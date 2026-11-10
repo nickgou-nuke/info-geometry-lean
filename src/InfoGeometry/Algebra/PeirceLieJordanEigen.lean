@@ -20,7 +20,7 @@ attribute [local instance 100] LieRing.ofAssociativeRing
 open InfoGeometry.Algebra.PeirceLieJordanResolution
 open InfoGeometry.Core.JordanMultiplicationClosure
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {R A : Type*} [Ring R] [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 lemma left_corner {p : A} (hp : p * p = p) (i j : Bool) (x : A) :
     p * cornerOp (R := R) p i j x =
@@ -42,6 +42,17 @@ lemma right_corner {p : A} (hp : p * p = p) (i j : Bool) (x : A) :
     _ = (endpoint p i * x) * (endpoint p j * p) := by simp only [mul_assoc]
     _ = _ := by rw [he]; cases j <;> simp [cornerOp, endpoint]
 
+/-- Weights `2,0,1,1` on the four full operator corners. -/
+theorem jordan_corner {p : A} (hp : p * p = p) (i j : Bool) (x : A) :
+    jordanLeft (R := R) p (cornerOp (R := R) p i j x) =
+      ((if i then (1 : ℤ) else 0) + (if j then 1 else 0)) •
+        cornerOp (R := R) p i j x := by
+  change p * cornerOp (R := R) p i j x + cornerOp (R := R) p i j x * p = _
+  rw [left_corner hp, right_corner hp]
+  cases i <;> cases j <;> simp [two_mul]
+
+variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+
 /-- Weights `0,0,1,-1` on the `11,00,10,01` corners. -/
 theorem ad_corner {p : A} (hp : p * p = p) (i j : Bool) (x : A) :
     LieAlgebra.ad R A p (cornerOp (R := R) p i j x) =
@@ -50,15 +61,6 @@ theorem ad_corner {p : A} (hp : p * p = p) (i j : Bool) (x : A) :
   change p * cornerOp (R := R) p i j x - cornerOp (R := R) p i j x * p = _
   rw [left_corner hp, right_corner hp]
   cases i <;> cases j <;> simp
-
-/-- Weights `2,0,1,1` on the same four full operator corners. -/
-theorem jordan_corner {p : A} (hp : p * p = p) (i j : Bool) (x : A) :
-    jordanLeft (R := R) p (cornerOp (R := R) p i j x) =
-      ((if i then (1 : ℤ) else 0) + (if j then 1 else 0)) •
-        cornerOp (R := R) p i j x := by
-  change p * cornerOp (R := R) p i j x + cornerOp (R := R) p i j x * p = _
-  rw [left_corner hp, right_corner hp]
-  cases i <;> cases j <;> simp [two_mul]
 
 /-- The adjoint action is the difference of the two off-diagonal projectors. -/
 theorem ad_eq_corner_difference (p : A) :

@@ -61,7 +61,7 @@ in the group algebra of ℚ/ℤ. Periodicity e(r+1) = e(r) encodes the quotient.
 Properties: e(0) = 1, e(r+s) = e(r)*e(s), e(r)* = e(-r), e(r+1) = e(r).
 -/
 structure GroupElementRepresentation
-    (C_comm : Type u) [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm] where
+    (C_comm : Type u) [Ring C_comm] [StarRing C_comm] [Algebra ℂ C_comm] where
   e : ℚ → C_comm
   e_zero : e 0 = 1
   e_add : ∀ r s : ℚ, e (r + s) = e r * e s
@@ -75,7 +75,7 @@ The semigroup endomorphisms α_n : C_comm → C_comm for n ∈ ℕ+.
 These are non-invertible endomorphisms dual to the multiplication-by-n map on Ẑ.
 -/
 structure SemigroupEndomorphismAction
-    (C_comm : Type u) [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
+    (C_comm : Type u) [Ring C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
     (e_rep : GroupElementRepresentation C_comm) where
   α : ℕ+ → C_comm → C_comm
   α_add : ∀ n x y, α n (x + y) = α n x + α n y
@@ -121,7 +121,7 @@ attribute [instance, instance_reducible] GaloisActionData.topologicalSpace
 Lifted Galois action on the commutative algebra: g · e(r) = e(g·r).
 -/
 structure GaloisAlgebraAutomorphism
-    (C_comm : Type u) [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
+    (C_comm : Type u) [Ring C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
     (e_rep : GroupElementRepresentation C_comm)
     {G : Type u} [GaloisActionData G] where
   galoisAut : G → C_comm →ₐ[ℂ] C_comm
@@ -146,7 +146,7 @@ which holds because the Galois action on ℚ/ℤ commutes with division by p
 (the cyclotomic character is compatible with the projection Ẑ^× → (ℤ/pℤ)^×).
 -/
 structure GaloisSemigroupEquivariance
-    (C_comm : Type u) [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
+    (C_comm : Type u) [Ring C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
     (e_rep : GroupElementRepresentation C_comm)
     (semigroup : SemigroupEndomorphismAction C_comm e_rep)
     (G : Type u) [GaloisActionData G]
@@ -167,7 +167,7 @@ This is the defining relation of the semigroup crossed product C_comm ⋊ ℕ+,
 the ambient algebra of the Bost-Connes system.
 -/
 structure BostConnesCrossedProduct
-    (C_comm : Type u) [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
+    (C_comm : Type u) [Ring C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
     (Op : Type u) [Ring Op] [StarRing Op] [Algebra ℂ Op]
     (e_rep : GroupElementRepresentation C_comm)
     (semigroup : SemigroupEndomorphismAction C_comm e_rep)

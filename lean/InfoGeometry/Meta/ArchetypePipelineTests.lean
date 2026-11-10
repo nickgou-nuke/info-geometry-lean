@@ -4,9 +4,9 @@ import Mathlib.Data.Nat.Prime.Basic
 open InfoGeometry.MetaCompiler
 
 /-- Every integer `n > 1` admits a prime divisor.  This is a genuine
-kernel-checked closure of the archetype claim: the `evidence` field now
-carries Mathlib's `Nat.exists_prime_and_dvd` rather than the vacuous
-`trivial : True` that a `.candidate` stage requires. -/
+kernel-checked closure of the archetype claim: the `.proved` evidence field
+carries Mathlib's `Nat.exists_prime_and_dvd`; candidate stages carry only the
+`PUnit` marker and cannot be used to extract claim proofs. -/
 def primeCandidateArch : TypedArchetype Nat .proved where
   name     := `primeCandidateArch
   phase    := 1

@@ -196,7 +196,7 @@ def IsCasimirInvariant
 
 theorem souriau_affineCoAd_is_action
     {𝕜 G LieDual : Type*}
-    [Field 𝕜] [Group G]
+    [Ring 𝕜] [Group G]
     [AddCommGroup LieDual] [Module 𝕜 LieDual]
     (coAd : G → LieDual →ₗ[𝕜] LieDual)
     (theta : G → LieDual)
@@ -213,7 +213,7 @@ theorem souriau_affineCoAd_is_action
 
 theorem entropy_is_casimir_under_affine_coadjoint_action
     {𝕜 G LieDual : Type*}
-    [Field 𝕜] [Group G]
+    [Ring 𝕜] [Group G]
     [AddCommGroup LieDual] [Module 𝕜 LieDual]
     (coAd : G → LieDual →ₗ[𝕜] LieDual)
     (theta : G → LieDual)

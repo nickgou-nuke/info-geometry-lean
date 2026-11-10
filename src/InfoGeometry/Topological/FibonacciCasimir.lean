@@ -17,11 +17,33 @@ namespace InfoGeometry.Topological.FibonacciAnyons
 
 open Matrix
 
-variable {K : Type*} [CommRing K]
+variable {K : Type*} [Ring K]
 
-/-- Trace of a `2 × 2` matrix. -/
+/-- Trace of a `2 × 2` matrix over any ring `[Ring K]`. -/
 def trace2 (M : Matrix (Fin 2) (Fin 2) K) : K :=
   M 0 0 + M 1 1
+
+/-- The finite `R` trace Casimir is the sum of its two diagonal phases over any `[Ring K]`. -/
+theorem trace2_R_matrixOf (q qInv : K) :
+    trace2 (R_matrixOf q qInv) = qInv ^ 4 + q ^ 3 := by
+  simp [trace2, R_matrixOf]
+
+/-- The Fibonacci fusion matrix has vanishing trace over any `[Ring K]`. -/
+theorem trace2_F_matrixOf (τ sqrtτ : K) :
+    trace2 (F_matrixOf τ sqrtτ) = 0 := by
+  simp [trace2, F_matrixOf]
+
+/-- Explicit non-commutative trace of the middle braid generator `B = F R F` over any `[Ring K]`. -/
+theorem trace2_B_matrixOf_noncomm (q qInv τ sqrtτ : K) :
+    trace2 (B_matrixOf q qInv τ sqrtτ) =
+      (τ * qInv ^ 4 * τ + sqrtτ * qInv ^ 4 * sqrtτ) +
+        (sqrtτ * q ^ 3 * sqrtτ + τ * q ^ 3 * τ) := by
+  simp [trace2, B_matrixOf, F_matrixOf, R_matrixOf, Matrix.mul_apply, Fin.sum_univ_two]
+  noncomm_ring
+
+section CommutativeCasimirs
+
+variable {K : Type*} [CommRing K]
 
 /-- Determinant of a `2 × 2` matrix, used as the second finite Casimir. -/
 def det2 (M : Matrix (Fin 2) (Fin 2) K) : K :=
@@ -31,17 +53,7 @@ def det2 (M : Matrix (Fin 2) (Fin 2) K) : K :=
 def discriminant2 (M : Matrix (Fin 2) (Fin 2) K) : K :=
   trace2 M ^ 2 - (4 : K) * det2 M
 
-/-- The finite `R` trace Casimir is the sum of its two diagonal phases. -/
-theorem trace2_R_matrixOf (q qInv : K) :
-    trace2 (R_matrixOf q qInv) = qInv ^ 4 + q ^ 3 := by
-  simp [trace2, R_matrixOf]
-
-/-- The Fibonacci fusion matrix has vanishing trace. -/
-theorem trace2_F_matrixOf (τ sqrtτ : K) :
-    trace2 (F_matrixOf τ sqrtτ) = 0 := by
-  simp [trace2, F_matrixOf]
-
-/-- Trace is cyclic for `2 × 2` matrices. -/
+/-- Trace is cyclic for `2 × 2` matrices over a commutative ring. -/
 theorem trace2_mul_comm
     (A B : Matrix (Fin 2) (Fin 2) K) :
     trace2 (A * B) = trace2 (B * A) := by
@@ -119,5 +131,7 @@ theorem discriminant2_B_eq_discriminant2_R_of_F_involution
     trace2_B_eq_trace2_R_of_F_involution q qInv τ sqrtτ hF,
     det2_B_eq_det2_R_of_F_involution q qInv τ sqrtτ hF,
   ]
+
+end CommutativeCasimirs
 
 end InfoGeometry.Topological.FibonacciAnyons

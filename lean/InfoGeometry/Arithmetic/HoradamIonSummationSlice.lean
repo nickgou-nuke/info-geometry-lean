@@ -28,7 +28,9 @@ open Finset
 open InfoGeometry.Arithmetic.HoradamIonMatrixMethods
 open InfoGeometry.Arithmetic.HoradamIonBinetSlice
 
-variable {R : Type*} [CommRing R]
+section Ring
+
+variable {R : Type*} [Ring R]
 
 /-- Finite geometric partial sum `∑_{i=0}^n x^i`. -/
 def geomPartial (x : R) (n : ℕ) : R :=
@@ -41,13 +43,17 @@ theorem one_sub_mul_geomPartial (x : R) (n : ℕ) :
   have h := mul_geom_sum x (n + 1)
   calc
     (1 - x) * (∑ i ∈ Finset.range (n + 1), x ^ i)
-        = -((x - 1) * (∑ i ∈ Finset.range (n + 1), x ^ i)) := by ring
+        = -((x - 1) * (∑ i ∈ Finset.range (n + 1), x ^ i)) := by noncomm_ring
     _ = -(x ^ (n + 1) - 1) := by rw [h]
-    _ = 1 - x ^ (n + 1) := by ring
+    _ = 1 - x ^ (n + 1) := by noncomm_ring
 
 /-- Finite partial sum of the Binet core. -/
 def binetPartialSum (A B α β : R) (n : ℕ) : R :=
   ∑ i ∈ Finset.range (n + 1), binetCore A B α β i
+
+end Ring
+
+variable {R : Type*} [CommRing R]
 
 /-- Cleared-denominator finite summation formula for the Binet core. -/
 theorem binetPartialSum_clear_denominator
@@ -79,7 +85,7 @@ theorem binetPartialSum_clear_denominator
           rw [hα, hβ]
 
 /-- Coordinate partial sum of the Binet ion packet. -/
-def binetIonPartialSum {N : ℕ} (A B α β : R) (n : ℕ) : Ion N R :=
+def binetIonPartialSum {R : Type*} [Ring R] {N : ℕ} (A B α β : R) (n : ℕ) : Ion N R :=
   fun s => ∑ i ∈ Finset.range (n + 1), binetCore A B α β (i + s.val)
 
 /-- Componentwise finite summation formula for the coordinate lift. -/

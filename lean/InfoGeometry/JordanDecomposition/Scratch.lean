@@ -6,10 +6,14 @@ noncomputable section
 open FiniteDimensional
 open Submodule
 
-variable {K : Type*} [Field K] {V : Type*} [AddCommGroup V] [Module K V]
+variable {K : Type*} [Ring K] {V : Type*} [AddCommGroup V] [Module K V]
 
 def NilpotentIndexScratch (N : Module.End K V) (k : ℕ) : Prop :=
   (N ^ k) = 0 ∧ (N ^ (k - 1)) ≠ 0
+
+section DivisionRing
+
+variable {K : Type*} [DivisionRing K] {V : Type*} [AddCommGroup V] [Module K V]
 
 lemma linearIndependent_cyclic_step (N : Module.End K V) (k : ℕ)
     (hN : NilpotentIndexScratch N k) (x : V) (hx : (N ^ (k - 1)) x ≠ 0)
@@ -69,7 +73,7 @@ lemma linearIndependent_cyclic_step (N : Module.End K V) (k : ℕ)
   · exfalso
     exact hx hx_zero
 
-lemma linearIndependent_cyclic [FiniteDimensional K V] (N : Module.End K V) (k : ℕ)
+lemma linearIndependent_cyclic (N : Module.End K V) (k : ℕ)
     (hN : NilpotentIndexScratch N k) (x : V) (hx : (N ^ (k - 1)) x ≠ 0) :
     LinearIndependent K (fun (i : Fin k) => (N ^ (i : ℕ)) x) := by
   apply Fintype.linearIndependent_iff.mpr
@@ -99,3 +103,5 @@ lemma linearIndependent_cyclic [FiniteDimensional K V] (N : Module.End K V) (k :
         rw [hj_eq]
         exact hl_d
   exact h_all k (le_refl k) i i.isLt
+
+end DivisionRing

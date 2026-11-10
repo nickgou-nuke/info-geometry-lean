@@ -20,10 +20,10 @@ We formally define the abstract Atiyah-Manton operator and establish its
 equivariance under the `D4` Triality action.
 -/
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [Ring K]
 
 /-- Abstract representation of a 4D Yang-Mills Instanton connection space. -/
-structure InstantonSpace (K : Type*) [Field K] where
+structure InstantonSpace (K : Type*) [Ring K] where
   /-- The abstract connection vector space -/
   Carrier : Type*
   /-- The base dimension signature (4) -/
@@ -34,7 +34,7 @@ structure InstantonSpace (K : Type*) [Field K] where
   dim_eq_four : base_dim = 4
 
 /-- Abstract representation of a 3D Skyrmion configuration space. -/
-structure SkyrmionSpace (K : Type*) [Field K] where
+structure SkyrmionSpace (K : Type*) [Ring K] where
   /-- The abstract configuration space on S^3 -/
   Carrier : Type*
   /-- The topological baryon number (degree of map to S^3) -/

@@ -17,7 +17,7 @@ Abstract polynomial encoding of the 1D Massieu/log-barrier relations:
 * `dPhi * a = -1`
 * `H * (a*a) = 1`
 -/
-structure MassieuGradientState (R : Type*) [CommRing R] where
+structure MassieuGradientState (R : Type*) [Ring R] where
   a    : R
   dPhi : R
   H    : R

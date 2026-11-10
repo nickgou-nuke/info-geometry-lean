@@ -10,7 +10,7 @@ open InfoGeometry.Physics.MoorePenroseHodgeDrazinGhostBridge
 open InfoGeometry.Algebra.Zorn.ParityTwistedLeviCivita
 
 variable {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The defect is A^+ - A^D -/
 def pseudoinverseDefect (A_plus A_D : V →ₗ[ℝ] V) : V →ₗ[ℝ] V :=

@@ -16,13 +16,28 @@ namespace InfoGeometry.Physics.ArnoldCoadjointOrbitsChernAudit
 open Module
 open InfoGeometry.Physics.ArnoldCoadjointOrbitsChern
 
-variable {R : Type*} [CommRing R]
-variable {L : Type*} [LieRing L] [LieAlgebra R L]
+section Ring
+
+variable {R : Type*} [Ring R]
+variable {L : Type*} [LieRing L] [Module R L]
 
 -- 1. Signature and Type-Level Verification
 #check (kks_form_antisymm : ∀ (ω : Dual R L) (x y : L), kks_form ω x y = -kks_form ω y x)
 #check (kks_form_closed : ∀ (ω : Dual R L) (x y z : L),
   kks_form ω x ⁅y, z⁆ + kks_form ω y ⁅z, x⁆ + kks_form ω z ⁅x, y⁆ = 0)
+
+-- 2. Non-Vacuity Check: Central elements produce trivial KKS pairings
+theorem audit_casimir_pairing_vanishes (ω : Dual R L) (c : L) (hc : IsCasimirElement ω c) (y : L) :
+    kks_form ω c y = 0 :=
+  hc y
+
+end Ring
+
+section CommRing
+
+variable {R : Type*} [CommRing R]
+variable {L : Type*} [LieRing L] [LieAlgebra R L]
+
 #check (casimir_coadjoint_stationary : ∀ (ω : Dual R L) (c : L),
   IsCasimirElement ω c → coadjoint_act c ω = 0)
 #check (helicity_conservation_on_orbit : ∀ (ω : Dual R L) (c : L),
@@ -33,16 +48,13 @@ variable {L : Type*} [LieRing L] [LieAlgebra R L]
     kks_form ω x ⁅y, z⁆ + kks_form ω y ⁅z, x⁆ + kks_form ω z ⁅x, y⁆ = 0 ∧
     coadjoint_act c ω = 0)
 
--- 2. Non-Vacuity Check: Central elements produce trivial KKS pairings
-theorem audit_casimir_pairing_vanishes (ω : Dual R L) (c : L) (hc : IsCasimirElement ω c) (y : L) :
-    kks_form ω c y = 0 :=
-  hc y
-
 -- 3. Foundational Axiom Footprint Audit
 #print axioms kks_form_antisymm
 #print axioms kks_form_closed
 #print axioms casimir_coadjoint_stationary
 #print axioms arnold_coadjoint_orbits_chern_synthesis
 #print axioms certified_arnold_coadjoint_orbits_chern_synthesis
+
+end CommRing
 
 end InfoGeometry.Physics.ArnoldCoadjointOrbitsChernAudit

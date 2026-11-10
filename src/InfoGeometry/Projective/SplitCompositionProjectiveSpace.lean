@@ -57,7 +57,7 @@ open Matrix
 open InfoGeometry.Clifford.Coquaternion
 open InfoGeometry.Clifford.Coquaternion.Coquaternion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### Section 1: Involutive Conjugation on Coquaternions -/
 
@@ -88,7 +88,7 @@ theorem conj_one : conj (1 : Coquaternion R) = 1 := by
 
 /-- Conjugation is additive: conj(p + q) = conj(p) + conj(q). -/
 theorem conj_add (p q : Coquaternion R) : conj (p + q) = conj p + conj q := by
-  ext <;> { simp [conj]; try ring }
+  ext <;> { simp [conj]; try abel }
 
 /-- Conjugation respects negation: conj(-q) = -conj(q). -/
 theorem conj_neg (q : Coquaternion R) : conj (-q) = -conj q := by
@@ -100,15 +100,15 @@ theorem conj_smul (c : R) (q : Coquaternion R) : conj (c • q) = c • conj q :
 
 /-- Anti-multiplicative property of conjugation:
     conj(p * q) = conj(q) * conj(p). -/
-theorem conj_mul (p q : Coquaternion R) : conj (p * q) = conj q * conj p := by
+theorem conj_mul {R : Type*} [CommRing R] (p q : Coquaternion R) : conj (p * q) = conj q * conj p := by
   ext <;> { simp [conj]; ring }
 
 /-- Fundamental norm identity: q * conj(q) = normSq(q) • 1. -/
-theorem mul_conj (q : Coquaternion R) : q * conj q = (normSq q) • (1 : Coquaternion R) := by
+theorem mul_conj {R : Type*} [CommRing R] (q : Coquaternion R) : q * conj q = (normSq q) • (1 : Coquaternion R) := by
   ext <;> { simp [conj, normSq]; ring }
 
 /-- Reverse fundamental norm identity: conj(q) * q = normSq(q) • 1. -/
-theorem conj_mul_self (q : Coquaternion R) : conj q * q = (normSq q) • (1 : Coquaternion R) := by
+theorem conj_mul_self {R : Type*} [CommRing R] (q : Coquaternion R) : conj q * q = (normSq q) • (1 : Coquaternion R) := by
   ext <;> { simp [conj, normSq]; ring }
 
 /-- Conjugation of the norm scalar: conj(N(q) • 1) = N(q) • 1. -/
@@ -118,20 +118,20 @@ theorem conj_normSq_smul_one (q : Coquaternion R) :
 
 /-- Scalar multiplication distributes across coquaternion multiplication:
     (c • p) * (d • q) = (c * d) • (p * q). -/
-theorem smul_mul_smul_coquaternion (c d : R) (p q : Coquaternion R) :
+theorem smul_mul_smul_coquaternion {R : Type*} [CommRing R] (c d : R) (p q : Coquaternion R) :
     (c • p) * (d • q) = (c * d) • (p * q) := by
   ext <;> { simp; ring }
 
 /-! ### Section 2: Module and Group Instances for Coquaternion -/
 
 instance : AddCommGroup (Coquaternion R) where
-  add_assoc := fun p q r => by ext <;> { simp; try ring }
+  add_assoc := fun p q r => by ext <;> { simp; try abel }
   zero_add := fun q => by ext <;> simp
   add_zero := fun q => by ext <;> simp
   nsmul := nsmulRec
-  add_comm := fun p q => by ext <;> { simp; try ring }
-  neg_add_cancel := fun q => by ext <;> { simp; try ring }
-  sub_eq_add_neg := fun p q => by ext <;> { simp; try ring }
+  add_comm := fun p q => by ext <;> { simp; try abel }
+  neg_add_cancel := fun q => by ext <;> { simp; try abel }
+  sub_eq_add_neg := fun p q => by ext <;> { simp; try abel }
   zsmul := zsmulRec
 
 instance : MulAction R (Coquaternion R) where
@@ -140,7 +140,7 @@ instance : MulAction R (Coquaternion R) where
     ext <;> simp
   mul_smul := fun c d q => by
     cases q
-    ext <;> { simp; try ring }
+    ext <;> { simp; try noncomm_ring }
 
 /-! ### Section 3: 2D Projective Vector Carrier and Split Quadric Spheres -/
 
@@ -186,7 +186,7 @@ def negNorm4 (q : Coquaternion R) : R :=
 theorem normSq_signature_22 (q : Coquaternion R) :
     normSq q = posNorm4 q - negNorm4 q := by
   dsimp [normSq, posNorm4, negNorm4]
-  ring
+  noncomm_ring
 
 /-- Positive definite part of the norm on D^2 = R^8: 4 positive squares. -/
 def posNorm8 (v : SphereVector2 R) : R :=
@@ -201,7 +201,7 @@ def negNorm8 (v : SphereVector2 R) : R :=
 theorem normSq2_signature_44 (v : SphereVector2 R) :
     normSq2 v = posNorm8 v - negNorm8 v := by
   dsimp [normSq2, posNorm8, negNorm8, posNorm4, negNorm4, normSq]
-  ring
+  noncomm_ring
 
 /-- Coordinate expansion of N_2(v) in all 8 scalar coordinates. -/
 theorem normSq2_coordinate_expansion (v : SphereVector2 R) :
@@ -239,14 +239,14 @@ def conjTranspose2 (M : Mat2D R) : Mat2D R :=
       conj (M 0 1), conj (M 1 1) ]
 
 /-- Scalar trace formula: trace2(P(v)) = (N_2(v)) • 1. -/
-theorem projector_trace2 (v : SphereVector2 R) :
+theorem projector_trace2 {R : Type*} [CommRing R] (v : SphereVector2 R) :
     trace2 (projector v) = (normSq2 v) • (1 : Coquaternion R) := by
   dsimp [trace2, projector, normSq2]
   rw [mul_conj, mul_conj]
   ext <;> { simp; try ring }
 
 /-- On the unit sphere N_2(v) = 1, the trace is the identity 1 • 1. -/
-theorem projector_trace2_unit (v : SphereVector2 R) (hv : normSq2 v = 1) :
+theorem projector_trace2_unit {R : Type*} [CommRing R] (v : SphereVector2 R) (hv : normSq2 v = 1) :
     trace2 (projector v) = 1 := by
   rw [projector_trace2, hv]
   ext <;> simp
@@ -258,12 +258,12 @@ theorem matrix_trace_eq_trace2 (M : Mat2D R) :
   rw [Fin.sum_univ_two]
 
 /-- Projector trace in terms of Mathlib's Matrix.trace. -/
-theorem projector_matrix_trace_unit (v : SphereVector2 R) (hv : normSq2 v = 1) :
+theorem projector_matrix_trace_unit {R : Type*} [CommRing R] (v : SphereVector2 R) (hv : normSq2 v = 1) :
     Matrix.trace (projector v) = 1 := by
   rw [matrix_trace_eq_trace2, projector_trace2_unit v hv]
 
 /-- Hermitian self-adjointness: P(v)^* = P(v) holds unconditionally for any vector v. -/
-theorem projector_hermitian (v : SphereVector2 R) :
+theorem projector_hermitian {R : Type*} [CommRing R] (v : SphereVector2 R) :
     conjTranspose2 (projector v) = projector v := by
   ext i j : 1
   fin_cases i <;> fin_cases j <;> {
@@ -273,7 +273,7 @@ theorem projector_hermitian (v : SphereVector2 R) :
 
 /-- Universal scaling identity: P(v) * P(v) = N_2(v) • P(v).
     This polynomial identity holds unconditionally over ANY commutative ring R. -/
-theorem projector_sq_scaling (v : SphereVector2 R) :
+theorem projector_sq_scaling {R : Type*} [CommRing R] (v : SphereVector2 R) :
     projector v * projector v = (normSq2 v) • projector v := by
   ext i j : 1
   fin_cases i <;> fin_cases j <;> {
@@ -285,7 +285,7 @@ theorem projector_sq_scaling (v : SphereVector2 R) :
   }
 
 /-- Idempotency on the sphere: N_2(v) = 1 implies P(v)^2 = P(v). -/
-theorem projector_idempotent (v : SphereVector2 R) (hv : normSq2 v = 1) :
+theorem projector_idempotent {R : Type*} [CommRing R] (v : SphereVector2 R) (hv : normSq2 v = 1) :
     projector v * projector v = projector v := by
   rw [projector_sq_scaling, hv, one_smul]
 
@@ -305,11 +305,11 @@ def toSphereVectorAffine (z : Coquaternion R) : SphereVector2 R :=
 theorem normSq2_affine (z : Coquaternion R) :
     normSq2 (toSphereVectorAffine z) = 1 + normSq z := by
   dsimp [normSq2, toSphereVectorAffine, normSq]
-  ring
+  noncomm_ring
 
 /-- The projector of the affine vector ⟨1, z⟩ equals the raw affine projector:
     P(⟨1, z⟩) = P_raw(z). -/
-theorem projector_affine_chart (z : Coquaternion R) :
+theorem projector_affine_chart {R : Type*} [CommRing R] (z : Coquaternion R) :
     projector (toSphereVectorAffine z) = affineProjectorRaw z := by
   ext i j : 1
   fin_cases i <;> fin_cases j
@@ -328,7 +328,7 @@ theorem projector_affine_chart (z : Coquaternion R) :
 
 /-- Universal scaling identity for the raw affine projector:
     P_raw(z)^2 = (1 + N(z)) • P_raw(z). -/
-theorem affineProjectorRaw_sq_scaling (z : Coquaternion R) :
+theorem affineProjectorRaw_sq_scaling {R : Type*} [CommRing R] (z : Coquaternion R) :
     affineProjectorRaw z * affineProjectorRaw z = (1 + normSq z) • affineProjectorRaw z := by
   have h := projector_sq_scaling (toSphereVectorAffine z)
   rw [projector_affine_chart, normSq2_affine] at h
@@ -336,7 +336,7 @@ theorem affineProjectorRaw_sq_scaling (z : Coquaternion R) :
 
 /-- Scalar multiplication distributes across 2x2 matrix multiplication:
     (c • M) * (d • N) = (c * d) • (M * N). -/
-theorem mat2_smul_mul_smul (c d : R) (M N : Mat2D R) :
+theorem mat2_smul_mul_smul {R : Type*} [CommRing R] (c d : R) (M N : Mat2D R) :
     (c • M) * (d • N) = (c * d) • (M * N) := by
   ext i j : 1
   fin_cases i <;> fin_cases j <;> {
@@ -353,7 +353,7 @@ def affineProjector (c : R) (z : Coquaternion R) : Mat2D R :=
 
 /-- Idempotency of the normalized affine projector:
     When c(1 + N(z)) = 1, P_c(z)^2 = P_c(z). -/
-theorem affine_projector_idempotent (c : R) (z : Coquaternion R)
+theorem affine_projector_idempotent {R : Type*} [CommRing R] (c : R) (z : Coquaternion R)
     (hc : c * (1 + normSq z) = 1) :
     affineProjector c z * affineProjector c z = affineProjector c z := by
   dsimp [affineProjector]
@@ -375,14 +375,14 @@ theorem affine_projector_trace2 (c : R) (z : Coquaternion R)
   · -- s component
     dsimp
     calc
-      c * 1 + c * (normSq z * 1) = c * (1 + normSq z) := by ring
+      c * 1 + c * (normSq z * 1) = c * (1 + normSq z) := by noncomm_ring
       _ = 1 := hc
   · -- x component
-    dsimp; ring
+    dsimp; noncomm_ring
   · -- y component
-    dsimp; ring
+    dsimp; noncomm_ring
   · -- z component
-    dsimp; ring
+    dsimp; noncomm_ring
 
 /-- Matrix trace of the normalized affine projector:
     When c(1 + N(z)) = 1, Matrix.trace(P_c(z)) = 1. -/
@@ -401,14 +401,14 @@ theorem conjTranspose2_smul (c : R) (M : Mat2D R) :
   }
 
 /-- Unconditional Hermitian self-adjointness of the raw affine projector. -/
-theorem affineProjectorRaw_hermitian (z : Coquaternion R) :
+theorem affineProjectorRaw_hermitian {R : Type*} [CommRing R] (z : Coquaternion R) :
     conjTranspose2 (affineProjectorRaw z) = affineProjectorRaw z := by
   have h := projector_hermitian (toSphereVectorAffine z)
   rw [projector_affine_chart] at h
   exact h
 
 /-- Hermitian self-adjointness of the normalized affine projector. -/
-theorem affine_projector_hermitian (c : R) (z : Coquaternion R) :
+theorem affine_projector_hermitian {R : Type*} [CommRing R] (c : R) (z : Coquaternion R) :
     conjTranspose2 (affineProjector c z) = affineProjector c z := by
   dsimp [affineProjector]
   rw [conjTranspose2_smul, affineProjectorRaw_hermitian]

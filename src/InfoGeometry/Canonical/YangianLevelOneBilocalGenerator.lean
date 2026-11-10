@@ -4,7 +4,7 @@ import InfoGeometry.Canonical.YangianLevelZeroRepresentation
 
 namespace InfoGeometry.Canonical
 
-variable {K : Type*} [CommRing K] [Invertible (2 : K)]
+variable {K : Type*} [CommRing K]
 variable {L : Type*} [LieRing L] [LieAlgebra K L]
 variable {V W : Type*} [AddCommGroup V] [Module K V] [LieRingModule L V] [LieModule K L V]
                        [AddCommGroup W] [Module K W] [LieRingModule L W] [LieModule K L W]

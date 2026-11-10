@@ -26,7 +26,7 @@ namespace GenericWitness
 
 open InfoGeometry.SuperGrassmannian.KantorTanakaSuperGrassmannian
 
-variable {R : Type*} [CommRing R] [Nontrivial R]
+variable {R : Type*} [Ring R] [Nontrivial R]
 
 def matrixUnit01 : Matrix (Fin 3) (Fin 3) R := E 0 1
 
@@ -64,7 +64,7 @@ namespace Contact
 open InfoGeometry.Algebra.SupergradedBracket
 open InfoGeometry.SuperGrassmannian.KantorTanakaSuperGrassmannian
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /- The generic matrix carrier is noncommutative whenever its coefficient ring
 is nontrivial; this is the witness required for the operator interpretation. -/

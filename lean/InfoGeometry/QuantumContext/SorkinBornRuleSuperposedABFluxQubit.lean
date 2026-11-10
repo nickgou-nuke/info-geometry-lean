@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Order.Ring.Defs
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.LinearCombination
 
 /-!
@@ -31,7 +32,7 @@ Formalizes the multipath and superposed-flux extensions referenced in Sections 2
 
 namespace InfoGeometry.QuantumContext.SorkinFluxQubit
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. Fresnel Quadratures and Multi-Slit Wave Superposition -/
 
@@ -43,7 +44,7 @@ structure FresnelWave (R : Type*) where
 
 namespace FresnelWave
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zeroWave : FresnelWave R := ⟨0, 0⟩
 
@@ -100,8 +101,13 @@ theorem superposed_ab_flux_qubit_readout
       intensity ψ₁ + (c * c + s * s) * intensity ψ₂ +
       2 * c * yangG ψ₁ ψ₂ + 2 * (w_plus - w_minus) * s * yinH ψ₁ ψ₂ := by
   dsimp [superposedFluxProb, abProb]
-  linear_combination
-    (intensity ψ₁ + (c * c + s * s) * intensity ψ₂ + 2 * c * yangG ψ₁ ψ₂) * h_norm
+  have h :
+      w_plus * (intensity ψ₁ + (c * c + s * s) * intensity ψ₂ + 2 * c * yangG ψ₁ ψ₂ + 2 * s * yinH ψ₁ ψ₂) +
+        w_minus * (intensity ψ₁ + (c * c + -s * -s) * intensity ψ₂ + 2 * c * yangG ψ₁ ψ₂ + 2 * -s * yinH ψ₁ ψ₂) =
+      (w_plus + w_minus) * (intensity ψ₁ + (c * c + s * s) * intensity ψ₂ + 2 * c * yangG ψ₁ ψ₂) +
+        2 * (w_plus - w_minus) * s * yinH ψ₁ ψ₂ := by
+    noncomm_ring
+  rw [h, h_norm, one_mul]
 
 /--
 Symmetric Schrödinger cat state of the flux qubit (`w₊ = w₋`):
@@ -115,7 +121,7 @@ theorem balanced_flux_cat_state_cancels_yin_asymmetry
     superposedFluxProb ψ₁ ψ₂ c s w w =
       intensity ψ₁ + (c * c + s * s) * intensity ψ₂ + 2 * c * yangG ψ₁ ψ₂ := by
   rw [superposed_ab_flux_qubit_readout ψ₁ ψ₂ c s w w h_norm]
-  ring
+  simp
 
 /-! ### 3. Triple Slit and Exact Vanishing of the Sorkin Parameter `κ₃` (Sorkin [31]) -/
 
@@ -138,13 +144,13 @@ def sorkinKappa3 (ψ₁ ψ₂ ψ₃ : FresnelWave R) : R :=
     (intensity ψ₁ + intensity ψ₂ + intensity ψ₃)
 
 /-- Double-slit intensity expansion: `I_{12} = I₁ + I₂ + 2 G_{(1,2)}`. -/
-theorem double_slit_expansion (ψ₁ ψ₂ : FresnelWave R) :
+theorem double_slit_expansion {R : Type*} [CommRing R] (ψ₁ ψ₂ : FresnelWave R) :
     doubleSlitIntensity ψ₁ ψ₂ = intensity ψ₁ + intensity ψ₂ + 2 * yangG ψ₁ ψ₂ := by
   dsimp [doubleSlitIntensity, intensity, add, yangG]
   ring
 
 /-- Triple-slit intensity expansion: `I_{123} = I₁ + I₂ + I₃ + 2(G₁₂ + G₂₃ + G₃₁)`. -/
-theorem triple_slit_expansion (ψ₁ ψ₂ ψ₃ : FresnelWave R) :
+theorem triple_slit_expansion {R : Type*} [CommRing R] (ψ₁ ψ₂ ψ₃ : FresnelWave R) :
     tripleSlitIntensity ψ₁ ψ₂ ψ₃ =
       intensity ψ₁ + intensity ψ₂ + intensity ψ₃ +
       2 * (yangG ψ₁ ψ₂ + yangG ψ₂ ψ₃ + yangG ψ₃ ψ₁) := by
@@ -159,7 +165,7 @@ Every triple of Fresnel waves has identically zero third-order Sorkin parameter:
 theorem sorkin_kappa3_identically_zero (ψ₁ ψ₂ ψ₃ : FresnelWave R) :
     sorkinKappa3 ψ₁ ψ₂ ψ₃ = 0 := by
   dsimp [sorkinKappa3, tripleSlitIntensity, doubleSlitIntensity, intensity, add3, add]
-  ring
+  noncomm_ring
 
 end FresnelWave
 

@@ -39,20 +39,20 @@ PART 1: The 14 = 8 + 3 + 3̄ Decomposition of 𝔤_{2(2)}
 
 /-- The 8-dimensional 𝔰𝔩(3, R) stabilizer matrix: traceless 3×3 matrix -/
 @[ext]
-structure SL3Generator (R : Type*) [CommRing R] where
+structure SL3Generator (R : Type*) [Ring R] where
   M : Matrix (Fin 3) (Fin 3) R
   tr_zero : M 0 0 + M 1 1 + M 2 2 = 0
 
 /-- The 2-dimensional Cartan subalgebra of 𝔰𝔩(3, R): diagonal traceless matrices -/
-def sl3Cartan {R : Type*} [CommRing R] (h1 h2 : R) : SL3Generator R where
+def sl3Cartan {R : Type*} [Ring R] (h1 h2 : R) : SL3Generator R where
   M := ![![h1, 0, 0],
          ![0, h2, 0],
          ![0, 0, -(h1 + h2)]]
   tr_zero := by
     change h1 + h2 + -(h1 + h2) = 0
-    ring
+    abel
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 variable {m n : Type*} [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n]
 
 /-!

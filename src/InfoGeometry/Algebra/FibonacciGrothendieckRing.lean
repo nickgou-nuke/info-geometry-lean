@@ -123,34 +123,47 @@ theorem right_distrib (x y z : FibonacciRingModel) :
 Evaluation of the Fibonacci fusion-ring model into any commutative ring once an
 element `t` satisfying `t² = t + 1` is chosen.
 -/
-def eval {R : Type*} [CommRing R] (t : R) (x : FibonacciRingModel) : R :=
+def eval {R : Type*} [Ring R] (t : R) (x : FibonacciRingModel) : R :=
   (x.1 : R) + (x.2 : R) * t
 
 @[simp]
-theorem eval_one {R : Type*} [CommRing R] (t : R) : eval t one = 1 := by
+theorem eval_one {R : Type*} [Ring R] (t : R) : eval t one = 1 := by
   simp [eval, one]
 
 @[simp]
-theorem eval_tau {R : Type*} [CommRing R] (t : R) : eval t tau = t := by
+theorem eval_tau {R : Type*} [Ring R] (t : R) : eval t tau = t := by
   simp [eval, tau]
 
-theorem eval_add {R : Type*} [CommRing R] (t : R) (x y : FibonacciRingModel) :
+theorem eval_add {R : Type*} [Ring R] (t : R) (x y : FibonacciRingModel) :
     eval t (x + y) = eval t x + eval t y := by
   simp [eval]
-  ring
+  noncomm_ring
 
-theorem eval_neg {R : Type*} [CommRing R] (t : R) (x : FibonacciRingModel) :
+theorem eval_neg {R : Type*} [Ring R] (t : R) (x : FibonacciRingModel) :
     eval t (-x) = -eval t x := by
   simp [eval]
-  ring
+  abel
 
-theorem eval_mul {R : Type*} [CommRing R] (t : R)
+theorem eval_mul {R : Type*} [Ring R] (t : R)
     (hτ : t ^ 2 = t + 1) (x y : FibonacciRingModel) :
     eval t (mul x y) = eval t x * eval t y := by
-  simp [eval, mul]
-  ring_nf
-  rw [hτ]
-  ring
+  dsimp [eval, mul]
+  push_cast
+  have ht2 : t * t = t + 1 := by rwa [sq] at hτ
+  have hcomm1 : t * (y.1 : R) = (y.1 : R) * t := (Int.cast_comm y.1 t).symm
+  have hcomm2 : t * (y.2 : R) = (y.2 : R) * t := (Int.cast_comm y.2 t).symm
+  calc
+    ((x.1 : R) * (y.1 : R) + (x.2 : R) * (y.2 : R)) +
+        ((x.1 : R) * (y.2 : R) + (x.2 : R) * (y.1 : R) + (x.2 : R) * (y.2 : R)) * t
+      = (x.1 : R) * (y.1 : R) + (x.1 : R) * ((y.2 : R) * t) +
+        (x.2 : R) * ((y.1 : R) * t) + (x.2 : R) * ((y.2 : R) * (t + 1)) := by noncomm_ring
+    _ = (x.1 : R) * (y.1 : R) + (x.1 : R) * ((y.2 : R) * t) +
+        (x.2 : R) * (t * (y.1 : R)) + (x.2 : R) * ((y.2 : R) * (t * t)) := by rw [← hcomm1, ← ht2]
+    _ = (x.1 : R) * (y.1 : R) + (x.1 : R) * ((y.2 : R) * t) +
+        (x.2 : R) * (t * (y.1 : R)) + (x.2 : R) * (((y.2 : R) * t) * t) := by noncomm_ring
+    _ = (x.1 : R) * (y.1 : R) + (x.1 : R) * ((y.2 : R) * t) +
+        (x.2 : R) * (t * (y.1 : R)) + (x.2 : R) * ((t * (y.2 : R)) * t) := by rw [← hcomm2]
+    _ = ((x.1 : R) + (x.2 : R) * t) * ((y.1 : R) + (y.2 : R) * t) := by noncomm_ring
 
 end FibonacciRingModel
 

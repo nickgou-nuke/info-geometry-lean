@@ -14,7 +14,7 @@ namespace InfoGeometry.Canonical.EulerCharacteristicBettiIndexBridge
 open ExteriorAlgebra
 open InfoGeometry.Canonical.WittenIndexSupersymmetricBridge
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- **Definition**: Topological Euler Characteristic χ = b_even - b_odd from Betti Numbers. -/
 def eulerCharacteristic (b_even b_odd : ℤ) : ℤ :=

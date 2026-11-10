@@ -43,7 +43,7 @@ PART 1: Peirce Coordinates, Zorn Matrix Determinant, and Split-Octonion Norm
 =============================================================================
 -/
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- 3D dot product on R³ -/
 def dot3 (u v : Fin 3 → R) : R :=
@@ -82,7 +82,7 @@ def peirceZorn (ω c t : R) (vecLambda x : Fin 3 → R) : Zorn R where
   🏆 THEOREM 1: The Zorn determinant identically equals the pseudo-Euclidean 
   split-octonionic Minkowski-Lorentz norm (ω² - c²t²) - (λ² - x²).
 -/
-theorem zornDet_peirce (ω c t : R) (vecLambda x : Fin 3 → R) :
+theorem zornDet_peirce {R : Type*} [CommRing R] (ω c t : R) (vecLambda x : Fin 3 → R) :
     zornDet (peirceZorn ω c t vecLambda x) =
       (ω^2 - c^2 * t^2) - (dot3 vecLambda vecLambda - dot3 x x) := by
   dsimp [zornDet, peirceZorn, dot3]

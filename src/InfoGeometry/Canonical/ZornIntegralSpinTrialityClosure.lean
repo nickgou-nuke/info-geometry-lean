@@ -18,7 +18,7 @@ open InfoGeometry.Canonical.ZornMatrix
 open InfoGeometry.Canonical.ZornClifford
 open InfoGeometry.Canonical.ZornIntegralSpinSubgroup
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 attribute [local simp] Matrix.vecHead Matrix.vecTail Matrix.cons_val_zero Matrix.cons_val_one Matrix.cons_val_two Matrix.cons_val_succ Pi.smul_apply Pi.add_apply Pi.sub_apply Pi.neg_apply
 
@@ -39,16 +39,20 @@ theorem zornTriality_order_three (Z : ZornMatrix R) :
   · ext i
     fin_cases i <;> rfl
 
-theorem zornTriality_norm (Z : ZornMatrix R) :
+theorem zornTriality_normFun (Z : ZornMatrix R) :
+    zornNormFun (zornTriality Z) = zornNormFun Z := by
+  simp [zornTriality, zornNormFun, dot]
+  abel
+
+theorem zornTriality_norm {R₀ : Type*} [CommRing R₀] (Z : ZornMatrix R₀) :
     zornNorm (zornTriality Z) = zornNorm Z := by
-  simp [zornTriality, zornNorm_apply, zornNormFun, dot]
-  ring
+  simp [zornNorm_apply, zornTriality_normFun]
 
 theorem zornTriality_mul (X Y : ZornMatrix R) :
     zornTriality (X * Y) = zornTriality X * zornTriality Y := by
   apply ZornMatrix.ext
-  · simp [zornTriality, mul_def, mul, dot, cross]; ring
-  · simp [zornTriality, mul_def, mul, dot, cross]; ring
+  · simp [zornTriality, mul_def, mul, dot, cross]; abel
+  · simp [zornTriality, mul_def, mul, dot, cross]; abel
   · ext i
     fin_cases i <;> simp [zornTriality, mul_def, mul, dot, cross]
   · ext i

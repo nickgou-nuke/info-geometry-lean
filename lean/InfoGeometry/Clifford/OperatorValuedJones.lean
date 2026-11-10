@@ -127,10 +127,12 @@ end ComplexCoordinates
 
 section DiracBoundary
 
-variable {ι R Op : Type*} [CommRing R] [Ring Op] [Algebra R Op]
+variable {ι R Op : Type*}
 
 /-- Anticommutator in the represented operator algebra. -/
-def operatorAnticommutator (A C : Op) : Op := A * C + C * A
+def operatorAnticommutator [Semiring Op] (A C : Op) : Op := A * C + C * A
+
+variable [CommSemiring R] [Semiring Op] [Algebra R Op]
 
 /--
 An operator family is a Dirac-matrix system precisely when the metric

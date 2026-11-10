@@ -55,7 +55,7 @@ namespace InfoGeometry.Holography.AdSCFT
 
 open Matrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Upper-left UV boundary $2 \times 2$ block $\mathcal{B}_{\mathrm{UV}}(M)$ extracted
 from a $4 \times 4$ bulk matrix $M \in \mathrm{Matrix}(\mathrm{Fin}\,2 \oplus \mathrm{Fin}\,2, \mathrm{Fin}\,2 \oplus \mathrm{Fin}\,2, R)$. -/
@@ -122,7 +122,7 @@ theorem feffermanGrahamField_source_and_condensate (J O : R) :
     feffermanGrahamField J O 0 = J ∧
     feffermanGrahamField J O 1 - feffermanGrahamField J O 0 = O := by
   unfold feffermanGrahamField
-  refine ⟨by ring, by ring⟩
+  simp
 
 /-- **Radial Symplectic Wronskian Invariance (`feffermanGrahamWronskian_z_independent`):**
 For any two Fefferman–Graham radial profiles $\Phi_1(z) = J_1 + z O_1$ and
@@ -130,7 +130,7 @@ $\Phi_2(z) = J_2 + z O_2$, the symplectic radial Wronskian
 $$W(\Phi_1, \Phi_2; z) = \Phi_1(z)\,O_2 - \Phi_2(z)\,O_1$$
 is strictly independent of the radial coordinate $z$ and equals the boundary
 symplectic pairing $J_1 O_2 - J_2 O_1$. -/
-theorem feffermanGrahamWronskian_z_independent (J₁ O₁ J₂ O₂ z : R) :
+theorem feffermanGrahamWronskian_z_independent {R : Type*} [CommRing R] (J₁ O₁ J₂ O₂ z : R) :
     feffermanGrahamField J₁ O₁ z * O₂ - feffermanGrahamField J₂ O₂ z * O₁ =
       J₁ * O₂ - J₂ * O₁ := by
   unfold feffermanGrahamField
@@ -148,7 +148,7 @@ For every 2-component spinor $\psi : \mathrm{Fin}\,2 \to R$:
 1. $\mathrm{Tr}(F^+(\psi)) = 0$ (traceless $\mathfrak{su}(2)_+$ endomorphism);
 2. $\det(F^+(\psi)) = -(\psi_0^2 + \psi_1^2)^2$ (non-positive discriminant proportional to $-\|\psi\|^4$);
 3. $F^+(\psi)^2 = (\psi_0^2 + \psi_1^2)^2 I_2$ (Clifford norm-square identity). -/
-theorem swSpinorCurvature_trace_det_and_clifford_sq (ψ : Fin 2 → R) :
+theorem swSpinorCurvature_trace_det_and_clifford_sq {R : Type*} [CommRing R] (ψ : Fin 2 → R) :
     Matrix.trace (swSpinorCurvature ψ) = 0 ∧
     Matrix.det (swSpinorCurvature ψ) = -((ψ 0 ^ 2 + ψ 1 ^ 2) ^ 2) ∧
     swSpinorCurvature ψ * swSpinorCurvature ψ =

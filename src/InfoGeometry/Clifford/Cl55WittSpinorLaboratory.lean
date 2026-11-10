@@ -40,13 +40,13 @@ $$
 All theorems are exact in native Mathlib 4 with zero `sorry`s.
 -/
 
-variable {R : Type*} [CommRing R] [Invertible (2 : R)]
-variable {A : Type*} [Ring A] [Algebra R A]
+variable {R : Type*} [Ring R] [Invertible (2 : R)]
+variable {A : Type*} [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-! ## 1. 5-Mode Real Witt Basis and Canonical Anticommutation Relations (CAR) -/
 
 /-- Structure capturing the 5-mode real Witt generators $(e_a, f_a)_{a \in \text{Fin } 5}$ satisfying CAR. -/
-structure WittBasis55 (A : Type*) [Ring A] [Algebra R A] where
+structure WittBasis55 (A : Type*) [Ring A] where
   e : Fin 5 → A
   f : Fin 5 → A
   e_sq : ∀ a, e a * e a = 0
@@ -57,7 +57,7 @@ structure WittBasis55 (A : Type*) [Ring A] [Algebra R A] where
 
 namespace WittBasis55
 
-variable (W : WittBasis55 (R := R) A)
+variable (W : WittBasis55 A)
 
 /-- Lie commutator bracket $[X, Y] = X Y - Y X$. -/
 def bracket (X Y : A) : A := X * Y - Y * X
@@ -76,13 +76,13 @@ omit [Invertible (2 : R)] in
 theorem bracket_smul_left (r : R) (X Y : A) :
     bracket (r • X) Y = r • bracket X Y := by
   unfold bracket
-  simp only [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_sub]
+  simp only [smul_mul_assoc, mul_smul_comm, smul_sub]
 
 omit [Invertible (2 : R)] in
 theorem bracket_smul_right (r : R) (X Y : A) :
     bracket X (r • Y) = r • bracket X Y := by
   unfold bracket
-  simp only [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, smul_sub]
+  simp only [mul_smul_comm, smul_mul_assoc, smul_sub]
 
 theorem bracket_sum_left {ι : Type*} (s : Finset ι) (f : ι → A) (Y : A) :
     bracket (∑ i ∈ s, f i) Y = ∑ i ∈ s, bracket (f i) Y := by
@@ -101,12 +101,12 @@ theorem bracket_sum_right {ι : Type*} (s : Finset ι) (X : A) (g : ι → A) :
     rw [Finset.sum_insert ha, Finset.sum_insert ha, bracket_add_right, ih]
 
 /-- The rank-five Cartan generators $H_a = e_a f_a - \frac{1}{2} I$. -/
-def H (a : Fin 5) : A :=
+def H (R : Type*) [Ring R] [Invertible (2 : R)] [Module R A] (W : WittBasis55 A) (a : Fin 5) : A :=
   W.e a * W.f a - ⅟(2 : R) • (1 : A)
 
 /-- $H_a$ equals the half-commutator $\frac{1}{2} [e_a, f_a]$. -/
 theorem H_eq_half_commutator (a : Fin 5) :
-    W.H a = ⅟(2 : R) • bracket (W.e a) (W.f a) := by
+    W.H R a = ⅟(2 : R) • bracket (W.e a) (W.f a) := by
   have hef := W.anticomm_ef a a
   simp only [if_true] at hef
   have hfe : W.f a * W.e a = 1 - W.e a * W.f a := by
@@ -128,7 +128,7 @@ theorem H_eq_half_commutator (a : Fin 5) :
 
 /-- **Theorem**: Diagonal Cartan action on creation operators: $[H_a, e_b] = \delta_{ab} e_b$. -/
 theorem bracket_H_e (a b : Fin 5) :
-    bracket (W.H a) (W.e b) = if a = b then W.e b else 0 := by
+    bracket (W.H R a) (W.e b) = if a = b then W.e b else 0 := by
   unfold H bracket
   by_cases hab : a = b
   · subst b
@@ -140,9 +140,9 @@ theorem bracket_H_e (a b : Fin 5) :
       abel
     have he2 := W.e_sq a
     have h1 : (W.e a * W.f a - ⅟(2 : R) • 1) * W.e a = W.e a * (W.f a * W.e a) - ⅟(2 : R) • W.e a := by
-      rw [sub_mul, mul_assoc, Algebra.smul_mul_assoc, one_mul]
+      rw [sub_mul, mul_assoc, smul_mul_assoc, one_mul]
     have h2 : W.e a * (W.e a * W.f a - ⅟(2 : R) • 1) = (W.e a * W.e a) * W.f a - ⅟(2 : R) • W.e a := by
-      rw [mul_sub, ← mul_assoc, Algebra.mul_smul_comm, mul_one]
+      rw [mul_sub, ← mul_assoc, mul_smul_comm, mul_one]
     rw [h1, h2, he2, zero_mul, hfe, mul_sub, mul_one]
     have he_zero : W.e a * (W.e a * W.f a) = 0 := by
       rw [← mul_assoc, he2, zero_mul]
@@ -159,9 +159,9 @@ theorem bracket_H_e (a b : Fin 5) :
       rw [← add_eq_zero_iff_eq_neg]
       exact hee
     have h1 : (W.e a * W.f a - ⅟(2 : R) • 1) * W.e b = W.e a * (W.f a * W.e b) - ⅟(2 : R) • W.e b := by
-      rw [sub_mul, mul_assoc, Algebra.smul_mul_assoc, one_mul]
+      rw [sub_mul, mul_assoc, smul_mul_assoc, one_mul]
     have h2 : W.e b * (W.e a * W.f a - ⅟(2 : R) • 1) = (W.e b * W.e a) * W.f a - ⅟(2 : R) • W.e b := by
-      rw [mul_sub, ← mul_assoc, Algebra.mul_smul_comm, mul_one]
+      rw [mul_sub, ← mul_assoc, mul_smul_comm, mul_one]
     rw [h1, h2, hfe]
     have h_assoc : W.e a * -(W.e b * W.f a) = - (W.e a * W.e b * W.f a) := by
       rw [mul_neg, mul_assoc]
@@ -170,7 +170,7 @@ theorem bracket_H_e (a b : Fin 5) :
 
 /-- **Theorem**: Diagonal Cartan action on annihilation operators: $[H_a, f_b] = -\delta_{ab} f_b$. -/
 theorem bracket_H_f (a b : Fin 5) :
-    bracket (W.H a) (W.f b) = if a = b then - W.f b else 0 := by
+    bracket (W.H R a) (W.f b) = if a = b then - W.f b else 0 := by
   unfold H bracket
   by_cases hab : a = b
   · subst b
@@ -182,9 +182,9 @@ theorem bracket_H_f (a b : Fin 5) :
       abel
     have hf2 := W.f_sq a
     have h1 : (W.e a * W.f a - ⅟(2 : R) • 1) * W.f a = W.e a * (W.f a * W.f a) - ⅟(2 : R) • W.f a := by
-      rw [sub_mul, mul_assoc, Algebra.smul_mul_assoc, one_mul]
+      rw [sub_mul, mul_assoc, smul_mul_assoc, one_mul]
     have h2 : W.f a * (W.e a * W.f a - ⅟(2 : R) • 1) = (W.f a * W.e a) * W.f a - ⅟(2 : R) • W.f a := by
-      rw [mul_sub, ← mul_assoc, Algebra.mul_smul_comm, mul_one]
+      rw [mul_sub, ← mul_assoc, mul_smul_comm, mul_one]
     rw [h1, h2, hf2, mul_zero, hef_sub, sub_mul, one_mul]
     have hf_zero : W.e a * W.f a * W.f a = 0 := by
       rw [mul_assoc, hf2, mul_zero]
@@ -201,9 +201,9 @@ theorem bracket_H_f (a b : Fin 5) :
       rw [← add_eq_zero_iff_eq_neg]
       exact hef_ab
     have h1 : (W.e a * W.f a - ⅟(2 : R) • 1) * W.f b = W.e a * (W.f a * W.f b) - ⅟(2 : R) • W.f b := by
-      rw [sub_mul, mul_assoc, Algebra.smul_mul_assoc, one_mul]
+      rw [sub_mul, mul_assoc, smul_mul_assoc, one_mul]
     have h2 : W.f b * (W.e a * W.f a - ⅟(2 : R) • 1) = (W.f b * W.e a) * W.f a - ⅟(2 : R) • W.f b := by
-      rw [mul_sub, ← mul_assoc, Algebra.mul_smul_comm, mul_one]
+      rw [mul_sub, ← mul_assoc, mul_smul_comm, mul_one]
     rw [h1, h2, hfa_fb]
     have h_assoc : W.e a * -(W.f b * W.f a) = - (W.e a * W.f b * W.f a) := by
       rw [mul_neg, mul_assoc]
@@ -212,7 +212,7 @@ theorem bracket_H_f (a b : Fin 5) :
 
 /-- **Theorem**: Mutual commutativity of the rank-five Cartan subalgebra: $[H_a, H_b] = 0$. -/
 theorem bracket_H_H (a b : Fin 5) :
-    bracket (W.H a) (W.H b) = 0 := by
+    bracket (W.H R a) (W.H R b) = 0 := by
   unfold H bracket
   by_cases hab : a = b
   · subst b
@@ -221,13 +221,13 @@ theorem bracket_H_H (a b : Fin 5) :
         (W.e a * W.f a) * (W.e b * W.f b) - ⅟(2 : R) • (W.e a * W.f a) - ⅟(2 : R) • (W.e b * W.f b) +
           (⅟(2 : R) * ⅟(2 : R)) • (1 : A) := by
       rw [sub_mul, mul_sub, mul_sub]
-      simp only [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, one_mul, mul_one, smul_smul]
+      simp only [smul_mul_assoc, mul_smul_comm, one_mul, mul_one, smul_smul]
       abel
     have h2 : (W.e b * W.f b - ⅟(2 : R) • 1) * (W.e a * W.f a - ⅟(2 : R) • 1) =
         (W.e b * W.f b) * (W.e a * W.f a) - ⅟(2 : R) • (W.e b * W.f b) - ⅟(2 : R) • (W.e a * W.f a) +
           (⅟(2 : R) * ⅟(2 : R)) • (1 : A) := by
       rw [sub_mul, mul_sub, mul_sub]
-      simp only [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, one_mul, mul_one, smul_smul]
+      simp only [smul_mul_assoc, mul_smul_comm, one_mul, mul_one, smul_smul]
       abel
     have hef_ab := W.anticomm_ef a b
     simp only [if_neg hab] at hef_ab
@@ -272,7 +272,7 @@ end WittBasis55
 /-! ## 2. Spinor Chirality vs Krein Fundamental Symmetry -/
 
 /-- Chirality / volume operator $\Gamma_*$ on the 32-spinor space. -/
-structure SpinorChirality (A : Type*) [Ring A] [Algebra R A] (W : WittBasis55 (R := R) A) where
+structure SpinorChirality (A : Type*) [Ring A] (W : WittBasis55 A) where
   gamma_star : A
   gamma_star_sq : gamma_star * gamma_star = 1
   gamma_star_anticomm_e : ∀ a, gamma_star * W.e a = - (W.e a * gamma_star)
@@ -286,16 +286,20 @@ structure KreinFundamentalSymmetry (A : Type*) [Ring A] where
 
 namespace SpinorChirality
 
-variable (W : WittBasis55 (R := R) A) (χ : SpinorChirality (R := R) A W)
+variable {W : WittBasis55 A} (χ : SpinorChirality A W)
 
 /-- Positive chiral projector $P_+ = \frac{1}{2}(I + \Gamma_*)$. -/
-def P_plus : A := ⅟(2 : R) • (1 + χ.gamma_star)
+def P_plus (R : Type*) [Ring R] [Invertible (2 : R)] [Module R A] (χ : SpinorChirality A W) : A :=
+  ⅟(2 : R) • (1 + χ.gamma_star)
 
 /-- Negative chiral projector $P_- = \frac{1}{2}(I - \Gamma_*)$. -/
-def P_minus : A := ⅟(2 : R) • (1 - χ.gamma_star)
+def P_minus (R : Type*) [Ring R] [Invertible (2 : R)] [Module R A] (χ : SpinorChirality A W) : A :=
+  ⅟(2 : R) • (1 - χ.gamma_star)
 
 /-- **Theorem**: $P_+$ is an idempotent projector ($P_+^2 = P_+$). -/
-theorem P_plus_sq : χ.P_plus * χ.P_plus = χ.P_plus := by
+theorem P_plus_sq (R : Type*) [Ring R] [Invertible (2 : R)] [Module R A]
+    [IsScalarTower R A A] [SMulCommClass R A A] :
+    χ.P_plus R * χ.P_plus R = χ.P_plus R := by
   unfold P_plus
   rw [smul_mul_smul_comm]
   have hmul : (1 + χ.gamma_star) * (1 + χ.gamma_star) = (2 : R) • (1 + χ.gamma_star) := by
@@ -305,7 +309,9 @@ theorem P_plus_sq : χ.P_plus * χ.P_plus = χ.P_plus := by
   rw [hmul, smul_smul, mul_assoc, invOf_mul_self, mul_one]
 
 /-- **Theorem**: $P_-$ is an idempotent projector ($P_-^2 = P_-$). -/
-theorem P_minus_sq : χ.P_minus * χ.P_minus = χ.P_minus := by
+theorem P_minus_sq (R : Type*) [Ring R] [Invertible (2 : R)] [Module R A]
+    [IsScalarTower R A A] [SMulCommClass R A A] :
+    χ.P_minus R * χ.P_minus R = χ.P_minus R := by
   unfold P_minus
   rw [smul_mul_smul_comm]
   have hmul : (1 - χ.gamma_star) * (1 - χ.gamma_star) = (2 : R) • (1 - χ.gamma_star) := by
@@ -315,7 +321,9 @@ theorem P_minus_sq : χ.P_minus * χ.P_minus = χ.P_minus := by
   rw [hmul, smul_smul, mul_assoc, invOf_mul_self, mul_one]
 
 /-- **Theorem**: Chiral projector orthogonality: $P_+ P_- = 0$. -/
-theorem P_plus_mul_P_minus : χ.P_plus * χ.P_minus = 0 := by
+theorem P_plus_mul_P_minus (R : Type*) [Ring R] [Invertible (2 : R)] [Module R A]
+    [IsScalarTower R A A] [SMulCommClass R A A] :
+    χ.P_plus R * χ.P_minus R = 0 := by
   unfold P_plus P_minus
   rw [smul_mul_smul_comm]
   have hmul : (1 + χ.gamma_star) * (1 - χ.gamma_star) = 0 := by
@@ -325,7 +333,8 @@ theorem P_plus_mul_P_minus : χ.P_plus * χ.P_minus = 0 := by
   rw [hmul, smul_zero]
 
 /-- **Theorem**: Chiral projector resolution of identity: $P_+ + P_- = 1$. -/
-theorem P_plus_add_P_minus : χ.P_plus + χ.P_minus = 1 := by
+theorem P_plus_add_P_minus (R : Type*) [Ring R] [Invertible (2 : R)] [Module R A] :
+    χ.P_plus R + χ.P_minus R = 1 := by
   unfold P_plus P_minus
   rw [← smul_add]
   have hadd : (1 + χ.gamma_star) + (1 - χ.gamma_star) = (2 : R) • (1 : A) := by
@@ -336,6 +345,10 @@ theorem P_plus_add_P_minus : χ.P_plus + χ.P_minus = 1 := by
 end SpinorChirality
 
 /-! ## 3. Spinor Bilinear Form and Lagrangian Subspaces -/
+
+section BilinearForm
+variable {R : Type*} [CommRing R] [Invertible (2 : R)]
+variable {A : Type*} [Ring A] [Algebra R A]
 
 /-- Invariant bilinear form on the spinor carrier $S$. -/
 structure SpinorBilinearForm (S : Type*) [AddCommGroup S] [Module R S] where
@@ -410,24 +423,26 @@ theorem chiral_minus_isotropic
 
 end SpinorBilinearForm
 
+end BilinearForm
+
 /-! ## 4. Moduli Space M_{0,5}(ℝ) Dihedral Cartan Readout -/
 
 /-- Dihedral Cartan embedding $U(u) = \sum_{a=0}^4 u_a H_a$ on the 5-point moduli space.
     Note: $\dim_\mathbb{R} \mathcal{M}_{0,5}(\mathbb{R}) = 2$, so $(u_0, \dots, u_4)$ are constrained
     coordinates on the Deligne-Mumford pentagon, NOT 5 independent unconstrained moduli. -/
 def dihedralCartanReadout
-    (W : WittBasis55 (R := R) A) (u : Fin 5 → R) : A :=
-  ∑ a : Fin 5, u a • W.H a
+    (W : WittBasis55 A) (u : Fin 5 → R) : A :=
+  ∑ a : Fin 5, u a • W.H R a
 
 /-- **Theorem**: Commutativity of any two dihedral Cartan elements: $[U(u), U(v)] = 0$. -/
 theorem dihedralCartanReadout_comm
-    (W : WittBasis55 (R := R) A) (u v : Fin 5 → R) :
+    (W : WittBasis55 A) (u v : Fin 5 → R) :
     WittBasis55.bracket (dihedralCartanReadout W u) (dihedralCartanReadout W v) = 0 := by
   unfold dihedralCartanReadout
   rw [WittBasis55.bracket_sum_left]
   simp_rw [WittBasis55.bracket_sum_right]
   simp_rw [WittBasis55.bracket_smul_left, WittBasis55.bracket_smul_right]
-  simp_rw [W.bracket_H_H, smul_zero, Finset.sum_const_zero]
+  simp_rw [W.bracket_H_H (R := R), smul_zero, Finset.sum_const_zero]
 
 /-! ## 5. Grand Cl(5,5) Spinor Master Theorem -/
 
@@ -443,29 +458,31 @@ Unifies:
 6. Dihedral Cartan readout commutativity for $\mathcal{M}_{0,5}(\mathbb{R})$ pentagonal coordinates.
 -/
 theorem grand_cl55_witt_spinor_synthesis
-    (W : WittBasis55 (R := R) A)
-    (χ : SpinorChirality (R := R) A W)
+    {R : Type*} [CommRing R] [Invertible (2 : R)]
+    {A : Type*} [Ring A] [Algebra R A]
+    (W : WittBasis55 A)
+    (χ : SpinorChirality A W)
     {S : Type*} [AddCommGroup S] [Module R S]
     (BF : SpinorBilinearForm (R := R) S)
     (gamma_star : S →ₗ[R] S)
     (h_gamma_sq : gamma_star.comp gamma_star = LinearMap.id)
     (u v : Fin 5 → R) :
     -- (1) Cartan action
-    (∀ a b, WittBasis55.bracket (W.H a) (W.e b) = if a = b then W.e b else 0) ∧
-    (∀ a b, WittBasis55.bracket (W.H a) (W.f b) = if a = b then - W.f b else 0) ∧
-    (∀ a b, WittBasis55.bracket (W.H a) (W.H b) = 0) ∧
+    (∀ a b, WittBasis55.bracket (W.H R a) (W.e b) = if a = b then W.e b else 0) ∧
+    (∀ a b, WittBasis55.bracket (W.H R a) (W.f b) = if a = b then - W.f b else 0) ∧
+    (∀ a b, WittBasis55.bracket (W.H R a) (W.H R b) = 0) ∧
     -- (2) Chirality Projectors
-    (χ.P_plus * χ.P_plus = χ.P_plus ∧
-     χ.P_minus * χ.P_minus = χ.P_minus ∧
-     χ.P_plus * χ.P_minus = 0 ∧
-     χ.P_plus + χ.P_minus = 1) ∧
+    (χ.P_plus R * χ.P_plus R = χ.P_plus R ∧
+     χ.P_minus R * χ.P_minus R = χ.P_minus R ∧
+     χ.P_plus R * χ.P_minus R = 0 ∧
+     χ.P_plus R + χ.P_minus R = 1) ∧
     -- (3) Isotropic Chiral Subspaces
     (∀ x y, BF.B (SpinorBilinearForm.linearPPlus gamma_star x) (SpinorBilinearForm.linearPPlus gamma_star y) = 0 ∧
             BF.B (SpinorBilinearForm.linearPMinus gamma_star x) (SpinorBilinearForm.linearPMinus gamma_star y) = 0) ∧
     -- (4) Dihedral Cartan Readout Commutativity
     (WittBasis55.bracket (dihedralCartanReadout W u) (dihedralCartanReadout W v) = 0) := by
-  refine ⟨W.bracket_H_e, W.bracket_H_f, W.bracket_H_H, ?_, ?_, dihedralCartanReadout_comm W u v⟩
-  · exact ⟨χ.P_plus_sq, χ.P_minus_sq, χ.P_plus_mul_P_minus, χ.P_plus_add_P_minus⟩
+  refine ⟨W.bracket_H_e (R := R), W.bracket_H_f (R := R), W.bracket_H_H (R := R), ?_, ?_, dihedralCartanReadout_comm W u v⟩
+  · exact ⟨χ.P_plus_sq R, χ.P_minus_sq R, χ.P_plus_mul_P_minus R, χ.P_plus_add_P_minus R⟩
   · intro x y
     exact ⟨BF.chiral_plus_isotropic gamma_star h_gamma_sq x y,
            BF.chiral_minus_isotropic gamma_star h_gamma_sq x y⟩

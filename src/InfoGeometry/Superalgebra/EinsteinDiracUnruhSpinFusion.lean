@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Algebra.Zorn.Decomposition
+import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Ring
 
 /-!
@@ -54,7 +55,7 @@ namespace InfoGeometry.Superalgebra.EinsteinDiracUnruh
 open InfoGeometry.Algebra.Zorn.ConcreteComposition
 open InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Multiplicative identity $\mathbf{1} = \mathrm{diag}(1, 1)$ in `ZornCell R`. -/
 def oneZ : ZornCell R :=
@@ -117,7 +118,7 @@ def unruhModularRotor (c s : R) : ZornCell R :=
 1. $U(\mathbf{u})\,H(\mathbf{d}) = (\mathbf{u}\cdot\mathbf{d})\,e_1 + V(\mathbf{u}\times\mathbf{d})$;
 2. $[U(\mathbf{u}), H(\mathbf{d})] = (\mathbf{u}\cdot\mathbf{d})\,K_0 + 2\,V(\mathbf{u}\times\mathbf{d})$. -/
 theorem spin_connection_geometric_and_commutator_fusion
-    (u₁ u₂ u₃ d₁ d₂ d₃ : R) :
+    {R : Type*} [CommRing R] (u₁ u₂ u₃ d₁ d₂ d₃ : R) :
     mulZ (sheetU u₁ u₂ u₃) (diracVecH d₁ d₂ d₃) =
       addZ (smulZ (u₁ * d₁ + u₂ * d₂ + u₃ * d₃) peirceE1)
            (sheetV (u₂ * d₃ - u₃ * d₂) (u₃ * d₁ - u₁ * d₃) (u₁ * d₂ - u₂ * d₁)) ∧
@@ -141,15 +142,15 @@ theorem fisher_metric_extracts_emergent_spacetime
     traceZ (mulZ (diracVecH u₁ u₂ u₃) (diracVecH v₁ v₂ v₃)) =
       2 * (u₁ * v₁ + u₂ * v₂ + u₃ * v₃) := by
   refine ⟨?_, ?_⟩
-  · dsimp [traceZ, mulZ, sheetU, daggerZ]; ring
-  · dsimp [traceZ, mulZ, diracVecH]; ring
+  · simp [traceZ, mulZ, sheetU, daggerZ]
+  · simp [traceZ, mulZ, diracVecH, two_mul]
 
 /-- **Einstein–Dirac–Hestenes Self-Generated Spin Connection & Laplacian
 (`einstein_dirac_self_generated_spin_connection_and_laplacian`):**
 1. $H(\mathbf{g})\,U(\mathbf{u}) = (\mathbf{g}\cdot\mathbf{u})\,e_2 + V(\mathbf{g}\times\mathbf{u})$;
 2. $H(\mathbf{g})^2 = (\mathbf{g}\cdot\mathbf{g})\,\mathbf{1}$. -/
 theorem einstein_dirac_self_generated_spin_connection_and_laplacian
-    (g₁ g₂ g₃ u₁ u₂ u₃ : R) :
+    {R : Type*} [CommRing R] (g₁ g₂ g₃ u₁ u₂ u₃ : R) :
     mulZ (diracVecH g₁ g₂ g₃) (sheetU u₁ u₂ u₃) =
       addZ (smulZ (g₁ * u₁ + g₂ * u₂ + g₃ * u₃) peirceE2)
            (sheetV (g₂ * u₃ - g₃ * u₂) (g₃ * u₁ - g₁ * u₃) (g₁ * u₂ - g₂ * u₁)) ∧
@@ -165,7 +166,7 @@ theorem einstein_dirac_self_generated_spin_connection_and_laplacian
 Acting with $\Delta(c, s)$ on the symmetric Dirac vacuum $H(\mathbf{u})$ produces
 $\Delta(c, s)\,H(\mathbf{u}) = U((c+s)\mathbf{u}) + V((c-s)\mathbf{u})$, so that
 $(c-s)$ times the forward sheet equals $(c+s)$ times the backward sheet. -/
-theorem unruh_thermal_kms_detailed_balance (c s u₁ u₂ u₃ : R) :
+theorem unruh_thermal_kms_detailed_balance {R : Type*} [CommRing R] (c s u₁ u₂ u₃ : R) :
     mulZ (unruhModularRotor c s) (diracVecH u₁ u₂ u₃) =
       addZ (sheetU ((c + s) * u₁) ((c + s) * u₂) ((c + s) * u₃))
            (sheetV ((c - s) * u₁) ((c - s) * u₂) ((c - s) * u₃)) ∧

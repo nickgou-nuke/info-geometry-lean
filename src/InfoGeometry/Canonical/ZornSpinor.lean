@@ -27,7 +27,7 @@ The Zorn matrix representation of a split-octonion.
 A Zorn matrix consists of two scalars (a, b) and two 3-vectors (x, y).
 -/
 @[rep_depth transport, ext]
-structure ZornMatrix (R : Type*) [CommRing R] where
+structure ZornMatrix (R : Type*) [Ring R] where
   a : R
   b : R
   x : Fin 3 → R
@@ -35,10 +35,10 @@ structure ZornMatrix (R : Type*) [CommRing R] where
 
 namespace ZornMatrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Product-coordinate carrier for the additive/module structure of Zorn matrices. -/
-abbrev Coord (R : Type*) [CommRing R] :=
+abbrev Coord (R : Type*) [Ring R] :=
   R × R × (Fin 3 → R) × (Fin 3 → R)
 
 /-- The coordinate equivalence used to transport additive and module structure. -/
@@ -54,6 +54,8 @@ def coordEquiv : ZornMatrix R ≃ Coord R where
 /-- Zorn matrices inherit their additive commutative group structure from coordinates. -/
 instance : AddCommGroup (ZornMatrix R) :=
   Equiv.addCommGroup coordEquiv
+
+instance : Inhabited (ZornMatrix R) := ⟨0⟩
 
 /-- The coordinate equivalence as an additive equivalence. -/
 def coordAddEquiv : ZornMatrix R ≃+ Coord R where

@@ -55,7 +55,7 @@ open Matrix
 section KreinMetric
 
 variable (ι₁ ι₂ : Type*) [DecidableEq ι₁] [Fintype ι₁] [DecidableEq ι₂] [Fintype ι₂]
-  (R : Type*) [CommRing R]
+  (R : Type*) [Ring R]
 
 /-- The canonical split Krein metric $\eta$ on $V = V^+ \oplus V^-$ in block form:
     $\eta = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}$. -/
@@ -81,7 +81,7 @@ end KreinMetric
 
 section ParaComplex
 
-variable (ι : Type*) [DecidableEq ι] [Fintype ι] (R : Type*) [CommRing R]
+variable (ι : Type*) [DecidableEq ι] [Fintype ι] (R : Type*) [Ring R]
 
 /-- The canonical almost para-complex structure $K$ on balanced spaces ($ι_1 = ι_2 = ι$):
     $K = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$. -/
@@ -106,7 +106,7 @@ theorem krein_paraComplex_anticomm :
   simp
 
 /-- Chiral mode operator $X(K_{\mathrm{mat}}) = \begin{pmatrix} 0 & K_{\mathrm{mat}} \\ K_{\mathrm{mat}} & 0 \end{pmatrix}$. -/
-def chiralMode {ι : Type*} [DecidableEq ι] [Fintype ι] {R : Type*} [CommRing R]
+def chiralMode {ι : Type*} [DecidableEq ι] [Fintype ι] {R : Type*} [Ring R]
     (K_mat : Matrix ι ι R) : Matrix (ι ⊕ ι) (ι ⊕ ι) R :=
   Matrix.fromBlocks 0 K_mat K_mat 0
 
@@ -184,21 +184,21 @@ end Berezinian
     - Unbalanced Berezinian projective scaling ($c^{p+q} \cdot (c^{-1})^q = c^p$) -/
 structure ProjectiveKreinBerezinianCertificate : Prop where
   krein_sq : ∀ (ι₁ ι₂ : Type*) [DecidableEq ι₁] [Fintype ι₁] [DecidableEq ι₂] [Fintype ι₂]
-    (R : Type*) [CommRing R],
+    (R : Type*) [Ring R],
     kreinMetric ι₁ ι₂ R * kreinMetric ι₁ ι₂ R = 1
   krein_transpose : ∀ (ι₁ ι₂ : Type*) [DecidableEq ι₁] [Fintype ι₁] [DecidableEq ι₂] [Fintype ι₂]
-    (R : Type*) [CommRing R],
+    (R : Type*) [Ring R],
     (kreinMetric ι₁ ι₂ R)ᵀ = kreinMetric ι₁ ι₂ R
-  paraComplex_sq : ∀ (ι : Type*) [DecidableEq ι] [Fintype ι] (R : Type*) [CommRing R],
+  paraComplex_sq : ∀ (ι : Type*) [DecidableEq ι] [Fintype ι] (R : Type*) [Ring R],
     paraComplexK ι R * paraComplexK ι R = 1
-  krein_paraComplex_anticomm : ∀ (ι : Type*) [DecidableEq ι] [Fintype ι] (R : Type*) [CommRing R],
+  krein_paraComplex_anticomm : ∀ (ι : Type*) [DecidableEq ι] [Fintype ι] (R : Type*) [Ring R],
     kreinMetric (ι₁ := ι) (ι₂ := ι) R * paraComplexK ι R +
     paraComplexK ι R * kreinMetric (ι₁ := ι) (ι₂ := ι) R = 0
-  chiral_comm : ∀ (ι : Type*) [DecidableEq ι] [Fintype ι] (R : Type*) [CommRing R],
+  chiral_comm : ∀ (ι : Type*) [DecidableEq ι] [Fintype ι] (R : Type*) [Ring R],
     chiralMode (1 : Matrix ι ι R) * paraComplexK ι R = 1
-  sheet_swap_pos : ∀ (ι : Type*) [DecidableEq ι] [Fintype ι] (R : Type*) [CommRing R] (u : ι → R),
+  sheet_swap_pos : ∀ (ι : Type*) [DecidableEq ι] [Fintype ι] (R : Type*) [Ring R] (u : ι → R),
     paraComplexK ι R *ᵥ Sum.elim u (0 : ι → R) = Sum.elim (0 : ι → R) u
-  sheet_swap_neg : ∀ (ι : Type*) [DecidableEq ι] [Fintype ι] (R : Type*) [CommRing R] (v : ι → R),
+  sheet_swap_neg : ∀ (ι : Type*) [DecidableEq ι] [Fintype ι] (R : Type*) [Ring R] (v : ι → R),
     paraComplexK ι R *ᵥ Sum.elim (0 : ι → R) v = Sum.elim v (0 : ι → R)
   balanced_berezinian : ∀ {R : Type*} [CommRing R] (p : ℕ) (c inv_c : R),
     c * inv_c = 1 → (c ^ p) * (inv_c ^ p) = 1

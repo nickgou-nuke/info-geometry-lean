@@ -1,0 +1,197 @@
+{
+  "export_date_utc": "2026-11-09",
+  "inputs": [
+    {
+      "id": "17Eixlgqxm2ZHD6Or_jINk1GnH1VUNEQb",
+      "kind": "drive",
+      "filename": "Paste November 07, 2026 - 4:46AM.txt",
+      "content_type": "application/octet-stream",
+      "bytes": 53211,
+      "sha256": "7e34372fa5e3ece835561c8ee0f0b2cf02be2d53bbc2778a6dfa473f8d6d4434",
+      "is_html": false,
+      "is_json": false,
+      "path": "cached/aistudio_download_20261109/17Eixlgqxm2ZHD6Or_jINk1GnH1VUNEQb__Paste_November_07_2026_-_4_46AM.txt"
+    },
+    {
+      "id": "19KiMx9Z2aU7dfhnDtXXOwBjqGLN-UVqE",
+      "kind": "drive",
+      "filename": "Paste November 09, 2026 - 11:02AM.txt",
+      "content_type": "application/octet-stream",
+      "bytes": 63300,
+      "sha256": "27355ddf691722df13ee9b3fc82f0f2d83a5aa47e9fdd9f060e31f0b82cb4fe9",
+      "is_html": false,
+      "is_json": false,
+      "path": "cached/aistudio_download_20261109/19KiMx9Z2aU7dfhnDtXXOwBjqGLN-UVqE__Paste_November_09_2026_-_11_02AM.txt"
+    },
+    {
+      "id": "1Hf8uzstyUazrbgZJBFuISADt2-sBwHQV",
+      "kind": "drive",
+      "filename": "Paste November 07, 2026 - 9:08AM.txt",
+      "content_type": "application/octet-stream",
+      "bytes": 61350,
+      "sha256": "2e3d1d56a22e2623884a6bcd7219709f4b5be29564c935a4dd0bb5d79b6a36e2",
+      "is_html": false,
+      "is_json": false,
+      "path": "cached/aistudio_download_20261109/1Hf8uzstyUazrbgZJBFuISADt2-sBwHQV__Paste_November_07_2026_-_9_08AM.txt"
+    },
+    {
+      "id": "1M6DtAn-YERAk15Z5R_n6BX6rW7NttJKg",
+      "kind": "drive",
+      "filename": "Paste November 09, 2026 - 10:10AM.txt",
+      "content_type": "application/octet-stream",
+      "bytes": 51565,
+      "sha256": "6fa9c92a9365a6a4ba038c7e354656efb5099e65c10e14e35dd78f5c583bea4e",
+      "is_html": false,
+      "is_json": false,
+      "path": "cached/aistudio_download_20261109/1M6DtAn-YERAk15Z5R_n6BX6rW7NttJKg__Paste_November_09_2026_-_10_10AM.txt"
+    },
+    {
+      "id": "1NRTfTcX2BHbg3Gc9xdqiw0a_c8XlKOEZ",
+      "kind": "drive",
+      "filename": "Paste November 09, 2026 - 10:27AM.txt",
+      "content_type": "application/octet-stream",
+      "bytes": 30242,
+      "sha256": "fb044901bcba84f4f238c6602d35918085d0803bd4781089a6a5c922e02e9a51",
+      "is_html": false,
+      "is_json": false,
+      "path": "cached/aistudio_download_20261109/1NRTfTcX2BHbg3Gc9xdqiw0a_c8XlKOEZ__Paste_November_09_2026_-_10_27AM.txt"
+    },
+    {
+      "id": "1PA5NMMld6mTDATG00Zc6hbQMRtggABGD",
+      "kind": "drive",
+      "filename": "Paste November 09, 2026 - 10:50AM.txt",
+      "content_type": "application/octet-stream",
+      "bytes": 33510,
+      "sha256": "224339fa2f5168d19fdd2ed9a5f51a5e02c2105522a1274991b1758843900350",
+      "is_html": false,
+      "is_json": false,
+      "path": "cached/aistudio_download_20261109/1PA5NMMld6mTDATG00Zc6hbQMRtggABGD__Paste_November_09_2026_-_10_50AM.txt"
+    },
+    {
+      "id": "1RhFNnNDP_93UgkpurmfeKKrnx-XQuWT2",
+      "kind": "drive",
+      "filename": "Paste November 07, 2026 - 3:14PM.txt",
+      "content_type": "application/octet-stream",
+      "bytes": 29894,
+      "sha256": "7e216799563f078fac0a9d665d24cac8eaad900a6cc11953b234140fe9b7e1b5",
+      "is_html": false,
+      "is_json": false,
+      "path": "cached/aistudio_download_20261109/1RhFNnNDP_93UgkpurmfeKKrnx-XQuWT2__Paste_November_07_2026_-_3_14PM.txt"
+    },
+    {
+      "id": "1SyIUpSSWwTjd5V98qoGontCeRFJUMlKz",
+      "kind": "drive",
+      "filename": "Paste November 07, 2026 - 12:29PM.txt",
+      "content_type": "application/octet-stream",
+      "bytes": 48563,
+      "sha256": "dde00d3a8fea754da083661b853f09f5b76a5bc8f89b558600d4312c9aa32b5f",
+      "is_html": false,
+      "is_json": false,
+      "path": "cached/aistudio_download_20261109/1SyIUpSSWwTjd5V98qoGontCeRFJUMlKz__Paste_November_07_2026_-_12_29PM.txt"
+    },
+    {
+      "id": "1U3StdO0lSiS0Ryn4oOef18IUt2H9Z841",
+      "kind": "drive",
+      "filename": "Paste November 09, 2026 - 10:23AM.txt",
+      "content_type": "application/octet-stream",
+      "bytes": 27731,
+      "sha256": "c0689399ffb1b860e9d72cfcaf81041a841e3ca6fefd11c483597031dce94d96",
+      "is_html": false,
+      "is_json": false,
+      "path": "cached/aistudio_download_20261109/1U3StdO0lSiS0Ryn4oOef18IUt2H9Z841__Paste_November_09_2026_-_10_23AM.txt"
+    },
+    {
+      "id": "1W1mR-rqz8-Wvj6urDCGwZQEM07auhVDi",
+      "kind": "drive",
+      "filename": "Paste November 09, 2026 - 10:15AM.txt",
+      "content_type": "application/octet-stream",
+      "bytes": 28889,
+      "sha256": "e6059fe05fb4f2e7009d48a68d98535e18600da71ec5f443243015d235a00ac3",
+      "is_html": false,
+      "is_json": false,
+      "path": "cached/aistudio_download_20261109/1W1mR-rqz8-Wvj6urDCGwZQEM07auhVDi__Paste_November_09_2026_-_10_15AM.txt"
+    },
+    {
+      "id": "1ZHg2CrQOF5xT4Hhp8gD5JWwBoXeQfh10",
+      "kind": "drive",
+      "filename": "Paste November 07, 2026 - 1:01PM.txt",
+      "content_type": "application/octet-stream",
+      "bytes": 55733,
+      "sha256": "4c83ad720947c1cb09ca7b5b0c87ce499a84f95da8e78eaba7007016d84bd021",
+      "is_html": false,
+      "is_json": false,
+      "path": "cached/aistudio_download_20261109/1ZHg2CrQOF5xT4Hhp8gD5JWwBoXeQfh10__Paste_November_07_2026_-_1_01PM.txt"
+    },
+    {
+      "id": "1fJv3o23Fixkb2A4Basw8bS_FX0LayqfC",
+      "kind": "drive",
+      "filename": "Paste November 07, 2026 - 7:55AM.txt",
+      "content_type": "application/octet-stream",
+      "bytes": 61350,
+      "sha256": "2e3d1d56a22e2623884a6bcd7219709f4b5be29564c935a4dd0bb5d79b6a36e2",
+      "is_html": false,
+      "is_json": false,
+      "path": "cached/aistudio_download_20261109/1fJv3o23Fixkb2A4Basw8bS_FX0LayqfC__Paste_November_07_2026_-_7_55AM.txt"
+    },
+    {
+      "id": "1iLTmbxfiVRM8rOhwchpAcmLD3r1zL4JA",
+      "kind": "aistudio",
+      "filename": "Unifying Drazin, Dirac, and Yang-Mills",
+      "content_type": "application/octet-stream",
+      "bytes": 5645796,
+      "sha256": "51d31292fba0233cbc821234fd28e42a37111452e27ceab79b6e05f6496dae82",
+      "is_html": false,
+      "is_json": true,
+      "path": "cached/aistudio_download_20261109/1iLTmbxfiVRM8rOhwchpAcmLD3r1zL4JA__Unifying_Drazin_Dirac_and_Yang-Mills.json",
+      "chunks": 124,
+      "roles": {
+        "model": 63,
+        "user": 61
+      }
+    },
+    {
+      "id": "1l9Vbd_L7VDcBGWDy1kaWSebL5K5nUebX",
+      "kind": "drive",
+      "filename": "Paste November 07, 2026 - 11:16AM.txt",
+      "content_type": "application/octet-stream",
+      "bytes": 40813,
+      "sha256": "e9f958e9c22e3f469fa9b1a18fd745a42a6d2d6cee2888f1a7e77f8981f6899d",
+      "is_html": false,
+      "is_json": false,
+      "path": "cached/aistudio_download_20261109/1l9Vbd_L7VDcBGWDy1kaWSebL5K5nUebX__Paste_November_07_2026_-_11_16AM.txt"
+    },
+    {
+      "id": "1m_3C7wbsmcj0DHbF_vRkkgcbSs8pZsqX",
+      "kind": "drive",
+      "filename": "Paste November 07, 2026 - 9:58PM.txt",
+      "content_type": "application/octet-stream",
+      "bytes": 28283,
+      "sha256": "87a1256d33b9207ff3c972d0aa4e0ad6410c16cde58a932b852f6d68a53d9ec2",
+      "is_html": false,
+      "is_json": false,
+      "path": "cached/aistudio_download_20261109/1m_3C7wbsmcj0DHbF_vRkkgcbSs8pZsqX__Paste_November_07_2026_-_9_58PM.txt"
+    },
+    {
+      "id": "1vW-a3FYA9imEZc4h_soCojULoZAF1Tpl",
+      "kind": "drive",
+      "filename": "Paste November 07, 2026 - 10:23AM.txt",
+      "content_type": "application/octet-stream",
+      "bytes": 81979,
+      "sha256": "735d57ab47f555458a97f4ee4cd122f33ef3395ba118e71ae31fbb6e436e0db5",
+      "is_html": false,
+      "is_json": false,
+      "path": "cached/aistudio_download_20261109/1vW-a3FYA9imEZc4h_soCojULoZAF1Tpl__Paste_November_07_2026_-_10_23AM.txt"
+    },
+    {
+      "id": "1wYZXI-lVXj5zDJ8q6G2PYm03S2BRD97m",
+      "kind": "drive",
+      "filename": "Paste November 09, 2026 - 11:54AM.txt",
+      "content_type": "application/octet-stream",
+      "bytes": 26445,
+      "sha256": "422322c54895af2294d8376749e6406b2ee21ad88e80dbf5dd221d74720688a6",
+      "is_html": false,
+      "is_json": false,
+      "path": "cached/aistudio_download_20261109/1wYZXI-lVXj5zDJ8q6G2PYm03S2BRD97m__Paste_November_09_2026_-_11_54AM.txt"
+    }
+  ]
+}

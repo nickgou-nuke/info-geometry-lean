@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.QCCRCore
@@ -9,7 +14,8 @@ set_option linter.unusedSectionVars false
 # q-CCR Inductive Colimit Bridge via TensorTowerColimit
 
 This module formalizes the inductive colimit bridge for the q-CCR / Cuntz–Toeplitz
-algebra system, fulfilling the Colimit Continuum Mandate:
+algebra system over a general (not necessarily commutative) operator ring `R`,
+fulfilling the Colimit Continuum Mandate:
 
 1. Graded tower of q-CCR generator systems `A_n ↪ A_{n+1}`.
 2. Inductive colimit cone compatibility using `TensorTowerColimit`.
@@ -26,7 +32,7 @@ noncomputable section
 
 open InfoGeometry.OperatorAlgebra.QCCRCore
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ## 1. Inductive Generator Tower System -/
 
@@ -41,6 +47,8 @@ def embedGeneratorVector {N : ℕ} {Op : Type*} (v : Fin N → Op) (zero_val : O
   simp [h]
 
 /-! ## 2. Graded Colimit Chain for q-CCR Systems -/
+
+section GradedColimitChain
 
 variable {Op : ℕ → Type*} [∀ n, Ring (Op n)] [∀ n, StarRing (Op n)] [∀ n, Algebra ℝ (Op n)]
 variable [∀ n, Module R (Op n)]
@@ -57,6 +65,8 @@ theorem qccr_psi_comp_iota_seq (psi_comm : ∀ n, (psi (n + 1)).comp (iota n) = 
     (psi (n + m)).comp (qccr_iota_seq iota n m) = psi n := by
   unfold qccr_iota_seq
   exact psi_comp_iota_seq Op iota A_inf psi psi_comm n m
+
+end GradedColimitChain
 
 /-! ## 3. Preservation of q-Deformation Relations -/
 
@@ -122,6 +132,13 @@ def makeQCCRColimitDeformationPacket {N : ℕ} {Op1 Op2 : Type*}
   transfer_star := hf_star
   transfer_smul := hf_smul
   preserved_commutation := fun i j => map_preserves_qccr f hf_star hf_smul A i j
+
+instance : Inhabited (QCCRColimitDeformationPacket 0 ℝ ℝ) :=
+  ⟨makeQCCRColimitDeformationPacket
+    { a := Fin.elim0, q := 0, q_commutation := fun i => Fin.elim0 i }
+    (RingHom.id ℝ)
+    (fun _x => rfl)
+    (fun _r _x => rfl)⟩
 
 end
 

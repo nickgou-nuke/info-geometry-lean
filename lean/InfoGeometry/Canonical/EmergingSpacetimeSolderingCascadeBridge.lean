@@ -52,15 +52,15 @@ structure WeylSpinor2D (R : Type*) where
   v : R
 
 /-- Flat Minkowski metric on Vector4D: η(v, w) = v_t w_t - v_x w_x - v_y w_y - v_z w_z -/
-def minkowskiBilinear (v w : Vector4D R) : R :=
+def minkowskiBilinear {R : Type*} [Ring R] (v w : Vector4D R) : R :=
   v.t * w.t - v.x * w.x - v.y * w.y - v.z * w.z
 
 /-- Minkowski norm squared: η(v, v) -/
-def minkowskiNormSq (v : Vector4D R) : R :=
+def minkowskiNormSq {R : Type*} [Ring R] (v : Vector4D R) : R :=
   minkowskiBilinear v v
 
 /-- 2x2 Pauli Soldering Matrix θ(v) with parameter I where I² = -1 -/
-def pauliSolderingMatrix (I : R) (v : Vector4D R) : Matrix (Fin 2) (Fin 2) R :=
+def pauliSolderingMatrix {R : Type*} [Ring R] (I : R) (v : Vector4D R) : Matrix (Fin 2) (Fin 2) R :=
   !![v.t + v.z, v.x - I * v.y;
      v.x + I * v.y, v.t - v.z]
 
@@ -82,7 +82,7 @@ theorem det_pauliSolderingMatrix_eq_minkowskiNormSq
     _ = v.t * v.t - v.x * v.x - v.y * v.y - v.z * v.z := by ring
 
 /-- Spinor Squaring map: Real bilinear product of two Weyl spinors to a null 4-vector -/
-def spinorSquaring (ψ : WeylSpinor2D R) : Vector4D R :=
+def spinorSquaring {R : Type*} [Ring R] (ψ : WeylSpinor2D R) : Vector4D R :=
   { t := ψ.u * ψ.u + ψ.v * ψ.v,
     x := 2 * ψ.u * ψ.v,
     y := 0,
@@ -102,7 +102,7 @@ theorem spinorSquaring_soldering_det_zero
   exact spinorSquaring_is_null ψ
 
 /-- 2D Hyperbolic Bogoliubov Vielbein Matrix parameterized by cosh_θ and sinh_θ -/
-def bogoliubovVielbein (cosh_θ sinh_θ : R) : Matrix (Fin 2) (Fin 2) R :=
+def bogoliubovVielbein {R : Type*} [Ring R] (cosh_θ sinh_θ : R) : Matrix (Fin 2) (Fin 2) R :=
   !![cosh_θ, sinh_θ;
      sinh_θ, cosh_θ]
 

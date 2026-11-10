@@ -10,7 +10,7 @@ namespace InfoGeometry.Canonical.ZornAmariMoebius
 
 set_option linter.unusedSectionVars false
 
-variable {F : Type*} [Field F] [NeZero (2 : F)]
+variable {F : Type*} [Ring F]
 
 /-! ### 1. Three-Point Möbius Map and Weyl Dilation -/
 
@@ -26,15 +26,22 @@ def weylDilation (scale : F) (p : MoebiusPoint F) : MoebiusPoint F where
 theorem moebius_fixpoint_zero (scale : F) :
     (weylDilation scale ⟨0⟩).val = 0 := by
   dsimp [weylDilation]
-  ring
+  exact mul_zero scale
 
 /-- 🏆 THEOREM: Weyl dilation maps identity 1 to the dilation scale factor. -/
 theorem moebius_scale_one (scale : F) :
     (weylDilation scale ⟨1⟩).val = scale := by
   dsimp [weylDilation]
-  ring
+  exact mul_one scale
 
 /-! ### 2. Amari Information Geometry (Primal-Dual Affine Space) -/
+
+/-- Amari Fisher information metric for the quadratic potential: g = d²ψ/dE² = 1. -/
+def amariFisherMetric (_E : F) : F := 1
+
+section DivisionRing
+
+variable {F : Type*} [DivisionRing F] [NeZero (2 : F)]
 
 /-- Amari primal potential (Entropy / Surprisal potential): ψ(E) = E² / 2. -/
 def amariPrimalPotential (E : F) : F := E^2 / 2
@@ -49,9 +56,6 @@ theorem amari_legendre_duality (E P : F) (h_momentum : P = E) :
   dsimp [amariPrimalPotential, amariDualPotential]
   rw [h_momentum, add_halves, sq]
 
-/-- Amari Fisher information metric for the quadratic potential: g = d²ψ/dE² = 1. -/
-def amariFisherMetric (_E : F) : F := 1
-
 /-- 🏆 THEOREM: Conformal closure of the scale horizon:
     Total Legendre action minus primal potential recovers the kinetic action E² / 2. -/
 theorem amari_moebius_unified_congruence (E : F) :
@@ -60,7 +64,9 @@ theorem amari_moebius_unified_congruence (E : F) :
     total_action - (amariPrimalPotential E) = E^2 / 2 := by
   intro P total_action
   dsimp [total_action, amariPrimalPotential, amariDualPotential]
-  ring
+  abel
+
+end DivisionRing
 
 theorem amari_moebius_certified :
     amariPrimalPotential (1 : ℝ) + amariDualPotential 1 = 1 * 1 :=

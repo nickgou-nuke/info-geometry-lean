@@ -23,8 +23,8 @@ open BigOperators
 open InfoGeometry.Canonical.ArnoldCohenBCFWBridge
 open InfoGeometry.Canonical.KZLogarithmicConnection
 
-/-- Ordered configurations of n distinct points over a field. -/
-def Conf (n : ℕ) (K : Type u) [Field K] : Type u :=
+/-- Ordered configurations of n distinct points over a ring. -/
+def Conf (n : ℕ) (K : Type u) [Ring K] : Type u :=
   {z : Fin n → K // Function.Injective z}
 
 /-- The tangent-vector carrier used by the finite algebraic form model. -/
@@ -33,20 +33,20 @@ abbrev Tangent (n : ℕ) (K : Type*) :=
 
 /-- The scalar coefficient of the logarithmic form d log (z_i-z_j). -/
 def dlogCoefficient
-    {n : ℕ} {K : Type*} [Field K]
+    {n : ℕ} {K : Type*} [DivisionRing K]
     (z : Conf n K) (i j : Fin n) : K :=
   1 / (z.1 i - z.1 j)
 
 /-- The algebraic Arnold one-form evaluated on a tangent carrier element. -/
 def dlogForm
-    {n : ℕ} {K : Type*} [Field K]
+    {n : ℕ} {K : Type*} [DivisionRing K]
     (z : Conf n K) (dz : Fin n → K)
     (i j : Fin n) : K :=
   dlogCoefficient z i j • (dz i - dz j)
 
 /-- Pairwise distinctness gives a nonzero logarithmic denominator. -/
 theorem dlog_denominator_ne_zero
-    {n : ℕ} {K : Type*} [Field K]
+    {n : ℕ} {K : Type*} [Ring K]
     (z : Conf n K) {i j : Fin n} (hij : i ≠ j) :
     z.1 i - z.1 j ≠ 0 := by
   apply sub_ne_zero.mpr
@@ -75,7 +75,7 @@ theorem dlog_partial_fraction
 
 /-- Finite-index Arnold relation for any alternating wedge carrier. -/
 theorem finite_arnold_relation
-    {n : ℕ} {K : Type*} [Field K]
+    {n : ℕ} {K : Type*} [CommRing K]
     {M : Type*} [AddCommGroup M] [Module K M]
     (alg : ExteriorFormAlgebra (R := K) M)
     (c : Fin n → Fin n → K)
@@ -226,7 +226,7 @@ theorem totalTripleCurvature_zero
 /-- Disjoint residue terms vanish pointwise, supplying the other summand in
 the standard KZ curvature decomposition. -/
 theorem disjoint_curvature_zero
-    {n : ℕ} {K : Type*} [Field K]
+    {n : ℕ} {K : Type*} [Ring K]
     (R : InfinitesimalBraidResidues n K)
     {i j k l : Fin n}
     (hij : i ≠ j) (hkl : k ≠ l) (hik : i ≠ k) (hil : i ≠ l)

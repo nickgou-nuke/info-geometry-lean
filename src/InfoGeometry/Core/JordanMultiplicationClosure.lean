@@ -17,7 +17,8 @@ final nested-commutator order is corrected explicitly.
 
 namespace InfoGeometry.Core.JordanMultiplicationClosure
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- Native linear left multiplication for the unnormalized Jordan product. -/
 def jordanLeft (s : A) : Module.End R A where

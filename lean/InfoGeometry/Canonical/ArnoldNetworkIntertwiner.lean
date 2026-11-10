@@ -59,25 +59,25 @@ noncomputable def arnoldToDoubledKreinIntertwiner_of_expertsFix
         intro e
         exact hfix e s)
 
-/--
-Readout-preservation contract for the Arnold→doubled/Krein intertwiner,
-parametrized by pointwise readout-identification hypotheses.
--/
+/-- The Arnold norm readout is not the doubled Fierz quadratic readout in
+general. On the vector `(1,1) : ℝ × ℝ`, the former is `√2` while the latter is
+`2`; thus the identity state map does not by itself preserve these readouts. -/
 @[rep_depth krein]
-theorem arnoldToDoubledKrein_readoutPreservation_of_pointwise_eq
-    (n : Nat) (net : ArnoldMajoranaNetwork n E) (β : ℝ)
-    [Nonempty (Fin n)]
-    (hfix : ∀ e : ExpertIdx n, ∀ v : ArnoldMajoranaCarrier E,
-      (net.moe.experts e).apply v = v)
-    (hMetric : ∀ ψ : ArnoldMajoranaCarrier E,
-      arnoldMetricReadout (E := E) ψ
-        = (doubledFierzReadout (E := E)).hilbert ψ)
-    (hPhase : ∀ ψ : ArnoldMajoranaCarrier E,
-      arnoldPhaseReadout (E := E) ψ
-        = (doubledFierzReadout (E := E)).symplectic ψ) :
-    ReadoutPreservation
-      (arnoldToDoubledKreinIntertwiner_of_expertsFix
-        (E := E) n net β hfix) := by
-  exact ⟨hMetric, hPhase⟩
+theorem arnold_metric_readout_differs_from_fierz_on_pair_one :
+    let ψ : ArnoldMajoranaCarrier ℝ := WithLp.toLp (2 : ENNReal) (1, 1)
+    arnoldMetricReadout ψ ≠
+      (doubledFierzReadout (E := ℝ)).hilbert ψ := by
+  intro ψ
+  change ‖ψ‖ ≠ InfoGeometry.Quantum.Fierz.infoHilbert ψ
+  have hnorm : ‖ψ‖ ^ 2 = 2 := by
+    rw [WithLp.prod_norm_sq_eq_of_L2]
+    simp [ψ]
+    norm_num
+  have htarget : InfoGeometry.Quantum.Fierz.infoHilbert ψ = 2 := by
+    simp [InfoGeometry.Quantum.Fierz.infoHilbert, ψ]
+    norm_num
+  intro h
+  rw [h, htarget] at hnorm
+  norm_num at hnorm
 
 end InfoGeometry.Canonical.ArnoldNetworkIntertwiner

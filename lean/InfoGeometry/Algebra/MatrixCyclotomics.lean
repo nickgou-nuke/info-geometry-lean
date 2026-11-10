@@ -32,8 +32,9 @@ theorem Eminus_cyclotomic_four :
   rw [aeval_cyclotomic_four, pow_two, Eminus_sq]
   simp
 
-theorem polynomial_root_transport (hom : Mat2 →ₐ[ℝ] Mat2)
-    (polynomial : Polynomial ℝ) (matrix : Mat2)
+theorem polynomial_root_transport {R A B : Type*} [CommSemiring R] [Semiring A] [Semiring B]
+    [Algebra R A] [Algebra R B] (hom : A →ₐ[R] B)
+    (polynomial : Polynomial R) (matrix : A)
     (hroot : Polynomial.aeval matrix polynomial = 0) :
     Polynomial.aeval (hom matrix) polynomial = 0 := by
   rw [Polynomial.aeval_algHom_apply, hroot, map_zero]

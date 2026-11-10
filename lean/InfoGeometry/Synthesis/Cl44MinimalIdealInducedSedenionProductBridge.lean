@@ -68,7 +68,7 @@ open InfoGeometry.Synthesis.Cl44InducedSplitSedenionAlgebra
 
 section ZornModuleInstances
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 instance instAddZornSplitOctonion : Add (ZornSplitOctonion R) :=
   ⟨zornAdd⟩
@@ -133,19 +133,19 @@ instance instSMulZornSplitOctonion {S : Type*} [SMul S R] : SMul S (ZornSplitOct
 @[simp] theorem ZornSplitOctonion.sub_b (x y : ZornSplitOctonion R) :
     (x - y).b = x.b - y.b := rfl
 
-omit [CommRing R] in
+omit [Ring R] in
 @[simp] theorem ZornSplitOctonion.smul_a {S : Type*} [SMul S R] (r : S) (x : ZornSplitOctonion R) :
     (r • x).a = r • x.a := rfl
 
-omit [CommRing R] in
+omit [Ring R] in
 @[simp] theorem ZornSplitOctonion.smul_u {S : Type*} [SMul S R] (r : S) (x : ZornSplitOctonion R)
     (k : Fin 3) : (r • x).u k = r • x.u k := rfl
 
-omit [CommRing R] in
+omit [Ring R] in
 @[simp] theorem ZornSplitOctonion.smul_v {S : Type*} [SMul S R] (r : S) (x : ZornSplitOctonion R)
     (k : Fin 3) : (r • x).v k = r • x.v k := rfl
 
-omit [CommRing R] in
+omit [Ring R] in
 @[simp] theorem ZornSplitOctonion.smul_b {S : Type*} [SMul S R] (r : S) (x : ZornSplitOctonion R) :
     (r • x).b = r • x.b := rfl
 

@@ -27,7 +27,7 @@ namespace InfoGeometry.Algebra
 
 section Operators
 
-variable {R A : Type*} [CommRing R] [NonUnitalNonAssocCommRing A] [Module R A]
+variable {R A : Type*} [Ring R] [NonUnitalNonAssocCommRing A] [Module R A]
   [SMulCommClass R A A]
 
 /-- Left Jordan multiplication as an `R`-linear endomorphism. -/
@@ -64,7 +64,7 @@ end Operators
 
 section Jordan
 
-variable {R A : Type*} [CommRing R] [NonUnitalNonAssocCommRing A] [Module R A]
+variable {R A : Type*} [Ring R] [NonUnitalNonAssocCommRing A] [Module R A]
   [SMulCommClass R A A]
 
 /-- In a commutative Jordan algebra in which two is invertible, commutators of
@@ -114,7 +114,7 @@ theorem jordanInnerDerivation_isLeibniz
 
 /-- The bundled inner derivation associated to two elements of a linear
 commutative Jordan algebra. -/
-def jordanInnerDerivationBundled
+def jordanInnerDerivationBundled {R : Type*} [CommRing R] [Module R A] [SMulCommClass R A A]
     [IsScalarTower R A A] [IsCommJordan A] [Invertible (2 : R)] (a b : A) :
     NonAssocDerivation.derivations R A :=
   ⟨jordanInnerDerivation (R := R) a b,

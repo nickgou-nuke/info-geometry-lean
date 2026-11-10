@@ -29,11 +29,12 @@ This module provides the complete native formalization of:
    - For an exponential flow $U_t = \exp(tD)$, $D(I) = 0$ strictly implies $U_t(I) = I$, $U_t(e_+) = e_+$, and $U_t(e_-) = e_-$.
 -/
 
-variable {K A : Type*} [Field K] [CharZero K] [AddCommGroup A] [Module K A]
-variable (mul : A →ₗ[K] A →ₗ[K] A)
+section DivisionRing
+
+variable {K A : Type*} [DivisionRing K] [CharZero K] [AddCommGroup A] [Module K A]
 variable (one : A)
 
-/-- The normalized half-scalar in the base field. -/
+/-- The normalized half-scalar in the base division ring. -/
 def half : K := (2 : K)⁻¹
 
 theorem half_two : (2 : K) * (half : K) = (1 : K) := by
@@ -73,6 +74,12 @@ theorem ePlus_add_eMinus (I : A) :
           exact inv_mul_cancel₀ (by norm_num)
         rw [h]
       _ = one := by rw [one_smul]
+
+end DivisionRing
+
+variable {K A : Type*} [Field K] [CharZero K] [AddCommGroup A] [Module K A]
+variable (mul : A →ₗ[K] A →ₗ[K] A)
+variable (one : A)
 
 /-- 🏆 THEOREM: Idempotency of e₊: e₊ ⋆ e₊ = e₊. -/
 theorem ePlus_idempotent

@@ -11,7 +11,7 @@ open Matrix
 namespace InfoGeometry.NCG
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 local notation "BlockMat" => Matrix (ι ⊕ ι) (ι ⊕ ι) R
 local notation "SubMat" => Matrix ι ι R
@@ -20,9 +20,9 @@ local notation "SubMat" => Matrix ι ι R
 This file closes the algebraic block-Gaussian step behind the Schur-complement
 Berezinian already defined in `BerezinianSuperdeterminant.lean`.
 
-The coefficient ring here is an ordinary commutative ring. Consequently these
-theorems do not identify the off-diagonal blocks with odd elements of a
-supercommutative algebra; that parity-sensitive layer is separate data.
+The block-Gaussian factorization itself (`berezinian_block_gaussian_factorization`)
+holds over any associative ring `[Ring R]`. The determinant-based Berezinian
+readouts specialize to a commutative ring `[CommRing R_comm]`.
 -/
 
 def berezinianUpperShear (B invD : SubMat) : BlockMat :=
@@ -60,36 +60,44 @@ theorem berezinian_block_gaussian_factorization
       berezinianLowerShear, fromBlocks_multiply, hleft, hright,
       hBD, hDC, hBDC, hAssoc]
 
-@[simp] theorem berezinianSchur_upperShear (X : SubMat) :
-    berezinianSchur (1 : SubMat) X 0 1 1 (1 : R) = 1 := by
+section CommRing
+
+variable {R_comm : Type*} [CommRing R_comm]
+
+local notation "SubMatC" => Matrix ι ι R_comm
+
+@[simp] theorem berezinianSchur_upperShear (X : SubMatC) :
+    berezinianSchur (1 : SubMatC) X 0 1 1 (1 : R_comm) = 1 := by
   simp [berezinianSchur]
 
-@[simp] theorem berezinianSchur_lowerShear (Y : SubMat) :
-    berezinianSchur (1 : SubMat) 0 Y 1 1 (1 : R) = 1 := by
+@[simp] theorem berezinianSchur_lowerShear (Y : SubMatC) :
+    berezinianSchur (1 : SubMatC) 0 Y 1 1 (1 : R_comm) = 1 := by
   simp [berezinianSchur]
 
 theorem berezinianSchur_middle_readout
-    (A B C D invD : SubMat) (invDetD : R) :
+    (A B C D invD : SubMatC) (invDetD : R_comm) :
     berezinianBlockDiag (A - B * invD * C) D invDetD =
       berezinianSchur A B C D invD invDetD := by
   rfl
 
 theorem berezinianSchur_eq_det_schur_mul_invDet
-    (A B C D invD : SubMat) (invDetD : R) :
+    (A B C D invD : SubMatC) (invDetD : R_comm) :
     berezinianSchur A B C D invD invDetD =
       Matrix.det (A - B * invD * C) * invDetD := by
   rfl
 
 theorem berezinianSchur_decoupled
-    (A D invD : SubMat) (invDetD : R) :
+    (A D invD : SubMatC) (invDetD : R_comm) :
     berezinianSchur A 0 0 D invD invDetD =
       Matrix.det A * invDetD := by
   simp [berezinianSchur]
 
 theorem berezinianSchur_decoupled_mul_det
-    (A D invD : SubMat) (invDetD : R)
+    (A D invD : SubMatC) (invDetD : R_comm)
     (hdet : invDetD * Matrix.det D = 1) :
     berezinianSchur A 0 0 D invD invDetD * Matrix.det D = Matrix.det A := by
   simp [berezinianSchur, mul_assoc, hdet]
+
+end CommRing
 
 end InfoGeometry.NCG

@@ -33,7 +33,7 @@ namespace InfoGeometry.GrandUnification.TrifactorZeta
 
 open InfoGeometry.Canonical.TrifactorDecomposition
 
-variable {R : Type*} [CommRing R] [Invertible (2 : R)]
+variable {R : Type*} [Ring R] [Invertible (2 : R)]
 variable {H : Type*} [AddCommGroup H] [Module R H]
 
 /-- If the active `P_plus + P_minus` channels annihilate a state `ρ`, the partition of

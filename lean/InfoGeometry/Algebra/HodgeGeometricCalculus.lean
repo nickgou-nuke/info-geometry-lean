@@ -29,7 +29,7 @@ namespace InfoGeometry.Algebra.HodgeGeometricCalculus
 
 section HodgeSign
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Hodge star involution sign factor $(-1)^{k(n-k) + s}$ in a ring `R`. -/
 def hodgeSign (k n s : ℕ) : R :=
@@ -51,7 +51,7 @@ theorem hodgeSign_odd (k n s : ℕ) (h : (k * (n - k) + s) % 2 = 1) :
 theorem hodgeSign_sq_one (k n s : ℕ) :
     hodgeSign (R := R) k n s * hodgeSign (R := R) k n s = 1 := by
   dsimp [hodgeSign]
-  split_ifs <;> ring
+  split_ifs <;> simp
 
 /-- In 2D Euclidean space ($n = 2, s = 0$), the Hodge star on 1-forms squares to $-1$: $\star^2 = -1$. -/
 theorem hodge_sq_vector_2d :

@@ -472,7 +472,8 @@ theorem stage_M9_all_scale_fractal_braiding_instanton_duality_and_master_metripl
       dsimp [daughterIdemTower]
       peirce_nf ih
   have hSplit := genV_defect_iterates_cycle_split hPk A C n
-  rcases qgt_defect_iterates_orthogonal hPk A C n with ⟨hXY, hYX⟩
+  have hXY := idempotencyDefect_iterates_mul_eq_zero (qgt_cycles_orthogonal hPk A C).1 n
+  have hYX := idempotencyDefect_iterates_mul_eq_zero (qgt_cycles_orthogonal hPk A C).2 n
   rcases qgt_defect_iterates_invS_and_parity hPk A C n with ⟨hSX, hSY, hSV, _⟩
   rcases qgt_defect_iterate_sum_commutes_with_cones hPk A C n with ⟨hCommNp, hCommNm⟩
   rcases qgt_defect_iterates_chiral_eigenvalues hPk A C n with

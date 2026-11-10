@@ -2,6 +2,8 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Matrix.Block
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
+import Mathlib.Tactic.Abel
 import Mathlib.Tactic.FinCases
 
 set_option linter.unusedSectionVars false
@@ -39,7 +41,7 @@ namespace InfoGeometry.SuperGrassmannian.GeneralSupercarrierDeformation
 open Matrix
 
 variable {ι₁ ι₂ : Type*} [DecidableEq ι₁] [Fintype ι₁] [DecidableEq ι₂] [Fintype ι₂]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. Graded Supertrace on General Block Matrices -/
 
@@ -71,21 +73,21 @@ theorem superTrace_add (M N : Matrix (ι₁ ⊕ ι₂) (ι₁ ⊕ ι₂) R) :
     superTrace (M + N) = superTrace M + superTrace N := by
   dsimp [superTrace]
   rw [Matrix.trace_add, Matrix.trace_add]
-  ring
+  abel
 
 /-- Scalar multiplication linearity of supertrace: `superTrace (r • M) = r * superTrace M`. -/
 theorem superTrace_smul (r : R) (M : Matrix (ι₁ ⊕ ι₂) (ι₁ ⊕ ι₂) R) :
     superTrace (r • M) = r * superTrace M := by
   dsimp [superTrace]
   rw [Matrix.trace_smul, Matrix.trace_smul]
-  ring
+  simp only [smul_eq_mul, mul_sub]
 
 /-- Negation linearity of supertrace: `superTrace (-M) = -superTrace M`. -/
 theorem superTrace_neg (M : Matrix (ι₁ ⊕ ι₂) (ι₁ ⊕ ι₂) R) :
     superTrace (-M) = -superTrace M := by
   dsimp [superTrace]
   rw [Matrix.trace_neg, Matrix.trace_neg]
-  ring
+  abel
 
 /-! ### 2. The Three Deformation Modes as Explicit Block Matrices -/
 
@@ -111,28 +113,26 @@ theorem superTrace_scaleMode (σ : R) :
   dsimp [superTrace, scaleMode]
   rw [Matrix.trace_smul, Matrix.trace_smul]
   rw [Matrix.trace_one, Matrix.trace_one]
-  ring
+  simp only [smul_eq_mul, (Nat.commute_cast σ (Fintype.card ι₁)).eq,
+    (Nat.commute_cast σ (Fintype.card ι₂)).eq, sub_mul]
 
 /-- Balanced scale invariance: when `Fintype.card ι₁ = Fintype.card ι₂`, the scale mode supertrace vanishes. -/
 theorem superTrace_scale_balanced (h : Fintype.card ι₁ = Fintype.card ι₂) (σ : R) :
     superTrace (scaleMode (ι₁ := ι₁) (ι₂ := ι₂) (R := R) σ) = 0 := by
-  rw [superTrace_scaleMode, h]
-  ring
+  rw [superTrace_scaleMode, h, sub_self, zero_mul]
 
 /-- Supertrace of the chiral mode operator vanishes identically: `superTrace (chiralMode B C) = 0`. -/
 theorem superTrace_chiralMode (B : Matrix ι₁ ι₂ R) (C : Matrix ι₂ ι₁ R) :
     superTrace (chiralMode (ι₁ := ι₁) (ι₂ := ι₂) B C) = 0 := by
   dsimp [superTrace, chiralMode]
-  rw [Matrix.trace_zero, Matrix.trace_zero]
-  ring
+  rw [Matrix.trace_zero, Matrix.trace_zero, sub_self]
 
 /-- Supertrace of the volume mode operator vanishes when `Matrix.trace A = Matrix.trace D`. -/
 theorem superTrace_volumeMode (A : Matrix ι₁ ι₁ R) (D : Matrix ι₂ ι₂ R)
     (h : Matrix.trace A = Matrix.trace D) :
     superTrace (volumeMode A D) = 0 := by
   dsimp [superTrace, volumeMode]
-  rw [h]
-  ring
+  rw [h, sub_self]
 
 /-- Total deformation splitting theorem:
     `superTrace (scaleMode σ + chiralMode B C + volumeMode A D) = ((Fintype.card ι₁ : R) - (Fintype.card ι₂ : R)) * σ`. -/
@@ -142,7 +142,7 @@ theorem total_deformation_superTrace (σ : R) (B : Matrix ι₁ ι₂ R) (C : Ma
       ((Fintype.card ι₁ : R) - (Fintype.card ι₂ : R)) * σ := by
   rw [superTrace_add, superTrace_add]
   rw [superTrace_scaleMode, superTrace_chiralMode, superTrace_volumeMode A D h]
-  ring
+  abel
 
 /-! ### 4. Noncommutative Algebra and Trace Cyclicity -/
 
@@ -154,18 +154,33 @@ theorem chiral_mode_mul (B : Matrix ι₁ ι₂ R) (C : Matrix ι₂ ι₁ R) :
   rw [Matrix.fromBlocks_multiply]
   simp
 
+/-- Over any non-commutative ring `[Ring R]`, the supertrace of the square of a chiral operator
+    equals the rectangular trace commutator defect `Matrix.trace (B * C) - Matrix.trace (C * B)`. -/
+theorem superTrace_chiral_square_noncomm (B : Matrix ι₁ ι₂ R) (C : Matrix ι₂ ι₁ R) :
+    superTrace (chiralMode B C * chiralMode B C) =
+      Matrix.trace (B * C) - Matrix.trace (C * B) := by
+  rw [chiral_mode_mul]
+  rfl
+
 /-- Supertrace of the square of any chiral operator vanishes identically by trace cyclicity:
     `Matrix.trace (B * C) = Matrix.trace (C * B)`. -/
-theorem superTrace_chiral_square (B : Matrix ι₁ ι₂ R) (C : Matrix ι₂ ι₁ R) :
+theorem superTrace_chiral_square {R : Type*} [CommRing R] (B : Matrix ι₁ ι₂ R) (C : Matrix ι₂ ι₁ R) :
     superTrace (chiralMode B C * chiralMode B C) = 0 := by
-  rw [chiral_mode_mul]
-  dsimp [superTrace]
-  rw [Matrix.trace_mul_comm B C]
-  ring
+  rw [superTrace_chiral_square_noncomm, Matrix.trace_mul_comm B C, sub_self]
+
+/-- Over any non-commutative ring `[Ring R]`, the commutator of scale and chiral modes
+    isolates the left-right scalar multiplication defect on `B` and `C`. -/
+theorem scale_chiral_commutator_noncomm (σ : R) (B : Matrix ι₁ ι₂ R) (C : Matrix ι₂ ι₁ R) :
+    scaleMode σ * chiralMode B C - chiralMode B C * scaleMode σ =
+      Matrix.fromBlocks 0 (σ • B) (σ • C) 0 -
+        Matrix.fromBlocks 0 (B * (σ • (1 : Matrix ι₂ ι₂ R))) (C * (σ • (1 : Matrix ι₁ ι₁ R))) 0 := by
+  dsimp [scaleMode, chiralMode]
+  rw [Matrix.fromBlocks_multiply, Matrix.fromBlocks_multiply]
+  simp
 
 /-- Commutation of scale and chiral modes:
     `scaleMode σ * chiralMode B C - chiralMode B C * scaleMode σ = 0`. -/
-theorem scale_chiral_commutator (σ : R) (B : Matrix ι₁ ι₂ R) (C : Matrix ι₂ ι₁ R) :
+theorem scale_chiral_commutator {R : Type*} [CommRing R] (σ : R) (B : Matrix ι₁ ι₂ R) (C : Matrix ι₂ ι₁ R) :
     scaleMode σ * chiralMode B C - chiralMode B C * scaleMode σ = 0 := by
   dsimp [scaleMode, chiralMode]
   rw [Matrix.fromBlocks_multiply, Matrix.fromBlocks_multiply]
@@ -176,34 +191,34 @@ theorem scale_chiral_commutator (σ : R) (B : Matrix ι₁ ι₂ R) (C : Matrix 
 /-- Master Verification Certificate bundling all core theorems of the general supercarrier deformation. -/
 structure GeneralSupercarrierDeformationCertificate : Prop where
   superTrace_add : ∀ {ι₁ ι₂ : Type*} [DecidableEq ι₁] [Fintype ι₁] [DecidableEq ι₂] [Fintype ι₂]
-    {R : Type*} [CommRing R] (M N : Matrix (ι₁ ⊕ ι₂) (ι₁ ⊕ ι₂) R),
+    {R : Type*} [Ring R] (M N : Matrix (ι₁ ⊕ ι₂) (ι₁ ⊕ ι₂) R),
     superTrace (M + N) = superTrace M + superTrace N
   superTrace_smul : ∀ {ι₁ ι₂ : Type*} [DecidableEq ι₁] [Fintype ι₁] [DecidableEq ι₂] [Fintype ι₂]
-    {R : Type*} [CommRing R] (r : R) (M : Matrix (ι₁ ⊕ ι₂) (ι₁ ⊕ ι₂) R),
+    {R : Type*} [Ring R] (r : R) (M : Matrix (ι₁ ⊕ ι₂) (ι₁ ⊕ ι₂) R),
     superTrace (r • M) = r * superTrace M
   superTrace_neg : ∀ {ι₁ ι₂ : Type*} [DecidableEq ι₁] [Fintype ι₁] [DecidableEq ι₂] [Fintype ι₂]
-    {R : Type*} [CommRing R] (M : Matrix (ι₁ ⊕ ι₂) (ι₁ ⊕ ι₂) R),
+    {R : Type*} [Ring R] (M : Matrix (ι₁ ⊕ ι₂) (ι₁ ⊕ ι₂) R),
     superTrace (-M) = -superTrace M
   superTrace_scaleMode : ∀ {ι₁ ι₂ : Type*} [DecidableEq ι₁] [Fintype ι₁] [DecidableEq ι₂] [Fintype ι₂]
-    {R : Type*} [CommRing R] (σ : R),
+    {R : Type*} [Ring R] (σ : R),
     superTrace (scaleMode (ι₁ := ι₁) (ι₂ := ι₂) (R := R) σ) =
       ((Fintype.card ι₁ : R) - (Fintype.card ι₂ : R)) * σ
   superTrace_scale_balanced : ∀ {ι₁ ι₂ : Type*} [DecidableEq ι₁] [Fintype ι₁] [DecidableEq ι₂] [Fintype ι₂]
-    {R : Type*} [CommRing R] (h : Fintype.card ι₁ = Fintype.card ι₂) (σ : R),
+    {R : Type*} [Ring R] (h : Fintype.card ι₁ = Fintype.card ι₂) (σ : R),
     superTrace (scaleMode (ι₁ := ι₁) (ι₂ := ι₂) (R := R) σ) = 0
   superTrace_chiralMode : ∀ {ι₁ ι₂ : Type*} [DecidableEq ι₁] [Fintype ι₁] [DecidableEq ι₂] [Fintype ι₂]
-    {R : Type*} [CommRing R] (B : Matrix ι₁ ι₂ R) (C : Matrix ι₂ ι₁ R),
+    {R : Type*} [Ring R] (B : Matrix ι₁ ι₂ R) (C : Matrix ι₂ ι₁ R),
     superTrace (chiralMode B C) = 0
   superTrace_volumeMode : ∀ {ι₁ ι₂ : Type*} [DecidableEq ι₁] [Fintype ι₁] [DecidableEq ι₂] [Fintype ι₂]
-    {R : Type*} [CommRing R] (A : Matrix ι₁ ι₁ R) (D : Matrix ι₂ ι₂ R) (h : Matrix.trace A = Matrix.trace D),
+    {R : Type*} [Ring R] (A : Matrix ι₁ ι₁ R) (D : Matrix ι₂ ι₂ R) (h : Matrix.trace A = Matrix.trace D),
     superTrace (volumeMode A D) = 0
   total_deformation_superTrace : ∀ {ι₁ ι₂ : Type*} [DecidableEq ι₁] [Fintype ι₁] [DecidableEq ι₂] [Fintype ι₂]
-    {R : Type*} [CommRing R] (σ : R) (B : Matrix ι₁ ι₂ R) (C : Matrix ι₂ ι₁ R)
+    {R : Type*} [Ring R] (σ : R) (B : Matrix ι₁ ι₂ R) (C : Matrix ι₂ ι₁ R)
     (A : Matrix ι₁ ι₁ R) (D : Matrix ι₂ ι₂ R) (h : Matrix.trace A = Matrix.trace D),
     superTrace (scaleMode σ + chiralMode B C + volumeMode A D) =
       ((Fintype.card ι₁ : R) - (Fintype.card ι₂ : R)) * σ
   chiral_mode_mul : ∀ {ι₁ ι₂ : Type*} [DecidableEq ι₁] [Fintype ι₁] [DecidableEq ι₂] [Fintype ι₂]
-    {R : Type*} [CommRing R] (B : Matrix ι₁ ι₂ R) (C : Matrix ι₂ ι₁ R),
+    {R : Type*} [Ring R] (B : Matrix ι₁ ι₂ R) (C : Matrix ι₂ ι₁ R),
     chiralMode B C * chiralMode B C = Matrix.fromBlocks (B * C) 0 0 (C * B)
   superTrace_chiral_square : ∀ {ι₁ ι₂ : Type*} [DecidableEq ι₁] [Fintype ι₁] [DecidableEq ι₂] [Fintype ι₂]
     {R : Type*} [CommRing R] (B : Matrix ι₁ ι₂ R) (C : Matrix ι₂ ι₁ R),

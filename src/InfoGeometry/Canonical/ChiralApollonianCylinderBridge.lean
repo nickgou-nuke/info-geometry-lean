@@ -62,13 +62,16 @@ open scoped Topology
 -/
 
 /-- Quadruple of circle curvatures in a 2D packing. -/
+@[ext]
 structure CurvatureQuadruple (R : Type*) where
   k1 : R
   k2 : R
   k3 : R
   k4 : R
 
-variable {R : Type*} [CommRing R]
+section Ring
+
+variable {R : Type*} [Ring R]
 
 /-- The Descartes quadratic form: 2(k1² + k2² + k3² + k4²) - (k1 + k2 + k3 + k4)². -/
 def descartesForm (q : CurvatureQuadruple R) : R :=
@@ -109,26 +112,32 @@ def soddyReflect1 (q : CurvatureQuadruple R) : CurvatureQuadruple R where
 /-- Soddy reflection 4 is an involution: S₄² = id. -/
 theorem soddyReflect4_involutive (q : CurvatureQuadruple R) :
     soddyReflect4 (soddyReflect4 q) = q := by
-  dsimp [soddyReflect4]
-  ring_nf
+  ext <;> simp [soddyReflect4]
 
 /-- Soddy reflection 3 is an involution: S₃² = id. -/
 theorem soddyReflect3_involutive (q : CurvatureQuadruple R) :
     soddyReflect3 (soddyReflect3 q) = q := by
-  dsimp [soddyReflect3]
-  ring_nf
+  ext <;> simp [soddyReflect3]
 
 /-- Soddy reflection 2 is an involution: S₂² = id. -/
 theorem soddyReflect2_involutive (q : CurvatureQuadruple R) :
     soddyReflect2 (soddyReflect2 q) = q := by
-  dsimp [soddyReflect2]
-  ring_nf
+  ext <;> simp [soddyReflect2]
 
 /-- Soddy reflection 1 is an involution: S₁² = id. -/
 theorem soddyReflect1_involutive (q : CurvatureQuadruple R) :
     soddyReflect1 (soddyReflect1 q) = q := by
-  dsimp [soddyReflect1]
-  ring_nf
+  ext <;> simp [soddyReflect1]
+
+/-- Dual kissing curvature sum rule: k₄ + (S₄ k)₄ = 2(k₁ + k₂ + k₃). -/
+theorem soddy_curvature_sum (q : CurvatureQuadruple R) :
+    q.k4 + (soddyReflect4 q).k4 = 2 * (q.k1 + q.k2 + q.k3) := by
+  dsimp [soddyReflect4]
+  abel
+
+end Ring
+
+variable {R : Type*} [CommRing R]
 
 /-- Soddy reflection 4 preserves the Descartes quadratic form identically. -/
 theorem descartesForm_soddyReflect4 (q : CurvatureQuadruple R) :
@@ -178,12 +187,6 @@ theorem isApollonian_soddyReflect1 {q : CurvatureQuadruple R} (h : IsApollonian 
   dsimp [IsApollonian] at *
   rw [descartesForm_soddyReflect1, h]
 
-/-- Dual kissing curvature sum rule: k₄ + (S₄ k)₄ = 2(k₁ + k₂ + k₃). -/
-theorem soddy_curvature_sum (q : CurvatureQuadruple R) :
-    q.k4 + (soddyReflect4 q).k4 = 2 * (q.k1 + q.k2 + q.k3) := by
-  dsimp [soddyReflect4]
-  ring
-
 /-- Descartes discriminant identity connecting the kissing radius deviation to the Descartes form. -/
 theorem descartes_discriminant_identity (q : CurvatureQuadruple R) :
     (q.k4 - (q.k1 + q.k2 + q.k3)) ^ 2 =
@@ -213,19 +216,19 @@ structure CuntzGenerators (d : ℕ) (A : Type*) [Ring A] where
   range_sum : (∑ i : Fin d, S i * S_star i) = 1
 
 /-- Normalized Markov transition weights on the d branches of the Cantor tree. -/
-structure MarkovWeights (d : ℕ) (R : Type*) [CommRing R] where
+structure MarkovWeights (d : ℕ) (R : Type*) [Ring R] where
   p : Fin d → R
   sum_eq_one : (∑ i : Fin d, p i) = 1
 
 /-- Unital Cuntz-Markov transition operator: Φ_w(x) = ∑_i w_i • (S_i* x S_i). -/
 def cuntzMarkovStep {d : ℕ} (C : CuntzGenerators d A)
-    {R : Type*} [CommRing R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
+    {R : Type*} [Ring R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
     (w : MarkovWeights d R) (x : A) : A :=
   ∑ i : Fin d, w.p i • (C.S_star i * x * C.S i)
 
 /-- The Cuntz-Markov operator is strictly unital: Φ_w(1) = 1. -/
 theorem cuntzMarkovStep_one {d : ℕ} (C : CuntzGenerators d A)
-    {R : Type*} [CommRing R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
+    {R : Type*} [Ring R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
     (w : MarkovWeights d R) :
     cuntzMarkovStep C w 1 = 1 := by
   dsimp [cuntzMarkovStep]
@@ -240,7 +243,7 @@ theorem cuntzMarkovStep_one {d : ℕ} (C : CuntzGenerators d A)
 
 /-- Cylinder projection conditional expectation: Φ_w(S_j y S_j*) = w_j • y. -/
 theorem cuntzMarkovStep_cylinder {d : ℕ} (C : CuntzGenerators d A)
-    {R : Type*} [CommRing R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
+    {R : Type*} [Ring R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
     (w : MarkovWeights d R) (j : Fin d) (y : A) :
     cuntzMarkovStep C w (C.S j * y * C.S_star j) = w.p j • y := by
   dsimp [cuntzMarkovStep]
@@ -410,10 +413,10 @@ theorem certified_chiral_apollonian_cylinder_bridge :
   (∀ q : CurvatureQuadruple ℝ, (q.k4 - (q.k1 + q.k2 + q.k3)) ^ 2 =
     4 * (q.k1 * q.k2 + q.k2 * q.k3 + q.k3 * q.k1) + descartesForm q) ∧
   (∀ {A : Type*} [Ring A] {d : ℕ} (C : CuntzGenerators d A)
-    {R : Type*} [CommRing R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
+    {R : Type*} [Ring R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
     (w : MarkovWeights d R), cuntzMarkovStep C w 1 = 1) ∧
   (∀ {A : Type*} [Ring A] {d : ℕ} (C : CuntzGenerators d A)
-    {R : Type*} [CommRing R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
+    {R : Type*} [Ring R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
     (w : MarkovWeights d R) (j : Fin d) (y : A),
     cuntzMarkovStep C w (C.S j * y * C.S_star j) = w.p j • y) ∧
   (∀ (α σ₁ σ₂ : ℝ), weylScale α (σ₁ + σ₂) = weylScale α σ₁ * weylScale α σ₂) ∧

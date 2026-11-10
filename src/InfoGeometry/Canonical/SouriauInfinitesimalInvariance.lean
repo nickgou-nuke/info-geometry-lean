@@ -12,7 +12,7 @@ No wrappers. No `sorry`.
 namespace InfoGeometry.Canonical.SouriauInfinitesimalInvariance
 
 variable {𝕜 V : Type*}
-variable [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
+variable [Ring 𝕜] [AddCommGroup V] [Module 𝕜 V]
 
 /--
 Vanishing commutator is equivalent to commutation under composition.

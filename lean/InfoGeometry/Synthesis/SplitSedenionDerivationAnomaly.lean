@@ -11,6 +11,7 @@ import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.LinearCombination
 import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.FinCases
 
@@ -78,7 +79,7 @@ and involution $\star : A \to A$:
 $$(a, b) \cdot_{\gamma} (c, d) = \big(a c + \gamma (d^\star b),\; d a + b c^\star\big).$$
 Because $A$ (such as the split octonions $\mathbb{O}_s$) is not assumed associative, this formula
 uses the general `[NonUnitalNonAssocRing A]` typeclass. -/
-def cdMul {R A : Type*} [CommRing R] [NonUnitalNonAssocRing A] [Module R A]
+def cdMul {R A : Type*} [Ring R] [NonUnitalNonAssocRing A] [Module R A]
     (starA : A → A) (γ : R) (x y : A × A) : A × A :=
   (x.1 * y.1 + γ • (starA y.2 * x.2), y.2 * x.1 + x.2 * starA y.1)
 
@@ -94,7 +95,7 @@ def cdLift {A : Type*} (D₀ : A → A) (x : A × A) : A × A :=
 
 /-- Predicate packaging an $R$-linear $\star$-derivation $D_0 \in \operatorname{Der}_R(A, \star)$
 of a possibly non-associative algebra $(A, \cdot, \star)$. -/
-def IsStarDerivation (R : Type*) {A : Type*} [CommRing R] [NonUnitalNonAssocRing A] [Module R A]
+def IsStarDerivation (R : Type*) {A : Type*} [Ring R] [NonUnitalNonAssocRing A] [Module R A]
     (starA : A → A) (D₀ : A → A) : Prop :=
   (∀ x y : A, D₀ (x + y) = D₀ x + D₀ y) ∧
   (∀ x : A, D₀ (-x) = -D₀ x) ∧
@@ -109,7 +110,7 @@ doubled algebra `(A × A, cdMul starA γ)` and commutes with the Cayley–Dickso
 This theorem does not assert injectivity of a map on derivation algebras or instantiate a specific
 octonion algebra. -/
 theorem cdLift_is_cayleyDickson_star_derivation
-    {R A : Type*} [CommRing R] [NonUnitalNonAssocRing A] [Module R A]
+    {R A : Type*} [Ring R] [NonUnitalNonAssocRing A] [Module R A]
     [IsScalarTower R A A] [SMulCommClass R A A]
     (starA : A → A) (γ : R) (D₀ : A → A)
     (hD : IsStarDerivation R starA D₀) (x y : A × A) :
@@ -144,34 +145,34 @@ theorem cdLift_pointwise_commutator_identity
 
 /-- The diagonal matrix representing a bilinear form of signature `(2,1)` on `Fin 3 → R`.
 This coordinate definition does not identify the coordinates with a Cayley--Dickson carrier. -/
-def eta21 {R : Type*} [CommRing R] : Matrix (Fin 3) (Fin 3) R :=
+def eta21 {R : Type*} [Ring R] : Matrix (Fin 3) (Fin 3) R :=
   !![1, 0, 0;
      0, 1, 0;
      0, 0, -1]
 
 /-- A concrete matrix generator preserving `eta21` infinitesimally:
 $$J_{12}(u) = v, \quad J_{12}(v) = -u, \quad J_{12}(uv) = 0.$$ -/
-def sl2GenJ12 {R : Type*} [CommRing R] : Matrix (Fin 3) (Fin 3) R :=
+def sl2GenJ12 {R : Type*} [Ring R] : Matrix (Fin 3) (Fin 3) R :=
   !![0, -1, 0;
      1,  0, 0;
      0,  0, 0]
 
 /-- A second concrete matrix generator preserving `eta21` infinitesimally:
 $$K_{13}(u) = uv, \quad K_{13}(v) = 0, \quad K_{13}(uv) = u.$$ -/
-def sl2GenK13 {R : Type*} [CommRing R] : Matrix (Fin 3) (Fin 3) R :=
+def sl2GenK13 {R : Type*} [Ring R] : Matrix (Fin 3) (Fin 3) R :=
   !![0, 0, 1;
      0, 0, 0;
      1, 0, 0]
 
 /-- A third concrete matrix generator preserving `eta21` infinitesimally:
 $$K_{23}(u) = 0, \quad K_{23}(v) = uv, \quad K_{23}(uv) = v.$$ -/
-def sl2GenK23 {R : Type*} [CommRing R] : Matrix (Fin 3) (Fin 3) R :=
+def sl2GenK23 {R : Type*} [Ring R] : Matrix (Fin 3) (Fin 3) R :=
   !![0, 0, 0;
      0, 0, 1;
      0, 1, 0]
 
 /-- Matrix commutator $[X, Y] = X Y - Y X$. -/
-def matBracket {n : Type*} [Fintype n] [DecidableEq n] {R : Type*} [CommRing R]
+def matBracket {n : Type*} [Fintype n] [DecidableEq n] {R : Type*} [Ring R]
     (X Y : Matrix n n R) : Matrix n n R :=
   X * Y - Y * X
 
@@ -190,7 +191,7 @@ theorem matBracket_trace_eq_zero {n : Type*} [Fintype n] [DecidableEq n]
 3. Satisfy the following bracket relations:
    $$[J_{12}, K_{13}] = K_{23}, \qquad [J_{12}, K_{23}] = -K_{13}, \qquad [K_{13}, K_{23}] = -J_{12},$$
 The quadratic matrix expression and its value are proved separately below. -/
-theorem so21_matrix_generator_relations (R : Type*) [CommRing R] :
+theorem so21_matrix_generator_relations (R : Type*) [Ring R] :
     ((sl2GenJ12 (R := R))ᵀ * eta21 (R := R) + eta21 (R := R) * sl2GenJ12 (R := R) = 0 ∧
      (sl2GenK13 (R := R))ᵀ * eta21 (R := R) + eta21 (R := R) * sl2GenK13 (R := R) = 0 ∧
      (sl2GenK23 (R := R))ᵀ * eta21 (R := R) + eta21 (R := R) * sl2GenK23 (R := R) = 0) ∧
@@ -220,7 +221,7 @@ theorem so21_matrix_generator_relations (R : Type*) [CommRing R] :
 /-- For every nontrivial coefficient ring, the displayed matrix generators do
 not commute. This supplies a concrete operator witness for the generic matrix
 carrier in this file. -/
-theorem sl2_generator_products_noncommute {R : Type*} [CommRing R] [Nontrivial R] :
+theorem sl2_generator_products_noncommute {R : Type*} [Ring R] [Nontrivial R] :
     sl2GenJ12 (R := R) * sl2GenK13 (R := R) ≠
       sl2GenK13 (R := R) * sl2GenJ12 (R := R) := by
   intro h
@@ -243,7 +244,7 @@ theorem sl2_generator_commutator_nonzero :
 
 /-- The symmetric bilinear form of signature `(2,1)` on the coefficient space
 of the three displayed doubling generators. -/
-def so21BilinearForm {R : Type*} [CommRing R]
+def so21BilinearForm {R : Type*} [Ring R]
     (u v : Fin 3 → R) : R :=
   u 0 * v 0 + u 1 * v 1 - u 2 * v 2
 
@@ -252,7 +253,7 @@ def so21BilinearForm {R : Type*} [CommRing R]
 This is the vector-space metric identity
 `⟨Xu,v⟩ + ⟨u,Xv⟩ = 0`; by itself it does not assert that these maps
 differentiate a Cayley--Dickson product. -/
-theorem sl2_so21_generators_metric_invariance {R : Type*} [CommRing R]
+theorem sl2_so21_generators_metric_invariance {R : Type*} [Ring R]
     (u v : Fin 3 → R) :
     so21BilinearForm ((sl2GenJ12 (R := R)).mulVec u) v +
         so21BilinearForm u ((sl2GenJ12 (R := R)).mulVec v) = 0 ∧
@@ -266,7 +267,7 @@ theorem sl2_so21_generators_metric_invariance {R : Type*} [CommRing R]
 
 /-- The quadratic operator formed from the three displayed `(2,1)` generators.
 The signs are fixed by the concrete matrices in this file. -/
-def so21QuadraticMatrixExpression {R : Type*} [CommRing R] : Matrix (Fin 3) (Fin 3) R :=
+def so21QuadraticMatrixExpression {R : Type*} [Ring R] : Matrix (Fin 3) (Fin 3) R :=
   -(sl2GenJ12 * sl2GenJ12) +
     sl2GenK13 * sl2GenK13 + sl2GenK23 * sl2GenK23
 
@@ -274,7 +275,7 @@ def so21QuadraticMatrixExpression {R : Type*} [CommRing R] : Matrix (Fin 3) (Fin
 commutes with each generator. This is a finite matrix calculation, not a claim
 about Casimir operators on the split-sedenion algebra. -/
 theorem so21_quadratic_matrix_expression_eq_two_smul_identity_and_central
-    (R : Type*) [CommRing R] :
+    (R : Type*) [Ring R] :
     so21QuadraticMatrixExpression (R := R) =
         (2 : R) • (1 : Matrix (Fin 3) (Fin 3) R) ∧
     matBracket (so21QuadraticMatrixExpression (R := R)) (sl2GenJ12 (R := R)) = 0 ∧
@@ -284,18 +285,18 @@ theorem so21_quadratic_matrix_expression_eq_two_smul_identity_and_central
       (2 : R) • (1 : Matrix (Fin 3) (Fin 3) R) := by
     ext i j
     fin_cases i <;> fin_cases j <;>
-      simp [so21QuadraticMatrixExpression, sl2GenJ12, sl2GenK13, sl2GenK23] <;> ring
+      simp [so21QuadraticMatrixExpression, sl2GenJ12, sl2GenK13, sl2GenK23] <;> norm_num
   refine ⟨hcas, ?_, ?_, ?_⟩
-  · rw [hcas]
-    simp [matBracket]
-  · rw [hcas]
-    simp [matBracket]
-  · rw [hcas]
-    simp [matBracket]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [matBracket, so21QuadraticMatrixExpression, sl2GenJ12, sl2GenK13, sl2GenK23]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [matBracket, so21QuadraticMatrixExpression, sl2GenJ12, sl2GenK13, sl2GenK23]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [matBracket, so21QuadraticMatrixExpression, sl2GenJ12, sl2GenK13, sl2GenK23]
 
 /-- The induced quadratic operator for the commutator action on endomorphisms:
 `-ad(J12)^2 + ad(K13)^2 + ad(K23)^2`. -/
-def so21AdjointQuadraticAction {R : Type*} [CommRing R]
+def so21AdjointQuadraticAction {R : Type*} [Ring R]
     (A : Matrix (Fin 3) (Fin 3) R) : Matrix (Fin 3) (Fin 3) R :=
   -matBracket (sl2GenJ12 (R := R)) (matBracket (sl2GenJ12 (R := R)) A) +
     matBracket (sl2GenK13 (R := R)) (matBracket (sl2GenK13 (R := R)) A) +
@@ -304,7 +305,7 @@ def so21AdjointQuadraticAction {R : Type*} [CommRing R]
 /-- On each of the three displayed generators, the commutator (adjoint) action
 has quadratic eigenvalue `2`. This identifies the eigenvalue on their span; it
 does not assert that the same operator is scalar on all trace-free matrices. -/
-theorem so21_adjoint_quadratic_action_on_generators (R : Type*) [CommRing R] :
+theorem so21_adjoint_quadratic_action_on_generators (R : Type*) [Ring R] :
     so21AdjointQuadraticAction (sl2GenJ12 (R := R)) =
         (2 : R) • sl2GenJ12 (R := R) ∧
     so21AdjointQuadraticAction (sl2GenK13 (R := R)) =
@@ -314,7 +315,7 @@ theorem so21_adjoint_quadratic_action_on_generators (R : Type*) [CommRing R] :
   refine ⟨?_, ?_, ?_⟩ <;>
     ext i j <;> fin_cases i <;> fin_cases j <;>
       simp [so21AdjointQuadraticAction, matBracket,
-        sl2GenJ12, sl2GenK13, sl2GenK23] <;> ring
+        sl2GenJ12, sl2GenK13, sl2GenK23] <;> norm_num
 
 /-! ### The quadratic adjoint action on trace-free endomorphisms
 
@@ -326,12 +327,12 @@ about `3 × 3` matrices only; they do not identify either part with a summand of
 split-sedenion derivation algebra. -/
 
 /-- Skew-adjointness with respect to the displayed `(2,1)` form. -/
-def so21EtaSkewAdjoint {R : Type*} [CommRing R]
+def so21EtaSkewAdjoint {R : Type*} [Ring R]
     (A : Matrix (Fin 3) (Fin 3) R) : Prop :=
   Aᵀ * eta21 + eta21 * A = 0
 
 /-- Self-adjointness with respect to the displayed `(2,1)` form. -/
-def so21EtaSelfAdjoint {R : Type*} [CommRing R]
+def so21EtaSelfAdjoint {R : Type*} [Ring R]
     (A : Matrix (Fin 3) (Fin 3) R) : Prop :=
   Aᵀ * eta21 - eta21 * A = 0
 
@@ -444,7 +445,7 @@ theorem trace_free_matrix_eta_adjoint_sector_decomposition
 This identity alone does not define representations of $\mathfrak{g}_{2(2)}$ or
 $\mathfrak{sl}(2,R)$ on a split-sedenion carrier:
 $$G (M S^T) - (G M) S^T = 0.$$ -/
-theorem matrix_left_right_actions_commute {R : Type*} [CommRing R]
+theorem matrix_left_right_actions_commute {R : Type*} [Ring R]
     (G : Matrix (Fin 7) (Fin 7) R) (S : Matrix (Fin 2) (Fin 2) R)
     (M : Matrix (Fin 7) (Fin 2) R) :
     G * (M * Sᵀ) - (G * M) * Sᵀ = 0 := by
@@ -473,7 +474,7 @@ $u^\star = -u$. In the displayed doubling formula with parameter $-1$, the eleme
 square zero. This proposition does not assert that $(u,1)$ is nonzero:
 $$(u, 1) \cdot_{-1} (u, 1) = (0, 0).$$ -/
 theorem split_cayleyDickson_square_zero
-    {R A : Type*} [CommRing R] [NonAssocRing A] [Module R A]
+    {R A : Type*} [Ring R] [NonAssocRing A] [Module R A]
     (starA : A → A) (u : A)
     (h_star_one : starA 1 = 1)
     (h_u_sq : u * u = 1)
@@ -520,7 +521,7 @@ theorem associator_eq_zero_of_ring {B : Type*} [Ring B] (a b c : B) :
 $$(u \times_{(2,1)} v)_0 = u_1 v_2 - u_2 v_1, \quad
   (u \times_{(2,1)} v)_1 = u_2 v_0 - u_0 v_2, \quad
   (u \times_{(2,1)} v)_2 = u_1 v_0 - u_0 v_1.$$ -/
-def so21CrossProduct {R : Type*} [CommRing R] (u v : Fin 3 → R) : Fin 3 → R :=
+def so21CrossProduct {R : Type*} [Ring R] (u v : Fin 3 → R) : Fin 3 → R :=
   ![u 1 * v 2 - u 2 * v 1,
     u 2 * v 0 - u 0 * v 2,
     u 1 * v 0 - u 0 * v 1]
@@ -529,21 +530,21 @@ def so21CrossProduct {R : Type*} [CommRing R] (u v : Fin 3 → R) : Fin 3 → R 
 $$(x_0, \vec{x}) \cdot_{(2,1)} (y_0, \vec{y}) =
   \big(x_0 y_0 - \langle \vec{x}, \vec{y} \rangle_{(2,1)},\;
        x_0 \vec{y} + y_0 \vec{x} + \vec{x} \times_{(2,1)} \vec{y}\big).$$ -/
-def socleDoublingMul {R : Type*} [CommRing R]
+def socleDoublingMul {R : Type*} [Ring R]
     (x y : R × (Fin 3 → R)) : R × (Fin 3 → R) :=
   (x.1 * y.1 - so21BilinearForm x.2 y.2,
    fun i => x.1 * y.2 i + y.1 * x.2 i + so21CrossProduct x.2 y.2 i)
 
 /-- Action of a $3 \times 3$ matrix on the vector coordinate of this four-dimensional carrier.
 No map from this coordinate algebra to split sedenions is defined in this module. -/
-def socleDerivation {R : Type*} [CommRing R]
+def socleDerivation {R : Type*} [Ring R]
     (X : Matrix (Fin 3) (Fin 3) R) (x : R × (Fin 3 → R)) : R × (Fin 3 → R) :=
   (0, X.mulVec x.2)
 
 /-- All three concrete $(2,1)$ matrices $J_{12}, K_{13}, K_{23}$ act as derivations of the
 $(2,1)$ cross product `so21CrossProduct`:
 $$X(u \times_{(2,1)} v) = (X u) \times_{(2,1)} v + u \times_{(2,1)} (X v).$$ -/
-theorem so21_generators_leibniz_crossProduct {R : Type*} [CommRing R]
+theorem so21_generators_leibniz_crossProduct {R : Type*} [Ring R]
     (u v : Fin 3 → R) :
     (sl2GenJ12 (R := R)).mulVec (so21CrossProduct u v) =
       so21CrossProduct ((sl2GenJ12 (R := R)).mulVec u) v +
@@ -557,19 +558,19 @@ theorem so21_generators_leibniz_crossProduct {R : Type*} [CommRing R]
   refine ⟨?_, ?_, ?_⟩
   · ext i; fin_cases i <;>
       simp [so21CrossProduct, sl2GenJ12, dotProduct, Fin.sum_univ_three] <;>
-      ring
+      noncomm_ring
   · ext i; fin_cases i <;>
       simp [so21CrossProduct, sl2GenK13, dotProduct, Fin.sum_univ_three] <;>
-      ring
+      noncomm_ring
   · ext i; fin_cases i <;>
       simp [so21CrossProduct, sl2GenK23, dotProduct, Fin.sum_univ_three] <;>
-      ring
+      noncomm_ring
 
 /-- Each of the three displayed matrices differentiates the coordinate multiplication
 `socleDoublingMul`. This statement concerns the explicitly defined four-dimensional coordinate
 algebra; it does not identify an action on split sedenions:
 $$D_X(x \cdot_{(2,1)} y) = D_X(x) \cdot_{(2,1)} y + x \cdot_{(2,1)} D_X(y).$$ -/
-theorem so21_socleDerivation_leibniz_test {R : Type*} [CommRing R]
+theorem so21_socleDerivation_leibniz_test {R : Type*} [Ring R]
     (x y : R × (Fin 3 → R)) :
     socleDerivation (sl2GenJ12 (R := R)) (socleDoublingMul x y) =
       socleDoublingMul (socleDerivation (sl2GenJ12 (R := R)) x) y +
@@ -587,21 +588,21 @@ theorem so21_socleDerivation_leibniz_test {R : Type*} [CommRing R]
     · fin_cases i <;>
         simp [socleDerivation, socleDoublingMul, so21CrossProduct, sl2GenJ12,
               dotProduct, Fin.sum_univ_three] <;>
-        ring
+        noncomm_ring
   · ext i
     · simp [socleDerivation, socleDoublingMul, so21BilinearForm, sl2GenK13,
             dotProduct, Fin.sum_univ_three]
     · fin_cases i <;>
         simp [socleDerivation, socleDoublingMul, so21CrossProduct, sl2GenK13,
               dotProduct, Fin.sum_univ_three] <;>
-        ring
+        noncomm_ring
   · ext i
     · simp [socleDerivation, socleDoublingMul, so21BilinearForm, sl2GenK23,
             dotProduct, Fin.sum_univ_three]
     · fin_cases i <;>
         simp [socleDerivation, socleDoublingMul, so21CrossProduct, sl2GenK23,
               dotProduct, Fin.sum_univ_three] <;>
-        ring
+        noncomm_ring
 
 /-- Generic left and right matrix actions on $\operatorname{Mat}_{7 \times 2}(R)$ commute, and scalar
 multiples of the $7 \times 7$ and $2 \times 2$ identities scale $M$ by the product scalar. -/

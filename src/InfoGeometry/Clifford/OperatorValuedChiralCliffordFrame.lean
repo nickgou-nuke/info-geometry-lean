@@ -13,19 +13,22 @@ namespace InfoGeometry.Clifford.OperatorValuedChiralCliffordFrame
 
 open InfoGeometry.Clifford
 
-variable {ι R Op : Type*} [Field R] [CharZero R] [Ring Op] [Algebra R Op]
+section Ring
 
-structure Frame (ι R Op : Type*) [Field R] [CharZero R] [Ring Op] [Algebra R Op] where
+variable {ι R Op : Type*} [Ring R] [Ring Op]
+
+structure Frame (ι R Op : Type*) [Ring R] [Ring Op] where
   gamma : ι → Op
   metric : ι → ι → R
 
 def anticommutator (F : Frame ι R Op) (i j : ι) : Op :=
   operatorAnticommutator (F.gamma i) (F.gamma j)
 
-theorem anticommutator_eq_metric (F : Frame ι R Op)
-    (hF : IsDiracMatrixSystem F.metric F.gamma) (i j : ι) :
-    anticommutator F i j = algebraMap R Op (2 * F.metric i j) :=
-  hF i j
+end Ring
+
+section DivisionRing
+
+variable {ι R Op : Type*} [DivisionRing R] [Ring Op] [Module R Op]
 
 def symmetricChannel (F : Frame ι R Op) (i j : ι) : Op :=
   ((2 : R)⁻¹) • anticommutator F i j
@@ -33,16 +36,25 @@ def symmetricChannel (F : Frame ι R Op) (i j : ι) : Op :=
 def bivectorChannel (F : Frame ι R Op) (i j : ι) : Op :=
   ((2 : R)⁻¹) • (F.gamma i * F.gamma j - F.gamma j * F.gamma i)
 
+theorem bivectorChannel_swap (F : Frame ι R Op) (i j : ι) :
+    bivectorChannel F j i = -bivectorChannel F i j := by
+  dsimp [bivectorChannel]
+  simp [sub_eq_add_neg]
+
+end DivisionRing
+
+variable {ι R Op : Type*} [Field R] [CharZero R] [Ring Op] [Algebra R Op]
+
+theorem anticommutator_eq_metric (F : Frame ι R Op)
+    (hF : IsDiracMatrixSystem F.metric F.gamma) (i j : ι) :
+    anticommutator F i j = algebraMap R Op (2 * F.metric i j) :=
+  hF i j
+
 theorem symmetricChannel_eq_metric (F : Frame ι R Op)
     (hF : IsDiracMatrixSystem F.metric F.gamma) (i j : ι) :
     symmetricChannel F i j = algebraMap R Op (F.metric i j) := by
   rw [symmetricChannel, anticommutator_eq_metric F hF]
   rw [Algebra.smul_def, ← map_mul]
   simp
-
-theorem bivectorChannel_swap (F : Frame ι R Op) (i j : ι) :
-    bivectorChannel F j i = -bivectorChannel F i j := by
-  dsimp [bivectorChannel]
-  simp [sub_eq_add_neg]
 
 end InfoGeometry.Clifford.OperatorValuedChiralCliffordFrame

@@ -9,11 +9,15 @@ import Mathlib.Basic.Real.Basic
 
 universe u
 
-structure HurewiczFibration where
-  hBase : Type u
-  hTotal : Type u
-  hProjection : hTotal → hBase
+structure SetMap where
+  base : Type u
+  total : Type u
+  projection : total → base
 
-def hasPathLifting (F : HurewiczFibration) : Prop :=
-  ∀ (γ : ℝ → F.hBase) (e : F.hTotal),
-    F.hProjection e = γ 0 → True
+/-! Set-theoretic path lifting only: this carrier has no topology, so
+continuity of the base path or lift is not part of this predicate. -/
+def hasSetTheoreticPathLifting (F : SetMap) : Prop :=
+  ∀ (γ : ℝ → F.base) (e : F.total),
+    F.projection e = γ 0 →
+      ∃ lift : ℝ → F.total,
+        lift 0 = e ∧ ∀ t, F.projection (lift t) = γ t

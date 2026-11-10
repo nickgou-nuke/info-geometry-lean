@@ -23,8 +23,8 @@ All proofs are complete with 0 `sorry`s, 0 custom axioms, and 0 placeholders.
 
 namespace InfoGeometry.Modular.RadonNikodymDerivation
 
-variable {R : Type*} [CommRing R]
-variable {A : Type*} [Ring A] [Algebra R A]
+variable {R : Type*} [Ring R]
+variable {A : Type*} [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-! =========================================================================
     1. Commutator Bracket and Inner Derivation ad_K
@@ -59,7 +59,7 @@ def innerDeriv (K : A) : A →ₗ[R] A where
     abel_nf
   map_smul' r x := by
     dsimp [bracket]
-    rw [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, smul_sub]
+    rw [mul_smul_comm, smul_mul_assoc, smul_sub]
 
 @[simp]
 theorem innerDeriv_apply (K x : A) : innerDeriv (R := R) K x = K * x - x * K :=
@@ -129,7 +129,7 @@ Evaluating the adjoint action `u(ε) * x * u(-ε)` to first order in `ε`
 reproduces the modular perturbation `[𝒦_{ψ,φ}, x]`:
   `(1 + ε K) * x * (1 - ε K) = x + ε • [K, x] - ε² • (K * x * K)`
 -/
-theorem cocycle_first_order_adjoint (K x : A) (eps : R) :
+theorem cocycle_first_order_adjoint {R : Type*} [CommRing R] {A : Type*} [Ring A] [Algebra R A] (K x : A) (eps : R) :
     (1 + eps • K) * x * (1 - eps • K) =
       x + eps • (bracket K x) - (eps * eps) • (K * x * K) := by
   dsimp [bracket]

@@ -25,7 +25,7 @@ namespace InfoGeometry.Exceptional.AlbertDerivations
 
 /-! ### 1. Abstract Jordan Derivations and the Lie Bracket -/
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 variable {J : Type*} [AddCommGroup J] [Module R J]
 
 /-- A derivation on an R-module J equipped with a bilinear Jordan product `circ`. -/

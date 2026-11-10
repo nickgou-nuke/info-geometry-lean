@@ -60,7 +60,7 @@ theorem basic12_det [CommRing R] (x : R) :
   ring_nf
 
 /-- Product closure of algebraic doubly stochastic matrices. -/
-theorem doublyStochastic_mul {n : ℕ} [CommSemiring R]
+theorem doublyStochastic_mul {n : ℕ} [Semiring R]
     {A B : Matrix (Fin n) (Fin n) R}
     (hA : IsAlgebraicDoublyStochastic A)
     (hB : IsAlgebraicDoublyStochastic B) :
@@ -90,7 +90,7 @@ Gibson's field condition: the characteristic is not two and the field has an
 element distinct from `0`, `1`, and `-1`. For a field this is the concrete
 algebraic form of “characteristic not two and more than three elements”.
 -/
-def GibsonFieldCondition (F : Type u) [Field F] : Prop :=
+def GibsonFieldCondition (F : Type u) [Ring F] : Prop :=
   ringChar F ≠ 2 ∧ ∃ a : F, a ≠ 0 ∧ a ≠ 1 ∧ a ≠ -1
 
 /--
@@ -98,7 +98,7 @@ An order-`n` basic doubly stochastic matrix acts nontrivially only on two
 distinct coordinates, where its block is `[[t, 1-t], [1-t, t]]`.
 -/
 def IsBasicDoublyStochastic
-    {F : Type u} [Field F] {n : ℕ}
+    {F : Type u} [Ring F] {n : ℕ}
     (B : Matrix (Fin n) (Fin n) F) : Prop :=
   ∃ i j : Fin n, i ≠ j ∧ ∃ t : F, ∀ r c,
     B r c =
@@ -110,14 +110,14 @@ def IsBasicDoublyStochastic
 
 /-- Native finite-product closure of the basic matrices. -/
 def GeneratedByBasicDoublyStochastic
-    {F : Type u} [Field F] {n : ℕ}
+    {F : Type u} [Ring F] {n : ℕ}
     (A : Matrix (Fin n) (Fin n) F) : Prop :=
   ∃ factors : List (Matrix (Fin n) (Fin n) F),
     (∀ B ∈ factors, IsBasicDoublyStochastic B) ∧ factors.prod = A
 
 /-- Native nonsingularity predicate over a field. -/
 def IsNonsingular
-    {F : Type u} [Field F] {n : ℕ}
+    {F : Type u} [CommRing F] {n : ℕ}
     (A : Matrix (Fin n) (Fin n) F) : Prop :=
   Matrix.det A ≠ 0
 
@@ -127,7 +127,7 @@ three arbitrary predicates: every term has a fixed matrix- or field-theoretic
 meaning.
 -/
 def NonsingularBasicGenerationCertificate
-    (F : Type u) [Field F] (n : ℕ) : Prop :=
+    (F : Type u) [CommRing F] (n : ℕ) : Prop :=
   (∀ A : Matrix (Fin n) (Fin n) F,
       IsAlgebraicDoublyStochastic A →
       IsNonsingular A →
@@ -136,7 +136,7 @@ def NonsingularBasicGenerationCertificate
 
 namespace NonsingularBasicGenerationCertificate
 
-variable {F : Type u} [Field F] {n : ℕ}
+variable {F : Type u} [CommRing F] {n : ℕ}
 variable (C : NonsingularBasicGenerationCertificate F n)
 
 /-- Historical projection name, now fixed to Gibson's native field predicate. -/
@@ -165,7 +165,7 @@ Exact proposition of Gibson Theorem 3.4 for the fixed native notions of field
 condition and generation by basic factors.
 -/
 def FullBasicGenerationCertificate
-    (F : Type u) [Field F] (n : ℕ) : Prop :=
+    (F : Type u) [Ring F] (n : ℕ) : Prop :=
   (∀ A : Matrix (Fin n) (Fin n) F,
       IsAlgebraicDoublyStochastic A →
       GeneratedByBasicDoublyStochastic A) ↔
@@ -173,7 +173,7 @@ def FullBasicGenerationCertificate
 
 namespace FullBasicGenerationCertificate
 
-variable {F : Type u} [Field F] {n : ℕ}
+variable {F : Type u} [Ring F] {n : ℕ}
 variable (C : FullBasicGenerationCertificate F n)
 
 /-- Historical projection name, now fixed to Gibson's native field predicate. -/
@@ -200,7 +200,7 @@ end FullBasicGenerationCertificate
 
 /-- Rank-refined factorization socket for Gibson Theorem 3.5. -/
 structure RankDefectBasicFactorizationCertificate
-    (F : Type u) [Field F] (n : ℕ) where
+    (F : Type u) [Semiring F] (n : ℕ) where
   rank : Matrix (Fin n) (Fin n) F → ℕ
   generatedByBasics : Matrix (Fin n) (Fin n) F → Prop
   singularBasicFactorCount : Matrix (Fin n) (Fin n) F → ℕ
@@ -215,7 +215,7 @@ structure RankDefectBasicFactorizationCertificate
 
 namespace RankDefectBasicFactorizationCertificate
 
-variable {F : Type u} [Field F] {n : ℕ}
+variable {F : Type u} [Semiring F] {n : ℕ}
 variable (C : RankDefectBasicFactorizationCertificate F n)
 
 /-- Any supplied Gibson 3.5 certificate yields exact rank-defect singular count. -/
@@ -228,7 +228,7 @@ end RankDefectBasicFactorizationCertificate
 
 /-- Characteristic-two orthogonal/symmetric inverse socket for Gibson Theorem 3.7. -/
 structure CharacteristicTwoTransposeInverseCertificate
-    (F : Type u) [Field F] (n : ℕ) where
+    (F : Type u) [Semiring F] (n : ℕ) where
   generatedByBasics : Matrix (Fin n) (Fin n) F → Prop
   nonsingular : Matrix (Fin n) (Fin n) F → Prop
   transposeInverseCondition : Matrix (Fin n) (Fin n) F → Prop
@@ -241,7 +241,7 @@ structure CharacteristicTwoTransposeInverseCertificate
 
 namespace CharacteristicTwoTransposeInverseCertificate
 
-variable {F : Type u} [Field F] {n : ℕ}
+variable {F : Type u} [Semiring F] {n : ℕ}
 variable (C : CharacteristicTwoTransposeInverseCertificate F n)
 
 /-- Gibson Theorem 3.7 reverse readout. -/

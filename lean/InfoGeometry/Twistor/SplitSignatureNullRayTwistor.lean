@@ -35,7 +35,7 @@ namespace InfoGeometry.Twistor.SplitSignatureNullRay
 
 open scoped BigOperators
 
-variable {F : Type*} [CommRing F]
+variable {F : Type*} [Ring F]
 
 /-- Two-term sum over `Fin 2`, expanded. -/
 theorem sum2 (f : Fin 2 → F) : (∑ A', f A') = f 0 + f 1 := by
@@ -45,10 +45,10 @@ theorem sum2 (f : Fin 2 → F) : (∑ A', f A') = f 0 + f 1 := by
 def eps22 (u v : Fin 2 → F) : F :=
   u 0 * v 1 - u 1 * v 0
 
-theorem eps22_self (u : Fin 2 → F) : eps22 u u = 0 := by
+theorem eps22_self {F : Type*} [CommRing F] (u : Fin 2 → F) : eps22 u u = 0 := by
   simp [eps22]; ring
 
-theorem eps22_comm (u v : Fin 2 → F) : eps22 u v = -eps22 v u := by
+theorem eps22_comm {F : Type*} [CommRing F] (u v : Fin 2 → F) : eps22 u v = -eps22 v u := by
   simp [eps22]; ring
 
 /-- Raising a lowered `2`-spinor index with the symplectic form:
@@ -65,7 +65,7 @@ $$\sum_{A'} \pi^{A'}\pi_{A'} = \varepsilon^{A'B'}\pi_{B'}\pi_{A'}
 
 The symmetric contraction $\sum_{A'}\pi^{A'}\pi_{A'}$ with a single (metric-raised) copy would
 *not* vanish; the alternation is essential and is exactly what $\varepsilon$ supplies. -/
-theorem epsLift_contraction_vanishes (pi : Fin 2 → F) :
+theorem epsLift_contraction_vanishes {F : Type*} [CommRing F] (pi : Fin 2 → F) :
     ∑ A', epsLift pi A' * pi A' = 0 := by
   rw [sum2]
   simp [epsLift]
@@ -90,7 +90,7 @@ def incident (x : Fin 2 → Fin 2 → F) (pi : Fin 2 → F) (A : Fin 2) : F :=
 relation is $p^{AA'}\pi_{A'} = lam^A\pi^{A'}\pi_{A'} = lam^A\cdot 0$, so $\omega^A$ depends
 only on $x_0$, not on $\tau$. This proves incidence constancy along the selected line; it does
 not assert that the projective twistor determines a unique null line. -/
-theorem incident_const_along_nullRay (x₀ : Fin 2 → Fin 2 → F) (lam pi : Fin 2 → F) (tau : F)
+theorem incident_const_along_nullRay {F : Type*} [CommRing F] (x₀ : Fin 2 → Fin 2 → F) (lam pi : Fin 2 → F) (tau : F)
     (A : Fin 2) :
     incident (nullRay x₀ lam (epsLift pi) tau) pi A = incident x₀ pi A := by
   rw [incident, incident]
@@ -101,7 +101,7 @@ theorem incident_const_along_nullRay (x₀ : Fin 2 → Fin 2 → F) (lam pi : Fi
   ring
 
 /-- Specialised: the ray parameter does not matter, so $\tau = 0$ and $\tau = 1$ agree. -/
-theorem incident_ray_equiv_zeroth_one (x₀ : Fin 2 → Fin 2 → F) (lam pi : Fin 2 → F)
+theorem incident_ray_equiv_zeroth_one {F : Type*} [CommRing F] (x₀ : Fin 2 → Fin 2 → F) (lam pi : Fin 2 → F)
     (A : Fin 2) :
     incident (nullRay x₀ lam (epsLift pi) 1) pi A
       = incident (nullRay x₀ lam (epsLift pi) 0) pi A :=

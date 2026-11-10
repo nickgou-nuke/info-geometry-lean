@@ -8,7 +8,7 @@ noncomputable section
 namespace InfoGeometry.Algebra.InvPairHolomorphicity
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Inv-Pair Preservation: Conjugation preserves inverse structure -/
 theorem inv_pair_conj (u x : Matrix n n R) [Invertible u] [Invertible x] :

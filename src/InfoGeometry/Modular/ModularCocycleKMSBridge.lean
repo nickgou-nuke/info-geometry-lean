@@ -287,10 +287,9 @@ PART 4: Matrix Trace KMS Stationarity and Expectation Identities
 section MatrixKMS
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
-variable {R : Type*} [CommRing R]
 
 /-- Cyclic trace state evaluation: `traceState ρ X = Tr(ρ * X)`. -/
-def traceState (rho X : Matrix n n R) : R :=
+def traceState {R : Type*} [Semiring R] (rho X : Matrix n n R) : R :=
   Matrix.trace (rho * X)
 
 /--
@@ -298,7 +297,7 @@ def traceState (rho X : Matrix n n R) : R :=
   Commutator expectation with the modular Hamiltonian vanishes in the thermal state:
   `Tr(ρ * [K, X]) = 0` whenever `ρ` and `K` commute (e.g. `ρ = exp(-K)`).
 -/
-theorem kms_stationarity_commutator_zero (rho K X : Matrix n n R)
+theorem kms_stationarity_commutator_zero {R : Type*} [CommRing R] (rho K X : Matrix n n R)
     (h_comm : rho * K = K * rho) :
     traceState rho (ringBracket K X) = 0 := by
   dsimp [traceState, ringBracket]
@@ -319,7 +318,8 @@ theorem kms_stationarity_commutator_zero (rho K X : Matrix n n R)
   THEOREM: Shifted Modular Hamiltonian trace expectation identity:
   `Tr(ρ * K_u) - Tr(ρ * K) = Tr(ρ * dlogL_{ad_K}(u))`
 -/
-theorem trace_perturbed_hamiltonian_diff (rho : Matrix n n R) (K : Matrix n n R) (u : (Matrix n n R)ˣ) :
+theorem trace_perturbed_hamiltonian_diff {R : Type*} [Ring R]
+    (rho : Matrix n n R) (K : Matrix n n R) (u : (Matrix n n R)ˣ) :
     traceState rho (perturbedModularHamiltonian K u) - traceState rho K =
       traceState rho (dlogL (adOp K) u) := by
   dsimp [traceState]

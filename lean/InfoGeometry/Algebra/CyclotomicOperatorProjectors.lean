@@ -353,18 +353,18 @@ end CyclotomicFieldSpecialization
 
 section CyclotomicInvolutions
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
-/-- Projector for the $+1$ eigenspace of an involution $u^2 = 1$ in a commutative ring with $1/2$. -/
+/-- Projector for the $+1$ eigenspace of an involution $u^2 = 1$ in a ring with $1/2$. -/
 def involutionPlusProjector (u : R) (half : R) : R :=
   half * (1 + u)
 
-/-- Projector for the $-1$ eigenspace of an involution $u^2 = 1$ in a commutative ring with $1/2$. -/
+/-- Projector for the $-1$ eigenspace of an involution $u^2 = 1$ in a ring with $1/2$. -/
 def involutionMinusProjector (u : R) (half : R) : R :=
   half * (1 - u)
 
 /-- The $+1$ involution projector is idempotent given $2 \cdot \mathrm{half} = 1$. -/
-theorem involution_plus_isIdempotent {u half : R}
+theorem involution_plus_isIdempotent {R : Type*} [CommRing R] {u half : R}
     (hhalf : 2 * half = 1)
     (hu : u ^ 2 = 1) :
     IsIdempotent (involutionPlusProjector u half) := by
@@ -379,7 +379,7 @@ theorem involution_plus_isIdempotent {u half : R}
     _ = half * (1 + u) := by ring
 
 /-- The $-1$ involution projector is idempotent given $2 \cdot \mathrm{half} = 1$. -/
-theorem involution_minus_isIdempotent {u half : R}
+theorem involution_minus_isIdempotent {R : Type*} [CommRing R] {u half : R}
     (hhalf : 2 * half = 1)
     (hu : u ^ 2 = 1) :
     IsIdempotent (involutionMinusProjector u half) := by
@@ -394,7 +394,7 @@ theorem involution_minus_isIdempotent {u half : R}
     _ = half * (1 - u) := by ring
 
 /-- The $+1$ and $-1$ involution projectors are mutually orthogonal. -/
-theorem involution_projectors_orthogonal {u half : R}
+theorem involution_projectors_orthogonal {R : Type*} [CommRing R] {u half : R}
     (hu : u ^ 2 = 1) :
     involutionPlusProjector u half * involutionMinusProjector u half = 0 := by
   dsimp [involutionPlusProjector, involutionMinusProjector]
@@ -413,7 +413,9 @@ theorem involution_projectors_sum_eq_one {u half : R}
     involutionPlusProjector u half + involutionMinusProjector u half = 1 := by
   dsimp [involutionPlusProjector, involutionMinusProjector]
   calc
-    half * (1 + u) + half * (1 - u) = (2 * half) * 1 := by ring
+    half * (1 + u) + half * (1 - u) = (2 * half) * 1 := by
+      rw [show (2 : R) = 1 + 1 by norm_num]
+      noncomm_ring
     _ = 1 * 1 := by rw [hhalf]
     _ = 1 := mul_one 1
 
@@ -423,12 +425,14 @@ theorem involution_spectral_reconstruction {u half : R}
     involutionPlusProjector u half - involutionMinusProjector u half = u := by
   dsimp [involutionPlusProjector, involutionMinusProjector]
   calc
-    half * (1 + u) - half * (1 - u) = (2 * half) * u := by ring
+    half * (1 + u) - half * (1 - u) = (2 * half) * u := by
+      rw [show (2 : R) = 1 + 1 by norm_num]
+      noncomm_ring
     _ = 1 * u := by rw [hhalf]
     _ = u := one_mul u
 
 /- The involution acts by its defining eigenvalue on each projector. -/
-theorem involution_plus_projector_eigen {u half : R} (hu : u ^ 2 = 1) :
+theorem involution_plus_projector_eigen {R : Type*} [CommRing R] {u half : R} (hu : u ^ 2 = 1) :
     u * involutionPlusProjector u half = involutionPlusProjector u half := by
   dsimp [involutionPlusProjector]
   calc
@@ -436,7 +440,7 @@ theorem involution_plus_projector_eigen {u half : R} (hu : u ^ 2 = 1) :
     _ = half * (u + 1) := by rw [← pow_two u, hu]
     _ = half * (1 + u) := by ring
 
-theorem involution_minus_projector_eigen {u half : R} (hu : u ^ 2 = 1) :
+theorem involution_minus_projector_eigen {R : Type*} [CommRing R] {u half : R} (hu : u ^ 2 = 1) :
     u * involutionMinusProjector u half = -involutionMinusProjector u half := by
   dsimp [involutionMinusProjector]
   calc
@@ -444,12 +448,12 @@ theorem involution_minus_projector_eigen {u half : R} (hu : u ^ 2 = 1) :
     _ = half * (u - 1) := by rw [← pow_two u, hu]
     _ = -(half * (1 - u)) := by ring
 
-theorem involution_plus_projector_right_eigen {u half : R} (hu : u ^ 2 = 1) :
+theorem involution_plus_projector_right_eigen {R : Type*} [CommRing R] {u half : R} (hu : u ^ 2 = 1) :
     involutionPlusProjector u half * u = involutionPlusProjector u half := by
   rw [mul_comm]
   exact involution_plus_projector_eigen hu
 
-theorem involution_minus_projector_right_eigen {u half : R} (hu : u ^ 2 = 1) :
+theorem involution_minus_projector_right_eigen {R : Type*} [CommRing R] {u half : R} (hu : u ^ 2 = 1) :
     involutionMinusProjector u half * u = -involutionMinusProjector u half := by
   rw [mul_comm]
   exact involution_minus_projector_eigen hu

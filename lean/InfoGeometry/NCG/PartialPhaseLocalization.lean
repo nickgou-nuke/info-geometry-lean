@@ -17,7 +17,7 @@ open Matrix NonCommutativeFredholmIndex
 open InfoGeometry.QuantumContext.Drazin
 open InfoGeometry.NCG.ChiralMatrixTrace
 
-variable {R n : Type*} [CommRing R] [Fintype n] [DecidableEq n]
+variable {R n : Type*} [Ring R] [Fintype n] [DecidableEq n]
 
 /-- The precise obstruction to commuting a phase with its commutator square. -/
 theorem phase_commutator_square_defect (F E : Matrix n n R) :
@@ -70,8 +70,12 @@ theorem tripotent_partial_isometry [StarRing R] {F : Matrix n n R}
     (hF : F * F * F = F) (hstar : IsSelfAdjoint F) : F * star F * F = F := by
   rw [hstar.star_eq, hF]
 
+section CommRing
+
+variable {R_comm : Type*} [CommRing R_comm]
+
 /-- The index-one complementary projector has exactly the original operator's kernel. -/
-theorem group_inverse_kernel_range {D B : Matrix n n R}
+theorem group_inverse_kernel_range {D B : Matrix n n R_comm}
     (h : IsDrazinInverse D B 1) :
     LinearMap.range (Matrix.toLin' (kernelProj D B)) = LinearMap.ker (Matrix.toLin' D) := by
   apply le_antisymm
@@ -88,26 +92,28 @@ theorem group_inverse_kernel_range {D B : Matrix n n R}
       Matrix.toLin'_mul_apply, hv', map_zero, sub_zero]
 
 /-- Zero modes of a partial phase are the range of its complementary support. -/
-theorem tripotent_kernel_range {F : Matrix n n R} (hF : F * F * F = F) :
+theorem tripotent_kernel_range {F : Matrix n n R_comm} (hF : F * F * F = F) :
     LinearMap.range (Matrix.toLin' (1 - F * F)) = LinearMap.ker (Matrix.toLin' F) :=
   group_inverse_kernel_range (tripotent_isDrazinInverse hF)
 
 /-- Chiral cancellation removes the regular Drazin sector from the weighted trace. -/
-theorem trace_spectralProj_zero [IsAddTorsionFree R] {γ D B : Matrix n n R} {k : ℕ}
+theorem trace_spectralProj_zero [IsAddTorsionFree R_comm] {γ D B : Matrix n n R_comm} {k : ℕ}
     (hγ : anticommutator γ D = 0) (hD : IsDrazinInverse D B k) :
     trace (γ * spectralProj D B) = 0 :=
   trace_mul_eq_zero hγ hD.comm
 
 /-- The remaining trace is exactly carried by the complementary Drazin projector. -/
-theorem trace_kernelProj_eq [IsAddTorsionFree R] {γ D B : Matrix n n R} {k : ℕ}
+theorem trace_kernelProj_eq [IsAddTorsionFree R_comm] {γ D B : Matrix n n R_comm} {k : ℕ}
     (hγ : anticommutator γ D = 0) (hD : IsDrazinInverse D B k) :
     trace (γ * kernelProj D B) = trace γ := by
   rw [kernelProj, mul_sub, mul_one, trace_sub, trace_spectralProj_zero hγ hD, sub_zero]
 
 /-- In a self-inverse partial phase, localization is to its actual zero-mode projector. -/
-theorem trace_tripotent_kernel_eq [IsAddTorsionFree R] {γ F : Matrix n n R}
+theorem trace_tripotent_kernel_eq [IsAddTorsionFree R_comm] {γ F : Matrix n n R_comm}
     (hγ : anticommutator γ F = 0) (hF : F * F * F = F) :
     trace (γ * (1 - F * F)) = trace γ :=
   trace_kernelProj_eq hγ (tripotent_isDrazinInverse hF)
+
+end CommRing
 
 end InfoGeometry.NCG.PartialPhaseLocalization

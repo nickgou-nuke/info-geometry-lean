@@ -19,7 +19,7 @@ prove that the anomaly nullification mechanism is not a finite artifact
 but strictly survives in the infinite continuum limit.
 -/
 
-variable {R : Type*} [CommRing R] [Algebra ℚ R]
+variable {R : Type*} [CommSemiring R] [Algebra ℚ R]
 variable (A : ℕ → Type*)
 variable [∀ n, Ring (A n)] [∀ n, Algebra ℚ (A n)] [∀ n, Algebra R (A n)]
 variable (A_inf : Type*) [Ring A_inf] [Algebra ℚ A_inf] [Algebra R A_inf]

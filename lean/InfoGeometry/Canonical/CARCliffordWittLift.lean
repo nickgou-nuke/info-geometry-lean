@@ -28,7 +28,7 @@ set_option linter.unusedSectionVars false
 
 open Matrix
 
-variable {R : Type*} [Field R] [CharZero R]
+variable {R : Type*} [Ring R]
 
 -- 1. The Cl(1,1) Sheet Atom
 def e_vec : Matrix (Fin 2) (Fin 2) R := !![1, 0; 0, -1]
@@ -44,6 +44,13 @@ lemma f_sq : f_vec (R := R) * f_vec = -1 := by
 lemma ef_anti : e_vec (R := R) * f_vec + f_vec * e_vec = 0 := by
   ext i j; fin_cases i <;> fin_cases j <;> simp [e_vec, f_vec]
 
+-- The geometric Lorentz bivector
+def bivector_ef : Matrix (Fin 2) (Fin 2) R := e_vec * f_vec
+
+section DivisionRing
+
+variable {R : Type*} [DivisionRing R] [CharZero R]
+
 -- 2. Witt / Circular Basis
 def witt_a : Matrix (Fin 2) (Fin 2) R := (1/2 : R) • (e_vec + f_vec)
 def witt_c : Matrix (Fin 2) (Fin 2) R := (1/2 : R) • (e_vec - f_vec)
@@ -56,12 +63,9 @@ theorem CAR_c_sq : witt_c (R := R) * witt_c = 0 := by
   ext i j; fin_cases i <;> fin_cases j <;> simp [witt_c, e_vec, f_vec]
 
 theorem CAR_ac_anti : witt_a (R := R) * witt_c + witt_c * witt_a = 1 := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [witt_a, witt_c, e_vec, f_vec] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [witt_a, witt_c, e_vec, f_vec] <;> norm_num
 
 -- 4. Quadratic Operator Lie Algebra
--- The geometric Lorentz bivector
-def bivector_ef : Matrix (Fin 2) (Fin 2) R := e_vec * f_vec
-
 -- The quadratic CAR operator
 def quadratic_E : Matrix (Fin 2) (Fin 2) R :=
   witt_c * witt_a - (1/2 : R) • (1 : Matrix (Fin 2) (Fin 2) R)
@@ -69,6 +73,8 @@ def quadratic_E : Matrix (Fin 2) (Fin 2) R :=
 -- 5. Noncommutative Symmetry Dynamics (Bivector Recovery)
 theorem quadratic_Lie_generator_eq_lorentz_bivector :
     quadratic_E (R := R) = (1/2 : R) • bivector_ef := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [quadratic_E, witt_c, witt_a, bivector_ef, e_vec, f_vec] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [quadratic_E, witt_c, witt_a, bivector_ef, e_vec, f_vec] <;> norm_num
+
+end DivisionRing
 
 end InfoGeometry.Canonical.CARCliffordWittLift

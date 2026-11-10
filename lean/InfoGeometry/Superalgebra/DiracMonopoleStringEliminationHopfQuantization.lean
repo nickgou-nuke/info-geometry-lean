@@ -5,6 +5,7 @@ Authors: InfoGeometry Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.LinearCombination
 
 /-!
@@ -36,7 +37,7 @@ Standard: QMS-SOP-IAA-001 (v1.1) / OpenGauss 16-Trap Universal Shield
 
 namespace InfoGeometry.Superalgebra.DiracMonopoleHopf
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. 3D Пространствени Вектори и Изображение на Хопф π_Hopf : ℝ⁴ → ℝ³ -/
 
@@ -49,7 +50,7 @@ structure ColorVec3 (R : Type*) where
 
 namespace ColorVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : ColorVec3 R := ⟨0, 0, 0⟩
 def neg (u : ColorVec3 R) : ColorVec3 R := ⟨-u.c1, -u.c2, -u.c3⟩
@@ -85,7 +86,7 @@ def hopfMap (z0 z1 z2 z3 : R) : ColorVec3 R where
 4D спинорната норма r = z₀² + z₁² + z₂² + z₃²:
 ‖π_Hopf(Z)‖² = (z₀² + z₁² + z₂² + z₃²)²!
 -/
-theorem hopf_map_norm_sq_identity (z0 z1 z2 z3 : R) :
+theorem hopf_map_norm_sq_identity {R : Type*} [CommRing R] (z0 z1 z2 z3 : R) :
     normSq (hopfMap z0 z1 z2 z3) =
       (z0 * z0 + z1 * z1 + z2 * z2 + z3 * z3) *
       (z0 * z0 + z1 * z1 + z2 * z2 + z3 * z3) := by
@@ -105,14 +106,14 @@ theorem hopf_regularizes_dirac_string_denominators (z0 z1 z2 z3 : R) :
     r + u.c3 = 2 * (z0 * z0 + z1 * z1) ∧
     r - u.c3 = 2 * (z2 * z2 + z3 * z3) := by
   dsimp [hopfMap]
-  constructor <;> ring
+  constructor <;> noncomm_ring
 
 /--
 Теорема 2 (Екваториален Преход на Ву–Янг за Двете Карти на Струната на Дирак):
 На сферата x² + y² + z² = r², произведението на северния знаменател (r + z)
 и южния знаменател (r - z) е точно квадратът на екваториалния радиус x² + y²!
 -/
-theorem wu_yang_equatorial_string_product (x y z r : R)
+theorem wu_yang_equatorial_string_product {R : Type*} [CommRing R] (x y z r : R)
     (h_sphere : x * x + y * y + z * z = r * r) :
     (r + z) * (r - z) = x * x + y * y := by
   linear_combination -h_sphere
@@ -140,7 +141,7 @@ structure SplitOctonion (R : Type*) where
 
 namespace SplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : SplitOctonion R := ⟨0, ColorVec3.zero, ColorVec3.zero, 0⟩
 def one  : SplitOctonion R := ⟨1, ColorVec3.zero, ColorVec3.zero, 1⟩
@@ -182,6 +183,8 @@ def extDerivativeMC (da db : ColorVec3 R) : SplitOctonion R :=
 def faradayYangMills (u da db : ColorVec3 R) : SplitOctonion R :=
   add (extDerivativeMC da db)
       (commutator (maurerCartanForm u da) (maurerCartanForm u db))
+
+variable {R : Type*} [CommRing R]
 
 /--
 Теорема 1 (Топологичната Пречка на Стокс в U(1) срещу Октонионния Монопол на Дирак):
@@ -238,7 +241,7 @@ theorem splitOctonion_mul_noncommutative :
 
 /-! ### 3. Главен Синтез на Раздел 139 -/
 
-theorem dirac_monopole_hopf_synthesis (u da db : ColorVec3 R)
+theorem dirac_monopole_hopf_synthesis {R : Type*} [CommRing R] (u da db : ColorVec3 R)
     (z0 z1 z2 z3 q_e n Phi_0 hbar : R)
     (h_winding : ColorVec3.det3 u da db = n * Phi_0)
     (h_dirac_cond : q_e * Phi_0 = hbar) :

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
+import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.LinearCombination
 
@@ -33,7 +34,7 @@ Ref: `QMS-DIR-SEC134-EINSTEIN-DIRAC-UNRUH-2026-OCT-16`
 
 namespace InfoGeometry.Superalgebra.EinsteinDiracUnruh
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. 3D Спинови Вектори -/
 
@@ -46,7 +47,7 @@ structure ColorVec3 (R : Type*) where
 
 namespace ColorVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : ColorVec3 R := ⟨0, 0, 0⟩
 def neg (u : ColorVec3 R) : ColorVec3 R := ⟨-u.c1, -u.c2, -u.c3⟩
@@ -85,7 +86,7 @@ structure SplitOctonion (R : Type*) where
 
 namespace SplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : SplitOctonion R := ⟨0, ColorVec3.zero, ColorVec3.zero, 0⟩
 def one  : SplitOctonion R := ⟨1, ColorVec3.zero, ColorVec3.zero, 1⟩
@@ -155,7 +156,7 @@ theorem spin_connection_geometric_product_fusion (u du : ColorVec3 R) :
   dsimp [quark, diracVecH, e1, antiquark, mul, add, scale,
          ColorVec3.zero, ColorVec3.dot, ColorVec3.sub, ColorVec3.add,
          ColorVec3.smul, ColorVec3.cross]
-  ext <;> ring
+  ext <;> simp
 
 /--
 Теорема 1b (Комутаторно Сливане на Спина и Спиновата Връзка):
@@ -163,7 +164,7 @@ theorem spin_connection_geometric_product_fusion (u du : ColorVec3 R) :
 и удвоената спинова връзка на Хестенес 2 • V(u × du) в задния лист:
 [U(u), H(du)] = (u · du) • K₀ + 2 • V(u × du)!
 -/
-theorem spin_connection_is_spin_fusion (u du : ColorVec3 R) :
+theorem spin_connection_is_spin_fusion {R : Type*} [CommRing R] (u du : ColorVec3 R) :
     commutator (quark u) (diracVecH du) =
       add (scale (ColorVec3.dot u du) paraSymplecticK0)
           (scale 2 (antiquark (ColorVec3.cross u du))) := by
@@ -183,8 +184,7 @@ theorem spin_connection_is_spin_fusion (u du : ColorVec3 R) :
 theorem fisher_metric_extracts_emergent_spacetime (du dv : ColorVec3 R) :
     trace (mul (diffProjPlus du) (dagger (diffProjPlus dv))) = ColorVec3.dot du dv := by
   have _ := (du, dv)
-  dsimp [trace, mul, diffProjPlus, dagger, ColorVec3.zero, ColorVec3.dot]
-  ring
+  simp [trace, mul, diffProjPlus, dagger, ColorVec3.zero, ColorVec3.dot]
 
 /--
 Теорема 2b (Следа на Пълните Хиперкомплексни Диференциали H(du) · H(dv)):
@@ -193,8 +193,7 @@ Tr( H(du) · H(dv) ) = 2 (du · dv).
 theorem fisher_metric_dirac_vec_trace (du dv : ColorVec3 R) :
     trace (mul (diracVecH du) (diracVecH dv)) = 2 * ColorVec3.dot du dv := by
   have _ := (du, dv)
-  dsimp [trace, mul, diracVecH, ColorVec3.dot]
-  ring
+  simp [trace, mul, diracVecH, ColorVec3.dot, two_mul]
 
 /-! ### 5. Теорема 3: Самогенериращо се Уравнение на Айнщайн–Дирак–Хестенес -/
 
@@ -212,13 +211,13 @@ theorem einstein_dirac_self_generated_spin_connection (grad u : ColorVec3 R) :
   dsimp [diracVecH, quark, e2, antiquark, mul, add, scale,
          ColorVec3.zero, ColorVec3.dot, ColorVec3.sub, ColorVec3.add,
          ColorVec3.smul, ColorVec3.cross]
-  ext <;> ring
+  ext <;> simp
 
 /--
 Теорема 3b (Квадратът на Дираковия Оператор H(∂) е Точният Лапласиан / Д'Аламбертиан):
 H(∂) · H(∂) = (∂ · ∂) • 𝟙!
 -/
-theorem dirac_operator_sq_is_laplacian (grad : ColorVec3 R) :
+theorem dirac_operator_sq_is_laplacian {R : Type*} [CommRing R] (grad : ColorVec3 R) :
     mul (diracVecH grad) (diracVecH grad) =
       scale (ColorVec3.dot grad grad) one := by
   have _ := grad
@@ -239,7 +238,7 @@ def unruhModularRotor (c s : R) : SplitOctonion R :=
 (c + s) = e^{π ω / a} и (c - s) = e^{-π ω / a}, удовлетворявайки закона за детайлния баланс:
 (c - s) • (Δ(c, s) · H(u)).u = (c + s) • (Δ(c, s) · H(u)).v!
 -/
-theorem unruh_thermal_kms_detailed_balance (c s : R) (u : ColorVec3 R) :
+theorem unruh_thermal_kms_detailed_balance {R : Type*} [CommRing R] (c s : R) (u : ColorVec3 R) :
     let Ψ_unruh := mul (unruhModularRotor c s) (diracVecH u)
     Ψ_unruh.u = ColorVec3.smul (c + s) u ∧
     Ψ_unruh.v = ColorVec3.smul (c - s) u ∧
@@ -254,7 +253,7 @@ end SplitOctonion
 
 /-! ### 7. Главен Синтез на Раздел 134 -/
 
-theorem einstein_dirac_unruh_synthesis (c s : R) (u du dv grad : ColorVec3 R) :
+theorem einstein_dirac_unruh_synthesis {R : Type*} [CommRing R] (c s : R) (u du dv grad : ColorVec3 R) :
     SplitOctonion.commutator (SplitOctonion.quark u) (SplitOctonion.diracVecH du) =
       SplitOctonion.add (SplitOctonion.scale (ColorVec3.dot u du) SplitOctonion.paraSymplecticK0)
                         (SplitOctonion.scale 2 (SplitOctonion.antiquark (ColorVec3.cross u du))) ∧

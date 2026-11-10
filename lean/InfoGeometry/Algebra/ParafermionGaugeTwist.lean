@@ -60,7 +60,7 @@ theorem parafermionZeta_mul_zeta (C : CuntzO2Carrier Op) (ω : Op) (x y : Op)
   rw [h1, h2, h3, h4]
   simp
 
-variable {R : Type*} [CommRing R] [Algebra R Op]
+variable {R : Type*} [Ring R]
 variable (n : ℕ)
 
 /-- Defining the structure of a matrix representation that honors the twisted action -/

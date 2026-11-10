@@ -22,19 +22,19 @@ namespace InfoGeometry.OperatorAlgebra.OperatorDirichlet
 
 open InfoGeometry.OperatorAlgebra.PeirceSpine
 
-variable {R B : Type*} [CommRing R] [Ring B] [Algebra R B] {P : B} (hP : P * P = P)
-include hP
-
-theorem conePlus_resolvent (A : B) :
+theorem conePlus_resolvent {B : Type*} [Ring B] {P : B} (hP : P * P = P) (A : B) :
     (1 - conePlus P A) * (1 + conePlus P A) = 1 ∧ (1 + conePlus P A) * (1 - conePlus P A) = 1 := by
   have h := conePlus_mul_conePlus hP A A
   constructor <;> noncomm_ring [h]
 
-theorem coneMinus_resolvent (C : B) :
+theorem coneMinus_resolvent {B : Type*} [Ring B] {P : B} (hP : P * P = P) (C : B) :
     (1 - coneMinus P C) * (1 + coneMinus P C) = 1 ∧
       (1 + coneMinus P C) * (1 - coneMinus P C) = 1 := by
   have h := coneMinus_mul_coneMinus hP C C
   constructor <;> noncomm_ring [h]
+
+variable {R B : Type*} [CommRing R] [Ring B] [Algebra R B] {P : B} (hP : P * P = P)
+include hP
 
 /-- Resolvent of `Φ` from the unit `z² - V`. -/
 theorem genPhi_resolvent (A C : B) (z : R) (u : Bˣ)

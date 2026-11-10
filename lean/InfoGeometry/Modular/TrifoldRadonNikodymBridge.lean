@@ -33,10 +33,10 @@ PART 1: The Graded Trifold Decomposition on Doubled Block Spaces
 =============================================================================
 -/
 
-section TrifoldDecomposition
+section TrifoldDecompositionRing
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 local notation "BlockMat" => Matrix (ι ⊕ ι) (ι ⊕ ι) R
 local notation "SubMat" => Matrix ι ι R
@@ -71,14 +71,14 @@ theorem trace_identityDoubled :
       (2 : R) * (Fintype.card ι : R) := by
   dsimp [identityDoubled]
   rw [trace_fromBlocks_diag, Matrix.trace_one]
-  ring
+  simp only [nsmul_eq_mul, mul_one, ← two_mul]
 
 @[simp]
 theorem trace_Gamma :
     Matrix.trace (Gamma : BlockMat) = 0 := by
   dsimp [Gamma]
   rw [trace_fromBlocks_diag, Matrix.trace_one, Matrix.trace_neg, Matrix.trace_one]
-  ring
+  abel
 
 @[simp]
 theorem superTrace_identityDoubled :
@@ -90,7 +90,7 @@ theorem superTrace_identityDoubled :
     rw [fromBlocks_multiply]
     simp
   rw [h_mul, trace_fromBlocks_diag, Matrix.trace_one, Matrix.trace_neg, Matrix.trace_one]
-  ring
+  abel
 
 @[simp]
 theorem trace_blockDiag (A B : SubMat) :
@@ -108,7 +108,7 @@ theorem superTrace_blockDiag (A B : SubMat) :
     rw [fromBlocks_multiply]
     simp
   rw [h_mul, trace_fromBlocks_diag, Matrix.trace_neg]
-  ring
+  abel
 
 /-! ### The Trifold Scalings and the Residual Shape Operator K₀ -/
 
@@ -130,6 +130,37 @@ def K_zero (A B : SubMat) : BlockMat :=
   blockDiag
     (A - (alphaCommon two_n_inv A B + betaChiral two_n_inv A B) • (1 : SubMat))
     (B - (alphaCommon two_n_inv A B - betaChiral two_n_inv A B) • (1 : SubMat))
+
+/--
+  THEOREM 3: Exact Reconstruction of the Surprisal Operator:
+  K = α • I + β • Γ + K₀
+-/
+theorem trifold_reconstruction (A B : SubMat) :
+    blockDiag A B =
+      (alphaCommon two_n_inv A B) • (identityDoubled : BlockMat) +
+      (betaChiral two_n_inv A B) • (Gamma : BlockMat) +
+      K_zero two_n_inv A B := by
+  dsimp [blockDiag, identityDoubled, Gamma, K_zero]
+  ext i j
+  rcases i with i | i <;> rcases j with j | j
+  · simp [Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Matrix.one_apply]
+    split_ifs <;> abel
+  · simp [Matrix.add_apply, Matrix.smul_apply, Matrix.zero_apply]
+  · simp [Matrix.add_apply, Matrix.smul_apply, Matrix.zero_apply]
+  · simp [Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Matrix.one_apply, Matrix.neg_apply]
+    split_ifs <;> abel
+
+end TrifoldDecompositionRing
+
+section TrifoldDecomposition
+
+variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+variable {R : Type*} [CommRing R]
+
+local notation "BlockMat" => Matrix (ι ⊕ ι) (ι ⊕ ι) R
+local notation "SubMat" => Matrix ι ι R
+
+variable (two_n_inv : R)
 
 /-- Helper scalar relation: (α + β) * n = Tr(A) -/
 lemma alpha_add_beta_mul_n (h_two_n : (2 * (Fintype.card ι : R)) * two_n_inv = 1) (A B : SubMat) :
@@ -190,25 +221,6 @@ theorem superTrace_K_zero (h_two_n : (2 * (Fintype.card ι : R)) * two_n_inv = 1
   rw [alpha_add_beta_mul_n two_n_inv h_two_n A B]
   rw [alpha_sub_beta_mul_n two_n_inv h_two_n A B]
   ring
-
-/--
-  THEOREM 3: Exact Reconstruction of the Surprisal Operator:
-  K = α • I + β • Γ + K₀
--/
-theorem trifold_reconstruction (A B : SubMat) :
-    blockDiag A B =
-      (alphaCommon two_n_inv A B) • (identityDoubled : BlockMat) +
-      (betaChiral two_n_inv A B) • (Gamma : BlockMat) +
-      K_zero two_n_inv A B := by
-  dsimp [blockDiag, identityDoubled, Gamma, K_zero]
-  ext i j
-  rcases i with i | i <;> rcases j with j | j
-  · simp [Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Matrix.one_apply]
-    split_ifs <;> ring
-  · simp [Matrix.add_apply, Matrix.smul_apply, Matrix.zero_apply]
-  · simp [Matrix.add_apply, Matrix.smul_apply, Matrix.zero_apply]
-  · simp [Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Matrix.one_apply, Matrix.neg_apply]
-    split_ifs <;> ring
 
 end TrifoldDecomposition
 

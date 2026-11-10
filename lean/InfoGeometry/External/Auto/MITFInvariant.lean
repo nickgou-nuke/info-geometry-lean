@@ -25,7 +25,52 @@ namespace MITFInvariant
 open Matrix
 open GenContFract
 
-variable {K : Type*} [Field K]
+section Ring
+
+variable {K : Type*} [Ring K]
+
+/-- The step matrix `[[b, 1], [a, 0]]`. -/
+def stepMatrix (a b : K) : Matrix (Fin 2) (Fin 2) K :=
+  !![b, 1;
+     a, 0]
+
+/-- The product of the partial numerators up to index `n`. -/
+def partialNumeratorsProd (g : GenContFract K) : ℕ → K
+  | 0 => 1
+  | n + 1 =>
+      match g.s.get? n with
+      | none => partialNumeratorsProd g n
+      | some s => partialNumeratorsProd g n * s.a
+
+lemma partialNumeratorsProd_succ_some (g : GenContFract K) (n : ℕ)
+    (s : GenContFract.Pair K) (hs : g.s.get? n = some s) :
+    partialNumeratorsProd g (n + 1) = partialNumeratorsProd g n * s.a := by
+  simp [partialNumeratorsProd, hs]
+
+/-- For simple continued fractions, every partial numerator is `1`. -/
+lemma partialNumeratorsProd_one (g : GenContFract K)
+    (h_simple : ∀ n, (g.s.get? n).map (·.a) = some (1 : K)) :
+    ∀ n, partialNumeratorsProd g n = 1
+  | 0 => rfl
+  | n + 1 => by
+      cases h_get : g.s.get? n with
+      | none =>
+          have hmap := h_simple n
+          rw [h_get] at hmap
+          simp at hmap
+      | some s =>
+          have hs : s.a = (1 : K) := by
+            have hmap : some s.a = some (1 : K) := by
+              simpa [h_get] using h_simple n
+            exact Option.some.inj hmap
+          rw [partialNumeratorsProd_succ_some g n s h_get]
+          rw [partialNumeratorsProd_one g h_simple n, hs, mul_one]
+
+end Ring
+
+section DivisionRing
+
+variable {K : Type*} [DivisionRing K]
 
 /-- The 2×2 continuant matrix
 `[[Aₙ₊₁, Aₙ], [Bₙ₊₁, Bₙ]]`. -/
@@ -33,10 +78,34 @@ def continuantMatrix (g : GenContFract K) (n : ℕ) : Matrix (Fin 2) (Fin 2) K :
   !![(g.contsAux (n + 1)).a, (g.contsAux n).a;
      (g.contsAux (n + 1)).b, (g.contsAux n).b]
 
-/-- The step matrix `[[b, 1], [a, 0]]`. -/
-def stepMatrix (a b : K) : Matrix (Fin 2) (Fin 2) K :=
-  !![b, 1;
-     a, 0]
+end DivisionRing
+
+section CommRing
+
+variable {K : Type*} [CommRing K]
+
+/-- The step matrix determinant. -/
+lemma det_stepMatrix (a b : K) : (stepMatrix a b).det = -a := by
+  simp [stepMatrix, Matrix.det_fin_two]
+
+/-- The step matrix lifted to `GL(2, K)`. -/
+def stepMatrixGL (b : K) : Matrix.GeneralLinearGroup (Fin 2) K :=
+  Matrix.GeneralLinearGroup.mk'' (stepMatrix 1 b) (by
+    have h_det : (stepMatrix 1 b).det = -1 := by
+      simp [stepMatrix, Matrix.det_fin_two]
+    rw [h_det]
+    exact isUnit_neg_one)
+
+/-- The `GL(2, K)` step matrix has determinant `-1` as a unit. -/
+lemma det_stepMatrixGL (b : K) :
+    Matrix.GeneralLinearGroup.det (stepMatrixGL b) = (-1 : Kˣ) := by
+  apply Units.ext
+  simp [stepMatrixGL, stepMatrix, Matrix.GeneralLinearGroup.val_det_apply,
+    Matrix.GeneralLinearGroup.val_mk'', Matrix.det_fin_two]
+
+end CommRing
+
+variable {K : Type*} [Field K]
 
 /-- The continuant matrix satisfies the expected one-step recursion. -/
 theorem continuantMatrix_recursion (g : GenContFract K) (n : ℕ)
@@ -65,23 +134,6 @@ theorem continuantMatrix_recursion (g : GenContFract K) (n : ℕ)
     simp [continuantMatrix, stepMatrix, Matrix.mul_apply, Fin.sum_univ_two, hrec]
     ring
   · simp [continuantMatrix, stepMatrix, Matrix.mul_apply, Fin.sum_univ_two]
-
-/-- The product of the partial numerators up to index `n`. -/
-def partialNumeratorsProd (g : GenContFract K) : ℕ → K
-  | 0 => 1
-  | n + 1 =>
-      match g.s.get? n with
-      | none => partialNumeratorsProd g n
-      | some s => partialNumeratorsProd g n * s.a
-
-lemma partialNumeratorsProd_succ_some (g : GenContFract K) (n : ℕ)
-    (s : GenContFract.Pair K) (hs : g.s.get? n = some s) :
-    partialNumeratorsProd g (n + 1) = partialNumeratorsProd g n * s.a := by
-  simp [partialNumeratorsProd, hs]
-
-/-- The step matrix determinant. -/
-lemma det_stepMatrix (a b : K) : (stepMatrix a b).det = -a := by
-  simp [stepMatrix, Matrix.det_fin_two]
 
 /-- Determinant formula for the continuant matrix. -/
 theorem det_continuantMatrix (g : GenContFract K) (n : ℕ)
@@ -114,25 +166,6 @@ theorem det_continuantMatrix (g : GenContFract K) (n : ℕ)
             _ = (-1 : K) ^ (n + 1 + 1) * (partialNumeratorsProd g n * s.a) := by
                   rw [← hpow]
 
-/-- For simple continued fractions, every partial numerator is `1`. -/
-lemma partialNumeratorsProd_one (g : GenContFract K)
-    (h_simple : ∀ n, (g.s.get? n).map (·.a) = some (1 : K)) :
-    ∀ n, partialNumeratorsProd g n = 1
-  | 0 => rfl
-  | n + 1 => by
-      cases h_get : g.s.get? n with
-      | none =>
-          have hmap := h_simple n
-          rw [h_get] at hmap
-          simp at hmap
-      | some s =>
-          have hs : s.a = (1 : K) := by
-            have hmap : some s.a = some (1 : K) := by
-              simpa [h_get] using h_simple n
-            exact Option.some.inj hmap
-          rw [partialNumeratorsProd_succ_some g n s h_get]
-          rw [partialNumeratorsProd_one g h_simple n, hs, mul_one]
-
 /-- Closed form of the determinant in the simple case. -/
 theorem det_continuantMatrix_simple (g : GenContFract K) (n : ℕ)
     (h_simple : ∀ m, (g.s.get? m).map (·.a) = some (1 : K))
@@ -141,21 +174,6 @@ theorem det_continuantMatrix_simple (g : GenContFract K) (n : ℕ)
   rw [det_continuantMatrix g n hn, partialNumeratorsProd_one g h_simple, mul_one]
 
 /-! ## GL(2, K) modular group lift -/
-
-/-- The step matrix lifted to `GL(2, K)`. -/
-def stepMatrixGL (b : K) : Matrix.GeneralLinearGroup (Fin 2) K :=
-  Matrix.GeneralLinearGroup.mk'' (stepMatrix 1 b) (by
-    have h_det : (stepMatrix 1 b).det = -1 := by
-      simp [stepMatrix, Matrix.det_fin_two]
-    rw [h_det]
-    exact isUnit_neg_one)
-
-/-- The `GL(2, K)` step matrix has determinant `-1` as a unit. -/
-lemma det_stepMatrixGL (b : K) :
-    Matrix.GeneralLinearGroup.det (stepMatrixGL b) = (-1 : Kˣ) := by
-  apply Units.ext
-  simp [stepMatrixGL, stepMatrix, Matrix.GeneralLinearGroup.val_det_apply,
-    Matrix.GeneralLinearGroup.val_mk'', Matrix.det_fin_two]
 
 /-- The continuant matrix lifted to `GL(2, K)`. -/
 def continuantMatrixGL (g : GenContFract K)

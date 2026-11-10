@@ -29,8 +29,8 @@ open GrassmannianBundleCyclotomicOrientability (unitOrbitMap)
 open InfoGeometry.OperatorAlgebra.TracialCARDensity (weighted weighted_apply joint_covariance)
 open InfoGeometry.NCG (TracialFunctional)
 
-section Algebraic
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+section RingScalars
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
 
 /-- Definition readback used to consume the native rotor inverse laws. -/
 theorem phaseRotor_eq_native (c s : R) (d B : A) :
@@ -40,6 +40,11 @@ theorem phaseRotor_eq_native (c s : R) (d B : A) :
 theorem kmsWeight_eq_supportWeight (u v : R) (d B : A) :
     UnifiedGeometryOperatorSignificance.kmsModularWeight u v d B =
       supportWeight (u*u) (v*v) d B := rfl
+
+end RingScalars
+
+section Algebraic
+variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
 
 /-- The moving pole is in the existing unit orbit, not just formally idempotent. -/
 theorem movingPolePlus_mem_unitOrbit {d B : A} (h : IsDualSeedPair d B)

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.ChiralOperatorSymbolProjection
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -12,9 +17,9 @@ symbol projection and its hidden defect sector are transported equivariantly.
 namespace InfoGeometry.Algebra
 
 variable {R Z E : Type*}
-  [CommRing R]
+  [Ring R]
   [AddCommGroup Z] [Module R Z]
-  [Ring E] [Algebra R E]
+  [Ring E] [Module R E]
 
 structure SymbolProjectionMirrorData
     (ι : Z →ₗ[R] E) (σ : E →ₗ[R] Z) where
@@ -36,6 +41,13 @@ def idSymbolProjectionMirrorData (ι : Z →ₗ[R] E) (σ : E →ₗ[R] Z) :
   mirrorOperator_mul _ _ := rfl
   mirror_inclusion := by ext; rfl
   mirror_readout := by ext; rfl
+
+instance : Inhabited (SymbolProjectionMirrorData (LinearMap.id : E →ₗ[R] E) (LinearMap.id : E →ₗ[R] E)) :=
+  ⟨{ mirrorOperator := LinearMap.id
+     mirrorSymbol := LinearMap.id
+     mirrorOperator_mul := fun X Y => rfl
+     mirror_inclusion := rfl
+     mirror_readout := rfl }⟩
 
 theorem mirror_symbolProjection
     {ι : Z →ₗ[R] E} {σ : E →ₗ[R] Z}

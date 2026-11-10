@@ -16,7 +16,7 @@ This provides the vertical chain from local cochain coherence to graded Lie symm
 
 namespace InfoGeometry.Canonical.SplitOctonionG2GradingTransportBridge
 
-variable {𝕜 𝔤 : Type*} [CommRing 𝕜] [LieRing 𝔤] [LieAlgebra 𝕜 𝔤]
+variable {𝕜 𝔤 : Type*} [Ring 𝕜] [LieRing 𝔤] [Module 𝕜 𝔤]
 
 /-- The grading group $(\mathbb{Z}_2)^3$. -/
 abbrev Z2_cube := ZMod 2 × ZMod 2 × ZMod 2

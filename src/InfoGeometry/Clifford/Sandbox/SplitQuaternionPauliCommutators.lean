@@ -66,72 +66,72 @@ namespace InfoGeometry.Clifford.Sandbox.SplitQuaternionPauliCommutators
 
 /-! ## Section 1: Basis matrices -/
 
-/-- Abbreviation for `2 × 2` matrices over a commutative ring. -/
-abbrev Mat2 (R : Type*) [CommRing R] := Matrix (Fin 2) (Fin 2) R
+/-- Abbreviation for `2 × 2` matrices over a ring. -/
+abbrev Mat2 (R : Type*) [Ring R] := Matrix (Fin 2) (Fin 2) R
 
 /-- Split-quaternion identity `𝟙`. -/
-def sqOne (R : Type*) [CommRing R] : Mat2 R := 1
+def sqOne (R : Type*) [Ring R] : Mat2 R := 1
 
 /-- Split-quaternion compact unit `𝐢`, satisfying `𝐢² = -𝟙`.
     `𝐢 = [[0, 1], [-1, 0]]` -/
-def sqI (R : Type*) [CommRing R] : Mat2 R :=
+def sqI (R : Type*) [Ring R] : Mat2 R :=
   !![0, 1; -1, 0]
 
 /-- Split-quaternion hyperbolic unit `𝐣`, satisfying `𝐣² = +𝟙`.
     `𝐣 = [[0, 1], [1, 0]]` (σ₁ Pauli matrix) -/
-def sqJ (R : Type*) [CommRing R] : Mat2 R :=
+def sqJ (R : Type*) [Ring R] : Mat2 R :=
   !![0, 1; 1, 0]
 
 /-- Split-quaternion hyperbolic unit `𝐤`, satisfying `𝐤² = +𝟙`.
     `𝐤 = [[1, 0], [0, -1]]` (σ₃ Pauli matrix) -/
-def sqK (R : Type*) [CommRing R] : Mat2 R :=
+def sqK (R : Type*) [Ring R] : Mat2 R :=
   !![1, 0; 0, -1]
 
 /-! ## Section 2: Squaring relations — the split signature -/
 
-@[simp] theorem sqI_sq (R : Type*) [CommRing R] :
+@[simp] theorem sqI_sq (R : Type*) [Ring R] :
     sqI R * sqI R = -(1 : Mat2 R) := by
   ext i j; fin_cases i <;> fin_cases j <;>
     simp [sqI, Matrix.mul_apply, Fin.sum_univ_two]
 
-@[simp] theorem sqJ_sq (R : Type*) [CommRing R] :
+@[simp] theorem sqJ_sq (R : Type*) [Ring R] :
     sqJ R * sqJ R = (1 : Mat2 R) := by
   ext i j; fin_cases i <;> fin_cases j <;>
     simp [sqJ, Matrix.mul_apply, Fin.sum_univ_two]
 
-@[simp] theorem sqK_sq (R : Type*) [CommRing R] :
+@[simp] theorem sqK_sq (R : Type*) [Ring R] :
     sqK R * sqK R = (1 : Mat2 R) := by
   ext i j; fin_cases i <;> fin_cases j <;>
     simp [sqK, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-! ## Section 3: Product relations -/
 
-theorem sqI_mul_sqJ (R : Type*) [CommRing R] :
+theorem sqI_mul_sqJ (R : Type*) [Ring R] :
     sqI R * sqJ R = sqK R := by
   ext i j; fin_cases i <;> fin_cases j <;>
     simp [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
 
-theorem sqJ_mul_sqI (R : Type*) [CommRing R] :
+theorem sqJ_mul_sqI (R : Type*) [Ring R] :
     sqJ R * sqI R = -(sqK R) := by
   ext i j; fin_cases i <;> fin_cases j <;>
     simp [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
 
-theorem sqJ_mul_sqK (R : Type*) [CommRing R] :
+theorem sqJ_mul_sqK (R : Type*) [Ring R] :
     sqJ R * sqK R = -(sqI R) := by
   ext i j; fin_cases i <;> fin_cases j <;>
     simp [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
 
-theorem sqK_mul_sqJ (R : Type*) [CommRing R] :
+theorem sqK_mul_sqJ (R : Type*) [Ring R] :
     sqK R * sqJ R = sqI R := by
   ext i j; fin_cases i <;> fin_cases j <;>
     simp [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
 
-theorem sqK_mul_sqI (R : Type*) [CommRing R] :
+theorem sqK_mul_sqI (R : Type*) [Ring R] :
     sqK R * sqI R = sqJ R := by
   ext i j; fin_cases i <;> fin_cases j <;>
     simp [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
 
-theorem sqI_mul_sqK (R : Type*) [CommRing R] :
+theorem sqI_mul_sqK (R : Type*) [Ring R] :
     sqI R * sqK R = -(sqJ R) := by
   ext i j; fin_cases i <;> fin_cases j <;>
     simp [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
@@ -139,72 +139,72 @@ theorem sqI_mul_sqK (R : Type*) [CommRing R] :
 /-! ## Section 4: Commutator relations `[A,B] = AB - BA` -/
 
 /-- The commutator of two matrices. -/
-def commutator {R : Type*} [CommRing R] (A B : Mat2 R) : Mat2 R :=
+def commutator {R : Type*} [Ring R] (A B : Mat2 R) : Mat2 R :=
   A * B - B * A
 
 /-- `[𝐢, 𝐣] = 2𝐤` -/
-theorem comm_sqI_sqJ (R : Type*) [CommRing R] :
+theorem comm_sqI_sqJ (R : Type*) [Ring R] :
     commutator (sqI R) (sqJ R) = 2 • sqK R := by
   simp only [commutator, sqI_mul_sqJ, sqJ_mul_sqI]
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [sqK, Matrix.sub_apply, Matrix.smul_apply] <;> ring
+    simp [sqK, Matrix.sub_apply, Matrix.smul_apply] <;> norm_num
 
 /-- `[𝐣, 𝐤] = -2𝐢` — the sign flip characteristic of the split algebra. -/
-theorem comm_sqJ_sqK (R : Type*) [CommRing R] :
+theorem comm_sqJ_sqK (R : Type*) [Ring R] :
     commutator (sqJ R) (sqK R) = -(2 • sqI R) := by
   simp only [commutator, sqJ_mul_sqK, sqK_mul_sqJ]
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [sqI, Matrix.sub_apply, Matrix.neg_apply] <;> ring
+    simp [sqI, Matrix.sub_apply, Matrix.neg_apply] <;> norm_num
 
 /-- `[𝐤, 𝐢] = 2𝐣` -/
-theorem comm_sqK_sqI (R : Type*) [CommRing R] :
+theorem comm_sqK_sqI (R : Type*) [Ring R] :
     commutator (sqK R) (sqI R) = 2 • sqJ R := by
   simp only [commutator, sqK_mul_sqI, sqI_mul_sqK]
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [sqJ, Matrix.sub_apply, Matrix.smul_apply] <;> ring
+    simp [sqJ, Matrix.sub_apply, Matrix.smul_apply] <;> norm_num
 
 /-! ## Section 5: Anticommutator relations `{A,B} = AB + BA` -/
 
 /-- The anticommutator of two matrices. -/
-def anticommutator {R : Type*} [CommRing R] (A B : Mat2 R) : Mat2 R :=
+def anticommutator {R : Type*} [Ring R] (A B : Mat2 R) : Mat2 R :=
   A * B + B * A
 
 /-- `{𝐢, 𝐢} = -2 · 𝟙` — the compact (rotation) direction. -/
-theorem anticomm_sqI_sqI (R : Type*) [CommRing R] :
+theorem anticomm_sqI_sqI (R : Type*) [Ring R] :
     anticommutator (sqI R) (sqI R) = -((2 : R) • (1 : Mat2 R)) := by
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [anticommutator, sqI, Matrix.add_apply, Matrix.neg_apply, Matrix.smul_apply] <;> ring
+    simp [anticommutator, sqI, Matrix.add_apply, Matrix.neg_apply, Matrix.smul_apply] <;> norm_num
 
 /-- `{𝐣, 𝐣} = +2 · 𝟙` — hyperbolic (boost) direction. -/
-theorem anticomm_sqJ_sqJ (R : Type*) [CommRing R] :
+theorem anticomm_sqJ_sqJ (R : Type*) [Ring R] :
     anticommutator (sqJ R) (sqJ R) = 2 • (1 : Mat2 R) := by
   simp only [anticommutator, sqJ_sq]
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [Matrix.add_apply, Matrix.smul_apply] <;> ring
+    simp [Matrix.add_apply, Matrix.smul_apply] <;> norm_num
 
 /-- `{𝐤, 𝐤} = +2 · 𝟙` — hyperbolic (boost) direction. -/
-theorem anticomm_sqK_sqK (R : Type*) [CommRing R] :
+theorem anticomm_sqK_sqK (R : Type*) [Ring R] :
     anticommutator (sqK R) (sqK R) = 2 • (1 : Mat2 R) := by
   simp only [anticommutator, sqK_sq]
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [Matrix.add_apply, Matrix.smul_apply] <;> ring
+    simp [Matrix.add_apply, Matrix.smul_apply] <;> norm_num
 
 /-- `{𝐢, 𝐣} = 0` — orthogonality of compact and hyperbolic directions. -/
-theorem anticomm_sqI_sqJ (R : Type*) [CommRing R] :
+theorem anticomm_sqI_sqJ (R : Type*) [Ring R] :
     anticommutator (sqI R) (sqJ R) = 0 := by
   simp only [anticommutator, sqI_mul_sqJ, sqJ_mul_sqI]
   ext i j; fin_cases i <;> fin_cases j <;>
     simp [sqK, Matrix.add_apply]
 
 /-- `{𝐣, 𝐤} = 0` — orthogonality. -/
-theorem anticomm_sqJ_sqK (R : Type*) [CommRing R] :
+theorem anticomm_sqJ_sqK (R : Type*) [Ring R] :
     anticommutator (sqJ R) (sqK R) = 0 := by
   simp only [anticommutator, sqJ_mul_sqK, sqK_mul_sqJ]
   ext i j; fin_cases i <;> fin_cases j <;>
     simp [sqI, Matrix.add_apply]
 
 /-- `{𝐤, 𝐢} = 0` — orthogonality. -/
-theorem anticomm_sqK_sqI (R : Type*) [CommRing R] :
+theorem anticomm_sqK_sqI (R : Type*) [Ring R] :
     anticommutator (sqK R) (sqI R) = 0 := by
   simp only [anticommutator, sqK_mul_sqI, sqI_mul_sqK]
   ext i j; fin_cases i <;> fin_cases j <;>
@@ -216,7 +216,7 @@ theorem anticomm_sqK_sqI (R : Type*) [CommRing R] :
 
 This bundles the split signature `(-, +, +)`, all commutators, and all
 anticommutators into a single theorem for downstream consumption. -/
-theorem split_quaternion_pauli_algebra (R : Type*) [CommRing R] :
+theorem split_quaternion_pauli_algebra (R : Type*) [Ring R] :
     -- Squaring relations (signature)
     sqI R * sqI R = -(1 : Mat2 R)
     ∧ sqJ R * sqJ R = (1 : Mat2 R)

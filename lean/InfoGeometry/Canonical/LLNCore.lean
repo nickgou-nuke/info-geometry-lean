@@ -38,11 +38,6 @@ theorem fixed_partition_slln_holds
   simpa [fixed_partition_slln] using
     (ProbabilityTheory.strong_law_ae_real (μ := μ) X hint hindep hident)
 
-/-- Canonical alias used by downstream modules/docs. -/
-def empirical_to_theoretical_slln {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
-    (X : ℕ → Ω → ℝ) : Prop :=
-  fixed_partition_slln μ X
-
 /--
 Almost-everywhere convergence of a ratio process to a Radon-Nikodym derivative target.
 -/

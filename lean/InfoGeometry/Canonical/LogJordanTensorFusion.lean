@@ -41,13 +41,13 @@ open scoped TensorProduct
 open InfoGeometry.Canonical.LogJordanVirasoroIntertwiner
 open InfoGeometry.Canonical.ModularCoproductFlux
 
-variable {𝕜 : Type*} [Field 𝕜]
+variable {𝕜 : Type*} [CommRing 𝕜]
 
 /-! ## Tensor-algebra level -/
 
-abbrev JordanEnd (𝕜 : Type*) [Field 𝕜] := Matrix (Fin 2) (Fin 2) 𝕜
+abbrev JordanEnd (𝕜 : Type*) [Ring 𝕜] := Matrix (Fin 2) (Fin 2) 𝕜
 
-abbrev JordanTensorEnd (𝕜 : Type*) [Field 𝕜] :=
+abbrev JordanTensorEnd (𝕜 : Type*) [CommRing 𝕜] :=
   JordanEnd 𝕜 ⊗[𝕜] JordanEnd 𝕜
 
 /-- The primitive nilpotent part on the tensor product of two logarithmic
@@ -57,9 +57,11 @@ def logTensorNilpotent : JordanTensorEnd 𝕜 :=
     (jordanNilpotent 𝕜) (jordanNilpotent 𝕜)
 
 /-- The logarithmic Jordan generator used in each factor is square-zero. -/
-theorem jordanNilpotent_sq_zero :
-    jordanNilpotent 𝕜 * jordanNilpotent 𝕜 = 0 :=
-  (zero_mode_subspace_indecomposable (𝕜 := 𝕜)).2
+theorem jordanNilpotent_sq_zero {𝕜 : Type*} [Ring 𝕜] :
+    jordanNilpotent 𝕜 * jordanNilpotent 𝕜 = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [jordanNilpotent, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- Tensor fusion raises the possible Jordan depth: the square of the primitive
 nilpotent is exactly the mixed tensor term. -/
@@ -97,7 +99,7 @@ theorem logTensorNilpotent_eq :
 /-! ## Actual tensor-product module level -/
 
 /-- Carrier of one rank-two logarithmic Jordan sector. -/
-abbrev JordanCarrier (𝕜 : Type*) [Field 𝕜] := Fin 2 → 𝕜
+abbrev JordanCarrier (𝕜 : Type*) [Ring 𝕜] := Fin 2 → 𝕜
 
 /-- The Jordan nilpotent as an actual linear endomorphism of the rank-two
 carrier. -/

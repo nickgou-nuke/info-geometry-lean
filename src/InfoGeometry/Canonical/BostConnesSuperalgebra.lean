@@ -78,22 +78,22 @@ def ParityOdd
 /-! ## Local finite Euler/Witten factor -/
 
 /-- Local bosonic Euler factor `(1 - x)⁻¹`. -/
-def localBosonFactor {R : Type*} [Field R] (x : R) : R :=
+def localBosonFactor {R : Type*} [DivisionRing R] (x : R) : R :=
   (1 - x)⁻¹
 
 /-- Local Witten/Möbius signed factor `1 - x`. -/
-def localWittenFactor {R : Type*} [Field R] (x : R) : R :=
+def localWittenFactor {R : Type*} [Ring R] (x : R) : R :=
   1 - x
 
 /-- The regulated local boson factor is inverted by the Witten factor. -/
 theorem local_boson_mul_wittenFactor
-    {R : Type*} [Field R] (x : R) (h : 1 - x ≠ 0) :
+    {R : Type*} [DivisionRing R] (x : R) (h : 1 - x ≠ 0) :
     localBosonFactor x * localWittenFactor x = 1 := by
   simp [localBosonFactor, localWittenFactor, inv_mul_cancel₀ h]
 
 /-- Same local inverse identity with factors reversed. -/
 theorem wittenFactor_mul_local_boson
-    {R : Type*} [Field R] (x : R) (h : 1 - x ≠ 0) :
+    {R : Type*} [DivisionRing R] (x : R) (h : 1 - x ≠ 0) :
     localWittenFactor x * localBosonFactor x = 1 := by
   simp [localBosonFactor, localWittenFactor, mul_inv_cancel₀ h]
 

@@ -21,9 +21,10 @@ namespace InfoGeometry.Canonical.NPotentBoundarySpinBridge
 
 open InfoGeometry.Topology.CFT
 
-variable {K V : Type*} [Field K] [AddCommGroup V] [Module K V]
+variable {K V : Type*}
 
 private theorem pow_apply_eigenvalue
+    [Ring K] [AddCommGroup V] [Module K V]
     (T : Module.End K V) (v : V) (lambda : K)
     (hEig : T v = lambda • v) :
     ∀ m : ℕ, (T ^ m) v = lambda ^ m • v := by
@@ -31,9 +32,11 @@ private theorem pow_apply_eigenvalue
   induction m with
   | zero => simp
   | succ m ih =>
-      rw [pow_succ, Module.End.mul_apply, hEig, map_smul, ih]
-      simp [smul_smul, pow_succ]
-      rw [mul_comm]
+      rw [pow_succ, Module.End.mul_apply, hEig, map_smul, ih, smul_smul, ← pow_succ']
+
+section DivisionRing
+
+variable [DivisionRing K] [AddCommGroup V] [Module K V]
 
 /-- Every eigenvalue of an `N`-potent endomorphism satisfies the same
 polynomial relation. -/
@@ -72,8 +75,11 @@ theorem tripotent_eigenvalue_zero_or_sq_eq_one
       (nonzero_eigenvalue_pow_pred_eq_one T 3 lambda v hT hEig hv hLam
         (by norm_num))
 
+end DivisionRing
+
 /-- Exact tripotent eigenvalue sectors over a field: zero, plus one, or minus one. -/
 theorem tripotent_eigenvalue_zero_or_one_or_neg_one
+    [Field K] [AddCommGroup V] [Module K V]
     (T : Module.End K V) (lambda : K) (v : V)
     (hT : T ^ 3 = T) (hEig : T v = lambda • v) (hv : v ≠ 0) :
     lambda = 0 ∨ lambda = 1 ∨ lambda = -1 := by

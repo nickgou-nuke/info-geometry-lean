@@ -19,6 +19,51 @@ namespace InfoGeometry.OperatorAlgebra.PeirceSuperoperators
 
 open InfoGeometry.Core
 
+section PureRing
+
+variable {A : Type*} [Ring A]
+
+/-- Pure ring-equivalence Peirce parity over any noncommutative ring `A`
+(requiring no scalar `CommRing` or `Algebra`). -/
+def ringParityEquiv (p : A) (hp : IsIdempotentElem p) : A ≃+* A :=
+  IdempotentCartan.reflectionConj p hp.eq
+
+@[simp] theorem ringParityEquiv_apply (p : A) (hp : IsIdempotentElem p) (x : A) :
+    ringParityEquiv p hp x =
+      PeirceGrading.reflection p * x * PeirceGrading.reflection p := by
+  change IdempotentCartan.reflection p * x * IdempotentCartan.reflection p = _
+  simp only [IdempotentCartan.reflection, PeirceGrading.reflection, two_nsmul, two_mul]
+
+theorem ringParityEquiv_involutive (p : A) (hp : IsIdempotentElem p) :
+    Function.Involutive (ringParityEquiv p hp) := by
+  intro x
+  simp only [ringParityEquiv_apply]
+  calc
+    _ = (PeirceGrading.reflection p * PeirceGrading.reflection p) * x *
+        (PeirceGrading.reflection p * PeirceGrading.reflection p) := by noncomm_ring
+    _ = x := by rw [PeirceGrading.reflection_sq hp]; simp
+
+theorem ringParityEquiv_of_even {p x : A} (hp : IsIdempotentElem p)
+    (hx : x ∈ LinearMap.range (PeirceGrading.even p)) :
+    ringParityEquiv p hp x = x := by
+  rw [ringParityEquiv_apply, (PeirceGrading.even_commutes_reflection hp hx).eq,
+    mul_assoc, PeirceGrading.reflection_sq hp, mul_one]
+
+theorem ringParityEquiv_of_odd {p x : A} (hp : IsIdempotentElem p)
+    (hx : x ∈ LinearMap.range (PeirceGrading.odd p)) :
+    ringParityEquiv p hp x = -x := by
+  rw [ringParityEquiv_apply,
+    eq_neg_of_add_eq_zero_left (PeirceGrading.odd_anticommutes_reflection hp hx),
+    neg_mul, mul_assoc, PeirceGrading.reflection_sq hp, mul_one]
+
+theorem ringParityEquiv_star [StarRing A] (p : A) (hp : IsIdempotentElem p)
+    (hps : IsSelfAdjoint p) (x : A) :
+    ringParityEquiv p hp (star x) = star (ringParityEquiv p hp x) := by
+  simp only [ringParityEquiv_apply, star_mul,
+    (PeirceGrading.reflection_star hps).star_eq, mul_assoc]
+
+end PureRing
+
 variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
 
 /-- Scalar-linear upgrade of the existing reflection conjugation equivalence. -/

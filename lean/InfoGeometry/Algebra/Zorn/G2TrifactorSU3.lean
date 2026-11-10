@@ -32,9 +32,9 @@ namespace InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 
 open InfoGeometry.Algebra.Zorn
 
-abbrev ZMat (R : Type*) [CommRing R] := InfoGeometry.Canonical.ZornMatrix R
+abbrev ZMat (R : Type*) [Ring R] := InfoGeometry.Canonical.ZornMatrix R
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The canonical Zorn product used by the finite projector owner. -/
 def zMul (X Y : ZMat R) : ZMat R where

@@ -8,8 +8,14 @@ namespace InfoGeometry.Algebra.Zorn.ConformalNPotent
 
 open Complex
 
-def IsNPotent {R : Type*} [CommRing R] (x : R) (n : ℕ) : Prop :=
+def IsNPotent {R : Type*} [Ring R] (x : R) (n : ℕ) : Prop :=
   x ^ n = x
+
+/-- Over any non-commutative ring `[Ring R]`, an element satisfying `x ^ m = 1` is `(m + 1)`-potent. -/
+theorem root_of_unity_succ_potent_ring {R : Type*} [Ring R] (x : R) (m : ℕ) (h : x ^ m = 1) :
+    IsNPotent x (m + 1) := by
+  dsimp [IsNPotent]
+  rw [pow_succ, h, one_mul]
 
 /-- Over ℂ, an `n`-potent element is either zero or a root of unity.
 

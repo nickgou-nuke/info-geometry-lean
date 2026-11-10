@@ -14,9 +14,9 @@ namespace InfoGeometry.Clifford.ProjectedShadowAkivisDefect
 
 open InfoGeometry.Algebra
 
-variable {R Z E : Type*} [CommRing R]
+variable {R Z E : Type*} [Ring R]
   [AddCommGroup Z] [Module R Z]
-  [Ring E] [Algebra R E]
+  [Ring E] [Module R E]
 
 def shadowMul (ι : Z →ₗ[R] E) (σ : E →ₗ[R] Z) (x y : Z) : Z :=
   projectedOperatorMul ι σ x y

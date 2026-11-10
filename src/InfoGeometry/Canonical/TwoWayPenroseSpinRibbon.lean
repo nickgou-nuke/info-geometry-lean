@@ -22,7 +22,7 @@ universe u
 section Ribbon
 
 variable {α : Type u} [PartialOrder α]
-variable {𝕜 T D : Type u} [CommRing 𝕜]
+variable {𝕜 T D : Type u} [Ring 𝕜]
 variable [AddCommGroup T] [Module 𝕜 T]
 variable [AddCommGroup D] [Module 𝕜 D]
 variable {S : SpinNet α 𝕜 T D} {black white : α → Prop}

@@ -28,10 +28,12 @@ open scoped Matrix
 
 namespace InfoGeometry.QuantumContext.FiniteMatrixSymmetricSkew
 
-variable {R : Type*} [CommRing R]
-
 /-- Native `2 × 2` matrix carrier over `R`. -/
 abbrev Mat2 (R : Type*) := Matrix (Fin 2) (Fin 2) R
+
+section Ring
+
+variable {R : Type*} [Ring R]
 
 /-- Frobenius pairing on matrices, defined by `Tr(Aᵀ B)`. -/
 def frobeniusPairing (A B : Mat2 R) : R :=
@@ -56,7 +58,21 @@ theorem symmetric_add_skew_eq_two_smul (A : Mat2 R) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [symmetricPartTwice, skewPartTwice, Matrix.transpose_apply]
-  <;> ring
+  <;> rw [two_mul]
+
+/-- Off-diagonal `2 × 2` matrix used in the finite square/determinant identity. -/
+def offDiagonalMatrix (γL γR : R) : Mat2 R :=
+  !![(0 : R), γL; γR, 0]
+
+/-- Trace of the square of the off-diagonal matrix. -/
+def twiceOffDiagonalProduct (γL γR : R) : R :=
+  Matrix.trace (offDiagonalMatrix γL γR * offDiagonalMatrix γL γR)
+
+end Ring
+
+section CommRing
+
+variable {R : Type*} [CommRing R]
 
 /-- Symmetric and skew-symmetric parts are orthogonal in the Frobenius pairing. -/
 theorem symmetric_skew_frobenius_pairing_zero (A : Mat2 R) :
@@ -74,10 +90,6 @@ theorem symmetric_skew_pythagorean_frobenius_norm (A : Mat2 R) :
     Matrix.trace, Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_two]
   ring_nf
 
-/-- Off-diagonal `2 × 2` matrix used in the finite square/determinant identity. -/
-def offDiagonalMatrix (γL γR : R) : Mat2 R :=
-  !![(0 : R), γL; γR, 0]
-
 /-- The square of the off-diagonal matrix is a scalar diagonal matrix. -/
 theorem offDiagonalMatrix_sq_diagonal (γL γR : R) :
     offDiagonalMatrix γL γR * offDiagonalMatrix γL γR =
@@ -89,10 +101,6 @@ theorem offDiagonalMatrix_sq_diagonal (γL γR : R) :
 /-- Negative determinant of the off-diagonal matrix. -/
 def negativeDeterminant (γL γR : R) : R :=
   -Matrix.det (offDiagonalMatrix γL γR)
-
-/-- Trace of the square of the off-diagonal matrix. -/
-def twiceOffDiagonalProduct (γL γR : R) : R :=
-  Matrix.trace (offDiagonalMatrix γL γR * offDiagonalMatrix γL γR)
 
 /-- The trace of the square equals twice both the negative determinant and
 `γL * γR`. -/
@@ -118,5 +126,7 @@ theorem offDiagonalMatrix_nilpotent_left_zero (γR : R) :
     fin_cases i <;> fin_cases j <;>
       simp [offDiagonalMatrix, Matrix.mul_apply, Fin.sum_univ_two]
   · simp [negativeDeterminant, offDiagonalMatrix, Matrix.det_fin_two]
+
+end CommRing
 
 end InfoGeometry.QuantumContext.FiniteMatrixSymmetricSkew

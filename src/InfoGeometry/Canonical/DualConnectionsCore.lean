@@ -249,13 +249,4 @@ theorem amariChentsovTensor_of_finProb (p : Θ → InfoGeometry.FinProb α) :
   intro a ha
   exact sq_nonneg ((p θ a).toReal)
 
-/--
-Compatibility bridge name preserved:
-Fisher-normalized fibers imply the quadratic Chentsov nonnegativity marker.
--/
-theorem fisher_metric_eq_hessian_KL (p : Θ → InfoGeometry.FinProb α) :
-    fisherMetric p → amariChentsovTensor p := by
-  intro _hf
-  exact amariChentsovTensor_of_finProb p
-
 end InfoGeometry.Canonical.DualConnections

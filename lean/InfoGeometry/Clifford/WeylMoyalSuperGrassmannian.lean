@@ -4,6 +4,8 @@ import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
+import Mathlib.Tactic.Abel
 import Mathlib.Tactic.FinCases
 
 set_option linter.unusedSectionVars false
@@ -52,21 +54,21 @@ $$
 \end{pmatrix}
 $$
 -/
-def symplecticMatrix (R : Type*) [CommRing R] : Matrix (Fin 4) (Fin 4) R :=
+def symplecticMatrix (R : Type*) [Ring R] : Matrix (Fin 4) (Fin 4) R :=
   !![ 0,  0, 1, 0;
       0,  0, 0, 1;
      -1,  0, 0, 0;
       0, -1, 0, 0]
 
 /-- The symplectic matrix is skew-symmetric: $\Omega^T = -\Omega$. -/
-theorem symplecticMatrix_transpose (R : Type*) [CommRing R] :
+theorem symplecticMatrix_transpose (R : Type*) [Ring R] :
     (symplecticMatrix R)ᵀ = -symplecticMatrix R := by
   ext i j
   fin_cases i <;> fin_cases j <;> { simp [symplecticMatrix, Matrix.transpose_apply]; try ring }
 
 /-- The symplectic matrix squares to $-I_4$, as a ring-valued matrix identity:
 $\Omega^2 = -1$. -/
-theorem symplecticMatrix_sq (R : Type*) [CommRing R] :
+theorem symplecticMatrix_sq (R : Type*) [Ring R] :
     symplecticMatrix R * symplecticMatrix R = -1 := by
   ext i j
   fin_cases i <;> fin_cases j <;> {
@@ -76,16 +78,25 @@ theorem symplecticMatrix_sq (R : Type*) [CommRing R] :
 
 /-- The canonical symplectic form $\Omega(u, v)$ on $\mathbb{R}^4$:
 $\Omega(u, v) = u_0 v_2 - u_2 v_0 + u_1 v_3 - u_3 v_1 = q_1 p_1' - p_1 q_1' + q_2 p_2' - p_2 q_2'$. -/
-def symplecticForm {R : Type*} [CommRing R] (u v : PhaseSpace4 R) : R :=
+def symplecticForm {R : Type*} [Ring R] (u v : PhaseSpace4 R) : R :=
   u 0 * v 2 - u 2 * v 0 + u 1 * v 3 - u 3 * v 1
 
-/-- The symplectic form is strictly alternating: $\Omega(u, u) = 0$. -/
+/-- Over any non-commutative ring `[Ring R]`, the diagonal symplectic pairing $\Omega(u, u)$
+equals the sum of the two canonical phase-space coordinate commutators
+`[u 0, u 2] + [u 1, u 3]`. -/
+theorem symplecticForm_self_noncomm {R : Type*} [Ring R] (u : PhaseSpace4 R) :
+    symplecticForm u u = (u 0 * u 2 - u 2 * u 0) + (u 1 * u 3 - u 3 * u 1) := by
+  simp [symplecticForm]
+  abel
+
+/-- Over any commutative ring, the symplectic form is strictly alternating: $\Omega(u, u) = 0$. -/
 theorem symplecticForm_alt {R : Type*} [CommRing R] (u : PhaseSpace4 R) :
     symplecticForm u u = 0 := by
   simp [symplecticForm]
   ring
 
-/-- The symplectic form is strictly skew-symmetric: $\Omega(u, v) = -\Omega(v, u)$. -/
+/-- Over any commutative ring, the symplectic form is strictly skew-symmetric:
+$\Omega(u, v) = -\Omega(v, u)$. -/
 theorem symplecticForm_skew {R : Type*} [CommRing R] (u v : PhaseSpace4 R) :
     symplecticForm u v = -symplecticForm v u := by
   simp [symplecticForm]
@@ -95,7 +106,7 @@ theorem symplecticForm_skew {R : Type*} [CommRing R] (u v : PhaseSpace4 R) :
 
 /-- The canonical Poisson bracket $\{u, v\}$ on linear phase space observables,
 governed by the symplectic form $\Omega(u, v)$. -/
-def poissonBracket {R : Type*} [CommRing R] (u v : PhaseSpace4 R) : R :=
+def poissonBracket {R : Type*} [Ring R] (u v : PhaseSpace4 R) : R :=
   symplecticForm u v
 
 /-- The Poisson bracket is antisymmetric: $\{u, v\} = -\{v, u\}$. -/
@@ -109,22 +120,22 @@ theorem poisson_self_zero {R : Type*} [CommRing R] (u : PhaseSpace4 R) :
   symplecticForm_alt u
 
 /-- Left-additivity of the Poisson bracket. -/
-theorem poisson_add_left {R : Type*} [CommRing R] (u₁ u₂ v : PhaseSpace4 R) :
+theorem poisson_add_left {R : Type*} [Ring R] (u₁ u₂ v : PhaseSpace4 R) :
     poissonBracket (u₁ + u₂) v = poissonBracket u₁ v + poissonBracket u₂ v := by
   simp [poissonBracket, symplecticForm]
-  ring
+  noncomm_ring
 
 /-- Right-additivity of the Poisson bracket. -/
-theorem poisson_add_right {R : Type*} [CommRing R] (u v₁ v₂ : PhaseSpace4 R) :
+theorem poisson_add_right {R : Type*} [Ring R] (u v₁ v₂ : PhaseSpace4 R) :
     poissonBracket u (v₁ + v₂) = poissonBracket u v₁ + poissonBracket u v₂ := by
   simp [poissonBracket, symplecticForm]
-  ring
+  noncomm_ring
 
 /-- Left-scalar multiplication on the Poisson bracket. -/
-theorem poisson_smul_left {R : Type*} [CommRing R] (c : R) (u v : PhaseSpace4 R) :
+theorem poisson_smul_left {R : Type*} [Ring R] (c : R) (u v : PhaseSpace4 R) :
     poissonBracket (c • u) v = c * poissonBracket u v := by
   simp [poissonBracket, symplecticForm]
-  ring
+  noncomm_ring
 
 /-- Right-scalar multiplication on the Poisson bracket. -/
 theorem poisson_smul_right {R : Type*} [CommRing R] (c : R) (u v : PhaseSpace4 R) :
@@ -134,12 +145,12 @@ theorem poisson_smul_right {R : Type*} [CommRing R] (c : R) (u v : PhaseSpace4 R
 
 /-- Constant scalar observables have vanishing phase space gradients,
 hence their Poisson bracket with any observable vanishes. -/
-theorem poisson_scalar_bracket_zero {R : Type*} [CommRing R] (w : PhaseSpace4 R) :
+theorem poisson_scalar_bracket_zero {R : Type*} [Ring R] (w : PhaseSpace4 R) :
     poissonBracket (0 : PhaseSpace4 R) w = 0 := by
   simp [poissonBracket, symplecticForm]
 
 /-- Constant scalar observables on the right have vanishing Poisson bracket. -/
-theorem poisson_scalar_bracket_zero_right {R : Type*} [CommRing R] (w : PhaseSpace4 R) :
+theorem poisson_scalar_bracket_zero_right {R : Type*} [Ring R] (w : PhaseSpace4 R) :
     poissonBracket w (0 : PhaseSpace4 R) = 0 := by
   simp [poissonBracket, symplecticForm]
 
@@ -149,16 +160,16 @@ under the canonical Poisson bracket. -/
 abbrev AffineObservable (R : Type*) := R × PhaseSpace4 R
 
 /-- Evaluation of an affine observable at a phase-space point. -/
-def affineEval {R : Type*} [CommRing R] (F : AffineObservable R)
+def affineEval {R : Type*} [Ring R] (F : AffineObservable R)
     (x : PhaseSpace4 R) : R := F.1 + ∑ i, F.2 i * x i
 
 /-- The bracket of affine observables is the constant observable determined
 by their symplectic pairing. -/
-def affinePoissonBracket {R : Type*} [CommRing R]
+def affinePoissonBracket {R : Type*} [Ring R]
     (F G : AffineObservable R) : AffineObservable R :=
   (poissonBracket F.2 G.2, 0)
 
-theorem affinePoissonBracket_eval {R : Type*} [CommRing R]
+theorem affinePoissonBracket_eval {R : Type*} [Ring R]
     (F G : AffineObservable R) (x : PhaseSpace4 R) :
     affineEval (affinePoissonBracket F G) x = poissonBracket F.2 G.2 := by
   simp [affineEval, affinePoissonBracket]
@@ -170,14 +181,14 @@ theorem affinePoissonBracket_antisymm {R : Type*} [CommRing R]
   · exact poisson_antisymm F.2 G.2
   · simp [affinePoissonBracket]
 
-theorem affinePoissonBracket_add_left {R : Type*} [CommRing R]
+theorem affinePoissonBracket_add_left {R : Type*} [Ring R]
     (F G H : AffineObservable R) :
     affinePoissonBracket (F + G) H = affinePoissonBracket F H + affinePoissonBracket G H := by
   apply Prod.ext
   · exact poisson_add_left F.2 G.2 H.2
   · simp [affinePoissonBracket]
 
-theorem affinePoissonBracket_smul_left {R : Type*} [CommRing R]
+theorem affinePoissonBracket_smul_left {R : Type*} [Ring R]
     (c : R) (F G : AffineObservable R) :
     affinePoissonBracket (c • F) G = c • affinePoissonBracket F G := by
   apply Prod.ext
@@ -185,25 +196,25 @@ theorem affinePoissonBracket_smul_left {R : Type*} [CommRing R]
   · simp [affinePoissonBracket]
 
 /-- Constants are central in the actual closed observable carrier. -/
-@[simp] theorem affinePoissonBracket_constant_left {R : Type*} [CommRing R]
+@[simp] theorem affinePoissonBracket_constant_left {R : Type*} [Ring R]
     (c : R) (F : AffineObservable R) :
     affinePoissonBracket (c, 0) F = 0 := by
   apply Prod.ext <;> simp [affinePoissonBracket, poissonBracket, symplecticForm]
 
-@[simp] theorem affinePoissonBracket_constant_right {R : Type*} [CommRing R]
+@[simp] theorem affinePoissonBracket_constant_right {R : Type*} [Ring R]
     (F : AffineObservable R) (c : R) :
     affinePoissonBracket F (c, 0) = 0 := by
   apply Prod.ext <;> simp [affinePoissonBracket, poissonBracket, symplecticForm]
 
 /-- Genuine cyclic Jacobi identity on all affine observables. -/
-theorem poisson_jacobi {R : Type*} [CommRing R] (F G H : AffineObservable R) :
+theorem poisson_jacobi {R : Type*} [Ring R] (F G H : AffineObservable R) :
     affinePoissonBracket F (affinePoissonBracket G H) +
       affinePoissonBracket G (affinePoissonBracket H F) +
       affinePoissonBracket H (affinePoissonBracket F G) = 0 := by
   simp [affinePoissonBracket, poisson_scalar_bracket_zero_right]
 
 /-- The left-nested cyclic form of Jacobi. -/
-theorem poisson_jacobi_cyclic {R : Type*} [CommRing R] (F G H : AffineObservable R) :
+theorem poisson_jacobi_cyclic {R : Type*} [Ring R] (F G H : AffineObservable R) :
     affinePoissonBracket (affinePoissonBracket F G) H +
       affinePoissonBracket (affinePoissonBracket G H) F +
       affinePoissonBracket (affinePoissonBracket H F) G = 0 := by
@@ -213,19 +224,19 @@ theorem poisson_jacobi_cyclic {R : Type*} [CommRing R] (F G H : AffineObservable
 
 /-- Parameter-scaled pairing on linear coefficients (historical name):
 $[u, v]_\star = \hbar \, \Omega(u, v)$. -/
-def starCommutator {R : Type*} [CommRing R] (ℏ : R) (u v : PhaseSpace4 R) : R :=
+def starCommutator {R : Type*} [Ring R] (ℏ : R) (u v : PhaseSpace4 R) : R :=
   ℏ * symplecticForm u v
 
 /-- Classical limit $\hbar = 0$: the deformed commutator vanishes identically,
 a statement about this scaled pairing. -/
-theorem star_commutator_classical_limit {R : Type*} [CommRing R] (u v : PhaseSpace4 R) :
+theorem star_commutator_classical_limit {R : Type*} [Ring R] (u v : PhaseSpace4 R) :
     starCommutator 0 u v = 0 := by
   simp [starCommutator]
 
 /-- Scaling identity for the parameter-dependent pairing:
 The parameter-scaled pairing is $\hbar$ times the coefficient Poisson pairing:
 $[u, v]_\star = \hbar \{u, v\}$. -/
-theorem star_commutator_first_order {R : Type*} [CommRing R] (ℏ : R) (u v : PhaseSpace4 R) :
+theorem star_commutator_first_order {R : Type*} [Ring R] (ℏ : R) (u v : PhaseSpace4 R) :
     starCommutator ℏ u v = ℏ * poissonBracket u v :=
   rfl
 
@@ -237,33 +248,33 @@ theorem star_commutator_antisymm {R : Type*} [CommRing R] (ℏ : R) (u v : Phase
   ring
 
 /-- Darboux position coordinate $q_1$. -/
-def q1 {R : Type*} [CommRing R] : PhaseSpace4 R :=
+def q1 {R : Type*} [Ring R] : PhaseSpace4 R :=
   fun i => if i = 0 then 1 else 0
 
 /-- Darboux position coordinate $q_2$. -/
-def q2 {R : Type*} [CommRing R] : PhaseSpace4 R :=
+def q2 {R : Type*} [Ring R] : PhaseSpace4 R :=
   fun i => if i = 1 then 1 else 0
 
 /-- Darboux momentum coordinate $p_1$. -/
-def p1 {R : Type*} [CommRing R] : PhaseSpace4 R :=
+def p1 {R : Type*} [Ring R] : PhaseSpace4 R :=
   fun i => if i = 2 then 1 else 0
 
 /-- Darboux momentum coordinate $p_2$. -/
-def p2 {R : Type*} [CommRing R] : PhaseSpace4 R :=
+def p2 {R : Type*} [Ring R] : PhaseSpace4 R :=
   fun i => if i = 3 then 1 else 0
 
 /-- Canonical Commutation Relation: $[q_1, p_1]_\star = \hbar$. -/
-theorem ccr_q1_p1 {R : Type*} [CommRing R] (ℏ : R) :
+theorem ccr_q1_p1 {R : Type*} [Ring R] (ℏ : R) :
     starCommutator ℏ (q1 : PhaseSpace4 R) p1 = ℏ := by
   simp [starCommutator, symplecticForm, q1, p1]
 
 /-- The affine bracket is nontrivial: the first Darboux pair produces
 exactly the central unit observable. -/
-theorem affinePoissonBracket_q1_p1 {R : Type*} [CommRing R] :
+theorem affinePoissonBracket_q1_p1 {R : Type*} [Ring R] :
     affinePoissonBracket (0, (q1 : PhaseSpace4 R)) (0, p1) = (1, 0) := by
   apply Prod.ext <;> simp [affinePoissonBracket, poissonBracket, symplecticForm, q1, p1]
 
-theorem affinePoissonBracket_q1_p1_ne_zero {R : Type*} [CommRing R] [Nontrivial R] :
+theorem affinePoissonBracket_q1_p1_ne_zero {R : Type*} [Ring R] [Nontrivial R] :
     affinePoissonBracket (0, (q1 : PhaseSpace4 R)) (0, p1) ≠ 0 := by
   rw [affinePoissonBracket_q1_p1]
   intro h
@@ -271,32 +282,32 @@ theorem affinePoissonBracket_q1_p1_ne_zero {R : Type*} [CommRing R] [Nontrivial 
   exact one_ne_zero hfirst
 
 /-- Canonical Commutation Relation: $[p_1, q_1]_\star = -\hbar$. -/
-theorem ccr_p1_q1 {R : Type*} [CommRing R] (ℏ : R) :
+theorem ccr_p1_q1 {R : Type*} [Ring R] (ℏ : R) :
     starCommutator ℏ (p1 : PhaseSpace4 R) q1 = -ℏ := by
   simp [starCommutator, symplecticForm, q1, p1]
 
 /-- Canonical Commutation Relation: $[q_2, p_2]_\star = \hbar$. -/
-theorem ccr_q2_p2 {R : Type*} [CommRing R] (ℏ : R) :
+theorem ccr_q2_p2 {R : Type*} [Ring R] (ℏ : R) :
     starCommutator ℏ (q2 : PhaseSpace4 R) p2 = ℏ := by
   simp [starCommutator, symplecticForm, q2, p2]
 
 /-- Canonical Commutation Relation: $[q_1, q_2]_\star = 0$. -/
-theorem ccr_q1_q2 {R : Type*} [CommRing R] (ℏ : R) :
+theorem ccr_q1_q2 {R : Type*} [Ring R] (ℏ : R) :
     starCommutator ℏ (q1 : PhaseSpace4 R) q2 = 0 := by
   simp [starCommutator, symplecticForm, q1, q2]
 
 /-- Canonical Commutation Relation: $[p_1, p_2]_\star = 0$. -/
-theorem ccr_p1_p2 {R : Type*} [CommRing R] (ℏ : R) :
+theorem ccr_p1_p2 {R : Type*} [Ring R] (ℏ : R) :
     starCommutator ℏ (p1 : PhaseSpace4 R) p2 = 0 := by
   simp [starCommutator, symplecticForm, p1, p2]
 
 /-- Canonical Commutation Relation: $[q_1, p_2]_\star = 0$. -/
-theorem ccr_q1_p2 {R : Type*} [CommRing R] (ℏ : R) :
+theorem ccr_q1_p2 {R : Type*} [Ring R] (ℏ : R) :
     starCommutator ℏ (q1 : PhaseSpace4 R) p2 = 0 := by
   simp [starCommutator, symplecticForm, q1, p2]
 
 /-- Canonical Commutation Relation: $[q_2, p_1]_\star = 0$. -/
-theorem ccr_q2_p1 {R : Type*} [CommRing R] (ℏ : R) :
+theorem ccr_q2_p1 {R : Type*} [Ring R] (ℏ : R) :
     starCommutator ℏ (q2 : PhaseSpace4 R) p1 = 0 := by
   simp [starCommutator, symplecticForm, q2, p1]
 
@@ -304,26 +315,26 @@ theorem ccr_q2_p1 {R : Type*} [CommRing R] (ℏ : R) :
 
 /-- Bilinear Hessian evaluation for quadratic forms on 4D phase space:
 $\mathrm{Hess}_H(u, v) = \sum_{i, j=0}^3 u_i H_{ij} v_j$. -/
-def phaseSpaceHessian {R : Type*} [CommRing R]
+def phaseSpaceHessian {R : Type*} [Ring R]
     (H : Matrix (Fin 4) (Fin 4) R) (u v : PhaseSpace4 R) : R :=
   ∑ i : Fin 4, ∑ j : Fin 4, u i * H i j * v j
 
 /-- Under the standard Euclidean metric $H = I_4$, the Hessian diagonal recovers the
 Riemannian norm squared: $\|u\|^2 = q_1^2 + q_2^2 + p_1^2 + p_2^2$. -/
-theorem phaseSpaceHessian_id {R : Type*} [CommRing R] (u : PhaseSpace4 R) :
+theorem phaseSpaceHessian_id {R : Type*} [Ring R] (u : PhaseSpace4 R) :
     phaseSpaceHessian 1 u u = (u 0)^2 + (u 1)^2 + (u 2)^2 + (u 3)^2 := by
   simp [phaseSpaceHessian, Fin.sum_univ_four, Matrix.one_apply]
-  ring
+  noncomm_ring
 
 /-- Symplectic-complex metric compatibility:
 Pairing a phase space vector $u$ with its complex structure image $J u = \Omega u$ via the
 symplectic form yields the negative Riemannian Euclidean norm:
 $\Omega(u, J u) = -\|u\|^2 = -(u_0^2 + u_1^2 + u_2^2 + u_3^2)$. -/
-theorem symplectic_complex_metric {R : Type*} [CommRing R] (u : PhaseSpace4 R) :
+theorem symplectic_complex_metric {R : Type*} [Ring R] (u : PhaseSpace4 R) :
     symplecticForm u (fun i => ∑ j, (symplecticMatrix R) i j * u j) =
       -((u 0)^2 + (u 1)^2 + (u 2)^2 + (u 3)^2) := by
   simp [symplecticForm, symplecticMatrix, Fin.sum_univ_four]
-  ring
+  noncomm_ring
 
 /-! ### Section 5: Master Verification Certificate -/
 

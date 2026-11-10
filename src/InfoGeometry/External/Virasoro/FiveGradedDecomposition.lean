@@ -32,7 +32,7 @@ decomposition of the Sugawara-extended affine Kac-Moody algebra into:
 - Grade 3 (+1): Current algebra raising
 - Grade 4 (+2): Virasoro raising
 -/
-structure FiveGradedAlgebra (𝕜 : Type*) [Field 𝕜] where
+structure FiveGradedAlgebra (𝕜 : Type*) [CommRing 𝕜] where
   /-- The full algebra -/
   algebra : Type*
   [instLieRing : LieRing algebra]

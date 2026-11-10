@@ -20,11 +20,11 @@ BUCKET 3: OPEN CLOSURE DEBT
 
 variable {A : Type*} [Field A]
 
-def P_hyp (O : A) : A := (1 / 2 : A) * (O ^ 2 + O)
+def P_hyp {A : Type*} [DivisionRing A] (O : A) : A := (1 / 2 : A) * (O ^ 2 + O)
 
-def P_ell (O : A) : A := (1 / 2 : A) * (O ^ 2 - O)
+def P_ell {A : Type*} [DivisionRing A] (O : A) : A := (1 / 2 : A) * (O ^ 2 - O)
 
-def P_par (O : A) : A := 1 - O ^ 2
+def P_par {A : Type*} [Ring A] (O : A) : A := 1 - O ^ 2
 
 theorem tri_facet_eigenspace_hyp (_h2 : (2 : A) ≠ 0) {O : A} (hO : O ^ 3 = O) :
     O * P_hyp O = P_hyp O := by

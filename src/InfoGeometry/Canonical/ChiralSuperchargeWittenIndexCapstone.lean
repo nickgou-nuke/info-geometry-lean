@@ -7,7 +7,7 @@ open InfoGeometry.Quantum.ChiralSuperchargeWittenIndex
 
 /-! Direct capstone for the algebraic supercharge reduction and the scalar
 vacuum/BPS readouts. -/
-theorem chiral_supercharge_witten_index_canonical_capstone {R : Type*} [CommRing R]
+theorem chiral_supercharge_witten_index_canonical_capstone {R : Type*} [Ring R]
     (a_L_dag a_L f_L_dag f_L : R)
     (h_car : f_L * f_L_dag = 1 - f_L_dag * f_L)
     (h_ccr : a_L * a_L_dag = 1 + a_L_dag * a_L)

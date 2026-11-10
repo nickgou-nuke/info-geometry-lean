@@ -36,7 +36,7 @@ namespace InfoGeometry.Topological.ChiralAnomalyEikonalBirefringence
 
 open Finset
 
-variable {R : Type*} [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
+variable {R : Type*} [Ring R]
 
 /-- Three-dimensional vector carrier. -/
 abbrev Vec3 (R : Type*) := Fin 3 → R
@@ -65,6 +65,15 @@ def poyntingSq (E B : Vec3 R) : R :=
 def fujikawaSource (E B : Vec3 R) : R :=
   dot E B * dot E B
 
+/-- Chiral eikonal dispersion: left/right circular polarizations
+    `Ω_±(k) = |k| ± b₀`. -/
+def omegaPlus (k b0 : R) : R := k + b0
+def omegaMinus (k b0 : R) : R := k - b0
+
+section CommutativeEikonal
+
+variable {R : Type*} [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
+
 /-- **Poynting–Fujikawa Decomposition**:
     `‖E‖² ‖B‖² = ‖E × B‖² + (E · B)²`. -/
 theorem poynting_fujikawa_decomposition (E B : Vec3 R) :
@@ -72,11 +81,6 @@ theorem poynting_fujikawa_decomposition (E B : Vec3 R) :
   dsimp [normSq, poyntingSq, fujikawaSource, dot, cross]
   simp [Fin.sum_univ_succ]
   ring
-
-/-- Chiral eikonal dispersion: left/right circular polarizations
-    `Ω_±(k) = |k| ± b₀`. -/
-def omegaPlus (k b0 : R) : R := k + b0
-def omegaMinus (k b0 : R) : R := k - b0
 
 /-- **Chiral dispersion product**:
     `Ω_+ · Ω_- = |k|² − b₀²`. -/
@@ -90,5 +94,7 @@ theorem tachyonic_instability (k b0 : R)
     omegaPlus k b0 * omegaMinus k b0 < 0 := by
   rw [chiral_dispersion_product]
   linarith
+
+end CommutativeEikonal
 
 end InfoGeometry.Topological.ChiralAnomalyEikonalBirefringence

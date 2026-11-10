@@ -31,7 +31,7 @@ of bent-core lipid membranes and moving frames:
 
 namespace InfoGeometry.Canonical.CartanMovingFrameSE3Helical
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-!
 ### Stratum 40.1: Traceless Triaxial Quadrupole Order Tensor Q_ab
@@ -73,7 +73,7 @@ def spinConnSkew (omega_ab omega_ba : R) : R :=
 theorem spin_conn_skew_zero (omega_ab : R) :
     spinConnSkew omega_ab (-omega_ab) = 0 := by
   dsimp [spinConnSkew]
-  ring
+  abel
 
 end SpinConnection
 
@@ -92,7 +92,7 @@ theorem pitch_relation_zero (Omega P two_pi_v : R) (h : Omega * P = two_pi_v) :
     pitchRelationDefect Omega P two_pi_v = 0 := by
   dsimp [pitchRelationDefect]
   rw [h]
-  ring
+  noncomm_ring
 
 /-- Commutativity of axial generators in se(3):
     Because axial translation and axial rotation commute,
@@ -100,9 +100,9 @@ theorem pitch_relation_zero (Omega P two_pi_v : R) (h : Omega * P = two_pi_v) :
 theorem axial_generators_commute (P_z J_z : R) (h_comm : P_z * J_z = J_z * P_z) :
     (P_z + J_z) * (P_z + J_z) = P_z * P_z + (1 + 1) * (P_z * J_z) + J_z * J_z := by
   calc (P_z + J_z) * (P_z + J_z)
-    _ = P_z * P_z + P_z * J_z + J_z * P_z + J_z * J_z := by ring
+    _ = P_z * P_z + P_z * J_z + J_z * P_z + J_z * J_z := by noncomm_ring
     _ = P_z * P_z + P_z * J_z + P_z * J_z + J_z * J_z := by rw [h_comm]
-    _ = P_z * P_z + (1 + 1) * (P_z * J_z) + J_z * J_z := by ring
+    _ = P_z * P_z + (1 + 1) * (P_z * J_z) + J_z * J_z := by noncomm_ring
 
 end HelicalScrew
 

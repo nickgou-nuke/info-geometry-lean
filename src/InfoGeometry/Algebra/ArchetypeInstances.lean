@@ -1,7 +1,7 @@
 /-
-Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Copyright (c) 2026 Epistemic Compiler Project. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: InfoGeometry Engine Contributors
+Authors: Epistemic Compiler Team & Independent QMS Auditor
 -/
 import Lean
 import InfoGeometry.Meta.ArchetypePipeline
@@ -56,42 +56,45 @@ def elabWithHeartbeatLimit : Tactic := fun stx => do
 
 variable {R : Type*} [CommRing R]
 
-def zornAssociatorDefectArchetype : TypedArchetype (Vec3 R × Vec3 R × Vec3 R) .proved where
-  name     := `zornAssociatorDefectArchetype
+def zornAssociatorDefectCandidate : TypedArchetype (Vec3 R × Vec3 R × Vec3 R) .candidate where
+  name     := `zornAssociatorDefectCandidate
   phase    := 1
   claim    := fun (S, p, eps) =>
     let T := dot3 S (cross3 p eps)
     zornAssociator (ZornMatrix.quark S) (ZornMatrix.quark p) (ZornMatrix.quark eps) =
     ZornMatrix.sub (ZornMatrix.smul T ZornMatrix.PMinus) (ZornMatrix.smul T ZornMatrix.PPlus)
-  evidence := fun (S, p, eps) => zorn_associator_three_quarks_demodulation S p eps
+  evidence := PUnit.unit
 
-#register_archetype zornAssociatorDefectArchetype
+#register_archetype zornAssociatorDefectCandidate
 
-/- Compatibility name retained for clients of the earlier promotion API. -/
-abbrev zornAssociatorDefectProved {R : Type*} [CommRing R] :=
-  zornAssociatorDefectArchetype (R := R)
+#promote_archetype zornAssociatorDefectCandidate as zornAssociatorDefectProved by
+  with_heartbeat_limit 50000
+    intro (S, p, eps)
+    exact zorn_associator_three_quarks_demodulation S p eps
 
 -- ============================================================================
 -- 3. Iwasawa KAN Triad Reconstruction Archetype
 -- ============================================================================
 
-def kanTriadArchetype : TypedArchetype R .proved where
-  name     := `kanTriadArchetype
+def kanTriadCandidate : TypedArchetype (R) .candidate where
+  name     := `kanTriadCandidate
   phase    := 2
   claim    := fun x => N_grp R x * P_minus R = P_minus R + x • e_plus R
-  evidence := fun x => N_mediates_peirce_polarization R x
+  evidence := PUnit.unit
 
-#register_archetype kanTriadArchetype
+#register_archetype kanTriadCandidate
 
-/- Compatibility name retained for clients of the earlier promotion API. -/
-abbrev kanTriadProved {R : Type*} [CommRing R] := kanTriadArchetype (R := R)
+#promote_archetype kanTriadCandidate as kanTriadProved by
+  with_heartbeat_limit 50000
+    intro x
+    exact N_mediates_peirce_polarization R x
 
 -- ============================================================================
 -- 4. Compile-Time QMS Registry Disposition
 -- ============================================================================
 
-#audit_archetype zornAssociatorDefectArchetype
-#audit_archetype kanTriadArchetype
+#audit_archetype zornAssociatorDefectProved
+#audit_archetype kanTriadProved
 
 #search_typed_archetypes
 

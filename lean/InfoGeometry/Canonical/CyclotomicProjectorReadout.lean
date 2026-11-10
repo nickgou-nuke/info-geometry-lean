@@ -51,7 +51,7 @@ open InfoGeometry.Canonical.MatrixStageTrifactorFourierCyclotomic
 
 /-- Structural interface for an exact cyclotomic projector readout of $X \in A$ of order $m$. -/
 structure FourierCyclotomicReadout
-    {K A : Type*} [CommRing K] [Ring A] [Algebra K A]
+    {K A : Type*} [CommSemiring K] [Ring A] [Algebra K A]
     (X : A) (m : ℕ) where
   /-- Primitive scalar root of unity in the base ring $K$. -/
   ζ : K
@@ -68,7 +68,7 @@ structure FourierCyclotomicReadout
 
 /-- Spectral reconstruction theorem: $X = \sum_i \zeta^i P_i$. -/
 theorem spectral_reconstruction
-    {K A : Type*} [CommRing K] [Ring A] [Algebra K A]
+    {K A : Type*} [CommSemiring K] [Ring A] [Algebra K A]
     {X : A} {m : ℕ} (F : FourierCyclotomicReadout (K := K) (A := A) X m) :
     X = ∑ i, (algebraMap K A (F.ζ ^ i.val) * F.projector i) := by
   calc X
@@ -83,7 +83,7 @@ theorem spectral_reconstruction
 
 /-- Compatibility bridge connecting the discrete power character to cyclotomic projectors. -/
 structure FourierMellinCompatibility
-    {K A : Type*} [CommRing K] [Ring A] [Algebra K A]
+    {K A : Type*} [CommSemiring K] [Ring A] [Algebra K A]
     {X : A} {m : ℕ}
     (F : FourierCyclotomicReadout (K := K) (A := A) X m)
     (M : MellinGradeReadout X) : Prop where
@@ -93,7 +93,7 @@ structure FourierMellinCompatibility
 
 /-- 🏆 THEOREM: Any valid Fourier and Mellin readout automatically satisfy Fourier-Mellin compatibility. -/
 theorem fourier_mellin_compatible
-    {K A : Type*} [CommRing K] [Ring A] [Algebra K A]
+    {K A : Type*} [CommSemiring K] [Ring A] [Algebra K A]
     {X : A} {m : ℕ}
     (F : FourierCyclotomicReadout (K := K) (A := A) X m)
     (M : MellinGradeReadout X) :

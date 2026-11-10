@@ -4,24 +4,25 @@ import Mathlib.Analysis.Matrix.Spectrum
 import Mathlib.Data.Matrix.Basic
 
 /-!
-# GAP-to-Lean Native Transposition Bridge
+# Selected Algebraic Identities and a Finite Matrix Representation
 
-This module translates and exactly reproves all computer-algebra verifications
-from the repository's GAP suite into native, kernel-checked Lean 4 theorems:
+This module proves the identities written in its theorem statements: scalar
+rational and polynomial identities, and four matrix identities for explicit
+2×2 real matrices. The proofs are Lean proofs of those statements; this module
+does not execute GAP or certify the output of external scripts. In particular,
+it contains no polycyclic presentation or group-order witness.
 
-1. `verify_fibonacci_partition.g`:
-   The supersymmetry difference identity `1/(1-x) - (1+x) = x²/(1-x)`.
-2. `verify_fractal_dimensions.g`:
-   The golden ratio fractal dimension polynomial factorization `(X+1)⁵ - X⁵ - 11 = 5(X²+X-1)(X²+X+2)`.
-3. `verify_einfinity_paradoxes.g`:
-   The E-infinity quantum paradoxes, Cantorian dimension `(1+X)³ = 4+X³ (mod X²+X-1)`,
-   and Carlos Castro's transfinite polynomial identity.
-4. `verify_clifford_equiv.g`:
-   The Clifford 2D matrix generators `e₁² = I`, `e₂² = I`, `{e₁, e₂} = 0`, and complex structure `S² = -I`.
-5. `tools/gap/de_rham_boltzmann_modular.g`:
-   The algebraic Boltzmann / de Rham modular logarithm derivative `d/dβ log Q = r tanh(β r)`.
+#### BUCKET 1: CLOSED FINITE THEOREMS
+The identities below are proved in their declared fields, commutative rings,
+and concrete matrix carrier.
 
-All proofs check in O(1) time without external dependencies, sorrys, or axioms.
+#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
+The scalar consequences use the stated nonzero-denominator or polynomial-root
+hypotheses. The Clifford statements use the explicit 2×2 real matrices.
+
+#### BUCKET 3: OPEN CLOSURE DEBT
+No bridge from these identities to an external GAP computation or a presented
+polycyclic group is established here.
 -/
 
 namespace InfoGeometry.Canonical.GAPTranspositionBridge
@@ -166,25 +167,5 @@ theorem gap_clifford_anticomm : gapE1 * gapE2 + gapE2 * gapE1 = 0 := by
 theorem gap_clifford_complex_structure : gapS * gapS = -gapId := by
   ext i j
   fin_cases i <;> fin_cases j <;> norm_num [gapS, gapE1, gapE2, gapId, mul_apply, Fin.sum_univ_two]
-
-/-! ## 5. GAP Polycyclic PC Presentation Orders -/
-
-/-- The 6 GAP PC generator orders `[2, 4, 4, 2, 2, 2]`. -/
-def gapPCOrders : Fin 6 → ℕ
-  | 0 => 2
-  | 1 => 4
-  | 2 => 4
-  | 3 => 2
-  | 4 => 2
-  | 5 => 2
-
-theorem gapPCOrders_eval :
-    gapPCOrders 0 = 2 ∧
-    gapPCOrders 1 = 4 ∧
-    gapPCOrders 2 = 4 ∧
-    gapPCOrders 3 = 2 ∧
-    gapPCOrders 4 = 2 ∧
-    gapPCOrders 5 = 2 := by
-  refine ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
 
 end InfoGeometry.Canonical.GAPTranspositionBridge

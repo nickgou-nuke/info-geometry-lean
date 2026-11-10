@@ -22,12 +22,12 @@ open InfoGeometry.NCG.BlockSupermatrixGradedTrace
 
 /-! The generic theorem is exposed at the Section 46 bridge boundary. -/
 
-/-- Block multiplication is associative on the finite block carrier. This is a
-law for the custom multiplication; it does not register a ring or algebra
+/-- Block multiplication is associative on the finite block carrier over any ring `[Ring R]`.
+This is a law for the custom multiplication; it does not register a ring or algebra
 instance on `SuperMatrix`. -/
 theorem operator_block_mul_assoc
     {m n R : Type*} [Fintype m] [Fintype n]
-    [DecidableEq m] [DecidableEq n] [CommRing R]
+    [DecidableEq m] [DecidableEq n] [Ring R]
     (X Y Z : InfoGeometry.NCG.BlockSupermatrixGradedTrace.SuperMatrix
       (m := m) (n := n) (R := R)) :
     (X * Y) * Z = X * (Y * Z) := by
@@ -114,7 +114,7 @@ noncommuting witness. The scalar-entry Section 46 certificate is separate. -/
 structure FiniteOperatorBlockCertificate : Prop where
   block_multiplication_associative :
     ∀ {m n R : Type*} [Fintype m] [Fintype n]
-      [DecidableEq m] [DecidableEq n] [CommRing R]
+      [DecidableEq m] [DecidableEq n] [Ring R]
       (X Y Z : InfoGeometry.NCG.BlockSupermatrixGradedTrace.SuperMatrix
         (m := m) (n := n) (R := R)),
       (X * Y) * Z = X * (Y * Z)

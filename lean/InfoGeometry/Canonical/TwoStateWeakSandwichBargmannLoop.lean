@@ -9,8 +9,9 @@ open Matrix
 
 namespace InfoGeometry.Canonical.TwoStateWeakSandwichBargmannLoop
 
-variable {R : Type*} [CommRing R]
-variable {A : Type*} [Ring A] [Algebra R A]
+section Ring
+variable {R : Type*} [Ring R]
+variable {A : Type*} [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-!
 ## 1. Core Definitions: Dual Seeds, Elliptic & Hyperbolic Moving Projectors, & Two-State Sandwiches
@@ -146,24 +147,6 @@ theorem two_state_velocity_sandwich_rev {d B : A} (h : IsDualSeedPair d B) (c s 
   rw [sub_mul, add_mul, smul_mul_assoc, smul_mul_assoc, smul_mul_assoc,
       polePlus_mul_B h, h.BdB, hvel_B, smul_zero, zero_add]
 
-/-- **Division-Free Elliptic Weak-Value Syzygy (`elliptic_weak_value_syzygy`)**:
-    For ALL `c, s ∈ R`, the overlap sandwich `P_+ * P_+^{ell}(c, s)` and the velocity sandwich
-    `P_+ * Q₁ * P_+^{ell}(c, s)` satisfy the exact division-free linear syzygy:
-    `s • (P_+ * P_+^{ell}(c, s)) + c • (P_+ * Q₁ * P_+^{ell}(c, s)) = 0`! -/
-theorem elliptic_weak_value_syzygy {d B : A} (h : IsDualSeedPair d B) (c s : R) :
-    s • (polePlus d B * ellipticPolePlus c s d B) +
-    c • (polePlus d B * transitionVelocity d B * ellipticPolePlus c s d B) = 0 := by
-  rw [polePlus_mul_ellipticPolePlus h c s, two_state_velocity_sandwich h c s,
-      smul_sub, smul_sub, smul_smul, smul_smul, smul_smul, smul_smul]
-  have h_sc : s * (c * c) = c * (c * s) := by ring
-  have h_cs : s * (c * s) = c * (s * s) := by ring
-  rw [h_sc, h_cs]
-  abel
-
-/-!
-## 4. Node 2 Atomic Lemmas: Division-Free Hyperbolic Two-State Sandwiches & Syzygy
--/
-
 /-- **Forward Hyperbolic Overlap Sandwich (`P_+ * P_+^{hyp}(u, v) = u^2 • P_+ - (u * v) • d`)**. -/
 lemma polePlus_mul_hyperbolicPolePlus {d B : A} (h : IsDualSeedPair d B) (u v : R) :
     polePlus d B * hyperbolicPolePlus u v d B =
@@ -184,6 +167,30 @@ theorem hyperbolic_two_state_wheel_sandwich {d B : A} (h : IsDualSeedPair d B) (
   rw [mul_sub, mul_sub, mul_smul_comm, mul_smul_comm, mul_smul_comm,
       d_mul_polePlus h, d_mul_poleMinus h, hd_wheel, smul_zero, zero_sub,
       smul_neg, sub_neg_eq_add]
+
+end Ring
+
+section CommRing
+variable {R : Type*} [CommRing R]
+variable {A : Type*} [Ring A] [Algebra R A]
+
+/-- **Division-Free Elliptic Weak-Value Syzygy (`elliptic_weak_value_syzygy`)**:
+    For ALL `c, s ∈ R`, the overlap sandwich `P_+ * P_+^{ell}(c, s)` and the velocity sandwich
+    `P_+ * Q₁ * P_+^{ell}(c, s)` satisfy the exact division-free linear syzygy:
+    `s • (P_+ * P_+^{ell}(c, s)) + c • (P_+ * Q₁ * P_+^{ell}(c, s)) = 0`! -/
+theorem elliptic_weak_value_syzygy {d B : A} (h : IsDualSeedPair d B) (c s : R) :
+    s • (polePlus d B * ellipticPolePlus c s d B) +
+    c • (polePlus d B * transitionVelocity d B * ellipticPolePlus c s d B) = 0 := by
+  rw [polePlus_mul_ellipticPolePlus h c s, two_state_velocity_sandwich h c s,
+      smul_sub, smul_sub, smul_smul, smul_smul, smul_smul, smul_smul]
+  have h_sc : s * (c * c) = c * (c * s) := by ring
+  have h_cs : s * (c * s) = c * (s * s) := by ring
+  rw [h_sc, h_cs]
+  abel
+
+/-!
+## 4. Node 2 Atomic Lemmas: Division-Free Hyperbolic Two-State Sandwiches & Syzygy
+-/
 
 /-- **Division-Free Hyperbolic Weak-Value Syzygy (`hyperbolic_weak_value_syzygy`)**:
     For ALL `u, v ∈ R`:
@@ -282,5 +289,7 @@ theorem mat2Z_two_state_weak_sandwich_witness :
     ⟨h_id0, h_vel_d⟩
   have hd_ne : matD ≠ 0 := by decide
   exact ⟨mat2Z_isDualSeedPair, h_id0, h_vel_d, hd_ne⟩
+
+end CommRing
 
 end InfoGeometry.Canonical.TwoStateWeakSandwichBargmannLoop

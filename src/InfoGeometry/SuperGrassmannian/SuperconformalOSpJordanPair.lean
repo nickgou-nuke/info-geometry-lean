@@ -1,8 +1,3 @@
-/-
-Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: InfoGeometry Engine Contributors
--/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
@@ -12,7 +7,6 @@ import Mathlib.Tactic.Ring
 import Mathlib.Tactic.FinCases
 import InfoGeometry.Algebra.SupergradedBracket
 import InfoGeometry.Canonical.TKKJordanPairData
-import InfoGeometry.SuperGrassmannian.FiveGradedLieSuperalgebra
 
 /-!
 # Section 86: Superconformal 𝔬𝔰𝔭(1|2) & Kantor Jordan Pair Architecture
@@ -52,7 +46,7 @@ namespace InfoGeometry.SuperGrassmannian.SuperconformalOSpJordanPair
 
 open scoped Matrix BigOperators
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### Section 1: Canonical Basis and Operators in M₃(R) -/
 
@@ -61,23 +55,23 @@ def E (i j : Fin 3) : Matrix (Fin 3) (Fin 3) R :=
   Matrix.of fun r c => if r = i ∧ c = j then 1 else 0
 
 /-- The Cartan element $H = E_{00} - E_{22} = \operatorname{diag}(1, 0, -1)$. -/
-def H_gen (R : Type*) [CommRing R] : Matrix (Fin 3) (Fin 3) R :=
+def H_gen (R : Type*) [Ring R] : Matrix (Fin 3) (Fin 3) R :=
   E 0 0 - E 2 2
 
 /-- The positive nilpotent generator $E = E_{02}$. -/
-def E_gen (R : Type*) [CommRing R] : Matrix (Fin 3) (Fin 3) R :=
+def E_gen (R : Type*) [Ring R] : Matrix (Fin 3) (Fin 3) R :=
   E 0 2
 
 /-- The negative nilpotent generator $F = E_{20}$. -/
-def F_gen (R : Type*) [CommRing R] : Matrix (Fin 3) (Fin 3) R :=
+def F_gen (R : Type*) [Ring R] : Matrix (Fin 3) (Fin 3) R :=
   E 2 0
 
 /-- The odd positive supercharge $Q_+ = E_{01} + E_{12}$. -/
-def Q_plus (R : Type*) [CommRing R] : Matrix (Fin 3) (Fin 3) R :=
+def Q_plus (R : Type*) [Ring R] : Matrix (Fin 3) (Fin 3) R :=
   E 0 1 + E 1 2
 
 /-- The odd negative supercharge $Q_- = E_{10} - E_{21}$. -/
-def Q_minus (R : Type*) [CommRing R] : Matrix (Fin 3) (Fin 3) R :=
+def Q_minus (R : Type*) [Ring R] : Matrix (Fin 3) (Fin 3) R :=
   E 1 0 - E 2 1
 
 /-! ### The explicit `2|1` grading used by these matrices
@@ -133,7 +127,7 @@ theorem anticomm_symm (A B : Matrix (Fin 3) (Fin 3) R) :
   unfold anticommutator
   ext i j
   simp only [Matrix.add_apply]
-  ring
+  abel
 
 /-! ### Section 2: Bosonic sl(2) Subalgebra Identities -/
 
@@ -141,13 +135,13 @@ theorem anticomm_symm (A B : Matrix (Fin 3) (Fin 3) R) :
 theorem osp_sl2_H_E : commutator (H_gen R) (E_gen R) = 2 • (E_gen R) := by
   unfold commutator H_gen E_gen E
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [Matrix.mul_apply, Matrix.sub_apply, Matrix.smul_apply]; ring
+    (simp [Matrix.mul_apply, Matrix.sub_apply, Matrix.smul_apply]; try norm_num)
 
 /-- **Theorem**: $[H, F] = -2F$. -/
 theorem osp_sl2_H_F : commutator (H_gen R) (F_gen R) = -2 • (F_gen R) := by
   unfold commutator H_gen F_gen E
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [Matrix.mul_apply, Matrix.sub_apply, Matrix.smul_apply]; ring
+    (simp [Matrix.mul_apply, Matrix.sub_apply, Matrix.smul_apply]; try norm_num)
 
 /-- **Theorem**: $[E, F] = H$. -/
 theorem osp_sl2_E_F : commutator (E_gen R) (F_gen R) = H_gen R := by
@@ -161,13 +155,13 @@ theorem osp_sl2_E_F : commutator (E_gen R) (F_gen R) = H_gen R := by
 theorem osp_anticomm_plus_plus : anticommutator (Q_plus R) (Q_plus R) = 2 • (E_gen R) := by
   unfold anticommutator Q_plus E_gen E
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply]; ring
+    (simp [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply]; try norm_num)
 
 /-- **Theorem**: $\{Q_-, Q_-\} = -2F$. -/
 theorem osp_anticomm_minus_minus : anticommutator (Q_minus R) (Q_minus R) = -2 • (F_gen R) := by
   unfold anticommutator Q_minus F_gen E
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply]; ring
+    (simp [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply]; try norm_num)
 
 /-- **Theorem**: $\{Q_+, Q_-\} = H$. -/
 theorem osp_anticomm_plus_minus : anticommutator (Q_plus R) (Q_minus R) = H_gen R := by
@@ -192,165 +186,6 @@ theorem osp_grad_H_Q_minus : commutator (H_gen R) (Q_minus R) = -Q_minus R := by
   unfold commutator H_gen Q_minus E
   ext i j; fin_cases i <;> fin_cases j <;>
     simp [Matrix.mul_apply, Matrix.sub_apply, Matrix.neg_apply]
-
-/-! ### Section 4b: The supercharge square reaches the contact grades
-
-The commutator action of `H_gen` is a derivation of the associative matrix
-product, hence also of the anticommutator.  Applied to the odd generators,
-this exhibits their squares as weight `+2` and `-2` elements.  These are
-concrete matrix statements; they do not assert an abstract prolongation.
--/
-
-/-- The commutator with a fixed matrix differentiates the anticommutator. -/
-theorem commutator_anticommutator_derivation
-    (H X Y : Matrix (Fin 3) (Fin 3) R) :
-    commutator H (anticommutator X Y) =
-      anticommutator (commutator H X) Y +
-        anticommutator X (commutator H Y) := by
-  unfold commutator anticommutator
-  ext i j
-  simp only [Matrix.sub_mul, Matrix.mul_sub, Matrix.add_mul, Matrix.mul_add,
-    Matrix.mul_assoc]
-  simp [Matrix.mul_apply, Fin.sum_univ_three]
-  ring
-
-/-- The positive supercharge square has grading weight `+2`. -/
-theorem osp_grad_H_Qplus_square :
-    commutator (H_gen R) (anticommutator (Q_plus R) (Q_plus R)) =
-      2 • anticommutator (Q_plus R) (Q_plus R) := by
-  simp only [commutator_anticommutator_derivation, osp_grad_H_Q_plus]
-  simp [anticommutator, two_smul]
-
-/-- The negative supercharge square has grading weight `-2`. -/
-theorem osp_grad_H_Qminus_square :
-    commutator (H_gen R) (anticommutator (Q_minus R) (Q_minus R)) =
-      -2 • anticommutator (Q_minus R) (Q_minus R) := by
-  simp only [commutator_anticommutator_derivation, osp_grad_H_Q_minus]
-  simp [anticommutator, two_smul]
-
-/-- Scalar multiplication passes through the matrix commutator. -/
-theorem commutator_smul_right (r : R)
-    (A B : Matrix (Fin 3) (Fin 3) R) :
-    commutator A (r • B) = r • commutator A B := by
-  unfold commutator
-  ext i j
-  simp [Matrix.mul_apply, Matrix.smul_apply, Fin.sum_univ_three]
-  ring
-
-theorem commutator_add_right
-    (A B C : Matrix (Fin 3) (Fin 3) R) :
-    commutator A (B + C) = commutator A B + commutator A C := by
-  unfold commutator
-  rw [mul_add, add_mul]
-  abel
-
-/-- Natural-number scalar multiplication passes through the matrix commutator. -/
-theorem commutator_nsmul_right (n : ℕ)
-    (A B : Matrix (Fin 3) (Fin 3) R) :
-    commutator A (n • B) = n • commutator A B := by
-  induction n with
-  | zero =>
-      unfold commutator
-      simp
-  | succ n ih =>
-      rw [add_nsmul, one_nsmul, commutator_add_right, ih, add_nsmul, one_nsmul]
-
-/-- Negation passes through the right argument of the matrix commutator. -/
-theorem commutator_neg_right
-    (A B : Matrix (Fin 3) (Fin 3) R) :
-    commutator A (-B) = -commutator A B := by
-  unfold commutator
-  rw [mul_neg, neg_mul]
-  abel
-
-/-- The positive contact square is detected by the cubic Peirce defect. -/
-theorem osp_peirce_cubic_defect_Qplus_square :
-    commutator (H_gen R) (commutator (H_gen R)
-      (commutator (H_gen R)
-        (anticommutator (Q_plus R) (Q_plus R)))) -
-      commutator (H_gen R) (anticommutator (Q_plus R) (Q_plus R)) =
-      6 • anticommutator (Q_plus R) (Q_plus R) := by
-  let B := anticommutator (Q_plus R) (Q_plus R)
-  let D : Matrix (Fin 3) (Fin 3) R → Matrix (Fin 3) (Fin 3) R :=
-    commutator (H_gen R)
-  change D (D (D B)) - D B = 6 • B
-  have h₁ : D B = 2 • B := osp_grad_H_Qplus_square
-  have h₂ : D (D B) = 4 • B := by
-    calc
-      D (D B) = D (2 • B) := congrArg D h₁
-      _ = 2 • D B := commutator_nsmul_right 2 (H_gen R) B
-      _ = 4 • B := by rw [h₁]; module
-  have h₃ : D (D (D B)) = 8 • B := by
-    calc
-      D (D (D B)) = D (4 • B) := congrArg D h₂
-      _ = 4 • D B := commutator_nsmul_right 4 (H_gen R) B
-      _ = 8 • B := by rw [h₁]; module
-  rw [h₃, h₁]
-  ext i j
-  simp only [Matrix.sub_apply, Matrix.smul_apply]
-  ring
-
-/-- The negative contact square is detected with the opposite cubic sign. -/
-theorem osp_peirce_cubic_defect_Qminus_square :
-    commutator (H_gen R) (commutator (H_gen R)
-      (commutator (H_gen R)
-        (anticommutator (Q_minus R) (Q_minus R)))) -
-      commutator (H_gen R) (anticommutator (Q_minus R) (Q_minus R)) =
-      -6 • anticommutator (Q_minus R) (Q_minus R) := by
-  let B := anticommutator (Q_minus R) (Q_minus R)
-  let D : Matrix (Fin 3) (Fin 3) R → Matrix (Fin 3) (Fin 3) R :=
-    commutator (H_gen R)
-  change D (D (D B)) - D B = -6 • B
-  have h₁ : D B = -(2 • B) := by
-    have h0 := osp_grad_H_Qminus_square (R := R)
-    rw [neg_smul, two_smul ℤ, ← two_smul ℕ] at h0
-    exact h0
-  have h₂ : D (D B) = 4 • B := by
-    calc
-      D (D B) = D (-(2 • B)) := congrArg D h₁
-      _ = -D (2 • B) := commutator_neg_right (H_gen R) (2 • B)
-      _ = -(2 • D B) := by
-        change -commutator (H_gen R) (2 • B) = -(2 • D B)
-        rw [commutator_nsmul_right 2 (H_gen R) B]
-      _ = 4 • B := by rw [h₁]; module
-  have h₃ : D (D (D B)) = -(8 • B) := by
-    calc
-      D (D (D B)) = D (4 • B) := congrArg D h₂
-      _ = 4 • D B := commutator_nsmul_right 4 (H_gen R) B
-      _ = -(8 • B) := by rw [h₁]; module
-  rw [h₃, h₁]
-  ext i j
-  simp only [Matrix.sub_apply, Matrix.neg_apply, Matrix.smul_apply]
-  ring
-
-/-- The OSp Cartan matrix is the same concrete grading element used by the
-five-graded adjoint action on `M₃(R)`. -/
-theorem osp_H_gen_eq_fiveGraded_H :
-    H_gen R = InfoGeometry.SuperGrassmannian.FiveGradedLieSuperalgebra.H_grading := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [H_gen, E, InfoGeometry.SuperGrassmannian.FiveGradedLieSuperalgebra.H_grading,
-      Matrix.diagonal]
-
-/-- The OSp commutator action therefore satisfies the full quintic grading
-identity on every matrix in `M₃(R)`. This is a concrete matrix-module theorem;
-it does not assert an abstract Lie-superalgebra classification. -/
-theorem osp_adH_quintic_identity (X : Matrix (Fin 3) (Fin 3) R) :
-    commutator (H_gen R)
-        (commutator (H_gen R)
-          (commutator (H_gen R)
-            (commutator (H_gen R) (commutator (H_gen R) X)))) -
-      5 • commutator (H_gen R)
-        (commutator (H_gen R) (commutator (H_gen R) X)) +
-      4 • commutator (H_gen R) X = 0 := by
-  have hD : ∀ Y : Matrix (Fin 3) (Fin 3) R,
-      commutator (H_gen R) Y =
-        InfoGeometry.SuperGrassmannian.FiveGradedLieSuperalgebra.adH Y := by
-    intro Y
-    rw [osp_H_gen_eq_fiveGraded_H]
-    rfl
-  simpa only [hD] using
-    (InfoGeometry.SuperGrassmannian.FiveGradedLieSuperalgebra.adH_quintic_identity X)
 
 /-- **Theorem**: Lowering supercharge ladder: $[E, Q_-] = -Q_+$. -/
 theorem osp_ladder_E_Q_minus : commutator (E_gen R) (Q_minus R) = -Q_plus R := by
@@ -436,17 +271,17 @@ def contactTriplePlus (x y z : R) : R := x * y * z
 /-- The negative scalar triple product for the two contact lines. -/
 def contactTripleMinus (y x w : R) : R := y * x * w
 
-theorem contactTriplePlus_outer (x y z : R) :
+theorem contactTriplePlus_outer {R : Type*} [CommRing R] (x y z : R) :
     contactTriplePlus x y z = contactTriplePlus z y x := by
   dsimp [contactTriplePlus]
   ring
 
-theorem contactTripleMinus_outer (x y z : R) :
+theorem contactTripleMinus_outer {R : Type*} [CommRing R] (x y z : R) :
     contactTripleMinus x y z = contactTripleMinus z y x := by
   dsimp [contactTripleMinus]
   ring
 
-theorem contactTriplePlus_fundamental (x u w y v : R) :
+theorem contactTriplePlus_fundamental {R : Type*} [CommRing R] (x u w y v : R) :
     contactTriplePlus x y (contactTriplePlus u v w) -
         contactTriplePlus u v (contactTriplePlus x y w) =
       contactTriplePlus (contactTriplePlus x y u) v w -
@@ -454,7 +289,7 @@ theorem contactTriplePlus_fundamental (x u w y v : R) :
   simp [contactTriplePlus, contactTripleMinus]
   ring
 
-theorem contactTripleMinus_fundamental (x u w y v : R) :
+theorem contactTripleMinus_fundamental {R : Type*} [CommRing R] (x u w y v : R) :
     contactTripleMinus x y (contactTripleMinus u v w) -
         contactTripleMinus u v (contactTripleMinus x y w) =
       contactTripleMinus (contactTripleMinus x y u) v w -
@@ -463,7 +298,7 @@ theorem contactTripleMinus_fundamental (x u w y v : R) :
   ring
 
 /-- The two one-dimensional contact spaces, with their Jordan pair products. -/
-def contactJordanPair : TKKJordanPairData.JordanPair R where
+def contactJordanPair {R : Type*} [CommRing R] : TKKJordanPairData.JordanPair R where
   Vplus := R
   Vminus := R
   triplePlus := contactTriplePlus
@@ -474,7 +309,7 @@ def contactJordanPair : TKKJordanPairData.JordanPair R where
   tripleMinus_fundamental := contactTripleMinus_fundamental
 
 /-- The positive matrix triple is the scalar Jordan pair triple on `Q_plus`. -/
-theorem jordan_pair_plus_scalar_readout (a b c : R) :
+theorem jordan_pair_plus_scalar_readout {R : Type*} [CommRing R] (a b c : R) :
     jordanPairPlus (a • Q_plus R) (b • Q_minus R) (c • Q_plus R) =
       (contactTriplePlus a b c) • Q_plus R := by
   unfold jordanPairPlus contactTriplePlus
@@ -486,7 +321,7 @@ theorem jordan_pair_plus_scalar_readout (a b c : R) :
     simp [Matrix.smul_apply, Matrix.mul_apply, Q_plus, Q_minus, E] <;> ring
 
 /-- The negative matrix triple is the dual scalar Jordan pair triple on `Q_minus`. -/
-theorem jordan_pair_minus_scalar_readout (a b c : R) :
+theorem jordan_pair_minus_scalar_readout {R : Type*} [CommRing R] (a b c : R) :
     jordanPairMinus (a • Q_minus R) (b • Q_plus R) (c • Q_minus R) =
       (contactTripleMinus a b c) • Q_minus R := by
   unfold jordanPairMinus contactTripleMinus
@@ -548,7 +383,7 @@ matrix contact lines by nested parity-aware superbrackets. This identifies
 the full one-dimensional pair operations with their concrete M₃ readouts;
 it is stronger than evaluating only the three generators.
 -/
-theorem contact_jordan_pair_matrix_realization (a b c : R) :
+theorem contact_jordan_pair_matrix_realization {R : Type*} [CommRing R] (a b c : R) :
     jordanPairPlus (a • Q_plus R) (b • Q_minus R) (c • Q_plus R) =
       (contactTriplePlus a b c) • Q_plus R ∧
     jordanPairMinus (a • Q_minus R) (b • Q_plus R) (c • Q_minus R) =
@@ -567,7 +402,7 @@ classification or an equivalence to an abstractly presented `osp(1|2)`.
 
 namespace MatrixSpans
 
-abbrev M (R : Type*) [CommRing R] := Matrix (Fin 3) (Fin 3) R
+abbrev M (R : Type*) [Ring R] := Matrix (Fin 3) (Fin 3) R
 
 inductive EvenIndex where
   | h | e | f
@@ -616,7 +451,7 @@ theorem sb_add_left (p q : Bool) (x y z : M R) :
     simp [sb, InfoGeometry.Algebra.SupergradedBracket.superBracket,
       InfoGeometry.Algebra.SupergradedBracket.commutator,
       InfoGeometry.Algebra.SupergradedBracket.anticommutator,
-      Matrix.mul_apply, Fin.sum_univ_three] <;> ring
+      Matrix.mul_apply, Fin.sum_univ_three] <;> noncomm_ring
 
 theorem sb_add_right (p q : Bool) (x y z : M R) :
     sb p q x (y + z) = sb p q x y + sb p q x z := by
@@ -625,9 +460,9 @@ theorem sb_add_right (p q : Bool) (x y z : M R) :
     simp [sb, InfoGeometry.Algebra.SupergradedBracket.superBracket,
       InfoGeometry.Algebra.SupergradedBracket.commutator,
       InfoGeometry.Algebra.SupergradedBracket.anticommutator,
-      Matrix.mul_apply, Fin.sum_univ_three] <;> ring
+      Matrix.mul_apply, Fin.sum_univ_three] <;> noncomm_ring
 
-theorem sb_smul_left (p q : Bool) (a : R) (x y : M R) :
+theorem sb_smul_left {R : Type*} [CommRing R] (p q : Bool) (a : R) (x y : M R) :
     sb p q (a • x) y = a • sb p q x y := by
   cases p <;> cases q <;>
     ext i j <;>
@@ -636,7 +471,7 @@ theorem sb_smul_left (p q : Bool) (a : R) (x y : M R) :
       InfoGeometry.Algebra.SupergradedBracket.anticommutator,
       Matrix.smul_apply, Matrix.mul_apply, Fin.sum_univ_three] <;> ring
 
-theorem sb_smul_right (p q : Bool) (a : R) (x y : M R) :
+theorem sb_smul_right {R : Type*} [CommRing R] (p q : Bool) (a : R) (x y : M R) :
     sb p q x (a • y) = a • sb p q x y := by
   cases p <;> cases q <;>
     ext i j <;>
@@ -658,7 +493,7 @@ theorem sb_zero_right (p q : Bool) (x : M R) : sb p q x 0 = 0 := by
       InfoGeometry.Algebra.SupergradedBracket.anticommutator]
 
 /-- Bilinearity lifts generator-pair closure to the linear spans. -/
-theorem span_pair_closure {s t : Set (M R)} (U : Submodule R (M R))
+theorem span_pair_closure {R : Type*} [CommRing R] {s t : Set (M R)} (U : Submodule R (M R))
     (p q : Bool)
     (hgen : ∀ x, x ∈ s → ∀ y, y ∈ t → sb p q x y ∈ U)
     {x y : M R} (hx : x ∈ Submodule.span R s)
@@ -728,7 +563,7 @@ private theorem even_even_evaluation (i j : EvenIndex) :
     simp [sb, evenBasis, evenEvenValue,
       InfoGeometry.Algebra.SupergradedBracket.superBracket,
       InfoGeometry.Algebra.SupergradedBracket.commutator,
-      H_gen, E_gen, F_gen, E, Matrix.mul_apply] <;> ring
+      H_gen, E_gen, F_gen, E, Matrix.mul_apply] <;> norm_num
 
 private theorem even_odd_evaluation (i : EvenIndex) (j : OddIndex) :
     sb false true (evenBasis (R := R) i) (oddBasis (R := R) j) =
@@ -758,7 +593,7 @@ private theorem odd_odd_evaluation (i j : OddIndex) :
     simp [sb, oddBasis, oddOddValue,
       InfoGeometry.Algebra.SupergradedBracket.superBracket,
       InfoGeometry.Algebra.SupergradedBracket.anticommutator,
-      H_gen, E_gen, F_gen, Q_plus, Q_minus, E, Matrix.mul_apply] <;> ring
+      H_gen, E_gen, F_gen, Q_plus, Q_minus, E, Matrix.mul_apply] <;> norm_num
 
 private theorem even_even_table (x : M R) (hx : x ∈ evenGenerators)
     (y : M R) (hy : y ∈ evenGenerators) :
@@ -806,25 +641,25 @@ private theorem odd_odd_table (x : M R) (hx : x ∈ oddGenerators)
   · exact evenSpan.smul_mem (-2 : R) even_F_mem
 
 /-- The even span is closed under the even-even superbracket. -/
-theorem even_even_span_closed {x y : M R}
+theorem even_even_span_closed {R : Type*} [CommRing R] {x y : M R}
     (hx : x ∈ evenSpan) (hy : y ∈ evenSpan) :
     sb false false x y ∈ evenSpan :=
   span_pair_closure evenSpan false false even_even_table hx hy
 
 /-- The even-odd bracket maps the even span and odd span into the odd span. -/
-theorem even_odd_span_closed {x y : M R}
+theorem even_odd_span_closed {R : Type*} [CommRing R] {x y : M R}
     (hx : x ∈ evenSpan) (hy : y ∈ oddSpan) :
     sb false true x y ∈ oddSpan :=
   span_pair_closure oddSpan false true even_odd_table hx hy
 
 /-- The odd-even bracket maps the odd span and even span into the odd span. -/
-theorem odd_even_span_closed {x y : M R}
+theorem odd_even_span_closed {R : Type*} [CommRing R] {x y : M R}
     (hx : x ∈ oddSpan) (hy : y ∈ evenSpan) :
     sb true false x y ∈ oddSpan :=
   span_pair_closure oddSpan true false odd_even_table hx hy
 
 /-- The odd-odd superbracket maps the odd span into the even span. -/
-theorem odd_odd_span_closed {x y : M R}
+theorem odd_odd_span_closed {R : Type*} [CommRing R] {x y : M R}
     (hx : x ∈ oddSpan) (hy : y ∈ oddSpan) :
     sb true true x y ∈ evenSpan :=
   span_pair_closure evenSpan true true odd_odd_table hx hy

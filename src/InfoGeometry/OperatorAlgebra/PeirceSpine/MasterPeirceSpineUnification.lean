@@ -12,16 +12,18 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.DeHaroModelBundleDualityPoset
 import InfoGeometry.OperatorAlgebra.PeirceSpine.YoshizawaGradientFlowInfoGeometryPoset
 import InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset
 import InfoGeometry.Canonical.Arxiv251107015ModelBundleSeibergWittenPoset
+import InfoGeometry.Canonical.Arxiv260821152GradientFlowInformationGeometryPoset
+import InfoGeometry.Canonical.Arxiv261006012AttentionTokenDifferenceRoutingPoset
 
 /-!
 # Three-Horizon Differential Square, Peirce-Corner Invariance, Finite Peirce Dilation,
 # and Double-Bracket / Para-Kähler / Jordan-Boundary Unification
 
-This module proves three synthesis theorems over an associative ring `B` (`[Ring B]`):
+This module proves five synthesis theorems over an associative ring `B` (`[Ring B]`):
 1. `three_horizon_d_tot_sq_on_weyl_dilation`: relates the square of the defined three-horizon
    differential to the commutator of the finite Peirce metric and proves that adding the waist
    corner term leaves that commutator unchanged.
-2. `de_haro_seiberg_witten_finite_peirce_dilation_bridge`: links the three-horizon Peirce corner
+2. `de_haro_seiberg_witten_finite_peirce_dilation_synthesis`: links the three-horizon Peirce corner
    decomposition, transitive Seiberg–Witten monodromy across the waist (`[N₁₀, N₀₂] = N₁₂`),
    monopole/dyon corner orthogonality (`Q₁₀ Q₂₀ = Q₂₀ Q₁₀ = 0`), a finite Peirce-corner dilation
    identity (`U(r, r⁻¹) U(r⁻¹, r) = 1` under stated corner equations), and cyclic-trace shell
@@ -29,14 +31,25 @@ This module proves three synthesis theorems over an associative ring `B` (`[Ring
 3. `master_global_peirce_spine_and_model_bundle_coagulation`: combines the three-horizon differential
    square, waist holonomy trace decomposition (`τ(V₀) = τ(Q₁₀) + τ(Q₂₀)`), Brockett–Souriau balance,
    Amari `α = ±1` exterior flatness, and Jordan-nilpotent boundary defect (`T² - T = N`).
+4. `arxiv_2608_21152_and_peirce_operator_cyclotomic_synthesis`: combines the unit-metric
+   `SL(2, ℤ)` modular braid presentation `(S T)³ = -1 = S²` in `[Ring B]`, polynomial and
+   Peirce-generated operator 24-factorizations, Kitaev rotor unit gap conservation
+   `(c K + s C)² = 1`, annulus midpoint centering, and Peirce exact–harmonic trace orthogonality.
+5. `arxiv_2610_06012_attention_routing_and_peirce_spine_synthesis`: combines the `arXiv:2610.06012`
+   Euclidean token-difference sink bias decomposition (`A^* A = P + Φ_sink + Q_- + A_c^* A_c`),
+   intrinsic pullback stationarity (`D_{μ,π} = P + D_c`), measure-projector band nilpotent shift
+   (`[P_μ, P_ν]² = 0`), Yoshizawa–Souriau–Brockett metriplectic sink lock, and multi-layer
+   compression valley annihilation in `[Ring B]`.
 
 BUCKET 1: PROVED FINITE/ALGEBRAIC IDENTITIES OVER `[Ring B]`
 - `d_tot3`
 - `three_horizon_d_tot_sq_on_weyl_dilation`
 
 BUCKET 2: CONDITIONAL IDENTITIES FROM EXPLICIT PREMISES
-- `de_haro_seiberg_witten_finite_peirce_dilation_bridge`
+- `de_haro_seiberg_witten_finite_peirce_dilation_synthesis`
 - `master_global_peirce_spine_and_model_bundle_coagulation`
+- `arxiv_2608_21152_and_peirce_operator_cyclotomic_synthesis`
+- `arxiv_2610_06012_attention_routing_and_peirce_spine_synthesis`
 
 BUCKET 3: OPEN CLOSURE DEBT
 - Re-exported through `InfoGeometry.OperatorAlgebra.PeirceSpine`; continuum gradient-flow ODE
@@ -132,8 +145,8 @@ lemma three_horizon_d_tot_sq_on_weyl_dilation
     rw [h_add, h_vW, add_zero]
   exact ⟨h_step1, h_step2, h_step3, h_step4⟩
 
-/-- **De Haro Model Bundle and Finite Peirce Dilation Bridge
-(`de_haro_seiberg_witten_finite_peirce_dilation_bridge`)**:
+/-- **De Haro Model Bundle and Finite Peirce Dilation Synthesis
+(`de_haro_seiberg_witten_finite_peirce_dilation_synthesis`)**:
 Links the three-horizon model-bundle corner decomposition, Seiberg–Witten transitive waist
 monodromy and monopole/dyon corner orthogonality, the finite Peirce-corner dilation
 `U(r, r⁻¹) = P₁ r P₁ + P₀ + P₂ r⁻¹ P₂`, and cyclic-trace shell vanishing:
@@ -145,7 +158,7 @@ monodromy and monopole/dyon corner orthogonality, the finite Peirce-corner dilat
    `U * U⁻¹ = 1` when `P₁ r P₁ r⁻¹ P₁ = P₁` and `P₂ r⁻¹ P₂ r P₂ = P₂`,
 5. Cyclic-trace equality across dual holonomies `tr.tr Q₁₀ = tr.tr Q₀₁` and Para-Kähler metric
    trace collapse `tr.tr (V_PK3 P1 P2 X Y) = tr.tr (V1_weyl3 P1 P2 X Y)`. -/
-theorem de_haro_seiberg_witten_finite_peirce_dilation_bridge
+theorem de_haro_seiberg_witten_finite_peirce_dilation_synthesis
     (tr : CyclicTrace B M)
     (P1 P2 r rinv W X Y Z : B)
     (h1 : P1 * P1 = P1) (h2 : P2 * P2 = P2)
@@ -214,7 +227,13 @@ theorem master_global_peirce_spine_and_model_bundle_coagulation
     (parabolicFlowPlus P1 X 1 * parabolicFlowMinus P1 Y (-1) * parabolicFlowPlus P1 X 1 =
       J_mc P1 X Y + (1 - V_met P1 X Y) * parabolicFlowPlus P1 X 1) ∧
     ((1 - J_mc P1 X Y) * (1 + J_mc P1 X Y) * (1 - Phi_v P1 X Y) * (1 + Phi_v P1 X Y) =
-      1 - (J_mc P1 X Y * J_mc P1 X Y) * (J_mc P1 X Y * J_mc P1 X Y)) := by
+      1 - (J_mc P1 X Y * J_mc P1 X Y) * (J_mc P1 X Y * J_mc P1 X Y)) ∧
+    (InfoGeometry.Canonical.Arxiv260821152GradientFlowInformationGeometryPoset.adH5
+      (InfoGeometry.Canonical.Arxiv260821152GradientFlowInformationGeometryPoset.weylGradingH P1 P2) X -
+      (5 : ℤ) • InfoGeometry.Canonical.Arxiv260821152GradientFlowInformationGeometryPoset.adH3
+        (InfoGeometry.Canonical.Arxiv260821152GradientFlowInformationGeometryPoset.weylGradingH P1 P2) X +
+      (4 : ℤ) • InfoGeometry.Canonical.Arxiv260821152GradientFlowInformationGeometryPoset.adH
+        (InfoGeometry.Canonical.Arxiv260821152GradientFlowInformationGeometryPoset.weylGradingH P1 P2) X = 0) := by
   have h_dtot := three_horizon_d_tot_sq_on_weyl_dilation P1 P2 X Y C0 h1 h2 h12 h21
   have h_dh :=
     three_horizon_modular_weights_and_cyclic_trace_balance
@@ -226,6 +245,9 @@ theorem master_global_peirce_spine_and_model_bundle_coagulation
   have h_moeb := tetractys_is_sl2_moebius_lie_algebra P1 X Y h1
   have h_stein := universal_modular_steinberg_braid_defect P1 X Y h1
   have h_diam := operator_factorization_diamond_in_pure_ring P1 X Y h1
+  have h_par5 :=
+    InfoGeometry.Canonical.Arxiv260821152GradientFlowInformationGeometryPoset.parabolic_five_graded_master_polynomial_and_24_isogeny
+      P1 P2 X h1 h2 h12 h21
   exact ⟨h_dtot.2.1.trans h_dtot.2.2.2.symm,
          h_dh.2.2.2.2.2.2.2.2.2.2.2,
          h_bs.2.2.2.2.2.2.2.1,
@@ -235,6 +257,130 @@ theorem master_global_peirce_spine_and_model_bundle_coagulation
          h_jordan.2.2.2.2.2.1,
          h_moeb.2.2.2.2.2.2.2.2.2.2.2.2.2,
          h_stein.2.2.2.1,
-         h_diam.2.2⟩
+         h_diam.2.2,
+         h_par5.1⟩
+
+/-- **Orders 29–32 Virasoro–Kitaev–Peirce–Steinberg Operator Synthesis**
+(`arxiv_2608_21152_and_peirce_operator_cyclotomic_synthesis`):
+Combines a unit-metric modular braid relation, a polynomial 24-factorization and its
+Peirce-generated operator counterpart, Kitaev rotor gap conservation, midpoint annulus
+centering, Peirce exact–harmonic trace orthogonality, the Order 32 5-graded Virasoro–Witt
+grade-2 commutator `comm (L5_pos2 P1 P2 Y) (L5_neg2 P1 P2 X) = L5_zero P1 P2 * V5_grade2 P1 P2 X Y`,
+and the universal Steinberg–Cyclotomic-24 annihilation identity. -/
+theorem arxiv_2608_21152_and_peirce_operator_cyclotomic_synthesis
+    (τ : B →+ M) (hCyclic : ∀ x y : B, τ (x * y) = τ (y * x))
+    (P1 P2 X Y Z : B)
+    (h1 : P1 * P1 = P1) (h2 : P2 * P2 = P2)
+    (h12 : P1 * P2 = 0) (h21 : P2 * P1 = 0)
+    (K C c s Q a_sq b_sq : B)
+    (hK : K * K = 1) (hC : C * C = 1) (hAnti : K * C + C * K = 0)
+    (hSphere : c * c + s * s = 1)
+    (hc : ∀ W : B, c * W = W * c) (hs : ∀ W : B, s * W = W * s)
+    (hQa : Q * a_sq = a_sq * Q) (hQb : Q * b_sq = b_sq * Q)
+    (hab : a_sq * b_sq = b_sq * a_sq) :
+    (V_met P1 X Y = 1 →
+      let S  := modularInversionOp P1 X Y
+      let T  := parabolicFlowPlus P1 X 1
+      let ST := S * T
+      ST * ST * ST = -1 ∧ ST * ST * ST = S * S) ∧
+    (X ^ 12 - 1) * (X ^ 4 + 1) * (X ^ 8 - X ^ 4 + 1) = X ^ 24 - 1 ∧
+    (let j := J_mc P1 X Y
+     let ph := Phi_v P1 X Y
+     let j2 := j * j
+     let j4 := j2 * j2
+     let j8 := j4 * j4
+     let j12 := j8 * j4
+     let j24 := j12 * j12
+     (1 - j) * (1 + j) * (1 - ph) * (1 + ph) * (1 + j4 + j8) *
+       (1 + j4) * Phi24_Operator j = 1 - j24) ∧
+    (c * K + s * C) * (c * K + s * C) = 1 ∧
+    (b_sq - a_sq) * (b_sq - a_sq) -
+      ((Q + Q) - (a_sq + b_sq)) * ((Q + Q) - (a_sq + b_sq)) =
+      4 • ((Q - a_sq) * (b_sq - Q)) ∧
+    τ ((P1 * X * (1 - P1 - P2)) * ((1 - P1 - P2) * Z * (1 - P1 - P2))) = 0 ∧
+    comm (L5_pos2 P1 P2 Y) (L5_neg2 P1 P2 X) = L5_zero P1 P2 * V5_grade2 P1 P2 X Y ∧
+    (let Tp  := parabolicFlowPlus P1 X 1
+     let Tm  := parabolicFlowMinus P1 Y (-1)
+     let j   := J_mc P1 X Y
+     let ph  := Phi_v P1 X Y
+     let v   := V_met P1 X Y
+     let p24 := Phi24_Operator j
+     (1 + v) * (1 + j ^ 4 + j ^ 8) * (1 + j ^ 4) * p24 *
+       (Tp * Tm * Tp - Tm * Tp * Tm) = (1 - j ^ 24) * ph) := by
+  have hCyc : (X ^ 12 - 1) * (X ^ 4 + 1) * (X ^ 8 - X ^ 4 + 1) = X ^ 24 - 1 := by
+    noncomm_ring
+  have hOpCyc := complete_twenty_four_cyclotomic_operator_identity P1 X Y h1
+  have hKit := kitaev_rotor_gap_conservation_exact K C c s hK hC hAnti hSphere hc hs
+  have hAnn := kitaev_annulus_gap_midpoint_centering Q a_sq b_sq hQa hQb hab
+  have hHod := peirce_exact_harmonic_trace_orthogonality τ hCyclic P1 P2 X Z h1 h2 h12 h21
+  have hVir5 := five_graded_virasoro_witt_tower_commutation P1 P2 X Y h1 h2 h12 h21
+  have hBru := gauss_bruhat_exchange_and_steinberg_cyclotomic_24_annihilation P1 X Y h1
+  refine ⟨?_, hCyc, ?_, hKit, hAnn, hHod.2.1, hVir5.2.2.2.2.2.2.2.2.2.2.1, hBru.2.2.2.2.2.2.1⟩
+  · intro hV
+    have hSl2 := unit_metric_modular_group_presentation_in_ring P1 X Y h1 hV
+    rcases hSl2 with ⟨_, _, _, _, _, hCubeNeg, hCubeEq, _⟩
+    exact ⟨hCubeNeg, hCubeEq⟩
+  · exact hOpCyc.1
+
+/-- **Attention Token-Difference Routing, Trilogy Metriplectic Lock, and Compression Valley
+Synthesis** (`arxiv_2610_06012_attention_routing_and_peirce_spine_synthesis`):
+Unites Viganò–Melzi–Ovsjanikov (`arXiv:2610.06012`), Yoshizawa (`arXiv:2608.21152`), and
+De Haro (`arXiv:2511.07015`) within the `[Ring B]` Peirce spine:
+1. Euclidean attention sink bias decomposition `A^* A = P + Φ_sink + Q_- + A_c^* A_c`,
+2. Intrinsic pullback TDO stationarity `D_{μ,π} = P + D_c` and `D_{μ,π}² = P + D_c²`,
+3. Non-commutative measure-projector band shift nilpotency `(P_ν - P_μ)² = 0`,
+4. Residual stream centered velocity and Coriolis–Brockett metriplectic sink lock
+   `[J_sink, [J_sink, Φ_sink]] + 2 • [Σ_sink, J_sink] = 0`,
+5. Multi-head model-bundle fiber isolation `P₁ M_MHA P₁ = P₁ M₁ P₁` and 3-layer
+   compression valley annihilation `(1 - P)(A₃ A_sink A₁)(1 - P) = 0`. -/
+theorem arxiv_2610_06012_attention_routing_and_peirce_spine_synthesis
+    (τ : B →+ M)
+    (P P_nu P_rho P_pi P1 P3 D_tdo Ω_mu Ω_mu_inv Ω_pi A_op A_star X_star Y V
+     M1 M2 M3 M_bundle N_bundle W_out W_out_inv L_mu L_mu_inv L_pi X1 Z1 X2 Z2 X3 Z3 : B)
+    (hP : P * P = P) (hP_nu : P_nu * P_nu = P_nu)
+    (h_mu_nu : P * P_nu = P_nu) (h_nu_mu : P_nu * P = P)
+    (h_mu_rho : P * P_rho = P_rho) (h_nu_rho : P_nu * P_rho = P_rho)
+    (h1 : P1 * P1 = P1) (h3 : P3 * P3 = P3)
+    (h13 : P1 * P3 = 0) (h31 : P3 * P1 = 0)
+    (hD_right : D_tdo * P = P) (hD_left : P * D_tdo = P)
+    (h_mu_inv : Ω_mu * Ω_mu_inv = 1)
+    (hRow : A_op * P = P) (hRowStar : P * A_star = P)
+    (hPullback : P_pi * A_op = P)
+    (hPiV : P_pi * V = P * V)
+    (hW : W_out * W_out_inv = 1)
+    (hL_inv : L_mu * L_mu_inv = 1) :
+    open InfoGeometry.Canonical.Arxiv261006012AttentionTokenDifferenceRoutingPoset in
+    (A_star * A_op =
+      P + sinkVielbeinPhi P A_op A_star + sinkGramMinus P A_op A_star +
+        centeredRouteOp P A_star * centeredRouteOp P A_op) ∧
+    (D_tdo = P + intrinsicCenteredTDO P D_tdo ∧
+     D_tdo * D_tdo = P + intrinsicCenteredTDO P D_tdo * intrinsicCenteredTDO P D_tdo) ∧
+    (measureShift P P_nu * measureShift P P_nu = 0 ∧
+     measureUnipotent P P_nu * measureUnipotent P_nu P_rho = measureUnipotent P P_rho) ∧
+    (residualAttnVelocity A_op (valueMeanPart P V) = 0 ∧
+     brockettSinkFlow P A_op A_star (sinkVielbeinPhi P A_op A_star) +
+       2 • souriauSinkFlow P A_op A_star (sinkSymplecticJ P A_op A_star) = 0) ∧
+    (P1 * multiHeadBundleSection P1 P3 M1 M2 M3 * P1 = P1 * M1 * P1 ∧
+     (1 - P) * (attnLayerOp P X3 Z3 * pureSinkHead P X2 * attnLayerOp P X1 Z1) * (1 - P) = 0) := by
+  have hS2 :=
+    InfoGeometry.Canonical.Arxiv261006012AttentionTokenDifferenceRoutingPoset.euclidean_tdo_structural_sink_bias_decomposition
+      P A_op A_star hP hRow hRowStar
+  have hS3 :=
+    InfoGeometry.Canonical.Arxiv261006012AttentionTokenDifferenceRoutingPoset.intrinsic_tdo_stationarity_and_centered_invariance
+      P D_tdo hP hD_right hD_left
+  have hTril :=
+    InfoGeometry.Canonical.Arxiv261006012AttentionTokenDifferenceRoutingPoset.duotriacontadic_trilogy_2511_07015_2608_21152_2610_06012_master_synthesis
+      τ P P_nu P_rho P_pi P1 P3 D_tdo Ω_mu Ω_mu_inv Ω_pi A_op A_star X_star Y V
+      M1 M2 M3 M_bundle N_bundle W_out W_out_inv
+      hP hP_nu h_mu_nu h_nu_mu h_mu_rho h_nu_rho h1 h3 h13 h31
+      hD_right hD_left h_mu_inv hRow hPullback hPiV hW
+  have hVal :=
+    InfoGeometry.Canonical.Arxiv261006012AttentionTokenDifferenceRoutingPoset.conformal_difference_and_multilayer_compression_valley
+      τ P L_mu L_mu_inv L_pi A_op A_star X_star Y X1 Z1 X2 Z2 X3 Z3 hP hL_inv
+  exact ⟨hS2.2.1,
+    ⟨hS3.2.2.2.1, hS3.2.2.2.2.2.2.1⟩,
+    ⟨hTril.1.2.1, hTril.1.2.2.1⟩,
+    ⟨hTril.2.2.1.1, hTril.2.2.1.2.2.2⟩,
+    ⟨hTril.2.2.2.1, hVal.2.2.2.2.2.2⟩⟩
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine.MasterPeirceSpineUnification

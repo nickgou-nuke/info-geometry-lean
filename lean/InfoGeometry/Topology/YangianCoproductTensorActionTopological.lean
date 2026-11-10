@@ -18,7 +18,7 @@ coproduct class field is not reinterpreted as a proved Yangian theorem.
 -/
 
 variable {K H V : Type*}
-  [CommRing K] [CommRing H] [Algebra K H]
+  [CommRing K] [Ring H] [Algebra K H]
   [AddCommGroup V] [Module K V]
 
 /-- The simultaneous counit-invariant locus of a Hopf representation. -/

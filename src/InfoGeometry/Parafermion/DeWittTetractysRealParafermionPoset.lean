@@ -733,24 +733,34 @@ theorem two_bit_tetractys_sp4_dimension_and_symplectic_orthogonality :
   · ext i j; fin_cases i <;> fin_cases j <;> decide
   · ext i j; fin_cases i <;> fin_cases j <;> decide
 
-/-- Plücker minor $\Delta_{12} = 1$ of the canonical $\mathrm{Gr}_+(2, 4)$ unipotent boundary measurement matrix
-$C(t_1, t_2, t_3, t_4) = \begin{pmatrix} 1 & 0 & -t_1 & -(t_1 t_3 + t_4) \\ 0 & 1 & t_2 & t_2 t_3 \end{pmatrix}$. -/
-def gr24Plucker12 {R : Type u} [CommRing R] (_t1 _t2 _t3 _t4 : R) : R := 1
+/-- Canonical boundary-measurement matrix for the `Gr_+(2,4)` chart. -/
+def gr24BoundaryMatrix {R : Type u} [CommRing R] (t1 t2 t3 t4 : R) :
+    Matrix (Fin 2) (Fin 4) R := fun i j =>
+  if i = 0 then
+    if j = 0 then 1 else if j = 1 then 0 else if j = 2 then -t1 else -(t1 * t3 + t4)
+  else if j = 0 then 0 else if j = 1 then 1 else if j = 2 then t2 else t2 * t3
 
-/-- Plücker minor $\Delta_{13} = t_2$ of the canonical $\mathrm{Gr}_+(2, 4)$ unipotent boundary measurement matrix. -/
-def gr24Plucker13 {R : Type u} [CommRing R] (_t1 t2 _t3 _t4 : R) : R := t2
+/-- Ordered `2 × 2` minor of columns `i` and `j` of a `2 × 4` matrix. -/
+def gr24Minor {R : Type u} [CommRing R] (C : Matrix (Fin 2) (Fin 4) R)
+    (i j : Fin 4) : R := C 0 i * C 1 j - C 1 i * C 0 j
 
-/-- Plücker minor $\Delta_{14} = t_2 t_3$ of the canonical $\mathrm{Gr}_+(2, 4)$ unipotent boundary measurement matrix. -/
-def gr24Plucker14 {R : Type u} [CommRing R] (_t1 t2 t3 _t4 : R) : R := t2 * t3
+/-- The six Plücker coordinates are actual minors of `gr24BoundaryMatrix`. -/
+def gr24Plucker12 {R : Type u} [CommRing R] (t1 t2 t3 t4 : R) : R := gr24Minor (gr24BoundaryMatrix t1 t2 t3 t4) 0 1
+def gr24Plucker13 {R : Type u} [CommRing R] (t1 t2 t3 t4 : R) : R := gr24Minor (gr24BoundaryMatrix t1 t2 t3 t4) 0 2
+def gr24Plucker14 {R : Type u} [CommRing R] (t1 t2 t3 t4 : R) : R := gr24Minor (gr24BoundaryMatrix t1 t2 t3 t4) 0 3
+def gr24Plucker23 {R : Type u} [CommRing R] (t1 t2 t3 t4 : R) : R := gr24Minor (gr24BoundaryMatrix t1 t2 t3 t4) 1 2
+def gr24Plucker24 {R : Type u} [CommRing R] (t1 t2 t3 t4 : R) : R := gr24Minor (gr24BoundaryMatrix t1 t2 t3 t4) 1 3
+def gr24Plucker34 {R : Type u} [CommRing R] (t1 t2 t3 t4 : R) : R := gr24Minor (gr24BoundaryMatrix t1 t2 t3 t4) 2 3
 
-/-- Plücker minor $\Delta_{23} = t_1$ of the canonical $\mathrm{Gr}_+(2, 4)$ unipotent boundary measurement matrix. -/
-def gr24Plucker23 {R : Type u} [CommRing R] (t1 _t2 _t3 _t4 : R) : R := t1
-
-/-- Plücker minor $\Delta_{24} = t_1 t_3 + t_4$ of the canonical $\mathrm{Gr}_+(2, 4)$ unipotent boundary measurement matrix. -/
-def gr24Plucker24 {R : Type u} [CommRing R] (t1 _t2 t3 t4 : R) : R := t1 * t3 + t4
-
-/-- Plücker minor $\Delta_{34} = t_2 t_4$ of the canonical $\mathrm{Gr}_+(2, 4)$ unipotent boundary measurement matrix. -/
-def gr24Plucker34 {R : Type u} [CommRing R] (_t1 t2 _t3 t4 : R) : R := t2 * t4
+theorem gr24Plucker_formulas {R : Type u} [CommRing R] (t1 t2 t3 t4 : R) :
+    gr24Plucker12 t1 t2 t3 t4 = 1 ∧
+    gr24Plucker13 t1 t2 t3 t4 = t2 ∧
+    gr24Plucker14 t1 t2 t3 t4 = t2 * t3 ∧
+    gr24Plucker23 t1 t2 t3 t4 = t1 ∧
+    gr24Plucker24 t1 t2 t3 t4 = t1 * t3 + t4 ∧
+    gr24Plucker34 t1 t2 t3 t4 = t2 * t4 := by
+  norm_num [gr24Plucker12, gr24Plucker13, gr24Plucker14, gr24Plucker23,
+    gr24Plucker24, gr24Plucker34, gr24Minor, gr24BoundaryMatrix] <;> ring
 
 /-- **Universal 3-Term Grassmann–Plücker Syzygy & Twisted Cyclic Shift Invariance on $\mathrm{Gr}(2, 4)$ (`real_grassmannian_gr24_three_term_plucker_syzygy`)**:
 Over any commutative ring `R`:
@@ -775,7 +785,8 @@ theorem real_grassmannian_gr24_three_term_plucker_syzygy
       gr24Plucker12 t1 t2 t3 t4 * gr24Plucker34 t1 t2 t3 t4 +
       gr24Plucker14 t1 t2 t3 t4 * gr24Plucker23 t1 t2 t3 t4 := by
   refine ⟨by ring, by ring, ⟨by ring, by ring, by ring⟩, ?_⟩
-  dsimp [gr24Plucker12, gr24Plucker13, gr24Plucker14, gr24Plucker23, gr24Plucker24, gr24Plucker34]
+  rcases gr24Plucker_formulas t1 t2 t3 t4 with ⟨h12, h13, h14, h23, h24, h34⟩
+  rw [h12, h13, h14, h23, h24, h34]
   ring
 
 /-- **Strict Total Positivity on the Real Grassmannian $\mathrm{Gr}_+(2, 4)$ (`real_grassmannian_gr24_total_positivity`)**:
@@ -793,7 +804,8 @@ theorem real_grassmannian_gr24_total_positivity
     gr24Plucker13 t1 t2 t3 t4 * gr24Plucker24 t1 t2 t3 t4 =
       gr24Plucker12 t1 t2 t3 t4 * gr24Plucker34 t1 t2 t3 t4 +
       gr24Plucker14 t1 t2 t3 t4 * gr24Plucker23 t1 t2 t3 t4 := by
-  dsimp [gr24Plucker12, gr24Plucker13, gr24Plucker14, gr24Plucker23, gr24Plucker24, gr24Plucker34]
+  rcases gr24Plucker_formulas t1 t2 t3 t4 with ⟨h12, h13, h14, h23, h24, h34⟩
+  rw [h12, h13, h14, h23, h24, h34]
   refine ⟨zero_lt_one, ht2, mul_pos ht2 ht3, ht1, ?_, mul_pos ht2 ht4, by ring⟩
   exact add_pos (mul_pos ht1 ht3) ht4
 

@@ -13,6 +13,16 @@ The geometric reverse of a two-term expression `g + K` is modeled by `g - K`.
 When the scalar-like part `g` commutes with the bivector-like part `K`, their
 product is exactly `g² - K²`. The commutation premise is explicit: it cannot be
 omitted in a general noncommutative ring.
+
+BUCKET 1: PROVED FINITE/ALGEBRAIC IDENTITIES OVER `[Ring B]`
+- `geometricTensor`
+- `geometricTensorReverse`
+
+BUCKET 2: CONDITIONAL IDENTITIES FROM EXPLICIT PREMISES
+- `cliffordKreinModulus` (from explicit commutation hypothesis `g * K = K * g`)
+
+BUCKET 3: OPEN CLOSURE DEBT
+- Krein-space indefinite inner-product topologies are not constructed here.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine.CliffordKreinGeometricUncertaintyPoset

@@ -167,7 +167,7 @@ stored.
 -/
 abbrev MatrixMicrocanonicalBoltzmann
     (n : Type*) [Fintype n] [DecidableEq n]
-    (_R : Type*) [CommRing _R] :=
+    (_R : Type*) [Ring _R] :=
   MicrocanonicalEnergyShell n × (n → ℝ)
 
 /-- Multiplication by entropy commutes with multiplication by energy. -/
@@ -190,7 +190,7 @@ $$\left[\hat S_{\text{micro-Boltzmann}}, \hat H\right] = 0$$
 ensuring that the microcanonical Boltzmann operator entropy is conserved under time evolution.
 -/
 theorem boltzmann_operator_hamiltonian_commutator_zero
-    {n : Type*} [Fintype n] [DecidableEq n] {R : Type*} [CommRing R]
+    {n : Type*} [Fintype n] [DecidableEq n] {R : Type*} [Ring R]
     (M : MatrixMicrocanonicalBoltzmann n R) :
     (microstateBoltzmannOperator M.1).comp
           (microcanonicalHamiltonian M.2) -
@@ -206,7 +206,7 @@ Summarizes the non-Gibbs, non-Shannon, non-von Neumann pure operator identity:
 -/
 theorem pure_microcanonical_boltzmann_operator_duality
     {E_Index : Type*} (shell : MicrocanonicalEnergyShell E_Index) (i : E_Index)
-    {n : Type*} [Fintype n] [DecidableEq n] {R : Type*} [CommRing R]
+    {n : Type*} [Fintype n] [DecidableEq n] {R : Type*} [Ring R]
     (M : MatrixMicrocanonicalBoltzmann n R) :
     (Real.exp (microcanonicalBoltzmannOperatorEntropy shell i) = microcanonicalStateCountOperator shell i) ∧
     ((microstateBoltzmannOperator M.1).comp

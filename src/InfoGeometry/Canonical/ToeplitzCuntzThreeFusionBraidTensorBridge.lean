@@ -21,8 +21,8 @@ namespace InfoGeometry.Canonical.ToeplitzCuntzThreeFusionBraidTensorBridge
 open InfoGeometry.Canonical.BraidedCubicCompressionBridge
 open InfoGeometry.Canonical.BraidedCubicCompressionBridge.BraidedProjectionData
 
-variable {K : Type*} [CommRing K]
-variable {A : Type*} [Ring A] [StarRing A] [Algebra K A]
+variable {K : Type*} [Ring K]
+variable {A : Type*} [Ring A] [StarRing A] [Module K A]
 
 /-- The composite 3-ary Toeplitz–Cuntz cyclic SUSY system with 2D matrix fusion space. -/
 structure ToeplitzCuntzThreeFusionData where

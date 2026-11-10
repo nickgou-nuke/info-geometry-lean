@@ -23,6 +23,21 @@ open scoped Matrix
 
 universe u
 
+section Ring
+
+variable {R : Type u} [Ring R] {n : ℕ}
+
+namespace FiniteVandermondeExclusionWitness
+
+/-- `V(v)`. -/
+@[rep_depth thermo]
+def matrix (W : Fin n → R) : Matrix (Fin n) (Fin n) R :=
+  fun i j => W i ^ (j : ℕ)
+
+end FiniteVandermondeExclusionWitness
+
+end Ring
+
 section CommRing
 
 variable {R : Type u} [CommRing R] {n : ℕ}
@@ -30,11 +45,6 @@ variable {R : Type u} [CommRing R] {n : ℕ}
 namespace FiniteVandermondeExclusionWitness
 
 variable (W : Fin n → R)
-
-/-- `V(v)`. -/
-@[rep_depth thermo]
-def matrix (W : Fin n → R) : Matrix (Fin n) (Fin n) R :=
-  Matrix.vandermonde W
 
 /-- `\det V(v)`. -/
 @[rep_depth thermo]
@@ -45,7 +55,11 @@ def determinant (W : Fin n → R) : R :=
 @[rep_depth thermo]
 theorem determinant_eq_pairwise_separation :
     determinant W = ∏ i : Fin n, ∏ j ∈ Finset.Ioi i, (W j - W i) := by
-  unfold determinant matrix
+  unfold determinant
+  have hm : matrix W = Matrix.vandermonde W := by
+    ext i j
+    simp [matrix, Matrix.vandermonde]
+  rw [hm]
   simpa using Matrix.det_vandermonde W
 
 end FiniteVandermondeExclusionWitness
@@ -64,14 +78,22 @@ variable (W : Fin n → R)
 @[rep_depth thermo]
 theorem determinant_eq_zero_iff_collision :
     determinant W = 0 ↔ ∃ i j : Fin n, W i = W j ∧ i ≠ j := by
-  unfold determinant matrix
+  unfold determinant
+  have hm : matrix W = Matrix.vandermonde W := by
+    ext i j
+    simp [matrix, Matrix.vandermonde]
+  rw [hm]
   simpa using (Matrix.det_vandermonde_eq_zero_iff (v := W))
 
 /-- `\det V(v)\neq 0 \iff` injective. -/
 @[rep_depth thermo]
 theorem determinant_ne_zero_iff_injective :
     determinant W ≠ 0 ↔ Function.Injective W := by
-  unfold determinant matrix
+  unfold determinant
+  have hm : matrix W = Matrix.vandermonde W := by
+    ext i j
+    simp [matrix, Matrix.vandermonde]
+  rw [hm]
   simpa using (Matrix.det_vandermonde_ne_zero_iff (v := W))
 
 /-- `i\neq j \wedge v_i=v_j \to \det V(v)=0`. -/

@@ -37,7 +37,7 @@ def standardLogBlock (R : Type*) [Zero R] [One R] : LogBlock R where
 @[simp] theorem standardLogBlock_matrix (R : Type*) [Zero R] [One R] :
     (standardLogBlock R).matrix = jordanNilpotent R := rfl
 
-@[simp] theorem standardLogBlock_trace (R : Type*) [CommRing R] :
+@[simp] theorem standardLogBlock_trace (R : Type*) [Ring R] :
     Matrix.trace (standardLogBlock R).matrix = 0 := by
   simp [standardLogBlock, Matrix.trace_fin_two, jordanNilpotent]
 

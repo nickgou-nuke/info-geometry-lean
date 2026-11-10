@@ -78,8 +78,42 @@ theorem map_iterate (f : A →+* B) (x : A) (n : ℕ) :
 theorem commute_iterate_add_idempotent {p y : A} (hp : IsIdempotentElem p)
     (hy : p * y + y * p = y) (n : ℕ) :
     Commute p (defect^[n + 1] (p + y)) := by
-  rw [Function.iterate_succ_apply, PeirceDefect.defect_add_idempotent_eq_square hp hy]
+  rw [Function.iterate_succ_apply,
+    (PeirceDefect.defect_add_idempotent_eq_square_iff hp).2 hy]
   exact commute_iterate (PeirceDefect.commute_square_of_tangent hp hy) n
+
+section Subring
+
+theorem iterate_mem_subring (S : Subring A) {x : A}
+    (hx : x ∈ S) (n : ℕ) : defect^[n] x ∈ S := by
+  induction n with
+  | zero => simpa only [Function.iterate_zero_apply] using hx
+  | succ n ih =>
+      rw [Function.iterate_succ_apply']
+      exact S.sub_mem (S.mul_mem ih ih) ih
+
+theorem iterate_mem_closure (x : A) (n : ℕ) :
+    defect^[n] x ∈ Subring.closure ({x} : Set A) :=
+  iterate_mem_subring _ (Subring.subset_closure (Set.mem_singleton x)) n
+
+/-- Taking the defect over an arbitrary noncommutative ring cannot enlarge the generated subring. -/
+theorem closure_defect_le (x : A) :
+    Subring.closure ({defect x} : Set A) ≤ Subring.closure ({x} : Set A) := by
+  rw [Subring.closure_le, Set.singleton_subset_iff]
+  have hx : x ∈ Subring.closure ({x} : Set A) :=
+    Subring.subset_closure (Set.mem_singleton x)
+  exact (Subring.closure ({x} : Set A)).sub_mem
+    ((Subring.closure ({x} : Set A)).mul_mem hx hx) hx
+
+/-- Antitone subring chain over a pure noncommutative ring `A` (requiring no scalar `CommRing`). -/
+theorem closure_iterate_antitone (x : A) :
+    Antitone (fun n : ℕ => Subring.closure ({defect^[n] x} : Set A)) := by
+  apply antitone_nat_of_succ_le
+  intro n
+  rw [Function.iterate_succ_apply']
+  exact closure_defect_le (defect^[n] x)
+
+end Subring
 
 section Subalgebra
 

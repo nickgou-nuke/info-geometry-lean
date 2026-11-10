@@ -25,7 +25,7 @@ namespace InfoGeometry.Projective.QuantumGrassmannian
 
 universe u
 
-variable (R : Type u) [Field R]
+variable (R : Type u) [CommRing R] [Inv R]
 
 /-- The row/column indices of a `2 × 4` quantum matrix. -/
 abbrev QuantumMatrixIndex := Fin 2 × Fin 4
@@ -318,7 +318,7 @@ lemma swap_row_left4 (q : R) (row : Fin 2) (j l : Fin 4) (hjl : j < l)
 /--
 The standard q-Plücker exchange theorem for the six ordered minors.
 -/
-theorem quantumPlucker (q : R) :
+theorem quantumPlucker {R : Type u} [Field R] (q : R) :
     quantumMinor R q ⟨(0, 1), by decide⟩ * quantumMinor R q ⟨(2, 3), by decide⟩ -
       q • (quantumMinor R q ⟨(0, 2), by decide⟩ * quantumMinor R q ⟨(1, 3), by decide⟩) +
       q^2 • (quantumMinor R q ⟨(0, 3), by decide⟩ * quantumMinor R q ⟨(1, 2), by decide⟩) = 0 := by

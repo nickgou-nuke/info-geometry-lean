@@ -60,18 +60,18 @@ namespace InfoGeometry.Canonical.KreinRindlerBogoliubov
 
 open Matrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*}
 
 /-!
 ### 1. The Krein Metric and Bogoliubov Transformations
 -/
 
 /-- Standard 2x2 identity matrix. -/
-def matOne : Matrix (Fin 2) (Fin 2) R :=
+def matOne [Ring R] : Matrix (Fin 2) (Fin 2) R :=
   !![1, 0; 0, 1]
 
 /-- The indefinite Krein metric $\eta = \operatorname{diag}(1, -1)$ on the doubled mode space. -/
-def eta : Matrix (Fin 2) (Fin 2) R :=
+def eta [Ring R] : Matrix (Fin 2) (Fin 2) R :=
   !![1, 0; 0, -1]
 
 /-- Real symmetric Bogoliubov transformation matrix mixing particle and hole modes. -/
@@ -79,20 +79,21 @@ def bogoliubovMatrix (u v : R) : Matrix (Fin 2) (Fin 2) R :=
   !![u, v; v, u]
 
 /-- Algebraic inverse of the Bogoliubov transformation matrix. -/
-def bogoliubovInverse (u v : R) : Matrix (Fin 2) (Fin 2) R :=
+def bogoliubovInverse [Neg R] (u v : R) : Matrix (Fin 2) (Fin 2) R :=
   !![u, -v; -v, u]
 
 /-- Krein metric is involutive: $\eta^2 = \mathbf{1}$. -/
-theorem eta_sq : eta (R := R) * eta = matOne := by
+theorem eta_sq [Ring R] : eta (R := R) * eta = matOne := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [eta, matOne]
 
-omit [CommRing R] in
 /-- The Bogoliubov matrix is symmetric under transpose: $M^T = M$. -/
 theorem bogoliubovMatrix_transpose (u v : R) :
     (bogoliubovMatrix u v)ᵀ = bogoliubovMatrix u v := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [bogoliubovMatrix]
+
+variable [CommRing R]
 
 /-- Krein-unitarity condition: $M^T \eta M = \eta \iff u^2 - v^2 = 1$. -/
 theorem bogoliubov_krein_unitary (u v : R) :

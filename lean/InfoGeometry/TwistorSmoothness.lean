@@ -69,7 +69,7 @@ theorem bott_kernel_cl55 (d : ℤ) (h_cube : d ^ 3 = d) :
 
 /-- The determinant classifier `det ∈ {-1,0,1}` is the tripotent classifier. -/
 theorem trifactor_survives_limit
-    {R : Type _} [CommRing R] [IsDomain R] (d : R) (h_cube : d ^ 3 = d) :
+    {R : Type _} [Ring R] [IsDomain R] (d : R) (h_cube : d ^ 3 = d) :
     d = 0 ∨ d = 1 ∨ d = -1 :=
   MellinColimitTrifactor.tripotent_classifier d h_cube
 

@@ -36,7 +36,7 @@ open InfoGeometry.Canonical.TypeIIIModularCantorSystem
 
 /-- A real Möbius matrix with determinant one. -/
 @[rep_depth projective]
-structure MoebiusMatrix (R : Type*) [CommRing R] where
+structure MoebiusMatrix (R : Type*) [Ring R] where
   a : R
   b : R
   c : R

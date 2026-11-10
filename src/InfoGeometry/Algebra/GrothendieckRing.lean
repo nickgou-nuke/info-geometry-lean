@@ -196,7 +196,7 @@ theorem grothendieckRingMap_apply_canonical
   exact grothendieckFunctor_map f.toAddMonoidHom m
 
 theorem ringHom_ext_of_grothendieckMap
-    {A : Type*} [CommRing A]
+    {A : Type*} [Ring A]
     {F G : Grothendieck M →+* A}
     (h : ∀ m, F (grothendieckMap M m) = G (grothendieckMap M m)) : F = G := by
   apply RingHom.ext
@@ -223,7 +223,7 @@ theorem grothendieckRingMap_comp
   simp [RingHom.comp_apply, grothendieckRingMap_apply_canonical]
 
 noncomputable def grothendieckRingLift
-    {A : Type*} [CommRing A] (f : M →+* A) :
+    {A : Type*} [Ring A] (f : M →+* A) :
     Grothendieck M →+* A where
   toFun := grothendieckLift f.toAddMonoidHom
   map_one' := by
@@ -246,24 +246,24 @@ noncomputable def grothendieckRingLift
     simp only [map_add]
     have happly (m : M) : f.toAddMonoidHom m = f m := rfl
     simp only [happly, f.map_mul]
-    ring
+    noncomm_ring
   map_zero' := (grothendieckLift f.toAddMonoidHom).map_zero
   map_add' := (grothendieckLift f.toAddMonoidHom).map_add
 
 @[simp]
 theorem grothendieckRingLift_apply
-    {A : Type*} [CommRing A] (f : M →+* A) (m : M) :
+    {A : Type*} [Ring A] (f : M →+* A) (m : M) :
     grothendieckRingLift f (grothendieckMap M m) = f m := by
   exact grothendieckLift_comp f.toAddMonoidHom m
 
 theorem grothendieckRingHom_lift_exists
-    {A : Type*} [CommRing A] (f : M →+* A) :
+    {A : Type*} [Ring A] (f : M →+* A) :
     ∃ F : Grothendieck M →+* A,
       ∀ m, F (grothendieckMap M m) = f m := by
   exact ⟨grothendieckRingLift f, grothendieckRingLift_apply f⟩
 
 theorem grothendieckRingLift_unique
-    {A : Type*} [CommRing A] (f : M →+* A)
+    {A : Type*} [Ring A] (f : M →+* A)
     (F : Grothendieck M →+* A)
     (hF : ∀ m, F (grothendieckMap M m) = f m) :
     F = grothendieckRingLift f := by
@@ -272,7 +272,7 @@ theorem grothendieckRingLift_unique
   rw [hF, grothendieckRingLift_apply]
 
 theorem grothendieckRingHom_lift_unique
-    {A : Type*} [CommRing A] (f : M →+* A)
+    {A : Type*} [Ring A] (f : M →+* A)
     (F G : Grothendieck M →+* A)
     (hF : ∀ m, F (grothendieckMap M m) = f m)
     (hG : ∀ m, G (grothendieckMap M m) = f m) : F = G := by

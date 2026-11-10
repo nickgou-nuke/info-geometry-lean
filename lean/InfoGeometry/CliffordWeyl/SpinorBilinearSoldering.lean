@@ -2,7 +2,7 @@ import InfoGeometry.Physics.KreinDiracKasparovSpinorBilinear
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.LinearAlgebra.Matrix.ConjTranspose
 import Mathlib.LinearAlgebra.Basis.Defs
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 
 namespace InfoGeometry.CliffordWeyl.SpinorBilinearSoldering
 
@@ -37,7 +37,7 @@ section FiniteSpinors
 
 open Matrix
 
-variable {Scalar Index : Type*} [CommRing Scalar] [StarRing Scalar] [Fintype Index]
+variable {Scalar Index : Type*} [Ring Scalar] [StarRing Scalar] [Fintype Index]
 
 def diracRow (metric : Matrix Index Index Scalar) (spinor : Index → Scalar) : Index → Scalar :=
   star spinor ᵥ* metric
@@ -49,7 +49,10 @@ def solder (metric : Matrix Index Index Scalar) (left right : Index → Scalar) 
 def bilinear (metric operator : Matrix Index Index Scalar) (left right : Index → Scalar) : Scalar :=
   diracRow metric left ⬝ᵥ (operator *ᵥ right)
 
-theorem solder_trace_readout (metric operator : Matrix Index Index Scalar)
+variable {Scalar : Type*} [CommRing Scalar] [StarRing Scalar]
+
+theorem solder_trace_readout
+    (metric operator : Matrix Index Index Scalar)
     (left right : Index → Scalar) :
     trace (operator * solder metric left right) = bilinear metric operator right left := by
   rw [solder, mul_vecMulVec, trace_vecMulVec]
@@ -66,9 +69,9 @@ theorem solder_quadratic (metric : Matrix Index Index Scalar) (spinor : Index �
       (diracRow metric spinor ⬝ᵥ spinor) • solder metric spinor spinor :=
   solder_fierz_product metric spinor spinor spinor spinor
 
-variable {Channel : Type*} [Fintype Channel]
+variable {Channel : Type*}
 
-theorem solder_basis_reconstruction
+theorem solder_basis_reconstruction [Fintype Channel]
     (basis : Module.Basis Channel Scalar (Matrix Index Index Scalar))
     (metric : Matrix Index Index Scalar) (left right : Index → Scalar) :
     ∑ channel, basis.repr (solder metric left right) channel • basis channel =

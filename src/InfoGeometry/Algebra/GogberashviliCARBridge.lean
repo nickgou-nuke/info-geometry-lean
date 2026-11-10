@@ -7,7 +7,7 @@ noncomputable section
 
 namespace InfoGeometry.Algebra.GogberashviliCAR
 
-variable {K A : Type*} [Field K] [Ring A] [Algebra K A]
+variable {K A : Type*} [DivisionRing K] [Ring A] [Module K A] [IsScalarTower K A A] [SMulCommClass K A A]
 
 /-- Primitive idempotents (diagonal projectors) -/
 def D_plus (J : A) : A := (2 : K)⁻¹ • (1 + J)
@@ -38,7 +38,7 @@ theorem D_plus_add_D_minus (h2 : (2 : K) ≠ 0) (J : A) :
 theorem D_plus_idempotent (h2 : (2 : K) ≠ 0) (J : A) (hJ : J * J = 1) :
     D_plus (K := K) J * D_plus (K := K) J = D_plus (K := K) J := by
   dsimp [D_plus]
-  rw [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, smul_smul]
+  rw [mul_smul_comm, smul_mul_assoc, smul_smul]
   have h_sq : (1 + J) * (1 + J) = (2 : K) • (1 + J) := by
     have h1 : (1 + J) * (1 + J) = 1 + J + J + J * J := by noncomm_ring
     rw [h1, hJ, two_smul_eq_add]
@@ -52,7 +52,7 @@ theorem D_plus_idempotent (h2 : (2 : K) ≠ 0) (J : A) (hJ : J * J = 1) :
 theorem D_minus_idempotent (h2 : (2 : K) ≠ 0) (J : A) (hJ : J * J = 1) :
     D_minus (K := K) J * D_minus (K := K) J = D_minus (K := K) J := by
   dsimp [D_minus]
-  rw [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, smul_smul]
+  rw [mul_smul_comm, smul_mul_assoc, smul_smul]
   have h_sq : (1 - J) * (1 - J) = (2 : K) • (1 - J) := by
     have h1 : (1 - J) * (1 - J) = 1 - J - J + J * J := by noncomm_ring
     rw [h1, hJ, two_smul_eq_add]
@@ -66,7 +66,7 @@ theorem D_minus_idempotent (h2 : (2 : K) ≠ 0) (J : A) (hJ : J * J = 1) :
 theorem D_plus_mul_D_minus (J : A) (hJ : J * J = 1) :
     D_plus (K := K) J * D_minus (K := K) J = 0 := by
   dsimp [D_plus, D_minus]
-  rw [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, smul_smul]
+  rw [mul_smul_comm, smul_mul_assoc, smul_smul]
   have h_prod : (1 + J) * (1 - J) = 0 := by
     have h1 : (1 + J) * (1 - J) = 1 - J + J - J * J := by noncomm_ring
     rw [h1, hJ]
@@ -77,7 +77,7 @@ theorem D_plus_mul_D_minus (J : A) (hJ : J * J = 1) :
 theorem D_minus_mul_D_plus (J : A) (hJ : J * J = 1) :
     D_minus (K := K) J * D_plus (K := K) J = 0 := by
   dsimp [D_plus, D_minus]
-  rw [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, smul_smul]
+  rw [mul_smul_comm, smul_mul_assoc, smul_smul]
   have h_prod : (1 - J) * (1 + J) = 0 := by
     have h1 : (1 - J) * (1 + J) = 1 + J - J - J * J := by noncomm_ring
     rw [h1, hJ]
@@ -91,7 +91,7 @@ theorem G_plus_square_zero (I j : A)
     (hI : I * I = 1) (hj : j * j = -1) (h_anticomm : I * j + j * I = 0) :
     G_plus (K := K) I j * G_plus (K := K) I j = 0 := by
   dsimp [G_plus]
-  rw [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, smul_smul]
+  rw [mul_smul_comm, smul_mul_assoc, smul_smul]
   have h_sq : (I + j) * (I + j) = 0 := by
     have h1 : (I + j) * (I + j) = I * I + (I * j + j * I) + j * j := by noncomm_ring
     rw [h1, hI, hj, h_anticomm]
@@ -103,7 +103,7 @@ theorem G_minus_square_zero (I j : A)
     (hI : I * I = 1) (hj : j * j = -1) (h_anticomm : I * j + j * I = 0) :
     G_minus (K := K) I j * G_minus (K := K) I j = 0 := by
   dsimp [G_minus]
-  rw [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, smul_smul]
+  rw [mul_smul_comm, smul_mul_assoc, smul_smul]
   have h_sq : (I - j) * (I - j) = 0 := by
     have h1 : (I - j) * (I - j) = I * I - (I * j + j * I) + j * j := by noncomm_ring
     rw [h1, hI, hj, h_anticomm]
@@ -117,7 +117,7 @@ theorem G_plus_mul_G_minus (h2 : (2 : K) ≠ 0) (I j J : A)
     (hI : I * I = 1) (hj : j * j = -1) (h_cross : j * I = - (I * j)) (hJ_def : J = I * j) :
     G_plus (K := K) I j * G_minus (K := K) I j = D_minus (K := K) J := by
   dsimp [G_plus, G_minus, D_minus]
-  rw [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, smul_smul]
+  rw [mul_smul_comm, smul_mul_assoc, smul_smul]
   have h_prod : (I + j) * (I - j) = (2 : K) • (1 - J) := by
     have h1 : (I + j) * (I - j) = I * I - I * j + j * I - j * j := by noncomm_ring
     rw [h1, hI, hj, h_cross, hJ_def, two_smul_eq_add]
@@ -132,7 +132,7 @@ theorem G_minus_mul_G_plus (h2 : (2 : K) ≠ 0) (I j J : A)
     (hI : I * I = 1) (hj : j * j = -1) (h_cross : j * I = - (I * j)) (hJ_def : J = I * j) :
     G_minus (K := K) I j * G_plus (K := K) I j = D_plus (K := K) J := by
   dsimp [G_plus, G_minus, D_plus]
-  rw [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, smul_smul]
+  rw [mul_smul_comm, smul_mul_assoc, smul_smul]
   have h_prod : (I - j) * (I + j) = (2 : K) • (1 + J) := by
     have h1 : (I - j) * (I + j) = I * I + I * j - j * I - j * j := by noncomm_ring
     rw [h1, hI, hj, h_cross, hJ_def, two_smul_eq_add]
@@ -167,7 +167,9 @@ PART 2: Zorn Norm / BdG Schur / Berezinian Scalar Specialization
 
 namespace InfoGeometry.Algebra.ZornNormSchurSpecialization
 
-variable {F : Type*} [Field F]
+section DivisionRingDefs
+
+variable {F : Type*} [DivisionRing F]
 
 /-- The scalar Schur complement for a 2×2 block with scalar entries -/
 def schurComplement (α β u v : F) : F :=
@@ -180,6 +182,10 @@ def berezinianScalar (α β u v : F) : F :=
 /-- The classical 2×2 determinant (Zorn norm) -/
 def zornNorm (α β u v : F) : F :=
   α * β - u * v
+
+end DivisionRingDefs
+
+variable {F : Type*} [Field F]
 
 /--
 THEOREM 1: The scalar Schur complement equals the ratio (α β - u v) / β.

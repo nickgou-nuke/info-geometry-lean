@@ -16,7 +16,6 @@ import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Operator.Banach
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -313,6 +312,19 @@ variable
     {T : ThermalDriveDatum Op}
 
 /--
+Thermal criticality gives the shear bound used by the transition law. The
+calibration threshold is transported to the transition-law threshold through
+`threshold_agrees`.
+-/
+theorem thermal_critical_implies_extreme_shear
+    (L : ThermalTriggeredTubuleLaw Op Charge Residue H G T)
+    (U : Op)
+    (hThermal : IsThermallyCritical T U) :
+    IsExtremeShear G L.transitionLaw.threshold U := by
+  rw [L.threshold_agrees]
+  exact L.shearCalibration.thermal_critical_implies_extreme_shear U hThermal
+
+/--
 Thermal criticality plus Hessian snap boundary yields chiral tubule
 crystallization, once the calibration and transition law are supplied.
 -/
@@ -323,10 +335,7 @@ theorem thermal_snap_implies_crystallization
     (hThermal : IsThermallyCritical T U) :
     ∃ C : ChiralTubuleCrystallization Op Charge Residue H,
       C.boundaryState = U := by
-  have hShear :
-      IsExtremeShear G L.transitionLaw.threshold U := by
-    rw [L.threshold_agrees]
-    exact L.shearCalibration.thermal_critical_implies_extreme_shear U hThermal
+  have hShear := L.thermal_critical_implies_extreme_shear U hThermal
   exact L.transitionLaw.snap_implies_crystallization
     U hSnap hShear hThermal
 
@@ -367,45 +376,5 @@ theorem cannot_relax_to_flat
     P.tubule_nontrivial t
 
 end ProtectedTubuleSector
-
-/-! ## 9. Boundary readout -/
-
-/--
-Chiral tubule boundary readout.
-
-It is intentionally witness-gated by thermal/shear calibration and a transition
-law.
--/
-theorem chiralTubuleBoundaryOwnerTarget :
-  ∀ (Op Charge Residue : Type*)
-    [NormedAddCommGroup Op] [NormedSpace ℝ Op]
-    [Zero Charge],
-  ∀ H : BregmanHessianDatum Op,
-  ∀ G : DualFlatOperatorGeometry Op,
-  ∀ T : ThermalDriveDatum Op,
-  ∀ _L : ThermalTriggeredTubuleLaw Op Charge Residue H G T,
-  ∀ U : Op,
-    IsTopologicalSnapBoundary H U →
-    IsThermallyCritical T U →
-      ∃ C : ChiralTubuleCrystallization Op Charge Residue H,
-        C.boundaryState = U := by
-  intro Op Charge Residue _ _ _ H G T L U hSnap hThermal
-  exact L.thermal_snap_implies_crystallization U hSnap hThermal
-
-/-- Packet readout for one thermally triggered chiral tubule boundary. -/
-theorem chiralTubuleBoundary_packet
-    (Op Charge Residue : Type*)
-    [NormedAddCommGroup Op] [NormedSpace ℝ Op]
-    [Zero Charge]
-    (H : BregmanHessianDatum Op)
-    (G : DualFlatOperatorGeometry Op)
-    (T : ThermalDriveDatum Op)
-    (L : ThermalTriggeredTubuleLaw Op Charge Residue H G T)
-    (U : Op)
-    (hSnap : IsTopologicalSnapBoundary H U)
-    (hThermal : IsThermallyCritical T U) :
-    ∃ C : ChiralTubuleCrystallization Op Charge Residue H,
-      C.boundaryState = U :=
-  chiralTubuleBoundaryOwnerTarget Op Charge Residue H G T L U hSnap hThermal
 
 end InfoGeometry.Geometry.ChiralTubuleBoundary

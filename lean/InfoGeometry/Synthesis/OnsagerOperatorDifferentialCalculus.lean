@@ -25,6 +25,8 @@ namespace InfoGeometry.Synthesis.OnsagerNCG
 
 open InfoGeometry.OperatorAlgebra.ExteriorAlgebra
 
+section Part1
+
 variable {R V A : Type*}
 variable [CommRing R]
 variable [AddCommGroup V] [Module R V]
@@ -162,6 +164,8 @@ theorem dissipation_eq_symmetric
 
 end TransportTensor
 
+end Part1
+
 /-!
 =============================================================================
 PART 2: Onsager–Casimir Reciprocity under Time-Reversal Involutions
@@ -169,15 +173,17 @@ PART 2: Onsager–Casimir Reciprocity under Time-Reversal Involutions
 -/
 
 /-- A Time-Reversal linear involution on the tangent module: T² = id. -/
-structure TimeReversal (R V : Type*) [CommRing R] [AddCommGroup V] [Module R V] where
+structure TimeReversal (R V : Type*) [Ring R] [AddCommGroup V] [Module R V] where
   toLinearMap : V →ₗ[R] V
   involutive' : toLinearMap.comp toLinearMap = LinearMap.id
 
-instance : CoeFun (TimeReversal R V) (fun _ => V → V) where
+instance {R V : Type*} [Ring R] [AddCommGroup V] [Module R V] :
+    CoeFun (TimeReversal R V) (fun _ => V → V) where
   coe T := T.toLinearMap
 
 namespace TimeReversal
 
+variable {R V : Type*} [Ring R] [AddCommGroup V] [Module R V]
 variable (T : TimeReversal R V)
 
 @[simp]
@@ -194,6 +200,7 @@ end TimeReversal
     W(Tu, Tv) = L(v, u) - Ω(v, u).
 -/
 theorem onsager_casimir_reciprocity
+    {R V A : Type*} [CommRing R] [AddCommGroup V] [Module R V] [Ring A] [Algebra R A]
     (half : R) (h_half : (2 : R) * half = 1)
     (W : TransportTensor R V A)
     (T : TimeReversal R V)

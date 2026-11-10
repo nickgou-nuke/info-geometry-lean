@@ -27,11 +27,9 @@ noncomputable section
 
 namespace InfoGeometry.Physics.NuclearFeshbachReduction
 
-variable {K V : Type*} [Field K] [AddCommGroup V] [Module K V]
+section Ring
 
-/-- The shifted complementary block, extended by zero on the model corner. -/
-def denominator (P H : Module.End K V) (E : K) : Module.End K V :=
-  E • (1 - P) - (1 - P) * H * (1 - P)
+variable {K V : Type*} [Ring K] [AddCommGroup V] [Module K V]
 
 /-- The energy-dependent effective Hamiltonian, extended by zero off the model. -/
 def effectiveHamiltonian (P H R : Module.End K V) : Module.End K V :=
@@ -70,6 +68,26 @@ theorem effectiveHamiltonian_supported (P H R : Module.End K V)
   constructor
   · simp only [effectiveHamiltonian, mul_add, ← mul_assoc, hP]
   · simp only [effectiveHamiltonian, add_mul, mul_assoc, hP]
+
+/-- The reconstruction map is injective on model vectors, not on all of V. -/
+theorem waveOperator_injective_on_model (P H R : Module.End K V)
+    (hP : P * P = P) (hQR : (1 - P) * R = R)
+    {v w : V} (hv : P v = v) (hw : P w = w)
+    (h : waveOperator P H R v = waveOperator P H R w) : v = w := by
+  have hPv := LinearMap.congr_fun (projection_mul_waveOperator P H R hP hQR) v
+  have hPw := LinearMap.congr_fun (projection_mul_waveOperator P H R hP hQR) w
+  change P (waveOperator P H R v) = P v at hPv
+  change P (waveOperator P H R w) = P w at hPw
+  rw [h, hPw, hv, hw] at hPv
+  exact hPv.symm
+
+end Ring
+
+variable {K V : Type*} [Field K] [AddCommGroup V] [Module K V]
+
+/-- The shifted complementary block, extended by zero on the model corner. -/
+def denominator (P H : Module.End K V) (E : K) : Module.End K V :=
+  E • (1 - P) - (1 - P) * H * (1 - P)
 
 theorem complementary_column (P H R : Module.End K V) (E : K)
     (hQR : (1 - P) * R = R) (hDR : denominator P H E * R = 1 - P) :
@@ -154,19 +172,9 @@ theorem projected_eigenvector_ne_zero (P H R : Module.End K V) (E : K)
   rw [hz, map_zero] at h
   exact hne h.symm
 
-/-- The reconstruction map is injective on model vectors, not on all of V. -/
-theorem waveOperator_injective_on_model (P H R : Module.End K V)
-    (hP : P * P = P) (hQR : (1 - P) * R = R)
-    {v w : V} (hv : P v = v) (hw : P w = w)
-    (h : waveOperator P H R v = waveOperator P H R w) : v = w := by
-  have hPv := LinearMap.congr_fun (projection_mul_waveOperator P H R hP hQR) v
-  have hPw := LinearMap.congr_fun (projection_mul_waveOperator P H R hP hQR) w
-  change P (waveOperator P H R v) = P v at hPv
-  change P (waveOperator P H R w) = P w at hPw
-  rw [h, hPw, hv, hw] at hPv
-  exact hPv.symm
+section RingBlock
 
-variable {𝕜 P Q : Type*} [Field 𝕜]
+variable {𝕜 P Q : Type*} [Ring 𝕜]
   [AddCommGroup P] [Module 𝕜 P] [AddCommGroup Q] [Module 𝕜 Q]
 
 /-- Native direct-sum block operator with independent P and Q dimensions. -/
@@ -182,6 +190,17 @@ theorem reconstruction_injective (C : P →ₗ[𝕜] Q) (K : Q →ₗ[𝕜] Q) :
     Function.Injective (reconstruction C K) := by
   intro x y h
   exact congrArg Prod.fst h
+
+/-- For a common carrier this is precisely the existing noncommutative Schur owner. -/
+theorem effective_eq_existing (A B C K : P →ₗ[𝕜] P) :
+    A - B.comp (K.comp C) =
+      NuclearOperatorSchurComplement.effectiveOperator A B C K := by
+  rfl
+
+end RingBlock
+
+variable {𝕜 P Q : Type*} [Field 𝕜]
+  [AddCommGroup P] [Module 𝕜 P] [AddCommGroup Q] [Module 𝕜 Q]
 
 /-- Exact kernel equivalence on a direct sum, including the reconstructed complementary component. -/
 theorem block_eigen_equation_iff
@@ -226,12 +245,6 @@ theorem reconstructed_nonzero_eigenvector_iff
   change (_ ∧ blockOperator A B C D (x, -K (C x)) = E • (x, -K (C x))) ↔ _
   rw [block_eigen_equation_iff A B C D K E hK]
   simp [hn]
-
-/-- For a common carrier this is precisely the existing noncommutative Schur owner. -/
-theorem effective_eq_existing (A B C K : P →ₗ[𝕜] P) :
-    A - B.comp (K.comp C) =
-      NuclearOperatorSchurComplement.effectiveOperator A B C K := by
-  rfl
 
 open InfoGeometry.Physics.SolovievFiniteSecularEigenproblem
 

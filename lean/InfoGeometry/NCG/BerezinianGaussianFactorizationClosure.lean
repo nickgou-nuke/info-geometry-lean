@@ -22,11 +22,11 @@ open Matrix
 noncomputable section
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 local notation "SubMat" => Matrix ι ι R
 
-/-- A two-sided inverse of a matrix is unique. -/
+/-- A two-sided inverse of a matrix is unique over any associative ring. -/
 theorem twoSidedMatrixInverse_unique
     {D invD₁ invD₂ : SubMat}
     (h₁ : TwoSidedMatrixInverse D invD₁)
@@ -39,9 +39,15 @@ theorem twoSidedMatrixInverse_unique
     _ = 1 * invD₂ := by rw [h₁.left_inv]
     _ = invD₂ := by rw [one_mul]
 
+section CommRing
+
+variable {R_comm : Type*} [CommRing R_comm]
+
+local notation "SubMatC" => Matrix ι ι R_comm
+
 /-- A right inverse of a scalar in a commutative ring is unique. -/
 theorem rightInverse_unique
-    {d x y : R}
+    {d x y : R_comm}
     (hx : d * x = 1)
     (hy : d * y = 1) :
     x = y := by
@@ -55,7 +61,7 @@ theorem rightInverse_unique
 /-- The Schur-complement Berezinian is independent of the chosen
 (two-sided) inverse of the denominator block. -/
 theorem berezinianSchur_eq_of_twoSidedMatrixInverse
-    (A B C D invD₁ invD₂ : SubMat) (invDetD : R)
+    (A B C D invD₁ invD₂ : SubMatC) (invDetD : R_comm)
     (h₁ : TwoSidedMatrixInverse D invD₁)
     (h₂ : TwoSidedMatrixInverse D invD₂) :
     berezinianSchur A B C D invD₁ invDetD =
@@ -65,12 +71,14 @@ theorem berezinianSchur_eq_of_twoSidedMatrixInverse
 /-- The Schur-complement Berezinian is independent of the chosen scalar
 right-inverse of the denominator determinant. -/
 theorem berezinianSchur_eq_of_rightInverseDet
-    (A B C D invD : SubMat) (invDetD₁ invDetD₂ : R)
+    (A B C D invD : SubMatC) (invDetD₁ invDetD₂ : R_comm)
     (h₁ : Matrix.det D * invDetD₁ = 1)
     (h₂ : Matrix.det D * invDetD₂ = 1) :
     berezinianSchur A B C D invD invDetD₁ =
       berezinianSchur A B C D invD invDetD₂ := by
   rw [rightInverse_unique h₁ h₂]
+
+end CommRing
 
 end
 

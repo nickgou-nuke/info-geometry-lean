@@ -28,7 +28,7 @@ import Mathlib.Tactic.Abel
 
 namespace InfoGeometry.GrandUnification.Continuum
 
-variable {R ι : Type*} [CommRing R]
+variable {R ι : Type*} [Ring R]
 variable [Preorder ι] [DecidableEq ι]
 variable (M : ι → Type*) [∀ i, AddCommGroup (M i)] [∀ i, Module R (M i)]
 variable (bonding : ∀ i j, i ≤ j → M i →ₗ[R] M j)
@@ -42,7 +42,10 @@ noncomputable def continuumOf (i : ι) : M i →ₗ[R] ContinuumSpace M bonding 
   Module.DirectLimit.of R ι M (fun i j h => bonding i j h) i
 
 /-- The grade-0 unit in the exterior algebra over the direct-limit continuum module. -/
-noncomputable def continuumVacuum : ExteriorAlgebra R (ContinuumSpace M bonding) :=
+noncomputable def continuumVacuum {R : Type*} [CommRing R]
+    (M : ι → Type*) [∀ i, AddCommGroup (M i)] [∀ i, Module R (M i)]
+    (bonding : ∀ i j, i ≤ j → M i →ₗ[R] M j) :
+    ExteriorAlgebra R (ContinuumSpace M bonding) :=
   1
 
 /-- Continuum translation by `lambda` on `ContinuumSpace M bonding`. -/

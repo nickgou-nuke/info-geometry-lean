@@ -5,26 +5,26 @@ namespace InfoGeometry.Canonical.SylvesterGrading
 
 open InfoGeometry.Canonical.SylvesterIwasawaKAN
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*}
 
 /-! ### 1. Abstract Braided Commutators -/
 
 /-- An abelian bicharacter β : Γ → Γ → Rˣ governing the categorical braiding. -/
-structure GradingBicharacter (Γ : Type*) [AddCommMonoid Γ] (R : Type*) [CommRing R] where
+structure GradingBicharacter (Γ : Type*) [AddCommMonoid Γ] (R : Type*) [Ring R] where
   β : Γ → Γ → Rˣ
   map_add_left : ∀ g₁ g₂ h : Γ, β (g₁ + g₂) h = β g₁ h * β g₂ h
   map_add_right : ∀ g h₁ h₂ : Γ, β g (h₁ + h₂) = β g h₁ * β g h₂
 
-instance {Γ} [AddCommMonoid Γ] :
+instance {Γ} [AddCommMonoid Γ] [Ring R] :
     CoeFun (GradingBicharacter Γ R) (fun _ => Γ → Γ → R) where
   coe B g h := (B.β g h : R)
 
 /-- The Braided Commutator [a, b]_β = a * b - β(|a|, |b|) • (b * a). -/
-def braidedCommutator {Γ A : Type*} [AddCommMonoid Γ] [Ring A] [Algebra R A]
+def braidedCommutator [Ring R] {Γ A : Type*} [AddCommMonoid Γ] [Ring A] [Module R A]
     (B : GradingBicharacter Γ R) (ga gb : Γ) (a b : A) : A :=
   a * b - (B.β ga gb : R) • (b * a)
 
-theorem braidedCommutator_eq_zero_iff {Γ A : Type*} [AddCommMonoid Γ] [Ring A] [Algebra R A]
+theorem braidedCommutator_eq_zero_iff [Ring R] {Γ A : Type*} [AddCommMonoid Γ] [Ring A] [Module R A]
     (B : GradingBicharacter Γ R) (ga gb : Γ) (a b : A) :
     braidedCommutator B ga gb a b = 0 ↔ a * b = (B.β ga gb : R) • (b * a) := by
   dsimp [braidedCommutator]
@@ -35,8 +35,10 @@ theorem braidedCommutator_eq_zero_iff {Γ A : Type*} [AddCommMonoid Γ] [Ring A]
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
 /-- A matrix M has Sylvester grade (a, b) if it is proportional to X^a Z^b -/
-def IsSylvesterGrade (X Z : Matrix n n R) (a b : ℕ) (M : Matrix n n R) : Prop :=
+def IsSylvesterGrade [Ring R] (X Z : Matrix n n R) (a b : ℕ) (M : Matrix n n R) : Prop :=
   ∃ c : R, M = c • (X ^ a * Z ^ b)
+
+variable [CommRing R]
 
 /-- The exact multiplication of two displacement basis elements -/
 lemma displacement_mul (ω : R) (X Z : Matrix n n R) (h : IsSylvesterPair ω X Z)
@@ -124,12 +126,12 @@ def degZ : PhaseSpace := (0, 1)
 theorem phaseSymplectic_ZX : phaseSymplecticForm degZ degX = -1 := by rfl
 theorem phaseSymplectic_XZ : phaseSymplecticForm degX degZ = 1 := by rfl
 
-theorem heisenberg_quantum_torus {A : Type*} [Ring A] [Algebra R A]
-    (B : GradingBicharacter PhaseSpace R) (X Z : A)
-    (q : Rˣ)
-    (h_phase : (B.β degZ degX : R) = (q : Rˣ))
+theorem heisenberg_quantum_torus {R₀ A : Type*} [Ring R₀] [Ring A] [Module R₀ A]
+    (B : GradingBicharacter PhaseSpace R₀) (X Z : A)
+    (q : R₀ˣ)
+    (h_phase : (B.β degZ degX : R₀) = (q : R₀ˣ))
     (h_comm : braidedCommutator B degZ degX Z X = 0) :
-    Z * X = (q : Rˣ) • (X * Z) := by
+    Z * X = (q : R₀ˣ) • (X * Z) := by
   rw [braidedCommutator_eq_zero_iff] at h_comm
   rw [h_phase] at h_comm
   exact h_comm

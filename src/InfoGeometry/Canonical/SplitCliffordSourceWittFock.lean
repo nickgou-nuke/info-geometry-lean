@@ -12,7 +12,7 @@ namespace InfoGeometry.Canonical.SplitCliffordSourceWittFock
 open Filter
 
 structure WittGenerators
-    (𝕜 V : Type*) [Field 𝕜]
+    (𝕜 V : Type*) [Ring 𝕜]
     [AddCommGroup V] [Module 𝕜 V] where
   create : Int → V →ₗ[𝕜] V
   annihilate : Int → V →ₗ[𝕜] V
@@ -32,7 +32,7 @@ structure WittGenerators
 
 namespace WittGenerators
 
-variable {𝕜 V : Type*} [Field 𝕜]
+variable {𝕜 V : Type*} [Ring 𝕜]
 variable [AddCommGroup V] [Module 𝕜 V]
 
 structure DiracPolarization where
@@ -82,6 +82,7 @@ def CurrentTruncation
   ∀ v : V, ∀ᶠ n : Int in atTop, J.Jlift n v = 0
 
 def CurrentWickLaw
+    {𝕜 V : Type*} [CommRing 𝕜] [AddCommGroup V] [Module 𝕜 V]
     {W : WittGenerators 𝕜 V}
     {P : DiracPolarization}
     (J : NormalOrderedCurrentDatum W P) : Prop :=

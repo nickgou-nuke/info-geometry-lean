@@ -36,18 +36,18 @@ theorem splitOctonionBasis_slot_count :
   decide
 
 /-- A theorem-safe coordinate packet for the existing supertwistor carrier. -/
-structure SupertwistorCliffordDecomposition (K : Type*) [CommRing K] where
+structure SupertwistorCliffordDecomposition (K : Type*) [Ring K] where
   cartan : CartanPairCoordinates K
   chiral : ThreeChiralCoordinates K
 
 /-- The decomposition is only a coordinate projection, not an algebra action. -/
 def SupertwistorCliffordDecomposition.cartanCoordinates
-    {K : Type*} [CommRing K]
+    {K : Type*} [Ring K]
     (D : SupertwistorCliffordDecomposition K) : CartanPairCoordinates K :=
   D.cartan
 
 def SupertwistorCliffordDecomposition.chiralCoordinates
-    {K : Type*} [CommRing K]
+    {K : Type*} [Ring K]
     (D : SupertwistorCliffordDecomposition K) : ThreeChiralCoordinates K :=
   D.chiral
 

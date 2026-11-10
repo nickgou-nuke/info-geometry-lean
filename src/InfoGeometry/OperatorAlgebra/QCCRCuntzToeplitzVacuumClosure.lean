@@ -21,8 +21,10 @@ open BigOperators
 open InfoGeometry.OperatorAlgebra.QCCRCuntzToeplitz
 
 variable {ι R Op : Type*} [DecidableEq ι] [Fintype ι]
-  [CommRing R] [Ring Op] [StarRing Op] [Algebra R Op]
+  [Ring R] [Ring Op] [StarRing Op] [Module R Op]
+  [IsScalarTower R Op Op] [SMulCommClass R Op Op]
 
+omit [SMulCommClass R Op Op] in
 /-- At arbitrary q, the left vacuum-defect action is exactly the q-weighted residual
 sum obtained by substituting the q-CCR relation into the defect. -/
 theorem star_mul_P_vac_eq_neg_q_sum
@@ -47,10 +49,10 @@ theorem star_mul_P_vac_eq_neg_q_sum
   have hdelta : (∑ i : ι, (if j = i then star (A.a i) else 0)) = star (A.a j) := by
     simp
   rw [hdelta]
-  rw [← Finset.smul_sum]
+  rw [← Finset.smul_sum, neg_smul]
   abel
-  module
 
+omit [IsScalarTower R Op Op] in
 /-- At arbitrary q, the right vacuum-defect action is exactly the q-weighted residual
 sum obtained by substituting the q-CCR relation into the defect. -/
 theorem P_vac_mul_a_eq_neg_q_sum
@@ -75,16 +77,17 @@ theorem P_vac_mul_a_eq_neg_q_sum
   have hdelta : (∑ i : ι, (if i = j then A.a i else 0)) = A.a j := by
     simp
   rw [hdelta]
-  rw [← Finset.smul_sum]
+  rw [← Finset.smul_sum, neg_smul]
   abel
-  module
 
+omit [SMulCommClass R Op Op] in
 /-- The q = 0 specialization recovers exact annihilation of the vacuum defect. -/
 theorem star_mul_P_vac_eq_zero_of_q_zero
     (A : QCCROperators ι R Op) (hq0 : A.q = 0) (j : ι) :
     star (A.a j) * P_vac A = 0 := by
   rw [star_mul_P_vac_eq_neg_q_sum A j, hq0, neg_zero, zero_smul]
 
+omit [IsScalarTower R Op Op] in
 /-- The q = 0 specialization recovers exact annihilation of the vacuum defect. -/
 theorem P_vac_mul_a_eq_zero_of_q_zero
     (A : QCCROperators ι R Op) (hq0 : A.q = 0) (j : ι) :

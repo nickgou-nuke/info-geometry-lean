@@ -48,7 +48,7 @@ structure ColorVec3 (R : Type*) where
 
 namespace ColorVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Zero 3-vector. -/
 @[simp]
@@ -186,6 +186,46 @@ def cross (u v : ColorVec3 R) : ColorVec3 R :=
 def baryonDet (u v w : ColorVec3 R) : R :=
   dot u (cross v w)
 
+/-- Map a structured 3-color vector to the canonical `Fin 3 → R` carrier `ZornVec3 R`. -/
+def toZornVec3 (u : ColorVec3 R) : InfoGeometry.Algebra.ZornVec3 R :=
+  ![u.c₁, u.c₂, u.c₃]
+
+/-- Reconstruct a structured 3-color vector from `ZornVec3 R`. -/
+def fromZornVec3 (v : InfoGeometry.Algebra.ZornVec3 R) : ColorVec3 R :=
+  ⟨v 0, v 1, v 2⟩
+
+/-- Explicit `R`-linear equivalence between `ColorVec3 R` and `InfoGeometry.Algebra.ZornVec3 R`. -/
+def equivZornVec3 : ColorVec3 R ≃ₗ[R] InfoGeometry.Algebra.ZornVec3 R where
+  toFun := toZornVec3
+  invFun := fromZornVec3
+  left_inv u := by cases u; rfl
+  right_inv v := by
+    ext i
+    fin_cases i <;> rfl
+  map_add' u v := by
+    ext i
+    fin_cases i <;> rfl
+  map_smul' r u := by
+    ext i
+    fin_cases i <;> rfl
+
+/-- `equivZornVec3` preserves the bilinear dot product. -/
+theorem equivZornVec3_dot (u v : ColorVec3 R) :
+    InfoGeometry.Algebra.ZornVec3.dot (equivZornVec3 u) (equivZornVec3 v) = dot u v := by
+  rw [InfoGeometry.Algebra.ZornVec3.dot_eq_sum_coords]
+  rfl
+
+/-- `equivZornVec3` intertwines the exterior cross product. -/
+theorem equivZornVec3_cross (u v : ColorVec3 R) :
+    equivZornVec3 (cross u v) =
+      InfoGeometry.Algebra.ZornVec3.cross (equivZornVec3 u) (equivZornVec3 v) := by
+  ext i
+  fin_cases i <;> rfl
+
+section CommRing
+
+variable {R : Type*} [CommRing R]
+
 /-- Symmetry of the bilinear color dot pairing. -/
 theorem dot_comm (u v : ColorVec3 R) : dot u v = dot v u := by
   dsimp [dot]
@@ -227,41 +267,7 @@ theorem dot_cross_cross (u₁ u₂ v₁ v₂ : ColorVec3 R) :
   dsimp [dot, cross]
   ring
 
-/-- Map a structured 3-color vector to the canonical `Fin 3 → R` carrier `ZornVec3 R`. -/
-def toZornVec3 (u : ColorVec3 R) : InfoGeometry.Algebra.ZornVec3 R :=
-  ![u.c₁, u.c₂, u.c₃]
-
-/-- Reconstruct a structured 3-color vector from `ZornVec3 R`. -/
-def fromZornVec3 (v : InfoGeometry.Algebra.ZornVec3 R) : ColorVec3 R :=
-  ⟨v 0, v 1, v 2⟩
-
-/-- Explicit `R`-linear equivalence between `ColorVec3 R` and `InfoGeometry.Algebra.ZornVec3 R`. -/
-def equivZornVec3 : ColorVec3 R ≃ₗ[R] InfoGeometry.Algebra.ZornVec3 R where
-  toFun := toZornVec3
-  invFun := fromZornVec3
-  left_inv u := by cases u; rfl
-  right_inv v := by
-    ext i
-    fin_cases i <;> rfl
-  map_add' u v := by
-    ext i
-    fin_cases i <;> rfl
-  map_smul' r u := by
-    ext i
-    fin_cases i <;> rfl
-
-/-- `equivZornVec3` preserves the bilinear dot product. -/
-theorem equivZornVec3_dot (u v : ColorVec3 R) :
-    InfoGeometry.Algebra.ZornVec3.dot (equivZornVec3 u) (equivZornVec3 v) = dot u v := by
-  rw [InfoGeometry.Algebra.ZornVec3.dot_eq_sum_coords]
-  rfl
-
-/-- `equivZornVec3` intertwines the exterior cross product. -/
-theorem equivZornVec3_cross (u v : ColorVec3 R) :
-    equivZornVec3 (cross u v) =
-      InfoGeometry.Algebra.ZornVec3.cross (equivZornVec3 u) (equivZornVec3 v) := by
-  ext i
-  fin_cases i <;> rfl
+end CommRing
 
 end ColorVec3
 
@@ -280,7 +286,7 @@ structure ZornAlgebra (R : Type*) where
 
 namespace ZornAlgebra
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Zero element of the Zorn algebra. -/
 def zero : ZornAlgebra R :=
@@ -420,29 +426,29 @@ def associator (X Y Z : ZornAlgebra R) : ZornAlgebra R :=
 @[simp]
 theorem one_mul (X : ZornAlgebra R) : mul one X = X := by
   ext <;> dsimp [mul, one, ColorVec3.zero, ColorVec3.dot, ColorVec3.add,
-    ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> ring
+    ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> simp
 
 /-- Right multiplicative identity law `X · I = X`. -/
 @[simp]
 theorem mul_one (X : ZornAlgebra R) : mul X one = X := by
   ext <;> dsimp [mul, one, ColorVec3.zero, ColorVec3.dot, ColorVec3.add,
-    ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> ring
+    ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> simp
 
 /-- **Quadratic Cayley–Hamilton / Norm-Conjugation Identity**:
     `X · X̄ = N(X) I`. -/
-theorem mul_conj (X : ZornAlgebra R) : mul X (conj X) = smul (norm X) one := by
+theorem mul_conj {R : Type*} [CommRing R] (X : ZornAlgebra R) : mul X (conj X) = smul (norm X) one := by
   ext <;> dsimp [mul, conj, norm, one, smul, ColorVec3.zero, ColorVec3.dot,
     ColorVec3.add, ColorVec3.sub, ColorVec3.neg, ColorVec3.smul, ColorVec3.cross] <;> ring
 
 /-- Left conjugation identity `X̄ · X = N(X) I`. -/
-theorem conj_mul (X : ZornAlgebra R) : mul (conj X) X = smul (norm X) one := by
+theorem conj_mul {R : Type*} [CommRing R] (X : ZornAlgebra R) : mul (conj X) X = smul (norm X) one := by
   ext <;> dsimp [mul, conj, norm, one, smul, ColorVec3.zero, ColorVec3.dot,
     ColorVec3.add, ColorVec3.sub, ColorVec3.neg, ColorVec3.smul, ColorVec3.cross] <;> ring
 
 /-- **Hurwitz–Zorn Composition Law**:
     The quadratic norm on the 8-dimensional non-associative Zorn split-octonion algebra
     is strictly multiplicative: `N(X · Y) = N(X) N(Y)`. -/
-theorem norm_mul (X Y : ZornAlgebra R) : norm (mul X Y) = norm X * norm Y := by
+theorem norm_mul {R : Type*} [CommRing R] (X Y : ZornAlgebra R) : norm (mul X Y) = norm X * norm Y := by
   dsimp [norm, mul, ColorVec3.dot, ColorVec3.add, ColorVec3.sub,
     ColorVec3.smul, ColorVec3.cross]
   ring
@@ -485,7 +491,7 @@ def equivZornVectorMatrix :
 
 /-- `equivZornVectorMatrix` is a multiplicative isomorphism with respect to the canonical
     Zorn product `InfoGeometry.Algebra.ZornVectorMatrix.mul`. -/
-theorem equivZornVectorMatrix_mul (X Y : ZornAlgebra R) :
+theorem equivZornVectorMatrix_mul {R : Type*} [CommRing R] (X Y : ZornAlgebra R) :
     equivZornVectorMatrix (mul X Y) =
       InfoGeometry.Algebra.ZornVectorMatrix.mul
         (equivZornVectorMatrix X) (equivZornVectorMatrix Y) := by
@@ -525,43 +531,43 @@ def e₂ : ZornAlgebra R :=
 @[simp]
 theorem e₁_idempotent : mul (e₁ : ZornAlgebra R) e₁ = e₁ := by
   ext <;> dsimp [mul, e₁, ColorVec3.zero, ColorVec3.dot, ColorVec3.add,
-    ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> ring
+    ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> simp
 
 /-- `e₂` is an idempotent: `e₂² = e₂`. -/
 @[simp]
 theorem e₂_idempotent : mul (e₂ : ZornAlgebra R) e₂ = e₂ := by
   ext <;> dsimp [mul, e₂, ColorVec3.zero, ColorVec3.dot, ColorVec3.add,
-    ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> ring
+    ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> simp
 
 /-- Mutual orthogonality of Peirce idempotents: `e₁ · e₂ = 0`. -/
 @[simp]
 theorem e₁_mul_e₂_zero : mul (e₁ : ZornAlgebra R) e₂ = zero := by
   ext <;> dsimp [mul, e₁, e₂, zero, ColorVec3.zero, ColorVec3.dot, ColorVec3.add,
-    ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> ring
+    ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> simp
 
 /-- Mutual orthogonality of Peirce idempotents: `e₂ · e₁ = 0`. -/
 @[simp]
 theorem e₂_mul_e₁_zero : mul (e₂ : ZornAlgebra R) e₁ = zero := by
   ext <;> dsimp [mul, e₁, e₂, zero, ColorVec3.zero, ColorVec3.dot, ColorVec3.add,
-    ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> ring
+    ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> simp
 
 /-- Partition of unity: `e₁ + e₂ = I`. -/
 theorem peirce_partition_of_unity : add (e₁ : ZornAlgebra R) e₂ = one := by
-  ext <;> dsimp [add, e₁, e₂, one, ColorVec3.add, ColorVec3.zero] <;> ring
+  ext <;> dsimp [add, e₁, e₂, one, ColorVec3.add, ColorVec3.zero] <;> simp
 
 /-- **Penrose Chiral Nullity (Left Ray)**:
     A pure left-chiral mode `m_L e₁` has identically zero quadratic norm (`N(m_L e₁) = 0`). -/
 @[simp]
 theorem norm_smul_e₁_zero (m_L : R) : norm (smul m_L (e₁ : ZornAlgebra R)) = 0 := by
   dsimp [norm, smul, e₁, ColorVec3.smul, ColorVec3.zero, ColorVec3.dot]
-  ring
+  simp
 
 /-- **Penrose Chiral Nullity (Right Ray)**:
     A pure right-chiral mode `m_R e₂` has identically zero quadratic norm (`N(m_R e₂) = 0`). -/
 @[simp]
 theorem norm_smul_e₂_zero (m_R : R) : norm (smul m_R (e₂ : ZornAlgebra R)) = 0 := by
   dsimp [norm, smul, e₂, ColorVec3.smul, ColorVec3.zero, ColorVec3.dot]
-  ring
+  simp
 
 /-- **Penrose Zig-Zag Mass Generation**:
     Although each chiral projector ray `m_L e₁` and `m_R e₂` is individually massless/null
@@ -570,7 +576,7 @@ theorem norm_smul_e₂_zero (m_R : R) : norm (smul m_R (e₂ : ZornAlgebra R)) =
 theorem penrose_zigzag_mass_norm (m_L m_R : R) :
     norm (add (smul m_L (e₁ : ZornAlgebra R)) (smul m_R e₂)) = m_L * m_R := by
   dsimp [norm, add, smul, e₁, e₂, ColorVec3.add, ColorVec3.smul, ColorVec3.zero, ColorVec3.dot]
-  ring
+  simp
 
 /-- Peirce `(1,1)` projection `P₁₁(X) = e₁ · (X · e₁)`. -/
 def peirce11 (X : ZornAlgebra R) : ZornAlgebra R :=
@@ -592,25 +598,25 @@ def peirce22 (X : ZornAlgebra R) : ZornAlgebra R :=
 theorem peirce11_eq (X : ZornAlgebra R) :
     peirce11 X = ⟨X.a, ColorVec3.zero, ColorVec3.zero, 0⟩ := by
   ext <;> dsimp [peirce11, mul, e₁, ColorVec3.zero, ColorVec3.dot,
-    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> ring
+    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> simp
 
 /-- Explicit matrix form of `P₁₂(X) = [[0, X.u], [0, 0]]` (upper off-diagonal quark sector). -/
 theorem peirce12_eq (X : ZornAlgebra R) :
     peirce12 X = ⟨0, X.u, ColorVec3.zero, 0⟩ := by
   ext <;> dsimp [peirce12, mul, e₁, e₂, ColorVec3.zero, ColorVec3.dot,
-    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> ring
+    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> simp
 
 /-- Explicit matrix form of `P₂₁(X) = [[0, 0], [X.v, 0]]` (lower off-diagonal antiquark sector). -/
 theorem peirce21_eq (X : ZornAlgebra R) :
     peirce21 X = ⟨0, ColorVec3.zero, X.v, 0⟩ := by
   ext <;> dsimp [peirce21, mul, e₁, e₂, ColorVec3.zero, ColorVec3.dot,
-    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> ring
+    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> simp
 
 /-- Explicit matrix form of `P₂₂(X) = [[0, 0], [0, X.b]]`. -/
 theorem peirce22_eq (X : ZornAlgebra R) :
     peirce22 X = ⟨0, ColorVec3.zero, ColorVec3.zero, X.b⟩ := by
   ext <;> dsimp [peirce22, mul, e₂, ColorVec3.zero, ColorVec3.dot,
-    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> ring
+    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> simp
 
 /-- **Peirce Four-Block Completeness Theorem**:
     Every Zorn split-octonion element decomposes uniquely into the sum of its four
@@ -618,7 +624,7 @@ theorem peirce22_eq (X : ZornAlgebra R) :
 theorem peirce_four_block_completeness (X : ZornAlgebra R) :
     add (add (peirce11 X) (peirce12 X)) (add (peirce21 X) (peirce22 X)) = X := by
   rw [peirce11_eq, peirce12_eq, peirce21_eq, peirce22_eq]
-  ext <;> dsimp [add, ColorVec3.add, ColorVec3.zero] <;> ring
+  ext <;> dsimp [add, ColorVec3.add, ColorVec3.zero] <;> simp
 
 /-! ## Section 4: DeWitt `ℤ₂` Super-Grading & Superalgebra Parity Laws -/
 
@@ -636,20 +642,20 @@ def dewittOdd (X : ZornAlgebra R) : ZornAlgebra R :=
 theorem dewittEven_eq (X : ZornAlgebra R) :
     dewittEven X = ⟨X.a, ColorVec3.zero, ColorVec3.zero, X.b⟩ := by
   rw [dewittEven, peirce11_eq, peirce22_eq]
-  ext <;> dsimp [add, ColorVec3.add, ColorVec3.zero] <;> ring
+  ext <;> dsimp [add, ColorVec3.add, ColorVec3.zero] <;> simp
 
 /-- Explicit off-diagonal form of `dewittOdd X`. -/
 theorem dewittOdd_eq (X : ZornAlgebra R) :
     dewittOdd X = ⟨0, X.u, X.v, 0⟩ := by
   rw [dewittOdd, peirce12_eq, peirce21_eq]
-  ext <;> dsimp [add, ColorVec3.add, ColorVec3.zero] <;> ring
+  ext <;> dsimp [add, ColorVec3.add, ColorVec3.zero] <;> simp
 
 /-- **Peirce–DeWitt Super-Decomposition Completeness**:
     `X_even + X_odd = X`. -/
 theorem peirce_dewitt_completeness (X : ZornAlgebra R) :
     add (dewittEven X) (dewittOdd X) = X := by
   rw [dewittEven_eq, dewittOdd_eq]
-  ext <;> dsimp [add, ColorVec3.add, ColorVec3.zero] <;> ring
+  ext <;> dsimp [add, ColorVec3.add, ColorVec3.zero] <;> simp
 
 /-- Idempotency of the Bosonic (Even) projector. -/
 @[simp]
@@ -683,7 +689,7 @@ theorem dewittOdd_mul_even_even (X Y : ZornAlgebra R) :
     dewittOdd (mul (dewittEven X) (dewittEven Y)) = zero := by
   rw [dewittEven_eq, dewittEven_eq, dewittOdd_eq]
   ext <;> dsimp [mul, zero, ColorVec3.zero, ColorVec3.dot, ColorVec3.add,
-    ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> ring
+    ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> simp
 
 /-- **Super-Grading Law (Even · Odd ⊆ Odd)**:
     The product of a Bosonic (Even) and a Fermionic (Odd) Zorn element has vanishing
@@ -692,7 +698,7 @@ theorem dewittEven_mul_even_odd (X Y : ZornAlgebra R) :
     dewittEven (mul (dewittEven X) (dewittOdd Y)) = zero := by
   rw [dewittEven_eq, dewittOdd_eq, dewittEven_eq]
   ext <;> dsimp [mul, zero, ColorVec3.zero, ColorVec3.dot, ColorVec3.add,
-    ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> ring
+    ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> simp
 
 /-- **Super-Grading Law (Odd · Even ⊆ Odd)**:
     The product of a Fermionic (Odd) and a Bosonic (Even) Zorn element has vanishing
@@ -701,7 +707,7 @@ theorem dewittEven_mul_odd_even (X Y : ZornAlgebra R) :
     dewittEven (mul (dewittOdd X) (dewittEven Y)) = zero := by
   rw [dewittOdd_eq, dewittEven_eq, dewittEven_eq]
   ext <;> dsimp [mul, zero, ColorVec3.zero, ColorVec3.dot, ColorVec3.add,
-    ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> ring
+    ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> simp
 
 /-- **Bosonic Part of `Odd · Odd` (CAR Inner Pairing)**:
     The Bosonic (Even) part of the product of two Fermionic (Odd) Zorn elements is the
@@ -710,7 +716,7 @@ theorem dewittEven_mul_odd_odd (X Y : ZornAlgebra R) :
     dewittEven (mul (dewittOdd X) (dewittOdd Y)) =
       ⟨ColorVec3.dot X.u Y.v, ColorVec3.zero, ColorVec3.zero, ColorVec3.dot X.v Y.u⟩ := by
   rw [dewittOdd_eq, dewittOdd_eq, dewittEven_eq]
-  ext <;> dsimp [mul, ColorVec3.zero, ColorVec3.dot] <;> ring
+  ext <;> dsimp [mul, ColorVec3.zero, ColorVec3.dot] <;> simp
 
 /-- **Fermionic Part of `Odd · Odd` (Octonionic Cross-Product Diquark Anomaly)**:
     Unlike an associative `2×2` supermatrix where `Odd · Odd` has zero Odd part, in the
@@ -721,7 +727,7 @@ theorem dewittOdd_mul_odd_odd (X Y : ZornAlgebra R) :
       ⟨0, ColorVec3.neg (ColorVec3.cross X.v Y.v), ColorVec3.cross X.u Y.u, 0⟩ := by
   rw [dewittOdd_eq, dewittOdd_eq, dewittOdd_eq]
   ext <;> dsimp [mul, ColorVec3.zero, ColorVec3.add, ColorVec3.sub,
-    ColorVec3.neg, ColorVec3.smul, ColorVec3.cross] <;> ring
+    ColorVec3.neg, ColorVec3.smul, ColorVec3.cross] <;> simp
 
 /-- When the cross products `X.u × Y.u = 0` and `X.v × Y.v = 0` vanish (e.g., on collinear
     color rays or opposite-chirality quark/antiquark pairs), `Odd · Odd` is purely Bosonic (Even). -/
@@ -730,7 +736,7 @@ theorem dewittOdd_mul_odd_odd_of_cross_zero (X Y : ZornAlgebra R)
     (hv : ColorVec3.cross X.v Y.v = ColorVec3.zero) :
     dewittOdd (mul (dewittOdd X) (dewittOdd Y)) = zero := by
   rw [dewittOdd_mul_odd_odd, hu, hv]
-  ext <;> dsimp [zero, ColorVec3.zero, ColorVec3.neg] <;> ring
+  ext <;> dsimp [zero, ColorVec3.zero, ColorVec3.neg] <;> simp
 
 /-! ## Section 5: Quantized Zorn Odd Generators, CAR Anticommutation & Supercolor Baryon Confinement -/
 
@@ -748,49 +754,72 @@ def antiquarkV (v : ColorVec3 R) : ZornAlgebra R :=
 @[simp]
 theorem e₁_mul_quarkU (u : ColorVec3 R) : mul e₁ (quarkU u) = quarkU u := by
   ext <;> dsimp [mul, e₁, quarkU, ColorVec3.zero, ColorVec3.dot,
-    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> ring
+    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> simp
 
 /-- Right Peirce chirality of `U(u)`: `U(u) · e₂ = U(u)`. -/
 @[simp]
 theorem quarkU_mul_e₂ (u : ColorVec3 R) : mul (quarkU u) e₂ = quarkU u := by
   ext <;> dsimp [mul, e₂, quarkU, ColorVec3.zero, ColorVec3.dot,
-    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> ring
+    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> simp
 
 /-- Left chiral annihilation of `U(u)`: `e₂ · U(u) = 0`. -/
 @[simp]
 theorem e₂_mul_quarkU (u : ColorVec3 R) : mul e₂ (quarkU u) = zero := by
   ext <;> dsimp [mul, e₂, quarkU, zero, ColorVec3.zero, ColorVec3.dot,
-    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> ring
+    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> simp
 
 /-- Right chiral annihilation of `U(u)`: `U(u) · e₁ = 0`. -/
 @[simp]
 theorem quarkU_mul_e₁ (u : ColorVec3 R) : mul (quarkU u) e₁ = zero := by
   ext <;> dsimp [mul, e₁, quarkU, zero, ColorVec3.zero, ColorVec3.dot,
-    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> ring
+    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> simp
 
 /-- Left Peirce chirality of `V(v)`: `e₂ · V(v) = V(v)`. -/
 @[simp]
 theorem e₂_mul_antiquarkV (v : ColorVec3 R) : mul e₂ (antiquarkV v) = antiquarkV v := by
   ext <;> dsimp [mul, e₂, antiquarkV, ColorVec3.zero, ColorVec3.dot,
-    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> ring
+    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> simp
 
 /-- Right Peirce chirality of `V(v)`: `V(v) · e₁ = V(v)`. -/
 @[simp]
 theorem antiquarkV_mul_e₁ (v : ColorVec3 R) : mul (antiquarkV v) e₁ = antiquarkV v := by
   ext <;> dsimp [mul, e₁, antiquarkV, ColorVec3.zero, ColorVec3.dot,
-    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> ring
+    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> simp
 
 /-- Left chiral annihilation of `V(v)`: `e₁ · V(v) = 0`. -/
 @[simp]
 theorem e₁_mul_antiquarkV (v : ColorVec3 R) : mul e₁ (antiquarkV v) = zero := by
   ext <;> dsimp [mul, e₁, antiquarkV, zero, ColorVec3.zero, ColorVec3.dot,
-    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> ring
+    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> simp
 
 /-- Right chiral annihilation of `V(v)`: `V(v) · e₂ = 0`. -/
 @[simp]
 theorem antiquarkV_mul_e₂ (v : ColorVec3 R) : mul (antiquarkV v) e₂ = zero := by
   ext <;> dsimp [mul, e₂, antiquarkV, zero, ColorVec3.zero, ColorVec3.dot,
-    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> ring
+    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> simp
+
+/-- **Theorem 2 (Supercolor Diquark Fusion `3 ⊗ 3 → 3̄`)**:
+    Multiplying two fundamental quark generators `U(u₁)` and `U(u₂)` in the Zorn algebra
+    automatically projects onto the antifundamental antiquark sector `V(u₁ × u₂)` via the
+    antisymmetric `SU(3)_c` cross product:
+    `U(u₁) · U(u₂) = V(u₁ × u₂)`. -/
+theorem supercolor_diquark_fusion (u₁ u₂ : ColorVec3 R) :
+    mul (quarkU u₁) (quarkU u₂) = antiquarkV (ColorVec3.cross u₁ u₂) := by
+  ext <;> dsimp [mul, quarkU, antiquarkV, ColorVec3.zero, ColorVec3.dot,
+    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> simp
+
+/-- **Dual Antidiquark Fusion (`3̄ ⊗ 3̄ → 3`)**:
+    Multiplying two antifundamental antiquark generators `V(v₁)` and `V(v₂)` projects onto
+    the negative fundamental quark sector `-U(v₁ × v₂)`:
+    `V(v₁) · V(v₂) = -U(v₁ × v₂)`. -/
+theorem supercolor_antidiquark_fusion (v₁ v₂ : ColorVec3 R) :
+    mul (antiquarkV v₁) (antiquarkV v₂) = neg (quarkU (ColorVec3.cross v₁ v₂)) := by
+  ext <;> dsimp [mul, quarkU, antiquarkV, neg, ColorVec3.zero, ColorVec3.dot,
+    ColorVec3.add, ColorVec3.sub, ColorVec3.neg, ColorVec3.smul, ColorVec3.cross] <;> simp
+
+section CommRing
+
+variable {R : Type*} [CommRing R]
 
 /-- **Theorem 1 (Canonical CAR Quantization in the Zorn Split-Octonion Algebra)**:
     The anticommutator of a quark generator `U(u)` in Peirce `(1,2)` and an antiquark
@@ -817,25 +846,6 @@ theorem antiquarkV_sq_zero (v : ColorVec3 R) : mul (antiquarkV v) (antiquarkV v)
   ext <;> dsimp [mul, antiquarkV, zero, ColorVec3.zero, ColorVec3.dot,
     ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> ring
 
-/-- **Theorem 2 (Supercolor Diquark Fusion `3 ⊗ 3 → 3̄`)**:
-    Multiplying two fundamental quark generators `U(u₁)` and `U(u₂)` in the Zorn algebra
-    automatically projects onto the antifundamental antiquark sector `V(u₁ × u₂)` via the
-    antisymmetric `SU(3)_c` cross product:
-    `U(u₁) · U(u₂) = V(u₁ × u₂)`. -/
-theorem supercolor_diquark_fusion (u₁ u₂ : ColorVec3 R) :
-    mul (quarkU u₁) (quarkU u₂) = antiquarkV (ColorVec3.cross u₁ u₂) := by
-  ext <;> dsimp [mul, quarkU, antiquarkV, ColorVec3.zero, ColorVec3.dot,
-    ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross] <;> ring
-
-/-- **Dual Antidiquark Fusion (`3̄ ⊗ 3̄ → 3`)**:
-    Multiplying two antifundamental antiquark generators `V(v₁)` and `V(v₂)` projects onto
-    the negative fundamental quark sector `-U(v₁ × v₂)`:
-    `V(v₁) · V(v₂) = -U(v₁ × v₂)`. -/
-theorem supercolor_antidiquark_fusion (v₁ v₂ : ColorVec3 R) :
-    mul (antiquarkV v₁) (antiquarkV v₂) = neg (quarkU (ColorVec3.cross v₁ v₂)) := by
-  ext <;> dsimp [mul, quarkU, antiquarkV, neg, ColorVec3.zero, ColorVec3.dot,
-    ColorVec3.add, ColorVec3.sub, ColorVec3.neg, ColorVec3.smul, ColorVec3.cross] <;> ring
-
 /-- **Theorem 3 (Color-Singlet Baryon Vertex Closure `3 ⊗ 3 ⊗ 3 → 1`)**:
     Combining a third quark `U(u₃)` with the diquark state `U(u₁) · U(u₂)` via the CAR
     anticommutator closes into the Bosonic color-singlet identity `I` multiplied by the
@@ -857,6 +867,8 @@ theorem rgb_baryon_singlet_unit :
   rw [supercolor_baryon_singlet_closure]
   ext <;> dsimp [smul, one, ColorVec3.baryonDet, ColorVec3.dot, ColorVec3.cross,
     ColorVec3.e_r, ColorVec3.e_g, ColorVec3.e_b, ColorVec3.smul, ColorVec3.zero] <;> ring
+
+end CommRing
 
 /-- Non-commutativity of the Zorn algebra over `ℤ`:
     `[e₁, U(e_r)] = U(e_r) ≠ 0`. -/

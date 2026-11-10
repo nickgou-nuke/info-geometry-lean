@@ -192,7 +192,7 @@ theorem modularLogEigenvalue_properties (δ δ₁ δ₂ : ℝ)
 
 section ModularConjugation
 
-variable {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
+variable {R M : Type*} [Ring R] [AddCommGroup M] [Module R M]
 
 /-- **Equivalence of Tomita–Takesaki Modular Conjugation and `IsOddOperator`:**
 For any modular conjugation involution $J_\Delta \in \mathrm{End}_R(M)$ with $J_\Delta^2 = 1$,
@@ -287,7 +287,8 @@ Over a free finite-rank module `M`, if $J_\Delta^2 = 1$, $J_\Delta K J_\Delta = 
 `supertrace J_Δ (K * 𝒯 - 𝒯 * K) ≠ 0`, then $J_\Delta \ne 1$, $J_\Delta \ne -1$, and
 $\mathcal{T} \notin \mathrm{ModularCommutant}\,K$ ($\mathcal{T} K \ne K \mathcal{T}$). -/
 theorem modular_time_anomaly_forces_noncommuting_twist
-    [Invertible (2 : R)] [Module.Free R M] [Module.Finite R M]
+    {R M : Type*} [CommRing R] [Invertible (2 : R)] [AddCommGroup M] [Module R M]
+    [Module.Free R M] [Module.Finite R M]
     (J_Δ K 𝒯 : Module.End R M)
     (hJ : J_Δ * J_Δ = 1)
     (hconj : J_Δ * K * J_Δ = -K)

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Exceptional.AlbertAlgebraSplitJordan
 
 open InfoGeometry.Exceptional.AlbertAlgebra
@@ -8,8 +14,7 @@ Standard: QMS-SOP-IAA-001 / OpenGauss Anti-Cheating Protocol
 Owner Module: `InfoGeometry.Exceptional.AlbertAlgebraSplitJordan`
 -/
 
--- Section 1: Carrier and Dimension
-#print axioms repDimension
+-- Section 1: Actual real carrier dimension
 #print axioms albert_algebra_dimension
 
 -- Section 2: Traces
@@ -39,7 +44,3 @@ Owner Module: `InfoGeometry.Exceptional.AlbertAlgebraSplitJordan`
 #print axioms jordanCrossProduct
 #print axioms jordanCrossProduct_one
 #print axioms jordanCrossProduct_self
-
--- Section 7: Master Certificate
-#print axioms AlbertAlgebraCertificate
-#print axioms compile_albert_algebra_certificate

@@ -28,17 +28,18 @@ open ModularCoproductFlux
 section
 
 variable {R A : Type*}
-variable [CommRing R] [Ring A] [Algebra R A]
 
 /-- `Φ` is the nilpotent/modular flux generator (`Φ := N`). -/
 abbrev Phi (N : A) : A := N
 
 /-- `Δ := 1 + Φ` on the finite algebraic lane. -/
-def modularDelta (N : A) : A := 1 + Phi N
+def modularDelta [Semiring A] (N : A) : A := 1 + Phi N
 
 /-- Group-like coproduct on the restricted modular generator lane: `hatDelta(Δ) = Δ ⊗ Δ`. -/
-def hatDeltaDelta (N : A) : A ⊗[R] A :=
+def hatDeltaDelta [CommSemiring R] [Semiring A] [Algebra R A] (N : A) : A ⊗[R] A :=
   modularDelta N ⊗ₜ[R] modularDelta N
+
+variable [CommRing R] [Ring A] [Algebra R A]
 
 /-- Centered coproduct flux: `hatDelta(Φ) := hatDelta(Δ) - 1 ⊗ 1`. -/
 def hatDeltaPhi (N : A) : A ⊗[R] A :=

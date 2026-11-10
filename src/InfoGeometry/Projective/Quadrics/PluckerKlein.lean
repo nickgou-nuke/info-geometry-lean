@@ -21,7 +21,8 @@ No axiom.
 
 namespace InfoGeometry.Projective.Quadrics.PluckerKlein
 
-variable {R : Type*} [CommRing R]
+section Ring
+variable {R : Type*} [Ring R]
 
 /-- Coordinate model for `R⁴`. -/
 abbrev Vec4 (R : Type*) :=
@@ -37,14 +38,14 @@ theorem pluckerCoord_self
     (x y : Vec4 R) (i : Fin 4) :
     pluckerCoord x y i i = 0 := by
   unfold pluckerCoord
-  ring
+  exact sub_self _
 
 /-- Plücker coordinates are antisymmetric. -/
 theorem pluckerCoord_swap
     (x y : Vec4 R) (i j : Fin 4) :
     pluckerCoord x y j i = - pluckerCoord x y i j := by
   unfold pluckerCoord
-  ring
+  exact (neg_sub _ _).symm
 
 /-- Scaling the first vector scales all Plücker coordinates. -/
 theorem pluckerCoord_smul_left
@@ -52,7 +53,19 @@ theorem pluckerCoord_smul_left
     pluckerCoord (fun k => a * x k) y i j =
       a * pluckerCoord x y i j := by
   unfold pluckerCoord
-  ring
+  noncomm_ring
+
+/--
+Named predicate for the Klein quadric equation in six coordinates.
+-/
+def KleinRel
+    (p01 p02 p03 p12 p13 p23 : R) : Prop :=
+  p01 * p23 - p02 * p13 + p03 * p12 = 0
+
+end Ring
+
+section CommRing
+variable {R : Type*} [CommRing R]
 
 /-- Scaling the second vector scales all Plücker coordinates. -/
 theorem pluckerCoord_smul_right
@@ -85,13 +98,6 @@ theorem plucker_klein_relation
         = 0 := by
   unfold pluckerCoord
   ring
-
-/--
-Named predicate for the Klein quadric equation in six coordinates.
--/
-def KleinRel
-    (p01 p02 p03 p12 p13 p23 : R) : Prop :=
-  p01 * p23 - p02 * p13 + p03 * p12 = 0
 
 /-- The Klein relation is homogeneous under uniform scaling of all six coordinates. -/
 theorem KleinRel_smul
@@ -134,6 +140,8 @@ theorem plucker_coordinates_smul_both_satisfy_KleinRel
       ((a * b) * pluckerCoord x y 1 3)
       ((a * b) * pluckerCoord x y 2 3) := by
   exact KleinRel_smul (a * b) (plucker_coordinates_satisfy_KleinRel x y)
+
+end CommRing
 
 /-!
 #### BUCKET 1: CLOSED FINITE THEOREMS

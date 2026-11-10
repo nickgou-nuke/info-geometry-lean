@@ -32,7 +32,6 @@ universe uK uA uS uι
 section
 
 variable {K : Type uK} {A : Type uA} {S : Type uS} {ι : Type uι}
-variable [Field K] [Ring A] [Algebra K A]
 variable [Monoid S] [Fintype ι]
 
 /--
@@ -40,6 +39,7 @@ Projecting a finite empirical state by observable pullback commutes with the
 finite empirical average.
 -/
 theorem semigroupProjection_projectState_finiteEmpiricalState
+    [CommSemiring K] [Semiring A] [Algebra K A]
     {E : OperatorErlangenSystem K A S}
     (P : E.SemigroupProjection)
     (weight : K)
@@ -57,6 +57,7 @@ Bundled finite families are closed under observable pullback along a semigroup
 projection.
 -/
 def projectedFiniteStateFamily
+    [CommSemiring K] [Semiring A] [Algebra K A]
     {E : OperatorErlangenSystem K A S}
     (P : E.SemigroupProjection)
     (F : FiniteStateCompatibleFamily (R := K) (A := A) (ι := ι)) :
@@ -67,6 +68,7 @@ def projectedFiniteStateFamily
 
 @[simp]
 theorem projectedFiniteStateFamily_averageState
+    [CommSemiring K] [Semiring A] [Algebra K A]
     {E : OperatorErlangenSystem K A S}
     (P : E.SemigroupProjection)
     (F : FiniteStateCompatibleFamily (R := K) (A := A) (ι := ι)) :
@@ -77,6 +79,8 @@ theorem projectedFiniteStateFamily_averageState
     (semigroupProjection_projectState_finiteEmpiricalState
       (K := K) (A := A) (S := S) (ι := ι)
       P F.weight F.sample F.hweight).symm
+
+variable [Field K] [Ring A] [Algebra K A]
 
 /--
 Any finite empirical state reads the projected exact nilpotent `n`-step update

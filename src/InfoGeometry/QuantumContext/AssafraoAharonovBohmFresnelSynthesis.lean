@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.QuantumContext.AharonovBohmFresnelDivergenceResolution
 
 /-!
@@ -19,7 +20,7 @@ a physical flux path integral, or an asymptotic divergence result.
 
 namespace InfoGeometry.QuantumContext.SorkinFluxQubit.FresnelWave
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Reversing the supplied sine coordinate changes the canonical Fresnel
 transition expression by exactly `-4 s · yinH`. The formula is valid for
@@ -29,6 +30,6 @@ theorem ab_probability_flux_reversal_difference
     abProb ψ₁ ψ₂ c (-s) - abProb ψ₁ ψ₂ c s =
       -4 * s * yinH ψ₁ ψ₂ := by
   dsimp [abProb]
-  ring
+  noncomm_ring
 
 end InfoGeometry.QuantumContext.SorkinFluxQubit.FresnelWave

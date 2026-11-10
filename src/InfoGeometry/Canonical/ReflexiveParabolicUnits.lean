@@ -16,12 +16,13 @@ by Mathlib's `Multiplicative`; no topology or faithfulness is assumed.
 -/
 namespace InfoGeometry.Canonical.ReflexiveNilpotentFlows
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- The additive scalar group acts by parabolic units. -/
 def parabolicUnitsHom {d : A} (hd : d * d = 0) : Multiplicative R →* Aˣ where
   toFun s := Streaming.UnipotentMemoryShift.unipotentUnit (s.toAdd • d)
-    (by simp only [smul_mul_smul, hd, smul_zero])
+    (by simp only [smul_mul_assoc, mul_smul_comm, hd, smul_zero])
   map_one' := by
     apply Units.ext
     change 1 + (0 : R) • d = 1

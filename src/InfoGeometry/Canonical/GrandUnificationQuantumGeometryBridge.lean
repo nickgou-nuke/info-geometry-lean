@@ -44,11 +44,11 @@ structure SpacetimeVector4D (R : Type*) where
   z : R
 
 /-- Minkowski quadratic form η(v, v) = t² - x² - y² - z² -/
-def minkowskiMetric (v : SpacetimeVector4D R) : R :=
+def minkowskiMetric {R : Type*} [Ring R] (v : SpacetimeVector4D R) : R :=
   v.t * v.t - v.x * v.x - v.y * v.y - v.z * v.z
 
 /-- 2x2 Pauli Soldering Matrix θ(v) with parameter I (I² = -1) -/
-def solderingMatrix (I : R) (v : SpacetimeVector4D R) : Matrix (Fin 2) (Fin 2) R :=
+def solderingMatrix {R : Type*} [Ring R] (I : R) (v : SpacetimeVector4D R) : Matrix (Fin 2) (Fin 2) R :=
   !![v.t + v.z, v.x - I * v.y;
      v.x + I * v.y, v.t - v.z]
 
@@ -77,7 +77,7 @@ structure WeylSpinor2D (R : Type*) where
   v : R
 
 /-- Bilinear Spinor Squaring Map -/
-def spinorSquaring (ψ : WeylSpinor2D R) : SpacetimeVector4D R :=
+def spinorSquaring {R : Type*} [Ring R] (ψ : WeylSpinor2D R) : SpacetimeVector4D R :=
   { t := ψ.u * ψ.u + ψ.v * ψ.v,
     x := 2 * ψ.u * ψ.v,
     y := 0,

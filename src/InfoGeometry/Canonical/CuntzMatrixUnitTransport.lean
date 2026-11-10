@@ -16,8 +16,8 @@ namespace InfoGeometry.Canonical.FibonacciToeplitzCuntzRepresentationBridge
 
 open Matrix
 
-theorem matrixToCuntz_stdBasisMatrix {K A : Type*} [CommRing K] [Ring A]
-    [Algebra K A] [StarRing A]
+theorem matrixToCuntz_stdBasisMatrix {K A : Type*} [Ring K] [Ring A]
+    [Module K A] [StarRing A]
     (ck : CuntzTwoIsometry K A) (i j : Fin 2) :
     matrixToCuntz ck (Matrix.single i j 1) =
       (if i = 0 then ck.S1 else ck.S2) *

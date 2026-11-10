@@ -5,6 +5,7 @@ import Mathlib.Data.Finset.Order
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.FinCases
 import InfoGeometry.Physics.FiniteRelativeModularOperator
@@ -243,7 +244,7 @@ theorem petz_gram_operator_identity {R : Type*} [Ring R] (Pi Pi_perp P_pinv rho 
 
 /-! ### Part V: Archetype 𝒜₄ — Past-Future 2x2 Block Splitting & Transfer Operators -/
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The $2 \times 2$ block intertwiner $V_i = \begin{pmatrix} K & 0 \\ L & 0 \end{pmatrix}$. -/
 def blockIntertwiner (K L : R) : Matrix (Fin 2) (Fin 2) R :=
@@ -259,7 +260,7 @@ theorem blockIntertwiner_gram (K L : R) :
       !![K ^ 2 + L ^ 2, 0; 0, 0] := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [blockIntertwiner, Matrix.mul_apply, Fin.sum_univ_two]; ring
+    simp [blockIntertwiner, Matrix.mul_apply, Fin.sum_univ_two] <;> noncomm_ring
 
 /-- The Gram operator equals the retained-support projection exactly when $K^2 + L^2 = 1$. -/
 theorem gram_isometry_iff_stiefel (K L : R) :
@@ -278,7 +279,7 @@ theorem gram_isometry_iff_stiefel (K L : R) :
 theorem stiefel_tradeoff (K L : R) (h_stiefel : K ^ 2 + L ^ 2 = 1) :
     L ^ 2 = 1 - K ^ 2 := by
   calc
-    L ^ 2 = (K ^ 2 + L ^ 2) - K ^ 2 := by ring
+    L ^ 2 = (K ^ 2 + L ^ 2) - K ^ 2 := by noncomm_ring
     _ = 1 - K ^ 2 := by rw [h_stiefel]
 
 /-- Past normalization forces the future squared weight to vanish. -/
@@ -295,7 +296,7 @@ def petzBlockReconstruct (K L s : R) : Matrix (Fin 2) (Fin 2) R :=
 
 /-- **Theorem**: Past Restoration ($PP$ block, index $(0, 0)$):
     $[\mathcal{R}_i(\sigma_i)]_{0,0} = s K^2$. -/
-theorem petz_block_past (K L s : R) :
+theorem petz_block_past {R : Type*} [CommRing R] (K L s : R) :
     petzBlockReconstruct K L s 0 0 = s * K ^ 2 := by
   dsimp [petzBlockReconstruct, blockIntertwiner, blockCausalState]
   simp [Matrix.mul_apply, Fin.sum_univ_two]
@@ -303,7 +304,7 @@ theorem petz_block_past (K L s : R) :
 
 /-- **Theorem**: Past-Future Coherence Regeneration ($PQ$ block, index $(0, 1)$):
     $[\mathcal{R}_i(\sigma_i)]_{0,1} = s K L$. -/
-theorem petz_block_coherence_PQ (K L s : R) :
+theorem petz_block_coherence_PQ {R : Type*} [CommRing R] (K L s : R) :
     petzBlockReconstruct K L s 0 1 = s * K * L := by
   dsimp [petzBlockReconstruct, blockIntertwiner, blockCausalState]
   simp [Matrix.mul_apply, Fin.sum_univ_two]
@@ -311,7 +312,7 @@ theorem petz_block_coherence_PQ (K L s : R) :
 
 /-- **Theorem**: Future-Past Coherence Regeneration ($QP$ block, index $(1, 0)$):
     $[\mathcal{R}_i(\sigma_i)]_{1,0} = s K L$. -/
-theorem petz_block_coherence_QP (K L s : R) :
+theorem petz_block_coherence_QP {R : Type*} [CommRing R] (K L s : R) :
     petzBlockReconstruct K L s 1 0 = s * K * L := by
   dsimp [petzBlockReconstruct, blockIntertwiner, blockCausalState]
   simp [Matrix.mul_apply, Fin.sum_univ_two]
@@ -319,14 +320,14 @@ theorem petz_block_coherence_QP (K L s : R) :
 
 /-- **Theorem**: Retrocausal Future Synthesis ($QQ$ block, index $(1, 1)$):
     $[\mathcal{R}_i(\sigma_i)]_{1,1} = s L^2$. -/
-theorem petz_block_future (K L s : R) :
+theorem petz_block_future {R : Type*} [CommRing R] (K L s : R) :
     petzBlockReconstruct K L s 1 1 = s * L ^ 2 := by
   dsimp [petzBlockReconstruct, blockIntertwiner, blockCausalState]
   simp [Matrix.mul_apply, Fin.sum_univ_two]
   ring
 
 /-- Full Matrix Representation of the Petz Reconstruction. -/
-theorem petz_block_reconstruct_matrix (K L s : R) :
+theorem petz_block_reconstruct_matrix {R : Type*} [CommRing R] (K L s : R) :
     petzBlockReconstruct K L s = !![s * K ^ 2, s * K * L; s * K * L, s * L ^ 2] := by
   ext i j
   fin_cases i <;> fin_cases j
@@ -336,14 +337,14 @@ theorem petz_block_reconstruct_matrix (K L s : R) :
   · exact petz_block_future K L s
 
 /-- The reconstructed trace equals $s(K^2 + L^2)$. -/
-theorem petz_block_trace (K L s : R) :
+theorem petz_block_trace {R : Type*} [CommRing R] (K L s : R) :
     Matrix.trace (petzBlockReconstruct K L s) = s * (K ^ 2 + L ^ 2) := by
   rw [petz_block_reconstruct_matrix]
   simp [Matrix.trace]
   ring
 
 /-- Trace preservation on input support under the Stiefel condition. -/
-theorem petz_block_trace_preservation_on_support (K L s : R)
+theorem petz_block_trace_preservation_on_support {R : Type*} [CommRing R] (K L s : R)
     (h_stiefel : K ^ 2 + L ^ 2 = 1) :
     Matrix.trace (petzBlockReconstruct K L s) = s := by
   rw [petz_block_trace, h_stiefel, mul_one]
@@ -351,7 +352,7 @@ theorem petz_block_trace_preservation_on_support (K L s : R)
 /-- **Coherence Determinant / Cauchy-Schwarz Equality**:
     The product of off-diagonal coherence blocks equals the product of past and future diagonal blocks:
     $[\mathcal{R}]_{0,1} \cdot [\mathcal{R}]_{1,0} = [\mathcal{R}]_{0,0} \cdot [\mathcal{R}]_{1,1}$. -/
-theorem petz_block_coherence_cauchy_schwarz (K L s : R) :
+theorem petz_block_coherence_cauchy_schwarz {R : Type*} [CommRing R] (K L s : R) :
     petzBlockReconstruct K L s 0 1 * petzBlockReconstruct K L s 1 0 =
     petzBlockReconstruct K L s 0 0 * petzBlockReconstruct K L s 1 1 := by
   rw [petz_block_coherence_PQ, petz_block_coherence_QP, petz_block_past, petz_block_future]
@@ -361,12 +362,13 @@ theorem petz_block_coherence_cauchy_schwarz (K L s : R) :
 theorem petz_decoupled_future_zero (K s : R) :
     petzBlockReconstruct K 0 s 1 1 = 0 ∧
     petzBlockReconstruct K 0 s 0 1 = 0 := by
-  constructor
-  · rw [petz_block_future]; ring
-  · rw [petz_block_coherence_PQ]; ring
+  constructor <;> {
+    dsimp [petzBlockReconstruct, blockIntertwiner, blockCausalState]
+    simp [Matrix.mul_apply, Fin.sum_univ_two]
+  }
 
 /-- Exact Past Preservation: When $K^2 = 1$, past is preserved identically. -/
-theorem petz_past_exact_preservation (K L s : R) (hK : K ^ 2 = 1) :
+theorem petz_past_exact_preservation {R : Type*} [CommRing R] (K L s : R) (hK : K ^ 2 = 1) :
     petzBlockReconstruct K L s 0 0 = s := by
   rw [petz_block_past, hK, mul_one]
 
@@ -376,7 +378,7 @@ theorem petz_past_exact_preservation (K L s : R) (hK : K ^ 2 = 1) :
     When the projector $P$ commutes with $\rho$ and $\sigma^{-1}$,
     compression to the causal corner commutes with the relative modular action. -/
 theorem relativeModularOperator_intertwines_causal_compression
-    {A : Type*} [Ring A] [Algebra R A]
+    {R : Type*} [CommRing R] {A : Type*} [Ring A] [Algebra R A]
     (rho sigmaInv P : A)
     (hρ : P * rho = rho * P)
     (hσ : P * sigmaInv = sigmaInv * P) :
@@ -389,7 +391,7 @@ theorem relativeModularOperator_intertwines_causal_compression
 /-- Pointwise modular preservation on causal observables:
     $\Delta_{\rho, \sigma}(P X P) = P \Delta_{\rho, \sigma}(X) P$. -/
 theorem relativeModularOperator_preserves_causal_observables
-    {A : Type*} [Ring A] [Algebra R A]
+    {R : Type*} [CommRing R] {A : Type*} [Ring A] [Algebra R A]
     (rho sigmaInv P X : A)
     (hρ : P * rho = rho * P)
     (hσ : P * sigmaInv = sigmaInv * P) :
@@ -449,12 +451,12 @@ structure CausalPetzDeconfabulationCertificate : Prop where
   petz_gram_isometry : ∀ {R : Type*} [Ring R] (Pi Pi_perp P_pinv rho : R)
     (h_comp : Pi + Pi_perp = 1) (h_r : P_pinv * Pi_perp = 0) (h_l : Pi_perp * P_pinv = 0),
     P_pinv * rho * P_pinv = P_pinv * (causalChannel Pi rho) * P_pinv
-  gram_stiefel_constraint : ∀ {R : Type*} [CommRing R] (K L : R),
+  gram_stiefel_constraint : ∀ {R : Type*} [Ring R] (K L : R),
     ((blockIntertwiner K L)ᵀ * blockIntertwiner K L = !![1, 0; 0, 0] ↔
       K ^ 2 + L ^ 2 = 1)
-  stiefel_tradeoff : ∀ {R : Type*} [CommRing R] (K L : R),
+  stiefel_tradeoff : ∀ {R : Type*} [Ring R] (K L : R),
     K ^ 2 + L ^ 2 = 1 → L ^ 2 = 1 - K ^ 2
-  past_normalization_forces_future_zero : ∀ {R : Type*} [CommRing R] (K L : R),
+  past_normalization_forces_future_zero : ∀ {R : Type*} [Ring R] (K L : R),
     K ^ 2 + L ^ 2 = 1 → K ^ 2 = 1 → L ^ 2 = 0
   past_restoration : ∀ {R : Type*} [CommRing R] (K L s : R),
     petzBlockReconstruct K L s 0 0 = s * K ^ 2

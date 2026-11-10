@@ -20,6 +20,42 @@ namespace InfoGeometry.OperatorAlgebra.PeirceSuperoperators
 open InfoGeometry.Core.JordanMultiplicationClosure
 attribute [local instance] LieRing.ofAssociativeRing
 
+section RingAlgebra
+
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
+
+local notation "Dᵣ" => ringAd (R := R)
+local notation "J" => jordanLeft (R := R)
+
+theorem ring_lie_jordan_difference_eq_iff (u v : A) :
+    Dᵣ u * J v - Dᵣ v * J u = J ⁅u, v⁆ ↔
+      ∀ x : A, (2 : ℕ) • (u * x * v - v * x * u) = 0 := by
+  rw [ring_lie_jordan_difference, add_eq_left]
+  constructor
+  · intro h x
+    have hx := congrArg (fun T : Module.End R A => T x) h
+    simpa only [LinearMap.smul_apply, LinearMap.sub_apply, Module.End.mul_apply,
+      LinearMap.mulLeft_apply, LinearMap.mulRight_apply, LinearMap.zero_apply,
+      mul_assoc] using hx
+  · intro h
+    ext x
+    simpa only [LinearMap.smul_apply, LinearMap.sub_apply, Module.End.mul_apply,
+      LinearMap.mulLeft_apply, LinearMap.mulRight_apply, LinearMap.zero_apply,
+      mul_assoc] using h x
+
+theorem ring_lie_jordan_difference_eq_implies_bracket_torsion (u v : A)
+    (h : Dᵣ u * J v - Dᵣ v * J u = J ⁅u, v⁆) :
+    (2 : ℕ) • ⁅u, v⁆ = 0 := by
+  simpa only [mul_one, Ring.lie_def] using (ring_lie_jordan_difference_eq_iff u v).mp h 1
+
+theorem ring_lie_jordan_difference_ne_of_bracket_not_torsion (u v : A)
+    (h : (2 : ℕ) • ⁅u, v⁆ ≠ 0) :
+    Dᵣ u * J v - Dᵣ v * J u ≠ J ⁅u, v⁆ :=
+  fun he => h (ring_lie_jordan_difference_eq_implies_bracket_torsion u v he)
+
+end RingAlgebra
+
 variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
 
 local notation "D" => LieAlgebra.ad R A

@@ -21,7 +21,7 @@ Raw CAR bilinears satisfy the matrix-unit commutator:
 `[Eᵢⱼ, Eₖₗ] = δⱼₖ Eᵢₗ - δᵢₗ Eₖⱼ`.
 -/
 theorem car_bilinear_commutator
-    {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
+    {𝕜 V : Type*} [Ring 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     (C : RawCARModeCompletion (V →ₗ[𝕜] V))
     (i j k l : Int) :
@@ -36,7 +36,7 @@ Normal-ordered CAR bilinears satisfy the Wick/Schwinger commutator:
 `[Nᵢⱼ, Nₖₗ] = δⱼₖ Nᵢₗ - δᵢₗ Nₖⱼ + central`.
 -/
 theorem normalOrdered_bilinear_commutator
-    {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
+    {𝕜 V : Type*} [Ring 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     (C : RawCARModeCompletion (V →ₗ[𝕜] V))
     (i j k l : Int) :
@@ -80,7 +80,7 @@ by
 Completed-current off-diagonal Heisenberg coefficient vanishes.
 -/
 theorem completedCurrent_commutator_eq_zero_of_add_ne_zero
-    {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
+    {𝕜 V : Type*} [Ring 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     (C : RawCARModeCompletion (V →ₗ[𝕜] V))
     {m n : Int} (hmn : m + n ≠ 0) :
@@ -92,7 +92,7 @@ theorem completedCurrent_commutator_eq_zero_of_add_ne_zero
 Completed-current diagonal Heisenberg coefficient.
 -/
 theorem completedCurrent_commutator_eq_central_of_add_eq_zero
-    {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
+    {𝕜 V : Type*} [Ring 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     (C : RawCARModeCompletion (V →ₗ[𝕜] V))
     {m n : Int} (hmn : m + n = 0) :

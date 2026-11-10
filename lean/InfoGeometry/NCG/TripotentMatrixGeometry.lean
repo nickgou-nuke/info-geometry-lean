@@ -57,6 +57,18 @@ theorem completion_sq : (1 - T * T + T) * (1 - T * T + T) = 1 := by
 theorem completion_isUnit : IsUnit (1 - T * T + T) :=
   ⟨⟨1 - T * T + T, 1 - T * T + T, completion_sq hT, completion_sq hT⟩, rfl⟩
 
+/-- The algebraic complement fixes exactly the kernel vectors. -/
+theorem complement_mulVec_eq_self_iff (v : n → R) :
+    (1 - T * T) *ᵥ v = v ↔ T *ᵥ v = 0 := by
+  constructor
+  · intro h
+    calc
+      T *ᵥ v = T *ᵥ ((1 - T * T) *ᵥ v) := by rw [h]
+      _ = (T * (1 - T * T)) *ᵥ v := mulVec_mulVec _ _ _
+      _ = 0 := by rw [mul_complement hT, zero_mulVec]
+  · intro h
+    rw [sub_mulVec, one_mulVec, ← mulVec_mulVec, h, mulVec_zero, sub_zero]
+
 section Star
 variable [StarRing R]
 
@@ -88,18 +100,6 @@ section Kernel
 variable {K : Type*} [CommRing K] {T : Matrix n n K} (hT : T * T * T = T)
 
 include hT
-
-/-- The algebraic complement fixes exactly the kernel vectors. -/
-theorem complement_mulVec_eq_self_iff (v : n → K) :
-    (1 - T * T) *ᵥ v = v ↔ T *ᵥ v = 0 := by
-  constructor
-  · intro h
-    calc
-      T *ᵥ v = T *ᵥ ((1 - T * T) *ᵥ v) := by rw [h]
-      _ = (T * (1 - T * T)) *ᵥ v := mulVec_mulVec _ _ _
-      _ = 0 := by rw [mul_complement hT, zero_mulVec]
-  · intro h
-    rw [sub_mulVec, one_mulVec, ← mulVec_mulVec, h, mulVec_zero, sub_zero]
 
 /-- A native submodule equality, without a basis change or division. -/
 theorem range_complement_eq_ker :

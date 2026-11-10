@@ -32,7 +32,7 @@ Shared projective-null datum.
 -/
 structure ProjectiveNullBoundaryDatum
     (K : Type u) (R : Type v) (T : Type w)
-    [Field K] [Zero R] where
+    [Ring K] [Zero R] where
   q : T → R
   zero : T
   scale : Kˣ → T → T
@@ -44,7 +44,7 @@ structure ProjectiveNullBoundaryDatum
 namespace ProjectiveNullBoundaryDatum
 
 variable {K : Type u} {R : Type v} {T : Type w}
-variable [Field K] [Zero R]
+variable [Ring K] [Zero R]
 
 /-- The null predicate attached to a projective-null datum. -/
 def IsNull (D : ProjectiveNullBoundaryDatum K R T) (Z : T) : Prop :=

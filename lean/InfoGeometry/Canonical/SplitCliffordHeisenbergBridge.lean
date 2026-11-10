@@ -133,7 +133,7 @@ theorem toCurrentSugawaraMorphism_heisenberg
     (W : SplitCliffordHeisenbergWitness 𝕜 V) :
     W.toCurrentSugawaraMorphism.heisenberg = W.toCurrentHeisenbergRep := by
   unfold toCurrentSugawaraMorphism
-  exact CurrentSugawaraMorphism.ofHeisenberg_heisenberg _
+  exact (CurrentSugawaraMorphism.ofHeisenberg_readout _).1
 
 /-- The Virasoro component of `W.toCurrentSugawaraMorphism` is the Sugawara representation. -/
 @[simp]
@@ -142,7 +142,7 @@ theorem toCurrentSugawaraMorphism_virasoro
     W.toCurrentSugawaraMorphism.virasoro =
       (W.toCurrentHeisenbergRep).currentSugawaraRepresentation := by
   unfold toCurrentSugawaraMorphism
-  exact CurrentSugawaraMorphism.ofHeisenberg_virasoro _
+  exact (CurrentSugawaraMorphism.ofHeisenberg_readout _).2.1
 
 /-- Joint readout of both components of `W.toCurrentSugawaraMorphism`. -/
 theorem toCurrentSugawaraMorphism_readout

@@ -44,7 +44,7 @@ PART 1: The Erlangen Program — Symmetry-Adapted Coordinates
 =============================================================================
 -/
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- A symmetry-adapted Peirce idempotent frame (e₊, e₋) with e₊ + e₋ = 1. -/
 structure PeirceFrame (A : Type*) [Ring A] where

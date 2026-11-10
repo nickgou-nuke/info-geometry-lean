@@ -130,7 +130,11 @@ theorem negative_car_reflexive {q c : A}
   · simpa only [neg_mul,mul_neg,neg_neg,mul_assoc] using hcq
 
 section Scalars
-variable {R : Type*} [CommRing R] [Algebra R A]
+variable {R : Type*}
+
+section NoncommScalars
+variable [Ring R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
+
 def unipotent (s : R) (d : A) : A := 1 + s • d
 def diagonal (s t : R) (d B : A) : A :=
   s • (d * B) + t • (B * d) + complement d B
@@ -140,8 +144,8 @@ def rotor (c s : R) (d B : A) : A :=
 
 theorem unipotent_add {d : A} (hd : d * d = 0) (s t : R) :
     unipotent s d * unipotent t d = unipotent (s + t) d := by
-  simp only [unipotent, add_mul, mul_add, one_mul, mul_one, smul_mul_smul,
-    hd, smul_zero, add_zero, add_smul]
+  simp only [unipotent, add_mul, mul_add, one_mul, mul_one, smul_mul_assoc,
+    mul_smul_comm, hd, smul_zero, add_zero, add_smul]
   abel
 
 theorem unipotent_inverse {d : A} (hd : d * d = 0) (s : R) :
@@ -176,13 +180,8 @@ theorem support_table :
 theorem diagonal_mul (a b c e : R) :
     diagonal a b d B * diagonal c e d B = diagonal (a*c) (b*e) d B := by
   obtain ⟨h₁,h₂,h₃,h₄,h₅,h₆,h₇,h₈,h₉⟩ := support_table hd hB hr hs
-  simp only [diagonal, add_mul, mul_add, smul_mul_assoc,
-    mul_smul_comm, h₁,h₂,h₃,h₄,h₅,h₆,h₇,h₈,h₉, smul_zero, add_zero, zero_add, smul_smul, mul_comm]
-
-theorem diagonal_inverse (a b : R) (hab : a*b=1) :
-    diagonal a b d B * diagonal b a d B = 1 := by
-  rw [diagonal_mul hd hB hr hs, hab, mul_comm b a, hab]
-  simp [diagonal, complement, support]
+  simp only [diagonal, add_mul, mul_add, smul_mul_assoc]
+  simp only [mul_smul_comm, h₁,h₂,h₃,h₄,h₅,h₆,h₇,h₈,h₉, smul_zero, add_zero, zero_add, smul_smul]
 
 theorem diagonal_scale_d (a b : R) :
     diagonal a b d B * d * diagonal b a d B = (a*a) • d := by
@@ -190,8 +189,8 @@ theorem diagonal_scale_d (a b : R) :
   have h₁ : (B*d)*d=0 := by rw [mul_assoc,hd,mul_zero]
   have h₂ : d*(d*B)=0 := by rw [← mul_assoc,hd,zero_mul]
   have h₃ : d*(B*d)=d := by rw [← mul_assoc,hr]
-  simp only [diagonal, add_mul, mul_add, smul_mul_assoc, mul_smul_comm,
-    hr,h₁,h₂,h₃,hz₁,hz₂,smul_zero,add_zero,zero_add,smul_smul]
+  simp only [diagonal, add_mul, mul_add, smul_mul_assoc]
+  simp only [mul_smul_comm, hr,h₁,h₂,h₃,hz₁,hz₂,zero_mul,smul_zero,add_zero,zero_add,smul_smul]
 
 theorem diagonal_scale_B (a b : R) :
     diagonal a b d B * B * diagonal b a d B = (b*b) • B := by
@@ -199,21 +198,15 @@ theorem diagonal_scale_B (a b : R) :
   have h₁ : (d*B)*B=0 := by rw [mul_assoc,hB,mul_zero]
   have h₂ : B*(B*d)=0 := by rw [← mul_assoc,hB,zero_mul]
   have h₃ : B*(d*B)=B := by rw [← mul_assoc,hs]
-  simp only [diagonal, add_mul, mul_add, smul_mul_assoc, mul_smul_comm,
-    hs,h₁,h₂,h₃,hz₁,hz₂,smul_zero,add_zero,zero_add,smul_smul]
-
-theorem diagonal_scale_unipotent (a b s : R) (hab : a*b=1) :
-    diagonal a b d B * unipotent s d * diagonal b a d B =
-      unipotent (a*a*s) d := by
-  simp only [unipotent, mul_add, mul_one, add_mul, mul_smul_comm, smul_mul_assoc]
-  rw [diagonal_inverse hd hB hr hs a b hab, diagonal_scale_d hd hB hr hs,
-    smul_smul, mul_comm s (a*a)]
+  simp only [diagonal, add_mul, mul_add, smul_mul_assoc]
+  simp only [mul_smul_comm, hs,h₁,h₂,h₃,hz₁,hz₂,zero_mul,smul_zero,add_zero,zero_add,smul_smul]
 
 theorem weyl_swap_unipotent (s : R) :
     weyl d B * unipotent s d * weylInv d B = unipotent (-s) B := by
   simp only [unipotent, mul_add, mul_one, add_mul, mul_smul_comm, smul_mul_assoc]
   rw [weyl_mul_inverse hd hB hr, weyl_swap_d hd hr hs]
   simp only [smul_neg, neg_smul]
+
 /-- Weyl conjugation exchanges the diagonal parameters. -/
 theorem weyl_diagonal (a b : R) :
     weyl d B * diagonal a b d B * weylInv d B = diagonal b a d B := by
@@ -227,8 +220,8 @@ theorem weyl_diagonal (a b : R) :
   rw [hp, hm, hc]
   abel
 
-/-- Algebraic circle multiplication, with no analytic or compactness claim. -/
-theorem rotor_mul (c s e t : R) :
+/-- Non-commutative algebraic circle multiplication over any ring `[Ring R]`. -/
+theorem rotor_mul_noncomm (c s e t : R) :
     rotor c s d B * rotor e t d B = rotor (c*e-s*t) (c*t+s*e) d B := by
   let S := support d B
   let H := complement d B
@@ -244,19 +237,47 @@ theorem rotor_mul (c s e t : R) :
   have hJH : J*H=0 := by dsimp [H,complement]; rw [mul_sub,mul_one,hJS,sub_self]
   have hJJ : J*J= -S := by dsimp [J,S,support]; noncomm_ring [hd,hB]
   change (H+c • S+s • J)*(H+e • S+t • J)=H+(c*e-s*t) • S+(c*t+s*e) • J
-  simp only [add_mul,mul_add,smul_mul_assoc,mul_smul_comm,hSS,hHH,hHS,hSH,
+  simp only [add_mul,mul_add,smul_mul_assoc]
+  simp only [mul_smul_comm,hSS,hHH,hHS,hSH,
     hSJ,hJS,hHJ,hJH,hJJ,smul_zero,zero_add,add_zero,smul_neg,smul_smul,
-    sub_smul,add_smul,smul_add]
-  rw [mul_comm e c, mul_comm t s, mul_comm t c, mul_comm e s]
+    sub_smul,add_smul]
   abel
 
-theorem rotor_inverse (c s : R) (hcircle : c*c+s*s=1) :
+theorem rotor_inverse_of_comm (c s : R) (hcircle : c*c+s*s=1) (hcs : c*s = s*c) :
     rotor c s d B * rotor c (-s) d B = 1 := by
-  rw [rotor_mul hd hB hr hs]
-  have hc : c*c-s*(-s)=1 := by simpa using hcircle
-  have hz : c*(-s)+s*c=0 := by ring
+  rw [rotor_mul_noncomm hd hB hr hs]
+  have hc : c*c-s*(-s)=1 := by simpa [mul_neg] using hcircle
+  have hz : c*(-s)+s*c=0 := by rw [mul_neg, hcs, neg_add_cancel]
   rw [hc,hz]
   simp [rotor,complement]
+
+end NoncommScalars
+
+variable [CommRing R] [Algebra R A]
+variable {d B : A} (hd : d * d = 0) (hB : B * B = 0)
+  (hr : d * B * d = d) (hs : B * d * B = B)
+include hd hB hr hs
+
+theorem diagonal_inverse (a b : R) (hab : a*b=1) :
+    diagonal a b d B * diagonal b a d B = 1 := by
+  rw [diagonal_mul hd hB hr hs, hab, mul_comm b a, hab]
+  simp [diagonal, complement, support]
+
+theorem diagonal_scale_unipotent (a b s : R) (hab : a*b=1) :
+    diagonal a b d B * unipotent s d * diagonal b a d B =
+      unipotent (a*a*s) d := by
+  simp only [unipotent, mul_add, mul_one, add_mul, mul_smul_comm, smul_mul_assoc]
+  rw [diagonal_inverse hd hB hr hs a b hab, diagonal_scale_d hd hB hr hs,
+    smul_smul, mul_comm s (a*a)]
+
+/-- Algebraic circle multiplication, with no analytic or compactness claim. -/
+theorem rotor_mul (c s e t : R) :
+    rotor c s d B * rotor e t d B = rotor (c*e-s*t) (c*t+s*e) d B :=
+  rotor_mul_noncomm hd hB hr hs c s e t
+
+theorem rotor_inverse (c s : R) (hcircle : c*c+s*s=1) :
+    rotor c s d B * rotor c (-s) d B = 1 :=
+  rotor_inverse_of_comm hd hB hr hs c s hcircle (mul_comm c s)
 
 end Scalars
 end InfoGeometry.Canonical.ReflexiveNilpotentFlows

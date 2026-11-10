@@ -24,7 +24,7 @@ connecting mesoscopic lipid bilayer dynamics to fundamental quantum action:
 
 namespace InfoGeometry.Canonical.DualSheetedKreinActionFiber
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-!
 ### Stratum 21.1: Transverse Fiber Action Quantum and Discrete Cell Volume
@@ -37,7 +37,7 @@ def discreteCellVolume (a0 h : R) : R :=
   a0 * h
 
 /-- Scaling of the discrete volume under uniform thickness dilation. -/
-theorem discreteCellVolume_scale (c a0 h : R) :
+theorem discreteCellVolume_scale {R : Type*} [CommRing R] (c a0 h : R) :
     discreteCellVolume a0 (c * h) = c * discreteCellVolume a0 h := by
   dsimp [discreteCellVolume]
   ring
@@ -58,13 +58,13 @@ def discreteFiberDiff (f_plus f_minus : R) : R :=
 theorem discreteFiberDiff_monopole (f : R) :
     discreteFiberDiff f f = 0 := by
   dsimp [discreteFiberDiff]
-  ring
+  exact sub_self f
 
 /-- Antisymmetric dipole mode has doubled fiber difference: f - (-f) = 2f. -/
 theorem discreteFiberDiff_dipole (f : R) :
     discreteFiberDiff f (-f) = (1 + 1) * f := by
   dsimp [discreteFiberDiff]
-  ring
+  noncomm_ring
 
 end DiscreteGradient
 
@@ -82,7 +82,7 @@ def mediatorAnticommutator (phi : R) : R :=
 theorem mediator_anticommutes_J (phi : R) :
     mediatorAnticommutator phi = 0 := by
   dsimp [mediatorAnticommutator]
-  ring
+  noncomm_ring
 
 /-- Projection of the off-diagonal mediator onto the positive sheet vanishes:
     P_+ Φ P_+ = 0. -/
@@ -93,7 +93,7 @@ def projPlusMediatorPlus (half phi : R) : R :=
 theorem projPlusMediatorPlus_zero (half phi : R) :
     projPlusMediatorPlus half phi = 0 := by
   dsimp [projPlusMediatorPlus]
-  ring
+  noncomm_ring
 
 /-- Projection of the off-diagonal mediator onto the negative sheet vanishes:
     P_- Φ P_- = 0. -/
@@ -104,7 +104,7 @@ def projMinusMediatorMinus (half phi : R) : R :=
 theorem projMinusMediatorMinus_zero (half phi : R) :
     projMinusMediatorMinus half phi = 0 := by
   dsimp [projMinusMediatorMinus]
-  ring
+  noncomm_ring
 
 end InterSheetMediator
 

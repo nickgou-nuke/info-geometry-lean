@@ -96,12 +96,6 @@ structure RealDoubledKreinGraphHodgePacket
     (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (α) [BEq α] [Hashable α] where
   finite : FiniteGraphHodgePacket α
-  J : RealDoubledKreinDAGCarrier E →L[ℝ] RealDoubledKreinDAGCarrier E
-  ε : RealDoubledKreinDAGCarrier E →L[ℝ] RealDoubledKreinDAGCarrier E
-  K : RealDoubledKreinDAGCarrier E →L[ℝ] RealDoubledKreinDAGCarrier E
-  J_eq : J = modular_j (E := E)
-  epsilon_eq : ε = spectral_epsilon (E := E)
-  K_eq : K = clockAxis (E := E)
 
 namespace RealDoubledKreinGraphHodgePacket
 
@@ -111,37 +105,56 @@ noncomputable def canonical
     {α} [BEq α] [Hashable α]
     (finite : FiniteGraphHodgePacket α) :
     RealDoubledKreinGraphHodgePacket E α :=
-  { finite := finite
-    J := modular_j (E := E)
-    ε := spectral_epsilon (E := E)
-    K := clockAxis (E := E)
-    J_eq := rfl
-    epsilon_eq := rfl
-    K_eq := rfl }
+  { finite := finite }
 
-@[simp]
-theorem canonical_J
+/-! The operators are derived from the actual doubled-space owner, rather than
+stored in the packet together with definitional equality proofs. -/
+
+noncomputable def J
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     {α} [BEq α] [Hashable α]
-    (finite : FiniteGraphHodgePacket α) :
-    (canonical (E := E) finite).J = modular_j (E := E) :=
-  rfl
+    (_P : RealDoubledKreinGraphHodgePacket E α) : RealDoubledKreinDAGEnd E :=
+  modular_j (E := E)
 
-@[simp]
-theorem canonical_epsilon
+noncomputable def ε
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     {α} [BEq α] [Hashable α]
-    (finite : FiniteGraphHodgePacket α) :
-    (canonical (E := E) finite).ε = spectral_epsilon (E := E) :=
-  rfl
+    (_P : RealDoubledKreinGraphHodgePacket E α) : RealDoubledKreinDAGEnd E :=
+  spectral_epsilon (E := E)
 
-@[simp]
-theorem canonical_clockAxis
+noncomputable def K
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     {α} [BEq α] [Hashable α]
-    (finite : FiniteGraphHodgePacket α) :
-    (canonical (E := E) finite).K = clockAxis (E := E) :=
-  rfl
+    (_P : RealDoubledKreinGraphHodgePacket E α) : RealDoubledKreinDAGEnd E :=
+  clockAxis (E := E)
+
+theorem J_involution
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {α} [BEq α] [Hashable α]
+    (P : RealDoubledKreinGraphHodgePacket E α) :
+    (P.J).comp P.J = ContinuousLinearMap.id ℝ (RealDoubledKreinDAGCarrier E) :=
+  modular_j_involution E
+
+theorem epsilon_involution
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {α} [BEq α] [Hashable α]
+    (P : RealDoubledKreinGraphHodgePacket E α) :
+    (P.ε).comp P.ε = ContinuousLinearMap.id ℝ (RealDoubledKreinDAGCarrier E) :=
+  spectral_epsilon_involution E
+
+theorem J_epsilon_anticommute
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {α} [BEq α] [Hashable α]
+    (P : RealDoubledKreinGraphHodgePacket E α) :
+    (P.J).comp P.ε = -((P.ε).comp P.J) :=
+  modular_j_spectral_epsilon_anticommute E
+
+theorem K_square
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {α} [BEq α] [Hashable α]
+    (P : RealDoubledKreinGraphHodgePacket E α) :
+    (P.K).comp P.K = -(ContinuousLinearMap.id ℝ (RealDoubledKreinDAGCarrier E)) :=
+  clockAxis_sq E
 
 end RealDoubledKreinGraphHodgePacket
 
@@ -179,6 +192,57 @@ noncomputable def canonicalEndomorphism
   P.cuntz.S_left * A * star P.cuntz.S_left +
     P.cuntz.S_right * A * star P.cuntz.S_right
 
+/-- The Cuntz branch map preserves multiplication by isometry and range
+orthogonality; this is the endomorphism law, not a definitional alias. -/
+theorem canonicalEndomorphism_mul
+    (P : RealDoubledKreinCuntzTransferPacket E α)
+    (A B : RealDoubledKreinDAGEnd E) :
+    canonicalEndomorphism P A * canonicalEndomorphism P B =
+      canonicalEndomorphism P (A * B) := by
+  have hleft := P.cuntz.left_isometry
+  have hright := P.cuntz.right_isometry
+  have hcross := P.cuntz.orthogonal_ranges
+  have branch_mul {S : RealDoubledKreinDAGEnd E}
+      (hS : star S * S = 1) (X Y : RealDoubledKreinDAGEnd E) :
+      (S * X * star S) * (S * Y * star S) = S * (X * Y) * star S := by
+    calc
+      (S * X * star S) * (S * Y * star S) = S * X * (star S * S) * Y * star S := by
+        noncomm_ring
+      _ = S * X * 1 * Y * star S := by rw [hS]
+      _ = S * (X * Y) * star S := by noncomm_ring
+  have branch_cross {S T : RealDoubledKreinDAGEnd E}
+      (hST : star S * T = 0) (X Y : RealDoubledKreinDAGEnd E) :
+      (S * X * star S) * (T * Y * star T) = 0 := by
+    calc
+      (S * X * star S) * (T * Y * star T) = S * X * (star S * T) * Y * star T := by
+        noncomm_ring
+      _ = 0 := by rw [hST]; noncomm_ring
+  have hLL := branch_mul hleft A B
+  have hRR := branch_mul hright A B
+  have hLR := branch_cross hcross.1 A B
+  have hRL := branch_cross hcross.2 A B
+  unfold canonicalEndomorphism
+  calc
+    (P.cuntz.S_left * A * star P.cuntz.S_left +
+        P.cuntz.S_right * A * star P.cuntz.S_right) *
+      (P.cuntz.S_left * B * star P.cuntz.S_left +
+        P.cuntz.S_right * B * star P.cuntz.S_right)
+        = (P.cuntz.S_left * A * star P.cuntz.S_left) *
+              (P.cuntz.S_left * B * star P.cuntz.S_left) +
+            (P.cuntz.S_left * A * star P.cuntz.S_left) *
+              (P.cuntz.S_right * B * star P.cuntz.S_right) +
+            (P.cuntz.S_right * A * star P.cuntz.S_right) *
+              (P.cuntz.S_left * B * star P.cuntz.S_left) +
+            (P.cuntz.S_right * A * star P.cuntz.S_right) *
+              (P.cuntz.S_right * B * star P.cuntz.S_right) := by
+          simp only [mul_add, add_mul, add_assoc]
+          abel
+    _ = P.cuntz.S_left * (A * B) * star P.cuntz.S_left +
+          P.cuntz.S_right * (A * B) * star P.cuntz.S_right := by
+      rw [hLL, hLR, hRL, hRR]
+      simp
+    _ = canonicalEndomorphism P (A * B) := rfl
+
 /--
 The discrete modular step used by this packet.
 
@@ -190,12 +254,13 @@ noncomputable def discreteModularStep
     (A : RealDoubledKreinDAGEnd E) : RealDoubledKreinDAGEnd E :=
   canonicalEndomorphism P A
 
-@[simp]
-theorem discreteModularStep_eq_canonicalEndomorphism
+/-- Multiplicativity of one discrete Cuntz modular step. -/
+theorem discreteModularStep_mul
     (P : RealDoubledKreinCuntzTransferPacket E α)
-    (A : RealDoubledKreinDAGEnd E) :
-    discreteModularStep P A = canonicalEndomorphism P A :=
-  rfl
+    (A B : RealDoubledKreinDAGEnd E) :
+    discreteModularStep P A * discreteModularStep P B =
+      discreteModularStep P (A * B) := by
+  simpa [discreteModularStep] using canonicalEndomorphism_mul P A B
 
 /-- The Cuntz transfer is unital by the `O₂` range-sum relation. -/
 theorem canonicalEndomorphism_one
@@ -232,10 +297,12 @@ theorem state_fixed_by_discreteModularStep
 /-- The Cuntz transfer packet is anchored on the real doubled Krein graph carrier. -/
 theorem graph_carrier_is_real_doubled
     (P : RealDoubledKreinCuntzTransferPacket E α) :
-    P.graph.J = modular_j (E := E) ∧
-      P.graph.ε = spectral_epsilon (E := E) ∧
-      P.graph.K = clockAxis (E := E) := by
-  exact ⟨P.graph.J_eq, P.graph.epsilon_eq, P.graph.K_eq⟩
+    (P.graph.J).comp P.graph.J = ContinuousLinearMap.id ℝ (RealDoubledKreinDAGCarrier E) ∧
+      (P.graph.ε).comp P.graph.ε = ContinuousLinearMap.id ℝ (RealDoubledKreinDAGCarrier E) ∧
+      (P.graph.J).comp P.graph.ε = -((P.graph.ε).comp P.graph.J) ∧
+      (P.graph.K).comp P.graph.K = -(ContinuousLinearMap.id ℝ (RealDoubledKreinDAGCarrier E)) := by
+  exact ⟨P.graph.J_involution, P.graph.epsilon_involution,
+    P.graph.J_epsilon_anticommute, P.graph.K_square⟩
 
 end RealDoubledKreinCuntzTransferPacket
 
@@ -278,20 +345,17 @@ theorem realDoubledKreinGraphHodgeBridgeTarget
       ∃ B : RealDoubledKreinGraphHodgePacket E α,
         B.finite.tc = tc ∧
         B.finite.dirac = graphDirac tc ∧
-        B.J = modular_j (E := E) ∧
-        B.ε = spectral_epsilon (E := E) ∧
-        B.K = clockAxis (E := E) := by
+        (B.J).comp B.J = ContinuousLinearMap.id ℝ (RealDoubledKreinDAGCarrier E) ∧
+        (B.ε).comp B.ε = ContinuousLinearMap.id ℝ (RealDoubledKreinDAGCarrier E) ∧
+        (B.J).comp B.ε = -((B.ε).comp B.J) ∧
+        (B.K).comp B.K = -(ContinuousLinearMap.id ℝ (RealDoubledKreinDAGCarrier E)) := by
   intro tc grading
   let finite := FiniteGraphHodgePacket.canonical tc grading
-  refine ⟨RealDoubledKreinGraphHodgePacket.canonical (E := E) finite, ?_⟩
-  constructor
-  · rfl
-  constructor
-  · rfl
-  constructor
-  · rfl
-  constructor
-  · rfl
-  · rfl
+  let packet := RealDoubledKreinGraphHodgePacket.canonical (E := E) finite
+  refine ⟨packet, rfl, rfl, ?_, ?_, ?_, ?_⟩
+  · exact packet.J_involution
+  · exact packet.epsilon_involution
+  · exact packet.J_epsilon_anticommute
+  · exact packet.K_square
 
 end DAG

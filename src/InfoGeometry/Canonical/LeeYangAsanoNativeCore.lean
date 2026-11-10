@@ -218,7 +218,7 @@ theorem asano_det_zero_contraction_nonzero_off_negProductSet
 
 /-- The Möbius transform induced by a nondegenerate Asano polynomial. -/
 @[rep_depth thermo]
-structure MoebiusTransform (K : Type*) [Field K] where
+structure MoebiusTransform (K : Type*) [Ring K] where
   a : K
   b : K
   c : K

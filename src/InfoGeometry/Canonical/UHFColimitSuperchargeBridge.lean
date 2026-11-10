@@ -17,7 +17,7 @@ survive under that target map.  This file does not assert the universal
 property of a categorical colimit or any analytic/topological limit.
 -/
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [CommSemiring R]
 variable (A : ℕ → Type*)
 variable [∀ n, Ring (A n)] [∀ n, Algebra R (A n)]
 variable (A_inf : Type*) [Ring A_inf] [Algebra R A_inf]

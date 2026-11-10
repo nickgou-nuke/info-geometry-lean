@@ -55,13 +55,15 @@ theorem normalizedDyad_compression (v : E) (f : Module.Dual 𝕜 E)
 
 /-- The normalized matrix coefficient of an endomorphism, defined without
 choosing coordinates on the module. -/
-def normalizedReadout (v : E) (f : Module.Dual 𝕜 E)
+def normalizedReadout {𝕜 E : Type*} [DivisionRing 𝕜] [AddCommGroup E] [Module 𝕜 E]
+    (v : E) (f : Module.Dual 𝕜 E)
     (A : Module.End 𝕜 E) : 𝕜 :=
   f (A v) / f v
 
 /-- Evaluating a two-boundary operator sandwich is exactly evaluation of its
 successive actions on the selected vector and covector. -/
 theorem normalizedReadout_twoBoundaryCompression
+    {𝕜 E : Type*} [DivisionRing 𝕜] [AddCommGroup E] [Module 𝕜 E]
     (v : E) (f : Module.Dual 𝕜 E)
     (post observable pre : Module.End 𝕜 E) :
     normalizedReadout v f
@@ -75,6 +77,7 @@ theorem normalizedReadout_twoBoundaryCompression
 /-- The intermediate-idempotent resolution in the operator ring descends
 through the coordinate-free normalized module readout. -/
 theorem normalizedReadout_twoBoundaryCompression_intermediate
+    {𝕜 E : Type*} [DivisionRing 𝕜] [AddCommGroup E] [Module 𝕜 E]
     (v : E) (f : Module.Dual 𝕜 E)
     (post x y pre middle : Module.End 𝕜 E)
     (hmiddle : middle * middle = middle) :

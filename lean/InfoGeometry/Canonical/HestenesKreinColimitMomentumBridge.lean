@@ -35,7 +35,7 @@ open InfoGeometry.Canonical.CantorDyadicRefinementCompatibilityBridge
 open InfoGeometry.Canonical.BilingualRealHestenesDictionary
 
 /-- Filtered inductive colimit momentum datum for a scale sequence of operators. -/
-structure ColimitMomentumDatum (R : Type*) [CommRing R] (A : ℕ → Type*)
+structure ColimitMomentumDatum (R : Type*) [Ring R] (A : ℕ → Type*)
     [∀ n, AddCommGroup (A n)] [∀ n, Module R (A n)]
     (iota : ∀ n, A n →ₗ[R] A (n + 1))
     (A_inf : Type*) [AddCommGroup A_inf] [Module R A_inf]
@@ -44,7 +44,7 @@ structure ColimitMomentumDatum (R : Type*) [CommRing R] (A : ℕ → Type*)
   colimit_kernel : ∀ (n : ℕ) (x : A n), psi n x = 0 → ∃ m, iota_seq A iota n m x = 0
 
 /-- 🏆 THEOREM 1: The colimit target maps preserve the finite-stage cone across any step length $m$. -/
-theorem colimit_psi_comp_iota_seq {R : Type*} [CommRing R] {A : ℕ → Type*}
+theorem colimit_psi_comp_iota_seq {R : Type*} [Ring R] {A : ℕ → Type*}
     [∀ n, AddCommGroup (A n)] [∀ n, Module R (A n)]
     {iota : ∀ n, A n →ₗ[R] A (n + 1)}
     {A_inf : Type*} [AddCommGroup A_inf] [Module R A_inf]
@@ -54,7 +54,7 @@ theorem colimit_psi_comp_iota_seq {R : Type*} [CommRing R] {A : ℕ → Type*}
   psi_comp_iota_seq A iota A_inf psi D.psi_comm n m
 
 /-- 🏆 THEOREM 2: Generic Colimit Trace Commutativity across inductive levels. -/
-theorem colimit_momentum_trace_comm {R : Type*} [CommRing R] {A : ℕ → Type*}
+theorem colimit_momentum_trace_comm {R : Type*} [Ring R] {A : ℕ → Type*}
     [∀ n, AddCommGroup (A n)] [∀ n, Module R (A n)]
     {iota : ∀ n, A n →ₗ[R] A (n + 1)}
     {A_inf : Type*} [AddCommGroup A_inf] [Module R A_inf]

@@ -550,7 +550,7 @@ def opZornGunaydinGurseyEquiv (R : Type*) :
 
 /-- Canonical 8D equivalence between `OpZornMatrix R` and the 8-component $\mathrm{Cl}(4,4)$
 semi-spinor carrier `Fin 8 → R`. -/
-def opZornFin8SemiSpinorEquiv (R : Type*) [CommRing R] :
+def opZornFin8SemiSpinorEquiv (R : Type*) [Ring R] :
     InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.OpZornMatrix R ≃ (Fin 8 → R) :=
   (opZornGunaydinGurseyEquiv R).trans (gunaydinGurseyEquiv R).toEquiv.symm
 

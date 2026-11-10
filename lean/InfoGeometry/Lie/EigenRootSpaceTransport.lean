@@ -9,14 +9,14 @@ the resulting root-space argument independent of any coordinate readback.
 -/
 
 def eigenRootSpace
-    {R L H : Type*} [CommRing R] [LieRing L] [Module R L]
-    [LieAlgebra R L] [AddCommGroup H] [Module R H]
+    {R L H : Type*} [Ring R] [LieRing L] [Module R L]
+    [AddCommGroup H] [Module R H]
     (ι : H →ₗ[R] L) (α : H →ₗ[R] R) : Set L :=
   {x | ∀ h, ⁅ι h, x⁆ = α h • x}
 
 theorem LinearEquiv.map_mem_eigenRootSpace
-    {R L H : Type*} [CommRing R] [LieRing L] [Module R L]
-    [LieAlgebra R L] [AddCommGroup H] [Module R H]
+    {R L H : Type*} [Ring R] [LieRing L] [Module R L]
+    [AddCommGroup H] [Module R H]
     (e : L ≃ₗ[R] L) (c : H ≃ₗ[R] H)
     (ι : H →ₗ[R] L)
     (hbracket : ∀ u v, e ⁅u, v⁆ = ⁅e u, e v⁆)

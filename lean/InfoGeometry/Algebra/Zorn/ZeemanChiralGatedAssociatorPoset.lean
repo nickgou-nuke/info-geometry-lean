@@ -942,10 +942,10 @@ theorem skewCrossMatrix_transpose {R : Type*} [Ring R]
   fin_cases i <;> fin_cases j <;> simp [skewCrossMatrix]
 
 /-- **Cayley Skew-Symmetric Generator to Cross-Product and Scalar Triple Product:**
-Over any commutative ring `R`, the $3 \times 3$ skew-symmetric matrix `skewCrossMatrix ω` acts on
+Over any ring `[Ring R]`, the $3 \times 3$ skew-symmetric matrix `skewCrossMatrix ω` acts on
 any 3-vector `v` as the cross product `cross ω v`, and its bilinear contraction with the nuclear
 spin vector `s` equals the scalar triple product `dot s (cross ω v)`. -/
-theorem skewCrossMatrix_mulVec_and_triple_product {R : Type*} [CommRing R]
+theorem skewCrossMatrix_mulVec_and_triple_product {R : Type*} [Ring R]
     (ω s v : NoncommutativeZornNambu.Vec3 R) :
     Matrix.mulVec (skewCrossMatrix ω) (vec3ToFin3 v) = vec3ToFin3 (cross ω v) ∧
     dotProduct (vec3ToFin3 s) (Matrix.mulVec (skewCrossMatrix ω) (vec3ToFin3 v)) =
@@ -954,7 +954,7 @@ theorem skewCrossMatrix_mulVec_and_triple_product {R : Type*} [CommRing R]
     funext i
     fin_cases i <;>
       simp [skewCrossMatrix, vec3ToFin3, cross, Matrix.mulVec, dotProduct, Fin.sum_univ_three] <;>
-      ring
+      noncomm_ring
   refine ⟨hmv, ?_⟩
   rw [hmv]
   simp [vec3ToFin3, dot, cross, dotProduct, Fin.sum_univ_three]
@@ -1038,19 +1038,43 @@ def cascadeTripleVolume {R : Type*} [Ring R]
     (s e1 e2 : NoncommutativeZornNambu.Vec3 R) : R :=
   dot s (cross e1 e2)
 
+/-- **Non-Commutative Spin & Photon Sign-Reversal Oddness (`[Ring R]`):**
+Over any non-commutative ring `R`, `cascadeTripleVolume s e1 e2` is strictly odd under reversal
+of any of its three vector arguments (`negVec3`). -/
+theorem cascadeTripleVolume_odd_in_all_slots {R : Type*} [Ring R]
+    (s e1 e2 : NoncommutativeZornNambu.Vec3 R) :
+    cascadeTripleVolume (negVec3 s) e1 e2 = -cascadeTripleVolume s e1 e2 ∧
+    cascadeTripleVolume s (negVec3 e1) e2 = -cascadeTripleVolume s e1 e2 ∧
+    cascadeTripleVolume s e1 (negVec3 e2) = -cascadeTripleVolume s e1 e2 := by
+  refine ⟨?_, ?_, ?_⟩ <;>
+    simp [cascadeTripleVolume, negVec3, dot, cross] <;>
+    noncomm_ring
+
+/-- **Non-Commutative Photon Exchange Commutator Defect (`[Ring R]`):**
+Over a general non-commutative ring `R`, the symmetric sum under photon exchange `e1 ↔ e2`
+equals the contraction of `s` with the commutator cross defect of `e1` and `e2`. -/
+theorem cascadeTripleVolume_photon_exchange_noncomm {R : Type*} [Ring R]
+    (s e1 e2 : NoncommutativeZornNambu.Vec3 R) :
+    cascadeTripleVolume s e1 e2 + cascadeTripleVolume s e2 e1 =
+      dot s ⟨NoncommutativeZornNambu.comm e1.x1 e2.x2 - NoncommutativeZornNambu.comm e1.x2 e2.x1,
+             NoncommutativeZornNambu.comm e1.x2 e2.x0 - NoncommutativeZornNambu.comm e1.x0 e2.x2,
+             NoncommutativeZornNambu.comm e1.x0 e2.x1 - NoncommutativeZornNambu.comm e1.x1 e2.x0⟩ := by
+  simp [cascadeTripleVolume, dot, cross, NoncommutativeZornNambu.comm]
+  noncomm_ring
+
 /-- **Node A Theorem (Spin-Odd Parity & Photon Exchange Antisymmetry):**
 Over any commutative ring `R`, `cascadeTripleVolume s e1 e2` is strictly odd under reversal of
-any argument (`negVec3`)
-  strictly antisymmetric under photon exchange $e_1 \leftrightarrow e_2$. -/
+any argument (`negVec3`) and strictly antisymmetric under photon exchange $e_1 \leftrightarrow e_2$. -/
 theorem cascadeTripleVolume_odd_and_antisymmetric {R : Type*} [CommRing R]
     (s e1 e2 : NoncommutativeZornNambu.Vec3 R) :
     cascadeTripleVolume (negVec3 s) e1 e2 = -cascadeTripleVolume s e1 e2 ∧
     cascadeTripleVolume s (negVec3 e1) e2 = -cascadeTripleVolume s e1 e2 ∧
     cascadeTripleVolume s e1 (negVec3 e2) = -cascadeTripleVolume s e1 e2 ∧
     cascadeTripleVolume s e2 e1 = -cascadeTripleVolume s e1 e2 := by
-  refine ⟨?_, ?_, ?_, ?_⟩ <;>
-    simp [cascadeTripleVolume, negVec3, dot, cross] <;>
-    ring
+  have hodd := cascadeTripleVolume_odd_in_all_slots s e1 e2
+  refine ⟨hodd.1, hodd.2.1, hodd.2.2, ?_⟩
+  simp [cascadeTripleVolume, dot, cross]
+  ring
 
 /-- **Node B Theorem (Universal Group-Theoretic T-Symmetry Nullification):**
 For any spin-odd observable `vol : V → V → V → G` (`vol (-s) e1 e2 = -vol s e1 e2`),
@@ -1072,6 +1096,37 @@ theorem odd_spin_time_reversal_forces_two_zsmul_zero
         nth_rw 2 [h1]
       _ = 0 := add_neg_cancel (vol s e1 e2)
   rwa [two_zsmul]
+
+/-- **Exact torsion criterion for time-reversal invariance of a spin-odd observable:**
+For an additive-group-valued observable that changes sign when its first argument is
+negated, invariance under that same reversal holds exactly when every value is killed
+by multiplication by two. The real-valued zero conclusion is the torsion-free special
+case; over groups with nontrivial 2-torsion, zero need not follow. -/
+theorem odd_observable_time_reversal_iff_two_torsion
+    {V G : Type*} [Neg V] [AddCommGroup G]
+    (vol : V → V → V → G)
+    (h_odd : ∀ s e1 e2, vol (-s) e1 e2 = -vol s e1 e2) :
+    (∀ s e1 e2, vol (-s) e1 e2 = vol s e1 e2) ↔
+      ∀ s e1 e2, (2 : ℤ) • vol s e1 e2 = 0 := by
+  constructor
+  · intro h_invariant s e1 e2
+    exact odd_spin_time_reversal_forces_two_zsmul_zero
+      vol h_odd h_invariant s e1 e2
+  · intro h_two_torsion s e1 e2
+    have hdouble : vol s e1 e2 + vol s e1 e2 = 0 := by
+      simpa only [two_zsmul] using h_two_torsion s e1 e2
+    have hneg : -vol s e1 e2 = vol s e1 e2 := by
+      calc
+        -vol s e1 e2 = -vol s e1 e2 + 0 := by simp
+        _ = -vol s e1 e2 + (vol s e1 e2 + vol s e1 e2) := by
+          rw [← hdouble]
+        _ = (-vol s e1 e2 + vol s e1 e2) + vol s e1 e2 := by
+          rw [add_assoc]
+        _ = 0 + vol s e1 e2 := by rw [neg_add_cancel]
+        _ = vol s e1 e2 := by simp
+    calc
+      vol (-s) e1 e2 = -vol s e1 e2 := h_odd s e1 e2
+      _ = vol s e1 e2 := hneg
 
 /-- **Node B Real Corollary:** Over `ℝ`, Time-Reversal symmetry forces `cascadeTripleVolume s e1 e2
   = 0`. -/
@@ -1113,6 +1168,49 @@ theorem pureUpper_three_vector_associator {R : Type*} [Ring R]
   cases e2
   simp [NoncommutativeZornNambu.associator, NoncommutativeZornNambu.mul,
     NoncommutativeZornNambu.sub, pureUpper, dot, cross]
+
+/-- Over any associative ring `[Ring R]`, `dot (cross s e1) e2 = cascadeTripleVolume s e1 e2`
+because every monomial preserves the left-to-right factor order `s * e1 * e2`. -/
+theorem dot_cross_eq_cascadeTripleVolume {R : Type*} [Ring R]
+    (s e1 e2 : NoncommutativeZornNambu.Vec3 R) :
+    dot (cross s e1) e2 = cascadeTripleVolume s e1 e2 := by
+  cases s
+  cases e1
+  cases e2
+  simp [cascadeTripleVolume, dot, cross]
+  noncomm_ring
+
+/-- Over any associative ring `[Ring R]`, the chiral-gated 3-vector Zorn associator
+has upper-left entry `cascadeTripleVolume s e1 e2`, lower-right entry
+`-cascadeTripleVolume s e1 e2`, and chiral supertrace `2 * cascadeTripleVolume s e1 e2`. -/
+theorem chiralGated_three_vector_associator_noncomm {R : Type*} [Ring R]
+    (a b c : R) (s e1 e2 : NoncommutativeZornNambu.Vec3 R) :
+    associator
+      (chiralUpperProj (psiCov a s))
+      (chiralUpperProj (psiCov b e1))
+      (chiralUpperProj (psiCov c e2)) =
+      ⟨cascadeTripleVolume s e1 e2, ⟨0, 0, 0⟩, ⟨0, 0, 0⟩, -cascadeTripleVolume s e1 e2⟩ ∧
+    (associator
+      (chiralUpperProj (psiCov a s))
+      (chiralUpperProj (psiCov b e1))
+      (chiralUpperProj (psiCov c e2))).α = cascadeTripleVolume s e1 e2 ∧
+    superTrace
+      (associator
+        (chiralUpperProj (psiCov a s))
+        (chiralUpperProj (psiCov b e1))
+        (chiralUpperProj (psiCov c e2))) = 2 * cascadeTripleVolume s e1 e2 := by
+  rw [(chiralProj_psiCov_pair a s).1, (chiralProj_psiCov_pair b e1).1,
+    (chiralProj_psiCov_pair c e2).1]
+  have hassoc :
+      associator (pureUpper s) (pureUpper e1) (pureUpper e2) =
+        ⟨cascadeTripleVolume s e1 e2, ⟨0, 0, 0⟩, ⟨0, 0, 0⟩, -cascadeTripleVolume s e1 e2⟩ := by
+    rw [pureUpper_three_vector_associator, dot_cross_eq_cascadeTripleVolume]
+    rfl
+  refine ⟨hassoc, ?_, ?_⟩
+  · rw [hassoc]
+  · rw [hassoc]
+    simp [superTrace]
+    noncomm_ring
 
 /-- **Node D Theorem (Constructive Proof of `volume_is_associator` on `ZornNC R`):**
 Over any commutative ring `R`, for any three covariant states `psiCov a s`, `psiCov b e1`,

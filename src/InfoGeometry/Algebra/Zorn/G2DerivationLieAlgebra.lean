@@ -20,7 +20,7 @@ infinitesimal preservation of the metric and Dickson 3-form.
 
 namespace InfoGeometry.Algebra.Zorn.G2DerivationLieAlgebra
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! =========================================================================
     1. Fano Cross Product and Bilinear Forms on R⁷
@@ -50,22 +50,22 @@ def bilinearForm (u v : Fin 7 → R) : R :=
 theorem crossProd_add_left (u₁ u₂ v : Fin 7 → R) :
     crossProd (u₁ + u₂) v = crossProd u₁ v + crossProd u₂ v := by
   funext i
-  fin_cases i <;> { dsimp [crossProd]; ring }
+  fin_cases i <;> { dsimp [crossProd]; noncomm_ring }
 
 theorem crossProd_add_right (u v₁ v₂ : Fin 7 → R) :
     crossProd u (v₁ + v₂) = crossProd u v₁ + crossProd u v₂ := by
   funext i
-  fin_cases i <;> { dsimp [crossProd]; ring }
+  fin_cases i <;> { dsimp [crossProd]; noncomm_ring }
 
 theorem crossProd_sub_left (u₁ u₂ v : Fin 7 → R) :
     crossProd (u₁ - u₂) v = crossProd u₁ v - crossProd u₂ v := by
   funext i
-  fin_cases i <;> { dsimp [crossProd]; ring }
+  fin_cases i <;> { dsimp [crossProd]; noncomm_ring }
 
 theorem crossProd_sub_right (u v₁ v₂ : Fin 7 → R) :
     crossProd u (v₁ - v₂) = crossProd u v₁ - crossProd u v₂ := by
   funext i
-  fin_cases i <;> { dsimp [crossProd]; ring }
+  fin_cases i <;> { dsimp [crossProd]; noncomm_ring }
 
 /-! =========================================================================
     3. The 𝔤₂ Derivation Structure
@@ -76,7 +76,7 @@ A linear endomorphism `D ∈ 𝔤₂ = Der(Im(𝕆))` satisfying the Leibniz pro
 with respect to the non-associative Fano cross product:
   `D(u × v) = D(u) × v + u × D(v)`
 -/
-structure G2Derivation (R : Type*) [CommRing R] where
+structure G2Derivation (R : Type*) [Ring R] where
   toFun : (Fin 7 → R) → (Fin 7 → R)
   map_add : ∀ u v, toFun (u + v) = toFun u + toFun v
   map_sub : ∀ u v, toFun (u - v) = toFun u - toFun v
@@ -166,7 +166,7 @@ theorem g2_infinitesimal_dickson_inv
   have h_split : bilinearForm (crossProd (D u) v + crossProd u (D v)) w =
       bilinearForm (crossProd (D u) v) w + bilinearForm (crossProd u (D v)) w := by
     dsimp [bilinearForm]
-    ring
+    noncomm_ring
   have h_leib : bilinearForm (D (crossProd u v)) w =
       bilinearForm (crossProd (D u) v + crossProd u (D v)) w := by
     rw [D.leibniz]
@@ -247,7 +247,7 @@ def derivationApp (p : Fin 14 → R) (u : Fin 7 → R) : Fin 7 → R
   | 6 => p 5 * u 0 + p 10 * u 1 + (-p 3 + p 9) * u 2 + p 13 * u 3 + (p 1 + p 12) * u 4 - (p 6 + p 11) * u 5
 
 /-- 🏆 THEOREM: Every 𝔤₂ derivation action strictly preserves the standard bilinear metric. -/
-theorem derivationApp_preserves_bilinearForm (p : Fin 14 → R) (u v : Fin 7 → R) :
+theorem derivationApp_preserves_bilinearForm {R : Type*} [CommRing R] (p : Fin 14 → R) (u v : Fin 7 → R) :
     bilinearForm (derivationApp p u) v + bilinearForm u (derivationApp p v) = 0 := by
   dsimp [bilinearForm, derivationApp]
   ring
@@ -257,7 +257,7 @@ theorem derivationMatrix_skew (p : Fin 14 → R) (i j : Fin 7) :
     derivationMatrix p i j = - derivationMatrix p j i := by
   fin_cases i <;> fin_cases j <;> {
     dsimp [derivationMatrix]
-    try ring
+    try abel
   }
 
 end InfoGeometry.Algebra.Zorn.G2DerivationLieAlgebra

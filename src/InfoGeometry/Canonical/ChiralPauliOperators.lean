@@ -12,7 +12,7 @@ into an associative operator algebra.
 
 namespace InfoGeometry.Canonical
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def chiralityZ (x : ChiralOdd R) : ChiralOdd R :=
   (x.1, fun i => -x.2 i)
@@ -30,6 +30,7 @@ theorem chiralityZ_sq (x : ChiralOdd R) :
     chiralityZ (chiralityZ x) = x := by
   ext i <;> simp [chiralityZ]
 
+omit [Ring R] in
 theorem chiralityJ_sq (x : ChiralOdd R) :
     chiralityJ (chiralityJ x) = x := by
   rfl

@@ -119,7 +119,7 @@ This is the small transport fact needed to read off the first Schur column
 without invoking the recursive AFP Schur algorithm.
 -/
 theorem basis_repr_smul_head
-    {K : Type*} [Field K]
+    {K : Type*} [CommRing K]
     {n : ℕ}
     (basis : Module.Basis (Fin (n + 1)) K (Fin (n + 1) → K))
     (eigenvector : Fin (n + 1) → K)
@@ -142,7 +142,7 @@ singleton vector `Pi.single 0 λ`.
 This is the Lean-native form of the AFP first Schur-column readout.
 -/
 theorem basis_repr_eigenvector_head
-    {K : Type*} [Field K]
+    {K : Type*} [CommRing K]
     {n : ℕ}
     (basis : Module.Basis (Fin (n + 1)) K (Fin (n + 1) → K))
     (A : Matrix (Fin (n + 1)) (Fin (n + 1)) K)
@@ -174,7 +174,7 @@ The conjugated matrix obtained from the basis change then has first column
 `eigval` in the top entry and zeros below.
 -/
 theorem schurStep_first_col
-    {K : Type*} [Field K]
+    {K : Type*} [CommRing K]
     {n : ℕ}
     (basis : Module.Basis (Fin (n + 1)) K (Fin (n + 1) → K))
     (A : Matrix (Fin (n + 1)) (Fin (n + 1)) K)
@@ -320,7 +320,7 @@ Certified output of the AFP Schur decomposition algorithm on `Fin n`.
 `eigenvalues` is a list rather than a function to mirror the AFP statement
 `diag_mat B = es`.
 -/
-structure SchurDecompositionPacket (K : Type*) [Field K] (n : ℕ) where
+structure SchurDecompositionPacket (K : Type*) [CommRing K] (n : ℕ) where
   /-- Input matrix. -/
   A : Matrix (Fin n) (Fin n) K
   /-- Eigenvalue list supplied to the algorithm. -/
@@ -344,7 +344,7 @@ structure SchurDecompositionPacket (K : Type*) [Field K] (n : ℕ) where
 
 namespace SchurDecompositionPacket
 
-variable {K : Type*} [Field K] {n : ℕ}
+variable {K : Type*} [CommRing K] {n : ℕ}
 
 /-- Similarity witness carried by a Schur packet. -/
 def similarWitness (S : SchurDecompositionPacket K n) :
@@ -395,7 +395,7 @@ end SchurDecompositionPacket
 AFP `basis_completion` data: a nonzero vector has been extended to an ordered
 basis whose first vector is the supplied vector.
 -/
-structure BasisCompletionPacket (K : Type*) [Field K] (n : ℕ) where
+structure BasisCompletionPacket (K : Type*) [CommRing K] (n : ℕ) where
   /-- Vector to be extended. -/
   v : Fin n → K
   /-- The vector is nonzero. -/
@@ -429,7 +429,7 @@ One recursive AFP Schur step: an eigenvector is completed to an orthogonal
 basis, conjugated into the first column, and the tail block is passed to the
 recursive call.
 -/
-structure SchurStepPacket (K : Type*) [Field K] (n : ℕ) where
+structure SchurStepPacket (K : Type*) [CommRing K] (n : ℕ) where
   /-- Input matrix. -/
   A : Matrix (Fin (n + 1)) (Fin (n + 1)) K
   /-- Selected eigenvalue. -/
@@ -463,7 +463,7 @@ structure SchurStepPacket (K : Type*) [Field K] (n : ℕ) where
 
 namespace SchurStepPacket
 
-variable {K : Type*} [Field K] {n : ℕ}
+variable {K : Type*} [CommRing K] {n : ℕ}
 
 /--
 Native constructor for the first recursive Schur step over a completed basis.
@@ -478,7 +478,7 @@ This packages the exact one-step AFP data:
 The recursive tail assembly is still a separate step; this theorem closes the
 first Schur-step packet natively.
 -/
-theorem of_basis
+theorem of_basis [Nontrivial K]
     (A : Matrix (Fin (n + 1)) (Fin (n + 1)) K)
     (eigenvector : Fin (n + 1) → K)
     (basis : Module.Basis (Fin (n + 1)) K (Fin (n + 1) → K))

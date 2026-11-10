@@ -31,7 +31,7 @@ open scoped BigOperators
 
 namespace InfoGeometry.Canonical.HigherApollonian
 
-variable {R : Type*} [Field R]
+variable {R : Type*} [Ring R]
 
 /-- The generalized Descartes quadratic form in `n` dimensions for `n+2` curvatures. -/
 def generalizedDescartesForm (n : ℕ) (k : Fin (n + 2) → R) : R :=
@@ -40,6 +40,10 @@ def generalizedDescartesForm (n : ℕ) (k : Fin (n + 2) → R) : R :=
 /-- An Apollonian configuration in `n` dimensions is an isotropic vector of the generalized Descartes form. -/
 def IsHigherApollonian (n : ℕ) (k : Fin (n + 2) → R) : Prop :=
   generalizedDescartesForm n k = 0
+
+section DivisionRing
+
+variable {R : Type*} [DivisionRing R]
 
 /-- 
 The n-dimensional Soddy reflection on the `i`-th curvature.
@@ -70,6 +74,8 @@ theorem curvature_step_size_exact (n : ℕ) (k : Fin (n + 2) → R) (j : Fin (n 
   have h_if : (if j = j then ((n - 1 : ℕ) : R)⁻¹ * 2 * (∑ m : Fin (n + 2), if m = j then (0:R) else k m) - k j else k j) 
                = ((n - 1 : ℕ) : R)⁻¹ * 2 * (∑ m : Fin (n + 2), if m = j then (0:R) else k m) - k j := if_pos rfl
   rw [h_if]
-  ring
+  rw [sub_sub, ← two_mul]
+
+end DivisionRing
 
 end InfoGeometry.Canonical.HigherApollonian

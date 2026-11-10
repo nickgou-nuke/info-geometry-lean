@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 
 /-!
@@ -9,16 +15,23 @@ boolean functions (NOT, NAND) cannot be realized in W_val.
 
 NAND(x,y) = 1 - xy requires exactly one PROJ_ORDER call.
 
-This file formalizes the core algebraic identities underlying these results.
+This file proves the integer Boolean truth table and elementary monotonicity
+facts. It does not formalize W_val programs or a PROJ_ORDER cost semantics.
 -/
 
 namespace Omega.POM.ValMonotoneBooleanNand
 
 /-! ## NAND algebraic identity -/
 
-/-- NAND(x,y) = 1 - xy for boolean inputs.
+/-- On Boolean integer inputs, `1 - x*y` is the truth table value of NAND.
+    This states the Boolean restriction explicitly; the unrestricted identity
+    `1 - x*y = 1 - x*y` carries no NAND content.
     prop:pom-nand-projorder-budget-one -/
-theorem nand_eq_one_sub_mul (x y : ℤ) : 1 - x * y = 1 - x * y := rfl
+theorem nand_eq_one_sub_mul (x y : ℤ)
+    (hx : x = 0 ∨ x = 1) (hy : y = 0 ∨ y = 1) :
+    1 - x * y = if x = 1 ∧ y = 1 then 0 else 1 := by
+  rcases hx with hx | hx <;> rcases hy with hy | hy <;> subst x <;> subst y <;>
+    norm_num
 
 /-- The NAND identity expanded: 1 - xy = 1 + (-1) * x * y.
     prop:pom-nand-projorder-budget-one -/

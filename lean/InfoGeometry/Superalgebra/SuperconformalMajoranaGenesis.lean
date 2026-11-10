@@ -3,7 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-import InfoGeometry.Algebra.Zorn.ConcreteComposition
+import InfoGeometry.Algebra.Zorn.Decomposition
 import Mathlib.Tactic.Ring
 
 /-!
@@ -55,7 +55,7 @@ namespace InfoGeometry.Superalgebra.SuperconformalMajorana
 open InfoGeometry.Algebra.Zorn.ConcreteComposition
 open InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Zero element of `ZornCell R`. -/
 def zeroZ : ZornCell R :=
@@ -115,7 +115,7 @@ For any 3D Majorana spinor vectors $\mathbf{u}, \mathbf{v} \in R^3$:
 2. $[U(\mathbf{u}), V(\mathbf{v})] = (\mathbf{u} \cdot \mathbf{v})\,K_0$ (skew-symmetric chiral boost/grading generator);
 3. $[K_0, U(\mathbf{u})] = 2 U(\mathbf{u})$ ($+2$ conformal weight of the forward sheet);
 4. $[K_0, V(\mathbf{v})] = -2 V(\mathbf{v})$ ($-2$ conformal weight of the backward sheet). -/
-theorem superconformal_majorana_osp_genesis (u₁ u₂ u₃ v₁ v₂ v₃ : R) :
+theorem superconformal_majorana_osp_genesis {R : Type*} [CommRing R] (u₁ u₂ u₃ v₁ v₂ v₃ : R) :
     anticommutatorZ (sheetU u₁ u₂ u₃) (sheetV v₁ v₂ v₃) =
       smulZ (u₁ * v₁ + u₂ * v₂ + u₃ * v₃) oneZ ∧
     commutatorZ (sheetU u₁ u₂ u₃) (sheetV v₁ v₂ v₃) =
@@ -136,25 +136,30 @@ theorem superconformal_majorana_osp_genesis (u₁ u₂ u₃ v₁ v₂ v₃ : R) 
 
 /-- **The Erlangen Epitaph — Exact 8D Zorn Associator Decomposition
 (`erlangen_epitaph_zorn_associator_decomposition`):**
-For any $\mathbf{u}, \mathbf{w}, \mathbf{v} \in R^3$, the Zorn associator
-$[U(\mathbf{u}), U(\mathbf{w}), V(\mathbf{v})] = (U(\mathbf{u})U(\mathbf{w}))V(\mathbf{v}) - U(\mathbf{u})(U(\mathbf{w})V(\mathbf{v}))$
-equals:
-- lower-right scalar component $s = (\mathbf{u} \times \mathbf{w}) \cdot \mathbf{v}$
-  (the chiral scalar triple product volume),
-- upper-right vector component $-(\mathbf{w} \cdot \mathbf{v})\,\mathbf{u}$
-  (non-associative sheet recoil),
-with all other components strictly zero. -/
+For any $\mathbf{u}, \mathbf{w}, \mathbf{v} \in R^3$:
+1. The mixed-sheet Zorn associator
+   $[U(\mathbf{u}), U(\mathbf{w}), V(\mathbf{v})] = (U(\mathbf{u})U(\mathbf{w}))V(\mathbf{v}) - U(\mathbf{u})(U(\mathbf{w})V(\mathbf{v}))$
+   equals the upper-right sheet BAC-CAB recoil $U\bigl((\mathbf{w} \cdot \mathbf{v})\,\mathbf{u} - (\mathbf{u} \cdot \mathbf{v})\,\mathbf{w}\bigr)$;
+2. The pure-sheet Zorn associator
+   $[U(\mathbf{u}), U(\mathbf{w}), U(\mathbf{v})] = (U(\mathbf{u})U(\mathbf{w}))U(\mathbf{v}) - U(\mathbf{u})(U(\mathbf{w})U(\mathbf{v}))$
+   equals the chiral scalar triple product volume $-\bigl((\mathbf{u} \times \mathbf{w}) \cdot \mathbf{v}\bigr)\,K_0$. -/
 theorem erlangen_epitaph_zorn_associator_decomposition
-    (u₁ u₂ u₃ w₁ w₂ w₃ v₁ v₂ v₃ : R) :
+    {R : Type*} [CommRing R] (u₁ u₂ u₃ w₁ w₂ w₃ v₁ v₂ v₃ : R) :
     associatorZ (sheetU u₁ u₂ u₃) (sheetU w₁ w₂ w₃) (sheetV v₁ v₂ v₃) =
-      ⟨0,
+      ⟨0, 0,
+       (w₁ * v₁ + w₂ * v₂ + w₃ * v₃) * u₁ - (u₁ * v₁ + u₂ * v₂ + u₃ * v₃) * w₁,
+       (w₁ * v₁ + w₂ * v₂ + w₃ * v₃) * u₂ - (u₁ * v₁ + u₂ * v₂ + u₃ * v₃) * w₂,
+       (w₁ * v₁ + w₂ * v₂ + w₃ * v₃) * u₃ - (u₁ * v₁ + u₂ * v₂ + u₃ * v₃) * w₃,
+       0, 0, 0⟩ ∧
+    associatorZ (sheetU u₁ u₂ u₃) (sheetU w₁ w₂ w₃) (sheetU v₁ v₂ v₃) =
+      ⟨-((u₂ * w₃ - u₃ * w₂) * v₁ + (u₃ * w₁ - u₁ * w₃) * v₂ + (u₁ * w₂ - u₂ * w₁) * v₃),
        (u₂ * w₃ - u₃ * w₂) * v₁ + (u₃ * w₁ - u₁ * w₃) * v₂ + (u₁ * w₂ - u₂ * w₁) * v₃,
-       -(w₁ * v₁ + w₂ * v₂ + w₃ * v₃) * u₁,
-       -(w₁ * v₁ + w₂ * v₂ + w₃ * v₃) * u₂,
-       -(w₁ * v₁ + w₂ * v₂ + w₃ * v₃) * u₃,
-       0, 0, 0⟩ := by
-  refine ext_fields ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ <;>
-    (dsimp [associatorZ, subZ, mulZ, sheetU, sheetV]; ring)
+       0, 0, 0, 0, 0, 0⟩ := by
+  refine ⟨?_, ?_⟩
+  · refine ext_fields ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ <;>
+      (dsimp [associatorZ, subZ, mulZ, sheetU, sheetV]; ring)
+  · refine ext_fields ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ <;>
+      (dsimp [associatorZ, subZ, mulZ, sheetU]; ring)
 
 /-- Diagonal Zorn element $\mathrm{diag}(r, s)$ in `ZornCell R`. -/
 def diagZ (r s : R) : ZornCell R :=
@@ -167,7 +172,7 @@ For any diagonal Zorn state $D = \mathrm{diag}(r, s)$:
    (exact operator reconstruction from trace and supertrace);
 2. $4 \det_Z(D) = \mathrm{Tr}(D)^2 - \mathrm{STr}(D)^2$
    (Lorentzian / Krein norm splitting into symmetric action square minus chiral charge square). -/
-theorem quantum_key_K0_diagonal_reconstruction (r s : R) :
+theorem quantum_key_K0_diagonal_reconstruction {R : Type*} [CommRing R] (r s : R) :
     smulZ 2 (diagZ r s) =
       addZ (smulZ (traceZ (diagZ r s)) oneZ)
            (smulZ (superTraceZ (diagZ r s)) paraSymplecticK0) ∧

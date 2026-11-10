@@ -12,7 +12,7 @@ the structural replacement for expanding nested Zorn-matrix commutators.
 
 namespace InfoGeometry.Algebra
 
-variable {R A : Type*} [CommRing R] [NonUnitalNonAssocRing A] [Module R A]
+variable {R A : Type*} [Ring R] [NonUnitalNonAssocRing A] [Module R A]
   [IsScalarTower R A A] [SMulCommClass R A A]
 
 theorem NonAssocDerivation.stanDerMap_covariant

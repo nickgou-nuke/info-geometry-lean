@@ -29,6 +29,34 @@ def wittenIndex {m n : ℕ} (Q : FiniteSupercharge m n) : ℤ :=
   (Module.finrank ℝ (LinearMap.ker Q.qPlus) : ℤ) -
     (Module.finrank ℝ (LinearMap.ker Q.qMinus) : ℤ)
 
+/-- Rank–nullity identifies the kernel index with the grading-dimension
+difference whenever the two odd maps have equal rank.  The square-zero fields
+in `FiniteSupercharge` alone do not imply this rank balance; it is an explicit
+condition supplied, for example, by an intertwining equivalence. -/
+theorem wittenIndex_eq_dimension_difference_of_range_finrank_eq
+    {m n : ℕ} (Q : FiniteSupercharge m n)
+    (hRank : Module.finrank ℝ (LinearMap.range Q.qPlus) =
+      Module.finrank ℝ (LinearMap.range Q.qMinus)) :
+    wittenIndex Q = (m : ℤ) - n := by
+  let rPlus := Module.finrank ℝ (LinearMap.range Q.qPlus)
+  let rMinus := Module.finrank ℝ (LinearMap.range Q.qMinus)
+  let kPlus := Module.finrank ℝ (LinearMap.ker Q.qPlus)
+  let kMinus := Module.finrank ℝ (LinearMap.ker Q.qMinus)
+  have hPlus : rPlus + kPlus = m := by
+    simpa [rPlus, kPlus, Plus, Module.finrank_fin_fun] using
+      (LinearMap.finrank_range_add_finrank_ker Q.qPlus)
+  have hMinus : rMinus + kMinus = n := by
+    simpa [rMinus, kMinus, Minus, Module.finrank_fin_fun] using
+      (LinearMap.finrank_range_add_finrank_ker Q.qMinus)
+  have hRank' : (rPlus : ℤ) = rMinus := by
+    exact_mod_cast hRank
+  have hPlus' : (rPlus : ℤ) + kPlus = m := by
+    exact_mod_cast hPlus
+  have hMinus' : (rMinus : ℤ) + kMinus = n := by
+    exact_mod_cast hMinus
+  change (kPlus : ℤ) - kMinus = (m : ℤ) - n
+  omega
+
 /-- The canonical finite complex with vanishing odd supercharges. -/
 def zeroSupercharge (m n : ℕ) : FiniteSupercharge m n where
   qPlus := 0
@@ -54,8 +82,10 @@ theorem zeroSupercharge_qMinus_ker (m n : ℕ) :
 
 theorem zeroSupercharge_wittenIndex (m n : ℕ) :
     wittenIndex (zeroSupercharge m n) = (m : ℤ) - n := by
-  unfold wittenIndex
-  rw [zeroSupercharge_qPlus_ker, zeroSupercharge_qMinus_ker]
+  apply wittenIndex_eq_dimension_difference_of_range_finrank_eq
+  change Module.finrank ℝ (LinearMap.range (0 : Plus m →ₗ[ℝ] Minus n)) =
+    Module.finrank ℝ (LinearMap.range (0 : Minus n →ₗ[ℝ] Plus m))
+  rw [LinearMap.range_zero, LinearMap.range_zero, finrank_bot, finrank_bot]
 
 theorem zeroSupercharge_wittenIndex_add
     (m n p q : ℕ) :

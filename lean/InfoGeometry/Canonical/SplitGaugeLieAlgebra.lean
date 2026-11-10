@@ -9,7 +9,7 @@ import InfoGeometry.Canonical.SplitGaugeGroup
 
 namespace InfoGeometry.Canonical
 
-variable (R : Type*) [CommRing R]
+variable (R : Type*) [Ring R]
 
 /-- 
   The Lie Algebra 𝔰𝔬(5,5) is the space of matrices X satisfying:
@@ -27,7 +27,7 @@ def matrix_commutator (X Y : Matrix (Sum (Fin 5) (Fin 5)) (Sum (Fin 5) (Fin 5)) 
   Theorem: The Lie algebra 𝔰𝔬(5,5) is closed under the commutator.
   If X, Y ∈ 𝔰𝔬(5,5), then [X, Y] ∈ 𝔰𝔬(5,5).
 -/
-theorem so55_lie_algebra_closure 
+theorem so55_lie_algebra_closure (R : Type*) [CommRing R]
     (X Y : Matrix (Sum (Fin 5) (Fin 5)) (Sum (Fin 5) (Fin 5)) R)
     (hX : is_so55_lie_algebra R X)
     (hY : is_so55_lie_algebra R Y) : 

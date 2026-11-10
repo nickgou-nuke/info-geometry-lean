@@ -11,8 +11,7 @@ equation is simply transported along a genuine Lie equivalence.
 
 theorem LinearEquiv.map_bracket_eigenvector
     {R L : Type*}
-    [CommRing R] [LieRing L] [Module R L]
-    [LieAlgebra R L]
+    [Ring R] [LieRing L] [Module R L]
     (e : L ≃ₗ[R] L)
     (hbracket : ∀ u v, e ⁅u, v⁆ = ⁅e u, e v⁆)
     (x H K : L) (a : R)
@@ -27,7 +26,7 @@ theorem LinearEquiv.map_bracket_eigenvector
 
 theorem LinearEquiv.map_eigenvector_under_conjugate_weight
     {R L H : Type*}
-    [CommRing R] [LieRing L] [Module R L] [LieAlgebra R L]
+    [Ring R] [LieRing L] [Module R L]
     [AddCommGroup H] [Module R H]
     (e : L ≃ₗ[R] L) (c : H ≃ₗ[R] H)
     (ι : H →ₗ[R] L)

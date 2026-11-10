@@ -18,8 +18,96 @@ namespace InfoGeometry.OperatorAlgebra.LieJordanHodgeBridge
 attribute [local instance 100] LieRing.ofAssociativeRing
 
 open InfoGeometry.Core.JordanMultiplicationClosure
+open InfoGeometry.OperatorAlgebra.LieJordanDualTransport
 open InfoGeometry.OperatorAlgebra.LieJordanCliffordDouble
 open InfoGeometry.OperatorAlgebra.LieJordanBoundaryCalculus
+
+section NoncommScalars
+
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
+
+/-- Exchange the two boundary blocks over any `[Ring R]`. -/
+def ringCoboundary (v : A) : Module.End R (A × A) :=
+  swapOp * ringBoundary (R := R) v * swapOp
+
+@[simp] theorem ringCoboundary_apply (v : A) (z : A × A) :
+    ringCoboundary (R := R) v z =
+      (jordanLeft (R := R) v z.2, ringAd (R := R) v z.1) := rfl
+
+theorem ringBoundary_ringCoboundary_anticommutator (u v : A) :
+    ringBoundary (R := R) u * ringCoboundary (R := R) v +
+      ringCoboundary (R := R) v * ringBoundary (R := R) u =
+        liftOp (jordanLeft (R := R) (u * v + v * u)) := by
+  apply LinearMap.ext
+  intro z
+  apply Prod.ext
+  · change (u * (v * z.1 - z.1 * v) - (v * z.1 - z.1 * v) * u) +
+      (v * (u * z.1 + z.1 * u) + (u * z.1 + z.1 * u) * v) =
+      (u * v + v * u) * z.1 + z.1 * (u * v + v * u)
+    noncomm_ring
+  · change (u * (v * z.2 + z.2 * v) + (v * z.2 + z.2 * v) * u) +
+      (v * (u * z.2 - z.2 * u) - (u * z.2 - z.2 * u) * v) =
+      (u * v + v * u) * z.2 + z.2 * (u * v + v * u)
+    noncomm_ring
+
+theorem ringCoboundary_sq (v : A) :
+    ringCoboundary (R := R) v * ringCoboundary (R := R) v =
+      liftOp (ringAd (R := R) (v * v)) := by
+  apply LinearMap.ext
+  intro z
+  apply Prod.ext
+  · change v * (v * z.1 - z.1 * v) + (v * z.1 - z.1 * v) * v =
+      (v * v) * z.1 - z.1 * (v * v)
+    noncomm_ring
+  · change v * (v * z.2 + z.2 * v) - (v * z.2 + z.2 * v) * v =
+      (v * v) * z.2 - z.2 * (v * v)
+    noncomm_ring
+
+theorem ringCoboundary_square_zero {v : A} (hv : v * v = 0) :
+    ringCoboundary (R := R) v * ringCoboundary (R := R) v = 0 := by
+  rw [ringCoboundary_sq, hv]
+  apply LinearMap.ext
+  intro z
+  change (0 * z.1 - z.1 * 0, 0 * z.2 - z.2 * 0) = (0, 0)
+  simp
+
+theorem ringBoundary_commutes_hodge {u : A} (hu : u * u = 0) (v : A) :
+    ringBoundary (R := R) u * liftOp (jordanLeft (R := R) (u * v + v * u)) =
+      liftOp (jordanLeft (R := R) (u * v + v * u)) * ringBoundary (R := R) u := by
+  rw [← ringBoundary_ringCoboundary_anticommutator]
+  have hd := ringBoundary_square_zero (R := R) hu
+  simp only [mul_add, add_mul, ← mul_assoc, hd, zero_mul, zero_add]
+  simp only [mul_assoc, hd, mul_zero, add_zero]
+
+/-- Its value on the identity pair need not be zero over any `[Ring R]`. -/
+theorem hodge_identity_pair (u v : A) :
+    liftOp (jordanLeft (R := R) (u * v + v * u)) (1, 1) =
+      ((2 : ℕ) • (u * v + v * u), (2 : ℕ) • (u * v + v * u)) := by
+  change ((u * v + v * u) * 1 + 1 * (u * v + v * u),
+    (u * v + v * u) * 1 + 1 * (u * v + v * u)) = _
+  simp only [mul_one, one_mul, two_nsmul]
+
+theorem map_ringCoboundary {B : Type*} [Ring B] [Module R B]
+    [IsScalarTower R B B] [SMulCommClass R B B]
+    (f : A →+* B) (v : A) (z : A × A) :
+    Prod.map f f (ringCoboundary (R := R) v z) =
+      ringCoboundary (R := R) (f v) (Prod.map f f z) := by
+  apply Prod.ext
+  · change f (v * z.2 + z.2 * v) = f v * f z.2 + f z.2 * f v
+    simp only [map_add, map_mul]
+  · change f (v * z.1 - z.1 * v) = f v * f z.1 - f z.1 * f v
+    simp only [map_sub, map_mul]
+
+/-- The Jordan Hodge action, evaluated at the unit, need not vanish over any `[Ring R]`. -/
+theorem jordan_quadratic_one (u v : A) :
+    jordanLeft (R := R) (u * v + v * u) 1 = 2 • (u * v + v * u) := by
+  change (u * v + v * u) * 1 + 1 * (u * v + v * u) = _
+  simp only [mul_one, one_mul, two_nsmul]
+
+end NoncommScalars
+
+section CommRingScalars
 
 variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
 
@@ -79,14 +167,6 @@ theorem boundary_commutes_hodge {u : A} (hu : u * u = 0) (v : A) :
   simp only [mul_add, add_mul, ← mul_assoc, hd, zero_mul, zero_add]
   simp only [mul_assoc, hd, mul_zero, add_zero]
 
-/-- Its value on the identity pair need not be zero. -/
-theorem hodge_identity_pair (u v : A) :
-    liftOp (jordanLeft (R := R) (u * v + v * u)) (1, 1) =
-      ((2 : ℕ) • (u * v + v * u), (2 : ℕ) • (u * v + v * u)) := by
-  change ((u * v + v * u) * 1 + 1 * (u * v + v * u),
-    (u * v + v * u) * 1 + 1 * (u * v + v * u)) = _
-  simp only [mul_one, one_mul, two_nsmul]
-
 /-- A ring homomorphism transports the exchanged blocks without reordering them. -/
 theorem map_coboundary {B : Type*} [Ring B] [Algebra R B]
     (f : A →+* B) (v : A) (z : A × A) :
@@ -98,10 +178,6 @@ theorem map_coboundary {B : Type*} [Ring B] [Algebra R B]
   · change f (v * z.1 - z.1 * v) = f v * f z.1 - f z.1 * f v
     simp only [map_sub, map_mul]
 
-/-- The Jordan Hodge action, evaluated at the unit, need not vanish. -/
-theorem jordan_quadratic_one (u v : A) :
-    jordanLeft (R := R) (u * v + v * u) 1 = 2 • (u * v + v * u) := by
-  change (u * v + v * u) * 1 + 1 * (u * v + v * u) = _
-  simp only [mul_one, one_mul, two_nsmul]
+end CommRingScalars
 
 end InfoGeometry.OperatorAlgebra.LieJordanHodgeBridge

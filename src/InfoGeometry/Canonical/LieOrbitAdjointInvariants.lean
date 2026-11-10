@@ -21,7 +21,7 @@ open Matrix
 section
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Adjoint action of `GL(n,R)` on `Matrix n n R` by conjugation. -/
 def adjointAction (g : GL n R) (A : Matrix n n R) : Matrix n n R :=
@@ -39,6 +39,10 @@ theorem adjointAction_mul (g h : GL n R) (A : Matrix n n R) :
     adjointAction (g * h) A = adjointAction g (adjointAction h A) := by
   ext i j
   simp [adjointAction, Matrix.mul_assoc]
+
+section CommRing
+
+variable {R : Type*} [CommRing R]
 
 theorem trace_adjointAction (g : GL n R) (A : Matrix n n R) :
     Matrix.trace (adjointAction g A) = Matrix.trace A := by
@@ -59,6 +63,8 @@ theorem det_constant_on_adjointOrbit (A B : Matrix n n R)
     Matrix.det B = Matrix.det A := by
   rcases hB with ⟨g, rfl⟩
   exact det_adjointAction g A
+
+end CommRing
 
 end
 

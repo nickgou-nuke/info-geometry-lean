@@ -5,7 +5,9 @@ import Mathlib.Tactic
 
 namespace InfoGeometry.Algebra.ExplogRN
 
-variable {A : Type*} [CommRing A]
+section Ring
+
+variable {A : Type*} [Ring A]
 
 def IsDerivation (D : A → A) : Prop :=
   (∀ x y, D (x + y) = D x + D y) ∧
@@ -22,6 +24,17 @@ theorem derivation_one (D : A → A) (hD : IsDerivation D) : D 1 = 0 := by
 
 def dlog (D : A → A) (u : Aˣ) : A :=
   (u⁻¹ : Aˣ).val * D (u : A)
+
+@[simp] theorem dlog_one (D : A → A) (hD : IsDerivation D) :
+    dlog D 1 = 0 := by
+  dsimp [dlog]
+  rw [derivation_one D hD, mul_zero]
+
+end Ring
+
+section CommRing
+
+variable {A : Type*} [CommRing A]
 
 theorem derivation_inv (D : A → A) (hD : IsDerivation D) (u : Aˣ) :
     D (u⁻¹ : Aˣ).val =
@@ -62,11 +75,6 @@ theorem dlog_mul (D : A → A) (hD : IsDerivation D) (u v : Aˣ) :
     _ = (u⁻¹ : Aˣ).val * D (u : A) +
           (v⁻¹ : Aˣ).val * D (v : A) := by rw [hv, hu, mul_one, mul_one]
 
-@[simp] theorem dlog_one (D : A → A) (hD : IsDerivation D) :
-    dlog D 1 = 0 := by
-  dsimp [dlog]
-  rw [derivation_one D hD, mul_zero]
-
 theorem dlog_inv (D : A → A) (hD : IsDerivation D) (u : Aˣ) :
     dlog D (u⁻¹) = -dlog D u := by
   have h := dlog_mul D hD u u⁻¹
@@ -77,5 +85,7 @@ theorem radon_nikodym_cocycle_dlog
     (D : A → A) (hD : IsDerivation D) (rho₁₂ rho₂₃ : Aˣ) :
     dlog D (rho₁₂ * rho₂₃) = dlog D rho₁₂ + dlog D rho₂₃ :=
   dlog_mul D hD rho₁₂ rho₂₃
+
+end CommRing
 
 end InfoGeometry.Algebra.ExplogRN

@@ -16,7 +16,7 @@ universe u v
 
 /-- Canonical matrix general linear group. -/
 abbrev «GL» (R : Type u) (V : Type v)
-    [CommRing R] [Fintype V] [DecidableEq V] :=
+    [Ring R] [Fintype V] [DecidableEq V] :=
   Matrix.GeneralLinearGroup V R
 
 /-- Determinant homomorphism `GL(V) →* Rˣ`. -/

@@ -68,7 +68,7 @@ theorem gradeAdd_m1_p1 : gradeAdd m1 p1 = some z0 := rfl
 theorem gradeAdd_m2_p2 : gradeAdd m2 p2 = some z0 := rfl
 
 /-- Abstract Jordan pair data over `R`. -/
-structure JordanPair (R : Type*) [CommRing R] where
+structure JordanPair (R : Type*) [Ring R] where
   Vplus : Type*
   Vminus : Type*
   [plus_add : AddCommGroup Vplus]
@@ -103,7 +103,7 @@ attribute [instance] JordanPair.plus_module JordanPair.minus_module
 
 namespace JordanPair
 
-variable {R : Type*} [CommRing R] (J : JordanPair R)
+variable {R : Type*} [Ring R] (J : JordanPair R)
 
 /-- Consolidated readback of the four defining Jordan-pair identities. -/
 theorem jordanPairIdentities :

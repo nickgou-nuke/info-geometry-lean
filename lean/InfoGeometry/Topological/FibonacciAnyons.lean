@@ -18,7 +18,7 @@ namespace InfoGeometry.Topological.FibonacciAnyons
 
 open Matrix
 
-variable {K : Type*} [CommRing K]
+variable {K : Type*} [Ring K]
 
 /-- Raw Fibonacci fusion matrix `F = [[τ, √τ], [√τ, -τ]]`. -/
 def F_matrixOf (τ sqrtτ : K) : Matrix (Fin 2) (Fin 2) K :=
@@ -32,6 +32,18 @@ def R_matrixOf (q qInv : K) : Matrix (Fin 2) (Fin 2) K :=
 def R_dual_matrixOf (q qInv : K) : Matrix (Fin 2) (Fin 2) K :=
   !![q ^ 4, 0; 0, qInv ^ 3]
 
+lemma pow_mul_pow_eq_one (a b : K) (h : a * b = 1) (m : ℕ) :
+    a ^ m * b ^ m = 1 := by
+  induction m with
+  | zero => simp
+  | succ m ih =>
+    calc a ^ (m + 1) * b ^ (m + 1)
+      _ = (a ^ m * a) * (b * b ^ m) := by rw [pow_succ, pow_succ']
+      _ = a ^ m * (a * b) * b ^ m := by noncomm_ring
+      _ = a ^ m * 1 * b ^ m := by rw [h]
+      _ = a ^ m * b ^ m := by simp
+      _ = 1 := ih
+
 /-- The raw diagonal `R` matrix is cancelled by its dual when `qInv` is `q`'s inverse. -/
 theorem R_matrixOf_mul_R_dual_matrixOf
     (q qInv : K) (hLeft : qInv * q = 1) (hRight : q * qInv = 1) :
@@ -39,11 +51,11 @@ theorem R_matrixOf_mul_R_dual_matrixOf
   ext i j
   fin_cases i <;> fin_cases j
   · simp [R_matrixOf, R_dual_matrixOf, Matrix.mul_apply, Fin.sum_univ_two,
-      ← mul_pow, hLeft]
+      pow_mul_pow_eq_one qInv q hLeft 4]
   · simp [R_matrixOf, R_dual_matrixOf, Matrix.mul_apply, Fin.sum_univ_two]
   · simp [R_matrixOf, R_dual_matrixOf, Matrix.mul_apply, Fin.sum_univ_two]
   · simp [R_matrixOf, R_dual_matrixOf, Matrix.mul_apply, Fin.sum_univ_two,
-      ← mul_pow, hRight]
+      pow_mul_pow_eq_one q qInv hRight 3]
 
 /-- The dual diagonal matrix also cancels `R_matrixOf` on the left. -/
 theorem R_dual_matrixOf_mul_R_matrixOf
@@ -52,11 +64,11 @@ theorem R_dual_matrixOf_mul_R_matrixOf
   ext i j
   fin_cases i <;> fin_cases j
   · simp [R_matrixOf, R_dual_matrixOf, Matrix.mul_apply, Fin.sum_univ_two,
-      ← mul_pow, hLeft]
+      pow_mul_pow_eq_one q qInv hLeft 4]
   · simp [R_matrixOf, R_dual_matrixOf, Matrix.mul_apply, Fin.sum_univ_two]
   · simp [R_matrixOf, R_dual_matrixOf, Matrix.mul_apply, Fin.sum_univ_two]
   · simp [R_matrixOf, R_dual_matrixOf, Matrix.mul_apply, Fin.sum_univ_two,
-      ← mul_pow, hRight]
+      pow_mul_pow_eq_one qInv q hRight 3]
 
 /-- Raw non-diagonal middle braid matrix `B = F R F`. -/
 def B_matrixOf (q qInv τ sqrtτ : K) : Matrix (Fin 2) (Fin 2) K :=
@@ -64,7 +76,7 @@ def B_matrixOf (q qInv τ sqrtτ : K) : Matrix (Fin 2) (Fin 2) K :=
 
 /--
 The Fibonacci fusion matrix is involutive from the finite golden-ratio
-relations `τ^2 + τ = 1` and `sqrtτ^2 = τ`.
+relations `τ^2 + τ = 1` and `sqrtτ^2 = τ` over any `[Ring K]`.
 -/
 theorem F_involution (τ sqrtτ : K)
     (hτ : τ ^ 2 + τ = 1) (hsqrtτ : sqrtτ ^ 2 = τ) :
@@ -73,11 +85,13 @@ theorem F_involution (τ sqrtτ : K)
   fin_cases i <;> fin_cases j <;>
     simp [F_matrixOf, Matrix.mul_apply, Fin.sum_univ_two]
   · rw [← hτ, ← hsqrtτ]
-    ring
-  · ring
-  · ring
+    noncomm_ring
+  · rw [← hsqrtτ]
+    noncomm_ring
+  · rw [← hsqrtτ]
+    noncomm_ring
   · rw [← hτ, ← hsqrtτ]
-    ring
+    noncomm_ring
 
 /-- The finite middle braid generator is definitionally `F R F`. -/
 theorem B_matrix_eq_FRF (q qInv τ sqrtτ : K) :
@@ -102,33 +116,33 @@ theorem fibonacci_artin_relation (q qInv τ sqrtτ : K)
 /-! ## Functorial transport of the raw matrix target -/
 
 /-- Coordinatewise application of a ring homomorphism to a matrix. -/
-def mapMatrix {m n K L : Type*} [CommRing K] [CommRing L]
+def mapMatrix {m n K L : Type*} [Ring K] [Ring L]
     (f : K →+* L) (M : Matrix m n K) : Matrix m n L :=
   fun i j => f (M i j)
 
 /-- Matrix multiplication commutes with coordinatewise ring-hom transport. -/
-theorem mapMatrix_mul {m n p K L : Type*} [Fintype n] [CommRing K] [CommRing L]
+theorem mapMatrix_mul {m n p K L : Type*} [Fintype n] [Ring K] [Ring L]
     (f : K →+* L) (A : Matrix m n K) (B : Matrix n p K) :
     mapMatrix f (A * B) = mapMatrix f A * mapMatrix f B := by
   ext i j
   simp [mapMatrix, Matrix.mul_apply]
 
 /-- Coordinatewise ring-hom transport preserves matrix addition. -/
-theorem mapMatrix_add {m n K L : Type*} [CommRing K] [CommRing L]
+theorem mapMatrix_add {m n K L : Type*} [Ring K] [Ring L]
     (f : K →+* L) (A B : Matrix m n K) :
     mapMatrix f (A + B) = mapMatrix f A + mapMatrix f B := by
   ext i j
   simp [mapMatrix]
 
 /-- Coordinatewise ring-hom transport preserves the zero matrix. -/
-theorem mapMatrix_zero {m n K L : Type*} [CommRing K] [CommRing L]
+theorem mapMatrix_zero {m n K L : Type*} [Ring K] [Ring L]
     (f : K →+* L) :
     mapMatrix f (0 : Matrix m n K) = 0 := by
   ext i j
   simp [mapMatrix]
 
 /-- Coordinatewise ring-hom transport preserves the identity matrix. -/
-theorem mapMatrix_one {n K L : Type*} [DecidableEq n] [CommRing K] [CommRing L]
+theorem mapMatrix_one {n K L : Type*} [DecidableEq n] [Ring K] [Ring L]
     (f : K →+* L) :
     mapMatrix f (1 : Matrix n n K) = 1 := by
   ext i j
@@ -138,21 +152,21 @@ theorem mapMatrix_one {n K L : Type*} [DecidableEq n] [CommRing K] [CommRing L]
   · simp [mapMatrix, h]
 
 /-- The raw `F` matrix commutes with coordinatewise ring-hom transport. -/
-theorem mapMatrix_F {K L : Type*} [CommRing K] [CommRing L]
+theorem mapMatrix_F {K L : Type*} [Ring K] [Ring L]
     (f : K →+* L) (τ sqrtτ : K) :
     mapMatrix f (F_matrixOf τ sqrtτ) = F_matrixOf (f τ) (f sqrtτ) := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [mapMatrix, F_matrixOf]
 
 /-- The raw `R` matrix commutes with coordinatewise ring-hom transport. -/
-theorem mapMatrix_R {K L : Type*} [CommRing K] [CommRing L]
+theorem mapMatrix_R {K L : Type*} [Ring K] [Ring L]
     (f : K →+* L) (q qInv : K) :
     mapMatrix f (R_matrixOf q qInv) = R_matrixOf (f q) (f qInv) := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [mapMatrix, R_matrixOf]
 
 /-- The raw `B = F R F` matrix commutes with coordinatewise ring-hom transport. -/
-theorem mapMatrix_B {K L : Type*} [CommRing K] [CommRing L]
+theorem mapMatrix_B {K L : Type*} [Ring K] [Ring L]
     (f : K →+* L) (q qInv τ sqrtτ : K) :
     mapMatrix f (B_matrixOf q qInv τ sqrtτ) =
       B_matrixOf (f q) (f qInv) (f τ) (f sqrtτ) := by
@@ -160,10 +174,9 @@ theorem mapMatrix_B {K L : Type*} [CommRing K] [CommRing L]
   rw [mapMatrix_mul, mapMatrix_mul, mapMatrix_F, mapMatrix_R]
 
 /--
-The raw Fibonacci Artin equality is preserved by any commutative-ring
-homomorphism.
+The raw Fibonacci Artin equality is preserved by any ring homomorphism.
 -/
-theorem fibonacci_artin_relation_map {K L : Type*} [CommRing K] [CommRing L]
+theorem fibonacci_artin_relation_map {K L : Type*} [Ring K] [Ring L]
     (f : K →+* L) (q qInv τ sqrtτ : K)
     (hArtin :
       R_matrixOf q qInv * B_matrixOf q qInv τ sqrtτ * R_matrixOf q qInv =

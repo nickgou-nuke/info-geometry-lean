@@ -49,7 +49,7 @@ open scoped BigOperators
 
 /-- An abstract composition algebra over a commutative ring $R$
     satisfying the Hurwitz-Jacobson axioms (Manivel Definition 2.3.1). -/
-structure CompositionAlgebra (R : Type*) (A : Type*) [CommRing R] [AddCommGroup A] [Module R A] where
+structure CompositionAlgebra (R : Type*) (A : Type*) [Ring R] [AddCommGroup A] [Module R A] where
   mul : A → A → A
   one : A
   q : A → R
@@ -79,7 +79,7 @@ structure CompositionAlgebra (R : Type*) (A : Type*) [CommRing R] [AddCommGroup 
 
 namespace CompositionAlgebra
 
-variable {R A : Type*} [CommRing R] [AddCommGroup A] [Module R A]
+variable {R A : Type*} [Ring R] [AddCommGroup A] [Module R A]
 
 /-- The imaginary part of an element: $\mathrm{Im}(x) = x - \mathrm{Re}(x) 1$. -/
 def imPart (CA : CompositionAlgebra R A) (x : A) : A :=
@@ -116,7 +116,7 @@ end CompositionAlgebra
     2. Zero Divisors and Left/Right Multiplication (Manivel Lemma 2.3.9 & 2.3.10)
     ========================================================================= -/
 
-variable {R A : Type*} [CommRing R] [AddCommGroup A] [Module R A]
+variable {R A : Type*} [Ring R] [AddCommGroup A] [Module R A]
 
 /-- 🏆 THEOREM 1 (Manivel Theorem 2.3.10):
     For any isotropic element $x$ ($q(x) = 0$), the entire image of left multiplication
@@ -271,7 +271,7 @@ theorem polarB_symm (CA : CompositionAlgebra R A) (x y : A) :
     CA.polarB x y = CA.polarB y x := by
   dsimp [CompositionAlgebra.polarB]
   rw [add_comm x y]
-  ring
+  abel
 
 /-- 🏆 THEOREM 11 (Image $x A$ is Totally Isotropic):
     For any isotropic element $x$, the polar bilinear form vanishes on the entire image $\operatorname{im}(L_x)$. -/
@@ -284,7 +284,7 @@ theorem range_leftMul_polarB_zero
   rw [CA.q_mul, CA.q_mul, CA.q_mul]
   dsimp [CompositionAlgebra.isIsotropic] at hx
   rw [hx, zero_mul, zero_mul, zero_mul]
-  ring
+  simp
 
 /-- 🏆 THEOREM 12 (Kernel of Left-Multiplication is Totally Isotropic):
     For any nonzero element `x ≠ 0`, the polar bilinear form vanishes on the entire kernel $\ker(L_x)$. -/
@@ -377,7 +377,6 @@ theorem conj_mul_purely_imaginary
   have h_sign : (- (1 : R)) • (- (1 : R)) • CA.mul v u = ((- (1 : R)) * (- (1 : R))) • CA.mul v u := by
     rw [smul_smul]
   rw [h_sign]
-  ring_nf
   simp
 
 end InfoGeometry.Algebra.ManivelG2

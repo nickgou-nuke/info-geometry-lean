@@ -31,15 +31,13 @@ open InfoGeometry.LogJordanKreinCore
 open InfoGeometry.Canonical.SplitCARCurrentSourceAdapter
 open InfoGeometry.Canonical.LogJordanVirasoroIntertwiner
 
-variable {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
-variable [AddCommGroup V] [Module 𝕜 V]
-variable {A : Type*} [Ring A]
-
-local instance : LieRing (Module.End 𝕜 V) := LieRing.ofAssociativeRing
-local instance : LieRing (Module.End 𝕜 (V × V)) := LieRing.ofAssociativeRing
-
 /-- The logarithmic extension carrier space $V_{\text{log}} = V \times V$. -/
 abbrev Vlog (V : Type*) := V × V
+
+section Ring
+
+variable {𝕜 V : Type*} [Ring 𝕜]
+variable [AddCommGroup V] [Module 𝕜 V]
 
 /-- Upper-triangular block operator on $V \times V$ defined by diagonal operator `T` and off-diagonal operator `C`. -/
 def blockOp (T C : Module.End 𝕜 V) : Module.End 𝕜 (V × V) where
@@ -66,6 +64,22 @@ theorem blockOp_commutator (T1 C1 T2 C2 : Module.End 𝕜 V) :
   · simp [blockOp, LinearMap.commutator]
     abel
   · simp [blockOp, LinearMap.commutator]
+
+/-- Matrix multiplication evaluation on $2 \times 2$ Jordan cell. -/
+theorem jordanCell_mulVec_apply (Δ : 𝕜) (w : Fin 2 → 𝕜) :
+    Matrix.mulVec (jordanCell Δ) w = ![Δ * w 0 + w 1, Δ * w 1] := by
+  ext i
+  fin_cases i <;> simp [jordanCell, Matrix.mulVec, Matrix.vecHead, Matrix.vecTail]
+
+end Ring
+
+section CommRing
+
+variable {𝕜 V : Type*} [CommRing 𝕜]
+variable [AddCommGroup V] [Module 𝕜 V]
+
+local instance : LieRing (Module.End 𝕜 V) := LieRing.ofAssociativeRing
+local instance : LieRing (Module.End 𝕜 (V × V)) := LieRing.ofAssociativeRing
 
 /--
 **Virasoro 1-Cocycle Derivation Condition:**
@@ -110,6 +124,15 @@ def makeLogVirasoroRepresentation
     have h2 : c ⁅x, y⁆ = (ρ x).commutator (c y) + (c x).commutator (ρ y) := hc x y
     rw [h1, h2]
 
+end CommRing
+
+variable {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
+variable [AddCommGroup V] [Module 𝕜 V]
+variable {A : Type*} [Ring A]
+
+local instance : LieRing (Module.End 𝕜 V) := LieRing.ofAssociativeRing
+local instance : LieRing (Module.End 𝕜 (V × V)) := LieRing.ofAssociativeRing
+
 /--
 **Source-Derived Logarithmic Extension:**
 Extends an `AdapterData 𝕜 A V` representation to the logarithmic extension space $V \times V$.
@@ -120,12 +143,6 @@ noncomputable def AdapterData.toLogVirasoroExtension
     (hc : IsVirasoroCocycle D.toSugawaraVirasoroRepresentation c) :
     VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ Module.End 𝕜 (V × V) :=
   makeLogVirasoroRepresentation D.toSugawaraVirasoroRepresentation c hc
-
-/-- Matrix multiplication evaluation on $2 \times 2$ Jordan cell. -/
-theorem jordanCell_mulVec_apply (Δ : 𝕜) (w : Fin 2 → 𝕜) :
-    Matrix.mulVec (jordanCell Δ) w = ![Δ * w 0 + w 1, Δ * w 1] := by
-  ext i
-  fin_cases i <;> simp [jordanCell, Matrix.mulVec, Matrix.vecHead, Matrix.vecTail]
 
 /--
 **Logarithmic Virasoro Intertwiner Construction:**

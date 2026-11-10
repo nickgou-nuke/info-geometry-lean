@@ -44,7 +44,7 @@ open InfoGeometry.Clifford.Coquaternion
 open InfoGeometry.Clifford.Coquaternion.Coquaternion
 open InfoGeometry.Projective.SplitComposition
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### Section 1: Split-Octonion Cayley-Dickson Doubled Carrier $\mathbb{O}_s \cong \mathbb{D} \oplus \mathbb{D} \ell$ -/
 
@@ -106,19 +106,19 @@ theorem conjOct_one : conjOct ((1, 0) : SplitOct R) = (1, 0) := by
 @[simp]
 theorem normOct_zero : normOct (0 : SplitOct R) = 0 := by
   dsimp [normOct, normSq]
-  ring
+  simp
 
 /-- The norm of the zero split octonion pair is zero: $N(0, 0) = 0$. -/
 @[simp]
 theorem normOct_zero_pair : normOct ((0, 0) : SplitOct R) = 0 := by
   dsimp [normOct, normSq]
-  ring
+  simp
 
 /-- The norm of the unit element $(1, 0)$ is one: $N(1) = 1$. -/
 @[simp]
 theorem normOct_one : normOct ((1, 0) : SplitOct R) = 1 := by
   dsimp [normOct, normSq]
-  ring
+  simp
 
 /-- The unit element $(1, 0)$ lies on the split-octonionic unit sphere. -/
 theorem isUnitSphereOct_one : IsUnitSphereOct ((1, 0) : SplitOct R) :=
@@ -141,7 +141,9 @@ theorem conjOct_neg (x : SplitOct R) : conjOct (-x) = -conjOct x := by
 theorem conjOct_smul (c : R) (x : SplitOct R) : conjOct (c • x) = c • conjOct x := by
   rcases x with ⟨x1, x2⟩
   dsimp [conjOct]
-  rw [conj_smul, smul_neg]
+  rw [conj_smul]
+  congr 1
+  ext <;> simp
 
 /-! ### Section 2: Split-Octonionic 2-Carrier $\mathbb{O}_s^2$ and Total Norm -/
 
@@ -161,7 +163,7 @@ def IsUnitSphereOct2 (v : VectorOct2 R) : Prop :=
 @[simp]
 theorem normSqOct2_zero : normSqOct2 (fun _ => (0, 0) : VectorOct2 R) = 0 := by
   dsimp [normSqOct2, normOct, normSq]
-  ring
+  simp
 
 /-! ### Section 3: 2x2 Projector Representation of $\mathbb{O}_s\mathrm{P}^1$ -/
 
@@ -194,11 +196,11 @@ def basepoint1 : VectorOct2 R :=
   fun i => if i = 1 then (1, 0) else (0, 0)
 
 /-- First canonical basepoint projector $E_0 = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix}$. -/
-def E0 (R : Type*) [CommRing R] : Matrix (Fin 2) (Fin 2) R :=
+def E0 (R : Type*) [Ring R] : Matrix (Fin 2) (Fin 2) R :=
   !![1, 0; 0, 0]
 
 /-- Second canonical basepoint projector $E_1 = \begin{pmatrix} 0 & 0 \\ 0 & 1 \end{pmatrix}$. -/
-def E1 (R : Type*) [CommRing R] : Matrix (Fin 2) (Fin 2) R :=
+def E1 (R : Type*) [Ring R] : Matrix (Fin 2) (Fin 2) R :=
   !![0, 0; 0, 1]
 
 /-- Diagonal projector of the first basepoint matches $E_0$. -/
@@ -338,43 +340,43 @@ theorem motivicCellDimOct_succ (n : ℕ) : motivicCellDimOct (n + 1) = motivicCe
     projectors, orthogonal partition of unity, and 8-dimensional motivic cell attachment. -/
 structure SplitOctonionMotivicOP1Certificate : Prop where
   -- Section 1: Split-Octonion Cayley-Dickson Doubled Carrier
-  conjOct_involutive : ∀ (R : Type*) [CommRing R] (x : SplitOct R), conjOct (conjOct x) = x
-  conjOct_zero : ∀ (R : Type*) [CommRing R], conjOct (0 : SplitOct R) = 0
-  conjOct_one : ∀ (R : Type*) [CommRing R], conjOct ((1, 0) : SplitOct R) = (1, 0)
-  normOct_zero : ∀ (R : Type*) [CommRing R], normOct (0 : SplitOct R) = 0
-  normOct_one : ∀ (R : Type*) [CommRing R], normOct ((1, 0) : SplitOct R) = 1
-  isUnitSphereOct_one : ∀ (R : Type*) [CommRing R], IsUnitSphereOct ((1, 0) : SplitOct R)
+  conjOct_involutive : ∀ (R : Type*) [Ring R] (x : SplitOct R), conjOct (conjOct x) = x
+  conjOct_zero : ∀ (R : Type*) [Ring R], conjOct (0 : SplitOct R) = 0
+  conjOct_one : ∀ (R : Type*) [Ring R], conjOct ((1, 0) : SplitOct R) = (1, 0)
+  normOct_zero : ∀ (R : Type*) [Ring R], normOct (0 : SplitOct R) = 0
+  normOct_one : ∀ (R : Type*) [Ring R], normOct ((1, 0) : SplitOct R) = 1
+  isUnitSphereOct_one : ∀ (R : Type*) [Ring R], IsUnitSphereOct ((1, 0) : SplitOct R)
 
   -- Section 2: Split-Octonionic 2-Carrier and Total Norm
-  normSqOct2_zero : ∀ (R : Type*) [CommRing R], normSqOct2 (fun _ => (0, 0) : VectorOct2 R) = 0
-  basepoint0_normSq : ∀ (R : Type*) [CommRing R], normSqOct2 (basepoint0 : VectorOct2 R) = 1
-  basepoint1_normSq : ∀ (R : Type*) [CommRing R], normSqOct2 (basepoint1 : VectorOct2 R) = 1
-  basepoint0_sphere : ∀ (R : Type*) [CommRing R], IsUnitSphereOct2 (basepoint0 : VectorOct2 R)
-  basepoint1_sphere : ∀ (R : Type*) [CommRing R], IsUnitSphereOct2 (basepoint1 : VectorOct2 R)
+  normSqOct2_zero : ∀ (R : Type*) [Ring R], normSqOct2 (fun _ => (0, 0) : VectorOct2 R) = 0
+  basepoint0_normSq : ∀ (R : Type*) [Ring R], normSqOct2 (basepoint0 : VectorOct2 R) = 1
+  basepoint1_normSq : ∀ (R : Type*) [Ring R], normSqOct2 (basepoint1 : VectorOct2 R) = 1
+  basepoint0_sphere : ∀ (R : Type*) [Ring R], IsUnitSphereOct2 (basepoint0 : VectorOct2 R)
+  basepoint1_sphere : ∀ (R : Type*) [Ring R], IsUnitSphereOct2 (basepoint1 : VectorOct2 R)
 
   -- Section 3: 2x2 Projector Representation
-  projOctDiag_trace : ∀ (R : Type*) [CommRing R] (v : VectorOct2 R),
+  projOctDiag_trace : ∀ (R : Type*) [Ring R] (v : VectorOct2 R),
     Matrix.trace (projOctDiag v) = normSqOct2 v
-  projOctDiag_trace_on_sphere : ∀ (R : Type*) [CommRing R] (v : VectorOct2 R),
+  projOctDiag_trace_on_sphere : ∀ (R : Type*) [Ring R] (v : VectorOct2 R),
     IsUnitSphereOct2 v → Matrix.trace (projOctDiag v) = 1
-  projOctDiag_basepoint0 : ∀ (R : Type*) [CommRing R],
+  projOctDiag_basepoint0 : ∀ (R : Type*) [Ring R],
     projOctDiag (basepoint0 : VectorOct2 R) = E0 R
-  projOctDiag_basepoint1 : ∀ (R : Type*) [CommRing R],
+  projOctDiag_basepoint1 : ∀ (R : Type*) [Ring R],
     projOctDiag (basepoint1 : VectorOct2 R) = E1 R
 
   -- Section 4: Basepoint Orthogonal Projectors & Partition of Unity
-  E0_idempotent : ∀ (R : Type*) [CommRing R], E0 R * E0 R = E0 R
-  E1_idempotent : ∀ (R : Type*) [CommRing R], E1 R * E1 R = E1 R
-  E0_ortho_E1 : ∀ (R : Type*) [CommRing R], E0 R * E1 R = 0
-  E1_ortho_E0 : ∀ (R : Type*) [CommRing R], E1 R * E0 R = 0
-  partition_of_unity : ∀ (R : Type*) [CommRing R], E0 R + E1 R = 1
+  E0_idempotent : ∀ (R : Type*) [Ring R], E0 R * E0 R = E0 R
+  E1_idempotent : ∀ (R : Type*) [Ring R], E1 R * E1 R = E1 R
+  E0_ortho_E1 : ∀ (R : Type*) [Ring R], E0 R * E1 R = 0
+  E1_ortho_E0 : ∀ (R : Type*) [Ring R], E1 R * E0 R = 0
+  partition_of_unity : ∀ (R : Type*) [Ring R], E0 R + E1 R = 1
 
   -- Section 5: Inductive Motivic Cell Attachment
-  affineTopCellOct_coord_zero : ∀ (R : Type*) [CommRing R] (z : SplitOct R),
+  affineTopCellOct_coord_zero : ∀ (R : Type*) [Ring R] (z : SplitOct R),
     affineTopCellOct z 0 = z
-  affineTopCellOct_coord_one : ∀ (R : Type*) [CommRing R] (z : SplitOct R),
+  affineTopCellOct_coord_one : ∀ (R : Type*) [Ring R] (z : SplitOct R),
     affineTopCellOct z 1 = (1, 0)
-  affineTopCellOct_norm : ∀ (R : Type*) [CommRing R] (z : SplitOct R),
+  affineTopCellOct_norm : ∀ (R : Type*) [Ring R] (z : SplitOct R),
     normSqOct2 (affineTopCellOct z) = normOct z + 1
   cell_dim_zero : motivicCellDimOct 0 = 0
   cell_dim_one : motivicCellDimOct 1 = 8

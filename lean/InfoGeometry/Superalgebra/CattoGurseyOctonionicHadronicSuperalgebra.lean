@@ -32,7 +32,7 @@ namespace CattoGurseyOctonionicSuperalgebra
 
 open InfoGeometry.Canonical.GLSupermatrixGradedLie
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The actual 6|21 composite matrix, resolved into all four supported sectors. -/
 theorem composite_sector_resolution (Psi Phi : SuperMatrix 6 21 R) :

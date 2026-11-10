@@ -198,18 +198,20 @@ noncomputable def cgenRight : ChiralVirasoro 𝕜 :=
   inLeft_bracket_inRight (VirasoroAlgebra.cgen 𝕜) (VirasoroAlgebra.cgen 𝕜)
 
 /-- Chiral central charge bookkeeping. -/
-structure CentralCharge where
+structure CentralCharge (𝕜 : Type u) [Ring 𝕜] where
   left : 𝕜
   right : 𝕜
 
 namespace CentralCharge
 
+variable {𝕜 : Type u} [Ring 𝕜]
+
 /-- Total central charge. -/
-def total (c : CentralCharge (𝕜 := 𝕜)) : 𝕜 :=
+def total (c : CentralCharge 𝕜) : 𝕜 :=
   c.left + c.right
 
 /-- Chiral imbalance of central charges. -/
-def imbalance (c : CentralCharge (𝕜 := 𝕜)) : 𝕜 :=
+def imbalance (c : CentralCharge 𝕜) : 𝕜 :=
   c.left - c.right
 
 @[simp] theorem total_mk (cL cR : 𝕜) :

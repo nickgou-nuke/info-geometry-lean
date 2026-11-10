@@ -5,7 +5,7 @@ import Mathlib.LinearAlgebra.QuadraticForm.IsometryEquiv
 namespace InfoGeometry.Clifford
 
 noncomputable instance quadraticIsometryEquivGroup
-    {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
+    {R M : Type*} [CommSemiring R] [AddCommMonoid M] [Module R M]
     (Q : QuadraticForm R M) : Group (Q.IsometryEquiv Q) where
   one := QuadraticMap.IsometryEquiv.refl Q
   mul f g := g.trans f

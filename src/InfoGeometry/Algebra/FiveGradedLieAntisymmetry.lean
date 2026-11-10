@@ -18,8 +18,8 @@ namespace InfoGeometry.Algebra.FiveGradedLieAntisymmetry
 
 open InfoGeometry.Algebra.FiveGradedTKK
 
-variable (R L : Type*) [CommRing R]
-variable [LieRing L] [LieAlgebra R L]
+variable (R L : Type*) [Ring R]
+variable [LieRing L] [Module R L]
 
 /-- Five distinguished homogeneous submodules of an ambient Lie algebra.
  Further owners may add closure and decomposition theorems without changing

@@ -23,7 +23,7 @@ namespace InfoGeometry.Topology.KleinMonodromy
 
 open InfoGeometry.Canonical.ProjectiveFoundation
 
-variable {K V : Type*} [Field K] [AddCommGroup V] [Module K V]
+variable {K V : Type*} [Ring K] [AddCommGroup V] [Module K V] [SMulCommClass K K V]
 
 /-- 
 The representation of the Klein bottle fundamental group $\pi_1(K)$ 
@@ -32,7 +32,7 @@ into the general linear group $\operatorname{GL}(V)$, up to a central projective
 The relation $a b a^{-1} b = \lambda I$ algebraically encodes the non-orientable 
 topological identification of the twisted torus.
 -/
-structure KleinMonodromyRepresentation (K V : Type*) [Field K] [AddCommGroup V] [Module K V] where
+structure KleinMonodromyRepresentation (K V : Type*) [Ring K] [AddCommGroup V] [Module K V] [SMulCommClass K K V] where
   /-- The orientation-reversing loop monodromy matrix. -/
   a : V ≃ₗ[K] V
   

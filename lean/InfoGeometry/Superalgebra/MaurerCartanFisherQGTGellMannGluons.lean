@@ -6,6 +6,7 @@ Authors: InfoGeometry Contributors
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Order.Ring.Defs
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Abel
 
 /-!
 # Раздел 131: Квантов Геометричен Тензор на Маурер–Картан, Торзионна Метрика на Фишер и 8-те Глуона на Гел-Ман
@@ -30,7 +31,7 @@ Ref: `QMS-DIR-SEC131-MC-FISHER-QGT-GELLMANN-2026-OCT-16`
 
 namespace InfoGeometry.Superalgebra.MaurerCartanFisherGellMann
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. 3D Цветово-Пространствен Носител -/
 
@@ -43,7 +44,7 @@ structure ColorVec3 (R : Type*) where
 
 namespace ColorVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : ColorVec3 R := ⟨0, 0, 0⟩
 def neg (u : ColorVec3 R) : ColorVec3 R := ⟨-u.c1, -u.c2, -u.c3⟩
@@ -84,7 +85,7 @@ structure SplitOctonion (R : Type*) where
 
 namespace SplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : SplitOctonion R := ⟨0, ColorVec3.zero, ColorVec3.zero, 0⟩
 def one  : SplitOctonion R := ⟨1, ColorVec3.zero, ColorVec3.zero, 1⟩
@@ -118,6 +119,7 @@ def superTrace (X : SplitOctonion R) : R := X.a - X.b
 def dagger (X : SplitOctonion R) : SplitOctonion R :=
   ⟨X.a, X.v, X.u, X.b⟩
 
+omit [Ring R] in
 @[simp]
 theorem dagger_involutive (X : SplitOctonion R) : dagger (dagger X) = X := by
   cases X
@@ -152,7 +154,11 @@ theorem flat_projector_fisher_metric (du : ColorVec3 R) :
   have _ := du
   dsimp [diffProjPlus, dagger, mul, trace, ColorVec3.normSq,
          ColorVec3.zero, ColorVec3.dot]
-  ring
+  simp
+
+section CommRing
+
+variable {R : Type*} [CommRing R]
 
 /--
 Теорема 1a (Пълна Анатомия на Квантовия Геометричен Тензор Q_MC = ω_L · ω_L†):
@@ -217,6 +223,8 @@ theorem berry_torsion_force_orthogonal_to_displacement (u du : ColorVec3 R) :
   dsimp [ColorVec3.dot, ColorVec3.cross]
   ring
 
+end CommRing
+
 end SplitOctonion
 
 /-! ### 4. Теорема 3: Осемте Матрици на Гел-Ман (λ₁..λ₈) като Сертифицирани Глуони -/
@@ -236,7 +244,7 @@ structure Mat3 (R : Type*) where
 
 namespace Mat3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def trace (M : Mat3 R) : R := M.m11 + M.m22 + M.m33
 
@@ -293,7 +301,8 @@ theorem gell_mann_gluon_field_traceless (g1 g2 g3 g4 g5 g6 g7 g8 : R) :
     trace (gluonField g1 g2 g3 g4 g5 g6 g7 g8) = 0 := by
   have _ := (g1, g2, g3, g4, g5, g6, g7, g8)
   dsimp [trace, gluonField]
-  ring
+  rw [neg_mul, two_mul]
+  abel
 
 end Mat3
 

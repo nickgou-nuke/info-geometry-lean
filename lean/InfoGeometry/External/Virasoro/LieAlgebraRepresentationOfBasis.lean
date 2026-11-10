@@ -52,14 +52,14 @@ lemma Representation.apply_bracket_eq_commutator {𝕜 𝕂 : Type*} [CommRing �
 corresponding collection of operators; `representationOfBasisAux` is just a linear map from
 the Lie algebra to the space of operators (not yet a morphism of Lie algebras). -/
 noncomputable def representationOfBasisAux
-    {𝕂 : Type*} [Field 𝕂] {V : Type*} [AddCommGroup V] [Module 𝕂 V]
+    {𝕂 : Type*} [CommRing 𝕂] {V : Type*} [AddCommGroup V] [Module 𝕂 V]
     {𝓰 : Type*} [LieRing 𝓰] [LieAlgebra 𝕂 𝓰] {ι : Type*} (B : Basis ι 𝕂 𝓰)
     (genOper : ι → (V →ₗ[𝕂] V)) :
     𝓰 →ₗ[𝕂] V →ₗ[𝕂] V :=
   B.constr 𝕂 <| fun i ↦ genOper i
 
 @[simp] lemma representationOfBasisAux_apply_basis
-    {𝕂 : Type*} [Field 𝕂] {V : Type*} [AddCommGroup V] [Module 𝕂 V]
+    {𝕂 : Type*} [CommRing 𝕂] {V : Type*} [AddCommGroup V] [Module 𝕂 V]
     {𝓰 : Type*} [LieRing 𝓰] [LieAlgebra 𝕂 𝓰] {ι : Type*} (B : Basis ι 𝕂 𝓰)
     (genOper : ι → (V →ₗ[𝕂] V)) (i : ι) :
     LieAlgebra.representationOfBasisAux B genOper (B i) = genOper i := by

@@ -25,7 +25,7 @@ namespace InfoGeometry.Canonical.SplitOctonionRigidity
 
 section AbstractRigidity
 
-variable {R O : Type*} [CommSemiring R] [NonUnitalNonAssocRing O] [Module R O] [One O]
+variable {R O : Type*} [Semiring R] [NonUnitalNonAssocRing O] [Module R O] [One O]
 
 /-- The commutator `[x,y] = xy - yx`. -/
 def commutator (x y : O) : O :=

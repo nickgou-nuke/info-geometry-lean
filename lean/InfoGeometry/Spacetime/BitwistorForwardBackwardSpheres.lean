@@ -20,7 +20,9 @@ object is constructed; those interpretations remain outside this theorem surface
 
 namespace InfoGeometry.Spacetime.Bitwistor
 
-variable {R : Type*} [CommRing R]
+section Ring
+
+variable {R : Type*} [Ring R]
 
 /-! ### 1. 3D Spatial Carrier and Relativistic Dot Product -/
 
@@ -33,7 +35,7 @@ structure Space3D (R : Type*) where
 
 namespace Space3D
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zeroSpace3D : Space3D R := ⟨0, 0, 0⟩
 
@@ -71,6 +73,12 @@ def sumTimeCoord (t_fwd t_bwd : R) : R :=
 def sumSpaceCoord (v_fwd v_bwd : Space3D R) : Space3D R :=
   ⟨v_fwd.x + v_bwd.x, v_fwd.y + v_bwd.y, v_fwd.z + v_bwd.z⟩
 
+end Ring
+
+section CommRing
+
+variable {R : Type*} [CommRing R]
+
 /-! ### 4. Polarization and Null-Pair Identities -/
 
 /-- Polarization identity for the scalar quadratic form under coordinatewise addition. -/
@@ -104,5 +112,7 @@ theorem opposite_spatial_sum_quadratic
   rw [null_pair_cross_term_identity E E v ⟨-v.x, -v.y, -v.z⟩ h_null h_bwd_null]
   dsimp [isNullQuadraticCoord, minkowskiQuadraticCoord, Space3D.sq, Space3D.dot] at h_null ⊢
   linear_combination -2 * h_null
+
+end CommRing
 
 end InfoGeometry.Spacetime.Bitwistor

@@ -7,7 +7,7 @@ as a convex transfer sum, while the Cuntz generators act on both sides. -/
 
 namespace InfoGeometry.Algebra.Cuntz
 
-variable {R A : Type*} [CommRing R] [Semiring A] [Algebra R A]
+variable {R A : Type*} [CommSemiring R] [Semiring A] [Algebra R A]
 variable {N : ℕ}
 
 def markovTransfer

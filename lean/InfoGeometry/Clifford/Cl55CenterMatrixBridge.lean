@@ -14,7 +14,7 @@ Mathlib's native `Matrix.center_eq_range` theorem.
 
 theorem center_scalar_of_algEquiv_matrix
     {R A : Type*}
-    [CommRing R] [Semiring A] [Algebra R A]
+    [CommSemiring R] [Semiring A] [Algebra R A]
     {n : Type*} [Fintype n] [DecidableEq n]
     (e : A ≃ₐ[R] Matrix n n R)
     {x : A} (hx : x ∈ Subalgebra.center R A) :

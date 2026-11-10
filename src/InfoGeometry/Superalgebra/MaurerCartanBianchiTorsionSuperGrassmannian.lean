@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
+import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Ring
 
 /-!
@@ -30,7 +31,7 @@ Ref: `QMS-JUBILEE-SEC130-MAURER-CARTAN-BIANCHI-SGR-2026-OCT-16`
 
 namespace InfoGeometry.Superalgebra.MaurerCartanBianchi
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. 3D Спиново-Цветово Пространство и Смесено Произведение -/
 
@@ -43,7 +44,7 @@ structure ColorVec3 (R : Type*) where
 
 namespace ColorVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def canonicalColorVec3Int : ColorVec3 ℤ := ⟨1, 2, 3⟩
 
@@ -72,12 +73,12 @@ def det3 (u₁ u₂ u₃ : ColorVec3 R) : R :=
   dot u₁ (cross u₂ u₃)
 
 @[simp]
-theorem dot_cross_self_left (u v : ColorVec3 R) : dot u (cross u v) = 0 := by
+theorem dot_cross_self_left {R : Type*} [CommRing R] (u v : ColorVec3 R) : dot u (cross u v) = 0 := by
   dsimp [dot, cross]
   ring
 
 @[simp]
-theorem dot_cross_self_right (u v : ColorVec3 R) : dot v (cross u v) = 0 := by
+theorem dot_cross_self_right {R : Type*} [CommRing R] (u v : ColorVec3 R) : dot v (cross u v) = 0 := by
   dsimp [dot, cross]
   ring
 
@@ -95,7 +96,7 @@ structure SplitOctonion (R : Type*) where
 
 namespace SplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def canonicalSplitOctonionInt : SplitOctonion ℤ := ⟨1, ⟨1, 0, 0⟩, ⟨0, 1, 0⟩, 2⟩
 
@@ -172,7 +173,7 @@ theorem maurer_cartan_left_form_explicit (u du : ColorVec3 R) :
   dsimp [maurerCartanLeftForm, gaugeGroupInv, one, quark, antiquark,
          sub, mul, ColorVec3.zero, ColorVec3.dot, ColorVec3.sub,
          ColorVec3.add, ColorVec3.smul, ColorVec3.cross]
-  ext <;> ring
+  ext <;> simp <;> abel
 
 /--
 Теорема 1b (Светлинна Изотропност на Двулистната Форма на Маурер–Картан):
@@ -181,7 +182,7 @@ theorem maurer_cartan_left_form_explicit (u du : ColorVec3 R) :
 intervalNorm(ω_L(u, du)) = 0!
 (Защото спиновата торзия u × du е винаги ортогонална на преместването du!).
 -/
-theorem maurer_cartan_left_form_strictly_null (u du : ColorVec3 R) :
+theorem maurer_cartan_left_form_strictly_null {R : Type*} [CommRing R] (u du : ColorVec3 R) :
     intervalNorm (maurerCartanLeftForm u du) = 0 := by
   rw [maurer_cartan_left_form_explicit]
   dsimp [intervalNorm, quark, antiquark, sub, ColorVec3.zero,
@@ -216,7 +217,7 @@ def bianchiCovariantDerivative3Form (ω₁ ω₂ ω₃ : SplitOctonion R) : Spli
 3. Когато трите полета са компланарни (det(u₁, u₂, u₃) = 0), класическото тъждество на Бианки
    Bianchi₃ = 0 се удовлетворява строго!
 -/
-theorem nonassociative_bianchi_identity_anomaly (u₁ u₂ u₃ : ColorVec3 R) :
+theorem nonassociative_bianchi_identity_anomaly {R : Type*} [CommRing R] (u₁ u₂ u₃ : ColorVec3 R) :
     let ω₁ := quark u₁
     let ω₂ := quark u₂
     let ω₃ := quark u₃
@@ -256,7 +257,7 @@ theorem twistor_projector_conformal_translation_with_torsion (u a : ColorVec3 R)
   dsimp [twistorProjPlus, gaugeGroupElem, one, quark, antiquark,
          mul, add, ColorVec3.zero, ColorVec3.dot, ColorVec3.sub,
          ColorVec3.add, ColorVec3.smul, ColorVec3.cross]
-  ext <;> ring
+  ext <;> simp <;> abel
 
 /-- При колинеарно отместване (u × a = 0) транслацията по проектора е чисто афинна! -/
 theorem twistor_projector_collinear_pure_translation (u a : ColorVec3 R)
@@ -265,13 +266,13 @@ theorem twistor_projector_collinear_pure_translation (u a : ColorVec3 R)
       twistorProjPlus (ColorVec3.add u a) := by
   rw [twistor_projector_conformal_translation_with_torsion, h_collinear]
   dsimp [twistorProjPlus, antiquark, add, ColorVec3.add, ColorVec3.zero]
-  ext <;> ring
+  ext <;> simp
 
 end SplitOctonion
 
 /-! ### 6. Главен Юбилеен Синтез на Раздел 130 -/
 
-theorem maurer_cartan_bianchi_sgr_synthesis
+theorem maurer_cartan_bianchi_sgr_synthesis {R : Type*} [CommRing R]
     (u du u₁ u₂ u₃ a : ColorVec3 R) :
     SplitOctonion.maurerCartanLeftForm u du =
       SplitOctonion.sub (SplitOctonion.quark du)

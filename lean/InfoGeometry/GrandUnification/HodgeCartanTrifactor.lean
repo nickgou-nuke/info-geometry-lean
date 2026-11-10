@@ -22,7 +22,7 @@ open InfoGeometry.Canonical.TrifactorDecomposition
 
 section Basic
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 variable (T : R)
 
 /-- The Harmonic operator (Kernel), corresponding to ℋ (P_zero) -/
@@ -39,11 +39,9 @@ theorem cartan_involution_square (hT : T ^ 3 = T) :
     cartan_involution T * cartan_involution T = 1 := by
   unfold cartan_involution
   calc
-    (1 - 2 * T^2) * (1 - 2 * T^2) = 1 - 4 * T^2 + 4 * T^4 := by ring
-    _ = 1 - 4 * T^2 + 4 * (T^3 * T) := by ring
-    _ = 1 - 4 * T^2 + 4 * (T * T) := by rw [hT]
-    _ = 1 - 4 * T^2 + 4 * T^2 := by ring
-    _ = 1 := by ring
+    (1 - (2 : R) * T^2) * (1 - (2 : R) * T^2) = 1 - (4 : R) * T^2 + (4 : R) * (T^3 * T) := by noncomm_ring
+    _ = 1 - (4 : R) * T^2 + (4 : R) * (T * T) := by rw [hT]
+    _ = 1 := by noncomm_ring
 
 /-- The harmonic trifactor component is in the `+1` eigenspace of the
     algebraic Cartan involution. -/
@@ -51,16 +49,15 @@ theorem cartan_symmetric_harmonic (hT : T ^ 3 = T) :
     cartan_involution T * harmonic_op T = harmonic_op T := by
   unfold cartan_involution harmonic_op P_zero InfoGeometry.Canonical.TriFacetGeometry.P_par
   calc
-    (1 - 2 * T^2) * (1 - T^2) = 1 - 3 * T^2 + 2 * T^4 := by ring
-    _ = 1 - 3 * T^2 + 2 * (T^3 * T) := by ring
-    _ = 1 - 3 * T^2 + 2 * (T * T) := by rw [hT]
-    _ = 1 - T^2 := by ring
+    (1 - (2 : R) * T^2) * (1 - T^2) = 1 - (3 : R) * T^2 + (2 : R) * (T^3 * T) := by noncomm_ring
+    _ = 1 - (3 : R) * T^2 + (2 : R) * (T * T) := by rw [hT]
+    _ = 1 - T^2 := by noncomm_ring
 
 end Basic
 
 section WithHalf
 
-variable {R : Type*} [CommRing R] [Invertible (2 : R)]
+variable {R : Type*} [Ring R] [Invertible (2 : R)]
 variable (T : R)
 
 /-- The finite exact-sector component, represented by `P_plus`. -/
@@ -80,11 +77,13 @@ theorem cartan_antisymmetric_exact (hT : T ^ 3 = T) :
     cartan_involution T * exact_op T = - exact_op T := by
   unfold cartan_involution exact_op P_plus InfoGeometry.Canonical.TriFacetGeometry.P_hyp
   calc
-    (1 - 2 * T^2) * (⅟(2 : R) * (T^2 + T)) = ⅟(2 : R) * (T^2 + T - 2 * T^4 - 2 * T^3) := by ring
-    _ = ⅟(2 : R) * (T^2 + T - 2 * (T^3 * T) - 2 * T^3) := by ring
-    _ = ⅟(2 : R) * (T^2 + T - 2 * (T * T) - 2 * T) := by rw [hT]
-    _ = ⅟(2 : R) * (- T^2 - T) := by ring
-    _ = - (⅟(2 : R) * (T^2 + T)) := by ring
+    (1 - (2 : R) * T^2) * (⅟(2 : R) * (T^2 + T))
+        = ((1 - (2 : R) * T^2) * ⅟(2 : R)) * (T^2 + T) := by noncomm_ring
+    _ = (⅟(2 : R) * (1 - (2 : R) * T^2)) * (T^2 + T) := by
+          rw [← InfoGeometry.Canonical.TriFacetGeometry.invOf_two_comm (1 - (2 : R) * T^2)]
+    _ = ⅟(2 : R) * (T^2 + T - (2 : R) * (T^3 * T) - (2 : R) * T^3) := by noncomm_ring
+    _ = ⅟(2 : R) * (T^2 + T - (2 : R) * (T * T) - (2 : R) * T) := by rw [hT]
+    _ = - (⅟(2 : R) * (T^2 + T)) := by noncomm_ring
 
 /-- The coexact trifactor component is in the `-1` eigenspace of the algebraic
     Cartan involution. -/
@@ -92,11 +91,13 @@ theorem cartan_antisymmetric_coexact (hT : T ^ 3 = T) :
     cartan_involution T * coexact_op T = - coexact_op T := by
   unfold cartan_involution coexact_op P_minus InfoGeometry.Canonical.TriFacetGeometry.P_ell
   calc
-    (1 - 2 * T^2) * (⅟(2 : R) * (T^2 - T)) = ⅟(2 : R) * (T^2 - T - 2 * T^4 + 2 * T^3) := by ring
-    _ = ⅟(2 : R) * (T^2 - T - 2 * (T^3 * T) + 2 * T^3) := by ring
-    _ = ⅟(2 : R) * (T^2 - T - 2 * (T * T) + 2 * T) := by rw [hT]
-    _ = ⅟(2 : R) * (- T^2 + T) := by ring
-    _ = - (⅟(2 : R) * (T^2 - T)) := by ring
+    (1 - (2 : R) * T^2) * (⅟(2 : R) * (T^2 - T))
+        = ((1 - (2 : R) * T^2) * ⅟(2 : R)) * (T^2 - T) := by noncomm_ring
+    _ = (⅟(2 : R) * (1 - (2 : R) * T^2)) * (T^2 - T) := by
+          rw [← InfoGeometry.Canonical.TriFacetGeometry.invOf_two_comm (1 - (2 : R) * T^2)]
+    _ = ⅟(2 : R) * (T^2 - T - (2 : R) * (T^3 * T) + (2 : R) * T^3) := by noncomm_ring
+    _ = ⅟(2 : R) * (T^2 - T - (2 : R) * (T * T) + (2 : R) * T) := by rw [hT]
+    _ = - (⅟(2 : R) * (T^2 - T)) := by noncomm_ring
 
 end WithHalf
 

@@ -7,6 +7,7 @@ import InfoGeometry.QuantumContext.CausalPetzRecovery
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.FinCases
 import InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness
 
@@ -38,7 +39,7 @@ namespace InfoGeometry.QuantumContext.CausalPetz
 
 open Matrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The 2×2 matrix trace. -/
 def trace2 (M : Matrix (Fin 2) (Fin 2) R) : R :=
@@ -54,7 +55,7 @@ Under the Stiefel constraint $K^2 + L^2 = 1$, the total trace of the
 reconstructed density matrix strictly equals the input scalar $s$:
 $\operatorname{Tr}(\mathcal{R}(\sigma)) = s$.
 -/
-theorem petz_trace_preservation (K L s : R) (h_stiefel : K^2 + L^2 = 1) :
+theorem petz_trace_preservation {R : Type*} [CommRing R] (K L s : R) (h_stiefel : K^2 + L^2 = 1) :
     trace2 (petzBlockReconstruct K L s) = s := by
   dsimp [trace2, petzBlockReconstruct, blockIntertwiner, blockCausalState]
   simp [Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_two]
@@ -72,7 +73,7 @@ theorem past_preservation_forces_future_quiescence (K L : R)
     (h_stiefel : K^2 + L^2 = 1) (h_past : K^2 = 1) :
     L^2 = 0 := by
   calc
-    L^2 = (K^2 + L^2) - K^2 := by ring
+    L^2 = (K^2 + L^2) - K^2 := by noncomm_ring
     _ = 1 - 1 := by rw [h_stiefel, h_past]
     _ = 0 := sub_self 1
 
@@ -85,7 +86,7 @@ theorem future_dominance_forces_past_annihilation (K L : R)
     (h_stiefel : K^2 + L^2 = 1) (h_future : L^2 = 1) :
     K^2 = 0 := by
   calc
-    K^2 = (K^2 + L^2) - L^2 := by ring
+    K^2 = (K^2 + L^2) - L^2 := by noncomm_ring
     _ = 1 - 1 := by rw [h_stiefel, h_future]
     _ = 0 := sub_self 1
 
@@ -93,15 +94,15 @@ theorem future_dominance_forces_past_annihilation (K L : R)
 
 /-- Certificate bundling the proved Stiefel conservation theorems with Prop fields. -/
 structure CausalPetzStiefelCertificate where
-  gram_operator : ∀ {R : Type*} [CommRing R] (K L : R),
+  gram_operator : ∀ {R : Type*} [Ring R] (K L : R),
     (blockIntertwiner K L)ᵀ * blockIntertwiner K L = !![K^2 + L^2, 0; 0, 0]
-  stiefel_iff : ∀ {R : Type*} [CommRing R] (K L : R),
+  stiefel_iff : ∀ {R : Type*} [Ring R] (K L : R),
     (blockIntertwiner K L)ᵀ * blockIntertwiner K L = !![1, 0; 0, 0] ↔ K^2 + L^2 = 1
   trace_preservation : ∀ {R : Type*} [CommRing R] (K L s : R) (h : K^2 + L^2 = 1),
     trace2 (petzBlockReconstruct K L s) = s
-  past_forces_future_zero : ∀ {R : Type*} [CommRing R] (K L : R) (h1 : K^2 + L^2 = 1) (h2 : K^2 = 1),
+  past_forces_future_zero : ∀ {R : Type*} [Ring R] (K L : R) (h1 : K^2 + L^2 = 1) (h2 : K^2 = 1),
     L^2 = 0
-  future_forces_past_zero : ∀ {R : Type*} [CommRing R] (K L : R) (h1 : K^2 + L^2 = 1) (h2 : L^2 = 1),
+  future_forces_past_zero : ∀ {R : Type*} [Ring R] (K L : R) (h1 : K^2 + L^2 = 1) (h2 : L^2 = 1),
     K^2 = 0
 
 /-- Instantiation of the master certificate with zero open assumptions. -/

@@ -40,8 +40,7 @@ open Matrix
 
 section UniversalHyperbolicEllipticDuality
 
-variable {R : Type*} [CommRing R]
-variable {A : Type*} [Ring A] [Algebra R A]
+variable {A : Type*} [Ring A]
 
 /-!
 ## 1. Primitives: Dual Seeds, Elliptic & Hyperbolic Moving Projectors, & KMS Weight
@@ -73,23 +72,23 @@ def transitionVelocity (d B : A) : A := d + B
 def wheelGenerator (d B : A) : A := d - B
 
 /-- Elliptic moving projector `P_+^{ell}(c, s) = c^2 • P_+ + s^2 • P_- - (c * s) • Q₁`. -/
-def ellipticPolePlus (c s : R) (d B : A) : A :=
+def ellipticPolePlus {R : Type*} [Ring R] [Module R A] (c s : R) (d B : A) : A :=
   (c * c) • polePlus d B + (s * s) • poleMinus d B - (c * s) • transitionVelocity d B
 
 /-- Hyperbolic moving idempotent `P_+^{hyp}(u, v) = u^2 • P_+ - v^2 • P_- - (u * v) • J`. -/
-def hyperbolicPolePlus (u v : R) (d B : A) : A :=
+def hyperbolicPolePlus {R : Type*} [Ring R] [Module R A] (u v : R) (d B : A) : A :=
   (u * u) • polePlus d B - (v * v) • poleMinus d B - (u * v) • wheelGenerator d B
 
 /-- Complementary hyperbolic moving idempotent `P_-^{hyp}(u, v) = -v^2 • P_+ + u^2 • P_- + (u * v) • J`. -/
-def hyperbolicPoleMinus (u v : R) (d B : A) : A :=
+def hyperbolicPoleMinus {R : Type*} [Ring R] [Module R A] (u v : R) (d B : A) : A :=
   -(v * v) • polePlus d B + (u * u) • poleMinus d B + (u * v) • wheelGenerator d B
 
 /-- Hyperbolic chordal direction `V(u, v) = v • Γ - u • J`. -/
-def hyperbolicChordalDir (u v : R) (d B : A) : A :=
+def hyperbolicChordalDir {R : Type*} [Ring R] [Module R A] (u v : R) (d B : A) : A :=
   v • phasePolarization d B - u • wheelGenerator d B
 
 /-- KMS modular density weight `ρ(s, c) = s^2 • P_- + c^2 • P_+` (definitionally Stream 3's `kmsModularWeight`). -/
-def kmsModularWeight (s c : R) (d B : A) : A :=
+def kmsModularWeight {R : Type*} [Ring R] [Module R A] (s c : R) (d B : A) : A :=
   (s * s) • poleMinus d B + (c * c) • polePlus d B
 
 /-- Diagonal Peirce decoherence projection `decohere(X) = P_+ X P_+ + P_- X P_-`. -/
@@ -98,7 +97,8 @@ def diagonalDecoherence (d B X : A) : A :=
 
 /-- Definitional coherence between Stream 6's `kmsModularWeight` and Stream 3's `kmsModularWeight`,
     and between Stream 6's `ellipticPolePlus` and Stream 5's `movingPolePlus_eq`. -/
-theorem stream6_stream3_stream5_coherence {d B : A} (h : IsDualSeedPair d B) (c s : R) :
+theorem stream6_stream3_stream5_coherence {R : Type*} [CommRing R] [Algebra R A]
+    {d B : A} (h : IsDualSeedPair d B) (c s : R) :
     kmsModularWeight s c d B =
       UnifiedGeometryOperatorSignificance.kmsModularWeight s c d B ∧
     DeBruijnRotorAlternationCycle.movingPolePlus c s d B =
@@ -184,6 +184,9 @@ lemma polarization_anticommutes_wheel {d B : A} (h : IsDualSeedPair d B) :
 ## 3. Node 1 Atomic Lemmas: Hyperbolic Moving Idempotent & Opposite-Sign Chordal Square
 -/
 
+section CommHyperbolic
+variable {R : Type*} [CommRing R] [Algebra R A]
+
 lemma hyperbolicPolePlus_sub_polePlus (u v : R) (d B : A) (h_uv : u * u - v * v = 1) :
     hyperbolicPolePlus u v d B - polePlus d B = v • hyperbolicChordalDir u v d B := by
   have h_u2 : u * u - 1 = v * v := by linear_combination h_uv
@@ -220,7 +223,10 @@ lemma hyperbolicChordalDir_sq {d B : A} (h : IsDualSeedPair d B) (u v : R) :
             polarization_anticommutes_wheel h, smul_neg, smul_zero, sub_zero,
             ← sub_eq_add_neg, ← sub_smul]
 
-lemma jordanProd_polePlus_hyperbolicChordalDir {d B : A} (h : IsDualSeedPair d B) (u v : R) :
+end CommHyperbolic
+
+lemma jordanProd_polePlus_hyperbolicChordalDir {R : Type*} [Ring R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
+    {d B : A} (h : IsDualSeedPair d B) (u v : R) :
     jordanProd (polePlus d B) (hyperbolicChordalDir u v d B) =
       v • (2 • polePlus d B) - u • wheelGenerator d B := by
   unfold jordanProd hyperbolicChordalDir phasePolarization
@@ -233,7 +239,7 @@ lemma jordanProd_polePlus_hyperbolicChordalDir {d B : A} (h : IsDualSeedPair d B
   abel
 
 /-- **Exact Idempotence of the Hyperbolic Moving Projector (`u^2 - v^2 = 1`)**. -/
-theorem hyperbolicPolePlus_idempotent {d B : A} (h : IsDualSeedPair d B)
+theorem hyperbolicPolePlus_idempotent {R : Type*} [CommRing R] [Algebra R A] {d B : A} (h : IsDualSeedPair d B)
     {u v : R} (h_uv : u * u - v * v = 1) :
     hyperbolicPolePlus u v d B * hyperbolicPolePlus u v d B =
       hyperbolicPolePlus u v d B := by
@@ -256,7 +262,7 @@ theorem hyperbolicPolePlus_idempotent {d B : A} (h : IsDualSeedPair d B)
         abel
 
 /-- **Hyperbolic Carrier Conservation (`P_+^{hyp}(u, v) + P_-^{hyp}(u, v) = Δ`)**. -/
-theorem hyperbolicPoles_sum_eq_carrierSupport (d B : A) {u v : R}
+theorem hyperbolicPoles_sum_eq_carrierSupport {R : Type*} [Ring R] [Module R A] (d B : A) {u v : R}
     (h_uv : u * u - v * v = 1) :
     hyperbolicPolePlus u v d B + hyperbolicPoleMinus u v d B =
       carrierSupport d B := by
@@ -268,7 +274,7 @@ theorem hyperbolicPoles_sum_eq_carrierSupport (d B : A) {u v : R}
     _ = polePlus d B + poleMinus d B := by rw [h_uv, one_smul, one_smul]
 
 /-- **Hyperbolic Chordal Displacement Square & Sandwich Compression (`(P_+^{hyp}(u, v) - P_+)^2 = -(v * v) • Δ`)**. -/
-theorem hyperbolic_timelike_chordal_metric {d B : A} (h : IsDualSeedPair d B)
+theorem hyperbolic_timelike_chordal_metric {R : Type*} [CommRing R] [Algebra R A] {d B : A} (h : IsDualSeedPair d B)
     {u v : R} (h_uv : u * u - v * v = 1) :
     (hyperbolicPolePlus u v d B - polePlus d B) *
       (hyperbolicPolePlus u v d B - polePlus d B) = -((v * v) • carrierSupport d B) ∧
@@ -309,6 +315,9 @@ lemma poleMinus_sandwich_velocity {d B : A} (h : IsDualSeedPair d B) :
     _ = B * (d * d) * (B * d) + (B * d * B) * (B * d) := by noncomm_ring
     _ = 0 := by rw [h.d_sq, h.BdB, hB_Bd, mul_zero, zero_mul, add_zero]
 
+section NoncommDecoherence
+variable {R : Type*} [Ring R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
+
 lemma polePlus_sandwich_ellipticPolePlus {d B : A} (h : IsDualSeedPair d B) (c s : R) :
     polePlus d B * ellipticPolePlus c s d B * polePlus d B =
       (c * c) • polePlus d B := by
@@ -343,6 +352,8 @@ theorem diagonalDecoherence_ellipticPolePlus_eq_kms {d B : A}
   rw [polePlus_sandwich_ellipticPolePlus h c s,
       poleMinus_sandwich_ellipticPolePlus h c s, add_comm]
 
+end NoncommDecoherence
+
 /-!
 ## 5. Node 3: Refutation Boundary & Master Elliptic–Hyperbolic–KMS Synthesis
 -/
@@ -370,7 +381,7 @@ theorem no_hyperbolic_boost_iff_seeds_vanish {d B : A} (h : IsDualSeedPair d B) 
   · rintro ⟨rfl, rfl⟩; rfl
 
 /-- **Master Elliptic–Hyperbolic–KMS Synthesis Theorem**. -/
-theorem elliptic_hyperbolic_kms_master_synthesis {d B : A} (h : IsDualSeedPair d B)
+theorem elliptic_hyperbolic_kms_master_synthesis {R : Type*} [CommRing R] [Algebra R A] {d B : A} (h : IsDualSeedPair d B)
     {c s u v : R} (h_cs : c * c + s * s = 1) (h_uv : u * u - v * v = 1) :
     (hyperbolicPolePlus u v d B * hyperbolicPolePlus u v d B = hyperbolicPolePlus u v d B ∧
      hyperbolicPolePlus u v d B + hyperbolicPoleMinus u v d B = carrierSupport d B) ∧

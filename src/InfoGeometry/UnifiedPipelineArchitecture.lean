@@ -45,12 +45,12 @@ open InfoGeometry.Algebra.IwasawaOperatorTwinLoxodromic
 open InfoGeometry.Algebra.CayleyPeirceKAN
 open InfoGeometry.Topology
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. Unified Finite Algebraic Layer -/
 
 /-- 🏆 THEOREM 1: The quantum causal vacuum projectors form a complete orthogonal resolution of identity. -/
-theorem causal_vacuum_complete_resolution (R : Type*) [CommRing R] :
+theorem causal_vacuum_complete_resolution (R : Type*) [Ring R] :
     (toZorn R ChiralBasis.uPlus) + (toZorn R ChiralBasis.uMinus) = ZornMatrix.I ∧
     (toZorn R ChiralBasis.uPlus) * (toZorn R ChiralBasis.uMinus) = 0 ∧
     (toZorn R ChiralBasis.uPlus) * (toZorn R ChiralBasis.uPlus) = toZorn R ChiralBasis.uPlus ∧

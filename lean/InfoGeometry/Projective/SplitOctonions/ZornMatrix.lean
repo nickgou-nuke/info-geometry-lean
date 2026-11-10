@@ -20,7 +20,7 @@ without requiring full associativity.
 
 namespace InfoGeometry.Projective.SplitOctonions
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 variable {V : Type*} [AddCommGroup V] [Module R V]
 
 /--
@@ -30,7 +30,7 @@ $x^{21}$ and $x^{22}$ are the off-diagonal vector components.
 Notice the structural minus sign on $x^{22}$ is absorbed into the definition of the operations.
 -/
 @[ext]
-structure ZornMatrix (R V : Type*) [CommRing R] [AddCommGroup V] [Module R V] where
+structure ZornMatrix (R V : Type*) [Ring R] [AddCommGroup V] [Module R V] where
   x11 : R
   x12 : R
   x21 : V
@@ -46,6 +46,21 @@ instance : Zero (ZornMatrix R V) where
 @[simp] theorem zero_x21 : (0 : ZornMatrix R V).x21 = 0 := rfl
 @[simp] theorem zero_x22 : (0 : ZornMatrix R V).x22 = 0 := rfl
 
+/-- The canonical involution $x^*$. -/
+def star (x : ZornMatrix R V) : ZornMatrix R V where
+  x11 := x.x12
+  x12 := x.x11
+  x21 := -x.x21
+  x22 := -x.x22
+
+/-- An element strictly on the diagonal. -/
+def diag (α β : R) : ZornMatrix R V where
+  x11 := α
+  x12 := β
+  x21 := 0
+  x22 := 0
+
+variable {R : Type*} [CommRing R] [Module R V]
 variable (B : V →ₗ[R] V →ₗ[R] R)
 
 /-- The split norm form $N(x) = x^{11} x^{12} + x^{21} \cdot x^{22}$. -/
@@ -62,20 +77,6 @@ def mul (x y : ZornMatrix R V) : ZornMatrix R V where
   x12 := x.x12 * y.x12 - B x.x22 y.x21
   x21 := (x.x11 • y.x21) + (y.x12 • x.x21)
   x22 := (x.x12 • y.x22) + (y.x11 • x.x22)
-
-/-- The canonical involution $x^*$. -/
-def star (x : ZornMatrix R V) : ZornMatrix R V where
-  x11 := x.x12
-  x12 := x.x11
-  x21 := -x.x21
-  x22 := -x.x22
-
-/-- An element strictly on the diagonal. -/
-def diag (α β : R) : ZornMatrix R V where
-  x11 := α
-  x12 := β
-  x21 := 0
-  x22 := 0
 
 /-!
 ### Voelkel Lemma 3.1.13: Diagonal Associativity

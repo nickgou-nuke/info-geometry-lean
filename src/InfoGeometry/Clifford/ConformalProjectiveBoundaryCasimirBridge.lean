@@ -61,7 +61,9 @@ open InfoGeometry.Clifford.Coquaternion
 open InfoGeometry.Clifford.Coquaternion.Coquaternion
 open InfoGeometry.Clifford.SolderingIsotropic
 
-variable {R : Type*} [CommRing R]
+section Ring
+
+variable {R : Type*} [Ring R]
 
 /-! ### 1. Spacetime Trace and Temporal Foliation -/
 
@@ -72,15 +74,14 @@ def trace2 (M : Mat2 R) : R :=
 /-- Trace of the soldering matrix equals $2t$, extracting the temporal foliation coordinate. -/
 theorem trace2_solderingMatrix (t x y z : R) :
     trace2 (solderingMatrix t x y z) = 2 * t := by
-  simp [trace2, solderingMatrix]
-  ring
+  simp [trace2, solderingMatrix, add_sub_cancel_right, ← two_mul]
 
 /-- Linearity of trace2 under matrix addition:
     $\operatorname{tr}_2(A + B) = \operatorname{tr}_2(A) + \operatorname{tr}_2(B)$. -/
 theorem trace2_add (A B : Mat2 R) :
     trace2 (A + B) = trace2 A + trace2 B := by
   simp [trace2]
-  ring
+  abel
 
 /-- Zero matrix has zero trace. -/
 @[simp]
@@ -97,8 +98,52 @@ def dilate (c : R) (M : Mat2 R) : Mat2 R :=
     $\operatorname{tr}_2(c \cdot M) = c \cdot \operatorname{tr}_2(M)$. -/
 theorem trace2_dilate (c : R) (M : Mat2 R) :
     trace2 (dilate c M) = c * trace2 M := by
-  simp [trace2, dilate]
-  ring
+  simp [trace2, dilate, mul_add]
+
+/-! ### 3. Adjugate Matrix and Inversion Geometry -/
+
+/-- Classical adjugate of a $2 \times 2$ matrix:
+    $$\operatorname{adj}_2\begin{pmatrix} a & b \\ c & d \end{pmatrix} = \begin{pmatrix} d & -b \\ -c & a \end{pmatrix}$$ -/
+def adj2 (M : Mat2 R) : Mat2 R :=
+  !![ M 1 1, -M 0 1;
+     -M 1 0,  M 0 0 ]
+
+/-- The conformal Casimir invariant on $2 \times 2$ spacetime matrices:
+    $C_{\text{conf}}(X) = \det_2(X)$. -/
+def conformalCasimir (X : Mat2 R) : R :=
+  det2 X
+
+/-! ### 5. Two-Sheeted Chiral Boundary Splitting -/
+
+/-- Positive/future left chiral projector trace: $\operatorname{tr}_2(P_L) = 1$. -/
+@[simp]
+theorem trace2_P_L : trace2 (P_L : Mat2 R) = 1 := by
+  simp [trace2, P_L]
+
+/-- Positive/future right chiral projector trace: $\operatorname{tr}_2(P_R) = 1$. -/
+@[simp]
+theorem trace2_P_R : trace2 (P_R : Mat2 R) = 1 := by
+  simp [trace2, P_R]
+
+/-- Negative/past left chiral projector trace: $\operatorname{tr}_2(-P_L) = -1$. -/
+@[simp]
+theorem trace2_neg_P_L : trace2 (- (P_L : Mat2 R)) = -1 := by
+  simp [trace2, P_L]
+
+/-- Negative/past right chiral projector trace: $\operatorname{tr}_2(-P_R) = -1$. -/
+@[simp]
+theorem trace2_neg_P_R : trace2 (- (P_R : Mat2 R)) = -1 := by
+  simp [trace2, P_R]
+
+/-- Opposite chiral sheets sum to a zero-trace null cross-term:
+    $\operatorname{tr}_2(P_L - P_R) = 0$. -/
+theorem trace2_chiral_difference :
+    trace2 ((P_L : Mat2 R) - P_R) = 0 := by
+  simp [trace2, P_L, P_R]
+
+end Ring
+
+variable {R : Type*} [CommRing R]
 
 /-- Determinant scales quadratically under dilation:
     $\det_2(c \cdot M) = c^2 \cdot \det_2(M)$. -/
@@ -111,14 +156,6 @@ theorem det2_dilate (c : R) (M : Mat2 R) :
 theorem celestial_boundary_dilation_invariant (c : R) (X : Mat2 R) (h_null : det2 X = 0) :
     det2 (dilate c X) = 0 := by
   rw [det2_dilate, h_null, mul_zero]
-
-/-! ### 3. Adjugate Matrix and Inversion Geometry -/
-
-/-- Classical adjugate of a $2 \times 2$ matrix:
-    $$\operatorname{adj}_2\begin{pmatrix} a & b \\ c & d \end{pmatrix} = \begin{pmatrix} d & -b \\ -c & a \end{pmatrix}$$ -/
-def adj2 (M : Mat2 R) : Mat2 R :=
-  !![ M 1 1, -M 0 1;
-     -M 1 0,  M 0 0 ]
 
 /-- Fundamental adjugate identity: $M \cdot \operatorname{adj}_2(M) = \det_2(M) \cdot I_2$. -/
 theorem mul_adj2 (M : Mat2 R) :
@@ -145,11 +182,6 @@ theorem adj2_null_is_null (M : Mat2 R) (h_null : det2 M = 0) :
 
 /-! ### 4. Conformal Casimir Boundary Annihilation -/
 
-/-- The conformal Casimir invariant on $2 \times 2$ spacetime matrices:
-    $C_{\text{conf}}(X) = \det_2(X)$. -/
-def conformalCasimir (X : Mat2 R) : R :=
-  det2 X
-
 /-- Invariance of the conformal Casimir under combined two-sided $\mathrm{SL}_2(R)$ Lorentz transformation
     and scale dilation: $C_{\text{conf}}(c \cdot (\Lambda X \Lambda^\top)) = c^2 \cdot C_{\text{conf}}(X)$. -/
 theorem conformal_casimir_transform (c : R) (Λ X : Mat2 R) (hΛ : det2 Λ = 1) :
@@ -164,28 +196,6 @@ theorem conformal_casimir_boundary_zero (c : R) (Λ X : Mat2 R)
     conformalCasimir (dilate c (Λ * X * Λᵀ)) = 0 := by
   rw [conformal_casimir_transform c Λ X hΛ, h_null, mul_zero]
 
-/-! ### 5. Two-Sheeted Chiral Boundary Splitting -/
-
-/-- Positive/future left chiral projector trace: $\operatorname{tr}_2(P_L) = 1$. -/
-@[simp]
-theorem trace2_P_L : trace2 (P_L : Mat2 R) = 1 := by
-  simp [trace2, P_L]
-
-/-- Positive/future right chiral projector trace: $\operatorname{tr}_2(P_R) = 1$. -/
-@[simp]
-theorem trace2_P_R : trace2 (P_R : Mat2 R) = 1 := by
-  simp [trace2, P_R]
-
-/-- Negative/past left chiral projector trace: $\operatorname{tr}_2(-P_L) = -1$. -/
-@[simp]
-theorem trace2_neg_P_L : trace2 (- (P_L : Mat2 R)) = -1 := by
-  simp [trace2, P_L]
-
-/-- Negative/past right chiral projector trace: $\operatorname{tr}_2(-P_R) = -1$. -/
-@[simp]
-theorem trace2_neg_P_R : trace2 (- (P_R : Mat2 R)) = -1 := by
-  simp [trace2, P_R]
-
 /-- Future and past left chiral projectors lie strictly on the celestial boundary:
     $\det_2(P_L) = 0$ and $\det_2(-P_L) = 0$. -/
 theorem det2_neg_P_L : det2 (- (P_L : Mat2 R)) = 0 := by
@@ -199,12 +209,6 @@ theorem det2_neg_P_R : det2 (- (P_R : Mat2 R)) = 0 := by
   have h_neg : - (P_R : Mat2 R) = dilate (-1) P_R := by
     ext i j; fin_cases i <;> fin_cases j <;> simp [dilate, P_R]
   rw [h_neg, det2_dilate, det2_P_R, mul_zero]
-
-/-- Opposite chiral sheets sum to a zero-trace null cross-term:
-    $\operatorname{tr}_2(P_L - P_R) = 0$. -/
-theorem trace2_chiral_difference :
-    trace2 ((P_L : Mat2 R) - P_R) = 0 := by
-  simp [trace2, P_L, P_R]
 
 /-! ### 6. Master Certificate: Frontier 97 Integration -/
 

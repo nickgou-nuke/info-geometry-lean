@@ -29,8 +29,8 @@ def xi_foldbin_critical_scale_success_curve_inversion_inverse (α : ℝ) : ℝ :
 
 /-- Concrete statement package for the critical-scale success curve and inverse. -/
 def xi_foldbin_critical_scale_success_curve_inversion_statement
-    (D : Omega.Folding.FoldBinDegeneracyTailCapacityKinksData) : Prop :=
-  D.capacityLimit ∧
+    : Prop :=
+  Omega.Folding.foldBinDegeneracyCapacityLimit ∧
   (∀ s : ℝ, xi_foldbin_critical_scale_success_curve_inversion_success_curve s =
     if s ≤ Real.goldenRatio⁻¹ then
       Real.goldenRatio ^ 2 / Real.sqrt 5 * s
@@ -49,10 +49,9 @@ def xi_foldbin_critical_scale_success_curve_inversion_statement
 
 /-- Paper label: `cor:xi-foldbin-critical-scale-success-curve-inversion`. -/
 theorem paper_xi_foldbin_critical_scale_success_curve_inversion
-    (D : Omega.Folding.FoldBinDegeneracyTailCapacityKinksData) :
-    xi_foldbin_critical_scale_success_curve_inversion_statement D := by
-  have hcapacity : D.capacityLimit :=
-    (Omega.Folding.paper_fold_bin_degeneracy_tail_capacity_kinks D).2
+    : xi_foldbin_critical_scale_success_curve_inversion_statement := by
+  have hcapacity : Omega.Folding.foldBinDegeneracyCapacityLimit :=
+    Omega.Folding.paper_fold_bin_degeneracy_tail_capacity_kinks.2
   refine ⟨hcapacity, ?_, rfl, ?_, ?_, ?_⟩
   · intro s
     rfl

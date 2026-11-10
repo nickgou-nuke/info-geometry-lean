@@ -1,4 +1,5 @@
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
@@ -23,14 +24,16 @@ from the supplied equation.
 
 namespace InfoGeometry.Canonical.ExplicitHalfTriFacetAlgebra
 
-variable {R : Type*} [CommRing R]
+section Ring
+
+variable {R : Type*} [Ring R]
 
 /-- Cubic projector reduction: `P^3 = P` implies `P^4 = P^2`. -/
 theorem P4_eq_P2 (P : R) (hP : P ^ 3 = P) :
     P ^ 4 = P ^ 2 := by
-  have h1 : P ^ 4 = P * P ^ 3 := by ring
+  have h1 : P ^ 4 = P * P ^ 3 := by noncomm_ring
   rw [h1, hP]
-  ring
+  noncomm_ring
 
 /--
 The parabolic, exact, and coexact pieces sum to unity with an explicit half
@@ -40,18 +43,22 @@ theorem P_par_sum (half P : R) (h_half : 2 * half = 1) :
     (1 - P ^ 2) + half * (P ^ 2 + P) + half * (P ^ 2 - P) = 1 := by
   calc
     (1 - P ^ 2) + half * (P ^ 2 + P) + half * (P ^ 2 - P)
-        = 1 - P ^ 2 + (2 * half) * P ^ 2 := by ring
+        = 1 - P ^ 2 + (2 * half) * P ^ 2 := by noncomm_ring
     _ = 1 - P ^ 2 + 1 * P ^ 2 := by rw [h_half]
-    _ = 1 := by ring
+    _ = 1 := by noncomm_ring
 
 /-- The parabolic component `1 - P^2` is idempotent. -/
 theorem P_par_idem (P : R) (hP : P ^ 3 = P) :
     (1 - P ^ 2) ^ 2 = 1 - P ^ 2 := by
   have hP4 : P ^ 4 = P ^ 2 := P4_eq_P2 P hP
   calc
-    (1 - P ^ 2) ^ 2 = 1 - 2 * P ^ 2 + P ^ 4 := by ring
+    (1 - P ^ 2) ^ 2 = 1 - 2 * P ^ 2 + P ^ 4 := by noncomm_ring
     _ = 1 - 2 * P ^ 2 + P ^ 2 := by rw [hP4]
-    _ = 1 - P ^ 2 := by ring
+    _ = 1 - P ^ 2 := by noncomm_ring
+
+end Ring
+
+variable {R : Type*} [CommRing R]
 
 /-- The exact component `half * (P^2 + P)` is idempotent. -/
 theorem P_ext_idem (half P : R) (h_half : 2 * half = 1) (hP : P ^ 3 = P) :

@@ -34,6 +34,7 @@ def Commutant (ℳ : Submodule R (Module.End R M)) : Submodule R (Module.End R M
 
 /-- Conjugation by an involution is itself involutive in the endomorphism ring. -/
 theorem conjugation_by_involution_involutive
+    {R M : Type*} [Ring R] [AddCommGroup M] [Module R M]
     (J X : Module.End R M) (hJ : J * J = 1) :
     J * (J * X * J) * J = X := by
   calc

@@ -56,7 +56,7 @@ theorem Plucker6.ext {R : Type*} {P Q : Plucker6 R}
 
 namespace Vec4
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Scalar multiplication of homogeneous coordinates. -/
 def scale (l : R) (X : Vec4 R) : Vec4 R where
@@ -69,7 +69,7 @@ end Vec4
 
 namespace Plucker6
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Coordinatewise addition of Plucker coordinate vectors. -/
 def add (P Q : Plucker6 R) : Plucker6 R where
@@ -128,7 +128,7 @@ The Klein quadric / Plucker relation.
 Every decomposable bivector `X ∧ Y`, written in Plucker coordinates, lies on
 the Klein quadric.
 -/
-theorem kleinQ_pluckerLine (X Y : Vec4 R) :
+theorem kleinQ_pluckerLine {R : Type*} [CommRing R] (X Y : Vec4 R) :
     kleinQ (pluckerLine X Y) = 0 := by
   rcases X with ⟨x0, x1, x2, x3⟩
   rcases Y with ⟨y0, y1, y2, y3⟩
@@ -142,10 +142,11 @@ theorem pluckerLine_scale_left
       scale l (pluckerLine X Y) := by
   rcases X with ⟨x0, x1, x2, x3⟩
   rcases Y with ⟨y0, y1, y2, y3⟩
-  apply Plucker6.ext <;> unfold pluckerLine Vec4.scale scale <;> ring
+  apply Plucker6.ext <;> unfold pluckerLine Vec4.scale scale <;> noncomm_ring
 
 /-- Scaling the second spanning vector scales all Plucker coordinates. -/
 theorem pluckerLine_scale_right
+    {R : Type*} [CommRing R]
     (m : R) (X Y : Vec4 R) :
     pluckerLine X (Vec4.scale m Y) =
       scale m (pluckerLine X Y) := by
@@ -155,6 +156,7 @@ theorem pluckerLine_scale_right
 
 /-- Scaling Plucker coordinates scales the Klein quadratic form by `l²`. -/
 theorem kleinQ_scale
+    {R : Type*} [CommRing R]
     (l : R) (P : Plucker6 R) :
     kleinQ (scale l P) = l ^ 2 * kleinQ P := by
   rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
@@ -189,10 +191,11 @@ theorem kleinQ_add
   rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
   rcases Q with ⟨q01, q02, q03, q12, q13, q23⟩
   unfold kleinQ kleinPolar add
-  ring
+  noncomm_ring
 
 /-- The Klein polar form is homogeneous in the left argument. -/
 theorem kleinPolar_scale_left
+    {R : Type*} [CommRing R]
     (l : R) (P Q : Plucker6 R) :
     kleinPolar (scale l P) Q = l * kleinPolar P Q := by
   rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
@@ -202,6 +205,7 @@ theorem kleinPolar_scale_left
 
 /-- The Klein polar form is homogeneous in the right argument. -/
 theorem kleinPolar_scale_right
+    {R : Type*} [CommRing R]
     (m : R) (P Q : Plucker6 R) :
     kleinPolar P (scale m Q) = m * kleinPolar P Q := by
   rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
@@ -220,7 +224,7 @@ theorem kleinPolar_comm
   rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
   rcases Q with ⟨q01, q02, q03, q12, q13, q23⟩
   unfold kleinPolar
-  ring
+  noncomm_ring
 
 /--
 The Klein polar form is additive in the left argument.
@@ -233,7 +237,7 @@ theorem kleinPolar_add_left
   rcases Q with ⟨q01, q02, q03, q12, q13, q23⟩
   rcases R₀ with ⟨r01, r02, r03, r12, r13, r23⟩
   unfold kleinPolar add
-  ring
+  noncomm_ring
 
 /--
 The Klein polar form is additive in the right argument.
@@ -257,7 +261,7 @@ theorem kleinPolar_eq_kleinQ_add_sub
     kleinPolar P Q =
       kleinQ (add P Q) - kleinQ P - kleinQ Q := by
   rw [kleinQ_add]
-  ring
+  abel
 
 /--
 The Klein polar form is the polarization of the Klein quadratic form.
@@ -267,30 +271,29 @@ In particular,
   `kleinPolar P P = 2 * kleinQ P`.
 -/
 theorem kleinPolar_self
-    {R : Type*} [CommRing R]
+    {R : Type*} [Ring R]
     (P : Plucker6 R) :
     kleinPolar P P = 2 * kleinQ P := by
   rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
   unfold kleinPolar kleinQ
-  ring
+  noncomm_ring
 
 /--
 A point on the Klein quadric is self-orthogonal for the associated polar form.
 -/
 theorem kleinPolar_self_of_kleinQ_zero
-    {R : Type*} [CommRing R]
+    {R : Type*} [Ring R]
     (P : Plucker6 R)
     (hP : kleinQ P = 0) :
     kleinPolar P P = 0 := by
-  rw [kleinPolar_self, hP]
-  ring
+  rw [kleinPolar_self, hP, mul_zero]
 
 /--
 Conversely, if `2 ≠ 0` and the ring has no zero divisors, self-orthogonality
 for the polar form implies the Klein quadratic equation.
 -/
 theorem kleinQ_zero_of_kleinPolar_self_zero
-    {R : Type*} [CommRing R] [NoZeroDivisors R]
+    {R : Type*} [Ring R] [NoZeroDivisors R]
     (h2 : (2 : R) ≠ 0)
     (P : Plucker6 R)
     (hP : kleinPolar P P = 0) :
@@ -305,7 +308,7 @@ Over a ring with no zero divisors and `2 ≠ 0`, the Klein quadric equation is
 equivalent to self-orthogonality for the associated polar bilinear form.
 -/
 theorem kleinPolar_self_zero_iff_kleinQ_zero_of_two_ne_zero
-    {R : Type*} [CommRing R] [NoZeroDivisors R]
+    {R : Type*} [Ring R] [NoZeroDivisors R]
     (h2 : (2 : R) ≠ 0)
     (P : Plucker6 R) :
     kleinPolar P P = 0 ↔ kleinQ P = 0 := by

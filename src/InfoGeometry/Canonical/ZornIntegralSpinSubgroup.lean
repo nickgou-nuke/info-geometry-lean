@@ -22,7 +22,7 @@ namespace InfoGeometry.Canonical.ZornIntegralSpinSubgroup
 open InfoGeometry.Canonical.ZornMatrix
 open InfoGeometry.Canonical.ZornClifford
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 @[simp] lemma zero_a : (0 : ZornMatrix R).a = 0 := rfl
 @[simp] lemma zero_b : (0 : ZornMatrix R).b = 0 := rfl

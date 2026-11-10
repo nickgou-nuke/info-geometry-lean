@@ -6,7 +6,7 @@ namespace InfoGeometry.Physics.ChiralEigenspaceEquivalence
 
 open FiniteChiralSpectralSymmetry
 
-variable {Scalar Space : Type*} [Field Scalar] [AddCommGroup Space] [Module Scalar Space]
+variable {Scalar Space : Type*} [CommRing Scalar] [AddCommGroup Space] [Module Scalar Space]
 
 theorem map_eigenspace (operator grading : Module.End Scalar Space)
     (hanti : operator.comp grading = -(grading.comp operator))
@@ -118,7 +118,8 @@ theorem eigenspace_finrank_eq (operator grading : Module.End Scalar Space)
       Module.finrank Scalar (operator.eigenspace (-eigenvalue)) :=
   (eigenspaceEquiv operator grading hanti hinvolution eigenvalue).finrank_eq
 
-theorem zero_mode (operator grading : Module.End Scalar Space)
+theorem zero_mode {Scalar Space : Type*} [Ring Scalar] [AddCommGroup Space] [Module Scalar Space]
+    (operator grading : Module.End Scalar Space)
     (hanti : operator.comp grading = -(grading.comp operator))
     {vector : Space} (hzero : operator vector = 0) :
     operator (grading vector) = 0 := by

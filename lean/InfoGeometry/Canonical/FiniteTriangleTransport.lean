@@ -11,7 +11,7 @@ is an endomorphism difference; no manifold curvature is asserted.
 
 namespace InfoGeometry.Canonical.FiniteTriangleTransport
 
-variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
+variable {R V : Type*} [Ring R] [AddCommGroup V] [Module R V]
 
 structure EdgeTransportDatum where
   edge01 : V ≃ₗ[R] V

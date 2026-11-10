@@ -6,6 +6,7 @@ import Mathlib.GroupTheory.QuotientGroup.Basic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Ring.Invertible
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.Group
 import proofs.KleinPresentedGroup
@@ -188,7 +189,7 @@ theorem parityFlipFree_preserves_relator :
 
 /-! ### Section 3: Doubled Krein Operator Carrier & Glide Differential -/
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The split Krein metric $\eta = \mathrm{diag}(1, -1)$ on $R^2$, representing the
 linear differential $dF$ of the Klein glide reflection. -/
@@ -238,7 +239,7 @@ theorem conjugateEta_formula (θ n k : R) :
   ext i j
   fin_cases i <;> fin_cases j <;> (
     simp [conjugateEta, kreinEta, Matrix.mul_apply, Fin.sum_univ_two]
-    try ring
+    try noncomm_ring
   )
 
 /-- Invariance under the crosscap glide differential: $\eta X \eta = X$. -/
@@ -264,17 +265,17 @@ theorem crosscap_invariant_iff (θ n k : R) [Invertible (2 : R)] :
       exact entry
     have hk : k = 0 := by
       apply eq_zero_of_two_mul_eq_zero (R := R)
-      calc 2 * k = k - (-k) := by ring
+      calc 2 * k = k - (-k) := by noncomm_ring
       _ = k - k := by rw [h10]
-      _ = 0 := by ring
+      _ = 0 := by noncomm_ring
     have h01 : k - n = n - k := by
       have entry := congr_fun (congr_fun h 0) 1
       exact entry
     have hn : n = 0 := by
       apply eq_zero_of_two_mul_eq_zero (R := R)
-      calc 2 * n = (n - k) - (k - n) + 2 * k := by ring
+      calc 2 * n = (n - k) - (k - n) + 2 * k := by noncomm_ring
       _ = (n - k) - (n - k) + 2 * 0 := by rw [h01, hk]
-      _ = 0 := by ring
+      _ = 0 := by noncomm_ring
     exact ⟨hk, hn⟩
   · rintro ⟨rfl, rfl⟩
     dsimp [IsCrosscapInvariant]
@@ -293,29 +294,29 @@ theorem crosscapProj_on_sl2 (θ n k : R) [Invertible (2 : R)] :
   ext i j
   fin_cases i <;> fin_cases j
   · simp only [crosscapProj, conjugateEta_formula, Matrix.smul_apply, Matrix.add_apply,
-      Matrix.cons_val_zero]
+      Matrix.cons_val_zero, smul_eq_mul]
     calc ⅟(2 : R) * (θ + θ)
-      = ⅟(2 : R) * (2 * θ) := by ring
+      = ⅟(2 : R) * (2 * θ) := by noncomm_ring
     _ = (⅟(2 : R) * 2) * θ := by rw [mul_assoc]
     _ = 1 * θ := by rw [invOf_mul_self]
-    _ = θ := by ring
+    _ = θ := by noncomm_ring
   · simp only [crosscapProj, conjugateEta_formula, Matrix.smul_apply, Matrix.add_apply,
-      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons]
+      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons, smul_eq_mul]
     calc ⅟(2 : R) * (n - k + (k - n))
-      = ⅟(2 : R) * 0 := by ring
+      = ⅟(2 : R) * 0 := by noncomm_ring
     _ = 0 := mul_zero _
   · simp only [crosscapProj, conjugateEta_formula, Matrix.smul_apply, Matrix.add_apply,
-      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons]
+      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons, smul_eq_mul]
     calc ⅟(2 : R) * (k + -k)
-      = ⅟(2 : R) * 0 := by ring
+      = ⅟(2 : R) * 0 := by noncomm_ring
     _ = 0 := mul_zero _
   · simp only [crosscapProj, conjugateEta_formula, Matrix.smul_apply, Matrix.add_apply,
-      Matrix.cons_val_one, Matrix.head_cons]
+      Matrix.cons_val_one, Matrix.head_cons, smul_eq_mul]
     calc ⅟(2 : R) * (-θ + -θ)
-      = -(⅟(2 : R) * (2 * θ)) := by ring
+      = -(⅟(2 : R) * (2 * θ)) := by noncomm_ring
     _ = -((⅟(2 : R) * 2) * θ) := by rw [mul_assoc]
     _ = -(1 * θ) := by rw [invOf_mul_self]
-    _ = -θ := by ring
+    _ = -θ := by noncomm_ring
 
 /-- Quadratic Casimir invariant: $C_2(X) = \mathrm{tr}(X^2)$. -/
 def casimirTwo (X : Matrix (Fin 2) (Fin 2) R) : R :=
@@ -327,7 +328,7 @@ theorem casimirTwo_crosscapProj (θ n k : R) [Invertible (2 : R)] :
     casimirTwo (crosscapProj !![θ, n - k; k, -θ]) = 2 * θ ^ 2 := by
   rw [crosscapProj_on_sl2]
   simp [casimirTwo, Matrix.trace, Matrix.diag, Matrix.mul_apply, Fin.sum_univ_two]
-  ring
+  noncomm_ring
 
 /-! ### Section 5: Synthesis and Bridges to Canonical Repositories -/
 
@@ -380,7 +381,7 @@ theorem casimirTwo_iwasawa_filtered (k θ n : R) [Invertible (2 : R)] :
   rw [crosscapProj_iwasawa_to_cartan]
   simp [casimirTwo, InfoGeometry.Lie.GlobalKANCasimirReduction.cartanA, Matrix.trace,
         Matrix.diag, Matrix.mul_apply, Fin.sum_univ_two]
-  ring
+  noncomm_ring
 
 /-- The split Krein metric $\eta$ is identically the 2x2 linear differential submatrix of the
 affine glide reflection matrix $F$ from `TitsBruhatBrillouinKlein`. -/
@@ -410,13 +411,13 @@ structure KleinBieberbachWeylCertificate : Prop where
   krein_clifford_anticommutation :
     (kreinEta (R := ℤ) * paraComplexK + paraComplexK * kreinEta) = 0
   crosscap_casimir_selection :
-    ∀ {R : Type*} [CommRing R] [Invertible (2 : R)] (θ n k : R),
+    ∀ {R : Type*} [Ring R] [Invertible (2 : R)] (θ n k : R),
       casimirTwo (crosscapProj !![θ, n - k; k, -θ]) = 2 * θ ^ 2
   affine_deck_faithful_factorization :
     toAffineKleinGroup (toKlein genA) = KleinAffineDeckGroup.aGen ∧
     toAffineKleinGroup (toKlein genB) = KleinAffineDeckGroup.bGen
   iwasawa_casimir_reduction :
-    ∀ {R : Type*} [CommRing R] [Invertible (2 : R)] (k θ n : R),
+    ∀ {R : Type*} [Ring R] [Invertible (2 : R)] (k θ n : R),
       casimirTwo (crosscapProj (InfoGeometry.Lie.GlobalKANCasimirReduction.compactK k +
                                InfoGeometry.Lie.GlobalKANCasimirReduction.cartanA θ +
                                InfoGeometry.Lie.GlobalKANCasimirReduction.nilpotentN n)) =

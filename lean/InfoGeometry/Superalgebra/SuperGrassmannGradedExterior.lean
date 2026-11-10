@@ -40,8 +40,7 @@ namespace InfoGeometry.Superalgebra.SuperGrassmann
 
 open ExteriorAlgebra
 
-variable {R : Type*} [CommRing R]
-variable {M : Type*} [AddCommGroup M] [Module R M]
+variable {R : Type*} [Ring R]
 
 /-! ### Archetype I & II: Parity, Grading, and the Koszul Sign Rule -/
 
@@ -90,10 +89,12 @@ theorem koszulSign_one_left (q : ℕ) :
 
 theorem koszulSign_one_one :
     koszulSign (R := R) 1 1 = -1 := by
-  dsimp [koszulSign]
-  ring
+  simp [koszulSign]
 
 /-! ### Archetype III & IV: Graded Commutativity of Exterior Products -/
+
+variable {R : Type*} [CommRing R]
+variable {M : Type*} [AddCommGroup M] [Module R M]
 
 /-- For degree-1 generators, `ι R v * ι R w + ι R w * ι R v = 0`. -/
 theorem ι_mul_ι_anticomm (v w : M) :

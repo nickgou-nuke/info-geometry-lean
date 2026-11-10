@@ -25,7 +25,10 @@ open InfoGeometry.Canonical.MatrixTwoNoncommutativity
 
 section Ring
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
+
+/-- Multiplicative commutator `x * y - y * x` in any ring `[Ring R]`. -/
+def opComm (x y : R) : R := x * y - y * x
 
 /-- Exchange the upper and lower two-dimensional blocks. -/
 def blockSwapVec (Z : Vec4 R) : Vec4 R := ⟨Z.x2, Z.x3, Z.x0, Z.x1⟩
@@ -39,7 +42,7 @@ theorem blockSwapPlucker_pluckerLine (Z W : Vec4 R) :
       pluckerLine (blockSwapVec Z) (blockSwapVec W) := by
   apply Plucker6.ext <;> simp [blockSwapPlucker, blockSwapVec, pluckerLine]
 
-omit [CommRing R] in
+omit [Ring R] in
 @[simp] theorem blockSwapVec_involutive (Z : Vec4 R) :
     blockSwapVec (blockSwapVec Z) = Z := by cases Z; rfl
 
@@ -56,14 +59,18 @@ theorem blockSwapPlucker_scale (l : R) (P : Plucker6 R) :
   apply Plucker6.ext <;> simp [blockSwapPlucker, scale]
 
 @[simp] theorem kleinQ_blockSwapPlucker (P : Plucker6 R) :
-    kleinQ (blockSwapPlucker P) = kleinQ P := by
-  simp [kleinQ, blockSwapPlucker]
-  ring
+    kleinQ (blockSwapPlucker P) =
+      kleinQ P + opComm P.p23 P.p01 + opComm P.p12 P.p03 := by
+  simp [kleinQ, blockSwapPlucker, opComm]
+  noncomm_ring
 
 theorem kleinPolar_blockSwapPlucker (P Q : Plucker6 R) :
-    kleinPolar (blockSwapPlucker P) (blockSwapPlucker Q) = kleinPolar P Q := by
-  simp [kleinPolar, blockSwapPlucker]
-  ring
+    kleinPolar (blockSwapPlucker P) (blockSwapPlucker Q) =
+      kleinPolar P Q +
+        (opComm P.p23 Q.p01 + opComm Q.p23 P.p01) +
+        (opComm P.p12 Q.p03 + opComm Q.p12 P.p03) := by
+  simp [kleinPolar, blockSwapPlucker, opComm]
+  noncomm_ring
 
 /-- The decomposable upper spinor plane, opposite the finite chart origin. -/
 def infinityPlucker : Plucker6 R :=
@@ -78,8 +85,8 @@ theorem infinityPlucker_coordinates :
     kleinPolar P infinityPlucker = P.p23 := by
   simp [kleinPolar, infinityPlucker_coordinates]
 
-@[simp] theorem kleinQ_infinityPlucker : kleinQ (infinityPlucker (R := R)) = 0 :=
-  kleinQ_pluckerLine _ _
+@[simp] theorem kleinQ_infinityPlucker : kleinQ (infinityPlucker (R := R)) = 0 := by
+  simp [kleinQ, infinityPlucker_coordinates]
 
 @[simp] theorem infinityPlucker_p23 : (infinityPlucker (R := R)).p23 = 0 := by
   rw [infinityPlucker_coordinates]
@@ -88,7 +95,8 @@ theorem blockSwapPlucker_origin :
     blockSwapPlucker (graphPlucker (0 : Matrix (Fin 2) (Fin 2) R)) =
       infinityPlucker := by
   apply Plucker6.ext <;>
-    simp [blockSwapPlucker, graphPlucker_coordinates, infinityPlucker_coordinates]
+    simp [blockSwapPlucker, graphPlucker, graphFirst, graphSecond, pluckerLine,
+      infinityPlucker_coordinates]
 
 theorem blockSwapPlucker_infinity :
     blockSwapPlucker (infinityPlucker (R := R)) = graphPlucker 0 := by
@@ -127,6 +135,8 @@ theorem det_inv_sub_inv (X Y : Matrix (Fin 2) (Fin 2) R)
     (hX : X.det ≠ 0) (hY : Y.det ≠ 0) :
     (X⁻¹ - Y⁻¹).det = (X - Y).det / (X.det * Y.det) := by
   have h := kleinPolar_blockSwapPlucker (graphPlucker X) (graphPlucker Y)
+  have hcomm : ∀ a b : R, opComm a b = 0 := fun a b => by simp [opComm, mul_comm]
+  simp only [hcomm, add_zero] at h
   rw [blockSwapPlucker_graphPlucker X hX, blockSwapPlucker_graphPlucker Y hY,
     kleinPolar_scale_left, kleinPolar_scale_right, kleinPolar_graphPlucker,
     kleinPolar_graphPlucker] at h

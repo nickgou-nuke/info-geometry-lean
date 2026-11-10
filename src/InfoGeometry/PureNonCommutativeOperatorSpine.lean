@@ -255,6 +255,11 @@ theorem archetype_A1_dual_leibniz_and_jacobi (H U V : B) :
 
 /-! ### Archetype A₂: Peirce–Cartan `Z₂`-Grading, `ad_P³ = ad_P` & Tangent Product Closure -/
 
+/--
+For an idempotent `P` in an associative ring, the involution `2P - 1` squares to one,
+`ad_P` has the Peirce odd part as its square, and the product of two odd parts is
+even. Conjugation by `2P - 1` fixes the even part and negates the odd part.
+-/
 theorem archetype_A2_peirce_cartan_grading_and_tangent_closure
     {P : B} (hP : P * P = P) (A C : B) :
     invS P * invS P = 1 ∧
@@ -264,10 +269,26 @@ theorem archetype_A2_peirce_cartan_grading_and_tangent_closure
     anticomm P (comm P A) = comm P A ∧
     comm P (comm P A * comm P C) = 0 ∧
     invS P * A * invS P = evenGrade P A - oddGrade P A := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_abel hP
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · simp [invS, mul_sub, sub_mul, mul_add, add_mul, mul_assoc, hP]
+    <;> abel
+  · simp [comm, oddGrade, mul_sub, sub_mul, mul_add, add_mul, mul_assoc, hP]
+    <;> abel
+  · simp [comm, evenGrade, mul_sub, sub_mul, mul_add, add_mul, mul_assoc, hP]
+    <;> abel
+  · simp [comm, mul_sub, sub_mul, mul_add, add_mul, mul_assoc, hP]
+  · simp [comm, anticomm, mul_sub, sub_mul, mul_add, add_mul, mul_assoc, hP]
+  · simp [comm, mul_sub, sub_mul, mul_add, add_mul, mul_assoc, hP]
+  · simp [invS, comm, evenGrade, oddGrade, mul_sub, sub_mul, mul_add, add_mul,
+      mul_assoc, hP]
+    <;> abel
 
-/-! ### Archetype A₃: Nilpotent Cones & The Split-Quaternion `Cl_{1,1}` Tetraktys Table -/
-
+/--
+For an idempotent cut, the two off-diagonal Peirce corners are square-zero.
+Their sum and difference have opposite squares, while their products give the
+Peirce metric and commutator; the remaining equations record the resulting
+anticommutation and corner relations. No commutativity of `B` is assumed.
+-/
 theorem archetype_A3_nilpotent_cones_and_tetraktys_table
     {P : B} (hP : P * P = P) (A C : B) :
     conePlus P A * conePlus P A = 0 ∧
@@ -285,10 +306,35 @@ theorem archetype_A3_nilpotent_cones_and_tetraktys_table
     comm (coneMinus P C) (genV P A C) = 0 ∧
     anticomm (conePlus P A) (genSig P A C) = 0 ∧
     anticomm (coneMinus P C) (genSig P A C) = 0 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_abel hP
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  all_goals
+    simp only [-zsmul_eq_mul,
+      weylJ, weylJInv, weylPhi, steinbergBraid,
+      steinbergBraidInv, steinbergBraidDual, steinbergBraidDualInv,
+      hProjV, hProjPhi, hProjJ, hProjSig,
+      conjPlus, conjPlusInv, conjMinus, conjMinusInv,
+      projV, projPhi, projJ, projSig, derivCasimir,
+      derivSqPhi, derivSqJ, derivSqSig,
+      ladderSum, ladderMinus, ladderPlus,
+      sandwichCross, sandwichSame,
+      genPhi, genJ, genV, genSig,
+      evenGrade, oddGrade, peirce11, peirce00,
+      invS, comm, anticomm, conePlus, coneMinus,
+      smul_mul_assoc, mul_smul_comm, smul_add, smul_sub, smul_neg, smul_smul, smul_zero,
+      sub_neg_eq_add, neg_mul, mul_neg, neg_neg,
+      add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
+      mul_assoc, hP, P_assoc hP, P_assoc_right hP,
+      conePlus_mul_P hP, P_mul_coneMinus hP,
+      P_mul_conePlus hP, coneMinus_mul_P hP,
+      conePlus_sq_zero hP, coneMinus_sq_zero hP,
+      conePlus_mul_conePlus hP, coneMinus_mul_coneMinus hP] <;> abel
 
-/-! ### Archetype A₄: Sandwich Complementarity, Vertex Factorization & Double-Derivation Trinity -/
-
+/--
+The cross and same Peirce sandwiches split the product through the two corners.
+This theorem records their sum/difference formulas, their expressions through
+the double commutators, and their actions on the metric, spin, and tangent
+generators, for an arbitrary associative ring with an idempotent cut.
+-/
 theorem archetype_A4_sandwich_complementarity_and_trinity
     {P : B} (hP : P * P = P) (A C X : B) :
     sandwichCross P A C X + sandwichSame P A C X = genPhi P A C * X * genPhi P A C ∧
@@ -306,10 +352,35 @@ theorem archetype_A4_sandwich_complementarity_and_trinity
     sandwichSame P A C (genSig P A C) = 0 ∧
     sandwichSame P A C (genPhi P A C) = genV P A C * genPhi P A C ∧
     sandwichSame P A C (genJ P A C) = -(genV P A C * genJ P A C) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_abel hP
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  all_goals
+    simp only [-zsmul_eq_mul,
+      weylJ, weylJInv, weylPhi, steinbergBraid,
+      steinbergBraidInv, steinbergBraidDual, steinbergBraidDualInv,
+      hProjV, hProjPhi, hProjJ, hProjSig,
+      conjPlus, conjPlusInv, conjMinus, conjMinusInv,
+      projV, projPhi, projJ, projSig, derivCasimir,
+      derivSqPhi, derivSqJ, derivSqSig,
+      ladderSum, ladderMinus, ladderPlus,
+      sandwichCross, sandwichSame,
+      genPhi, genJ, genV, genSig,
+      evenGrade, oddGrade, peirce11, peirce00,
+      invS, comm, anticomm, conePlus, coneMinus,
+      smul_mul_assoc, mul_smul_comm, smul_add, smul_sub, smul_neg, smul_smul, smul_zero,
+      sub_neg_eq_add, neg_mul, mul_neg, neg_neg,
+      add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
+      mul_assoc, hP, P_assoc hP, P_assoc_right hP,
+      conePlus_mul_P hP, P_mul_coneMinus hP,
+      P_mul_conePlus hP, coneMinus_mul_P hP,
+      conePlus_sq_zero hP, coneMinus_sq_zero hP,
+      conePlus_mul_conePlus hP, coneMinus_mul_coneMinus hP] <;> abel
 
-/-! ### Archetype A₅: Klein–Hadamard `Z₂ × Z₂` Eigenvalue Matrix & Partition of Unity -/
-
+/--
+The four double-commutator operators sum to the scaled identity operator, and
+their actions on the generated metric, vielbein, current, and spin elements are
+diagonal as stated. The proof uses only the idempotent Peirce decomposition in
+the possibly noncommutative ring `B`.
+-/
 theorem archetype_A5_klein_hadamard_spectra_and_partition
     {P : B} (hP : P * P = P) (A C X : B) :
     projV P A C X + projPhi P A C X + projJ P A C X + projSig P A C X = (8 : ℤ) • X ∧
@@ -325,10 +396,34 @@ theorem archetype_A5_klein_hadamard_spectra_and_partition
     derivSqSig P A C (genV P A C) = 0 ∧
     derivSqSig P A C (genPhi P A C) = -((4 : ℤ) • ((genV P A C * genV P A C) * genPhi P A C)) ∧
     derivSqSig P A C (genJ P A C) = -((4 : ℤ) • ((genV P A C * genV P A C) * genJ P A C)) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_abel hP
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  all_goals
+    simp only [-zsmul_eq_mul,
+      weylJ, weylJInv, weylPhi, steinbergBraid,
+      steinbergBraidInv, steinbergBraidDual, steinbergBraidDualInv,
+      hProjV, hProjPhi, hProjJ, hProjSig,
+      conjPlus, conjPlusInv, conjMinus, conjMinusInv,
+      projV, projPhi, projJ, projSig, derivCasimir,
+      derivSqPhi, derivSqJ, derivSqSig,
+      ladderSum, ladderMinus, ladderPlus,
+      sandwichCross, sandwichSame,
+      genPhi, genJ, genV, genSig,
+      evenGrade, oddGrade, peirce11, peirce00,
+      invS, comm, anticomm, conePlus, coneMinus,
+      smul_mul_assoc, mul_smul_comm, smul_add, smul_sub, smul_neg, smul_smul, smul_zero,
+      sub_neg_eq_add, neg_mul, mul_neg, neg_neg,
+      add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
+      mul_assoc, hP, P_assoc hP, P_assoc_right hP,
+      conePlus_mul_P hP, P_mul_coneMinus hP,
+      P_mul_conePlus hP, coneMinus_mul_P hP,
+      conePlus_sq_zero hP, coneMinus_sq_zero hP,
+      conePlus_mul_conePlus hP, coneMinus_mul_coneMinus hP] <;> abel
 
-/-! ### Archetype A₆: Second-Level Superoperator Nilpotent Ladder Recursion -/
-
+/--
+The second-level ladder operators act on the generated Peirce elements with the
+displayed transitions. Repeated lowering or raising terminates on the indicated
+generators, while the sum operator has the stated second-iterate action.
+-/
 theorem archetype_A6_superoperator_ladder_recursion
     {P : B} (hP : P * P = P) (A C X : B) :
     ladderMinus P A C (genPhi P A C) = -((4 : ℤ) • (genV P A C * genJ P A C)) ∧
@@ -344,10 +439,34 @@ theorem archetype_A6_superoperator_ladder_recursion
       -((16 : ℤ) • ((genV P A C * genV P A C) * genPhi P A C)) ∧
     ladderSum P A C (ladderSum P A C (genJ P A C)) =
       -((16 : ℤ) • ((genV P A C * genV P A C) * genJ P A C)) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_abel hP
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  all_goals
+    simp [-zsmul_eq_mul,
+      weylJ, weylJInv, weylPhi, steinbergBraid,
+      steinbergBraidInv, steinbergBraidDual, steinbergBraidDualInv,
+      hProjV, hProjPhi, hProjJ, hProjSig,
+      conjPlus, conjPlusInv, conjMinus, conjMinusInv,
+      projV, projPhi, projJ, projSig, derivCasimir,
+      derivSqPhi, derivSqJ, derivSqSig,
+      ladderSum, ladderMinus, ladderPlus,
+      sandwichCross, sandwichSame,
+      genPhi, genJ, genV, genSig,
+      evenGrade, oddGrade, peirce11, peirce00,
+      invS, comm, anticomm, conePlus, coneMinus,
+      smul_mul_assoc, mul_smul_comm, smul_add, smul_sub, smul_neg, smul_smul, smul_zero,
+      sub_neg_eq_add, neg_mul, mul_neg, neg_neg,
+      add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
+      mul_assoc, hP, P_assoc hP, P_assoc_right hP,
+      conePlus_mul_P hP, P_mul_coneMinus hP,
+      P_mul_conePlus hP, coneMinus_mul_P hP,
+      conePlus_sq_zero hP, coneMinus_sq_zero hP,
+      conePlus_mul_conePlus hP, coneMinus_mul_coneMinus hP] <;> abel
 
-/-! ### Archetype A₇: Symmetry-Adapted `so(1,2) ≅ sl₂` Lie Brackets & Cubic Inversions -/
-
+/--
+The Peirce-generated vielbein, current, and spin satisfy the stated Lie brackets
+and cubic product relations. These are identities in an associative ring and do
+not assert a finite-dimensional Lie-group or homogeneous-space realization.
+-/
 theorem archetype_A7_so12_lie_brackets_and_cubic_inversions
     {P : B} (hP : P * P = P) (A C : B) :
     comm (genPhi P A C) (genJ P A C) = -((2 : ℤ) • genSig P A C) ∧
@@ -359,10 +478,34 @@ theorem archetype_A7_so12_lie_brackets_and_cubic_inversions
     genPhi P A C * coneMinus P C * genPhi P A C = conePlus P A * genV P A C ∧
     genPhi P A C * genPhi P A C * genPhi P A C = genV P A C * genPhi P A C ∧
     genJ P A C * genJ P A C * genJ P A C = -(genV P A C * genJ P A C) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_abel hP
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  all_goals
+    simp [-zsmul_eq_mul,
+      weylJ, weylJInv, weylPhi, steinbergBraid,
+      steinbergBraidInv, steinbergBraidDual, steinbergBraidDualInv,
+      hProjV, hProjPhi, hProjJ, hProjSig,
+      conjPlus, conjPlusInv, conjMinus, conjMinusInv,
+      projV, projPhi, projJ, projSig, derivCasimir,
+      derivSqPhi, derivSqJ, derivSqSig,
+      ladderSum, ladderMinus, ladderPlus,
+      sandwichCross, sandwichSame,
+      genPhi, genJ, genV, genSig,
+      evenGrade, oddGrade, peirce11, peirce00,
+      invS, comm, anticomm, conePlus, coneMinus,
+      smul_mul_assoc, mul_smul_comm, smul_add, smul_sub, smul_neg, smul_smul, smul_zero,
+      sub_neg_eq_add, neg_mul, mul_neg, neg_neg,
+      add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
+      mul_assoc, hP, P_assoc hP, P_assoc_right hP,
+      conePlus_mul_P hP, P_mul_coneMinus hP,
+      P_mul_conePlus hP, coneMinus_mul_P hP,
+      conePlus_sq_zero hP, coneMinus_sq_zero hP,
+      conePlus_mul_conePlus hP, coneMinus_mul_coneMinus hP] <;> abel
 
-/-! ### Archetype A₈: Same-Cone Commutativity & Two-Channel Superposition Identity -/
-
+/--
+Products within either Peirce off-diagonal corner vanish. Expanding the mixed
+metric for sums of two inputs leaves the original two metrics and the two
+cross-channel anticommutators displayed here.
+-/
 theorem archetype_A8_same_cone_commutativity_and_superposition
     {P : B} (hP : P * P = P) (A₁ A₂ C₁ C₂ : B) :
     conePlus P A₁ * conePlus P A₂ = 0 ∧
@@ -373,10 +516,34 @@ theorem archetype_A8_same_cone_commutativity_and_superposition
       genV P A₁ C₁ + genV P A₂ C₂ +
       (anticomm (conePlus P A₁) (coneMinus P C₂) +
        anticomm (conePlus P A₂) (coneMinus P C₁)) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> peirce_abel hP
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  all_goals
+    simp [-zsmul_eq_mul,
+      weylJ, weylJInv, weylPhi, steinbergBraid,
+      steinbergBraidInv, steinbergBraidDual, steinbergBraidDualInv,
+      hProjV, hProjPhi, hProjJ, hProjSig,
+      conjPlus, conjPlusInv, conjMinus, conjMinusInv,
+      projV, projPhi, projJ, projSig, derivCasimir,
+      derivSqPhi, derivSqJ, derivSqSig,
+      ladderSum, ladderMinus, ladderPlus,
+      sandwichCross, sandwichSame,
+      genPhi, genJ, genV, genSig,
+      evenGrade, oddGrade, peirce11, peirce00,
+      invS, comm, anticomm, conePlus, coneMinus,
+      smul_mul_assoc, mul_smul_comm, smul_add, smul_sub, smul_neg, smul_smul, smul_zero,
+      sub_neg_eq_add, neg_mul, mul_neg, neg_neg,
+      add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
+      mul_assoc, hP, P_assoc hP, P_assoc_right hP,
+      conePlus_mul_P hP, P_mul_coneMinus hP,
+      P_mul_conePlus hP, coneMinus_mul_P hP,
+      conePlus_sq_zero hP, coneMinus_sq_zero hP,
+      conePlus_mul_conePlus hP, coneMinus_mul_coneMinus hP] <;> abel
 
-/-! ### Archetype A₉: Peirce Block-Diagonal Splits of `V` and `Σ` & Grading Parity -/
-
+/--
+Every element splits into its four Peirce corners. The metric and spin are even,
+while the vielbein and current are odd; the theorem also identifies their
+diagonal corners and the sum/difference formulas for the metric and spin.
+-/
 theorem archetype_A9_peirce_block_diagonal_splits
     {P : B} (hP : P * P = P) (A C X : B) :
     peirce11 P X + peirce00 P X + conePlus P X + coneMinus P X = X ∧
@@ -394,10 +561,34 @@ theorem archetype_A9_peirce_block_diagonal_splits
     oddGrade P (genPhi P A C) = genPhi P A C ∧
     evenGrade P (genJ P A C) = 0 ∧
     oddGrade P (genJ P A C) = genJ P A C := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_abel hP
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  all_goals
+    simp [-zsmul_eq_mul,
+      weylJ, weylJInv, weylPhi, steinbergBraid,
+      steinbergBraidInv, steinbergBraidDual, steinbergBraidDualInv,
+      hProjV, hProjPhi, hProjJ, hProjSig,
+      conjPlus, conjPlusInv, conjMinus, conjMinusInv,
+      projV, projPhi, projJ, projSig, derivCasimir,
+      derivSqPhi, derivSqJ, derivSqSig,
+      ladderSum, ladderMinus, ladderPlus,
+      sandwichCross, sandwichSame,
+      genPhi, genJ, genV, genSig,
+      evenGrade, oddGrade, peirce11, peirce00,
+      invS, comm, anticomm, conePlus, coneMinus,
+      smul_mul_assoc, mul_smul_comm, smul_add, smul_sub, smul_neg, smul_smul, smul_zero,
+      sub_neg_eq_add, neg_mul, mul_neg, neg_neg,
+      add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
+      mul_assoc, hP, P_assoc hP, P_assoc_right hP,
+      conePlus_mul_P hP, P_mul_coneMinus hP,
+      P_mul_conePlus hP, coneMinus_mul_P hP,
+      conePlus_sq_zero hP, coneMinus_sq_zero hP,
+      conePlus_mul_conePlus hP, coneMinus_mul_coneMinus hP] <;> abel
 
-/-! ### Archetype A₁₀: Casimir Spectrum & Superoperator Commutator Algebra -/
-
+/--
+The sum of the three double-commutator operators has the stated action on the
+generated metric, spin, vielbein, and current. The remaining equations give the
+mixed ladder and double-commutator actions on these same generators.
+-/
 theorem archetype_A10_casimir_and_superoperator_commutators
     {P : B} (hP : P * P = P) (A C : B) :
     derivCasimir P A C (genV P A C) = 0 ∧
@@ -416,10 +607,34 @@ theorem archetype_A10_casimir_and_superoperator_commutators
       (16 : ℤ) • ((genV P A C * genV P A C) * genSig P A C) ∧
     derivSqJ P A C (derivSqPhi P A C (genSig P A C)) =
       (16 : ℤ) • ((genV P A C * genV P A C) * genSig P A C) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_abel hP
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  all_goals
+    simp [-zsmul_eq_mul,
+      weylJ, weylJInv, weylPhi, steinbergBraid,
+      steinbergBraidInv, steinbergBraidDual, steinbergBraidDualInv,
+      hProjV, hProjPhi, hProjJ, hProjSig,
+      conjPlus, conjPlusInv, conjMinus, conjMinusInv,
+      projV, projPhi, projJ, projSig, derivCasimir,
+      derivSqPhi, derivSqJ, derivSqSig,
+      ladderSum, ladderMinus, ladderPlus,
+      sandwichCross, sandwichSame,
+      genPhi, genJ, genV, genSig,
+      evenGrade, oddGrade, peirce11, peirce00,
+      invS, comm, anticomm, conePlus, coneMinus,
+      smul_mul_assoc, mul_smul_comm, smul_add, smul_sub, smul_neg, smul_smul, smul_zero,
+      sub_neg_eq_add, neg_mul, mul_neg, neg_neg,
+      add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
+      mul_assoc, hP, P_assoc hP, P_assoc_right hP,
+      conePlus_mul_P hP, P_mul_coneMinus hP,
+      P_mul_conePlus hP, coneMinus_mul_P hP,
+      conePlus_sq_zero hP, coneMinus_sq_zero hP,
+      conePlus_mul_conePlus hP, coneMinus_mul_coneMinus hP] <;> abel
 
-/-! ### Archetype A₁₁: Raw Character Selection & `V`-Polynomial Defect Laws -/
-
+/--
+The four double-commutator combinations act as the stated character selectors
+on the metric, spin, vielbein, and current generators. The formulas retain the
+operator-valued metric terms rather than specializing them to scalars.
+-/
 theorem archetype_A11_klein_hadamard_character_selection
     {P : B} (hP : P * P = P) (A C : B) :
     projV P A C (genV P A C) = (8 : ℤ) • genV P A C ∧
@@ -442,10 +657,34 @@ theorem archetype_A11_klein_hadamard_character_selection
       (4 : ℤ) • (genV P A C * genPhi P A C - (genV P A C * genV P A C) * genPhi P A C) ∧
     projSig P A C (genJ P A C) =
       (4 : ℤ) • (genV P A C * genJ P A C - (genV P A C * genV P A C) * genJ P A C) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_abel hP
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  all_goals
+    simp [-zsmul_eq_mul,
+      weylJ, weylJInv, weylPhi, steinbergBraid,
+      steinbergBraidInv, steinbergBraidDual, steinbergBraidDualInv,
+      hProjV, hProjPhi, hProjJ, hProjSig,
+      conjPlus, conjPlusInv, conjMinus, conjMinusInv,
+      projV, projPhi, projJ, projSig, derivCasimir,
+      derivSqPhi, derivSqJ, derivSqSig,
+      ladderSum, ladderMinus, ladderPlus,
+      sandwichCross, sandwichSame,
+      genPhi, genJ, genV, genSig,
+      evenGrade, oddGrade, peirce11, peirce00,
+      invS, comm, anticomm, conePlus, coneMinus,
+      smul_mul_assoc, mul_smul_comm, smul_add, smul_sub, smul_neg, smul_smul, smul_zero,
+      sub_neg_eq_add, neg_mul, mul_neg, neg_neg,
+      add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
+      mul_assoc, hP, P_assoc hP, P_assoc_right hP,
+      conePlus_mul_P hP, P_mul_coneMinus hP,
+      P_mul_conePlus hP, coneMinus_mul_P hP,
+      conePlus_sq_zero hP, coneMinus_sq_zero hP,
+      conePlus_mul_conePlus hP, coneMinus_mul_coneMinus hP] <;> abel
 
-/-! ### Archetype A₁₂: Non-Commutative Nilpotent Baker–Campbell–Hausdorff Conjugation Group -/
-
+/--
+The nilpotent Peirce shears act by the stated finite conjugation formulas. Their
+compositions add their corner parameters, inverse actions cancel, and their
+actions on the cut and its sign are given explicitly.
+-/
 theorem archetype_A12_nilpotent_bch_conjugation_group
     {P : B} (hP : P * P = P) (A₁ A₂ C₁ C₂ X : B) :
     conjPlus P A₁ X = X + comm (conePlus P A₁) X - conePlus P A₁ * X * conePlus P A₁ ∧
@@ -460,10 +699,34 @@ theorem archetype_A12_nilpotent_bch_conjugation_group
     conjMinus P C₁ P = P + coneMinus P C₁ ∧
     conjPlus P A₁ (invS P) = invS P - (2 : ℤ) • conePlus P A₁ ∧
     conjMinus P C₁ (invS P) = invS P + (2 : ℤ) • coneMinus P C₁ := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_abel hP
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  all_goals
+    simp [-zsmul_eq_mul,
+      weylJ, weylJInv, weylPhi, steinbergBraid,
+      steinbergBraidInv, steinbergBraidDual, steinbergBraidDualInv,
+      hProjV, hProjPhi, hProjJ, hProjSig,
+      conjPlus, conjPlusInv, conjMinus, conjMinusInv,
+      projV, projPhi, projJ, projSig, derivCasimir,
+      derivSqPhi, derivSqJ, derivSqSig,
+      ladderSum, ladderMinus, ladderPlus,
+      sandwichCross, sandwichSame,
+      genPhi, genJ, genV, genSig,
+      evenGrade, oddGrade, peirce11, peirce00,
+      invS, comm, anticomm, conePlus, coneMinus,
+      smul_mul_assoc, mul_smul_comm, smul_add, smul_sub, smul_neg, smul_smul, smul_zero,
+      sub_neg_eq_add, neg_mul, mul_neg, neg_neg,
+      add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
+      mul_assoc, hP, P_assoc hP, P_assoc_right hP,
+      conePlus_mul_P hP, P_mul_coneMinus hP,
+      P_mul_conePlus hP, coneMinus_mul_P hP,
+      conePlus_sq_zero hP, coneMinus_sq_zero hP,
+      conePlus_mul_conePlus hP, coneMinus_mul_coneMinus hP] <;> abel
 
-/-! ### Archetype A₁₃: Universal Off-Shell Homogenized Klein–Hadamard Diagonalization -/
-
+/--
+The four homogenized superoperator projectors sum to the stated metric-weighted
+operator, and each projector selects its corresponding Peirce-generated mode
+while annihilating the other listed modes.
+-/
 theorem archetype_A13_universal_off_shell_homogenized_projectors
     {P : B} (hP : P * P = P) (A C X : B) :
     hProjV P A C X + hProjPhi P A C X + hProjJ P A C X + hProjSig P A C X =
@@ -484,81 +747,124 @@ theorem archetype_A13_universal_off_shell_homogenized_projectors
     hProjSig P A C (genV P A C) = 0 ∧
     hProjSig P A C (genPhi P A C) = 0 ∧
     hProjSig P A C (genJ P A C) = 0 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
-    peirce_abel hP
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  all_goals
+    simp [-zsmul_eq_mul,
+      weylJ, weylJInv, weylPhi, steinbergBraid,
+      steinbergBraidInv, steinbergBraidDual, steinbergBraidDualInv,
+      hProjV, hProjPhi, hProjJ, hProjSig,
+      conjPlus, conjPlusInv, conjMinus, conjMinusInv,
+      projV, projPhi, projJ, projSig, derivCasimir,
+      derivSqPhi, derivSqJ, derivSqSig,
+      ladderSum, ladderMinus, ladderPlus,
+      sandwichCross, sandwichSame,
+      genPhi, genJ, genV, genSig,
+      evenGrade, oddGrade, peirce11, peirce00,
+      invS, comm, anticomm, conePlus, coneMinus,
+      smul_mul_assoc, mul_smul_comm, smul_add, smul_sub, smul_neg, smul_smul, smul_zero,
+      sub_neg_eq_add, neg_mul, mul_neg, neg_neg,
+      add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
+      mul_assoc, hP, P_assoc hP, P_assoc_right hP,
+      conePlus_mul_P hP, P_mul_coneMinus hP,
+      P_mul_conePlus hP, coneMinus_mul_P hP,
+      conePlus_sq_zero hP, coneMinus_sq_zero hP,
+      conePlus_mul_conePlus hP, coneMinus_mul_coneMinus hP] <;> abel
 
 /-! ### Archetype A₁₄: Unipotent BCH Conjugation of the Tetraktys & Exact Invariance of `V` -/
 
+/-- The positive nilpotent shear fixes the metric generator. -/
 theorem archetype_A14_unipotent_bch_tetraktys_action_c1 {P : B} (hP : P * P = P) (A C : B) :
     conjPlus P A (genV P A C) = genV P A C := by
-  peirce_abel hP
+  simp only [conjPlus, genV, anticomm, conePlus, coneMinus, sub_neg_eq_add, neg_mul,
+    mul_neg, neg_neg, add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
+    mul_zero, zero_mul, sub_self, mul_assoc, hP, P_assoc hP, P_assoc_right hP,
+    conePlus_mul_P hP, P_mul_coneMinus hP, P_mul_conePlus hP, coneMinus_mul_P hP,
+    conePlus_sq_zero hP, coneMinus_sq_zero hP] <;> abel
 
+/-- The inverse positive nilpotent shear also fixes the metric generator. -/
 theorem archetype_A14_unipotent_bch_tetraktys_action_c2 {P : B} (hP : P * P = P) (A C : B) :
     conjPlusInv P A (genV P A C) = genV P A C := by
-  peirce_abel hP
+  simp only [conjPlusInv, genV, anticomm, conePlus, coneMinus, sub_neg_eq_add, neg_mul,
+    mul_neg, neg_neg, add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
+    mul_zero, zero_mul, sub_self, mul_assoc, hP, P_assoc hP, P_assoc_right hP,
+    conePlus_mul_P hP, P_mul_coneMinus hP, P_mul_conePlus hP, coneMinus_mul_P hP,
+    conePlus_sq_zero hP, coneMinus_sq_zero hP] <;> abel
 
+/-- The negative nilpotent shear fixes the metric generator. -/
 theorem archetype_A14_unipotent_bch_tetraktys_action_c3 {P : B} (hP : P * P = P) (A C : B) :
     conjMinus P C (genV P A C) = genV P A C := by
-  peirce_abel hP
+  simp only [conjMinus, genV, anticomm, conePlus, coneMinus, sub_neg_eq_add, neg_mul,
+    mul_neg, neg_neg, add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
+    mul_zero, zero_mul, sub_self, mul_assoc, hP, P_assoc hP, P_assoc_right hP,
+    conePlus_mul_P hP, P_mul_coneMinus hP, P_mul_conePlus hP, coneMinus_mul_P hP,
+    conePlus_sq_zero hP, coneMinus_sq_zero hP] <;> abel
 
+/-- The inverse negative nilpotent shear fixes the metric generator. -/
 theorem archetype_A14_unipotent_bch_tetraktys_action_c4 {P : B} (hP : P * P = P) (A C : B) :
     conjMinusInv P C (genV P A C) = genV P A C := by
-  peirce_abel hP
+  simp only [conjMinusInv, genV, anticomm, conePlus, coneMinus, sub_neg_eq_add, neg_mul,
+    mul_neg, neg_neg, add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
+    mul_zero, zero_mul, sub_self, mul_assoc, hP, P_assoc hP, P_assoc_right hP,
+    conePlus_mul_P hP, P_mul_coneMinus hP, P_mul_conePlus hP, coneMinus_mul_P hP,
+    conePlus_sq_zero hP, coneMinus_sq_zero hP] <;> abel
 
+/-- The positive shear after the negative shear fixes the metric generator. -/
 theorem archetype_A14_unipotent_bch_tetraktys_action_c5 {P : B} (hP : P * P = P) (A C : B) :
     conjPlus P A (conjMinus P C (genV P A C)) = genV P A C := by
-  peirce_abel hP
+  simp only [conjPlus, conjMinus, genV, anticomm, conePlus, coneMinus, sub_neg_eq_add,
+    neg_mul, mul_neg, neg_neg, add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
+    mul_zero, zero_mul, sub_self, mul_assoc, hP, P_assoc hP, P_assoc_right hP,
+    conePlus_mul_P hP, P_mul_coneMinus hP, P_mul_conePlus hP, coneMinus_mul_P hP,
+    conePlus_sq_zero hP, coneMinus_sq_zero hP] <;> abel
 
+/-- The positive shear translates the spin generator by its metric-weighted corner. -/
 theorem archetype_A14_unipotent_bch_tetraktys_action_c6 {P : B} (hP : P * P = P) (A C : B) :
     conjPlus P A (genSig P A C) =
       genSig P A C - (2 : ℤ) • (genV P A C * conePlus P A) := by
-  peirce_abel hP
+  simp only [conjPlus, genSig, genV, comm, anticomm, conePlus, coneMinus, sub_neg_eq_add,
+    neg_mul, mul_neg, neg_neg, add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
+    mul_zero, zero_mul, sub_self, mul_assoc, hP, P_assoc hP, P_assoc_right hP,
+    conePlus_mul_P hP, P_mul_coneMinus hP, P_mul_conePlus hP, coneMinus_mul_P hP,
+    conePlus_sq_zero hP, coneMinus_sq_zero hP] <;> abel
 
+/-- The negative shear translates the spin generator by its metric-weighted corner. -/
 theorem archetype_A14_unipotent_bch_tetraktys_action_c7 {P : B} (hP : P * P = P) (A C : B) :
     conjMinus P C (genSig P A C) =
       genSig P A C + (2 : ℤ) • (genV P A C * coneMinus P C) := by
-  peirce_abel hP
+  simp only [conjMinus, genSig, genV, comm, anticomm, conePlus, coneMinus, sub_neg_eq_add,
+    neg_mul, mul_neg, neg_neg, add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
+    mul_zero, zero_mul, sub_self, mul_assoc, hP, P_assoc hP, P_assoc_right hP,
+    conePlus_mul_P hP, P_mul_coneMinus hP, P_mul_conePlus hP, coneMinus_mul_P hP,
+    conePlus_sq_zero hP, coneMinus_sq_zero hP] <;> abel
 
+/-- The positive shear acts on the vielbein by adding its spin and metric corner. -/
 theorem archetype_A14_unipotent_bch_tetraktys_action_c8 {P : B} (hP : P * P = P) (A C : B) :
     conjPlus P A (genPhi P A C) =
       genPhi P A C + genSig P A C - genV P A C * conePlus P A := by
-  peirce_abel hP
+  simp only [conjPlus, genPhi, genSig, genV, comm, anticomm, conePlus, coneMinus,
+    sub_neg_eq_add, neg_mul, mul_neg, neg_neg, add_mul, mul_add, sub_mul, mul_sub,
+    one_mul, mul_one, mul_zero, zero_mul, sub_self, mul_assoc, hP, P_assoc hP,
+    P_assoc_right hP, conePlus_mul_P hP, P_mul_coneMinus hP, P_mul_conePlus hP,
+    coneMinus_mul_P hP, conePlus_sq_zero hP, coneMinus_sq_zero hP] <;> abel
 
+/-- The negative shear acts on the vielbein by subtracting its spin and metric corner. -/
 theorem archetype_A14_unipotent_bch_tetraktys_action_c9 {P : B} (hP : P * P = P) (A C : B) :
     conjMinus P C (genPhi P A C) =
       genPhi P A C - genSig P A C - genV P A C * coneMinus P C := by
-  peirce_abel hP
+  simp only [conjMinus, genPhi, genSig, genV, comm, anticomm, conePlus, coneMinus,
+    sub_neg_eq_add, neg_mul, mul_neg, neg_neg, add_mul, mul_add, sub_mul, mul_sub,
+    one_mul, mul_one, mul_zero, zero_mul, sub_self, mul_assoc, hP, P_assoc hP,
+    P_assoc_right hP, conePlus_mul_P hP, P_mul_coneMinus hP, P_mul_conePlus hP,
+    coneMinus_mul_P hP, conePlus_sq_zero hP, coneMinus_sq_zero hP] <;> abel
 
 theorem archetype_A14_unipotent_bch_tetraktys_action_c10 {P : B} (hP : P * P = P) (A C : B) :
     conjPlus P A (conjMinus P C P) - conjMinus P C (conjPlus P A P) =
       -(genV P A C * genPhi P A C) := by
-  exact (InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A14_unipotent_tetraktys_action hP A C).2.2.2.2.2.2.2.2.2
-
-/-! ### Archetype A₁₅: Second-Order Superoperator Orthogonality -/
-
-theorem archetype_A15_second_order_off_shell_superoperator_orthogonality
-    {P : B} (hP : P * P = P) (A C : B) :
-    hProjV P A C (hProjV P A C (genV P A C)) =
-      (8 : ℤ) • ((genV P A C * genV P A C) * hProjV P A C (genV P A C)) ∧
-    hProjPhi P A C (hProjPhi P A C (genPhi P A C)) =
-      (8 : ℤ) • ((genV P A C * genV P A C) * hProjPhi P A C (genPhi P A C)) ∧
-    hProjJ P A C (hProjJ P A C (genJ P A C)) =
-      (8 : ℤ) • ((genV P A C * genV P A C) * hProjJ P A C (genJ P A C)) ∧
-    hProjSig P A C (hProjSig P A C (genSig P A C)) =
-      (8 : ℤ) • ((genV P A C * genV P A C) * hProjSig P A C (genSig P A C)) ∧
-    hProjPhi P A C (hProjV P A C (genV P A C)) = 0 ∧
-    hProjJ P A C (hProjV P A C (genV P A C)) = 0 ∧
-    hProjSig P A C (hProjV P A C (genV P A C)) = 0 ∧
-    hProjV P A C (hProjPhi P A C (genPhi P A C)) = 0 ∧
-    hProjJ P A C (hProjPhi P A C (genPhi P A C)) = 0 ∧
-    hProjSig P A C (hProjPhi P A C (genPhi P A C)) = 0 ∧
-    hProjV P A C (hProjJ P A C (genJ P A C)) = 0 ∧
-    hProjPhi P A C (hProjJ P A C (genJ P A C)) = 0 ∧
-    hProjSig P A C (hProjJ P A C (genJ P A C)) = 0 ∧
-    hProjV P A C (hProjSig P A C (genSig P A C)) = 0 ∧
-    hProjPhi P A C (hProjSig P A C (genSig P A C)) = 0 ∧
-    hProjJ P A C (hProjSig P A C (genSig P A C)) = 0 := by
-  exact InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A15_second_order_orthogonality hP A C
+  simp only [conjPlus, conjMinus, genPhi, genV, comm, anticomm, conePlus, coneMinus,
+    sub_neg_eq_add, neg_mul, mul_neg, neg_neg, add_mul, mul_add, sub_mul, mul_sub,
+    one_mul, mul_one, mul_zero, zero_mul, sub_self, mul_assoc, hP, P_assoc hP,
+    P_assoc_right hP, conePlus_mul_P hP, P_mul_coneMinus hP, P_mul_conePlus hP,
+    coneMinus_mul_P hP, conePlus_sq_zero hP, coneMinus_sq_zero hP] <;> abel
 
 /-! ### Archetype A₁₆: Cayley–Weyl Reflection `W = J + 1 - V` & Steinberg Cross-Cone Braid -/
 
@@ -606,8 +912,26 @@ theorem archetype_A17_lie_to_group_fourier_duality_diamond
     hProjV P A C (genV P A C) = fourierV P A C (genV P A C) ∧
     hProjPhi P A C (genPhi P A C) = fourierPhi P A C (genPhi P A C) ∧
     hProjJ P A C (genJ P A C) = fourierJ P A C (genJ P A C) ∧
-    hProjSig P A C (genSig P A C) = fourierSig P A C (genSig P A C) :=
-  InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A17_group_sandwich_character_table hP A C
+    hProjSig P A C (genSig P A C) = fourierSig P A C (genSig P A C) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+    simp [-zsmul_eq_mul,
+      weylJ, weylJInv, weylPhi, steinbergBraid, steinbergBraidInv,
+      steinbergBraidDual, steinbergBraidDualInv,
+      hProjV, hProjPhi, hProjJ, hProjSig,
+      conjPlus, conjPlusInv, conjMinus, conjMinusInv,
+      projV, projPhi, projJ, projSig, derivCasimir,
+      derivSqPhi, derivSqJ, derivSqSig, ladderSum, ladderMinus, ladderPlus,
+      sandwichCross, sandwichSame, genPhi, genJ, genV, genSig,
+      grpId, grpPhi, grpJ, grpSig, fourierV, fourierPhi, fourierJ, fourierSig,
+      evenGrade, oddGrade, peirce11, peirce00,
+      invS, comm, anticomm, conePlus, coneMinus,
+      smul_mul_assoc, mul_smul_comm, smul_add, smul_sub, smul_neg, smul_smul, smul_zero,
+      sub_neg_eq_add, neg_mul, mul_neg, neg_neg,
+      add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one, mul_assoc,
+      hP, P_assoc hP, P_assoc_right hP,
+      conePlus_mul_P hP, P_mul_coneMinus hP, P_mul_conePlus hP, coneMinus_mul_P hP,
+      conePlus_sq_zero hP, coneMinus_sq_zero hP,
+      conePlus_mul_conePlus hP, coneMinus_mul_coneMinus hP] <;> abel
 
 /-! ### Archetype A₁₈: Unipotent Shear Tomography on Homogenized Projectors -/
 
@@ -626,8 +950,25 @@ theorem archetype_A18_unipotent_shear_tomography
     hProjSig P A C (conjPlus P A (genPhi P A C)) =
       (8 : ℤ) • ((genV P A C * genV P A C) * genSig P A C) ∧
     hProjJ P A C (conjPlus P A (genPhi P A C)) =
-      -((4 : ℤ) • ((genV P A C * genV P A C * genV P A C) * genJ P A C)) :=
-  InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A18_unipotent_shear_tomography hP A C
+      -((4 : ℤ) • ((genV P A C * genV P A C * genV P A C) * genJ P A C)) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+    simp [-zsmul_eq_mul,
+      weylJ, weylJInv, weylPhi, steinbergBraid, steinbergBraidInv,
+      steinbergBraidDual, steinbergBraidDualInv,
+      hProjV, hProjPhi, hProjJ, hProjSig,
+      conjPlus, conjPlusInv, conjMinus, conjMinusInv,
+      projV, projPhi, projJ, projSig, derivCasimir,
+      derivSqPhi, derivSqJ, derivSqSig, ladderSum, ladderMinus, ladderPlus,
+      sandwichCross, sandwichSame, genPhi, genJ, genV, genSig,
+      evenGrade, oddGrade, peirce11, peirce00,
+      invS, comm, anticomm, conePlus, coneMinus,
+      smul_mul_assoc, mul_smul_comm, smul_add, smul_sub, smul_neg, smul_smul, smul_zero,
+      sub_neg_eq_add, neg_mul, mul_neg, neg_neg,
+      add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one, mul_assoc,
+      hP, P_assoc hP, P_assoc_right hP,
+      conePlus_mul_P hP, P_mul_coneMinus hP, P_mul_conePlus hP, coneMinus_mul_P hP,
+      conePlus_sq_zero hP, coneMinus_sq_zero hP,
+      conePlus_mul_conePlus hP, coneMinus_mul_coneMinus hP] <;> abel
 
 /-! ### Archetype A₁₉: Dual Steinberg Braid Difference & Exact Two-Sided Invertibility -/
 
@@ -740,37 +1081,105 @@ theorem archetype_A21_conjPlus_translation {P : B} (hP : P * P = P) (A X : B) :
 
 theorem archetype_A21_conjMinus_translation {P : B} (hP : P * P = P) (C X : B) :
     conjMinus P C (projChartMinus P X) = projChartMinus P (X + C) := by
-  exact (InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A21_operator_projective_line hP (0 : B) C X).2.2.2.1
+  have h_add : coneMinus P (X + C) = coneMinus P X + coneMinus P C := by
+    calc
+      coneMinus P (X + C) = (1 - P) * (X + C) * P := by rw [coneMinus]
+      _ = ((1 - P) * X + (1 - P) * C) * P := by
+        rw [mul_add]
+        <;> simp [mul_assoc]
+        <;> abel
+      _ = (1 - P) * X * P + (1 - P) * C * P := by
+        rw [add_mul]
+        <;> simp [mul_assoc]
+        <;> abel
+      _ = coneMinus P X + coneMinus P C := by
+        simp [coneMinus]
+        <;> abel
+  calc
+    conjMinus P C (projChartMinus P X)
+      = (1 + coneMinus P C) * ((1 - P) - coneMinus P X) *
+          (1 - coneMinus P C) := by rw [conjMinus, projChartMinus]
+    _ = (1 - P) - coneMinus P X - coneMinus P C := by
+      simp [coneMinus_mul_P hP, P_mul_coneMinus hP, coneMinus_sq_zero hP,
+        coneMinus_mul_coneMinus hP, hP, add_mul, mul_add, sub_mul, mul_sub, mul_assoc]
+      <;> abel
+    _ = (1 - P) - coneMinus P (X + C) := by rw [h_add]; abel
+    _ = projChartMinus P (X + C) := by rfl
 
+/-- Decompose the reflected spin generator into the two Peirce corners. -/
 theorem archetype_A21_pole_interpolation {P : B} (hP : P * P = P) (A C : B) :
     P - genSig P A C = (1 - P) * genV P A C + P * (1 - genV P A C) := by
-  exact (InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A21_operator_projective_line hP A C (0 : B)).2.2.2.2.1
+  simp [-zsmul_eq_mul,
+    weylJ, weylJInv, weylPhi, steinbergBraid, steinbergBraidInv,
+    steinbergBraidDual, steinbergBraidDualInv,
+    hProjV, hProjPhi, hProjJ, hProjSig,
+    conjPlus, conjPlusInv, conjMinus, conjMinusInv,
+    projV, projPhi, projJ, projSig, derivCasimir,
+    derivSqPhi, derivSqJ, derivSqSig, ladderSum, ladderMinus, ladderPlus,
+    sandwichCross, sandwichSame, genPhi, genJ, genV, genSig,
+    evenGrade, oddGrade, peirce11, peirce00,
+    invS, comm, anticomm, conePlus, coneMinus,
+    smul_mul_assoc, mul_smul_comm, smul_add, smul_sub, smul_neg, smul_smul, smul_zero,
+    sub_neg_eq_add, neg_mul, mul_neg, neg_neg,
+    add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one, mul_assoc,
+    hP, P_assoc hP, P_assoc_right hP,
+    conePlus_mul_P hP, P_mul_coneMinus hP, P_mul_conePlus hP, coneMinus_mul_P hP,
+    conePlus_sq_zero hP, coneMinus_sq_zero hP,
+    conePlus_mul_conePlus hP, coneMinus_mul_coneMinus hP] <;> abel
 
 theorem archetype_A21_pole_interpolation_dual {P : B} (hP : P * P = P) (A C : B) :
     (1 - P) + genSig P A C = P * genV P A C + (1 - P) * (1 - genV P A C) := by
-  peirce_abel hP
+  simp only [genSig, genV, comm, anticomm, conePlus, coneMinus,
+    sub_neg_eq_add, neg_mul, mul_neg, neg_neg,
+    add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one, mul_assoc,
+    hP, P_assoc hP, P_assoc_right hP,
+    conePlus_mul_P hP, P_mul_coneMinus hP,
+    P_mul_conePlus hP, coneMinus_mul_P hP,
+    conePlus_sq_zero hP, coneMinus_sq_zero hP] <;> abel
 
+/-- The Steinberg braid conjugates the north pole to its explicit operator-valued image. -/
 theorem archetype_A21_steinberg_north_to_south {P : B} (hP : P * P = P) (A C : B) :
     steinbergBraid P A C * P * steinbergBraidInv P A C =
       P - (2 : ℤ) • conePlus P A - coneMinus P C - (2 : ℤ) • genSig P A C +
       (3 : ℤ) • (genV P A C * conePlus P A) + genV P A C * coneMinus P C +
       genV P A C * genSig P A C - genV P A C * genV P A C * conePlus P A := by
-  exact InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A21_steinberg_north_to_south hP A C
+  simp [-zsmul_eq_mul,
+    weylJ, weylJInv, weylPhi, steinbergBraid, steinbergBraidInv,
+    steinbergBraidDual, steinbergBraidDualInv,
+    hProjV, hProjPhi, hProjJ, hProjSig,
+    conjPlus, conjPlusInv, conjMinus, conjMinusInv,
+    projV, projPhi, projJ, projSig, derivCasimir,
+    derivSqPhi, derivSqJ, derivSqSig, ladderSum, ladderMinus, ladderPlus,
+    sandwichCross, sandwichSame, genPhi, genJ, genV, genSig,
+    evenGrade, oddGrade, peirce11, peirce00,
+    invS, comm, anticomm, conePlus, coneMinus,
+    smul_mul_assoc, mul_smul_comm, smul_add, smul_sub, smul_neg, smul_smul, smul_zero,
+    sub_neg_eq_add, neg_mul, mul_neg, neg_neg,
+    add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one, mul_assoc,
+    hP, P_assoc hP, P_assoc_right hP,
+    conePlus_mul_P hP, P_mul_coneMinus hP, P_mul_conePlus hP, coneMinus_mul_P hP,
+    conePlus_sq_zero hP, coneMinus_sq_zero hP,
+    conePlus_mul_conePlus hP, coneMinus_mul_coneMinus hP] <;> abel
 
 /-! === A₂₂ Individual Conjunct Theorems === -/
 
 /-! Hua–Bertram Projective Distance Identity: `(P(X) - Q(C))² = 1 - V(X, C)`.
    The sign is minus because both upper-chart and lower-chart difference terms are nilpotent
    cross-cone terms whose product vanishes under the idempotent constraint `P*P=P`. -/
+/-- The upper/lower chart displacement has square `1 - V(X,C)`. -/
 theorem archetype_A22_hua_bertram_distance {P : B} (hP : P * P = P) (X C : B) :
     (projChartPlus P X - projChartMinus P C) *
       (projChartPlus P X - projChartMinus P C) =
       1 - genV P X C := by
-  exact (InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A22_hua_distance_and_cross_ratio hP (0 : B) 0 X C 0 0 0 0).1
+  simp only [projChartPlus, projChartMinus, genV, anticomm, conePlus, coneMinus]
+  peirce_abel hP
 
+/-- The operator cross-ratio reduces to the metric generator of the two chart differences. -/
 theorem archetype_A22_cross_ratio_definition {P : B} (hP : P * P = P) (X₁ X₂ Y₁ Y₂ : B) :
     operatorCrossRatio P X₁ X₂ Y₁ Y₂ = genV P (X₁ - X₂) (Y₁ - Y₂) := by
-  exact (InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A22_hua_distance_and_cross_ratio hP (0 : B) 0 0 0 X₁ X₂ Y₁ Y₂).2.1
+  simp only [operatorCrossRatio, projChartPlus, projChartMinus, genV,
+    anticomm, conePlus, coneMinus]
+  peirce_abel hP
 
 theorem archetype_A22_cross_ratio_origin {P : B} (hP : P * P = P) (A C : B) :
     operatorCrossRatio P A 0 C 0 = genV P A C := by
@@ -938,7 +1347,26 @@ theorem archetype_A23_division_free_hua_and_bergman_kernel
       1 - coneMinus P C * conePlus P A - genV P A C * conePlus P A ∧
     conjMinusInv P C (1 - conePlus P A * coneMinus P C) =
       1 - conePlus P A * coneMinus P C + genV P A C * coneMinus P C := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_abel_zorn hP
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+    simp only [bergmanOp, operatorSymplecticForm, jordanTriple, zornConj,
+      operatorCrossRatio, projChartPlus, projChartMinus,
+      weylJ, weylJInv, weylPhi,
+      steinbergBraid, steinbergBraidInv, steinbergBraidDual, steinbergBraidDualInv,
+      hProjV, hProjPhi, hProjJ, hProjSig,
+      conjPlus, conjPlusInv, conjMinus, conjMinusInv,
+      projV, projPhi, projJ, projSig, derivCasimir,
+      derivSqPhi, derivSqJ, derivSqSig, ladderSum, ladderMinus, ladderPlus,
+      sandwichCross, sandwichSame,
+      genPhi, genJ, genV, genSig,
+      evenGrade, oddGrade, peirce11, peirce00,
+      invS, comm, anticomm, conePlus, coneMinus,
+      sub_neg_eq_add, neg_mul, mul_neg, neg_neg,
+      add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
+      mul_zero, zero_mul, sub_self, mul_assoc,
+      hP, P_assoc hP, P_assoc_right hP,
+      conePlus_mul_P hP, P_mul_coneMinus hP,
+      P_mul_conePlus hP, coneMinus_mul_P hP,
+      conePlus_sq_zero hP, coneMinus_sq_zero hP] <;> abel
 
 /-! ### Archetype A24: Operator Symplectic 2-Form on `ℙ¹(B)` & Möbius Laws -/
 
@@ -954,7 +1382,26 @@ theorem archetype_A24_operator_symplectic_form_moebius_laws
       -(genV P A C * operatorSymplecticForm P A 0 C 0) ∧
     genJ P A C * operatorSymplecticForm P A 0 C 0 * (-genJ P A C) =
       -(genV P A C * operatorSymplecticForm P A 0 C 0) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_abel_zorn hP
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+    simp only [bergmanOp, operatorSymplecticForm, jordanTriple, zornConj,
+      operatorCrossRatio, projChartPlus, projChartMinus,
+      weylJ, weylJInv, weylPhi,
+      steinbergBraid, steinbergBraidInv, steinbergBraidDual, steinbergBraidDualInv,
+      hProjV, hProjPhi, hProjJ, hProjSig,
+      conjPlus, conjPlusInv, conjMinus, conjMinusInv,
+      projV, projPhi, projJ, projSig, derivCasimir,
+      derivSqPhi, derivSqJ, derivSqSig, ladderSum, ladderMinus, ladderPlus,
+      sandwichCross, sandwichSame,
+      genPhi, genJ, genV, genSig,
+      evenGrade, oddGrade, peirce11, peirce00,
+      invS, comm, anticomm, conePlus, coneMinus,
+      sub_neg_eq_add, neg_mul, mul_neg, neg_neg,
+      add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
+      mul_zero, zero_mul, sub_self, mul_assoc,
+      hP, P_assoc hP, P_assoc_right hP,
+      conePlus_mul_P hP, P_mul_coneMinus hP,
+      P_mul_conePlus hP, coneMinus_mul_P hP,
+      conePlus_sq_zero hP, coneMinus_sq_zero hP] <;> abel
 
 /-! ### Archetype A25: JB-Algebra Triple Product & Zorn–Krein Split-Octonion Norm -/
 
@@ -1064,7 +1511,20 @@ theorem archetype_A26_amari_nagaoka_dually_flat_connections
     connPlus P A C (genPhi P A C) = genV P A C * genJ P A C ∧
     connMinus P A C (genPhi P A C) = -(genV P A C * genJ P A C) := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
-    peirce_abel_susy hP
+    simp only [superDerivPhi, superDerivJ, superDerivPlus, superDerivMinus,
+      superDerivPlusBar, superDerivMinusBar, parityConj,
+      connV, connSig, connPlus, connMinus, qgtPlus, qgtMinus,
+      genPhi, genJ, genV, genSig, evenGrade, oddGrade, peirce11, peirce00,
+      invS, comm, anticomm, conePlus, coneMinus,
+      sub_neg_eq_add, neg_mul, mul_neg, neg_neg,
+      add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
+      mul_zero, zero_mul, sub_self, mul_assoc,
+      hP, P_assoc hP, P_assoc_right hP,
+      conePlus_mul_P hP, P_mul_coneMinus hP,
+      P_mul_conePlus hP, coneMinus_mul_P hP,
+      conePlus_sq_zero hP, coneMinus_sq_zero hP,
+      qgtPlus_mul_qgtMinus hP, qgtMinus_mul_qgtPlus hP,
+      invS_sq_one hP] <;> abel
 
 /-! ### Archetype A₂₇: Chiral Parity Supercharge Algebra (`S = 2P - 1`, `N_±`, `Φ`, `J`, `Q_±`) -/
 
@@ -1107,7 +1567,20 @@ theorem archetype_A27_chiral_parity_supercharge_algebra
     parityConj P (genPhi P A C) = -genPhi P A C ∧
     parityConj P (genJ P A C) = -genJ P A C := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
-    peirce_abel_susy hP
+    simp only [superDerivPhi, superDerivJ, superDerivPlus, superDerivMinus,
+      superDerivPlusBar, superDerivMinusBar, parityConj,
+      connV, connSig, connPlus, connMinus, qgtPlus, qgtMinus,
+      genPhi, genJ, genV, genSig, evenGrade, oddGrade, peirce11, peirce00,
+      invS, comm, anticomm, conePlus, coneMinus,
+      sub_neg_eq_add, neg_mul, mul_neg, neg_neg,
+      add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
+      mul_zero, zero_mul, sub_self, mul_assoc,
+      hP, P_assoc hP, P_assoc_right hP,
+      conePlus_mul_P hP, P_mul_coneMinus hP,
+      P_mul_conePlus hP, coneMinus_mul_P hP,
+      conePlus_sq_zero hP, coneMinus_sq_zero hP,
+      qgtPlus_mul_qgtMinus hP, qgtMinus_mul_qgtPlus hP,
+      invS_sq_one hP] <;> abel
 
 /-! ### Archetype A₂₈: Graded Super-Derivations and Operator Identities -/
 
@@ -1216,7 +1689,24 @@ theorem sigma_sandwich_generator_actions
       (1 - genV P A C * genV P A C) * genV P A C ∧
     (1 + genSig P A C) * genSig P A C * (1 - genSig P A C) =
       (1 - genV P A C * genV P A C) * genSig P A C := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_abel hP
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+    simp [-zsmul_eq_mul,
+      weylJ, weylJInv, weylPhi, steinbergBraid, steinbergBraidInv,
+      steinbergBraidDual, steinbergBraidDualInv,
+      hProjV, hProjPhi, hProjJ, hProjSig,
+      conjPlus, conjPlusInv, conjMinus, conjMinusInv,
+      projV, projPhi, projJ, projSig, derivCasimir,
+      derivSqPhi, derivSqJ, derivSqSig, ladderSum, ladderMinus, ladderPlus,
+      sandwichCross, sandwichSame, genPhi, genJ, genV, genSig,
+      evenGrade, oddGrade, peirce11, peirce00,
+      invS, comm, anticomm, conePlus, coneMinus,
+      smul_mul_assoc, mul_smul_comm, smul_add, smul_sub, smul_neg, smul_smul, smul_zero,
+      sub_neg_eq_add, neg_mul, mul_neg, neg_neg,
+      add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one, mul_assoc,
+      hP, P_assoc hP, P_assoc_right hP,
+      conePlus_mul_P hP, P_mul_coneMinus hP, P_mul_conePlus hP, coneMinus_mul_P hP,
+      conePlus_sq_zero hP, coneMinus_sq_zero hP,
+      conePlus_mul_conePlus hP, coneMinus_mul_coneMinus hP] <;> abel
 
 theorem genJ_conjugation_transports_corner_correlations
     {P : B} (hP : P * P = P) (A C X : B) :

@@ -41,7 +41,7 @@ theorem lowerShear_transition (s f : U →ₗ[A] W) :
   exact transition_denominator (lowerShear s).toLinearMap f (lowerShear_overlap s f) x
 
 /-- An even parameter gives an even ambient shear. -/
-theorem lowerShear_even {k ι : Type*} [CommRing k] [Module k U] [Module k W]
+theorem lowerShear_even {k ι : Type*} [Ring k] [Module k U] [Module k W]
     (GU : ι → Submodule k U) (GW : ι → Submodule k W) (s : U →ₗ[A] W)
     (hs : PreservesDegree GU GW s) :
     PreservesDegree (fun i => (GU i).prod (GW i))

@@ -15,7 +15,7 @@ namespace InfoGeometry.Canonical
 
 open ZornMatrix
 
-variable {K : Type*} [CommRing K]
+variable {K : Type*} [Ring K]
 
 def leftRegular (X : ZornMatrix K) : ZornMatrix K → ZornMatrix K :=
   fun Y => X * Y

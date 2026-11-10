@@ -4,7 +4,7 @@ import Mathlib.Algebra.Ring.Basic
 
 namespace InfoGeometry.Canonical
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The 8-dimensional split-octonion representation. -/
 @[ext]

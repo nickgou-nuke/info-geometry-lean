@@ -3,8 +3,9 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-import InfoGeometry.Algebra.Zorn.Decomposition
+import InfoGeometry.Algebra.Zorn.ConcreteComposition
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 
 /-!
 # Hopf Braid Crossing Supertrace, Fisher Trace Dual, & Quadratic Braid Invariant
@@ -49,7 +50,14 @@ namespace InfoGeometry.Topology.HopfInvariant
 open InfoGeometry.Algebra.Zorn.ConcreteComposition
 open InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
+
+/-- Componentwise extensionality for `ZornCell R`. -/
+theorem ext_fields {X Y : ZornCell R}
+    (hr : X.r = Y.r) (hs : X.s = Y.s)
+    (hx1 : X.x1 = Y.x1) (hx2 : X.x2 = Y.x2) (hx3 : X.x3 = Y.x3)
+    (hy1 : X.y1 = Y.y1) (hy2 : X.y2 = Y.y2) (hy3 : X.y3 = Y.y3) : X = Y := by
+  cases X; cases Y; simp_all
 
 /-- Multiplicative identity $\mathbf{1} = \mathrm{diag}(1, 1)$ in `ZornCell R`. -/
 def oneZ : ZornCell R :=
@@ -99,6 +107,26 @@ def fisherSheetAnticommutator (u₁ u₂ u₃ v₁ v₂ v₃ : R) : ZornCell R :
   addZ (mulZ (sheetU u₁ u₂ u₃) (sheetV v₁ v₂ v₃))
        (mulZ (sheetV v₁ v₂ v₃) (sheetU u₁ u₂ u₃))
 
+/-- **Non-Commutative Hopf Braid Crossing Supertrace & Left Additivity
+(`hopfBraidCommutator_noncomm_supertrace_and_additivity`):**
+Over any (possibly non-commutative) ring `[Ring R]`, the Hopf braid crossing
+commutator has chiral supertrace $(u \cdot v) + (v \cdot u)$, Fisher anticommutator
+trace $(u \cdot v) + (v \cdot u)$, and is strictly additive in $\mathbf{u}$. -/
+theorem hopfBraidCommutator_noncomm_supertrace_and_additivity
+    (u₁ u₂ u₃ w₁ w₂ w₃ v₁ v₂ v₃ : R) :
+    superTraceZ (hopfBraidCommutator u₁ u₂ u₃ v₁ v₂ v₃) =
+      (u₁ * v₁ + u₂ * v₂ + u₃ * v₃) + (v₁ * u₁ + v₂ * u₂ + v₃ * u₃) ∧
+    traceZ (fisherSheetAnticommutator u₁ u₂ u₃ v₁ v₂ v₃) =
+      (u₁ * v₁ + u₂ * v₂ + u₃ * v₃) + (v₁ * u₁ + v₂ * u₂ + v₃ * u₃) ∧
+    hopfBraidCommutator (u₁ + w₁) (u₂ + w₂) (u₃ + w₃) v₁ v₂ v₃ =
+      addZ (hopfBraidCommutator u₁ u₂ u₃ v₁ v₂ v₃)
+           (hopfBraidCommutator w₁ w₂ w₃ v₁ v₂ v₃) := by
+  refine ⟨?_, ?_, ?_⟩
+  · dsimp [superTraceZ, hopfBraidCommutator, subZ, mulZ, sheetU, sheetV]; noncomm_ring
+  · dsimp [traceZ, fisherSheetAnticommutator, addZ, mulZ, sheetU, sheetV]; noncomm_ring
+  · refine ext_fields ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ <;>
+      (dsimp [hopfBraidCommutator, addZ, subZ, mulZ, sheetU, sheetV]; noncomm_ring)
+
 /-- **Hopf Braid Crossing Supertrace, Square Law, & Determinant
 (`hopfBraidCommutator_supertrace_and_square`):**
 For any 3D sheet vectors $\mathbf{u}, \mathbf{v} \in R^3$:
@@ -107,7 +135,8 @@ For any 3D sheet vectors $\mathbf{u}, \mathbf{v} \in R^3$:
    $\mathrm{Tr}(B(\mathbf{u}, \mathbf{v})) = 0$;
 3. $B(\mathbf{u}, \mathbf{v})^2 = (\mathbf{u} \cdot \mathbf{v})^2\,\mathbf{1}$;
 4. $\det_Z(B(\mathbf{u}, \mathbf{v})) = -(\mathbf{u} \cdot \mathbf{v})^2$. -/
-theorem hopfBraidCommutator_supertrace_and_square (u₁ u₂ u₃ v₁ v₂ v₃ : R) :
+theorem hopfBraidCommutator_supertrace_and_square
+    {R : Type*} [CommRing R] (u₁ u₂ u₃ v₁ v₂ v₃ : R) :
     hopfBraidCommutator u₁ u₂ u₃ v₁ v₂ v₃ =
       smulZ (u₁ * v₁ + u₂ * v₂ + u₃ * v₃) paraSymplecticK0 ∧
     superTraceZ (hopfBraidCommutator u₁ u₂ u₃ v₁ v₂ v₃) =
@@ -133,7 +162,8 @@ For any $\mathbf{u}, \mathbf{w}, \mathbf{v} \in R^3$:
 1. $\mathrm{Tr}(\{U(\mathbf{u}), V(\mathbf{v})\}) = 2(\mathbf{u} \cdot \mathbf{v})$ and
    $\mathrm{STr}(\{U(\mathbf{u}), V(\mathbf{v})\}) = 0$;
 2. $B(\mathbf{u} + \mathbf{w}, \mathbf{v}) = B(\mathbf{u}, \mathbf{v}) + B(\mathbf{w}, \mathbf{v})$. -/
-theorem hopfBraid_fisher_duality_and_additivity (u₁ u₂ u₃ w₁ w₂ w₃ v₁ v₂ v₃ : R) :
+theorem hopfBraid_fisher_duality_and_additivity
+    {R : Type*} [CommRing R] (u₁ u₂ u₃ w₁ w₂ w₃ v₁ v₂ v₃ : R) :
     traceZ (fisherSheetAnticommutator u₁ u₂ u₃ v₁ v₂ v₃) =
       2 * (u₁ * v₁ + u₂ * v₂ + u₃ * v₃) ∧
     superTraceZ (fisherSheetAnticommutator u₁ u₂ u₃ v₁ v₂ v₃) = 0 ∧

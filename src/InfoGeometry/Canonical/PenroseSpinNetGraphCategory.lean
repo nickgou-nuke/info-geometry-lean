@@ -72,7 +72,7 @@ section PatchPaths
 variable {α : Type u}
 variable [PartialOrder α]
 variable {𝕜 T D : Type u}
-variable [CommRing 𝕜]
+variable [Ring 𝕜]
 variable [AddCommGroup T] [Module 𝕜 T]
 variable [AddCommGroup D] [Module 𝕜 D]
 variable (S : SpinNet α 𝕜 T D)

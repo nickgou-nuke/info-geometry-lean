@@ -22,7 +22,6 @@ and an ER-style identification can evade that contradiction only by proving
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.EntanglementGeometry
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -459,30 +458,26 @@ theorem bridgeLength_monotone_after_thermalization
 
 end ComplexityBridgeBackend
 
-/-! ## 6. Owner target -/
+/-! ## 6. Monogamy incompatibility -/
 
 /--
-Owner target for the finite entanglement/monogamy/complexity layer.
+The backend monogamy law excludes the simultaneous occurrence of both
+maximal-entanglement relations and independence. This is the disjunctive
+form useful for identifying which of the three hypotheses must fail; the
+result remains conditional on the law stored in `MonogamyBackend`.
 -/
-@[owner_target_tag]
-def EntanglementMonogamyOwnerTarget : Prop :=
-  ∀ (System : Type)
-    (MaxEntangled Independent : System → System → Prop),
-    (∀ A B C,
-      MaxEntangled A B →
-      MaxEntangled A C →
-      Independent B C →
-      False) →
-    ∀ B A R : System,
-      MaxEntangled B A →
-      MaxEntangled B R →
-      Independent A R →
-      False
-
-/-- The AMPS-style monogamy obstruction is constructively discharged. -/
-theorem entanglementMonogamyOwnerTarget :
-    EntanglementMonogamyOwnerTarget := by
-  intro System MaxEntangled Independent hmonogamy B A R hBA hBR hAR
-  exact hmonogamy B A R hBA hBR hAR
+theorem MonogamyBackend.not_all_three_relations
+    (M : MonogamyBackend) (B A R : M.System) :
+    ¬ M.MaxEntangled B A ∨
+      ¬ M.MaxEntangled B R ∨
+      ¬ M.Independent A R := by
+  classical
+  by_cases hBA : M.MaxEntangled B A
+  · by_cases hBR : M.MaxEntangled B R
+    · by_cases hAR : M.Independent A R
+      · exact False.elim (M.monogamy B A R hBA hBR hAR)
+      · exact Or.inr (Or.inr hAR)
+    · exact Or.inr (Or.inl hBR)
+  · exact Or.inl hBA
 
 end InfoGeometry.Quantum.EntanglementMonogamy

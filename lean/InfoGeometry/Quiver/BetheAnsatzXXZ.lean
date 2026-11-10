@@ -16,8 +16,6 @@ open Polynomial BigOperators Finset
 
 namespace KoroteevZeitlin.Bethe
 
-variable {R : Type*} [CommRing R]
-
 /-- Admissible multiplicative XXZ deformation parameters. -/
 abbrev XXZDeformationParameter :=
   {q : ℂ // q ≠ 0 ∧ q ≠ 1}

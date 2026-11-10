@@ -40,7 +40,7 @@ namespace InfoGeometry.Canonical.CayleyMellinHaarRenyiZetaCapstone
 
 open ArithmeticFunction Complex
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. Conformal Cayley Transform and Lee-Yang Circle -/
 
@@ -116,7 +116,7 @@ def haarDilationPairing (fieldWeight formWeight : R) : R :=
 theorem haar_dilation_pairing_unit :
     haarDilationPairing (1 : R) (1 : R) = 1 := by
   dsimp [haarDilationPairing]
-  ring
+  noncomm_ring
 
 /-- Mellin volume shift: x^{s-1} = x^s · (1/x) -/
 theorem mellin_haar_volume_shift (s x : ℂ) (hx : x ≠ 0) :

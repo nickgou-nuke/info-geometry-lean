@@ -16,8 +16,8 @@ open InfoGeometry.Physics.FluidBRSTGaugeDecoupling
 open InfoGeometry.Physics.FluidBRSTGaugeDecoupling.FluidBRSTState
 open InfoGeometry.Physics.FluidBRSTGaugeDecoupling.HelmholtzHodgeDecomposition
 
-variable {R : Type*} [CommRing R] [Invertible (2 : R)]
-variable {L : Type*} [LieRing L] [LieAlgebra R L]
+variable {R : Type*} [Ring R] [Invertible (2 : R)]
+variable {L : Type*} [LieRing L] [Module R L]
 variable {V : Type*} [AddCommGroup V] [Module R V]
 
 -- 1. Signature and Type-Level Verification

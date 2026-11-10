@@ -10,8 +10,24 @@ import InfoGeometry.Algebra.ChiralCARTransport
 The difference of their quadratic products acts with the same sign on each
 family. These are algebraic commutators, without star or unitary assumptions. -/
 namespace InfoGeometry.Algebra.ZornVectorMatrix
-variable {R : Type*} [CommRing R]
 noncomputable section
+
+section Ring
+variable {R : Type*} [Ring R]
+
+theorem leftMajoranaPlus_tangent_mul (u : ZornVec3 R) (X : ZornVectorMatrix R) :
+    add (mul E11 (mul (offDiagonal u u) X)) (mul (offDiagonal u u) (mul E11 X)) =
+      mul (offDiagonal u u) X :=
+  mul_E11_tangent_offDiagonal u u X
+
+theorem leftMajoranaMinus_tangent_mul (u : ZornVec3 R) (X : ZornVectorMatrix R) :
+    add (mul E11 (mul (offDiagonal u (-u)) X)) (mul (offDiagonal u (-u)) (mul E11 X)) =
+      mul (offDiagonal u (-u)) X :=
+  mul_E11_tangent_offDiagonal u (-u) X
+
+end Ring
+
+variable {R : Type*} [CommRing R]
 
 /-- The difference of same-signature quadratic products. -/
 def leftMajoranaCurrent (u v : ZornVec3 R) : Module.End R (ZornVectorMatrix R) :=

@@ -10,10 +10,15 @@ import InfoGeometry.Canonical.PeirceHyperbolicComplement
 complement is fixed, so full support is unnecessary. -/
 namespace InfoGeometry.Canonical.PeirceMatrixUnitCompletion
 open ReflexiveNilpotentFlows
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {R A : Type*} [Ring R] [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 def completedMatrix (d B : A) (M : Matrix (Fin 2) (Fin 2) R) : A :=
   complement d B + pairMatrixLinear d B M
+
+theorem completedMatrix_one {d B : A} :
+    completedMatrix d B (1 : Matrix (Fin 2) (Fin 2) R) = 1 := by
+  rw [completedMatrix, pairMatrixLinear_one]
+  simp [complement]
 
 variable {d B : A} (hd : d*d=0) (hB : B*B=0)
   (hr : d*B*d=d) (hs : B*d*B=B)
@@ -41,12 +46,6 @@ theorem completedMatrix_mul (M N : Matrix (Fin 2) (Fin 2) R) :
     matrix_mul_complement hd hB hr hs, ← pairMatrixLinear_mul hd hB hr hs]
   simp
 
-omit hd hB hr hs in
-theorem completedMatrix_one :
-    completedMatrix d B (1 : Matrix (Fin 2) (Fin 2) R) = 1 := by
-  rw [completedMatrix, pairMatrixLinear_one]
-  simp [complement]
-
 /-- Any invertible active matrix gives an ambient unit fixing the complement. -/
 def completedUnit (M : (Matrix (Fin 2) (Fin 2) R)ˣ) : Aˣ where
   val := completedMatrix d B (M : Matrix (Fin 2) (Fin 2) R)
@@ -59,6 +58,21 @@ def completedUnit (M : (Matrix (Fin 2) (Fin 2) R)ˣ) : Aˣ where
     rw [completedMatrix_mul hd hB hr hs]
     change completedMatrix d B (M.inv * M.val) = 1
     rw [M.inv_val, completedMatrix_one]
+
+theorem completedMatrix_sandwich (M X N : Matrix (Fin 2) (Fin 2) R) :
+    completedMatrix d B M * pairMatrixLinear d B X * completedMatrix d B N =
+      pairMatrixLinear d B (M*X*N) := by
+  unfold completedMatrix
+  rw [add_mul, complement_mul_matrix hd hB hr hs, zero_add,
+    ← pairMatrixLinear_mul hd hB hr hs, mul_add,
+    matrix_mul_complement hd hB hr hs, zero_add,
+    ← pairMatrixLinear_mul hd hB hr hs]
+
+section CommScalars
+variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {d B : A} (hd : d*d=0) (hB : B*B=0)
+  (hr : d*B*d=d) (hs : B*d*B=B)
+include hd hB hr hs
 
 /-- A normalized split-root boost is an actual ambient unit, even for proper support. -/
 def hyperbolicUnit (u v : R) (h : u*u-v*v=1) : Aˣ :=
@@ -83,15 +97,6 @@ theorem hyperbolicUnit_val (u v : R) (h : u*u-v*v=1) :
     pairMatrixUnit, support, smul_add]
   abel
 
-theorem completedMatrix_sandwich (M X N : Matrix (Fin 2) (Fin 2) R) :
-    completedMatrix d B M * pairMatrixLinear d B X * completedMatrix d B N =
-      pairMatrixLinear d B (M*X*N) := by
-  unfold completedMatrix
-  rw [add_mul, complement_mul_matrix hd hB hr hs, zero_add,
-    ← pairMatrixLinear_mul hd hB hr hs, mul_add,
-    matrix_mul_complement hd hB hr hs, zero_add,
-    ← pairMatrixLinear_mul hd hB hr hs]
-
 theorem hyperbolicUnit_conjugates_plus (u v : R) (h : u*u-v*v=1) :
     (hyperbolicUnit hd hB hr hs u v h : A) * (d*B) *
       (↑(hyperbolicUnit hd hB hr hs u v h)⁻¹ : A) =
@@ -105,5 +110,7 @@ theorem hyperbolicUnit_conjugates_plus (u v : R) (h : u*u-v*v=1) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [PeirceHyperbolicOrbit.hyperbolicMatrix, Matrix.mul_apply, Fin.sum_univ_two, mul_comm]
+
+end CommScalars
 
 end InfoGeometry.Canonical.PeirceMatrixUnitCompletion

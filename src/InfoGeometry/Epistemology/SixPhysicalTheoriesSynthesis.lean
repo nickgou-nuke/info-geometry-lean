@@ -3,6 +3,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.FinCases
@@ -57,7 +58,7 @@ All proofs are 100% constructive, containing 0 `sorry`, 0 `admit`, and 0 custom 
 
 namespace InfoGeometry.Epistemology.SixTheories
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### Pillar 1: Canonical Quantum Gravity — Modular Zero-Mode -/
 
@@ -68,12 +69,12 @@ def modularCommutator (ρ X : R) : R := ρ * X - X * ρ
 Timelessness of the total state is the modular ground state of the algebra. -/
 theorem wdw_modular_zero_mode (ρ : R) : modularCommutator ρ 1 = 0 := by
   dsimp [modularCommutator]
-  ring
+  noncomm_ring
 
 /-- In a closed universe without boundary momentum ($p_{\text{grav}} = 0$), the total Wheeler–DeWitt
 constraint $\hat{\mathcal{H}}_{\text{total}} = K_{\text{mod}} + p_{\text{grav}}$ collapses to $K_{\text{mod}}$. -/
 theorem closed_universe_wdw_collapse (K_mod : R) : K_mod + 0 = K_mod := by
-  ring
+  abel
 
 /-! ### Pillar 2: Doubled Field Theory — Split Carrier & Tadpole Cancellation -/
 
@@ -84,12 +85,12 @@ def doubledMetricPairing (u alpha : R) : R := 2 * (alpha * u)
 /-- The Primal sheet $T^+$ (where $\alpha = 0$) is strictly null. -/
 theorem primal_sheet_null (u : R) : doubledMetricPairing u 0 = 0 := by
   dsimp [doubledMetricPairing]
-  ring
+  noncomm_ring
 
 /-- The Covector sheet $T^-$ (where $u = 0$) is strictly null. -/
 theorem covector_sheet_null (alpha : R) : doubledMetricPairing 0 alpha = 0 := by
   dsimp [doubledMetricPairing]
-  ring
+  noncomm_ring
 
 /-- Tadpole cancellation condition: total Ramond–Ramond charge of D-branes and crosscap vanishes. -/
 def totalRRCharge (branes crosscap : ℤ) : ℤ := branes - crosscap
@@ -126,12 +127,12 @@ def horizonProjector (P : R) : R := P
 
 /-- Horizon completeness: the active exterior wedge $P$ and interior black hole ideal $Q = 1 - P$ sum to $\mathbf{1}$. -/
 theorem horizon_completeness (P : R) : P + (1 - P) = 1 := by
-  ring
+  noncomm_ring
 
 /-- Horizon orthogonality: the black hole interior is annihilated by the exterior support projector. -/
 theorem horizon_orthogonality (P : R) (hP : P * P = P) : P * (1 - P) = 0 := by
   calc
-    P * (1 - P) = P - P * P := by ring
+    P * (1 - P) = P - P * P := by noncomm_ring
     _ = P - P := by rw [hP]
     _ = 0 := sub_self P
 
@@ -182,8 +183,8 @@ theorem drazin_attractor_idempotent {A D : R} {k : ℕ} (hD : IsDrazinOperator A
     (A * D) * (A * D) = A * (D * A * D) := by
       have _h1 : A * D = D * A := hD.comm
       calc
-        (A * D) * (A * D) = A * (D * (A * D)) := by ring
-        _ = A * (D * A * D) := by ring
+        (A * D) * (A * D) = A * (D * (A * D)) := by noncomm_ring
+        _ = A * (D * A * D) := by noncomm_ring
     _ = A * D := by rw [hD.drazin_one]
 
 /-- Ergodic Core Reconstruction ($k = 1$ for Markov chains): $A \cdot P_{\text{core}} = A$.

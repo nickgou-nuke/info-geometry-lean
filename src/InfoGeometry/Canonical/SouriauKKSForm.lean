@@ -13,7 +13,9 @@ space, and Fisher metrics require additional analytic and geometric owners.
 
 namespace SouriauKKS
 
-variable {R L : Type*} [CommRing R] [LieRing L] [LieAlgebra R L]
+section Ring
+
+variable {R L : Type*} [Ring R] [LieRing L] [Module R L]
 
 /-- The algebraic Kirillov--Kostant--Souriau 2-form at `μ`. -/
 def kksForm (μ : Module.Dual R L) (X Y : L) : R := μ ⁅X, Y⁆
@@ -41,6 +43,21 @@ theorem kksForm_add_right (μ : Module.Dual R L) (X Y₁ Y₂ : L) :
       congrArg μ (lie_add X Y₁ Y₂)
     _ = μ ⁅X, Y₁⁆ + μ ⁅X, Y₂⁆ := μ.map_add _ _
 
+/-- The KKS form is closed in the Lie-algebraic Chevalley--Eilenberg sense. -/
+theorem kksForm_jacobi (μ : Module.Dual R L) (X Y Z : L) :
+    kksForm μ X ⁅Y, Z⁆ + kksForm μ Y ⁅Z, X⁆ + kksForm μ Z ⁅X, Y⁆ = 0 := by
+  unfold kksForm
+  calc
+    μ ⁅X, ⁅Y, Z⁆⁆ + μ ⁅Y, ⁅Z, X⁆⁆ + μ ⁅Z, ⁅X, Y⁆⁆ =
+        μ (⁅X, ⁅Y, Z⁆⁆ + ⁅Y, ⁅Z, X⁆⁆ + ⁅Z, ⁅X, Y⁆⁆) := by
+      rw [μ.map_add, μ.map_add]
+    _ = μ 0 := congrArg μ (lie_jacobi X Y Z)
+    _ = 0 := μ.map_zero
+
+end Ring
+
+variable {R L : Type*} [CommRing R] [LieRing L] [LieAlgebra R L]
+
 theorem kksForm_smul_left (μ : Module.Dual R L) (a : R) (X Y : L) :
     kksForm μ (a • X) Y = a * kksForm μ X Y := by
   unfold kksForm
@@ -54,17 +71,6 @@ theorem kksForm_smul_right (μ : Module.Dual R L) (a : R) (X Y : L) :
   calc
     μ ⁅X, a • Y⁆ = μ (a • ⁅X, Y⁆) := congrArg μ (lie_smul a X Y)
     _ = a * μ ⁅X, Y⁆ := by rw [μ.map_smul]; rfl
-
-/-- The KKS form is closed in the Lie-algebraic Chevalley--Eilenberg sense. -/
-theorem kksForm_jacobi (μ : Module.Dual R L) (X Y Z : L) :
-    kksForm μ X ⁅Y, Z⁆ + kksForm μ Y ⁅Z, X⁆ + kksForm μ Z ⁅X, Y⁆ = 0 := by
-  unfold kksForm
-  calc
-    μ ⁅X, ⁅Y, Z⁆⁆ + μ ⁅Y, ⁅Z, X⁆⁆ + μ ⁅Z, ⁅X, Y⁆⁆ =
-        μ (⁅X, ⁅Y, Z⁆⁆ + ⁅Y, ⁅Z, X⁆⁆ + ⁅Z, ⁅X, Y⁆⁆) := by
-      rw [μ.map_add, μ.map_add]
-    _ = μ 0 := congrArg μ (lie_jacobi X Y Z)
-    _ = 0 := μ.map_zero
 
 /-- Affine KKS form obtained by adding a Lie-algebra two-cocycle. -/
 def affineKksForm

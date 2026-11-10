@@ -15,8 +15,8 @@ or a construction of metriplectic dynamics.
 
 namespace InfoGeometry.QuantumContext.MetriplecticCl11.MetriplecticSystem
 
-/-- The radical is the symmetric off-diagonal line, over any commutative ring. -/
-theorem metricBracket_radical_iff {R : Type*} [CommRing R] (A : Cl11Matrix R) :
+/-- The radical is the symmetric off-diagonal line, over any associative ring. -/
+theorem metricBracket_radical_iff {R : Type*} [Ring R] (A : Cl11Matrix R) :
     (∀ B, metricBracket A B = 0) ↔
       A.m11 = 0 ∧ A.m22 = 0 ∧ A.m12 = A.m21 := by
   constructor

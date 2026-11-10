@@ -19,19 +19,49 @@ namespace InfoGeometry.Algebra.Zorn.CochainTwistSeparation
 
 open InfoGeometry.Algebra.Zorn.Z2ThreeCochainBridge
 
-variable {R G : Type*} [CommRing R] [AddCommGroup G]
+variable {R G : Type*} [AddCommGroup G]
 
-/-- Exact binary cocycle equation, equivalent to a trivial associator. -/
+section NoncommRing
+variable [Ring R]
+
+/-- Exact binary cocycle equation, equivalent to a trivial associator over any ring `[Ring R]`. -/
 theorem associator_eq_one_iff (F : G → G → Rˣ) (x y z : G) :
     associatorCochain F x y z = 1 ↔
       F x y * F (x + y) z = F y z * F x (y + z) := by
-  constructor
-  · intro h
-    have hm := congrArg (fun u : Rˣ => u * (F y z * F x (y + z))) h
-    simpa [associatorCochain, mul_assoc] using hm
-  · intro h
-    rw [associatorCochain, h]
-    simp [mul_assoc, mul_comm]
+  unfold associatorCochain
+  exact mul_inv_eq_one
+
+/-- The binary multiplier carrying one coefficient table to another over any ring `[Ring R]`. -/
+def relativeTwist (F H : G → G → Rˣ) (x y : G) : Rˣ :=
+  H x y * (F x y)⁻¹
+
+omit [AddCommGroup G] in
+/-- Multiplication by the relative two-cochain recovers the target table over any ring `[Ring R]`. -/
+theorem relativeTwist_mul (F H : G → G → Rˣ) (x y : G) :
+    relativeTwist F H x y * F x y = H x y := by
+  simp [relativeTwist, mul_assoc]
+
+/-- Normalized two-cochains have a normalized associator in the first slot over any ring `[Ring R]`. -/
+theorem associator_zero_left (F : G → G → Rˣ)
+    (h0 : ∀ x, F 0 x = 1) (y z : G) :
+    associatorCochain F 0 y z = 1 := by
+  simp [associatorCochain, h0]
+
+/-- Normalization in the middle slot requires both unit laws over any ring `[Ring R]`. -/
+theorem associator_zero_middle (F : G → G → Rˣ)
+    (h0 : ∀ x, F 0 x = 1) (h1 : ∀ x, F x 0 = 1) (x z : G) :
+    associatorCochain F x 0 z = 1 := by
+  simp [associatorCochain, h0, h1]
+
+/-- Normalization in the last slot over any ring `[Ring R]`. -/
+theorem associator_zero_right (F : G → G → Rˣ)
+    (h1 : ∀ x, F x 0 = 1) (x y : G) :
+    associatorCochain F x y 0 = 1 := by
+  simp [associatorCochain, h1]
+
+end NoncommRing
+
+variable [CommRing R]
 
 /-- Trivial associator really gives equality of the two homogeneous products. -/
 theorem homogeneous_associative_of_cocycle
@@ -56,16 +86,6 @@ theorem associator_inv (F : G → G → Rˣ) (x y z : G) :
       (associatorCochain F x y z)⁻¹ := by
   simp only [associatorCochain, mul_inv_rev, inv_inv]
   ac_rfl
-
-/-- The binary multiplier carrying one coefficient table to another. -/
-def relativeTwist (F H : G → G → Rˣ) (x y : G) : Rˣ :=
-  H x y * (F x y)⁻¹
-
-omit [AddCommGroup G] in
-/-- Multiplication by the relative two-cochain recovers the target table. -/
-theorem relativeTwist_mul (F H : G → G → Rˣ) (x y : G) :
-    relativeTwist F H x y * F x y = H x y := by
-  simp [relativeTwist, mul_assoc]
 
 /-- The precise transformation law of the associator under a binary twist. -/
 theorem associator_relativeTwist (F H : G → G → Rˣ) (x y z : G) :
@@ -92,24 +112,6 @@ theorem relativeTwist_pentagon (F H : G → G → Rˣ) (x y z w : G) :
       associatorCochain (relativeTwist F H) (x + y) z w *
         associatorCochain (relativeTwist F H) x y (z + w) :=
   associatorCochain_cocycle (relativeTwist F H) x y z w
-
-/-- Normalized two-cochains have a normalized associator in the first slot. -/
-theorem associator_zero_left (F : G → G → Rˣ)
-    (h0 : ∀ x, F 0 x = 1) (y z : G) :
-    associatorCochain F 0 y z = 1 := by
-  simp [associatorCochain, h0]
-
-/-- Normalization in the middle slot requires both unit laws. -/
-theorem associator_zero_middle (F : G → G → Rˣ)
-    (h0 : ∀ x, F 0 x = 1) (h1 : ∀ x, F x 0 = 1) (x z : G) :
-    associatorCochain F x 0 z = 1 := by
-  simp [associatorCochain, h0, h1]
-
-/-- Normalization in the last slot. -/
-theorem associator_zero_right (F : G → G → Rˣ)
-    (h1 : ∀ x, F x 0 = 1) (x y : G) :
-    associatorCochain F x y 0 = 1 := by
-  simp [associatorCochain, h1]
 
 /-- The existing real sign unit converts parity addition into multiplication. -/
 theorem signUnit_add (a b : ZMod 2) :

@@ -39,6 +39,17 @@ theorem sum_square (s : Finset ι) (g : ι → A)
             (∑ i ∈ s, g i) * (∑ i ∈ s, g i) := by noncomm_ring
       _ = g a * g a + ∑ i ∈ s, g i * g i := by rw [hx, add_zero, ih hs]
 
+/-- Over a noncommutative coefficient ring `R`, scaling two anticommuting generators `a, b`
+(`a * b + b * a = 0`) by `r, s : R` produces an anticommutator anomaly governed by the
+commutator `r * s - s * r`. -/
+theorem smul_anti_noncomm_anomaly {R : Type*} [Ring R] [Module R A]
+    [IsScalarTower R A A] [SMulCommClass R A A]
+    (r s : R) {a b : A} (hab : a * b + b * a = 0) :
+    (r • a) * (s • b) + (s • b) * (r • a) = (r * s - s * r) • (a * b) := by
+  have hba : b * a = -(a * b) := eq_neg_of_add_eq_zero_right hab
+  rw [smul_mul_assoc, mul_smul_comm, smul_smul,
+    smul_mul_assoc, mul_smul_comm, smul_smul, hba, smul_neg, sub_smul, sub_eq_add_neg]
+
 variable {R : Type*} [CommRing R] [Algebra R A]
 
 /-- Central scalar coefficients preserve the off-diagonal anticommutation laws. -/

@@ -11,24 +11,24 @@ nonzero pair modulo cross-multiplication.  This owner uses unimodular pairs
 and identifies them only by multiplication by a unit.
 -/
 
-abbrev UnimodularPair (R : Type*) [CommRing R] :=
+abbrev UnimodularPair (R : Type*) [Ring R] :=
   Subtype (fun p : R × R => ∃ a b : R, a * p.1 + b * p.2 = 1)
 
 namespace UnimodularPair
 
-abbrev fst {R : Type*} [CommRing R] (p : UnimodularPair R) : R := p.1.1
-abbrev snd {R : Type*} [CommRing R] (p : UnimodularPair R) : R := p.1.2
-abbrev unimodular {R : Type*} [CommRing R] (p : UnimodularPair R) :
+abbrev fst {R : Type*} [Ring R] (p : UnimodularPair R) : R := p.1.1
+abbrev snd {R : Type*} [Ring R] (p : UnimodularPair R) : R := p.1.2
+abbrev unimodular {R : Type*} [Ring R] (p : UnimodularPair R) :
     ∃ a b : R, a * p.fst + b * p.snd = 1 := p.2
 
 end UnimodularPair
 
-def unimodularPairRel {R : Type*} [CommRing R]
+def unimodularPairRel {R : Type*} [Ring R]
     (p q : UnimodularPair R) : Prop :=
   ∃ u : Rˣ,
     q.fst = (u : R) * p.fst ∧ q.snd = (u : R) * p.snd
 
-instance unimodularPairSetoid (R : Type*) [CommRing R] :
+instance unimodularPairSetoid (R : Type*) [Ring R] :
     Setoid (UnimodularPair R) where
   r := unimodularPairRel
   iseqv := by
@@ -51,25 +51,25 @@ instance unimodularPairSetoid (R : Type*) [CommRing R] :
       · rw [hrsnd, hqsnd]
         simp [mul_assoc]
 
-abbrev ProjectiveBoundary (R : Type*) [CommRing R] :=
+abbrev ProjectiveBoundary (R : Type*) [Ring R] :=
   Quotient (unimodularPairSetoid R)
 
-def projectiveBoundaryMk {R : Type*} [CommRing R]
+def projectiveBoundaryMk {R : Type*} [Ring R]
     (p : UnimodularPair R) : ProjectiveBoundary R :=
   Quotient.mk' p
 
-theorem projectiveBoundaryMk_eq_iff {R : Type*} [CommRing R]
+theorem projectiveBoundaryMk_eq_iff {R : Type*} [Ring R]
     (p q : UnimodularPair R) :
     projectiveBoundaryMk p = projectiveBoundaryMk q ↔
       unimodularPairRel p q := by
   exact Quotient.eq_iff_equiv
 
-def projectiveFixedPoint {R : Type*} [CommRing R]
+def projectiveFixedPoint {R : Type*} [Ring R]
     (f : UnimodularPair R → UnimodularPair R)
     (p : UnimodularPair R) : Prop :=
   unimodularPairRel p (f p)
 
-theorem projectiveFixedPoint_iff_same_boundary {R : Type*} [CommRing R]
+theorem projectiveFixedPoint_iff_same_boundary {R : Type*} [Ring R]
     (f : UnimodularPair R → UnimodularPair R)
     (p : UnimodularPair R) :
     projectiveFixedPoint f p ↔

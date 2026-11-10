@@ -3,7 +3,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- **1. Сплит-Паули Cl(1,1) Антикомутатор**: {i, u} = i*u + u*i = 0 за i² = -1 и u² = 1 -/
 theorem split_pauli_anticommute (i u : R) (h_anti : i * u + u * i = 0) :
@@ -14,12 +14,12 @@ theorem split_pauli_commutator (i u : R) (h_anti : i * u + u * i = 0) :
     i * u - u * i = 2 * (i * u) := by
   have h1 : - (u * i) = i * u := (eq_neg_of_add_eq_zero_left h_anti).symm
   calc i * u - u * i
-      = i * u + (- (u * i)) := by ring
+      = i * u + (- (u * i)) := sub_eq_add_neg _ _
     _ = i * u + i * u := by rw [h1]
-    _ = 2 * (i * u) := by ring
+    _ = 2 * (i * u) := (two_mul _).symm
 
 section
-variable [Algebra ℝ R]
+variable [Module ℝ R] [IsScalarTower ℝ R R] [SMulCommClass ℝ R R]
 
 /-- **3. Хиперболичен Спинов Паралелен Пренос U(θ) = cosh(θ) 1 + sinh(θ) u** -/
 noncomputable def spinConnectionTransport (u : R) (theta : ℝ) : ℝ → R := fun _ =>
@@ -31,25 +31,21 @@ theorem spinConnectionTransport_add
     (spinConnectionTransport u theta1 0) * (spinConnectionTransport u theta2 0) =
     spinConnectionTransport u (theta1 + theta2) 0 := by
   dsimp [spinConnectionTransport]
-  simp only [Algebra.smul_def, Real.cosh_add, Real.sinh_add]
-  have h1 : (algebraMap ℝ R (Real.cosh theta1) * 1 + algebraMap ℝ R (Real.sinh theta1) * u) *
-            (algebraMap ℝ R (Real.cosh theta2) * 1 + algebraMap ℝ R (Real.sinh theta2) * u) =
-            (algebraMap ℝ R (Real.cosh theta1 * Real.cosh theta2 + Real.sinh theta1 * Real.sinh theta2)) * 1 +
-            (algebraMap ℝ R (Real.sinh theta1 * Real.cosh theta2 + Real.cosh theta1 * Real.sinh theta2)) * u := by
-    simp only [RingHom.map_add, RingHom.map_mul]
-    calc (algebraMap ℝ R (Real.cosh theta1) * 1 + algebraMap ℝ R (Real.sinh theta1) * u) *
-          (algebraMap ℝ R (Real.cosh theta2) * 1 + algebraMap ℝ R (Real.sinh theta2) * u)
-        = algebraMap ℝ R (Real.cosh theta1) * algebraMap ℝ R (Real.cosh theta2) * 1 +
-          algebraMap ℝ R (Real.cosh theta1) * algebraMap ℝ R (Real.sinh theta2) * u +
-          algebraMap ℝ R (Real.sinh theta1) * algebraMap ℝ R (Real.cosh theta2) * u +
-          algebraMap ℝ R (Real.sinh theta1) * algebraMap ℝ R (Real.sinh theta2) * (u * u) := by ring
-      _ = algebraMap ℝ R (Real.cosh theta1) * algebraMap ℝ R (Real.cosh theta2) * 1 +
-          algebraMap ℝ R (Real.cosh theta1) * algebraMap ℝ R (Real.sinh theta2) * u +
-          algebraMap ℝ R (Real.sinh theta1) * algebraMap ℝ R (Real.cosh theta2) * u +
-          algebraMap ℝ R (Real.sinh theta1) * algebraMap ℝ R (Real.sinh theta2) * 1 := by rw [hu]
-      _ = (algebraMap ℝ R (Real.cosh theta1) * algebraMap ℝ R (Real.cosh theta2) + algebraMap ℝ R (Real.sinh theta1) * algebraMap ℝ R (Real.sinh theta2)) * 1 +
-          (algebraMap ℝ R (Real.sinh theta1) * algebraMap ℝ R (Real.cosh theta2) + algebraMap ℝ R (Real.cosh theta1) * algebraMap ℝ R (Real.sinh theta2)) * u := by ring
-  exact h1
+  rw [Real.cosh_add, Real.sinh_add, add_smul, add_smul]
+  have h11 : (Real.cosh theta1 • (1 : R)) * (Real.cosh theta2 • (1 : R)) =
+      (Real.cosh theta1 * Real.cosh theta2) • (1 : R) := by
+    rw [smul_mul_assoc, one_mul, smul_smul]
+  have h12 : (Real.cosh theta1 • (1 : R)) * (Real.sinh theta2 • u) =
+      (Real.cosh theta1 * Real.sinh theta2) • u := by
+    rw [smul_mul_assoc, one_mul, smul_smul]
+  have h21 : (Real.sinh theta1 • u) * (Real.cosh theta2 • (1 : R)) =
+      (Real.sinh theta1 * Real.cosh theta2) • u := by
+    rw [smul_mul_assoc, mul_smul_comm, mul_one, smul_smul]
+  have h22 : (Real.sinh theta1 • u) * (Real.sinh theta2 • u) =
+      (Real.sinh theta1 * Real.sinh theta2) • (1 : R) := by
+    rw [smul_mul_assoc, mul_smul_comm, hu, smul_smul]
+  rw [add_mul, mul_add, mul_add, h11, h12, h21, h22]
+  abel
 
 /-- **Master Synthesis**: Хирална Конусна Спинова Рамка & Транспорт Synthesis -/
 theorem master_chiral_cone_spin_frame_synthesis

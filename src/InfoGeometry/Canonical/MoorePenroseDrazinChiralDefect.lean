@@ -27,7 +27,7 @@ open InfoGeometry.Singular.MoorePenrose
 open InfoGeometry.Singular.Drazin
 
 variable {K A : Type*}
-variable [CommRing K] [Ring A] [Algebra K A] [StarRing A]
+variable [Ring K] [Ring A] [Module K A] [StarRing A]
 
 def qPlus (ck : CuntzTwoIsometry K A) : A :=
   ck.S1 * star ck.S2

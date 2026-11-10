@@ -20,6 +20,43 @@ namespace InfoGeometry.OperatorAlgebra.PeirceSuperoperators
 open InfoGeometry.Core
 open InfoGeometry.OperatorAlgebra.IntrinsicGradedAdjoint
 
+section PureRing
+
+variable {A : Type*} [Ring A]
+
+theorem ringGradedAdjoint_even_mem_odd {p N x : A} (hp : IsIdempotentElem p)
+    (hN : N ∈ LinearMap.range (PeirceGrading.odd p))
+    (hx : x ∈ LinearMap.range (PeirceGrading.even p)) :
+    ringGradedAdjoint (ringParityEquiv p hp) N x ∈
+      LinearMap.range (PeirceGrading.odd p) := by
+  rw [ringGradedAdjoint_of_even _ _ _ (ringParityEquiv_of_even hp hx)]
+  exact (LinearMap.range (PeirceGrading.odd p)).sub_mem
+    (PeirceGrading.odd_mul_even hp hN hx) (PeirceGrading.even_mul_odd hp hx hN)
+
+theorem ringGradedAdjoint_odd_mem_even {p N x : A} (hp : IsIdempotentElem p)
+    (hN : N ∈ LinearMap.range (PeirceGrading.odd p))
+    (hx : x ∈ LinearMap.range (PeirceGrading.odd p)) :
+    ringGradedAdjoint (ringParityEquiv p hp) N x ∈
+      LinearMap.range (PeirceGrading.even p) := by
+  rw [ringGradedAdjoint_of_odd _ _ _ (ringParityEquiv_of_odd hp hx)]
+  exact (LinearMap.range (PeirceGrading.even p)).add_mem
+    (PeirceGrading.odd_mul_odd hp hN hx) (PeirceGrading.odd_mul_odd hp hx hN)
+
+/-- Square-zero of the charge gives square-zero of the pure-ring graded endomorphism. -/
+theorem ring_peirce_graded_square_zero {p N : A} (hp : IsIdempotentElem p)
+    (hN : N ∈ LinearMap.range (PeirceGrading.odd p)) (hsq : N * N = 0) :
+    (ringGradedAdjoint (ringParityEquiv p hp) N).comp
+      (ringGradedAdjoint (ringParityEquiv p hp) N) = 0 := by
+  ext x
+  simp only [AddMonoidHom.comp_apply, AddMonoidHom.zero_apply,
+    ringGradedAdjoint_square_apply (ringParityEquiv p hp)
+      (ringParityEquiv_involutive p hp) N (ringParityEquiv_of_odd hp hN) x,
+    hsq, zero_mul, mul_zero, sub_self]
+
+end PureRing
+
+section Algebra
+
 variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
 
 theorem gradedAdjoint_even_mem_odd {p N x : A} (hp : IsIdempotentElem p)
@@ -56,9 +93,11 @@ theorem peirce_graded_range_le_ker {p N : A} (hp : IsIdempotentElem p)
       (gradedAdjoint (parityEquiv (R := R) p hp) N).ker :=
   LinearMap.range_le_ker_iff.mpr (peirce_graded_square_zero hp hN hsq)
 
+end Algebra
+
 section Restrictions
 
-variable {p N : A} (hp : IsIdempotentElem p)
+variable {A : Type*} [Ring A] {p N : A} (hp : IsIdempotentElem p)
     (hN : N ∈ LinearMap.range (PeirceGrading.odd p))
 
 /-- The even-to-odd restriction of the same ambient graded action. -/

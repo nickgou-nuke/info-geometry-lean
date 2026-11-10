@@ -21,7 +21,7 @@ open BigOperators
 namespace InfoGeometry.Modular.KMS
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 local notation "Mat" => Matrix ι ι R
 
@@ -46,7 +46,7 @@ theorem expectation_zero (ρ : Mat) : expectation ρ 0 = 0 := by
   dsimp [expectation]
   simp
 
-theorem expectation_smul (ρ A : Mat) (r : R) :
+theorem expectation_smul {R : Type*} [CommRing R] (ρ A : Matrix ι ι R) (r : R) :
     expectation ρ (r • A) = r • expectation ρ A := by
   dsimp [expectation]
   rw [Matrix.mul_smul, Matrix.trace_smul]
@@ -58,14 +58,14 @@ theorem expectation_sub (ρ A B : Mat) :
   rw [mul_sub, Matrix.trace_sub]
 
 /-- The finite expectation functional bundled as an `R`-linear map. -/
-def expectationLinear (ρ : Mat) : Mat →ₗ[R] R where
+def expectationLinear {R : Type*} [CommRing R] (ρ : Matrix ι ι R) : Matrix ι ι R →ₗ[R] R where
   toFun := expectation ρ
   map_add' A B := expectation_add ρ A B
   map_smul' r A := by
     simpa [smul_eq_mul] using expectation_smul ρ A r
 
 @[simp]
-theorem expectationLinear_apply (ρ A : Mat) :
+theorem expectationLinear_apply {R : Type*} [CommRing R] (ρ A : Matrix ι ι R) :
     expectationLinear ρ A = expectation ρ A := rfl
 
 /-- The Modular Automorphism: σ_ρ(B) = ρ * B * ρ⁻¹ for an invertible density matrix ρ. -/
@@ -78,7 +78,7 @@ theorem modularAutomorphism_add (ρ ρ_inv A B : Mat) :
   dsimp [modularAutomorphism]
   rw [mul_add, add_mul]
 
-theorem modularAutomorphism_smul (ρ ρ_inv A : Mat) (r : R) :
+theorem modularAutomorphism_smul {R : Type*} [CommRing R] (ρ ρ_inv A : Matrix ι ι R) (r : R) :
     modularAutomorphism ρ ρ_inv (r • A) =
       r • modularAutomorphism ρ ρ_inv A := by
   dsimp [modularAutomorphism]
@@ -133,13 +133,13 @@ theorem modularAutomorphism_inverse_comp' (ρ ρ_inv B : Mat)
     _ = B := by simp
 
 /- The finite modular automorphism bundled as an `R`-linear map. -/
-def modularAutomorphismLinear (ρ ρ_inv : Mat) : Mat →ₗ[R] Mat where
+def modularAutomorphismLinear {R : Type*} [CommRing R] (ρ ρ_inv : Matrix ι ι R) : Matrix ι ι R →ₗ[R] Matrix ι ι R where
   toFun := modularAutomorphism ρ ρ_inv
   map_add' A B := modularAutomorphism_add ρ ρ_inv A B
   map_smul' r A := modularAutomorphism_smul ρ ρ_inv A r
 
 @[simp]
-theorem modularAutomorphismLinear_apply (ρ ρ_inv B : Mat) :
+theorem modularAutomorphismLinear_apply {R : Type*} [CommRing R] (ρ ρ_inv B : Matrix ι ι R) :
     modularAutomorphismLinear ρ ρ_inv B = modularAutomorphism ρ ρ_inv B := rfl
 
 @[simp]
@@ -159,7 +159,7 @@ theorem modularAutomorphism_one (ρ ρ_inv : Mat)
   ω_ρ(A * σ_ρ(B)) = ω_ρ(B * A)
   for any density matrix ρ and invertible element ρ with ρ_inv * ρ = 1.
 -/
-theorem kms_modular_condition (ρ ρ_inv A B : Mat)
+theorem kms_modular_condition {R : Type*} [CommRing R] (ρ ρ_inv A B : Matrix ι ι R)
     (h_left : ρ_inv * ρ = 1) :
     expectation ρ (A * modularAutomorphism ρ ρ_inv B) = expectation ρ (B * A) := by
   dsimp [expectation, modularAutomorphism]
@@ -180,8 +180,8 @@ theorem kms_modular_condition (ρ ρ_inv A B : Mat)
 /-- The expectation of a commutator is exactly the modular displacement of
 its first entry, paired against the second entry. This is the commutator
 defect form of the finite KMS identity. -/
-theorem kms_expectation_commutator_eq_modular_defect
-    (ρ ρ_inv A B : Mat) (h_left : ρ_inv * ρ = 1) :
+theorem kms_expectation_commutator_eq_modular_defect {R : Type*} [CommRing R]
+    (ρ ρ_inv A B : Matrix ι ι R) (h_left : ρ_inv * ρ = 1) :
     expectation ρ (A * B - B * A) =
       expectation ρ (B * (modularAutomorphism ρ ρ_inv A - A)) := by
   calc
@@ -199,8 +199,8 @@ inner derivation. The associated odd Peirce grade has zero readout, even
 pinching preserves the readout, and products of two tangent directions are
 fixed by even pinching. This is an algebraic trace statement: no positivity,
 normalization, or KMS modular condition is assumed. -/
-theorem traceWeight_peirce_tangent_qgt_synthesis
-    (K P X A B : Mat) (hP : P * P = P) (hKP : K * P = P * K) :
+theorem traceWeight_peirce_tangent_qgt_synthesis {R : Type*} [CommRing R]
+    (K P X A B : Matrix ι ι R) (hP : P * P = P) (hKP : K * P = P * K) :
     expectation K (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P X) = 0 ∧
     expectation K (InfoGeometry.OperatorAlgebra.PeirceSpine.oddGrade P X) = 0 ∧
     expectation K (InfoGeometry.OperatorAlgebra.PeirceSpine.evenGrade P X) =
@@ -210,8 +210,8 @@ theorem traceWeight_peirce_tangent_qgt_synthesis
           InfoGeometry.OperatorAlgebra.PeirceSpine.comm P B) =
       InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A *
         InfoGeometry.OperatorAlgebra.PeirceSpine.comm P B := by
-  let opComm : Mat → Mat → Mat := InfoGeometry.OperatorAlgebra.PeirceSpine.comm
-  have hStationary (Y : Mat) : expectation K (opComm P Y) = 0 := by
+  let opComm : Matrix ι ι R → Matrix ι ι R → Matrix ι ι R := InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+  have hStationary (Y : Matrix ι ι R) : expectation K (opComm P Y) = 0 := by
     dsimp [expectation, opComm, InfoGeometry.OperatorAlgebra.PeirceSpine.comm]
     have hTraceCycle : Matrix.trace (K * (P * Y)) =
         Matrix.trace (K * (Y * P)) := by
@@ -228,7 +228,7 @@ theorem traceWeight_peirce_tangent_qgt_synthesis
       _ = Matrix.trace (K * (P * Y)) - Matrix.trace (K * (Y * P)) :=
           Matrix.trace_sub _ _
       _ = 0 := sub_eq_zero.mpr hTraceCycle
-  have hOddFormula (Y : Mat) :
+  have hOddFormula (Y : Matrix ι ι R) :
       InfoGeometry.OperatorAlgebra.PeirceSpine.oddGrade P Y =
         opComm P (opComm P Y) := by
     dsimp [opComm]
@@ -267,7 +267,7 @@ theorem traceWeight_peirce_tangent_qgt_synthesis
 
 /-- THEOREM: Stationarity of the KMS state under its own Modular Flow:
     ω_ρ(σ_ρ(A)) = ω_ρ(A). -/
-theorem kms_state_stationary (ρ ρ_inv A : Mat)
+theorem kms_state_stationary {R : Type*} [CommRing R] (ρ ρ_inv A : Matrix ι ι R)
     (h_left : ρ_inv * ρ = 1) :
     expectation ρ (modularAutomorphism ρ ρ_inv A) = expectation ρ A := by
   have h := kms_modular_condition ρ ρ_inv 1 A h_left

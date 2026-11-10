@@ -6,42 +6,47 @@ section CharacterIndexHolonomy
 
 variable {A : Type*} [AddGroup A]
 
-/-- Minimal cocycle holonomy readout used for the character-postcomposition corollary. -/
-def characterHolonomy (ℓ : A →+ ℤ) (g : A) : ℤ :=
-  ℓ g
+/-- Holonomy readout of an additive character. -/
+def characterHolonomy (ℓ : A →+ ℤ) (g : A) : ℤ := ℓ g
 
-/-- Minimal index pairing carried by the same additive cocycle. -/
-def characterIndexPairing (ℓ : A →+ ℤ) (g : A) : ℤ :=
-  characterHolonomy ℓ g
+/-- Additive characters send sums in the source to sums of holonomies. -/
+theorem characterHolonomy_add (ℓ : A →+ ℤ) (g h : A) :
+    characterHolonomy ℓ (g + h) = characterHolonomy ℓ g + characterHolonomy ℓ h :=
+  map_add ℓ g h
 
-/-- The chapter-local holonomy/index theorem in this seed model is the identity between the two
-readouts. -/
-theorem character_index_holonomy_base (ℓ : A →+ ℤ) (g : A) :
-    characterIndexPairing ℓ g = characterHolonomy ℓ g := by
-  rfl
+/-- Every homomorphism from an additive group to `ℤ` kills its additive commutators. -/
+theorem characterHolonomy_additiveCommutator (ℓ : A →+ ℤ) (g h : A) :
+    characterHolonomy ℓ (g + h - g - h) = 0 := by
+  simp only [characterHolonomy, map_sub, map_add]
+  abel
 
-/-- Postcomposing the cocycle with a character `χ : ℤ →+ ℤ` is functorial on the holonomy
-readout. -/
-theorem characterHolonomy_postcompose (χ : ℤ →+ ℤ) (ℓ : A →+ ℤ) (g : A) :
-    characterHolonomy (χ.comp ℓ) g = χ (characterHolonomy ℓ g) := by
-  rfl
+/-- Postcomposition preserves the additive law of the holonomy readout. -/
+theorem characterHolonomy_postcompose_add (χ : ℤ →+ ℤ) (ℓ : A →+ ℤ) (g h : A) :
+    characterHolonomy (χ.comp ℓ) (g + h) =
+      χ (characterHolonomy ℓ g) + χ (characterHolonomy ℓ h) := by
+  change χ (ℓ (g + h)) = χ (ℓ g) + χ (ℓ h)
+  rw [map_add, map_add]
 
-/-- Postcomposing the cocycle with a character `χ : ℤ →+ ℤ` is functorial on the index pairing. -/
-theorem characterIndexPairing_postcompose (χ : ℤ →+ ℤ) (ℓ : A →+ ℤ) (g : A) :
-    characterIndexPairing (χ.comp ℓ) g = χ (characterIndexPairing ℓ g) := by
-  rfl
+/-- Postcomposition also annihilates source commutators in the holonomy readout. -/
+theorem characterHolonomy_postcompose_additiveCommutator
+    (χ : ℤ →+ ℤ) (ℓ : A →+ ℤ) (g h : A) :
+    characterHolonomy (χ.comp ℓ) (g + h - g - h) = 0 := by
+  exact characterHolonomy_additiveCommutator (χ.comp ℓ) g h
 
-/-- Postcomposing the cocycle `ℓ` with a character `χ : ℤ →+ ℤ` carries the same holonomy/index
-pairing theorem to the `χ`-coordinate system.
-    cor:discussion-character-index-holonomy -/
+/-- A character-valued additive holonomy factors through the abelianization
+at the level of its readout: it is additive and vanishes on additive
+commutators, and both properties persist under postcomposition. -/
 theorem paper_discussion_character_index_holonomy
-    (χ : ℤ →+ ℤ) (ℓ : A →+ ℤ) (g : A) :
-    characterIndexPairing (χ.comp ℓ) g = characterHolonomy (χ.comp ℓ) g ∧
-      characterHolonomy (χ.comp ℓ) g = χ (characterHolonomy ℓ g) ∧
-      characterIndexPairing (χ.comp ℓ) g = χ (characterIndexPairing ℓ g) := by
-  refine ⟨character_index_holonomy_base (χ.comp ℓ) g, ?_, ?_⟩
-  · exact characterHolonomy_postcompose χ ℓ g
-  · exact characterIndexPairing_postcompose χ ℓ g
+    (χ : ℤ →+ ℤ) (ℓ : A →+ ℤ) (g h : A) :
+    characterHolonomy ℓ (g + h) = characterHolonomy ℓ g + characterHolonomy ℓ h ∧
+      characterHolonomy ℓ (g + h - g - h) = 0 ∧
+      characterHolonomy (χ.comp ℓ) (g + h) =
+        χ (characterHolonomy ℓ g) + χ (characterHolonomy ℓ h) ∧
+      characterHolonomy (χ.comp ℓ) (g + h - g - h) = 0 := by
+  exact ⟨characterHolonomy_add ℓ g h,
+    characterHolonomy_additiveCommutator ℓ g h,
+    characterHolonomy_postcompose_add χ ℓ g h,
+    characterHolonomy_postcompose_additiveCommutator χ ℓ g h⟩
 
 end CharacterIndexHolonomy
 

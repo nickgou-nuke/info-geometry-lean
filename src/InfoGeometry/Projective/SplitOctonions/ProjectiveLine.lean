@@ -15,9 +15,10 @@ namespace InfoGeometry.Projective.SplitOctonions
 
 open InfoGeometry.Projective.SplitOctonions.ZornMatrix
 
-variable {R : Type*} [CommRing R]
+section RingHalf
+
+variable {R : Type*} [Ring R]
 variable {V : Type*} [AddCommGroup V] [Module R V]
-variable (B : V →ₗ[R] V →ₗ[R] R)
 
 /-- `half(x)=e₁` shorthand for the local coordinate convention. -/
 def half_inverter (x : ZornMatrix R V) : Prop := is_half_inverter x
@@ -35,6 +36,12 @@ lemma half_eq_e1_iff_half_inverter (x : ZornMatrix R V) :
     exact ⟨hx11, hx12, hx21⟩
   · intro hx
     exact hx
+
+end RingHalf
+
+variable {R : Type*} [CommRing R]
+variable {V : Type*} [AddCommGroup V] [Module R V]
+variable (B : V →ₗ[R] V →ₗ[R] R)
 
 /-- Boundary norm on the reduced OP1 shell. -/
 def op1BoundaryNorm (x : ZornMatrix R V) : R :=

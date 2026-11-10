@@ -63,7 +63,7 @@ The odd-odd Koszul tensor is even: conjugation by the total-parity operator
 fixes the concrete `1|1 ⊗ 1|1` matrix.
 -/
 theorem tensorParity_conj_oddOddKoszulTensorMatrix
-    {R : Type*} [CommRing R] (a b c d : R) :
+    {R : Type*} [Ring R] (a b c d : R) :
     tensorParityMatrix * oddOddKoszulTensorMatrix a b c d * tensorParityMatrix =
       oddOddKoszulTensorMatrix a b c d := by
   ext i j

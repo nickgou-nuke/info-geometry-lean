@@ -504,7 +504,7 @@ theorem hiddenMemory_arithmetic_calibration
     (bridge : LanglandsSugawaraBridge LPR EAV charge_eval)
     (s : State) :
     charge_eval (EAV.calibratedHiddenGradeMemoryReadout s) = LPR.completedL 0 := by
-  rw [← EAV.centralCharge_eq_hiddenGradeMemory s]
+  change charge_eval (EAV.centralChargeReadout s) = _
   exact bridge.Sugawara_L_calibration s
 
 /-! ## 7. Owner targets -/

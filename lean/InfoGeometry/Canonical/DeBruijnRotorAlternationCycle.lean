@@ -63,8 +63,7 @@ open Matrix
 
 section UniversalRotorAlternation
 
-variable {R : Type*} [CommRing R]
-variable {A : Type*} [Ring A] [Algebra R A]
+variable {A : Type*} [Ring A]
 
 /-!
 ## 1. De Bruijn Name-Free Primitives: One Carrier `Δ`, Two Poles `P_±`, Two Nilpotent Seeds `d, B`
@@ -105,15 +104,15 @@ def transitionVelocity (d B : A) : A := d + B
 def wheelGenerator (d B : A) : A := d - B
 
 /-- Algebraic circular rotor `R(c, s) = P₀ + c • Δ + s • J`. -/
-def phaseRotor (c s : R) (d B : A) : A :=
+def phaseRotor {R : Type*} [Ring R] [Module R A] (c s : R) (d B : A) : A :=
   zeroModeSupport d B + c • carrierSupport d B + s • wheelGenerator d B
 
 /-- Moving pole projection `P₊(c, s) = R(c, s) * P₊ * R(c, -s)`. -/
-def movingPolePlus (c s : R) (d B : A) : A :=
+def movingPolePlus {R : Type*} [Ring R] [Module R A] (c s : R) (d B : A) : A :=
   phaseRotor c s d B * polePlus d B * phaseRotor c (-s) d B
 
 /-- Moving opposite pole projection `P₋(c, s) = R(c, s) * P₋ * R(c, -s)`. -/
-def movingPoleMinus (c s : R) (d B : A) : A :=
+def movingPoleMinus {R : Type*} [Ring R] [Module R A] (c s : R) (d B : A) : A :=
   phaseRotor c s d B * poleMinus d B * phaseRotor c (-s) d B
 
 /-!
@@ -299,6 +298,9 @@ theorem harmonic_alternation_oscillator_law {d B : A} (h : IsDualSeedPair d B) :
 ## 4. Node 2 Atomic Lemmas: Algebraic Circular Rotor & Seed Growth Formula
 -/
 
+section NoncommRotor
+variable {R : Type*} [Ring R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
+
 lemma phaseRotor_mul_polePlus {d B : A} (h : IsDualSeedPair d B) (c s : R) :
     phaseRotor c s d B * polePlus d B = c • polePlus d B - s • B := by
   have h_P0_Pp : zeroModeSupport d B * polePlus d B = 0 := by
@@ -344,33 +346,6 @@ lemma B_mul_phaseRotor_neg {d B : A} (h : IsDualSeedPair d B) (c s : R) :
   unfold phaseRotor
   rw [mul_add, mul_add, mul_smul_comm, mul_smul_comm,
       hB_P0, hB_Delta, hB_J, neg_smul, zero_add, sub_eq_add_neg]
-
-lemma movingPolePlus_eq {d B : A} (h : IsDualSeedPair d B) (c s : R) :
-    movingPolePlus c s d B =
-      (c * c) • polePlus d B + (s * s) • poleMinus d B -
-      (c * s) • transitionVelocity d B := by
-  unfold movingPolePlus
-  rw [phaseRotor_mul_polePlus h c s, sub_mul, smul_mul_assoc, smul_mul_assoc,
-      polePlus_mul_phaseRotor_neg h c s, B_mul_phaseRotor_neg h c s,
-      smul_sub, smul_sub, smul_smul, smul_smul, smul_smul, smul_smul,
-      mul_comm s c]
-  unfold transitionVelocity
-  rw [smul_add]
-  abel
-
-/-- **Explicit Moving Projector & Opposite-Seed Growth Formula (`P₊(c, s)`)**:
-    At any rotor parameters `(c, s)`, the rotated pole `P₊(c, s) = R(c, s) P₊ R(c, -s)` is:
-    `P₊(c, s) = (c * c) • P₊ + (s * s) • P₋ - (c * s) • Q₁`.
-    At `c = 0, s = 1`, `P₊(0, 1) = P₋` (the two poles trade places). -/
-theorem movingPolePlus_explicit_formula {d B : A}
-    (h : IsDualSeedPair d B) (c s : R) :
-    movingPolePlus c s d B =
-      (c * c) • polePlus d B + (s * s) • poleMinus d B -
-      (c * s) • transitionVelocity d B ∧
-    movingPolePlus (0 : R) (1 : R) d B = poleMinus d B := by
-  refine ⟨movingPolePlus_eq h c s, ?_⟩
-  rw [movingPolePlus_eq h (0 : R) (1 : R)]
-  simp only [mul_zero, zero_smul, mul_one, one_smul, zero_add, sub_zero]
 
 lemma phaseRotor_mul_poleMinus {d B : A} (h : IsDualSeedPair d B) (c s : R) :
     phaseRotor c s d B * poleMinus d B = c • poleMinus d B + s • d := by
@@ -418,6 +393,51 @@ lemma d_mul_phaseRotor_neg {d B : A} (h : IsDualSeedPair d B) (c s : R) :
   rw [mul_add, mul_add, mul_smul_comm, mul_smul_comm,
       hd_P0, hd_Delta, hd_J, smul_neg, neg_smul, neg_neg, zero_add]
 
+lemma phaseRotor_mul_B {d B : A} (h : IsDualSeedPair d B) (c s : R) :
+    phaseRotor c s d B * B = c • B + s • polePlus d B := by
+  have hPp_B : polePlus d B * B = 0 := by unfold polePlus; rw [mul_assoc, h.B_sq, mul_zero]
+  have hPm_B : poleMinus d B * B = B := h.BdB
+  have hDelta_B : carrierSupport d B * B = B := by
+    unfold carrierSupport; rw [add_mul, hPp_B, hPm_B, zero_add]
+  have hP0_B : zeroModeSupport d B * B = 0 := by
+    unfold zeroModeSupport; rw [sub_mul, one_mul, hDelta_B, sub_self]
+  have hJ_B : wheelGenerator d B * B = polePlus d B := by
+    unfold wheelGenerator polePlus; rw [sub_mul, h.B_sq, sub_zero]
+  unfold phaseRotor
+  rw [add_mul, add_mul, smul_mul_assoc, smul_mul_assoc, hP0_B, hDelta_B, hJ_B, zero_add]
+
+end NoncommRotor
+
+section CommRotor
+variable {R : Type*} [CommRing R] [Algebra R A]
+
+lemma movingPolePlus_eq {d B : A} (h : IsDualSeedPair d B) (c s : R) :
+    movingPolePlus c s d B =
+      (c * c) • polePlus d B + (s * s) • poleMinus d B -
+      (c * s) • transitionVelocity d B := by
+  unfold movingPolePlus
+  rw [phaseRotor_mul_polePlus h c s, sub_mul, smul_mul_assoc, smul_mul_assoc,
+      polePlus_mul_phaseRotor_neg h c s, B_mul_phaseRotor_neg h c s,
+      smul_sub, smul_sub, smul_smul, smul_smul, smul_smul, smul_smul,
+      mul_comm s c]
+  unfold transitionVelocity
+  rw [smul_add]
+  abel
+
+/-- **Explicit Moving Projector & Opposite-Seed Growth Formula (`P₊(c, s)`)**:
+    At any rotor parameters `(c, s)`, the rotated pole `P₊(c, s) = R(c, s) P₊ R(c, -s)` is:
+    `P₊(c, s) = (c * c) • P₊ + (s * s) • P₋ - (c * s) • Q₁`.
+    At `c = 0, s = 1`, `P₊(0, 1) = P₋` (the two poles trade places). -/
+theorem movingPolePlus_explicit_formula {d B : A}
+    (h : IsDualSeedPair d B) (c s : R) :
+    movingPolePlus c s d B =
+      (c * c) • polePlus d B + (s * s) • poleMinus d B -
+      (c * s) • transitionVelocity d B ∧
+    movingPolePlus (0 : R) (1 : R) d B = poleMinus d B := by
+  refine ⟨movingPolePlus_eq h c s, ?_⟩
+  rw [movingPolePlus_eq h (0 : R) (1 : R)]
+  simp only [mul_zero, zero_smul, mul_one, one_smul, zero_add, sub_zero]
+
 lemma movingPoleMinus_eq {d B : A} (h : IsDualSeedPair d B) (c s : R) :
     movingPoleMinus c s d B =
       (c * c) • poleMinus d B + (s * s) • polePlus d B +
@@ -455,19 +475,6 @@ theorem movingPoles_sum_eq_carrierSupport {d B : A}
         rw [add_smul, add_smul]; abel
     _ = carrierSupport d B := by
         rw [hcs, one_smul, one_smul]; rfl
-
-lemma phaseRotor_mul_B {d B : A} (h : IsDualSeedPair d B) (c s : R) :
-    phaseRotor c s d B * B = c • B + s • polePlus d B := by
-  have hPp_B : polePlus d B * B = 0 := by unfold polePlus; rw [mul_assoc, h.B_sq, mul_zero]
-  have hPm_B : poleMinus d B * B = B := h.BdB
-  have hDelta_B : carrierSupport d B * B = B := by
-    unfold carrierSupport; rw [add_mul, hPp_B, hPm_B, zero_add]
-  have hP0_B : zeroModeSupport d B * B = 0 := by
-    unfold zeroModeSupport; rw [sub_mul, one_mul, hDelta_B, sub_self]
-  have hJ_B : wheelGenerator d B * B = polePlus d B := by
-    unfold wheelGenerator polePlus; rw [sub_mul, h.B_sq, sub_zero]
-  unfold phaseRotor
-  rw [add_mul, add_mul, smul_mul_assoc, smul_mul_assoc, hP0_B, hDelta_B, hJ_B, zero_add]
 
 lemma phaseRotor_neg_mul_phaseRotor_mul_polePlus {d B : A}
     (h : IsDualSeedPair d B) (c s : R) (hcs : c * c + s * s = 1) :
@@ -614,6 +621,8 @@ theorem movingPolePlus_chordal_square_and_compression {d B : A} (h : IsDualSeedP
         polePlus_idem h, polePlus_idem h, polePlus_mul_poleMinus h, zero_mul,
         h_v_P]
     simp only [smul_zero, add_zero, sub_zero]
+
+end CommRotor
 
 /-!
 ## 5. Node 3: Refutation Boundary (No Turning Without Nilpotent Seeds)

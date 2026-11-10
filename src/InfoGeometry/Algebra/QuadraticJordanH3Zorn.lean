@@ -25,9 +25,9 @@ set_option linter.unusedSectionVars false
 
 namespace InfoGeometry.Algebra
 
-variable (R : Type*) [CommRing R]
+variable (R : Type*) [Ring R]
 
-/-- The coordinate carrier for H₃(𝕆_s) over an arbitrary commutative ring R.
+/-- The coordinate carrier for H₃(𝕆_s) over an arbitrary associative ring R.
 It has the coordinate shape of a 3x3 Hermitian matrix over split octonions:
   [ α₁   a   c* ]
   [ a*   α₂  b  ]
@@ -43,7 +43,7 @@ structure H3Zorn where
 
 namespace H3Zorn
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 @[ext]
 lemma ext_h3 (X Y : H3Zorn R)
@@ -232,14 +232,14 @@ noncomputable def linearTrace (X : H3Zorn R) : R :=
     linearTrace (X + Y) = linearTrace X + linearTrace Y := by
   rw [add_readback]
   simp [linearTrace]
-  ring
+  abel
 
 /-- Homogeneity of the linear H3 trace. -/
 @[simp] theorem linearTrace_smul (r : R) (X : H3Zorn R) :
     linearTrace (r • X) = r * linearTrace X := by
   rw [smul_readback r X]
   simp [linearTrace]
-  ring
+  noncomm_ring
 
 /-- Pairing with the diagonal unit recovers the linear matrix trace. -/
 @[simp] theorem traceBilin_one (X : H3Zorn R) :
@@ -252,14 +252,14 @@ noncomputable def linearTrace (X : H3Zorn R) : R :=
 /-- Pairing with the additive zero vanishes on the left. -/
 @[simp] theorem traceBilin_zero_left (X : H3Zorn R) :
     traceBilin (0 : H3Zorn R) X = 0 := by
-  simp [traceBilin, zero_readback, ZornVectorMatrix.zero_mul,
-    ZornVectorMatrix.trace_zero]
+  simp [traceBilin, zero_readback, ZornVectorMatrix.zero, ZornVectorMatrix.mul,
+    ZornVectorMatrix.conj, ZornVectorMatrix.trace, ZornVec3.dot, ZornVec3.cross]
 
 /-- Pairing with the additive zero vanishes on the right. -/
 @[simp] theorem traceBilin_zero_right (X : H3Zorn R) :
     traceBilin X (0 : H3Zorn R) = 0 := by
-  simp [traceBilin, zero_readback, ZornVectorMatrix.mul_zero,
-    ZornVectorMatrix.trace_zero]
+  simp [traceBilin, zero_readback, ZornVectorMatrix.zero, ZornVectorMatrix.mul,
+    ZornVectorMatrix.conj, ZornVectorMatrix.trace, ZornVec3.dot, ZornVec3.cross]
 
 /-- The standard cubic norm for the displayed Hermitian layout.
 
@@ -277,13 +277,13 @@ noncomputable def normCubic (X : H3Zorn R) : R :=
 /-- The diagonal basepoint has cubic norm one. -/
 @[simp] theorem normCubic_one : normCubic (1 : H3Zorn R) = 1 := by
   change normCubic (H3Zorn.one : H3Zorn R) = 1
-  simp [normCubic, H3Zorn.one, ZornVectorMatrix.zero_mul,
-    ZornVectorMatrix.trace_zero]
+  simp [normCubic, H3Zorn.one, ZornVectorMatrix.zero, ZornVectorMatrix.mul,
+    ZornVectorMatrix.norm, ZornVectorMatrix.trace, ZornVec3.dot, ZornVec3.cross]
 
 /-- The additive zero has cubic norm zero. -/
 @[simp] theorem normCubic_zero : normCubic (0 : H3Zorn R) = 0 := by
-  simp [normCubic, zero_readback, ZornVectorMatrix.mul_zero,
-    ZornVectorMatrix.trace_zero]
+  simp [normCubic, zero_readback, ZornVectorMatrix.zero, ZornVectorMatrix.mul,
+    ZornVectorMatrix.norm, ZornVectorMatrix.trace, ZornVec3.dot, ZornVec3.cross]
 
 /-- The quadratic adjoint `X#` for the displayed Hermitian layout.
 
@@ -308,7 +308,7 @@ noncomputable def adjointQuad (X : H3Zorn R) : H3Zorn R :=
 /-- The quadratic adjoint is homogeneous of degree two.  The proof keeps each
 off-diagonal Zorn entry bundled and uses the composition-algebra operation
 laws, rather than expanding vector coordinates. -/
-theorem adjointQuad_smul (r : R) (X : H3Zorn R) :
+theorem adjointQuad_smul {R : Type*} [CommRing R] (r : R) (X : H3Zorn R) :
     adjointQuad (r • X) = (r ^ 2) • adjointQuad X := by
   rw [smul_readback r X, smul_readback (r ^ 2) (adjointQuad X)]
   apply ext_h3
@@ -338,9 +338,9 @@ theorem adjointQuad_smul (r : R) (X : H3Zorn R) :
 @[simp] theorem adjointQuad_one : adjointQuad (1 : H3Zorn R) = 1 := by
   change adjointQuad (H3Zorn.one : H3Zorn R) = H3Zorn.one
   apply ext_h3
-  · simp [adjointQuad, H3Zorn.one]
-  · simp [adjointQuad, H3Zorn.one]
-  · simp [adjointQuad, H3Zorn.one]
+  · simp [adjointQuad, H3Zorn.one, ZornVectorMatrix.norm, ZornVectorMatrix.zero, ZornVec3.dot]
+  · simp [adjointQuad, H3Zorn.one, ZornVectorMatrix.norm, ZornVectorMatrix.zero, ZornVec3.dot]
+  · simp [adjointQuad, H3Zorn.one, ZornVectorMatrix.norm, ZornVectorMatrix.zero, ZornVec3.dot]
   · ext i <;>
       simp [adjointQuad, H3Zorn.one, ZornVectorMatrix.sub,
         ZornVectorMatrix.add, ZornVectorMatrix.neg, ZornVectorMatrix.smul,
@@ -424,33 +424,30 @@ basepoint is the additive inverse of the original block. -/
 theorem crossProduct_one_a (X : H3Zorn R) :
     (crossProduct X 1).a = ZornVectorMatrix.neg X.a := by
   simp only [crossProduct, sub_readback, adjointQuad, add_readback, one_readback]
-  simp only [ZornVectorMatrix.add_zero, ZornVectorMatrix.conj_zero,
-    ZornVectorMatrix.zero_mul, ZornVectorMatrix.smul_zero]
   ext i <;>
     simp [ZornVectorMatrix.sub, ZornVectorMatrix.add, ZornVectorMatrix.neg,
-      ZornVectorMatrix.smul] <;> ring
+      ZornVectorMatrix.smul, ZornVectorMatrix.zero, ZornVectorMatrix.conj,
+      ZornVectorMatrix.mul, ZornVec3.dot, ZornVec3.cross] <;> noncomm_ring
 
 /-- The second off-diagonal block of the adjoint polarization against the
 basepoint is the additive inverse of the original block. -/
 theorem crossProduct_one_b (X : H3Zorn R) :
     (crossProduct X 1).b = ZornVectorMatrix.neg X.b := by
   simp only [crossProduct, sub_readback, adjointQuad, add_readback, one_readback]
-  simp only [ZornVectorMatrix.add_zero, ZornVectorMatrix.conj_zero,
-    ZornVectorMatrix.zero_mul, ZornVectorMatrix.smul_zero]
   ext i <;>
     simp [ZornVectorMatrix.sub, ZornVectorMatrix.add, ZornVectorMatrix.neg,
-      ZornVectorMatrix.smul] <;> ring
+      ZornVectorMatrix.smul, ZornVectorMatrix.zero, ZornVectorMatrix.conj,
+      ZornVectorMatrix.mul, ZornVec3.dot, ZornVec3.cross] <;> noncomm_ring
 
 /-- The third off-diagonal block of the adjoint polarization against the
 basepoint is the additive inverse of the original block. -/
 theorem crossProduct_one_c (X : H3Zorn R) :
     (crossProduct X 1).c = ZornVectorMatrix.neg X.c := by
   simp only [crossProduct, sub_readback, adjointQuad, add_readback, one_readback]
-  simp only [ZornVectorMatrix.add_zero, ZornVectorMatrix.conj_zero,
-    ZornVectorMatrix.zero_mul, ZornVectorMatrix.smul_zero]
   ext i <;>
     simp [ZornVectorMatrix.sub, ZornVectorMatrix.add, ZornVectorMatrix.neg,
-      ZornVectorMatrix.smul] <;> ring
+      ZornVectorMatrix.smul, ZornVectorMatrix.zero, ZornVectorMatrix.conj,
+      ZornVectorMatrix.mul, ZornVec3.dot, ZornVec3.cross] <;> noncomm_ring
 
 /-- Polarizing the quadratic adjoint against the diagonal basepoint gives the
 standard trace complement `X × 1 = Tr(X) 1 - X` of a cubic Jordan algebra. -/
@@ -460,15 +457,15 @@ standard trace complement `X × 1 = Tr(X) 1 - X` of a cubic Jordan algebra. -/
   · simp [crossProduct, adjointQuad, linearTrace, add_readback, sub_readback,
       smul_readback, one_readback, ZornVectorMatrix.norm,
       ZornVectorMatrix.add, ZornVectorMatrix.zero, ZornVec3.dot]
-    ring
+    noncomm_ring
   · simp [crossProduct, adjointQuad, linearTrace, add_readback, sub_readback,
       smul_readback, one_readback, ZornVectorMatrix.norm,
       ZornVectorMatrix.add, ZornVectorMatrix.zero, ZornVec3.dot]
-    ring
+    noncomm_ring
   · simp [crossProduct, adjointQuad, linearTrace, add_readback, sub_readback,
       smul_readback, one_readback, ZornVectorMatrix.norm,
       ZornVectorMatrix.add, ZornVectorMatrix.zero, ZornVec3.dot]
-    ring
+    noncomm_ring
   · rw [crossProduct_one_a]
     ext i <;> simp [linearTrace, sub_readback, smul_readback, one_readback,
       ZornVectorMatrix.sub, ZornVectorMatrix.add, ZornVectorMatrix.neg,
@@ -485,7 +482,7 @@ standard trace complement `X × 1 = Tr(X) 1 - X` of a cubic Jordan algebra. -/
 /-- Self-polarization of the quadratic adjoint. With
 `X × Y = (X + Y)# - X# - Y#`, quadratic homogeneity gives
 `X × X = 2 X#`. -/
-@[simp] theorem crossProduct_self (X : H3Zorn R) :
+@[simp] theorem crossProduct_self {R : Type*} [CommRing R] (X : H3Zorn R) :
     crossProduct X X = (2 : R) • adjointQuad X := by
   rw [crossProduct, show X + X = (2 : R) • X by module,
     adjointQuad_smul]
@@ -538,10 +535,11 @@ noncomputable def diagCartan (lam₁ lam₂ lam₃ : R) : H3Zorn R :=
 @[simp] theorem traceBilin_diagCartan_left (lam₁ lam₂ lam₃ : R) (Y : H3Zorn R) :
     traceBilin (diagCartan lam₁ lam₂ lam₃) Y =
       lam₁ * Y.α₁ + lam₂ * Y.α₂ + lam₃ * Y.α₃ := by
-  simp [traceBilin, diagCartan, ZornVectorMatrix.zero_mul, ZornVectorMatrix.trace_zero]
+  simp [traceBilin, diagCartan, ZornVectorMatrix.zero, ZornVectorMatrix.mul,
+    ZornVectorMatrix.conj, ZornVectorMatrix.trace, ZornVec3.dot, ZornVec3.cross]
 
 /-- Freudenthal cross product against a diagonal Cartan kernel in `H3Zorn R`. -/
-@[simp] theorem crossProduct_diagCartan_left (d₁ d₂ d₃ : R) (Y : H3Zorn R) :
+@[simp] theorem crossProduct_diagCartan_left {R : Type*} [CommRing R] (d₁ d₂ d₃ : R) (Y : H3Zorn R) :
     crossProduct (diagCartan d₁ d₂ d₃) Y =
       { α₁ := d₂ * Y.α₃ + d₃ * Y.α₂
         α₂ := d₁ * Y.α₃ + d₃ * Y.α₁
@@ -579,7 +577,7 @@ noncomputable def diagCartan (lam₁ lam₂ lam₃ : R) : H3Zorn R :=
     - **Exact 27D Quadratic Jordan Laplace–Mellin Semigroup Law**:
       `U (diagCartan lam₁ lam₂ lam₃) (U (diagCartan mu₁ mu₂ mu₃) X) = U (diagCartan (lam₁ * mu₁) (lam₂ * mu₂) (lam₃ * mu₃)) X`! -/
 theorem diagCartan_quadratic_U_peirce_laplace_mellin_and_semigroup
-    (lam₁ lam₂ lam₃ mu₁ mu₂ mu₃ : R) (X : H3Zorn R) :
+    {R : Type*} [CommRing R] (lam₁ lam₂ lam₃ mu₁ mu₂ mu₃ : R) (X : H3Zorn R) :
     adjointQuad (diagCartan lam₁ lam₂ lam₃) =
       diagCartan (lam₂ * lam₃) (lam₁ * lam₃) (lam₁ * lam₂) ∧
     normCubic (diagCartan lam₁ lam₂ lam₃) = lam₁ * lam₂ * lam₃ ∧

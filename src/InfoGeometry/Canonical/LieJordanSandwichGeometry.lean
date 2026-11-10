@@ -85,7 +85,7 @@ theorem trace_sandwich_sum (u v x : Matrix n n R) :
     rw [Matrix.trace_mul_comm (v * x) u, ← mul_assoc]
   rw [huv, hvu, add_comm]
 
-theorem sandwich_sum_one [DecidableEq n] (u v : Matrix n n R) :
+theorem sandwich_sum_one {R n : Type*} [Ring R] [Fintype n] [DecidableEq n] (u v : Matrix n n R) :
     u * 1 * v + v * 1 * u = u * v + v * u := by
   simp only [mul_one]
 

@@ -92,27 +92,24 @@ theorem peirce_alternating_transition_cubic_neutral {P : B}
   simp only [cyclicCommutatorTriple, comm, invS, qgtPlus, conePlus, coneMinus]
   peirce_nf hP
 
-/-- Causal synthesis: associativity supplies the alternating cubic, repeated
-inputs vanish, and the Peirce transition construction places the result in the
-neutral positive-sheet corner. -/
-theorem peirce_alternating_cubic_synthesis {P : B} (hP : P * P = P)
-    (A₁ C₁ A₂ C₂ A₃ C₃ : B) :
-    cyclicCommutatorTriple (qgtPlus P A₁ C₁) (qgtPlus P A₂ C₂)
-        (qgtPlus P A₃ C₃) =
-      alternatingProduct3 (qgtPlus P A₁ C₁) (qgtPlus P A₂ C₂)
-        (qgtPlus P A₃ C₃) ∧
-    alternatingProduct3 (qgtPlus P A₁ C₁) (qgtPlus P A₁ C₁)
-        (qgtPlus P A₃ C₃) = 0 ∧
-    P * cyclicCommutatorTriple (qgtPlus P A₁ C₁) (qgtPlus P A₂ C₂)
-        (qgtPlus P A₃ C₃) * P =
-      cyclicCommutatorTriple (qgtPlus P A₁ C₁) (qgtPlus P A₂ C₂)
-        (qgtPlus P A₃ C₃) ∧
-    comm (invS P)
-      (cyclicCommutatorTriple (qgtPlus P A₁ C₁) (qgtPlus P A₂ C₂)
-        (qgtPlus P A₃ C₃)) = 0 := by
-  exact ⟨cyclicCommutatorTriple_eq_alternatingProduct3 _ _ _,
-    alternatingProduct3_repeat_left _ _,
-    peirce_alternating_transition_cubic_support hP _ _ _ _ _ _,
-    peirce_alternating_transition_cubic_neutral hP _ _ _ _ _ _⟩
+/-- Reversing the last two transition links negates the oriented cubic while
+keeping it in the same Peirce corner. This is the corner-valued orientation
+law for three noncommuting transitions. -/
+theorem peirce_alternating_transition_cubic_orientation {P : B}
+    (hP : P * P = P) (A₁ C₁ A₂ C₂ A₃ C₃ : B) :
+    P * cyclicCommutatorTriple (qgtPlus P A₁ C₁) (qgtPlus P A₃ C₃)
+        (qgtPlus P A₂ C₂) * P =
+      -cyclicCommutatorTriple (qgtPlus P A₁ C₁) (qgtPlus P A₂ C₂)
+        (qgtPlus P A₃ C₃) := by
+  rw [peirce_alternating_transition_cubic_support hP]
+  calc
+    cyclicCommutatorTriple (qgtPlus P A₁ C₁) (qgtPlus P A₃ C₃)
+        (qgtPlus P A₂ C₂) =
+      alternatingProduct3 (qgtPlus P A₁ C₁) (qgtPlus P A₃ C₃)
+        (qgtPlus P A₂ C₂) := cyclicCommutatorTriple_eq_alternatingProduct3 _ _ _
+    _ = -alternatingProduct3 (qgtPlus P A₁ C₁) (qgtPlus P A₂ C₂)
+        (qgtPlus P A₃ C₃) := alternatingProduct3_swap_right _ _ _
+    _ = -cyclicCommutatorTriple (qgtPlus P A₁ C₁) (qgtPlus P A₂ C₂)
+        (qgtPlus P A₃ C₃) := by rw [cyclicCommutatorTriple_eq_alternatingProduct3]
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine

@@ -321,19 +321,19 @@ theorem einstein_cartan_sciama_kibble_contortion_spin_locking
 
 /-- Grade-$0$ internal gauge/Riemannian curvature component
 $F(\Omega_0) = d\Omega_0 + \frac{1}{2}[\Omega_0 \wedge \Omega_0]$ of a 5-graded Maurer–Cartan jet. -/
-def grade0SpinConnectionCurvature {R : Type*} [CommRing R]
+def grade0SpinConnectionCurvature {R : Type*} [Ring R]
     (J : FiveGradedMaurerCartanJet R) : R :=
   J.dOmega_0 + J.br_0_0_half
 
 /-- Grade-$-1$ covariant spin-frame exterior derivative
 $\mathcal{D}_{\Omega_0}\Omega_{-1} = d\Omega_{-1} + [\Omega_0 \wedge \Omega_{-1}]$. -/
-def gradeM1CovariantSpinDerivative {R : Type*} [CommRing R]
+def gradeM1CovariantSpinDerivative {R : Type*} [Ring R]
     (J : FiveGradedMaurerCartanJet R) : R :=
   J.dOmega_m1 + J.br_0_m1
 
 /-- Grade-$+1$ covariant dual-spin exterior derivative
 $\mathcal{D}_{\Omega_0}\Omega_{+1} = d\Omega_{+1} + [\Omega_0 \wedge \Omega_{+1}]$. -/
-def gradeP1CovariantSpinDerivative {R : Type*} [CommRing R]
+def gradeP1CovariantSpinDerivative {R : Type*} [Ring R]
     (J : FiveGradedMaurerCartanJet R) : R :=
   J.dOmega_p1 + J.br_0_p1
 
@@ -360,7 +360,7 @@ In any flat 5-graded Maurer–Cartan super-connection (`h_flat : mcCurvatureTowe
    nilpotent ($e_+^2 = 0$, $e_-^2 = 0$), while their Lie commutator $[e_+, e_-]$ equals the
    exact Grade-$0$ Cartan–Hestenes boost bivector spin connection `cl11BoostBivector` ($e_{01}$). -/
 theorem maurer_cartan_spin_and_spin_connection_unification
-    {R : Type*} [CommRing R] (J : FiveGradedMaurerCartanJet R)
+    {R : Type*} [Ring R] (J : FiveGradedMaurerCartanJet R)
     (h_flat : mcCurvatureTower J = (0, 0, 0, 0, 0))
     (h_contact : J.br_m2_p2 = 0) :
     (grade0SpinConnectionCurvature J = -(J.br_m1_p1 + J.br_m2_p2) ∧

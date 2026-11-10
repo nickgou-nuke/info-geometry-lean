@@ -39,7 +39,7 @@ namespace InfoGeometry.Physics.VoigtConformalFactor
 open Finset
 open scoped Matrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The Minkowski form `η = diag(1,1,1,−1)` (Pauli §4 Eq. (2), time slot last). -/
 def eta : Matrix (Fin 4) (Fin 4) R :=
@@ -95,7 +95,7 @@ theorem voigt_conformal (b r : R) (hr : r * r + b * b = 1) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [sum_fin4, eta, voigt, Matrix.transpose_apply, Matrix.mul_apply,
-      Matrix.smul_apply, smul_eq_mul, hbm] <;> ring
+      Matrix.smul_apply, smul_eq_mul, hbm] <;> noncomm_ring
 
 /-- **Voigt = boost minus the dilation** (verbatim Pauli fn. 12 remark). -/
 theorem boost_eq_smul_voigt (b g r : R) (hg : g * r = 1) :
@@ -105,7 +105,7 @@ theorem boost_eq_smul_voigt (b g r : R) (hg : g * r = 1) :
     simp [boost, voigt, Matrix.smul_apply, smul_eq_mul, hg]
 
 /-- **Boost isometry** (Pauli §4 Eqs. (I)/(II) with Eq. (8)). -/
-theorem boost_isometric (b g r : R) (hr : r * r + b * b = 1) (hg : g * r = 1) :
+theorem boost_isometric {R : Type*} [CommRing R] (b g r : R) (hr : r * r + b * b = 1) (hg : g * r = 1) :
     (boost b g)ᵀ * eta * boost b g = eta := by
   have hgg : g * g * (r * r) = 1 := by
     have h1 : (g * r) * (g * r) = 1 := by simp only [hg, one_mul]
@@ -139,10 +139,10 @@ theorem voigt_roundtrip_conformal (b r : R) (hr : r * r + b * b = 1) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [sum_fin4, voigt, Matrix.mul_apply, Matrix.smul_apply, smul_eq_mul,
-      hbm] <;> ring
+      hbm] <;> noncomm_ring
 
 /-- Resolved boost round trip (the closed `κ(b)κ(−b) = 1` group identity). -/
-theorem boost_roundtrip (b g r : R) (hr : r * r + b * b = 1) (hg : g * r = 1) :
+theorem boost_roundtrip {R : Type*} [CommRing R] (b g r : R) (hr : r * r + b * b = 1) (hg : g * r = 1) :
     boost b g * boost (-b) g = (1 : Matrix (Fin 4) (Fin 4) R) := by
   have hgg : g * g * (r * r) = 1 := by
     have h1 : (g * r) * (g * r) = 1 := by simp only [hg, one_mul]

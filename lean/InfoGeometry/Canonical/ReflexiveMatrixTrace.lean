@@ -16,7 +16,8 @@ import Mathlib.LinearAlgebra.Matrix.Trace
 determined by the trace of either diagonal support. No positivity is used. -/
 namespace InfoGeometry.Canonical.ReflexiveNilpotentFlows
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+section RingScalars
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
 variable (τ : A →ₗ[R] R) (hτ : ∀ x y : A, τ (x * y) = τ (y * x))
 variable {d B : A}
 include hτ
@@ -27,6 +28,21 @@ theorem trace_reflexive_square_zero (hd : d * d = 0) (hr : d * B * d = d) :
     τ d = τ ((d * B) * d) := congrArg τ hr.symm
     _ = τ (d * (d * B)) := hτ _ _
     _ = 0 := by rw [← mul_assoc, hd, zero_mul, map_zero]
+
+theorem trace_pair_support_scale (hfull : support d B = 1) :
+    2 * τ (d * B) = τ (1 : A) := by
+  calc
+    2 * τ (d * B) = τ (d * B) + τ (B * d) := by rw [hτ B d, ← two_mul]
+    _ = τ (support d B) := by rw [support, map_add]
+    _ = τ (1 : A) := congrArg τ hfull
+
+end RingScalars
+
+section CommScalars
+variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable (τ : A →ₗ[R] R) (hτ : ∀ x y : A, τ (x * y) = τ (y * x))
+variable {d B : A}
+include hτ
 
 theorem trace_pairMatrixLinear
     (hd : d * d = 0) (hB : B * B = 0)
@@ -49,11 +65,6 @@ theorem trace_pairMatrixLinear_mul
   rw [← pairMatrixLinear_mul hd hB hr hs]
   exact trace_pairMatrixLinear τ hτ hd hB hr hs _
 
-theorem trace_pair_support_scale (hfull : support d B = 1) :
-    2 * τ (d * B) = τ (1 : A) := by
-  calc
-    2 * τ (d * B) = τ (d * B) + τ (B * d) := by rw [hτ B d]; ring
-    _ = τ (support d B) := by rw [support, map_add]
-    _ = τ (1 : A) := congrArg τ hfull
+end CommScalars
 
 end InfoGeometry.Canonical.ReflexiveNilpotentFlows

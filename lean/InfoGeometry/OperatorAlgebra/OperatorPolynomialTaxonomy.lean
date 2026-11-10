@@ -29,17 +29,36 @@ abbrev IsNilpotent (T : End R V) (k : ℕ) : Prop :=
 abbrev IsNPotent (T : End R V) (n : ℕ) : Prop :=
   InfoGeometry.Algebra.CyclotomicOperatorProjectors.IsNPotent T n
 
-theorem isIdempotent_iff_isTwoPotent (T : End R V) :
-    IsIdempotent T ↔ IsNPotent T 2 := by
-  rfl
+theorem complementary_left_operator_resolution (T X : End R V) :
+    T * X + (1 - T) * X = X := by
+  noncomm_ring
+
+theorem complementary_right_operator_resolution (T X : End R V) :
+    X * T + X * (1 - T) = X := by
+  noncomm_ring
 
 theorem isRootOfUnity_one (T : End R V) : IsRootOfUnity T 0 := by
   change T ^ 0 = 1
   exact pow_zero T
 
-theorem isIdempotent_isTwoPotent (T : End R V) (hT : IsIdempotent T) :
-    IsNPotent T 2 := by
-  exact hT
+theorem idempotent_complement_pair (T : End R V) (hT : IsIdempotent T) :
+    IsIdempotent (1 - T) ∧
+    (1 - T) + T = 1 ∧
+    (1 - T) * T = 0 ∧
+    T * (1 - T) = 0 := by
+  have hT' : T * T = T := hT
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · change (1 - T) * (1 - T) = 1 - T
+    simp only [sub_mul, mul_sub, one_mul, mul_one]
+    rw [hT']
+    simp
+  · simp
+  · simp only [sub_mul, one_mul]
+    rw [hT']
+    simp
+  · simp only [mul_sub, mul_one]
+    rw [hT']
+    simp
 
 def nonzeroProjectorOfTwoPotent (T : End R V) : End R V := T
 
@@ -62,9 +81,10 @@ theorem zeroProjectorOfTwoPotent_idempotent
   rw [hT]
   simp
 
-theorem twoPotent_projectors_add (T : End R V) :
-    zeroProjectorOfTwoPotent T + nonzeroProjectorOfTwoPotent T = 1 := by
-  simp [zeroProjectorOfTwoPotent, nonzeroProjectorOfTwoPotent]
+theorem two_complement_four_block_expansion (T X : End R V) :
+    X = T * X * T + T * X * (1 - T) +
+      (1 - T) * X * T + (1 - T) * X * (1 - T) := by
+  noncomm_ring
 
 theorem twoPotent_projectors_orthogonal (T : End R V) (hT : IsNPotent T 2) :
     zeroProjectorOfTwoPotent T * nonzeroProjectorOfTwoPotent T = 0 := by

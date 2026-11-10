@@ -15,8 +15,8 @@ namespace InfoGeometry.Algebra.FiveGradedLieClosureData
 open InfoGeometry.Algebra.FiveGradedTKK
 open InfoGeometry.Algebra.FiveGradedLieAntisymmetry
 
-variable (R L : Type*) [CommRing R]
-variable [LieRing L] [LieAlgebra R L]
+variable (R L : Type*) [Ring R]
+variable [LieRing L] [Module R L]
 
 /-- A homogeneous bracket has the expected sum of weights whenever that sum is
 represented by one of the five declared weights. -/
@@ -28,8 +28,8 @@ structure FiveGradedLieClosure (G : FiveGradedLieData R L) where
 
 namespace ClosureData
 
-variable {R L : Type*} [CommRing R]
-variable [LieRing L] [LieAlgebra R L]
+variable {R L : Type*} [Ring R]
+variable [LieRing L] [Module R L]
 variable {G : FiveGradedLieData R L}
 
 theorem bracket_mem_of_weight_sum

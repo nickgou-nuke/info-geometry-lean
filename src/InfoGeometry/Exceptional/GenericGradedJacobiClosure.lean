@@ -31,6 +31,106 @@ namespace InfoGeometry.Exceptional
 
 open BigOperators
 
+section NoncommutativeBiadditive
+
+variable {R V : Type*} [Ring R] [AddCommGroup V] [Module R V]
+variable (B : V →+ V →+ V)
+
+/-- Non-commutative operator-algebra Leibniz defect of a bi-additive bracket over `[Ring R]`:
+    $\Delta(x, y, z) = [x, [y, z]] - [[x, y], z] - [y, [x, z]]$. -/
+def leibnizDefectAdd (x y z : V) : V :=
+  B x (B y z) - B (B x y) z - B y (B x z)
+
+@[simp]
+theorem leibnizDefectAdd_add_left (x₁ x₂ y z : V) :
+    leibnizDefectAdd B (x₁ + x₂) y z = leibnizDefectAdd B x₁ y z + leibnizDefectAdd B x₂ y z := by
+  dsimp [leibnizDefectAdd]
+  simp only [map_add, AddMonoidHom.add_apply]
+  abel
+
+@[simp]
+theorem leibnizDefectAdd_add_mid (x y₁ y₂ z : V) :
+    leibnizDefectAdd B x (y₁ + y₂) z = leibnizDefectAdd B x y₁ z + leibnizDefectAdd B x y₂ z := by
+  dsimp [leibnizDefectAdd]
+  simp only [map_add, AddMonoidHom.add_apply]
+  abel
+
+@[simp]
+theorem leibnizDefectAdd_add_right (x y z₁ z₂ : V) :
+    leibnizDefectAdd B x y (z₁ + z₂) = leibnizDefectAdd B x y z₁ + leibnizDefectAdd B x y z₂ := by
+  dsimp [leibnizDefectAdd]
+  simp only [map_add, AddMonoidHom.add_apply]
+  abel
+
+@[simp]
+theorem leibnizDefectAdd_zero_left (y z : V) : leibnizDefectAdd B 0 y z = 0 := by
+  dsimp [leibnizDefectAdd]
+  simp only [map_zero, AddMonoidHom.zero_apply, sub_zero]
+
+@[simp]
+theorem leibnizDefectAdd_zero_mid (x z : V) : leibnizDefectAdd B x 0 z = 0 := by
+  dsimp [leibnizDefectAdd]
+  simp only [map_zero, AddMonoidHom.zero_apply, sub_zero]
+
+@[simp]
+theorem leibnizDefectAdd_zero_right (x y : V) : leibnizDefectAdd B x y 0 = 0 := by
+  dsimp [leibnizDefectAdd]
+  simp only [map_zero, AddMonoidHom.zero_apply, sub_zero]
+
+theorem leibnizDefectAdd_sum_left {ι : Type*} (s : Finset ι) (f : ι → V) (y z : V) :
+    leibnizDefectAdd B (∑ i ∈ s, f i) y z = ∑ i ∈ s, leibnizDefectAdd B (f i) y z := by
+  classical
+  induction s using Finset.induction with
+  | empty => simp [leibnizDefectAdd_zero_left]
+  | @insert a s ha ih => simp [Finset.sum_insert ha, leibnizDefectAdd_add_left, ih]
+
+theorem leibnizDefectAdd_sum_mid {ι : Type*} (s : Finset ι) (x : V) (g : ι → V) (z : V) :
+    leibnizDefectAdd B x (∑ j ∈ s, g j) z = ∑ j ∈ s, leibnizDefectAdd B x (g j) z := by
+  classical
+  induction s using Finset.induction with
+  | empty => simp [leibnizDefectAdd_zero_mid]
+  | @insert a s ha ih => simp [Finset.sum_insert ha, leibnizDefectAdd_add_mid, ih]
+
+theorem leibnizDefectAdd_sum_right {ι : Type*} (s : Finset ι) (x y : V) (h : ι → V) :
+    leibnizDefectAdd B x y (∑ k ∈ s, h k) = ∑ k ∈ s, leibnizDefectAdd B x y (h k) := by
+  classical
+  induction s using Finset.induction with
+  | empty => simp [leibnizDefectAdd_zero_right]
+  | @insert a s ha ih => simp [Finset.sum_insert ha, leibnizDefectAdd_add_right, ih]
+
+variable {ι : Type*} [Fintype ι]
+
+/-- Global Leibniz defect over any `[Ring R]` expands as the triple sum of cell defects. -/
+theorem leibnizDefectAdd_decompose
+    (P : ι → V →ₗ[R] V) (hP : ∀ x : V, (∑ i : ι, P i x) = x)
+    (x y z : V) :
+    leibnizDefectAdd B x y z =
+      ∑ i : ι, ∑ j : ι, ∑ k : ι, leibnizDefectAdd B (P i x) (P j y) (P k z) := by
+  have hx : x = ∑ i : ι, P i x := (hP x).symm
+  have hy : y = ∑ j : ι, P j y := (hP y).symm
+  have hz : z = ∑ k : ι, P k z := (hP z).symm
+  nth_rw 1 [hx]
+  rw [leibnizDefectAdd_sum_left B Finset.univ (fun i => P i x) y z]
+  apply Finset.sum_congr rfl
+  intro i _
+  nth_rw 1 [hy]
+  rw [leibnizDefectAdd_sum_mid B Finset.univ (P i x) (fun j => P j y) z]
+  apply Finset.sum_congr rfl
+  intro j _
+  nth_rw 1 [hz]
+  rw [leibnizDefectAdd_sum_right B Finset.univ (P i x) (P j y) (fun k => P k z)]
+
+/-- Vanishing of all homogeneous cells over `[Ring R]` implies the global Leibniz identity. -/
+theorem global_leibniz_of_homogeneous_add
+    (P : ι → V →ₗ[R] V) (hP : ∀ x : V, (∑ i : ι, P i x) = x)
+    (h_cells : ∀ (i j k : ι) (x y z : V), leibnizDefectAdd B (P i x) (P j y) (P k z) = 0)
+    (x y z : V) :
+    leibnizDefectAdd B x y z = 0 := by
+  rw [leibnizDefectAdd_decompose B P hP x y z]
+  simp only [h_cells, Finset.sum_const_zero]
+
+end NoncommutativeBiadditive
+
 variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
 variable (B : V →ₗ[R] V →ₗ[R] V)
 

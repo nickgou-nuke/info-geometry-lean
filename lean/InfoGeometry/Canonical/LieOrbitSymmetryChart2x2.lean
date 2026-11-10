@@ -18,12 +18,14 @@ abbrev M2 (R : Type*) := Matrix (Fin 2) (Fin 2) R
 
 section
 
-variable {R : Type*} [Field R]
+variable {R : Type*}
 
 /-- Diagonal seed with eigenvalues `a,b`. -/
-def diag₂ (a b : R) : M2 R :=
+def diag₂ [Zero R] (a b : R) : M2 R :=
   !![a, 0;
      0, b]
+
+variable [CommRing R] [IsDomain R]
 
 theorem commute_diag₂_offdiag_zero
     (a b : R) (hab : a ≠ b) (X : M2 R)

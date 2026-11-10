@@ -3,6 +3,7 @@
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.ZornMatrix
 
 /-!
@@ -44,7 +45,7 @@ open InfoGeometry.Algebra.ZornMatrix
 
 namespace InfoGeometry.Nuclear.NambuGorkov
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ## 1. The 4 Witt Planes and Generators -/
 
@@ -171,7 +172,7 @@ theorem tau3_tau1_anticommute (i : Fin 3) :
 /-! ## 4. Nambu-Gorkov Quasiparticle Carrier and Zorn Matrix Lift -/
 
 /-- The Nambu-Gorkov nuclear pairing carrier: single-particle energy $\xi$ and pairing gap vector $\vec{\Delta}$. -/
-structure NambuGorkovCarrier (R : Type*) [CommRing R] where
+structure NambuGorkovCarrier (R : Type*) [Ring R] where
   xi : R
   delta : Vec3 R
 
@@ -232,7 +233,7 @@ theorem toZorn_coordEquiv (N : NambuGorkovCarrier R) :
 @[simp] theorem nambu_gorkov_traceless (N : NambuGorkovCarrier R) :
     zornTrace (toZorn N) = 0 := by
   dsimp [zornTrace, toZorn]
-  ring
+  abel
 
 /-- 🏆 THEOREM: Linear expansion of the Nambu-Gorkov state into the 4 Witt planes. -/
 theorem toZorn_eq_witt_expansion (N : NambuGorkovCarrier R) :
@@ -247,23 +248,23 @@ theorem toZorn_eq_witt_expansion (N : NambuGorkovCarrier R) :
   rw [hrw]
   ext j
   · dsimp [toZorn, add, sub, smul, E11, E22, U, V]
-    ring
+    simp
   · fin_cases j <;> {
       dsimp [toZorn, add, sub, smul, E11, E22, U, V, Vec3.add, Vec3.sub, Vec3.smul, Vec3.basis]
-      ring
+      simp
     }
   · fin_cases j <;> {
       dsimp [toZorn, add, sub, smul, E11, E22, U, V, Vec3.add, Vec3.sub, Vec3.smul, Vec3.basis]
-      ring
+      simp
     }
   · dsimp [toZorn, add, sub, smul, E11, E22, U, V]
-    ring
+    simp
 
 /-- 🏆 THEOREM: The Zorn reduced norm of the Nambu-Gorkov state gives the negative squared dispersion. -/
 theorem nambu_gorkov_zornNorm (N : NambuGorkovCarrier R) :
     zornNorm (toZorn N) = - (N.xi ^ 2 + Vec3.dot N.delta N.delta) := by
   dsimp [zornNorm, toZorn]
-  ring
+  noncomm_ring
 
 /-! ## 5. Real Bogoliubov Quasiparticle Spectrum -/
 

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 set_option autoImplicit false
@@ -35,23 +36,23 @@ def smulMonomial (c : ℝ) (M : MonomialLabel) : MonomialLabel where
   exp := c * M.exp
 
 /-- Split `2×2` symmetric-coordinate packet with coordinates `(t,x,z)`. -/
-structure SymmState2x2 (R : Type*) [CommRing R] where
+structure SymmState2x2 (R : Type*) [Ring R] where
   t : R
   x : R
   z : R
 
 /-- Uniform scalar scaling of a split `2×2` coordinate packet. -/
-def smulState {R : Type*} [CommRing R] (c : R) (S : SymmState2x2 R) : SymmState2x2 R where
+def smulState {R : Type*} [Ring R] (c : R) (S : SymmState2x2 R) : SymmState2x2 R where
   t := c * S.t
   x := c * S.x
   z := c * S.z
 
 /-- The trace-style linear readout `2t`. -/
-def trace2 {R : Type*} [CommRing R] (S : SymmState2x2 R) : R :=
+def trace2 {R : Type*} [Ring R] (S : SymmState2x2 R) : R :=
   S.t + S.t
 
 /-- The split quadratic determinant-style readout `t² - x² - z²`. -/
-def det2 {R : Type*} [CommRing R] (S : SymmState2x2 R) : R :=
+def det2 {R : Type*} [Ring R] (S : SymmState2x2 R) : R :=
   S.t * S.t - S.x * S.x - S.z * S.z
 
 /-- The finite coordinate map `(coeff, exp) ↦ (coeff, exp, 0)`. -/
@@ -81,10 +82,10 @@ theorem det2_monomialToState (M : MonomialLabel) :
   ring
 
 /-- The trace-style readout scales linearly under uniform state scaling. -/
-theorem trace2_smul {R : Type*} [CommRing R] (c : R) (S : SymmState2x2 R) :
+theorem trace2_smul {R : Type*} [Ring R] (c : R) (S : SymmState2x2 R) :
     trace2 (smulState c S) = c * trace2 S := by
   unfold trace2 smulState
-  ring
+  noncomm_ring
 
 /-- The determinant-style readout scales quadratically under uniform state scaling. -/
 theorem det2_smul {R : Type*} [CommRing R] (c : R) (S : SymmState2x2 R) :

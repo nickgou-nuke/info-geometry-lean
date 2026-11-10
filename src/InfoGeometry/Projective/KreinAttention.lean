@@ -19,7 +19,7 @@ Specifically, it mathematically encodes the realization that:
 
 namespace InfoGeometry.Projective.LLM
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- 
 The Fundamental Symmetry (Modular Conjugation J).

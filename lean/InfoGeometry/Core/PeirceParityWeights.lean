@@ -150,10 +150,7 @@ theorem one_pair_mix_square_noncomm_anomaly (h : IsDualSeedPair d b) (u v : R) :
     abel <;> simp [add_smul]
   exact h₉
 
-end Noncomm
-
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A] {d b : A}
-
+omit [IsScalarTower R A A] in
 /-- Traciality derives equal support traces; it is not a separate supplied equality. -/
 theorem trace_weights (h : IsDualSeedPair d b)
     (τ : A →ₗ[R] R) (hτ : ∀ x y, τ (x * y) = τ (y * x)) (x y : R) :
@@ -163,10 +160,14 @@ theorem trace_weights (h : IsDualSeedPair d b)
   have he : τ (poleMinus d b) = τ (polePlus d b) := hτ b d
   constructor
   · simp only [diagonalWeight, map_add, map_smul, smul_eq_mul, he]
-    ring
+    noncomm_ring
   · rw [grading_weight h]
     simp only [map_sub, map_smul, smul_eq_mul, he]
-    ring
+    noncomm_ring
+
+end Noncomm
+
+variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A] {d b : A}
 
 /-- A hyperbolic weight convention does not supply unit trace. -/
 theorem hyperbolic_trace {A : Type*} [Ring A] [Algebra ℝ A] {d b : A}

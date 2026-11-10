@@ -59,7 +59,7 @@ open Matrix
 universe u_V u_E u_R
 
 variable {V : Type u_V} {E : Type u_E} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-variable {R : Type u_R} [CommRing R]
+variable {R : Type u_R} [Ring R]
 
 /-! ### Section 1: Finite Graph Complex & Discrete Hodge-Dirac Operator -/
 
@@ -71,7 +71,7 @@ def edgeLaplacian (B : Matrix E V R) : Matrix E E R := B * Bᵀ
 
 /-- Trace equality across node and edge Laplacians (via trace cyclicity):
     $\operatorname{Tr}(\Delta_0) = \operatorname{Tr}(\Delta_1)$. -/
-theorem laplacian_trace_eq (B : Matrix E V R) :
+theorem laplacian_trace_eq {R : Type u_R} [CommRing R] (B : Matrix E V R) :
     Matrix.trace (nodeLaplacian B) = Matrix.trace (edgeLaplacian B) := by
   dsimp [nodeLaplacian, edgeLaplacian]
   exact Matrix.trace_mul_comm Bᵀ B
@@ -432,15 +432,15 @@ theorem colimit_dirac_anticomm_chiral (B : Matrix E V R) (m : ℕ) :
 structure GraphHodgeDiracColimitCertificate : Prop where
   dirac_sq_eq_block_laplacian :
     ∀ (V E : Type u_V) [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-      (R : Type u_R) [CommRing R] (B : Matrix E V R),
+      (R : Type u_R) [Ring R] (B : Matrix E V R),
       graphDirac B * graphDirac B = Matrix.fromBlocks (nodeLaplacian B) 0 0 (edgeLaplacian B)
   chiral_gamma_involution :
     ∀ (V E : Type u_V) [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-      (R : Type u_R) [CommRing R],
+      (R : Type u_R) [Ring R],
       (chiralGamma : Matrix (V ⊕ E) (V ⊕ E) R) * chiralGamma = 1
   dirac_chiral_anticommutation :
     ∀ (V E : Type u_V) [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-      (R : Type u_R) [CommRing R] (B : Matrix E V R),
+      (R : Type u_R) [Ring R] (B : Matrix E V R),
       graphDirac B * chiralGamma + chiralGamma * graphDirac B = 0
   laplacian_trace_equality :
     ∀ (V E : Type u_V) [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
@@ -450,112 +450,112 @@ structure GraphHodgeDiracColimitCertificate : Prop where
     ∀ (V1 E1 V2 E2 : Type u_V)
       [DecidableEq V1] [Fintype V1] [DecidableEq E1] [Fintype E1]
       [DecidableEq V2] [Fintype V2] [DecidableEq E2] [Fintype E2]
-      (R : Type u_R) [CommRing R] (B1 : Matrix E1 V1 R) (B2 : Matrix E2 V2 R),
+      (R : Type u_R) [Ring R] (B1 : Matrix E1 V1 R) (B2 : Matrix E2 V2 R),
       (directSumIncidence B1 B2)ᵀ * (directSumIncidence B1 B2) =
       Matrix.fromBlocks (B1ᵀ * B1) 0 0 (B2ᵀ * B2)
   edge_laplacian_direct_sum_split :
     ∀ (V1 E1 V2 E2 : Type u_V)
       [DecidableEq V1] [Fintype V1] [DecidableEq E1] [Fintype E1]
       [DecidableEq V2] [Fintype V2] [DecidableEq E2] [Fintype E2]
-      (R : Type u_R) [CommRing R] (B1 : Matrix E1 V1 R) (B2 : Matrix E2 V2 R),
+      (R : Type u_R) [Ring R] (B1 : Matrix E1 V1 R) (B2 : Matrix E2 V2 R),
       (directSumIncidence B1 B2) * (directSumIncidence B1 B2)ᵀ =
       Matrix.fromBlocks (B1 * B1ᵀ) 0 0 (B2 * B2ᵀ)
   trace_node_laplacian_direct_sum_add :
     ∀ (V1 E1 V2 E2 : Type u_V)
       [DecidableEq V1] [Fintype V1] [DecidableEq E1] [Fintype E1]
       [DecidableEq V2] [Fintype V2] [DecidableEq E2] [Fintype E2]
-      (R : Type u_R) [CommRing R] (B1 : Matrix E1 V1 R) (B2 : Matrix E2 V2 R),
+      (R : Type u_R) [Ring R] (B1 : Matrix E1 V1 R) (B2 : Matrix E2 V2 R),
       Matrix.trace ((directSumIncidence B1 B2)ᵀ * (directSumIncidence B1 B2)) =
       Matrix.trace (B1ᵀ * B1) + Matrix.trace (B2ᵀ * B2)
   trace_edge_laplacian_direct_sum_add :
     ∀ (V1 E1 V2 E2 : Type u_V)
       [DecidableEq V1] [Fintype V1] [DecidableEq E1] [Fintype E1]
       [DecidableEq V2] [Fintype V2] [DecidableEq E2] [Fintype E2]
-      (R : Type u_R) [CommRing R] (B1 : Matrix E1 V1 R) (B2 : Matrix E2 V2 R),
+      (R : Type u_R) [Ring R] (B1 : Matrix E1 V1 R) (B2 : Matrix E2 V2 R),
       Matrix.trace ((directSumIncidence B1 B2) * (directSumIncidence B1 B2)ᵀ) =
       Matrix.trace (B1 * B1ᵀ) + Matrix.trace (B2 * B2ᵀ)
   node_laplacian_extend_zero_split :
     ∀ (V E V_ext E_ext : Type u_V)
       [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
       [DecidableEq V_ext] [Fintype V_ext] [DecidableEq E_ext] [Fintype E_ext]
-      (R : Type u_R) [CommRing R] (B : Matrix E V R),
+      (R : Type u_R) [Ring R] (B : Matrix E V R),
       (extendGraphZero B V_ext E_ext)ᵀ * (extendGraphZero B V_ext E_ext) =
       Matrix.fromBlocks (Bᵀ * B) 0 0 0
   edge_laplacian_extend_zero_split :
     ∀ (V E V_ext E_ext : Type u_V)
       [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
       [DecidableEq V_ext] [Fintype V_ext] [DecidableEq E_ext] [Fintype E_ext]
-      (R : Type u_R) [CommRing R] (B : Matrix E V R),
+      (R : Type u_R) [Ring R] (B : Matrix E V R),
       (extendGraphZero B V_ext E_ext) * (extendGraphZero B V_ext E_ext)ᵀ =
       Matrix.fromBlocks (B * Bᵀ) 0 0 0
   trace_node_laplacian_colimit_invariance :
     ∀ (V E V_ext E_ext : Type u_V)
       [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
       [DecidableEq V_ext] [Fintype V_ext] [DecidableEq E_ext] [Fintype E_ext]
-      (R : Type u_R) [CommRing R] (B : Matrix E V R),
+      (R : Type u_R) [Ring R] (B : Matrix E V R),
       Matrix.trace ((extendGraphZero B V_ext E_ext)ᵀ * (extendGraphZero B V_ext E_ext)) =
       Matrix.trace (Bᵀ * B)
   trace_edge_laplacian_colimit_invariance :
     ∀ (V E V_ext E_ext : Type u_V)
       [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
       [DecidableEq V_ext] [Fintype V_ext] [DecidableEq E_ext] [Fintype E_ext]
-      (R : Type u_R) [CommRing R] (B : Matrix E V R),
+      (R : Type u_R) [Ring R] (B : Matrix E V R),
       Matrix.trace ((extendGraphZero B V_ext E_ext) * (extendGraphZero B V_ext E_ext)ᵀ) =
       Matrix.trace (B * Bᵀ)
   node_laplacian_sq_extend_split :
     ∀ (V E V_ext E_ext : Type u_V)
       [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
       [DecidableEq V_ext] [Fintype V_ext] [DecidableEq E_ext] [Fintype E_ext]
-      (R : Type u_R) [CommRing R] (B : Matrix E V R),
+      (R : Type u_R) [Ring R] (B : Matrix E V R),
       ((extendGraphZero B V_ext E_ext)ᵀ * (extendGraphZero B V_ext E_ext)) ^ 2 =
       Matrix.fromBlocks ((Bᵀ * B) ^ 2) 0 0 0
   trace_node_laplacian_sq_invariance :
     ∀ (V E V_ext E_ext : Type u_V)
       [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
       [DecidableEq V_ext] [Fintype V_ext] [DecidableEq E_ext] [Fintype E_ext]
-      (R : Type u_R) [CommRing R] (B : Matrix E V R),
+      (R : Type u_R) [Ring R] (B : Matrix E V R),
       Matrix.trace (((extendGraphZero B V_ext E_ext)ᵀ * (extendGraphZero B V_ext E_ext)) ^ 2) =
       Matrix.trace ((Bᵀ * B) ^ 2)
   trace_node_laplacian_pow_invariance :
     ∀ (V E V_ext E_ext : Type u_V)
       [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
       [DecidableEq V_ext] [Fintype V_ext] [DecidableEq E_ext] [Fintype E_ext]
-      (R : Type u_R) [CommRing R] (B : Matrix E V R) (k : ℕ),
+      (R : Type u_R) [Ring R] (B : Matrix E V R) (k : ℕ),
       Matrix.trace (((extendGraphZero B V_ext E_ext)ᵀ * (extendGraphZero B V_ext E_ext)) ^ (k + 1)) =
       Matrix.trace ((Bᵀ * B) ^ (k + 1))
   trace_edge_laplacian_pow_invariance :
     ∀ (V E V_ext E_ext : Type u_V)
       [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
       [DecidableEq V_ext] [Fintype V_ext] [DecidableEq E_ext] [Fintype E_ext]
-      (R : Type u_R) [CommRing R] (B : Matrix E V R) (k : ℕ),
+      (R : Type u_R) [Ring R] (B : Matrix E V R) (k : ℕ),
       Matrix.trace (((extendGraphZero B V_ext E_ext) * (extendGraphZero B V_ext E_ext)ᵀ) ^ (k + 1)) =
       Matrix.trace ((B * Bᵀ) ^ (k + 1))
   colimit_chain_trace_node_stabilization :
     ∀ (V V_step : Type u_V) (E E_step : Type u_E)
       [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
       [DecidableEq V_step] [Fintype V_step] [DecidableEq E_step] [Fintype E_step]
-      (R : Type u_R) [CommRing R] (B : Matrix E V R) (m : ℕ),
+      (R : Type u_R) [Ring R] (B : Matrix E V R) (m : ℕ),
       Matrix.trace ((extendChain B V_step E_step m)ᵀ * (extendChain B V_step E_step m)) =
       Matrix.trace (Bᵀ * B)
   colimit_chain_trace_edge_stabilization :
     ∀ (V V_step : Type u_V) (E E_step : Type u_E)
       [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
       [DecidableEq V_step] [Fintype V_step] [DecidableEq E_step] [Fintype E_step]
-      (R : Type u_R) [CommRing R] (B : Matrix E V R) (m : ℕ),
+      (R : Type u_R) [Ring R] (B : Matrix E V R) (m : ℕ),
       Matrix.trace ((extendChain B V_step E_step m) * (extendChain B V_step E_step m)ᵀ) =
       Matrix.trace (B * Bᵀ)
   colimit_chain_higher_casimir_stabilization :
     ∀ (V V_step : Type u_V) (E E_step : Type u_E)
       [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
       [DecidableEq V_step] [Fintype V_step] [DecidableEq E_step] [Fintype E_step]
-      (R : Type u_R) [CommRing R] (B : Matrix E V R) (k m : ℕ),
+      (R : Type u_R) [Ring R] (B : Matrix E V R) (k m : ℕ),
       Matrix.trace (((extendChain B V_step E_step m)ᵀ * (extendChain B V_step E_step m)) ^ (k + 1)) =
       Matrix.trace ((Bᵀ * B) ^ (k + 1))
   colimit_dirac_commutation :
     ∀ (V V_step : Type u_V) (E E_step : Type u_E)
       [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
       [DecidableEq V_step] [Fintype V_step] [DecidableEq E_step] [Fintype E_step]
-      (R : Type u_R) [CommRing R] (B : Matrix E V R) (m : ℕ),
+      (R : Type u_R) [Ring R] (B : Matrix E V R) (m : ℕ),
       graphDirac (extendChain B V_step E_step m) *
         (graphDirac (extendChain B V_step E_step m) * graphDirac (extendChain B V_step E_step m)) =
       (graphDirac (extendChain B V_step E_step m) * graphDirac (extendChain B V_step E_step m)) *

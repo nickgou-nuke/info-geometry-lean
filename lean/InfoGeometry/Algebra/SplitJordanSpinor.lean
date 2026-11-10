@@ -63,7 +63,7 @@ We deliberately use `NonAssocSemiring`, not `Ring`/`Algebra`, so that the
 split-octonionic case is not accidentally forced to be associative.  The only
 multiplicative law required here is the norm-composition identity.
 -/
-class SplitCompositionAlgebra (K A : Type*) [CommRing K] [NonAssocSemiring A] [SMul K A] where
+class SplitCompositionAlgebra (K A : Type*) [Ring K] [NonAssocSemiring A] [SMul K A] where
   /-- Real coordinate dimension `q`; in applications this is `2`, `4`, or `8`. -/
   q : ℕ
   /-- Critical-dimension restriction from the split composition algebra list. -/
@@ -83,7 +83,7 @@ class SplitCompositionAlgebra (K A : Type*) [CommRing K] [NonAssocSemiring A] [S
 
 namespace SplitCompositionAlgebraLemmas
 
-variable {K A : Type*} [CommRing K] [NonAssocSemiring A] [SMul K A]
+variable {K A : Type*} [Ring K] [NonAssocSemiring A] [SMul K A]
 variable [SplitCompositionAlgebra K A]
 
 /-- Local notation-free accessor for conjugation. -/
@@ -124,7 +124,7 @@ structure JordanMatrix2 (K A : Type*) where
 
 namespace JordanMatrix2
 
-variable {K A : Type*} [CommRing K] [NonAssocSemiring A] [SMul K A]
+variable {K A : Type*} [Ring K] [NonAssocSemiring A] [SMul K A]
 variable [SplitCompositionAlgebra K A]
 
 /-- Equation (3.5): determinant/quadratic norm `αβ - N(Z)`. -/

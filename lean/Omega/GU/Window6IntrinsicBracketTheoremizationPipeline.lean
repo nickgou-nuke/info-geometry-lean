@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Omega.GU.Window6BracketUniquenessMixedCertificateReduction
 import Omega.GU.Window6IntrinsicBracketModpLiftCriterion
 
@@ -13,7 +18,7 @@ theorem paper_window6_intrinsic_bracket_theoremization_pipeline
     (C : Omega.TypedAddressBiaxialCompletion.TypedAddressCertificateLoopData)
     (hUnitarySliceLocked : C.unitarySliceLocked)
     (R : TerminalGamma6RigidityData) :
-    (D.intrinsicBracketExistsUnique ↔ D.finiteIntegerSystemHasUniqueSolution) ∧
+    (∀ c, c ∈ D.finiteIntegerSystem → ∀ i k, c i i k = 0) ∧
       (M.uniqueIntegerSolution ∧ M.characteristicZeroExistenceUniqueness) ∧
       (C.repulsionRadiusTendsToOne ↔ C.toeplitzPsdAll) ∧
       (C.toeplitzPsdAll ↔ C.toeplitzPsdCofinal) ∧
@@ -24,3 +29,8 @@ theorem paper_window6_intrinsic_bracket_theoremization_pipeline
   exact ⟨hMixed.1, hModp, hMixed.2.1, hMixed.2.2.1, hMixed.2.2.2⟩
 
 end Omega.GU
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/

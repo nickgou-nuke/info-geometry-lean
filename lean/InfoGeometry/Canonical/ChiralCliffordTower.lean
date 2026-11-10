@@ -11,12 +11,8 @@ set_option linter.unusedSimpArgs false
 
 namespace InfoGeometry.CliffordTower
 
-variable {R : Type*} [CommRing R]
-
-/-! ### 2. The Chiral Tensor Product Cℓ(1, 1)_R ⊗ Cℓ(1, 1)_L ≅ Mat(4, ℝ) -/
-
 /-- Kronecker (tensor) product of two 2x2 matrices into a 4x4 matrix. -/
-def kron2 (A B : Matrix (Fin 2) (Fin 2) R) : Matrix (Fin 4) (Fin 4) R :=
+def kron2 {R : Type*} [Ring R] (A B : Matrix (Fin 2) (Fin 2) R) : Matrix (Fin 4) (Fin 4) R :=
   fun i j =>
     let i_R : Fin 2 := ⟨i.val / 2, by omega⟩
     let i_L : Fin 2 := ⟨i.val % 2, by omega⟩
@@ -24,7 +20,7 @@ def kron2 (A B : Matrix (Fin 2) (Fin 2) R) : Matrix (Fin 4) (Fin 4) R :=
     let j_L : Fin 2 := ⟨j.val % 2, by omega⟩
     A i_R j_R * B i_L j_L
 
-lemma kron2_mul (A₁ A₂ B₁ B₂ : Matrix (Fin 2) (Fin 2) R) :
+lemma kron2_mul {R : Type*} [CommRing R] (A₁ A₂ B₁ B₂ : Matrix (Fin 2) (Fin 2) R) :
     kron2 (A₁ * A₂) (B₁ * B₂) = kron2 A₁ B₁ * kron2 A₂ B₂ := by
   ext i j
   dsimp [kron2, Matrix.mul_apply]

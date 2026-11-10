@@ -7,6 +7,7 @@ import Mathlib.Basic.Real.Basic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Order.Ring.Defs
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.LinearCombination
 
@@ -23,7 +24,7 @@ final-area parameter; the geometric hypotheses remain open closure debt.
 
 namespace InfoGeometry.QuantumGravity.ConnesBousso
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. Finite Two-by-Two Matrix-Coordinate Record -/
 
@@ -37,7 +38,7 @@ structure SheetMatrixCoord2 (R : Type*) where
 
 namespace SheetMatrixCoord2
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zeroOp : SheetMatrixCoord2 R := ⟨0, 0, 0, 0⟩
 
@@ -68,14 +69,14 @@ def connesDiracMatrixModel (D₀ ϕ : R) : SheetMatrixCoord2 R :=
 
 /-- The square of the defined finite matrix has diagonal entries `D₀² + ϕ²`
 and zero off-diagonal entries. -/
-theorem finite_sheet_matrix_square (D₀ ϕ : R) :
+theorem finite_sheet_matrix_square {R : Type*} [CommRing R] (D₀ ϕ : R) :
     mul (connesDiracMatrixModel D₀ ϕ) (connesDiracMatrixModel D₀ ϕ) =
     ⟨D₀^2 + ϕ^2, 0, 0, D₀^2 + ϕ^2⟩ := by
   dsimp [mul, connesDiracMatrixModel]
   ext <;> ring
 
 /-- Trace of the square of the finite matrix-coordinate model. -/
-theorem finite_sheet_matrix_trace_square (D₀ ϕ : R) :
+theorem finite_sheet_matrix_trace_square {R : Type*} [CommRing R] (D₀ ϕ : R) :
     trace (mul (connesDiracMatrixModel D₀ ϕ) (connesDiracMatrixModel D₀ ϕ)) = 2 * (D₀^2 + ϕ^2) := by
   rw [finite_sheet_matrix_square]
   dsimp [trace]
@@ -94,7 +95,7 @@ theorem higgs_vacuum_minima_zero (lam_coupling v_vev : R) :
     spectralHiggsPotential lam_coupling v_vev v_vev = 0 ∧
     spectralHiggsPotential lam_coupling v_vev (-v_vev) = 0 := by
   dsimp [spectralHiggsPotential]
-  constructor <;> ring
+  constructor <;> simp [neg_sq]
 
 /-- The scalar quartic is nonnegative over a linearly ordered ring when its coupling is nonnegative. -/
 theorem spectralHiggsPotential_nonneg [LinearOrder R] [IsStrictOrderedRing R]
@@ -119,7 +120,15 @@ theorem raychaudhuri_scalar_rhs_nonpos [LinearOrder R] [IsStrictOrderedRing R]
   have h1 : 0 ≤ θ^2 := sq_nonneg θ
   have h2 : 0 ≤ σ^2 := sq_nonneg σ
   have h3 : 0 ≤ eight_pi_G * T_kk := mul_nonneg h_G h_nec
-  linarith
+  have h2' : 0 ≤ 2 * σ^2 := mul_nonneg zero_le_two h2
+  have h3' : 0 ≤ 2 * eight_pi_G * T_kk := by
+    rw [mul_assoc]
+    exact mul_nonneg zero_le_two h3
+  have hsum : 0 ≤ θ^2 + 2 * σ^2 + 2 * eight_pi_G * T_kk :=
+    add_nonneg (add_nonneg h1 h2') h3'
+  have heq : - θ^2 - 2 * σ^2 - 2 * eight_pi_G * T_kk = -(θ^2 + 2 * σ^2 + 2 * eight_pi_G * T_kk) := by abel
+  rw [heq]
+  exact neg_nonpos.mpr hsum
 
 /-- Two-segment scalar inequality: given local bounds and a nonnegative remainder,
 the sum of the scalar terms is bounded by the initial scalar area parameter. -/
@@ -129,7 +138,11 @@ theorem two_segment_scalar_bound_transitive [LinearOrder R] [IsStrictOrderedRing
     (h_seg2 : four_G * S₁₂ ≤ A₁ - A₂)
     (h_final_area_nonneg : 0 ≤ A₂) :
     four_G * (S₀₁ + S₁₂) ≤ A₀ := by
-  have h_sum : four_G * (S₀₁ + S₁₂) = four_G * S₀₁ + four_G * S₁₂ := by ring
-  linarith [h_seg1, h_seg2, h_final_area_nonneg]
+  calc four_G * (S₀₁ + S₁₂)
+    _ = four_G * S₀₁ + four_G * S₁₂ := mul_add four_G S₀₁ S₁₂
+    _ ≤ (A₀ - A₁) + (A₁ - A₂) := add_le_add h_seg1 h_seg2
+    _ = A₀ - A₂ := by abel
+    _ ≤ A₀ - 0 := sub_le_sub_left h_final_area_nonneg A₀
+    _ = A₀ := sub_zero A₀
 
 end InfoGeometry.QuantumGravity.ConnesBousso

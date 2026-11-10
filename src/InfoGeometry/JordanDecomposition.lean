@@ -23,7 +23,9 @@ noncomputable section
 
 namespace JordanDecomposition
 
-variable {K : Type*} [Field K] {V : Type*} [AddCommGroup V] [Module K V]
+section Ring
+
+variable {K : Type*} [Ring K] {V : Type*} [AddCommGroup V] [Module K V]
 
 /-! ### Lemma 1: Kernel chain inclusion -/
 
@@ -53,6 +55,12 @@ lemma quotient_well_defined (N : Module.End K V) (j : ℕ) (hj : 1 ≤ j) :
       _ = N 0 := by rw [hx]
       _ = 0 := by simp
   · exact image_ker_succ_sub_ker N j
+
+end Ring
+
+section DivisionRing
+
+variable {K : Type*} [DivisionRing K] {V : Type*} [AddCommGroup V] [Module K V]
 
 /-! ### Lemma 2: Jordan chains are linearly independent -/
 
@@ -108,5 +116,7 @@ lemma chain_linear_independent (N : Module.End K V) {x : V} {j : ℕ}
     rw [h_exp] at h_apply''
     exact (smul_eq_zero.mp h_apply'').resolve_right hx
   intro i; exact hzero i.val i.2
+
+end DivisionRing
 
 end JordanDecomposition

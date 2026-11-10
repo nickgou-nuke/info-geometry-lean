@@ -13,7 +13,7 @@ open Real
 
 noncomputable section
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Commutator of two ring elements. -/
 def commutator (A B : R) : R := A * B - B * A
@@ -93,13 +93,27 @@ theorem bps_rapidity_zero (J ξ : ℝ) (h_bps : BPSState J ξ) : ξ = 0 :=
 def superPoincareCasimir (P_u P_v : R) : R :=
   4 * P_u * P_v
 
-/-- The Casimir commutes with the translation generators. -/
-theorem casimir_commutes (P_u P_v : R) :
+/-- Over any non-commutative ring `[Ring R]`, the commutator of the Casimir with `P_u`
+is governed by the translation generator commutator `[P_v, P_u]`. -/
+theorem casimir_commutes_noncomm (P_u P_v : R) :
+    commutator (superPoincareCasimir P_u P_v) P_u = 4 * P_u * commutator P_v P_u := by
+  unfold commutator superPoincareCasimir
+  noncomm_ring
+
+/-- Over any non-commutative ring `[Ring R]`, the commutator of the Casimir with `P_v`
+is governed by the translation generator commutator `[P_u, P_v]`. -/
+theorem casimir_commutes'_noncomm (P_u P_v : R) :
+    commutator (superPoincareCasimir P_u P_v) P_v = 4 * commutator P_u P_v * P_v := by
+  unfold commutator superPoincareCasimir
+  noncomm_ring
+
+/-- The Casimir commutes with the translation generators in a commutative ring. -/
+theorem casimir_commutes {R : Type*} [CommRing R] (P_u P_v : R) :
     commutator (superPoincareCasimir P_u P_v) P_u = 0 := by
   unfold commutator superPoincareCasimir
   ring
 
-theorem casimir_commutes' (P_u P_v : R) :
+theorem casimir_commutes' {R : Type*} [CommRing R] (P_u P_v : R) :
     commutator (superPoincareCasimir P_u P_v) P_v = 0 := by
   unfold commutator superPoincareCasimir
   ring

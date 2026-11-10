@@ -41,6 +41,19 @@ reusing the canonical `PeirceSpine` vocabulary (`peirce11`, `peirce00`, `conePlu
    `(genPhi P A₁ C₁ + genJ P A₂ C₂) * (genPhi P A₁ C₁ + genJ P A₂ C₂) =`
    the exact Jordan-cross-term formula, together with self-adjointness of
    `zornTetradSym` and skew-adjointness of `zornTetradSkew` when `C_i = star A_i` and `star P = P`.
+
+BUCKET 1: PROVED FINITE/ALGEBRAIC IDENTITIES OVER `[Ring B]`
+- `zornMatrix`, `zornNorm`, `zornTetradSym`, `zornTetradSkew`
+- `zorn_matrix_product_and_quaternion_embedding`
+- `zorn_conjugation_and_quadratic_norms`
+- `complex_tetrad_sym_skew_split_and_even_parity`
+
+BUCKET 2: CONDITIONAL IDENTITIES FROM EXPLICIT PREMISES
+- `complex_tetrad_metric_electromagnetic_split_and_square` (from `[StarRing B]` and `star P = P`)
+- `stage_D29_zorn_matrix_algebra_and_complex_tetrad_master_synthesis`
+
+BUCKET 3: OPEN CLOSURE DEBT
+- Nonassociative split-Cayley Zorn octonion multiplication is owned by `OperatorZornFourPotentialGauge`.
 -/
 
 /- The `zornMatrix` carrier here is built inside an associative ring. It is a
@@ -82,10 +95,12 @@ inductive causalEdge : ZornPeirceTetradStage → ZornPeirceTetradStage → Prop
   | z3_z5 : causalEdge Z3_zorn_conjugation_and_norm Z5_unified_gravito_electromagnetic_square
   | z4_z5 : causalEdge Z4_complex_tetrad_sym_skew_split Z5_unified_gravito_electromagnetic_square
 
+/-- Every directed causal edge strictly increases the numerical rank. -/
 theorem causalEdge_strict_rank_mono {a b : ZornPeirceTetradStage}
     (h : causalEdge a b) : rank a < rank b := by
   cases h <;> simp [rank]
 
+/-- The causal edge relation is irreflexive. -/
 theorem causalEdge_irrefl (a : ZornPeirceTetradStage) : ¬ causalEdge a a := by
   intro h
   exact Nat.lt_irrefl (rank a) (causalEdge_strict_rank_mono h)
@@ -116,6 +131,7 @@ instance : PartialOrder ZornPeirceTetradStage where
   le_antisymm a b hab hba := by
     cases a <;> cases b <;> simp_all [causalLE]
 
+/-- Every causal edge implies ordering in `ZornPeirceTetradStage`. -/
 theorem causalEdge_le {a b : ZornPeirceTetradStage}
     (h : causalEdge a b) : a ≤ b := by
   cases h <;> simp [LE.le, causalLE]
@@ -146,6 +162,7 @@ operator `zornTetradSkew` (`= [K₁, K₂]`) for `K₁ = genPhi P A₁ C₁` and
 def zornTetradSym (P A₁ C₁ A₂ C₂ : B) : B :=
   anticomm (conePlus P A₁) (coneMinus P C₂) + anticomm (conePlus P A₂) (coneMinus P C₁)
 
+/-- Two-tetrad antisymmetric field-strength operator `zornTetradSkew` (`= [K₁, K₂]`). -/
 def zornTetradSkew (P A₁ C₁ A₂ C₂ : B) : B :=
   comm (conePlus P A₁) (coneMinus P C₂) - comm (conePlus P A₂) (coneMinus P C₁)
 

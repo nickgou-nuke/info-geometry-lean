@@ -11,7 +11,7 @@ theorem bott_periodicity_32d_dimension :
 
 /-- **2. 5-Generator Cartan MASA (Maximal Abelian Subalgebra)**:
     Spans the 5 commuting charges {T3, Y, Q, I3c, Yc} acting on 32D Spinors. -/
-structure CartanMASA5 (R : Type*) [CommRing R] where
+structure CartanMASA5 (R : Type*) [Ring R] where
   T3  : Module.End R (Fin 32 → R) -- Isospin
   Y   : Module.End R (Fin 32 → R) -- Hypercharge
   I3c : Module.End R (Fin 32 → R) -- Color Isospin

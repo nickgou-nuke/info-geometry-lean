@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
+import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Ring
 
 /-!
@@ -30,7 +31,7 @@ Standard: QMS-SOP-IAA-001 / OpenGauss 16-Trap Protocol
 
 namespace InfoGeometry.Superalgebra.CanonicalOctonionicLagrangian
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. 3D Импулсно-Спинови Вектори -/
 
@@ -43,7 +44,7 @@ structure ColorVec3 (R : Type*) where
 
 namespace ColorVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : ColorVec3 R := ⟨0, 0, 0⟩
 def neg (u : ColorVec3 R) : ColorVec3 R := ⟨-u.c1, -u.c2, -u.c3⟩
@@ -84,7 +85,7 @@ structure SplitOctonion (R : Type*) where
 
 namespace SplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def mul (X Y : SplitOctonion R) : SplitOctonion R where
   a := X.a * Y.a + ColorVec3.dot X.u Y.v
@@ -139,7 +140,7 @@ theorem dirac_action_on_full_spinor_explicit (k u v : ColorVec3 R) :
   have _ := (k, u, v)
   dsimp [diracGradH, fullSpinorPsi, mul, ColorVec3.dot, ColorVec3.neg,
          ColorVec3.sub, ColorVec3.add, ColorVec3.smul, ColorVec3.cross]
-  ext <;> ring
+  ext <;> simp
 
 /--
 Теорема 2 (Върховно Тъждество за Каноничния Топологичен Лагранжиан):
@@ -148,7 +149,7 @@ theorem dirac_action_on_full_spinor_explicit (k u v : ColorVec3 R) :
 2. Двете части се събират без остатък в ковариантния пропагатор ‖k‖² · (u · v):
    ℒ_total(k, u, v) = ‖k‖² · (u · v)!
 -/
-theorem canonical_lagrangian_helmholtz_hodge_unification (k u v : ColorVec3 R) :
+theorem canonical_lagrangian_helmholtz_hodge_unification {R : Type*} [CommRing R] (k u v : ColorVec3 R) :
     canonicalLagrangian k u v =
       ColorVec3.dot k u * ColorVec3.dot k v +
         ColorVec3.dot (ColorVec3.cross k u) (ColorVec3.cross k v) ∧
@@ -169,7 +170,7 @@ theorem canonical_lagrangian_helmholtz_hodge_unification (k u v : ColorVec3 R) :
 Когато полето е напречно (k · u = 0), целият релативистки Лагранжиан ‖k‖² (u · v)
 се поражда 100% от скаларния продукт на самогенерираните спинови връзки (k × u) · (k × v)!
 -/
-theorem transverse_gauge_pure_spin_connection_lagrangian (k u v : ColorVec3 R)
+theorem transverse_gauge_pure_spin_connection_lagrangian {R : Type*} [CommRing R] (k u v : ColorVec3 R)
     (h_transverse : ColorVec3.dot k u = 0) :
     ColorVec3.dot (ColorVec3.cross k u) (ColorVec3.cross k v) =
       ColorVec3.normSq k * ColorVec3.dot u v := by
@@ -182,7 +183,7 @@ end SplitOctonion
 
 /-! ### 4. Главен Синтез на Раздел 136 -/
 
-theorem canonical_octonionic_lagrangian_synthesis (k u v : ColorVec3 R)
+theorem canonical_octonionic_lagrangian_synthesis {R : Type*} [CommRing R] (k u v : ColorVec3 R)
     (h_transverse : ColorVec3.dot k u = 0) :
     SplitOctonion.mul (SplitOctonion.diracGradH k) (SplitOctonion.fullSpinorPsi u v) =
       ⟨ColorVec3.dot k v, ColorVec3.neg (ColorVec3.cross k v),

@@ -16,6 +16,7 @@ asserted here.
 
 namespace InfoGeometry.Algebra
 
+open InfoGeometry.Canonical
 open InfoGeometry.Physics.NCG
 
 variable {A : Type*} [NormedRing A] [NormedAlgebra ℝ A]
@@ -77,15 +78,13 @@ def topologicalOperatorSageGenerator
     (c : Fin 8) : OperatorSageTopologicalCarrier A :=
   operatorSageZornToTopological (operatorSageGenerator c)
 
-@[simp] theorem topologicalOperatorSageGenerator_toZorn
-    (c : Fin 8) :
-    operatorSageTopologicalToZorn (topologicalOperatorSageGenerator (A := A) c) =
-      operatorSageGenerator c := by
-  simp [topologicalOperatorSageGenerator]
-
-theorem continuous_topologicalOperatorSageGenerator
-    (c : Fin 8) :
-    Continuous (fun _ : Unit => topologicalOperatorSageGenerator (A := A) c) :=
-  continuous_const
+/-- The topological product presentation keeps the same eight generators
+distinct, by transport through its coordinate equivalence. -/
+theorem topologicalOperatorSageGenerator_injective [CharZero A] :
+    Function.Injective (topologicalOperatorSageGenerator (A := A)) := by
+  intro c d h
+  have h' := congrArg (operatorSageTopologicalToZorn (A := A)) h
+  change operatorSageGenerator c = operatorSageGenerator d at h'
+  exact operatorSageGenerator_injective h'
 
 end InfoGeometry.Algebra

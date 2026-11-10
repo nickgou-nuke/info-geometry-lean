@@ -46,7 +46,11 @@ noncomputable instance h3ZornJordanNonUnitalNonAssocCommRing :
 
 /-- The installed product satisfies Mathlib's commutative Jordan identity. -/
 noncomputable instance h3ZornJordanIsCommJordan : IsCommJordan (H3Zorn ℝ) :=
-  isCommJordan_of_cubicJordanDatum h3zornCubicJordanDatum
+  { lmul_comm_rmul_rmul := by
+      intro X Y
+      change candidateJordanMul (candidateJordanMul X Y) (candidateJordanMul X X) =
+        candidateJordanMul X (candidateJordanMul Y (candidateJordanMul X X))
+      exact H3ZornJordanProductLaw_proof X Y }
 
 /-- Native closure of the repository's named global product law. -/
 theorem h3ZornJordanProductLaw : H3ZornJordanProductLaw := by

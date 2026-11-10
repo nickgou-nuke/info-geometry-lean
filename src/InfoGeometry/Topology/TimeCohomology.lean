@@ -12,12 +12,12 @@ without inventing a topological or physical interpretation.
 
 namespace InfoGeometry.Motives
 
-variable {R : Type*} [CommRing R]
-
 /-- The two-by-two causal matrix used by the finite projective carrier. -/
-def CausalMatrix (t x y z : R) : Matrix (Fin 2) (Fin 2) R :=
+def CausalMatrix {R : Type*} [Ring R] (t x y z : R) : Matrix (Fin 2) (Fin 2) R :=
   ![![t + z, x - y],
     ![x + y, t - z]]
+
+variable {R : Type*} [CommRing R]
 
 /-- The determinant readout of the causal matrix. -/
 def CausalDeterminant (t x y z : R) : R :=

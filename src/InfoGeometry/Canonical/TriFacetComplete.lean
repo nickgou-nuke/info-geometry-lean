@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-
@@ -20,15 +21,15 @@ namespace InfoGeometry.Canonical.TriFacetComplete
 
 variable {A : Type*} [Field A]
 
-def P_hyp (O : A) : A := (1 / 2 : A) * (O ^ 2 + O)
-def P_ell (O : A) : A := (1 / 2 : A) * (O ^ 2 - O)
-def P_par (O : A) : A := 1 - O ^ 2
+def P_hyp {A : Type*} [DivisionRing A] (O : A) : A := (1 / 2 : A) * (O ^ 2 + O)
+def P_ell {A : Type*} [DivisionRing A] (O : A) : A := (1 / 2 : A) * (O ^ 2 - O)
+def P_par {A : Type*} [Ring A] (O : A) : A := 1 - O ^ 2
 
-theorem T_pow4 (O : A) (hO : O ^ 3 = O) : O ^ 4 = O ^ 2 := by
+theorem T_pow4 {A : Type*} [Ring A] (O : A) (hO : O ^ 3 = O) : O ^ 4 = O ^ 2 := by
   calc
-    O ^ 4 = O * O ^ 3 := by ring
+    O ^ 4 = O * O ^ 3 := by noncomm_ring
     _ = O * O := by rw [hO]
-    _ = O ^ 2 := by ring
+    _ = O ^ 2 := by noncomm_ring
 
 theorem O_mul_P_hyp {O : A} (hO : O ^ 3 = O) : O * P_hyp O = P_hyp O := by
   unfold P_hyp
@@ -38,13 +39,13 @@ theorem O_mul_P_hyp {O : A} (hO : O ^ 3 = O) : O * P_hyp O = P_hyp O := by
     _ = (1 / 2 : A) * (O + O ^ 2) := by rw [hO]
     _ = (1 / 2 : A) * (O ^ 2 + O) := by ring
 
-theorem P_hyp_mul_O {O : A} (hO : O ^ 3 = O) : P_hyp O * O = P_hyp O := by
+theorem P_hyp_mul_O {A : Type*} [DivisionRing A] {O : A} (hO : O ^ 3 = O) : P_hyp O * O = P_hyp O := by
   unfold P_hyp
   calc
-    ((1 / 2 : A) * (O ^ 2 + O)) * O = (1 / 2 : A) * ((O ^ 2 + O) * O) := by ring
-    _ = (1 / 2 : A) * (O ^ 3 + O ^ 2) := by ring
+    ((1 / 2 : A) * (O ^ 2 + O)) * O = (1 / 2 : A) * ((O ^ 2 + O) * O) := by noncomm_ring
+    _ = (1 / 2 : A) * (O ^ 3 + O ^ 2) := by noncomm_ring
     _ = (1 / 2 : A) * (O + O ^ 2) := by rw [hO]
-    _ = (1 / 2 : A) * (O ^ 2 + O) := by ring
+    _ = (1 / 2 : A) * (O ^ 2 + O) := by noncomm_ring
 
 theorem O_mul_P_ell {O : A} (hO : O ^ 3 = O) : O * P_ell O = - P_ell O := by
   unfold P_ell
@@ -54,27 +55,27 @@ theorem O_mul_P_ell {O : A} (hO : O ^ 3 = O) : O * P_ell O = - P_ell O := by
     _ = (1 / 2 : A) * (O - O ^ 2) := by rw [hO]
     _ = -((1 / 2 : A) * (O ^ 2 - O)) := by ring
 
-theorem P_ell_mul_O {O : A} (hO : O ^ 3 = O) : P_ell O * O = - P_ell O := by
+theorem P_ell_mul_O {A : Type*} [DivisionRing A] {O : A} (hO : O ^ 3 = O) : P_ell O * O = - P_ell O := by
   unfold P_ell
   calc
-    ((1 / 2 : A) * (O ^ 2 - O)) * O = (1 / 2 : A) * ((O ^ 2 - O) * O) := by ring
-    _ = (1 / 2 : A) * (O ^ 3 - O ^ 2) := by ring
+    ((1 / 2 : A) * (O ^ 2 - O)) * O = (1 / 2 : A) * ((O ^ 2 - O) * O) := by noncomm_ring
+    _ = (1 / 2 : A) * (O ^ 3 - O ^ 2) := by noncomm_ring
     _ = (1 / 2 : A) * (O - O ^ 2) := by rw [hO]
-    _ = -((1 / 2 : A) * (O ^ 2 - O)) := by ring
+    _ = -((1 / 2 : A) * (O ^ 2 - O)) := by noncomm_ring
 
-theorem O_mul_P_par {O : A} (hO : O ^ 3 = O) : O * P_par O = 0 := by
+theorem O_mul_P_par {A : Type*} [Ring A] {O : A} (hO : O ^ 3 = O) : O * P_par O = 0 := by
   unfold P_par
   calc
-    O * (1 - O ^ 2) = O - O ^ 3 := by ring
+    O * (1 - O ^ 2) = O - O ^ 3 := by noncomm_ring
     _ = O - O := by rw [hO]
-    _ = 0 := by ring
+    _ = 0 := by noncomm_ring
 
-theorem P_par_mul_O {O : A} (hO : O ^ 3 = O) : P_par O * O = 0 := by
+theorem P_par_mul_O {A : Type*} [Ring A] {O : A} (hO : O ^ 3 = O) : P_par O * O = 0 := by
   unfold P_par
   calc
-    (1 - O ^ 2) * O = O - O ^ 3 := by ring
+    (1 - O ^ 2) * O = O - O ^ 3 := by noncomm_ring
     _ = O - O := by rw [hO]
-    _ = 0 := by ring
+    _ = 0 := by noncomm_ring
 
 theorem P_hyp_idem (h2 : (2 : A) ≠ 0) {O : A} (hO : O ^ 3 = O) : P_hyp O * P_hyp O = P_hyp O := by
   calc
@@ -88,11 +89,12 @@ theorem P_ell_idem (h2 : (2 : A) ≠ 0) {O : A} (hO : O ^ 3 = O) : P_ell O * P_e
     _ = ((1 / 2 : A) ^ 2) * (O ^ 2 - 2 * O + O ^ 2) := by rw [T_pow4 O hO, hO]
     _ = (1 / 2 : A) * (O ^ 2 - O) := by field_simp [h2]; ring
 
-theorem P_par_idem {O : A} (hO : O ^ 3 = O) : P_par O * P_par O = P_par O := by
+theorem P_par_idem {A : Type*} [Ring A] {O : A} (hO : O ^ 3 = O) : P_par O * P_par O = P_par O := by
+  unfold P_par
   calc
-    (1 - O ^ 2) * (1 - O ^ 2) = 1 - 2 * O ^ 2 + O ^ 4 := by ring
+    (1 - O ^ 2) * (1 - O ^ 2) = 1 - 2 * O ^ 2 + O ^ 4 := by noncomm_ring
     _ = 1 - 2 * O ^ 2 + O ^ 2 := by rw [T_pow4 O hO]
-    _ = 1 - O ^ 2 := by ring
+    _ = 1 - O ^ 2 := by noncomm_ring
 
 theorem P_hyp_mul_P_ell (h2 : (2 : A) ≠ 0) {O : A} (hO : O ^ 3 = O) : P_hyp O * P_ell O = 0 := by
   calc

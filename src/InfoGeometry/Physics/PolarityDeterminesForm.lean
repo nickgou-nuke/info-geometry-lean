@@ -36,7 +36,7 @@ namespace InfoGeometry.Physics.PolarityDeterminesForm
 open scoped Matrix
 open InfoGeometry.Physics.VoigtConformalFactor
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Matrix units in the same `Fin 4` endomorphism carrier used for the form. -/
 def polarityMatrixE01 : Matrix (Fin 4) (Fin 4) R := Matrix.single 0 1 (1 : R)
@@ -102,9 +102,9 @@ theorem polarity_determines_form (m : Matrix (Fin 4) (Fin 4) R)
     simpa [dotProduct, Matrix.mulVec, Matrix.cons_val_zero, Matrix.cons_val_succ,
       Fin.sum_univ_succ, eoff 2 3 (by simp), eoff 3 2 (by simp)]
       using h
-  have q11 : m 1 1 = m 0 0 := by linear_combination (n1 - n0)
-  have q22 : m 2 2 = m 0 0 := by linear_combination (n2 - n0)
-  have q33 : m 3 3 = -m 0 0 := by linear_combination n0
+  have q11 : m 1 1 = m 0 0 := add_right_cancel (n1.trans n0.symm)
+  have q22 : m 2 2 = m 0 0 := add_right_cancel (n2.trans n0.symm)
+  have q33 : m 3 3 = -m 0 0 := eq_neg_of_add_eq_zero_right n0
   ext i j
   by_cases h : i = j
   · subst h

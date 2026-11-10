@@ -4,7 +4,7 @@ import Mathlib.Algebra.Field.Basic
 
 namespace InfoGeometry.Canonical
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-
 **The Pauli World Clock: The Three Rhythms and the Thermodynamic Axis**
@@ -14,12 +14,12 @@ We represent this algebraically as the three chiral lightcones driven by the cen
 -/
 
 /-- The Thermodynamic Clock Axis unit `l` with `l² = 1` -/
-structure ThermodynamicAxis (R : Type*) [CommRing R] where
+structure ThermodynamicAxis (R : Type*) [Ring R] where
   l : R
   l_sq_eq_one : l * l = 1
 
 /-- A Chiral Rhythm (Wheel) represented by a spatial unit `e` and its hyperbolic partner `u` -/
-structure ChiralRhythm (R : Type*) [CommRing R] (axis : ThermodynamicAxis R) where
+structure ChiralRhythm (R : Type*) [Ring R] (axis : ThermodynamicAxis R) where
   e : R
   u : R
   e_sq_eq_neg_one : e * e = -1
@@ -32,7 +32,7 @@ structure ChiralRhythm (R : Type*) [CommRing R] (axis : ThermodynamicAxis R) whe
 "Out of the One comes Two, out of Two comes Three, and from the Third comes the One as the Fourth."
 Here, the 3 independent chiral rhythms unite through the 1 central axis to form the 4D spacetime structure (quaternity).
 -/
-structure PauliWorldClock (R : Type*) [CommRing R] where
+structure PauliWorldClock (R : Type*) [Ring R] where
   axis : ThermodynamicAxis R
   red_wheel : ChiralRhythm R axis
   green_wheel : ChiralRhythm R axis

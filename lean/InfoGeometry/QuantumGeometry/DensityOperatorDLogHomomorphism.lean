@@ -10,10 +10,10 @@ noncomputable section
 
 namespace InfoGeometry.QuantumGeometry.DensityDLog
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
-/-- An additive derivation on a commutative ring R. -/
-structure CommRingDerivation (R : Type*) [CommRing R] where
+/-- An additive derivation on a ring R. -/
+structure CommRingDerivation (R : Type*) [Ring R] where
   toFun : R → R
   map_add' : ∀ x y, toFun (x + y) = toFun x + toFun y
   leibniz' : ∀ x y, toFun (x * y) = toFun x * y + x * toFun y
@@ -66,7 +66,7 @@ theorem dlog_one (D : CommRingDerivation R) :
   dsimp [dlog]
   rw [D.map_one, mul_zero]
 
-theorem dlog_mul (D : CommRingDerivation R) (u v : Rˣ) :
+theorem dlog_mul {R : Type*} [CommRing R] (D : CommRingDerivation R) (u v : Rˣ) :
     dlog D (u * v) = dlog D u + dlog D v := by
   have hu : (u⁻¹ : Rˣ).val * u.val = 1 := by
     rw [← Units.val_mul, inv_mul_cancel, Units.val_one]
@@ -83,14 +83,14 @@ theorem dlog_mul (D : CommRingDerivation R) (u v : Rˣ) :
     _ = (u⁻¹ : Rˣ).val * D (u.val) + (v⁻¹ : Rˣ).val * D (v.val) := by
       rw [mul_one, mul_one]
 
-theorem dlog_inv (D : CommRingDerivation R) (u : Rˣ) :
+theorem dlog_inv {R : Type*} [CommRing R] (D : CommRingDerivation R) (u : Rˣ) :
     dlog D (u⁻¹) = - dlog D u := by
   have h : dlog D (u * u⁻¹) = dlog D u + dlog D (u⁻¹) := dlog_mul D u (u⁻¹)
   rw [mul_inv_cancel, dlog_one] at h
   exact eq_neg_of_add_eq_zero_right h.symm
 
 /-- Bundled Group Homomorphism: dlogHom : Rˣ →* Multiplicative R -/
-def dlogHom (D : CommRingDerivation R) : Rˣ →* Multiplicative R where
+def dlogHom {R : Type*} [CommRing R] (D : CommRingDerivation R) : Rˣ →* Multiplicative R where
   toFun u := Multiplicative.ofAdd (dlog D u)
   map_one' := by
     change Multiplicative.ofAdd (dlog D 1) = Multiplicative.ofAdd 0
@@ -100,7 +100,7 @@ def dlogHom (D : CommRingDerivation R) : Rˣ →* Multiplicative R where
     rw [dlog_mul]
     rfl
 
-/-- Scalar Density Operator in a commutative von Neumann center -/
+/-- Scalar Density Operator -/
 def scalarDensityOperator (u : Rˣ) : R := u.val
 
 /-- Radon-Nikodym derivative unit between two density states: Δ_{u, v} = u * v⁻¹ -/
@@ -114,7 +114,7 @@ theorem rnDerivative_chain_rule (u v w : Rˣ) :
 
 /-- The modular logarithmic derivative of the Radon-Nikodym unit:
     dlog_D(Δ_{u, v}) = dlog_D(u) - dlog_D(v) -/
-theorem dlog_rnDerivative (D : CommRingDerivation R) (u v : Rˣ) :
+theorem dlog_rnDerivative {R : Type*} [CommRing R] (D : CommRingDerivation R) (u v : Rˣ) :
     dlog D (rnDerivativeUnit u v) = dlog D u - dlog D v := by
   dsimp [rnDerivativeUnit]
   rw [dlog_mul, dlog_inv, sub_eq_add_neg]

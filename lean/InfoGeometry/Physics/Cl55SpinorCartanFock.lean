@@ -2156,7 +2156,7 @@ theorem cl55_mode_graded_laplace_wavelet_bruhat_and_braid_synthesis
 
 section CartanOccupationSigns
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- **5-Mode Cartan Occupation Sign Tuple (`CartanSigns R = Fin 5 → R`)**:
     Represents the 5 commuting Cartan involutions `(σ₀, σ₁, σ₂, σ₃, σ₄)` of `𝔥₅ ⊂ Cl(5,5)`,
@@ -2225,7 +2225,7 @@ theorem cl55_cartan_reconstruction_chiral_split_and_sixChargeBL_table
   (simp [twoColorT3, threeColorY, shiftedColorNum, twoChiralProjPlus,
          twoChiralProjMinus, cl55Gamma, sixChargeBLSign, threeBMinusL,
          protonState, neutronState, neutrinoState, electronState,
-         redUpQuarkState, redDownQuarkState]; ring)
+         redUpQuarkState, redDownQuarkState]; first | noncomm_ring | norm_num)
 
 end CartanOccupationSigns
 

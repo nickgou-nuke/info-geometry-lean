@@ -26,7 +26,7 @@ noncomputable section
 namespace InfoGeometry.Algebra.DualAlgebra
 
 /-- A derivation on an R-algebra B (preserving addition, scalar multiplication, and Leibniz rule). -/
-structure AlgDerivation (R B : Type*) [CommRing R] [NonUnitalNonAssocRing B] [Module R B] where
+structure AlgDerivation (R B : Type*) [Ring R] [NonUnitalNonAssocRing B] [Module R B] where
   toFun : B → B
   map_add' : ∀ x y, toFun (x + y) = toFun x + toFun y
   map_smul' : ∀ (r : R) x, toFun (r • x) = r • toFun x
@@ -34,7 +34,7 @@ structure AlgDerivation (R B : Type*) [CommRing R] [NonUnitalNonAssocRing B] [Mo
 
 namespace AlgDerivation
 
-variable {R B : Type*} [CommRing R] [NonUnitalNonAssocRing B] [Module R B]
+variable {R B : Type*} [Ring R] [NonUnitalNonAssocRing B] [Module R B]
 
 instance : CoeFun (AlgDerivation R B) (fun _ => B → B) where
   coe D := D.toFun
@@ -80,7 +80,7 @@ def add (D₁ D₂ : AlgDerivation R B) : AlgDerivation R B where
 end AlgDerivation
 
 /-- An R-algebra automorphism on a (possibly non-associative) algebra B. -/
-structure AlgAut (R B : Type*) [CommRing R] [NonUnitalNonAssocRing B] [Module R B] where
+structure AlgAut (R B : Type*) [Ring R] [NonUnitalNonAssocRing B] [Module R B] where
   toFun : B → B
   invFun : B → B
   left_inv : ∀ x, invFun (toFun x) = x
@@ -91,7 +91,7 @@ structure AlgAut (R B : Type*) [CommRing R] [NonUnitalNonAssocRing B] [Module R 
 
 namespace AlgAut
 
-variable {R B : Type*} [CommRing R] [NonUnitalNonAssocRing B] [Module R B]
+variable {R B : Type*} [Ring R] [NonUnitalNonAssocRing B] [Module R B]
 
 instance : CoeFun (AlgAut R B) (fun _ => B → B) where
   coe phi := phi.toFun
@@ -143,7 +143,7 @@ structure DualExt (B : Type*) where
 
 namespace DualExt
 
-variable {R B : Type*} [CommRing R] [NonUnitalNonAssocRing B] [Module R B]
+variable {R B : Type*} [Ring R] [NonUnitalNonAssocRing B] [Module R B]
 
 instance : Add (DualExt B) where
   add u v := ⟨u.primal + v.primal, u.tangent + v.tangent⟩

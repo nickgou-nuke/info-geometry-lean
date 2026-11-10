@@ -114,7 +114,8 @@ theorem quantum_shield_commutator_non_vanishing {B : Type*} [Ring B] (f : A →+
 /-! ### IV. Point-Stabilizer Subgroup of a Vector -/
 
 /-- The stabilizer of a vector under linear automorphisms. -/
-def nullVectorStabilizer (n : M) : Subgroup (M ≃ₗ[R] M) where
+def nullVectorStabilizer {R₀ M₀ : Type*} [Ring R₀] [AddCommGroup M₀] [Module R₀ M₀]
+    (n : M₀) : Subgroup (M₀ ≃ₗ[R₀] M₀) where
   carrier := { g | g n = n }
   one_mem' := rfl
   mul_mem' := by
@@ -129,7 +130,8 @@ def nullVectorStabilizer (n : M) : Subgroup (M ≃ₗ[R] M) where
     calc g.symm n = g.symm (g n) := by rw [hg]
     _ = n := LinearEquiv.symm_apply_apply g n
 
-@[simp] theorem mem_nullVectorStabilizer_iff (n : M) (g : M ≃ₗ[R] M) :
+@[simp] theorem mem_nullVectorStabilizer_iff {R₀ M₀ : Type*} [Ring R₀] [AddCommGroup M₀] [Module R₀ M₀]
+    (n : M₀) (g : M₀ ≃ₗ[R₀] M₀) :
     g ∈ nullVectorStabilizer n ↔ g n = n :=
   Iff.rfl
 

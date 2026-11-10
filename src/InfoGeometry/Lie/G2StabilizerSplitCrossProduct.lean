@@ -26,7 +26,7 @@ open ZornVectorMatrix
 open InfoGeometry.Algebra
 open ZornVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ## 1. Split cross product 3-form -/
 
@@ -54,7 +54,7 @@ def stabilizerSplitCrossProduct (A : ZornVec3 R →ₗ[R] ZornVec3 R) : Prop :=
 
 /-- The split cross product 3-form has the algebraic signature (3,4)
     on Im(𝕆ₛ). -/
-theorem splitCrossProduct_signature :
+theorem splitCrossProduct_signature {R : Type*} [CommRing R] :
     ∀ u v : ZornVec3 R,
       dot u u + dot v v = 0 → splitCrossProductForm u u v = 0 := by
   intro u v _

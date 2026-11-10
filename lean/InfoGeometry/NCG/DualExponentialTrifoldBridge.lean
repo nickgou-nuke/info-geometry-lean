@@ -39,7 +39,7 @@ noncomputable section
 
 namespace InfoGeometry.NCG
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-!
 =============================================================================
@@ -58,7 +58,8 @@ theorem commonWeylAlpha_reconstruction (n : ℕ) (half_inv_n : R)
     (2 * (n : R)) * commonWeylAlpha half_inv_n traceK = traceK := by
   dsimp [commonWeylAlpha]
   calc
-    (2 * (n : R)) * (half_inv_n * traceK) = ((2 * (n : R)) * half_inv_n) * traceK := by ring
+    (2 * (n : R)) * (half_inv_n * traceK) = ((2 * (n : R)) * half_inv_n) * traceK := by
+      rw [← mul_assoc]
     _ = 1 * traceK := by rw [h_norm]
     _ = traceK := one_mul traceK
 
@@ -86,7 +87,8 @@ theorem chiralWeylBeta_reconstruction (n : ℕ) (half_inv_n : R)
     (2 * (n : R)) * chiralWeylBeta half_inv_n superTraceK = superTraceK := by
   dsimp [chiralWeylBeta]
   calc
-    (2 * (n : R)) * (half_inv_n * superTraceK) = ((2 * (n : R)) * half_inv_n) * superTraceK := by ring
+    (2 * (n : R)) * (half_inv_n * superTraceK) = ((2 * (n : R)) * half_inv_n) * superTraceK := by
+      rw [← mul_assoc]
     _ = 1 * superTraceK := by rw [h_norm]
     _ = superTraceK := one_mul superTraceK
 
@@ -104,7 +106,7 @@ PART 3: Mode C Traceless & Supertraceless Shape Derivation Component
 -/
 
 /-- A shape mode generator is defined by having both vanishing trace and vanishing supertrace. -/
-structure ShapeMode (R : Type*) [CommRing R] where
+structure ShapeMode (R : Type*) [Ring R] where
   trace : R
   superTrace : R
   trace_zero : trace = 0
@@ -112,7 +114,7 @@ structure ShapeMode (R : Type*) [CommRing R] where
 
 /-- 🏆 THEOREM: The Shape mode contributes 0 to both Volume (det) and Chiral (Ber) scaling. -/
 theorem shapeMode_alpha_zero (half_inv_n : R) (K0 : ShapeMode R) :
-    commonWeylAlpha half_inv_n K0.trace = 0 := by
+     commonWeylAlpha half_inv_n K0.trace = 0 := by
   dsimp [commonWeylAlpha]
   rw [K0.trace_zero, mul_zero]
 
@@ -128,7 +130,7 @@ PART 4: Universal Trifold Surprisal Decomposition
 -/
 
 /-- The complete Trifold Surprisal Spectrum: 𝒦 = α · I + β · Γ + 𝒦₀ -/
-structure TrifoldSurprisalSpectrum (n : ℕ) (R : Type*) [CommRing R] where
+structure TrifoldSurprisalSpectrum (n : ℕ) (R : Type*) [Ring R] where
   alpha : R
   beta : R
   shape : ShapeMode R
@@ -142,19 +144,24 @@ theorem trifold_uniqueness (n : ℕ) (half_inv_n : R)
     (h_norm : (2 * (n : R)) * half_inv_n = 1) (T : TrifoldSurprisalSpectrum n R) :
     commonWeylAlpha half_inv_n T.totalTrace = T.alpha ∧
     chiralWeylBeta half_inv_n T.totalSuperTrace = T.beta := by
+  have h_comm : half_inv_n * (2 * (n : R)) = (2 * (n : R)) * half_inv_n := by
+    have h_cast : (2 * (n : R)) = ((2 * n : ℕ) : R) := by push_cast; rfl
+    rw [h_cast, ← Nat.cast_comm]
   constructor
   · dsimp [commonWeylAlpha]
     rw [T.trace_eq]
     calc
-      half_inv_n * ((2 * (n : R)) * T.alpha) = (half_inv_n * (2 * (n : R))) * T.alpha := by ring
-      _ = ((2 * (n : R)) * half_inv_n) * T.alpha := by rw [mul_comm half_inv_n]
+      half_inv_n * ((2 * (n : R)) * T.alpha) = (half_inv_n * (2 * (n : R))) * T.alpha := by
+        rw [← mul_assoc]
+      _ = ((2 * (n : R)) * half_inv_n) * T.alpha := by rw [h_comm]
       _ = 1 * T.alpha := by rw [h_norm]
       _ = T.alpha := one_mul T.alpha
   · dsimp [chiralWeylBeta]
     rw [T.superTrace_eq]
     calc
-      half_inv_n * ((2 * (n : R)) * T.beta) = (half_inv_n * (2 * (n : R))) * T.beta := by ring
-      _ = ((2 * (n : R)) * half_inv_n) * T.beta := by rw [mul_comm half_inv_n]
+      half_inv_n * ((2 * (n : R)) * T.beta) = (half_inv_n * (2 * (n : R))) * T.beta := by
+        rw [← mul_assoc]
+      _ = ((2 * (n : R)) * half_inv_n) * T.beta := by rw [h_comm]
       _ = 1 * T.beta := by rw [h_norm]
       _ = T.beta := one_mul T.beta
 
@@ -164,12 +171,12 @@ PART 5: Outer Derivation Flow Automorphism Preservation
 =============================================================================
 -/
 
-variable {A : Type*} [AddCommGroup A] [Module R A]
+variable {S : Type*} [CommRing S] {A : Type*} [AddCommGroup A] [Module S A]
 
 /-- 🏆 THEOREM: Outer flow automorphism U_D(t) preserves the non-associative / split-octonion product:
     U_D(t)(x ⋆ y) = (U_D(t) x) ⋆ (U_D(t) y) -/
 theorem outer_flow_preserves_product
-    (mul : A →ₗ[R] A →ₗ[R] A) (one : A)
+    (mul : A →ₗ[S] A →ₗ[S] A) (one : A)
     (F : InfoGeometry.Algebra.NonAssocPeirceFrame.NonAssocAlgEnd mul one) (x y : A) :
     F (mul x y) = mul (F x) (F y) :=
   F.map_mul' x y

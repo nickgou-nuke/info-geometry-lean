@@ -26,13 +26,13 @@ open InfoGeometry.Canonical.ChernSimonsTransgressionInstantonBridge
 open InfoGeometry.Canonical.MatrixTracedChernWeilBridge
 open InfoGeometry.Canonical.NonAbelianCovariantBianchiChernWeilBridge
 
-variable {R V : Type*} [Field R] [AddCommGroup V] [Module R V] {n : ℕ}
+variable {R V : Type*} [AddCommGroup V] {n : ℕ}
 
 local notation "Mat" => Matrix (Fin n) (Fin n) (ExteriorAlgebra R V)
 
 /-- Connection curvature is preserved by a ring homomorphism that intertwines
 the matrix exterior derivative on this connection. -/
-theorem curvatureFromConnection_map
+theorem curvatureFromConnection_map [Field R] [Module R V]
     (f : Mat →+* Mat) (d : Module.End R (ExteriorAlgebra R V)) (A : Mat)
     (hDerivative : matrixExteriorDerivative d (f A) =
       f (matrixExteriorDerivative d A)) :
@@ -49,7 +49,7 @@ theorem curvatureFromConnection_map
 /-- The matrix covariant derivative is preserved when the ring homomorphism
 intertwines the exterior derivative on both the connection and the operator
 being differentiated. -/
-theorem covariantDerivative_map
+theorem covariantDerivative_map [CommRing R] [Module R V]
     (f : Mat →+* Mat) (d : Module.End R (ExteriorAlgebra R V)) (A X : Mat)
     (hDerivativeX : matrixExteriorDerivative d (f X) =
       f (matrixExteriorDerivative d X)) :
@@ -66,7 +66,7 @@ theorem covariantDerivative_map
 
 /-- A zero covariant derivative (the Bianchi equation, when `X` is the
 curvature) transports along the same explicitly compatible ring map. -/
-theorem zero_covariantDerivative_transports
+theorem zero_covariantDerivative_transports [CommRing R] [Module R V]
     (f : Mat →+* Mat) (d : Module.End R (ExteriorAlgebra R V)) (A X : Mat)
     (hDerivativeX : matrixExteriorDerivative d (f X) =
       f (matrixExteriorDerivative d X))
@@ -74,6 +74,8 @@ theorem zero_covariantDerivative_transports
     covariantDerivative (f A) d (f X) = 0 := by
   rw [← covariantDerivative_map f d A X hDerivativeX,
     hZero, map_zero]
+
+variable [Field R] [Module R V]
 
 /-- Connection curvature and the Bianchi zero equation transport together.
 The compatibility premises remain visible: this theorem becomes a bridge

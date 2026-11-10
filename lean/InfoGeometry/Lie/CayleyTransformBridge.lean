@@ -31,7 +31,7 @@ open InfoGeometry.Algebra.CircularChiralCausalConeBasis
 open InfoGeometry.Algebra.CyclotomicOperatorProjectors
 open InfoGeometry.Algebra.CayleyPeirceKAN
 
-variable {A : Type*} [CommRing A]
+variable {A : Type*} [Ring A]
 
 /-! ### 1. Cayley Transform Definition and Nilpotent Reduction -/
 
@@ -48,11 +48,11 @@ theorem unipotent_two_nilpotent_inv (N : A) (hN : N * N = 0) :
     (1 + N) * (1 - N) = 1 ∧ (1 - N) * (1 + N) = 1 := by
   constructor
   · calc
-      (1 + N) * (1 - N) = 1 - N * N := by ring
+      (1 + N) * (1 - N) = 1 - N * N := by noncomm_ring
       _ = 1 - 0 := by rw [hN]
       _ = 1 := sub_zero 1
   · calc
-      (1 - N) * (1 + N) = 1 - N * N := by ring
+      (1 - N) * (1 + N) = 1 - N * N := by noncomm_ring
       _ = 1 - 0 := by rw [hN]
       _ = 1 := sub_zero 1
 
@@ -61,7 +61,7 @@ theorem cayley_of_nilpotent (N : A) (hN : N * N = 0) :
     cayleyWithInv N (1 - N) = cayleyNilpotent N := by
   dsimp [cayleyWithInv, cayleyNilpotent]
   calc
-    (1 - N) * (1 - N) = 1 - 2 * N + N * N := by ring
+    (1 - N) * (1 - N) = 1 - 2 * N + N * N := by noncomm_ring
     _ = 1 - 2 * N + 0 := by rw [hN]
     _ = 1 - 2 * N := add_zero _
 
@@ -82,32 +82,29 @@ theorem cayley_of_nilpotent_charTwo (N : A) (hN : N * N = 0)
 /-- 🏆 THEOREM 3: Explicit algebraic identity proving that the Cayley transform is an involution: $\mathcal{C}(\mathcal{C}(x)) = x$.
     Whenever $(1 + x)$ and $2$ are invertible, $1 + \mathcal{C}(x)$ is invertible and $\mathcal{C}(\mathcal{C}(x)) = x$. -/
 theorem cayley_algebraic_identity (x : A) (inv_one_add_x inv_two : A)
-    (h_x : (1 + x) * inv_one_add_x = 1)
+    (h_x : inv_one_add_x * (1 + x) = 1)
     (h_two : (2 : A) * inv_two = 1) :
     let g := cayleyWithInv x inv_one_add_x
     let inv_one_add_g := (1 + x) * inv_two
     (1 + g) * inv_one_add_g = 1 ∧
     cayleyWithInv g inv_one_add_g = x := by
   intro g inv_one_add_g
-  have hcomm : inv_one_add_x * (1 + x) = 1 := by
-    rw [mul_comm] at h_x
-    exact h_x
   have h1 : (1 + g) * inv_one_add_g = 1 := by
     dsimp [g, inv_one_add_g, cayleyWithInv]
     calc
       (1 + (1 - x) * inv_one_add_x) * ((1 + x) * inv_two) =
-        (1 * (1 + x) + (1 - x) * (inv_one_add_x * (1 + x))) * inv_two := by ring
-      _ = (1 + x + (1 - x) * 1) * inv_two := by rw [hcomm]; ring
-      _ = (2 : A) * inv_two := by ring
+        (1 * (1 + x) + (1 - x) * (inv_one_add_x * (1 + x))) * inv_two := by noncomm_ring
+      _ = (1 + x + (1 - x) * 1) * inv_two := by rw [h_x]; noncomm_ring
+      _ = (2 : A) * inv_two := by noncomm_ring
       _ = 1 := h_two
   have h2 : cayleyWithInv g inv_one_add_g = x := by
     dsimp [g, inv_one_add_g, cayleyWithInv]
     calc
       (1 - (1 - x) * inv_one_add_x) * ((1 + x) * inv_two) =
-        (1 * (1 + x) - (1 - x) * (inv_one_add_x * (1 + x))) * inv_two := by ring
-      _ = (1 + x - (1 - x) * 1) * inv_two := by rw [hcomm]; ring
-      _ = (2 * x) * inv_two := by ring
-      _ = x * ((2 : A) * inv_two) := by ring
+        (1 * (1 + x) - (1 - x) * (inv_one_add_x * (1 + x))) * inv_two := by noncomm_ring
+      _ = (1 + x - (1 - x) * 1) * inv_two := by rw [h_x]; noncomm_ring
+      _ = (2 * x) * inv_two := by noncomm_ring
+      _ = x * ((2 : A) * inv_two) := by noncomm_ring
       _ = x * 1 := by rw [h_two]
       _ = x := mul_one x
   exact ⟨h1, h2⟩

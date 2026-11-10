@@ -15,7 +15,7 @@ namespace InfoGeometry.Canonical.ZornTwoRailReadout
 open InfoGeometry.Algebra
 open InfoGeometry.Algebra.ZornMatrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def uPlus : ZornMatrix R :=
   { a := 1, v := fun _ => 0, w := fun _ => 0, b := 0 }

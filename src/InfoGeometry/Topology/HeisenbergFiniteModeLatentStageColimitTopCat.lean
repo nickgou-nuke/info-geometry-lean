@@ -38,7 +38,7 @@ open InfoGeometry.Topology.CyclotomicLatentQuotientTopological
 
 noncomputable section
 
-variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
+variable {𝕜 : Type*} [Ring 𝕜]
 
 /-- Range of all basis-index latent labels at sixth-root parameter `q`. -/
 abbrev LatentLabelRange (q : SixthRootParameter) :=
@@ -60,16 +60,8 @@ def latentStageDiagram (q : SixthRootParameter) :
     Finset (Option ℤ) ⥤ TopCat where
   obj s := TopCat.of (heisenbergFiniteModeStageLatentSet q s)
   map f := latentStageInclusion q f.down.down
-  map_id _s := by
-    apply TopCat.hom_ext
-    ext z
-    unfold latentStageInclusion
-    exact Eq.refl _
-  map_comp _f _g := by
-    apply TopCat.hom_ext
-    ext z
-    unfold latentStageInclusion
-    exact Eq.refl _
+  map_id _s := rfl
+  map_comp _f _g := rfl
 
 /-- Inclusion morphism in `TopCat` from a finite-stage latent subset into `LatentLabelRange q`. -/
 def latentStageToRange
@@ -94,10 +86,7 @@ def latentStageRangeCocone (q : SixthRootParameter) :
     app := latentStageToRange q
     naturality := by
       intro _s _t _f
-      apply TopCat.hom_ext
-      ext z
-      unfold latentStageDiagram latentStageInclusion latentStageToRange
-      exact Eq.refl _ }
+      rfl }
 
 /-- Colimit comparison morphism from `colimit (latentStageDiagram q)` to `TopCat.of (LatentLabelRange q)`. -/
 noncomputable def latentStageColimitReadout (q : SixthRootParameter) :

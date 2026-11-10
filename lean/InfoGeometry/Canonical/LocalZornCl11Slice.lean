@@ -6,16 +6,9 @@ namespace InfoGeometry.Canonical
 
 open InfoGeometry.Algebra
 
-variable {R : Type*} [CommRing R]
+section Ring
 
-/-!
-# Local associative Zorn slices
-
-Fixing one vector direction `e` and taking both off-diagonal entries to be
-collinear with `e` kills the cross-product terms.  The remaining coordinates
-are exactly a 2-by-2 matrix product.  This is a local slice statement, not a
-claim that the full Zorn algebra is associative.
--/
+variable {R : Type*} [Ring R]
 
 def localZornSlice
     (e : ZornVec3 R) (a b u v : R) : ZornVectorMatrix R :=
@@ -42,7 +35,39 @@ theorem localZornMatrix_mul
   ext i j
   fin_cases i <;> fin_cases j <;>
     rw [Matrix.mul_apply, Fin.sum_univ_two] <;>
-    simp [localZornMatrix] <;> ring
+    simp [localZornMatrix, add_comm]
+
+/- The local Zorn multiplication is transported by the parameter matrix. -/
+theorem localZornSlice_mul_matrix
+    (e : ZornVec3 R)
+    (_he : ZornVec3.dot e e = 1)
+    (_hcross : ZornVec3.cross e e = fun _ => 0)
+    (a b u v c d x y : R) :
+    localZornMatrix
+        (a * c + u * y)
+        (b * d + v * x)
+        (a * x + u * d)
+        (v * c + b * y) =
+      localZornMatrix a b u v * localZornMatrix c d x y := by
+  symm
+  exact localZornMatrix_mul a b u v c d x y
+
+theorem localZorn_basis_direction_norm
+    (i : Fin 3) :
+    ZornVec3.dot (ZornVec3.basis (R := R) i) (ZornVec3.basis (R := R) i) = 1 := by
+  fin_cases i <;> simp [ZornVec3.dot, ZornVec3.basis, Fin.sum_univ_three]
+
+theorem localZorn_basis_direction_cross_self
+    (i : Fin 3) :
+    ZornVec3.cross (ZornVec3.basis (R := R) i) (ZornVec3.basis (R := R) i) = fun _ => 0 := by
+  ext j
+  fin_cases i <;> fin_cases j <;> simp [ZornVec3.cross, ZornVec3.basis]
+
+end Ring
+
+section CommRing
+
+variable {R : Type*} [CommRing R]
 
 theorem localZornSlice_norm_eq_det
     (e : ZornVec3 R) (he : ZornVec3.dot e e = 1)
@@ -87,21 +112,6 @@ theorem localZornSlice_mul
       ZornVec3.cross_smul_left, ZornVec3.cross_smul_right, hcross]
     ring
 
-/- The local Zorn multiplication is transported by the parameter matrix. -/
-theorem localZornSlice_mul_matrix
-    (e : ZornVec3 R)
-    (he : ZornVec3.dot e e = 1)
-    (hcross : ZornVec3.cross e e = fun _ => 0)
-    (a b u v c d x y : R) :
-    localZornMatrix
-        (a * c + u * y)
-        (b * d + v * x)
-        (a * x + u * d)
-        (v * c + b * y) =
-      localZornMatrix a b u v * localZornMatrix c d x y := by
-  symm
-  exact localZornMatrix_mul a b u v c d x y
-
 /-
 The local slice theorem in matrix form.  It is the precise replacement for
 the invalid claim that the full Zorn algebra acts associatively on a
@@ -123,15 +133,6 @@ theorem localZornSlice_mul_to_matrix
   rw [localZornMatrix_mul]
   exact localZornSlice_mul e he hcross a b u v c d x y
 
-theorem localZorn_basis_direction_norm
-    (i : Fin 3) :
-    ZornVec3.dot (ZornVec3.basis (R := R) i) (ZornVec3.basis (R := R) i) = 1 := by
-  fin_cases i <;> simp [ZornVec3.dot, ZornVec3.basis, Fin.sum_univ_three]
-
-theorem localZorn_basis_direction_cross_self
-    (i : Fin 3) :
-    ZornVec3.cross (ZornVec3.basis (R := R) i) (ZornVec3.basis (R := R) i) = fun _ => 0 := by
-  ext j
-  fin_cases i <;> fin_cases j <;> simp [ZornVec3.cross, ZornVec3.basis] <;> ring
+end CommRing
 
 end InfoGeometry.Canonical

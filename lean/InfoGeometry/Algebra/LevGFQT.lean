@@ -21,7 +21,7 @@ namespace InfoGeometry.Algebra.LevGFQT
 
 section SO14
 
-variable {K : Type*} [CommRing K]
+variable {K : Type*} [Ring K]
 
 /-- The diagonal metric tensor for so(1,4) signature (+, -, -, -, -) -/
 def eta : Matrix (Fin 5) (Fin 5) ℤ :=
@@ -63,7 +63,7 @@ def qneg [Neg R] (z : QuadraticPair R) : QuadraticPair R :=
   (-z.1, -z.2)
 
 /-- Multiplication with the relation `I² = -1`. -/
-def qmul [CommRing R] (z w : QuadraticPair R) : QuadraticPair R :=
+def qmul [Ring R] (z w : QuadraticPair R) : QuadraticPair R :=
   (z.1 * w.1 - z.2 * w.2, z.1 * w.2 + z.2 * w.1)
 
 /-- The real unit in the quadratic-pair algebra. -/
@@ -79,11 +79,11 @@ def qconj [Neg R] (z : QuadraticPair R) : QuadraticPair R :=
   (z.1, -z.2)
 
 /-- Norm readout `a² + b²`, i.e. `(a + bI)(a - bI)` in the pair model. -/
-def qnorm [CommRing R] (z : QuadraticPair R) : R :=
+def qnorm [Ring R] (z : QuadraticPair R) : R :=
   z.1 * z.1 + z.2 * z.2
 
 /-- The defining quadratic-pair relation: the formal unit squares to `-1`. -/
-theorem qI_sq [CommRing R] :
+theorem qI_sq [Ring R] :
     qmul (qI : QuadraticPair R) qI = qneg (qone : QuadraticPair R) := by
   ext <;> simp [qmul, qI, qneg, qone]
 

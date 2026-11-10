@@ -3,17 +3,10 @@ import Omega.Zeta.ZeckendorfPrimesNotSofic
 
 namespace Omega.Zeta
 
-/-- Minimal wrapper datum for the Zeckendorf-prime sofic obstruction. -/
-abbrev ZetaSyntaxZeckendorfPrimeData := Unit
-
-/-- Concrete publication-facing statement for the audited Zeckendorf-prime sofic obstruction. -/
-def ZetaSyntaxZeckendorfPrimesNotSoficStatement (_ : ZetaSyntaxZeckendorfPrimeData) : Prop :=
-  ∀ m, 3 ≤ m → m ≤ 20 → m < Nat.fib (m + 2)
-
-/-- Paper label: `thm:zeta-syntax-zeckendorf-primes-not-sofic`. -/
-theorem paper_zeta_syntax_zeckendorf_primes_not_sofic (D : ZetaSyntaxZeckendorfPrimeData) :
-    ZetaSyntaxZeckendorfPrimesNotSoficStatement D := by
-  simpa [ZetaSyntaxZeckendorfPrimesNotSoficStatement] using
-    paper_prime_languages_zeckendorf_primes_not_sofic
+/-- Fibonacci index growth bound retained from the source notes. It does not
+express a soficity or regularity property of a language. -/
+theorem zeta_syntax_zeckendorf_fibonacci_bound :
+    ∀ m : ℕ, m < Nat.fib (m + 2) :=
+  paper_prime_languages_zeckendorf_fibonacci_bound
 
 end Omega.Zeta

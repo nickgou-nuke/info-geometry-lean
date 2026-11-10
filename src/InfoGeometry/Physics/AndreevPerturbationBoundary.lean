@@ -10,7 +10,7 @@ both a signal and a perturbed signal cannot erase a nonzero perturbation.
 This is not a theorem about denoisers with measurements or extra information. -/
 namespace InfoGeometry.Physics.GeneralFermionicAndreevCarrier
 
-variable {V R : Type*} [Fintype V] [DecidableEq V] [CommRing R]
+variable {V R : Type*} [Fintype V] [DecidableEq V] [Ring R]
 
 theorem andreevRotation_mulVec_injective :
     Function.Injective (andreevRotation (V := V) (R := R)).mulVec := by

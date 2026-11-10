@@ -7,7 +7,7 @@ import Mathlib
 
 namespace InfoGeometry.QuantumContext.FresnelCl11MatrixIsomorphism
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. Двойка Амплитуди на Френел и Алгебра на Cℓ(1,1) ≅ M₂(R) -/
 
@@ -19,7 +19,7 @@ structure FresnelSlitAmp (R : Type*) where
 
 namespace FresnelSlitAmp
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def add (ψ₁ ψ₂ : FresnelSlitAmp R) : FresnelSlitAmp R :=
   ⟨ψ₁.cQuad + ψ₂.cQuad, ψ₁.sQuad + ψ₂.sQuad⟩
@@ -56,7 +56,7 @@ structure Cl11Op (R : Type*) where
 
 namespace Cl11Op
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def add (A B : Cl11Op R) : Cl11Op R :=
   ⟨A.m11 + B.m11, A.m12 + B.m12, A.m21 + B.m21, A.m22 + B.m22⟩
@@ -154,7 +154,7 @@ theorem frobenius_norm_sq_embed_eq_intensity_sum (ψ_pos ψ_neg : FresnelSlitAmp
     frobeniusNormSq (embedFresnelPair ψ_pos ψ_neg) =
       FresnelSlitAmp.intensity ψ_pos + FresnelSlitAmp.intensity ψ_neg := by
   dsimp [frobeniusNormSq, frobeniusInner, embedFresnelPair, FresnelSlitAmp.intensity]
-  ring
+  abel
 
 /-! ### 4. Проектор на Грам–Мур–Пенроуз M · Mᵀ и Тъждество на Брамагупта–Фибоначи -/
 
@@ -164,7 +164,7 @@ M · Mᵀ = [[I_+, G_{(+,-)}], [G_{(+,-)}, I_-]].
 Диагоналният Майорана сектор съдържа интензитетите на двата процепа (I_+, I_-),
 а извъндиагоналният Уейл мост съдържа точно симетричната Ян интерференция G_{(+,-)}!
 -/
-theorem gram_matrix_embed_explicit (ψ_pos ψ_neg : FresnelSlitAmp R) :
+theorem gram_matrix_embed_explicit {R : Type*} [CommRing R] (ψ_pos ψ_neg : FresnelSlitAmp R) :
     let M := embedFresnelPair ψ_pos ψ_neg
     mul M (transpose M) =
       ⟨FresnelSlitAmp.intensity ψ_pos,
@@ -186,7 +186,7 @@ theorem trace_gram_embed_eq_intensity_sum (ψ_pos ψ_neg : FresnelSlitAmp R) :
 Теорема 3b (Детерминантата на Грам M · Mᵀ като Тъждество на Брамагупта–Фибоначи–Френел):
 det(M · Mᵀ) = I_+ · I_- - G_{(+,-)}² = (det M)² = H_{(+,-)}².
 -/
-theorem det_gram_embed_eq_yin_sq (ψ_pos ψ_neg : FresnelSlitAmp R) :
+theorem det_gram_embed_eq_yin_sq {R : Type*} [CommRing R] (ψ_pos ψ_neg : FresnelSlitAmp R) :
     let M := embedFresnelPair ψ_pos ψ_neg
     det (mul M (transpose M)) =
       FresnelSlitAmp.intensity ψ_pos * FresnelSlitAmp.intensity ψ_neg -
@@ -210,7 +210,7 @@ def abHolonomyMatrix (c s : R) : Cl11Op R :=
 Горният извъндиагонален Уейл елемент m12 на M · U(c, s) · Mᵀ е точно
 пълният фазов интерференчен член c · G_{(+,-)} + s · H_{(+,-)}!
 -/
-theorem holonomy_conjugated_gram_m12 (ψ_pos ψ_neg : FresnelSlitAmp R) (c s : R) :
+theorem holonomy_conjugated_gram_m12 {R : Type*} [CommRing R] (ψ_pos ψ_neg : FresnelSlitAmp R) (c s : R) :
     let M := embedFresnelPair ψ_pos ψ_neg
     (mul (mul M (abHolonomyMatrix c s)) (transpose M)).m12 =
       c * FresnelSlitAmp.yangSymmetricG ψ_pos ψ_neg -
@@ -232,7 +232,7 @@ theorem ab_prob_from_cl11_invariants (ψ_pos ψ_neg : FresnelSlitAmp R) (c s : R
     frobeniusNormSq M + 2 * c * (mul M (transpose M)).m12 + 2 * s * det M := by
   dsimp [embedFresnelPair, frobeniusNormSq, frobeniusInner, mul, transpose, det,
          FresnelSlitAmp.intensity, FresnelSlitAmp.yangSymmetricG, FresnelSlitAmp.yinSymplecticH]
-  ring
+  abel
 
 end Cl11Op
 

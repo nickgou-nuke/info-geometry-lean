@@ -10,7 +10,7 @@ requires the Drinfel'd cocycle and is not claimed from a bare tensor unit.
 noncomputable section
 namespace InfoGeometry.QuantumAlgebra.TwistCoproduct
 open scoped TensorProduct
-variable {R H : Type*} [CommRing R] [Ring H] [Bialgebra R H]
+variable {R H : Type*} [CommSemiring R] [Semiring H] [Bialgebra R H]
 
 /-- The paper's F Delta(x) F^-1, on the actual native bialgebra tensor product. -/
 def coproduct (F : (H ⊗[R] H)ˣ) : H →ₐ[R] H ⊗[R] H where

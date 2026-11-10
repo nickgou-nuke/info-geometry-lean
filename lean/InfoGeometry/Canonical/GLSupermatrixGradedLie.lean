@@ -107,7 +107,7 @@ def oddMatrix (B : Matrix (Fin m) (Fin n) R)
 end Blocks
 
 section Grading
-variable {m n : ℕ} {R : Type*} [CommRing R]
+variable {m n : ℕ} {R : Type*} [Ring R]
 
 def IsHomogeneous (p : Parity) (M : SuperMatrix m n R) : Prop :=
   match p with
@@ -227,7 +227,7 @@ theorem superbracket_preserves_grading
     exact ⟨B * G + F * C, C * F + G * B, superbracket_odd_odd B F C G⟩
 
 /-- Even-even cyclicity of supertrace. -/
-theorem supertrace_mul_even_even
+theorem supertrace_mul_even_even {R : Type*} [CommRing R]
     (X Y : SuperMatrix m n R)
     (hX : IsHomogeneous .even X) (hY : IsHomogeneous .even Y) :
     supertrace (X * Y) = supertrace (Y * X) := by
@@ -257,7 +257,7 @@ theorem supertrace_mul_odd_even
   exact supertrace_oddMatrix _ _
 
 /-- Odd-odd cyclicity acquires the Koszul minus sign. -/
-theorem supertrace_mul_odd_odd
+theorem supertrace_mul_odd_odd {R : Type*} [CommRing R]
     (X Y : SuperMatrix m n R)
     (hX : IsHomogeneous .odd X) (hY : IsHomogeneous .odd Y) :
     supertrace (X * Y) = -supertrace (Y * X) := by
@@ -271,7 +271,7 @@ theorem supertrace_mul_odd_odd
   ring
 
 /-- Graded cyclicity `str(XY)=(-1)^(|X||Y|) str(YX)`. -/
-theorem supertrace_mul_graded
+theorem supertrace_mul_graded {R : Type*} [CommRing R]
     (p q : Parity) (X Y : SuperMatrix m n R)
     (hX : IsHomogeneous p X) (hY : IsHomogeneous q Y) :
     supertrace (X * Y) = Parity.sign R p q * supertrace (Y * X) := by
@@ -288,10 +288,10 @@ theorem superbracket_graded_skew
     (p q : Parity) (X Y : SuperMatrix m n R) :
     superbracket p q X Y = -(Parity.sign R p q) • superbracket q p Y X := by
   cases p <;> cases q <;>
-    ext i j <;> simp [superbracket, Parity.sign] <;> ring
+    ext i j <;> simp [superbracket, Parity.sign] <;> abel
 
 /-- Supertrace kills all homogeneous supercommutators. -/
-theorem supertrace_superbracket_eq_zero
+theorem supertrace_superbracket_eq_zero {R : Type*} [CommRing R]
     (p q : Parity) (X Y : SuperMatrix m n R)
     (hX : IsHomogeneous p X) (hY : IsHomogeneous q Y) :
     supertrace (superbracket p q X Y) = 0 := by
@@ -360,7 +360,7 @@ theorem super_adjoint_derivation
 end Universal
 
 section GLJacobi
-variable {m n : ℕ} {R : Type*} [CommRing R]
+variable {m n : ℕ} {R : Type*} [Ring R]
 
 /-- Universal super-Jacobi specialized to `gl(m|n)`. -/
 theorem gl_graded_super_jacobi

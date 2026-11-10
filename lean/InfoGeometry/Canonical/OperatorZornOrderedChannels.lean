@@ -82,6 +82,11 @@ theorem commutatorCrossTwice_commutative (U V : OperatorVector R) :
   unfold commutatorCrossTwice
   simp [mul_comm]
 
+end Commutative
+
+section RingAxes
+variable {R : Type*} [Ring R]
+
 theorem native_cross_axes :
     operatorCross (![1,0,0] : OperatorVector R) ![0,1,0] = ![0,0,1] := by
   funext i
@@ -95,7 +100,7 @@ theorem native_cross_axes_ne_zero [Nontrivial R] :
   have hne : (1 : R) ≠ 0 := one_ne_zero
   exact hne (by simpa using h2)
 
-end Commutative
+end RingAxes
 
 /-- Diagnostic only: this is never installed as the carrier multiplication. -/
 def sourceProduct (X Y : OperatorZornMatrix ℝ) : OperatorZornMatrix ℝ :=

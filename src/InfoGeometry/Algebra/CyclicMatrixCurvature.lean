@@ -18,7 +18,7 @@ No commutativity of the coefficient algebra is assumed.
 
 namespace InfoGeometry.Algebra.CyclicMatrixCurvature
 
-variable (R A : Type*) [CommRing R] [Ring A] [Algebra R A]
+variable (R A : Type*) [Ring R] [Ring A] [Module R A]
 
 /-- The additive R-linear commutator span. -/
 def commutatorSpan : Submodule R A :=
@@ -71,6 +71,8 @@ theorem cyclicTrace_diagonal [DecidableEq n] (a : A) :
 
 section Cohomology
 
+variable (R A : Type*) [CommRing R] [Ring A] [Algebra R A]
+variable {n : Type*} [Fintype n]
 variable {L : Type*} [LieRing L] [LieAlgebra R L]
 
 abbrev Coefficients := TrivialLieModule R L (CyclicModule R A)

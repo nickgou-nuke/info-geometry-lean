@@ -9,7 +9,7 @@ variable {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
 variable (Q : QuadraticForm R M)
 
 /-- The Jordan product for elements of a Clifford Algebra -/
-def jordanProduct {A : Type*} [Ring A] (u v : A) : A := u * v + v * u
+def jordanProduct {A : Type*} [Semiring A] (u v : A) : A := u * v + v * u
 
 /--
 Theorem: The metric tensor (bilinear form) can be recovered from the Jordan product

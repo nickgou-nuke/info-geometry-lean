@@ -585,40 +585,12 @@ theorem virasoro_anomalyCoeff_zero_on_global_modes
     m * (m ^ 2 - 1) = 0 :=
   virasoroCentralPolynomial_global_zero m hm
 
-/-! ## 7. Bridge readout -/
+/-! ## 7. Kernel criteria for affine-current readout -/
 
-/--
-Exceptional affine/Virasoro horizon bridge readout.
+namespace HorizonExceptionalVirasoroBridge
 
-Once the bridge is supplied:
-
-* hidden grade-two memory is represented as an affine current;
-* the hidden memory scalar equals the Virasoro/current stress readout.
--/
-theorem exceptionalVirasoroBridgeOwnerTarget :
-  ∀ (J L Obs Memory Finite AffineAlg : Type*)
-    [AddCommGroup J] [Module ℝ J]
-    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
-    [AddCommGroup Obs] [Module ℝ Obs]
-    [AddCommGroup Memory] [Module ℝ Memory]
-    [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
-    [AddCommGroup AffineAlg] [Module ℝ AffineAlg]
-    [LieRing AffineAlg] [LieAlgebra ℝ AffineAlg],
-  ∀ G : FiveGrading L,
-  ∀ A : FiveGradeProjectedAccounting J L Obs G,
-  ∀ B : HorizonExceptionalVirasoroBridge J L Obs Memory Finite AffineAlg A,
-    ∀ x y : J,
-      B.currentCalibration.memoryToAffine
-          (hiddenMemoryReadout B.horizon.ledger x y) =
-        B.currentCalibration.affineVirasoro.affine.Current
-          (B.currentCalibration.modeOf x y)
-          (B.currentCalibration.finiteChargeOf x y) := by
-  intro J L Obs Memory Finite AffineAlg _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ G A B
-  exact fun x y => B.hidden_memory_eq_current_mode x y
-
-/-- Packet readout for one exceptional Virasoro horizon bridge. -/
-theorem exceptionalVirasoroBridge_packet
-    (J L Obs Memory Finite AffineAlg : Type*)
+variable
+    {J L Obs Memory Finite AffineAlg : Type*}
     [AddCommGroup J] [Module ℝ J]
     [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup Obs] [Module ℝ Obs]
@@ -626,15 +598,43 @@ theorem exceptionalVirasoroBridge_packet
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
     [AddCommGroup AffineAlg] [Module ℝ AffineAlg]
     [LieRing AffineAlg] [LieAlgebra ℝ AffineAlg]
-    (G : FiveGrading L)
-    (A : FiveGradeProjectedAccounting J L Obs G)
-    (B : HorizonExceptionalVirasoroBridge J L Obs Memory Finite AffineAlg A)
-    (x y : J) :
-    B.currentCalibration.memoryToAffine
-        (hiddenMemoryReadout B.horizon.ledger x y) =
-      B.currentCalibration.affineVirasoro.affine.Current
+    {G : FiveGrading L}
+    {A : FiveGradeProjectedAccounting J L Obs G}
+
+variable (B : HorizonExceptionalVirasoroBridge J L Obs Memory Finite AffineAlg A)
+
+/--
+The affine current assigned to a horizon-memory pair vanishes exactly when
+that memory readout lies in the kernel of the memory-to-affine map. This
+criterion does not assume that the map is injective.
+-/
+theorem current_mode_eq_zero_iff_hidden_memory_mem_ker (x y : J) :
+    B.currentCalibration.affineVirasoro.affine.Current
         (B.currentCalibration.modeOf x y)
-        (B.currentCalibration.finiteChargeOf x y) :=
-  exceptionalVirasoroBridgeOwnerTarget J L Obs Memory Finite AffineAlg G A B x y
+        (B.currentCalibration.finiteChargeOf x y) = 0 ↔
+      hiddenMemoryReadout B.horizon.ledger x y ∈
+        LinearMap.ker B.currentCalibration.memoryToAffine := by
+  rw [← B.hidden_memory_eq_current_mode x y, LinearMap.mem_ker]
+
+/--
+If the memory-to-affine map is injective, vanishing of the assigned current
+detects vanishing of the hidden-memory readout itself.
+-/
+theorem current_mode_eq_zero_iff_hidden_memory_eq_zero
+    (hinj : Function.Injective B.currentCalibration.memoryToAffine)
+    (x y : J) :
+    B.currentCalibration.affineVirasoro.affine.Current
+        (B.currentCalibration.modeOf x y)
+        (B.currentCalibration.finiteChargeOf x y) = 0 ↔
+      hiddenMemoryReadout B.horizon.ledger x y = 0 := by
+  rw [← B.hidden_memory_eq_current_mode x y]
+  constructor
+  · intro h
+    apply hinj
+    simpa using h
+  · intro h
+    rw [h, map_zero]
+
+end HorizonExceptionalVirasoroBridge
 
 end InfoGeometry.OperatorAlgebra.ExceptionalVirasoroBridge

@@ -22,14 +22,19 @@ attribute [local instance 100] LieRing.ofAssociativeRing
 open InfoGeometry.Core.JordanMultiplicationClosure
 open InfoGeometry.OperatorAlgebra.LieJordanDualTransport
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+section NoncommScalars
 
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
+
+omit [IsScalarTower R A A] in
 /-- A coefficient-weighted sum of two endomorphisms of the full algebra.
 The coefficients act by left multiplication, so no commutation between the
 coefficients and the endomorphisms is built into the definition. -/
 def coefficientWeighted (Γ₁ Γ₂ : A) (T₁ T₂ : Module.End R A) : Module.End R A :=
   LinearMap.mulLeft R Γ₁ * T₁ + LinearMap.mulLeft R Γ₂ * T₂
 
+omit [IsScalarTower R A A] in
 /-- The square of a coefficient-weighted operator retains both the mixed
 operator commutator and every coefficient-transport defect. -/
 theorem coefficientWeighted_square_with_defects
@@ -65,38 +70,45 @@ theorem coefficientWeighted_square_with_defects
     (LinearMap.mulLeft R Γ₁) (LinearMap.mulLeft R Γ₂) T₁ T₂ h₁' h₂' h₁₂'
   simpa only [coefficientWeighted, Ring.lie_def] using hsq
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 /-- Componentwise lift of an actual algebra endomorphism. -/
 def liftOp (t : Module.End R A) : Module.End R (A × A) where
   toFun v := (t v.1, t v.2)
   map_add' v w := by simp
   map_smul' r v := by simp
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 /-- Exchange of the two copies of the algebra. -/
 def swapOp : Module.End R (A × A) where
   toFun v := (v.2, v.1)
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 /-- The two-sheet grading, acting on the full product module. -/
 def gradingOp : Module.End R (A × A) where
   toFun v := (v.1, -v.2)
   map_add' _ _ := by simp [add_comm]
   map_smul' _ _ := by simp
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 /-- Internal square-minus-one phase, with no external imaginary scalar. -/
 def phaseOp : Module.End R (A × A) := swapOp * gradingOp
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 theorem swapOp_sq : (swapOp : Module.End R (A × A)) * swapOp = 1 := by
   apply LinearMap.ext
   intro v
   rfl
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 theorem gradingOp_sq : (gradingOp : Module.End R (A × A)) * gradingOp = 1 := by
   apply LinearMap.ext
   intro v
   change (v.1, -(-v.2)) = v
   simp
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 theorem swap_grading_anticommute :
     (swapOp : Module.End R (A × A)) * gradingOp + gradingOp * swapOp = 0 := by
   apply LinearMap.ext
@@ -104,14 +116,66 @@ theorem swap_grading_anticommute :
   change (-v.2 + v.2, v.1 + -v.1) = (0, 0)
   simp
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 @[simp] theorem phaseOp_apply (v : A × A) :
     (phaseOp : Module.End R (A × A)) v = (-v.2, v.1) := rfl
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 theorem phaseOp_sq : (phaseOp : Module.End R (A × A)) * phaseOp = -1 := by
   apply LinearMap.ext
   intro v
   change (-v.1, -v.2) = -v
   rfl
+
+/-- The positive/negative transport acts in opposite off-diagonal blocks over any `[Ring R]`. -/
+def ringDoubled (h s : A) : Module.End R (A × A) where
+  toFun v := (ringMinus (R := R) h s v.2, ringPlus (R := R) h s v.1)
+  map_add' v w := by
+    change (ringMinus (R := R) h s (v.2 + w.2), ringPlus (R := R) h s (v.1 + w.1)) = _
+    rw [map_add, map_add]
+    rfl
+  map_smul' r v := by
+    change (ringMinus (R := R) h s (r • v.2), ringPlus (R := R) h s (r • v.1)) = _
+    rw [map_smul, map_smul]
+    rfl
+
+@[simp] theorem ringDoubled_apply (h s : A) (v : A × A) :
+    ringDoubled (R := R) h s v = (ringMinus (R := R) h s v.2, ringPlus (R := R) h s v.1) := rfl
+
+theorem ringDoubled_clifford_decomposition (h s : A) :
+    ringDoubled (R := R) h s =
+      swapOp * liftOp (ringAd (R := R) h) + phaseOp * liftOp (jordanLeft (R := R) s) := by
+  apply LinearMap.ext
+  intro v
+  change (ringAd (R := R) h v.2 - jordanLeft (R := R) s v.2,
+      ringAd (R := R) h v.1 + jordanLeft (R := R) s v.1) =
+    (ringAd (R := R) h v.2 + -(jordanLeft (R := R) s v.2),
+      ringAd (R := R) h v.1 + jordanLeft (R := R) s v.1)
+  simp only [sub_eq_add_neg]
+
+theorem grading_anticommutes_ringDoubled (h s : A) :
+    gradingOp * ringDoubled (R := R) h s + ringDoubled (R := R) h s * gradingOp = 0 := by
+  apply LinearMap.ext
+  intro v
+  change (ringMinus (R := R) h s v.2 + ringMinus (R := R) h s (-v.2),
+    -(ringPlus (R := R) h s v.1) + ringPlus (R := R) h s v.1) = (0, 0)
+  simp only [map_neg, add_neg_cancel, neg_add_cancel]
+
+theorem ringDoubled_square_apply (h s : A) (v : A × A) :
+    (ringDoubled (R := R) h s * ringDoubled (R := R) h s) v =
+      ((ringAd (R := R) h * ringAd (R := R) h -
+          jordanLeft (R := R) s * jordanLeft (R := R) s + jordanLeft (R := R) (h * s - s * h)) v.1,
+       (ringAd (R := R) h * ringAd (R := R) h -
+          jordanLeft (R := R) s * jordanLeft (R := R) s - jordanLeft (R := R) (h * s - s * h)) v.2) := by
+  apply Prod.ext
+  · exact congrArg (fun t : Module.End R A => t v.1) (ringMinus_mul_ringPlus h s)
+  · exact congrArg (fun t : Module.End R A => t v.2) (ringPlus_mul_ringMinus h s)
+
+end NoncommScalars
+
+section CommRingScalars
+
+variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
 
 /-- The positive/negative transport acts in opposite off-diagonal blocks. -/
 def doubled (h s : A) : Module.End R (A × A) where
@@ -159,5 +223,7 @@ theorem doubled_square_apply (h s : A) (v : A × A) :
   apply Prod.ext
   · exact congrArg (fun t : Module.End R A => t v.1) (minus_mul_plus h s)
   · exact congrArg (fun t : Module.End R A => t v.2) (plus_mul_minus h s)
+
+end CommRingScalars
 
 end InfoGeometry.OperatorAlgebra.LieJordanCliffordDouble

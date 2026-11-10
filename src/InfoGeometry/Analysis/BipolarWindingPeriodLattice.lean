@@ -21,6 +21,8 @@ through the difference `m-n`, and its logarithmic period is
 
 The diagonal winding `(n,n)` is invisible to this particular difference form.
 That does not make the full two-generator winding lattice one-dimensional.
+This module records the algebraic residue-pairing model; it does not define an
+integral of an exact potential on loops or claim a de Rham period theorem.
 -/
 
 noncomputable section
@@ -85,13 +87,6 @@ theorem circulationPeriod_eq_residuePairing (w : WindingPair) :
     circulationPeriod w =
       residuePairing w * (2 * Real.pi * Complex.I : ℂ) := by
   rw [circulationPeriod, residuePairing_eq_difference]
-
-/-- A globally exact scalar potential has zero period on the algebraic winding lattice.
-This is the period readout appropriate to the globally defined radial potential `eta`. -/
-def exactPotentialPeriod (_w : WindingPair) : ℝ := 0
-
-@[simp] theorem exactPotentialPeriod_zero (w : WindingPair) :
-    exactPotentialPeriod w = 0 := rfl
 
 /-- Compact corrected period packet. -/
 theorem bipolar_period_packet :

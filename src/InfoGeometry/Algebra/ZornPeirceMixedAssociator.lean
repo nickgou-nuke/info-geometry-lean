@@ -8,10 +8,10 @@ import InfoGeometry.Algebra.ZornVectorMatrix
 /-! Mixed Peirce associators on the existing nonassociative Zorn carrier. -/
 namespace InfoGeometry.Algebra.ZornVectorMatrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Two upper vectors and one lower vector give the vector triple-product defect. -/
-theorem associator_upper_upper_lower (u v w : ZornVec3 R) :
+theorem associator_upper_upper_lower {R : Type*} [CommRing R] (u v w : ZornVec3 R) :
     associator (offDiagonal u 0) (offDiagonal v 0) (offDiagonal 0 w) =
       offDiagonal (fun i => ZornVec3.dot v w * u i - ZornVec3.dot u w * v i) 0 := by
   ext i <;> (try fin_cases i) <;>
@@ -19,7 +19,7 @@ theorem associator_upper_upper_lower (u v w : ZornVec3 R) :
       ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three] <;> ring
 
 /-- In the signed lower convention `uStar = -V`, both contraction signs reverse. -/
-theorem associator_upper_upper_signed_lower (u v w : ZornVec3 R) :
+theorem associator_upper_upper_signed_lower {R : Type*} [CommRing R] (u v w : ZornVec3 R) :
     associator (offDiagonal u 0) (offDiagonal v 0) (offDiagonal 0 (-w)) =
       offDiagonal (fun i => ZornVec3.dot u w * v i - ZornVec3.dot v w * u i) 0 := by
   rw [associator_upper_upper_lower]
@@ -27,7 +27,7 @@ theorem associator_upper_upper_signed_lower (u v w : ZornVec3 R) :
   all_goals ring
 
 /-- The second mixed sector, for arbitrary vectors rather than selected basis triples. -/
-theorem associator_upper_lower_lower (u v w : ZornVec3 R) :
+theorem associator_upper_lower_lower {R : Type*} [CommRing R] (u v w : ZornVec3 R) :
     associator (offDiagonal u 0) (offDiagonal 0 v) (offDiagonal 0 w) =
       offDiagonal 0 (fun i => ZornVec3.dot u w * v i - ZornVec3.dot u v * w i) := by
   ext i <;> (try fin_cases i) <;>
@@ -35,7 +35,7 @@ theorem associator_upper_lower_lower (u v w : ZornVec3 R) :
       ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three] <;> ring
 
 /-- Exact vanishing criterion, with no division or nondegeneracy assumptions. -/
-theorem associator_upper_upper_lower_eq_zero_iff (u v w : ZornVec3 R) :
+theorem associator_upper_upper_lower_eq_zero_iff {R : Type*} [CommRing R] (u v w : ZornVec3 R) :
     associator (offDiagonal u 0) (offDiagonal v 0) (offDiagonal 0 w) = zero ↔
       ∀ i, ZornVec3.dot v w * u i = ZornVec3.dot u w * v i := by
   rw [associator_upper_upper_lower]
@@ -48,7 +48,7 @@ theorem associator_upper_upper_lower_eq_zero_iff (u v w : ZornVec3 R) :
 
 /-- The mixed triple from the intake has zero associator; the three-upper
 witness is already `associator_U_zero_U_one_U_two` in the native owner. -/
-theorem associator_U_zero_U_one_V_two :
+theorem associator_U_zero_U_one_V_two {R : Type*} [CommRing R] :
     associator (U 0 : ZornVectorMatrix R) (U 1) (V 2) = zero := by
   unfold associator
   rw [U_zero_mul_U_one, V_mul_self_zero, U_one_mul_V_two, mul_zero]
@@ -62,7 +62,7 @@ theorem conj_diagonal (a b : R) :
 
 /-! The remaining Peirce table, for arbitrary vectors over the base ring. -/
 
-theorem associator_upper_upper_upper (u v w : ZornVec3 R) :
+theorem associator_upper_upper_upper {R : Type*} [CommRing R] (u v w : ZornVec3 R) :
     associator (offDiagonal u 0) (offDiagonal v 0) (offDiagonal w 0) =
       diagonal (-ZornVec3.dot (ZornVec3.cross u v) w) (ZornVec3.dot (ZornVec3.cross u v) w) := by
   ext i <;> (try fin_cases i) <;>
@@ -70,7 +70,7 @@ theorem associator_upper_upper_upper (u v w : ZornVec3 R) :
       ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
   all_goals ring
 
-theorem associator_lower_lower_lower (u v w : ZornVec3 R) :
+theorem associator_lower_lower_lower {R : Type*} [CommRing R] (u v w : ZornVec3 R) :
     associator (offDiagonal 0 u) (offDiagonal 0 v) (offDiagonal 0 w) =
       diagonal (-ZornVec3.dot (ZornVec3.cross u v) w) (ZornVec3.dot (ZornVec3.cross u v) w) := by
   ext i <;> (try fin_cases i) <;>
@@ -121,7 +121,7 @@ theorem associator_upper_lower_E22 (u v : ZornVec3 R) :
       ZornVec3.dot, ZornVec3.cross]
 
 /-- The elliptic three-plane lies in an associative quaternion subalgebra. -/
-theorem associator_elliptic_vectors (u v w : ZornVec3 R) :
+theorem associator_elliptic_vectors {R : Type*} [CommRing R] (u v w : ZornVec3 R) :
     associator (offDiagonal u (-u)) (offDiagonal v (-v))
       (offDiagonal w (-w)) = zero := by
   ext i <;> (try fin_cases i) <;>
@@ -129,7 +129,7 @@ theorem associator_elliptic_vectors (u v w : ZornVec3 R) :
       ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three] <;> ring
 
 /-- The trace orientation is positive two for the owner's Zorn convention. -/
-theorem trace_elliptic_triple (u v w : ZornVec3 R) :
+theorem trace_elliptic_triple {R : Type*} [CommRing R] (u v w : ZornVec3 R) :
     trace (mul (mul (offDiagonal u (-u)) (offDiagonal v (-v)))
       (offDiagonal w (-w))) = 2 * ZornVec3.dot u (ZornVec3.cross v w) := by
   simp [trace, mul, offDiagonal, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
@@ -137,7 +137,7 @@ theorem trace_elliptic_triple (u v w : ZornVec3 R) :
 
 /-- Genuine product derivations preserve the associator by a three-slot Leibniz law.
 This does not assert that fixing two associator arguments gives a derivation. -/
-theorem derivation_map_associator (D : Derivation (R := R))
+theorem derivation_map_associator {R : Type*} [CommRing R] (D : Derivation (R := R))
     (X Y Z : ZornVectorMatrix R) :
     D (associator X Y Z) =
       add (add (associator (D X) Y Z) (associator X (D Y) Z))

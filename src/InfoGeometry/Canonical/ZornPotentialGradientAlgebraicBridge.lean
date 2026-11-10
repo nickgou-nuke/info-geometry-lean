@@ -18,7 +18,7 @@ open InfoGeometry.Algebra
 open InfoGeometry.Algebra.ZornVec3
 open InfoGeometry.Algebra.ZornVectorMatrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 local notation "Vec3" => ZornVec3 R
 local notation "ZM" => ZornVectorMatrix R
@@ -63,9 +63,9 @@ theorem symmetricGradient_mul_symmetricField
     simp [symmetricGradient, symmetricField, upperFieldComponent,
       ZornVectorMatrix.mul, ZornVec3.dot, ZornVec3.cross,
       Fin.sum_univ_three]
-  · ring
-  · ring
-  · ring
+  · noncomm_ring
+  · noncomm_ring
+  · noncomm_ring
 
 theorem symmetricGradient_mul_symmetricField_scalar
     (time scalar : R) (gradient vector : Vec3) :

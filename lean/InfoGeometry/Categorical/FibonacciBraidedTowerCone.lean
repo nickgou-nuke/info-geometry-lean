@@ -66,7 +66,7 @@ theorem zorn_maximal_support
   intro X hXZ hMX
   exact subset_antisymm (hM.right hXZ hMX) hMX
 
-variable {R : Type uR} [CommRing R] [Invertible (2 : R)]
+variable {R : Type uR} [Ring R] [Invertible (2 : R)]
 variable {A : ℕ → Type uA} [∀ n, AddCommGroup (A n)] [∀ n, Module R (A n)]
 variable {A_inf : Type uInf} [AddCommGroup A_inf] [Module R A_inf]
 

@@ -11,7 +11,7 @@ open InfoGeometry.Quantum.KleinBottleModularThroat
 -/
 
 theorem capstone_klein_bottle_throat_synthesis
-    {R : Type*} [CommRing R]
+    {R : Type*} [Ring R]
     (z : ℂ) (N_L N_R : ℝ)
     (h_standing : N_L = N_R) (σ : ℝ) (h_throat : σ - 1 / 2 = 0)
     (Q Qbar H : R) (h_susy : anticommutator Q Qbar = 2 * H) :

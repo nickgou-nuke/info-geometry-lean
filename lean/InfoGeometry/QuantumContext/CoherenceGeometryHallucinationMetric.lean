@@ -2,6 +2,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.FinCases
 
@@ -41,7 +42,7 @@ open Matrix Real
 
 /-! ### 1. Algebraic Stiefel Ring Infrastructure -/
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Prompt retention mass $P(K, s) = s K^2$. -/
 def promptRetention (K s : R) : R := s * K^2
@@ -63,12 +64,12 @@ theorem trace_conservation (K L s : R) (h_stiefel : K^2 + L^2 = 1) :
     promptRetention K s + futureGeneration L s = s := by
   dsimp [promptRetention, futureGeneration]
   calc
-    s * K^2 + s * L^2 = s * (K^2 + L^2) := by ring
+    s * K^2 + s * L^2 = s * (K^2 + L^2) := by noncomm_ring
     _ = s * 1 := by rw [h_stiefel]
     _ = s := mul_one s
 
 /-- **Theorem**: Algebraic expansion of hallucination defect: $\mathcal{H} = 1 - 2 K L$. -/
-theorem hallucination_defect_expansion (K L : R) (h_stiefel : K^2 + L^2 = 1) :
+theorem hallucination_defect_expansion {R : Type*} [CommRing R] (K L : R) (h_stiefel : K^2 + L^2 = 1) :
     hallucinationDefect K L = 1 - 2 * (K * L) := by
   dsimp [hallucinationDefect]
   calc
@@ -76,7 +77,7 @@ theorem hallucination_defect_expansion (K L : R) (h_stiefel : K^2 + L^2 = 1) :
     _ = 1 - 2 * (K * L) := by rw [h_stiefel]
 
 /-- **Theorem**: Defect-coherence conservation law: $\mathcal{H} + 2 K L = 1$. -/
-theorem hallucination_defect_add_coherence (K L : R) (h_stiefel : K^2 + L^2 = 1) :
+theorem hallucination_defect_add_coherence {R : Type*} [CommRing R] (K L : R) (h_stiefel : K^2 + L^2 = 1) :
     hallucinationDefect K L + 2 * (K * L) = 1 := by
   rw [hallucination_defect_expansion K L h_stiefel]
   ring
@@ -86,7 +87,7 @@ theorem perfect_balance_defect_zero (K L : R) (h_eq : K = L) :
     hallucinationDefect K L = 0 := by
   dsimp [hallucinationDefect]
   rw [h_eq]
-  ring
+  noncomm_ring
 
 /-! ### 2. Density Matrix Purity & Projector Identity -/
 
@@ -100,14 +101,14 @@ def trace2 (M : Matrix (Fin 2) (Fin 2) R) : R :=
   M 0 0 + M 1 1
 
 /-- **Theorem**: The determinant of the reconstructed state vanishes identically. -/
-theorem reconstructedState_det_zero (K L s : R) :
+theorem reconstructedState_det_zero {R : Type*} [CommRing R] (K L s : R) :
     (reconstructedState K L s 0 0 * reconstructedState K L s 1 1 -
      reconstructedState K L s 0 1 * reconstructedState K L s 1 0) = 0 := by
   dsimp [reconstructedState]
   ring
 
 /-- **Theorem**: Reconstructed state purity: $\mathcal{R}(\sigma)^2 = s \cdot \mathcal{R}(\sigma)$. -/
-theorem reconstructedState_sq (K L s : R) (h_stiefel : K^2 + L^2 = 1) :
+theorem reconstructedState_sq {R : Type*} [CommRing R] (K L s : R) (h_stiefel : K^2 + L^2 = 1) :
     reconstructedState K L s * reconstructedState K L s = s • reconstructedState K L s := by
   ext i j
   fin_cases i <;> fin_cases j
@@ -244,7 +245,7 @@ theorem total_hallucination_regime_pi_div_two (s : ℝ) :
 
 /-- Master certificate bundling all proved coherence geometry theorems. -/
 structure CoherenceGeometryCertificate where
-  trace_preservation : ∀ {R : Type*} [CommRing R] (K L s : R) (h : K^2 + L^2 = 1),
+  trace_preservation : ∀ {R : Type*} [Ring R] (K L s : R) (h : K^2 + L^2 = 1),
     promptRetention K s + futureGeneration L s = s
   reconstructed_det_zero : ∀ {R : Type*} [CommRing R] (K L s : R),
     (reconstructedState K L s 0 0 * reconstructedState K L s 1 1 -

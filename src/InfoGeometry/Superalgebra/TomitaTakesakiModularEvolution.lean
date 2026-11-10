@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.LinearCombination
 
@@ -40,7 +39,7 @@ structure ColorVec3 (R : Type*) where
 
 namespace ColorVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : ColorVec3 R := ⟨0, 0, 0⟩
 def smul (k : R) (u : ColorVec3 R) : ColorVec3 R := ⟨k * u.c1, k * u.c2, k * u.c3⟩
@@ -55,7 +54,7 @@ def cross (u v : ColorVec3 R) : ColorVec3 R where
   c2 := u.c3 * v.c1 - u.c1 * v.c3
   c3 := u.c1 * v.c2 - u.c2 * v.c1
 
-theorem dot_smul_smul (a b : R) (u v : ColorVec3 R) :
+theorem dot_smul_smul {R : Type*} [CommRing R] (a b : R) (u v : ColorVec3 R) :
     dot (smul a u) (smul b v) = (a * b) * dot u v := by
   dsimp [dot, smul]
   ring
@@ -74,7 +73,7 @@ structure SplitOctonion (R : Type*) where
 
 namespace SplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : SplitOctonion R := ⟨0, ColorVec3.zero, ColorVec3.zero, 0⟩
 def one  : SplitOctonion R := ⟨1, ColorVec3.zero, ColorVec3.zero, 1⟩
@@ -114,6 +113,12 @@ def modularHamiltonian (I_surp : R) : SplitOctonion R :=
 def modularDelta (c s : R) : SplitOctonion R :=
   ⟨c + s, ColorVec3.zero, ColorVec3.zero, c - s⟩
 
+/-- Two-sided modular automorphism `σ_t(X) = Δ_t · X · (Δ_t)⁻¹`. -/
+def tomitaTakesakiFlow (c s : R) (X : SplitOctonion R) : SplitOctonion R :=
+  mul (mul (modularDelta c s) X) (modularDelta c (-s))
+
+variable {R : Type*} [CommRing R]
+
 /-- The two diagonal products of the modular rotor have scalar coordinate
     `c² - s²`; this does not assume the mass-shell normalization. -/
 theorem modularDelta_mul_reverse (c s : R) :
@@ -139,10 +144,6 @@ theorem modularDelta_has_inverse (c s : R) (h_hyperbolic : c^2 - s^2 = 1) :
     have hs : (-s)^2 = s^2 := by ring
     rw [h_reverse', hs, h_hyperbolic]
     rfl
-
-/-- Two-sided modular automorphism `σ_t(X) = Δ_t · X · (Δ_t)⁻¹`. -/
-def tomitaTakesakiFlow (c s : R) (X : SplitOctonion R) : SplitOctonion R :=
-  mul (mul (modularDelta c s) X) (modularDelta c (-s))
 
 /--
 Blue-shift of the forward quark sheet:
@@ -188,106 +189,6 @@ theorem tomita_takesaki_kms_invariant (c s : R) (u v : ColorVec3 R)
       _ = 1 := by ring
   rw [tomita_takesaki_quark_blue_shift, tomita_takesaki_antiquark_red_shift]
   rw [anticommutator_quark_antiquark, ColorVec3.dot_smul_smul, h_prod, one_mul]
-
-/-! ### 3a. Real Rapidity Parameterization -/
-
-/-- The hyperbolic rotor's forward chiral weight is exactly `exp (2t)` when
-the parameters are `cosh t` and `sinh t`. -/
-theorem real_rapidity_forward_weight (t : ℝ) :
-    (Real.cosh t + Real.sinh t)^2 = Real.exp (2 * t) := by
-  rw [Real.cosh_add_sinh]
-  calc (Real.exp t)^2 = Real.exp (t + t) := by rw [pow_two, ← Real.exp_add]
-    _ = Real.exp (2 * t) := by congr 1; ring
-
-/-- The opposite chiral weight is `exp (-2t)` under the same real
-rapidity parameterization. -/
-theorem real_rapidity_backward_weight (t : ℝ) :
-    (Real.cosh t - Real.sinh t)^2 = Real.exp (-2 * t) := by
-  have hlinear : Real.cosh t - Real.sinh t = Real.exp (-t) := by
-    exact Real.cosh_sub_sinh t
-  rw [hlinear]
-  calc (Real.exp (-t))^2 = Real.exp (-t + -t) := by rw [pow_two, ← Real.exp_add]
-    _ = Real.exp (-2 * t) := by congr 1; ring
-
-/-- The real rapidity parameters automatically satisfy the inverse law used
-by `modularDelta_has_inverse`. -/
-theorem real_rapidity_hyperbolic_identity (t : ℝ) :
-    (Real.cosh t)^2 - (Real.sinh t)^2 = 1 :=
-  Real.cosh_sq_sub_sinh_sq t
-
-/-- At surprisal rapidity, the modular rotor has the expected exponential
-diagonal coordinates. This is a coordinate identity for the defined rotor;
-it does not identify the rotor with an exponential of `modularHamiltonian`. -/
-theorem modularDelta_surprisal_coordinates (I_surp : ℝ) :
-    modularDelta (Real.cosh I_surp) (Real.sinh I_surp) =
-      ⟨Real.exp I_surp, ColorVec3.zero, ColorVec3.zero, Real.exp (-I_surp)⟩ := by
-  ext <;> simp [modularDelta, ColorVec3.zero, Real.cosh_add_sinh,
-    Real.cosh_sub_sinh]
-
-/-- The algebraic blue-shift formula specializes to the forward exponential
-weight on the quark sheet. -/
-theorem tomita_takesaki_quark_rapidity_shift (t : ℝ) (u : ColorVec3 ℝ) :
-    tomitaTakesakiFlow (Real.cosh t) (Real.sinh t) (quark u) =
-      quark (ColorVec3.smul (Real.exp (2 * t)) u) := by
-  rw [tomita_takesaki_quark_blue_shift, real_rapidity_forward_weight]
-
-/-- The algebraic red-shift formula specializes to the backward exponential
-weight on the antiquark sheet. -/
-theorem tomita_takesaki_antiquark_rapidity_shift (t : ℝ) (v : ColorVec3 ℝ) :
-    tomitaTakesakiFlow (Real.cosh t) (Real.sinh t) (antiquark v) =
-      antiquark (ColorVec3.smul (Real.exp (-2 * t)) v) := by
-  rw [tomita_takesaki_antiquark_red_shift, real_rapidity_backward_weight]
-
-/-- Successive rapidity flows compose additively on the forward chiral sector.
-This proves the one-parameter action law on quarks for the algebraic flow
-defined above; it does not assert a modular group on the full split-octonion
-algebra. -/
-theorem tomita_takesaki_quark_rapidity_add (s t : ℝ) (u : ColorVec3 ℝ) :
-    tomitaTakesakiFlow (Real.cosh s) (Real.sinh s)
-      (tomitaTakesakiFlow (Real.cosh t) (Real.sinh t) (quark u)) =
-        tomitaTakesakiFlow (Real.cosh (s + t)) (Real.sinh (s + t)) (quark u) := by
-  have h_exp : Real.exp (2 * s) * Real.exp (2 * t) = Real.exp (2 * (s + t)) := by
-    rw [← Real.exp_add]
-    congr 1
-    ring
-  calc tomitaTakesakiFlow (Real.cosh s) (Real.sinh s)
-        (tomitaTakesakiFlow (Real.cosh t) (Real.sinh t) (quark u))
-      = tomitaTakesakiFlow (Real.cosh s) (Real.sinh s)
-          (quark (ColorVec3.smul (Real.exp (2 * t)) u)) := by
-            rw [tomita_takesaki_quark_rapidity_shift]
-    _ = quark (ColorVec3.smul (Real.exp (2 * s))
-          (ColorVec3.smul (Real.exp (2 * t)) u)) := by
-            rw [tomita_takesaki_quark_rapidity_shift]
-    _ = quark (ColorVec3.smul (Real.exp (2 * (s + t))) u) := by
-          congr 1
-          ext <;> dsimp [ColorVec3.smul] <;> rw [← mul_assoc, h_exp]
-    _ = tomitaTakesakiFlow (Real.cosh (s + t)) (Real.sinh (s + t)) (quark u) := by
-          rw [tomita_takesaki_quark_rapidity_shift]
-
-/-- Successive rapidity flows compose additively on the backward chiral sector.
-The opposite exponent is forced by the antiquark red-shift formula. -/
-theorem tomita_takesaki_antiquark_rapidity_add (s t : ℝ) (v : ColorVec3 ℝ) :
-    tomitaTakesakiFlow (Real.cosh s) (Real.sinh s)
-      (tomitaTakesakiFlow (Real.cosh t) (Real.sinh t) (antiquark v)) =
-        tomitaTakesakiFlow (Real.cosh (s + t)) (Real.sinh (s + t)) (antiquark v) := by
-  have h_exp : Real.exp (-2 * s) * Real.exp (-2 * t) =
-      Real.exp (-2 * (s + t)) := by
-    rw [← Real.exp_add]
-    congr 1
-    ring
-  calc tomitaTakesakiFlow (Real.cosh s) (Real.sinh s)
-        (tomitaTakesakiFlow (Real.cosh t) (Real.sinh t) (antiquark v))
-      = tomitaTakesakiFlow (Real.cosh s) (Real.sinh s)
-          (antiquark (ColorVec3.smul (Real.exp (-2 * t)) v)) := by
-            rw [tomita_takesaki_antiquark_rapidity_shift]
-    _ = antiquark (ColorVec3.smul (Real.exp (-2 * s))
-          (ColorVec3.smul (Real.exp (-2 * t)) v)) := by
-            rw [tomita_takesaki_antiquark_rapidity_shift]
-    _ = antiquark (ColorVec3.smul (Real.exp (-2 * (s + t))) v) := by
-          congr 1
-          ext <;> dsimp [ColorVec3.smul] <;> rw [← mul_assoc, h_exp]
-    _ = tomitaTakesakiFlow (Real.cosh (s + t)) (Real.sinh (s + t)) (antiquark v) := by
-          rw [tomita_takesaki_antiquark_rapidity_shift]
 
 end SplitOctonion
 

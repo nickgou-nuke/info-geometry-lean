@@ -21,7 +21,7 @@ structure SplitCayley (R : Type*) where
 
 namespace SplitCayley
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 @[ext] theorem ext {x y : SplitCayley R}
     (ha : x.a = y.a) (hu : x.u = y.u) (hv : x.v = y.v) (hb : x.b = y.b) : x = y := by
@@ -62,11 +62,19 @@ instance : Mul (SplitCayley R) := ⟨mul⟩
 def conj (x : SplitCayley R) : SplitCayley R := ⟨x.b, -x.u, -x.v, x.a⟩
 def norm (x : SplitCayley R) : R := x.a * x.b - dot x.u x.v
 
-@[simp] theorem cross_self_neg (w : Vec3 R) : cross w (-w) = 0 := by
+theorem cross_self_neg_noncomm (w : Vec3 R) : cross w (-w) = -cross w w := by
+  funext i
+  fin_cases i <;> simp [cross] <;> noncomm_ring
+
+theorem cross_neg_self_noncomm (w : Vec3 R) : cross (-w) w = -cross w w := by
+  funext i
+  fin_cases i <;> simp [cross] <;> noncomm_ring
+
+@[simp] theorem cross_self_neg {R : Type*} [CommRing R] (w : Vec3 R) : cross w (-w) = 0 := by
   funext i
   fin_cases i <;> simp [cross] <;> ring
 
-@[simp] theorem cross_neg_self (w : Vec3 R) : cross (-w) w = 0 := by
+@[simp] theorem cross_neg_self {R : Type*} [CommRing R] (w : Vec3 R) : cross (-w) w = 0 := by
   funext i
   fin_cases i <;> simp [cross] <;> ring
 
@@ -74,7 +82,7 @@ def norm (x : SplitCayley R) : R := x.a * x.b - dot x.u x.v
   cases x
   ext <;> simp [conj]
 
-@[simp] theorem mul_conj (x : SplitCayley R) :
+@[simp] theorem mul_conj {R : Type*} [CommRing R] (x : SplitCayley R) :
     x * conj x = norm x • (1 : SplitCayley R) := by
   cases x with
   | mk a u v b =>
@@ -93,7 +101,7 @@ def norm (x : SplitCayley R) : R := x.a * x.b - dot x.u x.v
       simp [dot]
       ring
 
-@[simp] theorem conj_mul (x : SplitCayley R) :
+@[simp] theorem conj_mul {R : Type*} [CommRing R] (x : SplitCayley R) :
     conj x * x = norm x • (1 : SplitCayley R) := by
   cases x with
   | mk a u v b =>
@@ -112,7 +120,7 @@ def norm (x : SplitCayley R) : R := x.a * x.b - dot x.u x.v
       simp [dot]
       ring
 
-@[simp] theorem norm_conj (x : SplitCayley R) : norm (conj x) = norm x := by
+@[simp] theorem norm_conj {R : Type*} [CommRing R] (x : SplitCayley R) : norm (conj x) = norm x := by
   cases x
   simp [conj, norm, dot]
   ring

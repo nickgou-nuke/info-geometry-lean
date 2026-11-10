@@ -29,8 +29,8 @@ open BigOperators
 
 namespace InfoGeometry.NCG
 
-variable {R : Type*} [CommRing R]
-variable {A : Type*} [Ring A] [Algebra R A] [StarRing A]
+variable {R : Type*} [Ring R]
+variable {A : Type*} [Ring A] [Module R A] [StarRing A]
 
 /-!
 =============================================================================
@@ -193,7 +193,7 @@ SECTION 2: The GNS Construction on Star Algebras
 -/
 
 /-- A positive linear state functional ω : A → R on a star-algebra -/
-structure PositiveState (R A : Type*) [CommRing R] [Ring A] [Algebra R A] [StarRing A] where
+structure PositiveState (R A : Type*) [Ring R] [Ring A] [Module R A] [StarRing A] where
   toLinearMap : A →ₗ[R] R
   normalized' : toLinearMap 1 = 1
 

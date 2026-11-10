@@ -36,8 +36,8 @@ noncomputable section
 
 namespace InfoGeometry.NCG.Core
 
-variable {R : Type*} [CommRing R]
-variable {A : Type*} [Ring A] [Algebra R A]
+variable {R : Type*} [Ring R]
+variable {A : Type*} [Ring A] [Module R A]
 
 /-!
 =============================================================================
@@ -97,7 +97,7 @@ SECTION 2: Universal GNS Construction on Star-Algebras
 =============================================================================
 -/
 
-variable {S : Type*} [Ring S] [StarRing S] [Algebra R S]
+variable {S : Type*} [Ring S] [StarRing S] [Module R S]
 
 /-- The GNS Sesquilinear Pre-Inner Product: `⟨a, b⟩_φ = φ(star b * a)` -/
 def gnsInner (φ : S →ₗ[R] R) (a b : S) : R :=
@@ -159,24 +159,28 @@ theorem gnsInner_isometry (φ : S →ₗ[R] R) (Φ : S → S)
 
 /-- Connes Perturbation of a linear functional `φ` by an element `h ∈ S`:
     `φ_h(x) = φ(h * x * h)` -/
-def connesPerturb (φ : S →ₗ[R] R) (h : S) : S →ₗ[R] R where
+def connesPerturb [IsScalarTower R S S] [SMulCommClass R S S]
+    (φ : S →ₗ[R] R) (h : S) : S →ₗ[R] R where
   toFun x := φ (h * x * h)
   map_add' x y := by
     simp only [mul_add, add_mul, φ.map_add]
   map_smul' r x := by
     have h_smul : h * (r • x) * h = r • (h * x * h) := by
-      simp only [Algebra.mul_smul_comm, Algebra.smul_mul_assoc]
+      simp only [mul_smul_comm, smul_mul_assoc]
     simp only [h_smul, φ.map_smul, smul_eq_mul, RingHom.id_apply]
 
 @[simp]
-theorem connesPerturb_apply (φ : S →ₗ[R] R) (h x : S) :
+theorem connesPerturb_apply [IsScalarTower R S S] [SMulCommClass R S S]
+    (φ : S →ₗ[R] R) (h x : S) :
     connesPerturb φ h x = φ (h * x * h) := rfl
 
-theorem connesPerturb_one (φ : S →ₗ[R] R) (h : S) :
+theorem connesPerturb_one [IsScalarTower R S S] [SMulCommClass R S S]
+    (φ : S →ₗ[R] R) (h : S) :
     connesPerturb φ h 1 = φ (h * h) := by
   simp [connesPerturb]
 
-theorem connesPerturb_normalized (φ : S →ₗ[R] R) (h : S)
+theorem connesPerturb_normalized [IsScalarTower R S S] [SMulCommClass R S S]
+    (φ : S →ₗ[R] R) (h : S)
     (h_norm : φ (h * h) = 1) :
     connesPerturb φ h 1 = 1 := by
   rw [connesPerturb_one, h_norm]

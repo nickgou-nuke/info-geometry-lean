@@ -60,6 +60,48 @@ It defines a conservative projective-shell quotient model for `OP1`, but does
 
 namespace InfoGeometry.Projective.SplitOctonions.ZornMatrix
 
+section RingCoords
+
+variable {R : Type*} [Ring R]
+variable {V : Type*} [AddCommGroup V] [Module R V]
+
+/-- Coordinate condition used for the local Lemma 4.5.2 calculations. -/
+def is_half_inverter (x : ZornMatrix R V) : Prop :=
+  x.x11 = 1 ∧ x.x12 = 1 ∧ x.x21 = 0
+
+/-- Unit scalar scaling on reduced Zorn matrices. -/
+def unitScale (u : Rˣ) (x : ZornMatrix R V) : ZornMatrix R V where
+  x11 := (u : R) * x.x11
+  x12 := (u : R) * x.x12
+  x21 := (u : R) • x.x21
+  x22 := (u : R) • x.x22
+
+@[simp] theorem unitScale_one (x : ZornMatrix R V) : unitScale (1 : Rˣ) x = x := by
+  cases x with
+  | mk a b c d => simp [unitScale]
+
+@[simp] theorem unitScale_mul (u v : Rˣ) (x : ZornMatrix R V) :
+    unitScale (u * v) x = unitScale u (unitScale v x) := by
+  ext <;> simp [unitScale, smul_smul, mul_assoc]
+
+@[simp] theorem unitScale_inv (u : Rˣ) (x : ZornMatrix R V) :
+    unitScale (u⁻¹) (unitScale u x) = x := by
+  cases x with
+  | mk a b c d => ext <;> simp [unitScale, smul_smul, ← mul_assoc]
+
+@[simp] theorem unitScale_zero (u : Rˣ) : unitScale u (0 : ZornMatrix R V) = 0 := by
+  ext
+  · change (u : R) * (0 : R) = (0 : R)
+    simp
+  · change (u : R) * (0 : R) = (0 : R)
+    simp
+  · change (u : R) • (0 : V) = (0 : V)
+    simp
+  · change (u : R) • (0 : V) = (0 : V)
+    simp
+
+end RingCoords
+
 variable {R : Type*} [CommRing R]
 variable {V : Type*} [AddCommGroup V] [Module R V]
 variable (B : V →ₗ[R] V →ₗ[R] R)
@@ -75,10 +117,6 @@ def associator (x y z : ZornMatrix R V) : ZornMatrix R V where
   x12 := (mul B (mul B x y) z).x12 - (mul B x (mul B y z)).x12
   x21 := (mul B (mul B x y) z).x21 - (mul B x (mul B y z)).x21
   x22 := (mul B (mul B x y) z).x22 - (mul B x (mul B y z)).x22
-
-/-- Coordinate condition used for the local Lemma 4.5.2 calculations. -/
-def is_half_inverter (x : ZornMatrix R V) : Prop :=
-  x.x11 = 1 ∧ x.x12 = 1 ∧ x.x21 = 0
 
 /--
 Residual vector component from Voelkel's Computation 4.5.1:
@@ -240,37 +278,6 @@ theorem associator_vanishes_of_half_inverter_star_mul_diag
   associator_vanishes_of_half_inverter_star_mul B vi (diag α β) x hx rfl
 
 /-! ## Projective-shell carrier -/
-
-/-- Unit scalar scaling on reduced Zorn matrices. -/
-def unitScale (u : Rˣ) (x : ZornMatrix R V) : ZornMatrix R V where
-  x11 := (u : R) * x.x11
-  x12 := (u : R) * x.x12
-  x21 := (u : R) • x.x21
-  x22 := (u : R) • x.x22
-
-@[simp] theorem unitScale_one (x : ZornMatrix R V) : unitScale (1 : Rˣ) x = x := by
-  cases x with
-  | mk a b c d => simp [unitScale]
-
-@[simp] theorem unitScale_mul (u v : Rˣ) (x : ZornMatrix R V) :
-    unitScale (u * v) x = unitScale u (unitScale v x) := by
-  ext <;> simp [unitScale, smul_smul, mul_left_comm, mul_comm]
-
-@[simp] theorem unitScale_inv (u : Rˣ) (x : ZornMatrix R V) :
-    unitScale (u⁻¹) (unitScale u x) = x := by
-  cases x with
-  | mk a b c d => ext <;> simp [unitScale, smul_smul, mul_comm]
-
-@[simp] theorem unitScale_zero (u : Rˣ) : unitScale u (0 : ZornMatrix R V) = 0 := by
-  ext
-  · change (u : R) * (0 : R) = (0 : R)
-    simp
-  · change (u : R) * (0 : R) = (0 : R)
-    simp
-  · change (u : R) • (0 : V) = (0 : V)
-    simp
-  · change (u : R) • (0 : V) = (0 : V)
-    simp
 
 /-- Boundary norm used for the local OP¹ shell. -/
 abbrev octonionicBoundaryNorm (x : ZornMatrix R V) : R :=

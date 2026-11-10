@@ -24,7 +24,7 @@ open InfoGeometry.Quantum
 open InfoGeometry.Clifford.SplitOctonionsDualProduct
 open InfoGeometry.Clifford.SplitOctonionsDualProduct.SplitOctonion
 
-variable {R : Type*} [Field R] [Invertible (2 : R)]
+variable {R : Type*} [CommRing R] [Invertible (2 : R)]
 variable {M : Type*} [AddCommGroup M] [Module R M]
 variable {Q : QuadraticForm R M}
 variable {v0 : M}

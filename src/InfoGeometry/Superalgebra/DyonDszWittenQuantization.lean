@@ -25,7 +25,7 @@ Standard: QMS-SOP-IAA-001 (v1.1) / OpenGauss 16-Trap Universal Shield
 
 namespace InfoGeometry.Superalgebra.DyonWittenQuantization
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. 3D Калибровъчно Пространство с Пълна Векторна Алгебра -/
 
@@ -38,7 +38,7 @@ structure ColorVec3 (R : Type*) where
 
 namespace ColorVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : ColorVec3 R := ⟨0, 0, 0⟩
 def add (u v : ColorVec3 R) : ColorVec3 R := ⟨u.c1 + v.c1, u.c2 + v.c2, u.c3 + v.c3⟩
@@ -78,7 +78,7 @@ structure SplitOctonion (R : Type*) where
 
 namespace SplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : SplitOctonion R := ⟨0, ColorVec3.zero, ColorVec3.zero, 0⟩
 def one  : SplitOctonion R := ⟨1, ColorVec3.zero, ColorVec3.zero, 1⟩
@@ -126,7 +126,7 @@ def wittenRotorAdj (ch sh : R) : SplitOctonion R :=
 проектирана върху пара-симплектичния генератор K₀:
 [𝔇(q₁, g₁, u), 𝔇(q₂, g₂, u)] = (q₁g₂ - q₂g₁) · ‖u‖² • K₀.
 -/
-theorem dsz_dyon_commutator (q₁ g₁ q₂ g₂ : R) (u : ColorVec3 R) :
+theorem dsz_dyon_commutator {R : Type*} [CommRing R] (q₁ g₁ q₂ g₂ : R) (u : ColorVec3 R) :
     commutator (dyon q₁ g₁ u) (dyon q₂ g₂ u) =
       scale ((q₁ * g₂ - q₂ * g₁) * ColorVec3.normSq u) paraSymplecticK0 := by
   dsimp [commutator, dyon, quark, antiquark, paraSymplecticK0, sub, add, scale, mul,
@@ -144,7 +144,7 @@ def dyonMajorana (q g : R) (u : ColorVec3 R) : SplitOctonion R :=
 Теорема 2 (Ефект на Витен): Действието на ротора върху чист монопол `dyonMajorana 0 g u`
 индуцира електрически заряд `q_θ = -2 g ch sh` в предния лист.
 -/
-theorem witten_effect_generation (ch sh : R) (g : R) (u : ColorVec3 R) :
+theorem witten_effect_generation {R : Type*} [CommRing R] (ch sh : R) (g : R) (u : ColorVec3 R) :
     let R_θ := wittenRotor ch sh
     let R_adj := wittenRotorAdj ch sh
     let M := dyonMajorana 0 g u
@@ -160,7 +160,7 @@ theorem witten_effect_generation (ch sh : R) (g : R) (u : ColorVec3 R) :
   q₁' = q₁ - θ · g₁,   q₂' = q₂ - θ · g₂
 симплектичното сдвояване q₁'g₂ - q₂'g₁ е СТРОГО РАВНО на q₁g₂ - q₂g₁!
 -/
-theorem witten_shift_preserves_dsz_pairing (q₁ g₁ q₂ g₂ theta : R) :
+theorem witten_shift_preserves_dsz_pairing {R : Type*} [CommRing R] (q₁ g₁ q₂ g₂ theta : R) :
     (q₁ - theta * g₁) * g₂ - (q₂ - theta * g₂) * g₁ = q₁ * g₂ - q₂ * g₁ := by
   ring
 
@@ -178,7 +178,7 @@ theorem splitOctonion_mul_noncommutative :
 
 /-! ### 5. Главен Синтез на Раздел 140 -/
 
-theorem dsz_witten_dyon_synthesis (q₁ g₁ q₂ g₂ ch sh theta : R) (u : ColorVec3 R) :
+theorem dsz_witten_dyon_synthesis {R : Type*} [CommRing R] (q₁ g₁ q₂ g₂ ch sh theta : R) (u : ColorVec3 R) :
     SplitOctonion.commutator (SplitOctonion.dyon q₁ g₁ u) (SplitOctonion.dyon q₂ g₂ u) =
       SplitOctonion.scale ((q₁ * g₂ - q₂ * g₁) * ColorVec3.normSq u) SplitOctonion.paraSymplecticK0 ∧
     SplitOctonion.mul (SplitOctonion.mul (SplitOctonion.wittenRotor ch sh) (SplitOctonion.dyonMajorana 0 g₁ u))

@@ -48,7 +48,7 @@ nonzero-sector projector `X^(n-1)`.
 -/
 structure FourierReadout
     {K : Type u} {A : Type v}
-    [CommRing K] [Ring A] [Algebra K A]
+    [CommSemiring K] [Ring A] [Algebra K A]
     (X : A) (m : ℕ) where
   /-- Eigenvalue/phase label for each finite mode. -/
   phase : Fin m → K
@@ -76,7 +76,7 @@ Compatibility of a Fourier readout with the already-proved algebraic
 -/
 structure NPotentFourierCompatibility
     {K : Type u} {A : Type v}
-    [CommRing K] [Ring A] [Algebra K A]
+    [CommSemiring K] [Ring A] [Algebra K A]
     (X : A) (n : ℕ)
     (hX : IsNPotent X n)
     (F : FourierReadout (K := K) X (n - 1)) : Prop where
@@ -107,7 +107,7 @@ an ambient algebra.
 -/
 structure GradeReadout
     {K : Type u} {A : Type v}
-    [CommRing K] [Ring A] [Algebra K A]
+    [CommSemiring K] [Ring A] [Algebra K A]
     (X : A) where
   grade : ℤ → Submodule K A
   /-- Left multiplication by `X^k` shifts a degree-zero vector to degree `k`. -/
@@ -121,7 +121,7 @@ read the finite spectral phases.
 -/
 structure FourierPowerCompatibility
     {K : Type u} {A : Type v}
-    [CommRing K] [Ring A] [Algebra K A]
+    [CommSemiring K] [Ring A] [Algebra K A]
     (X : A) (m : ℕ)
     (F : FourierReadout (K := K) X m)
     (P : PowerReadout X) : Prop where
@@ -204,7 +204,7 @@ Possessing an `NPotentTrifactorLedger` is stronger than merely proving
 -/
 structure NPotentTrifactorLedger
     {K : Type u} {A : Type v}
-    [CommRing K] [Ring A] [Algebra K A]
+    [CommSemiring K] [Ring A] [Algebra K A]
     (X : A) (n : ℕ) where
   npotent : IsNPotent X n
   fourier : FourierReadout (K := K) X (n - 1)

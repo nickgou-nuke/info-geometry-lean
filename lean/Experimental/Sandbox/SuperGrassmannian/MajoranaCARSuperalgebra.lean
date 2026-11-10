@@ -7,48 +7,26 @@ set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
 
 /-!
-# Majorana CAR Algebra, Nilpotent Lightcone Modes, and Chiral Superalgebra
+# Split-Cell Relations and Majorana CAR Identities
 
-Module: `InfoGeometry.SuperGrassmannian.MajoranaCARSuperalgebra`
+This module defines an abstract ring carrier with elements satisfying the
+split Clifford relations and proves the CAR, grading, projector, and ladder
+identities conditionally for each such carrier. It does not construct a
+Clifford algebra representation: the explicit noncommutative real matrix
+instance and its specialized consequences are provided by
+`InfoGeometry.SuperGrassmannian.SplitCliffordCellMatrixWitness`.
 
-This module formalizes the foundational first pillar of the Split Metric
-$\mathcal{C}\ell(1, 1)^n$ Tower:
-1. **The Split Clifford Cell $\mathcal{C}\ell(1, 1)$**:
-   - Generators $e, f$ in a ring $R$ equipped with central element $1/2$.
-   - Hyperbolic/spacelike generator: $e^2 = 1$.
-   - Elliptic/timelike generator: $f^2 = -1$.
-   - Anti-commutation: $e f + f e = 0$.
-2. **Majorana CAR Ladder Operators (Nilpotent Lightcone Modes)**:
-   - Annihilation mode: $a = \frac{1}{2}(e + f)$.
-   - Creation mode: $a^* = \frac{1}{2}(e - f)$.
-   - Nilpotency: $a^2 = 0$ and $(a^*)^2 = 0$ (Pauli exclusion on the lightcone).
-   - Canonical Anticommutation Relation (CAR): $\{a, a^*\} = a a^* + a^* a = 1$.
-3. **Chiral Grading Operator $\Gamma = e f$**:
-   - Involution / reflection: $\Gamma^2 = 1$.
-   - Fermion odd parity: $\Gamma a + a \Gamma = 0$ and $\Gamma a^* + a^* \Gamma = 0$.
-   - Spectral eigenspaces: $\Gamma a = -a$, $a \Gamma = a$, $\Gamma a^* = a^*$, $a^* \Gamma = -a^*$.
-4. **Number and Vacuum Projectors**:
-   - Number operator: $N = a^* a = \frac{1}{2}(1 + \Gamma)$.
-   - Vacuum projection: $1 - N = a a^* = \frac{1}{2}(1 - \Gamma)$.
-   - Projector idempotence: $N^2 = N$ and $(1 - N)^2 = 1 - N$.
-   - Orthogonal annihilation: $N (1 - N) = 0$ and $(1 - N) N = 0$.
-   - Parity reflection formula: $\Gamma = 2N - 1$, and $1 - 2N = f e = -\Gamma$.
-5. **Quantum Ladder Dynamics & Vacuum Annihilation**:
-   - $[N, a] = -a$ (annihilation operator reduces particle number).
-   - $[N, a^*] = +a^*$ (creation operator increases particle number).
-   - $a (1 - N) = 0$ (annihilation destroys the vacuum state).
-   - $(1 - N) a^* = 0$ (creation maps into the orthogonal occupied sector).
-   - $[N, \Gamma] = 0$ (number operator is parity-even).
-6. **Master Verification Certificate**:
-   - Structure `MajoranaCARSuperalgebraCertificate : Prop`.
-   - Theorem `compile_majorana_car_superalgebra` with 0 sorry, 0 admit, 0 custom axioms.
+The identities are conditional on a supplied `SplitCliffordCell`. The matrix
+witness companion supplies an actual inhabited instance. The final theorem
+records the multiplication table of the number/vacuum corners and the
+annihilation/creation operators.
 -/
 
 namespace InfoGeometry.SuperGrassmannian.MajoranaCAR
 
 /-! ### 1. Split Clifford Cell Structure Cl(1,1) -/
 
-/-- A split Clifford cell $\mathcal{C}\ell(1, 1)$ in a ring `R` equipped with central scalar `half`. -/
+/-- Elements satisfying the split Clifford relations in a ring with a central half-unit. -/
 structure SplitCliffordCell (R : Type*) [Ring R] where
   e : R
   f : R
@@ -434,60 +412,45 @@ theorem bracket_N_Gamma : N C * Gamma C - Gamma C * N C = 0 := by
 
 end SplitCliffordCell
 
-/-! ### 6. Master Verification Certificate -/
+/-! ### 6. Matrix-unit multiplication table -/
 
 open SplitCliffordCell
 
 /--
-Master verification certificate for the first pillar of the Split Metric $\mathcal{C}\ell(1, 1)^n$ Tower:
-"Majorana CAR Algebra, Nilpotent Lightcone Modes, and Chiral Superalgebra"
+The operators `1 - N`, `a`, `a_star`, and `N` satisfy the full ordered
+matrix-unit multiplication table. Thus the number and vacuum idempotents are
+orthogonal, with `a * a_star = 1 - N` and `a_star * a = N`.
 -/
-structure MajoranaCARSuperalgebraCertificate : Prop where
-  -- 1. Split Clifford cell
-  e_sq : ∀ {R : Type*} [Ring R] (C : SplitCliffordCell R), (C.e) ^ 2 = 1
-  f_sq : ∀ {R : Type*} [Ring R] (C : SplitCliffordCell R), (C.f) ^ 2 = -1
-  ef_anticomm : ∀ {R : Type*} [Ring R] (C : SplitCliffordCell R), C.e * C.f + C.f * C.e = 0
-  -- 2. Majorana CAR ladder operators
-  a_nilpotent : ∀ {R : Type*} [Ring R] (C : SplitCliffordCell R), (a C) ^ 2 = 0
-  a_star_nilpotent : ∀ {R : Type*} [Ring R] (C : SplitCliffordCell R), (a_star C) ^ 2 = 0
-  car_anticommutator : ∀ {R : Type*} [Ring R] (C : SplitCliffordCell R), a C * a_star C + a_star C * a C = 1
-  -- 3. Chiral grading operator
-  gamma_involution : ∀ {R : Type*} [Ring R] (C : SplitCliffordCell R), (Gamma C) ^ 2 = 1
-  gamma_odd_a : ∀ {R : Type*} [Ring R] (C : SplitCliffordCell R), Gamma C * a C + a C * Gamma C = 0
-  gamma_odd_a_star : ∀ {R : Type*} [Ring R] (C : SplitCliffordCell R), Gamma C * a_star C + a_star C * Gamma C = 0
-  -- 4. Number and vacuum projectors
-  n_idempotent : ∀ {R : Type*} [Ring R] (C : SplitCliffordCell R), (N C) ^ 2 = N C
-  vac_idempotent : ∀ {R : Type*} [Ring R] (C : SplitCliffordCell R), (1 - N C) ^ 2 = 1 - N C
-  ortho_annihilation : ∀ {R : Type*} [Ring R] (C : SplitCliffordCell R), N C * (1 - N C) = 0
-  gamma_parity_formula : ∀ {R : Type*} [Ring R] (C : SplitCliffordCell R), Gamma C = (2 : R) * N C - 1
-  chiral_parity_reflection : ∀ {R : Type*} [Ring R] (C : SplitCliffordCell R), 1 - (2 : R) * N C = C.f * C.e
-  vac_parity_reflection : ∀ {R : Type*} [Ring R] (C : SplitCliffordCell R), 1 - (2 : R) * (a C * a_star C) = Gamma C
-  -- 5. Ladder dynamics and vacuum annihilation
-  ladder_comm_annihilate : ∀ {R : Type*} [Ring R] (C : SplitCliffordCell R), N C * a C - a C * N C = - a C
-  ladder_comm_create : ∀ {R : Type*} [Ring R] (C : SplitCliffordCell R), N C * a_star C - a_star C * N C = a_star C
-  vacuum_annihilate : ∀ {R : Type*} [Ring R] (C : SplitCliffordCell R), a C * (1 - N C) = 0
-
-/--
-Instantiation of the master certificate with zero open assumptions (0 sorry, 0 admit, 0 custom axioms).
--/
-theorem compile_majorana_car_superalgebra : MajoranaCARSuperalgebraCertificate where
-  e_sq := fun C => C.e_sq_one
-  f_sq := fun C => C.f_sq_neg_one
-  ef_anticomm := fun C => C.ef_anticomm_zero
-  a_nilpotent := fun C => C.a_sq_zero
-  a_star_nilpotent := fun C => C.a_star_sq_zero
-  car_anticommutator := fun C => C.car_anticommutator
-  gamma_involution := fun C => C.Gamma_sq
-  gamma_odd_a := fun C => C.Gamma_anticomm_a
-  gamma_odd_a_star := fun C => C.Gamma_anticomm_a_star
-  n_idempotent := fun C => C.N_sq
-  vac_idempotent := fun C => C.vac_proj_sq
-  ortho_annihilation := fun C => C.ortho_annihilation
-  gamma_parity_formula := fun C => C.Gamma_eq_two_N_sub_one
-  chiral_parity_reflection := fun C => C.parity_reflection_fe
-  vac_parity_reflection := fun C => C.vac_parity_reflection
-  ladder_comm_annihilate := fun C => C.ladder_bracket_N_a
-  ladder_comm_create := fun C => C.ladder_bracket_N_a_star
-  vacuum_annihilate := fun C => C.a_mul_vac_proj
+theorem ladder_matrix_unit_multiplication_table
+    {R : Type*} [Ring R] (C : SplitCliffordCell R) :
+    (1 - N C) * (1 - N C) = 1 - N C ∧
+    (1 - N C) * a C = a C ∧
+    (1 - N C) * a_star C = 0 ∧
+    (1 - N C) * N C = 0 ∧
+    a C * (1 - N C) = 0 ∧
+    a C * a C = 0 ∧
+    a C * a_star C = 1 - N C ∧
+    a C * N C = a C ∧
+    a_star C * (1 - N C) = a_star C ∧
+    a_star C * a C = N C ∧
+    a_star C * a_star C = 0 ∧
+    a_star C * N C = 0 ∧
+    N C * (1 - N C) = 0 ∧
+    N C * a C = 0 ∧
+    N C * a_star C = a_star C ∧
+    N C * N C = N C := by
+  have h_vac_a : (1 - N C) * a C = a C := by
+    calc
+      (1 - N C) * a C = 1 * a C - N C * a C := by noncomm_ring
+      _ = a C := by rw [one_mul, N_mul_a]; simp
+  have h_astar_vac : a_star C * (1 - N C) = a_star C := by
+    calc
+      a_star C * (1 - N C) = a_star C * 1 - a_star C * N C := by noncomm_ring
+      _ = a_star C := by rw [mul_one, a_star_mul_N]; simp
+  exact ⟨by simpa only [pow_two] using vac_proj_sq C, h_vac_a, vac_proj_mul_a_star C,
+    ortho_annihilation_left C, a_mul_vac_proj C, a_mul_a C,
+    a_mul_a_star_eq C, a_mul_N C, h_astar_vac, rfl,
+    a_star_mul_a_star C, a_star_mul_N C, ortho_annihilation C,
+    N_mul_a C, N_mul_a_star C, N_mul_N C⟩
 
 end InfoGeometry.SuperGrassmannian.MajoranaCAR

@@ -76,7 +76,7 @@ theorem supported_corner_incidence_square_zero
 
 /-- A non-scalar Zorn element has a nonzero commutator witness. -/
 theorem non_scalar_has_nonzero_commutator
-    {R : Type*} [CommRing R]
+    {R : Type*} [Ring R]
     {x : InfoGeometry.Canonical.ZornMatrix R}
     (hx : ¬ ∃ r : R, x = r • (1 : InfoGeometry.Canonical.ZornMatrix R)) :
     ∃ y : InfoGeometry.Canonical.ZornMatrix R,
@@ -89,7 +89,7 @@ The concrete associator witness currently formalized in the explicit Zorn core:
 if the `y`-vector is nonzero, there exists a nonzero associator witness.
 -/
 theorem nonzero_associator_of_y_ne_zero
-    {R : Type*} [CommRing R]
+    {R : Type*} [Ring R]
     (x : InfoGeometry.Canonical.ZornMatrix R)
     (hy : x.y ≠ 0) :
     ∃ y z : InfoGeometry.Canonical.ZornMatrix R,

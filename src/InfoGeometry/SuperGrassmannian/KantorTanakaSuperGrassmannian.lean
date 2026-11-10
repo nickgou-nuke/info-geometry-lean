@@ -51,7 +51,7 @@ namespace InfoGeometry.SuperGrassmannian.KantorTanakaSuperGrassmannian
 
 open scoped Matrix BigOperators
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### Section 1: Matrix Units and the Cartan Grading Element -/
 
@@ -60,7 +60,7 @@ def E (i j : Fin 3) : Matrix (Fin 3) (Fin 3) R :=
   Matrix.of fun r c => if r = i ∧ c = j then 1 else 0
 
 /-- The Cartan grading element $H = \operatorname{diag}(1, 0, -1) \in \mathfrak{sl}(3, R)$. -/
-def H (R : Type*) [CommRing R] : Matrix (Fin 3) (Fin 3) R :=
+def H (R : Type*) [Ring R] : Matrix (Fin 3) (Fin 3) R :=
   Matrix.diagonal ![(1 : R), 0, -1]
 
 /-- The Lie bracket (commutator) on $M_3(R)$. -/
@@ -75,7 +75,7 @@ theorem bracket_skew (X Y : Matrix (Fin 3) (Fin 3) R) :
   unfold bracket
   ext i j
   simp only [Matrix.sub_apply, Matrix.neg_apply]
-  ring
+  abel
 
 /-- Self-bracket vanishes: $[X, X] = 0$. -/
 theorem bracket_self (X : Matrix (Fin 3) (Fin 3) R) :
@@ -191,7 +191,7 @@ theorem grade_truncation_neg2_neg1b :
 /-! ### Section 5: The Krein / Paracomplex Sheet-Swap Involution $J$ -/
 
 /-- The paracomplex / Krein anti-diagonal sheet-swap involution $J$. -/
-def J (R : Type*) [CommRing R] : Matrix (Fin 3) (Fin 3) R :=
+def J (R : Type*) [Ring R] : Matrix (Fin 3) (Fin 3) R :=
   Matrix.of fun r c => if (r : ℕ) + (c : ℕ) = 2 then 1 else 0
 
 /-- Left multiplication by $J$ reflects row indices: $(J X)_{i, j} = X_{2-i, j}$. -/

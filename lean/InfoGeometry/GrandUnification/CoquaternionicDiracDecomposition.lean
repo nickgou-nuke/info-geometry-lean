@@ -15,7 +15,7 @@ namespace InfoGeometry.GrandUnification.CoquaternionicDiracDecomposition
 
 open Matrix
 
-variable {R : Type*} [CommRing R] [Invertible (2 : R)]
+variable {R : Type*} [Ring R] [Invertible (2 : R)]
 
 def matOne : Matrix (Fin 2) (Fin 2) R := !![1, 0; 0, 1]
 def matI : Matrix (Fin 2) (Fin 2) R := !![0, -1; 1, 0]
@@ -35,27 +35,27 @@ theorem coquaternionic_expansion (M : Matrix (Fin 2) (Fin 2) R) :
   · dsimp [extractD0, extractDI, extractDJ, extractDK, matOne, matI, matJ, matK]
     have h2 : ⅟(2 : R) * 2 = 1 := invOf_mul_self 2
     calc
-      M 0 0 = 1 * M 0 0 := by ring
+      M 0 0 = 1 * M 0 0 := by noncomm_ring
       _ = (⅟(2:R) * 2) * M 0 0 := by rw [h2]
-      _ = ⅟(2:R)*(M 0 0 + M 1 1)*1 + ⅟(2:R)*(M 1 0 - M 0 1)*0 + ⅟(2:R)*(M 0 0 - M 1 1)*1 + ⅟(2:R)*(M 1 0 + M 0 1)*0 := by ring
+      _ = ⅟(2:R)*(M 0 0 + M 1 1)*1 + ⅟(2:R)*(M 1 0 - M 0 1)*0 + ⅟(2:R)*(M 0 0 - M 1 1)*1 + ⅟(2:R)*(M 1 0 + M 0 1)*0 := by noncomm_ring
   · dsimp [extractD0, extractDI, extractDJ, extractDK, matOne, matI, matJ, matK]
     have h2 : ⅟(2 : R) * 2 = 1 := invOf_mul_self 2
     calc
-      M 0 1 = 1 * M 0 1 := by ring
+      M 0 1 = 1 * M 0 1 := by noncomm_ring
       _ = (⅟(2:R) * 2) * M 0 1 := by rw [h2]
-      _ = ⅟(2:R)*(M 0 0 + M 1 1)*0 + ⅟(2:R)*(M 1 0 - M 0 1)*(-1) + ⅟(2:R)*(M 0 0 - M 1 1)*0 + ⅟(2:R)*(M 1 0 + M 0 1)*1 := by ring
+      _ = ⅟(2:R)*(M 0 0 + M 1 1)*0 + ⅟(2:R)*(M 1 0 - M 0 1)*(-1) + ⅟(2:R)*(M 0 0 - M 1 1)*0 + ⅟(2:R)*(M 1 0 + M 0 1)*1 := by noncomm_ring
   · dsimp [extractD0, extractDI, extractDJ, extractDK, matOne, matI, matJ, matK]
     have h2 : ⅟(2 : R) * 2 = 1 := invOf_mul_self 2
     calc
-      M 1 0 = 1 * M 1 0 := by ring
+      M 1 0 = 1 * M 1 0 := by noncomm_ring
       _ = (⅟(2:R) * 2) * M 1 0 := by rw [h2]
-      _ = ⅟(2:R)*(M 0 0 + M 1 1)*0 + ⅟(2:R)*(M 1 0 - M 0 1)*1 + ⅟(2:R)*(M 0 0 - M 1 1)*0 + ⅟(2:R)*(M 1 0 + M 0 1)*1 := by ring
+      _ = ⅟(2:R)*(M 0 0 + M 1 1)*0 + ⅟(2:R)*(M 1 0 - M 0 1)*1 + ⅟(2:R)*(M 0 0 - M 1 1)*0 + ⅟(2:R)*(M 1 0 + M 0 1)*1 := by noncomm_ring
   · dsimp [extractD0, extractDI, extractDJ, extractDK, matOne, matI, matJ, matK]
     have h2 : ⅟(2 : R) * 2 = 1 := invOf_mul_self 2
     calc
-      M 1 1 = 1 * M 1 1 := by ring
+      M 1 1 = 1 * M 1 1 := by noncomm_ring
       _ = (⅟(2:R) * 2) * M 1 1 := by rw [h2]
-      _ = ⅟(2:R)*(M 0 0 + M 1 1)*1 + ⅟(2:R)*(M 1 0 - M 0 1)*0 + ⅟(2:R)*(M 0 0 - M 1 1)*(-1) + ⅟(2:R)*(M 1 0 + M 0 1)*0 := by ring
+      _ = ⅟(2:R)*(M 0 0 + M 1 1)*1 + ⅟(2:R)*(M 1 0 - M 0 1)*0 + ⅟(2:R)*(M 0 0 - M 1 1)*(-1) + ⅟(2:R)*(M 1 0 + M 0 1)*0 := by noncomm_ring
 
 theorem chiral_anticommutation_reduction (D : Matrix (Fin 2) (Fin 2) R)
     (h_chiral : D * matJ + matJ * D = 0) :
@@ -65,17 +65,17 @@ theorem chiral_anticommutation_reduction (D : Matrix (Fin 2) (Fin 2) R)
 
   have h_D00 : D 0 0 = 0 := by
     have h_eval : (D * matJ + matJ * D : Matrix (Fin 2) (Fin 2) R) 0 0 = 2 * D 0 0 := by
-      dsimp [matJ, Matrix.mul_apply, dotProduct]; simp; ring
+      dsimp [matJ, Matrix.mul_apply, dotProduct]; simp; noncomm_ring
     rw [h_eval] at h00
     have h_inv : ⅟(2:R) * (2 * D 0 0) = ⅟(2:R) * 0 := by rw [h00]
     rw [← mul_assoc, invOf_mul_self, one_mul, mul_zero] at h_inv
     exact h_inv
   have h_D11 : D 1 1 = 0 := by
     have h_eval : (D * matJ + matJ * D : Matrix (Fin 2) (Fin 2) R) 1 1 = -2 * D 1 1 := by
-      dsimp [matJ, Matrix.mul_apply, dotProduct]; simp; ring
+      dsimp [matJ, Matrix.mul_apply, dotProduct]; simp; noncomm_ring
     rw [h_eval] at h11
     have h_inv : -⅟(2:R) * (-2 * D 1 1) = -⅟(2:R) * 0 := by rw [h11]
-    have h_simp : -⅟(2:R) * (-2 * D 1 1) = (⅟(2:R) * 2) * D 1 1 := by ring
+    have h_simp : -⅟(2:R) * (-2 * D 1 1) = (⅟(2:R) * 2) * D 1 1 := by noncomm_ring
     rw [h_simp, invOf_mul_self, one_mul, mul_zero] at h_inv
     exact h_inv
   constructor

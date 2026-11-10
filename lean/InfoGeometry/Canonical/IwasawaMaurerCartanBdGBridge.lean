@@ -224,9 +224,9 @@ theorem krein_horizon_orthogonality (phi psi : Fin 2 → R)
   dsimp [kreinDiracPairing]
   rw [h_ortho, sub_self]
 
-/-- In a field, weak value amplification: if ⟨ϕ, Ω ψ⟩_η = μ ≠ 0 and ⟨ϕ, ψ⟩_η = ε ≠ 0,
+/-- In a division ring, weak value amplification: if ⟨ϕ, Ω ψ⟩_η = μ ≠ 0 and ⟨ϕ, ψ⟩_η = ε ≠ 0,
     then Ω_w * ε = μ. -/
-theorem weak_value_scaling {K : Type*} [Field K] (mu eps : K) (h_eps : eps ≠ 0) :
+theorem weak_value_scaling {K : Type*} [DivisionRing K] (mu eps : K) (h_eps : eps ≠ 0) :
     let weak_val := mu / eps
     weak_val * eps = mu := by
   intro weak_val

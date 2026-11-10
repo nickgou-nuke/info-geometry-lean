@@ -15,7 +15,7 @@ namespace InfoGeometry.Canonical
 
 open ZornMatrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def chiralBasisSet : Set (ZornMatrix R) :=
   ({zornPlus} : Set (ZornMatrix R)) ∪

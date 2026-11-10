@@ -17,8 +17,8 @@ namespace InfoGeometry.Lie.SagerschnigS2S3Distribution
 
 open InfoGeometry.Projective.SplitOctonions
 
-/-- The coordinate cross product on `ℝ³`. -/
-def cross {𝕜 : Type} [CommRing 𝕜] (u v : Vec3 𝕜) : Vec3 𝕜 :=
+/-- The coordinate cross product on `ℝ³` (or over any ring `𝕜`). -/
+def cross {𝕜 : Type} [Ring 𝕜] (u v : Vec3 𝕜) : Vec3 𝕜 :=
   (u.2.1 * v.2.2 - u.2.2 * v.2.1,
    u.2.2 * v.1 - u.1 * v.2.2,
    u.1 * v.2.1 - u.2.1 * v.1)

@@ -202,17 +202,23 @@ inductive SimplexOptimizationArchetype : Type
 
 namespace SimplexOptimizationArchetype
 
-def rank : SimplexOptimizationArchetype → ℕ
+def rank : SimplexOptimizationArchetype → Fin 3
   | .SO1_CompactSimplexFiniteMaximumAttainment => 0
   | .SO2_ConvexSimplexCenterMassVertexBound => 1
   | .SO3_StrictUniqueMaximumExtremePoint => 2
 
-theorem rank_injective : Function.Injective rank := by
-  intro a b h
-  cases a <;> cases b <;> first | rfl | cases h
+theorem rank_bijective : Function.Bijective rank := by
+  constructor
+  · intro a b h
+    cases a <;> cases b <;> simp [rank] at h ⊢
+  · intro i
+    fin_cases i
+    · exact ⟨.SO1_CompactSimplexFiniteMaximumAttainment, rfl⟩
+    · exact ⟨.SO2_ConvexSimplexCenterMassVertexBound, rfl⟩
+    · exact ⟨.SO3_StrictUniqueMaximumExtremePoint, rfl⟩
 
 instance : LinearOrder SimplexOptimizationArchetype :=
-  LinearOrder.lift' rank rank_injective
+  LinearOrder.lift' rank rank_bijective.injective
 
 instance : Fintype SimplexOptimizationArchetype where
   elems := {
@@ -221,8 +227,6 @@ instance : Fintype SimplexOptimizationArchetype where
     .SO3_StrictUniqueMaximumExtremePoint
   }
   complete x := by cases x <;> simp
-
-theorem card_eq_three : Fintype.card SimplexOptimizationArchetype = 3 := rfl
 
 end SimplexOptimizationArchetype
 
@@ -287,17 +291,23 @@ inductive TwistorAmplituhedronArchetypeStage : Type
 
 namespace TwistorAmplituhedronArchetypeStage
 
-def rank : TwistorAmplituhedronArchetypeStage → ℕ
+def rank : TwistorAmplituhedronArchetypeStage → Fin 3
   | .TA1_NonCommutativeMat4PluckerHodgeAndNambuKleinAnomaly => 0
   | .TA2_KleinQuadricAndZornNilpotencyOfTwistorLines => 1
   | .TA3_AmplituhedronFourBracketAndZornBaryonBoundary => 2
 
-theorem rank_injective : Function.Injective rank := by
-  intro a b h
-  cases a <;> cases b <;> first | rfl | cases h
+theorem rank_bijective : Function.Bijective rank := by
+  constructor
+  · intro a b h
+    cases a <;> cases b <;> simp [rank] at h ⊢
+  · intro i
+    fin_cases i
+    · exact ⟨.TA1_NonCommutativeMat4PluckerHodgeAndNambuKleinAnomaly, rfl⟩
+    · exact ⟨.TA2_KleinQuadricAndZornNilpotencyOfTwistorLines, rfl⟩
+    · exact ⟨.TA3_AmplituhedronFourBracketAndZornBaryonBoundary, rfl⟩
 
 instance : LinearOrder TwistorAmplituhedronArchetypeStage :=
-  LinearOrder.lift' rank rank_injective
+  LinearOrder.lift' rank rank_bijective.injective
 
 instance : Fintype TwistorAmplituhedronArchetypeStage where
   elems := {
@@ -306,8 +316,6 @@ instance : Fintype TwistorAmplituhedronArchetypeStage where
     .TA3_AmplituhedronFourBracketAndZornBaryonBoundary
   }
   complete x := by cases x <;> simp
-
-theorem card_eq_three : Fintype.card TwistorAmplituhedronArchetypeStage = 3 := rfl
 
 end TwistorAmplituhedronArchetypeStage
 
@@ -5242,7 +5250,13 @@ def peirceCausalSynthesisRegisteredClaims : Prop :=
     (InfoGeometry.OperatorAlgebra.PeirceSpine.ArchetypeCausalSynthesis.finitePinchingChannelArchetype n).claim input) ∧
   (∀ (n : ℕ)
       (input : InfoGeometry.OperatorAlgebra.PeirceSpine.ArchetypeCausalSynthesis.PinchedHistoryArchetypeInput n),
+    (InfoGeometry.OperatorAlgebra.PeirceSpine.ArchetypeCausalSynthesis.residualKrausCompletionArchetype n).claim input) ∧
+  (∀ (n : ℕ)
+      (input : InfoGeometry.OperatorAlgebra.PeirceSpine.ArchetypeCausalSynthesis.PinchedHistoryArchetypeInput n),
     (InfoGeometry.OperatorAlgebra.PeirceSpine.ArchetypeCausalSynthesis.pinchedHistoryCollisionArchetype n).claim input) ∧
+  (∀ (n : ℕ)
+      (input : InfoGeometry.OperatorAlgebra.PeirceSpine.ArchetypeCausalSynthesis.PinchedHistoryArchetypeInput n),
+    (InfoGeometry.OperatorAlgebra.PeirceSpine.ArchetypeCausalSynthesis.sharpHistoryMinimaxArchetype n).claim input) ∧
   (∀ (n : ℕ)
       (input : InfoGeometry.OperatorAlgebra.PeirceSpine.ArchetypeCausalSynthesis.FiniteYukawaFrechetInput n),
     (InfoGeometry.OperatorAlgebra.PeirceSpine.ArchetypeCausalSynthesis.finiteYukawaFrechetDerivationArchetype n).claim input) ∧
@@ -5253,13 +5267,17 @@ def peirceCausalSynthesisRegisteredClaims : Prop :=
 
 theorem peirceCausalSynthesisRegisteredClaims_proved :
     peirceCausalSynthesisRegisteredClaims := by
-  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · intro n input
     exact (InfoGeometry.OperatorAlgebra.PeirceSpine.ArchetypeCausalSynthesis.replacementMinimaxArchetype n).evidence input
   · intro n input
     exact (InfoGeometry.OperatorAlgebra.PeirceSpine.ArchetypeCausalSynthesis.finitePinchingChannelArchetype n).evidence input
   · intro n input
+    exact (InfoGeometry.OperatorAlgebra.PeirceSpine.ArchetypeCausalSynthesis.residualKrausCompletionArchetype n).evidence input
+  · intro n input
     exact (InfoGeometry.OperatorAlgebra.PeirceSpine.ArchetypeCausalSynthesis.pinchedHistoryCollisionArchetype n).evidence input
+  · intro n input
+    exact (InfoGeometry.OperatorAlgebra.PeirceSpine.ArchetypeCausalSynthesis.sharpHistoryMinimaxArchetype n).evidence input
   · intro n input
     exact (InfoGeometry.OperatorAlgebra.PeirceSpine.ArchetypeCausalSynthesis.finiteYukawaFrechetDerivationArchetype n).evidence input
   · intro 𝕜 A hField hRing hAlgebra input

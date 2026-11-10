@@ -27,7 +27,7 @@ representation-theoretic readings require the explicit downstream data.
 
 namespace InfoGeometry.Canonical.SolderingFrobeniusMinkowski
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- 4D Spacetime coordinate vector -/
 structure Spacetime4D (R : Type*) where
@@ -46,7 +46,7 @@ def solderingMatrix (I : R) (v : Spacetime4D R) : Matrix (Fin 2) (Fin 2) R :=
      v.x + I * v.y, v.t - v.z]
 
 /-- 🏆 THEOREM 1: Determinant of Soldering Matrix equals the Emergent Minkowski Norm -/
-theorem det_solderingMatrix_eq_minkowskiNormSq (I : R) (hI : I * I = -1) (v : Spacetime4D R) :
+theorem det_solderingMatrix_eq_minkowskiNormSq {R : Type*} [CommRing R] (I : R) (hI : I * I = -1) (v : Spacetime4D R) :
     (solderingMatrix I v).det = minkowskiNormSq v := by
   dsimp [solderingMatrix, minkowskiNormSq]
   rw [Matrix.det_fin_two]
@@ -65,13 +65,13 @@ theorem det_solderingMatrix_eq_minkowskiNormSq (I : R) (hI : I * I = -1) (v : Sp
 theorem pure_time_soldering_norm (t : R) :
     minkowskiNormSq (Spacetime4D.mk t 0 0 0) = t * t := by
   dsimp [minkowskiNormSq]
-  ring
+  noncomm_ring
 
 /-- 🏆 THEOREM 3: Pure Space Sector (F_P = 1, ν = -1) gives Negative Metric Contribution -(x² + y² + z²) -/
 theorem pure_space_soldering_norm (x y z : R) :
     minkowskiNormSq (Spacetime4D.mk 0 x y z) = - (x * x + y * y + z * z) := by
   dsimp [minkowskiNormSq]
-  ring
+  noncomm_ring
 
 /-- 🏆 THEOREM 4: Linearity of Soldering Map on Spacetime Coordinates -/
 theorem solderingMatrix_add (I : R) (v w : Spacetime4D R) :
@@ -79,10 +79,10 @@ theorem solderingMatrix_add (I : R) (v w : Spacetime4D R) :
     solderingMatrix I v + solderingMatrix I w := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    dsimp [solderingMatrix] <;> ring
+    dsimp [solderingMatrix] <;> first | noncomm_ring | abel
 
 /-- 🏆 THEOREM 5: Grand Soldering Frobenius Minkowski Synthesis -/
-theorem soldering_frobenius_minkowski_synthesis (I : R) (hI : I * I = -1) (v : Spacetime4D R) :
+theorem soldering_frobenius_minkowski_synthesis {R : Type*} [CommRing R] (I : R) (hI : I * I = -1) (v : Spacetime4D R) :
     ((solderingMatrix I v).det = minkowskiNormSq v) ∧
     (∀ t : R, minkowskiNormSq (Spacetime4D.mk t 0 0 0) = t * t) ∧
     (∀ x y z : R, minkowskiNormSq (Spacetime4D.mk 0 x y z) = - (x * x + y * y + z * z)) :=

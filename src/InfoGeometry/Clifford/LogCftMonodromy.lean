@@ -52,7 +52,7 @@ def virasoroL0Cell {K : Type*} [Zero K] [One K] (h : K) :
   upperJordan h 1
 
 /-- The Jordan cell splits into a scalar diagonal and a nilpotent shear. -/
-theorem l0_cell_decomposition {K : Type*} [CommRing K] (h : K) :
+theorem l0_cell_decomposition {K : Type*} [Ring K] (h : K) :
     virasoroL0Cell h =
       h • (1 : Matrix (Fin 2) (Fin 2) K) + jordanNilpotent := by
   ext i j
@@ -76,7 +76,7 @@ theorem real_l0_cell_hypercomplex_parabolic (h : ℝ) :
     (l0_cell_decomposition (K := ℝ) h)
 
 /-- The nilpotent Jordan shear squares to zero. -/
-theorem jordanNilpotent_sq {K : Type*} [CommSemiring K] :
+theorem jordanNilpotent_sq {K : Type*} [Semiring K] :
     (jordanNilpotent : Matrix (Fin 2) (Fin 2) K) * jordanNilpotent = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
@@ -88,7 +88,7 @@ theorem epsilon_sq :
   exact jordanNilpotent_sq (K := ℂ)
 
 /-- Every power `N^k` with `2 ≤ k` vanishes. -/
-theorem jordanNilpotent_pow_zero {K : Type*} [CommSemiring K]
+theorem jordanNilpotent_pow_zero {K : Type*} [Semiring K]
     (k : ℕ) (hk : 2 ≤ k) :
     (jordanNilpotent : Matrix (Fin 2) (Fin 2) K) ^ k = 0 := by
   induction k, hk using Nat.le_induction with
@@ -103,7 +103,7 @@ theorem epsilon_pow_zero (k : ℕ) (hk : 2 ≤ k) :
   exact jordanNilpotent_pow_zero (K := ℂ) k hk
 
 /-- Multiplication law for equal-diagonal upper-Jordan blocks. -/
-theorem upperJordan_mul {K : Type*} [CommSemiring K] (a b c d : K) :
+theorem upperJordan_mul {K : Type*} [Semiring K] (a b c d : K) :
     upperJordan a b * upperJordan c d =
       upperJordan (a * c) (a * d + b * c) := by
   ext i j
@@ -449,7 +449,7 @@ theorem lowerJordanNilpotent_eq_transpose {K : Type*} [Zero K] [One K] :
     simp [lowerJordanNilpotent, jordanNilpotent, Matrix.transpose_apply]
 
 /-- The lower-triangular logarithmic shear also squares to zero. -/
-theorem lowerJordanNilpotent_sq {K : Type*} [CommSemiring K] :
+theorem lowerJordanNilpotent_sq {K : Type*} [Semiring K] :
     (lowerJordanNilpotent : Matrix (Fin 2) (Fin 2) K) *
       lowerJordanNilpotent = 0 := by
   ext i j

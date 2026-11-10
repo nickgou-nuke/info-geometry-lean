@@ -60,7 +60,7 @@ namespace InfoGeometry.Superalgebra.TomitaTakesakiHawking
 open InfoGeometry.Algebra.Zorn.ConcreteComposition
 open InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Multiplicative identity $\mathbf{1} = \mathrm{diag}(1, 1)$ in `ZornCell R`. -/
 def oneZ : ZornCell R :=
@@ -121,6 +121,8 @@ def modularDelta (c s : R) : ZornCell R :=
 /-- Two-sided modular automorphism $\sigma_{c,s}(X) = \Delta(c, s)\,X\,\Delta(c, -s)$. -/
 def modularAutomorphism (c s : R) (X : ZornCell R) : ZornCell R :=
   mulZ (mulZ (modularDelta c s) X) (modularDelta c (-s))
+
+variable {R : Type*} [CommRing R]
 
 /-- **Hyperbolic Group Composition Law (`modular_delta_group_composition`):**
 $\Delta(c_1, s_1)\,\Delta(c_2, s_2) = \Delta(c_1 c_2 + s_1 s_2,\; c_1 s_2 + s_1 c_2)$. -/

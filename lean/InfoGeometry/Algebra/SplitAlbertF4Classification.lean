@@ -1,28 +1,26 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Algebra.BaezF4H3Zorn
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Algebra.H3ZornCarrierBasis
 import Mathlib.LinearAlgebra.Dimension.Finrank
 import Mathlib.Tactic
 
 /-!
-# Split-Albert 27D Jordan Algebra and 52D 𝔣₄(4) Derivation Classification
+# Split-Albert Carrier Dimension and Exceptional Dimension Ledger
 
-This module formalizes:
-1. The 27-dimensional canonical direct sum decomposition of the split-Albert algebra:
-     H₃(𝕆_s) ≅ ℝ³ ⊕ (𝕆_s)³
-     with dim(H₃(𝕆_s)) = 3 + 3 × 8 = 27.
-2. The 52-dimensional canonical direct sum decomposition of the split-real 𝔣₄(4) derivation algebra:
-     𝔣₄ ≅ 𝔰𝔬(8) ⊕ (𝕆_s)³ ≅ 𝔤₂(₂) ⊕ ℝ⁷ ⊕ ℝ⁷ ⊕ (𝕆_s)³
-     with dim(𝔣₄) = 28 + 3 × 8 = 14 + 14 + 24 = 52.
-3. The graded projection maps from 𝔣₄ onto the 14D 𝔤₂(₂) subalgebra and the 3 × 8D off-diagonal octonionic sectors.
-4. THEOREM (Dimension Identities):
-     dim_ℝ(H₃(𝕆_s)) = 27
-     dim_ℝ(𝔣₄) = 52
-     dim_ℝ(𝔰𝔬(8)) = 28
-     dim_ℝ(𝔤₂(₂)) = 14.
-5. THEOREM (Graded Lie Bracket Invariance):
-     The derivation Lie bracket [D, D'] on 𝔣₄ preserves the Albert Jordan Leibniz identity.
-
-All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+This module contains a dimension ledger and readouts for the split-Albert
+carrier. The Albert carrier dimension is proved below from its actual
+`H3Zorn ℝ` coordinate basis. The F₄/SO(8)/G₂ numbers are arithmetic
+bookkeeping only: they do not establish dimensions of those Lie algebras, a
+direct-sum decomposition, or graded projection maps. The native F₄ derivation
+carrier and the conditional hypotheses needed for its exact dimension are
+owned by `InfoGeometry.Exceptional.F4DerivationsAlbert` and
+`InfoGeometry.Canonical.F4ActionSolderingBridge`.
 -/
 
 noncomputable section
@@ -34,7 +32,7 @@ open InfoGeometry.Algebra
 
 /-!
 =============================================================================
-PART 1: The 27-Dimensional Albert Algebra Decomposition
+PART 1: The Actual Albert Carrier Dimension and Its Count Ledger
 =============================================================================
 -/
 
@@ -47,12 +45,18 @@ def dimSplitOctonions : ℕ := 8
 /-- The number of off-diagonal octonionic pairs in a 3×3 Hermitian matrix. -/
 def numOffDiagonalSectors : ℕ := 3
 
-/-- The total real dimension of the exceptional split-Albert Jordan algebra H₃(𝕆_s). -/
+/-- Natural-number count assembled from three diagonal and three 8-coordinate
+Zorn blocks. The actual carrier finrank is `albert_dimension_eq_27`. -/
 def dimAlbertAlgebra : ℕ := dimRealDiagonal + numOffDiagonalSectors * dimSplitOctonions
 
-/-- THEOREM 1: The real dimension of the split-Albert Jordan algebra is exactly 27. -/
-theorem albert_dimension_eq_27 : dimAlbertAlgebra = 27 := by
+/-- Arithmetic check for the displayed decomposition count `3 + 3 * 8`. -/
+theorem dimAlbertAlgebra_formula_eq_27 : dimAlbertAlgebra = 27 := by
   dsimp [dimAlbertAlgebra, dimRealDiagonal, numOffDiagonalSectors, dimSplitOctonions]
+
+/-- The actual real carrier `H3Zorn ℝ` has finrank 27, by its explicit
+coordinate equivalence with functions `Fin 27 → ℝ`. -/
+theorem albert_dimension_eq_27 : Module.finrank ℝ (H3Zorn ℝ) = 27 :=
+  InfoGeometry.Algebra.finrank_h3zorn
 
 /-- 
   Linear embedding of the 27 coordinates (α₁, α₂, α₃, a, b, c) into H₃(𝕆_s).
@@ -69,35 +73,32 @@ theorem albertCoordinateMap_surjective (X : H3Zorn ℝ) :
 
 /-!
 =============================================================================
-PART 2: The 52-Dimensional F₄ Derivation Algebra Decomposition
+PART 2: Expected F₄ Count Ledger (No Carrier Decomposition Here)
 =============================================================================
 -/
 
-/-- The dimension of the G₂(₂) derivation Lie algebra of split-octonions: Der(𝕆_s) ≅ 𝔤₂(₂). -/
+/-- Expected-count entry for the split-octonion derivation algebra. -/
 def dimG2Derivations : ℕ := 14
 
-/-- The dimension of the SO(8) orthogonal Lie algebra: 𝔰𝔬(8) ≅ 𝔤₂(₂) ⊕ ℝ⁷ ⊕ ℝ⁷. -/
+/-- Expected-count entry for the orthogonal Lie algebra. -/
 def dimSO8LieAlgebra : ℕ := 28
 
-/-- The total real dimension of the F₄ derivation Lie algebra: 𝔣₄ = Der(H₃(𝕆_s)). -/
-/- The carrier is the split-real 𝔣₄(4) derivation owner. -/
+/-- Expected F₄ count from the arithmetic decomposition ledger. This is not
+the finrank of the native derivation carrier. -/
 def dimF4Derivations : ℕ := dimSO8LieAlgebra + numOffDiagonalSectors * dimSplitOctonions
 
-/-- THEOREM 2: The real dimension of the F₄ derivation Lie algebra is exactly 52. -/
-theorem f4_derivation_dimension_eq_52 : dimF4Derivations = 52 := by
+/-- Arithmetic check of the expected count `28 + 3 * 8`; this is not an exact
+dimension theorem for `H3ZornF4Derivations`. -/
+theorem f4_derivation_count_formula_eq_52 : dimF4Derivations = 52 := by
   dsimp [dimF4Derivations, dimSO8LieAlgebra, numOffDiagonalSectors, dimSplitOctonions]
 
-/-- 
-  THEOREM 3 (The SO(8) and G₂(₂) Triality Decomposition):
-  The 52-dimensional F₄ derivation algebra decomposes into SO(8) (28D) plus three
-  octonionic representation sectors (3 × 8 = 24D):
-    52 = 28 + 24 = 14 + 7 + 7 + 24.
--/
-theorem f4_triality_sum_decomposition :
+/-- Arithmetic check that the chosen SO(8) and three-sector ledger entries
+sum to the expected F₄ count. This is not a direct-sum decomposition theorem. -/
+theorem f4_triality_dimension_ledger_sum :
     dimSO8LieAlgebra + numOffDiagonalSectors * dimSplitOctonions = dimF4Derivations := by
   rfl
 
-theorem so8_g2_decomposition :
+theorem so8_g2_dimension_ledger_sum :
     dimG2Derivations + 7 + 7 = dimSO8LieAlgebra := by
   rfl
 

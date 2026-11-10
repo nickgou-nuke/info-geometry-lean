@@ -58,18 +58,34 @@ open InfoGeometry.Thermo.SplitChiralPolarizationBasis
 open InfoGeometry.Thermodynamics.ProjectiveTemperature
 
 /--
-**Theorem**: The critical point β = 1 is fixed by projective
-temperature inversion.
-
-The KMS branching, CPT emergence, and modular-flow decomposition are recorded
-below as closure debts; this theorem only proves the fixed-point arithmetic of
-`betaInvert`.
+The fixed points of the real totalized inversion `β ↦ β⁻¹` are exactly
+`0`, `1`, and `-1`. The zero case reflects Lean's total inverse; this is a
+real-arithmetic classification and makes no assertion about KMS states or
+branching of modular flows.
 -/
-theorem kms_branches_at_critical_point
-    (_X : KreinDoubledAtom) :
-    -- The projective temperature inversion fixes β = 1
-    betaInvert (1 : ℝ) = (1 : ℝ) := by
-  simp [betaInvert]
+theorem betaInvert_fixed_iff (β : ℝ) :
+    betaInvert β = β ↔ β = 0 ∨ β = 1 ∨ β = -1 := by
+  constructor
+  · intro h
+    by_cases hzero : β = 0
+    · exact Or.inl hzero
+    · have hmul : β⁻¹ * β = β * β := by
+        simpa [betaInvert] using congrArg (fun x : ℝ => x * β) h
+      have hsq : β * β = 1 := by
+        calc
+          β * β = β⁻¹ * β := hmul.symm
+          _ = 1 := inv_mul_cancel₀ hzero
+      have hfactor : (β - 1) * (β + 1) = 0 := by
+        calc
+          (β - 1) * (β + 1) = β * β - 1 := by ring
+          _ = 0 := by rw [hsq]; ring
+      rcases mul_eq_zero.mp hfactor with hminus | hplus
+      · exact Or.inr (Or.inl (sub_eq_zero.mp hminus))
+      · exact Or.inr (Or.inr (by linarith))
+  · rintro (hzero | hone | hneg)
+    · simp [hzero, betaInvert]
+    · simpa [hone] using betaInvert_one
+    · simp [hneg, betaInvert]
 
 /--
 **Theorem: KMS State Space Idempotent Decomposition**

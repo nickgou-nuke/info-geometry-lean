@@ -11,9 +11,9 @@ reflection conjugates the clock to its inverse, represented here by its square.
 
 namespace InfoGeometry.Canonical
 
-variable {K : Type*} [CommRing K]
+variable {K : Type*}
 
-def kleinCubicCharge (w : K) : A2ColourFiber K →ₗ[K] A2ColourFiber K where
+def kleinCubicCharge [CommSemiring K] (w : K) : A2ColourFiber K →ₗ[K] A2ColourFiber K where
   toFun v := ![v 0, w * v 1, (w ^ 2) * v 2]
   map_add' v u := by
     funext i
@@ -24,10 +24,10 @@ def kleinCubicCharge (w : K) : A2ColourFiber K →ₗ[K] A2ColourFiber K where
     · ring
     · ring
 
-def chiralExchange : A2ColourFiber K →ₗ[K] A2ColourFiber K :=
+def chiralExchange [CommRing K] : A2ColourFiber K →ₗ[K] A2ColourFiber K :=
   a2Reflection
 
-theorem kleinCubicCharge_cube (w : K) (hw : w ^ 3 = 1) :
+theorem kleinCubicCharge_cube [CommSemiring K] (w : K) (hw : w ^ 3 = 1) :
     (kleinCubicCharge w).comp ((kleinCubicCharge w).comp (kleinCubicCharge w)) =
       LinearMap.id := by
   have hw6 : w ^ 6 = 1 := by
@@ -47,6 +47,8 @@ theorem kleinCubicCharge_cube (w : K) (hw : w ^ 3 = 1) :
     calc
       w ^ 2 * (w ^ 2 * (w ^ 2 * v 2)) = (w ^ 6) * v 2 := by ring
       _ = v 2 := by rw [hw6]; simp
+
+variable [CommRing K]
 
 theorem chiralExchange_square :
     (chiralExchange (K := K)).comp (chiralExchange (K := K)) =

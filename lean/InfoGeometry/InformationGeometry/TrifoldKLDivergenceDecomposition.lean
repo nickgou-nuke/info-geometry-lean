@@ -10,7 +10,7 @@ open Matrix
 namespace InfoGeometry.InformationGeometry.TrifoldKL
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Total Trace of a Bipartite State: Tr(ρ) = Tr(ρ₊) + Tr(ρ₋). -/
 def totalTrace (ρ : Matrix ι ι R × Matrix ι ι R) : R :=
@@ -41,7 +41,7 @@ def K_zero (two_n_inv : R) (K : Matrix ι ι R × Matrix ι ι R) : Matrix ι ι
    K.2 - (alpha two_n_inv K - beta two_n_inv K) • (1 : Matrix ι ι R))
 
 /-- The residual has zero total trace when `two_n_inv` is the inverse of `2 * n`. -/
-theorem K_zero_trace
+theorem K_zero_trace {R : Type*} [CommRing R]
     (two_n_inv : R)
     (h_norm : (2 * (Fintype.card ι : R)) * two_n_inv = 1)
     (K : Matrix ι ι R × Matrix ι ι R) :
@@ -55,7 +55,7 @@ theorem K_zero_trace
     _ = 0 := by rw [h_norm]; ring
 
 /-- The residual has zero supertrace under the same normalization. -/
-theorem K_zero_superTrace
+theorem K_zero_superTrace {R : Type*} [CommRing R]
     (two_n_inv : R)
     (h_norm : (2 * (Fintype.card ι : R)) * two_n_inv = 1)
     (K : Matrix ι ι R × Matrix ι ι R) :
@@ -72,7 +72,7 @@ theorem K_zero_superTrace
   MASTER THEOREM: Exact Trifold Scalar Decomposition of Relative Entropy:
   D_KL(ρ, 𝒦) = α • Tr(ρ) + β • STr(ρ) + D_KL(ρ, 𝒦₀)
 -/
-theorem trifold_kl_decomposition
+theorem trifold_kl_decomposition {R : Type*} [CommRing R]
     (two_n_inv : R)
     (ρ : Matrix ι ι R × Matrix ι ι R)
     (K : Matrix ι ι R × Matrix ι ι R) :
@@ -90,7 +90,7 @@ theorem trifold_kl_decomposition
   drops out identically from the relative entropy:
     D_KL(ρ, 𝒦) = α • Tr(ρ) + D_KL(ρ, 𝒦₀)
 -/
-theorem symmetric_state_chiral_blind
+theorem symmetric_state_chiral_blind {R : Type*} [CommRing R]
     (two_n_inv : R)
     (ρ : Matrix ι ι R × Matrix ι ι R)
     (K : Matrix ι ι R × Matrix ι ι R)
@@ -105,7 +105,7 @@ theorem symmetric_state_chiral_blind
   the volume and chiral scalar channels vanish:
     D_KL(ρ, 𝒦) = D_KL(ρ, 𝒦₀)
 -/
-theorem pure_shape_kl_divergence
+theorem pure_shape_kl_divergence {R : Type*} [CommRing R]
     (two_n_inv : R)
     (ρ : Matrix ι ι R × Matrix ι ι R)
     (K : Matrix ι ι R × Matrix ι ι R)

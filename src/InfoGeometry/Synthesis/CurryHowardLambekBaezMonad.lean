@@ -45,7 +45,7 @@ namespace InfoGeometry.Synthesis.CurryHowardLambekBaezMonad
 universe u_V u_R
 
 variable {V : Type u_V} [DecidableEq V] [Fintype V]
-variable {R : Type u_R} [CommRing R]
+variable {R : Type u_R} [Ring R]
 
 /-! ### Section 1: The Five Functorial Projections of the Split Logos -/
 
@@ -145,7 +145,7 @@ def pluckerMinor (C : Matrix (Fin 2) (Fin 4) R) (i j : Fin 4) : R :=
 /-- Twistor Grassmannian $\mathrm{Gr}(2, 4)$ 4-term Plücker Syzygy:
     $\Delta_{01} \Delta_{23} - \Delta_{02} \Delta_{13} + \Delta_{03} \Delta_{12} = 0$,
     valid over any commutative ring $R$. -/
-theorem plucker_syzygy_4term (C : Matrix (Fin 2) (Fin 4) R) :
+theorem plucker_syzygy_4term {R : Type u_R} [CommRing R] (C : Matrix (Fin 2) (Fin 4) R) :
     pluckerMinor C 0 1 * pluckerMinor C 2 3 -
     pluckerMinor C 0 2 * pluckerMinor C 1 3 +
     pluckerMinor C 0 3 * pluckerMinor C 1 2 = 0 := by
@@ -161,13 +161,13 @@ def zornMatrix2 (S Q p : R) : Matrix (Fin 2) (Fin 2) R :=
 
 /-- Exact determinant of the 2×2 Zorn carrier matrix:
     $\det(Z) = S^2 - Q^2 - p$. -/
-theorem zornMatrix2_det (S Q p : R) :
+theorem zornMatrix2_det {R : Type u_R} [CommRing R] (S Q p : R) :
     Matrix.det (zornMatrix2 S Q p) = S^2 - Q^2 - p := by
   simp [zornMatrix2, Matrix.det_fin_two_of]
   ring
 
 /-- Decoupling identity of the Zorn matrix determinant into $(S^2 - Q^2)$ and off-diagonal momentum flux. -/
-theorem zornMatrix2_decoupling (S Q p : R) :
+theorem zornMatrix2_decoupling {R : Type u_R} [CommRing R] (S Q p : R) :
     Matrix.det (zornMatrix2 S Q p) = (S^2 - Q^2) - p := by
   rw [zornMatrix2_det]
 
@@ -187,7 +187,7 @@ theorem tracialState2_one [Invertible (2 : R)] :
   exact invOf_mul_self (2 : R)
 
 /-- Cyclic property of the normalized tracial state: $\mathrm{tr}_2(AB) = \mathrm{tr}_2(BA)$. -/
-theorem tracialState2_cyclic (A B : Matrix (Fin 2) (Fin 2) R) [Invertible (2 : R)] :
+theorem tracialState2_cyclic {R : Type u_R} [CommRing R] (A B : Matrix (Fin 2) (Fin 2) R) [Invertible (2 : R)] :
     tracialState2 (A * B) = tracialState2 (B * A) := by
   dsimp [tracialState2]
   rw [Matrix.trace_mul_comm]
@@ -283,17 +283,17 @@ theorem monadT_idempotent {Flux Invariant : Type*} (r : CHLBRetraction Flux Inva
     Curry-Howard-Lambek-Baez Synthesis and Monadic Retraction. -/
 structure CurryHowardLambekBaezMonadCertificate : Prop where
   wdw_modular_zero :
-    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [CommRing R]
+    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [Ring R]
       (H_wdw K_mod : Matrix V V R), H_wdw = K_mod →
       ∀ (psi : V → R), isWdwZeroMode H_wdw psi ↔ isModularZeroMode K_mod psi
   triality_cube :
-    ∀ {R : Type u_R} [CommRing R] (v : Fin 3 → R),
+    ∀ {R : Type u_R} [Ring R] (v : Fin 3 → R),
       generationTrialityCycle (generationTrialityCycle (generationTrialityCycle v)) = v
   nambu_tau1_sq :
-    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [CommRing R],
+    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [Ring R],
       (nambuTau1 (V := V) (R := R)) * nambuTau1 = 1
   nambu_bdg_ph :
-    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [CommRing R]
+    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [Ring R]
       (h Δ : Matrix V V R), hᵀ = h → Δᵀ = -Δ →
       nambuTau1 * nambuBdG h Δ * nambuTau1 = - nambuBdG h Δ
   plucker_syzygy :
@@ -305,17 +305,17 @@ structure CurryHowardLambekBaezMonadCertificate : Prop where
     ∀ {R : Type u_R} [CommRing R] (S Q p : R),
       Matrix.det (zornMatrix2 S Q p) = (S^2 - Q^2) - p
   tracial_state_one :
-    ∀ {R : Type u_R} [CommRing R] [Invertible (2 : R)],
+    ∀ {R : Type u_R} [Ring R] [Invertible (2 : R)],
       tracialState2 (1 : Matrix (Fin 2) (Fin 2) R) = 1
   tracial_state_cyclic :
     ∀ {R : Type u_R} [CommRing R] [Invertible (2 : R)] (A B : Matrix (Fin 2) (Fin 2) R),
       tracialState2 (A * B) = tracialState2 (B * A)
   mp_annihilates_kernel :
-    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [CommRing R]
+    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [Ring R]
       (rho pinv : Matrix V V R) (mp : MoorePenroseSupport rho pinv),
       (1 - mp.P) * rho = 0
   drazin_kernel_annihilates :
-    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [CommRing R]
+    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [Ring R]
       (L LD : Matrix V V R), L * LD * L = L →
       L * (1 - LD * L) = 0
   monad_closure :

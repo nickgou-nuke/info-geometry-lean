@@ -28,7 +28,7 @@ structure Data (R : Type*) where
   plusVector : Vec3 R
   minusVector : Vec3 R
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def qPlus (D : Data R) : ChiralBlock R :=
   chiralQPlus D.plusFactor

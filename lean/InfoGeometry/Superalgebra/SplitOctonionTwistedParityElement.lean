@@ -25,7 +25,7 @@ namespace InfoGeometry.Superalgebra.WittenMoebiusParity
 
 open InfoGeometry.Superalgebra.MadelungNonassociativeVortex
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The proposed chiral parity element, expressed in the existing carrier. -/
 def parityElement (c s : R) (u v : ColorVec3 R) : SplitOctonion R :=
@@ -35,7 +35,7 @@ def parityElement (c s : R) (u v : ColorVec3 R) : SplitOctonion R :=
       (SplitOctonion.sub (SplitOctonion.quark u) (SplitOctonion.antiquark v)))
 
 /-- Exact square formula: the scalar coefficient is controlled by `u · v`. -/
-theorem parityElement_sq (c s : R) (u v : ColorVec3 R) :
+theorem parityElement_sq {R : Type*} [CommRing R] (c s : R) (u v : ColorVec3 R) :
     SplitOctonion.mul (parityElement c s u v) (parityElement c s u v) =
       SplitOctonion.scale (c ^ 2 - s ^ 2 * ColorVec3.dot u v) SplitOctonion.one := by
   dsimp [parityElement, SplitOctonion.paraSymplecticK0, SplitOctonion.quark,
@@ -50,7 +50,7 @@ theorem parityElement_sq (c s : R) (u v : ColorVec3 R) :
 
 /-- The unit-circle and pairing conditions suffice for the parity element to square to one. -/
 theorem parityElement_involutive_of_unitCircle_pairing
-    (c s : R) (u v : ColorVec3 R)
+    {R : Type*} [CommRing R] (c s : R) (u v : ColorVec3 R)
     (h_circle : c ^ 2 + s ^ 2 = 1)
     (h_pairing : ColorVec3.dot u v = -1) :
     SplitOctonion.mul (parityElement c s u v) (parityElement c s u v) =
@@ -90,7 +90,7 @@ theorem diagonalParityReadout_parityElement (c s : R) (u v : ColorVec3 R) :
   dsimp [diagonalParityReadout, parityElement, SplitOctonion.paraSymplecticK0,
     SplitOctonion.quark, SplitOctonion.antiquark, SplitOctonion.sub,
     SplitOctonion.scale, ColorVec3.zero, ColorVec3.sub, ColorVec3.smul]
-  ring
+  simp [two_mul]
 
 /-! ## Angular periodicity on the existing parity element -/
 

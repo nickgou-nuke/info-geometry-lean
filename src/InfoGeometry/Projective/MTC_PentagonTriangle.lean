@@ -13,9 +13,10 @@ namespace InfoGeometry.Projective.MTC
 open InfoGeometry.Projective.SplitOctonions
 open InfoGeometry.Projective.SplitOctonions.ZornMatrix
 
-variable {R : Type*} [CommRing R]
+section RingDiagonal
+
+variable {R : Type*} [Ring R]
 variable {V : Type*} [AddCommGroup V] [Module R V]
-variable (B : V →ₗ[R] V →ₗ[R] R)
 
 /--
 A diagonal Zorn matrix represents a state that is purely confined
@@ -23,6 +24,12 @@ to the associative horizon boundary $\mathbb{OP}^1$.
 -/
 def is_diagonal (x : ZornMatrix R V) : Prop :=
   x.x21 = 0 ∧ x.x22 = 0
+
+end RingDiagonal
+
+variable {R : Type*} [CommRing R]
+variable {V : Type*} [AddCommGroup V] [Module R V]
+variable (B : V →ₗ[R] V →ₗ[R] R)
 
 /--
 The F-matrix (Fusion) acts on the associative diagonal boundary.

@@ -5,12 +5,12 @@ noncomputable section
 
 namespace SeedProverSmoke
 
-variable {K : Type*} [Field K] {V : Type*} [AddCommGroup V] [Module K V]
+variable {K : Type*} [Ring K] {V : Type*} [AddCommGroup V] [Module K V]
 
 def NilpotentIndex (N : Module.End K V) (k : ℕ) : Prop :=
   (N ^ k) = 0 ∧ (N ^ (k - 1)) ≠ 0
 
-lemma exists_nilpotent_index (N : Module.End K V) [FiniteDimensional K V]
+lemma exists_nilpotent_index (N : Module.End K V)
     (hN : IsNilpotent N) (hN_ne : N ≠ 0) :
     ∃ k : ℕ, 1 ≤ k ∧ NilpotentIndex N k := by
   classical

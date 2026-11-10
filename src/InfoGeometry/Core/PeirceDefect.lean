@@ -39,10 +39,6 @@ theorem defect_add_idempotent_eq_square_iff (hp : IsIdempotentElem p) :
   · intro h
     rw [h, sub_self, add_zero]
 
-theorem defect_add_idempotent_eq_square (hp : IsIdempotentElem p)
-    (hy : p * y + y * p = y) : defect (p + y) = y * y :=
-  (defect_add_idempotent_eq_square_iff hp).2 hy
-
 /-- The algebraic linearization kernel consists exactly of the two mixed Peirce corners. -/
 theorem tangent_iff_diagonal_corners_zero (hp : IsIdempotentElem p) :
     p * y + y * p = y ↔ component11 p y = 0 ∧ component00 p y = 0 := by
@@ -79,13 +75,26 @@ theorem commute_square_of_tangent (hp : IsIdempotentElem p)
   have ho := (mem_odd_iff hp).2 hy
   exact (mem_even_iff hp).1 (odd_mul_odd hp ho ho)
 
-theorem defect_add_commutator (hp : IsIdempotentElem p) (x : A) :
-    defect (p + (p * x - x * p)) = (p * x - x * p) * (p * x - x * p) :=
-  defect_add_idempotent_eq_square hp ((mem_odd_iff hp).1 (commutator_odd hp x))
+/-- A commutator tangent has a square defect, and that square lies in the
+centralizer of the idempotent. This records both consequences of the tangent
+criterion rather than only restating its forward implication. -/
+theorem commutator_tangent_defect_and_centrality (hp : IsIdempotentElem p) (x : A) :
+    defect (p + (p * x - x * p)) = (p * x - x * p) * (p * x - x * p) ∧
+    Commute p ((p * x - x * p) * (p * x - x * p)) := by
+  have ht : p * (p * x - x * p) + (p * x - x * p) * p = p * x - x * p :=
+    (mem_odd_iff hp).1 (commutator_odd hp x)
+  exact ⟨(defect_add_idempotent_eq_square_iff hp).2 ht,
+    commute_square_of_tangent hp ht⟩
 
-theorem defect_add_odd (hp : IsIdempotentElem p) (x : A) :
-    defect (p + odd p x) = odd p x * odd p x :=
-  defect_add_idempotent_eq_square hp ((mem_odd_iff hp).1 ⟨x, rfl⟩)
+/-- The canonical odd Peirce component has a square defect whose value
+centralizes the base idempotent. -/
+theorem odd_tangent_defect_and_centrality (hp : IsIdempotentElem p) (x : A) :
+    defect (p + odd p x) = odd p x * odd p x ∧
+    Commute p (odd p x * odd p x) := by
+  have ht : p * odd p x + odd p x * p = odd p x :=
+    (mem_odd_iff hp).1 ⟨x, rfl⟩
+  exact ⟨(defect_add_idempotent_eq_square_iff hp).2 ht,
+    commute_square_of_tangent hp ht⟩
 
 theorem defect_add_mem10 (hp : IsIdempotentElem p) (hu : u ∈ peirce10 p) :
     defect (p + u) = 0 := by
@@ -102,7 +111,7 @@ theorem defect_add_mem01 (hp : IsIdempotentElem p) (hv : v ∈ peirce01 p) :
 theorem defect_add_coupled (hp : IsIdempotentElem p)
     (hu : u ∈ peirce10 p) (hv : v ∈ peirce01 p) :
     defect (p + (u + v)) = u * v + v * u := by
-  rw [defect_add_idempotent_eq_square hp
+  rw [(defect_add_idempotent_eq_square_iff hp).2
     ((mem_odd_iff hp).1 (coupled_odd hp hu hv)), ← pow_two]
   exact coupled_square hp hu hv
 
@@ -113,7 +122,7 @@ theorem defect_add_difference (hp : IsIdempotentElem p)
     rw [mul_sub, sub_mul, left_support10 hp hu, left_support01 hp hv,
       right_support10 hp hu, right_support01 hp hv]
     abel
-  rw [defect_add_idempotent_eq_square hp hy, ← pow_two]
+  rw [(defect_add_idempotent_eq_square_iff hp).2 hy, ← pow_two]
   exact difference_square hp hu hv
 
 end InfoGeometry.Core.PeirceDefect

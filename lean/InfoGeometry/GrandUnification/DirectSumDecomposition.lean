@@ -12,7 +12,7 @@ open LinearMap
 open InfoGeometry.GrandUnification.MachianCosmology
 open InfoGeometry.GrandUnification.ModularPhaseSeparation
 
-variable {R M : Type*} [CommRing R] [Invertible (2 : R)] [AddCommGroup M] [Module R M]
+variable {R M : Type*} [Ring R] [Invertible (2 : R)] [AddCommGroup M] [Module R M]
 
 /-!
 ### Direct Sum Recovery of the Vacuum

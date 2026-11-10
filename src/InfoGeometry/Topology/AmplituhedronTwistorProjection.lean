@@ -24,13 +24,13 @@ or locality/unitarity statements.
 
 namespace AmplituhedronTwistorProjection
 
-variable {R : Type*} [CommRing R]
-
-theorem twistorBracket_skew (Y : Matrix (Fin 2) (Fin 4) R) (Z : Matrix (Fin 4) (Fin 4) R) (a b : Fin 4) :
+theorem twistorBracket_skew {R : Type*} [Ring R] (Y : Matrix (Fin 2) (Fin 4) R) (Z : Matrix (Fin 4) (Fin 4) R) (a b : Fin 4) :
     twistorBracket Y Z b a = - twistorBracket Y Z a b := by
   dsimp [twistorBracket, det4]
   simp
-  ring
+  noncomm_ring
+
+variable {R : Type*} [CommRing R]
 
 theorem twistorBracket_01 (C : Matrix (Fin 2) (Fin 4) R) (Z : Matrix (Fin 4) (Fin 4) R) :
     twistorBracket (twistorProj C Z) Z 0 1 = minor2 C 2 3 * det4 Z := by

@@ -39,13 +39,6 @@ def step : M2R := SplitCliffordSourceWickBase.N
 @[simp] theorem step_sq_zero : step * step = (0 : M2R) := by
   simp [step, N_sq_zero]
 
-/-- Combinatorial free-energy functional in the same sector: `A_info = N - N`. -/
-def informationFreeEnergy : M2R := step - step
-
-/-- Exact zero in this sector: `A_info = 0`. -/
-@[simp] theorem informationFreeEnergy_eq_zero : informationFreeEnergy = (0 : M2R) := by
-  simp [informationFreeEnergy]
-
 /-- Modular-flux recasting to the existing modular names. -/
 theorem entropyFlux_eq_step : entropyFlux = step := by
   exact

@@ -67,20 +67,20 @@ theorem parabolic_square {R : Type} [Ring R] (u : OperatorUnit R)
 def CubicProjector {R : Type} [Monoid R] (OP : R) : Prop :=
   OP ^ 3 = OP
 
-/-- In a commutative ring, `OP^3 = OP` is equivalent to the trifactor equation. -/
-theorem cubic_projector_iff_trifactor {R : Type} [CommRing R] (OP : R) :
+/-- In any associative ring, `OP^3 = OP` is equivalent to the trifactor equation. -/
+theorem cubic_projector_iff_trifactor {R : Type} [Ring R] (OP : R) :
     CubicProjector OP ↔ OP * (OP - 1) * (OP + 1) = 0 := by
   unfold CubicProjector
   constructor
   · intro h
     calc
       OP * (OP - 1) * (OP + 1)
-          = OP ^ 3 - OP := by ring
+          = OP ^ 3 - OP := by noncomm_ring
       _ = 0 := by rw [h, sub_self]
   · intro h
     have hfac : OP ^ 3 - OP = 0 := by
       calc
-        OP ^ 3 - OP = OP * (OP - 1) * (OP + 1) := by ring
+        OP ^ 3 - OP = OP * (OP - 1) * (OP + 1) := by noncomm_ring
         _ = 0 := h
     exact sub_eq_zero.mp hfac
 

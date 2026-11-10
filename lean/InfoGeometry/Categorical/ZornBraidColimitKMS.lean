@@ -61,7 +61,7 @@ universe u
 
 variable {Op : Type*} [Ring Op] [StarRing Op]
 variable (C : BostConnesCuntzSystem Op)
-variable {R : Type u} [CommRing R] {J : Type u} [Category.{u} J]
+variable {R : Type u} [Ring R] {J : Type u} [Category.{u} J]
 variable (ZornSequence : J ⥤ ModuleCat.{u} R)
 variable [HasColimit ZornSequence]
 

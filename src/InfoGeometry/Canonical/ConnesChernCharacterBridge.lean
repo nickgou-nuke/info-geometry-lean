@@ -6,9 +6,11 @@ namespace ConnesChern
 open InfoGeometry.Canonical.ConnesKMSIndexPairing
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
-variable {R : Type*} [CommRing R]
 
-/-- A matrix idempotent representing a finite projective module. -/
+section NoncommRing
+variable {R : Type*} [Ring R]
+
+/-- A matrix idempotent representing a finite projective module over any ring `[Ring R]`. -/
 abbrev IdempotentProjection :=
   {e : Matrix n n R // IsIdempotentElem e}
 
@@ -28,6 +30,27 @@ theorem idempotent_trace_sq : Matrix.trace (e proj * e proj) = Matrix.trace (e p
   rw [idem proj]
 
 end IdempotentProjection
+
+/-- Over any non-commutative ring `R`, the Chern pairing difference under `[D, Z]` homotopy
+equals the trace commutator defect `Tr((γ D) Z - Z (γ D))`. -/
+theorem chern_pairing_homotopy_noncomm
+    (ST : ConnesGradedSpectralTriple n R)
+    (X Y Z : Matrix n n R)
+    (h_comm : (ST.gamma : Matrix n n R) * Z = Z * ST.gamma)
+    (h_homotopy : X - Y = ST.D * Z - Z * ST.D) :
+    connesIndexPairing ST X - connesIndexPairing ST Y =
+      Matrix.trace (((ST.gamma : Matrix n n R) * ST.D) * Z -
+        Z * ((ST.gamma : Matrix n n R) * ST.D)) := by
+  have hdiff : connesIndexPairing ST X - connesIndexPairing ST Y =
+      connesIndexPairing ST (X - Y) := by
+    unfold connesIndexPairing
+    rw [Matrix.mul_sub, Matrix.trace_sub]
+  rw [hdiff, h_homotopy]
+  exact connes_pairing_commutator_noncomm ST Z h_comm
+
+end NoncommRing
+
+variable {R : Type*} [CommRing R]
 
 theorem chern_pairing_homotopy_invariance
     (ST : ConnesGradedSpectralTriple n R)

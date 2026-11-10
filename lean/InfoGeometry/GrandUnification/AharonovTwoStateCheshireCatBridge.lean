@@ -67,7 +67,7 @@ open InfoGeometry.Canonical.ModularTomitaTwoStateKlein
 open InfoGeometry.GrandUnification.ModularPhaseSeparation
 open InfoGeometry.GrandUnification.Dynamics
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ## Section 1: Four-State Interferometer $\mathcal{H}_{\mathrm{path}} \otimes \mathcal{H}_{\mathrm{spin}} \cong R^4$ -/
 
@@ -240,7 +240,7 @@ theorem quantum_cheshire_cat_separation_theorem :
   have h1 : twoStateOverlap4 (cheshirePostState (R := R)) (cheshirePreState (R := R)) = 2 := by
     unfold twoStateOverlap4 cheshirePostState cheshirePreState
     change (1 : R) * 1 + 1 * 1 + 1 * 1 + 1 * (-1) = 2
-    ring
+    norm_num
   have hL_vec : cheshirePathLeft (R := R) *ᵥ cheshirePreState (R := R) = ![1, 1, 0, 0] := by
     ext i; fin_cases i <;>
       simp [cheshirePathLeft, cheshirePreState, mulVec, dotProduct, sum_fin_4]
@@ -268,35 +268,35 @@ theorem quantum_cheshire_cat_separation_theorem :
     rw [hL_vec]
     unfold cheshirePostState
     change (1 : R) * 1 + 1 * 1 + 1 * 0 + 1 * 0 = 2
-    ring
+    norm_num
   have h3 : twoStatePairing4 (cheshirePostState (R := R)) cheshirePathRight (cheshirePreState (R
   := R)) = 0 := by
     unfold twoStatePairing4
     rw [hR_vec]
     unfold cheshirePostState
     change (1 : R) * 0 + 1 * 0 + 1 * 1 + 1 * (-1) = 0
-    ring
+    norm_num
   have h4 : twoStatePairing4 (cheshirePostState (R := R))
       (cheshirePathLeft * cheshireSpinZ) (cheshirePreState (R := R)) = 0 := by
     unfold twoStatePairing4
     rw [hLS_vec]
     unfold cheshirePostState
     change (1 : R) * 1 + 1 * (-1) + 1 * 0 + 1 * 0 = 0
-    ring
+    norm_num
   have h5 : twoStatePairing4 (cheshirePostState (R := R))
       (cheshirePathRight * cheshireSpinZ) (cheshirePreState (R := R)) = 2 := by
     unfold twoStatePairing4
     rw [hRS_vec]
     unfold cheshirePostState
     change (1 : R) * 0 + 1 * 0 + 1 * 1 + 1 * 1 = 2
-    ring
+    norm_num
   have h6 : twoStatePairing4 (cheshirePostState (R := R)) cheshireSpinZ (cheshirePreState (R
   := R)) = 2 := by
     unfold twoStatePairing4
     rw [hS_vec]
     unfold cheshirePostState
     change (1 : R) * 1 + 1 * (-1) + 1 * 1 + 1 * 1 = 2
-    ring
+    norm_num
   refine ⟨h1, h2, h3, h4, h5, h6, ?_, ?_⟩
   · rw [h2, h3, h1, add_zero]
   · rw [h4, h5, h6, zero_add]
@@ -367,6 +367,7 @@ Then:
    state $T_L v$ is an eigenstate of $X$ at the translated slit position $x_0 + L$:
    $X (T_L v) = (x_0 + L) \cdot (T_L v)$. -/
 theorem heisenberg_modular_shift_weyl_commutation
+    {R : Type*} [CommRing R]
     {M : Type*} [AddCommGroup M] [Module R M]
     (X T_L : Module.End R M) (L x₀ : R) (v : M)
     (h_weyl : X * T_L - T_L * X = L • T_L)
@@ -410,6 +411,7 @@ Unifies in one kernel-checked theorem:
 5. **Heisenberg–Weyl Modular Shift Translation:**
    $X v = x_0 v \implies X(T_L v) = (x_0 + L)(T_L v)$. -/
 theorem aharonov_two_state_grand_unification_synthesis
+    {R : Type*} [CommRing R]
     {M : Type*} [AddCommGroup M] [Module R M]
     (J_Δ 𝒯 X T_L : Module.End R M)
     (hJ : IsKreinSymmetry J_Δ) (hT : IsKreinSymmetry 𝒯) (hJT : IsOddOperator J_Δ 𝒯)

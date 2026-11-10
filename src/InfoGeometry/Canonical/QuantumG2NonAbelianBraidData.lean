@@ -22,7 +22,7 @@ abbrev ThreeParticleFusionSpace (a c : Sector) :=
 
 /-- Two invertible linear transformations that do not commute. -/
 structure NonAbelianBraidData (𝕜 : Type u) (M : Type u)
-    [CommRing 𝕜] [AddCommGroup M] [Module 𝕜 M] where
+    [Ring 𝕜] [AddCommGroup M] [Module 𝕜 M] where
   sigma1 : M ≃ₗ[𝕜] M
   sigma2 : M ≃ₗ[𝕜] M
   non_commuting : sigma1 * sigma2 ≠ sigma2 * sigma1

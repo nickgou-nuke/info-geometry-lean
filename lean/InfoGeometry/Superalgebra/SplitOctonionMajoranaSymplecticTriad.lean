@@ -5,6 +5,7 @@ Authors: InfoGeometry Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 
 /-!
 # Раздел 125 (Юбилеен Монумент): Сплит-Октониони в Базис от 6 Реални Хирални Майорана Нилпотенти, Пара-Симплектично Сплитане и Спинова Алгебра
@@ -31,7 +32,7 @@ Ref: `QMS-JUBILEE-SEC125-MAJORANA-OCTONION-TRIAD-2026-OCT-16`
 
 namespace InfoGeometry.Superalgebra.MajoranaSplitOctonions
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. 3D Спиново-Цветово Пространство за Изотропните Листи ℐ₊ и ℐ₋ -/
 
@@ -44,7 +45,7 @@ structure Vec3 (R : Type*) where
 
 namespace Vec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def canonicalVec3Int : Vec3 ℤ := ⟨1, 2, 3⟩
 
@@ -94,7 +95,7 @@ structure SplitOctonion (R : Type*) where
 
 namespace SplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def canonicalSplitOctonionInt : SplitOctonion ℤ := ⟨1, Vec3.e1, Vec3.e2, 2⟩
 
@@ -168,7 +169,7 @@ theorem mul_noncommutative_int :
 За всеки вектор u ∈ ℐ₊ и v ∈ ℐ₋, квадратът на елемента и неговият интервал са СТРОГО НУЛА:
 U(u)² = 0,  V(v)² = 0,  intervalNorm(U(u)) = 0,  intervalNorm(V(v)) = 0!
 -/
-theorem chiral_sheets_strictly_isotropic (u v : Vec3 R) :
+theorem chiral_sheets_strictly_isotropic {R : Type*} [CommRing R] (u v : Vec3 R) :
     mul (sheetPlus u) (sheetPlus u) = zero ∧
     mul (sheetMinus v) (sheetMinus v) = zero ∧
     intervalNorm (sheetPlus u) = 0 ∧
@@ -190,13 +191,13 @@ theorem chiral_sheets_strictly_isotropic (u v : Vec3 R) :
 theorem paraSymplecticK0_sq :
     mul (paraSymplecticK0 (R := R)) paraSymplecticK0 = one := by
   dsimp [paraSymplecticK0, mul, one, Vec3.zero, Vec3.dot, Vec3.sub, Vec3.add, Vec3.smul, Vec3.cross]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 /--
 Теорема 2a (Симетричната Метрика като Антикомутатор на Двата Листа):
 {U(u), V(v)} = (u · v) • 𝟙.
 -/
-theorem majorana_metric_anticommutator (u v : Vec3 R) :
+theorem majorana_metric_anticommutator {R : Type*} [CommRing R] (u v : Vec3 R) :
     anticommutator (sheetPlus u) (sheetMinus v) = scale (Vec3.dot u v) one := by
   dsimp [anticommutator, sheetPlus, sheetMinus, mul, add, scale, one,
          Vec3.zero, Vec3.dot, Vec3.sub, Vec3.add, Vec3.smul, Vec3.cross]
@@ -206,7 +207,7 @@ theorem majorana_metric_anticommutator (u v : Vec3 R) :
 Теорема 2b (Пара-Симплектичната 2-Форма като Комутатор на Двата Листа):
 [U(u), V(v)] = (u · v) • K₀.
 -/
-theorem majorana_parasymplectic_commutator (u v : Vec3 R) :
+theorem majorana_parasymplectic_commutator {R : Type*} [CommRing R] (u v : Vec3 R) :
     commutator (sheetPlus u) (sheetMinus v) = scale (Vec3.dot u v) paraSymplecticK0 := by
   dsimp [commutator, sheetPlus, sheetMinus, mul, sub, scale, paraSymplecticK0,
          Vec3.zero, Vec3.dot, Vec3.sub, Vec3.add, Vec3.smul, Vec3.cross]
@@ -221,7 +222,7 @@ theorem hestenes_majorana_product_decomposition (u v : Vec3 R) :
       add (scale (Vec3.dot u v) one) (scale (Vec3.dot u v) paraSymplecticK0) := by
   dsimp [sheetPlus, sheetMinus, mul, add, scale, one, paraSymplecticK0,
          Vec3.zero, Vec3.dot, Vec3.sub, Vec3.add, Vec3.smul, Vec3.cross]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 /-! ### 5. Генериране на 3 Комплексни (I_a) и 3 Хиперкомплексни (H_a) Структури -/
 
@@ -249,7 +250,7 @@ theorem generated_complex_structures_sq_neg_one :
            sheetPlus, sheetMinus, sub, mul, neg, one,
            Vec3.e1, Vec3.e2, Vec3.e3, Vec3.zero, Vec3.neg,
            Vec3.dot, Vec3.sub, Vec3.add, Vec3.smul, Vec3.cross]
-    ext <;> ring }
+    ext <;> noncomm_ring }
 
 /--
 Теорема 3b (Трите Генерирани Хиперкомплексни Структури удовлетворяват H_a² = +𝟙):
@@ -264,7 +265,7 @@ theorem generated_hypercomplex_structures_sq_pos_one :
            sheetPlus, sheetMinus, add, mul, one,
            Vec3.e1, Vec3.e2, Vec3.e3, Vec3.zero,
            Vec3.dot, Vec3.sub, Vec3.add, Vec3.smul, Vec3.cross]
-    ext <;> ring }
+    ext <;> noncomm_ring }
 
 /-! ### 6. Сплитане (Intertwining) чрез K₀ и Куплиране на Спиновите Алгебри -/
 
@@ -285,7 +286,7 @@ theorem parasymplectic_intertwines_complex_and_hypercomplex :
            U1, U2, U3, V1, V2, V3, sheetPlus, sheetMinus, add, sub, mul, neg,
            Vec3.e1, Vec3.e2, Vec3.e3, Vec3.zero, Vec3.neg,
            Vec3.dot, Vec3.sub, Vec3.add, Vec3.smul, Vec3.cross]
-    ext <;> ring }
+    ext <;> noncomm_ring }
 
 /--
 Теорема 5 (Куплиране на Спиновите Алгебри и Затваряне на Хиперболичните Бустове):
@@ -308,13 +309,13 @@ theorem spin_algebra_majorana_coupling :
            U1, U2, U3, V1, V2, V3, sheetPlus, sheetMinus, add, sub, mul, neg,
            Vec3.e1, Vec3.e2, Vec3.e3, Vec3.zero, Vec3.neg,
            Vec3.dot, Vec3.sub, Vec3.add, Vec3.smul, Vec3.cross]
-    ext <;> ring }
+    ext <;> noncomm_ring }
 
 end SplitOctonion
 
 /-! ### 7. Главен Юбилеен Синтез на Раздел 125 -/
 
-theorem majorana_split_octonion_synthesis (u v : Vec3 R) :
+theorem majorana_split_octonion_synthesis {R : Type*} [CommRing R] (u v : Vec3 R) :
     (SplitOctonion.mul (SplitOctonion.sheetPlus u) (SplitOctonion.sheetPlus u) = SplitOctonion.zero ∧
      SplitOctonion.mul (SplitOctonion.sheetMinus v) (SplitOctonion.sheetMinus v) = SplitOctonion.zero ∧
      SplitOctonion.intervalNorm (SplitOctonion.sheetPlus u) = 0 ∧

@@ -29,7 +29,7 @@ Standard: QMS-SOP-IAA-001 / OpenGauss 16-Trap Protocol / Trap T16 Universal Shie
 
 namespace InfoGeometry.Superalgebra.AlbertJordanFreudenthal
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. 3D Цветови Вектори -/
 
@@ -42,7 +42,7 @@ structure ColorVec3 (R : Type*) where
 
 namespace ColorVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : ColorVec3 R := ⟨0, 0, 0⟩
 def neg (u : ColorVec3 R) : ColorVec3 R := ⟨-u.c1, -u.c2, -u.c3⟩
@@ -84,7 +84,7 @@ structure SplitOctonion (R : Type*) where
 
 namespace SplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : SplitOctonion R := ⟨0, ColorVec3.zero, ColorVec3.zero, 0⟩
 
@@ -122,6 +122,10 @@ def associator (X Y Z : SplitOctonion R) : SplitOctonion R :=
 
 def quark (u : ColorVec3 R) : SplitOctonion R := ⟨0, u, ColorVec3.zero, 0⟩
 
+section CommRing
+
+variable {R : Type*} [CommRing R]
+
 /--
 Теорема 1a (Универсална Следова Асоциативност на Сплит-Октонионите):
 За произволни три октониона X, Y, Z ∈ 𝕆_s, следата на лявото скобуване (X · Y) · Z
@@ -146,6 +150,8 @@ theorem trace_associator_zero (X Y Z : SplitOctonion R) :
          ColorVec3.add, ColorVec3.smul, ColorVec3.cross]
   ring
 
+end CommRing
+
 end SplitOctonion
 
 /-! ### 3. 27-Мерна Албертова Йорданова Матрица 𝔍₃(𝕆_s) и Детерминант на Фройдентал -/
@@ -167,7 +173,7 @@ structure AlbertMatrix27 (R : Type*) where
 
 namespace AlbertMatrix27
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Некомутативно произведение по октонионните канали за проверка на T16. -/
 def channelMul (A B : AlbertMatrix27 R) : AlbertMatrix27 R where
@@ -219,16 +225,6 @@ def freudenthalDetRight (M : AlbertMatrix27 R) : R :=
     SplitOctonion.trace (SplitOctonion.mul M.X1 (SplitOctonion.mul M.X2 M.X3))
 
 /--
-Теорема 2 (Пълна Асоциативна Инвариантност на Детерминанта на Фройдентал в 𝔍₃(𝕆_s)):
-Въпреки че X₁, X₂, X₃ са неасоциативни сплит-октониони, кубичният детерминант на
-Фройдентал не зависи от реда на скобуване: det₃_left(𝒳) ≡ det₃_right(𝒳)!
--/
-theorem freudenthal_det_parenthesis_invariant (M : AlbertMatrix27 R) :
-    freudenthalDetLeft M = freudenthalDetRight M := by
-  dsimp [freudenthalDetLeft, freudenthalDetRight]
-  rw [SplitOctonion.trace_mul_assoc M.X1 M.X2 M.X3]
-
-/--
 Конструкция на 3-поколенна хирална кваркова матрица на Алберт от маси (α₁, α₂, α₃)
 и три кваркови цветни вектора (u₁, u₂, u₃) ∈ ℐ₊³.
 -/
@@ -239,6 +235,20 @@ def threeGenerationQuarkMatrix (α₁ α₂ α₃ : R) (u₁ u₂ u₃ : ColorVe
   X1 := SplitOctonion.quark u₁
   X2 := SplitOctonion.quark u₂
   X3 := SplitOctonion.quark u₃
+
+section CommRing
+
+variable {R : Type*} [CommRing R]
+
+/--
+Теорема 2 (Пълна Асоциативна Инвариантност на Детерминанта на Фройдентал в 𝔍₃(𝕆_s)):
+Въпреки че X₁, X₂, X₃ са неасоциативни сплит-октониони, кубичният детерминант на
+Фройдентал не зависи от реда на скобуване: det₃_left(𝒳) ≡ det₃_right(𝒳)!
+-/
+theorem freudenthal_det_parenthesis_invariant (M : AlbertMatrix27 R) :
+    freudenthalDetLeft M = freudenthalDetRight M := by
+  dsimp [freudenthalDetLeft, freudenthalDetRight]
+  rw [SplitOctonion.trace_mul_assoc M.X1 M.X2 M.X3]
 
 /--
 Теорема 3 (Обединение на 3-Поколенния Масов Продукт и Барионния Детерминант в 𝔍₃(𝕆_s)):
@@ -258,11 +268,13 @@ theorem freudenthal_det_three_generation_baryon_unification
          ColorVec3.add, ColorVec3.smul, ColorVec3.cross]
   ring
 
+end CommRing
+
 end AlbertMatrix27
 
 /-! ### 4. Главен Синтез на Раздел 137 -/
 
-theorem albert_jordan_freudenthal_synthesis (X Y Z : SplitOctonion R)
+theorem albert_jordan_freudenthal_synthesis {R : Type*} [CommRing R] (X Y Z : SplitOctonion R)
     (M : AlbertMatrix27 R) (α₁ α₂ α₃ : R) (u₁ u₂ u₃ : ColorVec3 R) :
     SplitOctonion.trace (SplitOctonion.mul (SplitOctonion.mul X Y) Z) =
       SplitOctonion.trace (SplitOctonion.mul X (SplitOctonion.mul Y Z)) ∧

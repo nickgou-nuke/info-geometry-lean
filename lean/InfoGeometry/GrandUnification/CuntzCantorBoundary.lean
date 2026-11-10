@@ -22,7 +22,7 @@ open InfoGeometry.GrandUnification.HodgeCartan
 open InfoGeometry.Canonical.TrifactorDecomposition
 open InfoGeometry.Canonical.TriFacetGeometry
 
-variable {R : Type*} [CommRing R] [Invertible (2 : R)]
+variable {R : Type*} [Ring R] [Invertible (2 : R)]
 variable (T : R)
 
 /-- The Cuntz Isometry corresponding to the Exact (Holomorphic) shift.

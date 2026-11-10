@@ -1,6 +1,7 @@
 import Mathlib.Algebra.Algebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
+import Mathlib.Tactic.NoncommRing
 
 /-!
 # Five-graded split-weight socket
@@ -26,8 +27,8 @@ theorem.
 
 namespace InfoGeometry.Algebra.FiveGradedTKK
 
-variable {K : Type*} [CommRing K]
-variable {A : Type*} [Ring A] [Algebra K A]
+variable {K : Type*} [Ring K]
+variable {A : Type*} [Ring A] [Module K A] [IsScalarTower K A A]
 
 /-- Orthogonal split idempotents with the Fioresi-style normalization
 `E² = 2E`, `Ebar² = 2Ebar`. -/
@@ -119,8 +120,11 @@ theorem right_mul_Ebar_of_split
           rw [smul_mul_assoc, smul_mul_assoc]
     _ = a_plus • (0 : A) + a_minus • ((2 : K) • Ebar) := by
           rw [h.1, h.2.2.2]
+    _ = (a_minus * 2) • Ebar := by
+          simp [smul_smul]
     _ = (2 * a_minus) • Ebar := by
-          simp [smul_smul, mul_comm]
+          have hc : a_minus * 2 = 2 * a_minus := by noncomm_ring
+          rw [hc]
 
 /-- Right multiplication by `E` extracts the `E` coefficient from a supplied
 `E/Ebar` decomposition, up to the normalization factor `2`. -/
@@ -136,8 +140,11 @@ theorem right_mul_E_of_split
           rw [smul_mul_assoc, smul_mul_assoc]
     _ = a_plus • ((2 : K) • E) + a_minus • (0 : A) := by
           rw [h.2.2.1, h.2.1]
+    _ = (a_plus * 2) • E := by
+          simp [smul_smul]
     _ = (2 * a_plus) • E := by
-          simp [smul_smul, mul_comm]
+          have hc : a_plus * 2 = 2 * a_plus := by noncomm_ring
+          rw [hc]
 
 /-- The two projection formulae packaged together. -/
 theorem split_idempotent_projection_packet

@@ -96,7 +96,7 @@ The equation says that the holonomy defect is the scalar `scalar`, embedded in
 the operator algebra, acting on the base idempotent.
 -/
 structure CentralDefectRealization
-    (A R : Type*) [Ring A] [CommRing R] [Algebra R A]
+    (A R : Type*) [Ring A] [CommSemiring R] [Algebra R A]
     {base : Diamond A} (L : WilsonLoop A base) where
   /-- Scalar curvature coefficient. -/
   scalar : R
@@ -106,7 +106,7 @@ structure CentralDefectRealization
 
 namespace CentralDefectRealization
 
-variable {A R : Type*} [Ring A] [CommRing R] [Algebra R A]
+variable {A R : Type*} [Ring A] [CommSemiring R] [Algebra R A]
 variable {base : Diamond A} {L : WilsonLoop A base}
 
 /-- Read back the central-defect equation. -/

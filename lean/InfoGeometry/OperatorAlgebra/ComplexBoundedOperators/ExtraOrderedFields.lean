@@ -25,7 +25,7 @@ namespace ExtraOrderedFields
 
 section FieldFacts
 
-variable {𝕜 : Type*} [Field 𝕜] [LinearOrder 𝕜] [IsStrictOrderedRing 𝕜]
+variable {𝕜 : Type*} [DivisionRing 𝕜] [LinearOrder 𝕜] [IsStrictOrderedRing 𝕜]
 variable {a b c x y z w : 𝕜}
 
 theorem mult_strict_left_mono_neg (hba : b < a) (hc : c < 0) :
@@ -92,19 +92,6 @@ theorem frac_less (hx : 0 ≤ x) (hxy : x < y) (hw : 0 < w) (hwz : w ≤ z) :
     x / z < y / w :=
   div_lt_div₀ hxy hwz (hx.trans hxy.le) hw
 
-theorem nonzero_abs_inverse (_ha : a ≠ 0) :
-    |a⁻¹| = (|a|)⁻¹ :=
-  abs_inv a
-
-theorem nonzero_abs_divide (_hb : b ≠ 0) :
-    |a / b| = |a| / |b| :=
-  abs_div a b
-
-theorem field_le_epsilon
-    (h : ∀ ε : 𝕜, 0 < ε → x ≤ y + ε) :
-    x ≤ y :=
-  le_of_forall_pos_le_add h
-
 @[simp]
 theorem inverse_positive_iff_positive :
     0 < a⁻¹ ↔ 0 < a :=
@@ -134,6 +121,26 @@ theorem one_le_inverse_iff :
     exact (one_le_inv₀ ha).mpr ha1
 
 end FieldFacts
+
+section CommFieldFacts
+
+variable {𝕜 : Type*} [Field 𝕜] [LinearOrder 𝕜] [IsStrictOrderedRing 𝕜]
+variable {a b x y : 𝕜}
+
+theorem nonzero_abs_inverse (_ha : a ≠ 0) :
+    |a⁻¹| = (|a|)⁻¹ :=
+  abs_inv a
+
+theorem nonzero_abs_divide (_hb : b ≠ 0) :
+    |a / b| = |a| / |b| :=
+  abs_div a b
+
+theorem field_le_epsilon
+    (h : ∀ ε : 𝕜, 0 < ε → x ≤ y + ε) :
+    x ≤ y :=
+  le_of_forall_pos_le_add h
+
+end CommFieldFacts
 
 section ComplexOfReal
 

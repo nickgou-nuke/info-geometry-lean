@@ -19,13 +19,13 @@ Boundaries & Epistemic Separation:
 - Explicit phase grading tables for $B_s, B_\ell$ remain separate and strictly typed.
 -/
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 abbrev RootCarrier := Fin 8
-abbrev RootOperator (R : Type*) [CommRing R] := Matrix RootCarrier RootCarrier R
+abbrev RootOperator (R : Type*) [Ring R] := Matrix RootCarrier RootCarrier R
 
 /-- An algebraic bivector on the 8D carrier with $B^2 = -I$. -/
-structure ChiralBivector (R : Type*) [CommRing R] where
+structure ChiralBivector (R : Type*) [Ring R] where
   B : RootOperator R
   B_sq : B * B = -(1 : RootOperator R)
 
@@ -33,7 +33,7 @@ structure ChiralBivector (R : Type*) [CommRing R] where
 def phaseMatrix (B_op : ChiralBivector R) (s half : R) : RootOperator R :=
   half • (s • (1 : RootOperator R) + B_op.B)
 
-theorem bivector_shift_matrix_sq (B_op : ChiralBivector R) (s : R) (hs : s ^ 2 = 3) :
+theorem bivector_shift_matrix_sq {R : Type*} [CommRing R] (B_op : ChiralBivector R) (s : R) (hs : s ^ 2 = 3) :
     (s • (1 : RootOperator R) + B_op.B) ^ 2 = (2 : R) • (1 : RootOperator R) + (2 * s) • B_op.B := by
   have h_sq : (s • (1 : RootOperator R) + B_op.B) ^ 2 =
       (s • 1 + B_op.B) * (s • 1 + B_op.B) := by rw [sq]
@@ -56,7 +56,7 @@ theorem bivector_shift_matrix_sq (B_op : ChiralBivector R) (s : R) (hs : s ^ 2 =
     _ = ((3 : R) • 1 + -1) + (s • B_op.B + s • B_op.B) := by rw [hs2]
     _ = (2 : R) • 1 + (2 * s) • B_op.B := by rw [h_three_one, ← h_two_s]
 
-theorem bivector_shift_matrix_cube (B_op : ChiralBivector R) (s : R) (hs : s ^ 2 = 3) :
+theorem bivector_shift_matrix_cube {R : Type*} [CommRing R] (B_op : ChiralBivector R) (s : R) (hs : s ^ 2 = 3) :
     (s • (1 : RootOperator R) + B_op.B) ^ 3 = (8 : R) • B_op.B := by
   have h3 : (s • (1 : RootOperator R) + B_op.B) ^ 3 =
       (s • 1 + B_op.B) * (s • 1 + B_op.B) ^ 2 := by
@@ -86,7 +86,7 @@ theorem bivector_shift_matrix_cube (B_op : ChiralBivector R) (s : R) (hs : s ^ 2
       rw [zero_add, h8]
 
 /-- 🏆 THEOREM: The cube of the phase matrix is the bivector itself: $U^3 = B$. -/
-theorem phaseMatrix_pow_three
+theorem phaseMatrix_pow_three {R : Type*} [CommRing R]
     (B_op : ChiralBivector R) (s half : R)
     (hhalf : (2 : R) * half = 1)
     (hs : s ^ 2 = 3) :
@@ -105,7 +105,7 @@ theorem phaseMatrix_pow_three
   rw [h_coeff, one_smul]
 
 /-- 🏆 THEOREM 1: The polynomial matrix defect $U^6 = -I$. -/
-theorem phaseMatrix_pow_six
+theorem phaseMatrix_pow_six {R : Type*} [CommRing R]
     (B_op : ChiralBivector R) (s half : R)
     (hhalf : (2 : R) * half = 1)
     (hs : s ^ 2 = 3) :

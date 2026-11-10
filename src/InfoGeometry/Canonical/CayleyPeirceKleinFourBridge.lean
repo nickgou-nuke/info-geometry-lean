@@ -441,7 +441,6 @@ abbrev Star_op : CoordEnd := hodgeStar
 abbrev Xi_op : CoordEnd := middleExchangeFlip
 
 theorem C_sq : C_op * C_op = 1 := cayleyConj_sq
-theorem Star_sq : Star_op * Star_op = 1 := hodgeStar_sq
 theorem Xi_sq : Xi_op * Xi_op = 1 := middleExchangeFlip_sq
 
 theorem C_mul_Star : C_op * Star_op = Xi_op := by
@@ -486,6 +485,17 @@ theorem C_eq_SM : C_op = S_gen * M_gen :=
 
 theorem Star_eq_ST : Star_op = S_gen * T_gen :=
   hodgeStar_eq_scalarExchange_mul_middleExchange
+
+/-- Removing the scalar exchange factor from the Hodge generator recovers the
+middle-degree exchange. This is a product law among the Klein-four operators,
+not a second copy of the Hodge involution equation. -/
+theorem Star_mul_S_eq_T : Star_op * S_gen = T_gen := by
+  calc
+    Star_op * S_gen = (S_gen * T_gen) * S_gen := by rw [Star_eq_ST]
+    _ = S_gen * (T_gen * S_gen) := by rw [mul_assoc]
+    _ = S_gen * (S_gen * T_gen) := by rw [← S_comm_T]
+    _ = (S_gen * S_gen) * T_gen := by rw [← mul_assoc]
+    _ = T_gen := by rw [S_sq]; simp
 
 theorem Xi_eq_TM : Xi_op = T_gen * M_gen :=
   middleExchangeFlip_eq_middleExchange_mul_middleSignFlip

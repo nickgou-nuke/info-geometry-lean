@@ -5,5 +5,5 @@ open InfoGeometry.OperatorAlgebra.PeirceSpine
 #print axioms plus_lie_mem_sector
 #print axioms minus_lie_mem_sector
 #print axioms cross_transport_mem_sector
-#print axioms opposite_lie_comm
+#print axioms InfoGeometry.OperatorAlgebra.LieJordan.lie_lie
 #print axioms sigma_lie_mem_sector

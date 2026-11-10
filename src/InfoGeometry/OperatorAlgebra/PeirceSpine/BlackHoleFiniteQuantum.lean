@@ -306,13 +306,6 @@ theorem d63_finite_page_admissible_input_nonempty :
     Nonempty (FinitePageAdmissibleInput (Fin 2)) :=
   ⟨d63ConcreteFinitePageInput⟩
 
-theorem d63_concrete_page_input_is_noncommuting :
-    d63ConcreteFinitePageInput.val.projection *
-        d63ConcreteFinitePageInput.val.amplitude ≠
-      d63ConcreteFinitePageInput.val.amplitude *
-        d63ConcreteFinitePageInput.val.projection :=
-  d63_tilted_cut_amplitude_noncommute
-
 /-- A scaled version of the tilted amplitude gives an interior, rather than
 endpoint, example for the finite Page-state defect. -/
 def d63InteriorPageAmplitude : Matrix (Fin 2) (Fin 2) ℂ :=

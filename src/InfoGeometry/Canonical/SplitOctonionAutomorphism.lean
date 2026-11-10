@@ -37,7 +37,7 @@ noncomputable section
 
 namespace InfoGeometry.Canonical
 
-variable {R : Type} [CommRing R]
+variable {R : Type} [Ring R]
 
 /-- Every real split-octonion automorphism preserves the Zorn determinant. -/
 @[simp] theorem RealSplitOctonionAut.preserves_detZ

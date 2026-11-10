@@ -7,6 +7,7 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
 import Mathlib.Tactic
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Canonical.FinitePlabicKasteleyn
 import InfoGeometry.Holography.PlabicKreinTwistedClusterMutation
 import InfoGeometry.Topology.DirectedPathMonoidTransport
@@ -28,7 +29,7 @@ open InfoGeometry.Topology
 
 namespace Cl11Op
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 @[simp] theorem one_mul (A : Cl11Op R) : mul one A = A := by
   ext <;> simp [mul, one]
@@ -44,7 +45,7 @@ instance : Monoid (Cl11Op R) where
   mul_assoc := by
     intro A B C
     change Cl11Op.mul (Cl11Op.mul A B) C = Cl11Op.mul A (Cl11Op.mul B C)
-    ext <;> simp [Cl11Op.mul] <;> ring
+    ext <;> simp [Cl11Op.mul] <;> noncomm_ring
 
 /-- The canonical matrix representation of a local `Cl11Op`. -/
 def toMatrix (A : Cl11Op R) : Matrix (Fin 2) (Fin 2) R :=
@@ -54,7 +55,7 @@ def toMatrix (A : Cl11Op R) : Matrix (Fin 2) (Fin 2) R :=
 def ofMatrix (M : Matrix (Fin 2) (Fin 2) R) : Cl11Op R :=
   ⟨M 0 0, M 0 1, M 1 0, M 1 1⟩
 
-omit [CommRing R] in
+omit [Ring R] in
 theorem toMatrix_injective :
     Function.Injective (toMatrix : Cl11Op R → Matrix (Fin 2) (Fin 2) R) := by
   intro A B h
@@ -64,11 +65,11 @@ theorem toMatrix_injective :
   · simpa [toMatrix] using congrFun (congrFun h 1) 0
   · simpa [toMatrix] using congrFun (congrFun h 1) 1
 
-omit [CommRing R] in
+omit [Ring R] in
 theorem ofMatrix_toMatrix (A : Cl11Op R) : ofMatrix (toMatrix A) = A := by
   ext <;> rfl
 
-omit [CommRing R] in
+omit [Ring R] in
 theorem toMatrix_ofMatrix (M : Matrix (Fin 2) (Fin 2) R) :
     toMatrix (ofMatrix M) = M := by
   ext i j
@@ -125,7 +126,7 @@ theorem toMatrixEquiv_map_mul (A B : Cl11Op R) :
 polynomial of every represented operator. The proof uses its actual
 two-sided inverse in the finite matrix representation; it does not assert
 that a general plabic square move is implemented by this conjugation. -/
-theorem matrix_edgeTransport_charpoly_invariant (w : R) (A : Cl11Op R) :
+theorem matrix_edgeTransport_charpoly_invariant {R : Type*} [CommRing R] (w : R) (A : Cl11Op R) :
     Matrix.charpoly
         (toMatrix (mul (mul (edgeTransport w) A) (edgeTransportInv w))) =
       Matrix.charpoly (toMatrix A) := by
@@ -393,6 +394,7 @@ unchanged when every edge label is conjugated by the same local
 representation and inverse laws; it does not identify a Plabic square move
 with this conjugation. -/
 theorem matrix_edgeTransport_pathProduct_charpoly_invariant
+    {R : Type*} [CommRing R]
     {G : ChiralDigraph} (w : R)
     (edgeWeight : ∀ u v : G.Vertex, G.edge u v → Cl11Op R)
     {u v : G.Vertex} (p : DirectedPath G u v) :

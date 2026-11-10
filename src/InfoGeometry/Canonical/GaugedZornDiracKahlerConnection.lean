@@ -48,9 +48,11 @@ hinted at in the relativistic physics stream:
 
 namespace InfoGeometry.Canonical.GaugedZornDiracKahler
 
-variable {R : Type*} [CommRing R]
+section RingZorn
 
-/-- 3-dimensional vector over a commutative ring `R`. -/
+variable {R : Type*} [Ring R]
+
+/-- 3-dimensional vector over a ring `R`. -/
 abbrev Vec3 (R : Type*) := Fin 3 → R
 
 /-- Standard dot product of two 3-vectors. -/
@@ -63,6 +65,12 @@ def cross3 (u v : Vec3 R) : Vec3 R :=
     u 2 * v 0 - u 0 * v 2,
     u 0 * v 1 - u 1 * v 0]
 
+end RingZorn
+
+section CommZornDot
+
+variable {R : Type*} [CommRing R]
+
 /-- The cross product of any 3-vector with itself vanishes identically. -/
 theorem cross3_self (u : Vec3 R) : cross3 u u = 0 := by
   dsimp [cross3]
@@ -73,6 +81,8 @@ theorem cross3_self (u : Vec3 R) : cross3 u u = 0 := by
 theorem dot3_comm (u v : Vec3 R) : dot3 u v = dot3 v u := by
   dsimp [dot3]
   ring
+
+end CommZornDot
 
 /--
 Zorn vector matrix: a $2 \times 2$ matrix with scalar diagonals `a, b`
@@ -86,7 +96,9 @@ structure ZornMatrix (R : Type*) where
 
 namespace ZornMatrix
 
-omit [CommRing R] in
+variable {R : Type*} [Ring R]
+
+omit [Ring R] in
 @[ext]
 theorem ext {X Y : ZornMatrix R}
     (ha : X.a = Y.a) (hb : X.b = Y.b)
@@ -132,24 +144,24 @@ def antiquark (v : Vec3 R) : ZornMatrix R := ⟨0, 0, 0, v⟩
 
 theorem peirce_plus_sq : zornMul (PPlus (R := R)) PPlus = PPlus := by
   apply ext
-  · dsimp [zornMul, PPlus, dot3]; ring
-  · dsimp [zornMul, PPlus, dot3]; ring
-  · dsimp [zornMul, PPlus, cross3]; ext i; fin_cases i <;> { dsimp; ring }
-  · dsimp [zornMul, PPlus, cross3]; ext i; fin_cases i <;> { dsimp; ring }
+  · dsimp [zornMul, PPlus, dot3]; simp
+  · dsimp [zornMul, PPlus, dot3]; simp
+  · dsimp [zornMul, PPlus, cross3]; ext i; fin_cases i <;> { dsimp; simp }
+  · dsimp [zornMul, PPlus, cross3]; ext i; fin_cases i <;> { dsimp; simp }
 
 theorem peirce_minus_sq : zornMul (PMinus (R := R)) PMinus = PMinus := by
   apply ext
-  · dsimp [zornMul, PMinus, dot3]; ring
-  · dsimp [zornMul, PMinus, dot3]; ring
-  · dsimp [zornMul, PMinus, cross3]; ext i; fin_cases i <;> { dsimp; ring }
-  · dsimp [zornMul, PMinus, cross3]; ext i; fin_cases i <;> { dsimp; ring }
+  · dsimp [zornMul, PMinus, dot3]; simp
+  · dsimp [zornMul, PMinus, dot3]; simp
+  · dsimp [zornMul, PMinus, cross3]; ext i; fin_cases i <;> { dsimp; simp }
+  · dsimp [zornMul, PMinus, cross3]; ext i; fin_cases i <;> { dsimp; simp }
 
 theorem peirce_ortho_pm : zornMul (PPlus (R := R)) PMinus = zero := by
   apply ext
-  · dsimp [zornMul, PPlus, PMinus, zero, dot3]; ring
-  · dsimp [zornMul, PPlus, PMinus, zero, dot3]; ring
-  · dsimp [zornMul, PPlus, PMinus, zero, cross3]; ext i; fin_cases i <;> { dsimp; ring }
-  · dsimp [zornMul, PPlus, PMinus, zero, cross3]; ext i; fin_cases i <;> { dsimp; ring }
+  · dsimp [zornMul, PPlus, PMinus, zero, dot3]; simp
+  · dsimp [zornMul, PPlus, PMinus, zero, dot3]; simp
+  · dsimp [zornMul, PPlus, PMinus, zero, cross3]; ext i; fin_cases i <;> { dsimp; simp }
+  · dsimp [zornMul, PPlus, PMinus, zero, cross3]; ext i; fin_cases i <;> { dsimp; simp }
 
 theorem peirce_resolution : add (PPlus (R := R)) PMinus = one := by
   apply ext <;> simp [add, PPlus, PMinus, one]
@@ -161,7 +173,9 @@ def Zorn4Vector (R : Type*) := Fin 4 → ZornMatrix R
 
 namespace Zorn4Vector
 
-variable {R : Type*} [CommRing R]
+section RingZorn4Vector
+
+variable {R : Type*} [Ring R]
 
 /-- Lepton gauge connection component: P₊ Z_μ P₊. -/
 def leptonConnection (Z : Zorn4Vector R) (μ : Fin 4) : ZornMatrix R :=
@@ -183,50 +197,19 @@ def antiquarkField (Z : Zorn4Vector R) (μ : Fin 4) : ZornMatrix R :=
 theorem quarkField_is_quark (Z : Zorn4Vector R) (μ : Fin 4) :
     quarkField Z μ = ZornMatrix.quark (Z μ).u := by
   apply ZornMatrix.ext
-  · dsimp [quarkField, ZornMatrix.zornMul, ZornMatrix.PPlus, ZornMatrix.PMinus, ZornMatrix.quark, dot3]; ring
-  · dsimp [quarkField, ZornMatrix.zornMul, ZornMatrix.PPlus, ZornMatrix.PMinus, ZornMatrix.quark, dot3]; ring
-  · ext i; fin_cases i <;> { dsimp [quarkField, ZornMatrix.zornMul, ZornMatrix.PPlus, ZornMatrix.PMinus, ZornMatrix.quark, cross3]; ring }
-  · ext i; fin_cases i <;> { dsimp [quarkField, ZornMatrix.zornMul, ZornMatrix.PPlus, ZornMatrix.PMinus, ZornMatrix.quark, cross3]; ring }
+  · dsimp [quarkField, ZornMatrix.zornMul, ZornMatrix.PPlus, ZornMatrix.PMinus, ZornMatrix.quark, dot3]; simp
+  · dsimp [quarkField, ZornMatrix.zornMul, ZornMatrix.PPlus, ZornMatrix.PMinus, ZornMatrix.quark, dot3]; simp
+  · ext i; fin_cases i <;> { dsimp [quarkField, ZornMatrix.zornMul, ZornMatrix.PPlus, ZornMatrix.PMinus, ZornMatrix.quark, cross3]; simp }
+  · ext i; fin_cases i <;> { dsimp [quarkField, ZornMatrix.zornMul, ZornMatrix.PPlus, ZornMatrix.PMinus, ZornMatrix.quark, cross3]; simp }
 
 /-- The antiquark projection isolates the lower-left vector field `v`. -/
 theorem antiquarkField_is_antiquark (Z : Zorn4Vector R) (μ : Fin 4) :
     antiquarkField Z μ = ZornMatrix.antiquark (Z μ).v := by
   apply ZornMatrix.ext
-  · dsimp [antiquarkField, ZornMatrix.zornMul, ZornMatrix.PPlus, ZornMatrix.PMinus, ZornMatrix.antiquark, dot3]; ring
-  · dsimp [antiquarkField, ZornMatrix.zornMul, ZornMatrix.PPlus, ZornMatrix.PMinus, ZornMatrix.antiquark, dot3]; ring
-  · ext i; fin_cases i <;> { dsimp [antiquarkField, ZornMatrix.zornMul, ZornMatrix.PPlus, ZornMatrix.PMinus, ZornMatrix.antiquark, cross3]; ring }
-  · ext i; fin_cases i <;> { dsimp [antiquarkField, ZornMatrix.zornMul, ZornMatrix.PPlus, ZornMatrix.PMinus, ZornMatrix.antiquark, cross3]; ring }
-
-/--
-Nilpotency of the colored quark field: (P₊ Z_μ P₋)² = 0.
-This holds identically because the cross product of identical vectors vanishes: u × u = 0.
--/
-theorem quarkField_sq_zero (Z : Zorn4Vector R) (μ : Fin 4) :
-    ZornMatrix.zornMul (quarkField Z μ) (quarkField Z μ) = ZornMatrix.zero := by
-  rw [quarkField_is_quark]
-  apply ZornMatrix.ext
-  · dsimp [ZornMatrix.zornMul, ZornMatrix.quark, ZornMatrix.zero, dot3]; ring
-  · dsimp [ZornMatrix.zornMul, ZornMatrix.quark, ZornMatrix.zero, dot3]; ring
-  · dsimp [ZornMatrix.zornMul, ZornMatrix.quark, ZornMatrix.zero, cross3]; ext i; fin_cases i <;> { dsimp; ring }
-  · dsimp [ZornMatrix.zornMul, ZornMatrix.quark, ZornMatrix.zero]
-    rw [cross3_self]
-    ext i; fin_cases i <;> { dsimp; ring }
-
-/--
-Nilpotency of the antiquark field: (P₋ Z_μ P₊)² = 0.
-This holds identically because the cross product v × v = 0.
--/
-theorem antiquarkField_sq_zero (Z : Zorn4Vector R) (μ : Fin 4) :
-    ZornMatrix.zornMul (antiquarkField Z μ) (antiquarkField Z μ) = ZornMatrix.zero := by
-  rw [antiquarkField_is_antiquark]
-  apply ZornMatrix.ext
-  · dsimp [ZornMatrix.zornMul, ZornMatrix.antiquark, ZornMatrix.zero, dot3]; ring
-  · dsimp [ZornMatrix.zornMul, ZornMatrix.antiquark, ZornMatrix.zero, dot3]; ring
-  · dsimp [ZornMatrix.zornMul, ZornMatrix.antiquark, ZornMatrix.zero]
-    have h : cross3 (Z μ).v (Z μ).v = 0 := cross3_self (Z μ).v
-    rw [h]
-    ext i; fin_cases i <;> { dsimp; ring }
-  · dsimp [ZornMatrix.zornMul, ZornMatrix.antiquark, ZornMatrix.zero, cross3]; ext i; fin_cases i <;> { dsimp; ring }
+  · dsimp [antiquarkField, ZornMatrix.zornMul, ZornMatrix.PPlus, ZornMatrix.PMinus, ZornMatrix.antiquark, dot3]; simp
+  · dsimp [antiquarkField, ZornMatrix.zornMul, ZornMatrix.PPlus, ZornMatrix.PMinus, ZornMatrix.antiquark, dot3]; simp
+  · ext i; fin_cases i <;> { dsimp [antiquarkField, ZornMatrix.zornMul, ZornMatrix.PPlus, ZornMatrix.PMinus, ZornMatrix.antiquark, cross3]; simp }
+  · ext i; fin_cases i <;> { dsimp [antiquarkField, ZornMatrix.zornMul, ZornMatrix.PPlus, ZornMatrix.PMinus, ZornMatrix.antiquark, cross3]; simp }
 
 /--
 Split Peirce Matter-Gauge Decomposition of the Zorn 4-vector field:
@@ -239,19 +222,56 @@ theorem matter_gauge_4vector_decomposition (Z : Zorn4Vector R) (μ : Fin 4) :
       (ZornMatrix.add (quarkField Z μ) (antiquarkField Z μ)) = Z μ := by
   apply ZornMatrix.ext
   · dsimp [ZornMatrix.add, leptonConnection, antileptonConnection, quarkField, antiquarkField,
-           ZornMatrix.zornMul, ZornMatrix.PPlus, ZornMatrix.PMinus, dot3]; ring
+           ZornMatrix.zornMul, ZornMatrix.PPlus, ZornMatrix.PMinus, dot3]; simp
   · dsimp [ZornMatrix.add, leptonConnection, antileptonConnection, quarkField, antiquarkField,
-           ZornMatrix.zornMul, ZornMatrix.PPlus, ZornMatrix.PMinus, dot3]; ring
+           ZornMatrix.zornMul, ZornMatrix.PPlus, ZornMatrix.PMinus, dot3]; simp
   · ext i; fin_cases i <;> {
       dsimp [ZornMatrix.add, leptonConnection, antileptonConnection, quarkField, antiquarkField,
              ZornMatrix.zornMul, ZornMatrix.PPlus, ZornMatrix.PMinus, cross3]
-      ring
+      simp
     }
   · ext i; fin_cases i <;> {
       dsimp [ZornMatrix.add, leptonConnection, antileptonConnection, quarkField, antiquarkField,
              ZornMatrix.zornMul, ZornMatrix.PPlus, ZornMatrix.PMinus, cross3]
-      ring
+      simp
     }
+
+end RingZorn4Vector
+
+section CommZorn4Vector
+
+variable {R : Type*} [CommRing R]
+
+/--
+Nilpotency of the colored quark field: (P₊ Z_μ P₋)² = 0.
+This holds identically because the cross product of identical vectors vanishes: u × u = 0.
+-/
+theorem quarkField_sq_zero (Z : Zorn4Vector R) (μ : Fin 4) :
+    ZornMatrix.zornMul (quarkField Z μ) (quarkField Z μ) = ZornMatrix.zero := by
+  rw [quarkField_is_quark]
+  apply ZornMatrix.ext
+  · dsimp [ZornMatrix.zornMul, ZornMatrix.quark, ZornMatrix.zero, dot3]; simp
+  · dsimp [ZornMatrix.zornMul, ZornMatrix.quark, ZornMatrix.zero, dot3]; simp
+  · dsimp [ZornMatrix.zornMul, ZornMatrix.quark, ZornMatrix.zero, cross3]; ext i; fin_cases i <;> { dsimp; simp }
+  · dsimp [ZornMatrix.zornMul, ZornMatrix.quark, ZornMatrix.zero]
+    rw [cross3_self]
+    ext i; fin_cases i <;> { dsimp; simp }
+
+/--
+Nilpotency of the antiquark field: (P₋ Z_μ P₊)² = 0.
+This holds identically because the cross product v × v = 0.
+-/
+theorem antiquarkField_sq_zero (Z : Zorn4Vector R) (μ : Fin 4) :
+    ZornMatrix.zornMul (antiquarkField Z μ) (antiquarkField Z μ) = ZornMatrix.zero := by
+  rw [antiquarkField_is_antiquark]
+  apply ZornMatrix.ext
+  · dsimp [ZornMatrix.zornMul, ZornMatrix.antiquark, ZornMatrix.zero, dot3]; simp
+  · dsimp [ZornMatrix.zornMul, ZornMatrix.antiquark, ZornMatrix.zero, dot3]; simp
+  · dsimp [ZornMatrix.zornMul, ZornMatrix.antiquark, ZornMatrix.zero]
+    have h : cross3 (Z μ).v (Z μ).v = 0 := cross3_self (Z μ).v
+    rw [h]
+    ext i; fin_cases i <;> { dsimp; simp }
+  · dsimp [ZornMatrix.zornMul, ZornMatrix.antiquark, ZornMatrix.zero, cross3]; ext i; fin_cases i <;> { dsimp; simp }
 
 /--
 Quark-Antiquark Current Anticommutation Relation (CAR):
@@ -270,6 +290,8 @@ theorem quark_current_car (Z : Zorn4Vector R) (μ ν : Fin 4) :
   · dsimp [ZornMatrix.add, ZornMatrix.zornMul, ZornMatrix.quark, ZornMatrix.antiquark, ZornMatrix.smul, ZornMatrix.one, dot3]; ring
   · dsimp [ZornMatrix.add, ZornMatrix.zornMul, ZornMatrix.quark, ZornMatrix.antiquark, ZornMatrix.smul, ZornMatrix.one, cross3]; ext i; fin_cases i <;> { dsimp; ring }
   · dsimp [ZornMatrix.add, ZornMatrix.zornMul, ZornMatrix.quark, ZornMatrix.antiquark, ZornMatrix.smul, ZornMatrix.one, cross3]; ext i; fin_cases i <;> { dsimp; ring }
+
+end CommZorn4Vector
 
 end Zorn4Vector
 

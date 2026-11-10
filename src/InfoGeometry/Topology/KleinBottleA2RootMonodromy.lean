@@ -17,7 +17,7 @@ with glide-twisted cyclotomic monodromy.
 
 namespace InfoGeometry.Topology.KleinBottleA2RootMonodromy
 
-variable {K V : Type*} [Field K] [AddCommGroup V] [Module K V]
+variable {K V : Type*} [Ring K] [AddCommGroup V] [Module K V]
 
 /--
 The Klein bottle monodromy data with cubic translation and glide reflection.
@@ -27,7 +27,7 @@ The glide g represents the orientation-reversing reflection (order 2).
 The conjugation relation g t g⁻¹ = t⁻¹ encodes the dihedral symmetry of the A₂ root system.
 -/
 structure KleinBottleA2RootMonodromyData
-    (K V : Type*) [Field K] [AddCommGroup V] [Module K V] where
+    (K V : Type*) [Ring K] [AddCommGroup V] [Module K V] where
   /-- Translation generator t (cubic rotation / Coxeter element of A₂) -/
   translation : V ≃ₗ[K] V
 

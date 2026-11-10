@@ -5,7 +5,7 @@ import Mathlib.LinearAlgebra.Matrix.Trace
 
 namespace InfoGeometry.Physics
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The nilpotent operator `K` representing the null direction on the Krein boundary. -/
 def K : Matrix (Fin 2) (Fin 2) R := !![0, 1; 0, 0]
@@ -19,22 +19,24 @@ theorem K_sq_eq_zero : K * K = (0 : Matrix (Fin 2) (Fin 2) R) := by
 theorem K_trace_eq_zero : Matrix.trace (K (R := R)) = 0 := by
   simp [K, Matrix.trace, Fin.sum_univ_two]
 
-/-- The null generator has vanishing determinant. -/
-theorem K_det_eq_zero : (K (R := R)).det = 0 := by
-  simp [K, Matrix.det_fin_two]
-
 /-- Exponentiation of the parabolic flow: exp(tK) = I + tK. -/
 def parabolicFlow (t : R) : Matrix (Fin 2) (Fin 2) R :=
   1 + t • K
+
+/-- The parabolic flow keeps trace `2`, hence is unipotent/parabolic. -/
+theorem parabolic_trace_two (t : R) : Matrix.trace (parabolicFlow t) = 2 := by
+  simp [parabolicFlow, K, Matrix.trace_fin_two]
+
+variable {R : Type*} [CommRing R]
+
+/-- The null generator has vanishing determinant. -/
+theorem K_det_eq_zero : (K (R := R)).det = 0 := by
+  simp [K, Matrix.det_fin_two]
 
 /-- The parabolic flow preserves the projective scaling freedom (det = 1). -/
 theorem parabolic_det_one (t : R) : (parabolicFlow t).det = 1 := by
   dsimp [parabolicFlow, K]
   simp [Matrix.det_fin_two]
-
-/-- The parabolic flow keeps trace `2`, hence is unipotent/parabolic. -/
-theorem parabolic_trace_two (t : R) : Matrix.trace (parabolicFlow t) = 2 := by
-  simp [parabolicFlow, K, Matrix.trace_fin_two]
 
 /-- Subtracting the identity from the parabolic flow recovers a square-zero step. -/
 theorem parabolicFlow_sub_one_sq_eq_zero (t : R) :

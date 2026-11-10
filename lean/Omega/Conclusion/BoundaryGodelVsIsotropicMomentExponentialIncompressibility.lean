@@ -11,7 +11,7 @@ theorem paper_conclusion_boundary_godel_vs_isotropic_moment_exponential_incompre
     (m n r_m : ℕ) {Y_m : Type*} (momentMap : Fin (2 ^ (m * n)) → Fin r_m)
     (postSketch : Fin r_m → Y_m)
     (hSketch : Function.Injective fun u => postSketch (momentMap u)) :
-    Function.Injective (Omega.SPG.boundaryGodelCode : Omega.SPG.DyadicPolycube →
+    Function.Injective (Omega.SPG.boundaryGodelCode : Omega.SPG.FiniteMomentSupport →
       Omega.SPG.BoundaryGodelCode) ∧
       Function.Injective momentMap ∧
       2 ^ (m * n) ≤ r_m := by
@@ -19,12 +19,9 @@ theorem paper_conclusion_boundary_godel_vs_isotropic_moment_exponential_incompre
     intro u v huv
     exact hSketch (by simp [huv])
   have hBoundary :
-      Function.Injective (Omega.SPG.boundaryGodelCode : Omega.SPG.DyadicPolycube →
+      Function.Injective (Omega.SPG.boundaryGodelCode : Omega.SPG.FiniteMomentSupport →
         Omega.SPG.BoundaryGodelCode) := by
-    intro U V _
-    cases U
-    cases V
-    rfl
+    exact Omega.SPG.boundaryGodelCode_injective
   have hGap :
       2 ^ (m * n) ≤ r_m :=
     paper_conclusion_boundary_stokes_observation_minimal_dimension_seeds

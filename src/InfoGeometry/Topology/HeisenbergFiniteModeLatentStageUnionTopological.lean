@@ -37,7 +37,7 @@ open InfoGeometry.Topology.CyclotomicLatentQuotientTopological
 
 noncomputable section
 
-variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
+variable {𝕜 : Type*} [Ring 𝕜]
 
 /-- The latent subset of `LatentQuotient` visible at a finite mode stage `s`. -/
 def heisenbergFiniteModeStageLatentSet

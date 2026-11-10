@@ -18,11 +18,11 @@ def pfaffian2x2 {R : Type*} (a : R) : R :=
   a
 
 /-- **Definition**: 2x2 Skew-Symmetric Matrix Determinant Det2x2(a) = a² for A = [[0, a], [-a, 0]]. -/
-def determinant2x2 {R : Type*} [CommRing R] (a : R) : R :=
+def determinant2x2 {R : Type*} [Ring R] (a : R) : R :=
   a * a
 
 /-- **Theorem**: Pfaffian-Determinant Fundamental Identity Pf(A)² = det(A). -/
-theorem pfaffian_sq_eq_determinant {R : Type*} [CommRing R] (a : R) :
+theorem pfaffian_sq_eq_determinant {R : Type*} [Ring R] (a : R) :
     pfaffian2x2 a * pfaffian2x2 a = determinant2x2 a :=
   rfl
 
@@ -37,7 +37,7 @@ theorem gaussian_berezin_pfaffian_identity {R : Type*} (a : R) :
     2. 2x2 Determinant definition det(A) = a².
     3. Fundamental Pfaffian-Determinant identity Pf(A)² = det(A).
     4. Exact algebraic bridge connecting Gaussian Berezin integration to Pfaffians and Plücker minors. -/
-theorem master_gaussian_berezin_pfaffian_determinant_synthesis {R : Type*} [CommRing R] (a : R) :
+theorem master_gaussian_berezin_pfaffian_determinant_synthesis {R : Type*} [Ring R] (a : R) :
     (pfaffian2x2 a * pfaffian2x2 a = determinant2x2 a) ∧
     (pfaffian2x2 a = a) := ⟨
   rfl,

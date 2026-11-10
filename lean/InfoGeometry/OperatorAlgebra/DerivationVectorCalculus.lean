@@ -32,7 +32,7 @@ open InfoGeometry.Algebra
 open InfoGeometry.Algebra.LieActionLane
 
 variable {R A : Type*}
-variable [Field R] [AddCommGroup A] [Module R A]
+variable [CommRing R] [AddCommGroup A] [Module R A]
 
 variable (K : LieActionLane R A)
 

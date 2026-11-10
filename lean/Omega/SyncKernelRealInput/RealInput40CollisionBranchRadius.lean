@@ -5,9 +5,6 @@ namespace Omega.SyncKernelRealInput
 
 noncomputable section
 
-/-- Concrete wrapper for the explicit collision-branch cubic package. -/
-abbrev real_input_40_collision_branch_radius_data := Unit
-
 /-- The chapter-local cubic used to model collision-pressure branch formation. -/
 def real_input_40_collision_branch_radius_cubic (u x : ℚ) : ℚ :=
   x ^ (3 : ℕ) - 3 * x + (u - 5 / 2)
@@ -28,66 +25,64 @@ def real_input_40_collision_branch_radius_theta_left : ℝ :=
 def real_input_40_collision_branch_radius_theta_right : ℝ :=
   Real.log (9 / 2 : ℝ)
 
-/-- The radius from `θ = 0` to the nearest real logarithmic branch point. -/
-def real_input_40_collision_branch_radius_taylor_radius : ℝ :=
+/-- The smaller of the distances from zero to the two displayed real logarithmic endpoints.
+This finite minimum is not asserted to be the analytic Taylor radius of a function. -/
+def real_input_40_collision_branch_radius_nearest_real_endpoint_distance : ℝ :=
   min |real_input_40_collision_branch_radius_theta_left|
     |real_input_40_collision_branch_radius_theta_right|
 
-namespace real_input_40_collision_branch_radius_data
+/-! The checked conclusions below concern the two specified endpoint roots, their real logarithms,
+and the minimum of the two real endpoint distances. They do not classify all roots or prove a
+complex-analytic Taylor-radius statement. -/
 
-/-- The branch points are exactly the `u`-values where the cubic and its derivative share a root,
-and these coincide with the explicit discriminant roots. -/
-def branch_points_are_discriminant_roots
-    (_D : real_input_40_collision_branch_radius_data) : Prop :=
-  real_input_40_collision_branch_radius_cubic (1 / 2) (-1) = 0 ∧
-    real_input_40_collision_branch_radius_cubic_deriv (-1) = 0 ∧
-    real_input_40_collision_branch_radius_discriminant (1 / 2) = 0 ∧
-    real_input_40_collision_branch_radius_cubic (9 / 2) 1 = 0 ∧
-    real_input_40_collision_branch_radius_cubic_deriv 1 = 0 ∧
-    real_input_40_collision_branch_radius_discriminant (9 / 2) = 0
+/-- The factorized quadratic in `u` agrees with the centered discriminant expression. -/
+lemma real_input_40_collision_branch_radius_discriminant_identity (u : ℚ) :
+    108 - 27 * (u - 5 / 2) ^ 2 =
+      real_input_40_collision_branch_radius_discriminant u := by
+  unfold real_input_40_collision_branch_radius_discriminant
+  ring
 
-/-- Lifting the two positive branch points through `u = exp θ` gives the real branch lattice seen
-from the `θ`-plane. -/
-def theta_branch_lattice (_D : real_input_40_collision_branch_radius_data) : Prop :=
-  Real.exp real_input_40_collision_branch_radius_theta_left = (1 / 2 : ℝ) ∧
-    Real.exp real_input_40_collision_branch_radius_theta_right = (9 / 2 : ℝ)
-
-/-- The Taylor radius at `θ = 0` is the distance to the nearest logarithmic branch point. -/
-def taylor_radius_formula (_D : real_input_40_collision_branch_radius_data) : Prop :=
-  real_input_40_collision_branch_radius_taylor_radius = Real.log 2
-
-end real_input_40_collision_branch_radius_data
-
-open real_input_40_collision_branch_radius_data
-
-/-- Paper label: `cor:real-input-40-collision-branch-radius`. For the explicit cubic
-`x^3 - 3x + (u - 5/2)`, the common roots of `f_u` and `f_u'` occur at `(u, x) = (1/2, -1)` and
-`(9/2, 1)`, so the discriminant roots lift under `u = exp θ` to the two real branch points
-`θ = -log 2` and `θ = log (9/2)`, and the nearest one has radius `log 2`. -/
+/-- Paper label: `cor:real-input-40-collision-branch-radius`. Verifies the two displayed repeated-root
+examples, the centered quadratic factorization, their real logarithmic preimages, and the minimum
+of those two endpoint distances. This statement does not assert these are all branch points. -/
 theorem paper_real_input_40_collision_branch_radius
-    (D : real_input_40_collision_branch_radius_data) :
-    D.branch_points_are_discriminant_roots ∧
-      D.theta_branch_lattice ∧
-      D.taylor_radius_formula := by
-  refine ⟨?_, ?_, ?_⟩
-  · unfold branch_points_are_discriminant_roots
-      real_input_40_collision_branch_radius_cubic
-      real_input_40_collision_branch_radius_cubic_deriv
-      real_input_40_collision_branch_radius_discriminant
+    : real_input_40_collision_branch_radius_cubic (1 / 2) (-1) = 0 ∧
+        real_input_40_collision_branch_radius_cubic_deriv (-1) = 0 ∧
+        real_input_40_collision_branch_radius_discriminant (1 / 2) = 0 ∧
+        real_input_40_collision_branch_radius_cubic (9 / 2) 1 = 0 ∧
+        real_input_40_collision_branch_radius_cubic_deriv 1 = 0 ∧
+        real_input_40_collision_branch_radius_discriminant (9 / 2) = 0 ∧
+        (∀ u : ℚ,
+          108 - 27 * (u - 5 / 2) ^ 2 =
+            real_input_40_collision_branch_radius_discriminant u) ∧
+        Real.exp real_input_40_collision_branch_radius_theta_left = (1 / 2 : ℝ) ∧
+        Real.exp real_input_40_collision_branch_radius_theta_right = (9 / 2 : ℝ) ∧
+        real_input_40_collision_branch_radius_nearest_real_endpoint_distance = Real.log 2 := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · unfold real_input_40_collision_branch_radius_cubic
     norm_num
-  · unfold theta_branch_lattice
-      real_input_40_collision_branch_radius_theta_left
-      real_input_40_collision_branch_radius_theta_right
-    constructor
-    · have htwo : (0 : ℝ) < 2 := by norm_num
-      calc
-        Real.exp (-Real.log 2) = (Real.exp (Real.log 2))⁻¹ := by rw [Real.exp_neg]
-        _ = (2 : ℝ)⁻¹ := by rw [Real.exp_log htwo]
-        _ = (1 / 2 : ℝ) := by norm_num
-    · have hpos : (0 : ℝ) < 9 / 2 := by norm_num
-      rw [Real.exp_log hpos]
-  · unfold taylor_radius_formula
-      real_input_40_collision_branch_radius_taylor_radius
+  · unfold real_input_40_collision_branch_radius_cubic_deriv
+    norm_num
+  · unfold real_input_40_collision_branch_radius_discriminant
+    norm_num
+  · unfold real_input_40_collision_branch_radius_cubic
+    norm_num
+  · unfold real_input_40_collision_branch_radius_cubic_deriv
+    norm_num
+  · unfold real_input_40_collision_branch_radius_discriminant
+    norm_num
+  · intro u
+    exact real_input_40_collision_branch_radius_discriminant_identity u
+  · unfold real_input_40_collision_branch_radius_theta_left
+    have htwo : (0 : ℝ) < 2 := by norm_num
+    calc
+      Real.exp (-Real.log 2) = (Real.exp (Real.log 2))⁻¹ := by rw [Real.exp_neg]
+      _ = (2 : ℝ)⁻¹ := by rw [Real.exp_log htwo]
+      _ = (1 / 2 : ℝ) := by norm_num
+  · unfold real_input_40_collision_branch_radius_theta_right
+    have hpos : (0 : ℝ) < 9 / 2 := by norm_num
+    rw [Real.exp_log hpos]
+  · unfold real_input_40_collision_branch_radius_nearest_real_endpoint_distance
       real_input_40_collision_branch_radius_theta_left
       real_input_40_collision_branch_radius_theta_right
     have hlog2_nonneg : 0 ≤ Real.log 2 := by

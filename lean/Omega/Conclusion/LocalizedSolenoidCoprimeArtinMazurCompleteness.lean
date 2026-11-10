@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.Algebra.GCDMonoid.Finset
 import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.Tactic
 import Omega.Zeta.LocalizedQuotientLedger
@@ -25,7 +31,7 @@ lemma localizedPrimeRecoveredByBase_iff_not_dvd (B p : ℕ) (hB : B ≠ 0) (hp :
     have hpOut : p ∉ B.primeFactors := by
       intro hpMem
       exact hpB (Nat.dvd_of_mem_primeFactors hpMem)
-    simpa [localizedPrimeRecoveredByBase, Omega.Zeta.localizedIndex, Omega.Zeta.nSperp, hpOut]
+    simp [localizedPrimeRecoveredByBase, Omega.Zeta.localizedIndex, Omega.Zeta.nSperp, hpOut]
 
 /-- Primewise separation seen through periodic-point counts. -/
 def periodicCountsSeparate (F : LocalizedSolenoidBaseFamily) : Prop :=
@@ -35,9 +41,10 @@ def periodicCountsSeparate (F : LocalizedSolenoidBaseFamily) : Prop :=
 def zetaFamilySeparates (F : LocalizedSolenoidBaseFamily) : Prop :=
   ∀ p, Nat.Prime p → ∃ B ∈ F.bases, localizedPrimeRecoveredByBase B p
 
-/-- Primewise formulation of `gcd(F.bases) = 1`: no prime divides every base in the family. -/
+/-- Arithmetic gcd-one condition for a nonempty localization family. The nonemptiness clause
+matters because Mathlib defines the gcd of the empty finite set to be zero. -/
 def gcdBasesEqOne (F : LocalizedSolenoidBaseFamily) : Prop :=
-  ∀ p, Nat.Prime p → ∃ B ∈ F.bases, ¬ p ∣ B
+  F.bases.Nonempty ∧ F.bases.gcd id = 1
 
 lemma periodicCountsSeparate_iff_zetaFamilySeparates (F : LocalizedSolenoidBaseFamily) :
     periodicCountsSeparate F ↔ zetaFamilySeparates F := by
@@ -57,7 +64,23 @@ lemma periodicCountsSeparate_iff_zetaFamilySeparates (F : LocalizedSolenoidBaseF
 
 lemma periodicCountsSeparate_iff_gcdBasesEqOne (F : LocalizedSolenoidBaseFamily) :
     periodicCountsSeparate F ↔ gcdBasesEqOne F := by
-  rfl
+  constructor
+  · intro hSeparate
+    have hNonempty : F.bases.Nonempty := by
+      rcases hSeparate 2 Nat.prime_two with ⟨B, hB, _⟩
+      exact ⟨B, hB⟩
+    refine ⟨hNonempty, ?_⟩
+    apply Nat.eq_one_iff_not_exists_prime_dvd.mpr
+    intro p hp hpgcd
+    rcases hSeparate p hp with ⟨B, hB, hpNotB⟩
+    exact hpNotB (hpgcd.trans (Finset.gcd_dvd hB))
+  · rintro ⟨hNonempty, hgcd⟩ p hp
+    by_contra hNoBase
+    push Not at hNoBase
+    have hpgcd : p ∣ F.bases.gcd id :=
+      Finset.dvd_gcd_iff.mpr (fun B hB => hNoBase B hB)
+    rw [hgcd] at hpgcd
+    exact hp.not_dvd_one hpgcd
 
 /-- Paper label: `thm:conclusion-localized-solenoid-coprime-artin-mazur-completeness`. -/
 theorem paper_conclusion_localized_solenoid_coprime_artin_mazur_completeness

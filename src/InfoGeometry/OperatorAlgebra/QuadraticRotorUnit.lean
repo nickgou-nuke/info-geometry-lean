@@ -14,6 +14,34 @@ algebra automorphism; a star automorphism requires further hypotheses.
 
 namespace InfoGeometry.OperatorAlgebra.QuadraticRotor
 
+section NoncommOperatorRotor
+
+variable {A : Type*} [Ring A]
+
+/-- Operator-valued polynomial rotor `c + s * J` in any associative ring `A`. -/
+def opRotor (J c s : A) : A := c + s * J
+
+/-- Over a general non-commutative ring `A`, the product of an operator rotor `c + s * J`
+with its reverse `c - s * J` differs from `c * c - s * s * (J * J)` by the three explicit
+commutator anomalies `[s, c] = s * c - c * s`, `[J, c] = J * c - c * J`, and
+`[J, s] = J * s - s * J`. -/
+theorem opRotor_mul_reverse_noncomm_anomaly (J c s : A) :
+    opRotor J c s * opRotor J c (-s) - (c * c - s * s * (J * J)) =
+      (s * c - c * s) * J + s * (J * c - c * J) - s * (J * s - s * J) * J := by
+  unfold opRotor
+  noncomm_ring
+
+/-- When the operator coefficients `c, s` commute with each other and with `J`, the
+commutator anomalies vanish and the quadratic norm `c * c - s * s * (J * J)` is recovered. -/
+theorem opRotor_mul_reverse_of_comm (J c s : A)
+    (hsc : s * c = c * s) (hJc : J * c = c * J) (hJs : J * s = s * J) :
+    opRotor J c s * opRotor J c (-s) = c * c - s * s * (J * J) := by
+  have h := opRotor_mul_reverse_noncomm_anomaly J c s
+  rw [hsc, hJc, hJs] at h
+  linear_combination (norm := noncomm_ring) h
+
+end NoncommOperatorRotor
+
 variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
 
 /-- The polynomial rotor in the full ambient associative algebra. -/

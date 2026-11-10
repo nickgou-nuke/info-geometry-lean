@@ -19,7 +19,7 @@ namespace InfoGeometry.Canonical.CARVacuumContraction
 open scoped BigOperators
 
 variable {𝕜 V ι : Type*}
-variable [CommRing 𝕜] [AddCommGroup V] [Module 𝕜 V]
+variable [CommSemiring 𝕜] [AddCommMonoid V] [Module 𝕜 V]
 
 /--
 Single-mode CAR vacuum contraction.

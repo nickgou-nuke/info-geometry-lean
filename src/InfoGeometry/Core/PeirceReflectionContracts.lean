@@ -90,12 +90,32 @@ theorem selfAdjoint_square_of_normalized [StarRing A] {r e : A}
     (hs : star r = r) (hn : r * star r = e) : r * r = e := by
   simpa only [hs] using hn
 
-/-- A scalar phase squaring to minus one changes the supported reflection square. -/
-theorem phase_twisted_square {R : Type*} [CommRing R] [Algebra R A]
+/-- A scalar or operator-module phase squaring to minus one changes the supported reflection square. -/
+theorem phase_twisted_square {R : Type*} [Ring R] [Module R A]
+    [IsScalarTower R A A] [SMulCommClass R A A]
     (h : IsDualSeedPair d b) (z : R) (hz : z * z = -1) :
     (z • transitionVelocity d b) * (z • transitionVelocity d b) =
       -carrierSupport d b := by
-  rw [smul_mul_smul, hz, h.clifford_squares.2.1, neg_one_smul]
+  rw [smul_mul_assoc, mul_smul_comm, smul_smul, hz, h.clifford_squares.2.1, neg_one_smul]
+
+/-- Operator-valued phase twist in a noncommutative ring `A`: the failure of `z • Q₁` to square
+to `-carrierSupport` is governed by the commutator anomaly `[Q₁, z]` acting on `Q₁`. -/
+theorem operator_phase_twisted_square_noncomm_anomaly
+    (h : IsDualSeedPair d b) (z : A) (hz : z * z = -1) :
+    (z * transitionVelocity d b) * (z * transitionVelocity d b) - (-carrierSupport d b) =
+      z * (transitionVelocity d b * z - z * transitionVelocity d b) * transitionVelocity d b := by
+  have hQ : transitionVelocity d b * transitionVelocity d b = carrierSupport d b :=
+    h.clifford_squares.2.1
+  calc
+    (z * transitionVelocity d b) * (z * transitionVelocity d b) - (-carrierSupport d b)
+      = (z * transitionVelocity d b) * (z * transitionVelocity d b) +
+          (1 : A) * (transitionVelocity d b * transitionVelocity d b) := by
+          rw [hQ, sub_neg_eq_add, one_mul]
+    _ = (z * transitionVelocity d b) * (z * transitionVelocity d b) +
+          (-(z * z)) * (transitionVelocity d b * transitionVelocity d b) := by
+          rw [hz, neg_neg]
+    _ = z * (transitionVelocity d b * z - z * transitionVelocity d b) * transitionVelocity d b := by
+          noncomm_ring
 
 section Module
 

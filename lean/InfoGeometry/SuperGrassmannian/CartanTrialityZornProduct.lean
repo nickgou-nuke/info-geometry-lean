@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.Basic
+import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Linarith
 
@@ -92,7 +93,7 @@ structure Vec3 (R : Type*) where
 
 namespace Vec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : Vec3 R := ⟨0, 0, 0⟩
 def add (u v : Vec3 R) : Vec3 R := ⟨u.x + v.x, u.y + v.y, u.z + v.z⟩
@@ -132,7 +133,7 @@ def cross (u v : Vec3 R) : Vec3 R :=
 @[simp] theorem cross_y (u v : Vec3 R) : (cross u v).y = u.z * v.x - u.x * v.z := rfl
 @[simp] theorem cross_z (u v : Vec3 R) : (cross u v).z = u.x * v.y - u.y * v.x := rfl
 
-@[simp] theorem dot_comm (u v : Vec3 R) : dot u v = dot v u := by
+@[simp] theorem dot_comm {R : Type*} [CommRing R] (u v : Vec3 R) : dot u v = dot v u := by
   simp [dot]; ring
 
 @[simp] theorem dot_zero_left (u : Vec3 R) : dot zero u = 0 := by
@@ -142,16 +143,18 @@ def cross (u v : Vec3 R) : Vec3 R :=
   simp [dot, zero]
 
 theorem dot_add_left (u v w : Vec3 R) : dot (add u v) w = dot u w + dot v w := by
-  simp [dot, add]; ring
+  simp [dot, add, add_mul]; abel
 
 theorem dot_add_right (u v w : Vec3 R) : dot u (add v w) = dot u v + dot u w := by
-  simp [dot, add]; ring
+  simp [dot, add, mul_add]; abel
 
 theorem dot_neg_left (u v : Vec3 R) : dot (neg u) v = -dot u v := by
-  simp [dot, neg]; ring
+  simp [dot, neg]; abel
 
 theorem dot_neg_right (u v : Vec3 R) : dot u (neg v) = -dot u v := by
-  simp [dot, neg]; ring
+  simp [dot, neg]; abel
+
+variable {R : Type*} [CommRing R]
 
 @[simp] theorem cross_self (u : Vec3 R) : cross u u = zero := by
   ext <;> simp <;> ring
@@ -190,7 +193,7 @@ structure ZornMatrix (R : Type*) where
 
 namespace ZornMatrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 theorem zorn_ext {X Y : ZornMatrix R}
     (ha : X.a = Y.a)
@@ -263,13 +266,15 @@ def inner (X Y : ZornMatrix R) : R :=
   apply zorn_ext <;> simp
 
 /-- Conjugation preserves determinant / quadratic norm: det(X̄) = det(X). -/
-theorem det_conj (X : ZornMatrix R) : det (conj X) = det X := by
+theorem det_conj {R : Type*} [CommRing R] (X : ZornMatrix R) : det (conj X) = det X := by
   simp [det, Vec3.dot]
   ring
 
 /-- Conjugation preserves trace: Tr(X̄) = Tr(X). -/
 theorem trace_conj (X : ZornMatrix R) : trace (conj X) = trace X := by
-  simp [trace]; ring
+  simp [trace]; abel
+
+variable {R : Type*} [CommRing R]
 
 /-- Self-inner product equals twice the determinant / norm: ⟨X, X⟩ = 2 det(X). -/
 theorem inner_self (X : ZornMatrix R) : inner X X = 2 * det X := by

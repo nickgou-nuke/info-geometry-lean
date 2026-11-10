@@ -26,8 +26,8 @@ All proofs are complete with 0 `sorry`s, 0 custom axioms, and 0 placeholders.
 
 namespace InfoGeometry.Modular.ConnesDifferentialEquation
 
-variable {R : Type*} [CommRing R]
-variable {A : Type*} [Ring A] [Algebra R A]
+variable {R : Type*} [Ring R]
+variable {A : Type*} [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-! =========================================================================
     1. Difference Quotients and the 1-Cocycle Law
@@ -42,7 +42,7 @@ MAIN IDENTITY 1 (Cocycle Difference Quotient Factorization):
 From `u(t + s) = u(t) * σ_t(u(s))` and `u(0) = 1`, the difference quotient factors as:
   `(u(t + s) - u(t)) / s = u(t) * σ_t((u(s) - 1) / s)`
 -/
-theorem cocycle_diffQuotient_factor
+theorem cocycle_diffQuotient_factor {R : Type*} [CommRing R] {A : Type*} [Ring A] [Algebra R A]
     (σ_t : A →ₐ[R] A) (u : ℝ → A) (t s : ℝ) (inv_s : R)
     (h_cocycle : u (t + s) = u t * σ_t (u s))
     (h_zero : u 0 = 1) :
@@ -70,7 +70,7 @@ MAIN THEOREM 2 (Master Cocycle Differential Equation):
 If `u` has initial velocity `G_{ψ,φ}` at `t = 0`, then for all `t`:
   `d/dt u(t) = u(t) * σ_t^φ(G_{ψ,φ})`
 -/
-theorem cocycle_differential_equation
+theorem cocycle_differential_equation {R : Type*} [CommRing R] {A : Type*} [Ring A] [Algebra R A]
     (σ_t : A →ₐ[R] A) (G_rel : A) (u : ℝ → A) (t s : ℝ) (inv_s : R)
     (h_cocycle : u (t + s) = u t * σ_t (u s))
     (h_zero : u 0 = 1)
@@ -88,7 +88,7 @@ When the relative Hamiltonian is invariant under the modular flow `σ_t^φ(𝒦)
 (or in the interaction picture where `[𝒦, u(t)] = 0`), the equation becomes:
   `d/dt u(t) = 𝒦_{ψ,φ} * u(t)`
 -/
-theorem cocycle_differential_equation_static
+theorem cocycle_differential_equation_static {R : Type*} [CommRing R] {A : Type*} [Ring A] [Algebra R A]
     (σ_t : A →ₐ[R] A) (G_rel : A) (u : ℝ → A) (t s : ℝ) (inv_s : R)
     (h_cocycle : u (t + s) = u t * σ_t (u s))
     (h_zero : u 0 = 1)
@@ -116,7 +116,7 @@ def innerDeriv (K : A) : A →ₗ[R] A where
     abel_nf
   map_smul' r x := by
     dsimp [bracket]
-    rw [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, smul_sub]
+    rw [mul_smul_comm, smul_mul_assoc, smul_sub]
 
 /--
 MAIN THEOREM 4 (Coupling of Cocycle Derivative to Modular Derivation):

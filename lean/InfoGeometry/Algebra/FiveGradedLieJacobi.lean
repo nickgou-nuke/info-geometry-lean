@@ -13,8 +13,8 @@ namespace InfoGeometry.Algebra.FiveGradedLieAntisymmetry
 
 open InfoGeometry.Algebra.FiveGradedTKK
 
-variable (R L : Type*) [CommRing R]
-variable [LieRing L] [LieAlgebra R L]
+variable (R L : Type*) [Ring R]
+variable [LieRing L] [Module R L]
 
 namespace FiveGradedLieData
 

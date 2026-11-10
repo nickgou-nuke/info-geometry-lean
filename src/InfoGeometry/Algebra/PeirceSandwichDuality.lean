@@ -20,7 +20,7 @@ namespace InfoGeometry.Algebra.PeirceSandwichDuality
 
 open InfoGeometry.OperatorAlgebra.LieJordanBoundaryCalculus
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {R A : Type*} [Ring R] [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- Output grading changes the symmetric action to the signed action. -/
 theorem reflection_cross_left {p : A} (hp : p * p = p) (a b x : A) :

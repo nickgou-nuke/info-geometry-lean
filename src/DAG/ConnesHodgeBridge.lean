@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import DAG.TwoComplex
 import DAG.GraphHodge
 import DAG.CocycleBridge
@@ -27,7 +32,8 @@ structure ConnesCorrespondence (α : Type) [BEq α] [Hashable α] where
   edgeCount : Nat
   /-- Dimension of harmonic 1-chains = b₁ -/
   harmonicDim : Nat
-  /-- Maximum number of independent Connes 1-cocycles = b₁ -/
+  /-- Finite upper-bound slot for a future cocycle construction. This readout
+  sets it to the ambient 1-cochain dimension; it does not count cocycles. -/
   cocycleDimUpperBound : Nat
   /-- Euler characteristic = index of Dirac operator -/
   eulerChar : Int
@@ -40,7 +46,7 @@ def fromTwoComplex {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) :
   { complex := tc
     edgeCount := tc.edges.size
     harmonicDim := b1
-    cocycleDimUpperBound := b1
+    cocycleDimUpperBound := tc.edges.size
     eulerChar := eulerCharacteristic tc
   }
 
@@ -51,81 +57,28 @@ def fromHodgeData {α : Type} [BEq α] [Hashable α]
     (hd : DAG.CocycleBridge.HodgeCocycleData α) : ConnesCorrespondence α :=
   { complex := hd.complex
     edgeCount := hd.complex.edges.size
-    harmonicDim := hd.betti1
-    cocycleDimUpperBound := hd.betti1
+    harmonicDim := hd.hodgeDecomp.2.2
+    cocycleDimUpperBound := hd.complex.edges.size
     eulerChar := hd.eulerChar
   }
 
-/-! ## Definitional Projections and Invariants -/
+/-! ## Finite cochain dimension bounds -/
 
-@[simp]
-theorem fromTwoComplex_edgeCount {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) :
-    (fromTwoComplex tc).edgeCount = tc.edges.size :=
-  rfl
+/-- For a raw `TwoComplex`, the Hodge-Laplacian nullity is bounded by the number
+of edge coordinates: it is the edge count minus a nonnegative computed rank. -/
+theorem fromTwoComplex_harmonicDim_le_cocycleDimUpperBound
+    {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) :
+    (fromTwoComplex tc).harmonicDim ≤ (fromTwoComplex tc).cocycleDimUpperBound := by
+  change betti1Hodge tc ≤ tc.edges.size
+  unfold betti1Hodge
+  exact Nat.sub_le _ _
 
-@[simp]
-theorem fromTwoComplex_harmonicDim {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) :
-    (fromTwoComplex tc).harmonicDim = betti1Hodge tc :=
-  rfl
-
-@[simp]
-theorem fromTwoComplex_cocycleDimUpperBound {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) :
-    (fromTwoComplex tc).cocycleDimUpperBound = betti1Hodge tc :=
-  rfl
-
-@[simp]
-theorem fromTwoComplex_eulerChar {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) :
-    (fromTwoComplex tc).eulerChar = eulerCharacteristic tc :=
-  rfl
-
-@[simp]
-theorem fromHodgeData_edgeCount {α : Type} [BEq α] [Hashable α] (hd : DAG.CocycleBridge.HodgeCocycleData α) :
-    (fromHodgeData hd).edgeCount = hd.complex.edges.size :=
-  rfl
-
-@[simp]
-theorem fromHodgeData_harmonicDim {α : Type} [BEq α] [Hashable α] (hd : DAG.CocycleBridge.HodgeCocycleData α) :
-    (fromHodgeData hd).harmonicDim = hd.betti1 :=
-  rfl
-
-@[simp]
-theorem fromHodgeData_cocycleDimUpperBound {α : Type} [BEq α] [Hashable α] (hd : DAG.CocycleBridge.HodgeCocycleData α) :
-    (fromHodgeData hd).cocycleDimUpperBound = hd.betti1 :=
-  rfl
-
-@[simp]
-theorem fromHodgeData_eulerChar {α : Type} [BEq α] [Hashable α] (hd : DAG.CocycleBridge.HodgeCocycleData α) :
-    (fromHodgeData hd).eulerChar = hd.eulerChar :=
-  rfl
-
-/-- Invariant: Harmonic dimension equals cocycle dimension upper bound for `fromTwoComplex`. -/
-theorem fromTwoComplex_harmonicDim_eq_cocycleDimUpperBound {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) :
-    (fromTwoComplex tc).harmonicDim = (fromTwoComplex tc).cocycleDimUpperBound :=
-  rfl
-
-/-- Invariant: Harmonic dimension equals cocycle dimension upper bound for `fromHodgeData`. -/
-theorem fromHodgeData_harmonicDim_eq_cocycleDimUpperBound {α : Type} [BEq α] [Hashable α] (hd : DAG.CocycleBridge.HodgeCocycleData α) :
-    (fromHodgeData hd).harmonicDim = (fromHodgeData hd).cocycleDimUpperBound :=
-  rfl
-
-/-- Alias matching alternate naming convention. -/
-theorem harmonicDim_eq_cocycleDimUpperBound_fromTwoComplex {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) :
-    (fromTwoComplex tc).harmonicDim = (fromTwoComplex tc).cocycleDimUpperBound :=
-  rfl
-
-/-- Alias matching alternate naming convention. -/
-theorem harmonicDim_eq_cocycleDimUpperBound_fromHodgeData {α : Type} [BEq α] [Hashable α] (hd : DAG.CocycleBridge.HodgeCocycleData α) :
-    (fromHodgeData hd).harmonicDim = (fromHodgeData hd).cocycleDimUpperBound :=
-  rfl
-
-/-- Coherence: edge counts agree when bridging through HodgeCocycleData. -/
-theorem fromHodgeData_fromTwoComplex_edgeCount {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) :
-    (fromHodgeData (DAG.CocycleBridge.fromTwoComplex tc)).edgeCount = (fromTwoComplex tc).edgeCount :=
-  rfl
-
-/-- Coherence: Euler characteristics agree when bridging through HodgeCocycleData. -/
-theorem fromHodgeData_fromTwoComplex_eulerChar {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) :
-    (fromHodgeData (DAG.CocycleBridge.fromTwoComplex tc)).eulerChar = (fromTwoComplex tc).eulerChar :=
-  rfl
+/-- For the canonical derived Hodge package, its harmonic dimension is bounded
+by the ambient 1-cochain dimension recorded by the edge coordinates. -/
+theorem fromHodgeData_harmonicDim_le_cocycleDimUpperBound
+    {α : Type} [BEq α] [Hashable α] (hd : DAG.CocycleBridge.HodgeCocycleData α) :
+    (fromHodgeData hd).harmonicDim ≤ (fromHodgeData hd).cocycleDimUpperBound := by
+  change hd.hodgeDecomp.2.2 ≤ hd.complex.edges.size
+  exact hd.hodgeHarmonicDim_le_edges
 
 end DAG.ConnesHodgeBridge

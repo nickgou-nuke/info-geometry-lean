@@ -5,6 +5,7 @@ Authors: InfoGeometry Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.LinearCombination
 
 /-!
@@ -31,7 +32,7 @@ Standard: QMS-SOP-IAA-001 (v1.1) / OpenGauss 16-Trap Protocol / Trap T16 Univers
 
 namespace InfoGeometry.Superalgebra.DSZDyons
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. 3D Векторно Пространство и 8D Сплит-Октонионен Носител -/
 
@@ -44,7 +45,7 @@ structure ColorVec3 (R : Type*) where
 
 namespace ColorVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : ColorVec3 R := ⟨0, 0, 0⟩
 def add (u v : ColorVec3 R) : ColorVec3 R := ⟨u.c1 + v.c1, u.c2 + v.c2, u.c3 + v.c3⟩
@@ -83,7 +84,7 @@ structure SplitOctonion (R : Type*) where
 
 namespace SplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : SplitOctonion R := ⟨0, ColorVec3.zero, ColorVec3.zero, 0⟩
 def one  : SplitOctonion R := ⟨1, ColorVec3.zero, ColorVec3.zero, 1⟩
@@ -111,7 +112,7 @@ def associator (X Y Z : SplitOctonion R) : SplitOctonion R :=
 
 def quark (u : ColorVec3 R) : SplitOctonion R := ⟨0, u, ColorVec3.zero, 0⟩
 
-theorem octonion_baryonic_associator_det3 (u da db : ColorVec3 R) :
+theorem octonion_baryonic_associator_det3 {R : Type*} [CommRing R] (u da db : ColorVec3 R) :
     associator (quark u) (quark da) (quark db) =
       scale (-ColorVec3.det3 u da db) paraSymplecticK0 := by
   dsimp [associator, quark, paraSymplecticK0, sub, mul, scale,
@@ -141,7 +142,7 @@ structure DyonCharge (R : Type*) where
 
 namespace DyonCharge
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Чист електрон (електричен заряд e, нулев магнитен заряд). -/
 def electron (e : R) : DyonCharge R := ⟨e, 0⟩
@@ -175,7 +176,7 @@ def wittenShift (theta_c : R) (D : DyonCharge R) : DyonCharge R where
 theorem dsz_bracket_antisymm (D₁ D₂ : DyonCharge R) :
     dszBracket D₁ D₂ = - dszBracket D₂ D₁ := by
   dsimp [dszBracket]
-  ring
+  noncomm_ring
 
 /--
 Теорема 1b (Самоанулиране / Изотропност на Диона със самия себе си):
@@ -186,7 +187,7 @@ theorem dsz_bracket_antisymm (D₁ D₂ : DyonCharge R) :
 theorem dsz_bracket_self_zero (D : DyonCharge R) :
     dszBracket D D = 0 := by
   dsimp [dszBracket]
-  ring
+  noncomm_ring
 
 /--
 Теорема 2 (Върховна Теорема за Инвариантността под Ефекта на Витен):
@@ -194,7 +195,7 @@ theorem dsz_bracket_self_zero (D : DyonCharge R) :
 симплектичното квантово сдвояване на решетката е СТРОГО ИНВАРИАНТНО:
 Ω_DSZ(D₁(θ_c), D₂(θ_c)) = Ω_DSZ(D₁, D₂)!
 -/
-theorem witten_theta_shift_invariance (theta_c : R) (D₁ D₂ : DyonCharge R) :
+theorem witten_theta_shift_invariance {R : Type*} [CommRing R] (theta_c : R) (D₁ D₂ : DyonCharge R) :
     dszBracket (wittenShift theta_c D₁) (wittenShift theta_c D₂) =
       dszBracket D₁ D₂ := by
   dsimp [dszBracket, wittenShift]
@@ -209,7 +210,7 @@ theorem witten_theta_shift_invariance (theta_c : R) (D₁ D₂ : DyonCharge R) :
 theorem dirac_1931_monopole_reduction (e g : R) :
     dszBracket (electron e) (monopole g) = e * g := by
   dsimp [dszBracket, electron, monopole]
-  ring
+  noncomm_ring
 
 /--
 Теорема 4 (Топологично Квантуване на Заряда в 𝕆_s):
@@ -218,7 +219,7 @@ g = n_winding · Phi_0 и е изпълнено условието на Дира
 тогава дионното сдвояване е строго квантувано:
 Ω_DSZ((e, 0), (0, g)) = n_winding · h_quantum!
 -/
-theorem dirac_quantization_exact_step (e n_winding Phi_0 h_quantum : R)
+theorem dirac_quantization_exact_step {R : Type*} [CommRing R] (e n_winding Phi_0 h_quantum : R)
     (h_quantum_step : e * Phi_0 = h_quantum) :
     dszBracket (electron e) (monopole (n_winding * Phi_0)) =
       n_winding * h_quantum := by
@@ -237,7 +238,7 @@ theorem dsz_octonion_baryonic_flux_pairing (e n_winding : R) (u da db : ColorVec
     dszBracket (electron e) (monopole (n_winding * ColorVec3.det3 u da db)) =
       e * n_winding * ColorVec3.det3 u da db := by
   dsimp [dszBracket, electron, monopole]
-  ring
+  noncomm_ring
 
 end DyonCharge
 
@@ -252,7 +253,7 @@ theorem dszBracket_noncommutative :
 
 /-! ### 4. Главен Юбилеен Синтез на Раздел 140 -/
 
-theorem dsz_dyonic_quantization_synthesis (theta_c e n_winding Phi_0 h_quantum : R)
+theorem dsz_dyonic_quantization_synthesis {R : Type*} [CommRing R] (theta_c e n_winding Phi_0 h_quantum : R)
     (D₁ D₂ : DyonCharge R) (u da db : ColorVec3 R)
     (h_quantum_step : e * Phi_0 = h_quantum) :
     DyonCharge.dszBracket D₁ D₂ = - DyonCharge.dszBracket D₂ D₁ ∧

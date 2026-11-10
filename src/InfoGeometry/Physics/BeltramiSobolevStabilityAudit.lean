@@ -33,8 +33,9 @@ set_option linter.unusedSimpArgs false
 #check (BeltramiField.sobolev_h1_coercivity :
   ∀ (B : BeltramiField), B.sobolevH1Sq = 2 * B.energy + 2 * B.enstrophy)
 
-#check (lamb_vector_annihilation :
-  ∀ (lambda u_norm : ℝ), lambVectorMagnitude lambda u_norm = 0)
+#check (ArnoldBeltrami.beltrami_lamb_vanishes :
+  ∀ (lambda : ℝ) (u : ChiralVector3),
+    ArnoldBeltrami.lambVector (lambda • u) u = 0)
 
 #check (BeltramiField.energy_nonneg_at_time :
   ∀ (B : BeltramiField) (nu t : ℝ), 0 ≤ B.energyAtTime nu t)
@@ -50,10 +51,11 @@ set_option linter.unusedSimpArgs false
   ∀ (nu1 nu2 lambda : ℝ), decayRate (nu1 + nu2) lambda = decayRate nu1 lambda + decayRate nu2 lambda)
 
 #check (beltrami_sobolev_stability_synthesis :
-  ∀ (B : BeltramiField) (nu t : ℝ) (h_nu : 0 ≤ nu) (h_t : 0 ≤ t),
+  ∀ (B : BeltramiField) (nu t : ℝ) (u : ChiralVector3)
+    (h_nu : 0 ≤ nu) (h_t : 0 ≤ t),
     (B.enstrophy = (B.lambda ^ 2) * B.energy) ∧
     (B.sobolevH1Sq = 2 * B.energy + 2 * B.enstrophy) ∧
-    (lambVectorMagnitude B.lambda 1.0 = 0) ∧
+    (ArnoldBeltrami.lambVector (B.lambda • u) u = 0) ∧
     (B.energyAtTime nu t ≤ B.energy) ∧
     (0 ≤ B.energyAtTime nu t) ∧
     (B.energyAtTime 0 t = B.energy) ∧
@@ -62,7 +64,7 @@ set_option linter.unusedSimpArgs false
 -- 2. Axiom Footprint Verification
 #print axioms BeltramiField.enstrophy_eq_lambda_sq_mul_energy
 #print axioms BeltramiField.sobolev_h1_coercivity
-#print axioms lamb_vector_annihilation
+#print axioms ArnoldBeltrami.beltrami_lamb_vanishes
 #print axioms BeltramiField.energy_le_initial_at_time
 #print axioms BeltramiField.euler_inviscid_conservation
 #print axioms beltrami_sobolev_stability_synthesis

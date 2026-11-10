@@ -49,7 +49,7 @@ namespace InfoGeometry.Physics.GeneralFermionicAndreevCarrier
 universe u_V u_R
 
 variable {V : Type u_V} [DecidableEq V] [Fintype V]
-variable {R : Type u_R} [CommRing R]
+variable {R : Type u_R} [Ring R]
 
 /-! ### Section 1: The General Andreev 90-Degree Rotation Operator -/
 
@@ -135,7 +135,7 @@ theorem andreevRotation_preserves_norm (v : V ⊕ V → R) :
 /-- 2-channel scattering structure at an Andreev superconducting horizon,
     specifying normal reflection $r_N$, Andreev reflection $r_A$,
     normal transmission $t_N$, and Andreev transmission $t_A$. -/
-structure ScatteringSMatrix2 (R : Type*) [CommRing R] where
+structure ScatteringSMatrix2 (R : Type*) [Ring R] where
   rN : R
   rA : R
   tN : R
@@ -149,32 +149,29 @@ structure ScatteringSMatrix2 (R : Type*) [CommRing R] where
 def toSMatrix (S : ScatteringSMatrix2 R) : Matrix (Fin 2) (Fin 2) R :=
   !![S.rN, S.rA; S.tN, S.tA]
 
+/-- Over any non-commutative ring `[Ring R]`, `S S^T` differs from the identity matrix
+exclusively in its lower-left entry by the channel-ordering commutator defect
+`(S.tN * S.rN + S.tA * S.rA)`. -/
+theorem sMatrix_mul_transpose_noncomm (S : ScatteringSMatrix2 R) :
+    toSMatrix S * (toSMatrix S)ᵀ = !![1, 0; S.tN * S.rN + S.tA * S.rA, 1] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [toSMatrix, Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_two]
+  · rw [← sq, ← sq, S.unitary_row1]
+  · exact S.orthogonal
+  · rw [← sq, ← sq, S.unitary_row2]
+
 /-- Exact unitarity and flux conservation of the 2-channel horizon S-matrix:
     $S S^\top = 1$. -/
-theorem sMatrix_mul_transpose_one (S : ScatteringSMatrix2 R) :
+theorem sMatrix_mul_transpose_one {R : Type u_R} [CommRing R] (S : ScatteringSMatrix2 R) :
     toSMatrix S * (toSMatrix S)ᵀ = 1 := by
-  ext i j
-  fin_cases i <;> fin_cases j
-  · simp only [toSMatrix, Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_two,
-      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons, Matrix.one_apply_eq]
-    calc
-      S.rN * S.rN + S.rA * S.rA = S.rN^2 + S.rA^2 := by ring
-      _ = 1 := S.unitary_row1
-  · simp only [toSMatrix, Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_two,
-      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
-      Matrix.one_apply_ne (show (0 : Fin 2) ≠ 1 by decide)]
-    exact S.orthogonal
-  · simp only [toSMatrix, Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_two,
-      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
-      Matrix.one_apply_ne (show (1 : Fin 2) ≠ 0 by decide)]
-    calc
-      S.tN * S.rN + S.tA * S.rA = S.rN * S.tN + S.rA * S.tA := by ring
+  rw [sMatrix_mul_transpose_noncomm]
+  have horth : S.tN * S.rN + S.tA * S.rA = 0 := by
+    calc S.tN * S.rN + S.tA * S.rA = S.rN * S.tN + S.rA * S.tA := by ring
       _ = 0 := S.orthogonal
-  · simp only [toSMatrix, Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_two,
-      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons, Matrix.one_apply_eq]
-    calc
-      S.tN * S.tN + S.tA * S.tA = S.tN^2 + S.tA^2 := by ring
-      _ = 1 := S.unitary_row2
+  rw [horth]
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp
 
 /-! ### Section 4: Master Verification Certificate -/
 
@@ -182,25 +179,25 @@ theorem sMatrix_mul_transpose_one (S : ScatteringSMatrix2 R) :
     quadratic norm conservation, and horizon 2-channel S-matrix unitarity. -/
 structure GeneralFermionicAndreevCertificate : Prop where
   andreev_rotation_sq :
-    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [CommRing R],
+    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [Ring R],
       andreevRotation (V := V) (R := R) * andreevRotation = -1
   andreev_rotation_pow4 :
-    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [CommRing R],
+    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [Ring R],
       andreevRotation (V := V) (R := R) * andreevRotation *
         (andreevRotation * andreevRotation) = 1
   andreev_rotation_traceless :
-    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [CommRing R],
+    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [Ring R],
       Matrix.trace (andreevRotation (V := V) (R := R)) = 0
   andreev_mulvec_inl :
-    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [CommRing R]
+    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [Ring R]
       (v : V ⊕ V → R) (i : V),
       (andreevRotation.mulVec v) (Sum.inl i) = - v (Sum.inr i)
   andreev_mulvec_inr :
-    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [CommRing R]
+    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [Ring R]
       (v : V ⊕ V → R) (i : V),
       (andreevRotation.mulVec v) (Sum.inr i) = v (Sum.inl i)
   andreev_preserves_norm :
-    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [CommRing R]
+    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [Ring R]
       (v : V ⊕ V → R),
       vectorNormSq (andreevRotation.mulVec v) = vectorNormSq v
   smatrix_unitary :

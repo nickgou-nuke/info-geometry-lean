@@ -9,7 +9,7 @@ namespace InfoGeometry.SuperGrassmannian.SuperconformalOSpJordanPair.MatrixSpans
 
 open InfoGeometry.SuperGrassmannian.SuperconformalOSpJordanPair
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The concrete `M₃(R)` graded even span lies in the kernel of the
 concrete supertrace. This packages the vanishing on the three structure generators as a closure
@@ -18,10 +18,10 @@ theorem evenSpan_supertrace_zero {x : M R} (hx : x ∈ evenSpan) :
     supertrace x = 0 := by
   have h_add (a b : M R) : supertrace (a + b) = supertrace a + supertrace b := by
     dsimp [supertrace]
-    ring
+    abel
   have h_smul (r : R) (a : M R) : supertrace (r • a) = r * supertrace a := by
     dsimp [supertrace]
-    ring
+    noncomm_ring
   refine Submodule.span_induction
     (p := fun a _ => supertrace a = 0)
     ?_ ?_ ?_ ?_ hx

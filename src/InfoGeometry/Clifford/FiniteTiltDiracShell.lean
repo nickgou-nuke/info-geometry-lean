@@ -206,54 +206,26 @@ theorem finiteTiltDiracShell_charpoly (m : ℝ) :
   rw [Matrix.charpoly_fin_two, finiteTiltDiracShell_trace, finiteTiltDiracShell_det]
   simp [sub_eq_add_neg, add_comm, add_left_comm, add_assoc]
 
+/-- The finite shell is two-sided invertible exactly when its mass parameter
+is nonzero. For nonzero mass, `(m²)⁻¹ • Dₘ` is an explicit inverse; at zero
+mass, the determinant vanishes. -/
 @[rep_depth operator]
-structure FiniteTiltDiracShellSpectralTarget where
-  trace_zero : ∀ m : ℝ, Matrix.trace (finiteTiltDiracShell m) = 0
-  det_eq : ∀ m : ℝ, Matrix.det (finiteTiltDiracShell m) = - m ^ 2
-  charpoly_eq :
-    ∀ m : ℝ,
-      (finiteTiltDiracShell m).charpoly =
-        Polynomial.X ^ 2 - Polynomial.C (m ^ 2 : ℝ)
-
-theorem finiteTiltDiracShellSpectralTarget :
-    FiniteTiltDiracShellSpectralTarget := by
-  exact
-    { trace_zero := finiteTiltDiracShell_trace
-      det_eq := finiteTiltDiracShell_det
-      charpoly_eq := finiteTiltDiracShell_charpoly }
-
-@[rep_depth operator]
-theorem finiteTiltDiracShellSpectralTarget_trace_zero (m : ℝ) :
-    Matrix.trace (finiteTiltDiracShell m) = 0 :=
-  let pkt := finiteTiltDiracShellSpectralTarget
-  pkt.trace_zero m
-
-@[rep_depth operator]
-theorem finiteTiltDiracShellSpectralTarget_det_eq (m : ℝ) :
-    Matrix.det (finiteTiltDiracShell m) = - m ^ 2 :=
-  let pkt := finiteTiltDiracShellSpectralTarget
-  pkt.det_eq m
-
-@[rep_depth operator]
-theorem finiteTiltDiracShellSpectralTarget_charpoly_eq (m : ℝ) :
-    (finiteTiltDiracShell m).charpoly =
-      Polynomial.X ^ 2 - Polynomial.C (m ^ 2 : ℝ) :=
-  let pkt := finiteTiltDiracShellSpectralTarget
-  pkt.charpoly_eq m
-
-@[rep_depth operator]
-def FiniteTiltDiracShellOwnerTarget : Prop :=
-  ∀ m : ℝ, finiteTiltDiracShell m * finiteTiltDiracShell m =
-    (m ^ 2 : ℝ) • (1 : Mat2)
-
-theorem finiteTiltDiracShellOwnerTarget :
-    FiniteTiltDiracShellOwnerTarget := by
-  exact finiteTiltDiracShell_sq
-
-@[rep_depth operator]
-theorem finiteTiltDiracShellOwnerTarget_shell_square (m : ℝ) :
-    finiteTiltDiracShell m * finiteTiltDiracShell m =
-    (m ^ 2 : ℝ) • (1 : Mat2) :=
-  finiteTiltDiracShellOwnerTarget m
+theorem finiteTiltDiracShell_has_twoSidedInverse_iff (m : ℝ) :
+    (∃ X : Mat2,
+      finiteTiltDiracShell m * X = 1 ∧
+      X * finiteTiltDiracShell m = 1) ↔ m ≠ 0 := by
+  constructor
+  · rintro ⟨X, hleft, _hright⟩ hm
+    have hdet :
+        Matrix.det (finiteTiltDiracShell m * X) = Matrix.det (1 : Mat2) :=
+      congrArg Matrix.det hleft
+    rw [Matrix.det_mul, Matrix.det_one, finiteTiltDiracShell_det, hm] at hdet
+    norm_num at hdet
+  · intro hm
+    have hm2 : (m ^ 2 : ℝ) ≠ 0 := pow_ne_zero 2 hm
+    have hcancel : (m ^ 2 : ℝ)⁻¹ * m ^ 2 = 1 := inv_mul_cancel₀ hm2
+    refine ⟨(m ^ 2 : ℝ)⁻¹ • finiteTiltDiracShell m, ?_, ?_⟩
+    · rw [mul_smul_comm, finiteTiltDiracShell_sq, smul_smul, hcancel, one_smul]
+    · rw [smul_mul_assoc, finiteTiltDiracShell_sq, smul_smul, hcancel, one_smul]
 
 end InfoGeometry.Clifford.FiniteTiltDiracShell

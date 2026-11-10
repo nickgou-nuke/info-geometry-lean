@@ -12,7 +12,7 @@ involutive transported metric is assumed. All identities concern full matrices.
 -/
 namespace InfoGeometry.CliffordWeyl.SpinorBilinearSoldering
 open Matrix
-variable {R n : Type*} [CommRing R] [StarRing R] [Fintype n] [DecidableEq n]
+variable {R n : Type*} [Ring R] [StarRing R] [Fintype n] [DecidableEq n]
 
 theorem diracRow_change_basis (S T η : Matrix n n R) (hTS : T * S = 1)
     (r : n → R) :

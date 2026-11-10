@@ -45,7 +45,7 @@ open InfoGeometry.Canonical.CurrentSugawaraBridge
 /-- Conjugating the zero endomorphism by `U` yields zero. -/
 @[simp]
 theorem conjugateEnd_zero
-    {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    {𝕜 V : Type*} [Ring 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (U : V ≃ₗ[𝕜] V) :
     conjugateEnd U (0 : V →ₗ[𝕜] V) = 0 := by
   ext v
@@ -54,7 +54,7 @@ theorem conjugateEnd_zero
 /-- Conjugating a difference of endomorphisms distributes over subtraction. -/
 @[simp]
 theorem conjugateEnd_sub
-    {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    {𝕜 V : Type*} [Ring 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (U : V ≃ₗ[𝕜] V) (A B : V →ₗ[𝕜] V) :
     conjugateEnd U (A - B) = conjugateEnd U A - conjugateEnd U B := by
   ext v
@@ -62,7 +62,7 @@ theorem conjugateEnd_sub
 
 /-- Conjugation by `U` intertwines the associative commutator `LinearMap.commutator`. -/
 theorem conjugateEnd_commutator
-    {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    {𝕜 V : Type*} [Ring 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (U : V ≃ₗ[𝕜] V)
     (A B : V →ₗ[𝕜] V) :
     (conjugateEnd U A).commutator (conjugateEnd U B) =

@@ -22,8 +22,10 @@ open VirasoroProject
 
 universe u
 
+section Ring
+
 variable {ι : Type u} [DecidableEq ι]
-variable (𝕜 : Type u) [Field 𝕜]
+variable (𝕜 : Type u) [Ring 𝕜]
 
 /--
 The supergraded N=2 central cocycle on mode labels.
@@ -60,6 +62,11 @@ theorem superLabelCocycle_q_r_symm (i j : ι) :
   by_cases h : i = j
   · simp [h]
   · simp [h, Ne.symm h]
+
+end Ring
+
+variable {ι : Type u} [DecidableEq ι]
+variable (𝕜 : Type u) [CommRing 𝕜]
 
 /-- Bilinear extension of the supergraded N=2 cocycle to finite-support modes. -/
 noncomputable def superBilin :

@@ -29,8 +29,7 @@ namespace InfoGeometry.QuantumContext.OperatorPeirceColimitTransport
 open InfoGeometry.Core.PeirceDecomposition
 open InfoGeometry.QuantumContext.MassAsCommutantCoupling
 
-variable {R : Type*} [CommRing R]
-variable {Carrier : Type*} [Ring Carrier] [Algebra R Carrier]
+variable {Carrier : Type*} [Ring Carrier]
 
 /-- The general off-diagonal bipolar routing operator associated with an idempotent $P$
     and any carrier operator $A$:
@@ -80,6 +79,8 @@ theorem generalBipolar_swaps (P A : Carrier) (hP : IsIdempotentElem P) :
 theorem generalBipolar_anticommutes (P A : Carrier) (hP : IsIdempotentElem P) :
     grading P * generalBipolar P A + generalBipolar P A * grading P = 0 :=
   grading_anticommutes P (generalBipolar P A) (generalBipolar_swaps P A hP)
+
+variable {R : Type*} [CommRing R] [Algebra R Carrier]
 
 /-- Balanced operator condition: the two off-diagonal channels square to the same scalar mass. -/
 def IsBalancedOperatorCoupling (P A : Carrier) (mass : R) : Prop :=

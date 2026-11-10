@@ -190,7 +190,7 @@ theorem stage_D41_geometry_physics_information_operator_synthesis
     hCross.trans (rosetta_bergman_metric hP A C).symm,
     hCrossTranslate,
     rosetta_bogoliubov_metric hP A C,
-    (archetype_A30_mixed_graded_differentials_and_jordan_laplacian hP A C X).2.2.2.2.1,
+    hodgeLaplacianPhi_eq hP A C X,
     by peirce_nf hP, by peirce_nf hP, hChart, hConjInv,
     hGram, hSheaf, hMag, hMagJ.trans hSJ, hJS, hHopf, hSV, hVar, hZorn, hPlus, hMinus,
     hKPlus, hKMinus⟩

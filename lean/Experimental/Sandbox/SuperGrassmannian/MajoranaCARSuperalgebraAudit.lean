@@ -1,4 +1,4 @@
-import Experimental.Sandbox.SuperGrassmannian.MajoranaCARSuperalgebra
+import InfoGeometry.SuperGrassmannian.MajoranaCARSuperalgebra
 
 /-!
 # Axiomatic Audit for Majorana CAR Superalgebra and Chiral Grading
@@ -73,7 +73,7 @@ open InfoGeometry.SuperGrassmannian.MajoranaCAR.SplitCliffordCell
 #print axioms Gamma_mul_N
 #print axioms bracket_N_Gamma
 
--- Section 6: Master Verification Certificate
-#print axioms compile_majorana_car_superalgebra
+-- Section 6: Derived matrix-unit multiplication table
+#print axioms ladder_matrix_unit_multiplication_table
 
 end InfoGeometry.SuperGrassmannian.MajoranaCAR.Audit

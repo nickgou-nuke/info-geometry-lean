@@ -6,7 +6,7 @@ noncomputable section
 namespace InfoGeometry.Algebra.ZornVectorMatrixCrossProductBridge
 
 /-- **Definition**: 3D Vector Cross Product over a Commutative Ring R. -/
-def cross3 {R : Type*} [CommRing R] (u v : Fin 3 → R) : Fin 3 → R :=
+def cross3 {R : Type*} [Ring R] (u v : Fin 3 → R) : Fin 3 → R :=
   ![u 1 * v 2 - u 2 * v 1,
     u 2 * v 0 - u 0 * v 2,
     u 0 * v 1 - u 1 * v 0]

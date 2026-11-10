@@ -19,6 +19,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import Mathlib.Algebra.Field.Basic
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
@@ -55,15 +56,15 @@ namespace InfoGeometry.Algebra.TriFacetScalar
 variable {A : Type*} [Field A]
 
 /-- Hyperbolic scalar projector `(O² + O) / 2`. -/
-def P_hyp (O : A) : A :=
+def P_hyp {A : Type*} [DivisionRing A] (O : A) : A :=
   (1 / 2 : A) * (O ^ 2 + O)
 
 /-- Elliptic scalar projector `(O² - O) / 2`. -/
-def P_ell (O : A) : A :=
+def P_ell {A : Type*} [DivisionRing A] (O : A) : A :=
   (1 / 2 : A) * (O ^ 2 - O)
 
 /-- Parabolic scalar projector `1 - O²`. -/
-def P_par (O : A) : A :=
+def P_par {A : Type*} [Ring A] (O : A) : A :=
   1 - O ^ 2
 
 /-- The hyperbolic projector lies in the `+1` scalar eigensector. -/
@@ -92,14 +93,14 @@ theorem tri_facet_eigenspace_ell
 
 /-- The parabolic projector lies in the zero scalar eigensector. -/
 theorem tri_facet_eigenspace_par
-    {O : A}
+    {A : Type*} [Ring A] {O : A}
     (hO : O ^ 3 = O) :
     O * P_par O = 0 := by
   unfold P_par
   have h_calc : O * (1 - O ^ 2) = O - O ^ 3 := by
-    ring
+    noncomm_ring
   rw [h_calc, hO]
-  ring
+  noncomm_ring
 
 /-- The hyperbolic-minus-elliptic projectors reconstruct `O`. -/
 theorem tri_facet_spectral_reconstruction

@@ -21,17 +21,17 @@ structure Monomial where
   exp : ℝ
 
 /-- A three-coordinate bulk state used for the local algebraic dictionary. -/
-structure SymmState2x2 (R : Type*) [CommRing R] where
+structure SymmState2x2 (R : Type*) [Ring R] where
   t : R
   x : R
   z : R
 
 /-- The doubled temporal readout. -/
-def trace_2x2 {R : Type*} [CommRing R] (S : SymmState2x2 R) : R :=
+def trace_2x2 {R : Type*} [Ring R] (S : SymmState2x2 R) : R :=
   S.t + S.t
 
 /-- The quadratic bulk interval readout. -/
-def det_2x2 {R : Type*} [CommRing R] (S : SymmState2x2 R) : R :=
+def det_2x2 {R : Type*} [Ring R] (S : SymmState2x2 R) : R :=
   S.t * S.t - S.x * S.x - S.z * S.z
 
 /--

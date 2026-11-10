@@ -25,7 +25,7 @@ namespace InfoGeometry.Canonical.WeilMetaplecticRepresentation
 
 open InfoGeometry.Canonical.SylvesterIwasawaKAN
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
 /-- The ordered clock-shift word with its chosen natural exponent convention.

@@ -10,7 +10,7 @@ open InfoGeometry.Canonical.BosonizationConstructiveCurrent
 open InfoGeometry.Canonical.CurrentSugawaraBridge
 open VirasoroProject
 
-variable {𝕜 A V : Type*} [Field 𝕜] [CharZero 𝕜]
+variable {𝕜 A V : Type*} [CommRing 𝕜]
 variable [Ring A] [AddCommGroup V] [Module 𝕜 V]
 
 /-- Ring homomorphisms preserve integer scalar multiplication on the unit. -/
@@ -88,7 +88,7 @@ Hypotheses that a family `J : Int → Module.End 𝕜 V` arises from
 a stabilized source-faithful cutoff.
 -/
 structure StabilizedCurrentSource
-    (𝕜 A V : Type*) [Field 𝕜] [CharZero 𝕜]
+    (𝕜 A V : Type*) [CommRing 𝕜]
     [Ring A] [AddCommGroup V] [Module 𝕜 V] where
   source : RawCARModeCompletion A
   ρ : A →+* Module.End 𝕜 V
@@ -104,7 +104,7 @@ structure StabilizedCurrentSource
 
 namespace StabilizedCurrentSource
 
-variable {𝕜 A V : Type*} [Field 𝕜] [CharZero 𝕜]
+variable {𝕜 A V : Type*} [CommRing 𝕜]
 variable [Ring A] [AddCommGroup V] [Module 𝕜 V]
 variable (S : StabilizedCurrentSource 𝕜 A V)
 

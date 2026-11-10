@@ -4,7 +4,9 @@ namespace InfoGeometry.HodgeCohomology.TwistedCubic
 
 noncomputable section
 
-variable {Scalar : Type*} [Field Scalar]
+section Ring
+
+variable {Scalar : Type*} [Ring Scalar]
 
 def parameter (first second : Scalar) : Fin 4 → Scalar :=
   ![first ^ 3, first ^ 2 * second, first * second ^ 2, second ^ 3]
@@ -13,6 +15,12 @@ def OnCurve (point : Fin 4 → Scalar) : Prop :=
   point 0 * point 2 = point 1 * point 1 ∧
     point 0 * point 3 = point 1 * point 2 ∧
     point 1 * point 3 = point 2 * point 2
+
+end Ring
+
+section CommRing
+
+variable {Scalar : Type*} [CommRing Scalar]
 
 def quadric (left right otherLeft otherRight : Fin 4) : MvPolynomial (Fin 4) Scalar :=
   MvPolynomial.X left * MvPolynomial.X right -
@@ -42,17 +50,6 @@ theorem parameter_onCurve (first second : Scalar) : OnCurve (parameter first sec
   · change (first ^ 2 * second) * second ^ 3 = (first * second ^ 2) * (first * second ^ 2)
     ring
 
-theorem parameter_nonzero (first second : Scalar) (nonzero : first ≠ 0 ∨ second ≠ 0) :
-    parameter first second ≠ 0 := by
-  intro equality
-  rcases nonzero with firstNonzero | secondNonzero
-  · have entry := congrArg (fun point : Fin 4 → Scalar => point 0) equality
-    have powerZero : first ^ 3 = 0 := by simpa [parameter] using entry
-    exact pow_ne_zero 3 firstNonzero powerZero
-  · have entry := congrArg (fun point : Fin 4 → Scalar => point 3) equality
-    have powerZero : second ^ 3 = 0 := by simpa [parameter] using entry
-    exact pow_ne_zero 3 secondNonzero powerZero
-
 theorem parameter_scale (scale first second : Scalar) :
     parameter (scale * first) (scale * second) = scale ^ 3 • parameter first second := by
   ext coordinate
@@ -72,13 +69,22 @@ theorem onCurve_smul (scale : Scalar) (point : Fin 4 → Scalar)
     scaled_relation scale _ _ _ _ onCurve.2.1,
     scaled_relation scale _ _ _ _ onCurve.2.2⟩
 
-theorem onCurve_smul_iff (scale : Scalar) (nonzero : scale ≠ 0)
-    (point : Fin 4 → Scalar) : OnCurve (scale • point) ↔ OnCurve point := by
-  constructor
-  · intro onCurve
-    have unscaled := onCurve_smul scale⁻¹ (scale • point) onCurve
-    simpa [smul_smul, nonzero] using unscaled
-  · exact onCurve_smul scale point
+end CommRing
+
+section Domain
+
+variable {Scalar : Type*} [CommRing Scalar] [NoZeroDivisors Scalar]
+
+theorem parameter_nonzero (first second : Scalar) (nonzero : first ≠ 0 ∨ second ≠ 0) :
+    parameter first second ≠ 0 := by
+  intro equality
+  rcases nonzero with firstNonzero | secondNonzero
+  · have entry := congrArg (fun point : Fin 4 → Scalar => point 0) equality
+    have powerZero : first ^ 3 = 0 := by simpa [parameter] using entry
+    exact pow_ne_zero 3 firstNonzero powerZero
+  · have entry := congrArg (fun point : Fin 4 → Scalar => point 3) equality
+    have powerZero : second ^ 3 = 0 := by simpa [parameter] using entry
+    exact pow_ne_zero 3 secondNonzero powerZero
 
 theorem zero_patch (point : Fin 4 → Scalar) (onCurve : OnCurve point)
     (firstZero : point 0 = 0) :
@@ -91,6 +97,44 @@ theorem zero_patch (point : Fin 4 → Scalar) (onCurve : OnCurve point)
   have thirdZero : point 2 = 0 := (mul_eq_zero.mp thirdSquare).elim id id
   ext coordinate
   fin_cases coordinate <;> simp [parameter, firstZero, secondZero, thirdZero]
+
+theorem two_quadrics_decompose (point : Fin 4 → Scalar) :
+    (point 0 * point 2 = point 1 * point 1 ∧
+      point 0 * point 3 = point 1 * point 2) ↔
+    OnCurve point ∨ (point 0 = 0 ∧ point 1 = 0) := by
+  constructor
+  · intro equations
+    by_cases firstZero : point 0 = 0
+    · right
+      refine ⟨firstZero, ?_⟩
+      have squareZero : point 1 * point 1 = 0 := by
+        simpa [firstZero] using equations.1.symm
+      exact (mul_eq_zero.mp squareZero).elim id id
+    · left
+      refine ⟨equations.1, equations.2, ?_⟩
+      have factored : point 0 * (point 1 * point 3 - point 2 * point 2) = 0 := by
+        calc
+          _ = point 1 * (point 0 * point 3 - point 1 * point 2) -
+              point 2 * (point 0 * point 2 - point 1 * point 1) := by ring
+          _ = 0 := by rw [equations.1, equations.2]; ring
+      exact sub_eq_zero.mp ((mul_eq_zero.mp factored).resolve_left firstZero)
+  · rintro (onCurve | onLine)
+    · exact ⟨onCurve.1, onCurve.2.1⟩
+    · simp [onLine.1, onLine.2]
+
+end Domain
+
+section Field
+
+variable {Scalar : Type*} [Field Scalar]
+
+theorem onCurve_smul_iff (scale : Scalar) (nonzero : scale ≠ 0)
+    (point : Fin 4 → Scalar) : OnCurve (scale • point) ↔ OnCurve point := by
+  constructor
+  · intro onCurve
+    have unscaled := onCurve_smul scale⁻¹ (scale • point) onCurve
+    simpa [smul_smul, nonzero] using unscaled
+  · exact onCurve_smul scale point
 
 theorem nonzero_patch (point : Fin 4 → Scalar) (onCurve : OnCurve point)
     (firstNonzero : point 0 ≠ 0) :
@@ -133,29 +177,7 @@ theorem onCurve_iff_projective_parameterized (point : Fin 4 → Scalar)
     rw [← scaled]
     exact onCurve_smul scale _ (parameter_onCurve first second)
 
-theorem two_quadrics_decompose (point : Fin 4 → Scalar) :
-    (point 0 * point 2 = point 1 * point 1 ∧
-      point 0 * point 3 = point 1 * point 2) ↔
-    OnCurve point ∨ (point 0 = 0 ∧ point 1 = 0) := by
-  constructor
-  · intro equations
-    by_cases firstZero : point 0 = 0
-    · right
-      refine ⟨firstZero, ?_⟩
-      have squareZero : point 1 * point 1 = 0 := by
-        simpa [firstZero] using equations.1.symm
-      exact (mul_eq_zero.mp squareZero).elim id id
-    · left
-      refine ⟨equations.1, equations.2, ?_⟩
-      have factored : point 0 * (point 1 * point 3 - point 2 * point 2) = 0 := by
-        calc
-          _ = point 1 * (point 0 * point 3 - point 1 * point 2) -
-              point 2 * (point 0 * point 2 - point 1 * point 1) := by ring
-          _ = 0 := by rw [equations.1, equations.2]; ring
-      exact sub_eq_zero.mp ((mul_eq_zero.mp factored).resolve_left firstZero)
-  · rintro (onCurve | onLine)
-    · exact ⟨onCurve.1, onCurve.2.1⟩
-    · simp [onLine.1, onLine.2]
+end Field
 
 end
 

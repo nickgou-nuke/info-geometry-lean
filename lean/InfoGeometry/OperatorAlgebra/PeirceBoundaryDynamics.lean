@@ -17,7 +17,8 @@ namespace InfoGeometry.OperatorAlgebra.LieJordan
 
 open InfoGeometry.Core.PeirceDecomposition
 
-variable (R : Type*) [CommRing R] {A : Type*} [Ring A] [Algebra R A]
+variable (R : Type*) [Ring R] {A : Type*} [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- The existing corner resolution identifies the actual squared endomorphism. -/
 theorem peirce_lie_square {p : A} (hp : p * p = p) :

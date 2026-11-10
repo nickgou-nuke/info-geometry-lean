@@ -63,7 +63,7 @@ theorem heisenberg_mode_stage_contains_jgen
     (k : ℤ) :
     HeisenbergAlgebra.jgen 𝕜 k ∈
       heisenbergFiniteModeStage (𝕜 := 𝕜) {some k} := by
-  dsimp; simpa using
+  simpa using
     (basisJK_mem_heisenbergFiniteModeStage (𝕜 := 𝕜)
       ({some k} : Finset (Option ℤ)) (some k) (Finset.mem_singleton_self _))
 
@@ -71,7 +71,7 @@ theorem heisenberg_mode_stage_contains_jgen
 theorem heisenberg_mode_stage_contains_kgen :
     HeisenbergAlgebra.kgen 𝕜 ∈
       heisenbergFiniteModeStage (𝕜 := 𝕜) {none} := by
-  dsimp; simpa using
+  simpa using
     (basisJK_mem_heisenbergFiniteModeStage (𝕜 := 𝕜)
       ({none} : Finset (Option ℤ)) none (Finset.mem_singleton_self _))
 

@@ -5,14 +5,14 @@ universe u v
 
 section PfaffianLineBundle
 
-variable (R : Type u) [CommRing R]
-variable (N P : Type v) [AddCommGroup N] [Module R N] [AddCommGroup P] [Module R P]
+variable (R : Type u) [CommSemiring R]
+variable (N P : Type v) [AddCommMonoid N] [Module R N] [AddCommMonoid P] [Module R P]
 
 -- The Pfaffian line bundle is defined as the top exterior power of the null modes N.
-variable (L_half : Type v) [AddCommGroup L_half] [Module R L_half]
+variable (L_half : Type v) [AddCommMonoid L_half] [Module R L_half]
 
 -- The Determinant line bundle is the top exterior power of V.
-variable (L_det : Type v) [AddCommGroup L_det] [Module R L_det]
+variable (L_det : Type v) [AddCommMonoid L_det] [Module R L_det]
 
 open TensorProduct
 

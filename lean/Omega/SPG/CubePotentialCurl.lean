@@ -1,23 +1,31 @@
-import Mathlib.Tactic
+import Omega.Conclusion.LeyangLattesHypercubeExactFormZeroCurvature
 
 /-!
-# Cube potential reconstruction by curl control seed values
+# Cube potential reconstruction from curl control
 
-Euler characteristic and inclusion-exclusion identities for cube potential reconstruction.
+This owner exposes the finite Boolean-hypercube potential result in the SPG
+namespace. The carrier is the `2k`-dimensional Boolean cube, the potential is
+the weighted coordinate sum, and the two-form boundary is its discrete curl.
 -/
 
 namespace Omega.SPG
 
-/-- Cube potential reconstruction by curl seeds.
-    cor:spg-cube-potential-reconstruction-by-curl -/
-theorem paper_spg_cube_potential_reconstruction_by_curl_seeds :
-    (2 ^ 2 = 4 ∧ 2 * 2 = 4 ∧ 1 = 1) ∧
-    (4 - 4 + 1 = 1) ∧
-    (2 ^ 3 = 8 ∧ 3 * 4 = 12 ∧ 6 = 6) ∧
-    (8 + 6 - 12 = 2) ∧
-    (1 = 1) ∧
-    (4 - 1 = 3) := by
-  refine ⟨⟨by norm_num, by omega, by omega⟩, by omega,
-         ⟨by norm_num, by omega, by omega⟩, by omega, by omega, by omega⟩
+/-- A weighted coordinate potential has the prescribed increment on every
+oriented edge from a zero coordinate to a one coordinate, and its discrete
+curl vanishes on every coordinate square. -/
+theorem paper_spg_cube_potential_reconstruction_by_curl
+    {k : Nat} (weight : Fin (2 * k) → Real) :
+    (∀ (x : Omega.Conclusion.conclusion_leyang_lattes_hypercube_exact_form_zero_curvature_vertex k)
+        (i : Fin (2 * k)),
+      x i = false →
+        Omega.Conclusion.conclusion_leyang_lattes_hypercube_exact_form_zero_curvature_increment
+          weight i x = weight i) ∧
+      (∀ (x : Omega.Conclusion.conclusion_leyang_lattes_hypercube_exact_form_zero_curvature_vertex k)
+          (i j : Fin (2 * k)),
+        i ≠ j → x i = false → x j = false →
+          Omega.Conclusion.conclusion_leyang_lattes_hypercube_exact_form_zero_curvature_boundary
+            weight i j x = 0) := by
+  exact Omega.Conclusion.paper_conclusion_leyang_lattes_hypercube_exact_form_zero_curvature
+    weight
 
 end Omega.SPG

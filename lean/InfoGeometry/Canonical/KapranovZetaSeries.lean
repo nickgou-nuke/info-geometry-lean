@@ -151,7 +151,7 @@ theorem quadraticFactor_apply {R : Type*} [Ring R] (a q : R) (n : ℕ) :
   rfl
 
 /-- Finite Cauchy-series factorization: `(1 - αT) * (1 - βT) = 1 - (α+β)T + αβT²`. -/
-theorem linearFactor_mul_linearFactor {R : Type*} [CommRing R] (α β : R) :
+theorem linearFactor_mul_linearFactor {R : Type*} [Ring R] (α β : R) :
     linearFactor α * linearFactor β = quadraticFactor (α + β) (α * β) := by
   funext n
   change cauchyMul (linearFactor α) (linearFactor β) n =

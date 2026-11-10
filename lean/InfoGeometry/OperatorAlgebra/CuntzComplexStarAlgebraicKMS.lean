@@ -21,9 +21,10 @@ open InfoGeometry.Algebra.CuntzKMSCondition
 
 local notation "φ" => quotientProductFunctional (fun _ => (1 / 2 : ℝ)) (by norm_num)
 
-/-- Twisted cyclic elements are closed under multiplication. -/
-theorem twisted_cyclicity_mul {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
-    (f : A →ₗ[R] R) (σ : A →ₐ[R] A) {a c : A}
+/-- Twisted cyclic elements are closed under multiplication over any ring `[Ring R]`. -/
+theorem twisted_cyclicity_mul {R A M : Type*} [Ring R] [Ring A] [Module R A]
+    [FunLike M A A] [MulHomClass M A A]
+    (f : A →ₗ[R] R) (σ : M) {a c : A}
     (ha : ∀ y, f (a * y) = f (y * σ a))
     (hc : ∀ y, f (c * y) = f (y * σ c)) (y : A) :
     f ((a * c) * y) = f (y * σ (a * c)) := by

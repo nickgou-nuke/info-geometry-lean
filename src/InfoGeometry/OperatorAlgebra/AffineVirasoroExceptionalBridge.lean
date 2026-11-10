@@ -83,11 +83,21 @@ variable (B : ExceptionalAffineVirasoroBridge Finite Affine Vir State Charge)
 def finiteToVirasoro : Finite →ₗ[ℝ] Vir :=
   B.affineToVirasoro.comp B.finiteToAffine
 
-@[simp]
-theorem finiteToVirasoro_apply (x : Finite) :
-    B.finiteToVirasoro x =
-      B.affineToVirasoro (B.finiteToAffine x) :=
+/-- An input is lost by the composite exactly when its affine image is lost
+by the second stage.  This identifies the kernel of the two-stage bridge with
+the preimage of the affine-to-Virasoro kernel. -/
+theorem finiteToVirasoro_mem_ker_iff (x : Finite) :
+    x ∈ LinearMap.ker B.finiteToVirasoro ↔
+      B.finiteToAffine x ∈ LinearMap.ker B.affineToVirasoro := by
+  change B.affineToVirasoro (B.finiteToAffine x) = 0 ↔ _
   rfl
+
+/-- The image of the two-stage map lies in the image of its final stage. -/
+theorem finiteToVirasoro_range_le :
+    LinearMap.range B.finiteToVirasoro ≤ LinearMap.range B.affineToVirasoro := by
+  intro y hy
+  rcases hy with ⟨x, rfl⟩
+  exact ⟨B.finiteToAffine x, rfl⟩
 
 /--
 Canonical boundary charge induced by the finite exceptional ledger.
@@ -107,12 +117,6 @@ def hiddenGradeMemoryReadout : State → Charge :=
 abbrev calibratedHiddenGradeMemoryReadout : State → Charge :=
   B.hiddenGradeMemoryReadout
 
-/-- The two historical readout names unfold to the same canonical map. -/
-theorem centralCharge_eq_hiddenGradeMemory
-    (s : State) :
-    B.centralChargeReadout s = B.calibratedHiddenGradeMemoryReadout s :=
-  rfl
-
 /-- The Virasoro central generator commutes inside the Virasoro ledger. -/
 theorem virasoro_central_commutes
     (X : Vir) :
@@ -120,43 +124,5 @@ theorem virasoro_central_commutes
   B.virasoro.central_commutes X
 
 end ExceptionalAffineVirasoroBridge
-
-/-! ## 2. Bridge readout -/
-
-/--
-Affine/Virasoro exceptional bridge readout.
-
-This captures the precise compatibility:
-
-```text
-the historical boundary-charge and hidden-memory names denote the same
-finite-ledger projection.  It does not assert an exceptional Sugawara theorem.
-```
--/
-theorem exceptionalAffineVirasoroBridgeOwnerTarget :
-  ∀ (Finite Affine Vir State Charge : Type*)
-    [AddCommGroup Finite] [Module ℝ Finite]
-    [AddCommGroup Affine] [Module ℝ Affine]
-    [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
-    [AddCommGroup State] [Module ℝ State]
-      [AddCommGroup Charge] [Module ℝ Charge],
-  ∀ B : ExceptionalAffineVirasoroBridge Finite Affine Vir State Charge,
-  ∀ s : State,
-    B.centralChargeReadout s = B.calibratedHiddenGradeMemoryReadout s := by
-  intro Finite Affine Vir State Charge _ _ _ _ _ _ _ _ _ _ _ _ B s
-  exact B.centralCharge_eq_hiddenGradeMemory s
-
-/-- Packet readout for one exceptional affine/Virasoro bridge. -/
-theorem exceptionalAffineVirasoroBridge_packet
-    (Finite Affine Vir State Charge : Type*)
-    [AddCommGroup Finite] [Module ℝ Finite]
-    [AddCommGroup Affine] [Module ℝ Affine]
-    [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
-    [AddCommGroup State] [Module ℝ State]
-    [AddCommGroup Charge] [Module ℝ Charge]
-    (B : ExceptionalAffineVirasoroBridge Finite Affine Vir State Charge)
-    (s : State) :
-    B.centralChargeReadout s = B.calibratedHiddenGradeMemoryReadout s :=
-  exceptionalAffineVirasoroBridgeOwnerTarget Finite Affine Vir State Charge B s
 
 end InfoGeometry.OperatorAlgebra.AffineVirasoroExceptionalBridge

@@ -37,7 +37,7 @@ open InfoGeometry.OperatorAlgebra.PeirceDefectBridge
 open InfoGeometry.OperatorAlgebra.PeirceSpine
 open InfoGeometry.Core.IdempotentGraphGrassmannian
 
-variable {R V : Type*} [Field R] [AddCommGroup V] [Module R V] {n : ℕ}
+variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] {n : ℕ}
 
 local notation "Mat" => Matrix (Fin n) (Fin n) (ExteriorAlgebra R V)
 

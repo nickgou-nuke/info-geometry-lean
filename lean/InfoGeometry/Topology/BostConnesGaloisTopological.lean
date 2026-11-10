@@ -19,7 +19,7 @@ noncomputable section
 
 universe u
 
-variable {C_comm : Type u} [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
+variable {C_comm : Type u} [Ring C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
 variable {G : Type u} [GaloisActionData G]
 
 instance commutativeBoundaryAlgebraTopologicalSpace :

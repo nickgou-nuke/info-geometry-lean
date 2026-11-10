@@ -20,7 +20,7 @@ noncomputable section
 
 namespace InfoGeometry.Canonical
 
-variable {R : Type} [CommRing R]
+variable {R : Type} [Ring R]
 
 /-- The canonical split-octonion carrier over `ℝ`. -/
 abbrev SplitOctonionReal : Type := ZornMatrix ℝ
@@ -29,8 +29,8 @@ abbrev SplitOctonionReal : Type := ZornMatrix ℝ
 def ZornMatrix.detZ (z : ZornMatrix R) : R :=
   z.a * z.b - ZornMatrix.dot z.x z.y
 
-/-- Linear candidates for split-octonion automorphisms over a commutative ring. -/
-abbrev SplitOctonionAutCandidate (R : Type) [CommRing R] : Type :=
+/-- Linear candidates for split-octonion automorphisms over a ring. -/
+abbrev SplitOctonionAutCandidate (R : Type) [Ring R] : Type :=
   ZornMatrix R ≃ₗ[R] ZornMatrix R
 
 /-- The candidate fixes the Zorn unit. -/

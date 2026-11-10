@@ -18,7 +18,7 @@ composition identity for a custom nonassociative product.
 
 namespace InfoGeometry.Algebra.Zorn
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /--
 A composition datum for the Zorn split-octonion cell.
@@ -27,7 +27,7 @@ It extends the dot/cross interface with an abstract multiplication `mulZ`
 and requires it to be strictly multiplicative on the Zorn determinant.
 This is the honest composition theorem, avoiding partial/placeholder proofs.
 -/
-structure ZornCompositionDatum (R : Type*) [CommRing R]
+structure ZornCompositionDatum (R : Type*) [Ring R]
     extends CrossProduct3 R where
   mulZ : ZornMatrix R → ZornMatrix R → ZornMatrix R
 

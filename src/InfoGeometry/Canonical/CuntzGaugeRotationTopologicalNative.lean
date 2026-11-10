@@ -6,7 +6,7 @@ namespace InfoGeometry.Canonical
 
 open ToeplitzCuntzVacuumBridge
 
-variable {R : Type*} [CommRing R] [StarRing R]
+variable {R : Type*} [Ring R] [StarRing R]
 variable [TopologicalSpace R] [ContinuousAdd R] [ContinuousMul R] [ContinuousNeg R]
 
 def nativeRotationParameterSet : Set (R × R) :=
@@ -178,14 +178,14 @@ theorem isCompact_realNativeRotationReadout_range
     isCompact_nativeRotationParameterSpace
   exact isCompact_range (continuous_nativeRotationReadout (R := ℝ) g)
 
-theorem nativeRotationV1Readout_isometry
+theorem nativeRotationV1Readout_isometry {R : Type*} [CommRing R] [StarRing R] [TopologicalSpace R]
     (g : ToeplitzCuntzGenerators R) (p : NativeRotationParameter (R := R)) :
     star (nativeRotationV1Readout g p) * nativeRotationV1Readout g p = 1 := by
   simpa [nativeRotationV1Readout, nativeRotationV1,
     nativeRotationParameterCoefficients] using
     nativeRotationV1_isometry (nativeRotationParameterCoefficients p) g
 
-theorem nativeRotationV2Readout_isometry
+theorem nativeRotationV2Readout_isometry {R : Type*} [CommRing R] [StarRing R] [TopologicalSpace R]
     (g : ToeplitzCuntzGenerators R) (p : NativeRotationParameter (R := R)) :
     star (nativeRotationV2Readout g p) * nativeRotationV2Readout g p = 1 := by
   simpa [nativeRotationV2Readout, nativeRotationV2,

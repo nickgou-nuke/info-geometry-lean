@@ -18,14 +18,14 @@ namespace InfoGeometry.Canonical.LCFT
 open Matrix
 open InfoGeometry.Canonical.Drazin
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [Ring K]
 
 /--
 Modular deviation operator representing `Δ - I` on LCFT state spaces.
 This deviation acts as the generator for non-diagonalizable Jordan structures
 governing logarithmic correlation functions.
 -/
-structure LogarithmicModularDeviation (n : Type*) [Fintype n] [DecidableEq n] (K : Type*) [Field K] where
+structure LogarithmicModularDeviation (n : Type*) [Fintype n] [DecidableEq n] (K : Type*) [Ring K] where
   /-- The diagonalized semi-simple eigenvalue block (S). -/
   S : Matrix n n K
   /-- The off-diagonal nilpotent Jordan block (N). -/
@@ -60,6 +60,8 @@ def L_operator (k : ℕ) : Matrix n n K :=
 
 /-- The Drazin inverse context of the Jordan-decomposed modular deviation. -/
 theorem modular_deviation_drazin_inverse
+    {K : Type*} [CommRing K]
+    (D : LogarithmicModularDeviation n K)
     (hS : IsUnit D.S.det) :
     ∃ (invD : Matrix (n ⊕ n) (n ⊕ n) K),
       let M := fromBlocks D.S (0 : Matrix n n K) (0 : Matrix n n K) D.N

@@ -19,7 +19,7 @@ namespace InfoGeometry.Canonical.ModularGibbsColimitBridge
 
 open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 variable (A : ℕ → Type*)
 variable [∀ n, AddCommGroup (A n)] [∀ n, Module R (A n)] [∀ n, Module ℝ (A n)] [∀ n, One (A n)]
 variable (iota : ∀ n, A n →ₗ[R] A (n + 1))

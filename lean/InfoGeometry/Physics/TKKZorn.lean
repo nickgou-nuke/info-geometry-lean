@@ -25,7 +25,7 @@ open InfoGeometry.Algebra.Zorn
 open InfoGeometry.Canonical.ZornMatrix
 open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 
-variable {R : Type*} [CommRing R] [CharZero R]
+variable {R : Type*} [Ring R] [CharZero R]
 
 -- ============================================================================
 -- 1. The 5-graded Lie algebra structure on Zorn matrices
@@ -92,7 +92,7 @@ theorem TKKFisherInformationMetric_symm (cp : CrossProduct3 R)
     (X Y : ZornMatrix R) :
     TKKFisherInformationMetric cp X Y = TKKFisherInformationMetric cp Y X := by
   simp [TKKFisherInformationMetric, add_comm, sub_eq_add_neg]
-  ring
+  abel
 
 /-- The Fisher information matrix packages the determinant polarization entries. -/
 theorem ZornFisherInformationMatrix_apply (cp : CrossProduct3 R)
@@ -163,7 +163,7 @@ def gamow_teller_operator (cp : CrossProduct3 R)
 -- 5. Projective Nuclear State wrapper
 -- ============================================================================
 
-structure ProjectiveZornState (R : Type*) [CommRing R] where
+structure ProjectiveZornState (R : Type*) [Ring R] where
   vector : ZornMatrix R
   non_zero : vector ≠ 0
 

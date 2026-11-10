@@ -15,6 +15,36 @@ vector. The Leibniz condition is exactly trace zero, over any commutative ring.
 
 namespace InfoGeometry.Algebra.ZornVectorMatrix
 
+section Ring
+variable {R : Type*} [Ring R]
+
+/-- Matrix action before imposing the Leibniz condition. -/
+def matrixAction (M : Matrix (Fin 3) (Fin 3) R) (X : ZornVectorMatrix R) :
+    ZornVectorMatrix R :=
+  ⟨0, M.mulVec X.v, -M.transpose.mulVec X.w, 0⟩
+
+@[simp] theorem matrixAction_E11 (M : Matrix (Fin 3) (Fin 3) R) :
+    matrixAction M E11 = zero := by
+  ext i <;> simp [matrixAction, E11, zero, Matrix.mulVec, dotProduct]
+
+@[simp] theorem matrixAction_E22 (M : Matrix (Fin 3) (Fin 3) R) :
+    matrixAction M E22 = zero := by
+  ext i <;> simp [matrixAction, E22, zero, Matrix.mulVec, dotProduct]
+
+@[simp] theorem trace_matrixAction (M : Matrix (Fin 3) (Fin 3) R)
+    (X : ZornVectorMatrix R) : trace (matrixAction M X) = 0 := by
+  simp [trace, matrixAction]
+
+/-- Faithfulness is visible on the upper basis vectors, in every characteristic. -/
+theorem matrixAction_injective :
+    Function.Injective (matrixAction (R := R)) := by
+  intro M N h
+  ext i j
+  have hv := congrArg (fun f => (f (U j)).v i) h
+  simpa [matrixAction, U, Matrix.mulVec, dotProduct, ZornVec3.basis] using hv
+
+end Ring
+
 variable {R : Type*} [CommRing R]
 
 /-- Infinitesimal covariance of the three-dimensional cross product. -/
@@ -26,11 +56,6 @@ theorem mulVec_cross_trace (M : Matrix (Fin 3) (Fin 3) R) (u v : ZornVec3 R) :
   fin_cases i <;>
     simp [Matrix.mulVec, dotProduct, Matrix.trace, Matrix.diag,
       ZornVec3.cross, Fin.sum_univ_three] <;> ring
-
-/-- Matrix action before imposing the Leibniz condition. -/
-def matrixAction (M : Matrix (Fin 3) (Fin 3) R) (X : ZornVectorMatrix R) :
-    ZornVectorMatrix R :=
-  ⟨0, M.mulVec X.v, -M.transpose.mulVec X.w, 0⟩
 
 theorem matrixAction_leibniz (M : Matrix (Fin 3) (Fin 3) R)
     (hM : Matrix.trace M = 0) (X Y : ZornVectorMatrix R) :
@@ -73,26 +98,6 @@ def matrixDerivation (M : Matrix (Fin 3) (Fin 3) R) (hM : Matrix.trace M = 0) :
     all_goals simp [matrixAction, smul, Matrix.mulVec, dotProduct, Fin.sum_univ_three]
     all_goals ring
   map_mul' := matrixAction_leibniz M hM
-
-@[simp] theorem matrixAction_E11 (M : Matrix (Fin 3) (Fin 3) R) :
-    matrixAction M E11 = zero := by
-  ext i <;> simp [matrixAction, E11, zero, Matrix.mulVec, dotProduct]
-
-@[simp] theorem matrixAction_E22 (M : Matrix (Fin 3) (Fin 3) R) :
-    matrixAction M E22 = zero := by
-  ext i <;> simp [matrixAction, E22, zero, Matrix.mulVec, dotProduct]
-
-@[simp] theorem trace_matrixAction (M : Matrix (Fin 3) (Fin 3) R)
-    (X : ZornVectorMatrix R) : trace (matrixAction M X) = 0 := by
-  simp [trace, matrixAction]
-
-/-- Faithfulness is visible on the upper basis vectors, in every characteristic. -/
-theorem matrixAction_injective :
-    Function.Injective (matrixAction (R := R)) := by
-  intro M N h
-  ext i j
-  have hv := congrArg (fun f => (f (U j)).v i) h
-  simpa [matrixAction, U, Matrix.mulVec, dotProduct, ZornVec3.basis] using hv
 
 /-- Commutators intertwine without a trace hypothesis on the input matrices. -/
 theorem matrixAction_bracket (M N : Matrix (Fin 3) (Fin 3) R)

@@ -39,7 +39,7 @@ structure ColorVec3 (R : Type*) where
 
 namespace ColorVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : ColorVec3 R := ⟨0, 0, 0⟩
 def smul (k : R) (u : ColorVec3 R) : ColorVec3 R := ⟨k * u.c1, k * u.c2, k * u.c3⟩
@@ -54,7 +54,7 @@ def cross (u v : ColorVec3 R) : ColorVec3 R where
   c2 := u.c3 * v.c1 - u.c1 * v.c3
   c3 := u.c1 * v.c2 - u.c2 * v.c1
 
-theorem dot_smul_smul (a b : R) (u v : ColorVec3 R) :
+theorem dot_smul_smul {R : Type*} [CommRing R] (a b : R) (u v : ColorVec3 R) :
     dot (smul a u) (smul b v) = (a * b) * dot u v := by
   dsimp [dot, smul]
   ring
@@ -73,7 +73,7 @@ structure SplitOctonion (R : Type*) where
 
 namespace SplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : SplitOctonion R := ⟨0, ColorVec3.zero, ColorVec3.zero, 0⟩
 def one  : SplitOctonion R := ⟨1, ColorVec3.zero, ColorVec3.zero, 1⟩
@@ -113,6 +113,12 @@ def modularHamiltonian (I_surp : R) : SplitOctonion R :=
 def modularDelta (c s : R) : SplitOctonion R :=
   ⟨c + s, ColorVec3.zero, ColorVec3.zero, c - s⟩
 
+/-- Two-sided modular automorphism `σ_t(X) = Δ_t · X · (Δ_t)⁻¹`. -/
+def tomitaTakesakiFlow (c s : R) (X : SplitOctonion R) : SplitOctonion R :=
+  mul (mul (modularDelta c s) X) (modularDelta c (-s))
+
+variable {R : Type*} [CommRing R]
+
 /-- The two diagonal products of the modular rotor have scalar coordinate
     `c² - s²`; this does not assume the mass-shell normalization. -/
 theorem modularDelta_mul_reverse (c s : R) :
@@ -138,10 +144,6 @@ theorem modularDelta_has_inverse (c s : R) (h_hyperbolic : c^2 - s^2 = 1) :
     have hs : (-s)^2 = s^2 := by ring
     rw [h_reverse', hs, h_hyperbolic]
     rfl
-
-/-- Two-sided modular automorphism `σ_t(X) = Δ_t · X · (Δ_t)⁻¹`. -/
-def tomitaTakesakiFlow (c s : R) (X : SplitOctonion R) : SplitOctonion R :=
-  mul (mul (modularDelta c s) X) (modularDelta c (-s))
 
 /--
 Blue-shift of the forward quark sheet:

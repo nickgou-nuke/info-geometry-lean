@@ -4,7 +4,7 @@ import InfoGeometry.Riemannian.CartanMetric
 import InfoGeometry.Clifford.HestenesNaturalConeStandardForm
 import InfoGeometry.Riemannian.ConeAction
 
-variable {R : Type*} [CommRing R] [Invertible (2 : R)]
+variable {R : Type*} [CommRing R]
 variable {M : Type*} [AddCommGroup M] [Module R M]
 
 open InfoGeometry.Clifford.Hestenes
@@ -28,7 +28,7 @@ def star_prod (X Y : SplitOctonion Q v0) : SplitOctonion Q v0 :=
    Y.snd * X.fst + X.snd * (hestenesAdjoint Q v0 Y.fst)⟩
 
 /-- Нормата на Cayley-Dickson Сплит-Октонион -/
-noncomputable def hNorm (X : SplitOctonion Q v0) : R :=
+noncomputable def hNorm [Invertible (2 : R)] (X : SplitOctonion Q v0) : R :=
   InfoGeometry.Riemannian.hTrace Q (X.fst * hestenesAdjoint Q v0 X.fst) - 
   InfoGeometry.Riemannian.hTrace Q (X.snd * hestenesAdjoint Q v0 X.snd)
 

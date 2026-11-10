@@ -36,7 +36,7 @@ Key Theorems:
 6. 🏆 `fourPlaneLift_spin_coxeter_twelve`: $(\zeta \cdot (\widehat{B_s} \widehat{B_\ell}))^6 = -I_8$ and 12th power is $I_8$.
 -/
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The 4-plane block direct sum lift $\widehat{B} = B \oplus B \oplus B \oplus B$ on $\text{Fin } 4 \times \text{Fin } 2$. -/
 def fourPlaneLift (B : Matrix (Fin 2) (Fin 2) R) : Matrix (Fin 4 × Fin 2) (Fin 4 × Fin 2) R :=
@@ -127,7 +127,7 @@ theorem fourPlaneLift_coxeter_pow_six (r3 : R) (hr3 : r3 ^ 2 = 3) :
   rw [cartan_coxeter_pow_six r3 hr3, fourPlaneLift_one]
 
 /-- 🏆 THEOREM 7: Exact 12-fold cyclotomic closure of the 8D spin Coxeter lift. -/
-theorem fourPlaneLift_spin_coxeter_twelve
+theorem fourPlaneLift_spin_coxeter_twelve {R : Type*} [CommRing R]
     (r3 zeta : R) (hr3 : r3 ^ 2 = 3) (h_zeta6 : zeta ^ 6 = -1) :
     (zeta • (fourPlaneLift (BsCartan r3) * fourPlaneLift (BlCartan r3))) ^ 6 = -1 ∧
     (zeta • (fourPlaneLift (BsCartan r3) * fourPlaneLift (BlCartan r3))) ^ 12 = 1 := by

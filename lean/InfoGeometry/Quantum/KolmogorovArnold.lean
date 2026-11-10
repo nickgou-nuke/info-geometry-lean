@@ -10,7 +10,7 @@ This module formalizes the recursive reformulation of Kolmogorov-Arnold Networks
 using Split-Algebras, Gibbs-Fermi Beta-divergencies, and inductive colimits.
 -/
 
-variable {R : Type} [CommRing R] [Invertible (2 : R)]
+variable {R : Type} [Ring R] [Invertible (2 : R)]
 
 /-- 
 The Beta-divergence channel types for the log-generating potentials.

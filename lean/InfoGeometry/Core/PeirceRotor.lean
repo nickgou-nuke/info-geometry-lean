@@ -20,15 +20,23 @@ open InfoGeometry.Core.DualSeedPeirce
 open InfoGeometry.Singular.MoorePenrose
 open InfoGeometry.Core.DiracSuperalgebra
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+section Noncomm
 
-/-- Evaluate four scalar coefficients on the actual Peirce matrix units. -/
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
+
+/-- Evaluate four scalar or operator-module coefficients on the actual Peirce matrix units. -/
 def peirceBlock (d b : A) (a x y z : R) : A :=
   a • polePlus d b + x • d + y • b + z • poleMinus d b
 
 variable {d b : A}
 
-/-- Multiplication of supported operators, derived from the seed equations. -/
+theorem smul_mul_smul_left (r s : R) (x y : A) :
+    (r • x) * (s • y) = (r * s) • (x * y) := by
+  rw [smul_mul_assoc, mul_smul_comm, smul_smul]
+
+/-- Multiplication of supported operators over a noncommutative coefficient ring `R`,
+derived from the seed equations. -/
 theorem peirceBlock_mul (h : IsDualSeedPair d b) (a x y z e f g k : R) :
     peirceBlock d b a x y z * peirceBlock d b e f g k =
       peirceBlock d b (a * e + x * g) (a * f + x * k)
@@ -36,10 +44,10 @@ theorem peirceBlock_mul (h : IsDualSeedPair d b) (a x y z e f g k : R) :
   unfold peirceBlock
   have hdb : d * b = polePlus d b := rfl
   have hbd : b * d = poleMinus d b := rfl
-  simp only [add_mul, mul_add, smul_mul_smul, h.pp, h.pq, h.qp, h.qq,
-    h.pd, h.pb, h.dp, h.dq, h.qd, h.qb, h.bp, h.bq, h.d_sq, h.b_sq, hdb, hbd, smul_zero]
-  change _ = _
-  module
+  simp only [add_mul, mul_add, smul_mul_smul_left,
+    h.pp, h.pq, h.qp, h.qq, h.pd, h.pb, h.dp, h.dq, h.qd, h.qb, h.bp, h.bq,
+    h.d_sq, h.b_sq, hdb, hbd, smul_zero, add_smul]
+  abel
 
 /-- The complementary idempotent annihilates every supported block. -/
 theorem harmonic_block (h : IsDualSeedPair d b) (a x y z : R) :
@@ -47,11 +55,18 @@ theorem harmonic_block (h : IsDualSeedPair d b) (a x y z : R) :
     peirceBlock d b a x y z * zeroModeSupport d b = 0 := by
   change (1 - polePlus d b - poleMinus d b) * peirceBlock d b a x y z = 0 ∧
     peirceBlock d b a x y z * (1 - polePlus d b - poleMinus d b) = 0
-  constructor <;> unfold peirceBlock <;>
-    simp only [add_mul, mul_add, sub_mul, mul_sub, smul_mul_assoc, mul_smul_comm,
-      one_mul, mul_one, h.pp, h.pq, h.qp, h.qq, h.pd, h.pb, h.dp, h.dq,
-      h.qd, h.qb, h.bp, h.bq, smul_zero] <;> module
+  constructor
+  · unfold peirceBlock
+    simp only [mul_add, mul_smul_comm, sub_mul,
+      one_mul, h.pp, h.pq, h.qp, h.qq, h.pd, h.pb,
+      h.qd, h.qb, sub_self, sub_zero, smul_zero, add_zero]
+  · unfold peirceBlock
+    simp only [add_mul, smul_mul_assoc, mul_sub,
+      mul_one, h.pp, h.pq, h.qp, h.qq, h.dp, h.dq,
+      h.bp, h.bq, smul_zero, add_zero]
+    abel
 
+omit [Module R A] [IsScalarTower R A A] [SMulCommClass R A A] in
 theorem harmonic_idempotent (h : IsDualSeedPair d b) :
     zeroModeSupport d b * zeroModeSupport d b = zeroModeSupport d b := by
   change (1 - polePlus d b - poleMinus d b) *
@@ -71,31 +86,54 @@ theorem completedBlock_mul (h : IsDualSeedPair d b) (a x y z e f g k : R) :
     (harmonic_block h e f g k).1, (harmonic_block h a x y z).2,
     peirceBlock_mul h, add_zero, zero_add]
 
-/-- The scalar circle rotor, equal to `P0 + c • Delta + s • J`. -/
+/-- The circle rotor, equal to `P0 + c • Delta + s • J`. -/
 def phaseRotor (c s : R) (d b : A) : A := completedBlock d b c s (-s) c
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 /-- This is the rotor specified in the attachment, on the existing carrier. -/
 theorem phaseRotor_formula (c s : R) :
     phaseRotor c s d b = zeroModeSupport d b +
       c • carrierSupport d b + s • wheelGenerator d b := by
   unfold phaseRotor completedBlock peirceBlock carrierSupport activeSupport
     wheelGenerator majoranaMinus
-  module
+  simp only [smul_add, smul_sub, neg_smul]
+  abel
 
-/-- The multiplication law holds before imposing a unit-circle constraint. -/
+/-- The multiplication law holds over any noncommutative ring `R` before imposing
+a unit-circle or commutativity constraint. -/
 theorem phaseRotor_mul (h : IsDualSeedPair d b) (c s e f : R) :
     phaseRotor c s d b * phaseRotor e f d b =
       phaseRotor (c * e - s * f) (c * f + s * e) d b := by
   unfold phaseRotor
   rw [completedBlock_mul h]
-  congr 1 <;> ring
+  congr 1
+  · rw [mul_neg, ← sub_eq_add_neg]
+  · rw [neg_mul, mul_neg, ← neg_add, add_comm]
+  · rw [neg_mul, add_comm, ← sub_eq_add_neg]
 
+/-- Over a noncommutative coefficient ring `R`, multiplying `phaseRotor c s d b` by its
+sign-reversed partner `phaseRotor c (-s) d b` produces an off-diagonal wheel-generator
+anomaly governed by the commutator `s * c - c * s`. -/
+theorem phaseRotor_mul_reverse_noncomm_anomaly (h : IsDualSeedPair d b) (c s : R) :
+    phaseRotor c s d b * phaseRotor c (-s) d b =
+      phaseRotor (c * c + s * s) (s * c - c * s) d b := by
+  rw [phaseRotor_mul h]
+  congr 1
+  · rw [mul_neg, sub_neg_eq_add]
+  · rw [mul_neg, add_comm, ← sub_eq_add_neg]
+
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 /-- The identity rotor is the ambient identity, including on proper support. -/
 theorem phaseRotor_one_zero : phaseRotor (1 : R) 0 d b = 1 := by
   simp only [phaseRotor, completedBlock, peirceBlock, neg_zero, one_smul,
     zero_smul, add_zero]
   change (1 - polePlus d b - poleMinus d b) + (polePlus d b + poleMinus d b) = 1
   abel
+
+end Noncomm
+
+variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {d b : A}
 
 /-- Both inverse equations use only the scalar circle equation. -/
 theorem phaseRotor_inverse (h : IsDualSeedPair d b) {c s : R} (hcs : c * c + s * s = 1) :

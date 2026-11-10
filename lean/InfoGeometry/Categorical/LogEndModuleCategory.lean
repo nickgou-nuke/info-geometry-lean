@@ -35,7 +35,9 @@ open scoped TensorProduct
 
 universe u v w
 
-variable (𝕜 : Type u) [Field 𝕜]
+section Ring
+
+variable (𝕜 : Type u) [Ring 𝕜]
 
 /-- A `𝕜`-module with a distinguished logarithmic/endormorphism direction. -/
 structure LogEndModule where
@@ -91,6 +93,14 @@ theorem Hom.map_N {X Y : LogEndModule 𝕜} (f : X ⟶ Y) (x : X) :
     f.hom (X.N x) = Y.N (f.hom x) := by
   have h := LinearMap.congr_fun f.comm x
   simpa [LinearMap.comp_apply] using h
+
+end LogEndModule
+
+end Ring
+
+namespace LogEndModule
+
+variable {𝕜 : Type u} [CommRing 𝕜]
 
 /-! ## Tensor product -/
 

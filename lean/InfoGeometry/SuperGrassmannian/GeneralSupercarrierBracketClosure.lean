@@ -12,7 +12,7 @@ namespace InfoGeometry.SuperGrassmannian.GeneralSupercarrierDeformation
 open Matrix
 
 variable {ι₁ ι₂ : Type*} [DecidableEq ι₁] [Fintype ι₁] [DecidableEq ι₂] [Fintype ι₂]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 private theorem chiral_mode_mul_pair
     (B₁ B₂ : Matrix ι₁ ι₂ R) (C₁ C₂ : Matrix ι₂ ι₁ R) :
@@ -22,15 +22,25 @@ private theorem chiral_mode_mul_pair
   rw [Matrix.fromBlocks_multiply]
   simp
 
+/-- Over any non-commutative ring `[Ring R]`, the odd--odd graded superbracket supertrace
+    equals the sum of the two rectangular trace commutator defects. -/
+theorem superTrace_chiral_superbracket_noncomm
+    (B₁ B₂ : Matrix ι₁ ι₂ R) (C₁ C₂ : Matrix ι₂ ι₁ R) :
+    superTrace (chiralMode B₁ C₁ * chiralMode B₂ C₂ +
+      chiralMode B₂ C₂ * chiralMode B₁ C₁) =
+        (Matrix.trace (B₁ * C₂) - Matrix.trace (C₁ * B₂)) +
+        (Matrix.trace (B₂ * C₁) - Matrix.trace (C₂ * B₁)) := by
+  rw [chiral_mode_mul_pair, chiral_mode_mul_pair, superTrace_add]
+  rfl
+
 /-- The odd--odd graded superbracket has zero supertrace for arbitrary chiral
 block operators.  This is the general block form of the odd supertrace
 cancellation, using rectangular trace cyclicity. -/
-theorem superTrace_chiral_superbracket_zero
+theorem superTrace_chiral_superbracket_zero {R : Type*} [CommRing R]
     (B₁ B₂ : Matrix ι₁ ι₂ R) (C₁ C₂ : Matrix ι₂ ι₁ R) :
     superTrace (chiralMode B₁ C₁ * chiralMode B₂ C₂ +
       chiralMode B₂ C₂ * chiralMode B₁ C₁) = 0 := by
-  rw [chiral_mode_mul_pair, chiral_mode_mul_pair, superTrace_add]
-  dsimp [superTrace]
+  rw [superTrace_chiral_superbracket_noncomm]
   rw [Matrix.trace_mul_comm B₁ C₂, Matrix.trace_mul_comm B₂ C₁]
   linear_combination
 

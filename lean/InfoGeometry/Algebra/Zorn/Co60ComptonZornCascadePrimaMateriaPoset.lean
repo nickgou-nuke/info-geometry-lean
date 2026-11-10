@@ -424,11 +424,17 @@ $W(c) = 1 + a_2 c^2 + a_4 c^4$ in $c = \cos\theta$. -/
 def e2AngularCorrelation {R : Type*} [Ring R] (a2 a4 c : R) : R :=
   1 + a2 * c ^ 2 + a4 * c ^ 4
 
-/-- Standard E2-E2 angular correlation is strictly parity-even ($c \mapsto -c$). -/
-theorem e2AngularCorrelation_even {R : Type*} [CommRing R] (a2 a4 c : R) :
+/-- Standard E2-E2 angular correlation is strictly parity-even ($c \mapsto -c$) over any ring `[Ring R]`. -/
+theorem e2AngularCorrelation_even {R : Type*} [Ring R] (a2 a4 c : R) :
     e2AngularCorrelation a2 a4 (-c) = e2AngularCorrelation a2 a4 c := by
   unfold e2AngularCorrelation
-  ring
+  have h2 : (-c) ^ 2 = c ^ 2 := neg_sq c
+  have h4 : (-c) ^ 4 = c ^ 4 := by
+    calc
+      (-c) ^ 4 = ((-c) ^ 2) ^ 2 := by noncomm_ring
+      _ = (c ^ 2) ^ 2 := by rw [h2]
+      _ = c ^ 4 := by noncomm_ring
+  rw [h2, h4]
 
 /-- Klein–Nishina polarized Compton scattering intensity modulation
 $I(\cos 2\phi) = I_0 (1 - \Pi \cdot \cos 2\phi)$. -/

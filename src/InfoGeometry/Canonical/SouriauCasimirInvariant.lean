@@ -30,7 +30,7 @@ namespace InfoGeometry.Canonical.SouriauCasimirInvariant
 /-- Raw affine coadjoint transport. -/
 def affineCoAd
     {𝕜 G LieDual : Type*}
-    [Field 𝕜] [Group G]
+    [Ring 𝕜] [Group G]
     [AddCommGroup LieDual] [Module 𝕜 LieDual]
     (coAd : G → LieDual →ₗ[𝕜] LieDual)
     (theta : G → LieDual)
@@ -48,7 +48,7 @@ This uses only:
 @[simp]
 theorem affineCoAd_one
     {𝕜 G LieDual : Type*}
-    [Field 𝕜] [Group G]
+    [Ring 𝕜] [Group G]
     [AddCommGroup LieDual] [Module 𝕜 LieDual]
     (coAd : G → LieDual →ₗ[𝕜] LieDual)
     (theta : G → LieDual)
@@ -74,7 +74,7 @@ Conclusion:
 -/
 theorem affineCoAd_mul
     {𝕜 G LieDual : Type*}
-    [Field 𝕜] [Group G]
+    [Ring 𝕜] [Group G]
     [AddCommGroup LieDual] [Module 𝕜 LieDual]
     (coAd : G → LieDual →ₗ[𝕜] LieDual)
     (theta : G → LieDual)
@@ -101,7 +101,7 @@ This is a genuine consequence of the cocycle law and the group action law.
 @[simp]
 theorem affineCoAd_inv_mul
     {𝕜 G LieDual : Type*}
-    [Field 𝕜] [Group G]
+    [Ring 𝕜] [Group G]
     [AddCommGroup LieDual] [Module 𝕜 LieDual]
     (coAd : G → LieDual →ₗ[𝕜] LieDual)
     (theta : G → LieDual)
@@ -132,7 +132,7 @@ Applying `g⁻¹` and then `g` returns the original coadjoint point.
 @[simp]
 theorem affineCoAd_mul_inv
     {𝕜 G LieDual : Type*}
-    [Field 𝕜] [Group G]
+    [Ring 𝕜] [Group G]
     [AddCommGroup LieDual] [Module 𝕜 LieDual]
     (coAd : G → LieDual →ₗ[𝕜] LieDual)
     (theta : G → LieDual)
@@ -162,7 +162,7 @@ Cocycle inverse identity:
 -/
 theorem theta_mul_inv
     {𝕜 G LieDual : Type*}
-    [Field 𝕜] [Group G]
+    [Ring 𝕜] [Group G]
     [AddCommGroup LieDual] [Module 𝕜 LieDual]
     (coAd : G → LieDual →ₗ[𝕜] LieDual)
     (theta : G → LieDual)
@@ -182,7 +182,7 @@ Cocycle inverse identity in the opposite order:
 -/
 theorem theta_inv_mul
     {𝕜 G LieDual : Type*}
-    [Field 𝕜] [Group G]
+    [Ring 𝕜] [Group G]
     [AddCommGroup LieDual] [Module 𝕜 LieDual]
     (coAd : G → LieDual →ₗ[𝕜] LieDual)
     (theta : G → LieDual)
@@ -200,7 +200,7 @@ The inverse group element gives the left inverse of affine coadjoint transport.
 -/
 theorem affineCoAd_inv_left
     {𝕜 G LieDual : Type*}
-    [Field 𝕜] [Group G]
+    [Ring 𝕜] [Group G]
     [AddCommGroup LieDual] [Module 𝕜 LieDual]
     (coAd : G → LieDual →ₗ[𝕜] LieDual)
     (theta : G → LieDual)
@@ -226,7 +226,7 @@ The inverse group element gives the right inverse of affine coadjoint transport.
 -/
 theorem affineCoAd_inv_right
     {𝕜 G LieDual : Type*}
-    [Field 𝕜] [Group G]
+    [Ring 𝕜] [Group G]
     [AddCommGroup LieDual] [Module 𝕜 LieDual]
     (coAd : G → LieDual →ₗ[𝕜] LieDual)
     (theta : G → LieDual)
@@ -250,7 +250,7 @@ theorem affineCoAd_inv_right
 /-- Each affine coadjoint transformation is injective. -/
 theorem affineCoAd_injective
     {𝕜 G LieDual : Type*}
-    [Field 𝕜] [Group G]
+    [Ring 𝕜] [Group G]
     [AddCommGroup LieDual] [Module 𝕜 LieDual]
     (coAd : G → LieDual →ₗ[𝕜] LieDual)
     (theta : G → LieDual)
@@ -274,7 +274,7 @@ theorem affineCoAd_injective
 /-- Each affine coadjoint transformation is surjective. -/
 theorem affineCoAd_surjective
     {𝕜 G LieDual : Type*}
-    [Field 𝕜] [Group G]
+    [Ring 𝕜] [Group G]
     [AddCommGroup LieDual] [Module 𝕜 LieDual]
     (coAd : G → LieDual →ₗ[𝕜] LieDual)
     (theta : G → LieDual)
@@ -295,7 +295,7 @@ theorem affineCoAd_surjective
 /-- Each affine coadjoint transformation is bijective. -/
 theorem affineCoAd_bijective
     {𝕜 G LieDual : Type*}
-    [Field 𝕜] [Group G]
+    [Ring 𝕜] [Group G]
     [AddCommGroup LieDual] [Module 𝕜 LieDual]
     (coAd : G → LieDual →ₗ[𝕜] LieDual)
     (theta : G → LieDual)
@@ -315,7 +315,7 @@ theorem affineCoAd_bijective
 /-- Equality is reflected by affine coadjoint transport. -/
 theorem affineCoAd_eq_iff
     {𝕜 G LieDual : Type*}
-    [Field 𝕜] [Group G]
+    [Ring 𝕜] [Group G]
     [AddCommGroup LieDual] [Module 𝕜 LieDual]
     (coAd : G → LieDual →ₗ[𝕜] LieDual)
     (theta : G → LieDual)
@@ -342,7 +342,7 @@ Affine coadjoint transport acts linearly on differences:
 -/
 theorem affineCoAd_sub
     {𝕜 G LieDual : Type*}
-    [Field 𝕜] [Group G]
+    [Ring 𝕜] [Group G]
     [AddCommGroup LieDual] [Module 𝕜 LieDual]
     (coAd : G → LieDual →ₗ[𝕜] LieDual)
     (theta : G → LieDual)

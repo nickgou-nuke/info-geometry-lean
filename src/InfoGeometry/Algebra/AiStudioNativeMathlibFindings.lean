@@ -160,18 +160,18 @@ theorem shearGenerator_sq_zero {R : Type*} [NonAssocSemiring R] :
     simp [shearGenerator, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- The native unipotent shear `I + tN`. -/
-def unipotentShear (R : Type*) [CommRing R] (t : R) : Matrix (Fin 2) (Fin 2) R :=
+def unipotentShear (R : Type*) [Ring R] (t : R) : Matrix (Fin 2) (Fin 2) R :=
   1 + t • (shearGenerator : Matrix (Fin 2) (Fin 2) R)
 
 /-- Coordinate form of the native unipotent shear. -/
-theorem unipotentShear_apply {R : Type*} [CommRing R] (t : R) :
+theorem unipotentShear_apply {R : Type*} [Ring R] (t : R) :
     unipotentShear R t = !![1, t; 0, 1] := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [unipotentShear, shearGenerator]
 
 /-- Additive composition law for native unipotent shears. -/
-theorem unipotentShear_mul {R : Type*} [CommRing R] (s t : R) :
+theorem unipotentShear_mul {R : Type*} [Ring R] (s t : R) :
     unipotentShear R s * unipotentShear R t = unipotentShear R (s + t) := by
   ext i j
   fin_cases i <;> fin_cases j <;>

@@ -8,7 +8,8 @@ import InfoGeometry.Canonical.PeirceHyperbolicOrbit
 /-! Complementary hyperbolic projections inside the existing active support. -/
 namespace InfoGeometry.Canonical.PeirceHyperbolicComplement
 open ReflexiveNilpotentFlows PeirceHyperbolicOrbit
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+section RingScalars
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
 
 def hyperbolicMinus (u v : R) (d B : A) : A :=
   support d B - hyperbolicPlus u v d B
@@ -21,11 +22,15 @@ theorem hyperbolic_sum (u v : R) (d B : A) :
 theorem hyperbolicMinus_expansion (u v : R) (h : u*u-v*v=1) (d B : A) :
     hyperbolicMinus u v d B =
       -(v*v) • (d*B) + (u*u) • (B*d) + (u*v) • (d-B) := by
-  have hu : u*u=1+v*v := by linear_combination h
+  have hu : u*u=1+v*v := eq_add_of_sub_eq h
   rw [hyperbolicMinus, hyperbolicPlus_expansion, hu]
   simp only [support, add_smul, one_smul, neg_smul]
   abel
 
+end RingScalars
+
+section CommScalars
+variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
 variable {d B : A} (hd : d*d=0) (hB : B*B=0)
   (hr : d*B*d=d) (hs : B*d*B=B)
 include hd hB hr hs
@@ -57,5 +62,7 @@ theorem hyperbolic_orthogonal (u v : R) (h : u*u-v*v=1) :
     hyperbolicPlus_mul_support hd hB hr hs,
     (hyperbolicPlus_idempotent hd hB hr hs u v h).eq, sub_self]
   exact ⟨rfl, rfl⟩
+
+end CommScalars
 
 end InfoGeometry.Canonical.PeirceHyperbolicComplement

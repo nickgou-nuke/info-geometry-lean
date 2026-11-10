@@ -78,7 +78,7 @@ sector contributions and the null contribution vanishes, then the readout is
 entirely active-sector supported.
 -/
 theorem drazin_filtered_central_charge_readout
-    {R : Type*} [CommRing R] [Invertible (2 : R)]
+    {R : Type*} [Ring R] [Invertible (2 : R)]
     (O virasoroCentralCharge activeCentralCharge nullCentralCharge : R)
     (hO : O ^ 3 = O)
     (hCentralSplit :
@@ -118,7 +118,7 @@ This is the combined theorem-safe statement:
 * the Drazin support/null projectors match the trifactor decomposition.
 -/
 theorem finite_witten_drazin_virasoro_capstone
-    {ι R : Type*} [DecidableEq ι] [CommRing R] [Invertible (2 : R)]
+    {ι R : Type*} [DecidableEq ι] [Ring R] [Invertible (2 : R)]
     (levels : Finset ι) (zero : ι → Prop) [DecidablePred zero]
     (boson fermion : ι → Nat) (weight : ι → Int)
     (O virasoroCentralCharge activeCentralCharge nullCentralCharge : R)

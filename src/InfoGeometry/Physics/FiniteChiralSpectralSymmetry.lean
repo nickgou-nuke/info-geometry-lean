@@ -11,7 +11,7 @@ the symmetry is derived from an explicit anticommuting involution.
 
 namespace InfoGeometry.Physics.FiniteChiralSpectralSymmetry
 
-variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
+variable {R V : Type*} [Ring R] [AddCommGroup V] [Module R V]
 
 /-- A vector is an eigenmode of a linear operator. -/
 def IsEigenmode (T : V →ₗ[R] V) (mu : R) (v : V) : Prop :=

@@ -31,7 +31,7 @@ This module formalizes:
      strictly confines the state to the critical line $\sigma = 1/2$.
 -/
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Left-moving chiral number operator from bosonic and fermionic modes -/
 def numberL (a_L_dag a_L f_L_dag f_L : R) : R :=
@@ -58,20 +58,20 @@ theorem chiral_parity_charge_decomp (a_L_dag a_L f_L_dag f_L a_R_dag a_R f_R_dag
     chiralParityCharge (numberL a_L_dag a_L f_L_dag f_L) (numberR a_R_dag a_R f_R_dag f_R) =
     (a_L_dag * a_L - a_R_dag * a_R) + (f_L_dag * f_L - f_R_dag * f_R) := by
   unfold chiralParityCharge numberL numberR
-  ring
+  noncomm_ring
 
 /-- 🏆 THEOREM 2: Parity Oddness of the Chiral Charge: Q₅(N_R, N_L) = - Q₅(N_L, N_R) -/
 theorem chiral_charge_parity_odd (N_L N_R : R) :
     chiralParityCharge N_R N_L = - chiralParityCharge N_L N_R := by
   unfold chiralParityCharge
-  ring
+  noncomm_ring
 
 /-- 🏆 THEOREM 3: Vanishing of Chiral Charge in Parity Invariant States -/
 theorem chiral_charge_eq_zero_of_equal_modes (N_L N_R : R) (h_eq : N_L = N_R) :
     chiralParityCharge N_L N_R = 0 := by
   unfold chiralParityCharge
   rw [h_eq]
-  ring
+  simp
 
 /-- 🏆 THEOREM 4: Equality of Chiral Sectors from Vanishing Chiral Charge -/
 theorem equal_modes_of_chiral_charge_zero (N_L N_R : R) (h_zero : chiralParityCharge N_L N_R = 0) :

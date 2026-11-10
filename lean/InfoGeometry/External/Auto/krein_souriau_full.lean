@@ -1,41 +1,25 @@
 import Mathlib.Tactic
 import Mathlib.Analysis.InnerProductSpace.Dual
+import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.Calculus.Deriv.Pow
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 open Matrix
 open Real
 
-/- THE KREIN-SOURIAU-FISHER-METRIPLECTIC COMPLEX
-   
-   Formalizing the unified thermodynamics architecture:
-   
-   Box formula:
-     Nonequilibrium quantum thermodynamics = (𝒜, J, 𝒜', K) + (G ↷ M, μ, β) + (g_F, ω, {,}, (,))
-   
-   Block 1: Modular/Krein operator algebra
-     - Krein doubled space H_ℝ ⊕ H_ℝ with complex structure J² = -I
-     - Krein metric η = diag(I, -I)
-     - Modular conjugation J_mod: J_mod·𝒜·J_mod = 𝒜' (commutant)
-     - Modular operator Δ = e^{-K}, flow σ_t(A) = Δ^{it}·A·Δ^{-it}
-   
-   Block 2: Souriau Lie thermodynamics
-     - Lie group G acting on symplectic manifold (M, ω)
-     - Moment map J_M: M → 𝔤*
-     - Generalized Gibbs state: ρ_β(x) ∝ exp(-⟨J_M(x), β⟩)
-     - β ∈ 𝔤 as thermodynamic covector
-   
-   Block 3: Information-geometric metriplectic dynamics
-     - Fisher metric g_F = ∇² log Z
-     - Cramér-Rao: Var·I ≥ 1
-     - Poisson bracket {,} (reversible, Hamiltonian)
-     - Metric bracket (,) (dissipative, entropy-producing)
-     - Metriplectic: Ḟ = {F, H} + (F, S)
-   
-   References:
-     Souriau (1970) "Structure des systèmes dynamiques"
-     Tomita-Takesaki (1970) modular theory
-     Morrison (1984) metriplectic dynamics
-     Marle (2016) Souriau thermodynamics
-     arXiv:2306.06787 metriplectic 4-bracket
+/-! # Finite Krein Matrix Identities and a Gaussian Log-Partition Model
+
+This module proves concrete identities for 2×2 real matrices, an inner-product
+pairing, and the Hessian of the scalar model `Z(β) = exp(β²/2)`. The records
+`MomentMapData` and `NonequilibriumQuantumThermodynamicsData` only package
+fields; they do not construct the corresponding geometric structures.
+
+The affine scalar cocycle below is an explicit model. The repository has
+separate owners for observable metriplectic, Onsager, and quantum Cramér–Rao
+results; this file does not duplicate those theorem interfaces. No general
+Souriau coadjoint cocycle or modular commutant theorem is claimed here.
+References to the literature are motivation, not evidence that those theories
+have been formalized by these declarations.
 -/
 
 noncomputable section
@@ -76,20 +60,67 @@ theorem Jm_commutant : Jm * J_cpx * Jm = -J_cpx := by
 def commutant (A : Matrix (Fin 2) (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
   Jm * A * Jm
 
-/-- The modular operator Δ = e^{-K} generates the modular flow -/
-noncomputable def modularFlow (K t : ℝ) (A : ℂ) : ℂ :=
-  Complex.exp (-Complex.I * (K : ℂ) * (t : ℂ)) * A * Complex.exp (Complex.I * (K : ℂ) * (t : ℂ))
+/-- Diagonal implementer for the finite-dimensional modular action. -/
+def modularImplementer (K t : ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
+  !![Complex.exp (-Complex.I * (K : ℂ) * (t : ℂ)), 0;
+    0, Complex.exp (Complex.I * (K : ℂ) * (t : ℂ))]
 
-/-- The fundamental symmetry J_fund = P₊ - P₋ = Jm (from T27) -/
-theorem fundamental_symmetry : Jm = Jm := rfl
+/-- The inverse diagonal implementer. -/
+def modularImplementerInv (K t : ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
+  !![Complex.exp (Complex.I * (K : ℂ) * (t : ℂ)), 0;
+    0, Complex.exp (-Complex.I * (K : ℂ) * (t : ℂ))]
+
+/-- Finite-dimensional modular conjugation on the noncommutative matrix
+    algebra. The opposite phases make this action nontrivial on off-diagonal
+    observables. -/
+def modularFlow (K t : ℝ) (A : Matrix (Fin 2) (Fin 2) ℂ) :=
+  modularImplementer K t * A * modularImplementerInv K t
+
+/-- The implementers are two-sided inverses, so the conjugation preserves
+    products. -/
+theorem modularFlow_mul (K t : ℝ) (A B : Matrix (Fin 2) (Fin 2) ℂ) :
+    modularFlow K t (A * B) = modularFlow K t A * modularFlow K t B := by
+  have hleft : modularImplementerInv K t * modularImplementer K t = 1 := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [modularImplementer, modularImplementerInv, Matrix.mul_apply,
+        ← Complex.exp_add]
+  unfold modularFlow
+  calc
+    modularImplementer K t * (A * B) * modularImplementerInv K t =
+        modularImplementer K t * A *
+          (modularImplementerInv K t * modularImplementer K t) * B *
+            modularImplementerInv K t := by rw [hleft]; simp only [mul_one, mul_assoc]
+    _ = (modularImplementer K t * A * modularImplementerInv K t) *
+          (modularImplementer K t * B * modularImplementerInv K t) := by
+            simp only [mul_assoc]
+
+/-- The flow acts on an off-diagonal matrix unit by a relative phase, so the
+    matrix model retains the noncommutative action that scalar conjugation
+    erased. -/
+theorem modularFlow_upperMatrixUnit (K t : ℝ) :
+    modularFlow K t (!![0, 1; 0, 0] : Matrix (Fin 2) (Fin 2) ℂ) =
+      !![0, Complex.exp (-2 * Complex.I * (K : ℂ) * (t : ℂ)); 0, 0] := by
+  ext i j
+  fin_cases i <;> fin_cases j
+  all_goals simp [modularFlow, modularImplementer, modularImplementerInv,
+    Matrix.mul_apply, ← Complex.exp_add]
+  all_goals ring_nf
+
+/-- In this concrete real model, `Jm` is self-adjoint and involutive, as a
+    Krein fundamental symmetry must be. -/
+theorem fundamental_symmetry : Jm.transpose = Jm ∧
+    Jm * Jm = (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
+  exact ⟨by ext i j; fin_cases i <;> fin_cases j <;> simp [Jm], Jm_sq_I⟩
 
 /-══════════════════════════════════════════════════════════════════════
    BLOCK 2: SOURIAU LIE GROUP THERMODYNAMICS
    ═════════════════════════════════════════════════════════════════════-/
 
-/-- The moment map J_M: M → 𝔤* for a symplectic G-action -/
-structure MomentMap (M 𝔤 : Type) where
-  μ : M → 𝔤  -- the moment map
+/-- Bare moment-map-shaped data only. A genuine moment map needs a dual target
+    and compatibility with a specified group action and symplectic form. -/
+structure MomentMapData (M 𝔤 : Type) where
+  value : M → 𝔤
 
 /-- Generalized inverse temperature β ∈ 𝔤 as a thermodynamic covector -/
 structure ThermodynamicCovector (𝔤 : Type) [AddCommGroup 𝔤] where
@@ -97,7 +128,8 @@ structure ThermodynamicCovector (𝔤 : Type) [AddCommGroup 𝔤] where
   μ : 𝔤   -- chemical potential (component)
   ω : 𝔤   -- angular velocity / rotation (component)
 
-/-- The partition function Z(β) = ∫_M exp(-⟨J_M, β⟩) dμ for Gaussian -/
+/-- A Gaussian cumulant-generating model `Z(β) = exp(β²/2)`. This definition
+    alone does not construct an integral or a Souriau partition function. -/
 def partitionFn (β : ℝ) : ℝ := Real.exp (β^2/2)
 
 /-- Log partition determines the cumulant generating function -/
@@ -105,8 +137,26 @@ theorem log_partition_eq (β : ℝ) : Real.log (partitionFn β) = β^2/2 := by
   dsimp [partitionFn]
   rw [Real.log_exp]
 
-/-- The Souriau cocycle: θ(g) = J_M(g·x) - Ad*_g(J_M(x)) -/
-def souriauCocycle (g : ℝ) (J_M x : ℝ) : ℝ := 0
+/- The general Souriau coadjoint cocycle remains open here: this scalar carrier
+   has no coadjoint action or moment-map equivariance data. The following is a
+   genuine cocycle for one explicit affine representation of the additive
+   group `ℝ`. -/
+
+/-- The scalar representation of the additive group `ℝ` by multiplication
+    with `exp g`. -/
+def exponentialScalarAction (g x : ℝ) : ℝ := Real.exp g * x
+
+/-- The affine one-cocycle `g ↦ exp(g) - 1` for `exponentialScalarAction`. -/
+def exponentialAffineCocycle (g : ℝ) : ℝ := Real.exp g - 1
+
+/-- Cocycle law for `g ↦ exp(g) - 1` under the exponential scalar action. -/
+theorem exponentialAffineCocycle_add (g h : ℝ) :
+    exponentialAffineCocycle (g + h) =
+      exponentialAffineCocycle g +
+        exponentialScalarAction g (exponentialAffineCocycle h) := by
+  rw [exponentialAffineCocycle, exponentialAffineCocycle,
+    exponentialAffineCocycle, exponentialScalarAction, Real.exp_add]
+  ring
 
 /-- The Gibbs state as a function of the thermodynamic covector -/
 def gibbsState (J_M β : ℝ) : ℝ := Real.exp (-J_M * β) / partitionFn β
@@ -124,57 +174,53 @@ def souriauPairingEnergy {M 𝔤 : Type} [NormedAddCommGroup 𝔤]
     [InnerProductSpace ℝ 𝔤] (J_M : M → 𝔤) (β : 𝔤) (x : M) : ℝ :=
   souriauDualPairing (𝔤 := 𝔤) β (J_M x)
 
-theorem souriauDualPairing_eq_inner {𝔤 : Type} [NormedAddCommGroup 𝔤]
-    [InnerProductSpace ℝ 𝔤] (β J : 𝔤) :
-    souriauDualPairing (𝔤 := 𝔤) β J = inner ℝ β J := by
-  simp [souriauDualPairing, innerSL_apply_apply]
-
-theorem souriau_pairing_energy_eq_inner {M 𝔤 : Type} [NormedAddCommGroup 𝔤]
+/-- The Souriau pairing in this inner-product model obeys the norm bound
+    supplied by Cauchy–Schwarz. This does not assert existence of a moment
+    map or a group action. -/
+theorem souriauPairingEnergy_norm_bound {M 𝔤 : Type} [NormedAddCommGroup 𝔤]
     [InnerProductSpace ℝ 𝔤] (J_M : M → 𝔤) (β : 𝔤) (x : M) :
-    souriauPairingEnergy (J_M := J_M) β x = inner ℝ β (J_M x) := by
-  rfl
+    |souriauPairingEnergy (J_M := J_M) β x| ≤ ‖β‖ * ‖J_M x‖ := by
+  simpa [souriauPairingEnergy, souriauDualPairing, innerSL_apply_apply,
+    Real.norm_eq_abs] using (norm_inner_le_norm (𝕜 := ℝ) β (J_M x))
 
 /-══════════════════════════════════════════════════════════════════════
    BLOCK 3: INFORMATION GEOMETRY AND METRIPLECTIC DYNAMICS
    ═════════════════════════════════════════════════════════════════════-/
 
-/-- Fisher metric as the Hessian of log partition: g_F = ∇² log Z -/
-noncomputable def fisherMetric (β : ℝ) : ℝ := 1
+/-- The one-dimensional Hessian of the chosen log-partition model. -/
+noncomputable def fisherMetric (β : ℝ) : ℝ :=
+  deriv (fun b : ℝ => deriv (fun x : ℝ => Real.log (partitionFn x)) b) β
 
-/-- Fisher information = Fisher metric for 1-parameter family -/
-noncomputable def fisherInfo : ℝ := 1
-
-/-- Cramér-Rao bound: Var(θ̂) · I(θ) ≥ 1 -/
-def cramerRao (variance I : ℝ) : Prop := variance * I ≥ 1
-
-/-- Poisson bracket (antisymmetric, generates Hamiltonian flow) -/
-def poissonBracket (F G : ℝ → ℝ) (x : ℝ) : ℝ := 0
-
-/-- Dissipative bracket (symmetric, produces entropy) -/
-def dissipativeBracket (F S : ℝ → ℝ) (x : ℝ) : ℝ := 0
-
-/-- Metriplectic generator: Ḟ = {F, H} + (F, S) -/
-def metriplectic (H S F : ℝ → ℝ) (x : ℝ) : ℝ :=
-  poissonBracket F H x + dissipativeBracket F S x
-
-/-- Energy conservation: {H, H} = 0 (antisymmetry of Poisson bracket) -/
-theorem energy_conservation (H : ℝ → ℝ) (x : ℝ) : poissonBracket H H x = 0 := by
-  rfl
-
-/-- Entropy production: (S, S) ≥ 0 (positivity of metric bracket) -/
-theorem entropy_production (S : ℝ → ℝ) (x : ℝ) : dissipativeBracket S S x ≥ 0 := by
-  simp [dissipativeBracket]
-
-/-- The Onsager operator L = -d²S/dX² (from T25 tri-projector) -/
-noncomputable def onsagerOperator : ℝ := 0
+/-- In this Gaussian model the Hessian, hence Fisher information, is one. -/
+theorem fisherMetric_eq_one (β : ℝ) : fisherMetric β = 1 := by
+  have hlog : (fun x : ℝ => Real.log (partitionFn x)) =
+      (fun x => x ^ 2 / 2) := by
+    funext x
+    exact log_partition_eq x
+  have hfirst : (fun b : ℝ => deriv (fun x : ℝ => Real.log (partitionFn x)) b) =
+      (fun b => b) := by
+    funext b
+    rw [hlog]
+    have hrewrite : (fun x : ℝ => x ^ 2 / 2) =
+        (fun x => (1 / 2 : ℝ) * x ^ 2) := by
+      funext x
+      ring
+    rw [hrewrite]
+    rw [deriv_const_mul_field, deriv_pow_field]
+    simp only [Nat.reduceSub, pow_one]
+    calc (1 / 2 : ℝ) * (2 * b) = ((1 / 2 : ℝ) * 2) * b := by ring
+      _ = 1 * b := by rw [show (1 / 2 : ℝ) * 2 = 1 by norm_num]
+      _ = b := one_mul b
+  rw [fisherMetric, hfirst]
+  simp
 
 /-══════════════════════════════════════════════════════════════════════
    THE UNIFIED FORMULA
    ═════════════════════════════════════════════════════════════════════-/
 
-/-- The complete nonequilibrium quantum thermodynamics complex:
-    (𝒜, J, 𝒜', K) + (G ↷ M, μ, β) + (g_F, ω, {,}, (,)) -/
-structure NonequilibriumQuantumThermodynamics where
+/-- A container for the component data used in a nonequilibrium model. It
+    imposes no action, symplectic, commutant, or bracket compatibility laws. -/
+structure NonequilibriumQuantumThermodynamicsData where
   -- Block 1: Modular/Krein
   A : Type                    -- 𝒜: visible algebra
   J_op : A → A                -- J: complex structure
@@ -199,19 +245,13 @@ structure NonequilibriumQuantumThermodynamics where
 #check Jm_commutant
 #check commutant
 #check modularFlow
-#check MomentMap
+#check MomentMapData
 #check ThermodynamicCovector
 #check partitionFn
 #check log_partition_eq
-#check souriauCocycle
 #check gibbsState
 #check fisherMetric
-#check cramerRao
-#check poissonBracket
-#check dissipativeBracket
-#check metriplectic
-#check energy_conservation
-#check entropy_production
-#check NonequilibriumQuantumThermodynamics
+#check fisherMetric_eq_one
+#check NonequilibriumQuantumThermodynamicsData
 
 end KreinSouriauFull

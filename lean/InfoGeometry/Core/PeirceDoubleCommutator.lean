@@ -66,7 +66,7 @@ theorem neg_ad_sum_sq_quadratic (hp : IsIdempotentElem p)
     (hu : u ∈ peirce10 p) (hv : v ∈ peirce01 p) :
     (-(LieAlgebra.ad R A (u + v) ^ 2)) (u * v + v * u) = 0 := by
   rw [LinearMap.neg_apply, ad_sq_apply_of_commute (R := R) _ _
-    (quadratic_commute_sum hp hu hv).symm, neg_zero]
+    (quadratic_round_trip_frame_commutants hp hu hv).1.symm, neg_zero]
 
 /-- The sum itself is annihilated without any corner hypotheses. -/
 theorem neg_ad_sum_sq_sum (u v : A) :
@@ -106,7 +106,17 @@ theorem neg_ad_sum_sq_reflection (hp : IsIdempotentElem p)
 theorem ad_difference_sq_quadratic (hp : IsIdempotentElem p)
     (hu : u ∈ peirce10 p) (hv : v ∈ peirce01 p) :
     (LieAlgebra.ad R A (u - v) ^ 2) (u * v + v * u) = 0 :=
-  ad_sq_apply_of_commute (R := R) _ _ (quadratic_commute_difference hp hu hv).symm
+  by
+    have hcomm : (u - v) * (u * v + v * u) =
+        (u * v + v * u) * (u - v) :=
+      (quadratic_round_trip_frame_commutants hp hu hv).2.symm.eq
+    rw [pow_two]
+    change (u - v) * ((u - v) * (u * v + v * u) -
+        (u * v + v * u) * (u - v)) -
+      ((u - v) * (u * v + v * u) -
+        (u * v + v * u) * (u - v)) * (u - v) = 0
+    rw [hcomm]
+    simp
 
 /-- The square of the difference coefficient supplies the negative sign. -/
 theorem ad_difference_sq_sum (hp : IsIdempotentElem p)
@@ -121,7 +131,11 @@ theorem ad_difference_sq_sum (hp : IsIdempotentElem p)
 /-- The difference itself is annihilated without any corner hypotheses. -/
 theorem ad_difference_sq_difference (u v : A) :
     (LieAlgebra.ad R A (u - v) ^ 2) (u - v) = 0 :=
-  ad_sq_apply_of_commute (R := R) _ _ (Commute.refl (u - v))
+  by
+    rw [pow_two]
+    change (u - v) * ((u - v) * (u - v) - (u - v) * (u - v)) -
+      ((u - v) * (u - v) - (u - v) * (u - v)) * (u - v) = 0
+    simp
 
 /-- The difference's squared adjoint action on the corner bracket. -/
 theorem ad_difference_sq_bracket (hp : IsIdempotentElem p)

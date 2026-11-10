@@ -44,7 +44,7 @@ open InfoGeometry.Projective.HadjiivanovLogConnectionReadoutBridge
 
 universe u v
 
-variable {𝕜 : Type u} [Field 𝕜]
+variable {𝕜 : Type u} [Ring 𝕜]
 
 section Complex
 

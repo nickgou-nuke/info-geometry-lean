@@ -16,8 +16,9 @@ No morphism record or proof-carrying witness is introduced.
 
 namespace InfoGeometry.Algebra.EquivariantBranching
 
+section Semiring
 variable {R H V₀ V₁ V₂ V₃ : Type*}
-variable [CommSemiring R]
+variable [Semiring R]
 variable [AddCommMonoid V₀] [Module R V₀]
 variable [AddCommMonoid V₁] [Module R V₁]
 variable [AddCommMonoid V₂] [Module R V₂]
@@ -65,8 +66,15 @@ theorem maps_annihilated_state
   rw [LinearMap.comp_apply, LinearMap.comp_apply, hv, map_zero] at hintertwine
   exact hintertwine.symm
 
+end Semiring
+
 section TensorBranch
 
+variable {R H V₀ V₁ V₂ V₃ : Type*}
+variable [CommSemiring R]
+variable [AddCommMonoid V₀] [Module R V₀]
+variable [AddCommMonoid V₁] [Module R V₁]
+variable [AddCommMonoid V₂] [Module R V₂]
 variable [AddCommMonoid V₃] [Module R V₃]
 
 /--

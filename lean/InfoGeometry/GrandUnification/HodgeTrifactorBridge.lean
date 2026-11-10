@@ -39,7 +39,7 @@ namespace InfoGeometry.GrandUnification.HodgeTrifactorBridge
 
 open InfoGeometry.Canonical.TrifactorDecomposition
 
-variable {R : Type*} [CommRing R] [Invertible (2 : R)]
+variable {R : Type*} [Ring R] [Invertible (2 : R)]
 variable {H : Type*} [AddCommGroup H] [Module R H]
 variable {H₂ : Type*} [AddCommGroup H₂] [Module R H₂]
 

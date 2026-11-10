@@ -19,10 +19,8 @@ namespace InfoGeometry.Algebra
 
 namespace ZornVectorMatrix
 
-variable {R : Type*} [CommRing R]
-
 /-- The conjugated trace pairing separates every Zorn coordinate. -/
-theorem eq_zero_of_trace_mul_conj_eq_zero (X : ZornVectorMatrix R)
+theorem eq_zero_of_trace_mul_conj_eq_zero {R : Type*} [Ring R] (X : ZornVectorMatrix R)
     (h : ∀ Y : ZornVectorMatrix R, trace (mul X (conj Y)) = 0) :
     X = 0 := by
   have ha : X.a = 0 := by
@@ -49,9 +47,9 @@ theorem eq_zero_of_trace_mul_conj_eq_zero (X : ZornVectorMatrix R)
 
 end ZornVectorMatrix
 
-namespace H3Zorn
-
 variable {R : Type*} [CommRing R]
+
+namespace H3Zorn
 
 /-- The full split Albert trace pairing is nondegenerate in its first slot. -/
 theorem eq_zero_of_traceBilin_left (X : H3Zorn R)

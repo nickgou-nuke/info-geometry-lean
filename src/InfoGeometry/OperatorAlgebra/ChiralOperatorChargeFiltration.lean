@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.ChiralOperatorEnvelope
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -8,15 +13,26 @@ open ChiralOperatorEnvelope
 /-!
 # Integer charge filtration for chiral operator words
 
-The charge is attached first to formal associative words.  This records the
-candidate integer grading without identifying higher operator words with the
-eight-dimensional Zorn symbols.
+The charge is attached first to formal associative words and their direct
+evaluation in any non-commutative operator ring `A`, as well as in the
+universal free envelope. This records the candidate integer grading without
+identifying higher operator words with the eight-dimensional Zorn symbols.
 -/
 
 abbrev ChiralWord := List ChiralGenerator
 
 def chargeSector (r : Int) : Set ChiralWord :=
   {w | wordDegree w = r}
+
+def evalOperatorWordProduct {A : Type*} [Ring A]
+    (ρ : ChiralGenerator → A) (u v : ChiralWord) : A :=
+  evalWord ρ (u ++ v)
+
+theorem evalOperatorWordProduct_eq_mul {A : Type*} [Ring A]
+    (ρ : ChiralGenerator → A) (u v : ChiralWord) :
+    evalOperatorWordProduct ρ u v =
+      evalWord ρ u * evalWord ρ v :=
+  evalWord_append ρ u v
 
 def operatorWordProduct {R : Type*} [CommRing R]
     (u v : ChiralWord) : ChiralOperatorEnvelope R :=
@@ -77,4 +93,3 @@ theorem mixedMinusPlusWord_mem_chargeSector (i j : Fin 3) :
   mixedMinusPlusWord_charge i j
 
 end InfoGeometry.OperatorAlgebra
-

@@ -121,7 +121,7 @@ theorem finite_wittenIndex_vanishes_on_nonempty_register
 
 /-! ## `{+1,-1,0}` trifactor sector readout -/
 
-variable {A : Type*} [CommRing A] [Invertible (2 : A)]
+variable {A : Type*} [Ring A] [Invertible (2 : A)]
 
 /-- The `+1` bosonic/square-free-even sector of a tripotent readout. -/
 abbrev bosonicTrifactorProjector (T : A) : A :=

@@ -3,7 +3,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace TestSmul2
 
-variable {F : Type*} [Field F] (A : F)
+variable {F : Type*} [CommSemiring F] [Inv F] (A : F)
 variable {A_alg : Type*} [Ring A_alg] [Algebra F A_alg]
 variable (ei ej : A_alg)
 

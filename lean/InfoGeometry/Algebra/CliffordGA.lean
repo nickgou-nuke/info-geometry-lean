@@ -99,7 +99,7 @@ theorem clifford_right_unit_vector_mul_bivector
       rw [neg_mul, mul_assoc, ι_sq_scalar, hv, map_one, mul_one]
 
 /-- Symmetric part of the product of two elements in a ring. -/
-def symPart {A : Type*} [Ring A] [Invertible (2 : A)] (x y : A) : A :=
+def symPart {A : Type*} [Semiring A] [Invertible (2 : A)] (x y : A) : A :=
   ⅟(2 : A) * (x * y + y * x)
 
 /-- Antisymmetric part of the product of two elements in a ring. -/
@@ -125,7 +125,7 @@ theorem hestenes_decomposition {A : Type*} [Ring A] [Invertible (2 : A)] (x y : 
   rw [one_mul]
 
 /-- The coordinate-free projection state mapping trace-free elements. -/
-def IsTraceFree {A : Type*} [Ring A] [Invertible (2 : A)] (x y : A) : Prop :=
+def IsTraceFree {A : Type*} [Semiring A] [Invertible (2 : A)] (x y : A) : Prop :=
   symPart x y = 0
 
 /-- An element product is trace-free if and only if it equals its antisymmetric (wedge) part. -/
@@ -147,10 +147,10 @@ theorem isTraceFree_iff_prod_eq_antiPart {A : Type*} [Ring A] [Invertible (2 : A
 abbrev IsLightlikePair (u v : M) : Prop :=
   Q u = 0 ∧ Q v = 0 ∧ QuadraticMap.polar Q u v = 2
 
-lemma commute_two {A : Type*} [Ring A] (x : A) : (2 : A) * x = x * (2 : A) := by
+lemma commute_two {A : Type*} [Semiring A] (x : A) : (2 : A) * x = x * (2 : A) := by
   rw [two_mul, mul_two]
 
-lemma commute_invOf_two {A : Type*} [Ring A] [Invertible (2 : A)] (x : A) :
+lemma commute_invOf_two {A : Type*} [Semiring A] [Invertible (2 : A)] (x : A) :
     ⅟(2 : A) * x = x * ⅟(2 : A) := by
   have hc : Commute (2 : A) x := by
     dsimp [Commute, SemiconjBy]

@@ -30,7 +30,7 @@ namespace InfoGeometry.GrandUnification.TomitaTakesakiRealization
 open InfoGeometry.GrandUnification.MachianCosmology
 open LinearMap
 
-variable {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
+variable {R M : Type*} [Ring R] [AddCommGroup M] [Module R M]
 
 /-- The bicommutant `Commutant (Commutant A)` contains the original subset `A`. -/
 lemma subset_bicommutant (A : Set (Module.End R M)) :
@@ -40,7 +40,7 @@ lemma subset_bicommutant (A : Set (Module.End R M)) :
   exact h.symm
 
 /-- Carrier data for Tomita–Takesaki modular conjugation on `Module.End R M`. -/
-class ModularConjugation (R M : Type*) [CommRing R] [AddCommGroup M] [Module R M] where
+class ModularConjugation (R M : Type*) [Ring R] [AddCommGroup M] [Module R M] where
   /-- The modular conjugation operator `J_Δ`. -/
   J_Δ : Module.End R M
   /-- The local algebra of observables `M_alg`. -/
@@ -48,12 +48,12 @@ class ModularConjugation (R M : Type*) [CommRing R] [AddCommGroup M] [Module R M
 
 /-- Canonical identity/empty model witnessing `Inhabited (ModularConjugation R M)`. -/
 @[instance_reducible]
-def trivialModularConjugation (R M : Type*) [CommRing R] [AddCommGroup M] [Module R M] :
+def trivialModularConjugation (R M : Type*) [Ring R] [AddCommGroup M] [Module R M] :
     ModularConjugation R M where
   J_Δ := 1
   M_alg := ∅
 
-instance instInhabitedModularConjugation (R M : Type*) [CommRing R] [AddCommGroup M] [Module R M] :
+instance instInhabitedModularConjugation (R M : Type*) [Ring R] [AddCommGroup M] [Module R M] :
     Inhabited (ModularConjugation R M) :=
   ⟨trivialModularConjugation R M⟩
 

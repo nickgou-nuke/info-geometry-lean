@@ -35,16 +35,16 @@ def IsPrimePotent {A : Type*} [Ring A] (X : A) (p : ℕ) : Prop :=
 
 section DomainSpectra
 
-variable {A : Type*} [CommRing A] [IsDomain A]
+variable {A : Type*} [Ring A] [IsDomain A]
 
 /-- 🏆 THEOREM 1 ($p=2$): Idempotents in an integral domain satisfy $X \in \{0, 1\}$. -/
 theorem spectrum_p2 (X : A) (h : IsPrimePotent X 2) :
     X = 0 ∨ X = 1 := by
   have h_eq : X * (X - 1) = 0 := by
     calc
-      X * (X - 1) = X ^ 2 - X := by ring
+      X * (X - 1) = X ^ 2 - X := by noncomm_ring
       _ = X - X := by rw [h]
-      _ = 0 := by ring
+      _ = 0 := by noncomm_ring
   rcases mul_eq_zero.mp h_eq with h0 | h1
   · exact Or.inl h0
   · exact Or.inr (sub_eq_zero.mp h1)
@@ -54,9 +54,9 @@ theorem spectrum_p3 (X : A) (h : IsPrimePotent X 3) :
     X = 0 ∨ X = 1 ∨ X = -1 := by
   have h_eq : X * (X - 1) * (X + 1) = 0 := by
     calc
-      X * (X - 1) * (X + 1) = X ^ 3 - X := by ring
+      X * (X - 1) * (X + 1) = X ^ 3 - X := by noncomm_ring
       _ = X - X := by rw [h]
-      _ = 0 := by ring
+      _ = 0 := by noncomm_ring
   rcases mul_eq_zero.mp h_eq with h12 | h3
   · rcases mul_eq_zero.mp h12 with h1 | h2
     · exact Or.inl h1
@@ -115,7 +115,7 @@ end FiniteFieldF8
 
 section OperatorSpectra
 
-variable {K M : Type*} [CommRing K] [AddCommGroup M] [Module K M]
+variable {K M : Type*} [Ring K] [AddCommGroup M] [Module K M]
 
 /-- Definition of a $p$-potent linear operator $T : M \to M$. -/
 def IsPrimePotentOp (T : Module.End K M) (p : ℕ) : Prop :=

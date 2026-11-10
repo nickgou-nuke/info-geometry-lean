@@ -77,14 +77,17 @@ theorem involution_average_orthogonal
       _ = 2 ^ 2 * 0 := by simp
 
 theorem involution_average_resolves_identity
-    (R : Type*) [Field R] [CharZero R] (U : R) :
+    (R : Type*) [DivisionRing R] [CharZero R] (U : R) :
     (1 + U) / 2 + (1 - U) / 2 = 1 := by
-  ring
+  have h : (1 + U) + (1 - U) = (2 : R) := by
+    rw [← one_add_one_eq_two]; abel
+  rw [← add_div, h, div_self two_ne_zero]
 
 theorem involution_average_reconstructs
-    (R : Type*) [Field R] [CharZero R] (U : R) :
+    (R : Type*) [DivisionRing R] [CharZero R] (U : R) :
     (1 + U) / 2 - (1 - U) / 2 = U := by
-  ring
+  have h : (1 + U) - (1 - U) = U * 2 := by noncomm_ring
+  rw [← sub_div, h, mul_div_cancel_right₀ U two_ne_zero]
 
 theorem order_three_average_idempotent
     (R : Type*) [Field R] [CharZero R] (U : R) (hU : U ^ 3 = 1) :

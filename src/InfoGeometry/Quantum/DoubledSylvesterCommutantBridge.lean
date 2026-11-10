@@ -8,7 +8,7 @@ open scoped Kronecker
 
 namespace DoubledSylvester
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 variable {N : ℕ}
 
 /-! ### Commutators and finite matrix generators
@@ -44,6 +44,10 @@ def sheet2 (B : Matrix (Fin N) (Fin N) R) : Matrix (Fin N × Fin N) (Fin N × Fi
 
 /-! ### Tensor-factor products and commutation -/
 
+section Commutant
+
+variable {R : Type*} [CommRing R]
+
 /-- Factorization: (A ⊗ I) * (I ⊗ B) = A ⊗ B. -/
 theorem sheet1_mul_sheet2 (A B : Matrix (Fin N) (Fin N) R) :
     sheet1 A * sheet2 B = A ⊗ₖ B := by
@@ -72,5 +76,7 @@ theorem bracket_clock_shiftTranspose_eq_zero [NeZero N] (ω : R) :
     bracket (sheet1 (sylvesterClock (N := N) ω))
             (sheet2 (sylvesterShiftTranspose (N := N))) = 0 :=
   commutant_commutes (sylvesterClock ω) sylvesterShiftTranspose
+
+end Commutant
 
 end DoubledSylvester

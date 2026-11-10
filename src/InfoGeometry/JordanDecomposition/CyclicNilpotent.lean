@@ -37,7 +37,7 @@ noncomputable section
 open FiniteDimensional
 open Submodule
 
-variable {K : Type*} [Field K] {V : Type*} [AddCommGroup V] [Module K V]
+variable {K : Type*} [Ring K] {V : Type*} [AddCommGroup V] [Module K V]
 
 /--
 A nilpotent operator with minimal index k: Nᵏ = 0 and N^{k-1} ≠ 0.
@@ -63,7 +63,7 @@ theorem nilpotentIndex_pos {N : Module.End K V} {k : ℕ}
 If `N : V → V` is nilpotent, there exists a minimal k ≥ 1 such that (N)^k = 0.
 This k is the *nilpotence index* of N.
 -/
-lemma exists_nilpotent_index (N : Module.End K V) [FiniteDimensional K V]
+lemma exists_nilpotent_index (N : Module.End K V)
     (hN : IsNilpotent N) (hN_ne : N ≠ 0) :
     ∃ k : ℕ, 1 ≤ k ∧ NilpotentIndex N k := by
   classical

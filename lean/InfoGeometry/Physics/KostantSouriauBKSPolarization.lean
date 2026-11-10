@@ -32,14 +32,14 @@ set_option linter.unusedSimpArgs false
 
 namespace InfoGeometry.Physics.KostantSouriauBKSPolarization
 
-variable {R : Type u} [CommRing R]
-variable {V : Type v} [AddCommGroup V] [Module R V] [LieRing V] [LieAlgebra R V]
+variable {R : Type u} [Ring R]
+variable {V : Type v} [LieRing V] [Module R V]
 variable {S : Type w} [AddCommGroup S] [Module R S]
 
 /-! ### Part I: Symplectic Space and Polarizations -/
 
 /-- Symplectic space structure with alternating bilinear 2-form ω. -/
-structure SymplecticSpace (R : Type u) (V : Type v) [CommRing R] [AddCommGroup V] [Module R V] where
+structure SymplecticSpace (R : Type u) (V : Type v) [Ring R] [AddCommGroup V] [Module R V] where
   omega : V → V → R
   omega_add_left : ∀ x y z, omega (x + y) z = omega x z + omega y z
   omega_smul_left : ∀ (c : R) x z, omega (c • x) z = c * omega x z
@@ -187,12 +187,30 @@ def correctedPairing (symp : SymplecticSpace R V) (conn : PrequantumConnection s
     (ψ φ : S) : R :=
   B.maslov_phase * B.pairing ψ φ
 
+/-- **Theorem 4a (Noncommutative Left-Inverse Maslov Correction)**:
+    Over any associative ring `R`, when `B.inv_maslov_phase * B.maslov_phase = 1`,
+    left multiplication by `B.inv_maslov_phase` inverts `correctedPairing`. -/
+theorem correctedPairing_inversion_of_left_inv
+    (symp : SymplecticSpace R V) (conn : PrequantumConnection symp S)
+    (T : TransversePolarizations symp) (B : BKSHalfFormPairing symp conn T)
+    (h_left : B.inv_maslov_phase * B.maslov_phase = 1)
+    (ψ φ : S) :
+    B.inv_maslov_phase * correctedPairing symp conn T B ψ φ = B.pairing ψ φ := by
+  dsimp [correctedPairing]
+  rw [← mul_assoc, h_left, one_mul]
+
+section CommutativeMaslov
+
+variable {Rc : Type u} [CommRing Rc]
+variable {Vc : Type v} [LieRing Vc] [Module Rc Vc]
+variable {Sc : Type w} [AddCommGroup Sc] [Module Rc Sc]
+
 /-- **Theorem 4 (Unitary Invertibility of the BKS Maslov Correction)**:
     The metaplectic phase correction can be inverted without loss of quantum information. -/
 theorem correctedPairing_inversion
-    (symp : SymplecticSpace R V) (conn : PrequantumConnection symp S)
+    (symp : SymplecticSpace Rc Vc) (conn : PrequantumConnection symp Sc)
     (T : TransversePolarizations symp) (B : BKSHalfFormPairing symp conn T)
-    (ψ φ : S) :
+    (ψ φ : Sc) :
     B.inv_maslov_phase * correctedPairing symp conn T B ψ φ = B.pairing ψ φ := by
   dsimp [correctedPairing]
   rw [← mul_assoc, mul_comm B.inv_maslov_phase B.maslov_phase, B.h_maslov_unitary, one_mul]
@@ -203,12 +221,12 @@ theorem correctedPairing_inversion
     involutive bracket preservation, BKS horizontal pairing annihilation,
     and metaplectic half-form unitarity on Arnold coadjoint vortex orbits. -/
 theorem kostant_souriau_bks_vortex_synthesis
-    (symp : SymplecticSpace R V)
-    (conn : PrequantumConnection symp S)
+    (symp : SymplecticSpace Rc Vc)
+    (conn : PrequantumConnection symp Sc)
     (T : TransversePolarizations symp)
     (B : BKSHalfFormPairing symp conn T)
-    (x y : V) (hx : T.P1.carrier x) (hy : T.P1.carrier y)
-    (ψ φ : S) (hψ : IsPolarized symp conn T.P1 ψ) :
+    (x y : Vc) (hx : T.P1.carrier x) (hy : T.P1.carrier y)
+    (ψ φ : Sc) (hψ : IsPolarized symp conn T.P1 ψ) :
     (conn.nabla x (conn.nabla y ψ) - conn.nabla y (conn.nabla x ψ) - conn.nabla ⁅x, y⁆ ψ = 0) ∧
     (conn.nabla ⁅x, y⁆ ψ = 0) ∧
     (B.pairing (conn.nabla x ψ) φ = 0) ∧
@@ -220,16 +238,18 @@ theorem kostant_souriau_bks_vortex_synthesis
 
 /-- Certified master conjunction for Section 5.82 / 5.90. -/
 theorem certified_kostant_souriau_bks_vortex_synthesis
-    (symp : SymplecticSpace R V)
-    (conn : PrequantumConnection symp S)
+    (symp : SymplecticSpace Rc Vc)
+    (conn : PrequantumConnection symp Sc)
     (T : TransversePolarizations symp)
     (B : BKSHalfFormPairing symp conn T)
-    (x y : V) (hx : T.P1.carrier x) (hy : T.P1.carrier y)
-    (ψ φ : S) (hψ : IsPolarized symp conn T.P1 ψ) :
+    (x y : Vc) (hx : T.P1.carrier x) (hy : T.P1.carrier y)
+    (ψ φ : Sc) (hψ : IsPolarized symp conn T.P1 ψ) :
     (conn.nabla x (conn.nabla y ψ) - conn.nabla y (conn.nabla x ψ) - conn.nabla ⁅x, y⁆ ψ = 0) ∧
     (conn.nabla ⁅x, y⁆ ψ = 0) ∧
     (B.pairing (conn.nabla x ψ) φ = 0) ∧
     (B.inv_maslov_phase * correctedPairing symp conn T B ψ φ = B.pairing ψ φ) :=
   kostant_souriau_bks_vortex_synthesis symp conn T B x y hx hy ψ φ hψ
+
+end CommutativeMaslov
 
 end InfoGeometry.Physics.KostantSouriauBKSPolarization

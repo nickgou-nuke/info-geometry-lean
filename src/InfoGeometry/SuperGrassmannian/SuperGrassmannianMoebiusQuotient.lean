@@ -27,7 +27,7 @@ namespace InfoGeometry.SuperGrassmannian.MoebiusQuotient
 
 open Matrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! --------------------------------------------------------------------------
     Section 1: Block Representation of the Ambient Carrier Algebra

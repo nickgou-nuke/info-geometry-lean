@@ -16,14 +16,12 @@ derivative or supermanifold is asserted.
 -/
 namespace InfoGeometry.SuperGrassmannian.GraphIdempotentDirections
 open ProjectorGraphChart
-variable {R M N : Type*} [CommRing R]
+variable {R M N : Type*} [Ring R]
   [AddCommGroup M] [Module R M] [AddCommGroup N] [Module R N]
 
 /-- Both directed off-diagonal corners as actual endomorphisms. -/
-def offDiagonalMap : ((M →ₗ[R] N) × (N →ₗ[R] M)) →ₗ[R] Module.End R (M × N) where
-  toFun t := (t.2.comp (LinearMap.snd R M N)).prod (t.1.comp (LinearMap.fst R M N))
-  map_add' _ _ := rfl
-  map_smul' _ _ := rfl
+def offDiagonalMap (t : (M →ₗ[R] N) × (N →ₗ[R] M)) : Module.End R (M × N) :=
+  (t.2.comp (LinearMap.snd R M N)).prod (t.1.comp (LinearMap.fst R M N))
 
 @[simp] theorem offDiagonalMap_apply (f : M →ₗ[R] N) (g : N →ₗ[R] M) (z : M × N) :
     offDiagonalMap (f, g) z = (g z.2, f z.1) := rfl
@@ -37,7 +35,8 @@ def upperBlock (T : Module.End R (M × N)) : N →ₗ[R] M :=
   (LinearMap.fst R M N).comp (T.comp (LinearMap.inr R M N))
 
 /-- Native submodule of solutions to the first-order idempotent equation. -/
-def idempotentDirections : Submodule R (Module.End R (M × N)) where
+def idempotentDirections {R M N : Type*} [CommRing R]
+    [AddCommGroup M] [Module R M] [AddCommGroup N] [Module R N] : Submodule R (Module.End R (M × N)) where
   carrier := {T | graphProjector (0 : M →ₗ[R] N) * T + T * graphProjector 0 = T}
   zero_mem' := by simp
   add_mem' := by
@@ -53,7 +52,9 @@ def idempotentDirections : Submodule R (Module.End R (M × N)) where
         simp [smul_add]
       _ = _ := by rw [ht]
 
-theorem offDiagonalMap_mem (t : (M →ₗ[R] N) × (N →ₗ[R] M)) :
+theorem offDiagonalMap_mem {R M N : Type*} [CommRing R]
+    [AddCommGroup M] [Module R M] [AddCommGroup N] [Module R N]
+    (t : (M →ₗ[R] N) × (N →ₗ[R] M)) :
     offDiagonalMap t ∈ idempotentDirections := by
   rcases t with ⟨f, g⟩
   apply LinearMap.ext
@@ -74,7 +75,8 @@ theorem offDiagonalMap_blocks (T : Module.End R (M × N)) :
   ext <;> simp [lowerBlock, upperBlock]
 
 /-- Every idempotent direction has exactly these two blocks, in every characteristic. -/
-def idempotentDirectionsEquiv :
+def idempotentDirectionsEquiv {R M N : Type*} [CommRing R]
+    [AddCommGroup M] [Module R M] [AddCommGroup N] [Module R N] :
     ((M →ₗ[R] N) × (N →ₗ[R] M)) ≃ₗ[R] idempotentDirections (R := R) (M := M) (N := N) where
   toFun t := ⟨offDiagonalMap t, offDiagonalMap_mem t⟩
   invFun T := (lowerBlock T.1, upperBlock T.1)

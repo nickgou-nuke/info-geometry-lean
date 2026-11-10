@@ -17,7 +17,8 @@ The previous contradictory rank-five pairing interface is not needed here.
 -/
 namespace InfoGeometry.Canonical.PureSpinor
 
-variable {R W : Type*} [Field R] [AddCommGroup W] [Module R W]
+section CommRing
+variable {R W : Type*} [CommRing R] [AddCommGroup W] [Module R W]
 
 /-- Creation by an exterior generator. -/
 def creationAction (w : W) (ψ : ExteriorAlgebra R W) : ExteriorAlgebra R W :=
@@ -33,6 +34,11 @@ def sheetAnnihilator (ψ : ExteriorAlgebra R W) : Submodule R W :=
 
 @[simp] theorem mem_sheetAnnihilator (ψ : ExteriorAlgebra R W) (w : W) :
     w ∈ sheetAnnihilator ψ ↔ creationAction w ψ = 0 := Iff.rfl
+
+end CommRing
+
+section Field
+variable {R W : Type*} [Field R] [AddCommGroup W] [Module R W]
 
 /-- Creation is faithful when evaluated on the scalar vacuum. -/
 theorem creationAction_vacuum_eq_zero_iff (w : W) :
@@ -56,5 +62,7 @@ theorem vacuum_creation_rank_ne (hW : 0 < Module.finrank R W) :
     Module.finrank R (sheetAnnihilator (1 : ExteriorAlgebra R W)) ≠
       Module.finrank R W :=
   ne_of_lt (vacuum_annihilator_rank_lt hW)
+
+end Field
 
 end InfoGeometry.Canonical.PureSpinor

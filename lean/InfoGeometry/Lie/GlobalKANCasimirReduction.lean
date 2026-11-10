@@ -4,6 +4,7 @@ import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.FinCases
 
 set_option linter.unusedSectionVars false
@@ -54,7 +55,7 @@ namespace InfoGeometry.Lie.GlobalKANCasimirReduction
 
 open Matrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 abbrev Mat2R (R : Type*) := Matrix (Fin 2) (Fin 2) R
 
@@ -88,10 +89,10 @@ theorem iwasawa_decomposition_2x2 (k θ n : R) :
   ext i j
   fin_cases i <;> fin_cases j <;> (
     simp [compactK, cartanA, nilpotentN]
-    try ring
+    try abel
   )
 
-/-- Uniqueness of these additive coordinates over a commutative ring. -/
+/-- Uniqueness of these additive coordinates over any ring. -/
 theorem iwasawa_decomposition_unique (k₁ θ₁ n₁ k₂ θ₂ n₂ : R)
     (h : compactK k₁ + cartanA θ₁ + nilpotentN n₁ = compactK k₂ + cartanA θ₂ + nilpotentN n₂) :
     k₁ = k₂ ∧ θ₁ = θ₂ ∧ n₁ = n₂ := by
@@ -108,13 +109,13 @@ theorem iwasawa_decomposition_unique (k₁ θ₁ n₁ k₂ θ₂ n₂ : R)
     have h_entry := congr_fun (congr_fun h 0) 1
     dsimp at h_entry
     calc
-      n₁ = (n₁ - k₁) + k₁ := by ring
+      n₁ = (n₁ - k₁) + k₁ := by abel
       _ = (n₂ - k₂) + k₂ := by rw [h_entry, h_10]
-      _ = n₂ := by ring
+      _ = n₂ := by abel
   exact ⟨h_10, h_00, h_01⟩
 
-/-- The Cartan subalgebra $\mathfrak{a}$ is abelian: $[A(\theta_1), A(\theta_2)] = 0$. -/
-theorem cartan_is_abelian (θ₁ θ₂ : R) :
+/-- The Cartan subalgebra $\mathfrak{a}$ is abelian over a commutative ring: $[A(\theta_1), A(\theta_2)] = 0$. -/
+theorem cartan_is_abelian {R : Type*} [CommRing R] (θ₁ θ₂ : R) :
     cartanA θ₁ * cartanA θ₂ - cartanA θ₂ * cartanA θ₁ = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;> (
@@ -129,7 +130,6 @@ theorem nilpotent_sq_zero (n : R) :
   ext i j
   fin_cases i <;> fin_cases j <;> (
     simp [nilpotentN, Matrix.mul_apply, Fin.sum_univ_two]
-    try ring
   )
 
 /-- Nilpotency: the lower shear satisfies $N_-(m)^2 = 0$. -/
@@ -139,7 +139,6 @@ theorem nilpotent_lower_sq_zero (m : R) :
   ext i j
   fin_cases i <;> fin_cases j <;> (
     simp [nilpotentN_lower, Matrix.mul_apply, Fin.sum_univ_two]
-    try ring
   )
 
 /-! ### Section 2: Finite Matrix Involution and Bracket Identities -/
@@ -157,7 +156,7 @@ theorem polar_decomposition_2x2 (k a b : R) :
   ext i j
   fin_cases i <;> fin_cases j <;> (
     simp [compactK, polarP]
-    try ring
+    try abel
   )
 
 /-- Uniqueness of the Cartan polar decomposition over rings where 2 is invertible. -/
@@ -175,17 +174,17 @@ theorem polar_decomposition_unique [Invertible (2 : R)] (k₁ a₁ b₁ k₂ a�
     have h_10 := congr_fun (congr_fun h 1) 0
     dsimp at h_01 h_10
     calc
-      2 * b₁ = (b₁ - k₁) + (b₁ + k₁) := by ring
+      2 * b₁ = (b₁ - k₁) + (b₁ + k₁) := by noncomm_ring
       _ = (b₂ - k₂) + (b₂ + k₂) := by rw [h_01, h_10]
-      _ = 2 * b₂ := by ring
+      _ = 2 * b₂ := by noncomm_ring
   have h_diff : 2 * k₁ = 2 * k₂ := by
     have h_01 := congr_fun (congr_fun h 0) 1
     have h_10 := congr_fun (congr_fun h 1) 0
     dsimp at h_01 h_10
     calc
-      2 * k₁ = (b₁ + k₁) - (b₁ - k₁) := by ring
+      2 * k₁ = (b₁ + k₁) - (b₁ - k₁) := by noncomm_ring
       _ = (b₂ + k₂) - (b₂ - k₂) := by rw [h_01, h_10]
-      _ = 2 * k₂ := by ring
+      _ = 2 * k₂ := by noncomm_ring
   have h_b : b₁ = b₂ := by
     calc
       b₁ = ⅟(2 : R) * (2 * b₁) := by rw [invOf_mul_cancel_left]
@@ -207,7 +206,6 @@ theorem cartanInvolution_compactK (k : R) :
   ext i j
   fin_cases i <;> fin_cases j <;> (
     simp [cartanInvolution, compactK, Matrix.transpose_apply]
-    try ring
   )
 
 /-- $\mathfrak{p}$ is the -1 eigenspace of the Cartan involution: $\Theta(P) = -P$. -/
@@ -216,11 +214,10 @@ theorem cartanInvolution_polarP (a b : R) :
   ext i j
   fin_cases i <;> fin_cases j <;> (
     simp [cartanInvolution, polarP, Matrix.transpose_apply]
-    try ring
   )
 
 /-- Symmetric space Lie bracket: $[\mathfrak{k}, \mathfrak{k}] \subseteq \mathfrak{k}$ (abelian in 2D). -/
-theorem compact_compact_comm (k₁ k₂ : R) :
+theorem compact_compact_comm {R : Type*} [CommRing R] (k₁ k₂ : R) :
     compactK k₁ * compactK k₂ - compactK k₂ * compactK k₁ = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;> (
@@ -229,7 +226,7 @@ theorem compact_compact_comm (k₁ k₂ : R) :
   )
 
 /-- Symmetric space Lie bracket: $[\mathfrak{k}, \mathfrak{p}] \subseteq \mathfrak{p}$. -/
-theorem compact_polar_comm (k a b : R) :
+theorem compact_polar_comm {R : Type*} [CommRing R] (k a b : R) :
     compactK k * polarP a b - polarP a b * compactK k =
     polarP (-2 * k * b) (2 * k * a) := by
   ext i j
@@ -239,7 +236,7 @@ theorem compact_polar_comm (k a b : R) :
   )
 
 /-- Symmetric space Lie bracket: $[\mathfrak{p}, \mathfrak{p}] \subseteq \mathfrak{k}$. -/
-theorem polar_polar_comm (a₁ b₁ a₂ b₂ : R) :
+theorem polar_polar_comm {R : Type*} [CommRing R] (a₁ b₁ a₂ b₂ : R) :
     polarP a₁ b₁ * polarP a₂ b₂ - polarP a₂ b₂ * polarP a₁ b₁ =
     compactK (-2 * (a₁ * b₂ - a₂ * b₁)) := by
   ext i j
@@ -287,14 +284,14 @@ theorem casimirTwo_on_cartan (θ : R) :
     casimirTwo (cartanA θ) = 2 * θ^2 := by
   dsimp [casimirTwo, cartanA, Matrix.trace]
   simp [Matrix.mul_apply, Fin.sum_univ_two]
-  ring
+  noncomm_ring
 
 /-- Quadratic Casimir on compact rotations: $C_2(K(k)) = -2k^2$. -/
 theorem casimirTwo_on_compactK (k : R) :
     casimirTwo (compactK k) = -2 * k^2 := by
   dsimp [casimirTwo, compactK, Matrix.trace]
   simp [Matrix.mul_apply, Fin.sum_univ_two]
-  ring
+  noncomm_ring
 
 /-- The quadratic trace polynomial vanishes on the displayed nilpotent shear. -/
 theorem casimirTwo_on_nilpotent_zero (n : R) :
@@ -306,10 +303,10 @@ theorem casimirTwo_on_nilpotent_zero (n : R) :
 theorem casimirTwo_weyl_invariant (θ : R) :
     casimirTwo (cartanA (-θ)) = casimirTwo (cartanA θ) := by
   rw [casimirTwo_on_cartan, casimirTwo_on_cartan]
-  ring
+  noncomm_ring
 
 /-- Similarity invariance of the quadratic trace polynomial for an invertible matrix. -/
-theorem casimirTwo_gauge_invariant
+theorem casimirTwo_gauge_invariant {R : Type*} [CommRing R]
     (g g_inv X : Mat2R R)
     (h_left : g_inv * g = 1)
     (h_right : g * g_inv = 1) :
@@ -329,7 +326,7 @@ theorem casimirTwo_gauge_invariant
 /-! ### Section 4: Master Verification Certificate -/
 
 /-- Certificate bundling the finite matrix identities in this file. -/
-structure GlobalKANCasimirReductionCertificate : Prop where
+structure GlobalKANCasimirReductionCertificate (R : Type*) [CommRing R] : Prop where
   iwasawa_dec : ∀ (k θ n : R), compactK k + cartanA θ + nilpotentN n = !![θ, n - k; k, -θ]
   iwasawa_unique : ∀ (k₁ θ₁ n₁ k₂ θ₂ n₂ : R),
     compactK k₁ + cartanA θ₁ + nilpotentN n₁ = compactK k₂ + cartanA θ₂ + nilpotentN n₂ →
@@ -354,7 +351,7 @@ structure GlobalKANCasimirReductionCertificate : Prop where
   casimir_two_gauge : ∀ (g g_inv X : Mat2R R), g_inv * g = 1 → g * g_inv = 1 → casimirTwo (g * X * g_inv) = casimirTwo X
 
 /-- Compilation theorem: the finite matrix-identity certificate holds. -/
-theorem compile_global_kan_casimir_reduction : GlobalKANCasimirReductionCertificate (R := R) where
+theorem compile_global_kan_casimir_reduction {R : Type*} [CommRing R] : GlobalKANCasimirReductionCertificate R where
   iwasawa_dec := iwasawa_decomposition_2x2
   iwasawa_unique := iwasawa_decomposition_unique
   cartan_abelian := cartan_is_abelian

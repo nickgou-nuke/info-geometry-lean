@@ -32,7 +32,7 @@ noncomputable def filtered_colimit_commutes_finite_limit_iso (F_diag : J тед I т
 
 universe u
 
-variable (R : Type u) [CommRing R]
+variable (R : Type u) [Ring R]
 
 section ModuleDiagramLimits
 

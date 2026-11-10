@@ -17,7 +17,6 @@ It kills the finite shadows first:
 
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -149,21 +148,13 @@ def copyBobToCharlie
   b := x.2
   c := x.2
 
-/-- A Bell-same support element copied into Charlie's register lands on GHZ support. -/
-theorem copyBellSame_to_GHZ
-    {x : Bit × Bit}
-    (h : bellSameAmplitude x ≠ 0) :
-    ghzAmplitude (copyBobToCharlie x) ≠ 0 := by
-  apply (ghz_nonzero_iff (copyBobToCharlie x)).mpr
-  constructor
-  · exact (bellSame_nonzero_iff x).mp h
-  · rfl
-
-/-- The copied register has Bob and Charlie equal by construction. -/
-theorem copyBobToCharlie_b_eq_c
+/-- Copying the second bit preserves support exactly: the copied triple is
+GHZ-supported precisely when the original pair is Bell-same-supported. -/
+theorem copyBobToCharlie_support_iff
     (x : Bit × Bit) :
-    (copyBobToCharlie x).b = (copyBobToCharlie x).c :=
-  rfl
+    ghzAmplitude (copyBobToCharlie x) ≠ 0 ↔ bellSameAmplitude x ≠ 0 := by
+  rw [ghz_nonzero_iff, bellSame_nonzero_iff]
+  simp [copyBobToCharlie]
 
 /-- If the copied state is GHZ-supported, Alice equals Charlie. -/
 theorem copyBobToCharlie_GHZ_a_eq_c
@@ -242,13 +233,6 @@ def classicalSingleFlipComplexity
     {n : ℕ}
     (s : BitString n) : ℕ :=
   hammingWeight s
-
-/-- The simple state has zero classical single-flip complexity. -/
-@[simp]
-theorem classicalSingleFlipComplexity_simple
-    {n : ℕ} :
-    classicalSingleFlipComplexity (simpleString : BitString n) = 0 := by
-  simp [classicalSingleFlipComplexity]
 
 /-- Classical single-flip complexity is bounded by the number of bits. -/
 theorem classicalSingleFlipComplexity_le
@@ -341,69 +325,44 @@ theorem cost_pos_of_ne_nil
   | cons _ _ =>
       simp [cost]
 
-/--
-Cost is bounded by an explicit list length exactly because it is that length.
--/
-theorem cost_eq_length
-    (C : Circuit Wire) :
-    cost C = C.length :=
-  rfl
-
 end Circuit
 
-/-! ## 7. Owner theorems discharged constructively -/
+/-! ## 7. Derived finite support and circuit-cost consequences -/
 
-/-- Constructive proof of Bell-same support correlation. -/
-theorem bellSameSupportOwnerTarget :
-    ∀ x : Bit × Bit,
-      bellSameAmplitude x ≠ 0 ↔ x.1 = x.2 :=
-  bellSame_nonzero_iff
+/-- The copy-register map retains both input bits and is therefore injective. -/
+theorem copyBobToCharlie_injective
+    {x y : Bit × Bit}
+    (h : copyBobToCharlie x = copyBobToCharlie y) :
+    x = y := by
+  have ha := congrArg (fun z : TripleBit => z.a) h
+  have hb := congrArg (fun z : TripleBit => z.b) h
+  cases x with
+  | mk xa xb =>
+    cases y with
+    | mk ya yb =>
+      change xa = ya at ha
+      change xb = yb at hb
+      subst ya
+      subst yb
+      rfl
 
-/-- Constructive proof of GHZ support correlation. -/
-theorem ghzSupportOwnerTarget :
-    ∀ x : TripleBit,
-      ghzAmplitude x ≠ 0 ↔ x.a = x.b ∧ x.b = x.c :=
-  ghz_nonzero_iff
+/-- Appending a circuit cannot reduce its gate cost. -/
+theorem Circuit.cost_le_append_right
+    {Wire : Type*}
+    (C D : Circuit Wire) :
+    Circuit.cost C ≤ Circuit.cost (C ++ D) := by
+  rw [Circuit.cost_append]
+  omega
 
-/-- Constructive proof of the finite Bell-to-GHZ support transition. -/
-theorem bellToGHZCopyOwnerTarget :
-    ∀ x : Bit × Bit,
-      bellSameAmplitude x ≠ 0 →
-        ghzAmplitude (copyBobToCharlie x) ≠ 0 := by
-  intro x h
-  exact copyBellSame_to_GHZ h
-
-/-- Constructive proof of the classical single-flip complexity bound. -/
-theorem classicalSingleFlipComplexityOwnerTarget :
-    ∀ (n : ℕ) (s : BitString n),
-      classicalSingleFlipComplexity s ≤ n := by
-  intro n s
-  exact classicalSingleFlipComplexity_le s
-
-/--
-Constructive proof of finite circuit gate-accounting additivity.
--/
-theorem circuitCostAppendOwnerTarget :
-    ∀ (Wire : Type*) (C₁ C₂ : Circuit Wire),
-      Circuit.cost (C₁ ++ C₂) =
-        Circuit.cost C₁ + Circuit.cost C₂ := by
-  intro Wire C₁ C₂
-  exact Circuit.cost_append C₁ C₂
-
-@[owner_target_tag]
-theorem finiteEntanglementComplexity_packet :
-    (∀ x : Bit × Bit, bellSameAmplitude x ≠ 0 ↔ x.1 = x.2) ∧
-      (∀ x : TripleBit, ghzAmplitude x ≠ 0 ↔ x.a = x.b ∧ x.b = x.c) ∧
-      (∀ x : Bit × Bit, bellSameAmplitude x ≠ 0 →
-        ghzAmplitude (copyBobToCharlie x) ≠ 0) ∧
-      (∀ (n : ℕ) (s : BitString n), classicalSingleFlipComplexity s ≤ n) ∧
-      (∀ (Wire : Type*) (C₁ C₂ : Circuit Wire),
-        Circuit.cost (C₁ ++ C₂) =
-          Circuit.cost C₁ + Circuit.cost C₂) := by
-  exact ⟨bellSameSupportOwnerTarget,
-    ghzSupportOwnerTarget,
-    bellToGHZCopyOwnerTarget,
-    classicalSingleFlipComplexityOwnerTarget,
-    circuitCostAppendOwnerTarget⟩
+/-- Appending a nonempty circuit strictly increases the gate cost. -/
+theorem Circuit.cost_lt_append_of_ne_nil
+    {Wire : Type*}
+    (C : Circuit Wire)
+    {D : Circuit Wire}
+    (hD : D ≠ []) :
+    Circuit.cost C < Circuit.cost (C ++ D) := by
+  rw [Circuit.cost_append]
+  have hpos := Circuit.cost_pos_of_ne_nil hD
+  omega
 
 end InfoGeometry.Quantum.FiniteEntanglementComplexityCore

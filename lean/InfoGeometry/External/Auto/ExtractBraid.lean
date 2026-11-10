@@ -75,13 +75,15 @@ open Complex
 
 section TemperleyLieb
 
-variable {F : Type*} [Field F]
+section DivisionRing
+
+variable {F : Type*} [DivisionRing F]
 variable (A : F)
 
 /-- The Temperley-Lieb loop value -/
 def d : F := - A^2 - (A⁻¹)^2
 
-variable {A_alg : Type*} [Ring A_alg] [Algebra F A_alg]
+variable {A_alg : Type*} [Ring A_alg] [Module F A_alg]
 variable (e : ℕ → A_alg)
 
 /-- Temperley-Lieb Algebra relations on generators e i -/
@@ -93,15 +95,23 @@ class TemperleyLieb (d_val : F) (e : ℕ → A_alg) : Prop where
 variable [TemperleyLieb (d A) e]
 
 -- Wrappers to bypass typeclass inference quirks
-lemma TL_e_sq {F : Type*} [Field F] (A : F) {A_alg : Type*} [Ring A_alg] [Algebra F A_alg] (e : ℕ → A_alg) [TemperleyLieb (d A) e] (i : ℕ) : e i * e i = (d A) • e i := @TemperleyLieb.e_sq F _ A_alg _ _ (d A) e _ i
-lemma TL_e_comm {F : Type*} [Field F] (A : F) {A_alg : Type*} [Ring A_alg] [Algebra F A_alg] (e : ℕ → A_alg) [TemperleyLieb (d A) e] (i j : ℕ) (h : i + 1 < j ∨ j + 1 < i) : e i * e j = e j * e i := @TemperleyLieb.e_comm F _ A_alg _ _ (d A) e _ i j h
-lemma TL_e_adj {F : Type*} [Field F] (A : F) {A_alg : Type*} [Ring A_alg] [Algebra F A_alg] (e : ℕ → A_alg) [TemperleyLieb (d A) e] (i j : ℕ) (h : i = j + 1 ∨ j = i + 1) : e i * e j * e i = e i := @TemperleyLieb.e_adj F _ A_alg _ _ (d A) e _ i j h
+lemma TL_e_sq {F : Type*} [DivisionRing F] (A : F) {A_alg : Type*} [Ring A_alg] [Module F A_alg] (e : ℕ → A_alg) [TemperleyLieb (d A) e] (i : ℕ) : e i * e i = (d A) • e i := @TemperleyLieb.e_sq F _ A_alg _ _ (d A) e _ i
+lemma TL_e_comm {F : Type*} [DivisionRing F] (A : F) {A_alg : Type*} [Ring A_alg] [Module F A_alg] (e : ℕ → A_alg) [TemperleyLieb (d A) e] (i j : ℕ) (h : i + 1 < j ∨ j + 1 < i) : e i * e j = e j * e i := @TemperleyLieb.e_comm F _ A_alg _ _ (d A) e _ i j h
+lemma TL_e_adj {F : Type*} [DivisionRing F] (A : F) {A_alg : Type*} [Ring A_alg] [Module F A_alg] (e : ℕ → A_alg) [TemperleyLieb (d A) e] (i j : ℕ) (h : i = j + 1 ∨ j = i + 1) : e i * e j * e i = e i := @TemperleyLieb.e_adj F _ A_alg _ _ (d A) e _ i j h
 
 /-- The Jones representation of the Braid Group generators -/
 def σ (i : ℕ) : A_alg := (A:F) • (1:A_alg) + (A⁻¹:F) • e i
 
 /-- Inverse of the Braid Group generators -/
 def σ_inv (i : ℕ) : A_alg := (A⁻¹:F) • (1:A_alg) + (A:F) • e i
+
+end DivisionRing
+
+variable {F : Type*} [Field F]
+variable (A : F)
+variable {A_alg : Type*} [Ring A_alg] [Algebra F A_alg]
+variable (e : ℕ → A_alg)
+variable [TemperleyLieb (d A) e]
 
 @[simp] lemma tl_smul_mul_smul_comm (c1 c2 : F) (x1 x2 : A_alg) : 
   (c1 • x1) * (c2 • x2) = (c1 * c2) • (x1 * x2) := by

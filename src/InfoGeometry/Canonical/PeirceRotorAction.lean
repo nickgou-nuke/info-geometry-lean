@@ -58,10 +58,31 @@ theorem stationary_iff {d B : A} (hd : d*d=0) (hB : B*B=0)
   · rintro ⟨rfl,rfl⟩; simp
 
 section Scalar
-variable {R : Type*} [CommRing R] [Algebra R A]
+variable {R : Type*}
+
+section NoncommScalar
+variable [Ring R] [Module R A]
 
 /-- Conjugation expression, defined even before imposing the circle equation. -/
 def movingPlus (c s : R) (d B : A) : A := rotor c s d B*(d*B)*rotor c (-s) d B
+
+/-- The opposite directed projection under the same rotor. -/
+def movingMinus (c s : R) (d B : A) : A :=
+  rotor c s d B*(B*d)*rotor c (-s) d B
+
+ theorem rotor_swap (c s : R) (d B : A) :
+    rotor c s B d=rotor c (-s) d B := by
+  simp only [rotor,complement,support,smul_sub,neg_smul,smul_add]
+  abel
+
+ theorem movingMinus_eq_swapped (c s : R) (d B : A) :
+    movingMinus c s d B=movingPlus c (-s) B d := by
+  simp only [movingPlus, movingMinus, rotor_swap c (-s) d B,
+    rotor_swap c s d B, neg_neg]
+
+end NoncommScalar
+
+variable [CommRing R] [Algebra R A]
 
 theorem movingPlus_expansion {d B : A} (hd : d*d=0) (hB : B*B=0)
     (hr : d*B*d=d) (hs : B*d*B=B) (c s : R) :
@@ -96,19 +117,6 @@ theorem movingPlus_idempotent {d B : A} (hd : d*d=0) (hB : B*B=0)
   apply GrassmannianBundleCyclotomicOrientability.isIdempotentElem_homogeneousProj
   · exact (support_table hd hB hr hs).1
   · simpa only [neg_neg] using rotor_inverse hd hB hr hs c (-s) (by simpa using hc)
-/-- The opposite directed projection under the same rotor. -/
-def movingMinus (c s : R) (d B : A) : A :=
-  rotor c s d B*(B*d)*rotor c (-s) d B
-
- theorem rotor_swap (c s : R) (d B : A) :
-    rotor c s B d=rotor c (-s) d B := by
-  simp only [rotor,complement,support,smul_sub,neg_smul,smul_add]
-  abel
-
- theorem movingMinus_eq_swapped (c s : R) (d B : A) :
-    movingMinus c s d B=movingPlus c (-s) B d := by
-  simp only [movingPlus, movingMinus, rotor_swap c (-s) d B,
-    rotor_swap c s d B, neg_neg]
 
  theorem movingMinus_expansion {d B : A} (hd : d*d=0) (hB : B*B=0)
     (hr : d*B*d=d) (hs : B*d*B=B) (c s : R) :

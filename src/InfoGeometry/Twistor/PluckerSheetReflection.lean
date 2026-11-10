@@ -35,7 +35,7 @@ open InfoGeometry.Clifford.Clifford55
 
 section Ring
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Exterior-square action of the phase-corrected spinor block exchange. -/
 def signedSheetPlucker (P : Plucker6 R) : Plucker6 R :=
@@ -55,27 +55,30 @@ theorem signedSheetPlucker_scale (c : R) (P : Plucker6 R) :
     (signedSheetPlucker P).p23 = -P.p01 := rfl
 
 @[simp] theorem kleinQ_signedSheetPlucker (P : Plucker6 R) :
-    kleinQ (signedSheetPlucker P) = kleinQ P := by
-  simp [kleinQ, signedSheetPlucker]
-  ring
+    kleinQ (signedSheetPlucker P) =
+      kleinQ P + opComm P.p23 P.p01 + opComm P.p12 P.p03 := by
+  simp [kleinQ, signedSheetPlucker, opComm]
+  noncomm_ring
 
 theorem kleinPolar_signedSheetPlucker (P Q : Plucker6 R) :
-    kleinPolar (signedSheetPlucker P) (signedSheetPlucker Q) = kleinPolar P Q := by
-  simp [kleinPolar, signedSheetPlucker]
-  ring
+    kleinPolar (signedSheetPlucker P) (signedSheetPlucker Q) =
+      kleinPolar P Q + opComm P.p23 Q.p01 + opComm Q.p23 P.p01 +
+        opComm P.p12 Q.p03 + opComm Q.p12 P.p03 := by
+  simp [kleinPolar, signedSheetPlucker, opComm]
+  noncomm_ring
 
 theorem signedSheetPlucker_origin :
     signedSheetPlucker (graphPlucker (0 : Matrix (Fin 2) (Fin 2) R)) =
       Plucker6.scale (-1) infinityPlucker := by
   apply Plucker6.ext <;>
-    simp [signedSheetPlucker, graphPlucker_coordinates,
+    simp [signedSheetPlucker, graphPlucker, graphFirst, graphSecond, pluckerLine,
       infinityPlucker_coordinates, Plucker6.scale]
 
 theorem signedSheetPlucker_infinity :
     signedSheetPlucker (infinityPlucker (R := R)) =
       Plucker6.scale (-1) (graphPlucker (0 : Matrix (Fin 2) (Fin 2) R)) := by
   apply Plucker6.ext <;>
-    simp [signedSheetPlucker, graphPlucker_coordinates,
+    simp [signedSheetPlucker, graphPlucker, graphFirst, graphSecond, pluckerLine,
       infinityPlucker_coordinates, Plucker6.scale]
 
 end Ring

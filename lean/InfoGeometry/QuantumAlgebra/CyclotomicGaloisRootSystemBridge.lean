@@ -8,7 +8,7 @@ namespace InfoGeometry.QuantumAlgebra.CyclotomicGaloisRootSystemBridge
 
 open InfoGeometry.QuantumAlgebra.RankTwoCyclotomicArtinBridge
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 theorem galois_preserves_cyclotomic10 (σ : R →+* R) (ζ : R)
     (hζ : cyclotomic10 ζ = 0) : cyclotomic10 (σ ζ) = 0 := by

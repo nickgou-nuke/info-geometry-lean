@@ -5,7 +5,7 @@ namespace InfoGeometry.Canonical
 
 open ToeplitzCuntzVacuumBridge
 
-variable {R : Type*} [CommRing R] [StarRing R]
+variable {R : Type*} [Ring R] [StarRing R]
 
 /-- The currently property gauge layer is the identity action.
 

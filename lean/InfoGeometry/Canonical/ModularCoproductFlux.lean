@@ -24,18 +24,17 @@ open scoped TensorProduct
 section
 
 variable {R A : Type*}
-variable [CommRing R] [Ring A] [Algebra R A]
 
 /-- Primitive, linearized flux part `N ⊗ 1 + 1 ⊗ N`. -/
-def primitiveFlux (N : A) : A ⊗[R] A :=
+def primitiveFlux [CommSemiring R] [Semiring A] [Algebra R A] (N : A) : A ⊗[R] A :=
   (N ⊗ₜ[R] (1 : A)) + ((1 : A) ⊗ₜ[R] N)
 
 /-- Cross-flux part `N ⊗ N`. -/
-def crossFlux (N : A) : A ⊗[R] A :=
+def crossFlux [CommSemiring R] [Semiring A] [Algebra R A] (N : A) : A ⊗[R] A :=
   N ⊗ₜ[R] N
 
 /-- Exact group-like centered flux part. -/
-def liftFlux (N : A) : A ⊗[R] A :=
+def liftFlux [CommSemiring R] [Semiring A] [Algebra R A] (N : A) : A ⊗[R] A :=
   primitiveFlux (R := R) N + crossFlux (R := R) N
 
 /--
@@ -46,6 +45,7 @@ Writing `Δ = 1 + N`, the centered tensor product is
 `Δ ⊗ Δ - 1 ⊗ 1 = N ⊗ 1 + 1 ⊗ N + N ⊗ N`.
 -/
 theorem one_add_tmul_one_add_sub_one_eq_liftFlux
+    [CommRing R] [Ring A] [Algebra R A]
     (N : A) :
     ((1 + N) ⊗ₜ[R] (1 + N) : A ⊗[R] A) -
         ((1 : A) ⊗ₜ[R] (1 : A)) =
@@ -60,7 +60,7 @@ The exact flux splits as primitive part plus cross-flux.
 This is a definitional readback, included to keep the primitive law separate
 from the exact group-like law.
 -/
-theorem liftFlux_eq_primitive_add_cross (N : A) :
+theorem liftFlux_eq_primitive_add_cross [CommSemiring R] [Semiring A] [Algebra R A] (N : A) :
     liftFlux (R := R) N = primitiveFlux (R := R) N + crossFlux (R := R) N := by
   rfl
 
@@ -72,7 +72,8 @@ The primitive formula is not the exact coproduct formula; it is what a linear
 readout sees when it kills the cross term `N ⊗ N`.
 -/
 theorem readout_liftFlux_eq_readout_primitive_of_cross_zero
-    {M : Type*} [AddCommGroup M] [Module R M]
+    [CommSemiring R] [Semiring A] [Algebra R A]
+    {M : Type*} [AddCommMonoid M] [Module R M]
     (readout : (A ⊗[R] A) →ₗ[R] M)
     (N : A)
     (hcross : readout (crossFlux (R := R) N) = 0) :
@@ -87,6 +88,7 @@ This is still a finite algebraic statement: the primitive law is obtained only
 under the explicit hypothesis `N ⊗ N = 0`.
 -/
 theorem liftFlux_eq_primitive_of_cross_zero
+    [CommSemiring R] [Semiring A] [Algebra R A]
     (N : A)
     (hcross : crossFlux (R := R) N = 0) :
     liftFlux (R := R) N = primitiveFlux (R := R) N := by
@@ -97,6 +99,7 @@ Under cross-flux annihilation, the centered group-like tensor product reduces
 to the primitive expression.
 -/
 theorem one_add_tmul_one_add_sub_one_eq_primitive_of_cross_zero
+    [CommRing R] [Ring A] [Algebra R A]
     (N : A)
     (hcross : crossFlux (R := R) N = 0) :
     ((1 + N) ⊗ₜ[R] (1 + N) : A ⊗[R] A) -
@@ -106,9 +109,12 @@ theorem one_add_tmul_one_add_sub_one_eq_primitive_of_cross_zero
   exact liftFlux_eq_primitive_of_cross_zero (R := R) N hcross
 
 theorem tensor_nilpotent_sq_zero
+    [CommSemiring R] [Semiring A] [Algebra R A]
     (N : A) (hN : N * N = 0) :
     crossFlux (R := R) N * crossFlux (R := R) N = 0 := by
   simp [crossFlux, Algebra.TensorProduct.tmul_mul_tmul, hN]
+
+variable [CommRing R] [Ring A] [Algebra R A]
 
 theorem liftFlux_sq
     (N : A) (hN : N * N = 0) :

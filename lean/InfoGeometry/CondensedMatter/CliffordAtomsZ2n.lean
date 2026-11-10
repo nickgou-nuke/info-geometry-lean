@@ -136,7 +136,7 @@ theorem flipBit_other
     (hij : j ≠ i)
     (charge : Z2Charge ι) :
     flipBit i charge j = charge j := by
-  simp [flipBit, Function.update_of_ne hij]
+  exact Function.update_of_ne hij (!charge i) charge
 
 /--
 A proof-carrying socket saying that a chosen Clifford edge operator realizes
@@ -182,6 +182,29 @@ theorem edge_preserves_other_bit
     A.charge (A.act (A.edge i) v) j = A.charge v j := by
   rw [A.edge_charge]
   simp [hij]
+
+/-- Distinct coordinate flips commute as maps on the Boolean charge space. -/
+theorem flipBit_commute
+    {i j : ι}
+    (hij : i ≠ j)
+    (charge : Z2Charge ι) :
+    flipBit i (flipBit j charge) = flipBit j (flipBit i charge) := by
+  unfold flipBit
+  simp only [Function.update_of_ne hij, Function.update_of_ne (Ne.symm hij)]
+  rw [Function.update_comm (Ne.symm hij) (!charge j) (!charge i) charge]
+
+/-- Applying two distinct Clifford edges in either order gives the same charge readout.
+
+This is equality of readouts only; it does not assert equality of the resulting states
+or commutation of the edge operators. -/
+theorem distinct_edge_charge_actions_commute
+    {i j : ι}
+    (hij : i ≠ j)
+    (v : State) :
+    A.charge (A.act (A.edge i) (A.act (A.edge j) v)) =
+      A.charge (A.act (A.edge j) (A.act (A.edge i) v)) := by
+  rw [A.edge_charge, A.edge_charge, A.edge_charge, A.edge_charge]
+  exact flipBit_commute hij (A.charge v)
 
 end CliffordHypercubeAction
 
@@ -284,62 +307,5 @@ structure LocalToGlobalAnomalyDatum where
   /-- Compatibility is the concrete equation relating the chosen local address to the global index. -/
   indexMap_localCharge :
     indexMap localCharge = globalClass.index
-
-namespace LocalToGlobalAnomalyDatum
-
-variable (D : LocalToGlobalAnomalyDatum)
-
-/-- Compatibility readout of the local four-bit address in the global index. -/
-theorem local_charge_is_four_bit :
-    D.indexMap D.localCharge = D.globalClass.index :=
-  D.indexMap_localCharge
-
-/-- The local-to-global bridge evaluates the supplied index map to the global index. -/
-theorem indexMap_localCharge_eq :
-    D.indexMap D.localCharge = D.globalClass.index :=
-  D.local_charge_is_four_bit
-
-end LocalToGlobalAnomalyDatum
-
-/-! ## 5. Owner target -/
-
-/--
-Owner target for a concrete model connecting four split Clifford atoms to a
-global anomaly class.
-
-This carries the actual witness data directly:
-- the four-atom chirality package,
-- the hypercube action on states,
-- the local-to-global anomaly datum.
--/
-structure CliffordAtomsZ2nOwnerTarget
-    (Op State : Type*) [Ring Op] where
-  fourAtomChirality : FourAtomChirality Op
-  hypercubeAction : CliffordHypercubeAction (Fin 4) Op State
-  anomalyDatum : LocalToGlobalAnomalyDatum
-
-namespace CliffordAtomsZ2nOwnerTarget
-
-variable {Op State : Type*} [Ring Op]
-
-/-- The owner target exposes the four-atom chirality package directly. -/
-def fourAtomChirality_of
-    (T : CliffordAtomsZ2nOwnerTarget Op State) :
-    FourAtomChirality Op :=
-  T.fourAtomChirality
-
-/-- The owner target exposes the local hypercube action directly. -/
-def hypercubeAction_of
-    (T : CliffordAtomsZ2nOwnerTarget Op State) :
-    CliffordHypercubeAction (Fin 4) Op State :=
-  T.hypercubeAction
-
-/-- The owner target exposes the local-to-global anomaly datum directly. -/
-def anomalyDatum_of
-    (T : CliffordAtomsZ2nOwnerTarget Op State) :
-    LocalToGlobalAnomalyDatum :=
-  T.anomalyDatum
-
-end CliffordAtomsZ2nOwnerTarget
 
 end InfoGeometry.CondensedMatter.CliffordAtomsZ2n

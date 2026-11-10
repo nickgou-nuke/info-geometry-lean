@@ -21,7 +21,7 @@ The generalized Benois l-invariant and the associated p-adic L-function data.
 This structure encodes the Mazur-Tate-Teitelbaum style formula for the derivative
 of p-adic L-functions at near central points without asserting unproven axioms.
 -/
-structure BenoisTrivialZeroData (K : Type*) [Field K] where
+structure BenoisTrivialZeroData (K : Type*) [DivisionRing K] where
   f : Newform K
   p : K
   alpha : K

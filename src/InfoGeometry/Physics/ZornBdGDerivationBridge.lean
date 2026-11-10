@@ -127,7 +127,7 @@ structure Zorn (R : Type*) where
   v : Fin 3 → R
   b : R
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 lemma eq_zero_of_self_eq_add_self {x : R} (h : x = x + x) : x = 0 := by
   have h1 : x + x = x + 0 := by rw [add_zero, ← h]
@@ -213,38 +213,38 @@ instance : SMul R (Zorn R) := ⟨zornSMul⟩
 theorem zorn_one_mul (X : Zorn R) : (1 : Zorn R) * X = X := by
   ext
   · change (1 : R) * X.a + (0 * X.v 0 + 0 * X.v 1 + 0 * X.v 2) = X.a
-    ring
+    noncomm_ring
   · rename_i i
     fin_cases i <;> {
       change (1 : R) * X.u _ + X.b * 0 - (0 * X.v _ - 0 * X.v _) = X.u _
-      ring
+      noncomm_ring
     }
   · rename_i i
     fin_cases i <;> {
       change X.a * (0 : R) + (1 : R) * X.v _ + (0 * X.u _ - 0 * X.u _) = X.v _
-      ring
+      noncomm_ring
     }
   · change (1 : R) * X.b + (0 * X.u 0 + 0 * X.u 1 + 0 * X.u 2) = X.b
-    ring
+    noncomm_ring
 
 /-- THEOREM: Right multiplication by 1 is the identity -/
 @[simp]
 theorem zorn_mul_one (X : Zorn R) : X * (1 : Zorn R) = X := by
   ext
   · change X.a * (1 : R) + (X.u 0 * 0 + X.u 1 * 0 + X.u 2 * 0) = X.a
-    ring
+    noncomm_ring
   · rename_i i
     fin_cases i <;> {
       change X.a * (0 : R) + (1 : R) * X.u _ - (X.v _ * 0 - X.v _ * 0) = X.u _
-      ring
+      noncomm_ring
     }
   · rename_i i
     fin_cases i <;> {
       change (1 : R) * X.v _ + X.b * (0 : R) + (X.u _ * 0 - X.u _ * 0) = X.v _
-      ring
+      noncomm_ring
     }
   · change X.b * (1 : R) + (X.v 0 * 0 + X.v 1 * 0 + X.v 2 * 0) = X.b
-    ring
+    noncomm_ring
 
 @[simp]
 theorem zorn_one_sq : (1 : Zorn R) * (1 : Zorn R) = (1 : Zorn R) :=

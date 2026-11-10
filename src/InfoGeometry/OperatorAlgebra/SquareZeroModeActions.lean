@@ -89,6 +89,47 @@ theorem lie_mul_of_lie_eq_zero {a m : A} (h : ⁅a, m⁆ = 0) (z : A) :
       noncomm_ring
     _ = _ := by rw [h, zero_mul, zero_add]
 
+/-- Pure ring-level negative double-commutator action of `u + v` on `u - v` over `[Ring A]`. -/
+theorem ring_neg_ad_sum_sq_difference {u v : A}
+    (hu : u * u = 0) (hv : v * v = 0) :
+    -⁅u + v, ⁅u + v, u - v⁆⁆ = -(4 • ((u * v + v * u) * (u - v))) := by
+  rw [sum_lie_difference, lie_neg, lie_nsmul, sum_lie_bracket hu hv]
+  simp only [two_nsmul, show (4 : ℕ) = 2 + 2 from rfl, add_nsmul]
+  noncomm_ring
+
+/-- Pure ring-level negative double-commutator action of `u + v` on `⁅u, v⁆` over `[Ring A]`. -/
+theorem ring_neg_ad_sum_sq_bracket {u v : A}
+    (hu : u * u = 0) (hv : v * v = 0) :
+    -⁅u + v, ⁅u + v, ⁅u, v⁆⁆⁆ = -(4 • ((u * v + v * u) * ⁅u, v⁆)) := by
+  rw [sum_lie_bracket hu hv, lie_neg, lie_nsmul,
+    lie_mul_of_lie_eq_zero (sum_lie_weight hu hv) (u - v), sum_lie_difference]
+  simp only [two_nsmul, show (4 : ℕ) = 2 + 2 from rfl, add_nsmul]
+  noncomm_ring
+
+/-- Pure ring-level double-commutator action of `u - v` on `u + v` over `[Ring A]`. -/
+theorem ring_ad_difference_sq_sum {u v : A}
+    (hu : u * u = 0) (hv : v * v = 0) :
+    ⁅u - v, ⁅u - v, u + v⁆⁆ = -(4 • ((u * v + v * u) * (u + v))) := by
+  rw [difference_lie_sum, lie_nsmul, difference_lie_bracket hu hv]
+  simp only [two_nsmul, show (4 : ℕ) = 2 + 2 from rfl, add_nsmul]
+  noncomm_ring
+
+/-- Pure ring-level double-commutator action of `u - v` on `⁅u, v⁆` over `[Ring A]`. -/
+theorem ring_ad_difference_sq_bracket {u v : A}
+    (hu : u * u = 0) (hv : v * v = 0) :
+    ⁅u - v, ⁅u - v, ⁅u, v⁆⁆⁆ = -(4 • ((u * v + v * u) * ⁅u, v⁆)) := by
+  rw [difference_lie_bracket hu hv, lie_neg, lie_nsmul,
+    lie_mul_of_lie_eq_zero (difference_lie_weight hu hv) (u + v), difference_lie_sum]
+  simp only [two_nsmul, show (4 : ℕ) = 2 + 2 from rfl, add_nsmul]
+  noncomm_ring
+
+/-- Pure ring-level polarization identity for double commutators on `[Ring A]`. -/
+theorem ring_ad_sum_difference_polarization (u v z : A) :
+    -⁅u + v, ⁅u + v, z⁆⁆ + ⁅u - v, ⁅u - v, z⁆⁆ =
+      -(2 • (⁅u, ⁅v, z⁆⁆ + ⁅v, ⁅u, z⁆⁆)) := by
+  simp only [Ring.lie_def, two_nsmul]
+  noncomm_ring
+
 section LinearActions
 
 variable {R : Type*} [CommRing R] [Algebra R A]

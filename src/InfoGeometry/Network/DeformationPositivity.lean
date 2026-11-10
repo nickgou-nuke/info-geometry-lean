@@ -26,7 +26,7 @@ and scaling by nonnegative scalars.  Any `E8`-specific or geometric instance
 would be supplied later as a concrete inhabitant of this interface.
 -/
 structure VertexCone
-    (R V : Type*) [Field R] [LinearOrder R] [IsStrictOrderedRing R]
+    (R V : Type*) [Ring R] [LinearOrder R] [IsStrictOrderedRing R]
     [AddCommGroup V] [Module R V] where
   carrier : Set V
   zero_mem : 0 ∈ carrier
@@ -38,14 +38,14 @@ The dual cone of a positivity cone: linear functionals that are nonnegative on
 the cone.
 -/
 def dualCone
-    {R V : Type*} [Field R] [LinearOrder R] [IsStrictOrderedRing R]
+    {R V : Type*} [Ring R] [LinearOrder R] [IsStrictOrderedRing R]
     [AddCommGroup V] [Module R V]
     (C : Set V) : Set (V →ₗ[R] R) :=
   {φ | ∀ x, x ∈ C → 0 ≤ φ x}
 
 @[simp]
 theorem mem_dualCone_iff
-    {R V : Type*} [Field R] [LinearOrder R] [IsStrictOrderedRing R]
+    {R V : Type*} [Ring R] [LinearOrder R] [IsStrictOrderedRing R]
     [AddCommGroup V] [Module R V]
     {C : Set V} {φ : V →ₗ[R] R} :
     φ ∈ dualCone C ↔ ∀ x, x ∈ C → 0 ≤ φ x := Iff.rfl
@@ -58,7 +58,7 @@ deformation cone, and `firstVariation_dual` certifies that it lies in the dual
 cone.
 -/
 structure LocalRigidityDatum
-    (R V : Type*) [Field R] [LinearOrder R] [IsStrictOrderedRing R]
+    (R V : Type*) [Ring R] [LinearOrder R] [IsStrictOrderedRing R]
     [AddCommGroup V] [Module R V] where
   cone : VertexCone R V
   firstVariation : V →ₗ[R] R
@@ -66,7 +66,7 @@ structure LocalRigidityDatum
 
 namespace LocalRigidityDatum
 
-variable {R V : Type*} [Field R] [LinearOrder R] [IsStrictOrderedRing R]
+variable {R V : Type*} [Ring R] [LinearOrder R] [IsStrictOrderedRing R]
     [AddCommGroup V] [Module R V]
 
 /-- A local admissible deformation is nonnegative under the first variation. -/

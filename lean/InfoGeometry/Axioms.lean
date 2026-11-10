@@ -1,9 +1,5 @@
 import InfoGeometry.Assumptions.Determinant
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import InfoGeometry.Assumptions.DualConnections
-import InfoGeometry.Assumptions.LLN
-import InfoGeometry.Assumptions.ManifoldDegree
-import InfoGeometry.Assumptions.ManifoldHomology
 import InfoGeometry.Projective.LogSum
 
 /-!
@@ -14,24 +10,8 @@ Compatibility facade over `InfoGeometry.Assumptions`.
 
 namespace InfoGeometry.Axioms
 
-export InfoGeometry.Assumptions.ManifoldDegree (
-  exists_isolating_nhds_of_nondegenerate
-  preimage_finite_of_regular_value
-  exists_local_chart_homotopy_to_linear
-  localDegreeSign
-  local_degree_eq_sign_jacDet
-)
-
 export InfoGeometry.Projective (
   logSum_inequality
-)
-
-export InfoGeometry.Assumptions.ManifoldHomology (
-  IsRegularValue
-  top_homology_is_Z
-  topHomologyIso
-  mappingDegree
-  degree_formula_via_jacobian
 )
 
 export InfoGeometry.Assumptions.Determinant (
@@ -51,19 +31,5 @@ abbrev «GL» (R : Type u) (V : Type v) [CommRing R] [Fintype V] [DecidableEq V]
 noncomputable abbrev «SL» (R : Type u) (V : Type v)
     [CommRing R] [Fintype V] [DecidableEq V] :=
   InfoGeometry.Assumptions.Determinant.SL R V
-
-export InfoGeometry.Assumptions.DualConnections (
-  fisherMetric
-  amariChentsovTensor
-  alphaConnection
-  alpha_duality
-  fisher_metric_eq_hessian_KL
-)
-
-export InfoGeometry.Assumptions.LLN (
-  fixed_partition_slln
-  empirical_to_theoretical_slln
-  ae_tendsto_ratio_to_rnDeriv
-)
 
 end InfoGeometry.Axioms

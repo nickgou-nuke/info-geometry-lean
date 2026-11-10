@@ -15,7 +15,7 @@ noncomputable section
 namespace ProjectiveSymmetryAlgebra
 
 variable {G : Type} [Group G]
-variable {R : Type} [CommRing R]
+variable {R : Type} [CommSemiring R]
 variable {Operator : Type} [Ring Operator] [Algebra R Operator]
 
 /-- Projective representation with scalar extraction on each fibre. -/

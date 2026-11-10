@@ -15,7 +15,7 @@ representative property needed by the nilpotence transport theorem below.
 
 section
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 variable (A : ℕ → Type*)
 variable [∀ n, AddCommGroup (A n)] [∀ n, Module R (A n)]
 variable (AInf : Type*) [AddCommGroup AInf] [Module R AInf]

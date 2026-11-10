@@ -19,14 +19,20 @@ def window6ResultsParagraphRoles : List ResultSentenceRole :=
 def window6PreProtocolParagraphIsPlaceholder (protocolPassed : Bool) : Bool :=
   !protocolPassed
 
-private theorem window6PreProtocolParagraphIsPlaceholder_true :
-    window6PreProtocolParagraphIsPlaceholder false = true := by
-  rfl
+/-- A paragraph remains a placeholder exactly while the protocol has not passed. -/
+theorem window6PreProtocolParagraphIsPlaceholder_iff_not_passed (protocolPassed : Bool) :
+    window6PreProtocolParagraphIsPlaceholder protocolPassed = true ↔
+      protocolPassed = false := by
+  cases protocolPassed <;> simp [window6PreProtocolParagraphIsPlaceholder]
 
-/-- Paper label: `prop:typed-address-biaxial-completion-window6-results-organization-principle`. -/
+/-- The results paragraph contains each of the four declared sentence roles exactly once.
+The `Nodup` conjunct rules out repeated roles, and the membership conjunct rules out omissions. -/
 theorem paper_typed_address_biaxial_completion_window6_results_organization_principle :
-    window6ResultsParagraphRoles = [ResultSentenceRole.claim, ResultSentenceRole.evidence,
-      ResultSentenceRole.statistic, ResultSentenceRole.mechanism] := by
-  rfl
+    window6ResultsParagraphRoles.Nodup ∧
+      ∀ role : ResultSentenceRole, role ∈ window6ResultsParagraphRoles := by
+  constructor
+  · simp [window6ResultsParagraphRoles]
+  · intro role
+    cases role <;> simp [window6ResultsParagraphRoles]
 
 end Omega.TypedAddressBiaxialCompletion

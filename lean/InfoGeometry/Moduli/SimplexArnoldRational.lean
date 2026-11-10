@@ -31,21 +31,21 @@ theorem odds_identity (x : K) (h₀ : x ≠ 0) (h₁ : 1 - x ≠ 0) :
   field_simp [h₀, h₁]
   ring
 
-def complement (x : K) : K := 1 - x
+def complement {K : Type*} [Ring K] (x : K) : K := 1 - x
 
-def inverse (x : K) : K := x⁻¹
+def inverse {K : Type*} [DivisionRing K] (x : K) : K := x⁻¹
 
-theorem complement_involution (x : K) :
+theorem complement_involution {K : Type*} [Ring K] (x : K) :
     complement (complement x) = x := by
   simp [complement]
 
-theorem inverse_involution (x : K) :
+theorem inverse_involution {K : Type*} [DivisionRing K] (x : K) :
     inverse (inverse x) = x := by
   simp [inverse]
 
-theorem cycle_identity (x : K) (h₀ : x ≠ 0) :
+theorem cycle_identity {K : Type*} [DivisionRing K] (x : K) (h₀ : x ≠ 0) :
     1 - x⁻¹ = (x - 1) / x := by
-  field_simp [h₀]
+  rw [sub_div, div_self h₀, one_div]
 
 theorem complement_mem_open_unit_interval (x : ℝ) (hx : 0 < x) (hx1 : x < 1) :
     0 < complement x ∧ complement x < 1 := by

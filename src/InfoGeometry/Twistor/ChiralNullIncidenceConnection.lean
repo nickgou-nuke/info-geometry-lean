@@ -13,12 +13,12 @@ namespace InfoGeometry.Twistor.ChiralNullIncidenceConnection
 
 open InfoGeometry.Twistor.PenroseIncidence
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 variable {F : Type*} [AddCommGroup F] [Module R F]
 variable {N : Type*}
 
 /-- A finite linear transport system over a set of incidence nodes. -/
-structure DiscreteLinearConnection (R : Type*) [CommRing R]
+structure DiscreteLinearConnection (R : Type*) [Ring R]
     (F : Type*) [AddCommGroup F] [Module R F] (N : Type*) where
   transport : N → N → F ≃ₗ[R] F
 

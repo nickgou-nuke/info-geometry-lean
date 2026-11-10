@@ -24,6 +24,55 @@ open scoped Matrix
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
+section NoncommRing
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A] {d b : A}
+
+/-- The Peirce multiplication law as a native non-unital ring homomorphism
+from `Matrix (Fin 2) (Fin 2) R` into any associative algebra `A` over a
+possibly noncommutative coefficient ring `R`. -/
+def ringRepresentation (h : IsDualSeedPair d b) :
+    Matrix (Fin 2) (Fin 2) R →ₙ+* A where
+  toFun M := peirceBlock d b (M 0 0) (M 0 1) (M 1 0) (M 1 1)
+  map_zero' := by simp [peirceBlock]
+  map_add' M N := by simp only [Matrix.add_apply, peirceBlock, add_smul]; abel
+  map_mul' M N := by
+    simp only [peirceBlock_mul h, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp] theorem ringRepresentation_single01 (h : IsDualSeedPair d b) (a : R) :
+    ringRepresentation h (Matrix.single 0 1 a) = a • d := by
+  change peirceBlock d b (Matrix.single 0 1 a 0 0) (Matrix.single 0 1 a 0 1)
+    (Matrix.single 0 1 a 1 0) (Matrix.single 0 1 a 1 1) = a • d
+  simp [peirceBlock, Matrix.single]
+
+@[simp] theorem ringRepresentation_single10 (h : IsDualSeedPair d b) (a : R) :
+    ringRepresentation h (Matrix.single 1 0 a) = a • b := by
+  change peirceBlock d b (Matrix.single 1 0 a 0 0) (Matrix.single 1 0 a 0 1)
+    (Matrix.single 1 0 a 1 0) (Matrix.single 1 0 a 1 1) = a • b
+  simp [peirceBlock, Matrix.single]
+
+theorem ringRepresentation_one (h : IsDualSeedPair d b) :
+    ringRepresentation (R := R) h 1 = d * b + b * d := by
+  change peirceBlock d b ((1 : Matrix (Fin 2) (Fin 2) R) 0 0)
+    ((1 : Matrix (Fin 2) (Fin 2) R) 0 1) ((1 : Matrix (Fin 2) (Fin 2) R) 1 0)
+    ((1 : Matrix (Fin 2) (Fin 2) R) 1 1) = d * b + b * d
+  simp [peirceBlock, polePlus, poleMinus,
+    InfoGeometry.Singular.MoorePenrose.exactSupport,
+    InfoGeometry.Singular.MoorePenrose.coexactSupport]
+
+omit [Ring R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A] in
+/-- Nonzero reflexive square-zero partners cannot commute in any associative ring `A`. -/
+theorem ring_generators_mul_ne (h : IsDualSeedPair d b) (hd : d ≠ 0) :
+    d * b ≠ b * d := by
+  intro hc
+  apply hd
+  calc
+    d = d * b * d := h.inner.symm
+    _ = b * (d * d) := by rw [hc, mul_assoc]
+    _ = 0 := by rw [h.d_sq, mul_zero]
+
+end NoncommRing
+
 section Ring
 variable {R : Type*} [CommRing R] {X Y : Matrix n n R}
 

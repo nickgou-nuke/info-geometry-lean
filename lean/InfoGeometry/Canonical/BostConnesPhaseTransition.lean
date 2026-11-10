@@ -32,7 +32,7 @@ theorem bostConnes_lowTemperature_package (β : ℝ) (hβ : 1 < β) :
 /-- The Pauli world clock keeps its proved synchronicity invariant alongside the
 low-temperature Bost-Connes package. -/
 theorem bostConnes_pauli_synchronicity_package
-    {R : Type*} [CommRing R] (clock : PauliWorldClock R) (β : ℝ) (hβ : 1 < β) :
+    {R : Type*} [Ring R] (clock : PauliWorldClock R) (β : ℝ) (hβ : 1 < β) :
     isLowTemperaturePhase β ∧
       InfoGeometry.Canonical.BostConnesKMS.bostConnesPartition β =
         (riemannZeta (β : ℂ)).re ∧

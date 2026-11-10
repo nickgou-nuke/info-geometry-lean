@@ -14,7 +14,7 @@ Formalizes the cubic Dickson polynomial invariant and the alternating trilinear
 
 namespace InfoGeometry.Algebra.Zorn.G2DicksonCubicInvariant
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! =========================================================================
     1. Fano Plane Triads and 3x3 Determinant Kernel
@@ -84,7 +84,7 @@ theorem dicksonTrilinear_add_left (u₁ u₂ v w : Fin 7 → R) :
     dicksonTrilinear (u₁ + u₂) v w =
       dicksonTrilinear u₁ v w + dicksonTrilinear u₂ v w := by
   dsimp [dicksonTrilinear, det3]
-  ring
+  noncomm_ring
 
 /--
 THEOREM: Middle linearity under vector addition:
@@ -94,7 +94,7 @@ theorem dicksonTrilinear_add_mid (u v₁ v₂ w : Fin 7 → R) :
     dicksonTrilinear u (v₁ + v₂) w =
       dicksonTrilinear u v₁ w + dicksonTrilinear u v₂ w := by
   dsimp [dicksonTrilinear, det3]
-  ring
+  noncomm_ring
 
 /--
 THEOREM: Right linearity under vector addition:
@@ -104,13 +104,13 @@ theorem dicksonTrilinear_add_right (u v w₁ w₂ : Fin 7 → R) :
     dicksonTrilinear u v (w₁ + w₂) =
       dicksonTrilinear u v w₁ + dicksonTrilinear u v w₂ := by
   dsimp [dicksonTrilinear, det3]
-  ring
+  noncomm_ring
 
 /--
 THEOREM (Alternating Property on Slots 1 & 2):
   `Φ(u, u, w) = 0`
 -/
-theorem dicksonTrilinear_self_12 (u w : Fin 7 → R) :
+theorem dicksonTrilinear_self_12 {R : Type*} [CommRing R] (u w : Fin 7 → R) :
     dicksonTrilinear u u w = 0 := by
   dsimp [dicksonTrilinear, det3]
   ring
@@ -119,7 +119,7 @@ theorem dicksonTrilinear_self_12 (u w : Fin 7 → R) :
 THEOREM (Alternating Property on Slots 2 & 3):
   `Φ(u, v, v) = 0`
 -/
-theorem dicksonTrilinear_self_23 (u v : Fin 7 → R) :
+theorem dicksonTrilinear_self_23 {R : Type*} [CommRing R] (u v : Fin 7 → R) :
     dicksonTrilinear u v v = 0 := by
   dsimp [dicksonTrilinear, det3]
   ring
@@ -128,7 +128,7 @@ theorem dicksonTrilinear_self_23 (u v : Fin 7 → R) :
 THEOREM (Alternating Property on Slots 1 & 3):
   `Φ(u, v, u) = 0`
 -/
-theorem dicksonTrilinear_self_13 (u v : Fin 7 → R) :
+theorem dicksonTrilinear_self_13 {R : Type*} [CommRing R] (u v : Fin 7 → R) :
     dicksonTrilinear u v u = 0 := by
   dsimp [dicksonTrilinear, det3]
   ring
@@ -137,7 +137,7 @@ theorem dicksonTrilinear_self_13 (u v : Fin 7 → R) :
 THEOREM (Skew-Symmetry under Swap 1 ↔ 2):
   `Φ(v, u, w) = - Φ(u, v, w)`
 -/
-theorem dicksonTrilinear_skew_12 (u v w : Fin 7 → R) :
+theorem dicksonTrilinear_skew_12 {R : Type*} [CommRing R] (u v w : Fin 7 → R) :
     dicksonTrilinear v u w = - dicksonTrilinear u v w := by
   dsimp [dicksonTrilinear, det3]
   ring
@@ -146,7 +146,7 @@ theorem dicksonTrilinear_skew_12 (u v w : Fin 7 → R) :
 THEOREM (Skew-Symmetry under Swap 2 ↔ 3):
   `Φ(u, w, v) = - Φ(u, v, w)`
 -/
-theorem dicksonTrilinear_skew_23 (u v w : Fin 7 → R) :
+theorem dicksonTrilinear_skew_23 {R : Type*} [CommRing R] (u v w : Fin 7 → R) :
     dicksonTrilinear u w v = - dicksonTrilinear u v w := by
   dsimp [dicksonTrilinear, det3]
   ring

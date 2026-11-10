@@ -20,19 +20,24 @@ namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.JordanChevalleyBr
 
 open Algebra Polynomial
 
-section Core
+section Ring
 
-variable {K V : Type*} [Field K] [AddCommGroup V] [Module K V] [FiniteDimensional K V]
+variable {K V : Type*} [Ring K] [AddCommGroup V] [Module K V]
 
 /-- Nilpotent endomorphisms in the Jordan-Chevalley corridor. -/
 def IsNilpotentEnd (f : Module.End K V) : Prop :=
   IsNilpotent f
 
+end Ring
+
+section CommRing
+
+variable {K V : Type*} [CommRing K] [AddCommGroup V] [Module K V]
+
 /-- Semisimple endomorphisms in the Jordan-Chevalley corridor. -/
 def IsSemisimpleEnd (f : Module.End K V) : Prop :=
   f.IsSemisimple
 
-omit [FiniteDimensional K V] in
 /-- Polynomial evaluation at an endomorphism commutes with every endomorphism commuting with the
 original endomorphism. -/
 theorem commute_aeval {f g : Module.End K V} (hfg : Commute f g) (p : K[X]) :
@@ -46,7 +51,6 @@ theorem commute_aeval {f g : Module.End K V} (hfg : Commute f g) (p : K[X]) :
       simpa [Polynomial.aeval_mul, Polynomial.aeval_C, Polynomial.aeval_X_pow, mul_assoc] using
         (Commute.mul_left (Algebra.commute_algebraMap_left a g) (hfg.pow_left (n + 1)))
 
-omit [FiniteDimensional K V] in
 /-- Any element of the singleton-generated algebra `adjoin K {f}` commutes with every operator
 that commutes with `f`. -/
 theorem commute_of_mem_adjoin_singleton {f g : Module.End K V} (hfg : Commute f g)
@@ -66,6 +70,16 @@ structure JordanChevalleySplit (f : Module.End K V) where
   sum_eq : f = semisimple + nilpotent
   semisimpleLaw : IsSemisimpleEnd semisimple
   nilpotentLaw : IsNilpotentEnd nilpotent
+
+/-- The matrix endomorphism associated to a square matrix on the standard basis. -/
+def matrixEnd {n : Nat} (A : Matrix (Fin n) (Fin n) K) : Module.End K (Fin n → K) :=
+  Matrix.toLin (Pi.basisFun K (Fin n)) (Pi.basisFun K (Fin n)) A
+
+end CommRing
+
+section Core
+
+variable {K V : Type*} [Field K] [AddCommGroup V] [Module K V] [FiniteDimensional K V]
 
 namespace JordanChevalleySplit
 
@@ -116,10 +130,6 @@ theorem parts_commute_with_of_commute [PerfectField K] {g : Module.End K V} (hfg
   · exact commute_of_mem_adjoin_singleton (f := f) (g := g) hfg B.nilpotentMem
 
 end JordanChevalleySplit
-
-/-- The matrix endomorphism associated to a square matrix on the standard basis. -/
-def matrixEnd {n : Nat} (A : Matrix (Fin n) (Fin n) K) : Module.End K (Fin n → K) :=
-  Matrix.toLin (Pi.basisFun K (Fin n)) (Pi.basisFun K (Fin n)) A
 
 /--
 Matrix-side Jordan-Chevalley existence theorem on the standard complex carrier.

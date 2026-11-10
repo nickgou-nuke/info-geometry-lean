@@ -12,6 +12,60 @@ ring. It does not identify a geometric cotangent bundle or assert a manifold.
 -/
 namespace InfoGeometry.Core.PeirceDecomposition
 open Matrix
+section CyclicFunctional
+variable {A G : Type*} [Ring A] [AddCommGroup G]
+
+/-- Under any cyclic additive functional `τ : A →+ G` on an associative ring `A`,
+left pairing with `component10 P X` equals right pairing with `component01 P Y`. -/
+theorem cyclic_component10_mul (τ : A →+ G)
+    (hτ : ∀ U V : A, τ (U * V) = τ (V * U)) (P X Y : A) :
+    τ (component10 P X * Y) = τ (X * component01 P Y) := by
+  unfold component10 component01
+  calc
+    _ = τ (P * (X * complementIdempotent P * Y)) := by simp only [mul_assoc]
+    _ = τ ((X * complementIdempotent P * Y) * P) := hτ _ _
+    _ = _ := by simp only [mul_assoc]
+
+/-- Under any cyclic additive functional `τ : A →+ G` on an associative ring `A`,
+left pairing with `component01 P X` equals right pairing with `component10 P Y`. -/
+theorem cyclic_component01_mul (τ : A →+ G)
+    (hτ : ∀ U V : A, τ (U * V) = τ (V * U)) (P X Y : A) :
+    τ (component01 P X * Y) = τ (X * component10 P Y) := by
+  unfold component10 component01
+  calc
+    _ = τ (complementIdempotent P * (X * P * Y)) := by simp only [mul_assoc]
+    _ = τ ((X * P * Y) * complementIdempotent P) := hτ _ _
+    _ = _ := by simp only [mul_assoc]
+
+end CyclicFunctional
+
+section NoncommMatrixTrace
+variable {R n : Type*} [Ring R] [Fintype n] [DecidableEq n]
+
+/-- Over any (possibly noncommutative) ring `R`, the matrix trace defect between
+`component10 P X * Y` and `X * component01 P Y` equals the trace commutator of `P`
+with `X * complementIdempotent P * Y`. -/
+theorem trace_component10_mul_noncomm_anomaly (P X Y : Matrix n n R) :
+    trace (component10 P X * Y) - trace (X * component01 P Y) =
+      trace (P * (X * complementIdempotent P * Y) -
+        (X * complementIdempotent P * Y) * P) := by
+  unfold component10 component01
+  rw [trace_sub]
+  simp only [mul_assoc]
+
+/-- Over any (possibly noncommutative) ring `R`, the matrix trace defect between
+`component01 P X * Y` and `X * component10 P Y` equals the trace commutator of
+`complementIdempotent P` with `X * P * Y`. -/
+theorem trace_component01_mul_noncomm_anomaly (P X Y : Matrix n n R) :
+    trace (component01 P X * Y) - trace (X * component10 P Y) =
+      trace (complementIdempotent P * (X * P * Y) -
+        (X * P * Y) * complementIdempotent P) := by
+  unfold component10 component01
+  rw [trace_sub]
+  simp only [mul_assoc]
+
+end NoncommMatrixTrace
+
 variable {R n : Type*} [CommRing R] [Fintype n] [DecidableEq n]
 
 theorem trace_component10_mul (P X Y : Matrix n n R) :

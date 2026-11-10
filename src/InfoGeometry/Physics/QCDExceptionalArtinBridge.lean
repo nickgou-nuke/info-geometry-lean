@@ -43,7 +43,7 @@ theorem artin_chiral_packet
 structural invariants without identifying their carriers. -/
 theorem artin_zorn_slot_packet
     (ρ : G2SpinOperatorLift)
-    {R : Type*} [CommRing R]
+    {R : Type*} [Ring R]
     (f : ZMat R → ZMat R)
     (hf : IsOPStabilizingCompositionMap f)
     (X : ZMat R) :

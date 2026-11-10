@@ -20,7 +20,7 @@ namespace InfoGeometry.Canonical
 open InfoGeometry.Canonical.BostConnesModularFlow
 open InfoGeometry.Arithmetic.BostConnesSystem
 
-variable {R Op : Type*} [CommRing R]
+variable {R Op : Type*} [Ring R]
 variable [NormedRing Op] [NormedAlgebra ℂ Op] [StarRing Op]
 
 structure PauliArithmeticModularFlowBridge

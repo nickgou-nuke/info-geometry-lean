@@ -14,7 +14,7 @@ The unified Conformal Projective Souriau InfoGeometry.Topology.Metriplectic brid
 This bundles the algebraic features of the Einstein anomaly,
 metriplectic conservation, and Möbius index cancellation.
 -/
-structure ConformalProjectiveSouriauMetriplecticBridge (R : Type*) [CommRing R] [StarRing R] where
+structure ConformalProjectiveSouriauMetriplecticBridge (R : Type*) [Ring R] [StarRing R] where
   /-- The underlying metriplectic structure -/
   metriplectic : MetriplecticStructure R
   
@@ -36,7 +36,7 @@ structure ConformalProjectiveSouriauMetriplecticBridge (R : Type*) [CommRing R] 
 
 namespace ConformalProjectiveSouriauMetriplecticBridge
 
-variable {R : Type*} [CommRing R] [StarRing R]
+variable {R : Type*} [Ring R] [StarRing R]
 variable (B : ConformalProjectiveSouriauMetriplecticBridge R)
 
 /-- The Einstein anomaly associated with the bridge is skew-adjoint. -/

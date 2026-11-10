@@ -84,7 +84,7 @@ def realScalarIdentityModel : SuperMatrix ℝ := ⟨1, 0, 0, 1⟩
 
 namespace SuperMatrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 @[ext]
 theorem ext (X Y : SuperMatrix R)
@@ -151,22 +151,22 @@ instance : Pow (SuperMatrix R) ℕ := ⟨λ M n => npow n M⟩
 
 theorem pow_two (M : SuperMatrix R) : M ^ 2 = M * M := by
   change M * (M * 1) = M * M
-  ext <;> (dsimp; ring)
+  ext <;> (dsimp; noncomm_ring)
 
 theorem mul_assoc (X Y Z : SuperMatrix R) : (X * Y) * Z = X * (Y * Z) := by
-  ext <;> (dsimp; ring)
+  ext <;> (dsimp; noncomm_ring)
 
 theorem one_mul (X : SuperMatrix R) : 1 * X = X := by
-  ext <;> (dsimp; ring)
+  ext <;> (dsimp; noncomm_ring)
 
 theorem mul_one (X : SuperMatrix R) : X * 1 = X := by
-  ext <;> (dsimp; ring)
+  ext <;> (dsimp; noncomm_ring)
 
 theorem left_distrib (X Y Z : SuperMatrix R) : X * (Y + Z) = X * Y + X * Z := by
-  ext <;> (dsimp; ring)
+  ext <;> (dsimp; noncomm_ring)
 
 theorem right_distrib (X Y Z : SuperMatrix R) : (X + Y) * Z = X * Z + Y * Z := by
-  ext <;> (dsimp; ring)
+  ext <;> (dsimp; noncomm_ring)
 
 /-! ### 3. Graded Projections and Homogeneity -/
 
@@ -180,7 +180,7 @@ def oddPart (M : SuperMatrix R) : SuperMatrix R :=
 
 /-- Direct sum decomposition: $M = \operatorname{evenPart}(M) + \operatorname{oddPart}(M)$. -/
 theorem even_add_odd (M : SuperMatrix R) : evenPart M + oddPart M = M := by
-  ext <;> (dsimp [evenPart, oddPart]; ring)
+  ext <;> (dsimp [evenPart, oddPart]; abel)
 
 /-- Predicate for even homogeneous supermatrices (block-diagonal). -/
 def isEven (M : SuperMatrix R) : Prop :=
@@ -252,8 +252,8 @@ theorem even_mul_even (M N : SuperMatrix R) (hM : isEven M) (hN : isEven N) :
   rcases hM with ⟨hMB, hMC⟩
   rcases hN with ⟨hNB, hNC⟩
   constructor
-  · dsimp; rw [hMB, hNB]; ring
-  · dsimp; rw [hMC, hNC]; ring
+  · dsimp; rw [hMB, hNB]; noncomm_ring
+  · dsimp; rw [hMC, hNC]; noncomm_ring
 
 /-- Product of two odd supermatrices is even ($\mathbb{Z}_2$ grading rule: $1 + 1 \equiv 0$). -/
 theorem odd_mul_odd (M N : SuperMatrix R) (hM : isOdd M) (hN : isOdd N) :
@@ -261,8 +261,8 @@ theorem odd_mul_odd (M N : SuperMatrix R) (hM : isOdd M) (hN : isOdd N) :
   rcases hM with ⟨hMA, hMD⟩
   rcases hN with ⟨hNA, hND⟩
   constructor
-  · dsimp; rw [hMA, hND]; ring
-  · dsimp; rw [hMD, hNA]; ring
+  · dsimp; rw [hMA, hND]; noncomm_ring
+  · dsimp; rw [hMD, hNA]; noncomm_ring
 
 /-- Product of an even and an odd supermatrix is odd. -/
 theorem even_mul_odd (M N : SuperMatrix R) (hM : isEven M) (hN : isOdd N) :
@@ -270,8 +270,8 @@ theorem even_mul_odd (M N : SuperMatrix R) (hM : isEven M) (hN : isOdd N) :
   rcases hM with ⟨hMB, hMC⟩
   rcases hN with ⟨hNA, hND⟩
   constructor
-  · dsimp; rw [hMB, hNA]; ring
-  · dsimp; rw [hMC, hND]; ring
+  · dsimp; rw [hMB, hNA]; noncomm_ring
+  · dsimp; rw [hMC, hND]; noncomm_ring
 
 /-- Product of an odd and an even supermatrix is odd. -/
 theorem odd_mul_even (M N : SuperMatrix R) (hM : isOdd M) (hN : isEven N) :
@@ -279,8 +279,8 @@ theorem odd_mul_even (M N : SuperMatrix R) (hM : isOdd M) (hN : isEven N) :
   rcases hM with ⟨hMA, hMD⟩
   rcases hN with ⟨hNB, hNC⟩
   constructor
-  · dsimp; rw [hMA, hNC]; ring
-  · dsimp; rw [hMD, hNB]; ring
+  · dsimp; rw [hMA, hNC]; noncomm_ring
+  · dsimp; rw [hMD, hNB]; noncomm_ring
 
 /-! ### 4. Graded Supertrace and Supercommutator Cyclicity -/
 
@@ -289,29 +289,29 @@ def supertrace (M : SuperMatrix R) : R :=
   M.A - M.D
 
 theorem supertrace_zero : supertrace (0 : SuperMatrix R) = 0 := by
-  dsimp [supertrace]; ring
+  dsimp [supertrace]; noncomm_ring
 
 theorem supertrace_add (M N : SuperMatrix R) :
     supertrace (M + N) = supertrace M + supertrace N := by
-  dsimp [supertrace]; ring
+  dsimp [supertrace]; abel
 
 theorem supertrace_sub (M N : SuperMatrix R) :
     supertrace (M - N) = supertrace M - supertrace N := by
-  dsimp [supertrace]; ring
+  dsimp [supertrace]; abel
 
 theorem supertrace_neg (M : SuperMatrix R) :
     supertrace (-M) = -supertrace M := by
-  simp only [supertrace, neg_A, neg_D]; ring
+  simp only [supertrace, neg_A, neg_D]; abel
 
 theorem supertrace_smul (r : R) (M : SuperMatrix R) :
     supertrace (r • M) = r * supertrace M := by
-  dsimp [supertrace]; ring
+  dsimp [supertrace]; noncomm_ring
 
 theorem supertrace_odd (M : SuperMatrix R) (h : isOdd M) :
     supertrace M = 0 := by
   dsimp [supertrace]
   rw [h.1, h.2]
-  ring
+  noncomm_ring
 
 theorem supertrace_evenPart (M : SuperMatrix R) :
     supertrace (evenPart M) = supertrace M := by
@@ -319,33 +319,50 @@ theorem supertrace_evenPart (M : SuperMatrix R) :
 
 theorem supertrace_oddPart (M : SuperMatrix R) :
     supertrace (oddPart M) = 0 := by
-  dsimp [supertrace, oddPart]; ring
+  dsimp [supertrace, oddPart]; noncomm_ring
 
-/-- For even matrices, the supercommutator is the standard commutator $M N - N M$. -/
-theorem supertrace_even_supercommutator (M N : SuperMatrix R)
+/-- Over any non-commutative ring `[Ring R]`, the even supercommutator supertrace
+    equals `(M.A * N.A - N.A * M.A) - (M.D * N.D - N.D * M.D)`. -/
+theorem supertrace_even_supercommutator_noncomm (M N : SuperMatrix R)
     (hM : isEven M) (hN : isEven N) :
-    supertrace (M * N - N * M) = 0 := by
+    supertrace (M * N - N * M) = (M.A * N.A - N.A * M.A) - (M.D * N.D - N.D * M.D) := by
   rcases hM with ⟨hMB, hMC⟩
   rcases hN with ⟨hNB, hNC⟩
   dsimp [supertrace]
   rw [hMB, hMC, hNB, hNC]
+  noncomm_ring
+
+/-- For even matrices, the supercommutator is the standard commutator $M N - N M$. -/
+theorem supertrace_even_supercommutator {R : Type*} [CommRing R] (M N : SuperMatrix R)
+    (hM : isEven M) (hN : isEven N) :
+    supertrace (M * N - N * M) = 0 := by
+  rw [supertrace_even_supercommutator_noncomm M N hM hN]
   ring
+
+/-- Over any non-commutative ring `[Ring R]`, the odd supercommutator supertrace
+    equals `(M.B * N.C - N.C * M.B) + (N.B * M.C - M.C * N.B)`. -/
+theorem supertrace_odd_supercommutator_noncomm (M N : SuperMatrix R)
+    (hM : isOdd M) (hN : isOdd N) :
+    supertrace (M * N + N * M) = (M.B * N.C - N.C * M.B) + (N.B * M.C - M.C * N.B) := by
+  rcases hM with ⟨hMA, hMD⟩
+  rcases hN with ⟨hNA, hND⟩
+  dsimp [supertrace]
+  rw [hMA, hMD, hNA, hND]
+  noncomm_ring
 
 /--
 For odd matrices, the supercommutator is the anticommutator $M N + N M$.
 Its supertrace vanishes identically by commutativity of the underlying ring:
 $$(B_1 C_2 + B_2 C_1) - (C_1 B_2 + C_2 B_1) = 0$$
 -/
-theorem supertrace_odd_supercommutator (M N : SuperMatrix R)
+theorem supertrace_odd_supercommutator {R : Type*} [CommRing R] (M N : SuperMatrix R)
     (hM : isOdd M) (hN : isOdd N) :
     supertrace (M * N + N * M) = 0 := by
-  rcases hM with ⟨hMA, hMD⟩
-  rcases hN with ⟨hNA, hND⟩
-  dsimp [supertrace]
-  rw [hMA, hMD, hNA, hND]
+  rw [supertrace_odd_supercommutator_noncomm M N hM hN]
   ring
 
-/-- For mixed even-odd pairs, the supercommutator is the commutator $M N - N M$. -/
+/-- For mixed even-odd pairs, the supercommutator is the commutator $M N - N M$,
+    whose supertrace vanishes over any ring `[Ring R]`. -/
 theorem supertrace_mixed_supercommutator_even_odd (M N : SuperMatrix R)
     (hM : isEven M) (hN : isOdd N) :
     supertrace (M * N - N * M) = 0 := by
@@ -353,9 +370,10 @@ theorem supertrace_mixed_supercommutator_even_odd (M N : SuperMatrix R)
   rcases hN with ⟨hNA, hND⟩
   dsimp [supertrace]
   rw [hMB, hMC, hNA, hND]
-  ring
+  noncomm_ring
 
-/-- For mixed odd-even pairs, the supercommutator is the commutator $M N - N M$. -/
+/-- For mixed odd-even pairs, the supercommutator is the commutator $M N - N M$,
+    whose supertrace vanishes over any ring `[Ring R]`. -/
 theorem supertrace_mixed_supercommutator_odd_even (M N : SuperMatrix R)
     (hM : isOdd M) (hN : isEven N) :
     supertrace (M * N - N * M) = 0 := by
@@ -363,7 +381,7 @@ theorem supertrace_mixed_supercommutator_odd_even (M N : SuperMatrix R)
   rcases hN with ⟨hNB, hNC⟩
   dsimp [supertrace]
   rw [hMA, hMD, hNB, hNC]
-  ring
+  noncomm_ring
 
 /-- Parity-tagged superbracket $[M, N]_s = M N - (-1)^{|M||N|} N M$. -/
 def superbracket (pM pN : Parity) (M N : SuperMatrix R) : SuperMatrix R :=
@@ -372,7 +390,7 @@ def superbracket (pM pN : Parity) (M N : SuperMatrix R) : SuperMatrix R :=
   | _, _ => M * N - N * M
 
 /-- **Theorem**: The Graded Supertrace annihilates every homogeneous superbracket. -/
-theorem supertrace_superbracket_eq_zero (pM pN : Parity) (M N : SuperMatrix R)
+theorem supertrace_superbracket_eq_zero {R : Type*} [CommRing R] (pM pN : Parity) (M N : SuperMatrix R)
     (hM : isHomogeneous pM M) (hN : isHomogeneous pN N) :
     supertrace (superbracket pM pN M N) = 0 := by
   cases pM <;> cases pN
@@ -398,13 +416,13 @@ theorem projector_idempotent (P_plus P_minus : R)
   rw [pow_two]
   ext
   · change P_plus * P_plus + 0 * 0 = P_plus
-    have h2 : P_plus * P_plus = P_plus ^ 2 := by ring
-    rw [h2, hplus]; ring
-  · change P_plus * 0 + 0 * P_minus = 0; ring
-  · change 0 * P_plus + P_minus * 0 = 0; ring
+    have h2 : P_plus * P_plus = P_plus ^ 2 := by noncomm_ring
+    rw [h2, hplus]; noncomm_ring
+  · change P_plus * 0 + 0 * P_minus = 0; noncomm_ring
+  · change 0 * P_plus + P_minus * 0 = 0; noncomm_ring
   · change 0 * 0 + P_minus * P_minus = P_minus
-    have h2 : P_minus * P_minus = P_minus ^ 2 := by ring
-    rw [h2, hminus]; ring
+    have h2 : P_minus * P_minus = P_minus ^ 2 := by noncomm_ring
+    rw [h2, hminus]; noncomm_ring
 
 /-- **Theorem**: Supertrace of the projector computes the graded virtual index: $\operatorname{str}(P) = P_+ - P_-$. -/
 theorem projector_supertrace (P_plus P_minus : R) :
@@ -414,7 +432,7 @@ theorem projector_supertrace (P_plus P_minus : R) :
 /-- For equal scalar diagonal entries, the scalar supertrace is zero. -/
 theorem balanced_projector_supertrace_zero (P_val : R) :
     supertrace (diagonalProjector P_val P_val) = 0 := by
-  dsimp [supertrace, diagonalProjector]; ring
+  dsimp [supertrace, diagonalProjector]; noncomm_ring
 
 /-! ### 6. Diagonal Quotient and Entrywise Exponential Identities -/
 
@@ -504,7 +522,7 @@ def realScalarPairModel : SuperVector ℝ := ⟨1, 0⟩
 
 namespace SuperVector
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 @[ext]
 theorem ext (u v : SuperVector R) (hp : u.plus = v.plus) (hm : u.minus = v.minus) : u = v := by
@@ -535,30 +553,30 @@ end SuperVector
 Action-like operation of the scalar array on a scalar pair:
 $$M \cdot v = \begin{pmatrix} A v_+ + B v_- \\ C v_+ + D v_- \end{pmatrix}$$
 -/
-def act {R : Type*} [CommRing R] (M : SuperMatrix R) (v : SuperVector R) : SuperVector R :=
+def act {R : Type*} [Ring R] (M : SuperMatrix R) (v : SuperVector R) : SuperVector R :=
   ⟨M.A * v.plus + M.B * v.minus, M.C * v.plus + M.D * v.minus⟩
 
 namespace SuperModule
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 theorem act_one (v : SuperVector R) : act 1 v = v := by
-  ext <;> (dsimp [act]; ring)
+  ext <;> (dsimp [act]; noncomm_ring)
 
 /-- **Theorem**: Associativity of the module action $(M N) \cdot v = M \cdot (N \cdot v)$. -/
 theorem act_mul (M N : SuperMatrix R) (v : SuperVector R) :
     act (M * N) v = act M (act N v) := by
-  ext <;> (dsimp [act]; ring)
+  ext <;> (dsimp [act]; noncomm_ring)
 
 /-- **Theorem**: Left linearity over matrix addition. -/
 theorem act_add (M N : SuperMatrix R) (v : SuperVector R) :
     act (M + N) v = act M v + act N v := by
-  ext <;> (dsimp [act]; ring)
+  ext <;> (dsimp [act]; noncomm_ring)
 
 /-- **Theorem**: Right linearity over vector addition. -/
 theorem act_vec_add (M : SuperMatrix R) (u v : SuperVector R) :
     act M (u + v) = act M u + act M v := by
-  ext <;> (dsimp [act]; ring)
+  ext <;> (dsimp [act]; noncomm_ring)
 
 /-- For a scalar pair with zero odd coordinate, an even array preserves that coordinate. -/
 theorem act_even_preserves_grading_plus (M : SuperMatrix R) (v : SuperVector R)
@@ -567,7 +585,7 @@ theorem act_even_preserves_grading_plus (M : SuperMatrix R) (v : SuperVector R)
   rcases hM with ⟨_, hMC⟩
   dsimp [act]
   rw [hMC, hv]
-  ring
+  noncomm_ring
 
 /-- For a scalar pair with zero even coordinate, an even array preserves that coordinate. -/
 theorem act_even_preserves_grading_minus (M : SuperMatrix R) (v : SuperVector R)
@@ -576,7 +594,7 @@ theorem act_even_preserves_grading_minus (M : SuperMatrix R) (v : SuperVector R)
   rcases hM with ⟨hMB, _⟩
   dsimp [act]
   rw [hMB, hv]
-  ring
+  noncomm_ring
 
 /-- For a scalar pair with zero odd coordinate, an odd array maps into the odd coordinate. -/
 theorem act_odd_reverses_grading_plus (M : SuperMatrix R) (v : SuperVector R)
@@ -585,7 +603,7 @@ theorem act_odd_reverses_grading_plus (M : SuperMatrix R) (v : SuperVector R)
   rcases hM with ⟨hMA, _⟩
   dsimp [act]
   rw [hMA, hv]
-  ring
+  noncomm_ring
 
 /-- For a scalar pair with zero even coordinate, an odd array maps into the even coordinate. -/
 theorem act_odd_reverses_grading_minus (M : SuperMatrix R) (v : SuperVector R)
@@ -594,7 +612,7 @@ theorem act_odd_reverses_grading_minus (M : SuperMatrix R) (v : SuperVector R)
   rcases hM with ⟨_, hMD⟩
   dsimp [act]
   rw [hMD, hv]
-  ring
+  noncomm_ring
 
 end SuperModule
 
@@ -603,39 +621,39 @@ end SuperModule
 /-- Certificate bundling the identities proved for this scalar-entry `1|1` model. -/
 structure ScalarOneOneGradedAlgebraCertificate : Prop where
   -- 1. Graded decomposition
-  even_odd_decomp : ∀ {R : Type*} [CommRing R] (M : SuperMatrix R),
+  even_odd_decomp : ∀ {R : Type*} [Ring R] (M : SuperMatrix R),
     SuperMatrix.evenPart M + SuperMatrix.oddPart M = M
-  evenPart_is_even : ∀ {R : Type*} [CommRing R] (M : SuperMatrix R),
+  evenPart_is_even : ∀ {R : Type*} [Ring R] (M : SuperMatrix R),
     SuperMatrix.isEven (SuperMatrix.evenPart M)
-  oddPart_is_odd : ∀ {R : Type*} [CommRing R] (M : SuperMatrix R),
+  oddPart_is_odd : ∀ {R : Type*} [Ring R] (M : SuperMatrix R),
     SuperMatrix.isOdd (SuperMatrix.oddPart M)
   -- 2. Graded multiplication rules
-  even_mul_even : ∀ {R : Type*} [CommRing R] (M N : SuperMatrix R),
+  even_mul_even : ∀ {R : Type*} [Ring R] (M N : SuperMatrix R),
     SuperMatrix.isEven M → SuperMatrix.isEven N → SuperMatrix.isEven (M * N)
-  odd_mul_odd : ∀ {R : Type*} [CommRing R] (M N : SuperMatrix R),
+  odd_mul_odd : ∀ {R : Type*} [Ring R] (M N : SuperMatrix R),
     SuperMatrix.isOdd M → SuperMatrix.isOdd N → SuperMatrix.isEven (M * N)
-  even_mul_odd : ∀ {R : Type*} [CommRing R] (M N : SuperMatrix R),
+  even_mul_odd : ∀ {R : Type*} [Ring R] (M N : SuperMatrix R),
     SuperMatrix.isEven M → SuperMatrix.isOdd N → SuperMatrix.isOdd (M * N)
-  odd_mul_even : ∀ {R : Type*} [CommRing R] (M N : SuperMatrix R),
+  odd_mul_even : ∀ {R : Type*} [Ring R] (M N : SuperMatrix R),
     SuperMatrix.isOdd M → SuperMatrix.isEven N → SuperMatrix.isOdd (M * N)
   -- 3. Graded supertrace linearity
-  supertrace_add : ∀ {R : Type*} [CommRing R] (M N : SuperMatrix R),
+  supertrace_add : ∀ {R : Type*} [Ring R] (M N : SuperMatrix R),
     SuperMatrix.supertrace (M + N) = SuperMatrix.supertrace M + SuperMatrix.supertrace N
-  supertrace_odd_vanish : ∀ {R : Type*} [CommRing R] (M : SuperMatrix R),
+  supertrace_odd_vanish : ∀ {R : Type*} [Ring R] (M : SuperMatrix R),
     SuperMatrix.isOdd M → SuperMatrix.supertrace M = 0
   -- 4. Supercommutator cyclicity
   supertrace_even_supercommutator : ∀ {R : Type*} [CommRing R] (M N : SuperMatrix R),
     SuperMatrix.isEven M → SuperMatrix.isEven N → SuperMatrix.supertrace (M * N - N * M) = 0
   supertrace_odd_supercommutator : ∀ {R : Type*} [CommRing R] (M N : SuperMatrix R),
     SuperMatrix.isOdd M → SuperMatrix.isOdd N → SuperMatrix.supertrace (M * N + N * M) = 0
-  supertrace_mixed_supercommutator : ∀ {R : Type*} [CommRing R] (M N : SuperMatrix R),
+  supertrace_mixed_supercommutator : ∀ {R : Type*} [Ring R] (M N : SuperMatrix R),
     SuperMatrix.isEven M → SuperMatrix.isOdd N → SuperMatrix.supertrace (M * N - N * M) = 0
   -- 5. Diagonal scalar idempotent pairs
-  projector_idempotent : ∀ {R : Type*} [CommRing R] (p q : R),
+  projector_idempotent : ∀ {R : Type*} [Ring R] (p q : R),
     p ^ 2 = p → q ^ 2 = q → (SuperMatrix.diagonalProjector p q) ^ 2 = SuperMatrix.diagonalProjector p q
-  projector_supertrace : ∀ {R : Type*} [CommRing R] (p q : R),
+  projector_supertrace : ∀ {R : Type*} [Ring R] (p q : R),
     SuperMatrix.supertrace (SuperMatrix.diagonalProjector p q) = p - q
-  balanced_projector_supertrace_zero : ∀ {R : Type*} [CommRing R] (p : R),
+  balanced_projector_supertrace_zero : ∀ {R : Type*} [Ring R] (p : R),
     SuperMatrix.supertrace (SuperMatrix.diagonalProjector p p) = 0
   -- 6. Diagonal quotient identities
   berezinian_mul : ∀ {K : Type*} [Field K] (M N : SuperMatrix K),
@@ -649,11 +667,11 @@ structure ScalarOneOneGradedAlgebraCertificate : Prop where
     SuperMatrix.supertrace (SuperMatrix.evenPart M) = 0 →
     SuperMatrix.berezinianEven (SuperMatrix.expEven M) = 1
   -- 7. Graded module action
-  act_mul : ∀ {R : Type*} [CommRing R] (M N : SuperMatrix R) (v : SuperVector R),
+  act_mul : ∀ {R : Type*} [Ring R] (M N : SuperMatrix R) (v : SuperVector R),
     act (M * N) v = act M (act N v)
-  act_even_preserves_grading : ∀ {R : Type*} [CommRing R] (M : SuperMatrix R) (v : SuperVector R),
+  act_even_preserves_grading : ∀ {R : Type*} [Ring R] (M : SuperMatrix R) (v : SuperVector R),
     SuperMatrix.isEven M → v.minus = 0 → (act M v).minus = 0
-  act_odd_reverses_grading : ∀ {R : Type*} [CommRing R] (M : SuperMatrix R) (v : SuperVector R),
+  act_odd_reverses_grading : ∀ {R : Type*} [Ring R] (M : SuperMatrix R) (v : SuperVector R),
     SuperMatrix.isOdd M → v.minus = 0 → (act M v).plus = 0
 
 /-- Assemble the proved scalar `1|1` graded-algebra identities into their certificate. -/

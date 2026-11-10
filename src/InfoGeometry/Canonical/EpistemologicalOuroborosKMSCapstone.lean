@@ -9,7 +9,7 @@ open InfoGeometry.Quantum.EpistemologicalOuroborosKMS
 
 The hypotheses are exactly those required by the two algebraic identities;
 the KMS normalization and multiplicativity are supplied by their owner. -/
-theorem epistemological_ouroboros_kms_canonical_capstone {R : Type*} [CommRing R]
+theorem epistemological_ouroboros_kms_canonical_capstone {R : Type*} [Ring R]
     (d delta gamma : R) (n m : ℕ) (β : ℝ)
     (hd : d * d = 0) (hdelta : delta * delta = 0)
     (hd_gamma : anticommutator gamma d = 0)

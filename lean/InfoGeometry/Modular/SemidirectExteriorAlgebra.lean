@@ -21,7 +21,7 @@ noncomputable section
 namespace InfoGeometry.Modular.SemidirectExterior
 
 variable {R A : Type*}
-variable [CommRing R] [Ring A] [Algebra R A]
+variable [Ring R] [Ring A] [Module R A]
 
 /-!
 =============================================================================
@@ -29,7 +29,7 @@ PART 1: Bundled Derivations and Semidirect Lie Elements
 =============================================================================
 -/
 
-structure Derivation (R A : Type*) [CommRing R] [Ring A] [Algebra R A] where
+structure Derivation (R A : Type*) [Ring R] [Ring A] [Module R A] where
   toFun : A → A
   map_add' : ∀ x y, toFun (x + y) = toFun x + toFun y
   map_smul' : ∀ (c : R) x, toFun (c • x) = c • toFun x
@@ -110,7 +110,7 @@ instance : Zero (Derivation R A) := ⟨zero⟩
 end Derivation
 
 /-- An element of the crossed product space Der(A) ⋉ A. -/
-structure SemidirectElement (R A : Type*) [CommRing R] [Ring A] [Algebra R A] where
+structure SemidirectElement (R A : Type*) [Ring R] [Ring A] [Module R A] where
   der : Derivation R A
   pot : A
 
@@ -162,7 +162,7 @@ PART 2: Alternating 2-Forms on the Semidirect Space
 
 /-- An alternating R-bilinear 2-form on the semidirect space Der(A) ⋉ A. -/
 structure Semidirect2Form (R A : Type*)
-    [CommRing R] [Ring A] [Algebra R A] where
+    [Ring R] [Ring A] [Module R A] where
   toFun : SemidirectElement R A → SemidirectElement R A → R
   map_add_left' : ∀ u v w, toFun (u + v) w = toFun u w + toFun v w
   map_add_right' : ∀ u v w, toFun u (v + w) = toFun u v + toFun u w
@@ -223,7 +223,7 @@ PART 3: The Chevalley–Eilenberg Differential on Dual 1-Forms
 -/
 
 /-- A linear functional (dual 1-form) on the semidirect Lie algebra 𝔤 = Der(A) ⋉ A. -/
-structure Semidirect1Form (R A : Type*) [CommRing R] [Ring A] [Algebra R A] where
+structure Semidirect1Form (R A : Type*) [Ring R] [Ring A] [Module R A] where
   toFun : SemidirectElement R A → R
   map_add' : ∀ u v, toFun (u + v) = toFun u + toFun v
 

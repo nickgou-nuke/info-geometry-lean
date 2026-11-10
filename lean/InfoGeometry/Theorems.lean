@@ -57,7 +57,17 @@ namespace InfoGeometry.Theorems
 
 section KreinSpaceProjectors
 
-variable {A : Type*} [CommRing A] [Invertible (2 : A)]
+variable {A : Type*} [Ring A] [Invertible (2 : A)]
+
+private theorem invOf_two_comm_krein (X : A) : ⅟(2 : A) * X = X * ⅟(2 : A) := by
+  have h1 : ⅟(2 : A) * 2 = 1 := invOf_mul_self (2 : A)
+  have h2 : 2 * ⅟(2 : A) = 1 := mul_invOf_self (2 : A)
+  calc
+    ⅟(2 : A) * X = ⅟(2 : A) * X * 1 := by noncomm_ring
+    _ = ⅟(2 : A) * X * (2 * ⅟(2 : A)) := by rw [← h2]
+    _ = (⅟(2 : A) * 2) * X * ⅟(2 : A) := by noncomm_ring
+    _ = 1 * X * ⅟(2 : A) := by rw [h1]
+    _ = X * ⅟(2 : A) := by noncomm_ring
 
 /-- The positive-norm exact-forms projector defined by a scalar fundamental symmetry. -/
 def krein_plus (J : A) : A := ⅟(2 : A) * (1 + J)
@@ -72,12 +82,13 @@ theorem krein_plus_idem (J : A) (hJ : J ^ 2 = 1) :
   have h2 : ⅟(2 : A) * 2 = 1 := invOf_mul_self (2 : A)
   calc
     (⅟(2 : A) * (1 + J)) ^ 2
-        = ⅟(2 : A) ^ 2 * (1 + 2 * J + J ^ 2) := by ring
-    _ = ⅟(2 : A) ^ 2 * (1 + 2 * J + 1) := by rw [hJ]
-    _ = ⅟(2 : A) ^ 2 * (2 + 2 * J) := by ring
-    _ = ⅟(2 : A) * (⅟(2 : A) * 2) * (1 + J) := by ring
-    _ = ⅟(2 : A) * 1 * (1 + J) := by rw [h2]
-    _ = ⅟(2 : A) * (1 + J) := by ring
+        = ⅟(2 : A) * ((1 + J) * ⅟(2 : A)) * (1 + J) := by noncomm_ring
+    _ = ⅟(2 : A) * (⅟(2 : A) * (1 + J)) * (1 + J) := by rw [← invOf_two_comm_krein (1 + J)]
+    _ = (⅟(2 : A) * ⅟(2 : A)) * (1 + 2 * J + J ^ 2) := by noncomm_ring
+    _ = (⅟(2 : A) * ⅟(2 : A)) * (1 + 2 * J + 1) := by rw [hJ]
+    _ = (⅟(2 : A) * (⅟(2 : A) * 2)) * (1 + J) := by noncomm_ring
+    _ = (⅟(2 : A) * 1) * (1 + J) := by rw [h2]
+    _ = ⅟(2 : A) * (1 + J) := by noncomm_ring
 
 /-- The scalar negative-sector projector is idempotent. -/
 theorem krein_minus_idem (J : A) (hJ : J ^ 2 = 1) :
@@ -86,12 +97,13 @@ theorem krein_minus_idem (J : A) (hJ : J ^ 2 = 1) :
   have h2 : ⅟(2 : A) * 2 = 1 := invOf_mul_self (2 : A)
   calc
     (⅟(2 : A) * (1 - J)) ^ 2
-        = ⅟(2 : A) ^ 2 * (1 - 2 * J + J ^ 2) := by ring
-    _ = ⅟(2 : A) ^ 2 * (1 - 2 * J + 1) := by rw [hJ]
-    _ = ⅟(2 : A) ^ 2 * (2 - 2 * J) := by ring
-    _ = ⅟(2 : A) * (⅟(2 : A) * 2) * (1 - J) := by ring
-    _ = ⅟(2 : A) * 1 * (1 - J) := by rw [h2]
-    _ = ⅟(2 : A) * (1 - J) := by ring
+        = ⅟(2 : A) * ((1 - J) * ⅟(2 : A)) * (1 - J) := by noncomm_ring
+    _ = ⅟(2 : A) * (⅟(2 : A) * (1 - J)) * (1 - J) := by rw [← invOf_two_comm_krein (1 - J)]
+    _ = (⅟(2 : A) * ⅟(2 : A)) * (1 - 2 * J + J ^ 2) := by noncomm_ring
+    _ = (⅟(2 : A) * ⅟(2 : A)) * (1 - 2 * J + 1) := by rw [hJ]
+    _ = (⅟(2 : A) * (⅟(2 : A) * 2)) * (1 - J) := by noncomm_ring
+    _ = (⅟(2 : A) * 1) * (1 - J) := by rw [h2]
+    _ = ⅟(2 : A) * (1 - J) := by noncomm_ring
 
 /-- The scalar positive and negative projectors are orthogonal. -/
 theorem krein_ortho (J : A) (hJ : J ^ 2 = 1) :
@@ -99,15 +111,17 @@ theorem krein_ortho (J : A) (hJ : J ^ 2 = 1) :
   unfold krein_plus krein_minus
   calc
     (⅟(2 : A) * (1 + J)) * (⅟(2 : A) * (1 - J))
-        = ⅟(2 : A) ^ 2 * (1 - J ^ 2) := by ring
-    _ = ⅟(2 : A) ^ 2 * (1 - 1) := by rw [hJ]
-    _ = 0 := by ring
+        = ⅟(2 : A) * ((1 + J) * ⅟(2 : A)) * (1 - J) := by noncomm_ring
+    _ = ⅟(2 : A) * (⅟(2 : A) * (1 + J)) * (1 - J) := by rw [← invOf_two_comm_krein (1 + J)]
+    _ = (⅟(2 : A) * ⅟(2 : A)) * (1 - J ^ 2) := by noncomm_ring
+    _ = (⅟(2 : A) * ⅟(2 : A)) * (1 - 1) := by rw [hJ]
+    _ = 0 := by noncomm_ring
 
 end KreinSpaceProjectors
 
 section ThermodynamicFluctuations
 
-variable {K A : Type*} [CommRing K] [CommRing A] [Algebra K A]
+variable {K A : Type*} [CommRing K] [Ring A] [Algebra K A]
 
 /--
 The centered second moment of an idempotent is `c - c^2` under a normalized
@@ -124,11 +138,16 @@ theorem idempotent_trace_variance
     rw [Algebra.algebraMap_eq_smul_one, LinearMap.map_smul, htau_one, smul_eq_mul, mul_one]
   have hP : tau P = c := by
     rw [hP_eq, map_add, h_map, h_tau_X, add_zero]
+  have h_comm : X * algebraMap K A c = algebraMap K A c * X :=
+    (Algebra.commutes c X).symm
   have hP2 : P ^ 2 = algebraMap K A (c ^ 2) + algebraMap K A (2 * c) * X + X ^ 2 := by
     rw [hP_eq]
     calc
       (algebraMap K A c + X) ^ 2
-          = (algebraMap K A c) ^ 2 + 2 * (algebraMap K A c) * X + X ^ 2 := by ring
+          = (algebraMap K A c) ^ 2 + algebraMap K A c * X + X * algebraMap K A c + X ^ 2 := by
+        noncomm_ring
+      _ = (algebraMap K A c) ^ 2 + 2 * (algebraMap K A c) * X + X ^ 2 := by
+        rw [h_comm]; noncomm_ring
       _ = algebraMap K A (c ^ 2) + algebraMap K A (2 * c) * X + X ^ 2 := by
         simp only [map_pow, map_mul, map_ofNat]
   have h_tau_P2 : tau (P ^ 2) = c ^ 2 + tau (X ^ 2) := by
@@ -161,6 +180,25 @@ theorem tri_facet_trace_fluctuation
     rw [Algebra.algebraMap_eq_smul_one, LinearMap.map_smul, htau_one, smul_eq_mul, mul_one]
   have hO : tau O = c := by
     rw [hO_eq, map_add, h_map, h_tau_X, add_zero]
+  have h_comm : X * algebraMap K A c = algebraMap K A c * X :=
+    (Algebra.commutes c X).symm
+  have hO2 :
+      (algebraMap K A c + X) ^ 2 =
+        (algebraMap K A c) ^ 2 + 2 * (algebraMap K A c) * X + X ^ 2 := by
+    calc
+      (algebraMap K A c + X) ^ 2
+          = (algebraMap K A c) ^ 2 + algebraMap K A c * X + X * algebraMap K A c + X ^ 2 := by
+        noncomm_ring
+      _ = (algebraMap K A c) ^ 2 + 2 * (algebraMap K A c) * X + X ^ 2 := by
+        rw [h_comm]; noncomm_ring
+  have h_comm_sq : X * (algebraMap K A c) ^ 2 = (algebraMap K A c) ^ 2 * X := by
+    rw [← map_pow]
+    exact (Algebra.commutes (c ^ 2) X).symm
+  have h_comm_2c : X * (2 * algebraMap K A c) = (2 * algebraMap K A c) * X := by
+    calc
+      X * (2 * algebraMap K A c) = 2 * (X * algebraMap K A c) := by noncomm_ring
+      _ = 2 * (algebraMap K A c * X) := by rw [h_comm]
+      _ = (2 * algebraMap K A c) * X := by noncomm_ring
   have hO3 :
       O ^ 3 =
         algebraMap K A (c ^ 3) +
@@ -169,9 +207,22 @@ theorem tri_facet_trace_fluctuation
     rw [hO_eq]
     calc
       (algebraMap K A c + X) ^ 3 =
-          (algebraMap K A c) ^ 3 +
+          (algebraMap K A c + X) * (algebraMap K A c + X) ^ 2 := by
+        noncomm_ring
+      _ = (algebraMap K A c + X) *
+            ((algebraMap K A c) ^ 2 + 2 * (algebraMap K A c) * X + X ^ 2) := by
+        rw [hO2]
+      _ = (algebraMap K A c) ^ 3 +
+            2 * (algebraMap K A c) ^ 2 * X +
+              (algebraMap K A c) * X ^ 2 +
+              (X * (algebraMap K A c) ^ 2) +
+              (X * (2 * algebraMap K A c)) * X + X ^ 3 := by
+        noncomm_ring
+      _ = (algebraMap K A c) ^ 3 +
             3 * (algebraMap K A c) ^ 2 * X +
-              3 * (algebraMap K A c) * X ^ 2 + X ^ 3 := by ring
+              3 * (algebraMap K A c) * X ^ 2 + X ^ 3 := by
+        rw [h_comm_sq, h_comm_2c]
+        noncomm_ring
       _ = algebraMap K A (c ^ 3) +
             algebraMap K A (3 * c ^ 2) * X +
               algebraMap K A (3 * c) * X ^ 2 + X ^ 3 := by
@@ -260,7 +311,18 @@ end VerlindeFusionAlgebra
 
 section TriFacet
 
-variable {F : Type*} [CommRing F]
+variable {F : Type*} [Ring F]
+
+private theorem invOf_two_comm_trifacet [Invertible (2 : F)] (X : F) :
+    ⅟(2 : F) * X = X * ⅟(2 : F) := by
+  have h1 : ⅟(2 : F) * 2 = 1 := invOf_mul_self (2 : F)
+  have h2 : 2 * ⅟(2 : F) = 1 := mul_invOf_self (2 : F)
+  calc
+    ⅟(2 : F) * X = ⅟(2 : F) * X * 1 := by noncomm_ring
+    _ = ⅟(2 : F) * X * (2 * ⅟(2 : F)) := by rw [← h2]
+    _ = (⅟(2 : F) * 2) * X * ⅟(2 : F) := by noncomm_ring
+    _ = 1 * X * ⅟(2 : F) := by rw [h1]
+    _ = X * ⅟(2 : F) := by noncomm_ring
 
 /-- The hyperbolic projection scalar associated to a tri-facet element. -/
 def P_hyp [Invertible (2 : F)] (T : F) : F := ⅟(2 : F) * (T ^ 2 + T)
@@ -277,16 +339,16 @@ theorem P_sum [Invertible (2 : F)] (T : F) : P_hyp T + P_ell T + P_par T = 1 := 
   have h2 : ⅟(2 : F) * 2 = 1 := invOf_mul_self (2 : F)
   calc
     ⅟(2 : F) * (T ^ 2 + T) + ⅟(2 : F) * (T ^ 2 - T) + (1 - T ^ 2)
-        = ⅟(2 : F) * 2 * T ^ 2 + (1 - T ^ 2) := by ring
+        = (⅟(2 : F) * 2) * T ^ 2 + (1 - T ^ 2) := by noncomm_ring
     _ = 1 * T ^ 2 + (1 - T ^ 2) := by rw [h2]
-    _ = 1 := by ring
+    _ = 1 := by noncomm_ring
 
 /-- A tri-facet element satisfying `T^3 = T` has `T^4 = T^2`. -/
 theorem T_pow4 (T : F) (hT : T ^ 3 = T) : T ^ 4 = T ^ 2 := by
   calc
-    T ^ 4 = T * T ^ 3 := by ring
+    T ^ 4 = T * T ^ 3 := by noncomm_ring
     _ = T * T := by rw [hT]
-    _ = T ^ 2 := by ring
+    _ = T ^ 2 := by noncomm_ring
 
 /-- The hyperbolic tri-facet scalar projector is idempotent. -/
 theorem P_hyp_idem [Invertible (2 : F)] (T : F) (hT : T ^ 3 = T) :
@@ -295,18 +357,24 @@ theorem P_hyp_idem [Invertible (2 : F)] (T : F) (hT : T ^ 3 = T) :
   have h2inv : ⅟(2 : F) * 2 = 1 := invOf_mul_self (2 : F)
   have h1 :
       (⅟(2 : F) * (T ^ 2 + T)) * (⅟(2 : F) * (T ^ 2 + T)) =
-        ⅟(2 : F) ^ 2 * (T ^ 2 + T) ^ 2 := by ring
+        (⅟(2 : F) * ⅟(2 : F)) * ((T ^ 2 + T) * (T ^ 2 + T)) := by
+    calc
+      (⅟(2 : F) * (T ^ 2 + T)) * (⅟(2 : F) * (T ^ 2 + T))
+          = ⅟(2 : F) * ((T ^ 2 + T) * ⅟(2 : F)) * (T ^ 2 + T) := by noncomm_ring
+      _ = ⅟(2 : F) * (⅟(2 : F) * (T ^ 2 + T)) * (T ^ 2 + T) := by
+        rw [← invOf_two_comm_trifacet (T ^ 2 + T)]
+      _ = (⅟(2 : F) * ⅟(2 : F)) * ((T ^ 2 + T) * (T ^ 2 + T)) := by noncomm_ring
   rw [h1]
-  have h2 : (T ^ 2 + T) ^ 2 = 2 * (T ^ 2 + T) := by
-    have h3 : (T ^ 2 + T) ^ 2 = T ^ 4 + 2 * T ^ 3 + T ^ 2 := by ring
+  have h2 : (T ^ 2 + T) * (T ^ 2 + T) = 2 * (T ^ 2 + T) := by
+    have h3 : (T ^ 2 + T) * (T ^ 2 + T) = T ^ 4 + 2 * T ^ 3 + T ^ 2 := by noncomm_ring
     rw [h3, T_pow4 T hT, hT]
-    ring
+    noncomm_ring
   rw [h2]
   calc
-    ⅟(2 : F) ^ 2 * (2 * (T ^ 2 + T))
-        = ⅟(2 : F) * (⅟(2 : F) * 2) * (T ^ 2 + T) := by ring
-    _ = ⅟(2 : F) * 1 * (T ^ 2 + T) := by rw [h2inv]
-    _ = ⅟(2 : F) * (T ^ 2 + T) := by ring
+    (⅟(2 : F) * ⅟(2 : F)) * (2 * (T ^ 2 + T))
+        = (⅟(2 : F) * (⅟(2 : F) * 2)) * (T ^ 2 + T) := by noncomm_ring
+    _ = (⅟(2 : F) * 1) * (T ^ 2 + T) := by rw [h2inv]
+    _ = ⅟(2 : F) * (T ^ 2 + T) := by noncomm_ring
 
 /-- The elliptic tri-facet scalar projector is idempotent. -/
 theorem P_ell_idem [Invertible (2 : F)] (T : F) (hT : T ^ 3 = T) :
@@ -315,27 +383,33 @@ theorem P_ell_idem [Invertible (2 : F)] (T : F) (hT : T ^ 3 = T) :
   have h2inv : ⅟(2 : F) * 2 = 1 := invOf_mul_self (2 : F)
   have h1 :
       (⅟(2 : F) * (T ^ 2 - T)) * (⅟(2 : F) * (T ^ 2 - T)) =
-        ⅟(2 : F) ^ 2 * (T ^ 2 - T) ^ 2 := by ring
+        (⅟(2 : F) * ⅟(2 : F)) * ((T ^ 2 - T) * (T ^ 2 - T)) := by
+    calc
+      (⅟(2 : F) * (T ^ 2 - T)) * (⅟(2 : F) * (T ^ 2 - T))
+          = ⅟(2 : F) * ((T ^ 2 - T) * ⅟(2 : F)) * (T ^ 2 - T) := by noncomm_ring
+      _ = ⅟(2 : F) * (⅟(2 : F) * (T ^ 2 - T)) * (T ^ 2 - T) := by
+        rw [← invOf_two_comm_trifacet (T ^ 2 - T)]
+      _ = (⅟(2 : F) * ⅟(2 : F)) * ((T ^ 2 - T) * (T ^ 2 - T)) := by noncomm_ring
   rw [h1]
-  have h2 : (T ^ 2 - T) ^ 2 = 2 * (T ^ 2 - T) := by
-    have h3 : (T ^ 2 - T) ^ 2 = T ^ 4 - 2 * T ^ 3 + T ^ 2 := by ring
+  have h2 : (T ^ 2 - T) * (T ^ 2 - T) = 2 * (T ^ 2 - T) := by
+    have h3 : (T ^ 2 - T) * (T ^ 2 - T) = T ^ 4 - 2 * T ^ 3 + T ^ 2 := by noncomm_ring
     rw [h3, T_pow4 T hT, hT]
-    ring
+    noncomm_ring
   rw [h2]
   calc
-    ⅟(2 : F) ^ 2 * (2 * (T ^ 2 - T))
-        = ⅟(2 : F) * (⅟(2 : F) * 2) * (T ^ 2 - T) := by ring
-    _ = ⅟(2 : F) * 1 * (T ^ 2 - T) := by rw [h2inv]
-    _ = ⅟(2 : F) * (T ^ 2 - T) := by ring
+    (⅟(2 : F) * ⅟(2 : F)) * (2 * (T ^ 2 - T))
+        = (⅟(2 : F) * (⅟(2 : F) * 2)) * (T ^ 2 - T) := by noncomm_ring
+    _ = (⅟(2 : F) * 1) * (T ^ 2 - T) := by rw [h2inv]
+    _ = ⅟(2 : F) * (T ^ 2 - T) := by noncomm_ring
 
 /-- The parabolic tri-facet scalar projector is idempotent. -/
 theorem P_par_idem (T : F) (hT : T ^ 3 = T) :
     P_par T * P_par T = P_par T := by
   dsimp [P_par]
   calc
-    (1 - T ^ 2) * (1 - T ^ 2) = 1 - 2 * T ^ 2 + T ^ 4 := by ring
+    (1 - T ^ 2) * (1 - T ^ 2) = 1 - 2 * T ^ 2 + T ^ 4 := by noncomm_ring
     _ = 1 - 2 * T ^ 2 + T ^ 2 := by rw [T_pow4 T hT]
-    _ = 1 - T ^ 2 := by ring
+    _ = 1 - T ^ 2 := by noncomm_ring
 
 /-- The hyperbolic and elliptic tri-facet projectors are orthogonal. -/
 theorem P_hyp_ell_orth [Invertible (2 : F)] (T : F) (hT : T ^ 3 = T) :
@@ -343,9 +417,15 @@ theorem P_hyp_ell_orth [Invertible (2 : F)] (T : F) (hT : T ^ 3 = T) :
   dsimp [P_hyp, P_ell]
   have h1 :
       (⅟(2 : F) * (T ^ 2 + T)) * (⅟(2 : F) * (T ^ 2 - T)) =
-        ⅟(2 : F) ^ 2 * (T ^ 4 - T ^ 2) := by ring
+        (⅟(2 : F) * ⅟(2 : F)) * (T ^ 4 - T ^ 2) := by
+    calc
+      (⅟(2 : F) * (T ^ 2 + T)) * (⅟(2 : F) * (T ^ 2 - T))
+          = ⅟(2 : F) * ((T ^ 2 + T) * ⅟(2 : F)) * (T ^ 2 - T) := by noncomm_ring
+      _ = ⅟(2 : F) * (⅟(2 : F) * (T ^ 2 + T)) * (T ^ 2 - T) := by
+        rw [← invOf_two_comm_trifacet (T ^ 2 + T)]
+      _ = (⅟(2 : F) * ⅟(2 : F)) * (T ^ 4 - T ^ 2) := by noncomm_ring
   rw [h1, T_pow4 T hT]
-  ring
+  noncomm_ring
 
 /-- The hyperbolic and parabolic tri-facet projectors are orthogonal. -/
 theorem P_hyp_par_orth [Invertible (2 : F)] (T : F) (hT : T ^ 3 = T) :
@@ -354,9 +434,9 @@ theorem P_hyp_par_orth [Invertible (2 : F)] (T : F) (hT : T ^ 3 = T) :
   have h1 :
       ⅟(2 : F) * (T ^ 2 + T) * (1 - T ^ 2) =
         ⅟(2 : F) * (T ^ 2 + T - T ^ 4 - T ^ 3) := by
-    ring
+    noncomm_ring
   rw [h1, T_pow4 T hT, hT]
-  ring
+  noncomm_ring
 
 /-- The elliptic and parabolic tri-facet projectors are orthogonal. -/
 theorem P_ell_par_orth [Invertible (2 : F)] (T : F) (hT : T ^ 3 = T) :
@@ -365,9 +445,9 @@ theorem P_ell_par_orth [Invertible (2 : F)] (T : F) (hT : T ^ 3 = T) :
   have h1 :
       ⅟(2 : F) * (T ^ 2 - T) * (1 - T ^ 2) =
         ⅟(2 : F) * (T ^ 2 - T - T ^ 4 + T ^ 3) := by
-    ring
+    noncomm_ring
   rw [h1, T_pow4 T hT, hT]
-  ring
+  noncomm_ring
 
 end TriFacet
 

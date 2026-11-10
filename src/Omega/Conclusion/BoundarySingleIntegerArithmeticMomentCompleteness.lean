@@ -1,110 +1,56 @@
 import Mathlib.Tactic
-import Omega.SPG.BoundaryGodelFiniteMomentCompleteness
-import Omega.SPG.BoundaryGodelGcdLipschitzStability
 import Omega.SPG.BoundaryGodelMomentReadout
 
 namespace Omega.Conclusion
 
-/-- The constant empty boundary model used to package the conclusion-level area/Stokes statement. -/
-def conclusion_boundary_single_integer_arithmetic_moment_completeness_boundary
-    (m n : ℕ) :
-    (Fin m → Fin n) → Finset (Fin 0) :=
-  fun _ => ∅
+/-- Symmetric-difference distance on finite monomial supports. -/
+def finiteMomentSupportDistance
+    (U V : Omega.SPG.FiniteMomentSupport) : ℝ :=
+  (((U \ V).card + (V \ U).card : ℕ) : ℝ)
 
-/-- The corresponding arithmetic boundary distance. -/
-def conclusion_boundary_single_integer_arithmetic_moment_completeness_dist
-    (m n : ℕ) :
-    (Fin m → Fin n) → (Fin m → Fin n) → ℕ :=
-  fun _ _ => 0
+/-- Counting measure of a finite monomial support. -/
+def finiteMomentSupportMeasure
+    (U : Omega.SPG.FiniteMomentSupport) : ℝ := (U.card : ℝ)
 
-/-- The corresponding boundary area functional. -/
-def conclusion_boundary_single_integer_arithmetic_moment_completeness_area
-    (m n : ℕ) :
-    (Fin m → Fin n) → (Fin m → Fin n) → ℝ :=
-  fun _ _ => 0
+/-- Counting measure is 1-Lipschitz for symmetric-difference distance. -/
+theorem finiteMomentSupport_measure_lipschitz
+    (U V : Omega.SPG.FiniteMomentSupport) :
+    |finiteMomentSupportMeasure U - finiteMomentSupportMeasure V| ≤
+      finiteMomentSupportDistance U V := by
+  have hU :
+      (((U \ V).card : ℕ) : ℝ) + (((U ∩ V).card : ℕ) : ℝ) =
+        (U.card : ℝ) := by
+    exact_mod_cast Finset.card_sdiff_add_card_inter U V
+  have hV :
+      (((V \ U).card : ℕ) : ℝ) + (((V ∩ U).card : ℕ) : ℝ) =
+        (V.card : ℝ) := by
+    exact_mod_cast Finset.card_sdiff_add_card_inter V U
+  have hI : ((U ∩ V).card : ℝ) = ((V ∩ U).card : ℝ) := by
+    simp [Finset.inter_comm]
+  have hNonnegUV : (0 : ℝ) ≤ ((U \ V).card : ℝ) := Nat.cast_nonneg _
+  have hNonnegVU : (0 : ℝ) ≤ ((V \ U).card : ℝ) := Nat.cast_nonneg _
+  rw [finiteMomentSupportMeasure, finiteMomentSupportMeasure,
+    finiteMomentSupportDistance, abs_le]
+  rw [Nat.cast_add]
+  constructor <;> linarith
 
-/-- The corresponding bulk volume functional. -/
-def conclusion_boundary_single_integer_arithmetic_moment_completeness_vol
-    (m n : ℕ) :
-    (Fin m → Fin n) → ℝ :=
-  fun _ => 0
-
-/-- The monomial-moment box read from the SPG wrapper. -/
-def conclusion_boundary_single_integer_arithmetic_moment_completeness_moment_box :
-    Omega.SPG.DyadicPolycube → Omega.SPG.MultiIndex → ℚ :=
-  fun U α => Omega.SPG.monomialMoment α U
-
-/-- Conclusion-level package of the boundary area law, Stokes bound, and finite-moment
-completeness. -/
-def conclusion_boundary_single_integer_arithmetic_moment_completeness_statement
-    (m n : Nat) : Prop :=
-  (∀ A B : Fin m → Fin n,
-      conclusion_boundary_single_integer_arithmetic_moment_completeness_area m n A B =
-        (1 : ℝ) *
-          conclusion_boundary_single_integer_arithmetic_moment_completeness_dist m n A B) ∧
-    (∀ A B : Fin m → Fin n,
-      |conclusion_boundary_single_integer_arithmetic_moment_completeness_vol m n A -
-          conclusion_boundary_single_integer_arithmetic_moment_completeness_vol m n B| ≤
-        (1 : ℝ) *
-          conclusion_boundary_single_integer_arithmetic_moment_completeness_dist m n A B) ∧
-    Function.Injective (Omega.SPG.boundaryGodelCode : Omega.SPG.DyadicPolycube →
-      Omega.SPG.BoundaryGodelCode)
-
-/-- Paper label: `thm:conclusion-boundary-single-integer-arithmetic-moment-completeness`. -/
-theorem paper_conclusion_boundary_single_integer_arithmetic_moment_completeness
-    (m n : Nat) : conclusion_boundary_single_integer_arithmetic_moment_completeness_statement m n := by
-  have hBoundary :=
-    Omega.SPG.paper_spg_godel_boundary_gcd_lipschitz_stability
-      (boundary :=
-        conclusion_boundary_single_integer_arithmetic_moment_completeness_boundary m n)
-      (Dist_m :=
-        conclusion_boundary_single_integer_arithmetic_moment_completeness_dist m n)
-      (boundaryArea :=
-        conclusion_boundary_single_integer_arithmetic_moment_completeness_area m n)
-      (vol := conclusion_boundary_single_integer_arithmetic_moment_completeness_vol m n)
-      (faceArea := (1 : ℝ))
-      (hDist := by
-        intro A B
-        simp [conclusion_boundary_single_integer_arithmetic_moment_completeness_boundary,
-          conclusion_boundary_single_integer_arithmetic_moment_completeness_dist])
-      (hArea := by
-        intro A B
-        simp [conclusion_boundary_single_integer_arithmetic_moment_completeness_area,
-          conclusion_boundary_single_integer_arithmetic_moment_completeness_dist])
-      (hStokes := by
-        intro A B
-        simp [conclusion_boundary_single_integer_arithmetic_moment_completeness_vol,
-          conclusion_boundary_single_integer_arithmetic_moment_completeness_area])
-  have hMomentReadout := Omega.SPG.paper_spg_boundary_godel_moment_readout
-  have hMomentCompleteness :
-      Function.Injective (Omega.SPG.boundaryGodelCode : Omega.SPG.DyadicPolycube →
-        Omega.SPG.BoundaryGodelCode) := by
-    refine Omega.SPG.paper_spg_boundary_godel_finite_moment_completeness
-      (encode := Omega.SPG.boundaryGodelCode)
-      (momentBox :=
-        conclusion_boundary_single_integer_arithmetic_moment_completeness_moment_box)
-      (hReadout := ?_)
-      (hComplete := ?_)
-    · intro U V hCode
-      funext α
-      have hCode' :
-          Omega.SPG.boundaryMomentFromGodel α (Omega.SPG.boundaryGodelCode U) =
-            Omega.SPG.boundaryMomentFromGodel α (Omega.SPG.boundaryGodelCode V) :=
-        congrArg (Omega.SPG.boundaryMomentFromGodel α) hCode
-      calc
-        conclusion_boundary_single_integer_arithmetic_moment_completeness_moment_box U α =
-            Omega.SPG.boundaryMomentFromGodel α (Omega.SPG.boundaryGodelCode U) := by
-              simpa [conclusion_boundary_single_integer_arithmetic_moment_completeness_moment_box]
-                using hMomentReadout α U
-        _ =
-            Omega.SPG.boundaryMomentFromGodel α (Omega.SPG.boundaryGodelCode V) := hCode'
-        _ = conclusion_boundary_single_integer_arithmetic_moment_completeness_moment_box V α := by
-              simpa [conclusion_boundary_single_integer_arithmetic_moment_completeness_moment_box]
-                using (hMomentReadout α V).symm
-    · intro U V _
-      cases U
-      cases V
-      rfl
-  exact ⟨hBoundary.1, hBoundary.2, hMomentCompleteness⟩
+/--
+The finite support encoding and its full moment profile both recover the
+support; its counting measure obeys the symmetric-difference bound.
+This theorem concerns finite combinatorial supports only. It constructs no
+geometric dyadic polycube, boundary operator, or analytic Stokes theorem.
+-/
+theorem finiteMomentSupport_code_moment_and_measure_recovery :
+    Function.Injective
+      (Omega.SPG.boundaryGodelCode : Omega.SPG.FiniteMomentSupport →
+        Omega.SPG.BoundaryGodelCode) ∧
+    (∀ U V : Omega.SPG.FiniteMomentSupport,
+      (∀ α, Omega.SPG.monomialMoment α U = Omega.SPG.monomialMoment α V) → U = V) ∧
+    (∀ U V : Omega.SPG.FiniteMomentSupport,
+      |finiteMomentSupportMeasure U - finiteMomentSupportMeasure V| ≤
+        finiteMomentSupportDistance U V) := by
+  refine ⟨Omega.SPG.boundaryGodelCode_injective, ?_, finiteMomentSupport_measure_lipschitz⟩
+  intro U V h
+  exact Omega.SPG.monomialMoment_profile_injective h
 
 end Omega.Conclusion

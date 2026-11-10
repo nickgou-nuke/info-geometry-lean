@@ -38,7 +38,7 @@ namespace InfoGeometry.Canonical.DualAffineSaddleHelixTubule
 
 section DualAffineConnection
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The affine difference tensor $S = A_1 - A_2$ between two leaflet packing connections. -/
 def connectionDiff2x2 (A1 A2 : Matrix (Fin 2) (Fin 2) R) : Matrix (Fin 2) (Fin 2) R :=
@@ -58,7 +58,7 @@ end DualAffineConnection
 
 section CurvatureSignatures
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Mean curvature $H = \frac{1}{2}(\kappa_1 + \kappa_2)$. -/
 def meanCurvature (k1 k2 half : R) : R := half * (k1 + k2)
@@ -97,7 +97,7 @@ end CurvatureSignatures
 
 section WidthBuckling
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Energy difference between saddle stretching ($w^5$) and developable bending ($w$). -/
 def bucklingEnergyDiff (C_stretch C_bend w : R) : R :=
@@ -111,7 +111,7 @@ theorem buckling_threshold_root (C_stretch C_bend w : R)
   rw [h_root, sub_self, mul_zero]
 
 /-- Factored form of buckling energy difference showing explicit width root. -/
-theorem buckling_energy_factored (C_stretch C_bend w : R) :
+theorem buckling_energy_factored {R : Type*} [CommRing R] (C_stretch C_bend w : R) :
     bucklingEnergyDiff C_stretch C_bend w =
       C_stretch * (w * w * w * w * w) - C_bend * w := by
   dsimp [bucklingEnergyDiff]
@@ -125,7 +125,7 @@ end WidthBuckling
 
 section BentCoreChirality
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- 2D cross product $P \times m = P_0 m_1 - P_1 m_0$. -/
 def crossProduct2D (P m : Fin 2 → R) : R :=
@@ -137,10 +137,10 @@ theorem bent_core_chiral_selection_nonzero (P m : Fin 2 → R)
     crossProduct2D P m = -1 := by
   dsimp [crossProduct2D]
   rw [h_polar, h_Py, h_tilt_x, h_tilt_y]
-  ring
+  noncomm_ring
 
 /-- Collinear polarization and tilt are achiral ($P \times m = 0$). -/
-theorem bent_core_achiral_parallel (P m : Fin 2 → R) (c : R)
+theorem bent_core_achiral_parallel {R : Type*} [CommRing R] (P m : Fin 2 → R) (c : R)
     (h_par : m = fun i => c * P i) :
     crossProduct2D P m = 0 := by
   dsimp [crossProduct2D]
@@ -149,7 +149,7 @@ theorem bent_core_achiral_parallel (P m : Fin 2 → R) (c : R)
   ring
 
 /-- Anticommutativity of the 2D cross product. -/
-theorem crossProduct2D_anticomm (P m : Fin 2 → R) :
+theorem crossProduct2D_anticomm {R : Type*} [CommRing R] (P m : Fin 2 → R) :
     crossProduct2D P m = - crossProduct2D m P := by
   dsimp [crossProduct2D]
   ring
@@ -162,7 +162,7 @@ end BentCoreChirality
 
 section TubuleClosure
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The seam closure gap $\Delta = w - 2\pi R \cos\phi$. -/
 def tubuleClosureGap (w twoPi_R cosPhi : R) : R :=

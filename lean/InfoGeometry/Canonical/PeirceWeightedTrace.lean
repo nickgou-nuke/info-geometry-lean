@@ -53,7 +53,10 @@ theorem support_complement_selfAdjoint [StarRing A] {d B : A}
   simp only [support,complement,star_add,star_sub,star_one,hp,hm,and_self]
 
 section Scalar
-variable {R : Type*} [CommRing R] [Algebra R A]
+variable {R : Type*}
+
+section NoncommScalar
+variable [Ring R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- Active-support weight. The complement has coefficient zero; unlike a
 full CAR pair, the active support need not be the ambient identity. -/
@@ -70,6 +73,10 @@ theorem weight_eigenproducts {d B : A}
   have hbb : B*(B*d)=0 := by rw [← mul_assoc,hB,zero_mul]
   simp only [supportWeight,add_mul,mul_add,smul_mul_assoc,mul_smul_comm,
     mul_assoc,hd,hB,hr',hs',hdd,hbb,mul_zero,smul_zero,zero_add,add_zero,and_self]
+
+end NoncommScalar
+
+variable [CommRing R] [Algebra R A]
 
 /-- Division-free intertwining; squared weights are a specialization. -/
 theorem weight_intertwining {d B : A}

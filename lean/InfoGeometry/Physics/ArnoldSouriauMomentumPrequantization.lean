@@ -25,8 +25,8 @@ Zero debt, 0 sorry, 0 admit, kernel-checked in Lean 4.
 
 universe u v
 
-variable {R : Type*} [CommRing R]
-variable {L : Type u} [LieRing L] [LieAlgebra R L]
+variable {R : Type*} [Ring R]
+variable {L : Type u} [LieRing L] [Module R L]
 
 open Module
 
@@ -36,7 +36,7 @@ namespace ArnoldSouriau
 
 /-- A Souriau 2-cocycle on the Lie algebra L represents the symplectic anomaly
     generating affine coadjoint orbits (e.g., the Bott-Virasoro cocycle for KdV fluids). -/
-structure SouriauCocycle (R : Type*) (L : Type u) [CommRing R] [LieRing L] [LieAlgebra R L] where
+structure SouriauCocycle (R : Type*) (L : Type u) [Ring R] [LieRing L] [Module R L] where
   cocycle : L → L → R
   skew : ∀ x y : L, cocycle x y = -cocycle y x
   closed : ∀ x y z : L, cocycle ⁅x, y⁆ z + cocycle ⁅y, z⁆ x + cocycle ⁅z, x⁆ y = 0

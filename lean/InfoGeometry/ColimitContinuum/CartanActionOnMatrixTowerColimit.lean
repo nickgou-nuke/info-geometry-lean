@@ -25,7 +25,7 @@ open CategoryTheory CategoryTheory.Limits
 open InfoGeometry.ColimitContinuum.TensorTowerColimit
 open InfoGeometry.Spectral.Colimit.SequentialModule
 
-variable {R : Type} [CommRing R]
+variable {R : Type} [Ring R]
 
 /-- The `n`th stage starts with the existing `M₃(R)` owner stage. -/
 abbrev Stage (n : ℕ) := Matrix (Fin (2 * (n + 1) + 1)) (Fin (2 * (n + 1) + 1)) R
@@ -48,6 +48,10 @@ def stageDiagram : ℕ ⥤ ModuleCat R :=
 theorem stageDiagram_obj (n : ℕ) :
     (stageDiagram (R := R)).obj n = StageObj (R := R) n := rfl
 
+section ColimitAction
+
+variable {R : Type} [CommRing R]
+
 /-- The actual categorical module colimit of the concrete matrix tower. -/
 abbrev TowerColimit : ModuleCat R :=
   InfoGeometry.Spectral.Colimit.SequentialModule.Carrier R (stageDiagram (R := R))
@@ -58,7 +62,7 @@ abbrev stageInclusion (n : ℕ) :
   InfoGeometry.Spectral.Colimit.SequentialModule.inclusion R n
 
 /-- The tower embeddings are exactly the successor arrows of the diagram. -/
-theorem stageDiagram_map_succ (n : ℕ) :
+theorem stageDiagram_map_succ {R : Type} [Ring R] (n : ℕ) :
     (stageDiagram (R := R)).map (homOfLE (Nat.le_succ n)) =
       ModuleCat.ofHom (stageBond (R := R) n) := by
   simpa [stageDiagram] using
@@ -145,6 +149,8 @@ theorem cartanColimitEndomorphism_unique
   apply colimit.hom_ext
   intro n
   exact (hf n).trans (cartanColimitEndomorphism_stage (R := R) n).symm
+
+end ColimitAction
 
 end InfoGeometry.ColimitContinuum.CartanActionOnMatrixTowerColimit
 

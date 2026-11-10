@@ -13,7 +13,8 @@ coordinates belong to `ker ann`.  The first coordinate is the occupied one.
 
 namespace InfoGeometry.Algebra.CARModuleDecomposition
 
-variable {K V : Type*} [Field K] [AddCommGroup V] [Module K V]
+section Semiring
+variable {K V : Type*} [Semiring K] [AddCommGroup V] [Module K V]
 variable (C : SplitClifford.CARPair (Module.End K V))
 
 lemma ann_ann (v : V) : C.ann (C.ann v) = 0 :=
@@ -73,6 +74,11 @@ theorem ann_split (x y : C.ann.ker) :
 theorem cre_split (x y : C.ann.ker) :
     C.cre (splitEquiv C (x,y)) = splitEquiv C (y,0) := by
   simp only [splitEquiv_apply, Submodule.coe_zero, map_add, cre_cre, zero_add, add_zero]
+
+end Semiring
+
+variable {K V : Type*} [DivisionRing K] [AddCommGroup V] [Module K V]
+variable (C : SplitClifford.CARPair (Module.End K V))
 
 /-- Dimension is derived from the CAR equations, not assumed. -/
 theorem finrank_twice_kernel [FiniteDimensional K V] :

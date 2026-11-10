@@ -4,10 +4,10 @@ import Mathlib.Tactic.Ring
 
 namespace InfoGeometry.Exceptional.GenericZorn
 
-/-- A 3D vector over a commutative ring R. -/
+/-- A 3D vector over a ring R. -/
 def Vec3 (R : Type*) := R × R × R
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def cross (u v : Vec3 R) : Vec3 R :=
   (u.2.1 * v.2.2 - u.2.2 * v.2.1,
@@ -58,14 +58,14 @@ lemma ext_lem (A B : ZornMatrix R)
 def norm (A : ZornMatrix R) : R :=
   A.a * A.b - dot A.u A.v
 
-theorem norm_mul (A B : ZornMatrix R) : (A * B).norm = A.norm * B.norm := by
+theorem norm_mul {R : Type*} [CommRing R] (A B : ZornMatrix R) : (A * B).norm = A.norm * B.norm := by
   change (A.mul B).norm = A.norm * B.norm
   dsimp [norm, mul, dot, cross, add, sub, smul]
   ring
 
 def trace (A : ZornMatrix R) : R := A.a + A.b
 
-theorem trace_mul_comm (A B : ZornMatrix R) : (A * B).trace = (B * A).trace := by
+theorem trace_mul_comm {R : Type*} [CommRing R] (A B : ZornMatrix R) : (A * B).trace = (B * A).trace := by
   change (A.mul B).trace = (B.mul A).trace
   dsimp [trace, mul, dot, cross, add, sub, smul]
   ring

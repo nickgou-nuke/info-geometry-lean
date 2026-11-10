@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Data.Matrix.Basic
 
 /-!
@@ -20,7 +21,9 @@ presentation of the Plücker ideal.
 
 namespace InfoGeometry.Canonical.Grassmannian
 
-variable {R : Type*} [CommRing R] {n : ℕ}
+section Ring
+
+variable {R : Type*} [Ring R] {n : ℕ}
 
 /-- 
 Computes the 3x3 determinant minor Δ_{ijk} of a 3xn matrix.
@@ -34,17 +37,21 @@ def pluckerMinor3 (C : Matrix (Fin 3) (Fin n) R) (i j k : Fin n) : R :=
 /-- Swapping the first two indices negates the minor. -/
 theorem pluckerMinor3_antisymm12 (C : Matrix (Fin 3) (Fin n) R) (i j k : Fin n) :
     pluckerMinor3 C j i k = - pluckerMinor3 C i j k := by
-  unfold pluckerMinor3; ring
+  unfold pluckerMinor3; noncomm_ring
 
 /-- Swapping the last two indices negates the minor. -/
 theorem pluckerMinor3_antisymm23 (C : Matrix (Fin 3) (Fin n) R) (i j k : Fin n) :
     pluckerMinor3 C i k j = - pluckerMinor3 C i j k := by
-  unfold pluckerMinor3; ring
+  unfold pluckerMinor3; noncomm_ring
 
 /-- The minor vanishes when its first two indices agree. -/
 theorem pluckerMinor3_self12 (C : Matrix (Fin 3) (Fin n) R) (i k : Fin n) :
     pluckerMinor3 C i i k = 0 := by
-  unfold pluckerMinor3; ring
+  unfold pluckerMinor3; noncomm_ring
+
+end Ring
+
+variable {R : Type*} [CommRing R] {n : ℕ}
 
 /--
 For any matrix with three rows, its 3-by-3 minors satisfy this four-term

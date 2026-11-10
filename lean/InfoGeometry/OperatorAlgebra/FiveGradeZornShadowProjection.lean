@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ChiralOperatorSymbolProjection
@@ -18,12 +23,12 @@ namespace InfoGeometry.OperatorAlgebra.FiveGradeZornShadowProjection
 open InfoGeometry.Algebra
 
 variable {R Z E : Type*}
-  [CommRing R]
+  [Ring R]
   [AddCommGroup Z] [Module R Z]
-  [Ring E] [Algebra R E]
+  [Ring E] [Module R E]
 
 /-- Native Zorn vector-matrix carrier, exposed as a possible shadow target. -/
-abbrev ZornShadowCarrier (R : Type*) [CommRing R] :=
+abbrev ZornShadowCarrier (R : Type*) [Ring R] :=
   ZornMatrix R
 
 def visibleProjection (inclusion : Z →ₗ[R] E) (readout : E →ₗ[R] Z) : E →ₗ[R] E :=

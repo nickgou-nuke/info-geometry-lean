@@ -3,7 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-import InfoGeometry.Algebra.Zorn.ConcreteComposition
+import InfoGeometry.Algebra.Zorn.Decomposition
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic.LinearCombination
 import Mathlib.Tactic.Ring
@@ -61,7 +61,7 @@ open InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell
 
 section AlgebraicWittenMoebius
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Multiplicative identity $\mathbf{1} = \mathrm{diag}(1, 1)$ in `ZornCell R`. -/
 def oneZ : ZornCell R :=
@@ -109,6 +109,8 @@ $$\mathcal{P}_{\mathrm{WM}}(c, s, \mathbf{u}, \mathbf{v})
 def wittenMoebiusOperator (c s u₁ u₂ u₃ v₁ v₂ v₃ : R) : ZornCell R :=
   subZ (smulZ c paraSymplecticK0)
        (smulZ s (subZ (sheetU u₁ u₂ u₃) (sheetV v₁ v₂ v₃)))
+
+variable {R : Type*} [CommRing R]
 
 /-- **Clifford Square, Determinant, & Supertrace Protection of `wittenMoebiusOperator`
 (`wittenMoebius_clifford_square_and_supertrace`):**

@@ -36,7 +36,8 @@ structure FiniteSpectralData (ι R : Type*) where
 
 namespace FiniteSpectralData
 
-variable {ι R : Type*} [Fintype ι] [CommSemiring R]
+section Semiring
+variable {ι R : Type*} [Fintype ι] [Semiring R]
 
 /-- Integer Mellin/power moment of finite spectral data. -/
 def mellinMoment (D : FiniteSpectralData ι R) (k : ℕ) : R :=
@@ -81,6 +82,16 @@ theorem taylorMomentPrefix_succ (D : FiniteSpectralData ι R)
       D.taylorMomentPrefix c N + c N * D.mellinMoment N := by
   simp [taylorMomentPrefix, Finset.sum_range_succ]
 
+/-- The one-term Taylor prefix recovers the zeroth Mellin moment with coefficient `c 0`. -/
+theorem taylorMomentPrefix_one (D : FiniteSpectralData ι R) (c : ℕ → R) :
+    D.taylorMomentPrefix c 1 = c 0 * D.mellinMoment 0 := by
+  simp [taylorMomentPrefix]
+
+end Semiring
+
+section CommSemiring
+variable {ι R : Type*} [Fintype ι] [CommSemiring R]
+
 /--
 Finite spectral Taylor/Mellin interchange: summing a finite Taylor prefix over
 spectral weights equals the coefficient-weighted sum of finite Mellin moments.
@@ -97,10 +108,7 @@ theorem weighted_pointwiseTaylorPrefix_eq_taylorMomentPrefix
   intro i hi
   ring
 
-/-- The one-term Taylor prefix recovers the zeroth Mellin moment with coefficient `c 0`. -/
-theorem taylorMomentPrefix_one (D : FiniteSpectralData ι R) (c : ℕ → R) :
-    D.taylorMomentPrefix c 1 = c 0 * D.mellinMoment 0 := by
-  simp [taylorMomentPrefix]
+end CommSemiring
 
 end FiniteSpectralData
 

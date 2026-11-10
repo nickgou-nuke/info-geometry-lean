@@ -10,7 +10,7 @@ open scoped BigOperators
 namespace MetaplecticWeil
 
 variable {n : ℕ} [NeZero n]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. Triangular Numbers and Modular Boundary Arithmetic -/
 
@@ -133,7 +133,7 @@ theorem chirpMatrix_mul_clockMatrix (ω : R) (κ : ℕ) :
   dsimp [chirpMatrix, clockMatrix, Matrix.mul_apply, Matrix.of_apply]
   simp only [ite_mul, mul_ite, zero_mul, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
   split_ifs with h
-  · subst h; rw [mul_comm]
+  · subst h; rw [← pow_add, ← pow_add, add_comm]
   · rfl
 
 /-- Parabolic Shear: The quadratic chirp shears the Shift operator: U_κ * S = S * C^κ * U_κ. -/
@@ -154,6 +154,18 @@ theorem chirpMatrix_mul_shiftMatrix (ω : R) (hn : ω ^ n = 1) (k : ℕ) (hn_odd
 
 /-! ### 5. Invertibility of the Chirp Operator -/
 
+lemma pow_mul_pow_eq_one (a b : R) (h : a * b = 1) (m : ℕ) :
+    a ^ m * b ^ m = 1 := by
+  induction m with
+  | zero => simp
+  | succ m ih =>
+    calc a ^ (m + 1) * b ^ (m + 1)
+      _ = (a ^ m * a) * (b * b ^ m) := by rw [pow_succ, pow_succ']
+      _ = a ^ m * (a * b) * b ^ m := by noncomm_ring
+      _ = a ^ m * 1 * b ^ m := by rw [h]
+      _ = a ^ m * b ^ m := by simp
+      _ = 1 := ih
+
 /-- Left and right inverse: U_κ * U_κ⁻¹ = 1. -/
 theorem chirpMatrix_mul_inv (ω ω_inv : R) (h_inv : ω * ω_inv = 1) (κ : ℕ) :
     chirpMatrix (n := n) ω κ * chirpMatrixInv (n := n) ω_inv κ = 1 := by
@@ -162,7 +174,19 @@ theorem chirpMatrix_mul_inv (ω ω_inv : R) (h_inv : ω * ω_inv = 1) (κ : ℕ)
   simp only [ite_mul, mul_ite, zero_mul, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
   split_ifs with h
   · subst h
-    rw [← mul_pow, h_inv, one_pow]
+    exact pow_mul_pow_eq_one ω ω_inv h_inv (κ * tri i.val)
+  · rfl
+
+/-- Right inverse: the inverse-root chirp also multiplies back to the identity
+over any `[Ring R]` when `ω_inv * ω = 1`. -/
+theorem chirpMatrixInv_mul_noncomm (ω ω_inv : R) (h_inv' : ω_inv * ω = 1) (κ : ℕ) :
+    chirpMatrixInv (n := n) ω_inv κ * chirpMatrix (n := n) ω κ = 1 := by
+  ext i j
+  dsimp [chirpMatrix, chirpMatrixInv, Matrix.mul_apply, Matrix.of_apply, Matrix.one_apply]
+  simp only [ite_mul, mul_ite, zero_mul, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  split_ifs with h
+  · subst h
+    exact pow_mul_pow_eq_one ω_inv ω h_inv' (κ * tri i.val)
   · rfl
 
 /-- Right inverse: the inverse-root chirp also multiplies back to the identity.
@@ -170,16 +194,9 @@ theorem chirpMatrix_mul_inv (ω ω_inv : R) (h_inv : ω * ω_inv = 1) (κ : ℕ)
 Together with `chirpMatrix_mul_inv`, this records a two-sided algebraic
 inverse. It does not by itself assert unitarity, which requires a star
 structure and a compatibility condition between `ω_inv` and `star ω`. -/
-theorem chirpMatrixInv_mul (ω ω_inv : R) (h_inv : ω * ω_inv = 1) (κ : ℕ) :
-    chirpMatrixInv (n := n) ω_inv κ * chirpMatrix (n := n) ω κ = 1 := by
-  have h_inv' : ω_inv * ω = 1 := by rw [mul_comm, h_inv]
-  ext i j
-  dsimp [chirpMatrix, chirpMatrixInv, Matrix.mul_apply, Matrix.of_apply, Matrix.one_apply]
-  simp only [ite_mul, mul_ite, zero_mul, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
-  split_ifs with h
-  · subst h
-    rw [← mul_pow, h_inv', one_pow]
-  · rfl
+theorem chirpMatrixInv_mul {R : Type*} [CommRing R] (ω ω_inv : R) (h_inv : ω * ω_inv = 1) (κ : ℕ) :
+    chirpMatrixInv (n := n) ω_inv κ * chirpMatrix (n := n) ω κ = 1 :=
+  chirpMatrixInv_mul_noncomm ω ω_inv (by rw [mul_comm, h_inv]) κ
 
 /-! ### 6. Metaplectic Covariance Theorems -/
 

@@ -24,7 +24,7 @@ noncomputable section
 namespace InfoGeometry.Algebra.Zorn.ConcreteComposition
 namespace ZornCell
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-
 Elementwise constructor extensionality for concrete Zorn cells.
@@ -78,7 +78,7 @@ theorem mul_eq_assoc_plus_teleport (X Y : ZornCell R) :
   · simp [mulZ, assocMul, teleportMul, addZ, sub_eq_add_neg, add_assoc]
   ·
     simp [mulZ, assocMul, teleportMul, addZ, sub_eq_add_neg]
-    ring
+    abel
   · simp [mulZ, assocMul, teleportMul, addZ, sub_eq_add_neg, add_assoc]
   · simp [mulZ, assocMul, teleportMul, addZ, sub_eq_add_neg, add_assoc]
   · simp [mulZ, assocMul, teleportMul, addZ, sub_eq_add_neg, add_assoc]

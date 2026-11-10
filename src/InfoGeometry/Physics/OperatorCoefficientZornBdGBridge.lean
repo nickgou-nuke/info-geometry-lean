@@ -156,7 +156,7 @@ structure Zorn (R : Type*) where
   v : Fin 3 → R
   b : R
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The Dot Product on R³ -/
 def dotR (u v : Fin 3 → R) : R :=
@@ -269,7 +269,7 @@ def zornNorm (X : Zorn R) : R :=
   X.a * X.b - dotR X.u X.v
 
 /-- The reduced Zorn norm is multiplicative, hence is a composition norm. -/
-theorem zornNorm_mul (X Y : Zorn R) :
+theorem zornNorm_mul {R : Type*} [CommRing R] (X Y : Zorn R) :
     zornNorm (X * Y) = zornNorm X * zornNorm Y := by
   dsimp [zornNorm, dotR, crossR]
   change (X.a * Y.a + (X.u 0 * Y.v 0 + X.u 1 * Y.v 1 + X.u 2 * Y.v 2)) *
@@ -299,9 +299,9 @@ theorem derivation_annihilates_one (D : Zorn R → Zorn R) (hD : IsZornDerivatio
     _ = D 1 + D 1 := by rw [zorn_mul_one (D 1), zorn_one_mul (D 1)]
   have h_zero : ∀ (x : R), x = x + x → x = 0 := by
     intro x h
-    calc x = (x + x) - x := by ring
+    calc x = (x + x) - x := by abel
     _ = x - x := by rw [← h]
-    _ = 0 := by ring
+    _ = 0 := by abel
   ext
   · exact h_zero (D 1).a (congr_arg Zorn.a h_add)
   · rename_i i
@@ -315,10 +315,10 @@ theorem derivation_annihilates_scalar_seed (D : Zorn R → Zorn R) (hD : IsZornD
     D (c • (1 : Zorn R)) = ⟨0, fun _ => 0, fun _ => 0, 0⟩ := by
   rw [hD.2.1 c 1, derivation_annihilates_one D hD]
   ext
-  · change c * 0 = 0; ring
-  · rename_i i; change c * 0 = 0; ring
-  · rename_i i; change c * 0 = 0; ring
-  · change c * 0 = 0; ring
+  · change c * 0 = 0; noncomm_ring
+  · rename_i i; change c * 0 = 0; noncomm_ring
+  · rename_i i; change c * 0 = 0; noncomm_ring
+  · change c * 0 = 0; noncomm_ring
 
 end ZornVectorMatrixAlgebra
 

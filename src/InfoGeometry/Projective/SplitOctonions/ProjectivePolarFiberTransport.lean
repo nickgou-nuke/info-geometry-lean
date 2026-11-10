@@ -47,7 +47,7 @@ coordinates; it is carried functorially by the symmetry action.
 -/
 theorem incidenceFiber_image_eq
     {R G Carrier : Type*}
-    [CommRing R] [Group G]
+    [Ring R] [Group G]
     (polar : Carrier → Carrier → R)
     (act : G → Carrier → Carrier)
     (scale : G → R)
@@ -75,7 +75,7 @@ theorem incidenceFiber_image_eq
     change polar (act g X) (act g Y₀) = 0
     rw [hcov g X Y₀]
     rw [hY₀]
-    ring
+    noncomm_ring
   · intro hY
     refine ⟨act g⁻¹ Y, ?_, ?_⟩
     · unfold incidenceFiber at hY ⊢
@@ -109,7 +109,7 @@ This is often the easier theorem for downstream rewriting:
 -/
 theorem mem_incidenceFiber_iff_exists_preimage
     {R G Carrier : Type*}
-    [CommRing R] [Group G]
+    [Ring R] [Group G]
     (polar : Carrier → Carrier → R)
     (act : G → Carrier → Carrier)
     (scale : G → R)

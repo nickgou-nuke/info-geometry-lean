@@ -17,18 +17,16 @@ exceptional algebra.
 
 namespace InfoGeometry.OperatorAlgebra.MatrixThreeAdjugate
 
-variable {R : Type*} [CommRing R]
-
 /-- Upper off-diagonal matrix unit in `M₃(R)`. -/
-def mat3Unit01 : Matrix (Fin 3) (Fin 3) R :=
+def mat3Unit01 {R : Type*} [Ring R] : Matrix (Fin 3) (Fin 3) R :=
   fun i j => if i = 0 ∧ j = 1 then 1 else 0
 
 /-- Lower off-diagonal matrix unit in `M₃(R)`. -/
-def mat3Unit10 : Matrix (Fin 3) (Fin 3) R :=
+def mat3Unit10 {R : Type*} [Ring R] : Matrix (Fin 3) (Fin 3) R :=
   fun i j => if i = 1 ∧ j = 0 then 1 else 0
 
 /-- Matrix multiplication on `M₃(R)` is noncommutative over any nontrivial ring. -/
-theorem mat3_units_noncommute [Nontrivial R] :
+theorem mat3_units_noncommute {R : Type*} [Ring R] [Nontrivial R] :
     mat3Unit01 (R := R) * mat3Unit10 (R := R) ≠
       mat3Unit10 (R := R) * mat3Unit01 (R := R) := by
   intro h
@@ -36,6 +34,8 @@ theorem mat3_units_noncommute [Nontrivial R] :
   have h10 : (1 : R) = 0 := by
     simpa [mat3Unit01, mat3Unit10, Matrix.mul_apply, Fin.sum_univ_three] using h00
   exact one_ne_zero h10
+
+variable {R : Type*} [CommRing R]
 
 /-- Division-free quadratic adjugate identity in dimension three. -/
 theorem adjugate_eq_quadratic (X : Matrix (Fin 3) (Fin 3) R) :

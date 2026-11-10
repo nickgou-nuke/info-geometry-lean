@@ -55,7 +55,7 @@ theorem super_tkk_5_grading (X : M) :
   Wires the Albert algebra's characteristic Freudenthal cubic reduction
   directly into the 5-graded Super-TKK base structure.
 -/
-def superTKK_of_Freudenthal {K : Type*} [CommRing K] [Algebra K M]
+def superTKK_of_Freudenthal {K : Type*} [Ring K] [Module K M]
     (sys : Albert.CubicNorm M K)
     (P : M)
     (h_tr1 : sys.trace1 P = 0)

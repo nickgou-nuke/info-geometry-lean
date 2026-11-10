@@ -87,7 +87,7 @@ theorem neg_ad_sum_sq_quadratic (hp : IsIdempotentElem p)
     (-(LieAlgebra.ad R A (u + v) ^ 2)) (u * v + v * u) = 0 := by
   have hK : LieAlgebra.ad R A (u + v) (u * v + v * u) = 0 := by
     change (u + v) * (u * v + v * u) - (u * v + v * u) * (u + v) = 0
-    exact sub_eq_zero.mpr (quadratic_commute_sum hp hu hv).symm.eq
+    exact sub_eq_zero.mpr (quadratic_round_trip_frame_commutants hp hu hv).1.symm.eq
   simp only [LinearMap.neg_apply, pow_two, Module.End.mul_apply,
     hK, map_zero, neg_zero]
 
@@ -96,7 +96,7 @@ theorem ad_sub_sq_quadratic (hp : IsIdempotentElem p)
     (LieAlgebra.ad R A (u - v) ^ 2) (u * v + v * u) = 0 := by
   have hK : LieAlgebra.ad R A (u - v) (u * v + v * u) = 0 := by
     change (u - v) * (u * v + v * u) - (u * v + v * u) * (u - v) = 0
-    exact sub_eq_zero.mpr (quadratic_commute_difference hp hu hv).symm.eq
+    exact sub_eq_zero.mpr (quadratic_round_trip_frame_commutants hp hu hv).2.symm.eq
   simp only [pow_two, Module.End.mul_apply, hK, map_zero]
 
 theorem neg_ad_sum_sq_sub (hp : IsIdempotentElem p)

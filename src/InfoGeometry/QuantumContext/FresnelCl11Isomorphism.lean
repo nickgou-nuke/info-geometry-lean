@@ -6,6 +6,8 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Logic.Equiv.Defs
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Clifford.Cl11Matrix
 import InfoGeometry.QuantumContext.AharonovBohmFresnelDivergenceResolution
 
@@ -35,7 +37,7 @@ and proves:
 
 namespace InfoGeometry.QuantumContext.FresnelCl11Isomorphism
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 open InfoGeometry.QuantumContext.SorkinFluxQubit
 
@@ -52,7 +54,7 @@ structure Cl11Op (R : Type*) where
 
 namespace Cl11Op
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zeroOp : Cl11Op R := ⟨0, 0, 0, 0⟩
 
@@ -165,7 +167,7 @@ theorem frobenius_norm_sq_embed_eq_intensity_sum (ψ_pos ψ_neg : FresnelWave R)
     frobeniusNormSq (embedFresnelPair ψ_pos ψ_neg) =
       FresnelWave.intensity ψ_pos + FresnelWave.intensity ψ_neg := by
   dsimp [frobeniusNormSq, frobeniusInner, embedFresnelPair, FresnelWave.intensity]
-  ring
+  abel
 
 /-! ### 4. Gram Matrix `M · Mᵀ` and a Brahmagupta–Fibonacci Identity -/
 
@@ -175,7 +177,7 @@ The Gram matrix `G_L = M · Mᵀ` packs `I_+`, `I_-`, and `G_{(+,-)}`:
 The diagonal entries are the two intensities, while the off-diagonal entries are
 the symmetric pairing `G_{(+,-)}`.
 -/
-theorem gram_matrix_embed_explicit (ψ_pos ψ_neg : FresnelWave R) :
+theorem gram_matrix_embed_explicit {R : Type*} [CommRing R] (ψ_pos ψ_neg : FresnelWave R) :
     let M := embedFresnelPair ψ_pos ψ_neg
     mul M (transpose M) =
       ⟨FresnelWave.intensity ψ_pos,
@@ -197,7 +199,7 @@ theorem trace_gram_embed_eq_intensity_sum (ψ_pos ψ_neg : FresnelWave R) :
 Determinant of the Gram matrix `M · Mᵀ` as the Brahmagupta–Fibonacci–Fresnel identity:
 `det(M · Mᵀ) = I_+ · I_- - G_{(+,-)}² = (det M)² = H_{(+,-)}²`.
 -/
-theorem det_gram_embed_eq_yin_sq (ψ_pos ψ_neg : FresnelWave R) :
+theorem det_gram_embed_eq_yin_sq {R : Type*} [CommRing R] (ψ_pos ψ_neg : FresnelWave R) :
     let M := embedFresnelPair ψ_pos ψ_neg
     det (mul M (transpose M)) =
       FresnelWave.intensity ψ_pos * FresnelWave.intensity ψ_neg -
@@ -220,7 +222,7 @@ def parameterMatrix (c s : R) : Cl11Op R :=
 For the supplied scalar parameters, the upper off-diagonal entry `m12` of
 `M · U(c, s) · Mᵀ` equals `c · G_{(+,-)} + s · H_{(+,-)}`.
 -/
-theorem parameterized_gram_m12 (ψ_pos ψ_neg : FresnelWave R) (c s : R) :
+theorem parameterized_gram_m12 {R : Type*} [CommRing R] (ψ_pos ψ_neg : FresnelWave R) (c s : R) :
     let M := embedFresnelPair ψ_pos ψ_neg
     (mul (mul M (parameterMatrix c s)) (transpose M)).m12 =
       c * FresnelWave.yangG ψ_pos ψ_neg +
@@ -243,7 +245,7 @@ theorem ab_prob_from_cl11_invariants (ψ_pos ψ_neg : FresnelWave R) (c s : R) :
   dsimp [embedFresnelPair, frobeniusNormSq, frobeniusInner, mul, transpose, det,
          FresnelWave.abProb, FresnelWave.intensity,
          FresnelWave.yangG, FresnelWave.yinH]
-  ring
+  noncomm_ring
 
 /-- On the unit circle, the defined transition expression has the simplified
 matrix formula without a correction term. -/
@@ -256,7 +258,7 @@ theorem ab_prob_from_cl11_invariants_of_unit_circle
         2 * s * det M := by
   rw [ab_prob_from_cl11_invariants]
   rw [hcs]
-  ring
+  noncomm_ring
 
 end Cl11Op
 

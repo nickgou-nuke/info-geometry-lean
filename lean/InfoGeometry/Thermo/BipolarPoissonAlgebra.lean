@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermo.BipolarGENERICThreeCoordinateModel
@@ -33,14 +38,22 @@ open InfoGeometry.OperatorAlgebra.ExteriorAlgebra
 open InfoGeometry.Thermo.BipolarGENERICThreeCoordinateModel
 open InfoGeometry.Thermo.GenericMetriplecticFlow
 
-variable {A : Type*} [CommRing A] [Algebra ℝ A]
+variable {A : Type*} [Ring A] [Algebra ℝ A]
+
+/-- Multiplicative commutator `x * y - y * x` in any ring `[Ring A]`. -/
+def opComm (x y : A) : A := x * y - y * x
 
 /-- Two commuting real-linear Leibniz derivations representing the canonical
 `theta` and auxiliary directions. -/
-structure CommutingDerivationPair (A : Type*) [CommRing A] [Algebra ℝ A] where
+structure CommutingDerivationPair (A : Type*) [Ring A] [Algebra ℝ A] where
   theta : OpDerivation ℝ A
   auxiliary : OpDerivation ℝ A
   commute : ∀ x : A, theta (auxiliary x) = auxiliary (theta x)
+
+instance : Inhabited (CommutingDerivationPair A) :=
+  ⟨{ theta := ⟨0, fun _ _ => by simp⟩
+     auxiliary := ⟨0, fun _ _ => by simp⟩
+     commute := fun _ => rfl }⟩
 
 /-- Constant rank-two Poisson bracket associated with the commuting derivation
 pair. -/
@@ -48,18 +61,52 @@ def poissonBracket
     (D : CommutingDerivationPair A) (F G : A) : A :=
   D.theta F * D.auxiliary G - D.auxiliary F * D.theta G
 
-/-- Skew-symmetry. -/
+/-- Noncommutative skew-symmetry commutator anomaly of `poissonBracket`. -/
+def poissonSkewAnomaly
+    (D : CommutingDerivationPair A) (F G : A) : A :=
+  opComm (D.theta F) (D.auxiliary G) - opComm (D.auxiliary F) (D.theta G)
+
+/-- Noncommutative right-Leibniz commutator anomaly of `poissonBracket`. -/
+def poissonLeibnizRightAnomaly
+    (D : CommutingDerivationPair A) (F G H : A) : A :=
+  opComm (D.theta F) G * D.auxiliary H - opComm (D.auxiliary F) G * D.theta H
+
+/-- Noncommutative left-Leibniz commutator anomaly of `poissonBracket`. -/
+def poissonLeibnizLeftAnomaly
+    (D : CommutingDerivationPair A) (F G H : A) : A :=
+  D.theta F * opComm G (D.auxiliary H) - D.auxiliary F * opComm G (D.theta H)
+
+/-- Cyclic triple commutator defect `X Y Z - Z X Y = [X, Y Z] + [Y, Z X]`. -/
+def cyclicTripleComm (X Y Z : A) : A :=
+  opComm X (Y * Z) + opComm Y (Z * X)
+
+/-- Noncommutative Jacobiator commutator anomaly of `poissonBracket`. -/
+def poissonJacobiAnomaly
+    (D : CommutingDerivationPair A) (F G H : A) : A :=
+  cyclicTripleComm (D.theta (D.theta F)) (D.auxiliary G) (D.auxiliary H) +
+  cyclicTripleComm (D.theta (D.theta G)) (D.auxiliary H) (D.auxiliary F) +
+  cyclicTripleComm (D.theta (D.theta H)) (D.auxiliary F) (D.auxiliary G) +
+  cyclicTripleComm (D.auxiliary (D.auxiliary F)) (D.theta G) (D.theta H) +
+  cyclicTripleComm (D.auxiliary (D.auxiliary G)) (D.theta H) (D.theta F) +
+  cyclicTripleComm (D.auxiliary (D.auxiliary H)) (D.theta F) (D.theta G) +
+  opComm (D.theta H) (D.auxiliary (D.theta F) * D.auxiliary G) +
+  opComm (D.theta F) (D.auxiliary (D.theta G) * D.auxiliary H) +
+  opComm (D.theta G) (D.auxiliary (D.theta H) * D.auxiliary F) +
+  opComm (D.auxiliary H) (D.auxiliary (D.theta F) * D.theta G) +
+  opComm (D.auxiliary F) (D.auxiliary (D.theta G) * D.theta H) +
+  opComm (D.auxiliary G) (D.auxiliary (D.theta H) * D.theta F)
+
+/-- Skew-symmetry up to the noncommutative derivative commutator anomaly. -/
 theorem poissonBracket_skew
     (D : CommutingDerivationPair A) (F G : A) :
-    poissonBracket D F G = -poissonBracket D G F := by
-  simp [poissonBracket]
-  ring
+    poissonBracket D F G = -poissonBracket D G F + poissonSkewAnomaly D F G := by
+  simp [poissonBracket, poissonSkewAnomaly, opComm]
+  noncomm_ring
 
 @[simp] theorem poissonBracket_self
     (D : CommutingDerivationPair A) (F : A) :
-    poissonBracket D F F = 0 := by
-  simp [poissonBracket]
-  ring
+    poissonBracket D F F = opComm (D.theta F) (D.auxiliary F) := by
+  simp [poissonBracket, opComm]
 
 /-- Additivity in the first argument. -/
 theorem poissonBracket_add_left
@@ -67,7 +114,7 @@ theorem poissonBracket_add_left
     poissonBracket D (F₁ + F₂) G =
       poissonBracket D F₁ G + poissonBracket D F₂ G := by
   simp [poissonBracket]
-  ring
+  noncomm_ring
 
 /-- Additivity in the second argument. -/
 theorem poissonBracket_add_right
@@ -75,7 +122,7 @@ theorem poissonBracket_add_right
     poissonBracket D F (G₁ + G₂) =
       poissonBracket D F G₁ + poissonBracket D F G₂ := by
   simp [poissonBracket]
-  ring
+  noncomm_ring
 
 /-- Real homogeneity in the first argument. -/
 theorem poissonBracket_smul_left
@@ -91,21 +138,23 @@ theorem poissonBracket_smul_right
   simp [poissonBracket, Algebra.smul_mul_assoc,
     Algebra.mul_smul_comm, smul_sub]
 
-/-- Leibniz rule in the second argument. -/
+/-- Leibniz rule in the second argument with explicit noncommutative commutator anomaly. -/
 theorem poissonBracket_leibniz_right
     (D : CommutingDerivationPair A) (F G H : A) :
     poissonBracket D F (G * H) =
-      poissonBracket D F G * H + G * poissonBracket D F H := by
-  simp [poissonBracket]
-  ring
+      poissonBracket D F G * H + G * poissonBracket D F H +
+        poissonLeibnizRightAnomaly D F G H := by
+  simp [poissonBracket, poissonLeibnizRightAnomaly, opComm]
+  noncomm_ring
 
-/-- Leibniz rule in the first argument. -/
+/-- Leibniz rule in the first argument with explicit noncommutative commutator anomaly. -/
 theorem poissonBracket_leibniz_left
     (D : CommutingDerivationPair A) (F G H : A) :
     poissonBracket D (F * G) H =
-      F * poissonBracket D G H + poissonBracket D F H * G := by
-  simp [poissonBracket]
-  ring
+      F * poissonBracket D G H + poissonBracket D F H * G +
+        poissonLeibnizLeftAnomaly D F G H := by
+  simp [poissonBracket, poissonLeibnizLeftAnomaly, opComm]
+  noncomm_ring
 
 /-- Expansion of the theta derivative of the bracket. -/
 theorem theta_poissonBracket
@@ -127,25 +176,27 @@ theorem auxiliary_poissonBracket
         D.auxiliary F * D.auxiliary (D.theta G)) := by
   simp [poissonBracket]
 
-/-- Jacobi identity, derived from the Leibniz laws and commutation of the two
-coordinate derivations. -/
+/-- Jacobi identity in `[Ring A]`, with explicit noncommutative cyclic commutator anomaly. -/
 theorem poissonBracket_jacobi
     (D : CommutingDerivationPair A) (F G H : A) :
     poissonBracket D (poissonBracket D F G) H +
       poissonBracket D (poissonBracket D G H) F +
-      poissonBracket D (poissonBracket D H F) G = 0 := by
+      poissonBracket D (poissonBracket D H F) G =
+      poissonJacobiAnomaly D F G H := by
   change
     (D.theta (poissonBracket D F G) * D.auxiliary H -
         D.auxiliary (poissonBracket D F G) * D.theta H) +
       (D.theta (poissonBracket D G H) * D.auxiliary F -
         D.auxiliary (poissonBracket D G H) * D.theta F) +
       (D.theta (poissonBracket D H F) * D.auxiliary G -
-        D.auxiliary (poissonBracket D H F) * D.theta G) = 0
+        D.auxiliary (poissonBracket D H F) * D.theta G) =
+      poissonJacobiAnomaly D F G H
   rw [theta_poissonBracket, auxiliary_poissonBracket,
     theta_poissonBracket, auxiliary_poissonBracket,
     theta_poissonBracket, auxiliary_poissonBracket]
   rw [D.commute F, D.commute G, D.commute H]
-  ring
+  simp [poissonJacobiAnomaly, cyclicTripleComm, opComm]
+  noncomm_ring
 
 /-- Casimir predicate for the Poisson bracket. -/
 def IsCasimir
@@ -160,17 +211,17 @@ theorem isCasimir_of_derivations_eq_zero
   intro F
   simp [poissonBracket, hθ, ha]
 
-/-- Every observable Poisson-commutes with itself. -/
+/-- Self-bracket of any observable equals the commutator of its two derivatives. -/
 theorem hamiltonian_self_conservation
     (D : CommutingDerivationPair A) (H : A) :
-    poissonBracket D H H = 0 :=
+    poissonBracket D H H = opComm (D.theta H) (D.auxiliary H) :=
   poissonBracket_self D H
 
-/-- A Casimir is preserved by every Hamiltonian bracket. -/
+/-- A Casimir is preserved by every Hamiltonian bracket up to `poissonSkewAnomaly`. -/
 theorem casimir_conservation
     (D : CommutingDerivationPair A) (C H : A)
     (hC : IsCasimir D C) :
-    poissonBracket D C H = 0 := by
+    poissonBracket D C H = poissonSkewAnomaly D C H := by
   rw [poissonBracket_skew, hC H]
   simp
 
@@ -214,15 +265,17 @@ Poisson tensor. -/
   rw [cotangentPoissonPairing_eq]
   simp
 
-/-- Compact Poisson-algebra packet. -/
+/-- Compact Poisson-algebra packet over any noncommutative `[Ring A]`. -/
 theorem bipolar_poisson_algebra_packet
     (D : CommutingDerivationPair A) (F G H : A) :
-    poissonBracket D F G = -poissonBracket D G F ∧
+    poissonBracket D F G = -poissonBracket D G F + poissonSkewAnomaly D F G ∧
       poissonBracket D F (G * H) =
-        poissonBracket D F G * H + G * poissonBracket D F H ∧
+        poissonBracket D F G * H + G * poissonBracket D F H +
+          poissonLeibnizRightAnomaly D F G H ∧
       poissonBracket D (poissonBracket D F G) H +
         poissonBracket D (poissonBracket D G H) F +
-        poissonBracket D (poissonBracket D H F) G = 0 := by
+        poissonBracket D (poissonBracket D H F) G =
+        poissonJacobiAnomaly D F G H := by
   exact ⟨poissonBracket_skew D F G,
     poissonBracket_leibniz_right D F G H,
     poissonBracket_jacobi D F G H⟩

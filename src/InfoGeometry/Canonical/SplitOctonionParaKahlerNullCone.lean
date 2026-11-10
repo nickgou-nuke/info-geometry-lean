@@ -138,27 +138,27 @@ section RingOperations
 variable {R : Type*} [CommRing R]
 
 /-- Multiplicative identity $\begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$ of the Zorn algebra. -/
-def zornOne : ZornSplitOctonion R :=
+def zornOne {R : Type*} [Ring R] : ZornSplitOctonion R :=
   ⟨1, fun _ => 0, fun _ => 0, 1⟩
 
 /-- Diagonal para-complex grading element $I_{\text{para}} = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}$. -/
-def zornParaGrading : ZornSplitOctonion R :=
+def zornParaGrading {R : Type*} [Ring R] : ZornSplitOctonion R :=
   ⟨1, fun _ => 0, fun _ => 0, -1⟩
 
 /-- Componentwise addition on `ZornSplitOctonion R`. -/
-def zornAdd (x y : ZornSplitOctonion R) : ZornSplitOctonion R :=
+def zornAdd {R : Type*} [Ring R] (x y : ZornSplitOctonion R) : ZornSplitOctonion R :=
   ⟨x.a + y.a, fun k => x.u k + y.u k, fun k => x.v k + y.v k, x.b + y.b⟩
 
 /-- Componentwise subtraction on `ZornSplitOctonion R`. -/
-def zornSub (x y : ZornSplitOctonion R) : ZornSplitOctonion R :=
+def zornSub {R : Type*} [Ring R] (x y : ZornSplitOctonion R) : ZornSplitOctonion R :=
   ⟨x.a - y.a, fun k => x.u k - y.u k, fun k => x.v k - y.v k, x.b - y.b⟩
 
 /-- Scalar multiplication on `ZornSplitOctonion R`. -/
-def zornSmul (c : R) (x : ZornSplitOctonion R) : ZornSplitOctonion R :=
+def zornSmul {R : Type*} [Ring R] (c : R) (x : ZornSplitOctonion R) : ZornSplitOctonion R :=
   ⟨c * x.a, fun k => c * x.u k, fun k => c * x.v k, c * x.b⟩
 
 /-- Algebra commutator $[x, y] = x y - y x$ on `ZornSplitOctonion R`. -/
-def zornCommutator (x y : ZornSplitOctonion R) : ZornSplitOctonion R :=
+def zornCommutator {R : Type*} [Ring R] (x y : ZornSplitOctonion R) : ZornSplitOctonion R :=
   zornSub (zornMul x y) (zornMul y x)
 
 /-- The 3D cross product of any vector with itself vanishes. -/
@@ -561,101 +561,6 @@ theorem zorn_commutator_dual_dual_pure_hodgeCross (v₁ v₂ : Fin 3 → R) :
 
 end RingOperations
 
-/-! ## Full-carrier three-channel decomposition of the Zorn product -/
-
-section FullZornMetriplectic
-
-variable {R : Type*} [CommRing R]
-
-/-- The symmetric diagonal coefficient of the Zorn product on arbitrary elements. -/
-def zornMetriplecticMetric (x y : ZornSplitOctonion R) : R :=
-  x.a * y.a + x.b * y.b + vec3Dot x.u y.v + vec3Dot x.v y.u
-
-/-- The signed diagonal coefficient of the Zorn product on arbitrary elements. -/
-def zornMetriplecticSkew (x y : ZornSplitOctonion R) : R :=
-  x.a * y.a - x.b * y.b + vec3Dot x.u y.v - vec3Dot x.v y.u
-
-/-- The off-diagonal Zorn product channel, including bimodule and Hodge terms. -/
-def zornHodgeProduct (x y : ZornSplitOctonion R) : ZornSplitOctonion R :=
-  ⟨0,
-    fun i => x.a * y.u i + y.b * x.u i - vec3Cross x.v y.v i,
-    fun i => y.a * x.v i + x.b * y.v i + vec3Cross x.u y.u i,
-    0⟩
-
-/-- On the full Zorn carrier, twice the product is the sum of its symmetric diagonal,
-signed diagonal, and off-diagonal channels. The scaled form is valid over every commutative
-ring, without a hypothesis that `2` is invertible. -/
-theorem zornMul_two_metriplectic_decomp (x y : ZornSplitOctonion R) :
-    zornSmul (2 : R) (zornMul x y) =
-      zornAdd
-        (zornAdd
-          (zornSmul (zornMetriplecticMetric x y) (zornOne : ZornSplitOctonion R))
-          (zornSmul (zornMetriplecticSkew x y) (zornParaGrading : ZornSplitOctonion R)))
-        (zornSmul (2 : R) (zornHodgeProduct x y)) := by
-  ext k
-  · dsimp [zornSmul, zornAdd, zornMul, zornOne, zornParaGrading,
-      zornMetriplecticMetric, zornMetriplecticSkew, zornHodgeProduct, vec3Dot]
-    ring
-  · fin_cases k <;> {
-      dsimp [zornSmul, zornAdd, zornMul, zornOne, zornParaGrading,
-        zornMetriplecticMetric, zornMetriplecticSkew, zornHodgeProduct,
-        vec3Dot, vec3Cross]
-      ring
-    }
-  · fin_cases k <;> {
-      dsimp [zornSmul, zornAdd, zornMul, zornOne, zornParaGrading,
-        zornMetriplecticMetric, zornMetriplecticSkew, zornHodgeProduct,
-        vec3Dot, vec3Cross]
-      ring
-    }
-  · dsimp [zornSmul, zornAdd, zornMul, zornOne, zornParaGrading,
-      zornMetriplecticMetric, zornMetriplecticSkew, zornHodgeProduct, vec3Dot]
-    ring
-
-section FullZornMetriplecticField
-
-variable {R : Type*} [Field R] [NeZero (2 : R)]
-
-/-- The unscaled three-channel decomposition for arbitrary Zorn elements when `2` is
-invertible. This is the full-carrier form of the half-scaled identity, with no restriction
-to the off-diagonal para-Kähler tangent subspace. -/
-theorem zornMul_metriplectic_decomp (x y : ZornSplitOctonion R) :
-    zornMul x y =
-      zornAdd
-        (zornAdd
-          (zornSmul ((1 / 2 : R) * zornMetriplecticMetric x y)
-            (zornOne : ZornSplitOctonion R))
-          (zornSmul ((1 / 2 : R) * zornMetriplecticSkew x y)
-            (zornParaGrading : ZornSplitOctonion R)))
-        (zornHodgeProduct x y) := by
-  ext k
-  · dsimp [zornSmul, zornAdd, zornMul, zornOne, zornParaGrading,
-      zornMetriplecticMetric, zornMetriplecticSkew, zornHodgeProduct, vec3Dot]
-    field_simp
-    ring
-  · fin_cases k <;> {
-      dsimp [zornSmul, zornAdd, zornMul, zornOne, zornParaGrading,
-        zornMetriplecticMetric, zornMetriplecticSkew, zornHodgeProduct,
-        vec3Dot, vec3Cross]
-      field_simp
-      ring
-    }
-  · fin_cases k <;> {
-      dsimp [zornSmul, zornAdd, zornMul, zornOne, zornParaGrading,
-        zornMetriplecticMetric, zornMetriplecticSkew, zornHodgeProduct,
-        vec3Dot, vec3Cross]
-      field_simp
-      ring
-    }
-  · dsimp [zornSmul, zornAdd, zornMul, zornOne, zornParaGrading,
-      zornMetriplecticMetric, zornMetriplecticSkew, zornHodgeProduct, vec3Dot]
-    field_simp
-    ring
-
-end FullZornMetriplecticField
-
-end FullZornMetriplectic
-
 /-!
 ## Section 6: Full Metriplectic Product Synthesis over `ℝ` ($g + \omega + \text{Hodge Cross Product}$)
 -/
@@ -704,87 +609,27 @@ abbrev paraComplexOp (z : ParaKahlerVec R) : ParaKahlerVec R :=
   paraComplexK z
 
 /-- Zero element of `ZornSplitOctonion R`. -/
-def zornZero : ZornSplitOctonion R :=
+def zornZero {R : Type*} [Ring R] : ZornSplitOctonion R :=
   ⟨0, fun _ => 0, fun _ => 0, 0⟩
 
 /-- Upper-left Peirce idempotent $e_0 = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix}$ in `ZornSplitOctonion R`. -/
-def zornE0 : ZornSplitOctonion R :=
+def zornE0 {R : Type*} [Ring R] : ZornSplitOctonion R :=
   ⟨1, fun _ => 0, fun _ => 0, 0⟩
 
 /-- Lower-right Peirce idempotent $e_1 = \begin{pmatrix} 0 & 0 \\ 0 & 1 \end{pmatrix}$ in `ZornSplitOctonion R`. -/
-def zornE1 : ZornSplitOctonion R :=
+def zornE1 {R : Type*} [Ring R] : ZornSplitOctonion R :=
   ⟨0, fun _ => 0, fun _ => 0, 1⟩
 
 /-- Algebra anticommutator $\{x, y\} = x y + y x$ on `ZornSplitOctonion R`. -/
-def zornAnticommutator (x y : ZornSplitOctonion R) : ZornSplitOctonion R :=
+def zornAnticommutator {R : Type*} [Ring R] (x y : ZornSplitOctonion R) : ZornSplitOctonion R :=
   zornAdd (zornMul x y) (zornMul y x)
 
 /-- Algebra associator $[x, y, z] = (x y) z - x (y z)$ on `ZornSplitOctonion R`. -/
-def zornAssociator (x y z : ZornSplitOctonion R) : ZornSplitOctonion R :=
+def zornAssociator {R : Type*} [Ring R] (x y z : ZornSplitOctonion R) : ZornSplitOctonion R :=
   zornSub (zornMul (zornMul x y) z) (zornMul x (zornMul y z))
 
-
-/-- Multiplication table for the four-coefficient parametrized span generated by the two
-Peirce idempotents and the primal and dual parts of one fixed para-Kähler vector. -/
-theorem zorn_single_ray_span_mul (z : ParaKahlerVec R)
-    (a b c d a' b' c' d' : R) :
-    zornMul
-      (zornAdd (zornSmul a zornE0)
-        (zornAdd (zornSmul b zornE1)
-          (zornAdd (zornSmul c (embedVec (primalSheet z.u)))
-            (zornSmul d (embedVec (dualSheet z.v))))))
-      (zornAdd (zornSmul a' zornE0)
-        (zornAdd (zornSmul b' zornE1)
-          (zornAdd (zornSmul c' (embedVec (primalSheet z.u)))
-            (zornSmul d' (embedVec (dualSheet z.v)))))) =
-      ⟨a * a' + vec3Dot z.u z.v * c * d',
-       fun i => (a * c' + c * b') * z.u i,
-       fun i => (b * d' + d * a') * z.v i,
-       b * b' + vec3Dot z.u z.v * d * c'⟩ := by
-  ext i
-  · simp [zornMul, zornAdd, zornSmul, zornE0, zornE1, embedVec,
-      primalSheet, dualSheet, vec3Dot, vec3Cross]
-    ring
-  · fin_cases i <;> simp [zornMul, zornAdd, zornSmul, zornE0, zornE1,
-      embedVec, primalSheet, dualSheet, vec3Dot, vec3Cross] <;> ring
-  · fin_cases i <;> simp [zornMul, zornAdd, zornSmul, zornE0, zornE1,
-      embedVec, primalSheet, dualSheet, vec3Dot, vec3Cross] <;> ring
-  · simp [zornMul, zornAdd, zornSmul, zornE0, zornE1, embedVec,
-      primalSheet, dualSheet, vec3Dot, vec3Cross]
-    ring
-
-/-- The explicit four-coefficient span on a single fixed ray is associative. -/
-theorem zorn_single_ray_span_associator (z : ParaKahlerVec R)
-    (a₁ b₁ c₁ d₁ a₂ b₂ c₂ d₂ a₃ b₃ c₃ d₃ : R) :
-    zornAssociator
-      (zornAdd (zornSmul a₁ zornE0)
-        (zornAdd (zornSmul b₁ zornE1)
-          (zornAdd (zornSmul c₁ (embedVec (primalSheet z.u)))
-            (zornSmul d₁ (embedVec (dualSheet z.v))))))
-      (zornAdd (zornSmul a₂ zornE0)
-        (zornAdd (zornSmul b₂ zornE1)
-          (zornAdd (zornSmul c₂ (embedVec (primalSheet z.u)))
-            (zornSmul d₂ (embedVec (dualSheet z.v))))))
-      (zornAdd (zornSmul a₃ zornE0)
-        (zornAdd (zornSmul b₃ zornE1)
-          (zornAdd (zornSmul c₃ (embedVec (primalSheet z.u)))
-            (zornSmul d₃ (embedVec (dualSheet z.v)))))) = zornZero := by
-  ext i
-  · simp [zornAssociator, zornSub, zornMul, zornAdd, zornSmul, zornE0,
-      zornE1, zornZero, embedVec, primalSheet, dualSheet, vec3Dot, vec3Cross]
-    ring
-  · fin_cases i <;> simp [zornAssociator, zornSub, zornMul, zornAdd,
-      zornSmul, zornE0, zornE1, zornZero, embedVec, primalSheet, dualSheet,
-      vec3Dot, vec3Cross] <;> ring
-  · fin_cases i <;> simp [zornAssociator, zornSub, zornMul, zornAdd,
-      zornSmul, zornE0, zornE1, zornZero, embedVec, primalSheet, dualSheet,
-      vec3Dot, vec3Cross] <;> ring
-  · simp [zornAssociator, zornSub, zornMul, zornAdd, zornSmul, zornE0,
-      zornE1, zornZero, embedVec, primalSheet, dualSheet, vec3Dot, vec3Cross]
-    ring
-
 /-- Scalar 3D triple product $\det(u_1, u_2, u_3) = \langle u_1 \times u_2, u_3 \rangle$. -/
-def vec3TripleProduct (u₁ u₂ u₃ : Fin 3 → R) : R :=
+def vec3TripleProduct {R : Type*} [Ring R] (u₁ u₂ u₃ : Fin 3 → R) : R :=
   vec3Dot (vec3Cross u₁ u₂) u₃
 
 /-- **Commutator Action of the Para-Complex Operator $K$**:

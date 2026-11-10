@@ -6,8 +6,6 @@ import InfoGeometry.Canonical.AmplituhedronGrassmannianBCFWCapstone
 
 namespace InfoGeometry.AmplituhedronBCFW
 
-variable {F : Type*} [Field F]
-
 /-! ### Scalar model for BCFW-style denominator cancellation
 
 The declarations below are identities in a field for freely supplied scalar
@@ -26,7 +24,7 @@ structure PhysicalFacets (F : Type*) where
   P₅ : F  -- ⟨Y Z₅ Z₁⟩
 
 /-- Non-vanishing hypothesis on the physical boundary facets (interior of the Amplituhedron). -/
-structure PhysicalFacetsNonzero (p : PhysicalFacets F) : Prop where
+structure PhysicalFacetsNonzero {F : Type*} [Zero F] (p : PhysicalFacets F) : Prop where
   hP₁ : p.P₁ ≠ 0
   hP₂ : p.P₂ ≠ 0
   hP₃ : p.P₃ ≠ 0
@@ -34,6 +32,10 @@ structure PhysicalFacetsNonzero (p : PhysicalFacets F) : Prop where
   hP₅ : p.P₅ ≠ 0
 
 /-! ### 2. The Two BCFW Cell Densities -/
+
+section DivisionRing
+
+variable {F : Type*} [DivisionRing F]
 
 /-- Rational scalar assigned to the first denominator pattern. -/
 def cellA (p : PhysicalFacets F) (S : F) (N_A : F) : F :=
@@ -47,6 +49,18 @@ def cellB (p : PhysicalFacets F) (S : F) (N_B : F) : F :=
 denominator.  No canonical form or pole classification is defined here. -/
 def globalAmplituhedronForm (p : PhysicalFacets F) (N₅ : F) : F :=
   N₅ / (p.P₁ * p.P₂ * p.P₃ * p.P₄ * p.P₅)
+
+/-- Rational coefficient left after omitting the scalar factor `S` from the
+first denominator.  It is not defined as a limit or differential-form residue. -/
+def residueCellA (p : PhysicalFacets F) (N_A : F) : F :=
+  N_A / (p.P₁ * p.P₂ * p.P₅)
+
+/-- Rational coefficient left after omitting the scalar factor `S` from the
+second denominator.  It is not defined as a limit or differential-form residue. -/
+def residueCellB (p : PhysicalFacets F) (N_B : F) : F :=
+  N_B / (p.P₃ * p.P₄ * p.P₅)
+
+end DivisionRing
 
 /-! ### 3. Matrix Minor Syzygy and the Remaining BCFW Match -/
 
@@ -68,8 +82,10 @@ theorem plucker_spurious_factor (C : Matrix (Fin 2) (Fin 4) ℝ) :
 
 /-- The additional numerator relation required by the scalar cancellation
 theorem below.  Its geometric derivation is not part of this module. -/
-def BCFWMatchingCondition (p : PhysicalFacets F) (S : F) (N_A N_B N₅ : F) : Prop :=
+def BCFWMatchingCondition {F : Type*} [Ring F] (p : PhysicalFacets F) (S : F) (N_A N_B N₅ : F) : Prop :=
   N_A * (p.P₃ * p.P₄) + N_B * (p.P₁ * p.P₂) = S * N₅
+
+variable {F : Type*} [Field F]
 
 /-! ### 4. Core Theorem: Algebraic Spurious Pole Cancellation -/
 
@@ -123,16 +139,6 @@ theorem bcfw_spurious_pole_cancellation
   exact h_div_cancel
 
 /-! ### 5. Spurious Residue Cancellation -/
-
-/-- Rational coefficient left after omitting the scalar factor `S` from the
-first denominator.  It is not defined as a limit or differential-form residue. -/
-def residueCellA (p : PhysicalFacets F) (N_A : F) : F :=
-  N_A / (p.P₁ * p.P₂ * p.P₅)
-
-/-- Rational coefficient left after omitting the scalar factor `S` from the
-second denominator.  It is not defined as a limit or differential-form residue. -/
-def residueCellB (p : PhysicalFacets F) (N_B : F) : F :=
-  N_B / (p.P₃ * p.P₄ * p.P₅)
 
 /-- At `S = 0`, the supplied matching equation makes the two rational
 coefficients sum to zero after common-denominator algebra. -/

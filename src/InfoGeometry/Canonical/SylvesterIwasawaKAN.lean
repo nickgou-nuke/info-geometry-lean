@@ -3,7 +3,9 @@ import Mathlib.Tactic
 
 namespace InfoGeometry.Canonical.SylvesterIwasawaKAN
 
-variable {R : Type*} [CommRing R]
+section Ring
+
+variable {R : Type*} [Ring R]
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
 /-- The core Heisenberg-Weyl commutation relation Z X = ω X Z -/
@@ -21,6 +23,11 @@ theorem iwasawa_N_shear (ω : R) (X Z : Matrix n n R) (h : IsSylvesterPair ω X 
     Z * (X * Z) = (Z * X) * Z := by rw [Matrix.mul_assoc]
     _ = (ω • (X * Z)) * Z := by rw [h]
     _ = ω • (X * Z * Z) := by rw [Matrix.smul_mul, Matrix.mul_assoc]
+
+end Ring
+
+variable {R : Type*} [CommRing R]
+variable {n : Type*} [Fintype n] [DecidableEq n]
 
 /-! ### 2. The K-Component (Compact / Rotation / Fourier Transform)
     The rotation maps X ↦ Z and Z ↦ X⁻¹.

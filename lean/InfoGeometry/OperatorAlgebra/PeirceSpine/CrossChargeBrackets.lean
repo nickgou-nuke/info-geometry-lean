@@ -26,11 +26,6 @@ theorem lie_sandwich_comm (U W : B) :
 
 variable (P A C : B)
 
-theorem plus_lie_minus_sandwich_comm :
-    comm (lieOp ℤ (conePlus P A)) (sandwichOp ℤ (coneMinus P C) (coneMinus P C)) =
-      crossTransport ℤ (genSig P A C) (coneMinus P C) :=
-  lie_sandwich_comm (conePlus P A) (coneMinus P C)
-
 theorem minus_lie_plus_sandwich_comm :
     comm (lieOp ℤ (coneMinus P C)) (sandwichOp ℤ (conePlus P A) (conePlus P A)) =
       -crossTransport ℤ (genSig P A C) (conePlus P A) := by

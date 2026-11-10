@@ -12,18 +12,21 @@ open ExteriorAlgebra
 open InfoGeometry.Canonical.CARSpinorCliffordActionBridge
 open InfoGeometry.Canonical.ExteriorContractionOperatorBridge
 
-variable {R U : Type*} [CommRing R] [AddCommGroup U] [Module R U]
+variable {R U : Type*}
 
 /-- **Definition**: Evaluation Covector ev_u(α) = α(u) on U*. -/
-def evaluationLinear (u : U) : (U →ₗ[R] R) →ₗ[R] R where
+def evaluationLinear [CommSemiring R] [AddCommMonoid U] [Module R U] (u : U) : (U →ₗ[R] R) →ₗ[R] R where
   toFun alpha := alpha u
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
 
 /-- **Theorem**: Evaluation Covector Identity ev_u(α) = α(u). -/
-theorem evaluation_linear_apply (u : U) (alpha : U →ₗ[R] R) :
+theorem evaluation_linear_apply [CommSemiring R] [AddCommMonoid U] [Module R U]
+    (u : U) (alpha : U →ₗ[R] R) :
     evaluationLinear u alpha = alpha u :=
   rfl
+
+variable [CommRing R] [AddCommGroup U] [Module R U]
 
 /-- **Theorem**: Mixed CAR Evaluation Scalar Action Identity.
     For any pairing (u, α), evaluation ev_u(α) • ω = α(u) • ω. -/

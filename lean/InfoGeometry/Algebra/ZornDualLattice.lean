@@ -6,8 +6,6 @@ namespace InfoGeometry.Algebra.ZornVectorMatrix
 
 open scoped BigOperators
 
-variable {R : Type*} [CommRing R]
-
 def polar (X Y : ZornVectorMatrix ℚ) : ℚ :=
   X.a * Y.b + Y.a * X.b -
     (X.v 0 * Y.w 0 + X.v 1 * Y.w 1 + X.v 2 * Y.w 2 +

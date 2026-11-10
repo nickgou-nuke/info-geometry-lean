@@ -20,7 +20,7 @@ open InfoGeometry.Canonical.FockVacuumAnnihilationBridge
 open InfoGeometry.Canonical.SingleParticleFockStateBridge
 open InfoGeometry.Canonical.WickTheoremVacuumContractionBridge
 
-variable {R U : Type*} [CommRing R] [AddCommGroup U] [Module R U]
+variable {R U : Type*} [Ring R] [AddCommGroup U] [Module R U]
 
 /-- **Definition**: 2-Point Wick Contraction Plücker Determinant Det2(α1, α2; u1, u2). -/
 def wick2PointDeterminant (alpha1 alpha2 : U →ₗ[R] R) (u1 u2 : U) : R :=
@@ -30,13 +30,13 @@ def wick2PointDeterminant (alpha1 alpha2 : U →ₗ[R] R) (u1 u2 : U) : R :=
 theorem wick_determinant_covector_alternating (alpha1 alpha2 : U →ₗ[R] R) (u1 u2 : U) :
     wick2PointDeterminant alpha1 alpha2 u1 u2 = - wick2PointDeterminant alpha2 alpha1 u1 u2 := by
   dsimp [wick2PointDeterminant]
-  ring
+  abel
 
 /-- **Theorem**: 2-Point Wick Contraction Determinant Alternating in Vectors (Det2(α1, α2; u1, u2) = -Det2(α1, α2; u2, u1)). -/
 theorem wick_determinant_vector_alternating (alpha1 alpha2 : U →ₗ[R] R) (u1 u2 : U) :
     wick2PointDeterminant alpha1 alpha2 u1 u2 = - wick2PointDeterminant alpha1 alpha2 u2 u1 := by
   dsimp [wick2PointDeterminant]
-  ring
+  abel
 
 /-- **Theorem**: Master N-Point Wick Contraction & Plücker Determinant Synthesis.
     Unifies:

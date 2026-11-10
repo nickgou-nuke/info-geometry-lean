@@ -38,7 +38,7 @@ namespace InfoGeometry.Canonical.MathematicalUnification
 
 section TriFacet
 
-variable {F : Type*} [Field F]
+variable {F : Type*} [CommRing F]
 
 /-- The Hyperbolic projection operator. -/
 def P_hyp [Invertible (2 : F)] (T : F) : F :=
@@ -238,10 +238,10 @@ end Drazin
 
 section GoldenRatio
 
-variable {F : Type*} [Field F] {phi : F}
+variable {F : Type*} {phi : F}
 
 /-- The third power of the golden ratio. -/
-theorem phi_pow3 (hphi : phi ^ 2 = phi + 1) :
+theorem phi_pow3 [CommRing F] (hphi : phi ^ 2 = phi + 1) :
     phi ^ 3 = 2 * phi + 1 := by
   calc
     phi ^ 3 = phi * phi ^ 2 := by ring
@@ -251,7 +251,7 @@ theorem phi_pow3 (hphi : phi ^ 2 = phi + 1) :
     _ = 2 * phi + 1 := by ring
 
 /-- The fourth power of the golden ratio minus one. -/
-theorem phi_pow4_sub_one (hphi : phi ^ 2 = phi + 1) :
+theorem phi_pow4_sub_one [CommRing F] (hphi : phi ^ 2 = phi + 1) :
     phi ^ 4 - 1 = 3 * phi + 1 := by
   have h3 : phi ^ 3 = 2 * phi + 1 := phi_pow3 hphi
   calc
@@ -262,7 +262,7 @@ theorem phi_pow4_sub_one (hphi : phi ^ 2 = phi + 1) :
     _ = 3 * phi + 1 := by ring
 
 /-- The anyonic quantum dimension scaling relation. -/
-theorem one_add_phi_sq_mul_phi (hphi : phi ^ 2 = phi + 1) :
+theorem one_add_phi_sq_mul_phi [CommRing F] (hphi : phi ^ 2 = phi + 1) :
     (1 + phi ^ 2) * phi = 3 * phi + 1 := by
   calc
     (1 + phi ^ 2) * phi = phi + phi ^ 3 := by ring
@@ -270,7 +270,7 @@ theorem one_add_phi_sq_mul_phi (hphi : phi ^ 2 = phi + 1) :
     _ = 3 * phi + 1 := by ring
 
 /-- Multiplicative relation proving the golden ratio is invertible. -/
-theorem phi_mul_sub_one_eq_one (hphi : phi ^ 2 = phi + 1) :
+theorem phi_mul_sub_one_eq_one [CommRing F] (hphi : phi ^ 2 = phi + 1) :
     phi * (phi - 1) = 1 := by
   calc
     phi * (phi - 1) = phi ^ 2 - phi := by ring
@@ -278,12 +278,14 @@ theorem phi_mul_sub_one_eq_one (hphi : phi ^ 2 = phi + 1) :
     _ = 1 := by ring
 
 /-- The golden ratio is non-zero. -/
-theorem phi_ne_zero (hphi : phi ^ 2 = phi + 1) :
+theorem phi_ne_zero [CommRing F] [Nontrivial F] (hphi : phi ^ 2 = phi + 1) :
     phi ≠ 0 := by
   intro h_zero
   have h_mul : phi * (phi - 1) = 1 := phi_mul_sub_one_eq_one hphi
   rw [h_zero, zero_mul] at h_mul
   exact zero_ne_one h_mul
+
+variable [Field F]
 
 /-- The explicit inverse of the golden ratio. -/
 theorem phi_inv_eq (hphi : phi ^ 2 = phi + 1) :

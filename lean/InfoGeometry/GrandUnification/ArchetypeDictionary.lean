@@ -24,7 +24,8 @@ import Mathlib.Algebra.Algebra.Basic
 
 namespace InfoGeometry.GrandUnification.ArchetypeDictionary
 
-variable {R A : Type*} [CommRing R] [Invertible (2 : R)] [Ring A] [Algebra R A]
+variable {R A : Type*} [Ring R] [Invertible (2 : R)] [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- The positive Peirce operator associated to an element of a unital algebra. -/
 def peircePlus (epsilon : A) : A := (⅟(2 : R)) • (1 + epsilon)
@@ -32,6 +33,7 @@ def peircePlus (epsilon : A) : A := (⅟(2 : R)) • (1 + epsilon)
 /-- The negative Peirce operator associated to an element of a unital algebra. -/
 def peirceMinus (epsilon : A) : A := (⅟(2 : R)) • (1 - epsilon)
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 /-- Direct projector completeness theorem: only the operator equation
 `epsilon * epsilon = 1` is used; no splitting package is required. -/
 theorem peircePlus_add_peirceMinus (epsilon : A) :
@@ -44,6 +46,7 @@ theorem peircePlus_add_peirceMinus (epsilon : A) :
       _ = (2 : R) • (1 : A) := by rw [two_smul]
   rw [h_sum, ← mul_smul, invOf_mul_self, one_smul]
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 /-- The difference of the two Peirce projectors recovers the involution. -/
 theorem peircePlus_sub_peirceMinus (epsilon : A) :
     peircePlus (R := R) epsilon - peirceMinus (R := R) epsilon = epsilon := by
@@ -60,7 +63,7 @@ theorem peircePlus_sq (epsilon : A) (hε : epsilon * epsilon = 1) :
     peircePlus (R := R) epsilon * peircePlus (R := R) epsilon =
       peircePlus (R := R) epsilon := by
   dsimp [peircePlus]
-  rw [smul_mul_smul]
+  rw [smul_mul_assoc, mul_smul_comm, smul_smul]
   have h_sq : (1 + epsilon) * (1 + epsilon) = (2 : R) • (1 + epsilon) := by
     calc
       (1 + epsilon) * (1 + epsilon) = 1 + epsilon + epsilon + epsilon * epsilon := by noncomm_ring
@@ -80,7 +83,7 @@ theorem peirceMinus_sq (epsilon : A) (hε : epsilon * epsilon = 1) :
     peirceMinus (R := R) epsilon * peirceMinus (R := R) epsilon =
       peirceMinus (R := R) epsilon := by
   dsimp [peirceMinus]
-  rw [smul_mul_smul]
+  rw [smul_mul_assoc, mul_smul_comm, smul_smul]
   have h_sq : (1 - epsilon) * (1 - epsilon) = (2 : R) • (1 - epsilon) := by
     calc
       (1 - epsilon) * (1 - epsilon) = 1 - epsilon - epsilon + epsilon * epsilon := by noncomm_ring
@@ -99,7 +102,7 @@ theorem peirceMinus_sq (epsilon : A) (hε : epsilon * epsilon = 1) :
 theorem peircePlus_mul_peirceMinus (epsilon : A) (hε : epsilon * epsilon = 1) :
     peircePlus (R := R) epsilon * peirceMinus (R := R) epsilon = 0 := by
   dsimp [peircePlus, peirceMinus]
-  rw [smul_mul_smul]
+  rw [smul_mul_assoc, mul_smul_comm, smul_smul]
   have h_cross : (1 + epsilon) * (1 - epsilon) = 0 := by
     calc
       (1 + epsilon) * (1 - epsilon) = 1 - epsilon * epsilon := by noncomm_ring
@@ -111,7 +114,7 @@ theorem peircePlus_mul_peirceMinus (epsilon : A) (hε : epsilon * epsilon = 1) :
 theorem peirceMinus_mul_peircePlus (epsilon : A) (hε : epsilon * epsilon = 1) :
     peirceMinus (R := R) epsilon * peircePlus (R := R) epsilon = 0 := by
   dsimp [peircePlus, peirceMinus]
-  rw [smul_mul_smul]
+  rw [smul_mul_assoc, mul_smul_comm, smul_smul]
   have h_cross : (1 - epsilon) * (1 + epsilon) = 0 := by
     calc
       (1 - epsilon) * (1 + epsilon) = 1 - epsilon * epsilon := by noncomm_ring
@@ -119,7 +122,7 @@ theorem peirceMinus_mul_peircePlus (epsilon : A) (hε : epsilon * epsilon = 1) :
       _ = 0 := by noncomm_ring
   rw [h_cross, smul_zero]
 
-structure SplitInvolution (R A : Type*) [CommRing R] [Invertible (2 : R)] [Ring A] [Algebra R A] where
+structure SplitInvolution (R A : Type*) [Ring R] [Invertible (2 : R)] [Ring A] [Module R A] where
   epsilon : A
   sq_eq_one : epsilon * epsilon = 1
 
@@ -132,12 +135,12 @@ def splitInvolutionPUnitModel : SplitInvolution PUnit PUnit where
   sq_eq_one := mul_one 1
 
 /-- Constructive identity involution model `ε = 1` for `SplitInvolution R A`. -/
-def SplitInvolution.unitModel (R A : Type*) [CommRing R] [Invertible (2 : R)] [Ring A] [Algebra R A] :
+def SplitInvolution.unitModel (R A : Type*) [Ring R] [Invertible (2 : R)] [Ring A] [Module R A] :
     SplitInvolution R A where
   epsilon := 1
   sq_eq_one := mul_one 1
 
-instance instInhabitedSplitInvolution (R A : Type*) [CommRing R] [Invertible (2 : R)] [Ring A] [Algebra R A] :
+instance instInhabitedSplitInvolution (R A : Type*) [Ring R] [Invertible (2 : R)] [Ring A] [Module R A] :
     Inhabited (SplitInvolution R A) :=
   ⟨SplitInvolution.unitModel R A⟩
 
@@ -148,6 +151,7 @@ variable (inv : SplitInvolution R A)
 def P_plus : A := peircePlus (R := R) inv.epsilon
 def P_minus : A := peirceMinus (R := R) inv.epsilon
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 theorem P_plus_add_P_minus : inv.P_plus + inv.P_minus = 1 := by
   apply peircePlus_add_peirceMinus (R := R) inv.epsilon
 

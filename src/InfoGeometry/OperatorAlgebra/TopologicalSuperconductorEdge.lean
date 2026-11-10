@@ -95,8 +95,11 @@ variable (T : BdGEdgeModeWitness Boundary V)
 
 /-- The edge mode is fixed by closure. -/
 theorem theta_edgeMode_eq_edgeMode :
-    T.boundaryDatum.closure.theta T.edgeMode = T.edgeMode :=
-  T.boundaryDatum.closure.theta_eq_self_of_fixed T.edgeMode_fixed
+    T.boundaryDatum.closure.theta T.edgeMode = T.edgeMode := by
+  have hnext := T.boundaryDatum.closure.theta_maps_fixed_to_fixed T.edgeMode_fixed
+  have hnext_eq := (T.boundaryDatum.closure.mem_fixed_iff
+    (T.boundaryDatum.closure.theta T.edgeMode)).mp hnext
+  exact hnext_eq.symm.trans (T.boundaryDatum.closure.theta_involutive T.edgeMode)
 
 /-- The edge mode is a zero-energy mode of the supplied BdG Hamiltonian. -/
 theorem edgeMode_is_zero_energy :

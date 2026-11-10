@@ -14,7 +14,7 @@ index type, new state construction, or analytic KMS assertion is needed here.
 namespace InfoGeometry.Canonical.FiniteMatrixGibbsFunctional
 
 section Algebraic
-variable {R n : Type*} [CommRing R] [Fintype n] [DecidableEq n]
+variable {R n : Type*} [Ring R] [Fintype n] [DecidableEq n]
 
 /-- An invertible weight preserves separation of the right argument.
 This is algebraic nondegeneracy, not a positivity hypothesis. -/

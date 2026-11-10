@@ -1,28 +1,38 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 
 /-!
-# Fisher zeros arcsine law seed values
+# Fisher-zero arcsine arithmetic seeds
 
-The characteristic polynomial P_k(t) = det(L_k + tI) of the fence Laplacian has zeros
-  t_p = -4 sin²((2p-1)π/(4k+2)),  p = 1, …, k
-lying in (-4, 0). The empirical zero measure converges to the arcsine distribution
-on [-4, 0] with density dω(t) = 1/(π √((-t)(4+t))) dt.
+This file defines numerical denominator, numerator, and discriminant
+expressions. It does not define a fence Laplacian or characteristic polynomial,
+and it proves no root-location or limiting-measure result.
 
 ## Seed values
 
-The zeros are located at t_p = -4 sin²(θ_p) where θ_p = (2p-1)π/(4k+2).
-At small k, the argument denominators and numerator coefficients are:
+The proposed angle parameters use θ_p = (2p-1)π/(4k+2). The following are
+arithmetic seeds for those formulas:
 
 - k=1: denominator 4·1+2 = 6, one zero at p=1: θ = π/6
 - k=2: denominator 4·2+2 = 10, zeros at p=1,2: θ = π/10, 3π/10
 - k=3: denominator 4·3+2 = 14, zeros at p=1,2,3: θ = π/14, 3π/14, 5π/14
 
-The arcsine discriminant Δ(t) = t(4+t) vanishes at t=0 and t=-4,
-giving the support endpoints of the limiting measure.
+The polynomial expression Δ(t) = t(4+t) has the listed endpoint values.
 
 ## Paper references
 
 - thm:pom-Lk-fisher-zeros-arcsine
+
+## Scope
+
+This module currently proves arithmetic seed identities only. It does not
+define the fence Laplacian, its characteristic polynomial, the listed roots,
+or the limiting zero measure; those spectral claims remain open here.
 -/
 
 namespace Omega.POM.FisherZerosArcsineSeeds
@@ -124,14 +134,18 @@ theorem arcsineDiscriminant_symmetry :
     arcsineDiscriminant (-1) = arcsineDiscriminant (-3) := by
   simp [arcsineDiscriminant]
 
-/-! ## Zero count per level: exactly k zeros for L_k
+/-! ## Numerator range for the indexed Fisher-zero angles
 
-The polynomial P_k(t) = det(L_k + tI) has degree k, hence exactly k zeros
-(counted with multiplicity). All zeros are real and simple, lying in (-4, 0). -/
+The polynomial and its roots are not defined in this seed module, so no
+spectral zero-count theorem is claimed here. The following arithmetic bound
+does verify that each positive-index numerator lies below the denominator. -/
 
-/-- Total zero count at level k equals k (polynomial degree).
-    thm:pom-Lk-fisher-zeros-arcsine -/
-theorem zero_count_eq_degree (k : ℕ) : k = k := rfl
+/-- For `1 ≤ p ≤ k`, the angle numerator `2p - 1` is positive and strictly
+below the Fisher denominator `4k + 2`. -/
+theorem oddNumerator_bounds {p k : ℕ} (hp : 1 ≤ p) (hpk : p ≤ k) :
+    0 < oddNumerator p ∧ oddNumerator p < argDenom k := by
+  simp only [oddNumerator, argDenom]
+  omega
 
 /-! ## Joukowsky uniformization seeds: w^{2k+1} = -1
 

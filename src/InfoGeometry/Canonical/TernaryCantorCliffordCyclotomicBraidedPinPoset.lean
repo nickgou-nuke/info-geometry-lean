@@ -26,9 +26,10 @@ governed by the 3rd cyclotomic polynomial $\Phi_3(\omega) = \omega^2 + \omega + 
      under the binary product $v_1 v_2 \in \mathrm{Cl}_{1,1}^+$, it is strictly closed under
      both the associative ternary product $v_1 v_2 v_3 \in V$ and the symmetric
      Cantor–Jordan triple product $\{v_1, v_2, v_3\}_{\mathrm{JT}} = v_1 v_2 v_3 + v_3 v_2 v_1 \in V$.
-   - Proves the Cartan–Dieudonné three-reflection norm law
-     $(v_1 v_2 v_3)^2 = (\epsilon_1 \epsilon_2 \epsilon_3) I_2$ and the fundamental Jordan
-     triple identity $\{\{u, v, u\}, w, \{u, v, u\}\} = \{u, \{v, \{u, w, u\}, v\}, u\}$.
+   - Proves the non-commutative bimetric Cartan–Dieudonné three-reflection norm law
+     $(v_1 v_2 v_3)^2 = \mathrm{diag}\bigl((a_+ b_- c_+)(a_- b_+ c_-),\; (a_- b_+ c_-)(a_+ b_- c_+)\bigr)$
+     and the fundamental Jordan triple identity
+     $\{\{u, v, u\}, w, \{u, v, u\}\} = \{u, \{v, \{u, w, u\}, v\}, u\}$ over any `[Ring B]`.
 2. **Multiparticle Cantor-Like Branch Factorization & Ternary Creation–Vacuum–Annihilation:**
    - Constructs the two orthogonal Cantor branch projections $P_{\mathrm{vac}} = u_+ v_-$
      and $P_{\mathrm{occ}} = v_- u_+$ together with the ternary cross-branch
@@ -37,7 +38,7 @@ governed by the 3rd cyclotomic polynomial $\Phi_3(\omega) = \omega^2 + \omega + 
      reciprocity $T_{01}(T_{10}(P_{\mathrm{vac}})) = P_{\mathrm{vac}}$.
 3. **Ternary / Cubic Generalized Clifford Algebra ($v^3 = Q(v) I_3$) & Sylvester Matrices:**
    - For the $3 \times 3$ Sylvester shift $X_3$ and clock $Z_3(\omega) = \mathrm{diag}(1, \omega, \omega^2)$
-     over any commutative ring $R$ with $\omega^2 + \omega + 1 = 0$, proves $\omega^3 = 1$,
+     over any non-commutative ring `[Ring B]` with $\omega^2 + \omega + 1 = 0$, proves $\omega^3 = 1$,
      $X_3^3 = I_3$, $Z_3(\omega)^3 = I_3$, the braided Weyl commutation relation
      $X_3 Z_3(\omega) = \omega Z_3(\omega) X_3$, vanishing of both polarized cyclic triple
      sums $X_3^2 Z_3 + X_3 Z_3 X_3 + Z_3 X_3^2 = 0$ and $X_3 Z_3^2 + Z_3 X_3 Z_3 + Z_3^2 X_3 = 0$,
@@ -66,8 +67,8 @@ governed by the 3rd cyclotomic polynomial $\Phi_3(\omega) = \omega^2 + \omega + 
     `sylvester_qutrit_noncommutative`.
 
 * **BUCKET 2 — Eliminated Certificate & Prop-Def Wrappers (Zero Remaining):**
-  - All declarations are concrete `def`s and constructive `theorem`s over `Matrix (Fin 2) (Fin 2) R`
-    and `Matrix (Fin 3) (Fin 3) R`, with zero `Prop`-valued `def` or `structure` wrappers.
+  - All declarations are concrete `def`s and constructive `theorem`s over `Matrix (Fin 2) (Fin 2) B`
+    and `Matrix (Fin 3) (Fin 3) B` (`[Ring B]`), with zero `Prop`-valued `def` or `structure` wrappers.
 
 * **BUCKET 3 — Infinite-Particle C*-Inductive Norm Completion (`[bucket_3_open_debt]`):**
   - Banach/C*-norm completions of infinite tensor products $\bigotimes_{k=1}^\infty M_3(\mathbb{C})$
@@ -78,55 +79,56 @@ namespace InfoGeometry.Canonical.TernaryCantorCliffordCyclotomicBraidedPinPoset
 
 open Matrix
 
-variable {R : Type*} [CommRing R]
+variable {B : Type*} [Ring B]
 
 -- ============================================================================
 -- SECTION 1: Ternary Sandwich Product & Jordan–Cantor Triple Closure of V
 -- ============================================================================
 
 /-- Split vector $V(x_+, x_-) = \begin{pmatrix} 0 & x_+ \\ x_- & 0 \end{pmatrix}$ in the odd subspace
-$V = N_+ \oplus N_- \subset \mathrm{Cl}_{1,1}(R)$. -/
-def splitOddVec (x_plus x_minus : R) : Matrix (Fin 2) (Fin 2) R :=
+$V = N_+ \oplus N_- \subset \mathrm{Cl}_{1,1}(B)$. -/
+def splitOddVec (x_plus x_minus : B) : Matrix (Fin 2) (Fin 2) B :=
   !![0, x_plus; x_minus, 0]
 
-/-- Associative ternary product $\tau(A, B, C) = A B C$ on `Matrix (Fin 2) (Fin 2) R`. -/
-def ternaryMul2 (A B C : Matrix (Fin 2) (Fin 2) R) : Matrix (Fin 2) (Fin 2) R :=
-  A * B * C
+/-- Associative ternary product $\tau(A_1, A_2, A_3) = A_1 A_2 A_3$ on `Matrix (Fin 2) (Fin 2) B`. -/
+def ternaryMul2 (A₁ A₂ A₃ : Matrix (Fin 2) (Fin 2) B) : Matrix (Fin 2) (Fin 2) B :=
+  A₁ * A₂ * A₃
 
-/-- Symmetric Cantor–Jordan triple product $\{A, B, C\}_{\mathrm{JT}} = A B C + C B A$
-on `Matrix (Fin 2) (Fin 2) R`. -/
-def jordanTriple2 (A B C : Matrix (Fin 2) (Fin 2) R) : Matrix (Fin 2) (Fin 2) R :=
-  A * B * C + C * B * A
+/-- Symmetric Cantor–Jordan triple product $\{A_1, A_2, A_3\}_{\mathrm{JT}} = A_1 A_2 A_3 + A_3 A_2 A_1$
+on `Matrix (Fin 2) (Fin 2) B`. -/
+def jordanTriple2 (A₁ A₂ A₃ : Matrix (Fin 2) (Fin 2) B) : Matrix (Fin 2) (Fin 2) B :=
+  A₁ * A₂ * A₃ + A₃ * A₂ * A₁
 
 /-- Two-matrix product of odd split vectors is diagonal:
 $V(a_+, a_-)\,V(b_+, b_-) = \mathrm{diag}(a_+ b_-, a_- b_+)$. -/
-theorem splitOddVec_mul_splitOddVec (a_plus a_minus b_plus b_minus : R) :
+theorem splitOddVec_mul_splitOddVec (a_plus a_minus b_plus b_minus : B) :
     splitOddVec a_plus a_minus * splitOddVec b_plus b_minus =
       !![a_plus * b_minus, 0; 0, a_minus * b_plus] := by
   ext i j; fin_cases i <;> fin_cases j <;>
     simp [splitOddVec, Matrix.mul_apply]
 
 /-- Two-matrix left action of a diagonal matrix on an odd split vector. -/
-theorem diag2_mul_splitOddVec (d₀ d₁ c_plus c_minus : R) :
-    (!![d₀, 0; 0, d₁] : Matrix (Fin 2) (Fin 2) R) * splitOddVec c_plus c_minus =
+theorem diag2_mul_splitOddVec (d₀ d₁ c_plus c_minus : B) :
+    (!![d₀, 0; 0, d₁] : Matrix (Fin 2) (Fin 2) B) * splitOddVec c_plus c_minus =
       splitOddVec (d₀ * c_plus) (d₁ * c_minus) := by
   ext i j; fin_cases i <;> fin_cases j <;>
     simp [splitOddVec, Matrix.mul_apply]
 
 /-- **Odd Vector Subspace Ternary Closure & Three-Reflection Law
 (`oddVector_ternary_closure_and_jordan_triple_law`):**
+Over any non-commutative associative ring `[Ring B]`:
 1. **Binary Escape vs. Ternary Closure:** While $V(a_+, a_-)\,V(b_+, b_-) = \mathrm{diag}(a_+ b_-, a_- b_+)$
    leaves the odd vector space $V$, the ternary product $V(a_+, a_-)\,V(b_+, b_-)\,V(c_+, c_-)$
    and Jordan triple product $\{V(a_+, a_-), V(b_+, b_-), V(c_+, c_-)\}_{\mathrm{JT}}$ remain
    strictly inside $V$:
    $$V(a_+, a_-)\,V(b_+, b_-)\,V(c_+, c_-) = V(a_+ b_- c_+,\; a_- b_+ c_-),$$
    $$\{V(a_+, a_-), V(b_+, b_-), V(c_+, c_-)\}_{\mathrm{JT}}
-     = V(2 a_+ b_- c_+,\; 2 a_- b_+ c_-);$$
-2. **Cartan–Dieudonné Three-Reflection Norm:** The Clifford square of the triple product
-   $v_{123} = V(a_+, a_-)\,V(b_+, b_-)\,V(c_+, c_-)$ is the product of the three individual
-   split norms $(a_+ a_-)(b_+ b_-)(c_+ c_-)\,I_2$. -/
+     = V(a_+ b_- c_+ + c_+ b_- a_+,\; a_- b_+ c_- + c_- b_+ a_-);$$
+2. **Non-Commutative Bimetric Cartan–Dieudonné Three-Reflection Norm:** The Clifford square of the
+   triple product $v_{123} = V(a_+, a_-)\,V(b_+, b_-)\,V(c_+, c_-)$ is the bimetric Peirce diagonal
+   $\mathrm{diag}\bigl((a_+ b_- c_+)(a_- b_+ c_-),\; (a_- b_+ c_-)(a_+ b_- c_+)\bigr)$. -/
 theorem oddVector_ternary_closure_and_jordan_triple_law
-    (a_plus a_minus b_plus b_minus c_plus c_minus : R) :
+    (a_plus a_minus b_plus b_minus c_plus c_minus : B) :
     ternaryMul2 (splitOddVec a_plus a_minus)
                 (splitOddVec b_plus b_minus)
                 (splitOddVec c_plus c_minus) =
@@ -134,14 +136,15 @@ theorem oddVector_ternary_closure_and_jordan_triple_law
     jordanTriple2 (splitOddVec a_plus a_minus)
                   (splitOddVec b_plus b_minus)
                   (splitOddVec c_plus c_minus) =
-      splitOddVec (2 * a_plus * b_minus * c_plus) (2 * a_minus * b_plus * c_minus) ∧
+      splitOddVec (a_plus * b_minus * c_plus + c_plus * b_minus * a_plus)
+                  (a_minus * b_plus * c_minus + c_minus * b_plus * a_minus) ∧
     let v123 := ternaryMul2 (splitOddVec a_plus a_minus)
                             (splitOddVec b_plus b_minus)
                             (splitOddVec c_plus c_minus)
     v123 * v123 =
-      ((a_plus * a_minus) * (b_plus * b_minus) * (c_plus * c_minus)) •
-        (1 : Matrix (Fin 2) (Fin 2) R) := by
-  have h_tern : ∀ x₁ x₂ y₁ y₂ z₁ z₂ : R,
+      (!![(a_plus * b_minus * c_plus) * (a_minus * b_plus * c_minus), 0;
+          0, (a_minus * b_plus * c_minus) * (a_plus * b_minus * c_plus)] : Matrix (Fin 2) (Fin 2) B) := by
+  have h_tern : ∀ x₁ x₂ y₁ y₂ z₁ z₂ : B,
       ternaryMul2 (splitOddVec x₁ x₂) (splitOddVec y₁ y₂) (splitOddVec z₁ z₂) =
         splitOddVec (x₁ * y₂ * z₁) (x₂ * y₁ * z₂) := by
     intro x₁ x₂ y₁ y₂ z₁ z₂
@@ -150,19 +153,18 @@ theorem oddVector_ternary_closure_and_jordan_triple_law
   · change ternaryMul2 (splitOddVec a_plus a_minus) (splitOddVec b_plus b_minus) (splitOddVec c_plus c_minus) +
       ternaryMul2 (splitOddVec c_plus c_minus) (splitOddVec b_plus b_minus) (splitOddVec a_plus a_minus) = _
     rw [h_tern, h_tern]
-    ext i j; fin_cases i <;> fin_cases j <;> simp [splitOddVec] <;> ring
+    ext i j; fin_cases i <;> fin_cases j <;> simp [splitOddVec]
   · dsimp only
     rw [h_tern, splitOddVec_mul_splitOddVec]
-    ext i j; fin_cases i <;> fin_cases j <;> simp <;> ring
 
 /-- **Jordan Triple Fundamental Identity on Split Vectors
 (`jordanTriple_fundamental_identity_on_oddVectors`):**
-For any associative $2 \times 2$ matrices (and in particular for any split vectors
+For any associative $2 \times 2$ matrices over `[Ring B]` (and in particular for any split vectors
 $u, v, w \in V$), the quadratic Jordan triple map $P(x)(y) = x y x$ satisfies
 $P(P(u)v)(w) = P(u)(P(v)(P(u)w))$, i.e.,
 $$(u v u)\,w\,(u v u) = u\,\bigl(v\,(u w u)\,v\bigr)\,u.$$ -/
 theorem jordanTriple_fundamental_identity_on_oddVectors
-    (u v w : Matrix (Fin 2) (Fin 2) R) :
+    (u v w : Matrix (Fin 2) (Fin 2) B) :
     ternaryMul2 (ternaryMul2 u v u) w (ternaryMul2 u v u) =
       ternaryMul2 u (ternaryMul2 v (ternaryMul2 u w u) v) u := by
   simp only [ternaryMul2, Matrix.mul_assoc]
@@ -172,27 +174,27 @@ theorem jordanTriple_fundamental_identity_on_oddVectors
 -- ============================================================================
 
 /-- Forward Witt creation nilpotent $u_+ = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix}$. -/
-def cantorCreateU : Matrix (Fin 2) (Fin 2) R :=
+def cantorCreateU : Matrix (Fin 2) (Fin 2) B :=
   !![0, 1; 0, 0]
 
 /-- Backward Witt annihilation nilpotent $v_- = \begin{pmatrix} 0 & 0 \\ 1 & 0 \end{pmatrix}$. -/
-def cantorAnnihilateV : Matrix (Fin 2) (Fin 2) R :=
+def cantorAnnihilateV : Matrix (Fin 2) (Fin 2) B :=
   !![0, 0; 1, 0]
 
 /-- Vacuum branch idempotent $P_{\mathrm{vac}} = u_+ v_- = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix}$. -/
-def cantorBranchVac : Matrix (Fin 2) (Fin 2) R :=
+def cantorBranchVac : Matrix (Fin 2) (Fin 2) B :=
   !![1, 0; 0, 0]
 
 /-- Occupied branch idempotent $P_{\mathrm{occ}} = v_- u_+ = \begin{pmatrix} 0 & 0 \\ 0 & 1 \end{pmatrix}$. -/
-def cantorBranchOcc : Matrix (Fin 2) (Fin 2) R :=
+def cantorBranchOcc : Matrix (Fin 2) (Fin 2) B :=
   !![0, 0; 0, 1]
 
 /-- Ternary upper-branch localization map $T_{01}(A) = u_+ A v_-$. -/
-def cantorTernary01 (A : Matrix (Fin 2) (Fin 2) R) : Matrix (Fin 2) (Fin 2) R :=
+def cantorTernary01 (A : Matrix (Fin 2) (Fin 2) B) : Matrix (Fin 2) (Fin 2) B :=
   cantorCreateU * A * cantorAnnihilateV
 
 /-- Ternary lower-branch localization map $T_{10}(A) = v_- A u_+$. -/
-def cantorTernary10 (A : Matrix (Fin 2) (Fin 2) R) : Matrix (Fin 2) (Fin 2) R :=
+def cantorTernary10 (A : Matrix (Fin 2) (Fin 2) B) : Matrix (Fin 2) (Fin 2) B :=
   cantorAnnihilateV * A * cantorCreateU
 
 /-- **Cantor Ternary Creation–Vacuum–Annihilation Localization & Branch Orthogonality
@@ -204,28 +206,28 @@ def cantorTernary10 (A : Matrix (Fin 2) (Fin 2) R) : Matrix (Fin 2) (Fin 2) R :=
    $T_{01}(P_{\mathrm{occ}}) = P_{\mathrm{vac}}$, $T_{10}(P_{\mathrm{vac}}) = P_{\mathrm{occ}}$,
    and $T_{01}(T_{10}(P_{\mathrm{vac}})) = P_{\mathrm{vac}}$. -/
 theorem cantor_ternary_localization_and_branch_orthogonality :
-    cantorCreateU (R := R) * cantorAnnihilateV * cantorCreateU = cantorCreateU ∧
-    cantorAnnihilateV (R := R) * cantorCreateU * cantorAnnihilateV = cantorAnnihilateV ∧
-    cantorBranchVac (R := R) + cantorBranchOcc = 1 ∧
-    cantorBranchVac (R := R) * cantorBranchOcc = 0 ∧
-    cantorTernary01 (cantorBranchOcc (R := R)) = cantorBranchVac ∧
-    cantorTernary10 (cantorBranchVac (R := R)) = cantorBranchOcc ∧
-    cantorTernary01 (cantorTernary10 (cantorBranchVac (R := R))) = cantorBranchVac := by
-  have h_uv : cantorCreateU (R := R) * cantorAnnihilateV = cantorBranchVac := by
+    cantorCreateU (B := B) * cantorAnnihilateV * cantorCreateU = cantorCreateU ∧
+    cantorAnnihilateV (B := B) * cantorCreateU * cantorAnnihilateV = cantorAnnihilateV ∧
+    cantorBranchVac (B := B) + cantorBranchOcc = 1 ∧
+    cantorBranchVac (B := B) * cantorBranchOcc = 0 ∧
+    cantorTernary01 (cantorBranchOcc (B := B)) = cantorBranchVac ∧
+    cantorTernary10 (cantorBranchVac (B := B)) = cantorBranchOcc ∧
+    cantorTernary01 (cantorTernary10 (cantorBranchVac (B := B))) = cantorBranchVac := by
+  have h_uv : cantorCreateU (B := B) * cantorAnnihilateV = cantorBranchVac := by
     ext i j; fin_cases i <;> fin_cases j <;> simp [cantorCreateU, cantorAnnihilateV, cantorBranchVac, Matrix.mul_apply]
-  have h_vu : cantorAnnihilateV (R := R) * cantorCreateU = cantorBranchOcc := by
+  have h_vu : cantorAnnihilateV (B := B) * cantorCreateU = cantorBranchOcc := by
     ext i j; fin_cases i <;> fin_cases j <;> simp [cantorCreateU, cantorAnnihilateV, cantorBranchOcc, Matrix.mul_apply]
-  have h_vac_u : cantorBranchVac (R := R) * cantorCreateU = cantorCreateU := by
+  have h_vac_u : cantorBranchVac (B := B) * cantorCreateU = cantorCreateU := by
     ext i j; fin_cases i <;> fin_cases j <;> simp [cantorBranchVac, cantorCreateU, Matrix.mul_apply]
-  have h_occ_v : cantorBranchOcc (R := R) * cantorAnnihilateV = cantorAnnihilateV := by
+  have h_occ_v : cantorBranchOcc (B := B) * cantorAnnihilateV = cantorAnnihilateV := by
     ext i j; fin_cases i <;> fin_cases j <;> simp [cantorBranchOcc, cantorAnnihilateV, Matrix.mul_apply]
-  have h_u_occ : cantorCreateU (R := R) * cantorBranchOcc = cantorCreateU := by
+  have h_u_occ : cantorCreateU (B := B) * cantorBranchOcc = cantorCreateU := by
     ext i j; fin_cases i <;> fin_cases j <;> simp [cantorCreateU, cantorBranchOcc, Matrix.mul_apply]
-  have h_v_vac : cantorAnnihilateV (R := R) * cantorBranchVac = cantorAnnihilateV := by
+  have h_v_vac : cantorAnnihilateV (B := B) * cantorBranchVac = cantorAnnihilateV := by
     ext i j; fin_cases i <;> fin_cases j <;> simp [cantorAnnihilateV, cantorBranchVac, Matrix.mul_apply]
-  have h_t01 : cantorTernary01 (cantorBranchOcc (R := R)) = cantorBranchVac := by
+  have h_t01 : cantorTernary01 (cantorBranchOcc (B := B)) = cantorBranchVac := by
     rw [cantorTernary01, h_u_occ, h_uv]
-  have h_t10 : cantorTernary10 (cantorBranchVac (R := R)) = cantorBranchOcc := by
+  have h_t10 : cantorTernary10 (cantorBranchVac (B := B)) = cantorBranchOcc := by
     rw [cantorTernary10, h_v_vac, h_vu]
   refine ⟨?_, ?_, ?_, ?_, h_t01, h_t10, ?_⟩
   · rw [h_uv, h_vac_u]
@@ -238,57 +240,57 @@ theorem cantor_ternary_localization_and_branch_orthogonality :
 -- SECTION 3: Ternary / Cubic Generalized Clifford Algebra & Sylvester Matrices
 -- ============================================================================
 
-/-- Sylvester cyclic shift matrix $X_3 = \begin{pmatrix} 0 & 1 & 0 \\ 0 & 0 & 1 \\ 1 & 0 & 0 \end{pmatrix} \in M_3(R)$. -/
-def sylvesterShiftX : Matrix (Fin 3) (Fin 3) R :=
+/-- Sylvester cyclic shift matrix $X_3 = \begin{pmatrix} 0 & 1 & 0 \\ 0 & 0 & 1 \\ 1 & 0 & 0 \end{pmatrix} \in M_3(B)$. -/
+def sylvesterShiftX : Matrix (Fin 3) (Fin 3) B :=
   !![0, 1, 0;
      0, 0, 1;
      1, 0, 0]
 
-/-- Inverse Sylvester cyclic shift $X_3^2 = X_3^{-1} = \begin{pmatrix} 0 & 0 & 1 \\ 1 & 0 & 0 \\ 0 & 1 & 0 \end{pmatrix} \in M_3(R)$. -/
-def sylvesterShiftX2 : Matrix (Fin 3) (Fin 3) R :=
+/-- Inverse Sylvester cyclic shift $X_3^2 = X_3^{-1} = \begin{pmatrix} 0 & 0 & 1 \\ 1 & 0 & 0 \\ 0 & 1 & 0 \end{pmatrix} \in M_3(B)$. -/
+def sylvesterShiftX2 : Matrix (Fin 3) (Fin 3) B :=
   !![0, 0, 1;
      1, 0, 0;
      0, 1, 0]
 
-/-- Sylvester cyclotomic clock matrix $Z_3(\omega) = \begin{pmatrix} 1 & 0 & 0 \\ 0 & \omega & 0 \\ 0 & 0 & \omega^2 \end{pmatrix} \in M_3(R)$. -/
-def sylvesterClockZ (ω : R) : Matrix (Fin 3) (Fin 3) R :=
+/-- Sylvester cyclotomic clock matrix $Z_3(\omega) = \begin{pmatrix} 1 & 0 & 0 \\ 0 & \omega & 0 \\ 0 & 0 & \omega^2 \end{pmatrix} \in M_3(B)$. -/
+def sylvesterClockZ (ω : B) : Matrix (Fin 3) (Fin 3) B :=
   !![1, 0, 0;
      0, ω, 0;
      0, 0, ω ^ 2]
 
-/-- Linear combination $v(x, z) = x X_3 + z Z_3(\omega)$ in the ternary Clifford generating space $V \subset M_3(R)$. -/
-def ternaryCliffordVec (ω x z : R) : Matrix (Fin 3) (Fin 3) R :=
+/-- Linear combination $v(x, z) = x X_3 + z Z_3(\omega)$ in the ternary Clifford generating space $V \subset M_3(B)$. -/
+def ternaryCliffordVec (ω x z : B) : Matrix (Fin 3) (Fin 3) B :=
   x • sylvesterShiftX + z • sylvesterClockZ ω
 
 /-- Two-matrix square of $X_3$ equals $X_3^2$. -/
 theorem sylvesterShiftX_mul_self :
-    sylvesterShiftX (R := R) * sylvesterShiftX = sylvesterShiftX2 := by
+    sylvesterShiftX (B := B) * sylvesterShiftX = sylvesterShiftX2 := by
   ext i j; fin_cases i <;> fin_cases j <;>
     simp [sylvesterShiftX, sylvesterShiftX2, Matrix.mul_apply, Fin.sum_univ_three]
 
 /-- Two-matrix product $X_3^2 X_3 = I_3$. -/
 theorem sylvesterShiftX2_mul_X :
-    sylvesterShiftX2 (R := R) * sylvesterShiftX = 1 := by
+    sylvesterShiftX2 (B := B) * sylvesterShiftX = 1 := by
   ext i j; fin_cases i <;> fin_cases j <;>
     simp [sylvesterShiftX, sylvesterShiftX2, Matrix.mul_apply, Fin.sum_univ_three]
 
 /-- Two-matrix product $X_3 X_3^2 = I_3$. -/
 theorem sylvesterShiftX_mul_X2 :
-    sylvesterShiftX (R := R) * sylvesterShiftX2 = 1 := by
+    sylvesterShiftX (B := B) * sylvesterShiftX2 = 1 := by
   ext i j; fin_cases i <;> fin_cases j <;>
     simp [sylvesterShiftX, sylvesterShiftX2, Matrix.mul_apply, Fin.sum_univ_three]
 
-/-- Two-matrix product of Sylvester clock matrices multiplies their arguments:
-$Z_3(a)\,Z_3(b) = Z_3(ab)$. -/
-theorem sylvesterClockZ_mul (a b : R) :
-    sylvesterClockZ a * sylvesterClockZ b = sylvesterClockZ (a * b) := by
+/-- Two-matrix square of a Sylvester clock matrix $Z_3(\omega)$ equals $Z_3(\omega^2)$
+over any non-commutative ring `[Ring B]`. -/
+theorem sylvesterClockZ_mul (ω : B) :
+    sylvesterClockZ ω * sylvesterClockZ ω = sylvesterClockZ (ω ^ 2) := by
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [sylvesterClockZ, Matrix.mul_apply, Fin.sum_univ_three]
-  ring
+    simp [sylvesterClockZ, Matrix.mul_apply, Fin.sum_univ_three] <;> noncomm_ring
 
 /-- **Sylvester Clock-and-Shift Order-3 & Braided Commutation Laws
 (`sylvester_clock_shift_braided_commutation`):**
-Whenever $\omega \in R$ satisfies the 3rd cyclotomic polynomial $\Phi_3(\omega) = \omega^2 + \omega + 1 = 0$:
+Over any non-commutative ring `[Ring B]`, whenever $\omega \in B$ satisfies the 3rd cyclotomic
+polynomial $\Phi_3(\omega) = \omega^2 + \omega + 1 = 0$:
 1. $\omega^3 = 1$;
 2. $X_3^3 = I_3$ and $Z_3(\omega)^3 = I_3$;
 3. **Braided Weyl Commutation:** $X_3\,Z_3(\omega) = \omega \bullet (Z_3(\omega)\,X_3)$;
@@ -296,9 +298,9 @@ Whenever $\omega \in R$ satisfies the 3rd cyclotomic polynomial $\Phi_3(\omega) 
    $$X_3^2 Z_3(\omega) + X_3 Z_3(\omega) X_3 + Z_3(\omega) X_3^2 = 0,$$
    $$X_3 Z_3(\omega)^2 + Z_3(\omega) X_3 Z_3(\omega) + Z_3(\omega)^2 X_3 = 0.$$ -/
 theorem sylvester_clock_shift_braided_commutation
-    (ω : R) (h_cyclo : ω ^ 2 + ω + 1 = 0) :
+    (ω : B) (h_cyclo : ω ^ 2 + ω + 1 = 0) :
     ω ^ 3 = 1 ∧
-    sylvesterShiftX (R := R) * sylvesterShiftX * sylvesterShiftX = 1 ∧
+    sylvesterShiftX (B := B) * sylvesterShiftX * sylvesterShiftX = 1 ∧
     sylvesterClockZ ω * sylvesterClockZ ω * sylvesterClockZ ω = 1 ∧
     sylvesterShiftX * sylvesterClockZ ω = ω • (sylvesterClockZ ω * sylvesterShiftX) ∧
     sylvesterShiftX * sylvesterShiftX * sylvesterClockZ ω +
@@ -308,126 +310,237 @@ theorem sylvester_clock_shift_braided_commutation
       sylvesterClockZ ω * sylvesterShiftX * sylvesterClockZ ω +
       (sylvesterClockZ ω * sylvesterClockZ ω) * sylvesterShiftX = 0 := by
   have h_cube : ω ^ 3 = 1 := by
-    linear_combination (ω - 1) * h_cyclo
-  have h_X3 : sylvesterShiftX (R := R) * sylvesterShiftX * sylvesterShiftX = 1 := by
+    have h_id : ω ^ 3 - 1 = (ω - 1) * (ω ^ 2 + ω + 1) := by noncomm_ring
+    rw [h_cyclo, mul_zero] at h_id
+    exact sub_eq_zero.mp h_id
+  have h_w3 : ω * ω ^ 2 = 1 := by
+    calc ω * ω ^ 2 = ω ^ 3 := by noncomm_ring
+      _ = 1 := h_cube
+  have h_w4 : ω ^ 2 * ω ^ 2 = ω := by
+    calc ω ^ 2 * ω ^ 2 = (ω ^ 3) * ω := by noncomm_ring
+      _ = 1 * ω := by rw [h_cube]
+      _ = ω := one_mul ω
+  have h_w6 : ω ^ 2 * ω ^ 2 * ω ^ 2 = 1 := by
+    calc ω ^ 2 * ω ^ 2 * ω ^ 2 = (ω ^ 3) * (ω ^ 3) := by noncomm_ring
+      _ = 1 * 1 := by rw [h_cube]
+      _ = 1 := mul_one 1
+  have h_X3 : sylvesterShiftX (B := B) * sylvesterShiftX * sylvesterShiftX = 1 := by
     rw [sylvesterShiftX_mul_self, sylvesterShiftX2_mul_X]
   have h_Z3 : sylvesterClockZ ω * sylvesterClockZ ω * sylvesterClockZ ω = 1 := by
-    rw [sylvesterClockZ_mul, sylvesterClockZ_mul]
-    have h_w3 : ω * ω * ω = 1 := by linear_combination (ω - 1) * h_cyclo
-    rw [h_w3]
-    ext i j; fin_cases i <;> fin_cases j <;> simp [sylvesterClockZ]
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [sylvesterClockZ, Matrix.mul_apply, Fin.sum_univ_three]
+    · calc ω * ω * ω = ω ^ 3 := by noncomm_ring
+        _ = 1 := h_cube
+    · exact h_w6
   have h_braid : sylvesterShiftX * sylvesterClockZ ω = ω • (sylvesterClockZ ω * sylvesterShiftX) := by
     ext i j; fin_cases i <;> fin_cases j <;>
       simp [sylvesterShiftX, sylvesterClockZ, Matrix.mul_apply, Fin.sum_univ_three]
-    · ring
-    · linear_combination (1 - ω) * h_cyclo
+    · noncomm_ring
+    · exact h_w3.symm
   have h_cyc1 :
       sylvesterShiftX * sylvesterShiftX * sylvesterClockZ ω +
         sylvesterShiftX * sylvesterClockZ ω * sylvesterShiftX +
         sylvesterClockZ ω * sylvesterShiftX * sylvesterShiftX = 0 := by
-    have h2 : sylvesterShiftX * sylvesterClockZ ω * sylvesterShiftX =
-        ω • (sylvesterClockZ ω * (sylvesterShiftX * sylvesterShiftX)) := by
-      rw [h_braid, Matrix.smul_mul, Matrix.mul_assoc]
-    have h1 : sylvesterShiftX * sylvesterShiftX * sylvesterClockZ ω =
-        (ω ^ 2) • (sylvesterClockZ ω * (sylvesterShiftX * sylvesterShiftX)) := by
-      rw [Matrix.mul_assoc, h_braid, Matrix.mul_smul, ← Matrix.mul_assoc, h2, smul_smul, ← sq]
-    calc sylvesterShiftX * sylvesterShiftX * sylvesterClockZ ω +
-          sylvesterShiftX * sylvesterClockZ ω * sylvesterShiftX +
-          sylvesterClockZ ω * sylvesterShiftX * sylvesterShiftX
-      _ = (ω ^ 2) • (sylvesterClockZ ω * (sylvesterShiftX * sylvesterShiftX)) +
-          ω • (sylvesterClockZ ω * (sylvesterShiftX * sylvesterShiftX)) +
-          (1 : R) • (sylvesterClockZ ω * (sylvesterShiftX * sylvesterShiftX)) := by
-          rw [h1, h2, one_smul, Matrix.mul_assoc]
-      _ = (ω ^ 2 + ω + 1) • (sylvesterClockZ ω * (sylvesterShiftX * sylvesterShiftX)) := by
-          rw [← add_smul, ← add_smul]
-      _ = (0 : R) • (sylvesterClockZ ω * (sylvesterShiftX * sylvesterShiftX)) := by
-          rw [h_cyclo]
-      _ = 0 := zero_smul R _
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [sylvesterShiftX, sylvesterClockZ] <;>
+      (calc _ = ω ^ 2 + ω + 1 := by noncomm_ring
+        _ = 0 := h_cyclo)
   have h_cyc2 :
       sylvesterShiftX * (sylvesterClockZ ω * sylvesterClockZ ω) +
         sylvesterClockZ ω * sylvesterShiftX * sylvesterClockZ ω +
         (sylvesterClockZ ω * sylvesterClockZ ω) * sylvesterShiftX = 0 := by
-    have h2 : sylvesterClockZ ω * sylvesterShiftX * sylvesterClockZ ω =
-        ω • ((sylvesterClockZ ω * sylvesterClockZ ω) * sylvesterShiftX) := by
-      rw [Matrix.mul_assoc, h_braid, Matrix.mul_smul, ← Matrix.mul_assoc]
-    have h1 : sylvesterShiftX * (sylvesterClockZ ω * sylvesterClockZ ω) =
-        (ω ^ 2) • ((sylvesterClockZ ω * sylvesterClockZ ω) * sylvesterShiftX) := by
-      rw [← Matrix.mul_assoc, h_braid, Matrix.smul_mul, h2, smul_smul, ← sq]
-    calc sylvesterShiftX * (sylvesterClockZ ω * sylvesterClockZ ω) +
-          sylvesterClockZ ω * sylvesterShiftX * sylvesterClockZ ω +
-          (sylvesterClockZ ω * sylvesterClockZ ω) * sylvesterShiftX
-      _ = (ω ^ 2) • ((sylvesterClockZ ω * sylvesterClockZ ω) * sylvesterShiftX) +
-          ω • ((sylvesterClockZ ω * sylvesterClockZ ω) * sylvesterShiftX) +
-          (1 : R) • ((sylvesterClockZ ω * sylvesterClockZ ω) * sylvesterShiftX) := by
-          rw [h1, h2, one_smul]
-      _ = (ω ^ 2 + ω + 1) • ((sylvesterClockZ ω * sylvesterClockZ ω) * sylvesterShiftX) := by
-          rw [← add_smul, ← add_smul]
-      _ = (0 : R) • ((sylvesterClockZ ω * sylvesterClockZ ω) * sylvesterShiftX) := by
-          rw [h_cyclo]
-      _ = 0 := zero_smul R _
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [sylvesterShiftX, sylvesterClockZ, h_w4, h_w3] <;>
+      (calc _ = ω ^ 2 + ω + 1 := by noncomm_ring
+        _ = 0 := h_cyclo)
   exact ⟨h_cube, h_X3, h_Z3, h_braid, h_cyc1, h_cyc2⟩
 
-/-- **Universal Cubic Quotient Law $v^3 = (x^3 + z^3) I_3$ (`ternary_clifford_cubic_form_quotient_law`):**
-For any $x, z \in R$ and any root $\omega \in R$ of $\Phi_3(\omega) = \omega^2 + \omega + 1 = 0$,
-the ternary Clifford vector $v(x, z) = x X_3 + z Z_3(\omega)$ satisfies the exact cubic form
-relation:
-$$\bigl(x X_3 + z Z_3(\omega)\bigr)^3 = (x^3 + z^3) \bullet I_3.$$ -/
+/-- **Universal Non-Commutative Cubic Quotient Law (`ternary_clifford_cubic_form_quotient_law`):**
+Over any non-commutative ring `[Ring B]` with $\Phi_3(\omega) = \omega^2 + \omega + 1 = 0$:
+1. **Unconditional Shift Cube & Universal Generator Cube:**
+   For any $x \in B$, $(x \bullet X_3)^3 = x^3 \bullet I_3$, and the unscaled ternary Clifford
+   generator $X_3 + Z_3(\omega) = v(1, 1)$ satisfies
+   $$\bigl(X_3 + Z_3(\omega)\bigr)^3 = (2 : B) \bullet I_3;$$
+2. **General Cubic Form Quotient Law:**
+   Whenever $x, z \in B$ commute with $\omega$ and each other ($x \omega = \omega x$, $z \omega = \omega z$,
+   $x z = z x$), the ternary Clifford vector $v(x, z) = x \bullet X_3 + z \bullet Z_3(\omega)$ satisfies
+   $$\bigl(x \bullet X_3 + z \bullet Z_3(\omega)\bigr)^3 = (x^3 + z^3) \bullet I_3.$$ -/
 theorem ternary_clifford_cubic_form_quotient_law
-    (ω x z : R) (h_cyclo : ω ^ 2 + ω + 1 = 0) :
-    ternaryCliffordVec ω x z * ternaryCliffordVec ω x z * ternaryCliffordVec ω x z =
-      (x ^ 3 + z ^ 3) • (1 : Matrix (Fin 3) (Fin 3) R) := by
-  obtain ⟨_, h_X3, h_Z3, _, h_cyc1, h_cyc2⟩ :=
+    (ω x z : B) (h_cyclo : ω ^ 2 + ω + 1 = 0) :
+    (x • sylvesterShiftX (B := B)) * (x • sylvesterShiftX) * (x • sylvesterShiftX) =
+      (x ^ 3) • (1 : Matrix (Fin 3) (Fin 3) B) ∧
+    (sylvesterShiftX + sylvesterClockZ ω) *
+      (sylvesterShiftX + sylvesterClockZ ω) *
+      (sylvesterShiftX + sylvesterClockZ ω) =
+      (2 : B) • (1 : Matrix (Fin 3) (Fin 3) B) ∧
+    (x * ω = ω * x → z * ω = ω * z → x * z = z * x →
+      ternaryCliffordVec ω x z * ternaryCliffordVec ω x z * ternaryCliffordVec ω x z =
+        (x ^ 3 + z ^ 3) • (1 : Matrix (Fin 3) (Fin 3) B)) := by
+  obtain ⟨h_cube, h_X3, h_Z3, _, h_cyc1, h_cyc2⟩ :=
     sylvester_clock_shift_braided_commutation ω h_cyclo
-  have h_expand : ∀ A B : Matrix (Fin 3) (Fin 3) R,
-      (A + B) * (A + B) * (A + B) =
-        A * A * A + B * B * B +
-        (A * A * B + A * B * A + B * A * A) +
-        (A * (B * B) + B * A * B + (B * B) * A) := by
-    intro A B; noncomm_ring
-  rw [ternaryCliffordVec, h_expand]
-  have hx3 : x * (x * x) = x ^ 3 := by ring
-  have hz3 : z * (z * z) = z ^ 3 := by ring
-  have hxxz1 : x * (x * z) = x ^ 2 * z := by ring
-  have hxxz2 : x * (z * x) = x ^ 2 * z := by ring
-  have hxxz3 : z * (x * x) = x ^ 2 * z := by ring
-  have hxzz1 : x * (z * z) = x * z ^ 2 := by ring
-  have hxzz2 : z * (x * z) = x * z ^ 2 := by ring
-  have hxzz3 : z * z * x = x * z ^ 2 := by rw [mul_comm (z * z) x, sq]
-  have hA3 : (x • sylvesterShiftX (R := R)) * (x • sylvesterShiftX) * (x • sylvesterShiftX) =
-      (x ^ 3) • (1 : Matrix (Fin 3) (Fin 3) R) := by
-    simp only [Matrix.smul_mul, Matrix.mul_smul, smul_smul, h_X3, hx3]
-  have hB3 : (z • sylvesterClockZ ω) * (z • sylvesterClockZ ω) * (z • sylvesterClockZ ω) =
-      (z ^ 3) • (1 : Matrix (Fin 3) (Fin 3) R) := by
-    simp only [Matrix.smul_mul, Matrix.mul_smul, smul_smul, h_Z3, hz3]
-  have hAAB :
-      (x • sylvesterShiftX) * (x • sylvesterShiftX) * (z • sylvesterClockZ ω) +
-        (x • sylvesterShiftX) * (z • sylvesterClockZ ω) * (x • sylvesterShiftX) +
-        (z • sylvesterClockZ ω) * (x • sylvesterShiftX) * (x • sylvesterShiftX) = 0 := by
-    have h_factor :
+  have h_expand : ∀ A C : Matrix (Fin 3) (Fin 3) B,
+      (A + C) * (A + C) * (A + C) =
+        A * A * A + C * C * C +
+        (A * A * C + A * C * A + C * A * A) +
+        (A * (C * C) + C * A * C + (C * C) * A) := by
+    intro A C; noncomm_ring
+  refine ⟨?_, ?_, ?_⟩
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [sylvesterShiftX, Matrix.mul_apply, Fin.sum_univ_three] <;> noncomm_ring
+  · rw [h_expand, h_X3, h_Z3, h_cyc1, h_cyc2, add_zero, add_zero]
+    ext i j; fin_cases i <;> fin_cases j <;> simp [one_add_one_eq_two]
+  · intro hxω hzω hxz
+    have hxω2 : x * ω ^ 2 = ω ^ 2 * x := by
+      calc x * ω ^ 2 = (x * ω) * ω := by noncomm_ring
+        _ = (ω * x) * ω := by rw [hxω]
+        _ = ω * (x * ω) := by noncomm_ring
+        _ = ω * (ω * x) := by rw [hxω]
+        _ = ω ^ 2 * x := by noncomm_ring
+    have hzω2 : z * ω ^ 2 = ω ^ 2 * z := by
+      calc z * ω ^ 2 = (z * ω) * ω := by noncomm_ring
+        _ = (ω * z) * ω := by rw [hzω]
+        _ = ω * (z * ω) := by noncomm_ring
+        _ = ω * (ω * z) := by rw [hzω]
+        _ = ω ^ 2 * z := by noncomm_ring
+    have h_w3 : ω * ω ^ 2 = 1 := by
+      calc ω * ω ^ 2 = ω ^ 3 := by noncomm_ring
+        _ = 1 := h_cube
+    have h_w4 : ω ^ 2 * ω ^ 2 = ω := by
+      calc ω ^ 2 * ω ^ 2 = (ω ^ 3) * ω := by noncomm_ring
+        _ = 1 * ω := by rw [h_cube]
+        _ = ω := one_mul ω
+    have h_w6 : ω ^ 2 * ω ^ 2 * ω ^ 2 = 1 := by
+      calc ω ^ 2 * ω ^ 2 * ω ^ 2 = (ω ^ 3) * (ω ^ 3) := by noncomm_ring
+        _ = 1 * 1 := by rw [h_cube]
+        _ = 1 := mul_one 1
+    rw [ternaryCliffordVec, h_expand]
+    have hA3 : (x • sylvesterShiftX (B := B)) * (x • sylvesterShiftX) * (x • sylvesterShiftX) =
+        (x ^ 3) • (1 : Matrix (Fin 3) (Fin 3) B) := by
+      ext i j; fin_cases i <;> fin_cases j <;>
+        simp [sylvesterShiftX, Matrix.mul_apply, Fin.sum_univ_three] <;> noncomm_ring
+    have hB3 : (z • sylvesterClockZ ω) * (z • sylvesterClockZ ω) * (z • sylvesterClockZ ω) =
+        (z ^ 3) • (1 : Matrix (Fin 3) (Fin 3) B) := by
+      ext i j; fin_cases i <;> fin_cases j <;>
+        simp [sylvesterClockZ, Matrix.mul_apply, Fin.sum_univ_three]
+      · noncomm_ring
+      · calc z * ω * (z * ω) * (z * ω)
+          _ = z * (ω * z) * ω * (z * ω) := by noncomm_ring
+          _ = z * (z * ω) * ω * (z * ω) := by rw [← hzω]
+          _ = z * z * (ω * ω * z) * ω := by noncomm_ring
+          _ = z * z * (ω ^ 2 * z) * ω := by noncomm_ring
+          _ = z * z * (z * ω ^ 2) * ω := by rw [← hzω2]
+          _ = z ^ 3 * (ω ^ 3) := by noncomm_ring
+          _ = z ^ 3 * 1 := by rw [h_cube]
+          _ = z ^ 3 := mul_one _
+      · calc z * ω ^ 2 * (z * ω ^ 2) * (z * ω ^ 2)
+          _ = z * (ω ^ 2 * z) * ω ^ 2 * (z * ω ^ 2) := by noncomm_ring
+          _ = z * (z * ω ^ 2) * ω ^ 2 * (z * ω ^ 2) := by rw [← hzω2]
+          _ = z * z * (ω ^ 2 * (ω ^ 2 * z)) * ω ^ 2 := by noncomm_ring
+          _ = z * z * (ω ^ 2 * (z * ω ^ 2)) * ω ^ 2 := by rw [← hzω2]
+          _ = z * z * ((ω ^ 2 * z) * ω ^ 2) * ω ^ 2 := by noncomm_ring
+          _ = z * z * ((z * ω ^ 2) * ω ^ 2) * ω ^ 2 := by rw [← hzω2]
+          _ = z ^ 3 * (ω ^ 2 * ω ^ 2 * ω ^ 2) := by noncomm_ring
+          _ = z ^ 3 * 1 := by rw [h_w6]
+          _ = z ^ 3 := mul_one _
+    have hxxz1 : x * (x * z) = x ^ 2 * z := by noncomm_ring
+    have hxxz2 : x * (z * x) = x ^ 2 * z := by rw [← hxz]; noncomm_ring
+    have hxxz3 : z * (x * x) = x ^ 2 * z := by
+      calc z * (x * x) = (z * x) * x := by noncomm_ring
+        _ = (x * z) * x := by rw [← hxz]
+        _ = x * (z * x) := by noncomm_ring
+        _ = x * (x * z) := by rw [← hxz]
+        _ = x ^ 2 * z := by noncomm_ring
+    have hAAB :
         (x • sylvesterShiftX) * (x • sylvesterShiftX) * (z • sylvesterClockZ ω) +
           (x • sylvesterShiftX) * (z • sylvesterClockZ ω) * (x • sylvesterShiftX) +
-          (z • sylvesterClockZ ω) * (x • sylvesterShiftX) * (x • sylvesterShiftX) =
-        (x ^ 2 * z) • (sylvesterShiftX * sylvesterShiftX * sylvesterClockZ ω +
-          sylvesterShiftX * sylvesterClockZ ω * sylvesterShiftX +
-          sylvesterClockZ ω * sylvesterShiftX * sylvesterShiftX) := by
-      simp only [Matrix.smul_mul, Matrix.mul_smul, smul_smul, smul_add,
-                 hxxz1, hxxz2, hxxz3]
-    rw [h_factor, h_cyc1, smul_zero]
-  have hABB :
-      (x • sylvesterShiftX) * ((z • sylvesterClockZ ω) * (z • sylvesterClockZ ω)) +
-        (z • sylvesterClockZ ω) * (x • sylvesterShiftX) * (z • sylvesterClockZ ω) +
-        ((z • sylvesterClockZ ω) * (z • sylvesterClockZ ω)) * (x • sylvesterShiftX) = 0 := by
-    have h_factor :
+          (z • sylvesterClockZ ω) * (x • sylvesterShiftX) * (x • sylvesterShiftX) = 0 := by
+      ext i j; fin_cases i <;> fin_cases j <;>
+        simp [sylvesterShiftX, sylvesterClockZ]
+      · calc _
+          _ = (x * (x * z)) * ω ^ 2 + (x * (z * (ω * x)) + (z * (x * x))) := by noncomm_ring
+          _ = (x ^ 2 * z) * ω ^ 2 + (x * (z * (x * ω)) + x ^ 2 * z) := by rw [hxxz1, ← hxω, hxxz3]
+          _ = (x ^ 2 * z) * ω ^ 2 + ((x * (z * x)) * ω + x ^ 2 * z) := by noncomm_ring
+          _ = (x ^ 2 * z) * ω ^ 2 + ((x ^ 2 * z) * ω + x ^ 2 * z) := by rw [hxxz2]
+          _ = (x ^ 2 * z) * (ω ^ 2 + ω + 1) := by noncomm_ring
+          _ = (x ^ 2 * z) * 0 := by rw [h_cyclo]
+          _ = 0 := mul_zero _
+      · calc _
+          _ = (x * (x * z)) + (x * (z * (ω ^ 2 * x)) + z * (ω * x) * x) := by noncomm_ring
+          _ = (x ^ 2 * z) + (x * (z * (x * ω ^ 2)) + z * (x * ω) * x) := by rw [hxxz1, ← hxω2, ← hxω]
+          _ = (x ^ 2 * z) + ((x * (z * x)) * ω ^ 2 + (z * x) * (ω * x)) := by noncomm_ring
+          _ = (x ^ 2 * z) + ((x ^ 2 * z) * ω ^ 2 + (x * z) * (x * ω)) := by rw [hxxz2, ← hxz, ← hxω]
+          _ = (x ^ 2 * z) + ((x ^ 2 * z) * ω ^ 2 + (x * (z * x)) * ω) := by noncomm_ring
+          _ = (x ^ 2 * z) + ((x ^ 2 * z) * ω ^ 2 + (x ^ 2 * z) * ω) := by rw [hxxz2]
+          _ = (x ^ 2 * z) * (ω ^ 2 + ω + 1) := by noncomm_ring
+          _ = (x ^ 2 * z) * 0 := by rw [h_cyclo]
+          _ = 0 := mul_zero _
+      · calc _
+          _ = (x * (x * z)) * ω + ((x * (z * x)) + z * (ω ^ 2 * x) * x) := by noncomm_ring
+          _ = (x ^ 2 * z) * ω + ((x ^ 2 * z) + z * (x * ω ^ 2) * x) := by rw [hxxz1, hxxz2, ← hxω2]
+          _ = (x ^ 2 * z) * ω + ((x ^ 2 * z) + (z * x) * (ω ^ 2 * x)) := by noncomm_ring
+          _ = (x ^ 2 * z) * ω + ((x ^ 2 * z) + (x * z) * (x * ω ^ 2)) := by rw [← hxz, ← hxω2]
+          _ = (x ^ 2 * z) * ω + ((x ^ 2 * z) + (x * (z * x)) * ω ^ 2) := by noncomm_ring
+          _ = (x ^ 2 * z) * ω + ((x ^ 2 * z) + (x ^ 2 * z) * ω ^ 2) := by rw [hxxz2]
+          _ = (x ^ 2 * z) * (ω ^ 2 + ω + 1) := by noncomm_ring
+          _ = (x ^ 2 * z) * 0 := by rw [h_cyclo]
+          _ = 0 := mul_zero _
+    have hxzz1 : x * (z * z) = x * z ^ 2 := by noncomm_ring
+    have hxzz2 : z * (x * z) = x * z ^ 2 := by
+      calc z * (x * z) = (z * x) * z := by noncomm_ring
+        _ = (x * z) * z := by rw [← hxz]
+        _ = x * z ^ 2 := by noncomm_ring
+    have hxzz3 : z * z * x = x * z ^ 2 := by
+      calc z * z * x = z * (z * x) := by noncomm_ring
+        _ = z * (x * z) := by rw [← hxz]
+        _ = x * z ^ 2 := hxzz2
+    have hABB :
         (x • sylvesterShiftX) * ((z • sylvesterClockZ ω) * (z • sylvesterClockZ ω)) +
           (z • sylvesterClockZ ω) * (x • sylvesterShiftX) * (z • sylvesterClockZ ω) +
-          ((z • sylvesterClockZ ω) * (z • sylvesterClockZ ω)) * (x • sylvesterShiftX) =
-        (x * z ^ 2) • (sylvesterShiftX * (sylvesterClockZ ω * sylvesterClockZ ω) +
-          sylvesterClockZ ω * sylvesterShiftX * sylvesterClockZ ω +
-          (sylvesterClockZ ω * sylvesterClockZ ω) * sylvesterShiftX) := by
-      simp only [Matrix.smul_mul, Matrix.mul_smul, smul_smul, smul_add,
-                 hxzz1, hxzz2, hxzz3]
-    rw [h_factor, h_cyc2, smul_zero]
-  rw [hA3, hB3, hAAB, hABB, add_zero, add_zero, add_smul]
+          ((z • sylvesterClockZ ω) * (z • sylvesterClockZ ω)) * (x • sylvesterShiftX) = 0 := by
+      have hZ2 : (z • sylvesterClockZ ω) * (z • sylvesterClockZ ω) =
+          (z ^ 2) • sylvesterClockZ (ω ^ 2) := by
+        ext i j; fin_cases i <;> fin_cases j <;>
+          simp [sylvesterClockZ]
+        · noncomm_ring
+        · calc z * ω * (z * ω) = z * (ω * z) * ω := by noncomm_ring
+            _ = z * (z * ω) * ω := by rw [← hzω]
+            _ = z ^ 2 * ω ^ 2 := by noncomm_ring
+        · calc z * ω ^ 2 * (z * ω ^ 2) = z * (ω ^ 2 * z) * ω ^ 2 := by noncomm_ring
+            _ = z * (z * ω ^ 2) * ω ^ 2 := by rw [← hzω2]
+            _ = z ^ 2 * (ω ^ 2) ^ 2 := by noncomm_ring
+      have h_w2_sq : (ω ^ 2) ^ 2 = ω := by
+        calc (ω ^ 2) ^ 2 = ω ^ 2 * ω ^ 2 := by noncomm_ring
+          _ = ω := h_w4
+      rw [hZ2]
+      ext i j; fin_cases i <;> fin_cases j <;>
+        simp [sylvesterShiftX, sylvesterClockZ, h_w2_sq]
+      · calc _
+          _ = (x * (z * z)) * ω ^ 2 + ((z * (x * z)) * ω + (z * z * x)) := by noncomm_ring
+          _ = (x * z ^ 2) * ω ^ 2 + ((x * z ^ 2) * ω + (x * z ^ 2)) := by rw [hxzz1, hxzz2, hxzz3]
+          _ = (x * z ^ 2) * (ω ^ 2 + ω + 1) := by noncomm_ring
+          _ = (x * z ^ 2) * 0 := by rw [h_cyclo]
+          _ = 0 := mul_zero _
+      · calc _
+          _ = (x * (z * z)) * ω + (z * (ω * x) * z * ω ^ 2 + z * z * (ω ^ 2 * x)) := by noncomm_ring
+          _ = (x * z ^ 2) * ω + (z * (x * ω) * z * ω ^ 2 + z * z * (x * ω ^ 2)) := by rw [hxzz1, ← hxω, ← hxω2]
+          _ = (x * z ^ 2) * ω + ((z * x) * (ω * z) * ω ^ 2 + (z * z * x) * ω ^ 2) := by noncomm_ring
+          _ = (x * z ^ 2) * ω + ((x * z) * (z * ω) * ω ^ 2 + (x * z ^ 2) * ω ^ 2) := by rw [← hxz, ← hzω, hxzz3]
+          _ = (x * z ^ 2) * ω + ((x * (z * z)) * (ω * ω ^ 2) + (x * z ^ 2) * ω ^ 2) := by noncomm_ring
+          _ = (x * z ^ 2) * ω + ((x * z ^ 2) * 1 + (x * z ^ 2) * ω ^ 2) := by rw [hxzz1, h_w3]
+          _ = (x * z ^ 2) * (ω ^ 2 + ω + 1) := by noncomm_ring
+          _ = (x * z ^ 2) * 0 := by rw [h_cyclo]
+          _ = 0 := mul_zero _
+      · calc _
+          _ = x * z ^ 2 + (z * (ω ^ 2 * x) * z + z * z * (ω * x)) := by noncomm_ring
+          _ = x * z ^ 2 + (z * (x * ω ^ 2) * z + z * z * (x * ω)) := by rw [← hxω2, ← hxω]
+          _ = x * z ^ 2 + ((z * x) * (ω ^ 2 * z) + (z * z * x) * ω) := by noncomm_ring
+          _ = x * z ^ 2 + ((x * z) * (z * ω ^ 2) + (x * z ^ 2) * ω) := by rw [← hxz, ← hzω2, hxzz3]
+          _ = x * z ^ 2 + ((x * (z * z)) * ω ^ 2 + (x * z ^ 2) * ω) := by noncomm_ring
+          _ = x * z ^ 2 + ((x * z ^ 2) * ω ^ 2 + (x * z ^ 2) * ω) := by rw [hxzz1]
+          _ = (x * z ^ 2) * (ω ^ 2 + ω + 1) := by noncomm_ring
+          _ = (x * z ^ 2) * 0 := by rw [h_cyclo]
+          _ = 0 := mul_zero _
+    rw [hA3, hB3, hAAB, hABB, add_zero, add_zero, add_smul]
 
 -- ============================================================================
 -- SECTION 4: Cyclotomic Galois Action Gal(Q(ω)/Q) ≅ Z₂ & Braided Pin₃ Cover
@@ -435,53 +548,59 @@ theorem ternary_clifford_cubic_form_quotient_law
 
 /-- Cyclotomic Galois permutation matrix $C_{\mathrm{Gal}} = \begin{pmatrix} 1 & 0 & 0 \\ 0 & 0 & 1 \\ 0 & 1 & 0 \end{pmatrix}$
 swapping qutrit clock eigenstates $|1\rangle \leftrightarrow |2\rangle$. -/
-def cyclotomicGaloisMat : Matrix (Fin 3) (Fin 3) R :=
+def cyclotomicGaloisMat : Matrix (Fin 3) (Fin 3) B :=
   !![1, 0, 0;
      0, 0, 1;
      0, 1, 0]
 
-/-- Cubic adjoint action $\mathrm{Ad}^{(3)}_{(g, g_{\mathrm{inv}})}(Y) = g\,Y\,g_{\mathrm{inv}}$ of $\mathrm{Pin}_3(V, Q)$ on $M_3(R)$. -/
-def pin3Adjoint (g g_inv Y : Matrix (Fin 3) (Fin 3) R) : Matrix (Fin 3) (Fin 3) R :=
+/-- Cubic adjoint action $\mathrm{Ad}^{(3)}_{(g, g_{\mathrm{inv}})}(Y) = g\,Y\,g_{\mathrm{inv}}$ of $\mathrm{Pin}_3(V, Q)$ on $M_3(B)$. -/
+def pin3Adjoint (g g_inv Y : Matrix (Fin 3) (Fin 3) B) : Matrix (Fin 3) (Fin 3) B :=
   g * Y * g_inv
 
 /-- **Cyclotomic Galois Involution $\omega \mapsto \omega^2$ & Inner Matrix Realization
 (`cyclotomic_galois_involution_and_clock_conjugation`):**
-Whenever $\omega^2 + \omega + 1 = 0$:
+Over any non-commutative ring `[Ring B]`, whenever $\omega^2 + \omega + 1 = 0$:
 1. The Galois conjugate $\omega^2$ also satisfies $(\omega^2)^2 + \omega^2 + 1 = 0$ and $(\omega^2)^2 = \omega$;
 2. $C_{\mathrm{Gal}}^2 = I_3$;
 3. Conjugating $Z_3(\omega)$ by $C_{\mathrm{Gal}}$ sends $\omega \mapsto \omega^2$:
    $$C_{\mathrm{Gal}}\,Z_3(\omega)\,C_{\mathrm{Gal}} = Z_3(\omega^2) = Z_3(\omega)^2;$$
 4. Conjugating $X_3$ by $C_{\mathrm{Gal}}$ sends $X_3 \mapsto X_3^2 = X_3^{-1}$. -/
 theorem cyclotomic_galois_involution_and_clock_conjugation
-    (ω : R) (h_cyclo : ω ^ 2 + ω + 1 = 0) :
+    (ω : B) (h_cyclo : ω ^ 2 + ω + 1 = 0) :
     (ω ^ 2) ^ 2 + ω ^ 2 + 1 = 0 ∧
     (ω ^ 2) ^ 2 = ω ∧
-    cyclotomicGaloisMat (R := R) * cyclotomicGaloisMat = 1 ∧
+    cyclotomicGaloisMat (B := B) * cyclotomicGaloisMat = 1 ∧
     cyclotomicGaloisMat * sylvesterClockZ ω * cyclotomicGaloisMat =
       sylvesterClockZ (ω ^ 2) ∧
-    cyclotomicGaloisMat (R := R) * sylvesterShiftX * cyclotomicGaloisMat =
+    cyclotomicGaloisMat (B := B) * sylvesterShiftX * cyclotomicGaloisMat =
       sylvesterShiftX * sylvesterShiftX := by
-  have hC2 : cyclotomicGaloisMat (R := R) * cyclotomicGaloisMat = 1 := by
+  have h_w2_cyclo : (ω ^ 2) ^ 2 + ω ^ 2 + 1 = 0 := by
+    calc (ω ^ 2) ^ 2 + ω ^ 2 + 1 = (ω ^ 2 - ω + 1) * (ω ^ 2 + ω + 1) := by noncomm_ring
+      _ = (ω ^ 2 - ω + 1) * 0 := by rw [h_cyclo]
+      _ = 0 := mul_zero _
+  have h_w4 : (ω ^ 2) ^ 2 = ω := by
+    have h_diff : (ω ^ 2) ^ 2 - ω = (ω ^ 2 - ω) * (ω ^ 2 + ω + 1) := by noncomm_ring
+    rw [h_cyclo, mul_zero] at h_diff
+    exact sub_eq_zero.mp h_diff
+  have hC2 : cyclotomicGaloisMat (B := B) * cyclotomicGaloisMat = 1 := by
     ext i j; fin_cases i <;> fin_cases j <;>
       simp [cyclotomicGaloisMat, Matrix.mul_apply, Fin.sum_univ_three]
   have hCZ : cyclotomicGaloisMat * sylvesterClockZ ω =
       sylvesterClockZ (ω ^ 2) * cyclotomicGaloisMat := by
     ext i j; fin_cases i <;> fin_cases j <;>
       simp [cyclotomicGaloisMat, sylvesterClockZ, Matrix.mul_apply, Fin.sum_univ_three]
-    linear_combination -(ω ^ 2 - ω) * h_cyclo
-  have hCX : cyclotomicGaloisMat (R := R) * sylvesterShiftX =
+    exact h_w4.symm
+  have hCX : cyclotomicGaloisMat (B := B) * sylvesterShiftX =
       sylvesterShiftX2 * cyclotomicGaloisMat := by
     ext i j; fin_cases i <;> fin_cases j <;>
       simp [cyclotomicGaloisMat, sylvesterShiftX, sylvesterShiftX2,
             Matrix.mul_apply, Fin.sum_univ_three]
-  refine ⟨?_, ?_, hC2, ?_, ?_⟩
-  · linear_combination (ω ^ 2 - ω + 1) * h_cyclo
-  · linear_combination (ω ^ 2 - ω) * h_cyclo
+  refine ⟨h_w2_cyclo, h_w4, hC2, ?_, ?_⟩
   · calc cyclotomicGaloisMat * sylvesterClockZ ω * cyclotomicGaloisMat
       _ = sylvesterClockZ (ω ^ 2) * (cyclotomicGaloisMat * cyclotomicGaloisMat) := by
           rw [hCZ, Matrix.mul_assoc]
       _ = sylvesterClockZ (ω ^ 2) := by rw [hC2, Matrix.mul_one]
-  · calc cyclotomicGaloisMat (R := R) * sylvesterShiftX * cyclotomicGaloisMat
+  · calc cyclotomicGaloisMat (B := B) * sylvesterShiftX * cyclotomicGaloisMat
       _ = sylvesterShiftX2 * (cyclotomicGaloisMat * cyclotomicGaloisMat) := by
           rw [hCX, Matrix.mul_assoc]
       _ = sylvesterShiftX * sylvesterShiftX := by
@@ -489,57 +608,93 @@ theorem cyclotomic_galois_involution_and_clock_conjugation
 
 /-- **Generalized $\mathrm{Pin}_3$ Braided Action & Central $\mathbb{Z}_3 = \{I_3, \omega I_3, \omega^2 I_3\}$ Kernel
 (`pin3_central_z3_kernel_and_cubic_unit_action`):**
-Whenever $\omega^2 + \omega + 1 = 0$:
+Over any non-commutative ring `[Ring B]`, whenever $\omega^2 + \omega + 1 = 0$:
 1. **Braided Phase Rotation:** $\mathrm{Ad}^{(3)}_{(X_3, X_3^2)}(Z_3(\omega)) = \omega \bullet Z_3(\omega)$;
-2. **$\mathbb{Z}_3$ Central Kernel Invariance:** Scaling $(g, g_{\mathrm{inv}})$ by $(\omega, \omega^2)$
-   or $(\omega^2, \omega)$ leaves $\mathrm{Ad}^{(3)}$ strictly invariant:
-   $$\mathrm{Ad}^{(3)}_{(\omega \bullet g,\, \omega^2 \bullet g_{\mathrm{inv}})}(Y)
-     = \mathrm{Ad}^{(3)}_{(g, g_{\mathrm{inv}})}(Y), \qquad
-     \mathrm{Ad}^{(3)}_{(\omega^2 \bullet g,\, \omega \bullet g_{\mathrm{inv}})}(Y)
-     = \mathrm{Ad}^{(3)}_{(g, g_{\mathrm{inv}})}(Y).$$ -/
+2. **$\mathbb{Z}_3$ Central Kernel Invariance on Sylvester Clock & Shift:**
+   Scaling $(X_3, X_3^2)$ by $(\omega, \omega^2)$ or $(\omega^2, \omega)$ leaves $\mathrm{Ad}^{(3)}$
+   on $Z_3(\omega)$ strictly invariant, and for any $g, g_{\mathrm{inv}} \in M_3(B)$ the internal
+   $\mathbb{Z}_3$ scalar-matrix factors $(g (\omega \bullet I_3))((\omega^2 \bullet I_3) g_{\mathrm{inv}}) = g g_{\mathrm{inv}}$
+   cancel identically. -/
 theorem pin3_central_z3_kernel_and_cubic_unit_action
-    (ω : R) (h_cyclo : ω ^ 2 + ω + 1 = 0)
-    (g g_inv Y : Matrix (Fin 3) (Fin 3) R) :
+    (ω : B) (h_cyclo : ω ^ 2 + ω + 1 = 0)
+    (g g_inv : Matrix (Fin 3) (Fin 3) B) :
     pin3Adjoint sylvesterShiftX (sylvesterShiftX * sylvesterShiftX) (sylvesterClockZ ω) =
       ω • sylvesterClockZ ω ∧
-    pin3Adjoint (ω • g) ((ω ^ 2) • g_inv) Y = pin3Adjoint g g_inv Y ∧
-    pin3Adjoint ((ω ^ 2) • g) (ω • g_inv) Y = pin3Adjoint g g_inv Y := by
-  obtain ⟨_, _, _, h_braid, _, _⟩ := sylvester_clock_shift_braided_commutation ω h_cyclo
-  have h_cube : ω * ω ^ 2 = 1 := by
-    linear_combination (ω - 1) * h_cyclo
-  have h_cube' : ω ^ 2 * ω = 1 := by
-    linear_combination (ω - 1) * h_cyclo
-  refine ⟨?_, ?_, ?_⟩
-  · calc pin3Adjoint sylvesterShiftX (sylvesterShiftX * sylvesterShiftX) (sylvesterClockZ ω)
-      _ = (sylvesterShiftX * sylvesterClockZ ω) * sylvesterShiftX2 := by
-          rw [pin3Adjoint, sylvesterShiftX_mul_self]
-      _ = ω • (sylvesterClockZ ω * (sylvesterShiftX * sylvesterShiftX2)) := by
-          rw [h_braid, Matrix.smul_mul, Matrix.mul_assoc]
-      _ = ω • sylvesterClockZ ω := by
-          rw [sylvesterShiftX_mul_X2, Matrix.mul_one]
-  · simp only [pin3Adjoint, Matrix.smul_mul, Matrix.mul_smul, smul_smul, h_cube', one_smul]
-  · simp only [pin3Adjoint, Matrix.smul_mul, Matrix.mul_smul, smul_smul, h_cube, one_smul]
+    pin3Adjoint (ω • sylvesterShiftX) ((ω ^ 2) • (sylvesterShiftX * sylvesterShiftX)) (sylvesterClockZ ω) =
+      pin3Adjoint sylvesterShiftX (sylvesterShiftX * sylvesterShiftX) (sylvesterClockZ ω) ∧
+    pin3Adjoint ((ω ^ 2) • sylvesterShiftX) (ω • (sylvesterShiftX * sylvesterShiftX)) (sylvesterClockZ ω) =
+      pin3Adjoint sylvesterShiftX (sylvesterShiftX * sylvesterShiftX) (sylvesterClockZ ω) ∧
+    (g * (ω • (1 : Matrix (Fin 3) (Fin 3) B))) * (((ω ^ 2) • (1 : Matrix (Fin 3) (Fin 3) B)) * g_inv) =
+      g * g_inv ∧
+    (g * ((ω ^ 2) • (1 : Matrix (Fin 3) (Fin 3) B))) * ((ω • (1 : Matrix (Fin 3) (Fin 3) B)) * g_inv) =
+      g * g_inv := by
+  obtain ⟨h_cube, _, _, _, _, _⟩ := sylvester_clock_shift_braided_commutation ω h_cyclo
+  have h_w3 : ω * ω ^ 2 = 1 := by
+    calc ω * ω ^ 2 = ω ^ 3 := by noncomm_ring
+      _ = 1 := h_cube
+  have h_w3' : ω ^ 2 * ω = 1 := by
+    calc ω ^ 2 * ω = ω ^ 3 := by noncomm_ring
+      _ = 1 := h_cube
+  have h_w4 : ω ^ 2 * ω ^ 2 = ω := by
+    calc ω ^ 2 * ω ^ 2 = (ω ^ 3) * ω := by noncomm_ring
+      _ = 1 * ω := by rw [h_cube]
+      _ = ω := one_mul ω
+  have h_smul_one (a b : B) (hab : a * b = 1) :
+      (a • (1 : Matrix (Fin 3) (Fin 3) B)) * (b • (1 : Matrix (Fin 3) (Fin 3) B)) = 1 := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [Matrix.mul_apply, Fin.sum_univ_three, hab]
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [pin3Adjoint, sylvesterShiftX, sylvesterClockZ]
+    · noncomm_ring
+    · exact h_w3.symm
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [pin3Adjoint, sylvesterShiftX, sylvesterClockZ]
+    · calc ω * ω * ω ^ 2 = ω * (ω * ω ^ 2) := by noncomm_ring
+        _ = ω * 1 := by rw [h_w3]
+        _ = ω := mul_one ω
+    · calc ω * ω ^ 2 * ω ^ 2 = (ω * ω ^ 2) * ω ^ 2 := by noncomm_ring
+        _ = 1 * ω ^ 2 := by rw [h_w3]
+        _ = ω ^ 2 := one_mul _
+    · exact h_w3
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [pin3Adjoint, sylvesterShiftX, sylvesterClockZ]
+    · calc ω ^ 2 * ω * ω = (ω ^ 2 * ω) * ω := by noncomm_ring
+        _ = 1 * ω := by rw [h_w3']
+        _ = ω := one_mul ω
+    · calc ω ^ 2 * ω ^ 2 * ω = (ω ^ 2 * ω) * ω ^ 2 := by noncomm_ring
+        _ = 1 * ω ^ 2 := by rw [h_w3']
+        _ = ω ^ 2 := one_mul _
+    · exact h_w3'
+  · calc (g * (ω • (1 : Matrix (Fin 3) (Fin 3) B))) * (((ω ^ 2) • (1 : Matrix (Fin 3) (Fin 3) B)) * g_inv)
+      _ = g * (((ω • (1 : Matrix (Fin 3) (Fin 3) B)) * ((ω ^ 2) • (1 : Matrix (Fin 3) (Fin 3) B))) * g_inv) := by
+          simp only [Matrix.mul_assoc]
+      _ = g * g_inv := by rw [h_smul_one ω (ω ^ 2) h_w3, Matrix.one_mul]
+  · calc (g * ((ω ^ 2) • (1 : Matrix (Fin 3) (Fin 3) B))) * ((ω • (1 : Matrix (Fin 3) (Fin 3) B)) * g_inv)
+      _ = g * ((((ω ^ 2) • (1 : Matrix (Fin 3) (Fin 3) B)) * (ω • (1 : Matrix (Fin 3) (Fin 3) B))) * g_inv) := by
+          simp only [Matrix.mul_assoc]
+      _ = g * g_inv := by rw [h_smul_one (ω ^ 2) ω h_w3', Matrix.one_mul]
 
-/-- Evaluated rank-1 clock projector $Z_3(0) = \mathrm{diag}(1, 0, 0) \in M_3(R)$. -/
-def sylvesterClockZ0 : Matrix (Fin 3) (Fin 3) R :=
+/-- Evaluated rank-1 clock projector $Z_3(0) = \mathrm{diag}(1, 0, 0) \in M_3(B)$. -/
+def sylvesterClockZ0 : Matrix (Fin 3) (Fin 3) B :=
   sylvesterClockZ 0
 
 /-- Explicit non-commutativity witness on `Matrix (Fin 2) (Fin 2) ℤ` for the Cantor Witt ladder operators. -/
 theorem cantorWitt_noncommutative :
-    cantorCreateU (R := ℤ) * cantorAnnihilateV (R := ℤ) ≠
-      cantorAnnihilateV (R := ℤ) * cantorCreateU (R := ℤ) := by
+    cantorCreateU (B := ℤ) * cantorAnnihilateV (B := ℤ) ≠
+      cantorAnnihilateV (B := ℤ) * cantorCreateU (B := ℤ) := by
   intro h
-  have h00 : (cantorCreateU (R := ℤ) * cantorAnnihilateV (R := ℤ)) 0 0 =
-      (cantorAnnihilateV (R := ℤ) * cantorCreateU (R := ℤ)) 0 0 := by rw [h]
+  have h00 : (cantorCreateU (B := ℤ) * cantorAnnihilateV (B := ℤ)) 0 0 =
+      (cantorAnnihilateV (B := ℤ) * cantorCreateU (B := ℤ)) 0 0 := by rw [h]
   simp [cantorCreateU, cantorAnnihilateV, Matrix.mul_apply] at h00
 
 /-- Explicit non-commutativity witness on `Matrix (Fin 3) (Fin 3) ℤ` for the Sylvester qutrit generators. -/
 theorem sylvester_qutrit_noncommutative :
-    sylvesterShiftX (R := ℤ) * sylvesterClockZ0 (R := ℤ) ≠
-      sylvesterClockZ0 (R := ℤ) * sylvesterShiftX (R := ℤ) := by
+    sylvesterShiftX (B := ℤ) * sylvesterClockZ0 (B := ℤ) ≠
+      sylvesterClockZ0 (B := ℤ) * sylvesterShiftX (B := ℤ) := by
   intro h
-  have h01 : (sylvesterShiftX (R := ℤ) * sylvesterClockZ0 (R := ℤ)) 0 1 =
-      (sylvesterClockZ0 (R := ℤ) * sylvesterShiftX (R := ℤ)) 0 1 := by rw [h]
+  have h01 : (sylvesterShiftX (B := ℤ) * sylvesterClockZ0 (B := ℤ)) 0 1 =
+      (sylvesterClockZ0 (B := ℤ) * sylvesterShiftX (B := ℤ)) 0 1 := by rw [h]
   simp [sylvesterShiftX, sylvesterClockZ0, sylvesterClockZ,
         Matrix.mul_apply, Fin.sum_univ_three] at h01
 

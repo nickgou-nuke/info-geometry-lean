@@ -6,7 +6,7 @@ namespace InfoGeometry.Canonical
 
 open ToeplitzCuntzVacuumBridge
 
-variable {R : Type*} [CommRing R] [StarRing R]
+variable {R : Type*} [Ring R] [StarRing R]
 variable [TopologicalSpace R] [ContinuousAdd R] [ContinuousMul R] [ContinuousNeg R]
 
 /-- The normalized self-adjoint coefficient locus for the native rotation. -/
@@ -47,12 +47,12 @@ theorem continuous_continuousRotationV2 (g : ToeplitzCuntzGenerators R) :
   unfold continuousRotationV2 nativeRotationV2 rotationParameterToNative
   fun_prop
 
-theorem continuousRotationV1_preserves_isometry
+theorem continuousRotationV1_preserves_isometry {R : Type*} [CommRing R] [StarRing R] [TopologicalSpace R]
     (g : ToeplitzCuntzGenerators R) (p : RotationParameter (R := R)) :
     star (continuousRotationV1 g p) * continuousRotationV1 g p = 1 :=
   nativeRotationV1_isometry (rotationParameterToNative p) g
 
-theorem continuousRotationV2_preserves_isometry
+theorem continuousRotationV2_preserves_isometry {R : Type*} [CommRing R] [StarRing R] [TopologicalSpace R]
     (g : ToeplitzCuntzGenerators R) (p : RotationParameter (R := R)) :
     star (continuousRotationV2 g p) * continuousRotationV2 g p = 1 :=
   nativeRotationV2_isometry (rotationParameterToNative p) g

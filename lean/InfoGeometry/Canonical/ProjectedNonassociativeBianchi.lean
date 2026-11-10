@@ -16,9 +16,9 @@ namespace InfoGeometry.Canonical.ProjectedNonassociativeBianchi
 open InfoGeometry.OperatorAlgebra.FiveGradeZornShadowProjection
 
 variable {R Z E : Type*}
-  [CommRing R]
+  [Ring R]
   [AddCommGroup Z] [Module R Z]
-  [Ring E] [Algebra R E]
+  [Ring E] [Module R E]
 
 /-- A shadow-valued connection one-form, with no unproved differential data. -/
 structure ProjectedConnection (Point Tangent : Type*) where

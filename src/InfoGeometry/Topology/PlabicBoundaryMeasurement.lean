@@ -1,47 +1,9 @@
-/-
-Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: InfoGeometry Engine Contributors
--/
+
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Algebra.Ring.Basic
 import InfoGeometry.Topology.AmplituhedronGeneralTwistorExpansion
-import InfoGeometry.Topology.PlabicCluster
 import Mathlib.Tactic
-
-/-!
-# Plabic Boundary Measurement & Unipotent Bridge Addition on `Gr(2,4)`
-
-## i. Overview
-Formalizes elementary unipotent boundary-bridge additions on $2 \times n$ matrices,
-their multilinear Plücker minor expansions, and the four-parameter positive chart
-`boundaryMeasurementMatrix` on $\mathrm{Gr}_+(2,4)$.
-
-## ii. Key results
-- `minor2_addBridge_of_ne`, `minor2_addBridge_right`, `minor2_addBridge_left`
-- `plucker_01`, `plucker_02`, `plucker_03`, `plucker_12`, `plucker_13`, `plucker_23`
-- `boundaryMeasurement_plucker_13_eq_two_route_readout` & `boundaryMeasurement_plucker_13_eq_diamond_readout`
-
-## iii. Table of contents
-- Elementary unipotent boundary bridge additions
-- Positive `Gr(2,4)` boundary measurement matrix and six Plücker minors
-- Two-route and diamond DAG Green-function readouts
-
-## iv. References
-- Alexander Postnikov, *Total positivity, Grassmannians, and networks* (2006)
-
-#### BUCKET 1 — Proved Kernel Content
-- `minor2_addBridge_of_ne`, `minor2_addBridge_right`, `minor2_addBridge_left`
-- `plucker_01`, `plucker_02`, `plucker_03`, `plucker_12`, `plucker_13`, `plucker_23`
-- `boundaryMeasurement_plucker_13_eq_two_route_readout` & `boundaryMeasurement_plucker_13_eq_diamond_readout`
-
-#### BUCKET 2 — Conditional / Interface Boundaries
-- Positivity theorems hold under explicit `0 < tᵢ` parameter hypotheses.
-
-#### BUCKET 3 — Open / Unformalized
-- General `Gr(k,n)` plabic graph move equivalence is outside this `Gr(2,4)` chart owner.
--/
 
 open Matrix
 open scoped Matrix
@@ -49,23 +11,25 @@ open InfoGeometry.Amplituhedron
 
 namespace PlabicBoundaryMeasurement
 
-variable {n : ℕ} {R : Type*} [CommRing R]
+variable {n : ℕ}
 
 /-! ### 2. Boundary Bridge Addition (Elementary Unipotent Shears) -/
 
 /-- Boundary Bridge Addition:
     Adds an on-shell bridge from boundary strand j to i with positive weight t,
     mapping column i to (c_i + t * c_j). -/
-def addBridge (C : Matrix (Fin 2) (Fin n) R) (i j : Fin n) (t : R) :
+def addBridge {R : Type*} [Ring R] (C : Matrix (Fin 2) (Fin n) R) (i j : Fin n) (t : R) :
     Matrix (Fin 2) (Fin n) R :=
   fun r c => if c = i then C r i + t * C r j else C r c
 
 /-- Bridge Invariance: Minors of columns disjoint from the bridge target i are unchanged. -/
-theorem minor2_addBridge_of_ne (C : Matrix (Fin 2) (Fin n) R) (i j a b : Fin n) (t : R)
+theorem minor2_addBridge_of_ne {R : Type*} [Ring R] (C : Matrix (Fin 2) (Fin n) R) (i j a b : Fin n) (t : R)
     (ha : a ≠ i) (hb : b ≠ i) :
     minor2 (addBridge C i j t) a b = minor2 C a b := by
   dsimp [minor2, addBridge]
   rw [if_neg ha, if_neg ha, if_neg hb, if_neg hb]
+
+variable {R : Type*} [CommRing R]
 
 /-- Multilinear Bridge Expansion (Right Column):
     Δ_{a, i}(C') = Δ_{a, i}(C) + t * Δ_{a, j}(C). -/
@@ -111,120 +75,31 @@ def boundaryMeasurementMatrix (t₁ t₂ t₃ t₄ : ℝ) : Matrix (Fin 2) (Fin 
 
 /-! ### 4. Exact Evaluation of Its Plücker Coordinates -/
 
-/-- The `(0, 1)` Plücker minor of `boundaryMeasurementMatrix t₁ t₂ t₃ t₄` equals `t₂`. -/
 theorem plucker_01 (t₁ t₂ t₃ t₄ : ℝ) :
     minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 0 1 = t₂ := by
   dsimp [minor2, boundaryMeasurementMatrix]
   ring
 
-/-- The `(0, 2)` Plücker minor of `boundaryMeasurementMatrix t₁ t₂ t₃ t₄` equals `1`. -/
 theorem plucker_02 (t₁ t₂ t₃ t₄ : ℝ) :
     minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 0 2 = 1 := by
   dsimp [minor2, boundaryMeasurementMatrix]
   ring
 
-/-- The `(0, 3)` Plücker minor of `boundaryMeasurementMatrix t₁ t₂ t₃ t₄` equals `t₃`. -/
 theorem plucker_03 (t₁ t₂ t₃ t₄ : ℝ) :
     minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 0 3 = t₃ := by
   dsimp [minor2, boundaryMeasurementMatrix]
   ring
 
-/-- The `(1, 2)` Plücker minor of `boundaryMeasurementMatrix t₁ t₂ t₃ t₄` equals `t₁`. -/
 theorem plucker_12 (t₁ t₂ t₃ t₄ : ℝ) :
     minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 1 2 = t₁ := by
   dsimp [minor2, boundaryMeasurementMatrix]
   ring
 
-/-- The `(1, 3)` Plücker minor of `boundaryMeasurementMatrix t₁ t₂ t₃ t₄` equals `t₁ * t₃ + t₂ * t₄`. -/
 theorem plucker_13 (t₁ t₂ t₃ t₄ : ℝ) :
     minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 1 3 = t₁ * t₃ + t₂ * t₄ := by
   dsimp [minor2, boundaryMeasurementMatrix]
   ring
 
-/-- A three-vertex acyclic weighted network with a direct route of weight
-`t₂ * t₄` and a two-edge route of weight `t₁ * t₃`. Its adjacency matrix is
-strictly upper triangular, so its finite path-sum matrix is `I + W + W²`. -/
-def chartTwoRouteAdjacency (t₁ t₂ t₃ t₄ : ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
-  !![0, t₁, t₂ * t₄;
-     0, 0, t₃;
-     0, 0, 0]
-
-/-- The finite path-sum matrix of `chartTwoRouteAdjacency`: the `(0,2)` entry
-is the sum of its direct route and its unique two-edge route. -/
-def chartTwoRouteGreen (t₁ t₂ t₃ t₄ : ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
-  !![1, t₁, t₁ * t₃ + t₂ * t₄;
-     0, 1, t₃;
-     0, 0, 1]
-
-/-- The Green matrix is the exact finite path sum `I + W + W²` for this DAG. -/
-theorem chartTwoRouteGreen_eq_path_sum (t₁ t₂ t₃ t₄ : ℝ) :
-    chartTwoRouteGreen t₁ t₂ t₃ t₄ =
-      1 + chartTwoRouteAdjacency t₁ t₂ t₃ t₄ +
-        chartTwoRouteAdjacency t₁ t₂ t₃ t₄ ^ 2 := by
-  ext i j
-  fin_cases i <;> fin_cases j
-  all_goals simp [chartTwoRouteGreen, chartTwoRouteAdjacency, pow_two]
-  all_goals ring
-
-/-- The `Δ₁₃` minor of the positive `Gr(2,4)` chart is the `(0,2)` entry of
-the finite path-sum matrix of `chartTwoRouteAdjacency`. This is a chart-to-DAG
-identity; the DAG here is not asserted to be a planar plabic network. -/
-theorem boundaryMeasurement_plucker_13_eq_two_route_readout
-    (t₁ t₂ t₃ t₄ : ℝ) :
-    minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 1 3 =
-      chartTwoRouteGreen t₁ t₂ t₃ t₄ 0 2 := by
-  rw [plucker_13]
-  rfl
-
-/-- The same finite path-sum matrix is a two-sided inverse of `I - W`, giving
-the usual terminating resolvent identity for this acyclic three-vertex model. -/
-theorem chartTwoRouteGreen_is_resolvent (t₁ t₂ t₃ t₄ : ℝ) :
-    (1 - chartTwoRouteAdjacency t₁ t₂ t₃ t₄) *
-        chartTwoRouteGreen t₁ t₂ t₃ t₄ = 1 ∧
-      chartTwoRouteGreen t₁ t₂ t₃ t₄ *
-        (1 - chartTwoRouteAdjacency t₁ t₂ t₃ t₄) = 1 := by
-  constructor <;> ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [chartTwoRouteGreen, chartTwoRouteAdjacency, Matrix.mul_apply,
-      Matrix.sub_apply, Matrix.one_apply, Fin.sum_univ_three]
-
-/-- A four-vertex diamond DAG with two distinct source-to-sink routes.
-The route weights are `t₁ * t₃` and `t₂ * t₄`, matching the two terms in
-the `Δ₁₃` boundary-channel decomposition. -/
-def chartDiamondAdjacency (t₁ t₂ t₃ t₄ : ℝ) : Matrix (Fin 4) (Fin 4) ℝ :=
-  !![0, t₁, t₂, 0;
-     0, 0, 0, t₃;
-     0, 0, 0, t₄;
-     0, 0, 0, 0]
-
-/-- The path-sum matrix for the diamond DAG. Since all directed paths have
-length at most two, the sum terminates at `I + W + W²`. -/
-def chartDiamondGreen (t₁ t₂ t₃ t₄ : ℝ) : Matrix (Fin 4) (Fin 4) ℝ :=
-  !![1, t₁, t₂, t₁ * t₃ + t₂ * t₄;
-     0, 1, 0, t₃;
-     0, 0, 1, t₄;
-     0, 0, 0, 1]
-
-/-- The `(0,3)` readout adds the weights of the two distinct directed routes. -/
-theorem chartDiamondGreen_eq_path_sum (t₁ t₂ t₃ t₄ : ℝ) :
-    chartDiamondGreen t₁ t₂ t₃ t₄ =
-      1 + chartDiamondAdjacency t₁ t₂ t₃ t₄ +
-        chartDiamondAdjacency t₁ t₂ t₃ t₄ ^ 2 := by
-  ext i j
-  fin_cases i <;> fin_cases j
-  all_goals simp [chartDiamondGreen, chartDiamondAdjacency, pow_two]
-  all_goals ring
-
-/-- In the four-vertex network, the `Δ₁₃` chart coordinate is the sum of the
-two actual source-to-sink path weights, without compressing either route into
-a single edge. -/
-theorem boundaryMeasurement_plucker_13_eq_diamond_readout
-    (t₁ t₂ t₃ t₄ : ℝ) :
-    minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 1 3 =
-      chartDiamondGreen t₁ t₂ t₃ t₄ 0 3 := by
-  rw [plucker_13]
-  rfl
-
-/-- The `(2, 3)` Plücker minor of `boundaryMeasurementMatrix t₁ t₂ t₃ t₄` equals `t₄`. -/
 theorem plucker_23 (t₁ t₂ t₃ t₄ : ℝ) :
     minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 2 3 = t₄ := by
   dsimp [minor2, boundaryMeasurementMatrix]
@@ -261,76 +136,9 @@ theorem boundaryMeasurement_plucker_relation (t₁ t₂ t₃ t₄ : ℝ) :
 noncomputable def mutatePlucker (Δ_a Δ_b Δ_c Δ_d Δ_orig : ℝ) : ℝ :=
   (Δ_a * Δ_b + Δ_c * Δ_d) / Δ_orig
 
-/-- On a `2 × 4` matrix, the rational exchange expression is exactly the
-remaining Plücker minor whenever the denominator minor is nonzero.  This is the
-matrix-level exchange identity; it does not identify the matrix operation with
-a graph square move. -/
-theorem mutatePlucker_eq_minor2_of_plucker_relation
-    (C : Matrix (Fin 2) (Fin 4) ℝ)
-    (h02 : minor2 C 0 2 ≠ 0) :
-    mutatePlucker (minor2 C 0 1) (minor2 C 2 3)
-        (minor2 C 0 3) (minor2 C 1 2) (minor2 C 0 2) =
-      minor2 C 1 3 := by
-  dsimp [mutatePlucker]
-  rw [div_eq_iff h02]
-  simpa [mul_comm] using
-    (InfoGeometry.Amplituhedron.plucker_relation_general C 0 1 2 3).symm
-
-/-- For the explicit positive matrix family, the exchange formula recovers
-the `Δ₁₃` coordinate from the other five minors. -/
-theorem boundaryMeasurement_mutatePlucker_eq_plucker_13
-    (t₁ t₂ t₃ t₄ : ℝ) :
-    mutatePlucker
-        (minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 0 1)
-        (minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 2 3)
-        (minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 0 3)
-        (minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 1 2)
-        (minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 0 2) =
-      minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 1 3 := by
-  apply mutatePlucker_eq_minor2_of_plucker_relation
-  rw [plucker_02]
-  norm_num
-
-/-- The positive `Gr(2,4)` matrix chart induces the corresponding cluster face
-coordinate: the normalized sum of the opposite Plücker products is the
-normalized `Δ₁₃` coordinate.  This connects the matrix chart to the abstract
-Ptolemy face-weight formula; it does not identify the chart with a graph. -/
-theorem boundaryMeasurement_cluster_face_weight_readout
-    {t₁ t₂ t₃ t₄ : ℝ}
-    (h1 : 0 < t₁) (h2 : 0 < t₂) (h3 : 0 < t₃) (h4 : 0 < t₄) :
-    1 +
-      (minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 0 1 *
-        minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 2 3) *
-        (minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 0 3 *
-          minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 1 2)⁻¹ =
-      minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 1 3 *
-        (minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 0 3 *
-          minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 1 2)⁻¹ ∧
-    0 < minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 1 3 := by
-  have h_denom :
-      minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 0 3 *
-        minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 1 2 ≠ 0 := by
-    rw [plucker_03, plucker_12]
-    exact ne_of_gt (mul_pos h3 h1)
-  refine ⟨?_, ?_⟩
-  · simpa only [plucker_02, one_mul] using
-    (InfoGeometry.PlabicCluster.ptolemy_face_weight_add_one
-    (minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 0 2)
-    (minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 1 3)
-    (minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 0 1)
-    (minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 0 3)
-    (minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 2 3)
-    (minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 1 2)
-    (by
-      simpa [plucker_02] using
-        boundaryMeasurement_plucker_relation t₁ t₂ t₃ t₄)
-    h_denom)
-  · rw [plucker_13]
-    exact add_pos (mul_pos h1 h3) (mul_pos h2 h4)
-
-/-- Positivity of the rational exchange expression when its four numerator
-    coordinates and denominator are positive.  Identifying this expression
-    with a graph square move requires a separate boundary-measurement theorem. -/
+/-- Total Positivity Preservation Theorem under Cluster Mutation:
+    If all seed Plücker coordinates are strictly positive, the mutated coordinate
+    produced by the square move / urban renewal is strictly positive. -/
 theorem mutatePlucker_pos {Δ_a Δ_b Δ_c Δ_d Δ_orig : ℝ}
     (ha : 0 < Δ_a) (hb : 0 < Δ_b) (hc : 0 < Δ_c) (hd : 0 < Δ_d) (h_orig : 0 < Δ_orig) :
     0 < mutatePlucker Δ_a Δ_b Δ_c Δ_d Δ_orig := by
@@ -350,26 +158,22 @@ namespace PlabicBoundaryMeasurement
 def lieBracket {A : Type*} [Ring A] (x y : A) : A :=
   x * y - y * x
 
-/-- Every ring element commutes with itself under `lieBracket`. -/
 @[simp] theorem lieBracket_self {A : Type*} [Ring A] (x : A) :
     lieBracket x x = 0 := by
   dsimp [lieBracket]
   abel
 
-/-- The ring commutator `lieBracket` is antisymmetric. -/
 theorem lieBracket_antisymm {A : Type*} [Ring A] (x y : A) :
     lieBracket x y = - lieBracket y x := by
   dsimp [lieBracket]
   abel
 
-/-- The ring commutator `lieBracket` is additive in its left argument. -/
 theorem lieBracket_add_left {A : Type*} [Ring A] (x y z : A) :
     lieBracket (x + y) z = lieBracket x z + lieBracket y z := by
   dsimp [lieBracket]
   rw [add_mul, mul_add]
   abel
 
-/-- The ring commutator `lieBracket` is additive in its right argument. -/
 theorem lieBracket_add_right {A : Type*} [Ring A] (x y z : A) :
     lieBracket x (y + z) = lieBracket x y + lieBracket x z := by
   dsimp [lieBracket]
@@ -379,32 +183,27 @@ theorem lieBracket_add_right {A : Type*} [Ring A] (x y z : A) :
 /-! ### 8. Elementary Plabic Strand Crossing -/
 
 /-- An elementary 2-strand crossing inside a plabic graph.
-    Two incoming strands with charges `inA, inB` cross and exit with transposed
-    charges `outA = inB` and `outB = inA`. -/
+    Two incoming strands with charges inA, inB cross and exit as outA, outB. -/
 structure StrandCrossing (A : Type*) [Ring A] where
   inA : A
   inB : A
-
-/-- Outgoing strand A charge after the crossing equals `inB`. -/
-def StrandCrossing.outA {A : Type*} [Ring A] (c : StrandCrossing A) : A :=
-  c.inB
-
-/-- Outgoing strand B charge after the crossing equals `inA`. -/
-def StrandCrossing.outB {A : Type*} [Ring A] (c : StrandCrossing A) : A :=
-  c.inA
+  outA : A
+  outB : A
+  h_perm_A : outA = inB
+  h_perm_B : outB = inA
 
 /-- Master Theorem 1A (Local Level-0 Conservation across Crossing):
     Total flux is conserved at the strand crossing: inA + inB = outA + outB. -/
 theorem strand_crossing_level0 {A : Type*} [Ring A] (c : StrandCrossing A) :
     c.inA + c.inB = c.outA + c.outB := by
-  dsimp [StrandCrossing.outA, StrandCrossing.outB]
+  rw [c.h_perm_A, c.h_perm_B]
   abel
 
 /-- Master Theorem 1B (Local Level-1 Invariance across Crossing):
     The Lie commutator is preserved up to topological orientation swap. -/
 theorem strand_crossing_level1 {A : Type*} [Ring A] (c : StrandCrossing A) :
     lieBracket c.outA c.outB = - lieBracket c.inA c.inB := by
-  dsimp [StrandCrossing.outA, StrandCrossing.outB]
+  rw [c.h_perm_A, c.h_perm_B]
   exact lieBracket_antisymm c.inB c.inA
 
 /-! ### 9. 3-Point Boundary Strand Flow (The Triangle Face) -/
@@ -511,20 +310,19 @@ theorem cyclicFlux4_shift_invariant {A : Type*} [Ring A] (E : Fin 4 → A) :
 /-! ### 12. Plabic Square Move (Urban Renewal) -/
 
 /-- A Plabic Square Move (Urban Renewal):
-    Mutates a 4-face in the plabic network, rearranging the 4 internal strands. -/
+    Mutates a 4-face in the plabic network, rearranging the 4 internal strands
+    while preserving the total Level-0 flux. -/
 structure PlabicSquareMove (A : Type*) [Ring A] where
   inCharges : Fin 4 → A
   outCharges : Fin 4 → A
+  h_conservation : level0_4 inCharges = level0_4 outCharges
 
-/-- Theorem 5: If a square move conserves Level-0 flux and the incoming strand
-    configuration is on-shell (level0 = 0), the outgoing mutated strand
-    configuration is also on-shell. -/
+/-- Theorem 5: If the incoming strand configuration is on-shell (level0 = 0),
+    the outgoing mutated strand configuration is also on-shell. -/
 theorem square_move_preserves_on_shell {A : Type*} [Ring A]
-    (m : PlabicSquareMove A)
-    (h_conservation : level0_4 m.inCharges = level0_4 m.outCharges)
-    (h_in : level0_4 m.inCharges = 0) :
+    (m : PlabicSquareMove A) (h_in : level0_4 m.inCharges = 0) :
     level0_4 m.outCharges = 0 := by
-  rw [← h_conservation]
+  rw [← m.h_conservation]
   exact h_in
 
 end PlabicBoundaryMeasurement

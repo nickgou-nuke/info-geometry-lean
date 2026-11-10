@@ -12,7 +12,7 @@ namespace InfoGeometry.Canonical.WittenIndexSupersymmetricBridge
 
 open ExteriorAlgebra
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- **Definition**: Witten Index ind(D) = n_plus - n_minus for Chiral Zero Mode Dimensions. -/
 def wittenIndex (n_plus n_minus : ℤ) : ℤ :=

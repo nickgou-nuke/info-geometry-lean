@@ -46,17 +46,16 @@ theorem cross_transport_mem_sector :
   ext X
   exact charge_cross_sandwich hP A C X
 
-omit hP in
-/-- Opposite charge-one derivations bracket to the neutral inner derivation. -/
-theorem opposite_lie_comm :
-    comm (lieOp ℤ (conePlus P A)) (lieOp ℤ (coneMinus P C)) =
-      lieOp ℤ (genSig P A C) := by
-  exact lie_lie ℤ (conePlus P A) (coneMinus P C)
-
 theorem sigma_lie_mem_sector :
     lieOp ℤ (genSig P A C) ∈ chargeSector P 0 := by
+  have hOpposite :
+      comm (lieOp ℤ (conePlus P A)) (lieOp ℤ (coneMinus P C)) =
+        lieOp ℤ (genSig P A C) := by
+    simpa [comm, genSig] using
+      (InfoGeometry.OperatorAlgebra.LieJordan.lie_lie ℤ
+        (conePlus P A) (coneMinus P C))
   have h := comm_mem_chargeSector (m := 1) (n := -1)
     (plus_lie_mem_sector hP A) (minus_lie_mem_sector hP C)
-  simpa only [opposite_lie_comm, Int.reduceAdd] using h
+  simpa only [hOpposite, Int.reduceAdd] using h
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine

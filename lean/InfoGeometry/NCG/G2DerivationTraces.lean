@@ -15,7 +15,7 @@ open BigOperators
 namespace InfoGeometry.NCG
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 local notation "BlockMat" => Matrix (ι ⊕ ι) (ι ⊕ ι) R
 local notation "SubMat" => Matrix ι ι R
@@ -51,7 +51,7 @@ theorem trace_soBlockDerivation (A B C : SubMat) :
     Matrix.trace (soBlockDerivation A B C : BlockMat) = 0 := by
   dsimp [soBlockDerivation]
   rw [trace_fromBlocks_gen, Matrix.trace_neg, Matrix.trace_transpose]
-  ring
+  exact add_neg_cancel _
 
 /-- 🏆 THEOREM 2: Off-diagonal Bogoliubov / Pairing derivations are Supertrace-Free:
     STr(D_pair) = 0 -/
@@ -77,7 +77,6 @@ theorem shape_operator_traces (A : SubMat) (hA_trace : Matrix.trace A = 0) (B C 
         fromBlocks A B (-C) (Aᵀ) := by
       rw [fromBlocks_multiply]
       simp
-    rw [h_mul, trace_fromBlocks_gen, Matrix.trace_transpose, hA_trace]
-    ring
+    rw [h_mul, trace_fromBlocks_gen, Matrix.trace_transpose, hA_trace, add_zero]
 
 end InfoGeometry.NCG

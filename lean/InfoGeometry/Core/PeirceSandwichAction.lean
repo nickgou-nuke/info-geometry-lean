@@ -19,6 +19,30 @@ open InfoGeometry.Core.PeirceDecomposition InfoGeometry.Core.DualSeedPeirce
 open InfoGeometry.Core.PeirceRotor InfoGeometry.Core.DiracSuperalgebra
 open InfoGeometry.Singular.MoorePenrose
 
+section PureRing
+variable {A : Type*} [Ring A] {X Y : A}
+
+/-- Reflexivity normalizes multiplication of the sum by the support in any ring `A`. -/
+theorem ring_support_mul_add (h : IsDualSeedPair X Y) :
+    (X * Y + Y * X) * (X + Y) = X + Y := by
+  change (polePlus X Y + poleMinus X Y) * (X + Y) = X + Y
+  simp only [add_mul, mul_add, h.pd, h.pb, h.qd, h.qb, add_zero, zero_add]
+
+theorem ring_support_mul_sub (h : IsDualSeedPair X Y) :
+    (X * Y + Y * X) * (X - Y) = X - Y := by
+  change (polePlus X Y + poleMinus X Y) * (X - Y) = X - Y
+  simp only [add_mul, mul_sub, h.pd, h.pb, h.qd, h.qb]
+  abel
+
+theorem ring_support_mul_commutator (h : IsDualSeedPair X Y) :
+    (X * Y + Y * X) * (X * Y - Y * X) = X * Y - Y * X := by
+  change (polePlus X Y + poleMinus X Y) *
+    (polePlus X Y - poleMinus X Y) = polePlus X Y - poleMinus X Y
+  simp only [add_mul, mul_sub, h.pp, h.pq, h.qp, h.qq]
+  abel
+
+end PureRing
+
 variable {n R : Type*} [Fintype n] [DecidableEq n] [CommRing R]
 
 /-- Opposing Peirce corners give the corrected sum action without reflexivity. -/

@@ -12,6 +12,15 @@ import InfoGeometry.Core.PeirceAdjointCycle
 The cubic relation for ad P implies a fifth-degree relation for its commutator
 on the full endomorphism ring. No eigenbasis, characteristic restriction, or
 commutation of the tested endomorphism with ad P is assumed.
+
+## BUCKET 1 — Kernel-verified algebraic identities
+The tripotent commutator polynomial and its bundled endomorphism realization are proved.
+
+## BUCKET 2 — Conditional consequences
+The operator results assume the displayed idempotence or tripotence hypotheses.
+
+## BUCKET 3 — Open interpretation
+No analytic flow or geometric interpretation is constructed by this file.
 -/
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine
 variable {B : Type*} [Ring B]
@@ -31,9 +40,6 @@ attribute [local instance 100] LieRing.ofAssociativeRing
 /-- The full charge operator, bundled as a native integer-linear endomorphism. -/
 def endomorphismCharge (P : B) : Module.End ℤ (Module.End ℤ B) :=
   LieAlgebra.ad ℤ (Module.End ℤ B) (LieAlgebra.ad ℤ B P)
-
-theorem endomorphismCharge_apply (P : B) (K : Module.End ℤ B) (X : B) :
-    endomorphismCharge P K X = charge P K X := rfl
 
 /-- The annihilator holds on every integer-linear endomorphism, not just sandwiches. -/
 theorem endomorphismCharge_fifth {P : B} (hP : P * P = P)
@@ -58,14 +64,21 @@ theorem endomorphismCharge_pow_apply (P : B) (K : Module.End ℤ B)
       charge P (chargeIter P K n) X
     simp only [charge, ih]
 
+/-- The same fifth-order annihilator evaluated on an integer-linear operator. -/
 theorem chargeIter_fifth_of_linear {P : B} (hP : P * P = P)
     (K : Module.End ℤ B) (X : B) :
     chargeIter P K 5 X - (5 : ℤ) • chargeIter P K 3 X +
       (4 : ℤ) • chargeIter P K 1 X = 0 := by
   have h := congrArg (fun L : Module.End ℤ B => L X)
     (endomorphismCharge_fifth hP K)
-  simpa only [LinearMap.add_apply, LinearMap.sub_apply, LinearMap.smul_apply,
-    LinearMap.zero_apply, endomorphismCharge_pow_apply, chargeIter,
-    endomorphismCharge_apply] using h
+  simp only [LinearMap.add_apply, LinearMap.sub_apply, LinearMap.smul_apply,
+    LinearMap.zero_apply, endomorphismCharge_pow_apply, chargeIter] at h
+  change charge P (charge P (charge P (charge P (charge P K)))) X -
+      (5 : ℤ) • charge P (charge P (charge P K)) X +
+      (4 : ℤ) • charge P K X = 0 at h
+  change charge P (charge P (charge P (charge P (charge P K)))) X -
+      (5 : ℤ) • charge P (charge P (charge P K)) X +
+      (4 : ℤ) • charge P K X = 0
+  exact h
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine

@@ -51,7 +51,7 @@ end ArchetypePoset
 
 section SpectralTheory
 
-variable {R M : Type*} [Field R] [AddCommGroup M] [Module R M]
+variable {R M : Type*} [DivisionRing R] [AddCommGroup M] [Module R M]
 variable [FiniteDimensional R M]
 
 /-- The "Defect Block" mathematically maps to the Kernel of the Endomorphism. -/

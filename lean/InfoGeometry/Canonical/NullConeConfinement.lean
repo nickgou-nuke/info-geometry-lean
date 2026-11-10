@@ -21,7 +21,7 @@ namespace InfoGeometry.Canonical.NullConeConfinement
 \]
 -/
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [CommRing K]
 variable {V : Type*} [AddCommGroup V] [Module K V]
 
 /-- `\mathrm{NullCone}(q):=\{x\mid q(x)=0\}`. -/

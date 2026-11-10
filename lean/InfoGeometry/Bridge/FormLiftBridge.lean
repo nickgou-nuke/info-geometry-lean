@@ -20,34 +20,34 @@ noncomputable section
 namespace InfoGeometry.Bridge.FormLiftBridge
 
 /-- A Finsupp-based 0-form: a finitely supported function from vertices to the base ring. -/
-abbrev FinsuppZeroForm (V : Type*) [AddCommGroup V] (R : Type*) [CommRing R] :=
+abbrev FinsuppZeroForm (V : Type*) [AddCommGroup V] (R : Type*) [Ring R] :=
   V →₀ R
 
 /-- A Finsupp-based 1-form: a finitely supported function from edges to the base ring. -/
-abbrev FinsuppOneForm (V E : Type*) [AddCommGroup V] [AddCommGroup E] (R : Type*) [CommRing R] :=
+abbrev FinsuppOneForm (V E : Type*) [AddCommGroup V] [AddCommGroup E] (R : Type*) [Ring R] :=
   E →₀ R
 
 /-- A Finsupp-based 2-form: a finitely supported function from faces to the base ring. -/
-abbrev FinsuppTwoForm (V E F : Type*) [AddCommGroup V] [AddCommGroup E] [AddCommGroup F] (R : Type*) [CommRing R] :=
+abbrev FinsuppTwoForm (V E F : Type*) [AddCommGroup V] [AddCommGroup E] [AddCommGroup F] (R : Type*) [Ring R] :=
   F →₀ R
 
 /-- The exterior derivative d₀ from 0-forms to 1-forms, lifted from the finite-matrix d0.
     d₀ ω (e : E) = ω (target e) - ω (source e) -/
 def finsupp_d0 {V E : Type*} [AddCommGroup V] [AddCommGroup E] [Fintype V] [Fintype E]
-    {R : Type*} [CommRing R]
+    {R : Type*} [Ring R]
     (d0_mat : Matrix E V R) (ω : FinsuppZeroForm V R) : FinsuppOneForm V E R :=
   Finsupp.onFinset Finset.univ (fun e => ∑ v, d0_mat e v * ω v) (by simp)
 
 /-- The exterior derivative d₁ from 1-forms to 2-forms, lifted from the finite-matrix d1.
     d₁ ω (f : F) = ∑ e ∈ boundary f, ω e -/
 def finsupp_d1 {V E F : Type*} [AddCommGroup V] [AddCommGroup E] [AddCommGroup F]
-    [Fintype E] [Fintype F] {R : Type*} [CommRing R]
+    [Fintype E] [Fintype F] {R : Type*} [Ring R]
     (d1_mat : Matrix F E R) (ω : FinsuppOneForm V E R) : FinsuppTwoForm V E F R :=
   Finsupp.onFinset Finset.univ (fun f => ∑ e, d1_mat f e * ω e) (by simp)
 
 /-- The De Rham complex structure using Finsupp forms, backed by finite matrices d0/d1. -/
 class FinsuppDeRhamComplex (V E F : Type*) [AddCommGroup V] [AddCommGroup E] [AddCommGroup F]
-    [Fintype V] [Fintype E] [Fintype F] (R : Type*) [CommRing R] where
+    [Fintype V] [Fintype E] [Fintype F] (R : Type*) [Ring R] where
   d0_mat : Matrix E V R
   d1_mat : Matrix F E R
   complex_condition : d1_mat * d0_mat = 0
@@ -59,7 +59,7 @@ class FinsuppDeRhamComplex (V E F : Type*) [AddCommGroup V] [AddCommGroup E] [Ad
 
 /-- The Information Geometry Metric (Hessian) as a symmetric 2-form on Finsupp. -/
 class FinsuppHessianMetric (V E F : Type*) [AddCommGroup V] [AddCommGroup E] [AddCommGroup F]
-    [Fintype V] [Fintype E] [Fintype F] (R : Type*) [CommRing R]
+    [Fintype V] [Fintype E] [Fintype F] (R : Type*) [Ring R]
     [FinsuppDeRhamComplex V E F R] (logQ : V → R) where
   metric : V → V → R
   metric_eq_symmetric_differential : ∀ x y, metric x y = metric y x
@@ -92,7 +92,7 @@ instance : FinsuppDeRhamComplex Unit Unit Unit ℝ where
 /-- The Hestenes geometric derivative lifted to Finsupp forms. -/
 def finsuppGeometricDerivative {V E F : Type*} [AddCommGroup V] [AddCommGroup E] [AddCommGroup F]
     [Fintype V] [Fintype E] [Fintype F]
-    {R : Type*} [CommRing R] [FinsuppDeRhamComplex V E F R]
+    {R : Type*} [Ring R] [FinsuppDeRhamComplex V E F R]
     (ω : FinsuppOneForm V E R) : FinsuppTwoForm V E F R :=
   (inferInstance : FinsuppDeRhamComplex V E F R).d1 ω
 

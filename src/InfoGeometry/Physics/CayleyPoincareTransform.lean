@@ -9,7 +9,7 @@ namespace LegacyCayleyPoincareTransform
 
 open InfoGeometry.Physics
 
-variable {A : Type*} [CommRing A] [StarRing A]
+variable {A : Type*} [Ring A] [StarRing A]
 
 /-- The numerator and denominator polynomials of the Cayley transform.
 No inverse is assumed here. -/
@@ -25,7 +25,7 @@ def cayleyDenominator (D : BdGBlock A) : BdGBlock A := 1 + D
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [cayleyNumerator, cayleyDenominator, diracOperator,
-      Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+      Matrix.mul_apply, Fin.sum_univ_two] <;> noncomm_ring
 
 def artinBraidGenerator : BdGBlock A := 1 + chiralGrading
 
@@ -35,8 +35,8 @@ def artinBraidGenerator : BdGBlock A := 1 + chiralGrading
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [artinBraidGenerator, chiralGrading, Matrix.mul_apply,
-      Matrix.add_apply, Matrix.one_apply, Matrix.vecMul, dotProduct,
-      Fin.sum_univ_two] <;> ring
+      Matrix.add_apply, Matrix.one_apply,
+      Fin.sum_univ_two, two_smul] <;> noncomm_ring
 
 theorem braid_dirac_identity (Delta : A) :
     artinBraidGenerator (A := A) * diracOperator Delta +
@@ -46,7 +46,7 @@ theorem braid_dirac_identity (Delta : A) :
   fin_cases i <;> fin_cases j <;>
     simp [artinBraidGenerator, diracOperator, chiralGrading,
       Matrix.mul_apply, Matrix.add_apply, Matrix.one_apply, Matrix.vecMul,
-      dotProduct, Fin.sum_univ_two] <;> ring
+      dotProduct, Fin.sum_univ_two] <;> noncomm_ring
 
 end LegacyCayleyPoincareTransform
 

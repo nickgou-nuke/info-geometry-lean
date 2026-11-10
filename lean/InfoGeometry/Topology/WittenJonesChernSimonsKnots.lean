@@ -5,6 +5,7 @@ Authors: InfoGeometry Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.LinearCombination
 
 /-!
@@ -43,7 +44,7 @@ structure ColorVec3 (R : Type*) where
 
 namespace ColorVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : ColorVec3 R := ⟨0, 0, 0⟩
 def add (u v : ColorVec3 R) : ColorVec3 R := ⟨u.c1 + v.c1, u.c2 + v.c2, u.c3 + v.c3⟩
@@ -71,7 +72,7 @@ structure SplitOctonion (R : Type*) where
 
 namespace SplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : SplitOctonion R := ⟨0, ColorVec3.zero, ColorVec3.zero, 0⟩
 def one  : SplitOctonion R := ⟨1, ColorVec3.zero, ColorVec3.zero, 1⟩
@@ -124,7 +125,7 @@ structure ChernSimonsPhase (R : Type*) where
   A_inv : R
   deriving DecidableEq, Repr, Inhabited
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /--
 Kauffman skein crossing resolution `⟨L₊⟩ = A ⟨L₀⟩ + A⁻¹ ⟨L_∞⟩`.
@@ -151,7 +152,7 @@ Cosmological constant as knot framing anomaly:
 Under `h_inv : CS.A * CS.A_inv = 1`, the squared chiral phase difference `(CS.A - CS.A_inv)^2`
 equals `topologicalCosmoConstant CS`.
 -/
-theorem witten_cosmological_constant_is_knot_anomaly (CS : ChernSimonsPhase R)
+theorem witten_cosmological_constant_is_knot_anomaly {R : Type*} [CommRing R] (CS : ChernSimonsPhase R)
     (h_inv : CS.A * CS.A_inv = 1) :
     (CS.A - CS.A_inv)^2 = topologicalCosmoConstant CS := by
   dsimp [topologicalCosmoConstant]
@@ -167,7 +168,7 @@ The unknot vacuum loop value satisfies `unknotVacuumLoop CS = - topologicalCosmo
 theorem unknot_vacuum_is_negative_cosmo_energy (CS : ChernSimonsPhase R) :
     unknotVacuumLoop CS = - topologicalCosmoConstant CS - 2 := by
   dsimp [unknotVacuumLoop, topologicalCosmoConstant]
-  ring
+  noncomm_ring
 
 /-! ### 4. 8D Split-Octonion Kauffman Skein Braiding Rotor Theorems -/
 
@@ -201,7 +202,7 @@ theorem octonion_skein_difference_eq_framing_anomaly (CS : ChernSimonsPhase R) (
          SplitOctonion.scale, SplitOctonion.twistorProjPlus, SplitOctonion.twistorProjMinus,
          SplitOctonion.paraSymplecticK0, SplitOctonion.quark, SplitOctonion.antiquark,
          ColorVec3.zero, ColorVec3.add, ColorVec3.sub, ColorVec3.smul]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 /--
 Octonion skein trace equals chiral phase sum:
@@ -211,14 +212,14 @@ theorem octonion_skein_trace_eq_phase_sum (CS : ChernSimonsPhase R) (u v : Color
     SplitOctonion.trace (octonionSkeinBraiding CS u v) = CS.A + CS.A_inv := by
   dsimp [octonionSkeinBraiding, SplitOctonion.trace, SplitOctonion.add,
          SplitOctonion.scale, SplitOctonion.twistorProjPlus, SplitOctonion.twistorProjMinus]
-  ring
+  noncomm_ring
 
 /--
 Cosmological constant from 8D octonion skein trace:
 Under `h_inv : CS.A * CS.A_inv = 1`, the squared trace of the 8D skein braiding operator
 minus `4` recovers `topologicalCosmoConstant CS`.
 -/
-theorem octonion_cosmo_constant_from_skein_trace (CS : ChernSimonsPhase R) (u v : ColorVec3 R)
+theorem octonion_cosmo_constant_from_skein_trace {R : Type*} [CommRing R] (CS : ChernSimonsPhase R) (u v : ColorVec3 R)
     (h_inv : CS.A * CS.A_inv = 1) :
     (SplitOctonion.trace (octonionSkeinBraiding CS u v))^2 - 4 = topologicalCosmoConstant CS := by
   rw [octonion_skein_trace_eq_phase_sum]
@@ -249,7 +250,7 @@ structure Mat3 (R : Type*) where
 
 namespace Mat3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : Mat3 R := ⟨0, 0, 0, 0, 0, 0, 0, 0, 0⟩
 def one  : Mat3 R := ⟨1, 0, 0, 0, 1, 0, 0, 0, 1⟩
@@ -324,25 +325,25 @@ def tlGenE2 (d : R) : Mat3 R :=
 theorem tlGenE1_sq (d : R) :
     Mat3.mul (tlGenE1 d) (tlGenE1 d) = Mat3.smul d (tlGenE1 d) := by
   dsimp [tlGenE1, Mat3.mul, Mat3.smul]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 /-- Temperley-Lieb quadratic loop relation for $E_2(d)$: $E_2(d)^2 = d \cdot E_2(d)$. -/
 theorem tlGenE2_sq (d : R) :
     Mat3.mul (tlGenE2 d) (tlGenE2 d) = Mat3.smul d (tlGenE2 d) := by
   dsimp [tlGenE2, Mat3.mul, Mat3.smul]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 /-- First Jones cubic Temperley-Lieb relation: $E_1(d) E_2(d) E_1(d) = E_1(d)$. -/
 theorem tlGen_jones_cubic_121 (d : R) :
     Mat3.mul (Mat3.mul (tlGenE1 d) (tlGenE2 d)) (tlGenE1 d) = tlGenE1 d := by
   dsimp [tlGenE1, tlGenE2, Mat3.mul]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 /-- Second Jones cubic Temperley-Lieb relation: $E_2(d) E_1(d) E_2(d) = E_2(d)$. -/
 theorem tlGen_jones_cubic_212 (d : R) :
     Mat3.mul (Mat3.mul (tlGenE2 d) (tlGenE1 d)) (tlGenE2 d) = tlGenE2 d := by
   dsimp [tlGenE1, tlGenE2, Mat3.mul]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 /--
 Forward Kauffman braid generator $R_1 = A \cdot I + A^{-1} E_1(d)$ on strands $(1, 2)$,
@@ -374,7 +375,7 @@ Kauffman Braid Inversion Theorem (Reidemeister II Move):
 Under `h_inv : CS.A * CS.A_inv = 1`, the braid generator `kauffmanBraidR1 CS` and its formal
 inverse `kauffmanBraidR1Inv CS` multiply to the identity matrix `Mat3.one`.
 -/
-theorem kauffmanBraidR1_mul_inv (CS : ChernSimonsPhase R) (h_inv : CS.A * CS.A_inv = 1) :
+theorem kauffmanBraidR1_mul_inv {R : Type*} [CommRing R] (CS : ChernSimonsPhase R) (h_inv : CS.A * CS.A_inv = 1) :
     Mat3.mul (kauffmanBraidR1 CS) (kauffmanBraidR1Inv CS) = Mat3.one := by
   dsimp [kauffmanBraidR1, kauffmanBraidR1Inv, tlGenE1, unknotVacuumLoop,
          Mat3.mul, Mat3.add, Mat3.smul, Mat3.one]
@@ -399,14 +400,14 @@ theorem kauffmanBraidR1_skein_relation (CS : ChernSimonsPhase R) :
       Mat3.smul (CS.A - CS.A_inv) (Mat3.sub Mat3.one (tlGenE1 (unknotVacuumLoop CS))) := by
   dsimp [kauffmanBraidR1, kauffmanBraidR1Inv, tlGenE1, unknotVacuumLoop,
          Mat3.sub, Mat3.add, Mat3.smul, Mat3.one]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 /--
 Exact Yang-Baxter Braid Equation (Reidemeister III Move) for Kauffman Bracket Operators:
 Under `h_inv : CS.A * CS.A_inv = 1`, the Kauffman braid generators satisfy the noncommutative
 Artin braid group relation $R_1 R_2 R_1 = R_2 R_1 R_2$ in `Mat3 R`.
 -/
-theorem kauffmanBraid_yang_baxter_121_eq_212
+theorem kauffmanBraid_yang_baxter_121_eq_212 {R : Type*} [CommRing R]
     (CS : ChernSimonsPhase R) (h_inv : CS.A * CS.A_inv = 1) :
     Mat3.mul (Mat3.mul (kauffmanBraidR1 CS) (kauffmanBraidR2 CS)) (kauffmanBraidR1 CS) =
       Mat3.mul (Mat3.mul (kauffmanBraidR2 CS) (kauffmanBraidR1 CS)) (kauffmanBraidR2 CS) := by
@@ -467,7 +468,7 @@ theorem splitOctonion_mul_noncommutative :
 
 /-! ### 6. Master Synthesis of Section 148 -/
 
-theorem witten_jones_cosmology_synthesis
+theorem witten_jones_cosmology_synthesis {R : Type*} [CommRing R]
     (CS : ChernSimonsPhase R) (u v : ColorVec3 R) (h_inv : CS.A * CS.A_inv = 1) :
     (CS.A - CS.A_inv)^2 = topologicalCosmoConstant CS ∧
     unknotVacuumLoop CS = - topologicalCosmoConstant CS - 2 ∧

@@ -14,7 +14,7 @@ kernel-checkable certificate needed by downstream theorems; it does not claim
 that every matrix admits such a decomposition.
 -/
 
-variable {R ι : Type*} [CommRing R] [Fintype ι] [DecidableEq ι]
+variable {R ι : Type*} [Ring R] [Fintype ι] [DecidableEq ι]
 
 abbrev Carrier (R ι : Type*) := Matrix ι ι R
 
@@ -25,7 +25,7 @@ def isWeylDilation (H : Carrier R ι) : Prop :=
 
 def isParabolicNilpotent (N : Carrier R ι) : Prop := N * N = 0
 
-structure KANCertificate (R ι : Type*) [CommRing R] [Fintype ι]
+structure KANCertificate (R ι : Type*) [Ring R] [Fintype ι]
     [DecidableEq ι] (g : Carrier R ι) where
   k : Carrier R ι
   a : Carrier R ι

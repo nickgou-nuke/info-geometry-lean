@@ -1,6 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.SouriauLieThermoKKTBridge
-import InfoGeometry.Canonical.MadelungNavierStokesClosure
+import InfoGeometry.Canonical.NavierStokesBridge
 
 noncomputable section
 
@@ -8,7 +8,6 @@ namespace InfoGeometry.EntropicGravity
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.SouriauLieThermoKKTBridge
-open InfoGeometry.Canonical.MadelungHydrodynamic
 open scoped InnerProductSpace
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -85,20 +84,13 @@ theorem jacobson_temperature_eq_mass_gap
       _ = bridge.viscousDissipation x := h1.symm
       _ = bridge.jacobsonHeatTransfer x := h3
       _ = bridge.jacobsonTemperature x * bridge.souriauContext.dissipativeEntropyRate x := h2
-  exact (mul_right_inj' h_dissipative).mp h5.symm
+  exact (mul_left_inj' h_dissipative).mp h5.symm
 
-/--
-Theorem: Madelung-Jacobson Equilibrium.
-
-If the fluid velocity field acts strictly as the non-commutative Madelung torque 
-(skew-adjoint generator of isometric modular flow, `IsMadelungDrivenTorque`), 
-and if this enforces zero viscous dissipation, then either the mass gap is zero 
-or the system is at equilibrium (zero entropy production).
--/
-theorem madelung_equilibrium_of_zero_dissipation
+/-! If the viscous dissipation is zero, the multiplicative dissipation law
+forces either the mass gap or the dissipative entropy rate to vanish. -/
+theorem equilibrium_of_zero_viscous_dissipation
     (bridge : EntropicGravityBridge G Gdual Orbit E)
     (x : Orbit)
-    (h_madelung : IsMadelungDrivenTorque (bridge.fluidVelocity x))
     (h_zero_viscosity : bridge.viscousDissipation x = 0) :
     bridge.zitterbewegungMassGap = 0 ∨ bridge.souriauContext.dissipativeEntropyRate x = 0 := by
   have h1 := bridge.viscous_dissipation_eq x

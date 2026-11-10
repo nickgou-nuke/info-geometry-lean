@@ -32,7 +32,7 @@ namespace InfoGeometry.Algebra.NonAssocIteratedLeibnizTransport
 universe u v
 
 variable {R : Type u} {A : Type v}
-variable [CommRing R] [NonUnitalNonAssocRing A] [Module R A]
+variable [Ring R] [NonUnitalNonAssocRing A] [Module R A]
 variable [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-! ## Iterated Leibniz rule -/
@@ -326,7 +326,7 @@ def splitPeirceFrame
     simpa [two_mul] using half_spec
   have hcoeff : half * half + half * half = half := by
     calc
-      half * half + half * half = (half + half) * half := by ring
+      half * half + half * half = (half + half) * half := by noncomm_ring
       _ = 1 * half := by rw [htwo]
       _ = half := one_mul half
   have hplus_prod : (one + I) * (one + I) = (one + I) + (one + I) := by

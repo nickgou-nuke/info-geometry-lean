@@ -129,6 +129,22 @@ theorem cyclicFunctional_tangent_curvature_core_complement_cancel
   change τ (p * f * p) + τ ((1 - p) * f * (1 - p)) = 0
   rw [hsplit, hzero]
 
+/-- Over any ring `[Ring R]`, the sum of the two diagonal Peirce compressions of the
+matrix Berry curvature equals the full matrix trace of the commutator of tangent directions. -/
+theorem tangent_curvature_core_complement_trace_noncomm {n : Type*}
+    [Fintype n] [DecidableEq n] {R : Type*} [Ring R]
+    {p : Matrix n n R} (hp : IsIdempotentElem p) (a b : Matrix n n R) :
+    Matrix.trace (p * operatorComm (peirceTangent p a) (peirceTangent p b) * p) +
+      Matrix.trace ((1 - p) * operatorComm (peirceTangent p a) (peirceTangent p b) *
+        (1 - p)) =
+      Matrix.trace (operatorComm (peirceTangent p a) (peirceTangent p b)) := by
+  let f := operatorComm (peirceTangent p a) (peirceTangent p b)
+  have hpf : p * f = f * p :=
+    (mem_even_iff hp).mp (tangent_lie_jordan_products_mem_even hp a b).1
+  simpa [Matrix.traceAddMonoidHom] using
+    (cyclicFunctional_peirce_diagonal_split
+      (τ := Matrix.traceAddMonoidHom n R) p f hp.eq hpf)
+
 /-- Matrix Berry-curvature flux in the two Peirce diagonal compressions cancels.
 This is a finite algebraic trace identity and makes no continuum mass-gap claim. -/
 theorem tangent_curvature_core_complement_trace_cancel {n : Type*}

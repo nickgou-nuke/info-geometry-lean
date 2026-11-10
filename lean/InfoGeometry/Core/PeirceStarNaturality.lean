@@ -55,13 +55,17 @@ section Star
 
 variable [StarRing A] [StarRing B]
 
+@[simp] theorem map_reflected_star_ringHom (f : A →+* B)
+    (hf : ∀ x : A, f (star x) = star (f x)) (p x : A) :
+    f (reflection p * star x * reflection p) =
+      reflection (f p) * star (f x) * reflection (f p) := by
+  simp only [map_mul, hf, map_reflection]
+
 @[simp] theorem map_reflected_star {R : Type*} [CommRing R]
     [Algebra R A] [Algebra R B] (f : A →⋆ₐ[R] B) (p x : A) :
     f (reflection p * star x * reflection p) =
-      reflection (f p) * star (f x) * reflection (f p) := by
-  simp only [map_mul, map_star]
-  rw [show f (reflection p) = reflection (f p) from
-    map_reflection f.toAlgHom.toRingHom p]
+      reflection (f p) * star (f x) * reflection (f p) :=
+  map_reflected_star_ringHom f.toAlgHom.toRingHom (map_star f) p x
 
 /-- Star reverses the corner, on which reflection conjugation has sign minus. -/
 theorem reflected_star_corner {p u : A} (hp : IsStarProjection p)

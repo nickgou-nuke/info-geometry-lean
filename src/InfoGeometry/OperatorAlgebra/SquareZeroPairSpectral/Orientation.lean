@@ -49,7 +49,8 @@ open InfoGeometry.OperatorAlgebra.LieJordan
 open InfoGeometry.Core.PeirceDecomposition
 open InfoGeometry.Core.IdempotentCartan (reflection reflection_sq)
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-! ### Half-twist sandwiches of a square-zero pair -/
 

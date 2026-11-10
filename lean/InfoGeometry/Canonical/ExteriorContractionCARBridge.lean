@@ -9,7 +9,9 @@ namespace InfoGeometry.Canonical.ExteriorContractionCARBridge
 
 open ExteriorAlgebra
 
-variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
+section Ring
+
+variable {R V : Type*} [Ring R] [AddCommGroup V] [Module R V]
 
 /-- **Definition**: Contraction Annihilation Operator ι_λ on 1-forms. -/
 def contraction1 (lambda : V →ₗ[R] R) (v : V) : R :=
@@ -19,17 +21,23 @@ def contraction1 (lambda : V →ₗ[R] R) (v : V) : R :=
 def contraction2 (lambda mu : V →ₗ[R] R) (v1 v2 : V) : R :=
   lambda v1 * mu v2 - lambda v2 * mu v1
 
+end Ring
+
+section CommRing
+
+variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
+
 /-- **Theorem**: Contraction Annihilation Operator Nilpotency ι_λ ι_λ = 0. -/
 theorem contraction_sq_zero (lambda : V →ₗ[R] R) (v1 v2 : V) :
     contraction2 lambda lambda v1 v2 = 0 := by
-  dsimp [contraction2]
+  unfold contraction2
   ring
 
 /-- **Theorem**: Contraction Annihilation Anti-Commutativity {ι_λ, ι_μ} = 0. -/
 theorem contraction_contraction_anticommute
     (lambda mu : V →ₗ[R] R) (v1 v2 : V) :
     contraction2 lambda mu v1 v2 + contraction2 mu lambda v1 v2 = 0 := by
-  dsimp [contraction2]
+  unfold contraction2
   ring
 
 /-- **Theorem**: Master Exterior Contraction CAR Annihilation Algebra Synthesis.
@@ -44,5 +52,7 @@ theorem master_exterior_contraction_car_synthesis
   contraction_sq_zero lambda v1 v2,
   contraction_contraction_anticommute lambda mu v1 v2
 ⟩
+
+end CommRing
 
 end InfoGeometry.Canonical.ExteriorContractionCARBridge

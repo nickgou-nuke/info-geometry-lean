@@ -32,13 +32,13 @@ namespace InfoGeometry.Physics.SpacetimeGlide
     glide `glide`.  Because the two objects act on different carriers, the wrapper
     returns a *pair* of results – the modular conjugation output and the glide
     output. -/
-structure GlideOp {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M] where
+structure GlideOp {R M : Type*} [Ring R] [AddCommGroup M] [Module R M] where
   J_apply : Module.End R M      -- the abstract modular conjugation `J_Δ`
   glide_apply : Split55 → Split55 -- the concrete glide on the split‑55 carrier
 
 /-- The canonical `glide` operator on `Split55`. -/
 @[simp, reducible]
-def glideOp {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
+def glideOp {R M : Type*} [Ring R] [AddCommGroup M] [Module R M]
     [hJ : ModularConjugation R M] : GlideOp (R := R) (M := M) :=
   { J_apply := hJ.J_Δ,
     glide_apply := glide }

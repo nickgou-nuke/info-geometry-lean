@@ -41,15 +41,15 @@ end Parity
 
 variable {m n R : Type*}
 variable [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
-variable [CommRing R]
+variable [Ring R]
 
 /--
 A finite `(m|n)` block supermatrix.  Parity is represented by block support:
 even homogeneous matrices are block diagonal and odd homogeneous matrices are
 off diagonal.
 
-The coefficient ring is ordinary and commutative.  This is the endomorphism
-superalgebra grading; it is distinct from a Grassmann grading on coefficients.
+The coefficient ring for the carrier, block multiplication, grading, and
+supertrace is an arbitrary ring `[Ring R]`.
 -/
 structure SuperMatrix where
   A : Matrix m m R
@@ -128,7 +128,7 @@ def superbracket (pX pY : Parity)
   change Matrix.trace (X.A + Y.A) - Matrix.trace (X.D + Y.D) = _
   rw [Matrix.trace_add, Matrix.trace_add]
   simp only [supertrace]
-  ring
+  abel
 
  theorem supertrace_sub
     (X Y : SuperMatrix (m := m) (n := n) (R := R)) :
@@ -136,17 +136,7 @@ def superbracket (pX pY : Parity)
   change Matrix.trace (X.A - Y.A) - Matrix.trace (X.D - Y.D) = _
   rw [Matrix.trace_sub, Matrix.trace_sub]
   simp only [supertrace]
-  ring
-
-/-- Even-even products are cyclic under supertrace. -/
-theorem supertrace_mul_even_even
-    (X Y : SuperMatrix (m := m) (n := n) (R := R))
-    (hX : IsHomogeneous .even X) (hY : IsHomogeneous .even Y) :
-    supertrace (X * Y) = supertrace (Y * X) := by
-  rcases hX with ⟨hXB, hXC⟩
-  rcases hY with ⟨hYB, hYC⟩
-  simp [supertrace, hXB, hXC, hYB, hYC]
-  rw [Matrix.trace_mul_comm X.A Y.A, Matrix.trace_mul_comm X.D Y.D]
+  abel
 
 /-- A mixed even-odd product has zero diagonal and hence zero supertrace. -/
 theorem supertrace_mul_even_odd
@@ -166,9 +156,23 @@ theorem supertrace_mul_odd_even
   rcases hY with ⟨hYB, hYC⟩
   simp [supertrace, hXA, hXD, hYB, hYC]
 
+section CommRing
+
+variable {R_comm : Type*} [CommRing R_comm]
+
+/-- Even-even products are cyclic under supertrace. -/
+theorem supertrace_mul_even_even
+    (X Y : SuperMatrix (m := m) (n := n) (R := R_comm))
+    (hX : IsHomogeneous .even X) (hY : IsHomogeneous .even Y) :
+    supertrace (X * Y) = supertrace (Y * X) := by
+  rcases hX with ⟨hXB, hXC⟩
+  rcases hY with ⟨hYB, hYC⟩
+  simp [supertrace, hXB, hXC, hYB, hYC]
+  rw [Matrix.trace_mul_comm X.A Y.A, Matrix.trace_mul_comm X.D Y.D]
+
 /-- Odd-odd products are anticyclic under the supertrace. -/
 theorem supertrace_mul_odd_odd
-    (X Y : SuperMatrix (m := m) (n := n) (R := R))
+    (X Y : SuperMatrix (m := m) (n := n) (R := R_comm))
     (hX : IsHomogeneous .odd X) (hY : IsHomogeneous .odd Y) :
     supertrace (X * Y) = - supertrace (Y * X) := by
   rcases hX with ⟨hXA, hXD⟩
@@ -179,9 +183,9 @@ theorem supertrace_mul_odd_odd
 /-- Graded cyclicity `str(XY) = (-1)^(|X||Y|) str(YX)`. -/
 theorem supertrace_mul_graded_comm
     (pX pY : Parity)
-    (X Y : SuperMatrix (m := m) (n := n) (R := R))
+    (X Y : SuperMatrix (m := m) (n := n) (R := R_comm))
     (hX : IsHomogeneous pX X) (hY : IsHomogeneous pY Y) :
-    supertrace (X * Y) = Parity.sign R pX pY * supertrace (Y * X) := by
+    supertrace (X * Y) = Parity.sign R_comm pX pY * supertrace (Y * X) := by
   cases pX <;> cases pY
   · simpa [Parity.sign] using supertrace_mul_even_even X Y hX hY
   · rw [supertrace_mul_even_odd X Y hX hY,
@@ -195,7 +199,7 @@ theorem supertrace_mul_graded_comm
 /-- The supertrace annihilates every homogeneous supercommutator. -/
 theorem supertrace_superbracket_eq_zero
     (pX pY : Parity)
-    (X Y : SuperMatrix (m := m) (n := n) (R := R))
+    (X Y : SuperMatrix (m := m) (n := n) (R := R_comm))
     (hX : IsHomogeneous pX X) (hY : IsHomogeneous pY Y) :
     supertrace (superbracket pX pY X Y) = 0 := by
   cases pX <;> cases pY
@@ -212,6 +216,8 @@ theorem supertrace_superbracket_eq_zero
   · rw [show superbracket .odd .odd X Y = X * Y + Y * X by rfl,
       supertrace_add, supertrace_mul_odd_odd X Y hX hY]
     simp
+
+end CommRing
 
 end SuperMatrix
 

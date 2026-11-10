@@ -234,7 +234,7 @@ theorem algebraEquiv_swap_offDiagonalTransition {A : Type*} [Ring A] [Algebra �
 
 /-! ### Diagonal sign matrix -/
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- 
 The diagonal matrix with five `1` entries followed by five `-1` entries.
@@ -255,7 +255,7 @@ theorem eta55_sq :
   rw [Matrix.diagonal_mul_diagonal]
   have h : (fun i : Fin 10 => (if (i : ℕ) < 5 then (1 : R) else -1) * (if (i : ℕ) < 5 then 1 else -1)) = fun _ => 1 := by
     ext i
-    split_ifs <;> ring
+    split_ifs <;> simp
   rw [h]
   exact Matrix.diagonal_one
 

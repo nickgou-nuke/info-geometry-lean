@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Physics.ThermodynamicAlgebraicCenter
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.TwoSheetedAlgebra
@@ -16,6 +21,12 @@ structure AntiAutomorphism (A : Type*) [Ring A] where
   inv : ∀ x, toFun (toFun x) = x
 
 open MulOpposite
+
+instance {R : Type*} [Ring R] : Inhabited (AntiAutomorphism (R × Rᵐᵒᵖ)) :=
+  ⟨{ toFun := fun p => (unop p.2, op p.1)
+     map_add := fun x y => rfl
+     map_mul := fun x y => rfl
+     inv := fun x => rfl }⟩
 
 /-! The anti-automorphism becomes an honest ring equivalence after passing to
 the opposite ring.  This is the typed algebraic core of the right/opposite
@@ -55,7 +66,7 @@ def antiOppositeRingEquiv
 opposite-ring equivalence.  This is the algebraic Morita-side construction; an
 analytic Hilbert-bimodule Morita theorem still requires its own module data. -/
 def AntiAutomorphism.toTwoSheetedAlgebra
-    {K A : Type*} [CommRing K] [Ring A] [Algebra K A]
+    {K A : Type*} [Ring K] [Ring A] [Module K A]
     (J : AntiAutomorphism A) :
     InfoGeometry.OperatorAlgebra.TwoSheetedAlgebra K where
   L := A

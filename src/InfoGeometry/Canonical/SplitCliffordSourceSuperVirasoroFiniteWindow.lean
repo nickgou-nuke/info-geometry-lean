@@ -14,7 +14,7 @@ namespace InfoGeometry.Canonical.SuperVirasoroFiniteWindow
 open Finset
 open Filter
 
-variable {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
+variable {𝕜 V : Type*} [CommRing 𝕜] [Div 𝕜] [AddCommGroup V] [Module 𝕜 V]
 
 local notation "EndV" => Module.End 𝕜 V
 

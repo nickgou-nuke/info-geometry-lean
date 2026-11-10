@@ -14,7 +14,7 @@ noncomputable section
 
 namespace YangBaxterQuotientDescent
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [Ring K]
 variable {V : Type*} [AddCommGroup V] [Module K V]
 variable (R : Submodule K V)
 

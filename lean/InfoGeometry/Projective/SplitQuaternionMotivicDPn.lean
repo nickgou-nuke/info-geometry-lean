@@ -36,17 +36,17 @@ open InfoGeometry.Clifford.Coquaternion.Coquaternion
 open InfoGeometry.Projective.SplitComposition
 open InfoGeometry.Projective.SplitQuaternionMotivicHopf
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### Mathlib Semiring and Algebra Hierarchy for Coquaternion -/
 
 instance : Semiring (Coquaternion R) where
   add := (· + ·)
-  add_assoc := fun p q r => by ext <;> { simp; try ring }
+  add_assoc := fun p q r => by ext <;> { simp; try abel }
   zero := 0
   zero_add := fun q => by ext <;> simp
   add_zero := fun q => by ext <;> simp
-  add_comm := fun p q => by ext <;> { simp; try ring }
+  add_comm := fun p q => by ext <;> { simp; try abel }
   mul := (· * ·)
   mul_assoc := mul_assoc_q
   one := 1
@@ -60,7 +60,7 @@ instance : Semiring (Coquaternion R) where
   npow := npowRec
   natCast n := ⟨n, 0, 0, 0⟩
   natCast_zero := by ext <;> simp
-  natCast_succ n := by ext <;> { simp; try ring }
+  natCast_succ n := by ext <;> { simp; try abel }
 
 /-- Canonical ring homomorphism from R into Coquaternion R embedding scalars on the real line. -/
 def coquaternionAlgebraMap : R →+* Coquaternion R where
@@ -70,23 +70,23 @@ def coquaternionAlgebraMap : R →+* Coquaternion R where
   map_add' r s := by ext <;> simp
   map_mul' r s := by ext <;> simp
 
-instance : Algebra R (Coquaternion R) where
+instance {R : Type*} [CommRing R] : Algebra R (Coquaternion R) where
   algebraMap := coquaternionAlgebraMap
   commutes' r x := by ext <;> { simp [coquaternionAlgebraMap]; try ring }
   smul_def' r x := by ext <;> { simp [coquaternionAlgebraMap]; try ring }
 
 @[simp]
-theorem algebraMap_apply (r : R) :
+theorem algebraMap_apply {R : Type*} [CommRing R] (r : R) :
     algebraMap R (Coquaternion R) r = ⟨r, 0, 0, 0⟩ := rfl
 
-theorem mul_conj_eq_algebraMap (q : Coquaternion R) :
+theorem mul_conj_eq_algebraMap {R : Type*} [CommRing R] (q : Coquaternion R) :
     q * conj q = algebraMap R (Coquaternion R) (normSq q) := by
   ext <;> { simp [conj, normSq]; ring }
 
 @[simp]
 theorem normSq_zero : normSq (0 : Coquaternion R) = 0 := by
   dsimp [normSq]
-  ring
+  noncomm_ring
 
 /-! ### Section 1: Split-Quaternionic Vector Space $\mathbb{D}^{n+1}$, Norm, and Sphere $S^{(4n+3, 2n+1)}$ -/
 
@@ -123,14 +123,14 @@ theorem actionN_mul {n : ℕ} (v : VectorD n R) (u1 u2 : Coquaternion R) :
 
 /-- Multiplicativity of the total split quadratic norm under the right action:
     $N_{n+1}(v \triangleleft u) = N_{n+1}(v) \cdot N(u)$. -/
-theorem normSqN_action {n : ℕ} (v : VectorD n R) (u : Coquaternion R) :
+theorem normSqN_action {R : Type*} [CommRing R] {n : ℕ} (v : VectorD n R) (u : Coquaternion R) :
     normSqN (actionN v u) = normSqN v * normSq u := by
   dsimp [normSqN, actionN]
   simp_rw [normSq_mul]
   rw [← Finset.sum_mul]
 
 /-- Preservation of the unit split sphere $S^{(4n+3, 2n+1)}$ under the action of $S^{(3,1)}$. -/
-theorem sphere_action_preserves {n : ℕ} (v : VectorD n R) (u : Coquaternion R)
+theorem sphere_action_preserves {R : Type*} [CommRing R] {n : ℕ} (v : VectorD n R) (u : Coquaternion R)
     (hv : IsUnitSphere v) (hu : normSq u = 1) :
     IsUnitSphere (actionN v u) := by
   dsimp [IsUnitSphere] at *
@@ -149,7 +149,7 @@ def traceCoq {n : ℕ} (M : Matrix (Fin (n + 1)) (Fin (n + 1)) (Coquaternion R))
 
 /-- Trace of the projector matrix equals the total norm embedded via algebraMap:
     $\operatorname{Tr}(P(v)) = \operatorname{algebraMap}(N_{n+1}(v))$. -/
-theorem projectorN_trace {n : ℕ} (v : VectorD n R) :
+theorem projectorN_trace {R : Type*} [CommRing R] {n : ℕ} (v : VectorD n R) :
     traceCoq (projectorN v) = algebraMap R (Coquaternion R) (normSqN v) := by
   dsimp [traceCoq, projectorN, normSqN]
   have h (i : Fin (n + 1)) : v i * conj (v i) = algebraMap R (Coquaternion R) (normSq (v i)) :=
@@ -159,13 +159,13 @@ theorem projectorN_trace {n : ℕ} (v : VectorD n R) :
 
 /-- Entrywise identity for coquaternion conjugation under right multiplication:
     $(a \cdot u) \cdot \overline{b \cdot u} = N(u) \cdot (a \cdot \overline{b})$. -/
-theorem mul_conj_mul (a b u : Coquaternion R) :
+theorem mul_conj_mul {R : Type*} [CommRing R] (a b u : Coquaternion R) :
     (a * u) * conj (b * u) = normSq u • (a * conj b) := by
   ext <;> { simp [conj, normSq]; ring }
 
 /-- Projector scaling under right action:
     $P(v \triangleleft u) = N(u) \cdot P(v)$. -/
-theorem projectorN_action {n : ℕ} (v : VectorD n R) (u : Coquaternion R) :
+theorem projectorN_action {R : Type*} [CommRing R] {n : ℕ} (v : VectorD n R) (u : Coquaternion R) :
     projectorN (actionN v u) = normSq u • projectorN v := by
   ext i j : 1
   dsimp [projectorN, actionN]
@@ -173,7 +173,7 @@ theorem projectorN_action {n : ℕ} (v : VectorD n R) (u : Coquaternion R) :
 
 /-- Projector gauge invariance under the unit sphere $S^{(3,1)}$:
     When $N(u) = 1$, $P(v \triangleleft u) = P(v)$. -/
-theorem projectorN_gauge_invariance {n : ℕ} (v : VectorD n R) (u : Coquaternion R)
+theorem projectorN_gauge_invariance {R : Type*} [CommRing R] {n : ℕ} (v : VectorD n R) (u : Coquaternion R)
     (hu : normSq u = 1) :
     projectorN (actionN v u) = projectorN v := by
   rw [projectorN_action, hu, one_smul]

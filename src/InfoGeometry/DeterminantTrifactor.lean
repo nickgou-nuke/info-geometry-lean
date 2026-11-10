@@ -18,18 +18,18 @@ noncomputable section
 
 namespace DeterminantTrifactor
 
-theorem determinant_trifactor_eq {R : Type*} [CommRing R] [IsDomain R] (d : R)
+theorem determinant_trifactor_eq {R : Type*} [Ring R] [IsDomain R] (d : R)
     (h_cube : d ^ 3 = d) : d = 0 ∨ d = 1 ∨ d = -1 := by
   -- 1. d³ - d = 0
   have h_eq_zero : d ^ 3 - d = 0 := by
     calc
       d ^ 3 - d = d - d := by rw [h_cube]
-      _ = 0 := by ring
+      _ = 0 := by noncomm_ring
 
   -- 2. Factor: d(d-1)(d+1) = 0
   have h_factored : d * (d - 1) * (d + 1) = 0 := by
     calc
-      d * (d - 1) * (d + 1) = d ^ 3 - d := by ring
+      d * (d - 1) * (d + 1) = d ^ 3 - d := by noncomm_ring
       _ = 0 := h_eq_zero
 
   -- 3. Integral domain: product = 0 ⇒ one factor = 0
@@ -41,14 +41,14 @@ theorem determinant_trifactor_eq {R : Type*} [CommRing R] [IsDomain R] (d : R)
     · -- d - 1 = 0 ⇒ d = 1
       right; left
       calc
-        d = d - 1 + 1 := by ring
+        d = d - 1 + 1 := by noncomm_ring
         _ = 0 + 1     := by rw [hd_minus_one]
-        _ = 1         := by ring
+        _ = 1         := by abel
   · -- Case B: d + 1 = 0 ⇒ d = -1
     right; right
     calc
-      d = d + 1 - 1 := by ring
+      d = d + 1 - 1 := by noncomm_ring
       _ = 0 - 1     := by rw [h_right]
-      _ = -1        := by ring
+      _ = -1        := by abel
 
 end DeterminantTrifactor

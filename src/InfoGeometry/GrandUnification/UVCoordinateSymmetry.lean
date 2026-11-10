@@ -64,7 +64,7 @@ open InfoGeometry.Canonical.TrifactorDecomposition
 
 section Basic
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- If `ρ` is fixed by the harmonic operator, then it is fixed by the
 Cartan involution (`cartan_involution T * ρ = ρ`). -/
@@ -82,7 +82,7 @@ end Basic
 
 section WithHalf
 
-variable {R : Type*} [CommRing R] [Invertible (2 : R)]
+variable {R : Type*} [Ring R] [Invertible (2 : R)]
 
 /-- If `ρ` is fixed by the exact operator, then the Cartan involution
 acts by negation. -/
@@ -94,7 +94,7 @@ theorem exact_annihilation (T : R) (hT : T ^ 3 = T) (ρ : R)
       congrArg (fun x => cartan_involution T * x) h_exact.symm
     _ = (cartan_involution T * exact_op T) * ρ := by rw [mul_assoc]
     _ = (- exact_op T) * ρ := by rw [cartan_antisymmetric_exact T hT]
-    _ = - (exact_op T * ρ) := by ring
+    _ = - (exact_op T * ρ) := by rw [neg_mul]
     _ = -ρ := by rw [h_exact]
 
 /-- If `ρ` is fixed by the coexact operator, then the Cartan involution
@@ -107,7 +107,7 @@ theorem coexact_annihilation (T : R) (hT : T ^ 3 = T) (ρ : R)
       congrArg (fun x => cartan_involution T * x) h_coexact.symm
     _ = (cartan_involution T * coexact_op T) * ρ := by rw [mul_assoc]
     _ = (- coexact_op T) * ρ := by rw [cartan_antisymmetric_coexact T hT]
-    _ = - (coexact_op T * ρ) := by ring
+    _ = - (coexact_op T * ρ) := by rw [neg_mul]
     _ = -ρ := by rw [h_coexact]
 
 end WithHalf

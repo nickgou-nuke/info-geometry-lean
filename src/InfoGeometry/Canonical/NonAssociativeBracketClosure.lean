@@ -13,7 +13,7 @@ nonAssocCommutator and antinonAssocCommutator parts.
 
 namespace InfoGeometry.Canonical
 
-variable {R A : Type*} [Field R] [NeZero (2 : R)]
+variable {R A : Type*} [DivisionRing R] [NeZero (2 : R)]
   [NonUnitalNonAssocRing A] [Module R A]
 
 def nonAssocCommutator (x y : A) : A := x * y - y * x
@@ -58,6 +58,7 @@ theorem bracket_closure_eq_mul_closure
   exact Submodule.smul_mem U (2 : R)⁻¹ hsum
 
 theorem mul_closure_implies_bracket_closure
+    {R : Type*} [Ring R] [Module R A]
     (U : Submodule R A)
     (hmul : ∀ {x y : A}, x ∈ U → y ∈ U → x * y ∈ U)
     {x y : A} (hx : x ∈ U) (hy : y ∈ U) :

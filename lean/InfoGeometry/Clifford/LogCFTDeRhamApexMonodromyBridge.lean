@@ -81,7 +81,7 @@ open InfoGeometry.Clifford.SolderingIsotropic
 abbrev Mat2 (R : Type*) := Matrix (Fin 2) (Fin 2) R
 
 /-- Determinant of a $2 \times 2$ matrix. -/
-def det2 {R : Type*} [CommRing R] (M : Mat2 R) : R :=
+def det2 {R : Type*} [Ring R] (M : Mat2 R) : R :=
   M 0 0 * M 1 1 - M 0 1 * M 1 0
 
 /-- Determinant of the transpose of a $2 \times 2$ matrix. -/
@@ -103,12 +103,12 @@ theorem det2_smul {R : Type*} [CommRing R] (k : R) (M : Mat2 R) :
   ring
 
 /-- The parity reflection matrix $e_1 = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix} \in M_2(R)$. -/
-def parity_e1 {R : Type*} [CommRing R] : Mat2 R :=
+def parity_e1 {R : Type*} [Ring R] : Mat2 R :=
   KleinBottleLoxodromicTwist.e1
 
 section RingCarrier
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. Split-Quaternion Parabolic Generators and Matrix Nilpotency -/
 
@@ -126,13 +126,13 @@ def coquaternion_N_lower : Coquaternion R :=
     $(-e_2 - \omega)^2 = e_2^2 + e_2 \omega + \omega e_2 + \omega^2 = -1 + e_1 - e_1 + 1 = 0$. -/
 theorem coquaternion_N_upper_sq :
     (coquaternion_N_upper : Coquaternion R) * coquaternion_N_upper = 0 := by
-  ext <;> { simp [coquaternion_N_upper]; try ring }
+  ext <;> simp [coquaternion_N_upper]
 
 /-- $N_{\mathrm{lower}}$ squares to zero in $\mathbb{H}_{\mathrm{split}}$:
     $(-e_2 + \omega)^2 = e_2^2 - e_2 \omega - \omega e_2 + \omega^2 = -1 - e_1 + e_1 + 1 = 0$. -/
 theorem coquaternion_N_lower_sq :
     (coquaternion_N_lower : Coquaternion R) * coquaternion_N_lower = 0 := by
-  ext <;> { simp [coquaternion_N_lower]; try ring }
+  ext <;> simp [coquaternion_N_lower]
 
 /-- The standard upper nilpotent shear matrix $N \in M_2(R)$:
     $N = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix}$. -/
@@ -152,7 +152,7 @@ theorem toMatrix_coquaternion_N_upper :
   ext i j
   fin_cases i <;> fin_cases j <;> {
     simp [Coquaternion.toMatrix, coquaternion_N_upper, N]
-    try ring
+    try norm_num
   }
 
 /-- The matrix representation of $N_{\mathrm{lower}}$ is $-2 \cdot N^\top$:
@@ -163,7 +163,7 @@ theorem toMatrix_coquaternion_N_lower :
   ext i j
   fin_cases i <;> fin_cases j <;> {
     simp [Coquaternion.toMatrix, coquaternion_N_lower]
-    try ring
+    try norm_num
   }
 
 /-- $N$ is nilpotent of order 2: $N^2 = 0$. -/
@@ -253,7 +253,7 @@ theorem monodromy_mul (c₁ c₂ : R) :
   ext i j
   fin_cases i <;> fin_cases j <;> {
     simp [Matrix.mul_apply, Fin.sum_univ_two]
-    try ring
+    try abel
   }
 
 /-- Linear winding power law for LogCFT de Rham monodromy:
@@ -267,7 +267,7 @@ theorem monodromy_pow (k : ℕ) (c : R) :
       rw [pow_succ, ih, monodromy_mul]
       congr 1
       push_cast
-      ring
+      rw [add_mul, one_mul]
 
 /-- Inverse monodromy: $\mathcal{M}(c) \mathcal{M}(-c) = \mathbf{1}$. -/
 @[simp]
@@ -327,7 +327,8 @@ theorem monodromy_transpose_coords (c : R) :
 @[simp]
 theorem det2_monodromy_transpose (c : R) :
     det2 ((monodromy c)ᵀ) = 1 := by
-  rw [det2_transpose, det2_monodromy]
+  rw [monodromy_transpose_coords]
+  simp [det2]
 
 /-- At the apex of the causal lightcone ($X = 0$), the frame dragging fixes the apex:
     $\operatorname{dragSoldering}(c, 0) = 0$. -/
@@ -336,44 +337,14 @@ theorem dragSoldering_apex (c : R) :
     dragSoldering c (0 : Mat2 R) = 0 := by
   simp [dragSoldering]
 
-/-- Conservation of the Minkowski / conformal Casimir interval under frame dragging:
-    For any spacetime matrix $X$, $\det_2(\operatorname{dragSoldering}(c, X)) = \det_2(X)$. -/
-theorem det2_dragSoldering_matrix (c : R) (X : Mat2 R) :
-    det2 (dragSoldering c X) = det2 X := by
-  simp [dragSoldering, det2_mul, det2_monodromy, det2_monodromy_transpose]
-
-/-- Conservation of the physical Minkowski metric interval for $X(t, x, y, z)$:
-    $$\det_2(\operatorname{dragSoldering}(c, X(t, x, y, z))) = t^2 - x^2 + y^2 - z^2$$ -/
-theorem det2_dragSoldering (c : R) (t x y z : R) :
-    det2 (dragSoldering c (solderingMatrix t x y z)) = t ^ 2 - x ^ 2 + y ^ 2 - z ^ 2 := by
-  rw [det2_dragSoldering_matrix]
-  simp [det2, solderingMatrix]
-  ring
-
-/-- Explicit sheared coordinate entries of the dragged soldering matrix:
-    $$\operatorname{dragSoldering}(c, X(t, x, y, z)) =
-      \begin{pmatrix} (t+z) + c(x+y) + c(x-y + c(t-z)) & (x-y) + c(t-z) \\
-                      (x+y) + c(t-z) & t-z \end{pmatrix}$$ -/
-theorem dragSoldering_coords (c : R) (t x y z : R) :
-    dragSoldering c (solderingMatrix t x y z) =
-    !![ (t + z) + c * (x + y) + c * ((x - y) + c * (t - z)), (x - y) + c * (t - z);
-        (x + y) + c * (t - z),                                t - z ] := by
-  ext i j
-  fin_cases i <;> fin_cases j <;> {
-    simp [dragSoldering, monodromy_coords, Matrix.transpose, solderingMatrix, Matrix.mul_apply, Fin.sum_univ_two]
-    try ring
-  }
-
 /-- Invariance of the left chiral Souriau sheet under apex frame dragging:
     $\operatorname{dragSoldering}(c, P_L) = P_L$.
     The left chiral null generator along the lightcone is strictly an invariant ray! -/
 theorem dragSoldering_P_L (c : R) :
     dragSoldering c P_L = P_L := by
   ext i j
-  fin_cases i <;> fin_cases j <;> {
+  fin_cases i <;> fin_cases j <;>
     simp [dragSoldering, monodromy_coords, Matrix.transpose, P_L, Matrix.mul_apply, Fin.sum_univ_two]
-    try ring
-  }
 
 /-- Action on the right chiral Souriau sheet under apex frame dragging:
     $\operatorname{dragSoldering}(c, P_R) = \begin{pmatrix} c^2 & c \\ c & 1 \end{pmatrix}$. -/
@@ -382,17 +353,8 @@ theorem dragSoldering_P_R (c : R) :
                               c,   1 ] := by
   ext i j
   fin_cases i <;> fin_cases j <;> {
-    simp [dragSoldering, monodromy_coords, Matrix.transpose, P_R, Matrix.mul_apply, Fin.sum_univ_two]
-    try ring
+    simp [dragSoldering, monodromy_coords, Matrix.transpose, P_R, Matrix.mul_apply, Fin.sum_univ_two, sq]
   }
-
-/-- The dragged right chiral state remains strictly on the null cone:
-    $\det_2(\operatorname{dragSoldering}(c, P_R)) = 0$. -/
-theorem det2_dragSoldering_P_R (c : R) :
-    det2 (dragSoldering c P_R) = 0 := by
-  rw [dragSoldering_P_R]
-  simp [det2]
-  ring
 
 /-! ### 5. Intertwining with Klein Parity Inversion -/
 
@@ -426,7 +388,6 @@ theorem e1_monodromy_conj (c : R) :
   ext i j
   fin_cases i <;> fin_cases j <;> {
     simp [parity_e1, KleinBottleLoxodromicTwist.e1, monodromy_coords, Matrix.mul_apply, Fin.sum_univ_two]
-    try ring
   }
 
 /-- Klein-reflected monodromy matrix coordinates:
@@ -437,6 +398,48 @@ theorem e1_monodromy_conj_coords (c : R) :
   rw [e1_monodromy_conj, monodromy_transpose_coords]
 
 end RingCarrier
+
+section CommRingCarrier
+
+variable {R : Type*} [CommRing R]
+
+/-- Conservation of the Minkowski / conformal Casimir interval under frame dragging:
+    For any spacetime matrix $X$, $\det_2(\operatorname{dragSoldering}(c, X)) = \det_2(X)$. -/
+theorem det2_dragSoldering_matrix (c : R) (X : Mat2 R) :
+    det2 (dragSoldering c X) = det2 X := by
+  simp [dragSoldering, det2_mul, det2_monodromy, det2_monodromy_transpose]
+
+/-- Conservation of the physical Minkowski metric interval for $X(t, x, y, z)$:
+    $$\det_2(\operatorname{dragSoldering}(c, X(t, x, y, z))) = t^2 - x^2 + y^2 - z^2$$ -/
+theorem det2_dragSoldering (c : R) (t x y z : R) :
+    det2 (dragSoldering c (solderingMatrix t x y z)) = t ^ 2 - x ^ 2 + y ^ 2 - z ^ 2 := by
+  rw [det2_dragSoldering_matrix]
+  simp [det2, solderingMatrix]
+  ring
+
+/-- Explicit sheared coordinate entries of the dragged soldering matrix:
+    $$\operatorname{dragSoldering}(c, X(t, x, y, z)) =
+      \begin{pmatrix} (t+z) + c(x+y) + c(x-y + c(t-z)) & (x-y) + c(t-z) \\
+                      (x+y) + c(t-z) & t-z \end{pmatrix}$$ -/
+theorem dragSoldering_coords (c : R) (t x y z : R) :
+    dragSoldering c (solderingMatrix t x y z) =
+    !![ (t + z) + c * (x + y) + c * ((x - y) + c * (t - z)), (x - y) + c * (t - z);
+        (x + y) + c * (t - z),                                t - z ] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> {
+    simp [dragSoldering, monodromy_coords, Matrix.transpose, solderingMatrix, Matrix.mul_apply, Fin.sum_univ_two]
+    try ring
+  }
+
+/-- The dragged right chiral state remains strictly on the null cone:
+    $\det_2(\operatorname{dragSoldering}(c, P_R)) = 0$. -/
+theorem det2_dragSoldering_P_R (c : R) :
+    det2 (dragSoldering c P_R) = 0 := by
+  rw [dragSoldering_P_R]
+  simp [det2]
+  ring
+
+end CommRingCarrier
 
 /-! ### 6. Complex LogCFT Monodromy Decomposition (General $h \in \mathbb{C}$) -/
 

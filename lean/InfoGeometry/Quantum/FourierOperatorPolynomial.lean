@@ -9,7 +9,7 @@ namespace InfoGeometry.Quantum.FourierOperatorPolynomial
 set_option linter.unusedVariables false
 set_option linter.unusedSimpArgs false
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def IsFourierFourthRoot (X : R) : Prop := X ^ 4 = 1
 
@@ -21,13 +21,13 @@ def GeneralTripartiteFactorization (X : R) (k : ℕ) : R := X * (X ^ (2 * k) - 1
 
 theorem tripartite_factorization_eq_quintic (X : R) :
     X * (X ^ 2 - 1) * (X ^ 2 + 1) = X ^ 5 - X := by
-  ring
+  noncomm_ring
 
 theorem general_tripartite_factorization (X : R) (k : ℕ) :
     X * (X ^ (2 * k) - 1) * (X ^ (2 * k) + 1) = X ^ (4 * k + 1) - X := by
   have h_sq : (X ^ (2 * k) - 1) * (X ^ (2 * k) + 1) = X ^ (4 * k) - 1 := by
     calc (X ^ (2 * k) - 1) * (X ^ (2 * k) + 1)
-      _ = (X ^ (2 * k)) ^ 2 - 1 ^ 2 := by ring
+      _ = (X ^ (2 * k)) ^ 2 - 1 ^ 2 := by noncomm_ring
       _ = X ^ (2 * k * 2) - 1 := by rw [← pow_mul, one_pow]
       _ = X ^ (4 * k) - 1 := by
         have : 2 * k * 2 = 4 * k := by ring
@@ -37,10 +37,7 @@ theorem general_tripartite_factorization (X : R) (k : ℕ) :
     _ = X * (X ^ (4 * k) - 1) := by rw [h_sq]
     _ = X * X ^ (4 * k) - X * 1 := by rw [mul_sub]
     _ = X ^ (4 * k + 1) - X := by
-      have : X * X ^ (4 * k) = X ^ (4 * k + 1) := by
-        have h_p : X ^ (4 * k + 1) = X ^ (4 * k) * X := by rw [pow_succ]
-        rw [h_p, mul_comm]
-      rw [this, mul_one]
+      rw [← pow_succ', mul_one]
 
 theorem fourier_fourth_root_annihilates_quintic (X : R) (hX : IsFourierFourthRoot X) :
     X ^ 5 - X = 0 := by

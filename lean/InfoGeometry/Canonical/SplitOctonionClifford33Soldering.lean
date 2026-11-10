@@ -159,94 +159,94 @@ theorem zornMul_smul_right (c : R) (x y : ZornSplitOctonion R) :
     ring
 
 /-- `zornZero` is absorbing on the left. -/
-theorem zornZero_mul (y : ZornSplitOctonion R) : zornMul zornZero y = zornZero := by
+theorem zornZero_mul {R : Type*} [Ring R] (y : ZornSplitOctonion R) : zornMul zornZero y = zornZero := by
   ext k
   · dsimp [zornZero, zornMul, vec3Dot]
-    ring
-  · fin_cases k <;> (dsimp [zornZero, zornMul, vec3Dot, vec3Cross]; ring)
-  · fin_cases k <;> (dsimp [zornZero, zornMul, vec3Dot, vec3Cross]; ring)
+    noncomm_ring
+  · fin_cases k <;> (dsimp [zornZero, zornMul, vec3Dot, vec3Cross]; noncomm_ring)
+  · fin_cases k <;> (dsimp [zornZero, zornMul, vec3Dot, vec3Cross]; noncomm_ring)
   · dsimp [zornZero, zornMul, vec3Dot]
-    ring
+    noncomm_ring
 
 /-- `zornZero` is absorbing on the right. -/
-theorem zornMul_zornZero (x : ZornSplitOctonion R) : zornMul x zornZero = zornZero := by
+theorem zornMul_zornZero {R : Type*} [Ring R] (x : ZornSplitOctonion R) : zornMul x zornZero = zornZero := by
   ext k
   · dsimp [zornZero, zornMul, vec3Dot]
-    ring
-  · fin_cases k <;> (dsimp [zornZero, zornMul, vec3Dot, vec3Cross]; ring)
-  · fin_cases k <;> (dsimp [zornZero, zornMul, vec3Dot, vec3Cross]; ring)
+    noncomm_ring
+  · fin_cases k <;> (dsimp [zornZero, zornMul, vec3Dot, vec3Cross]; noncomm_ring)
+  · fin_cases k <;> (dsimp [zornZero, zornMul, vec3Dot, vec3Cross]; noncomm_ring)
   · dsimp [zornZero, zornMul, vec3Dot]
-    ring
+    noncomm_ring
 
 /-- `zornOne` is a left unit for `zornMul`. -/
-theorem zornOne_mul (y : ZornSplitOctonion R) : zornMul zornOne y = y := by
+theorem zornOne_mul {R : Type*} [Ring R] (y : ZornSplitOctonion R) : zornMul zornOne y = y := by
   ext k
   · dsimp [zornOne, zornMul, vec3Dot]
-    ring
-  · fin_cases k <;> (dsimp [zornOne, zornMul, vec3Dot, vec3Cross]; ring)
-  · fin_cases k <;> (dsimp [zornOne, zornMul, vec3Dot, vec3Cross]; ring)
+    noncomm_ring
+  · fin_cases k <;> (dsimp [zornOne, zornMul, vec3Dot, vec3Cross]; noncomm_ring)
+  · fin_cases k <;> (dsimp [zornOne, zornMul, vec3Dot, vec3Cross]; noncomm_ring)
   · dsimp [zornOne, zornMul, vec3Dot]
-    ring
+    noncomm_ring
 
 /-- `zornOne` is a right unit for `zornMul`. -/
-theorem zornMul_zornOne (x : ZornSplitOctonion R) : zornMul x zornOne = x := by
+theorem zornMul_zornOne {R : Type*} [Ring R] (x : ZornSplitOctonion R) : zornMul x zornOne = x := by
   ext k
   · dsimp [zornOne, zornMul, vec3Dot]
-    ring
-  · fin_cases k <;> (dsimp [zornOne, zornMul, vec3Dot, vec3Cross]; ring)
-  · fin_cases k <;> (dsimp [zornOne, zornMul, vec3Dot, vec3Cross]; ring)
+    noncomm_ring
+  · fin_cases k <;> (dsimp [zornOne, zornMul, vec3Dot, vec3Cross]; noncomm_ring)
+  · fin_cases k <;> (dsimp [zornOne, zornMul, vec3Dot, vec3Cross]; noncomm_ring)
   · dsimp [zornOne, zornMul, vec3Dot]
-    ring
+    noncomm_ring
 
 /-- The upper-left Peirce idempotent `e_0` satisfies `e_0^2 = e_0`. -/
-theorem zornE0_sq : zornMul (R := R) zornE0 zornE0 = zornE0 := by
+theorem zornE0_sq {R : Type*} [Ring R] : zornMul (R := R) zornE0 zornE0 = zornE0 := by
   ext k
   · dsimp [zornE0, zornMul, vec3Dot]
-    ring
-  · fin_cases k <;> (dsimp [zornE0, zornMul, vec3Dot, vec3Cross]; ring)
-  · fin_cases k <;> (dsimp [zornE0, zornMul, vec3Dot, vec3Cross]; ring)
+    noncomm_ring
+  · fin_cases k <;> (dsimp [zornE0, zornMul, vec3Dot, vec3Cross]; noncomm_ring)
+  · fin_cases k <;> (dsimp [zornE0, zornMul, vec3Dot, vec3Cross]; noncomm_ring)
   · dsimp [zornE0, zornMul, vec3Dot]
-    ring
+    noncomm_ring
 
 /-- The lower-right Peirce idempotent `e_1` satisfies `e_1^2 = e_1`. -/
-theorem zornE1_sq : zornMul (R := R) zornE1 zornE1 = zornE1 := by
+theorem zornE1_sq {R : Type*} [Ring R] : zornMul (R := R) zornE1 zornE1 = zornE1 := by
   ext k
   · dsimp [zornE1, zornMul, vec3Dot]
-    ring
-  · fin_cases k <;> (dsimp [zornE1, zornMul, vec3Dot, vec3Cross]; ring)
-  · fin_cases k <;> (dsimp [zornE1, zornMul, vec3Dot, vec3Cross]; ring)
+    noncomm_ring
+  · fin_cases k <;> (dsimp [zornE1, zornMul, vec3Dot, vec3Cross]; noncomm_ring)
+  · fin_cases k <;> (dsimp [zornE1, zornMul, vec3Dot, vec3Cross]; noncomm_ring)
   · dsimp [zornE1, zornMul, vec3Dot]
-    ring
+    noncomm_ring
 
 /-- The two Peirce idempotents are mutually orthogonal on the left. -/
-theorem zornE0_mul_zornE1 : zornMul (R := R) zornE0 zornE1 = zornZero := by
+theorem zornE0_mul_zornE1 {R : Type*} [Ring R] : zornMul (R := R) zornE0 zornE1 = zornZero := by
   ext k
   · dsimp [zornE0, zornE1, zornZero, zornMul, vec3Dot]
-    ring
-  · fin_cases k <;> (dsimp [zornE0, zornE1, zornZero, zornMul, vec3Dot, vec3Cross]; ring)
-  · fin_cases k <;> (dsimp [zornE0, zornE1, zornZero, zornMul, vec3Dot, vec3Cross]; ring)
+    noncomm_ring
+  · fin_cases k <;> (dsimp [zornE0, zornE1, zornZero, zornMul, vec3Dot, vec3Cross]; noncomm_ring)
+  · fin_cases k <;> (dsimp [zornE0, zornE1, zornZero, zornMul, vec3Dot, vec3Cross]; noncomm_ring)
   · dsimp [zornE0, zornE1, zornZero, zornMul, vec3Dot]
-    ring
+    noncomm_ring
 
 /-- The two Peirce idempotents are mutually orthogonal on the right. -/
-theorem zornE1_mul_zornE0 : zornMul (R := R) zornE1 zornE0 = zornZero := by
+theorem zornE1_mul_zornE0 {R : Type*} [Ring R] : zornMul (R := R) zornE1 zornE0 = zornZero := by
   ext k
   · dsimp [zornE0, zornE1, zornZero, zornMul, vec3Dot]
-    ring
-  · fin_cases k <;> (dsimp [zornE0, zornE1, zornZero, zornMul, vec3Dot, vec3Cross]; ring)
-  · fin_cases k <;> (dsimp [zornE0, zornE1, zornZero, zornMul, vec3Dot, vec3Cross]; ring)
+    noncomm_ring
+  · fin_cases k <;> (dsimp [zornE0, zornE1, zornZero, zornMul, vec3Dot, vec3Cross]; noncomm_ring)
+  · fin_cases k <;> (dsimp [zornE0, zornE1, zornZero, zornMul, vec3Dot, vec3Cross]; noncomm_ring)
   · dsimp [zornE0, zornE1, zornZero, zornMul, vec3Dot]
-    ring
+    noncomm_ring
 
 /-- The Zorn identity splits as `e_0 + e_1`. -/
-theorem zornE0_add_zornE1 : zornAdd (R := R) zornE0 zornE1 = zornOne := by
+theorem zornE0_add_zornE1 {R : Type*} [Ring R] : zornAdd (R := R) zornE0 zornE1 = zornOne := by
   ext k
   · dsimp [zornE0, zornE1, zornOne, zornAdd]
-    ring
-  · fin_cases k <;> (dsimp [zornE0, zornE1, zornOne, zornAdd]; ring)
-  · fin_cases k <;> (dsimp [zornE0, zornE1, zornOne, zornAdd]; ring)
+    abel
+  · fin_cases k <;> (dsimp [zornE0, zornE1, zornOne, zornAdd]; abel)
+  · fin_cases k <;> (dsimp [zornE0, zornE1, zornOne, zornAdd]; abel)
   · dsimp [zornE0, zornE1, zornOne, zornAdd]
-    ring
+    abel
 
 /-- **Left multiplication operator `L_x(y) = x ⋆ y` on the 8D ket carrier.** -/
 def zornLeftAct (x y : ZornSplitOctonion R) : ZornSplitOctonion R := zornMul x y

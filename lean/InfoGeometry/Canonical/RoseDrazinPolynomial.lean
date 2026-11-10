@@ -35,7 +35,7 @@ namespace InfoGeometry.Canonical.RoseDrazinPolynomial
 
 noncomputable section
 
-variable {R : Type} [Field R]
+variable {R : Type} [Ring R]
 
 /-- Rose Example 1 inverse candidate for the nonsingular block. -/
 def roseExampleOneInverseBlock (c : R) : R :=
@@ -48,44 +48,41 @@ theorem roseExampleOne_right_inverse
     c * roseExampleOneInverseBlock c = 1 := by
   unfold roseExampleOneInverseBlock
   have htail : c ^ 2 + 5 * c = -1 := by
-    rw [← sub_eq_zero]
-    linear_combination hc
+    calc
+      c ^ 2 + 5 * c = (c ^ 2 + 5 * c + 1) - 1 := by noncomm_ring
+      _ = 0 - 1 := by rw [hc]
+      _ = -1 := by noncomm_ring
   calc
-    c * (-c - 5) = -(c ^ 2 + 5 * c) := by ring
+    c * (-c - 5) = -(c ^ 2 + 5 * c) := by noncomm_ring
     _ = -(-1) := by rw [htail]
-    _ = 1 := by ring
+    _ = 1 := neg_neg 1
 
-/-- In a field, the same candidate is also a left inverse. -/
+/-- Over any ring, the same candidate is also a left inverse. -/
 theorem roseExampleOne_left_inverse
     (c : R)
     (hc : c ^ 2 + 5 * c + 1 = 0) :
     roseExampleOneInverseBlock c * c = 1 := by
-  rw [mul_comm]
-  exact roseExampleOne_right_inverse c hc
+  unfold roseExampleOneInverseBlock
+  have htail : c ^ 2 + 5 * c = -1 := by
+    calc
+      c ^ 2 + 5 * c = (c ^ 2 + 5 * c + 1) - 1 := by noncomm_ring
+      _ = 0 - 1 := by rw [hc]
+      _ = -1 := by noncomm_ring
+  calc
+    (-c - 5) * c = -(c ^ 2 + 5 * c) := by noncomm_ring
+    _ = -(-1) := by rw [htail]
+    _ = 1 := neg_neg 1
 
 /--
 Rose's recursive inverse-power computation in Example 1 reaches
 `c³ * (-24c - 115) = 1`.
 -/
 theorem roseExampleOne_inversePower_three
+    {R : Type} [CommRing R]
     (c : R)
     (hc : c ^ 2 + 5 * c + 1 = 0) :
     c ^ 3 * (-24 * c - 115) = 1 := by
-  have hc2 : c ^ 2 = -5 * c - 1 := by
-    rw [← sub_eq_zero]
-    linear_combination hc
-  have hc3 : c ^ 3 = 24 * c + 5 := by
-    calc
-      c ^ 3 = c * c ^ 2 := by ring
-      _ = c * (-5 * c - 1) := by rw [hc2]
-      _ = -5 * c ^ 2 - c := by ring
-      _ = -5 * (-5 * c - 1) - c := by rw [hc2]
-      _ = 24 * c + 5 := by ring
-  calc
-    c ^ 3 * (-24 * c - 115) = (24 * c + 5) * (-24 * c - 115) := by rw [hc3]
-    _ = -576 * c ^ 2 - 2880 * c - 575 := by ring
-    _ = -576 * (-5 * c - 1) - 2880 * c - 575 := by rw [hc2]
-    _ = 1 := by ring
+  linear_combination (-24 * c ^ 2 + 5 * c - 1) * hc
 
 /-- Block model for Rose Example 1: nilpotent block and nonsingular block. -/
 def roseExampleOneBlock (n c : R) : R × R :=
@@ -110,24 +107,23 @@ theorem roseExampleOne_drazin_equations
         roseExampleOneInverseBlock]
     · simp [A, X, roseExampleOneBlock, roseExampleOneDrazinBlock,
         roseExampleOneInverseBlock]
-      ring
+      noncomm_ring
   constructor
   · ext
     · simp [A, X, roseExampleOneBlock, roseExampleOneDrazinBlock]
     · simp [A, X, roseExampleOneBlock, roseExampleOneDrazinBlock]
       calc
         roseExampleOneInverseBlock c * c * roseExampleOneInverseBlock c
-            = (c * roseExampleOneInverseBlock c) * roseExampleOneInverseBlock c := by ring
-        _ = 1 * roseExampleOneInverseBlock c := by rw [roseExampleOne_right_inverse c hc]
-        _ = roseExampleOneInverseBlock c := by ring
+            = 1 * roseExampleOneInverseBlock c := by rw [roseExampleOne_left_inverse c hc]
+        _ = roseExampleOneInverseBlock c := by noncomm_ring
   · ext
     · simp [A, X, roseExampleOneBlock, roseExampleOneDrazinBlock]
       rw [hn]
     · simp [A, X, roseExampleOneBlock, roseExampleOneDrazinBlock]
       calc
-        c ^ 3 * roseExampleOneInverseBlock c = c ^ 2 * (c * roseExampleOneInverseBlock c) := by ring
+        c ^ 3 * roseExampleOneInverseBlock c = c ^ 2 * (c * roseExampleOneInverseBlock c) := by noncomm_ring
         _ = c ^ 2 * 1 := by rw [roseExampleOne_right_inverse c hc]
-        _ = c ^ 2 := by ring
+        _ = c ^ 2 := by noncomm_ring
 
 end
 

@@ -107,30 +107,6 @@ def operatorSageGenerator : Fin 8 → OperatorSageCarrier A
   | 6 => operatorJEll
   | 7 => operatorKEll
 
-@[simp] theorem operatorSageGenerator_zero :
-    operatorSageGenerator (A := A) 0 = operatorOne (A := A) := rfl
-
-@[simp] theorem operatorSageGenerator_one :
-    operatorSageGenerator (A := A) 1 = operatorI (A := A) := rfl
-
-@[simp] theorem operatorSageGenerator_two :
-    operatorSageGenerator (A := A) 2 = operatorJ (A := A) := rfl
-
-@[simp] theorem operatorSageGenerator_three :
-    operatorSageGenerator (A := A) 3 = operatorK (A := A) := rfl
-
-@[simp] theorem operatorSageGenerator_four :
-    operatorSageGenerator (A := A) 4 = operatorEll (A := A) := rfl
-
-@[simp] theorem operatorSageGenerator_five :
-    operatorSageGenerator (A := A) 5 = operatorIEll (A := A) := rfl
-
-@[simp] theorem operatorSageGenerator_six :
-    operatorSageGenerator (A := A) 6 = operatorJEll (A := A) := rfl
-
-@[simp] theorem operatorSageGenerator_seven :
-    operatorSageGenerator (A := A) 7 = operatorKEll (A := A) := rfl
-
 @[simp] theorem operatorOne_components :
     (operatorOne : OperatorSageCarrier A) =
       ⟨1, 1, fun _ => 0, fun _ => 0⟩ := by
@@ -164,5 +140,19 @@ theorem operatorSageGenerator_table :
         (sigmaMinus (operatorUnit (A := A) 2)) := by
   simp [operatorSageGenerator, operatorOne, operatorI, operatorJ, operatorK,
     operatorEll, operatorIEll, operatorJEll, operatorKEll]
+
+/-! ### Separation of the Sage-ordered generators -/
+
+/-- In characteristic zero, the eight Sage-ordered operator generators are
+pairwise distinct in the noncommutative Zorn coordinate carrier. -/
+theorem operatorSageGenerator_injective [CharZero A] :
+    Function.Injective (operatorSageGenerator (A := A)) := by
+  intro c d h
+  fin_cases c <;> fin_cases d <;>
+    simp [operatorSageGenerator, operatorOne, operatorI, operatorJ, operatorK,
+      operatorEll, operatorIEll, operatorJEll, operatorKEll, operatorAdd,
+      operatorSub, operatorUnit, nPlus, nMinus, sigmaPlus, sigmaMinus,
+      funext_iff, Pi.single_apply, Fin.forall_fin_succ] at h ⊢ <;>
+    norm_num at h
 
 end InfoGeometry.Algebra

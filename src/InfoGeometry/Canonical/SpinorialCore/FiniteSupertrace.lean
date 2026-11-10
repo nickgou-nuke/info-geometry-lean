@@ -13,7 +13,7 @@ noncomputable section
 open scoped BigOperators
 namespace InfoGeometry.Canonical.SpinorialCore
 
-variable {R m n : Type*} [CommRing R]
+variable {R m n : Type*} [Ring R]
   [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
 /-- Rectangular intertwining of powers of partner operators. -/
@@ -29,6 +29,8 @@ theorem partner_power_intertwines (A : Matrix m n R) (B : Matrix n m R) (k : ℕ
       _ = ((A * B) ^ k * A) * (B * A) := by rw [Matrix.mul_assoc]
       _ = (A * (B * A) ^ k) * (B * A) := by rw [ih]
       _ = A * (B * A) ^ (k + 1) := by rw [pow_succ, Matrix.mul_assoc]
+
+variable {R : Type*} [CommRing R]
 
 theorem partner_positive_power_trace (A : Matrix m n R) (B : Matrix n m R) (k : ℕ) :
     Matrix.trace ((A * B) ^ (k + 1)) = Matrix.trace ((B * A) ^ (k + 1)) := by

@@ -31,7 +31,7 @@ namespace InfoGeometry.Canonical.ModularTomitaTwoStateKlein
 open Matrix
 open InfoGeometry.Canonical.KreinDoubledCartanPeirce
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Tomita-Takesaki modular conjugation / Klein bottle holonomy swap operator J = σ_x. -/
 def J_swap : Matrix (Fin 2) (Fin 2) R :=
@@ -84,14 +84,14 @@ theorem klein_deck_time_reversal :
   J_inverts_eta
 
 /-- Master synthesis packet for Stratum 37. -/
-structure ModularTwoStateKleinPacket (R : Type*) [CommRing R] where
+structure ModularTwoStateKleinPacket (R : Type*) [Ring R] where
   j_is_involution : J_swap (R := R) * J_swap = 1
   j_swaps_peirce : J_swap (R := R) * P_plus * J_swap = P_minus
   j_inverts_krein_time : J_swap (R := R) * eta * J_swap = -eta
   tsvf_identity_is_overlap : ∀ ts : TwoStateVector R, tsvfTransition 1 ts = tsvfOverlap ts
 
 /-- Zero-debt constructor for Stratum 37 packet. -/
-def makeModularTwoStateKleinPacket (R : Type*) [CommRing R] : ModularTwoStateKleinPacket R where
+def makeModularTwoStateKleinPacket (R : Type*) [Ring R] : ModularTwoStateKleinPacket R where
   j_is_involution := J_sq
   j_swaps_peirce := J_swaps_Peirce_plus
   j_inverts_krein_time := J_inverts_eta

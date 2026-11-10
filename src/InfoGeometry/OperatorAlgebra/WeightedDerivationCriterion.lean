@@ -14,7 +14,7 @@ as sufficient. No commutativity of the ambient algebra is assumed.
 
 namespace InfoGeometry.OperatorAlgebra.ExteriorAlgebra.OpDerivation
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
 
 /-- Exact Leibniz criterion for weighting by an element of the ambient algebra. -/
 theorem left_weight_leibniz_iff (D : OpDerivation R A) (K : A) :
@@ -47,17 +47,17 @@ theorem left_weight_leibniz_iff_central (D : OpDerivation R A) (K y z : A)
     rw [(h x).eq, sub_self, zero_mul]
 
 /-- Bundle the weighted linear map using the exact image-annihilation condition. -/
-def leftWeighted (D : OpDerivation R A) (K : A)
+def leftWeighted [SMulCommClass R A A] (D : OpDerivation R A) (K : A)
     (h : ∀ x y, (K * x - x * K) * D y = 0) : OpDerivation R A where
   toLinearMap :=
     { toFun := fun x => K * D x
       map_add' := by intro x y; rw [D.map_add, mul_add]
       map_smul' := by
         intro c x
-        simp only [RingHom.id_apply, D.map_smul, Algebra.mul_smul_comm] }
+        simp only [RingHom.id_apply, D.map_smul, mul_smul_comm] }
   leibniz' := (left_weight_leibniz_iff D K).2 h
 
-@[simp] theorem leftWeighted_apply (D : OpDerivation R A) (K : A)
+@[simp] theorem leftWeighted_apply [SMulCommClass R A A] (D : OpDerivation R A) (K : A)
     (h : ∀ x y, (K * x - x * K) * D y = 0) (x : A) :
     leftWeighted D K h x = K * D x := rfl
 

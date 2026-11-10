@@ -24,7 +24,7 @@ namespace InfoGeometry.Canonical.PalatiniBoundaryStokesBridge
 
 open InfoGeometry.Canonical.EinsteinHilbertPalatiniActionBridge
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 variable {Ω2 Ω3 Ω4 Ω3_bd : Type*}
 variable [AddCommGroup Ω2] [Module R Ω2]
 variable [AddCommGroup Ω3] [Module R Ω3]
@@ -34,7 +34,7 @@ variable [AddCommGroup Ω3_bd] [Module R Ω3_bd]
 /-- **Definition**: Stokes Boundary Differential Complex.
     Encapsulates exterior derivative stages d₂ : Ω² → Ω³, d₃ : Ω³ → Ω⁴ with d₃ ∘ d₂ = 0,
     a boundary pullback map i* : Ω³(M) → Ω³(∂M), and Stokes boundary pairing. -/
-structure StokesBoundaryComplex (R : Type*) [CommRing R]
+structure StokesBoundaryComplex (R : Type*) [Ring R]
     (Ω2 Ω3 Ω4 Ω3_bd : Type*)
     [AddCommGroup Ω2] [Module R Ω2]
     [AddCommGroup Ω3] [Module R Ω3]
@@ -90,12 +90,17 @@ structure PalatiniActionData
 
 /-- **Definition**: Construction of PalatiniActionData from ExteriorAlgebra Palatini Lagrangian. -/
 def palatiniActionDataOfExteriorAlgebra
-    {V : Type*} [AddCommGroup V] [Module R V]
-    (C : StokesBoundaryComplex R Ω2 Ω3 (ExteriorAlgebra R V) Ω3_bd)
-    (diff : Module.End R (ExteriorAlgebra R V))
-    (e : Fin 4 → ExteriorAlgebra R V)
-    (omega : Fin 4 → Fin 4 → ExteriorAlgebra R V)
-    (theta : Ω3)
+    {R₀ : Type*} [CommRing R₀]
+    {Ω2₀ Ω3₀ Ω3_bd₀ : Type*}
+    [AddCommGroup Ω2₀] [Module R₀ Ω2₀]
+    [AddCommGroup Ω3₀] [Module R₀ Ω3₀]
+    [AddCommGroup Ω3_bd₀] [Module R₀ Ω3_bd₀]
+    {V : Type*} [AddCommGroup V] [Module R₀ V]
+    (C : StokesBoundaryComplex R₀ Ω2₀ Ω3₀ (ExteriorAlgebra R₀ V) Ω3_bd₀)
+    (diff : Module.End R₀ (ExteriorAlgebra R₀ V))
+    (e : Fin 4 → ExteriorAlgebra R₀ V)
+    (omega : Fin 4 → Fin 4 → ExteriorAlgebra R₀ V)
+    (theta : Ω3₀)
     (h_diff : C.d3 theta = palatiniLagrangianFourForm diff e omega) :
     PalatiniActionData C := {
   lagrangian := palatiniLagrangianFourForm diff e omega
@@ -127,7 +132,7 @@ theorem palatini_stokes_pairing
 /-- **Definition**: Cauchy Boundary Splitting ∂M = Σ₊ ∪ (-Σ₋).
     Decomposes the total boundary integral into future and past Cauchy surface integrals. -/
 structure CauchyBoundarySplitting
-    (R : Type*) [CommRing R]
+    (R : Type*) [Ring R]
     (Ω3_bd : Type*) [AddCommGroup Ω3_bd] [Module R Ω3_bd]
     (integrateBoundary : Ω3_bd →ₗ[R] R) where
   integrateFuture : Ω3_bd →ₗ[R] R
@@ -165,7 +170,7 @@ theorem flux_transfer_with_bulk_source
 
 /-- **Definition**: Certified Synthesis Package for Palatini Boundary Stokes Architecture. -/
 structure CertifiedPalatiniStokesSynthesis
-    (R : Type*) [CommRing R]
+    (R : Type*) [Ring R]
     (Ω2 Ω3 Ω4 Ω3_bd : Type*)
     [AddCommGroup Ω2] [Module R Ω2]
     [AddCommGroup Ω3] [Module R Ω3]

@@ -25,8 +25,8 @@ noncomputable section
 
 namespace InfoGeometry.NCG
 
-variable {R : Type*} [CommRing R]
-variable {A : Type*} [Ring A] [Algebra R A]
+variable {R : Type*} [Ring R]
+variable {A : Type*} [Ring A] [Module R A]
 
 /-- The noncommutative commutator bracket [X, Y] = X * Y - Y * X -/
 def bracket (X Y : A) : A :=
@@ -60,11 +60,13 @@ theorem bracket_add_right (X Y Z : A) :
   simp only [bracket, add_mul, mul_add]
   abel
 
-theorem bracket_smul_left (r : R) (X Y : A) :
+theorem bracket_smul_left [IsScalarTower R A A] [SMulCommClass R A A]
+    (r : R) (X Y : A) :
     bracket (r • X) Y = r • bracket X Y := by
   simp only [bracket, smul_mul_assoc, mul_smul_comm, smul_sub]
 
-theorem bracket_smul_right (r : R) (X Y : A) :
+theorem bracket_smul_right [IsScalarTower R A A] [SMulCommClass R A A]
+    (r : R) (X Y : A) :
     bracket X (r • Y) = r • bracket X Y := by
   simp only [bracket, smul_mul_assoc, mul_smul_comm, smul_sub]
 
@@ -77,7 +79,8 @@ theorem bracket_jacobi (X Y Z : A) :
   abel
 
 /-- The Inner Derivation ad_X : A →ₗ[R] A given by ad_X(Y) = [X, Y] -/
-def adLie (R : Type*) [CommRing R] {A : Type*} [Ring A] [Algebra R A] (X : A) : A →ₗ[R] A where
+def adLie (R : Type*) [Ring R] {A : Type*} [Ring A] [Module R A]
+    [IsScalarTower R A A] [SMulCommClass R A A] (X : A) : A →ₗ[R] A where
   toFun Y := bracket X Y
   map_add' Y Z := by
     dsimp [bracket]
@@ -85,14 +88,15 @@ def adLie (R : Type*) [CommRing R] {A : Type*} [Ring A] [Algebra R A] (X : A) : 
     noncomm_ring
   map_smul' r Y := by
     dsimp [bracket]
-    simp only [mul_smul_comm, smul_mul_assoc, smul_sub]
+    simp only [mul_smul_comm, smul_mul_assoc, smul_sub, RingHom.id_apply]
 
-theorem adLie_apply (X Y : A) : adLie R X Y = X * Y - Y * X := by
+theorem adLie_apply [IsScalarTower R A A] [SMulCommClass R A A] (X Y : A) :
+    adLie R X Y = X * Y - Y * X := by
   rfl
 
 /-- 🏆 THEOREM 3: The Inner Derivation satisfies the Leibniz Rule:
     ad_X(Y * Z) = ad_X(Y) * Z + Y * ad_X(Z) -/
-theorem adLie_leibniz (X Y Z : A) :
+theorem adLie_leibniz [IsScalarTower R A A] [SMulCommClass R A A] (X Y Z : A) :
     adLie R X (Y * Z) = adLie R X Y * Z + Y * adLie R X Z := by
   dsimp [adLie, bracket]
   calc
@@ -105,7 +109,7 @@ theorem adLie_leibniz (X Y Z : A) :
 
 /-- 🏆 THEOREM 4: Lie Homomorphism of Inner Derivations:
     [ad_X, ad_Y](Z) = ad_[X, Y](Z) -/
-theorem adLie_commutator (X Y Z : A) :
+theorem adLie_commutator [IsScalarTower R A A] [SMulCommClass R A A] (X Y Z : A) :
     adLie R X (adLie R Y Z) - adLie R Y (adLie R X Z) = adLie R (bracket X Y) Z := by
   simp only [adLie_apply, bracket]
   noncomm_ring
@@ -113,7 +117,8 @@ theorem adLie_commutator (X Y Z : A) :
 /-- 🏆 THEOREM 5: Noncommutative Noether Conservation Law:
     If a charge Q commutes with the Hamiltonian H ([H, Q] = 0),
     then the infinitesimal evolution of Q vanishes: ad_H(Q) = 0. -/
-theorem noncommutative_noether (H Q : A) (h_comm : bracket H Q = 0) :
+theorem noncommutative_noether [IsScalarTower R A A] [SMulCommClass R A A]
+    (H Q : A) (h_comm : bracket H Q = 0) :
     adLie R H Q = 0 := by
   dsimp [adLie]
   exact h_comm

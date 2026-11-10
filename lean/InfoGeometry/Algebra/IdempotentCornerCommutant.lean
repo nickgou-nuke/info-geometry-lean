@@ -74,7 +74,7 @@ end CornerCarrier
 section LinearCommutant
 
 variable {R A : Type*}
-variable [CommSemiring R] [Semiring A] [Algebra R A]
+variable [Semiring R] [Semiring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- The principal left ideal `Ae`, viewed as an `R`-submodule of `A`. -/
 def principalLeftIdealSubmodule (e : A) : Submodule R A where
@@ -87,7 +87,7 @@ def principalLeftIdealSubmodule (e : A) : Submodule R A where
   smul_mem' := by
     intro r x hx
     change (r • x) * e = r • x
-    rw [Algebra.smul_mul_assoc, hx]
+    rw [smul_mul_assoc, hx]
 
 /-- The native carrier of the principal left ideal `Ae`. -/
 abbrev PrincipalLeftIdeal (e : A) : Type _ :=
@@ -116,7 +116,7 @@ def leftAction (e a : A) :
     simp [mul_add]
   map_smul' r x := by
     apply Subtype.ext
-    simp [Algebra.mul_smul_comm]
+    simp [mul_smul_comm]
 
 /-- Right multiplication by a corner element on `Ae`. -/
 def rightCornerAction (e : A) (c : Corner e) :
@@ -131,7 +131,7 @@ def rightCornerAction (e : A) (c : Corner e) :
     simp [add_mul]
   map_smul' r x := by
     apply Subtype.ext
-    simp [Algebra.smul_mul_assoc]
+    simp [smul_mul_assoc]
 
 @[simp]
 theorem leftAction_apply (e a : A)

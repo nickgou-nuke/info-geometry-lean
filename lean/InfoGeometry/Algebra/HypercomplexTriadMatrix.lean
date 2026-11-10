@@ -24,23 +24,23 @@ namespace InfoGeometry.Algebra.HypercomplexTriadMatrix
 open Matrix
 
 /-- Concrete elliptic unit: matrix model of `i`, satisfying `I² = -1`. -/
-def I (R : Type*) [CommRing R] : Matrix (Fin 2) (Fin 2) R :=
+def I (R : Type*) [Ring R] : Matrix (Fin 2) (Fin 2) R :=
   !![0, -1;
      1,  0]
 
 /-- Concrete hyperbolic/split unit: matrix model of `e`, satisfying `E² = 1`. -/
-def E (R : Type*) [CommRing R] : Matrix (Fin 2) (Fin 2) R :=
+def E (R : Type*) [Ring R] : Matrix (Fin 2) (Fin 2) R :=
   !![0, 1;
      1, 0]
 
 /-- Concrete parabolic/dual nilpotent unit: matrix model of `N`, satisfying `N² = 0`. -/
-def N (R : Type*) [CommRing R] : Matrix (Fin 2) (Fin 2) R :=
+def N (R : Type*) [Ring R] : Matrix (Fin 2) (Fin 2) R :=
   !![0, 1;
      0, 0]
 
 /-- Elliptic sector: `I² = -1`. -/
 theorem I_sq
-    {R : Type*} [CommRing R] :
+    {R : Type*} [Ring R] :
     I R * I R = -(1 : Matrix (Fin 2) (Fin 2) R) := by
   ext i j <;> fin_cases i <;> fin_cases j
     <;> simp [I, Matrix.mul_apply, Fin.sum_univ_two]
@@ -53,7 +53,7 @@ theorem I_det
 
 /-- Hyperbolic/split sector: `E² = 1`. -/
 theorem E_sq
-    {R : Type*} [CommRing R] :
+    {R : Type*} [Ring R] :
     E R * E R = (1 : Matrix (Fin 2) (Fin 2) R) := by
   ext i j <;> fin_cases i <;> fin_cases j
     <;> simp [E, Matrix.mul_apply, Fin.sum_univ_two]
@@ -66,7 +66,7 @@ theorem E_det
 
 /-- Parabolic/dual sector: `N² = 0`. -/
 theorem N_sq
-    {R : Type*} [CommRing R] :
+    {R : Type*} [Ring R] :
     N R * N R = (0 : Matrix (Fin 2) (Fin 2) R) := by
   ext i j <;> fin_cases i <;> fin_cases j
     <;> simp [N, Matrix.mul_apply, Fin.sum_univ_two]
@@ -79,7 +79,7 @@ theorem N_det
 
 /-- The nilpotent unit `N` has no left inverse over a nontrivial ring. -/
 theorem N_no_left_inverse
-    {R : Type*} [CommRing R] [Nontrivial R] :
+    {R : Type*} [Ring R] [Nontrivial R] :
     ¬ ∃ M : Matrix (Fin 2) (Fin 2) R,
       M * N R = (1 : Matrix (Fin 2) (Fin 2) R) := by
   rintro ⟨M, hM⟩
@@ -89,7 +89,7 @@ theorem N_no_left_inverse
 
 /-- The nilpotent unit `N` has no right inverse over a nontrivial ring. -/
 theorem N_no_right_inverse
-    {R : Type*} [CommRing R] [Nontrivial R] :
+    {R : Type*} [Ring R] [Nontrivial R] :
     ¬ ∃ M : Matrix (Fin 2) (Fin 2) R,
       N R * M = (1 : Matrix (Fin 2) (Fin 2) R) := by
   rintro ⟨M, hM⟩
@@ -103,7 +103,7 @@ The parabolic nilpotent generates a unipotent shift:
 `(1 + N)(1 - N) = 1`.
 -/
 theorem one_add_N_mul_one_sub_N
-    {R : Type*} [CommRing R] :
+    {R : Type*} [Ring R] :
     ((1 : Matrix (Fin 2) (Fin 2) R) + N R) *
       ((1 : Matrix (Fin 2) (Fin 2) R) - N R)
       =
@@ -124,7 +124,7 @@ Right-handed unipotent inverse identity:
 `(1 - N)(1 + N) = 1`.
 -/
 theorem one_sub_N_mul_one_add_N
-    {R : Type*} [CommRing R] :
+    {R : Type*} [Ring R] :
     ((1 : Matrix (Fin 2) (Fin 2) R) - N R) *
       ((1 : Matrix (Fin 2) (Fin 2) R) + N R)
       =
@@ -150,7 +150,7 @@ For a square-zero element `N`, the Drazin inverse is `0` with index `2`:
 * `N * 0 = 0 * N`.
 -/
 theorem N_drazin_zero_index_two
-    {R : Type*} [CommRing R] :
+    {R : Type*} [Ring R] :
     (N R) ^ 3 * (0 : Matrix (Fin 2) (Fin 2) R) = (N R) ^ 2
       ∧
     (0 : Matrix (Fin 2) (Fin 2) R) * N R *

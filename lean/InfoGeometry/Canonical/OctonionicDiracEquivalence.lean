@@ -24,7 +24,7 @@ to the 2006 2-factor representation (Köplinger) via the nonassociative group co
 `w ↦ (J_3 w) J_3`. We integrate this with the existing `ZornVectorMatrix` middle Moufang identity.
 -/
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The four historical approaches to the octonionic Dirac equation. -/
 inductive OctonionicDiracRepresentation
@@ -46,7 +46,7 @@ def diracOp2006 (Dprime m ψprime : ZornVectorMatrix R) : ZornVectorMatrix R :=
   (Dprime - m) * ψprime
 
 /-- The rotation of the 2024 Dirac system yields the 2006 2-factor system. -/
-theorem rotation_equivalence
+theorem rotation_equivalence {R : Type*} [CommRing R]
     (D J3 m ψ : ZornVectorMatrix R)
     (hJ3 : J3 * J3 = ZornVectorMatrix.one)
     (h_assoc : J3 * (J3 * m) = (J3 * J3) * m) :

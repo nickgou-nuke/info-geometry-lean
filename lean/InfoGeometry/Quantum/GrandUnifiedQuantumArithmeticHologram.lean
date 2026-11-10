@@ -17,7 +17,7 @@ open InfoGeometry.Quantum.TomitaTakesakiBostConnesKMS
 open InfoGeometry.Quantum.ChiralSuperchargeWittenIndex
 open InfoGeometry.Quantum.EpistemologicalOuroborosKMS
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 theorem master_grand_unified_quantum_hologram_synthesis
     (z : ℂ) (hz : z ≠ 0)

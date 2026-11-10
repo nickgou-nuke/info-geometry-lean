@@ -80,21 +80,21 @@ def eps [Zero R] [One R] : Carrier R :=
 @[simp] theorem mul_im [Add R] [Mul R] (x y : Carrier R) :
     (x * y).im = x.re * y.im + x.im * y.re := rfl
 
-theorem mul_assoc_carrier [CommRing R] (x y z : Carrier R) :
+theorem mul_assoc_carrier [Ring R] (x y z : Carrier R) :
     (x * y) * z = x * (y * z) := by
   ext <;> simp only [mul_re, mul_im]
-  · ring
-  · ring
+  · noncomm_ring
+  · noncomm_ring
 
-theorem mul_one_carrier [CommRing R] (x : Carrier R) :
+theorem mul_one_carrier [Ring R] (x : Carrier R) :
     x * (1 : Carrier R) = x := by
   ext <;> simp
 
-theorem one_mul_carrier [CommRing R] (x : Carrier R) :
+theorem one_mul_carrier [Ring R] (x : Carrier R) :
     (1 : Carrier R) * x = x := by
   ext <;> simp
 
-instance [CommRing R] : Monoid (Carrier R) where
+instance [Ring R] : Monoid (Carrier R) where
   mul := (· * ·)
   one := 1
   mul_assoc := mul_assoc_carrier
@@ -102,23 +102,23 @@ instance [CommRing R] : Monoid (Carrier R) where
   mul_one := mul_one_carrier
 
 /-- The split generator squares to `1`. -/
-theorem eps_sq [CommRing R] :
+theorem eps_sq [Ring R] :
     eps (R := R) * eps (R := R) = (1 : Carrier R) := by
   ext <;> simp [eps]
 
 /-- The two split-null factors `1 + ε` and `1 - ε` multiply to zero. -/
-theorem one_add_eps_mul_one_sub_eps [CommRing R] :
+theorem one_add_eps_mul_one_sub_eps [Ring R] :
     ((1 : Carrier R) + eps (R := R)) * ((1 : Carrier R) - eps (R := R)) = 0 := by
   ext <;> simp [eps]
 
 /-- The opposite order also multiplies to zero. -/
-theorem one_sub_eps_mul_one_add_eps [CommRing R] :
+theorem one_sub_eps_mul_one_add_eps [Ring R] :
     ((1 : Carrier R) - eps (R := R)) * ((1 : Carrier R) + eps (R := R)) = 0 := by
   ext <;> simp [eps]
 
 section ZeroDivisors
 
-variable [CommRing R] [Nontrivial R]
+variable [Ring R] [Nontrivial R]
 
 def u : Carrier R := (1 : Carrier R) + eps (R := R)
 

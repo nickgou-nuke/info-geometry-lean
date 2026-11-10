@@ -11,16 +11,16 @@ noncomputable section
 
 namespace InfoGeometry.Algebra.HyperbolicBogoliubovSplitAlgebra
 
-/-- **Definition**: Split-Complex (Hyperbolic) Number over a Commutative Ring R.
+/-- **Definition**: Split-Complex (Hyperbolic) Number over a Ring R.
     z = u + ε v where ε^2 = 1. -/
 @[ext]
-structure SplitComplex (R : Type*) [CommRing R] where
+structure SplitComplex (R : Type*) [Ring R] where
   real : R
   split : R
 
 namespace SplitComplex
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 instance : Inhabited (SplitComplex R) :=
   ⟨⟨0, 0⟩⟩
@@ -36,17 +36,17 @@ def normSq (z : SplitComplex R) : R :=
 
 theorem mul_assoc (x y z : SplitComplex R) :
     mul (mul x y) z = mul x (mul y z) := by
-  ext <;> dsimp [mul] <;> ring
+  ext <;> dsimp [mul] <;> noncomm_ring
 
 theorem mul_one (x : SplitComplex R) :
     mul x ⟨1, 0⟩ = x := by
-  ext <;> dsimp [mul] <;> ring
+  ext <;> dsimp [mul] <;> noncomm_ring
 
 theorem one_mul (x : SplitComplex R) :
     mul ⟨1, 0⟩ x = x := by
-  ext <;> dsimp [mul] <;> ring
+  ext <;> dsimp [mul] <;> noncomm_ring
 
-theorem normSq_mul (x y : SplitComplex R) :
+theorem normSq_mul {R₀ : Type*} [CommRing R₀] (x y : SplitComplex R₀) :
     normSq (mul x y) = normSq x * normSq y := by
   dsimp [normSq, mul]
   ring
@@ -55,7 +55,7 @@ theorem normSq_mul (x y : SplitComplex R) :
 theorem epsilon_squared :
     mul (⟨0, 1⟩ : SplitComplex R) ⟨0, 1⟩ = ⟨1, 0⟩ := by
   dsimp [mul]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 /-- **Definition**: Bogoliubov Squeezing Action on Mode Coordinates (u, v)
     u' = u c + v s
@@ -66,7 +66,8 @@ def bogoliubovTransform (c s u v : R) : R × R :=
 
 /-- **Theorem**: Hyperbolic Interval Preservation under Bogoliubov Squeezing.
     (u')^2 - (v')^2 = (u^2 - v^2) (c^2 - s^2). -/
-theorem bogoliubov_interval_invariance (c s u v : R) (h_hyperbolic : c * c - s * s = 1) :
+theorem bogoliubov_interval_invariance {R₀ : Type*} [CommRing R₀]
+    (c s u v : R₀) (h_hyperbolic : c * c - s * s = 1) :
     let (u', v') := bogoliubovTransform c s u v
     u' * u' - v' * v' = u * u - v * v := by
   dsimp [bogoliubovTransform]
@@ -82,7 +83,7 @@ theorem bogoliubov_interval_invariance (c s u v : R) (h_hyperbolic : c * c - s *
 theorem bogoliubov_ccr_preservation (c s : R) (h_hyperbolic : c * c - s * s = 1) :
     c * c = 1 + s * s := by
   calc
-    c * c = (c * c - s * s) + s * s := by ring
+    c * c = (c * c - s * s) + s * s := by abel
     _ = 1 + s * s := by rw [h_hyperbolic]
 
 /-- **Theorem**: Master Hyperbolic Bogoliubov Squeezing Synthesis.

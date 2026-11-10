@@ -61,7 +61,7 @@ namespace InfoGeometry.QuantumContext.GeneralGraphHodgeDiracKrein
 open Matrix
 
 variable {V E : Type*} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### Section 1: The Discrete Exterior Derivative & Codifferential on Graphs -/
 
@@ -73,7 +73,7 @@ def edgeLaplacian (B : Matrix E V R) : Matrix E E R := B * Bᵀ
 
 /-- Trace equality across node and edge Laplacians (via trace cyclicity):
     $\mathrm{Tr}(\Delta_0) = \mathrm{Tr}(\Delta_1)$. -/
-theorem laplacian_trace_eq (B : Matrix E V R) :
+theorem laplacian_trace_eq {R : Type*} [CommRing R] (B : Matrix E V R) :
     Matrix.trace (nodeLaplacian B) = Matrix.trace (edgeLaplacian B) := by
   dsimp [nodeLaplacian, edgeLaplacian]
   exact Matrix.trace_mul_comm Bᵀ B
@@ -222,40 +222,40 @@ structure GeneralGraphHodgeDiracKreinCertificate : Prop where
       Matrix.trace (nodeLaplacian B) = Matrix.trace (edgeLaplacian B)
   dirac_laplacian_block_squared :
     ∀ (V E : Type*) [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-      (R : Type*) [CommRing R] (B : Matrix E V R),
+      (R : Type*) [Ring R] (B : Matrix E V R),
       graphDirac B * graphDirac B = Matrix.fromBlocks (nodeLaplacian B) 0 0 (edgeLaplacian B)
   chiral_gamma_involutive :
     ∀ (V E : Type*) [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-      (R : Type*) [CommRing R],
+      (R : Type*) [Ring R],
       (graphChiralGamma : Matrix (V ⊕ E) (V ⊕ E) R) * graphChiralGamma = 1
   dirac_chiral_anticommutation :
     ∀ (V E : Type*) [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-      (R : Type*) [CommRing R] (B : Matrix E V R),
+      (R : Type*) [Ring R] (B : Matrix E V R),
       graphDirac B * graphChiralGamma + graphChiralGamma * graphDirac B = 0
   krein_j_squared_neg_one :
-    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R],
+    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [Ring R],
       (graphKreinJ : Matrix (V ⊕ V) (V ⊕ V) R) * graphKreinJ = -1
   krein_j_chiral_anticommutation :
-    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R],
+    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [Ring R],
       (graphKreinJ : Matrix (V ⊕ V) (V ⊕ V) R) * graphChiralGamma +
       (graphChiralGamma : Matrix (V ⊕ V) (V ⊕ V) R) * graphKreinJ = 0
   krein_dirac_exact_diagonalization :
-    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R] (B : Matrix V V R),
+    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [Ring R] (B : Matrix V V R),
       graphKreinDirac B = Matrix.fromBlocks (-B) 0 0 Bᵀ
   null_projector_idempotent :
-    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R]
+    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [Ring R]
       (P : Matrix V V R) (hP : P * P = P),
       nullProjector P * nullProjector P = nullProjector P
   null_projector_annihilation :
-    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R]
+    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [Ring R]
       (P : Matrix V V R) (hP : P * P = P),
       P * nullProjector P = 0 ∧ nullProjector P * P = 0
   drazin_core_idempotent :
-    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R]
+    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [Ring R]
       (L LD : Matrix V V R) (hcomm : L * LD = LD * L) (h3 : L * LD * L = L),
       drazinCore L LD * drazinCore L LD = drazinCore L LD
   drazin_kernel_annihilation :
-    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R]
+    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [Ring R]
       (L LD : Matrix V V R) (hcomm : L * LD = LD * L) (h3 : L * LD * L = L),
       L * drazinKernel L LD = 0
 

@@ -12,8 +12,7 @@ open InfoGeometry.GrandUnification.DirectSumDecomposition
 open InfoGeometry.GrandUnification.MachianCosmology
 open InfoGeometry.GrandUnification.ModularPhaseSeparation
 
-variable {R M : Type*} [Field R] [Invertible (2 : R)] [AddCommGroup M] [Module R M]
-variable [FiniteDimensional R M]
+variable {R M : Type*} [Ring R] [AddCommGroup M] [Module R M]
 
 /-! ### Witten zero index -/
 
@@ -41,7 +40,8 @@ Theorem: The Total 10-Dimensional Vacuum.
 Because the direct sum perfectly recovers the entire spatial module, 
 the (5,5) split geometry exactly forces the total topological dimension to 10.
 -/
-theorem total_dimension_ten
+theorem total_dimension_ten {R M : Type*} [DivisionRing R] [Invertible (2 : R)]
+    [AddCommGroup M] [Module R M] [FiniteDimensional R M]
     (Γ : Module.End R M)
     (h_krein : IsKreinSymmetry Γ)
     (h_left : Module.finrank R (Ego Γ) = 5)

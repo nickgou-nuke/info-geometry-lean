@@ -55,7 +55,7 @@ Formalizes in full native Mathlib in Lean 4:
 
 namespace InfoGeometry.Algebra.H3Zorn
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Projection dot-notation alias for quadratic Jordan trace on `H3Zorn R`. -/
 noncomputable def quadTrace (X : H3Zorn R) : R := jordanQuadraticTrace X
@@ -72,7 +72,7 @@ end InfoGeometry.Algebra.H3Zorn
 
 namespace InfoGeometry.Synthesis.GrandModularKleinAlbertSynthesis
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### Section 1: Modular KMS & Krein Chiral Tilt Flow -/
 
@@ -80,7 +80,7 @@ variable {R : Type*} [CommRing R]
 def cartanChiral (θ : R) : Matrix (Fin 2) (Fin 2) R := !![θ, 0; 0, -θ]
 
 /-- Commutativity of chiral flows: the Cartan subalgebra is abelian. -/
-theorem cartanChiral_comm (θ₁ θ₂ : R) :
+theorem cartanChiral_comm {R : Type*} [CommRing R] (θ₁ θ₂ : R) :
     cartanChiral θ₁ * cartanChiral θ₂ = cartanChiral θ₂ * cartanChiral θ₁ := by
   ext i j
   fin_cases i <;> fin_cases j <;> {
@@ -94,7 +94,7 @@ theorem cartanChiral_trace (θ : R) :
     Matrix.trace (cartanChiral θ) = 0 := by
   dsimp [Matrix.trace, Matrix.diag, cartanChiral]
   simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one, head_cons]
-  ring
+  abel
 
 /-- Quadratic Casimir charge of a 2x2 matrix: Tr(M²). -/
 def casimirTwo (M : Matrix (Fin 2) (Fin 2) R) : R :=
@@ -107,22 +107,22 @@ theorem cartanChiral_casimir (θ : R) :
   simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one, head_cons]
   simp only [mul_zero, zero_mul, add_zero, zero_add]
   have scalar_identity : (θ * θ + -θ * -θ : R) = 2 * θ^2 := by
-    ring
+    noncomm_ring
   exact scalar_identity
 
 /-! ### Section 2: Klein Crosscap Casimir Selection -/
 
 /-- Krein glide differential metric η = diag(1, -1). -/
-def kreinEta (R : Type*) [CommRing R] : Matrix (Fin 2) (Fin 2) R := !![1, 0; 0, -1]
+def kreinEta (R : Type*) [Ring R] : Matrix (Fin 2) (Fin 2) R := !![1, 0; 0, -1]
 
 /-- Krein metric is an involution: η² = 1. -/
-theorem kreinEta_sq (R : Type*) [CommRing R] :
+theorem kreinEta_sq (R : Type*) [Ring R] :
     kreinEta R * kreinEta R = 1 := by
   ext i j
   fin_cases i <;> fin_cases j <;> {
     dsimp [kreinEta, Matrix.mul_apply, Matrix.one_apply]
     simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one, head_cons]
-    ring
+    noncomm_ring
   }
 
 /-- Conjugation by the Krein metric: η X η. -/
@@ -136,7 +136,7 @@ lemma conjugateEta_apply (X : Matrix (Fin 2) (Fin 2) R) :
   fin_cases i <;> fin_cases j <;> {
     dsimp [conjugateEta, kreinEta, Matrix.mul_apply]
     simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one, head_cons]
-    try ring
+    try noncomm_ring
   }
 
 /-- Crosscap projector P_c(X) = ⅟2 • (X + η X η). -/
@@ -151,13 +151,13 @@ lemma crosscapProj_diag (X : Matrix (Fin 2) (Fin 2) R) [Invertible (2 : R)] :
   ext i j
   fin_cases i <;> fin_cases j
   · dsimp
-    rw [show X 0 0 + X 0 0 = 2 * X 0 0 by ring, ← mul_assoc, h2, one_mul]
+    rw [show X 0 0 + X 0 0 = 2 * X 0 0 by noncomm_ring, ← mul_assoc, h2, one_mul]
   · dsimp
-    rw [show X 0 1 + -X 0 1 = 0 by ring, mul_zero]
+    rw [show X 0 1 + -X 0 1 = 0 by abel, mul_zero]
   · dsimp
-    rw [show X 1 0 + -X 1 0 = 0 by ring, mul_zero]
+    rw [show X 1 0 + -X 1 0 = 0 by abel, mul_zero]
   · dsimp
-    rw [show X 1 1 + X 1 1 = 2 * X 1 1 by ring, ← mul_assoc, h2, one_mul]
+    rw [show X 1 1 + X 1 1 = 2 * X 1 1 by noncomm_ring, ← mul_assoc, h2, one_mul]
 
 /-- The crosscap projector is idempotent: P_c² = P_c. -/
 theorem crosscapProj_idempotent (X : Matrix (Fin 2) (Fin 2) R) [Invertible (2 : R)] :
@@ -196,14 +196,14 @@ noncomputable def chiralAlbert (θ : R) : AlbertElement R :=
 theorem chiralAlbert_trace (θ : R) :
     (chiralAlbert θ).trace = 3 * θ := by
   dsimp [H3Zorn.trace, chiralAlbert, diagonalAlbert]
-  ring
+  noncomm_ring
 
 /-- Quadratic Jordan trace of the chiral Albert element is 3 θ². -/
 theorem chiralAlbert_quadTrace (θ : R) :
     (chiralAlbert θ).quadTrace = 3 * θ^2 := by
   dsimp [H3Zorn.quadTrace, jordanQuadraticTrace, traceBilin, chiralAlbert, diagonalAlbert]
   simp only [ZornVectorMatrix.zero_mul, ZornVectorMatrix.trace_zero, ZornVectorMatrix.conj_zero, add_zero]
-  ring
+  noncomm_ring
 
 /-- Freudenthal cubic determinant of the chiral Albert element is θ³. -/
 theorem chiralAlbert_det (θ : R) :
@@ -211,7 +211,7 @@ theorem chiralAlbert_det (θ : R) :
   have hd : chiralAlbert θ = InfoGeometry.Exceptional.AlbertAlgebra.diagonal θ θ θ := rfl
   change InfoGeometry.Exceptional.AlbertAlgebra.freudenthalDet (chiralAlbert θ) = θ^3
   rw [hd, diagonal_normCubic]
-  ring
+  noncomm_ring
 
 /-- Freudenthal quadratic adjoint of the chiral Albert element. -/
 theorem chiralAlbert_adjoint (θ : R) :
@@ -220,9 +220,9 @@ theorem chiralAlbert_adjoint (θ : R) :
   change InfoGeometry.Exceptional.AlbertAlgebra.freudenthalAdjoint (chiralAlbert θ) = diagonalAlbert (θ^2) (θ^2) (θ^2)
   rw [hd, diagonal_adjoint_exact]
   apply ext_h3
-  · dsimp [InfoGeometry.Exceptional.AlbertAlgebra.diagonal, diagonalAlbert]; ring
-  · dsimp [InfoGeometry.Exceptional.AlbertAlgebra.diagonal, diagonalAlbert]; ring
-  · dsimp [InfoGeometry.Exceptional.AlbertAlgebra.diagonal, diagonalAlbert]; ring
+  · dsimp [InfoGeometry.Exceptional.AlbertAlgebra.diagonal, diagonalAlbert]; noncomm_ring
+  · dsimp [InfoGeometry.Exceptional.AlbertAlgebra.diagonal, diagonalAlbert]; noncomm_ring
+  · dsimp [InfoGeometry.Exceptional.AlbertAlgebra.diagonal, diagonalAlbert]; noncomm_ring
   · rfl
   · rfl
   · rfl
@@ -233,7 +233,7 @@ theorem casimir_albert_trace_coupling (θ : R) :
     2 * (chiralAlbert θ).freudenthalAdjoint.trace = 3 * (2 * θ^2) := by
   rw [chiralAlbert_adjoint]
   dsimp [H3Zorn.trace, diagonalAlbert]
-  ring
+  noncomm_ring
 
 /-! ### Section 4: Nilpotent BPS Orbit Stratification -/
 
@@ -259,7 +259,7 @@ theorem rank1_candidate_det (k : R) :
   have hd : rank1Candidate k = InfoGeometry.Exceptional.AlbertAlgebra.diagonal k 0 0 := rfl
   change InfoGeometry.Exceptional.AlbertAlgebra.freudenthalDet (rank1Candidate k) = 0
   rw [hd, diagonal_normCubic]
-  ring
+  noncomm_ring
 
 /-- Rank 1 candidate has vanishing quadratic adjoint. -/
 theorem rank1_candidate_adjoint (k : R) :
@@ -268,9 +268,9 @@ theorem rank1_candidate_adjoint (k : R) :
   change InfoGeometry.Exceptional.AlbertAlgebra.freudenthalAdjoint (rank1Candidate k) = 0
   rw [hd, diagonal_adjoint_exact]
   apply ext_h3
-  · dsimp [InfoGeometry.Exceptional.AlbertAlgebra.diagonal]; ring
-  · dsimp [InfoGeometry.Exceptional.AlbertAlgebra.diagonal]; ring
-  · dsimp [InfoGeometry.Exceptional.AlbertAlgebra.diagonal]; ring
+  · dsimp [InfoGeometry.Exceptional.AlbertAlgebra.diagonal]; noncomm_ring
+  · dsimp [InfoGeometry.Exceptional.AlbertAlgebra.diagonal]; noncomm_ring
+  · dsimp [InfoGeometry.Exceptional.AlbertAlgebra.diagonal]; noncomm_ring
   · rfl
   · rfl
   · rfl
@@ -285,7 +285,7 @@ theorem rank2_candidate_det (k₁ k₂ : R) :
   have hd : rank2Candidate k₁ k₂ = InfoGeometry.Exceptional.AlbertAlgebra.diagonal k₁ k₂ 0 := rfl
   change InfoGeometry.Exceptional.AlbertAlgebra.freudenthalDet (rank2Candidate k₁ k₂) = 0
   rw [hd, diagonal_normCubic]
-  ring
+  noncomm_ring
 
 /-- Rank 2 candidate quadratic adjoint is non-vanishing (rank 1 nilpotent orbit). -/
 theorem rank2_candidate_adjoint (k₁ k₂ : R) :
@@ -293,7 +293,7 @@ theorem rank2_candidate_adjoint (k₁ k₂ : R) :
   have hd : rank2Candidate k₁ k₂ = InfoGeometry.Exceptional.AlbertAlgebra.diagonal k₁ k₂ 0 := rfl
   change InfoGeometry.Exceptional.AlbertAlgebra.freudenthalAdjoint (rank2Candidate k₁ k₂) = diagonalAlbert 0 0 (k₁ * k₂)
   rw [hd, diagonal_adjoint_exact]
-  apply ext_h3 <;> { dsimp [InfoGeometry.Exceptional.AlbertAlgebra.diagonal, diagonalAlbert]; try ring; try rfl }
+  apply ext_h3 <;> { dsimp [InfoGeometry.Exceptional.AlbertAlgebra.diagonal, diagonalAlbert]; try noncomm_ring; try rfl }
 
 /-- Nilpotency of the adjoint flow: the second adjoint of a rank 2 candidate vanishes. -/
 theorem rank2_candidate_adjoint_adjoint (k₁ k₂ : R) :
@@ -302,7 +302,7 @@ theorem rank2_candidate_adjoint_adjoint (k₁ k₂ : R) :
   have hd : diagonalAlbert 0 0 (k₁ * k₂) = InfoGeometry.Exceptional.AlbertAlgebra.diagonal 0 0 (k₁ * k₂) := rfl
   change InfoGeometry.Exceptional.AlbertAlgebra.freudenthalAdjoint (diagonalAlbert 0 0 (k₁ * k₂)) = 0
   rw [hd, diagonal_adjoint_exact]
-  apply ext_h3 <;> { dsimp [InfoGeometry.Exceptional.AlbertAlgebra.diagonal]; try ring; try rfl }
+  apply ext_h3 <;> { dsimp [InfoGeometry.Exceptional.AlbertAlgebra.diagonal]; try noncomm_ring; try rfl }
 
 /-- BPS Horizon Entropy on the chiral orbit: S(θ) = π · √|det₃(chiralAlbert θ)|. -/
 noncomputable def chiralEntropy (θ : ℝ) : ℝ :=

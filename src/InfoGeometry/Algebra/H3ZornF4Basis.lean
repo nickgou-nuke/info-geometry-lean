@@ -12,7 +12,7 @@ derivation theory and is not installed here.
 
 namespace InfoGeometry.Algebra.H3Zorn
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The ordinary diagonal trace of a matrix in the H₃ Zorn carrier. -/
 def trace (X : H3Zorn R) : R := X.α₁ + X.α₂ + X.α₃
@@ -22,14 +22,14 @@ def trace (X : H3Zorn R) : R := X.α₁ + X.α₂ + X.α₃
     trace (X + Y) = trace X + trace Y := by
   change (X.α₁ + Y.α₁) + (X.α₂ + Y.α₂) + (X.α₃ + Y.α₃) =
     (X.α₁ + X.α₂ + X.α₃) + (Y.α₁ + Y.α₂ + Y.α₃)
-  ring
+  abel
 
 /-- Trace is homogeneous on the H₃ Zorn carrier. -/
 theorem trace_smul (r : R) (X : H3Zorn R) :
     trace (r • X) = r * trace X := by
   change r * X.α₁ + r * X.α₂ + r * X.α₃ =
     r * (X.α₁ + X.α₂ + X.α₃)
-  ring
+  noncomm_ring
 
 /-- The zero H₃ Zorn matrix has zero trace. -/
 @[simp] theorem trace_zero :
@@ -46,7 +46,7 @@ def traceZero : Submodule R (H3Zorn R) where
     change (X.α₁ + Y.α₁) + (X.α₂ + Y.α₂) + (X.α₃ + Y.α₃) = 0
     calc
       (X.α₁ + Y.α₁) + (X.α₂ + Y.α₂) + (X.α₃ + Y.α₃)
-          = (X.α₁ + X.α₂ + X.α₃) + (Y.α₁ + Y.α₂ + Y.α₃) := by ring
+          = (X.α₁ + X.α₂ + X.α₃) + (Y.α₁ + Y.α₂ + Y.α₃) := by abel
       _ = 0 := by rw [hX, hY]; simp
   zero_mem' := by
     simp only [Set.mem_setOf_eq, trace]
@@ -57,7 +57,7 @@ def traceZero : Submodule R (H3Zorn R) where
     simp only [Set.mem_setOf_eq, trace] at hX ⊢
     change c * X.α₁ + c * X.α₂ + c * X.α₃ = 0
     calc
-      c * X.α₁ + c * X.α₂ + c * X.α₃ = c * (X.α₁ + X.α₂ + X.α₃) := by ring
+      c * X.α₁ + c * X.α₂ + c * X.α₃ = c * (X.α₁ + X.α₂ + X.α₃) := by noncomm_ring
       _ = 0 := by rw [hX]; simp
 
 /-- Standard coordinate probes for `ZornVectorMatrix ℝ`. -/

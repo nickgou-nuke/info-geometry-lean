@@ -14,7 +14,7 @@ algebraic boundary and does not quotient the incidence relation yet.
 
 namespace InfoGeometry.Algebra.Zorn
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /--
 Polar form associated to the reduced Zorn determinant.
@@ -29,7 +29,7 @@ def polarZ (cp : CrossProduct3 R) (X Y : ZornMatrix R) : R :=
     polarZ cp X Y = polarZ cp Y X := by
   unfold polarZ
   rw [add_comm Y X]
-  ring_nf
+  abel
 
 /--
 Incidence between two bundled Zorn representatives.

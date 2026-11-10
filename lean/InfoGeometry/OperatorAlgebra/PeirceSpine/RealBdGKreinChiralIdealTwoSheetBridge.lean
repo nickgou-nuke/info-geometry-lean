@@ -275,9 +275,6 @@ theorem V_star (N_plus : B) : star (V N_plus) = V N_plus := by
 theorem J_star (N_plus : B) : star (J N_plus) = -J N_plus := by
   dsimp [J]; rw [star_sub, star_star, neg_sub]
 
-theorem P_mul_N_plus (N_plus : B) (h_reg : N_plus * star N_plus * N_plus = N_plus) :
-    P N_plus * N_plus = N_plus := h_reg
-
 theorem N_plus_mul_P (N_plus : B) (h_nil : N_plus * N_plus = 0) :
     N_plus * P N_plus = 0 := by
   dsimp [P]; rw [← mul_assoc, h_nil, zero_mul]
@@ -297,10 +294,6 @@ theorem P_mul_star_N_plus (N_plus : B) (h_nil : N_plus * N_plus = 0) :
 theorem star_N_plus_mul_P (N_plus : B) (h_reg : N_plus * star N_plus * N_plus = N_plus) :
     star N_plus * P N_plus = star N_plus := by
   dsimp [P]; rw [← mul_assoc, star_N_plus_reg N_plus h_reg]
-
-theorem Q_mul_star_N_plus (N_plus : B) (h_reg : N_plus * star N_plus * N_plus = N_plus) :
-    Q N_plus * star N_plus = star N_plus :=
-  star_N_plus_reg N_plus h_reg
 
 theorem star_N_plus_mul_Q (N_plus : B) (h_nil : N_plus * N_plus = 0) :
     star N_plus * Q N_plus = 0 := by
@@ -364,8 +357,9 @@ theorem S_P_sq_eq_one (N_plus : B) (h_reg : N_plus * star N_plus * N_plus = N_pl
 
 theorem S_P_mul_N_plus (N_plus : B) (h_reg : N_plus * star N_plus * N_plus = N_plus) :
     S_P N_plus * N_plus = N_plus := by
+  change P N_plus * N_plus = N_plus at h_reg
   dsimp [S_P]
-  rw [sub_mul, add_mul, one_mul, P_mul_N_plus N_plus h_reg, add_sub_self_right]
+  rw [sub_mul, add_mul, one_mul, h_reg, add_sub_self_right]
 
 theorem N_plus_mul_S_P (N_plus : B) (h_nil : N_plus * N_plus = 0) :
     N_plus * S_P N_plus = -N_plus := by
@@ -524,8 +518,9 @@ theorem V_mul_N_plus (N_plus : B)
     (h_nil : N_plus * N_plus = 0)
     (h_reg : N_plus * star N_plus * N_plus = N_plus) :
     V N_plus * N_plus = N_plus := by
+  change P N_plus * N_plus = N_plus at h_reg
   have hV : V N_plus = P N_plus + Q N_plus := rfl
-  rw [hV, add_mul, P_mul_N_plus N_plus h_reg, Q_mul_N_plus N_plus h_nil, add_zero]
+  rw [hV, add_mul, h_reg, Q_mul_N_plus N_plus h_nil, add_zero]
 
 theorem N_plus_mul_V (N_plus : B)
     (h_nil : N_plus * N_plus = 0)
@@ -539,7 +534,9 @@ theorem V_mul_star_N_plus (N_plus : B)
     (h_reg : N_plus * star N_plus * N_plus = N_plus) :
     V N_plus * star N_plus = star N_plus := by
   have hV : V N_plus = P N_plus + Q N_plus := rfl
-  rw [hV, add_mul, P_mul_star_N_plus N_plus h_nil, Q_mul_star_N_plus N_plus h_reg, zero_add]
+  rw [hV, add_mul, P_mul_star_N_plus N_plus h_nil, zero_add]
+  change star N_plus * N_plus * star N_plus = star N_plus
+  exact star_N_plus_reg N_plus h_reg
 
 theorem star_N_plus_mul_V (N_plus : B)
     (h_nil : N_plus * N_plus = 0)
@@ -554,6 +551,7 @@ theorem W_Bog_eq (N_plus : B)
     (h_nil : N_plus * N_plus = 0)
     (h_reg : N_plus * star N_plus * N_plus = N_plus) :
     W_Bog N_plus = (1 - V N_plus) + J N_plus := by
+  change P N_plus * N_plus = N_plus at h_reg
   dsimp [W_Bog, U_plus, U_minus_inv, J]
   have h1 : (1 + N_plus) * (1 - star N_plus) =
             (1 + (N_plus - star N_plus)) - P N_plus := by
@@ -573,7 +571,7 @@ theorem W_Bog_eq (N_plus : B)
     calc ((1 + (N_plus - star N_plus)) - P N_plus) * N_plus
       _ = (1 + (N_plus - star N_plus)) * N_plus - P N_plus * N_plus := by rw [sub_mul]
       _ = (1 * N_plus + (N_plus - star N_plus) * N_plus) - N_plus := by
-          rw [add_mul, P_mul_N_plus N_plus h_reg]
+          rw [add_mul, h_reg]
       _ = (N_plus + -Q N_plus) - N_plus := by rw [one_mul, hJ_N]
       _ = (-Q N_plus + N_plus) - N_plus := by rw [add_comm N_plus (-Q N_plus)]
       _ = -Q N_plus := by rw [add_sub_self_right]
@@ -995,9 +993,6 @@ theorem Q_mul_P (N_plus : B) (h_nil : N_plus * N_plus = 0) :
     _ = star N_plus * (0 * star N_plus) := by rw [h_nil]
     _ = 0 := by rw [zero_mul, mul_zero]
 
-theorem P_mul_N_plus (N_plus : B) (h_reg : N_plus * star N_plus * N_plus = N_plus) :
-    P N_plus * N_plus = N_plus := h_reg
-
 theorem N_plus_mul_P (N_plus : B) (h_nil : N_plus * N_plus = 0) :
     N_plus * P N_plus = 0 := by
   dsimp [P]; rw [← mul_assoc, h_nil, zero_mul]
@@ -1150,8 +1145,9 @@ theorem P_mul_Phi (N_plus : B)
     (h_nil : N_plus * N_plus = 0)
     (h_reg : N_plus * star N_plus * N_plus = N_plus) :
     P N_plus * Phi N_plus = N_plus := by
+  change P N_plus * N_plus = N_plus at h_reg
   dsimp [Phi]
-  rw [mul_add, P_mul_N_plus N_plus h_reg, P_mul_star_N_plus N_plus h_nil, add_zero]
+  rw [mul_add, h_reg, P_mul_star_N_plus N_plus h_nil, add_zero]
 
 theorem Phi_mul_P (N_plus : B)
     (h_nil : N_plus * N_plus = 0)
@@ -1221,8 +1217,9 @@ theorem comm_J_Phi_eq_two_Sigma (N_plus : B) (h_nil : N_plus * N_plus = 0) :
 theorem Gamma_chiral_mul_N_plus (N_plus : B)
     (h_reg : N_plus * star N_plus * N_plus = N_plus) :
     Gamma_chiral N_plus * N_plus = N_plus := by
+  change P N_plus * N_plus = N_plus at h_reg
   dsimp [Gamma_chiral]
-  rw [sub_mul, add_mul, one_mul, P_mul_N_plus N_plus h_reg, add_sub_self_right]
+  rw [sub_mul, add_mul, one_mul, h_reg, add_sub_self_right]
 
 theorem N_plus_mul_Gamma_chiral (N_plus : B)
     (h_nil : N_plus * N_plus = 0) :
@@ -1254,9 +1251,6 @@ theorem anticomm_Gamma_chiral_star_N_plus (N_plus : B)
   dsimp [anticomm]
   rw [hL, hR, add_comm (-star N_plus) (star N_plus), ← sub_eq_add_neg, sub_self]
 
-/-- **`HFD₉` Emergent Poincaré Translation Equals the Higgs Bandgap (`P_poincare = V`):** -/
-theorem P_poincare_eq_V (N_plus : B) : P_poincare N_plus = V N_plus := rfl
-
 /-- **`HFD₉` SUSY Translation Invariance (`[P_poincare, Q_+] = 0`):**
     The emergent Poincaré translation generator commutes with the chiral supercharge `N_+`. -/
 theorem comm_P_poincare_N_plus (N_plus : B)
@@ -1277,8 +1271,8 @@ theorem comm_P_poincare_N_plus (N_plus : B)
 theorem supercolor_poincare_comm (N_a N_b : B)
     (h_comm : V N_a * V N_b = V N_b * V N_a) :
     comm (P_poincare N_a) (P_poincare N_b) = 0 := by
-  dsimp [comm]
-  rw [P_poincare_eq_V, P_poincare_eq_V, h_comm, sub_self]
+  change V N_a * V N_b - V N_b * V N_a = 0
+  rw [h_comm, sub_self]
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine.HiggsFrameDraggingSupercolorPoset
 

@@ -87,17 +87,6 @@ def regularPart (A A_D : R) : R := A * regularProjector A A_D
 /-- The algebraic complementary part `N = A E_N` (legacy name retained). -/
 def harmonicPart (A A_D : R) : R := A * harmonicProjector A A_D
 
-/-- The local Moore--Penrose predicate is the owner predicate. -/
-theorem toIsMoorePenroseInverse {A A_plus : R} (h : IsMoorePenrose A A_plus) :
-    InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse A A_plus :=
-  h
-
-omit [StarRing R] in
-/-- The local index-one predicate is the `k = 1` case of the Drazin owner. -/
-theorem toIsDrazinInverse {A A_D : R} (h : IsDrazinIndexOne A A_D) :
-    InfoGeometry.Canonical.Drazin.IsDrazinInverse A A_D 1 := by
-  exact h
-
 omit [StarRing R] in
 /-- **`regular_add_harmonic_id`.**  The regular and harmonic projectors are
 complementary for every Drazin pair. -/
@@ -130,6 +119,22 @@ theorem harmonic_projector_idempotent {A A_D : R} (h : IsDrazinIndexOne A A_D) :
   have hE : (A * A_D) * (A * A_D) = A * A_D := regular_projector_idempotent h
   unfold harmonicProjector
   rw [sub_mul, one_mul, mul_sub, mul_one, hE, sub_self, sub_zero]
+
+omit [StarRing R] in
+/-- The regular and complementary Drazin projectors are orthogonal on both
+sides. This uses only the idempotence of the regular projector and preserves
+the order of factors in the noncommutative ring. -/
+theorem regular_harmonic_projectors_orthogonal {A A_D : R}
+    (h : IsDrazinIndexOne A A_D) :
+    regularProjector A A_D * harmonicProjector A A_D = 0 ∧
+      harmonicProjector A A_D * regularProjector A A_D = 0 := by
+  have hE : (A * A_D) * (A * A_D) = A * A_D := by
+    simpa [regularProjector] using regular_projector_idempotent h
+  constructor
+  · change (A * A_D) * (1 - A * A_D) = 0
+    rw [mul_sub, mul_one, hE, sub_self]
+  · change (1 - A * A_D) * (A * A_D) = 0
+    rw [sub_mul, one_mul, hE, sub_self]
 
 omit [StarRing R] in
 /-- **`harmonic_projector_in_kernel`.**  The harmonic projector is annihilated
@@ -201,45 +206,25 @@ theorem moore_penrose_is_drazin_index_one {A A_plus : R}
   simpa [pow_two, pow_one] using (by
     rw [mul_assoc, hEP, ← mul_assoc, h.aba_eq_a] : A * A * A_plus = A)
 
-/-- Capstone certificate: the Moore--Penrose and Drazin index-one laws are
-recorded together and induce the exact algebraic regular/complementary split.
-It does not assert equality of the supplied inverse candidates or a Hodge
-complex. -/
-structure CertifiedMPHodgeDrazinGhostSynthesis (A A_plus A_D : R) : Prop where
-  mp : IsMoorePenrose A A_plus
-  drazin : IsDrazinIndexOne A A_D
-  ep : A * A_plus = A_plus * A
-  projectors_sum_one : regularProjector A A_D + harmonicProjector A A_D = 1
-  regular_idempotent :
-    regularProjector A A_D * regularProjector A A_D = regularProjector A A_D
-  harmonic_idempotent :
-    harmonicProjector A A_D * harmonicProjector A A_D = harmonicProjector A A_D
-  harmonic_in_kernel : A * harmonicProjector A A_D = 0
-  drazin_annihilates_harmonic : A_D * harmonicProjector A A_D = 0
-  gauge_inverse_left :
-    (regularPart A A_D + harmonicProjector A A_D) *
-        (A_D + harmonicProjector A A_D) = 1
-  gauge_inverse_right :
-    (A_D + harmonicProjector A A_D) *
-        (regularPart A A_D + harmonicProjector A A_D) = 1
-  mp_is_drazin : IsDrazinIndexOne A A_plus
-
-/-- **`certified_mp_hodge_drazin_ghost_synthesis`.** -/
-theorem certified_mp_hodge_drazin_ghost_synthesis {A A_plus A_D : R}
-    (hMP : IsMoorePenrose A A_plus) (hD : IsDrazinIndexOne A A_D)
-    (hEP : A * A_plus = A_plus * A) :
-    CertifiedMPHodgeDrazinGhostSynthesis A A_plus A_D where
-  mp := hMP
-  drazin := hD
-  ep := hEP
-  projectors_sum_one := regular_add_harmonic_id A A_D
-  regular_idempotent := regular_projector_idempotent hD
-  harmonic_idempotent := harmonic_projector_idempotent hD
-  harmonic_in_kernel := harmonic_projector_in_kernel hD
-  drazin_annihilates_harmonic := drazin_annihilates_null hD
-  gauge_inverse_left := (regular_sector_exact_inversion hD).1
-  gauge_inverse_right := (regular_sector_exact_inversion hD).2
-  mp_is_drazin := moore_penrose_is_drazin_index_one hMP hEP
+omit [StarRing R] in
+/-- For the complementary regular/harmonic operators, every operator has a
+four-corner Peirce decomposition. The factor order is retained throughout. -/
+theorem regular_harmonic_four_corner_decomposition {A A_D X : R} :
+    X = regularProjector A A_D * X * regularProjector A A_D +
+      regularProjector A A_D * X * harmonicProjector A A_D +
+      harmonicProjector A A_D * X * regularProjector A A_D +
+      harmonicProjector A A_D * X * harmonicProjector A A_D := by
+  have hsum := regular_add_harmonic_id A A_D
+  calc
+    X = (regularProjector A A_D + harmonicProjector A A_D) * X *
+        (regularProjector A A_D + harmonicProjector A A_D) := by
+      rw [hsum]
+      simp
+    _ = regularProjector A A_D * X * regularProjector A A_D +
+        regularProjector A A_D * X * harmonicProjector A A_D +
+        harmonicProjector A A_D * X * regularProjector A A_D +
+        harmonicProjector A A_D * X * harmonicProjector A A_D := by
+      noncomm_ring
 
 end Pseudoinverses
 

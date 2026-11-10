@@ -14,7 +14,8 @@ Multiplication of endomorphisms means composition, with the right map first.
 
 namespace InfoGeometry.OperatorAlgebra.LieJordan
 
-variable (R : Type*) [CommRing R] {A : Type*} [Ring A] [Algebra R A]
+variable (R : Type*) [Ring R] {A : Type*} [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- The difference of the two ordered sandwiches, without positivity claims. -/
 def skewTransport (a b : A) : Module.End R A :=
@@ -80,14 +81,29 @@ theorem composition_octet (a b : A) :
     lie_pair_sum R a b, mixed_difference_defect R a b,
     jordan_lie_mixed_difference R a b⟩
 
+/-- Any ring homomorphism intertwines the evaluated signed transport. -/
+theorem RingHom.map_skewTransport {B : Type*} [Ring B] [Module R B]
+    [IsScalarTower R B B] [SMulCommClass R B B]
+    (f : A →+* B) (a b x : A) :
+    f (skewTransport R a b x) =
+      skewTransport R (f a) (f b) (f x) := by
+  simp only [skewTransport_apply, map_sub, map_mul]
+
+section AlgebraHom
+
+variable (R₁ : Type*) [CommRing R₁] {A₁ B₁ : Type*} [Ring A₁] [Ring B₁]
+  [Algebra R₁ A₁] [Algebra R₁ B₁]
+
 /-- Both sandwiches are transported; no commutation of their generators is used. -/
-theorem skewTransport_natural {B : Type*} [Ring B] [Algebra R B]
-    (f : A →ₐ[R] B) (a b : A) :
-    f.toLinearMap.comp (skewTransport R a b) =
-      (skewTransport R (f a) (f b)).comp f.toLinearMap := by
+theorem skewTransport_natural
+    (f : A₁ →ₐ[R₁] B₁) (a b : A₁) :
+    f.toLinearMap.comp (skewTransport R₁ a b) =
+      (skewTransport R₁ (f a) (f b)).comp f.toLinearMap := by
   ext x
   change f (a*x*b-b*x*a) = f a*f x*f b-f b*f x*f a
   simp only [map_sub, map_mul]
+
+end AlgebraHom
 
 section SquareZero
 variable {a b : A}

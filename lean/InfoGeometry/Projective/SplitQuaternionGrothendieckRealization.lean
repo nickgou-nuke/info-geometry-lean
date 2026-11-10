@@ -21,7 +21,7 @@ open InfoGeometry.Clifford.Coquaternion.Coquaternion
 open InfoGeometry.Projective.SplitComposition
 open InfoGeometry.Projective.SplitQuaternionMotivicDPn
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The additive matrix trace on the noncommutative projector carrier. -/
 def projectorTraceAddHom (n : ℕ) :
@@ -39,6 +39,10 @@ def projectorTraceOnGrothendieck (n : ℕ) :
     Grothendieck (Matrix (Fin (n + 1)) (Fin (n + 1)) (Coquaternion R)) →+
       Coquaternion R :=
   grothendieckLift (projectorTraceAddHom (R := R) n)
+
+section CommRing
+
+variable {R : Type*} [CommRing R]
 
 /-- On the Grothendieck class of the projective matrix operator, the lifted
 trace is exactly the split quadratic norm, embedded as a scalar coquaternion. -/
@@ -78,5 +82,7 @@ theorem projectorTraceOnGrothendieck_gauge_invariant {n : ℕ}
           (projectorN v)) := by
   rw [projectorTraceOnGrothendieck_action, hu, mul_one]
   exact (projectorTraceOnGrothendieck_projectorN v).symm
+
+end CommRing
 
 end InfoGeometry.Projective.SplitQuaternionGrothendieckRealization

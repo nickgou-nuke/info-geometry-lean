@@ -3,13 +3,13 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.RiemannSymmetries
 
-variable {F : Type*} [Field F] [CharZero F]
-
 /--
 The functional equation of the Riemann Zeta function in standard coordinates:
 `s ↦ 1 - s`.
 -/
-def zetaInvolution (s : F) : F := 1 - s
+def zetaInvolution {F : Type*} [Ring F] (s : F) : F := 1 - s
+
+variable {F : Type*} [DivisionRing F] [CharZero F]
 
 /--
 The standard chart fixed point is forced to be 1/2.
@@ -21,9 +21,9 @@ theorem fixed_point_standard (s : F) (h : zetaInvolution s = s) :
   have h2 : s + s = 1 := by
     calc
       s + s = (1 - s) + s := by rw [h]
-      _ = 1 := by ring
+      _ = 1 := sub_add_cancel 1 s
   calc
-    s = (s + s) / 2 := by ring
+    s = (s + s) / 2 := by rw [← mul_two, mul_div_cancel_right₀ s two_ne_zero]
     _ = 1 / 2 := by rw [h2]
 
 /--
@@ -41,6 +41,11 @@ origin (`u = 0`) of the symmetric chart, devoid of any special numerical signifi
 theorem involution_is_parity (u : F) :
     zetaInvolution (centralAxisShift u) = centralAxisShift (-u) := by
   dsimp [zetaInvolution, centralAxisShift]
-  ring
+  have hhalf : (1 : F) - (1 : F) / 2 = (1 : F) / 2 :=
+    sub_eq_of_eq_add (add_halves (1 : F)).symm
+  calc
+    1 - (u + (1 : F) / 2) = (1 - (1 : F) / 2) - u := by abel
+    _ = (1 : F) / 2 - u := by rw [hhalf]
+    _ = -u + (1 : F) / 2 := by abel
 
 end InfoGeometry.RiemannSymmetries

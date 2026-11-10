@@ -7,7 +7,7 @@ namespace InfoGeometry.Clifford.Hestenes
 
 open CliffordAlgebra
 
-variable {R : Type*} [CommRing R] [Invertible (2 : R)]
+variable {R : Type*} [CommRing R]
 variable {M : Type*} [AddCommGroup M] [Module R M]
 variable (Q : QuadraticForm R M)
 

@@ -202,27 +202,27 @@ theorem canonicalMaurerCartanJet_ne_default :
   norm_num at h1
 
 /-- Grade $-2$ Maurer–Cartan curvature $F_{-2} = d\Omega_{-2} + [\Omega_0 \wedge \Omega_{-2}] + \frac{1}{2}[\Omega_{-1} \wedge \Omega_{-1}]$. -/
-def mcCurvatureGradeM2 {R : Type*} [AddCommGroup R] (J : FiveGradedMaurerCartanJet R) : R :=
+def mcCurvatureGradeM2 {R : Type*} [Ring R] (J : FiveGradedMaurerCartanJet R) : R :=
   J.dOmega_m2 + J.br_0_m2 + J.br_m1_m1_half
 
 /-- Grade $-1$ Maurer–Cartan curvature $F_{-1} = d\Omega_{-1} + [\Omega_0 \wedge \Omega_{-1}] + [\Omega_{+1} \wedge \Omega_{-2}]$. -/
-def mcCurvatureGradeM1 {R : Type*} [AddCommGroup R] (J : FiveGradedMaurerCartanJet R) : R :=
+def mcCurvatureGradeM1 {R : Type*} [Ring R] (J : FiveGradedMaurerCartanJet R) : R :=
   J.dOmega_m1 + J.br_0_m1 + J.br_p1_m2
 
 /-- Grade $0$ Maurer–Cartan curvature $F_0 = d\Omega_0 + \frac{1}{2}[\Omega_0 \wedge \Omega_0] + ([\Omega_{-1} \wedge \Omega_{+1}] + [\Omega_{-2} \wedge \Omega_{+2}])$. -/
-def mcCurvatureGrade0 {R : Type*} [AddCommGroup R] (J : FiveGradedMaurerCartanJet R) : R :=
+def mcCurvatureGrade0 {R : Type*} [Ring R] (J : FiveGradedMaurerCartanJet R) : R :=
   J.dOmega_0 + J.br_0_0_half + (J.br_m1_p1 + J.br_m2_p2)
 
 /-- Grade $+1$ Maurer–Cartan curvature $F_{+1} = d\Omega_{+1} + [\Omega_0 \wedge \Omega_{+1}] + [\Omega_{-1} \wedge \Omega_{+2}]$. -/
-def mcCurvatureGradeP1 {R : Type*} [AddCommGroup R] (J : FiveGradedMaurerCartanJet R) : R :=
+def mcCurvatureGradeP1 {R : Type*} [Ring R] (J : FiveGradedMaurerCartanJet R) : R :=
   J.dOmega_p1 + J.br_0_p1 + J.br_m1_p2
 
 /-- Grade $+2$ Maurer–Cartan curvature $F_{+2} = d\Omega_{+2} + [\Omega_0 \wedge \Omega_{+2}] + \frac{1}{2}[\Omega_{+1} \wedge \Omega_{+1}]$. -/
-def mcCurvatureGradeP2 {R : Type*} [AddCommGroup R] (J : FiveGradedMaurerCartanJet R) : R :=
+def mcCurvatureGradeP2 {R : Type*} [Ring R] (J : FiveGradedMaurerCartanJet R) : R :=
   J.dOmega_p2 + J.br_0_p2 + J.br_p1_p1_half
 
 /-- Full 5-graded Maurer–Cartan curvature tuple $(F_{-2}, F_{-1}, F_0, F_{+1}, F_{+2})$. -/
-def mcCurvatureTower {R : Type*} [AddCommGroup R] (J : FiveGradedMaurerCartanJet R) :
+def mcCurvatureTower {R : Type*} [Ring R] (J : FiveGradedMaurerCartanJet R) :
     R × R × R × R × R :=
   (mcCurvatureGradeM2 J, mcCurvatureGradeM1 J, mcCurvatureGrade0 J,
    mcCurvatureGradeP1 J, mcCurvatureGradeP2 J)
@@ -235,7 +235,7 @@ only if the five graded covariant differentials balance their respective graded 
 3. Grade $0$: $d\Omega_0 + \frac{1}{2}[\Omega_0 \wedge \Omega_0] = -([\Omega_{-1} \wedge \Omega_{+1}] + [\Omega_{-2} \wedge \Omega_{+2}])$,
 4. Grade $+1$: $d\Omega_{+1} + [\Omega_0 \wedge \Omega_{+1}] = -[\Omega_{-1} \wedge \Omega_{+2}]$,
 5. Grade $+2$: $d\Omega_{+2} + [\Omega_0 \wedge \Omega_{+2}] = -\frac{1}{2}[\Omega_{+1} \wedge \Omega_{+1}]$. -/
-theorem mcCurvatureTower_flat_iff_source_laws {R : Type*} [AddCommGroup R]
+theorem mcCurvatureTower_flat_iff_source_laws {R : Type*} [Ring R]
     (J : FiveGradedMaurerCartanJet R) :
     mcCurvatureTower J = (0, 0, 0, 0, 0) ↔
       (J.dOmega_m2 + J.br_0_m2 = -J.br_m1_m1_half ∧
@@ -342,7 +342,7 @@ $\ell^2 = +1_{\mathbb{S}_s}$), the condensed element $z_+ = (u, 1_{\mathbb{O}_s}
    `sedenionG2Derivation p (u, zornOne) = (zornG2Derivation p u, zornZero)`. -/
 theorem hyperbolic_root_plus_ell_lightcone_condensation
     (u : ZornSplitOctonion ℝ)
-    (hu_im : Cl44LeftIdealSplitSedenionSynthesis.zornConj u = zornSmul (-1 : ℝ) u)
+    (hu_im : zornConj u = zornSmul (-1 : ℝ) u)
     (hu_sq : zornMul u u = zornSmul (-1 : ℝ) zornOne)
     (hu_norm : zornNorm u = 1)
     (p : Params) :
@@ -356,17 +356,13 @@ theorem hyperbolic_root_plus_ell_lightcone_condensation
     · dsimp [sedenionMul, sedenionZero]
       rw [hu_sq]
       ext k
-      · dsimp [zornAdd, zornSmul, zornOne, zornMul,
-          Cl44LeftIdealSplitSedenionSynthesis.zornConj, zornZero, vec3Dot]
+      · dsimp [zornAdd, zornSmul, zornOne, zornMul, zornConj, zornZero, vec3Dot]
         ring
       · fin_cases k <;>
-          (dsimp [zornAdd, zornSmul, zornOne, zornMul,
-            Cl44LeftIdealSplitSedenionSynthesis.zornConj, zornZero, vec3Cross]; ring)
+          (dsimp [zornAdd, zornSmul, zornOne, zornMul, zornConj, zornZero, vec3Cross]; ring)
       · fin_cases k <;>
-          (dsimp [zornAdd, zornSmul, zornOne, zornMul,
-            Cl44LeftIdealSplitSedenionSynthesis.zornConj, zornZero, vec3Cross]; ring)
-      · dsimp [zornAdd, zornSmul, zornOne, zornMul,
-          Cl44LeftIdealSplitSedenionSynthesis.zornConj, zornZero, vec3Dot]
+          (dsimp [zornAdd, zornSmul, zornOne, zornMul, zornConj, zornZero, vec3Cross]; ring)
+      · dsimp [zornAdd, zornSmul, zornOne, zornMul, zornConj, zornZero, vec3Dot]
         ring
     · dsimp [sedenionMul, sedenionZero]
       rw [hu_im, zornOne_mul, zornOne_mul]
@@ -396,20 +392,18 @@ def canonicalImaginaryUnitOctonion : ZornSplitOctonion ℝ :=
 /-- Concrete non-vacuity certification that `canonicalImaginaryUnitOctonion` satisfies all three
 hypotheses of `hyperbolic_root_plus_ell_lightcone_condensation`. -/
 theorem canonicalImaginaryUnitOctonion_spec :
-    Cl44LeftIdealSplitSedenionSynthesis.zornConj canonicalImaginaryUnitOctonion =
+    zornConj canonicalImaginaryUnitOctonion =
       zornSmul (-1 : ℝ) canonicalImaginaryUnitOctonion ∧
     zornMul canonicalImaginaryUnitOctonion canonicalImaginaryUnitOctonion =
       zornSmul (-1 : ℝ) zornOne ∧
     zornNorm canonicalImaginaryUnitOctonion = 1 := by
   refine ⟨?_, ?_, ?_⟩
   · ext k
-    · dsimp [canonicalImaginaryUnitOctonion, Cl44LeftIdealSplitSedenionSynthesis.zornConj, zornSmul]
+    · dsimp [canonicalImaginaryUnitOctonion, zornConj, zornSmul]
       ring
-    · fin_cases k <;>
-        (dsimp [canonicalImaginaryUnitOctonion, Cl44LeftIdealSplitSedenionSynthesis.zornConj, zornSmul]; ring)
-    · fin_cases k <;>
-        (dsimp [canonicalImaginaryUnitOctonion, Cl44LeftIdealSplitSedenionSynthesis.zornConj, zornSmul]; ring)
-    · dsimp [canonicalImaginaryUnitOctonion, Cl44LeftIdealSplitSedenionSynthesis.zornConj, zornSmul]
+    · fin_cases k <;> (dsimp [canonicalImaginaryUnitOctonion, zornConj, zornSmul]; ring)
+    · fin_cases k <;> (dsimp [canonicalImaginaryUnitOctonion, zornConj, zornSmul]; ring)
+    · dsimp [canonicalImaginaryUnitOctonion, zornConj, zornSmul]
       ring
   · ext k
     · dsimp [canonicalImaginaryUnitOctonion, zornMul, zornSmul, zornOne, vec3Dot]

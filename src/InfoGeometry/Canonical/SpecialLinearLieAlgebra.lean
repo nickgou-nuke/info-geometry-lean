@@ -25,7 +25,7 @@ namespace InfoGeometry.Canonical.SpecialLinearLieAlgebra
 open BigOperators
 
 variable {n : Type*} [Fintype n]
-variable {F : Type*} [CommRing F]
+variable {F : Type*} [Ring F]
 
 /-- The custom trace operator defined as the sum of diagonal entries. -/
 def my_trace (A : Matrix n n F) : F :=
@@ -50,19 +50,8 @@ lemma my_trace_smul (c : F) (A : Matrix n n F) :
     my_trace (c • A) = c * my_trace A := by
   simp [my_trace_eq_matrix_trace, smul_eq_mul]
 
-/-- The cyclic property of the trace operator: `trace (A * B) = trace (B * A)`. -/
-lemma my_trace_mul_comm (A B : Matrix n n F) :
-    my_trace (A * B) = my_trace (B * A) := by
-  simpa [my_trace_eq_matrix_trace] using Matrix.trace_mul_comm A B
-
-/-- The trace of any commutator `[A, B] = A * B - B * A` is zero. -/
-theorem my_trace_commutator (A B : Matrix n n F) :
-    my_trace (A * B - B * A) = 0 := by
-  rw [my_trace_sub, my_trace_mul_comm]
-  exact sub_self (my_trace (B * A))
-
 /-- The special linear Lie algebra: the submodule of trace-zero matrices. -/
-def SlLieAlgebra (n : Type*) [Fintype n] (F : Type*) [CommRing F] :
+def SlLieAlgebra (n : Type*) [Fintype n] (F : Type*) [Ring F] :
     Submodule F (Matrix n n F) where
   carrier := {A | my_trace A = 0}
   zero_mem' := by
@@ -76,6 +65,21 @@ def SlLieAlgebra (n : Type*) [Fintype n] (F : Type*) [CommRing F] :
     rw [Set.mem_setOf_eq] at hA
     rw [Set.mem_setOf_eq, my_trace_smul, hA, mul_zero]
 
+section CommRing
+
+variable {F : Type*} [CommRing F]
+
+/-- The cyclic property of the trace operator: `trace (A * B) = trace (B * A)`. -/
+lemma my_trace_mul_comm (A B : Matrix n n F) :
+    my_trace (A * B) = my_trace (B * A) := by
+  simpa [my_trace_eq_matrix_trace] using Matrix.trace_mul_comm A B
+
+/-- The trace of any commutator `[A, B] = A * B - B * A` is zero. -/
+theorem my_trace_commutator (A B : Matrix n n F) :
+    my_trace (A * B - B * A) = 0 := by
+  rw [my_trace_sub, my_trace_mul_comm]
+  exact sub_self (my_trace (B * A))
+
 /-- The commutator of any two matrices lies in the special linear Lie algebra. -/
 theorem commutator_mem_sl (A B : Matrix n n F) :
     A * B - B * A ∈ SlLieAlgebra n F := by
@@ -86,5 +90,7 @@ theorem lie_bracket_closed {A B : Matrix n n F}
     (_hA : A ∈ SlLieAlgebra n F) (_hB : B ∈ SlLieAlgebra n F) :
     A * B - B * A ∈ SlLieAlgebra n F := by
   exact commutator_mem_sl A B
+
+end CommRing
 
 end InfoGeometry.Canonical.SpecialLinearLieAlgebra

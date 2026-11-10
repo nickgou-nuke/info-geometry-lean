@@ -93,21 +93,28 @@ SECTION 3: The Supertrace & Berezinian Duality
 =============================================================================
 -/
 
+section SupertraceRing
+
+variable {R_ring : Type*} [Ring R_ring]
+
+local notation "BlockMatR" => Matrix (ι ⊕ ι) (ι ⊕ ι) R_ring
+local notation "SubMatR" => Matrix ι ι R_ring
+
 /-- Grading Operator Γ = [[1, 0], [0, -1]] -/
-def Gamma : BlockMat :=
-  fromBlocks (1 : SubMat) 0 0 (-1 : SubMat)
+def Gamma : BlockMatR :=
+  fromBlocks (1 : SubMatR) 0 0 (-1 : SubMatR)
 
 /-- Supertrace of Block Matrix: STr(M) = Tr(M₁₁) - Tr(M₂₂) -/
-def superTrace (M : BlockMat) : R :=
-  Matrix.trace (fromBlocks (1 : SubMat) 0 0 (-1 : SubMat) * M)
+def superTrace (M : BlockMatR) : R_ring :=
+  Matrix.trace (fromBlocks (1 : SubMatR) 0 0 (-1 : SubMatR) * M)
 
 /-- 🏆 THEOREM 5: Supertrace of Block-Diagonal Matrix:
     STr(diag(K₁, K₂)) = Tr(K₁) - Tr(K₂) -/
-theorem superTrace_blockDiag_eq (K1 K2 : SubMat) :
-    superTrace (fromBlocks K1 (0 : SubMat) (0 : SubMat) K2) =
+theorem superTrace_blockDiag_eq (K1 K2 : SubMatR) :
+    superTrace (fromBlocks K1 (0 : SubMatR) (0 : SubMatR) K2) =
       Matrix.trace K1 - Matrix.trace K2 := by
   dsimp [superTrace]
-  have h_mul : fromBlocks (1 : SubMat) 0 0 (-1) * fromBlocks K1 0 0 K2 =
+  have h_mul : fromBlocks (1 : SubMatR) 0 0 (-1) * fromBlocks K1 0 0 K2 =
       fromBlocks K1 0 0 (-K2) := by
     rw [fromBlocks_multiply]
     simp
@@ -115,6 +122,8 @@ theorem superTrace_blockDiag_eq (K1 K2 : SubMat) :
   dsimp [Matrix.trace]
   rw [Fintype.sum_sum_type]
   simp
-  ring
+  abel
+
+end SupertraceRing
 
 end InfoGeometry.NCG

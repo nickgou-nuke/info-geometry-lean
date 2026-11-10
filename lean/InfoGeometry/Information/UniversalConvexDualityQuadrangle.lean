@@ -43,7 +43,7 @@ PILLAR 1: The Logarithmic Radon–Nikodym Functor (Microscopic × ➜ Macroscopi
 =============================================================================
 -/
 
-variable {A : Type*} [CommRing A]
+variable {A : Type*} [Ring A]
 
 /-- A linear/additive map is a derivation if it satisfies the Leibniz product rule. -/
 def IsDerivation (D : A → A) : Prop :=
@@ -67,7 +67,7 @@ theorem derivation_one
   exact add_left_cancel h
 
 /-- Invertible density derivative: D(u⁻¹) = - u⁻² D(u). -/
-theorem derivation_inv
+theorem derivation_inv {A : Type*} [CommRing A]
     (D : A → A)
     (hD : IsDerivation D)
     (u : Aˣ) :
@@ -91,7 +91,7 @@ theorem derivation_inv
 
 /-- 🏆 THEOREM: The Fundamental Logarithmic Homomorphism:
     dlog_D(u · v) = dlog_D(u) + dlog_D(v) -/
-theorem dlog_mul
+theorem dlog_mul {A : Type*} [CommRing A]
     (D : A → A)
     (hD : IsDerivation D)
     (u v : Aˣ) :
@@ -118,7 +118,7 @@ theorem dlog_mul
   rw [h_left, h_right]
 
 /-- Surprisal reflection: dlog_D(u⁻¹) = - dlog_D(u). -/
-theorem dlog_inv
+theorem dlog_inv {A : Type*} [CommRing A]
     (D : A → A)
     (hD : IsDerivation D)
     (u : Aˣ) :

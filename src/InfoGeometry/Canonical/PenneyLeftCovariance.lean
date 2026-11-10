@@ -112,7 +112,7 @@ theorem right_sector_transport
 
 section SplitQuaternionIntertwiner
 
-variable {F : Type*} [CommRing F] [StarRing F]
+variable {F : Type*} [Ring F] [StarRing F]
 
 /-- Constructive zero-hypothesis intertwining of `(peircePlus, peirceMinus, wheelJ)`
 by the Tits–Bruhat element `bruhatS` on `SplitQuaternion F`. -/

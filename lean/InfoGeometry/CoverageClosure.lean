@@ -95,7 +95,6 @@ import InfoGeometry.Canonical.BlackHoleInformationParadox
 import InfoGeometry.Canonical.BogoliubovRGFlowBridge
 import InfoGeometry.Canonical.BooleanCubeDictionary
 import InfoGeometry.Canonical.BoundaryCurrentHeisenbergAPI
-import InfoGeometry.Canonical.CantorCFTObservables
 import InfoGeometry.Canonical.CantorCl11Limit
 import InfoGeometry.Canonical.CantorGoldenMeanBitwordBridge
 import InfoGeometry.Canonical.CantorHaarDiracSea

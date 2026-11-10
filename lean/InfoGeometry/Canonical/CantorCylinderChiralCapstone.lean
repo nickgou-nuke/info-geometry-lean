@@ -6,7 +6,7 @@ namespace InfoGeometry.Canonical.CantorCylinderChiralCapstone
 open InfoGeometry.Canonical.CantorCylinderChiral
 
 theorem capstone_cantor_cylinder_chiral_synthesis
-    {R : Type*} [CommRing R]
+    {R : Type*} [Ring R]
     (a : ChiralArrow) (past future : ℕ → Bool) (n : ℕ)
     (w : BitWord n) (C : ChiralCuntzPair R) (N_L N_R : ℝ) (h_bal : N_L = N_R)
     (σ : ℝ) (h_crit : σ - 1 / 2 = 0) :

@@ -12,7 +12,7 @@ evaluation-at-`1` theorem, stated once at the generic algebraic level.
 namespace InfoGeometry.Algebra.AssociativeRegularCommutant
 
 variable {R A : Type*}
-variable [CommSemiring R] [Semiring A] [Algebra R A]
+variable [Semiring R] [Semiring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 def leftRegular (a : A) : Module.End R A :=
   LinearMap.mulLeft R a

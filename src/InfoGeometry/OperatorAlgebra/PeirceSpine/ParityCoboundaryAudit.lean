@@ -2,7 +2,7 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.ParityCoboundary
 
 open InfoGeometry.OperatorAlgebra.PeirceSpine
 
-#print axioms automorphismCoboundary_one
+#print axioms automorphismCoboundary_inv
 #print axioms automorphismCoboundary_mul
 #print axioms automorphismDifference
 #print axioms automorphismDifference_mul

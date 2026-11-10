@@ -106,10 +106,11 @@ theorem cyclic_grading_unit_add_polynomial [AddCommGroup R] (τ : B →+ R)
   unfold invS
   exact map_sub τ _ _
 
-/-- Polynomial cancellation with coefficients in any commutative base ring,
-for a linear cyclic functional on a possibly noncommutative algebra. -/
+/-- Polynomial cancellation with coefficients in any (possibly noncommutative)
+coefficient ring `K`, for a `K`-linear cyclic functional on a noncommutative
+operator ring `B`. -/
 theorem cyclic_grading_algebra_polynomial_zero
-    {K : Type*} [CommRing K] [Algebra K B] [AddCommGroup R] [Module K R]
+    {K : Type*} [Ring K] [Module K B] [SMulCommClass K B B] [AddCommGroup R] [Module K R]
     (τ : B →ₗ[K] R) (hCyc : ∀ X Y, τ (X * Y) = τ (Y * X))
     {P : B} (hP : P * P = P) (A C : B)
     (s : Finset ℕ) (coeff : ℕ → K) :
@@ -122,9 +123,10 @@ theorem cyclic_grading_algebra_polynomial_zero
   rw [hz, smul_zero]
 
 /-- The graded trace of a unit plus any finite positive-degree polynomial
-equals the trace difference of the complementary idempotent corners. -/
+with coefficients in `K` equals the trace difference of the complementary
+idempotent corners. -/
 theorem cyclic_grading_unit_add_algebra_polynomial
-    {K : Type*} [CommRing K] [Algebra K B] [AddCommGroup R] [Module K R]
+    {K : Type*} [Ring K] [Module K B] [SMulCommClass K B B] [AddCommGroup R] [Module K R]
     (τ : B →ₗ[K] R) (hCyc : ∀ X Y, τ (X * Y) = τ (Y * X))
     {P : B} (hP : P * P = P) (A C : B)
     (s : Finset ℕ) (coeff : ℕ → K) :

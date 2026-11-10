@@ -5,7 +5,7 @@ namespace InfoGeometry.Canonical
 
 section CohomologyTransport
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 variable (A : ℕ → Type*)
 variable [∀ n, AddCommGroup (A n)] [∀ n, Module R (A n)]
 variable (AInf : Type*) [AddCommGroup AInf] [Module R AInf]

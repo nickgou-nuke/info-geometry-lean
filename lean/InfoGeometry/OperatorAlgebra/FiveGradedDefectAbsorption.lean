@@ -85,19 +85,6 @@ structure ThreeGradeClosureDefect
     (State Defect : Type*) where
   defect : State → Defect
 
-namespace ThreeGradeClosureDefect
-
-variable {State Defect : Type*}
-variable (D : ThreeGradeClosureDefect State Defect)
-
-/-- The closure-defect readout is the supplied defect function. -/
-theorem defect_readout
-    (s : State) :
-    D.defect s = D.defect s :=
-  rfl
-
-end ThreeGradeClosureDefect
-
 /--
 Absorption of a three-grade closure defect into the positive grade-two
 memory/contact sector of a five-graded algebra.
@@ -125,20 +112,19 @@ variable
 
 variable (A : DefectAbsorbedInPlusTwo L State Defect G D)
 
-/-- The closure defect is stored in the top contact/memory grade. -/
-theorem defect_is_plus_two_memory
-    (s : State) :
-    A.defectToPlusTwo (D.defect s) ∈ G.gPosTwo :=
-  A.defect_mem_plus_two s
-
-/--
-The old TKK closure defect is represented by a top-grade element in the
-extended algebra.
+/-!
+The witness supplies grade membership state by state. Linearity of the
+embedding and submodule closure imply that finite linear combinations remain
+in the positive grade-two sector.
 -/
-theorem absorption
-    (s : State) :
-    A.defectToPlusTwo (D.defect s) ∈ G.gPosTwo :=
-  A.defect_mem_plus_two s
+theorem linearCombination_mem_plus_two
+    (r : ℝ)
+    (s t : State) :
+    A.defectToPlusTwo (r • D.defect s + D.defect t) ∈ G.gPosTwo := by
+  rw [map_add, map_smul]
+  exact G.gPosTwo.add_mem
+    (G.gPosTwo.smul_mem r (A.defect_mem_plus_two s))
+    (A.defect_mem_plus_two t)
 
 end DefectAbsorbedInPlusTwo
 
@@ -448,52 +434,21 @@ theorem mass_nonneg_of_BPS
 
 end BPSBoundDatum
 
-/-! ## 7. Absorption readout -/
+/-! ## 7. BPS comparison consequence -/
 
 /--
-Five-grade defect absorption readout.
-
-Once a five-grade absorption witness is supplied, every old closure defect is
-represented in the `g_+2` memory sector.
+If two BPS data saturate their bounds at the same state, ordering their central
+norm readouts orders their mass readouts at that state.
 -/
-theorem fiveGradeDefectAbsorptionOwnerTarget :
-  ∀ (L State Defect : Type*)
-    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
-    [AddCommGroup Defect] [Module ℝ Defect],
-  ∀ G : FiveGrading L,
-  ∀ D : ThreeGradeClosureDefect State Defect,
-  ∀ A : DefectAbsorbedInPlusTwo L State Defect G D,
-  ∀ s : State,
-    A.defectToPlusTwo (D.defect s) ∈ G.gPosTwo := by
-  intro L State Defect _ _ _ _ _ _ G D A s
-  exact A.defect_is_plus_two_memory s
-
-/-- Packet readout for one five-grade defect absorption witness. -/
-theorem fiveGradeDefectAbsorption_packet
-    (L State Defect : Type*)
-    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
-    [AddCommGroup Defect] [Module ℝ Defect]
-    (G : FiveGrading L)
-    (D : ThreeGradeClosureDefect State Defect)
-    (A : DefectAbsorbedInPlusTwo L State Defect G D)
-    (s : State) :
-    A.defectToPlusTwo (D.defect s) ∈ G.gPosTwo :=
-  fiveGradeDefectAbsorptionOwnerTarget L State Defect G D A s
-
-/--
-Owner target for installing a BPS/central-charge bound.
--/
-def BPSBoundOwnerTarget
-    (State : Type*) : Prop :=
-  ∀ B : BPSBoundDatum State,
-    (∀ s : State, 0 ≤ B.centralNorm s) ∧
-      (∀ s : State, B.centralNorm s ≤ B.mass s)
-
-/-- Installed BPS data satisfy the central-norm lower-bound target. -/
-theorem bpsBoundOwnerTarget
-    (State : Type*) :
-    BPSBoundOwnerTarget State := by
-  intro B
-  exact ⟨B.centralNorm_nonnegative, B.centralNorm_le_mass⟩
+theorem mass_le_of_saturated_and_centralNorm_le
+    {State : Type*}
+    (B₁ B₂ : BPSBoundDatum State)
+    (s : State)
+    (h₁ : IsBPS B₁ s)
+    (h₂ : IsBPS B₂ s)
+    (hNorm : B₁.centralNorm s ≤ B₂.centralNorm s) :
+    B₁.mass s ≤ B₂.mass s := by
+  rw [h₁, h₂]
+  exact hNorm
 
 end InfoGeometry.OperatorAlgebra.FiveGradedDefectAbsorption

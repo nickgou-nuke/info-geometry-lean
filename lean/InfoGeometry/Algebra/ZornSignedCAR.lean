@@ -14,7 +14,7 @@ No grading, adjoint identification, or octonion-product representation is assert
 namespace InfoGeometry.Algebra
 
 section Alternative
-variable {R A : Type*} [CommRing R] [NonUnitalNonAssocRing A] [Module R A]
+variable {R A : Type*} [Ring R] [NonUnitalNonAssocRing A] [Module R A]
 variable [SMulCommClass R A A]
 
 theorem L_map_square_of_left_alternative

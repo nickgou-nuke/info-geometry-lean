@@ -136,7 +136,7 @@ theorem associativeProduct_eq_jordan_add_half_innerDerivation
 /-! ## Existing nonassociative triple-product endpoint -/
 
 variable {S J : Type*}
-  [CommRing S] [AddCommGroup J] [Module S J]
+  [Ring S] [AddCommGroup J] [Module S J]
 
 /--
 A quadratic derivation acts in all three slots of the polarized Jordan triple

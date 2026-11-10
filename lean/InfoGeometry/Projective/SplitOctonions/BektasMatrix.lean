@@ -17,7 +17,7 @@ No wrappers. No `sorry`.
 
 namespace InfoGeometry.Projective.SplitOctonions.BektasMatrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Unrolled real-quaternion coordinates. -/
 structure Quat (R : Type*) where
@@ -70,7 +70,7 @@ theorem blockDet_is_split_signature (X : BektasCell R) :
       (X.q1.r ^ 2 + X.q1.i ^ 2 + X.q1.j ^ 2 + X.q1.k ^ 2) -
       (X.q2.r ^ 2 + X.q2.i ^ 2 + X.q2.j ^ 2 + X.q2.k ^ 2) := by
   unfold blockDet Quat.norm
-  ring
+  rfl
 
 /--
 Block trace isolates the longitudinal scalar coordinate.
@@ -78,7 +78,7 @@ Block trace isolates the longitudinal scalar coordinate.
 theorem trace_is_longitudinal_scalar (X : BektasCell R) :
     X.blockTrace = 2 * X.q1.r := by
   unfold blockTrace Quat.realPart
-  ring
+  exact (two_mul X.q1.r).symm
 
 end BektasCell
 

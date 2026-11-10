@@ -12,7 +12,7 @@ not construct a universal-enveloping-algebra action or a formal-series completio
 noncomputable section
 namespace InfoGeometry.QuantumAlgebra.RepresentedTwist
 open scoped TensorProduct
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {R A : Type*} [CommSemiring R] [Semiring A] [Algebra R A]
 
 abbrev multiply : A ⊗[R] A →ₗ[R] A := LinearMap.mul' R A
 
@@ -115,7 +115,7 @@ def identityTwist : InverseTwist (R := R) (A := A) where
     (identityTwist (R := R) (A := A)).product a b = a*b := by simp [InverseTwist.product, identityTwist]
 
 section Commutative
-variable {B : Type*} [CommRing B] [Algebra R B]
+variable {B : Type*} [CommSemiring B] [Algebra R B]
 
 theorem multiply_flip (t : B ⊗[R] B) :
     multiply ((TensorProduct.comm R B B) t) = multiply t := by

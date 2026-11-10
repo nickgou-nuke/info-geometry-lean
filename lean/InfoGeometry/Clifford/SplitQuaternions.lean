@@ -24,7 +24,7 @@ variable (v0 : M)
 Това математически дефинира пространството на Минковски (хиперболична геометрия) 
 като алгебрична структура на времевата транслация.
 -/
-structure SplitQuaternion (R : Type*) [CommRing R] where
+structure SplitQuaternion (R : Type*) [Ring R] where
   re : R       -- Реална част (скалар)
   i : R        -- Първа имагинерна единица ($i^2 = -1$)
   j : R        -- Втора (хиперболична) единица ($j^2 = +1$)
@@ -34,7 +34,7 @@ structure SplitQuaternion (R : Type*) [CommRing R] where
 Спрежение на Разделен Кватернион (Conjugation).
 Отговаря на Time Reversal оператора (T-симетрия) в Twin Wave формализма.
 -/
-def SplitQuaternion.conj {R : Type*} [CommRing R] (q : SplitQuaternion R) : SplitQuaternion R :=
+def SplitQuaternion.conj {R : Type*} [Ring R] (q : SplitQuaternion R) : SplitQuaternion R :=
   { re := q.re,
     i := -q.i,
     j := -q.j,
@@ -45,26 +45,26 @@ def SplitQuaternion.conj {R : Type*} [CommRing R] (q : SplitQuaternion R) : Spli
 За разлика от обикновените кватерниони, умножението тук е свързано с 
 Лоренцови трансформации (Lorentz boosts), осъществяващи преходи във времето.
 -/
-def SplitQuaternion.mul {R : Type*} [CommRing R] (q1 q2 : SplitQuaternion R) : SplitQuaternion R :=
+def SplitQuaternion.mul {R : Type*} [Ring R] (q1 q2 : SplitQuaternion R) : SplitQuaternion R :=
   { re := q1.re * q2.re - q1.i * q2.i + q1.j * q2.j + q1.k * q2.k,
     i := q1.re * q2.i + q1.i * q2.re - q1.j * q2.k + q1.k * q2.j,
     j := q1.re * q2.j - q1.i * q2.k + q1.j * q2.re + q1.k * q2.i,
     k := q1.re * q2.k + q1.i * q2.j - q1.j * q2.i + q1.k * q2.re }
 
-instance {R : Type*} [CommRing R] : Mul (SplitQuaternion R) := ⟨SplitQuaternion.mul⟩
+instance {R : Type*} [Ring R] : Mul (SplitQuaternion R) := ⟨SplitQuaternion.mul⟩
 
 /-- 
 Норма (Квадратна) на Разделен Кватернион: $N(q) = q \cdot q^*$.
 В Лоренцова геометрия това съответства на интервала в пространството на Минковски.
 -/
-def SplitQuaternion.normSq {R : Type*} [CommRing R] (q : SplitQuaternion R) : R :=
+def SplitQuaternion.normSq {R : Type*} [Ring R] (q : SplitQuaternion R) : R :=
   q.re * q.re + q.i * q.i - q.j * q.j - q.k * q.k
 @[ext]
-lemma SplitQuaternion.ext {R : Type*} [CommRing R] (x y : SplitQuaternion R) 
+lemma SplitQuaternion.ext {R : Type*} [Ring R] (x y : SplitQuaternion R) 
     (h_re : x.re = y.re) (h_i : x.i = y.i) (h_j : x.j = y.j) (h_k : x.k = y.k) : x = y := by
   cases x; cases y; simp_all
 
-instance {R : Type*} [CommRing R] : Zero (SplitQuaternion R) :=
+instance {R : Type*} [Ring R] : Zero (SplitQuaternion R) :=
   ⟨{ re := 0, i := 0, j := 0, k := 0 }⟩
 
 /-- Съхранение на интервала на Минковски при Twin Wave интерференция.
@@ -87,16 +87,16 @@ theorem conj_mul {R : Type*} [CommRing R] (X Y : SplitQuaternion R) :
   · dsimp [SplitQuaternion.conj, SplitQuaternion.mul]; ring
 
 /-- Двойно времево спрежение възстановява оригиналното състояние. -/
-theorem conj_conj {R : Type*} [CommRing R] (X : SplitQuaternion R) : 
+theorem conj_conj {R : Type*} [Ring R] (X : SplitQuaternion R) : 
     X.conj.conj = X := by
   ext
   · rfl
-  · dsimp [SplitQuaternion.conj]; ring
-  · dsimp [SplitQuaternion.conj]; ring
-  · dsimp [SplitQuaternion.conj]; ring
+  · dsimp [SplitQuaternion.conj]; exact neg_neg _
+  · dsimp [SplitQuaternion.conj]; exact neg_neg _
+  · dsimp [SplitQuaternion.conj]; exact neg_neg _
 
 /-- Дефиниция на състояние върху светлинния конус (Photon / Null State) -/
-def isLightlike {R : Type*} [CommRing R] (X : SplitQuaternion R) : Prop := 
+def isLightlike {R : Type*} [Ring R] (X : SplitQuaternion R) : Prop := 
     SplitQuaternion.normSq X = 0
 
 /-- В Разделените Кватерниони съществуват нетривиални светлинни състояния.

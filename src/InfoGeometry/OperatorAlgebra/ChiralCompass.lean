@@ -15,32 +15,13 @@ open TensorProduct
 
 namespace InfoGeometry.ChiralCompass
 
-variable (R : Type*) [CommRing R] [Invertible (2 : R)]
+section Ring
+
+variable (R : Type*) [Ring R]
 
 abbrev Vec11 := Fin 2 → R
 
 abbrev Vec22 := Fin 4 → R
-
-/--
-The quadratic form for Cl(1,1), representing a single chiral compass.
-Signature (+, -).
--/
-def Q11 : QuadraticForm R (Vec11 R) :=
-  QuadraticMap.proj 0 0 - QuadraticMap.proj 1 1
-
-/--
-The quadratic form for Cl(2,2), representing the combined 4D spacetime.
-Signature (+, -, +, -).
--/
-def Q22 : QuadraticForm R (Vec22 R) :=
-  QuadraticMap.proj 0 0 - QuadraticMap.proj 1 1 +
-    QuadraticMap.proj 2 2 - QuadraticMap.proj 3 3
-
-/-- The Clifford algebra for the single chiral compass Cl(1,1). -/
-abbrev Cl11 := CliffordAlgebra (Q11 R)
-
-/-- The Clifford algebra for the full (2,2) spacetime. -/
-abbrev Cl22 := CliffordAlgebra (Q22 R)
 
 /-- Inclusion of the first split plane into the four-coordinate split space. -/
 def leftPlane : Vec11 R →ₗ[R] Vec22 R where
@@ -75,6 +56,33 @@ def rightPlane : Vec11 R →ₗ[R] Vec22 R where
     intro a p
     ext i
     fin_cases i <;> simp
+
+end Ring
+
+section CommRing
+
+variable (R : Type*) [CommRing R] [Invertible (2 : R)]
+
+/--
+The quadratic form for Cl(1,1), representing a single chiral compass.
+Signature (+, -).
+-/
+def Q11 : QuadraticForm R (Vec11 R) :=
+  QuadraticMap.proj 0 0 - QuadraticMap.proj 1 1
+
+/--
+The quadratic form for Cl(2,2), representing the combined 4D spacetime.
+Signature (+, -, +, -).
+-/
+def Q22 : QuadraticForm R (Vec22 R) :=
+  QuadraticMap.proj 0 0 - QuadraticMap.proj 1 1 +
+    QuadraticMap.proj 2 2 - QuadraticMap.proj 3 3
+
+/-- The Clifford algebra for the single chiral compass Cl(1,1). -/
+abbrev Cl11 := CliffordAlgebra (Q11 R)
+
+/-- The Clifford algebra for the full (2,2) spacetime. -/
+abbrev Cl22 := CliffordAlgebra (Q22 R)
 
 @[simp] theorem Q22_leftPlane (p : Vec11 R) :
     Q22 R (leftPlane R p) = Q11 R p := by
@@ -150,5 +158,7 @@ def chiral_compasses_equivalence :
 theorem chiral_compasses_equivalence_eq_leftCompass :
     chiral_compasses_equivalence R = leftCompass R :=
   rfl
+
+end CommRing
 
 end InfoGeometry.ChiralCompass

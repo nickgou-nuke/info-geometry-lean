@@ -26,7 +26,9 @@ namespace InfoGeometry.Canonical.BogoliubovBerryMaurerCartanBridge
 open InfoGeometry.NCG
 open InfoGeometry.OperatorAlgebra
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+section RingCarrier
+
+variable {A : Type*} [Ring A]
 
 /-! ## Affine central shifts -/
 
@@ -54,6 +56,12 @@ theorem CentralAffineShift.apply_additive_offset
   simp only [add_mul, mul_add]
   abel
 
+end RingCarrier
+
+section CommScalars
+
+variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+
 /-! ## Pure-gauge Maurer--Cartan flatness -/
 
 /-- The right Maurer--Cartan coefficient attached to an algebraic frame. -/
@@ -79,8 +87,13 @@ theorem affine_shift_and_berry_flatness
           berryMaurerCartan D u * berryMaurerCartan D u = 0 := by
   exact ⟨B.apply_eq_commutator x, berryMaurerCartan_flat D u⟩
 
+end CommScalars
+
 /-! ## Operator-valued local gauge transport -/
 
+section LocalGaugeTransport
+
+variable {A : Type*} [Ring A]
 variable {Point Tangent : Type*}
 
 /-- The existing local-gauge owner transports an adjoint field covariantly.
@@ -102,6 +115,8 @@ theorem berry_frame_covariant_transport
         (InfoGeometry.Optics.LocalGaugeCovariantDerivative.adjointCovariantDerivative C s p X) := by
   exact InfoGeometry.Optics.LocalGaugeCovariantDerivative.localGaugeField_covariantDerivative
     G C s p X
+
+end LocalGaugeTransport
 
 end InfoGeometry.Canonical.BogoliubovBerryMaurerCartanBridge
 

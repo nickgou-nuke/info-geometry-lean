@@ -14,7 +14,7 @@ Instead of heuristic matrix wrappers, we build the rigorous Cartesian representa
 of 3x3 Hermitian matrices over a generic non-associative algebra.
 -/
 
-variable (R : Type*) [CommRing R]
+variable (R : Type*) [Ring R]
 variable (A : Type*) [NonUnitalNonAssocRing A] [Module R A]
 
 /-- The Albert Vector represents a 3x3 Hermitian matrix:
@@ -71,6 +71,6 @@ theorem cubicDet_diagonal_eq_prod
   have h_zero_mul : ((0 : A) * (0 : A)) * (0 : A) = 0 := by simp
   rw [h_zero_mul]
   rw [h_trace_zero]
-  ring
+  noncomm_ring
 
 end InfoGeometry.SplitOctonions

@@ -2,7 +2,6 @@ import InfoGeometry.Canonical.ChiralHodgeDecomposition
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesAnalyticity
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Meta.SocketTarget
 
 open scoped InnerProductSpace
@@ -190,33 +189,25 @@ structure ChiralHodgeHomologyCalibration
   Dminus_eq_dMinus :
     ∀ y : Cminus, hodge.Dminus y = complex.dMinus y
 
-/-! ## 4. File-level owner theorem -/
+/-! ## 4. Nilpotence transported through the calibration -/
 
-/-- The chiral/Dirac homology owner target is discharged by the local witnesses. -/
-theorem chiralDiracHomologyBridgeOwnerTarget :
-    (∀ {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
-        (C : ChiralComplexSocket Cplus Cminus)
-        {x : Cplus}, C.plusBoundary x → C.plusCycle x) ∧
-    (∀ {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
-        (C : ChiralComplexSocket Cplus Cminus)
-        {y : Cminus}, C.minusBoundary y → C.minusCycle y) ∧
-    (∀ {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
-        (H : ChiralHodgeDiracSocket Cplus Cminus) (x : Cplus),
-        H.plusHarmonic x ↔ H.Dminus (H.Dplus x) = 0) ∧
-    (∀ {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
-        (H : ChiralHodgeDiracSocket Cplus Cminus) (y : Cminus),
-        H.minusHarmonic y ↔ H.Dplus (H.Dminus y) = 0) := by
-  constructor
-  · intro Cplus Cminus instC instM C x hx
-    exact C.plus_boundary_is_cycle hx
-  · constructor
-    · intro Cplus Cminus instC instM C y hy
-      exact C.minus_boundary_is_cycle hy
-    · constructor
-      · intro Cplus Cminus instC instM H x
-        exact H.plusHarmonic_iff_loop_zero x
-      · intro Cplus Cminus instC instM H y
-        exact H.minusHarmonic_iff_loop_zero y
+/-- The calibration carries the plus chain-complex relation to the Hodge/Dirac
+composite: `D⁺ ∘ D⁻ = 0`. -/
+theorem calibrated_plus_composite_eq_zero
+    {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
+    (K : ChiralHodgeHomologyCalibration Cplus Cminus) (y : Cminus) :
+    K.hodge.Dplus (K.hodge.Dminus y) = 0 := by
+  rw [K.Dplus_eq_dPlus, K.Dminus_eq_dMinus]
+  exact K.complex.dPlus_dMinus_zero y
+
+/-- The calibration carries the minus chain-complex relation to the Hodge/Dirac
+composite: `D⁻ ∘ D⁺ = 0`. -/
+theorem calibrated_minus_composite_eq_zero
+    {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
+    (K : ChiralHodgeHomologyCalibration Cplus Cminus) (x : Cplus) :
+    K.hodge.Dminus (K.hodge.Dplus x) = 0 := by
+  rw [K.Dminus_eq_dMinus, K.Dplus_eq_dPlus]
+  exact K.complex.dMinus_dPlus_zero x
 
 /-! ## 4. Root doubled-carrier readbacks from the owner lane -/
 

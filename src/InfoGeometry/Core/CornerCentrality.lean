@@ -37,7 +37,7 @@ theorem commutes_iff_block_diagonal (P X : A) (hP : P * P = P) :
       simpa only [sub_mul, one_mul] using h₂
     exact (sub_eq_zero.mp h₁').trans (sub_eq_zero.mp h₂').symm
 
-variable {R : Type*} [CommRing R] [Algebra R A]
+variable {R : Type*} [Ring R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 theorem scalar_commutator (r : R) (P X : A) :
     (r • P) * X - X * (r • P) = r • (P * X - X * P) := by

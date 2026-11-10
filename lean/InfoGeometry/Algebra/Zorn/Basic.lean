@@ -20,12 +20,12 @@ not ordinary matrix determinant multiplicativity.
 namespace InfoGeometry.Algebra.Zorn
 
 /-- Use the canonical Zorn matrix carrier. -/
-abbrev ZornMatrix (R : Type*) [CommRing R] := InfoGeometry.Canonical.ZornMatrix R
+abbrev ZornMatrix (R : Type*) [Ring R] := InfoGeometry.Canonical.ZornMatrix R
 
 /--
 A minimal dot/cross interface on `R^3`.
 -/
-structure CrossProduct3 (R : Type*) [CommRing R] where
+structure CrossProduct3 (R : Type*) [Ring R] where
   dot : (Fin 3 → R) → (Fin 3 → R) → R
   cross : (Fin 3 → R) → (Fin 3 → R) → (Fin 3 → R)
 
@@ -41,7 +41,7 @@ structure CrossProduct3 (R : Type*) [CommRing R] where
 
 namespace ZornMatrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /--
 Zorn determinant / split norm.

@@ -5,6 +5,7 @@ Authors: InfoGeometry Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.LinearCombination
 
 /-!
@@ -28,7 +29,7 @@ Ref: `QMS-DIR-SEC126-CAYLEY-DICKSON-G2-LIGHTCONE-2026-OCT-16`
 
 namespace InfoGeometry.Superalgebra.CayleyDicksonG2
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. 3D Вектори и 4D Кватернионни Координати -/
 
@@ -41,7 +42,7 @@ structure Vec3 (R : Type*) where
 
 namespace Vec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def canonicalVec3Int : Vec3 ℤ := ⟨1, 2, 3⟩
 
@@ -75,7 +76,7 @@ structure Quat4 (R : Type*) where
 
 namespace Quat4
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def canonicalQuat4Int : Quat4 ℤ := ⟨1, ⟨2, 3, 4⟩⟩
 
@@ -100,7 +101,7 @@ structure SplitOctonion (R : Type*) where
 
 namespace SplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def canonicalSplitOctonionInt : SplitOctonion ℤ := ⟨1, ⟨1, 0, 0⟩, ⟨0, 1, 0⟩, 2⟩
 
@@ -165,7 +166,7 @@ theorem cayley_dickson_eq_majorana_intertwining (p q : Quat4 R) :
       add (embedQuat p) (mul paraSymplecticK0 (embedQuat q)) := by
   dsimp [fromCayleyDickson, embedQuat, paraSymplecticK0, add, mul,
          Vec3.zero, Vec3.dot, Vec3.add, Vec3.sub, Vec3.neg, Vec3.smul, Vec3.cross]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 /-! ### 3. Диагонализация на Интервала s² и Геометрия на Светлинния Конус (s² = 0) -/
 
@@ -175,7 +176,7 @@ theorem cayley_dickson_eq_majorana_intertwining (p q : Quat4 R) :
 се диагонализира без остатък до разликата от 4D евклидовите норми на p и q:
 s² = intervalNorm(p + K₀·q) = ‖p‖²_ℍ - ‖q‖²_ℍ!
 -/
-theorem cayley_dickson_diagonalizes_interval (p q : Quat4 R) :
+theorem cayley_dickson_diagonalizes_interval {R : Type*} [CommRing R] (p q : Quat4 R) :
     intervalNorm (fromCayleyDickson p q) = Quat4.normSq p - Quat4.normSq q := by
   dsimp [intervalNorm, fromCayleyDickson, Quat4.normSq, Vec3.dot, Vec3.add, Vec3.neg]
   ring
@@ -186,7 +187,7 @@ theorem cayley_dickson_diagonalizes_interval (p q : Quat4 R) :
 тогава и само тогава, когато елиптичната норма на p е равна на хиперболичната норма на q:
 intervalNorm(p + K₀·q) = 0 ⟺ ‖p‖²_ℍ = ‖q‖²_ℍ!
 -/
-theorem lightcone_iff_equal_quat_norms (p q : Quat4 R) :
+theorem lightcone_iff_equal_quat_norms {R : Type*} [CommRing R] (p q : Quat4 R) :
     intervalNorm (fromCayleyDickson p q) = 0 ↔ Quat4.normSq p = Quat4.normSq q := by
   rw [cayley_dickson_diagonalizes_interval]
   exact sub_eq_zero
@@ -202,14 +203,13 @@ theorem chiral_sheets_as_equal_norm_cayley_dickson_rays (w : Vec3 R) :
     intervalNorm (fromCayleyDickson ⟨0, w⟩ ⟨0, w⟩) = 0 := by
   refine ⟨?_, ?_, ?_⟩
   · dsimp [fromCayleyDickson, sheetPlus, Vec3.add, Vec3.neg, Vec3.smul, Vec3.zero]
-    ext <;> ring
+    ext <;> noncomm_ring
   · dsimp [fromCayleyDickson, sheetMinus, Vec3.add, Vec3.neg, Vec3.smul, Vec3.zero]
-    ext <;> ring
-  · rw [cayley_dickson_diagonalizes_interval]
-    dsimp [Quat4.normSq, Vec3.dot]
-    ring
+    ext <;> noncomm_ring
+  · dsimp [intervalNorm, fromCayleyDickson, Vec3.dot, Vec3.add, Vec3.neg]
+    noncomm_ring
 
-/-! ### 4. Рационалното Преобразуване на Кейли Върху Нилпотентните Майорана Листи -/
+/-! ### 4. Рационалното Преобразуването на Кейли Върху Нилпотентните Майорана Листи -/
 
 /--
 Полиномно Преобразуване на Кейли за изотропен Майорана вектор U(u) ∈ ℐ₊:
@@ -226,7 +226,7 @@ def cayleyTransformPlus (u : Vec3 R) : SplitOctonion R :=
 2. (𝟙 + U(u)) · (𝟙 + U(u)) = 𝟙 + 2 U(u) = Cayley(U(u)).
 3. intervalNorm(Cayley(U(u))) = 1 (Преобразуването на Кейли е точна изометрия на интервала!).
 -/
-theorem cayley_transform_nilpotent_exact (u : Vec3 R) :
+theorem cayley_transform_nilpotent_exact {R : Type*} [CommRing R] (u : Vec3 R) :
     mul (sub one (sheetPlus u)) (add one (sheetPlus u)) = one ∧
     mul (add one (sheetPlus u)) (add one (sheetPlus u)) = cayleyTransformPlus u ∧
     intervalNorm (cayleyTransformPlus u) = 1 := by
@@ -255,7 +255,7 @@ def sl3ColorDerivation (l1 l2 l3 : R) (X : SplitOctonion R) : SplitOctonion R wh
 Контрагредиентното цветово действие върху ℐ₊ и ℐ₋ анулира вариацията на скаларния продукт u · v:
 δ(u · v) = (δu) · v + u · (δv) = 0, запазвайки пространствено-времевия интервал s² инвариантен!
 -/
-theorem sl3_derivation_preserves_interval_bilinear (l1 l2 l3 : R) (X : SplitOctonion R) :
+theorem sl3_derivation_preserves_interval_bilinear {R : Type*} [CommRing R] (l1 l2 l3 : R) (X : SplitOctonion R) :
     let dX := sl3ColorDerivation l1 l2 l3 X
     Vec3.dot dX.u X.v + Vec3.dot X.u dX.v = 0 := by
   dsimp [sl3ColorDerivation, Vec3.dot]
@@ -269,7 +269,7 @@ end SplitOctonion
 
 /-! ### 6. Главен Синтез на Раздел 126 -/
 
-theorem cayley_dickson_g2_synthesis
+theorem cayley_dickson_g2_synthesis {R : Type*} [CommRing R]
     (p q : Quat4 R) (u : Vec3 R) (l1 l2 l3 : R) (X : SplitOctonion R) :
     SplitOctonion.fromCayleyDickson p q =
       SplitOctonion.add (SplitOctonion.embedQuat p)

@@ -34,8 +34,10 @@ open SouriauKKS
 open InfoGeometry.Physics.SouriauLieThermodynamics
 open InfoGeometry.Canonical.SouriauKKSContragredientBridge
 
+section ModuleOrbitResponse
+
 variable {R L : Type*}
-variable [CommRing R] [LieRing L] [LieAlgebra R L]
+variable [CommRing R] [AddCommGroup L] [Module R L]
 
 /--
 The invariant response packet on an operator-orbit tangent/Lie carrier.
@@ -49,8 +51,14 @@ structure OperatorOrbitResponse where
   metric_symm : ∀ X Y : L, metric X Y = metric Y X
   symplectic_skew : ∀ X Y : L, symplectic X Y = -symplectic Y X
 
+end ModuleOrbitResponse
+
 namespace OperatorOrbitResponse
 
+section ModuleProperties
+
+variable {R L : Type*}
+variable [CommRing R] [AddCommGroup L] [Module R L]
 variable (D : OperatorOrbitResponse (R := R) (L := L))
 
 /-- Re-export of symmetry for the symmetric response. -/
@@ -65,7 +73,7 @@ variable (D : OperatorOrbitResponse (R := R) (L := L))
 
 /-- Over `ℝ`, the skew response is alternating. -/
 theorem symplectic_self_zero
-    {L : Type*} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    {L : Type*} [AddCommGroup L] [Module ℝ L]
     (D : OperatorOrbitResponse (R := ℝ) (L := L)) (X : L) :
     D.symplectic X X = 0 := by
   have h := D.symplectic_skew X X
@@ -114,6 +122,12 @@ theorem invariantUnder_symm
   · intro X Y
     have hxy := h.2 (e.symm X) (e.symm Y)
     simpa only [e.apply_symm_apply] using hxy.symm
+
+end ModuleProperties
+
+variable {R L : Type*}
+variable [CommRing R] [LieRing L] [LieAlgebra R L]
+variable (D : OperatorOrbitResponse (R := R) (L := L))
 
 /-! ## Realization predicates -/
 

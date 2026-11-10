@@ -7,7 +7,7 @@ namespace InfoGeometry.Algebra.BostConnesKMSPhaseTransition
 
 /-- Structure representing the algebraic generators and relations of the Bost-Connes C*-dynamical system.
     Generators: Isometries x_n for n ∈ ℕ⁺ and group algebra elements e(r) for r ∈ ℚ/ℤ (represented via periodic functions e(r+1) = e(r)). -/
-structure BostConnesSystem (R : Type*) [CommRing R] where
+structure BostConnesSystem (R : Type*) [Ring R] where
   x : ℕ+ → R
   x_star : ℕ+ → R
   e : ℚ → R
@@ -38,12 +38,12 @@ theorem thermalKMSWeight_mul (β : ℝ) (m n : ℕ+) :
 /-- **Theorem**: Projection Mode Projection Operator Identity.
     In the Bost-Connes system, the element p_n = x_n x_n^* is a self-adjoint projection
     (idempotent: p_n^2 = p_n) representing the range of the mode isometry x_n. -/
-theorem projection_mode_idempotent {R : Type*} [CommRing R] (g : BostConnesSystem R) (n : ℕ+) :
+theorem projection_mode_idempotent {R : Type*} [Ring R] (g : BostConnesSystem R) (n : ℕ+) :
     (g.x n * g.x_star n) * (g.x n * g.x_star n) = g.x n * g.x_star n := by
   calc (g.x n * g.x_star n) * (g.x n * g.x_star n)
-    _ = g.x n * (g.x_star n * g.x n) * g.x_star n := by ring
+    _ = g.x n * (g.x_star n * g.x n) * g.x_star n := by noncomm_ring
     _ = g.x n * 1 * g.x_star n := by rw [g.x_star_x n]
-    _ = g.x n * g.x_star n := by ring
+    _ = g.x n * g.x_star n := by noncomm_ring
 
 /-- **Definition**: Phase Transition Characterization.
     The Bost-Connes system exhibits a Phase Transition at critical temperature β_c = 1:
@@ -83,7 +83,7 @@ theorem kms_projection_expectation (β : ℝ) (n : ℕ+) :
     4. Disjoint phase stratification between High-T (0 < β ≤ 1) and Low-T (β > 1).
     5. Critical phase boundary at β_c = 1. -/
 theorem master_bost_connes_kms_synthesis
-    {R : Type*} [CommRing R] (g : BostConnesSystem R) (m n : ℕ+) (β : ℝ) (h_low : isLowTemperaturePhase β) :
+    {R : Type*} [Ring R] (g : BostConnesSystem R) (m n : ℕ+) (β : ℝ) (h_low : isLowTemperaturePhase β) :
     (g.x_star n * g.x n = 1) ∧
     (g.x (m * n) = g.x m * g.x n) ∧
     ((g.x n * g.x_star n) * (g.x n * g.x_star n) = g.x n * g.x_star n) ∧

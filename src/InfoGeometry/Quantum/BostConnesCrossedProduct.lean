@@ -13,7 +13,7 @@ noncomputable section
 set_option linter.unusedVariables false
 set_option linter.unusedSimpArgs false
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def crossedProductRelation (Sp : R) (A alphaA : R) : Prop :=
   Sp * A = alphaA * Sp

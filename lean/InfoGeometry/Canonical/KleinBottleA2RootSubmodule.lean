@@ -11,7 +11,7 @@ monodromy restricts to the genuine `A₂` root local system.
 
 namespace InfoGeometry.Canonical
 
-variable {K : Type*} [CommRing K]
+variable {K : Type*} [Ring K]
 
 def a2RootSubmodule : Submodule K (A2ColourFiber K) where
   carrier := {v | v 0 + v 1 + v 2 = 0}
@@ -19,7 +19,9 @@ def a2RootSubmodule : Submodule K (A2ColourFiber K) where
   add_mem' := by
     intro v w hv hw
     dsimp at hv hw ⊢
-    linear_combination hv + hw
+    calc
+      v 0 + w 0 + (v 1 + w 1) + (v 2 + w 2) = (v 0 + v 1 + v 2) + (w 0 + w 1 + w 2) := by abel
+      _ = 0 := by rw [hv, hw, add_zero]
   smul_mem' := by
     intro c v hv
     dsimp at hv ⊢
@@ -28,16 +30,18 @@ def a2RootSubmodule : Submodule K (A2ColourFiber K) where
 def a2RootCycle : a2RootSubmodule (K := K) →ₗ[K] a2RootSubmodule (K := K) where
   toFun v := ⟨a2Cycle v.1, by
     change v.1 2 + v.1 0 + v.1 1 = 0
-    have hv : v.1 0 + v.1 1 + v.1 2 = 0 := v.property
-    linear_combination hv⟩
+    calc
+      v.1 2 + v.1 0 + v.1 1 = v.1 0 + v.1 1 + v.1 2 := by abel
+      _ = 0 := v.property⟩
   map_add' v w := by ext i; fin_cases i <;> simp
   map_smul' c v := by ext i; fin_cases i <;> simp
 
 def a2RootReflection : a2RootSubmodule (K := K) →ₗ[K] a2RootSubmodule (K := K) where
   toFun v := ⟨a2Reflection v.1, by
     change v.1 0 + v.1 2 + v.1 1 = 0
-    have hv : v.1 0 + v.1 1 + v.1 2 = 0 := v.property
-    linear_combination hv⟩
+    calc
+      v.1 0 + v.1 2 + v.1 1 = v.1 0 + v.1 1 + v.1 2 := by abel
+      _ = 0 := v.property⟩
   map_add' v w := by ext i; fin_cases i <;> simp
   map_smul' c v := by ext i; fin_cases i <;> simp
 

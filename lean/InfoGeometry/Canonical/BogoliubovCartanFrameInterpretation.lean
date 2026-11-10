@@ -203,10 +203,25 @@ namespace OperatorInBogoliubovKANChart
 
 variable (O : OperatorInBogoliubovKANChart (E := E))
 
-/-- The primitive owner of the chart is the original neutral-space operator. -/
-theorem primitive_operator_owner :
-    O.operator = O.operator :=
-  rfl
+/-- A chart package is determined by its primitive operator and chosen frame.
+
+The two readouts are not independent data: the structure fields force them to
+be the full-frame and Cartan-component conjugations, respectively. -/
+theorem ext {O₁ O₂ : OperatorInBogoliubovKANChart (E := E)}
+    (hop : O₁.operator = O₂.operator) (hframe : O₁.frame = O₂.frame) :
+    O₁ = O₂ := by
+  cases O₁ with
+  | mk op₁ frame₁ framed₁ diagonal₁ hframed₁ hdiagonal₁ =>
+    cases O₂ with
+    | mk op₂ frame₂ framed₂ diagonal₂ hframed₂ hdiagonal₂ =>
+      dsimp at hop hframe
+      subst op₂
+      subst frame₂
+      have hframed : framed₁ = framed₂ := hframed₁.trans hframed₂.symm
+      have hdiagonal : diagonal₁ = diagonal₂ := hdiagonal₁.trans hdiagonal₂.symm
+      cases hframed
+      cases hdiagonal
+      rfl
 
 /-- Re-export: the framed operator is the full Bogoliubov frame action. -/
 theorem framedOperator_eq_frameAction :

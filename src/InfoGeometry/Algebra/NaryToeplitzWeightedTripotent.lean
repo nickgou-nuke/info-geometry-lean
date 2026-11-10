@@ -12,7 +12,7 @@ central scalar algebra `R`; the adjoint-side family is supplied by the
 algebraic Cuntz presentation.
 -/
 
-variable {R A : Type*} [CommRing R] [Semiring A] [Algebra R A]
+variable {R A : Type*} [CommSemiring R] [Semiring A] [Algebra R A]
 variable {N : ℕ}
 
 def weightedSupercharge

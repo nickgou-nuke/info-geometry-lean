@@ -23,10 +23,10 @@ Key Components:
    the hexagon relations collapse to standard braided monoidal Yang-Baxter equations.
 -/
 
-variable {K : Type*} [CommRing K]
+variable {K : Type*} [Ring K]
 
 /-- Abstract parenthesized 3-fold tensor datum. -/
-structure ParenthesizedTensorData (K : Type*) [CommRing K] (n : Type*) [Fintype n] [DecidableEq n] where
+structure ParenthesizedTensorData (K : Type*) [Ring K] (n : Type*) [Fintype n] [DecidableEq n] where
   Phi : Matrix n n K
   Phi_inv : Matrix n n K
   h_inv_l : Phi * Phi_inv = 1

@@ -29,7 +29,7 @@ open Matrix
 open InfoGeometry.Canonical.NonAbelianFusionFRBridge
 
 /-- Cuntz-Krieger 2-isometry structure on algebra A over K. -/
-structure CuntzTwoIsometry (K A : Type*) [CommRing K] [Ring A] [Algebra K A] [StarRing A] where
+structure CuntzTwoIsometry (K A : Type*) [Ring K] [Ring A] [Module K A] [StarRing A] where
   S1 : A
   S2 : A
   S1_star_S1 : star S1 * S1 = 1
@@ -39,7 +39,7 @@ structure CuntzTwoIsometry (K A : Type*) [CommRing K] [Ring A] [Algebra K A] [St
 
 namespace CuntzTwoIsometry
 
-variable {K A : Type*} [CommRing K] [StarRing K] [Ring A] [StarRing A] [Algebra K A] [StarModule K A]
+variable {K A : Type*} [Ring K] [StarRing K] [Ring A] [StarRing A] [Module K A] [StarModule K A]
 variable (ck : CuntzTwoIsometry K A)
 
 /-- Excitation projection H = S₁ S₁* + S₂ S₂* in corner algebra H A H. -/
@@ -79,7 +79,7 @@ theorem defectProjection_sq :
 end CuntzTwoIsometry
 
 /-- Matrix-to-Cuntz operator algebra representation map π : M₂(K) → A. -/
-def matrixToCuntz {K A : Type*} [CommRing K] [Ring A] [Algebra K A] [StarRing A]
+def matrixToCuntz {K A : Type*} [Ring K] [Ring A] [Module K A] [StarRing A]
     (ck : CuntzTwoIsometry K A) (M : Matrix (Fin 2) (Fin 2) K) : A :=
   (M 0 0) • (ck.S1 * star ck.S1) +
   (M 0 1) • (ck.S1 * star ck.S2) +
@@ -87,53 +87,53 @@ def matrixToCuntz {K A : Type*} [CommRing K] [Ring A] [Algebra K A] [StarRing A]
   (M 1 1) • (ck.S2 * star ck.S2)
 
 /-- Cuntz operator braid generator U₁ = π(σ₁). -/
-def kuntzBraidGen1 {K A : Type*} [CommRing K] [Ring A] [Algebra K A] [StarRing A]
+def kuntzBraidGen1 {K A : Type*} [Ring K] [Ring A] [Module K A] [StarRing A]
     (ck : CuntzTwoIsometry K A) (q1 q2 : K) : A :=
   matrixToCuntz ck (braidGen1 K q1 q2)
 
 /-- Cuntz operator braid generator U₂ = π(σ₂). -/
-def kuntzBraidGen2 {K A : Type*} [CommRing K] [Ring A] [Algebra K A] [StarRing A]
+def kuntzBraidGen2 {K A : Type*} [CommRing K] [Ring A] [Module K A] [StarRing A]
     (ck : CuntzTwoIsometry K A) (a b q1 q2 : K) : A :=
   matrixToCuntz ck (braidGen2 K a b q1 q2)
 
 /-- Global vacuum-fixed operator extension M̃ = π(M) + P₀.
 Note: M̃ is a unital multiplicative (*)-extension, NOT a ring/algebra homomorphism (non-additive). -/
-def extendedMatrixToCuntz {K A : Type*} [CommRing K] [StarRing K] [Ring A] [StarRing A] [Algebra K A] [StarModule K A]
+def extendedMatrixToCuntz {K A : Type*} [Ring K] [StarRing K] [Ring A] [StarRing A] [Module K A] [StarModule K A]
     (ck : CuntzTwoIsometry K A) (M : Matrix (Fin 2) (Fin 2) K) : A :=
   matrixToCuntz ck M + ck.defectProjection
 
 /-- Global extended braid generator 1: Ũ₁ = π(σ₁) + P₀. -/
-def extendedBraidGen1 {K A : Type*} [CommRing K] [StarRing K] [Ring A] [StarRing A] [Algebra K A] [StarModule K A]
+def extendedBraidGen1 {K A : Type*} [Ring K] [StarRing K] [Ring A] [StarRing A] [Module K A] [StarModule K A]
     (ck : CuntzTwoIsometry K A) (q1 q2 : K) : A :=
   extendedMatrixToCuntz ck (braidGen1 K q1 q2)
 
 /-- Global extended braid generator 2: Ũ₂ = π(σ₂) + P₀. -/
-def extendedBraidGen2 {K A : Type*} [CommRing K] [StarRing K] [Ring A] [StarRing A] [Algebra K A] [StarModule K A]
+def extendedBraidGen2 {K A : Type*} [CommRing K] [StarRing K] [Ring A] [StarRing A] [Module K A] [StarModule K A]
     (ck : CuntzTwoIsometry K A) (a b q1 q2 : K) : A :=
   extendedMatrixToCuntz ck (braidGen2 K a b q1 q2)
 
 /-! ## Fundamental Representation API & Algebraic Laws -/
 
-theorem matrixToCuntz_zero {K A : Type*} [CommRing K] [Ring A] [Algebra K A] [StarRing A]
+theorem matrixToCuntz_zero {K A : Type*} [Ring K] [Ring A] [Module K A] [StarRing A]
     (ck : CuntzTwoIsometry K A) :
     matrixToCuntz ck 0 = 0 := by
   dsimp [matrixToCuntz]
   simp only [zero_smul, add_zero]
 
-theorem matrixToCuntz_add {K A : Type*} [CommRing K] [Ring A] [Algebra K A] [StarRing A]
+theorem matrixToCuntz_add {K A : Type*} [Ring K] [Ring A] [Module K A] [StarRing A]
     (ck : CuntzTwoIsometry K A) (M N : Matrix (Fin 2) (Fin 2) K) :
     matrixToCuntz ck (M + N) = matrixToCuntz ck M + matrixToCuntz ck N := by
   dsimp [matrixToCuntz]
   simp only [add_smul]
   abel
 
-theorem matrixToCuntz_smul {K A : Type*} [CommRing K] [Ring A] [Algebra K A] [StarRing A]
+theorem matrixToCuntz_smul {K A : Type*} [Ring K] [Ring A] [Module K A] [StarRing A]
     (ck : CuntzTwoIsometry K A) (c : K) (M : Matrix (Fin 2) (Fin 2) K) :
     matrixToCuntz ck (c • M) = c • matrixToCuntz ck M := by
   dsimp [matrixToCuntz]
   simp only [smul_add, smul_smul]
 
-theorem matrixToCuntz_one {K A : Type*} [CommRing K] [StarRing K] [Ring A] [StarRing A] [Algebra K A] [StarModule K A]
+theorem matrixToCuntz_one {K A : Type*} [Ring K] [StarRing K] [Ring A] [StarRing A] [Module K A] [StarModule K A]
     (ck : CuntzTwoIsometry K A) :
     matrixToCuntz ck 1 = ck.excitationProjection := by
   dsimp [matrixToCuntz, CuntzTwoIsometry.excitationProjection]
@@ -143,7 +143,7 @@ theorem matrixToCuntz_one {K A : Type*} [CommRing K] [StarRing K] [Ring A] [Star
   simp only [one_smul, zero_smul, add_zero, zero_add]
 
 /-- Star-homomorphism theorem: π(M†) = (π(M))*. -/
-theorem matrixToCuntz_conjTranspose {K A : Type*} [CommRing K] [StarRing K] [Ring A] [StarRing A] [Algebra K A] [StarModule K A]
+theorem matrixToCuntz_conjTranspose {K A : Type*} [Ring K] [StarRing K] [Ring A] [StarRing A] [Module K A] [StarModule K A]
     (ck : CuntzTwoIsometry K A) (M : Matrix (Fin 2) (Fin 2) K) :
     matrixToCuntz ck M.conjTranspose = star (matrixToCuntz ck M) := by
   dsimp [matrixToCuntz, conjTranspose, transpose, map]
@@ -345,7 +345,8 @@ theorem matrixToCuntz_injective {K A : Type*} [CommRing K] [Ring A] [Algebra K A
 
 /-! ## Vacuum Orthogonality & Extended Unital API -/
 
-theorem matrixToCuntz_mul_defect {K A : Type*} [CommRing K] [StarRing K] [Ring A] [StarRing A] [Algebra K A] [StarModule K A]
+theorem matrixToCuntz_mul_defect {K A : Type*} [Ring K] [StarRing K] [Ring A] [StarRing A]
+    [Module K A] [IsScalarTower K A A] [StarModule K A]
     (ck : CuntzTwoIsometry K A) (M : Matrix (Fin 2) (Fin 2) K) :
     matrixToCuntz ck M * ck.defectProjection = 0 := by
   dsimp [matrixToCuntz, CuntzTwoIsometry.defectProjection, CuntzTwoIsometry.excitationProjection]
@@ -383,7 +384,8 @@ theorem matrixToCuntz_mul_defect {K A : Type*} [CommRing K] [StarRing K] [Ring A
     rw [h, h_o1, h_o2, sub_zero, sub_self]
   simp only [add_mul, smul_mul_assoc, h11, h12, h21, h22, smul_zero, add_zero]
 
-theorem defect_mul_matrixToCuntz {K A : Type*} [CommRing K] [StarRing K] [Ring A] [StarRing A] [Algebra K A] [StarModule K A]
+theorem defect_mul_matrixToCuntz {K A : Type*} [Ring K] [StarRing K] [Ring A] [StarRing A]
+    [Module K A] [SMulCommClass K A A] [StarModule K A]
     (ck : CuntzTwoIsometry K A) (M : Matrix (Fin 2) (Fin 2) K) :
     ck.defectProjection * matrixToCuntz ck M = 0 := by
   dsimp [matrixToCuntz, CuntzTwoIsometry.defectProjection, CuntzTwoIsometry.excitationProjection]
@@ -421,7 +423,7 @@ theorem defect_mul_matrixToCuntz {K A : Type*} [CommRing K] [StarRing K] [Ring A
     rw [h, h_o1, h_o2, sub_zero, sub_self]
   simp only [mul_add, mul_smul_comm, h11, h12, h21, h22, smul_zero, add_zero]
 
-theorem extendedMatrixToCuntz_one {K A : Type*} [CommRing K] [StarRing K] [Ring A] [StarRing A] [Algebra K A] [StarModule K A]
+theorem extendedMatrixToCuntz_one {K A : Type*} [Ring K] [StarRing K] [Ring A] [StarRing A] [Module K A] [StarModule K A]
     (ck : CuntzTwoIsometry K A) :
     extendedMatrixToCuntz ck 1 = 1 := by
   dsimp [extendedMatrixToCuntz, CuntzTwoIsometry.defectProjection]
@@ -445,7 +447,8 @@ theorem extendedMatrixToCuntz_mul {K A : Type*} [CommRing K] [StarRing K] [Ring 
   noncomm_ring
 
 /-- Right vacuum fixation theorem: M̃(M) P₀ = P₀. -/
-theorem extendedMatrixToCuntz_fixes_defect {K A : Type*} [CommRing K] [StarRing K] [Ring A] [StarRing A] [Algebra K A] [StarModule K A]
+theorem extendedMatrixToCuntz_fixes_defect {K A : Type*} [Ring K] [StarRing K] [Ring A] [StarRing A]
+    [Module K A] [IsScalarTower K A A] [StarModule K A]
     (ck : CuntzTwoIsometry K A) (M : Matrix (Fin 2) (Fin 2) K) :
     extendedMatrixToCuntz ck M * ck.defectProjection = ck.defectProjection := by
   dsimp [extendedMatrixToCuntz]
@@ -457,7 +460,8 @@ theorem extendedMatrixToCuntz_fixes_defect {K A : Type*} [CommRing K] [StarRing 
     _ = ck.defectProjection := by simp only [zero_add]
 
 /-- **Left Vacuum Fixation Theorem (Bilateral Audit Compliance)**: P₀ M̃(M) = P₀. -/
-theorem defect_fixes_extendedMatrixToCuntz {K A : Type*} [CommRing K] [StarRing K] [Ring A] [StarRing A] [Algebra K A] [StarModule K A]
+theorem defect_fixes_extendedMatrixToCuntz {K A : Type*} [Ring K] [StarRing K] [Ring A] [StarRing A]
+    [Module K A] [SMulCommClass K A A] [StarModule K A]
     (ck : CuntzTwoIsometry K A) (M : Matrix (Fin 2) (Fin 2) K) :
     ck.defectProjection * extendedMatrixToCuntz ck M = ck.defectProjection := by
   dsimp [extendedMatrixToCuntz]

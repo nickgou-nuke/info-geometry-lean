@@ -34,14 +34,14 @@ namespace InfoGeometry.Algebra.PenroseTwistorG2
 
 open scoped BigOperators
 
-variable {R : Type*} [CommRing R]
+variable {R B : Type*}
 
 /-! =========================================================================
     1. Bi-Twistor Space and Scalar-Vector Splitting
     ========================================================================= -/
 
-/-- An abstract Bi-Twistor space over a commutative ring $R$ (with $2$ invertible). -/
-structure BiTwistorSpace (R B : Type*) [CommRing R] [AddCommGroup B] [Module R B] where
+/-- An abstract Bi-Twistor space over a commutative semiring $R$ (with $2$ invertible). -/
+structure BiTwistorSpace (R B : Type*) [CommSemiring R] [AddCommGroup B] [Module R B] where
   /-- Polar bilinear form with split signature. -/
   metric : B →ₗ[R] B →ₗ[R] R
   metric_comm : ∀ x y : B, metric x y = metric y x
@@ -56,7 +56,9 @@ structure BiTwistorSpace (R B : Type*) [CommRing R] [AddCommGroup B] [Module R B
 
 namespace BiTwistorSpace
 
-variable {B : Type*} [AddCommGroup B] [Module R B]
+section CommSemiring
+
+variable [CommSemiring R] [AddCommGroup B] [Module R B]
 
 /-- Scalar part of a bi-twistor $A$: $A_S = \frac{1}{2} (A \cdot E)$. -/
 def scalarPart (bt : BiTwistorSpace R B) (two_inv : R) (A : B) : R :=
@@ -65,6 +67,31 @@ def scalarPart (bt : BiTwistorSpace R B) (two_inv : R) (A : B) : R :=
 /-- Vector part of a bi-twistor $A$: $A_V = A - A_S • E$. -/
 def vectorPart (bt : BiTwistorSpace R B) (two_inv : R) (A : B) : B :=
   A - (bt.scalarPart two_inv A) • bt.E
+
+/-- 🏆 THEOREM (Scalar-Vector Reconstruction):
+    Every bi-twistor $A$ is uniquely reconstructed as $A = A_S • E + A_V$. -/
+theorem biTwistor_reconstruction (bt : BiTwistorSpace R B) (two_inv : R) (A : B) :
+    (bt.scalarPart two_inv A) • bt.E + bt.vectorPart two_inv A = A := by
+  dsimp [vectorPart]
+  abel
+
+/-- 🏆 THEOREM: The unit bi-twistor $E$ acts as the multiplicative identity on scalar multiples
+    (when $E_S = 1$ and $E_V = 0$). -/
+theorem scalarPart_E (bt : BiTwistorSpace R B) (two_inv : R) (h2 : 2 * two_inv = 1) :
+    bt.scalarPart two_inv bt.E = 1 := by
+  dsimp [scalarPart]
+  rw [bt.E_sq, mul_comm, h2]
+
+theorem vectorPart_E (bt : BiTwistorSpace R B) (two_inv : R) (h2 : 2 * two_inv = 1) :
+    bt.vectorPart two_inv bt.E = 0 := by
+  dsimp [vectorPart]
+  rw [bt.scalarPart_E two_inv h2, one_smul, sub_self]
+
+end CommSemiring
+
+section CommRing
+
+variable [CommRing R] [AddCommGroup B] [Module R B]
 
 /-- 🏆 THEOREM: The vector part $A_V$ is orthogonal to the unit bi-twistor $E$
     (when $2 \cdot \mathrm{two\_inv} = 1$). -/
@@ -79,13 +106,6 @@ theorem vectorPart_orthogonal (bt : BiTwistorSpace R B) (two_inv : R) (h2 : 2 * 
     _ = bt.metric A bt.E - (1 : R) * bt.metric A bt.E := by rw [h2]
     _ = 0 := by ring
 
-/-- 🏆 THEOREM (Scalar-Vector Reconstruction):
-    Every bi-twistor $A$ is uniquely reconstructed as $A = A_S • E + A_V$. -/
-theorem biTwistor_reconstruction (bt : BiTwistorSpace R B) (two_inv : R) (A : B) :
-    (bt.scalarPart two_inv A) • bt.E + bt.vectorPart two_inv A = A := by
-  dsimp [vectorPart]
-  abel
-
 /-! =========================================================================
     2. Penrose Split-Octonionic Multiplication
     ========================================================================= -/
@@ -98,17 +118,7 @@ def mul (bt : BiTwistorSpace R B) (two_inv : R) (x y : B) : B :=
   let bV := bt.vectorPart two_inv y
   (aS * bS - bt.metric aV bV) • bt.E + (aS • bV + bS • aV + bt.cross aV bV)
 
-/-- 🏆 THEOREM: The unit bi-twistor $E$ acts as the multiplicative identity on scalar multiples
-    (when $E_S = 1$ and $E_V = 0$). -/
-theorem scalarPart_E (bt : BiTwistorSpace R B) (two_inv : R) (h2 : 2 * two_inv = 1) :
-    bt.scalarPart two_inv bt.E = 1 := by
-  dsimp [scalarPart]
-  rw [bt.E_sq, mul_comm, h2]
-
-theorem vectorPart_E (bt : BiTwistorSpace R B) (two_inv : R) (h2 : 2 * two_inv = 1) :
-    bt.vectorPart two_inv bt.E = 0 := by
-  dsimp [vectorPart]
-  rw [bt.scalarPart_E two_inv h2, one_smul, sub_self]
+end CommRing
 
 /-! =========================================================================
     3. Automorphisms of Bi-Twistor Space ($G_2^*$ Symmetry)
@@ -116,7 +126,7 @@ theorem vectorPart_E (bt : BiTwistorSpace R B) (two_inv : R) (h2 : 2 * two_inv =
 
 /-- An automorphism of the Penrose bi-twistor split octonion algebra is a linear equivalence
     preserving the unit $E$, the metric, and the cross product. -/
-structure Automorphism (bt : BiTwistorSpace R B) where
+structure Automorphism [CommSemiring R] [AddCommGroup B] [Module R B] (bt : BiTwistorSpace R B) where
   toLinearEquiv : B ≃ₗ[R] B
   map_E : toLinearEquiv bt.E = bt.E
   map_metric : ∀ x y : B, bt.metric (toLinearEquiv x) (toLinearEquiv y) = bt.metric x y
@@ -124,7 +134,9 @@ structure Automorphism (bt : BiTwistorSpace R B) where
 
 namespace Automorphism
 
-variable {bt : BiTwistorSpace R B}
+section CommSemiring
+
+variable [CommSemiring R] [AddCommGroup B] [Module R B] {bt : BiTwistorSpace R B}
 
 @[simp] theorem apply_E (Φ : Automorphism bt) : Φ.toLinearEquiv bt.E = bt.E := Φ.map_E
 
@@ -146,9 +158,12 @@ theorem map_vectorPart (Φ : Automorphism bt) (two_inv : R) (A : B) :
   simp only [map_sub, map_smul, Φ.apply_E]
   rw [Φ.map_scalarPart two_inv A]
 
+end CommSemiring
+
 /-- 🏆 THEOREM: Every bi-twistor automorphism preserves the Penrose split-octonionic product:
     $\Phi(A \cdot B) = \Phi(A) \cdot \Phi(B)$. -/
-theorem map_mul (Φ : Automorphism bt) (two_inv : R) (x y : B) :
+theorem map_mul [CommRing R] [AddCommGroup B] [Module R B] {bt : BiTwistorSpace R B}
+    (Φ : Automorphism bt) (two_inv : R) (x y : B) :
     Φ.toLinearEquiv (bt.mul two_inv x y) =
       bt.mul two_inv (Φ.toLinearEquiv x) (Φ.toLinearEquiv y) := by
   dsimp [mul]

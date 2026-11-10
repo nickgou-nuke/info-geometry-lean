@@ -5,6 +5,7 @@ Authors: InfoGeometry Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 
 /-!
 # Section 145: Tomita-Takesaki Modular Conjugation J, Octonion Conjugation, and CPT Invariance
@@ -37,7 +38,7 @@ structure ColorVec3 (R : Type*) where
 
 namespace ColorVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : ColorVec3 R := ⟨0, 0, 0⟩
 def add (u v : ColorVec3 R) : ColorVec3 R := ⟨u.c1 + v.c1, u.c2 + v.c2, u.c3 + v.c3⟩
@@ -67,7 +68,7 @@ structure SplitOctonion (R : Type*) where
 
 namespace SplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : SplitOctonion R := ⟨0, ColorVec3.zero, ColorVec3.zero, 0⟩
 def one  : SplitOctonion R := ⟨1, ColorVec3.zero, ColorVec3.zero, 1⟩
@@ -119,13 +120,13 @@ abbrev J (X : SplitOctonion R) : SplitOctonion R :=
 theorem modular_conjugation_involutive (X : SplitOctonion R) :
     modularConjugationJ (modularConjugationJ X) = X := by
   dsimp [modularConjugationJ, ColorVec3.neg]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 /--
 Tomita anti-automorphism:
 Modular conjugation reverses multiplication order: `J (mul X Y) = mul (J Y) (J X)`.
 -/
-theorem modular_conjugation_anti_automorphism (X Y : SplitOctonion R) :
+theorem modular_conjugation_anti_automorphism {R : Type*} [CommRing R] (X Y : SplitOctonion R) :
     modularConjugationJ (mul X Y) = mul (modularConjugationJ Y) (modularConjugationJ X) := by
   dsimp [modularConjugationJ, mul, ColorVec3.neg, ColorVec3.dot,
          ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross]
@@ -136,7 +137,7 @@ Fundamental composition algebra identity:
 Multiplying any split-octonion by its modular conjugate on either side yields
 `scale (intervalNorm X) one`.
 -/
-theorem composition_algebra_fundamental_identity (X : SplitOctonion R) :
+theorem composition_algebra_fundamental_identity {R : Type*} [CommRing R] (X : SplitOctonion R) :
     mul X (modularConjugationJ X) = scale (intervalNorm X) one ∧
     mul (modularConjugationJ X) X = scale (intervalNorm X) one := by
   constructor
@@ -153,7 +154,7 @@ theorem composition_algebra_fundamental_identity (X : SplitOctonion R) :
 theorem cpt_time_inversion_exact :
     J (paraSymplecticK0 (R := R)) = neg paraSymplecticK0 := by
   dsimp [J, modularConjugationJ, paraSymplecticK0, neg, ColorVec3.neg, ColorVec3.zero]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 /--
 CPT time-space reversal and vacuum invariance:
@@ -167,9 +168,9 @@ theorem cpt_time_space_reversal (d : ColorVec3 R) :
     modularConjugationJ (one (R := R)) = one := by
   refine ⟨cpt_time_inversion_exact, ?_, ?_⟩
   · dsimp [modularConjugationJ, diracVecH, neg, ColorVec3.neg]
-    ext <;> ring
+    ext <;> noncomm_ring
   · dsimp [modularConjugationJ, one, ColorVec3.neg, ColorVec3.zero]
-    ext <;> ring
+    ext <;> noncomm_ring
 
 end SplitOctonion
 

@@ -99,11 +99,28 @@ theorem no_hyperbolic_boost_iff_seeds_vanish (h : IsDualSeedPair d b) :
 
 section Scalars
 
-variable {R : Type*} [CommRing R] [Algebra R A]
+/-- Diagonal Peirce conditional expectation / decoherence `P_+ X P_+ + P_- X P_-`. -/
+def diagonalDecoherence (d b X : A) : A :=
+  polePlus d b * X * polePlus d b + poleMinus d b * X * poleMinus d b
+
+section NoncommScalars
+variable {R : Type*} [Ring R] [Module R A]
 
 /-- Elliptic chordal direction `s • Gamma + c • Q_1`. -/
 def ellipticChordalDirection (c s : R) (d b : A) : A :=
   s • phasePolarization d b + c • transitionVelocity d b
+
+/-- Hyperbolic chordal direction `v • Gamma - u • J`. -/
+def hyperbolicChordalDirection (u v : R) (d b : A) : A :=
+  v • phasePolarization d b - u • wheelGenerator d b
+
+/-- KMS modular weight `(u * u) • P_- + (v * v) • P_+`. -/
+def kmsModularWeight (u v : R) (d b : A) : A :=
+  (u * u) • poleMinus d b + (v * v) • polePlus d b
+
+end NoncommScalars
+
+variable {R : Type*} [CommRing R] [Algebra R A]
 
 theorem ellipticChordalDirection_sq (h : IsDualSeedPair d b) (c s : R) :
     ellipticChordalDirection c s d b * ellipticChordalDirection c s d b =
@@ -144,10 +161,6 @@ theorem elliptic_transition_sandwich (h : IsDualSeedPair d b) (c s : R) :
   simp only [transitionVelocity, majoranaPlus, mul_sub, sub_mul, mul_add,
     mul_smul_comm, smul_mul_assoc, h.pp, h.pq, h.pd, h.pb, h.dp,
     sub_zero, add_zero, smul_zero]
-
-/-- Hyperbolic chordal direction `v • Gamma - u • J`. -/
-def hyperbolicChordalDirection (u v : R) (d b : A) : A :=
-  v • phasePolarization d b - u • wheelGenerator d b
 
 /-- Its square is `(v^2 - u^2) • carrierSupport d b`. -/
 theorem hyperbolicChordalDirection_sq (h : IsDualSeedPair d b) (u v : R) :
@@ -206,14 +219,6 @@ theorem two_state_velocity_sandwich (h : IsDualSeedPair d b) (c s : R) :
   rw [hPq, movingPolePlus_formula]
   simp only [transitionVelocity, majoranaPlus, mul_sub, mul_add, mul_smul_comm,
     h.dp, h.dq, h.d_sq, hdb, smul_zero, zero_add]
-
-/-- Diagonal Peirce conditional expectation / decoherence `P_+ X P_+ + P_- X P_-`. -/
-def diagonalDecoherence (d b X : A) : A :=
-  polePlus d b * X * polePlus d b + poleMinus d b * X * poleMinus d b
-
-/-- KMS modular weight `(u * u) • P_- + (v * v) • P_+`. -/
-def kmsModularWeight (u v : R) (d b : A) : A :=
-  (u * u) • poleMinus d b + (v * v) • polePlus d b
 
 /-- Diagonal Peirce decoherence of `movingPolePlus c s d b` annihilates the off-diagonal
 coherence `-c s • Q_1` and yields `kmsModularWeight s c d b`. -/

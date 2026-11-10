@@ -14,7 +14,7 @@ namespace InfoGeometry.Canonical.SouriauModularLogIdentity
 open LinearMap
 
 variable {𝕜 V : Type*}
-variable [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
+variable [Ring 𝕜] [AddCommGroup V] [Module 𝕜 V]
 
 /-- Algebraic modular data for commutator transport. -/
 structure ModularLogData where

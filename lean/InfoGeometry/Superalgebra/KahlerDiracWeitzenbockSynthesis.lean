@@ -233,35 +233,38 @@ theorem chevalleyAction_anticomm {R : Type*} [CommRing R] {M : Type*} [AddCommGr
 ## Archetype III: Kähler–Dirac Operator `D = d + δ` and Hodge Laplacian `Δ = (d + δ)²`
 -/
 
-variable {R}
+section NoncommutativeRing
+
+variable {S : Type*} [Ring S]
+variable {Ω : Type*} [AddCommGroup Ω] [Module S Ω]
 
 /-- The Kähler–Dirac operator `D = d + δ` built from coboundary `d` and codifferential `δ`. -/
-def kahlerDirac (d δ : Module.End R Ω) : Module.End R Ω :=
+def kahlerDirac (d δ : Module.End S Ω) : Module.End S Ω :=
   d + δ
 
 /-- The skew-adjoint Clifford–Dirac operator `D_- = d - δ`. -/
-def cliffordDiracSub (d δ : Module.End R Ω) : Module.End R Ω :=
+def cliffordDiracSub (d δ : Module.End S Ω) : Module.End S Ω :=
   d - δ
 
 /-- The Hodge Laplacian `Δ = d δ + δ d` (anticommutator of `d` and `δ`). -/
-def hodgeLaplacian (d δ : Module.End R Ω) : Module.End R Ω :=
+def hodgeLaplacian (d δ : Module.End S Ω) : Module.End S Ω :=
   d * δ + δ * d
 
 /-- Full operator expansion of `(d + δ)²` prior to imposing nilpotency of `d` and `δ`. -/
-theorem kahlerDirac_sq_expansion (d δ : Module.End R Ω) :
+theorem kahlerDirac_sq_expansion (d δ : Module.End S Ω) :
     kahlerDirac d δ * kahlerDirac d δ = d * d + hodgeLaplacian d δ + δ * δ := by
   simp only [kahlerDirac, hodgeLaplacian, add_mul, mul_add]
   abel
 
 /-- When `d² = 0` and `δ² = 0`, the square of the Kähler–Dirac operator `D = d + δ` is
 identically the Hodge Laplacian `Δ = d δ + δ d`. -/
-theorem kahlerDirac_sq_eq_hodgeLaplacian (d δ : Module.End R Ω)
+theorem kahlerDirac_sq_eq_hodgeLaplacian (d δ : Module.End S Ω)
     (hd : d * d = 0) (hδ : δ * δ = 0) :
     kahlerDirac d δ * kahlerDirac d δ = hodgeLaplacian d δ := by
   rw [kahlerDirac_sq_expansion, hd, hδ, zero_add, add_zero]
 
 /-- When `d² = 0` and `δ² = 0`, the square of `d - δ` is `-Δ = -(d δ + δ d)`. -/
-theorem cliffordDiracSub_sq_eq_neg_hodgeLaplacian (d δ : Module.End R Ω)
+theorem cliffordDiracSub_sq_eq_neg_hodgeLaplacian (d δ : Module.End S Ω)
     (hd : d * d = 0) (hδ : δ * δ = 0) :
     cliffordDiracSub d δ * cliffordDiracSub d δ = - hodgeLaplacian d δ := by
   calc
@@ -273,7 +276,7 @@ theorem cliffordDiracSub_sq_eq_neg_hodgeLaplacian (d δ : Module.End R Ω)
       rw [hd, hδ, zero_sub, add_zero, hodgeLaplacian]
 
 /-- The Hodge Laplacian commutes with the exterior derivative `d` whenever `d² = 0`. -/
-theorem hodgeLaplacian_comm_d (d δ : Module.End R Ω) (hd : d * d = 0) :
+theorem hodgeLaplacian_comm_d (d δ : Module.End S Ω) (hd : d * d = 0) :
     hodgeLaplacian d δ * d = d * hodgeLaplacian d δ := by
   calc
     hodgeLaplacian d δ * d = d * δ * d + δ * (d * d) := by
@@ -284,7 +287,7 @@ theorem hodgeLaplacian_comm_d (d δ : Module.End R Ω) (hd : d * d = 0) :
       simp only [hodgeLaplacian, mul_add, mul_assoc]
 
 /-- The Hodge Laplacian commutes with the codifferential `δ` whenever `δ² = 0`. -/
-theorem hodgeLaplacian_comm_delta (d δ : Module.End R Ω) (hδ : δ * δ = 0) :
+theorem hodgeLaplacian_comm_delta (d δ : Module.End S Ω) (hδ : δ * δ = 0) :
     hodgeLaplacian d δ * δ = δ * hodgeLaplacian d δ := by
   calc
     hodgeLaplacian d δ * δ = d * (δ * δ) + δ * d * δ := by
@@ -295,14 +298,14 @@ theorem hodgeLaplacian_comm_delta (d δ : Module.End R Ω) (hδ : δ * δ = 0) :
       simp only [hodgeLaplacian, mul_add, mul_assoc]
 
 /-- The Kähler–Dirac operator commutes with the Hodge Laplacian. -/
-theorem kahlerDirac_comm_hodgeLaplacian (d δ : Module.End R Ω)
+theorem kahlerDirac_comm_hodgeLaplacian (d δ : Module.End S Ω)
     (hd : d * d = 0) (hδ : δ * δ = 0) :
     kahlerDirac d δ * hodgeLaplacian d δ = hodgeLaplacian d δ * kahlerDirac d δ := by
   simp only [kahlerDirac, add_mul, mul_add,
     ← hodgeLaplacian_comm_d d δ hd, ← hodgeLaplacian_comm_delta d δ hδ]
 
 /-- Every Kähler–Dirac harmonic form (`(d + δ) ω = 0`) is Hodge harmonic (`Δ ω = 0`). -/
-theorem kahlerDirac_harmonic_imp_hodge_harmonic (d δ : Module.End R Ω)
+theorem kahlerDirac_harmonic_imp_hodge_harmonic (d δ : Module.End S Ω)
     (hd : d * d = 0) (hδ : δ * δ = 0) (ω : Ω) (hω : kahlerDirac d δ ω = 0) :
     hodgeLaplacian d δ ω = 0 := by
   rw [← kahlerDirac_sq_eq_hodgeLaplacian d δ hd hδ, Module.End.mul_apply, hω, map_zero]
@@ -313,25 +316,25 @@ theorem kahlerDirac_harmonic_imp_hodge_harmonic (d δ : Module.End R Ω)
 
 /-- Finite sum of products in an endomorphism algebra. No geometric frame is
 part of this definition. -/
-def diracOperator {ι : Type*} [Fintype ι] (γ covDeriv : ι → Module.End R Ω) : Module.End R Ω :=
+def diracOperator {ι : Type*} [Fintype ι] (γ covDeriv : ι → Module.End S Ω) : Module.End S Ω :=
   ∑ i : ι, γ i * covDeriv i
 
 /-- Two-direction Bochner rough Laplacian `∇₁² + ∇₂²`. -/
-def bochnerLaplacian₂ (covDeriv₁ covDeriv₂ : Module.End R Ω) : Module.End R Ω :=
+def bochnerLaplacian₂ (covDeriv₁ covDeriv₂ : Module.End S Ω) : Module.End S Ω :=
   covDeriv₁ * covDeriv₁ + covDeriv₂ * covDeriv₂
 
 /-- Covariant curvature commutator `R₁₂ = [∇₁, ∇₂] = ∇₁ ∇₂ - ∇₂ ∇₁`. -/
-def curvatureCommutator (covDeriv₁ covDeriv₂ : Module.End R Ω) : Module.End R Ω :=
+def curvatureCommutator (covDeriv₁ covDeriv₂ : Module.End S Ω) : Module.End S Ω :=
   covDeriv₁ * covDeriv₂ - covDeriv₂ * covDeriv₁
 
 /-- Two-term endomorphism expression `D₂ = γ₁ A₁ + γ₂ A₂`. -/
-def diracOperator₂ (γ₁ γ₂ covDeriv₁ covDeriv₂ : Module.End R Ω) : Module.End R Ω :=
+def diracOperator₂ (γ₁ γ₂ covDeriv₁ covDeriv₂ : Module.End S Ω) : Module.End S Ω :=
   γ₁ * covDeriv₁ + γ₂ * covDeriv₂
 
 /-- Two-generator endomorphism identity under the stated square, anticommutation,
 and commutation hypotheses. Its commutator term is an algebraic rearrangement;
 this theorem does not assert the geometric Lichnerowicz formula. -/
-theorem diracOperator₂_sq_weitzenbock (γ₁ γ₂ covDeriv₁ covDeriv₂ : Module.End R Ω)
+theorem diracOperator₂_sq_weitzenbock (γ₁ γ₂ covDeriv₁ covDeriv₂ : Module.End S Ω)
     (hγ1 : γ₁ * γ₁ = 1) (hγ2 : γ₂ * γ₂ = 1)
     (hanticomm : γ₁ * γ₂ + γ₂ * γ₁ = 0)
     (hcomm11 : covDeriv₁ * γ₁ = γ₁ * covDeriv₁) (hcomm12 : covDeriv₁ * γ₂ = γ₂ * covDeriv₁)
@@ -371,9 +374,13 @@ theorem diracOperator₂_sq_weitzenbock (γ₁ γ₂ covDeriv₁ covDeriv₂ : M
       rw [h11, h22, h12, h21, bochnerLaplacian₂, curvatureCommutator, mul_sub, sub_eq_add_neg]
 
 /-- Decompose any endomorphism square into a chosen summand and its remainder. -/
-theorem dirac_sq_remainder_decomposition (D bochnerLaplacian : Module.End R Ω) :
+theorem dirac_sq_remainder_decomposition (D bochnerLaplacian : Module.End S Ω) :
     D * D = bochnerLaplacian + (D * D - bochnerLaplacian) :=
   (add_sub_cancel bochnerLaplacian (D * D)).symm
+
+end NoncommutativeRing
+
+variable {R}
 
 /-- If the remainder is assumed to be a scalar multiple of the identity, its
 action is multiplication by that scalar. This assumes the scalar identification
@@ -391,8 +398,8 @@ theorem dirac_sq_scalar_remainder_apply (D bochnerLaplacian : Module.End R Ω) (
 
 /-- Finite-index quadratic contraction `Cᵢⱼ = ∑ₖₗ Hᵢₖₗ Hⱼₖₗ` of an arbitrary
 three-index function. No differential-form or metric structure is assumed. -/
-def finiteQuadraticTensorContraction {n : Type*} [Fintype n]
-    (H : n → n → n → R) (i j : n) : R :=
+def finiteQuadraticTensorContraction {S : Type*} [Ring S] {n : Type*} [Fintype n]
+    (H : n → n → n → S) (i j : n) : S :=
   ∑ k : n, ∑ l : n, H i k l * H j k l
 
 /-- The finite quadratic contraction is symmetric in its two free indices. -/
@@ -417,8 +424,8 @@ theorem finiteQuadraticTensorContraction_diag_nonneg {S : Type*}
 
 /-- A componentwise weighted combination of an input matrix, the finite
 quadratic contraction, and a second input matrix. -/
-def weightedRicciHessianTensor {n : Type*} [Fintype n]
-    (ricci hessPhi : Matrix n n R) (H : n → n → n → R) (cH cPhi : R) : Matrix n n R :=
+def weightedRicciHessianTensor {S : Type*} [Ring S] {n : Type*} [Fintype n]
+    (ricci hessPhi : Matrix n n S) (H : n → n → n → S) (cH cPhi : S) : Matrix n n S :=
   fun i j => ricci i j - cH * finiteQuadraticTensorContraction H i j + cPhi * hessPhi i j
 
 /-- If the input matrices are symmetric, their weighted combination with the
@@ -434,9 +441,9 @@ theorem weightedRicciHessianTensor_isSymm {n : Type*} [Fintype n]
 /-- If both correction inputs vanish, the weighted matrix formula reduces to
 the first input matrix. -/
 @[simp]
-theorem weightedRicciHessianTensor_zero_corrections {n : Type*} [Fintype n]
-    (ricci : Matrix n n R) (cH cPhi : R) :
-    weightedRicciHessianTensor ricci 0 (fun _ _ _ => (0 : R)) cH cPhi = ricci := by
+theorem weightedRicciHessianTensor_zero_corrections {S : Type*} [Ring S] {n : Type*} [Fintype n]
+    (ricci : Matrix n n S) (cH cPhi : S) :
+    weightedRicciHessianTensor ricci 0 (fun _ _ _ => (0 : S)) cH cPhi = ricci := by
   ext i j
   simp [weightedRicciHessianTensor, finiteQuadraticTensorContraction]
 

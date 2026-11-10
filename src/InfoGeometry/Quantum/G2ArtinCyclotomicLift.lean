@@ -12,7 +12,7 @@ product has order six; its third power, rather than its sixth power, is `-I`.
 Thus this model is a Weyl shadow, not a spin lift.
 -/
 
-variable {K : Type*} [CommRing K]
+variable {K : Type*} [Ring K]
 
 abbrev RootPlane := Fin 2
 abbrev RootOperator (K : Type*) := Matrix RootPlane RootPlane K
@@ -25,12 +25,34 @@ def BLong (a : K) : RootOperator K :=
 
 def Coxeter (a : K) : RootOperator K := BShort a * BLong a
 
-theorem coxeter_pow_three (a : K) (ha : a * a = 3) :
-    Coxeter a ^ 3 = -(1 : RootOperator K) := by
+theorem coxeter_eq (a : K) (ha : a * a = 3) :
+    Coxeter a = !![2, a; -a, -1] := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    norm_num [Coxeter, BShort, BLong, Matrix.mul_apply, Fin.sum_univ_two,
-      pow_succ, pow_two, ha] <;> ring_nf at * <;> simp [ha] <;> norm_num
+    simp [Coxeter, BShort, BLong, Matrix.mul_apply, Fin.sum_univ_two]
+  · rw [ha]; norm_num
+
+theorem coxeter_sq_eq (a : K) (ha : a * a = 3) :
+    Coxeter a ^ 2 = !![1, a; -a, -2] := by
+  rw [pow_two, coxeter_eq a ha]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Fin.sum_univ_two]
+  · rw [ha]; norm_num
+  · noncomm_ring
+  · noncomm_ring
+  · rw [ha]; norm_num
+
+theorem coxeter_pow_three (a : K) (ha : a * a = 3) :
+    Coxeter a ^ 3 = -(1 : RootOperator K) := by
+  have h3 : Coxeter a ^ 3 = Coxeter a ^ 2 * Coxeter a := pow_succ _ 2
+  rw [h3, coxeter_sq_eq a ha, coxeter_eq a ha]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Fin.sum_univ_two]
+  · rw [ha]; norm_num
+  · noncomm_ring
+  · rw [ha]; norm_num
 
 theorem coxeter_pow_six (a : K) (ha : a * a = 3) :
     Coxeter a ^ 6 = 1 := by

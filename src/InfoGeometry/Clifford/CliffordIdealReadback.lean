@@ -16,29 +16,25 @@ variable {Cl : Type*} [Ring Cl]
 def LeftIdeal (P : Cl) := {x : Cl | x * P = x}
 def RightIdeal (P : Cl) := {y : Cl | P * y = y}
 
-theorem idempotent_mem_leftIdeal (P : Cl) (hP : P * P = P) :
-    P ∈ LeftIdeal P := hP
+theorem leftIdeal_mul_closed (P : Cl) (x y : LeftIdeal P) :
+    x.1 * y.1 ∈ LeftIdeal P := by
+  change (x.1 * y.1) * P = x.1 * y.1
+  rw [mul_assoc, y.2]
 
-theorem idempotent_mem_rightIdeal (P : Cl) (hP : P * P = P) :
-    P ∈ RightIdeal P := hP
+theorem rightIdeal_mul_closed (P : Cl) (x y : RightIdeal P) :
+    x.1 * y.1 ∈ RightIdeal P := by
+  change P * (x.1 * y.1) = x.1 * y.1
+  rw [← mul_assoc, x.2]
 
-def leftIdealEquiv
-    (P : Cl) (_hP : P * P = P) :
-    LeftIdeal P ≃
-      InfoGeometry.Algebra.IdempotentCornerCommutant.principalLeftIdeal P :=
-  Equiv.refl _
+theorem leftIdeal_add_closed (P : Cl) (x y : LeftIdeal P) :
+    x.1 + y.1 ∈ LeftIdeal P := by
+  change (x.1 + y.1) * P = x.1 + y.1
+  rw [add_mul, x.2, y.2]
 
-@[simp] theorem leftIdealEquiv_coe
-    (P : Cl) (hP : P * P = P) (x : LeftIdeal P) :
-    (leftIdealEquiv P hP x : Cl) = x.1 :=
-  rfl
-
-@[simp] theorem leftIdealEquiv_mem
-    (P : Cl) (hP : P * P = P) (x : LeftIdeal P) :
-    (leftIdealEquiv P hP x :
-      InfoGeometry.Algebra.IdempotentCornerCommutant.principalLeftIdeal P) =
-      ⟨x.1, x.2⟩ :=
-  rfl
+theorem rightIdeal_add_closed (P : Cl) (x y : RightIdeal P) :
+    x.1 + y.1 ∈ RightIdeal P := by
+  change P * (x.1 + y.1) = x.1 + y.1
+  rw [mul_add, x.2, y.2]
 
 theorem left_mul_mem (P : Cl) (g : Cl) (x : LeftIdeal P) :
     g * x.1 ∈ LeftIdeal P := by

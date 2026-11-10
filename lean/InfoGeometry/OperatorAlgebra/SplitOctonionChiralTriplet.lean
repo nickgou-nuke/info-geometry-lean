@@ -1,16 +1,24 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.SplitOctonionChiralFockSpectrum
 
 /-!
-# Polarized Cayley triplet carrier
+# Polarized Cayley triplet carrier over non-commutative operator rings
 
-This file is a coefficient-frame model, not a Zorn-matrix realization.  The
-two triplet slots are ordinary `Fin 3 → R` vectors, and the product records
-the polarized Cayley channels:
+This file is a coefficient-frame model over a general (not necessarily commutative)
+operator ring `R`. The two triplet slots are `Fin 3 → R` vectors, and the product
+records the polarized Cayley channels:
 
 * same-sheet vector data use the three-dimensional cross product;
-* opposite-sheet vector data use the scalar dot product.
+* opposite-sheet vector data use the ordered dot product;
+* over a non-commutative ring `R`, same-sheet self-products `star (plusTriplet a) (plusTriplet a)`
+  carry the Plücker–Zorn self-cross commutator anomaly `cross a a`.
 
 No scattering, BdG, or physical Andreev interpretation is asserted here.
 -/
@@ -19,7 +27,7 @@ namespace InfoGeometry.OperatorAlgebra.SplitOctonionChiralTriplet
 
 open scoped BigOperators
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 abbrev Vec3 (R : Type*) := Fin 3 → R
 
@@ -62,6 +70,8 @@ def plusPole (r : R) : ChiralAmplitude R :=
 def minusPole (r : R) : ChiralAmplitude R :=
   { polePlus := 0, poleMinus := r, vectorPlus := 0, vectorMinus := 0 }
 
+instance : Inhabited (ChiralAmplitude R) := ⟨plusPole 0⟩
+
 @[simp] theorem dot_zero_left (b : Vec3 R) : dot 0 b = 0 := by
   simp [dot]
 
@@ -76,6 +86,7 @@ def minusPole (r : R) : ChiralAmplitude R :=
   funext i
   fin_cases i <;> simp [cross]
 
+omit [Ring R] in
 theorem eq_iff {x y : ChiralAmplitude R} :
     x = y ↔
       x.polePlus = y.polePlus ∧
@@ -122,6 +133,15 @@ theorem cross_component_one (a b : Vec3 R) :
 theorem cross_component_two (a b : Vec3 R) :
     cross a b 2 = a 0 * b 1 - a 1 * b 0 := by
   rfl
+
+/-- Over a non-commutative operator ring `R`, the same-sheet self-cross product
+`cross a a` has components equal to the pairwise operator commutators
+`[a 1, a 2]`, `[a 2, a 0]`, `[a 0, a 1]`. -/
+theorem cross_self_components (a : Vec3 R) :
+    cross a a 0 = a 1 * a 2 - a 2 * a 1 ∧
+    cross a a 1 = a 2 * a 0 - a 0 * a 2 ∧
+    cross a a 2 = a 0 * a 1 - a 1 * a 0 :=
+  ⟨rfl, rfl, rfl⟩
 
 end ChiralAmplitude
 

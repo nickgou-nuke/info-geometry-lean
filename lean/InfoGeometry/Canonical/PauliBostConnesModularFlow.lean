@@ -6,13 +6,13 @@ import InfoGeometry.Canonical.PauliWorldClockSynchronicity
 
 namespace InfoGeometry.Canonical
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /--
-A Modular Automorphism Flow on a CommRing R.
+A Modular Automorphism Flow on a Ring R.
 Abstractly represents σ_t : R → R, representing the Unruh/Souriau flow of time.
 -/
-structure ModularFlow (R : Type*) [CommRing R] where
+structure ModularFlow (R : Type*) [Ring R] where
   flow : ℝ → R → R
   preserves_add : ∀ t x y, flow t (x + y) = flow t x + flow t y
   preserves_mul : ∀ t x y, flow t (x * y) = flow t x * flow t y
@@ -24,7 +24,7 @@ structure ModularFlow (R : Type*) [CommRing R] where
 The modular flow of the Unus Mundus is driven exclusively by the central Thermodynamic Axis `l`.
 Therefore, the clock axis itself is invariant under the flow of time (it is the generator of time).
 -/
-structure PauliBostConnesClock (R : Type*) [CommRing R] extends PauliWorldClock R where
+structure PauliBostConnesClock (R : Type*) [Ring R] extends PauliWorldClock R where
   time_flow : ModularFlow R
   axis_invariant : ∀ t, time_flow.flow t axis.l = axis.l
   neg_invariant : ∀ t x, time_flow.flow t (-x) = -time_flow.flow t x

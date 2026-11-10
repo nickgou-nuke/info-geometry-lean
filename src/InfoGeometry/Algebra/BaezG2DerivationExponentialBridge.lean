@@ -56,7 +56,7 @@ theorem baezDerivation_one (x y : Algebra R V B) :
 /-- 🏆 THEOREM: Multiplicativity of the Nilpotent Baez Exponential Flow.
     For any Baez derivation D with D² = 0 on products, exp(tD) preserves non-associative multiplication. -/
 theorem baez_nilpotent_exp_map_mul
-    {K : Type*} [Field K] [CharZero K]
+    {K : Type*} [CommRing K]
     {A : Type*} [AddCommGroup A] [Module K A]
     (mul : A →ₗ[K] A →ₗ[K] A)
     (D : A →ₗ[K] A)

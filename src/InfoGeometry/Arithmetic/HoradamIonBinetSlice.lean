@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.HoradamIonMatrixMethods
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
@@ -30,7 +31,7 @@ open InfoGeometry.Arithmetic.HoradamIonMatrixMethods
 variable {R : Type*} [CommRing R]
 
 /-- Conditional Binet numerator/core `A α^n - B β^n`. -/
-def binetCore (A B α β : R) (n : ℕ) : R := A * α ^ n - B * β ^ n
+def binetCore {R : Type*} [Ring R] (A B α β : R) (n : ℕ) : R := A * α ^ n - B * β ^ n
 
 /-- A root of `x^2 - p x - q = 0` propagates the Horadam recurrence. -/
 theorem pow_succ_succ_of_characteristic
@@ -60,7 +61,7 @@ theorem binetCore_recurrence
   ring
 
 /-- Coordinate lift of the Binet core. -/
-def binetIon {N : ℕ} (A B α β : R) (n : ℕ) : Ion N R :=
+def binetIon {R : Type*} [Ring R] {N : ℕ} (A B α β : R) (n : ℕ) : Ion N R :=
   fun s => binetCore A B α β (n + s.val)
 
 /-- The Binet coordinate lift satisfies the componentwise Horadam recurrence. -/
@@ -79,17 +80,17 @@ theorem binetIon_recurrence {N : ℕ}
   exact binetCore_recurrence A B α β p q hα hβ (n + s.val)
 
 /-- Paper's numerator constant `A=b-aβ`. -/
-def paperA (a b β : R) : R := b - a * β
+def paperA {R : Type*} [Ring R] (a b β : R) : R := b - a * β
 
 /-- Paper's numerator constant `B=b-aα`. -/
-def paperB (a b α : R) : R := b - a * α
+def paperB {R : Type*} [Ring R] (a b α : R) : R := b - a * α
 
 /-- The normalized Binet numerator has initial value `a` after clearing denominator. -/
 theorem paper_binet_initial_zero_clear_denominator
-    (a b α β : R) :
+    {R : Type*} [Ring R] (a b α β : R) :
     binetCore (paperA a b β) (paperB a b α) α β 0 = a * (α - β) := by
   simp [binetCore, paperA, paperB]
-  ring
+  noncomm_ring
 
 /-- The normalized Binet numerator has initial value `b` after clearing denominator. -/
 theorem paper_binet_initial_one_clear_denominator

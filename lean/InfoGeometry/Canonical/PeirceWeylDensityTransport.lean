@@ -10,7 +10,8 @@ positivity assumption is needed. The Weyl element is an ambient unit. -/
 namespace InfoGeometry.Canonical.PeirceWeylDensityTransport
 open ReflexiveNilpotentFlows PeirceWeightedTrace
 open InfoGeometry.NCG InfoGeometry.OperatorAlgebra.TracialCARDensity
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A] {d B : A}
+section RingScalars
+variable {R A : Type*} [Ring R] [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A] {d B : A}
 variable (hd : d*d=0) (hB : B*B=0) (hr : d*B*d=d) (hs : B*d*B=B)
 include hs
 
@@ -22,6 +23,13 @@ theorem weyl_conjugates_weight (a b : R) :
     b • (B*d) + a • (d*B)
   simp only [mul_add, add_mul, mul_smul_comm, smul_mul_assoc, hp, hm]
   abel
+
+end RingScalars
+
+section CommScalars
+variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A] {d B : A}
+variable (hd : d*d=0) (hB : B*B=0) (hr : d*B*d=d) (hs : B*d*B=B)
+include hs
 
 theorem weyl_weight_pullback (τ : TracialFunctional R A) (a b : R) (x : A) :
     weighted τ (supportWeight b a d B) x =
@@ -36,5 +44,7 @@ theorem weyl_weight_joint_covariance (τ : TracialFunctional R A) (a b : R) (x :
       weighted τ (supportWeight a b d B) x := by
   rw [← weyl_conjugates_weight hd hB hr hs a b]
   exact joint_covariance τ _ _ _
+
+end CommScalars
 
 end InfoGeometry.Canonical.PeirceWeylDensityTransport

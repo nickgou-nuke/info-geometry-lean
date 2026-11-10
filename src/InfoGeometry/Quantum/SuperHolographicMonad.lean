@@ -15,13 +15,16 @@ noncomputable section
 set_option linter.unusedVariables false
 set_option linter.unusedSimpArgs false
 
-variable {A : Type*} [CommRing A] [Algebra ℚ A]
+variable {A : Type*} [Ring A] [Algebra ℚ A]
 
 def half : A := algebraMap ℚ A (1 / 2)
 
 def P_vac (X : A) : A := 1 - X^4
 def P_sym (X : A) : A := half * (X^4 + X^2)
 def P_anti (X : A) : A := half * (X^4 - X^2)
+
+theorem half_comm (Y : A) : Y * half = half * Y :=
+  (Algebra.commutes (1 / 2 : ℚ) Y).symm
 
 theorem tripartite_completeness (X : A) : 
     P_vac X + P_sym X + P_anti X = 1 := by
@@ -31,21 +34,23 @@ theorem tripartite_completeness (X : A) :
     have : (1 / 2 : ℚ) + (1 / 2 : ℚ) = 1 := by norm_num
     rw [this, map_one]
   calc 1 - X^4 + algebraMap ℚ A (1 / 2) * (X^4 + X^2) + algebraMap ℚ A (1 / 2) * (X^4 - X^2)
-    _ = 1 - X^4 + (algebraMap ℚ A (1 / 2) + algebraMap ℚ A (1 / 2)) * X^4 := by ring
+    _ = 1 - X^4 + (algebraMap ℚ A (1 / 2) + algebraMap ℚ A (1 / 2)) * X^4 := by noncomm_ring
     _ = 1 - X^4 + 1 * X^4 := by rw [h_half]
-    _ = 1 := by ring
+    _ = 1 := by noncomm_ring
 
 theorem chiral_orthogonality (X : A) (hX : X^5 = X) : 
     P_sym X * P_anti X = 0 := by
   unfold P_sym P_anti
   have h8 : X^8 = X^4 := by
-    calc X^8 = X^5 * X^3 := by ring
+    calc X^8 = X^5 * X^3 := by noncomm_ring
       _ = X * X^3 := by rw [hX]
-      _ = X^4 := by ring
+      _ = X^4 := by noncomm_ring
   calc half * (X^4 + X^2) * (half * (X^4 - X^2))
-    _ = half * half * (X^8 - X^4) := by ring
+    _ = half * ((X^4 + X^2) * half) * (X^4 - X^2) := by noncomm_ring
+    _ = half * (half * (X^4 + X^2)) * (X^4 - X^2) := by rw [half_comm (X^4 + X^2)]
+    _ = half * half * (X^8 - X^4) := by noncomm_ring
     _ = half * half * (X^4 - X^4) := by rw [h8]
-    _ = 0 := by ring
+    _ = 0 := by noncomm_ring
 
 def chiralCharge (N_L N_R : ℝ) : ℝ := N_L - N_R
 

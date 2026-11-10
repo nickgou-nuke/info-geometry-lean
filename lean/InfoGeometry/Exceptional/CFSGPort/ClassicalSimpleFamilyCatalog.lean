@@ -15,7 +15,7 @@ namespace InfoGeometry.Exceptional.CFSGPort.Classical
 
 open Matrix
 
-theorem specialLinear_eq_detKer (n : ℕ) (K : Type) [Field K] :
+theorem specialLinear_eq_detKer (n : ℕ) (K : Type) [CommRing K] :
     SpecialLinear n K = (Matrix.GeneralLinearGroup.det : GL (Fin n) K →* Kˣ).ker := by
   have hset : {A : GL (Fin n) K | (A : Matrix (Fin n) (Fin n) K).det = 1} =
       ((Matrix.GeneralLinearGroup.det : GL (Fin n) K →* Kˣ).ker : Set (GL (Fin n) K)) := by
@@ -23,17 +23,17 @@ theorem specialLinear_eq_detKer (n : ℕ) (K : Type) [Field K] :
     simp [Units.ext_iff]
   rw [SpecialLinear, hset, Subgroup.closure_eq]
 
-theorem specialLinear_eq_range_toGL (n : ℕ) (K : Type) [Field K] :
+theorem specialLinear_eq_range_toGL (n : ℕ) (K : Type) [CommRing K] :
     SpecialLinear n K = (Matrix.SpecialLinearGroup.toGL :
       Matrix.SpecialLinearGroup (Fin n) K →* GL (Fin n) K).range := by
   rw [specialLinear_eq_detKer, Matrix.SpecialLinearGroup.range_toGL_eq_ker_det]
 
-noncomputable def specialLinearGroupEquiv (n : ℕ) (K : Type) [Field K] :
+noncomputable def specialLinearGroupEquiv (n : ℕ) (K : Type) [CommRing K] :
     Matrix.SpecialLinearGroup (Fin n) K ≃* SpecialLinear n K :=
   (MonoidHom.ofInjective Matrix.SpecialLinearGroup.toGL_injective).trans
     (MulEquiv.subgroupCongr (specialLinear_eq_range_toGL n K).symm)
 
-theorem specialLinearGroupEquiv_coe (n : ℕ) (K : Type) [Field K]
+theorem specialLinearGroupEquiv_coe (n : ℕ) (K : Type) [CommRing K]
     (A : Matrix.SpecialLinearGroup (Fin n) K) :
     ((specialLinearGroupEquiv n K A : GL (Fin n) K) : Matrix (Fin n) (Fin n) K) = A := by
   simp [specialLinearGroupEquiv, MulEquiv.subgroupCongr_apply, MonoidHom.ofInjective_apply,

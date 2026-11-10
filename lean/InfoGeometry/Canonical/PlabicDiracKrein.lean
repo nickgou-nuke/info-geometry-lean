@@ -5,7 +5,7 @@ import Mathlib.LinearAlgebra.Matrix.Hermitian
 
 namespace InfoGeometry.Canonical.PlabicDiracKrein
 
-variable {R : Type*} [CommRing R] [StarRing R]
+variable {R : Type*} [Ring R] [StarRing R]
 variable {VB VW : Type*} [Fintype VB] [Fintype VW] [DecidableEq VB] [DecidableEq VW]
 
 /-! ### 1. Krein Signature and Chiral Substrate -/
@@ -59,7 +59,7 @@ variable {N : Type*} [Fintype N] [DecidableEq N]
 
 /-- A Sylvester pair (X, Z) encoding the quantum torus boundary conditions.
     Z X = ω X Z, where ω is a root of unity. -/
-structure SylvesterPair (R : Type*) [CommRing R] (N : Type*) [Fintype N] [DecidableEq N] where
+structure SylvesterPair (R : Type*) [Ring R] (N : Type*) [Fintype N] [DecidableEq N] where
   ω : R
   X : Matrix N N R
   Z : Matrix N N R

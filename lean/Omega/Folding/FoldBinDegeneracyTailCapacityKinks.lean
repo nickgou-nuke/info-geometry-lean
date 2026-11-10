@@ -6,9 +6,6 @@ namespace Omega.Folding
 
 noncomputable section
 
-/-- Concrete container for the scaled tail/capacity kink package. -/
-abbrev FoldBinDegeneracyTailCapacityKinksData := Unit
-
 /-- The scaled tail observable for the two-level bin-fold degeneracy model. -/
 noncomputable def foldBinDegeneracyScaledTail (m : ℕ) (s : ℝ) : ℝ :=
   if s ≤ Real.goldenRatio⁻¹ then 1
@@ -92,27 +89,23 @@ private lemma fib_succ_mul_phi_neg_tendsto :
   simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
     hshift.const_mul Real.goldenRatio
 
-namespace FoldBinDegeneracyTailCapacityKinksData
-
 /-- Pointwise scaled tail limit away from the rigid kink locations. -/
-def tailLimit (_D : FoldBinDegeneracyTailCapacityKinksData) : Prop :=
+def foldBinDegeneracyTailLimit : Prop :=
   ∀ s : ℝ, s ≠ Real.goldenRatio⁻¹ → s ≠ 1 →
     Filter.Tendsto (fun m : ℕ => foldBinDegeneracyScaledTail m s) Filter.atTop
       (nhds (foldBinDegeneracyTailLimitFn s))
 
 /-- Pointwise scaled capacity limit with the same two kink locations. -/
-def capacityLimit (_D : FoldBinDegeneracyTailCapacityKinksData) : Prop :=
+def foldBinDegeneracyCapacityLimit : Prop :=
   ∀ s : ℝ, 0 ≤ s →
     Filter.Tendsto (fun m : ℕ => foldBinDegeneracyScaledCapacity m s) Filter.atTop
       (nhds (foldBinDegeneracyCapacityLimitFn s))
 
-end FoldBinDegeneracyTailCapacityKinksData
-
 /-- Paper label: `prop:fold-bin-degeneracy-tail-capacity-kinks`. The normalized tail spectrum has
 the rigid values `1`, `φ⁻¹`, `0` between the thresholds `φ⁻¹` and `1`, and the capacity profile
 converges to the corresponding piecewise-linear limit. -/
-theorem paper_fold_bin_degeneracy_tail_capacity_kinks (D : FoldBinDegeneracyTailCapacityKinksData) :
-    D.tailLimit ∧ D.capacityLimit := by
+theorem paper_fold_bin_degeneracy_tail_capacity_kinks :
+    foldBinDegeneracyTailLimit ∧ foldBinDegeneracyCapacityLimit := by
   refine ⟨?_, ?_⟩
   · intro s hs_phi hs_one
     by_cases hslt : s < Real.goldenRatio⁻¹

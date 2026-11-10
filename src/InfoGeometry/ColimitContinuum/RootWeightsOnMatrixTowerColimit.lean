@@ -23,7 +23,7 @@ open CategoryTheory CategoryTheory.Limits
 open InfoGeometry.ColimitContinuum.TensorTowerColimit
 open InfoGeometry.ColimitContinuum.CartanActionOnMatrixTowerColimit
 
-variable {R : Type} [CommRing R]
+variable {R : Type} [Ring R]
 
 /-- The raising operator `E₀₂` at stage `n`; the tower embedding keeps it in
 the same noncommutative corner at every later stage. -/
@@ -46,7 +46,7 @@ private theorem base_raising_weight :
     simp [ad_H, H_tower, ad,
       InfoGeometry.ColimitContinuum.TensorTowerColimit.commutator,
       H_3, raisingMatrix, InfoGeometry.ColimitContinuum.TensorTowerColimit.E3,
-      Matrix.mul_apply] <;> ring
+      Matrix.mul_apply] <;> norm_num
 
 private theorem base_lowering_weight :
     ad_H (R := R) 1 (loweringMatrix (R := R) 0) =
@@ -58,7 +58,7 @@ private theorem base_lowering_weight :
     simp [ad_H, H_tower, ad,
       InfoGeometry.ColimitContinuum.TensorTowerColimit.commutator,
       H_3, loweringMatrix, InfoGeometry.ColimitContinuum.TensorTowerColimit.E3,
-      Matrix.mul_apply] <;> ring
+      Matrix.mul_apply, smul_eq_mul] <;> norm_num
 
 /-- The raising matrix is a weight `+2` vector at every finite tower stage. -/
 theorem raisingMatrix_cartan_weight (n : ℕ) :
@@ -99,6 +99,10 @@ theorem loweringMatrix_cartan_weight (n : ℕ) :
           rw [hneg, embed_tower_smul]
           rfl
 
+section ColimitWeights
+
+variable {R : Type} [CommRing R]
+
 /-- The represented raising root vector in the actual categorical module
 colimit. -/
 def raisingRoot (n : ℕ) : TowerColimit (R := R) :=
@@ -133,6 +137,8 @@ theorem cartanColimit_loweringRoot_weight (n : ℕ) :
     f ((-((2 : R))) • loweringMatrix (R := R) n) =
         (-((2 : R))) • f (loweringMatrix (R := R) n) := f.map_smul _ _
     _ = -( (2 : R) • f (loweringMatrix (R := R) n)) := neg_smul _ _
+
+end ColimitWeights
 
 end InfoGeometry.ColimitContinuum.RootWeightsOnMatrixTowerColimit
 

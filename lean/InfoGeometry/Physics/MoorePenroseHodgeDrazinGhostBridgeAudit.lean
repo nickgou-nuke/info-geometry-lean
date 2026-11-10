@@ -15,9 +15,9 @@ below:
 
 `regular_add_harmonic_id`, `regular_projector_idempotent`,
 `harmonic_projector_idempotent`, `harmonic_projector_in_kernel`,
-`regular_sector_exact_inversion`, `moore_penrose_is_drazin_index_one`,
-`drazin_annihilates_null`, and the capstone
-`certified_mp_hodge_drazin_ghost_synthesis`.
+`regular_harmonic_projectors_orthogonal`,
+`regular_harmonic_four_corner_decomposition`, `regular_sector_exact_inversion`,
+`moore_penrose_is_drazin_index_one`, and `drazin_annihilates_null`.
 
 `moore_penrose_is_drazin_index_one` is proved under the EP hypothesis
 `A * A_plus = A_plus * A`.  The unconditional statement is false: for the
@@ -58,8 +58,7 @@ open InfoGeometry.Physics.MoorePenroseHodgeDrazinGhostBridge
 #print axioms harmonicProjector
 #print axioms regularPart
 #print axioms harmonicPart
-#print axioms toIsMoorePenroseInverse
-#print axioms toIsDrazinInverse
+#print axioms regular_harmonic_projectors_orthogonal
 #print axioms regular_add_harmonic_id
 #print axioms regularPart_add_harmonicPart
 #print axioms regular_projector_idempotent
@@ -68,5 +67,4 @@ open InfoGeometry.Physics.MoorePenroseHodgeDrazinGhostBridge
 #print axioms drazin_annihilates_null
 #print axioms regular_sector_exact_inversion
 #print axioms moore_penrose_is_drazin_index_one
-#print axioms CertifiedMPHodgeDrazinGhostSynthesis
-#print axioms certified_mp_hodge_drazin_ghost_synthesis
+#print axioms regular_harmonic_four_corner_decomposition

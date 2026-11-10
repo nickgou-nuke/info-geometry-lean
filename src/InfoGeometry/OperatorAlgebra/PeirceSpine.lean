@@ -160,6 +160,8 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.DeHaroModelBundleDualityPoset
 import InfoGeometry.OperatorAlgebra.PeirceSpine.YoshizawaGradientFlowInfoGeometryPoset
 import InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset
 import InfoGeometry.Canonical.Arxiv251107015ModelBundleSeibergWittenPoset
+import InfoGeometry.Canonical.Arxiv260821152GradientFlowInformationGeometryPoset
+import InfoGeometry.Canonical.Arxiv261006012AttentionTokenDifferenceRoutingPoset
 import InfoGeometry.OperatorAlgebra.PeirceSpine.MasterPeirceSpineUnification
 import InfoGeometry.OperatorAlgebra.CliffordSplitMobiusBridge
 
@@ -231,4 +233,13 @@ separately proved residual in `CrossChargeBrackets`.
 `TripotentDefect` records polynomial consequences in an arbitrary ring and
 their orthogonal three-corner specialization. It does not infer an `su(3)`
 action or a color symmetry group from tripotency.
+
+BUCKET 1: PROVED FINITE/ALGEBRAIC IDENTITIES OVER `[Ring B]`
+- Re-exports the constructive Peirce-spine modules over an arbitrary associative ring `[Ring B]`.
+
+BUCKET 2: CONDITIONAL IDENTITIES FROM EXPLICIT PREMISES
+- Re-exports conditional resolvent, central-parameter rotor, and cyclic-trace modules.
+
+BUCKET 3: OPEN CLOSURE DEBT
+- Smooth manifold continuum limits and analytic Lie-group exponential series are outside this algebraic aggregator.
 -/

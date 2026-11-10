@@ -14,7 +14,7 @@ native Mathlib Vandermonde nonsingularity theorem, not finite enumeration.
 namespace InfoGeometry.Combinatorics.BinaryBCHMinimumDistance
 
 theorem coefficients_eq_zero_of_consecutive_power_sums
-    {K : Type*} [Field K] {t : ℕ}
+    {K : Type*} [CommRing K] [IsDomain K] {t : ℕ}
     (α : K) (exponent : Fin t → ℕ)
     (hexponent : Function.Injective (fun i : Fin t => α ^ exponent i))
     (coeff : Fin t → K)
@@ -25,7 +25,7 @@ theorem coefficients_eq_zero_of_consecutive_power_sums
     hexponent hvanish
 
 theorem bch_no_sparse_vanishing_polynomial
-    {K : Type*} [Field K] {t : ℕ}
+    {K : Type*} [CommRing K] [IsDomain K] {t : ℕ}
     (α : K) (exponent : Fin t → ℕ)
     (hexponent : Function.Injective (fun i : Fin t => α ^ exponent i))
     (coeff : Fin t → K)

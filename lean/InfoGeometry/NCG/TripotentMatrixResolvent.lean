@@ -46,11 +46,13 @@ theorem numerator_right {T : Matrix n n K} (hT : T * T * T = T) (a : K) :
 end Polynomial
 
 section Inverse
-variable {K : Type*} [Field K]
+variable {K : Type*}
 
 /-- Explicit degree-two polynomial candidate; theorems state its domain of validity. -/
-def resolventPolynomial (T : Matrix n n K) (a : K) : Matrix n n K :=
+def resolventPolynomial [Ring K] [Inv K] (T : Matrix n n K) (a : K) : Matrix n n K :=
   (a * (a ^ 2 - 1))⁻¹ • ((a ^ 2 - 1) • 1 + a • T + T * T)
+
+variable [Field K]
 
 theorem shift_mul_resolvent {T : Matrix n n K} (hT : T * T * T = T)
     {a : K} (ha : a ≠ 0) (ha2 : a ^ 2 ≠ 1) :

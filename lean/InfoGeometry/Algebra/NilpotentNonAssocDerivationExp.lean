@@ -13,20 +13,9 @@ open InfoGeometry.Algebra.NonAssocIteratedLeibniz
 
 namespace InfoGeometry.Algebra.NilpotentNonAssocDerivationExp
 
-variable {K A : Type*} [Field K] [CharZero K] [AddCommGroup A] [Module K A]
-variable (mul : A →ₗ[K] A →ₗ[K] A) (one : A)
+section Field
 
-/-!
-# Nilpotent Derivation Exponentials in Non-Associative Algebras
-
-This module owns:
-1. The explicit truncated exponential of a linear endomorphism `nilpotentExp D N`.
-2. Annihilation preservation: `nilpotentExp D N one = one` for derivations killing the unit.
-3. The 2-step / quadratic nilpotent derivation exponential isomorphism:
-   `exp(tD) (x ⋆ y) = (exp(tD) x) ⋆ (exp(tD) y)` when `D² = 0` and `D x ⋆ D y = 0`.
-4. Invertibility: `exp(tD) ∘ exp(-tD) = id`.
-5. Multiplicative transport of non-associative structures under nilpotent flows.
--/
+variable {K A : Type*} [Field K] [AddCommGroup A] [Module K A]
 
 /-- Truncated polynomial exponential of an endomorphism up to order `N`. -/
 def nilpotentExp (D : A →ₗ[K] A) (N : ℕ) : A →ₗ[K] A :=
@@ -53,6 +42,11 @@ theorem nilpotentExp_two (D : A →ₗ[K] A) :
 @[simp] theorem nilpotentExp_two_apply (D : A →ₗ[K] A) (x : A) :
     nilpotentExp D 2 x = x + D x := by
   rw [nilpotentExp_two, LinearMap.add_apply, LinearMap.id_apply]
+
+end Field
+
+variable {K A : Type*} [CommRing K] [AddCommGroup A] [Module K A]
+variable (mul : A →ₗ[K] A →ₗ[K] A) (one : A)
 
 /-- Scaled 2-step nilpotent exponential `exp(tD) = id + t • D`. -/
 def nilpotentExpStep2 (D : A →ₗ[K] A) (t : K) : A →ₗ[K] A :=

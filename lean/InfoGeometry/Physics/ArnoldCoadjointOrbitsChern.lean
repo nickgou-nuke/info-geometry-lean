@@ -13,45 +13,10 @@ namespace InfoGeometry.Physics.ArnoldCoadjointOrbitsChern
 
 universe u
 
-variable {R : Type*} [CommRing R]
-variable {L : Type u} [LieRing L] [LieAlgebra R L]
+section Ring
 
-/-!
-# Section 5.80 / 5.88: Arnold Coadjoint Orbits, KKS Symplectic Geometry & Chern Prequantization
-
-This module formalizes:
-1. Coadjoint action `coadjoint_act x ω` on the linear dual space `Module.Dual R L`:
-   `(coadjoint_act x ω) y = - ω ⁅x, y⁆`.
-2. Kirillov-Kostant-Souriau (KKS) 2-form `kks_form ω x y = ω ⁅x, y⁆`:
-   - Alternating / Nilpotence on diagonal: `kks_form ω x x = 0`.
-   - Antisymmetry: `kks_form ω x y = - kks_form ω y x`.
-   - Bilinearity in both arguments.
-   - Closedness via Jacobi identity: $d\Omega = 0$:
-     `kks_form ω x ⁅y, z⁆ + kks_form ω y ⁅z, x⁆ + kks_form ω z ⁅x, y⁆ = 0`.
-3. Coadjoint Representation Homomorphism:
-   - `coadjoint_act ⁅x, y⁆ ω = coadjoint_act x (coadjoint_act y ω) - coadjoint_act y (coadjoint_act x ω)`.
-4. Casimir Stabilization & Helicity Conservation:
-   - Casimir condition: `IsCasimirElement ω c ↔ ∀ y, ω ⁅c, y⁆ = 0`.
-   - Coadjoint stationarity: `casimir_coadjoint_stationary: coadjoint_act c ω = 0`.
-   - Arnold coadjoint self-pairing invariance: `coadjoint_act x ω x = 0`.
-   - Helicity conservation on coadjoint orbit: `(coadjoint_act c ω) y = 0`.
-5. Prequantization Condition:
-   - Integrality condition for first Chern class `c₁(O_ω)`.
-6. Master Certified Synthesis Theorems.
--/
-
-/-- Coadjoint action of a Lie algebra element `x` on a covector `ω ∈ L*`. -/
-def coadjoint_act (x : L) (ω : Dual R L) : Dual R L where
-  toFun y := -ω ⁅x, y⁆
-  map_add' y z := by
-    rw [LieRing.lie_add, map_add, neg_add]
-  map_smul' r y := by
-    simp only [LieAlgebra.lie_smul, map_smul, smul_eq_mul, RingHom.id_apply]
-    ring
-
-/-- Evaluation formula for the coadjoint action: `(coadjoint_act x ω) y = - ω ⁅x, y⁆`. -/
-@[simp] theorem coadjoint_act_apply (x : L) (ω : Dual R L) (y : L) :
-    coadjoint_act x ω y = - ω ⁅x, y⁆ := rfl
+variable {R : Type*} [Ring R]
+variable {L : Type u} [LieRing L] [Module R L]
 
 /-- Kirillov-Kostant-Souriau (KKS) symplectic 2-form on the coadjoint orbit:
     `kks_form ω x y = ω ⁅x, y⁆`. -/
@@ -96,6 +61,36 @@ theorem kks_form_closed (ω : Dual R L) (x y z : L) :
     lie_jacobi x y z
   rw [h_jacobi, map_zero]
 
+/-- Casimir condition: An element c ∈ L is central / Casimir for ω
+    if it pairs to zero against all commutators: ⟨ω, [c, y]⟩ = 0 for all y. -/
+def IsCasimirElement (ω : Dual R L) (c : L) : Prop :=
+  ∀ y : L, ω ⁅c, y⁆ = 0
+
+/-- Prequantization structure representing the integer cohomology class of the symplectic orbit -/
+structure PrequantizationCondition (ω : Dual R L) where
+  quantization_scale : R
+  is_integer_orbit : ∀ x y : L, ∃ n : ℤ, kks_form ω x y = n • quantization_scale
+
+end Ring
+
+section CommRing
+
+variable {R : Type*} [CommRing R]
+variable {L : Type u} [LieRing L] [LieAlgebra R L]
+
+/-- Coadjoint action of a Lie algebra element `x` on a covector `ω ∈ L*`. -/
+def coadjoint_act (x : L) (ω : Dual R L) : Dual R L where
+  toFun y := -ω ⁅x, y⁆
+  map_add' y z := by
+    rw [LieRing.lie_add, map_add, neg_add]
+  map_smul' r y := by
+    simp only [LieAlgebra.lie_smul, map_smul, smul_eq_mul, RingHom.id_apply]
+    ring
+
+/-- Evaluation formula for the coadjoint action: `(coadjoint_act x ω) y = - ω ⁅x, y⁆`. -/
+@[simp] theorem coadjoint_act_apply (x : L) (ω : Dual R L) (y : L) :
+    coadjoint_act x ω y = - ω ⁅x, y⁆ := rfl
+
 /-- **Theorem 6 (Coadjoint Representation Lie Homomorphism)**:
     The coadjoint action satisfies the Lie algebra homomorphism property:
     `coadjoint_act ⁅x, y⁆ ω = coadjoint_act x (coadjoint_act y ω) - coadjoint_act y (coadjoint_act x ω)`. -/
@@ -105,11 +100,6 @@ theorem coadjoint_lie_hom (x y : L) (ω : Dual R L) :
   dsimp [coadjoint_act]
   rw [lie_lie, map_sub]
   ring
-
-/-- Casimir condition: An element c ∈ L is central / Casimir for ω
-    if it pairs to zero against all commutators: ⟨ω, [c, y]⟩ = 0 for all y. -/
-def IsCasimirElement (ω : Dual R L) (c : L) : Prop :=
-  ∀ y : L, ω ⁅c, y⁆ = 0
 
 /-- **Theorem 7 (Casimir Coadjoint Stabilization)**:
     If a covector `ω` annihilates all Lie brackets with `c`,
@@ -137,11 +127,6 @@ theorem helicity_conservation_on_orbit (ω : Dual R L) (c : L) (hc : IsCasimirEl
     (coadjoint_act c ω) y = 0 := by
   rw [casimir_coadjoint_stationary ω c hc]
   rfl
-
-/-- Prequantization structure representing the integer cohomology class of the symplectic orbit -/
-structure PrequantizationCondition (ω : Dual R L) where
-  quantization_scale : R
-  is_integer_orbit : ∀ x y : L, ∃ n : ℤ, kks_form ω x y = n • quantization_scale
 
 /-- Synthesis theorem matching Section 5.80 spec -/
 theorem arnold_coadjoint_orbits_chern_synthesis
@@ -173,5 +158,7 @@ theorem certified_arnold_coadjoint_orbits_chern_synthesis
           coadjoint_lie_hom x y ω,
           casimir_coadjoint_stationary ω c hc,
           arnold_coadjoint_self_pairing x ω⟩
+
+end CommRing
 
 end InfoGeometry.Physics.ArnoldCoadjointOrbitsChern

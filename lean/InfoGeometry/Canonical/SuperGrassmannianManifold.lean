@@ -54,11 +54,11 @@ theorem zeroPseudoRiemannianMetric {R V : Type*} [CommRing R] [AddCommGroup V] [
   ⟨fun _ _ => rfl⟩
 
 /-- Algebraic para-complex structure on $V$: an involutive linear endomorphism $K^2 = \text{id}$. -/
-structure ParaComplexStructure (K : V →ₗ[R] V) : Prop where
+structure ParaComplexStructure {R V : Type*} [Ring R] [AddCommGroup V] [Module R V] (K : V →ₗ[R] V) : Prop where
   involutive : ∀ v, K (K v) = v
 
 /-- Constructive model witness: the identity linear map is involutive. -/
-theorem idParaComplexStructure {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] :
+theorem idParaComplexStructure {R V : Type*} [Ring R] [AddCommGroup V] [Module R V] :
     ParaComplexStructure (LinearMap.id : V →ₗ[R] V) :=
   ⟨fun _ => rfl⟩
 
@@ -104,11 +104,11 @@ theorem metric_anti_invariance
 /-! ### 3. Plus/Minus Eigenspaces and Isotropy Identities -/
 
 /-- Membership in the $+1$ eigenspace $T^+ = \{v \mid K v = v\}$. -/
-def InTPlus (K : V →ₗ[R] V) (v : V) : Prop :=
+def InTPlus {R V : Type*} [Ring R] [AddCommGroup V] [Module R V] (K : V →ₗ[R] V) (v : V) : Prop :=
   K v = v
 
 /-- Membership in the $-1$ eigenspace $T^- = \{v \mid K v = -v\}$. -/
-def InTMinus (K : V →ₗ[R] V) (v : V) : Prop :=
+def InTMinus {R V : Type*} [Ring R] [AddCommGroup V] [Module R V] (K : V →ₗ[R] V) (v : V) : Prop :=
   K v = -v
 
 /--
@@ -270,12 +270,17 @@ theorem omega_tminus_bilinear_isotropic_two_mul
 
 /-! ### 4. Algebraic Idempotent Projectors and Complementary Split -/
 
+section ProjectorsRing
+
+variable {R : Type*} [Ring R]
+variable {V : Type*} [AddCommGroup V] [Module R V]
+
 /-- Ungraded idempotent linear projector $P^2 = P$ on $V$. -/
 structure GrassmannianProjector (P : V →ₗ[R] V) : Prop where
   idempotent : ∀ v, P (P v) = P v
 
 /-- Constructive model witness: the identity linear map is an idempotent projector. -/
-theorem idGrassmannianProjector {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] :
+theorem idGrassmannianProjector {R V : Type*} [Ring R] [AddCommGroup V] [Module R V] :
     GrassmannianProjector (LinearMap.id : V →ₗ[R] V) :=
   ⟨fun _ => rfl⟩
 
@@ -310,5 +315,7 @@ theorem projector_add_orthoComplement (P : V →ₗ[R] V) (v : V) :
     P v + orthoComplement P v = v := by
   dsimp [orthoComplement]
   exact add_sub_cancel (P v) v
+
+end ProjectorsRing
 
 end InfoGeometry.Canonical.SuperGrassmannianManifold

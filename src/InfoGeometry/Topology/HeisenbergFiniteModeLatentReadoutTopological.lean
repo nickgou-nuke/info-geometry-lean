@@ -81,8 +81,8 @@ theorem continuous_heisenbergFiniteModeLatentReadout :
 /-- Local constancy of `heisenbergFiniteModeLatentReadout` on the discrete parameter product. -/
 theorem isLocallyConstant_heisenbergFiniteModeLatentReadout :
     IsLocallyConstant heisenbergFiniteModeLatentReadout := by
-  unfold heisenbergFiniteModeLatentReadout
-  exact IsLocallyConstant.of_discrete
+  intro s
+  exact isOpen_discrete _
 
 /-- Latent labels visible from a finite mode stage `s` at a fixed root parameter `q`. -/
 def heisenbergFiniteModeStageLatentImage

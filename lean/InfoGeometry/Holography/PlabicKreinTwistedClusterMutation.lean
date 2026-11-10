@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 
 /-!
 # Two-Sector Plabic–Krein Unipotent Edge Transport & Cluster Conjugation
@@ -34,7 +35,7 @@ involution `kreinEta = diag(1, -1)`.
 
 namespace InfoGeometry.Holography.PlabicKrein
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Four-coordinate carrier representing a $2 \times 2$ two-sector operator
 $\begin{pmatrix} m_{11} & m_{12} \\ m_{21} & m_{22} \end{pmatrix}$ over `R`. -/
@@ -48,7 +49,7 @@ structure Cl11Op (R : Type*) where
 
 namespace Cl11Op
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Zero operator in `Cl11Op R`. -/
 def zero : Cl11Op R := ⟨0, 0, 0, 0⟩
@@ -95,7 +96,7 @@ def edgeTransportInv (w : R) : Cl11Op R := sub one (edgeTwist w)
 theorem edgeTwist_sq_zero (w : R) :
     mul (edgeTwist w) (edgeTwist w) = zero := by
   dsimp [edgeTwist, mul, zero]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 /-- Multiplication through the two diagonal sectors gives the displayed
 upper-right matrix entry. This is a local matrix product identity. -/
@@ -103,7 +104,7 @@ theorem nodeBlack_edgeTwist_nodeWhite (x w y : R) :
     mul (mul (nodeBlack x) (edgeTwist w)) (nodeWhite y) =
       ⟨0, x * w * y, 0, 0⟩ := by
   dsimp [nodeBlack, edgeTwist, nodeWhite, mul]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 /-- Conjugating the black diagonal element by the explicit unipotent element
 has this finite matrix value. -/
@@ -112,19 +113,19 @@ theorem edgeTransport_conjugation_nodeBlack (x w : R) :
       ⟨x, -(x * w), 0, 0⟩ := by
   dsimp [edgeTransport, edgeTransportInv, nodeBlack, edgeTwist,
     one, add, sub, mul]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 /-- Right cancellation of the two explicit unipotent factors. -/
 theorem edgeTransport_mul_inv (w : R) :
     mul (edgeTransport w) (edgeTransportInv w) = one := by
   dsimp [edgeTransport, edgeTransportInv, edgeTwist, one, add, sub, mul]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 /-- Left cancellation of the two explicit unipotent factors. -/
 theorem edgeTransportInv_mul (w : R) :
     mul (edgeTransportInv w) (edgeTransport w) = one := by
   dsimp [edgeTransport, edgeTransportInv, edgeTwist, one, add, sub, mul]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 /-- **Krein Involution & Chiral Anticommutation of `edgeTwist`
 (`kreinEta_sq_and_edgeTwist_anticommutator`):**
@@ -136,9 +137,9 @@ theorem kreinEta_sq_and_edgeTwist_anticommutator (w : R) :
     add (mul kreinEta (edgeTwist w)) (mul (edgeTwist w) kreinEta) = zero := by
   refine ⟨?_, ?_⟩
   · dsimp [kreinEta, mul, one]
-    ext <;> ring
+    ext <;> noncomm_ring
   · dsimp [kreinEta, edgeTwist, mul, add, zero]
-    ext <;> ring
+    ext <;> noncomm_ring
 
 /-- Explicit non-commutativity witness on `Cl11Op ℤ`: the forward and backward
 edge twists do not commute. -/

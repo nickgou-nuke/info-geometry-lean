@@ -11,7 +11,7 @@ structure QuantumPluckerGenerator (ι : Type v) where
 deriving DecidableEq, Repr
 
 /-- The free algebra on the Plücker generators. -/
-abbrev FreeQG (R : Type u) [CommRing R] (ι : Type v) := 
+abbrev FreeQG (R : Type u) [CommSemiring R] (ι : Type v) := 
   FreeAlgebra R (QuantumPluckerGenerator ι)
 
 /-- 
@@ -20,7 +20,7 @@ abbrev FreeQG (R : Type u) [CommRing R] (ι : Type v) :=
   p_{ij} p_{kl} - p_{ik} p_{jl} + p_{il} p_{jk} = 0,
   represented algebraically as p_{ij} p_{kl} + p_{il} p_{jk} = p_{ik} p_{jl}.
 -/
-inductive QuantumPluckerRel (R : Type u) [CommRing R] (ι : Type v) : FreeQG R ι → FreeQG R ι → Prop
+inductive QuantumPluckerRel (R : Type u) [CommSemiring R] (ι : Type v) : FreeQG R ι → FreeQG R ι → Prop
   | plucker (i j k l : ι) : 
       QuantumPluckerRel R ι
         (FreeAlgebra.ι R (QuantumPluckerGenerator.mk i j) * FreeAlgebra.ι R (QuantumPluckerGenerator.mk k l) + 
@@ -30,6 +30,6 @@ inductive QuantumPluckerRel (R : Type u) [CommRing R] (ι : Type v) : FreeQG R �
 /-- 
   The Quantum Grassmannian coordinate ring as a quotient algebra. 
 -/
-def QuantumGrassmannian (R : Type u) [CommRing R] (ι : Type v) : Type _ :=
+def QuantumGrassmannian (R : Type u) [CommSemiring R] (ι : Type v) : Type _ :=
   RingQuot (QuantumPluckerRel R ι)
-deriving Inhabited, Ring, Algebra R
+deriving Inhabited, Semiring, Algebra R

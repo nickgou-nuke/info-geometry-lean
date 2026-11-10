@@ -15,6 +15,55 @@ No adjoint relation, positivity, or spectral lower bound is assumed or inferred.
 
 namespace InfoGeometry.OperatorAlgebra.SymmetricDissipator
 
+section RingDissipator
+
+variable {A : Type*} [Ring A]
+
+/-- Pure ring-level negative symmetric composition of two inner derivations on `[Ring A]`,
+requiring no scalar `CommRing` or `Algebra` structure. -/
+def ringDissipator (u v x : A) : A :=
+  2 • (u * x * v + v * x * u) -
+    ((u * v + v * u) * x + x * (u * v + v * u))
+
+/-- Double-commutator form of `ringDissipator` over any associative ring `A`. -/
+theorem ringDissipator_eq_double_commutator (u v x : A) :
+    ringDissipator u v x =
+      -(u * (v * x - x * v) - (v * x - x * v) * u +
+        (v * (u * x - x * u) - (u * x - x * u) * v)) := by
+  unfold ringDissipator
+  simp only [two_nsmul]
+  noncomm_ring
+
+/-- The ring dissipator annihilates the multiplicative identity `1`. -/
+theorem ringDissipator_one (u v : A) : ringDissipator u v 1 = 0 := by
+  unfold ringDissipator
+  simp only [mul_one, one_mul, two_nsmul]
+  noncomm_ring
+
+/-- Any ring homomorphism intertwines `ringDissipator`. -/
+theorem map_ringDissipator {B : Type*} [Ring B]
+    (f : A →+* B) (u v x : A) :
+    f (ringDissipator u v x) =
+      ringDissipator (f u) (f v) (f x) := by
+  simp only [ringDissipator, two_nsmul, map_sub, map_add, map_mul]
+
+/-- Simultaneous sign reversal of the two operator coefficients leaves `ringDissipator` invariant. -/
+theorem ringDissipator_neg_neg (u v x : A) :
+    ringDissipator (-u) (-v) x = ringDissipator u v x := by
+  unfold ringDissipator
+  simp only [two_nsmul]
+  noncomm_ring
+
+/-- A sign-reversing ring automorphism intertwines `ringDissipator`. -/
+theorem ring_parity_equivariant (θ : A ≃+* A) (u v x : A)
+    (hu : θ u = -u) (hv : θ v = -v) :
+    θ (ringDissipator u v x) = ringDissipator u v (θ x) := by
+  have h := map_ringDissipator θ.toRingHom u v x
+  change θ (ringDissipator u v x) = ringDissipator (θ u) (θ v) (θ x) at h
+  rwa [hu, hv, ringDissipator_neg_neg] at h
+
+end RingDissipator
+
 attribute [local instance 100] LieRing.ofAssociativeRing
 
 variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]

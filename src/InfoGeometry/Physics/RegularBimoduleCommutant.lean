@@ -12,7 +12,7 @@ supplied Tomita or Hodge law.
 
 namespace InfoGeometry.Physics.RegularBimoduleCommutant
 
-variable {R A : Type*} [CommSemiring R] [Ring A] [Algebra R A]
+variable {R A : Type*} [Semiring R] [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 def leftAction (a : A) : A →ₗ[R] A := LinearMap.mulLeft R a
 

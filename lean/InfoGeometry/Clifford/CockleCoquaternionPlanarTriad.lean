@@ -1,6 +1,8 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
+import Mathlib.Tactic.Abel
 import Mathlib.Tactic.FinCases
 
 set_option linter.unusedSectionVars false
@@ -57,7 +59,7 @@ structure Coquaternion (R : Type*) where
   z : R  -- chiral bivector component (ω = e₁e₂, ω² = +1)
   deriving DecidableEq, Repr
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 namespace Coquaternion
 
@@ -212,15 +214,15 @@ theorem mul_one_q (q : Coquaternion R) : q * 1 = q := by
 
 /-- Associativity of coquaternion multiplication. -/
 theorem mul_assoc_q (p q r : Coquaternion R) : (p * q) * r = p * (q * r) := by
-  ext <;> { simp; ring }
+  ext <;> { simp; noncomm_ring }
 
 /-- Left distributivity. -/
 theorem left_distrib_q (p q r : Coquaternion R) : p * (q + r) = p * q + p * r := by
-  ext <;> { simp; ring }
+  ext <;> { simp; noncomm_ring }
 
 /-- Right distributivity. -/
 theorem right_distrib_q (p q r : Coquaternion R) : (p + q) * r = p * r + q * r := by
-  ext <;> { simp; ring }
+  ext <;> { simp; noncomm_ring }
 
 /-! ### Section 2: The Triad of Planar Number Systems in Cl(1,1) -/
 
@@ -267,7 +269,7 @@ def oddPart (q : Coquaternion R) : Coquaternion R :=
 
 /-- Direct sum decomposition: q = evenPart q + oddPart q. -/
 theorem even_add_odd (q : Coquaternion R) : evenPart q + oddPart q = q := by
-  ext <;> { simp [evenPart, oddPart]; try ring }
+  ext <;> { simp [evenPart, oddPart]; try abel }
 
 /-- Chiral volume element / grading operator Γ = ω. -/
 def chiralGrading : Coquaternion R := omega
@@ -280,12 +282,12 @@ theorem chiralGrading_sq : (chiralGrading : Coquaternion R) * chiralGrading = 1 
 /-- Grading action on even elements: Γ (even) Γ = + (even). -/
 theorem chiral_grading_even (q : Coquaternion R) :
     chiralGrading * evenPart q * chiralGrading = evenPart q := by
-  ext <;> { simp [chiralGrading, omega, evenPart]; try ring }
+  ext <;> { simp [chiralGrading, omega, evenPart]; try abel }
 
 /-- Grading action on odd elements: Γ (odd) Γ = - (odd). -/
 theorem chiral_grading_odd (q : Coquaternion R) :
     chiralGrading * oddPart q * chiralGrading = - oddPart q := by
-  ext <;> { simp [chiralGrading, omega, oddPart]; try ring }
+  ext <;> { simp [chiralGrading, omega, oddPart]; try abel }
 
 /-- Unscaled chiral lightcone projector P₊ = 1 + ω. -/
 def P_plus_raw : Coquaternion R := 1 + omega
@@ -303,15 +305,15 @@ theorem P_minus_mul_P_plus : (P_minus_raw : Coquaternion R) * P_plus_raw = 0 := 
 
 /-- Completeness relation: P₊ + P₋ = 2 • 1. -/
 theorem P_plus_add_P_minus : (P_plus_raw : Coquaternion R) + P_minus_raw = ⟨2, 0, 0, 0⟩ := by
-  ext <;> { simp [P_plus_raw, P_minus_raw, omega]; try ring }
+  ext <;> { simp [P_plus_raw, P_minus_raw, omega]; try norm_num }
 
 /-- Raw idempotency of P₊: (1 + ω)² = 2(1 + ω). -/
 theorem P_plus_sq : (P_plus_raw : Coquaternion R) * P_plus_raw = ⟨2, 0, 0, 2⟩ := by
-  ext <;> { simp [P_plus_raw, omega]; try ring }
+  ext <;> { simp [P_plus_raw, omega]; try norm_num }
 
 /-- Raw idempotency of P₋: (1 - ω)² = 2(1 - ω). -/
 theorem P_minus_sq : (P_minus_raw : Coquaternion R) * P_minus_raw = ⟨2, 0, 0, -2⟩ := by
-  ext <;> { simp [P_minus_raw, omega]; try ring }
+  ext <;> { simp [P_minus_raw, omega]; try norm_num }
 
 /-- Lightcone nilpotent ladder: (P₊ e₁)² = 0. -/
 theorem lightcone_ladder_nilpotent :
@@ -342,12 +344,12 @@ theorem toMatrix_one : toMatrix (1 : Coquaternion R) = 1 := by
 /-- Addition is preserved by toMatrix. -/
 theorem toMatrix_add (p q : Coquaternion R) :
     toMatrix (p + q) = toMatrix p + toMatrix q := by
-  ext i j; fin_cases i <;> fin_cases j <;> { simp [toMatrix]; ring }
+  ext i j; fin_cases i <;> fin_cases j <;> { simp [toMatrix]; abel }
 
 /-- Scalar multiplication is preserved by toMatrix. -/
 theorem toMatrix_smul (c : R) (q : Coquaternion R) :
     toMatrix (smul c q) = c • toMatrix q := by
-  ext i j; fin_cases i <;> fin_cases j <;> { simp [toMatrix, smul]; ring }
+  ext i j; fin_cases i <;> fin_cases j <;> { simp [toMatrix, smul]; noncomm_ring }
 
 /-- Matrix multiplication homomorphism:
     Ψ(p • q) = Ψ(p) * Ψ(q). -/
@@ -356,7 +358,7 @@ theorem toMatrix_mul (p q : Coquaternion R) :
   ext i j
   fin_cases i <;> fin_cases j <;> {
     simp [toMatrix, Matrix.mul_apply, Fin.sum_univ_two]
-    ring
+    noncomm_ring
   }
 
 /-- Determinant of a 2x2 matrix: det(M) = M₀₀ M₁₁ - M₀₁ M₁₀. -/
@@ -367,9 +369,17 @@ def det2 (M : Mat2 R) : R :=
 def normSq (q : Coquaternion R) : R :=
   q.s^2 - q.x^2 + q.y^2 - q.z^2
 
-/-- The determinant of the matrix representation equals the coquaternion reduced norm:
-    det(Ψ(q)) = N(q). -/
-theorem toMatrix_det (q : Coquaternion R) :
+/-- Over any non-commutative ring `[Ring R]`, `det2 (toMatrix q)` equals the reduced norm
+`normSq q` plus the commutator anomaly `(q.x * q.s - q.s * q.x) + (q.z * q.y - q.y * q.z)`. -/
+theorem toMatrix_det_noncomm (q : Coquaternion R) :
+    det2 (toMatrix q) =
+      normSq q + (q.x * q.s - q.s * q.x) + (q.z * q.y - q.y * q.z) := by
+  simp [toMatrix, det2, normSq, sq]
+  noncomm_ring
+
+/-- Over any commutative ring, the determinant of the matrix representation equals the
+coquaternion reduced norm: det(Ψ(q)) = N(q). -/
+theorem toMatrix_det {S : Type*} [CommRing S] (q : Coquaternion S) :
     det2 (toMatrix q) = normSq q := by
   simp [toMatrix, det2, normSq]
   ring
@@ -378,25 +388,25 @@ theorem toMatrix_det (q : Coquaternion R) :
 
 /-- Master verification certificate for Cockle's coquaternions and the Cl(1,1) triad. -/
 structure CockleCoquaternionPlanarTriadCertificate : Prop where
-  e1_square : ∀ (R : Type) [CommRing R], (e1 : Coquaternion R) * e1 = 1
-  e2_square : ∀ (R : Type) [CommRing R], (e2 : Coquaternion R) * e2 = -1
-  omega_square : ∀ (R : Type) [CommRing R], (omega : Coquaternion R) * omega = 1
-  anticomm_e1_e2 : ∀ (R : Type) [CommRing R], (e1 : Coquaternion R) * e2 + e2 * e1 = 0
-  planar_coexistence : ∀ (R : Type) [CommRing R],
+  e1_square : ∀ (R : Type) [Ring R], (e1 : Coquaternion R) * e1 = 1
+  e2_square : ∀ (R : Type) [Ring R], (e2 : Coquaternion R) * e2 = -1
+  omega_square : ∀ (R : Type) [Ring R], (omega : Coquaternion R) * omega = 1
+  anticomm_e1_e2 : ∀ (R : Type) [Ring R], (e1 : Coquaternion R) * e2 + e2 * e1 = 0
+  planar_coexistence : ∀ (R : Type) [Ring R],
     (i_unit : Coquaternion R) * i_unit = -1 ∧
     (j_unit : Coquaternion R) * j_unit = 1 ∧
     (epsilon : Coquaternion R) * epsilon = 0
-  chiral_involution : ∀ (R : Type) [CommRing R],
+  chiral_involution : ∀ (R : Type) [Ring R],
     (chiralGrading : Coquaternion R) * chiralGrading = 1
-  chiral_even_grading : ∀ (R : Type) [CommRing R] (q : Coquaternion R),
+  chiral_even_grading : ∀ (R : Type) [Ring R] (q : Coquaternion R),
     chiralGrading * evenPart q * chiralGrading = evenPart q
-  chiral_odd_grading : ∀ (R : Type) [CommRing R] (q : Coquaternion R),
+  chiral_odd_grading : ∀ (R : Type) [Ring R] (q : Coquaternion R),
     chiralGrading * oddPart q * chiralGrading = - oddPart q
-  projector_orthogonal : ∀ (R : Type) [CommRing R],
+  projector_orthogonal : ∀ (R : Type) [Ring R],
     (P_plus_raw : Coquaternion R) * P_minus_raw = 0
-  lightcone_ladder : ∀ (R : Type) [CommRing R],
+  lightcone_ladder : ∀ (R : Type) [Ring R],
     ((P_plus_raw : Coquaternion R) * e1) * (P_plus_raw * e1) = 0
-  matrix_homomorphism : ∀ (R : Type) [CommRing R] (p q : Coquaternion R),
+  matrix_homomorphism : ∀ (R : Type) [Ring R] (p q : Coquaternion R),
     toMatrix (p * q) = toMatrix p * toMatrix q
   matrix_norm_det : ∀ (R : Type) [CommRing R] (q : Coquaternion R),
     det2 (toMatrix q) = normSq q

@@ -44,7 +44,7 @@ namespace InfoGeometry.QuantumContext.DiscreteHodgeDirac
 
 open Matrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! --------------------------------------------------------------------------
     Section 1: Block Representation of the Discrete Hodge–Dirac Operator
@@ -146,7 +146,7 @@ Master Certificate for the Discrete Hodge–Dirac–Krein Operator:
 6. Symmetric Krein-Dirac anticommutation: {D, J} = 0 for d = δ.
 7. Krein-Chiral Dirac intertwining: D_K = diag(-d, δ).
 -/
-structure DiscreteHodgeDiracKreinCertificate (R : Type*) [CommRing R] : Prop where
+structure DiscreteHodgeDiracKreinCertificate (R : Type*) [Ring R] : Prop where
   laplacian_gen : ∀ (d δ : R), diracBlock d δ * diracBlock d δ = !![δ * d, 0; 0, d * δ]
   chiral_inv : chiralGamma (R := R) * chiralGamma = 1
   chiral_anticomm : ∀ (d δ : R), diracBlock d δ * chiralGamma + chiralGamma * diracBlock d δ = 0
@@ -159,7 +159,7 @@ structure DiscreteHodgeDiracKreinCertificate (R : Type*) [CommRing R] : Prop whe
 Master compilation constructor verifying that the Discrete Hodge–Dirac–Krein
 chiral operator is 100% mathematically closed in Lean 4 without custom axioms.
 -/
-theorem compile_discrete_hodge_dirac_krein (R : Type*) [CommRing R] :
+theorem compile_discrete_hodge_dirac_krein (R : Type*) [Ring R] :
     DiscreteHodgeDiracKreinCertificate R where
   laplacian_gen := dirac_sq_eq_laplacian
   chiral_inv := chiralGamma_sq

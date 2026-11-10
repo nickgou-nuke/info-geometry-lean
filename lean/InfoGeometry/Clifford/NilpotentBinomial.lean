@@ -31,14 +31,12 @@ theorem one_add_pow_of_sq_zero {R : Type*} [Semiring R]
       rw [pow_succ, ih, add_mul, one_mul, mul_add, mul_one, nsmul_mul_self x hx n]
       rw [add_zero, add_assoc, succ_nsmul']
 
-theorem one_add_smul_pow_of_sq_zero {R : Type*} [CommSemiring R]
-    (x : R) (hx : x * x = 0) (a : R) (n : ℕ) :
+theorem one_add_smul_pow_of_sq_zero {R A : Type*} [Semiring R] [Semiring A]
+    [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
+    (x : A) (hx : x * x = 0) (a : R) (n : ℕ) :
     (1 + a • x) ^ n = 1 + n • (a • x) := by
   apply one_add_pow_of_sq_zero
-  change (a * x) * (a * x) = 0
-  calc
-    (a * x) * (a * x) = (a * a) * (x * x) := by ring
-    _ = 0 := by rw [hx, mul_zero]
+  rw [smul_mul_assoc, mul_smul_comm, hx, smul_zero, smul_zero]
 
 theorem spinorMatrix_one_add_pow_of_sq_zero
     (x : SpinorMatrix32) (hx : x * x = 0) (n : ℕ) :

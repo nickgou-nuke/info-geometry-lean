@@ -10,8 +10,8 @@ namespace InfoGeometry.OperatorAlgebra.QCCRCuntzToeplitzClosure
 
 open InfoGeometry.OperatorAlgebra.QCCRCuntzToeplitz
 
-variable {ι R Op : Type*} [DecidableEq ι] [CommRing R] [Ring Op]
-  [StarRing Op] [Algebra R Op]
+variable {ι R Op : Type*} [DecidableEq ι] [Ring R] [Ring Op]
+  [StarRing Op] [Module R Op]
 
 /-- The homogeneous part of the q-CCR relation, with the diagonal correction explicit. -/
 def commutator (X Y : Op) : Op := X * Y - Y * X
@@ -23,24 +23,26 @@ theorem qccr_commutator (A : QCCROperators ι R Op) (i j : ι) :
     commutator (star (A.a i)) (A.a j) =
       (if i = j then (1 : Op) else 0) + (A.q - 1) • (A.a j * star (A.a i)) := by
   unfold commutator
-  rw [A.q_commutation]
-  module
+  rw [A.q_commutation, sub_smul, one_smul]
+  abel
 
 /-- The q-CCR relation determines the anticommutator, including its diagonal correction. -/
 theorem qccr_anticommutator (A : QCCROperators ι R Op) (i j : ι) :
     anticommutator (star (A.a i)) (A.a j) =
       (if i = j then (1 : Op) else 0) + (A.q + 1) • (A.a j * star (A.a i)) := by
   unfold anticommutator
-  rw [A.q_commutation]
-  module
+  rw [A.q_commutation, add_smul, one_smul]
+  abel
 
-/-- Exact commutator--anticommutator closure for q-CCR, with the diagonal Kronecker correction. -/
+/-- Exact commutator--anticommutator closure for q-CCR over any noncommutative ring `R`,
+with the diagonal Kronecker correction. -/
 theorem qccr_comm_anti_closure (A : QCCROperators ι R Op) (i j : ι) :
     (A.q + 1) • commutator (star (A.a i)) (A.a j) =
       (A.q - 1) • anticommutator (star (A.a i)) (A.a j) +
         2 • (if i = j then (1 : Op) else 0) := by
   rw [qccr_commutator, qccr_anticommutator]
-  module
+  simp only [add_smul, sub_smul, one_smul, smul_add, smul_sub, two_nsmul]
+  abel
 
 /-- The off-diagonal closure has no Kronecker correction. -/
 theorem qccr_offDiagonal_comm_anti_closure

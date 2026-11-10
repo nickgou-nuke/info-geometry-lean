@@ -19,14 +19,14 @@ open Matrix
 open scoped BigOperators
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
-variable {R : Type*} [CommRing R] [StarRing R]
+variable {R : Type*} [Ring R] [StarRing R]
 
 /-! ## 1. Code space -/
 
 /-- A quantum error-correcting code is a subspace of the ambient Hilbert space.
     We represent it by its orthogonal projection P_C.
 -/
-structure QuantumCode (n : Type*) [Fintype n] (R : Type*) [CommRing R] [StarRing R] where
+structure QuantumCode (n : Type*) [Fintype n] (R : Type*) [Ring R] [StarRing R] where
   /-- The code space projector P_C (idempotent and self-adjoint). -/
   P_C : Matrix n n R
   /-- P_C is a projector: P_C^2 = P_C. -/
@@ -41,7 +41,7 @@ def IsCodeState (code : QuantumCode n R) (ρ : Matrix n n R) : Prop :=
 /-! ## 2. Error operators -/
 
 /-- A finite family of error operators {E_a} on the ambient Hilbert space. -/
-structure ErrorOperators (n : Type*) [Fintype n] (R : Type*) [CommRing R] [StarRing R] where
+structure ErrorOperators (n : Type*) [Fintype n] (R : Type*) [Ring R] [StarRing R] where
   carrier : Type*
   [fintypeCarrier : Fintype carrier]
   [decidableCarrier : DecidableEq carrier]

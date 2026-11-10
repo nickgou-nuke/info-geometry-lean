@@ -19,7 +19,8 @@ namespace InfoGeometry.Algebra
 
 namespace GogberashviliNilpotentCARBridge
 
-variable {K A : Type*} [Field K] [Ring A] [Algebra K A]
+variable {K A : Type*} [DivisionRing K] [Ring A] [Module K A]
+  [IsScalarTower K A A] [SMulCommClass K A A]
 
 /-- Positive chiral projector associated with an involution `J`. Primitivity is not asserted for a general algebra `A`. -/
 def DPlus (J : A) : A :=
@@ -45,7 +46,7 @@ abbrev G_minus (I j : A) : A := GMinus (K := K) I j
 private theorem smul_mul_smul
     (r s : K) (x y : A) :
     (r • x) * (s • y) = (r * s) • (x * y) := by
-  rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul]
+  rw [smul_mul_assoc, mul_smul_comm, smul_smul]
 
 private theorem inv_two_sq_mul_two
     (h2 : (2 : K) ≠ 0) :
@@ -374,7 +375,8 @@ end GogberashviliNilpotentCARBridge
 
 namespace ZornNormSchurScalarSpecialization
 
-variable {F : Type*} [Field F]
+section DivisionRing
+variable {F : Type*} [DivisionRing F]
 
 /-- The scalar Schur complement for a 2×2 block with scalar entries -/
 def schurComplement (α β u v : F) : F :=
@@ -387,6 +389,10 @@ def berezinianScalar (α β u v : F) : F :=
 /-- The classical 2×2 determinant (Zorn norm) -/
 def zornNorm (α β u v : F) : F :=
   α * β - u * v
+
+end DivisionRing
+
+variable {F : Type*} [Field F]
 
 /--
 THEOREM 1: The scalar Schur complement equals the ratio (α β - u v) / β.

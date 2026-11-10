@@ -17,7 +17,7 @@ statement is asserted.
 
 namespace InfoGeometry.Physics
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The physics `L0` owner and the Clifford logarithmic-cell owner are the
 same finite matrix carrier. -/
@@ -79,7 +79,7 @@ theorem logCFTUnipotentFlow_add (s t : R) :
   fin_cases i <;> fin_cases j <;>
     simp [logCFTUnipotentFlow, N_log, Matrix.mul_apply,
       Fin.sum_univ_two]
-  ring
+  abel
 
 theorem logCFTUnipotentFlow_inverse (t : R) :
     logCFTUnipotentFlow t * logCFTUnipotentFlow (-t) = 1 := by
@@ -92,13 +92,7 @@ theorem logCFTUnipotentFlow_pow (t : R) (n : ℕ) :
   | zero =>
       simp [logCFTUnipotentFlow_zero]
   | succ n ih =>
-      rw [pow_succ, ih, ← logCFTUnipotentFlow_add]
-      <;> simp [add_smul, one_smul]
-      <;> ring_nf
-      <;> simp_all [logCFTUnipotentFlow_add]
-      <;> try ring_nf
-      <;> try simp_all [Matrix.mul_apply, Fin.sum_univ_two, N_log]
-      <;> try aesop
+      rw [pow_succ, ih, ← logCFTUnipotentFlow_add, succ_nsmul]
 
 theorem logCFTUnipotentFlow_apply (t : R) :
     logCFTUnipotentFlow t = !![1, t; 0, 1] := by

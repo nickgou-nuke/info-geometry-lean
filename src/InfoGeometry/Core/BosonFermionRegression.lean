@@ -17,7 +17,7 @@ examples, not a restriction of the arbitrary ambient ring in the theorem owner.
 namespace InfoGeometry.Core.BosonFermionRegression
 open BosonParityString
 
-variable {R : Type*} [CommRing R] {N : ℕ}
+variable {R : Type*} [Ring R] {N : ℕ}
 
 /-- A local hard-core mode on the native configuration module. -/
 def localMode (c : Bool) (j : Fin N) : Module.End R ((Fin N → Bool) → R) where
@@ -62,8 +62,8 @@ lemma localMode_commute (c e : Bool) {j k : Fin N} (hne : j ≠ k) :
   rw [Function.update_comm hne]
   split_ifs <;> rfl
 
-/-- An actual input system for every `N`, over any commutative coefficient ring. -/
-theorem configuration_system (R : Type*) [CommRing R] (N : ℕ) :
+/-- An actual input system for every `N`, over any coefficient ring `R`. -/
+theorem configuration_system (R : Type*) [Ring R] (N : ℕ) :
     IsCommutingBosonSystem (localMode (R := R) (N := N) false) (localMode true) where
   d_sq := localMode_sq false
   B_sq := localMode_sq true

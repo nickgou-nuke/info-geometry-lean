@@ -35,7 +35,7 @@ namespace InfoGeometry.GrandUnification.ModularPhaseSeparation
 
 open LinearMap
 
-variable {R M : Type*} [CommRing R] [Invertible (2 : R)] [AddCommGroup M] [Module R M]
+variable {R M : Type*} [Ring R] [Invertible (2 : R)] [AddCommGroup M] [Module R M]
 
 /-! ### 1. Krein Symmetry and Chiral Gradings -/
 
@@ -48,8 +48,9 @@ abbrev IsOddOperator (Γ A : Module.End R M) : Prop :=
   Γ * A = - (A * Γ)
 
 /-- The Graded Krein Supertrace over the endomorphism algebra. -/
-noncomputable def supertrace (Γ X : Module.End R M) : R :=
-  LinearMap.trace R M (Γ * X)
+noncomputable def supertrace {R₀ M₀ : Type*} [CommRing R₀] [AddCommGroup M₀] [Module R₀ M₀]
+    (Γ X : Module.End R₀ M₀) : R₀ :=
+  LinearMap.trace R₀ M₀ (Γ * X)
 
 /-! ### 2. The Triviality Bounds -/
 
@@ -58,18 +59,19 @@ lemma odd_operator_zero_of_grading_one (Γ A : Module.End R M)
     (h_odd : IsOddOperator Γ A) (h_one : Γ = 1) : A = 0 := by
   unfold IsOddOperator at h_odd
   rw [h_one, mul_one, one_mul] at h_odd
-  have h_add : A + A = 0 := by
-    calc A + A = -A + A := by nth_rw 1 [h_odd]
-         _ = 0 := neg_add_cancel A
-  have h_two : (2 : R) • A = 0 := by
-    calc (2 : R) • A = (1 + 1 : R) • A := by norm_num
-         _ = (1 : R) • A + (1 : R) • A := add_smul 1 1 A
-         _ = A + A := by rw [one_smul]
-         _ = 0 := h_add
-  calc A = (1 : R) • A := by rw [one_smul]
-       _ = (⅟(2 : R) * 2) • A := by rw [invOf_mul_self]
-       _ = ⅟(2 : R) • ((2 : R) • A) := by rw [mul_smul]
-       _ = ⅟(2 : R) • (0 : Module.End R M) := by rw [h_two]
+  ext v
+  have h_eval : A v = -A v := by
+    simpa using congrArg (fun f : Module.End R M => f v) h_odd
+  have h_add : A v + A v = 0 := by
+    calc A v + A v = -A v + A v := by nth_rw 1 [h_eval]
+         _ = 0 := neg_add_cancel (A v)
+  have h_two : (2 : R) • A v = 0 := by
+    rw [two_smul]
+    exact h_add
+  calc A v = (1 : R) • A v := (one_smul R (A v)).symm
+       _ = (⅟(2 : R) * 2) • A v := by rw [invOf_mul_self]
+       _ = ⅟(2 : R) • ((2 : R) • A v) := mul_smul _ _ _
+       _ = ⅟(2 : R) • (0 : M) := by rw [h_two]
        _ = 0 := smul_zero _
 
 /-- Any odd operator with respect to the negative trivial grading `Γ = -1` vanishes identically. -/
@@ -77,25 +79,27 @@ lemma odd_operator_zero_of_grading_neg_one (Γ A : Module.End R M)
     (h_odd : IsOddOperator Γ A) (h_neg_one : Γ = -1) : A = 0 := by
   unfold IsOddOperator at h_odd
   rw [h_neg_one, neg_mul, mul_neg, one_mul, mul_one, neg_neg] at h_odd
-  have h_add : A + A = 0 := by
-    calc A + A = -A + A := by nth_rw 1 [← h_odd]
-         _ = 0 := neg_add_cancel A
-  have h_two : (2 : R) • A = 0 := by
-    calc (2 : R) • A = (1 + 1 : R) • A := by norm_num
-         _ = (1 : R) • A + (1 : R) • A := add_smul 1 1 A
-         _ = A + A := by rw [one_smul]
-         _ = 0 := h_add
-  calc A = (1 : R) • A := by rw [one_smul]
-       _ = (⅟(2 : R) * 2) • A := by rw [invOf_mul_self]
-       _ = ⅟(2 : R) • ((2 : R) • A) := by rw [mul_smul]
-       _ = ⅟(2 : R) • (0 : Module.End R M) := by rw [h_two]
+  ext v
+  have h_eval : -A v = A v := by
+    simpa using congrArg (fun f : Module.End R M => f v) h_odd
+  have h_add : A v + A v = 0 := by
+    calc A v + A v = -A v + A v := by nth_rw 1 [← h_eval]
+         _ = 0 := neg_add_cancel (A v)
+  have h_two : (2 : R) • A v = 0 := by
+    rw [two_smul]
+    exact h_add
+  calc A v = (1 : R) • A v := (one_smul R (A v)).symm
+       _ = (⅟(2 : R) * 2) • A v := by rw [invOf_mul_self]
+       _ = ⅟(2 : R) • ((2 : R) • A v) := mul_smul _ _ _
+       _ = ⅟(2 : R) • (0 : M) := by rw [h_two]
        _ = 0 := smul_zero _
 
 /-! ### 3. Algebra (Ego) & Commutant (Anima) Modular Partition -/
 
 /-- The Commutant (Anima) of an operator algebra block.
     Defines the set of all endomorphisms that commute with a given target operator. -/
-def ModularCommutant (A : Module.End R M) : Submodule R (Module.End R M) where
+def ModularCommutant {R₀ M₀ : Type*} [CommRing R₀] [AddCommGroup M₀] [Module R₀ M₀]
+    (A : Module.End R₀ M₀) : Submodule R₀ (Module.End R₀ M₀) where
   carrier := {X | X * A = A * X}
   zero_mem' := by dsimp; rw [zero_mul, mul_zero]
   add_mem' := by
@@ -114,7 +118,8 @@ def ModularCommutant (A : Module.End R M) : Submodule R (Module.End R M) where
 /-- Theorem: The presence of a non-trivial local spinning anomaly breaks the
     ambient vacuum symmetry, separating the architecture into an algebra and its commutant. -/
 theorem modular_phase_separation
-    (Γ A B : Module.End R M)
+    {R₀ M₀ : Type*} [CommRing R₀] [Invertible (2 : R₀)] [AddCommGroup M₀] [Module R₀ M₀]
+    (Γ A B : Module.End R₀ M₀)
     (h_odd_A : IsOddOperator Γ A)
     (h_anomaly : supertrace Γ (A * B - B * A) ≠ 0) :
     Γ ≠ 1 ∧ Γ ≠ -1 ∧ (B ∈ ModularCommutant A → False) := by
@@ -122,21 +127,21 @@ theorem modular_phase_separation
   · intro h_one
     have hA_zero := odd_operator_zero_of_grading_one Γ A h_odd_A h_one
     rw [hA_zero, zero_mul, mul_zero, sub_zero] at h_anomaly
-    have h_str_zero : supertrace Γ (0 : Module.End R M) = 0 := by
+    have h_str_zero : supertrace Γ (0 : Module.End R₀ M₀) = 0 := by
       unfold supertrace; rw [mul_zero, map_zero]
     exact h_anomaly h_str_zero
   · constructor
     · intro h_neg_one
       have hA_zero := odd_operator_zero_of_grading_neg_one Γ A h_odd_A h_neg_one
       rw [hA_zero, zero_mul, mul_zero, sub_zero] at h_anomaly
-      have h_str_zero : supertrace Γ (0 : Module.End R M) = 0 := by
+      have h_str_zero : supertrace Γ (0 : Module.End R₀ M₀) = 0 := by
         unfold supertrace; rw [mul_zero, map_zero]
       exact h_anomaly h_str_zero
     · intro h_comm
       dsimp [ModularCommutant] at h_comm
       have h_sub_zero : A * B - B * A = 0 := by rw [h_comm, sub_self]
       rw [h_sub_zero] at h_anomaly
-      have h_str_zero : supertrace Γ (0 : Module.End R M) = 0 := by
+      have h_str_zero : supertrace Γ (0 : Module.End R₀ M₀) = 0 := by
         unfold supertrace; rw [mul_zero, map_zero]
       exact h_anomaly h_str_zero
 

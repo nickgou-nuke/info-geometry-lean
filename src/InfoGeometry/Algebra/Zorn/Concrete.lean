@@ -32,7 +32,7 @@ structure ZornCell (R : Type*) where
 
 namespace ZornCell
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Zorn determinant / split norm. -/
 def detZ (X : ZornCell R) : R :=
@@ -70,15 +70,14 @@ theorem polarZ_self (X : ZornCell R) :
     polarZ X X = 2 * detZ X := by
   rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
   unfold polarZ addZ detZ
-  ring
+  noncomm_ring
 
 /-- A Zorn-null vector is self-orthogonal for the polar form. -/
 theorem polarZ_self_of_detZ_zero
     (X : ZornCell R)
     (hX : detZ X = 0) :
     polarZ X X = 0 := by
-  rw [polarZ_self, hX]
-  ring
+  rw [polarZ_self, hX, mul_zero]
 
 /--
 Conversely, if `2 ≠ 0` and the base ring has no zero divisors, then
@@ -120,13 +119,13 @@ theorem polarZ_closed (X Y : ZornCell R) :
   rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
   rcases Y with ⟨r', s', x1', x2', x3', y1', y2', y3'⟩
   unfold polarZ addZ detZ
-  ring
+  noncomm_ring
 
 /-- The Zorn polar pairing is symmetric. -/
 theorem polarZ_comm (X Y : ZornCell R) :
     polarZ X Y = polarZ Y X := by
   rw [polarZ_closed, polarZ_closed]
-  ring
+  abel
 
 /-- Additivity of `polarZ` in the left argument. -/
 theorem polarZ_add_left (X Y Z : ZornCell R) :
@@ -135,7 +134,7 @@ theorem polarZ_add_left (X Y Z : ZornCell R) :
   rcases Y with ⟨r', s', x1', x2', x3', y1', y2', y3'⟩
   rcases Z with ⟨r'', s'', x1'', x2'', x3'', y1'', y2'', y3''⟩
   unfold polarZ addZ detZ
-  ring
+  noncomm_ring
 
 /-- Additivity of `polarZ` in the right argument. -/
 theorem polarZ_add_right (X Y Z : ZornCell R) :
@@ -191,7 +190,7 @@ instance instMulZornCell : Mul (ZornCell R) where
   mul := mulZ
 
 /-- Coordinate composition identity for `mulZ`. -/
-theorem detZ_mulZ (X Y : ZornCell R) :
+theorem detZ_mulZ {R : Type*} [CommRing R] (X Y : ZornCell R) :
     detZ (mulZ X Y) = detZ X * detZ Y := by
   rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
   rcases Y with ⟨r₂, s₂, u1, u2, u3, v1, v2, v3⟩
@@ -204,33 +203,33 @@ Zorn Composition Theorem:
 
 `detZ (X * Y) = detZ X * detZ Y`.
 -/
-theorem detZ_mul (X Y : ZornCell R) :
+theorem detZ_mul {R : Type*} [CommRing R] (X Y : ZornCell R) :
     detZ (X * Y) = detZ X * detZ Y :=
   detZ_mulZ X Y
 
 /-- Left multiplication by a norm-one Zorn cell preserves `detZ`. -/
-theorem detZ_left_mul_normOne
+theorem detZ_left_mul_normOne {R : Type*} [CommRing R]
     (U X : ZornCell R)
     (hU : detZ U = 1) :
     detZ (U * X) = detZ X := by
   rw [detZ_mul, hU, one_mul]
 
 /-- Right multiplication by a norm-one Zorn cell preserves `detZ`. -/
-theorem detZ_right_mul_normOne
+theorem detZ_right_mul_normOne {R : Type*} [CommRing R]
     (X U : ZornCell R)
     (hU : detZ U = 1) :
     detZ (X * U) = detZ X := by
   rw [detZ_mul, hU, mul_one]
 
 /-- Left null factor forces the product to be Zorn-null. -/
-theorem detZ_mul_eq_zero_of_left_null
+theorem detZ_mul_eq_zero_of_left_null {R : Type*} [CommRing R]
     (X Y : ZornCell R)
     (hX : detZ X = 0) :
     detZ (X * Y) = 0 := by
   rw [detZ_mul, hX, zero_mul]
 
 /-- Right null factor forces the product to be Zorn-null. -/
-theorem detZ_mul_eq_zero_of_right_null
+theorem detZ_mul_eq_zero_of_right_null {R : Type*} [CommRing R]
     (X Y : ZornCell R)
     (hY : detZ Y = 0) :
     detZ (X * Y) = 0 := by
@@ -249,7 +248,7 @@ def negLogDet
 /--
 The negative log-determinant is an additive cocycle under Zorn multiplication.
 -/
-theorem negLogDet_mul
+theorem negLogDet_mul {R : Type*} [CommRing R]
     {A : Type*} [AddCommGroup A]
     (ell : R → A)
     (hlog_mul : ∀ a b : R, ell (a * b) = ell a + ell b)

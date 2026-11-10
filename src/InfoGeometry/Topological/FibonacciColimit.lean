@@ -29,7 +29,7 @@ The finite Fibonacci Artin relation survives canonical transport into an
 algebraic direct limit.
 -/
 theorem fibonacci_colimit_artin_relation_of_finite_stage
-    {Stage : Nat → Type u} [∀ n : Nat, CommRing (Stage n)]
+    {Stage : Nat → Type u} [∀ n : Nat, Ring (Stage n)]
     (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
     (n : Nat) (q qInv τ sqrtτ : Stage n)
     (hArtin :
@@ -62,7 +62,7 @@ The inverse-pair relation survives canonical transport into an algebraic direct
 limit.
 -/
 theorem fibonacci_colimit_inverse_relation_of_finite_stage
-    {Stage : Nat → Type u} [∀ n : Nat, CommRing (Stage n)]
+    {Stage : Nat → Type u} [∀ n : Nat, Ring (Stage n)]
     (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
     (n : Nat) (q qInv : Stage n)
     (h : q * qInv = 1) :
@@ -75,7 +75,7 @@ The golden-ratio relation survives canonical transport into an algebraic direct
 limit.
 -/
 theorem fibonacci_colimit_tau_relation_of_finite_stage
-    {Stage : Nat → Type u} [∀ n : Nat, CommRing (Stage n)]
+    {Stage : Nat → Type u} [∀ n : Nat, Ring (Stage n)]
     (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
     (n : Nat) (τ : Stage n)
     (h : τ ^ 2 + τ = 1) :
@@ -89,7 +89,7 @@ The square-root relation for the Fibonacci fusion entry survives canonical
 transport into an algebraic direct limit.
 -/
 theorem fibonacci_colimit_sqrt_tau_relation_of_finite_stage
-    {Stage : Nat → Type u} [∀ n : Nat, CommRing (Stage n)]
+    {Stage : Nat → Type u} [∀ n : Nat, Ring (Stage n)]
     (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
     (n : Nat) (τ sqrtτ : Stage n)
     (h : sqrtτ ^ 2 = τ) :
@@ -102,7 +102,7 @@ The phase-to-golden-ratio relation survives canonical transport into an
 algebraic direct limit.
 -/
 theorem fibonacci_colimit_phase_relation_of_finite_stage
-    {Stage : Nat → Type u} [∀ n : Nat, CommRing (Stage n)]
+    {Stage : Nat → Type u} [∀ n : Nat, Ring (Stage n)]
     (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
     (n : Nat) (q qInv τ : Stage n)
     (h : q ^ 2 + qInv ^ 2 = τ) :

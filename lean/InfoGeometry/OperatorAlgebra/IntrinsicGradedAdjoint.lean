@@ -21,6 +21,92 @@ transport is stated separately with its necessary intertwining hypothesis.
 
 namespace InfoGeometry.OperatorAlgebra.IntrinsicGradedAdjoint
 
+section NoncommRingGradedAdjoint
+
+variable {A B : Type*} [Ring A] [Ring B]
+
+/-- The intrinsic odd adjoint over any associative ring `A`, bundled as an additive
+group endomorphism `A →+ A` with respect to an involutive ring automorphism `θ : A ≃+* A`. -/
+def ringGradedAdjoint (θ : A ≃+* A) (Q : A) : A →+ A where
+  toFun X := Q * X - θ X * Q
+  map_zero' := by simp
+  map_add' X Y := by
+    simp only [map_add]
+    noncomm_ring
+
+@[simp] theorem ringGradedAdjoint_apply (θ : A ≃+* A) (Q X : A) :
+    ringGradedAdjoint θ Q X = Q * X - θ X * Q := rfl
+
+/-- The graded Leibniz identity over any ring `A`. -/
+theorem ringGradedAdjoint_leibniz (θ : A ≃+* A) (Q X Y : A) :
+    ringGradedAdjoint θ Q (X * Y) =
+      ringGradedAdjoint θ Q X * Y + θ X * ringGradedAdjoint θ Q Y := by
+  simp only [ringGradedAdjoint_apply, map_mul]
+  noncomm_ring
+
+theorem ringGradedAdjoint_of_even (θ : A ≃+* A) (Q X : A) (hX : θ X = X) :
+    ringGradedAdjoint θ Q X = Q * X - X * Q := by
+  rw [ringGradedAdjoint_apply, hX]
+
+theorem ringGradedAdjoint_of_odd (θ : A ≃+* A) (Q X : A) (hX : θ X = -X) :
+    ringGradedAdjoint θ Q X = Q * X + X * Q := by
+  rw [ringGradedAdjoint_apply, hX]
+  simp only [neg_mul, sub_neg_eq_add]
+
+theorem ringGradedAdjoint_parity (θ : A ≃+* A)
+    (hθ : Function.Involutive θ) (Q : A) (hQ : θ Q = -Q) (X : A) :
+    θ (ringGradedAdjoint θ Q X) = -ringGradedAdjoint θ Q (θ X) := by
+  simp only [ringGradedAdjoint_apply, map_sub, map_mul, hQ, hθ X]
+  noncomm_ring
+
+/-- Over any ring `A`, the square of the odd graded adjoint is the inner commutator
+derivation `[Q * Q, -]`. -/
+theorem ringGradedAdjoint_square_apply (θ : A ≃+* A)
+    (hθ : Function.Involutive θ) (Q : A) (hQ : θ Q = -Q) (X : A) :
+    ringGradedAdjoint θ Q (ringGradedAdjoint θ Q X) =
+      (Q * Q) * X - X * (Q * Q) := by
+  simp only [ringGradedAdjoint_apply, map_sub, map_mul, hQ, hθ X]
+  noncomm_ring
+
+theorem ringGradedAdjoint_square_apply_eq_zero_iff (θ : A ≃+* A)
+    (hθ : Function.Involutive θ) (Q : A) (hQ : θ Q = -Q) (X : A) :
+    ringGradedAdjoint θ Q (ringGradedAdjoint θ Q X) = 0 ↔ Commute (Q * Q) X := by
+  rw [ringGradedAdjoint_square_apply θ hθ Q hQ]
+  change (Q * Q) * X - X * (Q * Q) = 0 ↔ (Q * Q) * X = X * (Q * Q)
+  exact sub_eq_zero
+
+theorem ringGradedAdjoint_mixed_apply (θ : A ≃+* A)
+    (hθ : Function.Involutive θ) (Q S : A)
+    (hQ : θ Q = -Q) (hS : θ S = -S) (X : A) :
+    ringGradedAdjoint θ Q (ringGradedAdjoint θ S X) +
+      ringGradedAdjoint θ S (ringGradedAdjoint θ Q X) =
+        (Q * S + S * Q) * X - X * (Q * S + S * Q) := by
+  simp only [ringGradedAdjoint_apply, map_sub, map_mul, hQ, hS, hθ X]
+  noncomm_ring
+
+theorem ringOdd_square_even (θ : A ≃+* A) (Q : A) (hQ : θ Q = -Q) :
+    θ (Q * Q) = Q * Q := by
+  rw [map_mul, hQ, neg_mul_neg]
+
+theorem ringGradedAdjoint_curvature_closed (θ : A ≃+* A) (Q : A) (hQ : θ Q = -Q) :
+    ringGradedAdjoint θ Q (Q * Q) = 0 := by
+  rw [ringGradedAdjoint_apply, ringOdd_square_even θ Q hQ]
+  noncomm_ring
+
+def transportRingParity (e : A ≃+* B) (θ : A ≃+* A) : B ≃+* B :=
+  (e.symm.trans θ).trans e
+
+@[simp] theorem transportRingParity_apply (e : A ≃+* B) (θ : A ≃+* A) (X : B) :
+    transportRingParity e θ X = e (θ (e.symm X)) := rfl
+
+theorem map_ringGradedAdjoint (e : A ≃+* B) (θ : A ≃+* A) (Q X : A) :
+    e (ringGradedAdjoint θ Q X) =
+      ringGradedAdjoint (transportRingParity e θ) (e Q) (e X) := by
+  simp only [ringGradedAdjoint_apply, map_sub, map_mul, transportRingParity_apply,
+    RingEquiv.symm_apply_apply]
+
+end NoncommRingGradedAdjoint
+
 variable {R A B : Type*} [CommRing R] [Ring A] [Algebra R A]
   [Ring B] [Algebra R B]
 

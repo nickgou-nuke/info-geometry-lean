@@ -20,13 +20,15 @@ noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra.PartnerEigenspaces
 
-variable {K X Y : Type*} [Field K]
-  [AddCommGroup X] [Module K X] [AddCommGroup Y] [Module K Y]
-
-theorem partner_eigenvector (A : X →ₗ[K] Y) (B : Y →ₗ[K] X)
+theorem partner_eigenvector {K X Y : Type*} [Ring K]
+    [AddCommGroup X] [Module K X] [AddCommGroup Y] [Module K Y]
+    (A : X →ₗ[K] Y) (B : Y →ₗ[K] X)
     {μ : K} {x : X} (hx : B (A x) = μ • x) :
     A (B (A x)) = μ • A x := by
   rw [hx, map_smul]
+
+variable {K X Y : Type*} [Field K]
+  [AddCommGroup X] [Module K X] [AddCommGroup Y] [Module K Y]
 
 /-- The actual linear isomorphism, including its inverse on the eigenspaces. -/
 def nonzeroEigenspaceEquiv (A : X →ₗ[K] Y) (B : Y →ₗ[K] X)

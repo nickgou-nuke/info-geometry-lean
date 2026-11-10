@@ -27,7 +27,7 @@ open InfoGeometry.Projective.KleinQuadricPlucker.Plucker6
 
 section Ring
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- First column of the graph frame `(X,1)`. -/
 def graphFirst (X : Matrix (Fin 2) (Fin 2) R) : Vec4 R :=
@@ -41,31 +41,36 @@ def graphSecond (X : Matrix (Fin 2) (Fin 2) R) : Vec4 R :=
 def graphPlucker (X : Matrix (Fin 2) (Fin 2) R) : Plucker6 R :=
   pluckerLine (graphFirst X) (graphSecond X)
 
-theorem graphPlucker_coordinates (X : Matrix (Fin 2) (Fin 2) R) :
+theorem graphPlucker_coordinates {R : Type*} [CommRing R] (X : Matrix (Fin 2) (Fin 2) R) :
     graphPlucker X = ⟨X.det, -X 0 1, X 0 0, -X 1 1, X 1 0, 1⟩ := by
   apply Plucker6.ext <;>
     simp [graphPlucker, graphFirst, graphSecond, pluckerLine, Matrix.det_fin_two]
   ring
 
-@[simp] theorem graphPlucker_p01 (X : Matrix (Fin 2) (Fin 2) R) :
+@[simp] theorem graphPlucker_p01 {R : Type*} [CommRing R] (X : Matrix (Fin 2) (Fin 2) R) :
     (graphPlucker X).p01 = X.det := by rw [graphPlucker_coordinates]
 
 @[simp] theorem graphPlucker_p02 (X : Matrix (Fin 2) (Fin 2) R) :
-    (graphPlucker X).p02 = -X 0 1 := by rw [graphPlucker_coordinates]
+    (graphPlucker X).p02 = -X 0 1 := by
+  simp [graphPlucker, graphFirst, graphSecond, pluckerLine]
 
 @[simp] theorem graphPlucker_p03 (X : Matrix (Fin 2) (Fin 2) R) :
-    (graphPlucker X).p03 = X 0 0 := by rw [graphPlucker_coordinates]
+    (graphPlucker X).p03 = X 0 0 := by
+  simp [graphPlucker, graphFirst, graphSecond, pluckerLine]
 
 @[simp] theorem graphPlucker_p12 (X : Matrix (Fin 2) (Fin 2) R) :
-    (graphPlucker X).p12 = -X 1 1 := by rw [graphPlucker_coordinates]
+    (graphPlucker X).p12 = -X 1 1 := by
+  simp [graphPlucker, graphFirst, graphSecond, pluckerLine]
 
 @[simp] theorem graphPlucker_p13 (X : Matrix (Fin 2) (Fin 2) R) :
-    (graphPlucker X).p13 = X 1 0 := by rw [graphPlucker_coordinates]
+    (graphPlucker X).p13 = X 1 0 := by
+  simp [graphPlucker, graphFirst, graphSecond, pluckerLine]
 
 @[simp] theorem graphPlucker_p23 (X : Matrix (Fin 2) (Fin 2) R) :
-    (graphPlucker X).p23 = 1 := by rw [graphPlucker_coordinates]
+    (graphPlucker X).p23 = 1 := by
+  simp [graphPlucker, graphFirst, graphSecond, pluckerLine]
 
-@[simp] theorem kleinQ_graphPlucker (X : Matrix (Fin 2) (Fin 2) R) :
+@[simp] theorem kleinQ_graphPlucker {R : Type*} [CommRing R] (X : Matrix (Fin 2) (Fin 2) R) :
     kleinQ (graphPlucker X) = 0 :=
   kleinQ_pluckerLine _ _
 
@@ -84,7 +89,7 @@ theorem graphPlucker_injective :
   fin_cases i <;> fin_cases j <;> assumption
 
 /-- The full Klein polarization is exactly the determinant interval in this chart. -/
-theorem kleinPolar_graphPlucker (X Y : Matrix (Fin 2) (Fin 2) R) :
+theorem kleinPolar_graphPlucker {R : Type*} [CommRing R] (X Y : Matrix (Fin 2) (Fin 2) R) :
     kleinPolar (graphPlucker X) (graphPlucker Y) = (X - Y).det := by
   simp [kleinPolar, graphPlucker_coordinates, Matrix.det_fin_two]
   ring

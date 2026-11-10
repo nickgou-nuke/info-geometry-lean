@@ -31,6 +31,19 @@ open scoped Matrix BigOperators
 /-! ## 1. Constructive cyclicity and invariance -/
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
+
+/-- Over a non-commutative ring `[Ring R]`, conjugation of `A : Matrix n n R` by a
+left-invertible pair `(U, U_inv)` (`U_inv * U = 1`) shifts `Matrix.trace` by the
+exact matrix commutator trace `Matrix.trace ((U * A) * U_inv - U_inv * (U * A))`. -/
+theorem matrix_trace_conjugation_defect {R : Type*} [Ring R]
+    (A U U_inv : Matrix n n R)
+    (h_left : U_inv * U = 1) :
+    Matrix.trace (U * A * U_inv) - Matrix.trace A =
+      Matrix.trace ((U * A) * U_inv - U_inv * (U * A)) := by
+  have hA : Matrix.trace A = Matrix.trace (U_inv * (U * A)) := by
+    rw [← mul_assoc, h_left, one_mul]
+  rw [hA, ← Matrix.trace_sub]
+
 variable {R : Type*} [CommRing R]
 
 /--

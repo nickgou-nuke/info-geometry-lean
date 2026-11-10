@@ -18,7 +18,7 @@ namespace InfoGeometry.Physics.MajoranaKreinPfaffianCarrier
 open InfoGeometry.Volume.PfaffianPathBridge
 open InfoGeometry.Volume.PfaffianGeneral
 
-variable {R α : Type*} [CommRing R]
+variable {R α : Type*} [Ring R]
 
 /-- Off-diagonal skew pairing of two copies of a finite label set. -/
 def offDiagonalPairing [DecidableEq α] (K : Matrix α α R) :
@@ -54,7 +54,7 @@ theorem offDiagonalPairing_skew [DecidableEq α] [Fintype α]
   simp [offDiagonalPairing]
 
 theorem offDiagonalPairing_det_sq_eq_det_fourth
-    [DecidableEq α] [Fintype α] (K : Matrix α α R) :
+    {R : Type*} [CommRing R] [DecidableEq α] [Fintype α] (K : Matrix α α R) :
     (offDiagonalPairing K).det ^ 2 = K.det ^ 4 := by
   have hmul :
       offDiagonalPairing K * (offDiagonalPairing K).transpose =

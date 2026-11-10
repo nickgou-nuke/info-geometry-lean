@@ -6,7 +6,7 @@ open Matrix BigOperators
 
 namespace InfoGeometry.Weyl
 
-variable {R A : Type*} [CommSemiring R] [Semiring A] [Algebra R A]
+variable {R A : Type*} [Semiring R] [Semiring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-! ### 1. Inductive Braiding Lemmas -/
 
@@ -96,7 +96,7 @@ def sylvesterD (shift clock : Matrix (ZMod n) (ZMod n) R) (a b : ℕ) :
   weylD shift clock a b
 
 /-- Specialization of the projective composition law to Sylvester matrices. -/
-theorem sylvesterD_mul (shift clock : Matrix (ZMod n) (ZMod n) R) (ω : R)
+theorem sylvesterD_mul {R : Type*} [CommSemiring R] (shift clock : Matrix (ZMod n) (ZMod n) R) (ω : R)
     (h_braid : clock * shift = ω • (shift * clock)) (a b c d : ℕ) :
     sylvesterD shift clock a b * sylvesterD shift clock c d =
       (ω ^ (b * c)) • sylvesterD shift clock (a + c) (b + d) :=

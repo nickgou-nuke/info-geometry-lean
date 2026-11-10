@@ -14,7 +14,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 namespace InfoGeometry.Canonical.Pfaffian
 
 /-- The Pfaffian of a 2×2 skew-symmetric matrix [[0, a], [-a, 0]]. -/
-def pfaffian_2x2 {R : Type*} [CommRing R] (a : R) : R := a
+def pfaffian_2x2 {R : Type*} [Ring R] (a : R) : R := a
 
 /-- The determinant of a 2×2 skew-symmetric matrix [[0, a], [-a, 0]]. -/
 theorem det_skew_2x2 {R : Type*} [CommRing R] (a : R) :
@@ -27,7 +27,7 @@ theorem pfaffian_sq_eq_det_2x2 {R : Type*} [CommRing R] (a : R) :
   simp [pfaffian_2x2, Matrix.det_fin_two, pow_two]
 
 /-- Pf(M) = 0 when a = 0 (matrix is zero). -/
-theorem pfaffian_zero_2x2 {R : Type*} [CommRing R] : pfaffian_2x2 (0 : R) = 0 := by
+theorem pfaffian_zero_2x2 {R : Type*} [Ring R] : pfaffian_2x2 (0 : R) = 0 := by
   simp [pfaffian_2x2]
 
 /-- det(M) ≥ 0 for real skew-symmetric 2×2 matrix (det = a² ≥ 0). -/

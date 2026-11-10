@@ -142,7 +142,7 @@ theorem modular_hamiltonian_zero_of_empty_horizon_support
 
 section TwinSheetModularConjugation
 
-variable {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
+variable {R M : Type*} [Ring R] [AddCommGroup M] [Module R M]
 
 /-- The $+1$ fixed-point Horizon Defect Submodule $Q_0 = \mathrm{Ego}(\Gamma) = \ker(\Gamma - 1)$. -/
 def horizonDefectEgo (Γ : Module.End R M) : Submodule R M :=
@@ -153,7 +153,8 @@ def horizonMirrorAnima (Γ : Module.End R M) : Submodule R M :=
   LinearMap.ker (Γ + 1)
 
 /-- The graded Krein supertrace $\mathrm{Str}_\Gamma(X) = \mathrm{Tr}(\Gamma X)$ over a finite free module. -/
-def kreinSupertrace [Module.Free R M] [Module.Finite R M] (Γ X : Module.End R M) : R :=
+def kreinSupertrace {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
+    [Module.Free R M] [Module.Finite R M] (Γ X : Module.End R M) : R :=
   LinearMap.trace R M (Γ * X)
 
 /-- **Equivalence of Modular Conjugation Inversion and Anti-Commutation (`modular_conjugation_neg_iff_anticommutes`):**
@@ -272,16 +273,18 @@ theorem modular_hamiltonian_zero_of_trivial_conjugation
     (J_Δ = 1 → K = 0) ∧ (J_Δ = -1 → K = 0) := by
   have hZeroOfEqNeg : K = -K → K = 0 := by
     intro hK
-    have hAdd : K + K = 0 := by
+    ext x
+    have hAdd : K x + K x = 0 := by
       calc
-        K + K = -K + K := by nth_rw 1 [hK]
-        _ = 0 := neg_add_cancel K
-    have hTwo : (2 : R) • K = 0 := by
+        K x + K x = (-K) x + K x := by nth_rw 1 [hK]
+        _ = - (K x) + K x := rfl
+        _ = 0 := neg_add_cancel (K x)
+    have hTwo : (2 : R) • K x = 0 := by
       rw [two_smul, hAdd]
     calc
-      K = (1 : R) • K := (one_smul R K).symm
-      _ = (⅟(2 : R) * 2) • K := by rw [invOf_mul_self]
-      _ = ⅟(2 : R) • ((2 : R) • K) := by rw [mul_smul]
+      K x = (1 : R) • K x := (one_smul R (K x)).symm
+      _ = (⅟(2 : R) * 2) • K x := by rw [invOf_mul_self]
+      _ = ⅟(2 : R) • ((2 : R) • K x) := by rw [mul_smul]
       _ = 0 := by rw [hTwo, smul_zero]
   constructor
   · intro hOne
@@ -307,7 +310,7 @@ end TwinSheetModularConjugation
 
 section HorizonCapacitanceAndTime
 
-variable {R M : Type*} [Field R] [AddCommGroup M] [Module R M]
+variable {R M : Type*} [Ring R] [AddCommGroup M] [Module R M]
 
 /-- Algebraic Horizon Capacitance of a twist/grading endomorphism $\mathcal{T} \in \mathrm{End}_R(M)$,
 defined as the dimension of the $+1$ fixed-point defect subspace `horizonDefectEgo 𝒯 = ker(𝒯 - 1)`. -/
@@ -377,10 +380,54 @@ theorem capacitor_plates_direct_sum_decomposition
     rw [hDecomp]
     exact Submodule.add_mem_sup hInEgo hInAnima
 
+/-- **Defect-Support Characterization (`twist_mul_eq_self_iff_range_le_ego`):**
+A Modular Hamiltonian $K \in \mathrm{End}_R(M)$ satisfies $\mathcal{T} * K = K$ (every state in
+the image of $K$ is fixed by the Möbius twist $\mathcal{T}$) if and only if
+$\mathrm{range}(K) \le \mathrm{horizonDefectEgo}(\mathcal{T})$. -/
+theorem twist_mul_eq_self_iff_range_le_ego
+    (𝒯 K : Module.End R M) :
+    𝒯 * K = K ↔ LinearMap.range K ≤ horizonDefectEgo 𝒯 := by
+  unfold horizonDefectEgo
+  constructor
+  · intro hTK y hy
+    rcases hy with ⟨x, rfl⟩
+    rw [LinearMap.mem_ker, LinearMap.sub_apply, Module.End.one_apply]
+    have hEval := congr_arg (fun f : Module.End R M => f x) hTK
+    simp only [Module.End.mul_apply] at hEval
+    rw [hEval, sub_self]
+  · intro hRange
+    ext x
+    have hx : K x ∈ LinearMap.range K := ⟨x, rfl⟩
+    have hKer := hRange hx
+    rw [LinearMap.mem_ker, LinearMap.sub_apply, Module.End.one_apply, sub_eq_zero] at hKer
+    exact hKer
+
+/-- **Commuting Modular Flow Preserves the Horizon Defect (`modular_hamiltonian_preserves_horizon_defect_of_commutes`):**
+Whenever the Modular Hamiltonian $K$ commutes with the Möbius twist $\mathcal{T}$
+($K * \mathcal{T} = \mathcal{T} * K$), $K$ maps the horizon defect subspace
+`horizonDefectEgo 𝒯 = ker(𝒯 - 1)` into itself:
+$$\forall v \in \mathrm{horizonDefectEgo}(\mathcal{T}),\quad K v \in \mathrm{horizonDefectEgo}(\mathcal{T}).$$ -/
+theorem modular_hamiltonian_preserves_horizon_defect_of_commutes
+    (𝒯 K : Module.End R M) (hComm : K * 𝒯 = 𝒯 * K)
+    (v : M) (hv : v ∈ horizonDefectEgo 𝒯) :
+    K v ∈ horizonDefectEgo 𝒯 := by
+  unfold horizonDefectEgo at hv ⊢
+  rw [LinearMap.mem_ker, LinearMap.sub_apply, Module.End.one_apply, sub_eq_zero] at hv ⊢
+  have hEval := congr_arg (fun f : Module.End R M => f v) hComm.symm
+  simp only [Module.End.mul_apply] at hEval
+  rw [hEval, hv]
+
+end HorizonCapacitanceAndTime
+
+section HorizonCapacitanceDivisionRing
+
+variable {R M : Type*} [DivisionRing R] [AddCommGroup M] [Module R M] [FiniteDimensional R M]
+
 /-- **Rank-Nullity Decomposition of Horizon Capacitance (`horizonCapacitance_add_range_finrank`):**
 The horizon capacitance `horizonCapacitance 𝒯` and the rank of `𝒯 - 1` sum to the total
 dimension of the state space `M`. -/
-theorem horizonCapacitance_add_range_finrank [FiniteDimensional R M] (𝒯 : Module.End R M) :
+theorem horizonCapacitance_add_range_finrank
+    (𝒯 : Module.End R M) :
     horizonCapacitance 𝒯 +
       (Module.finrank R (LinearMap.range (𝒯 - 1)) : ℤ) =
       (Module.finrank R M : ℤ) := by
@@ -397,7 +444,7 @@ $\dim_R \mathrm{Anima}(\Gamma) = 5$):
 3. **10D Bulk Recovery:** `Module.finrank R M = 10`;
 4. **Complementary Defect Range Rank:** `(Module.finrank R (LinearMap.range (Γ - 1)) : ℤ) = 5`. -/
 theorem holographic_capacitance_quantization
-    [Invertible (2 : R)] [FiniteDimensional R M]
+    [Invertible (2 : R)]
     (Γ : Module.End R M)
     (h_krein : Γ * Γ = 1)
     (h_left : Module.finrank R (horizonDefectEgo Γ) = 5)
@@ -436,32 +483,41 @@ theorem holographic_capacitance_quantization
 /-- **Zero Horizon Capacitance Equivalence (`horizonCapacitance_eq_zero_iff_ego_bot`):**
 Over any finite-dimensional vector space $M$, `horizonCapacitance 𝒯 = 0` if and only if the
 horizon defect subspace `horizonDefectEgo 𝒯 = ker(𝒯 - 1)` is the zero subspace `⊥`. -/
-theorem horizonCapacitance_eq_zero_iff_ego_bot [FiniteDimensional R M] (𝒯 : Module.End R M) :
+theorem horizonCapacitance_eq_zero_iff_ego_bot
+    (𝒯 : Module.End R M) :
     horizonCapacitance 𝒯 = 0 ↔ horizonDefectEgo 𝒯 = ⊥ := by
   unfold horizonCapacitance
   rw [Nat.cast_eq_zero, Submodule.finrank_eq_zero]
 
-/-- **Defect-Support Characterization (`twist_mul_eq_self_iff_range_le_ego`):**
-A Modular Hamiltonian $K \in \mathrm{End}_R(M)$ satisfies $\mathcal{T} * K = K$ (every state in
-the image of $K$ is fixed by the Möbius twist $\mathcal{T}$) if and only if
-$\mathrm{range}(K) \le \mathrm{horizonDefectEgo}(\mathcal{T})$. -/
-theorem twist_mul_eq_self_iff_range_le_ego
-    (𝒯 K : Module.End R M) :
-    𝒯 * K = K ↔ LinearMap.range K ≤ horizonDefectEgo 𝒯 := by
-  unfold horizonDefectEgo
-  constructor
-  · intro hTK y hy
-    rcases hy with ⟨x, rfl⟩
-    rw [LinearMap.mem_ker, LinearMap.sub_apply, Module.End.one_apply]
-    have hEval := congr_arg (fun f : Module.End R M => f x) hTK
-    simp only [Module.End.mul_apply] at hEval
-    rw [hEval, sub_self]
-  · intro hRange
-    ext x
-    have hx : K x ∈ LinearMap.range K := ⟨x, rfl⟩
-    have hKer := hRange hx
-    rw [LinearMap.mem_ker, LinearMap.sub_apply, Module.End.one_apply, sub_eq_zero] at hKer
-    exact hKer
+/-- **Contrapositive Discovery Theorem (`non_zero_modular_hamiltonian_forces_positive_horizon_capacitance`):**
+If a defect-supported Modular Hamiltonian is non-zero ($K \neq 0$ with $\mathcal{T} * K = K$),
+then the Horizon Defect Block is non-trivial (`horizonDefectEgo 𝒯 ≠ ⊥`) and the Horizon Capacitance
+is strictly positive (`0 < horizonCapacitance 𝒯`). -/
+theorem non_zero_modular_hamiltonian_forces_positive_horizon_capacitance
+    (𝒯 K : Module.End R M)
+    (h_defect_support : 𝒯 * K = K)
+    (hK_ne_zero : K ≠ 0) :
+    horizonDefectEgo 𝒯 ≠ ⊥ ∧ 0 < horizonCapacitance 𝒯 := by
+  have hBotNe : horizonDefectEgo 𝒯 ≠ ⊥ := by
+    intro hBot
+    have hRangeLe : LinearMap.range K ≤ horizonDefectEgo 𝒯 :=
+      (twist_mul_eq_self_iff_range_le_ego 𝒯 K).mp h_defect_support
+    rw [hBot, le_bot_iff] at hRangeLe
+    exact hK_ne_zero (LinearMap.range_eq_bot.mp hRangeLe)
+  have hCapNeZero : horizonCapacitance 𝒯 ≠ 0 := by
+    intro hCapZero
+    exact hBotNe ((horizonCapacitance_eq_zero_iff_ego_bot 𝒯).mp hCapZero)
+  refine ⟨hBotNe, ?_⟩
+  unfold horizonCapacitance
+  have hNonneg : (0 : ℤ) ≤ (Module.finrank R (horizonDefectEgo 𝒯) : ℤ) :=
+    Nat.cast_nonneg _
+  exact lt_of_le_of_ne hNonneg (Ne.symm hCapNeZero)
+
+end HorizonCapacitanceDivisionRing
+
+section HorizonCapacitanceField
+
+variable {R M : Type*} [Field R] [AddCommGroup M] [Module R M] [FiniteDimensional R M]
 
 /-- **Non-Vacuous Theorem (`time_requires_horizon` — Replacing `True := trivial`):**
 If the Modular Hamiltonian $K \in \mathrm{End}_R(M)$ is supported on the Horizon Defect Block
@@ -472,7 +528,6 @@ and the Horizon Capacitance vanishes (`horizonCapacitance 𝒯 = 0`), then:
 3. **`K = 0` identically** (Modular Time cannot exist without a horizon defect);
 4. For any grading/conjugation $J_\Delta$, `kreinSupertrace J_Δ K = 0`. -/
 theorem time_requires_horizon
-    [FiniteDimensional R M]
     (𝒯 J_Δ K : Module.End R M)
     (h_defect_support : 𝒯 * K = K)
     (h_trivial_horizon : horizonCapacitance 𝒯 = 0) :
@@ -491,43 +546,6 @@ theorem time_requires_horizon
     rw [hK, mul_zero, map_zero]
   exact ⟨hBot, hRangeLe, hK, hStr⟩
 
-/-- **Contrapositive Discovery Theorem (`non_zero_modular_hamiltonian_forces_positive_horizon_capacitance`):**
-If a defect-supported Modular Hamiltonian is non-zero ($K \neq 0$ with $\mathcal{T} * K = K$),
-then the Horizon Defect Block is non-trivial (`horizonDefectEgo 𝒯 ≠ ⊥`) and the Horizon Capacitance
-is strictly positive (`0 < horizonCapacitance 𝒯`). -/
-theorem non_zero_modular_hamiltonian_forces_positive_horizon_capacitance
-    [FiniteDimensional R M]
-    (𝒯 K : Module.End R M)
-    (h_defect_support : 𝒯 * K = K)
-    (hK_ne_zero : K ≠ 0) :
-    horizonDefectEgo 𝒯 ≠ ⊥ ∧ 0 < horizonCapacitance 𝒯 := by
-  have hCapNeZero : horizonCapacitance 𝒯 ≠ 0 := by
-    intro hCapZero
-    exact hK_ne_zero (time_requires_horizon 𝒯 1 K h_defect_support hCapZero).2.2.1
-  have hBotNe : horizonDefectEgo 𝒯 ≠ ⊥ := by
-    intro hBot
-    exact hCapNeZero ((horizonCapacitance_eq_zero_iff_ego_bot 𝒯).mpr hBot)
-  refine ⟨hBotNe, ?_⟩
-  unfold horizonCapacitance
-  have hNonneg : (0 : ℤ) ≤ (Module.finrank R (horizonDefectEgo 𝒯) : ℤ) :=
-    Nat.cast_nonneg _
-  exact lt_of_le_of_ne hNonneg (Ne.symm hCapNeZero)
-
-/-- **Commuting Modular Flow Preserves the Horizon Defect (`modular_hamiltonian_preserves_horizon_defect_of_commutes`):**
-Whenever the Modular Hamiltonian $K$ commutes with the Möbius twist $\mathcal{T}$
-($K * \mathcal{T} = \mathcal{T} * K$), $K$ maps the horizon defect subspace
-`horizonDefectEgo 𝒯 = ker(𝒯 - 1)` into itself:
-$$\forall v \in \mathrm{horizonDefectEgo}(\mathcal{T}),\quad K v \in \mathrm{horizonDefectEgo}(\mathcal{T}).$$ -/
-theorem modular_hamiltonian_preserves_horizon_defect_of_commutes
-    (𝒯 K : Module.End R M) (hComm : K * 𝒯 = 𝒯 * K)
-    (v : M) (hv : v ∈ horizonDefectEgo 𝒯) :
-    K v ∈ horizonDefectEgo 𝒯 := by
-  unfold horizonDefectEgo at hv ⊢
-  rw [LinearMap.mem_ker, LinearMap.sub_apply, Module.End.one_apply, sub_eq_zero] at hv ⊢
-  have hEval := congr_arg (fun f : Module.End R M => f v) hComm.symm
-  simp only [Module.End.mul_apply] at hEval
-  rw [hEval, hv]
-
 /-- **Modular Time Anomaly Theorem (`modular_anomaly_breaks_twist_commutation_and_forces_nonzero_time`):**
 If $J_\Delta$ is a Krein modular involution ($J_\Delta^2 = 1$), $K$ satisfies the twin-sheet
 modular conjugation law $J_\Delta K J_\Delta = -K$, and the Krein supertrace of the
@@ -540,7 +558,7 @@ then simultaneously:
 4. $K * \mathcal{T} \neq \mathcal{T} * K$ (the Modular Hamiltonian cannot commute with the
    Möbius twist in the presence of a non-zero Krein anomaly). -/
 theorem modular_anomaly_breaks_twist_commutation_and_forces_nonzero_time
-    [Invertible (2 : R)] [FiniteDimensional R M]
+    [Invertible (2 : R)]
     (J_Δ 𝒯 K : Module.End R M)
     (hConj : J_Δ * K * J_Δ = -K)
     (hAnomaly : kreinSupertrace J_Δ (K * 𝒯 - 𝒯 * K) ≠ 0) :
@@ -569,7 +587,7 @@ theorem modular_anomaly_breaks_twist_commutation_and_forces_nonzero_time
     exact hAnomaly hStrZero
   exact ⟨hKNe, hTNe, hJNeOne, hJNeNegOne, hNotComm⟩
 
-end HorizonCapacitanceAndTime
+end HorizonCapacitanceField
 
 -- ============================================================================
 -- SECTION 4: Horizon Capacitance as the Spinor Trace of 𝒯 on the Defect Block Q₀

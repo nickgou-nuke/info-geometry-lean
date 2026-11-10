@@ -22,18 +22,18 @@ universe u
 
 namespace ZornCell
 
-variable {𝕜 : Type u} [CommRing 𝕜]
+variable {𝕜 : Type u} [Ring 𝕜]
 
 /-- Diagonal-trace cross term `a₁ b₂ + b₁ a₂`. -/
 def traceCross3 (X Y : ZornCell 𝕜 (Vec3 𝕜)) : 𝕜 :=
-  X.a * Y.b + X.b * Y.a
+  X.a * Y.b + Y.a * X.b
 
 /--
 Trace-style concrete incidence bilinear form on Zorn cells over `𝕜³`.
 
 This is the explicit finite form
 
-`a₁ b₂ + b₁ a₂ - v₁·w₂ - v₂·w₁`.
+`a₁ b₂ + a₂ b₁ - v₁·w₂ - v₂·w₁`.
 -/
 def traceIncidence3 (X Y : ZornCell 𝕜 (Vec3 𝕜)) : 𝕜 :=
   traceCross3 X Y - Vec3.dot X.v Y.w - Vec3.dot Y.v X.w
@@ -42,7 +42,7 @@ def traceIncidence3 (X Y : ZornCell 𝕜 (Vec3 𝕜)) : 𝕜 :=
 theorem traceIncidence3_eq_polarFormula3 (X Y : ZornCell 𝕜 (Vec3 𝕜)) :
     traceIncidence3 X Y = polarFormula3 X Y := by
   unfold traceIncidence3 traceCross3 polarFormula3
-  ring
+  abel
 
 @[simp]
 theorem traceIncidence3_eq_polarZ3 (X Y : ZornCell 𝕜 (Vec3 𝕜)) :

@@ -13,7 +13,7 @@ factorization is topologically governed by the Q₈ centralizer.
 
 open Matrix
 
-variable (M : Type _) [CommRing M] [StarRing M] [Algebra ℂ M]
+variable (M : Type _) [Ring M] [StarRing M] [Algebra ℂ M]
 
 /-- 
   The D4 Singular Superpotential: W = x^2 + y^2 * z + z^3.
@@ -38,7 +38,8 @@ namespace D4MatrixFactorization
   maps under the projectivization to the representations of the 
   outer automorphism group S₃.
 -/
-theorem d4_factorization_respects_q8 (x y z : M) (fac : D4MatrixFactorization M x y z) :
+theorem d4_factorization_respects_q8 (M : Type _) [CommRing M] [StarRing M] [Algebra ℂ M]
+    (x y z : M) (fac : D4MatrixFactorization M x y z) :
     ∃ (M_a : Matrix (Fin 2) (Fin 2) M), M_a * fac.D0 * M_a⁻¹ = fac.D0 := by
   use 1
   simp

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
@@ -26,7 +27,9 @@ structure HomPoint2 (R : Type*) where
 
 namespace HomPoint2
 
-variable {R : Type*} [CommRing R]
+section Ring
+
+variable {R : Type*} [Ring R]
 
 /-- The alternating bracket `x₁ y₂ - x₂ y₁`. -/
 def bracket (P Q : HomPoint2 R) : R :=
@@ -49,15 +52,61 @@ def det2 (a b c d : R) : R :=
 @[simp] theorem det2_identity :
     det2 (1 : R) 0 0 1 = 1 := by
   unfold det2
-  ring
+  simp
+
+@[simp] theorem det2_row1_add (a b a' b' c d : R) :
+    det2 (a + a') (b + b') c d = det2 a b c d + det2 a' b' c d := by
+  unfold det2
+  noncomm_ring
+
+@[simp] theorem det2_row2_add (a b c d c' d' : R) :
+    det2 a b (c + c') (d + d') = det2 a b c d + det2 a b c' d' := by
+  unfold det2
+  noncomm_ring
+
+@[simp] theorem det2_col1_add (a c a' c' b d : R) :
+    det2 (a + a') b (c + c') d = det2 a b c d + det2 a' b c' d := by
+  unfold det2
+  noncomm_ring
+
+@[simp] theorem det2_col2_add (a c b d b' d' : R) :
+    det2 a (b + b') c (d + d') = det2 a b c d + det2 a b' c d' := by
+  unfold det2
+  noncomm_ring
+
+@[simp] theorem det2_row1_smul (r a b c d : R) :
+    det2 (r * a) (r * b) c d = r * det2 a b c d := by
+  unfold det2
+  noncomm_ring
+
+@[simp] theorem det2_upper_triangular (a b d : R) :
+    det2 a b 0 d = a * d := by
+  unfold det2
+  simp
+
+@[simp] theorem det2_lower_triangular (a c d : R) :
+    det2 a 0 c d = a * d := by
+  unfold det2
+  simp
+
+/-- Cross-ratio numerator in homogeneous bracket form. -/
+def crossNum
+    (P₁ P₂ P₃ P₄ : HomPoint2 R) : R :=
+  bracket P₁ P₃ * bracket P₂ P₄
+
+/-- Cross-ratio denominator in homogeneous bracket form. -/
+def crossDen
+    (P₁ P₂ P₃ P₄ : HomPoint2 R) : R :=
+  bracket P₁ P₄ * bracket P₂ P₃
+
+end Ring
+
+section CommRing
+
+variable {R : Type*} [CommRing R]
 
 @[simp] theorem det2_duplicate_rows_zero (a b : R) :
     det2 a b a b = 0 := by
-  unfold det2
-  ring
-
-@[simp] theorem det2_duplicate_cols_zero (a b : R) :
-    det2 a a b b = 0 := by
   unfold det2
   ring
 
@@ -66,33 +115,22 @@ def det2 (a b c d : R) : R :=
   unfold det2
   ring
 
+/-- Bracket homogeneity in the left argument. -/
+@[simp] theorem bracket_scale_left
+    (l : R) (P Q : HomPoint2 R) :
+    bracket (scale l P) Q = l * bracket P Q := by
+  rcases P with ⟨x₁, y₁⟩
+  rcases Q with ⟨x₂, y₂⟩
+  unfold bracket scale
+  ring
+
+@[simp] theorem det2_duplicate_cols_zero (a b : R) :
+    det2 a a b b = 0 := by
+  unfold det2
+  ring
+
 @[simp] theorem det2_swap_cols (a b c d : R) :
     det2 b a d c = -det2 a b c d := by
-  unfold det2
-  ring
-
-@[simp] theorem det2_row1_add (a b a' b' c d : R) :
-    det2 (a + a') (b + b') c d = det2 a b c d + det2 a' b' c d := by
-  unfold det2
-  ring
-
-@[simp] theorem det2_row2_add (a b c d c' d' : R) :
-    det2 a b (c + c') (d + d') = det2 a b c d + det2 a b c' d' := by
-  unfold det2
-  ring
-
-@[simp] theorem det2_col1_add (a c a' c' b d : R) :
-    det2 (a + a') b (c + c') d = det2 a b c d + det2 a' b c' d := by
-  unfold det2
-  ring
-
-@[simp] theorem det2_col2_add (a c b d b' d' : R) :
-    det2 a (b + b') c (d + d') = det2 a b c d + det2 a b' c d' := by
-  unfold det2
-  ring
-
-@[simp] theorem det2_row1_smul (r a b c d : R) :
-    det2 (r * a) (r * b) c d = r * det2 a b c d := by
   unfold det2
   ring
 
@@ -111,16 +149,6 @@ def det2 (a b c d : R) : R :=
   unfold det2
   ring
 
-@[simp] theorem det2_upper_triangular (a b d : R) :
-    det2 a b 0 d = a * d := by
-  unfold det2
-  ring
-
-@[simp] theorem det2_lower_triangular (a c d : R) :
-    det2 a 0 c d = a * d := by
-  unfold det2
-  ring
-
 @[simp] theorem det2_mul
     (a b c d e f g h : R) :
     det2 (a * e + b * g) (a * f + b * h)
@@ -128,15 +156,6 @@ def det2 (a b c d : R) : R :=
       =
     det2 a b c d * det2 e f g h := by
   unfold det2
-  ring
-
-/-- Bracket homogeneity in the left argument. -/
-@[simp] theorem bracket_scale_left
-    (l : R) (P Q : HomPoint2 R) :
-    bracket (scale l P) Q = l * bracket P Q := by
-  rcases P with ⟨x₁, y₁⟩
-  rcases Q with ⟨x₂, y₂⟩
-  unfold bracket scale
   ring
 
 /-- Bracket homogeneity in the right argument. -/
@@ -171,16 +190,6 @@ The basic projective-linear covariance identity:
   rcases Q with ⟨x₂, y₂⟩
   unfold bracket lin det2
   ring
-
-/-- Cross-ratio numerator in homogeneous bracket form. -/
-def crossNum
-    (P₁ P₂ P₃ P₄ : HomPoint2 R) : R :=
-  bracket P₁ P₃ * bracket P₂ P₄
-
-/-- Cross-ratio denominator in homogeneous bracket form. -/
-def crossDen
-    (P₁ P₂ P₃ P₄ : HomPoint2 R) : R :=
-  bracket P₁ P₄ * bracket P₂ P₃
 
 /--
 Scaling four homogeneous representatives scales the cross-ratio numerator by
@@ -288,6 +297,8 @@ theorem crossRatio_lin_cross_mul
         (lin a b c d P₃) (lin a b c d P₄) := by
   rw [crossNum_lin, crossDen_lin]
   ring
+
+end CommRing
 
 end HomPoint2
 

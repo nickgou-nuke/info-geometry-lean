@@ -19,7 +19,7 @@ namespace InfoGeometry.Canonical.LogarithmicDeRhamPolya
 
 open Complex
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Logarithmic Dilation Action: Represents D = z d/dz acting on power eigenstate x^s with eigenvalue s -/
 def logDilationEigenvalue (s : ℂ) : ℂ :=
@@ -107,7 +107,7 @@ def deRhamLogPairing (dilationWeight formWeight : R) : R :=
 theorem deRham_log_pairing_unit :
     deRhamLogPairing (1 : R) (1 : R) = 1 := by
   dsimp [deRhamLogPairing]
-  ring
+  exact mul_one 1
 
 /-- 🏆 THEOREM 4: Grand Logarithmic de Rham Pólya Synthesis -/
 theorem logarithmic_derham_polya_synthesis (E : ℝ) (s : ℂ) :

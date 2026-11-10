@@ -18,7 +18,7 @@ negative half, so its projectivity and rank are consequences, not inputs.
 noncomputable section
 namespace InfoGeometry.SuperGrassmannian.ZornGraphChart
 open InfoGeometry.Algebra
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 abbrev Positive (R : Type*) := R × ZornVec3 R
 abbrev Negative (R : Type*) := ZornVec3 R × R
@@ -36,8 +36,15 @@ def splitEquiv : ZornVectorMatrix R ≃ₗ[R] Positive R × Negative R where
 @[simp] theorem splitEquiv_symm_apply (x : Positive R) (y : Negative R) :
     splitEquiv.symm (x, y) = (⟨x.1, x.2, y.1, y.2⟩ : ZornVectorMatrix R) := rfl
 
+/-- Element-level octonionic left projector is the zero graph projector over any ring `R`. -/
+theorem splitEquiv_mul_E11 (X : ZornVectorMatrix R) :
+    splitEquiv (ZornVectorMatrix.mul ZornVectorMatrix.E11 X) =
+      ProjectorGraphChart.graphProjector (0 : Positive R →ₗ[R] Negative R) (splitEquiv X) := by
+  rw [ZornVectorMatrix.mul_E11_apply]
+  rfl
+
 /-- The existing octonionic left projector is exactly the zero graph projector. -/
-theorem splitEquiv_left_E11 (X : ZornVectorMatrix R) :
+theorem splitEquiv_left_E11 {R : Type*} [CommRing R] (X : ZornVectorMatrix R) :
     splitEquiv (L_map (R := R) ZornVectorMatrix.E11 X) =
       ProjectorGraphChart.graphProjector (0 : Positive R →ₗ[R] Negative R) (splitEquiv X) := by
   rw [ZornVectorMatrix.left_E11_apply]
@@ -74,7 +81,7 @@ def quotientEquiv (f : Positive R →ₗ[R] Negative R) :
   (graphReadout f).quotKerEquivOfSurjective (graphReadout_surjective f)
 
 /-- The zero graph is precisely the image of the corrected projector. -/
-theorem zero_graph_eq_range_left_E11 :
+theorem zero_graph_eq_range_left_E11 {R : Type*} [CommRing R] :
     LinearMap.ker (graphReadout (0 : Positive R →ₗ[R] Negative R)) =
       LinearMap.range (L_map (R := R) (ZornVectorMatrix.E11 : ZornVectorMatrix R)) := by
   ext X
@@ -91,7 +98,7 @@ theorem zero_graph_eq_range_left_E11 :
     simp
 
 section Grassmannian
-variable [Nontrivial R]
+variable {R : Type*} [CommRing R] [Nontrivial R]
 
 /-- Actual native Grassmannian points, with finite projective rank-four quotients. -/
 def grassmannianChart (f : Positive R →ₗ[R] Negative R) :

@@ -108,42 +108,28 @@ def divisorOrder (F : LocalLaurentNormalForm (R := R)) : ℤ :=
     divisorOrder F = F.order :=
   rfl
 
-theorem divisorOrder_pos_of_zero
-    (F : LocalLaurentNormalForm (R := R))
-    (h : 0 < F.order) :
-    0 < divisorOrder F := by
-  exact h
+/-! The structure stores an integer order, not separate analytic zero and pole
+predicates.  The useful classification is therefore the exhaustive sign
+partition of that order. -/
 
-theorem divisorOrder_neg_of_pole
-    (F : LocalLaurentNormalForm (R := R))
-    (h : F.order < 0) :
-    divisorOrder F < 0 := by
-  exact h
-
-theorem divisorOrder_eq_zero_of_regular
-    (F : LocalLaurentNormalForm (R := R))
-    (h : F.order = 0) :
-    divisorOrder F = 0 := by
-  exact h
-
-/-! Exact order classifications.  These are equivalences for the stored
-integer order; the structure does not separately encode analytic zero/pole
-predicates. -/
-
-theorem divisorOrder_pos_iff
+/-- Every local Laurent order is positive, zero, or negative, with these cases
+pairwise disjoint. -/
+theorem divisorOrder_sign_partition
     (F : LocalLaurentNormalForm (R := R)) :
-    0 < divisorOrder F ↔ 0 < F.order := by
-  rfl
+    (0 < divisorOrder F ∨ divisorOrder F = 0 ∨ divisorOrder F < 0) ∧
+    ¬ (0 < divisorOrder F ∧ divisorOrder F = 0) ∧
+    ¬ (0 < divisorOrder F ∧ divisorOrder F < 0) ∧
+    ¬ (divisorOrder F = 0 ∧ divisorOrder F < 0) := by
+  simp only [divisorOrder]
+  omega
 
-theorem divisorOrder_neg_iff
-    (F : LocalLaurentNormalForm (R := R)) :
-    divisorOrder F < 0 ↔ F.order < 0 := by
-  rfl
-
-theorem divisorOrder_eq_zero_iff
-    (F : LocalLaurentNormalForm (R := R)) :
-    divisorOrder F = 0 ↔ F.order = 0 := by
-  rfl
+/-- The product of two local forms is regular exactly when their signed orders
+cancel.  This uses the order-addition law for `LocalLaurentNormalForm.mul`. -/
+theorem divisorOrder_mul_eq_zero_iff_orders_cancel
+    (F G : LocalLaurentNormalForm (R := R)) :
+    divisorOrder (F.mul G) = 0 ↔ divisorOrder F = -divisorOrder G := by
+  rw [divisorOrder_mul]
+  omega
 
 /-! ## Finite divisor index -/
 

@@ -38,7 +38,7 @@ namespace InfoGeometry.Supergeometry.Berezinian
 
 open Matrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The first diagonal matrix unit. -/
 def matrixE00 : Matrix (Fin 2) (Fin 2) R := !![1, 0; 0, 0]
@@ -64,7 +64,7 @@ def berezinian (M : Matrix (Fin 2) (Fin 2) R) (invD : R) : R :=
   (M 0 0 - M 0 1 * invD * M 1 0) * invD
 
 /-- Scalar expansion used by the balanced Berezinian scaling law. -/
-private theorem balancedScaling_expand
+private theorem balancedScaling_expand {R : Type*} [CommRing R]
     (a b d invD c inv_c : R) :
     (c * a - c * b * (inv_c * invD) * (c * d)) * (inv_c * invD) =
       (c * inv_c) * (a * invD) - (c * inv_c)^2 * (b * invD * d * invD) := by
@@ -75,7 +75,7 @@ private theorem balancedScaling_contract
     (a b d invD : R) :
     1 * (a * invD) - 1^2 * (b * invD * d * invD) =
       (a - b * invD * d) * invD := by
-  ring
+  noncomm_ring
 
 /-! ### 3. The Super-LU Trifactor Matrix Decomposition -/
 
@@ -93,7 +93,8 @@ def factorR (M : Matrix (Fin 2) (Fin 2) R) (invD : R) : Matrix (Fin 2) (Fin 2) R
 
 /-- Exact Super-LU Trifactor Matrix Factorization Theorem:
     L(M) * H(M) * R(M) = M on all 2x2 matrix operators. -/
-theorem super_lu_factorization (M : Matrix (Fin 2) (Fin 2) R) (invD : R) (hD : M 1 1 * invD = 1) :
+theorem super_lu_factorization {R : Type*} [CommRing R]
+    (M : Matrix (Fin 2) (Fin 2) R) (invD : R) (hD : M 1 1 * invD = 1) :
     factorL M invD * factorH M invD * factorR M invD = M := by
   ext i j
   fin_cases i <;> fin_cases j <;>
@@ -108,21 +109,20 @@ theorem super_lu_factorization (M : Matrix (Fin 2) (Fin 2) R) (invD : R) (hD : M
 theorem unipotent_L_berezinian (x : R) :
     berezinian (!![1, x; 0, 1]) 1 = 1 := by
   dsimp [berezinian]
-  ring
+  noncomm_ring
 
 /-- Lower unipotent factor has Berezinian 1. -/
 theorem unipotent_R_berezinian (y : R) :
     berezinian (!![1, 0; y, 1]) 1 = 1 := by
   dsimp [berezinian]
-  ring
+  noncomm_ring
 
 /-- Unipotent group multiplication law: L(x) * L(y) = L(x + y). -/
 theorem unipotent_group_mul (x y : R) :
     (!![1, x; 0, 1] : Matrix (Fin 2) (Fin 2) R) * !![1, y; 0, 1] = !![1, x + y; 0, 1] := by
   ext i j
   fin_cases i <;> fin_cases j <;> (
-    simp [Matrix.mul_apply, Fin.sum_univ_two]
-    try ring
+    simp [Matrix.mul_apply, Fin.sum_univ_two, add_comm]
   )
 
 /-! ### 5. Diagonal Berezinian Evaluation -/
@@ -131,13 +131,13 @@ theorem unipotent_group_mul (x y : R) :
 theorem diagonal_berezinian (a d invD : R) :
     berezinian (!![a, 0; 0, d]) invD = a * invD := by
   dsimp [berezinian]
-  ring
+  noncomm_ring
 
 /-! ### 6. Berezinian Scaling Invariance Law -/
 
 /-- Berezinian Scaling Invariance for balanced (1|1) superspace:
     Scaling the matrix operator M by c leaves the Berezinian invariant: Ber(c • M) = Ber(M). -/
-theorem berezinian_scaling_balanced
+theorem berezinian_scaling_balanced {R : Type*} [CommRing R]
     (M : Matrix (Fin 2) (Fin 2) R)
     (invD : R)
     (c inv_c : R)
@@ -164,6 +164,6 @@ theorem berezinian_of_orthogonal
     berezinian M invD = M 0 0 * invD := by
   dsimp [berezinian]
   rw [h_orth]
-  ring
+  noncomm_ring
 
 end InfoGeometry.Supergeometry.Berezinian

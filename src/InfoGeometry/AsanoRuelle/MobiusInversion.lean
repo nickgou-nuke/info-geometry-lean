@@ -15,11 +15,11 @@ namespace InfoGeometry.AsanoRuelle
 variable {K : Type*} [Field K]
 
 /-- The forward Möbius map `ψ(z) = (A + B z) / (C + D z)`. -/
-def ruelle_psi (A B C D z : K) : K :=
+def ruelle_psi {K : Type*} [DivisionRing K] (A B C D z : K) : K :=
   (A + B * z) / (C + D * z)
 
 /-- The dual Möbius map `χ(w) = (A + C w) / (B + D w)`. -/
-def ruelle_chi (A B C D w : K) : K :=
+def ruelle_chi {K : Type*} [DivisionRing K] (A B C D w : K) : K :=
   (A + C * w) / (B + D * w)
 
 /--

@@ -57,8 +57,7 @@ namespace InfoGeometry.Canonical.UnifiedGeometryOperatorSignificance
 
 section AbstractFivePillarSynthesis
 
-variable {R : Type*} [CommRing R]
-variable {A : Type*} [Ring A] [Algebra R A]
+variable {A : Type*} [Ring A]
 
 /-!
 ## 1. Fundamental Geometric & Operator-Algebraic Primitives in `A`
@@ -120,7 +119,7 @@ def bruhatWeylReflection (d B : A) : A := projHarmonic d B + kahlerStructure d B
 def bruhatWeylReflectionInv (d B : A) : A := projHarmonic d B - kahlerStructure d B
 
 /-- Algebraic weighted support `ρ = u² • P_- + v² • P_+`; not a state. -/
-def kmsModularWeight (u v : R) (d B : A) : A :=
+def kmsModularWeight {R : Type*} [Ring R] [Module R A] (u v : R) (d B : A) : A :=
   (u * u) • projMinus d B + (v * v) • projPlus d B
 
 /-!
@@ -531,6 +530,31 @@ def bruhatWeylUnit {d B : A}
   val_inv := bruhatWeylReflection_mul_inv hd hB hdBd hBdB
   inv_val := bruhatWeylReflectionInv_mul hd hB hdBd hBdB
 
+lemma jordanProd_commutator_eq_associator (S T X : A) :
+    jordanProd S (jordanProd T X) - jordanProd T (jordanProd S X) =
+      jordanAssociator T X S := by
+  unfold jordanAssociator jordanProd
+  noncomm_ring
+
+/-- Corrected inner-bracket order, reusing the division-free ring owner. -/
+lemma jordanAssociator_eq_double_lieBracket (S T X : A) :
+    jordanAssociator T X S = lieBracket (lieBracket S T) X := by
+  rw [← jordanProd_commutator_eq_associator]
+  exact InfoGeometry.Core.JordanAssociator.symm_operator_commutator S T X
+
+/-- Equivalent `[X, [T, S]]` form directly from `Core.JordanAssociator.symm_associator_eq_double_commutator`. -/
+lemma jordanAssociator_eq_commutator_right (S T X : A) :
+    jordanAssociator T X S = lieBracket X (lieBracket T S) :=
+  InfoGeometry.Core.JordanAssociator.symm_associator_eq_double_commutator T X S
+
+/-- Square-zero does not annihilate every Jordan associator: `[d, d, B]_∘ = -(2 • d)`. -/
+lemma square_zero_jordanAssociator_eq_neg_two_smul {d B : A}
+    (hd : d * d = 0) (hdBd : d * B * d = d) :
+    jordanAssociator d d B = -(2 • d) :=
+  InfoGeometry.Core.JordanAssociator.symm_associator_square_zero_inner_inverse hd hdBd
+
+variable {R : Type*} [CommRing R] [Algebra R A]
+
 lemma kmsModularWeight_intertwines_d {d B : A}
     (hd : d * d = 0) (hdBd : d * B * d = d) (u v : R) :
     (u * u) • (kmsModularWeight u v d B * d) =
@@ -558,29 +582,6 @@ lemma kmsModularWeight_intertwines_B {d B : A}
     rw [mul_add, mul_smul_comm, mul_smul_comm, B_mul_projMinus d hB,
         B_mul_projPlus hBdB, smul_zero, zero_add]
   rw [h_left, h_right, smul_smul, smul_smul, mul_comm (v * v) (u * u)]
-
-lemma jordanProd_commutator_eq_associator (S T X : A) :
-    jordanProd S (jordanProd T X) - jordanProd T (jordanProd S X) =
-      jordanAssociator T X S := by
-  unfold jordanAssociator jordanProd
-  noncomm_ring
-
-/-- Corrected inner-bracket order, reusing the division-free ring owner. -/
-lemma jordanAssociator_eq_double_lieBracket (S T X : A) :
-    jordanAssociator T X S = lieBracket (lieBracket S T) X := by
-  rw [← jordanProd_commutator_eq_associator]
-  exact InfoGeometry.Core.JordanAssociator.symm_operator_commutator S T X
-
-/-- Equivalent `[X, [T, S]]` form directly from `Core.JordanAssociator.symm_associator_eq_double_commutator`. -/
-lemma jordanAssociator_eq_commutator_right (S T X : A) :
-    jordanAssociator T X S = lieBracket X (lieBracket T S) :=
-  InfoGeometry.Core.JordanAssociator.symm_associator_eq_double_commutator T X S
-
-/-- Square-zero does not annihilate every Jordan associator: `[d, d, B]_∘ = -(2 • d)`. -/
-lemma square_zero_jordanAssociator_eq_neg_two_smul {d B : A}
-    (hd : d * d = 0) (hdBd : d * B * d = d) :
-    jordanAssociator d d B = -(2 • d) :=
-  InfoGeometry.Core.JordanAssociator.symm_associator_square_zero_inner_inverse hd hdBd
 
 /-- Tracial functional boundary intertwining law for `kmsModularWeight u v d B`,
     reusing `InfoGeometry.Canonical.PeirceWeightedTrace.weighted_trace_boundary`. -/

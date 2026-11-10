@@ -17,6 +17,92 @@ equivalence, without changing its action or choosing a spectral basis.
 
 namespace InfoGeometry.OperatorAlgebra.LieJordan
 
+section RingTwistedComplex
+
+open InfoGeometry.Core.IdempotentCartan
+open InfoGeometry.Core.PeirceDecomposition
+
+variable {A : Type*} [Ring A]
+
+/-- Pure ring-level twisted inner operator `q * x - θ x * q` on `[Ring A]`. -/
+def ringTwistedInner (θ : A →+* A) (q x : A) : A :=
+  q * x - θ x * q
+
+/-- Pure ring-level opposite signed twisted operator `q * x + θ x * q` on `[Ring A]`. -/
+def ringTwistedCoInner (θ : A →+* A) (q x : A) : A :=
+  q * x + θ x * q
+
+@[simp] theorem ringTwistedInner_apply (θ : A →+* A) (q x : A) :
+    ringTwistedInner θ q x = q * x - θ x * q := rfl
+
+@[simp] theorem ringTwistedCoInner_apply (θ : A →+* A) (q x : A) :
+    ringTwistedCoInner θ q x = q * x + θ x * q := rfl
+
+theorem ringTwistedInner_leibniz (θ : A →+* A) (q x y : A) :
+    ringTwistedInner θ q (x * y) =
+      ringTwistedInner θ q x * y + θ x * ringTwistedInner θ q y := by
+  simp only [ringTwistedInner_apply, map_mul]
+  noncomm_ring
+
+theorem ringTwistedInner_reverses_parity (θ : A →+* A) {q : A}
+    (hq : θ q = -q) (x : A) :
+    θ (ringTwistedInner θ q x) = -ringTwistedInner θ q (θ x) := by
+  simp only [ringTwistedInner_apply, map_sub, map_mul, hq]
+  noncomm_ring
+
+theorem ringTwistedInner_square (θ : A →+* A)
+    (hθ : Function.Involutive θ) {q : A} (hq : θ q = -q) (x : A) :
+    ringTwistedInner θ q (ringTwistedInner θ q x) = (q * q) * x - x * (q * q) := by
+  simp only [ringTwistedInner_apply, map_sub, map_mul, hq, hθ x]
+  noncomm_ring
+
+theorem ringTwistedCoInner_square (θ : A →+* A)
+    (hθ : Function.Involutive θ) {q : A} (hq : θ q = -q) (x : A) :
+    ringTwistedCoInner θ q (ringTwistedCoInner θ q x) = (q * q) * x - x * (q * q) := by
+  simp only [ringTwistedCoInner_apply, map_add, map_mul, hq, hθ x]
+  noncomm_ring
+
+theorem ringTwistedInner_mixed (θ : A →+* A)
+    (hθ : Function.Involutive θ) {q r : A} (hq : θ q = -q) (hr : θ r = -r) (x : A) :
+    ringTwistedInner θ q (ringTwistedInner θ r x) +
+      ringTwistedInner θ r (ringTwistedInner θ q x) =
+        (q * r + r * q) * x - x * (q * r + r * q) := by
+  simp only [ringTwistedInner_apply, map_sub, map_mul, hq, hr, hθ x]
+  noncomm_ring
+
+theorem ringTwistedInner_coInner (θ : A →+* A)
+    (hθ : Function.Involutive θ) {q r : A} (hq : θ q = -q) (hr : θ r = -r) (x : A) :
+    ringTwistedInner θ q (ringTwistedCoInner θ r x) +
+      ringTwistedCoInner θ r (ringTwistedInner θ q x) =
+        (q * r + r * q) * x + x * (q * r + r * q) := by
+  simp only [ringTwistedInner_apply, ringTwistedCoInner_apply,
+    map_add, map_sub, map_mul, hq, hr, hθ x]
+  noncomm_ring
+
+/-- Over any associative ring `A`, the concrete Peirce boundary operator
+`ringTwistedInner (reflectionConj p hp).toRingHom (component10 p a)` is strictly
+square-zero on all of `A` without requiring any scalar `CommRing` or `Algebra`. -/
+theorem ring_peirce_boundary_square_zero (p : A) (hp : p * p = p) (a x : A) :
+    ringTwistedInner (reflectionConj p hp).toRingHom (component10 p a)
+      (ringTwistedInner (reflectionConj p hp).toRingHom (component10 p a) x) = 0 := by
+  have hinv : Function.Involutive (reflectionConj p hp).toRingHom := by
+    intro y
+    change reflection p * (reflection p * y * reflection p) * reflection p = y
+    calc
+      _ = (reflection p * reflection p) * y * (reflection p * reflection p) := by
+        noncomm_ring
+      _ = y := by rw [reflection_sq hp]; simp
+  have hodd : (reflectionConj p hp).toRingHom (component10 p a) = -component10 p a := by
+    change reflection p * component10 p a * reflection p = -component10 p a
+    simp only [reflection, two_nsmul, component10, complementIdempotent]
+    noncomm_ring [hp, idempotent_mul_nested p hp]
+  have hsq : component10 p a * component10 p a = 0 :=
+    (InfoGeometry.Core.IdempotentCartan.corners_square_zero hp a).1
+  rw [ringTwistedInner_square (reflectionConj p hp).toRingHom hinv hodd x, hsq]
+  simp
+
+end RingTwistedComplex
+
 variable (R : Type*) [CommRing R] {A : Type*} [Ring A] [Algebra R A]
 
 /-- Global odd inner action: the twist carries the parity of the argument. -/

@@ -344,7 +344,7 @@ local notation A "⊗ₖ" B => Matrix.kroneckerMap (fun a b => a * b) A B
 
 section MatrixCarrier
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Identity 2x2 matrix. -/
 def matOne : Matrix (Fin 2) (Fin 2) R := 1
@@ -450,7 +450,7 @@ theorem real_spinor_dyadic_expansion (ψ φ : Fin 2 → R) :
   fin_cases i <;> fin_cases j <;>
     simp [dyad, matOne, matGamma, matJ, matK,
           bilinScalar, bilinChiral, bilinVector1, bilinVector2] <;>
-    ring
+    noncomm_ring
 
 /-! ### 4. Real Chiral Fierz Completeness Identity -/
 
@@ -522,8 +522,8 @@ theorem grading_derivation_cube (X : Matrix (Fin 2) (Fin 2) R) :
       (4 : R) • (matGamma * X - X * matGamma) := by
     ext i j
     fin_cases i <;> fin_cases j <;>
-      simp only [one_mul, mul_one, Matrix.sub_apply, Matrix.add_apply, Matrix.smul_apply] <;>
-      ring
+      simp only [one_mul, mul_one, Matrix.sub_apply, Matrix.add_apply, Matrix.smul_apply, smul_eq_mul] <;>
+      noncomm_ring
   exact h_simp
 
 /-! ### 6. Supertrace & Real SUSY Vacuum Energy Cancellation -/
@@ -535,7 +535,7 @@ def superTrace2 (M : Matrix (Fin 2) (Fin 2) R) : R :=
 /-- Linear supertrace of sum: $\operatorname{STr}(A + B) = \operatorname{STr}(A) + \operatorname{STr}(B)$. -/
 theorem superTrace2_add (A B : Matrix (Fin 2) (Fin 2) R) :
     superTrace2 (A + B) = superTrace2 A + superTrace2 B := by
-  simp [superTrace2]; ring
+  simp [superTrace2]; abel
 
 /-- General supersymmetric Hamiltonian with coupling $v \in R$:
 $H(v) = \{Q(v), Q^\dagger(v)\} = v^2 \cdot \mathbf{1}$. -/
@@ -547,7 +547,7 @@ theorem matSusyH_eq (v : R) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [matSusyH, matQ, matQ_dag, matOne] <;>
-    ring
+    noncomm_ring
 
 /-- **Theorem**: Exact Cancellation of Vacuum Energy in the Real SUSY Hamiltonian:
 $\operatorname{STr}(H_{\mathrm{susy}}) = 0$. -/
@@ -573,20 +573,20 @@ structure RealMajoranaChiralIdealCertificate : Prop where
     S.superchargeQ γ ^ 2 = 0 ∧ S.superchargeQ_dag γ ^ 2 = 0
   abstract_susy_conservation : ∀ (R : Type) [Ring R] (S : ChiralSheetSubstrate R) (γ : R),
     S.susyH γ * S.superchargeQ γ - S.superchargeQ γ * S.susyH γ = 0
-  concrete_dyadic_expansion : ∀ (R : Type) [CommRing R] (ψ φ : Fin 2 → R),
+  concrete_dyadic_expansion : ∀ (R : Type) [Ring R] (ψ φ : Fin 2 → R),
     (2 : R) • dyad ψ φ =
       bilinScalar ψ φ • matOne + bilinChiral ψ φ • matGamma +
       bilinVector1 ψ φ • matJ - bilinVector2 ψ φ • matK
-  concrete_chiral_fierz_ideal : ∀ (R : Type) [CommRing R],
+  concrete_chiral_fierz_ideal : ∀ (R : Type) [Ring R],
     kronMul (matPL (R := R)) matPL + kronMul matPR matPR +
     kronMul matQ matQ_dag + kronMul matQ_dag matQ = Swap2
-  concrete_chiral_fierz_pauli : ∀ (R : Type) [CommRing R],
+  concrete_chiral_fierz_pauli : ∀ (R : Type) [Ring R],
     (2 : R) • (Swap2 (R := R)) =
       kronMul (matOne (R := R)) matOne + kronMul matGamma matGamma +
       kronMul matJ matJ - kronMul matK matK
-  concrete_five_graded_derivation : ∀ (R : Type) [CommRing R] (X : Matrix (Fin 2) (Fin 2) R),
+  concrete_five_graded_derivation : ∀ (R : Type) [Ring R] (X : Matrix (Fin 2) (Fin 2) R),
     gradingDeriv (gradingDeriv (gradingDeriv X)) = (4 : R) • gradingDeriv X
-  concrete_vacuum_energy_cancellation : ∀ (R : Type) [CommRing R] (v : R),
+  concrete_vacuum_energy_cancellation : ∀ (R : Type) [Ring R] (v : R),
     superTrace2 (matSusyH (R := R) v) = 0
 
 theorem compile_real_majorana_chiral_ideal :

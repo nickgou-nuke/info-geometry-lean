@@ -6,6 +6,7 @@ Authors: nickgou-nuke contributors
 import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic
+import InfoGeometry.Physics.ArnoldHydrodynamicsBeltrami
 
 set_option linter.unusedVariables false
 set_option linter.unusedSectionVars false
@@ -135,18 +136,7 @@ theorem euler_inviscid_conservation (B : BeltramiField) (t : ℝ) :
 
 end BeltramiField
 
-/-! ### Part II: Nonlinear Lamb Vector Annihilation -/
-
-/-- Hydrodynamic Lamb vector magnitude $L = \|\boldsymbol{\omega} \times \mathbf{u}\|$. -/
-def lambVectorMagnitude (_lambda : ℝ) (_u_norm : ℝ) : ℝ := 0
-
-/-- **Theorem 6 (Lamb Vector Annihilation)**:
-    Because $\boldsymbol{\omega} = \lambda \mathbf{u}$, the cross product $\boldsymbol{\omega} \times \mathbf{u}$ vanishes identically,
-    completely neutralizing nonlinear vortex stretching. -/
-theorem lamb_vector_annihilation (lambda u_norm : ℝ) :
-    lambVectorMagnitude lambda u_norm = 0 := rfl
-
-/-! ### Part III: Decay Rate Linearity in Viscosity -/
+/-! ### Part II: Decay Rate Linearity in Viscosity -/
 
 /-- **Theorem 7 (Decay Rate Linearity in Viscosity)**:
     The viscous dissipation rate scales linearly with the kinematic viscosity $\nu$. -/
@@ -164,18 +154,19 @@ theorem decay_rate_linear (nu1 nu2 lambda : ℝ) :
 theorem beltrami_sobolev_stability_synthesis
     (B : BeltramiField)
     (nu t : ℝ)
+    (u : ChiralVector3)
     (h_nu : 0 ≤ nu)
     (h_t : 0 ≤ t) :
     (B.enstrophy = (B.lambda ^ 2) * B.energy) ∧
     (B.sobolevH1Sq = 2 * B.energy + 2 * B.enstrophy) ∧
-    (lambVectorMagnitude B.lambda 1.0 = 0) ∧
+    (ArnoldBeltrami.lambVector (B.lambda • u) u = 0) ∧
     (B.energyAtTime nu t ≤ B.energy) ∧
     (0 ≤ B.energyAtTime nu t) ∧
     (B.energyAtTime 0 t = B.energy) ∧
     (decayRate 0 B.lambda = 0) := by
   refine ⟨B.enstrophy_eq_lambda_sq_mul_energy,
           B.sobolev_h1_coercivity,
-          lamb_vector_annihilation B.lambda 1.0,
+          ArnoldBeltrami.beltrami_lamb_vanishes B.lambda u,
           B.energy_le_initial_at_time nu t h_nu h_t,
           B.energy_nonneg_at_time nu t,
           B.euler_inviscid_conservation t,
@@ -186,10 +177,11 @@ theorem beltrami_sobolev_stability_synthesis
 /-- Certified wrapper certifying Section 5.86 / 5.95. -/
 structure CertifiedBeltramiSobolevStability where
   certified_synthesis :
-    ∀ (B : BeltramiField) (nu t : ℝ) (h_nu : 0 ≤ nu) (h_t : 0 ≤ t),
+    ∀ (B : BeltramiField) (nu t : ℝ) (u : ChiralVector3)
+      (h_nu : 0 ≤ nu) (h_t : 0 ≤ t),
       (B.enstrophy = (B.lambda ^ 2) * B.energy) ∧
       (B.sobolevH1Sq = 2 * B.energy + 2 * B.enstrophy) ∧
-      (lambVectorMagnitude B.lambda 1.0 = 0) ∧
+      (ArnoldBeltrami.lambVector (B.lambda • u) u = 0) ∧
       (B.energyAtTime nu t ≤ B.energy) ∧
       (0 ≤ B.energyAtTime nu t) ∧
       (B.energyAtTime 0 t = B.energy) ∧

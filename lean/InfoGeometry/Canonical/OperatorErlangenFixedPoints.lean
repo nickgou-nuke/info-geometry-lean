@@ -54,7 +54,7 @@ theorem fixedPointSubsemiring_antitone {H K : Subgroup G} (h : H ≤ K) :
 
 section SupergradedCompatibility
 
-variable {R B : Type*} [Field R] [Ring B] [Algebra R B]
+variable {B : Type*} [Ring B]
   [DistribMulAction G B]
 
 def ringFixedPointSet (H : Subgroup G) : Set B :=

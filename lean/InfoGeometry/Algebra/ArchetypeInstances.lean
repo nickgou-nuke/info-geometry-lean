@@ -63,7 +63,7 @@ def zornAssociatorDefectCandidate : TypedArchetype (Vec3 R × Vec3 R × Vec3 R) 
     let T := dot3 S (cross3 p eps)
     zornAssociator (ZornMatrix.quark S) (ZornMatrix.quark p) (ZornMatrix.quark eps) =
     ZornMatrix.sub (ZornMatrix.smul T ZornMatrix.PMinus) (ZornMatrix.smul T ZornMatrix.PPlus)
-  evidence := trivial
+  evidence := PUnit.unit
 
 #register_archetype zornAssociatorDefectCandidate
 
@@ -80,7 +80,7 @@ def kanTriadCandidate : TypedArchetype (R) .candidate where
   name     := `kanTriadCandidate
   phase    := 2
   claim    := fun x => N_grp R x * P_minus R = P_minus R + x • e_plus R
-  evidence := trivial
+  evidence := PUnit.unit
 
 #register_archetype kanTriadCandidate
 

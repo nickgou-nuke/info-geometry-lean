@@ -42,13 +42,28 @@ theorem nontrivial_phase_excludes_commutation (x z : Aˣ) (q : R)
   intro hcomm
   exact hq (commuting_units_force_phase_one x z q hcomm hphase)
 
-omit [Nontrivial A] in
+end Phase
+
+section PhaseRing
+
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
+
 theorem phase_commutator (x z : A) (q : R)
     (hphase : z * x = q • (x * z)) :
     x * z - z * x = (1 - q) • (x * z) := by
   rw [hphase, sub_smul, one_smul]
 
-omit [Nontrivial A] in
+theorem phase_anticommutator (x z : A) (q : R)
+    (hphase : z * x = q • (x * z)) :
+    x * z + z * x = (1 + q) • (x * z) := by
+  rw [hphase, add_smul, one_smul]
+
+end PhaseRing
+
+section PhaseDivisionRing
+
+variable {R A : Type*} [DivisionRing R] [Ring A] [Module R A]
+
 /-- For arbitrary operators, a nontrivial scalar phase permits commutation
 exactly when their product vanishes. No invertibility or absence of zero
 divisors in the ambient algebra is required. -/
@@ -59,7 +74,6 @@ theorem phase_commute_iff (x z : A) (q : R)
   rw [← sub_eq_zero, phase_commutator x z q hphase, smul_eq_zero, sub_eq_zero]
   simp only [eq_comm]
 
-omit [Nontrivial A] in
 /-- The nonzero-product condition is the precise replacement for the unit
 hypothesis in the phase noncommutation obstruction. -/
 theorem phase_noncommute_iff (x z : A) (q : R)
@@ -67,13 +81,7 @@ theorem phase_noncommute_iff (x z : A) (q : R)
     ¬ Commute x z ↔ q ≠ 1 ∧ x * z ≠ 0 := by
   rw [phase_commute_iff x z q hphase, not_or]
 
-omit [Nontrivial A] in
-theorem phase_anticommutator (x z : A) (q : R)
-    (hphase : z * x = q • (x * z)) :
-    x * z + z * x = (1 + q) • (x * z) := by
-  rw [hphase, add_smul, one_smul]
-
-end Phase
+end PhaseDivisionRing
 
 section Conjugation
 

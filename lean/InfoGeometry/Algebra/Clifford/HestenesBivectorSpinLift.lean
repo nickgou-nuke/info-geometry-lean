@@ -24,7 +24,7 @@ Key Theorems:
 
 section BivectorLift
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- A spatial/elliptic bivector is an operator whose square is $-I$. -/
 def IsChiralBivector {M : Type*} [AddCommGroup M] [Module R M]
@@ -58,6 +58,12 @@ theorem bivector_pow_four (B : Module.End R M) (hB : IsChiralBivector B) :
     have h_mul : (2 : ℕ) * 2 = 4 := rfl
     rw [← pow_mul, h_mul]
   rw [h4, hB, neg_one_sq_op]
+
+end BivectorLift
+
+section BivectorCyclotomicLift
+
+variable {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
 
 theorem bivector_shift_sq
     (B : Module.End R M) (sqrt3 : R)
@@ -212,6 +218,6 @@ theorem krein_involution_projectors_ortho
       _ = 0 := by module
   rw [h_inner, smul_zero]
 
-end BivectorLift
+end BivectorCyclotomicLift
 
 end InfoGeometry.Algebra.Clifford

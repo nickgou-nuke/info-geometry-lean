@@ -29,11 +29,11 @@ noncomputable section
 namespace InfoGeometry.OperatorAlgebra.General
 
 variable {R V W U A : Type*}
-variable [CommRing R]
+variable [Ring R]
 variable [AddCommGroup V] [Module R V]
 variable [AddCommGroup W] [Module R W]
 variable [AddCommGroup U] [Module R U]
-variable [Ring A] [Algebra R A]
+variable [Ring A] [Module R A]
 
 /-!
 =============================================================================
@@ -43,10 +43,11 @@ PART 1: Operator-Valued Differential Forms of Arbitrary Degree n ∈ ℕ
 
 /-- 
   An operator-valued differential form of arbitrary degree `n ∈ ℕ` on module V
-  with values in algebra A, formalized as an Alternating Multilinear Map.
+  with values in operator ring A over a (possibly noncommutative) ring R,
+  formalized as an Alternating Multilinear Map.
 -/
 abbrev OpForm (R V A : Type*) (n : ℕ)
-    [CommRing R] [AddCommGroup V] [Module R V] [Ring A] [Algebra R A] :=
+    [Ring R] [AddCommGroup V] [Module R V] [Ring A] [Module R A] :=
   AlternatingMap R V A (Fin n)
 
 /-- Pullback of an operator form of arbitrary degree `n` along a linear map `ϕ : W →ₗ[R] V`. -/
@@ -72,8 +73,8 @@ PART 2: Derivation Action on Forms of Arbitrary Degree n ∈ ℕ
 =============================================================================
 -/
 
-/-- An R-linear derivation on the algebra A. -/
-structure FormDerivation (R A : Type*) [CommRing R] [Ring A] [Algebra R A] where
+/-- An R-linear derivation on the operator ring A over a (possibly noncommutative) ring R. -/
+structure FormDerivation (R A : Type*) [Ring R] [Ring A] [Module R A] where
   toFun : A → A
   map_add' : ∀ x y, toFun (x + y) = toFun x + toFun y
   map_smul' : ∀ (c : R) x, toFun (c • x) = c • toFun x
@@ -118,34 +119,34 @@ def derivN (n : ℕ) (D : FormDerivation R A) (ω : OpForm R V A n) : OpForm R V
 theorem derivN_apply (n : ℕ) (D : FormDerivation R A) (ω : OpForm R V A n) (v : Fin n → V) :
     derivN n D ω v = D (ω v) := rfl
 
-/-- Transport an arbitrary-degree operator-valued form through an algebra
-homomorphism on its coefficient algebra. -/
-def mapN {C : Type*} [Ring C] [Algebra R C] (n : ℕ)
-    (f : A →ₐ[R] C) (ω : OpForm R V A n) : OpForm R V C n :=
-  f.toLinearMap.compAlternatingMap ω
+/-- Transport an arbitrary-degree operator-valued form through an R-linear map
+on its coefficient operator ring. -/
+def mapN {C : Type*} [Ring C] [Module R C] (n : ℕ)
+    (f : A →ₗ[R] C) (ω : OpForm R V A n) : OpForm R V C n :=
+  f.compAlternatingMap ω
 
-@[simp] theorem mapN_apply {C : Type*} [Ring C] [Algebra R C] (n : ℕ)
-    (f : A →ₐ[R] C) (ω : OpForm R V A n) (v : Fin n → V) :
+@[simp] theorem mapN_apply {C : Type*} [Ring C] [Module R C] (n : ℕ)
+    (f : A →ₗ[R] C) (ω : OpForm R V A n) (v : Fin n → V) :
     mapN n f ω v = f (ω v) := rfl
 
 @[simp] theorem mapN_id (n : ℕ) (ω : OpForm R V A n) :
-    mapN n (AlgHom.id R A) ω = ω := by
+    mapN n (LinearMap.id : A →ₗ[R] A) ω = ω := by
   ext v
   rfl
 
 /-- Arbitrary-degree coefficient transport is functorial under composition of
-algebra homomorphisms. -/
-theorem mapN_comp {C D : Type*} [Ring C] [Algebra R C]
-    [Ring D] [Algebra R D] (n : ℕ)
-    (f : A →ₐ[R] C) (g : C →ₐ[R] D) (ω : OpForm R V A n) :
+R-linear maps. -/
+theorem mapN_comp {C D : Type*} [Ring C] [Module R C]
+    [Ring D] [Module R D] (n : ℕ)
+    (f : A →ₗ[R] C) (g : C →ₗ[R] D) (ω : OpForm R V A n) :
     mapN n (g.comp f) ω = mapN n g (mapN n f ω) := by
   ext v
   rfl
 
-/-- An algebra homomorphism intertwining two coefficient derivations induces a
+/-- An R-linear map intertwining two coefficient derivations induces a
 map of their arbitrary-degree operator-valued form derivation actions. -/
-theorem mapN_derivN {C : Type*} [Ring C] [Algebra R C]
-    (n : ℕ) (f : A →ₐ[R] C) (D : FormDerivation R A)
+theorem mapN_derivN {C : Type*} [Ring C] [Module R C]
+    (n : ℕ) (f : A →ₗ[R] C) (D : FormDerivation R A)
     (E : FormDerivation R C)
     (hDE : ∀ a, f (D a) = E (f a)) (ω : OpForm R V A n) :
     mapN n f (derivN n D ω) = derivN n E (mapN n f ω) := by
@@ -167,8 +168,8 @@ PART 3: Exact Derivation of Onsager–Casimir Reciprocity from Parities
 =============================================================================
 -/
 
-/-- An R-bilinear transport tensor W(u, v). -/
-structure TransportTensor (R V A : Type*) [CommRing R] [AddCommGroup V] [Module R V] [Ring A] [Algebra R A] where
+/-- An R-bilinear transport tensor W(u, v) over a (possibly noncommutative) ring R. -/
+structure TransportTensor (R V A : Type*) [Ring R] [AddCommGroup V] [Module R V] [Ring A] [Module R A] where
   toFun : V → V → A
   map_add_left' : ∀ u v w, toFun (u + v) w = toFun u w + toFun v w
   map_add_right' : ∀ u v w, toFun u (v + w) = toFun u v + toFun u w
@@ -216,7 +217,7 @@ theorem decomposition (half : R) (h_half : (2 : R) * half = 1) (u v : V) :
       _ = (2 : R) • (W.toFun u v) + 0 := by rw [two_smul, sub_self]
       _ = (2 : R) • (W.toFun u v) := by rw [add_zero]
   rw [h_add, smul_smul]
-  have h_norm : half * 2 = 1 := by rw [mul_comm, h_half]
+  have h_norm : half * 2 = 1 := by rw [mul_two, ← two_mul, h_half]
   rw [h_norm, one_smul]
 
 /-- 

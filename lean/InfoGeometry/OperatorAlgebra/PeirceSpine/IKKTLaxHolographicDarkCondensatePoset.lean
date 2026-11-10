@@ -35,6 +35,21 @@ synthesis over an arbitrary associative ring `B` (`[Ring B]`):
    condensate `C₀ = P₀ C P₀` commutes with both `P₁` and `P₂` (`[P₁, C₀] = [P₂, C₀] = 0`)
    while dressing the horizon metric `V_dressed = P₁ X C₀² Y P₁`, and proves the constructive
    Jones–Peirce two-projection and waist Temperley–Lieb contraction identities.
+
+BUCKET 1: PROVED FINITE/ALGEBRAIC IDENTITIES OVER `[Ring B]`
+- `ikkt_operator_variation_decomposition`
+- `relational_entanglement_and_holographic_boundary_localization`
+- `moving_observer_recoil_and_berry_simon_connection`
+- `dark_matter_waist_condensate_and_constructive_temperley_lieb`
+
+BUCKET 2: CONDITIONAL IDENTITIES FROM EXPLICIT PREMISES
+- `ikkt_connes_variational_euler_lagrange_and_lax_conservation` (from cyclic trace `τ : CyclicTrace B M`)
+- `gradient_dissipation_and_open_system_arrow_of_time` (from derivation `D : OpDerivation B`)
+- `master_ikkt_lax_holographic_dark_condensate_poset_coagulation` (from cyclic trace and derivation)
+
+BUCKET 3: OPEN CLOSURE DEBT
+- Path-integral partition functions and continuum subfactor von Neumann completions are outside this
+  algebraic `[Ring B]` module.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine.IKKTLaxHolographicDarkCondensatePoset

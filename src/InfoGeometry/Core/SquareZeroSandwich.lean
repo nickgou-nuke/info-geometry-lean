@@ -18,6 +18,42 @@ namespace InfoGeometry.Core.SquareZeroSandwich
 
 open Matrix
 
+section PureRing
+variable {A : Type*} [Ring A] {X Y : A}
+
+/-- The anticommutator commutes with the first square-zero generator in any ring `A`. -/
+theorem ring_anticomm_mul_left (hx : X * X = 0) :
+    (X * Y + Y * X) * X = X * (X * Y + Y * X) := by
+  have hxx : X * (X * Y) = 0 := by rw [← mul_assoc, hx, zero_mul]
+  simp only [add_mul, mul_add, mul_assoc, hx, hxx, mul_zero, add_zero, zero_add]
+
+/-- The anticommutator commutes with the second square-zero generator in any ring `A`. -/
+theorem ring_anticomm_mul_right (hy : Y * Y = 0) :
+    (X * Y + Y * X) * Y = Y * (X * Y + Y * X) := by
+  simpa only [add_comm] using (ring_anticomm_mul_left (Y := X) hy)
+
+/-- The product difference anticommutes with the first seed in any ring `A`. -/
+theorem ring_commutator_anticomm_left (hx : X * X = 0) :
+    X * (X * Y - Y * X) = -((X * Y - Y * X) * X) := by
+  have hxx : X * (X * Y) = 0 := by rw [← mul_assoc, hx, zero_mul]
+  simp only [mul_sub, sub_mul, mul_assoc, hx, hxx, mul_zero, zero_sub, sub_zero]
+
+/-- The product difference anticommutes with the second seed in any ring `A`. -/
+theorem ring_commutator_anticomm_right (hy : Y * Y = 0) :
+    Y * (X * Y - Y * X) = -((X * Y - Y * X) * Y) := by
+  have hyy : Y * (Y * X) = 0 := by rw [← mul_assoc, hy, zero_mul]
+  simp only [mul_sub, sub_mul, mul_assoc, hy, hyy, mul_zero, zero_sub, sub_zero, neg_neg]
+
+/-- The sum and difference of the two products commute in any ring `A`, using square-zero. -/
+theorem ring_anticomm_mul_commutator (hx : X * X = 0) (hy : Y * Y = 0) :
+    (X * Y + Y * X) * (X * Y - Y * X) =
+      (X * Y - Y * X) * (X * Y + Y * X) := by
+  have hcx : Commute (X * Y + Y * X) X := ring_anticomm_mul_left hx
+  have hcy : Commute (X * Y + Y * X) Y := ring_anticomm_mul_right hy
+  exact (hcx.mul_right hcy).sub_right (hcy.mul_right hcx)
+
+end PureRing
+
 variable {n R : Type*} [Fintype n] [DecidableEq n] [CommRing R]
 
 /-- The paired sandwich, as a native linear endomorphism of the matrix algebra. -/

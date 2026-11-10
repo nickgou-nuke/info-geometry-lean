@@ -220,14 +220,14 @@ theorem gradedTrace_evenCorner_eq {R : Type*} [AddCommGroup R]
 
 /-- A finite weighted mixture of unitary conjugations on an associative
 operator algebra. -/
-def unitaryMixture {R A κ : Type*} [CommSemiring R] [Ring A]
-    [Algebra R A] [StarRing A] [Fintype κ]
+def unitaryMixture {R A κ : Type*} [Semiring R] [Ring A]
+    [Module R A] [StarRing A] [Fintype κ]
     (w : κ → R) (U : κ → A) (x : A) : A :=
   ∑ i, w i • (U i * x * star (U i))
 
 /-- Each unitary conjugation preserves a cyclic linear functional. -/
 theorem cyclicFunctional_unitaryConjugation {R A : Type*}
-    [CommSemiring R] [Ring A] [Algebra R A] [StarRing A]
+    [Semiring R] [Ring A] [Module R A] [StarRing A]
     (τ : A →ₗ[R] R) (hτ : ∀ a b, τ (a * b) = τ (b * a))
     {u x : A} (hu : star u * u = 1) :
     τ (u * x * star u) = τ x := by
@@ -241,7 +241,7 @@ theorem cyclicFunctional_unitaryConjugation {R A : Type*}
 preserves every cyclic linear functional. The operator products remain ordered
 throughout; no commutative or diagonal carrier is chosen. -/
 theorem unitaryMixture_unital_and_cyclicFunctional_preserving
-    {R A κ : Type*} [CommSemiring R] [Ring A] [Algebra R A] [StarRing A]
+    {R A κ : Type*} [Semiring R] [Ring A] [Module R A] [StarRing A]
     [Fintype κ] (w : κ → R) (hw : ∑ i, w i = 1) (U : κ → A)
     (hU : ∀ i, star (U i) * U i = 1 ∧ U i * star (U i) = 1)
     (τ : A →ₗ[R] R) (hτ : ∀ a b, τ (a * b) = τ (b * a)) (x : A) :

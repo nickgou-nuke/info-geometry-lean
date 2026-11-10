@@ -19,7 +19,7 @@ open InfoGeometry.Canonical.ZornClifford
 open InfoGeometry.Canonical.ZornIntegralSpinSubgroup
 open InfoGeometry.Canonical.ZornIntegralSpinTrialityClosure
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 attribute [local simp] ZornMatrix.smul_a ZornMatrix.smul_b ZornMatrix.smul_x ZornMatrix.smul_y
   Matrix.vecHead Matrix.vecTail Matrix.cons_val_zero Matrix.cons_val_one
@@ -67,7 +67,8 @@ theorem zornTriality_conj (Z : ZornMatrix R) :
 def diracAxisCycle (Ψ : DiracSpinor16 (R := R)) : DiracSpinor16 (R := R) :=
   (zornTriality Ψ.1, zornTriality Ψ.2)
 
-theorem diracGamma_axis_covariant (V : ZornMatrix R) (Ψ : DiracSpinor16 (R := R)) :
+theorem diracGamma_axis_covariant {R₀ : Type*} [CommRing R₀]
+    (V : ZornMatrix R₀) (Ψ : DiracSpinor16 (R := R₀)) :
     diracAxisCycle (diracGamma V Ψ) = diracGamma (zornTriality V) (diracAxisCycle Ψ) := by
   apply Prod.ext
   · exact zornTriality_mul V Ψ.2

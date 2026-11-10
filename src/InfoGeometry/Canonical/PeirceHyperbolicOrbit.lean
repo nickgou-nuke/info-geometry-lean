@@ -12,7 +12,8 @@ import InfoGeometry.Canonical.PeirceWeightedTrace
 Polynomial identities only: no spacetime metric or thermal-state claim. -/
 namespace InfoGeometry.Canonical.PeirceHyperbolicOrbit
 open ReflexiveNilpotentFlows PeirceRotorAction PeirceWeightedTrace
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+section RingScalars
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
 
 def hyperbolicMatrix (u v : R) : Matrix (Fin 2) (Fin 2) R :=
   !![u*u, -(u*v); u*v, -(v*v)]
@@ -23,9 +24,14 @@ def hyperbolicPlus (u v : R) (d B : A) : A :=
 theorem hyperbolicPlus_expansion (u v : R) (d B : A) :
     hyperbolicPlus u v d B =
       (u*u) • (d*B) - (v*v) • (B*d) - (u*v) • (d-B) := by
-  simp [hyperbolicPlus, hyperbolicMatrix, pairMatrixLinear_apply,
+  simp [hyperbolicPlus, hyperbolicMatrix, pairMatrixLinear,
     pairMatrixUnit, neg_smul, smul_sub]
   abel
+
+end RingScalars
+
+section CommScalars
+variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
 
 theorem hyperbolicMatrix_sq (u v : R) (h : u*u-v*v=1) :
     hyperbolicMatrix u v * hyperbolicMatrix u v = hyperbolicMatrix u v := by
@@ -83,5 +89,7 @@ theorem hyperbolicPlus_boost_sandwich (u v : R) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [hyperbolicMatrix, Matrix.mul_apply, Fin.sum_univ_two, mul_comm]
+
+end CommScalars
 
 end InfoGeometry.Canonical.PeirceHyperbolicOrbit

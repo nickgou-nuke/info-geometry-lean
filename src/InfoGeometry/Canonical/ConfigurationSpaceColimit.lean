@@ -24,17 +24,17 @@ packaged to instantiate the categorical proof colimit for the de Rham cohomology
 -/
 def configurationSpaceTower
     (CohomologyRing_n : ℕ → Type u)
-    [∀ n, CommRing (CohomologyRing_n n)] [∀ n, StarRing (CohomologyRing_n n)]
+    [∀ n, Ring (CohomologyRing_n n)] [∀ n, StarRing (CohomologyRing_n n)]
     (fadell_neuwirth_pullback : ∀ n, CohomologyRing_n n →+* CohomologyRing_n (n+1))
     (StableCohomology : Type u)
-    [CommRing StableCohomology] [StarRing StableCohomology]
+    [Ring StableCohomology] [StarRing StableCohomology]
     (stable_toLimit : ∀ n, CohomologyRing_n n →+* StableCohomology)
     (stable_cone_comm : ∀ n x, stable_toLimit (n+1) (fadell_neuwirth_pullback n x) = stable_toLimit n x)
     (ArnoldRelations_n : ℕ → Type u)
-    [∀ n, CommRing (ArnoldRelations_n n)] [∀ n, StarRing (ArnoldRelations_n n)]
+    [∀ n, Ring (ArnoldRelations_n n)] [∀ n, StarRing (ArnoldRelations_n n)]
     (arnold_bond : ∀ n, ArnoldRelations_n n →+* ArnoldRelations_n (n+1))
     (StableArnold : Type u)
-    [CommRing StableArnold] [StarRing StableArnold]
+    [Ring StableArnold] [StarRing StableArnold]
     (arnold_toLimit : ∀ n, ArnoldRelations_n n →+* StableArnold)
     (arnold_cone_comm : ∀ n x, arnold_toLimit (n+1) (arnold_bond n x) = arnold_toLimit n x)
     (arnold_mixed_relation : ∀ n, CohomologyRing_n n → ArnoldRelations_n n → Prop)
@@ -57,17 +57,17 @@ theorem.
 -/
 theorem configuration_space_homotopical_stabilization
     (CohomologyRing_n : ℕ → Type u)
-    [∀ n, CommRing (CohomologyRing_n n)] [∀ n, StarRing (CohomologyRing_n n)]
+    [∀ n, Ring (CohomologyRing_n n)] [∀ n, StarRing (CohomologyRing_n n)]
     (fadell_neuwirth_pullback : ∀ n, CohomologyRing_n n →+* CohomologyRing_n (n+1))
     (StableCohomology : Type u)
-    [CommRing StableCohomology] [StarRing StableCohomology]
+    [Ring StableCohomology] [StarRing StableCohomology]
     (stable_toLimit : ∀ n, CohomologyRing_n n →+* StableCohomology)
     (stable_cone_comm : ∀ n x, stable_toLimit (n+1) (fadell_neuwirth_pullback n x) = stable_toLimit n x)
     (ArnoldRelations_n : ℕ → Type u)
-    [∀ n, CommRing (ArnoldRelations_n n)] [∀ n, StarRing (ArnoldRelations_n n)]
+    [∀ n, Ring (ArnoldRelations_n n)] [∀ n, StarRing (ArnoldRelations_n n)]
     (arnold_bond : ∀ n, ArnoldRelations_n n →+* ArnoldRelations_n (n+1))
     (StableArnold : Type u)
-    [CommRing StableArnold] [StarRing StableArnold]
+    [Ring StableArnold] [StarRing StableArnold]
     (arnold_toLimit : ∀ n, ArnoldRelations_n n →+* StableArnold)
     (arnold_cone_comm : ∀ n x, arnold_toLimit (n+1) (arnold_bond n x) = arnold_toLimit n x)
     (arnold_mixed_relation : ∀ n, CohomologyRing_n n → ArnoldRelations_n n → Prop)

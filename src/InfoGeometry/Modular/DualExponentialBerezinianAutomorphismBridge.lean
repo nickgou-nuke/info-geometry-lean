@@ -35,7 +35,7 @@ PART 1: Tracelessness and Supertracelessness of Shape Derivations
 section TracelessDerivations
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 local notation "SubMat" => Matrix ι ι R
 local notation "BlockMat" => Matrix (ι ⊕ ι) (ι ⊕ ι) R
@@ -54,9 +54,9 @@ theorem trace_fromBlocks_diag (A B : SubMat) :
       Matrix.trace A + Matrix.trace B := by
   simp [Matrix.trace, Fintype.sum_sum_type]
 
-/-- 🏆 THEOREM 1: The Commutator of any two matrices is strictly trace-free:
+/-- 🏆 THEOREM 1: The Commutator of any two matrices over a commutative ring is strictly trace-free:
     Tr([A, B]) = 0 -/
-theorem trace_commutator (A B : SubMat) :
+theorem trace_commutator {R : Type*} [CommRing R] (A B : Matrix ι ι R) :
     Matrix.trace (A * B - B * A) = 0 := by
   rw [Matrix.trace_sub, Matrix.trace_mul_comm, sub_self]
 

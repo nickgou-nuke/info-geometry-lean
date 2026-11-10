@@ -618,28 +618,6 @@ theorem finite_trace_commutator_colimit_zero
   rw [Matrix.trace_mul_comm A B]
   ring
 
-/-! ## Finite circulation and divisor/Fredholm index -/
-
-def quantumCirculation (order : ℤ) : ℝ := 2 * Real.pi * order
-
-theorem quantumCirculation_eq_residue_multiple (order : ℤ) :
-    quantumCirculation order = 2 * Real.pi * order := rfl
-
-theorem finite_fredholm_index_eq_divisor_index
-    {ι : Type*} [Fintype ι] (order : ι → ℤ) :
-    finiteKernelIndex (divisorKernelComplex order) = divisorIndex order := by
-  exact divisor_kernel_index_eq_divisor_index order
-
-set_option maxHeartbeats 400000 in
-theorem finite_fredholm_index_eq_residue_sum
-    {ι : Type*} [Fintype ι]
-    (data : ι → LocalDivisorData ℤ) :
-    finiteKernelIndex
-        (InfoGeometry.Arithmetic.RiemannPoleZeroMonodromy.divisorKernelComplex
-          (fun a => (data a).order)) =
-      ∑ a : ι, residue (chargeForm (data a)) := by
-  exact InfoGeometry.Arithmetic.RiemannPoleZeroMonodromy.divisor_kernel_index_eq_residue_sum data
-
 end InfoGeometry.Canonical.FiniteMadelungTomitaQuantization
 
 end noncomputable section

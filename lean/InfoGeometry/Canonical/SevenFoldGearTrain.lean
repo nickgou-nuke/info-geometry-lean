@@ -38,16 +38,16 @@ theorem plabic_chiral_defect (p : PlabicIndex) :
 
 /-! ### 4. Hopping on the G₂ Root Lattice: The Perron-Frobenius Eigenvalue -/
 
-structure G2AdjacencyRowSum (R : Type*) [CommRing R] where
+structure G2AdjacencyRowSum (R : Type*) [Ring R] where
   row_sum_P : R
   row_sum_I : R
   h_P : row_sum_P = 1
   h_I : row_sum_I = 1
 
-theorem g2_perron_frobenius_eigenvalue {R : Type*} [CommRing R] (g : G2AdjacencyRowSum R) :
+theorem g2_perron_frobenius_eigenvalue {R : Type*} [Ring R] (g : G2AdjacencyRowSum R) :
     g.row_sum_P + (g.row_sum_I + g.row_sum_P) = 3 := by
   rw [g.h_P, g.h_I]
-  ring
+  norm_num
 
 /-! ### 5. Torus to Klein Bottle: The Möbius Glide Reflection -/
 

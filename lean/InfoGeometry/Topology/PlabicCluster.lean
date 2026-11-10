@@ -3,7 +3,9 @@ import Mathlib.Tactic
 
 namespace InfoGeometry.PlabicCluster
 
-variable {F : Type*} [Field F]
+section DivisionRing
+
+variable {F : Type*} [DivisionRing F]
 
 /-! ### 1. Cluster Face Weights around a Plabic Square Face -/
 
@@ -84,61 +86,6 @@ theorem square_move_central_inversion (w : SquareFaceWeights F) :
     (mutateF w).yf = w.yf⁻¹ :=
   rfl
 
-/-- Master Theorem 2A (Opposite Pair 1-2 Scaling):
-    The product of opposite face weights y₁' * y₂' scales by y_f:
-    y₁' * y₂' = y₁ * y₂ * y_f. -/
-theorem square_move_opposite_pair_12 (w : SquareFaceWeights F)
-    (hyf : w.yf ≠ 0) (h_add : 1 + w.yf ≠ 0) :
-    (mutateF w).y1 * (mutateF w).y2 = w.y1 * w.y2 * w.yf := by
-  dsimp [mutateF]
-  rw [inv_one_add_inv w.yf hyf h_add]
-  have h_cancel : (1 + w.yf) * (w.yf * (1 + w.yf)⁻¹) = w.yf := by
-    calc (1 + w.yf) * (w.yf * (1 + w.yf)⁻¹)
-        = (1 + w.yf) * ((1 + w.yf)⁻¹ * w.yf) := by rw [mul_comm w.yf]
-      _ = ((1 + w.yf) * (1 + w.yf)⁻¹) * w.yf := by rw [← mul_assoc]
-      _ = 1 * w.yf := by rw [mul_inv_cancel₀ h_add]
-      _ = w.yf := one_mul w.yf
-  calc (w.y1 * (1 + w.yf)) * (w.y2 * (w.yf * (1 + w.yf)⁻¹))
-      = (w.y1 * w.y2) * ((1 + w.yf) * (w.yf * (1 + w.yf)⁻¹)) := by ring
-    _ = (w.y1 * w.y2) * w.yf := by rw [h_cancel]
-    _ = w.y1 * w.y2 * w.yf := by rw [mul_assoc]
-
-/-- Master Theorem 2B (Opposite Pair 3-4 Scaling):
-    The product of opposite face weights y₃' * y₄' scales by y_f:
-    y₃' * y₄' = y₃ * y₄ * y_f. -/
-theorem square_move_opposite_pair_34 (w : SquareFaceWeights F)
-    (hyf : w.yf ≠ 0) (h_add : 1 + w.yf ≠ 0) :
-    (mutateF w).y3 * (mutateF w).y4 = w.y3 * w.y4 * w.yf := by
-  dsimp [mutateF]
-  rw [inv_one_add_inv w.yf hyf h_add]
-  have h_cancel : (1 + w.yf) * (w.yf * (1 + w.yf)⁻¹) = w.yf := by
-    calc (1 + w.yf) * (w.yf * (1 + w.yf)⁻¹)
-        = (1 + w.yf) * ((1 + w.yf)⁻¹ * w.yf) := by rw [mul_comm w.yf]
-      _ = ((1 + w.yf) * (1 + w.yf)⁻¹) * w.yf := by rw [← mul_assoc]
-      _ = 1 * w.yf := by rw [mul_inv_cancel₀ h_add]
-      _ = w.yf := one_mul w.yf
-  calc (w.y3 * (1 + w.yf)) * (w.y4 * (w.yf * (1 + w.yf)⁻¹))
-      = (w.y3 * w.y4) * ((1 + w.yf) * (w.yf * (1 + w.yf)⁻¹)) := by ring
-    _ = (w.y3 * w.y4) * w.yf := by rw [h_cancel]
-    _ = w.y3 * w.y4 * w.yf := by rw [mul_assoc]
-
-/-- Master Theorem 3 (Total Cluster Face Weight Monodromy Invariance):
-    The overall 5-face product is strictly preserved under the square move:
-    y_f' * (y₁' * y₂') * (y₃' * y₄') = y_f * (y₁ * y₂) * (y₃ * y₄). -/
-theorem total_cluster_face_weight_monodromy (w : SquareFaceWeights F)
-    (hyf : w.yf ≠ 0) (h_add : 1 + w.yf ≠ 0) :
-    (mutateF w).yf * ((mutateF w).y1 * (mutateF w).y2) * ((mutateF w).y3 * (mutateF w).y4) =
-    w.yf * (w.y1 * w.y2) * (w.y3 * w.y4) := by
-  have h12 := square_move_opposite_pair_12 w hyf h_add
-  have h34 := square_move_opposite_pair_34 w hyf h_add
-  dsimp [mutateF] at h12 h34 ⊢
-  rw [h12, h34]
-  calc w.yf⁻¹ * (w.y1 * w.y2 * w.yf) * (w.y3 * w.y4 * w.yf)
-      = (w.yf⁻¹ * w.yf) * (w.y1 * w.y2) * (w.y3 * w.y4 * w.yf) := by ring
-    _ = 1 * (w.y1 * w.y2) * (w.y3 * w.y4 * w.yf) := by rw [inv_mul_cancel₀ hyf]
-    _ = (w.y1 * w.y2) * (w.y3 * w.y4 * w.yf) := by rw [one_mul]
-    _ = w.yf * (w.y1 * w.y2) * (w.y3 * w.y4) := by ring
-
 /-- Master Theorem 4 (Cluster Mutation Involution):
     Mutating twice (reversing quiver arrows on the second mutation)
     recovers the exact initial cluster face weights:
@@ -203,5 +150,68 @@ theorem ptolemy_face_weight_inv
   calc ((x1 * x3) * (x2 * x4)⁻¹)⁻¹
       = (x2 * x4)⁻¹⁻¹ * (x1 * x3)⁻¹ := by rw [mul_inv_rev]
     _ = (x2 * x4) * (x1 * x3)⁻¹ := by rw [inv_inv]
+
+end DivisionRing
+
+section Field
+
+variable {F : Type*} [Field F]
+
+/-- Master Theorem 2A (Opposite Pair 1-2 Scaling):
+    The product of opposite face weights y₁' * y₂' scales by y_f:
+    y₁' * y₂' = y₁ * y₂ * y_f. -/
+theorem square_move_opposite_pair_12 (w : SquareFaceWeights F)
+    (hyf : w.yf ≠ 0) (h_add : 1 + w.yf ≠ 0) :
+    (mutateF w).y1 * (mutateF w).y2 = w.y1 * w.y2 * w.yf := by
+  dsimp [mutateF]
+  rw [inv_one_add_inv w.yf hyf h_add]
+  have h_cancel : (1 + w.yf) * (w.yf * (1 + w.yf)⁻¹) = w.yf := by
+    calc (1 + w.yf) * (w.yf * (1 + w.yf)⁻¹)
+        = (1 + w.yf) * ((1 + w.yf)⁻¹ * w.yf) := by rw [mul_comm w.yf]
+      _ = ((1 + w.yf) * (1 + w.yf)⁻¹) * w.yf := by rw [← mul_assoc]
+      _ = 1 * w.yf := by rw [mul_inv_cancel₀ h_add]
+      _ = w.yf := one_mul w.yf
+  calc (w.y1 * (1 + w.yf)) * (w.y2 * (w.yf * (1 + w.yf)⁻¹))
+      = (w.y1 * w.y2) * ((1 + w.yf) * (w.yf * (1 + w.yf)⁻¹)) := by ring
+    _ = (w.y1 * w.y2) * w.yf := by rw [h_cancel]
+    _ = w.y1 * w.y2 * w.yf := by rw [mul_assoc]
+
+/-- Master Theorem 2B (Opposite Pair 3-4 Scaling):
+    The product of opposite face weights y₃' * y₄' scales by y_f:
+    y₃' * y₄' = y₃ * y₄ * y_f. -/
+theorem square_move_opposite_pair_34 (w : SquareFaceWeights F)
+    (hyf : w.yf ≠ 0) (h_add : 1 + w.yf ≠ 0) :
+    (mutateF w).y3 * (mutateF w).y4 = w.y3 * w.y4 * w.yf := by
+  dsimp [mutateF]
+  rw [inv_one_add_inv w.yf hyf h_add]
+  have h_cancel : (1 + w.yf) * (w.yf * (1 + w.yf)⁻¹) = w.yf := by
+    calc (1 + w.yf) * (w.yf * (1 + w.yf)⁻¹)
+        = (1 + w.yf) * ((1 + w.yf)⁻¹ * w.yf) := by rw [mul_comm w.yf]
+      _ = ((1 + w.yf) * (1 + w.yf)⁻¹) * w.yf := by rw [← mul_assoc]
+      _ = 1 * w.yf := by rw [mul_inv_cancel₀ h_add]
+      _ = w.yf := one_mul w.yf
+  calc (w.y3 * (1 + w.yf)) * (w.y4 * (w.yf * (1 + w.yf)⁻¹))
+      = (w.y3 * w.y4) * ((1 + w.yf) * (w.yf * (1 + w.yf)⁻¹)) := by ring
+    _ = (w.y3 * w.y4) * w.yf := by rw [h_cancel]
+    _ = w.y3 * w.y4 * w.yf := by rw [mul_assoc]
+
+/-- Master Theorem 3 (Total Cluster Face Weight Monodromy Invariance):
+    The overall 5-face product is strictly preserved under the square move:
+    y_f' * (y₁' * y₂') * (y₃' * y₄') = y_f * (y₁ * y₂) * (y₃ * y₄). -/
+theorem total_cluster_face_weight_monodromy (w : SquareFaceWeights F)
+    (hyf : w.yf ≠ 0) (h_add : 1 + w.yf ≠ 0) :
+    (mutateF w).yf * ((mutateF w).y1 * (mutateF w).y2) * ((mutateF w).y3 * (mutateF w).y4) =
+    w.yf * (w.y1 * w.y2) * (w.y3 * w.y4) := by
+  have h12 := square_move_opposite_pair_12 w hyf h_add
+  have h34 := square_move_opposite_pair_34 w hyf h_add
+  dsimp [mutateF] at h12 h34 ⊢
+  rw [h12, h34]
+  calc w.yf⁻¹ * (w.y1 * w.y2 * w.yf) * (w.y3 * w.y4 * w.yf)
+      = (w.yf⁻¹ * w.yf) * (w.y1 * w.y2) * (w.y3 * w.y4 * w.yf) := by ring
+    _ = 1 * (w.y1 * w.y2) * (w.y3 * w.y4 * w.yf) := by rw [inv_mul_cancel₀ hyf]
+    _ = (w.y1 * w.y2) * (w.y3 * w.y4 * w.yf) := by rw [one_mul]
+    _ = w.yf * (w.y1 * w.y2) * (w.y3 * w.y4) := by ring
+
+end Field
 
 end InfoGeometry.PlabicCluster

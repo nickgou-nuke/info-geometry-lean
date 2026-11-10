@@ -12,9 +12,9 @@ transported metric is not assumed involutive.
 -/
 namespace InfoGeometry.CliffordWeyl.SpinorBilinearSoldering
 open Matrix InfoGeometry.Core.PeirceDecomposition
-variable {R n : Type*} [CommRing R] [StarRing R] [Fintype n] [DecidableEq n]
+variable {R n : Type*} [Ring R] [StarRing R] [Fintype n] [DecidableEq n]
 
-theorem dirac_trace_pairing_change_basis (S T η ξ X Y : Matrix n n R)
+theorem dirac_trace_pairing_change_basis {R : Type*} [CommRing R] [StarRing R] (S T η ξ X Y : Matrix n n R)
     (hTS : T * S = 1) :
     trace ((S * X * T) * ((S * ξ * S.conjTranspose) *
       (S * Y * T).conjTranspose * (T.conjTranspose * η * T))) =
@@ -58,7 +58,7 @@ theorem metric_adjoint_fixed_change_basis (S T η ξ P : Matrix n n R)
   rw [metric_adjoint_change_basis S T η ξ P hTS, hP]
 
 /-- The Dirac trace expression on component10 matrices is coordinate invariant. -/
-theorem component10_dirac_trace_pairing_change_basis (S T η ξ P X Y : Matrix n n R)
+theorem component10_dirac_trace_pairing_change_basis {R : Type*} [CommRing R] [StarRing R] (S T η ξ P X Y : Matrix n n R)
     (hTS : T * S = 1) (hST : S * T = 1) :
     trace (component10 (S * P * T) (S * X * T) *
       ((S * ξ * S.conjTranspose) *

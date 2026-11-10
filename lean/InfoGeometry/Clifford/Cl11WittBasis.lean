@@ -4,7 +4,7 @@ import InfoGeometry.Clifford.Cl11SheetDiracMatrices
 
 namespace InfoGeometry.Clifford
 
-variable {B : Type*} [CommRing B] [Algebra ℚ B]
+variable {B : Type*} [Ring B] [Algebra ℚ B]
 
 /-- The Witt annihilation operator (circular basis corresponding to the real Clifford plane). -/
 def e_plus : Matrix (Fin 2) (Fin 2) B :=

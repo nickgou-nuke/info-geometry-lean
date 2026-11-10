@@ -161,11 +161,11 @@ theorem galois_modular_comm_P (MF : ModularPhaseFlow A) (g : G) (t : ℝ) (n : �
 ### Arithmetic Intertwining Law (Hilbert's 12th Problem / Kronecker's Jugendtraum)
 -/
 
-variable {E : Type*} [CommRing E]
+variable {E : Type*} [Ring E]
 
-/-- Arithmetic evaluation functional on the phase algebra into field E
+/-- Arithmetic evaluation functional on the phase algebra into ring E
 intertwining with Galois automorphisms of E. -/
-structure ArithmeticIntertwining (E : Type*) [CommRing E] where
+structure ArithmeticIntertwining (E : Type*) [Ring E] where
   rho : G → (E ≃+* E)
   chi : Γ → E
   chi_intertwine : ∀ (g : G) (γ : Γ), chi (GA.act g γ) = rho g (chi γ)

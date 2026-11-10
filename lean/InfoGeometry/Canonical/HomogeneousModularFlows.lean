@@ -22,7 +22,9 @@ and proves the capstone theorem:
 The logarithmic bridge factors exactly through the Maurer-Cartan form on the homogeneous space of modular flows.
 -/
 
-variable {R : Type*} [CommRing R]
+section Ring
+
+variable {R : Type*} [Ring R]
 
 /--
   The algebraic Maurer-Cartan derivative on the group.
@@ -43,6 +45,10 @@ theorem maurerCartanPath_eq_logarithmicBridge
     maurerCartanPath D path inversePath t =
       inversePath t * D (path t) :=
   rfl
+
+end Ring
+
+variable {R : Type*} [CommRing R]
 
 /-- 
   🏆 THEOREM: The Homogeneous-Space Capstone

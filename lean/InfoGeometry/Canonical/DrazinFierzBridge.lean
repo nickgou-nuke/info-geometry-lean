@@ -208,50 +208,18 @@ structure NoTraceDrazinData
 
 end BSExpectationPhi
 
-/-! ## 3. Drazin-stable Fierz readout sockets -/
+/-! ## 3. Consequences of Drazin separation -/
 
-/--
-Model-specific map extracting normalized Fierz coordinates from the stable
-Böttcher--Spitkovsky data.
--/
+/-- On the stable rank-one stratum, essential separation of `lambdaRankOne`
+from zero forces it to be nonzero almost everywhere. -/
 @[rep_depth operator]
-def DrazinFierzReadout
-    (NormalizedFierzCoordinates : Type*) : Type _ :=
-  BSExpectationPhi → Measure ℝ → Set ℝ → NormalizedFierzCoordinates
-
-namespace DrazinFierzReadout
-
-/-- The normalized-coordinate map carried by the direct readout owner. -/
-abbrev readout
-    {NormalizedFierzCoordinates : Type*}
-    (R : DrazinFierzReadout NormalizedFierzCoordinates) :
-    BSExpectationPhi → Measure ℝ → Set ℝ → NormalizedFierzCoordinates :=
-  R
-
-/-- Construct a normalized-coordinate readout. -/
-def mk
-    {NormalizedFierzCoordinates : Type*}
-    (R : BSExpectationPhi → Measure ℝ → Set ℝ → NormalizedFierzCoordinates) :
-    DrazinFierzReadout NormalizedFierzCoordinates :=
-  R
-
-end DrazinFierzReadout
-
-/--
-Readback: any supplied readout produces a coordinate value on Drazin-stable
-two-projection data.
--/
-@[rep_depth operator]
-theorem drazin_stable_fierz_readout
-    {NormalizedFierzCoordinates : Type*}
-    (R : DrazinFierzReadout NormalizedFierzCoordinates)
-    (Φ : BSExpectationPhi)
-    (νH : Measure ℝ)
-    (σH : Set ℝ)
-    (_hD : BSExpectationPhi.NoTraceDrazinData Φ νH σH) :
-    ∃ x : NormalizedFierzCoordinates,
-      x = R.readout Φ νH σH :=
-  ⟨R.readout Φ νH σH, rfl⟩
+theorem NoTraceDrazinData.lambdaRankOne_ne_zero_ae
+    (D : BSExpectationPhi.NoTraceDrazinData Φ νH σH) :
+    ∀ᵐ t ∂νH, t ∈ Φ.Delta11 σH → D.lambdaRankOne t ≠ 0 := by
+  rcases D.lambdaSeparated with ⟨ε, hε, hSeparated⟩
+  filter_upwards [hSeparated] with t ht
+  intro htStratum
+  exact norm_pos_iff.mp (lt_of_lt_of_le hε (ht htStratum))
 
 /--
 Trace-free expectation Fierz readout.

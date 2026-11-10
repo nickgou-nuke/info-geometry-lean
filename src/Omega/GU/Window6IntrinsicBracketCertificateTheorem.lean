@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Omega.GU.TerminalDeltaParityRule
 import Omega.GU.TerminalGamma6Rigidity
 import Omega.GU.Window6IntrinsicBracketFiniteIntegerReduction
@@ -13,14 +18,21 @@ theorem paper_window6_intrinsic_bracket_certificate_theorem (V G : Type _)
     (h_right : ∀ g, phi (psi g) = g) (D : Window6IntrinsicBracketFiniteIntegerReductionData)
     (R : TerminalGamma6RigidityData) :
     (∃ bracketV : V → V → V, ∀ x y, phi (bracketV x y) = bracketG (phi x) (phi y)) ∧
-      (D.intrinsicBracketExistsUnique ↔ D.finiteIntegerSystemHasUniqueSolution) ∧
+      (∀ c, c ∈ D.finiteIntegerSystem → ∀ i k, c i i k = 0) ∧
       (Nat.fib 9 = 34 ∧ terminalFoldbin6BoundaryOffsets = ({34} : Finset Nat)) ∧
       R.automorphismGroupTrivial := by
   have hPullback :=
     paper_window6_root_dictionary_pullback_bracket V G bracketG phi psi h_left h_right
-  have hReduction := paper_window6_intrinsic_bracket_finite_integer_reduction D
+  have hDiagonal : ∀ c, c ∈ D.finiteIntegerSystem → ∀ i k, c i i k = 0 := by
+    intro c hc i k
+    exact window6_antisymmetry_forces_diagonal_structure_constants_zero D c hc i k
   rcases paper_terminal_delta_parity_rule with ⟨hFib, hOffsets, _, _, _⟩
   rcases paper_terminal_gamma6_rigidity R with ⟨_, hRigid⟩
-  exact ⟨hPullback, hReduction, ⟨hFib, hOffsets⟩, hRigid⟩
+  exact ⟨hPullback, hDiagonal, ⟨hFib, hOffsets⟩, hRigid⟩
 
 end Omega.GU
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/

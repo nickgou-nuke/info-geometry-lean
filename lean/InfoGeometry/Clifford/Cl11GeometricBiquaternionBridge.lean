@@ -1,6 +1,8 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
+import Mathlib.Tactic.Abel
 import Mathlib.Tactic.FinCases
 import InfoGeometry.Clifford.CockleCoquaternionPlanarTriad
 
@@ -50,7 +52,7 @@ open Matrix
 open InfoGeometry.Clifford.Coquaternion
 open InfoGeometry.Clifford.Coquaternion.Coquaternion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. The Geometric Biquaternion Carrier: Cl(1,2) = Cl(1,1) ⊕ I₃ Cl(1,1) -/
 
@@ -143,14 +145,14 @@ theorem I3_sq : (I3 : Biquat R) * I3 = -1 := by
 theorem I3_comm_coquaternion (q : Coquaternion R) :
     (I3 : Biquat R) * ofCoquaternion q = ofCoquaternion q * I3 := by
   apply Biquat.ext
-  · ext <;> { simp [I3, ofCoquaternion]; try ring }
-  · ext <;> { simp [I3, ofCoquaternion]; try ring }
+  · ext <;> { simp [I3, ofCoquaternion]; try abel }
+  · ext <;> { simp [I3, ofCoquaternion]; try abel }
 
 /-- Associativity of biquaternion multiplication. -/
 theorem mul_assoc_biquat (p q r : Biquat R) : (p * q) * r = p * (q * r) := by
   apply Biquat.ext
-  · ext <;> { simp; ring }
-  · ext <;> { simp; ring }
+  · ext <;> { simp; noncomm_ring }
+  · ext <;> { simp; noncomm_ring }
 
 /-- Left identity law. -/
 @[simp]
@@ -169,14 +171,14 @@ theorem mul_one_biquat (q : Biquat R) : q * 1 = q := by
 /-- Left distributivity. -/
 theorem left_distrib_biquat (p q r : Biquat R) : p * (q + r) = p * q + p * r := by
   apply Biquat.ext
-  · ext <;> { simp; ring }
-  · ext <;> { simp; ring }
+  · ext <;> { simp; noncomm_ring }
+  · ext <;> { simp; noncomm_ring }
 
 /-- Right distributivity. -/
 theorem right_distrib_biquat (p q r : Biquat R) : (p + q) * r = p * r + q * r := by
   apply Biquat.ext
-  · ext <;> { simp; ring }
-  · ext <;> { simp; ring }
+  · ext <;> { simp; noncomm_ring }
+  · ext <;> { simp; noncomm_ring }
 
 /-! ### 3. Signature Inversion and Hodge Duality under I₃ -/
 
@@ -277,7 +279,7 @@ theorem toMatrix4_one : toMatrix4 (1 : Biquat R) = 1 := by
 /-- Addition is preserved by toMatrix4. -/
 theorem toMatrix4_add (p q : Biquat R) :
     toMatrix4 (p + q) = toMatrix4 p + toMatrix4 q := by
-  ext i j; fin_cases i <;> fin_cases j <;> { simp [toMatrix4, toMatrix]; ring }
+  ext i j; fin_cases i <;> fin_cases j <;> { simp [toMatrix4, toMatrix]; abel }
 
 /-- Matrix multiplication homomorphism: $\Phi(p * q) = \Phi(p) * \Phi(q)$. -/
 theorem toMatrix4_mul (p q : Biquat R) :
@@ -285,7 +287,7 @@ theorem toMatrix4_mul (p q : Biquat R) :
   ext i j
   fin_cases i <;> fin_cases j <;> {
     simp [toMatrix4, toMatrix, Matrix.mul_apply, Fin.sum_univ_four]
-    ring
+    noncomm_ring
   }
 
 /-- The $4 \times 4$ complex structure operator $J_4 := \Phi(I_3)$. -/
@@ -304,27 +306,27 @@ theorem J4_sq : (J4 : Mat4 R) * J4 = -1 := by
 /-- Master verification certificate for the Cl(1,1) geometric biquaternion bridge. -/
 structure Cl11GeometricBiquaternionCertificate : Prop where
   I3_square :
-    ∀ (R : Type) [CommRing R], (I3 : Biquat R) * I3 = -1
+    ∀ (R : Type) [Ring R], (I3 : Biquat R) * I3 = -1
   I3_central :
-    ∀ (R : Type) [CommRing R] (q : Coquaternion R),
+    ∀ (R : Type) [Ring R] (q : Coquaternion R),
       (I3 : Biquat R) * ofCoquaternion q = ofCoquaternion q * I3
   E3_timelike :
-    ∀ (R : Type) [CommRing R], (E3 : Biquat R) * E3 = -1
+    ∀ (R : Type) [Ring R], (E3 : Biquat R) * E3 = -1
   signature_inversion_spacelike :
-    ∀ (R : Type) [CommRing R], ((I3 : Biquat R) * E1) * (I3 * E1) = -1
+    ∀ (R : Type) [Ring R], ((I3 : Biquat R) * E1) * (I3 * E1) = -1
   signature_inversion_timelike :
-    ∀ (R : Type) [CommRing R], ((I3 : Biquat R) * E2) * (I3 * E2) = 1
+    ∀ (R : Type) [Ring R], ((I3 : Biquat R) * E2) * (I3 * E2) = 1
   signature_inversion_bivector :
-    ∀ (R : Type) [CommRing R], ((I3 : Biquat R) * Omega) * (I3 * Omega) = -1
+    ∀ (R : Type) [Ring R], ((I3 : Biquat R) * Omega) * (I3 * Omega) = -1
   spinor_internal_complex :
-    ∀ (R : Type) [CommRing R], (J_spinor : Mat2 R) * J_spinor = -1
+    ∀ (R : Type) [Ring R], (J_spinor : Mat2 R) * J_spinor = -1
   spinor_parakähler_anticomm :
-    ∀ (R : Type) [CommRing R], (J_spinor : Mat2 R) * Gamma_spinor + Gamma_spinor * J_spinor = 0
+    ∀ (R : Type) [Ring R], (J_spinor : Mat2 R) * Gamma_spinor + Gamma_spinor * J_spinor = 0
   matrix4_homomorphism :
-    ∀ (R : Type) [CommRing R] (p q : Biquat R),
+    ∀ (R : Type) [Ring R] (p q : Biquat R),
       toMatrix4 (p * q) = toMatrix4 p * toMatrix4 q
   J4_square :
-    ∀ (R : Type) [CommRing R], (J4 : Mat4 R) * J4 = -1
+    ∀ (R : Type) [Ring R], (J4 : Mat4 R) * J4 = -1
 
 /-- Universal compilation theorem proving that the biquaternion bridge holds unconditionally. -/
 theorem compile_cl11_geometric_biquaternion_bridge :

@@ -46,7 +46,7 @@ The output is deliberately `2 * g x x = 0` and not `g x x = 0`, because the infe
 former to the latter fails over a general commutative ring with `2`-torsion. That is the
 precise boundary of the necessity argument, made explicit in
 `sheet_self_zero_of_two_ne`. -/
-theorem sheet_self_double_zero {F ι : Type*} [CommRing F]
+theorem sheet_self_double_zero {F ι : Type*} [Ring F]
     (g : ι → ι → F) (K : ι → ι)
     (hanti : ∀ x y, g (K x) (K y) = -g x y)
     (hfix : ∀ x, K x = x) (x : ι) :
@@ -55,11 +55,11 @@ theorem sheet_self_double_zero {F ι : Type*} [CommRing F]
     have h := hanti x x
     rw [hfix x] at h
     exact h
-  calc 2 * g x x = g x x + g x x := by ring
+  calc 2 * g x x = g x x + g x x := two_mul (g x x)
     _ = g x x + (-g x x) := by rw [← h1]
     _ = 0 := by simp
 
-theorem sheet_self_zero_of_two_ne {F ι : Type*} [CommRing F] [NoZeroDivisors F]
+theorem sheet_self_zero_of_two_ne {F ι : Type*} [Ring F] [NoZeroDivisors F]
     (g : ι → ι → F) (K : ι → ι)
     (hanti : ∀ x y, g (K x) (K y) = -g x y)
     (hfix : ∀ x, K x = x) (x : ι) (h2 : (2 : F) ≠ 0) :
@@ -71,7 +71,7 @@ theorem sheet_self_zero_of_two_ne {F ι : Type*} [CommRing F] [NoZeroDivisors F]
 so `2 g(x,y) = 0`. After cancellation this gives isotropy; maximal isotropy
 requires separate hypotheses. Symmetry is retained for compatibility here,
 but the localized theorem in `FixedPairingTorsionBoundary` does not need it. -/
-theorem sheet_cross_double_zero {F ι : Type*} [CommRing F]
+theorem sheet_cross_double_zero {F ι : Type*} [Ring F]
     (g : ι → ι → F) (K : ι → ι)
     (hsymm : ∀ x y, g x y = g y x)
     (hanti : ∀ x y, g (K x) (K y) = -g x y)
@@ -82,8 +82,8 @@ theorem sheet_cross_double_zero {F ι : Type*} [CommRing F]
     rw [hfix x, hfix y] at h
     exact h
   calc 2 * g x y = 2 * g y x := by rw [hsymm x y]
-    _ = g y x + g y x := by ring
+    _ = g y x + g y x := two_mul (g y x)
     _ = g y x + (-g y x) := by rw [← h1]
-    _ = 0 := by ring
+    _ = 0 := by abel
 
 end InfoGeometry.Canonical.NullEigenspace

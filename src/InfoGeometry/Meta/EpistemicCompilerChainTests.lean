@@ -14,7 +14,7 @@ def openCandidate : TypedArchetype Nat .candidate where
   name := `InfoGeometry.MetaCompiler.Tests.openCandidate
   phase := Phase.toNat Phase.multiAgentCandidateRepair
   claim := fun n => n + 0 = n
-  evidence := trivial
+  evidence := PUnit.unit
 
 def promotedCandidate : TypedArchetype Nat .proved :=
   TypedArchetype.promoteToProved openCandidate (by intro n; change n + 0 = n; exact Nat.add_zero n)

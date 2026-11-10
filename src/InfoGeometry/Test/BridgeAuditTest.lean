@@ -25,7 +25,7 @@ def expensiveLoopCandidate : TypedArchetype Nat .candidate where
   name     := `expensiveLoopCandidate
   phase    := 0
   claim    := fun n => n = n
-  evidence := trivial
+  evidence := PUnit.unit
 
 #register_archetype expensiveLoopCandidate
 

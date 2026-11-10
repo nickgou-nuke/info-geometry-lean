@@ -63,7 +63,7 @@ theorem ambientReflection_reverses_polarization (h : IsDualSeedPair d B) :
   exact reflection_conjugates_grading h.d_sq h.B_sq h.dBd h.BdB
 
 section Coefficients
-variable {R : Type*} [CommRing R] [Algebra R A]
+variable {R : Type*} [Ring R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- Even and odd components for this particular algebraic reflection. -/
 theorem odd_combination_conjugation (h : IsDualSeedPair d B) (α β : R) :

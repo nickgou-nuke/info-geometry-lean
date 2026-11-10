@@ -32,12 +32,12 @@ open InfoGeometry.Algebra
 open ZornVectorMatrix
 open ZornVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ## 1. Three Spin(4,4) actions -/
 
 /-- A related triple of Spin(4,4) actions on the split-octonion carrier. -/
-structure Spin44RelatedTriple (R : Type*) [CommRing R] where
+structure Spin44RelatedTriple (R : Type*) [Ring R] where
   ρ₁ : ZornVectorMatrix R → ZornVectorMatrix R
   ρ₂ : ZornVectorMatrix R → ZornVectorMatrix R
   ρ₃ : ZornVectorMatrix R → ZornVectorMatrix R
@@ -59,7 +59,7 @@ def diagonalSector (T : Spin44RelatedTriple R) (g : ZornVectorMatrix R → ZornV
 /-! ## 3. Infinitesimal form -/
 
 /-- An infinitesimal related triple of derivations. -/
-structure InfinitesimalTriality (R : Type*) [CommRing R] where
+structure InfinitesimalTriality (R : Type*) [Ring R] where
   D₁ : ZornVectorMatrix R →ₗ[R] ZornVectorMatrix R
   D₂ : ZornVectorMatrix R →ₗ[R] ZornVectorMatrix R
   D₃ : ZornVectorMatrix R →ₗ[R] ZornVectorMatrix R

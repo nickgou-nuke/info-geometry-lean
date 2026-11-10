@@ -25,6 +25,26 @@ attribute [local instance 100] LieRing.ofAssociativeRing
 
 open InfoGeometry.Core.JordanMultiplicationClosure
 
+section NoncommCyclicTrace
+
+variable {R A G : Type*} [Ring R] [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A] [AddCommGroup G]
+  (τ : A →+ G) (hτ : ∀ x y : A, τ (x * y) = τ (y * x))
+
+include hτ
+
+/-- Jordan multiplication over any noncommutative coefficient ring `R` is
+symmetric for every cyclic biadditive pairing. -/
+theorem trace_jordan_symmetric (s x y : A) :
+    τ (jordanLeft (R := R) s x * y) = τ (x * jordanLeft (R := R) s y) := by
+  change τ ((s * x + x * s) * y) = τ (x * (s * y + y * s))
+  have hcyclic : τ (s * x * y) = τ (x * (y * s)) := by
+    rw [mul_assoc s x y, hτ s (x * y), mul_assoc x y s]
+  rw [add_mul, mul_add, map_add, map_add, hcyclic, mul_assoc x s y]
+  exact add_comm _ _
+
+end NoncommCyclicTrace
+
 variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
 
 /-- The mixed Lie/Jordan identity as an equality of native endomorphisms. -/
@@ -163,15 +183,6 @@ theorem trace_ad_skew (h x y : A) :
   change τ ((h * x - x * h) * y) + τ (x * (h * y - y * h)) = 0
   simpa only [add_comm] using
     (InfoGeometry.Core.JordanMultiplicationClosure.trace_adjoint_identity τ hτ h x y)
-
-/-- Jordan multiplication is symmetric for the same cyclic biadditive pairing. -/
-theorem trace_jordan_symmetric (s x y : A) :
-    τ (jordanLeft (R := R) s x * y) = τ (x * jordanLeft (R := R) s y) := by
-  change τ ((s * x + x * s) * y) = τ (x * (s * y + y * s))
-  have hcyclic : τ (s * x * y) = τ (x * (y * s)) := by
-    rw [mul_assoc s x y, hτ s (x * y), mul_assoc x y s]
-  rw [add_mul, mul_add, map_add, map_add, hcyclic, mul_assoc x s y]
-  exact add_comm _ _
 
 /-- The sum and difference are negative adjoints for the cyclic pairing. -/
 theorem trace_plus_minus (h s x y : A) :

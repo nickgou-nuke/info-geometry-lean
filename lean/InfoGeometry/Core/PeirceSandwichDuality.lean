@@ -83,7 +83,7 @@ theorem sandwich_sub_eq_zero_of_odd (hp : IsIdempotentElem p)
 
 section LinearMaps
 
-variable {R : Type*} [CommRing R] [Algebra R A]
+variable {R : Type*} [Ring R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 theorem reflection_mul_sandwich_sum_eq (hp : IsIdempotentElem p)
     (hu : u ∈ peirce10 p) (hv : v ∈ peirce01 p) :

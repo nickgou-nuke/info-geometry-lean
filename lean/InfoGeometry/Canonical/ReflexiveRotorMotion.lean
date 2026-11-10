@@ -72,7 +72,10 @@ theorem skew_commutator_plus_eq_zero_iff (hd : d*d=0) (hB : B*B=0)
   · rintro ⟨rfl, rfl⟩; simp
 
 section Scalars
-variable {R : Type*} [CommRing R] [Algebra R A]
+variable {R : Type*}
+
+section NoncommScalars
+variable [Ring R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 variable (hd : d*d=0) (hB : B*B=0) (hr : d*B*d=d) (hs : B*d*B=B)
 include hd hB hr hs
 
@@ -111,6 +114,18 @@ theorem creator_mul_rotor (c s : R) :
   have hbj : B*(d-B) = B*d := by rw [mul_sub, hB, sub_zero]
   simp only [rotor, mul_add, mul_smul_comm, hbc, hbs, hbj, zero_add]
 
+omit hd hB hr hs in
+/-- Exchanging the two generators reverses the scalar skew parameter. -/
+theorem rotor_swap_parameters (c s : R) : rotor c s B d = rotor c (-s) d B := by
+  simp only [rotor, complement, support, add_comm (B*d) (d*B), neg_smul]
+  rw [show B-d = -(d-B) by abel, smul_neg]
+
+end NoncommScalars
+
+variable [CommRing R] [Algebra R A]
+variable (hd : d*d=0) (hB : B*B=0) (hr : d*B*d=d) (hs : B*d*B=B)
+include hd hB hr hs
+
 /-- Polynomial projector formula; no circle normalization is needed. -/
 theorem rotor_conjugate_plus (c s : R) :
     rotor c s d B * (d*B) * rotor c (-s) d B =
@@ -120,12 +135,6 @@ theorem rotor_conjugate_plus (c s : R) :
     creator_mul_rotor hd hB hr hs, smul_add, smul_smul,
     neg_smul, smul_neg, mul_comm s c]
   abel
-
-omit hd hB hr hs in
-/-- Exchanging the two generators reverses the scalar skew parameter. -/
-theorem rotor_swap_parameters (c s : R) : rotor c s B d = rotor c (-s) d B := by
-  simp only [rotor, complement, support, add_comm (B*d) (d*B), neg_smul]
-  rw [show B-d = -(d-B) by abel, smul_neg]
 
 /-- The minus projector has the opposite mixed-term sign. -/
 theorem rotor_conjugate_minus (c s : R) :

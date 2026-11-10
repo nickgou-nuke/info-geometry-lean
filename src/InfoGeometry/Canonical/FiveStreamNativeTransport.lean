@@ -25,7 +25,7 @@ open DeBruijnRotorAlternationCycle
 open InfoGeometry.OperatorAlgebra.TracialCARDensity
 open InfoGeometry.Core.ParabolicModularRepresentation
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {A : Type*} [Ring A]
 variable {d B : A}
 
 /-- Native CAR supplies the four seed laws, without an extra inverse assumption. -/
@@ -34,6 +34,33 @@ theorem carPair_isDualSeedPair (P : SplitClifford.CARPair A) :
   refine ⟨P.ann_sq, P.cre_sq, ?_, ?_⟩
   · simpa only [mul_assoc] using ann_cre_ann P
   · simpa only [mul_assoc] using cre_ann_cre P
+
+/-- Exact algebraic first-order projector motion, rather than a supplied derivative field. -/
+theorem movingPole_firstJet (h : IsDualSeedPair d B) :
+    (InfoGeometry.Core.InnerConjugationJet.unit (wheelGenerator d B) : DualNumber A) *
+      TrivSqZeroExt.inl (polePlus d B) *
+        (↑(InfoGeometry.Core.InnerConjugationJet.unit (wheelGenerator d B))⁻¹ : DualNumber A) =
+      TrivSqZeroExt.inl (polePlus d B) + TrivSqZeroExt.inr (-transitionVelocity d B) := by
+  have hj := InfoGeometry.Core.InnerConjugationJet.conjugate
+    (wheelGenerator d B) (polePlus d B) 0
+  simp only [TrivSqZeroExt.inr_zero, add_zero, zero_add] at hj
+  change _ = TrivSqZeroExt.inl (polePlus d B) +
+    TrivSqZeroExt.inr (lieBracket (wheelGenerator d B) (polePlus d B)) at hj
+  rw [lieBracket_wheel_polePlus h] at hj
+  exact hj
+
+/-- The transported Stream 3 density is the same weighted sum of moving poles. -/
+theorem transportedWeight {R : Type*} [Ring R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
+    (u v c s : R) :
+    phaseRotor c s d B * UnifiedGeometryOperatorSignificance.kmsModularWeight u v d B *
+        phaseRotor c (-s) d B =
+      (u * u) • movingPoleMinus c s d B + (v * v) • movingPolePlus c s d B := by
+  simp only [UnifiedGeometryOperatorSignificance.kmsModularWeight,
+    UnifiedGeometryOperatorSignificance.projMinus, UnifiedGeometryOperatorSignificance.projPlus,
+    movingPoleMinus, movingPolePlus, poleMinus, polePlus,
+    mul_add, add_mul, mul_smul_comm, smul_mul_assoc]
+
+variable {R : Type*} [CommRing R] [Algebra R A]
 
 /-- Promote the existing supported rotor to an actual ambient unit. -/
 def phaseRotorUnit (h : IsDualSeedPair d B) (c s : R)
@@ -90,16 +117,6 @@ theorem doubleShear_cube_eq_quarterTurn_square (h : IsDualSeedPair d B) :
   simp only [representation, ofRelations_s]
   exact congrArg (fun u : Aˣ => (u : A)) (unit_relations h.d_sq h.B_sq h.dBd h.BdB).2.symm
 
-/-- The transported Stream 3 density is the same weighted sum of moving poles. -/
-theorem transportedWeight (u v c s : R) :
-    phaseRotor c s d B * UnifiedGeometryOperatorSignificance.kmsModularWeight u v d B *
-        phaseRotor c (-s) d B =
-      (u * u) • movingPoleMinus c s d B + (v * v) • movingPolePlus c s d B := by
-  simp only [UnifiedGeometryOperatorSignificance.kmsModularWeight,
-    UnifiedGeometryOperatorSignificance.projMinus, UnifiedGeometryOperatorSignificance.projPlus,
-    movingPoleMinus, movingPolePlus, poleMinus, polePlus,
-    mul_add, add_mul, mul_smul_comm, smul_mul_assoc]
-
 /-- Actual native tracial readouts are invariant under joint density/observable transport. -/
 theorem movingWeight_joint_covariance (τ : InfoGeometry.NCG.TracialFunctional R A)
     (h : IsDualSeedPair d B) (u v c s : R) (hc : c * c + s * s = 1) (X : A) :
@@ -108,20 +125,6 @@ theorem movingWeight_joint_covariance (τ : InfoGeometry.NCG.TracialFunctional R
     weighted τ (UnifiedGeometryOperatorSignificance.kmsModularWeight u v d B) X := by
   rw [← transportedWeight]
   exact joint_covariance τ (phaseRotorUnit h c s hc) _ X
-
-/-- Exact algebraic first-order projector motion, rather than a supplied derivative field. -/
-theorem movingPole_firstJet (h : IsDualSeedPair d B) :
-    (InfoGeometry.Core.InnerConjugationJet.unit (wheelGenerator d B) : DualNumber A) *
-      TrivSqZeroExt.inl (polePlus d B) *
-        (↑(InfoGeometry.Core.InnerConjugationJet.unit (wheelGenerator d B))⁻¹ : DualNumber A) =
-      TrivSqZeroExt.inl (polePlus d B) + TrivSqZeroExt.inr (-transitionVelocity d B) := by
-  have hj := InfoGeometry.Core.InnerConjugationJet.conjugate
-    (wheelGenerator d B) (polePlus d B) 0
-  simp only [TrivSqZeroExt.inr_zero, add_zero, zero_add] at hj
-  change _ = TrivSqZeroExt.inl (polePlus d B) +
-    TrivSqZeroExt.inr (lieBracket (wheelGenerator d B) (polePlus d B)) at hj
-  rw [lieBracket_wheel_polePlus h] at hj
-  exact hj
 
 /-- Rotor construction commutes with actual algebra maps, including stage embeddings. -/
 theorem map_phaseRotor {C : Type*} [Ring C] [Algebra R C]

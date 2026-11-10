@@ -30,7 +30,7 @@ Ref: `QMS-DIR-SEC132-EXP-ROTOR-HOPF-EINSTEIN-2026-OCT-16`
 
 namespace InfoGeometry.Superalgebra.ExponentialRotorHopf
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. 3D Векторно Пространство на Хопфовите Влакна -/
 
@@ -43,7 +43,7 @@ structure ColorVec3 (R : Type*) where
 
 namespace ColorVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : ColorVec3 R := ⟨0, 0, 0⟩
 def neg (u : ColorVec3 R) : ColorVec3 R := ⟨-u.c1, -u.c2, -u.c3⟩
@@ -84,7 +84,7 @@ structure SplitOctonion (R : Type*) where
 
 namespace SplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : SplitOctonion R := ⟨0, ColorVec3.zero, ColorVec3.zero, 0⟩
 def one  : SplitOctonion R := ⟨1, ColorVec3.zero, ColorVec3.zero, 1⟩
@@ -140,6 +140,18 @@ def maurerCartanForm (u du : ColorVec3 R) : SplitOctonion R :=
 def expRotor (u du : ColorVec3 R) : SplitOctonion R :=
   add one (maurerCartanForm u du)
 
+/-- Квантов Геометричен Тензор Q_MC(u, du) = ω_L(u, du) · ω_L(u, du)†. -/
+def maurerCartanQGT (u du : ColorVec3 R) : SplitOctonion R :=
+  mul (maurerCartanForm u du) (dagger (maurerCartanForm u du))
+
+/-- Сила на кривината на Бери–Хопф: F_Berry(u, du) = (u × du) × du. -/
+def berryHopfForce (u du : ColorVec3 R) : ColorVec3 R :=
+  ColorVec3.cross (ColorVec3.cross u du) du
+
+section CommRing
+
+variable {R : Type*} [CommRing R]
+
 /-! ### 3. Теореми 1, 2 и 3: Нилпотентност на ω_L, Унитарност на ℛ_exp и Хопфова Триангулация -/
 
 /--
@@ -192,14 +204,6 @@ theorem exp_rotor_hopf_triangulation_of_projector (u du : ColorVec3 R) :
 
 /-! ### 4. Теорема 4: Уравнение на Айнщайн–Фишер–Хопф върху Квантовия Геометричен Тензор -/
 
-/-- Квантов Геометричен Тензор Q_MC(u, du) = ω_L(u, du) · ω_L(u, du)†. -/
-def maurerCartanQGT (u du : ColorVec3 R) : SplitOctonion R :=
-  mul (maurerCartanForm u du) (dagger (maurerCartanForm u du))
-
-/-- Сила на кривината на Бери–Хопф: F_Berry(u, du) = (u × du) × du. -/
-def berryHopfForce (u du : ColorVec3 R) : ColorVec3 R :=
-  ColorVec3.cross (ColorVec3.cross u du) du
-
 /--
 Теорема 4a (Факторизация на Квадрата на Силата на Бери–Хопф):
 Понеже u × du е перпендикулярен на du, квадратът на нормата на силата на Бери–Хопф
@@ -245,11 +249,13 @@ theorem einstein_fisher_hopf_dispersion_identity (u du : ColorVec3 R) :
          ColorVec3.dot, ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross]
   ring
 
+end CommRing
+
 end SplitOctonion
 
 /-! ### 5. Главен Синтез на Раздел 132 -/
 
-theorem exponential_rotor_hopf_einstein_synthesis (u du : ColorVec3 R) :
+theorem exponential_rotor_hopf_einstein_synthesis {R : Type*} [CommRing R] (u du : ColorVec3 R) :
     SplitOctonion.mul (SplitOctonion.maurerCartanForm u du)
                       (SplitOctonion.maurerCartanForm u du) = SplitOctonion.zero ∧
     (SplitOctonion.mul (SplitOctonion.expRotor u du)

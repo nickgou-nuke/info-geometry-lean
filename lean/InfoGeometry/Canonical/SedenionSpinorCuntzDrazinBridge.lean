@@ -191,7 +191,7 @@ theorem sedenionBasis_cuntz_projection_packet
 
 /-! ## Drazin/tripotent support lane -/
 
-variable {A : Type*} [CommRing A] [Invertible (2 : A)]
+variable {A : Type*} [Ring A] [Invertible (2 : A)]
 
 /-- Combined finite bridge packet: sector count, bilinear split, and associator shadow. -/
 theorem sedenion_spinor_finite_digest_packet :

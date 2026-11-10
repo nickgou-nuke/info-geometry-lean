@@ -43,7 +43,7 @@ theorem ckm_shift_order_three {K : Type*} (v : ThreeChiralCoordinates K) :
   rw [h]
 
 /-- The linear equivalence representing the cyclic Z_3 mixing of the three generations. -/
-def generational_ckm_equiv {K : Type*} [CommRing K] : 
+def generational_ckm_equiv {K : Type*} [Ring K] : 
     ThreeChiralCoordinates K ≃ₗ[K] ThreeChiralCoordinates K where
   toFun := generational_ckm_shift
   invFun := generational_ckm_unshift

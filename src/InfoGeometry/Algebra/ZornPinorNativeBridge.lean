@@ -15,7 +15,7 @@ namespace InfoGeometry.Algebra.ZornMatrix
 
 noncomputable section
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The two chiral ladder generators in the native Zorn carrier. -/
 def pinorRaise (i : Fin 3) : ZornMatrix R := U i
@@ -101,14 +101,14 @@ theorem gamma_anticomm_general (i j : Fin 3) :
       smul (- (2 : R) * Vec3.dot (Vec3.basis i) (Vec3.basis j)) I := by
   fin_cases i <;> fin_cases j <;> apply ZornMatrix.ext <;>
     simp [gamma, pinMinusPinor, U, V, I, Vec3.basis, ZornMatrix.smul,
-      mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul] <;> ring
+      mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul] <;> norm_num
 
 theorem gamma_anticomm_of_orthogonal {i j : Fin 3}
     (hij : Vec3.dot (Vec3.basis (R := R) i) (Vec3.basis (R := R) j) = (0 : R)) :
     gamma (R := R) i * gamma j + gamma j * gamma i = 0 := by
   rw [gamma_anticomm_general i j]
   have hcoef : - (2 : R) * Vec3.dot (Vec3.basis (R := R) i)
-      (Vec3.basis (R := R) j) = 0 := by rw [hij]; ring
+      (Vec3.basis (R := R) j) = 0 := by rw [hij]; noncomm_ring
   rw [hcoef]
   simp [ZornMatrix.smul, zero, I, Vec3.smul]
 
@@ -134,7 +134,7 @@ def bivector (i j : Fin 3) : ZornMatrix R := gamma i * gamma j
   fin_cases i <;> fin_cases j <;>
     simp_all [bivector, gamma, pinMinusPinor, U, V, I, ZornMatrix.smul,
       mul, Vec3.basis, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul] <;>
-    ring
+    norm_num
 
 /-- The native Zorn orientation fixes the sign of the first quaternion product. -/
 theorem gamma_mul_gamma_zero_one :
@@ -221,21 +221,21 @@ theorem qI_anticomm_qJ :
   rw [qI_mul_qJ, qJ_mul_qI]
   apply ZornMatrix.ext <;>
     simp [qI, qJ, qK, gamma, pinMinusPinor, U, V, ZornMatrix.smul,
-      Vec3.smul, Vec3.add, zero] <;> ring
+      Vec3.smul, Vec3.add, zero]
 
 theorem qJ_anticomm_qK :
     qJ (R := R) * qK + qK * qJ = (0 : ZornMatrix R) := by
   rw [qJ_mul_qK, qK_mul_qJ]
   apply ZornMatrix.ext <;>
     simp [qI, qJ, qK, gamma, pinMinusPinor, U, V, ZornMatrix.smul,
-      Vec3.smul, Vec3.add, zero] <;> ring
+      Vec3.smul, Vec3.add, zero]
 
 theorem qK_anticomm_qI :
     qK (R := R) * qI + qI * qK = (0 : ZornMatrix R) := by
   rw [qK_mul_qI, qI_mul_qK]
   apply ZornMatrix.ext <;>
     simp [qI, qJ, qK, gamma, pinMinusPinor, U, V, ZornMatrix.smul,
-      Vec3.smul, Vec3.add, zero] <;> ring
+      Vec3.smul, Vec3.add, zero]
 
 end
 

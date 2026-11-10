@@ -10,7 +10,7 @@ The proof owner is `InfoGeometry.Canonical.TrifactorDecomposition`.
 
 namespace InfoGeometry.TrifactorSpectralDecomposition
 
-variable {R : Type*} [CommRing R] [Invertible (2 : R)]
+variable {R : Type*} [Ring R] [Invertible (2 : R)]
 
 /-- The null boundary projector, corresponding to the `0` sector. -/
 abbrev P_zero (T : R) : R := InfoGeometry.Canonical.TrifactorDecomposition.P_zero T

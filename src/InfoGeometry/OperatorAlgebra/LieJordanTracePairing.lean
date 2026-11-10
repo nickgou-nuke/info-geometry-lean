@@ -23,15 +23,14 @@ open InfoGeometry.Core.JordanMultiplicationClosure
 open InfoGeometry.Core.JordanAssociator
 open InfoGeometry.OperatorAlgebra.LieJordanDualTransport
 
-variable {R A G : Type*} [CommRing R] [Ring A] [Algebra R A] [AddCommGroup G]
+section NoncommRingCyclic
 
-section Cyclic
-
+variable {R A G : Type*} [Ring R] [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A] [AddCommGroup G]
 variable (tau : A →+ G) (hcyc : ∀ x y : A, tau (x * y) = tau (y * x))
 
 /-- The trace cubic form is symmetric in the two Jordan multiplication
-arguments. This statement uses the full noncommutative product; symmetry comes
-from the Jordan sum, not from commuting the factors. -/
+arguments over any `[Ring R]`. -/
 theorem jordan_trace_cubic_swap_first (s x y : A) :
     tau (jordanLeft (R := R) s x * y) =
       tau (jordanLeft (R := R) x s * y) := by
@@ -50,17 +49,17 @@ theorem jordan_trace_adjoint (s x y : A) :
   abel
 
 /-- Cyclicity makes the trace cubic form symmetric under exchange of the
-right argument with the differentiated argument. -/
+right argument with the differentiated argument over any `[Ring R]`. -/
 theorem jordan_trace_cubic_swap_last (s x y : A) :
     tau (jordanLeft (R := R) s x * y) =
       tau (jordanLeft (R := R) s y * x) := by
   rw [jordan_trace_adjoint (R := R) tau hcyc s x y, hcyc]
 
-/-- Opposite Jordan perturbations are dual for the cyclic bilinear pairing. -/
-theorem trace_dual (h s x y : A) :
-    tau (plus (R := R) h s x * y) + tau (x * minus (R := R) h s y) = 0 := by
-  change tau ((LieAlgebra.ad R A h x + jordanLeft (R := R) s x) * y) +
-    tau (x * (LieAlgebra.ad R A h y - jordanLeft (R := R) s y)) = 0
+/-- Opposite Jordan perturbations are dual for the cyclic bilinear pairing over any `[Ring R]`. -/
+theorem ring_trace_dual (h s x y : A) :
+    tau (ringPlus (R := R) h s x * y) + tau (x * ringMinus (R := R) h s y) = 0 := by
+  change tau ((ringAd (R := R) h x + jordanLeft (R := R) s x) * y) +
+    tau (x * (ringAd (R := R) h y - jordanLeft (R := R) s y)) = 0
   rw [add_mul, mul_sub, map_add, map_sub, ← jordan_trace_adjoint (R := R) tau hcyc s x y]
   calc
     _ = tau (x * (h * y - y * h)) + tau ((h * x - x * h) * y) := by
@@ -69,41 +68,46 @@ theorem trace_dual (h s x y : A) :
       abel
     _ = 0 := trace_adjoint_identity tau hcyc h x y
 
-theorem trace_plus (h s x : A) :
-    tau (plus (R := R) h s x) = 2 • tau (s * x) := by
-  rw [plus_apply, map_add, trace_commutator tau hcyc,
+theorem ring_trace_plus (h s x : A) :
+    tau (ringPlus (R := R) h s x) = 2 • tau (s * x) := by
+  rw [ringPlus_apply, map_add, trace_commutator tau hcyc,
     trace_symm tau hcyc, zero_add]
 
-theorem trace_minus (h s x : A) :
-    tau (minus (R := R) h s x) = -(2 • tau (s * x)) := by
-  rw [minus_apply, map_sub, trace_commutator tau hcyc,
+theorem ring_trace_minus (h s x : A) :
+    tau (ringMinus (R := R) h s x) = -(2 • tau (s * x)) := by
+  rw [ringMinus_apply, map_sub, trace_commutator tau hcyc,
     trace_symm tau hcyc, zero_sub]
 
-/-- Both order-sensitive products are formally symmetric; commutation of
-`h` and `s` is not necessary for this bilinear adjoint statement. -/
-theorem minus_plus_trace_symmetric (h s x y : A) :
-    tau (minus (R := R) h s (plus (R := R) h s x) * y) =
-      tau (x * minus (R := R) h s (plus (R := R) h s y)) := by
-  have hl := trace_dual (R := R) tau hcyc h s y (plus (R := R) h s x)
-  rw [hcyc (plus (R := R) h s y) (plus (R := R) h s x),
-    hcyc y (minus (R := R) h s (plus (R := R) h s x))] at hl
-  have hr := trace_dual (R := R) tau hcyc h s x (plus (R := R) h s y)
+theorem ring_minus_plus_trace_symmetric (h s x y : A) :
+    tau (ringMinus (R := R) h s (ringPlus (R := R) h s x) * y) =
+      tau (x * ringMinus (R := R) h s (ringPlus (R := R) h s y)) := by
+  have hl := ring_trace_dual (R := R) tau hcyc h s y (ringPlus (R := R) h s x)
+  rw [hcyc (ringPlus (R := R) h s y) (ringPlus (R := R) h s x),
+    hcyc y (ringMinus (R := R) h s (ringPlus (R := R) h s x))] at hl
+  have hr := ring_trace_dual (R := R) tau hcyc h s x (ringPlus (R := R) h s y)
   exact add_left_cancel (hl.trans hr.symm)
 
-/-- The exact negative-square pairing, with no positivity interpretation. -/
-theorem minus_plus_trace_factor (h s x y : A) :
-    tau (minus (R := R) h s (plus (R := R) h s x) * y) =
-      -tau (plus (R := R) h s x * plus (R := R) h s y) := by
-  have hz := trace_dual (R := R) tau hcyc h s y (plus (R := R) h s x)
-  rw [hcyc (plus (R := R) h s y) (plus (R := R) h s x),
-    hcyc y (minus (R := R) h s (plus (R := R) h s x))] at hz
+theorem ring_minus_plus_trace_factor (h s x y : A) :
+    tau (ringMinus (R := R) h s (ringPlus (R := R) h s x) * y) =
+      -tau (ringPlus (R := R) h s x * ringPlus (R := R) h s y) := by
+  have hz := ring_trace_dual (R := R) tau hcyc h s y (ringPlus (R := R) h s x)
+  rw [hcyc (ringPlus (R := R) h s y) (ringPlus (R := R) h s x),
+    hcyc y (ringMinus (R := R) h s (ringPlus (R := R) h s x))] at hz
   calc
-    _ = (tau (plus (R := R) h s x * plus (R := R) h s y) +
-          tau (minus (R := R) h s (plus (R := R) h s x) * y)) -
-          tau (plus (R := R) h s x * plus (R := R) h s y) := by abel
+    _ = (tau (ringPlus (R := R) h s x * ringPlus (R := R) h s y) +
+          tau (ringMinus (R := R) h s (ringPlus (R := R) h s x) * y)) -
+          tau (ringPlus (R := R) h s x * ringPlus (R := R) h s y) := by abel
     _ = _ := by rw [hz, zero_sub]
 
-/-- Exact obstruction to symmetry of a weighted bilinear trace pairing. -/
+end NoncommRingCyclic
+
+section PureRingCyclic
+
+variable {A G : Type*} [Ring A] [AddCommGroup G]
+variable (tau : A →+ G) (hcyc : ∀ x y : A, tau (x * y) = tau (y * x))
+include hcyc
+
+/-- Exact obstruction to symmetry of a weighted bilinear trace pairing over any `[Ring A]`. -/
 theorem weighted_symmetry_defect (w x y : A) :
     tau (w * x * y) - tau (w * y * x) = tau ((w * x - x * w) * y) := by
   have hc : tau (w * y * x) = tau (x * w * y) := by
@@ -123,7 +127,7 @@ theorem weighted_skew_of_anticommute (w x y : A) (hx : w * x + x * w = 0) :
     rw [hcyc (w * y) x, ← mul_assoc]
   rw [hc, ← map_add, ← add_mul, hx, zero_mul, map_zero]
 
-/-- Removing repeated endpoints in a paired pair of corners uses cyclicity. -/
+/-- Removing repeated endpoints in a paired pair of corners uses cyclicity over any `[Ring A]`. -/
 theorem trace_corner_pair {p q : A} (hp : p * p = p) (hq : q * q = q) (x y : A) :
     tau ((p * x * q) * (q * y * p)) = tau (p * x * q * y) := by
   calc
@@ -136,7 +140,7 @@ theorem trace_corner_pair {p q : A} (hp : p * p = p) (hq : q * q = q) (x y : A) 
       simp only [mul_assoc]
     _ = _ := by rw [hp, hq]
 
-/-- The ordinary trace pairs opposite off-diagonal corners. -/
+/-- The ordinary trace pairs opposite off-diagonal corners over any `[Ring A]`. -/
 theorem trace_peirce_split {p : A} (hp : p * p = p) (x y : A) :
     tau (x * y) = tau (peirce11 p x * peirce11 p y) +
       tau (peirce00 p x * peirce00 p y) +
@@ -161,7 +165,7 @@ theorem trace_peirce_split {p : A} (hp : p * p = p) (x y : A) :
           noncomm_ring
     _ = _ := by simp only [map_add]
 
-/-- The signed four-corner expansion is not a claim of a symmetric metric. -/
+/-- The signed four-corner expansion over any `[Ring A]`. -/
 theorem weighted_peirce_split {p : A} (hp : p * p = p) (x y : A) :
     tau ((p - compIdempotent p) * x * y) =
       tau (peirce11 p x * peirce11 p y) - tau (peirce00 p x * peirce00 p y) +
@@ -183,6 +187,38 @@ theorem weighted_peirce_split {p : A} (hp : p * p = p) (x y : A) :
           unfold compIdempotent
           noncomm_ring
     _ = _ := by simp only [map_add, map_sub]
+
+end PureRingCyclic
+
+variable {R A G : Type*} [CommRing R] [Ring A] [Algebra R A] [AddCommGroup G]
+
+section Cyclic
+
+variable (tau : A →+ G) (hcyc : ∀ x y : A, tau (x * y) = tau (y * x))
+include hcyc
+
+/-- Opposite Jordan perturbations are dual for the cyclic bilinear pairing. -/
+theorem trace_dual (h s x y : A) :
+    tau (plus (R := R) h s x * y) + tau (x * minus (R := R) h s y) = 0 :=
+  ring_trace_dual (R := R) tau hcyc h s x y
+
+theorem trace_plus (h s x : A) :
+    tau (plus (R := R) h s x) = 2 • tau (s * x) :=
+  ring_trace_plus (R := R) tau hcyc h s x
+
+theorem trace_minus (h s x : A) :
+    tau (minus (R := R) h s x) = -(2 • tau (s * x)) :=
+  ring_trace_minus (R := R) tau hcyc h s x
+
+theorem minus_plus_trace_symmetric (h s x y : A) :
+    tau (minus (R := R) h s (plus (R := R) h s x) * y) =
+      tau (x * minus (R := R) h s (plus (R := R) h s y)) :=
+  ring_minus_plus_trace_symmetric (R := R) tau hcyc h s x y
+
+theorem minus_plus_trace_factor (h s x y : A) :
+    tau (minus (R := R) h s (plus (R := R) h s x) * y) =
+      -tau (plus (R := R) h s x * plus (R := R) h s y) :=
+  ring_minus_plus_trace_factor (R := R) tau hcyc h s x y
 
 end Cyclic
 

@@ -34,7 +34,7 @@ open CurrentSugawaraMetricDatum
 open CurrentMetricDatum
 
 variable {𝕜 I V : Type*}
-variable [Field 𝕜] [Fintype I] [DecidableEq I]
+variable [CommRing 𝕜] [Fintype I] [DecidableEq I]
 variable [AddCommGroup V] [Module 𝕜 V]
 
 /-- Channel-indexed normal-ordered pair of current operators `:J_{i,m} J_{j,n}:`. -/
@@ -70,7 +70,7 @@ theorem channelPairNO_of_gt
 
 /-- Explicit finite-channel Sugawara kernel
 `L_n v = 2⁻¹ • ∑ᶠ k, ∑ i, ∑ j, κ^{ij} • :J_{i,n-k} J_{j,k}: v`. -/
-noncomputable def channelSugawaraKernel
+noncomputable def channelSugawaraKernel [Inv 𝕜]
     (H : CurrentMetricDatum.MetricHeisenbergCurrent 𝕜 V I)
     (n : ℤ) : V → V :=
   fun v =>
@@ -78,7 +78,7 @@ noncomputable def channelSugawaraKernel
       channelPairNO H i j (n - k) k v
 
 /-- Pointwise evaluation of `channelSugawaraKernel H n v`. -/
-@[simp] theorem channelSugawaraKernel_def
+@[simp] theorem channelSugawaraKernel_def [Inv 𝕜]
     (H : CurrentMetricDatum.MetricHeisenbergCurrent 𝕜 V I)
     (n : ℤ) (v : V) :
     channelSugawaraKernel H n v =

@@ -12,7 +12,7 @@ open InfoGeometry.Canonical.SplitOctonionClassificationCore
 
 namespace InfoGeometry.Canonical.SplitOctonionPeirceChiralFrame
 
-variable {R : Type} [CommRing R] [Invertible (2 : R)]
+variable {R : Type} [Ring R] [Invertible (2 : R)]
 
 @[simp] theorem one_a : (1 : ZornMatrix R).a = 1 := rfl
 @[simp] theorem one_b : (1 : ZornMatrix R).b = 1 := rfl
@@ -69,7 +69,7 @@ theorem gPlus_square_zero (i : Fin 3) :
   · fin_cases k <;> simp [mul_def, gPlus, mul, dot, cross]
   · fin_cases k <;>
       simp [mul_def, gPlus, mul, dot, cross] <;>
-      split_ifs <;> ring
+      split_ifs <;> noncomm_ring
 
 theorem gMinus_square_zero (i : Fin 3) :
     gMinus (R := R) i * gMinus (R := R) i = 0 := by
@@ -78,7 +78,7 @@ theorem gMinus_square_zero (i : Fin 3) :
   · simp [mul_def, gMinus, mul, dot, cross]
   · fin_cases k <;>
       simp [mul_def, gMinus, mul, dot, cross] <;>
-      split_ifs <;> ring
+      split_ifs <;> noncomm_ring
   · fin_cases k <;> simp [mul_def, gMinus, mul, dot, cross]
 
 -- 3. Automorphism/Derivation Transport
@@ -127,9 +127,9 @@ theorem transportedEPlus_eq_of_U_chiralI_eq_chiralI
   have h2 : (2 : R) • ePlus (R := R) = (1 : ZornMatrix R) + chiralI := by
     apply ZornMatrix.ext
     · change 2 * 1 = 1 + (1 - 0)
-      ring
+      noncomm_ring
     · change 2 * 0 = 1 + (0 - 1)
-      ring
+      noncomm_ring
     · ext j; simp [ePlus, chiralI, eMinus, zornPlus, zornMinus]
     · ext j; simp [ePlus, chiralI, eMinus, zornPlus, zornMinus]
   have h2_map : (2 : R) • transportedEPlus (R := R) U = (2 : R) • ePlus := by
@@ -149,9 +149,9 @@ theorem transportedEMinus_eq_of_U_chiralI_eq_chiralI
   have h2 : (2 : R) • eMinus (R := R) = (1 : ZornMatrix R) - chiralI := by
     apply ZornMatrix.ext
     · change 2 * 0 = 1 - (1 - 0)
-      ring
+      noncomm_ring
     · change 2 * 1 = 1 - (0 - 1)
-      ring
+      noncomm_ring
     · ext j; simp [ePlus, chiralI, eMinus, zornPlus, zornMinus]
     · ext j; simp [ePlus, chiralI, eMinus, zornPlus, zornMinus]
   have h2_map : (2 : R) • transportedEMinus (R := R) U = (2 : R) • eMinus := by

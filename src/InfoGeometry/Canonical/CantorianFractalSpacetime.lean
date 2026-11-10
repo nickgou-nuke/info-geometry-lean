@@ -1,6 +1,7 @@
 import Mathlib.Algebra.Field.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Analysis.SpecialFunctions.Complex.Log
 import Mathlib.Data.Complex.Basic
 
@@ -22,7 +23,7 @@ Key invariants verified:
 5. Verification of the complex dimension poles for the Golden string geometric counting function.
 -/
 
-variable {F : Type*} [Field F]
+variable {F : Type*} [Ring F]
 
 /-- The Golden Mean equation: φ² + φ = 1. -/
 def IsGoldenMean (phi : F) : Prop := phi ^ 2 + phi = 1
@@ -36,20 +37,20 @@ theorem goldenRatio_eqn {phi : F} (hphi : IsGoldenMean phi) :
   unfold goldenRatio
   have hphi_eq : phi^2 = 1 - phi := by
     calc
-      phi^2 = (phi^2 + phi) - phi := by ring
+      phi^2 = (phi^2 + phi) - phi := by noncomm_ring
       _ = 1 - phi := by rw [hphi]
   calc
-    (1 + phi)^2 = 1 + 2 * phi + phi^2 := by ring
+    (1 + phi)^2 = 1 + 2 * phi + phi^2 := by noncomm_ring
     _ = 1 + 2 * phi + (1 - phi) := by rw [hphi_eq]
-    _ = (1 + phi) + 1 := by ring
+    _ = (1 + phi) + 1 := by noncomm_ring
 
 /-- Verify the relation φ * τ = 1. -/
 theorem phi_mul_tau_eq_one {phi : F} (hphi : IsGoldenMean phi) :
     phi * (goldenRatio phi) = 1 := by
   unfold goldenRatio
   calc
-    phi * (1 + phi) = phi + phi^2 := by ring
-    _ = phi^2 + phi := by ring
+    phi * (1 + phi) = phi + phi^2 := by noncomm_ring
+    _ = phi^2 + phi := by noncomm_ring
     _ = 1 := hphi
 
 /-- Recurrence definition of Fibonacci numbers in Lean. -/
@@ -64,7 +65,7 @@ theorem tau_pow_eq_fib {phi : F} (hphi : IsGoldenMean phi) (n : ℕ) :
     (goldenRatio phi) ^ n = ((fib (n + 1) : F) + (fib n : F) * phi) := by
   have h_phi2 : phi^2 = 1 - phi := by
     calc
-      phi^2 = (phi^2 + phi) - phi := by ring
+      phi^2 = (phi^2 + phi) - phi := by noncomm_ring
       _ = 1 - phi := by rw [hphi]
   induction n with
   | zero =>
@@ -74,9 +75,9 @@ theorem tau_pow_eq_fib {phi : F} (hphi : IsGoldenMean phi) (n : ℕ) :
       unfold goldenRatio
       calc
         ((fib (n + 1) : F) + (fib n : F) * phi) * (1 + phi)
-          = (fib (n + 1) : F) + (fib (n + 1) : F) * phi + (fib n : F) * phi + (fib n : F) * phi^2 := by ring
+          = (fib (n + 1) : F) + (fib (n + 1) : F) * phi + (fib n : F) * phi + (fib n : F) * phi^2 := by noncomm_ring
         _ = (fib (n + 1) : F) + (fib (n + 1) : F) * phi + (fib n : F) * phi + (fib n : F) * (1 - phi) := by rw [h_phi2]
-        _ = ((fib (n + 1) : F) + (fib n : F)) + (fib (n + 1) : F) * phi := by ring
+        _ = ((fib (n + 1) : F) + (fib n : F)) + (fib (n + 1) : F) * phi := by noncomm_ring
         _ = ((fib (n + 2) : F) + (fib (n + 1) : F) * phi) := by
             simp only [fib, Nat.cast_add]
 
@@ -110,7 +111,8 @@ lemma tau_pow_9 {phi : F} (hphi : IsGoldenMean phi) :
 theorem alpha_inv_en_eq {phi : F} (hphi : IsGoldenMean phi) :
     20 * (goldenRatio phi) ^ 4 = 100 + 60 * phi := by
   rw [tau_pow_4 hphi]
-  ring
+  rw [mul_add, ← mul_assoc]
+  norm_num
 
 /-- Castro's Transfinite M-theory Fine Structure Constant sum:
     1 + τ² + τ⁴ + τ⁸ + τ³ + τ⁹ = 100 + 61 * φ. -/
@@ -118,7 +120,10 @@ theorem alpha_inv_castro_eq {phi : F} (hphi : IsGoldenMean phi) :
     1 + (goldenRatio phi) ^ 2 + (goldenRatio phi) ^ 4 + (goldenRatio phi) ^ 8 +
     (goldenRatio phi) ^ 3 + (goldenRatio phi) ^ 9 = 100 + 61 * phi := by
   rw [tau_pow_2 hphi, tau_pow_4 hphi, tau_pow_8 hphi, tau_pow_3 hphi, tau_pow_9 hphi]
-  ring
+  calc
+    1 + (2 + phi) + (5 + 3 * phi) + (34 + 21 * phi) + (3 + 2 * phi) + (55 + 34 * phi)
+      = (1 + 2 + 5 + 34 + 3 + 55) + (1 + 3 + 21 + 2 + 34) * phi := by noncomm_ring
+    _ = 100 + 61 * phi := by norm_num
 
 open Complex
 

@@ -4,7 +4,7 @@ import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 
 namespace InfoGeometry.Physics
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The nilpotent shear operator in the LogCFT Jordan Block. -/
 def N_log : Matrix (Fin 2) (Fin 2) R := !![0, 1; 0, 0]

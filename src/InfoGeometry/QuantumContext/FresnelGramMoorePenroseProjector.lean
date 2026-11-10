@@ -5,6 +5,7 @@ Authors: InfoGeometry Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Abel
 
 /-!
 # Раздел 124: Спектрална Дуалност на Грам, Теорема на Кейли–Хамилтон и Проектор на Мур–Пенроуз в Cℓ(1,1)
@@ -29,7 +30,7 @@ Ref: `QMS-DIR-SEC124-GRAM-MOORE-PENROSE-CL11-2026-OCT-16`
 
 namespace InfoGeometry.QuantumContext.FresnelGramProjector
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. Френелови Квадратури и Матрична Алгебра Cℓ(1,1) ≅ M₂(R) -/
 
@@ -41,7 +42,7 @@ structure FresnelSlitAmp (R : Type*) where
 
 namespace FresnelSlitAmp
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def canonicalFresnelSlitAmpInt : FresnelSlitAmp ℤ := ⟨3, 4⟩
 
@@ -73,7 +74,9 @@ structure Cl11Op (R : Type*) where
 
 namespace Cl11Op
 
-variable {R : Type*} [CommRing R]
+section Ring
+
+variable {R : Type*} [Ring R]
 
 def canonicalCl11OpInt : Cl11Op ℤ := ⟨1, 2, 3, 4⟩
 
@@ -141,8 +144,14 @@ theorem left_right_gram_trace_eq (ψ_pos ψ_neg : FresnelSlitAmp R) :
       FresnelSlitAmp.intensity ψ_pos + FresnelSlitAmp.intensity ψ_neg := by
   constructor
   · dsimp [leftGram, rightGram, embedFresnelPair, mul, transpose, trace]
-    ring
+    abel
   · dsimp [leftGram, embedFresnelPair, mul, transpose, trace, FresnelSlitAmp.intensity]
+
+end Ring
+
+section CommRing
+
+variable {R : Type*} [CommRing R]
 
 /-- Левият и десният оператор на Грам имат тъждествено равна детерминанта H_{(+,-)}². -/
 theorem left_right_gram_det_eq (ψ_pos ψ_neg : FresnelSlitAmp R) :
@@ -242,11 +251,14 @@ theorem ab_prob_index_free_trace_formula (ψ_pos ψ_neg : FresnelSlitAmp R) (c s
          FresnelSlitAmp.intensity, FresnelSlitAmp.yangSymmetricG, FresnelSlitAmp.yinSymplecticH]
   ring
 
+end CommRing
+
 end Cl11Op
 
 /-! ### 6. Главен Синтез на Раздел 124 -/
 
 theorem fresnel_gram_projector_synthesis
+    {R : Type*} [CommRing R]
     (ψ_pos ψ_neg ψ₀ : FresnelSlitAmp R) (c s : R) :
     (Cl11Op.trace (Cl11Op.leftGram ψ_pos ψ_neg) = Cl11Op.trace (Cl11Op.rightGram ψ_pos ψ_neg) ∧
      Cl11Op.det (Cl11Op.leftGram ψ_pos ψ_neg) = Cl11Op.det (Cl11Op.rightGram ψ_pos ψ_neg)) ∧

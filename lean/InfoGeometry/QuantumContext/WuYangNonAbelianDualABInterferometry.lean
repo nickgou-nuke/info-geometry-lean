@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.Algebra.Quaternion
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Order.Ring.Defs
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.Ring
 
 /-!
@@ -24,7 +25,7 @@ and proved bridges.
 
 namespace InfoGeometry.QuantumContext.WuYangDualAB
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. Finite 3D Vector Identities for the Specified Dual Transformation -/
 
@@ -37,7 +38,7 @@ structure Vec3 (R : Type*) where
 
 namespace Vec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zeroVec3 : Vec3 R := ⟨0, 0, 0⟩
 
@@ -118,15 +119,17 @@ theorem dualCrossProductDifference_maxwell_invariant (D : DipoleDoublet R) (F : 
       dualCrossProductDifference D F := by
   dsimp [dualCrossProductDifference, maxwellDipoleDual, maxwellFieldDual,
          Vec3.sub, Vec3.cross, Vec3.neg]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 /-- Applying Maxwell duality four times is the identity operator (order-4 cycle). -/
 theorem maxwell_duality_order_four (F : EMFieldDoublet R) :
     maxwellFieldDual (maxwellFieldDual (maxwellFieldDual (maxwellFieldDual F))) = F := by
   dsimp [maxwellFieldDual, Vec3.neg]
-  ext <;> ring
+  ext <;> abel
 
 /-! ### 2. Hamilton-quaternion interference norm -/
+
+variable {R : Type*} [CommRing R]
 
 /-- Left multiplication by a unit-norm quaternion preserves squared norm.
 This is the finite algebraic isometry consequence of the quaternion norm law;

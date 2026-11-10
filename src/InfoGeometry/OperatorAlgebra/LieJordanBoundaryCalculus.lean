@@ -23,7 +23,10 @@ open InfoGeometry.Core.JordanMultiplicationClosure
 open InfoGeometry.Core.JordanAssociator
 open InfoGeometry.OperatorAlgebra.LieJordanCliffordDouble
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+section NoncommScalars
+
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- Two-sided symmetric sandwich action, without an implicit adjoint condition. -/
 def crossTransport (u v : A) : Module.End R A where
@@ -45,6 +48,7 @@ def orientedTransport (u v : A) : Module.End R A where
 @[simp] theorem orientedTransport_apply (u v x : A) :
     orientedTransport (R := R) u v x = u * x * v - v * x * u := rfl
 
+omit [Ring R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A] in
 private theorem squareZero_nested (u : A) (hu : u * u = 0) (x : A) :
     u * (u * x) = 0 := by
   rw [← mul_assoc, hu, zero_mul]
@@ -75,6 +79,173 @@ theorem cross_oriented_anticommute_of_square_zero {u v : A}
     (u * (u * x * v + v * x * u) * v -
       v * (u * x * v + v * x * u) * u) = 0
   noncomm_ring [hu, hv, squareZero_nested u hu, squareZero_nested v hv]
+
+@[simp] theorem crossTransport_one (u v : A) :
+    crossTransport (R := R) u v 1 = u * v + v * u := by
+  simp only [crossTransport_apply, mul_one]
+
+/-- Cyclic trace balance has no commutation hypothesis on the input. -/
+theorem trace_crossTransport {G : Type*} [AddCommGroup G]
+    (tau : A →+ G) (hcyc : ∀ a b : A, tau (a * b) = tau (b * a)) (u v x : A) :
+    tau (crossTransport (R := R) u v x) = tau ((u * v + v * u) * x) := by
+  simp only [crossTransport_apply, add_mul, map_add]
+  have hu : tau (u * x * v) = tau (v * u * x) := by
+    rw [hcyc (u * x) v, ← mul_assoc]
+  have hv : tau (v * x * u) = tau (u * v * x) := by
+    rw [hcyc (v * x) u, ← mul_assoc]
+  rw [hu, hv, add_comm]
+
+theorem map_crossTransport {B : Type*} [Ring B] [Module R B]
+    [IsScalarTower R B B] [SMulCommClass R B B]
+    (f : A →+* B) (u v x : A) :
+    f (crossTransport (R := R) u v x) =
+      crossTransport (R := R) (f u) (f v) (f x) := by
+  simp only [crossTransport_apply, map_add, map_mul]
+
+theorem map_orientedTransport {B : Type*} [Ring B] [Module R B]
+    [IsScalarTower R B B] [SMulCommClass R B B]
+    (f : A →+* B) (u v x : A) :
+    f (orientedTransport (R := R) u v x) =
+      orientedTransport (R := R) (f u) (f v) (f x) := by
+  simp only [orientedTransport_apply, map_sub, map_mul]
+
+theorem jordan_jordan_sum (u v : A) :
+    jordanLeft (R := R) u * jordanLeft (R := R) v +
+      jordanLeft (R := R) v * jordanLeft (R := R) u =
+        jordanLeft (R := R) (u * v + v * u) +
+          2 • crossTransport (R := R) u v := by
+  ext x
+  change (u * (v * x + x * v) + (v * x + x * v) * u) +
+    (v * (u * x + x * u) + (u * x + x * u) * v) =
+    (u * v + v * u) * x + x * (u * v + v * u) +
+      2 • (u * x * v + v * x * u)
+  simp only [two_nsmul]
+  noncomm_ring
+
+open InfoGeometry.OperatorAlgebra.LieJordanDualTransport
+
+theorem ring_jordan_lie_sum (u v : A) :
+    jordanLeft (R := R) u * ringAd (R := R) v +
+      jordanLeft (R := R) v * ringAd (R := R) u =
+        ringAd (R := R) (u * v + v * u) := by
+  ext x
+  change (u * (v * x - x * v) + (v * x - x * v) * u) +
+    (v * (u * x - x * u) + (u * x - x * u) * v) =
+    (u * v + v * u) * x - x * (u * v + v * u)
+  noncomm_ring
+
+theorem ring_lie_jordan_difference (u v : A) :
+    ringAd (R := R) u * jordanLeft (R := R) v -
+      ringAd (R := R) v * jordanLeft (R := R) u =
+        jordanLeft (R := R) (u * v - v * u) +
+          2 • orientedTransport (R := R) u v := by
+  ext x
+  change (u * (v * x + x * v) - (v * x + x * v) * u) -
+    (v * (u * x + x * u) - (u * x + x * u) * v) =
+    (u * v - v * u) * x + x * (u * v - v * u) +
+      2 • (u * x * v - v * x * u)
+  simp only [two_nsmul]
+  noncomm_ring
+
+theorem ring_lie_lie_difference (u v : A) :
+    ringAd (R := R) u * ringAd (R := R) v -
+      ringAd (R := R) v * ringAd (R := R) u =
+        ringAd (R := R) (u * v - v * u) := by
+  ext x
+  exact commutator_operator_commutator u v x
+
+theorem ring_lie_lie_sum (u v : A) :
+    ringAd (R := R) u * ringAd (R := R) v +
+      ringAd (R := R) v * ringAd (R := R) u =
+        jordanLeft (R := R) (u * v + v * u) -
+          2 • crossTransport (R := R) u v := by
+  ext x
+  change (u * (v * x - x * v) - (v * x - x * v) * u) +
+    (v * (u * x - x * u) - (u * x - x * u) * v) =
+    (u * v + v * u) * x + x * (u * v + v * u) -
+      2 • (u * x * v + v * x * u)
+  simp only [two_nsmul]
+  noncomm_ring
+
+theorem ring_fourfold_cross_readout (u v : A) :
+    (jordanLeft (R := R) u * jordanLeft (R := R) v +
+      jordanLeft (R := R) v * jordanLeft (R := R) u) -
+    (ringAd (R := R) u * ringAd (R := R) v +
+      ringAd (R := R) v * ringAd (R := R) u) =
+        (4 : ℕ) • crossTransport (R := R) u v := by
+  rw [jordan_jordan_sum, ring_lie_lie_sum]
+  simp only [show (4 : ℕ) = 2 + 2 from rfl, add_nsmul, two_nsmul]
+  abel
+
+/-- A doubled boundary operator over any `[Ring R]`. -/
+def ringBoundary (u : A) : Module.End R (A × A) where
+  toFun z := (ringAd (R := R) u z.2, jordanLeft (R := R) u z.1)
+  map_add' z w := by
+    change (ringAd (R := R) u (z.2 + w.2), jordanLeft (R := R) u (z.1 + w.1)) = _
+    rw [map_add, map_add]
+    rfl
+  map_smul' r z := by
+    change (ringAd (R := R) u (r • z.2), jordanLeft (R := R) u (r • z.1)) = _
+    rw [map_smul, map_smul]
+    rfl
+
+theorem ringBoundary_sq (u : A) :
+    ringBoundary (R := R) u * ringBoundary (R := R) u =
+      liftOp (ringAd (R := R) (u * u)) := by
+  apply LinearMap.ext
+  intro z
+  apply Prod.ext
+  · change u * (u * z.1 + z.1 * u) - (u * z.1 + z.1 * u) * u =
+      (u * u) * z.1 - z.1 * (u * u)
+    noncomm_ring
+  · change u * (u * z.2 - z.2 * u) + (u * z.2 - z.2 * u) * u =
+      (u * u) * z.2 - z.2 * (u * u)
+    noncomm_ring
+
+theorem ringBoundary_square_zero {u : A} (hu : u * u = 0) :
+    ringBoundary (R := R) u * ringBoundary (R := R) u = 0 := by
+  rw [ringBoundary_sq, hu]
+  apply LinearMap.ext
+  intro z
+  change (0 * z.1 - z.1 * 0, 0 * z.2 - z.2 * 0) = (0, 0)
+  simp
+
+theorem ringBoundary_range_le_ker {u : A} (hu : u * u = 0) :
+    LinearMap.range (ringBoundary (R := R) u) ≤ LinearMap.ker (ringBoundary (R := R) u) := by
+  rintro z ⟨x, rfl⟩
+  change ringBoundary (R := R) u (ringBoundary (R := R) u x) = 0
+  exact congrArg (fun t : Module.End R (A × A) => t x) (ringBoundary_square_zero hu)
+
+theorem ringBoundary_anticommutator (u v : A) :
+    ringBoundary (R := R) u * ringBoundary (R := R) v +
+      ringBoundary (R := R) v * ringBoundary (R := R) u =
+        liftOp (ringAd (R := R) (u * v + v * u)) := by
+  apply LinearMap.ext
+  intro z
+  apply Prod.ext
+  · change (u * (v * z.1 + z.1 * v) - (v * z.1 + z.1 * v) * u) +
+      (v * (u * z.1 + z.1 * u) - (u * z.1 + z.1 * u) * v) =
+      (u * v + v * u) * z.1 - z.1 * (u * v + v * u)
+    noncomm_ring
+  · change (u * (v * z.2 - z.2 * v) + (v * z.2 - z.2 * v) * u) +
+      (v * (u * z.2 - z.2 * u) + (u * z.2 - z.2 * u) * v) =
+      (u * v + v * u) * z.2 - z.2 * (u * v + v * u)
+    noncomm_ring
+
+omit [Ring R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A] in
+theorem ringAd_square_of_square_zero {u : A} (hu : u * u = 0) (x : A) :
+    u * (u * x - x * u) - (u * x - x * u) * u = -(2 • (u * x * u)) := by
+  calc
+    _ = (u * u) * x - 2 • (u * x * u) + x * (u * u) := by
+      simp only [two_nsmul]
+      noncomm_ring
+    _ = _ := by rw [hu]; simp
+
+end NoncommScalars
+
+section CommRingScalars
+
+variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
 
 /-- Mixed symmetric composition cancels all two-sided terms. -/
 theorem jordan_lie_sum (u v : A) :
@@ -108,19 +279,6 @@ theorem lie_lie_difference (u v : A) :
         LieAlgebra.ad R A (u * v - v * u) := by
   ext x
   exact commutator_operator_commutator u v x
-
-theorem jordan_jordan_sum (u v : A) :
-    jordanLeft (R := R) u * jordanLeft (R := R) v +
-      jordanLeft (R := R) v * jordanLeft (R := R) u =
-        jordanLeft (R := R) (u * v + v * u) +
-          2 • crossTransport (R := R) u v := by
-  ext x
-  change (u * (v * x + x * v) + (v * x + x * v) * u) +
-    (v * (u * x + x * u) + (u * x + x * u) * v) =
-    (u * v + v * u) * x + x * (u * v + v * u) +
-      2 • (u * x * v + v * x * u)
-  simp only [two_nsmul]
-  noncomm_ring
 
 theorem lie_lie_sum (u v : A) :
     LieAlgebra.ad R A u * LieAlgebra.ad R A v +
@@ -234,31 +392,6 @@ theorem ad_cube_of_square_zero {u : A} (hu : u * u = 0) (x : A) :
   rw [hs]
   simp
 
-@[simp] theorem crossTransport_one (u v : A) :
-    crossTransport (R := R) u v 1 = u * v + v * u := by
-  simp only [crossTransport_apply, mul_one]
-
-/-- Cyclic trace balance has no commutation hypothesis on the input. -/
-theorem trace_crossTransport {G : Type*} [AddCommGroup G]
-    (tau : A →+ G) (hcyc : ∀ a b : A, tau (a * b) = tau (b * a)) (u v x : A) :
-    tau (crossTransport (R := R) u v x) = tau ((u * v + v * u) * x) := by
-  simp only [crossTransport_apply, add_mul, map_add]
-  have hu : tau (u * x * v) = tau (v * u * x) := by
-    rw [hcyc (u * x) v, ← mul_assoc]
-  have hv : tau (v * x * u) = tau (u * v * x) := by
-    rw [hcyc (v * x) u, ← mul_assoc]
-  rw [hu, hv, add_comm]
-
-theorem map_crossTransport {B : Type*} [Ring B] [Algebra R B]
-    (f : A →+* B) (u v x : A) :
-    f (crossTransport (R := R) u v x) =
-      crossTransport (R := R) (f u) (f v) (f x) := by
-  simp only [crossTransport_apply, map_add, map_mul]
-
-theorem map_orientedTransport {B : Type*} [Ring B] [Algebra R B]
-    (f : A →+* B) (u v x : A) :
-    f (orientedTransport (R := R) u v x) =
-      orientedTransport (R := R) (f u) (f v) (f x) := by
-  simp only [orientedTransport_apply, map_sub, map_mul]
+end CommRingScalars
 
 end InfoGeometry.OperatorAlgebra.LieJordanBoundaryCalculus

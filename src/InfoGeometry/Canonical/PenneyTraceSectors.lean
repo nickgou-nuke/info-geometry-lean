@@ -19,10 +19,10 @@ namespace InfoGeometry.Canonical.PenneyTraceSectors
 
 open InfoGeometry.Canonical.PenneyOctonionIsospin
 
-variable {R : Type*} [CommRing R] (n : Type*) [Fintype n] [DecidableEq n]
+variable {R : Type*} [Ring R] (n : Type*) [Fintype n] [DecidableEq n]
 
 /-- Orthogonal right sectors have zero traced mixed product. -/
-theorem trace_mixed_sector_zero (e f x : Matrix n n R)
+theorem trace_mixed_sector_zero {R : Type*} [CommRing R] (e f x : Matrix n n R)
     (hfe : f * e = 0) :
     Matrix.trace (e * x * f) = 0 := by
   rw [Matrix.trace_mul_comm (e * x) f]
@@ -34,7 +34,7 @@ theorem trace_right_sector_sum (e f x : Matrix n n R) (h : e + f = 1) :
   rw [← Matrix.trace_add, ← mul_add, h, mul_one]
 
 /-- The matrix trace is unchanged by conjugation by a unit. -/
-theorem trace_conjugation (u : (Matrix n n R)ˣ) (x : Matrix n n R) :
+theorem trace_conjugation {R : Type*} [CommRing R] (u : (Matrix n n R)ˣ) (x : Matrix n n R) :
     Matrix.trace ((u : Matrix n n R) * x * (↑u⁻¹ : Matrix n n R)) =
       Matrix.trace x :=
   Matrix.trace_units_conj u x

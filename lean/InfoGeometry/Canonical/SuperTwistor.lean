@@ -7,7 +7,7 @@ open scoped BigOperators
 
 namespace InfoGeometry.SuperTwistor
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def bosonicScaleFactor (t : R) (n : ℕ) : R := t ^ n
 def fermionicBerezinScaleFactor (t : Rˣ) (m : ℕ) : R := ((t⁻¹ : Rˣ) : R) ^ m
@@ -17,7 +17,7 @@ def superBerezinianScaleFactor (t : Rˣ) (n m : ℕ) : R :=
 theorem super_twistor_measure_projective_invariance (t : Rˣ) :
     superBerezinianScaleFactor t 4 4 = 1 := by
   dsimp [superBerezinianScaleFactor, bosonicScaleFactor, fermionicBerezinScaleFactor]
-  rw [← mul_pow]
+  rw [← (Commute.units_inv_right rfl).mul_pow]
   have h_inv : (t : R) * ((t⁻¹ : Rˣ) : R) = 1 := Units.mul_inv t
   rw [h_inv, one_pow]
 

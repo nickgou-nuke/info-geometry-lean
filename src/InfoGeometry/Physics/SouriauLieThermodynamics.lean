@@ -18,8 +18,10 @@ namespace InfoGeometry.Physics.SouriauLieThermodynamics
 
 open LieAlgebra
 
-variable {R g : Type*} [CommRing R] [LieRing g] [LieAlgebra R g]
-variable {A : Type*} [Ring A] [Algebra R A]
+section Ring
+
+variable {R g : Type*} [Ring R] [LieRing g] [Module R g]
+variable {A : Type*} [Ring A] [Module R A]
 
 /--
 A quantum moment map $J : \mathfrak{g} \to \mathcal{A}$ assigning to every Lie direction $X$
@@ -68,6 +70,14 @@ The Poisson bracket with the Hamiltonian direction $dH$ vanishes identically alo
 theorem first_law_coadjoint_conservation (s : SouriauState (R := R) (g := g)) (dH : g) :
     s.kksSymplecticForm dH dH = 0 :=
   s.kks_antisymm dH
+
+end SouriauState
+
+end Ring
+
+namespace SouriauState
+
+variable {R g : Type*} [CommRing R] [LieRing g] [LieAlgebra R g]
 
 /--
 The Souriau-Fisher metric structure representing the symmetric quantum covariance tensor:

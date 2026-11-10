@@ -16,9 +16,28 @@ No Grassmannian functor or Lie-superalgebra classification is asserted.
 
 namespace InfoGeometry.Algebra.ZornVectorMatrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 noncomputable section
+
+/-- Element-level left action of the native diagonal difference over any ring `R`. -/
+theorem mul_diagonal_difference_apply (X : ZornVectorMatrix R) :
+    mul (diagonal 1 (-1)) X = ⟨X.a, X.v, -X.w, -X.b⟩ := by
+  ext i <;> simp [mul, diagonal, ZornVec3.dot, ZornVec3.cross]
+
+/-- Element-level left Peirce projector action over any ring `R`. -/
+theorem mul_E11_apply (X : ZornVectorMatrix R) :
+    mul E11 X = ⟨X.a, X.v, 0, 0⟩ := by
+  ext i <;> simp [mul, E11, ZornVec3.dot, ZornVec3.cross]
+
+/-- Element-level projector tangent equation over any ring `R`. -/
+theorem mul_E11_tangent_offDiagonal (u v : ZornVec3 R) (X : ZornVectorMatrix R) :
+    add (mul E11 (mul (offDiagonal u v) X))
+      (mul (offDiagonal u v) (mul E11 X)) = mul (offDiagonal u v) X := by
+  ext i <;> simp [mul, E11, offDiagonal, add,
+    ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+
+variable {R : Type*} [CommRing R]
 
 /-- The left action of the native diagonal difference gives the correct four-plus-four signs. -/
 theorem left_diagonal_difference_apply (X : ZornVectorMatrix R) :

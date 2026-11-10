@@ -149,7 +149,7 @@ theorem gibbs_state_is_algebraic_kms
     ========================================================================= -/
 
 /-- A Leibniz derivation `δ : A → A` over `ℂ`. -/
-structure LinearDerivation (R : Type*) (A : Type*) [CommRing R] [Ring A] [Algebra R A] where
+structure LinearDerivation (R : Type*) (A : Type*) [Ring R] [Ring A] [Module R A] where
   toLinearMap : A →ₗ[R] A
   leibniz' : ∀ (x y : A), toLinearMap (x * y) = toLinearMap x * y + x * toLinearMap y
 

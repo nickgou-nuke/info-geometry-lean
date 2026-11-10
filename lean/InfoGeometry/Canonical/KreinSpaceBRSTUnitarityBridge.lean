@@ -21,7 +21,7 @@ open ExteriorAlgebra
 open InfoGeometry.Canonical.BRSTExactClassZeroBridge
 open InfoGeometry.Canonical.PhysicalGhostZeroBRSTCohomologyBridge
 
-variable {R H : Type*} [CommRing R] [AddCommGroup H] [Module R H]
+variable {R H : Type*} [Ring R] [AddCommGroup H] [Module R H]
 
 /-- **Definition**: BRST Physical State Condition Q ψ = 0. -/
 def isPhysicalState (q : Module.End R H) (psi : H) : Prop :=

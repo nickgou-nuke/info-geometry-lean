@@ -16,7 +16,7 @@ universe u
 
 structure TwistorIncidenceDatum
     (𝕜 T D : Type u)
-    [CommRing 𝕜]
+    [Ring 𝕜]
     [AddCommGroup T] [Module 𝕜 T]
     [AddCommGroup D] [Module 𝕜 D] where
   incidence : D → T → Prop
@@ -28,7 +28,7 @@ structure TwistorIncidenceDatum
 namespace TwistorIncidenceDatum
 
 variable {𝕜 T D : Type u}
-variable [CommRing 𝕜]
+variable [Ring 𝕜]
 variable [AddCommGroup T] [Module 𝕜 T]
 variable [AddCommGroup D] [Module 𝕜 D]
 

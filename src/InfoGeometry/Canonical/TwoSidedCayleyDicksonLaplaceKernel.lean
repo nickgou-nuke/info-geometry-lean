@@ -24,8 +24,8 @@ namespace InfoGeometry.Canonical.TwoSidedCayleyDicksonLaplaceKernel
 open InfoGeometry.Core.DualSeedPeirce
 open InfoGeometry.Canonical
 
-variable {R : Type*} [CommRing R]
-variable {A : Type*} [Ring A] [Algebra R A]
+variable {R : Type*} [Ring R]
+variable {A : Type*} [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-! ## 1. Kernels over the Existing Dual Seed Carrier -/
 
@@ -126,7 +126,7 @@ theorem twoSidedHyperbolicLaplace_sector_scaling {d B : A}
 ## 4. Node 2: Symmetric vs. Antisymmetric Selectivity (`λ * μ = 1`)
 -/
 
-theorem symmetric_vs_antisymmetric_laplace_selectivity {d B : A}
+theorem symmetric_vs_antisymmetric_laplace_selectivity {R : Type*} [CommRing R] [Algebra R A] {d B : A}
     (h : IsDualSeedPair d B) {lam mu : R} (h_lm : lam * mu = 1) :
     (twoSidedHyperbolicLaplace lam mu lam mu d B d = d ∧
      twoSidedHyperbolicLaplace lam mu lam mu d B B = B ∧

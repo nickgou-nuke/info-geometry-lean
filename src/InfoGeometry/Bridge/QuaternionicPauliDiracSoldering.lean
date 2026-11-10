@@ -107,7 +107,7 @@ theorem I_comp_J : I.comp J = K := by
     _ = K4c.mulVec x := by rw [I4c_mul_J4c]
 
 theorem commute_third_quaternionic_axis
-    {R V : Type*} [CommSemiring R] [AddCommMonoid V] [Module R V]
+    {R V : Type*} [Semiring R] [AddCommMonoid V] [Module R V]
     {I J K N : Module.End R V}
     (hK : I * J = K) (hNI : N * I = I * N) (hNJ : N * J = J * N) :
     N * K = K * N := by

@@ -15,14 +15,14 @@ In Mathlib, the dual numbers over a ring `R` are implemented as `TrivSqZeroExt R
 namespace InfoGeometry.Algebra
 
 /-- A Dual Quaternion is a quaternion over the dual numbers. -/
-abbrev DualQuaternion (R : Type*) [CommRing R] := Quaternion (TrivSqZeroExt R R)
+abbrev DualQuaternion (R : Type*) [Ring R] := Quaternion (TrivSqZeroExt R R)
 
 /-- 
 The Dual Quaternion algebra explicitly models the rotation and translation 
 components of SE(3). We can embed two real quaternions (the rotation part and the translation part)
 into a single dual quaternion.
 -/
-def DualQuaternion.mk_dual {R : Type*} [CommRing R] (real_part dual_part : Quaternion R) : DualQuaternion R :=
+def DualQuaternion.mk_dual {R : Type*} [Ring R] (real_part dual_part : Quaternion R) : DualQuaternion R :=
   ⟨TrivSqZeroExt.inr real_part.re + TrivSqZeroExt.inl dual_part.re,
    TrivSqZeroExt.inr real_part.imI + TrivSqZeroExt.inl dual_part.imI,
    TrivSqZeroExt.inr real_part.imJ + TrivSqZeroExt.inl dual_part.imJ,

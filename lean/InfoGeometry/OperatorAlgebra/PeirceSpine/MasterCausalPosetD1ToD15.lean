@@ -60,7 +60,7 @@ those edges are not claimed to generate a partial order or to be cover relations
 * `D₁₁`: 5-graded Kantor / endomorphism charge polynomial annihilator
   `Δ_P⁵ - 5 Δ_P³ + 4 Δ_P = 0` on `Module.End ℤ B`.
 * `D₁₂`: `ℕ × ℕ` iterated defect tower splitting and chiral braiding
-  (`genV_defect_iterates_cycle_split`, `qgt_defect_iterates_orthogonal`).
+  (`genV_defect_iterates_cycle_split`, generic preservation of orthogonality under defect iteration).
 * `D₁₃`: Boundary-only dependence of `Φ, J, V, Σ` under arbitrary even-grade
   shifts `A ↦ A + E_P(X)`.
 * `D₁₄`: Grading-twisted star anti-involution and principal-ideal chart pairing
@@ -325,7 +325,7 @@ theorem master_causal_poset_D1_to_D15
     ⟨hEuler, hCyc6⟩,
     endomorphismCharge_fifth hP K,
     ⟨genV_defect_iterates_cycle_split hP A C n,
-     (qgt_defect_iterates_orthogonal hP A C n).1⟩,
+     idempotencyDefect_iterates_mul_eq_zero (qgt_cycles_orthogonal hP A C).1 n⟩,
     ⟨hShiftV, hShiftPhi⟩,
     ⟨grading_star_involutive hPs hP X, twisted_ideal_pairing hP hPs X Y⟩,
     ⟨symAdj_add_skewAdj W,

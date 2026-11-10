@@ -100,13 +100,21 @@ theorem aeval_prod_cyclotomic_eq_zero {n : ℕ} (hn : 0 < n) {T : A} (hT : T ^ n
 
 /-! ### Operator-coefficient characteristic polynomial and resolvent -/
 
+theorem commute_square {Φ V : A} (hΦ : Φ * Φ = V) : Commute Φ V := by
+  rw [← hΦ]; exact (Commute.refl Φ).mul_right (Commute.refl Φ)
+
+/-- Over any non-commutative ring `A`, for any operator spectral parameter `z : A`
+and `Φ * Φ = V`, the product `(z - Φ) * (z + Φ)` equals `z * z - V` plus the
+operator commutator anomaly `z * Φ - Φ * z`. -/
+theorem charPoly_factor_noncomm {Φ V : A} (hΦ : Φ * Φ = V) (z : A) :
+    (z - Φ) * (z + Φ) = z * z - V + (z * Φ - Φ * z) := by
+  rw [← hΦ]
+  noncomm_ring
+
 section CharPoly
 
 variable {R : Type*} [CommRing R] [Algebra R A] {Φ V : A} (hΦ : Φ * Φ = V)
 include hΦ
-
-theorem commute_square : Commute Φ V := by
-  rw [← hΦ]; exact (Commute.refl Φ).mul_right (Commute.refl Φ)
 
 /-- `(z - Φ)(z + Φ) = z² - V` with operator-valued `V`. -/
 theorem charPoly_factor (z : R) :

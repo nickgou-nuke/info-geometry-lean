@@ -91,6 +91,12 @@ theorem compactified_doubling_step
   have h := compactified_doubling_step_two_torsion qn Tn T2n hTn hT2n
   exact sub_eq_zero.mp (h2Cancel _ h)
 
+end RingLemmas
+
+section NoncommCompactifiedRelation
+
+variable {R : Type*} [Ring R]
+
 /--
 Cross-multiplied compactified-coordinate relation.
 
@@ -102,18 +108,18 @@ def CompactifiedRelation (q T : R) : Prop :=
 
 /-- Ring homomorphisms preserve the compactified-coordinate relation. -/
 theorem map_compactifiedRelation
-    {S : Type*} [CommRing S]
+    {S : Type*} [Ring S]
     (f : R →+* S) {q T : R}
     (h : CompactifiedRelation q T) :
     CompactifiedRelation (f q) (f T) := by
   simpa [CompactifiedRelation] using congrArg f h
 
-end RingLemmas
+end NoncommCompactifiedRelation
 
 section StageTransport
 
-variable {Stage : Nat → Type*} [∀ n : Nat, CommRing (Stage n)]
-variable {Limit : Type*} [CommRing Limit]
+variable {Stage : Nat → Type*} [∀ n : Nat, Ring (Stage n)]
+variable {Limit : Type*} [Ring Limit]
 
 /--
 A compactified-coordinate relation transported along every finite stage of a
@@ -265,7 +271,7 @@ Compose two compactified thermal states represented as pairs `(q, T)`.
 The caller supplies the inversion operation explicitly.  This is a plain
 function on product types, not a proof-carrying state wrapper.
 -/
-def compactCompose {R : Type*} [CommRing R]
+def compactCompose {R : Type*} [Ring R]
     (inv : R → R) (s1 s2 : R × R) : R × R :=
   let nextQ := s1.1 * s2.1
   let num := s1.2 + s2.2
@@ -279,7 +285,7 @@ Input `(q1, T1)` is the one-step state.  The result is a pair `(qN, TN)`.
 The inversion operation is an explicit parameter; this definition asserts no
 analytic or spectral property of that operation.
 -/
-def computeScale {R : Type*} [CommRing R]
+def computeScale {R : Type*} [Ring R]
     (inv : R → R) (q1 T1 : R) : Nat → R × R
   | 0 => (1, 0)
   | 1 => (q1, T1)
@@ -304,7 +310,7 @@ coefficient function, and `invNat N` supplies the scalar `1/N`.  The recurrence
 is intended for positive `N`; it is left as a plain formula so the scalar
 normalization is explicit.
 -/
-def fermionicNewtonGirardStep {R : Type*} [CommRing R]
+def fermionicNewtonGirardStep {R : Type*} [Ring R]
     (invNat : Nat → R) (A Z : Nat → R) (N : Nat) : R :=
   let sum := (List.range N).foldl (fun acc i =>
     let k := i + 1
@@ -318,7 +324,7 @@ One Newton-Girard symmetric-algebra step for bosonic partition coefficients.
 `A k` is the single-particle trace input, `Z` is the previously computed
 coefficient function, and `invNat N` supplies the scalar `1/N`.
 -/
-def bosonicNewtonGirardStep {R : Type*} [CommRing R]
+def bosonicNewtonGirardStep {R : Type*} [Ring R]
     (invNat : Nat → R) (A Z : Nat → R) (N : Nat) : R :=
   let sum := (List.range N).foldl (fun acc i =>
     let k := i + 1

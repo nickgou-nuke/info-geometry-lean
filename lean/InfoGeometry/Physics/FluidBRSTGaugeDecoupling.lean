@@ -30,8 +30,8 @@ universe u v
 
 namespace InfoGeometry.Physics.FluidBRSTGaugeDecoupling
 
-variable {R : Type*} [CommRing R]
-variable {L : Type u} [LieRing L] [LieAlgebra R L]
+variable {R : Type*} [Ring R]
+variable {L : Type u} [LieRing L] [Module R L]
 
 /-- BRST state space for the quantum fluid:
 - `u`: fluid velocity field (degree 0)
@@ -65,14 +65,14 @@ instance : Zero (FluidBRSTState L) := ⟨zeroState⟩
   s(c)     = -1/2 [c, c]
   s(c_bar) = b
   s(b)     = 0 -/
-def s (R : Type*) [CommRing R] [Invertible (2 : R)] [LieAlgebra R L]
+def s (R : Type*) [Ring R] [Invertible (2 : R)] [Module R L]
     (ψ : FluidBRSTState L) : FluidBRSTState L where
   u := -⁅ψ.u, ψ.c⁆
   c := -⅟(2 : R) • ⁅ψ.c, ψ.c⁆
   c_bar := ψ.b
   b := 0
 
-variable (R : Type*) [CommRing R] [Invertible (2 : R)] [LieAlgebra R L]
+variable (R : Type*) [Ring R] [Invertible (2 : R)] [Module R L]
 
 @[simp] lemma s_u (ψ : FluidBRSTState L) : (s R ψ).u = -⁅ψ.u, ψ.c⁆ := rfl
 @[simp] lemma s_c (ψ : FluidBRSTState L) : (s R ψ).c = -⅟(2 : R) • ⁅ψ.c, ψ.c⁆ := rfl
@@ -153,7 +153,7 @@ variable {V : Type*} [AddCommGroup V] [Module R V]
 
 /-- Abstract Helmholtz-Hodge decomposition structure:
     Splits arbitrary vector fields into transverse (solenoidal) and longitudinal (potential) parts. -/
-structure HelmholtzHodgeDecomposition (R : Type*) (V : Type*) [CommRing R] [AddCommGroup V] [Module R V] where
+structure HelmholtzHodgeDecomposition (R : Type*) (V : Type*) [Ring R] [AddCommGroup V] [Module R V] where
   P_T : V →ₗ[R] V  -- Transverse (solenoidal) projector
   P_L : V →ₗ[R] V  -- Longitudinal (potential) projector
   h_sum : ∀ v : V, P_T v + P_L v = v
@@ -163,7 +163,7 @@ structure HelmholtzHodgeDecomposition (R : Type*) (V : Type*) [CommRing R] [AddC
 
 namespace HelmholtzHodgeDecomposition
 
-variable (H : HelmholtzHodgeDecomposition R V)
+variable {R V : Type*} [Ring R] [AddCommGroup V] [Module R V] (H : HelmholtzHodgeDecomposition R V)
 
 /-- Transverse projection annihilates pure gradient / longitudinal gauge modes -/
 theorem transverse_annihilates_longitudinal (w : V) (hw : ∃ φ, w = H.P_L φ) :

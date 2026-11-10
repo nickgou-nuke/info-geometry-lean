@@ -22,7 +22,6 @@ open InfoGeometry.OperatorAlgebra.PeirceSpine
 #print axioms chargePowerMatrix_no_left_inverse
 #print axioms chargePowerMatrix_no_right_inverse
 #print axioms lie_sandwich_comm
-#print axioms plus_lie_minus_sandwich_comm
 #print axioms minus_lie_plus_sandwich_comm
 #print axioms extreme_sandwich_comm
 #print axioms extreme_same_support_residual

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.GenericZorn
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornVectorMatrix
@@ -19,7 +24,7 @@ open InfoGeometry.Algebra
 open InfoGeometry.Algebra.ZornVec3
 open InfoGeometry.OperatorAlgebra.GenericZorn
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Pack eight scalar coordinates into the vector-matrix Zorn carrier. -/
 def toVectorMatrix (X : ZornSplitOctonion R) : ZornVectorMatrix R :=
@@ -72,10 +77,10 @@ theorem toVectorMatrix_mul (X Y : ZornSplitOctonion R) :
         fin_cases i <;>
           simp [toVectorMatrix, InfoGeometry.OperatorAlgebra.GenericZorn.mul,
             ZornVectorMatrix.mul, ZornVec3.cross]
-        all_goals ring
+        all_goals abel
       · simp [toVectorMatrix, InfoGeometry.OperatorAlgebra.GenericZorn.mul,
           ZornVectorMatrix.mul, ZornVec3.dot, Fin.sum_univ_three]
-        ring
+        abel
 
 theorem fromVectorMatrix_mul (X Y : ZornVectorMatrix R) :
     fromVectorMatrix (ZornVectorMatrix.mul X Y) =
@@ -89,7 +94,7 @@ theorem fromVectorMatrix_mul (X Y : ZornVectorMatrix R) :
           InfoGeometry.OperatorAlgebra.GenericZorn.mul,
           ZornVectorMatrix.mul, ZornVec3.dot, ZornVec3.cross,
           Fin.sum_univ_three]
-      <;> ring
+      <;> abel
 
 theorem toVectorMatrix_norm (X : ZornSplitOctonion R) :
     ZornVectorMatrix.norm (toVectorMatrix X) =

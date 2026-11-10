@@ -23,27 +23,29 @@ def KleinPluckerRelation {F : Type*} [Ring F] (p : Fin 6 → F) : Prop :=
 
 /-- The square-face ratio on the six Plücker coordinates, when the denominator
 is invertible. -/
-def plabicFaceWeight {F : Type*} [Field F] (p : Fin 6 → F) : F :=
+def plabicFaceWeight {F : Type*} [DivisionRing F] (p : Fin 6 → F) : F :=
   (p 0 * p 5) * (p 2 * p 3)⁻¹
 
 /-- The Plücker quadric rewrites the face ratio as the usual Ptolemy sum. -/
-theorem one_add_plabicFaceWeight {F : Type*} [Field F]
+theorem one_add_plabicFaceWeight {F : Type*} [DivisionRing F]
     (p : Fin 6 → F) (hK : KleinPluckerRelation p)
     (hden : p 2 * p 3 ≠ 0) :
     1 + plabicFaceWeight p = (p 1 * p 4) * (p 2 * p 3)⁻¹ := by
   have hsum : p 1 * p 4 = p 0 * p 5 + p 2 * p 3 := by
     dsimp [KleinPluckerRelation] at hK
-    linear_combination -hK
+    calc
+      p 1 * p 4 = p 0 * p 5 + p 2 * p 3 - (p 0 * p 5 - p 1 * p 4 + p 2 * p 3) := by abel
+      _ = p 0 * p 5 + p 2 * p 3 := by rw [hK, sub_zero]
   dsimp [plabicFaceWeight]
   calc
     1 + (p 0 * p 5) * (p 2 * p 3)⁻¹ =
         (p 2 * p 3) * (p 2 * p 3)⁻¹ + (p 0 * p 5) * (p 2 * p 3)⁻¹ := by
           rw [mul_inv_cancel₀ hden]
-    _ = (p 0 * p 5 + p 2 * p 3) * (p 2 * p 3)⁻¹ := by ring
+    _ = (p 0 * p 5 + p 2 * p 3) * (p 2 * p 3)⁻¹ := by rw [add_comm (p 0 * p 5), add_mul]
     _ = (p 1 * p 4) * (p 2 * p 3)⁻¹ := by rw [← hsum]
 
 /-- Inverting the face ratio exchanges numerator and denominator. -/
-theorem plabicFaceWeight_inv {F : Type*} [Field F] (p : Fin 6 → F) :
+theorem plabicFaceWeight_inv {F : Type*} [DivisionRing F] (p : Fin 6 → F) :
     (plabicFaceWeight p)⁻¹ = (p 2 * p 3) * (p 0 * p 5)⁻¹ := by
   simp [plabicFaceWeight, mul_inv_rev]
 

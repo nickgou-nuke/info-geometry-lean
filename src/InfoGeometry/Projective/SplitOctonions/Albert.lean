@@ -4,7 +4,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 namespace InfoGeometry.Projective.SplitOctonions
 universe u
 
-structure SplitAlbertPlaneDatum (R : Type u) [CommRing R] where
+structure SplitAlbertPlaneDatum (R : Type u) [Ring R] where
   A : Type u
   zero : A
   jordan : A → A → A
@@ -14,7 +14,7 @@ structure SplitAlbertPlaneDatum (R : Type u) [CommRing R] where
 
 namespace SplitAlbertPlaneDatum
 
-variable {R : Type u} [CommRing R]
+variable {R : Type u} [Ring R]
 variable (D : SplitAlbertPlaneDatum R)
 
 /-- A projective point is a rank-one Jordan idempotent with trace one. -/

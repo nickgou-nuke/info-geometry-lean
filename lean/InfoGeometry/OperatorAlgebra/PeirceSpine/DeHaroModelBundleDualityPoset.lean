@@ -42,6 +42,19 @@ architecture:
 
 All statements are algebraic identities over `[Ring B]`; no topological manifold, analytic bundle,
 or modular group action on the upper half-plane is assumed.
+
+BUCKET 1: PROVED FINITE/ALGEBRAIC IDENTITIES OVER `[Ring B]`
+- `peirceCorner`, `peirceTransition`, `peirceTransition_compose`, `peirceTransition_orthogonal_compose`
+- `orthogonal_idempotents_induce_complementary_tripotent_frame`
+- `peirce_corner_subalgebras_and_grade_zero_commutator_split`
+- `step_one_peirce_corner_sandwich_and_brockett_commutator`
+
+BUCKET 2: CONDITIONAL IDENTITIES FROM EXPLICIT PREMISES
+- `parity_conjugation_invariants_and_cyclic_trace_conservation` (from cyclic trace `τ : CyclicTrace B R`)
+- `five_grade_peirce_resolution_and_unit_maurer_cartan` (from unit gauge frames `g : Bˣ`)
+
+BUCKET 3: OPEN CLOSURE DEBT
+- Topological moduli bundles and analytic upper-half-plane modular actions are not constructed here.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine.DeHaroModelBundleDualityPoset
@@ -125,6 +138,7 @@ theorem peirceCorner_idempotent_identity {e : B} (he : e * e = e) :
   change e * e = e ∧ e * e = e
   exact ⟨he, he⟩
 
+/-- Right-associated idempotent and orthogonality rewrite helpers for `P₁, P₂`. -/
 private theorem peirce_nf_helpers {P1 P2 : B}
     (h1 : P1 * P1 = P1) (h2 : P2 * P2 = P2)
     (h12 : P1 * P2 = 0) (h21 : P2 * P1 = 0) :

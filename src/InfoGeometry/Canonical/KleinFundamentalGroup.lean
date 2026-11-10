@@ -90,7 +90,7 @@ def trans_b : Matrix (Fin 2) (Fin 2) ℝ :=
 def trans_b_inv : Matrix (Fin 2) (Fin 2) ℝ :=
   ![![1, -1], ![0, 1]]
 
-private theorem fin2_mul_eq {R : Type*} [CommRing R]
+private theorem fin2_mul_eq {R : Type*} [Ring R]
     (A B C : Matrix (Fin 2) (Fin 2) R)
     (h00 : (A * B) 0 0 = C 0 0)
     (h01 : (A * B) 0 1 = C 0 1)

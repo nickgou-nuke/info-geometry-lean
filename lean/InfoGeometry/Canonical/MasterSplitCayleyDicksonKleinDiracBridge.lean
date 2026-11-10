@@ -128,114 +128,114 @@ end SplitComplex
 /-! ### Stratum 2: Coquaternions / Split Quaternions ($\mathbb{H}' \cong \mathrm{Mat}_2(R)$) -/
 
 /-- Identity matrix in $\mathrm{Mat}_2(R)$. -/
-def matOne {R : Type*} [CommRing R] : Matrix (Fin 2) (Fin 2) R :=
+def matOne {R : Type*} [Ring R] : Matrix (Fin 2) (Fin 2) R :=
   !![1, 0; 0, 1]
 
 /-- Elliptic generator $I$ with $I^2 = -\mathbf{1}$. -/
-def matI {R : Type*} [CommRing R] : Matrix (Fin 2) (Fin 2) R :=
+def matI {R : Type*} [Ring R] : Matrix (Fin 2) (Fin 2) R :=
   !![0, -1; 1, 0]
 
 /-- Hyperbolic generator $J$ with $J^2 = +\mathbf{1}$. -/
-def matJ {R : Type*} [CommRing R] : Matrix (Fin 2) (Fin 2) R :=
+def matJ {R : Type*} [Ring R] : Matrix (Fin 2) (Fin 2) R :=
   !![1, 0; 0, -1]
 
 /-- Hyperbolic generator $K$ with $K^2 = +\mathbf{1}$. -/
-def matK {R : Type*} [CommRing R] : Matrix (Fin 2) (Fin 2) R :=
+def matK {R : Type*} [Ring R] : Matrix (Fin 2) (Fin 2) R :=
   !![0, 1; 1, 0]
 
-theorem coquat_i_sq {R : Type*} [CommRing R] :
+theorem coquat_i_sq {R : Type*} [Ring R] :
     matI (R := R) * matI = - matOne := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [matI, matOne]
 
-theorem coquat_j_sq {R : Type*} [CommRing R] :
+theorem coquat_j_sq {R : Type*} [Ring R] :
     matJ (R := R) * matJ = matOne := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [matJ, matOne]
 
-theorem coquat_k_sq {R : Type*} [CommRing R] :
+theorem coquat_k_sq {R : Type*} [Ring R] :
     matK (R := R) * matK = matOne := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [matK, matOne]
 
-theorem coquat_ij {R : Type*} [CommRing R] :
+theorem coquat_ij {R : Type*} [Ring R] :
     matI (R := R) * matJ = matK := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [matI, matJ, matK]
 
-theorem coquat_ji {R : Type*} [CommRing R] :
+theorem coquat_ji {R : Type*} [Ring R] :
     matJ (R := R) * matI = - matK := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [matI, matJ, matK]
 
-theorem coquat_jk {R : Type*} [CommRing R] :
+theorem coquat_jk {R : Type*} [Ring R] :
     matJ (R := R) * matK = - matI := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [matI, matJ, matK]
 
-theorem coquat_kj {R : Type*} [CommRing R] :
+theorem coquat_kj {R : Type*} [Ring R] :
     matK (R := R) * matJ = matI := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [matI, matJ, matK]
 
-theorem coquat_ki {R : Type*} [CommRing R] :
+theorem coquat_ki {R : Type*} [Ring R] :
     matK (R := R) * matI = matJ := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [matI, matJ, matK]
 
-theorem coquat_ik {R : Type*} [CommRing R] :
+theorem coquat_ik {R : Type*} [Ring R] :
     matI (R := R) * matK = - matJ := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [matI, matJ, matK]
 
 /-- Concrete matrix Peirce projector $P_+ = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix}$. -/
-def matPeircePlusJ {R : Type*} [CommRing R] : Matrix (Fin 2) (Fin 2) R :=
+def matPeircePlusJ {R : Type*} [Ring R] : Matrix (Fin 2) (Fin 2) R :=
   !![1, 0; 0, 0]
 
 /-- Concrete matrix Peirce projector $P_- = \begin{pmatrix} 0 & 0 \\ 0 & 1 \end{pmatrix}$. -/
-def matPeirceMinusJ {R : Type*} [CommRing R] : Matrix (Fin 2) (Fin 2) R :=
+def matPeirceMinusJ {R : Type*} [Ring R] : Matrix (Fin 2) (Fin 2) R :=
   !![0, 0; 0, 1]
 
-theorem matPeircePlusJ_sq {R : Type*} [CommRing R] :
+theorem matPeircePlusJ_sq {R : Type*} [Ring R] :
     matPeircePlusJ (R := R) * matPeircePlusJ = matPeircePlusJ := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [matPeircePlusJ]
 
-theorem matPeirceMinusJ_sq {R : Type*} [CommRing R] :
+theorem matPeirceMinusJ_sq {R : Type*} [Ring R] :
     matPeirceMinusJ (R := R) * matPeirceMinusJ = matPeirceMinusJ := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [matPeirceMinusJ]
 
-theorem matPeirce_orthog {R : Type*} [CommRing R] :
+theorem matPeirce_orthog {R : Type*} [Ring R] :
     matPeircePlusJ (R := R) * matPeirceMinusJ = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [matPeircePlusJ, matPeirceMinusJ]
 
-theorem matPeirce_complete {R : Type*} [CommRing R] :
+theorem matPeirce_complete {R : Type*} [Ring R] :
     matPeircePlusJ (R := R) + matPeirceMinusJ = matOne := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [matPeircePlusJ, matPeirceMinusJ, matOne]
 
 /-- A general off-diagonal operator matrix in $\mathrm{Mat}_2(R)$. -/
-def matDiracOffDiag {R : Type*} [CommRing R] (d01 d10 : R) : Matrix (Fin 2) (Fin 2) R :=
+def matDiracOffDiag {R : Type*} [Ring R] (d01 d10 : R) : Matrix (Fin 2) (Fin 2) R :=
   !![0, d01; d10, 0]
 
-theorem matDiracOffDiag_anticomm {R : Type*} [CommRing R] (d01 d10 : R) :
+theorem matDiracOffDiag_anticomm {R : Type*} [Ring R] (d01 d10 : R) :
     matDiracOffDiag d01 d10 * matJ + matJ * matDiracOffDiag d01 d10 = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [matDiracOffDiag, matJ]
 
-theorem matDirac_peirce_plus_plus_zero {R : Type*} [CommRing R] (d01 d10 : R) :
+theorem matDirac_peirce_plus_plus_zero {R : Type*} [Ring R] (d01 d10 : R) :
     matPeircePlusJ (R := R) * matDiracOffDiag d01 d10 * matPeircePlusJ = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [matPeircePlusJ, matDiracOffDiag]
 
-theorem matDirac_peirce_minus_minus_zero {R : Type*} [CommRing R] (d01 d10 : R) :
+theorem matDirac_peirce_minus_minus_zero {R : Type*} [Ring R] (d01 d10 : R) :
     matPeirceMinusJ (R := R) * matDiracOffDiag d01 d10 * matPeirceMinusJ = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [matPeirceMinusJ, matDiracOffDiag]
 
-theorem matDirac_off_diag_decomposition {R : Type*} [CommRing R] (d01 d10 : R) :
+theorem matDirac_off_diag_decomposition {R : Type*} [Ring R] (d01 d10 : R) :
     matDiracOffDiag d01 d10 =
       matPeircePlusJ * matDiracOffDiag d01 d10 * matPeirceMinusJ +
       matPeirceMinusJ * matDiracOffDiag d01 d10 * matPeircePlusJ := by

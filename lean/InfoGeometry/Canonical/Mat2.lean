@@ -60,7 +60,7 @@ theorem mat_ext {A B : Carrier R}
   ext i j
   fin_cases i <;> fin_cases j <;> assumption
 
-variable [CommRing R]
+variable [Ring R]
 
 /-- The `2 × 2` identity matrix. -/
 def I2 : Carrier R :=

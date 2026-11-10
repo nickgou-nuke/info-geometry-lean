@@ -32,9 +32,9 @@ open Matrix
 open InfoGeometry.SuperGrassmannian.SuperconformalOSpJordanPair
 open InfoGeometry.Nuclear.NuclearQuasiphononJordanPairBridge
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
-abbrev M₃ (R : Type*) [CommRing R] := Matrix (Fin 3) (Fin 3) R
+abbrev M₃ (R : Type*) [Ring R] := Matrix (Fin 3) (Fin 3) R
 
 /-- The parity operator for the Section 86 ordering `(even, odd, even)`. -/
 def Gamma : M₃ R := Matrix.diagonal ![(1 : R), -1, 1]
@@ -131,7 +131,7 @@ theorem tau_conj_adH (X : M₃ R) :
   simpa [SuperconformalOSpJordanPair.commutator] using (congrArg Neg.neg h').symm
 
 /-- A Cartan-adjoint eigenvector of weight `k` is sent to weight `-k`. -/
-theorem tau_reverses_adH_eigenvalue (k : R) (X : M₃ R)
+theorem tau_reverses_adH_eigenvalue {R : Type*} [CommRing R] (k : R) (X : M₃ R)
     (hX : adH X = k • X) :
     adH (tau (R := R) * X * tau) = (-k) • (tau * X * tau) := by
   rw [tau_conj_adH, hX]
@@ -169,7 +169,7 @@ theorem supertrace_tau_invariant (X : M₃ R) :
       Matrix.diagonal_apply, Matrix.mul_apply, Matrix.of_apply]
   unfold supertrace
   rw [h0, h1, h2]
-  ring
+  abel
 
 /-- The Section 87 OSp pairing element is covariant under energy reversal. -/
 theorem tau_intertwines_ospPairingElement (ε Δ : ℝ) :

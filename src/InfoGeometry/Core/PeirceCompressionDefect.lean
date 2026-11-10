@@ -3,24 +3,22 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-import InfoGeometry.Core.IdempotencyDefect
 import Mathlib.Algebra.Star.Basic
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic.NoncommRing
+import InfoGeometry.Core.IdempotencyDefect
+import InfoGeometry.Core.PeirceDecomposition
 
 /-!
 # Multiplication defects of an idempotent compression
 
 These are associative-ring identities. Star-square factorization supplies
 self-adjointness, but no ordered positivity or diffraction interpretation is
-asserted. The input operators need not be idempotent. Nested compressions and
-finite descending flags retain exact ordered relative-shell contributions to
-the idempotency defect.
+asserted. The input operators need not be idempotent.
 -/
 namespace InfoGeometry.Core.PeirceCompressionDefect
 
 open IdempotencyDefect
-open scoped BigOperators
 
 variable {A : Type*} [Ring A]
 
@@ -44,6 +42,282 @@ theorem compression_square_defect (p x : A) (hp : p * p = p) :
   calc
     _ = p * x * ((1 - p) * (1 - p)) * x * p := by rw [hc]
     _ = _ := by simp only [mul_assoc]
+
+/-! ## Defect transport through nested compression -/
+
+/-- The compressed idempotency defect is the ambient defect compressed to the
+corner, minus the transfer through its complementary corner. -/
+theorem defect_compression (p x : A) (hp : p * p = p) :
+    defect (p * x * p) =
+      p * defect x * p - p * x * (1 - p) * x * p := by
+  rw [← compression_mul_defect p x x hp]
+  unfold defect
+  noncomm_ring
+
+/-- The idempotency defect of a compressed operator is exactly the ordered
+product of its two off-diagonal Peirce blocks, subtracted from the compressed
+ambient defect.  This identifies the correction term in `defect_compression`
+as transfer from the `p` corner to its complement and back; no commutation
+between `p` and `x` is assumed. -/
+theorem defect_compression_peirce_transfer (p x : A) (hp : p * p = p) :
+    defect (p * x * p) =
+      p * defect x * p -
+        (InfoGeometry.Core.PeirceDecomposition.component10 p x) *
+          (InfoGeometry.Core.PeirceDecomposition.component01 p x) := by
+  have hTransfer :
+      (InfoGeometry.Core.PeirceDecomposition.component10 p x) *
+          (InfoGeometry.Core.PeirceDecomposition.component01 p x) =
+        p * x * (1 - p) * x * p := by
+    have hcomp : (1 - p) * (1 - p) = 1 - p := by
+      noncomm_ring [hp]
+    dsimp [InfoGeometry.Core.PeirceDecomposition.component10,
+      InfoGeometry.Core.PeirceDecomposition.component01,
+      InfoGeometry.Core.PeirceDecomposition.complementIdempotent]
+    calc
+      p * x * (1 - p) * ((1 - p) * x * p) =
+          p * x * ((1 - p) * (1 - p)) * x * p := by noncomm_ring
+      _ = p * x * (1 - p) * x * p := by rw [hcomp]
+  rw [defect_compression p x hp, hTransfer]
+
+/-- For compatible nested idempotents, the relative shell `p - q` gives the
+exact correction to the defect of compressing first by `p` and then by `q`. -/
+theorem defect_nested_compression (p q x : A)
+    (hp : p * p = p) (hq : q * q = q)
+    (hqp : q * p = q) (hpq : p * q = q) :
+    defect (q * x * q) =
+      q * defect (p * x * p) * q - q * x * (p - q) * x * q := by
+  have hcompress : q * (p * x * p) * q = q * x * q := by
+    calc
+      _ = (q * p) * x * (p * q) := by simp only [mul_assoc]
+      _ = _ := by rw [hqp, hpq]
+  have hrelative : p * (1 - q) * p = p - q := by
+    calc
+      _ = p * p - (p * q) * p := by noncomm_ring
+      _ = _ := by rw [hp, hpq, hqp]
+  have htransfer :
+      q * (p * x * p) * (1 - q) * (p * x * p) * q =
+        q * x * (p - q) * x * q := by
+    calc
+      _ = (q * p) * x * (p * (1 - q) * p) * x * (p * q) := by
+        simp only [mul_assoc]
+      _ = _ := by rw [hqp, hpq, hrelative]
+  have h := defect_compression q (p * x * p) hq
+  rw [hcompress, htransfer] at h
+  exact h
+
+/-- A finite descending compatible flag accumulates the exact ordered
+relative-shell corrections; this is a finite algebraic identity. -/
+theorem defect_compression_flag (p : ℕ → A) (x : A) (n : ℕ)
+    (hp : ∀ i ≤ n, p i * p i = p i)
+    (hleft : ∀ i < n, p (i + 1) * p i = p (i + 1))
+    (hright : ∀ i < n, p i * p (i + 1) = p (i + 1)) :
+    defect (p n * x * p n) =
+      p n * defect (p 0 * x * p 0) * p n -
+        ∑ i ∈ Finset.range n, p n * x * (p i - p (i + 1)) * x * p n := by
+  have hbase : ∀ k ≤ n, p k * p 0 = p k ∧ p 0 * p k = p k := by
+    intro k
+    induction k with
+    | zero =>
+        intro hk
+        exact ⟨hp 0 hk, hp 0 hk⟩
+    | succ k ih =>
+        intro hk
+        have hkn : k ≤ n := (Nat.le_succ k).trans hk
+        have hklt : k < n := (Nat.lt_succ_self k).trans_le hk
+        rcases ih hkn with ⟨hkl, hkr⟩
+        constructor
+        · calc
+            p (k + 1) * p 0 = (p (k + 1) * p k) * p 0 := by
+              rw [hleft k hklt]
+            _ = p (k + 1) * (p k * p 0) := mul_assoc _ _ _
+            _ = p (k + 1) := by rw [hkl, hleft k hklt]
+        · calc
+            p 0 * p (k + 1) = p 0 * (p k * p (k + 1)) := by
+              rw [hright k hklt]
+            _ = (p 0 * p k) * p (k + 1) := (mul_assoc _ _ _).symm
+            _ = p (k + 1) := by rw [hkr, hright k hklt]
+  have hshells : ∀ k : ℕ,
+      (∑ i ∈ Finset.range k, (p i - p (i + 1))) = p 0 - p k := by
+    intro k
+    induction k with
+    | zero => simp
+    | succ k ih =>
+        rw [Finset.sum_range_succ, ih]
+        noncomm_ring
+  have hsum :
+      (∑ i ∈ Finset.range n, p n * x * (p i - p (i + 1)) * x * p n) =
+        p n * x * (p 0 - p n) * x * p n := by
+    calc
+      _ = (p n * x) * (∑ i ∈ Finset.range n, (p i - p (i + 1))) *
+          x * p n := by simp only [Finset.mul_sum, Finset.sum_mul]
+      _ = _ := by rw [hshells]
+  rw [hsum]
+  exact defect_nested_compression (p 0) (p n) x
+    (hp 0 (Nat.zero_le n)) (hp n le_rfl) (hbase n le_rfl).1 (hbase n le_rfl).2
+
+/-! ## The universal defect of a pair of idempotents -/
+
+/-- **Two-idempotent chordal defect identity.** For idempotents `p₁,p₂` in an
+associative ring, the square `Δ = (p₂ - p₁)²` commutes with both endpoints,
+the two return sandwiches are `pᵢ (1 - Δ)`, and the negative square of their
+commutator is `Δ (1 - Δ)`. These are ring identities; no scalar angle,
+positivity, or probability interpretation is assumed. -/
+theorem twoIdempotentChordalDefect
+    (p₁ p₂ : A) (hp₁ : p₁ * p₁ = p₁) (hp₂ : p₂ * p₂ = p₂) :
+    let Δ := (p₂ - p₁) * (p₂ - p₁)
+    let C := p₂ * p₁ - p₁ * p₂
+    Δ * p₁ = p₁ * Δ ∧
+    Δ * p₂ = p₂ * Δ ∧
+    p₁ * p₂ * p₁ = p₁ * (1 - Δ) ∧
+    p₂ * p₁ * p₂ = p₂ * (1 - Δ) ∧
+    -(C * C) = Δ * (1 - Δ) := by
+  intro Δ C
+  dsimp [Δ, C]
+  have hL₁ : ∀ z : A, p₁ * (p₁ * z) = p₁ * z := by
+    intro z
+    rw [← mul_assoc, hp₁]
+  have hR₁ : ∀ z : A, (z * p₁) * p₁ = z * p₁ := by
+    intro z
+    rw [mul_assoc, hp₁]
+  have hRp₁ : ∀ z : A, z * (p₁ * p₁) = z * p₁ := by
+    intro z
+    rw [hp₁]
+  have hL₂ : ∀ z : A, p₂ * (p₂ * z) = p₂ * z := by
+    intro z
+    rw [← mul_assoc, hp₂]
+  have hR₂ : ∀ z : A, (z * p₂) * p₂ = z * p₂ := by
+    intro z
+    rw [mul_assoc, hp₂]
+  have hRp₂ : ∀ z : A, z * (p₂ * p₂) = z * p₂ := by
+    intro z
+    rw [hp₂]
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · noncomm_ring [hL₁, hR₁, hRp₁, hL₂, hR₂, hRp₂]
+  · noncomm_ring [hL₁, hR₁, hRp₁, hL₂, hR₂, hRp₂]
+  · noncomm_ring [hL₁, hR₁, hRp₁, hL₂, hR₂, hRp₂]
+    rw [hp₁]
+    abel
+  · noncomm_ring [hL₁, hR₁, hRp₁, hL₂, hR₂, hRp₂]
+    rw [hp₂]
+    abel
+  · noncomm_ring [hL₁, hR₁, hRp₁, hL₂, hR₂, hRp₂]
+
+/-- **Davis decomposition for two idempotents.** For idempotents `p₁,p₂`,
+the difference `d = p₂ - p₁` and the centered sum
+`s = p₁ + p₂ - 1` anticommute and have complementary squares. Their ordered
+product is the commutator `p₂p₁ - p₁p₂`; the displayed corner identities are
+the corresponding intertwining relations. This is a polynomial identity in an
+associative ring, with no self-adjointness or positivity assumptions. -/
+theorem twoIdempotentDavisDecomposition
+    (p₁ p₂ : A) (hp₁ : p₁ * p₁ = p₁) (hp₂ : p₂ * p₂ = p₂) :
+    let d := p₂ - p₁
+    let s := p₁ + p₂ - 1
+    let c := p₂ * p₁ - p₁ * p₂
+    d * s = c ∧
+    s * d = -c ∧
+    d * s + s * d = 0 ∧
+    d * s - s * d = c + c ∧
+    d * d + s * s = 1 ∧
+    p₁ * s = p₁ * p₂ ∧
+    s * p₂ = p₁ * p₂ ∧
+    d * p₁ = (1 - p₂) * d ∧
+    p₁ * p₂ * p₁ = p₁ * (s * s) ∧
+    -(c * c) = (d * d) * (s * s) := by
+  intro d s c
+  dsimp [d, s, c]
+  have hL₁ : ∀ z : A, p₁ * (p₁ * z) = p₁ * z := by
+    intro z
+    rw [← mul_assoc, hp₁]
+  have hL₂ : ∀ z : A, p₂ * (p₂ * z) = p₂ * z := by
+    intro z
+    rw [← mul_assoc, hp₂]
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  all_goals
+    simp only [mul_add, add_mul, sub_mul, mul_sub, mul_one, one_mul,
+      neg_sub, mul_assoc, hp₁, hp₂, hL₁, hL₂]
+    abel
+
+/-- The product of the two Cartan involutions associated with idempotents is
+the algebraic double-angle decomposition. Here `d = p - q`, so the sine
+channel is `p*q - q*p`; the formula uses no scalar half-angle normalization. -/
+theorem idempotentCartanProduct_doubleAngle
+    (p q : A) (hp : p * p = p) (hq : q * q = q) :
+    let d := p - q
+    let c := p * q - q * p
+    (p + p - 1) * (q + q - 1) =
+        (1 - (d * d + d * d)) + (c + c) ∧
+    ((p + p - 1) * (q + q - 1) + (q + q - 1) * (p + p - 1)) =
+        (1 - (d * d + d * d)) + (1 - (d * d + d * d)) ∧
+    ((p + p - 1) * (q + q - 1) - (q + q - 1) * (p + p - 1)) =
+        c + c + c + c := by
+  intro d c
+  dsimp [d, c]
+  constructor
+  · noncomm_ring [hp, hq]
+  constructor
+  · noncomm_ring [hp, hq]
+  · noncomm_ring [hp, hq]
+
+/-! ## Three-idempotent reflection identities
+
+The statements below stay in an arbitrary associative ring. “Bargmann” and
+“Nambu” are names for the ordered products and alternating sum defined here;
+no state space, trace, topology, or geometric phase is part of these types.
+-/
+
+/-- The centered sum of two idempotents. -/
+def davisReflection (p q : A) : A := p + q - 1
+
+/-- The three-step ordered product of centered idempotent sums. -/
+def threeReflectionLoop (p q r : A) : A :=
+  davisReflection p q * davisReflection q r * davisReflection r p
+
+/-- The alternating associative three-variable commutator. -/
+def alternatingTriple (x y z : A) : A :=
+  (x * y * z + y * z * x + z * x * y) -
+    (x * z * y + y * x * z + z * y * x)
+
+/-- Two adjacent centered sums split into the ordered path and its complementary
+path. Only the shared middle element must be idempotent; the endpoints are
+arbitrary ring elements. -/
+theorem adjacentDavisReflections_split
+    (p q r : A) (hq : q * q = q) :
+    davisReflection p q * davisReflection q r =
+      p * q * r + (1 - p) * (1 - q) * (1 - r) := by
+  unfold davisReflection
+  noncomm_ring [hq]
+
+/-- The ordered three-reflection loop separates into a `p` corner and a
+complementary corner. The negative sign is due to the three complementary
+factors. -/
+theorem threeDavisReflections_corner_split
+    (p q r : A) (hp : p * p = p) (hq : q * q = q) (hr : r * r = r) :
+    threeReflectionLoop p q r =
+      p * q * r * p - (1 - p) * (1 - q) * (1 - r) * (1 - p) := by
+  unfold threeReflectionLoop davisReflection
+  noncomm_ring [hp, hq, hr]
+
+/-- Reversing the two internal vertices leaves the difference of the two
+three-reflection loops equal to the commutator in the two orthogonal corners. -/
+theorem threeDavisReflections_orientation
+    (p q r : A) (hp : p * p = p) (hq : q * q = q) (hr : r * r = r) :
+    threeReflectionLoop p q r - threeReflectionLoop p r q =
+      p * (q * r - r * q) * p -
+        (1 - p) * (q * r - r * q) * (1 - p) := by
+  unfold threeReflectionLoop davisReflection
+  noncomm_ring [hp, hq, hr]
+
+/-- The cyclic sum of orientation differences is the alternating triple
+commutator doubled, minus the boundary commutator sum. -/
+theorem threeDavisReflections_cyclic_alternating_identity
+    (p q r : A) (hp : p * p = p) (hq : q * q = q) (hr : r * r = r) :
+    (threeReflectionLoop p q r - threeReflectionLoop p r q) +
+      (threeReflectionLoop q r p - threeReflectionLoop q p r) +
+      (threeReflectionLoop r p q - threeReflectionLoop r q p) +
+      ((p * q - q * p) + (q * r - r * q) + (r * p - p * r)) =
+      alternatingTriple p q r + alternatingTriple p q r := by
+  unfold threeReflectionLoop davisReflection alternatingTriple
+  noncomm_ring [hp, hq, hr]
 
 /-! ## Two-boundary compression and its intermediate-corner decomposition -/
 
@@ -76,9 +350,17 @@ theorem twoBoundaryCompression_right_absorption
         final * observable * (initial * initial) := by simp only [mul_assoc]
     _ = final * observable * initial := by rw [hinitial]
 
-/-- Equal boundary idempotents recover the ordinary Peirce compression. -/
-theorem twoBoundaryCompression_diagonal (p x : A) :
-    twoBoundaryCompression p x p = p * x * p := rfl
+/-- Reapplying the same idempotent boundary compression has no further effect.
+This is the operator-level idempotency law for the compression map. -/
+theorem twoBoundaryCompression_idempotent
+    (p x : A) (hp : p * p = p) :
+    twoBoundaryCompression p (twoBoundaryCompression p x p) p =
+      twoBoundaryCompression p x p := by
+  unfold twoBoundaryCompression
+  calc
+    p * (p * x * p) * p = (p * p) * x * (p * p) := by
+      simp only [mul_assoc]
+    _ = p * x * p := by rw [hp]
 
 /-- The sum of two idempotent boundary observables doubles the transition
 corner, without requiring the two idempotents to commute. -/
@@ -192,94 +474,6 @@ theorem compression_defect_sum {I : Type*} [Fintype I]
   calc
     _ = p * x * (s i * s i) * y * p := by rw [hi i]
     _ = _ := by simp only [mul_assoc]
-
-/-- Compression of the idempotency defect differs from the defect of the
-compression by the exact ordered transfer through the complementary corner. -/
-theorem defect_compression (p x : A) (hp : p * p = p) :
-    defect (p * x * p) =
-      p * defect x * p - p * x * (1 - p) * x * p := by
-  rw [← compression_mul_defect p x x hp]
-  unfold defect
-  noncomm_ring
-
-/-- For nested idempotents, refining the compression changes its defect by
-the transfer through the relative shell. Both absorption equations are
-explicit; neither idempotent is assumed to commute with the input. -/
-theorem defect_nested_compression (p q x : A)
-    (hp : p * p = p) (hq : q * q = q)
-    (hqp : q * p = q) (hpq : p * q = q) :
-    defect (q * x * q) =
-      q * defect (p * x * p) * q - q * x * (p - q) * x * q := by
-  have hcompress : q * (p * x * p) * q = q * x * q := by
-    calc
-      _ = (q * p) * x * (p * q) := by simp only [mul_assoc]
-      _ = _ := by rw [hqp, hpq]
-  have hrelative : p * (1 - q) * p = p - q := by
-    calc
-      _ = p * p - (p * q) * p := by noncomm_ring
-      _ = _ := by rw [hp, hpq, hqp]
-  have htransfer :
-      q * (p * x * p) * (1 - q) * (p * x * p) * q =
-        q * x * (p - q) * x * q := by
-    calc
-      _ = (q * p) * x * (p * (1 - q) * p) * x * (p * q) := by
-        simp only [mul_assoc]
-      _ = _ := by rw [hqp, hpq, hrelative]
-  have h := defect_compression q (p * x * p) hq
-  rw [hcompress, htransfer] at h
-  exact h
-
-/-- Every finite descending compression flag has an exact cumulative defect
-formula. The relative-shell contributions keep `x` on both sides in its
-original noncommutative order. All hypotheses are bounded by the chosen
-finite endpoint `n`; no convergence or infinite-dimensional limit is used. -/
-theorem defect_compression_flag (p : ℕ → A) (x : A) (n : ℕ)
-    (hp : ∀ i ≤ n, p i * p i = p i)
-    (hleft : ∀ i < n, p (i + 1) * p i = p (i + 1))
-    (hright : ∀ i < n, p i * p (i + 1) = p (i + 1)) :
-    defect (p n * x * p n) =
-      p n * defect (p 0 * x * p 0) * p n -
-        ∑ i ∈ Finset.range n, p n * x * (p i - p (i + 1)) * x * p n := by
-  have hbase : ∀ k ≤ n, p k * p 0 = p k ∧ p 0 * p k = p k := by
-    intro k
-    induction k with
-    | zero =>
-        intro hk
-        exact ⟨hp 0 hk, hp 0 hk⟩
-    | succ k ih =>
-        intro hk
-        have hkn : k ≤ n := (Nat.le_succ k).trans hk
-        have hklt : k < n := (Nat.lt_succ_self k).trans_le hk
-        rcases ih hkn with ⟨hkl, hkr⟩
-        constructor
-        · calc
-            p (k + 1) * p 0 = (p (k + 1) * p k) * p 0 := by
-              rw [hleft k hklt]
-            _ = p (k + 1) * (p k * p 0) := mul_assoc _ _ _
-            _ = p (k + 1) := by rw [hkl, hleft k hklt]
-        · calc
-            p 0 * p (k + 1) = p 0 * (p k * p (k + 1)) := by
-              rw [hright k hklt]
-            _ = (p 0 * p k) * p (k + 1) := (mul_assoc _ _ _).symm
-            _ = p (k + 1) := by rw [hkr, hright k hklt]
-  have hshells : ∀ k : ℕ,
-      (∑ i ∈ Finset.range k, (p i - p (i + 1))) = p 0 - p k := by
-    intro k
-    induction k with
-    | zero => simp
-    | succ k ih =>
-        rw [Finset.sum_range_succ, ih]
-        noncomm_ring
-  have hsum :
-      (∑ i ∈ Finset.range n, p n * x * (p i - p (i + 1)) * x * p n) =
-        p n * x * (p 0 - p n) * x * p n := by
-    calc
-      _ = (p n * x) * (∑ i ∈ Finset.range n, (p i - p (i + 1))) *
-          x * p n := by simp only [Finset.mul_sum, Finset.sum_mul]
-      _ = _ := by rw [hshells]
-  rw [hsum]
-  exact defect_nested_compression (p 0) (p n) x
-    (hp 0 (Nat.zero_le n)) (hp n le_rfl) (hbase n le_rfl).1 (hbase n le_rfl).2
 
 section Star
 variable [StarRing A]

@@ -39,7 +39,9 @@ noncomputable section
 
 open InfoGeometry.Canonical
 
-variable {K V : Type*} [CommRing K] [AddCommGroup V] [Module K V]
+section Ring
+
+variable {K : Type*} [Ring K]
 
 /-- The cubic charge weight $\omega^{\mathrm{val}(r)}$ carried by a degree $r \in \mathrm{ZMod}\,3$. -/
 def cubicWeight (ω : K) (r : ZMod 3) : K := ω ^ r.val
@@ -61,24 +63,20 @@ theorem cubicWeight_add (ω : K) (hω : ω ^ 3 = 1)
   have hs : s.val = 0 ∨ s.val = 1 ∨ s.val = 2 := by omega
   rcases hr with hr | hr | hr <;> rcases hs with hs | hs | hs <;>
     simp only [cubicWeight, ZMod.val_add, hr, hs]
-  · ring
-  · ring
-  · ring
-  · ring
-  · ring
-  · calc
-      ω ^ (3 % 3) = 1 := by norm_num
-      _ = ω ^ 3 := hω.symm
-      _ = ω ^ 1 * ω ^ 2 := by ring
-  · ring
-  · calc
-      ω ^ (3 % 3) = 1 := by norm_num
-      _ = ω ^ 3 := hω.symm
-      _ = ω ^ 2 * ω ^ 1 := by ring
-  · calc
-      ω ^ (4 % 3) = ω * 1 := by norm_num
-      _ = ω * ω ^ 3 := by rw [hω]
-      _ = ω ^ 2 * ω ^ 2 := by ring
+  · change ω ^ 0 = ω ^ 0 * ω ^ 0; simp
+  · change ω ^ 1 = ω ^ 0 * ω ^ 1; simp
+  · change ω ^ 2 = ω ^ 0 * ω ^ 2; simp
+  · change ω ^ 1 = ω ^ 1 * ω ^ 0; simp
+  · change ω ^ 2 = ω ^ 1 * ω ^ 1; rw [← pow_add]
+  · change ω ^ 0 = ω ^ 1 * ω ^ 2; rw [pow_zero, ← pow_add, hω]
+  · change ω ^ 2 = ω ^ 2 * ω ^ 0; simp
+  · change ω ^ 0 = ω ^ 2 * ω ^ 1; rw [pow_zero, ← pow_add, hω]
+  · change ω ^ 1 = ω ^ 2 * ω ^ 2
+    rw [← pow_add, show (2 : ℕ) + 2 = 3 + 1 from rfl, pow_add, hω, one_mul]
+
+end Ring
+
+variable {K V : Type*} [CommRing K] [AddCommGroup V] [Module K V]
 
 /-- If a mode family `mode : ℤ → Module.End K V` satisfies the cubic charge covariance
 relation $Q \circ J_n = \omega^{n \bmod 3} (J_n \circ Q)$, then $J_n$ shifts any

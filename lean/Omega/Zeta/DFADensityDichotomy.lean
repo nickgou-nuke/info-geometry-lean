@@ -12,11 +12,22 @@ theorem dfa_vs_prime_count_seeds :
     (4 < 32 ∧ 32 < 4096) := by
   norm_num
 
-/-- Fibonacci growth vs polynomial: F_{m+2} > m for m ≥ 3.
-    thm:zeta-syntax-zeckendorf-primes-not-sofic -/
-theorem fib_gt_linear (m : ℕ) (hm : 3 ≤ m) (hm2 : m ≤ 20) :
-    m < Nat.fib (m + 2) := by
-  interval_cases m <;> simp [Nat.fib_add_two]
+/-- The Fibonacci sequence at index `m + 2` strictly exceeds `m` for every natural `m`.
+
+This arithmetic growth bound is a finite-algebraic input only; it does not establish
+non-regularity or non-soficity of any language. -/
+theorem fib_gt_linear : ∀ m : ℕ, m < Nat.fib (m + 2)
+  | 0 => by norm_num [Nat.fib]
+  | n + 1 => by
+      have ih := fib_gt_linear n
+      have hrec : Nat.fib (n + 3) = Nat.fib (n + 1) + Nat.fib (n + 2) := by
+        have h := Nat.fib_add_two (n := n + 1)
+        rw [show n + 1 + 2 = n + 3 by omega,
+          show n + 1 + 1 = n + 2 by omega] at h
+        exact h
+      have hpos : 0 < Nat.fib (n + 1) := Nat.fib_pos.mpr (by omega)
+      rw [show n + 1 + 2 = n + 3 by omega, hrec]
+      omega
 
 /-- Paper package: DFA density dichotomy seeds.
     thm:zeta-syntax-dfa-density-dichotomy -/

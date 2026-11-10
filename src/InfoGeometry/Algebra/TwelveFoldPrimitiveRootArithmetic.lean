@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Algebra.TwelveFoldPrimitiveRootArithmetic
@@ -9,7 +10,7 @@ namespace InfoGeometry.Algebra.TwelveFoldPrimitiveRootArithmetic
 physical interpretation is used in this owner. -/
 
 theorem primitive_root_pow_six_eq_neg
-    {K : Type*} [Field K] (ζ : K) (hζ : IsPrimitiveRoot ζ 12) :
+    {K : Type*} [CommRing K] [NoZeroDivisors K] (ζ : K) (hζ : IsPrimitiveRoot ζ 12) :
     ζ ^ 6 = -1 := by
   have h12 : ζ ^ 12 = 1 := hζ.pow_eq_one
   have h6_ne : ζ ^ 6 ≠ 1 := by
@@ -18,22 +19,22 @@ theorem primitive_root_pow_six_eq_neg
     omega
   have hprod : (ζ ^ 6 - 1) * (ζ ^ 6 + 1) = 0 := by
     calc
-      (ζ ^ 6 - 1) * (ζ ^ 6 + 1) = ζ ^ 12 - 1 := by ring
-      _ = 0 := by rw [h12]; ring
+      (ζ ^ 6 - 1) * (ζ ^ 6 + 1) = ζ ^ 12 - 1 := by noncomm_ring
+      _ = 0 := by rw [h12, sub_self]
   rcases mul_eq_zero.mp hprod with hminus | hplus
   · exact (h6_ne (sub_eq_zero.mp hminus)).elim
   · exact eq_neg_of_add_eq_zero_left hplus
 
 theorem primitive_root_pow_seven_eq_neg
-    {K : Type*} [Field K] (ζ : K) (hζ : IsPrimitiveRoot ζ 12) :
+    {K : Type*} [CommRing K] [NoZeroDivisors K] (ζ : K) (hζ : IsPrimitiveRoot ζ 12) :
     ζ ^ 7 = -ζ := by
-  rw [show ζ ^ 7 = ζ ^ 6 * ζ by ring,
+  rw [show ζ ^ 7 = ζ ^ 6 * ζ from pow_succ ζ 6,
     primitive_root_pow_six_eq_neg ζ hζ, neg_one_mul]
 
 theorem primitive_root_pow_three_sq_eq_neg
-    {K : Type*} [Field K] (ζ : K) (hζ : IsPrimitiveRoot ζ 12) :
+    {K : Type*} [CommRing K] [NoZeroDivisors K] (ζ : K) (hζ : IsPrimitiveRoot ζ 12) :
     (ζ ^ 3) ^ 2 = -1 := by
-  rw [show (ζ ^ 3) ^ 2 = ζ ^ 6 by ring,
+  rw [show (ζ ^ 3) ^ 2 = ζ ^ 6 by rw [← pow_mul],
     primitive_root_pow_six_eq_neg ζ hζ]
 
 end InfoGeometry.Algebra.TwelveFoldPrimitiveRootArithmetic

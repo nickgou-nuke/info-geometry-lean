@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.QCCRCuntzToeplitz
 
 open InfoGeometry.OperatorAlgebra.QCCRCuntzToeplitz
@@ -15,4 +20,3 @@ open InfoGeometry.OperatorAlgebra.QCCRCuntzToeplitz
 #print axioms bracket_neg_one
 #print axioms bracket_zero
 #print axioms bracket_one
-#print axioms compile_qccr_cuntz_toeplitz

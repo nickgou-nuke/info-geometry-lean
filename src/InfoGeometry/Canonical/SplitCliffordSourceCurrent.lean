@@ -23,7 +23,7 @@ Current modes attached to a split source carrier.
 `modeAction l v` is the `l`-th current mode applied to source vector `v`.
 -/
 structure SplitSourceCurrent
-    (𝕜 V Carrier : Type*) [Field 𝕜] [CharZero 𝕜]
+    (𝕜 V Carrier : Type*) [Ring 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     [AddCommGroup Carrier] [Module 𝕜 Carrier]
     (S : SplitSourceCarrier 𝕜 V Carrier) where
@@ -37,7 +37,7 @@ This is the honest theorem target that must be proved from source stabilization
 and transported normal ordering.
 -/
 def SplitCurrentTruncation
-    {𝕜 V Carrier : Type*} [Field 𝕜] [CharZero 𝕜]
+    {𝕜 V Carrier : Type*} [Ring 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     [AddCommGroup Carrier] [Module 𝕜 Carrier]
     {S : SplitSourceCarrier 𝕜 V Carrier}
@@ -52,7 +52,7 @@ mode vanishes whenever the source vector is past its cutoff, then the current
 satisfies the `atTop` truncation obligation.
 -/
 theorem splitCurrentTruncation_of_stableCutoff_zero
-    {𝕜 V Carrier : Type*} [Field 𝕜] [CharZero 𝕜]
+    {𝕜 V Carrier : Type*} [Ring 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     [AddCommGroup Carrier] [Module 𝕜 Carrier]
     {S : SplitSourceCarrier 𝕜 V Carrier}
@@ -73,7 +73,7 @@ theorem splitCurrentTruncation_of_stableCutoff_zero
 Convenience form using the carrier's built-in monotonicity field.
 -/
 theorem splitCurrentTruncation_of_stableCutoff
-    {𝕜 V Carrier : Type*} [Field 𝕜] [CharZero 𝕜]
+    {𝕜 V Carrier : Type*} [Ring 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     [AddCommGroup Carrier] [Module 𝕜 Carrier]
     {S : SplitSourceCarrier 𝕜 V Carrier}
@@ -89,7 +89,7 @@ section EndLift
 
 universe u
 
-variable (𝕜 : Type u) [Field 𝕜] [CharZero 𝕜]
+variable (𝕜 : Type u) [Ring 𝕜]
 variable (V : Type u) [AddCommGroup V] [Module 𝕜 V]
 
 /-- Endomorphism shorthand. -/
@@ -127,6 +127,19 @@ def rawBilinear
     (W : WittGenerators 𝕜 V)
     (i j : Int) : End 𝕜 V :=
   (W.create i).comp (W.annihilate j)
+
+/-- Truncation predicate for endomorphism-valued lifted current families. -/
+def SplitLiftTruncation (J : Int → End 𝕜 V) : Prop :=
+  ∀ v : V, ∀ᶠ l in (atTop : Filter Int), J l v = 0
+
+end EndLift
+
+section EndLiftCommRing
+
+universe u
+
+variable (𝕜 : Type u) [CommRing 𝕜]
+variable (V : Type u) [AddCommGroup V] [Module 𝕜 V]
 
 /-- Normal-ordered bilinear with explicit contraction term. -/
 def normalOrderedBilinear
@@ -207,10 +220,6 @@ structure SplitCurrentLiftDatum where
 def Jlift (L : SplitCurrentLiftDatum 𝕜 V) : Int → End 𝕜 V :=
   L.Jlift
 
-/-- Truncation predicate for endomorphism-valued lifted current families. -/
-def SplitLiftTruncation (J : Int → End 𝕜 V) : Prop :=
-  ∀ v : V, ∀ᶠ l in (atTop : Filter Int), J l v = 0
-
 /-- Truncation theorem readout for the lifted current family. -/
 theorem Jlift_trunc (L : SplitCurrentLiftDatum 𝕜 V) :
     SplitLiftTruncation 𝕜 V L.Jlift :=
@@ -223,6 +232,6 @@ theorem Jlift_from_cutoff (L : SplitCurrentLiftDatum 𝕜 V) :
         L.Jlift n v = cutoffCurrentMode 𝕜 V L.W L.contraction (L.cutoffs m) n v :=
   L.from_cutoff
 
-end EndLift
+end EndLiftCommRing
 
 end InfoGeometry.Canonical.SplitCliffordSourceCurrent

@@ -9,6 +9,7 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Analysis.Complex.Trigonometric
 import Mathlib.Tactic
 import Omega.Zeta.UnitaryDeterminantZeroUnitCircle
+import InfoGeometry.Physics.ArnoldHydrodynamicsBeltrami
 
 open scoped BigOperators Complex
 
@@ -82,15 +83,6 @@ structure BeltramiWaveguide where
   h_circ_pos : 0 < circulation_quantum
 
 namespace BeltramiWaveguide
-
-/-- In a Beltrami waveguide, the Lamb vector vanishes identically:
-    `L = ω × u = (λ u) × u = 0`. -/
-def lambVectorMagnitude (_W : BeltramiWaveguide) (_u_norm : ℝ) : ℝ := 0
-
-/-- **Theorem 2 (Lamb Annihilation in Waveguides)**:
-    The convective advection non-linearity is identically zero in all channels. -/
-theorem lamb_annihilation (W : BeltramiWaveguide) (u_norm : ℝ) :
-    W.lambVectorMagnitude u_norm = 0 := rfl
 
 end BeltramiWaveguide
 
@@ -180,14 +172,15 @@ theorem tao_fluid_computer_synthesis
     (W : BeltramiWaveguide)
     (G : PhaseShiftGate)
     (s1 : VortexQubitState)
-    (s2 : TwoVortexState) :
-    (W.lambVectorMagnitude 1.0 = 0) ∧
+    (s2 : TwoVortexState)
+    (u : ChiralVector3) :
+    (ArnoldBeltrami.lambVector (W.lambda • u) u = 0) ∧
     ((G.act s1).alpha = s1.alpha) ∧
     (c_abs (G.act s1).alpha ^ 2 + c_abs (G.act s1).beta ^ 2 = 1) ∧
     (s2.cnotGate.cnotGate = s2) ∧
     (c_abs (s2.cnotGate).c00 ^ 2 + c_abs (s2.cnotGate).c01 ^ 2 +
      c_abs (s2.cnotGate).c10 ^ 2 + c_abs (s2.cnotGate).c11 ^ 2 = 1) := by
-  exact ⟨W.lamb_annihilation 1.0,
+  exact ⟨ArnoldBeltrami.beltrami_lamb_vanishes W.lambda u,
          rfl,
          G.phase_gate_unitary s1,
          s2.cnot_involution,

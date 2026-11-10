@@ -47,16 +47,6 @@ This is the canonical definition for Phase 1.
 noncomputable def localDegreeSign (f : M → M) (x : M) : ℤ :=
   InfoGeometry.Canonical.ManifoldHomology.localDegreeSign f x
 
-set_option linter.unusedSectionVars false in
-/--
-A point is a regular value if the Jacobian is non-vanishing at all preimages.
--/
-theorem regularValue_of_nonvanishing_jacobian
-    (f : M → M) (y : M)
-    (h : ∀ x, f x = y → LinearMap.det (fderiv ℝ f x).toLinearMap ≠ 0) :
-    InfoGeometry.Canonical.ManifoldHomology.IsRegularValue f y := by
-  exact h
-
 /--
 Mapping degree at a regular value `y` with a finite fiber.
 -/

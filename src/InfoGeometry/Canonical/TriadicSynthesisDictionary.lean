@@ -30,9 +30,9 @@ uses that carrier rather than defining a duplicate coordinate API.
 -/
 
 /-- Cyclic sum of coordinate differences vanishes identically. -/
-theorem cyclic_diff_sum_zero (z1 z2 z3 : R) :
+theorem cyclic_diff_sum_zero {R : Type*} [Ring R] (z1 z2 z3 : R) :
     (z1 - z2) + (z2 - z3) + (z3 - z1) = 0 := by
-  ring
+  abel
 
 /-- THEOREM 3 (BCFW Mixed Arnold-Cohen Identity):
     Configuration 3-point residue identity governing Yangian-invariant amplitudes. -/

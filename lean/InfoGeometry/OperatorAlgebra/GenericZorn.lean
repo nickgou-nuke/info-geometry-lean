@@ -22,10 +22,10 @@ open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 
 namespace InfoGeometry.OperatorAlgebra.GenericZorn
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 @[ext]
-structure ZornSplitOctonion (R : Type*) [CommRing R] where
+structure ZornSplitOctonion (R : Type*) [Ring R] where
   a : R
   b : R
   x0 : R
@@ -66,10 +66,12 @@ def canonicalEquiv : ZornSplitOctonion R ≃ InfoGeometry.Canonical.ZornMatrix R
     · funext i
       fin_cases i <;> rfl
 
-def zero (R : Type*) [CommRing R] : ZornSplitOctonion R :=
+def zero (R : Type*) [Ring R] : ZornSplitOctonion R :=
   ⟨0, 0, 0, 0, 0, 0, 0, 0⟩
 
 instance : Zero (ZornSplitOctonion R) := ⟨zero R⟩
+
+instance : Inhabited (ZornSplitOctonion R) := ⟨0⟩
 
 def add (x y : ZornSplitOctonion R) : ZornSplitOctonion R :=
   ⟨x.a + y.a, x.b + y.b, x.x0 + y.x0, x.x1 + y.x1, x.x2 + y.x2,
@@ -85,12 +87,12 @@ instance : Neg (ZornSplitOctonion R) := ⟨neg⟩
 theorem add_zero (x : ZornSplitOctonion R) : x + 0 = x := by
   cases x
   change add _ (zero R) = _
-  congr <;> simp [add, zero]
+  simp [add, zero]
 
 theorem zero_add (x : ZornSplitOctonion R) : 0 + x = x := by
   cases x
   change add (zero R) _ = _
-  congr <;> simp [add, zero]
+  simp [add, zero]
 
 theorem add_comm (x y : ZornSplitOctonion R) : x + y = y + x := by
   cases x
@@ -120,7 +122,7 @@ theorem add_neg_cancel_right (x : ZornSplitOctonion R) : x + -x = 0 := by
   apply ZornSplitOctonion.ext <;>
     simp [add, neg, zero]
 
-def one (R : Type*) [CommRing R] : ZornSplitOctonion R :=
+def one (R : Type*) [Ring R] : ZornSplitOctonion R :=
   ⟨1, 1, 0, 0, 0, 0, 0, 0⟩
 
 theorem toCanonical_zero :
@@ -191,7 +193,7 @@ theorem mul_add (x y z : ZornSplitOctonion R) :
   cases z
   change mul _ (add _ _) = add (mul _ _) (mul _ _)
   apply ZornSplitOctonion.ext <;>
-    simp [mul, add] <;> ring
+    simp [mul, add] <;> noncomm_ring
 
 theorem add_mul (x y z : ZornSplitOctonion R) :
     mul (x + y) z = mul x z + mul y z := by
@@ -200,7 +202,7 @@ theorem add_mul (x y z : ZornSplitOctonion R) :
   cases z
   change mul (add _ _) _ = add (mul _ _) (mul _ _)
   apply ZornSplitOctonion.ext <;>
-    simp [mul, add] <;> ring
+    simp [mul, add] <;> noncomm_ring
 
 theorem toCanonical_mul (x y : ZornSplitOctonion R) :
     toCanonical (mul x y) = toCanonical x * toCanonical y := by
@@ -243,10 +245,46 @@ def conjugate (x : ZornSplitOctonion R) : ZornSplitOctonion R :=
   cases x
   ext <;> simp [conjugate]
 
+/-- Over a non-commutative ring `[Ring R]`, the difference between `norm x` and
+`norm (conjugate x)` is the diagonal Peirce commutator `x.a * x.b - x.b * x.a`,
+and `mul x (conjugate x)` carries the non-commutative self-cross anomalies
+`+(y × y)` and `-(x × x)` in its off-diagonal vector slots. -/
+theorem norm_sub_norm_conjugate_eq_commutator (x : ZornSplitOctonion R) :
+    norm x - norm (conjugate x) = x.a * x.b - x.b * x.a ∧
+    (mul x (conjugate x)).a = norm x ∧
+    (mul x (conjugate x)).b = x.b * x.a - (x.y0 * x.x0 + x.y1 * x.x1 + x.y2 * x.x2) ∧
+    (mul x (conjugate x)).x0 = x.y1 * x.y2 - x.y2 * x.y1 ∧
+    (mul x (conjugate x)).x1 = x.y2 * x.y0 - x.y0 * x.y2 ∧
+    (mul x (conjugate x)).x2 = x.y0 * x.y1 - x.y1 * x.y0 ∧
+    (mul x (conjugate x)).y0 = -(x.x1 * x.x2 - x.x2 * x.x1) ∧
+    (mul x (conjugate x)).y1 = -(x.x2 * x.x0 - x.x0 * x.x2) ∧
+    (mul x (conjugate x)).y2 = -(x.x0 * x.x1 - x.x1 * x.x0) := by
+  cases x
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+    simp [norm, conjugate, mul] <;> noncomm_ring
+
+/-- Over a non-commutative ring `[Ring R]`, the diagonal Peirce difference between
+`conjugate (mul x y)` and `mul (conjugate y) (conjugate x)` is the exact sum of
+scalar and vector-component commutators:
+`(x.b * y.b - y.b * x.b) + ((x.y0 * y.x0 - y.x0 * x.y0) + (x.y1 * y.x1 - y.x1 * x.y1) + (x.y2 * y.x2 - y.x2 * x.y2))`
+in the `a`-slot, and
+`(x.a * y.a - y.a * x.a) + ((x.x0 * y.y0 - y.y0 * x.x0) + (x.x1 * y.y1 - y.y1 * x.y1) + (x.x2 * y.y2 - y.y2 * x.x2))`
+in the `b`-slot. -/
+theorem conjugate_mul_peirce_anomaly_noncomm (x y : ZornSplitOctonion R) :
+    (conjugate (mul x y)).a - (mul (conjugate y) (conjugate x)).a =
+      (x.b * y.b - y.b * x.b) +
+        ((x.y0 * y.x0 - y.x0 * x.y0) + (x.y1 * y.x1 - y.x1 * x.y1) + (x.y2 * y.x2 - y.x2 * x.y2)) ∧
+    (conjugate (mul x y)).b - (mul (conjugate y) (conjugate x)).b =
+      (x.a * y.a - y.a * x.a) +
+        ((x.x0 * y.y0 - y.y0 * x.x0) + (x.x1 * y.y1 - y.y1 * x.x1) + (x.x2 * y.y2 - y.y2 * x.x2)) := by
+  cases x
+  cases y
+  constructor <;> simp [conjugate, mul] <;> noncomm_ring
+
 /- The canonical `ZornMatrix` owner does not currently expose a conjugation
    operation, so this cross-carrier statement is intentionally deferred. -/
 /-! Cayley conjugation is the anti-involution underlying the Zorn model. -/
-theorem conjugate_mul (x y : ZornSplitOctonion R) :
+theorem conjugate_mul {R : Type*} [CommRing R] (x y : ZornSplitOctonion R) :
     conjugate (mul x y) = mul (conjugate y) (conjugate x) := by
   cases x with
   | mk a b x0 x1 x2 y0 y1 y2 =>
@@ -259,7 +297,7 @@ theorem scalar_injective : Function.Injective (scalar : R → ZornSplitOctonion 
   intro r s h
   exact congrArg ZornSplitOctonion.a h
 
-theorem norm_mul (x y : ZornSplitOctonion R) :
+theorem norm_mul {R : Type*} [CommRing R] (x y : ZornSplitOctonion R) :
     norm (mul x y) = norm x * norm y := by
   cases x with
   | mk a b x0 x1 x2 y0 y1 y2 =>
@@ -269,7 +307,7 @@ theorem norm_mul (x y : ZornSplitOctonion R) :
       ring_nf
 
 theorem norm_eq_zero_left_or_right_of_mul_eq_zero
-    [NoZeroDivisors R] (x y : ZornSplitOctonion R)
+    {R : Type*} [CommRing R] [NoZeroDivisors R] (x y : ZornSplitOctonion R)
     (hxy : mul x y = zero R) :
     norm x = 0 ∨ norm y = 0 := by
   have hnorm : norm x * norm y = 0 := by
@@ -278,7 +316,7 @@ theorem norm_eq_zero_left_or_right_of_mul_eq_zero
     simpa [norm, zero] using h
   exact eq_zero_or_eq_zero_of_mul_eq_zero hnorm
 
-theorem mul_conjugate (x : ZornSplitOctonion R) :
+theorem mul_conjugate {R : Type*} [CommRing R] (x : ZornSplitOctonion R) :
     mul x (conjugate x) = scalar (norm x) := by
   cases x
   ext <;> simp [mul, conjugate, scalar, norm]
@@ -291,7 +329,7 @@ theorem mul_conjugate (x : ZornSplitOctonion R) :
   · ring
   · ring
 
-theorem norm_conjugate (x : ZornSplitOctonion R) :
+theorem norm_conjugate {R : Type*} [CommRing R] (x : ZornSplitOctonion R) :
     norm (conjugate x) = norm x := by
   cases x
   simp [norm, conjugate]

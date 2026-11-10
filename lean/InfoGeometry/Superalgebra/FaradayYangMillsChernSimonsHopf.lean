@@ -57,7 +57,7 @@ namespace InfoGeometry.Superalgebra.FaradayYangMillsChernSimons
 open InfoGeometry.Algebra.Zorn.ConcreteComposition
 open InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Multiplicative identity $\mathbf{1} = \mathrm{diag}(1, 1)$ in `ZornCell R`. -/
 def oneZ : ZornCell R :=
@@ -127,6 +127,10 @@ def faradayYangMillsCurvature (u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃ : R)
 def chernSimons3Form (u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃ c₁ c₂ c₃ : R) : R :=
   traceZ (mulZ (faradayYangMillsCurvature u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃)
                (daggerZ (maurerCartanForm u₁ u₂ u₃ c₁ c₂ c₃)))
+
+section CommRing
+
+variable {R : Type*} [CommRing R]
 
 /-- **Maurer–Cartan Commutator & Faraday–Yang–Mills Monopole Reduction
 (`maurer_cartan_commutator_and_faraday_monopole_reduction`):**
@@ -203,5 +207,7 @@ theorem faradayYangMills_zorn_noncommutative :
   have hr := congrArg ZornCell.r h
   revert hr
   decide
+
+end CommRing
 
 end InfoGeometry.Superalgebra.FaradayYangMillsChernSimons

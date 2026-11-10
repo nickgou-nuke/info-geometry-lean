@@ -12,7 +12,7 @@ any larger geometric identification.
 
 set_option linter.unusedSectionVars false
 
-variable {R : Type*} [CommRing R] [Invertible (2 : R)]
+variable {R : Type*} [CommRing R]
 variable {V : Type*} [AddCommGroup V] [Module R V]
 variable (Q : QuadraticForm R V)
 

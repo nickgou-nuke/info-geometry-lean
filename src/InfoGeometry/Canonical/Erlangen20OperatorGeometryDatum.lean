@@ -17,7 +17,7 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.Erlangen20OperatorGeometryDatum
 
-local instance moduleEndLieRing (R V : Type*) [CommRing R]
+local instance moduleEndLieRing (R V : Type*) [Ring R]
     [AddCommGroup V] [Module R V] : LieRing (Module.End R V) :=
   LieRing.ofAssociativeRing
 
@@ -71,7 +71,7 @@ unrelated carriers. -/
 
 structure OperatorIntertwiner
     (R V W : Type*)
-    [CommRing R]
+    [Ring R]
     [AddCommGroup V] [Module R V]
     [AddCommGroup W] [Module R W] where
   carrierEquiv : V ≃ₗ[R] W
@@ -81,7 +81,7 @@ structure OperatorIntertwiner
 
 theorem OperatorIntertwiner.target_eq_conjugated
     {R V W : Type*}
-    [CommRing R]
+    [Ring R]
     [AddCommGroup V] [Module R V]
     [AddCommGroup W] [Module R W]
     (I : OperatorIntertwiner R V W) :
@@ -95,7 +95,7 @@ theorem OperatorIntertwiner.target_eq_conjugated
 
 theorem OperatorIntertwiner.source_eq_conjugated
     {R V W : Type*}
-    [CommRing R]
+    [Ring R]
     [AddCommGroup V] [Module R V]
     [AddCommGroup W] [Module R W]
     (I : OperatorIntertwiner R V W) :

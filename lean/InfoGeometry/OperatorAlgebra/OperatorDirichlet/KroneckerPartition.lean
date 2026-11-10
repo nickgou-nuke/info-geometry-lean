@@ -26,6 +26,13 @@ namespace InfoGeometry.OperatorAlgebra.OperatorDirichlet
 open Matrix
 open scoped Kronecker
 
+/-- Over any (possibly non-commutative) ring `α`, the trace of a Kronecker product
+`A ⊗ₖ B` equals `trace A * trace B` in exact factor order. -/
+theorem trace_kronecker_ring {α : Type*} [Ring α] {m n : Type*} [Fintype m] [Fintype n]
+    (A : Matrix m m α) (B : Matrix n n α) :
+    trace (A ⊗ₖ B) = trace A * trace B :=
+  Matrix.trace_kronecker A B
+
 variable {α : Type*} [CommRing α] {m n : Type*} [Fintype m] [Fintype n]
   [DecidableEq m] [DecidableEq n]
 

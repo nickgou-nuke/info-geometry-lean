@@ -103,7 +103,7 @@ end EndomorphismCyclotomic
 /-- For an element `u` satisfying `u * u = 1`, `starA u = -u`, and `starA 1 = 1`, both opposite
 sheet combinations `(u, 1)` and `(u, -1)` have square zero under `cdMul starA (-1)`. -/
 theorem split_cayleyDickson_plus_minus_square_zero
-    {R A : Type*} [CommRing R] [NonAssocRing A] [Module R A]
+    {R A : Type*} [Ring R] [NonAssocRing A] [Module R A]
     (starA : A → A) (u : A)
     (h_star_one : starA 1 = 1)
     (h_star_neg_one : starA (-1 : A) = -1)
@@ -122,7 +122,7 @@ theorem split_cayleyDickson_plus_minus_square_zero
 `cdMul starA γ` into the first-order tangent equation
 `cdMul (cdLift D₀ z) z + cdMul z (cdLift D₀ z) = (0, 0)`. -/
 theorem cdLift_preserves_square_zero_tangent
-    {R A : Type*} [CommRing R] [NonUnitalNonAssocRing A] [Module R A]
+    {R A : Type*} [Ring R] [NonUnitalNonAssocRing A] [Module R A]
     [IsScalarTower R A A] [SMulCommClass R A A]
     (starA : A → A) (γ : R) (D₀ : A → A)
     (hD : IsStarDerivation R starA D₀)

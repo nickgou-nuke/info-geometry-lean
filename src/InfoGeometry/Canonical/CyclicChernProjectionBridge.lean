@@ -39,7 +39,7 @@ namespace InfoGeometry.Canonical.CyclicChernProjectionBridge
 open InfoGeometry.NCG
 
 variable {R A : Type*}
-variable [CommRing R] [Ring A] [Algebra R A]
+variable [Ring R] [Ring A] [Module R A]
 
 /-- Idempotent chiral projection in a noncommutative algebra. -/
 structure ChiralProjection where

@@ -10,6 +10,7 @@ import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.Ring
 import InfoGeometry.Clifford.Cl55OperatorFiveGradeClosure
 import InfoGeometry.SuperGrassmannian.FiveGradedLieSuperalgebra
@@ -168,7 +169,7 @@ theorem cl55_kkt_five_graded_ladder_synthesis
 The 5 eigenvalues $k \in \{-2, -1, 0, +1, +2\}$ of the KKT grading operator $D$ factor the
 quintic polynomial $x^5 - 5x^3 + 4x = x(x - 1)(x + 1)(x - 2)(x + 2)$, and the canonical
 grading derivation `adH` on $M_3(R)$ satisfies $\operatorname{ad}_H^5(X) - 5\operatorname{ad}_H^3(X) + 4\operatorname{ad}_H(X) = 0$. -/
-theorem kkt_quintic_characteristic_synthesis {R : Type*} [CommRing R]
+theorem kkt_quintic_characteristic_synthesis {R : Type*} [Ring R]
     (x : R) (X : Matrix (Fin 3) (Fin 3) R) :
     x * (x - 1) * (x + 1) * (x - 2) * (x + 2) = x ^ 5 - 5 * x ^ 3 + 4 * x ∧
     adH (adH (adH (adH (adH X)))) - 5 • adH (adH (adH X)) + 4 • adH X = 0 :=
@@ -180,7 +181,7 @@ theorem kkt_quintic_characteristic_synthesis {R : Type*} [CommRing R]
 
 section Twistor55Geometry
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- **The 16-Dimensional $\mathrm{Cl}(5,5)$ Twistor Space $\mathbb{T}_{(5,5)} = \mathbf{8}_s \oplus \mathbf{8}_c$**:
 A real Majorana–Weyl semi-spinor $Z = (\psi, \chi) \in \mathbb{T}_{(5,5)}$ decomposes under
@@ -221,7 +222,7 @@ If $X \in M_8(R)$ is skew-symmetric ($X^T = -X$), then every twistor $Z = (\psi,
 satisfying the Penrose incidence relation $\psi^A = X^{A\dot{A}} \chi_{\dot{A}}$ lies on the
 null quadric of `twistorNeutralPairing`:
 $$\langle Z, Z \rangle_{\mathbb{T}} = 2 \, \chi^T X \chi = 0.$$ -/
-theorem penrose_incidence_null_of_skewSymmetric
+theorem penrose_incidence_null_of_skewSymmetric {R : Type*} [CommRing R]
     (X : Matrix (Fin 8) (Fin 8) R) (Z : Twistor55 R)
     (h_skew : Xᵀ = -X)
     (h_inc : PenroseTwistorIncidence X Z) :
@@ -240,7 +241,7 @@ end Twistor55Geometry
 
 section SupercolorGrassmannian
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- **Günaydin–Gürsey Lepton–Quark Multiplet Carrier**:
 Decomposes an 8-component $\mathrm{Cl}(4,4)$ semi-spinor into:
@@ -264,7 +265,7 @@ def gunaydinGurseyCombine (m : GunaydinGurseyMultiplet R) : Fin 8 → R :=
 `gunaydinGurseySplit` and `gunaydinGurseyCombine` form an exact $R$-linear isomorphism
 between the 8-dimensional semi-spinor space $\mathbf{8}_s$ and the lepton-quark multiplet
 carrier $(\mathrm{Fin}\, 2 \to R) \times (\mathrm{Fin}\, 3 \to R) \times (\mathrm{Fin}\, 3 \to R)$. -/
-def gunaydinGurseyEquiv (R : Type*) [CommRing R] :
+def gunaydinGurseyEquiv (R : Type*) [Ring R] :
     (Fin 8 → R) ≃ₗ[R] GunaydinGurseyMultiplet R where
   toFun := gunaydinGurseySplit
   invFun := gunaydinGurseyCombine
@@ -308,7 +309,7 @@ incidence relation $\psi = X \chi$, the induced odd supercolor charge
 $\Theta^a = \psi^A \theta_A^a$ equals the dual semi-spinor pairing with the transported
 Grassmann frame $X^T \theta$:
 $$\Theta(\psi, \theta) = \Theta(\chi, X^T \theta).$$ -/
-theorem oddSupercolorIncidence_penrose_transport
+theorem oddSupercolorIncidence_penrose_transport {R : Type*} [CommRing R]
     (X : Matrix (Fin 8) (Fin 8) R) (Z : Twistor55 R)
     (θ : Matrix (Fin 8) (Fin 3) R)
     (h_inc : PenroseTwistorIncidence X Z) :
@@ -324,7 +325,7 @@ end SupercolorGrassmannian
 
 section SuperAndreevReflection
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- **Super-Andreev Twistor Reflection Operator ($\mathcal{R}_{\text{super}}$)**:
 Acts on a supertwistor $\mathcal{Z} = ((\psi, \chi), \eta, \xi, \ell) \in \mathbb{T}_{\text{super}}$ by:
@@ -367,11 +368,11 @@ theorem superAndreevReflect_order_four_and_symplectic_invariance
   · unfold superAndreevReflect twistorSymplecticForm
     dsimp
     rw [neg_dotProduct, dotProduct_neg]
-    ring
+    noncomm_ring
   · unfold superAndreevReflect colorSymplecticForm
     dsimp
     rw [neg_dotProduct, dotProduct_neg]
-    ring
+    noncomm_ring
 
 /-- **Bilinear Color-Singlet Invariant $\mathcal{I}_{\text{color}}(\eta, \xi) = \sum_{a=0}^2 \eta^a \xi_a$**
 in any (generally non-commutative) ring $A$. -/

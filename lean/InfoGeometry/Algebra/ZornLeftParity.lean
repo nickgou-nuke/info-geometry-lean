@@ -15,9 +15,29 @@ commutator `L_map (U (R := R) i) * L_map (V (R := R) i) - L_map (V (R := R) i) *
 
 namespace InfoGeometry.Algebra.ZornVectorMatrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 noncomputable section
+
+/-- Element-level individual mode parity on the native eight coordinates over any ring `R`. -/
+theorem mul_mode_commutator_apply (i : Fin 3) (X : ZornVectorMatrix R) :
+    sub (mul (U (R := R) i) (mul (V (R := R) i) X))
+      (mul (V (R := R) i) (mul (U (R := R) i) X)) =
+      ⟨X.a, (fun k => if k = i then X.v k else -X.v k),
+        (fun k => if k = i then -X.w k else X.w k), -X.b⟩ := by
+  fin_cases i <;> ext k <;> (try fin_cases k) <;>
+    simp [sub, add, neg, mul, U, V, ZornVec3.basis,
+      ZornVec3.dot, ZornVec3.cross]
+
+/-- Element-level normalization of one native unsigned CAR pair over any ring `R`. -/
+theorem mul_U_V_same_car (i : Fin 3) (X : ZornVectorMatrix R) :
+    add (mul (U (R := R) i) (mul (V (R := R) i) X))
+      (mul (V (R := R) i) (mul (U (R := R) i) X)) = X := by
+  fin_cases i <;> ext k <;> (try fin_cases k) <;>
+    simp [add, mul, U, V, ZornVec3.basis,
+      ZornVec3.dot, ZornVec3.cross]
+
+variable {R : Type*} [CommRing R]
 
 /-- Individual mode parity on the native eight coordinates. -/
 theorem left_mode_commutator_apply (i : Fin 3) (X : ZornVectorMatrix R) :

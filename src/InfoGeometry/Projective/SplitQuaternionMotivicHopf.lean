@@ -64,7 +64,7 @@ open InfoGeometry.Clifford.Coquaternion
 open InfoGeometry.Clifford.Coquaternion.Coquaternion
 open InfoGeometry.Projective.SplitComposition
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### Section 1: The Motivic Split Hopf Fibration S^(7,3) -> DP^1 -/
 
@@ -83,21 +83,21 @@ def action (v : SphereVector2 R) (u : Coquaternion R) : SphereVector2 R :=
 
 /-- Multiplicativity of the coquaternion reduced norm:
     normSq (p * q) = normSq p * normSq q. -/
-theorem normSq_mul (p q : Coquaternion R) :
+theorem normSq_mul {R : Type*} [CommRing R] (p q : Coquaternion R) :
     normSq (p * q) = normSq p * normSq q := by
   dsimp [normSq]
   ring
 
 /-- Multiplicativity of the 2D sphere norm under the right action:
     normSq2 (action v u) = normSq2 v * normSq u. -/
-theorem normSq2_action (v : SphereVector2 R) (u : Coquaternion R) :
+theorem normSq2_action {R : Type*} [CommRing R] (v : SphereVector2 R) (u : Coquaternion R) :
     normSq2 (action v u) = normSq2 v * normSq u := by
   dsimp [normSq2, action]
   rw [normSq_mul, normSq_mul]
   ring
 
 /-- Preservation of the total space S^(7,3) under the right action by S^(3,1). -/
-theorem action_preserves_sphere73 (v : SphereVector2 R) (u : Coquaternion R)
+theorem action_preserves_sphere73 {R : Type*} [CommRing R] (v : SphereVector2 R) (u : Coquaternion R)
     (hv : IsUnitSphere73 v) (hu : IsUnitSphere31 u) :
     IsUnitSphere73 (action v u) := by
   dsimp [IsUnitSphere73] at *
@@ -114,7 +114,7 @@ theorem action_mul (v : SphereVector2 R) (u1 u2 : Coquaternion R) :
 
 /-- Projector transformation under the fiber action:
     P(v ◁ u) = normSq u • P(v). -/
-theorem projector_action_scaling (v : SphereVector2 R) (u : Coquaternion R) :
+theorem projector_action_scaling {R : Type*} [CommRing R] (v : SphereVector2 R) (u : Coquaternion R) :
     projector (action v u) = normSq u • projector v := by
   ext i j : 1
   fin_cases i <;> fin_cases j <;> {
@@ -127,7 +127,7 @@ theorem projector_action_scaling (v : SphereVector2 R) (u : Coquaternion R) :
 
 /-- Projector gauge invariance under the action of the fiber group S^(3,1):
     When normSq u = 1, P(v ◁ u) = P(v). -/
-theorem projector_action_gauge_invariant (v : SphereVector2 R) (u : Coquaternion R)
+theorem projector_action_gauge_invariant {R : Type*} [CommRing R] (v : SphereVector2 R) (u : Coquaternion R)
     (hu : IsUnitSphere31 u) :
     projector (action v u) = projector v := by
   rw [projector_action_scaling]
@@ -156,11 +156,11 @@ def fiberInclusion (u : Coquaternion R) : SphereVector2 R :=
 theorem fiberInclusion_normSq (u : Coquaternion R) :
     normSq2 (fiberInclusion u) = normSq u := by
   dsimp [normSq2, fiberInclusion, normSq]
-  ring
+  noncomm_ring
 
 /-- The projector of a fiber point scales E11 by normSq u:
     P(fiberInclusion u) = normSq u • E11. -/
-theorem fiberInclusion_projector (u : Coquaternion R) :
+theorem fiberInclusion_projector {R : Type*} [CommRing R] (u : Coquaternion R) :
     projector (fiberInclusion u) = normSq u • E11 := by
   ext i j : 1
   fin_cases i <;> fin_cases j <;> {
@@ -168,7 +168,7 @@ theorem fiberInclusion_projector (u : Coquaternion R) :
   }
 
 /-- On the fiber group S^(3,1), the fiber inclusion maps exactly to the basepoint projector E11. -/
-theorem fiberInclusion_basepoint (u : Coquaternion R) (hu : IsUnitSphere31 u) :
+theorem fiberInclusion_basepoint {R : Type*} [CommRing R] (u : Coquaternion R) (hu : IsUnitSphere31 u) :
     projector (fiberInclusion u) = E11 := by
   rw [fiberInclusion_projector]
   dsimp [IsUnitSphere31] at hu
@@ -207,11 +207,11 @@ def half2 (q : Coquaternion R) : R :=
 theorem half_decomposition (q : Coquaternion R) :
     half1 q + half2 q = 2 * q.s := by
   dsimp [half1, half2]
-  ring
+  noncomm_ring
 
 /-- Voelkel's Half-Inverter Data for split composition algebras (Voelkel Section 3.2 & Definition 4.1.7).
     A pair (x, y) with N(x) = 1 such that the first half-coordinate of y * x is 1. -/
-structure HalfInverterData (R : Type*) [CommRing R] where
+structure HalfInverterData (R : Type*) [Ring R] where
   x : Coquaternion R
   y : Coquaternion R
   norm_x : normSq x = 1
@@ -234,9 +234,9 @@ theorem half_inverter_affine_shift (H : HalfInverterData R) (w : Coquaternion R)
     (H.y * H.x + w * H.x).s + (H.y * H.x + w * H.x).x
       = ((H.y * H.x).s + (H.y * H.x).x) + ((w * H.x).s + (w * H.x).x) := by
         simp only [add_s, add_x]
-        ring
+        abel
     _ = 1 + 0 := by rw [h1, hw]
-    _ = 1 := by ring
+    _ = 1 := add_zero 1
 
 /-! ### Section 4: Motivic Schubert Cell Decomposition of DP^1 -/
 
@@ -246,13 +246,13 @@ def affineChartProjector (z : Coquaternion R) : Mat2D R :=
 
 /-- Explicit matrix formula for the affine chart projector:
     affineChartProjector z = !![1, conj z; z, normSq z • 1]. -/
-theorem affineChartProjector_eq (z : Coquaternion R) :
+theorem affineChartProjector_eq {R : Type*} [CommRing R] (z : Coquaternion R) :
     affineChartProjector z = !![(1 : Coquaternion R), conj z;
                                 z, (normSq z) • (1 : Coquaternion R)] := by
   exact projector_affine_chart z
 
 /-- Chart separation theorem: the affine chart cell DP^1 \ {[0:1]} never meets the basepoint infinity E22
-    over any nontrivial commutative ring. -/
+    over any nontrivial ring. -/
 theorem affine_chart_ne_basepoint_infinity [Nontrivial R] (z : Coquaternion R) :
     affineChartProjector z ≠ E22 := by
   intro h
@@ -262,7 +262,7 @@ theorem affine_chart_ne_basepoint_infinity [Nontrivial R] (z : Coquaternion R) :
     rw [h00]
   dsimp [affineChartProjector, projector, E22, conj] at h_s
   have h_contra : (1 : R) = 0 := by
-    calc (1 : R) = (1 * 1 + 0 * -0 - 0 * -0 + 0 * -0 : R) := by ring
+    calc (1 : R) = (1 * 1 + 0 * -0 - 0 * -0 + 0 * -0 : R) := by noncomm_ring
     _ = 0 := h_s
   exact one_ne_zero h_contra
 

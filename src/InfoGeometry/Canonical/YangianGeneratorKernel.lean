@@ -3,7 +3,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 
-variable {K : Type*} [CommRing K]
+variable {K : Type*} [Ring K]
 variable {A : Type*} [AddCommGroup A] [Module K A]
 
 /-- 

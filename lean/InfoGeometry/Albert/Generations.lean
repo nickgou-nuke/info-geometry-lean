@@ -46,11 +46,24 @@ quantum-number table.  No geometric realization is asserted here. -/
 def threeGenerationsFermions : List FermionQuantumNumbers :=
   singleGenFermions ++ singleGenFermions ++ singleGenFermions
 
-theorem single_gen_fermions_count : singleGenFermions.length = 8 := rfl
+/-- Every label in the finite table satisfies the declared charge relation
+`Q = T₃ + Y/2`.  This checks the quantum-number assignments entry by entry. -/
+theorem single_generation_charge_relation (q : FermionQuantumNumbers)
+    (hq : q ∈ singleGenFermions) :
+    q.charge = q.weakIsospin + q.hypercharge / 2 := by
+  simp [singleGenFermions] at hq
+  rcases hq with h | h | h | h | h | h | h | h <;> subst q <;> norm_num
 
-/-- The finite table has 24 entries after three copies are concatenated. -/
-theorem three_generation_decomposition :
-    threeGenerationsFermions.length = 24 := rfl
+/-- The same charge relation holds for every entry in the three-copy table. -/
+theorem three_generation_charge_relation (q : FermionQuantumNumbers)
+    (hq : q ∈ threeGenerationsFermions) :
+    q.charge = q.weakIsospin + q.hypercharge / 2 := by
+  change q ∈ singleGenFermions ++ singleGenFermions ++ singleGenFermions at hq
+  rcases List.mem_append.mp hq with h12 | h3
+  · rcases List.mem_append.mp h12 with h1 | h2
+    · exact single_generation_charge_relation q h1
+    · exact single_generation_charge_relation q h2
+  · exact single_generation_charge_relation q h3
 
 /-- The total charge of the finite 24-entry table is zero. -/
 theorem three_generations_charge_sum_zero :

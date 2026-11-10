@@ -102,9 +102,8 @@ private theorem pairedBasis33_eq_pairedSplitVectors :
   rfl
 
 private lemma algHom_map_foldl_mul
-    {R A B : Type*} [CommSemiring R] [Semiring A] [Semiring B]
-    [Algebra R A] [Algebra R B]
-    (f : A →ₐ[R] B) (L : List A) (a : A) :
+    {F A B : Type*} [Semiring A] [Semiring B] [FunLike F A B] [MonoidHomClass F A B]
+    (f : F) (L : List A) (a : A) :
     f (L.foldl (· * ·) a) = (L.map f).foldl (· * ·) (f a) := by
   induction L generalizing a with
   | nil => simp

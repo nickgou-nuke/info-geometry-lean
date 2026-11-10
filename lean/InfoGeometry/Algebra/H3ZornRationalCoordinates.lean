@@ -15,7 +15,7 @@ noncomputable section
 
 open H3Zorn
 
-variable {R : Type*} [Field R]
+variable {R : Type*} [CommRing R] [Inv R]
 
 def h3ZornCoordinateR (X : H3Zorn R) : Fin 27 → R :=
   ![X.α₁, X.α₂, X.α₃,

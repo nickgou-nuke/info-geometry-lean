@@ -38,7 +38,7 @@ def PowerAction (G : Type u) (R : Type v) : Type (max u v) :=
   G → R → G
 
 /-- Predicate expressing the algebraic laws of a power structure. -/
-def IsPowerStructure {G : Type u} {R : Type v} [CommGroup G] [CommRing R]
+def IsPowerStructure {G : Type u} {R : Type v} [CommGroup G] [Ring R]
     (pow : PowerAction G R) : Prop :=
   (∀ A : G, pow A 0 = 1) ∧
     (∀ A : G, pow A 1 = A) ∧
@@ -46,27 +46,27 @@ def IsPowerStructure {G : Type u} {R : Type v} [CommGroup G] [CommRing R]
     (∀ (A : G) (m n : R), pow A (m + n) = pow A m * pow A n) ∧
     (∀ (A : G) (m n : R), pow (pow A n) m = pow A (m * n))
 
-theorem powerStructure_pow_zero {G : Type u} {R : Type v} [CommGroup G] [CommRing R]
+theorem powerStructure_pow_zero {G : Type u} {R : Type v} [CommGroup G] [Ring R]
     {pow : PowerAction G R} (hpow : IsPowerStructure pow) :
     ∀ A : G, pow A 0 = 1 := by
   exact hpow.1
 
-theorem powerStructure_pow_one {G : Type u} {R : Type v} [CommGroup G] [CommRing R]
+theorem powerStructure_pow_one {G : Type u} {R : Type v} [CommGroup G] [Ring R]
     {pow : PowerAction G R} (hpow : IsPowerStructure pow) :
     ∀ A : G, pow A 1 = A := by
   exact hpow.2.1
 
-theorem powerStructure_mul_pow {G : Type u} {R : Type v} [CommGroup G] [CommRing R]
+theorem powerStructure_mul_pow {G : Type u} {R : Type v} [CommGroup G] [Ring R]
     {pow : PowerAction G R} (hpow : IsPowerStructure pow) :
     ∀ (A B : G) (m : R), pow (A * B) m = pow A m * pow B m := by
   exact hpow.2.2.1
 
-theorem powerStructure_pow_add {G : Type u} {R : Type v} [CommGroup G] [CommRing R]
+theorem powerStructure_pow_add {G : Type u} {R : Type v} [CommGroup G] [Ring R]
     {pow : PowerAction G R} (hpow : IsPowerStructure pow) :
     ∀ (A : G) (m n : R), pow A (m + n) = pow A m * pow A n := by
   exact hpow.2.2.2.1
 
-theorem powerStructure_pow_mul {G : Type u} {R : Type v} [CommGroup G] [CommRing R]
+theorem powerStructure_pow_mul {G : Type u} {R : Type v} [CommGroup G] [Ring R]
     {pow : PowerAction G R} (hpow : IsPowerStructure pow) :
     ∀ (A : G) (m n : R), pow (pow A n) m = pow A (m * n) := by
   exact hpow.2.2.2.2
@@ -83,7 +83,7 @@ def lambdaFromPowerStructure {G : Type u} {R : Type v} (pow : PowerAction G R) (
 
 /-- A power structure defines an additive-to-multiplicative pre-lambda readout. -/
 theorem lambdaFromPowerStructure_isAddMulHom {G : Type u} {R : Type v}
-    [CommGroup G] [CommRing R] {pow : PowerAction G R}
+    [CommGroup G] [Ring R] {pow : PowerAction G R}
     (hpow : IsPowerStructure pow) (A₀ : G) :
     IsAddMulHom (lambdaFromPowerStructure pow A₀) := by
   refine ⟨?_, ?_⟩
@@ -92,7 +92,7 @@ theorem lambdaFromPowerStructure_isAddMulHom {G : Type u} {R : Type v}
     exact powerStructure_pow_add hpow A₀ m n
 
 /-- Any power structure sends the multiplicative identity of `G` to itself. -/
-theorem pow_one_base {G : Type u} {R : Type v} [CommGroup G] [CommRing R]
+theorem pow_one_base {G : Type u} {R : Type v} [CommGroup G] [Ring R]
     {pow : PowerAction G R} (hpow : IsPowerStructure pow) (m : R) :
     pow 1 m = (1 : G) := by
   have h_idem : pow 1 m = pow 1 m * pow 1 m := by
@@ -107,7 +107,7 @@ theorem pow_one_base {G : Type u} {R : Type v} [CommGroup G] [CommRing R]
     _ = 1 := by rw [mul_inv_cancel]
 
 /-- Exponentiation by a fixed element of `R` is a multiplicative group homomorphism. -/
-def powMonoidHom {G : Type u} {R : Type v} [CommGroup G] [CommRing R]
+def powMonoidHom {G : Type u} {R : Type v} [CommGroup G] [Ring R]
     {pow : PowerAction G R} (hpow : IsPowerStructure pow) (m : R) : G →* G where
   toFun A := pow A m
   map_one' := pow_one_base hpow m
@@ -116,7 +116,7 @@ def powMonoidHom {G : Type u} {R : Type v} [CommGroup G] [CommRing R]
 /-- Homomorphism compatibility of two explicitly compatible power structures. -/
 theorem power_structure_hom_compat
     {G₁ G₂ : Type u} [CommGroup G₁] [CommGroup G₂]
-    {R₁ R₂ : Type v} [CommRing R₁] [CommRing R₂]
+    {R₁ R₂ : Type v} [Ring R₁] [Ring R₂]
     {pow₁ : PowerAction G₁ R₁} {pow₂ : PowerAction G₂ R₂}
     (psi : G₁ →* G₂) (phi : R₁ →+* R₂)
     (h_compat : ∀ (A : G₁) (m : R₁), psi (pow₁ A m) = pow₂ (psi A) (phi m))

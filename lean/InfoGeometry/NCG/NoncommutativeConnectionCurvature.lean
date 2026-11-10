@@ -28,10 +28,10 @@ noncomputable section
 
 namespace InfoGeometry.NCG
 
-variable {R : Type*} [CommRing R]
-variable {A : Type*} [Ring A] [Algebra R A]
+variable {R : Type*} [Ring R]
+variable {A : Type*} [Ring A] [Module R A]
 
-structure AlgebraDerivation (R A : Type*) [CommRing R] [Ring A] [Algebra R A] where
+structure AlgebraDerivation (R A : Type*) [Ring R] [Ring A] [Module R A] where
   toLinearMap : A →ₗ[R] A
   leibniz' : ∀ x y, toLinearMap (x * y) = toLinearMap x * y + x * toLinearMap y
 
@@ -91,7 +91,8 @@ theorem covariantDerivative_zero (A_conn : A) :
   rw [D.map_zero, mul_zero, zero_mul, sub_self, add_zero]
 
 /-- Covariant differentiation is linear over the scalar algebra. -/
-theorem covariantDerivative_smul (r : R) (A_conn X : A) :
+theorem covariantDerivative_smul [IsScalarTower R A A] [SMulCommClass R A A]
+    (r : R) (A_conn X : A) :
     covariantDerivative D A_conn (r • X) =
       r • covariantDerivative D A_conn X := by
   dsimp [covariantDerivative]
@@ -237,7 +238,8 @@ theorem gaugeTransform_observable_mul (u : Aˣ) (X Y : A) :
         simp only [mul_assoc]
 
 /-- Gauge conjugation is linear over the declared scalar algebra. -/
-theorem gaugeTransform_smul (u : Aˣ) (r : R) (X : A) :
+theorem gaugeTransform_smul [IsScalarTower R A A] [SMulCommClass R A A]
+    (u : Aˣ) (r : R) (X : A) :
     gaugeTransform u (r • X) = r • gaugeTransform u X := by
   dsimp [gaugeTransform]
   simp only [smul_mul_assoc, mul_smul_comm]
@@ -249,13 +251,14 @@ theorem gaugeTransform_add (u : Aˣ) (X Y : A) :
   simp only [add_mul, mul_add]
 
 /-- The gauge action bundled as an `R`-linear endomorphism. -/
-def gaugeTransformLinear (u : Aˣ) : A →ₗ[R] A where
+def gaugeTransformLinear [IsScalarTower R A A] [SMulCommClass R A A] (u : Aˣ) : A →ₗ[R] A where
   toFun := gaugeTransform u
   map_add' X Y := gaugeTransform_add u X Y
   map_smul' r X := gaugeTransform_smul u r X
 
 @[simp]
-theorem gaugeTransformLinear_apply (u : Aˣ) (X : A) :
+theorem gaugeTransformLinear_apply [IsScalarTower R A A] [SMulCommClass R A A]
+    (u : Aˣ) (X : A) :
     (gaugeTransformLinear (R := R) (A := A) u) X = gaugeTransform u X := rfl
 
 /-- Gauge conjugation commutes with natural powers of an observable. -/

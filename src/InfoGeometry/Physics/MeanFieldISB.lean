@@ -3,8 +3,8 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Physics
 
-variable (R : Type*) [CommRing R]
-variable (L : Type*) [AddCommGroup L] [Module R L] [LieRing L] [LieAlgebra R L]
+variable (R : Type*) [Ring R]
+variable (L : Type*) [AddCommGroup L] [Module R L] [LieRing L]
 
 
 /-- A phenomenological Charge Symmetry Breaking (CSB) force. -/

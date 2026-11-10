@@ -12,9 +12,9 @@ is inferred beyond these exact hypotheses.
 
 namespace InfoGeometry.Canonical
 
-variable {K V : Type*} [Field K] [AddCommGroup V] [Module K V]
+variable {K V : Type*} [Ring K] [AddCommGroup V] [Module K V]
 
-structure CubicGlideLift (K V : Type*) [Field K] [AddCommGroup V] [Module K V] where
+structure CubicGlideLift (K V : Type*) [Ring K] [AddCommGroup V] [Module K V] where
   cubicCharge : V ≃ₗ[K] V
   axisTranslation : V ≃ₗ[K] V
   glide : V ≃ₗ[K] V

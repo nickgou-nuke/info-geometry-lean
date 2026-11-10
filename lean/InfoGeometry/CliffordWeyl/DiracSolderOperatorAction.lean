@@ -13,7 +13,7 @@ of those operations is assumed.
 -/
 namespace InfoGeometry.CliffordWeyl.SpinorBilinearSoldering
 open Matrix
-variable {R n : Type*} [CommRing R] [StarRing R] [Fintype n] [DecidableEq n]
+variable {R n : Type*} [Ring R] [StarRing R] [Fintype n] [DecidableEq n]
 
 theorem diracRow_operator_action (η ξ A : Matrix n n R)
     (hηξ : η * ξ = 1) (r : n → R) :

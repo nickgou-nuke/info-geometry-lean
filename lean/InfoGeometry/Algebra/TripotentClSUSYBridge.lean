@@ -2,6 +2,7 @@ import InfoGeometry.Algebra.Cl11Fermions
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzCantorSupergradedBridge
 import Mathlib.Tactic
+import Mathlib.Tactic.NoncommRing
 
 /-!
 # Tripotent connection: Cl(1,1) → Cuntz-Cantor word parity
@@ -209,9 +210,9 @@ theorem word_parity_matches_projectors :
 
 
 /-- Ring expansion: a(a-1)(a+1) = a(a²-1) = a³-a -/
-theorem tripotent_factor : ∀ {R : Type*} [CommRing R] (a : R), a * a * a - a = a * (a - 1) * (a + 1) := by
+theorem tripotent_factor : ∀ {R : Type*} [Ring R] (a : R), a * a * a - a = a * (a - 1) * (a + 1) := by
   intro R inst a
-  ring
+  noncomm_ring
 
 
 /-- a(a-1)(a+1) = 0, field has no zero divisors, so a ∈ {0, 1, -1} -/

@@ -46,7 +46,7 @@ namespace InfoGeometry.ColimitContinuum.TensorTowerColimit
 open scoped BigOperators
 open Matrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### Section 1: Canonical Block Inclusion and Tower Equivalences -/
 

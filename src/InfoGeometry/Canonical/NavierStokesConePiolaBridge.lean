@@ -48,7 +48,7 @@ open Matrix
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.ZornNavierStokesHydrodynamic
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-!
 ## 1. Piola Curl Adjugate Transformation Law

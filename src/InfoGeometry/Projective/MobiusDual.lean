@@ -6,10 +6,13 @@ namespace InfoGeometry.Projective.MobiusDual
 
 open scoped Matrix
 
-variable {R : Type*} [CommRing R]
+abbrev ProjectivePoint (R : Type*) [Ring R] := Matrix (Fin 2) (Fin 1) R
+abbrev ProjectiveLine (R : Type*) [Ring R] := Matrix (Fin 1) (Fin 2) R
 
-abbrev ProjectivePoint (R : Type*) [CommRing R] := Matrix (Fin 2) (Fin 1) R
-abbrev ProjectiveLine (R : Type*) [CommRing R] := Matrix (Fin 1) (Fin 2) R
+def pairing {R : Type*} [Ring R] (η : ProjectiveLine R) (θ : ProjectivePoint R) : R :=
+  η 0 0 * θ 0 0 + η 0 1 * θ 1 0
+
+variable {R : Type*} [CommRing R]
 
 structure SL2 (R : Type*) [CommRing R] where
   M : Matrix (Fin 2) (Fin 2) R
@@ -17,9 +20,6 @@ structure SL2 (R : Type*) [CommRing R] where
 
 def contragredient (A : SL2 R) : Matrix (Fin 2) (Fin 2) R :=
   !![A.M 1 1, -A.M 0 1; -A.M 1 0, A.M 0 0]
-
-def pairing (η : ProjectiveLine R) (θ : ProjectivePoint R) : R :=
-  η 0 0 * θ 0 0 + η 0 1 * θ 1 0
 
 def actPoint (A : SL2 R) (θ : ProjectivePoint R) : ProjectivePoint R :=
   !![A.M 0 0 * θ 0 0 + A.M 0 1 * θ 1 0;

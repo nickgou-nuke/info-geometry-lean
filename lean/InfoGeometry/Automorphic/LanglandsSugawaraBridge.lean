@@ -132,15 +132,6 @@ theorem centralCharge_eq_projectedL_zero_of_match
   simpa [hspectral, hcompleted] using B.centralCharge_eq_completedL
 
 /--
-Central charge also equals hidden exceptional grade-memory readout by the
-affine/Virasoro exceptional bridge.
--/
-theorem centralCharge_eq_hiddenGradeMemory :
-    B.affineVirasoro.centralChargeReadout B.state =
-      B.affineVirasoro.calibratedHiddenGradeMemoryReadout B.state :=
-  B.affineVirasoro.centralCharge_eq_hiddenGradeMemory B.state
-
-/--
 Hidden exceptional grade-memory readout equals the selected completed
 L-function value.
 
@@ -150,53 +141,20 @@ Virasoro central charge = hidden memory = completed L-value.
 theorem hiddenGradeMemory_eq_completedL :
     B.affineVirasoro.calibratedHiddenGradeMemoryReadout B.state =
       B.completedL B.spectralPoint := by
-  rw [← B.centralCharge_eq_hiddenGradeMemory]
+  change B.affineVirasoro.centralChargeReadout B.state = _
   exact B.centralCharge_eq_completedL
 
+/-- If the bridge evaluates at zero and its completed function is the
+projected function, then the hidden-memory readout is the projected value at
+zero. -/
+theorem hiddenGradeMemory_eq_projectedL_zero_of_match
+    (B : LanglandsSugawaraBridge P Finite Affine Vir State)
+    (hspectral : B.spectralPoint = 0)
+    (hcompleted : B.completedL = P.L) :
+    B.affineVirasoro.calibratedHiddenGradeMemoryReadout B.state = P.L 0 := by
+  change B.affineVirasoro.centralChargeReadout B.state = _
+  simpa [hspectral, hcompleted] using B.centralCharge_eq_completedL
+
 end LanglandsSugawaraBridge
-
-/--
-Installed owner target for the Langlands/Sugawara bridge.
-
-Once the bridge witness is supplied, it packages the strong
-`LanglandsPrimeResonanceStrongWitness` already carried by the bridge and
-exposes the central-charge/completed-L calibration.
--/
-def LanglandsSugawaraBridgeInstalledTarget
-    {Bulk : Type uBulk} {Boundary : Type uBoundary}
-    [AddCommGroup Bulk] [Module ℝ Bulk]
-    [AddCommGroup Boundary] [Module ℝ Boundary]
-    {W : SiegelEisensteinWitness Bulk Boundary}
-    (P : ProjectedAutomorphicLFunctionWitness W)
-    (Finite Affine Vir State : Type*)
-    [AddCommGroup Finite] [Module ℝ Finite]
-    [AddCommGroup Affine] [Module ℝ Affine]
-    [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
-    [AddCommGroup State] [Module ℝ State]
-    (B : LanglandsSugawaraBridge P Finite Affine Vir State) :=
-  ∃ _ : LanglandsPrimeResonanceStrongWitness P,
-    B.affineVirasoro.centralChargeReadout B.state =
-      B.completedL B.spectralPoint
-
-/--
-The installed target data follows from the supplied bridge witness.
--/
-def langlandsSugawaraBridgeInstalledTarget :
-    ∀ {Bulk : Type uBulk} {Boundary : Type uBoundary}
-      [AddCommGroup Bulk] [Module ℝ Bulk]
-      [AddCommGroup Boundary] [Module ℝ Boundary]
-      {W : SiegelEisensteinWitness Bulk Boundary}
-      (P : ProjectedAutomorphicLFunctionWitness W)
-      (Finite Affine Vir State : Type*)
-      [AddCommGroup Finite] [Module ℝ Finite]
-      [AddCommGroup Affine] [Module ℝ Affine]
-      [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
-      [AddCommGroup State] [Module ℝ State]
-      (B : LanglandsSugawaraBridge P Finite Affine Vir State),
-    LanglandsSugawaraBridgeInstalledTarget
-      (P := P) (Finite := Finite) (Affine := Affine) (Vir := Vir) (State := State) B := by
-  intro Bulk Boundary _ _ _ _ W P Finite Affine Vir State
-    _ _ _ _ _ _ _ _ _ _ B
-  exact ⟨B.resonance, B.centralCharge_eq_completedL⟩
 
 end InfoGeometry.Automorphic

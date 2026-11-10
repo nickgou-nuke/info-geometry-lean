@@ -8,7 +8,7 @@ namespace InfoGeometry.Canonical
 open InfoGeometry.Quantum.FourierOperatorZ4Slicing
 
 theorem fourier_operator_z4_slicing_canonical_capstone
-    {R : Type*} [CommRing R] (X : R) (z : ℂ) :
+    {R : Type*} [Ring R] (X : R) (z : ℂ) :
     (X ^ 5 - X = X * (X ^ 2 - 1) * (X ^ 2 + 1)) ∧
     (X ^ 5 = X ↔ X * (X ^ 2 - 1) * (X ^ 2 + 1) = 0) ∧
     (X ^ 4 = 1 → X ^ 5 = X) ∧

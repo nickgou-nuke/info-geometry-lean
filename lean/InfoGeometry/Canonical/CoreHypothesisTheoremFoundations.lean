@@ -101,10 +101,10 @@ end BdGBlockSymmetries
 
 section TrifoldDecomposition
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Trifold representation of a 2-graded matrix with trace and supertrace. -/
-structure GradedMatrix2 (R : Type*) [CommRing R] where
+structure GradedMatrix2 (R : Type*) [Ring R] where
   diag_top : R
   diag_bot : R
   off_diag1 : R
@@ -112,7 +112,7 @@ structure GradedMatrix2 (R : Type*) [CommRing R] where
 
 namespace GradedMatrix2
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def tr (M : GradedMatrix2 R) : R := M.diag_top + M.diag_bot
 def str (M : GradedMatrix2 R) : R := M.diag_top - M.diag_bot
@@ -145,19 +145,27 @@ theorem diagonal_reconstruction (M : GradedMatrix2 R) (two_inv : R) (htwo : 2 * 
     alpha M two_inv + beta M two_inv = M.diag_top ∧
     alpha M two_inv - beta M two_inv = M.diag_bot := by
   dsimp [alpha, beta, tr, str]
+  have h1 : (M.diag_top + M.diag_bot) + (M.diag_top - M.diag_bot) = 2 * M.diag_top := by
+    rw [two_mul]
+    abel
+  have h2 : (M.diag_top + M.diag_bot) - (M.diag_top - M.diag_bot) = 2 * M.diag_bot := by
+    rw [two_mul]
+    abel
+  have hc : two_inv * 2 = 2 * two_inv := by
+    rw [mul_two, two_mul]
   constructor
   · calc two_inv * (M.diag_top + M.diag_bot) + two_inv * (M.diag_top - M.diag_bot)
       _ = two_inv * ((M.diag_top + M.diag_bot) + (M.diag_top - M.diag_bot)) := by rw [← mul_add]
-      _ = two_inv * (2 * M.diag_top) := by ring_nf
-      _ = (two_inv * 2) * M.diag_top := by rw [mul_assoc]
-      _ = (2 * two_inv) * M.diag_top := by rw [mul_comm two_inv 2]
+      _ = two_inv * (2 * M.diag_top) := by rw [h1]
+      _ = (two_inv * 2) * M.diag_top := by rw [← mul_assoc]
+      _ = (2 * two_inv) * M.diag_top := by rw [hc]
       _ = 1 * M.diag_top := by rw [htwo]
       _ = M.diag_top := by rw [one_mul]
   · calc two_inv * (M.diag_top + M.diag_bot) - two_inv * (M.diag_top - M.diag_bot)
       _ = two_inv * ((M.diag_top + M.diag_bot) - (M.diag_top - M.diag_bot)) := by rw [← mul_sub]
-      _ = two_inv * (2 * M.diag_bot) := by ring_nf
-      _ = (two_inv * 2) * M.diag_bot := by rw [mul_assoc]
-      _ = (2 * two_inv) * M.diag_bot := by rw [mul_comm two_inv 2]
+      _ = two_inv * (2 * M.diag_bot) := by rw [h2]
+      _ = (two_inv * 2) * M.diag_bot := by rw [← mul_assoc]
+      _ = (2 * two_inv) * M.diag_bot := by rw [hc]
       _ = 1 * M.diag_bot := by rw [htwo]
       _ = M.diag_bot := by rw [one_mul]
 

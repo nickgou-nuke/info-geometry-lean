@@ -10,7 +10,7 @@ Epoch 4 Master Release Integration.
 This module verifies that the Metriplectic Topology formally aggregates
 with the discrete Cole-Fury roots and exceptional G2 twisted boundaries.
 -/
-abbrev Epoch4MasterSystem (M : Type) [CommRing M] :=
+abbrev Epoch4MasterSystem (M : Type) [Ring M] :=
   InfoGeometry.Topology.Metriplectic.MetriplecticStructure M
 
 /--
@@ -18,7 +18,7 @@ THEOREM: Holographic Thermodynamic Unification (Epoch 4).
 Proves that under the defined dual-bracket metriplectic evolution,
 the exact thermodynamic laws are rigidly structured and structurally isolated.
 -/
-theorem epoch4_holographic_closure {M : Type} [CommRing M]
+theorem epoch4_holographic_closure {M : Type} [Ring M]
     (sys : Epoch4MasterSystem M) :
     sys.poisson sys.S sys.H = 0 ∧
       sys.metric sys.H sys.S = 0 := by

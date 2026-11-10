@@ -5,6 +5,8 @@ Authors: InfoGeometry Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
+import Mathlib.Tactic.Abel
 import Mathlib.Tactic.LinearCombination
 import InfoGeometry.Canonical.SplitOctonionClifford33Soldering
 
@@ -30,11 +32,11 @@ open InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge
 open InfoGeometry.Canonical.SplitOctonionParaKahlerNullCone
 open InfoGeometry.Canonical.SplitOctonionClifford33Soldering
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. Некомутативна Спинорна Алгебра (`Mat2 R`) и Спояваща Форма -/
 
-/-- Некомутативна 2×2 спинорна матрица над комутативен пръстен `R`. -/
+/-- Некомутативна 2×2 спинорна матрица над пръстен `R`. -/
 @[ext]
 structure Mat2 (R : Type*) where
   m11 : R
@@ -45,7 +47,7 @@ structure Mat2 (R : Type*) where
 
 namespace Mat2
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : Mat2 R := ⟨0, 0, 0, 0⟩
 def one  : Mat2 R := ⟨1, 0, 0, 1⟩
@@ -91,66 +93,66 @@ theorem mul_noncommutative_int :
 theorem mul_add (A B C : Mat2 R) :
     mul A (add B C) = add (mul A B) (mul A C) := by
   dsimp [mul, add]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 @[simp]
 theorem add_mul (A B C : Mat2 R) :
     mul (add A B) C = add (mul A C) (mul B C) := by
   dsimp [mul, add]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 @[simp]
 theorem mul_assoc (A B C : Mat2 R) :
     mul (mul A B) C = mul A (mul B C) := by
   dsimp [mul]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 @[simp]
 theorem one_mul (A : Mat2 R) :
     mul one A = A := by
   dsimp [mul, one]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 @[simp]
 theorem mul_one (A : Mat2 R) :
     mul A one = A := by
   dsimp [mul, one]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 @[simp]
 theorem zero_add (A : Mat2 R) :
     add zero A = A := by
   dsimp [add, zero]
-  ext <;> ring
+  ext <;> abel
 
 @[simp]
 theorem add_zero (A : Mat2 R) :
     add A zero = A := by
   dsimp [add, zero]
-  ext <;> ring
+  ext <;> abel
 
 theorem add_assoc (A B C : Mat2 R) :
     add (add A B) C = add A (add B C) := by
   dsimp [add]
-  ext <;> ring
+  ext <;> abel
 
 theorem add_comm (A B : Mat2 R) :
     add A B = add B A := by
   dsimp [add]
-  ext <;> ring
+  ext <;> abel
 
-theorem trace_mul_comm (A B : Mat2 R) :
+theorem trace_mul_comm {R : Type*} [CommRing R] (A B : Mat2 R) :
     trace (mul A B) = trace (mul B A) := by
   dsimp [trace, mul]
   ring
 
-theorem transpose_mul (A B : Mat2 R) :
+theorem transpose_mul {R : Type*} [CommRing R] (A B : Mat2 R) :
     transpose (mul A B) = mul (transpose B) (transpose A) := by
   dsimp [transpose, mul]
   ext <;> ring
 
 /-- Дуалност между детерминантата на спояващата форма и псевдо-римановата метрика. -/
-theorem solderingForm_det_eq_metric (t x y z : R) :
+theorem solderingForm_det_eq_metric {R : Type*} [CommRing R] (t x y z : R) :
     det (solderingForm t x y z) = t^2 - z^2 - x^2 + y^2 := by
   dsimp [det, solderingForm]
   ring
@@ -162,9 +164,9 @@ theorem solderingForm_trace (t x y z : R) :
   have _ := (x, y, z)
   constructor
   · dsimp [trace, solderingForm]
-    ring
+    noncomm_ring
   · dsimp [trace, solderingForm]
-    ring
+    noncomm_ring
 
 end Mat2
 
@@ -219,10 +221,10 @@ theorem matrixDeriv_mul {d : R → R} (hd : IsScalarDerivation d) (A B : Mat2 R)
   rcases hd with ⟨h_add, h_leib, _⟩
   dsimp [matrixDeriv, Mat2.mul, Mat2.add]
   ext
-  · simp only [h_add, h_leib]; ring
-  · simp only [h_add, h_leib]; ring
-  · simp only [h_add, h_leib]; ring
-  · simp only [h_add, h_leib]; ring
+  · simp only [h_add, h_leib]; abel
+  · simp only [h_add, h_leib]; abel
+  · simp only [h_add, h_leib]; abel
+  · simp only [h_add, h_leib]; abel
 
 /-! ### 3. Точна Калибровъчна Ковариантност на Оператора на Дирак (0 `sorry`) -/
 
@@ -252,7 +254,7 @@ theorem gauge_identity {d : R → R} (hd : IsScalarDerivation d)
       Mat2.one_mul] at h2
   have hz : Mat2.mul G.U Mat2.zero = Mat2.zero := by
     dsimp [Mat2.mul, Mat2.zero]
-    ext <;> ring
+    ext <;> noncomm_ring
   rw [hz] at h2
   exact h2
 
@@ -282,13 +284,13 @@ theorem dirac_gauge_covariance {d : R → R} (hd : IsScalarDerivation d)
         Mat2.mul G.U (Mat2.mul A psi) := by
     calc Mat2.mul (Mat2.mul G.U (Mat2.mul A G.U_trans)) (Mat2.mul G.U psi)
       _ = Mat2.mul G.U (Mat2.mul A (Mat2.mul (Mat2.mul G.U_trans G.U) psi)) := by
-          dsimp [Mat2.mul]; ext <;> ring
+          dsimp [Mat2.mul]; ext <;> noncomm_ring
       _ = Mat2.mul G.U (Mat2.mul A (Mat2.mul Mat2.one psi)) := by rw [hG.2.2]
       _ = Mat2.mul G.U (Mat2.mul A psi) := by rw [Mat2.one_mul]
   have h_mc :
       Mat2.mul (Mat2.mul G.U (matrixDeriv d G.U_trans)) (Mat2.mul G.U psi) =
         Mat2.mul (Mat2.mul G.U (Mat2.mul (matrixDeriv d G.U_trans) G.U)) psi := by
-    dsimp [Mat2.mul]; ext <;> ring
+    dsimp [Mat2.mul]; ext <;> noncomm_ring
   rw [h_conn, h_mc]
   have h_rearrange :
       Mat2.add
@@ -301,11 +303,11 @@ theorem dirac_gauge_covariance {d : R → R} (hd : IsScalarDerivation d)
           psi)
         (Mat2.mul G.U (Mat2.add (matrixDeriv d psi) (Mat2.mul A psi))) := by
     dsimp [Mat2.add, Mat2.mul]
-    ext <;> ring
+    ext <;> noncomm_ring
   rw [h_rearrange, h_gauge]
   have hz_psi : Mat2.mul Mat2.zero psi = Mat2.zero := by
     dsimp [Mat2.mul, Mat2.zero]
-    ext <;> ring
+    ext <;> noncomm_ring
   rw [hz_psi, Mat2.zero_add]
 
 /-! ### 4. Квадратично Изображение на Зайберг–Витен и Спояващ Мост към `Cl(3,3)` -/
@@ -322,16 +324,20 @@ def swQuadMap (Psi : Mat2 R) (half : R) : Mat2 R :=
 theorem sw_quad_map_traceless (Psi : Mat2 R) (half : R) (h_half : 2 * half = 1) :
     Mat2.trace (swQuadMap Psi half) = 0 := by
   dsimp [swQuadMap, Mat2.sub, Mat2.trace, Mat2.scale, Mat2.one, Mat2.mul, Mat2.transpose]
-  have h : 1 - 2 * half = 0 := by linear_combination -h_half
-  simp [Mat2.trace, Mat2.mul, Mat2.transpose, Mat2.sub, Mat2.scale, Mat2.one]
-  linear_combination
-    (Psi.m11 ^ 2 + Psi.m12 ^ 2 + Psi.m21 ^ 2 + Psi.m22 ^ 2) * h
+  calc
+    (Psi.m11 * Psi.m11 + Psi.m12 * Psi.m12 -
+        (half * (Psi.m11 * Psi.m11 + Psi.m12 * Psi.m12 + (Psi.m21 * Psi.m21 + Psi.m22 * Psi.m22)) * 1)) +
+      (Psi.m21 * Psi.m21 + Psi.m22 * Psi.m22 -
+        (half * (Psi.m11 * Psi.m11 + Psi.m12 * Psi.m12 + (Psi.m21 * Psi.m21 + Psi.m22 * Psi.m22)) * 1)) =
+      (1 - 2 * half) * (Psi.m11 * Psi.m11 + Psi.m12 * Psi.m12 + Psi.m21 * Psi.m21 + Psi.m22 * Psi.m22) := by
+        noncomm_ring
+    _ = 0 := by rw [h_half, sub_self, zero_mul]
 
 /--
 Теорема 3 (Еквивариантност на квадратичното матрично изображение на Зайберг–Витен):
 `σ(U · ψ) = U · σ(ψ) · Uᵀ`.
 -/
-theorem sw_quad_map_gauge_equivariant (Psi : Mat2 R)
+theorem sw_quad_map_gauge_equivariant {R : Type*} [CommRing R] (Psi : Mat2 R)
     (G : OrthogonalGaugeData R) (hG : IsOrthogonalGauge G) (half : R) :
     swQuadMap (Mat2.mul G.U Psi) half =
       Mat2.mul G.U (Mat2.mul (swQuadMap Psi half) G.U_trans) := by
@@ -373,7 +379,8 @@ theorem sw_quad_map_gauge_equivariant (Psi : Mat2 R)
 точното Клифордово антикомутаторно тъждество върху 8-мерното спинорно пространство:
 `L_{ι(z₁)}(L_{ι(z₂)}(y)) + L_{ι(z₂)}(L_{ι(z₁)}(y)) = g(z₁, z₂) • y`.
 -/
-theorem octonionic_clifford33_soldering_bridge (z₁ z₂ : ParaKahlerVec R)
+theorem octonionic_clifford33_soldering_bridge {R : Type*} [CommRing R]
+    (z₁ z₂ : ParaKahlerVec R)
     (y : ZornSplitOctonion R) :
     zornAdd (zornMul (embedVec z₁) (zornMul (embedVec z₂) y))
             (zornMul (embedVec z₂) (zornMul (embedVec z₁) y)) =
@@ -383,6 +390,7 @@ theorem octonionic_clifford33_soldering_bridge (z₁ z₂ : ParaKahlerVec R)
 /-! ### 5. Главен Синтез на Раздел 143b -/
 
 theorem seiberg_witten_noncommutative_gauge_synthesis
+    {R : Type*} [CommRing R]
     {d : R → R} (hd : IsScalarDerivation d)
     (A Psi : Mat2 R) (G : OrthogonalGaugeData R) (hG : IsOrthogonalGauge G)
     (half : R) (h_half : 2 * half = 1)

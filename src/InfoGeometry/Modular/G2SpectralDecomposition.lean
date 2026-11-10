@@ -22,8 +22,8 @@ categorical infrastructure already present in the repository.
 
 namespace InfoGeometry.Modular.G2SpectralDecomposition
 
-variable {R : Type*} [CommRing R]
-variable {A : Type*} [Ring A] [Algebra R A]
+variable {R : Type*} [Ring R]
+variable {A : Type*} [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- An element `T : A` is a **tripotent** if `T³ = T`. -/
  def IsTripotent (T : A) : Prop := T * T * T = T
@@ -42,6 +42,7 @@ variable {A : Type*} [Ring A] [Algebra R A]
    T * T * T - T = T * (T - 1) * (T + 1) := by
    noncomm_ring
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 /-- Partition of unity for the three Peirce projectors. -/
  theorem peirce_partition_of_unity (inv2 : R) (h2 : (2 : R) * inv2 = 1) (T : A) :
    projPlus inv2 T + projMinus inv2 T + projZero T = (1 : A) := by
@@ -50,9 +51,10 @@ variable {A : Type*} [Ring A] [Algebra R A]
    have h_add : (T * T + T) + (T * T - T) = (2 : R) • (T * T) := by
      rw [two_smul]
      abel_nf
-   rw [h_add, smul_smul, mul_comm inv2 (2 : R), h2, one_smul]
+   rw [h_add, smul_smul, (Commute.ofNat_right inv2 2).eq, h2, one_smul]
    abel_nf
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 /-- Reconstruction of `T` from the projectors: `p₊ - p₋ = T`. -/
  theorem peirce_reconstruction (inv2 : R) (h2 : (2 : R) * inv2 = 1) (T : A) :
    projPlus inv2 T - projMinus inv2 T = T := by
@@ -61,8 +63,9 @@ variable {A : Type*} [Ring A] [Algebra R A]
    have h_sub : (T * T + T) - (T * T - T) = (2 : R) • T := by
      rw [two_smul]
      abel_nf
-   rw [h_sub, smul_smul, mul_comm inv2 (2 : R), h2, one_smul]
+   rw [h_sub, smul_smul, (Commute.ofNat_right inv2 2).eq, h2, one_smul]
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 /-- Square reconstruction: `p₊ + p₋ = T²`. -/
  theorem peirce_sq_reconstruction (inv2 : R) (h2 : (2 : R) * inv2 = 1) (T : A) :
    projPlus inv2 T + projMinus inv2 T = T * T := by
@@ -71,20 +74,22 @@ variable {A : Type*} [Ring A] [Algebra R A]
    have h_add : (T * T + T) + (T * T - T) = (2 : R) • (T * T) := by
      rw [two_smul]
      abel_nf
-   rw [h_add, smul_smul, mul_comm inv2 (2 : R), h2, one_smul]
+   rw [h_add, smul_smul, (Commute.ofNat_right inv2 2).eq, h2, one_smul]
 
+omit [IsScalarTower R A A] in
 /-- Eigenvalue `+1` on `p₊`: `T * p₊ = p₊`. -/
  theorem peirce_eigen_plus (inv2 : R) (T : A) (hT : IsTripotent T) :
    T * projPlus inv2 T = projPlus inv2 T := by
    dsimp [projPlus]
-   rw [Algebra.mul_smul_comm, mul_add, ← mul_assoc, hT]
+   rw [mul_smul_comm, mul_add, ← mul_assoc, hT]
    rw [add_comm T (T * T)]
 
+omit [IsScalarTower R A A] in
 /-- Eigenvalue `-1` on `p₋`: `T * p₋ = -p₋`. -/
  theorem peirce_eigen_minus (inv2 : R) (T : A) (hT : IsTripotent T) :
    T * projMinus inv2 T = - projMinus inv2 T := by
    dsimp [projMinus]
-   rw [Algebra.mul_smul_comm, mul_sub, ← mul_assoc, hT]
+   rw [mul_smul_comm, mul_sub, ← mul_assoc, hT]
    have hneg : T - T * T = - (T * T - T) := by abel_nf
    rw [hneg, smul_neg]
 
@@ -115,8 +120,8 @@ variable {A : Type*} [Ring A] [Algebra R A]
        _ = T * T + T + (T + T * T) := by rw [hT4, hT3, hT]
        _ = (T * T + T) + (T * T + T) := by abel_nf
        _ = (2 : R) • (T * T + T) := by rw [two_smul]
-   rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul, h_mul,
-       smul_smul, mul_assoc, mul_comm inv2 (2 : R), h2, mul_one]
+   rw [smul_mul_assoc, mul_smul_comm, smul_smul, h_mul,
+       smul_smul, mul_assoc, (Commute.ofNat_right inv2 2).eq, h2, mul_one]
 
 /-- Idempotency of `p₋`. -/
  theorem peirce_idempotent_minus (inv2 : R) (h2 : (2 : R) * inv2 = 1) (T : A) (hT : IsTripotent T) :
@@ -139,8 +144,8 @@ variable {A : Type*} [Ring A] [Algebra R A]
        _ = T * T - T - (T - T * T) := by rw [hT4, hT3, hT]
        _ = (T * T - T) + (T * T - T) := by abel_nf
        _ = (2 : R) • (T * T - T) := by rw [two_smul]
-   rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul, h_mul,
-       smul_smul, mul_assoc, mul_comm inv2 (2 : R), h2, mul_one]
+   rw [smul_mul_assoc, mul_smul_comm, smul_smul, h_mul,
+       smul_smul, mul_assoc, (Commute.ofNat_right inv2 2).eq, h2, mul_one]
 
 /-- Orthogonality `p₊ * p₋ = 0`. -/
  theorem peirce_orthogonal_plus_minus (inv2 : R) (T : A) (hT : IsTripotent T) :
@@ -162,8 +167,9 @@ variable {A : Type*} [Ring A] [Algebra R A]
        _ = T * T * (T * T) + T * (T * T) - (T * T * T + T * T) := by rw [add_mul, add_mul]
        _ = T * T + T - (T + T * T) := by rw [hT4, hT3, hT]
        _ = 0 := by abel_nf
-   rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul, h_mul, smul_zero]
+   rw [smul_mul_assoc, mul_smul_comm, smul_smul, h_mul, smul_zero]
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 /-- Master theorem: spectral resolution of the modular Hamiltonian.
     For any scalars `α β : R` we have
     `α • 1 + β • T = (α + β) • p₊ + (α - β) • p₋ + α • p₀`. -/

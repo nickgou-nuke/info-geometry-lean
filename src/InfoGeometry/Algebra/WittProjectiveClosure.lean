@@ -78,7 +78,7 @@ end CommRing
 
 section ClosureOnly
 
-variable (𝕜 : Type*) [CommRing 𝕜]
+variable (𝕜 : Type*) [Ring 𝕜]
 
 theorem projective_sum_mem_of_bracket_coeff_ne_zero
     {m n : ℤ} (hm : m ∈ ProjectiveClosure) (hn : n ∈ ProjectiveClosure)

@@ -12,7 +12,7 @@ open Matrix
 open InfoGeometry.SuperGrassmannian.GeneralSupercarrierDeformation
 open InfoGeometry.SuperGrassmannian.RealSuperGrassmannianModule
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Representation of the scalar `1|1` carrier by one-point block matrices. -/
 def scalarRepresentation (M : SuperMatrix R) :
@@ -41,9 +41,18 @@ theorem general_superTrace_scalarRepresentation (M : SuperMatrix R) :
   change Matrix.trace A - Matrix.trace D = M.A - M.D
   rw [Matrix.trace_fin_one, Matrix.trace_fin_one]
 
+/-- Over any non-commutative ring `[Ring R]`, the scalar odd-square supertrace equals
+    the commutator defect `B * C - C * B`. -/
+theorem scalar_odd_square_from_general_noncomm
+    (B C : R) :
+    SuperMatrix.supertrace
+      ((⟨0, B, C, 0⟩ : SuperMatrix R) * ⟨0, B, C, 0⟩) = B * C - C * B := by
+  dsimp [SuperMatrix.supertrace]
+  noncomm_ring
+
 /-- The scalar odd-square identity is inherited from the general chiral-square
 supertrace theorem through the multiplication-preserving representation. -/
-theorem scalar_odd_square_from_general
+theorem scalar_odd_square_from_general {R : Type*} [CommRing R]
     (B C : R) :
     SuperMatrix.supertrace
       ((⟨0, B, C, 0⟩ : SuperMatrix R) * ⟨0, B, C, 0⟩) = 0 := by

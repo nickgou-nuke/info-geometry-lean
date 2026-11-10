@@ -449,7 +449,7 @@ theorem lowerJordanNilpotent_eq_transpose {K : Type*} [Zero K] [One K] :
     simp [lowerJordanNilpotent, jordanNilpotent, Matrix.transpose_apply]
 
 /-- The lower-triangular logarithmic shear also squares to zero. -/
-theorem lowerJordanNilpotent_sq {K : Type*} [CommSemiring K] :
+theorem lowerJordanNilpotent_sq {K : Type*} [Semiring K] :
     (lowerJordanNilpotent : Matrix (Fin 2) (Fin 2) K) *
       lowerJordanNilpotent = 0 := by
   ext i j

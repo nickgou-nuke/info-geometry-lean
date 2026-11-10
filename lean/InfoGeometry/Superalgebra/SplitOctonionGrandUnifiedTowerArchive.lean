@@ -63,7 +63,7 @@ namespace InfoGeometry.Superalgebra.GrandUnifiedArchive
 open InfoGeometry.Algebra.Zorn.ConcreteComposition
 open InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Zero element of `ZornCell R`. -/
 def zeroZ : ZornCell R :=
@@ -175,6 +175,8 @@ def faradayYangMills (u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃ : R) : ZornCe
   addZ (smulZ (-2) (sheetV (a₂ * b₃ - a₃ * b₂) (a₃ * b₁ - a₁ * b₃) (a₁ * b₂ - a₂ * b₁)))
        (commutatorZ (maurerCartanForm u₁ u₂ u₃ a₁ a₂ a₃)
                     (maurerCartanForm u₁ u₂ u₃ b₁ b₂ b₃))
+
+variable {R : Type*} [CommRing R]
 
 /-- **Pillars $\mathcal{A}_1$–$\mathcal{A}_3$ (`pillar_1_3_hestenes_majorana_triad`):**
 Isotropic nilpotency $U(\mathbf{u})^2 = 0$, Hestenes decomposition

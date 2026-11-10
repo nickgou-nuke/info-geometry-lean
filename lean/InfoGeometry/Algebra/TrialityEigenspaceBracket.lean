@@ -1,5 +1,6 @@
 import InfoGeometry.Algebra.TrialityG2
 import InfoGeometry.Algebra.KantorTripleFiveGrading
+import Mathlib.Tactic.NoncommRing
 
 namespace InfoGeometry.Algebra.TrialityG2
 
@@ -24,14 +25,14 @@ end InfoGeometry.Algebra.TrialityG2
 
 namespace InfoGeometry.Algebra.KantorTripleFiveGrading.KantorTripleSystem
 
-variable {Scalar Space : Type*} [CommRing Scalar] [AddCommGroup Space] [Module Scalar Space]
+variable {Scalar Space : Type*} [Ring Scalar] [AddCommGroup Space] [Module Scalar Space]
 
 theorem cubic_phase_invariant (system : KantorTripleSystem Scalar Space)
     (phase : Scalar) (hphase : phase ^ 3 = 1) (first second third : Space) :
     system.triple (phase • first) (phase • second) (phase • third) =
       system.triple first second third := by
   rw [system.triple_smul_left, system.triple_smul_middle, system.triple_smul_right,
-    smul_smul, smul_smul, show phase * phase * phase = phase ^ 3 by ring,
+    smul_smul, smul_smul, show phase * phase * phase = phase ^ 3 by noncomm_ring,
     hphase, one_smul]
 
 end InfoGeometry.Algebra.KantorTripleFiveGrading.KantorTripleSystem

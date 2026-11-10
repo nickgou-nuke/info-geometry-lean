@@ -3,9 +3,10 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-import Mathlib.Basic.Real.Basic
+import Mathlib.Data.Real.Basic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.Linarith
 
 /-!
@@ -22,7 +23,7 @@ or metriplectic dynamics.
 
 namespace InfoGeometry.QuantumContext.MetriplecticCl11
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ## Section 1: Four-Entry Matrix-Coordinate Carrier -/
 
@@ -37,7 +38,7 @@ structure Cl11Matrix (R : Type*) where
 
 namespace Cl11Matrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Identity operator $I = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$. -/
 def id : Cl11Matrix R := ⟨1, 0, 0, 1⟩
@@ -130,7 +131,7 @@ theorem action_hyper_mul_and_singlet_trace (A B : Cl11Matrix R) (ψ : MajoranaSp
     (action (mul A B) ψ).hyper_right = (action A (action B ψ)).hyper_right ∧
     (action A ψ).real_singlet = trace A * ψ.real_singlet := by
   dsimp [action, mul, trace]
-  refine ⟨by ring, by ring, by ring⟩
+  refine ⟨by noncomm_ring, by noncomm_ring, rfl⟩
 
 /-! ## Section 3: Symmetric–Skew Coordinate Decomposition -/
 
@@ -149,18 +150,18 @@ def toSkew (A : Cl11Matrix R) [Invertible (2 : R)] : Cl11Matrix R :=
 theorem yin_yang_reconstruction (A : Cl11Matrix R) [Invertible (2 : R)] :
   add (toSymmetric A) (toSkew A) = A := by
   dsimp [add, toSymmetric, toSkew]
-  have h2 : (2 : R) * ⅟(2 : R) = 1 := mul_invOf_self 2
+  have h2 : ⅟(2 : R) * (2 : R) = 1 := invOf_mul_self 2
   ext
-  · ring
+  · noncomm_ring
   · calc ⅟(2 : R) * (A.m12 + A.m21) + ⅟(2 : R) * (A.m12 - A.m21)
-      _ = ((2 : R) * ⅟(2 : R)) * A.m12 := by ring
+      _ = (⅟(2 : R) * (2 : R)) * A.m12 := by noncomm_ring
       _ = 1 * A.m12 := by rw [h2]
-      _ = A.m12 := by ring
+      _ = A.m12 := by noncomm_ring
   · calc ⅟(2 : R) * (A.m12 + A.m21) + -⅟(2 : R) * (A.m12 - A.m21)
-      _ = ((2 : R) * ⅟(2 : R)) * A.m21 := by ring
+      _ = (⅟(2 : R) * (2 : R)) * A.m21 := by noncomm_ring
       _ = 1 * A.m21 := by rw [h2]
-      _ = A.m21 := by ring
-  · ring
+      _ = A.m21 := by noncomm_ring
+  · noncomm_ring
 
 end Cl11Matrix
 
@@ -178,7 +179,7 @@ namespace MetriplecticSystem
 
 open Cl11Matrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Zero metriplectic system. -/
 def zero : MetriplecticSystem R := ⟨Cl11Matrix.zero, Cl11Matrix.zero⟩
@@ -206,13 +207,13 @@ def metricBracket (A B : Cl11Matrix R) : R :=
   (A.m12 - A.m21) * (B.m12 - B.m21) - (A.m11 * B.m22 + A.m22 * B.m11)
 
 /-- Antisymmetry of the bilinear form. -/
-theorem poissonBracket_antisymm (A B : Cl11Matrix R) :
+theorem poissonBracket_antisymm {R : Type*} [CommRing R] (A B : Cl11Matrix R) :
     poissonBracket A B = - poissonBracket B A := by
   dsimp [poissonBracket]
   ring
 
 /-- Symmetry of the bilinear form: $\langle A, B \rangle = \langle B, A \rangle$. -/
-theorem metricBracket_symm (A B : Cl11Matrix R) :
+theorem metricBracket_symm {R : Type*} [CommRing R] (A B : Cl11Matrix R) :
     metricBracket A B = metricBracket B A := by
   dsimp [metricBracket]
   ring
@@ -234,7 +235,7 @@ theorem metricBracket_not_positiveSemidefinite :
   norm_num [metricBracket] at hId
 
 /-- The antisymmetric bilinear form vanishes on the diagonal. -/
-theorem poisson_self_null (H : Cl11Matrix R) : poissonBracket H H = 0 := by
+theorem poisson_self_null {R : Type*} [CommRing R] (H : Cl11Matrix R) : poissonBracket H H = 0 := by
   dsimp [poissonBracket]
   ring
 
@@ -251,7 +252,7 @@ theorem metric_energy_preservation_manifold (sys : MetriplecticSystem R)
       poissonBracket sys.Hamiltonian sys.Entropy = 0 := by
   dsimp [metricBracket, poissonBracket]
   rw [h_chiral_balance, h_vacuum_null.1, h_vacuum_null.2, h_entropy_diag.1, h_entropy_diag.2]
-  refine ⟨by ring, by ring, by ring⟩
+  refine ⟨by noncomm_ring, by noncomm_ring, by noncomm_ring⟩
 
 end MetriplecticSystem
 

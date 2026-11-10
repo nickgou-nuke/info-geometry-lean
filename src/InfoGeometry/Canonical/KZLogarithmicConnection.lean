@@ -30,7 +30,9 @@ where:
 All proofs are complete in native Mathlib 4 with zero `sorry`s and zero custom axioms.
 -/
 
-variable {K : Type*} [Field K]
+section CYBE
+
+variable {K : Type*} [Ring K]
 
 /-! ## 1. Classical Yang-Baxter and Lie Casimir Data -/
 
@@ -38,7 +40,7 @@ variable {K : Type*} [Field K]
 def bracket {A : Type*} [Ring A] (X Y : A) : A := X * Y - Y * X
 
 /-- An associative Lie algebra or matrix algebra with 3-body Casimir exchange operators. -/
-structure CYBEExchangeData (A : Type*) [Ring A] [Algebra K A] where
+structure CYBEExchangeData (A : Type*) [Ring A] [Module K A] where
   t01 : A
   t12 : A
   t20 : A
@@ -48,7 +50,7 @@ structure CYBEExchangeData (A : Type*) [Ring A] [Algebra K A] where
 
 namespace CYBEExchangeData
 
-variable {A : Type*} [Ring A] [Algebra K A] (C : CYBEExchangeData (K := K) A)
+variable {A : Type*} [Ring A] [Module K A] (C : CYBEExchangeData (K := K) A)
 
 theorem bracket_01_12_eq_12_20 :
     bracket C.t01 C.t12 = bracket C.t12 C.t20 :=
@@ -72,6 +74,10 @@ theorem cybe_sum_eq_three :
   rw [h1, h2]
 
 end CYBEExchangeData
+
+end CYBE
+
+variable {K : Type*} [Field K]
 
 /-! ## 2. Arnold coefficient cancellation (not yet curvature)
 

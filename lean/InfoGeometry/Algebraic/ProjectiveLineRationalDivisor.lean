@@ -17,17 +17,9 @@ namespace InfoGeometry.Algebraic.ProjectiveLineRationalDivisor
 
 open Polynomial
 
-variable (K : Type*) [Field K]
+section Divisor
 
-/-- A polynomial presentation of a nonzero rational function whose numerator
-and denominator split over the coefficient field. -/
-structure SplitRationalFunction where
-  numerator : K[X]
-  denominator : K[X]
-  numerator_ne_zero : numerator ≠ 0
-  denominator_ne_zero : denominator ≠ 0
-  numerator_splits : numerator.Splits
-  denominator_splits : denominator.Splits
+variable (K : Type*)
 
 /-- Divisor data on `ℙ¹(K)`: finite zero and pole multisets, together with
 the signed order at the point at infinity. Multiset repetition records
@@ -47,6 +39,22 @@ def ProjectiveLineDivisor.orderAt [DecidableEq K]
 /-- Degree of divisor data, counting multiplicities and the point at infinity. -/
 def ProjectiveLineDivisor.degree (D : ProjectiveLineDivisor K) : ℤ :=
   (D.zeros.card : ℤ) - D.poles.card + D.orderAtInfinity
+
+end Divisor
+
+section SplitRational
+
+variable (K : Type*) [CommRing K] [IsDomain K]
+
+/-- A polynomial presentation of a nonzero rational function whose numerator
+and denominator split over the coefficient domain. -/
+structure SplitRationalFunction where
+  numerator : K[X]
+  denominator : K[X]
+  numerator_ne_zero : numerator ≠ 0
+  denominator_ne_zero : denominator ≠ 0
+  numerator_splits : numerator.Splits
+  denominator_splits : denominator.Splits
 
 /-- The divisor associated with the displayed polynomial quotient `p / q`.
 The construction is tied to this presentation; no claim of quotient
@@ -80,5 +88,7 @@ theorem SplitRationalFunction.orderAtInfinity_eq_neg_finite_degree
   have hden : (f.denominator.natDegree : ℤ) = f.denominator.roots.card := by
     exact_mod_cast f.denominator_splits.natDegree_eq_card_roots
   simp [SplitRationalFunction.divisor, hnum, hden]
+
+end SplitRational
 
 end InfoGeometry.Algebraic.ProjectiveLineRationalDivisor

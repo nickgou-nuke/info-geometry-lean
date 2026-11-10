@@ -13,7 +13,7 @@ open ExteriorAlgebra
 open InfoGeometry.Canonical.BerezinFermionicIntegrationBridge
 open InfoGeometry.Canonical.GaussianBerezinPfaffianDeterminantBridge
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- **Definition**: Supermatrix Berezinian / Superdeterminant sdet(A, B, C, D) = (A - B * D⁻¹ * C) * D⁻¹ for invertible D. -/
 def superdeterminantBerezinian (a b c d_inv : R) : R :=
@@ -23,13 +23,13 @@ def superdeterminantBerezinian (a b c d_inv : R) : R :=
 theorem superdeterminant_diagonal (a d_inv : R) :
     superdeterminantBerezinian a 0 0 d_inv = a * d_inv := by
   dsimp [superdeterminantBerezinian]
-  ring
+  noncomm_ring
 
 /-- **Theorem**: Superdeterminant Identity Matrix Value sdet(1, 0, 0, 1) = 1. -/
 theorem superdeterminant_identity :
     superdeterminantBerezinian (1 : R) 0 0 1 = 1 := by
   dsimp [superdeterminantBerezinian]
-  ring
+  noncomm_ring
 
 /-- **Theorem**: Master Superdeterminant Berezinian & Supergeometry Synthesis.
     Unifies:

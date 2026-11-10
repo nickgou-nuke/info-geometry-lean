@@ -65,6 +65,12 @@ theorem conjugation_pow (u : Aˣ) (X : A) (n : ℕ) :
 end Gauge
 
 section Trace
+variable {R n : Type*} [Ring R] [Fintype n] [DecidableEq n]
+
+/-- Finite polynomial trace action, with all coefficients explicit. -/
+def polynomialTrace (N : ℕ) (c : Fin (N + 1) → R) (X : Matrix n n R) : R :=
+  ∑ i, c i * Matrix.trace (X ^ (i : ℕ))
+
 variable {R n : Type*} [CommRing R] [Fintype n] [DecidableEq n]
 
 theorem trace_conjugation (u : (Matrix n n R)ˣ) (X : Matrix n n R) :
@@ -75,10 +81,6 @@ theorem trace_conjugation (u : (Matrix n n R)ˣ) (X : Matrix n n R) :
         Matrix.trace ((↑(u⁻¹) : Matrix n n R) * ((u : Matrix n n R) * X)) :=
       Matrix.trace_mul_comm _ _
     _ = Matrix.trace X := by rw [← mul_assoc, hui, one_mul]
-
-/-- Finite polynomial trace action, with all coefficients explicit. -/
-def polynomialTrace (N : ℕ) (c : Fin (N + 1) → R) (X : Matrix n n R) : R :=
-  ∑ i, c i * Matrix.trace (X ^ (i : ℕ))
 
 theorem polynomialTrace_conjugation (N : ℕ) (c : Fin (N + 1) → R)
     (u : (Matrix n n R)ˣ) (X : Matrix n n R) :

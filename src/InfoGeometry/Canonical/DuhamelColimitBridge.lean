@@ -16,7 +16,7 @@ namespace InfoGeometry.Canonical.DuhamelColimitBridge
 
 open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 variable (A : ℕ → Type*)
 variable [∀ n, AddCommGroup (A n)] [∀ n, Module R (A n)]
 variable (A_inf : Type*) [AddCommGroup A_inf] [Module R A_inf]

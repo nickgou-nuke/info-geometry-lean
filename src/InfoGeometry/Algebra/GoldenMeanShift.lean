@@ -34,9 +34,9 @@ theorem apex_eq :
 
 /-! ## Extension I: tripotents -/
 
-theorem tripotent_factor {R : Type*} [CommRing R] (a : R) :
+theorem tripotent_factor {R : Type*} [Ring R] (a : R) :
     a ^ 3 - a = a * (a - 1) * (a + 1) := by
-  ring
+  noncomm_ring
 
 theorem tripotent_roots_in_field {K : Type*} [Field K] (a : K) (ha : a ^ 3 = a) :
     a = 0 ∨ a = 1 ∨ a = -1 := by
@@ -49,8 +49,8 @@ theorem tripotent_roots_in_field {K : Type*} [Field K] (a : K) (ha : a ^ 3 = a) 
 
 /-! ## Extension II: nth roots of unity and −1 -/
 
-def isNthRootOfUnity {R : Type*} [CommRing R] (n : ℕ) (x : R) : Prop := x ^ n = 1
-def isNthRootOfNegOne {R : Type*} [CommRing R] (n : ℕ) (x : R) : Prop := x ^ n = -1
+def isNthRootOfUnity {R : Type*} [Ring R] (n : ℕ) (x : R) : Prop := x ^ n = 1
+def isNthRootOfNegOne {R : Type*} [Ring R] (n : ℕ) (x : R) : Prop := x ^ n = -1
 
 theorem apex_not_root_of_unity_sq (t : ℚ) (ht : t ^ 2 = t + 1) : ¬ t ^ 2 = -1 := by
   intro h
@@ -61,9 +61,9 @@ theorem apex_not_root_of_unity_sq (t : ℚ) (ht : t ^ 2 = t + 1) : ¬ t ^ 2 = -1
 
 /-! ## Extension III: Möbius / PSL(2,ℤ) scaffolding -/
 
-def mobiusTrace {K : Type*} [CommRing K] (a d : K) : K := a + d
-def mobiusDet {K : Type*} [CommRing K] (a b c d : K) : K := a * d - b * c
-def mobiusTraceSq {K : Type*} [CommRing K] (a d : K) : K := (mobiusTrace a d) ^ 2
+def mobiusTrace {K : Type*} [Ring K] (a d : K) : K := a + d
+def mobiusDet {K : Type*} [Ring K] (a b c d : K) : K := a * d - b * c
+def mobiusTraceSq {K : Type*} [Ring K] (a d : K) : K := (mobiusTrace a d) ^ 2
 
 /-! ## Extension IV: noncommutative Cuntz lift of the golden apex -/
 

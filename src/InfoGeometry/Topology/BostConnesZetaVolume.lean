@@ -13,7 +13,7 @@ proportional to the Bost-Connes partition function ζ(2) = π²/6.
 
 open Real
 
-variable (M : Type _) [CommRing M] [StarRing M] [Algebra ℂ M]
+variable (M : Type _) [Ring M] [StarRing M] [Algebra ℂ M]
 
 /-- The Bost-Connes Partition Function Z(β) = ζ(β) -/
 noncomputable def bost_connes_partition_function (β : ℝ) : ℝ :=

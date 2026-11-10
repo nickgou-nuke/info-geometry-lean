@@ -22,7 +22,7 @@ namespace InfoGeometry.Arithmetic.TrifactorZetaBridge
 open InfoGeometry.Canonical.TrifactorDecomposition
 open RiemannZetaEquivalences
 
-variable {R : Type*} [CommRing R] [Invertible (2 : R)]
+variable {R : Type*} [Ring R] [Invertible (2 : R)]
 
 /-! ## Pure tripotent projector algebra -/
 
@@ -32,9 +32,9 @@ theorem active_projectors_sum_eq_square (T : R) :
   unfold P_plus P_minus InfoGeometry.Canonical.TriFacetGeometry.P_hyp InfoGeometry.Canonical.TriFacetGeometry.P_ell
   calc
     ⅟(2 : R) * (T ^ 2 + T) + ⅟(2 : R) * (T ^ 2 - T) =
-        (⅟(2 : R) * (2 : R)) * T ^ 2 := by ring
+        (⅟(2 : R) * (2 : R)) * T ^ 2 := by noncomm_ring
     _ = 1 * T ^ 2 := by rw [invOf_mul_self (2 : R)]
-    _ = T ^ 2 := by ring
+    _ = T ^ 2 := by noncomm_ring
 
 /--
 If the active plus/minus support of a state vanishes, the state is fixed by the
@@ -44,11 +44,11 @@ theorem vacuum_sector_of_active_support_zero (T ρ : R)
     (hActive : (P_plus T + P_minus T) * ρ = 0) :
     P_zero T * ρ = ρ := by
   calc
-    P_zero T * ρ = P_zero T * ρ + 0 := by ring
+    P_zero T * ρ = P_zero T * ρ + 0 := by simp
     _ = P_zero T * ρ + (P_plus T + P_minus T) * ρ := by rw [hActive]
-    _ = (P_zero T + P_plus T + P_minus T) * ρ := by ring
+    _ = (P_zero T + P_plus T + P_minus T) * ρ := by noncomm_ring
     _ = 1 * ρ := by rw [partition_of_unity T]
-    _ = ρ := by ring
+    _ = ρ := by simp
 
 /-- The square-zero active-support condition is the same null-sector condition. -/
 theorem vacuum_sector_of_square_zero (T ρ : R) (hSquare : T ^ 2 * ρ = 0) :
@@ -62,9 +62,9 @@ theorem vacuum_sector_of_active_components_zero (T ρ : R)
     P_zero T * ρ = ρ := by
   apply vacuum_sector_of_active_support_zero T ρ
   calc
-    (P_plus T + P_minus T) * ρ = P_plus T * ρ + P_minus T * ρ := by ring
+    (P_plus T + P_minus T) * ρ = P_plus T * ρ + P_minus T * ρ := by noncomm_ring
     _ = 0 + 0 := by rw [hPlus, hMinus]
-    _ = 0 := by ring
+    _ = 0 := by simp
 
 /-! ## Zeta-facing conditional mode surface -/
 

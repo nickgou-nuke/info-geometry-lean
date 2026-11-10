@@ -11,7 +11,7 @@ This is an algebraic shadow of a Freudenthal/Albert characteristic polynomial,
 not a construction of the Albert algebra, OP², or an exceptional Lie group.
 Concrete exceptional carriers must supply this characteristic law explicitly.
 -/
-structure CubicNorm (M K : Type*) [CommRing K] [Ring M] [Algebra K M] where
+structure CubicNorm (M K : Type*) [Ring K] [Ring M] [Module K M] where
   trace1 : M → K
   trace2 : M → K
   norm   : M → K
@@ -20,7 +20,7 @@ structure CubicNorm (M K : Type*) [CommRing K] [Ring M] [Algebra K M] where
   cubic_characteristic : ∀ (x : M),
     x^3 - (trace1 x) • x^2 + (trace2 x) • x - (norm x) • 1 = 0
 
-variable {M K : Type*} [CommRing K] [Ring M] [Algebra K M] (sys : CubicNorm M K)
+variable {M K : Type*} [Ring K] [Ring M] [Module K M] (sys : CubicNorm M K)
 
 /-- The cubic characteristic residual stored by `CubicNorm`. -/
 def cubicResidual (x : M) : M :=

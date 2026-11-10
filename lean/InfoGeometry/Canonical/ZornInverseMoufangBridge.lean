@@ -11,22 +11,22 @@ open InfoGeometry.Algebra.ZornVectorMatrix
 
 variable {F : Type*} [Field F]
 
-abbrev ZornF (F : Type*) [Field F] := ZornVectorMatrix F
+abbrev ZornF (F : Type*) [Ring F] := ZornVectorMatrix F
 
 /--
-The norm-conjugate inverse formula on the field-valued Zorn carrier.
+The norm-conjugate inverse formula on the division-ring-valued Zorn carrier.
 
 This is deliberately a named totalized operation rather than a global `Inv`
-instance: when `norm X = 0`, the field convention gives `(norm X)⁻¹ = 0`, so
+instance: when `norm X = 0`, the convention gives `(norm X)⁻¹ = 0`, so
 `totalizedInverse X = 0`; it is a genuine two-sided inverse only on the
 non-isotropic locus.
 -/
-noncomputable def totalizedInverse (X : ZornF F) : ZornF F :=
+noncomputable def totalizedInverse {F : Type*} [DivisionRing F] (X : ZornF F) : ZornF F :=
   ZornVectorMatrix.smul (ZornVectorMatrix.norm X)⁻¹ (ZornVectorMatrix.conj X)
 
 /-- The totalized inverse vanishes on the split null cone. -/
 theorem totalizedInverse_of_norm_eq_zero
-    (X : ZornF F) (hX : ZornVectorMatrix.norm X = 0) :
+    {F : Type*} [DivisionRing F] (X : ZornF F) (hX : ZornVectorMatrix.norm X = 0) :
     totalizedInverse X = ZornVectorMatrix.zero := by
   rw [totalizedInverse, hX]
   rw [inv_zero]
@@ -114,7 +114,7 @@ theorem inverse_moufang_dual
   exact middle_moufang (ZornVectorMatrix.conj X) Y X
 
 /-- The genuine invertible locus is exactly where the cancellation theorems apply. -/
-def IsNonIsotropic (X : ZornF F) : Prop := ZornVectorMatrix.norm X ≠ 0
+def IsNonIsotropic {F : Type*} [Ring F] (X : ZornF F) : Prop := ZornVectorMatrix.norm X ≠ 0
 
 /-- Packet of the two-sided inverse laws on the non-isotropic locus. -/
 theorem nonIsotropic_inverse_packet

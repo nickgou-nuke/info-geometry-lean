@@ -210,12 +210,14 @@ theorem hyperbolic_clifford_cross_products {E : Type*} [Ring E]
     simp only [two_nsmul]
     noncomm_ring
 
-variable (R : Type*) [CommRing R] {A : Type*} [Ring A] [Algebra R A]
+variable (R : Type*) [Ring R] {A : Type*} [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- Clifford coefficients composed with operators, not multiplied into their labels. -/
 def weighted (Γ₁ Γ₂ : A) (T₁ T₂ : Module.End R A) : Module.End R A :=
   LinearMap.mulLeft R Γ₁ * T₁ + LinearMap.mulLeft R Γ₂ * T₂
 
+omit [IsScalarTower R A A] in
 @[simp] theorem weighted_apply (Γ₁ Γ₂ : A) (T₁ T₂ : Module.End R A) (X : A) :
     weighted R Γ₁ Γ₂ T₁ T₂ X = Γ₁ * T₁ X + Γ₂ * T₂ X := rfl
 
@@ -244,6 +246,7 @@ theorem minus_coefficient_defect (H S Γ : A) :
     ((H - S) * Γ - Γ * (H - S)) * X
   noncomm_ring
 
+omit [IsScalarTower R A A] in
 /-- Exact square for arbitrary endomorphisms and a noncentral Clifford pair. -/
 theorem weighted_square (Γ₁ Γ₂ : A) (T₁ T₂ : Module.End R A)
     (h₁ : Γ₁ * Γ₁ = 1) (h₂ : Γ₂ * Γ₂ = 1)

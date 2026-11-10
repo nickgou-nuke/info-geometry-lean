@@ -11,7 +11,7 @@ open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 open InfoGeometry.Algebra.SupergradedBracket
 open InfoGeometry.Canonical.SuperVirasoroFiniteWindow
 
-variable {𝕜 : Type*} [Field 𝕜]
+variable {𝕜 : Type*} [CommRing 𝕜] [Div 𝕜]
 variable {V : Type} [AddCommGroup V] [Module 𝕜 V]
 
 local notation "EndV" => Module.End 𝕜 V

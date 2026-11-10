@@ -9,19 +9,19 @@ set_option linter.unusedVariables false
 
 namespace InfoGeometry.Algebra.BdGSchurBerezinianCompatibility
 
-variable {F : Type*} [Field F]
-
-def blockMatrix (α β u v : F) : Matrix (Fin 2) (Fin 2) F :=
+def blockMatrix {F : Type*} [Ring F] (α β u v : F) : Matrix (Fin 2) (Fin 2) F :=
   !![α, u; v, β]
 
-def schurComplement (α β u v : F) : F :=
+def schurComplement {F : Type*} [DivisionRing F] (α β u v : F) : F :=
   α - u * β⁻¹ * v
 
-def berezinianScalar (α β u v : F) : F :=
+def berezinianScalar {F : Type*} [DivisionRing F] (α β u v : F) : F :=
   schurComplement α β u v / β
 
-def zornNorm (α β u v : F) : F :=
+def zornNorm {F : Type*} [Ring F] (α β u v : F) : F :=
   α * β - u * v
+
+variable {F : Type*} [Field F]
 
 @[simp] theorem det_blockMatrix (α β u v : F) :
     Matrix.det (blockMatrix α β u v) = zornNorm α β u v := by

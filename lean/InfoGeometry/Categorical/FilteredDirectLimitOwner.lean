@@ -30,7 +30,7 @@ open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 
 universe u
 
-variable (R : Type u) [CommRing R]
+variable (R : Type u) [Ring R]
 variable {J : Type u} [Category.{u} J]
 
 section ModuleColimit

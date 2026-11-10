@@ -275,9 +275,6 @@ theorem V_star (N_plus : B) : star (V N_plus) = V N_plus := by
 theorem J_star (N_plus : B) : star (J N_plus) = -J N_plus := by
   dsimp [J]; rw [star_sub, star_star, neg_sub]
 
-theorem P_mul_N_plus (N_plus : B) (h_reg : N_plus * star N_plus * N_plus = N_plus) :
-    P N_plus * N_plus = N_plus := h_reg
-
 theorem N_plus_mul_P (N_plus : B) (h_nil : N_plus * N_plus = 0) :
     N_plus * P N_plus = 0 := by
   dsimp [P]; rw [← mul_assoc, h_nil, zero_mul]
@@ -297,10 +294,6 @@ theorem P_mul_star_N_plus (N_plus : B) (h_nil : N_plus * N_plus = 0) :
 theorem star_N_plus_mul_P (N_plus : B) (h_reg : N_plus * star N_plus * N_plus = N_plus) :
     star N_plus * P N_plus = star N_plus := by
   dsimp [P]; rw [← mul_assoc, star_N_plus_reg N_plus h_reg]
-
-theorem Q_mul_star_N_plus (N_plus : B) (h_reg : N_plus * star N_plus * N_plus = N_plus) :
-    Q N_plus * star N_plus = star N_plus :=
-  star_N_plus_reg N_plus h_reg
 
 theorem star_N_plus_mul_Q (N_plus : B) (h_nil : N_plus * N_plus = 0) :
     star N_plus * Q N_plus = 0 := by
@@ -364,8 +357,9 @@ theorem S_P_sq_eq_one (N_plus : B) (h_reg : N_plus * star N_plus * N_plus = N_pl
 
 theorem S_P_mul_N_plus (N_plus : B) (h_reg : N_plus * star N_plus * N_plus = N_plus) :
     S_P N_plus * N_plus = N_plus := by
+  change P N_plus * N_plus = N_plus at h_reg
   dsimp [S_P]
-  rw [sub_mul, add_mul, one_mul, P_mul_N_plus N_plus h_reg, add_sub_self_right]
+  rw [sub_mul, add_mul, one_mul, h_reg, add_sub_self_right]
 
 theorem N_plus_mul_S_P (N_plus : B) (h_nil : N_plus * N_plus = 0) :
     N_plus * S_P N_plus = -N_plus := by
@@ -524,8 +518,9 @@ theorem V_mul_N_plus (N_plus : B)
     (h_nil : N_plus * N_plus = 0)
     (h_reg : N_plus * star N_plus * N_plus = N_plus) :
     V N_plus * N_plus = N_plus := by
+  change P N_plus * N_plus = N_plus at h_reg
   have hV : V N_plus = P N_plus + Q N_plus := rfl
-  rw [hV, add_mul, P_mul_N_plus N_plus h_reg, Q_mul_N_plus N_plus h_nil, add_zero]
+  rw [hV, add_mul, h_reg, Q_mul_N_plus N_plus h_nil, add_zero]
 
 theorem N_plus_mul_V (N_plus : B)
     (h_nil : N_plus * N_plus = 0)
@@ -539,7 +534,9 @@ theorem V_mul_star_N_plus (N_plus : B)
     (h_reg : N_plus * star N_plus * N_plus = N_plus) :
     V N_plus * star N_plus = star N_plus := by
   have hV : V N_plus = P N_plus + Q N_plus := rfl
-  rw [hV, add_mul, P_mul_star_N_plus N_plus h_nil, Q_mul_star_N_plus N_plus h_reg, zero_add]
+  rw [hV, add_mul, P_mul_star_N_plus N_plus h_nil, zero_add]
+  change star N_plus * N_plus * star N_plus = star N_plus
+  exact star_N_plus_reg N_plus h_reg
 
 theorem star_N_plus_mul_V (N_plus : B)
     (h_nil : N_plus * N_plus = 0)
@@ -554,6 +551,7 @@ theorem W_Bog_eq (N_plus : B)
     (h_nil : N_plus * N_plus = 0)
     (h_reg : N_plus * star N_plus * N_plus = N_plus) :
     W_Bog N_plus = (1 - V N_plus) + J N_plus := by
+  change P N_plus * N_plus = N_plus at h_reg
   dsimp [W_Bog, U_plus, U_minus_inv, J]
   have h1 : (1 + N_plus) * (1 - star N_plus) =
             (1 + (N_plus - star N_plus)) - P N_plus := by
@@ -573,7 +571,7 @@ theorem W_Bog_eq (N_plus : B)
     calc ((1 + (N_plus - star N_plus)) - P N_plus) * N_plus
       _ = (1 + (N_plus - star N_plus)) * N_plus - P N_plus * N_plus := by rw [sub_mul]
       _ = (1 * N_plus + (N_plus - star N_plus) * N_plus) - N_plus := by
-          rw [add_mul, P_mul_N_plus N_plus h_reg]
+          rw [add_mul, h_reg]
       _ = (N_plus + -Q N_plus) - N_plus := by rw [one_mul, hJ_N]
       _ = (-Q N_plus + N_plus) - N_plus := by rw [add_comm N_plus (-Q N_plus)]
       _ = -Q N_plus := by rw [add_sub_self_right]
@@ -995,9 +993,6 @@ theorem Q_mul_P (N_plus : B) (h_nil : N_plus * N_plus = 0) :
     _ = star N_plus * (0 * star N_plus) := by rw [h_nil]
     _ = 0 := by rw [zero_mul, mul_zero]
 
-theorem P_mul_N_plus (N_plus : B) (h_reg : N_plus * star N_plus * N_plus = N_plus) :
-    P N_plus * N_plus = N_plus := h_reg
-
 theorem N_plus_mul_P (N_plus : B) (h_nil : N_plus * N_plus = 0) :
     N_plus * P N_plus = 0 := by
   dsimp [P]; rw [← mul_assoc, h_nil, zero_mul]
@@ -1150,8 +1145,9 @@ theorem P_mul_Phi (N_plus : B)
     (h_nil : N_plus * N_plus = 0)
     (h_reg : N_plus * star N_plus * N_plus = N_plus) :
     P N_plus * Phi N_plus = N_plus := by
+  change P N_plus * N_plus = N_plus at h_reg
   dsimp [Phi]
-  rw [mul_add, P_mul_N_plus N_plus h_reg, P_mul_star_N_plus N_plus h_nil, add_zero]
+  rw [mul_add, h_reg, P_mul_star_N_plus N_plus h_nil, add_zero]
 
 theorem Phi_mul_P (N_plus : B)
     (h_nil : N_plus * N_plus = 0)
@@ -1221,8 +1217,9 @@ theorem comm_J_Phi_eq_two_Sigma (N_plus : B) (h_nil : N_plus * N_plus = 0) :
 theorem Gamma_chiral_mul_N_plus (N_plus : B)
     (h_reg : N_plus * star N_plus * N_plus = N_plus) :
     Gamma_chiral N_plus * N_plus = N_plus := by
+  change P N_plus * N_plus = N_plus at h_reg
   dsimp [Gamma_chiral]
-  rw [sub_mul, add_mul, one_mul, P_mul_N_plus N_plus h_reg, add_sub_self_right]
+  rw [sub_mul, add_mul, one_mul, h_reg, add_sub_self_right]
 
 theorem N_plus_mul_Gamma_chiral (N_plus : B)
     (h_nil : N_plus * N_plus = 0) :
@@ -1254,9 +1251,6 @@ theorem anticomm_Gamma_chiral_star_N_plus (N_plus : B)
   dsimp [anticomm]
   rw [hL, hR, add_comm (-star N_plus) (star N_plus), ← sub_eq_add_neg, sub_self]
 
-/-- **`HFD₉` Emergent Poincaré Translation Equals the Higgs Bandgap (`P_poincare = V`):** -/
-theorem P_poincare_eq_V (N_plus : B) : P_poincare N_plus = V N_plus := rfl
-
 /-- **`HFD₉` SUSY Translation Invariance (`[P_poincare, Q_+] = 0`):**
     The emergent Poincaré translation generator commutes with the chiral supercharge `N_+`. -/
 theorem comm_P_poincare_N_plus (N_plus : B)
@@ -1271,40 +1265,14 @@ theorem comm_P_poincare_N_plus (N_plus : B)
         ← mul_assoc N_plus (star N_plus) N_plus, h_reg, zero_add]
   rw [hL, hR, sub_self]
 
-/-- **`HFD₉` Dual SUSY Translation Invariance (`[P_poincare, Q_-] = 0`):**
-    Translation commutes with the adjoint chiral supercharge
-    `N_- = star N_plus`. -/
-theorem comm_P_poincare_star_N_plus (N_plus : B)
-    (h_nil : N_plus * N_plus = 0)
-    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
-    comm (P_poincare N_plus) (star N_plus) = 0 := by
-  dsimp [comm, P_poincare, anticomm]
-  have hL :
-      (N_plus * star N_plus + star N_plus * N_plus) * star N_plus =
-        star N_plus := by
-    rw [add_mul,
-      mul_assoc N_plus (star N_plus) (star N_plus),
-      star_N_plus_sq N_plus h_nil, mul_zero,
-      star_N_plus_reg N_plus h_reg,
-      zero_add]
-  have hR :
-      star N_plus * (N_plus * star N_plus + star N_plus * N_plus) =
-        star N_plus := by
-    rw [mul_add,
-      ← mul_assoc (star N_plus) N_plus (star N_plus),
-      star_N_plus_reg N_plus h_reg,
-      ← mul_assoc (star N_plus) (star N_plus) N_plus,
-      star_N_plus_sq N_plus h_nil, zero_mul, add_zero]
-  rw [hL, hR, sub_self]
-
 /-- **`HFD₁₀` Multi-Channel Supercolor Translation Closure (`[P_poincare(N_a), P_poincare(N_b)] = 0`):**
     For any two supercolor nilpotent channels `N_a, N_b` with commuting bandgap supports,
     their emergent Poincaré translation generators commute identically. -/
 theorem supercolor_poincare_comm (N_a N_b : B)
     (h_comm : V N_a * V N_b = V N_b * V N_a) :
     comm (P_poincare N_a) (P_poincare N_b) = 0 := by
-  dsimp [comm]
-  rw [P_poincare_eq_V, P_poincare_eq_V, h_comm, sub_self]
+  change V N_a * V N_b - V N_b * V N_a = 0
+  rw [h_comm, sub_self]
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine.HiggsFrameDraggingSupercolorPoset
 
@@ -1340,77 +1308,6 @@ theorem sub_Four_swap (a b c d : B) :
 
 def anticomm (X Y : B) : B := X * Y + Y * X
 def comm (X Y : B) : B := X * Y - Y * X
-
-/-- Commuting with each input makes the commutator commute with the same element. -/
-theorem comm_comm_of_commute (S A C : B)
-    (hSA : S * A = A * S) (hSC : S * C = C * S) :
-    comm S (comm A C) = 0 := by
-  have hAC : S * (A * C) = (A * C) * S := by
-    calc S * (A * C) = (S * A) * C := by rw [mul_assoc]
-      _ = (A * S) * C := by rw [hSA]
-      _ = A * (S * C) := by rw [mul_assoc]
-      _ = A * (C * S) := by rw [hSC]
-      _ = (A * C) * S := by rw [mul_assoc]
-  have hCA : S * (C * A) = (C * A) * S := by
-    calc S * (C * A) = (S * C) * A := by rw [mul_assoc]
-      _ = (C * S) * A := by rw [hSC]
-      _ = C * (S * A) := by rw [mul_assoc]
-      _ = C * (A * S) := by rw [hSA]
-      _ = (C * A) * S := by rw [mul_assoc]
-  dsimp [comm]
-  rw [mul_sub, sub_mul, hAC, hCA, sub_self]
-
-/-- Commuting with an even input and anticommuting with an odd input
-makes their commutator anticommute with the grading element. -/
-theorem anticomm_comm_of_even_odd (S A C : B)
-    (hSA : S * A = A * S) (hSC : S * C = -(C * S)) :
-    anticomm S (comm A C) = 0 := by
-  have hAC : S * (A * C) = -((A * C) * S) := by
-    calc S * (A * C) = (S * A) * C := by rw [mul_assoc]
-      _ = (A * S) * C := by rw [hSA]
-      _ = A * (S * C) := by rw [mul_assoc]
-      _ = A * (-(C * S)) := by rw [hSC]
-      _ = -((A * C) * S) := by rw [mul_neg, mul_assoc]
-  have hCA : S * (C * A) = -((C * A) * S) := by
-    calc S * (C * A) = (S * C) * A := by rw [mul_assoc]
-      _ = (-(C * S)) * A := by rw [hSC]
-      _ = -(C * (S * A)) := by rw [neg_mul, mul_assoc]
-      _ = -(C * (A * S)) := by rw [hSA]
-      _ = -((C * A) * S) := by rw [mul_assoc]
-  dsimp [anticomm, comm]
-  rw [mul_sub, sub_mul, hAC, hCA]
-  abel_nf
-
-/-- The commutator of two odd elements is even. -/
-theorem comm_comm_of_odd (S A C : B)
-    (hSA : S * A = -(A * S)) (hSC : S * C = -(C * S)) :
-    comm S (comm A C) = 0 := by
-  have hAC : S * (A * C) = (A * C) * S := by
-    calc S * (A * C) = (S * A) * C := by rw [mul_assoc]
-      _ = (-(A * S)) * C := by rw [hSA]
-      _ = -(A * (S * C)) := by rw [neg_mul, mul_assoc]
-      _ = -(A * (-(C * S))) := by rw [hSC]
-      _ = (A * C) * S := by rw [mul_neg, neg_neg, mul_assoc]
-  have hCA : S * (C * A) = (C * A) * S := by
-    calc S * (C * A) = (S * C) * A := by rw [mul_assoc]
-      _ = (-(C * S)) * A := by rw [hSC]
-      _ = -(C * (S * A)) := by rw [neg_mul, mul_assoc]
-      _ = -(C * (-(A * S))) := by rw [hSA]
-      _ = (C * A) * S := by rw [mul_neg, neg_neg, mul_assoc]
-  dsimp [comm]
-  rw [mul_sub, sub_mul, hAC, hCA, sub_self]
-
-theorem comm_add_right (S A C : B) :
-    comm S (A + C) = comm S A + comm S C := by
-  dsimp [comm]
-  rw [mul_add, add_mul]
-  abel
-
-theorem anticomm_sub_right (S A C : B) :
-    anticomm S (A - C) = anticomm S A - anticomm S C := by
-  dsimp [anticomm]
-  rw [mul_sub, sub_mul]
-  abel
 
 end RingHelpers
 
@@ -1803,72 +1700,6 @@ theorem emergent_cartan_curvature_torsion_split (N_plus W₁ X₁ W₂ X₂ : B)
   dsimp [cartanConnV, riemannCurvV, cartanTorsionV, comm]
   rw [mul_add, add_mul, add_mul, mul_add, add_mul, add_mul]
   abel
-
-/-- The emergent Cartan curvature is even under the intrinsic sheet grading:
-`[Σ, ℛ_V] = 0`. -/
-theorem comm_Sigma_riemannCurvV (N_plus W₁ X₁ W₂ X₂ : B)
-    (h_nil : N_plus * N_plus = 0)
-    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
-    comm (Sigma N_plus) (riemannCurvV N_plus W₁ X₁ W₂ X₂) = 0 := by
-  have hSpin₁ := comm_Sigma_spinConnV N_plus W₁ h_nil h_reg
-  have hSpin₂ := comm_Sigma_spinConnV N_plus W₂ h_nil h_reg
-  have hFrame₁ : anticomm (Sigma N_plus) (framePhiV N_plus X₁) = 0 :=
-    anticomm_Sigma_framePhiV N_plus X₁ h_nil h_reg
-  have hFrame₂ : anticomm (Sigma N_plus) (framePhiV N_plus X₂) = 0 :=
-    anticomm_Sigma_framePhiV N_plus X₂ h_nil h_reg
-  have h₁ := comm_comm_of_commute (Sigma N_plus)
-    (spinConnV N_plus W₁) (spinConnV N_plus W₂)
-    (by
-      dsimp [comm] at hSpin₁
-      exact sub_eq_zero.mp hSpin₁)
-    (by
-      dsimp [comm] at hSpin₂
-      exact sub_eq_zero.mp hSpin₂)
-  have hSigmaFrame₁ : Sigma N_plus * framePhiV N_plus X₁ =
-      -(framePhiV N_plus X₁ * Sigma N_plus) := by
-    rw [Sigma_mul_framePhiV N_plus X₁ h_nil h_reg,
-      framePhiV_mul_Sigma N_plus X₁ h_nil h_reg]
-    rw [neg_neg]
-  have hSigmaFrame₂ : Sigma N_plus * framePhiV N_plus X₂ =
-      -(framePhiV N_plus X₂ * Sigma N_plus) := by
-    rw [Sigma_mul_framePhiV N_plus X₂ h_nil h_reg,
-      framePhiV_mul_Sigma N_plus X₂ h_nil h_reg, neg_neg]
-  have h₂ := comm_comm_of_odd (Sigma N_plus)
-    (framePhiV N_plus X₁) (framePhiV N_plus X₂)
-    hSigmaFrame₁ hSigmaFrame₂
-  rw [riemannCurvV, comm_add_right, h₁, h₂, add_zero]
-
-/-- The emergent Cartan torsion is odd under the intrinsic sheet grading:
-`{Σ, 𝒯_V} = 0`. -/
-theorem anticomm_Sigma_cartanTorsionV (N_plus W₁ X₁ W₂ X₂ : B)
-    (h_nil : N_plus * N_plus = 0)
-    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
-    anticomm (Sigma N_plus) (cartanTorsionV N_plus W₁ X₁ W₂ X₂) = 0 := by
-  have hSpin₁ := comm_Sigma_spinConnV N_plus W₁ h_nil h_reg
-  have hSpin₂ := comm_Sigma_spinConnV N_plus W₂ h_nil h_reg
-  have hFrame₁ : Sigma N_plus * framePhiV N_plus X₁ =
-      -(framePhiV N_plus X₁ * Sigma N_plus) := by
-    rw [Sigma_mul_framePhiV N_plus X₁ h_nil h_reg,
-      framePhiV_mul_Sigma N_plus X₁ h_nil h_reg]
-    simp
-  have hFrame₂ : Sigma N_plus * framePhiV N_plus X₂ =
-      -(framePhiV N_plus X₂ * Sigma N_plus) := by
-    rw [Sigma_mul_framePhiV N_plus X₂ h_nil h_reg,
-      framePhiV_mul_Sigma N_plus X₂ h_nil h_reg, neg_neg]
-  have h₁ := anticomm_comm_of_even_odd (Sigma N_plus)
-    (spinConnV N_plus W₁) (framePhiV N_plus X₂)
-    (by
-      dsimp [comm] at hSpin₁
-      exact sub_eq_zero.mp hSpin₁)
-    hFrame₂
-  have h₂ := anticomm_comm_of_even_odd (Sigma N_plus)
-    (spinConnV N_plus W₂) (framePhiV N_plus X₁)
-    (by
-      dsimp [comm] at hSpin₂
-      exact sub_eq_zero.mp hSpin₂)
-    hFrame₁
-  rw [cartanTorsionV, anticomm_sub_right, h₁, h₂]
-  simp
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine.EmergentTwoSheetBridge
 

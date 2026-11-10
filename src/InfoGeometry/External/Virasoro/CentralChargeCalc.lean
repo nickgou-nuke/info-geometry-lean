@@ -174,7 +174,7 @@ lemma zMonomialF_eq (R : Type*) [Field R] [CharZero R] (d : ℕ) :
         simp [sub_add, prod_range_succ']
       · simp [ihd, mul_comm _ (d.factorial : R), Nat.factorial_succ, mul_comm]
 
-lemma zMonomialF_zero_eq (R : Type*) [Field R] (n : ℤ) :
+lemma zMonomialF_zero_eq (R : Type*) [AddCommGroup R] [One R] (n : ℤ) :
     zMonomialF R 0 n = 1 := by
   simp [zMonomialF]
 

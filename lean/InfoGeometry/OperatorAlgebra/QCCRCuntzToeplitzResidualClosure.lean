@@ -12,7 +12,8 @@ open BigOperators
 open InfoGeometry.OperatorAlgebra.QCCRCuntzToeplitz
 
 variable {ι R Op : Type*} [DecidableEq ι] [Fintype ι]
-  [CommRing R] [Ring Op] [StarRing Op] [Algebra R Op]
+  [Ring R] [Ring Op] [StarRing Op] [Module R Op]
+  [IsScalarTower R Op Op] [SMulCommClass R Op Op]
 
 /-- The square of the finite vacuum defect has an exact q-weighted residual.
 At q = 0 this specializes to idempotence; for general q it records the

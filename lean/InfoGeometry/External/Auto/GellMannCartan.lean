@@ -1,8 +1,9 @@
 import Mathlib.Tactic
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
-# Gell-Mann Cartan decomposition — no division, pure `CommRing`
+# Gell-Mann Cartan decomposition — no division, pure `Ring` / `CommRing`
 
 Cartan involution `θ(X) = -Xᵀ` decomposes 3×3 matrices into compact
 (antisymmetric) and noncompact (symmetric) parts. All theorems avoid
@@ -15,7 +16,7 @@ namespace GellMannCartan
 
 open Matrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def θ (X : Matrix (Fin 3) (Fin 3) R) : Matrix (Fin 3) (Fin 3) R := -Xᵀ
 
@@ -38,21 +39,21 @@ theorem twiceCompact_isCompact (X : Matrix (Fin 3) (Fin 3) R) : isCompact (twice
 theorem twiceNoncompact_isNoncompact (X : Matrix (Fin 3) (Fin 3) R) : isNoncompact (twiceNoncompact X) := by
   dsimp [isNoncompact, θ, twiceNoncompact]
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [Matrix.add_apply, Matrix.transpose_apply] <;> ring
+    simp [Matrix.add_apply, Matrix.transpose_apply] <;> abel
 
 theorem twice_decomposition (X : Matrix (Fin 3) (Fin 3) R) :
     (2 : R) • X = twiceCompact X + twiceNoncompact X := by
   dsimp [twiceCompact, twiceNoncompact]
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [Matrix.smul_apply, Matrix.add_apply, Matrix.sub_apply, Matrix.transpose_apply] <;> ring
+    simp [Matrix.smul_apply, Matrix.add_apply, Matrix.sub_apply, Matrix.transpose_apply] <;> noncomm_ring
 
 theorem twiceCompact_idem (X : Matrix (Fin 3) (Fin 3) R) :
     twiceCompact (twiceCompact X) = (2 : R) • twiceCompact X := by
   dsimp [twiceCompact]
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [Matrix.smul_apply, Matrix.sub_apply, Matrix.transpose_apply] <;> ring
+    simp [Matrix.smul_apply, Matrix.sub_apply, Matrix.transpose_apply] <;> noncomm_ring
 
-theorem compact_closed_under_lie (K₁ K₂ : Matrix (Fin 3) (Fin 3) R)
+theorem compact_closed_under_lie {R : Type*} [CommRing R] (K₁ K₂ : Matrix (Fin 3) (Fin 3) R)
     (hK₁ : isCompact K₁) (hK₂ : isCompact K₂) : isCompact (K₁ * K₂ - K₂ * K₁) := by
   have hK₁' : K₁ᵀ = -K₁ := by
     dsimp [isCompact, θ] at hK₁

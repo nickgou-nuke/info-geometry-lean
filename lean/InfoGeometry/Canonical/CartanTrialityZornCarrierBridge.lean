@@ -16,7 +16,7 @@ namespace InfoGeometry.SuperGrassmannian.CartanTrialityZorn
 
 open InfoGeometry.Canonical
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Convert the Section 49 three-coordinate record to a function vector. -/
 def Vec3.toCanonical (u : Vec3 R) : Fin 3 → R := ![u.x, u.y, u.z]
@@ -24,13 +24,13 @@ def Vec3.toCanonical (u : Vec3 R) : Fin 3 → R := ![u.x, u.y, u.z]
 /-- Convert a canonical function vector to the Section 49 record. -/
 def Vec3.ofCanonical (u : Fin 3 → R) : Vec3 R := ⟨u 0, u 1, u 2⟩
 
-omit [CommRing R] in
+omit [Ring R] in
 @[simp] theorem Vec3.ofCanonical_toCanonical (u : Vec3 R) :
     Vec3.ofCanonical (Vec3.toCanonical u) = u := by
   cases u
   rfl
 
-omit [CommRing R] in
+omit [Ring R] in
 @[simp] theorem Vec3.toCanonical_ofCanonical (u : Fin 3 → R) :
     Vec3.toCanonical (Vec3.ofCanonical u) = u := by
   funext i
@@ -102,31 +102,6 @@ theorem ZornMatrix.toCanonical_smul (r : R) (X : ZornMatrix R) :
   apply InfoGeometry.Canonical.ZornMatrix.ext <;>
     simp [ZornMatrix.smul, ZornMatrix.toCanonical, Vec3.toCanonical]
 
-/-- Conversion intertwines the two existing Zorn products. -/
-theorem ZornMatrix.toCanonical_mul (X Y : ZornMatrix R) :
-    ZornMatrix.toCanonical (ZornMatrix.mul X Y) =
-      InfoGeometry.Canonical.ZornMatrix.mul
-        (ZornMatrix.toCanonical X) (ZornMatrix.toCanonical Y) := by
-  cases X with
-  | mk xa xu xv xb =>
-    cases Y with
-    | mk ya yu yv yb =>
-      apply InfoGeometry.Canonical.ZornMatrix.ext
-      · simp [ZornMatrix.toCanonical, ZornMatrix.mul,
-          InfoGeometry.Canonical.ZornMatrix.mul, Vec3.dot_toCanonical]
-      · simp [ZornMatrix.toCanonical, ZornMatrix.mul,
-          InfoGeometry.Canonical.ZornMatrix.mul, Vec3.dot_toCanonical]
-      · ext i
-        fin_cases i <;>
-          simp [ZornMatrix.toCanonical, ZornMatrix.mul, Vec3.toCanonical,
-            Vec3.cross, InfoGeometry.Canonical.ZornMatrix.mul,
-            InfoGeometry.Canonical.ZornMatrix.cross]
-      · ext i
-        fin_cases i <;>
-          simp [ZornMatrix.toCanonical, ZornMatrix.mul, Vec3.toCanonical,
-            Vec3.cross, InfoGeometry.Canonical.ZornMatrix.mul,
-            InfoGeometry.Canonical.ZornMatrix.cross] <;> ring
-
 /-- The explicit Section 49 unit is sent to the canonical unit. -/
 theorem ZornMatrix.toCanonical_one :
     ZornMatrix.toCanonical (ZornMatrix.one : ZornMatrix R) =
@@ -153,5 +128,36 @@ theorem ZornMatrix.toCanonical_det (X : ZornMatrix R) :
     InfoGeometry.Algebra.ZornVec3.dot,
     InfoGeometry.Canonical.ZornMatrix.dot, Vec3.toCanonical,
     Fin.sum_univ_three]
+
+section CommRing
+
+variable {R : Type*} [CommRing R]
+
+/-- Conversion intertwines the two existing Zorn products. -/
+theorem ZornMatrix.toCanonical_mul (X Y : ZornMatrix R) :
+    ZornMatrix.toCanonical (ZornMatrix.mul X Y) =
+      InfoGeometry.Canonical.ZornMatrix.mul
+        (ZornMatrix.toCanonical X) (ZornMatrix.toCanonical Y) := by
+  cases X with
+  | mk xa xu xv xb =>
+    cases Y with
+    | mk ya yu yv yb =>
+      apply InfoGeometry.Canonical.ZornMatrix.ext
+      · simp [ZornMatrix.toCanonical, ZornMatrix.mul,
+          InfoGeometry.Canonical.ZornMatrix.mul, Vec3.dot_toCanonical]
+      · simp [ZornMatrix.toCanonical, ZornMatrix.mul,
+          InfoGeometry.Canonical.ZornMatrix.mul, Vec3.dot_toCanonical]
+      · ext i
+        fin_cases i <;>
+          simp [ZornMatrix.toCanonical, ZornMatrix.mul, Vec3.toCanonical,
+            Vec3.cross, InfoGeometry.Canonical.ZornMatrix.mul,
+            InfoGeometry.Canonical.ZornMatrix.cross]
+      · ext i
+        fin_cases i <;>
+          simp [ZornMatrix.toCanonical, ZornMatrix.mul, Vec3.toCanonical,
+            Vec3.cross, InfoGeometry.Canonical.ZornMatrix.mul,
+            InfoGeometry.Canonical.ZornMatrix.cross] <;> abel
+
+end CommRing
 
 end InfoGeometry.SuperGrassmannian.CartanTrialityZorn

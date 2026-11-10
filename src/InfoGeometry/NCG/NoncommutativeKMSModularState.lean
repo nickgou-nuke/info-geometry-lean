@@ -27,7 +27,7 @@ noncomputable section
 namespace InfoGeometry.NCG.KMS
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 local notation "Mat" => Matrix ι ι R
 
@@ -55,56 +55,6 @@ theorem stateOf_add (ρ X Y : Mat) :
     stateOf ρ (X + Y) = stateOf ρ X + stateOf ρ Y := by
   dsimp [stateOf]
   rw [mul_add, Matrix.trace_add]
-
-theorem stateOf_smul (ρ X : Mat) (c : R) :
-    stateOf ρ (c • X) = c * stateOf ρ X := by
-  dsimp [stateOf]
-  rw [Matrix.mul_smul, Matrix.trace_smul]
-  rfl
-
-/-- 🏆 THEOREM 2: Exact Invariance of the Quantum State under the Modular Shift:
-    `ω_ρ(Δ_ρ(X)) = ω_ρ(X)` whenever `ρ * ρ⁻¹ = 1` and `ρ⁻¹ * ρ = 1` -/
-theorem stateOf_modularShift_invariant (ρ ρ_inv X : Mat)
-    (h_right : ρ * ρ_inv = 1) (h_left : ρ_inv * ρ = 1) :
-    stateOf ρ (innerModularShift ρ ρ_inv X) = stateOf ρ X := by
-  dsimp [stateOf, innerModularShift]
-  calc
-    Matrix.trace (ρ * (ρ * X * ρ_inv))
-      = Matrix.trace ((ρ * ρ * X) * ρ_inv) := by simp only [mul_assoc]
-    _ = Matrix.trace (ρ_inv * (ρ * ρ * X)) := by rw [Matrix.trace_mul_comm]
-    _ = Matrix.trace ((ρ_inv * ρ) * (ρ * X)) := by simp only [mul_assoc]
-    _ = Matrix.trace (1 * (ρ * X)) := by rw [h_left]
-    _ = Matrix.trace (ρ * X) := by rw [one_mul]
-
-/-- 🏆 THEOREM 3: The Noncommutative Kubo–Martin–Schwinger (KMS) Condition:
-    `ω_ρ(X * Δ_ρ(Y)) = ω_ρ(Y * X)` -/
-theorem kms_condition (ρ ρ_inv X Y : Mat)
-    (h_right : ρ * ρ_inv = 1) (h_left : ρ_inv * ρ = 1) :
-    stateOf ρ (X * innerModularShift ρ ρ_inv Y) = stateOf ρ (Y * X) := by
-  dsimp [stateOf, innerModularShift]
-  calc
-    Matrix.trace (ρ * (X * (ρ * Y * ρ_inv)))
-      = Matrix.trace ((ρ * X * ρ * Y) * ρ_inv) := by simp only [mul_assoc]
-    _ = Matrix.trace (ρ_inv * (ρ * X * ρ * Y)) := by rw [Matrix.trace_mul_comm]
-    _ = Matrix.trace ((ρ_inv * ρ) * (X * ρ * Y)) := by simp only [mul_assoc]
-    _ = Matrix.trace (1 * (X * ρ * Y)) := by rw [h_left]
-    _ = Matrix.trace (X * ρ * Y) := by rw [one_mul]
-    _ = Matrix.trace ((X * ρ) * Y) := by simp only [mul_assoc]
-    _ = Matrix.trace (Y * (X * ρ)) := by rw [Matrix.trace_mul_comm]
-    _ = Matrix.trace ((Y * X) * ρ) := by simp only [mul_assoc]
-    _ = Matrix.trace (ρ * (Y * X)) := by rw [Matrix.trace_mul_comm]
-
-/-- The density-weighted expectation annihilates the commutator with the
-    density matrix itself.  This is the finite matrix form of cyclicity of
-    the trace, with no commutativity assumption on observables. -/
-theorem stateOf_comm_density_zero (ρ X : Mat) :
-    stateOf ρ (comm ρ X) = 0 := by
-  dsimp [stateOf, comm]
-  rw [mul_sub, Matrix.trace_sub]
-  have htrace : Matrix.trace (ρ * (ρ * X)) = Matrix.trace (ρ * X * ρ) := by
-    rw [Matrix.trace_mul_comm]
-  rw [htrace]
-  simp only [show ρ * (X * ρ) = ρ * X * ρ by simp only [mul_assoc], sub_self]
 
 /-- 🏆 THEOREM 4: Characterization of the Modular Centralizer:
     `Δ_ρ(X) = X ↔ [ρ, X] = 0` (for invertible `ρ`) -/
@@ -171,31 +121,12 @@ theorem innerModularShift_comp (ρ ρ_inv σ σ_inv X : Mat) :
   dsimp [innerModularShift]
   simp only [mul_assoc]
 
-/-- The state is invariant under the inverse modular shift as well. -/
-theorem stateOf_inverse_modularShift_invariant (ρ ρ_inv X : Mat)
-    (h_right : ρ * ρ_inv = 1) (h_left : ρ_inv * ρ = 1) :
-    stateOf ρ (innerModularShift ρ_inv ρ X) = stateOf ρ X := by
-  dsimp [stateOf, innerModularShift]
-  calc
-    Matrix.trace (ρ * (ρ_inv * X * ρ)) =
-        Matrix.trace ((ρ * ρ_inv) * X * ρ) := by simp only [mul_assoc]
-    _ = Matrix.trace (1 * X * ρ) := by rw [h_right]
-    _ = Matrix.trace (X * ρ) := by rw [one_mul]
-    _ = Matrix.trace (ρ * X) := by rw [Matrix.trace_mul_comm]
-
 /-- The inner modular shift is additive on observables. -/
 theorem innerModularShift_add (ρ ρ_inv X Y : Mat) :
     innerModularShift ρ ρ_inv (X + Y) =
       innerModularShift ρ ρ_inv X + innerModularShift ρ ρ_inv Y := by
   dsimp [innerModularShift]
   simp only [mul_add, add_mul]
-
-/-- The inner modular shift is linear over the coefficient ring. -/
-theorem innerModularShift_smul (ρ ρ_inv X : Mat) (c : R) :
-    innerModularShift ρ ρ_inv (c • X) =
-      c • innerModularShift ρ ρ_inv X := by
-  dsimp [innerModularShift]
-  simp only [Matrix.mul_smul, Matrix.smul_mul]
 
 /-- 🏆 THEOREM 5: Modular Multiplicativity (Homomorphism Property):
     `Δ_ρ(X * Y) = Δ_ρ(X) * Δ_ρ(Y)` -/
@@ -273,6 +204,83 @@ theorem innerModularShiftRingHom_map_comm (ρ ρ_inv : Mat)
       comm (innerModularShiftRingHom ρ ρ_inv h_right h_left X)
         (innerModularShiftRingHom ρ ρ_inv h_right h_left Y) := by
   exact innerModularShift_comm ρ ρ_inv X Y h_right h_left
+
+section CommRing
+
+variable {R_comm : Type*} [CommRing R_comm]
+
+local notation "MatC" => Matrix ι ι R_comm
+
+theorem stateOf_smul (ρ X : MatC) (c : R_comm) :
+    stateOf ρ (c • X) = c * stateOf ρ X := by
+  dsimp [stateOf]
+  rw [Matrix.mul_smul, Matrix.trace_smul]
+  rfl
+
+/-- 🏆 THEOREM 2: Exact Invariance of the Quantum State under the Modular Shift:
+    `ω_ρ(Δ_ρ(X)) = ω_ρ(X)` whenever `ρ * ρ⁻¹ = 1` and `ρ⁻¹ * ρ = 1` -/
+theorem stateOf_modularShift_invariant (ρ ρ_inv X : MatC)
+    (h_right : ρ * ρ_inv = 1) (h_left : ρ_inv * ρ = 1) :
+    stateOf ρ (innerModularShift ρ ρ_inv X) = stateOf ρ X := by
+  dsimp [stateOf, innerModularShift]
+  calc
+    Matrix.trace (ρ * (ρ * X * ρ_inv))
+      = Matrix.trace ((ρ * ρ * X) * ρ_inv) := by simp only [mul_assoc]
+    _ = Matrix.trace (ρ_inv * (ρ * ρ * X)) := by rw [Matrix.trace_mul_comm]
+    _ = Matrix.trace ((ρ_inv * ρ) * (ρ * X)) := by simp only [mul_assoc]
+    _ = Matrix.trace (1 * (ρ * X)) := by rw [h_left]
+    _ = Matrix.trace (ρ * X) := by rw [one_mul]
+
+/-- 🏆 THEOREM 3: The Noncommutative Kubo–Martin–Schwinger (KMS) Condition:
+    `ω_ρ(X * Δ_ρ(Y)) = ω_ρ(Y * X)` -/
+theorem kms_condition (ρ ρ_inv X Y : MatC)
+    (h_right : ρ * ρ_inv = 1) (h_left : ρ_inv * ρ = 1) :
+    stateOf ρ (X * innerModularShift ρ ρ_inv Y) = stateOf ρ (Y * X) := by
+  dsimp [stateOf, innerModularShift]
+  calc
+    Matrix.trace (ρ * (X * (ρ * Y * ρ_inv)))
+      = Matrix.trace ((ρ * X * ρ * Y) * ρ_inv) := by simp only [mul_assoc]
+    _ = Matrix.trace (ρ_inv * (ρ * X * ρ * Y)) := by rw [Matrix.trace_mul_comm]
+    _ = Matrix.trace ((ρ_inv * ρ) * (X * ρ * Y)) := by simp only [mul_assoc]
+    _ = Matrix.trace (1 * (X * ρ * Y)) := by rw [h_left]
+    _ = Matrix.trace (X * ρ * Y) := by rw [one_mul]
+    _ = Matrix.trace ((X * ρ) * Y) := by simp only [mul_assoc]
+    _ = Matrix.trace (Y * (X * ρ)) := by rw [Matrix.trace_mul_comm]
+    _ = Matrix.trace ((Y * X) * ρ) := by simp only [mul_assoc]
+    _ = Matrix.trace (ρ * (Y * X)) := by rw [Matrix.trace_mul_comm]
+
+/-- The density-weighted expectation annihilates the commutator with the
+    density matrix itself.  This is the finite matrix form of cyclicity of
+    the trace, with no commutativity assumption on observables. -/
+theorem stateOf_comm_density_zero (ρ X : MatC) :
+    stateOf ρ (comm ρ X) = 0 := by
+  dsimp [stateOf, comm]
+  rw [mul_sub, Matrix.trace_sub]
+  have htrace : Matrix.trace (ρ * (ρ * X)) = Matrix.trace (ρ * X * ρ) := by
+    rw [Matrix.trace_mul_comm]
+  rw [htrace]
+  simp only [show ρ * (X * ρ) = ρ * X * ρ by simp only [mul_assoc], sub_self]
+
+/-- The state is invariant under the inverse modular shift as well. -/
+theorem stateOf_inverse_modularShift_invariant (ρ ρ_inv X : MatC)
+    (h_right : ρ * ρ_inv = 1) (h_left : ρ_inv * ρ = 1) :
+    stateOf ρ (innerModularShift ρ_inv ρ X) = stateOf ρ X := by
+  dsimp [stateOf, innerModularShift]
+  calc
+    Matrix.trace (ρ * (ρ_inv * X * ρ)) =
+        Matrix.trace ((ρ * ρ_inv) * X * ρ) := by simp only [mul_assoc]
+    _ = Matrix.trace (1 * X * ρ) := by rw [h_right]
+    _ = Matrix.trace (X * ρ) := by rw [one_mul]
+    _ = Matrix.trace (ρ * X) := by rw [Matrix.trace_mul_comm]
+
+/-- The inner modular shift is linear over the coefficient ring. -/
+theorem innerModularShift_smul (ρ ρ_inv X : MatC) (c : R_comm) :
+    innerModularShift ρ ρ_inv (c • X) =
+      c • innerModularShift ρ ρ_inv X := by
+  dsimp [innerModularShift]
+  simp only [Matrix.mul_smul, Matrix.smul_mul]
+
+end CommRing
 
 end InfoGeometry.NCG.KMS
 

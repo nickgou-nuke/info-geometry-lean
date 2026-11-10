@@ -5,18 +5,17 @@ namespace InfoGeometry.Algebra.MadelungDerivation
 
 noncomputable section
 
-variable {Base Carrier : Type*} [CommRing Base] [Field Carrier]
-variable [Algebra Base Carrier]
+variable {Base Carrier : Type*} [Field Carrier]
 
-def logarithmicDerivative (spatial : Derivation Base Carrier Carrier)
+def logarithmicDerivative [CommSemiring Base] [Algebra Base Carrier] (spatial : Derivation Base Carrier Carrier)
     (amplitude : Carrier) : Carrier :=
   spatial amplitude / amplitude
 
-def amplitudeCurvature (spatial : Derivation Base Carrier Carrier)
+def amplitudeCurvature [CommSemiring Base] [Algebra Base Carrier] (spatial : Derivation Base Carrier Carrier)
     (amplitude : Carrier) : Carrier :=
   spatial (spatial amplitude) / amplitude
 
-theorem curvature_eq_riccati (spatial : Derivation Base Carrier Carrier)
+theorem curvature_eq_riccati [CommRing Base] [Algebra Base Carrier] (spatial : Derivation Base Carrier Carrier)
     (amplitude : Carrier) (amplitude_ne : amplitude ≠ 0) :
     amplitudeCurvature spatial amplitude =
       spatial (logarithmicDerivative spatial amplitude) +
@@ -26,7 +25,7 @@ theorem curvature_eq_riccati (spatial : Derivation Base Carrier Carrier)
   field_simp
   ring
 
-theorem logarithmicDerivative_square (spatial : Derivation Base Carrier Carrier)
+theorem logarithmicDerivative_square [CommSemiring Base] [Algebra Base Carrier] (spatial : Derivation Base Carrier Carrier)
     (amplitude : Carrier) :
     logarithmicDerivative spatial (amplitude ^ 2) =
       2 * logarithmicDerivative spatial amplitude := by
@@ -36,7 +35,7 @@ theorem logarithmicDerivative_square (spatial : Derivation Base Carrier Carrier)
     norm_num
     field_simp
 
-variable [CharZero Carrier]
+variable [CommRing Base] [Algebra Base Carrier] [CharZero Carrier]
 
 theorem curvature_eq_density_score (spatial : Derivation Base Carrier Carrier)
     (amplitude : Carrier) (amplitude_ne : amplitude ≠ 0) :

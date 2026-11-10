@@ -198,22 +198,22 @@ theorem mixed_raise_associator_grade_anomaly (u₁ u₂ w : OpVec3 A) :
 /-- The Jacobiator's Peirce corner blocks are even-grade components. -/
 theorem jacobiator_peirce_corners_even
     (X Y Z : OpZornMatrix A) :
-    peirce_pp (zornJacobiator X Y Z) = P_plus * zornJacobiator X Y Z * P_plus ∧
-    peirce_mm (zornJacobiator X Y Z) = P_minus * zornJacobiator X Y Z * P_minus := by
-  refine ⟨rfl, rfl⟩
+    peirce_pp (zornJacobiator X Y Z) = ⟨(zornJacobiator X Y Z).a, 0, 0, 0⟩ ∧
+    peirce_mm (zornJacobiator X Y Z) = ⟨0, 0, 0, (zornJacobiator X Y Z).b⟩ := by
+  exact ⟨peirce_pp_eq _, peirce_mm_eq _⟩
 
 /-- The Jacobiator's off-diagonal Peirce components are η-odd:
   `η·J₊₋·η = -J₊₋` and `η·J₋₊·η = -J₋₊`.
 This identifies their parity, not their nonvanishing. -/
 theorem jacobiator_peirce_offdiag_odd
     (X Y Z : OpZornMatrix A) :
-    peirce_pm (zornJacobiator X Y Z) = P_plus * zornJacobiator X Y Z * P_minus ∧
-    peirce_mp (zornJacobiator X Y Z) = P_minus * zornJacobiator X Y Z * P_plus ∧
+    peirce_pm (zornJacobiator X Y Z) = ⟨0, (zornJacobiator X Y Z).v, 0, 0⟩ ∧
+    peirce_mp (zornJacobiator X Y Z) = ⟨0, 0, (zornJacobiator X Y Z).w, 0⟩ ∧
     eta_grading * peirce_pm (zornJacobiator X Y Z) * eta_grading =
       -peirce_pm (zornJacobiator X Y Z) ∧
     eta_grading * peirce_mp (zornJacobiator X Y Z) * eta_grading =
       -peirce_mp (zornJacobiator X Y Z) := by
-  refine ⟨rfl, rfl, ?_, ?_⟩ <;>
+  refine ⟨peirce_pm_eq _, peirce_mp_eq _, ?_, ?_⟩ <;>
   simp [peirce_pm_eq, peirce_mp_eq] <;>
   ext <;>
   simp [peirce_pp_eq, peirce_mm_eq, peirce_pm_eq, peirce_mp_eq,
@@ -247,22 +247,22 @@ theorem jacobiator_vanishes_on_xaxis_all_peirce_blocks
 /-- The associator's Peirce corner blocks are even-grade components. -/
 theorem associator_peirce_corners_even
     (X Y Z : OpZornMatrix A) :
-    peirce_pp (opAssociator X Y Z) = P_plus * opAssociator X Y Z * P_plus ∧
-    peirce_mm (opAssociator X Y Z) = P_minus * opAssociator X Y Z * P_minus := by
-  refine ⟨rfl, rfl⟩
+    peirce_pp (opAssociator X Y Z) = ⟨(opAssociator X Y Z).a, 0, 0, 0⟩ ∧
+    peirce_mm (opAssociator X Y Z) = ⟨0, 0, 0, (opAssociator X Y Z).b⟩ := by
+  exact ⟨peirce_pp_eq _, peirce_mm_eq _⟩
 
 /-- The associator's off-diagonal Peirce components are η-odd:
   `η·Ass₊₋·η = -Ass₊₋` and `η·Ass₋₊·η = -Ass₋₊`.
 This identifies their parity, not their nonvanishing. -/
 theorem associator_peirce_offdiag_odd
     (X Y Z : OpZornMatrix A) :
-    peirce_pm (opAssociator X Y Z) = P_plus * opAssociator X Y Z * P_minus ∧
-    peirce_mp (opAssociator X Y Z) = P_minus * opAssociator X Y Z * P_plus ∧
+    peirce_pm (opAssociator X Y Z) = ⟨0, (opAssociator X Y Z).v, 0, 0⟩ ∧
+    peirce_mp (opAssociator X Y Z) = ⟨0, 0, (opAssociator X Y Z).w, 0⟩ ∧
     eta_grading * peirce_pm (opAssociator X Y Z) * eta_grading =
       -peirce_pm (opAssociator X Y Z) ∧
     eta_grading * peirce_mp (opAssociator X Y Z) * eta_grading =
       -peirce_mp (opAssociator X Y Z) := by
-  refine ⟨rfl, rfl, ?_, ?_⟩ <;>
+  refine ⟨peirce_pm_eq _, peirce_mp_eq _, ?_, ?_⟩ <;>
   simp [peirce_pm_eq, peirce_mp_eq] <;>
   ext <;>
   simp [peirce_pp_eq, peirce_mm_eq, peirce_pm_eq, peirce_mp_eq,

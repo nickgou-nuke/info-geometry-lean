@@ -211,13 +211,11 @@ end Pillar1_Chentsov
 
 section Pillar2_Cl11
 
-variable {R : Type*} [CommRing R]
-
 /--
 A hyperbolic $\mathrm{Cl}(1,1)$ cell data structure spanned by two nilpotent
 lightcone generators $n_+$ and $n_-$.
 -/
-structure Cl11Cell (R : Type*) [CommRing R] (Carrier : Type*) [Ring Carrier] [Algebra R Carrier] where
+structure Cl11Cell (R : Type*) (Carrier : Type*) [Ring Carrier] where
   np : Carrier
   nm : Carrier
   np_nilpotent : np * np = 0
@@ -225,16 +223,16 @@ structure Cl11Cell (R : Type*) [CommRing R] (Carrier : Type*) [Ring Carrier] [Al
   anticommutator_unit : np * nm + nm * np = (2 : Carrier)
 
 /-- In lightcone coordinates, orthogonal generators are assembled from nilpotents. -/
-def cl11_e1 {Carrier : Type*} [Ring Carrier] [Algebra R Carrier]
+def cl11_e1 {R : Type*} {Carrier : Type*} [Ring Carrier]
     (cell : Cl11Cell R Carrier) : Carrier :=
   cell.np + cell.nm
 
-def cl11_e2 {Carrier : Type*} [Ring Carrier] [Algebra R Carrier]
+def cl11_e2 {R : Type*} {Carrier : Type*} [Ring Carrier]
     (cell : Cl11Cell R Carrier) : Carrier :=
   cell.np - cell.nm
 
 /-- Spacelike square: $e_1^2 = 2 \cdot \mathbf{1}$. -/
-theorem cl11_e1_sq {Carrier : Type*} [Ring Carrier] [Algebra R Carrier]
+theorem cl11_e1_sq {R : Type*} {Carrier : Type*} [Ring Carrier]
     (cell : Cl11Cell R Carrier) :
     cl11_e1 cell * cl11_e1 cell = (2 : Carrier) := by
   dsimp [cl11_e1]
@@ -249,7 +247,7 @@ theorem cl11_e1_sq {Carrier : Type*} [Ring Carrier] [Algebra R Carrier]
     _ = (2 : Carrier) := cell.anticommutator_unit
 
 /-- Timelike square: $e_2^2 = -2 \cdot \mathbf{1}$ (hyperbolic split signature). -/
-theorem cl11_e2_sq {Carrier : Type*} [Ring Carrier] [Algebra R Carrier]
+theorem cl11_e2_sq {R : Type*} {Carrier : Type*} [Ring Carrier]
     (cell : Cl11Cell R Carrier) :
     cl11_e2 cell * cl11_e2 cell = -(2 : Carrier) := by
   dsimp [cl11_e2]
@@ -265,7 +263,7 @@ theorem cl11_e2_sq {Carrier : Type*} [Ring Carrier] [Algebra R Carrier]
       rw [cell.anticommutator_unit]
 
 /-- Orthogonality of basis: $\{e_1, e_2\} = 0$. -/
-theorem cl11_e1_anticomm_e2 {Carrier : Type*} [Ring Carrier] [Algebra R Carrier]
+theorem cl11_e1_anticomm_e2 {R : Type*} {Carrier : Type*} [Ring Carrier]
     (cell : Cl11Cell R Carrier) :
     cl11_e1 cell * cl11_e2 cell + cl11_e2 cell * cl11_e1 cell = 0 := by
   dsimp [cl11_e1, cl11_e2]
@@ -605,7 +603,7 @@ end Pillar5_MobiusTwist
 The Master Certificate uniting the five inevitabilities of the closed self-excited universe.
 -/
 structure WheelersOuroborosCertificate (V : Type*) [AddCommGroup V] [Module ℝ V]
-    (E : Type*) [AddCommGroup E] [Module ℝ E] (Carrier : Type*) [Ring Carrier] [Algebra ℝ Carrier] : Prop where
+    (E : Type*) [AddCommGroup E] [Module ℝ E] (Carrier : Type*) [Ring Carrier] : Prop where
   -- Pillar 1: Chentsov Markov Monotonicity
   markov_tv_monotone : ∀ {A B : Type*} [Fintype A] [Fintype B]
     (K : MarkovKernel A B) (P Q : ProbDist A),
@@ -644,7 +642,7 @@ Master compilation constructor verifying that Wheeler's Ouroboros architecture
 is 100% mathematically closed in Lean 4 without custom axioms.
 -/
 theorem compile_wheelers_ouroboros_synthesis (V : Type*) [AddCommGroup V] [Module ℝ V]
-    (E : Type*) [AddCommGroup E] [Module ℝ E] (Carrier : Type*) [Ring Carrier] [Algebra ℝ Carrier] :
+    (E : Type*) [AddCommGroup E] [Module ℝ E] (Carrier : Type*) [Ring Carrier] :
     WheelersOuroborosCertificate V E Carrier where
   markov_tv_monotone := fun K P Q => markov_tv_contraction K P Q
   cell_e1_sq := fun cell => cl11_e1_sq cell

@@ -14,7 +14,7 @@ namespace InfoGeometry.Algebra
 
 open H3Zorn
 
-variable {R : Type*} [Field R]
+variable {R : Type*} [CommRing R] [Inv R]
 
 /-- The cubic Jordan product induced by the generic `H3Zorn` trilinear form. -/
 noncomputable def cubicJordanMul (X Y : H3Zorn R) : H3Zorn R :=

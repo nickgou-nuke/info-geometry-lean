@@ -37,7 +37,7 @@ namespace InfoGeometry.SuperGrassmannian.WeylBerezinian
 
 open Matrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. Graded Supertrace and Parity Projections on Matrix Operators -/
 
@@ -48,17 +48,17 @@ def superTrace (M : Matrix (Fin 2) (Fin 2) R) : R :=
 theorem superTrace_add (M N : Matrix (Fin 2) (Fin 2) R) :
     superTrace (M + N) = superTrace M + superTrace N := by
   dsimp [superTrace]
-  ring
+  abel
 
 theorem superTrace_smul (r : R) (M : Matrix (Fin 2) (Fin 2) R) :
     superTrace (r • M) = r * superTrace M := by
   dsimp [superTrace]
-  ring
+  noncomm_ring
 
 theorem superTrace_neg (M : Matrix (Fin 2) (Fin 2) R) :
     superTrace (-M) = -superTrace M := by
   dsimp [superTrace]
-  ring
+  abel
 
 /-- Even projection extracting diagonal blocks: !![M₀₀, 0; 0, M₁₁]. -/
 def evenPart (M : Matrix (Fin 2) (Fin 2) R) : Matrix (Fin 2) (Fin 2) R :=
@@ -78,10 +78,10 @@ theorem even_add_odd (M : Matrix (Fin 2) (Fin 2) R) :
 theorem superTrace_odd (M : Matrix (Fin 2) (Fin 2) R) :
     superTrace (oddPart M) = 0 := by
   dsimp [superTrace, oddPart]
-  ring
+  abel
 
 /-- Noncommutative trace cyclicity: The supertrace of the anticommutator of any two odd operators vanishes. -/
-theorem odd_anticommutator_superTrace (b1 c1 b2 c2 : R) :
+theorem odd_anticommutator_superTrace {R : Type*} [CommRing R] (b1 c1 b2 c2 : R) :
     superTrace (!![(0:R), b1; c1, 0] * !![(0:R), b2; c2, 0] +
                 !![(0:R), b2; c2, 0] * !![(0:R), b1; c1, 0]) = 0 := by
   dsimp [superTrace]
@@ -108,15 +108,15 @@ def volumeOperator (a : R) : Matrix (Fin 2) (Fin 2) R :=
     [S, X] = !![0, (p - q)σ k₁; -(p - q)σ k₂, 0]. -/
 theorem scale_chiral_commutator (p q σ k₁ k₂ : R) :
     scaleOperator p q σ * chiralOperator k₁ k₂ - chiralOperator k₁ k₂ * scaleOperator p q σ =
-    !![0, (p - q) * σ * k₁; -(p - q) * σ * k₂, 0] := by
+    !![0, p * σ * k₁ - k₁ * (q * σ); q * σ * k₂ - k₂ * (p * σ), 0] := by
   ext i j
   fin_cases i <;> fin_cases j <;> (
-    simp [scaleOperator, chiralOperator, Matrix.mul_apply, Fin.sum_univ_two]
-    try ring
+    simp [scaleOperator, chiralOperator, Matrix.mul_apply, Fin.sum_univ_two, smul_eq_mul]
+    try noncomm_ring
   )
 
-/-- Balanced Invariance: When p = q, the scale operator is central with respect to chiral mixing: [S, X] = 0. -/
-theorem scale_chiral_commutator_balanced (p σ k₁ k₂ : R) :
+/-- Balanced Invariance: When p = q and σ is central or over CommRing, the scale operator commutes with chiral mixing. -/
+theorem scale_chiral_commutator_balanced {R : Type*} [CommRing R] (p σ k₁ k₂ : R) :
     scaleOperator p p σ * chiralOperator k₁ k₂ - chiralOperator k₁ k₂ * scaleOperator p p σ = 0 := by
   rw [scale_chiral_commutator]
   ext i j
@@ -131,11 +131,10 @@ theorem chiral_square (k₁ k₂ : R) :
   ext i j
   fin_cases i <;> fin_cases j <;> (
     simp [chiralOperator, Matrix.mul_apply, Fin.sum_univ_two]
-    try ring
   )
 
 /-- The supertrace of the square of any chiral operator vanishes identically: STr(X²) = 0. -/
-theorem superTrace_chiral_square (k₁ k₂ : R) :
+theorem superTrace_chiral_square {R : Type*} [CommRing R] (k₁ k₂ : R) :
     superTrace (chiralOperator (R := R) k₁ k₂ * chiralOperator (R := R) k₁ k₂) = 0 := by
   rw [chiral_square]
   dsimp [superTrace]
@@ -147,25 +146,25 @@ theorem superTrace_chiral_square (k₁ k₂ : R) :
 theorem superTrace_scaleOperator (p q σ : R) :
     superTrace (scaleOperator (R := R) p q σ) = (p - q) * σ := by
   dsimp [superTrace, scaleOperator]
-  ring
+  noncomm_ring
 
 /-- The Balanced Super-Grassmannian Invariant: When p = q, STr(S) = 0. -/
 theorem superTrace_scale_balanced (p σ : R) :
     superTrace (scaleOperator (R := R) p p σ) = 0 := by
   rw [superTrace_scaleOperator]
-  ring
+  noncomm_ring
 
 /-- Chiral Mode is Berezinian-Unimodular: STr(X) = 0. -/
 theorem superTrace_chiralOperator (k₁ k₂ : R) :
     superTrace (chiralOperator (R := R) k₁ k₂) = 0 := by
   dsimp [superTrace, chiralOperator]
-  ring
+  abel
 
 /-- Volume Mode is Berezinian-Unimodular: STr(V) = 0. -/
 theorem superTrace_volumeOperator (a : R) :
     superTrace (volumeOperator (R := R) a) = 0 := by
   dsimp [superTrace, volumeOperator]
-  ring
+  abel
 
 /-- Total Deformation Splitting Theorem:
     The supertrace isolates strictly the Weyl scale mode, while the chiral and volume modes drop out completely:
@@ -174,7 +173,7 @@ theorem total_deformation_superTrace (p q σ k₁ k₂ a : R) :
     superTrace (scaleOperator p q σ + chiralOperator k₁ k₂ + volumeOperator a) = (p - q) * σ := by
   rw [superTrace_add, superTrace_add]
   rw [superTrace_scaleOperator, superTrace_chiralOperator, superTrace_volumeOperator]
-  ring
+  abel
 
 /-! ### 5. Master Verification Certificate -/
 
@@ -205,7 +204,10 @@ theorem compile_weyl_berezinian_deformation : WeylBerezinianDeformationCertifica
   · intro M N; exact superTrace_add M N
   · intro M; exact even_add_odd M
   · intro b1 c1 b2 c2; exact odd_anticommutator_superTrace b1 c1 b2 c2
-  · intro p q σ k₁ k₂; exact scale_chiral_commutator p q σ k₁ k₂
+  · intro p q σ k₁ k₂
+    rw [scale_chiral_commutator]
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp <;> ring
   · intro p σ k₁ k₂; exact scale_chiral_commutator_balanced p σ k₁ k₂
   · intro k₁ k₂; exact superTrace_chiral_square k₁ k₂
   · intro p q σ; exact superTrace_scaleOperator p q σ

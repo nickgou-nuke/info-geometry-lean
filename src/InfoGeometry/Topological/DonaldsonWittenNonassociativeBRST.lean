@@ -5,6 +5,7 @@ Authors: InfoGeometry Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.LinearCombination
 
@@ -190,7 +191,7 @@ theorem canonicalColorVec3Int_nondegenerate :
 
 namespace ColorVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : ColorVec3 R := ⟨0, 0, 0⟩
 def neg (u : ColorVec3 R) : ColorVec3 R := ⟨-u.c1, -u.c2, -u.c3⟩
@@ -233,7 +234,7 @@ theorem canonicalSplitOctonionInt_nondegenerate :
 
 namespace SplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : SplitOctonion R := ⟨0, ColorVec3.zero, ColorVec3.zero, 0⟩
 def one : SplitOctonion R := ⟨1, ColorVec3.zero, ColorVec3.zero, 1⟩
@@ -281,22 +282,22 @@ instance : Mul (SplitOctonion R) := ⟨mul⟩
 /-- Concrete `NonUnitalNonAssocRing` instance on `SplitOctonion R`. -/
 instance instNonUnitalNonAssocRing : NonUnitalNonAssocRing (SplitOctonion R) where
   add := (· + ·)
-  add_assoc X Y Z := by ext <;> simp only [add_def, add, ColorVec3.add] <;> ring
+  add_assoc X Y Z := by ext <;> simp only [add_def, add, ColorVec3.add] <;> abel
   zero := 0
-  zero_add X := by ext <;> simp only [add_def, zero_def, add, zero, ColorVec3.add, ColorVec3.zero] <;> ring
-  add_zero X := by ext <;> simp only [add_def, zero_def, add, zero, ColorVec3.add, ColorVec3.zero] <;> ring
+  zero_add X := by ext <;> simp only [add_def, zero_def, add, zero, ColorVec3.add, ColorVec3.zero] <;> abel
+  add_zero X := by ext <;> simp only [add_def, zero_def, add, zero, ColorVec3.add, ColorVec3.zero] <;> abel
   nsmul := nsmulRec
   neg := (- ·)
   zsmul := zsmulRec
-  neg_add_cancel X := by ext <;> simp only [add_def, neg_def, zero_def, add, neg, zero, ColorVec3.add, ColorVec3.neg, ColorVec3.zero] <;> ring
-  add_comm X Y := by ext <;> simp only [add_def, add, ColorVec3.add] <;> ring
+  neg_add_cancel X := by ext <;> simp only [add_def, neg_def, zero_def, add, neg, zero, ColorVec3.add, ColorVec3.neg, ColorVec3.zero] <;> abel
+  add_comm X Y := by ext <;> simp only [add_def, add, ColorVec3.add] <;> abel
   sub := (· - ·)
-  sub_eq_add_neg X Y := by ext <;> simp only [sub_def, add_def, neg_def, sub, add, neg, ColorVec3.sub, ColorVec3.add, ColorVec3.neg] <;> ring
+  sub_eq_add_neg X Y := by ext <;> simp only [sub_def, add_def, neg_def, sub, add, neg, ColorVec3.sub, ColorVec3.add, ColorVec3.neg] <;> abel
   mul := (· * ·)
-  left_distrib X Y Z := by ext <;> simp only [mul_def, add_def, mul, add, ColorVec3.add, ColorVec3.dot] <;> ring
-  right_distrib X Y Z := by ext <;> simp only [mul_def, add_def, mul, add, ColorVec3.add, ColorVec3.dot] <;> ring
-  zero_mul X := by ext <;> simp only [mul_def, zero_def, mul, zero, ColorVec3.zero, ColorVec3.dot] <;> ring
-  mul_zero X := by ext <;> simp only [mul_def, zero_def, mul, zero, ColorVec3.zero, ColorVec3.dot] <;> ring
+  left_distrib X Y Z := by ext <;> simp only [mul_def, add_def, mul, add, ColorVec3.add, ColorVec3.dot] <;> noncomm_ring
+  right_distrib X Y Z := by ext <;> simp only [mul_def, add_def, mul, add, ColorVec3.add, ColorVec3.dot] <;> noncomm_ring
+  zero_mul X := by ext <;> simp only [mul_def, zero_def, mul, zero, ColorVec3.zero, ColorVec3.dot] <;> noncomm_ring
+  mul_zero X := by ext <;> simp only [mul_def, zero_def, mul, zero, ColorVec3.zero, ColorVec3.dot] <;> noncomm_ring
 
 /-- Non-commutativity of `SplitOctonion ℤ` multiplication. -/
 theorem mul_noncommutative_int :
@@ -315,7 +316,8 @@ Specialization of the Akivis identity to split-octonion quark modes:
 evaluated on three split-octonion quark modes $U(u_1), U(u_2), U(u_3)$, the general
 `NonUnitalNonAssocRing` `jacobiator` equals $-6 \det_3(u_1, u_2, u_3) K_0$.
 -/
-theorem splitOctonion_quark_jacobiator_eq_neg_six_det3 (u1 u2 u3 : ColorVec3 R) :
+theorem splitOctonion_quark_jacobiator_eq_neg_six_det3 {R : Type*} [CommRing R]
+    (u1 u2 u3 : ColorVec3 R) :
     jacobiator (quark u1) (quark u2) (quark u3) =
       scale (-6 * ColorVec3.det3 u1 u2 u3) paraSymplecticK0 := by
   ext <;>
@@ -337,7 +339,7 @@ Traceless $\mathfrak{sl}(3)$ Cartan generators are exact derivations of `SplitOc
 when $c_1 + c_2 + c_3 = 0$, `cartanColorDerivation c1 c2 c3` satisfies the exact Leibniz rule
 on the full 8-dimensional nonassociative algebra `SplitOctonion R`.
 -/
-def cartanGaugeDerivation (c1 c2 c3 : R) (h_tr : c1 + c2 + c3 = 0) :
+def cartanGaugeDerivation {R : Type*} [CommRing R] (c1 c2 c3 : R) (h_tr : c1 + c2 + c3 = 0) :
     GaugeDerivation (SplitOctonion R) where
   delta := cartanColorDerivation c1 c2 c3
   map_add X Y := by

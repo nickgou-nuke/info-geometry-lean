@@ -186,7 +186,7 @@ theorem innerTransport_superconnectionCurvature
 /-- In a field of characteristic different from two, the odd--odd product is
 the complementary sum of the graded-symmetric and ordinary channels. -/
 theorem odd_odd_product_decomposition
-    {K : Type*} [Field K] [Algebra K Value] [NeZero (2 : K)]
+    {K : Type*} [DivisionRing K] [Module K Value] [NeZero (2 : K)]
     (ω : OperatorOneForm Point Tangent Value)
     (parity : Point → Tangent → Z2Parity)
     (p : Point) (X Y : Tangent)

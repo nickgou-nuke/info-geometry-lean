@@ -96,14 +96,14 @@ theorem continuous_heisenbergCyclotomicRootReadout (α : 𝕜) :
 /-- The Heisenberg boundary readout is locally constant on the discrete parameter set. -/
 theorem isLocallyConstant_heisenbergBoundaryAtlasReadout (α : 𝕜) :
     IsLocallyConstant (heisenbergBoundaryAtlasReadout α) := by
-  unfold heisenbergBoundaryAtlasReadout
-  exact IsLocallyConstant.of_discrete
+  intro s
+  exact isOpen_discrete _
 
 /-- The cyclotomic-root readout is locally constant on the discrete parameter set. -/
 theorem isLocallyConstant_heisenbergCyclotomicRootReadout (α : 𝕜) :
     IsLocallyConstant (heisenbergCyclotomicRootReadout α) := by
-  unfold heisenbergCyclotomicRootReadout
-  exact IsLocallyConstant.of_discrete
+  intro s
+  exact isOpen_discrete _
 
 end
 end InfoGeometry.Topology.HeisenbergCyclotomicAtlasTopological

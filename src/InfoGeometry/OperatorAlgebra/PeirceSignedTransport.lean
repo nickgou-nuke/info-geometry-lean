@@ -17,7 +17,8 @@ namespace InfoGeometry.OperatorAlgebra.LieJordan
 
 open InfoGeometry.Core.PeirceDecomposition InfoGeometry.Core.IdempotentCartan
 
-variable (R : Type*) [CommRing R] {A : Type*} [Ring A] [Algebra R A]
+variable (R : Type*) [Ring R] {A : Type*} [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
 
 section Peirce
 variable {p : A} (hp : p*p=p)

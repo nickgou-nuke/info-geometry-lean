@@ -162,7 +162,7 @@ end Star
 
 section GeneratedAlgebra
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {R A : Type*} [CommSemiring R] [Ring A] [Algebra R A]
 variable {S : Set A} {g h x y : A}
 
 theorem clifford_sum_mem_adjoin (hg : g ∈ S) (hh : h ∈ S) (hx : x ∈ S) (hy : y ∈ S) :
@@ -175,7 +175,8 @@ theorem sum_squares_mem_adjoin (hx : x ∈ S) (hy : y ∈ S) :
     x * x + y * y ∈ Algebra.adjoin R S :=
   clifford_sum_mem_adjoin hx hy hx hy
 
-theorem curvature_mem_adjoin (hg : g ∈ S) (hh : h ∈ S) (hx : x ∈ S) (hy : y ∈ S) :
+theorem curvature_mem_adjoin {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+    {S : Set A} {g h x y : A} (hg : g ∈ S) (hh : h ∈ S) (hx : x ∈ S) (hy : y ∈ S) :
     (g * h) * ⁅x, y⁆ ∈ Algebra.adjoin R S := by
   apply (Algebra.adjoin R S).mul_mem
   · exact (Algebra.adjoin R S).mul_mem (Algebra.subset_adjoin hg) (Algebra.subset_adjoin hh)

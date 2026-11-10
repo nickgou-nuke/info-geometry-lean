@@ -90,23 +90,23 @@ theorem peirce_opposing_channels_to_00
   peirce01_mul_peirce10 hp x y
 
 /-- Zorn upper Peirce projector is null. -/
-theorem zorn_pPlus_null {R : Type*} [CommRing R] (cp : CrossProduct3 R) :
+theorem zorn_pPlus_null {R : Type*} [Ring R] (cp : CrossProduct3 R) :
     ZornMatrix.IsNull cp (pPlus : ZornMatrix R) :=
   pPlus_isNull cp
 
 /-- Zorn lower Peirce projector is null. -/
-theorem zorn_pMinus_null {R : Type*} [CommRing R] (cp : CrossProduct3 R) :
+theorem zorn_pMinus_null {R : Type*} [Ring R] (cp : CrossProduct3 R) :
     ZornMatrix.IsNull cp (pMinus : ZornMatrix R) :=
   pMinus_isNull cp
 
 /-- Every upper off-diagonal Zorn lightray is null. -/
-theorem zorn_upper_lightray_null {R : Type*} [CommRing R]
+theorem zorn_upper_lightray_null {R : Type*} [Ring R]
     (cp : CrossProduct3 R) (v : Fin 3 → R) :
     ZornMatrix.IsNull cp (upperLightray v) :=
   upperLightray_isNull cp v
 
 /-- Every lower off-diagonal Zorn lightray is null. -/
-theorem zorn_lower_lightray_null {R : Type*} [CommRing R]
+theorem zorn_lower_lightray_null {R : Type*} [Ring R]
     (cp : CrossProduct3 R) (w : Fin 3 → R) :
     ZornMatrix.IsNull cp (lowerLightray w) :=
   lowerLightray_isNull cp w

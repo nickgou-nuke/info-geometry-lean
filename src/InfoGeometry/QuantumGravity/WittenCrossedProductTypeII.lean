@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.Basic.Real.Basic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Abel
 import Mathlib.Tactic.LinearCombination
 
 /-!
@@ -22,7 +23,7 @@ readouts of explicitly constructed entries.
 
 namespace InfoGeometry.QuantumGravity.WittenCrossedProduct
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. Four-Entry Matrix Coordinate Carrier -/
 
@@ -37,7 +38,7 @@ structure MatrixCoord2 (R : Type*) where
 
 namespace MatrixCoord2
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zeroOp : MatrixCoord2 R := ⟨0, 0, 0, 0⟩
 
@@ -72,7 +73,7 @@ theorem matrixCoord2_mul_noncommutative :
   decide
 
 /-- Cyclic invariance of the ordinary matrix trace: `Tr(A · B) = Tr(B · A)`. -/
-theorem trace_mul_comm (A B : MatrixCoord2 R) :
+theorem trace_mul_comm {R : Type*} [CommRing R] (A B : MatrixCoord2 R) :
     trace (mul A B) = trace (mul B A) := by
   dsimp [trace, mul]
   ring
@@ -81,7 +82,7 @@ theorem trace_mul_comm (A B : MatrixCoord2 R) :
 theorem trace_add (A B : MatrixCoord2 R) :
     trace (add A B) = trace A + trace B := by
   dsimp [trace, add]
-  ring
+  abel
 
 end MatrixCoord2
 
@@ -90,7 +91,7 @@ end MatrixCoord2
 /-- Four scalar coordinates used to construct a finite matrix readout. This is
 not a crossed-product algebra or operator-algebraic Hamiltonian. -/
 @[ext]
-structure MatrixHamiltonianData (R : Type*) [CommRing R] where
+structure MatrixHamiltonianData (R : Type*) [Ring R] where
   H_grav   : R
   K_mod    : R
   offDiag1 : R
@@ -134,7 +135,7 @@ theorem finiteTraceReadout_eq_parameter_sum (W : MatrixHamiltonianData R) :
     finiteTraceReadout W = W.H_grav + W.K_mod := by
   dsimp [finiteTraceReadout, matrixTrace, totalOp, gravOp, modOp,
          MatrixCoord2.add, MatrixCoord2.trace]
-  ring
+  abel
 
 
 end InfoGeometry.QuantumGravity.WittenCrossedProduct

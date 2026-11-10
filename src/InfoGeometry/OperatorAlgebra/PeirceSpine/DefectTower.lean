@@ -54,15 +54,6 @@ theorem genV_defect_iterates_cycle_split (A C : B) (n : ℕ) :
   exact idempotencyDefect_iterates_add_of_orthogonal
     (qgt_cycles_orthogonal hP A C).1 (qgt_cycles_orthogonal hP A C).2 n
 
-/-- The two iterated cycles still annihilate each other in both orders. -/
-theorem qgt_defect_iterates_orthogonal (A C : B) (n : ℕ) :
-    idempotencyDefect^[n] (qgtPlus P A C) *
-        idempotencyDefect^[n] (qgtMinus P A C) = 0 ∧
-    idempotencyDefect^[n] (qgtMinus P A C) *
-        idempotencyDefect^[n] (qgtPlus P A C) = 0 := by
-  exact ⟨idempotencyDefect_iterates_mul_eq_zero (qgt_cycles_orthogonal hP A C).1 n,
-    idempotencyDefect_iterates_mul_eq_zero (qgt_cycles_orthogonal hP A C).2 n⟩
-
 /-- Upper-cycle left support is preserved at every finite depth. -/
 theorem qgtPlus_defect_iterates_left (A C : B) (n : ℕ) :
     P * idempotencyDefect^[n] (qgtPlus P A C) =

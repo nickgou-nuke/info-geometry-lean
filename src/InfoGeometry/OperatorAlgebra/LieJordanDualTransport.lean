@@ -22,6 +22,129 @@ attribute [local instance 100] LieRing.ofAssociativeRing
 open InfoGeometry.Core.JordanMultiplicationClosure
 open InfoGeometry.Core.JordanAssociator
 
+section NoncommScalars
+
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
+
+/-- Associative adjoint endomorphism over any ring `[Ring R]`. -/
+def ringAd (h : A) : Module.End R A :=
+  LinearMap.mulLeft R h - LinearMap.mulRight R h
+
+@[simp] theorem ringAd_apply (h x : A) :
+    ringAd (R := R) h x = h * x - x * h := rfl
+
+/-- Lie transport with a positive unnormalized Jordan summand over any `[Ring R]`. -/
+def ringPlus (h s : A) : Module.End R A :=
+  ringAd (R := R) h + jordanLeft (R := R) s
+
+/-- Lie transport with the opposite Jordan summand over any `[Ring R]`. -/
+def ringMinus (h s : A) : Module.End R A :=
+  ringAd (R := R) h - jordanLeft (R := R) s
+
+@[simp] theorem ringPlus_apply (h s x : A) :
+    ringPlus (R := R) h s x = h * x - x * h + (s * x + x * s) := rfl
+
+@[simp] theorem ringMinus_apply (h s x : A) :
+    ringMinus (R := R) h s x = h * x - x * h - (s * x + x * s) := rfl
+
+theorem ringPlus_add_ringMinus (h s : A) :
+    ringPlus (R := R) h s + ringMinus (R := R) h s = 2 • ringAd (R := R) h := by
+  unfold ringPlus ringMinus
+  simp only [two_nsmul]
+  abel
+
+theorem ringPlus_sub_ringMinus (h s : A) :
+    ringPlus (R := R) h s - ringMinus (R := R) h s = 2 • jordanLeft (R := R) s := by
+  unfold ringPlus ringMinus
+  simp only [two_nsmul]
+  abel
+
+/-- The mixed bracket is the Jordan operator of the coefficient commutator over any `[Ring R]`. -/
+theorem ring_mixed_operator_commutator (h s : A) :
+    ringAd (R := R) h * jordanLeft (R := R) s - jordanLeft (R := R) s * ringAd (R := R) h =
+      jordanLeft (R := R) (h * s - s * h) := by
+  ext x
+  exact commutator_symm_operator h s x
+
+theorem ringMinus_mul_ringPlus (h s : A) :
+    ringMinus (R := R) h s * ringPlus (R := R) h s =
+      ringAd (R := R) h * ringAd (R := R) h -
+        jordanLeft (R := R) s * jordanLeft (R := R) s + jordanLeft (R := R) (h * s - s * h) := by
+  calc
+    _ = ringAd (R := R) h * ringAd (R := R) h -
+          jordanLeft (R := R) s * jordanLeft (R := R) s +
+          (ringAd (R := R) h * jordanLeft (R := R) s -
+            jordanLeft (R := R) s * ringAd (R := R) h) := by
+          unfold ringMinus ringPlus
+          simp only [sub_mul, mul_add]
+          abel
+    _ = _ := by rw [ring_mixed_operator_commutator]
+
+theorem ringPlus_mul_ringMinus (h s : A) :
+    ringPlus (R := R) h s * ringMinus (R := R) h s =
+      ringAd (R := R) h * ringAd (R := R) h -
+        jordanLeft (R := R) s * jordanLeft (R := R) s - jordanLeft (R := R) (h * s - s * h) := by
+  calc
+    _ = ringAd (R := R) h * ringAd (R := R) h -
+          jordanLeft (R := R) s * jordanLeft (R := R) s -
+          (ringAd (R := R) h * jordanLeft (R := R) s -
+            jordanLeft (R := R) s * ringAd (R := R) h) := by
+          unfold ringMinus ringPlus
+          simp only [mul_sub, add_mul]
+          abel
+    _ = _ := by rw [ring_mixed_operator_commutator]
+
+theorem ring_product_order_defect (h s : A) :
+    ringMinus (R := R) h s * ringPlus (R := R) h s - ringPlus (R := R) h s * ringMinus (R := R) h s =
+      2 • jordanLeft (R := R) (h * s - s * h) := by
+  rw [ringMinus_mul_ringPlus, ringPlus_mul_ringMinus]
+  simp only [two_nsmul]
+  abel
+
+theorem ring_products_commute_iff (h s : A) :
+    ringMinus (R := R) h s * ringPlus (R := R) h s = ringPlus (R := R) h s * ringMinus (R := R) h s ↔
+      2 • jordanLeft (R := R) (h * s - s * h) = 0 := by
+  rw [← sub_eq_zero, ring_product_order_defect]
+
+theorem ringPlus_commutator (h s k t : A) :
+    ringPlus (R := R) h s * ringPlus (R := R) k t - ringPlus (R := R) k t * ringPlus (R := R) h s =
+      ringPlus (R := R) (h * k - k * h + (s * t - t * s))
+        (h * t - t * h + (s * k - k * s)) := by
+  ext x
+  change (h * (k * x - x * k + (t * x + x * t)) -
+      (k * x - x * k + (t * x + x * t)) * h +
+      (s * (k * x - x * k + (t * x + x * t)) +
+        (k * x - x * k + (t * x + x * t)) * s)) -
+    (k * (h * x - x * h + (s * x + x * s)) -
+      (h * x - x * h + (s * x + x * s)) * k +
+      (t * (h * x - x * h + (s * x + x * s)) +
+        (h * x - x * h + (s * x + x * s)) * t)) = _
+  rw [ringPlus_apply]
+  noncomm_ring
+
+theorem ringPlus_leibniz_defect (h s x y : A) :
+    ringPlus (R := R) h s (x * y) -
+      (ringPlus (R := R) h s x * y + x * ringPlus (R := R) h s y) = -(2 • (x * s * y)) := by
+  simp only [ringPlus_apply, two_nsmul]
+  noncomm_ring
+
+theorem map_ringPlus {B : Type*} [Ring B] [Module R B]
+    [IsScalarTower R B B] [SMulCommClass R B B]
+    (f : A →+* B) (h s x : A) :
+    f (ringPlus (R := R) h s x) = ringPlus (R := R) (f h) (f s) (f x) := by
+  simp only [ringPlus_apply, map_add, map_sub, map_mul]
+
+theorem map_ringMinus {B : Type*} [Ring B] [Module R B]
+    [IsScalarTower R B B] [SMulCommClass R B B]
+    (f : A →+* B) (h s x : A) :
+    f (ringMinus (R := R) h s x) = ringMinus (R := R) (f h) (f s) (f x) := by
+  simp only [ringMinus_apply, map_add, map_sub, map_mul]
+
+end NoncommScalars
+
+section CommRingScalars
+
 variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
 
 /-- Lie transport with a positive unnormalized Jordan summand. -/
@@ -68,7 +191,7 @@ theorem minus_mul_plus (h s : A) :
           (LieAlgebra.ad R A h * jordanLeft (R := R) s -
             jordanLeft (R := R) s * LieAlgebra.ad R A h) := by
           unfold minus plus
-          simp only [sub_mul, mul_sub, add_mul, mul_add]
+          simp only [sub_mul, mul_add]
           abel
     _ = _ := by rw [mixed_operator_commutator]
 
@@ -83,7 +206,7 @@ theorem plus_mul_minus (h s : A) :
           (LieAlgebra.ad R A h * jordanLeft (R := R) s -
             jordanLeft (R := R) s * LieAlgebra.ad R A h) := by
           unfold minus plus
-          simp only [sub_mul, mul_sub, add_mul, mul_add]
+          simp only [mul_sub, add_mul]
           abel
     _ = _ := by rw [mixed_operator_commutator]
 
@@ -134,5 +257,7 @@ theorem map_minus {B : Type*} [Ring B] [Algebra R B]
     (f : A →+* B) (h s x : A) :
     f (minus (R := R) h s x) = minus (R := R) (f h) (f s) (f x) := by
   simp only [minus_apply, map_add, map_sub, map_mul]
+
+end CommRingScalars
 
 end InfoGeometry.OperatorAlgebra.LieJordanDualTransport

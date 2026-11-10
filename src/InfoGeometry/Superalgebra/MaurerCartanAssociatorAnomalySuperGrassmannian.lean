@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
+import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Ring
 
 /-!
@@ -33,7 +34,7 @@ Ref: `QMS-DIR-SEC129-MAURER-CARTAN-ANOMALY-SGR-2026-OCT-16`
 
 namespace InfoGeometry.Superalgebra.MaurerCartanSuperGrassmannian
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. 3D Спиново-Цветови Вектори и Барионен Детерминант -/
 
@@ -46,7 +47,7 @@ structure ColorVec3 (R : Type*) where
 
 namespace ColorVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def canonicalColorVec3Int : ColorVec3 ℤ := ⟨1, 2, 3⟩
 
@@ -93,7 +94,7 @@ structure SplitOctonion (R : Type*) where
 
 namespace SplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def canonicalSplitOctonionInt : SplitOctonion ℤ := ⟨1, ColorVec3.e1, ColorVec3.e2, 2⟩
 
@@ -164,7 +165,7 @@ theorem mul_noncommutative_int :
 Комутаторът на два кварка от предния лист ℐ₊ генерира удвоен антикварк в задния лист ℐ₋:
 [U(u₁), U(u₂)] = 2 • V(u₁ × u₂).
 -/
-theorem quark_commutator_eq_two_antiquark_cross (u₁ u₂ : ColorVec3 R) :
+theorem quark_commutator_eq_two_antiquark_cross {R : Type*} [CommRing R] (u₁ u₂ : ColorVec3 R) :
     commutator (quark u₁) (quark u₂) =
       scale 2 (antiquark (ColorVec3.cross u₁ u₂)) := by
   dsimp [commutator, quark, antiquark, mul, sub, scale,
@@ -178,7 +179,7 @@ theorem quark_commutator_eq_two_antiquark_cross (u₁ u₂ : ColorVec3 R) :
 пара-симплектичния оператор K₀, претеглен с барионния топологичен заряд:
 [[U(u₁), U(u₂)], U(u₃)] = - 2 det(u₁, u₂, u₃) • K₀!
 -/
-theorem nested_quark_commutator_generates_k0 (u₁ u₂ u₃ : ColorVec3 R) :
+theorem nested_quark_commutator_generates_k0 {R : Type*} [CommRing R] (u₁ u₂ u₃ : ColorVec3 R) :
     commutator (commutator (quark u₁) (quark u₂)) (quark u₃) =
       scale (- 2 * ColorVec3.det3 u₁ u₂ u₃) paraSymplecticK0 := by
   dsimp [commutator, quark, paraSymplecticK0, mul, sub, scale,
@@ -193,7 +194,7 @@ theorem nested_quark_commutator_generates_k0 (u₁ u₂ u₃ : ColorVec3 R) :
 J(U(u₁), U(u₂), U(u₃)) = 6 • [U(u₁), U(u₂), U(u₃)] = - 6 det(u₁, u₂, u₃) • K₀!
 Така нарушението на тъждеството на Якоби се превръща в точен генератор на вакуумната хиралност!
 -/
-theorem akivis_malcev_maurer_cartan_anomaly_theorem (u₁ u₂ u₃ : ColorVec3 R) :
+theorem akivis_malcev_maurer_cartan_anomaly_theorem {R : Type*} [CommRing R] (u₁ u₂ u₃ : ColorVec3 R) :
     jacobiator (quark u₁) (quark u₂) (quark u₃) =
       scale 6 (associator (quark u₁) (quark u₂) (quark u₃)) ∧
     jacobiator (quark u₁) (quark u₂) (quark u₃) =
@@ -224,7 +225,7 @@ def twistorProjMinus (v : ColorVec3 R) : SplitOctonion R :=
 1. P₊(u) · P₊(u) = P₊(u)   и   P₋(v) · P₋(v) = P₋(v) (Идемпотентни проектори!).
 2. intervalNorm(P₊(u)) = 0  и   intervalNorm(P₋(v)) = 0 (Лежат изцяло на светлинния конус s² = 0!).
 -/
-theorem twistor_projectors_idempotent_and_null (u v : ColorVec3 R) :
+theorem twistor_projectors_idempotent_and_null {R : Type*} [CommRing R] (u v : ColorVec3 R) :
     mul (twistorProjPlus u) (twistorProjPlus u) = twistorProjPlus u ∧
     mul (twistorProjMinus v) (twistorProjMinus v) = twistorProjMinus v ∧
     intervalNorm (twistorProjPlus u) = 0 ∧
@@ -255,10 +256,10 @@ theorem twistor_projector_parallel_transport (u₁ u₂ v₁ v₂ : ColorVec3 R)
   constructor
   · dsimp [twistorProjPlus, antiquark, mul, add, ColorVec3.zero, ColorVec3.dot,
            ColorVec3.sub, ColorVec3.add, ColorVec3.smul, ColorVec3.cross]
-    ext <;> ring
+    ext <;> simp
   · dsimp [twistorProjMinus, quark, mul, sub, ColorVec3.zero, ColorVec3.dot,
            ColorVec3.sub, ColorVec3.add, ColorVec3.smul, ColorVec3.cross]
-    ext <;> ring
+    ext <;> simp
 
 /--
 Теорема 3b (Кръстосано Срещане на Двата Листа и Условие за Инцидентност на Пенроуз):
@@ -271,13 +272,13 @@ theorem twistor_projector_cross_incidence (u v : ColorVec3 R) :
   dsimp [twistorProjPlus, twistorProjMinus, e1, quark, mul, add, scale,
          ColorVec3.zero, ColorVec3.dot, ColorVec3.sub, ColorVec3.add,
          ColorVec3.smul, ColorVec3.cross]
-  ext <;> ring
+  ext <;> simp
 
 end SplitOctonion
 
 /-! ### 5. Главен Синтез на Раздел 129 -/
 
-theorem maurer_cartan_super_grassmannian_synthesis
+theorem maurer_cartan_super_grassmannian_synthesis {R : Type*} [CommRing R]
     (u₁ u₂ u₃ u v : ColorVec3 R) :
     SplitOctonion.jacobiator (SplitOctonion.quark u₁) (SplitOctonion.quark u₂) (SplitOctonion.quark u₃) =
       SplitOctonion.scale 6 (SplitOctonion.associator (SplitOctonion.quark u₁) (SplitOctonion.quark u₂) (SplitOctonion.quark u₃)) ∧

@@ -27,7 +27,7 @@ open BigOperators
 namespace InfoGeometry.Lie.SplitOctonionDerivationSpinRep
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 local notation "BlockMat" => Matrix (ι ⊕ ι) (ι ⊕ ι) R
 local notation "SubMat" => Matrix ι ι R
@@ -96,7 +96,7 @@ theorem commutes_Gamma_iff_diagComponent_eq
         have h'x : M.toBlocks₁₂ i j = -M.toBlocks₁₂ i j := by
           simpa [Matrix.fromBlocks] using h'
         have hz : (2 : R) * M.toBlocks₁₂ i j = 0 := by
-          linear_combination h'x
+          rw [two_mul, add_eq_zero_iff_eq_neg.mpr h'x]
         have hx : M.toBlocks₁₂ i j = 0 :=
           (mul_eq_zero.mp hz).resolve_left (by norm_num)
         simpa [diagComponent, Matrix.fromBlocks, Matrix.toBlocks₁₂] using hx.symm
@@ -104,7 +104,7 @@ theorem commutes_Gamma_iff_diagComponent_eq
         have h'x : M.toBlocks₂₁ i j = -M.toBlocks₂₁ i j := by
           simpa [Matrix.fromBlocks] using h'.symm
         have hz : (2 : R) * M.toBlocks₂₁ i j = 0 := by
-          linear_combination h'x
+          rw [two_mul, add_eq_zero_iff_eq_neg.mpr h'x]
         have hx : M.toBlocks₂₁ i j = 0 :=
           (mul_eq_zero.mp hz).resolve_left (by norm_num)
         simpa [diagComponent, Matrix.fromBlocks, Matrix.toBlocks₂₁] using hx.symm
@@ -166,7 +166,7 @@ theorem anticommutes_Gamma_iff_offDiagComponent_eq
         have h'x : M.toBlocks₁₁ i j = -M.toBlocks₁₁ i j := by
           simpa [Matrix.fromBlocks] using h'
         have hz : (2 : R) * M.toBlocks₁₁ i j = 0 := by
-          linear_combination h'x
+          rw [two_mul, add_eq_zero_iff_eq_neg.mpr h'x]
         have hx : M.toBlocks₁₁ i j = 0 :=
           (mul_eq_zero.mp hz).resolve_left (by norm_num)
         simpa [offDiagComponent, Matrix.fromBlocks, Matrix.toBlocks₁₁] using hx.symm
@@ -176,7 +176,7 @@ theorem anticommutes_Gamma_iff_offDiagComponent_eq
         have h'x : M.toBlocks₂₂ i j = -M.toBlocks₂₂ i j := by
           simpa [Matrix.fromBlocks] using h'.symm
         have hz : (2 : R) * M.toBlocks₂₂ i j = 0 := by
-          linear_combination h'x
+          rw [two_mul, add_eq_zero_iff_eq_neg.mpr h'x]
         have hx : M.toBlocks₂₂ i j = 0 :=
           (mul_eq_zero.mp hz).resolve_left (by norm_num)
         simpa [offDiagComponent, Matrix.fromBlocks, Matrix.toBlocks₂₂] using hx.symm
@@ -245,7 +245,7 @@ theorem projDiag_eq_half_add_cartan
       _ = (2 : R) • diagComponent M + 0 := by rw [two_smul, sub_self]
       _ = (2 : R) • diagComponent M := by rw [add_zero]
   rw [h_sum, smul_smul]
-  have h_scalar : two_inv * 2 = 1 := by rw [mul_comm, h2]
+  have h_scalar : two_inv * 2 = 1 := by rw [mul_two, ← two_mul, h2]
   rw [h_scalar, one_smul]
 
 /-- THEOREM 6: The Pairing Projection equals (1/2) • (M - Γ M Γ). -/
@@ -271,7 +271,7 @@ theorem projOffDiag_eq_half_sub_cartan
       _ = 0 + (2 : R) • offDiagComponent M := by rw [sub_self, two_smul]
       _ = (2 : R) • offDiagComponent M := by rw [zero_add]
   rw [h_sub, smul_smul]
-  have h_scalar : two_inv * 2 = 1 := by rw [mul_comm, h2]
+  have h_scalar : two_inv * 2 = 1 := by rw [mul_two, ← two_mul, h2]
   rw [h_scalar, one_smul]
 
 /-!

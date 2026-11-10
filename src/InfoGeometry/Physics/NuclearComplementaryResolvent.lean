@@ -21,7 +21,9 @@ namespace InfoGeometry.Physics.NuclearComplementaryResolvent
 
 open InfoGeometry.Physics.NuclearFeshbachReduction
 
-variable {K V : Type*} [Field K] [AddCommGroup V] [Module K V]
+section Ring
+
+variable {K V : Type*} [Ring K] [AddCommGroup V] [Module K V]
 
 /-- Complementary projection with its actual submodule as codomain. -/
 def kerProjection (P : Module.End K V) (hP : P * P = P) : V →ₗ[K] LinearMap.ker P :=
@@ -57,29 +59,6 @@ def kerProjection (P : Module.End K V) (hP : P * P = P) : V →ₗ[K] LinearMap.
   simp only [LinearMap.sub_apply, Module.End.one_apply,
     LinearMap.mem_ker.mp v.property, sub_zero]
 
-/-- `E id - Q H Q` as a native endomorphism of the complementary submodule. -/
-def complementShift (P : Module.End K V) (hP : P * P = P)
-    (H : Module.End K V) (E : K) : Module.End K (LinearMap.ker P) :=
-  E • 1 - (kerProjection P hP).comp (H.comp (LinearMap.ker P).subtype)
-
-theorem denominator_subtype (P H : Module.End K V) (E : K)
-    (hP : P * P = P) (v : LinearMap.ker P) :
-    denominator P H E (v : V) = (complementShift P hP H E v : V) := by
-  simp only [denominator, LinearMap.sub_apply, LinearMap.smul_apply,
-    Module.End.mul_apply, complementShift,
-    LinearMap.comp_apply, Submodule.subtype_apply, Module.End.one_apply,
-    Submodule.coe_sub, Submodule.coe_smul, coe_kerProjection,
-    LinearMap.mem_ker.mp v.property, sub_zero]
-
-theorem kerProjection_denominator (P H : Module.End K V) (E : K)
-    (hP : P * P = P) (v : V) :
-    kerProjection P hP (denominator P H E v) =
-      complementShift P hP H E (kerProjection P hP v) := by
-  simp only [denominator, LinearMap.sub_apply, LinearMap.smul_apply,
-    Module.End.mul_apply, map_sub, map_smul, kerProjection_projection,
-    complementShift, Module.End.one_apply, LinearMap.comp_apply,
-    Submodule.subtype_apply, coe_kerProjection, sub_zero]
-
 /-- Extend the inverse of a complementary linear equivalence by zero. -/
 def liftInverse (P : Module.End K V) (hP : P * P = P)
     (e : LinearMap.ker P ≃ₗ[K] LinearMap.ker P) : Module.End K V :=
@@ -102,6 +81,35 @@ theorem liftInverse_mul_complement (P : Module.End K V) (hP : P * P = P)
   apply LinearMap.ext
   intro v
   simp only [Module.End.mul_apply, liftInverse_apply, kerProjection_complement]
+
+end Ring
+
+section Field
+
+variable {K V : Type*} [Field K] [AddCommGroup V] [Module K V]
+
+/-- `E id - Q H Q` as a native endomorphism of the complementary submodule. -/
+def complementShift (P : Module.End K V) (hP : P * P = P)
+    (H : Module.End K V) (E : K) : Module.End K (LinearMap.ker P) :=
+  E • 1 - (kerProjection P hP).comp (H.comp (LinearMap.ker P).subtype)
+
+theorem denominator_subtype (P H : Module.End K V) (E : K)
+    (hP : P * P = P) (v : LinearMap.ker P) :
+    denominator P H E (v : V) = (complementShift P hP H E v : V) := by
+  simp only [denominator, LinearMap.sub_apply, LinearMap.smul_apply,
+    Module.End.mul_apply, complementShift,
+    LinearMap.comp_apply, Submodule.subtype_apply, Module.End.one_apply,
+    Submodule.coe_sub, Submodule.coe_smul, coe_kerProjection,
+    LinearMap.mem_ker.mp v.property, sub_zero]
+
+theorem kerProjection_denominator (P H : Module.End K V) (E : K)
+    (hP : P * P = P) (v : V) :
+    kerProjection P hP (denominator P H E v) =
+      complementShift P hP H E (kerProjection P hP v) := by
+  simp only [denominator, LinearMap.sub_apply, LinearMap.smul_apply,
+    Module.End.mul_apply, map_sub, map_smul, kerProjection_projection,
+    complementShift, Module.End.one_apply, LinearMap.comp_apply,
+    Submodule.subtype_apply, coe_kerProjection, sub_zero]
 
 theorem denominator_mul_liftInverse (P H : Module.End K V) (E : K)
     (hP : P * P = P) (e : LinearMap.ker P ≃ₗ[K] LinearMap.ker P)
@@ -142,5 +150,7 @@ theorem reconstruct_eigenvector_of_equiv (P H : Module.End K V) (E : K)
     waveOperator P H (liftInverse P hP e) (P ψ) = ψ :=
   reconstruct_eigenvector P H _ E hP (liftInverse_mul_complement P hP e)
     (liftInverse_mul_denominator P H E hP e he) ψ hψ
+
+end Field
 
 end InfoGeometry.Physics.NuclearComplementaryResolvent

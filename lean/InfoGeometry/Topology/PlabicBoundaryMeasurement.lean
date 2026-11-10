@@ -11,23 +11,25 @@ open InfoGeometry.Amplituhedron
 
 namespace PlabicBoundaryMeasurement
 
-variable {n : ℕ} {R : Type*} [CommRing R]
+variable {n : ℕ}
 
 /-! ### 2. Boundary Bridge Addition (Elementary Unipotent Shears) -/
 
 /-- Boundary Bridge Addition:
     Adds an on-shell bridge from boundary strand j to i with positive weight t,
     mapping column i to (c_i + t * c_j). -/
-def addBridge (C : Matrix (Fin 2) (Fin n) R) (i j : Fin n) (t : R) :
+def addBridge {R : Type*} [Ring R] (C : Matrix (Fin 2) (Fin n) R) (i j : Fin n) (t : R) :
     Matrix (Fin 2) (Fin n) R :=
   fun r c => if c = i then C r i + t * C r j else C r c
 
 /-- Bridge Invariance: Minors of columns disjoint from the bridge target i are unchanged. -/
-theorem minor2_addBridge_of_ne (C : Matrix (Fin 2) (Fin n) R) (i j a b : Fin n) (t : R)
+theorem minor2_addBridge_of_ne {R : Type*} [Ring R] (C : Matrix (Fin 2) (Fin n) R) (i j a b : Fin n) (t : R)
     (ha : a ≠ i) (hb : b ≠ i) :
     minor2 (addBridge C i j t) a b = minor2 C a b := by
   dsimp [minor2, addBridge]
   rw [if_neg ha, if_neg ha, if_neg hb, if_neg hb]
+
+variable {R : Type*} [CommRing R]
 
 /-- Multilinear Bridge Expansion (Right Column):
     Δ_{a, i}(C') = Δ_{a, i}(C) + t * Δ_{a, j}(C). -/

@@ -30,7 +30,7 @@ namespace InfoGeometry.Canonical.AmplituhedronMetriplecticBridge
 open InfoGeometry.Canonical.AmplituhedronBostConnesBridge
 open InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Amplituhedron kinematic phase space point -/
 structure KinematicPluckerPoint (R : Type*) where
@@ -55,7 +55,7 @@ theorem klein_null_of_factorization (p : KinematicPluckerPoint R)
     IsKleinNull p := by
   dsimp [IsKleinNull, kleinQuadricEval]
   rw [h]
-  ring
+  noncomm_ring
 
 /-- The elementary scalar-rate implication formerly presented as an
 amplituhedron second law.  This is only real addition and order: it asserts

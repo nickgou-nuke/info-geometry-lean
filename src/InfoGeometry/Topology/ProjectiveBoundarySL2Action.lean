@@ -12,12 +12,12 @@ the preservation proof elementary and makes the required invertibility
 property visible.
 -/
 
-def det2 {R : Type*} [CommRing R]
+def det2 {R : Type*} [Ring R]
     (M : Matrix (Fin 2) (Fin 2) R) : R :=
   M 0 0 * M 1 1 - M 0 1 * M 1 0
 
 @[ext]
-structure SL2BoundaryMatrix (R : Type*) [CommRing R] where
+structure SL2BoundaryMatrix (R : Type*) [Ring R] where
   matrix : Matrix (Fin 2) (Fin 2) R
   det_eq_one : det2 matrix = 1
 

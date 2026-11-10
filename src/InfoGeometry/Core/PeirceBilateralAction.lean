@@ -19,9 +19,12 @@ namespace InfoGeometry.Core.PeirceBilateralAction
 open InfoGeometry.Core.DualSeedPeirce InfoGeometry.Core.PeirceRotor
 open InfoGeometry.Core.DiracSuperalgebra InfoGeometry.Algebra
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+section Noncomm
 
-/-- Bundle the existing left/right multiplication maps on the actual algebra. -/
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
+
+/-- Bundle the existing left/right multiplication maps on the actual algebra over any ring `R`. -/
 def bilateral (u v : A) : A →ₗ[R] A := (R_map v).comp (L_map u)
 
 @[simp] theorem bilateral_apply (u v x : A) : bilateral (R := R) u v x = u * x * v := rfl
@@ -65,21 +68,24 @@ def bilateralEquiv (u v : Aˣ) : A ≃ₗ[R] A where
 /-- The diagonal specialization of the existing supported block evaluator. -/
 def diagonal (d b : A) (lam mu : R) : A := peirceBlock d b lam 0 0 mu
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 @[simp] theorem diagonal_formula (d b : A) (lam mu : R) :
     diagonal d b lam mu = lam • polePlus d b + mu • poleMinus d b := by
   simp [diagonal, peirceBlock]
 
-/-- Expansion is valid for every ambient signal; it does not assert active support. -/
+/-- Expansion is valid for every ambient signal over any noncommutative ring `R`;
+it does not assert active support. -/
 theorem four_corner_expansion (d b x : A) (l m r s : R) :
     bilateral (R := R) (diagonal d b l m) (diagonal d b r s) x =
       (l * r) • (polePlus d b * x * polePlus d b) +
       (l * s) • (polePlus d b * x * poleMinus d b) +
       (m * r) • (poleMinus d b * x * polePlus d b) +
       (m * s) • (poleMinus d b * x * poleMinus d b) := by
-  simp only [bilateral_apply, diagonal_formula, add_mul, mul_add,
-    smul_mul_assoc, mul_smul_comm]
-  module
+  simp only [bilateral_apply, diagonal_formula, add_mul, mul_add]
+  simp_rw [smul_mul_assoc, mul_smul_comm, smul_smul]
+  abel
 
+omit [Ring R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A] in
 /-- The four corners reconstruct the active compression, not an arbitrary signal. -/
 theorem active_corner_sum (d b x : A) :
     polePlus d b * x * polePlus d b + polePlus d b * x * poleMinus d b +
@@ -88,11 +94,7 @@ theorem active_corner_sum (d b x : A) :
   change _ = (polePlus d b + poleMinus d b) * x * (polePlus d b + poleMinus d b)
   noncomm_ring
 
-/-- A product of two scalar weight vectors cannot prescribe four independent weights. -/
-theorem weights_separable (l m r s : R) :
-    (l * r) * (m * s) = (l * s) * (m * r) := by ring
-
-/-- A reusable corner eigen-scaling contract on an arbitrary algebra. -/
+/-- A reusable corner eigen-scaling contract over any noncommutative ring `R` and algebra `A`. -/
 theorem corner_scaling (u v p q x : A) (l r : R)
     (hl : u * p = l • p) (hr : q * v = r • q) :
     bilateral (R := R) u v (p * x * q) = (l * r) • (p * x * q) := by
@@ -100,8 +102,24 @@ theorem corner_scaling (u v p q x : A) (l r : R)
     _ = (u * p) * x * (q * v) := by simp only [bilateral_apply, mul_assoc]
     _ = _ := by
       rw [hl, hr]
-      simp only [smul_mul_assoc, mul_smul_comm, smul_smul]
-      rw [mul_comm r l]
+      rw [smul_mul_assoc, smul_mul_assoc, mul_smul_comm, smul_smul]
+
+/-- Over a noncommutative coefficient ring `R`, bilateral action of diagonal blocks sandwiches
+each coefficient `a, x, y, z` between left weights `(l, m)` and right weights `(r, s)`. -/
+theorem diagonal_block_action_noncomm {d b : A} (h : IsDualSeedPair d b)
+    (l m r s a x y z : R) :
+    bilateral (R := R) (diagonal d b l m) (diagonal d b r s) (peirceBlock d b a x y z) =
+      peirceBlock d b (l * a * r) (l * x * s) (m * y * r) (m * z * s) := by
+  simp only [bilateral_apply, diagonal, peirceBlock_mul h,
+    mul_zero, zero_mul, add_zero, zero_add]
+
+end Noncomm
+
+variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+
+/-- A product of two scalar weight vectors cannot prescribe four independent weights. -/
+theorem weights_separable (l m r s : R) :
+    (l * r) * (m * s) = (l * s) * (m * r) := by ring
 
 variable {d b : A}
 

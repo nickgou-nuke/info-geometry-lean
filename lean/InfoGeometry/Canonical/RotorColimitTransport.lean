@@ -30,6 +30,17 @@ theorem map_seed_pair (f : A →+* C) {d B : A} (h : IsDualSeedPair d B) :
   BdB := by simpa only [map_mul] using congrArg f h.BdB
 end Ring
 
+section CommSemiring
+variable {R A C : Type*} [CommSemiring R] [Ring A] [Ring C]
+variable [Algebra R A] [Algebra R C]
+
+/-- Pole and carrier support commute with the algebra map. -/
+theorem map_polePlus_and_carrierSupport (f : A →ₐ[R] C) (d B : A) :
+    f (polePlus d B) = polePlus (f d) (f B) ∧
+    f (carrierSupport d B) = carrierSupport (f d) (f B) := by
+  simp only [polePlus, poleMinus, carrierSupport, map_add, map_mul, and_self]
+end CommSemiring
+
 section Algebra
 variable {R A C : Type*} [CommRing R] [Ring A] [Ring C]
 variable [Algebra R A] [Algebra R C]
@@ -57,12 +68,6 @@ theorem map_kmsModularWeight (f : A →ₐ[R] C) (u v : R) (d B : A) :
 theorem map_movingPoleMinus (f : A →ₐ[R] C) (c s : R) (d B : A) :
     f (movingPoleMinus c s d B) = movingPoleMinus c s (f d) (f B) := by
   simp only [movingPoleMinus, poleMinus, map_mul, map_phaseRotor]
-
-/-- Pole and carrier support commute with the algebra map. -/
-theorem map_polePlus_and_carrierSupport (f : A →ₐ[R] C) (d B : A) :
-    f (polePlus d B) = polePlus (f d) (f B) ∧
-    f (carrierSupport d B) = carrierSupport (f d) (f B) := by
-  simp only [polePlus, poleMinus, carrierSupport, map_add, map_mul, and_self]
 end Algebra
 
 section NativeColimit

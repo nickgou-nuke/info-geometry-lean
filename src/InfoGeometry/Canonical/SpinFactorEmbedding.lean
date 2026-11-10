@@ -10,7 +10,9 @@ namespace InfoGeometry.Canonical
 open InfoGeometry.Algebra.SplitJordanSpinor
 open JordanMatrix2
 
-variable (K A : Type*) [CommRing K] [NonAssocSemiring A] [SMul K A]
+section Ring
+
+variable (K A : Type*) [Ring K] [NonAssocSemiring A] [SMul K A]
 variable [SplitCompositionAlgebra K A]
 
 /-- 
@@ -24,17 +26,24 @@ abbrev SpinFactorEmbedding :=
       (Phi X).transpose * (splitMetric10D K) * (Phi X) =
         (fun _ _ => JordanMatrix2.determinant X)}
 
-def Phi {K A : Type*} [CommRing K] [NonAssocSemiring A] [SMul K A]
+def Phi {K A : Type*} [Ring K] [NonAssocSemiring A] [SMul K A]
     [SplitCompositionAlgebra K A] (emb : SpinFactorEmbedding K A) :
     JordanMatrix2 K A → Matrix (Sum (Fin 5) (Fin 5)) (Fin 1) K :=
   emb.1
 
-theorem isometry {K A : Type*} [CommRing K] [NonAssocSemiring A] [SMul K A]
+theorem isometry {K A : Type*} [Ring K] [NonAssocSemiring A] [SMul K A]
     [SplitCompositionAlgebra K A]
     (emb : SpinFactorEmbedding K A) (X : JordanMatrix2 K A) :
     (Phi emb X).transpose * (splitMetric10D K) * (Phi emb X) =
       (fun _ _ => JordanMatrix2.determinant X) :=
   emb.2 X
+
+end Ring
+
+section CommRing
+
+variable (K A : Type*) [CommRing K] [NonAssocSemiring A] [SMul K A]
+variable [SplitCompositionAlgebra K A]
 
 /--
   2. ТЕОРЕМА ЗА СИМЕТРИЯТА НА МАРШРУТИЗАЦИЯТА (Routing Symmetry Theorem)
@@ -66,5 +75,7 @@ theorem transpose_o55_preserves_spin_factor_determinant
         congrArg (fun M => (Phi emb X).transpose * M * Phi emb X) hG
     rw [hG_subst, isometry emb X]
   exact hleft.trans hconj
+
+end CommRing
 
 end InfoGeometry.Canonical

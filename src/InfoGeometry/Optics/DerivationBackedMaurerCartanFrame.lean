@@ -28,7 +28,7 @@ open InfoGeometry.Optics.LocalGaugeQGTCovariance
 open InfoGeometry.Optics.LocalGaugeFrameComposition
 
 variable {R Point Tangent A : Type*}
-variable [CommRing R] [Ring A] [Algebra R A]
+variable [Ring R] [Ring A] [Module R A]
 
 /-- A direction-indexed algebra derivation on the coefficient algebra. -/
 abbrev DirectionalDerivation :=

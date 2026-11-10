@@ -26,7 +26,7 @@ Abstract split source carrier with a mode-indexed stabilization witness.
 large modes are inactive beyond cutoff `N`.
 -/
 structure SplitSourceCarrier
-    (𝕜 V Carrier : Type*) [Field 𝕜]
+    (𝕜 V Carrier : Type*) [Ring 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     [AddCommGroup Carrier] [Module 𝕜 Carrier] where
   /-- Embed source vectors into the carrier. -/
@@ -42,7 +42,7 @@ structure SplitSourceCarrier
 
 namespace SplitSourceCarrier
 
-variable {𝕜 V Carrier : Type*} [Field 𝕜]
+variable {𝕜 V Carrier : Type*} [Ring 𝕜]
 variable [AddCommGroup V] [Module 𝕜 V]
 variable [AddCommGroup Carrier] [Module 𝕜 Carrier]
 

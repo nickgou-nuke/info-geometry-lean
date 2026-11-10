@@ -23,7 +23,7 @@ open scoped BigOperators
 
 namespace ZornMatrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Explicit Zorn multiplication copied from the concrete carrier. -/
 def mulZ (z1 z2 : InfoGeometry.Canonical.ZornMatrix R) :
@@ -160,9 +160,9 @@ def lower (u : Fin 3 → R) : InfoGeometry.Canonical.ZornMatrix R :=
 theorem dot_smul_left (a : R) (u v : Fin 3 → R) :
     ZornMatrix.dot (a • u) v = a * ZornMatrix.dot u v := by
   simp [ZornMatrix.dot]
-  ring
+  noncomm_ring
 
-theorem dot_smul_right (a : R) (u v : Fin 3 → R) :
+theorem dot_smul_right {R : Type*} [CommRing R] (a : R) (u v : Fin 3 → R) :
     ZornMatrix.dot u (a • v) = a * ZornMatrix.dot u v := by
   simp [ZornMatrix.dot]
   ring
@@ -170,14 +170,14 @@ theorem dot_smul_right (a : R) (u v : Fin 3 → R) :
 theorem cross_smul_left (a : R) (u v : Fin 3 → R) :
     ZornMatrix.cross (a • u) v = a • ZornMatrix.cross u v := by
   ext i <;> fin_cases i <;>
-    simp [ZornMatrix.cross] <;> ring
+    simp [ZornMatrix.cross] <;> noncomm_ring
 
-theorem cross_smul_right (a : R) (u v : Fin 3 → R) :
+theorem cross_smul_right {R : Type*} [CommRing R] (a : R) (u v : Fin 3 → R) :
     ZornMatrix.cross u (a • v) = a • ZornMatrix.cross u v := by
   ext i <;> fin_cases i <;>
     simp [ZornMatrix.cross] <;> ring
 
-theorem cross_skew (u v : Fin 3 → R) :
+theorem cross_skew {R : Type*} [CommRing R] (u v : Fin 3 → R) :
     ZornMatrix.cross u v = - ZornMatrix.cross v u := by
   ext i <;> fin_cases i <;> simp [ZornMatrix.cross] <;> ring
 
@@ -190,19 +190,19 @@ theorem commutator_upper_e1_x2 (x : InfoGeometry.Canonical.ZornMatrix R) :
     (mulZ x (upper e1)).y 2 - (mulZ (upper e1) x).y 2 = (2 : R) * x.x 0 := by
   rcases x with ⟨a, b, x, y⟩
   simp [mulZ, upper, e1, ZornMatrix.dot, ZornMatrix.cross]
-  ring_nf
+  noncomm_ring
 
 theorem commutator_upper_e2_x0 (x : InfoGeometry.Canonical.ZornMatrix R) :
     (mulZ x (upper e2)).y 0 - (mulZ (upper e2) x).y 0 = (2 : R) * x.x 1 := by
   rcases x with ⟨a, b, x, y⟩
   simp [mulZ, upper, e2, ZornMatrix.dot, ZornMatrix.cross]
-  ring_nf
+  noncomm_ring
 
 theorem commutator_upper_e0_x1 (x : InfoGeometry.Canonical.ZornMatrix R) :
     (mulZ x (upper e0)).y 1 - (mulZ (upper e0) x).y 1 = (2 : R) * x.x 2 := by
   rcases x with ⟨a, b, x, y⟩
   simp [mulZ, upper, e0, ZornMatrix.dot, ZornMatrix.cross]
-  ring_nf
+  noncomm_ring
 
 theorem commutator_lower_e0_a (x : InfoGeometry.Canonical.ZornMatrix R) :
     (mulZ x (lower e0)).a - (mulZ (lower e0) x).a = x.x 0 := by
@@ -223,19 +223,19 @@ theorem commutator_lower_e0_x1 (x : InfoGeometry.Canonical.ZornMatrix R) :
     (mulZ x (lower e0)).x 1 - (mulZ (lower e0) x).x 1 = - (2 : R) * x.y 2 := by
   rcases x with ⟨a, b, x, y⟩
   simp [mulZ, lower, e0, ZornMatrix.dot, ZornMatrix.cross]
-  ring_nf
+  noncomm_ring
 
 theorem commutator_lower_e0_x2 (x : InfoGeometry.Canonical.ZornMatrix R) :
     (mulZ x (lower e0)).x 2 - (mulZ (lower e0) x).x 2 = (2 : R) * x.y 1 := by
   rcases x with ⟨a, b, x, y⟩
   simp [mulZ, lower, e0, ZornMatrix.dot, ZornMatrix.cross]
-  ring_nf
+  noncomm_ring
 
 theorem commutator_lower_e1_x2 (x : InfoGeometry.Canonical.ZornMatrix R) :
     (mulZ x (lower e1)).x 2 - (mulZ (lower e1) x).x 2 = - (2 : R) * x.y 0 := by
   rcases x with ⟨a, b, x, y⟩
   simp [mulZ, lower, e1, ZornMatrix.dot, ZornMatrix.cross]
-  ring_nf
+  noncomm_ring
 
 theorem associator_upper_e0_lower_e0_y (x : InfoGeometry.Canonical.ZornMatrix R) :
     (associator x (upper e0) (lower e0)).y = ![0, -x.y 1, -x.y 2] := by

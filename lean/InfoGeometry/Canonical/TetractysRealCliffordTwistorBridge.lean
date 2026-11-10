@@ -94,122 +94,251 @@ theorem gamma_clifford_relations :
     ext i j <;> fin_cases i <;> fin_cases j <;>
     decide
 
-/-- Integer-coefficient Dirac 4-vector $V(p) = p_0 \gamma_0 + p_1 \gamma_1 + p_2 \gamma_2 + p_3 \gamma_3$. -/
-def diracVector (p0 p1 p2 p3 : ℤ) : Mat4Z :=
-  p0 • gamma0 + p1 • gamma1 + p2 • gamma2 + p3 • gamma3
+/-- Integer-coefficient Dirac 4-vector $V(p) = p_0 \gamma_0 + p_1 \gamma_1 + p_2 \gamma_2 + p_3 \gamma_3$ in `[Ring B]`. -/
+def diracVector {B : Type*} [Ring B] (g0 g1 g2 g3 : B) (p0 p1 p2 p3 : ℤ) : B :=
+  p0 • g0 + p1 • g1 + p2 • g2 + p3 • g3
+
+theorem gamma2_eq :
+    gamma2 = !![0, 0, 1, 0; 0, 0, 0, -1; 1, 0, 0, 0; 0, -1, 0, 0] := by
+  ext i j; fin_cases i <;> fin_cases j <;> decide
+
+theorem gamma3_eq :
+    gamma3 = !![0, 0, 0, 1; 0, 0, 1, 0; 0, 1, 0, 0; 1, 0, 0, 0] := by
+  ext i j; fin_cases i <;> fin_cases j <;> decide
+
+theorem diracVector_eq (p0 p1 p2 p3 : ℤ) :
+    diracVector gamma0 gamma1 gamma2 gamma3 p0 p1 p2 p3 =
+      !![p1, 0, p0 + p2, p3;
+         0, p1, p3, p0 - p2;
+         -p0 + p2, p3, -p1, 0;
+         p3, -p0 - p2, 0, -p1] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [diracVector, gamma0, gamma1, gamma2_eq, gamma3_eq, dtMatJ1, dtMatS1] <;> ring
 
 /-- The square of the concrete Dirac vector is its `(-,+,+,+)` Minkowski quadratic form. -/
 theorem diracVector_square (p0 p1 p2 p3 : ℤ) :
-    diracVector p0 p1 p2 p3 * diracVector p0 p1 p2 p3 =
+    diracVector gamma0 gamma1 gamma2 gamma3 p0 p1 p2 p3 *
+      diracVector gamma0 gamma1 gamma2 gamma3 p0 p1 p2 p3 =
       (-p0 ^ 2 + p1 ^ 2 + p2 ^ 2 + p3 ^ 2) • (1 : Mat4Z) := by
+  rw [diracVector_eq]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [diracVector, gamma0, gamma1, gamma2, gamma3,
-      dtMatJ1, dtMatS1, dtMatPhi1, dtMatS2, dtMatPhi2,
-      Matrix.mul_apply, Matrix.smul_apply] <;> ring
+    simp <;> ring
 
 /-- **Faithfulness of the 4-Dimensional Dirac Translation Module (`diracVector_eq_zero_iff`)**:
 The four generators `gamma0, gamma1, gamma2, gamma3` are $\mathbb{Z}$-linearly independent, so
-`diracVector p0 p1 p2 p3 = 0` if and only if `p0 = 0 ∧ p1 = 0 ∧ p2 = 0 ∧ p3 = 0`. -/
+`diracVector gamma0 gamma1 gamma2 gamma3 p0 p1 p2 p3 = 0` if and only if `p0 = 0 ∧ p1 = 0 ∧ p2 = 0 ∧ p3 = 0`. -/
 theorem diracVector_eq_zero_iff (p0 p1 p2 p3 : ℤ) :
-    diracVector p0 p1 p2 p3 = 0 ↔ p0 = 0 ∧ p1 = 0 ∧ p2 = 0 ∧ p3 = 0 := by
+    diracVector gamma0 gamma1 gamma2 gamma3 p0 p1 p2 p3 = 0 ↔
+      p0 = 0 ∧ p1 = 0 ∧ p2 = 0 ∧ p3 = 0 := by
   constructor
   · intro h
-    have h00 : diracVector p0 p1 p2 p3 0 0 = 0 := by rw [h]; rfl
-    have h02 : diracVector p0 p1 p2 p3 0 2 = 0 := by rw [h]; rfl
-    have h13 : diracVector p0 p1 p2 p3 1 3 = 0 := by rw [h]; rfl
-    have h03 : diracVector p0 p1 p2 p3 0 3 = 0 := by rw [h]; rfl
-    change p1 = 0 at h00
-    change p0 + p2 = 0 at h02
-    change p0 - p2 = 0 at h13
-    change p3 = 0 at h03
+    have h00 : diracVector gamma0 gamma1 gamma2 gamma3 p0 p1 p2 p3 0 0 = 0 := by rw [h]; rfl
+    have h02 : diracVector gamma0 gamma1 gamma2 gamma3 p0 p1 p2 p3 0 2 = 0 := by rw [h]; rfl
+    have h13 : diracVector gamma0 gamma1 gamma2 gamma3 p0 p1 p2 p3 1 3 = 0 := by rw [h]; rfl
+    have h03 : diracVector gamma0 gamma1 gamma2 gamma3 p0 p1 p2 p3 0 3 = 0 := by rw [h]; rfl
+    simp [diracVector_eq] at h00 h02 h13 h03
     refine ⟨by omega, h00, by omega, h03⟩
   · rintro ⟨rfl, rfl, rfl, rfl⟩
     ext i j
     fin_cases i <;> fin_cases j <;> decide
 
-/-- Spatial rotation bivector $\Sigma_{12} = \gamma_1 \gamma_2$ ($\Sigma_{12}^2 = -I_4$). -/
-def sigma12 : Mat4Z := gamma1 * gamma2
+/-- Spatial rotation bivector $\Sigma_{12} = \gamma_1 \gamma_2$ in `[Ring B]`. -/
+def sigma12 {B : Type*} [Ring B] (g1 g2 : B) : B := g1 * g2
 
-/-- Spatial rotation bivector $\Sigma_{23} = \gamma_2 \gamma_3$ ($\Sigma_{23}^2 = -I_4$). -/
-def sigma23 : Mat4Z := gamma2 * gamma3
+/-- Spatial rotation bivector $\Sigma_{23} = \gamma_2 \gamma_3$ in `[Ring B]`. -/
+def sigma23 {B : Type*} [Ring B] (g2 g3 : B) : B := g2 * g3
 
-/-- Spatial rotation bivector $\Sigma_{31} = \gamma_3 \gamma_1$ ($\Sigma_{31}^2 = -I_4$). -/
-def sigma31 : Mat4Z := gamma3 * gamma1
+/-- Spatial rotation bivector $\Sigma_{31} = \gamma_3 \gamma_1$ in `[Ring B]`. -/
+def sigma31 {B : Type*} [Ring B] (g3 g1 : B) : B := g3 * g1
 
-/-- Lorentz boost bivector $K_{01} = \gamma_0 \gamma_1$ ($K_{01}^2 = +I_4$). -/
-def boost01 : Mat4Z := gamma0 * gamma1
+/-- Lorentz boost bivector $K_{01} = \gamma_0 \gamma_1$ in `[Ring B]`. -/
+def boost01 {B : Type*} [Ring B] (g0 g1 : B) : B := g0 * g1
 
-/-- Lorentz boost bivector $K_{02} = \gamma_0 \gamma_2$ ($K_{02}^2 = +I_4$). -/
-def boost02 : Mat4Z := gamma0 * gamma2
+/-- Lorentz boost bivector $K_{02} = \gamma_0 \gamma_2$ in `[Ring B]`. -/
+def boost02 {B : Type*} [Ring B] (g0 g2 : B) : B := g0 * g2
 
-/-- Lorentz boost bivector $K_{03} = \gamma_0 \gamma_3$ ($K_{03}^2 = +I_4$). -/
-def boost03 : Mat4Z := gamma0 * gamma3
+/-- Lorentz boost bivector $K_{03} = \gamma_0 \gamma_3$ in `[Ring B]`. -/
+def boost03 {B : Type*} [Ring B] (g0 g3 : B) : B := g0 * g3
 
-/-- **6-Generator $\mathfrak{so}(3,1)$ Lorentz Bivector Action on the 4D Dirac Translation Module (`so31_bivector_squares_and_diracVector_action`)**:
-1. The three spatial rotation bivectors satisfy $\Sigma_{12}^2 = \Sigma_{23}^2 = \Sigma_{31}^2 = -I_4$,
-   and the three boost bivectors satisfy $K_{01}^2 = K_{02}^2 = K_{03}^2 = +I_4$.
+/-- For any anticommuting `a, b` in `[Ring B]`, `(a * b)^2 = -(a^2 * b^2)`. -/
+theorem clifford_bivector_sq {B : Type*} [Ring B] (a b : B)
+    (hab : a * b + b * a = 0) :
+    (a * b) * (a * b) = -((a * a) * (b * b)) := by
+  have hba : b * a = -(a * b) := eq_neg_of_add_eq_zero_right hab
+  calc
+    (a * b) * (a * b) = a * (b * a) * b := by simp only [mul_assoc]
+    _ = a * (-(a * b)) * b := by rw [hba]
+    _ = -((a * a) * (b * b)) := by noncomm_ring
+
+/-- Any bivector `a * b` in `[Ring B]` commutes with any `c` that anticommutes with both `a` and `b`. -/
+theorem clifford_bivector_comm_orth {B : Type*} [Ring B] (a b c : B)
+    (hac : a * c + c * a = 0) (hbc : b * c + c * b = 0) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm (a * b) c = 0 := by
+  have hac' : a * c = -(c * a) := eq_neg_of_add_eq_zero_left hac
+  have hbc' : b * c = -(c * b) := eq_neg_of_add_eq_zero_left hbc
+  dsimp [InfoGeometry.OperatorAlgebra.PeirceSpine.comm]
+  calc
+    (a * b) * c - c * (a * b) = a * (b * c) - c * (a * b) := by simp only [mul_assoc]
+    _ = a * (-(c * b)) - c * (a * b) := by rw [hbc']
+    _ = -((a * c) * b) - c * (a * b) := by noncomm_ring
+    _ = -(-(c * a) * b) - c * (a * b) := by rw [hac']
+    _ = 0 := by noncomm_ring
+
+/-- Commutator of a bivector `a * b` with its left factor `a` when `a * b + b * a = 0`. -/
+theorem clifford_bivector_comm_left {B : Type*} [Ring B] (a b : B)
+    (hab : a * b + b * a = 0) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm (a * b) a = -((2 : ℤ) • ((a * a) * b)) := by
+  have hba : b * a = -(a * b) := eq_neg_of_add_eq_zero_right hab
+  dsimp [InfoGeometry.OperatorAlgebra.PeirceSpine.comm]
+  calc
+    (a * b) * a - a * (a * b) = a * (b * a) - a * (a * b) := by simp only [mul_assoc]
+    _ = a * (-(a * b)) - a * (a * b) := by rw [hba]
+    _ = -((2 : ℤ) • ((a * a) * b)) := by
+      rw [two_zsmul]
+      noncomm_ring
+
+/-- Commutator of a bivector `a * b` with its right factor `b` when `a * b + b * a = 0`. -/
+theorem clifford_bivector_comm_right {B : Type*} [Ring B] (a b : B)
+    (hab : a * b + b * a = 0) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm (a * b) b = (2 : ℤ) • (a * (b * b)) := by
+  have hba : b * a = -(a * b) := eq_neg_of_add_eq_zero_right hab
+  dsimp [InfoGeometry.OperatorAlgebra.PeirceSpine.comm]
+  calc
+    (a * b) * b - b * (a * b) = a * (b * b) - (b * a) * b := by simp only [mul_assoc]
+    _ = a * (b * b) - (-(a * b)) * b := by rw [hba]
+    _ = (2 : ℤ) • (a * (b * b)) := by
+      rw [two_zsmul]
+      noncomm_ring
+
+/-- Linearity of the commutator in the 4-component Dirac vector `diracVector`. -/
+theorem comm_diracVector {B : Type*} [Ring B] (X g0 g1 g2 g3 : B) (p0 p1 p2 p3 : ℤ) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm X (diracVector g0 g1 g2 g3 p0 p1 p2 p3) =
+      p0 • InfoGeometry.OperatorAlgebra.PeirceSpine.comm X g0 +
+      p1 • InfoGeometry.OperatorAlgebra.PeirceSpine.comm X g1 +
+      p2 • InfoGeometry.OperatorAlgebra.PeirceSpine.comm X g2 +
+      p3 • InfoGeometry.OperatorAlgebra.PeirceSpine.comm X g3 := by
+  dsimp [diracVector, InfoGeometry.OperatorAlgebra.PeirceSpine.comm]
+  simp only [mul_add, add_mul, mul_smul_comm, smul_mul_assoc, smul_sub]
+  abel
+
+/-- **6-Generator $\mathfrak{so}(3,1)$ Lorentz Bivector Action on the 4D Dirac Translation Module in `[Ring B]` (`so31_bivector_squares_and_diracVector_action`)**:
+For any `g0, g1, g2, g3` in `[Ring B]` satisfying the `Cl(3,1)` relations
+`g0^2 = -1`, `g1^2 = g2^2 = g3^2 = 1`, and pairwise anticommutation `gi * gj + gj * gi = 0`:
+1. The three spatial rotation bivectors satisfy $\Sigma_{12}^2 = \Sigma_{23}^2 = \Sigma_{31}^2 = -1$,
+   and the three boost bivectors satisfy $K_{01}^2 = K_{02}^2 = K_{03}^2 = +1$.
 2. Under the commutator action $[B, V] = B V - V B$, all six $\mathfrak{so}(3,1)$ bivectors preserve
-   the 4-dimensional module `diracVector p0 p1 p2 p3` with the exact $(1,3)$ Minkowski Lorentz
-   rotation and boost laws:
-   - $[\Sigma_{12}, V(p_0, p_1, p_2, p_3)] = 2 \cdot V(0, p_2, -p_1, 0)$,
-   - $[\Sigma_{23}, V(p_0, p_1, p_2, p_3)] = 2 \cdot V(0, 0, p_3, -p_2)$,
-   - $[\Sigma_{31}, V(p_0, p_1, p_2, p_3)] = 2 \cdot V(0, -p_3, 0, p_1)$,
-   - $[K_{01}, V(p_0, p_1, p_2, p_3)] = 2 \cdot V(p_1, p_0, 0, 0)$,
-   - $[K_{02}, V(p_0, p_1, p_2, p_3)] = 2 \cdot V(p_2, 0, p_0, 0)$,
-   - $[K_{03}, V(p_0, p_1, p_2, p_3)] = 2 \cdot V(p_3, 0, 0, p_0)$. -/
-theorem so31_bivector_squares_and_diracVector_action (p0 p1 p2 p3 : ℤ) :
-    (sigma12 * sigma12 = -1 ∧ sigma23 * sigma23 = -1 ∧ sigma31 * sigma31 = -1 ∧
-     boost01 * boost01 = 1 ∧ boost02 * boost02 = 1 ∧ boost03 * boost03 = 1) ∧
-    sigma12 * diracVector p0 p1 p2 p3 - diracVector p0 p1 p2 p3 * sigma12 =
-      2 • diracVector 0 p2 (-p1) 0 ∧
-    sigma23 * diracVector p0 p1 p2 p3 - diracVector p0 p1 p2 p3 * sigma23 =
-      2 • diracVector 0 0 p3 (-p2) ∧
-    sigma31 * diracVector p0 p1 p2 p3 - diracVector p0 p1 p2 p3 * sigma31 =
-      2 • diracVector 0 (-p3) 0 p1 ∧
-    boost01 * diracVector p0 p1 p2 p3 - diracVector p0 p1 p2 p3 * boost01 =
-      2 • diracVector p1 p0 0 0 ∧
-    boost02 * diracVector p0 p1 p2 p3 - diracVector p0 p1 p2 p3 * boost02 =
-      2 • diracVector p2 0 p0 0 ∧
-    boost03 * diracVector p0 p1 p2 p3 - diracVector p0 p1 p2 p3 * boost03 =
-      2 • diracVector p3 0 0 p0 := by
+   the 4-dimensional module `diracVector g0 g1 g2 g3 p0 p1 p2 p3` with the exact $(1,3)$ Minkowski Lorentz
+   rotation and boost laws. -/
+theorem so31_bivector_squares_and_diracVector_action {B : Type*} [Ring B]
+    (g0 g1 g2 g3 : B) (p0 p1 p2 p3 : ℤ)
+    (h0 : g0 * g0 = -1) (h1 : g1 * g1 = 1) (h2 : g2 * g2 = 1) (h3 : g3 * g3 = 1)
+    (h01 : g0 * g1 + g1 * g0 = 0) (h02 : g0 * g2 + g2 * g0 = 0) (h03 : g0 * g3 + g3 * g0 = 0)
+    (h12 : g1 * g2 + g2 * g1 = 0) (h13 : g1 * g3 + g3 * g1 = 0) (h23 : g2 * g3 + g3 * g2 = 0) :
+    (sigma12 g1 g2 * sigma12 g1 g2 = -1 ∧
+     sigma23 g2 g3 * sigma23 g2 g3 = -1 ∧
+     sigma31 g3 g1 * sigma31 g3 g1 = -1 ∧
+     boost01 g0 g1 * boost01 g0 g1 = 1 ∧
+     boost02 g0 g2 * boost02 g0 g2 = 1 ∧
+     boost03 g0 g3 * boost03 g0 g3 = 1) ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (sigma12 g1 g2) (diracVector g0 g1 g2 g3 p0 p1 p2 p3) =
+      (2 : ℤ) • diracVector g0 g1 g2 g3 0 p2 (-p1) 0 ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (sigma23 g2 g3) (diracVector g0 g1 g2 g3 p0 p1 p2 p3) =
+      (2 : ℤ) • diracVector g0 g1 g2 g3 0 0 p3 (-p2) ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (sigma31 g3 g1) (diracVector g0 g1 g2 g3 p0 p1 p2 p3) =
+      (2 : ℤ) • diracVector g0 g1 g2 g3 0 (-p3) 0 p1 ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (boost01 g0 g1) (diracVector g0 g1 g2 g3 p0 p1 p2 p3) =
+      (2 : ℤ) • diracVector g0 g1 g2 g3 p1 p0 0 0 ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (boost02 g0 g2) (diracVector g0 g1 g2 g3 p0 p1 p2 p3) =
+      (2 : ℤ) • diracVector g0 g1 g2 g3 p2 0 p0 0 ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (boost03 g0 g3) (diracVector g0 g1 g2 g3 p0 p1 p2 p3) =
+      (2 : ℤ) • diracVector g0 g1 g2 g3 p3 0 0 p0 := by
+  have h10 : g1 * g0 + g0 * g1 = 0 := by simpa [add_comm] using h01
+  have h20 : g2 * g0 + g0 * g2 = 0 := by simpa [add_comm] using h02
+  have h30 : g3 * g0 + g0 * g3 = 0 := by simpa [add_comm] using h03
+  have h21 : g2 * g1 + g1 * g2 = 0 := by simpa [add_comm] using h12
+  have h31 : g3 * g1 + g1 * g3 = 0 := by simpa [add_comm] using h13
+  have h32 : g3 * g2 + g2 * g3 = 0 := by simpa [add_comm] using h23
+  have h_pos : ∀ (p : ℤ) (x : B), p • ((2 : ℤ) • x) = (2 : ℤ) • (p • x) := by
+    intro p x
+    rw [← mul_smul, ← mul_smul, mul_comm]
+  have h_neg : ∀ (p : ℤ) (x : B), p • -((2 : ℤ) • x) = (2 : ℤ) • ((-p) • x) := by
+    intro p x
+    rw [smul_neg, neg_smul, smul_neg, h_pos]
   refine ⟨⟨?_, ?_, ?_, ?_, ?_, ?_⟩, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · ext i j; fin_cases i <;> fin_cases j <;> decide
-  · ext i j; fin_cases i <;> fin_cases j <;> decide
-  · ext i j; fin_cases i <;> fin_cases j <;> decide
-  · ext i j; fin_cases i <;> fin_cases j <;> decide
-  · ext i j; fin_cases i <;> fin_cases j <;> decide
-  · ext i j; fin_cases i <;> fin_cases j <;> decide
-  · ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [sigma12, diracVector, gamma0, gamma1, gamma2, gamma3,
-        dtMatJ1, dtMatS1, dtMatPhi1, dtMatS2, dtMatPhi2,
-        Matrix.mul_apply, Matrix.smul_apply] <;> ring
-  · ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [sigma23, diracVector, gamma0, gamma1, gamma2, gamma3,
-        dtMatJ1, dtMatS1, dtMatPhi1, dtMatS2, dtMatPhi2,
-        Matrix.mul_apply, Matrix.smul_apply] <;> ring
-  · ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [sigma31, diracVector, gamma0, gamma1, gamma2, gamma3,
-        dtMatJ1, dtMatS1, dtMatPhi1, dtMatS2, dtMatPhi2,
-        Matrix.mul_apply, Matrix.smul_apply] <;> ring
-  · ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [boost01, diracVector, gamma0, gamma1, gamma2, gamma3,
-        dtMatJ1, dtMatS1, dtMatPhi1, dtMatS2, dtMatPhi2,
-        Matrix.mul_apply, Matrix.smul_apply] <;> ring
-  · ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [boost02, diracVector, gamma0, gamma1, gamma2, gamma3,
-        dtMatJ1, dtMatS1, dtMatPhi1, dtMatS2, dtMatPhi2,
-        Matrix.mul_apply, Matrix.smul_apply] <;> ring
-  · ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [boost03, diracVector, gamma0, gamma1, gamma2, gamma3,
-        dtMatJ1, dtMatS1, dtMatPhi1, dtMatS2, dtMatPhi2,
-        Matrix.mul_apply, Matrix.smul_apply] <;> ring
+  · dsimp [sigma12]; rw [clifford_bivector_sq g1 g2 h12, h1, h2]; simp
+  · dsimp [sigma23]; rw [clifford_bivector_sq g2 g3 h23, h2, h3]; simp
+  · dsimp [sigma31]; rw [clifford_bivector_sq g3 g1 h31, h3, h1]; simp
+  · dsimp [boost01]; rw [clifford_bivector_sq g0 g1 h01, h0, h1]; simp
+  · dsimp [boost02]; rw [clifford_bivector_sq g0 g2 h02, h0, h2]; simp
+  · dsimp [boost03]; rw [clifford_bivector_sq g0 g3 h03, h0, h3]; simp
+  · dsimp [sigma12]
+    rw [comm_diracVector,
+      clifford_bivector_comm_orth g1 g2 g0 h10 h20,
+      clifford_bivector_comm_left g1 g2 h12,
+      clifford_bivector_comm_right g1 g2 h12,
+      clifford_bivector_comm_orth g1 g2 g3 h13 h23,
+      h1, h2]
+    simp only [one_mul, mul_one, diracVector, zero_smul, smul_zero, add_zero, zero_add,
+      h_pos, h_neg, smul_add]
+    abel
+  · dsimp [sigma23]
+    rw [comm_diracVector,
+      clifford_bivector_comm_orth g2 g3 g0 h20 h30,
+      clifford_bivector_comm_orth g2 g3 g1 h21 h31,
+      clifford_bivector_comm_left g2 g3 h23,
+      clifford_bivector_comm_right g2 g3 h23,
+      h2, h3]
+    simp only [one_mul, mul_one, diracVector, zero_smul, smul_zero, add_zero, zero_add,
+      h_pos, h_neg, smul_add]
+    abel
+  · dsimp [sigma31]
+    rw [comm_diracVector,
+      clifford_bivector_comm_orth g3 g1 g0 h30 h10,
+      clifford_bivector_comm_right g3 g1 h31,
+      clifford_bivector_comm_orth g3 g1 g2 h32 h12,
+      clifford_bivector_comm_left g3 g1 h31,
+      h3, h1]
+    simp only [one_mul, mul_one, diracVector, zero_smul, smul_zero, add_zero, zero_add,
+      h_pos, h_neg, smul_add]
+    abel
+  · dsimp [boost01]
+    rw [comm_diracVector,
+      clifford_bivector_comm_left g0 g1 h01,
+      clifford_bivector_comm_right g0 g1 h01,
+      clifford_bivector_comm_orth g0 g1 g2 h02 h12,
+      clifford_bivector_comm_orth g0 g1 g3 h03 h13,
+      h0, h1]
+    simp only [neg_mul, one_mul, mul_one, smul_neg, neg_neg, diracVector,
+      zero_smul, smul_zero, add_zero, h_pos, smul_add]
+    abel
+  · dsimp [boost02]
+    rw [comm_diracVector,
+      clifford_bivector_comm_left g0 g2 h02,
+      clifford_bivector_comm_orth g0 g2 g1 h01 h21,
+      clifford_bivector_comm_right g0 g2 h02,
+      clifford_bivector_comm_orth g0 g2 g3 h03 h23,
+      h0, h2]
+    simp only [neg_mul, one_mul, mul_one, smul_neg, neg_neg, diracVector,
+      zero_smul, smul_zero, add_zero, h_pos, smul_add]
+    abel
+  · dsimp [boost03]
+    rw [comm_diracVector,
+      clifford_bivector_comm_left g0 g3 h03,
+      clifford_bivector_comm_orth g0 g3 g1 h01 h31,
+      clifford_bivector_comm_orth g0 g3 g2 h02 h32,
+      clifford_bivector_comm_right g0 g3 h03,
+      h0, h3]
+    simp only [neg_mul, one_mul, mul_one, smul_neg, neg_neg, diracVector,
+      zero_smul, smul_zero, add_zero, h_pos, smul_add]
+    abel
 
 /-! ## §2. General `[Ring B]` Peirce-Corner Nilpotence and Corner-Preserving Lorentz Action -/
 
@@ -223,12 +352,11 @@ def evenBlock {B : Type*} [Ring B] (P L : B) : B := P * L * P + (1 - P) * L * (1
 theorem upperCorner_mul_eq_zero {B : Type*} [Ring B]
     (P x y : B) (hP : P * P = P) :
     upperCorner P x * upperCorner P y = 0 := by
-  have hQP : (1 - P) * P = 0 := by
-    rw [sub_mul, one_mul, hP]
-    abel
+  have hP_assoc : ∀ z : B, P * (P * z) = P * z :=
+    fun z => by rw [← mul_assoc, hP]
   dsimp [upperCorner]
-  rw [mul_assoc, mul_assoc, ← mul_assoc (P * x), hQP]
-  simp
+  simp only [sub_mul, mul_sub, mul_one, mul_assoc, hP_assoc]
+  abel
 
 /-- The commutator of any two upper-corner elements vanishes. -/
 theorem upperCorner_commute {B : Type*} [Ring B]
@@ -277,7 +405,7 @@ theorem upperCorner_lorentz_conjugation_and_commutator {B : Type*} [Ring B]
   have h_idem : ∀ y : B, upperCorner P (upperCorner P y) = upperCorner P y := by
     intro y
     dsimp [upperCorner]
-    simp only [sub_mul, mul_sub, one_mul, mul_one, mul_assoc, hP, hP_assoc]
+    simp only [sub_mul, mul_sub, mul_one, mul_assoc, hP, hP_assoc]
     abel
   have h_conj : G * upperCorner P x * G_inv = upperCorner P (G * x * G_inv) := by
     dsimp [upperCorner]
@@ -307,7 +435,7 @@ theorem upperCorner_lorentz_conjugation_and_commutator {B : Type*} [Ring B]
       _ = P * ((W * L) * V) * (1 - P) - P * (W * (V * L)) * (1 - P) := by
           rw [← hWL]
       _ = P * (W * (L * V - V * L)) * (1 - P) := by
-          simp only [mul_sub, sub_mul, mul_assoc]
+          noncomm_ring
 
 /-! ## §3. Concrete 4-Dimensional Translation Module in `upperCorner dtMatP1` and Corner-Preserving Spinorial Lorentz Action -/
 
@@ -337,6 +465,73 @@ def dualCornerTranslation (p0 p1 p2 p3 : ℤ) : Mat4Z :=
     (p0 • dtMatPhi1 - p1 • (dtMatPhi1 * dtMatS2) -
      p2 • (dtMatPhi1 * dtMatPhi2) - p3 • (dtMatPhi1 * dtMatJ2)) * dtMatP1
 
+def dtMatQ1 : Mat4Z := 1 - dtMatP1
+
+theorem one_sub_dtMatP1 :
+    (1 : Mat4Z) - dtMatP1 = !![0, 0, 0, 0; 0, 0, 0, 0; 0, 0, 1, 0; 0, 0, 0, 1] := by
+  ext i j; fin_cases i <;> fin_cases j <;> decide
+
+theorem cornerBasis0_eq :
+    cornerBasis0 = !![0, 0, 1, 0; 0, 0, 0, 1; 0, 0, 0, 0; 0, 0, 0, 0] := by
+  ext i j; fin_cases i <;> fin_cases j <;> decide
+
+theorem cornerBasis1_eq :
+    cornerBasis1 = !![0, 0, 1, 0; 0, 0, 0, -1; 0, 0, 0, 0; 0, 0, 0, 0] := by
+  ext i j; fin_cases i <;> fin_cases j <;> decide
+
+theorem cornerBasis2_eq :
+    cornerBasis2 = !![0, 0, 0, 1; 0, 0, 1, 0; 0, 0, 0, 0; 0, 0, 0, 0] := by
+  ext i j; fin_cases i <;> fin_cases j <;> decide
+
+theorem cornerBasis3_eq :
+    cornerBasis3 = !![0, 0, 0, 1; 0, 0, -1, 0; 0, 0, 0, 0; 0, 0, 0, 0] := by
+  ext i j; fin_cases i <;> fin_cases j <;> decide
+
+theorem lowerBasis0_eq :
+    dtMatQ1 * dtMatPhi1 * dtMatP1 =
+      !![0, 0, 0, 0; 0, 0, 0, 0; 1, 0, 0, 0; 0, 1, 0, 0] := by
+  ext i j; fin_cases i <;> fin_cases j <;> decide
+
+theorem lowerBasis1_eq :
+    dtMatQ1 * (dtMatPhi1 * dtMatS2) * dtMatP1 =
+      !![0, 0, 0, 0; 0, 0, 0, 0; 1, 0, 0, 0; 0, -1, 0, 0] := by
+  ext i j; fin_cases i <;> fin_cases j <;> decide
+
+theorem lowerBasis2_eq :
+    dtMatQ1 * (dtMatPhi1 * dtMatPhi2) * dtMatP1 =
+      !![0, 0, 0, 0; 0, 0, 0, 0; 0, 1, 0, 0; 1, 0, 0, 0] := by
+  ext i j; fin_cases i <;> fin_cases j <;> decide
+
+theorem lowerBasis3_eq :
+    dtMatQ1 * (dtMatPhi1 * dtMatJ2) * dtMatP1 =
+      !![0, 0, 0, 0; 0, 0, 0, 0; 0, 1, 0, 0; -1, 0, 0, 0] := by
+  ext i j; fin_cases i <;> fin_cases j <;> decide
+
+theorem cornerTranslation_eq (p0 p1 p2 p3 : ℤ) :
+    cornerTranslation p0 p1 p2 p3 =
+      !![0, 0, p0 + p1, p2 + p3;
+         0, 0, p2 - p3, p0 - p1;
+         0, 0, 0, 0;
+         0, 0, 0, 0] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [cornerTranslation, cornerBasis0_eq, cornerBasis1_eq, cornerBasis2_eq, cornerBasis3_eq] <;>
+    ring
+
+theorem dualCornerTranslation_eq (p0 p1 p2 p3 : ℤ) :
+    dualCornerTranslation p0 p1 p2 p3 =
+      !![0, 0, 0, 0;
+         0, 0, 0, 0;
+         p0 - p1, -p2 - p3, 0, 0;
+         -p2 + p3, p0 + p1, 0, 0] := by
+  change dtMatQ1 *
+      (p0 • dtMatPhi1 - p1 • (dtMatPhi1 * dtMatS2) -
+       p2 • (dtMatPhi1 * dtMatPhi2) - p3 • (dtMatPhi1 * dtMatJ2)) * dtMatP1 = _
+  simp only [mul_sub, sub_mul, smul_mul_assoc, mul_smul_comm,
+    lowerBasis0_eq, lowerBasis1_eq, lowerBasis2_eq, lowerBasis3_eq]
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp
+
 /-- **Faithful 4-Dimensional Translation Module Inside `upperCorner dtMatP1` (`cornerTranslation_mem_upperCorner_and_faithful`)**:
 1. **Strict Upper-Corner Membership**:
    `upperCorner dtMatP1 (cornerTranslation p0 p1 p2 p3) = cornerTranslation p0 p1 p2 p3`.
@@ -355,49 +550,41 @@ theorem cornerTranslation_mem_upperCorner_and_faithful (p0 p1 p2 p3 q0 q1 q2 q3 
     cornerTranslation p0 p1 p2 p3 * cornerTranslation q0 q1 q2 q3 = 0 ∧
     (1 + cornerTranslation p0 p1 p2 p3) * (1 + cornerTranslation q0 q1 q2 q3) =
       1 + cornerTranslation (p0 + q0) (p1 + q1) (p2 + q2) (p3 + q3) := by
-  have h_mul : cornerTranslation p0 p1 p2 p3 * cornerTranslation q0 q1 q2 q3 = 0 := by
+  have h_add :
+      cornerTranslation (p0 + q0) (p1 + q1) (p2 + q2) (p3 + q3) =
+        cornerTranslation p0 p1 p2 p3 + cornerTranslation q0 q1 q2 q3 := by
+    rw [cornerTranslation_eq, cornerTranslation_eq, cornerTranslation_eq]
     ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [cornerTranslation, cornerBasis0, cornerBasis1, cornerBasis2, cornerBasis3,
-        upperCorner, dtMatP1, dtMatPhi1, dtMatS2, dtMatPhi2, dtMatJ2,
-        Matrix.mul_apply, Matrix.smul_apply]
-  refine ⟨?_, ?_, ?_, h_mul, ?_⟩
-  · ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [cornerTranslation, cornerBasis0, cornerBasis1, cornerBasis2, cornerBasis3,
-        upperCorner, dtMatP1, dtMatPhi1, dtMatS2, dtMatPhi2, dtMatJ2,
-        Matrix.mul_apply, Matrix.smul_apply]
-  · ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [cornerTranslation, cornerBasis0, cornerBasis1, cornerBasis2, cornerBasis3,
-        upperCorner, dtMatP1, dtMatPhi1, dtMatS2, dtMatPhi2, dtMatJ2,
-        Matrix.mul_apply, Matrix.smul_apply] <;> ring
+    fin_cases i <;> fin_cases j <;> simp <;> ring
+  have h_mul : cornerTranslation p0 p1 p2 p3 * cornerTranslation q0 q1 q2 q3 = 0 := by
+    rw [cornerTranslation_eq, cornerTranslation_eq]
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp
+  refine ⟨?_, h_add, ?_, h_mul, ?_⟩
+  · dsimp [upperCorner]
+    rw [one_sub_dtMatP1, cornerTranslation_eq]
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp [dtMatP1]
   · constructor
     · intro h
       have h02 : cornerTranslation p0 p1 p2 p3 0 2 = 0 := by rw [h]; rfl
       have h13 : cornerTranslation p0 p1 p2 p3 1 3 = 0 := by rw [h]; rfl
       have h03 : cornerTranslation p0 p1 p2 p3 0 3 = 0 := by rw [h]; rfl
       have h12 : cornerTranslation p0 p1 p2 p3 1 2 = 0 := by rw [h]; rfl
-      change p0 + p1 = 0 at h02
-      change p0 - p1 = 0 at h13
-      change p2 + p3 = 0 at h03
-      change p2 - p3 = 0 at h12
+      simp [cornerTranslation_eq] at h02 h13 h03 h12
       refine ⟨by omega, by omega, by omega, by omega⟩
     · rintro ⟨rfl, rfl, rfl, rfl⟩
       ext i j
       fin_cases i <;> fin_cases j <;> decide
-  · ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [cornerTranslation, cornerBasis0, cornerBasis1, cornerBasis2, cornerBasis3,
-        upperCorner, dtMatP1, dtMatPhi1, dtMatS2, dtMatPhi2, dtMatJ2,
-        Matrix.mul_apply, Matrix.smul_apply] <;> ring
+  · simp only [add_mul, mul_add, one_mul, mul_one, h_mul, add_zero, h_add, add_assoc]
 
+set_option maxHeartbeats 800000 in
 /-- **Corner-Preserving Spinorial Lorentz Action & Quadratic Norm on `cornerTranslation` (`cornerTranslation_lorentz_action_and_quadratic_norm`)**:
 1. **Block-Diagonal Commutation with `dtMatP1`**:
    The Bit-2 $\mathfrak{sl}_2(\mathbb{R})$ generators `dtMatJ2`, `dtMatS2`, `dtMatPhi2` all commute
    with the Peirce idempotent `dtMatP1`.
 2. **Lie Algebra Action Preserving `cornerTranslation`**:
-   - `[dtMatJ2, cornerTranslation p0 p1 p2 p3] = 2 • cornerTranslation 0 (-p2) p1 0` (rotation in the $(p_1, p_2)$ plane),
+   - `[dtMatJ2, cornerTranslation p0 p1 p2 p3] = 2 • cornerTranslation 0 p2 (-p1) 0` (rotation in the $(p_1, p_2)$ plane),
    - `[dtMatS2, cornerTranslation p0 p1 p2 p3] = 2 • cornerTranslation 0 0 p3 p2` (boost in the $(p_2, p_3)$ plane),
    - `[dtMatPhi2, cornerTranslation p0 p1 p2 p3] = 2 • cornerTranslation 0 (-p3) 0 (-p1)` (boost in the $(p_1, p_3)$ plane).
 3. **Group Conjugation & Chiral Spinor Action Preserving `cornerTranslation`**:
@@ -413,7 +600,7 @@ theorem cornerTranslation_lorentz_action_and_quadratic_norm (p0 p1 p2 p3 : ℤ) 
      dtMatP1 * dtMatS2 = dtMatS2 * dtMatP1 ∧
      dtMatP1 * dtMatPhi2 = dtMatPhi2 * dtMatP1) ∧
     dtMatJ2 * cornerTranslation p0 p1 p2 p3 - cornerTranslation p0 p1 p2 p3 * dtMatJ2 =
-      2 • cornerTranslation 0 (-p2) p1 0 ∧
+      2 • cornerTranslation 0 p2 (-p1) 0 ∧
     dtMatS2 * cornerTranslation p0 p1 p2 p3 - cornerTranslation p0 p1 p2 p3 * dtMatS2 =
       2 • cornerTranslation 0 0 p3 p2 ∧
     dtMatPhi2 * cornerTranslation p0 p1 p2 p3 - cornerTranslation p0 p1 p2 p3 * dtMatPhi2 =
@@ -426,47 +613,29 @@ theorem cornerTranslation_lorentz_action_and_quadratic_norm (p0 p1 p2 p3 : ℤ) 
       (p0 ^ 2 - p1 ^ 2 - p2 ^ 2 + p3 ^ 2) • dtMatP1 ∧
     cornerTranslation (-p3) p2 (-p1) p0 * dualCornerTranslation (-p3) p2 (-p1) p0 =
       cornerTranslation p0 p1 p2 p3 * dualCornerTranslation p0 p1 p2 p3 := by
-  refine ⟨⟨?_, ?_, ?_⟩, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  have h_norm :
+      ∀ q0 q1 q2 q3 : ℤ,
+        cornerTranslation q0 q1 q2 q3 * dualCornerTranslation q0 q1 q2 q3 =
+          (q0 ^ 2 - q1 ^ 2 - q2 ^ 2 + q3 ^ 2) • dtMatP1 := by
+    intro q0 q1 q2 q3
+    rw [cornerTranslation_eq, dualCornerTranslation_eq]
+    ext i j; fin_cases i <;> fin_cases j <;> simp [dtMatP1] <;> ring
+  refine ⟨⟨?_, ?_, ?_⟩, ?_, ?_, ?_, ?_, ?_, h_norm p0 p1 p2 p3, ?_⟩
   · ext i j; fin_cases i <;> fin_cases j <;> decide
   · ext i j; fin_cases i <;> fin_cases j <;> decide
   · ext i j; fin_cases i <;> fin_cases j <;> decide
-  · ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [cornerTranslation, cornerBasis0, cornerBasis1, cornerBasis2, cornerBasis3,
-        upperCorner, dtMatP1, dtMatPhi1, dtMatS2, dtMatPhi2, dtMatJ2,
-        Matrix.mul_apply, Matrix.smul_apply] <;> ring
-  · ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [cornerTranslation, cornerBasis0, cornerBasis1, cornerBasis2, cornerBasis3,
-        upperCorner, dtMatP1, dtMatPhi1, dtMatS2, dtMatPhi2, dtMatJ2,
-        Matrix.mul_apply, Matrix.smul_apply] <;> ring
-  · ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [cornerTranslation, cornerBasis0, cornerBasis1, cornerBasis2, cornerBasis3,
-        upperCorner, dtMatP1, dtMatPhi1, dtMatS2, dtMatPhi2, dtMatJ2,
-        Matrix.mul_apply, Matrix.smul_apply] <;> ring
-  · ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [cornerTranslation, cornerBasis0, cornerBasis1, cornerBasis2, cornerBasis3,
-        upperCorner, dtMatP1, dtMatPhi1, dtMatS2, dtMatPhi2, dtMatJ2,
-        Matrix.mul_apply, Matrix.smul_apply] <;> ring
-  · ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [cornerTranslation, cornerBasis0, cornerBasis1, cornerBasis2, cornerBasis3,
-        upperCorner, dtMatP1, dtMatPhi1, dtMatS2, dtMatPhi2, dtMatJ2,
-        Matrix.mul_apply, Matrix.smul_apply] <;> ring
-  · ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [cornerTranslation, dualCornerTranslation,
-        cornerBasis0, cornerBasis1, cornerBasis2, cornerBasis3,
-        upperCorner, dtMatP1, dtMatPhi1, dtMatS2, dtMatPhi2, dtMatJ2,
-        Matrix.mul_apply, Matrix.smul_apply] <;> ring
-  · ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [cornerTranslation, dualCornerTranslation,
-        cornerBasis0, cornerBasis1, cornerBasis2, cornerBasis3,
-        upperCorner, dtMatP1, dtMatPhi1, dtMatS2, dtMatPhi2, dtMatJ2,
-        Matrix.mul_apply, Matrix.smul_apply] <;> ring
+  · rw [cornerTranslation_eq, cornerTranslation_eq]
+    ext i j; fin_cases i <;> fin_cases j <;> simp [dtMatJ2] <;> ring
+  · rw [cornerTranslation_eq, cornerTranslation_eq]
+    ext i j; fin_cases i <;> fin_cases j <;> simp [dtMatS2] <;> ring
+  · rw [cornerTranslation_eq, cornerTranslation_eq]
+    ext i j; fin_cases i <;> fin_cases j <;> simp [dtMatPhi2] <;> ring
+  · rw [cornerTranslation_eq, cornerTranslation_eq]
+    ext i j; fin_cases i <;> fin_cases j <;> simp [dtMatJ2] <;> ring
+  · rw [cornerTranslation_eq, cornerTranslation_eq]
+    ext i j; fin_cases i <;> fin_cases j <;> simp [dtMatJ2] <;> ring
+  · rw [h_norm, h_norm]
+    ext i j; fin_cases i <;> fin_cases j <;> simp [dtMatP1] <;> ring
 
 /-! ## §4. Real Two-Spinor Null and Massive Determinant Identities -/
 

@@ -36,7 +36,7 @@ open InfoGeometry.Canonical.CyclotomicProjector
 
 /-- Structural interface for a $G$-graded algebra readout. -/
 structure GradedAlgebraReadout
-    (R A G : Type*) [CommRing R] [Ring A] [Algebra R A] [AddCommMonoid G] where
+    (R A G : Type*) [Ring R] [Ring A] [Module R A] [AddCommMonoid G] where
   /-- The grading submodules $A_g \le A$. -/
   piece : G → Submodule R A
   /-- Grade multiplication compatibility: $A_g \cdot A_h \subseteq A_{g+h}$. -/
@@ -49,7 +49,7 @@ structure GradedAlgebraReadout
 
 /-- Compatibility between an element's power character and a grading. -/
 structure GradePowerCompatibility
-    {R A G : Type*} [CommRing R] [Ring A] [Algebra R A] [AddCommMonoid G]
+    {R A G : Type*} [Ring R] [Ring A] [Module R A] [AddCommMonoid G]
     {X : A} (g : G)
     (GRead : GradedAlgebraReadout R A G)
     (M : MellinGradeReadout X) : Prop where
@@ -60,7 +60,7 @@ structure GradePowerCompatibility
 
 /-- 🏆 THEOREM: Any element with a defined degree automatically satisfies power degree progression. -/
 theorem grade_power_progression
-    {R A G : Type*} [CommRing R] [Ring A] [Algebra R A] [AddCommMonoid G]
+    {R A G : Type*} [Ring R] [Ring A] [Module R A] [AddCommMonoid G]
     {X : A} (g : G)
     (GRead : GradedAlgebraReadout R A G)
     (M : MellinGradeReadout X)

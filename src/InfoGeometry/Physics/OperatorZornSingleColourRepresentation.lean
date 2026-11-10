@@ -14,6 +14,21 @@ namespace InfoGeometry.Physics.PalatialTwistor
 
 open InfoGeometry.Physics.NCG
 
+variable {A : Type*} [Ring A]
+
+theorem singleColourEmbedding_injective (c : Fin 3) :
+    Function.Injective (singleColourEmbedding c :
+      Matrix (Fin 2) (Fin 2) A → NCZornElement A) := by
+  intro M N h
+  funext i j
+  fin_cases i <;> fin_cases j
+  · exact congrArg NCZornElement.n_plus h
+  · have hs := congrFun (congrArg NCZornElement.sigma_plus h) c
+    simpa [singleColourEmbedding] using hs
+  · have hs := congrFun (congrArg NCZornElement.sigma_minus h) c
+    simpa [singleColourEmbedding] using hs
+  · exact congrArg NCZornElement.n_minus h
+
 variable {C : Type*} [CommRing C]
 
 def singleColourMulHom (c : Fin 3) :
@@ -24,19 +39,6 @@ def singleColourMulHom (c : Fin 3) :
 @[simp] theorem singleColourMulHom_apply (c : Fin 3)
     (M : Matrix (Fin 2) (Fin 2) C) :
     singleColourMulHom c M = singleColourEmbedding c M := rfl
-
-theorem singleColourEmbedding_injective (c : Fin 3) :
-    Function.Injective (singleColourEmbedding c :
-      Matrix (Fin 2) (Fin 2) C → NCZornElement C) := by
-  intro M N h
-  funext i j
-  fin_cases i <;> fin_cases j
-  · exact congrArg NCZornElement.n_plus h
-  · have hs := congrFun (congrArg NCZornElement.sigma_plus h) c
-    simpa [singleColourEmbedding] using hs
-  · have hs := congrFun (congrArg NCZornElement.sigma_minus h) c
-    simpa [singleColourEmbedding] using hs
-  · exact congrArg NCZornElement.n_minus h
 
 theorem singleColourMulHom_injective (c : Fin 3) :
     Function.Injective (singleColourMulHom (C := C) c) :=

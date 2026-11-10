@@ -50,10 +50,10 @@ sheet-swap involution. -/
 
 /-- Five fermionic modes contribute five to the mode-count calibration.
 This is a cardinality identity, not a Virasoro/Sugawara theorem. -/
-def modeCountCentralCharge (𝕜 : Type*) [Field 𝕜] (N : ℕ) : 𝕜 :=
+def modeCountCentralCharge (𝕜 : Type*) [Ring 𝕜] (N : ℕ) : 𝕜 :=
   (Fintype.card (Fin N) : 𝕜)
 
-theorem five_mode_count (𝕜 : Type*) [Field 𝕜] :
+theorem five_mode_count (𝕜 : Type*) [Ring 𝕜] :
     modeCountCentralCharge 𝕜 5 = (5 : 𝕜) := by
   rfl
 

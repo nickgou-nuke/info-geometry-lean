@@ -46,12 +46,12 @@ local instance : CompleteSpace EndH := inferInstance
 
 section CCR
 
+/-- Ring commutator [x, y] = x*y - y*x -/
+def comm {A : Type*} [Ring A] (x y : A) : A := x * y - y * x
+
 variable {𝕜 : Type*} [CommRing 𝕜]
 variable {V : Type*} [AddCommGroup V] [Module 𝕜 V]
 variable {A : Type*} [Ring A] [Algebra 𝕜 A]
-
-/-- Ring commutator [x, y] = x*y - y*x -/
-def comm (x y : A) : A := x * y - y * x
 
 /--
 Canonical Commutation Relations driven by an *indefinite* Hessian bilinear form:

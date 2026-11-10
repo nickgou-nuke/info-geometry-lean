@@ -56,7 +56,7 @@ namespace InfoGeometry.Canonical.ZetaSouriauMetriplecticFlow
 
 open ArithmeticFunction Complex
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. 2D Flow-Adapted Coordinates and V4 Symmetries -/
 

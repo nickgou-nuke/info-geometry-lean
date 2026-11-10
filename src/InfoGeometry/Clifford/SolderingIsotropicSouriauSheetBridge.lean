@@ -62,7 +62,9 @@ open Matrix
 open InfoGeometry.Clifford.Coquaternion
 open InfoGeometry.Clifford.Coquaternion.Coquaternion
 
-variable {R : Type*} [CommRing R]
+section Ring
+
+variable {R : Type*} [Ring R]
 
 /-! ### 1. Spacetime Soldering Form and Determinant Metric -/
 
@@ -71,13 +73,6 @@ variable {R : Type*} [CommRing R]
 def solderingMatrix (t x y z : R) : Mat2 R :=
   !![ t + z, x - y;
       x + y, t - z ]
-
-/-- Determinant formula for the soldering matrix:
-    $\det_2(X) = (t+z)(t-z) - (x-y)(x+y) = t^2 - x^2 + y^2 - z^2$. -/
-theorem det2_solderingMatrix (t x y z : R) :
-    det2 (solderingMatrix t x y z) = t ^ 2 - x ^ 2 + y ^ 2 - z ^ 2 := by
-  simp [det2, solderingMatrix]
-  ring
 
 /-- The zero vector maps to the zero soldering matrix. -/
 @[simp]
@@ -90,43 +85,7 @@ theorem solderingMatrix_zero :
 theorem solderingMatrix_add (t₁ x₁ y₁ z₁ t₂ x₂ y₂ z₂ : R) :
     solderingMatrix (t₁ + t₂) (x₁ + x₂) (y₁ + y₂) (z₁ + z₂) =
     solderingMatrix t₁ x₁ y₁ z₁ + solderingMatrix t₂ x₂ y₂ z₂ := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [solderingMatrix] <;> ring
-
-/-! ### 2. Two-Sided SL₂(R) Conjugation and Lorentz Invariance -/
-
-/-- Determinant of the transpose of a $2 \times 2$ matrix equals the determinant:
-    $\det_2(M^\top) = \det_2(M)$. -/
-theorem det2_transpose (M : Mat2 R) :
-    det2 Mᵀ = det2 M := by
-  simp [det2, Matrix.transpose]
-  ring
-
-/-- Determinant of a product of two $2 \times 2$ matrices is multiplicative:
-    $\det_2(A * B) = \det_2(A) * \det_2(B)$. -/
-theorem det2_mul (A B : Mat2 R) :
-    det2 (A * B) = det2 A * det2 B := by
-  simp [det2, Matrix.mul_apply]
-  ring
-
-/-- Determinant of the two-sided conjugation:
-    $\det_2(\Lambda X \Lambda^\top) = (\det_2 \Lambda)^2 \det_2(X)$. -/
-theorem det2_two_sided_conjugation (Λ X : Mat2 R) :
-    det2 (Λ * X * Λᵀ) = (det2 Λ) ^ 2 * det2 X := by
-  rw [det2_mul, det2_mul, det2_transpose]
-  ring
-
-/-- Lorentz Invariance of the Minkowski interval:
-    If $\det_2(\Lambda) = 1$, then $\det_2(\Lambda X \Lambda^\top) = \det_2(X)$. -/
-theorem lorentz_invariance_minkowski (Λ X : Mat2 R) (hΛ : det2 Λ = 1) :
-    det2 (Λ * X * Λᵀ) = det2 X := by
-  rw [det2_two_sided_conjugation, hΛ]
-  ring
-
-/-- Two-sided transformation of the soldering form preserves the Minkowski interval:
-    $X' = \Lambda X(t, x, y, z) \Lambda^\top \implies \det_2(X') = t^2 - x^2 + y^2 - z^2$. -/
-theorem soldering_lorentz_invariant (Λ : Mat2 R) (t x y z : R) (hΛ : det2 Λ = 1) :
-    det2 (Λ * solderingMatrix t x y z * Λᵀ) = t ^ 2 - x ^ 2 + y ^ 2 - z ^ 2 := by
-  rw [lorentz_invariance_minkowski Λ (solderingMatrix t x y z) hΛ, det2_solderingMatrix]
+  ext i j; fin_cases i <;> fin_cases j <;> simp [solderingMatrix] <;> abel
 
 /-! ### 3. Chiral Idempotent Projectors & Left/Right Ideals -/
 
@@ -193,6 +152,58 @@ def spinorDyad (l0 l1 lt0 lt1 : R) : Mat2 R :=
   !![ l0 * lt0, l0 * lt1;
       l1 * lt0, l1 * lt1 ]
 
+/-- Coadjoint orbit action on a base idempotent $P$:
+    $\mathcal{O}(\Lambda, P) = \Lambda P \Lambda^\top$. -/
+def souriauOrbitPoint (Λ P : Mat2 R) : Mat2 R :=
+  Λ * P * Λᵀ
+
+end Ring
+
+variable {R : Type*} [CommRing R]
+
+/-- Determinant formula for the soldering matrix:
+    $\det_2(X) = (t+z)(t-z) - (x-y)(x+y) = t^2 - x^2 + y^2 - z^2$. -/
+theorem det2_solderingMatrix (t x y z : R) :
+    det2 (solderingMatrix t x y z) = t ^ 2 - x ^ 2 + y ^ 2 - z ^ 2 := by
+  simp [det2, solderingMatrix]
+  ring
+
+/-! ### 2. Two-Sided SL₂(R) Conjugation and Lorentz Invariance -/
+
+/-- Determinant of the transpose of a $2 \times 2$ matrix equals the determinant:
+    $\det_2(M^\top) = \det_2(M)$. -/
+theorem det2_transpose (M : Mat2 R) :
+    det2 Mᵀ = det2 M := by
+  simp [det2, Matrix.transpose]
+  ring
+
+/-- Determinant of a product of two $2 \times 2$ matrices is multiplicative:
+    $\det_2(A * B) = \det_2(A) * \det_2(B)$. -/
+theorem det2_mul (A B : Mat2 R) :
+    det2 (A * B) = det2 A * det2 B := by
+  simp [det2, Matrix.mul_apply]
+  ring
+
+/-- Determinant of the two-sided conjugation:
+    $\det_2(\Lambda X \Lambda^\top) = (\det_2 \Lambda)^2 \det_2(X)$. -/
+theorem det2_two_sided_conjugation (Λ X : Mat2 R) :
+    det2 (Λ * X * Λᵀ) = (det2 Λ) ^ 2 * det2 X := by
+  rw [det2_mul, det2_mul, det2_transpose]
+  ring
+
+/-- Lorentz Invariance of the Minkowski interval:
+    If $\det_2(\Lambda) = 1$, then $\det_2(\Lambda X \Lambda^\top) = \det_2(X)$. -/
+theorem lorentz_invariance_minkowski (Λ X : Mat2 R) (hΛ : det2 Λ = 1) :
+    det2 (Λ * X * Λᵀ) = det2 X := by
+  rw [det2_two_sided_conjugation, hΛ]
+  ring
+
+/-- Two-sided transformation of the soldering form preserves the Minkowski interval:
+    $X' = \Lambda X(t, x, y, z) \Lambda^\top \implies \det_2(X') = t^2 - x^2 + y^2 - z^2$. -/
+theorem soldering_lorentz_invariant (Λ : Mat2 R) (t x y z : R) (hΛ : det2 Λ = 1) :
+    det2 (Λ * solderingMatrix t x y z * Λᵀ) = t ^ 2 - x ^ 2 + y ^ 2 - z ^ 2 := by
+  rw [lorentz_invariance_minkowski Λ (solderingMatrix t x y z) hΛ, det2_solderingMatrix]
+
 /-- Every dyadic spinor product identically has zero determinant:
     $\det_2(\lambda \tilde{\lambda}^\top) = 0$. -/
 theorem det2_spinorDyad (l0 l1 lt0 lt1 : R) :
@@ -201,11 +212,6 @@ theorem det2_spinorDyad (l0 l1 lt0 lt1 : R) :
   ring
 
 /-! ### 5. Left and Right Isotropic Souriau Sheets (Coadjoint Orbits) -/
-
-/-- Coadjoint orbit action on a base idempotent $P$:
-    $\mathcal{O}(\Lambda, P) = \Lambda P \Lambda^\top$. -/
-def souriauOrbitPoint (Λ P : Mat2 R) : Mat2 R :=
-  Λ * P * Λᵀ
 
 /-- Left Isotropic Souriau Sheet: The orbit of $P_L$ under any $\Lambda$ strictly has $\det_2 = 0$. -/
 theorem souriau_sheet_L_isotropic (Λ : Mat2 R) :

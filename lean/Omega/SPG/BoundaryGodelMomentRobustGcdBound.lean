@@ -9,7 +9,7 @@ namespace Omega.SPG
     `2^{-m(n-1)} / (α₁ + 1)`.
     cor:spg-godel-moment-robust-gcd-bound -/
 theorem paper_spg_godel_moment_robust_gcd_bound
-    (α : MultiIndex) (Dist_m : DyadicPolycube → DyadicPolycube → ℕ) (α1 m n : ℕ)
+    (α : MultiIndex) (Dist_m : FiniteMomentSupport → FiniteMomentSupport → ℕ) (α1 m n : ℕ)
     (hDist : ∀ A B,
       Dist_m A B =
         (Finset.card ((boundaryGodelCode A) \ (boundaryGodelCode B)) +
@@ -35,8 +35,10 @@ theorem paper_spg_godel_moment_robust_gcd_bound
       (fun _ _ => rfl)
       hStokes
   rcases hLipPackage with ⟨_, hLip⟩
-  cases U
-  cases V
-  simpa [faceArea] using hLip () ()
+  have hMomentBound := hLip U V
+  have hU := congrFun (finiteSupport_moment_profile_readout U) α
+  have hV := congrFun (finiteSupport_moment_profile_readout V) α
+  rw [← hU, ← hV] at hMomentBound
+  simpa [faceArea] using hMomentBound
 
 end Omega.SPG

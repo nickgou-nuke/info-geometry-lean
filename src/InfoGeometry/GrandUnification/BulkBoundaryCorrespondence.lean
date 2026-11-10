@@ -31,7 +31,7 @@ namespace InfoGeometry.GrandUnification
 
 open LinearMap
 
-variable {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
+variable {R M : Type*} [Ring R] [AddCommGroup M] [Module R M]
 
 /-- If an operator $K \in \mathrm{Module.End}\,R\,M$ is anchored to the fixed-point sector of a
 boundary twist $\mathcal{T}$ ($\mathcal{T} * K = K$), then $\mathrm{range}(K) \le \ker(\mathcal{T} - 1)$. -/
@@ -54,6 +54,7 @@ then:
 2. $K \ne 0$ and $K * B \ne B * K$;
 3. The boundary defect subspace $\ker(\mathcal{T} - 1)$ is non-trivial ($\ker(\mathcal{T} - 1) \ne \bot$). -/
 theorem bulk_index_forces_boundary_defect_mode
+    {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
     [Module.Free R M] [Module.Finite R M]
     (𝒯 Γ K B : Module.End R M)
     (hTK : 𝒯 * K = K)

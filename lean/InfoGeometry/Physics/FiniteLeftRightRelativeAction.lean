@@ -16,7 +16,7 @@ namespace InfoGeometry.Physics.FiniteLeftRightRelativeAction
 
 open InfoGeometry.Physics.RegularBimoduleCommutant
 
-variable {R A : Type*} [CommSemiring R] [Ring A] [Algebra R A]
+variable {R A : Type*} [Semiring R] [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 open InfoGeometry.Krein
 

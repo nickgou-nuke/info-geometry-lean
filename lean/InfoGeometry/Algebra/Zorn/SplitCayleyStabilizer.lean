@@ -15,7 +15,7 @@ namespace InfoGeometry.Algebra.Zorn.SplitCayleyStabilizer
 
 open InfoGeometry.Algebra.Zorn.ConcreteComposition
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 namespace ZornCell
 
@@ -50,19 +50,19 @@ def zornOne : ZornCell R :=
   change ZornCell.mulZ (zornOne (R := R)) X = X
   rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
   unfold zornOne ZornCell.mulZ
-  ring_nf
+  congr <;> noncomm_ring
 
 @[simp] theorem mul_zornOne (X : ZornCell R) :
     X * zornOne (R := R) = X := by
   change ZornCell.mulZ X (zornOne (R := R)) = X
   rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
   unfold zornOne ZornCell.mulZ
-  ring_nf
+  congr <;> noncomm_ring
 
 @[simp] theorem detZ_zornOne :
     ZornCell.detZ (zornOne (R := R)) = 1 := by
   unfold zornOne ZornCell.detZ
-  ring
+  noncomm_ring
 
 /-- A linear equivalence preserving the Zorn unit and multiplication. -/
 def IsSplitCayleyAut (e : ZornCell R ≃ₗ[R] ZornCell R) : Prop :=

@@ -35,12 +35,12 @@ namespace InfoGeometry.Algebra.RubenthalerE6
 
 open LieAlgebra
 
-variable {R : Type*} [CommRing R]
-variable {L : Type*} [LieRing L] [LieAlgebra R L]
+variable {R : Type*} [Semiring R]
+variable {L : Type*} [LieRing L] [DistribMulAction R L]
 
 /-- The Chevalley generators and commutation relations of an $A_2 \cong \mathfrak{sl}_3$
 subalgebra in a Lie algebra $L$. -/
-structure RubenthalerA2Triple (R : Type*) (L : Type*) [CommRing R] [LieRing L] [LieAlgebra R L] where
+structure RubenthalerA2Triple (R : Type*) (L : Type*) [Semiring R] [LieRing L] [DistribMulAction R L] where
   H1 : L
   H2 : L
   X1 : L
@@ -78,17 +78,23 @@ theorem rubenthalerMul_add_right (trip : RubenthalerA2Triple R L) (x1 x2 y2 : L)
   dsimp [rubenthalerMul]
   rw [lie_add, lie_add, lie_add, lie_add]
 
+section LieAlgebraLinearity
+
+variable {R₀ : Type*} [CommRing R₀] {L₀ : Type*} [LieRing L₀] [LieAlgebra R₀ L₀]
+
 /-- Left scalar linearity of Rubenthaler's octonion product. -/
-theorem rubenthalerMul_smul_left (trip : RubenthalerA2Triple R L) (c : R) (x1 x2 : L) :
+theorem rubenthalerMul_smul_left (trip : RubenthalerA2Triple R₀ L₀) (c : R₀) (x1 x2 : L₀) :
     rubenthalerMul trip (c • x1) x2 = c • rubenthalerMul trip x1 x2 := by
   dsimp [rubenthalerMul]
   rw [smul_lie, lie_smul]
 
 /-- Right scalar linearity of Rubenthaler's octonion product. -/
-theorem rubenthalerMul_smul_right (trip : RubenthalerA2Triple R L) (c : R) (x1 x2 : L) :
+theorem rubenthalerMul_smul_right (trip : RubenthalerA2Triple R₀ L₀) (c : R₀) (x1 x2 : L₀) :
     rubenthalerMul trip x1 (c • x2) = c • rubenthalerMul trip x1 x2 := by
   dsimp [rubenthalerMul]
   rw [lie_smul, lie_smul, lie_smul, lie_smul]
+
+end LieAlgebraLinearity
 
 /-- 🏆 THEOREM 4.1.1 (Idempotency of the Identity Element):
 The Chevalley generator $X_1$ acts as an idempotent under the Rubenthaler bracket product:

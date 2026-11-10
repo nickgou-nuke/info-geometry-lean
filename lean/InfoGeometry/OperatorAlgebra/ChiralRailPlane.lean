@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
@@ -28,7 +33,7 @@ open InfoGeometry.Algebra
 open ZornVectorMatrix
 open Matrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def K_standard : Matrix (Fin 2) (Fin 2) R := !![0, -1; 1, 0]
 def P_plus_standard : Matrix (Fin 2) (Fin 2) R := !![1, 0; 0, 0]
@@ -41,7 +46,7 @@ def g_standard : Matrix (Fin 2) (Fin 2) R := !![1, 0; 0, 1]
 
 /-- A chiral rail plane is a 4-dimensional real vector space with
     algebraic structure, projectors, raising/lowering operators, and metric. -/
-structure ChiralRailPlane (R : Type*) [CommRing R] where
+structure ChiralRailPlane (R : Type*) [Ring R] where
   K : Matrix (Fin 2) (Fin 2) R
   P_plus : Matrix (Fin 2) (Fin 2) R
   P_minus : Matrix (Fin 2) (Fin 2) R
@@ -107,6 +112,15 @@ theorem anticommutator_E_R_E_L_standard : E_R_standard * E_L_standard + E_L_stan
   fin_cases i <;> fin_cases j <;>
     simp [E_R_standard, E_L_standard]
 
+theorem E_R_E_L_noncomm [Nontrivial R] :
+    (E_R_standard : Matrix (Fin 2) (Fin 2) R) * E_L_standard ≠
+      E_L_standard * E_R_standard := by
+  intro h
+  have h00 : (1 : R) = 0 := by
+    simpa [E_R_standard, E_L_standard, Matrix.mul_apply, Fin.sum_univ_two] using
+      congr_fun (congr_fun h 0) 0
+  exact one_ne_zero h00
+
 theorem metric_compatibility_standard : K_standard.transpose * g_standard * K_standard = (g_standard : Matrix (Fin 2) (Fin 2) R) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
@@ -117,7 +131,7 @@ theorem symplectic_compatibility_standard : K_standard.transpose * Ω_standard *
   fin_cases i <;> fin_cases j <;>
     simp [K_standard, Ω_standard, Matrix.mul_apply, Fin.sum_univ_two]
 
-def standardChiralRailPlane (R : Type*) [CommRing R] : ChiralRailPlane R where
+def standardChiralRailPlane (R : Type*) [Ring R] : ChiralRailPlane R where
   K := K_standard
   P_plus := P_plus_standard
   P_minus := P_minus_standard
@@ -137,6 +151,8 @@ def standardChiralRailPlane (R : Type*) [CommRing R] : ChiralRailPlane R where
   h_anticommutator := anticommutator_E_R_E_L_standard
   h_metric_compat := metric_compatibility_standard
   h_symplectic_compat := symplectic_compatibility_standard
+
+instance (B : Type*) [Ring B] : Inhabited (ChiralRailPlane B) := ⟨standardChiralRailPlane B⟩
 
 /-- The canonical embedding into the Zorn split-octonion basis. -/
 def toZornBasis (i : Fin 3) : ZornVectorMatrix R :=

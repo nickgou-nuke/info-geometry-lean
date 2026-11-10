@@ -10,8 +10,27 @@ import Mathlib.Tactic.NoncommRing
 owner provides its Clifford universal-property lift; these
 operator conclusions allow every commutative coefficient ring. -/
 namespace InfoGeometry.Algebra.ZornVectorMatrix
-variable {R : Type*} [CommRing R]
 noncomputable section
+
+section Ring
+variable {R : Type*} [Ring R]
+
+theorem mul_offDiagonal_basis_plus (i : Fin 3) (X : ZornVectorMatrix R) :
+    mul (offDiagonal (ZornVec3.basis (R := R) i) (ZornVec3.basis (R := R) i)) X =
+      add (mul (U (R := R) i) X) (mul (V (R := R) i) X) := by
+  ext k <;> simp [mul, offDiagonal, U, V, add, ZornVec3.dot, ZornVec3.cross,
+    Fin.sum_univ_three] <;> abel
+
+theorem mul_offDiagonal_basis_minus (i : Fin 3) (X : ZornVectorMatrix R) :
+    mul (offDiagonal (ZornVec3.basis (R := R) i) (-ZornVec3.basis (R := R) i)) X =
+      sub (mul (U (R := R) i) X) (mul (V (R := R) i) X) := by
+  ext k <;> (try fin_cases k) <;>
+    simp [mul, offDiagonal, U, V, sub, add, neg, ZornVec3.dot, ZornVec3.cross,
+      Fin.sum_univ_three, sub_eq_add_neg] <;> abel
+
+end Ring
+
+variable {R : Type*} [CommRing R]
 
 /-- Left off-diagonal multiplication has scalar square, by alternativity. -/
 theorem left_offDiagonal_square (u v : ZornVec3 R) :

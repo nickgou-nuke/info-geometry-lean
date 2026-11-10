@@ -55,7 +55,7 @@ each Galois automorphism transports the expectation value of the
 "position" observable e(r) to e(g·r), labeling a distinct boundary ray.
 -/
 theorem galois_transport_of_generator
-    {C_comm : Type u} [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
+    {C_comm : Type u} [Ring C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
     (e_rep : GroupElementRepresentation C_comm)
     {G : Type u} [GaloisActionData G]
     (galoisAut : GaloisAlgebraAutomorphism C_comm e_rep)
@@ -68,7 +68,7 @@ theorem galois_transport_of_generator
   galoisAut(g)(e(r+1)) = galoisAut(g)(e(r))
 -/
 theorem galois_preserves_periodicity
-    {C_comm : Type u} [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
+    {C_comm : Type u} [Ring C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
     (e_rep : GroupElementRepresentation C_comm)
     {G : Type u} [GaloisActionData G]
     (galoisAut : GaloisAlgebraAutomorphism C_comm e_rep)

@@ -20,7 +20,7 @@ public noncomputable section
 
 namespace Matrix.GeneralLinearGroup
 
-variable {n K : Type*} [Fintype n] [DecidableEq n] [Field K]
+variable {n K : Type*} [Fintype n] [DecidableEq n] [CommRing K]
 
 /-- The inverse-transpose multiplicative equivalence of a general linear
 operator group, ported locally for the pinned Mathlib version. -/

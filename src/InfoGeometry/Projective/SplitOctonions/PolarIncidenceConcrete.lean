@@ -28,13 +28,13 @@ abbrev Vec3 (𝕜 : Type u) := 𝕜 × 𝕜 × 𝕜
 
 namespace Vec3
 
-variable {𝕜 : Type u} [CommRing 𝕜]
+variable {𝕜 : Type u} [Ring 𝕜]
 
 /-- Standard coordinate dot product on `𝕜³`. -/
 def dot (p q : Vec3 𝕜) : 𝕜 :=
   p.1 * q.1 + p.2.1 * q.2.1 + p.2.2 * q.2.2
 
-@[simp] theorem dot_comm (p q : Vec3 𝕜) :
+@[simp] theorem dot_comm {𝕜 : Type u} [CommRing 𝕜] (p q : Vec3 𝕜) :
     dot p q = dot q p := by
   unfold dot
   ring
@@ -43,7 +43,7 @@ end Vec3
 
 namespace ZornCell
 
-variable {𝕜 : Type u} [CommRing 𝕜]
+variable {𝕜 : Type u} [Ring 𝕜]
 
 /-- Concrete addition of Zorn cells over `𝕜³`. -/
 def add3c (X Y : ZornCell 𝕜 (Vec3 𝕜)) : ZornCell 𝕜 (Vec3 𝕜) where
@@ -72,14 +72,14 @@ def BZ3 [Inv 𝕜] (X Y : ZornCell 𝕜 (Vec3 𝕜)) : 𝕜 :=
 theorem polarZ3_eq_formula (X Y : ZornCell 𝕜 (Vec3 𝕜)) :
     polarZ3 X Y = polarFormula3 X Y := by
   unfold polarZ3 polarFormula3 detZ3c add3c Vec3.dot
-  simp [Prod.fst_add, Prod.snd_add, add_mul, mul_add, sub_eq_add_neg]
-  ring_nf
+  simp only [Prod.fst_add, Prod.snd_add]
+  noncomm_ring
 
 /-- The explicit Zorn polarization numerator is symmetric. -/
 theorem polarFormula3_symm (X Y : ZornCell 𝕜 (Vec3 𝕜)) :
     polarFormula3 X Y = polarFormula3 Y X := by
   unfold polarFormula3 Vec3.dot
-  ring
+  abel
 
 /-- The concrete Zorn polarization numerator is symmetric. -/
 theorem polarZ3_symm (X Y : ZornCell 𝕜 (Vec3 𝕜)) :

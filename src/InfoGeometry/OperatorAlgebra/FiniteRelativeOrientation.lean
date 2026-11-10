@@ -6,7 +6,7 @@ open Matrix
 
 namespace InfoGeometry.OperatorAlgebra.FiniteRelativeOrientation
 
-variable {n R : Type*} [Fintype n] [CommRing R]
+variable {n R : Type*} [Fintype n] [Ring R]
 
 def relativeBoltzmannAction
     (logActual logReference X : Matrix n n R) : Matrix n n R :=
@@ -36,6 +36,8 @@ theorem positiveRelativeInformationAction_eq_reversedBoltzmannAction
     positiveRelativeInformationAction logActual logReference X =
       relativeBoltzmannAction logReference logActual X :=
   rfl
+
+variable {R : Type*} [CommRing R]
 
 theorem relativeBoltzmann_trace_readout
     (xi actual logActual logReference : Matrix n n R)

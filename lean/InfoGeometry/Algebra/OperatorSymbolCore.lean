@@ -22,10 +22,10 @@ namespace InfoGeometry.Algebra.OperatorSymbolCore
 
 /-! ## Off-diagonal symbol square -/
 
-section OffDiagonal
+section OffDiagonalSemiring
 
 variable {R V W : Type*}
-variable [CommSemiring R]
+variable [Semiring R]
 variable [AddCommMonoid V] [Module R V]
 variable [AddCommMonoid W] [Module R W]
 
@@ -54,6 +54,15 @@ theorem offDiagonalEnd_sq_apply
   rcases ψ with ⟨v, w⟩
   rfl
 
+end OffDiagonalSemiring
+
+section OffDiagonalCommSemiring
+
+variable {R V W : Type*}
+variable [CommSemiring R]
+variable [AddCommMonoid V] [Module R V]
+variable [AddCommMonoid W] [Module R W]
+
 /-- If both ordered block products are the same scalar identity, the complete
 off-diagonal symbol squares to that scalar on the product carrier. -/
 theorem offDiagonalEnd_sq_scalar_apply
@@ -77,7 +86,7 @@ theorem offDiagonalEnd_sq_scalar
   intro ψ
   exact offDiagonalEnd_sq_scalar_apply A B q hAB hBA ψ
 
-end OffDiagonal
+end OffDiagonalCommSemiring
 
 /-! ## Rank-one CAR / Peirce algebra -/
 

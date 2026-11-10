@@ -30,7 +30,7 @@ noncomputable section
 
 namespace InfoGeometry.NCG.ColimitKMS
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 variable {I : Type*} [Preorder I]
 
 /-- Directed Inductive System of Modules/Algebras over a Poset (I, ≤) -/
@@ -116,9 +116,9 @@ PART 2: Noncommutative Star-Algebra Inductive Colimit and KMS Descent
 
 /-- Compatible Cocone of Star-Algebra Homomorphisms targeting `A_inf` -/
 structure StarAlgebraCocone {A : I → Type*} [∀ i, Ring (A i)] [∀ i, StarRing (A i)]
-    [∀ i, Module R (A i)] [∀ i, Algebra R (A i)]
+    [∀ i, Module R (A i)]
     (sys : InductiveSystem (R := R) A)
-    (A_inf : Type*) [Ring A_inf] [StarRing A_inf] [Module R A_inf] [Algebra R A_inf] where
+    (A_inf : Type*) [Ring A_inf] [StarRing A_inf] [Module R A_inf] where
   leg : ∀ i, A i →ₗ[R] A_inf
   compatible : ∀ {i j : I} (hij : i ≤ j), (leg j).comp (sys.trans hij) = leg i
   map_mul : ∀ (i : I) (x y : A i), leg i (x * y) = leg i x * leg i y
@@ -133,9 +133,9 @@ def gnsInnerColimit {A_inf : Type*} [Ring A_inf] [StarRing A_inf] [Module R A_in
 namespace StarAlgebraCocone
 
 variable {A : I → Type*} [∀ i, Ring (A i)] [∀ i, StarRing (A i)]
-    [∀ i, Module R (A i)] [∀ i, Algebra R (A i)]
+    [∀ i, Module R (A i)]
 variable {sys : InductiveSystem (R := R) A}
-variable {A_inf : Type*} [Ring A_inf] [StarRing A_inf] [Module R A_inf] [Algebra R A_inf]
+variable {A_inf : Type*} [Ring A_inf] [StarRing A_inf] [Module R A_inf]
 variable (c : StarAlgebraCocone sys A_inf)
 
 @[simp]

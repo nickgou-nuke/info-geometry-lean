@@ -23,16 +23,17 @@ noncomputable section
 
 namespace InfoGeometry.Geometry.AssociativeGaugeConnection
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {R A : Type*} [Ring R] [Ring A] [Module R A] [SMulCommClass R A A]
 
 def IsLeibniz (D : Module.End R A) : Prop :=
   ∀ x y, D (x * y) = D x * y + x * D y
 
-/-- A concrete source of associative derivations. -/
-def innerDerivative (a : A) : Module.End R A :=
+/-- A concrete source of associative derivations over any ring `[Ring R]`. -/
+def innerDerivative [IsScalarTower R A A] (a : A) : Module.End R A :=
   LinearMap.mulLeft R a - LinearMap.mulRight R a
 
-theorem innerDerivative_isLeibniz (a : A) : IsLeibniz (innerDerivative (R := R) a) := by
+theorem innerDerivative_isLeibniz [IsScalarTower R A A] (a : A) :
+    IsLeibniz (innerDerivative (R := R) a) := by
   intro x y
   change a * (x * y) - (x * y) * a =
     (a * x - x * a) * y + x * (a * y - y * a)
@@ -68,9 +69,9 @@ theorem curvature_action (D E : Module.End R A)
   simp only [covariantDerivative_apply, map_add, hD b x, hE a x, curvature, hcomm]
   noncomm_ring
 
-def conjugate (g : Aˣ) (x : A) : A := (g : A) * x * (↑g⁻¹ : A)
+def conjugate {A : Type*} [Ring A] (g : Aˣ) (x : A) : A := (g : A) * x * (↑g⁻¹ : A)
 
-theorem conjugate_mul (g : Aˣ) (x y : A) :
+theorem conjugate_mul {A : Type*} [Ring A] (g : Aˣ) (x y : A) :
     conjugate g x * conjugate g y = conjugate g (x * y) := by
   simp only [conjugate]
   calc

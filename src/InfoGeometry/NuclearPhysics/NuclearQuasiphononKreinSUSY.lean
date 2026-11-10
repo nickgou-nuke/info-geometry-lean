@@ -4,6 +4,7 @@ import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.FinCases
 
 set_option linter.unusedSectionVars false
@@ -59,7 +60,7 @@ namespace InfoGeometry.NuclearPhysics.NuclearQuasiphononKreinSUSY
 
 open scoped Matrix BigOperators
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### Section 1: Canonical Matrix Basis and Operators in M₃(R) -/
 
@@ -68,28 +69,28 @@ def E (i j : Fin 3) : Matrix (Fin 3) (Fin 3) R :=
   Matrix.of fun r c => if r = i ∧ c = j then 1 else 0
 
 /-- The Cartan grading element $H = E_{00} - E_{22} = \operatorname{diag}(1, 0, -1)$. -/
-def H_gen (R : Type*) [CommRing R] : Matrix (Fin 3) (Fin 3) R :=
+def H_gen (R : Type*) [Ring R] : Matrix (Fin 3) (Fin 3) R :=
   E 0 0 - E 2 2
 
 /-- Positive nilpotent generator $E = E_{02}$. -/
-def E_gen (R : Type*) [CommRing R] : Matrix (Fin 3) (Fin 3) R :=
+def E_gen (R : Type*) [Ring R] : Matrix (Fin 3) (Fin 3) R :=
   E 0 2
 
 /-- Negative nilpotent generator $F = E_{20}$. -/
-def F_gen (R : Type*) [CommRing R] : Matrix (Fin 3) (Fin 3) R :=
+def F_gen (R : Type*) [Ring R] : Matrix (Fin 3) (Fin 3) R :=
   E 2 0
 
 /-- Odd creation operator $\alpha^\dagger = E_{01}$ (Grade $+1$). -/
-def alpha_dag (R : Type*) [CommRing R] : Matrix (Fin 3) (Fin 3) R := E 0 1
+def alpha_dag (R : Type*) [Ring R] : Matrix (Fin 3) (Fin 3) R := E 0 1
 
 /-- Odd creation operator $\beta^\dagger = E_{12}$ (Grade $+1$). -/
-def beta_dag (R : Type*) [CommRing R] : Matrix (Fin 3) (Fin 3) R := E 1 2
+def beta_dag (R : Type*) [Ring R] : Matrix (Fin 3) (Fin 3) R := E 1 2
 
 /-- Odd annihilation operator $\alpha = E_{10}$ (Grade $-1$). -/
-def alpha (R : Type*) [CommRing R] : Matrix (Fin 3) (Fin 3) R := E 1 0
+def alpha (R : Type*) [Ring R] : Matrix (Fin 3) (Fin 3) R := E 1 0
 
 /-- Odd annihilation operator $\beta = E_{21}$ (Grade $-1$). -/
-def beta (R : Type*) [CommRing R] : Matrix (Fin 3) (Fin 3) R := E 2 1
+def beta (R : Type*) [Ring R] : Matrix (Fin 3) (Fin 3) R := E 2 1
 
 /-- Matrix Lie bracket (commutator): $[A, B] = AB - BA$. -/
 def commutator (A B : Matrix (Fin 3) (Fin 3) R) : Matrix (Fin 3) (Fin 3) R :=
@@ -123,7 +124,7 @@ theorem car_beta : anticommutator (beta R) (beta_dag R) = E 1 1 + E 2 2 := by
 
 /-- The Soloviev pairing inner derivation element:
     $T_{\text{pair}} = [\alpha^\dagger, \alpha] - [\beta^\dagger, \beta] \in \mathfrak{g}_0$. -/
-def T_pair (R : Type*) [CommRing R] : Matrix (Fin 3) (Fin 3) R :=
+def T_pair (R : Type*) [Ring R] : Matrix (Fin 3) (Fin 3) R :=
   commutator (alpha_dag R) (alpha R) - commutator (beta_dag R) (beta R)
 
 /-- **Theorem**: Explicit diagonal form of the pairing derivation:
@@ -132,7 +133,7 @@ theorem T_pair_explicit :
     T_pair R = E 0 0 - 2 • (E 1 1) + E 2 2 := by
   unfold T_pair commutator alpha_dag alpha beta_dag beta E
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [Matrix.mul_apply, Matrix.add_apply, Matrix.sub_apply, Matrix.smul_apply, Fin.sum_univ_three] <;> ring
+    simp [Matrix.mul_apply, Matrix.add_apply, Matrix.sub_apply, Matrix.smul_apply, two_smul, one_smul, neg_smul, smul_eq_mul, nsmul_eq_mul, zsmul_eq_mul, Fin.sum_univ_three] <;> abel
 
 /-- **Theorem**: The pairing derivation commutes with the Cartan grading element:
     $[T_{\text{pair}}, H] = 0$. -/
@@ -141,7 +142,7 @@ theorem T_pair_comm_H :
   rw [T_pair_explicit]
   unfold commutator H_gen E
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [Matrix.mul_apply, Matrix.add_apply, Matrix.sub_apply, Matrix.smul_apply, Fin.sum_univ_three] <;> ring
+    simp [Matrix.mul_apply, Matrix.add_apply, Matrix.sub_apply, Matrix.smul_apply, two_smul, one_smul, neg_smul, smul_eq_mul, nsmul_eq_mul, zsmul_eq_mul, Fin.sum_univ_three] <;> abel
 
 /-- **Theorem**: The Cartan element is the sum of the spinor bilinears:
     $H = [\alpha^\dagger, \alpha] + [\beta^\dagger, \beta]$. -/
@@ -154,18 +155,18 @@ theorem H_gen_as_sum :
 /-! ### Section 4: Krein Metric & Paracomplex Sheet-Swap Intertwining -/
 
 /-- The fundamental Krein metric $\eta = \operatorname{diag}(1, -1, 1)$. -/
-def eta_krein (R : Type*) [CommRing R] : Matrix (Fin 3) (Fin 3) R :=
+def eta_krein (R : Type*) [Ring R] : Matrix (Fin 3) (Fin 3) R :=
   Matrix.of fun r c =>
     if r = c then
       if r = 0 ∨ r = 2 then 1 else -1
     else 0
 
 /-- The paracomplex / Krein anti-diagonal sheet-swap involution $J_{\text{sheet}}$. -/
-def J_sheet (R : Type*) [CommRing R] : Matrix (Fin 3) (Fin 3) R :=
+def J_sheet (R : Type*) [Ring R] : Matrix (Fin 3) (Fin 3) R :=
   Matrix.of fun r c => if (r : ℕ) + (c : ℕ) = 2 then 1 else 0
 
 /-- The Andreev particle-hole reflection generator $\tau_1 = E_{02} + E_{20} = E + F$. -/
-def tau_1 (R : Type*) [CommRing R] : Matrix (Fin 3) (Fin 3) R :=
+def tau_1 (R : Type*) [Ring R] : Matrix (Fin 3) (Fin 3) R :=
   E 0 2 + E 2 0
 
 /-- **Theorem**: Involutive property of the sheet swap: $J_{\text{sheet}}^2 = \mathbf{1}$. -/
@@ -205,7 +206,7 @@ theorem T_pair_krein_self_adjoint :
   rw [T_pair_explicit]
   unfold eta_krein E
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [Matrix.mul_apply, Matrix.add_apply, Matrix.sub_apply, Matrix.smul_apply, Matrix.transpose_apply, Fin.sum_univ_three] <;> ring
+    simp [Matrix.mul_apply, Matrix.add_apply, Matrix.sub_apply, Matrix.smul_apply, Matrix.transpose_apply, nsmul_eq_mul, zsmul_eq_mul, Fin.sum_univ_three] <;> noncomm_ring
 
 /-- **Theorem**: Krein self-adjointness of the Cartan grading element:
     $H^\top \eta = \eta H$. -/
@@ -213,7 +214,7 @@ theorem H_gen_krein_self_adjoint :
     (H_gen R)ᵀ * (eta_krein R) = (eta_krein R) * (H_gen R) := by
   unfold H_gen eta_krein E
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [Matrix.mul_apply, Matrix.add_apply, Matrix.sub_apply, Matrix.smul_apply, Matrix.transpose_apply, Fin.sum_univ_three] <;> ring
+    simp [Matrix.mul_apply, Matrix.add_apply, Matrix.sub_apply, Matrix.smul_apply, Matrix.transpose_apply, Fin.sum_univ_three] <;> noncomm_ring
 
 /-- **Theorem**: Krein self-adjointness of the Andreev generator:
     $\tau_1^\top \eta = \eta \tau_1$. -/
@@ -231,7 +232,7 @@ def pairingHamiltonian (ε Δ : R) : Matrix (Fin 3) (Fin 3) R :=
 
 /-- **Theorem**: The entire Soloviev pairing Hamiltonian is Krein self-adjoint:
     $(H_{\text{pair}}(\varepsilon, \Delta))^\top \eta = \eta H_{\text{pair}}(\varepsilon, \Delta)$. -/
-theorem pairing_krein_self_adjoint (ε Δ : R) :
+theorem pairing_krein_self_adjoint {R : Type*} [CommRing R] (ε Δ : R) :
     (pairingHamiltonian ε Δ)ᵀ * (eta_krein R) = (eta_krein R) * (pairingHamiltonian ε Δ) := by
   unfold pairingHamiltonian
   simp only [Matrix.transpose_add, Matrix.transpose_smul, Matrix.add_mul, Matrix.smul_mul,
@@ -240,7 +241,7 @@ theorem pairing_krein_self_adjoint (ε Δ : R) :
 
 /-- **Theorem**: Paracomplex sheet-swap intertwining inverts single-particle energy:
     $J_{\text{sheet}} H_{\text{pair}}(\varepsilon, \Delta) J_{\text{sheet}} = H_{\text{pair}}(-\varepsilon, \Delta)$. -/
-theorem pairing_sheet_swap_intertwine (ε Δ : R) :
+theorem pairing_sheet_swap_intertwine {R : Type*} [CommRing R] (ε Δ : R) :
     (J_sheet R) * (pairingHamiltonian ε Δ) * (J_sheet R) = pairingHamiltonian (-ε) Δ := by
   unfold pairingHamiltonian
   simp only [Matrix.mul_add, Matrix.add_mul, Matrix.mul_smul, Matrix.smul_mul]
@@ -250,7 +251,7 @@ theorem pairing_sheet_swap_intertwine (ε Δ : R) :
 
 /-- **Theorem**: Exact Bogoliubov-de Gennes dispersion squaring identity:
     $(H_{\text{pair}}(\varepsilon, \Delta))^2 = (\varepsilon^2 + \Delta^2) H^2$. -/
-theorem pairing_hamiltonian_sq (ε Δ : R) :
+theorem pairing_hamiltonian_sq {R : Type*} [CommRing R] (ε Δ : R) :
     (pairingHamiltonian ε Δ) * (pairingHamiltonian ε Δ) =
       (ε ^ 2 + Δ ^ 2) • ((H_gen R) * (H_gen R)) := by
   unfold pairingHamiltonian H_gen tau_1 E
@@ -259,7 +260,7 @@ theorem pairing_hamiltonian_sq (ε Δ : R) :
 
 /-- **Theorem**: Cubic minimal polynomial / quasiparticle characteristic equation:
     $(H_{\text{pair}}(\varepsilon, \Delta))^3 = (\varepsilon^2 + \Delta^2) H_{\text{pair}}(\varepsilon, \Delta)$. -/
-theorem pairing_hamiltonian_cube (ε Δ : R) :
+theorem pairing_hamiltonian_cube {R : Type*} [CommRing R] (ε Δ : R) :
     (pairingHamiltonian ε Δ) * (pairingHamiltonian ε Δ) * (pairingHamiltonian ε Δ) =
       (ε ^ 2 + Δ ^ 2) • (pairingHamiltonian ε Δ) := by
   unfold pairingHamiltonian H_gen tau_1 E
@@ -276,7 +277,7 @@ theorem pairing_supertrace (ε Δ : R) :
 /-! ### Section 7: Master Certification & Conjunction Targets -/
 
 /-- Master certificate structure packaging the full set of Nuclear Quasiphonon Krein SUSY theorems. -/
-structure NuclearQuasiphononKreinSUSYCertificate : Prop where
+structure NuclearQuasiphononKreinSUSYCertificate {R : Type*} [CommRing R] : Prop where
   car_alpha_comm          : anticommutator (alpha R) (alpha_dag R) = E 1 1 + E 0 0
   car_beta_comm           : anticommutator (beta R) (beta_dag R) = E 1 1 + E 2 2
   T_pair_explicit_form    : T_pair R = E 0 0 - 2 • (E 1 1) + E 2 2
@@ -299,7 +300,7 @@ structure NuclearQuasiphononKreinSUSYCertificate : Prop where
   pairing_str_zero        : ∀ ε Δ : R, supertrace (pairingHamiltonian ε Δ) = 0
 
 /-- Master certificate instantiation. -/
-theorem compile_nuclear_quasiphonon_krein_susy_cert :
+theorem compile_nuclear_quasiphonon_krein_susy_cert {R : Type*} [CommRing R] :
     NuclearQuasiphononKreinSUSYCertificate (R := R) where
   car_alpha_comm          := car_alpha
   car_beta_comm           := car_beta

@@ -29,13 +29,15 @@ Two-node polynomial divisibility data.
 is the polynomial variable `X`.
 -/
 @[rep_depth thermo]
-structure TwoNodePolynomialShadow (R : Type*) [CommRing R] where
+structure TwoNodePolynomialShadow (R : Type*) [Ring R] where
   a : R
   n : ℕ
 
 namespace TwoNodePolynomialShadow
 
-variable {R : Type*} [CommRing R]
+section Ring
+
+variable {R : Type*} [Ring R]
 variable (P : TwoNodePolynomialShadow R)
 
 /-- The finite Vandermonde-type denominator factor. -/
@@ -47,6 +49,11 @@ noncomputable def denominator : R[X] :=
 @[rep_depth thermo]
 noncomputable def numerator : R[X] :=
   X ^ P.n - C (P.a ^ P.n)
+
+end Ring
+
+variable {R : Type*} [CommRing R]
+variable (P : TwoNodePolynomialShadow R)
 
 /--
 The finite denominator divides the alternating polynomial numerator.

@@ -86,24 +86,90 @@ theorem current_mul_pairSupport :
     sub_zero]
   noncomm_ring
 
-section Scalars
-variable {R : Type*} [CommRing R] [Algebra R A]
+section NoncommScalars
+variable {R : Type*} [Ring R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
+omit hp hP hq hQ hpP hqQ hpq hPQ hpQ hqP
+  [IsScalarTower R A A] [SMulCommClass R A A] in
 /-- The identity on the complementary sector plus a circular pair-sector rotor. -/
 def rotor (p P q Q : A) (c s : R) : A :=
   1 + (c - 1) • pairSupport p P q Q + s • current p P q Q
+
+/-- Noncommutative circular pairing rotor inverse defect over any ring `R`:
+multiplying `rotor p P q Q c s` by its reversed-angle partner `rotor p P q Q c (-s)`
+produces both the radial defect `(c * c + s * s - 1) • pairSupport p P q Q` and the
+noncommutative current-torsion anomaly `(s * c - c * s) • current p P q Q`. -/
+theorem rotor_mul_reverse_noncomm_anomaly (c s : R) :
+    rotor p P q Q c s * rotor p P q Q c (-s) =
+      1 + (c * c + s * s - 1) • pairSupport p P q Q +
+        (s * c - c * s) • current p P q Q := by
+  have hTT := current_sq p P q Q hp hP hpP hqQ hpq hPQ hpQ hqP
+  have hEE := pairSupport_sq p P q Q hp hq hpP hqQ hpq hPQ hpQ hqP
+  have hET := pairSupport_mul_current p P q Q hp hP hq hQ hpP hqQ hpq hPQ hpQ hqP
+  have hTE := current_mul_pairSupport p P q Q hp hP hq hQ hpP hqQ hpq hPQ hpQ hqP
+  simp only [rotor, add_mul, mul_add, smul_mul_assoc]
+  simp only [mul_smul_comm, one_mul, mul_one, hTT, hEE, hET, hTE]
+  simp only [smul_sub, smul_neg, neg_smul, smul_smul,
+    add_smul, sub_smul, one_smul, sub_mul, neg_neg,
+    one_mul]
+  abel
+
+/-- Exact finite action over any noncommutative coefficient ring `R`;
+all quadratic operator words vanish by fermionic nilpotency, so no scalar
+commutativity or normalization is needed. -/
+theorem rotor_annihilator_one (c s : R) :
+    rotor p P q Q c s * p * rotor p P q Q c (-s) = c • p + s • Q := by
+  simp (disch := assumption) only [rotor, current, pairSupport, mul_add, add_mul, mul_sub, sub_mul, neg_mul, mul_neg,
+    smul_mul_assoc, mul_smul_comm, smul_smul, smul_add, smul_sub, smul_neg, neg_smul, mul_assoc,
+    square_tail, car_tail, anti_tail, car_pair, anti_pair, hp, mul_zero, zero_mul, one_mul,
+    mul_one, neg_neg, sub_zero, zero_sub, smul_zero, sub_smul, one_smul]
+  abel
+
+/-- Exact finite action over any noncommutative coefficient ring `R`;
+the polynomial identity needs no normalization. -/
+theorem rotor_creator_two (c s : R) :
+    rotor p P q Q c s * Q * rotor p P q Q c (-s) = c • Q - s • p := by
+  simp (disch := assumption) only [rotor, current, pairSupport, mul_add, add_mul, mul_sub, sub_mul, neg_mul, mul_neg,
+    smul_mul_assoc, mul_smul_comm, smul_smul, smul_add, smul_sub, smul_neg, neg_smul, mul_assoc,
+    square_tail, car_tail, anti_tail, car_pair, anti_pair, hp, mul_zero, zero_mul, one_mul,
+    mul_one, neg_neg, sub_zero, zero_sub, zero_add, smul_zero, sub_smul, one_smul]
+  abel
+
+omit hQ in
+/-- Exact finite action over any noncommutative coefficient ring `R`;
+the polynomial identity needs no normalization. -/
+theorem rotor_annihilator_two (c s : R) :
+    rotor p P q Q c s * q * rotor p P q Q c (-s) = c • q - s • P := by
+  simp (disch := assumption) only [rotor, current, pairSupport, mul_add, add_mul, mul_sub, sub_mul, neg_mul, mul_neg,
+    smul_mul_assoc, mul_smul_comm, smul_smul, smul_add, smul_sub, smul_neg, neg_smul, mul_assoc,
+    square_tail, car_tail, anti_tail, car_pair, anti_pair, hp, hP, hq, mul_zero, zero_mul,
+    one_mul, mul_one, neg_neg, sub_zero, zero_sub, zero_add, smul_zero,
+    sub_smul, one_smul]
+  abel
+
+omit hQ in
+/-- Exact finite action over any noncommutative coefficient ring `R`;
+the polynomial identity needs no normalization. -/
+theorem rotor_creator_one (c s : R) :
+    rotor p P q Q c s * P * rotor p P q Q c (-s) = c • P + s • q := by
+  simp (disch := assumption) only [rotor, current, pairSupport, mul_add, add_mul, mul_sub, sub_mul, neg_mul, mul_neg,
+    smul_mul_assoc, mul_smul_comm, smul_smul, smul_add, smul_sub, smul_neg, neg_smul, mul_assoc,
+    square_tail, car_tail, anti_tail, car_pair, anti_pair, hp, hP, hq, mul_zero, zero_mul,
+    one_mul, mul_one, neg_neg, sub_zero, zero_sub, zero_add, smul_zero,
+    sub_smul, one_smul]
+  abel
+
+end NoncommScalars
+
+section Scalars
+variable {R : Type*} [CommRing R] [Algebra R A]
 
 /-- Polynomial inverse defect; normalization is needed only to make this one. -/
 theorem rotor_mul_reverse (c s : R) :
     rotor p P q Q c s * rotor p P q Q c (-s) =
       1 + (c * c + s * s - 1) • pairSupport p P q Q := by
-  have hTT := current_sq p P q Q hp hP hpP hqQ hpq hPQ hpQ hqP
-  have hEE := pairSupport_sq p P q Q hp hq hpP hqQ hpq hPQ hpQ hqP
-  have hET := pairSupport_mul_current p P q Q hp hP hq hQ hpP hqQ hpq hPQ hpQ hqP
-  have hTE := current_mul_pairSupport p P q Q hp hP hq hQ hpP hqQ hpq hPQ hpQ hqP
-  simp only [rotor, add_mul, mul_add, smul_mul_smul, one_mul, mul_one,
-    hTT, hEE, hET, hTE, smul_neg]
-  module
+  rw [rotor_mul_reverse_noncomm_anomaly p P q Q hp hP hq hQ hpP hqQ hpq hPQ hpQ hqP c s]
+  rw [mul_comm s c, sub_self, zero_smul, add_zero]
 
 /-- Both inverse orders are consequences of CAR and scalar normalization. -/
 def rotorUnit (c s : R) (hcs : c * c + s * s = 1) : Aˣ where
@@ -115,44 +181,6 @@ def rotorUnit (c s : R) (hcs : c * c + s * s = 1) : Aˣ where
   inv_val := by
     have h := rotor_mul_reverse p P q Q hp hP hq hQ hpP hqQ hpq hPQ hpQ hqP c (-s)
     simpa [hcs] using h
-
-/-- Exact finite action; the polynomial identity needs no normalization. -/
-theorem rotor_annihilator_one (c s : R) :
-    rotor p P q Q c s * p * rotor p P q Q c (-s) = c • p + s • Q := by
-  simp (disch := assumption) only [rotor, current, pairSupport, mul_add, add_mul, mul_sub, sub_mul, neg_mul, mul_neg,
-    smul_mul_assoc, mul_smul_comm, smul_smul, smul_add, smul_sub, smul_neg, mul_assoc,
-    square_tail, car_tail, anti_tail, car_pair, anti_pair, hp, mul_zero, zero_mul, one_mul,
-    mul_one, neg_neg, sub_zero, zero_sub, smul_zero]
-  module
-
-/-- Exact finite action; the polynomial identity needs no normalization. -/
-theorem rotor_creator_two (c s : R) :
-    rotor p P q Q c s * Q * rotor p P q Q c (-s) = c • Q - s • p := by
-  simp (disch := assumption) only [rotor, current, pairSupport, mul_add, add_mul, mul_sub, sub_mul, neg_mul, mul_neg,
-    smul_mul_assoc, mul_smul_comm, smul_smul, smul_add, smul_sub, smul_neg, mul_assoc,
-    square_tail, car_tail, anti_tail, car_pair, anti_pair, hp, mul_zero, zero_mul, one_mul,
-    mul_one, neg_neg, sub_zero, zero_sub, zero_add, smul_zero]
-  module
-
-omit hQ in
-/-- Exact finite action; the polynomial identity needs no normalization. -/
-theorem rotor_annihilator_two (c s : R) :
-    rotor p P q Q c s * q * rotor p P q Q c (-s) = c • q - s • P := by
-  simp (disch := assumption) only [rotor, current, pairSupport, mul_add, add_mul, mul_sub, sub_mul, neg_mul, mul_neg,
-    smul_mul_assoc, mul_smul_comm, smul_smul, smul_add, smul_sub, smul_neg, mul_assoc,
-    square_tail, car_tail, anti_tail, car_pair, anti_pair, hp, hP, hq, mul_zero, zero_mul,
-    one_mul, mul_one, neg_neg, sub_zero, zero_sub, add_zero, zero_add, smul_zero]
-  module
-
-omit hQ in
-/-- Exact finite action; the polynomial identity needs no normalization. -/
-theorem rotor_creator_one (c s : R) :
-    rotor p P q Q c s * P * rotor p P q Q c (-s) = c • P + s • q := by
-  simp (disch := assumption) only [rotor, current, pairSupport, mul_add, add_mul, mul_sub, sub_mul, neg_mul, mul_neg,
-    smul_mul_assoc, mul_smul_comm, smul_smul, smul_add, smul_sub, smul_neg, mul_assoc,
-    square_tail, car_tail, anti_tail, car_pair, anti_pair, hp, hP, hq, mul_zero, zero_mul,
-    one_mul, mul_one, neg_neg, sub_zero, zero_sub, add_zero, zero_add, smul_zero]
-  module
 
 end Scalars
 end InfoGeometry.OperatorAlgebra.FinitePairingImplementer

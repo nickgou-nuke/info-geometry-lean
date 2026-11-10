@@ -7,7 +7,7 @@ namespace FiniteProjectorSpectralCalculus
 
 open scoped BigOperators
 
-variable {R A : Type*} [CommSemiring R] [Semiring A] [Algebra R A]
+variable {R A : Type*} [Semiring R] [Semiring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 /-- Orthogonal idempotent family. -/
@@ -43,8 +43,8 @@ theorem spectralHamiltonian_mul_projector
     intro i hi
     by_cases hij : i = j
     · subst hij
-      simp [orthogonal_idempotent_sq hP]
-    · simp [hij, orthogonal_idempotent_mul_ne hP hij]
+      simp [smul_mul_assoc, orthogonal_idempotent_sq hP]
+    · simp [smul_mul_assoc, hij, orthogonal_idempotent_mul_ne hP hij]
   · rw [Finset.sum_ite_eq']
     simp
 
@@ -59,9 +59,9 @@ theorem projector_mul_spectralHamiltonian
     intro i hi
     by_cases hij : i = j
     · subst hij
-      simp [orthogonal_idempotent_sq hP]
+      simp [mul_smul_comm, orthogonal_idempotent_sq hP]
     · have hji : j ≠ i := by exact Ne.symm hij
-      simp [hij, orthogonal_idempotent_mul_ne hP hji]
+      simp [mul_smul_comm, hij, orthogonal_idempotent_mul_ne hP hji]
   · rw [Finset.sum_ite_eq']
     simp
 

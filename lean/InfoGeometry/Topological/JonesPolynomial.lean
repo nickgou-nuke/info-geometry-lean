@@ -54,13 +54,13 @@ theorem reidemeister_factor_cancel {R : Type*} [Group R]
 For the Kauffman bracket one instantiates `c` with the unit represented by
 `-A^3`; keeping `c` abstract avoids introducing an unjustified square-root
 choice for the Laurent variable. -/
-def normalizedBracket {D R : Type*} [CommRing R]
+def normalizedBracket {D R : Type*} [Ring R]
     (c : Units R) (bracket : D → R) (writhe : D → ℤ) (d : D) : R :=
   ((c ^ (-writhe d) : Units R) : R) * bracket d
 
 /-- A Reidemeister-I bracket law is exactly cancelled by writhe normalization. -/
 theorem normalizedBracket_reidemeister_one
-    {D R : Type*} [CommRing R]
+    {D R : Type*} [Ring R]
     (c : Units R) (bracket : D → R) (writhe : D → ℤ)
     (move : D → D)
     (hbracket : ∀ d, bracket (move d) = (c : R) * bracket d)
@@ -110,7 +110,7 @@ def satisfiesJonesSkein {D R : Type*} [Ring R]
     (((q⁻¹ : Units R) : R) ^ 2) * V triple.positive -
       ((q : R) ^ 2) * V triple.negative
 
-structure JonesPolynomialModel (D R : Type*) [CommRing R] where
+structure JonesPolynomialModel (D R : Type*) [Ring R] where
   value : D → R
   unknot : D
   unknot_value : value unknot = 1
@@ -118,12 +118,12 @@ structure JonesPolynomialModel (D R : Type*) [CommRing R] where
   skein_law : ∀ triple : SkeinTriple D, satisfiesJonesSkein value skein_parameter triple
 
 theorem JonesPolynomialModel.unknot_normalized
-    {D R : Type*} [CommRing R] (M : JonesPolynomialModel D R) :
+    {D R : Type*} [Ring R] (M : JonesPolynomialModel D R) :
     M.value M.unknot = 1 :=
   M.unknot_value
 
 theorem JonesPolynomialModel.satisfies_skein
-    {D R : Type*} [CommRing R] (M : JonesPolynomialModel D R)
+    {D R : Type*} [Ring R] (M : JonesPolynomialModel D R)
     (triple : SkeinTriple D) :
     satisfiesJonesSkein M.value M.skein_parameter triple :=
   M.skein_law triple

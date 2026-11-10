@@ -28,7 +28,7 @@ import InfoGeometry.GrandUnification.ModularPhaseSeparation
 namespace InfoGeometry.GrandUnification.MachianCosmology
 open LinearMap
 
-variable {R M : Type*} [CommRing R] [Invertible (2 : R)] [AddCommGroup M] [Module R M]
+variable {R M : Type*} [Ring R] [Invertible (2 : R)] [AddCommGroup M] [Module R M]
 
 /-! ### Eigenspace carriers for the two grading signs -/
 

@@ -60,7 +60,7 @@ structure ThreeColorPolynomialRData (K : Type*) [CommRing K] where
   polynomial_ne_zero : polynomial ≠ 0
   annihilates : matrixPolynomialEval polynomial R = 0
 
-noncomputable def colourSwapPolynomial (K : Type*) [CommRing K] : Polynomial K :=
+noncomputable def colourSwapPolynomial (K : Type*) [Ring K] : Polynomial K :=
   Polynomial.X ^ 2 - 1
 
 theorem pairSwap_sq : pairSwap * pairSwap = 1 := by

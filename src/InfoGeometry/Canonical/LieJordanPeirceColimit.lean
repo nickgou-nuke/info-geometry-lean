@@ -24,8 +24,10 @@ open InfoGeometry.Clifford.Cl11TensorTowerLimit
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 
 /-- Generic corner naturality, specialized below to the actual tower maps. -/
-theorem map_cornerOp {R A B : Type*} [CommRing R] [Ring A] [Ring B]
-    [Algebra R A] [Algebra R B] (f : A →+* B) (p x : A) (i j : Bool) :
+theorem map_cornerOp {R A B : Type*} [Ring R] [Ring A] [Ring B]
+    [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
+    [Module R B] [IsScalarTower R B B] [SMulCommClass R B B]
+    (f : A →+* B) (p x : A) (i j : Bool) :
     f (cornerOp (R := R) p i j x) = cornerOp (R := R) (f p) i j (f x) := by
   cases i <;> cases j <;>
     simp [cornerOp, endpoint, compIdempotent, map_mul, map_sub]

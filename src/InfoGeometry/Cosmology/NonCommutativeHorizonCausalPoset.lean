@@ -31,8 +31,8 @@ and Bogoliubov–Rindler flows. The archetypes are ordered into a strict causal 
 -- ==============================================================================
 namespace Archetype_II_GNS_Radical
 
-variable {R : Type*} [CommRing R] [StarRing R]
-variable {A : Type*} [Ring A] [StarRing A] [Algebra R A] [StarModule R A]
+variable {R : Type*} [Ring R] [StarRing R]
+variable {A : Type*} [Ring A] [StarRing A] [Module R A] [SMulCommClass R A A] [StarModule R A]
 variable (φ : A →ₗ[R] R)
 
 /-- The Gelfand-Naimark-Segal (GNS) null radical.
@@ -66,8 +66,8 @@ end Archetype_II_GNS_Radical
 -- ==============================================================================
 namespace Archetype_III_Tracial_Modular
 
-variable {R : Type*} [CommRing R] [StarRing R]
-variable {A : Type*} [Ring A] [StarRing A] [Algebra R A] [StarModule R A]
+variable {R : Type*} [Ring R] [StarRing R]
+variable {A : Type*} [Ring A] [StarRing A] [Module R A] [SMulCommClass R A A] [StarModule R A]
 variable (φ : A →ₗ[R] R)
 
 /-- A state functional is tracial if it is invariant under cyclic permutation.

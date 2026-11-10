@@ -23,10 +23,10 @@ packaged to instantiate the categorical proof colimit.
 -/
 def penroseKTheoryTower
     (Patch_n : ℕ → Type u)
-    [∀ n, CommRing (Patch_n n)] [∀ n, StarRing (Patch_n n)]
+    [∀ n, Ring (Patch_n n)] [∀ n, StarRing (Patch_n n)]
     (inflation_bond : ∀ n, Patch_n n →+* Patch_n (n+1))
     (PenroseAF : Type u)
-    [CommRing PenroseAF] [StarRing PenroseAF]
+    [Ring PenroseAF] [StarRing PenroseAF]
     (patch_toLimit : ∀ n, Patch_n n →+* PenroseAF)
     (patch_cone_comm : ∀ n x, patch_toLimit (n+1) (inflation_bond n x) = patch_toLimit n x)
     (K0_n : ℕ → Type u)
@@ -55,10 +55,10 @@ transport stably to the infinite-dimensional Penrose AF C*-algebra.
 -/
 theorem penrose_k0_colimit_stabilization
     (Patch_n : ℕ → Type u)
-    [∀ n, CommRing (Patch_n n)] [∀ n, StarRing (Patch_n n)]
+    [∀ n, Ring (Patch_n n)] [∀ n, StarRing (Patch_n n)]
     (inflation_bond : ∀ n, Patch_n n →+* Patch_n (n+1))
     (PenroseAF : Type u)
-    [CommRing PenroseAF] [StarRing PenroseAF]
+    [Ring PenroseAF] [StarRing PenroseAF]
     (patch_toLimit : ∀ n, Patch_n n →+* PenroseAF)
     (patch_cone_comm : ∀ n x, patch_toLimit (n+1) (inflation_bond n x) = patch_toLimit n x)
     (K0_n : ℕ → Type u)

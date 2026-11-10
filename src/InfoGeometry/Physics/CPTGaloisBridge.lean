@@ -31,7 +31,7 @@ $$\sigma_7(\zeta_{12}) = \zeta_{12}^7 = -\zeta_{12}$$
 CPT Inversion is the central antipodal involution of the 12th cyclotomic circle.
 -/
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The 12th cyclotomic polynomial $\Phi_{12}(X) = X^4 - X^2 + 1$. -/
 def cyclotomic12 (zeta : R) : R := zeta ^ 4 - zeta ^ 2 + 1
@@ -70,11 +70,11 @@ def galoisAction (g : GaloisCPT) (zeta : R) : R :=
 /-- $\Phi_{12}(\zeta) = 0 \implies \zeta^6 = -1$. -/
 theorem zeta_pow_six_of_cyclotomic (zeta : R) (h : cyclotomic12 zeta = 0) :
     zeta ^ 6 = -1 := by
-  have hmul : (zeta ^ 2 + 1) * (zeta ^ 4 - zeta ^ 2 + 1) = zeta ^ 6 + 1 := by ring
+  have hmul : (zeta ^ 2 + 1) * (zeta ^ 4 - zeta ^ 2 + 1) = zeta ^ 6 + 1 := by noncomm_ring
   dsimp [cyclotomic12] at h
   have h6 : zeta ^ 6 + 1 = 0 := by
     rw [← hmul, h, mul_zero]
-  linear_combination h6
+  exact eq_neg_of_add_eq_zero_left h6
 
 /-- $\Phi_{12}(\zeta) = 0 \implies \zeta^{12} = 1$. -/
 theorem zeta_pow_twelve_of_cyclotomic (zeta : R) (h : cyclotomic12 zeta = 0) :
@@ -84,7 +84,7 @@ theorem zeta_pow_twelve_of_cyclotomic (zeta : R) (h : cyclotomic12 zeta = 0) :
     have : (6 : ℕ) * 2 = 12 := rfl
     rw [← pow_mul, this]
   rw [h12, h6]
-  ring
+  noncomm_ring
 
 /-- 🏆 THEOREM 1: Quantum imaginary unit squares to $-1$: $i_{\text{alg}}^2 = -1$. -/
 theorem quantumI_sq (zeta : R) (h : cyclotomic12 zeta = 0) :
@@ -102,16 +102,20 @@ theorem root3Alg_sq (zeta : R) (h : cyclotomic12 zeta = 0) :
   have h6 := zeta_pow_six_of_cyclotomic zeta h
   have h12 := zeta_pow_twelve_of_cyclotomic zeta h
   dsimp [root3Alg]
-  have h_exp : (zeta + zeta ^ 11) ^ 2 = zeta ^ 2 + 2 * zeta ^ 12 + zeta ^ 22 := by ring
-  have h22 : zeta ^ 22 = zeta ^ 12 * zeta ^ 6 * zeta ^ 4 := by
-    have : (22 : ℕ) = 12 + 6 + 4 := rfl
-    rw [this, pow_add, pow_add]
-  rw [h_exp, h12, h22, h12, h6]
+  have h_exp : (zeta + zeta ^ 11) ^ 2 = zeta ^ 2 + zeta * zeta ^ 11 + zeta ^ 11 * zeta + (zeta ^ 11) ^ 2 := by
+    noncomm_ring
+  have h1_11 : zeta * zeta ^ 11 = zeta ^ 12 := by rw [← pow_succ']
+  have h11_1 : zeta ^ 11 * zeta = zeta ^ 12 := by rw [← pow_succ]
+  have h11_2 : (zeta ^ 11) ^ 2 = zeta ^ 12 * zeta ^ 6 * zeta ^ 4 := by
+    rw [← pow_mul, show (11 : ℕ) * 2 = 12 + 6 + 4 from rfl, pow_add, pow_add]
+  rw [h_exp, h1_11, h11_1, h11_2, h12, h6]
   have h4 : zeta ^ 4 = zeta ^ 2 - 1 := by
-    dsimp [cyclotomic12] at h
-    linear_combination h
-  rw [h4]
-  ring
+    have h' : zeta ^ 4 - (zeta ^ 2 - 1) = cyclotomic12 zeta := by
+      dsimp [cyclotomic12]; noncomm_ring
+    exact sub_eq_zero.mp (h'.trans h)
+  have h3 : (1 : R) + 1 + 1 = 3 := by norm_num
+  rw [h4, ← h3]
+  noncomm_ring
 
 /-! ### The Four Fundamental Galois CPT Symmetry Actions -/
 
@@ -147,7 +151,7 @@ theorem galois_T_action (zeta : R) (h : cyclotomic12 zeta = 0) :
       have : (33 : ℕ) = 12 * 2 + 6 + 3 := rfl
       rw [this, pow_add, pow_add, pow_mul]
     rw [h33, h33_red, h12, h6]
-    ring
+    noncomm_ring
 
 /-- 🏆 THEOREM 5 (Charge-Parity $CP = \sigma_5$):
     Inverts spatial geometry $\sqrt{3} \mapsto -\sqrt{3}$ and preserves quantum phase $i \mapsto i$. -/
@@ -169,7 +173,7 @@ theorem galois_CP_action (zeta : R) (h : cyclotomic12 zeta = 0) :
       have : (11 : ℕ) = 6 + 5 := rfl
       rw [this, pow_add]
     rw [h55, h55_red, h12, h6, h11_red, h6]
-    ring
+    noncomm_ring
   · dsimp [quantumI]
     have h15 : (zeta ^ 5) ^ 3 = zeta ^ 15 := by
       have : (5 : ℕ) * 3 = 15 := rfl
@@ -203,7 +207,7 @@ theorem galois_CPT_action (zeta : R) (h : cyclotomic12 zeta = 0) :
       have : (11 : ℕ) = 6 + 5 := rfl
       rw [this, pow_add]
     rw [h77, h77_red, h12, one_pow, one_mul, h7_eq_neg_zeta, h11_red, h6]
-    ring
+    noncomm_ring
   · dsimp [quantumI]
     have h21 : (zeta ^ 7) ^ 3 = zeta ^ 21 := by
       have : (7 : ℕ) * 3 = 21 := rfl
@@ -212,7 +216,7 @@ theorem galois_CPT_action (zeta : R) (h : cyclotomic12 zeta = 0) :
       have : (21 : ℕ) = 12 + 6 + 3 := rfl
       rw [this, pow_add, pow_add]
     rw [h21, h21_red, h12, h6]
-    ring
+    noncomm_ring
 
 /-- 🏆 THEOREM 7 (CPT Inversion is Antipodal Map $\zeta \mapsto -\zeta$):
     The Galois automorphism $\sigma_7$ is identical to negation $\zeta^7 = -\zeta$. -/

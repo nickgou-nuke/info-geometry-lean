@@ -21,7 +21,7 @@ namespace InfoGeometry.Physics.QCDZornColorSlotBridge
 
 open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Exact upper/lower three-vector slot extraction packet. -/
 theorem zorn_three_vector_slot_packet (X : ZMat R) :

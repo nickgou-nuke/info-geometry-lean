@@ -26,7 +26,7 @@ set_option linter.unusedSimpArgs false
 namespace InfoGeometry.Algebra.Zorn.BruhatInterval
 
 variable {G : Type*} [Group G] [DecidableEq G]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! =========================================================================
     1. Subword Down-Sets and Finite Bruhat Intervals

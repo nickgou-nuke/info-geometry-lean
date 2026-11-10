@@ -6,14 +6,14 @@ noncomputable section
 namespace InfoGeometry.Algebra.H3ZornCubicFormE6Bridge
 
 /-- **Definition**: Diagonal 3x3 Zorn Jordan Matrix State (d1, d2, d3). -/
-structure DiagonalH3Zorn (R : Type*) [CommRing R] where
+structure DiagonalH3Zorn (R : Type*) [Ring R] where
   d1 : R
   d2 : R
   d3 : R
 
 namespace DiagonalH3Zorn
 
-variable {R : Type*} [CommRing R] (x : DiagonalH3Zorn R)
+variable {R : Type*} [Ring R] (x : DiagonalH3Zorn R)
 
 /-- Trace of 3x3 Zorn Matrix: tr(X) = d1 + d2 + d3. -/
 def trace : R := x.d1 + x.d2 + x.d3
@@ -23,7 +23,7 @@ def trace : R := x.d1 + x.d2 + x.d3
 def detCubic : R := x.d1 * x.d2 * x.d3
 
 /-- **Theorem**: Cubic Form Scale Homogeneity det(c X) = c³ det(X). -/
-theorem detCubic_scale (c : R) :
+theorem detCubic_scale {R : Type*} [CommRing R] (x : DiagonalH3Zorn R) (c : R) :
     detCubic (⟨c * x.d1, c * x.d2, c * x.d3⟩ : DiagonalH3Zorn R) = c ^ 3 * detCubic x := by
   dsimp [detCubic]
   ring
@@ -31,8 +31,7 @@ theorem detCubic_scale (c : R) :
 /-- **Theorem**: Determinant Factorization for Zero Element. -/
 theorem detCubic_zero :
     detCubic (⟨0, 0, 0⟩ : DiagonalH3Zorn R) = 0 := by
-  dsimp [detCubic]
-  ring
+  simp [detCubic]
 
 end DiagonalH3Zorn
 

@@ -6,6 +6,8 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.Basic.Real.Basic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.Linarith
 
 /-!
@@ -32,7 +34,7 @@ This module formalizes the algebraic synthesis connecting:
 
 namespace InfoGeometry.QuantumContext.FujikawaBirefringence
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ## Section 1: 3D Vector Carrier (`Vec3 R`) -/
 
@@ -46,7 +48,7 @@ structure Vec3 (R : Type*) where
 
 namespace Vec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Zero 3-vector. -/
 def zero : Vec3 R := ⟨0, 0, 0⟩
@@ -95,7 +97,7 @@ structure ChiralZeroModes (R : Type*) where
 
 namespace ChiralZeroModes
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Zero chiral zero-mode configuration. -/
 def zero : ChiralZeroModes R := ⟨0, 0⟩
@@ -127,7 +129,7 @@ def fujikawaMeasureExponent (α : R) (M : ChiralZeroModes R) : R :=
 theorem fujikawa_anomaly_factor_two (α : R) (M : ChiralZeroModes R) :
     fujikawaMeasureExponent α M = - 2 * α * atiyahSingerIndex M := by
   dsimp [fujikawaMeasureExponent, atiyahSingerIndex]
-  ring
+  noncomm_ring
 
 /-! ## Section 3: Poynting–Fujikawa Electromagnetic Energy Partition -/
 
@@ -143,7 +145,7 @@ def poyntingSq (E B : Vec3 R) : R :=
     The product of the squared electric and magnetic field norms decomposes into the transverse
     Poynting radiation flux $\|\mathbf{E} \times \mathbf{B}\|^2$ plus the square of the topological
     Fujikawa anomaly source $(\mathbf{E} \cdot \mathbf{B})^2$. -/
-theorem poynting_fujikawa_energy_partition (E B : Vec3 R) :
+theorem poynting_fujikawa_energy_partition {R : Type*} [CommRing R] (E B : Vec3 R) :
     poyntingSq E B + (pontryaginSource E B) ^ 2 = Vec3.sq E * Vec3.sq B := by
   dsimp [poyntingSq, pontryaginSource, Vec3.sq, Vec3.dot, Vec3.cross]
   ring
@@ -162,12 +164,13 @@ def eikonalOmegaMinus (k b₀ : R) : R := k - b₀
 theorem chiral_birefringence_frequency_split (k b₀ : R) :
     eikonalOmegaPlus k b₀ - eikonalOmegaMinus k b₀ = 2 * b₀ := by
   dsimp [eikonalOmegaPlus, eikonalOmegaMinus]
-  ring
+  rw [two_mul]
+  abel
 
 /-- **Chiral Eikonal Dispersion Product**:
     The product of the two birefringent eikonal frequencies yields the relativistic dispersion
     relation $\Omega_+ \Omega_- = k^2 - b_0^2$ with tachyonic mass-squared shift $-b_0^2$. -/
-theorem chiral_eikonal_dispersion_product (k b₀ : R) :
+theorem chiral_eikonal_dispersion_product {R : Type*} [CommRing R] (k b₀ : R) :
     eikonalOmegaPlus k b₀ * eikonalOmegaMinus k b₀ = k ^ 2 - b₀ ^ 2 := by
   dsimp [eikonalOmegaPlus, eikonalOmegaMinus]
   ring

@@ -37,7 +37,9 @@ def reduceMod2 : SL2Z →* SL2ZMod2 :=
     (reduceMod2 g : Matrix.SpecialLinearGroup (Fin 2) (ZMod 2)) =
       Matrix.SpecialLinearGroup.map (Int.castRingHom (ZMod 2)) g := rfl
 
-variable {K : Type*} [Field K]
+section DivisionRing
+
+variable {K : Type*} [DivisionRing K]
 
 /-- The projective Möbius action of a `2 × 2` matrix on a scalar `z`. -/
 def mobiusMatrix (M : Matrix (Fin 2) (Fin 2) K) (z : K) : K :=
@@ -64,6 +66,15 @@ def mobiusOption (M : Matrix (Fin 2) (Fin 2) K) : Option K → Option K
       if h : M 1 0 * z + M 1 1 = 0 then none
       else some ((M 0 0 * z + M 0 1) / (M 1 0 * z + M 1 1)) := by
   rfl
+
+/-- The identity matrix acts as the identity on the projective line. -/
+theorem mobiusOption_one (z : Option K) :
+    mobiusOption (1 : Matrix (Fin 2) (Fin 2) K) z = z := by
+  cases z <;> simp [mobiusOption]
+
+end DivisionRing
+
+variable {K : Type*} [Field K]
 
 /-- Scalar rescaling by a unit does not change the `Option K` Möbius action at `∞`. -/
 theorem mobiusOption_projective_rescale_none {u : Kˣ}
@@ -168,11 +179,6 @@ theorem mobiusOption_projective_rescale {u : Kˣ}
   | some x =>
       exact mobiusOption_projective_rescale_some (u := u) M x
 
-/-- The identity matrix acts as the identity on the projective line. -/
-theorem mobiusOption_one (z : Option K) :
-    mobiusOption (1 : Matrix (Fin 2) (Fin 2) K) z = z := by
-  cases z <;> simp [mobiusOption]
-
 /-- Projective rescaling does not change the Möbius action. -/
 theorem mobiusMatrix_projective_rescale {lam : K}
     (M : Matrix (Fin 2) (Fin 2) K) (z : K)
@@ -184,45 +190,45 @@ theorem mobiusMatrix_projective_rescale {lam : K}
   field_simp [hlam, hden, hden']
 
 /-- The `2 × 2` trace used in the Möbius discriminant formulas. -/
-def trace2 (M : Matrix (Fin 2) (Fin 2) K) : K := M 0 0 + M 1 1
+def trace2 {K : Type*} [Ring K] (M : Matrix (Fin 2) (Fin 2) K) : K := M 0 0 + M 1 1
 
 /-- The determinant of `M - I` in trace form. -/
-theorem det_sub_one (M : Matrix (Fin 2) (Fin 2) K) :
+theorem det_sub_one {K : Type*} [CommRing K] (M : Matrix (Fin 2) (Fin 2) K) :
     (M - (1 : Matrix (Fin 2) (Fin 2) K)).det = M.det - trace2 M + 1 := by
   simp [trace2, Matrix.det_fin_two, Matrix.sub_apply]
   ring
 
 /-- The determinant of `M + I` in trace form. -/
-theorem det_add_one (M : Matrix (Fin 2) (Fin 2) K) :
+theorem det_add_one {K : Type*} [CommRing K] (M : Matrix (Fin 2) (Fin 2) K) :
     (M + (1 : Matrix (Fin 2) (Fin 2) K)).det = M.det + trace2 M + 1 := by
   simp [trace2, Matrix.det_fin_two, Matrix.add_apply]
   ring
 
 /-- The product `(M - I).det * (M + I).det` factors through the trace. -/
-theorem det_sub_one_mul_det_add_one (M : Matrix (Fin 2) (Fin 2) K) :
+theorem det_sub_one_mul_det_add_one {K : Type*} [CommRing K] (M : Matrix (Fin 2) (Fin 2) K) :
     (M - (1 : Matrix (Fin 2) (Fin 2) K)).det * (M + (1 : Matrix (Fin 2) (Fin 2) K)).det =
       (M.det + 1)^2 - trace2 M ^ 2 := by
   rw [det_sub_one, det_add_one]
   ring
 
 /-- The discriminant `tr(M)^2 - 4 det(M)` used to classify projective dynamics. -/
-def mobiusDiscriminant (M : Matrix (Fin 2) (Fin 2) K) : K :=
+def mobiusDiscriminant {K : Type*} [CommRing K] (M : Matrix (Fin 2) (Fin 2) K) : K :=
   trace2 M ^ 2 - 4 * M.det
 
 /-- In the `SL(2)` case, `det(M - I) = 2 - tr(M)`. -/
-theorem det_sub_one_sl2 (M : Matrix (Fin 2) (Fin 2) K) (hdet : M.det = 1) :
+theorem det_sub_one_sl2 {K : Type*} [CommRing K] (M : Matrix (Fin 2) (Fin 2) K) (hdet : M.det = 1) :
     (M - (1 : Matrix (Fin 2) (Fin 2) K)).det = 2 - trace2 M := by
   rw [det_sub_one, hdet]
   ring
 
 /-- In the `SL(2)` case, `det(M + I) = 2 + tr(M)`. -/
-theorem det_add_one_sl2 (M : Matrix (Fin 2) (Fin 2) K) (hdet : M.det = 1) :
+theorem det_add_one_sl2 {K : Type*} [CommRing K] (M : Matrix (Fin 2) (Fin 2) K) (hdet : M.det = 1) :
     (M + (1 : Matrix (Fin 2) (Fin 2) K)).det = 2 + trace2 M := by
   rw [det_add_one, hdet]
   ring
 
 /-- In the `SL(2)` case, the `M ± I` boundary factor is `4 - tr(M)^2`. -/
-theorem det_sub_one_mul_det_add_one_sl2 (M : Matrix (Fin 2) (Fin 2) K)
+theorem det_sub_one_mul_det_add_one_sl2 {K : Type*} [CommRing K] (M : Matrix (Fin 2) (Fin 2) K)
     (hdet : M.det = 1) :
     (M - (1 : Matrix (Fin 2) (Fin 2) K)).det * (M + (1 : Matrix (Fin 2) (Fin 2) K)).det =
       4 - trace2 M ^ 2 := by

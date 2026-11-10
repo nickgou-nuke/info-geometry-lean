@@ -96,8 +96,8 @@ theorem continuous_heisenbergBasisCyclotomicDegree :
 /-- The index-to-degree readout is locally constant for the discrete index topology. -/
 theorem isLocallyConstant_heisenbergBasisCyclotomicDegree :
     IsLocallyConstant heisenbergBasisCyclotomicDegree := by
-  unfold heisenbergBasisCyclotomicDegree
-  exact IsLocallyConstant.of_discrete
+  intro s
+  exact isOpen_discrete _
 
 end
 end InfoGeometry.Topology.HeisenbergFiniteModeCyclotomicTopological

@@ -44,9 +44,9 @@ noncomputable def celestialConfigurationCoveringFiberLinearEquiv
       Finsupp.single ((celestialOrderedFiberEquivPerm n p).symm q) a := by
   exact Finsupp.domLCongr_single (celestialOrderedFiberEquivPerm n p).symm q a
 
-/-- Over a field, the direct celestial covering fiber has dimension `n!`. -/
+/-- Over a division ring, the direct celestial covering fiber has dimension `n!`. -/
 theorem celestialConfigurationCoveringFiber_finrank
-    (F : Type*) [Field F] (n : ℕ)
+    (F : Type*) [DivisionRing F] (n : ℕ)
     (p : CelestialOrderedConfiguration n) :
     Module.finrank F
         ({q : CelestialOrderedConfiguration n //

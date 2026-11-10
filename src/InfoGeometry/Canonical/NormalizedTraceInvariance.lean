@@ -10,7 +10,8 @@ open Matrix
 
 namespace MultiChainNormalizedTrace
 
-variable {t : Type*} [Fintype t] [DecidableEq t] {K : Type*} [Field K]
+section Ring
+variable {t : Type*} [Fintype t] [DecidableEq t] {K : Type*} [Ring K]
 
 /-- 1. The Multi-Chain Tensor Algebra Embedding ιₙ : Aₙ → Aₙ₊₁
     Represented as the block diagonal map M ↦ [[M, 0], [0, M]] = M ⊗ I₂ -/
@@ -22,8 +23,11 @@ theorem embedding_trace (M : Matrix t t K) :
     trace (embeddingMap M) = 2 * trace M := by
   dsimp [trace, embeddingMap]
   rw [Fintype.sum_sum_type]
-  simp [fromBlocks]
-  ring
+  simp [fromBlocks, ← two_mul]
+
+end Ring
+
+variable {t : Type*} [Fintype t] [DecidableEq t] {K : Type*} [Field K]
 
 /-- 2. Normalized Trace Operator for a matrix space with dimension factor d:
     τ_d(M) = (1 / d) * Tr(M) -/

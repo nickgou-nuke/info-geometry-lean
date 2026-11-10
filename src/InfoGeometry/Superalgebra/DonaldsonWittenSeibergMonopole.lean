@@ -33,7 +33,7 @@ Standard: QMS-SOP-IAA-001 (v1.1) / OpenGauss 16-Trap Universal Shield
 
 namespace InfoGeometry.Superalgebra.DonaldsonWitten
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. 3D Цветови Вектори и 8D Сплит-Октониони за BRST и Зайберг–Витен Операторите -/
 
@@ -46,7 +46,7 @@ structure ColorVec3 (R : Type*) where
 
 namespace ColorVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : ColorVec3 R := ⟨0, 0, 0⟩
 def neg (u : ColorVec3 R) : ColorVec3 R := ⟨-u.c1, -u.c2, -u.c3⟩
@@ -83,7 +83,7 @@ structure SplitOctonion (R : Type*) where
 
 namespace SplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : SplitOctonion R := ⟨0, ColorVec3.zero, ColorVec3.zero, 0⟩
 def one  : SplitOctonion R := ⟨1, ColorVec3.zero, ColorVec3.zero, 1⟩
@@ -116,7 +116,7 @@ def antiquark (v : ColorVec3 R) : SplitOctonion R := ⟨0, ColorVec3.zero, v, 0�
 Всеки изотропен кварков суперзаряд Q(u) = U(u) в 𝕆_s е строго квадратично нилпотентен:
 Q(u) · Q(u) = 0.
 -/
-theorem octonion_brst_supercharge_nilpotent (u : ColorVec3 R) :
+theorem octonion_brst_supercharge_nilpotent {R : Type*} [CommRing R] (u : ColorVec3 R) :
     mul (quark u) (quark u) = zero := by
   dsimp [mul, quark, zero, ColorVec3.zero, ColorVec3.dot, ColorVec3.sub,
          ColorVec3.add, ColorVec3.smul, ColorVec3.cross]
@@ -128,7 +128,7 @@ theorem octonion_brst_supercharge_nilpotent (u : ColorVec3 R) :
 спинор V(v) генерира точно скаларната BPS плътност (u · v) • 𝟙 в 𝕆_s:
 U(u) · V(v) + V(v) · U(u) = (u · v) • 𝟙.
 -/
-theorem octonion_seiberg_witten_anticommutator (u v : ColorVec3 R) :
+theorem octonion_seiberg_witten_anticommutator {R : Type*} [CommRing R] (u v : ColorVec3 R) :
     add (mul (quark u) (antiquark v)) (mul (antiquark v) (quark u)) =
       scale (ColorVec3.dot u v) one := by
   dsimp [add, mul, quark, antiquark, scale, one, ColorVec3.zero, ColorVec3.dot,
@@ -141,7 +141,7 @@ theorem octonion_seiberg_witten_anticommutator (u v : ColorVec3 R) :
 BRST-екзактният антикомутатор {Q, Λ} = Q · Λ + Λ · Q е строго BRST-затворен:
 Q · {Q, Λ} - {Q, Λ} · Q = 0.
 -/
-theorem octonion_donaldson_brst_exact_closed (u v : ColorVec3 R) :
+theorem octonion_donaldson_brst_exact_closed {R : Type*} [CommRing R] (u v : ColorVec3 R) :
     let Q := quark u
     let Lambda := quark v
     let exactObs := add (mul Q Lambda) (mul Lambda Q)
@@ -181,7 +181,7 @@ structure BRSTFieldMultiplet (M : Type*) where
 
 namespace BRSTFieldMultiplet
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def mul (X Y : BRSTFieldMultiplet (SplitOctonion R)) : BRSTFieldMultiplet (SplitOctonion R) where
   A := SplitOctonion.mul X.A Y.A
@@ -227,7 +227,7 @@ theorem donaldson_witten_brst_sq_eq_neg_gauge_var (F : BRSTFieldMultiplet (Split
     brstQ (brstQ F) =
       ⟨SplitOctonion.neg (gaugeVarPhi F).A, SplitOctonion.zero, SplitOctonion.zero, SplitOctonion.zero⟩ := by
   dsimp [brstQ, gaugeVarPhi, SplitOctonion.neg, SplitOctonion.zero, ColorVec3.neg, ColorVec3.zero]
-  ext <;> ring
+  ext <;> simp
 
 /--
 Теорема за Нилпотентност на BRST Диференциала върху Калибровъчно-Инвариантни Полета:
@@ -243,7 +243,7 @@ theorem donaldson_witten_brst_sq_zero_on_gauge_invariant
   dsimp [gaugeVarPhi]
   rw [h_inv]
   dsimp [SplitOctonion.neg, SplitOctonion.zero, ColorVec3.neg, ColorVec3.zero]
-  ext <;> ring
+  ext <;> simp
 
 /--
 Квадратично спинорно изображение на Зайберг–Витен `σ(ψ, ψ̄)` в безследовия
@@ -257,7 +257,7 @@ def swQuadraticMap (ψ₁ ψ₂ barψ₁ barψ₂ : R) : R × R × R :=
 Евклидовата норма на безследовата спинорна билинейна форма се факторизира
 без остатък в квадрата на спинорната плътност `(ψ₁ ψ̄₁ + ψ₂ ψ̄₂)²`!
 -/
-theorem swQuadraticMap_norm_sq_factorization (ψ₁ ψ₂ barψ₁ barψ₂ : R) :
+theorem swQuadraticMap_norm_sq_factorization {R : Type*} [CommRing R] (ψ₁ ψ₂ barψ₁ barψ₂ : R) :
     (ψ₁ * barψ₁ - ψ₂ * barψ₂)^2 + (2 * ψ₁ * barψ₂) * (2 * ψ₂ * barψ₁) =
       (ψ₁ * barψ₁ + ψ₂ * barψ₂)^2 := by
   have _ := (ψ₁, ψ₂, barψ₁, barψ₂)
@@ -269,8 +269,8 @@ theorem swQuadraticMap_norm_sq_factorization (ψ₁ ψ₂ barψ₁ barψ₂ : R)
 Теорема 1b: Нилпотентност на заряда на Доналдсън–Витен в пръстена R.
 -/
 theorem topological_charge_is_nilpotent (Q_op : R) (hQ : Q_op * Q_op = 0) :
-    Q_op * Q_op = 0 := by
-  linear_combination hQ
+    Q_op * Q_op = 0 :=
+  hQ
 
 /-- Самодуален монополен източник на Зайберг–Витен: F⁺ = ½ (M · M†). -/
 def seibergWittenCurvature (monopole_M monopole_M_dag half : R) : R :=
@@ -284,10 +284,7 @@ def seibergWittenCurvature (monopole_M monopole_M_dag half : R) : R :=
 theorem seiberg_witten_bps_balance (M M_dag half : R) (h_half : 2 * half = 1) :
     2 * (seibergWittenCurvature M M_dag half) = M * M_dag := by
   dsimp [seibergWittenCurvature]
-  calc 2 * (half * (M * M_dag))
-    _ = (2 * half) * (M * M_dag) := by ring
-    _ = 1 * (M * M_dag) := by rw [h_half]
-    _ = M * M_dag := by ring
+  rw [← mul_assoc, h_half, one_mul]
 
 /-- Антикомутатор на суперзаряда с произволен калибровъчен калибър: {Q, Λ} = Q · Λ + Λ · Q. -/
 def brstExactObservable (Q_op Lambda : R) : R :=
@@ -303,9 +300,13 @@ theorem donaldson_metric_independence (Q_op Lambda : R) (hQ : Q_op * Q_op = 0) :
   dsimp [brstExactObservable]
   calc Q_op * (Q_op * Lambda + Lambda * Q_op) -
        (Q_op * Lambda + Lambda * Q_op) * Q_op
-    _ = (Q_op * Q_op) * Lambda - Lambda * (Q_op * Q_op) := by ring
-    _ = 0 * Lambda - Lambda * 0 := by rw [hQ]
-    _ = 0 := by ring
+    _ = ((Q_op * Q_op) * Lambda + Q_op * (Lambda * Q_op)) -
+        ((Q_op * Lambda) * Q_op + Lambda * (Q_op * Q_op)) := by
+      rw [mul_add, add_mul, ← mul_assoc Q_op Q_op Lambda, mul_assoc Lambda Q_op Q_op]
+    _ = (0 * Lambda + Q_op * (Lambda * Q_op)) -
+        ((Q_op * Lambda) * Q_op + Lambda * 0) := by rw [hQ]
+    _ = 0 := by
+      rw [zero_mul, mul_zero, zero_add, add_zero, mul_assoc, sub_self]
 
 /--
 Теорема 4: Механизъм на Двойния Свръхпроводник (Зайберг–Витен 1994).
@@ -316,11 +317,11 @@ theorem monopole_condensation_mass_gap (v_mono : R) :
     let mass_gap_sq := 2 * v_mono^2
     mass_gap_sq - 2 * (v_mono * v_mono) = 0 := by
   dsimp
-  ring
+  rw [sq, sub_self]
 
 /-! ### 3. Главен Синтез на Раздел 141 -/
 
-theorem donaldson_witten_seiberg_synthesis (u v : ColorVec3 R)
+theorem donaldson_witten_seiberg_synthesis {R : Type*} [CommRing R] (u v : ColorVec3 R)
     (Q_op Lambda M M_dag half v_mono : R)
     (hQ : Q_op * Q_op = 0) (h_half : 2 * half = 1) :
     SplitOctonion.mul (SplitOctonion.quark u) (SplitOctonion.quark u) = SplitOctonion.zero ∧

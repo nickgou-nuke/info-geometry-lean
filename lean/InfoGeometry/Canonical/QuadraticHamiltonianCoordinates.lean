@@ -27,8 +27,8 @@ def H1 (q p : A) : A := p * q + q * p
 /-- Paper's inverted quadratic expression. -/
 def H2 (q p : A) : A := p * p - q * q
 
-section Coordinates
-variable {R : Type*} [CommRing R] [Algebra R A]
+section RingCoordinates
+variable {R : Type*} [Ring R] [Module R A]
 
 def hamiltonian (a0 a1 a2 : R) (q p : A) : A :=
   a0 • H0 q p + a1 • H1 q p + a2 • H2 q p
@@ -40,6 +40,13 @@ def rotatedP (c s : R) (q p : A) : A := -s • q + c • p
 def doubleCos (c s : R) : R := c * c - s * s
 
 def doubleSin (c s : R) : R := 2 * c * s
+
+def discriminant (a0 a1 a2 : R) : R := a0 * a0 - a1 * a1 - a2 * a2
+
+end RingCoordinates
+
+section Coordinates
+variable {R : Type*} [CommRing R] [Algebra R A]
 
 theorem rotated_commutator (c s : R) (q p : A) :
     ⁅rotatedQ c s q p, rotatedP c s q p⁆ = (c * c + s * s) • ⁅q, p⁆ := by
@@ -75,8 +82,6 @@ theorem hamiltonian_rotated (a0 a1 a2 c s : R) (q p : A)
         (a1 * doubleSin c s + a2 * doubleCos c s) q p := by
   simp only [hamiltonian, H0_rotated, H1_rotated, H2_rotated, hcs, one_smul]
   module
-
-def discriminant (a0 a1 a2 : R) : R := a0 * a0 - a1 * a1 - a2 * a2
 
 theorem discriminant_rotated (a0 a1 a2 c s : R)
     (hcs : c * c + s * s = 1) :

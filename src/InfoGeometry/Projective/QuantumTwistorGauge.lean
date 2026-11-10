@@ -17,7 +17,7 @@ namespace InfoGeometry.Projective.QuantumTwistorGauge
 open InfoGeometry.Projective.QuantumGrassmannian
 open InfoGeometry.Projective.QuantumTwistor
 
-variable (R : Type*) [Field R] (q : R) (u : R)
+variable (R : Type*) [CommRing R] [Inv R] (q : R) (u : R)
 
 /-! ## Descent through the FRT quotient -/
 

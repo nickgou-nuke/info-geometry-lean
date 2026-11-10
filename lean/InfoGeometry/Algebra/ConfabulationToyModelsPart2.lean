@@ -1,6 +1,7 @@
 import Mathlib.Algebra.Ring.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.Linarith
 
@@ -20,7 +21,7 @@ namespace InfoGeometry.Algebra.ConfabulationToyModelsPart2
 
 section ParityChirality
 /-! ## Cluster A: Parity/Chirality Toy Models -/
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 structure ToySpacetime (R : Type*) where
   t : R
@@ -44,7 +45,7 @@ theorem spatial_parity_preserves_trace (v : ToySpacetime R) :
 theorem spatial_parity_preserves_interval (v : ToySpacetime R) :
   toy_interval (toy_parity v) = toy_interval v := by
   dsimp [toy_interval, toy_parity]
-  ring
+  noncomm_ring
 
 end ParityChirality
 
@@ -65,10 +66,10 @@ theorem onsager_flux_linearity (metric : A → A → A)
     _ = (β * dμ) * metric X N := by rw [h2]
     _ = dμ * β * metric X N := by ring
 
-theorem vacuum_flux_vanishes (metric : A → A → A) (X dμ β N : A) (h_vac : dμ = 0) :
+theorem vacuum_flux_vanishes {A : Type*} [Ring A] (metric : A → A → A) (X dμ β N : A) (h_vac : dμ = 0) :
   dμ * β * metric X N = 0 := by
   rw [h_vac]
-  ring
+  noncomm_ring
 
 end MetriplecticToy
 
@@ -103,20 +104,20 @@ end FreeEnergy
 
 section Plucker
 /-! ## Cluster ? (Packet 0009): Plücker-Klein finite coordinate identity -/
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 variable (x y : Fin 4 → R)
 
 def P (i j : Fin 4) : R := x i * y j - x j * y i
 
 theorem pluckerCoord_self (i : Fin 4) : P x y i i = 0 := by
   dsimp [P]
-  ring
+  noncomm_ring
 
 theorem pluckerCoord_swap (i j : Fin 4) : P x y i j = - P x y j i := by
   dsimp [P]
-  ring
+  noncomm_ring
 
-theorem plucker_klein_relation :
+theorem plucker_klein_relation {R : Type*} [CommRing R] (x y : Fin 4 → R) :
   P x y 0 1 * P x y 2 3 - P x y 0 2 * P x y 1 3 + P x y 0 3 * P x y 1 2 = 0 := by
   dsimp [P]
   ring

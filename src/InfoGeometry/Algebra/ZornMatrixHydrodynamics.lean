@@ -47,7 +47,7 @@ namespace InfoGeometry.Algebra.ZornMatrixHydrodynamics
 
 universe u_V u_R
 
-variable {R : Type u_R} [CommRing R]
+variable {R : Type u_R} [Ring R]
 
 /-! ### Section 1: Zorn Vector Matrix Carrier & Exact (4, 4) Krein Determinant -/
 
@@ -60,7 +60,7 @@ def normSq3 (u : Fin 3 → R) : R :=
   dot3 u u
 
 /-- Commutativity of the dot product on `Fin 3 → R`. -/
-theorem dot3_comm (u v : Fin 3 → R) : dot3 u v = dot3 v u := by
+theorem dot3_comm {R : Type u_R} [CommRing R] (u v : Fin 3 → R) : dot3 u v = dot3 v u := by
   dsimp [dot3]
   simp_rw [mul_comm]
 
@@ -73,7 +73,7 @@ def pMinus (A v : Fin 3 → R) (m : R) : Fin 3 → R :=
   fun i => A i - m * v i
 
 /-- Moment product factorization identity on `Fin 3 → R`. -/
-theorem dot3_pPlus_pMinus (A v : Fin 3 → R) (m : R) :
+theorem dot3_pPlus_pMinus {R : Type u_R} [CommRing R] (A v : Fin 3 → R) (m : R) :
     dot3 (pPlus A v m) (pMinus A v m) = normSq3 A - m^2 * normSq3 v := by
   dsimp [dot3, normSq3, pPlus, pMinus]
   rw [Fin.sum_univ_three, Fin.sum_univ_three, Fin.sum_univ_three]
@@ -84,7 +84,7 @@ def zornScalarMatrix (S Q : R) (p_dot : R) : Matrix (Fin 2) (Fin 2) R :=
   !![S + Q, p_dot; 1, S - Q]
 
 /-- The determinant of the 2×2 Zorn scalar carrier matrix. -/
-theorem zornScalarMatrix_det (S Q : R) (p_dot : R) :
+theorem zornScalarMatrix_det {R : Type u_R} [CommRing R] (S Q : R) (p_dot : R) :
     Matrix.det (zornScalarMatrix S Q p_dot) = S^2 - Q^2 - p_dot := by
   simp [zornScalarMatrix, Matrix.det_fin_two_of]
   ring
@@ -94,13 +94,13 @@ def zornKreinDet (S Q : R) (A v : Fin 3 → R) (m : R) : R :=
   (S + Q) * (S - Q) - dot3 (pPlus A v m) (pMinus A v m)
 
 /-- Exact Split (4, 4) Krein Determinant identity factoring forward-backward momenta. -/
-theorem zornKreinDet_exact (S Q : R) (A v : Fin 3 → R) (m : R) :
+theorem zornKreinDet_exact {R : Type u_R} [CommRing R] (S Q : R) (A v : Fin 3 → R) (m : R) :
     zornKreinDet S Q A v m = S^2 - normSq3 A + m^2 * normSq3 v - Q^2 := by
   rw [zornKreinDet, dot3_pPlus_pMinus]
   ring
 
 /-- Equivalence between the Krein determinant and the determinant of the Zorn scalar matrix. -/
-theorem zornKreinDet_eq_det_zornScalarMatrix (S Q : R) (A v : Fin 3 → R) (m : R) :
+theorem zornKreinDet_eq_det_zornScalarMatrix {R : Type u_R} [CommRing R] (S Q : R) (A v : Fin 3 → R) (m : R) :
     zornKreinDet S Q A v m = Matrix.det (zornScalarMatrix S Q (dot3 (pPlus A v m) (pMinus A v m))) := by
   rw [zornKreinDet, zornScalarMatrix_det]
   ring
@@ -112,7 +112,7 @@ def IsZornEquilibrium (S Q : R) (A v : Fin 3 → R) (m E0 : R) : Prop :=
   zornKreinDet S Q A v m = E0
 
 /-- Fisher metric energy balance relation under Zorn equilibrium. -/
-theorem zorn_energy_balance (S Q : R) (A v : Fin 3 → R) (m E0 : R)
+theorem zorn_energy_balance {R : Type u_R} [CommRing R] (S Q : R) (A v : Fin 3 → R) (m E0 : R)
     (h_eq : IsZornEquilibrium S Q A v m E0) :
     S^2 + m^2 * normSq3 v = E0 + normSq3 A + Q^2 := by
   dsimp [IsZornEquilibrium] at h_eq
@@ -182,12 +182,12 @@ structure ZornMatrixHydrodynamicsCertificate : Prop where
       IsZornEquilibrium S Q A v m E0 →
       S^2 + m^2 * normSq3 v = E0 + normSq3 A + Q^2
   drazin_collapse_projector_annihilates :
-    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [CommRing R]
+    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [Ring R]
       (L LD : Matrix V V R),
       L * LD = LD * L → L * LD * L = L →
       drazinCollapseProjector L LD * L = 0
   drazin_sink_projector_idempotent :
-    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [CommRing R]
+    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [Ring R]
       (L LD : Matrix V V R),
       L * LD = LD * L → L * LD * L = L →
       drazinSinkProjector L LD * drazinSinkProjector L LD = drazinSinkProjector L LD

@@ -61,8 +61,7 @@ open InfoGeometry.Canonical.DeBruijnRotorAlternationCycle
 
 section CrossStreamIntertwiners
 
-variable {R : Type*} [CommRing R]
-variable {A : Type*} [Ring A] [Algebra R A]
+variable {A : Type*} [Ring A]
 
 /-!
 ## 1. Node 0: Cross-Stream Carrier Identity & Stream 1 Grassmannian Bundle Extraction
@@ -98,7 +97,7 @@ theorem cross_stream_definitional_carrier_coherence (d B : A) :
 /-- Stream 5's moving pole `movingPolePlus c s d B` is definitionally Stream 1's
     `homogeneousProj (phaseRotor c s d B) (phaseRotor c (-s) d B) (polePlus d B)` and is
     an idempotent Grassmannian point (`IsIdempotentElem`) whenever `c * c + s * s = 1`. -/
-theorem movingPolePlus_is_grassmannian_homogeneousProj {d B : A}
+theorem movingPolePlus_is_grassmannian_homogeneousProj {R : Type*} [CommRing R] [Algebra R A] {d B : A}
     (h : IsDualSeedPair d B) (c s : R) (hcs : c * c + s * s = 1) :
     movingPolePlus c s d B =
       homogeneousProj (phaseRotor c s d B) (phaseRotor c (-s) d B)
@@ -150,7 +149,7 @@ theorem grassmannian_peirce_extracts_seeds_and_horizontal_velocity {d B : A}
 /-- Multiplicative orthogonality, squared displacement, and compression for
 moving idempotents. The cross-stream carrier equality is algebraic; no metric,
 Mostow decomposition, or Born probability is asserted. -/
-theorem movingPoles_chordal_compression_and_orthogonality {d B : A}
+theorem movingPoles_chordal_compression_and_orthogonality {R : Type*} [CommRing R] [Algebra R A] {d B : A}
     (h : IsDualSeedPair d B) {c s : R} (h_cs : c * c + s * s = 1) :
     movingPolePlus c s d B * movingPoleMinus c s d B = 0 ∧
     (movingPolePlus c s d B - DeBruijnRotorAlternationCycle.polePlus d B) *
@@ -170,7 +169,7 @@ theorem movingPoles_chordal_compression_and_orthogonality {d B : A}
 /-- At the quarter-turn `(c, s) = (0, 1)`, Stream 5's algebraic rotor `phaseRotor 0 1 d B`
     equals Stream 4's triple parabolic shear `bruhatQuarticOp d B = (1 + d)(1 - B)(1 + d)`,
     Stream 2's `moebiusWeylInversion d B`, and Stream 3's `bruhatWeylReflection d B`. -/
-theorem phaseRotor_quarter_turn_eq_bruhatQuarticOp {d B : A} (h : IsDualSeedPair d B) :
+theorem phaseRotor_quarter_turn_eq_bruhatQuarticOp {R : Type*} [Ring R] [Module R A] {d B : A} (h : IsDualSeedPair d B) :
     phaseRotor (0 : R) (1 : R) d B = bruhatQuarticOp d B ∧
     phaseRotor (0 : R) (1 : R) d B = moebiusWeylInversion d B ∧
     phaseRotor (0 : R) (1 : R) d B = bruhatWeylReflection d B := by
@@ -255,7 +254,7 @@ theorem bruhatQuarticOp_reverses_phasePolarization {d B : A} (h : IsDualSeedPair
 /-- **Automatic Tracial Vanishing on Nilpotent Seeds (`tracial_vanishes_on_dual_seeds`)**:
     For any tracial linear map `τ : A →ₗ[R] R` (`∀ x y, τ (x * y) = τ (y * x)`),
     `τ d = 0` and `τ B = 0` hold automatically without extra hypotheses. -/
-theorem tracial_vanishes_on_dual_seeds {d B : A} (h : IsDualSeedPair d B)
+theorem tracial_vanishes_on_dual_seeds {R : Type*} [Ring R] [Module R A] {d B : A} (h : IsDualSeedPair d B)
     (τ : A →ₗ[R] R) (hτ : ∀ x y : A, τ (x * y) = τ (y * x)) :
     τ d = 0 ∧ τ B = 0 := by
   refine ⟨?_, ?_⟩
@@ -265,6 +264,8 @@ theorem tracial_vanishes_on_dual_seeds {d B : A} (h : IsDualSeedPair d B)
   · calc τ B = τ ((B * d) * B) := by rw [h.BdB]
       _ = τ (B * (B * d)) := hτ (B * d) B
       _ = 0 := by rw [← mul_assoc, h.B_sq, zero_mul, map_zero]
+
+variable {R : Type*} [CommRing R] [Algebra R A]
 
 /-- Product of Stream 3's `kmsModularWeight u v d B = (u * u) • P₋ + (v * v) • P₊`
     with Stream 5's moving pole `movingPolePlus c s d B`. -/

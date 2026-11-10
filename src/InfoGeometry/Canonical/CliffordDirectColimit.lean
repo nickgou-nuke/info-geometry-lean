@@ -8,10 +8,10 @@ namespace InfoGeometry.Canonical.CliffordDirectColimit
 
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 
-variable {𝕜 : Type} [Field 𝕜] [CharZero 𝕜]
+variable {𝕜 : Type} [Ring 𝕜]
 
 /-- Matrix algebra at stage `n` representing the finite Clifford algebra `Cl(2n, ℂ)`. -/
-abbrev CliffordStage (𝕜 : Type) [Field 𝕜] (n : ℕ) : Type :=
+abbrev CliffordStage (𝕜 : Type) [Ring 𝕜] (n : ℕ) : Type :=
   Matrix (Fin (2^n)) (Fin (2^n)) 𝕜
 
 /-- Block diagonal inclusion `ι_n : Cl(2n, ℂ) ↪ Cl(2n+2, ℂ)` mapping `A ↦ diag(A, A)`. -/

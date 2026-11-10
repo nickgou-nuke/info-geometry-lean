@@ -10,7 +10,7 @@ open scoped BigOperators
 namespace MetaplecticFreeFlight
 
 variable {n : ℕ} [NeZero n]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. Triangular Numbers & Modular Arithmetic Helpers -/
 
@@ -79,7 +79,7 @@ theorem dftMatrix_mul_shiftMatrix (ω : R) (hn : ω ^ n = 1) :
     rw [← h, ZMod.val_natCast]
   rw [hval, pow_mul_mod ω hn i.val (j.val + 1)]
   have : i.val * (j.val + 1) = i.val + i.val * j.val := by ring
-  rw [this, pow_add, mul_comm]
+  rw [this, pow_add]
 
 /-- Fourier Duality 2: The DFT transforms the Clock operator into the Adjoint Shift operator:
     S* * F = F * C. -/
@@ -123,7 +123,7 @@ theorem chirpMatrix_mul_clockMatrix (ω : R) (κ : ℕ) :
   dsimp [Matrix.mul_apply, clockMatrix, chirpMatrix, Matrix.of_apply]
   simp only [ite_mul, mul_ite, zero_mul, mul_zero, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true, mul_one, one_mul]
   split_ifs with h
-  · subst h; rw [mul_comm]
+  · subst h; rw [← pow_add, ← pow_add, add_comm]
   · rfl
 
 /-- Momentum Preservation in Fourier Space:

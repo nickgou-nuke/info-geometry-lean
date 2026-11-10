@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.Basic
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
@@ -40,7 +41,7 @@ section QuantumMetric
 
 /-- Quantum covariance / correlation metric tensor:
     g(P₁, P₂) = (1/2) ⟨P₁ P₂ + P₂ P₁⟩ - ⟨P₁⟩⟨P₂⟩. -/
-def quantumCovarianceMetric (half exp_P1P2 exp_P2P1 exp_P1 exp_P2 : R) : R :=
+def quantumCovarianceMetric {R : Type*} [Ring R] (half exp_P1P2 exp_P2P1 exp_P1 exp_P2 : R) : R :=
   half * (exp_P1P2 + exp_P2P1) - exp_P1 * exp_P2
 
 /-- The quantum metric tensor is symmetric under index transposition: g_μν = g_νμ. -/
@@ -51,14 +52,14 @@ theorem quantum_metric_symmetric (half exp_P1P2 exp_P2P1 exp_P1 exp_P2 : R) :
   ring
 
 /-- On-diagonal variance formula: g(P, P) = ⟨P²⟩ - ⟨P⟩² for half + half = 1. -/
-theorem quantum_metric_diagonal (half exp_P2 exp_P : R) (h_half : half + half = 1) :
+theorem quantum_metric_diagonal {R : Type*} [Ring R] (half exp_P2 exp_P : R) (h_half : half + half = 1) :
     quantumCovarianceMetric half exp_P2 exp_P2 exp_P exp_P =
     exp_P2 - exp_P * exp_P := by
   dsimp [quantumCovarianceMetric]
   calc half * (exp_P2 + exp_P2) - exp_P * exp_P
-    _ = (half + half) * exp_P2 - exp_P * exp_P := by ring
+    _ = (half + half) * exp_P2 - exp_P * exp_P := by noncomm_ring
     _ = 1 * exp_P2 - exp_P * exp_P := by rw [h_half]
-    _ = exp_P2 - exp_P * exp_P := by ring
+    _ = exp_P2 - exp_P * exp_P := by noncomm_ring
 
 end QuantumMetric
 
@@ -69,7 +70,7 @@ end QuantumMetric
 section TwistorIncidence
 
 /-- Chiral twistor dyad matrix X = u ⊗ v. -/
-def dyadMatrix (u v : Fin 2 → R) : Matrix (Fin 2) (Fin 2) R :=
+def dyadMatrix {R : Type*} [Ring R] (u v : Fin 2 → R) : Matrix (Fin 2) (Fin 2) R :=
   fun i j => u i * v j
 
 /-- The determinant of any chiral dyad vanishes identically: det(u ⊗ v) = 0. -/
@@ -88,24 +89,24 @@ end TwistorIncidence
 section WeylGravity
 
 /-- Ricci scalar derived from the stress-energy trace via Einstein's equation: R = - κ tr(T). -/
-def ricciScalarFromTrace (kappa tr_T : R) : R :=
+def ricciScalarFromTrace {R : Type*} [Ring R] (kappa tr_T : R) : R :=
   - (kappa * tr_T)
 
 /-- When tr(T) = 0, the Ricci scalar curvature vanishes identically: R = 0. -/
-theorem ricci_scalar_vanishes (kappa : R) :
+theorem ricci_scalar_vanishes {R : Type*} [Ring R] (kappa : R) :
     ricciScalarFromTrace kappa 0 = 0 := by
   dsimp [ricciScalarFromTrace]
-  ring
+  noncomm_ring
 
 /-- Scalar curvature mass shift in the Lichnerowicz formula: (1/4) R. -/
-def lichnerowiczScalarShift (quarter R_curv : R) : R :=
+def lichnerowiczScalarShift {R : Type*} [Ring R] (quarter R_curv : R) : R :=
   quarter * R_curv
 
 /-- Vanishing of the Lichnerowicz mass shift in pure Weyl gravity: (1/4) * 0 = 0. -/
-theorem lichnerowicz_scalar_shift_vanishes (quarter : R) :
+theorem lichnerowicz_scalar_shift_vanishes {R : Type*} [Ring R] (quarter : R) :
     lichnerowiczScalarShift quarter 0 = 0 := by
   dsimp [lichnerowiczScalarShift]
-  ring
+  noncomm_ring
 
 end WeylGravity
 

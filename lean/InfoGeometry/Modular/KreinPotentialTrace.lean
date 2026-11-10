@@ -29,7 +29,7 @@ namespace InfoGeometry.Modular.Graded
 
 open Matrix
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 local notation "BM" => Matrix (ι ⊕ ι) (ι ⊕ ι) R
 
 /-- Exact conversion between the ordinary and graded trace on the full carrier. -/
@@ -37,7 +37,7 @@ theorem trace_eq_superTrace_add_negative_block (A : BM) :
     Matrix.trace A = superTrace A + 2 * Matrix.trace (toBlocks₂₂ A) := by
   simp only [Matrix.trace, superTrace, Fintype.sum_sum_type,
     Matrix.toBlocks₁₁, Matrix.toBlocks₂₂, Matrix.diag, Matrix.of_apply]
-  ring
+  noncomm_ring
 
 theorem superTrace_eq_trace_Gamma (A : BM) :
     superTrace A = Matrix.trace ((Gamma : BM) * A) := by
@@ -59,7 +59,7 @@ theorem superTrace_krein_square_blocks [StarRing R] (A B C D : Matrix ι ι R) :
   rw [superTrace_krein_square]
   simp [Gamma, Matrix.fromBlocks_conjTranspose, Matrix.fromBlocks_multiply,
     Matrix.trace, Fintype.sum_sum_type, Finset.sum_add_distrib]
-  ring
+  abel
 
 /-- Exact correction term for the ordinary Krein quadratic trace. -/
 theorem trace_krein_square_correction [StarRing R] (A B C D : Matrix ι ι R) :
@@ -70,7 +70,7 @@ theorem trace_krein_square_correction [StarRing R] (A B C D : Matrix ι ι R) :
   congr 1
   simp [Gamma, Matrix.fromBlocks_conjTranspose, Matrix.fromBlocks_multiply,
     Matrix.trace_neg]
-  ring
+  noncomm_ring
 
 /-- The two complex quadratic traces agree exactly when the negative-column
 blocks have equal Gram traces. This replaces unconditional identification. -/

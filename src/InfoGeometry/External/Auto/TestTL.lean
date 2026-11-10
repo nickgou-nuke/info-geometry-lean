@@ -8,12 +8,12 @@ namespace TestTL
 
 section TemperleyLieb
 
-variable {F : Type*} [Field F]
+variable {F : Type*} [DivisionRing F]
 variable (A : F)
 
 def d : F := - A^2 - (A⁻¹)^2
 
-variable {A_alg : Type*} [Ring A_alg] [Algebra F A_alg]
+variable {A_alg : Type*} [Ring A_alg] [Module F A_alg] [IsScalarTower F A_alg A_alg] [SMulCommClass F A_alg A_alg]
 variable (e : ℕ → A_alg)
 
 class TemperleyLieb (d_val : F) (e : ℕ → A_alg) : Prop where
@@ -39,7 +39,7 @@ def σ_inv (i : ℕ) : A_alg := (A⁻¹:F) • (1:A_alg) + (A:F) • e i
 
 @[simp] lemma tl_smul_mul_smul_comm (c1 c2 : F) (x1 x2 : A_alg) : 
   (c1 • x1) * (c2 • x2) = (c1 * c2) • (x1 * x2) := by
-  rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul]
+  rw [smul_mul_assoc, mul_smul_comm, smul_smul]
 
 lemma add_smul3 (c1 c2 c3 : F) (x : A_alg) : 
   c1 • x + c2 • x + c3 • x = (c1 + c2 + c3) • x := by
@@ -71,7 +71,7 @@ lemma sigma_mul_sigma_inv (i : ℕ) (hA : A ≠ 0) : σ A e i * σ_inv A e i = 1
     rw [← add_smul, ← add_smul]
     have hz : A^2 + (A⁻¹)^2 + d A = 0 := by
       dsimp [d]
-      ring
+      abel
     rw [hz, zero_smul]
   simpa [add_assoc] using congrArg (fun x : A_alg => (1 : A_alg) + x) h_sum
 

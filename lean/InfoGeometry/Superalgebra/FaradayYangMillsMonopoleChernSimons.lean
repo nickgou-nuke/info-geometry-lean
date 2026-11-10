@@ -37,7 +37,7 @@ Ref: `QMS-JUBILEE-SEC135-FARADAY-YANG-MILLS-CHERNSIMONS-2026-OCT-16`
 
 namespace InfoGeometry.Superalgebra.FaradayYangMillsChernSimons
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. 3D Векторна Алгебра и Двойно Векторно Произведение на Хопф -/
 
@@ -50,7 +50,7 @@ structure ColorVec3 (R : Type*) where
 
 namespace ColorVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : ColorVec3 R := ⟨0, 0, 0⟩
 def neg (u : ColorVec3 R) : ColorVec3 R := ⟨-u.c1, -u.c2, -u.c3⟩
@@ -85,7 +85,7 @@ def det3 (u da db : ColorVec3 R) : R :=
 радиално по самия туисторен вектор u, претеглено с детерминантата det(u, da, db):
 (u × da) × (u × db) = det(u, da, db) • u!
 -/
-theorem cross_torsion_pair_eq_det3_smul (u da db : ColorVec3 R) :
+theorem cross_torsion_pair_eq_det3_smul {R : Type*} [CommRing R] (u da db : ColorVec3 R) :
     cross (cross u da) (cross u db) = smul (det3 u da db) u := by
   have _ := (u, da, db)
   dsimp [cross, det3, dot, smul]
@@ -105,7 +105,7 @@ structure SplitOctonion (R : Type*) where
 
 namespace SplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : SplitOctonion R := ⟨0, ColorVec3.zero, ColorVec3.zero, 0⟩
 def one  : SplitOctonion R := ⟨1, ColorVec3.zero, ColorVec3.zero, 1⟩
@@ -187,6 +187,8 @@ def faradayYangMillsCurvature (u da db : ColorVec3 R) : SplitOctonion R :=
       (commutator (maurerCartanForm u da) (maurerCartanForm u db))
 
 /-! ### 3. Теореми 2 и 3: Раждане на Монопола на Фарадей–Янг–Милс от Кривината на Бери -/
+
+variable {R : Type*} [CommRing R]
 
 /--
 Теорема 2a (Неабелевият Комутатор [ω₁, ω₂] на Две Форми на Маурер–Картан):
@@ -296,7 +298,7 @@ end SplitOctonion
 
 /-! ### 5. Главен Юбилеен Синтез на Раздел 135 -/
 
-theorem faraday_yang_mills_chern_simons_synthesis (X : SplitOctonion R)
+theorem faraday_yang_mills_chern_simons_synthesis {R : Type*} [CommRing R] (X : SplitOctonion R)
     (u da db dc : ColorVec3 R) (h_tangent : ColorVec3.dot u dc = 0) :
     SplitOctonion.dualConjugate (SplitOctonion.dualConjugate X) = X ∧
     SplitOctonion.trace (SplitOctonion.dualConjugate X) = SplitOctonion.trace X ∧

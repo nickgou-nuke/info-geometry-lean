@@ -1,10 +1,9 @@
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.FiniteSUSYBlocks
-import InfoGeometry.Algebra.AnyonFiniteSpinBraid.AnyonCoxeterQuotient
+import InfoGeometry.Algebra.AnyonFiniteSpinBraid.AnyonTypeDParameterCount
 import InfoGeometry.Algebra.AnyonFiniteSpinBraid.AnyonLocalDefectSteps
 import InfoGeometry.Algebra.AnyonFiniteSpinBraid.AnyonHomologicalStability
-import InfoGeometry.Algebra.AnyonFiniteSpinBraid.AnyonPacket
 import InfoGeometry.Algebra.AnyonFiniteSpinBraid.AnyonB3ConcreteSpin
 import InfoGeometry.Algebra.AnyonFiniteSpinBraid.AnyonArtinBraidOperators
 

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -13,7 +19,7 @@ set_option linter.unusedSimpArgs false
 /-!
 # Split-Exceptional–Clifford Compatibility Boundary
 
-This owner records the exact finite carrier and dimension compatibilities
+This owner records the finite carrier compatibilities and a clearly separated dimension ledger
 available between the **split-real** exceptional Jordan/Zorn tower and the
 Clifford/Witt tower.  The real-form convention is fixed by the split carriers:
 
@@ -28,19 +34,20 @@ are currently theorem-backed.  It does not manufacture Lie-algebra
 identifications or an exceptional-algebra representation intertwiner into the
 `Cl(5,5)` spinor carrier.
 
-1. **Split exceptional dimensions:**
-   $$\dim \mathfrak g_{2(2)}=14,\quad
-     \dim \mathfrak f_{4(4)}=52,\quad
-     \dim \mathfrak e_{6(6)}=78,$$
-   $$\dim \mathfrak e_{7(7)}=27+(78+1)+27=133,$$
-   $$\dim \mathfrak e_{8(8)}=1+56+(133+1)+56+1=248.$$
+1. **Split exceptional expected-count ledger:**
+   $$14,\quad 52,\quad 78,\quad 27+(78+1)+27=133,$$
+   $$1+56+(133+1)+56+1=248.$$
+   These are arithmetic ledger entries. Except for the separately proved
+   `H3Zorn ℝ` carrier finrank, this file does not prove exact Lie-carrier
+   dimensions or graded decompositions.
 
 2. **Carrier embedding** `W_{4,4} ↪ W_{5,5} = W_{4,4} ⊕ H`:
    $$\pi_{5,4}(\iota_{4,5}(x))=x.$$
 
-3. **Split-octonion orthogonal chain:**
-   $$\dim \mathfrak g_{2(2)}=14<\dim\mathfrak{so}(4,4)=28<
-     \dim\mathfrak{so}(5,5)=45.$$
+3. **Expected-count ordering:**
+   $$14<28<45$$
+   for the displayed `𝔤₂`, `𝔰𝔬(4,4)`, and `𝔰𝔬(5,5)` ledger values; this
+   arithmetic does not establish carrier finranks.
 -/
 
 noncomputable section
@@ -52,65 +59,66 @@ open ProjectiveAffineConformalClosure55
 open CanonicalZornProjectiveTKKBridge
 open InfoGeometry.Algebra.F4Classification
 
-/-- Dimension of the real split `𝔤₂(2) = Der(𝕆_s)`. -/
+/-- Expected-count entry for split `𝔤₂(2)`; no derivation-carrier finrank is proved here. -/
 def dim_g2_split : ℕ := 14
 
-/-- Dimension of the split Albert algebra `H₃(𝕆_s)`. -/
+/-- Arithmetic ledger entry for the split Albert carrier; its actual finrank is proved in the Albert owner. -/
 def dim_albert_J3 : ℕ := dimAlbertAlgebra
 
-/-- Dimension of `𝔣₄(4) = Der(H₃(𝕆_s))`, read from the split-Albert owner. -/
-def dim_f44 : ℕ := dimF4Derivations
+/-- Expected-count ledger entry for `𝔣₄(4)`, not the finrank of its native carrier. -/
+def dim_f44 : ℕ := dimF4Derivations -- expected-count ledger, not carrier finrank
 
-/-- Dimension of the traceless split Albert carrier. -/
+/-- Arithmetic ledger entry for the traceless split Albert carrier. -/
 def dim_albert_traceless : ℕ := 26
 
-/-- Dimension of the reduced structure algebra `𝔢₆(6)` of split `H₃(𝕆_s)`. -/
+/-- Reduced-structure dimension ledger entry. -/
 def dim_e66 : ℕ := dim_f44 + dim_albert_traceless
 
-/-- Grade-zero dimension in the split `𝔢₇(7)` TKK 3-grading. -/
+/-- Grade-zero dimension ledger entry in the split `𝔢₇(7)` TKK 3-grading. -/
 def dim_g0_e7 : ℕ := dim_e66 + 1
 
-/-- Split `𝔢₇(7)` TKK dimension. -/
+/-- Split `𝔢₇(7)` TKK dimension ledger entry. -/
 def dim_e77 : ℕ := dim_albert_J3 + dim_g0_e7 + dim_albert_J3
 
-/-- The split-octonion derivation dimension is `14`. -/
-theorem g2_split_dim_exact : dim_g2_split = 14 := by
+/-- The expected-count ledger for split `𝔤₂(2)` evaluates to `14`. -/
+theorem g2_split_dimension_ledger_eq_14 : dim_g2_split = 14 := by
   rfl
 
-/-- The split Albert derivation algebra has dimension `52`, hence the `F₄(4)` ledger. -/
-theorem f44_dim_exact : dim_f44 = 52 := by
-  exact f4_derivation_dimension_eq_52
+/-- The expected-count ledger for the split Albert derivation carrier evaluates to `52`.
+This does not establish its exact finrank. -/
+theorem f44_dimension_ledger_eq_52 : dim_f44 = 52 := by
+  exact f4_derivation_count_formula_eq_52
 
-/-- The reduced structure dimension over split Albert is `52 + 26 = 78`. -/
-theorem e66_dim_exact : dim_e66 = 78 := by
+/-- The reduced-structure dimension ledger evaluates to `52 + 26 = 78`. -/
+theorem e66_dimension_ledger_eq_78 : dim_e66 = 78 := by
   rw [dim_e66, dim_f44, dim_albert_traceless]
-  exact congrArg (fun n => n + 26) f4_derivation_dimension_eq_52
+  exact congrArg (fun n => n + 26) f4_derivation_count_formula_eq_52
 
-/-- Exact split TKK grading dimension `27 + (78 + 1) + 27 = 133`. -/
-theorem e77_dim_exact : dim_e77 = 133 := by
+/-- Split TKK grading dimension ledger `27 + (78 + 1) + 27 = 133`. -/
+theorem e77_dimension_ledger_eq_133 : dim_e77 = 133 := by
   simp [dim_e77, dim_g0_e7, dim_albert_J3, dim_e66, dim_f44,
     dim_albert_traceless, dimAlbertAlgebra, dimRealDiagonal,
     numOffDiagonalSectors, dimSplitOctonions, dimF4Derivations,
     dimSO8LieAlgebra]
 
-/-- Freudenthal charge carrier dimension for the split Albert algebra. -/
+/-- Freudenthal charge count in the split Albert dimension ledger. -/
 def dim_freudenthal_56 : ℕ := 56
 
-/-- Grade-zero dimension in the split `𝔢₈(8)` five-grading. -/
+/-- Grade-zero dimension ledger entry in the split `𝔢₈(8)` five-grading. -/
 def dim_g0_e8 : ℕ := dim_e77 + 1
 
-/-- Split `𝔢₈(8)` quasi-conformal dimension. -/
+/-- Split `𝔢₈(8)` quasi-conformal dimension ledger entry. -/
 def dim_e88 : ℕ := 1 + dim_freudenthal_56 + dim_g0_e8 + dim_freudenthal_56 + 1
 
-/-- Exact split Freudenthal five-grading dimension `1 + 56 + 134 + 56 + 1 = 248`. -/
-theorem e88_dim_exact : dim_e88 = 248 := by
+/-- Split Freudenthal five-grading dimension ledger `1 + 56 + 134 + 56 + 1 = 248`. -/
+theorem e88_dimension_ledger_eq_248 : dim_e88 = 248 := by
   simp [dim_e88, dim_g0_e8, dim_e77, dim_g0_e7, dim_albert_J3,
     dim_e66, dim_f44, dim_albert_traceless, dim_freudenthal_56,
     dimAlbertAlgebra, dimRealDiagonal, numOffDiagonalSectors,
     dimSplitOctonions, dimF4Derivations, dimSO8LieAlgebra]
 
-/-- Strict dimension growth along the split exceptional tower. -/
-theorem split_exceptional_dimension_chain :
+/-- Strict growth of the displayed split exceptional dimension ledger. -/
+theorem split_exceptional_dimension_ledger_chain :
     dim_g2_split < dim_f44 ∧ dim_f44 < dim_e66 ∧
       dim_e66 < dim_e77 ∧ dim_e77 < dim_e88 := by
   norm_num [dim_g2_split, dim_f44, dim_e66, dim_e77, dim_g0_e7,

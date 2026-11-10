@@ -44,6 +44,20 @@ trace. Its trace result is conditional on an explicitly supplied cyclic trace.
   has the same trace as its step-1 component.
 * `waist_commutes_with_horizon_difference` derives commutation with `P₁ - P₂` from the two
   horizon-commutation results in the existing IKKT owner.
+
+BUCKET 1: PROVED FINITE/ALGEBRAIC IDENTITIES OVER `[Ring B]`
+- `temperley_lieb_commutative_collapse`
+- `non_commutative_temperley_lieb_curvature`
+- `universal_halmos_two_projection_and_quantum_tripotency`
+- `peirce_inner_derivation_shell_weights`
+- `waist_commutes_with_horizon_difference`
+
+BUCKET 2: CONDITIONAL IDENTITIES FROM EXPLICIT PREMISES
+- `cyclic_trace_vanishes_on_peirce_shells` (from supplied cyclic trace `tr : CyclicTrace B M`)
+
+BUCKET 3: OPEN CLOSURE DEBT
+- Von Neumann crossed products and Connes–Takesaki modular flow analytic continuations are not
+  constructed here.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine.TemperleyLiebCrossedProductAndGrandUnificationPoset

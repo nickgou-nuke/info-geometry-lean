@@ -9,7 +9,7 @@ namespace InfoGeometry.Algebra.RankTwoCyclotomicCPTBridge
 open InfoGeometry.Algebra.RankTwoCyclotomicArtinBridge
 open InfoGeometry.Physics.CPTGaloisBridge
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [DivisionRing K]
 
 /-- On a nonzero twelfth root of unity, the inverse-based rank-two parameter
     agrees with the eleventh-power form used by the CPT arithmetic owner. -/
@@ -20,8 +20,8 @@ theorem quantumInteger_eq_root3Alg
     calc
       ζ⁻¹ = ζ⁻¹ * 1 := by rw [mul_one]
       _ = ζ⁻¹ * ζ ^ 12 := by rw [hζ]
-      _ = ζ⁻¹ * (ζ ^ 11 * ζ) := by rw [← pow_succ]
-      _ = (ζ⁻¹ * ζ) * ζ ^ 11 := by ring
+      _ = ζ⁻¹ * (ζ * ζ ^ 11) := by rw [pow_succ' ζ 11]
+      _ = (ζ⁻¹ * ζ) * ζ ^ 11 := by rw [← mul_assoc]
       _ = ζ ^ 11 := by rw [inv_mul_cancel₀ hζ0, one_mul]
   simp [quantumInteger, root3Alg, hinv]
 

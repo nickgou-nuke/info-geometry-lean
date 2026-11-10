@@ -19,15 +19,15 @@ section Core
 
 variable {M T : Type*}
 
-/-- Coordinate-free derivation on a commutative scalar algebra. -/
-structure ScalarDerivation (F : Type*) [CommRing F] where
+/-- Coordinate-free derivation on a scalar algebra. -/
+structure ScalarDerivation (F : Type*) [Ring F] where
   toFun : F → F
   map_add' : ∀ a b : F, toFun (a + b) = toFun a + toFun b
   map_mul' : ∀ a b : F, toFun (a * b) = a * toFun b + b * toFun a
 
 namespace ScalarDerivation
 
-variable {F : Type*} [CommRing F]
+variable {F : Type*} [Ring F]
 
 instance : CoeFun (ScalarDerivation F) (fun _ => F → F) where
   coe D := D.toFun

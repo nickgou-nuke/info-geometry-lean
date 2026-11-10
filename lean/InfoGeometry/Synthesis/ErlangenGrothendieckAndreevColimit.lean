@@ -6,6 +6,7 @@ import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Algebra.Ring.Basic
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.FinCases
 
@@ -52,7 +53,7 @@ namespace InfoGeometry.Synthesis.ErlangenGrothendieckAndreevColimit
 universe u_V u_E u_R
 
 variable {V : Type u_V} {E : Type u_E} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-variable {R : Type u_R} [CommRing R]
+variable {R : Type u_R} [Ring R]
 
 /-! ### Section 1: The Erlangen KAN & Cartan 3-Mode Supercarrier Triad -/
 
@@ -74,7 +75,7 @@ def volumeMode (A : Matrix V V R) (D : Matrix E E R) : Matrix (V ⊕ E) (V ⊕ E
   Matrix.fromBlocks A 0 0 D
 
 /-- Euler-Poincaré Characteristic of the graph complex: `χ(G) = |V| - |E|`. -/
-def eulerPoincare (V E : Type*) [Fintype V] [Fintype E] (R : Type*) [CommRing R] : R :=
+def eulerPoincare (V E : Type*) [Fintype V] [Fintype E] (R : Type*) [Ring R] : R :=
   (Fintype.card V : R) - (Fintype.card E : R)
 
 /-- Grothendieck Scale Supertrace Theorem:
@@ -84,7 +85,8 @@ theorem superTrace_scaleMode (σ : R) :
   dsimp [superTrace, scaleMode, eulerPoincare]
   rw [Matrix.trace_smul, Matrix.trace_smul]
   rw [Matrix.trace_one, Matrix.trace_one]
-  ring
+  simp only [smul_eq_mul]
+  rw [sub_mul, Nat.cast_comm, Nat.cast_comm]
 
 /-- Discrete Hodge-Dirac injection:
     `hodgeDirac B = Matrix.fromBlocks 0 Bᵀ B 0`. -/
@@ -96,8 +98,7 @@ def hodgeDirac (B : Matrix E V R) : Matrix (V ⊕ E) (V ⊕ E) R :=
 theorem superTrace_hodgeDirac (B : Matrix E V R) :
     superTrace (hodgeDirac B) = 0 := by
   dsimp [superTrace, hodgeDirac]
-  rw [Matrix.trace_zero, Matrix.trace_zero]
-  ring
+  rw [Matrix.trace_zero, Matrix.trace_zero, sub_self]
 
 /-- Hodge-Laplacian Square is a Volume Mode:
     The square of the Hodge-Dirac operator decomposes into node and edge Laplacians. -/
@@ -109,7 +110,7 @@ theorem hodgeDirac_sq (B : Matrix E V R) :
 
 /-- Hodge-Laplacian Supertrace Exact Cancellation via Cyclicity:
     `superTrace (D²) = Tr(Bᵀ * B) - Tr(B * Bᵀ) = 0` via Mathlib's `trace_mul_comm`. -/
-theorem superTrace_hodgeDirac_sq (B : Matrix E V R) :
+theorem superTrace_hodgeDirac_sq {R : Type u_R} [CommRing R] (B : Matrix E V R) :
     superTrace (hodgeDirac B * hodgeDirac B) = 0 := by
   rw [hodgeDirac_sq]
   dsimp [superTrace]
@@ -119,7 +120,7 @@ theorem superTrace_hodgeDirac_sq (B : Matrix E V R) :
 /-- Scale-Dirac Commutation:
     Uniform homotheties strictly commute with the discrete Hodge-Dirac operator:
     `scaleMode σ * hodgeDirac B - hodgeDirac B * scaleMode σ = 0`. -/
-theorem scaleMode_hodgeDirac_comm (σ : R) (B : Matrix E V R) :
+theorem scaleMode_hodgeDirac_comm {R : Type u_R} [CommRing R] (σ : R) (B : Matrix E V R) :
     scaleMode σ * hodgeDirac B - hodgeDirac B * scaleMode σ = 0 := by
   dsimp [scaleMode, hodgeDirac]
   rw [Matrix.fromBlocks_multiply, Matrix.fromBlocks_multiply]
@@ -129,12 +130,12 @@ theorem scaleMode_hodgeDirac_comm (σ : R) (B : Matrix E V R) :
 
 /-- Fundamental Andreev / Particle-Hole Involution $\tau_1 = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$
     on Nambu carrier `Matrix (V ⊕ V) (V ⊕ V) R`. -/
-def andreevTau1 (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R] :
+def andreevTau1 (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [Ring R] :
     Matrix (V ⊕ V) (V ⊕ V) R :=
   Matrix.fromBlocks 0 1 1 0
 
 /-- Involutive property of Andreev particle-hole symmetry: $\tau_1^2 = 1$. -/
-theorem andreevTau1_sq (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R] :
+theorem andreevTau1_sq (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [Ring R] :
     (andreevTau1 V R) * (andreevTau1 V R) = 1 := by
   dsimp [andreevTau1]
   rw [Matrix.fromBlocks_multiply]
@@ -204,7 +205,7 @@ theorem eulerPoincare_directSum :
   dsimp [eulerPoincare]
   rw [Fintype.card_sum, Fintype.card_sum]
   push_cast
-  ring
+  noncomm_ring
 
 /-- Zero-extension of a graph boundary matrix $B : \mathrm{Matrix}\ E\ V\ R$ with $V_{\mathrm{ext}}$
     isolated nodes and $E_{\mathrm{ext}}$ isolated edges:
@@ -244,7 +245,7 @@ theorem trace_edgeLaplacian_extendB (B : Matrix E V R) :
 
 /-- Supertrace invariance of the colimit Hodge-Dirac square:
     $\operatorname{STr}((D^{\mathrm{ext}})^2) = 0$. -/
-theorem superTrace_hodgeDirac_sq_extendB (B : Matrix E V R) :
+theorem superTrace_hodgeDirac_sq_extendB {R : Type u_R} [CommRing R] (B : Matrix E V R) :
     superTrace (hodgeDirac (extendB B V_ext E_ext) * hodgeDirac (extendB B V_ext E_ext)) = 0 := by
   exact superTrace_hodgeDirac_sq (extendB B V_ext E_ext)
 
@@ -354,15 +355,15 @@ theorem colimit_hodgeDirac_comm (B : Matrix E V R) (m : ℕ) :
 structure ErlangenGrothendieckAndreevCertificate : Prop where
   supertrace_scale :
     ∀ {V : Type u_V} {E : Type u_E} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-      {R : Type u_R} [CommRing R] (σ : R),
+      {R : Type u_R} [Ring R] (σ : R),
       superTrace (scaleMode (V := V) (E := E) σ) = eulerPoincare V E R * σ
   supertrace_dirac :
     ∀ {V : Type u_V} {E : Type u_E} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-      {R : Type u_R} [CommRing R] (B : Matrix E V R),
+      {R : Type u_R} [Ring R] (B : Matrix E V R),
       superTrace (hodgeDirac B) = 0
   hodge_dirac_sq :
     ∀ {V : Type u_V} {E : Type u_E} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-      {R : Type u_R} [CommRing R] (B : Matrix E V R),
+      {R : Type u_R} [Ring R] (B : Matrix E V R),
       hodgeDirac B * hodgeDirac B = Matrix.fromBlocks (Bᵀ * B) 0 0 (B * Bᵀ)
   supertrace_dirac_sq :
     ∀ {V : Type u_V} {E : Type u_E} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
@@ -373,38 +374,38 @@ structure ErlangenGrothendieckAndreevCertificate : Prop where
       {R : Type u_R} [CommRing R] (σ : R) (B : Matrix E V R),
       scaleMode σ * hodgeDirac B - hodgeDirac B * scaleMode σ = 0
   andreev_tau1_sq :
-    ∀ (V : Type u_V) [DecidableEq V] [Fintype V] (R : Type u_R) [CommRing R],
+    ∀ (V : Type u_V) [DecidableEq V] [Fintype V] (R : Type u_R) [Ring R],
       andreevTau1 V R * andreevTau1 V R = 1
   andreev_bdg_anti :
-    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [CommRing R]
+    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [Ring R]
       (H0 Delta : Matrix V V R), Deltaᵀ = -Delta →
       andreevTau1 V R * bdgHamiltonian H0 Delta * andreevTau1 V R = - (bdgHamiltonian H0 Delta)ᵀ
   andreev_skew_reversal :
-    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [CommRing R]
+    ∀ {V : Type u_V} [DecidableEq V] [Fintype V] {R : Type u_R} [Ring R]
       (H0 Delta : Matrix V V R), H0ᵀ = H0 → Deltaᵀ = -Delta →
       andreevTau1 V R * bdgHamiltonian H0 Delta * andreevTau1 V R = - bdgHamiltonian H0 Delta
   euler_additivity :
     ∀ {V V_ext : Type u_V} {E E_ext : Type u_E} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-      [DecidableEq V_ext] [Fintype V_ext] [DecidableEq E_ext] [Fintype E_ext] {R : Type u_R} [CommRing R],
+      [DecidableEq V_ext] [Fintype V_ext] [DecidableEq E_ext] [Fintype E_ext] {R : Type u_R} [Ring R],
       eulerPoincare (V ⊕ V_ext) (E ⊕ E_ext) R = eulerPoincare V E R + eulerPoincare V_ext E_ext R
   node_laplacian_extend :
     ∀ {V V_ext : Type u_V} {E E_ext : Type u_E} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-      [DecidableEq V_ext] [Fintype V_ext] [DecidableEq E_ext] [Fintype E_ext] {R : Type u_R} [CommRing R]
+      [DecidableEq V_ext] [Fintype V_ext] [DecidableEq E_ext] [Fintype E_ext] {R : Type u_R} [Ring R]
       (B : Matrix E V R),
       (extendB B V_ext E_ext)ᵀ * (extendB B V_ext E_ext) = Matrix.fromBlocks (Bᵀ * B) 0 0 0
   edge_laplacian_extend :
     ∀ {V V_ext : Type u_V} {E E_ext : Type u_E} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-      [DecidableEq V_ext] [Fintype V_ext] [DecidableEq E_ext] [Fintype E_ext] {R : Type u_R} [CommRing R]
+      [DecidableEq V_ext] [Fintype V_ext] [DecidableEq E_ext] [Fintype E_ext] {R : Type u_R} [Ring R]
       (B : Matrix E V R),
       (extendB B V_ext E_ext) * (extendB B V_ext E_ext)ᵀ = Matrix.fromBlocks (B * Bᵀ) 0 0 0
   trace_node_laplacian_extend :
     ∀ {V V_ext : Type u_V} {E E_ext : Type u_E} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-      [DecidableEq V_ext] [Fintype V_ext] [DecidableEq E_ext] [Fintype E_ext] {R : Type u_R} [CommRing R]
+      [DecidableEq V_ext] [Fintype V_ext] [DecidableEq E_ext] [Fintype E_ext] {R : Type u_R} [Ring R]
       (B : Matrix E V R),
       Matrix.trace ((extendB B V_ext E_ext)ᵀ * (extendB B V_ext E_ext)) = Matrix.trace (Bᵀ * B)
   trace_edge_laplacian_extend :
     ∀ {V V_ext : Type u_V} {E E_ext : Type u_E} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-      [DecidableEq V_ext] [Fintype V_ext] [DecidableEq E_ext] [Fintype E_ext] {R : Type u_R} [CommRing R]
+      [DecidableEq V_ext] [Fintype V_ext] [DecidableEq E_ext] [Fintype E_ext] {R : Type u_R} [Ring R]
       (B : Matrix E V R),
       Matrix.trace ((extendB B V_ext E_ext) * (extendB B V_ext E_ext)ᵀ) = Matrix.trace (B * Bᵀ)
   supertrace_hodge_sq_extend :
@@ -413,25 +414,25 @@ structure ErlangenGrothendieckAndreevCertificate : Prop where
       (B : Matrix E V R),
       superTrace (hodgeDirac (extendB B V_ext E_ext) * hodgeDirac (extendB B V_ext E_ext)) = 0
   andreev_bdg_extend_anti :
-    ∀ {V V_ext : Type u_V} [DecidableEq V] [Fintype V] [DecidableEq V_ext] [Fintype V_ext] {R : Type u_R} [CommRing R]
+    ∀ {V V_ext : Type u_V} [DecidableEq V] [Fintype V] [DecidableEq V_ext] [Fintype V_ext] {R : Type u_R} [Ring R]
       (H0 Delta : Matrix V V R), Deltaᵀ = -Delta →
       andreevTau1 (V ⊕ V_ext) R * extendBdG H0 Delta V_ext * andreevTau1 (V ⊕ V_ext) R =
         - (extendBdG H0 Delta V_ext)ᵀ
   trace_node_laplacian_chain :
     ∀ {V V_step : Type u_V} {E E_step : Type u_E} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-      [DecidableEq V_step] [Fintype V_step] [DecidableEq E_step] [Fintype E_step] {R : Type u_R} [CommRing R]
+      [DecidableEq V_step] [Fintype V_step] [DecidableEq E_step] [Fintype E_step] {R : Type u_R} [Ring R]
       (B : Matrix E V R) (m : ℕ),
       Matrix.trace ((extendChain B V_step E_step m)ᵀ * (extendChain B V_step E_step m)) =
         Matrix.trace (Bᵀ * B)
   trace_edge_laplacian_chain :
     ∀ {V V_step : Type u_V} {E E_step : Type u_E} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-      [DecidableEq V_step] [Fintype V_step] [DecidableEq E_step] [Fintype E_step] {R : Type u_R} [CommRing R]
+      [DecidableEq V_step] [Fintype V_step] [DecidableEq E_step] [Fintype E_step] {R : Type u_R} [Ring R]
       (B : Matrix E V R) (m : ℕ),
       Matrix.trace ((extendChain B V_step E_step m) * (extendChain B V_step E_step m)ᵀ) =
         Matrix.trace (B * Bᵀ)
   colimit_hodge_comm :
     ∀ {V V_step : Type u_V} {E E_step : Type u_E} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-      [DecidableEq V_step] [Fintype V_step] [DecidableEq E_step] [Fintype E_step] {R : Type u_R} [CommRing R]
+      [DecidableEq V_step] [Fintype V_step] [DecidableEq E_step] [Fintype E_step] {R : Type u_R} [Ring R]
       (B : Matrix E V R) (m : ℕ),
       hodgeDirac (extendChain B V_step E_step m) *
         (hodgeDirac (extendChain B V_step E_step m) * hodgeDirac (extendChain B V_step E_step m)) =

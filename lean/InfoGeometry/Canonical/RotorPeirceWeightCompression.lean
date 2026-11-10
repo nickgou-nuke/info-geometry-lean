@@ -10,7 +10,7 @@ No positivity, normalized state, or analytic KMS assertion is made. -/
 namespace InfoGeometry.Canonical.RotorPeirceWeightCompression
 open DeBruijnRotorAlternationCycle
 open GrassmannianBundleCyclotomicOrientability (normalBundlePart)
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {A : Type*} [Ring A]
 
 lemma normal_polePlus {d B : A} (h : IsDualSeedPair d B) :
     normalBundlePart (polePlus d B) (polePlus d B) = polePlus d B := by
@@ -38,7 +38,8 @@ lemma normal_velocity {d B : A} (h : IsDualSeedPair d B) :
                 simp only [smul_zero, add_zero, transitionVelocity]; abel
 
 /-- The normal Peirce projection is linear in its observable. -/
-lemma normal_linear_combination (P X Y Z : A) (a b c : R) :
+lemma normal_linear_combination {R : Type*} [Ring R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
+    (P X Y Z : A) (a b c : R) :
     normalBundlePart P (a • X + b • Y - c • Z) =
       a • normalBundlePart P X + b • normalBundlePart P Y -
       c • normalBundlePart P Z := by
@@ -47,6 +48,8 @@ lemma normal_linear_combination (P X Y Z : A) (a b c : R) :
   simp only [mul_sub, sub_mul, mul_add, add_mul,
     mul_smul_comm, smul_mul_assoc, smul_add]
   abel
+
+variable {R : Type*} [CommRing R] [Algebra R A]
 
 /-- Compressing the existing elliptic orbit gives the existing squared weight.
 The equation holds without a circle normalization hypothesis. -/

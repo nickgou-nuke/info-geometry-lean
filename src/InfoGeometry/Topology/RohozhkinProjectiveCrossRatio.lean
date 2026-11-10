@@ -41,9 +41,9 @@ namespace InfoGeometry.Topology.Delaunay
 
 open Matrix
 
-section FieldBridge
+section DivisionRingBridge
 
-variable {K : Type} [Field K]
+variable {K : Type} [DivisionRing K]
 
 /-- Affine coordinate in the chart sending `zk ↦ 0` and `zi ↦ 1`. -/
 def affineChart (zi zk x : K) : K :=
@@ -53,48 +53,17 @@ def affineChart (zi zk x : K) : K :=
 def projectiveCrossRatio (a b c d : K) : K :=
   ((a - b) * (c - d)) / ((a - c) * (b - d))
 
-/-- Affine changes of coordinate leave the projective cross-ratio unchanged.
-
-The two nonzero hypotheses are exactly the denominator conditions for the
-chosen cross-ratio chart; the transformed denominators are nonzero because
-the scale factor is nonzero. -/
-theorem projectiveCrossRatio_affine_invariant
-    (a b c d r t : K)
-    (hr : r ≠ 0)
-    (hac : a - c ≠ 0)
-    (hbd : b - d ≠ 0) :
-    projectiveCrossRatio (r * a + t) (r * b + t) (r * c + t) (r * d + t) =
-      projectiveCrossRatio a b c d := by
-  unfold projectiveCrossRatio
-  have hab : (r * a + t) - (r * b + t) = r * (a - b) := by ring
-  have hcd : (r * c + t) - (r * d + t) = r * (c - d) := by ring
-  have hac' : (r * a + t) - (r * c + t) = r * (a - c) := by ring
-  have hbd' : (r * b + t) - (r * d + t) = r * (b - d) := by ring
-  rw [hab, hcd, hac', hbd']
-  field_simp [hr, hac, hbd]
-
 /-- The local `2 × 2` Rohozhkin flip block for `ik → jl`. -/
 def rohozhkinFlipBlock (zi zk zj zl : K) : Matrix (Fin 2) (Fin 2) K :=
   !![(zi - zl) / (zi - zk), (zi - zj) / (zi - zk);
     (zl - zk) / (zi - zk), (zj - zk) / (zi - zk)]
 
-/-- The matrix carrier used by the flip block is genuinely noncommutative. -/
-def matrixE01 : Matrix (Fin 2) (Fin 2) K := !![0, 1; 0, 0]
-
-def matrixE10 : Matrix (Fin 2) (Fin 2) K := !![0, 0; 1, 0]
-
-theorem matrixE01_mul_E10_ne_mul_E10_E01 :
-    matrixE01 (K := K) * matrixE10 (K := K) ≠
-      matrixE10 (K := K) * matrixE01 (K := K) := by
-  intro h
-  have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) K => M 0 0) h
-  norm_num [matrixE01, matrixE10, Matrix.mul_apply, Fin.sum_univ_two] at h00
-
 lemma one_sub_affineChart (zi zk x : K) (h : zi - zk ≠ 0) :
     1 - affineChart zi zk x = (zi - x) / (zi - zk) := by
   unfold affineChart
-  field_simp [h]
-  ring
+  rw [← div_self h, ← sub_div]
+  congr 1
+  abel
 
 /-- The flip block is the barycentric transition matrix in the affine chart of `(zk, zi)`. -/
 theorem rohozhkinFlipBlock_eq_affine_chart_form (zi zk zj zl : K) (h : zi - zk ≠ 0) :
@@ -115,16 +84,58 @@ theorem rohozhkinFlipBlock_eq_affine_chart_form (zi zk zj zl : K) (h : zi - zk �
 /-- The first column is affine/barycentric: its entries sum to `1`. -/
 theorem rohozhkinFlipBlock_first_column_sum (zi zk zj zl : K) (h : zi - zk ≠ 0) :
     rohozhkinFlipBlock zi zk zj zl 0 0 + rohozhkinFlipBlock zi zk zj zl 1 0 = 1 := by
-  simp [rohozhkinFlipBlock]
-  field_simp [h]
-  ring
+  simp only [rohozhkinFlipBlock, of_apply, cons_val', cons_val_zero, cons_val_one, head_cons, head_fin_const]
+  rw [← add_div, sub_add_sub_cancel, div_self h]
 
 /-- The second column is affine/barycentric: its entries sum to `1`. -/
 theorem rohozhkinFlipBlock_second_column_sum (zi zk zj zl : K) (h : zi - zk ≠ 0) :
     rohozhkinFlipBlock zi zk zj zl 0 1 + rohozhkinFlipBlock zi zk zj zl 1 1 = 1 := by
-  simp [rohozhkinFlipBlock]
-  field_simp [h]
-  ring
+  simp only [rohozhkinFlipBlock, of_apply, cons_val', cons_val_zero, cons_val_one, head_cons, head_fin_const]
+  rw [← add_div, sub_add_sub_cancel, div_self h]
+
+end DivisionRingBridge
+
+section RingBridge
+
+variable {K : Type} [Ring K] [Nontrivial K]
+
+/-- The matrix carrier used by the flip block is genuinely noncommutative. -/
+def matrixE01 : Matrix (Fin 2) (Fin 2) K := !![0, 1; 0, 0]
+
+def matrixE10 : Matrix (Fin 2) (Fin 2) K := !![0, 0; 1, 0]
+
+theorem matrixE01_mul_E10_ne_mul_E10_E01 :
+    matrixE01 (K := K) * matrixE10 (K := K) ≠
+      matrixE10 (K := K) * matrixE01 (K := K) := by
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) K => M 0 0) h
+  norm_num [matrixE01, matrixE10, Matrix.mul_apply, Fin.sum_univ_two] at h00
+
+end RingBridge
+
+section FieldBridge
+
+variable {K : Type} [Field K]
+
+/-- Affine changes of coordinate leave the projective cross-ratio unchanged.
+
+The two nonzero hypotheses are exactly the denominator conditions for the
+chosen cross-ratio chart; the transformed denominators are nonzero because
+the scale factor is nonzero. -/
+theorem projectiveCrossRatio_affine_invariant
+    (a b c d r t : K)
+    (hr : r ≠ 0)
+    (hac : a - c ≠ 0)
+    (hbd : b - d ≠ 0) :
+    projectiveCrossRatio (r * a + t) (r * b + t) (r * c + t) (r * d + t) =
+      projectiveCrossRatio a b c d := by
+  unfold projectiveCrossRatio
+  have hab : (r * a + t) - (r * b + t) = r * (a - b) := by ring
+  have hcd : (r * c + t) - (r * d + t) = r * (c - d) := by ring
+  have hac' : (r * a + t) - (r * c + t) = r * (a - c) := by ring
+  have hbd' : (r * b + t) - (r * d + t) = r * (b - d) := by ring
+  rw [hab, hcd, hac', hbd']
+  field_simp [hr, hac, hbd]
 
 /-- The determinant of the local flip block. -/
 theorem rohozhkinFlipBlock_det (zi zk zj zl : K) (h : zi - zk ≠ 0) :

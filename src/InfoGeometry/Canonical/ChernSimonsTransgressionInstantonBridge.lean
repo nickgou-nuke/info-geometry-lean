@@ -36,7 +36,8 @@ open InfoGeometry.Canonical.ExteriorGradedDerivationBridge
 open BigOperators
 open Finset
 
-variable {R V : Type*} [Field R] [AddCommGroup V] [Module R V] {n : ℕ}
+section CommRing
+variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] {n : ℕ}
 
 def curvatureFromConnection
     (d : Module.End R (ExteriorAlgebra R V))
@@ -44,16 +45,23 @@ def curvatureFromConnection
     Matrix (Fin n) (Fin n) (ExteriorAlgebra R V) :=
   matrixExteriorDerivative d A + A * A
 
+def IsHomogeneousExteriorDegree (k : ℕ) (x : ExteriorAlgebra R V) : Prop :=
+  x ∈ (Submodule.span R (Set.range (fun (v : Fin k → V) => List.prod (List.ofFn (fun i => ι R (v i))))))
+
+def MatrixIsHomogeneous (k : ℕ) (M : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V)) : Prop :=
+  ∀ i j, IsHomogeneousExteriorDegree k (M i j)
+
+end CommRing
+
+section Field
+variable {R V : Type*} [Field R] [AddCommGroup V] [Module R V] {n : ℕ}
+
 def chernSimonsDensityForm
     (d : Module.End R (ExteriorAlgebra R V))
     (A : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V)) :
     ExteriorAlgebra R V :=
   matrixTraceForm (A * matrixExteriorDerivative d A + (2 / 3 : R) • (A * A * A))
 
-def IsHomogeneousExteriorDegree (k : ℕ) (x : ExteriorAlgebra R V) : Prop :=
-  x ∈ (Submodule.span R (Set.range (fun (v : Fin k → V) => List.prod (List.ofFn (fun i => ι R (v i))))))
-
-def MatrixIsHomogeneous (k : ℕ) (M : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V)) : Prop :=
-  ∀ i j, IsHomogeneousExteriorDegree k (M i j)
+end Field
 
 end InfoGeometry.Canonical.ChernSimonsTransgressionInstantonBridge

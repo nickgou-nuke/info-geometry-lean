@@ -7,6 +7,7 @@ import Mathlib.Basic.Real.Basic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Order.Ring.Defs
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.LinearCombination
 
@@ -33,7 +34,7 @@ chirally twisted media:
 
 namespace InfoGeometry.QuantumContext.AxionBirefringence
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ## Section 1: 3D Vector Carrier for Electromagnetic and Axion Fields (`Vec3 R`) -/
 
@@ -47,7 +48,7 @@ structure Vec3 (R : Type*) where
 
 namespace Vec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Zero 3-vector. -/
 def zero : Vec3 R := ⟨0, 0, 0⟩
@@ -86,7 +87,7 @@ def sq (u : Vec3 R) : R :=
 
 /-- Orthogonality of a cross product with its second factor: $\mathbf{v} \cdot (\mathbf{u} \times \mathbf{v}) = 0$. -/
 @[simp]
-theorem dot_cross_self_right (u v : Vec3 R) : dot v (cross u v) = 0 := by
+theorem dot_cross_self_right {R : Type*} [CommRing R] (u v : Vec3 R) : dot v (cross u v) = 0 := by
   dsimp [dot, cross]
   ring
 
@@ -115,7 +116,7 @@ def poyntingVector (E B : Vec3 R) : Vec3 R :=
 
 /-- **Lagrange–Poynting–Fujikawa Decomposition**:
     $\|\mathbf{E} \times \mathbf{B}\|^2 + (\mathbf{E} \cdot \mathbf{B})^2 = \|\mathbf{E}\|^2 \|\mathbf{B}\|^2$. -/
-theorem poynting_fujikawa_lagrange_identity (E B : Vec3 R) :
+theorem poynting_fujikawa_lagrange_identity {R : Type*} [CommRing R] (E B : Vec3 R) :
     Vec3.sq (poyntingVector E B) + (pontryaginInvariant E B) ^ 2 =
       Vec3.sq E * Vec3.sq B := by
   dsimp [poyntingVector, pontryaginInvariant, Vec3.sq, Vec3.dot, Vec3.cross]
@@ -139,7 +140,7 @@ def totalAxionCurrent (b₀ : R) (b_vec E B : Vec3 R) : Vec3 R :=
 /-- **Zero Joule Heating of the Anomalous Hall Current**:
     The anomalous Hall current $\mathbf{b} \times \mathbf{E}$ is perpendicular to $\mathbf{E}$,
     doing zero dissipative Joule work ($\mathbf{E} \cdot (\mathbf{b} \times \mathbf{E}) = 0$). -/
-theorem anomalous_hall_zero_joule_heating (b_vec E : Vec3 R) :
+theorem anomalous_hall_zero_joule_heating {R : Type*} [CommRing R] (b_vec E : Vec3 R) :
     Vec3.dot E (anomalousHallCurrent b_vec E) = 0 := by
   dsimp [anomalousHallCurrent]
   exact Vec3.dot_cross_self_right b_vec E
@@ -148,7 +149,7 @@ theorem anomalous_hall_zero_joule_heating (b_vec E : Vec3 R) :
     The electromagnetic power injected into the total axion current comes purely from the
     Fujikawa–Pontryagin chiral anomaly:
     $\mathbf{E} \cdot \mathbf{J}_{\mathrm{axion}} = b_0 (\mathbf{E} \cdot \mathbf{B}) = \mathcal{L}_{\mathrm{axion}}(b_0, \mathbf{E}, \mathbf{B})$. -/
-theorem axion_current_power_is_pontryagin (b₀ : R) (b_vec E B : Vec3 R) :
+theorem axion_current_power_is_pontryagin {R : Type*} [CommRing R] (b₀ : R) (b_vec E B : Vec3 R) :
     Vec3.dot E (totalAxionCurrent b₀ b_vec E B) = b₀ * pontryaginInvariant E B ∧
     Vec3.dot E (totalAxionCurrent b₀ b_vec E B) = axionGaugeTerm b₀ E B := by
   dsimp [totalAxionCurrent, chiralMagneticCurrent, anomalousHallCurrent,
@@ -170,13 +171,13 @@ theorem phase_velocity_birefringence_splitting (k b₀ v_plus v_minus : R)
     (h_right : k * v_plus = omegaRight k b₀)
     (h_left  : k * v_minus = omegaLeft k b₀) :
     k * (v_plus - v_minus) = 2 * b₀ := by
-  dsimp [omegaRight, omegaLeft] at h_right h_left
-  linear_combination h_right - h_left
+  rw [mul_sub, h_right, h_left, omegaRight, omegaLeft, two_mul]
+  abel
 
 /-- **Subcritical Tachyonic Zitterbewegung Instability ($k^2 < b_0^2 \implies \Omega_+ \Omega_- < 0$)**:
     When the squared wavenumber $k^2$ falls below the squared chiral torsion $b_0^2$, the
     dispersion product $\Omega_+ \Omega_- = k^2 - b_0^2$ is strictly negative. -/
-theorem chiral_tachyonic_zitterbewegung_instability [LinearOrder R] [IsStrictOrderedRing R]
+theorem chiral_tachyonic_zitterbewegung_instability {R : Type*} [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
     (k b₀ : R) (h_subcritical : k ^ 2 < b₀ ^ 2) :
     omegaRight k b₀ * omegaLeft k b₀ < 0 := by
   dsimp [omegaRight, omegaLeft]
@@ -201,7 +202,7 @@ theorem destructive_birefringence_negative_dwell_time :
     Combines the Lagrange–Poynting–Fujikawa identity, dissipationless anomalous Hall current,
     axion current Pontryagin power law, phase-velocity birefringence splitting, and subcritical
     tachyonic instability. -/
-theorem axion_weyl_birefringence_master_synthesis [LinearOrder R] [IsStrictOrderedRing R] :
+theorem axion_weyl_birefringence_master_synthesis {R : Type*} [CommRing R] [LinearOrder R] [IsStrictOrderedRing R] :
     (∀ E B : Vec3 R,
       Vec3.sq (poyntingVector E B) + (pontryaginInvariant E B) ^ 2 = Vec3.sq E * Vec3.sq B) ∧
     (∀ b_vec E : Vec3 R, Vec3.dot E (anomalousHallCurrent b_vec E) = 0) ∧

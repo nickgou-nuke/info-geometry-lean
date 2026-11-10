@@ -14,13 +14,21 @@ associative ring; associativity is proved, not assumed as a field.
 -/
 noncomputable section
 namespace InfoGeometry.QuantumAlgebra.FirstOrderTwist
-variable {R A : Type*} [CommRing R] [CommRing A] [Algebra R A]
+section RingCarrier
+
+variable {R A : Type*} [CommSemiring R] [Ring A] [Module R A]
 
 structure Cocycle where
   bilinear : A →ₗ[R] A →ₗ[R] A
   one_left : ∀ b, bilinear 1 b = 0
   one_right : ∀ a, bilinear a 1 = 0
   law : ∀ a b c, bilinear a b*c + bilinear (a*b) c = a*bilinear b c + bilinear a (b*c)
+
+end RingCarrier
+
+section CommCarrier
+
+variable {R A : Type*} [CommRing R] [CommRing A] [Algebra R A]
 
 /-- Leading term for the ordered abelian inverse twist exp(h D tensor E). -/
 def derivationCocycle (D E : Derivation R A A) : Cocycle (R := R) (A := A) where
@@ -34,7 +42,13 @@ def derivationCocycle (D E : Derivation R A A) : Cocycle (R := R) (A := A) where
     simp only [smul_eq_mul]
     ring_nf
 
+end CommCarrier
+
 namespace Cocycle
+
+section RingJet
+
+variable {R A : Type*} [CommSemiring R] [Ring A] [Module R A]
 
 def Jet (_c : Cocycle (R := R) (A := A)) := A × A
 variable (c : Cocycle (R := R) (A := A))
@@ -59,7 +73,15 @@ theorem multiply_assoc (x y z : c.Jet) : c.multiply (c.multiply x y) z = c.multi
   · change (x.1*y.1)*z.2+(x.1*y.2+x.2*y.1+c.bilinear x.1 y.1)*z.1+
         c.bilinear (x.1*y.1) z.1 =
       x.1*(y.1*z.2+y.2*z.1+c.bilinear y.1 z.1)+x.2*(y.1*z.1)+c.bilinear x.1 (y.1*z.1)
-    linear_combination c.law x.1 y.1 z.1
+    calc (x.1*y.1)*z.2+(x.1*y.2+x.2*y.1+c.bilinear x.1 y.1)*z.1+c.bilinear (x.1*y.1) z.1
+      _ = x.1*(y.1*z.2)+x.1*(y.2*z.1)+x.2*(y.1*z.1)+(c.bilinear x.1 y.1*z.1+c.bilinear (x.1*y.1) z.1) := by
+          simp only [add_mul, mul_assoc]
+          abel
+      _ = x.1*(y.1*z.2)+x.1*(y.2*z.1)+x.2*(y.1*z.1)+(x.1*c.bilinear y.1 z.1+c.bilinear x.1 (y.1*z.1)) := by
+          rw [c.law x.1 y.1 z.1]
+      _ = x.1*(y.1*z.2+y.2*z.1+c.bilinear y.1 z.1)+x.2*(y.1*z.1)+c.bilinear x.1 (y.1*z.1) := by
+          simp only [mul_add, mul_assoc]
+          abel
 
 instance : Ring c.Jet where
   __ := (inferInstance : AddCommGroup c.Jet)
@@ -124,15 +146,16 @@ instance : Ring c.Jet where
     · change x.1*(y.2+z.2)+x.2*(y.1+z.1)+c.bilinear x.1 (y.1+z.1)=
         (x.1*y.2+x.2*y.1+c.bilinear x.1 y.1)+(x.1*z.2+x.2*z.1+c.bilinear x.1 z.1)
       rw [map_add]
-      ring
+      simp only [mul_add]
+      abel
   right_distrib x y z := by
     apply Prod.ext
     · change (x.1+y.1)*z.1=x.1*z.1+y.1*z.1
       exact add_mul _ _ _
     · change (x.1+y.1)*z.2+(x.2+y.2)*z.1+c.bilinear (x.1+y.1) z.1=
         (x.1*z.2+x.2*z.1+c.bilinear x.1 z.1)+(y.1*z.2+y.2*z.1+c.bilinear y.1 z.1)
-      simp only [map_add, LinearMap.add_apply]
-      ring
+      simp only [map_add, LinearMap.add_apply, add_mul]
+      abel
 
 @[simp] theorem mul_fst (x y : c.Jet) : (x*y).1=x.1*y.1 := rfl
 @[simp] theorem mul_snd (x y : c.Jet) : (x*y).2=x.1*y.2+x.2*y.1+c.bilinear x.1 y.1 := rfl
@@ -167,6 +190,19 @@ theorem parameter_commutes (x : c.Jet) : c.parameter*x=x*c.parameter := by
   · change (0 : A)*x.2+1*x.1+c.bilinear 0 x.1=x.1*1+x.2*0+c.bilinear x.1 0
     simp
 
+theorem constant_product_of_cocycle_zero (a b : A) (h : c.bilinear a b=0) :
+    c.constant a*c.constant b=c.constant (a*b) := by
+  rw [constant_mul]
+  change (a*b, c.bilinear a b) = (a*b, 0)
+  apply Prod.ext <;> simp [h]
+
+end RingJet
+
+section CommJet
+
+variable {R A : Type*} [CommSemiring R] [CommRing A] [Module R A]
+variable (c : Cocycle (R := R) (A := A))
+
 theorem constant_commutator (a b : A) :
     c.constant a*c.constant b-c.constant b*c.constant a =
       ((0,c.bilinear a b-c.bilinear b a) : c.Jet) := by
@@ -177,13 +213,13 @@ theorem constant_commutator (a b : A) :
   · ring
   · rfl
 
-theorem constant_product_of_cocycle_zero (a b : A) (h : c.bilinear a b=0) :
-    c.constant a*c.constant b=c.constant (a*b) := by
-  rw [constant_mul]
-  change (a*b, c.bilinear a b) = (a*b, 0)
-  apply Prod.ext <;> simp [h]
+end CommJet
 
 end Cocycle
+
+section DerivationJet
+
+variable {R A : Type*} [CommRing R] [CommRing A] [Algebra R A]
 
 theorem invariant_fibre_product (D E : Derivation R A A) (a b : A) (ha : D a=0) :
     (derivationCocycle D E).constant a * (derivationCocycle D E).constant b =
@@ -223,5 +259,7 @@ theorem liftDifferential_leibniz (D E Z : Derivation R A A)
         (x.1*Z y.2+x.2*Z y.1+D x.1*E (Z y.1))
     simp only [map_add, Z.leibniz, smul_eq_mul, hZD, hZE]
     ring
+
+end DerivationJet
 
 end InfoGeometry.QuantumAlgebra.FirstOrderTwist

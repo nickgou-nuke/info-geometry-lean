@@ -11,6 +11,7 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.BlackHoleFiniteQuantum
 import InfoGeometry.OperatorAlgebra.PeirceSpine.ZornHistoryQuantitativeRecovery
 import InfoGeometry.OperatorAlgebra.PeirceSpine.PeircePinchingChannel
 import InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceHistoryRecoveryError
+import InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceCoarseGrainedDynamics
 import InfoGeometry.OperatorAlgebra.PeirceSpine.MatrixPeirceOperatorGeometryD62
 import InfoGeometry.OperatorAlgebra.PeirceSpine.MatrixBlackHolePeirceD63
 import InfoGeometry.OperatorAlgebra.PeirceSpine.MatrixChiralTraceD64
@@ -94,6 +95,28 @@ structure FinitePinchingArchetypeInput (n : ℕ) where
   cutSelfAdjoint : star cut = cut
   amplifiedPositive : amplifiedOperator.PosSemidef
 
+theorem d63_finite_pinching_input_has_nonzero_cut_and_operator :
+    ∃ input : FinitePinchingArchetypeInput 2,
+      input.cut ≠ 0 ∧ input.operator ≠ 0 ∧ input.amplifiedOperator ≠ 0 := by
+  let input : FinitePinchingArchetypeInput 2 :=
+    { cut := d63TiltedProjection
+      operator := d63TiltedAmplitude
+      amplifiedOperator := 1
+      cutIdempotent := d63_tilted_projection_is_star_projection.isIdempotentElem.eq
+      cutSelfAdjoint := d63_tilted_projection_is_star_projection.isSelfAdjoint
+      amplifiedPositive := Matrix.PosSemidef.one }
+  refine ⟨input, ?_, ?_, ?_⟩
+  · intro h
+    have h00 := congrArg (fun M : D63CausalMatrix => M 0 0) h
+    norm_num [input, d63TiltedProjection] at h00
+  · intro h
+    have h00 := congrArg (fun M : D63CausalMatrix => M 0 0) h
+    norm_num [input, d63TiltedAmplitude] at h00
+  · intro h
+    have h00 := congrArg
+      (fun M : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ => M (0, 0) (0, 0)) h
+    norm_num [input] at h00
+
 def finitePinchingChannelArchetype (n : ℕ) :
     TypedArchetype (FinitePinchingArchetypeInput n) .proved where
   name := `InfoGeometry.OperatorAlgebra.PeirceSpine.ArchetypeCausalSynthesis.finitePinchingChannelArchetype
@@ -127,13 +150,49 @@ structure PinchedHistoryArchetypeInput (n : ℕ) where
   residualPositive : (1 - InfoGeometry.OperatorAlgebra.PeirceSpine.genV
     cut amplitude (star amplitude)).PosSemidef
 
-def pinchedHistoryCollisionArchetype (n : ℕ) :
+theorem d63_pinched_history_input_has_nonzero_amplitude :
+    ∃ input : PinchedHistoryArchetypeInput 2, input.amplitude ≠ 0 := by
+  let A := InfoGeometry.OperatorAlgebra.PeirceSpine.BlackHoleFiniteQuantum.d63InteriorPageAmplitude
+  have hResidual : (1 - InfoGeometry.OperatorAlgebra.PeirceSpine.genV
+      d63TiltedProjection A (star A)).PosSemidef := by
+    rw [show A = InfoGeometry.OperatorAlgebra.PeirceSpine.BlackHoleFiniteQuantum.d63InteriorPageAmplitude by rfl]
+    rw [InfoGeometry.OperatorAlgebra.PeirceSpine.BlackHoleFiniteQuantum.d63_interior_page_metric_value]
+    have hdiag : (Matrix.diagonal (fun _ : Fin 2 => (3 / 4 : ℂ))).PosSemidef :=
+      Matrix.PosSemidef.diagonal (fun _ => by positivity)
+    convert hdiag using 1
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [Matrix.diagonal_apply, Matrix.one_apply]
+  let input : PinchedHistoryArchetypeInput 2 :=
+    { cut := d63TiltedProjection
+      amplitude := A
+      cutIdempotent := d63_tilted_projection_is_star_projection.isIdempotentElem.eq
+      cutSelfAdjoint := d63_tilted_projection_is_star_projection.isSelfAdjoint
+      cutNonzero := by
+        intro h
+        have h00 := congrArg (fun M : D63CausalMatrix => M 0 0) h
+        norm_num [d63TiltedProjection] at h00
+      cutNotOne := by
+        intro h
+        have h01 := congrArg (fun M : D63CausalMatrix => M 0 1) h
+        norm_num [d63TiltedProjection] at h01
+      residualPositive := hResidual }
+  refine ⟨input, ?_⟩
+  · intro h
+    have h00 := congrArg
+      (fun M : D63CausalMatrix => M 0 0) h
+    norm_num [input, A,
+      InfoGeometry.OperatorAlgebra.PeirceSpine.BlackHoleFiniteQuantum.d63InteriorPageAmplitude] at h00
+
+def residualKrausCompletionArchetype (n : ℕ) :
     TypedArchetype (PinchedHistoryArchetypeInput n) .proved where
-  name := `InfoGeometry.OperatorAlgebra.PeirceSpine.ArchetypeCausalSynthesis.pinchedHistoryCollisionArchetype
+  name := `InfoGeometry.OperatorAlgebra.PeirceSpine.ArchetypeCausalSynthesis.residualKrausCompletionArchetype
   phase := 63
   claim := fun input =>
     ∃ W : Matrix (Fin n) (Fin n) ℂ,
       InfoGeometry.OperatorAlgebra.PeirceSpine.evenGrade input.cut W = W ∧
+      star W * W = 1 - InfoGeometry.OperatorAlgebra.PeirceSpine.genV
+        input.cut input.amplitude (star input.amplitude) ∧
       ∀ X : Matrix (Fin n) (Fin n) ℂ,
         Matrix.trace (InfoGeometry.Quantum.Choi.krausMap
           (InfoGeometry.OperatorAlgebra.PeirceSpine.BlackHoleFiniteQuantum.cornerKrausWithResidual
@@ -142,9 +201,71 @@ def pinchedHistoryCollisionArchetype (n : ℕ) :
     obtain ⟨W, hW, hResidual⟩ :=
       InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceChannelDynamics.exists_even_residual
         input.cut input.amplitude input.cutIdempotent input.residualPositive
-    exact ⟨W, hW, fun X =>
+    exact ⟨W, hW, hResidual, fun X =>
       InfoGeometry.OperatorAlgebra.PeirceSpine.BlackHoleFiniteQuantum.cornerKrausWithResidual_trace
         input.cut input.amplitude W X input.cutSelfAdjoint hResidual⟩
+
+def pinchedHistoryCollisionArchetype (n : ℕ) :
+    TypedArchetype (PinchedHistoryArchetypeInput n) .proved where
+  name := `InfoGeometry.OperatorAlgebra.PeirceSpine.ArchetypeCausalSynthesis.pinchedHistoryCollisionArchetype
+  phase := 63
+  claim := fun input =>
+    ∃ W : Matrix (Fin n) (Fin n) ℂ,
+      InfoGeometry.OperatorAlgebra.PeirceSpine.evenGrade input.cut W = W ∧
+      ∃ ρ σ : Matrix (Fin n) (Fin n) ℂ,
+        ρ.PosSemidef ∧ σ.PosSemidef ∧ Matrix.trace ρ = 1 ∧ Matrix.trace σ = 1 ∧
+        ρ ≠ σ ∧ ∀ k,
+          InfoGeometry.OperatorAlgebra.PeirceSpine.evenGrade input.cut
+            (InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceCoarseGrainedDynamics.evolve
+              input.cut input.amplitude W k ρ) =
+          InfoGeometry.OperatorAlgebra.PeirceSpine.evenGrade input.cut
+            (InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceCoarseGrainedDynamics.evolve
+              input.cut input.amplitude W k σ)
+  evidence := fun input => by
+    obtain ⟨W, hW, _, _⟩ := (residualKrausCompletionArchetype n).evidence input
+    obtain ⟨ρ, σ, hρ, hσ, hτρ, hτσ, hne, hcollision⟩ :=
+      InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceCoarseGrainedDynamics.exists_densities_colliding_after_evolution
+        input.cut input.amplitude W
+        input.cutIdempotent input.cutSelfAdjoint hW input.cutNonzero input.cutNotOne
+    exact ⟨W, hW, ρ, σ, hρ, hσ, hτρ, hτσ, hne, hcollision⟩
+
+def sharpHistoryMinimaxArchetype (n : ℕ) :
+    TypedArchetype (PinchedHistoryArchetypeInput n) .proved where
+  name := `InfoGeometry.OperatorAlgebra.PeirceSpine.ArchetypeCausalSynthesis.sharpHistoryMinimaxArchetype
+  phase := 63
+  claim := fun input =>
+    ∃ W : Matrix (Fin n) (Fin n) ℂ,
+      InfoGeometry.OperatorAlgebra.PeirceSpine.evenGrade input.cut W = W ∧
+      ∃ ρ σ : Matrix (Fin n) (Fin n) ℂ,
+        ρ.PosSemidef ∧ σ.PosSemidef ∧ Matrix.trace ρ = 1 ∧ Matrix.trace σ = 1 ∧
+        ρ ≠ σ ∧
+        (∀ k,
+          InfoGeometry.OperatorAlgebra.PeirceSpine.evenGrade input.cut
+            (InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceCoarseGrainedDynamics.evolve
+              input.cut input.amplitude W k ρ) =
+          InfoGeometry.OperatorAlgebra.PeirceSpine.evenGrade input.cut
+            (InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceCoarseGrainedDynamics.evolve
+              input.cut input.amplitude W k σ)) ∧
+        ∃ ε : ℝ, 0 < ε ∧
+          ∀ decode : (ℕ → Matrix (Fin n) (Fin n) ℂ) → Matrix (Fin n) (Fin n) ℂ,
+            ε ≤ max
+              (InfoGeometry.OperatorAlgebra.DerivationDifferentialForms.matrixTraceNormSq
+                (ρ - decode (fun k =>
+                  InfoGeometry.OperatorAlgebra.PeirceSpine.evenGrade input.cut
+                    (InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceCoarseGrainedDynamics.evolve
+                      input.cut input.amplitude W k ρ))))
+              (InfoGeometry.OperatorAlgebra.DerivationDifferentialForms.matrixTraceNormSq
+                (σ - decode (fun k =>
+                  InfoGeometry.OperatorAlgebra.PeirceSpine.evenGrade input.cut
+                    (InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceCoarseGrainedDynamics.evolve
+                      input.cut input.amplitude W k σ))))
+  evidence := fun input => by
+    obtain ⟨W, hW, _, _⟩ := (residualKrausCompletionArchetype n).evidence input
+    obtain ⟨ρ, σ, hρ, hσ, hτρ, hτσ, hne, hsame, ε, hε, hbound⟩ :=
+      InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceHistoryRecoveryError.exists_density_pair_with_uniform_history_error
+        input.cut input.amplitude W
+        input.cutIdempotent input.cutSelfAdjoint hW input.cutNonzero input.cutNotOne
+    exact ⟨W, hW, ρ, σ, hρ, hσ, hτρ, hτσ, hne, hsame, ε, hε, hbound⟩
 
 structure ReplacementMinimaxInput (m : ℕ) where
   rho : Matrix (Fin m) (Fin m) ℂ
@@ -157,6 +278,20 @@ structure ReplacementMinimaxInput (m : ℕ) where
   sigmaTrace : Matrix.trace sigma = 1
   observationOneTrace : Matrix.trace observationOne = 1
   observationTwoTrace : Matrix.trace observationTwo = 1
+
+theorem replacement_minimax_one_dimensional_inputs_are_scalar_identity
+    (input : ReplacementMinimaxInput 1) :
+    input.rho = 1 ∧ input.sigma = 1 ∧
+      input.observationOne = 1 ∧ input.observationTwo = 1 := by
+  have hscalar (M : Matrix (Fin 1) (Fin 1) ℂ) (hM : Matrix.trace M = 1) : M = 1 := by
+    ext i j
+    fin_cases i
+    fin_cases j
+    simpa [Matrix.trace] using hM
+  exact ⟨hscalar input.rho input.rhoTrace,
+    hscalar input.sigma input.sigmaTrace,
+    hscalar input.observationOne input.observationOneTrace,
+    hscalar input.observationTwo input.observationTwoTrace⟩
 
 /-- A replacement channel attains the exact two-state minimax midpoint bound.
 This is an owner-backed finite-dimensional matrix archetype. -/
@@ -187,8 +322,12 @@ def replacementMinimaxArchetype (m : ℕ) :
 
 #register_archetype finitePinchingChannelArchetype
 #audit_archetype finitePinchingChannelArchetype
+#register_archetype residualKrausCompletionArchetype
+#audit_archetype residualKrausCompletionArchetype
 #register_archetype pinchedHistoryCollisionArchetype
 #audit_archetype pinchedHistoryCollisionArchetype
+#register_archetype sharpHistoryMinimaxArchetype
+#audit_archetype sharpHistoryMinimaxArchetype
 
 /-- Proof-input strata for the operator archetypes distributed across the
 Peirce-spine owners. -/
@@ -402,12 +541,12 @@ def Node.edge : Node → Node → Prop
   | .starProjection, .finitePinchingChannel =>
       ∀ (n : ℕ) (input : FinitePinchingArchetypeInput n),
         (finitePinchingChannelArchetype n).claim input
-  | .finitePinchingChannel, .pinchedHistoryCollision =>
+  | .residualKrausCompletion, .pinchedHistoryCollision =>
       ∀ (input : PinchedHistoryArchetypeInput 2),
         (pinchedHistoryCollisionArchetype 2).claim input
   | .pinchedHistoryCollision, .sharpHistoryMinimax =>
       ∀ (input : PinchedHistoryArchetypeInput 2),
-        (pinchedHistoryCollisionArchetype 2).claim input
+        (sharpHistoryMinimaxArchetype 2).claim input
   | .twoPointTraceBound, .sharpHistoryMinimax =>
       ∀ (X Y Z : D63CausalMatrix),
         InfoGeometry.OperatorAlgebra.DerivationDifferentialForms.matrixTraceNormSq (X - Y) / 4 ≤
@@ -760,11 +899,8 @@ theorem sector_data_to_balanced_trace :
   have hDifference : Node.edge .sectorData .chargeDifference := by
     intro data
     exact InfoGeometry.OperatorAlgebra.PeirceSpine.AnomalyCosmology.charge_difference_from_sector_data
-        (X := data.witness)
-        data.weakOneIdempotent data.weakTwoIdempotent
-        data.weakOrthogonal12 data.weakOrthogonal21
-        data.colorOrthogonal data.weakColorOrthogonal
-        data.scalarOrthogonal data.weakScalarOrthogonal
+      (P_O2 := data.colorSector) (P_H1 := data.weakSectorOne)
+      (P_H2 := data.weakSectorTwo) (P_C := data.scalarSector)
   have hBalanced : Node.edge .chargeDifference .balancedChargeTrace := by
     intro data
     exact InfoGeometry.OperatorAlgebra.PeirceSpine.AnomalyCosmology.acBalancedChargeTraceArchetype.evidence data
@@ -782,7 +918,8 @@ bound and replacement-channel inputs; the bound is stated on the actual
 full complex matrix carrier. -/
 theorem pinching_history_minimax_causal_branch {n : Type*}
     [Fintype n] [DecidableEq n] (X Y Z : Matrix n n ℂ) :
-    causalLE .starProjection .pinchedHistoryCollision ∧
+    causalLE .starProjection .finitePinchingChannel ∧
+    causalLE .residualKrausCompletion .pinchedHistoryCollision ∧
     causalLE .pinchedHistoryCollision .sharpHistoryMinimax ∧
     causalLE .twoPointTraceBound .sharpHistoryMinimax ∧
     causalLE .replacementChannel .sharpHistoryMinimax ∧
@@ -792,12 +929,12 @@ theorem pinching_history_minimax_causal_branch {n : Type*}
   have hPinching : Node.edge .starProjection .finitePinchingChannel := by
     intro k input
     exact (finitePinchingChannelArchetype k).evidence input
-  have hCollision : Node.edge .finitePinchingChannel .pinchedHistoryCollision := by
+  have hCollision : Node.edge .residualKrausCompletion .pinchedHistoryCollision := by
     intro input
     exact (pinchedHistoryCollisionArchetype 2).evidence input
   have hSharp : Node.edge .pinchedHistoryCollision .sharpHistoryMinimax := by
     intro input
-    exact (pinchedHistoryCollisionArchetype 2).evidence input
+    exact (sharpHistoryMinimaxArchetype 2).evidence input
   have hTwoPoint : Node.edge .twoPointTraceBound .sharpHistoryMinimax := by
     intro U V W
     exact InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceHistoryRecoveryError.two_point_error_lower_bound
@@ -805,9 +942,8 @@ theorem pinching_history_minimax_causal_branch {n : Type*}
   have hReplacement : Node.edge .replacementChannel .sharpHistoryMinimax := by
     intro m input
     exact (replacementMinimaxArchetype m).evidence input
-  refine ⟨causalLE_trans
-      (edge_causalLE (a := .starProjection) (b := .finitePinchingChannel) hPinching)
-      (edge_causalLE (a := .finitePinchingChannel) (b := .pinchedHistoryCollision) hCollision),
+  refine ⟨edge_causalLE (a := .starProjection) (b := .finitePinchingChannel) hPinching,
+    edge_causalLE (a := .residualKrausCompletion) (b := .pinchedHistoryCollision) hCollision,
     edge_causalLE (a := .pinchedHistoryCollision) (b := .sharpHistoryMinimax) hSharp,
     edge_causalLE (a := .twoPointTraceBound) (b := .sharpHistoryMinimax) hTwoPoint,
     edge_causalLE (a := .replacementChannel) (b := .sharpHistoryMinimax) hReplacement, ?_⟩
@@ -955,7 +1091,9 @@ theorem d63_finite_page_archetypes_have_concrete_instance :
   refine ⟨d63ConcreteFinitePageInput, ?_, ?_, ?_⟩
   · exact finitePageDensityClaim_proved _
   · exact finitePageChannelEvolutionClaim_proved _
-  · exact d63_concrete_page_input_is_noncommuting
+  · change d63TiltedProjection * d63TiltedAmplitude ≠
+      d63TiltedAmplitude * d63TiltedProjection
+    exact d63_tilted_cut_amplitude_noncommute
 
 theorem d63_interior_page_defect_archetype_proved :
     causalLE .finitePageDensity .finiteInteriorPageDefect ∧

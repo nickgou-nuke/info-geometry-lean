@@ -9,16 +9,16 @@ import InfoGeometry.Canonical.NullEigenspace
 The sharpness witness is a genuine rank-one bilinear form over `ZMod 6`. -/
 namespace InfoGeometry.Canonical.FixedPairingTorsionBoundary
 
-theorem fixed_pair_double_zero {R V : Type*} [CommRing R]
+theorem fixed_pair_double_zero {R V : Type*} [Ring R]
     (g : V → V → R) (K : V → V)
     (ha : ∀ x y, g (K x) (K y) = -g x y)
     {x y : V} (hx : K x = x) (hy : K y = y) : 2 * g x y = 0 := by
   have h := ha x y
   rw [hx, hy] at h
-  calc 2 * g x y = g x y + g x y := by ring
+  calc 2 * g x y = g x y + g x y := two_mul (g x y)
     _ = 0 := eq_neg_iff_add_eq_zero.mp h
 
-theorem fixed_pair_zero {R V : Type*} [CommRing R]
+theorem fixed_pair_zero {R V : Type*} [Ring R]
     (ht : ∀ a : R, 2*a=0 → a=0) (g : V → V → R) (K : V → V)
     (ha : ∀ x y, g (K x) (K y) = -g x y)
     {x y : V} (hx : K x = x) (hy : K y = y) : g x y = 0 :=

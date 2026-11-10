@@ -38,10 +38,10 @@ open InfoGeometry.Canonical.YangMillsSelfDualInstantonBridge
 open InfoGeometry.Canonical.SelfDualConnectionCurvatureYangMillsBridge
 open BigOperators
 
-variable {R V : Type*} [Field R] [AddCommGroup V] [Module R V] {n : ℕ}
+variable {R V : Type*} [AddCommGroup V] {n : ℕ}
 
 /-- **Theorem**: Matrix Exterior Derivative Additivity d(M + N) = dM + dN. -/
-theorem matrixExteriorDerivative_add
+theorem matrixExteriorDerivative_add [CommRing R] [Module R V]
     (d : Module.End R (ExteriorAlgebra R V))
     (M N : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V)) :
     matrixExteriorDerivative d (M + N) = matrixExteriorDerivative d M + matrixExteriorDerivative d N := by
@@ -50,11 +50,14 @@ theorem matrixExteriorDerivative_add
   exact LinearMap.map_add d (M i j) (N i j)
 
 /-- **Theorem**: Matrix Commutator of Matrix with its Square vanishes [A, A * A] = 0. -/
-theorem matrixCommutator_cube_zero (A : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V)) :
+theorem matrixCommutator_cube_zero [CommRing R] [Module R V]
+    (A : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V)) :
     matrixCommutator A (A * A) = 0 := by
   dsimp [matrixCommutator]
   rw [Matrix.mul_assoc]
   rw [sub_self]
+
+variable [Field R] [Module R V]
 
 /-- **Theorem**: Genuine Derivation of Connection Curvature Bianchi Identity D_A F_A = 0 from Nilpotency d² = 0 & Derivation Product Rule. -/
 theorem curvatureFromConnection_bianchi

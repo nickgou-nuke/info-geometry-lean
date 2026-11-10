@@ -155,7 +155,7 @@ theorem krausChannel_preserves_cyclicFunctional {R ι : Type*}
 
 section WeightedUnitaryMixtures
 
-variable {R A ι : Type*} [CommSemiring R] [Ring A] [Algebra R A]
+variable {R A ι : Type*} [Semiring R] [Ring A] [Module R A]
   [StarRing A] [Fintype ι]
 
 /-- A finite weighted mixture of adjoint conjugations on an associative

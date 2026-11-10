@@ -8,6 +8,7 @@ import InfoGeometry.GrandUnification.AmplituhedronTwistorPluckerDictionary
 import InfoGeometry.Clifford.Cl33FiniteJWMajoranaMatrix
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
+import Mathlib.Tactic.NoncommRing
 
 /-!
 # Split-Signature Twistor Incidence, Token Null-Ray Invariance, and Loxodromic $\operatorname{Cl}(3,3)$ Cartan Synthesis
@@ -86,7 +87,7 @@ open InfoGeometry.Clifford.Cl33FiniteJWMajoranaMatrix
 
 section ConformalNullConeEmbedding
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- A point in 4-dimensional split-signature spacetime $\mathbb{R}^{2,2}$ in double-null coordinates
 $(u, v, w, \tilde{w})$ with quadratic norm $u v - w \tilde{w}$. -/
@@ -121,7 +122,7 @@ def spacetimeNorm (x : SplitSpacetime22 R) : R :=
 
 /-- The determinant of the $2 \times 2$ spinor matrix `spacetimeMatrix x` equals the split-signature
 norm $u v - w \tilde{w}$. -/
-theorem det_spacetimeMatrix (x : SplitSpacetime22 R) :
+theorem det_spacetimeMatrix {R : Type*} [CommRing R] (x : SplitSpacetime22 R) :
     Matrix.det (spacetimeMatrix x) = spacetimeNorm x := by
   simp [spacetimeMatrix, spacetimeNorm, Matrix.det_fin_two_of]
 
@@ -137,18 +138,18 @@ embedded spacetime point vanishes identically. -/
 theorem vec3Dot_conformalEmbedParaKahler (x : SplitSpacetime22 R) :
     vec3Dot (conformalEmbedParaKahler x).u (conformalEmbedParaKahler x).v = 0 := by
   dsimp [conformalEmbedParaKahler, spacetimeNorm, vec3Dot]
-  ring
+  noncomm_ring
 
 /-- Every conformally embedded spacetime point is isotropic with respect to the $(3,3)$
 para-Kähler metric $g$: $g(\Phi(x), \Phi(x)) = 0$. -/
-theorem paraKahlerMetric_conformalEmbedParaKahler (x : SplitSpacetime22 R) :
+theorem paraKahlerMetric_conformalEmbedParaKahler {R : Type*} [CommRing R] (x : SplitSpacetime22 R) :
     paraKahlerMetric (conformalEmbedParaKahler x) (conformalEmbedParaKahler x) = 0 := by
   dsimp [paraKahlerMetric, conformalEmbedParaKahler, spacetimeNorm, vec3Dot]
   ring
 
 /-- Every conformally embedded spacetime point lies on the $\operatorname{Cl}(3,3)$ isotropic
 null cone inside `ZornSplitOctonion R`. -/
-theorem isOnNullCone_conformalEmbedParaKahler (x : SplitSpacetime22 R) :
+theorem isOnNullCone_conformalEmbedParaKahler {R : Type*} [CommRing R] (x : SplitSpacetime22 R) :
     IsOnNullCone (conformalEmbedParaKahler x) := by
   rw [isOnNullCone_iff_vec3Dot_zero]
   exact vec3Dot_conformalEmbedParaKahler x
@@ -318,18 +319,18 @@ theorem canonicalRealTwistor_ne_zero :
     canonicalRealTwistor ≠ ⟨0, 0, 0, 0⟩ := by
   decide
 
-/-- The primary 2-spinor $\omega^A = (\omega^0, \omega^1)$ of a real twistor $Z$. -/
-def twistorOmega (Z : RealTwistor R) : Fin 2 → R :=
+/-- Theprimary 2-spinor $\omega^A = (\omega^0, \omega^1)$ of a real twistor $Z$. -/
+def twistorOmega {R : Type*} (Z : RealTwistor R) : Fin 2 → R :=
   ![Z.omega0, Z.omega1]
 
 /-- The projection 2-spinor $\pi_{A'} = (\pi_{0'}, \pi_{1'})$ of a real twistor $Z$. -/
-def twistorPi (Z : RealTwistor R) : Fin 2 → R :=
+def twistorPi {R : Type*} (Z : RealTwistor R) : Fin 2 → R :=
   ![Z.pi0, Z.pi1]
 
 /-- Symplectic spinor index raising $\pi^{A'} = \epsilon^{A'B'} \pi_{B'}$ with
 $\epsilon^{0'1'} = +1, \epsilon^{1'0'} = -1$:
 $$\pi^{0'} = \pi_{1'}, \qquad \pi^{1'} = -\pi_{0'}.$$ -/
-def raiseSpinor (pi0 pi1 : R) : Fin 2 → R :=
+def raiseSpinor {R : Type*} [Neg R] (pi0 pi1 : R) : Fin 2 → R :=
   ![pi1, -pi0]
 
 /-- **Symplectic Spinor Self-Contraction Identity ($\pi^{A'} \pi_{A'} = 0$)**:
@@ -344,7 +345,7 @@ theorem raiseSpinor_contract_self (pi0 pi1 : R) :
 two spinors $\lambda^A = (\lambda^0, \lambda^1)$ and $\pi^{A'} = (\pi_{1'}, -\pi_{0'})$:
 $$p^{AA'} = \begin{pmatrix} \lambda^0 \pi_{1'} & -\lambda^0 \pi_{0'} \\
   \lambda^1 \pi_{1'} & -\lambda^1 \pi_{0'} \end{pmatrix}.$$ -/
-def nullTangent22 (lam0 lam1 pi0 pi1 : R) : SplitSpacetime22 R where
+def nullTangent22 {R : Type*} [Ring R] (lam0 lam1 pi0 pi1 : R) : SplitSpacetime22 R where
   u := lam0 * pi1
   v := -lam1 * pi0
   w := -lam0 * pi0
@@ -364,7 +365,7 @@ theorem det_spacetimeMatrix_nullTangent22_zero (lam0 lam1 pi0 pi1 : R) :
 
 /-- The affine token null ray $x^{AA'}(\tau) = x_0^{AA'} + \tau \lambda^A \pi^{A'}$ propagating from
 base point $x_0$ along the null spinor direction $\lambda^A \pi^{A'}$. -/
-def tokenNullRay (x₀ : SplitSpacetime22 R) (lam0 lam1 pi0 pi1 τ : R) : SplitSpacetime22 R where
+def tokenNullRay {R : Type*} [Ring R] (x₀ : SplitSpacetime22 R) (lam0 lam1 pi0 pi1 τ : R) : SplitSpacetime22 R where
   u := x₀.u + τ * (lam0 * pi1)
   v := x₀.v + τ * (-lam1 * pi0)
   w := x₀.w + τ * (-lam0 * pi0)
@@ -372,21 +373,21 @@ def tokenNullRay (x₀ : SplitSpacetime22 R) (lam0 lam1 pi0 pi1 τ : R) : SplitS
 
 /-- First component $\mathcal{I}^0(x, \pi) = u \pi_{0'} + w \pi_{1'}$ of the twistor incidence map
 $x^{AA'} \pi_{A'}$. -/
-def incidentOmega0 (x : SplitSpacetime22 R) (pi0 pi1 : R) : R :=
+def incidentOmega0 {R : Type*} [Ring R] (x : SplitSpacetime22 R) (pi0 pi1 : R) : R :=
   x.u * pi0 + x.w * pi1
 
 /-- Second component $\mathcal{I}^1(x, \pi) = \tilde{w} \pi_{0'} + v \pi_{1'}$ of the twistor
 incidence map $x^{AA'} \pi_{A'}$. -/
-def incidentOmega1 (x : SplitSpacetime22 R) (pi0 pi1 : R) : R :=
+def incidentOmega1 {R : Type*} [Ring R] (x : SplitSpacetime22 R) (pi0 pi1 : R) : R :=
   x.w_tilde * pi0 + x.v * pi1
 
 /-- Penrose–Witten real twistor incidence relation $\omega^A = x^{AA'} \pi_{A'}$. -/
-def IsTwistorIncident (x : SplitSpacetime22 R) (Z : RealTwistor R) : Prop :=
+def IsTwistorIncident {R : Type*} [Ring R] (x : SplitSpacetime22 R) (Z : RealTwistor R) : Prop :=
   Z.omega0 = incidentOmega0 x Z.pi0 Z.pi1 ∧ Z.omega1 = incidentOmega1 x Z.pi0 Z.pi1
 
 /-- Matrix-vector formulation of the incidence map: multiplying `spacetimeMatrix x` by `twistorPi Z`
 yields the vector `![incidentOmega0 x Z.pi0 Z.pi1, incidentOmega1 x Z.pi0 Z.pi1]`. -/
-theorem incidentOmega_eq_spacetimeMatrix_mulVec (x : SplitSpacetime22 R) (Z : RealTwistor R) :
+theorem incidentOmega_eq_spacetimeMatrix_mulVec {R : Type*} [Ring R] (x : SplitSpacetime22 R) (Z : RealTwistor R) :
     (spacetimeMatrix x).mulVec (twistorPi Z) =
       ![incidentOmega0 x Z.pi0 Z.pi1, incidentOmega1 x Z.pi0 Z.pi1] := by
   ext i
@@ -426,7 +427,7 @@ theorem isTwistorIncident_tokenNullRay_iff (x₀ : SplitSpacetime22 R) (lam0 lam
 
 /-- The $2 \times 4$ twistor matrix packaging a pair of twistors $Z_1, Z_2$ incident with the same
 spacetime point $x \in \mathbb{R}^{2,2}$. -/
-def incidentTwistorPairMatrix (x : SplitSpacetime22 R) (pi1_0 pi1_1 pi2_0 pi2_1 : R) :
+def incidentTwistorPairMatrix {R : Type*} [Ring R] (x : SplitSpacetime22 R) (pi1_0 pi1_1 pi2_0 pi2_1 : R) :
     PlabicTwistorMatrix R where
   z11 := incidentOmega0 x pi1_0 pi1_1
   z12 := incidentOmega1 x pi1_0 pi1_1
@@ -483,13 +484,13 @@ Evaluated on the canonical spinor basis $\pi_{(1)} = (1, 0)$, $\pi_{(2)} = (0, 1
 minors of `incidentTwistorPairMatrix x 1 0 0 1` are precisely the six para-Kähler null-cone
 coordinates of `conformalEmbedParaKahler x` from Section 1:
 $$\mathbf{u}(x) = (P_{14}, P_{13}, P_{34}), \qquad \mathbf{v}(x) = (-P_{23}, P_{24}, -P_{12}).$$ -/
-theorem conformalEmbedParaKahler_eq_unitSpinor_plucker (x : SplitSpacetime22 R) :
+theorem conformalEmbedParaKahler_eq_unitSpinor_plucker {R : Type*} [Ring R] (x : SplitSpacetime22 R) :
     let P := extractTwistorPluckerCoordinates (incidentTwistorPairMatrix x 1 0 0 1)
     conformalEmbedParaKahler x =
       ⟨![P.p14, P.p13, P.p34], ![-P.p23, P.p24, -P.p12]⟩ := by
   ext i <;> fin_cases i <;>
     (dsimp [conformalEmbedParaKahler, extractTwistorPluckerCoordinates,
-      incidentTwistorPairMatrix, incidentOmega0, incidentOmega1, spacetimeNorm]; ring)
+      incidentTwistorPairMatrix, incidentOmega0, incidentOmega1, spacetimeNorm]; noncomm_ring)
 
 /-- Non-vacuity witness for `incidentTwistorPairMatrix`: on `canonicalSpacetime22` with the
 canonical spinor frame `(1, 0), (0, 1)`, the Plücker minors $P_{34} = 1$ and $P_{12} = 1$ are

@@ -52,7 +52,7 @@ open Matrix
     ========================================================================= -/
 
 /-- An involution algebra over a commutative ring $R$ (e.g. $\mathbb{R}, \mathbb{C}, \mathbb{H}$). -/
-structure InvolutiveRing (R : Type*) (A : Type*) [CommRing R] [AddCommGroup A] [Module R A] where
+structure InvolutiveRing (R : Type*) (A : Type*) [Ring R] [AddCommGroup A] [Module R A] where
   mul : A → A → A
   one : A
   conj : A → A
@@ -72,7 +72,7 @@ structure InvolutiveRing (R : Type*) (A : Type*) [CommRing R] [AddCommGroup A] [
 
 namespace InvolutiveRing
 
-variable {R A : Type*} [CommRing R] [AddCommGroup A] [Module R A]
+variable {R A : Type*} [Ring R] [AddCommGroup A] [Module R A]
 
 /-- The Cayley-Dickson doubling carrier $A \times A$. -/
 abbrev CD (A : Type*) := A × A

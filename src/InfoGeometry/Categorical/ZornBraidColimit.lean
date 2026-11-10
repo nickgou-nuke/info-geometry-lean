@@ -70,7 +70,9 @@ open CategoryTheory.Limits
 
 universe u
 
-variable (R : Type u) [CommRing R]
+section Ring
+
+variable (R : Type u) [Ring R]
 variable {J : Type u} [Category.{u} J]
 
 -- The directed diagram representing the finite tower of Zorn vector spaces over R.
@@ -82,6 +84,43 @@ categorical direct colimit of the finite Zorn sequence in ModuleCat.
 -/
 noncomputable def zornContinuumModule [HasColimit ZornSequence] : ModuleCat.{u} R :=
   colimit ZornSequence
+
+-- Functor representing a scaled version of the Zorn stages.
+variable (ZornSequenceScaled : J ⥤ ModuleCat.{u} R)
+
+-- Finite scaling covariance provides a natural isomorphism between
+-- the standard Zorn stages and the scaled Zorn stages.
+variable (zorn_scaling_covariance : ZornSequence ≅ ZornSequenceScaled)
+
+/--
+The scaling covariance naturally extends to the continuum colimit via
+the universal property of the limit in ModuleCat.
+-/
+noncomputable def zorn_scaling_covariance_colimit
+    [HasColimit ZornSequence] [HasColimit ZornSequenceScaled] :
+    zornContinuumModule R ZornSequence ≅ zornContinuumModule R ZornSequenceScaled :=
+  HasColimit.isoOfNatIso zorn_scaling_covariance
+
+variable [HasColimit ZornSequence]
+
+-- A chosen sequence of elements in the finite stages; no generator relations
+-- are built into this assignment.
+variable (zornSeed : ∀ j, ZornSequence.obj j)
+
+/--
+The colimit image of a chosen finite-stage seed.  Its algebraic properties
+come only from explicit hypotheses about the witnessed multiplication.
+-/
+noncomputable def continuumSeed (j : J) : ↑(zornContinuumModule R ZornSequence) :=
+  colimit.ι ZornSequence j (zornSeed j)
+
+end Ring
+
+section CommRing
+
+variable (R : Type u) [CommRing R]
+variable {J : Type u} [Category.{u} J]
+variable (ZornSequence : J ⥤ ModuleCat.{u} R)
 
 /-! ## Witnessed bilinear multiplication on the colimit -/
 
@@ -131,22 +170,6 @@ theorem colimit_square_zero_of_stage {j : J} {x : ZornSequence.obj j}
 
 end CompatibleBilinearMultiplication
 
--- Functor representing a scaled version of the Zorn stages.
-variable (ZornSequenceScaled : J ⥤ ModuleCat.{u} R)
-
--- Finite scaling covariance provides a natural isomorphism between
--- the standard Zorn stages and the scaled Zorn stages.
-variable (zorn_scaling_covariance : ZornSequence ≅ ZornSequenceScaled)
-
-/--
-The scaling covariance naturally extends to the continuum colimit via
-the universal property of the limit in ModuleCat.
--/
-noncomputable def zorn_scaling_covariance_colimit
-    [HasColimit ZornSequence] [HasColimit ZornSequenceScaled] :
-    zornContinuumModule R ZornSequence ≅ zornContinuumModule R ZornSequenceScaled :=
-  HasColimit.isoOfNatIso zorn_scaling_covariance
-
 /--
 Tensoring with a fixed `ModuleCat` object preserves colimits in `ModuleCat`.
 
@@ -192,17 +215,7 @@ instance on the colimit.
 
 variable [HasColimit ZornSequence]
 variable (M : CompatibleBilinearMultiplication R ZornSequence)
-
--- A chosen sequence of elements in the finite stages; no generator relations
--- are built into this assignment.
 variable (zornSeed : ∀ j, ZornSequence.obj j)
-
-/--
-The colimit image of a chosen finite-stage seed.  Its algebraic properties
-come only from explicit hypotheses about the witnessed multiplication.
--/
-noncomputable def continuumSeed (j : J) : ↑(zornContinuumModule R ZornSequence) :=
-  colimit.ι ZornSequence j (zornSeed j)
 
 /--
 A finite-stage square-zero seed remains square-zero after insertion into the
@@ -215,5 +228,7 @@ theorem continuumSeed_sq_zero_of_stage (j : J)
         (continuumSeed R ZornSequence zornSeed j) = 0 := by
   exact CompatibleBilinearMultiplication.colimit_square_zero_of_stage
     (R := R) (ZornSequence := ZornSequence) M h
+
+end CommRing
 
 end InfoGeometry.Categorical.ZornBraidColimit

@@ -10,19 +10,23 @@ open Finset
 variable {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
 
 /-- Truncated supercurrent `G_r^N`. -/
-def G_trunc (N r : ℤ) (J ψ : ℤ → Module.End 𝕜 V) : Module.End 𝕜 V :=
+def G_trunc {𝕜 V : Type*} [Ring 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    (N r : ℤ) (J ψ : ℤ → Module.End 𝕜 V) : Module.End 𝕜 V :=
   Finset.sum (Icc (-N) N) (fun k => (J k) * (ψ (r - k)))
 
 /-- Truncated bosonic stress part. -/
-def L_bosonic_trunc (N n : ℤ) (J : ℤ → Module.End 𝕜 V) : Module.End 𝕜 V :=
+def L_bosonic_trunc {𝕜 V : Type*} [Ring 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    (N n : ℤ) (J : ℤ → Module.End 𝕜 V) : Module.End 𝕜 V :=
   Finset.sum (Icc (-N) N) (fun k => (J k) * (J (n - k)))
 
 /-- Truncated fermionic stress part. -/
-def L_fermionic_trunc (N n : ℤ) (ψ : ℤ → Module.End 𝕜 V) : Module.End 𝕜 V :=
+def L_fermionic_trunc {𝕜 V : Type*} [CommRing 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    (N n : ℤ) (ψ : ℤ → Module.End 𝕜 V) : Module.End 𝕜 V :=
   Finset.sum (Icc (-N) N) (fun k => (k : 𝕜) • ((ψ (-k)) * (ψ (k + n))))
 
 /-- Total truncated stress tensor. -/
-def L_trunc (N n : ℤ) (J ψ : ℤ → Module.End 𝕜 V) : Module.End 𝕜 V :=
+def L_trunc {𝕜 V : Type*} [CommRing 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    (N n : ℤ) (J ψ : ℤ → Module.End 𝕜 V) : Module.End 𝕜 V :=
   L_bosonic_trunc N n J + L_fermionic_trunc N n ψ
 
 /-- Step-3 target for `[L,G]`. -/
@@ -32,7 +36,7 @@ def SuperBracket_L_G_Target
     = ((m : 𝕜) / 2 - (r : 𝕜)) • G_trunc N (m + r) J ψ + defect
 
 /-- Step-3 target for `{G,G}`. -/
-def SuperBracket_G_G_Target
+def SuperBracket_G_G_Target {𝕜 V : Type*} [CommRing 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (N r s : ℤ) (J ψ : ℤ → Module.End 𝕜 V)
     (central_N : ℤ → ℤ → 𝕜) (defect : Module.End 𝕜 V) : Prop :=
   (G_trunc N r J ψ) * (G_trunc N s J ψ) + (G_trunc N s J ψ) * (G_trunc N r J ψ)
@@ -45,7 +49,7 @@ def defect_LG
     - ((m : 𝕜) / 2 - (r : 𝕜)) • G_trunc N (m + r) J ψ
 
 /-- Explicit finite defect for `{G,G}`. -/
-def defect_GG
+def defect_GG {𝕜 V : Type*} [CommRing 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (N r s : ℤ) (J ψ : ℤ → Module.End 𝕜 V)
     (central_N : ℤ → ℤ → 𝕜) : Module.End 𝕜 V :=
   (G_trunc N r J ψ) * (G_trunc N s J ψ) + (G_trunc N s J ψ) * (G_trunc N r J ψ)
@@ -59,7 +63,7 @@ theorem superBracket_L_G_target_with_defect
   abel_nf
 
 /-- Finite evaluation of `{G,G}` with explicit defect. -/
-theorem superBracket_G_G_target_with_defect
+theorem superBracket_G_G_target_with_defect {𝕜 V : Type*} [CommRing 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (N r s : ℤ) (J ψ : ℤ → Module.End 𝕜 V) (central_N : ℤ → ℤ → 𝕜) :
     SuperBracket_G_G_Target N r s J ψ central_N (defect_GG N r s J ψ central_N) := by
   unfold SuperBracket_G_G_Target defect_GG
@@ -89,7 +93,7 @@ Stabilization readback for `{G,G}` on a fixed vector:
 if the defect eventually vanishes on `v` along `N → +∞`, then the
 anticommutator identity is eventually exact on `v`.
 -/
-theorem eventually_exact_GG_on_vector
+theorem eventually_exact_GG_on_vector {𝕜 V : Type*} [CommRing 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (r s : ℤ) (J ψ : ℤ → Module.End 𝕜 V) (central_N : ℤ → ℤ → 𝕜) (v : V)
     (hdef :
       ∀ᶠ N : ℤ in Filter.atTop,

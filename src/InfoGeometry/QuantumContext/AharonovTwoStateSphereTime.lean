@@ -7,8 +7,6 @@ import Mathlib
 
 namespace InfoGeometry.QuantumContext.AharonovTime
 
-variable {R : Type*} [CommRing R]
-
 /-! ### 1. 4D Euclidean Carrier and Concentric S³ Shells (Trap T16 Cleared) -/
 
 @[ext]
@@ -20,7 +18,9 @@ structure Sphere4D (R : Type*) where
 
 namespace Sphere4D
 
-variable {R : Type*} [CommRing R]
+section Ring
+
+variable {R : Type*} [Ring R]
 
 /-- Squared radius of the S³ shell in ℝ⁴: r² = w² + x² + y² + z². -/
 def radiusSq (X : Sphere4D R) : R :=
@@ -29,6 +29,12 @@ def radiusSq (X : Sphere4D R) : R :=
 /-- Radial Weyl dilatation of the S³ shell by scale factor s = exp(τ). -/
 def dilate (s : R) (X : Sphere4D R) : Sphere4D R :=
   ⟨s * X.w, s * X.x, s * X.y, s * X.z⟩
+
+end Ring
+
+section CommRing
+
+variable {R : Type*} [CommRing R]
 
 /-- 
 Radial Dilatation Scaling Law:
@@ -63,6 +69,8 @@ theorem twin_shell_horizon_lock (r₀ exp_pos exp_neg : R)
     _ = r₀^2 * 1 := by rw [h_inv]
     _ = r₀^2 := by ring
 
+end CommRing
+
 end Sphere4D
 
 /-! ### 2. Double-Slit Two-State Vector Formalism (Aharonov–Bergmann–Lebowitz) -/
@@ -75,7 +83,7 @@ structure SlitState2D (R : Type*) where
 
 namespace SlitState2D
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Bilinear pairing between backward post-selected state ⟨ϕ| and forward pre-selected state |ψ⟩. -/
 def bracket (ϕ ψ : SlitState2D R) : R :=
@@ -107,10 +115,10 @@ In conventional 1-vector quantum mechanics (where ϕ = ψ), the expectation valu
 of the Slit 1 projector ⟨ψ | P̂₁ | ψ⟩ = ψ₁² is ALWAYS non-negative!
 Standard single-vector QM can never register negative dwell time.
 -/
-theorem standard_qm_slit1_nonneg [CommRing R] [LinearOrder R] [IsStrictOrderedRing R] (ψ : SlitState2D R) :
+theorem standard_qm_slit1_nonneg [LinearOrder R] [IsStrictOrderedRing R] (ψ : SlitState2D R) :
     0 ≤ bracket ψ (projSlit1 ψ) := by
   dsimp [bracket, projSlit1]
-  have h_eq : ψ.s₁ * ψ.s₁ + ψ.s₂ * 0 = ψ.s₁^2 := by ring
+  have h_eq : ψ.s₁ * ψ.s₁ + ψ.s₂ * 0 = ψ.s₁^2 := by simp [sq]
   rw [h_eq]
   exact sq_nonneg ψ.s₁
 
@@ -123,7 +131,7 @@ amplitudes across Slit 1 and Slit 2 equals the total overlap ⟨ϕ | ψ⟩:
 theorem two_state_weak_partition (ϕ ψ : SlitState2D R) :
     bracket ϕ (projSlit1 ψ) + bracket ϕ (projSlit2 ψ) = bracket ϕ ψ := by
   dsimp [bracket, projSlit1, projSlit2]
-  ring
+  simp [add_assoc]
 
 /-! ### 3. The Negative Weak Dwell-Time Theorem (Destructive Interference Witness) -/
 
@@ -181,7 +189,7 @@ structure AharonovSphereTimeCertificate (R : Type*) [CommRing R] [LinearOrder R]
   negative_weak_time_witness :
     SlitState2D.normalizedWeakValue1 SlitState2D.backwardPostSelected SlitState2D.forwardPreSelected < 0
 
-theorem compile_aharonov_sphere_time_certificate [CommRing R] [LinearOrder R] [IsStrictOrderedRing R] :
+theorem compile_aharonov_sphere_time_certificate {R : Type*} [CommRing R] [LinearOrder R] [IsStrictOrderedRing R] :
     AharonovSphereTimeCertificate R where
   shell_dilatation := Sphere4D.radiusSq_dilate
   twin_horizon_lock := Sphere4D.twin_shell_horizon_lock

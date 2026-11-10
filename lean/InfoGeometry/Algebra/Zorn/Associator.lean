@@ -16,11 +16,11 @@ namespace InfoGeometry.Algebra.Zorn
 open InfoGeometry.Canonical
 
 /-- The Zorn associator defect `(x * y) * z - x * (y * z)`. -/
-def associatorDefect {R : Type*} [CommRing R]
+def associatorDefect {R : Type*} [Ring R]
     (x y z : ZornMatrix R) : ZornMatrix R :=
   (x * y) * z - x * (y * z)
 
-theorem associatorDefect_apply {R : Type*} [CommRing R]
+theorem associatorDefect_apply {R : Type*} [Ring R]
     (x y z : ZornMatrix R) :
     associatorDefect x y z = (x * y) * z - x * (y * z) :=
   rfl
@@ -32,7 +32,7 @@ This is the local H^3 defect statement, imported from the canonical split
 octonion classification layer.
 -/
 theorem exists_nonzero_associator_of_not_scalar
-    {R : Type*} [CommRing R]
+    {R : Type*} [Ring R]
     {x : ZornMatrix R}
     (hx : ¬ ∃ r : R, x = r • (1 : ZornMatrix R)) :
     ∃ y z : ZornMatrix R, associatorDefect x y z ≠ 0 := by

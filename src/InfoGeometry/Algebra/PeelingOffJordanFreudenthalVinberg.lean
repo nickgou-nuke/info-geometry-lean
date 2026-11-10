@@ -220,36 +220,39 @@ end JordanAlgebraData
     4. Dynkin Node Peeling via Derivation Lie Subalgebras & Quotient Root-Spaces
     ========================================================================= -/
 
-variable {A : Type*} [AddCommGroup A] [Module R A]
+section DerivationPeeling
 
-/-- Leibniz derivation condition for a linear map $D : A \toₗ[R] A$ with respect to multiplication `mul`. -/
-def IsNonAssocDerivation (mul : A →ₗ[R] A →ₗ[R] A) (D : A →ₗ[R] A) : Prop :=
+variable {R₀ : Type*} [CommSemiring R₀]
+variable {A : Type*} [AddCommGroup A] [Module R₀ A]
+
+/-- Leibniz derivation condition for a linear map $D : A \toₗ[R₀] A$ with respect to multiplication `mul`. -/
+def IsNonAssocDerivation (mul : A →ₗ[R₀] A →ₗ[R₀] A) (D : A →ₗ[R₀] A) : Prop :=
   ∀ x y : A, D (mul x y) = mul (D x) y + mul x (D y)
 
 /-- Derivation Lie bracket $[D_1, D_2] = D_1 D_2 - D_2 D_1$. -/
-def derivationBracket (D1 D2 : A →ₗ[R] A) : A →ₗ[R] A :=
+def derivationBracket {R₁ : Type*} [Semiring R₁] [Module R₁ A] (D1 D2 : A →ₗ[R₁] A) : A →ₗ[R₁] A :=
   D1 ∘ₗ D2 - D2 ∘ₗ D1
 
 /-- 🏆 THEOREM: Derivations form a Lie algebra (the bracket of two derivations is a derivation). -/
 theorem derivation_bracket_is_derivation
-    (mul : A →ₗ[R] A →ₗ[R] A) (D1 D2 : A →ₗ[R] A)
+    (mul : A →ₗ[R₀] A →ₗ[R₀] A) (D1 D2 : A →ₗ[R₀] A)
     (h1 : IsNonAssocDerivation mul D1) (h2 : IsNonAssocDerivation mul D2) :
     IsNonAssocDerivation mul (derivationBracket D1 D2) := by
   intro x y
   dsimp [derivationBracket]
   simp only [LinearMap.sub_apply, map_sub]
   rw [h2 x y, h1 x y, D1.map_add, D2.map_add, h1 (D2 x) y, h1 x (D2 y), h2 (D1 x) y, h2 x (D1 y)]
-  module
+  abel
 
 /-- The stabilizer submodule of a vector $u \in A$:
     $\operatorname{Stab}(u) = \{ D \in \operatorname{End}(A) \mid D(u) = 0 \}$. -/
-def StabilizerSubmodule (u : A) : Submodule R (A →ₗ[R] A) where
+def StabilizerSubmodule (u : A) : Submodule R₀ (A →ₗ[R₀] A) where
   carrier := { D | D u = 0 }
   add_mem' {D1 D2} (h1 : D1 u = 0) (h2 : D2 u = 0) := by
     show (D1 + D2) u = 0
     rw [LinearMap.add_apply, h1, h2, add_zero]
   zero_mem' := by
-    show (0 : A →ₗ[R] A) u = 0
+    show (0 : A →ₗ[R₀] A) u = 0
     exact LinearMap.zero_apply u
   smul_mem' c D (h : D u = 0) := by
     show (c • D) u = 0
@@ -257,30 +260,30 @@ def StabilizerSubmodule (u : A) : Submodule R (A →ₗ[R] A) where
 
 /-- 🏆 THEOREM: The stabilizer $\operatorname{Stab}(u)$ is closed under the Lie bracket:
     $[D_1, D_2](u) = 0$ for all $D_1, D_2 \in \operatorname{Stab}(u)$. -/
-theorem stabilizer_bracket_closed (u : A) (D1 D2 : A →ₗ[R] A)
-    (h1 : D1 ∈ StabilizerSubmodule (R := R) u) (h2 : D2 ∈ StabilizerSubmodule (R := R) u) :
-    derivationBracket D1 D2 ∈ StabilizerSubmodule (R := R) u := by
+theorem stabilizer_bracket_closed (u : A) (D1 D2 : A →ₗ[R₀] A)
+    (h1 : D1 ∈ StabilizerSubmodule (R₀ := R₀) u) (h2 : D2 ∈ StabilizerSubmodule (R₀ := R₀) u) :
+    derivationBracket D1 D2 ∈ StabilizerSubmodule (R₀ := R₀) u := by
   dsimp [StabilizerSubmodule, derivationBracket] at h1 h2 ⊢
   show (D1 (D2 u) - D2 (D1 u)) = 0
   rw [h2, h1, map_zero, map_zero, sub_zero]
 
 /-- Successive two-point stabilizer $\operatorname{Stab}(u, v) = \operatorname{Stab}(u) \cap \operatorname{Stab}(v)$. -/
-def StabilizerPairSubmodule (u v : A) : Submodule R (A →ₗ[R] A) :=
-  StabilizerSubmodule (R := R) u ⊓ StabilizerSubmodule (R := R) v
+def StabilizerPairSubmodule (u v : A) : Submodule R₀ (A →ₗ[R₀] A) :=
+  StabilizerSubmodule (R₀ := R₀) u ⊓ StabilizerSubmodule (R₀ := R₀) v
 
 /-- 🏆 THEOREM (Dynkin Derivation Peeling Filtration):
     The stabilizer chain forms an exact decreasing filtration of Lie subalgebras:
     $$\operatorname{End}(A) \supseteq \operatorname{Stab}(u) \supseteq \operatorname{Stab}(u, v)$$ -/
 theorem derivation_peeling_chain_le (u v : A) :
-    StabilizerPairSubmodule (R := R) u v ≤ StabilizerSubmodule (R := R) u ∧
-    StabilizerPairSubmodule (R := R) u v ≤ StabilizerSubmodule (R := R) v :=
+    StabilizerPairSubmodule (R₀ := R₀) u v ≤ StabilizerSubmodule (R₀ := R₀) u ∧
+    StabilizerPairSubmodule (R₀ := R₀) u v ≤ StabilizerSubmodule (R₀ := R₀) v :=
   ⟨inf_le_left, inf_le_right⟩
 
 /-- 🏆 THEOREM: If $D \in \operatorname{Stab}(u)$ is a derivation, then $D$ annihilates $u^2$:
     $D(u \cdot u) = 0$. -/
 theorem stabilizer_preserves_square
-    (mul : A →ₗ[R] A →ₗ[R] A) (u : A) (D : A →ₗ[R] A)
-    (hder : IsNonAssocDerivation mul D) (hstab : D ∈ StabilizerSubmodule (R := R) u) :
+    (mul : A →ₗ[R₀] A →ₗ[R₀] A) (u : A) (D : A →ₗ[R₀] A)
+    (hder : IsNonAssocDerivation mul D) (hstab : D ∈ StabilizerSubmodule (R₀ := R₀) u) :
     D (mul u u) = 0 := by
   have hd := hder u u
   dsimp [StabilizerSubmodule] at hstab
@@ -294,20 +297,20 @@ theorem stabilizer_preserves_square
     5. Evaluation Maps and Quotient Root-Space Exact Identifications
     ========================================================================= -/
 
-/-- The evaluation linear map $\operatorname{eval}_u : \operatorname{End}(A) \toₗ[R] A$ sending $D \mapsto D(u)$. -/
-def evalLinear (u : A) : (A →ₗ[R] A) →ₗ[R] A where
+/-- The evaluation linear map $\operatorname{eval}_u : \operatorname{End}(A) \toₗ[R₀] A$ sending $D \mapsto D(u)$. -/
+def evalLinear (u : A) : (A →ₗ[R₀] A) →ₗ[R₀] A where
   toFun D := D u
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
 
-@[simp] theorem evalLinear_apply (u : A) (D : A →ₗ[R] A) :
-    evalLinear (R := R) u D = D u := rfl
+@[simp] theorem evalLinear_apply (u : A) (D : A →ₗ[R₀] A) :
+    evalLinear (R₀ := R₀) u D = D u := rfl
 
 /-- 🏆 THEOREM (First Peeling Kernel Identification):
     The kernel of the evaluation map at $u$ is identically the stabilizer $\operatorname{Stab}(u)$:
     $$\operatorname{ker}(\operatorname{eval}_u) = \operatorname{Stab}(u)$$ -/
 theorem ker_evalLinear_eq_stabilizer (u : A) :
-    LinearMap.ker (evalLinear (R := R) u) = StabilizerSubmodule (R := R) u := by
+    LinearMap.ker (evalLinear (R₀ := R₀) u) = StabilizerSubmodule (R₀ := R₀) u := by
   ext D
   simp [evalLinear, StabilizerSubmodule, LinearMap.mem_ker]
 
@@ -315,8 +318,8 @@ theorem ker_evalLinear_eq_stabilizer (u : A) :
     If $D \in \operatorname{Stab}(u)$ and $x \in A$ anticommutes with $u$ ($u \cdot x + x \cdot u = 0$),
     then $D(x)$ also anticommutes with $u$: $u \cdot D(x) + D(x) \cdot u = 0$. -/
 theorem stabilizer_preserves_anticommuting
-    (mul : A →ₗ[R] A →ₗ[R] A) (u x : A) (D : A →ₗ[R] A)
-    (hder : IsNonAssocDerivation mul D) (hstab : D ∈ StabilizerSubmodule (R := R) u)
+    (mul : A →ₗ[R₀] A →ₗ[R₀] A) (u x : A) (D : A →ₗ[R₀] A)
+    (hder : IsNonAssocDerivation mul D) (hstab : D ∈ StabilizerSubmodule (R₀ := R₀) u)
     (hanticomm : mul u x + mul x u = 0) :
     mul u (D x) + mul (D x) u = 0 := by
   have hd_ux := hder u x
@@ -333,5 +336,7 @@ theorem stabilizer_preserves_anticommuting
   have hx0 : mul x 0 = 0 := by simp
   rw [h0x, hx0, zero_add, add_zero] at hd_sum
   exact hd_sum.symm
+
+end DerivationPeeling
 
 end InfoGeometry.Algebra.PeelingOff

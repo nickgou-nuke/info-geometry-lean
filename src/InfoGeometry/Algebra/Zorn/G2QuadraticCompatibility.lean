@@ -15,7 +15,7 @@ orthogonality to the Dickson 3-form `Φ(u, v, w)`, and simultaneous `G₂(2)` in
 
 namespace InfoGeometry.Algebra.Zorn.G2QuadraticCompatibility
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! =========================================================================
     1. Quadratic Form, Polar Bilinear Form, and Basis Vectors
@@ -46,10 +46,19 @@ def basisVec (k : Fin 7) : Fin 7 → R
   | 6 => if k = 6 then 1 else 0
 
 /--
+THEOREM (Non-Commutative Polarization Identity):
+  `Q(u + v) = Q(u) + Q(v) + B(u, v) + B(v, u)`
+-/
+theorem quadForm_add_noncomm (u v : Fin 7 → R) :
+    quadForm (u + v) = quadForm u + quadForm v + bilinearForm u v + bilinearForm v u := by
+  dsimp [quadForm, bilinearForm]
+  noncomm_ring
+
+/--
 THEOREM (Polarization Identity):
   `Q(u + v) = Q(u) + Q(v) + 2 • B(u, v)`
 -/
-theorem quadForm_add (u v : Fin 7 → R) :
+theorem quadForm_add {R : Type*} [CommRing R] (u v : Fin 7 → R) :
     quadForm (u + v) = quadForm u + quadForm v + 2 * bilinearForm u v := by
   dsimp [quadForm, bilinearForm]
   ring
@@ -58,7 +67,7 @@ theorem quadForm_add (u v : Fin 7 → R) :
 THEOREM: The polar form `B(u, v)` is strictly symmetric:
   `B(u, v) = B(v, u)`
 -/
-theorem bilinearForm_symm (u v : Fin 7 → R) :
+theorem bilinearForm_symm {R : Type*} [CommRing R] (u v : Fin 7 → R) :
     bilinearForm u v = bilinearForm v u := by
   dsimp [bilinearForm]
   ring
@@ -70,7 +79,7 @@ THEOREM: Left linearity under vector addition:
 theorem bilinearForm_add_left (u₁ u₂ v : Fin 7 → R) :
     bilinearForm (u₁ + u₂) v = bilinearForm u₁ v + bilinearForm u₂ v := by
   dsimp [bilinearForm]
-  ring
+  noncomm_ring
 
 /--
 LEMMA: Sifting property of the standard basis vectors:
@@ -79,13 +88,13 @@ LEMMA: Sifting property of the standard basis vectors:
 theorem bilinearForm_basisVec (u : Fin 7 → R) (k : Fin 7) :
     bilinearForm (basisVec k) u = u k := by
   fin_cases k
-  · dsimp [bilinearForm, basisVec]; ring
-  · dsimp [bilinearForm, basisVec]; ring
-  · dsimp [bilinearForm, basisVec]; ring
-  · dsimp [bilinearForm, basisVec]; ring
-  · dsimp [bilinearForm, basisVec]; ring
-  · dsimp [bilinearForm, basisVec]; ring
-  · dsimp [bilinearForm, basisVec]; ring
+  · dsimp [bilinearForm, basisVec]; noncomm_ring
+  · dsimp [bilinearForm, basisVec]; noncomm_ring
+  · dsimp [bilinearForm, basisVec]; noncomm_ring
+  · dsimp [bilinearForm, basisVec]; noncomm_ring
+  · dsimp [bilinearForm, basisVec]; noncomm_ring
+  · dsimp [bilinearForm, basisVec]; noncomm_ring
+  · dsimp [bilinearForm, basisVec]; noncomm_ring
 
 /--
 THEOREM (Non-Degeneracy of the Bilinear Polar Form):
@@ -139,7 +148,7 @@ def dicksonTrilinear (u v w : Fin 7 → R) : R :=
 THEOREM (Cross Product Skew-Symmetry):
   `v × u = - (u × v)`
 -/
-theorem crossProd_skew (u v : Fin 7 → R) :
+theorem crossProd_skew {R : Type*} [CommRing R] (u v : Fin 7 → R) :
     crossProd v u = - crossProd u v := by
   funext i
   fin_cases i <;> { dsimp [crossProd]; ring }
@@ -147,20 +156,20 @@ theorem crossProd_skew (u v : Fin 7 → R) :
 /--
 MAIN THEOREM (Metric Pairing Duality):
 The bilinear pairing of the cross product with a third vector evaluates identically
-to the alternating Dickson 3-form:
+to the alternating Dickson 3-form over any non-commutative ring `[Ring R]`:
   `B(u × v, w) = Φ(u, v, w)`
 -/
 theorem bilinearForm_crossProd_eq_dicksonTrilinear (u v w : Fin 7 → R) :
     bilinearForm (crossProd u v) w = dicksonTrilinear u v w := by
   dsimp [bilinearForm, crossProd, dicksonTrilinear, det3]
-  ring
+  noncomm_ring
 
 /--
 THEOREM (Left Orthogonality):
 The cross product `u × v` is orthogonal to `u` under the metric:
   `B(u × v, u) = 0`
 -/
-theorem crossProd_orthogonal_left (u v : Fin 7 → R) :
+theorem crossProd_orthogonal_left {R : Type*} [CommRing R] (u v : Fin 7 → R) :
     bilinearForm (crossProd u v) u = 0 := by
   rw [bilinearForm_crossProd_eq_dicksonTrilinear]
   dsimp [dicksonTrilinear, det3]
@@ -171,7 +180,7 @@ THEOREM (Right Orthogonality):
 The cross product `u × v` is orthogonal to `v` under the metric:
   `B(u × v, v) = 0`
 -/
-theorem crossProd_orthogonal_right (u v : Fin 7 → R) :
+theorem crossProd_orthogonal_right {R : Type*} [CommRing R] (u v : Fin 7 → R) :
     bilinearForm (crossProd u v) v = 0 := by
   rw [bilinearForm_crossProd_eq_dicksonTrilinear]
   dsimp [dicksonTrilinear, det3]
@@ -210,17 +219,17 @@ theorem g2_preserves_quadratic (g : (Fin 7 → R) → (Fin 7 → R))
   calc
     (g x 0)^2 + (g x 1)^2 + (g x 2)^2 + (g x 3)^2 + (g x 4)^2 + (g x 5)^2 + (g x 6)^2
       = g x 0 * g x 0 + g x 1 * g x 1 + g x 2 * g x 2 + g x 3 * g x 3 +
-        g x 4 * g x 4 + g x 5 * g x 5 + g x 6 * g x 6 := by ring
+        g x 4 * g x 4 + g x 5 * g x 5 + g x 6 * g x 6 := by noncomm_ring
     _ = x 0 * x 0 + x 1 * x 1 + x 2 * x 2 + x 3 * x 3 +
         x 4 * x 4 + x 5 * x 5 + x 6 * x 6 := h_bilin
-    _ = (x 0)^2 + (x 1)^2 + (x 2)^2 + (x 3)^2 + (x 4)^2 + (x 5)^2 + (x 6)^2 := by ring
+    _ = (x 0)^2 + (x 1)^2 + (x 2)^2 + (x 3)^2 + (x 4)^2 + (x 5)^2 + (x 6)^2 := by noncomm_ring
 
 /--
 MAIN THEOREM (Equivariance of Fano Cross Product under G₂(2)):
 Every bijective `G₂(2)` automorphism commutes with the octonionic cross product:
   `g(u × v) = g(u) × g(v)`
 -/
-theorem g2_crossProd_equivariant
+theorem g2_crossProd_equivariant {R : Type*} [CommRing R]
     (g : (Fin 7 → R) → (Fin 7 → R))
     (g_inv : (Fin 7 → R) → (Fin 7 → R))
     (h_inv : ∀ v, g (g_inv v) = v)

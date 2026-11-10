@@ -10,7 +10,7 @@ Integration of the finite quantum topology into the infinite macroscopic limit.
 
 namespace InfoGeometry.Integration
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 variable (A : ℕ → Type*)
 variable [∀ n, AddCommGroup (A n)] [∀ n, Module R (A n)]
 variable (iota : ∀ n, A n →ₗ[R] A (n + 1))

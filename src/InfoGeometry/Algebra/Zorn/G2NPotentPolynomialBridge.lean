@@ -27,7 +27,7 @@ theorem pow_eq_self_iff_mul_pow_sub_one_eq_zero
   · exact sub_eq_zero.mp h
 
 theorem pow_eq_self_iff_eq_zero_or_pow_pred_eq_one
-    {R : Type*} [Field R] (n : ℕ) (hn : 2 ≤ n) (x : R) :
+    {R : Type*} [Ring R] [NoZeroDivisors R] (n : ℕ) (hn : 2 ≤ n) (x : R) :
     x ^ n = x ↔ x = 0 ∨ x ^ (n - 1) = 1 := by
   constructor
   · intro h

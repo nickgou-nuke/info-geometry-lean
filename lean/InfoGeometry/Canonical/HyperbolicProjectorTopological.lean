@@ -11,11 +11,13 @@ involution with a split-octonion element, a Clifford generator, or a physical
 time direction.
 -/
 
+def hyperbolicProjectorPlus {R : Type*} [DivisionRing R] (u : R) : R := (1 / 2 : R) * (1 + u)
+
+def hyperbolicProjectorMinus {R : Type*} [DivisionRing R] (u : R) : R := (1 / 2 : R) * (1 - u)
+
+section Field
+
 variable {R : Type*} [Field R] [CharZero R]
-
-def hyperbolicProjectorPlus (u : R) : R := (1 / 2 : R) * (1 + u)
-
-def hyperbolicProjectorMinus (u : R) : R := (1 / 2 : R) * (1 - u)
 
 theorem hyperbolicProjectorPlus_idempotent (u : R) (hu : u * u = 1) :
     hyperbolicProjectorPlus u * hyperbolicProjectorPlus u =
@@ -46,12 +48,14 @@ theorem hyperbolicProjectors_orthogonal (u : R) (hu : u * u = 1) :
     _ = (1 / 4 : R) * (1 - 1) := by rw [hu]
     _ = 0 := by ring
 
-theorem hyperbolicProjectors_resolve_identity (u : R) :
+end Field
+
+theorem hyperbolicProjectors_resolve_identity {R : Type*} [DivisionRing R] [CharZero R] (u : R) :
     hyperbolicProjectorPlus u + hyperbolicProjectorMinus u = 1 := by
   dsimp [hyperbolicProjectorPlus, hyperbolicProjectorMinus]
-  ring
+  rw [← mul_add, add_add_sub_cancel, ← two_mul, mul_one, one_div_mul_cancel (NeZero.ne (2 : R))]
 
-theorem hyperbolicProjectors_complete (u : R) (hu : u * u = 1) :
+theorem hyperbolicProjectors_complete {R : Type*} [Field R] [CharZero R] (u : R) (hu : u * u = 1) :
     (hyperbolicProjectorPlus u * hyperbolicProjectorPlus u =
         hyperbolicProjectorPlus u) ∧
     (hyperbolicProjectorMinus u * hyperbolicProjectorMinus u =
@@ -63,26 +67,27 @@ theorem hyperbolicProjectors_complete (u : R) (hu : u * u = 1) :
     hyperbolicProjectors_orthogonal u hu,
     hyperbolicProjectors_resolve_identity u⟩
 
-variable [TopologicalSpace R] [ContinuousAdd R] [ContinuousMul R]
-  [ContinuousSub R] [ContinuousConstSMul R R]
+def hyperbolicInvolutionLocus {R : Type*} [Ring R] : Set R := {u | u * u = 1}
 
-def hyperbolicInvolutionLocus : Set R := {u | u * u = 1}
-
-theorem hyperbolicInvolutionLocus_closed [T1Space R] :
+theorem hyperbolicInvolutionLocus_closed {R : Type*} [Ring R] [TopologicalSpace R]
+    [ContinuousMul R] [T1Space R] :
     IsClosed (hyperbolicInvolutionLocus (R := R)) := by
   change IsClosed ((fun u : R => u * u) ⁻¹' ({1} : Set R))
   exact isClosed_singleton.preimage (continuous_id.mul continuous_id)
 
-def hyperbolicProjectorReadout : {u : R // u * u = 1} → R × R :=
+def hyperbolicProjectorReadout {R : Type*} [DivisionRing R] : {u : R // u * u = 1} → R × R :=
   fun u => (hyperbolicProjectorPlus u.1, hyperbolicProjectorMinus u.1)
 
-theorem continuous_hyperbolicProjectorReadout :
+theorem continuous_hyperbolicProjectorReadout {R : Type*} [DivisionRing R]
+    [TopologicalSpace R] [ContinuousAdd R] [ContinuousMul R]
+    [ContinuousSub R] [ContinuousConstSMul R R] :
     Continuous (hyperbolicProjectorReadout (R := R)) := by
   change Continuous (fun u : {u : R // u * u = 1} =>
     ((1 / 2 : R) * (1 + u.1), (1 / 2 : R) * (1 - u.1)))
   fun_prop
 
-theorem hyperbolicProjectorReadout_spec (u : {u : R // u * u = 1}) :
+theorem hyperbolicProjectorReadout_spec {R : Type*} [DivisionRing R]
+    (u : {u : R // u * u = 1}) :
     hyperbolicProjectorReadout u =
       (hyperbolicProjectorPlus u.1, hyperbolicProjectorMinus u.1) := rfl
 

@@ -21,6 +21,138 @@ open InfoGeometry.Core.JordanMultiplicationClosure
 
 attribute [local instance] LieRing.ofAssociativeRing
 
+section RingAlgebra
+
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
+
+/-- Inner commutator endomorphism over any `[Ring R]`. -/
+def ringAd (u : A) : Module.End R A :=
+  LinearMap.mulLeft R u - LinearMap.mulRight R u
+
+@[simp] theorem ringAd_apply (u x : A) :
+    ringAd (R := R) u x = u * x - x * u := rfl
+
+@[simp] theorem ringAd_zero :
+    ringAd (R := R) (0 : A) = 0 := by
+  ext x
+  simp [ringAd]
+
+local notation "Dᵣ" => ringAd (R := R)
+local notation "J" => jordanLeft (R := R)
+local notation "L" => LinearMap.mulLeft R
+local notation "M" => LinearMap.mulRight R
+
+theorem ring_lie_jordan_sum (u v : A) :
+    Dᵣ u * J v + Dᵣ v * J u = Dᵣ (u * v + v * u) := by
+  ext x
+  change (u * (v * x + x * v) - (v * x + x * v) * u) +
+    (v * (u * x + x * u) - (u * x + x * u) * v) =
+      (u * v + v * u) * x - x * (u * v + v * u)
+  noncomm_ring
+
+theorem ring_jordan_lie_sum (u v : A) :
+    J u * Dᵣ v + J v * Dᵣ u = Dᵣ (u * v + v * u) := by
+  ext x
+  change (u * (v * x - x * v) + (v * x - x * v) * u) +
+    (v * (u * x - x * u) + (u * x - x * u) * v) =
+      (u * v + v * u) * x - x * (u * v + v * u)
+  noncomm_ring
+
+theorem ring_lie_jordan_difference (u v : A) :
+    Dᵣ u * J v - Dᵣ v * J u =
+      J ⁅u, v⁆ + 2 • (L u * M v - L v * M u) := by
+  ext x
+  change (u * (v * x + x * v) - (v * x + x * v) * u) -
+    (v * (u * x + x * u) - (u * x + x * u) * v) =
+      (u * v - v * u) * x + x * (u * v - v * u) +
+        2 • (u * (x * v) - v * (x * u))
+  simp only [two_nsmul]
+  noncomm_ring
+
+theorem ring_jordan_lie_difference (u v : A) :
+    J u * Dᵣ v - J v * Dᵣ u =
+      J ⁅u, v⁆ - 2 • (L u * M v - L v * M u) := by
+  ext x
+  change (u * (v * x - x * v) + (v * x - x * v) * u) -
+    (v * (u * x - x * u) + (u * x - x * u) * v) =
+      (u * v - v * u) * x + x * (u * v - v * u) -
+        2 • (u * (x * v) - v * (x * u))
+  simp only [two_nsmul]
+  noncomm_ring
+
+theorem ring_lie_lie_sum (u v : A) :
+    Dᵣ u * Dᵣ v + Dᵣ v * Dᵣ u =
+      J (u * v + v * u) - 2 • (L u * M v + L v * M u) := by
+  ext x
+  change (u * (v * x - x * v) - (v * x - x * v) * u) +
+    (v * (u * x - x * u) - (u * x - x * u) * v) =
+      (u * v + v * u) * x + x * (u * v + v * u) -
+        2 • (u * (x * v) + v * (x * u))
+  simp only [two_nsmul]
+  noncomm_ring
+
+theorem ring_jordan_jordan_sum (u v : A) :
+    J u * J v + J v * J u =
+      J (u * v + v * u) + 2 • (L u * M v + L v * M u) := by
+  ext x
+  change (u * (v * x + x * v) + (v * x + x * v) * u) +
+    (v * (u * x + x * u) + (u * x + x * u) * v) =
+      (u * v + v * u) * x + x * (u * v + v * u) +
+        2 • (u * (x * v) + v * (x * u))
+  simp only [two_nsmul]
+  noncomm_ring
+
+theorem ring_pure_composition_difference (u v : A) :
+    (J u * J v + J v * J u) - (Dᵣ u * Dᵣ v + Dᵣ v * Dᵣ u) =
+      4 • (L u * M v + L v * M u) := by
+  rw [ring_jordan_jordan_sum, ring_lie_lie_sum]
+  abel
+
+theorem ring_pure_composition_sum (u v : A) :
+    (J u * J v + J v * J u) + (Dᵣ u * Dᵣ v + Dᵣ v * Dᵣ u) =
+      2 • J (u * v + v * u) := by
+  rw [ring_jordan_jordan_sum, ring_lie_lie_sum]
+  abel
+
+theorem ring_lie_jordan_same (u : A) : Dᵣ u * J u = Dᵣ (u * u) := by
+  ext x
+  change u * (u * x + x * u) - (u * x + x * u) * u =
+    (u * u) * x - x * (u * u)
+  noncomm_ring
+
+theorem ring_jordan_lie_same (u : A) : J u * Dᵣ u = Dᵣ (u * u) := by
+  ext x
+  change u * (u * x - x * u) + (u * x - x * u) * u =
+    (u * u) * x - x * (u * u)
+  noncomm_ring
+
+theorem ring_lie_action_square (u : A) :
+    Dᵣ u * Dᵣ u = J (u * u) - 2 • (L u * M u) := by
+  ext x
+  change u * (u * x - x * u) - (u * x - x * u) * u =
+    (u * u) * x + x * (u * u) - 2 • (u * (x * u))
+  simp only [two_nsmul]
+  noncomm_ring
+
+theorem ring_jordan_action_square (u : A) :
+    J u * J u = J (u * u) + 2 • (L u * M u) := by
+  ext x
+  change u * (u * x + x * u) + (u * x + x * u) * u =
+    (u * u) * x + x * (u * u) + 2 • (u * (x * u))
+  simp only [two_nsmul]
+  noncomm_ring
+
+theorem ring_lie_jordan_eq_zero_of_square_zero (u : A) (hu : u * u = 0) :
+    Dᵣ u * J u = 0 := by
+  rw [ring_lie_jordan_same, hu, ringAd_zero]
+
+theorem ring_jordan_lie_eq_zero_of_square_zero (u : A) (hu : u * u = 0) :
+    J u * Dᵣ u = 0 := by
+  rw [ring_jordan_lie_same, hu, ringAd_zero]
+
+end RingAlgebra
+
 section Algebra
 
 variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
@@ -148,7 +280,18 @@ end Algebra
 
 section Trace
 
-variable {n R : Type*} [Fintype n] [CommRing R]
+variable {n : Type*} [Fintype n]
+
+/-- Over a non-commutative ring `[Ring R]`, the matrix trace of the symmetric
+sandwich `u * x * v + v * x * u` differs from `((u * v + v * u) * x).trace` by the
+exact sum of matrix commutator traces `((u * x) * v - v * (u * x)).trace + ((v * x) * u - u * (v * x)).trace`. -/
+theorem trace_symmetric_sandwich_noncomm {R : Type*} [Ring R] (u v x : Matrix n n R) :
+    (u * x * v + v * x * u).trace - ((u * v + v * u) * x).trace =
+      ((u * x) * v - v * (u * x)).trace + ((v * x) * u - u * (v * x)).trace := by
+  simp only [add_mul, Matrix.mul_assoc, Matrix.trace_add, Matrix.trace_sub]
+  abel
+
+variable {R : Type*} [CommRing R]
 
 /-- Cyclic trace gives this transport identity for every input, without parity. -/
 theorem trace_symmetric_sandwich (u v x : Matrix n n R) :

@@ -24,6 +24,33 @@ open InfoGeometry.Algebra.PeirceDeWittChiralSplit
 open scoped Matrix
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
+
+/-- An ordered bilinear trace form over any ring `[Ring R]`. It is not a symmetric metric in general. -/
+def weightedTrace {R : Type*} [Ring R] (P X Y : Matrix n n R) : R := trace (grading P * X * Y)
+
+/-- Over a noncommutative ring `[Ring R]`, the asymmetry of `weightedTrace` relative to the
+grading commutator is the cyclic trace commutator anomaly
+`trace (X * grading P * Y) - trace (grading P * Y * X)`. -/
+theorem weightedTrace_asymmetry_noncomm_anomaly {R : Type*} [Ring R] (P X Y : Matrix n n R) :
+    (weightedTrace P X Y - weightedTrace P Y X) -
+      trace ((grading P * X - X * grading P) * Y) =
+      trace (X * grading P * Y) - trace (grading P * Y * X) := by
+  unfold weightedTrace
+  rw [sub_mul, trace_sub]
+  abel
+
+/-- Over a noncommutative ring `[Ring R]`, the symmetric part of `weightedTrace` relative to the
+grading anticommutator is the cyclic trace commutator anomaly
+`trace (grading P * Y * X) - trace (X * grading P * Y)`. -/
+theorem weightedTrace_symmetric_part_noncomm_anomaly {R : Type*} [Ring R] (P X Y : Matrix n n R) :
+    (weightedTrace P X Y + weightedTrace P Y X) -
+      trace ((grading P * X + X * grading P) * Y) =
+      trace (grading P * Y * X) - trace (X * grading P * Y) := by
+  unfold weightedTrace
+  rw [add_mul, trace_add]
+  abel
+
+section CommTrace
 variable {R : Type*} [CommRing R]
 
 /-- Cyclicity reduces a product of opposing corners without commuting matrices. -/
@@ -57,9 +84,6 @@ theorem trace_four_corners {P : Matrix n n R} (hP : IsIdempotent P)
   congr 1
   simp only [compIdempotent]
   noncomm_ring
-
-/-- An ordered bilinear trace form. It is not a symmetric metric in general. -/
-def weightedTrace (P X Y : Matrix n n R) : R := trace (grading P * X * Y)
 
 /-- Diagonal and opposing off-diagonal terms have their exact ordered signs. -/
 theorem weightedTrace_four_corners {P : Matrix n n R} (hP : IsIdempotent P)
@@ -113,9 +137,11 @@ theorem weightedTrace_odd_skew {P : Matrix n n R} (hP : IsIdempotent P)
   rw [weightedTrace_symmetric_part, grading_anticommutes_oddPart P hP X]
   simp
 
+end CommTrace
+
 section Star
 
-variable [StarRing R]
+variable {R : Type*} [Ring R] [StarRing R]
 
 /-- A separate sesquilinear form on full matrices. -/
 def kreinTrace (P X Y : Matrix n n R) : R := trace (Xᴴ * grading P * Y)

@@ -28,7 +28,7 @@ namespace InfoGeometry.Canonical.KreinDoubledCartanPeirce
 
 open Matrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The fundamental Krein symmetry matrix η = σ₃. -/
 def eta : Matrix (Fin 2) (Fin 2) R :=
@@ -100,17 +100,17 @@ def kreinBilinear (u v : Fin 2 → R) : R :=
 /-- Matrix evaluation: ⟨u, v⟩_η = u · (η v). -/
 theorem kreinBilinear_matrix_eval (u v : Fin 2 → R) :
     kreinBilinear u v = u 0 * (eta *ᵥ v) 0 + u 1 * (eta *ᵥ v) 1 := by
-  simp [kreinBilinear, Matrix.mulVec, eta, Matrix.vecHead, Matrix.vecTail]
-  ring
+  simp [kreinBilinear, Matrix.mulVec, eta, Matrix.vecHead, Matrix.vecTail, dotProduct,
+    Fin.sum_univ_two, sub_eq_add_neg]
 
 /-- Symmetry of the Krein inner product: ⟨u, v⟩_η = ⟨v, u⟩_η. -/
-theorem kreinBilinear_symm (u v : Fin 2 → R) :
+theorem kreinBilinear_symm {R : Type*} [CommRing R] (u v : Fin 2 → R) :
     kreinBilinear u v = kreinBilinear v u := by
   simp [kreinBilinear]
   ring
 
 /-- Master synthesis packet for Stratum 36. -/
-structure KreinCartanPeircePacket (R : Type*) [CommRing R] where
+structure KreinCartanPeircePacket (R : Type*) [Ring R] where
   eta_is_involution : eta (R := R) * eta = 1
   peirce_completeness : P_plus (R := R) + P_minus = 1
   eta_is_peirce_diff : eta (R := R) = P_plus - P_minus
@@ -118,7 +118,7 @@ structure KreinCartanPeircePacket (R : Type*) [CommRing R] where
   cartan_odd_inverted : ∀ b c : R, eta * !![0, b; c, 0] * eta = -!![0, b; c, 0]
 
 /-- Zero-debt constructor for Stratum 36 packet. -/
-def makeKreinCartanPeircePacket (R : Type*) [CommRing R] : KreinCartanPeircePacket R where
+def makeKreinCartanPeircePacket (R : Type*) [Ring R] : KreinCartanPeircePacket R where
   eta_is_involution := eta_sq
   peirce_completeness := P_plus_add_P_minus
   eta_is_peirce_diff := eta_eq_sub

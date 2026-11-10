@@ -17,7 +17,7 @@ assert neither positivity nor normalization nor an analytic KMS condition.
 namespace InfoGeometry.Canonical.ReflexiveNilpotentFlows
 open UnifiedGeometryOperatorSignificance
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {R A : Type*} [Ring R] [Ring A] [Module R A] [IsScalarTower R A A]
 
 /-- The two weights have the same ordering as the existing support owner. -/
 theorem pairMatrixLinear_weight (d B : A) (u v : R) :
@@ -39,6 +39,9 @@ theorem cyclic_weighted_balance (τ : A →ₗ[R] R)
     _ = b * τ (ρ * (Y * x)) := by
       rw [mul_assoc x ρ Y, hcyclic x (ρ * Y), mul_assoc ρ Y x]
 
+section CommScalars
+variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+
 theorem cyclic_support_balance_d (τ : A →ₗ[R] R)
     (hcyclic : ∀ x y : A, τ (x * y) = τ (y * x))
     {d B : A} (hd : d * d = 0) (hr : d * B * d = d) (u v : R) (Y : A) :
@@ -54,5 +57,7 @@ theorem cyclic_support_balance_B (τ : A →ₗ[R] R)
       (u * u) * τ (kmsModularWeight u v d B * (Y * B)) :=
   cyclic_weighted_balance τ hcyclic _ _ _ _ Y
     (kmsModularWeight_intertwines_B hB hs u v)
+
+end CommScalars
 
 end InfoGeometry.Canonical.ReflexiveNilpotentFlows

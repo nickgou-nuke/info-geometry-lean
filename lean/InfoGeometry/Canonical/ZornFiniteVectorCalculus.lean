@@ -17,7 +17,7 @@ open InfoGeometry.Algebra
 open InfoGeometry.Algebra.ZornVec3
 open InfoGeometry.Canonical.ZornPotentialDifferentialReadout
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 structure DifferentialCarrier where
   timeDerivative : R → R
@@ -74,7 +74,7 @@ theorem divergence_curl (D : DifferentialCarrier (R := R)) (v : ZornVec3 R) :
   rw [D.spatial_commute 0 1 (v 2), D.spatial_commute 0 2 (v 1),
     D.spatial_commute 1 2 (v 0), D.spatial_commute 1 0 (v 2),
     D.spatial_commute 2 0 (v 1), D.spatial_commute 2 1 (v 0)]
-  ring
+  abel
 
 def potentialData
     (D : DifferentialCarrier (R := R)) (scalar : R) (vector : ZornVec3 R) :

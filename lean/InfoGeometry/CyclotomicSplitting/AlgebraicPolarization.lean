@@ -40,7 +40,7 @@ end Cancellation
 
 section Normalization
 
-variable {Scalar : Type*} [Field Scalar]
+variable {Scalar : Type*} [DivisionRing Scalar]
 
 def normalizedPhase (order index : ℕ) (root : Scalar) : Scalar :=
   (order : Scalar)⁻¹ * root ^ index

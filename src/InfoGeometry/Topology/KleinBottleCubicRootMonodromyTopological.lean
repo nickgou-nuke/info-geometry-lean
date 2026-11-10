@@ -71,14 +71,13 @@ def cubicRootChargeReadout (q : CubicRootParameter) : ColourOperator :=
 /-- Continuity of `cubicRootChargeReadout` on the discrete parameter subtype. -/
 theorem continuous_cubicRootChargeReadout :
     Continuous cubicRootChargeReadout := by
-  unfold cubicRootChargeReadout
   exact continuous_of_discreteTopology
 
 /-- Local constancy of `cubicRootChargeReadout` on the discrete parameter subtype. -/
 theorem isLocallyConstant_cubicRootChargeReadout :
     IsLocallyConstant cubicRootChargeReadout := by
-  unfold cubicRootChargeReadout
-  exact IsLocallyConstant.of_discrete
+  intro s
+  exact isOpen_discrete _
 
 /-- Every member of the family `cubicRootChargeReadout` has order three. -/
 theorem cubicRootChargeReadout_cube (q : CubicRootParameter) :

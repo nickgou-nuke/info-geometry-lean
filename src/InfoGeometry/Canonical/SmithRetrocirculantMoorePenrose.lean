@@ -24,7 +24,7 @@ universe u
 /-- Algebraic doubly-sided Penrose equations without conjugation.  This is the
 finite exact-rational form used by the CAS witnesses; the complex/unitary
 Moore--Penrose interpretation is supplied by owner certificates below. -/
-def AlgebraicMoorePenrosePair {K : Type u} [Field K] {n : ℕ}
+def AlgebraicMoorePenrosePair {K : Type u} [Ring K] {n : ℕ}
     (A Aplus : Matrix (Fin n) (Fin n) K) : Prop :=
   A * Aplus * A = A ∧
     Aplus * A * Aplus = Aplus ∧
@@ -40,7 +40,7 @@ def retro2Plus {K : Type u} [DivisionSemiring K] (a b : K) : Matrix (Fin 2) (Fin
   !![0, a⁻¹; b⁻¹, 0]
 
 /-- Exact Penrose equations for the nonzero `2 × 2` retrocirculant block. -/
-theorem retro2_penrose {K : Type u} [Field K] {a b : K}
+theorem retro2_penrose {K : Type u} [DivisionRing K] {a b : K}
     (ha : a ≠ 0) (hb : b ≠ 0) :
     AlgebraicMoorePenrosePair (retro2 a b) (retro2Plus a b) := by
   refine ⟨?_, ?_, ?_, ?_⟩
@@ -55,7 +55,7 @@ theorem retro2_penrose {K : Type u} [Field K] {a b : K}
 
 /-- Smith retrocirculant data: `A = P C`, with Fourier-commutation and
 circulant status left as explicit predicates owned by the spectral layer. -/
-structure RetrocirculantData (K : Type u) [Field K] {n : ℕ}
+structure RetrocirculantData (K : Type u) [Ring K] {n : ℕ}
     (A P C : Matrix (Fin n) (Fin n) K) where
   isCirculant : Matrix (Fin n) (Fin n) K → Prop
   commutesWithFourier : Matrix (Fin n) (Fin n) K → Prop
@@ -66,7 +66,7 @@ structure RetrocirculantData (K : Type u) [Field K] {n : ℕ}
 
 namespace RetrocirculantData
 
-variable {K : Type u} [Field K] {n : ℕ}
+variable {K : Type u} [Ring K] {n : ℕ}
 variable {A P C : Matrix (Fin n) (Fin n) K}
 /-- Read out Smith's definition of a retrocirculant. -/
 theorem as_product (R : RetrocirculantData K A P C) : A = P * C := by
@@ -79,7 +79,7 @@ end RetrocirculantData
 /-- Certificate for Smith Theorem 1: `A = P C` is retrocirculant iff `A⁺` is
 retrocirculant, and in that case `A⁺ = C⁺ Pᵀ`. -/
 structure SmithMoorePenroseRetrocirculantCertificate
-    (K : Type u) [Field K] {n : ℕ}
+    (K : Type u) [Ring K] {n : ℕ}
     (A Aplus P C Cplus : Matrix (Fin n) (Fin n) K) where
   retro : RetrocirculantData K A P C
   penroseC : AlgebraicMoorePenrosePair C Cplus
@@ -91,7 +91,7 @@ structure SmithMoorePenroseRetrocirculantCertificate
 
 namespace SmithMoorePenroseRetrocirculantCertificate
 
-variable {K : Type u} [Field K] {n : ℕ}
+variable {K : Type u} [Ring K] {n : ℕ}
 variable {A Aplus P C Cplus : Matrix (Fin n) (Fin n) K}
 /-- Smith's Moore--Penrose inverse formula. -/
 theorem moorePenrose_formula (S : SmithMoorePenroseRetrocirculantCertificate K A Aplus P C Cplus) : Aplus = Cplus * Matrix.transpose P := by
@@ -116,7 +116,7 @@ end SmithMoorePenroseRetrocirculantCertificate
 /-- Block diagonal similarity/eigenvalue certificate from Smith Lemma 4 and
 Theorem 3. -/
 structure RetrocirculantSpectralBlockCertificate
-    (K : Type u) [Field K] [StarRing K] {n : ℕ}
+    (K : Type u) [DivisionRing K] [StarRing K] {n : ℕ}
     (A : Matrix (Fin n) (Fin n) K) where
   /-- Concrete block normal form and its change of basis. -/
   blockMatrix : Matrix (Fin n) (Fin n) K
@@ -132,7 +132,7 @@ structure RetrocirculantSpectralBlockCertificate
 
 namespace RetrocirculantSpectralBlockCertificate
 
-variable {K : Type u} [Field K] [StarRing K] {n : ℕ}
+variable {K : Type u} [DivisionRing K] [StarRing K] {n : ℕ}
 variable {A : Matrix (Fin n) (Fin n) K}
 variable (S : RetrocirculantSpectralBlockCertificate K A)
 
@@ -160,7 +160,7 @@ end RetrocirculantSpectralBlockCertificate
 
 /-- Algebraic closure system for Smith Theorems 4 and 5. -/
 structure RetrocirculantClosureSystem
-    (K : Type u) [Field K] {n : ℕ} where
+    (K : Type u) [Ring K] {n : ℕ} where
   isCirculant : Matrix (Fin n) (Fin n) K → Prop
   isRetrocirculant : Matrix (Fin n) (Fin n) K → Prop
   adjointClosure : ∀ A, isRetrocirculant A → isRetrocirculant (Matrix.transpose A)
@@ -171,7 +171,7 @@ structure RetrocirculantClosureSystem
 
 namespace RetrocirculantClosureSystem
 
-variable {K : Type u} [Field K] {n : ℕ}
+variable {K : Type u} [Ring K] {n : ℕ}
 variable (C : RetrocirculantClosureSystem K (n := n))
 
 /-- Product of two retrocirculants is circulant. -/

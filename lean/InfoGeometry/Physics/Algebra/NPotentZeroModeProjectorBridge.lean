@@ -20,7 +20,7 @@ noncomputable section
 
 namespace InfoGeometry.Physics.Algebra.NPotentZeroModeProjectorBridge
 
-variable {R : Type*} [CommRing R] {V : Type*} [AddCommGroup V] [Module R V]
+variable {R : Type*} [Ring R] {V : Type*} [AddCommGroup V] [Module R V]
 
 /-- Canonical degree-(N-1) zero-mode projector: P₀^{(N)} = I - T^{N-1}. -/
 def nPotentZeroProjector (N : ℕ) (T : Module.End R V) : Module.End R V :=

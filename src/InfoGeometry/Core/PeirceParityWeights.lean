@@ -24,7 +24,10 @@ open InfoGeometry.Core.PeirceReflectionContracts
 open InfoGeometry.Core.DiracSuperalgebra
 open InfoGeometry.Singular.MoorePenrose
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A] {d b : A}
+section Noncomm
+
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A] {d b : A}
 
 /-- Preserve the source's actual algebraic combination without its physical label. -/
 def oddCombination (α β : R) (d b : A) : A :=
@@ -50,8 +53,8 @@ theorem combination_anticommutes (h : IsDualSeedPair d b) (α β : R) :
         transitionVelocity d b * phasePolarization d b) +
       β • (phasePolarization d b * wheelGenerator d b +
         wheelGenerator d b * phasePolarization d b) := by
-        simp only [oddCombination, mul_add, add_mul, mul_smul_comm, smul_mul_assoc]
-        module
+        simp only [oddCombination, mul_add, add_mul, mul_smul_comm, smul_mul_assoc, smul_add]
+        abel
     _ = 0 := by rw [h.polarization_velocity, hj, smul_zero, smul_zero, add_zero]
 
 /-- Exact parity action, not an identification of this action with physical CP. -/
@@ -62,7 +65,7 @@ theorem combination_reflection (h : IsDualSeedPair d b) (α β : R) :
     (reflection_generator_parities h).1, (reflection_generator_parities h).2,
     smul_neg, neg_smul]
 
-/-- Fixed and negative-fixed defects need no cancellation of two. -/
+/-- Fixed and negative-fixed defects over any noncommutative ring `R`, needing no cancellation of two. -/
 theorem combination_defects (h : IsDualSeedPair d b) (α β : R) :
     transitionVelocity d b * oddCombination α β d b * transitionVelocity d b -
       oddCombination α β d b = -((2 * β) • wheelGenerator d b) ∧
@@ -70,7 +73,8 @@ theorem combination_defects (h : IsDualSeedPair d b) (α β : R) :
       oddCombination α β d b = (2 * α) • transitionVelocity d b := by
   rw [combination_reflection h]
   unfold oddCombination
-  constructor <;> module
+  simp only [two_mul, add_smul, neg_smul]
+  constructor <;> abel
 
 /-- Exact fixed-point criterion includes torsion and degenerate seeds. -/
 theorem combination_fixed_iff (h : IsDualSeedPair d b) (α β : R) :
@@ -84,6 +88,7 @@ theorem combination_negfixed_iff (h : IsDualSeedPair d b) (α β : R) :
       -oddCombination α β d b ↔ (2 * α) • transitionVelocity d b = 0 := by
   rw [eq_neg_iff_add_eq_zero, (combination_defects h α β).2]
 
+omit [IsScalarTower R A A] in
 /-- The chiral observable reads the signed difference of diagonal weights. -/
 theorem grading_weight (h : IsDualSeedPair d b) (x y : R) :
     phasePolarization d b * diagonalWeight x y d b =
@@ -91,9 +96,61 @@ theorem grading_weight (h : IsDualSeedPair d b) (x y : R) :
   change (polePlus d b - poleMinus d b) *
     (x • polePlus d b + y • poleMinus d b) = _
   simp only [mul_add, sub_mul, mul_smul_comm, h.pp, h.pq, h.qp, h.qq,
-    sub_zero, zero_sub]
-  module
+    sub_zero, zero_sub, smul_neg, ← sub_eq_add_neg]
 
+/-- Over a noncommutative coefficient ring `R`, squaring `u • d + v • b` breaks the symmetry
+between `polePlus d b` and `poleMinus d b` by the commutator anomaly `(v * u - u * v) • poleMinus d b`. -/
+theorem one_pair_mix_square_noncomm_anomaly (h : IsDualSeedPair d b) (u v : R) :
+    (u • d + v • b) * (u • d + v • b) - (u * v) • carrierSupport d b =
+      (v * u - u * v) • poleMinus d b := by
+  have hdb : d * b = polePlus d b := rfl
+  have hbd : b * d = poleMinus d b := rfl
+  have hcs : carrierSupport d b = polePlus d b + poleMinus d b := by rfl
+  have h₄ : (u • d) * (u • d) = 0 := by
+    calc
+      (u • d) * (u • d) = u • (d * (u • d)) := by rw [smul_mul_assoc]
+      _ = u • (u • (d * d)) := by rw [mul_smul_comm]
+      _ = (u * u) • (d * d) := by rw [smul_smul]
+      _ = (u * u) • 0 := by rw [h.d_sq]
+      _ = 0 := by rw [smul_zero]
+  have h₅ : (u • d) * (v • b) = (u * v) • polePlus d b := by
+    calc
+      (u • d) * (v • b) = u • (d * (v • b)) := by rw [smul_mul_assoc]
+      _ = u • (v • (d * b)) := by rw [mul_smul_comm]
+      _ = (u * v) • (d * b) := by rw [smul_smul]
+      _ = (u * v) • polePlus d b := by rw [hdb]
+  have h₆ : (v • b) * (u • d) = (v * u) • poleMinus d b := by
+    calc
+      (v • b) * (u • d) = v • (b * (u • d)) := by rw [smul_mul_assoc]
+      _ = v • (u • (b * d)) := by rw [mul_smul_comm]
+      _ = (v * u) • (b * d) := by rw [smul_smul]
+      _ = (v * u) • poleMinus d b := by rw [hbd]
+  have h₇ : (v • b) * (v • b) = 0 := by
+    calc
+      (v • b) * (v • b) = v • (b * (v • b)) := by rw [smul_mul_assoc]
+      _ = v • (v • (b * b)) := by rw [mul_smul_comm]
+      _ = (v * v) • (b * b) := by rw [smul_smul]
+      _ = (v * v) • 0 := by rw [h.b_sq]
+      _ = 0 := by rw [smul_zero]
+  have h₈ : (u • d + v • b) * (u • d + v • b) = (u * v) • polePlus d b + (v * u) • poleMinus d b := by
+    calc
+      (u • d + v • b) * (u • d + v • b)
+        = (u • d) * (u • d + v • b) + (v • b) * (u • d + v • b) := by rw [add_mul]
+      _ = (u • d) * (u • d) + (u • d) * (v • b) + (v • b) * (u • d) + (v • b) * (v • b) := by
+        rw [mul_add, mul_add]
+        <;> simp [add_assoc]
+      _ = 0 + (u * v) • polePlus d b + (v * u) • poleMinus d b + 0 := by
+        rw [h₄, h₅, h₆, h₇]
+      _ = (u * v) • polePlus d b + (v * u) • poleMinus d b := by
+        abel
+  have h₉ : (u • d + v • b) * (u • d + v • b) - (u * v) • carrierSupport d b = (v * u - u * v) • poleMinus d b := by
+    rw [hcs]
+    rw [h₈]
+    rw [smul_add]
+    abel <;> simp [add_smul]
+  exact h₉
+
+omit [IsScalarTower R A A] in
 /-- Traciality derives equal support traces; it is not a separate supplied equality. -/
 theorem trace_weights (h : IsDualSeedPair d b)
     (τ : A →ₗ[R] R) (hτ : ∀ x y, τ (x * y) = τ (y * x)) (x y : R) :
@@ -103,10 +160,14 @@ theorem trace_weights (h : IsDualSeedPair d b)
   have he : τ (poleMinus d b) = τ (polePlus d b) := hτ b d
   constructor
   · simp only [diagonalWeight, map_add, map_smul, smul_eq_mul, he]
-    ring
+    noncomm_ring
   · rw [grading_weight h]
     simp only [map_sub, map_smul, smul_eq_mul, he]
-    ring
+    noncomm_ring
+
+end Noncomm
+
+variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A] {d b : A}
 
 /-- A hyperbolic weight convention does not supply unit trace. -/
 theorem hyperbolic_trace {A : Type*} [Ring A] [Algebra ℝ A] {d b : A}

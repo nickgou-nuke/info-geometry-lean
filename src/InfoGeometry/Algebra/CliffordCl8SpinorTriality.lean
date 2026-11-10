@@ -5,7 +5,18 @@ noncomputable section
 
 namespace InfoGeometry.Algebra.CliffordCl8SpinorTriality
 
-variable {R : Type*} [CommRing R] [Invertible (2 : R)]
+variable {R : Type*} [Ring R] [Invertible (2 : R)]
+
+theorem invOf_two_comm (x : R) : (⅟2 : R) * x = x * (⅟2 : R) := by
+  have h2 : (2 : R) * x = x * 2 := by
+    rw [show (2 : R) = 1 + 1 by norm_num]
+    noncomm_ring
+  calc
+    (⅟2 : R) * x = (⅟2 : R) * x * ((2 : R) * ⅟2) := by rw [mul_invOf_self, mul_one]
+    _ = (⅟2 : R) * (x * 2) * ⅟2 := by noncomm_ring
+    _ = (⅟2 : R) * (2 * x) * ⅟2 := by rw [← h2]
+    _ = ((⅟2 : R) * 2) * x * ⅟2 := by noncomm_ring
+    _ = x * ⅟2 := by rw [invOf_mul_self, one_mul]
 
 theorem anticomm_symm (a b : R) (h : a * b = - (b * a)) : b * a = - (a * b) := by
   rw [h, neg_neg]
@@ -176,7 +187,7 @@ theorem gamma_sq_eq_one (g : Clifford8Generators R) :
     _ = g.g7 * (- (g.g7 * g.g8)) * g.g8 := by rw [h78_s]
     _ = - ((g.g7 * g.g7) * (g.g8 * g.g8)) := by noncomm_ring
     _ = - (1 * 1) := by rw [h_sq7, h_sq8]
-    _ = -1 := by ring
+    _ = -1 := by noncomm_ring
   have h_prod3 : (g.g6 * g.g7 * g.g8) * (g.g6 * g.g7 * g.g8) = -1 := by
     have h_step3 : (g.g6 * g.g7 * g.g8) * (g.g6 * g.g7 * g.g8) =
         g.g6 * (g.g7 * g.g8 * g.g6) * (g.g7 * g.g8) := by noncomm_ring
@@ -215,7 +226,7 @@ theorem gamma_sq_eq_one (g : Clifford8Generators R) :
     have h_sq5_sub : g.g5 * (- (g.g5 * (g.g6 * g.g7 * g.g8))) * (g.g6 * g.g7 * g.g8) =
         - ((g.g5 * g.g5) * ((g.g6 * g.g7 * g.g8) * (g.g6 * g.g7 * g.g8))) := by noncomm_ring
     rw [h_sq5_sub, h_sq5, one_mul, h_prod3]
-    ring
+    norm_num
   have h_prod5 : (g.g4 * g.g5 * g.g6 * g.g7 * g.g8) * (g.g4 * g.g5 * g.g6 * g.g7 * g.g8) = 1 := by
     have h_step5 : (g.g4 * g.g5 * g.g6 * g.g7 * g.g8) * (g.g4 * g.g5 * g.g6 * g.g7 * g.g8) =
         g.g4 * (g.g5 * g.g6 * g.g7 * g.g8 * g.g4) * (g.g5 * g.g6 * g.g7 * g.g8) := by noncomm_ring
@@ -309,13 +320,17 @@ theorem gamma_sq_eq_one (g : Clifford8Generators R) :
   _ = (- (g.g2 * g.g3 * g.g4 * g.g5 * g.g6 * g.g7 * g.g8)) * (g.g2 * g.g3 * g.g4 * g.g5 * g.g6 * g.g7 * g.g8) := by rw [h_right]
   _ = - ((g.g2 * g.g3 * g.g4 * g.g5 * g.g6 * g.g7 * g.g8) * (g.g2 * g.g3 * g.g4 * g.g5 * g.g6 * g.g7 * g.g8)) := by noncomm_ring
   _ = - (-1 : R) := by rw [h7_sq]
-  _ = 1 := by ring
+  _ = 1 := by norm_num
 
 /-- **Theorem 5**: Completeness of Chiral Projectors: P₊ + P₋ = 1. -/
 theorem chiral_projectors_completeness (g : Clifford8Generators R) :
     PPlus g + PMinus g = 1 := by
   dsimp [PPlus, PMinus]
-  have h_add : (⅟2 : R) * (1 + Gamma g) + (⅟2 : R) * (1 - Gamma g) = (⅟2 : R) * (2 : R) := by ring
+  have h_add : (⅟2 : R) * (1 + Gamma g) + (⅟2 : R) * (1 - Gamma g) = (⅟2 : R) * (2 : R) := by
+    calc
+      (⅟2 : R) * (1 + Gamma g) + (⅟2 : R) * (1 - Gamma g)
+        = (⅟2 : R) * (1 + 1 : R) := by noncomm_ring
+      _ = (⅟2 : R) * (2 : R) := by norm_num
   rw [h_add]
   exact invOf_mul_self (a := (2 : R))
 
@@ -324,21 +339,39 @@ theorem pplus_idempotent (g : Clifford8Generators R) :
     PPlus g * PPlus g = PPlus g := by
   dsimp [PPlus]
   have h_sq := gamma_sq_eq_one g
+  have h_c := invOf_two_comm (1 + Gamma g)
   have h_exp : (⅟2 : R) * (1 + Gamma g) * ((⅟2 : R) * (1 + Gamma g)) =
-      (⅟2 * ⅟2 : R) * (1 + 2 * Gamma g + Gamma g * Gamma g) := by ring
+      (⅟2 * ⅟2 : R) * (1 + 2 * Gamma g + Gamma g * Gamma g) := by
+    calc
+      (⅟2 : R) * (1 + Gamma g) * ((⅟2 : R) * (1 + Gamma g))
+        = (⅟2 : R) * ((1 + Gamma g) * (⅟2 : R)) * (1 + Gamma g) := by noncomm_ring
+      _ = (⅟2 : R) * ((⅟2 : R) * (1 + Gamma g)) * (1 + Gamma g) := by rw [← h_c]
+      _ = (⅟2 * ⅟2 : R) * (1 + (1 + 1) * Gamma g + Gamma g * Gamma g) := by noncomm_ring
+      _ = (⅟2 * ⅟2 : R) * (1 + 2 * Gamma g + Gamma g * Gamma g) := by norm_num
   rw [h_exp, h_sq]
-  have h_ring : (1 + 2 * Gamma g + 1 : R) = (2 : R) * (1 + Gamma g) := by ring
+  have h_ring : (1 + 2 * Gamma g + 1 : R) = (2 : R) * (1 + Gamma g) := by
+    rw [show (2 : R) = 1 + 1 by norm_num]
+    noncomm_ring
   rw [h_ring]
-  have h_assoc : (⅟2 * ⅟2 : R) * ((2 : R) * (1 + Gamma g)) = ((⅟2 : R) * (2 : R)) * ((⅟2 : R) * (1 + Gamma g)) := by ring
-  rw [h_assoc, invOf_mul_self (a := (2 : R)), one_mul]
+  calc
+    (⅟2 * ⅟2 : R) * ((2 : R) * (1 + Gamma g))
+      = (⅟2 : R) * ((⅟2 : R) * (2 : R)) * (1 + Gamma g) := by noncomm_ring
+    _ = (⅟2 : R) * 1 * (1 + Gamma g) := by rw [invOf_mul_self]
+    _ = (⅟2 : R) * (1 + Gamma g) := by noncomm_ring
 
 /-- **Theorem 7**: Orthogonality of Chiral Projectors: P₊ P₋ = 0. -/
 theorem chiral_projectors_orthogonal (g : Clifford8Generators R) :
     PPlus g * PMinus g = 0 := by
   dsimp [PPlus, PMinus]
   have h_sq := gamma_sq_eq_one g
+  have h_c := invOf_two_comm (1 + Gamma g)
   have h_exp : (⅟2 : R) * (1 + Gamma g) * ((⅟2 : R) * (1 - Gamma g)) =
-      (⅟2 * ⅟2 : R) * (1 - Gamma g * Gamma g) := by ring
+      (⅟2 * ⅟2 : R) * (1 - Gamma g * Gamma g) := by
+    calc
+      (⅟2 : R) * (1 + Gamma g) * ((⅟2 : R) * (1 - Gamma g))
+        = (⅟2 : R) * ((1 + Gamma g) * (⅟2 : R)) * (1 - Gamma g) := by noncomm_ring
+      _ = (⅟2 : R) * ((⅟2 : R) * (1 + Gamma g)) * (1 - Gamma g) := by rw [← h_c]
+      _ = (⅟2 * ⅟2 : R) * (1 - Gamma g * Gamma g) := by noncomm_ring
   rw [h_exp, h_sq, sub_self, mul_zero]
 
 /-- **Theorem 8**: Parity-Flipping Action (Majorana-Weyl Splitting Δ₈⁺ ⊕ Δ₈⁻): P₊ γ₁ = γ₁ P₋. -/
@@ -348,13 +381,15 @@ theorem pplus_gamma1_flip (g : Clifford8Generators R) :
   have h_anti := gamma_anticomm_g1 g
   have h_comm : Gamma g * g.g1 = - (g.g1 * Gamma g) := by
     calc
-      Gamma g * g.g1 = Gamma g * g.g1 + g.g1 * Gamma g - g.g1 * Gamma g := by ring
+      Gamma g * g.g1 = Gamma g * g.g1 + g.g1 * Gamma g - g.g1 * Gamma g := by noncomm_ring
       _ = 0 - g.g1 * Gamma g := by rw [h_anti]
-      _ = - (g.g1 * Gamma g) := by ring
-  have h_left : (⅟2 : R) * (1 + Gamma g) * g.g1 = (⅟2 : R) * (g.g1 + Gamma g * g.g1) := by ring
-  have h_right : g.g1 * ((⅟2 : R) * (1 - Gamma g)) = (⅟2 : R) * (g.g1 - g.g1 * Gamma g) := by ring
+      _ = - (g.g1 * Gamma g) := by noncomm_ring
+  have h_left : (⅟2 : R) * (1 + Gamma g) * g.g1 = (⅟2 : R) * (g.g1 + Gamma g * g.g1) := by noncomm_ring
+  have h_right : g.g1 * ((⅟2 : R) * (1 - Gamma g)) = (⅟2 : R) * (g.g1 - g.g1 * Gamma g) := by
+    rw [← mul_assoc, ← invOf_two_comm g.g1, mul_assoc]
+    noncomm_ring
   rw [h_left, h_right, h_comm]
-  ring
+  noncomm_ring
 
 /-- **Theorem 9**: Master Spin(8) Triality & Chiral Parity Theorem.
     Unifies 8D parity involutivity, vector anticommutation, chiral projection,

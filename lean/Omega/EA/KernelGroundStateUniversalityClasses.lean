@@ -7,26 +7,28 @@ namespace Omega.EA
 
 open Polynomial
 
-/-- The zero-temperature kernel supported on the single carry-free state of the `K9` full shift. -/
-def kernelK9ZeroTempData : KernelZeroTempData where
-  α := Unit
-  gibbsFamily := fun _ _ => 1
+/-- Uniform one-symbol marginal on the seven self-loops of the `K9` full-shift presentation. -/
+noncomputable def kernelK9ZeroTempData : KernelZeroTempData where
+  α := Fin 7
+  gibbsFamily := fun _ _ => (1 : ℝ) / 7
   carry := fun _ => 0
-  zeroTempLimit := fun _ => 1
-  carryFreeRoot := ()
+  zeroTempLimit := fun _ => (1 : ℝ) / 7
+  carryFreeRoot := 0
   limitTendsto _ := tendsto_const_nhds
-  limitHasTotalMass := by simp
+  limitHasTotalMass := by
+    norm_num [Fin.sum_univ_succ]
   positiveMassImpliesCarryFree _ _ := rfl
 
-/-- The zero-temperature kernel supported on the single carry-free state of the `K13` full shift. -/
-def kernelK13ZeroTempData : KernelZeroTempData where
-  α := Unit
-  gibbsFamily := fun _ _ => 1
+/-- Uniform one-symbol marginal on the three self-loops of the `K13` full-shift presentation. -/
+noncomputable def kernelK13ZeroTempData : KernelZeroTempData where
+  α := Fin 3
+  gibbsFamily := fun _ _ => (1 : ℝ) / 3
   carry := fun _ => 0
-  zeroTempLimit := fun _ => 1
-  carryFreeRoot := ()
+  zeroTempLimit := fun _ => (1 : ℝ) / 3
+  carryFreeRoot := 0
   limitTendsto _ := tendsto_const_nhds
-  limitHasTotalMass := by simp
+  limitHasTotalMass := by
+    norm_num [Fin.sum_univ_succ]
   positiveMassImpliesCarryFree _ _ := rfl
 
 /-- The golden-mean / Zeckendorf zero-temperature kernel. -/
@@ -66,6 +68,18 @@ def k21ZeckendorfGroundState : Prop :=
   kernelK21ZeroTempData.limitSupportedOnCarryFree ∧
     globalAssemblyK21Adjacency.charpoly = Polynomial.X ^ 2 - 3 * Polynomial.X + 1 ∧
     kernelK21ZeroTempData.zeroTempLimit (0 : Fin 2) = 1 / (Real.goldenRatio + 2)
+
+/-- The `K9` limit assigns normalized uniform mass to all seven symbol states. -/
+theorem kernelK9_uniform_symbol_mass :
+    (∀ a : Fin 7, kernelK9ZeroTempData.zeroTempLimit a = (1 : ℝ) / 7) ∧
+      ∑ a : Fin 7, kernelK9ZeroTempData.zeroTempLimit a = 1 := by
+  exact ⟨fun _ => rfl, kernelK9ZeroTempData.limitHasTotalMass⟩
+
+/-- The `K13` limit assigns normalized uniform mass to all three symbol states. -/
+theorem kernelK13_uniform_symbol_mass :
+    (∀ a : Fin 3, kernelK13ZeroTempData.zeroTempLimit a = (1 : ℝ) / 3) ∧
+      ∑ a : Fin 3, kernelK13ZeroTempData.zeroTempLimit a = 1 := by
+  exact ⟨fun _ => rfl, kernelK13ZeroTempData.limitHasTotalMass⟩
 
 /-- Paper label: `thm:kernel-ground-state-universality-classes`. -/
 theorem paper_kernel_ground_state_universality_classes :

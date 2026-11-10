@@ -7,7 +7,7 @@ namespace InfoGeometry.Canonical.SplitComplexAdapters
 
 open InfoGeometry.Canonical.SplitComplex
 
-noncomputable def hyperbolicToCanonical {R : Type*} [CommRing R] :
+noncomputable def hyperbolicToCanonical {R : Type*} [Ring R] :
     InfoGeometry.Algebra.HyperbolicBogoliubovSplitAlgebra.SplitComplex R ≃
       Carrier R where
   toFun z := ⟨z.real, z.split⟩
@@ -15,7 +15,7 @@ noncomputable def hyperbolicToCanonical {R : Type*} [CommRing R] :
   left_inv z := by cases z; rfl
   right_inv z := by cases z; rfl
 
-theorem hyperbolicToCanonical_mul {R : Type*} [CommRing R]
+theorem hyperbolicToCanonical_mul {R : Type*} [Ring R]
     (x y : InfoGeometry.Algebra.HyperbolicBogoliubovSplitAlgebra.SplitComplex R) :
     hyperbolicToCanonical (InfoGeometry.Algebra.HyperbolicBogoliubovSplitAlgebra.SplitComplex.mul x y) =
       hyperbolicToCanonical x * hyperbolicToCanonical y := by
@@ -36,7 +36,7 @@ theorem hestenesToCanonical_mul (x y :
       hestenesToCanonical x * hestenesToCanonical y := by
   cases x; cases y; rfl
 
-noncomputable def hierarchyToCanonical {R : Type*} [CommRing R] :
+noncomputable def hierarchyToCanonical {R : Type*} [Ring R] :
     InfoGeometry.Algebra.SplitAlgebraHierarchyBridge.SplitComplex R ≃
       Carrier R where
   toFun z := ⟨z.re, z.j_im⟩
@@ -44,7 +44,7 @@ noncomputable def hierarchyToCanonical {R : Type*} [CommRing R] :
   left_inv z := by cases z; rfl
   right_inv z := by cases z; rfl
 
-theorem hierarchyToCanonical_mul {R : Type*} [CommRing R]
+theorem hierarchyToCanonical_mul {R : Type*} [Ring R]
     (x y : InfoGeometry.Algebra.SplitAlgebraHierarchyBridge.SplitComplex R) :
     hierarchyToCanonical
         (InfoGeometry.Algebra.SplitAlgebraHierarchyBridge.SplitComplex.mul x y) =

@@ -5,10 +5,10 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.GradedBRSTCochainComplexBridge
 
-variable {R H : Type*} [CommRing R] [AddCommGroup H] [Module R H]
+variable {R H : Type*} [Ring R] [AddCommGroup H] [Module R H]
 
 /-- **Structure**: Graded BRST Cochain Package. -/
-structure GradedBRSTCochainPackage (R H : Type*) [CommRing R] [AddCommGroup H] [Module R H] where
+structure GradedBRSTCochainPackage (R H : Type*) [Ring R] [AddCommGroup H] [Module R H] where
   q : Module.End R H
   g_op : Module.End R H
   hq2 : q.comp q = 0

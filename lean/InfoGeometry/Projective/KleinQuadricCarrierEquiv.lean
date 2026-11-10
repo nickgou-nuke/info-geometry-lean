@@ -44,7 +44,7 @@ def plucker6Equiv (R : Type*) : KQ.Plucker6 R ≃ KP.Plucker6 R where
   left_inv P := by cases P; rfl
   right_inv P := by cases P; rfl
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 @[simp] theorem plucker6Equiv_wedge (u v : KQ.Vec4 R) :
     plucker6Equiv R (InfoGeometry.Projective.KleinQuadric.Vec4.wedge u v) =
@@ -67,7 +67,7 @@ variable {R : Type*} [CommRing R]
 
 /-- The incidence form in the first owner is literally the Klein polar form
 after transport to the twistor/Grassmannian coordinate carrier. -/
-theorem incidenceForm_eq_kleinPolar (P Q : KQ.Plucker6 R) :
+theorem incidenceForm_eq_kleinPolar {R : Type*} [CommRing R] (P Q : KQ.Plucker6 R) :
     InfoGeometry.Projective.KleinQuadricIncidence.Plucker6.incidenceForm P Q =
       InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.kleinPolar
         (plucker6Equiv R P) (plucker6Equiv R Q) := by

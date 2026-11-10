@@ -38,7 +38,7 @@ theorem nonzero_wall_can_be_reflection_invariant :
       reflection * wall * reflection = wall := by decide
 
 /-- The defect criterion itself requires no scalar cancellation hypothesis. -/
-theorem defect_zero_iff {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+theorem defect_zero_iff {R A : Type*} [Ring R] [Ring A] [Module R A]
     (q w j : A) (β : R) (h : q*w*q-w = -((2*β) • j)) :
     q*w*q = w ↔ (2*β) • j = 0 := by
   rw [← sub_eq_zero, h, neg_eq_zero]

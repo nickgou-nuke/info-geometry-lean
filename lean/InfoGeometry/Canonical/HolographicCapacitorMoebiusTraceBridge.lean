@@ -89,24 +89,26 @@ noncomputable section
 
 section SubmoduleTraceCapacitance
 
-variable {R M : Type*} [Field R] [AddCommGroup M] [Module R M]
+variable {R M : Type*} [AddCommGroup M]
 
 /-- Membership in `HorizonDefectBlock 𝒯 = ker(𝒯 - id)` is equivalent to being a fixed point
 ($+1$ Majorana parity eigenmode) of the Möbius twist $\mathcal{T}$:
 $$v \in \mathrm{HorizonDefectBlock}(\mathcal{T}) \iff \mathcal{T}(v) = v.$$ -/
-theorem mem_horizonDefectBlock_iff_fixed (𝒯 : Module.End R M) (v : M) :
+theorem mem_horizonDefectBlock_iff_fixed [Ring R] [Module R M] (𝒯 : Module.End R M) (v : M) :
     v ∈ HorizonDefectBlock 𝒯 ↔ 𝒯 v = v := by
   unfold HorizonDefectBlock
   rw [LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.id_apply, sub_eq_zero]
 
 /-- Canonical restriction $\mathcal{T}|_{Q_0} \in \mathrm{End}_R(\mathrm{HorizonDefectBlock}\;\mathcal{T})$
 of the Möbius twist $\mathcal{T}$ to the Horizon Defect Submodule $Q_0$. -/
-def horizonDefectRestriction (𝒯 : Module.End R M) :
+def horizonDefectRestriction [Ring R] [Module R M] (𝒯 : Module.End R M) :
     Module.End R (HorizonDefectBlock 𝒯) :=
   LinearMap.restrict 𝒯 (fun x hx => by
     have h_fix : 𝒯 x = x := (mem_horizonDefectBlock_iff_fixed 𝒯 x).mp hx
     rw [h_fix]
     exact hx)
+
+variable [Field R] [Module R M]
 
 /-- **Spinor/Operator Trace Definition of Horizon Capacitance (`horizonTraceCapacitance`)**:
 The Horizon Capacitance defined directly as the `LinearMap.trace` of the Möbius twist

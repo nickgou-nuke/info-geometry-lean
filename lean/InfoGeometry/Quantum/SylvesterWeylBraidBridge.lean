@@ -17,7 +17,7 @@ import Mathlib.Tactic
 namespace SylvesterWeylBraid
 
 variable (n : ℕ) [NeZero n]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def clockMatrix (ω : R) : Matrix (ZMod n) (ZMod n) R :=
   Matrix.of fun i j => if i = j then ω ^ i.val else 0
@@ -40,7 +40,7 @@ lemma pow_val_add_one (ω : R) (hn : ω ^ n = 1) (j : ZMod n) :
     ω ^ (j + 1).val = ω * ω ^ j.val := by
   rw [zmod_val_add_one n j]
   rw [← pow_eq_pow_mod n ω hn (j.val + 1)]
-  rw [pow_succ, mul_comm]
+  rw [pow_succ']
 
 theorem sylvester_weyl_braid_relation (ω : R) (hn : ω ^ n = 1) :
     clockMatrix n ω * shiftMatrix n = ω • (shiftMatrix n * clockMatrix n ω) := by

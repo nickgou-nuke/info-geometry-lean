@@ -120,7 +120,7 @@ structure Zorn (R : Type*) where
   v : Fin 3 → R
   b : R
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 theorem zorn_ext (X Y : Zorn R)
     (ha : X.a = Y.a)
@@ -183,25 +183,25 @@ theorem zorn_one_mul (X : Zorn R) : (1 : Zorn R) * X = X := by
   rcases X with ⟨Xa, Xu, Xv, Xb⟩
   apply zorn_ext
   · show (1 : R) * Xa + dotR (fun _ => (0 : R)) Xv = Xa
-    dsimp [dotR]; ring
+    dsimp [dotR]; noncomm_ring
   · intro i
     fin_cases i
     · show (1 : R) * Xu 0 + Xb * (0 : R) - crossR (fun _ => (0 : R)) Xv 0 = Xu 0
-      dsimp [crossR]; ring
+      dsimp [crossR]; noncomm_ring
     · show (1 : R) * Xu 1 + Xb * (0 : R) - crossR (fun _ => (0 : R)) Xv 1 = Xu 1
-      dsimp [crossR]; ring
+      dsimp [crossR]; noncomm_ring
     · show (1 : R) * Xu 2 + Xb * (0 : R) - crossR (fun _ => (0 : R)) Xv 2 = Xu 2
-      dsimp [crossR]; ring
+      dsimp [crossR]; noncomm_ring
   · intro i
     fin_cases i
     · show Xa * (0 : R) + (1 : R) * Xv 0 + crossR (fun _ => (0 : R)) Xu 0 = Xv 0
-      dsimp [crossR]; ring
+      dsimp [crossR]; noncomm_ring
     · show Xa * (0 : R) + (1 : R) * Xv 1 + crossR (fun _ => (0 : R)) Xu 1 = Xv 1
-      dsimp [crossR]; ring
+      dsimp [crossR]; noncomm_ring
     · show Xa * (0 : R) + (1 : R) * Xv 2 + crossR (fun _ => (0 : R)) Xu 2 = Xv 2
-      dsimp [crossR]; ring
+      dsimp [crossR]; noncomm_ring
   · show (1 : R) * Xb + dotR (fun _ => (0 : R)) Xu = Xb
-    dsimp [dotR]; ring
+    dsimp [dotR]; noncomm_ring
 
 /-- THEOREM: Right multiplication by 1 is the identity -/
 @[simp]
@@ -209,25 +209,25 @@ theorem zorn_mul_one (X : Zorn R) : X * (1 : Zorn R) = X := by
   rcases X with ⟨Xa, Xu, Xv, Xb⟩
   apply zorn_ext
   · show Xa * (1 : R) + dotR Xu (fun _ => (0 : R)) = Xa
-    dsimp [dotR]; ring
+    dsimp [dotR]; noncomm_ring
   · intro i
     fin_cases i
     · show Xa * (0 : R) + (1 : R) * Xu 0 - crossR Xv (fun _ => (0 : R)) 0 = Xu 0
-      dsimp [crossR]; ring
+      dsimp [crossR]; noncomm_ring
     · show Xa * (0 : R) + (1 : R) * Xu 1 - crossR Xv (fun _ => (0 : R)) 1 = Xu 1
-      dsimp [crossR]; ring
+      dsimp [crossR]; noncomm_ring
     · show Xa * (0 : R) + (1 : R) * Xu 2 - crossR Xv (fun _ => (0 : R)) 2 = Xu 2
-      dsimp [crossR]; ring
+      dsimp [crossR]; noncomm_ring
   · intro i
     fin_cases i
     · show (1 : R) * Xv 0 + Xb * (0 : R) + crossR Xu (fun _ => (0 : R)) 0 = Xv 0
-      dsimp [crossR]; ring
+      dsimp [crossR]; noncomm_ring
     · show (1 : R) * Xv 1 + Xb * (0 : R) + crossR Xu (fun _ => (0 : R)) 1 = Xv 1
-      dsimp [crossR]; ring
+      dsimp [crossR]; noncomm_ring
     · show (1 : R) * Xv 2 + Xb * (0 : R) + crossR Xu (fun _ => (0 : R)) 2 = Xv 2
-      dsimp [crossR]; ring
+      dsimp [crossR]; noncomm_ring
   · show Xb * (1 : R) + dotR Xv (fun _ => (0 : R)) = Xb
-    dsimp [dotR]; ring
+    dsimp [dotR]; noncomm_ring
 
 /-- The split (4,4) composition norm: N(Z) = a b - u · v -/
 def zornNorm (X : Zorn R) : R :=
@@ -266,10 +266,10 @@ theorem derivation_annihilates_scalar_seed (D : Zorn R → Zorn R) (hD : IsZornD
     D (c • (1 : Zorn R)) = ⟨0, fun _ => 0, fun _ => 0, 0⟩ := by
   rw [hD.2.1 c 1, derivation_annihilates_one D hD]
   apply zorn_ext
-  · show c * (0 : R) = 0; ring
-  · intro i; show c * (0 : R) = 0; ring
-  · intro i; show c * (0 : R) = 0; ring
-  · show c * (0 : R) = 0; ring
+  · show c * (0 : R) = 0; noncomm_ring
+  · intro i; show c * (0 : R) = 0; noncomm_ring
+  · intro i; show c * (0 : R) = 0; noncomm_ring
+  · show c * (0 : R) = 0; noncomm_ring
 
 end ZornVectorMatrixAlgebra
 

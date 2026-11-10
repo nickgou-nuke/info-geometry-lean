@@ -26,7 +26,7 @@ open InfoGeometry.Physics
 open InfoGeometry.Physics.AlgebraicTomitaTakesaki
 
 variable {R Op : Type*}
-variable [Field R] [CharZero R] [Ring Op] [Algebra R Op]
+variable [Ring R] [Ring Op]
 
 theorem anti_map_zero (J : AntiAutomorphism Op) :
     J.toFun 0 = 0 := by

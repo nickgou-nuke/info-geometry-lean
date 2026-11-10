@@ -15,7 +15,7 @@ to descend. Its functorial maps need not preserve the ambient multiplicative uni
 
 namespace InfoGeometry.Algebra.CyclicQuotient
 
-variable (R A : Type*) [CommRing R] [Ring A] [Module R A]
+variable (R A : Type*) [Ring R] [Ring A] [Module R A]
 
 /-- The linear span of associative commutators. -/
 def commutatorSpan : Submodule R A :=

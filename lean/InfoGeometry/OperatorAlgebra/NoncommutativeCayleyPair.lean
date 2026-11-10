@@ -68,6 +68,27 @@ theorem cayley_pole_identities {x rPlus : A}
       _ = ((1 + x) - (1 - x)) * rPlus := by rw [← sub_mul]
       _ = 2 • (x * rPlus) := by simp; noncomm_ring
 
+/-- Over any non-commutative ring `A`, when `μ` and `E` are operators in `A`
+with `E * E = M`, the shifted quadratic factorization acquires the exact commutator
+anomaly `μ * E - E * μ`. When `μ` and `E` commute, this anomaly vanishes. -/
+theorem shifted_operator_factorization_noncomm {μ E M : A}
+    (hE : E * E = M) :
+    (μ - E) * (μ + E) =
+      μ ^ 2 * (1 - M) + (μ ^ 2 - 1) * M + (μ * E - E * μ) := by
+  calc
+    (μ - E) * (μ + E) = μ * μ - E * E + (μ * E - E * μ) := by noncomm_ring
+    _ = μ ^ 2 * (1 - M) + (μ ^ 2 - 1) * M + (μ * E - E * μ) := by
+      rw [hE]
+      noncomm_ring
+
+/-- When the operator shift `μ` commutes with `E` in `[Ring A]`, the commutator
+anomaly vanishes and `(μ - E) * (μ + E)` decomposes cleanly along `1 - M` and `M`. -/
+theorem shifted_operator_factorization_of_comm {μ E M : A}
+    (hE : E * E = M) (hcomm : μ * E = E * μ) :
+    (μ - E) * (μ + E) =
+      μ ^ 2 * (1 - M) + (μ ^ 2 - 1) * M := by
+  rw [shifted_operator_factorization_noncomm hE, hcomm, sub_self, add_zero]
+
 end InfoGeometry.OperatorAlgebra.NoncommutativeCayleyPair
 
 namespace InfoGeometry.OperatorAlgebra.NoncommutativeCayleyPair

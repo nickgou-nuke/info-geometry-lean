@@ -82,7 +82,7 @@ theorem riemannCurvature_antiSymmetric
   rw [neg_add, h1, h_sum]
 
 /-- **Definition**: 4D Levi-Civita Permutation Symbol ε_{abcd} in Ring R. -/
-def leviCivita4D (R : Type*) [CommRing R] (a b c d_idx : Fin 4) : R :=
+def leviCivita4D (R : Type*) [Ring R] (a b c d_idx : Fin 4) : R :=
   if a.val ≠ b.val ∧ a.val ≠ c.val ∧ a.val ≠ d_idx.val ∧ b.val ≠ c.val ∧ b.val ≠ d_idx.val ∧ c.val ≠ d_idx.val then 1 else 0
 
 /-- **Definition**: Palatini Einstein-Hilbert Lagrangian 4-Form Density L_{Palatini} = ∑_{a,b,c,d} ε_{abcd} e^a ∧ e^b ∧ R^{cd}. -/

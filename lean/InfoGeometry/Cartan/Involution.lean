@@ -23,13 +23,12 @@ evaluation on vectors to ensure maximum performance and universe consistency.
 
 namespace InfoGeometry.Cartan
 
-variable {𝕜 E : Type*} [Field 𝕜] [Invertible (2 : 𝕜)]
-variable [AddCommGroup E] [Module 𝕜 E]
-
 /-- A Cartan involution is an endomorphism that squares to the identity. -/
-def IsCartanInvolution (θ : Module.End 𝕜 E) : Prop :=
+def IsCartanInvolution {𝕜 E : Type*} [Ring 𝕜] [AddCommGroup E] [Module 𝕜 E] (θ : Module.End 𝕜 E) : Prop :=
   θ * θ = 1
 
+variable {𝕜 E : Type*} [CommRing 𝕜] [Invertible (2 : 𝕜)]
+variable [AddCommGroup E] [Module 𝕜 E]
 variable (θ : Module.End 𝕜 E)
 
 /-- Projection to the +1 eigenspace: P₊ = 1/2 (id + θ). -/

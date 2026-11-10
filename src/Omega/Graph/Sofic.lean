@@ -1,6 +1,8 @@
 import Omega.Core.No11
 import Omega.Folding.StableSyntax
 import Omega.Graph.LabeledGraph
+import Mathlib.Data.Matrix.Basic
+import Mathlib.LinearAlgebra.Matrix.Trace
 
 namespace Omega.Graph
 
@@ -103,6 +105,12 @@ theorem goldenMean_transfer_false (b : Bool) :
 theorem goldenMean_transfer_true_false :
     goldenMeanGraph.edge true false false := goldenMean_edge_tf
 
+/-- From state `true`, an edge exists exactly for the emitted bit and next
+state both equal to `false`. This characterizes the unique outgoing edge. -/
+theorem goldenMean_edge_from_true_iff (b q' : Bool) :
+    goldenMeanGraph.edge true b q' ↔ b = false ∧ q' = false := by
+  cases b <;> cases q' <;> simp [goldenMeanGraph]
+
 
 /-- The golden-mean adjacency count: number of valid transitions from state q emitting bit b. -/
 def goldenMeanTransitionCount (q : Bool) : Nat :=
@@ -110,14 +118,25 @@ def goldenMeanTransitionCount (q : Bool) : Nat :=
   | false => 2  -- from state 0: can emit 0 (→0) or 1 (→1)
   | true => 1   -- from state 1: can only emit 0 (→0)
 
-/-- The transition count satisfies the Fibonacci adjacency relation:
-    count(false) + count(true) = 3 (total edges). -/
-theorem goldenMean_total_edges :
-    goldenMeanTransitionCount false + goldenMeanTransitionCount true = 3 := by
-  rfl
+/-- The adjacency matrix counts labels that give a transition between two states. -/
+noncomputable def goldenMeanGraphAdjacency : Matrix Bool Bool ℕ := by
+  classical
+  exact fun q q' => ∑ b : Bool, if goldenMeanGraph.edge q b q' then 1 else 0
 
-/-- The trace of the adjacency is 1 (only the false→false edge is diagonal). -/
-theorem goldenMean_adjacency_trace : 1 = 1 := rfl
+/-- The golden-mean adjacency matrix is `[[1, 1], [1, 0]]` in the `false, true`
+state order. -/
+theorem goldenMeanGraphAdjacency_entries (q q' : Bool) :
+    goldenMeanGraphAdjacency q q' =
+      if q = true ∧ q' = true then 0 else 1 := by
+  classical
+  cases q <;> cases q' <;>
+    simp [goldenMeanGraphAdjacency, goldenMeanGraph]
+
+/-- The trace of the actual two-state adjacency matrix is one: its only
+diagonal transition is `false → false`. -/
+theorem goldenMean_adjacency_trace : Matrix.trace goldenMeanGraphAdjacency = 1 := by
+  classical
+  simp [Matrix.trace, goldenMeanGraphAdjacency_entries]
 
 /-- The characteristic polynomial relation: the cardinality recurrence
     |X_{m+2}| = |X_{m+1}| + |X_m| is equivalent to the transfer matrix
@@ -127,10 +146,27 @@ theorem goldenMean_characteristic_recurrence (m : Nat) :
     Fintype.card (X (m + 2)) = Fintype.card (X (m + 1)) + Fintype.card (X m) :=
   X.card_recurrence m
 
-/-- The golden-mean graph has exactly 3 edges (out-degree sum). -/
-theorem goldenMean_edge_count_eq_three :
-    goldenMeanTransitionCount false + goldenMeanTransitionCount true = 3 :=
-  goldenMean_total_edges
+/-- Summing a row of the adjacency matrix recovers the graph's transition
+count from that state. -/
+theorem goldenMeanGraphAdjacency_row_sum (q : Bool) :
+    ∑ q' : Bool, goldenMeanGraphAdjacency q q' = goldenMeanTransitionCount q := by
+  cases q <;> simp [goldenMeanGraphAdjacency_entries, goldenMeanTransitionCount]
+
+/-- The sum of all entries of the graph adjacency matrix is the total number
+of labeled transitions. -/
+theorem goldenMeanGraphAdjacency_total_entries :
+    ∑ q : Bool, ∑ q' : Bool, goldenMeanGraphAdjacency q q' = 3 := by
+  simp [goldenMeanGraphAdjacency_entries]
+
+/-- The transition count is the sum of adjacency rows, hence is exactly the
+number of labeled edges in the two-state graph. -/
+theorem goldenMean_total_edges :
+    goldenMeanTransitionCount false + goldenMeanTransitionCount true = 3 := by
+  rw [← goldenMeanGraphAdjacency_row_sum false, ← goldenMeanGraphAdjacency_row_sum true]
+  simp only [Fintype.sum_bool]
+  have h := goldenMeanGraphAdjacency_total_entries
+  simp only [Fintype.sum_bool] at h
+  simpa only [add_comm, add_left_comm, add_assoc] using h
 
 /-- The cardinality growth ratio: |X_{m+1}| / |X_m| approaches φ.
     Specifically: |X_{m+2}| = |X_{m+1}| + |X_m|, which means
@@ -149,19 +185,10 @@ theorem stable_word_is_accepted (x : X m) :
     AcceptsWord goldenMeanGraph false x.1 :=
   acceptsWord_of_stable x
 
-/-- The golden-mean graph has no self-loop at state true (no edge true → true). -/
-theorem goldenMean_no_self_loop_true :
-    ¬ goldenMeanGraph.edge true true true :=
-  goldenMean_no_edge_tt true
-
 /-- From state false, both transitions are valid. -/
 theorem goldenMean_from_false_complete (b : Bool) :
     goldenMeanGraph.edge false b b :=
   goldenMean_transfer_false b
-
-/-- The golden-mean graph forbids 11 transitions (named). -/
-theorem goldenMean_forbids_11 : ¬ goldenMeanGraph.edge true true true :=
-  goldenMean_no_self_loop_true
 
 /-- The stable language is exactly the golden-mean sofic language (bidirectional). -/
 theorem stable_iff_sofic (w : Word m) :

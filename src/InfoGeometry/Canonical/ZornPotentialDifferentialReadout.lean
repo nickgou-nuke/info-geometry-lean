@@ -18,7 +18,7 @@ open InfoGeometry.Algebra
 open InfoGeometry.Algebra.ZornVec3
 open InfoGeometry.Algebra.ZornVectorMatrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 local notation "Vec3" => ZornVec3 R
 local notation "ZM" => ZornVectorMatrix R
@@ -57,7 +57,7 @@ def differentialFieldReadout (P : PotentialDifferentialData (R := R)) : ZM :=
       fun i => -(electricReadout P i + magneticReadout P i) := by
   funext i
   simp [upperFieldReadout, electricReadout, magneticReadout]
-  ring
+  abel
 
 @[simp] theorem lowerFieldReadout_eq_electric_add_magnetic
     (P : PotentialDifferentialData (R := R)) :

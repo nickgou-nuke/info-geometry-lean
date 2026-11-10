@@ -13,7 +13,7 @@ cell.
 namespace InfoGeometry.Algebra.Zorn.ConcreteComposition
 namespace ZornCell
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Multiplicative identity cell for the concrete Zorn product. -/
 def oneZ : ZornCell R :=
@@ -23,17 +23,17 @@ theorem mulZ_one (X : ZornCell R) : X * oneZ = X := by
   rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
   change mulZ _ _ = _
   unfold mulZ oneZ
-  congr <;> ring
+  congr <;> noncomm_ring
 
 theorem oneZ_mul (X : ZornCell R) : oneZ * X = X := by
   rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
   change mulZ _ _ = _
   unfold mulZ oneZ
-  congr <;> ring
+  congr <;> noncomm_ring
 
 theorem detZ_oneZ : detZ (oneZ : ZornCell R) = 1 := by
   unfold detZ oneZ
-  ring
+  noncomm_ring
 
 /-- Scalar diagonal cell `c · 1`. -/
 def scalarZ (c : R) : ZornCell R :=
@@ -45,7 +45,7 @@ def scaleZ (c : R) (X : ZornCell R) : ZornCell R :=
     c * X.y1, c * X.y2, c * X.y3⟩
 
 /-- Right scalar extraction for the concrete Zorn product. -/
-theorem mul_scaleZ_right (c : R) (X Y : ZornCell R) :
+theorem mul_scaleZ_right {R : Type*} [CommRing R] (c : R) (X Y : ZornCell R) :
     X * scaleZ c Y = scaleZ c (X * Y) := by
   rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
   rcases Y with ⟨r', s', x1', x2', x3', y1', y2', y3'⟩
@@ -55,7 +55,7 @@ theorem mul_scaleZ_right (c : R) (X Y : ZornCell R) :
   repeat' constructor <;> first | ring_nf | trivial
 
 /-- Left scalar extraction for the concrete Zorn product. -/
-theorem mul_scaleZ_left (c : R) (X Y : ZornCell R) :
+theorem mul_scaleZ_left {R : Type*} [CommRing R] (c : R) (X Y : ZornCell R) :
     scaleZ c X * Y = scaleZ c (X * Y) := by
   rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
   rcases Y with ⟨r', s', x1', x2', x3', y1', y2', y3'⟩
@@ -71,7 +71,7 @@ def conjZ (X : ZornCell R) : ZornCell R :=
 theorem scaleZ_scalarZ (c d : R) :
     scaleZ c (scalarZ d) = scalarZ (c * d) := by
   unfold scaleZ scalarZ
-  congr <;> ring
+  congr <;> noncomm_ring
 
 theorem conjZ_scalarZ (c : R) :
     conjZ (scalarZ c) = scalarZ c := by
@@ -82,20 +82,20 @@ theorem conjZ_scaleZ (c : R) (X : ZornCell R) :
     conjZ (scaleZ c X) = scaleZ c (conjZ X) := by
   rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
   unfold conjZ scaleZ
-  congr <;> ring
+  congr <;> noncomm_ring
 
 theorem conjZ_involutive (X : ZornCell R) :
-    conjZ (conjZ X) = X := by
+  conjZ (conjZ X) = X := by
   rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
   simp [conjZ]
 
-theorem detZ_conjZ (X : ZornCell R) :
+theorem detZ_conjZ {R : Type*} [CommRing R] (X : ZornCell R) :
     detZ (conjZ X) = detZ X := by
   rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
   simp [conjZ, detZ]
   ring
 
-theorem conjZ_mul_reverse (X Y : ZornCell R) :
+theorem conjZ_mul_reverse {R : Type*} [CommRing R] (X Y : ZornCell R) :
     conjZ (X * Y) = conjZ Y * conjZ X := by
   change conjZ (mulZ X Y) = mulZ (conjZ Y) (conjZ X)
   rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
@@ -104,7 +104,7 @@ theorem conjZ_mul_reverse (X Y : ZornCell R) :
   congr <;> ring
 
 /-- Left adjugate identity: `X * conjZ X = detZ X · 1`. -/
-theorem mul_conjZ (X : ZornCell R) :
+theorem mul_conjZ {R : Type*} [CommRing R] (X : ZornCell R) :
     X * conjZ X = scalarZ (detZ X) := by
   rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
   unfold conjZ scalarZ detZ
@@ -113,7 +113,7 @@ theorem mul_conjZ (X : ZornCell R) :
   congr <;> ring
 
 /-- Right adjugate identity: `conjZ X * X = detZ X · 1`. -/
-theorem conjZ_mul (X : ZornCell R) :
+theorem conjZ_mul {R : Type*} [CommRing R] (X : ZornCell R) :
     conjZ X * X = scalarZ (detZ X) := by
   rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
   unfold conjZ scalarZ detZ
@@ -122,7 +122,7 @@ theorem conjZ_mul (X : ZornCell R) :
   congr <;> ring
 
 /-- The adjugate identities as a paired packet. -/
-theorem adjugate_identity_packet (X : ZornCell R) :
+theorem adjugate_identity_packet {R : Type*} [CommRing R] (X : ZornCell R) :
     X * conjZ X = scalarZ (detZ X) ∧
       conjZ X * X = scalarZ (detZ X) := by
   exact ⟨mul_conjZ X, conjZ_mul X⟩

@@ -26,13 +26,13 @@ In any integral domain, d³ = d ⇒ d(d-1)(d+1) = 0 ⇒ d ∈ {0, 1, -1}.
 These are the three critical Mellin exponents — the fixed points of the
 scaling action where the determinant structure is preserved.
 -/
-theorem tripotent_classifier {R : Type _} [CommRing R] [IsDomain R] (d : R)
+theorem tripotent_classifier {R : Type _} [Ring R] [IsDomain R] (d : R)
     (h_cube : d ^ 3 = d) : d = 0 ∨ d = 1 ∨ d = -1 := by
   have h_factor : d * (d - 1) * (d + 1) = 0 := by
     calc
-      d * (d - 1) * (d + 1) = d ^ 3 - d := by ring
+      d * (d - 1) * (d + 1) = d ^ 3 - d := by noncomm_ring
       _ = d - d := by rw [h_cube]
-      _ = 0 := by ring
+      _ = 0 := by noncomm_ring
   have h_factor' := mul_eq_zero.mp h_factor
   rcases h_factor' with (h0 | h_rest)
   · -- d*(d-1) = 0
@@ -42,14 +42,14 @@ theorem tripotent_classifier {R : Type _} [CommRing R] [IsDomain R] (d : R)
       left; exact hd
     · -- d-1 = 0 → d = 1
       right; left; calc
-        d = (d - 1) + 1 := by ring
+        d = (d - 1) + 1 := by noncomm_ring
         _ = 0 + 1 := by rw [h1]
         _ = 1 := by simp
   · -- d+1 = 0 → d = -1
     right; right; calc
-      d = (d + 1) - 1 := by ring
+      d = (d + 1) - 1 := by noncomm_ring
       _ = 0 - 1 := by rw [h_rest]
-      _ = -1 := by ring
+      _ = -1 := by noncomm_ring
 
 /--
 **Theorem 2**: Bott periodicity absorbs the det=-1 sector.
@@ -99,7 +99,7 @@ If T³ = T, then for any ring endomorphism φ with φ(a·b) = φ(a)·φ(b):
 This means the trifactor is invariant under the Mellin scaling operator
 S_λ: T ↦ λ^{-s}·T, which is a multiplicative automorphism for λ ≠ 0.
 -/
-theorem colimit_stability {R : Type _} [CommRing R] (T : R) (h_cube : T ^ 3 = T)
+theorem colimit_stability {R : Type _} [Ring R] (T : R) (h_cube : T ^ 3 = T)
     (φ : R → R) (h_mul : ∀ a b, φ (a * b) = φ a * φ b) : (φ T) ^ 3 = φ T := by
   calc
     (φ T) ^ 3 = φ (T ^ 3) := by
@@ -128,7 +128,7 @@ theorem mellin_colimit_trifactor_capstone :
      (∀ s : ℤ, s = -1 ∨ s = 0 ∨ s = 1 → s ^ 3 = s) ∧
       ∀ s : ℤ, s ^ 3 = s → (s = -1 ∨ s = 0 ∨ s = 1)) ∧
     (-- 4. Colimit stability under multiplicative automorphisms
-     ∀ (R : Type _) [CommRing R] (T : R), T ^ 3 = T →
+     ∀ (R : Type _) [Ring R] (T : R), T ^ 3 = T →
        ∀ (φ : R → R), (∀ a b, φ (a * b) = φ a * φ b) → (φ T) ^ 3 = φ T) := by
   refine ⟨?_, ?_, ?_, ?_⟩
   · exact tripotent_classifier

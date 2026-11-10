@@ -23,14 +23,14 @@ namespace InfoGeometry.Canonical.HestenesDiracAdjoint
 
 -- We define the base Cl(1,1) Split-Quaternion algebra natively.
 @[ext]
-structure SplitQuaternion (R : Type*) [CommRing R] where
+structure SplitQuaternion (R : Type*) [Ring R] where
   re : R
   e : R
   f : R
   ef : R
 
 namespace SplitQuaternion
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 @[simps]
 instance : Add (SplitQuaternion R) :=
@@ -82,7 +82,7 @@ theorem cliffordConjugation_eq_gradeInvolution_comp_reversion (x : SplitQuaterni
     cliffordConjugation x = gradeInvolution (reversion x) := by
   ext <;> simp [cliffordConjugation, gradeInvolution, reversion]
 
-theorem x_mul_cliffordConjugation (x : SplitQuaternion R) :
+theorem x_mul_cliffordConjugation {R : Type*} [CommRing R] (x : SplitQuaternion R) :
     x * cliffordConjugation x = ⟨normSq x, 0, 0, 0⟩ := by
   ext <;> simp [cliffordConjugation, normSq] <;> ring_nf
 

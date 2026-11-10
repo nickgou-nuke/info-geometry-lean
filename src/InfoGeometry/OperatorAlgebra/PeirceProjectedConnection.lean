@@ -60,7 +60,8 @@ end RingIdentities
 
 section NativeSubmodule
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- The fixed submodule of left multiplication by `p`.  For an idempotent it
 is the range of that projection and the underlying module of the right ideal `pA`. -/
@@ -91,6 +92,7 @@ def rangeProjection (p : A) (hp : p * p = p) : A →ₗ[R] peirceRange (R := R) 
     apply Subtype.ext
     exact mul_smul_comm r p s
 
+omit [IsScalarTower R A A] in
 /-- The projection retracts the native inclusion of the full Peirce range. -/
 theorem rangeProjection_comp_subtype (p : A) (hp : p * p = p) :
     (rangeProjection (R := R) p hp).comp (peirceRange (R := R) p).subtype =

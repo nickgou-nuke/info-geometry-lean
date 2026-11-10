@@ -5,7 +5,7 @@ namespace InfoGeometry.Algebra.CyclicOrderThree
 
 section Additive
 
-variable {Scalar Space : Type*} [CommRing Scalar] [AddCommGroup Space] [Module Scalar Space]
+variable {Scalar Space : Type*} [Ring Scalar] [AddCommGroup Space] [Module Scalar Space]
 variable (rotation : Module.End Scalar Space)
 
 def orbitSum : Module.End Scalar Space :=
@@ -45,8 +45,15 @@ theorem boundary_orbitSum (vector : Space) :
 
 theorem orbitSum_of_fixed (vector : Space) (hfixed : rotation vector = vector) :
     orbitSum rotation vector = (3 : Scalar) • vector := by
-  simp only [orbitSum_apply, hfixed]
-  module
+  calc
+    orbitSum rotation vector = vector + vector + vector := by
+      simp only [orbitSum_apply, hfixed]
+    _ = (1 : Scalar) • vector + (1 : Scalar) • vector + (1 : Scalar) • vector := by
+      rw [one_smul]
+    _ = (1 + 1 + 1 : Scalar) • vector := by
+      rw [add_smul, add_smul]
+    _ = (3 : Scalar) • vector := by
+      norm_num
 
 include hcycle in
 theorem orbitSum_square (vector : Space) :

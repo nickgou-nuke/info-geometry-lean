@@ -24,9 +24,9 @@ blocks detects precisely when the square correction vanishes.
 
 namespace InfoGeometry.Core.OperatorCliffordDouble
 
-variable {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
+variable {R M : Type*} [Ring R] [AddCommGroup M] [Module R M]
 
-/-- Four unrestricted blocks acting on the doubled module. -/
+/-- Four unrestricted blocks acting on the doubled module over any ring `R`. -/
 def block (A B C D : Module.End R M) : Module.End R (M × M) :=
   (A.coprod B).prod (C.coprod D)
 
@@ -35,36 +35,106 @@ theorem block_apply (A B C D : Module.End R M) (x : M × M) :
     block A B C D x = (A x.1 + B x.2, C x.1 + D x.2) :=
   rfl
 
-/-- The native product/coproduct equivalences cover the full doubled
-endomorphism space. -/
+/-- The upper-left block, extracted by native injection and projection. -/
+def upperLeft (T : Module.End R (M × M)) : Module.End R M :=
+  (LinearMap.fst R M M).comp (T.comp (LinearMap.inl R M M))
+
+/-- The upper-right block, extracted by native injection and projection. -/
+def upperRight (T : Module.End R (M × M)) : Module.End R M :=
+  (LinearMap.fst R M M).comp (T.comp (LinearMap.inr R M M))
+
+/-- The lower-left block, extracted by native injection and projection. -/
+def lowerLeft (T : Module.End R (M × M)) : Module.End R M :=
+  (LinearMap.snd R M M).comp (T.comp (LinearMap.inl R M M))
+
+/-- The lower-right block, extracted by native injection and projection. -/
+def lowerRight (T : Module.End R (M × M)) : Module.End R M :=
+  (LinearMap.snd R M M).comp (T.comp (LinearMap.inr R M M))
+
+@[simp]
+theorem upperLeft_block (A B C D : Module.End R M) :
+    upperLeft (block A B C D) = A := by
+  apply LinearMap.ext
+  intro x
+  simp [upperLeft]
+
+@[simp]
+theorem upperRight_block (A B C D : Module.End R M) :
+    upperRight (block A B C D) = B := by
+  apply LinearMap.ext
+  intro x
+  simp [upperRight]
+
+@[simp]
+theorem lowerLeft_block (A B C D : Module.End R M) :
+    lowerLeft (block A B C D) = C := by
+  apply LinearMap.ext
+  intro x
+  simp [lowerLeft]
+
+@[simp]
+theorem lowerRight_block (A B C D : Module.End R M) :
+    lowerRight (block A B C D) = D := by
+  apply LinearMap.ext
+  intro x
+  simp [lowerRight]
+
+/-- Reconstruction of any doubled endomorphism from its four block projections over any ring `R`. -/
+theorem block_projections (T : Module.End R (M × M)) :
+    block (upperLeft T) (upperRight T) (lowerLeft T) (lowerRight T) = T := by
+  apply LinearMap.ext
+  rintro ⟨x, y⟩
+  have hxy : (x, y) = (x, (0 : M)) + ((0 : M), y) := by simp
+  apply Prod.ext
+  · simp only [block_apply, upperLeft, upperRight, LinearMap.comp_apply,
+      LinearMap.fst_apply, LinearMap.inl_apply, LinearMap.inr_apply]
+    rw [← Prod.fst_add, ← map_add, ← hxy]
+  · simp only [block_apply, lowerLeft, lowerRight, LinearMap.comp_apply,
+      LinearMap.snd_apply, LinearMap.inl_apply, LinearMap.inr_apply]
+    rw [← Prod.snd_add, ← map_add, ← hxy]
+
+/-- Equality of full doubled operators is equality of all four blocks over any ring `R`. -/
+@[simp]
+theorem block_inj {A B C D A' B' C' D' : Module.End R M} :
+    block A B C D = block A' B' C' D' ↔
+      A = A' ∧ B = B' ∧ C = C' ∧ D = D' := by
+  constructor
+  · intro h
+    refine ⟨?_, ?_, ?_, ?_⟩
+    · simpa using congrArg upperLeft h
+    · simpa using congrArg upperRight h
+    · simpa using congrArg lowerLeft h
+    · simpa using congrArg lowerRight h
+  · rintro ⟨rfl, rfl, rfl, rfl⟩
+    rfl
+
+theorem exists_block (T : Module.End R (M × M)) :
+    ∃ A B C D : Module.End R M, block A B C D = T :=
+  ⟨upperLeft T, upperRight T, lowerLeft T, lowerRight T, block_projections T⟩
+
+/-- The additive equivalence between four endomorphism blocks and the doubled
+endomorphism space over any ring `R`. -/
 def blockEquiv :
     ((Module.End R M × Module.End R M) ×
-      (Module.End R M × Module.End R M)) ≃ₗ[R]
-        Module.End R (M × M) :=
-  ((LinearMap.coprodEquiv R).prodCongr
-      (LinearMap.coprodEquiv R)).trans
-    (LinearMap.prodEquiv R)
+      (Module.End R M × Module.End R M)) ≃+
+        Module.End R (M × M) where
+  toFun p := block p.1.1 p.1.2 p.2.1 p.2.2
+  invFun T := ((upperLeft T, upperRight T), (lowerLeft T, lowerRight T))
+  left_inv p := by
+    rcases p with ⟨⟨A, B⟩, ⟨C, D⟩⟩
+    simp
+  right_inv T := block_projections T
+  map_add' p q := by
+    rcases p with ⟨⟨A, B⟩, ⟨C, D⟩⟩
+    rcases q with ⟨⟨A', B'⟩, ⟨C', D'⟩⟩
+    apply LinearMap.ext
+    rintro ⟨x, y⟩
+    apply Prod.ext <;> simp <;> abel
 
 @[simp]
 theorem blockEquiv_apply (A B C D : Module.End R M) :
     blockEquiv ((A, B), (C, D)) = block A B C D :=
   rfl
-
-/-- Equality of full doubled operators is equality of all four blocks. -/
-@[simp]
-theorem block_inj {A B C D A' B' C' D' : Module.End R M} :
-    block A B C D = block A' B' C' D' ↔
-      A = A' ∧ B = B' ∧ C = C' ∧ D = D' := by
-  change blockEquiv ((A, B), (C, D)) =
-      blockEquiv ((A', B'), (C', D')) ↔ _
-  rw [(blockEquiv (R := R) (M := M)).injective.eq_iff]
-  simp only [Prod.mk.injEq, and_assoc]
-
-theorem exists_block (T : Module.End R (M × M)) :
-    ∃ A B C D : Module.End R M, block A B C D = T := by
-  obtain ⟨⟨⟨A, B⟩, ⟨C, D⟩⟩, h⟩ :=
-    (blockEquiv (R := R) (M := M)).surjective T
-  exact ⟨A, B, C, D, h⟩
 
 @[simp]
 theorem block_zero :
@@ -111,44 +181,22 @@ theorem block_mul (A B C D A' B' C' D' : Module.End R M) :
     simp only [Module.End.mul_apply, block_apply, LinearMap.add_apply, map_add] <;>
     abel
 
-/-- The upper-right block, extracted by native injection and projection. -/
-def upperRight (T : Module.End R (M × M)) : Module.End R M :=
-  (LinearMap.fst R M M).comp (T.comp (LinearMap.inr R M M))
-
-/-- The lower-left block, extracted by native injection and projection. -/
-def lowerLeft (T : Module.End R (M × M)) : Module.End R M :=
-  (LinearMap.snd R M M).comp (T.comp (LinearMap.inl R M M))
-
-@[simp]
-theorem upperRight_block (A B C D : Module.End R M) :
-    upperRight (block A B C D) = B := by
-  apply LinearMap.ext
-  intro x
-  simp [upperRight]
-
-@[simp]
-theorem lowerLeft_block (A B C D : Module.End R M) :
-    lowerLeft (block A B C D) = C := by
-  apply LinearMap.ext
-  intro x
-  simp [lowerLeft]
-
-/-- Simultaneous action on both summands, using native algebra homomorphisms. -/
-def lift : Module.End R M →ₐ[R] Module.End R (M × M) :=
-  (LinearMap.prodMapAlgHom R M M).comp
-    ((AlgHom.id R (Module.End R M)).prod
-      (AlgHom.id R (Module.End R M)))
+/-- Simultaneous action on both summands, using native ring homomorphisms over any ring `R`. -/
+def lift : Module.End R M →+* Module.End R (M × M) where
+  toFun A := block A 0 0 A
+  map_one' := block_one
+  map_mul' A B := by simp [block_mul]
+  map_zero' := block_zero
+  map_add' A B := by simp [block_add]
 
 @[simp]
 theorem lift_apply (A : Module.End R M) (x : M × M) :
-    lift A x = (A x.1, A x.2) :=
-  rfl
+    lift A x = (A x.1, A x.2) := by
+  simp [lift]
 
 theorem lift_eq_block (A : Module.End R M) :
-    lift A = block A 0 0 A := by
-  apply LinearMap.ext
-  rintro ⟨x, y⟩
-  apply Prod.ext <;> simp
+    lift A = block A 0 0 A :=
+  rfl
 
 /-- No endomorphism information is lost by simultaneous lifting. -/
 theorem lift_injective :

@@ -1,6 +1,7 @@
 import InfoGeometry.Projective.KleinQuadric
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
+import Mathlib.Tactic.NoncommRing
 
 /-!
 # InfoGeometry.Projective.KleinQuadricIncidence
@@ -23,7 +24,9 @@ open KleinQuadric
 
 namespace Plucker6
 
-variable {R : Type*} [CommRing R]
+section Ring
+
+variable {R : Type*} [Ring R]
 
 /--
 Klein line-incidence pairing.
@@ -37,38 +40,13 @@ def incidenceForm (P Q : Plucker6 R) : R :=
   P.p01 * Q.p23 - P.p02 * Q.p13 + P.p03 * Q.p12
     + P.p12 * Q.p03 - P.p13 * Q.p02 + P.p23 * Q.p01
 
-/--
-The incidence pairing is exactly the polar form attached to the Klein quadric
-from `InfoGeometry.Projective.KleinQuadric`.
--/
-@[simp] theorem incidenceForm_eq_polar (P Q : Plucker6 R) :
-    incidenceForm P Q = Plucker6.polar P Q := by
-  rw [Plucker6.polar_formula]
-  unfold incidenceForm
-  ring
-
-@[simp] theorem incidenceForm_symm (P Q : Plucker6 R) :
-    incidenceForm P Q = incidenceForm Q P := by
-  rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
-  rcases Q with ⟨q01, q02, q03, q12, q13, q23⟩
-  unfold incidenceForm
-  ring
-
 /-- Left homogeneity of incidence form. -/
 @[simp] theorem incidenceForm_scale_left (l : R) (P Q : Plucker6 R) :
     incidenceForm (Plucker6.scale l P) Q = l * incidenceForm P Q := by
   rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
   rcases Q with ⟨q01, q02, q03, q12, q13, q23⟩
   unfold incidenceForm Plucker6.scale
-  ring
-
-/-- Right homogeneity of incidence form. -/
-@[simp] theorem incidenceForm_scale_right (m : R) (P Q : Plucker6 R) :
-    incidenceForm P (Plucker6.scale m Q) = m * incidenceForm P Q := by
-  rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
-  rcases Q with ⟨q01, q02, q03, q12, q13, q23⟩
-  unfold incidenceForm Plucker6.scale
-  ring
+  noncomm_ring
 
 /-- Incidence fiber through a fixed line-coordinate point `Y`. -/
 def incidenceFiber (Y : Plucker6 R) : Set (Plucker6 R) :=
@@ -88,23 +66,6 @@ def incidenceFiber (Y : Plucker6 R) : Set (Plucker6 R) :=
   constructor
   · intro h
     exact (mul_eq_zero.mp h).resolve_left hl
-  · intro h
-    rw [h, mul_zero]
-
-/-- Right representative rescaling does not change the incidence fiber. -/
-  theorem incidenceFiber_scale_right
-    [NoZeroDivisors R]
-    (m : R) (hm : m ≠ 0)
-    (Y : Plucker6 R) :
-    {X : Plucker6 R | incidenceForm X (Plucker6.scale m Y) = 0}
-      =
-    {X : Plucker6 R | incidenceForm X Y = 0} := by
-  ext X
-  change (incidenceForm X (Plucker6.scale m Y) = 0 ↔ incidenceForm X Y = 0)
-  rw [incidenceForm_scale_right]
-  constructor
-  · intro h
-    exact (mul_eq_zero.mp h).resolve_left hm
   · intro h
     rw [h, mul_zero]
 
@@ -137,6 +98,54 @@ theorem incidenceFiber_erlangen_image
     change incidenceForm (g X) (g Y) = 0
     rw [hcov X Y, hX, mul_zero]
 
+end Ring
+
+section CommRing
+
+variable {R : Type*} [CommRing R]
+
+/--
+The incidence pairing is exactly the polar form attached to the Klein quadric
+from `InfoGeometry.Projective.KleinQuadric`.
+-/
+@[simp] theorem incidenceForm_eq_polar (P Q : Plucker6 R) :
+    incidenceForm P Q = Plucker6.polar P Q := by
+  rw [Plucker6.polar_formula]
+  unfold incidenceForm
+  ring
+
+@[simp] theorem incidenceForm_symm (P Q : Plucker6 R) :
+    incidenceForm P Q = incidenceForm Q P := by
+  rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
+  rcases Q with ⟨q01, q02, q03, q12, q13, q23⟩
+  unfold incidenceForm
+  ring
+
+/-- Right homogeneity of incidence form. -/
+@[simp] theorem incidenceForm_scale_right (m : R) (P Q : Plucker6 R) :
+    incidenceForm P (Plucker6.scale m Q) = m * incidenceForm P Q := by
+  rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
+  rcases Q with ⟨q01, q02, q03, q12, q13, q23⟩
+  unfold incidenceForm Plucker6.scale
+  ring
+
+/-- Right representative rescaling does not change the incidence fiber. -/
+  theorem incidenceFiber_scale_right
+    [NoZeroDivisors R]
+    (m : R) (hm : m ≠ 0)
+    (Y : Plucker6 R) :
+    {X : Plucker6 R | incidenceForm X (Plucker6.scale m Y) = 0}
+      =
+    {X : Plucker6 R | incidenceForm X Y = 0} := by
+  ext X
+  change (incidenceForm X (Plucker6.scale m Y) = 0 ↔ incidenceForm X Y = 0)
+  rw [incidenceForm_scale_right]
+  constructor
+  · intro h
+    exact (mul_eq_zero.mp h).resolve_left hm
+  · intro h
+    rw [h, mul_zero]
+
 /--
 Combined projective scaling plus Erlangen covariance for Klein incidence
 fibers.
@@ -161,6 +170,8 @@ theorem incidenceFiber_projective_erlangen_image
       g '' {X : Plucker6 R | incidenceForm X Y = 0} := by
         exact congrArg (fun S : Set (Plucker6 R) => g '' S)
           (incidenceFiber_scale_right m hm Y)
+
+end CommRing
 
 end Plucker6
 

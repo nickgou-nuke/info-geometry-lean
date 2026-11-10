@@ -54,12 +54,12 @@ lemma commutator_pair' (A B C : V →ₗ[𝕜] V) :
     _ = A * B * C - B * A * C + B * A * C - B * C * A     := by simp [← mul_assoc]
     _ = B * (A * C - C * A) + (A * B - B * A) * C         := by simp [mul_sub, sub_mul, ← mul_assoc]
 
-@[simp] lemma commutator_smul_one {𝕜 : Type*} [Field 𝕜] (V : Type*) [AddCommGroup V] [Module 𝕜 V]
+@[simp] lemma commutator_smul_one {𝕜 : Type*} [CommSemiring 𝕜] (V : Type*) [AddCommGroup V] [Module 𝕜 V]
     (A : V →ₗ[𝕜] V) (c : 𝕜) :
     A.commutator (c • 1) = 0 := by
   simp [LinearMap.commutator]
 
-@[simp] lemma smul_one_commutator {𝕜 : Type*} [Field 𝕜] (V : Type*) [AddCommGroup V] [Module 𝕜 V]
+@[simp] lemma smul_one_commutator {𝕜 : Type*} [CommSemiring 𝕜] (V : Type*) [AddCommGroup V] [Module 𝕜 V]
     (A : V →ₗ[𝕜] V) (c : 𝕜) :
     (c • 1 : V →ₗ[𝕜] V).commutator A = 0 := by
   simp [LinearMap.commutator]
@@ -70,7 +70,7 @@ end commutator
 
 section commutatorBilin
 
-variable {𝕜 : Type*} [Field 𝕜] (V : Type*) [AddCommGroup V] [Module 𝕜 V]
+variable {𝕜 : Type*} [CommSemiring 𝕜] (V : Type*) [AddCommGroup V] [Module 𝕜 V]
 
 /-- Commutator `[⬝,⬝]` as a bilinear map on the space of linear maps. -/
 noncomputable def commutatorBilin :

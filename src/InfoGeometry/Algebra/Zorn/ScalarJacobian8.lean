@@ -13,7 +13,7 @@ on every diagonal entry.  Its determinant is `u^8`.
 namespace InfoGeometry.Algebra.Zorn
 
 /-- The `8×8` coordinate matrix for uniform scalar scaling on Zorn coordinates. -/
-def scalarJacobianMatrix8 {R : Type*} [CommRing R] (u : R) : Matrix (Fin 8) (Fin 8) R :=
+def scalarJacobianMatrix8 {R : Type*} [Ring R] (u : R) : Matrix (Fin 8) (Fin 8) R :=
   Matrix.diagonal (fun _ : Fin 8 => u)
 
 /-- The coordinate-volume Jacobian of uniform scalar scaling on eight Zorn coordinates. -/

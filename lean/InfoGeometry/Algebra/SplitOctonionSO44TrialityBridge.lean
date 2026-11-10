@@ -7,7 +7,7 @@ namespace InfoGeometry.Algebra.SplitOctonionSO44TrialityBridge
 
 /-- **Definition**: Zorn Vector-Matrix Representation of Split-Octonions.
     z = (a, b, u, v) where a, b ∈ R and u, v ∈ R³. -/
-structure ZornSplitOctonion (R : Type*) [CommRing R] where
+structure ZornSplitOctonion (R : Type*) [Ring R] where
   a : R
   b : R
   u : Fin 3 → R
@@ -15,7 +15,7 @@ structure ZornSplitOctonion (R : Type*) [CommRing R] where
 
 namespace ZornSplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Split-Octonion Determinant / Quadratic Norm Form N(z) = a b - ⟨u, v⟩.
     Carries the non-compact SO(4,4) signature (4,4). -/
@@ -72,7 +72,7 @@ end Cl44Generators
     1. Zorn split-octonion determinant norm N(0) = 0 over signature (4,4).
     2. Cl(4,4) chiral projector completeness P₊ + P⋺ = 1. -/
 theorem master_split_octonion_so44_triality_synthesis
-    {R : Type*} [CommRing R] [Invertible (2 : R)] (g : Cl44Generators R) :
+    {R : Type*} [Ring R] [Invertible (2 : R)] (g : Cl44Generators R) :
     (ZornSplitOctonion.normSq (⟨0, 0, 0, 0⟩ : ZornSplitOctonion R) = 0) ∧
     (g.projPlus + g.projMinus = 1) := ⟨
   ZornSplitOctonion.normSq_zero,

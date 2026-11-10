@@ -19,14 +19,14 @@ The thermodynamic KMS trace (partition function) of the Hadjiivanov log block
 evaluates to its trace, which isolates the primary component since the nilpotent
 logarithmic partner N has trace 0.
 -/
-def logBlockPartitionFunction (R : Type*) [CommRing R] : R :=
+def logBlockPartitionFunction (R : Type*) [Ring R] : R :=
   Matrix.trace (standardLogBlock R).matrix
 
 /--
 The partition function of the pure nilpotent log block vanishes, representing
 the structural feature of the un-normalized Amplituhedron boundary volume anomaly.
 -/
-theorem logBlockPartitionFunction_vanishes (R : Type*) [CommRing R] :
+theorem logBlockPartitionFunction_vanishes (R : Type*) [Ring R] :
     logBlockPartitionFunction R = 0 := by
   dsimp [logBlockPartitionFunction, standardLogBlock]
   simp [Matrix.trace_fin_two, jordanNilpotent]

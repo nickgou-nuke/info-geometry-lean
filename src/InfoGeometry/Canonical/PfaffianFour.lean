@@ -15,12 +15,12 @@ implementation for arbitrary even dimensions.
 namespace InfoGeometry.Canonical.Pfaffian
 
 /-- The standard 4×4 skew-symmetric matrix with upper-triangular entries. -/
-def skew4 {R : Type*} [CommRing R] (a b c d e f : R) :
+def skew4 {R : Type*} [Ring R] (a b c d e f : R) :
     Matrix (Fin 4) (Fin 4) R :=
   !![0, a, b, c; -a, 0, d, e; -b, -d, 0, f; -c, -e, -f, 0]
 
 /-- The Pfaffian polynomial of a 4×4 skew-symmetric matrix. -/
-def pfaffian4 {R : Type*} [CommRing R] (a b c d e f : R) : R :=
+def pfaffian4 {R : Type*} [Ring R] (a b c d e f : R) : R :=
   a * f - b * e + c * d
 
 private lemma det_fin_three_explicit {R : Type*} [CommRing R]

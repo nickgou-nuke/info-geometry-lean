@@ -4,7 +4,7 @@ import Mathlib.Algebra.Ring.Basic
 
 namespace InfoGeometry.GrandUnification.KleinDiracRealization
 
-variable {R M : Type*} [CommRing R] [Invertible (2 : R)] [AddCommGroup M] [Module R M]
+variable {R M : Type*} [Ring R] [AddCommGroup M] [Module R M]
 
 def Ego (Γ : Module.End R M) : Submodule R M := LinearMap.ker (Γ - 1)
 def Anima (Γ : Module.End R M) : Submodule R M := LinearMap.ker (Γ + 1)

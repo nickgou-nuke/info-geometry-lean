@@ -3,7 +3,33 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+/-
+Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.
+Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
+Bulgarian Academy of Sciences.
 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+Authors: Nikolay Goutev, Dimitar Tonev
+-/
+
+import InfoGeometry.Analysis.FixedGroundHamiltonianFiber
+import InfoGeometry.Analysis.FixedGroundHamiltonianSpectrum
+import InfoGeometry.Analysis.RealOperatorGapCentering
+import InfoGeometry.OperatorAlgebra.FinitePropagationCompression
+import InfoGeometry.OperatorAlgebra.KitaevDoubledRotor
+import InfoGeometry.OperatorAlgebra.SkewCompressionCounterexample
+import InfoGeometry.OperatorAlgebra.SkewCompressionGap
 import InfoGeometry.Twistor.RealConstructs
 import InfoGeometry.Twistor.RealConstructsAudit
 import InfoGeometry.Physics.NuclearTwistorSectorAudit
@@ -80,6 +106,17 @@ import InfoGeometry.Canonical.BipolarAll
 import InfoGeometry.Canonical.TomitaCliffordJordanLieBridge
 import InfoGeometry.Canonical.OperatorMobiusInversion
 import InfoGeometry.Canonical.OperatorResolventSpine
+import InfoGeometry.Canonical.CartanHestenesPinSkolemNoetherGaloisPoset
+import InfoGeometry.Canonical.TernaryCantorCliffordCyclotomicBraidedPinPoset
+import InfoGeometry.Canonical.BhojaKrasnovSpinorPolyformMixedParabolicPoset
+import InfoGeometry.Canonical.XamboWesselRieszSkewDerivationOlindeRodriguesPoset
+import InfoGeometry.Canonical.AharonovTwoStateWeakValueModularShiftHolonomyPoset
+import InfoGeometry.Canonical.CartanBhojaKrasnovXamboAharonovUnificationBridge
+import InfoGeometry.OperatorAlgebra.PeirceSpine.BimetricSheetGeometry
+import InfoGeometry.OperatorAlgebra.PeirceSpine.TwoStateModularShiftGeometry
+import InfoGeometry.OperatorAlgebra.PeirceSpine.NavierMadelungChiralVortexAnomalyPoset
+import InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset
+import InfoGeometry.Clifford.XamboWesselRieszRotorGeometry
 import InfoGeometry.Automorphic.SiegelResonance
 import InfoGeometry.Automorphic.SiegelArithmeticResonanceOperator
 import InfoGeometry.Automorphic.ZetaPotentialSign
@@ -361,7 +398,6 @@ import InfoGeometry.Canonical.PeirceReflectionAudit
 import InfoGeometry.Canonical.AlbertCayleyDickson
 import InfoGeometry.Canonical.ArnoldParaKahlerBCFW
 import InfoGeometry.Algebra.ZornAlternativeLaws
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-
 # InfoGeometry
@@ -563,6 +599,7 @@ import InfoGeometry.Algebra.DeWittPeirceSuperalgebra
 import InfoGeometry.Algebra.Det2
 import InfoGeometry.Algebra.DihedralArtinI2SixSpinLift
 import InfoGeometry.Algebra.DihedralArtinI2SixSpinOrder
+import InfoGeometry.Algebra.DihedralFourierBlocks
 import InfoGeometry.Algebra.DiscretePowerGradeReadout
 import InfoGeometry.Algebra.DualAlgebraAutomorphismDerivationBridge
 import InfoGeometry.Algebra.DualQuaternion
@@ -718,6 +755,7 @@ import InfoGeometry.Algebra.NonAssocIteratedLeibniz
 import InfoGeometry.Algebra.NonAssocIteratedLeibnizTransport
 import InfoGeometry.Algebra.NonAssocPeirceFrame
 import InfoGeometry.Algebra.NoncommutativePlaneWaveKernel
+import InfoGeometry.Algebra.FiniteGroupFourier
 import InfoGeometry.Algebra.OSp12BulkBoundaryBridge
 import InfoGeometry.Algebra.OSp12ColimitReadback
 import InfoGeometry.Algebra.OSp12InductiveColimit
@@ -725,6 +763,7 @@ import InfoGeometry.Algebra.OSp12LogarithmicTransport
 import InfoGeometry.Algebra.OctonionMatrixObstruction
 import InfoGeometry.Algebra.OnCuntzNAryIFSBridge
 import InfoGeometry.Algebra.OperatorSymbolCore
+import InfoGeometry.Algebra.OneCornerCounterexample
 import InfoGeometry.Algebra.OrbitClassification
 import InfoGeometry.Algebra.OrbitClassificationBridge
 import InfoGeometry.Algebra.OrbitStratification
@@ -838,6 +877,7 @@ import InfoGeometry.Algebra.SuperTraceBerezinian
 import InfoGeometry.Algebra.SupergradedCocycle
 import InfoGeometry.Algebra.SupergradedHomogeneousClosure
 import InfoGeometry.Algebra.SupergradedJordanLieSplit
+import InfoGeometry.Algebra.SubgroupCompressionVariance
 import InfoGeometry.Algebra.SusyCore
 import InfoGeometry.Algebra.SymplecticRankTwoJacobiator
 import InfoGeometry.Algebra.TemperleyLiebZeroLoop
@@ -1447,6 +1487,7 @@ import InfoGeometry.Arithmetic.CuntzPrimeCriticalEulerFactorBridge
 import InfoGeometry.Arithmetic.CuntzPrimeFiniteGibbsBridge
 import InfoGeometry.Arithmetic.CyclotomicFiveNPotentGaloisBridge
 import InfoGeometry.Arithmetic.CyclotomicGaloisRootsOfUnityGaussSumCapstone
+import InfoGeometry.Arithmetic.CyclotomicHarmonicOrbits
 import InfoGeometry.Arithmetic.DirichletCharacters
 import InfoGeometry.Arithmetic.DirichletModeFactorization
 import InfoGeometry.Arithmetic.Erdos1196ProofPin
@@ -1710,10 +1751,10 @@ import InfoGeometry.AsanoRuelle.MobiusPoleScaleAction
 import InfoGeometry.AsanoRuelle.UnrestrictedFalse
 import InfoGeometry.Assumptions
 import InfoGeometry.Assumptions.Determinant
-import InfoGeometry.Assumptions.DualConnections
-import InfoGeometry.Assumptions.LLN
-import InfoGeometry.Assumptions.ManifoldDegree
-import InfoGeometry.Assumptions.ManifoldHomology
+import InfoGeometry.Canonical.DualConnectionsCore
+import InfoGeometry.Canonical.LLNCore
+import InfoGeometry.Canonical.ManifoldDegreeCore
+import InfoGeometry.Canonical.ManifoldHomologyCore
 import InfoGeometry.AtiyahBottEquivariantLocalizationIndex
 import InfoGeometry.AtiyahBottEquivariantLocalizationIndexAudit
 import InfoGeometry.Attention.AttentionCurvatureHolonomy
@@ -2149,7 +2190,6 @@ import InfoGeometry.Canonical.CantorBoundaryReadoutIntervalApproximation
 import InfoGeometry.Canonical.CantorBoundaryReadoutIntervalTarget
 import InfoGeometry.Canonical.CantorBoundaryReadoutKernelQuotientTopCat
 import InfoGeometry.Canonical.CantorBoundaryTomitaBridge
-import InfoGeometry.Canonical.CantorCFTObservables
 import InfoGeometry.Canonical.CantorCartanIndependentCoordinates
 import InfoGeometry.Canonical.CantorCartanTorusLaplaceMellin
 import InfoGeometry.Canonical.CantorCliffordFunctionModelMirrorGrading
@@ -5582,7 +5622,6 @@ import InfoGeometry.Critical.LogarithmicCFTCapstone
 import InfoGeometry.CyclotomicSplitting.AlgebraicPolarization
 import InfoGeometry.CyclotomicSplitting.AlgebraicPolarizationTests
 import InfoGeometry.DAGMajorana
-import InfoGeometry.Degree
 import InfoGeometry.Detector.AmariHessianDependency
 import InfoGeometry.Detector.AmariHessianDuality
 import InfoGeometry.Detector.AmariHessianDualityTests
@@ -6417,7 +6456,6 @@ import InfoGeometry.External.Auto.TransformsAndScale
 import InfoGeometry.External.Auto.TrifactorGeometry
 import InfoGeometry.External.Auto.TripotentCliffordColimit
 import InfoGeometry.External.Auto.TripotentPenroseHolography
-import InfoGeometry.External.Auto.TwistedOrbifoldVacuum
 import InfoGeometry.External.Auto.UnifiedAnomalyArchitecture
 import InfoGeometry.External.Auto.UnifiedKleinHolographicArchitecture
 import InfoGeometry.External.Auto.UthayakumaarMirrorKnockout
@@ -6425,7 +6463,6 @@ import InfoGeometry.External.Auto.V4
 import InfoGeometry.External.Auto.V4_test2
 import InfoGeometry.External.Auto.VacuumCohomology
 import InfoGeometry.External.Auto.VacuumGroundstate
-import InfoGeometry.External.Auto.VacuumTopology
 import InfoGeometry.External.Auto.VarlamovKleinSpectral
 import InfoGeometry.External.Auto.VerberckWallpaperFourier
 import InfoGeometry.External.Auto.VertexAlgebraBraidingCocycle
@@ -6968,6 +7005,7 @@ import InfoGeometry.LLM.DiscreteRouterHestenesPathBridge
 import InfoGeometry.LLM.FiniteVectorSpinKernel
 import InfoGeometry.LLM.HypothesisScaffold70
 import InfoGeometry.LLM.KMSAttentionThermodynamicRouterCapstone
+import InfoGeometry.LLM.KMSBoundaryCounterexample
 import InfoGeometry.LLM.KreinEuclideanComparison
 import InfoGeometry.LLM.Llama4PythonBlockSpec
 import InfoGeometry.LLM.Llama4SpinSpec
@@ -6993,11 +7031,12 @@ import InfoGeometry.LLM.SpinTransformerFixedPoint
 import InfoGeometry.LLM.SpinTransformerMeanField
 import InfoGeometry.LLM.SpinTransformerPathEntropy
 import InfoGeometry.LLM.SpinTransformerQuenchRelax
+import InfoGeometry.LLM.SubgroupLogCompression
 import InfoGeometry.LLM.TransformerPhysicsEngine
 import InfoGeometry.LLM.TrialityMoE
 import InfoGeometry.LLM.WallpaperMirrorAttentionBridge
 import InfoGeometry.LLM.ZModFourierBridge
-import InfoGeometry.LLM.CyclicGramGeometry
+import InfoGeometry.LLM.WalshCharacterGeometry
 import InfoGeometry.LanglandsGWBridge
 import InfoGeometry.LatticeGauge.FiniteGibbsModel
 import InfoGeometry.LatticeGauge.FinitePlaquette
@@ -7866,7 +7905,6 @@ import InfoGeometry.OperatorAlgebra.OperatorSuperoperatorExamples
 import InfoGeometry.OperatorAlgebra.OperatorZornEllLift
 import InfoGeometry.OperatorAlgebra.OperatorZornTwinAudit
 import InfoGeometry.OperatorAlgebra.OppositeFrameTransport
-import InfoGeometry.OperatorAlgebra.OntologyRing
 import InfoGeometry.OperatorAlgebra.ParabolicClockInClifford
 import InfoGeometry.OperatorAlgebra.ParabolicClockInCliffordInfinity
 import InfoGeometry.OperatorAlgebra.PartnerGeneralizedEigenspaces
@@ -8162,17 +8200,6 @@ import InfoGeometry.ParaKahler.ParaKahlerMetriplecticFisherClosure
 import InfoGeometry.ParaKahler.RapidityAngleHessianClosure
 import InfoGeometry.ParaKahler.UnifiedPotential
 import InfoGeometry.Parafermion.PrimeParafermionGrandCanonicalClock
-import InfoGeometry.Parafermion.EpistemicCompilerSelfBootstrapPoset
-import InfoGeometry.PeterWeyl.PeterWeylNoncommutativeFourierPoset
-import InfoGeometry.GaloisQuotient.GaloisQuotientNonAbelianFourierPoset
-import InfoGeometry.WignerHurwitzAdamsKTheory.WignerHurwitzAdamsKTheoryPoset
-import InfoGeometry.CliffordBottKTheoryWignerS4.CliffordBottKTheoryWignerS4Poset
-import InfoGeometry.Physics.GaloisCyclotomicHurwitzSynthesis
-import InfoGeometry.PinMinus88Triality.PinMinus88TrialityPoset
-import InfoGeometry.Canonical.KitaevPinMinusParityArithmeticBridge
-import InfoGeometry.Kitaev.KitaevLocalGapOmegaSpectrumPoset
-import InfoGeometry.Canonical.LanguageStatisticsCirculantBirkhoffYangianPeircePoset
-import InfoGeometry.Canonical.LanguageSymmetryCirculantToeplitzBirkhoffPeircePoset
 import InfoGeometry.Parahyperkahler.AnalyticExcision
 import InfoGeometry.Parahyperkahler.KreinCuntzBridge
 import InfoGeometry.Peirce.PeirceLadderOperators
@@ -11219,3 +11246,10 @@ import InfoGeometry.WillertonIsbellAmariDuality
 import InfoGeometry.WillertonIsbellAmariDualityAudit
 import InfoGeometry.auto_blueprints
 import InfoGeometry.generalizedKL
+import InfoGeometry.Parafermion.TetractysMajoranaYangMillsPoset
+import InfoGeometry.Canonical.SouriauMetriplecticParabolicWeitzenbockPoset
+import InfoGeometry.Canonical.AmariParaKahlerOperatorLiftAlphaCliffordPoset
+import InfoGeometry.Canonical.WheelerItFromBitSingleCommutatorForgottenArchetypesPoset
+import InfoGeometry.Canonical.VietaIKKTLaxBerryDarkMatterTemperleyLiebHodgePoset
+import InfoGeometry.Canonical.SYKParafermionGolayPeterWeylWignerHurwitzPoset
+import InfoGeometry.Canonical.WheelerGodelKitaevFriedmanFoamMasterPoset

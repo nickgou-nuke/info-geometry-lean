@@ -37,7 +37,7 @@ variable {R : Type u} [CommRing R]
   of modules connected by a differential `d` satisfying the core
   cohomological property `d ∘ d = 0`.
 -/
-structure ModuleComplex (R : Type u) [CommRing R] where
+structure ModuleComplex (R : Type u) [Ring R] where
   -- The objects of the complex, indexed by ℕ. In De Rham cohomology,
   -- `X n` corresponds to the module of n-forms Ω^n(M).
   X : ℕ → ModuleCat.{max u v} R

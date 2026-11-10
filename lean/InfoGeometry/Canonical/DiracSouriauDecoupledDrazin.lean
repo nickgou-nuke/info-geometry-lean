@@ -18,7 +18,7 @@ namespace InfoGeometry.Canonical.DiracSouriau
 open Matrix
 open InfoGeometry.Canonical.Drazin
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [CommRing K]
 
 /--
 Constructive Drazin inverse for a block-diagonal matrix where one block is invertible

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Tessellation.NilpotentFlow
 import InfoGeometry.Algebra.NilpotentModularAutomorphism
@@ -28,10 +33,13 @@ namespace DAG.AlgebraicExponential
 def algebraicExp {A : Type*} [Ring A] (N : A) (_hN : N * N = 0) : A :=
   1 + N
 
-@[simp]
-theorem algebraicExp_eq_one_add {A : Type*} [Ring A] (N : A) (hN : N * N = 0) :
-    algebraicExp N hN = 1 + N :=
-  rfl
+theorem algebraicExp_mul_of_orthogonal_square_zero {A : Type*} [Ring A]
+    (N M : A) (hN : N * N = 0) (hM : M * M = 0)
+    (hNM : N * M = 0) (hMN : M * N = 0) :
+    algebraicExp N hN * algebraicExp M hM =
+      algebraicExp (N + M) (by noncomm_ring [hN, hM, hNM, hMN]) := by
+  unfold algebraicExp
+  noncomm_ring [hN, hM, hNM]
 
 /-- The inverse candidate for `exp(N)` is `exp(-N) = 1 - N`. -/
 @[simp]
@@ -52,14 +60,17 @@ theorem algebraicExp_neg_mul {A : Type*} [Ring A] (N : A) (hN : N * N = 0) :
   simp [algebraicExp]
   noncomm_ring [hN]
 
-/--
-The DAG algebraic exponential is the same unit already owned by the
-tessellation nilpotent-flow lane.
--/
-theorem algebraicExp_unit_eq_tessellationUnit {A : Type*} [Ring A]
+/-- The negative nilpotent exponential is the inverse of the unit owned by the
+tessellation nilpotent-flow lane. -/
+theorem algebraicExp_neg_eq_inverse_unit {A : Type*} [Ring A]
     (N : A) (hN : N * N = 0) :
-    (InfoGeometry.Tessellation.oneAddSquareZeroUnit N hN : A) = algebraicExp N hN :=
-  rfl
+    algebraicExp (-N) (by noncomm_ring [hN]) =
+      (((InfoGeometry.Tessellation.oneAddSquareZeroUnit N hN)⁻¹ : Aˣ) : A) := by
+  calc
+    algebraicExp (-N) (by noncomm_ring [hN]) = 1 - N :=
+      algebraicExp_neg_eq_one_sub N hN
+    _ = (((InfoGeometry.Tessellation.oneAddSquareZeroUnit N hN)⁻¹ : Aˣ) : A) :=
+      (InfoGeometry.Tessellation.oneAddSquareZeroUnit_inv_val N hN).symm
 
 /-! ## Timed nilpotent sector over a noncommutative ring -/
 
@@ -71,10 +82,13 @@ For scalar time, specialize `T` through the owner algebra map for the carrier.
 def timedNilpotentExp {A : Type*} [Ring A] (N T : A) : A :=
   1 + T * N
 
-@[simp]
-theorem timedNilpotentExp_zero {A : Type*} [Ring A] (N : A) :
-    timedNilpotentExp N 0 = 1 := by
-  simp [timedNilpotentExp]
+/- Exact multiplication defect before imposing nilpotence or commutation. -/
+theorem timedNilpotentExp_multiplication_defect {A : Type*} [Ring A]
+    (N S T : A) :
+    timedNilpotentExp N S * timedNilpotentExp N T -
+      timedNilpotentExp N (S + T) = S * N * T * N := by
+  unfold timedNilpotentExp
+  noncomm_ring
 
 /--
 Group law in the square-zero `N` sector.

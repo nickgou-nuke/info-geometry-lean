@@ -52,7 +52,7 @@ Pole-image exclusion: in the nondegenerate branch, the numerator does not
 vanish at the left pole.
 -/
 theorem asano_numerator_ne_zero_at_pole
-    {K : Type*} [Field K]
+    {K : Type*} [CommRing K]
     {A B C D z1 : K}
     (hNondeg : A * D - B * C ≠ 0)
     (hPole : C + D * z1 = 0) :
@@ -70,7 +70,7 @@ If `AD - BC ≠ 0`, a root of
 cannot occur at the left Möbius pole `C + D z₁ = 0`.
 -/
 theorem asano_no_root_at_left_pole_of_nondegenerate
-    {K : Type*} [Field K]
+    {K : Type*} [CommRing K]
     {A B C D z1 z2 : K}
     (hNondeg : A * D - B * C ≠ 0)
     (hPole : C + D * z1 = 0)

@@ -1,16 +1,21 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 
 namespace InfoGeometry.Algebra
 
-variable (R : Type*) [CommRing R]
+variable (R : Type*) [Ring R]
 
 abbrev Vec3 := Fin 3 → R
 
 namespace Vec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def dot (v w : Vec3 R) : R :=
   v 0 * w 0 + v 1 * w 1 + v 2 * w 2
@@ -41,10 +46,10 @@ structure ZornMatrix where
 
 namespace ZornMatrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Coordinate carrier for the native algebraic Zorn matrix. -/
-abbrev Coord (R : Type*) [CommRing R] :=
+abbrev Coord (R : Type*) [Ring R] :=
   R × (Fin 3 → R) × (Fin 3 → R) × R
 
 /-- Native coordinate equivalence for the algebraic Zorn carrier. -/
@@ -133,6 +138,7 @@ instance : Sub (ZornMatrix R) := ⟨sub⟩
 instance : Mul (ZornMatrix R) := ⟨mul⟩
 instance : HSMul R (ZornMatrix R) (ZornMatrix R) := ⟨smul⟩
 instance : Zero (ZornMatrix R) := ⟨zero⟩
+instance : Inhabited (ZornMatrix R) := ⟨zero⟩
 
 @[simp] theorem add_a (X Y : ZornMatrix R) : (X + Y).a = X.a + Y.a := rfl
 @[simp] theorem add_v (X Y : ZornMatrix R) : (X + Y).v = Vec3.add X.v Y.v := rfl
@@ -305,6 +311,36 @@ theorem nonassociative_witness [Nontrivial R] :
     hleft.symm.trans (h.trans hright)
   have ha := congrArg ZornMatrix.a hdiag
   simp [E11, E22] at ha
+
+/-- Over any non-commutative ring `[Ring R]`, the Cayley–Hamilton defect
+`X * X - (zornTrace X) • X + (zornNorm X) • I` of a Zorn matrix equals the
+non-commutative commutator and self-cross anomaly matrix
+`⟨X.a * X.b - X.b * X.a, -(X.w × X.w), X.v × X.v, X.w · X.v - X.v · X.w⟩`. -/
+theorem zorn_characteristic_anomaly_over_noncomm_ring (X : ZornMatrix R) :
+    X * X - (zornTrace X) • X + (zornNorm X) • (I : ZornMatrix R) =
+      { a := X.a * X.b - X.b * X.a
+        v := Vec3.sub ![0, 0, 0] (Vec3.cross X.w X.w)
+        w := Vec3.cross X.v X.v
+        b := Vec3.dot X.w X.v - Vec3.dot X.v X.w } := by
+  change add (sub (mul X X) (smul (zornTrace X) X))
+      (smul (zornNorm X) (I : ZornMatrix R)) = _
+  ext j
+  · simp [mul, sub, add, smul, zornTrace, zornNorm, I,
+      Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+    noncomm_ring
+  · fin_cases j <;>
+      simp [mul, sub, add, smul, zornTrace, zornNorm, I,
+        Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul] <;>
+      noncomm_ring
+  · fin_cases j <;>
+      simp [mul, sub, add, smul, zornTrace, zornNorm, I,
+        Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul] <;>
+      noncomm_ring
+  · simp [mul, sub, add, smul, zornTrace, zornNorm, I,
+      Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+    noncomm_ring
+
+variable {R : Type*} [CommRing R]
 
 lemma dot_cross_self (v : Vec3 R) : Vec3.dot v (Vec3.cross v v) = 0 := by
   dsimp [Vec3.dot, Vec3.cross]

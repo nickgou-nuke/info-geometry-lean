@@ -52,7 +52,7 @@ structure ZornCell (R : Type*) where
 
 namespace ZornCell
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Zorn determinant / split norm. -/
 def detZ (X : ZornCell R) : R :=
@@ -112,7 +112,7 @@ The concrete Zorn composition theorem:
 This is the split-octonion composition norm identity, proved by coordinate
 polynomial calculation.
 -/
-theorem detZ_mul (X Y : ZornCell R) :
+theorem detZ_mul {R : Type*} [CommRing R] (X Y : ZornCell R) :
     detZ (X * Y) = detZ X * detZ Y := by
   change detZ (mulZ X Y) = detZ X * detZ Y
   rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
@@ -121,28 +121,28 @@ theorem detZ_mul (X Y : ZornCell R) :
   ring_nf
 
 /-- Left multiplication by a norm-one Zorn cell preserves `detZ`. -/
-theorem detZ_left_mul_normOne
+theorem detZ_left_mul_normOne {R : Type*} [CommRing R]
     (U X : ZornCell R)
     (hU : detZ U = 1) :
     detZ (U * X) = detZ X := by
   rw [detZ_mul, hU, one_mul]
 
 /-- Right multiplication by a norm-one Zorn cell preserves `detZ`. -/
-theorem detZ_right_mul_normOne
+theorem detZ_right_mul_normOne {R : Type*} [CommRing R]
     (X U : ZornCell R)
     (hU : detZ U = 1) :
     detZ (X * U) = detZ X := by
   rw [detZ_mul, hU, mul_one]
 
 /-- Left null factor forces the product to be Zorn-null. -/
-theorem detZ_mul_eq_zero_of_left_null
+theorem detZ_mul_eq_zero_of_left_null {R : Type*} [CommRing R]
     (X Y : ZornCell R)
     (hX : detZ X = 0) :
     detZ (X * Y) = 0 := by
   rw [detZ_mul, hX, zero_mul]
 
 /-- Right null factor forces the product to be Zorn-null. -/
-theorem detZ_mul_eq_zero_of_right_null
+theorem detZ_mul_eq_zero_of_right_null {R : Type*} [CommRing R]
     (X Y : ZornCell R)
     (hY : detZ Y = 0) :
     detZ (X * Y) = 0 := by
@@ -170,7 +170,7 @@ If `ell` sends multiplication to addition, then
 
 `-ell(detZ (X * Y)) = -ell(detZ X) + -ell(detZ Y)`.
 -/
-theorem negLogDet_mul
+theorem negLogDet_mul {R : Type*} [CommRing R]
     {A : Type*} [AddCommGroup A]
     (ell : R → A)
     (hlog_mul : ∀ a b : R, ell (a * b) = ell a + ell b)

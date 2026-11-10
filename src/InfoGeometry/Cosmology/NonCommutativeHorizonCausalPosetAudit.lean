@@ -23,8 +23,8 @@ open Archetype_IV_Krein_Metric
 open Archetype_V_Bogoliubov_Rindler
 open Matrix
 
-variable {R : Type*} [CommRing R] [StarRing R]
-variable {A : Type*} [Ring A] [StarRing A] [Algebra R A] [StarModule R A]
+variable {R : Type*} [Ring R] [StarRing R]
+variable {A : Type*} [Ring A] [StarRing A] [Module R A] [SMulCommClass R A A] [StarModule R A]
 
 theorem audit_gns_left_ideal (φ : A →ₗ[R] R) (a : A) (x : A) (hx : x ∈ gnsRadical φ) :
     a * x ∈ gnsRadical φ :=

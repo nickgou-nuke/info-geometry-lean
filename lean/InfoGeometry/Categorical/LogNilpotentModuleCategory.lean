@@ -24,7 +24,9 @@ open InfoGeometry.Categorical.LogEndModuleNilpotentClosure
 
 universe u v
 
-variable (𝕜 : Type u) [Field 𝕜]
+section Ring
+
+variable (𝕜 : Type u) [Ring 𝕜]
 
 /-- A logarithmic module with an explicitly certified finite nilpotency order. -/
 structure LogNilpotentModule where
@@ -88,6 +90,14 @@ theorem hom_comp {X Y Z : LogNilpotentModule 𝕜}
 theorem N_pow_order_eq_zero (X : LogNilpotentModule 𝕜) :
     X.N ^ X.nilpotencyOrder = 0 :=
   X.nilpotent
+
+end LogNilpotentModule
+
+end Ring
+
+namespace LogNilpotentModule
+
+variable {𝕜 : Type u} [Field 𝕜]
 
 /-- Tensor product in the finite-nilpotent logarithmic category. -/
 def tensorObj (X Y : LogNilpotentModule 𝕜) : LogNilpotentModule 𝕜 where

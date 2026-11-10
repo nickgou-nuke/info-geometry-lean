@@ -39,9 +39,9 @@ variable [Module.Free R M] [Module.Finite R M]
 noncomputable def supertrace (Γ X : Module.End R M) : R :=
   LinearMap.trace R M (Γ * X)
 
-omit [Module.Free R M] [Module.Finite R M] in
 /-- The product of two $\Gamma$-odd operators is $\Gamma$-even (commutes with $\Gamma$). -/
 theorem odd_mul_odd_commutes_with_grading
+    {R M : Type*} [Ring R] [AddCommGroup M] [Module R M]
     (Γ A B : Module.End R M)
     (hA : Γ * A = -(A * Γ))
     (hB : Γ * B = -(B * Γ)) :

@@ -27,11 +27,11 @@ open HoradamIonMatrixMethods
 variable {R : Type*} [CommRing R]
 
 /-- Finite truncated generating polynomial `∑_{i=0}^n W_i t^i`. -/
-def seqGeneratingTrunc (W : ℕ → R) (t : R) (n : ℕ) : R :=
+def seqGeneratingTrunc {R : Type*} [Ring R] (W : ℕ → R) (t : R) (n : ℕ) : R :=
   ∑ i ∈ Finset.range (n + 1), W i * t ^ i
 
 /-- One-step extension of the finite generating polynomial. -/
-theorem seqGeneratingTrunc_succ (W : ℕ → R) (t : R) (n : ℕ) :
+theorem seqGeneratingTrunc_succ {R : Type*} [Ring R] (W : ℕ → R) (t : R) (n : ℕ) :
     seqGeneratingTrunc W t (n + 1) =
       seqGeneratingTrunc W t n + W (n + 1) * t ^ (n + 1) := by
   unfold seqGeneratingTrunc

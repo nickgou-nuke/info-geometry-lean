@@ -75,8 +75,8 @@ theorem continuous_cyclotomicLatentQuotientReadout :
 /-- Local constancy of `cyclotomicLatentQuotientReadout` on the discrete parameter space. -/
 theorem isLocallyConstant_cyclotomicLatentQuotientReadout :
     IsLocallyConstant cyclotomicLatentQuotientReadout := by
-  unfold cyclotomicLatentQuotientReadout
-  exact IsLocallyConstant.of_discrete
+  intro s
+  exact isOpen_discrete _
 
 /-- Effective cube-root coordinate of `cyclotomicLatentQuotientReadout p`. -/
 @[simp] theorem cyclotomicLatentQuotientReadout_root

@@ -222,7 +222,7 @@ PART 3: The Trifold Surprisal Decomposition in 2x2 Matrix Algebra
 =============================================================================
 -/
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 open Matrix
 
@@ -250,12 +250,12 @@ def supertrace (M : Matrix (Fin 2) (Fin 2) R) : R :=
 theorem supertrace_add (M N : Matrix (Fin 2) (Fin 2) R) :
     supertrace (M + N) = supertrace M + supertrace N := by
   dsimp [supertrace]
-  ring
+  noncomm_ring
 
 theorem supertrace_smul (c : R) (M : Matrix (Fin 2) (Fin 2) R) :
     supertrace (c • M) = c * supertrace M := by
   dsimp [supertrace]
-  ring
+  noncomm_ring
 
 /-- THEOREM 10: Trace of Common Weyl is 2. -/
 @[simp]
@@ -269,7 +269,7 @@ theorem trace_chiralWeyl : trace (chiralWeyl : Matrix (Fin 2) (Fin 2) R) = 0 := 
   dsimp [chiralWeyl, trace, diag]
   rw [Fin.sum_univ_two]
   dsimp
-  ring
+  abel
 
 /-- THEOREM 12: Trace of Shape Derivation vanishes (Traceless). -/
 @[simp]
@@ -278,7 +278,7 @@ theorem trace_shapeDerivation (u : R) (v : R) :
   dsimp [shapeDerivation, trace, diag]
   rw [Fin.sum_univ_two]
   dsimp
-  ring
+  abel
 
 /-- THEOREM 13: Supertrace of Common Weyl vanishes. -/
 @[simp]
@@ -290,7 +290,7 @@ theorem supertrace_commonWeyl : supertrace (commonWeyl : Matrix (Fin 2) (Fin 2) 
 @[simp]
 theorem supertrace_chiralWeyl : supertrace (chiralWeyl : Matrix (Fin 2) (Fin 2) R) = (2 : R) := by
   dsimp [chiralWeyl, supertrace]
-  ring
+  norm_num
 
 /-- THEOREM 15: Supertrace of Shape Derivation vanishes (Supertraceless). -/
 @[simp]
@@ -306,23 +306,22 @@ theorem supertrace_shapeDerivation (u : R) (v : R) :
   Tr(K) = 2 • α
 -/
 theorem trace_trifoldSurprisal (α : R) (β : R) (u : R) (v : R) :
-    trace (trifoldSurprisal α β u v) = (2 : R) * α := by
+    trace (trifoldSurprisal α β u v) = α * (2 : R) := by
   dsimp [trifoldSurprisal]
   rw [trace_add, trace_add, trace_smul, trace_smul]
   rw [trace_commonWeyl, trace_chiralWeyl, trace_shapeDerivation u v]
   simp only [smul_eq_mul, mul_zero, add_zero]
-  ring
 
 /-- 
   🏆 THEOREM 17: The Master Supertrace Readout (Chiral Berezinian Imbalance).
   STr(K) = 2 • β
 -/
 theorem supertrace_trifoldSurprisal (α : R) (β : R) (u : R) (v : R) :
-    supertrace (trifoldSurprisal α β u v) = (2 : R) * β := by
+    supertrace (trifoldSurprisal α β u v) = β * (2 : R) := by
   dsimp [trifoldSurprisal]
   rw [supertrace_add, supertrace_add, supertrace_smul, supertrace_smul]
   rw [supertrace_commonWeyl, supertrace_chiralWeyl, supertrace_shapeDerivation u v]
-  ring
+  simp only [mul_zero, add_zero, zero_add]
 
 /-- 
   🏆 THEOREM 18: Pure Shape Derivations are both Traceless and Supertraceless.

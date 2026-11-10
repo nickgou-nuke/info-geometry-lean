@@ -67,7 +67,7 @@ open InfoGeometry.Synthesis.SplitSedenionImaginaryBimoduleBridge
 -/
 
 /-- Componentwise scalar multiplication on `SplitSedenion R`. -/
-def sedenionSmul {R : Type*} [CommRing R] (c : R) (X : SplitSedenion R) : SplitSedenion R :=
+def sedenionSmul {R : Type*} [Ring R] (c : R) (X : SplitSedenion R) : SplitSedenion R :=
   (zornSmul c X.1, zornSmul c X.2)
 
 /-- Predicate characterizing an $\mathbb{R}$-linear derivation $D : \mathbb{S}_s \to \mathbb{S}_s$

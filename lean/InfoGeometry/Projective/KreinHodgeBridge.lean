@@ -18,7 +18,7 @@ We map:
 
 namespace InfoGeometry.Projective.LLM
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- 
 Represents the decomposition of the Neural Network text generation sequence 

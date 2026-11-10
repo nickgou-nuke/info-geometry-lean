@@ -25,7 +25,7 @@ namespace InfoGeometry.GrandUnification.PfaffianSquareRootCharacter
 
 open Matrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The signed Pfaffian in the standard orientation of the two coordinates. -/
 def pfaffian2D (A : Matrix (Fin 2) (Fin 2) R) : R := A 0 1
@@ -41,12 +41,16 @@ def swapMat2D : Matrix (Fin 2) (Fin 2) R := !![0, 1; 1, 0]
 def tiltedMat2D : Matrix (Fin 2) (Fin 2) R := !![1, 1; 1, 0]
 
 /-- Noncommutativity of the $2 \times 2$ matrix algebra `Matrix (Fin 2) (Fin 2) R`
-over any nontrivial commutative ring `R`. -/
+over any nontrivial ring `R`. -/
 theorem swapMat2D_mul_tiltedMat2D_ne [Nontrivial R] :
     (swapMat2D : Matrix (Fin 2) (Fin 2) R) * tiltedMat2D ≠
       tiltedMat2D * swapMat2D := by
   intro h
   exact InfoGeometry.Algebra.MatrixNoncommutativity.swapMatrix_mul_tiltedMatrix_ne (A := R) h
+
+section CommRing
+
+variable {R : Type*} [CommRing R]
 
 /-- For an arbitrary skew 2-by-2 matrix, the determinant is the square of
 the `(0,1)` entry, the signed Pfaffian in this orientation. -/
@@ -75,5 +79,7 @@ theorem pfaffian2D_congruence_of_isSkew2D
   unfold pfaffian2D
   rw [hcongA, InfoGeometry.Canonical.ChiralVolumePfaffianDiracKahler.pfaffian_congruence_2x2 M (A 0 1)]
   exact Eq.refl (Matrix.det M * A 0 1)
+
+end CommRing
 
 end InfoGeometry.GrandUnification.PfaffianSquareRootCharacter

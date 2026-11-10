@@ -5,7 +5,7 @@ import InfoGeometry.Meta.Architecture
 
 namespace InfoGeometry.Canonical
 
-variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
+variable {R V : Type*} [Ring R] [AddCommGroup V] [Module R V]
 
 /-- **1. Метриплектична Потокова Динамика M(x) = Rotational(x) + Dissipative(x)**:
     Обединява ротационния (симплектичен) и иротационния (метричен/дифузионен) поток. -/

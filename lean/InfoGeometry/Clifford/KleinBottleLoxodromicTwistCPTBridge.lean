@@ -61,7 +61,9 @@ open InfoGeometry.Clifford.Coquaternion
 open InfoGeometry.Clifford.Coquaternion.Coquaternion
 open InfoGeometry.Clifford.SolderingIsotropic
 
-variable {R : Type*} [CommRing R]
+section Ring
+
+variable {R : Type*} [Ring R]
 
 /-! ### 1. The Reflection Generator e₁ in M₂(R) -/
 
@@ -108,29 +110,7 @@ theorem chiral_swap_P_R_to_P_L :
 theorem soldering_parity_reflection (t x y z : R) :
     (e1 : Mat2 R) * solderingMatrix t x y z * e1 =
     solderingMatrix t x (-y) (-z) := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [e1, solderingMatrix, Matrix.mul_apply] <;> ring
-
-/-! ### 4. Preservation of Determinant / Conformal Casimir -/
-
-/-- General determinant conjugation under $e_1$:
-    For any $2 \times 2$ matrix $M$, $\det_2(e_1 M e_1) = \det_2(M)$. -/
-theorem det2_e1_conj (M : Mat2 R) :
-    det2 ((e1 : Mat2 R) * M * e1) = det2 M := by
-  rw [det2_mul, det2_mul, det2_e1]
-  ring
-
-/-- Parity reflection leaves the Minkowski interval / conformal Casimir invariant:
-    $$\det_2(e_1 X(t, x, y, z) e_1) = \det_2(X(t, x, y, z))$$ -/
-theorem det2_soldering_parity_invariant (t x y z : R) :
-    det2 ((e1 : Mat2 R) * solderingMatrix t x y z * e1) =
-    det2 (solderingMatrix t x y z) := by
-  rw [det2_e1_conj]
-
-/-- Explicit expansion verifying interval conservation:
-    $$\det_2(X(t, x, -y, -z)) = t^2 - x^2 + y^2 - z^2$$ -/
-theorem det2_solderingMatrix_parity (t x y z : R) :
-    det2 (solderingMatrix t x (-y) (-z)) = t ^ 2 - x ^ 2 + y ^ 2 - z ^ 2 := by
-  simp [det2_solderingMatrix]
+  ext i j; fin_cases i <;> fin_cases j <;> simp [e1, solderingMatrix, Matrix.mul_apply] <;> abel
 
 /-! ### 5. Loxodromic Boost and Klein Glide Reflection Squaring -/
 
@@ -156,47 +136,12 @@ theorem e1_boostX_e1 (c s : R) :
 theorem boostX_mul (c₁ s₁ c₂ s₂ : R) :
     (boostX c₁ s₁ : Mat2 R) * boostX c₂ s₂ =
     boostX (c₁ * c₂ + s₁ * s₂) (c₁ * s₂ + s₁ * c₂) := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [boostX, Matrix.mul_apply] <;> ring
-
-/-- Squaring a boost gives the doubled rapidity boost:
-    $$\Lambda_{\text{boost}}(c, s)^2 = \Lambda_{\text{boost}}(c^2 + s^2, 2cs)$$
-    which matches $(\cosh\phi, \sinh\phi)^2 = (\cosh(2\phi), \sinh(2\phi))$. -/
-theorem boostX_sq (c s : R) :
-    (boostX c s : Mat2 R) * boostX c s =
-    boostX (c ^ 2 + s ^ 2) (2 * c * s) := by
-  have h := boostX_mul c s c s
-  have h2 : c * s + s * c = 2 * c * s := by ring
-  have hsq : c * c + s * s = c ^ 2 + s ^ 2 := by ring
-  rw [h2, hsq] at h
-  exact h
+  ext i j; fin_cases i <;> fin_cases j <;> simp [boostX, Matrix.mul_apply] <;> abel
 
 /-- The Klein glide reflection operator on spacetime matrices:
     $$\mathcal{G}_{\text{Klein}}(B, X) = e_1 (B X B^\top) e_1$$ -/
 def kleinGlide (B X : Mat2 R) : Mat2 R :=
   (e1 : Mat2 R) * (B * X * Bᵀ) * e1
-
-/-- Squaring the Klein glide reflection doubles the longitudinal boost:
-    $$\mathcal{G}_{\text{Klein}}(B, \mathcal{G}_{\text{Klein}}(B, X)) = (B^2) X (B^2)^\top$$
-    Proving that the two-fold cover of the Klein boundary transformation is an orientable Torus dilation. -/
-theorem glide_reflection_sq_dilation (c s : R) (X : Mat2 R) :
-    kleinGlide (boostX c s) (kleinGlide (boostX c s) X) =
-    (boostX (c ^ 2 + s ^ 2) (2 * c * s)) * X * (boostX (c ^ 2 + s ^ 2) (2 * c * s))ᵀ := by
-  unfold kleinGlide
-  have hB_symm : (boostX c s : Mat2 R)ᵀ = boostX c s := boostX_transpose c s
-  have he1_B_e1 : (e1 : Mat2 R) * boostX c s * e1 = boostX c s := e1_boostX_e1 c s
-  have hB2 : (boostX c s : Mat2 R) * boostX c s = boostX (c ^ 2 + s ^ 2) (2 * c * s) := boostX_sq c s
-  rw [hB_symm]
-  have h_assoc : (e1 : Mat2 R) * (boostX c s * (e1 * (boostX c s * X * boostX c s) * e1) * boostX c s) * e1 =
-    ((e1 : Mat2 R) * boostX c s * e1) * (boostX c s * X * boostX c s) * ((e1 : Mat2 R) * boostX c s * e1) := by
-    simp only [Matrix.mul_assoc]
-  rw [h_assoc, he1_B_e1]
-  have h_final : boostX c s * (boostX c s * X * boostX c s) * boostX c s =
-    (boostX c s * boostX c s) * X * (boostX c s * boostX c s) := by
-    simp only [Matrix.mul_assoc]
-  rw [h_final, hB2]
-  have h_trans : (boostX (c ^ 2 + s ^ 2) (2 * c * s) : Mat2 R)ᵀ = boostX (c ^ 2 + s ^ 2) (2 * c * s) :=
-    boostX_transpose (c ^ 2 + s ^ 2) (2 * c * s)
-  rw [h_trans]
 
 /-! ### 6. Spinor Twist and Fermionic Spin Flip (2π Phase) -/
 
@@ -243,5 +188,66 @@ theorem compile_klein_bottle_loxodromic_twist_cpt_bridge :
     (twistMatrixC * twistMatrixC = -1) := by
   refine ⟨soldering_parity_reflection, chiral_swap_P_L_to_P_R, chiral_swap_P_R_to_P_L,
           det2_e1, spinor_twist_pi_half, spinor_twist_pi_half_complex⟩
+
+end Ring
+
+variable {R : Type*} [CommRing R]
+
+/-! ### 4. Preservation of Determinant / Conformal Casimir -/
+
+/-- General determinant conjugation under $e_1$:
+    For any $2 \times 2$ matrix $M$, $\det_2(e_1 M e_1) = \det_2(M)$. -/
+theorem det2_e1_conj (M : Mat2 R) :
+    det2 ((e1 : Mat2 R) * M * e1) = det2 M := by
+  rw [det2_mul, det2_mul, det2_e1]
+  ring
+
+/-- Parity reflection leaves the Minkowski interval / conformal Casimir invariant:
+    $$\det_2(e_1 X(t, x, y, z) e_1) = \det_2(X(t, x, y, z))$$ -/
+theorem det2_soldering_parity_invariant (t x y z : R) :
+    det2 ((e1 : Mat2 R) * solderingMatrix t x y z * e1) =
+    det2 (solderingMatrix t x y z) := by
+  rw [det2_e1_conj]
+
+/-- Explicit expansion verifying interval conservation:
+    $$\det_2(X(t, x, -y, -z)) = t^2 - x^2 + y^2 - z^2$$ -/
+theorem det2_solderingMatrix_parity (t x y z : R) :
+    det2 (solderingMatrix t x (-y) (-z)) = t ^ 2 - x ^ 2 + y ^ 2 - z ^ 2 := by
+  simp [det2_solderingMatrix]
+
+/-- Squaring a boost gives the doubled rapidity boost:
+    $$\Lambda_{\text{boost}}(c, s)^2 = \Lambda_{\text{boost}}(c^2 + s^2, 2cs)$$
+    which matches $(\cosh\phi, \sinh\phi)^2 = (\cosh(2\phi), \sinh(2\phi))$. -/
+theorem boostX_sq (c s : R) :
+    (boostX c s : Mat2 R) * boostX c s =
+    boostX (c ^ 2 + s ^ 2) (2 * c * s) := by
+  have h := boostX_mul c s c s
+  have h2 : c * s + s * c = 2 * c * s := by ring
+  have hsq : c * c + s * s = c ^ 2 + s ^ 2 := by ring
+  rw [h2, hsq] at h
+  exact h
+
+/-- Squaring the Klein glide reflection doubles the longitudinal boost:
+    $$\mathcal{G}_{\text{Klein}}(B, \mathcal{G}_{\text{Klein}}(B, X)) = (B^2) X (B^2)^\top$$
+    Proving that the two-fold cover of the Klein boundary transformation is an orientable Torus dilation. -/
+theorem glide_reflection_sq_dilation (c s : R) (X : Mat2 R) :
+    kleinGlide (boostX c s) (kleinGlide (boostX c s) X) =
+    (boostX (c ^ 2 + s ^ 2) (2 * c * s)) * X * (boostX (c ^ 2 + s ^ 2) (2 * c * s))ᵀ := by
+  unfold kleinGlide
+  have hB_symm : (boostX c s : Mat2 R)ᵀ = boostX c s := boostX_transpose c s
+  have he1_B_e1 : (e1 : Mat2 R) * boostX c s * e1 = boostX c s := e1_boostX_e1 c s
+  have hB2 : (boostX c s : Mat2 R) * boostX c s = boostX (c ^ 2 + s ^ 2) (2 * c * s) := boostX_sq c s
+  rw [hB_symm]
+  have h_assoc : (e1 : Mat2 R) * (boostX c s * (e1 * (boostX c s * X * boostX c s) * e1) * boostX c s) * e1 =
+    ((e1 : Mat2 R) * boostX c s * e1) * (boostX c s * X * boostX c s) * ((e1 : Mat2 R) * boostX c s * e1) := by
+    simp only [Matrix.mul_assoc]
+  rw [h_assoc, he1_B_e1]
+  have h_final : boostX c s * (boostX c s * X * boostX c s) * boostX c s =
+    (boostX c s * boostX c s) * X * (boostX c s * boostX c s) := by
+    simp only [Matrix.mul_assoc]
+  rw [h_final, hB2]
+  have h_trans : (boostX (c ^ 2 + s ^ 2) (2 * c * s) : Mat2 R)ᵀ = boostX (c ^ 2 + s ^ 2) (2 * c * s) :=
+    boostX_transpose (c ^ 2 + s ^ 2) (2 * c * s)
+  rw [h_trans]
 
 end InfoGeometry.Clifford.KleinBottleLoxodromicTwist

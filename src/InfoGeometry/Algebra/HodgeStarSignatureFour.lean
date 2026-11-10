@@ -46,7 +46,7 @@ namespace InfoGeometry.Algebra.HodgeStarSignatureFour
 
 open scoped Matrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- A `Fin 6` sum splits into six summands (helper for the 6×6 entry work). -/
 theorem sum_fin6 {M : Type*} [AddCommMonoid M] (f : Fin 6 → M) :
@@ -203,7 +203,7 @@ theorem projSelfDual_add_projAntiSelfDual :
   rw [h_add, smul_smul]
   rw [invOf_mul_self (2 : R), one_smul]
 
-theorem projSelfDual_sq :
+theorem projSelfDual_sq {R : Type*} [CommRing R] [Invertible (2 : R)] :
     (projSelfDual : Matrix (Fin 6) (Fin 6) R) * projSelfDual = projSelfDual := by
   dsimp [projSelfDual]
   rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul]
@@ -221,7 +221,7 @@ theorem projSelfDual_sq :
   have h_assoc : ⅟(2 : R) * ⅟(2 : R) * 2 = ⅟(2 : R) * (⅟(2 : R) * 2) := by ring
   rw [h_assoc, h_coeff]
 
-theorem projAntiSelfDual_sq :
+theorem projAntiSelfDual_sq {R : Type*} [CommRing R] [Invertible (2 : R)] :
     (projAntiSelfDual : Matrix (Fin 6) (Fin 6) R) * projAntiSelfDual =
       projAntiSelfDual := by
   dsimp [projAntiSelfDual]
@@ -240,7 +240,7 @@ theorem projAntiSelfDual_sq :
   have h_assoc : ⅟(2 : R) * ⅟(2 : R) * 2 = ⅟(2 : R) * (⅟(2 : R) * 2) := by ring
   rw [h_assoc, h_coeff]
 
-theorem proj_self_dual_mul_proj_anti_self_dual :
+theorem proj_self_dual_mul_proj_anti_self_dual {R : Type*} [CommRing R] [Invertible (2 : R)] :
     projSelfDual * projAntiSelfDual = (0 : Matrix (Fin 6) (Fin 6) R) := by
   dsimp [projSelfDual, projAntiSelfDual]
   rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul]
@@ -252,7 +252,7 @@ theorem proj_self_dual_mul_proj_anti_self_dual :
       norm_num
   rw [h_mul, smul_zero]
 
-theorem proj_anti_self_dual_mul_proj_self_dual :
+theorem proj_anti_self_dual_mul_proj_self_dual {R : Type*} [CommRing R] [Invertible (2 : R)] :
     projAntiSelfDual * projSelfDual = (0 : Matrix (Fin 6) (Fin 6) R) := by
   dsimp [projSelfDual, projAntiSelfDual]
   rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul]

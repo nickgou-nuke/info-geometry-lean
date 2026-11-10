@@ -56,7 +56,7 @@ open InfoGeometry.Arithmetic.BostConnesSystem
 universe u
 
 variable
-    {C_comm : Type u} [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
+    {C_comm : Type u} [Ring C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
     (e_rep : GroupElementRepresentation C_comm)
     {G : Type u} [GaloisActionData G]
     (galoisAut : GaloisAlgebraAutomorphism C_comm e_rep (G := G))
@@ -104,7 +104,7 @@ the scalar boundary evaluation and the normalization parameters already used
 by the projection-level KMS corridor.
 -/
 structure BoundaryKMSReadout
-    (C_comm : Type u) [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm] where
+    (C_comm : Type u) [Ring C_comm] [StarRing C_comm] [Algebra ℂ C_comm] where
   β : ℝ
   ζβ : ℝ
   read : C_comm → ℂ
@@ -401,8 +401,8 @@ Cayley/Mobius relations in rings and ring homomorphisms, not an analytic
 completion theorem.
 -/
 theorem compactified_cyclotomic_induction_limit_image_chain
-    {Stage : Nat → Type*} [∀ n : Nat, CommRing (Stage n)]
-    {Limit : Type*} [CommRing Limit]
+    {Stage : Nat → Type*} [∀ n : Nat, Ring (Stage n)]
+    {Limit : Type*} [Ring Limit]
     (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
     (toLimit : ∀ n : Nat, Stage n →+* Limit)
     (q T : ∀ n : Nat, Stage n)
@@ -420,7 +420,7 @@ This is the finite, repo-owned part of the requested induction/cocycle/normal
 cone bridge.  It combines:
 
 * `cone_system_compatible` from the inductive normal-cone tower;
-* `DAG.AnalyticBridge.connes_cocycle_at_limit` from the direct-limit cocycle
+* `DAG.AnalyticBridge.uhfModularFlow_add` for the algebraic direct-limit action
   readout;
 * `e(r + 1) = e(r)` for rational cyclotomic phases; and
 * preservation of that rational phase equality after embedding into the
@@ -438,7 +438,7 @@ theorem normalCone_cocycle_limit_preserves_rational_phase_periodicity
       e_rep.e (r + 1) = e_rep.e r ∧
       crossed.ι (e_rep.e (r + 1)) = crossed.ι (e_rep.e r) := by
   refine ⟨cone_system_compatible n A,
-    DAG.AnalyticBridge.connes_cocycle_at_limit s t, e_rep.e_periodic r, ?_⟩
+    DAG.AnalyticBridge.uhfModularFlow_add s t, e_rep.e_periodic r, ?_⟩
   rw [e_rep.e_periodic r]
 
 end InfoGeometry.Canonical.BostConnesSymmetryBreaking

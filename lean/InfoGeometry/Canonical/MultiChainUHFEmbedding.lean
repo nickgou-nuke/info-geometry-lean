@@ -10,7 +10,7 @@ open Matrix
 
 namespace MultiChainUHF
 
-variable {n : Type*} [Fintype n] [DecidableEq n] {R : Type*} [CommRing R]
+variable {n : Type*} [Fintype n] [DecidableEq n] {R : Type*} [Ring R]
 
 /-- 1. The Multi-Chain Tensor Algebra Embedding ιₙ : Aₙ → Aₙ₊₁
     Represented as the block diagonal map M ↦ [[M, 0], [0, M]] = M ⊗ I₂ -/
@@ -49,6 +49,6 @@ theorem embedding_trace (M : Matrix n n R) :
   dsimp [trace, embeddingMap]
   rw [Fintype.sum_sum_type]
   simp [fromBlocks]
-  ring
+  exact (two_mul _).symm
 
 end MultiChainUHF

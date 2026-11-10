@@ -15,6 +15,23 @@ commutative ring, including characteristics two and three.
 
 namespace InfoGeometry.Algebra.ZornVectorMatrix
 
+section Ring
+variable {R : Type*} [Ring R]
+
+/-- The six-parameter off-diagonal action in the owner's sign convention. -/
+def offDiagonalAction (p q : ZornVec3 R) (X : ZornVectorMatrix R) :
+    ZornVectorMatrix R :=
+  ⟨ZornVec3.dot p X.w - ZornVec3.dot q X.v,
+   fun i => (X.b - X.a) * p i + ZornVec3.cross q X.w i,
+   fun i => (X.a - X.b) * q i - ZornVec3.cross p X.v i,
+   ZornVec3.dot q X.v - ZornVec3.dot p X.w⟩
+
+@[simp] theorem trace_offDiagonalAction (p q : ZornVec3 R)
+    (X : ZornVectorMatrix R) : trace (offDiagonalAction p q X) = 0 := by
+  simp [trace, offDiagonalAction]
+
+end Ring
+
 variable {R : Type*} [CommRing R]
 
 /-- Leibniz forces the sign linking the first idempotent to the lower corner. -/
@@ -27,14 +44,6 @@ theorem Derivation.lower_corner_a (D : Derivation (R := R)) (v : ZornVec3 R) :
   simp [mul, ZornVectorMatrix.add, ZornVectorMatrix.zero, E11, offDiagonal, ZornVec3.dot] at h
   change 0 = ZornVec3.dot (D E11).v v + (D (offDiagonal 0 v)).a at h
   linear_combination -h
-
-/-- The six-parameter off-diagonal action in the owner's sign convention. -/
-def offDiagonalAction (p q : ZornVec3 R) (X : ZornVectorMatrix R) :
-    ZornVectorMatrix R :=
-  ⟨ZornVec3.dot p X.w - ZornVec3.dot q X.v,
-   fun i => (X.b - X.a) * p i + ZornVec3.cross q X.w i,
-   fun i => (X.a - X.b) * q i - ZornVec3.cross p X.v i,
-   ZornVec3.dot q X.v - ZornVec3.dot p X.w⟩
 
 theorem offDiagonalAction_leibniz (p q : ZornVec3 R)
     (X Y : ZornVectorMatrix R) :
@@ -81,10 +90,6 @@ theorem offDiagonalDerivation_upper_bracket (p r : ZornVec3 R) :
   apply Derivation.ext
   intro X
   exact offDiagonalAction_upper_bracket p r X
-
-@[simp] theorem trace_offDiagonalAction (p q : ZornVec3 R)
-    (X : ZornVectorMatrix R) : trace (offDiagonalAction p q X) = 0 := by
-  simp [trace, offDiagonalAction]
 
 /-- The second off-diagonal bracket has the opposite sign. -/
 theorem offDiagonalAction_lower_bracket (q s : ZornVec3 R)

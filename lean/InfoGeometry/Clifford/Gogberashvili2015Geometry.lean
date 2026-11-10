@@ -76,12 +76,19 @@ theorem normSquared_expanded (s : Worldline) :
   simp [normSquared, lambdaSquared, spatialSquared]
   ring
 
-theorem physical_event_norm_nonnegative (s : Worldline)
-    (h : physicalEvent s) : 0 ≤ normSquared s := h
+theorem signal_determinant_eq_normSquared (s : Worldline) :
+    ZornCell.detZ (signal s) = normSquared s := by
+  simp [signal, coordinates, normSquared, ZornCell.detZ,
+    SplitOctonionicDiracCoordinates.element]
+  ring
 
-theorem timelike_vector_part_expanded (s : Worldline) :
-    timelikeVectorPart s ↔
-      spatialSquared s < (s.c * s.t) ^ 2 + lambdaSquared s := by
-  rfl
+theorem physical_event_iff_signal_determinant_nonnegative (s : Worldline) :
+    physicalEvent s ↔ 0 ≤ ZornCell.detZ (signal s) := by
+  rw [physicalEvent, ← signal_determinant_eq_normSquared]
+
+theorem timelike_vector_part_iff_norm_below_frequency_square (s : Worldline) :
+    timelikeVectorPart s ↔ normSquared s < s.omega ^ 2 := by
+  unfold timelikeVectorPart normSquared spatialSquared lambdaSquared
+  constructor <;> intro h <;> nlinarith
 
 end InfoGeometry.Clifford.Gogberashvili2015Geometry

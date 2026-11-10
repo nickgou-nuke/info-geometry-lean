@@ -12,8 +12,8 @@ noncomputable section
 
 namespace InfoGeometry.NCG
 
-variable {R : Type*} [CommRing R]
-variable {A : Type*} [Ring A] [Algebra R A]
+variable {R : Type*} [Ring R]
+variable {A : Type*} [Ring A] [Module R A]
 
 namespace CyclicAlgebraDerivation
 
@@ -39,7 +39,7 @@ def flowOrderOne (t : R) (x : A) : A :=
 
 /-- 🏆 THEOREM 2: First-Order Product Preservation (Automorphism to O(t²)):
     U₁(t)(x) * U₁(t)(y) = U₁(t)(x * y) + t² • (D(x) * D(y)) -/
-theorem flowOrderOne_mul (t : R) (x y : A) :
+theorem flowOrderOne_mul [IsScalarTower R A A] [SMulCommClass R A A] (t : R) (x y : A) :
     flowOrderOne D t x * flowOrderOne D t y =
       flowOrderOne D t (x * y) + (t * t) • (D x * D y) := by
   dsimp [flowOrderOne]

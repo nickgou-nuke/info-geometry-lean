@@ -53,23 +53,26 @@ theorem resolvent_identity {Value : Type*} [Ring Value]
 /-! ## Scalar field resolvents -/
 
 /--
-Scalar resolvent identity, with the inverse laws discharged by field inversion.
+Scalar resolvent identity, with the inverse laws discharged by division-ring inversion.
 -/
-theorem scalar_resolvent_identity {K : Type*} [Field K]
+theorem scalar_resolvent_identity {K : Type*} [DivisionRing K]
     (A B : K)
     (hA : A ≠ 0)
     (hB : B ≠ 0) :
     A⁻¹ - B⁻¹ = A⁻¹ * (B - A) * B⁻¹ := by
-  field_simp
+  calc
+    A⁻¹ - B⁻¹ = A⁻¹ * (B * B⁻¹) - (A⁻¹ * A) * B⁻¹ := by
+      rw [mul_inv_cancel₀ hB, inv_mul_cancel₀ hA, mul_one, one_mul]
+    _ = A⁻¹ * (B - A) * B⁻¹ := by noncomm_ring
 
 /-- The resolvent identity specializes to the zero difference when the points coincide. -/
-theorem scalar_resolvent_identity_self {K : Type*} [Field K]
+theorem scalar_resolvent_identity_self {K : Type*} [DivisionRing K]
     (A : K) :
     A⁻¹ - A⁻¹ = A⁻¹ * (A - A) * A⁻¹ := by
   simp
 
 /-- The scalar inverse-difference specialization of the resolvent identity. -/
-theorem scalar_inverse_difference {K : Type*} [Field K]
+theorem scalar_inverse_difference {K : Type*} [DivisionRing K]
     (A B : K)
     (hA : A ≠ 0)
     (hB : B ≠ 0) :
@@ -77,13 +80,13 @@ theorem scalar_inverse_difference {K : Type*} [Field K]
   exact scalar_resolvent_identity A B hA hB
 
 /-- The bundled scalar inverse is left-inverse to the scalar. -/
-theorem scalarVerifiedInverse_left_inv {K : Type*} [Field K]
+theorem scalarVerifiedInverse_left_inv {K : Type*} [DivisionRing K]
     (z : K) (hz : z ≠ 0) :
     z⁻¹ * z = 1 := by
   exact inv_mul_cancel₀ hz
 
 /-- The bundled scalar inverse is right-inverse to the scalar. -/
-theorem scalarVerifiedInverse_right_inv {K : Type*} [Field K]
+theorem scalarVerifiedInverse_right_inv {K : Type*} [DivisionRing K]
     (z : K) (hz : z ≠ 0) :
     z * z⁻¹ = 1 := by
   exact mul_inv_cancel₀ hz

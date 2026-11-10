@@ -20,7 +20,8 @@ namespace InfoGeometry.OperatorAlgebra.LieJordanDiracPair
 
 open LieJordanDuality OperatorDiracSchur
 
-variable (R : Type*) [CommRing R] {A : Type*} [Ring A] [Algebra R A]
+variable (R : Type*) [Ring R] {A : Type*} [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- Sum of gamma-composed inner derivations. -/
 def midpoint (g₁ g₂ : Module.End R A) (H₁ H₂ : A) : Module.End R A :=

@@ -9,6 +9,7 @@ these coefficients before using the evaluation theorems.
 module
 
 public import InfoGeometry.Exceptional.CFSGPort.ChevalleySparseColumns
+import Mathlib.Tactic.NoncommRing
 
 public noncomputable section
 

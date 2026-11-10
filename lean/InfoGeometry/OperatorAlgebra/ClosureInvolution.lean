@@ -94,12 +94,15 @@ theorem theta_theta
     C.theta (C.theta v) = v :=
   C.theta_involutive v
 
-/-- If `v` is fixed, then `θ v = v`. -/
-theorem theta_eq_self_of_fixed
+/-- The involution preserves the fixed submodule. -/
+theorem theta_maps_fixed_to_fixed
     {v : V}
     (hv : v ∈ C.Fixed) :
-    C.theta v = v :=
-  (C.mem_fixed_iff v).mp hv
+    C.theta v ∈ C.Fixed := by
+  change C.theta (C.theta v) = C.theta v
+  calc
+    C.theta (C.theta v) = v := C.theta_involutive v
+    _ = C.theta v := (C.mem_fixed_iff v).mp hv |>.symm
 
 /-- If `v` is anti-fixed, then `θ v = -v`. -/
 theorem theta_eq_neg_of_antiFixed

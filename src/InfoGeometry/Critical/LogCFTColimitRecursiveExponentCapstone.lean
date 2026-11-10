@@ -95,7 +95,7 @@ theorem expNilpotent_apply_D (s : ℂ) : (expNilpotent J s) J.D = J.D - s • J.
 
 /-! ## 2. Categorical Inductive Filtered Colimit Intertwining -/
 
-variable {Ring_R : Type*} [CommRing Ring_R]
+variable {Ring_R : Type*} [Ring Ring_R]
 variable {I : Type*} [Preorder I]
 variable {A : I → Type*} [∀ i, AddCommGroup (A i)] [∀ i, Module Ring_R (A i)]
 variable {sys : InductiveSystem (R := Ring_R) A}

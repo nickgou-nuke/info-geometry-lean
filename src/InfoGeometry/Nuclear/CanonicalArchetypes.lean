@@ -41,13 +41,11 @@ structure KreinSpace where
   -- A bilinear map representing the indefinite metric signature.
   form : V →ₗ[K] V →ₗ[K] K
 
-instance : Inhabited (KreinSpace K V) := ⟨⟨0⟩⟩
-
 end KreinSpace
 
 section GradedLieStructure
 
-variable (R : Type*) [CommRing R] (L : Type*) [LieRing L] [LieAlgebra R L]
+variable (R : Type*) [Ring R] (L : Type*) [LieRing L] [Module R L]
 
 /--
   ARCHETYPE 2: The Cartan 5-Grading.
@@ -61,13 +59,6 @@ structure FiveGradedLieAlgebra where
   -- The index addition is modulated by the finite bound.
   bracket_compat : ∀ i j k : Fin 5, (i.val + j.val = k.val + 2) →
     ∀ x ∈ grade i, ∀ y ∈ grade j, ⁅x, y⁆ ∈ grade k
-
-instance : Inhabited (FiveGradedLieAlgebra R L) :=
-  ⟨{ grade := fun _ => ⊥
-     bracket_compat := by
-       intro i j k _ x hx y _
-       rw [Submodule.mem_bot] at hx ⊢
-       rw [hx, zero_lie] }⟩
 
 end GradedLieStructure
 
@@ -97,15 +88,18 @@ theorem strict_positivity_of_biased_dispersion
     (omega_obs : ℝ)
     (h_dispersion : omega_obs^2 = omega_0^2 + (G_eff * torsional_volume_form omega j_pi j_nu)^2) :
     omega_obs^2 > 0 := by
-  rw [h_dispersion]
+  
   -- The effective anomalous bias is strictly non-zero
   have h_bias_ne_zero : G_eff * torsional_volume_form omega j_pi j_nu ≠ 0 :=
     mul_ne_zero (ne_of_gt h_G) h_vol
+    
   -- The square of a non-zero real number is strictly positive
   have h_bias_sq_pos : (G_eff * torsional_volume_form omega j_pi j_nu)^2 > 0 :=
     sq_pos_of_ne_zero h_bias_ne_zero
+    
   -- The mean-field symmetric potential is non-negative
   have h_omega_0_sq_nonneg : 0 ≤ omega_0^2 := sq_nonneg omega_0
+  
   -- Therefore, the total observable mass gap squared must be strictly positive
   linarith
 

@@ -35,33 +35,33 @@ abbrev Projective {ι : Type} [Fintype ι] [DecidableEq ι] {K : Type} [Field K]
     (H : Subgroup (GL ι K)) : Type :=
   H ⧸ (Scalars ι K).subgroupOf H
 
-@[expose] def SpecialLinear (n : ℕ) (K : Type) [Field K] : Subgroup (GL (Fin n) K) :=
+@[expose] def SpecialLinear (n : ℕ) (K : Type) [CommRing K] : Subgroup (GL (Fin n) K) :=
   Subgroup.closure {A | (A : Matrix (Fin n) (Fin n) K).det = 1}
 
-@[expose] def SpecialUnitary (n q : ℕ) (K : Type) [Field K] :
+@[expose] def SpecialUnitary (n q : ℕ) (K : Type) [CommRing K] :
     Subgroup (GL (Fin n) K) :=
   Subgroup.closure {A | (A : Matrix (Fin n) (Fin n) K).det = 1 ∧
     ((A : Matrix (Fin n) (Fin n) K).map (· ^ q))ᵀ * (A : Matrix (Fin n) (Fin n) K) = 1}
 
-@[expose] def Symplectic (n : ℕ) (K : Type) [Field K] :
+@[expose] def Symplectic (n : ℕ) (K : Type) [Ring K] :
     Subgroup (GL (Fin n ⊕ Fin n) K) :=
   let J : Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) K := Matrix.fromBlocks 0 1 (-1) 0
   Subgroup.closure {A | (A : Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) K)ᵀ * J *
     (A : Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) K) = J}
 
-@[expose] def Orthogonal {ι : Type} [Fintype ι] [DecidableEq ι] {K : Type} [Field K]
+@[expose] def Orthogonal {ι : Type} [Fintype ι] [DecidableEq ι] {K : Type} [Ring K]
     (Q : (ι → K) → K) : Subgroup (GL ι K) :=
   Subgroup.closure {A | ∀ v : ι → K,
     Q (Matrix.mulVec (A : Matrix ι ι K) v) = Q v}
 
-@[expose] def QuadOdd (n : ℕ) (K : Type) [Field K]
+@[expose] def QuadOdd (n : ℕ) (K : Type) [Ring K]
     (v : Fin n ⊕ Fin n ⊕ Unit → K) : K :=
   ∑ i, v (.inl i) * v (.inr (.inl i)) + v (.inr (.inr ())) ^ 2
 
-@[expose] def QuadPlus (n : ℕ) (K : Type) [Field K] (v : Fin n ⊕ Fin n → K) : K :=
+@[expose] def QuadPlus (n : ℕ) (K : Type) [Ring K] (v : Fin n ⊕ Fin n → K) : K :=
   ∑ i, v (.inl i) * v (.inr i)
 
-@[expose] def QuadMinus (n : ℕ) (K : Type) [Field K] (b c : K)
+@[expose] def QuadMinus (n : ℕ) (K : Type) [Ring K] (b c : K)
     (v : Fin (n - 1) ⊕ Fin (n - 1) ⊕ Fin 2 → K) : K :=
   ∑ i, v (.inl i) * v (.inr (.inl i)) + v (.inr (.inr 0)) ^ 2 +
     b * v (.inr (.inr 0)) * v (.inr (.inr 1)) + c * v (.inr (.inr 1)) ^ 2

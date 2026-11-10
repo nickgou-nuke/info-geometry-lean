@@ -45,7 +45,7 @@ end KreinSpace
 
 section GradedLieStructure
 
-variable (R : Type*) [CommRing R] (L : Type*) [LieRing L] [LieAlgebra R L]
+variable (R : Type*) [Ring R] (L : Type*) [LieRing L] [Module R L]
 
 /--
   ARCHETYPE 2: The Cartan 5-Grading.

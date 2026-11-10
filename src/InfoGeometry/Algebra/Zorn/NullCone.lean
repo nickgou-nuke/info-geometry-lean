@@ -12,7 +12,7 @@ projective quotienting.
 
 namespace InfoGeometry.Algebra.Zorn
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Upper diagonal Peirce projector. -/
 def pPlus : ZornMatrix R where

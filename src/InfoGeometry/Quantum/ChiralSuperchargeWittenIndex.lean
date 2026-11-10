@@ -33,7 +33,7 @@ This module formalizes:
    - BPS saturation $H_0 = 1/2 \implies \sigma = 1/2$.
 -/
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Left-moving chiral supercharge -/
 def Q_L (a_L_dag f_L : R) : R :=
@@ -71,7 +71,7 @@ theorem chiral_supercharge_anticommutator_identity
     a_dag * a * (f * f_dag) + (a * a_dag) * (f_dag * f) =
     a_dag * a + f_dag * f := by
   rw [h_car, h_ccr]
-  ring
+  noncomm_ring
 
 /-- 🏆 THEOREM 2: Right-Moving Chiral Supercharge Anticommutator Identity -/
 theorem chiral_supercharge_R_identity
@@ -81,13 +81,13 @@ theorem chiral_supercharge_R_identity
     a_R_dag * a_R * (f_R * f_R_dag) + (a_R * a_R_dag) * (f_R_dag * f_R) =
     a_R_dag * a_R + f_R_dag * f_R := by
   rw [h_car, h_ccr]
-  ring
+  noncomm_ring
 
 /-- 🏆 THEOREM 3: Ground State Vacuum Energy of the Chiral Hamiltonian -/
 theorem chiral_hamiltonian_ground_state (E_vac : R) :
     chiralHamiltonian 0 0 E_vac = E_vac := by
   unfold chiralHamiltonian
-  ring
+  simp
 
 /-- 🏆 THEOREM 4: BPS Ground State Energy Confinement to Critical Line -/
 theorem bps_critical_line_confinement (σ : ℝ)

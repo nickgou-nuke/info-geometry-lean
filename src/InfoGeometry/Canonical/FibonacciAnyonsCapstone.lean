@@ -13,7 +13,7 @@ honest hypothesis-bearing interface instead.
 -/
 
 theorem fibonacci_matrix_capstone
-    {K : Type*} [CommRing K]
+    {K : Type*} [Ring K]
     (τ sqrtτ : K) (hτ : τ ^ 2 + τ = 1)
     (hsqrtτ : sqrtτ ^ 2 = τ) :
     F_matrixOf τ sqrtτ * F_matrixOf τ sqrtτ = 1 := by

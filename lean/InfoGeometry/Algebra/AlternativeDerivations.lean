@@ -26,7 +26,7 @@ We define:
 
 namespace InfoGeometry.Algebra
 
-variable (R A : Type*) [CommRing R] [NonUnitalNonAssocRing A] [Module R A]
+variable (R A : Type*) [Ring R] [NonUnitalNonAssocRing A] [Module R A]
 variable [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- 
@@ -72,6 +72,8 @@ instance : Zero (NonAssocDerivation R A) where
     { toLinearMap := 0
       leibniz' := fun x y => by simp }
 
+instance : Inhabited (NonAssocDerivation R A) := ⟨0⟩
+
 instance : Add (NonAssocDerivation R A) where
   add D E := 
     { toLinearMap := D.toLinearMap + E.toLinearMap
@@ -85,7 +87,8 @@ instance : Neg (NonAssocDerivation R A) where
       leibniz' := fun x y => by
         simp only [LinearMap.neg_apply, toLinearMap_apply, leibniz, neg_mul, mul_neg, neg_add] }
 
-instance : SMul R (NonAssocDerivation R A) where
+instance {R₀ : Type*} [CommRing R₀] [Module R₀ A] [IsScalarTower R₀ A A] [SMulCommClass R₀ A A] :
+    SMul R₀ (NonAssocDerivation R₀ A) where
   smul r D := 
     { toLinearMap := r • D.toLinearMap
       leibniz' := fun x y => by 
@@ -133,7 +136,7 @@ theorem stanDerMap_add_left (a a' b x : A) :
 theorem stanDerMap_smul_left (r : R) (a b x : A) :
     stanDerMap (R := R) (r • a) b x = r • stanDerMap (R := R) a b x := by
   simp [stanDerMap, L_map, R_map, smul_mul_assoc, mul_smul_comm,
-    smul_add, smul_sub, smul_neg, neg_smul]
+    smul_add, smul_sub]
 
 theorem stanDerMap_add_right (a b b' x : A) :
     stanDerMap (R := R) a (b + b') x = stanDerMap (R := R) a b x + stanDerMap (R := R) a b' x := by
@@ -143,7 +146,7 @@ theorem stanDerMap_add_right (a b b' x : A) :
 theorem stanDerMap_smul_right (r : R) (a b x : A) :
     stanDerMap (R := R) a (r • b) x = r • stanDerMap (R := R) a b x := by
   simp [stanDerMap, L_map, R_map, smul_mul_assoc, mul_smul_comm,
-    smul_add, smul_sub, smul_neg, neg_smul]
+    smul_add, smul_sub]
 
 /-!
 ### Standard derivations in an alternative algebra
@@ -359,11 +362,18 @@ noncomputable def stanDerivation (a b : A) : NonAssocDerivation R A where
 
 end Alternative
 
-/-- A standard derivation is a derivation of the form ∑ D_{a_i, b_i}. -/
-def StanDer (D : NonAssocDerivation R A) : Prop :=
-  D.toLinearMap ∈ Submodule.span R (Set.range (fun (p : A × A) => stanDerMap p.1 p.2))
+/-- A standard derivation over a commutative ring is a derivation in the `R`-linear span of `D_{a_i, b_i}`. -/
+def StanDer {R₀ A : Type*} [CommRing R₀] [NonUnitalNonAssocRing A] [Module R₀ A]
+    [IsScalarTower R₀ A A] [SMulCommClass R₀ A A] (D : NonAssocDerivation R₀ A) : Prop :=
+  D.toLinearMap ∈ Submodule.span R₀ (Set.range (fun (p : A × A) => stanDerMap p.1 p.2))
 
 open scoped BigOperators
+
+/-- A standard derivation over a general (possibly non-commutative) ring `R` is a finite additive
+combination of standard derivations `∑ D_{a_i, b_i}`. -/
+def AddStanDer (D : NonAssocDerivation R A) : Prop :=
+  ∃ (s : Finset (A × A)),
+    D.toLinearMap = ∑ p ∈ s, stanDerMap (R := R) p.1 p.2
 
 /-- An associator derivation is a derivation of the form ∑ [L_{a_i}, R_{b_i}] where ∑ [a_i, b_i] = 0. -/
 def AssDer (D : NonAssocDerivation R A) : Prop :=

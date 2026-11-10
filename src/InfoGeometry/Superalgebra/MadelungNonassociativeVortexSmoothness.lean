@@ -29,7 +29,7 @@ Standard: QMS-SOP-IAA-001 (v1.1) / OpenGauss 16-Trap Universal Shield
 
 namespace InfoGeometry.Superalgebra.MadelungNonassociativeVortex
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. 3D Векторно Пространство за Фазата на Маделунг -/
 
@@ -42,7 +42,7 @@ structure ColorVec3 (R : Type*) where
 
 namespace ColorVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : ColorVec3 R := ⟨0, 0, 0⟩
 def add (u v : ColorVec3 R) : ColorVec3 R := ⟨u.c1 + v.c1, u.c2 + v.c2, u.c3 + v.c3⟩
@@ -85,7 +85,7 @@ structure SplitOctonion (R : Type*) where
 
 namespace SplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : SplitOctonion R := ⟨0, ColorVec3.zero, ColorVec3.zero, 0⟩
 def one  : SplitOctonion R := ⟨1, ColorVec3.zero, ColorVec3.zero, 1⟩
@@ -129,7 +129,7 @@ def quark (u : ColorVec3 R) : SplitOctonion R := ⟨0, u, ColorVec3.zero, 0⟩
 гладката топологична вихрушка на квантовия флуид:
 J(U(u_S), U(grad_a), U(grad_b)) = - 6 det(u_S, grad_a, grad_b) • K₀ !
 -/
-theorem madelung_vortex_is_akivis_anomaly (u_S grad_a grad_b : ColorVec3 R) :
+theorem madelung_vortex_is_akivis_anomaly {R : Type*} [CommRing R] (u_S grad_a grad_b : ColorVec3 R) :
     jacobiator (quark u_S) (quark grad_a) (quark grad_b) =
       scale (-6 * ColorVec3.det3 u_S grad_a grad_b) paraSymplecticK0 := by
   dsimp [jacobiator, commutator, quark, paraSymplecticK0, mul, add, sub, scale,
@@ -158,7 +158,7 @@ def wittenRotorAdj (ch sh : R) : SplitOctonion R :=
 неговия дуален антикварков близнак (магнитен сектор), симплектичната фазова
 разлика (DSZ инвариантът от Раздел 140) остава СТРОГО СЪХРАНЕНА!
 -/
-theorem madelung_phase_witten_theta_coherence (q1 g1 q2 g2 theta_c : R) :
+theorem madelung_phase_witten_theta_coherence {R : Type*} [CommRing R] (q1 g1 q2 g2 theta_c : R) :
     let q1_shift := q1 - theta_c * g1
     let q2_shift := q2 - theta_c * g2
     (q1_shift * g2 - q2_shift * g1) = (q1 * g2 - q2 * g1) := by
@@ -180,7 +180,7 @@ theorem splitOctonion_mul_noncommutative :
 
 /-! ### 5. Главен Синтез на Раздел 141 -/
 
-theorem madelung_nonassociative_vortex_synthesis (u_S grad_a grad_b : ColorVec3 R)
+theorem madelung_nonassociative_vortex_synthesis {R : Type*} [CommRing R] (u_S grad_a grad_b : ColorVec3 R)
     (q1 g1 q2 g2 theta_c : R) :
     SplitOctonion.jacobiator (SplitOctonion.quark u_S)
                              (SplitOctonion.quark grad_a)

@@ -21,33 +21,56 @@ open InfoGeometry.Core.PeirceRotor
 open InfoGeometry.Singular.MoorePenrose
 open InfoGeometry.Core.DiracSuperalgebra
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+section Noncomm
+
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
 variable {d b : A}
 
 /-- The hyperbolic squeeze rotor, equal to `P_0 + u • Delta + v • Q_1`. -/
 def hyperbolicRotor (u v : R) (d b : A) : A := completedBlock d b u v v u
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 /-- Explicit formula on the harmonic complement, active carrier, and velocity. -/
 theorem hyperbolicRotor_formula (u v : R) :
     hyperbolicRotor u v d b = zeroModeSupport d b +
       u • carrierSupport d b + v • transitionVelocity d b := by
   unfold hyperbolicRotor completedBlock peirceBlock carrierSupport activeSupport
     transitionVelocity majoranaPlus
-  module
+  simp only [smul_add]
+  abel
 
-/-- Hyperbolic addition law before imposing the unit-hyperbola constraint. -/
+/-- Hyperbolic addition law over any noncommutative ring `R` before imposing
+a unit-hyperbola or commutativity constraint. -/
 theorem hyperbolicRotor_mul (h : IsDualSeedPair d b) (u v e f : R) :
     hyperbolicRotor u v d b * hyperbolicRotor e f d b =
       hyperbolicRotor (u * e + v * f) (u * f + v * e) d b := by
   unfold hyperbolicRotor
   rw [completedBlock_mul h]
-  congr 1 <;> ring
+  congr 1 <;> exact add_comm _ _
 
+/-- Over a noncommutative coefficient ring `R`, multiplying `hyperbolicRotor u v d b` by its
+sign-reversed partner `hyperbolicRotor u (-v) d b` produces a velocity anomaly governed by
+the commutator `v * u - u * v`. -/
+theorem hyperbolicRotor_mul_reverse_noncomm_anomaly (h : IsDualSeedPair d b) (u v : R) :
+    hyperbolicRotor u v d b * hyperbolicRotor u (-v) d b =
+      hyperbolicRotor (u * u - v * v) (v * u - u * v) d b := by
+  rw [hyperbolicRotor_mul h]
+  congr 1
+  · rw [mul_neg, ← sub_eq_add_neg]
+  · rw [mul_neg, add_comm, ← sub_eq_add_neg]
+
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 /-- Identity squeeze rotor at `(u, v) = (1, 0)`. -/
 theorem hyperbolicRotor_one_zero : hyperbolicRotor (1 : R) 0 d b = 1 := by
   simp only [hyperbolicRotor, completedBlock, peirceBlock, one_smul, zero_smul, add_zero]
   change (1 - polePlus d b - poleMinus d b) + (polePlus d b + poleMinus d b) = 1
   abel
+
+end Noncomm
+
+variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {d b : A}
 
 /-- Two-sided inverse law on the scalar unit hyperbola `u^2 - v^2 = 1`. -/
 theorem hyperbolicRotor_inverse (h : IsDualSeedPair d b) {u v : R}

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
+import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.LinearCombination
 
@@ -31,7 +32,7 @@ Ref: `QMS-DIR-SEC128-GUNAYDIN-GURSEY-SOLDERING-SU3-2026-OCT-16`
 
 namespace InfoGeometry.Superalgebra.GunaydinGurseySU3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. 3D Цветови Вектори и Пълна 3×3 Матрична Алгебра Mat3 R -/
 
@@ -44,7 +45,7 @@ structure ColorVec3 (R : Type*) where
 
 namespace ColorVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def canonicalColorVec3Int : ColorVec3 ℤ := ⟨1, 2, 3⟩
 
@@ -94,7 +95,7 @@ structure Mat3 (R : Type*) where
 
 namespace Mat3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def canonicalMat3Int : Mat3 ℤ := ⟨1, 1, 0, 0, -1, 0, 0, 0, 0⟩
 
@@ -144,7 +145,7 @@ def mulVec (M : Mat3 R) (u : ColorVec3 R) : ColorVec3 R where
 а антикварките с δv = -Mᵀ v, то вариацията на скаларния продукт u · v е СТРОГО НУЛА:
 (M u) · v + u · (-Mᵀ v) = 0!
 -/
-theorem contragredient_preserves_dot (M : Mat3 R) (u v : ColorVec3 R) :
+theorem contragredient_preserves_dot {R : Type*} [CommRing R] (M : Mat3 R) (u v : ColorVec3 R) :
     ColorVec3.dot (mulVec M u) v +
       ColorVec3.dot u (ColorVec3.neg (mulVec (transpose M) v)) = 0 := by
   dsimp [mulVec, transpose, ColorVec3.dot, ColorVec3.neg]
@@ -157,7 +158,7 @@ theorem contragredient_preserves_dot (M : Mat3 R) (u v : ColorVec3 R) :
 Това тъждество е точната алгебрична причина, поради която само безследовите матрици
 (Tr(M) = 0, т.е. sl(3) / su(3)_color) запазват октонионното дикварково сливане!
 -/
-theorem cross_product_leibniz_defect_eq_trace (M : Mat3 R) (u₁ u₂ : ColorVec3 R) :
+theorem cross_product_leibniz_defect_eq_trace {R : Type*} [CommRing R] (M : Mat3 R) (u₁ u₂ : ColorVec3 R) :
     ColorVec3.add
       (ColorVec3.add (ColorVec3.cross (mulVec M u₁) u₂)
                      (ColorVec3.cross u₁ (mulVec M u₂)))
@@ -170,7 +171,7 @@ theorem cross_product_leibniz_defect_eq_trace (M : Mat3 R) (u₁ u₂ : ColorVec
 Теорема 3b (Производна на Барионния Детерминант чрез Следата Tr(M)):
 det(M u₁, u₂, u₃) + det(u₁, M u₂, u₃) + det(u₁, u₂, M u₃) = Tr(M) · det(u₁, u₂, u₃)!
 -/
-theorem baryon_det3_leibniz_eq_trace_mul_det (M : Mat3 R) (u₁ u₂ u₃ : ColorVec3 R) :
+theorem baryon_det3_leibniz_eq_trace_mul_det {R : Type*} [CommRing R] (M : Mat3 R) (u₁ u₂ u₃ : ColorVec3 R) :
     ColorVec3.det3 (mulVec M u₁) u₂ u₃ +
     ColorVec3.det3 u₁ (mulVec M u₂) u₃ +
     ColorVec3.det3 u₁ u₂ (mulVec M u₃) =
@@ -192,7 +193,7 @@ structure SplitOctonion (R : Type*) where
 
 namespace SplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def canonicalSplitOctonionInt : SplitOctonion ℤ := ⟨1, ColorVec3.e1, ColorVec3.e2, 2⟩
 
@@ -257,7 +258,7 @@ theorem gunaydin_gursey_soldering_identities (x : ColorVec3 R) :
            complexVecI, hyperVecH, add, sub, scale, mul, neg,
            ColorVec3.zero, ColorVec3.dot, ColorVec3.add, ColorVec3.sub,
            ColorVec3.neg, ColorVec3.smul, ColorVec3.cross]
-    ext <;> ring }
+    ext <;> simp [two_mul, sub_eq_add_neg, one_add_one_eq_two] }
 
 /-! ### 3. Деривации на Цветовата Алгебра sl(3) / su(3)_color върху 𝕆_s -/
 
@@ -277,7 +278,7 @@ def colorDerivation (M : Mat3 R) (X : SplitOctonion R) : SplitOctonion R where
 Разликата между D_M(U(u₁) · U(u₂)) и D_M(U(u₁)) · U(u₂) + U(u₁) · D_M(U(u₂))
 е точно равна на - Tr(M) • V(u₁ × u₂)!
 -/
-theorem color_derivation_diquark_leibniz_defect (M : Mat3 R) (u₁ u₂ : ColorVec3 R) :
+theorem color_derivation_diquark_leibniz_defect {R : Type*} [CommRing R] (M : Mat3 R) (u₁ u₂ : ColorVec3 R) :
     sub (add (mul (colorDerivation M (ggQuark u₁)) (ggQuark u₂))
              (mul (ggQuark u₁) (colorDerivation M (ggQuark u₂))))
         (colorDerivation M (mul (ggQuark u₁) (ggQuark u₂))) =
@@ -291,11 +292,11 @@ theorem color_derivation_diquark_leibniz_defect (M : Mat3 R) (u₁ u₂ : ColorV
 /--
 Теорема 4b (Върховна Теорема на Гюнайдън–Гюрсей за Изплуването на SU(3)_c / sl(3)):
 Когато 3×3 матрицата M е БЕЗСЛЕДОВА (Tr(M) = 0 — 8-те глуонни генератора на Гел-Ман),
-операторът D_M е ТОЧНА ДЕРИВАЦИЯ на кварковото умножение в сплит-октонионите:
+оперaторът D_M е ТОЧНА ДЕРИВАЦИЯ на кварковото умножение в сплит-октонионите:
 D_M(U(u₁) · U(u₂)) = D_M(U(u₁)) · U(u₂) + U(u₁) · D_M(U(u₂))!
 -/
 theorem sl3_traceless_is_exact_octonion_quark_derivation
-    (M : Mat3 R) (u₁ u₂ : ColorVec3 R) (h_traceless : Mat3.trace M = 0) :
+    {R : Type*} [CommRing R] (M : Mat3 R) (u₁ u₂ : ColorVec3 R) (h_traceless : Mat3.trace M = 0) :
     colorDerivation M (mul (ggQuark u₁) (ggQuark u₂)) =
       add (mul (colorDerivation M (ggQuark u₁)) (ggQuark u₂))
           (mul (ggQuark u₁) (colorDerivation M (ggQuark u₂))) := by
@@ -320,7 +321,7 @@ end SplitOctonion
 /-! ### 4. Главен Синтез на Раздел 128 -/
 
 theorem gunaydin_gursey_su3_synthesis
-    (x u₁ u₂ : ColorVec3 R) (M : Mat3 R) (h_traceless : Mat3.trace M = 0) :
+    {R : Type*} [CommRing R] (x u₁ u₂ : ColorVec3 R) (M : Mat3 R) (h_traceless : Mat3.trace M = 0) :
     (SplitOctonion.mul SplitOctonion.ggU0 (SplitOctonion.complexVecI x) = SplitOctonion.ggQuark x ∧
      SplitOctonion.mul SplitOctonion.ggU0Star (SplitOctonion.complexVecI x) =
        SplitOctonion.neg (SplitOctonion.ggAntiquark x)) ∧

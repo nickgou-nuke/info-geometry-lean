@@ -14,7 +14,7 @@ does not invoke an analytic spectrum.
 namespace InfoGeometry.Physics.Algebra.NPotentIdempotentDecomposition
 
 theorem npotent_nonzero_sector_idempotent
-    {R : Type*} [CommRing R] {x : R} {n : ℕ}
+    {R : Type*} [Ring R] {x : R} {n : ℕ}
     (hn : 2 ≤ n) (hx : x ^ n = x) :
     (x ^ (n - 1)) ^ 2 = x ^ (n - 1) := by
   calc
@@ -29,17 +29,17 @@ theorem npotent_nonzero_sector_idempotent
         _ = x ^ (n - 1) := by congr 1; omega
 
 theorem npotent_zero_sector_idempotent
-    {R : Type*} [CommRing R] {x : R} {n : ℕ}
+    {R : Type*} [Ring R] {x : R} {n : ℕ}
     (hn : 2 ≤ n) (hx : x ^ n = x) :
     (1 - x ^ (n - 1)) ^ 2 = 1 - x ^ (n - 1) := by
   have hP := npotent_nonzero_sector_idempotent hn hx
   calc
     (1 - x ^ (n - 1)) ^ 2 =
-        1 - 2 * x ^ (n - 1) + (x ^ (n - 1)) ^ 2 := by ring
-    _ = 1 - x ^ (n - 1) := by rw [hP]; ring
+        1 - 2 * x ^ (n - 1) + (x ^ (n - 1)) ^ 2 := by noncomm_ring
+    _ = 1 - x ^ (n - 1) := by rw [hP]; noncomm_ring
 
 theorem npotent_sectors_orthogonal
-    {R : Type*} [CommRing R] {x : R} {n : ℕ}
+    {R : Type*} [Ring R] {x : R} {n : ℕ}
     (hn : 2 ≤ n) (hx : x ^ n = x) :
     (1 - x ^ (n - 1)) * x ^ (n - 1) = 0 ∧
       x ^ (n - 1) * (1 - x ^ (n - 1)) = 0 := by
@@ -47,16 +47,16 @@ theorem npotent_sectors_orthogonal
   constructor
   · calc
       (1 - x ^ (n - 1)) * x ^ (n - 1) =
-          x ^ (n - 1) - (x ^ (n - 1)) ^ 2 := by ring
-      _ = 0 := by rw [hP]; ring
+          x ^ (n - 1) - (x ^ (n - 1)) ^ 2 := by noncomm_ring
+      _ = 0 := by rw [hP]; noncomm_ring
   · calc
       x ^ (n - 1) * (1 - x ^ (n - 1)) =
-          x ^ (n - 1) - (x ^ (n - 1)) ^ 2 := by ring
-      _ = 0 := by rw [hP]; ring
+          x ^ (n - 1) - (x ^ (n - 1)) ^ 2 := by noncomm_ring
+      _ = 0 := by rw [hP]; noncomm_ring
 
 theorem npotent_sectors_resolve_identity
-    {R : Type*} [CommRing R] {x : R} {n : ℕ} :
+    {R : Type*} [Ring R] {x : R} {n : ℕ} :
     (1 - x ^ (n - 1)) + x ^ (n - 1) = 1 := by
-  ring
+  noncomm_ring
 
 end InfoGeometry.Physics.Algebra.NPotentIdempotentDecomposition

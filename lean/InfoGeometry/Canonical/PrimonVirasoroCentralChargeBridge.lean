@@ -243,12 +243,23 @@ theorem primeVirasoroCentralCharge_eq_card_of_level_one_dualCoxeter_zero
   PrimeVirasoroSugawara.centralCharge_eq_card_of_level_one_dualCoxeter_zero
     P.primeVirasoro S hlevel hdim hdual hcc
 
-/-- The Virasoro central charge is calibrated by the Sugawara owner theorem. -/
+/-- The bridge's central-charge readout inherits the level-one cardinality law.
+
+The hypotheses are those of the prime Sugawara owner theorem; the bridge
+equality transports that result to the central-charge field exposed by `P`. -/
 @[rep_depth operator]
-theorem virasoroCentralCharge_calibrated :
-    P.primeVirasoro.affineVirasoro.centralCharge =
-      P.primeVirasoro.affineVirasoro.centralCharge :=
-  rfl
+theorem virasoroCentralCharge_eq_card_of_level_one_dualCoxeter_zero
+    (S : Finset PrimeLabel)
+    (hlevel : P.primeVirasoro.affineVirasoro.level = 1)
+    (hdim : P.primeVirasoro.affineVirasoro.finiteDimension = (S.card : ℝ))
+    (hdual : P.primeVirasoro.affineVirasoro.dualCoxeterNumber = 0)
+    (hcc : P.primeVirasoro.affineVirasoro.centralCharge =
+      P.primeVirasoro.affineVirasoro.level * P.primeVirasoro.affineVirasoro.finiteDimension /
+        (P.primeVirasoro.affineVirasoro.level + P.primeVirasoro.affineVirasoro.dualCoxeterNumber)) :
+    P.virasoroCentralCharge = (S.card : ℝ) := by
+  rw [P.virasoroCentralCharge_eq]
+  exact primeVirasoroCentralCharge_eq_card_of_level_one_dualCoxeter_zero
+    (P := P) S hlevel hdim hdual hcc
 
 /-- The stored bridge data give the four concrete prime-to-Virasoro readouts. -/
 @[rep_depth thermo]

@@ -23,7 +23,7 @@ namespace InfoGeometry.Algebra
 
 open ZornVectorMatrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-!
 ### Step 1: NonUnitalNonAssocRing instance on ZornVectorMatrix R
@@ -47,11 +47,29 @@ noncomputable instance zvmMul : Mul (ZornVectorMatrix R) where mul := ZornVector
 @[simp] theorem zvm_smul_def (r : R) (X : ZornVectorMatrix R) :
     r • X = ZornVectorMatrix.smul r X := rfl
 
+/-- The identity element. -/
+def one : ZornVectorMatrix R := ZornVectorMatrix.one
+
+section CommRing
+
+variable {R : Type*} [CommRing R]
+
 noncomputable instance : NonUnitalNonAssocRing (ZornVectorMatrix R) where
   zero_mul := ZornVectorMatrix.zero_mul
   mul_zero := ZornVectorMatrix.mul_zero
   left_distrib := ZornVectorMatrix.mul_add
   right_distrib := ZornVectorMatrix.add_mul
+
+namespace ZornVectorMatrix
+
+/-- Conjugation is scalar trace minus the original Zorn element. -/
+lemma conj_eq_scalar_trace_sub (X : ZornVectorMatrix R) :
+    conj X = sub (scalar (trace X)) X := by
+  change conj X = scalar (trace X) - X
+  have h : X + conj X = scalar (trace X) := conj_trace_identity X
+  exact eq_sub_of_add_eq' h
+
+end ZornVectorMatrix
 
 noncomputable instance : IsScalarTower R (ZornVectorMatrix R) (ZornVectorMatrix R) where
   smul_assoc r X Y := by
@@ -66,13 +84,6 @@ noncomputable instance : SMulCommClass R (ZornVectorMatrix R) (ZornVectorMatrix 
     exact (ZornVectorMatrix.mul_smul r X Y).symm
 
 namespace ZornVectorMatrix
-
-/-- Conjugation is scalar trace minus the original Zorn element. -/
-lemma conj_eq_scalar_trace_sub (X : ZornVectorMatrix R) :
-    conj X = sub (scalar (trace X)) X := by
-  change conj X = scalar (trace X) - X
-  have h : X + conj X = scalar (trace X) := conj_trace_identity X
-  exact eq_sub_of_add_eq' h
 
 /-- Kirmse's left contraction, derived from conjugation and left alternativity. -/
 theorem kirmse_left (X Y : ZornVectorMatrix R) :
@@ -246,9 +257,6 @@ Only proved consequences are exported below.  The stronger classification of
 all derivations is not represented by a proposition-valued placeholder.
 -/
 
-/-- The identity element. -/
-def one : ZornVectorMatrix R := ZornVectorMatrix.one
-
 /-- Derivation of the identity element is zero. -/
 @[simp] theorem map_one (D : NonAssocDerivation R (ZornVectorMatrix R)) :
     D one = 0 := by
@@ -274,6 +282,8 @@ theorem map_E22_mul_E22 (D : NonAssocDerivation R (ZornVectorMatrix R)) :
   have h : D (E22 * E22) = D E22 * E22 + E22 * D E22 := D.leibniz E22 E22
   have H : (E22 : ZornVectorMatrix R) * E22 = E22 := by rw [zvm_mul_def, E22_mul_E22]
   rwa [H] at h
+
+end CommRing
 
 
 end InfoGeometry.Algebra

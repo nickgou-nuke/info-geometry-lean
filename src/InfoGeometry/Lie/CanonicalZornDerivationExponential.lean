@@ -19,30 +19,30 @@ abbrev CZ := InfoGeometry.Lie.CanonicalZornDerivation.CZ
 abbrev EndCZ := InfoGeometry.Lie.CanonicalZornDerivation.EndCZ
 abbrev V8 := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 theorem zorn_mul_add (z1 z2 z3 : ZornMatrix R) : z1 * (z2 + z3) = z1 * z2 + z1 * z3 := by
   apply ZornMatrix.ext
-  · simp [mul_def, mul, dot, add_def]; ring
-  · simp [mul_def, mul, dot, add_def]; ring
-  · ext i; fin_cases i <;> simp [mul_def, mul, cross, add_def, Matrix.vecHead, Matrix.vecTail, Pi.smul_apply, smul_eq_mul] <;> ring
-  · ext i; fin_cases i <;> simp [mul_def, mul, cross, add_def, Matrix.vecHead, Matrix.vecTail, Pi.smul_apply, smul_eq_mul] <;> ring
+  · simp [mul_def, mul, dot, add_def]; noncomm_ring
+  · simp [mul_def, mul, dot, add_def]; noncomm_ring
+  · ext i; fin_cases i <;> simp [mul_def, mul, cross, add_def, Matrix.vecHead, Matrix.vecTail, Pi.smul_apply, smul_eq_mul] <;> noncomm_ring
+  · ext i; fin_cases i <;> simp [mul_def, mul, cross, add_def, Matrix.vecHead, Matrix.vecTail, Pi.smul_apply, smul_eq_mul] <;> noncomm_ring
 
 theorem zorn_add_mul (z1 z2 z3 : ZornMatrix R) : (z1 + z2) * z3 = z1 * z3 + z2 * z3 := by
   apply ZornMatrix.ext
-  · simp [mul_def, mul, dot, add_def]; ring
-  · simp [mul_def, mul, dot, add_def]; ring
-  · ext i; fin_cases i <;> simp [mul_def, mul, cross, add_def, Matrix.vecHead, Matrix.vecTail, Pi.smul_apply, smul_eq_mul] <;> ring
-  · ext i; fin_cases i <;> simp [mul_def, mul, cross, add_def, Matrix.vecHead, Matrix.vecTail, Pi.smul_apply, smul_eq_mul] <;> ring
+  · simp [mul_def, mul, dot, add_def]; noncomm_ring
+  · simp [mul_def, mul, dot, add_def]; noncomm_ring
+  · ext i; fin_cases i <;> simp [mul_def, mul, cross, add_def, Matrix.vecHead, Matrix.vecTail, Pi.smul_apply, smul_eq_mul] <;> noncomm_ring
+  · ext i; fin_cases i <;> simp [mul_def, mul, cross, add_def, Matrix.vecHead, Matrix.vecTail, Pi.smul_apply, smul_eq_mul] <;> noncomm_ring
 
-theorem zorn_mul_smul (r : R) (z1 z2 : ZornMatrix R) : z1 * (r • z2) = r • (z1 * z2) := by
+theorem zorn_mul_smul {R : Type*} [CommRing R] (r : R) (z1 z2 : ZornMatrix R) : z1 * (r • z2) = r • (z1 * z2) := by
   apply ZornMatrix.ext
   · simp [mul_def, mul, dot, smul_a, smul_b, smul_x, smul_y]; ring
   · simp [mul_def, mul, dot, smul_a, smul_b, smul_x, smul_y]; ring
   · ext i; fin_cases i <;> simp [mul_def, mul, cross, smul_a, smul_b, smul_x, smul_y, Matrix.vecHead, Matrix.vecTail, smul_eq_mul, Pi.smul_apply] <;> ring
   · ext i; fin_cases i <;> simp [mul_def, mul, cross, smul_a, smul_b, smul_x, smul_y, Matrix.vecHead, Matrix.vecTail, smul_eq_mul, Pi.smul_apply] <;> ring
 
-theorem zorn_smul_mul (r : R) (z1 z2 : ZornMatrix R) : (r • z1) * z2 = r • (z1 * z2) := by
+theorem zorn_smul_mul {R : Type*} [CommRing R] (r : R) (z1 z2 : ZornMatrix R) : (r • z1) * z2 = r • (z1 * z2) := by
   apply ZornMatrix.ext
   · simp [mul_def, mul, dot, smul_a, smul_b, smul_x, smul_y]; ring
   · simp [mul_def, mul, dot, smul_a, smul_b, smul_x, smul_y]; ring

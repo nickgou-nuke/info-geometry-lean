@@ -77,7 +77,11 @@ theorem paper_conclusion_fixed_resolution_pareto_coldend_log_cusp :
       8 + 4 + 9 = (21 : ℕ) ∧
       4 - 2 + 1 = (3 : ℕ) ∧
       8 * 2 ^ 2 + 4 * 3 ^ 2 + 9 * 4 ^ 2 = (212 : ℕ) ∧
-      (1 : ℤ) + 1 - 1 = 1 := by
+      (∀ δ κstar κ, δ ≠ 0 → κ < κstar →
+        HasDerivAt (Omega.Conclusion.ParetoColdendCurvaturePole.coldendCuspPotential δ κstar)
+          (Omega.Conclusion.ParetoColdendCurvaturePole.coldendCuspSlope δ κstar κ) κ ∧
+        HasDerivAt (Omega.Conclusion.ParetoColdendCurvaturePole.coldendCuspSlope δ κstar)
+          (-1 / (δ * (κstar - κ))) κ) := by
   refine ⟨rfl, rfl, rfl, rfl, rfl, ?_, rfl, rfl, rfl, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · have h43 : (1 : ℝ) < (4 : ℝ) / 3 := by norm_num
     simpa [conclusion_fixed_resolution_pareto_coldend_log_cusp_delta] using Real.log_pos h43
@@ -88,7 +92,9 @@ theorem paper_conclusion_fixed_resolution_pareto_coldend_log_cusp :
   · exact Omega.Conclusion.ParetoColdendCurvaturePole.fiber_count_6
   · exact Omega.Conclusion.ParetoColdendCurvaturePole.fiber_range_contiguous
   · exact Omega.Conclusion.ParetoColdendCurvaturePole.s2_moment_6
-  · exact Omega.Conclusion.ParetoColdendCurvaturePole.pole_order_arithmetic
+  · intro δ κstar κ hδ hκ
+    exact Omega.Conclusion.ParetoColdendCurvaturePole.coldend_cusp_derivative_chain
+      δ κstar κ hδ hκ
 
 /-- The right-edge slope parameter `α_*` for the cold-end support plateau. -/
 def conclusion_coldend_support_function_finite_integer_plateau_alpha_star : ℝ :=

@@ -57,7 +57,7 @@ open Matrix
 open InfoGeometry.Algebra
 open InfoGeometry.Algebra.ZornVectorMatrix (E11 E22 U V)
 open InfoGeometry.Lie.CanonicalZornDerivationDimension
-open InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge hiding zornConj
+open InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge
 open InfoGeometry.Canonical.SplitOctonionParaKahlerNullCone
 open InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis
 open InfoGeometry.Synthesis.G2SplitSedenionDerivationBridge
@@ -82,39 +82,39 @@ theorem sl2Gen_real_noncommute :
   sl2_generator_products_noncommute
 
 /-- `socleDerivation` annihilates the scalar coordinate and applies `X.mulVec` to the vector slot. -/
-theorem socleDerivation_scalar {R : Type*} [CommRing R] (X : Matrix (Fin 3) (Fin 3) R)
+theorem socleDerivation_scalar {R : Type*} [Ring R] (X : Matrix (Fin 3) (Fin 3) R)
     (c : R) (w : Fin 3 → R) :
     socleDerivation X (c, w) = (0, X.mulVec w) :=
   rfl
 
 /-- Predicate stating that $X \in \operatorname{Mat}_{3 \times 3}(R)$ acts as a derivation of
 `so21CrossProduct` and is skew-adjoint with respect to `so21BilinearForm`. -/
-def IsSo21Adjoint {R : Type*} [CommRing R] (X : Matrix (Fin 3) (Fin 3) R) : Prop :=
+def IsSo21Adjoint {R : Type*} [Ring R] (X : Matrix (Fin 3) (Fin 3) R) : Prop :=
   (∀ u v : Fin 3 → R, X.mulVec (so21CrossProduct u v) =
       so21CrossProduct (X.mulVec u) v + so21CrossProduct u (X.mulVec v)) ∧
     (∀ u v : Fin 3 → R,
       so21BilinearForm (X.mulVec u) v + so21BilinearForm u (X.mulVec v) = 0)
 
 /-- The compact rotation generator `sl2GenJ12` satisfies `IsSo21Adjoint`. -/
-theorem sl2GenJ12_isSo21Adjoint {R : Type*} [CommRing R] :
+theorem sl2GenJ12_isSo21Adjoint {R : Type*} [Ring R] :
     IsSo21Adjoint (sl2GenJ12 (R := R)) :=
   ⟨fun u v => (so21_generators_leibniz_crossProduct (R := R) u v).1,
    fun u v => (sl2_so21_generators_metric_invariance (R := R) u v).1⟩
 
 /-- The first hyperbolic boost generator `sl2GenK13` satisfies `IsSo21Adjoint`. -/
-theorem sl2GenK13_isSo21Adjoint {R : Type*} [CommRing R] :
+theorem sl2GenK13_isSo21Adjoint {R : Type*} [Ring R] :
     IsSo21Adjoint (sl2GenK13 (R := R)) :=
   ⟨fun u v => (so21_generators_leibniz_crossProduct (R := R) u v).2.1,
    fun u v => (sl2_so21_generators_metric_invariance (R := R) u v).2.1⟩
 
 /-- The second hyperbolic boost generator `sl2GenK23` satisfies `IsSo21Adjoint`. -/
-theorem sl2GenK23_isSo21Adjoint {R : Type*} [CommRing R] :
+theorem sl2GenK23_isSo21Adjoint {R : Type*} [Ring R] :
     IsSo21Adjoint (sl2GenK23 (R := R)) :=
   ⟨fun u v => (so21_generators_leibniz_crossProduct (R := R) u v).2.2,
    fun u v => (sl2_so21_generators_metric_invariance (R := R) u v).2.2⟩
 
 /-- Combined packet certifying that all three $(2,1)$ generators satisfy `IsSo21Adjoint`. -/
-theorem sl2Gen_isSo21Adjoint {R : Type*} [CommRing R] :
+theorem sl2Gen_isSo21Adjoint {R : Type*} [Ring R] :
     IsSo21Adjoint (sl2GenJ12 (R := R)) ∧
       IsSo21Adjoint (sl2GenK13 (R := R)) ∧
       IsSo21Adjoint (sl2GenK23 (R := R)) :=
@@ -196,7 +196,7 @@ positive $(2,1)$ bilinear pairing $+ \langle \vec{x}, \vec{y} \rangle_{(2,1)}$:
 $$(x_0, \vec{x}) \cdot_{\mathbb{H}_s} (y_0, \vec{y}) =
   \big(x_0 y_0 + \langle \vec{x}, \vec{y} \rangle_{(2,1)},\;
        x_0 \vec{y} + y_0 \vec{x} + \vec{x} \times_{(2,1)} \vec{y}\big).$$ -/
-def splitQuatSocleMul {R : Type*} [CommRing R]
+def splitQuatSocleMul {R : Type*} [Ring R]
     (x y : R × (Fin 3 → R)) : R × (Fin 3 → R) :=
   (x.1 * y.1 + so21BilinearForm x.2 y.2,
    fun i => x.1 * y.2 i + y.1 * x.2 i + so21CrossProduct x.2 y.2 i)
@@ -249,12 +249,12 @@ theorem socleDerivation_leibniz_splitQuatSocleMul_of_isSo21Adjoint {R : Type*} [
 concentrated along mode `0`:
 $$\iota_{\mathbb{H}_s}(x_0, \vec{x}) =
   \begin{pmatrix} x_0 + x_0' & (x_1' - x_2') e_0 \\ (x_1' + x_2') e_0 & x_0 - x_0' \end{pmatrix}.$$ -/
-def embedSplitQuatToZorn {R : Type*} [CommRing R]
+def embedSplitQuatToZorn {R : Type*} [Ring R]
     (x : R × (Fin 3 → R)) : ZornSplitOctonion R :=
   ⟨x.1 + x.2 0, ![x.2 1 - x.2 2, 0, 0], ![x.2 1 + x.2 2, 0, 0], x.1 - x.2 0⟩
 
 /-- `embedSplitQuatToZorn` sends the split-quaternion identity `(1, 0)` to `zornOne`. -/
-theorem embedSplitQuatToZorn_one {R : Type*} [CommRing R] :
+theorem embedSplitQuatToZorn_one {R : Type*} [Ring R] :
     embedSplitQuatToZorn ((1 : R), ![0, 0, 0]) = (zornOne : ZornSplitOctonion R) := by
   ext i
   · simp [embedSplitQuatToZorn, zornOne]
@@ -531,26 +531,26 @@ def lambda1Probe (k : Fin 3) : ZornSplitOctonion ℝ :=
   ⟨0, fun j => if j = k then 1 else 0, fun _ => 0, 0⟩
 
 /-- Reads the $(2,1)$ vector coordinate off the $\Lambda^2$ (`v`) slot of the second Zorn factor. -/
-def socleVectorRead {R : Type*} [CommRing R] (Y : SplitSedenion R) : R × (Fin 3 → R) :=
+def socleVectorRead {R : Type*} [Ring R] (Y : SplitSedenion R) : R × (Fin 3 → R) :=
   (0, Y.2.v)
 
 /-- Embeds a 3-vector into the $\Lambda^2$ (`v`) slot of the second Zorn factor of `SplitSedenion R`. -/
-def socleVectorWrite {R : Type*} [CommRing R] (w : Fin 3 → R) : SplitSedenion R :=
+def socleVectorWrite {R : Type*} [Ring R] (w : Fin 3 → R) : SplitSedenion R :=
   (zornZero, ⟨0, fun _ => 0, w, 0⟩)
 
 /-- Lift of `socleDerivation X` to `SplitSedenion R`, acting on the $\Lambda^2$ (`v`) slot
 of the second Zorn factor and annihilating the first Zorn factor. -/
-def socleDerivationLift {R : Type*} [CommRing R] (X : Matrix (Fin 3) (Fin 3) R)
+def socleDerivationLift {R : Type*} [Ring R] (X : Matrix (Fin 3) (Fin 3) R)
     (Y : SplitSedenion R) : SplitSedenion R :=
   socleVectorWrite (socleDerivation X (socleVectorRead Y)).2
 
-@[simp] theorem socleDerivationLift_apply {R : Type*} [CommRing R]
+@[simp] theorem socleDerivationLift_apply {R : Type*} [Ring R]
     (X : Matrix (Fin 3) (Fin 3) R) (Y : SplitSedenion R) :
     socleDerivationLift X Y = (zornZero, ⟨0, fun _ => 0, X.mulVec Y.2.v, 0⟩) :=
   rfl
 
 /-- `socleDerivationLift X` annihilates the first Zorn factor. -/
-@[simp] theorem socleDerivationLift_first {R : Type*} [CommRing R]
+@[simp] theorem socleDerivationLift_first {R : Type*} [Ring R]
     (X : Matrix (Fin 3) (Fin 3) R) (Y : SplitSedenion R) :
     (socleDerivationLift X Y).1 = zornZero :=
   rfl

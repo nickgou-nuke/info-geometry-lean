@@ -21,7 +21,7 @@ variable {F : Type*}
 
 section OrderedField
 
-variable [Field F] [LinearOrder F] [IsStrictOrderedRing F]
+variable [Ring F] [LinearOrder F] [IsStrictOrderedRing F]
 
 instance : LinearOrder (Extend F) := inferInstance
 instance : AddCommMonoid (Extend F) := inferInstance

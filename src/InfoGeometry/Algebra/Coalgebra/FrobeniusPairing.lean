@@ -18,10 +18,11 @@ not asserted: it is additional data about `ε`.
 namespace InfoGeometry.Algebra.FrobeniusPairing
 
 variable {R A : Type*}
-variable [CommSemiring R] [Semiring A] [Algebra R A]
+variable [CommSemiring R] [Semiring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- Left multiplication followed by a linear functional. -/
-def pairingRight (ε : A →ₗ[R] R) (a : A) : A →ₗ[R] R :=
+def pairingRight {R A : Type*} [Semiring R] [Semiring A] [Module R A] [SMulCommClass R A A]
+    (ε : A →ₗ[R] R) (a : A) : A →ₗ[R] R :=
   ε.comp (LinearMap.mulLeft R a)
 
 /-- The Frobenius pairing `β(a,b) = ε(ab)` as a curried bilinear map. -/
@@ -32,7 +33,7 @@ def pairing (ε : A →ₗ[R] R) : A →ₗ[R] (A →ₗ[R] R) where
     simp [pairingRight, LinearMap.mulLeft_apply, add_mul]
   map_smul' r a := by
     ext b
-    simp [pairingRight, LinearMap.mulLeft_apply, Algebra.smul_mul_assoc]
+    simp [pairingRight, LinearMap.mulLeft_apply, smul_mul_assoc]
 
 @[simp]
 theorem pairing_apply (ε : A →ₗ[R] R) (a b : A) :

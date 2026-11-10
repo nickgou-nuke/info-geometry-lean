@@ -31,7 +31,8 @@ def involutionUnit (A : CoordEnd) (hA : A * A = 1) : CoordEndˣ where
   inv_val := hA
 
 def C_unit : CoordEndˣ := involutionUnit C_op C_sq
-def Star_unit : CoordEndˣ := involutionUnit Star_op Star_sq
+def Star_unit : CoordEndˣ :=
+  involutionUnit Star_op (by change hodgeStar * hodgeStar = 1; exact hodgeStar_sq)
 def Xi_unit : CoordEndˣ := involutionUnit Xi_op Xi_sq
 
 @[simp] theorem C_unit_val : (C_unit : CoordEnd) = C_op := rfl
@@ -76,7 +77,8 @@ theorem C_unit_mul_Xi_unit : C_unit * Xi_unit = Star_unit := by
 @[simp] theorem Star_unit_sq : Star_unit * Star_unit = 1 := by
   apply Units.ext
   change Star_op * Star_op = 1
-  exact Star_sq
+  change hodgeStar * hodgeStar = 1
+  exact hodgeStar_sq
 
 @[simp] theorem Xi_unit_sq : Xi_unit * Xi_unit = 1 := by
   apply Units.ext

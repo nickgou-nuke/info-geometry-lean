@@ -16,7 +16,7 @@ open InfoGeometry.Projective.QuantumGrassmannian
 open KleinQuadricPlucker
 
 universe u
-variable (R : Type u) [Field R]
+variable (R : Type u) [CommRing R] [Inv R]
 
 /-- Structure representing the 6 quantum Plucker generators. -/
 structure QuantumPluckerGenerator (A : Type*) where
@@ -40,11 +40,11 @@ def quantumPluckerMap (q : R) :
 
 /-- The six recorded coordinates satisfy the q-Plücker relation in
 `O_q(Gr(2,4))`. -/
-theorem quantumPluckerMap_relation (q : R) :
+theorem quantumPluckerMap_relation {R : Type u} [Field R] (q : R) :
     let P := quantumPluckerMap R q
     P.p01 * P.p23 - q • (P.p02 * P.p13) + q ^ 2 • (P.p03 * P.p12) = 0 := by
   apply Subtype.ext
-  exact quantumPlucker R q
+  exact quantumPlucker q
 
 /-! ## Homogeneous scalar gauge readback -/
 

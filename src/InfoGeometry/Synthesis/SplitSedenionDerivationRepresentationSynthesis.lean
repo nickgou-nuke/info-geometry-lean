@@ -67,7 +67,7 @@ open InfoGeometry.Synthesis.SplitSedenionImaginaryBimoduleBridge
 -/
 
 /-- Componentwise scalar multiplication on `SplitSedenion R`. -/
-def sedenionSmul {R : Type*} [CommRing R] (c : R) (X : SplitSedenion R) : SplitSedenion R :=
+def sedenionSmul {R : Type*} [Ring R] (c : R) (X : SplitSedenion R) : SplitSedenion R :=
   (zornSmul c X.1, zornSmul c X.2)
 
 /-- Predicate characterizing an $\mathbb{R}$-linear derivation $D : \mathbb{S}_s \to \mathbb{S}_s$
@@ -106,25 +106,22 @@ def sedenionDerivationCommutator
 
 /-- `zornConj` distributes over `zornAdd`. -/
 theorem zornConj_add (x y : ZornSplitOctonion ℝ) :
-    Cl44LeftIdealSplitSedenionSynthesis.zornConj (zornAdd x y) =
-      zornAdd (Cl44LeftIdealSplitSedenionSynthesis.zornConj x)
-        (Cl44LeftIdealSplitSedenionSynthesis.zornConj y) := by
+    zornConj (zornAdd x y) = zornAdd (zornConj x) (zornConj y) := by
   have _ := (x, y)
   ext k
   · rfl
-  · fin_cases k <;> (dsimp [Cl44LeftIdealSplitSedenionSynthesis.zornConj, zornAdd]; ring)
-  · fin_cases k <;> (dsimp [Cl44LeftIdealSplitSedenionSynthesis.zornConj, zornAdd]; ring)
+  · fin_cases k <;> (dsimp [zornConj, zornAdd]; ring)
+  · fin_cases k <;> (dsimp [zornConj, zornAdd]; ring)
   · rfl
 
 /-- `zornConj` commutes with scalar multiplication `zornSmul`. -/
 theorem zornConj_smul (c : ℝ) (x : ZornSplitOctonion ℝ) :
-    Cl44LeftIdealSplitSedenionSynthesis.zornConj (zornSmul c x) =
-      zornSmul c (Cl44LeftIdealSplitSedenionSynthesis.zornConj x) := by
+    zornConj (zornSmul c x) = zornSmul c (zornConj x) := by
   have _ := (c, x)
   ext k
   · rfl
-  · fin_cases k <;> (dsimp [Cl44LeftIdealSplitSedenionSynthesis.zornConj, zornSmul]; ring)
-  · fin_cases k <;> (dsimp [Cl44LeftIdealSplitSedenionSynthesis.zornConj, zornSmul]; ring)
+  · fin_cases k <;> (dsimp [zornConj, zornSmul]; ring)
+  · fin_cases k <;> (dsimp [zornConj, zornSmul]; ring)
   · rfl
 
 /-- Scalar multiplication `zornSmul` distributes over `zornAdd`. -/
@@ -160,12 +157,10 @@ theorem sedenionMul_add_left (X Y Z : SplitSedenion ℝ) :
       sedenionAdd (sedenionMul X Z) (sedenionMul Y Z) := by
   apply Prod.ext
   · dsimp [sedenionMul, sedenionAdd]
-    rw [zornMul_add_left X.1 Y.1 Z.1,
-      zornMul_add_right (Cl44LeftIdealSplitSedenionSynthesis.zornConj Z.2) X.2 Y.2]
+    rw [zornMul_add_left X.1 Y.1 Z.1, zornMul_add_right (zornConj Z.2) X.2 Y.2]
     exact zornAdd_add_add_comm _ _ _ _
   · dsimp [sedenionMul, sedenionAdd]
-    rw [zornMul_add_right Z.2 X.1 Y.1,
-      zornMul_add_left X.2 Y.2 (Cl44LeftIdealSplitSedenionSynthesis.zornConj Z.1)]
+    rw [zornMul_add_right Z.2 X.1 Y.1, zornMul_add_left X.2 Y.2 (zornConj Z.1)]
     exact zornAdd_add_add_comm _ _ _ _
 
 /-- `sedenionMul` distributes over `sedenionAdd` in its right argument. -/
@@ -175,13 +170,11 @@ theorem sedenionMul_add_right (X Y Z : SplitSedenion ℝ) :
   apply Prod.ext
   · dsimp [sedenionMul, sedenionAdd]
     rw [zornMul_add_right X.1 Y.1 Z.1, zornConj_add Y.2 Z.2,
-        zornMul_add_left (Cl44LeftIdealSplitSedenionSynthesis.zornConj Y.2)
-          (Cl44LeftIdealSplitSedenionSynthesis.zornConj Z.2) X.2]
+        zornMul_add_left (zornConj Y.2) (zornConj Z.2) X.2]
     exact zornAdd_add_add_comm _ _ _ _
   · dsimp [sedenionMul, sedenionAdd]
     rw [zornMul_add_left Y.2 Z.2 X.1, zornConj_add Y.1 Z.1,
-        zornMul_add_right X.2 (Cl44LeftIdealSplitSedenionSynthesis.zornConj Y.1)
-          (Cl44LeftIdealSplitSedenionSynthesis.zornConj Z.1)]
+        zornMul_add_right X.2 (zornConj Y.1) (zornConj Z.1)]
     exact zornAdd_add_add_comm _ _ _ _
 
 /-- `sedenionMul` is homogeneous with respect to `sedenionSmul` in its left argument. -/
@@ -190,12 +183,10 @@ theorem sedenionMul_smul_left (c : ℝ) (X Y : SplitSedenion ℝ) :
       sedenionSmul c (sedenionMul X Y) := by
   apply Prod.ext
   · dsimp [sedenionMul, sedenionSmul]
-    rw [zornMul_smul_left c X.1 Y.1,
-        zornMul_smul_right c (Cl44LeftIdealSplitSedenionSynthesis.zornConj Y.2) X.2,
+    rw [zornMul_smul_left c X.1 Y.1, zornMul_smul_right c (zornConj Y.2) X.2,
         ← zornSmul_add c]
   · dsimp [sedenionMul, sedenionSmul]
-    rw [zornMul_smul_right c Y.2 X.1,
-        zornMul_smul_left c X.2 (Cl44LeftIdealSplitSedenionSynthesis.zornConj Y.1),
+    rw [zornMul_smul_right c Y.2 X.1, zornMul_smul_left c X.2 (zornConj Y.1),
         ← zornSmul_add c]
 
 /-- `sedenionMul` is homogeneous with respect to `sedenionSmul` in its right argument. -/
@@ -205,12 +196,10 @@ theorem sedenionMul_smul_right (c : ℝ) (X Y : SplitSedenion ℝ) :
   apply Prod.ext
   · dsimp [sedenionMul, sedenionSmul]
     rw [zornMul_smul_right c X.1 Y.1, zornConj_smul c Y.2,
-        zornMul_smul_left c (Cl44LeftIdealSplitSedenionSynthesis.zornConj Y.2) X.2,
-        ← zornSmul_add c]
+        zornMul_smul_left c (zornConj Y.2) X.2, ← zornSmul_add c]
   · dsimp [sedenionMul, sedenionSmul]
     rw [zornMul_smul_left c Y.2 X.1, zornConj_smul c Y.1,
-        zornMul_smul_right c X.2 (Cl44LeftIdealSplitSedenionSynthesis.zornConj Y.1),
-        ← zornSmul_add c]
+        zornMul_smul_right c X.2 (zornConj Y.1), ← zornSmul_add c]
 
 /-- `sedenionMul` distributes over `sedenionSub` in its left argument. -/
 theorem sedenionMul_sub_left (X Y Z : SplitSedenion ℝ) :
@@ -294,12 +283,10 @@ theorem sedenionConj_sub (X Y : SplitSedenion ℝ) :
   · ext k
     · rfl
     · fin_cases k <;>
-        (dsimp [sedenionConj, sedenionSub, sedenionAdd, sedenionNeg,
-          Cl44LeftIdealSplitSedenionSynthesis.zornConj, zornAdd, zornSmul];
+        (dsimp [sedenionConj, sedenionSub, sedenionAdd, sedenionNeg, zornConj, zornAdd, zornSmul];
          ring)
     · fin_cases k <;>
-        (dsimp [sedenionConj, sedenionSub, sedenionAdd, sedenionNeg,
-          Cl44LeftIdealSplitSedenionSynthesis.zornConj, zornAdd, zornSmul];
+        (dsimp [sedenionConj, sedenionSub, sedenionAdd, sedenionNeg, zornConj, zornAdd, zornSmul];
          ring)
     · rfl
   · ext k

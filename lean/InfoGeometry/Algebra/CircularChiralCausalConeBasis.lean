@@ -58,10 +58,10 @@ theorem chiral_basis_card : Fintype.card ChiralBasis = 8 := by
   change Fintype.card (Unit ⊕ Unit ⊕ Fin 3 ⊕ Fin 3) = 8
   simp only [Fintype.card_sum, Fintype.card_unit, Fintype.card_fin]
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Canonical embedding of the 8-element Chiral Basis into the Zorn matrix split-octonions. -/
-def toZorn (R : Type*) [CommRing R] : ChiralBasis → ZornMatrix R
+def toZorn (R : Type*) [Ring R] : ChiralBasis → ZornMatrix R
   | ChiralBasis.uPlus => E11
   | ChiralBasis.uMinus => E22
   | ChiralBasis.up i => U i
@@ -142,7 +142,7 @@ theorem up_down_anticommutator (i j : Fin 3) :
   U_V_anticommutator i j
 
 /-- The Chirality operator $\chi = u^+ - u^-$. -/
-def chiralityOp (R : Type*) [CommRing R] : ZornMatrix R :=
+def chiralityOp (R : Type*) [Ring R] : ZornMatrix R :=
   toZorn R ChiralBasis.uPlus - toZorn R ChiralBasis.uMinus
 
 /-- 🏆 THEOREM 7: Chirality is an involution ($\chi^2 = I$). -/

@@ -26,6 +26,22 @@ Causal order of the formal claims:
 4. Under a cyclic trace, off-diagonal and cross-sector pairings listed in the theorem vanish.
 5. If an element commutes with a commutator generator, its trace pairings with that commutator
    vanish in both orders.
+
+BUCKET 1: PROVED FINITE/ALGEBRAIC IDENTITIES OVER `[Ring B]`
+- `peirce_nine_block_decomposition`
+- `peirce_waist_corner_boundary_annihilation`
+- `peirce_complement_triad`
+- `peirce_grade_sector_projectors`
+- `peirce_corner_weyl_weights`
+
+BUCKET 2: CONDITIONAL IDENTITIES FROM EXPLICIT PREMISES
+- `cyclicTrace_tr_corner_eq_zero` (from cyclic trace `τ : CyclicTrace B R`)
+- `peirce_grade_trace_pairing_vanishes` (from cyclic trace `τ : CyclicTrace B R`)
+- `cyclic_trace_closed_commutator_pairing_zero` (from cyclic trace and closedness hypothesis)
+- `peirce_corner_asymmetry_and_step_commutator_jacobi` (from cyclic trace `τ : CyclicTrace B R`)
+
+BUCKET 3: OPEN CLOSURE DEBT
+- Analytic Hilbert-space Hodge decomposition and elliptic regularity are not constructed here.
 -/
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine.ThreeHorizonHodgeDecompositionPoset
 
@@ -200,6 +216,7 @@ theorem peirce_waist_corner_boundary_annihilation
 -- 3. THREE-SECTOR PROJECTOR ALGEBRA & 5-GRADED EIGENVALUE SPECTRUM
 -- ============================================================================
 
+/-- Right-associated idempotent and orthogonality rewrite helpers for `P₁, P₂`. -/
 private theorem peirce_grade_nf {P1 P2 : B}
     (h1 : P1 * P1 = P1) (h2 : P2 * P2 = P2)
     (h12 : P1 * P2 = 0) (h21 : P2 * P1 = 0) :

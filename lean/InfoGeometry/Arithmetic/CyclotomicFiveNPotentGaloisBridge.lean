@@ -13,14 +13,14 @@ Galois representation or an analytic Fibonacci-category symmetry.
 
 namespace InfoGeometry.Arithmetic.CyclotomicFiveNPotentGaloisBridge
 
-variable {K : Type*} [CommRing K] [IsDomain K]
+variable {K : Type*} [Ring K] [IsDomain K]
 
 def p6 (x : K) : K := x ^ 6 - x
 
 theorem p6_factorization (x : K) :
     p6 x = x * (x ^ 5 - 1) := by
   dsimp [p6]
-  ring
+  noncomm_ring
 
 theorem mem_six_potent_hull_iff (x : K) :
     p6 x = 0 ↔ x = 0 ∨ x ^ 5 = 1 := by
@@ -29,29 +29,29 @@ theorem mem_six_potent_hull_iff (x : K) :
 theorem six_potent_of_pow_five_eq_one {x : K} (hx : x ^ 5 = 1) :
     x ^ 6 = x := by
   calc
-    x ^ 6 = x ^ 5 * x := by ring
+    x ^ 6 = x ^ 5 * x := by noncomm_ring
     _ = 1 * x := by rw [hx]
     _ = x := by rw [one_mul]
 
 theorem fifth_root_square_is_fifth_root {x : K} (hx : x ^ 5 = 1) :
     (x ^ 2) ^ 5 = 1 := by
   calc
-    (x ^ 2) ^ 5 = (x ^ 5) ^ 2 := by ring
+    (x ^ 2) ^ 5 = (x ^ 5) ^ 2 := by noncomm_ring
     _ = 1 ^ 2 := by rw [hx]
-    _ = 1 := by ring
+    _ = 1 := by noncomm_ring
 
 theorem fifth_root_fourth_is_fifth_root {x : K} (hx : x ^ 5 = 1) :
     ((x ^ 2) ^ 4) ^ 5 = 1 := by
   calc
-    ((x ^ 2) ^ 4) ^ 5 = ((x ^ 5) ^ 2) ^ 4 := by ring
+    ((x ^ 2) ^ 4) ^ 5 = ((x ^ 5) ^ 2) ^ 4 := by noncomm_ring
     _ = (1 ^ 2) ^ 4 := by rw [hx]
-    _ = 1 := by ring
+    _ = 1 := by noncomm_ring
 
 theorem twist_fourth_mul_twist_eq_one {x : K} (hx : x ^ 5 = 1) :
     (x ^ 2) ^ 4 * (x ^ 2) = 1 := by
   calc
-    (x ^ 2) ^ 4 * (x ^ 2) = (x ^ 5) ^ 2 := by ring
-    _ = 1 := by rw [hx]; ring
+    (x ^ 2) ^ 4 * (x ^ 2) = (x ^ 5) ^ 2 := by noncomm_ring
+    _ = 1 := by rw [hx]; noncomm_ring
 
 theorem fibonacci_twist_mem_p6_hull {x : K} (hx : x ^ 5 = 1) :
     p6 (x ^ 2) = 0 := by

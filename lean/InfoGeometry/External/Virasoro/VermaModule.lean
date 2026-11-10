@@ -103,7 +103,7 @@ end cyclic_vectors
 
 section generalized_Verma_module
 
-variable {𝕜 A : Type*} [CommRing 𝕜] [Ring A] [Algebra 𝕜 A]
+variable {𝕜 A : Type*} [CommSemiring 𝕜] [Ring A] [Algebra 𝕜 A]
 variable {ι : Type*}
 
 /-- The left ideal used in the construction of a (generalized) Verma module for an algebra `A`:
@@ -185,7 +185,7 @@ end generalized_Verma_module
 
 section IsVerma
 
-variable {𝕜 A : Type*} [CommRing 𝕜] [Ring A] [Algebra 𝕜 A]
+variable {𝕜 A : Type*} [CommSemiring 𝕜] [Ring A] [Algebra 𝕜 A]
 variable {ι : Type*}
 
 universe u

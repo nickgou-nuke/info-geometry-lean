@@ -28,7 +28,7 @@ noncomputable section
 namespace InfoGeometry.NCG.OperatorMetric
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 local notation "Mat" => Matrix ι ι R
 
@@ -72,7 +72,7 @@ theorem isSLD_conjugate (ρ L A U U_inv : Mat)
     IsSLD (U * ρ * U_inv) (U * L * U_inv) (U * A * U_inv) := by
   unfold IsSLD at h ⊢
   rw [jordan_conjugate U U_inv ρ L hU', h]
-  simp only [Matrix.smul_mul, Matrix.mul_smul]
+  simp only [two_nsmul, Matrix.mul_add, Matrix.add_mul]
 
 /-- Noncommutative Quantum Fisher Inner Product with respect to density operator ρ:
     `g_ρ(L₁, L₂) = 1/2 * Tr(ρ * {L₁, L₂})` -/
@@ -104,9 +104,15 @@ theorem sldFisherInner_add_right (ρ L₁ L₂ L₃ : Mat) :
     sldFisherInner ρ L₁ (L₂ + L₃) = sldFisherInner ρ L₁ L₂ + sldFisherInner ρ L₁ L₃ := by
   rw [sldFisherInner_symm, sldFisherInner_add_left, sldFisherInner_symm ρ L₂ L₁, sldFisherInner_symm ρ L₃ L₁]
 
+section CommRing
+
+variable {R_comm : Type*} [CommRing R_comm]
+
+local notation "MatC" => Matrix ι ι R_comm
+
 /-- 🏆 THEOREM 4: Scalar Compatibility:
     `g_ρ(c • L₁, L₂) = c • g_ρ(L₁, L₂)` -/
-theorem sldFisherInner_smul_left (ρ L₁ L₂ : Mat) (c : R) :
+theorem sldFisherInner_smul_left (ρ L₁ L₂ : MatC) (c : R_comm) :
     sldFisherInner ρ (c • L₁) L₂ = c * sldFisherInner ρ L₁ L₂ := by
   dsimp [sldFisherInner]
   have h_smul : (c • L₁) * L₂ + L₂ * (c • L₁) = c • (L₁ * L₂ + L₂ * L₁) := by
@@ -116,12 +122,12 @@ theorem sldFisherInner_smul_left (ρ L₁ L₂ : Mat) (c : R) :
 
 /-- 🏆 THEOREM 5: Invariance under Unitary Quantum Symmetry:
     If `U` is unitary (`U * U_inv = 1`), then `g_{U ρ U_inv}(U L₁ U_inv, U L₂ U_inv) = g_ρ(L₁, L₂)` -/
-theorem sldFisherInner_unitary_invariant (ρ L₁ L₂ U U_inv : Mat)
+theorem sldFisherInner_unitary_invariant (ρ L₁ L₂ U U_inv : MatC)
     (hU : U * U_inv = 1) (hU' : U_inv * U = 1) :
     sldFisherInner (U * ρ * U_inv) (U * L₁ * U_inv) (U * L₂ * U_inv) =
       sldFisherInner ρ L₁ L₂ := by
   dsimp [sldFisherInner]
-  have h_conj_prod (A B : Mat) :
+  have h_conj_prod (A B : MatC) :
       (U * A * U_inv) * (U * B * U_inv) = U * (A * B) * U_inv := by
     calc
       (U * A * U_inv) * (U * B * U_inv)
@@ -152,6 +158,8 @@ theorem sldFisherInner_unitary_invariant (ρ L₁ L₂ U U_inv : Mat)
         simp only [mul_assoc]
     _ = Matrix.trace (1 * (ρ * (L₁ * L₂ + L₂ * L₁))) := by rw [hU']
     _ = Matrix.trace (ρ * (L₁ * L₂ + L₂ * L₁)) := by rw [one_mul]
+
+end CommRing
 
 end InfoGeometry.NCG.OperatorMetric
 

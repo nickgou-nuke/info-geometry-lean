@@ -7,7 +7,7 @@ open InfoGeometry.Quantum.ChiralParityCharge
 
 /-! A direct capstone for the parity-odd charge and its critical-line
 specialization. -/
-theorem chiral_parity_charge_canonical_capstone {R : Type*} [CommRing R]
+theorem chiral_parity_charge_canonical_capstone {R : Type*} [Ring R]
     (N_L N_R : R) (σ : ℝ)
     (h_eq : N_L = N_R) (h_chiral : chiralParityCharge σ (1 / 2) = 0) :
     (chiralParityCharge N_R N_L = - chiralParityCharge N_L N_R) ∧

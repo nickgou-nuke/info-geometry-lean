@@ -90,7 +90,7 @@ open Matrix
 
 section HolographicBulkBoundaryAndSeibergWitten
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Holographic boundary restriction $\mathcal{B}$ extracting the upper-left $2 \times 2$
 boundary block from a $4 \times 4$ block matrix in
@@ -135,7 +135,7 @@ theorem holographicRadialProfile_source_and_condensate (J O : R) :
     holographicRadialProfile J O 0 = J ∧
     holographicRadialProfile J O 1 - holographicRadialProfile J O 0 = O := by
   unfold holographicRadialProfile
-  refine ⟨by ring, by ring⟩
+  refine ⟨by noncomm_ring, by noncomm_ring⟩
 
 /-- Division-free $2 \times 2$ Seiberg–Witten self-dual quadratic spinor curvature matrix
 $$F^+(\psi)
@@ -159,7 +159,7 @@ For every 2-component spinor $\psi : \mathrm{Fin}\,2 \to R$:
 1. $F^+(\psi)^\top = F^+(\psi)$ (symmetric traceless endomorphism);
 2. $F^+(\psi)^2 = (\psi_0^2 + \psi_1^2)^2 I_2$ (the square of the quadratic spinor map is
    scalar multiplication by $\|\psi\|^4$). -/
-theorem swSelfDualCurvature_transpose_and_clifford_sq (ψ : Fin 2 → R) :
+theorem swSelfDualCurvature_transpose_and_clifford_sq {R : Type*} [CommRing R] (ψ : Fin 2 → R) :
     (swSelfDualCurvature ψ)ᵀ = swSelfDualCurvature ψ ∧
     swSelfDualCurvature ψ * swSelfDualCurvature ψ =
       ((ψ 0 ^ 2 + ψ 1 ^ 2) ^ 2) • (1 : Matrix (Fin 2) (Fin 2) R) := by
@@ -455,7 +455,7 @@ end DrazinDikinSouriauHolography
 
 section SeibergWittenWeitzenbockObstruction
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- BRST variation $Q\chi = F^+ - \sigma(\Phi)$ of the topologically twisted self-dual
 fermion 2-form $\chi_{\mu\nu}$ in Donaldson–Witten / Seiberg–Witten theory. -/
@@ -476,8 +476,6 @@ $$\mathcal{E}_{\mathrm{W}}(\|\nabla_A\Phi\|^2, R_{\mathrm{scal}}, \|\Phi\|^2)
 def weitzenbockEnergyFunctional (nablaSq R_scal normPhiSq : R) : R :=
   4 * nablaSq + R_scal * normPhiSq + 2 * (normPhiSq * normPhiSq)
 
-variable [LinearOrder R] [IsStrictOrderedRing R]
-
 /-- **Weitzenböck Positive Scalar Curvature Vanishing Theorem (`positive_scalar_curvature_kills_monopoles`):**
 Over any strictly ordered commutative ring `R`, if $0 \le \|\nabla_A\Phi\|^2$, $0 \le \|\Phi\|^2$,
 the scalar curvature is strictly positive ($0 < R_{\mathrm{scal}}$), and the
@@ -485,7 +483,8 @@ Weitzenböck energy satisfies $\mathcal{E}_{\mathrm{W}} \le 0$, then both the mo
 condensate $\|\Phi\|^2 = 0$
   the covariant gradient $\|\nabla_A\Phi\|^2
   = 0$ vanish identically. -/
-theorem positive_scalar_curvature_kills_monopoles (nablaSq R_scal normPhiSq : R)
+theorem positive_scalar_curvature_kills_monopoles {R : Type*} [CommRing R]
+    [LinearOrder R] [IsStrictOrderedRing R] (nablaSq R_scal normPhiSq : R)
     (h_nabla : 0 ≤ nablaSq)
     (h_phi : 0 ≤ normPhiSq)
     (h_R : 0 < R_scal)

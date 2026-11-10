@@ -14,6 +14,33 @@ no preservation of the star operation is asserted.
 
 namespace InfoGeometry.OperatorAlgebra
 
+section NoncommOperatorParticleHole
+
+variable {A : Type*} [Ring A]
+
+/-- Over any non-commutative operator ring `A`, the signed particle–hole anticommutator
+differs from the ordered bilinear combination by explicit mode-coefficient commutator
+anomalies together with the three coefficient-coefficient commutator anomalies
+`[u, v]`, `[w, u]`, and `[w, v]`. -/
+theorem operatorParticleHole_noncomm_anomaly
+    (p P q Q u v w : A) :
+    thermalAnticommutator (u * p + v * Q) (u * P + w * q) -
+      (u * u * thermalAnticommutator p P +
+        u * w * thermalAnticommutator p q +
+        v * u * thermalAnticommutator Q P +
+        v * w * thermalAnticommutator Q q) =
+      u * (p * u - u * p) * P + u * (P * u - u * P) * p +
+      u * (p * w - w * p) * q + w * (q * u - u * q) * p +
+      v * (Q * u - u * Q) * P + u * (P * v - v * P) * Q +
+      v * (Q * w - w * Q) * q + w * (q * v - v * q) * Q +
+      (u * v - v * u) * (P * Q) +
+      (w * u - u * w) * (q * p) +
+      (w * v - v * w) * (q * Q) := by
+  unfold thermalAnticommutator
+  noncomm_ring
+
+end NoncommOperatorParticleHole
+
 variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
 
 /-- The diagonal CAR coefficient with independent pairing signs. -/

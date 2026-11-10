@@ -16,10 +16,10 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.SplitSpinorCliffordRepresentationBridge
 
-variable {R U : Type*} [CommRing R] [AddCommGroup U] [Module R U]
+variable {R U : Type*} [Ring R] [AddCommGroup U] [Module R U]
 
 /-- **Definition**: Paired Split Vector Space E = U × Dual(U). -/
-def SplitPairedSpace (R U : Type*) [CommRing R] [AddCommGroup U] [Module R U] :=
+def SplitPairedSpace (R U : Type*) [Ring R] [AddCommGroup U] [Module R U] :=
   U × (U →ₗ[R] R)
 
 /-- **Definition**: Canonical Split Quadratic Form Q(u, α) = α(u). -/

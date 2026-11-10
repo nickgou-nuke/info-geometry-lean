@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.TriFacetEigenspace
@@ -16,11 +17,17 @@ namespace InfoGeometry.Canonical.TriFacetEigenspace
 #### BUCKET 3: OPEN CLOSURE DEBT — None.
 -/
 
+def P_par {A : Type*} [Ring A] (O : A) : A := 1 - O ^ 2
+
+theorem tri_facet_eigenspace_par {A : Type*} [Ring A] {O : A} (hO : O ^ 3 = O) : O * P_par O = 0 := by
+  unfold P_par
+  have h_calc : O * (1 - O ^ 2) = O - O ^ 3 := by noncomm_ring
+  rw [h_calc, hO, sub_self]
+
 variable {A : Type*} [Field A]
 
 def P_hyp (O : A) : A := (1 / 2 : A) * (O ^ 2 + O)
 def P_ell (O : A) : A := (1 / 2 : A) * (O ^ 2 - O)
-def P_par (O : A) : A := 1 - O ^ 2
 
 theorem tri_facet_eigenspace_hyp (h2 : (2 : A) ≠ 0) {O : A} (hO : O ^ 3 = O) :
     O * P_hyp O = P_hyp O := by
@@ -32,11 +39,6 @@ theorem tri_facet_eigenspace_ell (h2 : (2 : A) ≠ 0) {O : A} (hO : O ^ 3 = O) :
     O * P_ell O = - P_ell O := by
   unfold P_ell
   have h_calc : O * ((1 / 2 : A) * (O ^ 2 - O)) = (1 / 2 : A) * (O ^ 3 - O ^ 2) := by ring
-  rw [h_calc, hO]; ring
-
-theorem tri_facet_eigenspace_par {O : A} (hO : O ^ 3 = O) : O * P_par O = 0 := by
-  unfold P_par
-  have h_calc : O * (1 - O ^ 2) = O - O ^ 3 := by ring
   rw [h_calc, hO]; ring
 
 theorem tri_facet_spectral_reconstruction (h2 : (2 : A) ≠ 0) (O : A) :

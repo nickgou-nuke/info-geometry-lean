@@ -244,17 +244,17 @@ def isRegular (D : LocalDivisorData R) : Prop := D.order = 0
 
 def isPole (D : LocalDivisorData R) : Prop := D.order < 0
 
-theorem charge_pos_iff_isZero (D : LocalDivisorData R) :
-    0 < charge D ↔ isZero D := by
-  rfl
-
-theorem charge_eq_zero_iff_isRegular (D : LocalDivisorData R) :
-    charge D = 0 ↔ isRegular D := by
-  rfl
-
-theorem charge_neg_iff_isPole (D : LocalDivisorData R) :
-    charge D < 0 ↔ isPole D := by
-  rfl
+/-- The three local divisor labels form an exhaustive, pairwise-disjoint
+classification by signed charge.  This records the joint consequence of the
+positive, zero, and negative cases rather than restating each label's
+definition as a separate equivalence. -/
+theorem charge_sign_classification (D : LocalDivisorData R) :
+    (isZero D ∨ isRegular D ∨ isPole D) ∧
+    ¬ (isZero D ∧ isRegular D) ∧
+    ¬ (isZero D ∧ isPole D) ∧
+    ¬ (isRegular D ∧ isPole D) := by
+  simp only [isZero, isRegular, isPole]
+  omega
 
 /-! ## The canonical residue representative -/
 

@@ -10,25 +10,25 @@ open scoped BigOperators
 
 namespace InfoGeometry.Amplituhedron
 
-variable {n : ℕ} {R : Type*} [CommRing R]
+variable {n : ℕ} {R : Type*} [Ring R]
 
 /-! ### 1. 2x2 Plücker Minors and 4x4 Determinants -/
 
 def minor2 (C : Matrix (Fin 2) (Fin n) R) (a b : Fin n) : R :=
   C 0 a * C 1 b - C 1 a * C 0 b
 
-theorem minor2_skew (C : Matrix (Fin 2) (Fin n) R) (a b : Fin n) :
+theorem minor2_skew {R : Type*} [CommRing R] (C : Matrix (Fin 2) (Fin n) R) (a b : Fin n) :
     minor2 C b a = - minor2 C a b := by
   dsimp [minor2]
   ring
 
-theorem minor2_self (C : Matrix (Fin 2) (Fin n) R) (a : Fin n) :
+theorem minor2_self {R : Type*} [CommRing R] (C : Matrix (Fin 2) (Fin n) R) (a : Fin n) :
     minor2 C a a = 0 := by
   dsimp [minor2]
   ring
 
 /-- The three-term Plücker relation for the 2x2 minors of a two-row matrix. -/
-theorem plucker_relation_general (C : Matrix (Fin 2) (Fin n) R) (a b c d : Fin n) :
+theorem plucker_relation_general {R : Type*} [CommRing R] (C : Matrix (Fin 2) (Fin n) R) (a b c d : Fin n) :
     minor2 C a c * minor2 C b d =
       minor2 C a b * minor2 C c d + minor2 C a d * minor2 C b c := by
   dsimp [minor2]
@@ -49,7 +49,7 @@ def det4 (M : Matrix (Fin 4) (Fin 4) R) : R :=
            M 1 2 * (M 2 0 * M 3 1 - M 2 1 * M 3 0))
 
 /-- The explicit four-by-four Laplace polynomial agrees with Mathlib's determinant. -/
-theorem det4_eq_matrix_det (M : Matrix (Fin 4) (Fin 4) R) : det4 M = M.det := by
+theorem det4_eq_matrix_det {R : Type*} [CommRing R] (M : Matrix (Fin 4) (Fin 4) R) : det4 M = M.det := by
   rw [Matrix.det_succ_row_zero]
   simp [det4, Matrix.det_fin_three, Fin.sum_univ_four, Fin.succAbove]
   ring_nf
@@ -84,19 +84,19 @@ def twistorMatrix (Y : Matrix (Fin 2) (Fin 4) R) (Z : Matrix (Fin n) (Fin 4) R) 
     else if r = 2 then Z a c
     else Z b c
 
-omit [CommRing R] in
+omit [Ring R] in
 @[simp] lemma twistorMatrix_row0 (Y : Matrix (Fin 2) (Fin 4) R) (Z : Matrix (Fin n) (Fin 4) R)
     (a b : Fin n) (c : Fin 4) : twistorMatrix Y Z a b 0 c = Y 0 c := rfl
 
-omit [CommRing R] in
+omit [Ring R] in
 @[simp] lemma twistorMatrix_row1 (Y : Matrix (Fin 2) (Fin 4) R) (Z : Matrix (Fin n) (Fin 4) R)
     (a b : Fin n) (c : Fin 4) : twistorMatrix Y Z a b 1 c = Y 1 c := rfl
 
-omit [CommRing R] in
+omit [Ring R] in
 @[simp] lemma twistorMatrix_row2 (Y : Matrix (Fin 2) (Fin 4) R) (Z : Matrix (Fin n) (Fin 4) R)
     (a b : Fin n) (c : Fin 4) : twistorMatrix Y Z a b 2 c = Z a c := rfl
 
-omit [CommRing R] in
+omit [Ring R] in
 @[simp] lemma twistorMatrix_row3 (Y : Matrix (Fin 2) (Fin 4) R) (Z : Matrix (Fin n) (Fin 4) R)
     (a b : Fin n) (c : Fin 4) : twistorMatrix Y Z a b 3 c = Z b c := rfl
 

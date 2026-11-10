@@ -39,6 +39,9 @@ def mirrorAutomorphism (iso : Cl11 R ⊗[R] Cl11 R ≃ₐ[R] Cl22 R) :
     Cl22 R ≃ₐ[R] Cl22 R :=
   iso.symm.trans (compassSwap R |>.trans iso)
 
+section Ring
+variable (R : Type*) [Ring R]
+
 /--
 The physical meaning of the compass sheets:
 Left Sheet (L) controls Kähler moduli (z_i).
@@ -81,11 +84,11 @@ theorem nullCone_mirror_symmetric (x₀ x₁ x₂ x₃ : R) :
   constructor
   · intro h
     calc x₂ * x₂ - x₃ * x₃ + x₀ * x₀ - x₁ * x₁
-      _ = x₀ * x₀ - x₁ * x₁ + x₂ * x₂ - x₃ * x₃ := by ring
+      _ = x₀ * x₀ - x₁ * x₁ + x₂ * x₂ - x₃ * x₃ := by abel
       _ = 0 := h
   · intro h
     calc x₀ * x₀ - x₁ * x₁ + x₂ * x₂ - x₃ * x₃
-      _ = x₂ * x₂ - x₃ * x₃ + x₀ * x₀ - x₁ * x₁ := by ring
+      _ = x₂ * x₂ - x₃ * x₃ + x₀ * x₀ - x₁ * x₁ := by abel
       _ = 0 := h
 
 /--
@@ -98,5 +101,7 @@ theorem hilb_self_mirror_origin
     (M : ChiralSheetModuli) :
     mirrorModuliMap (mirrorModuliMap M) = M := by
   simp [mirrorModuliMap]
+
+end Ring
 
 end InfoGeometry.MirrorCliffordBridge

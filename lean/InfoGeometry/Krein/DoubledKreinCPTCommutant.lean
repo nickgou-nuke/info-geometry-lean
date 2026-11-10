@@ -9,6 +9,8 @@ import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Basic.Complex.Basic
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.LinearCombination
 
@@ -59,7 +61,7 @@ open Matrix
 abbrev Mat4 (R : Type*) := Matrix (Fin 4) (Fin 4) R
 abbrev Mat2 (R : Type*) := Matrix (Fin 2) (Fin 2) R
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### Section 1: The Modular CPT Conjugation Operator J -/
 
@@ -92,7 +94,7 @@ def matrixUnit01R : Mat4 R :=
      0, 0, 0, 0]
 
 theorem J_mul_matrixUnit01_ne_matrixUnit01_mul_J
-    {R : Type*} [CommRing R] [Nontrivial R] :
+    {R : Type*} [Ring R] [Nontrivial R] :
     (J : Mat4 R) * matrixUnit01R (R := R) ≠ matrixUnit01R (R := R) * J := by
   intro h
   have h21 := congrArg (fun M : Mat4 R => M 2 1) h
@@ -105,7 +107,7 @@ def matrixUnit10_2R : Mat2 R :=
   !![0, 0; 1, 0]
 
 theorem matrixUnit01_2_mul_matrixUnit10_2_ne_matrixUnit10_2_mul_matrixUnit01_2
-    {R : Type*} [CommRing R] [Nontrivial R] :
+    {R : Type*} [Ring R] [Nontrivial R] :
     matrixUnit01_2R (R := R) * matrixUnit10_2R (R := R) ≠
       matrixUnit10_2R (R := R) * matrixUnit01_2R (R := R) := by
   intro h
@@ -131,7 +133,7 @@ theorem cptMatrix_commutes (A B : Mat2 R) : commutesWithJ (cptMatrix A B) := by
   ext i j
   fin_cases i <;> fin_cases j <;> {
     simp [cptMatrix, J, Matrix.mul_apply, Fin.sum_univ_four]
-    try ring
+    try abel
   }
 
 /-- Explicit characterization: a 4x4 matrix commutes with J if and only if
@@ -164,19 +166,19 @@ theorem commutes_iff_cptMatrix (M : Mat4 R) :
     have h22 : M 2 2 = M 0 0 := by
       have h02' := h 0 2
       simp [Matrix.mul_apply, J, Fin.sum_univ_four] at h02'
-      linear_combination -h02'
+      exact h02'.symm
     have h23 : M 2 3 = M 0 1 := by
       have h03' := h 0 3
       simp [Matrix.mul_apply, J, Fin.sum_univ_four] at h03'
-      linear_combination -h03'
+      exact h03'.symm
     have h32 : M 3 2 = M 1 0 := by
       have h12' := h 1 2
       simp [Matrix.mul_apply, J, Fin.sum_univ_four] at h12'
-      linear_combination -h12'
+      exact h12'.symm
     have h33 : M 3 3 = M 1 1 := by
       have h13' := h 1 3
       simp [Matrix.mul_apply, J, Fin.sum_univ_four] at h13'
-      linear_combination -h13'
+      exact h13'.symm
     use A, B
     ext i j
     fin_cases i <;> fin_cases j <;> {
@@ -203,7 +205,7 @@ theorem add_commutes {M N : Mat4 R} (hM : commutesWithJ M) (hN : commutesWithJ N
   rw [Matrix.add_mul, Matrix.mul_add, hM, hN]
 
 /-- Scalar multiplication preserves commutation with J. -/
-theorem smul_commutes {M : Mat4 R} (c : R) (hM : commutesWithJ M) :
+theorem smul_commutes {R : Type*} [CommRing R] {M : Mat4 R} (c : R) (hM : commutesWithJ M) :
     commutesWithJ (c • M) := by
   dsimp [commutesWithJ] at *
   rw [Matrix.smul_mul, Matrix.mul_smul, hM]
@@ -220,7 +222,7 @@ theorem mul_commutes {M N : Mat4 R} (hM : commutesWithJ M) (hN : commutesWithJ N
     _           = J * (M * N) := by rw [Matrix.mul_assoc]
 
 /-- Transposition preserves commutation with J. -/
-theorem transpose_commutes {M : Mat4 R} (hM : commutesWithJ M) :
+theorem transpose_commutes {R : Type*} [CommRing R] {M : Mat4 R} (hM : commutesWithJ M) :
     commutesWithJ Mᵀ := by
   dsimp [commutesWithJ] at *
   have hT := congr_arg Matrix.transpose hM
@@ -237,7 +239,7 @@ theorem cptMatrix_mul (A1 B1 A2 B2 : Mat2 R) :
   ext i j
   fin_cases i <;> fin_cases j <;> {
     simp [cptMatrix, Matrix.mul_apply, Matrix.sub_apply, Matrix.add_apply, Fin.sum_univ_four, Fin.sum_univ_two]
-    ring
+    abel
   }
 
 /-- Block transposition formula: (cptMatrix A B)ᵀ = cptMatrix Aᵀ (-Bᵀ). -/
@@ -253,7 +255,7 @@ theorem J_mul_cptMatrix (A B : Mat2 R) :
   ext i j
   fin_cases i <;> fin_cases j <;> {
     simp [J, cptMatrix, Matrix.mul_apply, Fin.sum_univ_four]
-    try ring
+    try abel
   }
 
 /-- Commutativity: cptMatrix A B * J = cptMatrix (-B) A. -/

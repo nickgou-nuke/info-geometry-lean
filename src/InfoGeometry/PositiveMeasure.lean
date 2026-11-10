@@ -92,7 +92,7 @@ end Fintype
 section Normalize
 
 variable {α : Type u} {R : Type v}
-variable [Fintype α] [Nonempty α] [Field R] [LinearOrder R] [IsStrictOrderedRing R]
+variable [Fintype α] [Nonempty α] [DivisionRing R] [LinearOrder R] [IsStrictOrderedRing R]
 
 /-- `Z` is strictly positive for a `PositiveMeasure` on a nonempty finite type. -/
 lemma Z_pos (μ : PositiveMeasure α R) : 0 < Z μ := by

@@ -17,6 +17,21 @@ and the 6th-order 3-horizon Weyl–para-Kähler bridge.
 
 All theorems hold over an arbitrary associative (noncommutative) ring `B` (`[Ring B]`)
 with zero `sorry`s, zero axioms, and zero commutative scalar assumptions.
+
+BUCKET 1: PROVED FINITE/ALGEBRAIC IDENTITIES OVER `[Ring B]`
+- `amari_parakahler_exponential_families_and_v4_crossover`
+- `maurer_cartan_connection_sum_and_difference_laws`
+- `bruhat_projector_sum_diff_and_legendre_hua_dikin`
+- `fundamental_weyl_to_parakahler_metric_bridge`
+- `master_amari_parakahler_connection_sum_diff_poset_coagulation`
+
+BUCKET 2: CONDITIONAL IDENTITIES FROM EXPLICIT PREMISES
+- Idempotent hypothesis `P * P = P` and orthogonal triad hypotheses `P1 * P1 = P1`, `P2 * P2 = P2`,
+  `P1 * P2 = P2 * P1 = 0`.
+
+BUCKET 3: OPEN CLOSURE DEBT
+- Smooth affine statistical manifold differential geometry and infinite-series resolvent convergence
+  are outside this algebraic `[Ring B]` formalization.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine.AmariParaKahlerConnectionSumDiffPoset
@@ -63,18 +78,22 @@ instance : PartialOrder AmariParaKahlerNode where
   le_antisymm a b hab hba := by
     revert hab hba; cases a <;> cases b <;> decide
 
+/-- Product of two positive Peirce corners vanishes (`N_+(P, X₁) * N_+(P, X₂) = 0`). -/
 theorem N_plus_mul_N_plus {P : B} (hP : P * P = P) (X1 X2 : B) :
     N_plus P X1 * N_plus P X2 = 0 := by
   dsimp only [N_plus]; peirce_base_nf hP
 
+/-- Right-associated product of two positive Peirce corners vanishes (`N_+(P, X₁) * (N_+(P, X₂) * Z) = 0`). -/
 theorem N_plus_mul_N_plus_assoc {P : B} (hP : P * P = P) (X1 X2 Z : B) :
     N_plus P X1 * (N_plus P X2 * Z) = 0 := by
   rw [← mul_assoc, N_plus_mul_N_plus hP X1 X2, zero_mul]
 
+/-- Product of two negative Peirce corners vanishes (`N_-(P, Y₁) * N_-(P, Y₂) = 0`). -/
 theorem N_minus_mul_N_minus {P : B} (hP : P * P = P) (Y1 Y2 : B) :
     N_minus P Y1 * N_minus P Y2 = 0 := by
   dsimp only [N_minus]; peirce_base_nf hP
 
+/-- Right-associated product of two negative Peirce corners vanishes (`N_-(P, Y₁) * (N_-(P, Y₂) * Z) = 0`). -/
 theorem N_minus_mul_N_minus_assoc {P : B} (hP : P * P = P) (Y1 Y2 Z : B) :
     N_minus P Y1 * (N_minus P Y2 * Z) = 0 := by
   rw [← mul_assoc, N_minus_mul_N_minus hP Y1 Y2, zero_mul]

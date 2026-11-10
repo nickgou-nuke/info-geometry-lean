@@ -1,46 +1,46 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 
 /-!
-# ℤ^n → 𝕋 injective dense embedding seeds
+# ℤ^n → 𝕋 embedding arithmetic seeds
 
-For any n ≥ 1, there exists a group injection Φ : ℤ^n ↪ 𝕋 with dense image.
-The construction uses α = (α₁, …, αₙ) ∈ ℝ^n with 1, α₁, …, αₙ rationally
-independent, defining Φ(k) = exp(2πi⟨k, α⟩).
-
-Injectivity follows from rational linear independence.
-Density follows because infinite subgroups of 𝕋 are dense (the only
-closed subgroups of the circle are finite cyclic groups or all of 𝕋).
+This module records finite coordinate counts and elementary integer arithmetic
+associated with a proposed dense embedding. It does not define the embedding,
+prove rational independence, or prove injectivity or density.
 
 ## Seed values
 
-The dimension count n determines:
-- The number of independent generators needed: n
-- The rational independence requirement: n+1 numbers must be Q-independent
-- The density argument uses: |closed subgroups of 𝕋| ∈ {finite cyclic, 𝕋}
+The stored arithmetic conventions are `generatorCount n = card (Fin n)` and
+`qIndepDim n = n + 1`.
 
-Key arithmetic seeds:
-- n=1: need 1, α₁ Q-independent (i.e. α₁ irrational)
-- n=2: need 1, α₁, α₂ Q-independent
-- The Lindemann–Weierstrass theorem provides examples: 1, e, e² are Q-independent
+The small dimension lemmas below concern only these numerical conventions.
 
 ## Paper references
 
 - thm:conclusion-zn-to-circle-injective-dense
+
+## Scope
+
+This file contains finite-index counts and arithmetic seeds. It does not
+construct the proposed homomorphism into the circle or prove injectivity,
+rational independence, or density.
 -/
 
 namespace Omega.Conclusion.ZnToCircleInjectiveDenseSeeds
 
-/-! ## Generator count seeds: n independent generators for ℤ^n
+/-! ## Generator index cardinality -/
 
-The embedding ℤ^n ↪ 𝕋 requires n independent parameters. -/
+/-- Cardinality of the finite coordinate index type for an `n`-coordinate
+    integer lattice. This is an index-counting quantity; it does not by itself
+    construct or prove a dense homomorphism into the circle. -/
+def generatorCount (n : ℕ) : ℕ := Fintype.card (Fin n)
 
-/-- Generator count: ℤ^n needs n independent generators.
-    thm:conclusion-zn-to-circle-injective-dense -/
-def generatorCount (n : ℕ) : ℕ := n
-
-/-- Q-independence dimension: need n+1 numbers to be Q-independent
-    (including 1 as the base).
-    thm:conclusion-zn-to-circle-injective-dense -/
+/-- Stored arithmetic convention for the advertised parameter dimension. -/
 def qIndepDim (n : ℕ) : ℕ := n + 1
 
 /-- Q-independence dimension seed: n=1 needs 2 Q-independent numbers.
@@ -89,7 +89,7 @@ theorem linearForm2_neg (a₁ a₂ k₁ k₂ : ℤ) :
     linearForm2 a₁ a₂ (-k₁) (-k₂) = -linearForm2 a₁ a₂ k₁ k₂ := by
   simp [linearForm2]; ring
 
-/-! ## Closed subgroup classification seed
+/-! ## Proposed closed subgroup criterion (not formalized here)
 
 The only closed subgroups of 𝕋 are: finite cyclic groups ℤ/nℤ, or 𝕋 itself.
 An infinite subgroup has closure = 𝕋, hence is dense.
@@ -98,9 +98,9 @@ The key dichotomy: a subgroup H ≤ 𝕋 satisfies either |H| < ∞ or H̄ = �
 For Φ(ℤ^n) with n ≥ 1 and Q-independent α, the image is infinite
 (since ℤ^n is infinite and Φ is injective), hence dense. -/
 
-/-- Rank of ℤ^n: the free abelian group ℤ^n has rank n.
-    thm:conclusion-zn-to-circle-injective-dense -/
-theorem rank_eq (n : ℕ) : generatorCount n = n := rfl
+/-- The cardinality of the `Fin n` coordinate index is `n`. -/
+theorem rank_eq (n : ℕ) : generatorCount n = n := by
+  simp [generatorCount]
 
 /-- For n ≥ 1, the group ℤ^n is infinite (rank ≥ 1 suffices).
     At integer level: n ≥ 1 → n > 0.
@@ -108,46 +108,47 @@ theorem rank_eq (n : ℕ) : generatorCount n = n := rfl
 theorem pos_rank_of_pos (n : ℕ) (hn : 1 ≤ n) : 0 < generatorCount n := by
   simp [generatorCount]; omega
 
-/-! ## Density criterion seeds
+/-! ## Open circle-density bridge
 
-If |H| = ∞ for H ≤ 𝕋, then H is dense. Equivalently: if H is not dense,
-then H is finite. The contrapositive gives our density result.
+The closed-subgroup dichotomy and the proposed dense embedding are not
+formalized in this arithmetic seed file: it defines no subgroup, homomorphism,
+or topology on the circle. -/
 
-The order of finite cyclic subgroups ℤ/nℤ ⊂ 𝕋: exactly n elements
-(the n-th roots of unity). -/
+/-- The unit group modulo one has one residue class, as reflected by
+`Nat.totient 1 = 1`. -/
+theorem cyclic_order_1 : Nat.totient 1 = 1 := by norm_num
 
-/-- Finite cyclic subgroup order seed: ℤ/1ℤ has 1 element.
-    thm:conclusion-zn-to-circle-injective-dense -/
-theorem cyclic_order_1 : Nat.totient 1 + 1 = 1 + 1 := by norm_num
+/-- The actual totient values for the four divisors of six sum to six. -/
+theorem totient_sum_6 :
+    Nat.totient 1 + Nat.totient 2 + Nat.totient 3 + Nat.totient 6 = 6 := by
+  decide
 
-/-- Sum of totients divides order: Σ_{d|n} φ(d) = n.
-    Seed: Σ_{d|6} φ(d) = φ(1)+φ(2)+φ(3)+φ(6) = 1+1+2+2 = 6.
-    thm:conclusion-zn-to-circle-injective-dense -/
-theorem totient_sum_6 : 1 + 1 + 2 + 2 = 6 := by norm_num
+/-- The advertised `n+1` independence count is one more than the finite
+    coordinate index count. This arithmetic statement does not assert the
+    existence of rationally independent parameters or a circle homomorphism. -/
+theorem hom_param_count (n : ℕ) : qIndepDim n = generatorCount n + 1 := by
+  simp [qIndepDim, generatorCount]
 
-/-- The general homomorphism Ψ : ℤ^n → 𝕋 has the form
-    Ψ(k) = exp(2πi(k₁θ₁ + ⋯ + kₙθₙ)) for some θᵢ ∈ ℝ.
-    If |Ψ(ℤ^n)| = ∞, the image is dense by the closed subgroup theorem.
-    Seed: the number of parameters equals n.
-    thm:conclusion-zn-to-circle-injective-dense -/
-theorem hom_param_count (n : ℕ) : generatorCount n = n := rfl
-
-/-- Paper wrapper: ℤ^n → 𝕋 injective dense embedding seeds.
-    Q-independence dimension, linear form additivity, rank positivity,
-    and closed subgroup classification.
+/-- Arithmetic seed package associated with a proposed ℤⁿ-to-circle result.
+    This package does not establish an embedding or a density theorem.
     thm:conclusion-zn-to-circle-injective-dense -/
 theorem paper_conclusion_zn_to_circle_injective_dense_seeds :
     qIndepDim 1 = 2 ∧ qIndepDim 2 = 3 ∧ qIndepDim 3 = 4
-    ∧ (∀ a₁ a₂ : ℤ, linearForm2 a₁ a₂ 0 0 = 0)
+    ∧ (∀ a₁ a₂ k₁ k₂ l₁ l₂ : ℤ,
+      linearForm2 a₁ a₂ (k₁ + l₁) (k₂ + l₂) =
+        linearForm2 a₁ a₂ k₁ k₂ + linearForm2 a₁ a₂ l₁ l₂)
     ∧ (∀ n : ℕ, 1 ≤ n → 0 < generatorCount n) := by
   exact ⟨qIndepDim_1, qIndepDim_2, qIndepDim_3,
-    linearForm2_zero, pos_rank_of_pos⟩
+    linearForm2_add, pos_rank_of_pos⟩
 
-/-- Paper package wrapper for the qpos general singlephase injective dense conclusion.
+/-- Paper-facing package for the integer seed statements; not an injectivity
+    or density conclusion.
     thm:conclusion-qpos-general-singlephase-injective-dense -/
 theorem paper_conclusion_qpos_general_singlephase_injective_dense_package :
     qIndepDim 1 = 2 ∧ qIndepDim 2 = 3 ∧ qIndepDim 3 = 4
-    ∧ (∀ a₁ a₂ : ℤ, linearForm2 a₁ a₂ 0 0 = 0)
+    ∧ (∀ a₁ a₂ k₁ k₂ l₁ l₂ : ℤ,
+      linearForm2 a₁ a₂ (k₁ + l₁) (k₂ + l₂) =
+        linearForm2 a₁ a₂ k₁ k₂ + linearForm2 a₁ a₂ l₁ l₂)
     ∧ (∀ n : ℕ, 1 ≤ n → 0 < generatorCount n) :=
   paper_conclusion_zn_to_circle_injective_dense_seeds
 

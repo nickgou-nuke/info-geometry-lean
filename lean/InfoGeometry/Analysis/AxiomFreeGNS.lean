@@ -58,7 +58,7 @@ partition a locally supplied unit `I` and the functional is symmetric on the two
 branches, then each branch has expectation exactly `1 / 2`.
 -/
 theorem branch_weight_one_half
-    {A R : Type*} [AddMonoid A] [Field R] [CharZero R]
+    {A R : Type*} [AddMonoid A] [DivisionRing R] [CharZero R]
     (φ : A →+ R) (P_L P_R I : A)
     (h_partition : P_L + P_R = I)
     (h_norm : φ I = 1)
@@ -72,14 +72,12 @@ theorem branch_weight_one_half
       _ = 1 := h_norm
   have h_double : (2 : R) * φ P_L = 1 := by
     calc
-      (2 : R) * φ P_L = φ P_L + φ P_L := by ring
+      (2 : R) * φ P_L = φ P_L + φ P_L := two_mul (φ P_L)
       _ = φ P_L + φ P_R := by rw [h_symm]
       _ = 1 := h_sum
   have h_left : φ P_L = (1 / 2 : R) := by
-    calc
-      φ P_L = ((2 : R) * φ P_L) * (1 / 2 : R) := by ring
-      _ = 1 * (1 / 2 : R) := by rw [h_double]
-      _ = (1 / 2 : R) := by ring
+    have h2 : (2 : R) ≠ 0 := two_ne_zero
+    rw [one_div, ← mul_right_inj' h2, h_double, mul_inv_cancel₀ h2]
   exact ⟨h_left, by rw [← h_symm, h_left]⟩
 
 /-! ## 1. The cyclic vector and KMS state -/

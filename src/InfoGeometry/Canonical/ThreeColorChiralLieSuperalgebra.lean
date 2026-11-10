@@ -18,7 +18,7 @@ namespace InfoGeometry.Canonical
 open InfoGeometry.Algebra.Zorn.ConcreteComposition
 open InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell
 
-@[ext] theorem zornCell_ext {R : Type*} [CommRing R]
+@[ext] theorem zornCell_ext {R : Type*} [Ring R]
     {X Y : ZornCell R}
     (hr : X.r = Y.r) (hs : X.s = Y.s)
     (hx1 : X.x1 = Y.x1) (hx2 : X.x2 = Y.x2) (hx3 : X.x3 = Y.x3)
@@ -164,23 +164,23 @@ abbrev ChiralOddPlus (R : Type*) := Fin 3 → R
 abbrev ChiralOddMinus (R : Type*) := Fin 3 → R
 abbrev ChiralOdd (R : Type*) := ChiralOddPlus R × ChiralOddMinus R
 
-def bracketEvenEven {R : Type*} [CommRing R]
+def bracketEvenEven {R : Type*} [Ring R]
     (_ _ : ChiralEven R) : ChiralEven R := 0
 
-def bracketEvenOdd {R : Type*} [CommRing R]
+def bracketEvenOdd {R : Type*} [Ring R]
     (e : ChiralEven R) (x : ChiralOdd R) : ChiralOdd R :=
   (fun i => 2 * e.2 * x.1 i, fun i => -2 * e.2 * x.2 i)
 
-def bracketOddEven {R : Type*} [CommRing R]
+def bracketOddEven {R : Type*} [Ring R]
     (x : ChiralOdd R) (e : ChiralEven R) : ChiralOdd R :=
   (- (bracketEvenOdd e x).1, - (bracketEvenOdd e x).2)
 
-def oddPairing {R : Type*} [CommRing R]
+def oddPairing {R : Type*} [Ring R]
     (x y : ChiralOdd R) : R :=
   (∑ i : Fin 3, x.1 i * y.2 i) +
     (∑ i : Fin 3, y.1 i * x.2 i)
 
-def bracketOddOdd {R : Type*} [CommRing R]
+def bracketOddOdd {R : Type*} [Ring R]
     (x y : ChiralOdd R) : ChiralEven R :=
   (oddPairing x y, 0)
 
@@ -188,7 +188,7 @@ theorem oddPairing_symm {R : Type*} [CommRing R]
     (x y : ChiralOdd R) : oddPairing x y = oddPairing y x := by
   simp [oddPairing, Fin.sum_univ_three, add_comm, mul_comm]
 
-theorem bracketEvenEven_skew {R : Type*} [CommRing R]
+theorem bracketEvenEven_skew {R : Type*} [Ring R]
     (x y : ChiralEven R) :
     bracketEvenEven x y = - bracketEvenEven y x := by
   simp [bracketEvenEven]
@@ -197,12 +197,12 @@ theorem bracketOddOdd_symm {R : Type*} [CommRing R]
     (x y : ChiralOdd R) : bracketOddOdd x y = bracketOddOdd y x := by
   simp [bracketOddOdd, oddPairing_symm]
 
-theorem bracketEvenOdd_neg {R : Type*} [CommRing R]
+theorem bracketEvenOdd_neg {R : Type*} [Ring R]
     (e : ChiralEven R) (x : ChiralOdd R) :
     bracketEvenOdd e x = - bracketOddEven x e := by
   ext <;> simp [bracketEvenOdd, bracketOddEven]
 
-theorem jacobi_even_even_even {R : Type*} [CommRing R]
+theorem jacobi_even_even_even {R : Type*} [Ring R]
     (x y z : ChiralEven R) :
     bracketEvenEven x (bracketEvenEven y z) +
       bracketEvenEven y (bracketEvenEven z x) +
@@ -237,14 +237,14 @@ theorem jacobi_odd_odd_odd {R : Type*} [CommRing R]
 open InfoGeometry.Algebra.Zorn.ConcreteComposition
 open InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell
 
-def evenToZorn {R : Type*} [CommRing R]
+def evenToZorn {R : Type*} [Ring R]
     (e : ChiralEven R) : ZornCell R where
   r := e.1 + e.2
   s := e.1 - e.2
   x1 := 0; x2 := 0; x3 := 0
   y1 := 0; y2 := 0; y3 := 0
 
-def oddToZorn {R : Type*} [CommRing R]
+def oddToZorn {R : Type*} [Ring R]
     (x : ChiralOdd R) : ZornCell R where
   r := 0; s := 0
   x1 := x.1 0; x2 := x.1 1; x3 := x.1 2
@@ -255,18 +255,18 @@ transferred additive structure on `ZornCell`.  This keeps the comparison
 theorems about the native multiplication independent of implementation
 details of the transported `AddCommGroup` instance. -/
 
-def addCellR {R : Type*} [CommRing R]
+def addCellR {R : Type*} [Ring R]
     (X Y : ZornCell R) : ZornCell R where
   r := X.r + Y.r; s := X.s + Y.s
   x1 := X.x1 + Y.x1; x2 := X.x2 + Y.x2; x3 := X.x3 + Y.x3
   y1 := X.y1 + Y.y1; y2 := X.y2 + Y.y2; y3 := X.y3 + Y.y3
 
-def negCellR {R : Type*} [CommRing R] (X : ZornCell R) : ZornCell R where
+def negCellR {R : Type*} [Ring R] (X : ZornCell R) : ZornCell R where
   r := -X.r; s := -X.s
   x1 := -X.x1; x2 := -X.x2; x3 := -X.x3
   y1 := -X.y1; y2 := -X.y2; y3 := -X.y3
 
-def subCellR {R : Type*} [CommRing R]
+def subCellR {R : Type*} [Ring R]
     (X Y : ZornCell R) : ZornCell R := addCellR X (negCellR Y)
 
 def nativeCommutatorR {R : Type*} [CommRing R]

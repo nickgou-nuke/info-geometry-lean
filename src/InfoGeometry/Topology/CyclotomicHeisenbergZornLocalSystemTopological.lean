@@ -81,8 +81,8 @@ theorem continuous_cyclotomicLocalSystemReadout :
 /-- Discrete cyclotomic parameters give a locally constant joint readout. -/
 theorem isLocallyConstant_cyclotomicLocalSystemReadout :
     IsLocallyConstant cyclotomicLocalSystemReadout := by
-  unfold cyclotomicLocalSystemReadout
-  exact IsLocallyConstant.of_discrete
+  intro s
+  exact isOpen_discrete _
 
 /-- The first readout coordinate is always a cube root of unity. -/
 theorem cyclotomicLocalSystemReadout_effective_root_cube

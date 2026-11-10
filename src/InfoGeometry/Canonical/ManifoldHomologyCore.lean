@@ -66,17 +66,4 @@ noncomputable def mappingDegree (f : M → M) (y : M) (_hy : IsRegularValue f y)
   letI : Fintype (f ⁻¹' ({y} : Set M)) := hfinite.fintype
   ∑ x : (f ⁻¹' ({y} : Set M)), localDegreeSign f x
 
-/--
-Degree/Jacobian compatibility: `mappingDegree` is exactly the sum of local Jacobian signs
-over the finite preimage fiber.
--/
-theorem mappingDegree_eq_sum_localDegreeSign
-    (f : M → M) (y : M) (hy : IsRegularValue f y)
-    (hfinite : (f ⁻¹' ({y} : Set M)).Finite) :
-    mappingDegree f y hy hfinite
-      = by
-          letI : Fintype (f ⁻¹' ({y} : Set M)) := hfinite.fintype
-          exact ∑ x : (f ⁻¹' ({y} : Set M)), localDegreeSign f x :=
-  rfl
-
 end InfoGeometry.Canonical.ManifoldHomology

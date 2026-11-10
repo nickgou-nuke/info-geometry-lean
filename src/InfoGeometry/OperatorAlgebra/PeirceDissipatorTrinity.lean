@@ -23,7 +23,10 @@ open InfoGeometry.OperatorAlgebra.LieJordan
 
 attribute [local instance 100] LieRing.ofAssociativeRing
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+section NoncommScalars
+
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
 
 private theorem squareZero_nested (u : A) (hu : u * u = 0) (x : A) :
     u * (u * x) = 0 := by
@@ -676,18 +679,6 @@ theorem reflexive_pair_spin_square {u v : A}
   rw [hUV, hUVVU, hVUUV, hVU]
   abel
 
-/-- The symmetric block, spin commutator, and antisymmetric block obey a
-Lorentzian quadratic sum for every reflexive square-zero pair. The two
-positive mass terms cancel against the negative square of the difference. -/
-theorem reflexive_pair_lorentzian_quadratic_sum {u v : A}
-    (hu : u * u = 0) (hv : v * v = 0)
-    (huv : u * v * u = u) (hvu : v * u * v = v) :
-    (u + v) * (u + v) + (u * v - v * u) * (u * v - v * u) +
-      (u - v) * (u - v) = u * v + v * u := by
-  rw [even_coefficient_sq hu hv, reflexive_pair_spin_square hu hv huv hvu,
-    odd_coefficient_sq hu hv]
-  abel
-
 /-- The spin commutator rotates the Dirac sum into the axial difference for a
 reflexive square-zero pair. This is an identity in the ambient associative
 algebra, with no matrix-coordinate or commutativity assumptions. -/
@@ -912,10 +903,10 @@ theorem crossDissipator_apply_spin_of_squareZero {u v : A}
   rw [hCross, hMassComm, two_nsmul]
   abel
 
-/-- The mass annihilation law needs only square-zero of the two generators;
-reflexivity is unnecessary for this particular conclusion. -/
+/-- Compatibility form for callers that already have a reflexive pair. -/
 theorem crossDissipator_apply_mass_of_reflexive {u v : A}
-    (hu : u * u = 0) (hv : v * v = 0) :
+    (hu : u * u = 0) (hv : v * v = 0)
+    (huv : u * v * u = u) (hvu : v * u * v = v) :
     crossDissipator (R := R) u v (u * v + v * u) = 0 :=
   crossDissipator_apply_mass_of_squareZero (R := R) hu hv
 
@@ -1006,7 +997,7 @@ theorem crossDissipator_reflexive_pair_actions {u v : A}
     simp only [mul_one, one_mul]
     rw [two_nsmul]
     abel
-  have hMass := crossDissipator_apply_mass_of_reflexive (R := R) hu hv
+  have hMass := crossDissipator_apply_mass_of_reflexive (R := R) hu hv huv hvu
   have hMu : (u * v + v * u) * u = u := by
     have hVUU : v * u * u = 0 := by rw [mul_assoc, hu, mul_zero]
     calc
@@ -1580,33 +1571,10 @@ theorem peirce_corner_trinity {p a b : A} (hp : p * p = p) :
     sumDissipator_eq_neg_doubleLie (R := R) ha.1 hb.2,
     differenceDissipator_eq_doubleLie (R := R) ha.1 hb.2⟩
 
-/-- The same-corner sandwich operator is natural under an algebra homomorphism. -/
-theorem map_sameCornerChannel {B : Type*} [Ring B] [Algebra R B]
-    (f : A →ₐ[R] B) (u v : A) :
-    f.toLinearMap.comp (sameCornerChannel (R := R) u v) =
-      (sameCornerChannel (R := R) (f u) (f v)).comp f.toLinearMap := by
-  ext x
-  simp [sameCornerChannel, LieJordan.sandwichOp]
-
-/-- All three endomorphism dissipators intertwine with algebra homomorphisms.
-This is the finite-stage naturality law used by directed-system maps. -/
-theorem map_dissipator_trinity {B : Type*} [Ring B] [Algebra R B]
-    (f : A →ₐ[R] B) (u v : A) :
-    f.toLinearMap.comp (crossDissipator (R := R) u v) =
-        (crossDissipator (R := R) (f u) (f v)).comp f.toLinearMap ∧
-    f.toLinearMap.comp (sumDissipator (R := R) u v) =
-        (sumDissipator (R := R) (f u) (f v)).comp f.toLinearMap ∧
-    f.toLinearMap.comp (differenceDissipator (R := R) u v) =
-        (differenceDissipator (R := R) (f u) (f v)).comp f.toLinearMap := by
-  refine ⟨?_, ?_, ?_⟩ <;> ext x <;>
-    simp [crossDissipator, sumDissipator, differenceDissipator,
-      sameCornerChannel, LieJordan.crossTransport, LieJordan.sandwichOp,
-      InfoGeometry.Core.JordanMultiplicationClosure.jordanLeft, map_ofNat]
-
-/-- Algebra homomorphisms carry the directed Peirce corners to the corners
+/-- Ring homomorphisms carry the directed Peirce corners to the corners
 of the image idempotent. -/
-theorem map_peirce_components {B : Type*} [Ring B] [Algebra R B]
-    (f : A →ₐ[R] B) (p a : A) :
+theorem ringHom_peirce_components {B : Type*} [Ring B]
+    (f : A →+* B) (p a : A) :
     f (component10 p a) = component10 (f p) (f a) ∧
       f (component01 p a) = component01 (f p) (f a) := by
   constructor <;>
@@ -1677,10 +1645,12 @@ theorem ringHom_preserves_reflexive_pair_sl2 {B : Type*} [Ring B]
   have hCasimir := reflexive_pair_casimir hu' hv' huv' hvu'
   exact ⟨hRoot.2.1, hRoot.2.2, hCasimir⟩
 
-/-- Every algebra image of a reflexive horizon pair carries its mapped Jordan
-mass operator as a stationary state of the corresponding cross dissipator. -/
-theorem map_reflexive_pair_mass_stationary {B : Type*} [Ring B] [Algebra R B]
-    (f : A →ₐ[R] B) (u v : A)
+/-- Every ring image of a reflexive horizon pair over any coefficient ring `R`
+carries its mapped Jordan mass operator as a stationary state of the
+corresponding cross dissipator. -/
+theorem ringHom_reflexive_pair_mass_stationary {B : Type*} [Ring B]
+    [Module R B] [IsScalarTower R B B] [SMulCommClass R B B]
+    (f : A →+* B) (u v : A)
     (hu : u * u = 0) (hv : v * v = 0)
     (huv : u * v * u = u) (hvu : v * u * v = v) :
     crossDissipator (R := R) (f u) (f v) (f (u * v + v * u)) = 0 := by
@@ -1691,7 +1661,7 @@ theorem map_reflexive_pair_mass_stationary {B : Type*} [Ring B] [Algebra R B]
   have hvu' : f v * f u * f v = f v := by
     rw [← map_mul, ← map_mul, hvu]
   rw [map_add, map_mul, map_mul]
-  exact crossDissipator_apply_mass_of_reflexive (R := R) hu' hv'
+  exact crossDissipator_apply_mass_of_reflexive (R := R) hu' hv' huv' hvu'
 
 /-- Every ring-homomorphic stage image inherits the Dirac support and global
 involution identities of a reflexive horizon pair. -/
@@ -1710,6 +1680,73 @@ theorem ringHom_preserves_reflexive_pair_dirac_support {B : Type*} [Ring B]
   have hvu' : f v * f u * f v = f v := by rw [← map_mul, ← map_mul, hvu]
   exact reflexive_pair_dirac_support_and_involution hu' hv' huv' hvu'
 
+/-- The Peirce dissipator trinity is transported to every ring image of an
+idempotent over any coefficient ring `R`. -/
+theorem ringHom_peirce_trinity_natural {B : Type*} [Ring B]
+    [Module R B] [IsScalarTower R B B] [SMulCommClass R B B]
+    (f : A →+* B) {p a b : A} (hp : p * p = p) :
+    (2 : ℕ) • crossDissipator (R := R) (f (component10 p a))
+        (f (component01 p b)) =
+      sumDissipator (R := R) (f (component10 p a)) (f (component01 p b)) +
+        differenceDissipator (R := R) (f (component10 p a)) (f (component01 p b)) ∧
+    sumDissipator (R := R) (f (component10 p a)) (f (component01 p b)) =
+      -(LieJordan.lieOp R (f (component10 p a) + f (component01 p b)) *
+        LieJordan.lieOp R (f (component10 p a) + f (component01 p b))) ∧
+    differenceDissipator (R := R) (f (component10 p a)) (f (component01 p b)) =
+      LieJordan.lieOp R (f (component10 p a) - f (component01 p b)) *
+        LieJordan.lieOp R (f (component10 p a) - f (component01 p b)) := by
+  have hp' : f p * f p = f p := by rw [← map_mul, hp]
+  rcases ringHom_peirce_components f p a with ⟨ha, _⟩
+  rcases ringHom_peirce_components f p b with ⟨_, hb⟩
+  simpa only [← ha, ← hb] using
+    peirce_corner_trinity (R := R) (p := f p) (a := f a) (b := f b) hp'
+
+end NoncommScalars
+
+section CommRingScalars
+
+variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+
+/-- The same-corner sandwich operator is natural under an algebra homomorphism. -/
+theorem map_sameCornerChannel {B : Type*} [Ring B] [Algebra R B]
+    (f : A →ₐ[R] B) (u v : A) :
+    f.toLinearMap.comp (sameCornerChannel (R := R) u v) =
+      (sameCornerChannel (R := R) (f u) (f v)).comp f.toLinearMap := by
+  ext x
+  simp [sameCornerChannel, LieJordan.sandwichOp]
+
+/-- All three endomorphism dissipators intertwine with algebra homomorphisms.
+This is the finite-stage naturality law used by directed-system maps. -/
+theorem map_dissipator_trinity {B : Type*} [Ring B] [Algebra R B]
+    (f : A →ₐ[R] B) (u v : A) :
+    f.toLinearMap.comp (crossDissipator (R := R) u v) =
+        (crossDissipator (R := R) (f u) (f v)).comp f.toLinearMap ∧
+    f.toLinearMap.comp (sumDissipator (R := R) u v) =
+        (sumDissipator (R := R) (f u) (f v)).comp f.toLinearMap ∧
+    f.toLinearMap.comp (differenceDissipator (R := R) u v) =
+        (differenceDissipator (R := R) (f u) (f v)).comp f.toLinearMap := by
+  refine ⟨?_, ?_, ?_⟩ <;> ext x <;>
+    simp [crossDissipator, sumDissipator, differenceDissipator,
+      sameCornerChannel, LieJordan.crossTransport, LieJordan.sandwichOp,
+      InfoGeometry.Core.JordanMultiplicationClosure.jordanLeft, map_ofNat]
+
+/-- Algebra homomorphisms carry the directed Peirce corners to the corners
+of the image idempotent. -/
+theorem map_peirce_components {B : Type*} [Ring B] [Algebra R B]
+    (f : A →ₐ[R] B) (p a : A) :
+    f (component10 p a) = component10 (f p) (f a) ∧
+      f (component01 p a) = component01 (f p) (f a) :=
+  ringHom_peirce_components f.toRingHom p a
+
+/-- Every algebra image of a reflexive horizon pair carries its mapped Jordan
+mass operator as a stationary state of the corresponding cross dissipator. -/
+theorem map_reflexive_pair_mass_stationary {B : Type*} [Ring B] [Algebra R B]
+    (f : A →ₐ[R] B) (u v : A)
+    (hu : u * u = 0) (hv : v * v = 0)
+    (huv : u * v * u = u) (hvu : v * u * v = v) :
+    crossDissipator (R := R) (f u) (f v) (f (u * v + v * u)) = 0 :=
+  ringHom_reflexive_pair_mass_stationary (R := R) f.toRingHom u v hu hv huv hvu
+
 /-- The Peirce dissipator trinity is transported to every algebra image of an
 idempotent, including finite stages of an inductive operator tower. -/
 theorem peirce_trinity_natural {B : Type*} [Ring B] [Algebra R B]
@@ -1723,11 +1760,9 @@ theorem peirce_trinity_natural {B : Type*} [Ring B] [Algebra R B]
         LieJordan.lieOp R (f (component10 p a) + f (component01 p b))) ∧
     differenceDissipator (R := R) (f (component10 p a)) (f (component01 p b)) =
       LieJordan.lieOp R (f (component10 p a) - f (component01 p b)) *
-        LieJordan.lieOp R (f (component10 p a) - f (component01 p b)) := by
-  have hp' : f p * f p = f p := by rw [← map_mul, hp]
-  rcases map_peirce_components f p a with ⟨ha, _⟩
-  rcases map_peirce_components f p b with ⟨_, hb⟩
-  simpa only [← ha, ← hb] using
-    peirce_corner_trinity (R := R) (p := f p) (a := f a) (b := f b) hp'
+        LieJordan.lieOp R (f (component10 p a) - f (component01 p b)) :=
+  ringHom_peirce_trinity_natural (R := R) f.toRingHom hp
+
+end CommRingScalars
 
 end InfoGeometry.OperatorAlgebra.PeirceDissipatorTrinity

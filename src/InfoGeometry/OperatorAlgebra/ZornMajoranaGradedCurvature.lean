@@ -103,7 +103,7 @@ theorem higherOddCharge_odd :
   noncomm_ring
 
 /-- Ordered CAR reduction; no ambient commutativity is assumed. -/
-private theorem threeModeCharge_square {A : Type*} [Ring A]
+theorem threeModeCharge_square {A : Type*} [Ring A]
     (a b c : A) (ha : a * a = 1) (hb : b * b = 1) (hc : c * c = 1)
     (hba : b * a = -(a * b)) (hca : c * a = -(a * c))
     (hcb : c * b = -(b * c)) :

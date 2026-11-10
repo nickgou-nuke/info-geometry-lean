@@ -19,7 +19,7 @@ namespace InfoGeometry.Algebra.SplitOctonionicJordanCayleyBoundary
 
 open SplitJordanSpinor
 
-variable {K A : Type*} [CommRing K] [NonAssocSemiring A] [SMul K A]
+variable {K A : Type*} [Ring K] [NonAssocSemiring A] [SMul K A]
 variable [SplitCompositionAlgebra K A]
 
 /-- The affine cone over the quadratic Klein quadric `det(X)=0` for `J₂(A_s)`. -/
@@ -40,7 +40,7 @@ structure of obligations rather than a fake matrix-multiplication theorem.
 The field `fundamental_identity` is the kernel-checked content required from a
 concrete model.
 -/
-structure JordanCayleyBoundary (K A : Type*) [CommRing K] [NonAssocSemiring A] [SMul K A]
+structure JordanCayleyBoundary (K A : Type*) [Ring K] [NonAssocSemiring A] [SMul K A]
     [SplitCompositionAlgebra K A] where
   /-- Trace reversal/adjugate candidate. -/
   traceReversal : JordanMatrix2 K A → JordanMatrix2 K A
@@ -78,7 +78,7 @@ The `q_eq_8` field is the precise critical-dimension assertion.  The `cayley`
 field is the trace-reversal determinant identity still required from a concrete
 split-octonion model.
 -/
-structure SplitOctonionicBoundary (K A : Type*) [CommRing K] [NonAssocSemiring A] [SMul K A]
+structure SplitOctonionicBoundary (K A : Type*) [Ring K] [NonAssocSemiring A] [SMul K A]
     [SplitCompositionAlgebra K A] where
   q_eq_8 : SplitJordanSpinor.SplitCompositionAlgebra.q (K := K) (A := A) = 8
   cayley : JordanCayleyBoundary K A

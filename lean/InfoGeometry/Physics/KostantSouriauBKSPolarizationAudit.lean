@@ -27,8 +27,8 @@ open InfoGeometry.Physics.KostantSouriauBKSPolarization
 set_option linter.unusedVariables false
 set_option linter.unusedSectionVars false
 
-variable {R : Type*} [CommRing R]
-variable {V : Type*} [AddCommGroup V] [Module R V] [LieRing V] [LieAlgebra R V]
+variable {R : Type*} [Ring R]
+variable {V : Type*} [LieRing V] [Module R V]
 variable {S : Type*} [AddCommGroup S] [Module R S]
 
 -- 1. Signature and Type-Level Verification
@@ -48,31 +48,39 @@ variable {S : Type*} [AddCommGroup S] [Module R S]
     (x : V), T.P1.carrier x → ∀ {ψ : S}, IsPolarized symp conn T.P1 ψ → ∀ (φ : S),
     B.pairing (conn.nabla x ψ) φ = 0)
 
-#check (correctedPairing_inversion (R := R) (V := V) (S := S) :
-  ∀ (symp : SymplecticSpace R V) (conn : PrequantumConnection symp S)
+section CommutativeMaslov
+
+variable {Rc : Type*} [CommRing Rc]
+variable {Vc : Type*} [LieRing Vc] [Module Rc Vc]
+variable {Sc : Type*} [AddCommGroup Sc] [Module Rc Sc]
+
+#check (correctedPairing_inversion (Rc := Rc) (Vc := Vc) (Sc := Sc) :
+  ∀ (symp : SymplecticSpace Rc Vc) (conn : PrequantumConnection symp Sc)
     (T : TransversePolarizations symp) (B : BKSHalfFormPairing symp conn T)
-    (ψ φ : S),
+    (ψ φ : Sc),
     B.inv_maslov_phase * correctedPairing symp conn T B ψ φ = B.pairing ψ φ)
 
-#check (kostant_souriau_bks_vortex_synthesis (R := R) (V := V) (S := S) :
-  ∀ (symp : SymplecticSpace R V) (conn : PrequantumConnection symp S)
+#check (kostant_souriau_bks_vortex_synthesis (Rc := Rc) (Vc := Vc) (Sc := Sc) :
+  ∀ (symp : SymplecticSpace Rc Vc) (conn : PrequantumConnection symp Sc)
     (T : TransversePolarizations symp) (B : BKSHalfFormPairing symp conn T)
-    (x y : V), T.P1.carrier x → T.P1.carrier y → ∀ (ψ φ : S),
+    (x y : Vc), T.P1.carrier x → T.P1.carrier y → ∀ (ψ φ : Sc),
     IsPolarized symp conn T.P1 ψ →
       (conn.nabla x (conn.nabla y ψ) - conn.nabla y (conn.nabla x ψ) - conn.nabla ⁅x, y⁆ ψ = 0) ∧
       (conn.nabla ⁅x, y⁆ ψ = 0) ∧
       (B.pairing (conn.nabla x ψ) φ = 0) ∧
       (B.inv_maslov_phase * correctedPairing symp conn T B ψ φ = B.pairing ψ φ))
 
-#check (certified_kostant_souriau_bks_vortex_synthesis (R := R) (V := V) (S := S) :
-  ∀ (symp : SymplecticSpace R V) (conn : PrequantumConnection symp S)
+#check (certified_kostant_souriau_bks_vortex_synthesis (Rc := Rc) (Vc := Vc) (Sc := Sc) :
+  ∀ (symp : SymplecticSpace Rc Vc) (conn : PrequantumConnection symp Sc)
     (T : TransversePolarizations symp) (B : BKSHalfFormPairing symp conn T)
-    (x y : V), T.P1.carrier x → T.P1.carrier y → ∀ (ψ φ : S),
+    (x y : Vc), T.P1.carrier x → T.P1.carrier y → ∀ (ψ φ : Sc),
     IsPolarized symp conn T.P1 ψ →
       (conn.nabla x (conn.nabla y ψ) - conn.nabla y (conn.nabla x ψ) - conn.nabla ⁅x, y⁆ ψ = 0) ∧
       (conn.nabla ⁅x, y⁆ ψ = 0) ∧
       (B.pairing (conn.nabla x ψ) φ = 0) ∧
       (B.inv_maslov_phase * correctedPairing symp conn T B ψ φ = B.pairing ψ φ))
+
+end CommutativeMaslov
 
 -- 2. Non-Vacuity Unit Check: Trivial polarization annihilates curvature
 theorem audit_trivial_polarization_curvature_zero

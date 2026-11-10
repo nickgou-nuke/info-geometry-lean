@@ -7,6 +7,12 @@ import InfoGeometry.Core.PeirceCompressionDefect
 
 #print axioms InfoGeometry.Core.PeirceCompressionDefect.compression_mul_defect
 #print axioms InfoGeometry.Core.PeirceCompressionDefect.compression_square_defect
+#print axioms InfoGeometry.Core.PeirceCompressionDefect.twoIdempotentChordalDefect
+#print axioms InfoGeometry.Core.PeirceCompressionDefect.twoIdempotentDavisDecomposition
+#print axioms InfoGeometry.Core.PeirceCompressionDefect.adjacentDavisReflections_split
+#print axioms InfoGeometry.Core.PeirceCompressionDefect.threeDavisReflections_corner_split
+#print axioms InfoGeometry.Core.PeirceCompressionDefect.threeDavisReflections_orientation
+#print axioms InfoGeometry.Core.PeirceCompressionDefect.threeDavisReflections_cyclic_alternating_identity
 #print axioms InfoGeometry.Core.PeirceCompressionDefect.twoBoundaryCompression_left_absorption
 #print axioms InfoGeometry.Core.PeirceCompressionDefect.twoBoundaryCompression_right_absorption
 #print axioms InfoGeometry.Core.PeirceCompressionDefect.twoBoundaryCompression_sum_amplification
@@ -15,9 +21,3 @@ import InfoGeometry.Core.PeirceCompressionDefect
 #print axioms InfoGeometry.Core.PeirceCompressionDefect.compression_defect_sum
 #print axioms InfoGeometry.Core.PeirceCompressionDefect.compression_square_defect_star
 #print axioms InfoGeometry.Core.PeirceCompressionDefect.compression_square_defect_selfAdjoint
-
-#print axioms InfoGeometry.Core.PeirceCompressionDefect.defect_compression
-
-#print axioms InfoGeometry.Core.PeirceCompressionDefect.defect_nested_compression
-
-#print axioms InfoGeometry.Core.PeirceCompressionDefect.defect_compression_flag

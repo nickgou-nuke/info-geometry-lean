@@ -160,7 +160,7 @@ def promoteCompiledGraphVertices {G : ChiralDigraph} {Stage : Type u}
     { name := Lean.Name.str Lean.Name.anonymous "compiledGraphVertexClaims"
       phase := phase
       claim := fun v => statement (F.mapVertex v)
-      evidence := trivial }
+      evidence := PUnit.unit }
   exact candidate.promoteToProved (fun v =>
     compileCertified_proves_mem rules state pending completed compiled (covered v))
 

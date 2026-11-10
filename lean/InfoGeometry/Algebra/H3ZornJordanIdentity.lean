@@ -7,7 +7,6 @@ import InfoGeometry.Algebra.QuadraticJordanH3Zorn
 import InfoGeometry.Algebra.H3ZornCubicOperators
 import InfoGeometry.Algebra.H3ZornQuadraticCommutation
 import InfoGeometry.Exceptional.Freudenthal
-import Mathlib.Algebra.Jordan.Basic
 
 /-!
 # Verified `H3Zorn` candidate Jordan-law surface
@@ -196,17 +195,13 @@ installed instance. -/
 def H3ZornJordanIdentityTarget : Prop :=
   H3ZornJordanProductLaw
 
-/-- The product law is exactly the current paper-facing target. -/
-theorem H3ZornJordanIdentityTarget_iff_product_law :
-    H3ZornJordanIdentityTarget ↔ H3ZornJordanProductLaw := by
-  rfl
-
 /-- The paper-facing target is equivalent to the scalar-free `T`-commutation
-law. -/
+law. This exposes the quadratic operator criterion instead of merely
+repeating the target's definitional alias to the product law. -/
 theorem H3ZornJordanIdentityTarget_iff_TJordanCommutation :
     H3ZornJordanIdentityTarget ↔ TJordanCommutation := by
-  rw [H3ZornJordanIdentityTarget_iff_product_law,
-    H3ZornJordanProductLaw_iff_TJordanCommutation]
+  change H3ZornJordanProductLaw ↔ TJordanCommutation
+  exact H3ZornJordanProductLaw_iff_TJordanCommutation
 
 /-- McCrimmon's quadratic-representation identities close the scalar-free
 `T`-commutation law. -/
@@ -246,7 +241,7 @@ theorem H3ZornJordanProductLaw_proof : H3ZornJordanProductLaw :=
 
 /-- The paper-facing H3 Jordan-identity target is natively closed. -/
 theorem H3ZornJordanIdentityTarget_proof : H3ZornJordanIdentityTarget :=
-  H3ZornJordanIdentityTarget_iff_product_law.mpr H3ZornJordanProductLaw_proof
+  H3ZornJordanIdentityTarget_iff_TJordanCommutation.mpr TJordanCommutation_proof
 
 /-! Coordinate-free normal form used by explicit Albert-coordinate transports. -/
 theorem candidateJordanMul_trace_formula (X Y : H3Zorn ℝ) :
@@ -260,18 +255,5 @@ theorem candidateJordanMul_trace_formula (X Y : H3Zorn ℝ) :
   rw [H3Zorn.crossProduct_one]
   congr 1
   module
-
-/--
-A theorem that the cubic norm axioms of a `CubicJordanDatum` imply that the
-induced multiplication satisfies the commutative Jordan ring axioms (`IsCommJordan`).
-This represents the structural open debt of the cubic-to-Jordan algebra translation.
--/
-theorem isCommJordan_of_cubicJordanDatum [CommMagma (H3Zorn ℝ)]
-    (_D : CubicJordanDatum (H3Zorn ℝ))
-    (h_mul : ∀ x y : H3Zorn ℝ, x * y = candidateJordanMul x y := by intros; rfl) :
-    IsCommJordan (H3Zorn ℝ) where
-  lmul_comm_rmul_rmul x y := by
-    simp_rw [h_mul]
-    exact H3ZornJordanProductLaw_proof x y
 
 end InfoGeometry.Algebra

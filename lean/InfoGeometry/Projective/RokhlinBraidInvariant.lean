@@ -21,9 +21,10 @@ namespace InfoGeometry.Projective.Rokhlin
 open InfoGeometry.Projective.SplitOctonions
 open InfoGeometry.Projective.SplitOctonions.ZornMatrix
 
-variable {R : Type*} [CommRing R]
+section RingCentralizer
+
+variable {R : Type*} [Ring R]
 variable {V : Type*} [AddCommGroup V] [Module R V]
-variable (B : V →ₗ[R] V →ₗ[R] R)
 
 /--
 The Möbius Parity Centralizer $\{I, -I\}$.
@@ -32,6 +33,12 @@ Rokhlin invariants. The non-trivial state bounds a Majorana Zero Mode.
 -/
 def is_rokhlin_centralizer (x : ZornMatrix R V) : Prop :=
   x = diag 1 1 ∨ x = diag (-1) (-1)
+
+end RingCentralizer
+
+variable {R : Type*} [CommRing R]
+variable {V : Type*} [AddCommGroup V] [Module R V]
+variable (B : V →ₗ[R] V →ₗ[R] R)
 
 /--
 A Braid Holonomy represents the evaluation of a closed braid on the 

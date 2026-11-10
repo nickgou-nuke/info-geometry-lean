@@ -1,4 +1,5 @@
 import Mathlib.Data.ZMod.Basic
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.RingTheory.Polynomial.Basic
 import Mathlib.Tactic.Ring
@@ -49,22 +50,23 @@ theorem generator_mul_parityCheckPolynomial :
   simpa [mul_assoc, mul_left_comm, mul_comm] using generator_factorization
 
 theorem add_one_dvd_pow_add_one_of_odd
-    {S : Type*} [CommRing S] (a : S) {n : ℕ} (hn : Odd n) :
+    {S : Type*} [Ring S] (a : S) {n : ℕ} (hn : Odd n) :
     a + 1 ∣ a ^ n + 1 := by
   rcases hn with ⟨k, rfl⟩
   induction k with
   | zero =>
-      exact ⟨1, by ring⟩
+      refine ⟨1, ?_⟩
+      simp
   | succ k ih =>
       rcases ih with ⟨q, hq⟩
-      refine ⟨a ^ 2 * q - a + 1, ?_⟩
-      rw [show 2 * (k + 1) + 1 = (2 * k + 1) + 2 by omega]
+      refine ⟨a * a ^ (2 * k + 1) - a ^ (2 * k + 1) + q, ?_⟩
+      rw [show 2 * (k + 1) + 1 = 2 + (2 * k + 1) by omega]
       rw [pow_add]
       calc
-        a ^ (2 * k + 1) * a ^ 2 + 1 =
-            a ^ 2 * (a ^ (2 * k + 1) + 1) - (a ^ 2 - 1) := by ring
-        _ = a ^ 2 * ((a + 1) * q) - (a ^ 2 - 1) := by rw [hq]
-        _ = (a + 1) * (a ^ 2 * q - a + 1) := by ring
+        a ^ 2 * a ^ (2 * k + 1) + 1 =
+            (a ^ 2 * a ^ (2 * k + 1) - a ^ (2 * k + 1)) + (a ^ (2 * k + 1) + 1) := by noncomm_ring
+        _ = (a ^ 2 * a ^ (2 * k + 1) - a ^ (2 * k + 1)) + (a + 1) * q := by rw [hq]
+        _ = (a + 1) * (a * a ^ (2 * k + 1) - a ^ (2 * k + 1) + q) := by noncomm_ring
 
 def generatorCoefficientFormula (k : ℕ) : F₂ :=
   match k with

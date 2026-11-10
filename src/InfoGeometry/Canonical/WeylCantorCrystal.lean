@@ -26,7 +26,7 @@ structure WeylAction (D : Type*) [Group D] where
 The Weyl Character Denominator over the Cantor Primon lattice.
 Models the exact structural identity Δ_Weyl = 1 / ζ(s).
 -/
-structure WeylDenominator (S : Type*) [CommRing S] where
+structure WeylDenominator (S : Type*) [Ring S] where
   (prime_weight : ℕ → S)
   (is_euler_product : ∀ (n : ℕ), prime_weight n = 1 - (prime_weight n))
 

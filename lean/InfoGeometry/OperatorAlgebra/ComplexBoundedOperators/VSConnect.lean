@@ -158,7 +158,7 @@ structure VectorCarrierPacket (K : Type*) [Semiring K] (n : Nat) where
   carrier_eq_span : carrier = listSpan K vectors
 
 /-- A basis-level finite-vector packet, witness-gated (Native Closure Mandated: Closure Debt) for downstream basis APIs. -/
-structure VectorBasisPacket (K : Type*) [Field K] (n : Nat) where
+structure VectorBasisPacket (K : Type*) [Ring K] (n : Nat) where
   /-- Index type for the basis. -/
   basisIndex : Type
   /-- Finite basis index. -/

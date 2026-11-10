@@ -8,7 +8,6 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.GradedDefect
 open InfoGeometry.OperatorAlgebra.PeirceSpine
 
 #print axioms comm_idempotencyDefect
-#print axioms parity_idempotencyDefect
 #print axioms even_idempotencyDefect
 #print axioms odd_idempotencyDefect
 #print axioms odd_perturbation_defect

@@ -16,7 +16,7 @@ Clebsch-Gordan coefficients of the 7-dimensional representation.
 
 namespace InfoGeometry.Categorical
 
-variable (𝕜 : Type*) [Field 𝕜]
+variable (𝕜 : Type*) [Ring 𝕜]
 
 /-- 
 The abstract structure of a fusion category over a set of simple sectors.

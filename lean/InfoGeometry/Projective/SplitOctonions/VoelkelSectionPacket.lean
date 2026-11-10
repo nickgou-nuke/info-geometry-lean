@@ -22,9 +22,10 @@ section associator vanish in the reduced Zorn model.
 
 namespace InfoGeometry.Projective.SplitOctonions.ZornMatrix
 
-variable {R : Type*} [CommRing R]
+section RingHalfCoord
+
+variable {R : Type*} [Ring R]
 variable {V : Type*} [AddCommGroup V] [Module R V]
-variable (B : V →ₗ[R] V →ₗ[R] R)
 
 /-- The `half` projection from Voelkel Definition 3.2.1 in reduced Zorn coordinates. -/
 def halfCoord (x : ZornMatrix R V) : R × V :=
@@ -34,6 +35,16 @@ def halfCoord (x : ZornMatrix R V) : R × V :=
 def ohalfCoord (x : ZornMatrix R V) : R × V :=
   (x.x12, x.x22)
 
+/-- The coordinate equation `half(x)=e1`. -/
+def halfEqE1 (x : ZornMatrix R V) : Prop :=
+  x.x11 = 1 ∧ x.x21 = 0
+
+end RingHalfCoord
+
+variable {R : Type*} [CommRing R]
+variable {V : Type*} [AddCommGroup V] [Module R V]
+variable (B : V →ₗ[R] V →ₗ[R] R)
+
 /-- Pairing between the `half` and `ohalf` coordinate halves. -/
 def halfPairing (p q : R × V) : R :=
   p.1 * q.1 + B p.2 q.2
@@ -42,10 +53,6 @@ def halfPairing (p q : R × V) : R :=
 theorem norm_eq_halfPairing (x : ZornMatrix R V) :
     norm B x = halfPairing B (halfCoord x) (ohalfCoord x) := by
   rfl
-
-/-- The coordinate equation `half(x)=e1`. -/
-def halfEqE1 (x : ZornMatrix R V) : Prop :=
-  x.x11 = 1 ∧ x.x21 = 0
 
 /-- The unit-norm half-equation used in Lemma 4.5.2/4.5.3. -/
 def unitHalfEqE1 (x : ZornMatrix R V) : Prop :=

@@ -5,7 +5,7 @@ namespace InfoGeometry.Canonical
 
 open ToeplitzCuntzVacuumBridge
 
-variable {R : Type*} [CommRing R] [StarRing R]
+variable {R : Type*} [Ring R] [StarRing R]
 
 /-- The identity gauge action on a Cuntz generator pair.
 

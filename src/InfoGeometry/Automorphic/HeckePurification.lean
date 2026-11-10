@@ -159,7 +159,7 @@ theorem hiddenGradeMemory_eq_l_value
     (s : State) :
     charge_eval (EAV.calibratedHiddenGradeMemoryReadout s) =
       L_func.value chi 0 := by
-  rw [← EAV.centralCharge_eq_hiddenGradeMemory s]
+  change charge_eval (EAV.centralChargeReadout s) = _
   exact H.purified_charge_eq_l_value chi P s
 
 end HeckeSugawaraIntertwining

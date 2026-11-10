@@ -531,37 +531,37 @@ abbrev SplitSedenion (R : Type*) :=
   ZornSplitOctonion R × ZornSplitOctonion R
 
 /-- Zero element of `SplitSedenion R`. -/
-def sedenionZero {R : Type*} [CommRing R] : SplitSedenion R :=
+def sedenionZero {R : Type*} [Ring R] : SplitSedenion R :=
   (zornZero, zornZero)
 
 /-- Multiplicative identity $(1_{\mathbb{O}_s}, 0)$ of `SplitSedenion R`. -/
-def sedenionOne {R : Type*} [CommRing R] : SplitSedenion R :=
+def sedenionOne {R : Type*} [Ring R] : SplitSedenion R :=
   (zornOne, zornZero)
 
 /-- The Cayley–Dickson doubling unit $\ell = (0, 1_{\mathbb{O}_s}) \in S^-$. -/
-def sedenionEll {R : Type*} [CommRing R] : SplitSedenion R :=
+def sedenionEll {R : Type*} [Ring R] : SplitSedenion R :=
   (zornZero, zornOne)
 
 /-- Componentwise addition on `SplitSedenion R`. -/
-def sedenionAdd {R : Type*} [CommRing R] (X Y : SplitSedenion R) : SplitSedenion R :=
+def sedenionAdd {R : Type*} [Ring R] (X Y : SplitSedenion R) : SplitSedenion R :=
   (zornAdd X.1 Y.1, zornAdd X.2 Y.2)
 
 /-- Componentwise negation on `SplitSedenion R`. -/
-def sedenionNeg {R : Type*} [CommRing R] (X : SplitSedenion R) : SplitSedenion R :=
+def sedenionNeg {R : Type*} [Ring R] (X : SplitSedenion R) : SplitSedenion R :=
   (zornSmul (-1 : R) X.1, zornSmul (-1 : R) X.2)
 
 /-- Componentwise subtraction on `SplitSedenion R`. -/
-def sedenionSub {R : Type*} [CommRing R] (X Y : SplitSedenion R) : SplitSedenion R :=
+def sedenionSub {R : Type*} [Ring R] (X Y : SplitSedenion R) : SplitSedenion R :=
   sedenionAdd X (sedenionNeg Y)
 
 /-- Zorn split-octonion involution (conjugation)
 $\begin{pmatrix} a & \mathbf{u} \\ \mathbf{v} & b \end{pmatrix}^\star =
  \begin{pmatrix} b & -\mathbf{u} \\ -\mathbf{v} & a \end{pmatrix}$ on `ZornSplitOctonion R`. -/
-def zornConj {R : Type*} [CommRing R] (x : ZornSplitOctonion R) : ZornSplitOctonion R :=
+def zornConj {R : Type*} [Ring R] (x : ZornSplitOctonion R) : ZornSplitOctonion R :=
   ⟨x.b, fun k => -x.u k, fun k => -x.v k, x.a⟩
 
 /-- Cayley–Dickson involution $(a, b)^\star = (a^\star, -b)$ on `SplitSedenion R`. -/
-def sedenionConj {R : Type*} [CommRing R] (X : SplitSedenion R) : SplitSedenion R :=
+def sedenionConj {R : Type*} [Ring R] (X : SplitSedenion R) : SplitSedenion R :=
   (zornConj X.1, zornSmul (-1 : R) X.2)
 
 /-- **Split-Sedenion Cayley–Dickson/Zorn Pair Multiplication**
@@ -570,13 +570,13 @@ $$(a_1, b_1) \circ (a_2, b_2) =
   \Big(\underbrace{a_1 \star a_2 + b_2^\star \star b_1}_{\in S^+},\;
        \underbrace{b_2 \star a_1 + b_1 \star a_2^\star}_{\in S^-}\Big),$$
 where $\star$ is the non-associative Zorn split-octonion product `zornMul`. -/
-def sedenionMul {R : Type*} [CommRing R] (X Y : SplitSedenion R) : SplitSedenion R :=
+def sedenionMul {R : Type*} [Ring R] (X Y : SplitSedenion R) : SplitSedenion R :=
   (zornAdd (zornMul X.1 Y.1) (zornMul (zornConj Y.2) X.2),
    zornAdd (zornMul Y.2 X.1) (zornMul X.2 (zornConj Y.1)))
 
 /-- Split quadratic expression $N(a, b) = N_{\mathbb{O}_s}(a) - N_{\mathbb{O}_s}(b)$
 on the separately defined `SplitSedenion R` pair carrier. -/
-def sedenionNorm {R : Type*} [CommRing R] (X : SplitSedenion R) : R :=
+def sedenionNorm {R : Type*} [Ring R] (X : SplitSedenion R) : R :=
   zornNorm X.1 - zornNorm X.2
 
 /-- **Theorem 4.1 (Cayley–Dickson Pair Shift Laws)**:
@@ -585,7 +585,7 @@ def sedenionNorm {R : Type*} [CommRing R] (X : SplitSedenion R) : R :=
 2. Right multiplication by $\ell = (0, 1)$ shifts $S^+$ onto $S^-$: $(a, 0) \circ \ell = (0, a)$.
 3. The doubling unit $\ell = (0, 1)$ squares to $+\mathbf{1} = (1, 0)$:
    $\ell \circ \ell = (1_{\mathbb{O}_s}, 0)$. -/
-theorem splitSedenion_chiral_sheet_shift_laws {R : Type*} [CommRing R]
+theorem splitSedenion_chiral_sheet_shift_laws {R : Type*} [Ring R]
     (a₁ a₂ : ZornSplitOctonion R) :
     sedenionMul (a₁, zornZero) (a₂, zornZero) = (zornMul a₁ a₂, zornZero) ∧
     sedenionMul (a₁, zornZero) sedenionEll = (zornZero, a₁) ∧

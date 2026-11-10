@@ -14,7 +14,7 @@ namespace InfoGeometry.NCG.ChiralMatrixTrace
 open Matrix NonCommutativeFredholmIndex
 open InfoGeometry.Core.PeirceGrading
 
-variable {R n : Type*} [CommRing R] [Fintype n] [DecidableEq n]
+variable {R n : Type*} [Ring R] [Fintype n] [DecidableEq n]
 
 /-- Conjugation by an involutive chirality reverses an odd Dirac operator.
 The statement is for arbitrary noncommuting matrix operators. -/
@@ -59,13 +59,6 @@ def operatorDivergence {κ : Type*} [Fintype κ]
     (H J : κ → Matrix n n R) : Matrix n n R :=
   ∑ i, commutator (H i) (J i)
 
-/-- The trace of the operator-valued inner-derivation divergence vanishes by
-cyclicity, while the divergence itself remains a matrix operator. -/
-theorem trace_operatorDivergence_zero {κ : Type*} [Fintype κ]
-    (H J : κ → Matrix n n R) :
-    trace (operatorDivergence H J) = 0 := by
-  simp [operatorDivergence, NonCommutativeFredholmIndex.trace_commutator_zero]
-
 /-- Taking the flux in each direction to be its inner gradient yields the
 noncommutative sum of double commutators. -/
 theorem operatorDivergence_innerGradient {κ : Type*} [Fintype κ]
@@ -87,26 +80,43 @@ theorem operatorCasimir_commutator {κ : Type*} [Fintype κ]
   unfold NonCommutativeFredholmIndex.commutator operatorCasimir
   simp only [Finset.mul_sum, Finset.sum_mul, ← Finset.sum_sub_distrib]
 
+/-- Two idempotent commutators have an even product in the native Peirce range. -/
+theorem commutator_product_mem_even {P : Matrix n n R} (hP : IsIdempotentElem P)
+    (X Y : Matrix n n R) :
+    commutator P X * commutator P Y ∈ LinearMap.range (even P) :=
+  odd_mul_odd hP (commutator_odd hP X) (commutator_odd hP Y)
+
+section CommRing
+
+variable {R_comm : Type*} [CommRing R_comm]
+
+/-- The trace of the operator-valued inner-derivation divergence vanishes by
+cyclicity, while the divergence itself remains a matrix operator. -/
+theorem trace_operatorDivergence_zero {κ : Type*} [Fintype κ]
+    (H J : κ → Matrix n n R_comm) :
+    trace (operatorDivergence H J) = 0 := by
+  simp [operatorDivergence, NonCommutativeFredholmIndex.trace_commutator_zero]
+
 /-- The commutator moves from the test matrix to the trace weight. -/
-theorem trace_commutator_transport (γ A X : Matrix n n R) :
+theorem trace_commutator_transport (γ A X : Matrix n n R_comm) :
     trace (γ * commutator A X) = trace (commutator γ A * X) := by
   simp only [NonCommutativeFredholmIndex.commutator, mul_sub, sub_mul, trace_sub, ← mul_assoc]
   rw [trace_mul_cycle γ X A]
 
 /-- The same transport holds for the anticommutator, with no grading hypotheses. -/
-theorem trace_anticommutator_transport (γ D X : Matrix n n R) :
+theorem trace_anticommutator_transport (γ D X : Matrix n n R_comm) :
     trace (γ * anticommutator D X) = trace (anticommutator γ D * X) := by
   simp only [anticommutator, mul_add, add_mul, trace_add, ← mul_assoc]
   rw [trace_mul_cycle γ X D]
 
 /-- Chiral cancellation holds for every test matrix, irrespective of its parity. -/
-theorem trace_anticommutator_zero {γ D : Matrix n n R}
-    (h : anticommutator γ D = 0) (X : Matrix n n R) :
+theorem trace_anticommutator_zero {γ D : Matrix n n R_comm}
+    (h : anticommutator γ D = 0) (X : Matrix n n R_comm) :
     trace (γ * anticommutator D X) = 0 := by
   rw [trace_anticommutator_transport, h, zero_mul, trace_zero]
 
 /-- Vanishing on every anticommutator detects the actual chiral equation. -/
-theorem trace_anticommutator_zero_iff (γ D : Matrix n n R) :
+theorem trace_anticommutator_zero_iff (γ D : Matrix n n R_comm) :
     (∀ X, trace (γ * anticommutator D X) = 0) ↔ anticommutator γ D = 0 := by
   constructor
   · intro h
@@ -117,7 +127,7 @@ theorem trace_anticommutator_zero_iff (γ D : Matrix n n R) :
     exact trace_anticommutator_zero h X
 
 /-- The trace pairing detects exactly the centralizer of the weight. -/
-theorem trace_commutator_zero_iff (γ A : Matrix n n R) :
+theorem trace_commutator_zero_iff (γ A : Matrix n n R_comm) :
     (∀ X, trace (γ * commutator A X) = 0) ↔ Commute γ A := by
   constructor
   · intro h
@@ -132,7 +142,7 @@ theorem trace_commutator_zero_iff (γ A : Matrix n n R) :
     simp only [NonCommutativeFredholmIndex.commutator, h.eq, sub_self, zero_mul, trace_zero]
 
 /-- The Peirce pinching is self-adjoint for the bilinear matrix trace pairing. -/
-theorem trace_even_adjoint (P γ X : Matrix n n R) :
+theorem trace_even_adjoint (P γ X : Matrix n n R_comm) :
     trace (γ * even P X) = trace (even P γ * X) := by
   simp only [even_apply, mul_add, add_mul, trace_add]
   congr 1
@@ -146,8 +156,8 @@ theorem trace_even_adjoint (P γ X : Matrix n n R) :
       _ = _ := by simp only [mul_assoc]
 
 /-- A weighted trace is invariant under this pinching for every test matrix exactly for commuting weights. -/
-theorem trace_even_invariant_iff {P : Matrix n n R} (hP : IsIdempotentElem P)
-    (γ : Matrix n n R) :
+theorem trace_even_invariant_iff {P : Matrix n n R_comm} (hP : IsIdempotentElem P)
+    (γ : Matrix n n R_comm) :
     (∀ X, trace (γ * even P X) = trace (γ * X)) ↔ Commute P γ := by
   simp_rw [trace_even_adjoint]
   rw [← Matrix.ext_iff_trace_mul_right]
@@ -155,30 +165,26 @@ theorem trace_even_invariant_iff {P : Matrix n n R} (hP : IsIdempotentElem P)
   rfl
 
 /-- The discarded component is invisible to a commuting trace weight. -/
-theorem trace_odd_zero {P γ : Matrix n n R} (hP : IsIdempotentElem P)
-    (hγ : Commute P γ) (X : Matrix n n R) : trace (γ * odd P X) = 0 := by
+theorem trace_odd_zero {P γ : Matrix n n R_comm} (hP : IsIdempotentElem P)
+    (hγ : Commute P γ) (X : Matrix n n R_comm) : trace (γ * odd P X) = 0 := by
   have he := (trace_even_invariant_iff hP γ).2 hγ X
   simp only [odd, LinearMap.sub_apply, LinearMap.id_apply, mul_sub, trace_sub, he,
     sub_self]
 
-/-- Two idempotent commutators have an even product in the native Peirce range. -/
-theorem commutator_product_mem_even {P : Matrix n n R} (hP : IsIdempotentElem P)
-    (X Y : Matrix n n R) :
-    commutator P X * commutator P Y ∈ LinearMap.range (even P) :=
-  odd_mul_odd hP (commutator_odd hP X) (commutator_odd hP Y)
-
 /-- Without cancellation of two, the doubled weighted trace is what vanishes. -/
-theorem two_trace_mul_eq_zero {γ D B : Matrix n n R}
+theorem two_trace_mul_eq_zero {γ D B : Matrix n n R_comm}
     (hγ : anticommutator γ D = 0) (hDB : Commute D B) :
     trace (γ * (D * B)) + trace (γ * (D * B)) = 0 := by
   have h := trace_anticommutator_zero hγ B
   simpa only [anticommutator, ← hDB.eq, mul_add, trace_add] using h
 
 /-- Cancellation on the regular factor requires no additive two-torsion. -/
-theorem trace_mul_eq_zero [IsAddTorsionFree R] {γ D B : Matrix n n R}
+theorem trace_mul_eq_zero [IsAddTorsionFree R_comm] {γ D B : Matrix n n R_comm}
     (hγ : anticommutator γ D = 0) (hDB : Commute D B) :
     trace (γ * (D * B)) = 0 := by
   apply IsAddTorsionFree.nsmul_right_injective (by decide : (2 : ℕ) ≠ 0)
   simpa only [two_nsmul, smul_zero] using two_trace_mul_eq_zero hγ hDB
+
+end CommRing
 
 end InfoGeometry.NCG.ChiralMatrixTrace

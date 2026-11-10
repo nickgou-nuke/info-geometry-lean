@@ -45,8 +45,10 @@ namespace InfoGeometry.SuperGrassmannian.NuclearQuasiphononSuperGrassmannian
 
 open Matrix
 
+section RingSupercarrier
+
 variable {ι₀ ι₁ : Type*} [DecidableEq ι₀] [Fintype ι₀] [DecidableEq ι₁] [Fintype ι₁]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. The Graded Supercarrier & Graded Supertrace -/
 
@@ -78,21 +80,20 @@ theorem superTrace_add (M N : Matrix (ι₀ ⊕ ι₁) (ι₀ ⊕ ι₁) R) :
     superTrace (M + N) = superTrace M + superTrace N := by
   dsimp [superTrace]
   rw [Matrix.trace_add, Matrix.trace_add]
-  ring
+  abel
 
 /-- Scalar multiplication linearity of supertrace: `superTrace (c • M) = c * superTrace M`. -/
 theorem superTrace_smul (c : R) (M : Matrix (ι₀ ⊕ ι₁) (ι₀ ⊕ ι₁) R) :
     superTrace (c • M) = c * superTrace M := by
   dsimp [superTrace]
-  rw [Matrix.trace_smul, Matrix.trace_smul]
-  ring
+  rw [Matrix.trace_smul, Matrix.trace_smul, smul_eq_mul, smul_eq_mul, mul_sub]
 
 /-- Negation linearity of supertrace: `superTrace (-M) = -superTrace M`. -/
 theorem superTrace_neg (M : Matrix (ι₀ ⊕ ι₁) (ι₀ ⊕ ι₁) R) :
     superTrace (-M) = -superTrace M := by
   dsimp [superTrace]
   rw [Matrix.trace_neg, Matrix.trace_neg]
-  ring
+  abel
 
 /-- Subtraction linearity of supertrace: `superTrace (M - N) = superTrace M - superTrace N`. -/
 theorem superTrace_sub (M N : Matrix (ι₀ ⊕ ι₁) (ι₀ ⊕ ι₁) R) :
@@ -137,16 +138,6 @@ theorem susyH_eq (V : Matrix ι₀ ι₁ R) :
   rw [Matrix.fromBlocks_multiply, Matrix.fromBlocks_multiply, Matrix.fromBlocks_add]
   simp
 
-/-- The Fundamental Real SUSY Vacuum Energy Cancellation:
-    $\mathrm{STr}(H_{\mathrm{susy}}(V)) = \mathrm{Tr}(V Vᵀ) - \mathrm{Tr}(Vᵀ V) = 0$
-    strictly by cyclic invariance of trace. -/
-theorem superTrace_susyH (V : Matrix ι₀ ι₁ R) :
-    superTrace (susyH V) = 0 := by
-  rw [susyH_eq]
-  dsimp [superTrace]
-  rw [Matrix.trace_mul_comm V Vᵀ]
-  ring
-
 /-! ### 3. The 5-Graded Supercarrier Deformation Triad -/
 
 /-- Scale Mode: homothety `σ • 1` on diagonal blocks. -/
@@ -167,30 +158,29 @@ theorem superTrace_scaleMode (σ : R) :
     superTrace (scaleMode (ι₀ := ι₀) (ι₁ := ι₁) (R := R) σ) =
       ((Fintype.card ι₀ : R) - (Fintype.card ι₁ : R)) * σ := by
   dsimp [superTrace, scaleMode]
-  rw [Matrix.trace_smul, Matrix.trace_smul]
-  rw [Matrix.trace_one, Matrix.trace_one]
-  ring
+  rw [Matrix.trace_smul, Matrix.trace_smul, Matrix.trace_one, Matrix.trace_one]
+  simp only [smul_eq_mul, nsmul_eq_mul, mul_one]
+  rw [← (Nat.cast_commute (Fintype.card ι₀) σ).eq,
+      ← (Nat.cast_commute (Fintype.card ι₁) σ).eq,
+      ← sub_mul]
 
 /-- Balanced scale invariance: when `Fintype.card ι₀ = Fintype.card ι₁`, the scale mode supertrace vanishes. -/
 theorem superTrace_scale_balanced (h : Fintype.card ι₀ = Fintype.card ι₁) (σ : R) :
     superTrace (scaleMode (ι₀ := ι₀) (ι₁ := ι₁) (R := R) σ) = 0 := by
-  rw [superTrace_scaleMode, h]
-  ring
+  rw [superTrace_scaleMode, h, sub_self, zero_mul]
 
 /-- Supertrace of the chiral mode operator vanishes identically: `superTrace (chiralMode B C) = 0`. -/
 theorem superTrace_chiralMode (B : Matrix ι₀ ι₁ R) (C : Matrix ι₁ ι₀ R) :
     superTrace (chiralMode (ι₀ := ι₀) (ι₁ := ι₁) B C) = 0 := by
   dsimp [superTrace, chiralMode]
-  rw [Matrix.trace_zero, Matrix.trace_zero]
-  ring
+  rw [Matrix.trace_zero, Matrix.trace_zero, sub_self]
 
 /-- Supertrace of the volume mode operator vanishes when `Matrix.trace A = Matrix.trace D`. -/
 theorem superTrace_volumeMode (A : Matrix ι₀ ι₀ R) (D : Matrix ι₁ ι₁ R)
-    (h : Matrix.trace A = Matrix.trace D) :
+     (h : Matrix.trace A = Matrix.trace D) :
     superTrace (volumeMode (ι₀ := ι₀) (ι₁ := ι₁) A D) = 0 := by
   dsimp [superTrace, volumeMode]
-  rw [h]
-  ring
+  rw [h, sub_self]
 
 /-- Multiplication of two chiral mode operators:
     `chiralMode B C * chiralMode B C = Matrix.fromBlocks (B * C) 0 0 (C * B)`. -/
@@ -199,6 +189,43 @@ theorem chiral_mode_mul (B : Matrix ι₀ ι₁ R) (C : Matrix ι₁ ι₀ R) :
   dsimp [chiralMode]
   rw [Matrix.fromBlocks_multiply]
   simp
+
+/-- Total deformation splitting theorem:
+    `superTrace (scaleMode σ + chiralMode B C + volumeMode A D) = ((Fintype.card ι₀ : R) - (Fintype.card ι₁ : R)) * σ`. -/
+theorem total_deformation_superTrace (σ : R) (B : Matrix ι₀ ι₁ R) (C : Matrix ι₁ ι₀ R)
+    (A : Matrix ι₀ ι₀ R) (D : Matrix ι₁ ι₁ R) (hvol : Matrix.trace A = Matrix.trace D) :
+    superTrace (scaleMode (ι₀ := ι₀) (ι₁ := ι₁) σ + chiralMode B C + volumeMode A D) =
+      ((Fintype.card ι₀ : R) - (Fintype.card ι₁ : R)) * σ := by
+  rw [superTrace_add, superTrace_add]
+  rw [superTrace_scaleMode, superTrace_chiralMode, superTrace_volumeMode A D hvol]
+  abel
+
+/-- Berezinian for a 2x2 supermatrix with scalar entries `a, b, c, d` where `d` has specified inverse `inv_d`:
+    $\mathrm{Ber} \begin{pmatrix} a & b \\ c & d \end{pmatrix} = (a - b \, d^{-1} \, c) \, d^{-1}$. -/
+def berezinian2 (a b c d inv_d : R) : R :=
+  (a - b * inv_d * c) * inv_d
+
+/-- Berezinian on full 2x2 block matrix carrier `Matrix (Fin 2) (Fin 2) R`:
+    evaluates `berezinian2` on matrix components. -/
+def berezinianMat (M : Matrix (Fin 2) (Fin 2) R) (inv_d : R) : R :=
+  berezinian2 (M 0 0) (M 0 1) (M 1 0) (M 1 1) inv_d
+
+end RingSupercarrier
+
+section CommSupercarrier
+
+variable {ι₀ ι₁ : Type*} [DecidableEq ι₀] [Fintype ι₀] [DecidableEq ι₁] [Fintype ι₁]
+variable {R : Type*} [CommRing R]
+
+/-- The Fundamental Real SUSY Vacuum Energy Cancellation:
+    $\mathrm{STr}(H_{\mathrm{susy}}(V)) = \mathrm{Tr}(V Vᵀ) - \mathrm{Tr}(Vᵀ V) = 0$
+    strictly by cyclic invariance of trace. -/
+theorem superTrace_susyH (V : Matrix ι₀ ι₁ R) :
+    superTrace (susyH V) = 0 := by
+  rw [susyH_eq]
+  dsimp [superTrace]
+  rw [Matrix.trace_mul_comm V Vᵀ]
+  ring
 
 /-- Supertrace of the square of any chiral operator vanishes identically by trace cyclicity:
     `superTrace ((chiralMode B C) * (chiralMode B C)) = 0`. -/
@@ -209,22 +236,7 @@ theorem superTrace_chiralSquare (B : Matrix ι₀ ι₁ R) (C : Matrix ι₁ ι�
   rw [Matrix.trace_mul_comm B C]
   ring
 
-/-- Total deformation splitting theorem:
-    `superTrace (scaleMode σ + chiralMode B C + volumeMode A D) = ((Fintype.card ι₀ : R) - (Fintype.card ι₁ : R)) * σ`. -/
-theorem total_deformation_superTrace (σ : R) (B : Matrix ι₀ ι₁ R) (C : Matrix ι₁ ι₀ R)
-    (A : Matrix ι₀ ι₀ R) (D : Matrix ι₁ ι₁ R) (hvol : Matrix.trace A = Matrix.trace D) :
-    superTrace (scaleMode (ι₀ := ι₀) (ι₁ := ι₁) σ + chiralMode B C + volumeMode A D) =
-      ((Fintype.card ι₀ : R) - (Fintype.card ι₁ : R)) * σ := by
-  rw [superTrace_add, superTrace_add]
-  rw [superTrace_scaleMode, superTrace_chiralMode, superTrace_volumeMode A D hvol]
-  ring
-
 /-! ### 4. Super-Grassmannian Berezinian & Homothety Invariance -/
-
-/-- Berezinian for a 2x2 supermatrix with scalar entries `a, b, c, d` where `d` has specified inverse `inv_d`:
-    $\mathrm{Ber} \begin{pmatrix} a & b \\ c & d \end{pmatrix} = (a - b \, d^{-1} \, c) \, d^{-1}$. -/
-def berezinian2 (a b c d inv_d : R) : R :=
-  (a - b * inv_d * c) * inv_d
 
 /-- Berezinian homothety balance: under uniform scale homothety by a unit `scale` with inverse `inv_scale`,
     $\mathrm{Ber}(\mathrm{scale} \cdot M) = \mathrm{Ber}(M)$. -/
@@ -243,11 +255,6 @@ theorem berezinian_homothety_balance (a b c d inv_d scale inv_scale : R)
       = (scale * inv_scale) * ((a - b * inv_d * c) * inv_d) := by ring
     _ = 1 * ((a - b * inv_d * c) * inv_d) := by rw [h_scale]
     _ = (a - b * inv_d * c) * inv_d := by ring
-
-/-- Berezinian on full 2x2 block matrix carrier `Matrix (Fin 2) (Fin 2) R`:
-    evaluates `berezinian2` on matrix components. -/
-def berezinianMat (M : Matrix (Fin 2) (Fin 2) R) (inv_d : R) : R :=
-  berezinian2 (M 0 0) (M 0 1) (M 1 0) (M 1 1) inv_d
 
 /-- Berezinian scale invariance on `Matrix (Fin 2) (Fin 2) R` under scalar homothety:
     $\mathrm{Ber}(scale • M) = \mathrm{Ber}(M)$. -/
@@ -373,5 +380,7 @@ theorem compile_nuclear_quasiphonon_super_grassmannian :
     unbalanced_homothety_berezinian_factor p q c inv_c
   unbalanced_homothety_berezinian := fun p q c inv_c h =>
     unbalanced_homothety_berezinian p q c inv_c h
+
+end CommSupercarrier
 
 end InfoGeometry.SuperGrassmannian.NuclearQuasiphononSuperGrassmannian

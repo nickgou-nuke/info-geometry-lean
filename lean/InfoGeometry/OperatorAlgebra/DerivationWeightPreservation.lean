@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.ChiralRetainedWordFiveGradeClosure
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra
@@ -7,22 +12,23 @@ import InfoGeometry.Algebra.NonAssocDerivation
 # Derivations preserving noncommutative adjoint weights
 
 This is the operator-algebra seam used by the braid, current and Virasoro
-lanes.  It is deliberately stated for an associative operator algebra `A`;
-the carrier may have originated from a nonassociative algebra, but no
-commutative or diagonal model is introduced here.
+lanes.  It is deliberately stated for an associative operator algebra `A`
+over a (possibly noncommutative) ring `R`; the carrier may have originated
+from a nonassociative algebra, but no commutative or diagonal model is
+introduced here.
 -/
 
 namespace InfoGeometry.OperatorAlgebra
 
 open InfoGeometry.OperatorAlgebra.ExteriorAlgebra
 
-variable {A : Type*}
-variable [Ring A] [Algebra ℝ A]
+variable {R A : Type*}
 
 theorem derivation_preserves_inner_weight
-    (D : Module.End ℝ A)
-    (hD : InfoGeometry.Algebra.NonAssocDerivation.IsLeibniz ℝ A D)
-    (N X : A) (k : ℝ)
+    [Ring R] [Ring A] [Module R A]
+    (D : Module.End R A)
+    (hD : InfoGeometry.Algebra.NonAssocDerivation.IsLeibniz R A D)
+    (N X : A) (k : R)
     (hN : D N = 0)
     (hX : N * X - X * N = k • X) :
     N * D X - D X * N = k • D X := by
@@ -32,6 +38,8 @@ theorem derivation_preserves_inner_weight
   simp only [zero_add, add_zero] at h
   rw [map_smul] at h
   exact h
+
+variable [Ring A] [Algebra ℝ A]
 
 theorem derivation_preserves_gradeSubmodule
     (D : Module.End ℝ A)

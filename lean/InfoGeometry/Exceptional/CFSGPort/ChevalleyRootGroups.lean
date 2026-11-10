@@ -154,11 +154,11 @@ theorem adjointGroup_eq_rootSpan {K : Type v} [Field K] :
     rw [h]
     exact le_biSup (rootSubgroup τ K) (isRoot_neg_single τ i) (Subgroup.subset_closure ⟨c, rfl⟩)
 
-theorem card_rootSubgroup {K : Type v} [Field K] (α : Fin τ.rank → ℤ) :
+theorem card_rootSubgroup {K : Type v} [CommRing K] (α : Fin τ.rank → ℤ) :
     Nat.card (rootSubgroup τ K α) = Nat.card K :=
   (Nat.card_congr (rootSubgroupEquiv τ K α).toEquiv).symm
 
-theorem orderOf_eq_of_mem_rootSubgroup {K : Type v} [Field K] {p : ℕ} [Fact p.Prime] [CharP K p]
+theorem orderOf_eq_of_mem_rootSubgroup {K : Type v} [CommRing K] {p : ℕ} [Fact p.Prime] [CharP K p]
     {α : Fin τ.rank → ℤ} {g : (Module.End K (RootModule τ K))ˣ} (hg : g ∈ rootSubgroup τ K α)
     (hg1 : g ≠ 1) : orderOf g = p := by
   obtain ⟨c, rfl⟩ := mem_rootSubgroup.1 hg

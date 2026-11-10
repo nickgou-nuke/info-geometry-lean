@@ -18,6 +18,15 @@ namespace InfoGeometry.Algebra.ZornBilateralAction
 open InfoGeometry.Algebra
 open scoped BigOperators
 
+variable {R : Type*} [Ring R]
+
+/-- Element-level explicitly left-parenthesized sandwich on the native split octonions over any ring `R`. -/
+noncomputable def sandwichOp (k x : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  (k * x) * k
+
+@[simp] theorem sandwichOp_apply (k x : ZornVectorMatrix R) :
+    sandwichOp k x = (k * x) * k := rfl
+
 variable {R : Type*} [CommRing R]
 
 /-- The explicitly left-parenthesized sandwich on the native split octonions. -/

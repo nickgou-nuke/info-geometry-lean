@@ -33,20 +33,23 @@ def IsDerivation (D : A →ₗ[R] A) : Prop :=
     D (mul x y) = mul (D x) y + mul x (D y)
 
 /-- The `n`-fold iterate of a linear endomorphism. -/
-def iterD (D : A →ₗ[R] A) (n : ℕ) : A →ₗ[R] A :=
+def iterD {R A : Type*} [Semiring R] [AddCommMonoid A] [Module R A]
+    (D : A →ₗ[R] A) (n : ℕ) : A →ₗ[R] A :=
   D ^ n
 
-@[simp] theorem iterD_zero (D : A →ₗ[R] A) :
+@[simp] theorem iterD_zero {R A : Type*} [Semiring R] [AddCommMonoid A] [Module R A]
+    (D : A →ₗ[R] A) :
     iterD D 0 = LinearMap.id :=
   rfl
 
 /-- Successor iteration with `D` on the outside. -/
-@[simp] theorem iterD_succ (D : A →ₗ[R] A) (n : ℕ) :
+@[simp] theorem iterD_succ {R A : Type*} [Semiring R] [AddCommMonoid A] [Module R A]
+    (D : A →ₗ[R] A) (n : ℕ) :
     iterD D (n + 1) = D.comp (iterD D n) := by
   change D ^ (n + 1) = D.comp (D ^ n)
   exact Module.End.iterate_succ' (f' := D) n
 
-@[simp] theorem iterD_succ_apply
+@[simp] theorem iterD_succ_apply {R A : Type*} [Semiring R] [AddCommMonoid A] [Module R A]
     (D : A →ₗ[R] A) (n : ℕ) (x : A) :
     iterD D (n + 1) x = D (iterD D n x) := by
   rw [iterD_succ, LinearMap.comp_apply]
@@ -116,8 +119,8 @@ theorem iterated_leibniz_nsmul
 
 /-- Iterated Leibniz with binomial coefficients as ring scalars. -/
 theorem iterated_leibniz_smul
-    {R : Type*} [CommRing R]
-    {A : Type*} [AddCommGroup A] [Module R A]
+    {R : Type*} [CommSemiring R]
+    {A : Type*} [AddCommMonoid A] [Module R A]
     (mul : A →ₗ[R] A →ₗ[R] A)
     (D : A →ₗ[R] A)
     (hD : IsDerivation mul D)
@@ -245,9 +248,8 @@ end IteratedLeibniz
 
 section DerivationBracket
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Semiring R]
 variable {A : Type*} [AddCommGroup A] [Module R A]
-variable (mul : A →ₗ[R] A →ₗ[R] A)
 
 /-- The commutator of two linear endomorphisms. -/
 def derivationCommutator (D E : A →ₗ[R] A) : A →ₗ[R] A :=
@@ -255,8 +257,9 @@ def derivationCommutator (D E : A →ₗ[R] A) : A →ₗ[R] A :=
 
 /-- Derivations are closed under the endomorphism commutator, without any
 associativity assumption on the underlying multiplication. -/
-theorem derivationCommutator_isDerivation
-    (D E : A →ₗ[R] A)
+theorem derivationCommutator_isDerivation {R₀ : Type*} [CommSemiring R₀] [Module R₀ A]
+    (mul : A →ₗ[R₀] A →ₗ[R₀] A)
+    (D E : A →ₗ[R₀] A)
     (hD : IsDerivation mul D)
     (hE : IsDerivation mul E) :
     IsDerivation mul (derivationCommutator D E) := by
@@ -309,16 +312,16 @@ theorem derivationCommutator_add_right
   abel
 
 /-- The derivation commutator is homogeneous in its left entry. -/
-theorem derivationCommutator_smul_left
-    (r : R) (D E : A →ₗ[R] A) :
+theorem derivationCommutator_smul_left {R₁ : Type*} [CommRing R₁] [Module R₁ A]
+    (r : R₁) (D E : A →ₗ[R₁] A) :
     derivationCommutator (r • D) E = r • derivationCommutator D E := by
   ext x
   simp [derivationCommutator]
   rw [smul_sub]
 
 /-- The derivation commutator is homogeneous in its right entry. -/
-theorem derivationCommutator_smul_right
-    (r : R) (D E : A →ₗ[R] A) :
+theorem derivationCommutator_smul_right {R₁ : Type*} [CommRing R₁] [Module R₁ A]
+    (r : R₁) (D E : A →ₗ[R₁] A) :
     derivationCommutator D (r • E) = r • derivationCommutator D E := by
   ext x
   simp [derivationCommutator]
@@ -328,7 +331,7 @@ end DerivationBracket
 
 section Unit
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [CommSemiring R]
 variable {A : Type*} [AddCommGroup A] [Module R A]
 variable (mul : A →ₗ[R] A →ₗ[R] A)
 
@@ -353,9 +356,9 @@ theorem derivation_kills_one
   exact add_left_cancel h'
 
 /-- Every positive iterate annihilates a point already annihilated by `D`. -/
-theorem iterD_eq_zero_of_apply_eq_zero
-    (D : A →ₗ[R] A)
-    (x : A)
+theorem iterD_eq_zero_of_apply_eq_zero {R₁ A₁ : Type*} [Semiring R₁] [AddCommMonoid A₁] [Module R₁ A₁]
+    (D : A₁ →ₗ[R₁] A₁)
+    (x : A₁)
     (hx : D x = 0)
     (n : ℕ)
     (hn : 0 < n) :
@@ -367,9 +370,9 @@ theorem iterD_eq_zero_of_apply_eq_zero
       simp [iterD, pow_succ, Module.End.mul_apply, hx]
 
 /-- In particular, all positive iterates annihilate the unit. -/
-theorem iterD_kills_one
-    (D : A →ₗ[R] A)
-    (one : A)
+theorem iterD_kills_one {R₁ A₁ : Type*} [Semiring R₁] [AddCommMonoid A₁] [Module R₁ A₁]
+    (D : A₁ →ₗ[R₁] A₁)
+    (one : A₁)
     (hD_one : D one = 0)
     (n : ℕ)
     (hn : 0 < n) :
@@ -382,7 +385,7 @@ end Unit
 
 section Transport
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [CommSemiring R]
 variable {A : Type*} [AddCommGroup A] [Module R A]
 variable (mul : A →ₗ[R] A →ₗ[R] A)
 variable (one : A)

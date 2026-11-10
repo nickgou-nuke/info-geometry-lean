@@ -6,7 +6,7 @@ namespace InfoGeometry.Canonical.FourierOperatorPolynomialCapstone
 open InfoGeometry.Quantum.FourierOperatorPolynomial
 
 theorem capstone_fourier_operator_polynomial_synthesis
-    {R : Type*} [CommRing R] (X : R) (k : ℕ)
+    {R : Type*} [Ring R] (X : R) (k : ℕ)
     (hX : IsFourierFourthRoot X) :
     (X * (X ^ 2 - 1) * (X ^ 2 + 1) = X ^ 5 - X) ∧
     (X * (X ^ (2 * k) - 1) * (X ^ (2 * k) + 1) = X ^ (4 * k + 1) - X) ∧

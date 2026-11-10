@@ -8,7 +8,7 @@ namespace Audit.SuperTraceBerezinian
 /--
 A ℤ₂-graded 2×2 supermatrix with scalar entries (1|1)-dimensional case.
 -/
-structure SuperMatrix (R : Type*) [CommRing R] where
+structure SuperMatrix (R : Type*) [Ring R] where
   a : R
   b : R
   c : R
@@ -16,7 +16,7 @@ structure SuperMatrix (R : Type*) [CommRing R] where
 
 namespace SuperMatrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 @[ext]
 theorem ext' (M N : SuperMatrix R) (ha : M.a = N.a) (hb : M.b = N.b) (hc : M.c = N.c) (hd : M.d = N.d) : M = N := by
@@ -108,7 +108,7 @@ theorem supertrace_neg (M : SuperMatrix R) : supertrace (-M) = -supertrace M := 
   simp [supertrace, add_comm, sub_eq_add_neg]
 
 theorem supertrace_add (M N : SuperMatrix R) : supertrace (M + N) = supertrace M + supertrace N := by
-  unfold supertrace; simp; ring
+  unfold supertrace; simp; abel
 
 theorem berezinian_krein_J {R : Type*} [Field R] [CharZero R] : berezinian (⟨1, 0, 0, -1⟩ : SuperMatrix R) = -1 := by
   unfold berezinian; simp
@@ -116,7 +116,7 @@ theorem berezinian_krein_J {R : Type*} [Field R] [CharZero R] : berezinian (⟨1
 theorem berezinian_one {R : Type*} [Field R] : berezinian (⟨1, 0, 0, 1⟩ : SuperMatrix R) = 1 := by
   unfold berezinian; simp
 
-theorem supertrace_supercommutator_even (M N : SuperMatrix R) (hM : M.b = 0 ∧ M.c = 0) (hN : N.b = 0 ∧ N.c = 0) :
+theorem supertrace_supercommutator_even {R : Type*} [CommRing R] (M N : SuperMatrix R) (hM : M.b = 0 ∧ M.c = 0) (hN : N.b = 0 ∧ N.c = 0) :
     supertrace (M * N - N * M) = 0 := by
   rcases hM with ⟨hbM, hcM⟩; rcases hN with ⟨hbN, hcN⟩
   unfold supertrace; simp [hbM, hcM, hbN, hcN]; ring
@@ -149,7 +149,7 @@ theorem berezinian_exp_diag (M : SuperMatrix ℝ) :
   unfold exp_diag berezinian supertrace
   simp [Real.exp_sub]
 
-theorem det_ungraded_mul_diag (a1 d1 a2 d2 : R) :
+theorem det_ungraded_mul_diag {R : Type*} [CommRing R] (a1 d1 a2 d2 : R) :
     det_ungraded (⟨a1, 0, 0, d1⟩ * ⟨a2, 0, 0, d2⟩ : SuperMatrix R) =
       det_ungraded (⟨a1, 0, 0, d1⟩ : SuperMatrix R) * det_ungraded (⟨a2, 0, 0, d2⟩ : SuperMatrix R) := by
   unfold det_ungraded

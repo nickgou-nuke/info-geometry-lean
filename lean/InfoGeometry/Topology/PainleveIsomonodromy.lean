@@ -22,10 +22,10 @@ over a commutative differential ring.
 
 open Matrix
 
-variable (M : Type _) [CommRing M] [Algebra ℂ M]
+variable (M : Type _) [Ring M] [Algebra ℂ M]
 
-/-- A Differential Commutative Ring equipped with derivation operators ∂_z and ∂_t. -/
-class DifferentialRing (R : Type _) extends CommRing R where
+/-- A Differential Ring equipped with derivation operators ∂_z and ∂_t. -/
+class DifferentialRing (R : Type _) extends Ring R where
   del_z : R → R
   del_t : R → R
   -- Linearity and Leibniz rule could be axiomatically added here, 

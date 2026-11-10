@@ -31,7 +31,8 @@ open InfoGeometry.Canonical.ToeplitzCuntzThreeVacuumBridge
 open InfoGeometry.Canonical.ToeplitzCuntzThreeCyclicSuperchargeBridge
 open ToeplitzCuntzThreeGenerators
 
-variable {K A : Type*} [CommRing K] [StarRing K] [Ring A] [StarRing A] [Algebra K A] [StarModule K A]
+variable {K A : Type*} [Ring K] [StarRing K] [Ring A] [StarRing A] [Module K A]
+  [IsScalarTower K A A] [SMulCommClass K A A] [StarModule K A]
 variable (g : ToeplitzCuntzThreeGenerators A)
 variable (w : K)
 
@@ -113,7 +114,7 @@ def z3GradingOperatorInv : A :=
 theorem z3GradingOperator_apply_p2 :
     z3GradingOperator g w * g.P2 = (w * w) • g.P2 := by
   dsimp [z3GradingOperator]
-  simp [add_mul, p1_p2_ortho g, p3_p2_ortho g, p0_p2_ortho g, p2_idempotent g]
+  simp [add_mul, smul_mul_assoc, p1_p2_ortho g, p3_p2_ortho g, p0_p2_ortho g, p2_idempotent g]
 
 /-- **Non-triviality Certificate (Exact Order-3 Qualification)**: Proves Γ ≠ 1 provided (ω² • P₂ ≠ P₂). -/
 theorem z3GradingOperator_ne_one_of_sector_scale (h_ne : (w * w) • g.P2 ≠ g.P2) :
@@ -144,7 +145,7 @@ theorem z3GradingOperator_mul_inv (hw3 : w * w * w = 1) :
   have h02 := p0_p2_ortho g
   have h03 := p0_p3_ortho g
   have hw3_alt : w * (w * w) = 1 := by
-    calc w * (w * w) = w * w * w := by ring
+    calc w * (w * w) = w * w * w := (mul_assoc w w w).symm
       _ = 1 := hw3
   have hw3_alt2 : (w * w) * w = 1 := hw3
   dsimp [z3GradingOperator, z3GradingOperatorInv]
@@ -176,7 +177,7 @@ theorem z3GradingOperator_inv_mul (hw3 : w * w * w = 1) :
   have h02 := p0_p2_ortho g
   have h03 := p0_p3_ortho g
   have hw3_alt : w * (w * w) = 1 := by
-    calc w * (w * w) = w * w * w := by ring
+    calc w * (w * w) = w * w * w := (mul_assoc w w w).symm
       _ = 1 := hw3
   have hw3_alt2 : (w * w) * w = 1 := hw3
   dsimp [z3GradingOperator, z3GradingOperatorInv]
@@ -207,9 +208,9 @@ theorem z3GradingOperator_sq (hw3 : w * w * w = 1) :
   have h02 := p0_p2_ortho g
   have h03 := p0_p3_ortho g
   have hw4 : (w * w) * (w * w) = w := by
-    calc (w * w) * (w * w) = (w * w * w) * w := by ring
+    calc (w * w) * (w * w) = (w * w * w) * w := (mul_assoc (w * w) w w).symm
       _ = 1 * w := by rw [hw3]
-      _ = w := by ring
+      _ = w := one_mul w
   dsimp [z3GradingOperator, z3GradingOperatorInv]
   simp only [mul_add, add_mul, smul_mul_assoc, mul_smul_comm, smul_smul, hp1, hp2, hp3, hp0,
              h12, h21, h23, h32, h13, h31, h10, h20, h30, h01, h02, h03,
@@ -230,9 +231,9 @@ theorem cyclicSupercharge_z3_covariance (hw3 : w * w * w = 1) :
     z3GradingOperator g w * cyclicSupercharge g * z3GradingOperatorInv g w =
     w • cyclicSupercharge g := by
   have hw4 : (w * w) * (w * w) = w := by
-    calc (w * w) * (w * w) = (w * w * w) * w := by ring
+    calc (w * w) * (w * w) = (w * w * w) * w := (mul_assoc (w * w) w w).symm
       _ = 1 * w := by rw [hw3]
-      _ = w := by ring
+      _ = w := one_mul w
   have hp1_def : g.P1 = g.V1 * star g.V1 := rfl
   have hp2_def : g.P2 = g.V2 * star g.V2 := rfl
   have hp3_def : g.P3 = g.V3 * star g.V3 := rfl

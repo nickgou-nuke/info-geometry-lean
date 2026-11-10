@@ -16,7 +16,9 @@ namespace InfoGeometry.Canonical.ComplementHyperbolicOrbit
 open DeBruijnRotorAlternationCycle
 open ReflexiveNilpotentFlows
 open GrassmannianBundleCyclotomicOrientability
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+section RingScalars
+
+variable {R A : Type*} [Ring R] [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- Hyperbolic polynomial fixing the complement of the native active support. -/
 def hyperbolicRotor (u v : R) (d B : A) : A :=
@@ -63,6 +65,38 @@ theorem complement_mul_velocity : complement d B*(d+B)=0 := by
 theorem velocity_mul_complement : (d+B)*complement d B=0 := by
   rw [complement, mul_sub, mul_one, velocity_mul_support h, sub_self]
 
+/-- The plus column of the hyperbolic polynomial. -/
+theorem hyperbolicRotor_mul_plus (u v : R) :
+    hyperbolicRotor u v d B*(d*B)=u • (d*B)+v • B := by
+  obtain ⟨hpp, _, _, hmp, _, _, hcp, _, _⟩ := support_table h.d_sq h.B_sq h.dBd h.BdB
+  have hsp : support d B*(d*B)=d*B := by simp only [support, add_mul, hpp, hmp, add_zero]
+  have hqp : (d+B)*(d*B)=B := velocity_mul_polePlus h
+  simp only [hyperbolicRotor, add_mul, smul_mul_assoc, hcp, hsp, hqp, zero_add]
+
+/-- The plus row of the hyperbolic polynomial. -/
+theorem plus_mul_hyperbolicRotor (u v : R) :
+    (d*B)*hyperbolicRotor u v d B=u • (d*B)+v • d := by
+  obtain ⟨hpp, _, hpm, _, hpc, _, _, _, _⟩ := support_table h.d_sq h.B_sq h.dBd h.BdB
+  have hps : (d*B)*support d B=d*B := by simp only [support, mul_add, hpp, hpm, add_zero]
+  have hpq : (d*B)*(d+B)=d := polePlus_mul_velocity h
+  simp only [hyperbolicRotor, mul_add, mul_smul_comm, hpc, hps, hpq, zero_add]
+
+/-- The creator row uses the same native support absorption. -/
+theorem creator_mul_hyperbolicRotor (u v : R) :
+    B*hyperbolicRotor u v d B=u • B+v • (B*d) := by
+  have hbc := (complement_annihilates h.d_sq h.B_sq h.dBd h.BdB).2.2.2
+  have hbs : B*support d B=B := (active_support_absorbs h.d_sq h.B_sq h.dBd h.BdB).2.2.2
+  have hbq : B*(d+B)=B*d := by rw [mul_add, h.B_sq, add_zero]
+  simp only [hyperbolicRotor, mul_add, mul_smul_comm, hbc, hbs, hbq, zero_add]
+
+end RingScalars
+
+section CommScalars
+
+variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {d B : A} (h : IsDualSeedPair d B)
+include h
+
 /-- Multiplication keeps the complementary support fixed. -/
 theorem hyperbolicRotor_mul (u v a b : R) :
     hyperbolicRotor u v d B * hyperbolicRotor a b d B =
@@ -97,30 +131,6 @@ theorem hyperbolicRotor_reverse_inverse (u v : R) (huv : u*u-v*v=1) :
     hyperbolicRotor u (-v) d B * hyperbolicRotor u v d B = 1 := by
   have hn : u*u-(-v)*(-v)=1 := by simpa only [neg_mul_neg] using huv
   simpa only [neg_neg] using hyperbolicRotor_inverse h u (-v) hn
-
-/-- The plus column of the hyperbolic polynomial. -/
-theorem hyperbolicRotor_mul_plus (u v : R) :
-    hyperbolicRotor u v d B*(d*B)=u • (d*B)+v • B := by
-  obtain ⟨hpp, _, _, hmp, _, _, hcp, _, _⟩ := support_table h.d_sq h.B_sq h.dBd h.BdB
-  have hsp : support d B*(d*B)=d*B := by simp only [support, add_mul, hpp, hmp, add_zero]
-  have hqp : (d+B)*(d*B)=B := velocity_mul_polePlus h
-  simp only [hyperbolicRotor, add_mul, smul_mul_assoc, hcp, hsp, hqp, zero_add]
-
-/-- The plus row of the hyperbolic polynomial. -/
-theorem plus_mul_hyperbolicRotor (u v : R) :
-    (d*B)*hyperbolicRotor u v d B=u • (d*B)+v • d := by
-  obtain ⟨hpp, _, hpm, _, hpc, _, _, _, _⟩ := support_table h.d_sq h.B_sq h.dBd h.BdB
-  have hps : (d*B)*support d B=d*B := by simp only [support, mul_add, hpp, hpm, add_zero]
-  have hpq : (d*B)*(d+B)=d := polePlus_mul_velocity h
-  simp only [hyperbolicRotor, mul_add, mul_smul_comm, hpc, hps, hpq, zero_add]
-
-/-- The creator row uses the same native support absorption. -/
-theorem creator_mul_hyperbolicRotor (u v : R) :
-    B*hyperbolicRotor u v d B=u • B+v • (B*d) := by
-  have hbc := (complement_annihilates h.d_sq h.B_sq h.dBd h.BdB).2.2.2
-  have hbs : B*support d B=B := (active_support_absorbs h.d_sq h.B_sq h.dBd h.BdB).2.2.2
-  have hbq : B*(d+B)=B*d := by rw [mul_add, h.B_sq, add_zero]
-  simp only [hyperbolicRotor, mul_add, mul_smul_comm, hbc, hbs, hbq, zero_add]
 
 /-- The exact plus-pole expansion, without a hyperbola hypothesis. -/
 theorem hyperbolicPlus_expansion (u v : R) :
@@ -239,5 +249,7 @@ theorem hyperbolicPlus_displacement_square (u v : R) (huv : u*u-v*v=1) :
       rw [hu]
       simp only [add_smul, one_smul, smul_sub, carrierSupport, polePlus, poleMinus, smul_add]
       abel
+
+end CommScalars
 
 end InfoGeometry.Canonical.ComplementHyperbolicOrbit

@@ -17,6 +17,28 @@ operators belong to the former; their two blocks can be read separately.
 noncomputable section
 namespace InfoGeometry.SuperGrassmannian.ZornGraphChart
 open InfoGeometry.Algebra ProjectorGraphChart GraphIdempotentDirections
+
+section Ring
+variable {R : Type*} [Ring R]
+
+/-- Actual graph projectors on Zorn over any ring `R`, defined by linear map composition. -/
+def nativeGraphProjectorLinear (f : Positive R →ₗ[R] Negative R) :
+    Module.End R (ZornVectorMatrix R) :=
+  (splitEquiv (R := R)).symm.toLinearMap.comp
+    ((graphProjector f).comp (splitEquiv (R := R)).toLinearMap)
+
+@[simp] theorem nativeGraphProjectorLinear_apply (f : Positive R →ₗ[R] Negative R)
+    (X : ZornVectorMatrix R) :
+    nativeGraphProjectorLinear f X = splitEquiv.symm ((X.a, X.v), f (X.a, X.v)) := rfl
+
+theorem nativeGraphProjectorLinear_idempotent (f : Positive R →ₗ[R] Negative R) :
+    IsIdempotentElem (nativeGraphProjectorLinear f) := by
+  apply LinearMap.ext
+  intro X
+  simp [Module.End.mul_apply]
+
+end Ring
+
 variable {R : Type*} [CommRing R]
 
 /-- Conjugation by the explicit splitting identifies the actual projector. -/

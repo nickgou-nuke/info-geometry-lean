@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/AnomalyTubuleStability.lean
 
 Anomaly and topological readout sockets for stable defect/tubule sectors.
@@ -29,25 +34,22 @@ the readout of the variation:
 
 `A_delta x = tau (delta x)`.
 -/
-abbrev AnomalyReadout
-    (Op : Type*) [Ring Op] : Type _ :=
-  Σ' symmetryVariation : Op → Op,
-    Σ' readout : Op → ℝ,
-      ∃ x : Op,
-        readout (symmetryVariation x) ≠ readout (symmetryVariation 0)
+structure AnomalyReadout
+    (Op : Type*) [Ring Op] where
+  /-- The operator variation whose readout is being studied. -/
+  symmetryVariation : Op → Op
 
-namespace AnomalyReadout
+  /-- A real-valued readout of the varied operator. -/
+  readout : Op → ℝ
 
-abbrev symmetryVariation {Op : Type*} [Ring Op]
-    (A : AnomalyReadout Op) : Op → Op := A.1
-abbrev readout {Op : Type*} [Ring Op]
-    (A : AnomalyReadout Op) : Op → ℝ := A.2.1
-abbrev nonvanishing {Op : Type*} [Ring Op]
-    (A : AnomalyReadout Op) :
-    ∃ x : Op,
-      A.readout (A.symmetryVariation x) ≠ A.readout (A.symmetryVariation 0) := A.2.2
+  /-- The variation is nontrivial at at least one input. -/
+  variation_nontrivial : ∃ x : Op, symmetryVariation x ≠ symmetryVariation 0
 
-end AnomalyReadout
+  /-- The readout separates each varied value from the reference whenever the
+    operator values differ. -/
+  separates_variation : ∀ x : Op,
+    readout (symmetryVariation x) = readout (symmetryVariation 0) →
+      symmetryVariation x = symmetryVariation 0
 
 namespace AnomalyReadout
 
@@ -59,16 +61,14 @@ def anomaly
     (x : Op) : ℝ :=
   A.readout (A.symmetryVariation x)
 
-/-- Re-export the definitional anomaly law. -/
-theorem anomaly_eq_readout_variation
-    (x : Op) :
-    A.anomaly x = A.readout (A.symmetryVariation x) :=
-  rfl
-
-/-- The stored nonvanishing hypothesis gives a nonzero anomaly. -/
+/-- A nontrivial variation is detected as a nonzero anomaly by a readout that
+separates varied operator values from the reference. -/
 theorem exists_nonzero_anomaly :
     ∃ x : Op, A.anomaly x ≠ A.anomaly 0 := by
-  simpa [AnomalyReadout.anomaly] using A.nonvanishing
+  obtain ⟨x, hx⟩ := A.variation_nontrivial
+  refine ⟨x, ?_⟩
+  intro hread
+  exact hx (A.separates_variation x (by simpa [AnomalyReadout.anomaly] using hread))
 
 end AnomalyReadout
 
@@ -112,20 +112,14 @@ namespace AnomalousFlowData
 variable {Op Index : Type*} [Ring Op]
 variable (W : AnomalousFlowData Op Index)
 
-/-- Re-export flow invariance of the defect predicate. -/
-theorem defect_stays_defect
-    (t : ℝ)
-    {x : Op}
-    (hx : W.defect x) :
-    W.defect (W.flow t x) :=
-  W.defect_flow_invariant t x hx
-
-/-- Re-export anomaly detection of a defect. -/
-theorem defect_has_nontrivial_anomaly
-    {x : Op}
-    (hx : W.defect x) :
-    W.anomaly x ≠ W.anomaly 0 :=
-  W.anomaly_detects_defect x hx
+/- Show that the admissible flow preserves both defect membership and its
+non-reference anomaly readout. -/
+theorem flow_preserves_defect_and_detected_anomaly
+    (t : ℝ) {x : Op} (hx : W.defect x) :
+    W.defect (W.flow t x) ∧
+      W.anomaly (W.flow t x) ≠ W.anomaly 0 := by
+  have hflow := W.defect_flow_invariant t x hx
+  exact ⟨hflow, W.anomaly_detects_defect (W.flow t x) hflow⟩
 
 /-- A detected defect cannot also be a flat reference-frame point. -/
 theorem not_flatFrame_of_defect
@@ -133,7 +127,7 @@ theorem not_flatFrame_of_defect
     (hx : W.defect x) :
     ¬ W.flatFrame x := by
   intro hflat
-  exact W.defect_has_nontrivial_anomaly hx (W.flat_anomaly_zero x hflat)
+  exact W.anomaly_detects_defect x hx (W.flat_anomaly_zero x hflat)
 
 /-- A flat reference-frame point cannot be a detected defect. -/
 theorem not_defect_of_flatFrame

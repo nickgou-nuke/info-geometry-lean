@@ -32,6 +32,8 @@ noncomputable section
 
 namespace InfoGeometry.Thermo.BipolarObservableMetriplecticAlgebra
 
+section ObservableMetriplectic
+
 variable {A : Type*} [CommRing A] [Algebra ℝ A]
 
 /-- Three native coordinate derivations. Jacobi for the chosen constant
@@ -46,7 +48,7 @@ structure DerivationFrame (A : Type*) [CommRing A] [Algebra ℝ A] where
 theorem nativeDerivation_mul (δ : Derivation ℝ A A) (F G : A) :
     δ (F * G) = δ F * G + F * δ G := by
   rw [δ.leibniz]
-  simp [Algebra.smul_def]
+  simp [Algebra.smul_def, smul_eq_mul]
   ring
 
 /-- Additive rule in ordinary notation. -/
@@ -63,17 +65,6 @@ theorem nativeDerivation_sub (δ : Derivation ℝ A A) (F G : A) :
 def poissonBracket (D : DerivationFrame A) (F G : A) : A :=
   D.Dtheta F * D.Da G - D.Da F * D.Dtheta G
 
-/-- Skew-symmetry of the Poisson bracket. -/
-theorem poissonBracket_skew (D : DerivationFrame A) (F G : A) :
-    poissonBracket D F G = -poissonBracket D G F := by
-  unfold poissonBracket
-  ring
-
-@[simp] theorem poissonBracket_self (D : DerivationFrame A) (F : A) :
-    poissonBracket D F F = 0 := by
-  unfold poissonBracket
-  ring
-
 /-- Additivity in the first observable. -/
 theorem poissonBracket_add_left
     (D : DerivationFrame A) (F₁ F₂ G : A) :
@@ -81,7 +72,7 @@ theorem poissonBracket_add_left
       poissonBracket D F₁ G + poissonBracket D F₂ G := by
   unfold poissonBracket
   rw [nativeDerivation_add, nativeDerivation_add]
-  ring
+  noncomm_ring
 
 /-- Additivity in the second observable. -/
 theorem poissonBracket_add_right
@@ -90,7 +81,7 @@ theorem poissonBracket_add_right
       poissonBracket D F G₁ + poissonBracket D F G₂ := by
   unfold poissonBracket
   rw [nativeDerivation_add, nativeDerivation_add]
-  ring
+  noncomm_ring
 
 /-- Real homogeneity in the first observable. -/
 theorem poissonBracket_smul_left
@@ -105,24 +96,6 @@ theorem poissonBracket_smul_right
     poissonBracket D F (c • G) = c • poissonBracket D F G := by
   simp [poissonBracket, Algebra.smul_mul_assoc,
     Algebra.mul_smul_comm, smul_sub]
-
-/-- Right Leibniz identity for the Poisson bracket. -/
-theorem poissonBracket_leibniz_right
-    (D : DerivationFrame A) (F G H : A) :
-    poissonBracket D F (G * H) =
-      poissonBracket D F G * H + G * poissonBracket D F H := by
-  unfold poissonBracket
-  rw [nativeDerivation_mul, nativeDerivation_mul]
-  ring
-
-/-- Left Leibniz identity for the Poisson bracket. -/
-theorem poissonBracket_leibniz_left
-    (D : DerivationFrame A) (F G H : A) :
-    poissonBracket D (F * G) H =
-      F * poissonBracket D G H + poissonBracket D F H * G := by
-  unfold poissonBracket
-  rw [nativeDerivation_mul, nativeDerivation_mul]
-  ring
 
 lemma Dtheta_poissonBracket
     (D : DerivationFrame A) (F G : A) :
@@ -146,35 +119,9 @@ lemma Da_poissonBracket
   rw [nativeDerivation_sub,
     nativeDerivation_mul, nativeDerivation_mul]
 
-/-- Jacobi identity for the constant bivector `∂θ ∧ ∂a`. -/
-theorem poissonBracket_jacobi
-    (D : DerivationFrame A) (F G H : A) :
-    poissonBracket D (poissonBracket D F G) H +
-      poissonBracket D (poissonBracket D G H) F +
-      poissonBracket D (poissonBracket D H F) G = 0 := by
-  change
-    (D.Dtheta (poissonBracket D F G) * D.Da H -
-      D.Da (poissonBracket D F G) * D.Dtheta H) +
-    (D.Dtheta (poissonBracket D G H) * D.Da F -
-      D.Da (poissonBracket D G H) * D.Dtheta F) +
-    (D.Dtheta (poissonBracket D H F) * D.Da G -
-      D.Da (poissonBracket D H F) * D.Dtheta G) = 0
-  rw [Dtheta_poissonBracket, Da_poissonBracket,
-    Dtheta_poissonBracket, Da_poissonBracket,
-    Dtheta_poissonBracket, Da_poissonBracket]
-  rw [D.commute_theta_a F, D.commute_theta_a G,
-    D.commute_theta_a H]
-  ring
-
 /-- Symmetric rank-one metric bracket in the `η` direction. -/
 def metricBracket (D : DerivationFrame A) (F G : A) : A :=
   D.Deta F * D.Deta G
-
-/-- Symmetry of the metric bracket. -/
-theorem metricBracket_symm (D : DerivationFrame A) (F G : A) :
-    metricBracket D F G = metricBracket D G F := by
-  unfold metricBracket
-  ring
 
 /-- Additivity in the first observable. -/
 theorem metricBracket_add_left
@@ -183,7 +130,7 @@ theorem metricBracket_add_left
       metricBracket D F₁ G + metricBracket D F₂ G := by
   unfold metricBracket
   rw [nativeDerivation_add]
-  ring
+  noncomm_ring
 
 /-- Additivity in the second observable. -/
 theorem metricBracket_add_right
@@ -192,31 +139,13 @@ theorem metricBracket_add_right
       metricBracket D F G₁ + metricBracket D F G₂ := by
   unfold metricBracket
   rw [nativeDerivation_add]
-  ring
-
-/-- Right Leibniz identity for the metric biderivation. -/
-theorem metricBracket_leibniz_right
-    (D : DerivationFrame A) (F G H : A) :
-    metricBracket D F (G * H) =
-      metricBracket D F G * H + G * metricBracket D F H := by
-  unfold metricBracket
-  rw [nativeDerivation_mul]
-  ring
-
-/-- Left Leibniz identity for the metric biderivation. -/
-theorem metricBracket_leibniz_left
-    (D : DerivationFrame A) (F G H : A) :
-    metricBracket D (F * G) H =
-      F * metricBracket D G H + metricBracket D F H * G := by
-  unfold metricBracket
-  rw [nativeDerivation_mul]
-  ring
+  noncomm_ring
 
 /-- Diagonal metric response is a square. -/
 theorem metricBracket_sq (D : DerivationFrame A) (F : A) :
     metricBracket D F F = (D.Deta F) ^ 2 := by
   unfold metricBracket
-  ring
+  noncomm_ring
 
 /-- Positivity after evaluating an algebra-valued diagonal metric response. -/
 theorem metricBracket_nonneg (D : DerivationFrame A) (ev : A →+* ℝ) (F : A) :
@@ -254,16 +183,6 @@ theorem metriplecticBracket_add_right
   rw [poissonBracket_add_right, metricBracket_add_right]
   abel
 
-/-- Right Leibniz identity for the combined biderivation. -/
-theorem metriplecticBracket_leibniz_right
-    (D : DerivationFrame A) (F G H : A) :
-    metriplecticBracket D F (G * H) =
-      metriplecticBracket D F G * H +
-        G * metriplecticBracket D F H := by
-  unfold metriplecticBracket
-  rw [poissonBracket_leibniz_right, metricBracket_leibniz_right]
-  ring
-
 /-- Entropy is a Casimir of the Poisson lane. -/
 def IsPoissonCasimir (D : DerivationFrame A) (S : A) : Prop :=
   ∀ F : A, poissonBracket D F S = 0
@@ -298,6 +217,89 @@ theorem metriplectic_unified_evolution
       poissonBracket D F H + metricBracket D F S := by
   rw [metriplecticBracket, poissonBracket_add_right,
     metricBracket_add_right, hS F, hH F]
+  abel
+
+/-- Skew-symmetry of the Poisson bracket. -/
+theorem poissonBracket_skew (D : DerivationFrame A) (F G : A) :
+    poissonBracket D F G = -poissonBracket D G F := by
+  unfold poissonBracket
+  ring
+
+@[simp] theorem poissonBracket_self (D : DerivationFrame A) (F : A) :
+    poissonBracket D F F = 0 := by
+  unfold poissonBracket
+  ring
+
+/-- Right Leibniz identity for the Poisson bracket. -/
+theorem poissonBracket_leibniz_right
+    (D : DerivationFrame A) (F G H : A) :
+    poissonBracket D F (G * H) =
+      poissonBracket D F G * H + G * poissonBracket D F H := by
+  unfold poissonBracket
+  rw [nativeDerivation_mul, nativeDerivation_mul]
+  ring
+
+/-- Left Leibniz identity for the Poisson bracket. -/
+theorem poissonBracket_leibniz_left
+    (D : DerivationFrame A) (F G H : A) :
+    poissonBracket D (F * G) H =
+      F * poissonBracket D G H + poissonBracket D F H * G := by
+  unfold poissonBracket
+  rw [nativeDerivation_mul, nativeDerivation_mul]
+  ring
+
+/-- Jacobi identity for the constant bivector `∂θ ∧ ∂a`. -/
+theorem poissonBracket_jacobi
+    (D : DerivationFrame A) (F G H : A) :
+    poissonBracket D (poissonBracket D F G) H +
+      poissonBracket D (poissonBracket D G H) F +
+      poissonBracket D (poissonBracket D H F) G = 0 := by
+  change
+    (D.Dtheta (poissonBracket D F G) * D.Da H -
+      D.Da (poissonBracket D F G) * D.Dtheta H) +
+    (D.Dtheta (poissonBracket D G H) * D.Da F -
+      D.Da (poissonBracket D G H) * D.Dtheta F) +
+    (D.Dtheta (poissonBracket D H F) * D.Da G -
+      D.Da (poissonBracket D H F) * D.Dtheta G) = 0
+  rw [Dtheta_poissonBracket, Da_poissonBracket,
+    Dtheta_poissonBracket, Da_poissonBracket,
+    Dtheta_poissonBracket, Da_poissonBracket]
+  rw [D.commute_theta_a F, D.commute_theta_a G,
+    D.commute_theta_a H]
+  ring
+
+/-- Symmetry of the metric bracket. -/
+theorem metricBracket_symm (D : DerivationFrame A) (F G : A) :
+    metricBracket D F G = metricBracket D G F := by
+  unfold metricBracket
+  ring
+
+/-- Right Leibniz identity for the metric biderivation. -/
+theorem metricBracket_leibniz_right
+    (D : DerivationFrame A) (F G H : A) :
+    metricBracket D F (G * H) =
+      metricBracket D F G * H + G * metricBracket D F H := by
+  unfold metricBracket
+  rw [nativeDerivation_mul]
+  ring
+
+/-- Left Leibniz identity for the metric biderivation. -/
+theorem metricBracket_leibniz_left
+    (D : DerivationFrame A) (F G H : A) :
+    metricBracket D (F * G) H =
+      F * metricBracket D G H + metricBracket D F H * G := by
+  unfold metricBracket
+  rw [nativeDerivation_mul]
+  ring
+
+/-- Right Leibniz identity for the combined biderivation. -/
+theorem metriplecticBracket_leibniz_right
+    (D : DerivationFrame A) (F G H : A) :
+    metriplecticBracket D F (G * H) =
+      metriplecticBracket D F G * H +
+        G * metriplecticBracket D F H := by
+  unfold metriplecticBracket
+  rw [poissonBracket_leibniz_right, metricBracket_leibniz_right]
   ring
 
 /-- Energy conservation under the unified generator. -/
@@ -333,6 +335,8 @@ theorem metriplectic_second_law_nonneg
     0 ≤ ev (metriplecticBracket D S (H + S)) := by
   rw [metriplectic_second_law D H S hS hH, map_pow]
   exact sq_nonneg _
+
+end ObservableMetriplectic
 
 /-! ## Bridge to the finite three-coordinate GENERIC carrier -/
 
@@ -371,6 +375,7 @@ theorem etaCovector_is_reversible_casimir :
 
 /-- Compact observable-level packet. -/
 theorem bipolar_observable_metriplectic_packet
+    {A : Type*} [CommRing A] [Algebra ℝ A]
     (D : DerivationFrame A) (ev : A →+* ℝ) (H S F G K : A)
     (hS : IsPoissonCasimir D S)
     (hH : IsMetricKernel D H) :

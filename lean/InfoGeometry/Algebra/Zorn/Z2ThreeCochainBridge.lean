@@ -20,15 +20,22 @@ namespace InfoGeometry.Algebra.Zorn.Z2ThreeCochainBridge
 
 open scoped BigOperators
 
-variable {R G : Type*} [CommRing R] [AddCommGroup G]
+variable {R G : Type*} [AddCommGroup G]
 
-/-- The scalar coefficient of a homogeneous twisted product. -/
+section NoncommRing
+variable [Ring R]
+
+/-- The scalar coefficient of a homogeneous twisted product over any ring `[Ring R]`. -/
 def twistedScalar (F : G → G → Rˣ) (x y : G) (a b : R) : R :=
   (F x y : R) * a * b
 
-/-- The associator coefficient attached to a multiplicative two-cochain. -/
+/-- The associator coefficient attached to a multiplicative two-cochain over any ring `[Ring R]`. -/
 def associatorCochain (F : G → G → Rˣ) (x y z : G) : Rˣ :=
   F x y * F (x + y) z * (F y z * F x (y + z))⁻¹
+
+end NoncommRing
+
+variable [CommRing R]
 
 /-- On homogeneous products, reassociation is measured by `∂F`. -/
 theorem twistedScalar_associator

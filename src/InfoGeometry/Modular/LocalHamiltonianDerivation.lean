@@ -26,13 +26,13 @@ All proofs are complete with 0 `sorry`s, 0 custom axioms, and 0 placeholders.
 
 namespace InfoGeometry.Modular.LocalHamiltonianDerivation
 
-variable {R : Type*} [CommRing R]
-
 /-! =========================================================================
     1. The Inner Derivation ad_K = [K, ·]
     ========================================================================= -/
 
-variable {A : Type*} [Ring A] [Algebra R A]
+section InnerDeriv
+variable {R : Type*} [Ring R]
+variable {A : Type*} [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- The commutator bracket `[K, x] = K * x - x * K`. -/
 def bracket (K x : A) : A :=
@@ -51,7 +51,7 @@ theorem bracket_add (K x y : A) : bracket K (x + y) = bracket K x + bracket K y 
 /-- R-scalar compatibility: `[K, r • x] = r • [K, x]`. -/
 theorem bracket_smul (K : A) (r : R) (x : A) : bracket K (r • x) = r • bracket K x := by
   dsimp [bracket]
-  rw [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, smul_sub]
+  rw [mul_smul_comm, smul_mul_assoc, smul_sub]
 
 /--
 Leibniz Product Rule:
@@ -89,6 +89,10 @@ theorem innerDeriv_leibniz (K : A) (x y : A) :
 @[simp]
 theorem innerDeriv_one (K : A) : innerDeriv (R := R) K 1 = 0 := by
   simp [innerDeriv_apply]
+
+end InnerDeriv
+
+variable {R : Type*} [CommRing R]
 
 /-! =========================================================================
     2. Directed System of Associative R-Algebras

@@ -22,7 +22,7 @@ This slices the quantum Hilbert space into 3 fundamental sectors:
 3. **The Antisymmetric / Chiral Sector** ($\hat{X}^2 + \mathbf{I} = \mathbf{0}$): Sine rotational waves ($\pm i$).
 -/
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The quintic operator relation: X^5 = X. -/
 def IsFourierQuintic (X : R) : Prop :=
@@ -32,7 +32,7 @@ def IsFourierQuintic (X : R) : Prop :=
     X^5 - X = X * (X^2 - 1) * (X^2 + 1). -/
 theorem fourier_quintic_factorization (X : R) :
     X ^ 5 - X = X * (X ^ 2 - 1) * (X ^ 2 + 1) := by
-  ring
+  noncomm_ring
 
 /-- 🏆 THEOREM 2: Exact Equivalence of the Fourier Quintic and the Slicing Polynomial. -/
 theorem fourier_quintic_iff_product_zero (X : R) :
@@ -51,9 +51,9 @@ theorem fourier_quintic_iff_product_zero (X : R) :
 theorem fourier_order_four_implies_quintic (X : R) (h4 : X ^ 4 = 1) :
     X ^ 5 = X := by
   calc
-    X ^ 5 = X ^ 4 * X := by ring
+    X ^ 5 = X ^ 4 * X := by noncomm_ring
     _ = 1 * X := by rw [h4]
-    _ = X := by ring
+    _ = X := by simp
 
 /-- 🏆 THEOREM 4: The Tripartite Spectral Slicing.
     Any eigenvalue λ ∈ ℂ satisfying λ^5 = λ belongs to the discrete spectrum

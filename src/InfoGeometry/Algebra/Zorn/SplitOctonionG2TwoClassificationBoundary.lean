@@ -27,7 +27,7 @@ namespace InfoGeometry.Algebra.Zorn.SplitOctonionG2TwoClassificationBoundary
 open InfoGeometry.Algebra.Zorn
 open G2TrifactorSU3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- A candidate finite `G₂(2)`/split-octonion automorphism at the Zorn-coordinate level. -/
 structure G2TwoCandidate (cp : ZornCompositionDatum R) where

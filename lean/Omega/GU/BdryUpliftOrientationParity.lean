@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Omega.GU.BdryZ2JumpUniqueness
 import Mathlib.Tactic
 
@@ -6,23 +12,19 @@ namespace Omega.GU
 /-- The `ℤ₂`-valued orientation parity carried by a `k`-sheet boundary uplift delta-set. -/
 abbrev UpliftOrientationParity (k : ℕ) := Equiv.Perm (Fin k) →* ℤˣ
 
-/-- The canonical uplift orientation parity is the sign character on the labeling torsor. -/
-noncomputable def upliftOrientationParity (k : ℕ) : UpliftOrientationParity k :=
-  signHom k
+/-- The canonical uplift orientation parity is the sign character. -/
+noncomputable def upliftOrientationParity (k : ℕ) : UpliftOrientationParity k := signHom k
 
 /-- Relabeling a finite delta-set only conjugates the symmetric-group action, so the orientation
 parity is invariant. -/
 theorem upliftOrientationParity_relabel (k : ℕ) (τ σ : Equiv.Perm (Fin k)) :
     upliftOrientationParity k (τ * σ * τ⁻¹) = upliftOrientationParity k σ := by
-  have hτ : Equiv.Perm.sign τ * Equiv.Perm.sign τ = 1 := sign_sq_eq_one τ
+  change signHom k (τ * σ * τ⁻¹) = signHom k σ
+  rw [map_mul, map_mul, map_inv]
   calc
-    upliftOrientationParity k (τ * σ * τ⁻¹)
-        = Equiv.Perm.sign τ * Equiv.Perm.sign σ * Equiv.Perm.sign τ := by
-          simp [upliftOrientationParity, signHom, mul_assoc]
-    _ = Equiv.Perm.sign σ * (Equiv.Perm.sign τ * Equiv.Perm.sign τ) := by
-      ac_rfl
-    _ = Equiv.Perm.sign σ := by
-      rw [hτ, mul_one]
+    signHom k τ * signHom k σ * (signHom k τ)⁻¹ =
+        signHom k σ * (signHom k τ * (signHom k τ)⁻¹) := by ac_rfl
+    _ = signHom k σ := by simp
 
 /-- On a two-sheet uplift fiber, the nontrivial parity is the swap parity. -/
 theorem upliftOrientationParity_two_swap :

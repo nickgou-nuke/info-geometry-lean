@@ -16,8 +16,8 @@ namespace ArnoldSouriauAudit
 open Module
 open ArnoldSouriau
 
-variable {R : Type*} [CommRing R]
-variable {L : Type*} [LieRing L] [LieAlgebra R L]
+variable {R : Type*} [Ring R]
+variable {L : Type*} [LieRing L] [Module R L]
 variable {M : Type*}
 
 -- 1. Signature and Type-Level Verification

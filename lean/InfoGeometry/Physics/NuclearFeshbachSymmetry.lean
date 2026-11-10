@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Physics.NuclearFeshbachReduction
 import Mathlib.Algebra.Star.Module
+import Mathlib.Tactic.NoncommRing
 
 /-!
 # Conserved symmetries and adjoints under exact elimination
@@ -70,6 +71,19 @@ end Ring
 
 section Operators
 
+theorem commute_waveOperator {K V : Type*} [Ring K] [AddCommGroup V] [Module K V]
+    (P H R S : Module.End K V)
+    (hSP : Commute S P) (hSH : Commute S H) (hSR : Commute S R) :
+    Commute S (waveOperator P H R) :=
+  hSP.add_right ((hSR.mul_right hSH).mul_right hSP)
+
+theorem commute_effectiveHamiltonian {K V : Type*} [Ring K] [AddCommGroup V] [Module K V]
+    (P H R S : Module.End K V)
+    (hSP : Commute S P) (hSH : Commute S H) (hSR : Commute S R) :
+    Commute S (effectiveHamiltonian P H R) :=
+  ((hSP.mul_right hSH).mul_right hSP).add_right
+    ((((hSP.mul_right hSH).mul_right hSR).mul_right hSH).mul_right hSP)
+
 variable {K V : Type*} [Field K] [AddCommGroup V] [Module K V]
 
 theorem commute_denominator (P H S : Module.End K V) (E : K)
@@ -88,24 +102,12 @@ theorem commute_resolvent (P H R S : Module.End K V) (E : K)
     ((Commute.one_right S).sub_right hSP) (commute_denominator P H S E hSP hSH)
     hQR hRQ hRD hDR
 
-theorem commute_waveOperator (P H R S : Module.End K V)
-    (hSP : Commute S P) (hSH : Commute S H) (hSR : Commute S R) :
-    Commute S (waveOperator P H R) :=
-  hSP.add_right ((hSR.mul_right hSH).mul_right hSP)
-
-theorem commute_effectiveHamiltonian (P H R S : Module.End K V)
-    (hSP : Commute S P) (hSH : Commute S H) (hSR : Commute S R) :
-    Commute S (effectiveHamiltonian P H R) :=
-  ((hSP.mul_right hSH).mul_right hSP).add_right
-    ((((hSP.mul_right hSH).mul_right hSR).mul_right hSH).mul_right hSP)
-
 variable [StarRing K] [StarRing (Module.End K V)] [StarModule K (Module.End K V)]
 
 theorem denominator_star (P H : Module.End K V) (E : K)
     (hP : star P = P) (hH : star H = H) (hE : star E = E) :
     star (denominator P H E) = denominator P H E := by
-  simp only [denominator, star_sub, star_smul, star_one, star_mul, hP, hH, hE]
-  noncomm_ring
+  simp only [denominator, star_sub, star_smul, star_one, star_mul, hP, hH, hE, mul_assoc]
 
 /-- Self-adjoint P, H, and spectral parameter give a self-adjoint effective
 operator when the supported complementary inverse exists. -/
@@ -115,8 +117,7 @@ theorem effectiveHamiltonian_star (P H R : Module.End K V) (E : K)
     star (effectiveHamiltonian P H R) = effectiveHamiltonian P H R := by
   have hR : star R = R := cornerInverse_star (1 - P) (denominator P H E) R
     (by simp only [star_sub, star_one, hP]) (denominator_star P H E hP hH hE) hQR hDR
-  simp only [effectiveHamiltonian, star_add, star_mul, hP, hH, hR]
-  noncomm_ring
+  simp only [effectiveHamiltonian, star_add, star_mul, hP, hH, hR, mul_assoc]
 
 end Operators
 

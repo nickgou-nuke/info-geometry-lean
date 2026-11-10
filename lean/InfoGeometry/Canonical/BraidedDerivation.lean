@@ -10,9 +10,9 @@ namespace InfoGeometry.Canonical.BraidedDerivation
 
 open InfoGeometry.Canonical.SylvesterGrading
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 variable {Γ : Type*} [AddCommMonoid Γ]
-variable {A : Type*} [Ring A] [Algebra R A]
+variable {A : Type*} [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- A homogeneous element of degree `deg` in the graded algebra A. -/
 structure HomogeneousElement (Γ : Type*) (A : Type*) where
@@ -25,8 +25,8 @@ def mulHomogeneous (a b : HomogeneousElement Γ A) : HomogeneousElement Γ A :=
 
 /-- A Braided Derivation of degree `deg` on an R-algebra A equipped with bicharacter B:
     D(a * b) = D(a) * b + β(|a|, |D|) • (a * D(b)). -/
-structure BraidedDerivation (Γ : Type*) [AddCommMonoid Γ] (R : Type*) [CommRing R]
-    (A : Type*) [Ring A] [Algebra R A] (B : GradingBicharacter Γ R) where
+structure BraidedDerivation (Γ : Type*) [AddCommMonoid Γ] (R : Type*) [Ring R]
+    (A : Type*) [Ring A] [Module R A] (B : GradingBicharacter Γ R) where
   toFun : A → A
   deg : Γ
   map_add : ∀ x y : A, toFun (x + y) = toFun x + toFun y
@@ -96,7 +96,7 @@ theorem inner_braided_derivation_leibniz (B : GradingBicharacter Γ R)
     _ = x.val * a.val * b.val - (B.β a.deg x.deg : R) • ((B.β b.deg x.deg : R) • (a.val * (b.val * x.val))) := by
       rw [smul_smul]
     _ = x.val * a.val * b.val - (B.β a.deg x.deg : R) • (a.val * ((B.β b.deg x.deg : R) • (b.val * x.val))) := by
-      rw [Algebra.mul_smul_comm]
+      rw [mul_smul_comm]
     _ = (x.val * a.val - (B.β a.deg x.deg : R) • (a.val * x.val)) * b.val +
         (B.β a.deg x.deg : R) • (a.val * (x.val * b.val - (B.β b.deg x.deg : R) • (b.val * x.val))) := by
       rw [sub_mul, smul_mul_assoc, mul_sub, smul_sub]

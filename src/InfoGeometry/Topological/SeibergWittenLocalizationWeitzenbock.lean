@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.LinearCombination
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 
 /-!
 # Seiberg–Witten BRST Localization, Bochner–Weitzenböck Square Completion, & Positive Scalar Curvature Vanishing
@@ -51,7 +52,7 @@ namespace InfoGeometry.Topological.SeibergWittenWeitzenbock
 
 section AlgebraicLocalization
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- BRST variation $Q\chi = F^+ - \sigma(\Phi)$ of the topologically twisted self-dual
 2-form fermion $\chi_{\mu\nu}$. -/
@@ -73,11 +74,34 @@ def bochnerWeitzenbockAction (nablaPhiSq F_plus sigma_Phi R_scal normPhiSq : R) 
   4 * nablaPhiSq + 2 * (F_plus - sigma_Phi) ^ 2 +
     R_scal * normPhiSq + 2 * (normPhiSq * normPhiSq)
 
+/-- **Non-Commutative Bochner–Weitzenböck Square Completion
+(`weitzenbock_bochner_action_completion_noncomm`):**
+Over any (possibly non-commutative) ring `[Ring R]`, whenever
+$\sigma(\Phi)^2 = (\|\Phi\|^2)^2$, the Bochner–Weitzenböck functional expands with
+the anticommutator coupling $- 2 (F^+ \sigma(\Phi) + \sigma(\Phi) F^+)$. -/
+theorem weitzenbock_bochner_action_completion_noncomm
+    (nablaPhiSq F_plus sigma_Phi R_scal normPhiSq : R)
+    (h_clifford : sigma_Phi ^ 2 = normPhiSq * normPhiSq) :
+    bochnerWeitzenbockAction nablaPhiSq F_plus sigma_Phi R_scal normPhiSq =
+      4 * nablaPhiSq + 2 * F_plus ^ 2 - 2 * (F_plus * sigma_Phi + sigma_Phi * F_plus) +
+        R_scal * normPhiSq + 4 * (normPhiSq * normPhiSq) := by
+  unfold bochnerWeitzenbockAction
+  calc 4 * nablaPhiSq + 2 * (F_plus - sigma_Phi) ^ 2 +
+        R_scal * normPhiSq + 2 * (normPhiSq * normPhiSq)
+    _ = 4 * nablaPhiSq + 2 * F_plus ^ 2 - 2 * (F_plus * sigma_Phi + sigma_Phi * F_plus) +
+          2 * sigma_Phi ^ 2 + R_scal * normPhiSq + 2 * (normPhiSq * normPhiSq) := by noncomm_ring
+    _ = 4 * nablaPhiSq + 2 * F_plus ^ 2 - 2 * (F_plus * sigma_Phi + sigma_Phi * F_plus) +
+          2 * (normPhiSq * normPhiSq) + R_scal * normPhiSq + 2 * (normPhiSq * normPhiSq) := by
+        rw [h_clifford]
+    _ = 4 * nablaPhiSq + 2 * F_plus ^ 2 - 2 * (F_plus * sigma_Phi + sigma_Phi * F_plus) +
+          R_scal * normPhiSq + 4 * (normPhiSq * normPhiSq) := by noncomm_ring
+
 /-- **Bochner–Weitzenböck Square Completion (`weitzenbock_bochner_action_completion`):**
 Whenever the quadratic spinor form satisfies the Clifford norm identity
 $\sigma(\Phi)^2 = (\|\Phi\|^2)^2$, the full Bochner–Weitzenböck functional expands as
 $$4\|\nabla_A\Phi\|^2 + 2(F^+)^2 - 4 F^+\sigma(\Phi) + R_{\mathrm{scal}}\|\Phi\|^2 + 4\|\Phi\|^4.$$ -/
 theorem weitzenbock_bochner_action_completion
+    {R : Type*} [CommRing R]
     (nablaPhiSq F_plus sigma_Phi R_scal normPhiSq : R)
     (h_clifford : sigma_Phi ^ 2 = normPhiSq * normPhiSq) :
     bochnerWeitzenbockAction nablaPhiSq F_plus sigma_Phi R_scal normPhiSq =
@@ -98,11 +122,11 @@ end AlgebraicLocalization
 
 section OrderedWeitzenbockVanishing
 
-variable {R : Type*} [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
+variable {R : Type*} [Ring R] [LinearOrder R] [IsStrictOrderedRing R]
 
 /-- **Positive Scalar Curvature Vanishing of the Full Seiberg–Witten Moduli Space
 (`positive_scalar_curvature_vanishes_sw_moduli`):**
-Over any strictly ordered commutative ring `R`, if $0 \le \|\nabla_A\Phi\|^2$,
+Over any strictly ordered ring `R`, if $0 \le \|\nabla_A\Phi\|^2$,
 $0 \le \|\Phi\|^2$, $0 < R_{\mathrm{scal}}$, and
 $\mathcal{S}_{\mathrm{BW}}(\|\nabla_A\Phi\|^2, F^+, \sigma(\Phi), R_{\mathrm{scal}}, \|\Phi\|^2) \le 0$,
 then simultaneously:
@@ -117,25 +141,38 @@ theorem positive_scalar_curvature_vanishes_sw_moduli
     (h_action : bochnerWeitzenbockAction nablaPhiSq F_plus sigma_Phi R_scal normPhiSq ≤ 0) :
     normPhiSq = 0 ∧ nablaPhiSq = 0 ∧ F_plus = sigma_Phi := by
   unfold bochnerWeitzenbockAction at h_action
-  have h1 : 0 ≤ 4 * nablaPhiSq := by linarith [h_nabla]
+  have h1 : 0 ≤ 4 * nablaPhiSq := mul_nonneg (le_of_lt zero_lt_four) h_nabla
   have h_diff_sq : 0 ≤ (F_plus - sigma_Phi) ^ 2 := sq_nonneg (F_plus - sigma_Phi)
-  have h2 : 0 ≤ 2 * (F_plus - sigma_Phi) ^ 2 := by linarith [h_diff_sq]
+  have h2 : 0 ≤ 2 * (F_plus - sigma_Phi) ^ 2 := mul_nonneg (le_of_lt zero_lt_two) h_diff_sq
   have h_phi_sq : 0 ≤ normPhiSq * normPhiSq := mul_self_nonneg normPhiSq
-  have h3 : 0 ≤ 2 * (normPhiSq * normPhiSq) := by linarith [h_phi_sq]
+  have h3 : 0 ≤ 2 * (normPhiSq * normPhiSq) := mul_nonneg (le_of_lt zero_lt_two) h_phi_sq
   have h4 : 0 ≤ R_scal * normPhiSq := mul_nonneg (le_of_lt h_R) h_phi
-  have h_Rphi_le : R_scal * normPhiSq ≤ 0 := by linarith
+  have h12 : 0 ≤ 4 * nablaPhiSq + 2 * (F_plus - sigma_Phi) ^ 2 := add_nonneg h1 h2
+  have h124_le : 4 * nablaPhiSq + 2 * (F_plus - sigma_Phi) ^ 2 + R_scal * normPhiSq ≤ 0 :=
+    le_trans (le_add_of_nonneg_right h3) h_action
+  have h_Rphi_le : R_scal * normPhiSq ≤ 0 :=
+    le_trans (le_add_of_nonneg_left h12) h124_le
   have h_Rphi_zero : R_scal * normPhiSq = 0 := le_antisymm h_Rphi_le h4
   have h_phi_zero : normPhiSq = 0 := by
     rcases mul_eq_zero.mp h_Rphi_zero with hR0 | hPhi0
-    · linarith
+    · exact False.elim ((ne_of_gt h_R) hR0)
     · exact hPhi0
+  have h12_le : 4 * nablaPhiSq + 2 * (F_plus - sigma_Phi) ^ 2 ≤ 0 :=
+    le_trans (le_add_of_nonneg_right h4) h124_le
+  have h1_le : 4 * nablaPhiSq ≤ 0 :=
+    le_trans (le_add_of_nonneg_right h2) h12_le
+  have h1_zero : 4 * nablaPhiSq = 0 := le_antisymm h1_le h1
   have h_nabla_zero : nablaPhiSq = 0 := by
-    rw [h_phi_zero] at h_action
-    linarith
-  have h_diff_sq_le : (F_plus - sigma_Phi) ^ 2 ≤ 0 := by
-    rw [h_phi_zero, h_nabla_zero] at h_action
-    linarith
-  have h_diff_sq_zero : (F_plus - sigma_Phi) ^ 2 = 0 := le_antisymm h_diff_sq_le h_diff_sq
+    rcases mul_eq_zero.mp h1_zero with h40 | hN0
+    · exact False.elim ((ne_of_gt zero_lt_four) h40)
+    · exact hN0
+  have h2_le : 2 * (F_plus - sigma_Phi) ^ 2 ≤ 0 :=
+    le_trans (le_add_of_nonneg_left h1) h12_le
+  have h2_zero : 2 * (F_plus - sigma_Phi) ^ 2 = 0 := le_antisymm h2_le h2
+  have h_diff_sq_zero : (F_plus - sigma_Phi) ^ 2 = 0 := by
+    rcases mul_eq_zero.mp h2_zero with h20 | hD0
+    · exact False.elim ((ne_of_gt zero_lt_two) h20)
+    · exact hD0
   have h_F_eq : F_plus = sigma_Phi := sub_eq_zero.mp (sq_eq_zero_iff.mp h_diff_sq_zero)
   exact ⟨h_phi_zero, h_nabla_zero, h_F_eq⟩
 
@@ -154,12 +191,19 @@ theorem negative_scalar_curvature_bps_condensate_law
   unfold bochnerWeitzenbockAction at h_zero
   rw [h_bps] at h_zero
   have h_prod : (R_scal + 2 * normPhiSq) * normPhiSq = 0 := by
-    linear_combination h_zero
+    calc
+      (R_scal + 2 * normPhiSq) * normPhiSq =
+          4 * 0 + 2 * (sigma_Phi - sigma_Phi) ^ 2 +
+            R_scal * normPhiSq + 2 * (normPhiSq * normPhiSq) := by noncomm_ring
+      _ = 0 := h_zero
   have h_sum_zero : R_scal + 2 * normPhiSq = 0 := by
     rcases mul_eq_zero.mp h_prod with hSum | hPhi0
     · exact hSum
-    · linarith [h_phi_pos]
-  refine ⟨by linarith [h_sum_zero], by linarith [h_sum_zero, h_phi_pos]⟩
+    · exact False.elim ((ne_of_gt h_phi_pos) hPhi0)
+  have h_cond : 2 * normPhiSq = -R_scal := eq_neg_of_add_eq_zero_right h_sum_zero
+  have h_two_phi_pos : 0 < 2 * normPhiSq := mul_pos zero_lt_two h_phi_pos
+  have h_neg_R_pos : 0 < -R_scal := h_cond ▸ h_two_phi_pos
+  exact ⟨h_cond, neg_pos.mp h_neg_R_pos⟩
 
 end OrderedWeitzenbockVanishing
 

@@ -15,7 +15,7 @@ namespace InfoGeometry.GrandUnification
 
 open InfoGeometry.Canonical.AmplituhedronMetriplecticBridge
 
-variable {R : Type*} [CommRing R] [LinearOrder R]
+variable {R : Type*} [Ring R]
 
 /-- 
 The coordinate shear adds `z` times the first coordinate to the second
@@ -28,7 +28,8 @@ def applyCoordinateShear (Z : PlabicTwistorMatrix R) (z : R) : PlabicTwistorMatr
 /-- 
 The sheared rows still define a decomposable two-vector.
 -/
-theorem coordinate_shear_preserves_plucker_relation (Z : PlabicTwistorMatrix R) (z : R) :
+theorem coordinate_shear_preserves_plucker_relation {R : Type*} [CommRing R]
+    (Z : PlabicTwistorMatrix R) (z : R) :
     IsKleinNull (extractTwistorPluckerCoordinates (applyCoordinateShear Z z)) := by
   dsimp [IsKleinNull, kleinQuadricEval, extractTwistorPluckerCoordinates, applyCoordinateShear]
   ring

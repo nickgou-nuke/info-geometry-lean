@@ -23,6 +23,16 @@ namespace InfoGeometry.Algebra.ZornColorBilinears
 open ZornVectorMatrix
 open InfoGeometry.OperatorAlgebra
 
+section Ring
+variable {R : Type*} [Ring R]
+
+theorem left_E11_commutes_offDiagonal_product_mul (u v s t : ZornVec3 R) (X : ZornVectorMatrix R) :
+    mul E11 (mul (offDiagonal u v) (mul (offDiagonal s t) X)) =
+      mul (offDiagonal u v) (mul (offDiagonal s t) (mul E11 X)) := by
+  ext i <;> simp [mul, E11, offDiagonal, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+
+end Ring
+
 variable {R : Type*} [CommRing R]
 
 /-- The actual ordered bilinear in the U, -V convention. -/

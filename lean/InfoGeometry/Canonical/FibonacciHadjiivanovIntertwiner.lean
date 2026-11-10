@@ -69,9 +69,9 @@ theorem scalar_jordan_power_of_eq
   rw [hT]
   exact scalar_jordan_power lambda N h_nil n
 
-def fullBraidTwist (R B : Matrix (Fin 2) (Fin 2) ℂ) :
-    Matrix (Fin 2) (Fin 2) ℂ :=
-  (R * B * R) * (R * B * R)
+def fullBraidTwist {R : Type*} [Ring R] (A B : Matrix (Fin 2) (Fin 2) R) :
+    Matrix (Fin 2) (Fin 2) R :=
+  (A * B * A) * (A * B * A)
 
 def hadjiivanovMonodromy (lambda : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
   upperJordan lambda lambda

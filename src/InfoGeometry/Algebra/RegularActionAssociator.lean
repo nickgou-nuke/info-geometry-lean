@@ -15,7 +15,7 @@ imported from their native modules.
 namespace InfoGeometry.Algebra
 
 variable {R A : Type*}
-variable [CommRing R]
+variable [Ring R]
 variable [NonUnitalNonAssocRing A]
 variable [Module R A]
 variable [IsScalarTower R A A]
@@ -76,29 +76,31 @@ theorem leftRightCommutator_self
 
 namespace ZornVectorMatrix
 
+variable {R₀ : Type*} [CommRing R₀]
+
 /-- Canonical Zorn specialization of the regular-action/associator identity. -/
 theorem zorn_leftRightCommutator_apply
-    (x y z : ZornVectorMatrix R) :
-    leftRightCommutator (R := R) x y z = _root_.associator x y z := by
+    (x y z : ZornVectorMatrix R₀) :
+    leftRightCommutator (R := R₀) x y z = _root_.associator x y z := by
   exact leftRightCommutator_apply_of_right_alternative
-    (R := R) zorn_right_alternative x y z
+    (R := R₀) zorn_right_alternative x y z
 
 /-- Canonical Zorn regular-action commutator is alternating in its parameters. -/
 theorem zorn_leftRightCommutator_swap
-    (x y : ZornVectorMatrix R) :
-    leftRightCommutator (R := R) y x = -leftRightCommutator (R := R) x y := by
+    (x y : ZornVectorMatrix R₀) :
+    leftRightCommutator (R := R₀) y x = -leftRightCommutator (R := R₀) x y := by
   exact leftRightCommutator_swap
-    (R := R)
+    (R := R₀)
     zorn_left_alternative
     zorn_right_alternative
     x y
 
 /-- Canonical Zorn diagonal regular-action commutator vanishes. -/
 theorem zorn_leftRightCommutator_self
-    (x : ZornVectorMatrix R) :
-    leftRightCommutator (R := R) x x = 0 := by
+    (x : ZornVectorMatrix R₀) :
+    leftRightCommutator (R := R₀) x x = 0 := by
   exact leftRightCommutator_self
-    (R := R)
+    (R := R₀)
     zorn_left_alternative
     zorn_right_alternative
     x

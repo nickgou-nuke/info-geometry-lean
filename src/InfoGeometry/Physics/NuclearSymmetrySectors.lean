@@ -29,7 +29,7 @@ open scoped BigOperators
 
 section Projectors
 
-variable {K ι V : Type*} [Field K] [DecidableEq ι]
+variable {K ι V : Type*} [Ring K] [DecidableEq ι]
 variable [AddCommGroup V] [Module K V]
 
 /-- Projection onto one sector, retaining its whole configuration module. -/
@@ -58,6 +58,13 @@ theorem sum_sectorProjector [Fintype ι] :
   intro v
   simp only [LinearMap.sum_apply, sectorProjector_apply, Module.End.one_apply]
   exact LinearMap.sum_single_apply (fun _ : ι => V) v
+
+end Projectors
+
+section ProjectorsCommRing
+
+variable {K ι V : Type*} [CommRing K] [DecidableEq ι]
+variable [AddCommGroup V] [Module K V]
 
 /-- A supplied scalar quantum-number readout on the chosen sector product. -/
 def sectorSymmetry (weight : ι → K) : Module.End K (ι → V) :=
@@ -94,7 +101,7 @@ theorem sectorProjector_mem_eigenspace (weight : ι → K) (s : ι) (v : ι → 
   exact congrArg (fun T : Module.End K (ι → V) => T v)
     (symmetry_mul_sectorProjector weight s)
 
-end Projectors
+end ProjectorsCommRing
 
 section Selection
 

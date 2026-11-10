@@ -7,8 +7,8 @@ open scoped TensorProduct
 
 namespace InfoGeometry.Canonical.DoubledDiracKrein
 
-variable {R : Type*} [CommRing R]
-variable {V : Type*} [AddCommGroup V] [Module R V]
+variable {R : Type*} [CommSemiring R]
+variable {V : Type*} [AddCommMonoid V] [Module R V]
 
 /-!
 # Stage 1: Microscopic Algebra (Clifford Doubled Spin Network)

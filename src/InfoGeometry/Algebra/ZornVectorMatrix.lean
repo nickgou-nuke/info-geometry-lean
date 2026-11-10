@@ -14,6 +14,8 @@ import Mathlib.Data.Fin.Basic
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
+import Mathlib.Tactic.Abel
 
 /-!
 # Zorn vector matrices: split-octonion invariant interface
@@ -37,7 +39,7 @@ abbrev ZornVec3 (R : Type*) := Fin 3 → R
 
 namespace ZornVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def dot (x y : ZornVec3 R) : R :=
   ∑ i : Fin 3, x i * y i
@@ -163,7 +165,7 @@ theorem cross_basis_decomposition (x y : ZornVec3 R) :
   fin_cases i <;> simp [cross, basis]
 
 /-- Coordinate dot product is symmetric over a commutative ring. -/
-theorem dot_comm (x y : ZornVec3 R) :
+theorem dot_comm {R : Type*} [CommRing R] (x y : ZornVec3 R) :
     dot x y = dot y x := by
   simp [dot, Fin.sum_univ_three, mul_comm]
 
@@ -171,22 +173,22 @@ theorem dot_comm (x y : ZornVec3 R) :
 theorem dot_add_left (x y z : ZornVec3 R) :
     dot (x + y) z = dot x z + dot y z := by
   simp [dot, Fin.sum_univ_three]
-  ring
+  noncomm_ring
 
 /-- Coordinate dot product is additive in the right argument. -/
 theorem dot_add_right (x y z : ZornVec3 R) :
     dot x (y + z) = dot x y + dot x z := by
   simp [dot, Fin.sum_univ_three]
-  ring
+  noncomm_ring
 
 /-- Coordinate dot product is homogeneous in the left argument. -/
 theorem dot_smul_left (r : R) (x y : ZornVec3 R) :
     dot (r • x) y = r * dot x y := by
   simp [dot, Fin.sum_univ_three]
-  ring
+  noncomm_ring
 
 /-- Coordinate dot product is homogeneous in the right argument. -/
-theorem dot_smul_right (r : R) (x y : ZornVec3 R) :
+theorem dot_smul_right {R : Type*} [CommRing R] (r : R) (x y : ZornVec3 R) :
     dot x (r • y) = r * dot x y := by
   simp [dot, Fin.sum_univ_three]
   ring
@@ -215,16 +217,16 @@ theorem dot_neg_right (x y : ZornVec3 R) :
 theorem dot_sub_left (x y z : ZornVec3 R) :
     dot (x - y) z = dot x z - dot y z := by
   simp [dot, Fin.sum_univ_three]
-  ring
+  noncomm_ring
 
 /-- Coordinate dot product subtracts in the right argument. -/
 theorem dot_sub_right (x y z : ZornVec3 R) :
     dot x (y - z) = dot x y - dot x z := by
   simp [dot, Fin.sum_univ_three]
-  ring
+  noncomm_ring
 
 /-- Coordinate cross product is antisymmetric. -/
-theorem cross_anti (x y : ZornVec3 R) :
+theorem cross_anti {R : Type*} [CommRing R] (x y : ZornVec3 R) :
     cross y x = fun i => -cross x y i := by
   ext i
   fin_cases i <;> simp [cross] <;> ring
@@ -233,22 +235,22 @@ theorem cross_anti (x y : ZornVec3 R) :
 theorem cross_add_left (x y z : ZornVec3 R) :
     cross (x + y) z = fun i => cross x z i + cross y z i := by
   ext i
-  fin_cases i <;> simp [cross] <;> ring
+  fin_cases i <;> simp [cross] <;> noncomm_ring
 
 /-- Coordinate cross product is additive in the right argument. -/
 theorem cross_add_right (x y z : ZornVec3 R) :
     cross x (y + z) = fun i => cross x y i + cross x z i := by
   ext i
-  fin_cases i <;> simp [cross] <;> ring
+  fin_cases i <;> simp [cross] <;> noncomm_ring
 
 /-- Coordinate cross product is homogeneous in the left argument. -/
 theorem cross_smul_left (r : R) (x y : ZornVec3 R) :
     cross (r • x) y = fun i => r * cross x y i := by
   ext i
-  fin_cases i <;> simp [cross] <;> ring
+  fin_cases i <;> simp [cross] <;> noncomm_ring
 
 /-- Coordinate cross product is homogeneous in the right argument. -/
-theorem cross_smul_right (r : R) (x y : ZornVec3 R) :
+theorem cross_smul_right {R : Type*} [CommRing R] (r : R) (x y : ZornVec3 R) :
     cross x (r • y) = fun i => r * cross x y i := by
   ext i
   fin_cases i <;> simp [cross] <;> ring
@@ -269,53 +271,53 @@ theorem cross_smul_right (r : R) (x y : ZornVec3 R) :
 theorem cross_neg_left (x y : ZornVec3 R) :
     cross (fun i => -x i) y = fun i => -cross x y i := by
   ext i
-  fin_cases i <;> simp [cross] <;> ring
+  fin_cases i <;> simp [cross] <;> noncomm_ring
 
 /-- Coordinate cross product negates in the right argument. -/
 theorem cross_neg_right (x y : ZornVec3 R) :
     cross x (fun i => -y i) = fun i => -cross x y i := by
   ext i
-  fin_cases i <;> simp [cross] <;> ring
+  fin_cases i <;> simp [cross] <;> noncomm_ring
 
 /-- Coordinate cross product subtracts in the left argument. -/
 theorem cross_sub_left (x y z : ZornVec3 R) :
     cross (x - y) z = fun i => cross x z i - cross y z i := by
   ext i
-  fin_cases i <;> simp [cross] <;> ring
+  fin_cases i <;> simp [cross] <;> noncomm_ring
 
 /-- Coordinate cross product subtracts in the right argument. -/
 theorem cross_sub_right (x y z : ZornVec3 R) :
     cross x (y - z) = fun i => cross x y i - cross x z i := by
   ext i
-  fin_cases i <;> simp [cross] <;> ring
+  fin_cases i <;> simp [cross] <;> noncomm_ring
 
 /-- Coordinate cross product of a vector with itself vanishes. -/
-@[simp] theorem cross_self (x : ZornVec3 R) :
+@[simp] theorem cross_self {R : Type*} [CommRing R] (x : ZornVec3 R) :
     cross x x = fun _ => 0 := by
   ext i
   fin_cases i <;> simp [cross] <;> ring
 
 /-- A vector is orthogonal to its coordinate cross product with any other vector. -/
-theorem dot_cross_self_left (x y : ZornVec3 R) :
+theorem dot_cross_self_left {R : Type*} [CommRing R] (x y : ZornVec3 R) :
     dot x (cross x y) = 0 := by
   simp [dot, cross, Fin.sum_univ_three]
   ring
 
 /-- The second vector is orthogonal to the coordinate cross product. -/
-theorem dot_cross_self_right (x y : ZornVec3 R) :
+theorem dot_cross_self_right {R : Type*} [CommRing R] (x y : ZornVec3 R) :
     dot y (cross x y) = 0 := by
   simp [dot, cross, Fin.sum_univ_three]
   ring
 
 /-- Lagrange identity for the coordinate dot and cross products. -/
-theorem dot_cross_cross (x y z w : ZornVec3 R) :
+theorem dot_cross_cross {R : Type*} [CommRing R] (x y z w : ZornVec3 R) :
     dot (cross x y) (cross z w) =
       dot x z * dot y w - dot x w * dot y z := by
   simp [dot, cross, Fin.sum_univ_three]
   ring
 
 /-- Square norm form of Lagrange's identity for the coordinate cross product. -/
-theorem dot_cross_self (x y : ZornVec3 R) :
+theorem dot_cross_self {R : Type*} [CommRing R] (x y : ZornVec3 R) :
     dot (cross x y) (cross x y) = dot x x * dot y y - dot x y * dot x y := by
   rw [dot_cross_cross]
   rw [dot_comm y x]
@@ -332,7 +334,7 @@ structure ZornVectorMatrix (R : Type*) where
 
 namespace ZornVectorMatrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Canonical coordinate equivalence for the Zorn vector-matrix carrier. -/
 def coordEquiv : ZornVectorMatrix R ≃
@@ -586,19 +588,21 @@ instance : Module R (ZornVectorMatrix R) where
     intro r s X
     apply ZornVectorMatrix.ext
     · change (r * s) * X.a = r * (s * X.a)
-      ring
+      noncomm_ring
     · funext i
       change (r * s) * X.v i = r * (s * X.v i)
-      ring
+      noncomm_ring
     · funext i
       change (r * s) * X.w i = r * (s * X.w i)
-      ring
+      noncomm_ring
     · change (r * s) * X.b = r * (s * X.b)
-      ring
+      noncomm_ring
   smul_add := smul_add
   smul_zero := smul_zero
   add_smul := add_smul
   zero_smul := zero_smul
+
+instance : Inhabited (ZornVectorMatrix R) := ⟨zero⟩
 
 @[simp] theorem add_a' (X Y : ZornVectorMatrix R) : (X + Y).a = X.a + Y.a := rfl
 @[simp] theorem add_v' (X Y : ZornVectorMatrix R) (i : Fin 3) :
@@ -612,34 +616,6 @@ instance : Module R (ZornVectorMatrix R) where
 @[simp] theorem smul_w' (r : R) (X : ZornVectorMatrix R) (i : Fin 3) :
     (r • X).w i = r * X.w i := rfl
 @[simp] theorem smul_b' (r : R) (X : ZornVectorMatrix R) : (r • X).b = r * X.b := rfl
-
-theorem mul_smul (r : R) (X Y : ZornVectorMatrix R) :
-    mul X (smul r Y) = smul r (mul X Y) := by
-  ext i
-  · simp [mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
-    ring
-  · fin_cases i <;>
-      simp [mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three] <;>
-      ring
-  · fin_cases i <;>
-      simp [mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three] <;>
-      ring
-  · simp [mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
-    ring
-
-theorem smul_mul (r : R) (X Y : ZornVectorMatrix R) :
-    mul (smul r X) Y = smul r (mul X Y) := by
-  ext i
-  · simp [mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
-    ring
-  · fin_cases i <;>
-      simp [mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three] <;>
-      ring
-  · fin_cases i <;>
-      simp [mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three] <;>
-      ring
-  · simp [mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
-    ring
 
 @[simp] theorem mul_zero (X : ZornVectorMatrix R) :
     mul X zero = zero := by
@@ -660,14 +636,6 @@ theorem one_mul (X : ZornVectorMatrix R) :
 theorem scalar_mul (r : R) (X : ZornVectorMatrix R) :
     mul (scalar r) X = smul r X := by
   ext i <;> simp [mul, scalar, smul, ZornVec3.dot, ZornVec3.cross]
-
-theorem mul_scalar (X : ZornVectorMatrix R) (r : R) :
-    mul X (scalar r) = smul r X := by
-  ext i <;> simp [mul, scalar, smul, ZornVec3.dot, ZornVec3.cross, mul_comm]
-
-theorem scalar_mul_comm (r : R) (X : ZornVectorMatrix R) :
-    mul (scalar r) X = mul X (scalar r) := by
-  rw [scalar_mul, mul_scalar]
 
 theorem diagonal_mul (a b : R) (X : ZornVectorMatrix R) :
     mul (diagonal a b) X =
@@ -697,12 +665,6 @@ theorem trace_diagonal_mul_diagonal (a b c d : R) :
       a * c + b * d := by
   simp [diagonal_mul_diagonal, trace_diagonal]
 
-theorem norm_diagonal_mul_diagonal (a b c d : R) :
-    norm (mul (diagonal a b : ZornVectorMatrix R) (diagonal c d)) =
-      norm (diagonal a b : ZornVectorMatrix R) * norm (diagonal c d) := by
-  simp [diagonal_mul_diagonal, norm_diagonal]
-  ring
-
 /--
 Exact obstruction to the false claim that trace is multiplicative on the pure
 diagonal section.
@@ -713,7 +675,7 @@ theorem trace_diagonal_mul_diagonal_sub_mul_trace (a b c d : R) :
         trace (diagonal c d : ZornVectorMatrix R) =
       -(a * d + b * c) := by
   simp [trace_diagonal]
-  ring
+  noncomm_ring
 
 /--
 On the pure diagonal section, trace multiplicativity is equivalent to the
@@ -731,7 +693,7 @@ theorem trace_diagonal_mul_diagonal_eq_mul_trace_iff (a b c d : R) :
           trace (diagonal a b : ZornVectorMatrix R) *
             trace (diagonal c d : ZornVectorMatrix R) = 0 := by
       rw [htrace]
-      ring
+      exact _root_.sub_self _
     rw [trace_diagonal_mul_diagonal_sub_mul_trace] at hdiff
     exact neg_eq_zero.mp hdiff
   · intro hcross
@@ -757,10 +719,10 @@ theorem commutator_diagonal_offDiagonal (a b : R) (v w : ZornVec3 R) :
   · simp [commutator, sub, add, neg, mul, diagonal, offDiagonal, ZornVec3.dot]
   · fin_cases i <;>
       simp [commutator, sub, add, neg, mul, diagonal, offDiagonal, ZornVec3.cross] <;>
-      ring
+      noncomm_ring
   · fin_cases i <;>
       simp [commutator, sub, add, neg, mul, diagonal, offDiagonal, ZornVec3.cross] <;>
-      ring
+      noncomm_ring
   · simp [commutator, sub, add, neg, mul, diagonal, offDiagonal, ZornVec3.dot]
 
 /-- Reversed exact commutator of a pure off-diagonal and a pure diagonal Zorn matrix. -/
@@ -773,10 +735,10 @@ theorem commutator_offDiagonal_diagonal (v w : ZornVec3 R) (a b : R) :
   · simp [commutator, sub, add, neg, mul, diagonal, offDiagonal, ZornVec3.dot]
   · fin_cases i <;>
       simp [commutator, sub, add, neg, mul, diagonal, offDiagonal, ZornVec3.cross] <;>
-      ring
+      noncomm_ring
   · fin_cases i <;>
       simp [commutator, sub, add, neg, mul, diagonal, offDiagonal, ZornVec3.cross] <;>
-      ring
+      noncomm_ring
   · simp [commutator, sub, add, neg, mul, diagonal, offDiagonal, ZornVec3.dot]
 
 theorem offDiagonal_mul_offDiagonal (v w x y : ZornVec3 R) :
@@ -785,6 +747,60 @@ theorem offDiagonal_mul_offDiagonal (v w x y : ZornVec3 R) :
         (diagonal (ZornVec3.dot v y) (ZornVec3.dot w x))
         (offDiagonal (fun i => -ZornVec3.cross w y i) (ZornVec3.cross v x)) := by
   ext i <;> simp [mul, add, diagonal, offDiagonal]
+
+/-- Over any non-commutative ring `[Ring R]`, the product of a pure off-diagonal
+Zorn vector matrix with itself splits into the diagonal `(dot v w, dot w v)` and the
+non-commutative internal commutator cross-product `offDiagonal (-cross w w) (cross v v)`. -/
+theorem offDiagonal_mul_self_noncomm (v w : ZornVec3 R) :
+    mul (offDiagonal v w) (offDiagonal v w) =
+      add
+        (diagonal (ZornVec3.dot v w) (ZornVec3.dot w v))
+        (offDiagonal (fun i => -ZornVec3.cross w w i) (ZornVec3.cross v v)) :=
+  offDiagonal_mul_offDiagonal v w v w
+
+variable {R : Type*} [CommRing R]
+
+theorem mul_smul (r : R) (X Y : ZornVectorMatrix R) :
+    mul X (smul r Y) = smul r (mul X Y) := by
+  ext i
+  · simp [mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    ring
+  · fin_cases i <;>
+      simp [mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three] <;>
+      ring
+  · fin_cases i <;>
+      simp [mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three] <;>
+      ring
+  · simp [mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    ring
+
+theorem smul_mul (r : R) (X Y : ZornVectorMatrix R) :
+    mul (smul r X) Y = smul r (mul X Y) := by
+  ext i
+  · simp [mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    ring
+  · fin_cases i <;>
+      simp [mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three] <;>
+      ring
+  · fin_cases i <;>
+      simp [mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three] <;>
+      ring
+  · simp [mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    ring
+
+theorem mul_scalar (X : ZornVectorMatrix R) (r : R) :
+    mul X (scalar r) = smul r X := by
+  ext i <;> simp [mul, scalar, smul, ZornVec3.dot, ZornVec3.cross, mul_comm]
+
+theorem scalar_mul_comm (r : R) (X : ZornVectorMatrix R) :
+    mul (scalar r) X = mul X (scalar r) := by
+  rw [scalar_mul, mul_scalar]
+
+theorem norm_diagonal_mul_diagonal (a b c d : R) :
+    norm (mul (diagonal a b : ZornVectorMatrix R) (diagonal c d)) =
+      norm (diagonal a b : ZornVectorMatrix R) * norm (diagonal c d) := by
+  simp [diagonal_mul_diagonal, norm_diagonal]
+  ring
 
 /-- Exact commutator of two pure off-diagonal Zorn vector matrices. -/
 theorem commutator_offDiagonal_offDiagonal (v w x y : ZornVec3 R) :

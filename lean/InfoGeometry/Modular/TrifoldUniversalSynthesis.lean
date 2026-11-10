@@ -34,7 +34,7 @@ noncomputable section
 namespace InfoGeometry.Modular.Trifold
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 local notation "SubMat" => Matrix ι ι R
 local notation "BlockMat" => Matrix (ι ⊕ ι) (ι ⊕ ι) R
@@ -73,8 +73,7 @@ theorem trace_fromBlocks_diag (A B : SubMat) :
 theorem trace_IdDoubled :
     Matrix.trace (IdDoubled (ι := ι) (R := R)) = 2 * (dimSubspace (ι := ι) : R) := by
   dsimp [IdDoubled, dimSubspace]
-  simp
-  ring
+  simp [two_mul]
 
 /-- 🏆 THEOREM 2: Supertrace of the Identity Operator `STr(I₂ₙ) = 0` -/
 theorem superTrace_IdDoubled :
@@ -103,8 +102,7 @@ theorem superTrace_GammaGrading :
     rw [Matrix.fromBlocks_multiply]
     simp
   rw [h_mul, trace_fromBlocks_diag]
-  simp
-  ring
+  simp [two_mul]
 
 /-!
 =============================================================================

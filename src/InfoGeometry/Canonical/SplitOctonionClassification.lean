@@ -23,7 +23,7 @@ namespace InfoGeometry.Canonical.SplitOctonionClassification
 
 open scoped BigOperators
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 namespace ZornMatrix
 

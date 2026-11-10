@@ -15,7 +15,7 @@ open BigOperators
 namespace InfoGeometry.Modular.Graded
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 local notation "BlockMat" => Matrix (ι ⊕ ι) (ι ⊕ ι) R
 local notation "SubMat" => Matrix ι ι R
@@ -56,18 +56,18 @@ theorem trace_Gamma_zero :
       Matrix.trace (1 : SubMat) + Matrix.trace (-1 : SubMat) := by
     simp [Matrix.trace, Fintype.sum_sum_type]
   rw [h, Matrix.trace_one, Matrix.trace_neg, Matrix.trace_one]
-  ring
+  abel
 
 @[simp]
 theorem superTrace_identityDoubled_zero :
     superTrace (identityDoubled : BlockMat) = 0 := by
   dsimp [superTrace, identityDoubled, toBlocks₁₁, toBlocks₂₂]
   simp only [Matrix.trace_one]
-  ring
+  abel
 
 /-- THEOREM: Supertrace of a block-diagonal commutator vanishes:
     STr([M, N]) = 0 for block-diagonal M, N. -/
-theorem superTrace_block_commutator (A B C D : SubMat) :
+theorem superTrace_block_commutator {R : Type*} [CommRing R] (A B C D : Matrix ι ι R) :
     superTrace (fromBlocks A 0 0 D * fromBlocks B 0 0 C - fromBlocks B 0 0 C * fromBlocks A 0 0 D) = 0 := by
   rw [fromBlocks_multiply, fromBlocks_multiply]
   simp only [mul_zero, add_zero, zero_mul, zero_add]

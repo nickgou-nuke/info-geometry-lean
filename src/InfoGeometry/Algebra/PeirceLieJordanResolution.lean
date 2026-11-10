@@ -23,7 +23,7 @@ attribute [local instance 100] LieRing.ofAssociativeRing
 open InfoGeometry.Core.JordanMultiplicationClosure
 open InfoGeometry.OperatorAlgebra.LieJordanDualTransport
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {R A : Type*} [Ring R] [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- The two existing complementary endpoints, indexed without a basis choice. -/
 def endpoint (p : A) (i : Bool) : A := if i then p else compIdempotent p
@@ -92,6 +92,8 @@ theorem cornerOp_resolution (p : A) :
       cornerOp (R := R) p false true + cornerOp (R := R) p false false = 1 := by
   ext x
   exact peirce_decomposition_sum p x
+
+variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
 
 /-- The idempotent double commutator, with its exact sandwich term. -/
 theorem ad_square_apply {p : A} (hp : p * p = p) (x : A) :

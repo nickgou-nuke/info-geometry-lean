@@ -22,7 +22,7 @@ open FibonacciToeplitzCuntzRepresentationBridge
 open InfoGeometry.Singular.MetricAlgebraicProjectionDefect
 open InfoGeometry.Singular.Drazin
 
-variable {K A : Type*} [CommRing K] [Ring A] [Algebra K A] [StarRing A]
+variable {K A : Type*} [Ring K] [Ring A] [Module K A] [StarRing A]
 
 /-- Source and target supports of the actual Cuntz chiral arrows are disjoint. -/
 theorem chiral_supports_orthogonal (ck : CuntzTwoIsometry K A) :

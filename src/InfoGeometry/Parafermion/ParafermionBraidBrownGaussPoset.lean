@@ -875,7 +875,7 @@ def unipotentExpGate4Neg (η : B) : B :=
   6 - 6 * η + 3 * (η * η) - η * η * η
 
 /-- **Theorem 5 ($\mathfrak{PB}_7$ Unipotent Gate & Partition Quotient — `z4_unipotent_exponential_gate_and_cyclotomic_partition_quotient`)**:
-For any element $\eta \in K$ in a commutative ring `[CommRing K]`:
+For any element $\eta \in K$ in any associative ring `[Ring K]`:
 1. **Cyclotomic Partition Factorization ($\Phi_2 \Phi_4$)**:
    $$\Phi_2(\eta)\,\Phi_4(\eta) \;=\; (1 + \eta)(1 + \eta^2) \;=\; 1 + \eta + \eta^2 + \eta^3,$$
    and $(1 - \eta)\,\Phi_2(\eta)\,\Phi_4(\eta) = 1 - \eta^4$.
@@ -887,7 +887,7 @@ For any element $\eta \in K$ in a commutative ring `[CommRing K]`:
    $$(1 - \eta)\,\Phi_2(\eta)\,\Phi_4(\eta) = 1 \quad\text{and}\quad
      \bigl(6\,\mathcal{E}_4(+\eta)\bigr)\bigl(6\,\mathcal{E}_4(-\eta)\bigr) = 36.$$ -/
 theorem z4_unipotent_exponential_gate_and_cyclotomic_partition_quotient
-    {K : Type u} [CommRing K] (η : K) :
+    {K : Type u} [Ring K] (η : K) :
     cyclotomicPhi2 η * cyclotomicPhi4 η = truncatedPartitionSum4 η ∧
     (1 - η) * (cyclotomicPhi2 η * cyclotomicPhi4 η) = 1 - (η * η) * (η * η) ∧
     unipotentExpGate4Pos η * unipotentExpGate4Neg η =
@@ -897,15 +897,16 @@ theorem z4_unipotent_exponential_gate_and_cyclotomic_partition_quotient
       unipotentExpGate4Pos η * unipotentExpGate4Neg η = 36) := by
   have hFact : cyclotomicPhi2 η * cyclotomicPhi4 η = truncatedPartitionSum4 η := by
     dsimp [cyclotomicPhi2, cyclotomicPhi4, truncatedPartitionSum4]
-    ring
+    noncomm_ring
   have hGeom : (1 - η) * (cyclotomicPhi2 η * cyclotomicPhi4 η) = 1 - (η * η) * (η * η) := by
     dsimp [cyclotomicPhi2, cyclotomicPhi4]
-    ring
+    noncomm_ring
   have hExp :
       unipotentExpGate4Pos η * unipotentExpGate4Neg η =
         36 - 3 * ((η * η) * (η * η)) - (η * η) * ((η * η) * (η * η)) := by
     dsimp [unipotentExpGate4Pos, unipotentExpGate4Neg]
-    ring
+    rw [show (36 : K) = (6 : K) * 6 by norm_num]
+    noncomm_ring
   refine ⟨hFact, hGeom, hExp, fun h4 => ?_⟩
   refine ⟨?_, ?_⟩
   · rw [hGeom, h4, sub_zero]

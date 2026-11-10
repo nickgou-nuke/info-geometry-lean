@@ -19,8 +19,8 @@ structure MajoranaSystem (n : Nat) (A : Type*) [Ring A] where
   square_one : ∀ i, gamma i * gamma i = 1
   anti_comm : ∀ i j, i ≠ j → gamma i * gamma j = - (gamma j * gamma i)
 
-/-- Exact scalar data for `1 / sqrt 2` over an arbitrary coefficient field. -/
-structure CliffordBraidScalars (K : Type*) [Field K] where
+/-- Exact scalar data for `1 / sqrt 2` over an arbitrary division ring. -/
+structure CliffordBraidScalars (K : Type*) [DivisionRing K] where
   invSqrtTwo : K
   invSqrtTwo_sq : invSqrtTwo * invSqrtTwo = (1 : K) / 2
 

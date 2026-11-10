@@ -22,7 +22,7 @@ open InfoGeometry.Canonical.PhysicalGhostZeroBRSTCohomologyBridge
 open InfoGeometry.Canonical.KreinSpaceBRSTUnitarityBridge
 open InfoGeometry.Canonical.BRSTQuotientPairingWellDefinedBridge
 
-variable {R H : Type*} [CommRing R] [AddCommGroup H] [Module R H]
+variable {R H : Type*} [Ring R] [AddCommGroup H] [Module R H]
 
 /-- **Theorem**: Well-definedness condition for Quotient Pairing on BRST Cohomology Module H_Q = Ker Q / Im Q. -/
 theorem brst_quotient_pairing_well_defined_lift

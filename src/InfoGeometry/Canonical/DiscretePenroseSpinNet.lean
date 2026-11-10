@@ -27,7 +27,7 @@ universe u v
 section Basic
 
 variable (α : Type u) (𝕜 T D : Type u) [PartialOrder α]
-variable [CommRing 𝕜]
+variable [Ring 𝕜]
 variable [AddCommGroup T] [Module 𝕜 T]
 variable [AddCommGroup D] [Module 𝕜 D]
 
@@ -48,7 +48,7 @@ structure SpinNet where
 
 variable {α 𝕜 T D}
 variable [PartialOrder α]
-variable [CommRing 𝕜]
+variable [Ring 𝕜]
 variable [AddCommGroup T] [Module 𝕜 T]
 variable [AddCommGroup D] [Module 𝕜 D]
 

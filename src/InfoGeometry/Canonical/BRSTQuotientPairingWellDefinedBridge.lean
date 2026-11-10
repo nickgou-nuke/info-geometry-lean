@@ -23,7 +23,7 @@ open InfoGeometry.Canonical.BRSTExactClassZeroBridge
 open InfoGeometry.Canonical.PhysicalGhostZeroBRSTCohomologyBridge
 open InfoGeometry.Canonical.KreinSpaceBRSTUnitarityBridge
 
-variable {R H : Type*} [CommRing R] [AddCommGroup H] [Module R H]
+variable {R H : Type*} [Ring R] [AddCommGroup H] [Module R H]
 
 /-- **Theorem**: Left Exact State Decoupling Orthogonality ⟨Q χ, φ⟩ = 0 for BRST Physical States Q φ = 0. -/
 theorem exact_physical_decoupling_orthogonality

@@ -117,7 +117,7 @@ end Peirce
 
 section LinearProjection
 
-variable {R A : Type*} [CommRing R] [Ring A] [LieAlgebra R A]
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
 
 /-- The part of a native commutator discarded by a linear readout. -/
 def bracketDefect (P : A →ₗ[R] A) (X Y : A) : A :=
@@ -182,6 +182,34 @@ theorem nonzero_projectedJacobiator_detects_defect
   rw [projectedJacobiator_eq_defect]
   simp [hYZ, hZX, hXY]
 
+/-- Homogeneous eigenoperator weights add under the actual commutator over any `[Ring R]`. -/
+theorem bracket_weight_add [IsScalarTower R A A] [SMulCommClass R A A]
+    (H X Y : A) (a b : R)
+    (hX : ⁅H, X⁆ = a • X) (hY : ⁅H, Y⁆ = b • Y) :
+    ⁅H, ⁅X, Y⁆⁆ = (a + b) • ⁅X, Y⁆ := by
+  have hleib : ⁅H, ⁅X, Y⁆⁆ = ⁅⁅H, X⁆, Y⁆ + ⁅X, ⁅H, Y⁆⁆ := by
+    simp only [LieRing.of_associative_ring_bracket]
+    noncomm_ring
+  rw [hleib, hX, hY]
+  simp only [LieRing.of_associative_ring_bracket, smul_mul_assoc, mul_smul_comm,
+    ← smul_sub, add_smul]
+
+/-- A grading-compatible projection does not change the weight of the defect over any `[Ring R]`.
+The result can be even or odd; its grade is not assigned by terminology. -/
+theorem bracketDefect_weight [IsScalarTower R A A] [SMulCommClass R A A]
+    (P : A →ₗ[R] A) (H X Y : A) (a b : R)
+    (hPH : ∀ Z, ⁅H, P Z⁆ = P ⁅H, Z⁆)
+    (hX : ⁅H, X⁆ = a • X) (hY : ⁅H, Y⁆ = b • Y) :
+    ⁅H, bracketDefect P X Y⁆ = (a + b) • bracketDefect P X Y := by
+  simp only [bracketDefect, lie_sub, hPH,
+    bracket_weight_add H X Y a b hX hY, map_smul, smul_sub]
+
+end LinearProjection
+
+section RetainedLieClosure
+
+variable {R A : Type*} [CommRing R] [Ring A] [LieAlgebra R A]
+
 /-- Canonical Lie closure of the retained operator range. -/
 def retainedLieClosure (P : A →ₗ[R] A) : LieSubalgebra R A :=
   LieSubalgebra.lieSpan R A (Set.range P)
@@ -221,22 +249,6 @@ theorem range_lt_retainedLieClosure_of_defect
     exact bracketDefect_not_mem_range P hP X Y hD
       (hback (bracketDefect_mem_retainedLieClosure P X Y hX hY))
 
-/-- Homogeneous eigenoperator weights add under the actual commutator. -/
-theorem bracket_weight_add (H X Y : A) (a b : R)
-    (hX : ⁅H, X⁆ = a • X) (hY : ⁅H, Y⁆ = b • Y) :
-    ⁅H, ⁅X, Y⁆⁆ = (a + b) • ⁅X, Y⁆ := by
-  rw [leibniz_lie, hX, hY, smul_lie, lie_smul, ← add_smul]
-
-/-- A grading-compatible projection does not change the weight of the defect.
-The result can be even or odd; its grade is not assigned by terminology. -/
-theorem bracketDefect_weight
-    (P : A →ₗ[R] A) (H X Y : A) (a b : R)
-    (hPH : ∀ Z, ⁅H, P Z⁆ = P ⁅H, Z⁆)
-    (hX : ⁅H, X⁆ = a • X) (hY : ⁅H, Y⁆ = b • Y) :
-    ⁅H, bracketDefect P X Y⁆ = (a + b) • bracketDefect P X Y := by
-  simp only [bracketDefect, lie_sub, hPH,
-    bracket_weight_add H X Y a b hX hY, map_smul, smul_sub]
-
 /-- The odd Peirce component is generated inside every Lie subalgebra
 containing the idempotent and the original defect. -/
 theorem oddPart_mem_of_mem (K : LieSubalgebra R A) (p D : A)
@@ -245,6 +257,6 @@ theorem oddPart_mem_of_mem (K : LieSubalgebra R A) (p D : A)
   rw [← double_commutator_eq_oddPart p D hp]
   exact K.lie_mem hpK (K.lie_mem hpK hDK)
 
-end LinearProjection
+end RetainedLieClosure
 
 end InfoGeometry.OperatorAlgebra.DefectCompletion

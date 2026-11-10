@@ -9,16 +9,14 @@ open Matrix
 
 section CommutativeRing
 
-variable {Scalar Index : Type*} [CommRing Scalar]
+variable {Scalar Index : Type*}
 
-theorem bilinear_scaling (scalar : Scalar) (left right : Index → Scalar) :
+theorem bilinear_scaling [CommSemiring Scalar] (scalar : Scalar) (left right : Index → Scalar) :
     vecMulVec (scalar • left) (scalar • right) =
       scalar ^ 2 • vecMulVec left right := by
   rw [smul_vecMulVec, vecMulVec_smul, smul_smul, ← pow_two]
 
-variable [StarRing Scalar]
-
-theorem hermitian_outer_scaling (leftScalar rightScalar : Scalar)
+theorem hermitian_outer_scaling [CommSemiring Scalar] [StarRing Scalar] (leftScalar rightScalar : Scalar)
     (left right : Index → Scalar) :
     vecMulVec (leftScalar • left) (star (rightScalar • right)) =
       (leftScalar * star rightScalar) • vecMulVec left (star right) := by
@@ -26,11 +24,13 @@ theorem hermitian_outer_scaling (leftScalar rightScalar : Scalar)
   simp [vecMulVec, smul_eq_mul, StarMul.star_mul]
   ring
 
-theorem outer_phase_invariant (scalar : Scalar)
+theorem outer_phase_invariant [CommSemiring Scalar] [StarRing Scalar] (scalar : Scalar)
     (unitPhase : scalar * star scalar = 1) (left right : Index → Scalar) :
     vecMulVec (scalar • left) (star (scalar • right)) =
       vecMulVec left (star right) := by
   rw [hermitian_outer_scaling, unitPhase, one_smul]
+
+variable [CommRing Scalar] [StarRing Scalar]
 
 theorem det_sum_self_outer (left right : Fin 2 → Scalar) :
     (vecMulVec left (star left) + vecMulVec right (star right)).det =

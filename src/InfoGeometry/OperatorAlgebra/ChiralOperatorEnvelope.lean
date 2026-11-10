@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.FreeAlgebra
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -8,9 +13,10 @@ namespace InfoGeometry.OperatorAlgebra
 # Associative envelope for the chiral operator channels
 
 The eight-dimensional Zorn/Sage carrier is a readout layer. This owner keeps
-operator products in an associative free algebra, so same-chirality and
-mixed-chirality words remain distinct expressions until a later representation
-or projection supplies relations.
+operator products in an associative free algebra and provides direct evaluation
+into any associative (not necessarily commutative) operator ring `A`, so
+same-chirality and mixed-chirality words remain distinct expressions until a
+later representation or projection supplies relations.
 -/
 
 inductive ChiralGenerator
@@ -20,10 +26,50 @@ inductive ChiralGenerator
   | sMinus (i : Fin 3)
 deriving DecidableEq, Fintype
 
+instance : Inhabited ChiralGenerator := ⟨.pPlus⟩
+
 abbrev ChiralOperatorEnvelope (R : Type*) [CommRing R] :=
   FreeAlgebra R ChiralGenerator
 
 namespace ChiralOperatorEnvelope
+
+section NoncommRepresentation
+
+variable {A : Type*} [Ring A]
+
+/-- Direct evaluation of a formal generator word inside any non-commutative
+associative operator ring `A`. -/
+def evalWord (ρ : ChiralGenerator → A) : List ChiralGenerator → A
+  | [] => 1
+  | g :: w => ρ g * evalWord ρ w
+
+@[simp] theorem evalWord_nil (ρ : ChiralGenerator → A) :
+    evalWord ρ [] = 1 := rfl
+
+@[simp] theorem evalWord_cons (ρ : ChiralGenerator → A)
+    (g : ChiralGenerator) (w : List ChiralGenerator) :
+    evalWord ρ (g :: w) = ρ g * evalWord ρ w := rfl
+
+theorem evalWord_append (ρ : ChiralGenerator → A)
+    (u v : List ChiralGenerator) :
+    evalWord ρ (u ++ v) = evalWord ρ u * evalWord ρ v := by
+  induction u with
+  | nil => simp [evalWord]
+  | cons g u ih =>
+      simp [evalWord, ih, mul_assoc]
+
+/-- Operator commutator in any non-commutative ring `A`. -/
+def ringCommutator (X Y : A) : A := X * Y - Y * X
+
+/-- Operator anticommutator in any non-commutative ring `A`. -/
+def ringAnticommutator (X Y : A) : A := X * Y + Y * X
+
+theorem ringCommutator_antisymmetric (X Y : A) :
+    ringCommutator X Y = -ringCommutator Y X := by
+  unfold ringCommutator
+  abel
+
+end NoncommRepresentation
 
 variable {R : Type*} [CommRing R]
 

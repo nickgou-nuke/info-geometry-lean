@@ -14,9 +14,9 @@ Concrete models provide the explicit decomposition.
 
 namespace InfoGeometry.Algebra
 
-/-- A split metric space over a commutative ring `R`:
+/-- A split metric space over a commutative semiring `R`:
     a module `V` with a symmetric, nondegenerate bilinear form `β : V × V → R`. -/
-structure SplitMetricSpace (R : Type*) [CommRing R] where
+structure SplitMetricSpace (R : Type*) [CommSemiring R] where
   V : Type*
   [addCommGroup : AddCommGroup V]
   [module : Module R V]
@@ -34,26 +34,35 @@ attribute [instance] SplitMetricSpace.addCommGroup SplitMetricSpace.module
 
 namespace SplitMetricSpace
 
-variable {R : Type*} [CommRing R]
+section CommSemiring
+variable {R : Type*} [CommSemiring R]
 variable (S : SplitMetricSpace R)
 
 -- The orthogonal group O(β) = { g : V ≃ₗ[R] V | β(gx, gy) = β(x, y) }
 def OrthogonalGroup : Type* :=
   { g : S.V ≃ₗ[R] S.V // ∀ x y, S.beta x y = S.beta (g x) (g y) }
 
+end CommSemiring
+
+section CommRing
+variable {R : Type*} [CommRing R]
+variable (S : SplitMetricSpace R)
+
 -- The Lie algebra of the orthogonal group: skew-symmetric endomorphisms
 def SkewEndomorphisms : Type* :=
   skewAdjointLieSubalgebra S.beta
 
+end CommRing
+
 end SplitMetricSpace
 
 /-- A morphism of split metric spaces: a linear map preserving the bilinear form. -/
-structure SplitMetricSpaceHom {R : Type*} [CommRing R] (S₁ S₂ : SplitMetricSpace R) where
+structure SplitMetricSpaceHom {R : Type*} [CommSemiring R] (S₁ S₂ : SplitMetricSpace R) where
   toLinearMap : S₁.V →ₗ[R] S₂.V
   map_beta : ∀ (x y : S₁.V), S₂.beta (toLinearMap x) (toLinearMap y) = S₁.beta x y
 
 /-- An isomorphism of split metric spaces. -/
-structure SplitMetricSpaceEquiv {R : Type*} [CommRing R] (S₁ S₂ : SplitMetricSpace R) where
+structure SplitMetricSpaceEquiv {R : Type*} [CommSemiring R] (S₁ S₂ : SplitMetricSpace R) where
   toLinearEquiv : S₁.V ≃ₗ[R] S₂.V
   map_beta : ∀ (x y : S₁.V), S₂.beta (toLinearEquiv x) (toLinearEquiv y) = S₁.beta x y
 

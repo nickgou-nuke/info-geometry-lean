@@ -13,7 +13,7 @@ noncomputable section
 set_option linter.unusedVariables false
 set_option linter.unusedSimpArgs false
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Chiral Causal Arrows (Left/Right with opposite chirality) -/
 inductive ChiralArrow : Type where
@@ -87,7 +87,7 @@ def chiralBranchTruncate {n : ℕ} (w : BitWord (n + 1)) : BitWord n :=
   simp
 
 /-- Chiral Cuntz relations: S_L* S_L = 1, S_R* S_R = 1, S_L* S_R = 0 -/
-structure ChiralCuntzPair (R : Type*) [CommRing R] where
+structure ChiralCuntzPair (R : Type*) [Ring R] where
   S_L : R
   S_R : R
   S_L_star : R

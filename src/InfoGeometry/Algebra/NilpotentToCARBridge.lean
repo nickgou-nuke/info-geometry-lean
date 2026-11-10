@@ -11,7 +11,7 @@ noncomputable section
 
 namespace InfoGeometry.Algebra.NilpotentToCARBridge
 
-variable {K A : Type*} [Field K] [Ring A] [Algebra K A]
+variable {K A : Type*} [DivisionRing K] [Ring A] [Module K A] [SMulCommClass K A A] [IsScalarTower K A A]
 
 /-- Split triad generators (I, j) with I² = 1, j² = -1, and anticommutator Ij + jI = 0. -/
 structure SplitTriad (A : Type*) [Ring A] where
@@ -34,7 +34,7 @@ def GMinus (h2 : (2 : K) ≠ 0) : A :=
 private theorem smul_mul_smul
     (r s : K) (x y : A) :
     (r • x) * (s • y) = (r * s) • (x * y) := by
-  rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul]
+  rw [smul_mul_assoc, mul_smul_comm, smul_smul]
 
 /-- 🏆 THEOREM: G+ is strictly nilpotent: (G+)² = 0. -/
 @[simp]
@@ -88,17 +88,17 @@ theorem CAR_anticommutation (h2 : (2 : K) ≠ 0) :
       _ = (4 : K) • (1 : A) := by
             simp only [sub_neg_eq_add]
             rw [two_smul, show (1 : A) + 1 + ((1 : A) + 1) = (4 : K) • (1 : A) by
-              rw [show (4 : K) = 1 + 1 + 1 + 1 by ring, add_smul, add_smul, add_smul, one_smul]; abel]
+              rw [show (4 : K) = 1 + 1 + 1 + 1 by norm_num, add_smul, add_smul, add_smul, one_smul]; abel]
   rw [hsum, smul_smul]
   have h4 : (2 : K)⁻¹ * (2 : K)⁻¹ * (4 : K) = 1 := by
+    have h4eq : (4 : K) = 2 * 2 := by norm_num
+    rw [h4eq]
     calc
-      (2 : K)⁻¹ * (2 : K)⁻¹ * (4 : K)
-        = ((2 : K)⁻¹ * 2) * ((2 : K)⁻¹ * 2) := by
-            ring
-      _ = 1 * 1 := by
-            rw [inv_mul_cancel₀ h2]
-      _ = 1 := by
-            ring
+      (2 : K)⁻¹ * (2 : K)⁻¹ * (2 * 2)
+        = (2 : K)⁻¹ * ((2 : K)⁻¹ * 2) * 2 := by simp [mul_assoc]
+      _ = (2 : K)⁻¹ * 1 * 2 := by rw [inv_mul_cancel₀ h2]
+      _ = (2 : K)⁻¹ * 2 := by rw [mul_one]
+      _ = 1 := inv_mul_cancel₀ h2
   rw [h4, one_smul]
 
 end InfoGeometry.Algebra.NilpotentToCARBridge

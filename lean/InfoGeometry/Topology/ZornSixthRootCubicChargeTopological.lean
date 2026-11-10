@@ -64,8 +64,8 @@ theorem continuous_effectiveCubeRoot :
 /-- The effective root readout is locally constant on the discrete parameter set. -/
 theorem isLocallyConstant_effectiveCubeRoot :
     IsLocallyConstant effectiveCubeRoot := by
-  unfold effectiveCubeRoot
-  exact IsLocallyConstant.of_discrete
+  intro s
+  exact isOpen_discrete _
 
 /-- Order-three cyclotomic Zorn action associated with a sixth-root parameter `q`. -/
 def sixthRootCubicCharge (q : SixthRootParameter) : Zorn →ₗ[ℂ] Zorn :=

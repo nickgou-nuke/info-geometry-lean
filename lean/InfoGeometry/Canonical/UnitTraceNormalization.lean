@@ -7,7 +7,7 @@ open Matrix
 
 namespace UnitTraceNormalization
 
-variable {d : ℕ} {K : Type*} [Field K]
+variable {d : ℕ} {K : Type*} [DivisionRing K]
 
 /-- Normalized trace operator for d × d matrices: τ_d(M) = (1 / d) * Tr(M) -/
 def normalizedTrace (d : ℕ) (M : Matrix (Fin d) (Fin d) K) : K :=

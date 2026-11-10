@@ -4,9 +4,11 @@ import Mathlib.Tactic
 
 namespace InfoGeometry.BraidedCartanAnomaly
 
+section RingScalars
+
 variable {R : Type*} [CommRing R]
 variable {Γ : Type*} [AddCommGroup Γ]
-variable {A : Type*} [Ring A] [Algebra R A]
+variable {A : Type*} [Ring A] [Module R A]
 
 /-! A bicharacter is represented by Mathlib's iterated multiplicative
 homomorphisms. `Multiplicative` converts the additive grading law to the
@@ -37,6 +39,14 @@ def braidedJacobiator (B : UnifiedBicharacter Γ R) (gx gy gz : Γ) (x y z : A) 
   braidedComm B gx (gy + gz) x (braidedComm B gy gz y z) -
   braidedComm B (gx + gy) gz (braidedComm B gx gy x y) z -
   (bicharacterValue B gx gy : R) • braidedComm B gy (gx + gz) y (braidedComm B gx gz x z)
+
+end RingScalars
+
+section CommScalars
+
+variable {R : Type*} [CommRing R]
+variable {Γ : Type*} [AddCommGroup Γ]
+variable {A : Type*} [Ring A] [Algebra R A]
 
 theorem braided_jacobi_identity_associative
     (B : UnifiedBicharacter Γ R)
@@ -105,6 +115,12 @@ theorem braided_jacobiator_eq_associator_defect
     exact sub_eq_zero.mp h
   exact braided_jacobi_identity_associative B h_symm gx gy gz x y z h_assoc
 
+end CommScalars
+
+section PhaseSpaceBicharacter
+
+variable {R : Type*} [Ring R]
+
 abbrev PhaseSpace := ℤ × ℤ
 
 def symplecticOmega (w₁ w₂ : PhaseSpace) : ℤ :=
@@ -155,5 +171,7 @@ theorem phaseBicharacter_inverse (q : Rˣ) (w₁ w₂ : PhaseSpace) :
   rw [phaseBicharacter, phaseBicharacter, symplecticOmega_skew]
   rw [← zpow_add]
   simp
+
+end PhaseSpaceBicharacter
 
 end InfoGeometry.BraidedCartanAnomaly

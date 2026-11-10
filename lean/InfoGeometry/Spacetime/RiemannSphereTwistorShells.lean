@@ -22,7 +22,9 @@ defined light-shell predicate, and an ordered-ring positivity implication.
 
 namespace InfoGeometry.Spacetime.RiemannShells
 
-variable {R : Type*} [CommRing R]
+section Ring
+
+variable {R : Type*} [Ring R]
 
 /-! ### 1. 3D Space and Relativistic Interval -/
 
@@ -70,6 +72,12 @@ def bispinorDet (I t : R) (v : Space3D R) : R :=
 /-- Scalar polynomial corresponding to `(t + z)(t - z) - (x² + y²)`. -/
 def hermitianBispinorDet (t : R) (v : Space3D R) : R :=
   det2 (t + v.z) v.x v.x (t - v.z) - v.y^2
+
+end Ring
+
+section CommRing
+
+variable {R : Type*} [CommRing R]
 
 /-! ### 3. Scalar Determinant and Minkowski-Polynomial Identity -/
 
@@ -124,10 +132,12 @@ theorem light_shell_bispinor_det_zero (I t : R) (v : Space3D R)
   rw [bispinor_det_eq_hermitianBispinorDet I t v hI]
   exact light_shell_hermitianBispinorDet_zero t v h_shell
 
+end CommRing
+
 /-! ### 4. Ordered-Ring Time-Cone Positivity -/
 
 /-- Predicate for the interior of the causal time cone (`r² < t²`). -/
-def isInsideTimeCone [LT R] (t : R) (v : Space3D R) : Prop :=
+def isInsideTimeCone {R : Type*} [Ring R] [LT R] (t : R) (v : Space3D R) : Prop :=
   radiusSq v < t^2
 
 /--

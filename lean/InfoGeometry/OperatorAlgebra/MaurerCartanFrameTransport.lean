@@ -20,6 +20,28 @@ open InfoGeometry.Algebra
 open InfoGeometry.Algebra.DerivationLieLane
 open InfoGeometry.OperatorAlgebra.DerivationDifferentialForms
 
+section RingTransport
+
+variable {A : Type*} [Ring A]
+
+/-- Coordinate transport of an algebra element by the frame unit. -/
+def frameTransport (g : Aˣ) (a : A) : A := (↑g⁻¹ : A) * a * ↑g
+
+theorem frameTransport_mul (g : Aˣ) (a b : A) :
+    frameTransport g (a * b) = frameTransport g a * frameTransport g b := by
+  simp [frameTransport, mul_assoc]
+
+theorem frameTransport_idempotent (g : Aˣ) (p : A) (hp : p * p = p) :
+    frameTransport g p * frameTransport g p = frameTransport g p := by
+  rw [← frameTransport_mul, hp]
+
+theorem frameTransport_square_zero (g : Aˣ) (a : A) (ha : a * a = 0) :
+    frameTransport g a * frameTransport g a = 0 := by
+  rw [← frameTransport_mul, ha]
+  simp [frameTransport]
+
+end RingTransport
+
 variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
 variable (K : DerivationLieLane R A)
 
@@ -75,22 +97,6 @@ theorem gaugeForm_flat (g : Aˣ) : connectionCurvature K (gaugeForm K g) = 0 := 
   simp only [gaugeForm_apply, K.operatorAction_leibniz,
     action_inverse, K.operatorAction_commutator_apply]
   noncomm_ring
-
-/-- Coordinate transport of an algebra element by the frame unit. -/
-def frameTransport (g : Aˣ) (a : A) : A := (↑g⁻¹ : A) * a * ↑g
-
-theorem frameTransport_mul (g : Aˣ) (a b : A) :
-    frameTransport g (a * b) = frameTransport g a * frameTransport g b := by
-  simp [frameTransport, mul_assoc]
-
-theorem frameTransport_idempotent (g : Aˣ) (p : A) (hp : p * p = p) :
-    frameTransport g p * frameTransport g p = frameTransport g p := by
-  rw [← frameTransport_mul, hp]
-
-theorem frameTransport_square_zero (g : Aˣ) (a : A) (ha : a * a = 0) :
-    frameTransport g a * frameTransport g a = 0 := by
-  rw [← frameTransport_mul, ha]
-  simp [frameTransport]
 
 /-- The connection transforms actual operators, with no commuting approximation. -/
 theorem covariant_frameTransport (g : Aˣ) (x : K.L) (a : A) :

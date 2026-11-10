@@ -12,7 +12,7 @@ open BigOperators
 open InfoGeometry.OperatorAlgebra.QCCRCuntzToeplitz
 
 variable {ι R Op : Type*} [DecidableEq ι] [Fintype ι]
-  [CommRing R] [Ring Op] [StarRing Op] [Algebra R Op]
+  [Ring R] [Ring Op] [StarRing Op] [Module R Op]
 
 /-- The finite q-CCR vacuum defect is self-adjoint in every deformation sector. -/
 theorem star_P_vac_eq_P_vac (A : QCCROperators ι R Op) :

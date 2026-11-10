@@ -113,15 +113,28 @@ theorem quadratic_commute_right (hp : IsIdempotentElem p)
       simp only [hv2, mul_zero, zero_mul, add_zero, zero_add, mul_assoc]
     _ = _ := by noncomm_ring
 
-theorem quadratic_commute_sum (hp : IsIdempotentElem p)
+/-- The round-trip operator `u*v + v*u` commutes with both oriented frame
+combinations.  The two conclusions retain the sum/difference orientation,
+which is used by the subsequent bracket propagation identities. -/
+theorem quadratic_round_trip_frame_commutants (hp : IsIdempotentElem p)
     (hu : u ∈ peirce10 p) (hv : v ∈ peirce01 p) :
-    Commute (u * v + v * u) (u + v) :=
-  (quadratic_commute_left hp hu).add_right (quadratic_commute_right hp hv)
-
-theorem quadratic_commute_difference (hp : IsIdempotentElem p)
-    (hu : u ∈ peirce10 p) (hv : v ∈ peirce01 p) :
-    Commute (u * v + v * u) (u - v) :=
-  (quadratic_commute_left hp hu).sub_right (quadratic_commute_right hp hv)
+    Commute (u * v + v * u) (u + v) ∧
+    Commute (u * v + v * u) (u - v) := by
+  have hU := (quadratic_commute_left (v := v) hp hu).eq
+  have hV := (quadratic_commute_right (u := u) hp hv).eq
+  constructor
+  · change (u * v + v * u) * (u + v) = (u + v) * (u * v + v * u)
+    calc
+      (u * v + v * u) * (u + v) =
+          (u * v + v * u) * u + (u * v + v * u) * v := mul_add _ _ _
+      _ = u * (u * v + v * u) + v * (u * v + v * u) := by rw [hU, hV]
+      _ = (u + v) * (u * v + v * u) := (add_mul _ _ _).symm
+  · change (u * v + v * u) * (u - v) = (u - v) * (u * v + v * u)
+    calc
+      (u * v + v * u) * (u - v) =
+          (u * v + v * u) * u - (u * v + v * u) * v := mul_sub _ _ _
+      _ = u * (u * v + v * u) - v * (u * v + v * u) := by rw [hU, hV]
+      _ = (u - v) * (u * v + v * u) := (sub_mul _ _ _).symm
 
 theorem quadratic_commute_bracket (hp : IsIdempotentElem p)
     (hu : u ∈ peirce10 p) (hv : v ∈ peirce01 p) :
@@ -140,7 +153,7 @@ theorem bracket_mul_sum (hp : IsIdempotentElem p)
       rw [bracket_eq_difference_mul_sum hp hu hv]
       noncomm_ring
     _ = (u - v) * (u * v + v * u) := by rw [coupled_square hp hu hv]
-    _ = _ := (quadratic_commute_difference hp hu hv).eq.symm
+    _ = _ := (quadratic_round_trip_frame_commutants hp hu hv).2.eq.symm
 
 /-- The quadratic factor is retained in the bracket-times-difference product. -/
 theorem bracket_mul_difference (hp : IsIdempotentElem p)
@@ -152,7 +165,7 @@ theorem bracket_mul_difference (hp : IsIdempotentElem p)
       noncomm_ring
     _ = (u + v) * (u * v + v * u) := by
       rw [difference_square hp hu hv, mul_neg, neg_neg]
-    _ = _ := (quadratic_commute_sum hp hu hv).eq.symm
+    _ = _ := (quadratic_round_trip_frame_commutants hp hu hv).1.eq.symm
 
 theorem bracket_sum_anticommute (hp : IsIdempotentElem p)
     (hu : u ∈ peirce10 p) (hv : v ∈ peirce01 p) :

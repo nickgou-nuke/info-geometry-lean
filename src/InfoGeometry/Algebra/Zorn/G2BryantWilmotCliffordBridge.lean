@@ -26,7 +26,7 @@ Bryant, 1987).
 
 namespace InfoGeometry.Algebra.Zorn.G2BryantWilmot
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Elementary rotation bivector matrix `E_{ij} = e_i e_jᵀ - e_j e_iᵀ` in `𝔰𝔬(7)`. -/
 def bivector (i j : Fin 7) : Matrix (Fin 7) (Fin 7) R :=
@@ -123,7 +123,7 @@ theorem bryantWilmotMatrix_skew (c : Fin 14 → R) (i j : Fin 7) :
     bryantWilmotMatrix c i j = - bryantWilmotMatrix c j i := by
   fin_cases i <;> fin_cases j <;> {
     dsimp [bryantWilmotMatrix]
-    try ring
+    try abel
   }
 
 /-- Standard bilinear form on `R⁷`. -/
@@ -141,7 +141,7 @@ def bryantWilmotApp (c : Fin 14 → R) (u : Fin 7 → R) : Fin 7 → R
   | 6 => (-c 5 + c 12) * u 0 + (c 4 + c 11) * u 1 + c 10 * u 2 + (-c 2 + c 9) * u 3 - c 8 * u 4 + c 7 * u 5
 
 /-- 🏆 THEOREM: Every Bryant-Wilmot 𝔤₂ derivation preserves the standard bilinear metric. -/
-theorem bryantWilmot_preserves_metric (c : Fin 14 → R) (u v : Fin 7 → R) :
+theorem bryantWilmot_preserves_metric {R : Type*} [CommRing R] (c : Fin 14 → R) (u v : Fin 7 → R) :
     bilinearForm (bryantWilmotApp c u) v + bilinearForm u (bryantWilmotApp c v) = 0 := by
   dsimp [bilinearForm, bryantWilmotApp]
   ring

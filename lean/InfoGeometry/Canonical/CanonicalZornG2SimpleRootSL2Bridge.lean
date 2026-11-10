@@ -20,7 +20,7 @@ from which the full $G_2$ exceptional geometry is globally assembled.
 
 namespace InfoGeometry.Canonical.CanonicalZornG2SimpleRootSL2Bridge
 
-variable {𝕜 𝔤 : Type*} [CommRing 𝕜] [LieRing 𝔤] [LieAlgebra 𝕜 𝔤]
+variable {𝕜 𝔤 : Type*} [Ring 𝕜] [LieRing 𝔤] [Module 𝕜 𝔤]
 
 /-- 
 The abstract datum for a generic $\mathfrak{sl}_2$ root triple.

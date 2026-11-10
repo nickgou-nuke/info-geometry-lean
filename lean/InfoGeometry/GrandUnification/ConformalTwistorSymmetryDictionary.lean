@@ -21,7 +21,7 @@ namespace InfoGeometry.GrandUnification
 
 open InfoGeometry.Canonical.AmplituhedronMetriplecticBridge
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- A linear map on the four coordinates of each row twistor. -/
 def TwistorLinearMap (R : Type*) := Matrix (Fin 4) (Fin 4) R
@@ -34,7 +34,8 @@ def applyTwistorLinearMap (g : TwistorLinearMap R) (Z : PlabicTwistorMatrix R) :
     z21 := z2 0, z22 := z2 1, z23 := z2 2, z24 := z2 3 }
 
 /-- The minors of the two mapped rows satisfy the Klein quadric equation. -/
-theorem linear_map_preserves_plucker_relation (g : TwistorLinearMap R) (Z : PlabicTwistorMatrix R) :
+theorem linear_map_preserves_plucker_relation {R : Type*} [CommRing R]
+    (g : TwistorLinearMap R) (Z : PlabicTwistorMatrix R) :
     IsKleinNull (extractTwistorPluckerCoordinates (applyTwistorLinearMap g Z)) := by
   dsimp [IsKleinNull, kleinQuadricEval, extractTwistorPluckerCoordinates, applyTwistorLinearMap]
   ring

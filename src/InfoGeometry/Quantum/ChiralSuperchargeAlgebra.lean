@@ -7,7 +7,7 @@ namespace InfoGeometry.Quantum.ChiralSuperchargeAlgebra
 set_option linter.unusedVariables false
 set_option linter.unusedSimpArgs false
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def Anticommutator (A B : R) : R :=
   A * B + B * A
@@ -21,17 +21,47 @@ def chiralSuperchargeQbar (a f_dag : R) : R :=
 def chiralNumberOperator (a_dag a f_dag f : R) : R :=
   a_dag * a + f_dag * f
 
-theorem chiral_supercharge_anticommutator
+theorem chiral_supercharge_anticommutator_noncomm
     (a a_dag f f_dag : R)
     (h_boson_ccr : a * a_dag = 1 + a_dag * a)
     (h_fermion_car : f * f_dag = 1 - f_dag * f) :
     Anticommutator (chiralSuperchargeQ a_dag f) (chiralSuperchargeQbar a f_dag) =
-      chiralNumberOperator a_dag a f_dag f := by
+      chiralNumberOperator a_dag a f_dag f +
+        a_dag * (f * a - a * f) * f_dag +
+        a * (f_dag * a_dag - a_dag * f_dag) * f := by
   unfold Anticommutator chiralSuperchargeQ chiralSuperchargeQbar chiralNumberOperator
   calc (a_dag * f) * (a * f_dag) + (a * f_dag) * (a_dag * f)
-    _ = (a_dag * a) * (f * f_dag) + (a * a_dag) * (f_dag * f) := by ring
-    _ = (a_dag * a) * (1 - f_dag * f) + (1 + a_dag * a) * (f_dag * f) := by rw [h_fermion_car, h_boson_ccr]
-    _ = a_dag * a + f_dag * f := by ring
+    _ = (a_dag * a) * (f * f_dag) + (a * a_dag) * (f_dag * f) +
+          a_dag * (f * a - a * f) * f_dag +
+          a * (f_dag * a_dag - a_dag * f_dag) * f := by noncomm_ring
+    _ = (a_dag * a) * (1 - f_dag * f) + (1 + a_dag * a) * (f_dag * f) +
+          a_dag * (f * a - a * f) * f_dag +
+          a * (f_dag * a_dag - a_dag * f_dag) * f := by rw [h_fermion_car, h_boson_ccr]
+    _ = a_dag * a + f_dag * f +
+          a_dag * (f * a - a * f) * f_dag +
+          a * (f_dag * a_dag - a_dag * f_dag) * f := by noncomm_ring
+
+theorem chiral_supercharge_anticommutator_of_comm
+    (a a_dag f f_dag : R)
+    (h_boson_ccr : a * a_dag = 1 + a_dag * a)
+    (h_fermion_car : f * f_dag = 1 - f_dag * f)
+    (h_fa : f * a = a * f)
+    (h_fdag_adag : f_dag * a_dag = a_dag * f_dag) :
+    Anticommutator (chiralSuperchargeQ a_dag f) (chiralSuperchargeQbar a f_dag) =
+      chiralNumberOperator a_dag a f_dag f := by
+  rw [chiral_supercharge_anticommutator_noncomm a a_dag f f_dag h_boson_ccr h_fermion_car]
+  rw [h_fa, h_fdag_adag]
+  noncomm_ring
+
+theorem chiral_supercharge_anticommutator
+    (a a_dag f f_dag : R)
+    (h_boson_ccr : a * a_dag = 1 + a_dag * a)
+    (h_fermion_car : f * f_dag = 1 - f_dag * f)
+    (h_fa : f * a = a * f)
+    (h_fdag_adag : f_dag * a_dag = a_dag * f_dag) :
+    Anticommutator (chiralSuperchargeQ a_dag f) (chiralSuperchargeQbar a f_dag) =
+      chiralNumberOperator a_dag a f_dag f :=
+  chiral_supercharge_anticommutator_of_comm a a_dag f f_dag h_boson_ccr h_fermion_car h_fa h_fdag_adag
 
 def chiralParityCurrent (N_L N_R : ℝ) : ℝ :=
   N_L - N_R

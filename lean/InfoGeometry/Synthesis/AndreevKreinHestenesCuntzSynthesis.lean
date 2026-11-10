@@ -9,6 +9,7 @@ import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.Ring
 import InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset
 
@@ -120,7 +121,7 @@ end AndreevKrein
 
 section HestenesCl11
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Spacetime vector generator $e_0 = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$ with $e_0^2 = +\mathbf{1}$. -/
 def hestenesE0 : Matrix (Fin 2) (Fin 2) R :=
@@ -246,7 +247,7 @@ theorem hestenes_matrix_expansion_and_trace
   · simp only [Matrix.trace, Matrix.diag, Fin.sum_univ_two, Matrix.add_apply,
       Matrix.smul_apply, Matrix.one_apply_eq, majoranaPsi1, majoranaPsi2,
       hestenesOmega, of_apply, cons_val', cons_val_zero, cons_val_one, smul_eq_mul]
-    ring
+    noncomm_ring
 
 /-!
 ## Part III: Defined Matrix Reversion, Adjoint, and Projectors
@@ -269,7 +270,7 @@ def hestenesKreinAdjoint (M : Matrix (Fin 2) (Fin 2) R) : Matrix (Fin 2) (Fin 2)
 Hestenes reversion is an involution ($\widetilde{\widetilde{M}} = M$), reverses products
 ($\widetilde{A B} = \widetilde{B}\widetilde{A}$), fixes $\mathbf{1}, e_0, e_1, \psi_1, \psi_2$,
 and negates the bivector $\omega$ ($\widetilde{\omega} = -\omega$). -/
-theorem hestenesRev_properties (A B : Matrix (Fin 2) (Fin 2) R) :
+theorem hestenesRev_properties {R : Type*} [CommRing R] (A B : Matrix (Fin 2) (Fin 2) R) :
     hestenesRev (hestenesRev A) = A ∧
     hestenesRev (A * B) = hestenesRev B * hestenesRev A ∧
     hestenesRev (1 : Matrix (Fin 2) (Fin 2) R) = 1 ∧
@@ -349,7 +350,7 @@ end HestenesCl11
 section BlockCornerMaps
 
 variable {m : Type*} [Fintype m] [DecidableEq m]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- **First Block-Corner Embedding**:
 Embeds a local stage matrix $M \in M_m(R)$ into the top-left Peircian chiral sector

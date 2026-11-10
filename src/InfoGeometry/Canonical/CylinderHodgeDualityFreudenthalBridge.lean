@@ -42,7 +42,7 @@ open InfoGeometry.Algebra.H3ZornFreudenthal
 /-- Graded differential forms on a 2D cylinder with atomic components for 0-forms,
     1-forms (dξ and dθ components), and 2-forms (volume form dξ ∧ dθ). -/
 @[ext]
-structure GradedForms (R : Type*) [CommRing R] where
+structure GradedForms (R : Type*) [Ring R] where
   omega0 : R    -- 0-form (function / scalar field)
   omega1_1 : R  -- 1-form dξ component
   omega1_2 : R  -- 1-form dθ component
@@ -50,7 +50,7 @@ structure GradedForms (R : Type*) [CommRing R] where
 
 namespace GradedForms
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def add (f g : GradedForms R) : GradedForms R where
   omega0 := f.omega0 + g.omega0
@@ -102,21 +102,21 @@ instance : SMul R (GradedForms R) := ⟨smul⟩
 @[simp] theorem neg_omega2 (f : GradedForms R) : (-f).omega2 = -f.omega2 := rfl
 
 instance : AddCommGroup (GradedForms R) where
-  add_assoc f g h := by ext <;> (dsimp; ring)
-  zero_add f := by ext <;> (dsimp; ring)
-  add_zero f := by ext <;> (dsimp; ring)
+  add_assoc f g h := by ext <;> (dsimp; abel)
+  zero_add f := by ext <;> (dsimp; abel)
+  add_zero f := by ext <;> (dsimp; abel)
   nsmul := nsmulRec
   zsmul := zsmulRec
-  neg_add_cancel f := by ext <;> (dsimp; ring)
-  add_comm f g := by ext <;> (dsimp; ring)
+  neg_add_cancel f := by ext <;> (dsimp; abel)
+  add_comm f g := by ext <;> (dsimp; abel)
 
 instance : Module R (GradedForms R) where
-  one_smul f := by ext <;> (dsimp; ring)
-  mul_smul a b f := by ext <;> (dsimp; ring)
-  smul_zero a := by ext <;> (dsimp; ring)
-  smul_add a f g := by ext <;> (dsimp; ring)
-  add_smul a b f := by ext <;> (dsimp; ring)
-  zero_smul f := by ext <;> (dsimp; ring)
+  one_smul f := by ext <;> (dsimp; simp)
+  mul_smul a b f := by ext <;> (dsimp; exact mul_assoc _ _ _)
+  smul_zero a := by ext <;> (dsimp; simp)
+  smul_add a f g := by ext <;> (dsimp; exact mul_add _ _ _)
+  add_smul a b f := by ext <;> (dsimp; exact add_mul _ _ _)
+  zero_smul f := by ext <;> (dsimp; simp)
 
 /-! ## 2. Chirality and Hodge Star Operators -/
 
@@ -190,21 +190,22 @@ def innerProduct (f g : GradedForms R) : R :=
 theorem hodgeStar_isometry (f g : GradedForms R) :
     innerProduct (hodgeStar f) (hodgeStar g) = innerProduct f g := by
   dsimp [innerProduct, hodgeStar]
-  ring
+  simp only [neg_mul_neg]
+  abel
 
 end GradedForms
 
 /-! ## 4. Derivation and Hodge Codifferential -/
 
 /-- Commuting partial derivatives $(\partial_\xi, \partial_\theta)$ on the cylinder. -/
-structure CylinderDerivData (R : Type*) [CommRing R] where
+structure CylinderDerivData (R : Type*) [Ring R] where
   d_xi : R →+ R
   d_theta : R →+ R
   comm : ∀ x, d_xi (d_theta x) = d_theta (d_xi x)
 
 namespace CylinderDerivData
 
-variable {R : Type*} [CommRing R] (D : CylinderDerivData R)
+variable {R : Type*} [Ring R] (D : CylinderDerivData R)
 
 /-- Exterior derivative $d: \Omega^p \to \Omega^{p+1}$. -/
 def exteriorD (f : GradedForms R) : GradedForms R where
@@ -225,7 +226,7 @@ theorem exteriorD_sq_zero (f : GradedForms R) :
   · dsimp [exteriorD]
     have h := D.comm f.omega0
     rw [h]
-    ring
+    abel
 
 /-- The Hodge codifferential $\delta = -\star d \star$ on 2D forms. -/
 def codifferential (f : GradedForms R) : GradedForms R :=
@@ -236,16 +237,16 @@ theorem codifferential_sq_zero (f : GradedForms R) :
     codifferential D (codifferential D f) = 0 := by
   ext
   · dsimp [codifferential, exteriorD, GradedForms.hodgeStar]
-    simp only [neg_neg]
+    simp only [neg_neg, map_sub, map_neg]
     have h := D.comm f.omega2
     rw [h]
-    ring
+    abel
   · dsimp [codifferential, exteriorD, GradedForms.hodgeStar]
     simp
   · dsimp [codifferential, exteriorD, GradedForms.hodgeStar]
     simp
   · dsimp [codifferential, exteriorD, GradedForms.hodgeStar]
-    ring
+    abel
 
 /-- Hodge-de Rham Laplacian $\Delta = d\delta + \delta d$. -/
 def laplacian (f : GradedForms R) : GradedForms R :=

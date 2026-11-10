@@ -12,7 +12,8 @@ is asserted. The inverted generator is the multiplicative flow, not its
 infinitesimal grading. -/
 namespace InfoGeometry.Canonical.ReflexiveNilpotentFlows
 open KleinPresentedGroup
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
 variable {d B : A} (hd : d * d = 0) (hB : B * B = 0)
   (hr : d * B * d = d) (hs : B * d * B = B)
 

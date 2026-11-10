@@ -8,7 +8,7 @@ import InfoGeometry.Canonical.PeirceMatrixUnitCompletion
 /-! Composition of completed active-corner units and normalized boosts. -/
 namespace InfoGeometry.Canonical.PeirceHyperbolicComposition
 open ReflexiveNilpotentFlows PeirceMatrixUnitCompletion
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {R A : Type*} [Ring R] [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 variable {d B : A} (hd : d*d=0) (hB : B*B=0)
   (hr : d*B*d=d) (hs : B*d*B=B)
 
@@ -22,6 +22,11 @@ def completedUnitHom : (Matrix (Fin 2) (Fin 2) R)ˣ →* Aˣ where
     apply Units.ext
     exact (completedMatrix_mul hd hB hr hs (M : Matrix (Fin 2) (Fin 2) R)
       (N : Matrix (Fin 2) (Fin 2) R)).symm
+
+section CommScalars
+variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {d B : A} (hd : d*d=0) (hB : B*B=0)
+  (hr : d*B*d=d) (hs : B*d*B=B)
 
 theorem hyperbolic_norm_comp (u v e f : R) (hu : u*u-v*v=1) (he : e*e-f*f=1) :
     (u*e+v*f)*(u*e+v*f)-(u*f+v*e)*(u*f+v*e)=1 := by
@@ -63,4 +68,5 @@ theorem hyperbolic_orbit_composition (u v e f : R)
     mul_inv_rev, Units.val_mul]
   noncomm_ring
 
+end CommScalars
 end InfoGeometry.Canonical.PeirceHyperbolicComposition

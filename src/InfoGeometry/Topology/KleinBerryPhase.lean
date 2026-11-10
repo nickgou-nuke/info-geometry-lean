@@ -23,7 +23,7 @@ not prove a chiral-divergence or GUE-monodromy theorem.
 
 open Matrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The fundamental braid matrix representing one spatial encirclement of the Drazin defect. -/
 def BraidMatrix : Matrix (Fin 2) (Fin 2) ℤ :=

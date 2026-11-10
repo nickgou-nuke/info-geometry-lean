@@ -15,7 +15,7 @@ All proofs are complete in native Lean 4 + Mathlib with 0 sorrys, 0 admits, and 
 
 namespace InfoGeometry.Algebra.NPotentSpectra
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Compatibility name for the canonical n-potent predicate.
 
@@ -31,7 +31,7 @@ theorem npotent_two_factor (x : R) (hx : IsNPotent x 2) :
     x * (x - 1) = 0 := by
   dsimp [IsNPotent] at hx
   calc
-    x * (x - 1) = x ^ 2 - x := by ring
+    x * (x - 1) = x ^ 2 - x := by noncomm_ring
     _ = x - x := by rw [hx]
     _ = 0 := sub_self x
 
@@ -40,7 +40,7 @@ theorem npotent_three_factor (x : R) (hx : IsNPotent x 3) :
     x * (x - 1) * (x + 1) = 0 := by
   dsimp [IsNPotent] at hx
   calc
-    x * (x - 1) * (x + 1) = x ^ 3 - x := by ring
+    x * (x - 1) * (x + 1) = x ^ 3 - x := by noncomm_ring
     _ = x - x := by rw [hx]
     _ = 0 := sub_self x
 
@@ -49,7 +49,7 @@ theorem npotent_five_factor (x : R) (hx : IsNPotent x 5) :
     x * (x ^ 2 - 1) * (x ^ 2 + 1) = 0 := by
   dsimp [IsNPotent] at hx
   calc
-    x * (x ^ 2 - 1) * (x ^ 2 + 1) = x ^ 5 - x := by ring
+    x * (x ^ 2 - 1) * (x ^ 2 + 1) = x ^ 5 - x := by noncomm_ring
     _ = x - x := by rw [hx]
     _ = 0 := sub_self x
 
@@ -58,7 +58,7 @@ theorem npotent_seven_factor (x : R) (hx : IsNPotent x 7) :
     x * (x ^ 3 - 1) * (x ^ 3 + 1) = 0 := by
   dsimp [IsNPotent] at hx
   calc
-    x * (x ^ 3 - 1) * (x ^ 3 + 1) = x ^ 7 - x := by ring
+    x * (x ^ 3 - 1) * (x ^ 3 + 1) = x ^ 7 - x := by noncomm_ring
     _ = x - x := by rw [hx]
     _ = 0 := sub_self x
 
@@ -67,7 +67,7 @@ theorem npotent_eleven_factor (x : R) (hx : IsNPotent x 11) :
     x * (x ^ 5 - 1) * (x ^ 5 + 1) = 0 := by
   dsimp [IsNPotent] at hx
   calc
-    x * (x ^ 5 - 1) * (x ^ 5 + 1) = x ^ 11 - x := by ring
+    x * (x ^ 5 - 1) * (x ^ 5 + 1) = x ^ 11 - x := by noncomm_ring
     _ = x - x := by rw [hx]
     _ = 0 := sub_self x
 
@@ -76,7 +76,7 @@ theorem npotent_thirteen_factor (x : R) (hx : IsNPotent x 13) :
     x * (x ^ 6 - 1) * (x ^ 6 + 1) = 0 := by
   dsimp [IsNPotent] at hx
   calc
-    x * (x ^ 6 - 1) * (x ^ 6 + 1) = x ^ 13 - x := by ring
+    x * (x ^ 6 - 1) * (x ^ 6 + 1) = x ^ 13 - x := by noncomm_ring
     _ = x - x := by rw [hx]
     _ = 0 := sub_self x
 
@@ -105,7 +105,7 @@ def projZero (x : R) (n : ℕ) : R :=
 theorem proj_sum (x : R) (n : ℕ) :
     projZero x n + projNonzero x n = 1 := by
   dsimp [projZero, projNonzero]
-  ring
+  noncomm_ring
 
 /-- Orthogonality of zero-mode and nonzero-mode projectors. -/
 theorem proj_orthogonal (x : R) (n : ℕ) (hn : 2 ≤ n) (hx : IsNPotent x n) :
@@ -113,7 +113,7 @@ theorem proj_orthogonal (x : R) (n : ℕ) (hn : 2 ≤ n) (hx : IsNPotent x n) :
   dsimp [projZero, projNonzero, IsNPotent] at *
   have hs : (n - 1) + (n - 1) = n + (n - 2) := by omega
   calc
-    (1 - x ^ (n - 1)) * x ^ (n - 1) = x ^ (n - 1) - x ^ (n - 1) * x ^ (n - 1) := by ring
+    (1 - x ^ (n - 1)) * x ^ (n - 1) = x ^ (n - 1) - x ^ (n - 1) * x ^ (n - 1) := by noncomm_ring
     _ = x ^ (n - 1) - x ^ ((n - 1) + (n - 1)) := by rw [← pow_add]
     _ = x ^ (n - 1) - x ^ (n + (n - 2)) := by rw [hs]
     _ = x ^ (n - 1) - x ^ n * x ^ (n - 2) := by rw [pow_add]
@@ -141,7 +141,7 @@ theorem nilpotent_power_vanishing (N : R) (hN : N * N = 0) (p : ℕ) (hp : 2 ≤
 
 section LinearOperatorLift
 
-variable {K M : Type*} [CommRing K] [AddCommGroup M] [Module K M]
+variable {K M : Type*} [Ring K] [AddCommGroup M] [Module K M]
 
 /-! The operator instance is the same canonical monoid predicate; retaining
 this name preserves the historical API without creating a second owner. -/

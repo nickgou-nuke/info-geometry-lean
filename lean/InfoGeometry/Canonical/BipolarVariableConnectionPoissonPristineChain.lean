@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.BipolarVariableCartanMaurerCartan
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BipolarHalfLogLiftAnalyticPureGauge
@@ -63,17 +68,19 @@ theorem pristine_local_pure_gauge_core
         variableCartanConnection s v := by
   exact bipolar_half_log_pure_gauge_packet hs hslit v i j
 
-/-- Observable-level Poisson laws from a commuting pair of genuine
+/-- Observable-level noncommutative Poisson laws from a commuting pair of genuine
 Leibniz derivations. -/
 theorem pristine_poisson_core
-    {A : Type*} [CommRing A] [Algebra ℝ A]
+    {A : Type*} [Ring A] [Algebra ℝ A]
     (D : CommutingDerivationPair A) (F G H : A) :
-    poissonBracket D F G = -poissonBracket D G F ∧
+    poissonBracket D F G = -poissonBracket D G F + poissonSkewAnomaly D F G ∧
       poissonBracket D F (G * H) =
-        poissonBracket D F G * H + G * poissonBracket D F H ∧
+        poissonBracket D F G * H + G * poissonBracket D F H +
+          poissonLeibnizRightAnomaly D F G H ∧
       poissonBracket D (poissonBracket D F G) H +
         poissonBracket D (poissonBracket D G H) F +
-        poissonBracket D (poissonBracket D H F) G = 0 := by
+        poissonBracket D (poissonBracket D H F) G =
+        poissonJacobiAnomaly D F G H := by
   exact bipolar_poisson_algebra_packet D F G H
 
 /-- The exact two-dimensional obstruction behind the auxiliary-coordinate

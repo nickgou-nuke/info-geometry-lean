@@ -156,7 +156,7 @@ section cyclicTripleSumBilin
 /-- "Coerce" a bilinear map into a biadditive map. -/
 def _root_.LinearMap.toBiadditive
     {V₁ V₂ V₃ : Type*} [AddCommMonoid V₁] [AddCommMonoid V₂] [AddCommMonoid V₃]
-    {R₁ R₂ R₃ : Type*} [CommSemiring R₁] [CommSemiring R₂] [CommSemiring R₃]
+    {R₁ R₂ R₃ : Type*} [Semiring R₁] [Semiring R₂] [CommSemiring R₃]
     {σ : R₁ →+* R₃} {τ : R₂ →+* R₃}
     [Module R₁ V₁] [Module R₂ V₂] [Module R₃ V₃]
     (f : V₁ →ₛₗ[σ] V₂ →ₛₗ[τ] V₃) :

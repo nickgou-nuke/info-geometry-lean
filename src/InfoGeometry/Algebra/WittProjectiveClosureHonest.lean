@@ -104,7 +104,7 @@ end CommRing
 
 section ClosureOnly
 
-variable (𝕜 : Type*) [CommRing 𝕜]
+variable (𝕜 : Type*) [Ring 𝕜]
 
 /-- If two projective generators have nonzero Witt bracket coefficient, then the
 output index still lies in the projective set. This is the finite `sl₂` closure

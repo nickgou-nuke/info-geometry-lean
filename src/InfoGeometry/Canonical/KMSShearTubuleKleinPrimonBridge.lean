@@ -17,7 +17,7 @@ open Complex
 open Real
 open Matrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ## 1. The KMS Strip & Midline Gliding Reflection (Klein Seam) -/
 

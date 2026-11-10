@@ -125,14 +125,14 @@ end KreinDecomposition
 
 section TransverseThickness
 
-variable {A : Type*} [CommRing A]
+variable {A : Type*} [Ring A]
 variable (half J h : A)
 
 /-- Transverse moment operator across thickness $h$: $M_z = \frac{h}{2} J$. -/
 def transverseMoment : A := half * h * J
 
 /-- The square of the transverse moment operator is $\frac{h^2}{4} \mathbf{1}$. -/
-theorem transverse_moment_sq (hJ : J * J = 1) :
+theorem transverse_moment_sq {A : Type*} [CommRing A] (half J h : A) (hJ : J * J = 1) :
     transverseMoment half J h * transverseMoment half J h = (half * h * (half * h)) := by
   unfold transverseMoment
   calc (half * h * J) * (half * h * J)
@@ -148,7 +148,7 @@ end TransverseThickness
 
 section IndefiniteBilayerPairing
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Indefinite Krein inner product of two 2-sheeted vectors $[x, y] = x_+ y_+ - x_- y_-$. -/
 def kreinPairing (x y : Fin 2 → R) : R :=
@@ -164,7 +164,7 @@ theorem krein_sheet_orthogonality (x y : Fin 2 → R) :
     let y_minus : Fin 2 → R := ![0, y 1]
     kreinPairing x_plus y_minus = 0 := by
   dsimp [kreinPairing]
-  ring
+  simp
 
 /-- Transverse dipole polarization across thickness $h$: $d = \frac{h}{2}(x_+ - x_-)$. -/
 def transverseDipole (h half : R) (x : Fin 2 → R) : R :=
@@ -178,8 +178,7 @@ def transverseMonopole (x : Fin 2 → R) : R :=
 theorem krein_neutral_symmetric_state (x : Fin 2 → R) (h_eq : x 0 = x 1) :
     kreinPairing x x = 0 := by
   dsimp [kreinPairing]
-  rw [h_eq]
-  ring
+  rw [h_eq, sub_self]
 
 end IndefiniteBilayerPairing
 

@@ -20,9 +20,12 @@ namespace InfoGeometry.Core.PeirceDensityIntertwining
 open InfoGeometry.Singular.MoorePenrose
 open InfoGeometry.Core.DiracSuperalgebra
 
-variable {R A : Type*} [CommRing R] [Ring A] [StarRing A] [Algebra R A]
+section Noncomm
 
-/-- The source note's weight, generalized from squared to arbitrary scalars. -/
+variable {R A : Type*} [Ring R] [Ring A] [StarRing A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
+
+/-- The source note's weight, generalized from squared to arbitrary ring/operator coefficients. -/
 def density (d b : A) (u v : R) : A :=
   u • coexactSupport d b + v • exactSupport d b
 
@@ -31,7 +34,7 @@ def weightedTrace (τ : A →ₗ[R] R) (ρ x : A) : R := τ (ρ * x)
 
 variable {d b : A}
 
-/-- Four scalar eigen-relations; no division or invertibility is required. -/
+/-- Four eigen-relations over any noncommutative ring `R`; no division or invertibility is required. -/
 theorem density_actions (h : IsMoorePenroseInverse d b) (hd : d * d = 0)
     (u v : R) :
     density d b u v * d = v • d ∧ d * density d b u v = u • d ∧
@@ -41,6 +44,34 @@ theorem density_actions (h : IsMoorePenroseInverse d b) (hd : d * d = 0)
   simp only [density, add_mul, mul_add, smul_mul_assoc, mul_smul_comm,
     hpd, hdq, hdp, hqd, hqb, hbp, hbq, hpb, smul_zero, zero_add, add_zero,
     and_self]
+
+/-- Over a noncommutative coefficient ring `R`, the KMS/modular intertwining defects of `density d b u v`
+on `d` and `b` are governed directly by the commutator `u * v - v * u`. -/
+theorem density_intertwining_noncomm_anomaly (h : IsMoorePenroseInverse d b) (hd : d * d = 0)
+    (u v : R) :
+    u • (density d b u v * d) - v • (d * density d b u v) = (u * v - v * u) • d ∧
+    v • (density d b u v * b) - u • (b * density d b u v) = (v * u - u * v) • b := by
+  rcases density_actions h hd u v with ⟨h₁, h₂, h₃, h₄⟩
+  rw [h₁, h₂, h₃, h₄]
+  simp only [smul_smul, ← sub_smul, and_self]
+
+/-- Merely squaring arbitrary ring scalars does not establish order positivity. -/
+theorem density_harmonic_annihilation
+    (h : IsMoorePenroseInverse d b) (hd : d * d = 0) (u v : R) :
+    density d b u v * harmonicSupport d b = 0 ∧
+    harmonicSupport d b * density d b u v = 0 := by
+  constructor
+  · simp only [density, add_mul, smul_mul_assoc,
+      h.coexactSupport_mul_harmonicSupport hd, h.exactSupport_mul_harmonicSupport hd,
+      smul_zero, add_zero]
+  · simp only [density, mul_add, mul_smul_comm,
+      h.harmonicSupport_mul_coexactSupport hd, h.harmonicSupport_mul_exactSupport hd,
+      smul_zero, add_zero]
+
+end Noncomm
+
+variable {R A : Type*} [CommRing R] [Ring A] [StarRing A] [Algebra R A]
+variable {d b : A}
 
 /-- Cross-multiplication avoids division and remains valid at zero weights. -/
 theorem density_intertwining (h : IsMoorePenroseInverse d b) (hd : d * d = 0)
@@ -85,18 +116,5 @@ theorem density_trace_boundary
       u * weightedTrace τ (density d b u v) (y * b) := by
   exact ⟨weighted_trace_of_intertwining τ hτ (density_intertwining h hd u v).1 y,
     weighted_trace_of_intertwining τ hτ (density_intertwining h hd u v).2 y⟩
-
-/-- Merely squaring arbitrary ring scalars does not establish order positivity. -/
-theorem density_harmonic_annihilation
-    (h : IsMoorePenroseInverse d b) (hd : d * d = 0) (u v : R) :
-    density d b u v * harmonicSupport d b = 0 ∧
-    harmonicSupport d b * density d b u v = 0 := by
-  constructor
-  · simp only [density, add_mul, smul_mul_assoc,
-      h.coexactSupport_mul_harmonicSupport hd, h.exactSupport_mul_harmonicSupport hd,
-      smul_zero, add_zero]
-  · simp only [density, mul_add, mul_smul_comm,
-      h.harmonicSupport_mul_coexactSupport hd, h.harmonicSupport_mul_exactSupport hd,
-      smul_zero, add_zero]
 
 end InfoGeometry.Core.PeirceDensityIntertwining

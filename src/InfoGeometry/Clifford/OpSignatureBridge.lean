@@ -102,7 +102,7 @@ Bridge theorem: the signature-selected quadratic form feeds directly into the
 native Clifford anticommutator / polarization law.
 -/
 theorem bridge_to_polarization
-    {R : Type*} [CommRing R] [Invertible (2 : R)]
+    {R : Type*} [CommRing R]
     (sig : OpSignature) (v w : R) :
     CliffordAlgebra.ι (signatureToQuadraticForm (R := R) sig) v *
         CliffordAlgebra.ι (signatureToQuadraticForm (R := R) sig) w +

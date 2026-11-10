@@ -32,7 +32,7 @@ namespace InfoGeometry.Canonical.ZornBdGHamiltonianChiral
 open Matrix
 open InfoGeometry.Canonical.KreinDoubledCartanPeirce
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The Traceless Zorn Bogoliubov-de Gennes (BdG) Matrix. -/
 def zornBdG (D Delta1 Delta2 : R) : Matrix (Fin 2) (Fin 2) R :=
@@ -69,6 +69,10 @@ theorem eta_chiralDirac_comm (D : R) :
   ext i j
   fin_cases i <;> fin_cases j <;> simp [eta, zornChiralDirac]
 
+section CommRing
+
+variable {R : Type*} [CommRing R]
+
 /-- Determinant of the BdG Zorn matrix: det(Z_BdG) = -(D² + Δ₁Δ₂). -/
 theorem zornBdG_det (D Delta1 Delta2 : R) :
     det (zornBdG D Delta1 Delta2) = -(D ^ 2 + Delta1 * Delta2) := by
@@ -88,5 +92,7 @@ theorem zornBdG_symmetric_secular (D Delta E : R) :
   have h_sq : Delta * Delta = Delta ^ 2 := by ring
   rw [h_sq]
   exact sub_eq_zero
+
+end CommRing
 
 end InfoGeometry.Canonical.ZornBdGHamiltonianChiral

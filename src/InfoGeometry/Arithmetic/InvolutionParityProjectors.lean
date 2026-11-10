@@ -17,7 +17,7 @@ open scoped Interval
 
 noncomputable section
 
-variable {α R : Type*} [CommRing R]
+variable {α R : Type*} [Ring R]
 
 def evenPart
     (J : α → α) (half : R) (F : α → R) (x : α) : R :=
@@ -32,14 +32,14 @@ theorem evenPart_invariant
     (half : R) (F : α → R) (x : α) :
     evenPart J half F (J x) = evenPart J half F x := by
   simp [evenPart, hJ x]
-  ring
+  noncomm_ring
 
 theorem oddPart_antiinvariant
     (J : α → α) (hJ : Function.Involutive J)
     (half : R) (F : α → R) (x : α) :
     oddPart J half F (J x) = -oddPart J half F x := by
   simp only [oddPart, hJ x]
-  ring
+  noncomm_ring
 
 theorem evenPart_add_oddPart
     (J : α → α) (half : R) (hhalf : (2 : R) * half = 1)
@@ -48,7 +48,7 @@ theorem evenPart_add_oddPart
   dsimp [evenPart, oddPart]
   calc
     half * (F x + F (J x)) + half * (F x - F (J x)) =
-        ((2 : R) * half) * F x := by ring
+        ((2 : R) * half) * F x := by noncomm_ring
     _ = F x := by rw [hhalf, one_mul]
 
 theorem evenPart_eq_self_of_invariant
@@ -60,7 +60,7 @@ theorem evenPart_eq_self_of_invariant
   dsimp [evenPart]
   rw [hInv x]
   calc
-    half * (F x + F x) = ((2 : R) * half) * F x := by ring
+    half * (F x + F x) = ((2 : R) * half) * F x := by noncomm_ring
     _ = F x := by rw [hhalf, one_mul]
 
 theorem oddPart_eq_zero_of_invariant
@@ -88,7 +88,7 @@ theorem oddPart_eq_self_of_antiinvariant
   dsimp [oddPart]
   rw [hAnti x, sub_neg_eq_add]
   calc
-    half * (F x + F x) = ((2 : R) * half) * F x := by ring
+    half * (F x + F x) = ((2 : R) * half) * F x := by noncomm_ring
     _ = F x := by rw [hhalf, one_mul]
 
 theorem evenPart_idempotent

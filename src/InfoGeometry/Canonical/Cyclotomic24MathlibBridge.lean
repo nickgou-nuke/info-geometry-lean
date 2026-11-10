@@ -39,12 +39,12 @@ theorem map_cyclotomic24_eq_explicit (R : Type*) [Ring R] :
     Polynomial.cyclotomic 24 R = Polynomial.map (Int.castRingHom R) phi24Explicit := by
   rw [← Polynomial.map_cyclotomic_int, cyclotomic24_eq_explicit]
 
-/-- Over any commutative ring, evaluation of Mathlib's canonical polynomial
+/-- Over any ring, evaluation of Mathlib's canonical polynomial
 is the explicit scalar polynomial used by the repository's 24-cyclotomic
 archetypes. -/
-theorem eval_cyclotomic24_eq_explicit {R : Type*} [CommRing R] (x : R) :
+theorem eval_cyclotomic24_eq_explicit {R : Type*} [Ring R] (x : R) :
     (Polynomial.cyclotomic 24 R).eval x = x ^ 8 - x ^ 4 + 1 := by
   rw [map_cyclotomic24_eq_explicit]
-  simp [phi24Explicit]
+  simp [phi24Explicit, eval_add, eval_sub, eval_X_pow, eval_X, eval_one]
 
 end InfoGeometry.Canonical.Cyclotomic24MathlibBridge

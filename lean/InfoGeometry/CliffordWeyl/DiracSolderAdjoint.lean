@@ -21,7 +21,7 @@ namespace InfoGeometry.CliffordWeyl.SpinorBilinearSoldering
 open Matrix
 
 section MatrixDirac
-variable {Scalar Index : Type*} [CommRing Scalar] [StarRing Scalar]
+variable {Scalar Index : Type*} [Ring Scalar] [StarRing Scalar]
 variable [Fintype Index]
 
 theorem solder_eq_vecMulVec_mul (η : Matrix Index Index Scalar) (l r : Index → Scalar) :

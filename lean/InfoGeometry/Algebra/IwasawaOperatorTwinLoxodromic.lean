@@ -28,7 +28,7 @@ This module formalizes the algebraic operator components of the $K, A, N$ Iwasaw
 it does not assert a full group-level Iwasawa decomposition $G = KAN$.
 -/
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. K-Sector: Complex Rotors ($\mathcal{J}^2 = -1$) -/
 
@@ -44,7 +44,7 @@ def rotor (J c s : R) : R :=
 
 /-- 🏆 THEOREM: Rotor multiplication: $K(c_1, s_1) K(c_2, s_2) = K(c_1 c_2 - s_1 s_2, s_1 c_2 + c_1 s_2)$
     under $\mathcal{J}^2 = -1$. -/
-theorem rotor_mul (J : R) (hJ : IsComplexStructure J) (c1 s1 c2 s2 : R) :
+theorem rotor_mul {R : Type*} [CommRing R] (J : R) (hJ : IsComplexStructure J) (c1 s1 c2 s2 : R) :
     rotor J c1 s1 * rotor J c2 s2 =
       rotor J (c1 * c2 - s1 * s2) (s1 * c2 + c1 * s2) := by
   dsimp [rotor]
@@ -56,7 +56,7 @@ theorem rotor_mul (J : R) (hJ : IsComplexStructure J) (c1 s1 c2 s2 : R) :
     _ = (c1 * c2 - s1 * s2) + (s1 * c2 + c1 * s2) * J := by ring
 
 /-- Unit rotor condition: $c^2 + s^2 = 1 \implies K(c, s) K(c, -s) = 1$. -/
-theorem rotor_inv (J : R) (hJ : IsComplexStructure J) (c s : R) (h : c ^ 2 + s ^ 2 = 1) :
+theorem rotor_inv {R : Type*} [CommRing R] (J : R) (hJ : IsComplexStructure J) (c s : R) (h : c ^ 2 + s ^ 2 = 1) :
     rotor J c s * rotor J c (-s) = 1 := by
   rw [rotor_mul J hJ]
   dsimp [rotor]
@@ -87,9 +87,9 @@ theorem weyl_dilation_pow (Sig D : R) (hW : WeylDilationPair Sig D) (k : ℕ) :
   | succ k ih =>
     calc
       Sig * (D ^ (k + 1)) * Sig = Sig * (D ^ k * D) * Sig := by rw [pow_succ]
-      _ = Sig * (D ^ k) * 1 * D * Sig := by ring
+      _ = Sig * (D ^ k) * 1 * D * Sig := by noncomm_ring
       _ = Sig * (D ^ k) * (Sig * Sig) * D * Sig := by rw [hW.sig_sq]
-      _ = (Sig * (D ^ k) * Sig) * (Sig * D * Sig) := by ring
+      _ = (Sig * (D ^ k) * Sig) * (Sig * D * Sig) := by noncomm_ring
       _ = ((-D) ^ k) * (-D) := by rw [ih, hW.sig_conj_D]
       _ = (-D) ^ (k + 1) := by rw [pow_succ]
 
@@ -105,7 +105,7 @@ def loxodromicElement (J : R) (a c s : R) : R :=
 
 /-- 🏆 THEOREM: Composition of commuting loxodromic scaling and phase rotations:
     $(a_1 K(c_1, s_1)) \cdot (a_2 K(c_2, s_2)) = (a_1 a_2) K(c_1 c_2 - s_1 s_2, s_1 c_2 + c_1 s_2)$. -/
-theorem loxodromic_mul (J : R) (hJ : IsComplexStructure J) (a1 c1 s1 a2 c2 s2 : R) :
+theorem loxodromic_mul {R : Type*} [CommRing R] (J : R) (hJ : IsComplexStructure J) (a1 c1 s1 a2 c2 s2 : R) :
     loxodromicElement J a1 c1 s1 * loxodromicElement J a2 c2 s2 =
       loxodromicElement J (a1 * a2) (c1 * c2 - s1 * s2) (s1 * c2 + c1 * s2) := by
   dsimp [loxodromicElement]
@@ -145,12 +145,14 @@ theorem twin_projectors_sum_eq_one
     quarter * (1 + 1 * Γ) * (1 + -1 * Sig) +
     quarter * (1 + -1 * Γ) * (1 + 1 * Sig) +
     quarter * (1 + -1 * Γ) * (1 + -1 * Sig) =
-        (4 * quarter) * 1 := by ring
+        (4 * quarter) * 1 := by
+      rw [show (4 : R) = 1 + 1 + 1 + 1 by norm_num]
+      noncomm_ring
     _ = 1 * 1 := by rw [hquarter]
     _ = 1 := mul_one 1
 
 /-- 🏆 THEOREM (Idempotence): Each twin projector is idempotent $P_{\sigma, \tau}^2 = P_{\sigma, \tau}$. -/
-theorem twinProjector_isIdempotent
+theorem twinProjector_isIdempotent {R : Type*} [CommRing R]
     (Γ Sig quarter : R) (sΓ sSig : R)
     (hΓ : IsGradingInvolution Γ) (hSig : IsGradingInvolution Sig)
     (hsΓ : sΓ ^ 2 = 1) (hsSig : sSig ^ 2 = 1)
@@ -187,7 +189,7 @@ theorem twinProjector_isIdempotent
 
 /-- 🏆 THEOREM (Pairwise Orthogonality across Chiral Grading):
     $P_{\sigma, \tau_1} P_{-\sigma, \tau_2} = 0$. -/
-theorem twinProjector_chiral_orthogonal
+theorem twinProjector_chiral_orthogonal {R : Type*} [CommRing R]
     (Γ Sig quarter : R) (sΓ sSig1 sSig2 : R)
     (hΓ : IsGradingInvolution Γ) (hsΓ : sΓ ^ 2 = 1) :
     twinProjector Γ Sig quarter sΓ sSig1 * twinProjector Γ Sig quarter (-sΓ) sSig2 = 0 := by
@@ -209,7 +211,7 @@ theorem twinProjector_chiral_orthogonal
 
 /-- 🏆 THEOREM (Pairwise Orthogonality across Sheet Grading):
     $P_{\sigma_1, \tau} P_{\sigma_2, -\tau} = 0$. -/
-theorem twinProjector_sheet_orthogonal
+theorem twinProjector_sheet_orthogonal {R : Type*} [CommRing R]
     (Γ Sig quarter : R) (sSig sΓ1 sΓ2 : R)
     (hSig : IsGradingInvolution Sig) (hsSig : sSig ^ 2 = 1) :
     twinProjector Γ Sig quarter sΓ1 sSig * twinProjector Γ Sig quarter sΓ2 (-sSig) = 0 := by

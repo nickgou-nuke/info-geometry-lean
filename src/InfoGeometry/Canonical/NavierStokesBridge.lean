@@ -256,14 +256,6 @@ noncomputable def vorticityClosureResidual
     (u : VelocityField E) : VelocityField E :=
   vorticity u - u
 
-/--
-Deprecated compatibility name: this is not the full Navier-Stokes momentum
-residual. Use `vorticityClosureResidual`.
--/
-noncomputable def momentumResidual
-    (u : VelocityField E) : VelocityField E :=
-  vorticityClosureResidual u
-
 omit [FiniteDimensional ℝ E] in
 /--
 The linearized vorticity-closure residual vanishes for skew-adjoint flows.
@@ -275,14 +267,6 @@ lemma vorticityClosureResidual_eq_zero_of_skew
   unfold vorticityClosureResidual
   rw [vorticity_eq_self_of_skew (E := E) hSkew]
   simp
-
-omit [FiniteDimensional ℝ E] in
-/-- Compatibility form for the deprecated `momentumResidual` name. -/
-lemma momentumResidual_eq_zero_of_skew
-    {u : VelocityField E}
-    (hSkew : ContinuousLinearMap.adjoint u = -u) :
-    momentumResidual u = 0 := by
-  exact vorticityClosureResidual_eq_zero_of_skew (E := E) hSkew
 
 /--
 Canonical unit-density anomaly state.
@@ -300,102 +284,87 @@ theorem anomaly_as_fluid_state
   rfl
 
 omit [FiniteDimensional ℝ E] in
-/--
-State-level momentum closure for the canonical anomaly fluid:
-if the Einstein anomaly lane is skew-adjoint, the induced canonical fluid state
-has zero linearized momentum residual.
--/
-theorem anomalyFluidState_momentumResidual_eq_zero_of_skew
+/-- If the Einstein anomaly lane is skew-adjoint, the canonical state has zero
+vorticity-closure residual. -/
+theorem anomalyFluidState_vorticityClosureResidual_eq_zero_of_skew
     (A B_mp B_dr : VelocityField E)
     (hSkew :
       ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
         = -EinsteinAnomaly A B_mp B_dr) :
-    momentumResidual (E := E) ((anomalyFluidState (E := E) A B_mp B_dr).u) = 0 := by
+    vorticityClosureResidual (E := E) ((anomalyFluidState (E := E) A B_mp B_dr).u) = 0 := by
   have hResidual :
-      momentumResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 :=
-    momentumResidual_eq_zero_of_skew (E := E) hSkew
+      vorticityClosureResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 :=
+    vorticityClosureResidual_eq_zero_of_skew (E := E) hSkew
   simpa [anomaly_as_fluid_state (E := E) A B_mp B_dr] using hResidual
 
 omit [FiniteDimensional ℝ E] in
-/--
-If the anomaly lane is skew-adjoint, its linearized momentum residual vanishes.
--/
-theorem anomalyMomentumResidual_eq_zero_of_skew
+/-- If the anomaly lane is skew-adjoint, its vorticity-closure residual
+vanishes. -/
+theorem anomalyVorticityClosureResidual_eq_zero_of_skew
     (A B_mp B_dr : VelocityField E)
     (hSkew :
       ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
         = -EinsteinAnomaly A B_mp B_dr) :
-    momentumResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 := by
-  exact momentumResidual_eq_zero_of_skew (E := E) hSkew
+    vorticityClosureResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 := by
+  exact vorticityClosureResidual_eq_zero_of_skew (E := E) hSkew
 
 omit [FiniteDimensional ℝ E] in
-/--
-Regularization-driven momentum closure:
-if `B_mp` is Moore-Penrose for `A`, `B_dr` is Drazin for `A`, and the Drazin
-regularization channel `A * B_dr` is star-selfadjoint, then the
-Einstein-anomaly lane has zero linearized momentum residual.
--/
-theorem anomalyMomentumResidual_eq_zero_of_regularization
+/-- If the Moore–Penrose and Drazin conditions hold and `A * B_dr` is
+star-selfadjoint, then the Einstein-anomaly lane has zero vorticity-closure
+residual. -/
+theorem anomalyVorticityClosureResidual_eq_zero_of_regularization
     (A B_mp B_dr : VelocityField E)
     (h_mp : IsMoorePenroseInverse A B_mp)
     (k : ℕ)
     (h_dr : IsDrazinInverse A B_dr k)
     (h_dr_star : star (A * B_dr) = A * B_dr) :
-    momentumResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 := by
+    vorticityClosureResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 := by
   have hSkew :
       ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
         = -EinsteinAnomaly A B_mp B_dr := by
     simpa only [ContinuousLinearMap.star_eq_adjoint] using
       (einsteinAnomaly_skew_adjoint (a := A) (b_mp := B_mp) (b_dr := B_dr)
         (k := k) h_mp h_dr h_dr_star)
-  exact anomalyMomentumResidual_eq_zero_of_skew (E := E) A B_mp B_dr hSkew
+  exact anomalyVorticityClosureResidual_eq_zero_of_skew (E := E) A B_mp B_dr hSkew
 
 omit [FiniteDimensional ℝ E] in
-/--
-Regularization-driven momentum closure with existential Drazin witness:
-for fixed `B_dr`, a witness `∃ k, IsDrazinInverse A B_dr k` is sufficient.
--/
-theorem anomalyMomentumResidual_eq_zero_of_regularization_exists
+/-- Existential-witness form of
+`anomalyVorticityClosureResidual_eq_zero_of_regularization`. -/
+theorem anomalyVorticityClosureResidual_eq_zero_of_regularization_exists
     (A B_mp B_dr : VelocityField E)
     (h_mp : IsMoorePenroseInverse A B_mp)
     (h_dr_exists : ∃ k : ℕ, IsDrazinInverse A B_dr k)
     (h_dr_star : star (A * B_dr) = A * B_dr) :
-    momentumResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 := by
+    vorticityClosureResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 := by
   rcases h_dr_exists with ⟨k, h_dr⟩
-  exact anomalyMomentumResidual_eq_zero_of_regularization
+  exact anomalyVorticityClosureResidual_eq_zero_of_regularization
     (E := E) A B_mp B_dr h_mp k h_dr h_dr_star
 
 omit [FiniteDimensional ℝ E] in
-/--
-State-level regularization-driven momentum closure on the canonical unit-density
-anomaly fluid state.
--/
-theorem anomalyFluidState_momentumResidual_eq_zero_of_regularization
+/-- State-level version of the regularization vorticity-closure result. -/
+theorem anomalyFluidState_vorticityClosureResidual_eq_zero_of_regularization
     (A B_mp B_dr : VelocityField E)
     (h_mp : IsMoorePenroseInverse A B_mp)
     (k : ℕ)
     (h_dr : IsDrazinInverse A B_dr k)
     (h_dr_star : star (A * B_dr) = A * B_dr) :
-    momentumResidual (E := E) ((anomalyFluidState (E := E) A B_mp B_dr).u) = 0 := by
+    vorticityClosureResidual (E := E) ((anomalyFluidState (E := E) A B_mp B_dr).u) = 0 := by
   have hResidual :
-      momentumResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 :=
-    anomalyMomentumResidual_eq_zero_of_regularization
+      vorticityClosureResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 :=
+    anomalyVorticityClosureResidual_eq_zero_of_regularization
       (E := E) A B_mp B_dr h_mp k h_dr h_dr_star
   simpa [anomaly_as_fluid_state (E := E) A B_mp B_dr] using hResidual
 
 omit [FiniteDimensional ℝ E] in
-/--
-State-level regularization closure with existential Drazin witness:
-for fixed `B_dr`, a witness `∃ k, IsDrazinInverse A B_dr k` is sufficient.
--/
-theorem anomalyFluidState_momentumResidual_eq_zero_of_regularization_exists
+/-- Existential-witness form of the state-level regularization result. -/
+theorem anomalyFluidState_vorticityClosureResidual_eq_zero_of_regularization_exists
     (A B_mp B_dr : VelocityField E)
     (h_mp : IsMoorePenroseInverse A B_mp)
     (h_dr_exists : ∃ k : ℕ, IsDrazinInverse A B_dr k)
     (h_dr_star : star (A * B_dr) = A * B_dr) :
-    momentumResidual (E := E) ((anomalyFluidState (E := E) A B_mp B_dr).u) = 0 := by
+    vorticityClosureResidual (E := E) ((anomalyFluidState (E := E) A B_mp B_dr).u) = 0 := by
   rcases h_dr_exists with ⟨k, h_dr⟩
-  exact anomalyFluidState_momentumResidual_eq_zero_of_regularization
+  exact anomalyFluidState_vorticityClosureResidual_eq_zero_of_regularization
     (E := E) A B_mp B_dr h_mp k h_dr h_dr_star
 
 /--
@@ -426,49 +395,49 @@ theorem anomalySkew_of_regularization_of_finiteDimensional
       h_dr_star)
 
 /--
-Finite-dimensional regularization package at the momentum-closure level:
+Finite-dimensional regularization package at the vorticity-closure level:
 derive a canonical Drazin witness internally and reduce closure to the
 star-selfadjointness channel.
 -/
-theorem anomalyMomentumResidual_eq_zero_of_regularization_of_finiteDimensional
+theorem anomalyVorticityClosureResidual_eq_zero_of_regularization_of_finiteDimensional
     (A B_mp : VelocityField E)
     (h_mp : IsMoorePenroseInverse A B_mp) :
     ∃ (k : ℕ) (B_dr : VelocityField E),
       IsDrazinInverse A B_dr k ∧
       (star (A * B_dr) = A * B_dr →
-        momentumResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0) := by
+        vorticityClosureResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0) := by
   rcases anomalySkew_of_regularization_of_finiteDimensional
       (E := E) A B_mp h_mp with ⟨k, B_dr, h_dr, _hSkew_of_star⟩
   refine ⟨k, B_dr, h_dr, ?_⟩
   intro h_dr_star
-  exact anomalyMomentumResidual_eq_zero_of_regularization_exists
+  exact anomalyVorticityClosureResidual_eq_zero_of_regularization_exists
     (E := E) A B_mp B_dr h_mp ⟨k, h_dr⟩ h_dr_star
 
 /--
 Finite-dimensional regularization package at the state level:
-derive a canonical Drazin witness internally and reduce state momentum closure
-to the star-selfadjointness channel.
+derive a canonical Drazin witness internally and reduce state-level vorticity
+closure to the star-selfadjointness channel.
 -/
-theorem anomalyFluidState_momentumResidual_eq_zero_of_regularization_of_finiteDimensional
+theorem anomalyFluidState_vorticityClosureResidual_eq_zero_of_regularization_of_finiteDimensional
     (A B_mp : VelocityField E)
     (h_mp : IsMoorePenroseInverse A B_mp) :
     ∃ (k : ℕ) (B_dr : VelocityField E),
       IsDrazinInverse A B_dr k ∧
       (star (A * B_dr) = A * B_dr →
-        momentumResidual (E := E) ((anomalyFluidState (E := E) A B_mp B_dr).u) = 0) := by
+        vorticityClosureResidual (E := E) ((anomalyFluidState (E := E) A B_mp B_dr).u) = 0) := by
   rcases anomalySkew_of_regularization_of_finiteDimensional
       (E := E) A B_mp h_mp with ⟨k, B_dr, h_dr, _hSkew_of_star⟩
   refine ⟨k, B_dr, h_dr, ?_⟩
   intro h_dr_star
-  exact anomalyFluidState_momentumResidual_eq_zero_of_regularization_exists
+  exact anomalyFluidState_vorticityClosureResidual_eq_zero_of_regularization_exists
     (E := E) A B_mp B_dr h_mp ⟨k, h_dr⟩ h_dr_star
 
 /--
 Finite-dimensional global-Drazin regularization wrapper:
-derive a canonical Drazin witness internally and expose momentum closure while
+derive a canonical Drazin witness internally and expose vorticity closure while
 keeping only the star/selfadjointness channel as external input.
 -/
-theorem anomalyMomentumResidual_eq_zero_of_regularization_global_drazin
+theorem anomalyVorticityClosureResidual_eq_zero_of_regularization_global_drazin
     (A B_mp : VelocityField E)
     (h_mp : IsMoorePenroseInverse A B_mp)
     (h_dr_star_of_drazin :
@@ -476,11 +445,11 @@ theorem anomalyMomentumResidual_eq_zero_of_regularization_global_drazin
         IsDrazinInverse A B_dr k →
           star (A * B_dr) = A * B_dr) :
     ∃ (B_dr : VelocityField E),
-      momentumResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 := by
+      vorticityClosureResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 := by
   rcases DrazinExistenceBridge.exists_canonicalDrazinInverse_global_endCLM
       (E := E) A with ⟨k, B_dr, h_dr⟩
   refine ⟨B_dr, ?_⟩
-  exact anomalyMomentumResidual_eq_zero_of_regularization
+  exact anomalyVorticityClosureResidual_eq_zero_of_regularization
     (E := E)
     A B_mp B_dr
     h_mp
@@ -490,10 +459,10 @@ theorem anomalyMomentumResidual_eq_zero_of_regularization_global_drazin
 
 /--
 Finite-dimensional global-Drazin state-level wrapper:
-derive a canonical Drazin witness internally and expose fluid-state momentum
+derive a canonical Drazin witness internally and expose fluid-state vorticity
 closure while keeping only the star/selfadjointness channel as external input.
 -/
-theorem anomalyFluidState_momentumResidual_eq_zero_of_regularization_global_drazin
+theorem anomalyFluidState_vorticityClosureResidual_eq_zero_of_regularization_global_drazin
     (A B_mp : VelocityField E)
     (h_mp : IsMoorePenroseInverse A B_mp)
     (h_dr_star_of_drazin :
@@ -501,11 +470,11 @@ theorem anomalyFluidState_momentumResidual_eq_zero_of_regularization_global_draz
         IsDrazinInverse A B_dr k →
           star (A * B_dr) = A * B_dr) :
     ∃ (B_dr : VelocityField E),
-      momentumResidual (E := E) ((anomalyFluidState (E := E) A B_mp B_dr).u) = 0 := by
+      vorticityClosureResidual (E := E) ((anomalyFluidState (E := E) A B_mp B_dr).u) = 0 := by
   rcases DrazinExistenceBridge.exists_canonicalDrazinInverse_global_endCLM
       (E := E) A with ⟨k, B_dr, h_dr⟩
   refine ⟨B_dr, ?_⟩
-  exact anomalyFluidState_momentumResidual_eq_zero_of_regularization
+  exact anomalyFluidState_vorticityClosureResidual_eq_zero_of_regularization
     (E := E)
     A B_mp B_dr
     h_mp
@@ -949,19 +918,18 @@ attribute [rep_depth krein]
   vorticity_eq_self_of_skew
   vorticity_eq_zero_of_self_adjoint
   vorticityClosureResidual
-  momentumResidual
   vorticityClosureResidual_eq_zero_of_skew
-  momentumResidual_eq_zero_of_skew
   anomalyFluidState
   anomaly_as_fluid_state
-  anomalyMomentumResidual_eq_zero_of_skew
-  anomalyMomentumResidual_eq_zero_of_regularization
-  anomalyMomentumResidual_eq_zero_of_regularization_exists
-  anomalyFluidState_momentumResidual_eq_zero_of_regularization
-  anomalyFluidState_momentumResidual_eq_zero_of_regularization_exists
+  anomalyVorticityClosureResidual_eq_zero_of_skew
+  anomalyVorticityClosureResidual_eq_zero_of_regularization
+  anomalyVorticityClosureResidual_eq_zero_of_regularization_exists
+  anomalyFluidState_vorticityClosureResidual_eq_zero_of_skew
+  anomalyFluidState_vorticityClosureResidual_eq_zero_of_regularization
+  anomalyFluidState_vorticityClosureResidual_eq_zero_of_regularization_exists
   anomalySkew_of_regularization_of_finiteDimensional
-  anomalyMomentumResidual_eq_zero_of_regularization_of_finiteDimensional
-  anomalyFluidState_momentumResidual_eq_zero_of_regularization_of_finiteDimensional
+  anomalyVorticityClosureResidual_eq_zero_of_regularization_of_finiteDimensional
+  anomalyFluidState_vorticityClosureResidual_eq_zero_of_regularization_of_finiteDimensional
   ArnoldMajoranaCarrier
   modularHamiltonian
   freeEnergyHessianRegularizer

@@ -62,7 +62,7 @@ namespace InfoGeometry.SuperGrassmannian.GraphDiracSupercarrierEmbedding
 open Matrix
 
 variable {V E : Type*} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. Graded Supertrace on General Block Carrier -/
 
@@ -132,7 +132,8 @@ theorem superTrace_scaleMode (σ : R) :
   dsimp [superTrace, scaleMode]
   rw [Matrix.trace_smul, Matrix.trace_smul]
   rw [Matrix.trace_one, Matrix.trace_one]
-  ring_nf
+  simp only [smul_eq_mul, sub_mul]
+  rw [← Nat.cast_comm (Fintype.card V) σ, ← Nat.cast_comm (Fintype.card E) σ]
 
 /-- Supertrace of the volume mode operator vanishes when `Matrix.trace A = Matrix.trace D`. -/
 theorem superTrace_volumeMode (A : Matrix V V R) (D : Matrix E E R)
@@ -243,7 +244,7 @@ theorem hodgeDiracChiral_sq (B : Matrix E V R) :
 /-- Theorem 3 (Hodge-Laplacian Supertrace Exact Cancellation via Cyclicity):
     The supertrace of the squared Hodge-Dirac operator vanishes identically:
     `STr(D²) = Tr(Bᵀ * B) - Tr(B * Bᵀ) = 0` via Mathlib's `trace_mul_comm`. -/
-theorem superTrace_hodgeDiracChiral_sq (B : Matrix E V R) :
+theorem superTrace_hodgeDiracChiral_sq {R : Type*} [CommRing R] (B : Matrix E V R) :
     superTrace (hodgeDiracChiral B * hodgeDiracChiral B) = 0 := by
   rw [hodgeDiracChiral_sq]
   dsimp [superTrace, volumeMode]
@@ -253,7 +254,7 @@ theorem superTrace_hodgeDiracChiral_sq (B : Matrix E V R) :
 /-- Theorem 4 (Scale Commutation):
     Uniform homotheties strictly commute with the discrete Hodge-Dirac operator:
     `scaleMode σ * hodgeDiracChiral B = hodgeDiracChiral B * scaleMode σ`. -/
-theorem scaleMode_hodgeDiracChiral_comm (σ : R) (B : Matrix E V R) :
+theorem scaleMode_hodgeDiracChiral_comm {R : Type*} [CommRing R] (σ : R) (B : Matrix E V R) :
     scaleMode σ * hodgeDiracChiral B = hodgeDiracChiral B * scaleMode σ := by
   apply eq_of_sub_eq_zero
   dsimp [scaleMode, hodgeDiracChiral, chiralMode]
@@ -319,7 +320,7 @@ theorem hodgeDiracChiral_isBerezinianInvariant (B : Matrix E V R) :
   superTrace_hodgeDiracChiral B
 
 /-- Squared Hodge-Dirac operator (Hodge Laplacian) generates a Berezinian-invariant flow. -/
-theorem hodgeDiracChiral_sq_isBerezinianInvariant (B : Matrix E V R) :
+theorem hodgeDiracChiral_sq_isBerezinianInvariant {R : Type*} [CommRing R] (B : Matrix E V R) :
     isBerezinianInvariant (hodgeDiracChiral B * hodgeDiracChiral B) :=
   superTrace_hodgeDiracChiral_sq B
 
@@ -339,13 +340,13 @@ theorem balanced_deformation_isBerezinianInvariant (hcard : Fintype.card V = Fin
 /-- Multiplicative Berezinian Homothety Invariance on Balanced Super-spaces:
     Under uniform homothety by unit `c`, the Berezinian scale factor is
     `c^p * (inv_c)^p = 1`. -/
-theorem balanced_berezinian_homothety (p : ℕ) (c inv_c : R) (h : c * inv_c = 1) :
+theorem balanced_berezinian_homothety {R : Type*} [CommRing R] (p : ℕ) (c inv_c : R) (h : c * inv_c = 1) :
     (c ^ p) * (inv_c ^ p) = 1 := by
   rw [← mul_pow, h, one_pow]
 
 /-- Unbalanced Berezinian projective scaling factor:
     `c^(p+q) * (inv_c)^q = c^p * (c * inv_c)^q = c^p`. -/
-theorem unbalanced_berezinian_factor (p q : ℕ) (c inv_c : R) (h : c * inv_c = 1) :
+theorem unbalanced_berezinian_factor {R : Type*} [CommRing R] (p q : ℕ) (c inv_c : R) (h : c * inv_c = 1) :
     (c ^ (p + q)) * (inv_c ^ q) = c ^ p := by
   calc
     (c ^ (p + q)) * (inv_c ^ q) = (c ^ p * c ^ q) * (inv_c ^ q) := by rw [pow_add]
@@ -356,7 +357,7 @@ theorem unbalanced_berezinian_factor (p q : ℕ) (c inv_c : R) (h : c * inv_c = 
     _ = c ^ p := by rw [mul_one]
 
 /-- Berezinian homothety invariance for balanced graphs (`|V| = |E|`). -/
-theorem balanced_graph_berezinian_homothety (hcard : Fintype.card V = Fintype.card E)
+theorem balanced_graph_berezinian_homothety {R : Type*} [CommRing R] (hcard : Fintype.card V = Fintype.card E)
     (c inv_c : R) (h : c * inv_c = 1) :
     (c ^ (Fintype.card V)) * (inv_c ^ (Fintype.card E)) = 1 := by
   rw [hcard]

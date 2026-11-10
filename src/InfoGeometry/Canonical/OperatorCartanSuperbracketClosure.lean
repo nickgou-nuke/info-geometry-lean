@@ -18,7 +18,7 @@ No wrapper.
 namespace InfoGeometry.Canonical.OperatorCartanSuperbracketClosure
 
 variable {𝕜 V : Type*}
-variable [CommRing 𝕜]
+variable [Ring 𝕜]
 variable [AddCommGroup V] [Module 𝕜 V]
 
 /-- Conjugation by an involutive grading operator is itself involutive. -/

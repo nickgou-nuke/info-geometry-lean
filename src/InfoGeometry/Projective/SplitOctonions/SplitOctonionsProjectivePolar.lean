@@ -25,7 +25,7 @@ projective Zorn rays.
 -/
 theorem projective_incidence_well_defined_units
     {R Carrier : Type*}
-    [CommRing R]
+    [Ring R]
     [AddCommGroup Carrier] [Module R Carrier]
     (splitOctPolar : Carrier → Carrier → R)
     (h_left :
@@ -70,7 +70,7 @@ This is just the symmetric orientation of
 -/
 theorem projective_incidence_well_defined_units_right
     {R Carrier : Type*}
-    [CommRing R]
+    [Ring R]
     [AddCommGroup Carrier] [Module R Carrier]
     (splitOctPolar : Carrier → Carrier → R)
     (h_left :

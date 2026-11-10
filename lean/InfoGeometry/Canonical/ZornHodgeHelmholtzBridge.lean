@@ -19,7 +19,7 @@ open InfoGeometry.Algebra.ZornVec3
 open InfoGeometry.Canonical.ZornFiniteVectorCalculus
 open InfoGeometry.Canonical.ZornPotentialDifferentialReadout
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 local notation "Vec3" => ZornVec3 R
 
@@ -100,7 +100,7 @@ theorem magneticReadout_of_vectorPotential_decomposition
   have hcurl_add (x y : Vec3) :
       curl D (x + y) = curl D x + curl D y := by
     funext i
-    fin_cases i <;> simp [curl, D.spatial_add] <;> ring_nf
+    fin_cases i <;> simp [curl, D.spatial_add] <;> abel
   calc
     curl D (gradient D gaugePotential + curl D coPotential + harmonic) =
         curl D (gradient D gaugePotential) +

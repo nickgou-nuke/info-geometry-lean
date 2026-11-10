@@ -3,7 +3,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Extreme simplification of a Grassmann algebra z = z_B + z_S -/
 @[ext]

@@ -56,7 +56,7 @@ namespace InfoGeometry.QuantumContext.DiscreteKreinAndreevGraphEngine
 open Matrix
 
 variable {V E : Type*} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### Section 1: The Discrete Exterior Complex & Hodge-Dirac Operator -/
 
@@ -68,7 +68,7 @@ def edgeLaplacian (B : Matrix E V R) : Matrix E E R := B * Bᵀ
 
 /-- Trace equality across node and edge Laplacians (via trace cyclicity):
     $\mathrm{Tr}(\Delta_0) = \mathrm{Tr}(\Delta_1)$. -/
-theorem laplacian_trace_eq (B : Matrix E V R) :
+theorem laplacian_trace_eq {R : Type*} [CommRing R] (B : Matrix E V R) :
     Matrix.trace (nodeLaplacian B) = Matrix.trace (edgeLaplacian B) := by
   dsimp [nodeLaplacian, edgeLaplacian]
   exact Matrix.trace_mul_comm Bᵀ B
@@ -109,7 +109,7 @@ theorem dirac_anticomm_gamma (B : Matrix E V R) :
 
 /-- Krein fundamental symmetry $J = \begin{pmatrix} 0 & -\mathbf{1}_V \\ \mathbf{1}_V & 0 \end{pmatrix}$
     on balanced carrier ($V \oplus V$). -/
-def kreinJ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R] : Matrix (V ⊕ V) (V ⊕ V) R :=
+def kreinJ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [Ring R] : Matrix (V ⊕ V) (V ⊕ V) R :=
   Matrix.fromBlocks 0 (-1) 1 0
 
 /-- Involutive law of Krein fundamental symmetry: $J^2 = -\mathbf{1}$. -/
@@ -324,66 +324,66 @@ structure DiscreteKreinAndreevGraphCertificate : Prop where
       Matrix.trace (nodeLaplacian B) = Matrix.trace (edgeLaplacian B)
   hodge_dirac_squared :
     ∀ (V E : Type*) [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-      (R : Type*) [CommRing R] (B : Matrix E V R),
+      (R : Type*) [Ring R] (B : Matrix E V R),
       hodgeDirac B * hodgeDirac B = Matrix.fromBlocks (nodeLaplacian B) 0 0 (edgeLaplacian B)
   chiral_gamma_involutive :
     ∀ (V E : Type*) [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-      (R : Type*) [CommRing R],
+      (R : Type*) [Ring R],
       (chiralGamma : Matrix (V ⊕ E) (V ⊕ E) R) * chiralGamma = 1
   dirac_chiral_anticommutation :
     ∀ (V E : Type*) [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-      (R : Type*) [CommRing R] (B : Matrix E V R),
+      (R : Type*) [Ring R] (B : Matrix E V R),
       hodgeDirac B * chiralGamma + chiralGamma * hodgeDirac B = 0
   krein_j_squared_neg_one :
-    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R],
+    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [Ring R],
       (kreinJ V R) * (kreinJ V R) = -1
   krein_j_chiral_anticommutation :
-    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R],
+    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [Ring R],
       (kreinJ V R) * (chiralGamma (V := V) (E := V)) +
       (chiralGamma (V := V) (E := V)) * (kreinJ V R) = 0
   krein_dirac_formula :
-    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R] (B : Matrix V V R),
+    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [Ring R] (B : Matrix V V R),
       kreinDirac B = Matrix.fromBlocks (-B) 0 0 Bᵀ
   krein_dirac_sq_formula :
-    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R] (B : Matrix V V R),
+    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [Ring R] (B : Matrix V V R),
       kreinDirac B * kreinDirac B = Matrix.fromBlocks (B * B) 0 0 (Bᵀ * Bᵀ)
   andreev_tau1_squared :
-    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R],
+    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [Ring R],
       (andreevTau1 : Matrix (V ⊕ V) (V ⊕ V) R) * andreevTau1 = 1
   andreev_swap_formula :
-    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R]
+    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [Ring R]
       (A B C D : Matrix V V R),
       andreevTau1 * Matrix.fromBlocks A B C D * andreevTau1 = Matrix.fromBlocks D C B A
   andreev_bdg_antisymmetry :
-    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R]
+    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [Ring R]
       (H0 Delta : Matrix V V R) (hDelta : Deltaᵀ = -Delta),
       andreevTau1 * bdgHamiltonian H0 Delta * andreevTau1 = - (bdgHamiltonian H0 Delta)ᵀ
   andreev_skew_pairing_reversal :
-    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R]
+    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [Ring R]
       (H0 Delta : Matrix V V R) (hH0 : H0ᵀ = H0) (hDelta : Deltaᵀ = -Delta),
       andreevTau1 * bdgHamiltonian H0 Delta * andreevTau1 = - bdgHamiltonian H0 Delta
   matrix_support_proj_idempotent :
-    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R]
+    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [Ring R]
       (rho rho_pinv : Matrix V V R) (h : rho * rho_pinv * rho = rho),
       matrixSupportProj rho rho_pinv * matrixSupportProj rho rho_pinv = matrixSupportProj rho rho_pinv
   matrix_kernel_annihilates_density :
-    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R]
+    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [Ring R]
       (rho rho_pinv : Matrix V V R) (h : rho * rho_pinv * rho = rho),
       (1 - matrixSupportProj rho rho_pinv) * rho = 0
   drazin_core_idempotent :
-    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R]
+    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [Ring R]
       (L L_D : Matrix V V R) (hcomm : L * L_D = L_D * L) (h2 : L * L * L_D = L),
       drazinCoreProj L L_D * drazinCoreProj L L_D = drazinCoreProj L L_D
   drazin_stationary_sink_idempotent :
-    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R]
+    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [Ring R]
       (L L_D : Matrix V V R) (hcomm : L * L_D = L_D * L) (h2 : L * L * L_D = L),
       drazinStationarySinkProj L L_D * drazinStationarySinkProj L L_D = drazinStationarySinkProj L L_D
   drazin_stationary_sink_annihilates_generator :
-    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R]
+    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [Ring R]
       (L L_D : Matrix V V R) (hcomm : L * L_D = L_D * L) (h2 : L * L * L_D = L),
       L * drazinStationarySinkProj L L_D = 0
   drazin_stationary_sink_annihilates_generator_left :
-    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R]
+    ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [Ring R]
       (L L_D : Matrix V V R) (hcomm : L * L_D = L_D * L) (h2 : L * L * L_D = L),
       drazinStationarySinkProj L L_D * L = 0
 

@@ -14,7 +14,7 @@ algebraic zero divisors of $\mathbb{O}'$ with physical lightcones.
 
 namespace InfoGeometry.Algebra.ZornVectorMatrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /- The split octonion norm (quadratic form). Already defined in `ZornVectorMatrix.norm` as `X.a * X.b - ZornVec3.dot X.v X.w`. -/
 
@@ -50,11 +50,11 @@ theorem norm_of_traceless (X : ZornVectorMatrix R) (h : IsTraceless X) :
     norm X = -minkowskiInner X.a X.v X.a X.w := by
   dsimp [norm, IsTraceless, trace, minkowskiInner] at *
   have hb : X.b = -X.a := by 
-    calc X.b = X.a + X.b - X.a := by ring
+    calc X.b = X.a + X.b - X.a := by noncomm_ring
          _   = 0 - X.a := by rw [h]
-         _   = -X.a := by ring
+         _   = -X.a := by noncomm_ring
   rw [hb]
-  ring
+  noncomm_ring
 
 /--
 A traceless Zorn matrix with symmetric off-diagonals (v = w) 
@@ -66,23 +66,23 @@ theorem isNullCone_iff_minkowski_null_of_traceless_symm
     IsNullCone X ↔ minkowskiNormSq X.a X.v = 0 := by
   dsimp [IsNullCone, norm, IsTraceless, trace, minkowskiNormSq, minkowskiInner] at *
   have hb : X.b = -X.a := by 
-    calc X.b = X.a + X.b - X.a := by ring
+    calc X.b = X.a + X.b - X.a := by noncomm_ring
          _   = 0 - X.a := by rw [h_trace]
-         _   = -X.a := by ring
+         _   = -X.a := by noncomm_ring
   rw [hb, h_symm]
   constructor
   · intro h_neg
     have h1 : X.a * -X.a - ZornVec3.dot X.w X.w = 0 := h_neg
     have h2 : -(X.a * X.a + ZornVec3.dot X.w X.w) = 0 := by
       calc
-        -(X.a * X.a + ZornVec3.dot X.w X.w) = X.a * -X.a - ZornVec3.dot X.w X.w := by ring
+        -(X.a * X.a + ZornVec3.dot X.w X.w) = X.a * -X.a - ZornVec3.dot X.w X.w := by noncomm_ring
         _ = 0 := h1
     exact neg_eq_zero.mp h2
   · intro h_zero
     calc
       X.a * -X.a - ZornVec3.dot X.w X.w
-        = -(X.a * X.a + ZornVec3.dot X.w X.w) := by ring
+        = -(X.a * X.a + ZornVec3.dot X.w X.w) := by noncomm_ring
       _ = -0 := by rw [h_zero]
-      _ = 0 := by ring
+      _ = 0 := by norm_num
 
 end InfoGeometry.Algebra.ZornVectorMatrix

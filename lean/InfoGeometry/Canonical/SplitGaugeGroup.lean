@@ -8,23 +8,23 @@ import Mathlib.Tactic.NoncommRing
 namespace InfoGeometry.Canonical
 
 /-- 1. Канонична Сплит-Метрика η_{(5,5)} = [[0, I₅], [I₅, 0]] в 10D -/
-def splitMetric10D (R : Type*) [CommRing R] :
+def splitMetric10D (R : Type*) [Ring R] :
     Matrix (Sum (Fin 5) (Fin 5)) (Sum (Fin 5) (Fin 5)) R :=
   Matrix.fromBlocks 0 1 1 0
 
 /-- 2. Предикат за O(5,5) Изометрична Калибровочна Група: G * η * Gᵀ = η -/
-def isO55Isometric (R : Type*) [CommRing R]
+def isO55Isometric (R : Type*) [Ring R]
     (G : Matrix (Sum (Fin 5) (Fin 5)) (Sum (Fin 5) (Fin 5)) R) : Prop :=
   G * (splitMetric10D R) * G.transpose = splitMetric10D R
 
 /-- **Теорема 1a (Единица)**: Идентитетната матрица е в O(5,5). -/
-theorem id_is_o55_isometric (R : Type*) [CommRing R] :
+theorem id_is_o55_isometric (R : Type*) [Ring R] :
     isO55Isometric R 1 := by
   dsimp [isO55Isometric]
   rw [Matrix.transpose_one, mul_one, one_mul]
 
 /-- **Теорема 1 (Не-тривиална Единица)**: Скаларната матрица -I₁₀ е в O(5,5) (-I ≠ I). -/
-theorem neg_one_is_o55_isometric (R : Type*) [CommRing R] :
+theorem neg_one_is_o55_isometric (R : Type*) [Ring R] :
     isO55Isometric R (-1) := by
   dsimp [isO55Isometric]
   simp only [Matrix.transpose_one]

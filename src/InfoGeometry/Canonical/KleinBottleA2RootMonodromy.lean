@@ -11,7 +11,7 @@ explicit linear operators on `Fin 3 → K`.  Their relations give the concrete
 
 namespace InfoGeometry.Canonical
 
-variable {K : Type*} [CommRing K]
+variable {K : Type*} [Ring K]
 
 abbrev A2ColourFiber (K : Type*) := Fin 3 → K
 

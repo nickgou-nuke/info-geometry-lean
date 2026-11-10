@@ -24,7 +24,9 @@ namespace InfoGeometry.Canonical.LogJordanVirasoroIntertwiner
 
 open Matrix
 
-variable {𝕜 : Type*} [Field 𝕜]
+section Ring
+
+variable {𝕜 : Type*} [Ring 𝕜]
 
 /-- Standard basis vector $e_0 = (1, 0)^T$ in $\mathbb{k}^2$. -/
 def e0 : Fin 2 → 𝕜 := Pi.single 0 1
@@ -32,7 +34,7 @@ def e0 : Fin 2 → 𝕜 := Pi.single 0 1
 /-- Standard basis vector $e_1 = (0, 1)^T$ in $\mathbb{k}^2$. -/
 def e1 : Fin 2 → 𝕜 := Pi.single 1 1
 
-/-- The $2 \times 2$ nilpotent Jordan shift matrix over scalar field `𝕜`. -/
+/-- The $2 \times 2$ nilpotent Jordan shift matrix over scalar ring `𝕜`. -/
 def jordanNilpotent (𝕜 : Type*) [Semiring 𝕜] : Matrix (Fin 2) (Fin 2) 𝕜 :=
   !![0, 1; 0, 0]
 
@@ -49,6 +51,10 @@ theorem jordanCell_mulVec_e1 (Δ : 𝕜) :
     jordanCell Δ *ᵥ (e1 : Fin 2 → 𝕜) = Δ • (e1 : Fin 2 → 𝕜) + (e0 : Fin 2 → 𝕜) := by
   ext i
   fin_cases i <;> simp [jordanCell, e0, e1, Matrix.mulVec, Pi.single, vecHead, vecTail]
+
+end Ring
+
+variable {𝕜 : Type*} [CommRing 𝕜]
 
 section Subspace
 
@@ -112,7 +118,7 @@ end Subspace
 **Non-Diagonalizability Preservation:**
 The nilpotent shift matrix $N = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix}$ is non-zero and square-zero.
 -/
-theorem zero_mode_subspace_indecomposable :
+theorem zero_mode_subspace_indecomposable {𝕜 : Type*} [Ring 𝕜] [Nontrivial 𝕜] :
     jordanNilpotent 𝕜 ≠ 0 ∧ jordanNilpotent 𝕜 * jordanNilpotent 𝕜 = 0 := by
   constructor
   · intro h

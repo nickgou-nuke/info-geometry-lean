@@ -52,7 +52,7 @@ All theorems are constructively proved in native Mathlib with zero gaps.
 
 namespace InfoGeometry.Canonical.ZornVectorMatrixWeylBasis
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- 3-dimensional vector space over the base ring R. -/
 abbrev Vec3 (R : Type*) := Fin 3 → R
@@ -67,16 +67,22 @@ def cross3 (u v : Vec3 R) : Vec3 R :=
     u 2 * v 0 - u 0 * v 2,
     u 0 * v 1 - u 1 * v 0]
 
+section CommVec3
+
+variable {R₀ : Type*} [CommRing R₀]
+
 /-- 🏆 THEOREM: The 3D cross product of any vector with itself vanishes identically. -/
-theorem cross3_self (u : Vec3 R) : cross3 u u = 0 := by
+theorem cross3_self (u : Vec3 R₀) : cross3 u u = 0 := by
   dsimp [cross3]
   ext i
   fin_cases i <;> { dsimp; ring }
 
 /-- 🏆 THEOREM: The 3D dot product is commutative. -/
-theorem dot3_comm (u v : Vec3 R) : dot3 u v = dot3 v u := by
+theorem dot3_comm (u v : Vec3 R₀) : dot3 u v = dot3 v u := by
   dsimp [dot3]
   ring
+
+end CommVec3
 
 /-- Zorn vector matrix representation with diagonal scalars (a, b) and off-diagonal vectors (u, v). -/
 structure ZornMatrix (R : Type*) where
@@ -87,7 +93,7 @@ structure ZornMatrix (R : Type*) where
 
 namespace ZornMatrix
 
-omit [CommRing R] in
+omit [Ring R] in
 @[ext]
 theorem ext {X Y : ZornMatrix R}
     (ha : X.a = Y.a) (hb : X.b = Y.b)
@@ -147,26 +153,26 @@ def antiquark (v : Vec3 R) : ZornMatrix R := ⟨0, 0, 0, v⟩
 /-- 🏆 THEOREM: P+ is an idempotent projector: P+ * P+ = P+. -/
 theorem peirce_plus_sq : zornMul (PPlus (R := R)) PPlus = PPlus := by
   apply ext
-  · dsimp [zornMul, PPlus, dot3]; ring
-  · dsimp [zornMul, PPlus, dot3]; ring
-  · dsimp [zornMul, PPlus, cross3]; ext i; fin_cases i <;> { dsimp; ring }
-  · dsimp [zornMul, PPlus, cross3]; ext i; fin_cases i <;> { dsimp; ring }
+  · dsimp [zornMul, PPlus, dot3]; simp
+  · dsimp [zornMul, PPlus, dot3]; simp
+  · dsimp [zornMul, PPlus, cross3]; ext i; fin_cases i <;> { dsimp; simp }
+  · dsimp [zornMul, PPlus, cross3]; ext i; fin_cases i <;> { dsimp; simp }
 
 /-- 🏆 THEOREM: P- is an idempotent projector: P- * P- = P-. -/
 theorem peirce_minus_sq : zornMul (PMinus (R := R)) PMinus = PMinus := by
   apply ext
-  · dsimp [zornMul, PMinus, dot3]; ring
-  · dsimp [zornMul, PMinus, dot3]; ring
-  · dsimp [zornMul, PMinus, cross3]; ext i; fin_cases i <;> { dsimp; ring }
-  · dsimp [zornMul, PMinus, cross3]; ext i; fin_cases i <;> { dsimp; ring }
+  · dsimp [zornMul, PMinus, dot3]; simp
+  · dsimp [zornMul, PMinus, dot3]; simp
+  · dsimp [zornMul, PMinus, cross3]; ext i; fin_cases i <;> { dsimp; simp }
+  · dsimp [zornMul, PMinus, cross3]; ext i; fin_cases i <;> { dsimp; simp }
 
 /-- 🏆 THEOREM: P+ and P- are orthogonal: P+ * P- = 0. -/
 theorem peirce_ortho_pm : zornMul (PPlus (R := R)) PMinus = zero := by
   apply ext
-  · dsimp [zornMul, PPlus, PMinus, zero, dot3]; ring
-  · dsimp [zornMul, PPlus, PMinus, zero, dot3]; ring
-  · dsimp [zornMul, PPlus, PMinus, zero, cross3]; ext i; fin_cases i <;> { dsimp; ring }
-  · dsimp [zornMul, PPlus, PMinus, zero, cross3]; ext i; fin_cases i <;> { dsimp; ring }
+  · dsimp [zornMul, PPlus, PMinus, zero, dot3]; simp
+  · dsimp [zornMul, PPlus, PMinus, zero, dot3]; simp
+  · dsimp [zornMul, PPlus, PMinus, zero, cross3]; ext i; fin_cases i <;> { dsimp; simp }
+  · dsimp [zornMul, PPlus, PMinus, zero, cross3]; ext i; fin_cases i <;> { dsimp; simp }
 
 /-- 🏆 THEOREM: Split Peirce resolution of unity: P+ + P- = 1. -/
 theorem peirce_resolution : add (PPlus (R := R)) PMinus = one := by
@@ -176,37 +182,37 @@ theorem peirce_resolution : add (PPlus (R := R)) PMinus = one := by
 theorem peirce_lepton_singlet (X : ZornMatrix R) :
     zornMul (zornMul PPlus X) PPlus = ⟨X.a, 0, 0, 0⟩ := by
   apply ext
-  · dsimp [zornMul, PPlus, dot3]; ring
-  · dsimp [zornMul, PPlus, dot3]; ring
-  · ext i; fin_cases i <;> { dsimp [zornMul, PPlus, cross3]; ring }
-  · ext i; fin_cases i <;> { dsimp [zornMul, PPlus, cross3]; ring }
+  · dsimp [zornMul, PPlus, dot3]; simp
+  · dsimp [zornMul, PPlus, dot3]; simp
+  · ext i; fin_cases i <;> { dsimp [zornMul, PPlus, cross3]; simp }
+  · ext i; fin_cases i <;> { dsimp [zornMul, PPlus, cross3]; simp }
 
 /-- 🏆 THEOREM: Projection P- X P- dynamically extracts the diagonal antilepton 3-form singlet. -/
 theorem peirce_antilepton_singlet (X : ZornMatrix R) :
     zornMul (zornMul PMinus X) PMinus = ⟨0, X.b, 0, 0⟩ := by
   apply ext
-  · dsimp [zornMul, PMinus, dot3]; ring
-  · dsimp [zornMul, PMinus, dot3]; ring
-  · ext i; fin_cases i <;> { dsimp [zornMul, PMinus, cross3]; ring }
-  · ext i; fin_cases i <;> { dsimp [zornMul, PMinus, cross3]; ring }
+  · dsimp [zornMul, PMinus, dot3]; simp
+  · dsimp [zornMul, PMinus, dot3]; simp
+  · ext i; fin_cases i <;> { dsimp [zornMul, PMinus, cross3]; simp }
+  · ext i; fin_cases i <;> { dsimp [zornMul, PMinus, cross3]; simp }
 
 /-- 🏆 THEOREM: Projection P+ X P- dynamically extracts the 3-quark 1-form triplet. -/
 theorem peirce_quark_triplet (X : ZornMatrix R) :
     zornMul (zornMul PPlus X) PMinus = quark X.u := by
   apply ext
-  · dsimp [zornMul, PPlus, PMinus, quark, dot3]; ring
-  · dsimp [zornMul, PPlus, PMinus, quark, dot3]; ring
-  · ext i; fin_cases i <;> { dsimp [zornMul, PPlus, PMinus, quark, cross3]; ring }
-  · ext i; fin_cases i <;> { dsimp [zornMul, PPlus, PMinus, quark, cross3]; ring }
+  · dsimp [zornMul, PPlus, PMinus, quark, dot3]; simp
+  · dsimp [zornMul, PPlus, PMinus, quark, dot3]; simp
+  · ext i; fin_cases i <;> { dsimp [zornMul, PPlus, PMinus, quark, cross3]; simp }
+  · ext i; fin_cases i <;> { dsimp [zornMul, PPlus, PMinus, quark, cross3]; simp }
 
 /-- 🏆 THEOREM: Projection P- X P+ dynamically extracts the 3-antiquark 2-form triplet. -/
 theorem peirce_antiquark_triplet (X : ZornMatrix R) :
     zornMul (zornMul PMinus X) PPlus = antiquark X.v := by
   apply ext
-  · dsimp [zornMul, PPlus, PMinus, antiquark, dot3]; ring
-  · dsimp [zornMul, PPlus, PMinus, antiquark, dot3]; ring
-  · ext i; fin_cases i <;> { dsimp [zornMul, PPlus, PMinus, antiquark, cross3]; ring }
-  · ext i; fin_cases i <;> { dsimp [zornMul, PPlus, PMinus, antiquark, cross3]; ring }
+  · dsimp [zornMul, PPlus, PMinus, antiquark, dot3]; simp
+  · dsimp [zornMul, PPlus, PMinus, antiquark, dot3]; simp
+  · ext i; fin_cases i <;> { dsimp [zornMul, PPlus, PMinus, antiquark, cross3]; simp }
+  · ext i; fin_cases i <;> { dsimp [zornMul, PPlus, PMinus, antiquark, cross3]; simp }
 
 /-- 🏆 THEOREM: The 4-sector direct sum reconstitution: X = P++ + P-- + P+- + P-+. -/
 theorem peirce_fourfold_sum (X : ZornMatrix R) :
@@ -214,10 +220,10 @@ theorem peirce_fourfold_sum (X : ZornMatrix R) :
         (add (zornMul (zornMul PPlus X) PMinus) (zornMul (zornMul PMinus X) PPlus)) = X := by
   rw [peirce_lepton_singlet, peirce_antilepton_singlet, peirce_quark_triplet, peirce_antiquark_triplet]
   apply ext
-  · dsimp [add, quark, antiquark]; ring
-  · dsimp [add, quark, antiquark]; ring
-  · ext i; fin_cases i <;> { dsimp [add, quark, antiquark]; ring }
-  · ext i; fin_cases i <;> { dsimp [add, quark, antiquark]; ring }
+  · dsimp [add, quark, antiquark]; simp
+  · dsimp [add, quark, antiquark]; simp
+  · ext i; fin_cases i <;> { dsimp [add, quark, antiquark]; simp }
+  · ext i; fin_cases i <;> { dsimp [add, quark, antiquark]; simp }
 
 /-! ### 2. Split-Zorn Norm-Zero Criterion -/
 
@@ -227,30 +233,88 @@ criterion, not a Minkowski lightcone identification. -/
 theorem pauli_weyl_lightcone_iff (X : ZornMatrix R) :
     norm X = 0 ↔ X.a * X.b = dot3 X.u X.v := by
   dsimp [norm]
-  constructor
-  · intro h; linear_combination h
-  · intro h; rw [h]; ring
+  exact sub_eq_zero
 
 /-- 🏆 THEOREM: Every single quark is strictly lightlike: norm (quark u) = 0. -/
 theorem quark_lightlike (u : Vec3 R) : norm (quark u) = 0 := by
-  dsimp [norm, quark, dot3]; ring
+  dsimp [norm, quark, dot3]; simp
 
 /-- 🏆 THEOREM: Every single antiquark is strictly lightlike: norm (antiquark v) = 0. -/
 theorem antiquark_lightlike (v : Vec3 R) : norm (antiquark v) = 0 := by
-  dsimp [norm, antiquark, dot3]; ring
+  dsimp [norm, antiquark, dot3]; simp
 
 /-- 🏆 THEOREM: Vacuum projection P+ is a lightlike boundary state: norm PPlus = 0. -/
 theorem peirce_plus_lightlike : norm (PPlus (R := R)) = 0 := by
-  dsimp [norm, PPlus, dot3]; ring
+  dsimp [norm, PPlus, dot3]; simp
 
 /-- 🏆 THEOREM: Antilepton projection P- is a lightlike boundary state: norm PMinus = 0. -/
 theorem peirce_minus_lightlike : norm (PMinus (R := R)) = 0 := by
-  dsimp [norm, PMinus, dot3]; ring
+  dsimp [norm, PMinus, dot3]; simp
 
 /-! ### 3. Quark Nilpotency, Diquarks, Baryons, and Meson CAR -/
 
+/-- 🏆 THEOREM: Two quarks bind into an antiquark via the cross product: Q_1 * Q_2 = Q_bar(u_1 × u_2). -/
+theorem diquark_to_antiquark (u1 u2 : Vec3 R) :
+    zornMul (quark u1) (quark u2) = antiquark (cross3 u1 u2) := by
+  apply ext
+  · dsimp [zornMul, quark, antiquark, dot3]; simp
+  · dsimp [zornMul, quark, antiquark, dot3]; simp
+  · dsimp [zornMul, quark, antiquark, cross3]; ext i; fin_cases i <;> { dsimp; simp }
+  · dsimp [zornMul, quark, antiquark, cross3]; ext i; fin_cases i <;> { dsimp; simp }
+
+/-- 🏆 THEOREM: Three quarks bind into a colorless antilepton baryon singlet in the E22 vacuum. -/
+theorem baryon_three_quarks (u1 u2 u3 : Vec3 R) :
+    zornMul (zornMul (quark u1) (quark u2)) (quark u3) =
+    ⟨0, dot3 (cross3 u1 u2) u3, 0, 0⟩ := by
+  rw [diquark_to_antiquark]
+  apply ext
+  · dsimp [zornMul, antiquark, quark, dot3]; simp
+  · dsimp [zornMul, antiquark, quark, dot3]; simp
+  · dsimp [zornMul, antiquark, quark, cross3]; ext i; fin_cases i <;> { dsimp; simp }
+  · dsimp [zornMul, antiquark, quark, cross3]; ext i; fin_cases i <;> { dsimp; simp }
+
+/-- 🏆 THEOREM: Iwasawa Cartan scale generator commutation on quarks: [ell, Q] = +2 Q. -/
+theorem iwasawa_scale_quark (u : Vec3 R) :
+    sub (zornMul splitCartanEll (quark u)) (zornMul (quark u) splitCartanEll) =
+    smul (1 + 1) (quark u) := by
+  apply ext
+  · dsimp [sub, zornMul, splitCartanEll, quark, smul, dot3]; simp
+  · dsimp [sub, zornMul, splitCartanEll, quark, smul, dot3]; simp
+  · ext i
+    fin_cases i
+    · dsimp [sub, zornMul, splitCartanEll, quark, smul, cross3]; noncomm_ring
+    · dsimp [sub, zornMul, splitCartanEll, quark, smul, cross3]; noncomm_ring
+    · dsimp [sub, zornMul, splitCartanEll, quark, smul, cross3]; noncomm_ring
+  · ext i
+    fin_cases i
+    · dsimp [sub, zornMul, splitCartanEll, quark, smul, cross3]; simp
+    · dsimp [sub, zornMul, splitCartanEll, quark, smul, cross3]; simp
+    · dsimp [sub, zornMul, splitCartanEll, quark, smul, cross3]; simp
+
+/-- 🏆 THEOREM: Iwasawa Cartan scale generator commutation on antiquarks: [ell, Q_bar] = -2 Q_bar. -/
+theorem iwasawa_scale_antiquark (v : Vec3 R) :
+    sub (zornMul splitCartanEll (antiquark v)) (zornMul (antiquark v) splitCartanEll) =
+    smul (-(1 + 1)) (antiquark v) := by
+  apply ext
+  · dsimp [sub, zornMul, splitCartanEll, antiquark, smul, dot3]; simp
+  · dsimp [sub, zornMul, splitCartanEll, antiquark, smul, dot3]; simp
+  · ext i
+    fin_cases i
+    · dsimp [sub, zornMul, splitCartanEll, antiquark, smul, cross3]; simp
+    · dsimp [sub, zornMul, splitCartanEll, antiquark, smul, cross3]; simp
+    · dsimp [sub, zornMul, splitCartanEll, antiquark, smul, cross3]; simp
+  · ext i
+    fin_cases i
+    · dsimp [sub, zornMul, splitCartanEll, antiquark, smul, cross3]; noncomm_ring
+    · dsimp [sub, zornMul, splitCartanEll, antiquark, smul, cross3]; noncomm_ring
+    · dsimp [sub, zornMul, splitCartanEll, antiquark, smul, cross3]; noncomm_ring
+
+section CommZornMatrix
+
+variable {R₀ : Type*} [CommRing R₀]
+
 /-- 🏆 THEOREM: Single quark state is square-nilpotent: Q^2 = 0. -/
-theorem quark_sq_zero (u : Vec3 R) : zornMul (quark u) (quark u) = zero := by
+theorem quark_sq_zero (u : Vec3 R₀) : zornMul (quark u) (quark u) = zero := by
   apply ext
   · dsimp [zornMul, quark, zero, dot3]; ring
   · dsimp [zornMul, quark, zero, dot3]; ring
@@ -260,7 +324,7 @@ theorem quark_sq_zero (u : Vec3 R) : zornMul (quark u) (quark u) = zero := by
     ext i; fin_cases i <;> { dsimp; ring }
 
 /-- 🏆 THEOREM: Single antiquark state is square-nilpotent: (Q*)^2 = 0. -/
-theorem antiquark_sq_zero (v : Vec3 R) : zornMul (antiquark v) (antiquark v) = zero := by
+theorem antiquark_sq_zero (v : Vec3 R₀) : zornMul (antiquark v) (antiquark v) = zero := by
   apply ext
   · dsimp [zornMul, antiquark, zero, dot3]; ring
   · dsimp [zornMul, antiquark, zero, dot3]; ring
@@ -270,28 +334,8 @@ theorem antiquark_sq_zero (v : Vec3 R) : zornMul (antiquark v) (antiquark v) = z
     ext i; fin_cases i <;> { dsimp; ring }
   · dsimp [zornMul, antiquark, zero, cross3]; ext i; fin_cases i <;> { dsimp; ring }
 
-/-- 🏆 THEOREM: Two quarks bind into an antiquark via the cross product: Q_1 * Q_2 = Q_bar(u_1 × u_2). -/
-theorem diquark_to_antiquark (u1 u2 : Vec3 R) :
-    zornMul (quark u1) (quark u2) = antiquark (cross3 u1 u2) := by
-  apply ext
-  · dsimp [zornMul, quark, antiquark, dot3]; ring
-  · dsimp [zornMul, quark, antiquark, dot3]; ring
-  · dsimp [zornMul, quark, antiquark, cross3]; ext i; fin_cases i <;> { dsimp; ring }
-  · dsimp [zornMul, quark, antiquark, cross3]; ext i; fin_cases i <;> { dsimp; ring }
-
-/-- 🏆 THEOREM: Three quarks bind into a colorless antilepton baryon singlet in the E22 vacuum. -/
-theorem baryon_three_quarks (u1 u2 u3 : Vec3 R) :
-    zornMul (zornMul (quark u1) (quark u2)) (quark u3) =
-    ⟨0, dot3 (cross3 u1 u2) u3, 0, 0⟩ := by
-  rw [diquark_to_antiquark]
-  apply ext
-  · dsimp [zornMul, antiquark, quark, dot3]; ring
-  · dsimp [zornMul, antiquark, quark, dot3]; ring
-  · dsimp [zornMul, antiquark, quark, cross3]; ext i; fin_cases i <;> { dsimp; ring }
-  · dsimp [zornMul, antiquark, quark, cross3]; ext i; fin_cases i <;> { dsimp; ring }
-
 /-- 🏆 THEOREM: Meson Canonical Anticommutation Relations (CAR): {Q(u), Q_bar(v)} = (u · v) * 1. -/
-theorem meson_car_anticommutator (u v : Vec3 R) :
+theorem meson_car_anticommutator (u v : Vec3 R₀) :
     add (zornMul (quark u) (antiquark v)) (zornMul (antiquark v) (quark u)) =
     smul (dot3 u v) one := by
   apply ext
@@ -300,44 +344,8 @@ theorem meson_car_anticommutator (u v : Vec3 R) :
   · dsimp [add, zornMul, quark, antiquark, smul, one, cross3]; ext i; fin_cases i <;> { dsimp; ring }
   · dsimp [add, zornMul, quark, antiquark, smul, one, cross3]; ext i; fin_cases i <;> { dsimp; ring }
 
-/-- 🏆 THEOREM: Iwasawa Cartan scale generator commutation on quarks: [ell, Q] = +2 Q. -/
-theorem iwasawa_scale_quark (u : Vec3 R) :
-    sub (zornMul splitCartanEll (quark u)) (zornMul (quark u) splitCartanEll) =
-    smul (1 + 1) (quark u) := by
-  apply ext
-  · dsimp [sub, zornMul, splitCartanEll, quark, smul, dot3]; ring
-  · dsimp [sub, zornMul, splitCartanEll, quark, smul, dot3]; ring
-  · ext i
-    fin_cases i
-    · dsimp [sub, zornMul, splitCartanEll, quark, smul, cross3]; ring
-    · dsimp [sub, zornMul, splitCartanEll, quark, smul, cross3]; ring
-    · dsimp [sub, zornMul, splitCartanEll, quark, smul, cross3]; ring
-  · ext i
-    fin_cases i
-    · dsimp [sub, zornMul, splitCartanEll, quark, smul, cross3]; ring
-    · dsimp [sub, zornMul, splitCartanEll, quark, smul, cross3]; ring
-    · dsimp [sub, zornMul, splitCartanEll, quark, smul, cross3]; ring
-
-/-- 🏆 THEOREM: Iwasawa Cartan scale generator commutation on antiquarks: [ell, Q_bar] = -2 Q_bar. -/
-theorem iwasawa_scale_antiquark (v : Vec3 R) :
-    sub (zornMul splitCartanEll (antiquark v)) (zornMul (antiquark v) splitCartanEll) =
-    smul (-(1 + 1)) (antiquark v) := by
-  apply ext
-  · dsimp [sub, zornMul, splitCartanEll, antiquark, smul, dot3]; ring
-  · dsimp [sub, zornMul, splitCartanEll, antiquark, smul, dot3]; ring
-  · ext i
-    fin_cases i
-    · dsimp [sub, zornMul, splitCartanEll, antiquark, smul, cross3]; ring
-    · dsimp [sub, zornMul, splitCartanEll, antiquark, smul, cross3]; ring
-    · dsimp [sub, zornMul, splitCartanEll, antiquark, smul, cross3]; ring
-  · ext i
-    fin_cases i
-    · dsimp [sub, zornMul, splitCartanEll, antiquark, smul, cross3]; ring
-    · dsimp [sub, zornMul, splitCartanEll, antiquark, smul, cross3]; ring
-    · dsimp [sub, zornMul, splitCartanEll, antiquark, smul, cross3]; ring
-
 /-- 🏆 THEOREM: Split circular spin null product identity: u+ * u- = half² * (u1² - u2²). -/
-theorem split_circular_null_product (u1 u2 tau half : R)
+theorem split_circular_null_product (u1 u2 tau half : R₀)
     (htau : tau * tau = 1) :
     let u_plus := half * (u1 + tau * u2)
     let u_minus := half * (u1 - tau * u2)
@@ -349,6 +357,8 @@ theorem split_circular_null_product (u1 u2 tau half : R)
     _ = (half * half) * (u1 * u1 - (tau * tau) * (u2 * u2)) := by ring
     _ = (half * half) * (u1 * u1 - 1 * (u2 * u2)) := by rw [htau]
     _ = (half * half) * (u1 * u1 - u2 * u2) := by ring
+
+end CommZornMatrix
 
 /-! ### 4. Dirac-Kähler 8-Dimensional Fock Space Grading -/
 

@@ -75,6 +75,9 @@ abbrev Vec32R := Fin 32 → ℝ
 def comm (A B : Mat2C) : Mat2C :=
   A * B - B * A
 
+/-- Commutator on square matrices of any finite dimension. -/
+def matrixComm {n : ℕ} (A B : Matrix (Fin n) (Fin n) ℂ) := A * B - B * A
+
 /-- Spin-half raising matrix. -/
 def J_plus : Mat2C :=
   !![0, 1;
@@ -103,22 +106,26 @@ namespace SpinHalfBasis
 
 variable {n : ℕ} (basis : SpinHalfBasis n)
 
-/-- The `J₀,J₊` commutation relation read from a finite spin-half basis. -/
-theorem spin_z_plus_commutation :
-    basis.J_zero * basis.J_plus - basis.J_plus * basis.J_zero = basis.J_plus :=
-  basis.h_commutator_z_plus
-
-/-- The `J₀,J₋` commutation relation read from a finite spin-half basis. -/
-theorem spin_z_minus_commutation :
-    basis.J_zero * basis.J_minus - basis.J_minus * basis.J_zero = -basis.J_minus :=
-  basis.h_commutator_z_minus
-
-/-- The `J₊,J₋` commutation relation read from a finite spin-half basis. -/
-theorem spin_plus_minus_commutation :
-    basis.J_plus * basis.J_minus - basis.J_minus * basis.J_plus = (2 : ℂ) • basis.J_zero :=
-  basis.h_commutator_plus_minus
+/- These are consequences of the defining fields, not independent theorems.
+The useful derived statement here is the Jacobi identity for the three
+operators, which is not stored in the basis structure. -/
+theorem commutator_jacobi :
+    matrixComm basis.J_zero (matrixComm basis.J_plus basis.J_minus) +
+      matrixComm basis.J_plus (matrixComm basis.J_minus basis.J_zero) +
+      matrixComm basis.J_minus (matrixComm basis.J_zero basis.J_plus) = 0 := by
+  unfold matrixComm
+  noncomm_ring
 
 end SpinHalfBasis
+
+/-- The matrix commutator satisfies Jacobi for arbitrary operators, without
+assuming the spin-half relations. -/
+theorem matrix_commutator_jacobi (A B C : Mat2C) :
+    comm A (comm B C) + comm B (comm C A) + comm C (comm A B) = 0 := by
+  change matrixComm A (matrixComm B C) + matrixComm B (matrixComm C A) +
+    matrixComm C (matrixComm A B) = 0
+  unfold matrixComm
+  noncomm_ring
 
 /-- Concrete finite relation `[J₀,J₊]=J₊`. -/
 theorem comm_J_zero_J_plus :

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 
 namespace Omega.GU
@@ -68,8 +73,8 @@ def Window6IntrinsicBracketFiniteIntegerReductionData.finiteIntegerSystem
     Set Window6StructureConstants :=
   {c | D.intrinsicBracketConstraints c}
 
-/-- Existence and uniqueness of the intrinsic bracket after translating the structure constants
-into the finite constraint system. -/
+/-- Compatibility proposition for the intrinsic-bracket claim, currently encoded by unique
+membership in the finite constraint set. It does not supply a concrete solution witness. -/
 def Window6IntrinsicBracketFiniteIntegerReductionData.intrinsicBracketExistsUnique
     (D : Window6IntrinsicBracketFiniteIntegerReductionData) : Prop :=
   ∃! c : Window6StructureConstants, c ∈ D.finiteIntegerSystem
@@ -79,9 +84,24 @@ def Window6IntrinsicBracketFiniteIntegerReductionData.finiteIntegerSystemHasUniq
     (D : Window6IntrinsicBracketFiniteIntegerReductionData) : Prop :=
   ∃! c : Window6StructureConstants, c ∈ D.finiteIntegerSystem
 
-/-- Modeling the `21` structure constants together with antisymmetry, support, parity,
-block-compatibility, and Jacobi turns intrinsic-bracket existence/uniqueness into unique
-solvability of the corresponding finite integer system.
+/-- Antisymmetry over the integer structure constants forces every coefficient with repeated
+first and second basis arguments to vanish. This is a concrete consequence of the finite
+constraint system, independent of any existence or uniqueness claim. -/
+theorem window6_antisymmetry_forces_diagonal_structure_constants_zero
+    (D : Window6IntrinsicBracketFiniteIntegerReductionData)
+    (c : Window6StructureConstants)
+    (hc : c ∈ D.finiteIntegerSystem) :
+    ∀ i k, c i i k = 0 := by
+  change D.intrinsicBracketConstraints c at hc
+  have hanti := hc.1
+  intro i k
+  have h := hanti i i k
+  omega
+
+/-- Compatibility restatement: both sides are definitionally the same unique-membership
+proposition. This theorem does not establish that the finite system has a solution or construct
+an intrinsic bracket. The substantive consequence used by the certificate packages is
+`window6_antisymmetry_forces_diagonal_structure_constants_zero`.
     prop:window6-intrinsic-bracket-finite-integer-reduction -/
 theorem paper_window6_intrinsic_bracket_finite_integer_reduction
     (D : Window6IntrinsicBracketFiniteIntegerReductionData) :
@@ -89,3 +109,8 @@ theorem paper_window6_intrinsic_bracket_finite_integer_reduction
   rfl
 
 end Omega.GU
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/

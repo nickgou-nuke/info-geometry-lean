@@ -9,7 +9,7 @@ import InfoGeometry.OperatorAlgebra.QCCRCuntzToeplitz
 
 namespace InfoGeometry.OperatorAlgebra.QCCRCommutatorAnticommutator
 
-variable {R Op : Type*} [CommRing R] [Ring Op] [Algebra R Op]
+variable {R Op : Type*} [Ring R] [Ring Op] [Module R Op]
 
 def QCommutes (q : R) (X Y : Op) : Prop :=
   X * Y = q • (Y * X)
@@ -17,6 +17,21 @@ def QCommutes (q : R) (X Y : Op) : Prop :=
 def comm (X Y : Op) : Op := X * Y - Y * X
 
 def anti (X Y : Op) : Op := X * Y + Y * X
+
+omit [Ring R] [Module R Op] in
+/-- Operator-valued `Q`-commutation relation `X * Y = Q * (Y * X)` in any associative ring `Op`. -/
+def OpQCommutes (Q X Y : Op) : Prop :=
+  X * Y = Q * (Y * X)
+
+omit [Ring R] [Module R Op] in
+/-- Over any non-commutative ring `Op`, an operator-valued `Q`-commutation relation
+`X * Y = Q * (Y * X)` satisfies `(1 + Q) * [X, Y] = (Q - 1) * {X, Y}` without requiring
+`Q` to commute with `X` or `Y`. -/
+theorem op_comm_anti_relation (Q X Y : Op) (h : OpQCommutes Q X Y) :
+    (1 + Q) * comm X Y = (Q - 1) * anti X Y := by
+  unfold comm anti OpQCommutes at *
+  rw [h]
+  noncomm_ring
 
 theorem comm_eq (q : R) (X Y : Op) (h : QCommutes q X Y) :
     comm X Y = q • (Y * X) - Y * X := by
@@ -31,16 +46,16 @@ theorem anti_eq (q : R) (X Y : Op) (h : QCommutes q X Y) :
 theorem comm_anti_relation (q : R) (X Y : Op) (h : QCommutes q X Y) :
     (1 + q) • comm X Y = (q - 1) • anti X Y := by
   rw [comm_eq q X Y h, anti_eq q X Y h]
-  simp only [add_smul, one_smul, sub_smul, smul_sub, smul_add]
-  noncomm_ring
+  rw [add_smul, one_smul, sub_smul, one_smul, smul_sub, smul_add]
+  abel
 
 end InfoGeometry.OperatorAlgebra.QCCRCommutatorAnticommutator
 
 namespace InfoGeometry.OperatorAlgebra.QCCRCommutatorAnticommutator
 open InfoGeometry.OperatorAlgebra.QCCRCuntzToeplitz
 
-variable {ι R Op : Type*} [DecidableEq ι] [CommRing R] [Ring Op]
-  [StarRing Op] [Algebra R Op]
+variable {ι R Op : Type*} [DecidableEq ι] [Ring R] [Ring Op]
+  [StarRing Op] [Module R Op]
 
 /-- Off-diagonal QCCR modes satisfy the homogeneous commutator/anticommutator
 identity; the inhomogeneous Kronecker term vanishes when the indices differ. -/

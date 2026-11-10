@@ -21,7 +21,7 @@ open CategoryTheory
 open Matrix
 open InfoGeometry.Canonical.NonAbelianFusionFRBridge
 
-variable {K : Type*} [CommRing K]
+variable {K : Type*} [Ring K]
 variable [TopologicalSpace K] [ContinuousAdd K] [ContinuousMul K]
 
 abbrev FusionCarrier (K : Type*) := Matrix (Fin 2) (Fin 2) K
@@ -53,6 +53,11 @@ def fusionFLeftTopCatHom (a b : K) :
 def fusionBraid1LeftTopCatHom (q1 q2 : K) :
     TopCat.of (FusionCarrier K) ⟶ TopCat.of (FusionCarrier K) :=
   matrixLeftTopCatHom (braidGen1 K q1 q2)
+
+section CommRing
+
+variable {K : Type*} [CommRing K]
+variable [TopologicalSpace K] [ContinuousAdd K] [ContinuousMul K]
 
 def fusionBraid2LeftTopCatHom (a b q1 q2 : K) :
     TopCat.of (FusionCarrier K) ⟶ TopCat.of (FusionCarrier K) :=
@@ -88,5 +93,7 @@ theorem fusionBraidLeftTopCatHom_artin (a b q1 q2 : K)
   simpa only [Matrix.mul_assoc] using
     congrArg (fun M : FusionCarrier K => M * X)
       (nonAbelian_artin_braid_relation K a b q1 q2 h_norm h_braid)
+
+end CommRing
 
 end InfoGeometry.Canonical.NonAbelianFusionFRTopologicalBridge

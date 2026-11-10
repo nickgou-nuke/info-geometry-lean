@@ -10,7 +10,7 @@ def addZeroCandidate : TypedArchetype Nat .candidate where
   name     := `addZeroCandidate
   phase    := 1
   claim    := fun n => n + 0 = n
-  evidence := trivial
+  evidence := PUnit.unit
 
 #register_archetype addZeroCandidate
 
@@ -28,7 +28,7 @@ def triangleCandidate : TypedArchetype (Nat × Nat) .candidate where
   name     := `triangleCandidate
   phase    := 2
   claim    := fun (a, b) => a + b ≥ a
-  evidence := trivial
+  evidence := PUnit.unit
 
 #register_archetype triangleCandidate
 
@@ -44,7 +44,7 @@ def offsetCandidate (offset : Nat) : TypedArchetype Nat .candidate where
   name     := `offsetCandidate
   phase    := 1
   claim    := fun n => n + offset ≥ offset
-  evidence := trivial
+  evidence := PUnit.unit
 
 #register_archetype offsetCandidate
 
@@ -61,7 +61,7 @@ def inductionCandidate : TypedArchetype Nat .candidate where
   name     := `inductionCandidate
   phase    := 3
   claim    := fun n => 0 + n = n
-  evidence := trivial
+  evidence := PUnit.unit
 
 #register_archetype inductionCandidate
 

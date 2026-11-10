@@ -13,7 +13,7 @@ V₄/Q₈ boundary conditions of the emergent spacetime.
 
 namespace InfoGeometry.Topology.BuscherTDuality
 
-variable (M : Type _) [Field M]
+variable (M : Type _) [Ring M]
 
 /-- 
   The Kaluza-Klein metric and B-field configuration.
@@ -26,6 +26,10 @@ structure StringBackground where
   g_inv : g_yy * g_yy = 1 -- Normalized boundary condition
 
 variable {M}
+
+section DivisionRing
+
+variable {M : Type _} [DivisionRing M]
 
 /-- 
   The non-linear Buscher rules for the T-dual background.
@@ -53,5 +57,7 @@ theorem t_duality_preserves_q8_boundary (bg : StringBackground M)
   rw [dual.buscher_g]
   have h_inv : bg.g_yy⁻¹ = bg.g_yy := inv_eq_of_mul_eq_one_left h_q8
   rw [h_inv, h_q8]
+
+end DivisionRing
 
 end InfoGeometry.Topology.BuscherTDuality

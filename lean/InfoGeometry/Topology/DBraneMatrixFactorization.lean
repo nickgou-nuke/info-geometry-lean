@@ -13,7 +13,7 @@ its adjugate form a minimal topological D-brane on the horizon.
 
 open Matrix
 
-variable (M : Type _) [CommRing M] [Algebra ℂ M]
+variable (M : Type _) [Ring M] [Algebra ℂ M]
 
 /-- 
   The Matrix Factorization category of the polynomial W.
@@ -42,7 +42,7 @@ def pauli_adjugate (E px py pz : M) : Matrix (Fin 2) (Fin 2) M :=
   Proves that the Pauli-soldered momentum matrix and its adjugate form 
   a valid, minimal matrix factorization of the Minkowski metric q(P).
 -/
-theorem pauli_is_dbrane_factorization (E px py pz : M) :
+theorem pauli_is_dbrane_factorization (M : Type _) [CommRing M] [Algebra ℂ M] (E px py pz : M) :
     let q := E^2 - px^2 - py^2 - pz^2
     let D0 := pauli_momentum M E px py pz
     let D1 := pauli_adjugate M E px py pz

@@ -16,7 +16,8 @@ identity in `SquareZeroPairSpectral` transfers to those channels.
 
 namespace InfoGeometry.OperatorAlgebra.SquareZeroPairSpectral
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A] {u v : A}
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A] {u v : A}
 
 theorem phiLaplacian_eq_sumDissipator (hu : u * u = 0) (hv : v * v = 0) :
     phiLaplacian R u v = PeirceDissipatorTrinity.sumDissipator (R := R) u v :=

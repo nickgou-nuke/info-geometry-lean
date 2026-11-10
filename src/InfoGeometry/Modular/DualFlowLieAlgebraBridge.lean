@@ -261,7 +261,7 @@ def LieProduct (L M : Type*) := L × M
 
 namespace LieProduct
 
-variable {L M : Type*} [LieRing L] [LieAlgebra R L] [LieRing M] [LieAlgebra R M]
+variable {L M : Type*} [LieRing L] [LieRing M]
 
 instance : Bracket (L × M) (L × M) where
   bracket p q := (⁅p.1, q.1⁆, ⁅p.2, q.2⁆)
@@ -285,6 +285,8 @@ instance : LieRing (L × M) where
     ext
     · exact leibniz_lie p.1 q.1 r.1
     · exact leibniz_lie p.2 q.2 r.2
+
+variable [LieAlgebra R L] [LieAlgebra R M]
 
 instance : LieAlgebra R (L × M) where
   lie_smul r p q := by

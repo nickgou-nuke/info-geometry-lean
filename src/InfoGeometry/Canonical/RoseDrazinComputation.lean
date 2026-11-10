@@ -21,7 +21,7 @@ namespace InfoGeometry.Canonical.RoseDrazinComputation
 noncomputable section
 
 /-- A polynomial expression for the inverse power used in Rose's formula. -/
-structure InversePowerPolynomialIdentity (K : Type*) [Field K] where
+structure InversePowerPolynomialIdentity (K : Type*) [Semiring K] where
   s : ℕ
   ell : ℕ
   p : Polynomial K
@@ -33,7 +33,7 @@ structure InversePowerPolynomialIdentity (K : Type*) [Field K] where
 an owner theorem, while `rosePolynomialReadout` records Rose's formula
 `Aᴰ = A^ell p(A)`. -/
 structure RoseDrazinPolynomialComputation
-    (K : Type*) [Field K] {n : ℕ}
+    (K : Type*) [CommRing K] {n : ℕ}
     (A drazin : Matrix (Fin n) (Fin n) K) where
   ell : ℕ
   p : Polynomial K
@@ -46,7 +46,7 @@ structure RoseDrazinPolynomialComputation
 
 namespace RoseDrazinPolynomialComputation
 
-variable {K : Type*} [Field K] {n : ℕ}
+variable {K : Type*} [CommRing K] {n : ℕ}
 variable {A drazin : Matrix (Fin n) (Fin n) K}
 variable (C : RoseDrazinPolynomialComputation K A drazin)
 
@@ -70,7 +70,7 @@ end RoseDrazinPolynomialComputation
 /-- Souriau--Frame algorithm: the final zero `B_r`, last nonzero `p_s`,
 and annihilating-polynomial/index readouts are explicit equations. -/
 structure SouriauFrameDrazinIndexComputation
-    (K : Type*) [Field K] {n : ℕ}
+    (K : Type*) [CommRing K] {n : ℕ}
     (A : Matrix (Fin n) (Fin n) K) where
   B : ℕ → Matrix (Fin n) (Fin n) K
   p : ℕ → K
@@ -85,7 +85,7 @@ structure SouriauFrameDrazinIndexComputation
 
 namespace SouriauFrameDrazinIndexComputation
 
-variable {K : Type*} [Field K] {n : ℕ}
+variable {K : Type*} [CommRing K] {n : ℕ}
 variable {A : Matrix (Fin n) (Fin n) K}
 variable (C : SouriauFrameDrazinIndexComputation K A)
 
@@ -149,7 +149,7 @@ theorem example2_inverse_power_identity (x : ℚ)
 
 /-- Binomial nilpotent inverse-power computation for Rose Example 3. -/
 structure BinomialNilpotentInversePower
-    (K : Type*) [Field K] {n : ℕ}
+    (K : Type*) [Ring K] {n : ℕ}
     (A : Matrix (Fin n) (Fin n) K) where
   exponent : ℕ
   nilpotent : (A - 1) ^ exponent = 0
@@ -158,7 +158,7 @@ structure BinomialNilpotentInversePower
 
 namespace BinomialNilpotentInversePower
 
-variable {K : Type*} [Field K] {n : ℕ}
+variable {K : Type*} [Ring K] {n : ℕ}
 variable {A : Matrix (Fin n) (Fin n) K}
 variable (C : BinomialNilpotentInversePower K A)
 

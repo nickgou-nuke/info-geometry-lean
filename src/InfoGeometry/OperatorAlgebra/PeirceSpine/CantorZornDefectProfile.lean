@@ -43,21 +43,40 @@ theorem cantorTripleAssociatorResidual_eq_zero
   simp [cantorTripleAssociatorResidual,
     InfoGeometry.Canonical.PositiveGrassmannianExteriorCantor.cantorGradedProduct_associator]
 
-/-- On the operator-Zorn carrier, every nonzero left-multiplication defect
-has a nonzero component in the native five-grade decomposition. -/
+/-- A left-multiplication defect is nonzero exactly when one of its five
+native grade projections is nonzero. The forward direction uses exhaustive
+five-grade support; the reverse direction follows because each projection
+sends the zero endomorphism to zero. -/
 theorem zornDefect_has_fiveGrade_support
     {A : Type*} [Ring A]
     (X Y : InfoGeometry.Canonical.OperatorZornMatrix A)
-    (hD : InfoGeometry.OperatorAlgebra.NCZornTripotentFiveGrading.ncZornMulDefect X Y ≠ 0) :
-    ∃ d : Fin 5,
-      InfoGeometry.OperatorAlgebra.NCZornTripotentFiveGrading.ncZornFiveComponent
-        (InfoGeometry.OperatorAlgebra.NCZornTripotentFiveGrading.ncZornMulDefect X Y) d ≠ 0 :=
-  InfoGeometry.OperatorAlgebra.NCZornDefectFiveGradeSupport.ncZornMulDefect_has_nonzero_five_grade_component X Y hD
+    : InfoGeometry.OperatorAlgebra.NCZornTripotentFiveGrading.ncZornMulDefect X Y ≠ 0 ↔
+      ∃ d : Fin 5,
+        InfoGeometry.OperatorAlgebra.NCZornTripotentFiveGrading.ncZornFiveComponent
+          (InfoGeometry.OperatorAlgebra.NCZornTripotentFiveGrading.ncZornMulDefect X Y) d ≠ 0 := by
+  constructor
+  · exact InfoGeometry.OperatorAlgebra.NCZornDefectFiveGradeSupport.ncZornMulDefect_has_nonzero_five_grade_component X Y
+  · rintro ⟨d, hd⟩ hZero
+    have hComponent := congrArg
+      (fun K : Module.End ℤ (InfoGeometry.Canonical.OperatorZornMatrix A) =>
+        InfoGeometry.OperatorAlgebra.NCZornTripotentFiveGrading.ncZornFiveComponent K d)
+      hZero
+    have hComponentZero :
+        InfoGeometry.OperatorAlgebra.NCZornTripotentFiveGrading.ncZornFiveComponent
+          (InfoGeometry.OperatorAlgebra.NCZornTripotentFiveGrading.ncZornMulDefect X Y) d = 0 := by
+      have hZeroComponent :
+          InfoGeometry.OperatorAlgebra.NCZornTripotentFiveGrading.ncZornFiveComponent
+              (0 : Module.End ℤ (InfoGeometry.Canonical.OperatorZornMatrix A)) d = 0 := by
+        simp [InfoGeometry.OperatorAlgebra.NCZornTripotentFiveGrading.ncZornFiveComponent,
+          InfoGeometry.OperatorAlgebra.NCZornTripotentFiveGrading.ncZornBlock]
+        fin_cases d <;> rfl
+      rw [hZeroComponent] at hComponent
+      exact hComponent
+    exact hd hComponentZero
 
-/-- Carrier-separated defect profile: the represented Cantor triple
-associator vanishes, while any supplied nonzero Zorn multiplication defect
-is detected by its five-grade components. No cross-carrier equality is
-asserted. -/
+/-- A nonzero operator-valued Zorn defect has an input at which one of its
+five evaluated grade contributions is nonzero. This strengthens the
+operator-level support theorem by exhibiting a witness in the carrier. -/
 theorem cantor_triple_and_zorn_fiveGrade_defects
     {Op A : Type*} [Ring Op] [StarRing Op] [Ring A]
     (C : InfoGeometry.Topology.CuntzO2Carrier Op)
@@ -66,11 +85,22 @@ theorem cantor_triple_and_zorn_fiveGrade_defects
     (X Y : InfoGeometry.Canonical.OperatorZornMatrix A)
     (hD : InfoGeometry.OperatorAlgebra.NCZornTripotentFiveGrading.ncZornMulDefect X Y ≠ 0) :
     cantorTripleAssociatorResidual C p q r u v w = 0 ∧
-      ∃ d : Fin 5,
-        InfoGeometry.OperatorAlgebra.NCZornTripotentFiveGrading.ncZornFiveComponent
-          (InfoGeometry.OperatorAlgebra.NCZornTripotentFiveGrading.ncZornMulDefect X Y) d ≠ 0 :=
-  ⟨cantorTripleAssociatorResidual_eq_zero C p q r u v w,
-    zornDefect_has_fiveGrade_support X Y hD⟩
+      ∃ Z : InfoGeometry.Canonical.OperatorZornMatrix A,
+        ∃ d : Fin 5,
+          InfoGeometry.OperatorAlgebra.NCZornTripotentFiveGrading.ncZornFiveComponent
+            (InfoGeometry.OperatorAlgebra.NCZornTripotentFiveGrading.ncZornMulDefect X Y) d Z ≠ 0 := by
+  have hInput : ∃ Z : InfoGeometry.Canonical.OperatorZornMatrix A,
+      InfoGeometry.OperatorAlgebra.NCZornTripotentFiveGrading.ncZornMulDefect X Y Z ≠ 0 := by
+    by_contra hNoInput
+    apply hD
+    apply LinearMap.ext
+    intro Z
+    by_contra hNZ
+    exact hNoInput ⟨Z, hNZ⟩
+  rcases hInput with ⟨Z, hZ⟩
+  exact ⟨cantorTripleAssociatorResidual_eq_zero C p q r u v w, Z,
+    (InfoGeometry.OperatorAlgebra.NCZornDefectFiveGradeSupport.ncZornMulDefect_apply_has_nonzero_five_grade_component
+      X Y Z hZ)⟩
 
 /-- Full carrier-separated readout: the Cantor associator vanishes, while
 the Zorn associator itself (not merely its nonvanishing support) is exactly
@@ -106,13 +136,14 @@ theorem cantor_and_full_zorn_defect_profile
     exact InfoGeometry.OperatorAlgebra.NCZornTripotentFiveGrading.ncZornFiveComponent_comm_tripotent
       (InfoGeometry.OperatorAlgebra.NCZornTripotentFiveGrading.ncZornMulDefect X Y) d
   · intro hD
-    exact zornDefect_has_fiveGrade_support X Y hD
+    exact (zornDefect_has_fiveGrade_support X Y).mp hD
 
-/-- Evaluation-level carrier-separated profile: the represented Cantor
-associator vanishes, while a nonzero operator-Zorn associator value at the
-specified third input has a nonzero evaluated grade contribution. -/
+/-- At a fixed third input, the defect value is the sum of its five evaluated
+grade contributions; if that value is nonzero, one contribution is nonzero.
+Each endomorphism grade has its exact tripotent charge. -/
 theorem cantor_and_evaluated_zorn_defect_profile
-    {Op A : Type*} [Ring Op] [StarRing Op] [Ring A]
+    {A : Type*} [Ring A]
+    {Op : Type*} [Ring Op] [StarRing Op]
     (C : InfoGeometry.Topology.CuntzO2Carrier Op)
     (p q r : Bool)
     (u v w : List InfoGeometry.OperatorAlgebra.ErlangenNet.BinarySector)

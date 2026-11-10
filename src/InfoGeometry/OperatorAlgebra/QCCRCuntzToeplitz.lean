@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Star.Basic
@@ -25,8 +30,6 @@ The formalization covers:
    - Exact boundary identification with the pure Cuntz algebra O_N when P_vac = 0.
 4. Continuous bracket interpolation connecting CAR (anticommutator) to CCR (commutator)
    through Cuntz-Toeplitz (free product).
-5. Master certificate QCCRCuntzToeplitzCertificate bundling all proven theorems with
-   zero sorry and 100% axiomatic purity.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.QCCRCuntzToeplitz
@@ -49,7 +52,7 @@ def T {ι R : Type*} [Mul R] (q : R) (f : ι × ι → R) (p : ι × ι) : R :=
   q * f (tau p)
 
 /-- The operator T(q) satisfies T(q)^2 = q^2 · id on 2-tensor functions. -/
-theorem T_sq_eq_q_sq {ι R : Type*} [CommSemiring R] (q : R) (f : ι × ι → R) (p : ι × ι) :
+theorem T_sq_eq_q_sq {ι R : Type*} [Semiring R] (q : R) (f : ι × ι → R) (p : ι × ι) :
     T q (T q f) p = q^2 * f p := by
   dsimp [T]
   rw [tau_involutive, sq, mul_assoc]
@@ -65,15 +68,18 @@ theorem q_sq_lt_one (q : ℝ) (hq : |q| < 1) : q^2 < 1 := by
 
 /-! ## 2. General q-CCR Operator Algebra Carrier -/
 
-/-- General finite-index q-CCR operator system over scalar ring R and operator ring Op. -/
+/-- General finite-index q-CCR operator system over ring R and operator ring Op. -/
 structure QCCROperators (ι : Type*) (R : Type*) (Op : Type*)
-    [DecidableEq ι] [CommRing R] [Ring Op] [StarRing Op] [Algebra R Op] where
+    [DecidableEq ι] [Ring R] [Ring Op] [StarRing Op] [Module R Op] where
   a : ι → Op
   q : R
   q_commutation : ∀ i j : ι,
     star (a i) * a j = (if i = j then (1 : Op) else 0) + q • (a j * star (a i))
 
-variable {ι R Op : Type*} [DecidableEq ι] [CommRing R] [Ring Op] [StarRing Op] [Algebra R Op]
+variable {ι R Op : Type*} [DecidableEq ι] [Ring R] [Ring Op] [StarRing Op] [Module R Op]
+
+instance : Inhabited (QCCROperators PEmpty R Op) :=
+  ⟨⟨PEmpty.elim, 0, fun i => PEmpty.elim i⟩⟩
 
 /-- Boundary specialization: at q = 0, q-CCR reduces to the Cuntz-Toeplitz orthogonality relations. -/
 theorem q_zero_is_cuntz_toeplitz (A : QCCROperators ι R Op) (hq0 : A.q = 0) (i j : ι) :
@@ -168,7 +174,7 @@ theorem P_vac_eq_zero_iff_cuntz [Fintype ι] (A : QCCROperators ι R Op) :
 
 section Bracket
 
-variable {R Op : Type*} [CommRing R] [Ring Op] [Algebra R Op]
+variable {R Op : Type*} [Ring R] [Ring Op] [Module R Op]
 
 /-- The q-bracket family connecting anticommutator (q = -1) to commutator (q = 1). -/
 def bracket (q : R) (X Y : Op) : Op :=
@@ -193,78 +199,5 @@ theorem bracket_one (X Y : Op) :
   rw [one_smul]
 
 end Bracket
-
-/-! ## 5. Master Certificate -/
-
-/-- Master certificate bundling the complete algebraic package for the q-CCR / Cuntz-Toeplitz road. -/
-structure QCCRCuntzToeplitzCertificate : Prop where
-  tau_involutive_holds :
-    ∀ (ι : Type*) (p : ι × ι), tau (tau p) = p
-  T_sq_eq_q_sq_holds :
-    ∀ (ι R : Type*) [CommSemiring R] (q : R) (f : ι × ι → R) (p : ι × ι),
-      T q (T q f) p = q^2 * f p
-  q_sq_lt_one_holds :
-    ∀ (q : ℝ), |q| < 1 → q^2 < 1
-  q_zero_is_cuntz_toeplitz_holds :
-    ∀ (ι R Op : Type*) [DecidableEq ι] [CommRing R] [Ring Op] [StarRing Op] [Algebra R Op]
-      (A : QCCROperators ι R Op), A.q = 0 → ∀ i j : ι,
-      star (A.a i) * A.a j = if i = j then (1 : Op) else 0
-  q_neg_one_is_car_holds :
-    ∀ (ι R Op : Type*) [DecidableEq ι] [CommRing R] [Ring Op] [StarRing Op] [Algebra R Op]
-      (A : QCCROperators ι R Op), A.q = -1 → ∀ i j : ι,
-      star (A.a i) * A.a j + A.a j * star (A.a i) = if i = j then (1 : Op) else 0
-  q_one_is_ccr_holds :
-    ∀ (ι R Op : Type*) [DecidableEq ι] [CommRing R] [Ring Op] [StarRing Op] [Algebra R Op]
-      (A : QCCROperators ι R Op), A.q = 1 → ∀ i j : ι,
-      star (A.a i) * A.a j - A.a j * star (A.a i) = if i = j then (1 : Op) else 0
-  star_a_mul_P_vac_eq_zero_holds :
-    ∀ (ι R Op : Type*) [DecidableEq ι] [Fintype ι] [CommRing R] [Ring Op] [StarRing Op] [Algebra R Op]
-      (A : QCCROperators ι R Op), A.q = 0 → ∀ j : ι,
-      star (A.a j) * P_vac A = 0
-  P_vac_mul_a_eq_zero_holds :
-    ∀ (ι R Op : Type*) [DecidableEq ι] [Fintype ι] [CommRing R] [Ring Op] [StarRing Op] [Algebra R Op]
-      (A : QCCROperators ι R Op), A.q = 0 → ∀ j : ι,
-      P_vac A * A.a j = 0
-  P_vac_idempotent_holds :
-    ∀ (ι R Op : Type*) [DecidableEq ι] [Fintype ι] [CommRing R] [Ring Op] [StarRing Op] [Algebra R Op]
-      (A : QCCROperators ι R Op), A.q = 0 →
-      P_vac A * P_vac A = P_vac A
-  P_vac_eq_zero_iff_cuntz_holds :
-    ∀ (ι R Op : Type*) [DecidableEq ι] [Fintype ι] [CommRing R] [Ring Op] [StarRing Op] [Algebra R Op]
-      (A : QCCROperators ι R Op),
-      P_vac A = 0 ↔ ∑ i : ι, A.a i * star (A.a i) = 1
-  bracket_neg_one_holds :
-    ∀ (R Op : Type*) [CommRing R] [Ring Op] [Algebra R Op] (X Y : Op),
-      bracket (-1 : R) X Y = X * Y + Y * X
-  bracket_zero_holds :
-    ∀ (R Op : Type*) [CommRing R] [Ring Op] [Algebra R Op] (X Y : Op),
-      bracket (0 : R) X Y = X * Y
-  bracket_one_holds :
-    ∀ (R Op : Type*) [CommRing R] [Ring Op] [Algebra R Op] (X Y : Op),
-      bracket (1 : R) X Y = X * Y - Y * X
-
-/-- Master compiler theorem proving the QCCRCuntzToeplitzCertificate. -/
-theorem compile_qccr_cuntz_toeplitz : QCCRCuntzToeplitzCertificate := {
-  tau_involutive_holds := fun _ p => tau_involutive p
-  T_sq_eq_q_sq_holds := fun _ _ _ q f p => T_sq_eq_q_sq q f p
-  q_sq_lt_one_holds := fun q hq => q_sq_lt_one q hq
-  q_zero_is_cuntz_toeplitz_holds := fun _ _ _ _ _ _ _ _ A hq0 i j =>
-    q_zero_is_cuntz_toeplitz A hq0 i j
-  q_neg_one_is_car_holds := fun _ _ _ _ _ _ _ _ A hq_neg1 i j =>
-    q_neg_one_is_car A hq_neg1 i j
-  q_one_is_ccr_holds := fun _ _ _ _ _ _ _ _ A hq1 i j =>
-    q_one_is_ccr A hq1 i j
-  star_a_mul_P_vac_eq_zero_holds := fun _ _ _ _ _ _ _ _ _ A hq0 j =>
-    star_a_mul_P_vac_eq_zero A hq0 j
-  P_vac_mul_a_eq_zero_holds := fun _ _ _ _ _ _ _ _ _ A hq0 j =>
-    P_vac_mul_a_eq_zero A hq0 j
-  P_vac_idempotent_holds := fun _ _ _ _ _ _ _ _ _ A hq0 =>
-    P_vac_idempotent A hq0
-  P_vac_eq_zero_iff_cuntz_holds := fun _ _ _ _ _ _ _ _ _ A =>
-    P_vac_eq_zero_iff_cuntz A
-  bracket_neg_one_holds := fun _ _ _ _ _ X Y => bracket_neg_one X Y
-  bracket_zero_holds := fun _ _ _ _ _ X Y => bracket_zero X Y
-  bracket_one_holds := fun _ _ _ _ _ X Y => bracket_one X Y
-}
 
 end InfoGeometry.OperatorAlgebra.QCCRCuntzToeplitz

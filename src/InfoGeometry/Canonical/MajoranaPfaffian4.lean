@@ -15,7 +15,7 @@ namespace InfoGeometry.Canonical.MajoranaPfaffian4
 open scoped Matrix
 open InfoGeometry.Canonical.OrientedPfaffianMatching
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def skewMatrix4 (a b c d e f : R) : Matrix (Fin 4) (Fin 4) R :=
   !![0, a, b, c;
@@ -38,6 +38,7 @@ theorem skewMatrix4_transpose (a b c d e f : R) :
     simp [skewMatrix4, Matrix.transpose_apply]
 
 theorem skewMatrix4_pfaffian_sq_eq_det
+    {R : Type*} [CommRing R]
     (a b c d e f : R) :
     pfaffian4 a b c d e f ^ 2 =
       (skewMatrix4 a b c d e f).det := by
@@ -52,7 +53,7 @@ theorem pfaffian4_matching_terms
     pfaffian4 a b c d e f =
       (a * f) + (-(b * e)) + (c * d) := by
   unfold pfaffian4
-  ring
+  abel
 
 /-! The three perfect matchings of four labelled vertices.  Their partner
 functions are the pairings `01|23`, `02|13`, and `03|12`. -/

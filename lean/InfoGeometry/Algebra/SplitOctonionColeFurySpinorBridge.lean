@@ -5,11 +5,11 @@ noncomputable section
 
 namespace InfoGeometry.Algebra.ColeFurySpinorBridge
 
-abbrev ColeFurySpinor (C : Type*) [CommRing C] := Fin 32 -> C
+abbrev ColeFurySpinor (C : Type*) [Ring C] := Fin 32 -> C
 
 namespace ColeFurySpinor
 
-variable {C : Type*} [CommRing C]
+variable {C : Type*} [Ring C]
 
 def zero : ColeFurySpinor C := fun _ => 0
 

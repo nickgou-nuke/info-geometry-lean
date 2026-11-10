@@ -24,7 +24,7 @@ The equalities below do not establish a topological index theorem, mutation
 invariance of a grading trace, or a physical helicity theorem.
 -/
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- A diagonal involution with `+1` coordinates indexed by `Fin Vwhite` and
     `-1` coordinates indexed by `Fin Vblack`. -/
@@ -40,7 +40,7 @@ theorem trace_kreinInvolution (Vwhite Vblack : ℕ) :
   dsimp [kreinInvolution]
   rw [Matrix.trace_diagonal]
   rw [Fintype.sum_sum_type]
-  simp; ring
+  simp; noncomm_ring
 
 /-- Plabic count fields filled from natural counts. This encoding does not
 construct a graph or a map from an eigenspace to a graph. -/

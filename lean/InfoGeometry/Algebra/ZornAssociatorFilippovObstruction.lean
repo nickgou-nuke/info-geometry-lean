@@ -18,7 +18,7 @@ derivation of an alternative algebra or a Lie algebra's nested triple product.
 
 namespace InfoGeometry.Algebra.ZornVectorMatrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The fundamental-identity defect of the existing associator, with no new bracket. -/
 def associatorFilippovDefect (x y u v w : ZornVectorMatrix R) :

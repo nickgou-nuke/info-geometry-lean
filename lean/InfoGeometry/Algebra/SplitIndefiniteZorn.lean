@@ -13,7 +13,7 @@ specialization is attempted.
 
 namespace InfoGeometry.Algebra.SplitIndefiniteZorn
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 abbrev SplitVec3 (R : Type*) := Fin 3 → R
 
@@ -30,28 +30,28 @@ def splitDet (x y z : SplitVec3 R) : R :=
     - x 1 * (y 0 * z 2 - y 2 * z 0)
     + x 2 * (y 0 * z 1 - y 1 * z 0)
 
-@[simp] theorem splitDot_comm (x y : SplitVec3 R) :
+@[simp] theorem splitDot_comm {R : Type*} [CommRing R] (x y : SplitVec3 R) :
     splitDot x y = splitDot y x := by
   simp [splitDot]
   ring
 
-@[simp] theorem splitCross_self (x : SplitVec3 R) :
+@[simp] theorem splitCross_self {R : Type*} [CommRing R] (x : SplitVec3 R) :
     splitCross x x = 0 := by
   funext i
   fin_cases i <;> simp [splitCross] <;> ring
 
-theorem splitDot_cross (x y z : SplitVec3 R) :
+theorem splitDot_cross {R : Type*} [CommRing R] (x y z : SplitVec3 R) :
     splitDot (splitCross x y) z = splitDet x y z := by
   simp [splitDot, splitCross, splitDet]
   ring
 
-theorem splitCross_orthogonal_left (x y : SplitVec3 R) :
+theorem splitCross_orthogonal_left {R : Type*} [CommRing R] (x y : SplitVec3 R) :
     splitDot (splitCross x y) x = 0 := by
   rw [splitDot_cross]
   simp [splitDet]
   ring
 
-theorem splitCross_orthogonal_right (x y : SplitVec3 R) :
+theorem splitCross_orthogonal_right {R : Type*} [CommRing R] (x y : SplitVec3 R) :
     splitDot (splitCross x y) y = 0 := by
   rw [splitDot_cross]
   simp [splitDet]
@@ -66,7 +66,7 @@ theorem splitMetric_basis :
       (fun i => if i = 2 then (1 : R) else 0) = -1 := by
   simp [splitDot]
 
-structure SplitZornMatrix (R : Type*) [CommRing R] where
+structure SplitZornMatrix (R : Type*) [Ring R] where
   a : R
   x : SplitVec3 R
   y : SplitVec3 R

@@ -191,7 +191,7 @@ PART 4: Trifold Relative Surprisal Decomposition
 
 section TrifoldDecomposition
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /--
   Trifold Relative Surprisal Decomposition structure:

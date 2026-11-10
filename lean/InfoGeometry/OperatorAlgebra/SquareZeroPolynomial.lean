@@ -26,6 +26,29 @@ namespace InfoGeometry.OperatorAlgebra.SquareZeroPolynomial
 
 open Polynomial
 
+section PureRingPeirceShear
+
+variable {A : Type*} [Ring A]
+
+/-- The two directional Peirce relations already force square-zero
+nilpotency over any ring `[Ring A]`. In particular, nonzero is a separate condition. -/
+theorem sq_zero_of_peirce_relations {P N : A}
+    (hPN : P * N = N) (hNP : N * P = 0) : N * N = 0 := by
+  calc
+    N * N = N * (P * N) := by rw [hPN]
+    _ = (N * P) * N := (mul_assoc N P N).symm
+    _ = 0 := by rw [hNP, zero_mul]
+
+/-- Adding one oriented off-diagonal corner to an idempotent gives an
+idempotent over any ring `[Ring A]` even though the two operators need not commute. -/
+theorem add_idempotent_of_peirce_relations {P N : A} (hP : P * P = P)
+    (hPN : P * N = N) (hNP : N * P = 0) :
+    (P + N) * (P + N) = P + N := by
+  have hN := sq_zero_of_peirce_relations hPN hNP
+  noncomm_ring [hP, hPN, hNP, hN]
+
+end PureRingPeirceShear
+
 section Polynomial
 
 variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
@@ -81,23 +104,6 @@ theorem aeval_idempotent (F : R[X]) {P : A} (hP : P * P = P) :
     noncomm_ring
   · intro n r ih
     simpa only [pow_succ, mul_assoc] using step (C r * X ^ n) ih
-
-/-- The two directional Peirce relations already force square-zero
-nilpotency. In particular, nonzero is a separate condition. -/
-theorem sq_zero_of_peirce_relations {P N : A}
-    (hPN : P * N = N) (hNP : N * P = 0) : N * N = 0 := by
-  calc
-    N * N = N * (P * N) := by rw [hPN]
-    _ = (N * P) * N := (mul_assoc N P N).symm
-    _ = 0 := by rw [hNP, zero_mul]
-
-/-- Adding one oriented off-diagonal corner to an idempotent gives an
-idempotent even though the two operators need not commute. -/
-theorem add_idempotent_of_peirce_relations {P N : A} (hP : P * P = P)
-    (hPN : P * N = N) (hNP : N * P = 0) :
-    (P + N) * (P + N) = P + N := by
-  have hN := sq_zero_of_peirce_relations hPN hNP
-  noncomm_ring [hP, hPN, hNP, hN]
 
 /-- Exact polynomial response to an oriented Peirce shear. Its coefficient
 is the divided difference at zero and one, not `F.derivative.eval 1`. -/

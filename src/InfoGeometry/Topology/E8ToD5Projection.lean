@@ -15,7 +15,7 @@ namespace InfoGeometry.Topology.E8Projection
 
 open InfoGeometry.Topology.BuscherTDuality
 
-variable (M : Type _) [Field M]
+variable (M : Type _) [Ring M]
 
 /-- 
   The projection matrix from E8 to D5.

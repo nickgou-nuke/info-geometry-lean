@@ -16,9 +16,9 @@ open InfoGeometry.Canonical.ProjectedNonassociativeBianchi
 open InfoGeometry.Optics.OperatorValuedConnection
 
 variable {R Z E Point Tangent : Type*}
-  [CommRing R]
+  [Ring R]
   [AddCommGroup Z] [Module R Z]
-  [Ring E] [Algebra R E]
+  [Ring E] [Module R E]
 
 def projectConnection
     (readout : E →ₗ[R] Z)

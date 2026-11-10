@@ -60,46 +60,69 @@ theorem divisionFreeKMS (τ : TracialFunctional R A) (ρ η x y : A) (k : R)
     _ = _ := by rw [mul_assoc]
 
 /-- Native CAR normalization supplies reflexive absorption, not an extra field. -/
-theorem ann_cre_ann (P : CARPair A) : P.ann * (P.cre * P.ann) = P.ann := by
+theorem ann_cre_ann {A : Type*} [Ring A] (P : CARPair A) : P.ann * (P.cre * P.ann) = P.ann := by
   have h : P.ann * P.cre = 1 - P.cre * P.ann := eq_sub_of_add_eq P.anti
   rw [← mul_assoc, h, sub_mul, one_mul, mul_assoc, P.ann_sq, mul_zero, sub_zero]
 
-theorem cre_ann_cre (P : CARPair A) : P.cre * (P.ann * P.cre) = P.cre := by
+theorem cre_ann_cre {A : Type*} [Ring A] (P : CARPair A) : P.cre * (P.ann * P.cre) = P.cre := by
   exact ann_cre_ann (particleHole P)
 
 /-- Occupation weight a multiplies Bb; vacuum weight c multiplies bB. -/
-def density (P : CARPair A) (a c : R) : A := a • minus P + c • plus P
+def density {R A : Type*} [Ring R] [Ring A] [Module R A] (P : CARPair A) (a c : R) : A :=
+  a • minus P + c • plus P
 
 /-- Algebraic adjugate: the two complementary weights are exchanged. -/
-def densityAdjugate (P : CARPair A) (a c : R) : A := c • minus P + a • plus P
+def densityAdjugate {R A : Type*} [Ring R] [Ring A] [Module R A] (P : CARPair A) (a c : R) : A :=
+  c • minus P + a • plus P
 
-theorem density_mul_ann (P : CARPair A) (a c : R) :
+theorem density_mul_ann {R A : Type*} [Ring R] [Ring A] [Module R A] [IsScalarTower R A A]
+    (P : CARPair A) (a c : R) :
     density P a c * P.ann = c • P.ann := by
   simp only [density, minus, plus, add_mul, smul_mul_assoc, mul_assoc,
     P.ann_sq, mul_zero, smul_zero, zero_add, ann_cre_ann]
 
-theorem ann_mul_density (P : CARPair A) (a c : R) :
+theorem ann_mul_density {R A : Type*} [Ring R] [Ring A] [Module R A] [SMulCommClass R A A]
+    (P : CARPair A) (a c : R) :
     P.ann * density P a c = a • P.ann := by
   change P.ann * (a • (P.cre * P.ann) + c • (P.ann * P.cre)) = _
   rw [mul_add, mul_smul_comm, mul_smul_comm, ann_cre_ann,
     ← mul_assoc, P.ann_sq, zero_mul, smul_zero, add_zero]
 
-theorem density_mul_cre (P : CARPair A) (a c : R) :
+theorem density_mul_cre {R A : Type*} [Ring R] [Ring A] [Module R A] [IsScalarTower R A A]
+    (P : CARPair A) (a c : R) :
     density P a c * P.cre = a • P.cre := by
   simp only [density, minus, plus, add_mul, smul_mul_assoc, mul_assoc,
     P.cre_sq, mul_zero, smul_zero, add_zero, cre_ann_cre]
 
-theorem cre_mul_density (P : CARPair A) (a c : R) :
+theorem cre_mul_density {R A : Type*} [Ring R] [Ring A] [Module R A] [SMulCommClass R A A]
+    (P : CARPair A) (a c : R) :
     P.cre * density P a c = c • P.cre := by
   change P.cre * (a • (P.cre * P.ann) + c • (P.ann * P.cre)) = _
   rw [mul_add, mul_smul_comm, mul_smul_comm, cre_ann_cre,
     ← mul_assoc, P.cre_sq, zero_mul, smul_zero, zero_add]
 
-/-- Product law in the existing two complementary CAR sectors. -/
-theorem density_mul_density (P : CARPair A) (a c d e : R) :
+/-- Product law in the existing two complementary CAR sectors over any `[Ring R]`. -/
+theorem density_mul_density {R A : Type*} [Ring R] [Ring A] [Module R A]
+    [IsScalarTower R A A] [SMulCommClass R A A]
+    (P : CARPair A) (a c d e : R) :
     density P a c * density P d e = density P (a * d) (c * e) := by
-  simp only [density, add_mul, mul_add, smul_mul_smul, minus_idempotent,
-    plus_idempotent, minus_mul_plus, plus_mul_minus, smul_zero, add_zero, zero_add]
+  simp only [density, add_mul, mul_add, smul_mul_assoc]
+  simp only [mul_smul_comm, smul_smul,
+    minus_idempotent, plus_idempotent, minus_mul_plus, plus_mul_minus,
+    smul_zero, add_zero, zero_add]
+
+/-- Over a non-commutative ring `[Ring R]`, the product of `density P a c` with its
+adjugate `densityAdjugate P a c` equals `(a * c) • 1` plus the scalar commutator
+anomaly `(c * a - a * c) • plus P` in the vacuum sector. -/
+theorem density_mul_adjugate_noncomm {R A : Type*} [Ring R] [Ring A] [Module R A]
+    [IsScalarTower R A A] [SMulCommClass R A A]
+    (P : CARPair A) (a c : R) :
+    density P a c * densityAdjugate P a c =
+      (a * c) • (1 : A) + (c * a - a * c) • plus P := by
+  change density P a c * density P c a = _
+  rw [density_mul_density, ← projectors_add P]
+  simp only [density, smul_add, sub_smul]
+  abel
 
 theorem density_mul_adjugate (P : CARPair A) (a c : R) :
     density P a c * densityAdjugate P a c = (a * c) • (1 : A) := by
@@ -180,13 +203,14 @@ theorem tilted_vacuum_difference (τ : TracialFunctional R A) (P : CARPair A)
   simp only [weighted_apply, mul_sub, τ.map_sub]
 
 /-- The actual vacuum support bB is killed on the left by b. -/
-theorem ann_mul_vacuum (P : CARPair A) : P.ann * plus P = 0 := by
+theorem ann_mul_vacuum {A : Type*} [Ring A] (P : CARPair A) : P.ann * plus P = 0 := by
   change P.ann * (P.ann * P.cre) = 0
   rw [← mul_assoc, P.ann_sq, zero_mul]
 
 /-- Operator excitation of the product vacuum; no nonzero claim or off-site
 commutation is needed for this ordered identity. -/
-theorem mixed_annihilator_vacuum (P₁ P₂ : CARPair A) (u v : R) :
+theorem mixed_annihilator_vacuum {R A : Type*} [Ring R] [Ring A] [Module R A] [IsScalarTower R A A]
+    (P₁ P₂ : CARPair A) (u v : R) :
     (u • P₁.ann + v • P₂.cre) * (plus P₁ * plus P₂) =
       v • (P₂.cre * (plus P₁ * plus P₂)) := by
   rw [add_mul, smul_mul_assoc, smul_mul_assoc,
@@ -203,46 +227,56 @@ theorem weighted_commutator_defect (τ : TracialFunctional R A) (ρ x y : A) :
   change τ (ρ * (x * y - y * x)) = _
   rw [mul_sub, τ.map_sub, sub_mul, τ.map_sub, h, mul_assoc ρ x y]
 
-/-- Density commutator with the sum Majorana combination. -/
-theorem density_commutator_majorana_plus (P : CARPair A) (a c : R) :
+/-- Density commutator with the sum Majorana combination over any `[Ring R]`. -/
+theorem density_commutator_majorana_plus {R A : Type*} [Ring R] [Ring A] [Module R A]
+    [IsScalarTower R A A] [SMulCommClass R A A]
+    (P : CARPair A) (a c : R) :
     density P a c * (P.ann + P.cre) - (P.ann + P.cre) * density P a c =
       (c - a) • (P.ann - P.cre) := by
   simp only [mul_add, add_mul, density_mul_ann, density_mul_cre,
-    ann_mul_density, cre_mul_density]
-  module
+    ann_mul_density, cre_mul_density, sub_smul, smul_sub]
+  abel
 
-/-- Density commutator with the difference Majorana combination. -/
-theorem density_commutator_majorana_minus (P : CARPair A) (a c : R) :
+/-- Density commutator with the difference Majorana combination over any `[Ring R]`. -/
+theorem density_commutator_majorana_minus {R A : Type*} [Ring R] [Ring A] [Module R A]
+    [IsScalarTower R A A] [SMulCommClass R A A]
+    (P : CARPair A) (a c : R) :
     density P a c * (P.ann - P.cre) - (P.ann - P.cre) * density P a c =
       (c - a) • (P.ann + P.cre) := by
   simp only [mul_sub, sub_mul, density_mul_ann, density_mul_cre,
-    ann_mul_density, cre_mul_density]
-  module
+    ann_mul_density, cre_mul_density, sub_smul, smul_add]
+  abel
 
-/-- Density anticommutator with the sum Majorana combination. -/
-theorem density_anticommutator_majorana_plus (P : CARPair A) (a c : R) :
+/-- Density anticommutator with the sum Majorana combination over any `[Ring R]`. -/
+theorem density_anticommutator_majorana_plus {R A : Type*} [Ring R] [Ring A] [Module R A]
+    [IsScalarTower R A A] [SMulCommClass R A A]
+    (P : CARPair A) (a c : R) :
     density P a c * (P.ann + P.cre) + (P.ann + P.cre) * density P a c =
       (a + c) • (P.ann + P.cre) := by
   simp only [mul_add, add_mul, density_mul_ann, density_mul_cre,
-    ann_mul_density, cre_mul_density]
-  module
+    ann_mul_density, cre_mul_density, add_smul, smul_add]
+  abel
 
-/-- Density anticommutator with the difference Majorana combination. -/
-theorem density_anticommutator_majorana_minus (P : CARPair A) (a c : R) :
+/-- Density anticommutator with the difference Majorana combination over any `[Ring R]`. -/
+theorem density_anticommutator_majorana_minus {R A : Type*} [Ring R] [Ring A] [Module R A]
+    [IsScalarTower R A A] [SMulCommClass R A A]
+    (P : CARPair A) (a c : R) :
     density P a c * (P.ann - P.cre) + (P.ann - P.cre) * density P a c =
       (a + c) • (P.ann - P.cre) := by
   simp only [mul_sub, sub_mul, density_mul_ann, density_mul_cre,
-    ann_mul_density, cre_mul_density]
-  module
+    ann_mul_density, cre_mul_density, add_smul, smul_sub]
+  abel
 
 /-- Native chirality is vacuum minus occupation. This decomposition does not
-invert two or assert recovery from reflection eigenspaces in characteristic two. -/
-theorem two_smul_density (P : CARPair A) (a c : R) :
+invert two or assert recovery from reflection eigenspaces in characteristic two,
+and holds over any `[Ring R]`. -/
+theorem two_smul_density {R A : Type*} [Ring R] [Ring A] [Module R A]
+    (P : CARPair A) (a c : R) :
     (2 : R) • density P a c =
       (a + c) • (1 : A) + (c - a) • chirality P := by
   rw [← projectors_add P]
-  simp only [density, chirality]
-  module
+  simp only [density, chirality, two_smul, smul_add, smul_sub, add_smul, sub_smul]
+  abel
 
 /-- Division-free annihilator boundary equation in commutator form. -/
 theorem annihilator_commutator_boundary (τ : TracialFunctional R A)

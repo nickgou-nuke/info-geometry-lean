@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.ChiralOperatorChargeFiltration
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TensorTowerColimit
@@ -8,7 +13,8 @@ import InfoGeometry.Canonical.TensorTowerColimit
 The free operator envelope has an honest integer word charge.  This owner
 records the finite window `[-2,2]` without identifying its endpoints
 cyclotomically, and connects compatible finite-stage readouts to the native
-TensorTower colimit calculus.
+TensorTower colimit calculus over a general (not necessarily commutative)
+operator ring `R`.
 -/
 
 namespace InfoGeometry.Algebra
@@ -131,7 +137,7 @@ namespace InfoGeometry.Topology
 
 section ColimitReadout
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 variable (A : ℕ → Type*)
 variable [∀ n, AddCommGroup (A n)] [∀ n, Module R (A n)]
 variable (iota : ∀ n, A n →ₗ[R] A (n + 1))

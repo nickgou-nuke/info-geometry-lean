@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.ZornCliffordRepresentation
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -5,13 +10,15 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 # Chiral Clifford Split Algebra
 
 This module formalizes the algebraic relations for the vector/chiral splitting
-within the Zorn matrix representation.
+within the Zorn matrix representation over general (not necessarily commutative)
+operator rings `R` as well as the classical Clifford reduction.
 
 Specifically, it proves:
-1. `zornConj_eq_neg_of_diagonal_zero`: If a Zorn matrix has zero diagonal elements
-   (representing a pure spatial vector in the De Witt split), its Zorn conjugation
-   is exactly its negation.
-2. `vector_neg_mul`: The algebraic relation for multiplying negation components.
+1. `zornConj_eq_neg_of_diagonal_zero` (over `[Ring R]`): If a Zorn matrix has zero
+   diagonal elements (representing a pure spatial vector in the De Witt split), its
+   Zorn conjugation is exactly its negation.
+2. `vector_neg_mul` (over `[Ring R]`): The algebraic relation for multiplying
+   negation components.
 3. `vector_clifford_relation`: The vector Clifford relation for the Zorn matrix action
    on a spinor: $V \cdot (V \cdot S) = (V.x \cdot V.y) \cdot S$.
 
@@ -22,10 +29,12 @@ open InfoGeometry.Canonical
 open InfoGeometry.Canonical.ZornMatrix
 open InfoGeometry.Canonical.ZornClifford
 
-variable {R : Type*} [CommRing R]
+section NoncommRing
 
-/-- Under the De Witt split, if the diagonal components a and b are zero,
-    the Zorn conjugate of a matrix is equal to its negative. -/
+variable {R : Type*} [Ring R]
+
+/-- Under the De Witt split over any ring `R`, if the diagonal components `a` and `b`
+    are zero, the Zorn conjugate of a matrix is equal to its negative. -/
 theorem zornConj_eq_neg_of_diagonal_zero (V : ZornMatrix R) (ha : V.a = 0) (hb : V.b = 0) :
     zornConj V = -V := by
   apply ZornMatrix.ext
@@ -34,21 +43,25 @@ theorem zornConj_eq_neg_of_diagonal_zero (V : ZornMatrix R) (ha : V.a = 0) (hb :
   · simp [zornConj]
   · simp [zornConj]
 
-/-- Distributive negation rule for vector multiplication. -/
+/-- Distributive negation rule for vector multiplication over any ring `R`. -/
 theorem vector_neg_mul (V S : ZornMatrix R) : V * (-V * S) = -(V * (V * S)) := by
   apply ZornMatrix.ext
   · simp [mul_def, mul, dot, cross]
-    ring
+    noncomm_ring
   · simp [mul_def, mul, dot, cross]
-    ring
+    noncomm_ring
   · ext i; fin_cases i <;>
       dsimp [ZornMatrix.mul_def, mul, dot, cross, Matrix.vecHead, Matrix.vecTail,
              Pi.smul_apply, Pi.add_apply, Pi.sub_apply, Pi.neg_apply] <;>
-      ring
+      noncomm_ring
   · ext i; fin_cases i <;>
       dsimp [ZornMatrix.mul_def, mul, dot, cross, Matrix.vecHead, Matrix.vecTail,
              Pi.smul_apply, Pi.add_apply, Pi.sub_apply, Pi.neg_apply] <;>
-      ring
+      noncomm_ring
+
+end NoncommRing
+
+variable {R : Type*} [CommRing R]
 
 /-- The main Clifford relation for the split Clifford algebra:
     $V \cdot (V \cdot S) = (V_x \cdot V_y) \cdot S$. -/

@@ -327,14 +327,14 @@ Metriplectic readout: entropy production is the metric channel; the Poisson
 channel contributes zero by the owner laws of `MetriplecticStructure`.
 -/
 theorem metriplectic_entropyProduction_metric_channel
-    {R : Type*} [CommRing R]
+    {R : Type*} [Ring R]
     (M : InfoGeometry.Topology.Metriplectic.MetriplecticStructure R) :
     InfoGeometry.Topology.Metriplectic.totalEvolution M M.S = M.metric M.S M.S :=
   InfoGeometry.Topology.Metriplectic.entropy_evolution M
 
 /-- The conservative Poisson channel annihilates entropy in the metriplectic owner. -/
 theorem metriplectic_entropy_poisson_channel_zero
-    {R : Type*} [CommRing R]
+    {R : Type*} [Ring R]
     (M : InfoGeometry.Topology.Metriplectic.MetriplecticStructure R) :
     M.poisson M.S M.H = 0 :=
   M.poisson_S_left_zero M.H
@@ -344,7 +344,7 @@ Combined metriplectic readout: entropy production is exactly the metric channel,
 and the reversible Poisson channel contributes zero to entropy.
 -/
 theorem metriplectic_entropy_channel_packet
-    {R : Type*} [CommRing R]
+    {R : Type*} [Ring R]
     (M : InfoGeometry.Topology.Metriplectic.MetriplecticStructure R) :
     InfoGeometry.Topology.Metriplectic.totalEvolution M M.S = M.metric M.S M.S ∧
       M.poisson M.S M.H = 0 :=

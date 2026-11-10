@@ -15,7 +15,7 @@ namespace InfoGeometry.GrandUnification
 
 open InfoGeometry.Canonical.AmplituhedronMetriplecticBridge
 
-variable {R : Type*} [CommRing R] [LinearOrder R]
+variable {R : Type*} [Ring R]
 
 /-- An arbitrary two-row array of four coordinates over `R`. -/
 structure PlabicTwistorMatrix (R : Type*) where
@@ -38,7 +38,8 @@ def extractTwistorPluckerCoordinates (Z : PlabicTwistorMatrix R) : KinematicPluc
     p23 := Z.z12 * Z.z23 - Z.z13 * Z.z22 }
 
 /-- The minors of any two-row matrix satisfy the Klein quadric equation. -/
-theorem extracted_blade_satisfies_klein_relation (Z : PlabicTwistorMatrix R) :
+theorem extracted_blade_satisfies_klein_relation {R : Type*} [CommRing R]
+    (Z : PlabicTwistorMatrix R) :
     IsKleinNull (extractTwistorPluckerCoordinates Z) := by
   dsimp [IsKleinNull, kleinQuadricEval, extractTwistorPluckerCoordinates]
   ring

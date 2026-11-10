@@ -14,7 +14,7 @@ noncomputable section
 namespace InfoGeometry.Modular.Tensor
 
 variable {m n : Type*} [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 local notation "dimM" => Fintype.card m
 local notation "dimN" => Fintype.card n
@@ -22,7 +22,7 @@ local notation "dimN" => Fintype.card n
 def tensorProd (A : Matrix m m R) (B : Matrix n n R) : Matrix (m × n) (m × n) R :=
   fun ⟨i₁, j₁⟩ ⟨i₂, j₂⟩ => A i₁ i₂ * B j₁ j₂
 
-theorem tensorProd_mul (A₁ A₂ : Matrix m m R) (B₁ B₂ : Matrix n n R) :
+theorem tensorProd_mul {R : Type*} [CommRing R] (A₁ A₂ : Matrix m m R) (B₁ B₂ : Matrix n n R) :
     tensorProd (A₁ * A₂) (B₁ * B₂) = tensorProd A₁ B₁ * tensorProd A₂ B₂ := by
   ext ⟨i₁, j₁⟩ ⟨i₂, j₂⟩
   dsimp [tensorProd, Matrix.mul_apply]
@@ -65,7 +65,7 @@ theorem tensorProd_diag (u : m → R) (v : n → R) :
   · simp [hi, hj]
   · simp [hi, hj]
 
-theorem prod_tensor_spectrum (u : m → R) (v : n → R) :
+theorem prod_tensor_spectrum {R : Type*} [CommRing R] (u : m → R) (v : n → R) :
     (∏ p : m × n, (u p.1 * v p.2)) = (∏ i, u i) ^ dimN * (∏ j, v j) ^ dimM := by
   rw [Fintype.prod_prod_type]
   have h_inner (i : m) : (∏ j : n, (u i * v j)) = u i ^ dimN * (∏ j : n, v j) := by

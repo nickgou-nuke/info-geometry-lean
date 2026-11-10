@@ -16,7 +16,7 @@ noncentral odd bracket in gl(3|1).
 noncomputable section
 namespace InfoGeometry.Algebra.ZornColorOperatorCoordinates
 open InfoGeometry.Canonical.GLSupermatrixGradedLie
-variable {R : Type*} [CommRing R] [Nontrivial R]
+variable {R : Type*} [Ring R] [Nontrivial R]
 
 /-- In gl(3|1), [e_{0,3},e_{3,1}]_+ = e_{0,1}, which does not commute with e_{0,0}. -/
 theorem gl31_odd_bracket_noncentral :
@@ -34,7 +34,7 @@ theorem gl31_odd_bracket_noncentral :
 
 /-- No faithful gl(3|1) representation can send its entire odd component into
 this six-dimensional raw CAR odd space while preserving homogeneous brackets. -/
-theorem not_faithful_gl31_with_CAR_odd
+theorem not_faithful_gl31_with_CAR_odd {R : Type*} [CommRing R] [Nontrivial R]
     (F : SuperMatrix 3 1 R →ₗ[R] Op R)
     (hodd : ∀ X, IsHomogeneous .odd X → F X ∈ oddPart)
     (hbracket : ∀ (p q : Parity) (X Y : SuperMatrix 3 1 R),
@@ -56,6 +56,7 @@ theorem not_faithful_gl31_with_CAR_odd
 every homogeneous-bracket-preserving linear map into the raw CAR odd sector
 kills some nonzero element. This theorem does not identify that element. -/
 theorem exists_nonzero_kernel_of_homogeneous_bracket_map_to_CAR_odd
+    {R : Type*} [CommRing R] [Nontrivial R]
     (F : SuperMatrix 3 1 R →ₗ[R] Op R)
     (hodd : ∀ X, IsHomogeneous .odd X → F X ∈ oddPart)
     (hbracket : ∀ (p q : Parity) (X Y : SuperMatrix 3 1 R),
@@ -80,6 +81,7 @@ every homogeneous-bracket-preserving map into the raw CAR odd space kills it.
 This strengthens the abstract nonzero-kernel conclusion by identifying a
 specific anomaly-generated kernel element. -/
 theorem explicit_anomaly_in_kernel_of_homogeneous_bracket_map_to_CAR_odd
+    {R : Type*} [CommRing R] [Nontrivial R]
     (F : SuperMatrix 3 1 R →ₗ[R] Op R)
     (hodd : ∀ X, IsHomogeneous .odd X → F X ∈ oddPart)
     (hbracket : ∀ (p q : Parity) (X Y : SuperMatrix 3 1 R),

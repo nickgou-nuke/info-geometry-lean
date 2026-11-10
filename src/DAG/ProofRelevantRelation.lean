@@ -1,5 +1,6 @@
 import DAG.TypedCategory
 import InfoGeometry.Meta.Architecture
+import Mathlib.Data.List.Chain
 import Mathlib.Data.Set.Defs
 
 /-!
@@ -35,88 +36,49 @@ structure TypedRelation where
   srcDepth? : Option RepDepth := none
   dstDepth? : Option RepDepth := none
 
-def composableEdges : List TypedRelation → Prop
-  | [] => True
-  | [_] => True
-  | first :: second :: rest =>
-      first.dst = second.src ∧ composableEdges (second :: rest)
-
-@[simp] theorem composableEdges_nil : composableEdges [] := by
-  trivial
-
-@[simp] theorem composableEdges_single (edge : TypedRelation) :
-    composableEdges [edge] := by
-  trivial
-
-theorem composableEdges_cons_cons_iff
-    (first second : TypedRelation) (rest : List TypedRelation) :
-    composableEdges (first :: second :: rest) ↔
-      first.dst = second.src ∧ composableEdges (second :: rest) := by
-  rfl
-
 structure TypedRelationPath where
   src : Name
   dst : Name
   edges : List TypedRelation
-  source_ok : edges.head?.map (·.src) = some src ∨ edges = []
-  target_ok : edges.getLast?.map (·.dst) = some dst ∨ edges = []
-  composable : composableEdges edges
+  endpoints :
+    (edges.head?.map (·.src) = some src ∧ edges.getLast?.map (·.dst) = some dst) ∨
+    (edges = [] ∧ src = dst)
+  composable : List.IsChain (fun first second => first.dst = second.src) edges
 
-theorem TypedRelationPath.composable_of_two
-    (p : TypedRelationPath) (first second : TypedRelation)
-    (hEdges : p.edges = first :: second :: []) :
+theorem TypedRelationPath.endpoints_of_nonempty
+    (p : TypedRelationPath) (hEdges : p.edges ≠ []) :
+    p.edges.head?.map (·.src) = some p.src ∧
+      p.edges.getLast?.map (·.dst) = some p.dst := by
+  rcases p.endpoints with hEndpoints | ⟨hEmpty, _⟩
+  · exact hEndpoints
+  · exact False.elim (hEdges hEmpty)
+
+/-- Every decomposition of a composable path containing adjacent edges exposes
+the corresponding endpoint match. This applies at any position and for any
+path length. -/
+theorem TypedRelationPath.edge_match_of_adjacent_decomposition
+    (p : TypedRelationPath) (before after : List TypedRelation)
+    (first second : TypedRelation)
+    (hEdges : p.edges = before ++ first :: second :: after) :
     first.dst = second.src := by
-  have h := p.composable
-  rw [hEdges] at h
-  exact h.1
+  exact List.isChain_iff_forall_rel_of_append_cons_cons.mp p.composable hEdges
 
-def representationDistance (p : TypedRelationPath) : Option Nat :=
-  if p.edges = [] then none else some p.edges.length
+def representationDistance (p : TypedRelationPath) : Nat := p.edges.length
 
-theorem representationDistance_some
-    (p : TypedRelationPath) (h : p.edges ≠ []) :
-    representationDistance p = some p.edges.length := by
-  simp [representationDistance, h]
-
-theorem representationDistance_none_iff
+theorem representationDistance_pos_iff_edges_nonempty
     (p : TypedRelationPath) :
-    representationDistance p = none ↔ p.edges = [] := by
-  simp [representationDistance]
-
-theorem edges_nonempty_of_representationDistance_some
-    (p : TypedRelationPath) (distance : Nat)
-    (h : representationDistance p = some distance) :
-    p.edges ≠ [] := by
-  intro hnil
-  simp [representationDistance, hnil] at h
-
-theorem representationDistance_pos
-    (p : TypedRelationPath) (h : p.edges ≠ []) :
-    0 < (representationDistance p).getD 0 := by
+    0 < representationDistance p ↔ p.edges ≠ [] := by
   cases hEdges : p.edges with
-  | nil => exact False.elim (h (by simp [hEdges]))
+  | nil => simp [representationDistance, hEdges]
   | cons head tail => simp [representationDistance, hEdges]
 
 def relationCone (target : Name) (relations : List TypedRelation) : Set Name :=
   {source | ∃ relation ∈ relations,
     relation.dst = target ∧ relation.src = source}
 
-theorem mem_relationCone_iff
-    (target source : Name) (relations : List TypedRelation) :
-    source ∈ relationCone target relations ↔
-      ∃ relation ∈ relations, relation.dst = target ∧ relation.src = source := by
-  rfl
-
 def typedSupportCone (target : Name) (relations : List TypedRelation) : Set Name :=
   {source | ∃ relation ∈ relations,
     relation.dst = target ∧ relation.src = source ∧ relation.processMorphism?.isSome}
-
-theorem mem_typedSupportCone_iff
-    (target source : Name) (relations : List TypedRelation) :
-    source ∈ typedSupportCone target relations ↔
-      ∃ relation ∈ relations,
-        relation.dst = target ∧ relation.src = source ∧ relation.processMorphism?.isSome := by
-  rfl
 
 theorem typedSupportCone_subset_relationCone
     (target : Name) (relations : List TypedRelation) :

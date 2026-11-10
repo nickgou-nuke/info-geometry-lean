@@ -22,7 +22,8 @@ namespace InfoGeometry.OperatorAlgebra.PeirceLieJordanResolution
 
 open LieJordanDuality
 
-variable (R : Type*) [CommRing R] {A : Type*} [Ring A] [Algebra R A]
+variable (R : Type*) [Ring R] {A : Type*} [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- A bundled corner projector: multiplication on both sides, in the original algebra. -/
 def corner (p : A) (i j : Bool) : Module.End R A :=
@@ -166,11 +167,26 @@ theorem dual_ad_corner {p : A} (hp : p * p = p) (X : A) :
   have hn (x : A) : p * (p * x) = p * x := by rw [← mul_assoc, hp]
   noncomm_ring [hp, hn]
 
-/-- Corner extraction commutes with every algebra homomorphism. -/
-theorem map_corner {B : Type*} [Ring B] [Algebra R B]
-    (f : A →ₐ[R] B) (p X : A) (i j : Bool) :
+/-- Corner extraction commutes with every ring homomorphism. -/
+theorem RingHom.map_corner {B : Type*} [Ring B] [Module R B]
+    [IsScalarTower R B B] [SMulCommClass R B B]
+    (f : A →+* B) (p X : A) (i j : Bool) :
     f (corner R p i j X) = corner R (f p) i j (f X) := by
   cases i <;> cases j <;>
     simp [corner_apply, compIdempotent, map_mul, map_sub, map_one]
+
+section AlgebraHom
+
+variable (R₁ : Type*) [CommRing R₁] {A₁ B₁ : Type*} [Ring A₁] [Ring B₁]
+  [Algebra R₁ A₁] [Algebra R₁ B₁]
+
+/-- Corner extraction commutes with every algebra homomorphism. -/
+theorem map_corner
+    (f : A₁ →ₐ[R₁] B₁) (p X : A₁) (i j : Bool) :
+    f (corner R₁ p i j X) = corner R₁ (f p) i j (f X) := by
+  cases i <;> cases j <;>
+    simp [corner_apply, compIdempotent, map_mul, map_sub, map_one]
+
+end AlgebraHom
 
 end InfoGeometry.OperatorAlgebra.PeirceLieJordanResolution

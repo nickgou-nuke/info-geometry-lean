@@ -167,7 +167,7 @@ end SubgroupAverage
 
 section AlgebraicCompression
 
-variable {k A : Type*} [CommRing k] [Ring A] [Algebra k A]
+variable {k A : Type*} [Ring k] [Ring A] [Module k A] [IsScalarTower k A A] [SMulCommClass k A A]
 
 /-- The binary normal form is preserved on the macro corner. -/
 theorem binary_macro_compression (p σ : A) (a b : k)
@@ -204,7 +204,7 @@ theorem binary_micro_compression_variance (p σ : A) (a b : k)
   have htransfer : (p * σ * (1 - p)) * ((1 - p) * σ * p) = p := by
     rw [← compression_square_defect p σ hp, hσ, mul_one, hp, hmicro]
     simp
-  rw [hleft, hright, smul_mul_smul_comm, htransfer]
+  rw [hleft, hright, smul_mul_assoc, mul_smul_comm, smul_smul, htransfer]
 
 end AlgebraicCompression
 

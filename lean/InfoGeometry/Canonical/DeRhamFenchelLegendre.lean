@@ -18,7 +18,7 @@ native Algebraic D-modules and De Rham cohomology evaluated over the generating 
 We represent the generating 1-form (d ln Q) and 2-form metric.
 -/
 
-class DeRhamComplex (V : Type _) (R : Type _) [AddCommGroup V] [CommRing R] where
+class DeRhamComplex (V : Type _) (R : Type _) [AddCommGroup V] [Ring R] where
   /-- The exterior derivative `d` on 0-forms (functions to 1-forms) -/
   d0 : (V → R) → (V → V)
   /-- The exterior derivative `d` on 1-forms (vector fields to 2-forms) -/
@@ -30,7 +30,7 @@ class DeRhamComplex (V : Type _) (R : Type _) [AddCommGroup V] [CommRing R] wher
 The Information Geometry Metric (Hessian) as the symmetric differential.
 This represents the 2-form differential d(d ln Q) mapped to the symmetric tensor space.
 -/
-class HessianMetric (V : Type _) (R : Type _) [AddCommGroup V] [CommRing R] [DeRhamComplex V R]
+class HessianMetric (V : Type _) (R : Type _) [AddCommGroup V] [Ring R] [DeRhamComplex V R]
   (logQ : V → R) where
   /-- The metric tensor `g = ∇² ln Q` -/
   metric : V → V → R
@@ -41,7 +41,7 @@ class HessianMetric (V : Type _) (R : Type _) [AddCommGroup V] [CommRing R] [DeR
 Fenchel-Legendre duality on the De Rham homology space.
 The primal potential `ψ` and dual potential `φ` satisfy `dψ = η` and `dφ = θ`.
 -/
-structure DeRhamFenchelDualPair {V : Type _} {R : Type _} [AddCommGroup V] [CommRing R]
+structure DeRhamFenchelDualPair {V : Type _} {R : Type _} [AddCommGroup V] [Ring R]
   [InnerSpace V R] [DeRhamComplex V R] (ψ : V → R) (φ : V → R) where
   /-- The dual variable `η` is exactly the De Rham 1-form `dψ` of the primal potential. -/
   eta : V → V
@@ -53,7 +53,7 @@ structure DeRhamFenchelDualPair {V : Type _} {R : Type _} [AddCommGroup V] [Comm
 Theorem: The Fenchel-Legendre dual generates the conjugate 1-form `dφ(η) = θ`.
 This represents the geometric exchange of the thermodynamic force (`d ln Q`) and the state.
 -/
-theorem derham_fenchel_conjugate_one_form {V : Type _} {R : Type _} [AddCommGroup V] [CommRing R]
+theorem derham_fenchel_conjugate_one_form {V : Type _} {R : Type _} [AddCommGroup V] [Ring R]
   [InnerSpace V R] [DeRhamComplex V R] (ψ φ : V → R) (pair : DeRhamFenchelDualPair ψ φ) :
   pair.eta = DeRhamComplex.d0 ψ := pair.eta_eq_d0_psi
 
@@ -61,7 +61,7 @@ theorem derham_fenchel_conjugate_one_form {V : Type _} {R : Type _} [AddCommGrou
 Theorem: In the De Rham cohomology space, the symplectic 2-form `dθ ∧ dη` vanishes on the
 Legendre submanifold defined by `η = dψ`, because `d(dψ) = 0`.
 -/
-theorem legendre_submanifold_lagrangian {V : Type _} {R : Type _} [AddCommGroup V] [CommRing R]
+theorem legendre_submanifold_lagrangian {V : Type _} {R : Type _} [AddCommGroup V] [Ring R]
   [InnerSpace V R] [DeRhamComplex V R] (ψ φ : V → R) (pair : DeRhamFenchelDualPair ψ φ) (x y : V) :
   DeRhamComplex.d1 (pair.eta) x y = (0 : R) := by
   rw [pair.eta_eq_d0_psi]

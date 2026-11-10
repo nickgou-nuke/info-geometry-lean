@@ -38,7 +38,7 @@ open scoped BigOperators
 
 /-- Subtype carrier of finite channel metrics `(kappa, kappaInv)` satisfying symmetry
 and left/right matrix inversion on a finite channel set `I`. -/
-def CurrentMetricDatum (𝕜 I : Type*) [Field 𝕜] [Fintype I] [DecidableEq I] : Type _ :=
+def CurrentMetricDatum (𝕜 I : Type*) [Ring 𝕜] [Fintype I] [DecidableEq I] : Type _ :=
   { p : (I → I → 𝕜) × (I → I → 𝕜) //
     (∀ i j, p.1 i j = p.1 j i) ∧
     (∀ i k, ∑ j, p.2 i j * p.1 j k = if i = k then 1 else 0) ∧
@@ -46,7 +46,9 @@ def CurrentMetricDatum (𝕜 I : Type*) [Field 𝕜] [Fintype I] [DecidableEq I]
 
 namespace CurrentMetricDatum
 
-variable {𝕜 I : Type*} [Field 𝕜] [Fintype I] [DecidableEq I]
+section Ring
+
+variable {𝕜 I : Type*} [Ring 𝕜] [Fintype I] [DecidableEq I]
 
 /-- Constructor for `CurrentMetricDatum 𝕜 I`. -/
 def mk
@@ -83,10 +85,14 @@ theorem inverse_right (M : CurrentMetricDatum 𝕜 I) (i k : I) :
   unfold kappa kappaInv
   exact M.2.2.2 i k
 
+end Ring
+
+variable {𝕜 I : Type*} [CommRing 𝕜] [Fintype I] [DecidableEq I]
+
 /-- Subtype carrier of metric-indexed Heisenberg current families `(metric, J, K)`
 satisfying high-mode truncation and the metric-weighted Heisenberg commutator law. -/
 def MetricHeisenbergCurrent
-    (𝕜 V I : Type*) [Field 𝕜] [AddCommGroup V] [Module 𝕜 V] [Fintype I] [DecidableEq I] :
+    (𝕜 V I : Type*) [CommRing 𝕜] [AddCommGroup V] [Module 𝕜 V] [Fintype I] [DecidableEq I] :
     Type _ :=
   { p : CurrentMetricDatum 𝕜 I × ((I → ℤ → V →ₗ[𝕜] V) × (V →ₗ[𝕜] V)) //
     (∀ v i, ∀ᶠ l in Filter.atTop, p.2.1 i l v = 0) ∧

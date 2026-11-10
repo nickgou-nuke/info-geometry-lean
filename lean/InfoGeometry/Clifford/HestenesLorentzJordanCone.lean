@@ -6,7 +6,7 @@ namespace InfoGeometry.Clifford.Hestenes
 
 open CliffordAlgebra
 
-variable {R : Type*} [CommRing R] [Invertible (2 : R)]
+variable {R : Type*} [CommRing R]
 variable {M : Type*} [AddCommGroup M] [Module R M]
 variable (Q : QuadraticForm R M)
 variable (v0 : M) (hv0_norm : Q v0 = 1)
@@ -15,7 +15,7 @@ variable (v0 : M) (hv0_norm : Q v0 = 1)
 Специалното Jordan произведение върху четния сектор ClPlus.
 То превръща асоциативната операторна алгебра в комутативна неасоциативна Jordan алгебра.
 -/
-def jordanProduct (A B : ClPlus Q) : ClPlus Q :=
+def jordanProduct [Invertible (2 : R)] (A B : ClPlus Q) : ClPlus Q :=
   ⟨(⅟(2 : R)) • (A.val * B.val + B.val * A.val), by
     have h1 := SetLike.GradedMonoid.toGradedMul.mul_mem A.property B.property
     have h2 := SetLike.GradedMonoid.toGradedMul.mul_mem B.property A.property
@@ -25,7 +25,7 @@ def jordanProduct (A B : ClPlus Q) : ClPlus Q :=
 local infixl:70 " ∘ " => jordanProduct Q
 
 /-- Jordan произведението е комутативно по дефиниция (A ∘ B = B ∘ A) -/
-theorem jordanProduct_comm (A B : ClPlus Q) :
+theorem jordanProduct_comm [Invertible (2 : R)] (A B : ClPlus Q) :
     A ∘ B = B ∘ A := by
   dsimp [jordanProduct]
   apply Subtype.ext

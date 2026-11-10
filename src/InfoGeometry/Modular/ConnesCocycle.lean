@@ -22,16 +22,16 @@ Formalizes the Tomita–Takesaki Radon–Nikodym cocycle identity for modular au
 
 namespace InfoGeometry.Modular.ConnesCocycle
 
-variable {R : Type*} [CommSemiring R] [StarRing R]
-variable {A : Type*} [Ring A] [Algebra R A] [StarRing A] [StarModule R A]
+variable {R : Type*} [CommSemiring R]
+variable {A : Type*} [Semiring A] [Algebra R A] [StarRing A]
 
 /-! =========================================================================
     1. Modular 1-Parameter *-Automorphism Group
     ========================================================================= -/
 
 /-- A 1-parameter group of *-algebra automorphisms `σ : ℝ → (A →⋆ₐ[R] A)`. -/
-structure ModularFlow (R : Type*) [CommSemiring R] [StarRing R]
-    (A : Type*) [Ring A] [Algebra R A] [StarRing A] [StarModule R A] where
+structure ModularFlow (R : Type*) [CommSemiring R]
+    (A : Type*) [Semiring A] [Algebra R A] [StarRing A] where
   toFun : ℝ → (A →⋆ₐ[R] A)
   map_zero : toFun 0 = StarAlgHom.id R A
   map_add : ∀ (s t : ℝ) (x : A), toFun (s + t) x = toFun s (toFun t x)

@@ -129,6 +129,11 @@ structure ModularShiftPair (A : Type*) [Ring A] where
   σ : A →+* A
   intertwine : ∀ V : A, T * V = σ V * T
 
+instance : Inhabited (ModularShiftPair A) :=
+  ⟨{ T := 1
+     σ := RingHom.id A
+     intertwine := fun V => by simp }⟩
+
 namespace ModularShiftPair
 
 theorem heisenberg_modular_difference_law (M : ModularShiftPair A) (V : A) :
@@ -178,13 +183,13 @@ section MatrixReadout
 open scoped BigOperators
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
-variable {R : Type*} [CommRing R]
+variable {B : Type*} [Ring B]
 
 /-- The permutation shift whose `(i,j)` entry is one when `j = π i`. -/
-def sylvesterShiftMatrix (π : ι ≃ ι) : Matrix ι ι R :=
+def sylvesterShiftMatrix (π : ι ≃ ι) : Matrix ι ι B :=
   fun i j => if j = π i then 1 else 0
 
-theorem sylvesterShift_intertwines_diagonal (π : ι ≃ ι) (v : ι → R) :
+theorem sylvesterShift_intertwines_diagonal (π : ι ≃ ι) (v : ι → B) :
     sylvesterShiftMatrix π * Matrix.diagonal v =
       Matrix.diagonal (v ∘ π) * sylvesterShiftMatrix π := by
   ext i j
@@ -195,7 +200,7 @@ theorem sylvesterShift_intertwines_diagonal (π : ι ≃ ι) (v : ι → R) :
     simp
   · simp [h]
 
-theorem sylvesterShift_commutator_diagonal (π : ι ≃ ι) (v : ι → R) :
+theorem sylvesterShift_commutator_diagonal (π : ι ≃ ι) (v : ι → B) :
     sylvesterShiftMatrix π * Matrix.diagonal v -
         Matrix.diagonal v * sylvesterShiftMatrix π =
       Matrix.diagonal (fun i => v (π i) - v i) * sylvesterShiftMatrix π := by
@@ -208,7 +213,7 @@ theorem sylvesterShift_commutator_diagonal (π : ι ≃ ι) (v : ι → R) :
   · simp [h]
 
 theorem matrix_trace_two_state_sum_and_square
-    {S₁ S₂ : Matrix ι ι R}
+    {S₁ S₂ : Matrix ι ι B}
     (hS₁ : IsSpine S₁) (hS₂ : IsSpine S₂) :
     Matrix.trace (TwoStateSandwich S₂ (S₁ + S₂) S₁) =
         (2 : ℕ) • Matrix.trace (S₂ * S₁) ∧

@@ -616,7 +616,7 @@ def bohmProj2 {m : Type*} [DecidableEq m] {R : Type*} [Zero R] [One R] :
   Matrix.fromBlocks 0 0 0 1
 
 /-- **Holomovement Pinching Endomorphism ($\Phi(Y) = P_1 Y P_1 + P_2 Y P_2$)**. -/
-def bohmHolomovement {m : Type*} [Fintype m] [DecidableEq m] {R : Type*} [CommRing R]
+def bohmHolomovement {m : Type*} [Fintype m] [DecidableEq m] {R : Type*} [Ring R]
     (Y : Matrix (m ⊕ m) (m ⊕ m) R) : Matrix (m ⊕ m) (m ⊕ m) R :=
   bohmProj1 * Y * bohmProj1 + bohmProj2 * Y * bohmProj2
 
@@ -626,7 +626,7 @@ Both Cuntz sub-channel unfoldments recover the exact local observable
 observable is a fixed point of the holomovement pinching channel
 ($\Phi(\mathcal{E}(X)) = \mathcal{E}(X)$). -/
 theorem bohm_holographic_retraction_and_stationarity
-    {m : Type*} [Fintype m] [DecidableEq m] {R : Type*} [CommRing R]
+    {m : Type*} [Fintype m] [DecidableEq m] {R : Type*} [Ring R]
     (X : Matrix m m R) :
     bohmUnfold1 (bohmEnfold X) = X ∧
       bohmUnfold2 (bohmEnfold X) = X ∧
@@ -642,7 +642,7 @@ Enfolding a local observable $X \in M_m(R)$ into $M_{m \oplus m}(R)$ doubles its
 trace, making the normalized tracial state $\tau_k(X) = 2^{-k}\operatorname{Tr}(X)$
 strictly scale-invariant across the UHF inductive limit. -/
 theorem bohmEnfold_trace_scaling
-    {m : Type*} [Fintype m] {R : Type*} [CommRing R]
+    {m : Type*} [Fintype m] {R : Type*} [Ring R]
     (X : Matrix m m R) :
     Matrix.trace (bohmEnfold X) = 2 * Matrix.trace X := by
   unfold bohmEnfold

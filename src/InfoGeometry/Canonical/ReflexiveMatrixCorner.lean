@@ -17,7 +17,7 @@ this corner unit with the ambient unit is asserted.
 -/
 namespace InfoGeometry.Canonical.ReflexiveNilpotentFlows
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {R A : Type*} [Ring R] [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 def pairMatrixUnit (d B : A) : Fin 2 → Fin 2 → A := !![d * B, d; B, B * d]
 
@@ -44,7 +44,7 @@ theorem pairMatrixUnit_mul (i j k l : Fin 2) :
     simp [pairMatrixUnit, mul_assoc, hd, hB, hr', hs',
       ← mul_assoc d d, ← mul_assoc B B]
 
-/-- Scalar-linear realization in the ambient algebra. -/
+/-- Scalar-linear realization in the ambient algebra over any ring `[Ring R]`. -/
 def pairMatrixLinear (d B : A) : Matrix (Fin 2) (Fin 2) R →ₗ[R] A where
   toFun M := M 0 0 • pairMatrixUnit d B 0 0 + M 0 1 • pairMatrixUnit d B 0 1 +
     M 1 0 • pairMatrixUnit d B 1 0 + M 1 1 • pairMatrixUnit d B 1 1
@@ -60,10 +60,10 @@ include hd hB hr hs in
 theorem pairMatrixLinear_mul (M N : Matrix (Fin 2) (Fin 2) R) :
     pairMatrixLinear d B (M * N) = pairMatrixLinear d B M * pairMatrixLinear d B N := by
   simp only [pairMatrixLinear_apply, Matrix.mul_apply, Fin.sum_univ_two,
-    add_smul, add_mul, mul_add, smul_mul_assoc, mul_smul_comm,
-    pairMatrixUnit_mul hd hB hr hs]
+    add_smul, add_mul, mul_add, smul_mul_assoc]
+  simp only [mul_smul_comm, pairMatrixUnit_mul hd hB hr hs]
   norm_num
-  simp only [smul_smul, mul_comm]
+  simp only [smul_smul]
   abel
 
 @[simp] theorem pairMatrixLinear_one :
@@ -79,7 +79,7 @@ theorem pairMatrixLinear_mem_corner (M : Matrix (Fin 2) (Fin 2) R) :
   · rw [← pairMatrixLinear_one (R := R), ← pairMatrixLinear_mul hd hB hr hs, one_mul]
   · rw [← pairMatrixLinear_one (R := R), ← pairMatrixLinear_mul hd hB hr hs, mul_one]
 
-/-- A unital representation into the active corner, rather than the ambient ring. -/
+/-- A unital representation into the active corner over any ring `[Ring R]`. -/
 def pairMatrixCornerHom : Matrix (Fin 2) (Fin 2) R →+*
     (show IsIdempotentElem (support d B) from support_sq hd hB hr hs).Corner where
   toFun M := ⟨pairMatrixLinear d B M, pairMatrixLinear_mem_corner hd hB hr hs M⟩
@@ -89,7 +89,10 @@ def pairMatrixCornerHom : Matrix (Fin 2) (Fin 2) R →+*
   map_mul' M N := Subtype.ext (pairMatrixLinear_mul hd hB hr hs M N)
 
 /-- With full support, the same representation is a native algebra homomorphism. -/
-def pairMatrixAlgHom (hfull : support d B = 1) : Matrix (Fin 2) (Fin 2) R →ₐ[R] A where
+def pairMatrixAlgHom {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+    {d B : A} (hd : d * d = 0) (hB : B * B = 0)
+    (hr : d * B * d = d) (hs : B * d * B = B)
+    (hfull : support d B = 1) : Matrix (Fin 2) (Fin 2) R →ₐ[R] A where
   toFun := pairMatrixLinear d B
   map_one' := pairMatrixLinear_one.trans hfull
   map_zero' := map_zero (pairMatrixLinear d B)

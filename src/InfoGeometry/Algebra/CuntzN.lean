@@ -117,7 +117,7 @@ noncomputable def cuntzTensorAdjoint {R : Type*} [CommSemiring R] {N : ℕ} (i :
     CuntzTensorAlgebra R N :=
   TensorAlgebra.ι R (cuntzAdjointVector (R := R) i)
 
-inductive CuntzTensorRel (R : Type*) [CommRing R] (N : ℕ) :
+inductive CuntzTensorRel (R : Type*) [CommSemiring R] (N : ℕ) :
     CuntzTensorAlgebra R N → CuntzTensorAlgebra R N → Prop where
   | isometry (i j : Fin N) :
       CuntzTensorRel R N
@@ -128,23 +128,23 @@ inductive CuntzTensorRel (R : Type*) [CommRing R] (N : ℕ) :
         (∑ i : Fin N, cuntzTensorGenerator (R := R) i * cuntzTensorAdjoint (R := R) i)
         1
 
-abbrev CuntzTensorQuotient (R : Type*) [CommRing R] (N : ℕ) : Type _ :=
+abbrev CuntzTensorQuotient (R : Type*) [CommSemiring R] (N : ℕ) : Type _ :=
   RingQuot (CuntzTensorRel R N)
 
-noncomputable def cuntzQuotientMap {R : Type*} [CommRing R] {N : ℕ} :
+noncomputable def cuntzQuotientMap {R : Type*} [CommSemiring R] {N : ℕ} :
     CuntzTensorAlgebra R N →ₐ[R] CuntzTensorQuotient R N :=
   RingQuot.mkAlgHom R (CuntzTensorRel R N)
 
-noncomputable def cuntzQuotientGenerator {R : Type*} [CommRing R] {N : ℕ} (i : Fin N) :
+noncomputable def cuntzQuotientGenerator {R : Type*} [CommSemiring R] {N : ℕ} (i : Fin N) :
     CuntzTensorQuotient R N :=
   cuntzQuotientMap (R := R) (N := N) (cuntzTensorGenerator (R := R) i)
 
-noncomputable def cuntzQuotientAdjoint {R : Type*} [CommRing R] {N : ℕ} (i : Fin N) :
+noncomputable def cuntzQuotientAdjoint {R : Type*} [CommSemiring R] {N : ℕ} (i : Fin N) :
     CuntzTensorQuotient R N :=
   cuntzQuotientMap (R := R) (N := N) (cuntzTensorAdjoint (R := R) i)
 
 @[simp]
-theorem cuntzQuotient_isometry {R : Type*} [CommRing R] {N : ℕ} (i j : Fin N) :
+theorem cuntzQuotient_isometry {R : Type*} [CommSemiring R] {N : ℕ} (i j : Fin N) :
     cuntzQuotientAdjoint (R := R) i * cuntzQuotientGenerator (R := R) j =
       if i = j then (1 : CuntzTensorQuotient R N) else 0 := by
   simpa [CuntzTensorQuotient, cuntzQuotientAdjoint, cuntzQuotientGenerator,
@@ -152,7 +152,7 @@ theorem cuntzQuotient_isometry {R : Type*} [CommRing R] {N : ℕ} (i j : Fin N) 
     using RingQuot.mkAlgHom_rel R (CuntzTensorRel.isometry (R := R) (N := N) i j)
 
 @[simp]
-theorem cuntzQuotient_range_sum {R : Type*} [CommRing R] (N : ℕ) :
+theorem cuntzQuotient_range_sum {R : Type*} [CommSemiring R] (N : ℕ) :
     ∑ i : Fin N, cuntzQuotientGenerator (R := R) i * cuntzQuotientAdjoint (R := R) i =
       1 := by
   simpa [CuntzTensorQuotient, cuntzQuotientGenerator, cuntzQuotientAdjoint,
@@ -208,7 +208,7 @@ theorem algebraicCuntzTensorLift_adjoint {R : Type*} [CommSemiring R] {N : ℕ}
     algebraicCuntzTensorLift (R := R) P (cuntzTensorAdjoint (R := R) i) = P.T i := by
   simp [algebraicCuntzTensorLift, cuntzTensorAdjoint]
 
-theorem algebraicCuntzTensorLift_respects {R : Type*} [CommRing R] {N : ℕ}
+theorem algebraicCuntzTensorLift_respects {R : Type*} [CommSemiring R] {N : ℕ}
     {A : Type*} [Semiring A] [Algebra R A]
     (P : AlgebraicCuntzNPresentation R N A) :
     ∀ ⦃x y : CuntzTensorAlgebra R N⦄, CuntzTensorRel R N x y →
@@ -220,7 +220,7 @@ theorem algebraicCuntzTensorLift_respects {R : Type*} [CommRing R] {N : ℕ}
   | range_sum =>
       simpa using P.range_sum
 
-noncomputable def AlgebraicCuntzNPresentation.lift {R : Type*} [CommRing R] {N : ℕ}
+noncomputable def AlgebraicCuntzNPresentation.lift {R : Type*} [CommSemiring R] {N : ℕ}
     {A : Type*} [Semiring A] [Algebra R A]
     (P : AlgebraicCuntzNPresentation R N A) :
     CuntzTensorQuotient R N →ₐ[R] A :=
@@ -228,7 +228,7 @@ noncomputable def AlgebraicCuntzNPresentation.lift {R : Type*} [CommRing R] {N :
     ⟨algebraicCuntzTensorLift (R := R) P, algebraicCuntzTensorLift_respects (R := R) P⟩
 
 @[simp]
-theorem AlgebraicCuntzNPresentation.lift_generator {R : Type*} [CommRing R] {N : ℕ}
+theorem AlgebraicCuntzNPresentation.lift_generator {R : Type*} [CommSemiring R] {N : ℕ}
     {A : Type*} [Semiring A] [Algebra R A]
     (P : AlgebraicCuntzNPresentation R N A) (i : Fin N) :
     P.lift (cuntzQuotientGenerator (R := R) i) = P.S i := by
@@ -245,7 +245,7 @@ theorem AlgebraicCuntzNPresentation.lift_generator {R : Type*} [CommRing R] {N :
     (algebraicCuntzTensorLift_generator (R := R) P i)
 
 @[simp]
-theorem AlgebraicCuntzNPresentation.lift_adjoint {R : Type*} [CommRing R] {N : ℕ}
+theorem AlgebraicCuntzNPresentation.lift_adjoint {R : Type*} [CommSemiring R] {N : ℕ}
     {A : Type*} [Semiring A] [Algebra R A]
     (P : AlgebraicCuntzNPresentation R N A) (i : Fin N) :
     P.lift (cuntzQuotientAdjoint (R := R) i) = P.T i := by
@@ -261,7 +261,7 @@ theorem AlgebraicCuntzNPresentation.lift_adjoint {R : Type*} [CommRing R] {N : �
       (cuntzTensorAdjoint (R := R) i)).trans
     (algebraicCuntzTensorLift_adjoint (R := R) P i)
 
-noncomputable def cuntzTensorQuotientPresentation (R : Type*) [CommRing R] (N : ℕ) :
+noncomputable def cuntzTensorQuotientPresentation (R : Type*) [CommSemiring R] (N : ℕ) :
     AlgebraicCuntzNPresentation R N (CuntzTensorQuotient R N) where
   S := cuntzQuotientGenerator (R := R)
   T := cuntzQuotientAdjoint (R := R)

@@ -24,8 +24,9 @@ namespace InfoGeometry.Algebra.BosonizedOSpCoproduct
 
 open scoped TensorProduct
 
+section Semiring
 variable {R A : Type*}
-variable [CommRing R] [Ring A] [Algebra R A]
+variable [CommSemiring R] [Semiring A] [Algebra R A]
 
 /-- Primitive coproduct expression for an even element. -/
 def primitiveEven (E : A) : A ⊗[R] A :=
@@ -34,6 +35,11 @@ def primitiveEven (E : A) : A ⊗[R] A :=
 /-- Bosonized coproduct expression for an odd element. -/
 def bosonizedOdd (Γ G : A) : A ⊗[R] A :=
   G ⊗ₜ[R] (1 : A) + Γ ⊗ₜ[R] G
+
+end Semiring
+
+variable {R A : Type*}
+variable [CommSemiring R] [Ring A] [Algebra R A]
 
 /--
 The square of the bosonized odd coproduct has no mixed terms.

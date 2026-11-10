@@ -21,6 +21,53 @@ open InfoGeometry.Core.JordanMultiplicationClosure
 
 attribute [local instance] LieRing.ofAssociativeRing
 
+/-- Over any non-commutative ring `[Ring A]` and scalar ring `[Ring R]`, if `X` commutes
+with both `u` and `v`, then every scalar perturbation of the Gram inner commutator by
+the double inner commutator annihilates `X`. -/
+theorem commutator_perturbation_eq_zero_of_commute {R A : Type*} [Ring R] [Ring A] [Module R A]
+    (c : R) (u v X : A) (huX : Commute u X) (hvX : Commute v X) :
+    c • ⁅u * v + v * u, X⁆ - (⁅u, ⁅v, X⁆⁆ + ⁅v, ⁅u, X⁆⁆) = 0 := by
+  have hH : Commute (u * v + v * u) X :=
+    (huX.mul_left hvX).add_left (hvX.mul_left huX)
+  have hu : ⁅u, X⁆ = 0 := sub_eq_zero.mpr huX.eq
+  have hv : ⁅v, X⁆ = 0 := sub_eq_zero.mpr hvX.eq
+  have hh : ⁅u * v + v * u, X⁆ = 0 := sub_eq_zero.mpr hH.eq
+  have h0u : ⁅u, (0 : A)⁆ = 0 := by simp [Ring.lie_def]
+  have h0v : ⁅v, (0 : A)⁆ = 0 := by simp [Ring.lie_def]
+  rw [hu, hv, hh, smul_zero, h0u, h0v, add_zero, sub_self]
+
+section RingAlgebra
+
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
+
+local notation "Dᵣ" => ringAd (R := R)
+local notation "J" => jordanLeft (R := R)
+
+theorem ring_commutator_perturbation_eq_zero_of_commute [SMulCommClass R R A]
+    (c : R) (u v X : A) (huX : Commute u X) (hvX : Commute v X) :
+    (c • Dᵣ (u * v + v * u) - (Dᵣ u * Dᵣ v + Dᵣ v * Dᵣ u)) X = 0 := by
+  exact commutator_perturbation_eq_zero_of_commute c u v X huX hvX
+
+theorem ring_commutator_perturbation_one [SMulCommClass R R A] (c : R) (u v : A) :
+    (c • Dᵣ (u * v + v * u) - (Dᵣ u * Dᵣ v + Dᵣ v * Dᵣ u)) 1 = 0 :=
+  ring_commutator_perturbation_eq_zero_of_commute c u v 1 (Commute.one_right u) (Commute.one_right v)
+
+theorem ring_mixed_difference_of_commute (u v X : A)
+    (huX : Commute u X) (hvX : Commute v X) :
+    (Dᵣ u * J v - Dᵣ v * J u) X = 4 • (⁅u, v⁆ * X) := by
+  have hK : Commute (u * v - v * u) X :=
+    (huX.mul_left hvX).sub_left (hvX.mul_left huX)
+  rw [ring_lie_jordan_difference]
+  change (u * v - v * u) * X + X * (u * v - v * u) +
+    2 • (u * (X * v) - v * (X * u)) = 4 • ((u * v - v * u) * X)
+  rw [← huX.eq, ← hvX.eq, ← hK.eq]
+  rw [show (4 : ℕ) = 2 + 2 from rfl, add_nsmul]
+  simp only [two_nsmul]
+  noncomm_ring
+
+end RingAlgebra
+
 variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
 
 local notation "D" => LieAlgebra.ad R A

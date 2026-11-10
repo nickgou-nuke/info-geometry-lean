@@ -25,7 +25,7 @@ open InfoGeometry.Algebra
 open InfoGeometry.Algebra.ZornVectorMatrix
 open InfoGeometry.Algebra.ZornVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The antiquark core projector $u_0^*$ -/
 def uStarZero : ZornVectorMatrix R := E11

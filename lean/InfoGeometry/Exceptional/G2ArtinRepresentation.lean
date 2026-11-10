@@ -32,7 +32,7 @@ This module formalizes the native operator-level $I_2(6)$ Artin lift following t
    additive defect distinguished from quasi-monoidal reassociation morphisms.
 -/
 
-variable {K : Type*} [CommRing K]
+variable {K : Type*} [Ring K]
 
 /-- Root type discriminator distinguishing short and long roots in $G_2$. -/
 inductive G2RootKind

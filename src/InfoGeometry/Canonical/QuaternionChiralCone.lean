@@ -18,7 +18,7 @@ open Quaternion
 
 section
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Chiral axis unit `î`. -/
 def iHat : Quaternion R := ⟨0, 1, 0, 0⟩
@@ -43,10 +43,10 @@ def chiralCoord (τ χ : R) : Quaternion R :=
 theorem chiralCoord_mul (τ₁ χ₁ τ₂ χ₂ : R) :
     chiralCoord (R := R) τ₁ χ₁ * chiralCoord (R := R) τ₂ χ₂ =
       chiralCoord (R := R) (τ₁ * τ₂ - χ₁ * χ₂) (τ₁ * χ₂ + χ₁ * τ₂) := by
-  ext <;> simp [chiralCoord, iHat, mul_comm, sub_eq_add_neg]
+  ext <;> simp [chiralCoord, iHat, sub_eq_add_neg]
 
 /-- Commutativity recovered on the fixed-axis chiral slice. -/
-theorem chiralCoord_mul_comm (τ₁ χ₁ τ₂ χ₂ : R) :
+theorem chiralCoord_mul_comm {R : Type*} [CommRing R] (τ₁ χ₁ τ₂ χ₂ : R) :
     chiralCoord (R := R) τ₁ χ₁ * chiralCoord (R := R) τ₂ χ₂ =
       chiralCoord (R := R) τ₂ χ₂ * chiralCoord (R := R) τ₁ χ₁ := by
   rw [chiralCoord_mul, chiralCoord_mul]

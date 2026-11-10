@@ -20,9 +20,6 @@ noncomputable section
 
 namespace InfoGeometry.QuantumGeometry.Symplectic
 
-variable {R A : Type*}
-variable [CommRing R] [Ring A] [Algebra R A]
-
 /-!
 =============================================================================
 PART 1: Tangent Derivations and Cotangent Forms
@@ -30,17 +27,21 @@ PART 1: Tangent Derivations and Cotangent Forms
 -/
 
 /-- Tangent Vector / Velocity: an R-linear derivation on the algebra A. -/
-structure TangentVector (R A : Type*) [CommRing R] [Ring A] [Algebra R A] where
+structure TangentVector (R A : Type*) [Ring R] [Ring A] [Module R A] where
   toFun : A → A
   map_add' : ∀ x y, toFun (x + y) = toFun x + toFun y
   map_smul' : ∀ (c : R) x, toFun (c • x) = c • toFun x
   leibniz' : ∀ x y, toFun (x * y) = toFun x * y + x * toFun y
 
-instance : CoeFun (TangentVector R A) (fun _ => A → A) where
+instance {R A : Type*} [Ring R] [Ring A] [Module R A] :
+    CoeFun (TangentVector R A) (fun _ => A → A) where
   coe D := D.toFun
 
 namespace TangentVector
 
+section Ring
+
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
 variable (D : TangentVector R A)
 
 @[ext]
@@ -76,6 +77,12 @@ instance : Add (TangentVector R A) := ⟨add⟩
 @[simp] theorem add_apply (v₁ v₂ : TangentVector R A) (x : A) :
     (v₁ + v₂) x = v₁ x + v₂ x := rfl
 
+end Ring
+
+section CommRing
+
+variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+
 /-- Scalar multiplication of tangent vectors. -/
 def smul (c : R) (v : TangentVector R A) : TangentVector R A where
   toFun := fun x => c • v x
@@ -91,7 +98,12 @@ instance : HSMul R (TangentVector R A) (TangentVector R A) := ⟨smul⟩
 @[simp] theorem smul_apply (c : R) (v : TangentVector R A) (x : A) :
     (c • v) x = c • v x := rfl
 
+end CommRing
+
 end TangentVector
+
+variable {R A : Type*}
+variable [CommRing R] [Ring A] [Algebra R A]
 
 /-- Cotangent Vector / Momentum: an R-linear functional on the tangent space. -/
 structure CotangentVector (R A : Type*) [CommRing R] [Ring A] [Algebra R A] where

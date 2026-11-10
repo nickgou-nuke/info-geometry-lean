@@ -30,7 +30,7 @@ noncomputable section
 
 namespace InfoGeometry.Lie.SplitG2SL3ModuleDecomposition
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-!
 =============================================================================
@@ -43,7 +43,7 @@ theorem g2_dimension_decomposition : (8 : ℕ) + 3 + 3 = 14 := rfl
 
 /-- The 8-dimensional 𝔰𝔩(3, R) stabilizer matrix: traceless 3×3 matrix -/
 @[ext]
-structure SL3Stabilizer (R : Type*) [CommRing R] where
+structure SL3Stabilizer (R : Type*) [Ring R] where
   M : Matrix (Fin 3) (Fin 3) R
   tr_zero : M 0 0 + M 1 1 + M 2 2 = 0
 
@@ -54,7 +54,7 @@ def sl3Cartan (h1 h2 : R) : SL3Stabilizer R where
          ![0, 0, -(h1 + h2)]]
   tr_zero := by
     change h1 + h2 + -(h1 + h2) = 0
-    ring
+    abel
 
 /-!
 =============================================================================
@@ -70,7 +70,7 @@ def lieBracket (A B : Matrix (Fin 3) (Fin 3) R) : Matrix (Fin 3) (Fin 3) R :=
   🏆 THEOREM 2: The commutator bracket of two traceless matrices is traceless:
   [𝔰𝔩₃, 𝔰𝔩₃] ⊆ 𝔰𝔩₃.
 -/
-theorem sl3_bracket_closed (A B : Matrix (Fin 3) (Fin 3) R)
+theorem sl3_bracket_closed {R : Type*} [CommRing R] (A B : Matrix (Fin 3) (Fin 3) R)
     (_hA : A 0 0 + A 1 1 + A 2 2 = 0)
     (_hB : B 0 0 + B 1 1 + B 2 2 = 0) :
     let C := lieBracket A B

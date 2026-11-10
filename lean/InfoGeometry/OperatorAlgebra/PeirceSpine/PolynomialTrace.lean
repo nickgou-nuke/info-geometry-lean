@@ -20,7 +20,7 @@ open Polynomial
 open InfoGeometry.OperatorAlgebra.PeirceSpine
 open InfoGeometry.OperatorAlgebra.PeirceSpine.GradedTraceMoments
 
-variable {K B M : Type*} [CommRing K] [Ring B] [Algebra K B]
+variable {K B M : Type*} [CommSemiring K] [Ring B] [Algebra K B]
   [AddCommGroup M] [Module K M]
 
 /-- The graded cyclic trace of a polynomial in the Peirce metric is exactly

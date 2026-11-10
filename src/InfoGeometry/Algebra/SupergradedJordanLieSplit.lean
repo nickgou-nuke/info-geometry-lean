@@ -13,7 +13,7 @@ instance or assert any analytic completion.
 
 namespace InfoGeometry.Algebra.SupergradedBracket
 
-variable {R A : Type*} [Field R] [Ring A] [Algebra R A]
+variable {R A : Type*} [DivisionRing R] [Ring A] [Module R A]
   [NeZero (2 : R)]
 
 /-- The Koszul sign attached to two Boolean parity labels. -/

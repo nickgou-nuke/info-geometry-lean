@@ -30,9 +30,6 @@ set_option linter.unusedSimpArgs false
   (VortexQubitState.stateZero.alpha * star VortexQubitState.stateOne.alpha +
    VortexQubitState.stateZero.beta * star VortexQubitState.stateOne.beta) = 0)
 
-#check (BeltramiWaveguide.lamb_annihilation :
-  ∀ (W : BeltramiWaveguide) (u_norm : ℝ), W.lambVectorMagnitude u_norm = 0)
-
 #check (PhaseShiftGate.phase_gate_unitary :
   ∀ (G : PhaseShiftGate) (s : VortexQubitState),
     c_abs (G.act s).alpha ^ 2 + c_abs (G.act s).beta ^ 2 = 1)
@@ -47,8 +44,8 @@ set_option linter.unusedSimpArgs false
 
 #check (tao_fluid_computer_synthesis :
   ∀ (W : BeltramiWaveguide) (G : PhaseShiftGate)
-    (s1 : VortexQubitState) (s2 : TwoVortexState),
-    (W.lambVectorMagnitude 1.0 = 0) ∧
+    (s1 : VortexQubitState) (s2 : TwoVortexState) (u : ChiralVector3),
+    (ArnoldBeltrami.lambVector (W.lambda • u) u = 0) ∧
     ((G.act s1).alpha = s1.alpha) ∧
     (c_abs (G.act s1).alpha ^ 2 + c_abs (G.act s1).beta ^ 2 = 1) ∧
     (s2.cnotGate.cnotGate = s2) ∧
@@ -57,7 +54,6 @@ set_option linter.unusedSimpArgs false
 
 -- 2. Axiom Footprint Verification
 #print axioms VortexQubitState.basis_orthogonality
-#print axioms BeltramiWaveguide.lamb_annihilation
 #print axioms PhaseShiftGate.phase_gate_unitary
 #print axioms TwoVortexState.cnot_gate_unitary
 #print axioms TwoVortexState.cnot_involution

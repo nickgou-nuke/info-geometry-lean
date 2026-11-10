@@ -65,25 +65,13 @@ noncomputable def ofVerifiedData (D : VerifiedCategoryData) : Category HeadObj w
   comp_id := D.comp_id
   assoc := D.assoc
 
-structure HarvestWitnesses where
-  morphs : Array MorphismEntry
-  idWitness : ∀ A : HeadObj, Hom A A
-  compWitness : ∀ {A B C : HeadObj}, Hom A B → Hom B C → Hom A C
-  id_comp_witness : ∀ {A B : HeadObj} (f : Hom A B), compWitness (idWitness A) f = f
-  comp_id_witness : ∀ {A B : HeadObj} (f : Hom A B), compWitness f (idWitness B) = f
-  assoc_witness :
-    ∀ {A B C D : HeadObj} (f : Hom A B) (g : Hom B C) (h : Hom C D),
-      compWitness (compWitness f g) h = compWitness f (compWitness g h)
-
-noncomputable def HarvestWitnesses.toVerifiedCategoryData (W : HarvestWitnesses) : VerifiedCategoryData where
-  id := W.idWitness
-  comp := fun f g => W.compWitness f g
-  id_comp := W.id_comp_witness
-  comp_id := W.comp_id_witness
-  assoc := W.assoc_witness
-
-noncomputable def HarvestWitnesses.toCategory (W : HarvestWitnesses) : Category HeadObj :=
-  ofVerifiedData W.toVerifiedCategoryData
+/-- Associativity in the conditional category data also identifies the
+underlying harvested morphism metadata, after forgetting the endpoint subtype. -/
+theorem VerifiedCategoryData.comp_assoc_entry (D : VerifiedCategoryData)
+    {A B C E : HeadObj} (f : Hom A B) (g : Hom B C) (h : Hom C E) :
+    ((D.comp (D.comp f g) h).1.entry) =
+      ((D.comp f (D.comp g h)).1.entry) := by
+  exact congrArg (fun m : Hom A E => m.1.entry) (D.assoc f g h)
 
 def hasVerifiedIdentity (obj : HeadObj) (morphs : Array MorphismEntry) : MetaM Bool := do
   return (← idMorphism? obj morphs).isSome

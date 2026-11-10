@@ -6,7 +6,7 @@ namespace InfoGeometry.Canonical.BostConnesCrossedProductCapstone
 open InfoGeometry.Quantum.BostConnesCrossedProduct
 
 theorem capstone_bost_connes_crossed_product_synthesis
-    {R : Type*} [CommRing R] (g alpha : R →+* R) (Sp A : R) (r1 r2 : ℚ)
+    {R : Type*} [Ring R] (g alpha : R →+* R) (Sp A : R) (r1 r2 : ℚ)
     (h_comm : ∀ x, g (alpha x) = alpha (g x))
     (h_rel : crossedProductRelation Sp A (alpha A)) :
     (cyclotomicPhase (r1 + r2) = cyclotomicPhase r1 * cyclotomicPhase r2) ∧

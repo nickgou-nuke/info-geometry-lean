@@ -28,7 +28,7 @@ governed by the quantum integer $[2]_q = q + q^{-1} = 2\cos(\pi/m)$ at primitive
    preserving matrix multiplication, powers, nilpotency, and Artin braid equalities.
 -/
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The 10th cyclotomic polynomial $\Phi_{10}(X) = X^4 - X^3 + X^2 - X + 1$. -/
 def cyclotomic10 (zeta : R) : R := zeta ^ 4 - zeta ^ 3 + zeta ^ 2 - zeta + 1
@@ -43,7 +43,7 @@ def quantumTwo (zeta zeta_inv : R) : R := zeta + zeta_inv
 
 /-- 🏆 THEOREM 1: For roots of $\Phi_{10}(\zeta) = 0$, the quantum integer $d_5 = \zeta + \zeta^{-1}$ satisfies
     the exact Golden Ratio polynomial identity $d_5^2 = d_5 + 1$. -/
-theorem I2Five_quantumDimension_golden (zeta zeta_inv : R)
+theorem I2Five_quantumDimension_golden {R : Type*} [CommRing R] (zeta zeta_inv : R)
     (h_inv : zeta * zeta_inv = 1)
     (h_phi10 : cyclotomic10 zeta = 0) :
     (quantumTwo zeta zeta_inv) ^ 2 = quantumTwo zeta zeta_inv + 1 := by
@@ -65,7 +65,7 @@ theorem I2Five_quantumDimension_golden (zeta zeta_inv : R)
 
 /-- 🏆 THEOREM 2: For roots of $\Phi_{12}(\zeta) = 0$, the quantum integer $d_6 = \zeta + \zeta^{-1}$ satisfies
     the exact root-three identity $d_6^2 = 3$. -/
-theorem I2Six_quantumDimension_sq_three (zeta zeta_inv : R)
+theorem I2Six_quantumDimension_sq_three {R : Type*} [CommRing R] (zeta zeta_inv : R)
     (h_inv : zeta * zeta_inv = 1)
     (h_phi12 : cyclotomic12 zeta = 0) :
     (quantumTwo zeta zeta_inv) ^ 2 = 3 := by
@@ -115,23 +115,25 @@ private theorem CCartan_eq_explicit (d : R) :
     CCartan d = ![![d ^ 2 - 1, -d], ![d, -1]] := by
   have h := Matrix.two_mul_expl (B1Cartan d) (B2Cartan d)
   apply fin2_mul_eq
-  · convert h.1 using 1 <;> simp [B1Cartan, B2Cartan, pow_two] <;> ring
-  · convert h.2.1 using 1 <;> simp [B1Cartan, B2Cartan, pow_two] <;> ring
-  · convert h.2.2.1 using 1 <;> simp [B1Cartan, B2Cartan, pow_two] <;> ring
-  · convert h.2.2.2 using 1 <;> simp [B1Cartan, B2Cartan, pow_two] <;> ring
+  · convert h.1 using 1 <;> simp [B1Cartan, B2Cartan, pow_two] <;> noncomm_ring
+  · convert h.2.1 using 1 <;> simp [B1Cartan, B2Cartan, pow_two]
+  · convert h.2.2.1 using 1 <;> simp [B1Cartan, B2Cartan, pow_two]
+  · convert h.2.2.2 using 1 <;> simp [B1Cartan, B2Cartan, pow_two]
 
 /-- 🏆 THEOREM 3: The Coxeter product trace is $\operatorname{tr}(C(d)) = d^2 - 2$. -/
 theorem CCartan_trace (d : R) :
     Matrix.trace (CCartan d) = d ^ 2 - 2 := by
   rw [CCartan_eq_explicit]
   simp [Matrix.trace, Matrix.diag, Fin.sum_univ_two]
-  ring
+  rw [show (2 : R) = 1 + 1 by norm_num]
+  noncomm_ring
 
 /-- 🏆 THEOREM 4: For $m=6$ ($d^2 = 3$), $C^3 = -I$ and $C^6 = I$. -/
 theorem CCartan_six_order (d : R) (hd : d ^ 2 = 3) :
     (CCartan d) ^ 3 = -1 ∧ (CCartan d) ^ 6 = 1 := by
   have hC := CCartan_eq_explicit d
   let M : Matrix (Fin 2) (Fin 2) R := ![![d ^ 2 - 1, -d], ![d, -1]]
+  have hdd : d * d = 3 := by rwa [pow_two] at hd
   have hM2 : M ^ 2 = M - 1 := by
     rw [pow_two]
     have h := Matrix.two_mul_expl M M
@@ -139,27 +141,27 @@ theorem CCartan_six_order (d : R) (hd : d ^ 2 = 3) :
     · calc
         (M * M) 0 0 = M 0 0 * M 0 0 + M 0 1 * M 1 0 := h.1
         _ = M 0 0 - 1 := by
-          simp [M, pow_two]
-          linear_combination (d ^ 2 - 1) * hd
-        _ = (M - 1) 0 0 := by simp [Matrix.sub_apply, Matrix.one_apply]
+          simp [M, hd, hdd]
+          norm_num
+        _ = (M - 1) 0 0 := by simp [Matrix.sub_apply]
     · calc
         (M * M) 0 1 = M 0 0 * M 0 1 + M 0 1 * M 1 1 := h.2.1
         _ = M 0 1 := by
-          simp [M]
-          linear_combination (-d) * hd
-        _ = (M - 1) 0 1 := by simp [Matrix.sub_apply, Matrix.one_apply]
+          simp [M, hd]
+          noncomm_ring
+        _ = (M - 1) 0 1 := by simp [Matrix.sub_apply]
     · calc
         (M * M) 1 0 = M 1 0 * M 0 0 + M 1 1 * M 1 0 := h.2.2.1
         _ = M 1 0 := by
-          simp [M]
-          linear_combination d * hd
-        _ = (M - 1) 1 0 := by simp [Matrix.sub_apply, Matrix.one_apply]
+          simp [M, hd]
+          noncomm_ring
+        _ = (M - 1) 1 0 := by simp [Matrix.sub_apply]
     · calc
         (M * M) 1 1 = M 1 0 * M 0 1 + M 1 1 * M 1 1 := h.2.2.2
         _ = M 1 1 - 1 := by
-          simp [M]
-          linear_combination -hd
-        _ = (M - 1) 1 1 := by simp [Matrix.sub_apply, Matrix.one_apply]
+          simp [M, hdd]
+          norm_num
+        _ = (M - 1) 1 1 := by simp [Matrix.sub_apply]
   have hM3 : M ^ 3 = -1 := by
     calc
       M ^ 3 = M ^ 2 * M := by rw [pow_succ]
@@ -188,29 +190,31 @@ theorem CCartan_five_order (d : R) (hd : d ^ 2 = d + 1) :
     calc
       d ^ 3 = d ^ 2 * d := by rw [pow_succ]
       _ = (d + 1) * d := by rw [hd]
-      _ = d ^ 2 + d := by ring
+      _ = d ^ 2 + d := by noncomm_ring
       _ = (d + 1) + d := by rw [hd]
-      _ = 2 * d + 1 := by ring
+      _ = 2 * d + 1 := by noncomm_ring
   have hd4 : d ^ 4 = 3 * d + 2 := by
     calc
       d ^ 4 = d ^ 3 * d := by rw [pow_succ]
       _ = (2 * d + 1) * d := by rw [hd3]
-      _ = 2 * d ^ 2 + d := by ring
+      _ = 2 * d ^ 2 + d := by noncomm_ring
       _ = 2 * (d + 1) + d := by rw [hd]
-      _ = 3 * d + 2 := by ring
-  have hd_sub : d ^ 2 - d = 1 := by rw [hd]; ring
+      _ = 3 * d + 2 := by
+        rw [show (2 : R) = 1 + 1 by norm_num, show (3 : R) = 1 + 1 + 1 by norm_num]
+        noncomm_ring
+  have hd_sub : d ^ 2 - d = 1 := by rw [hd]; noncomm_ring
   have hd_flip : d - d ^ 2 = -1 := by
     calc
-      d - d ^ 2 = -(d ^ 2 - d) := by ring
+      d - d ^ 2 = -(d ^ 2 - d) := by noncomm_ring
       _ = -1 := by rw [hd_sub]
-  have hd_sq_sub_one : d ^ 2 - 1 = d := by rw [hd]; ring
+  have hd_sq_sub_one : d ^ 2 - 1 = d := by rw [hd]; noncomm_ring
   have hd_mul_sub : d * d - d = 1 := by simpa only [pow_two] using hd_sub
   have hd_sub_mul : d - d * d = -1 := by simpa only [pow_two] using hd_flip
   have hd_mul_sq_sub_one : d * d - 1 = d := by
     simpa only [pow_two] using hd_sq_sub_one
   have hd_cube_reduce : -d ^ 3 + 2 * d ^ 2 = 1 := by
     rw [hd3, hd]
-    ring
+    noncomm_ring
   let M2 : Matrix (Fin 2) (Fin 2) R := ![![0, -1], ![1, -d]]
   let M3 : Matrix (Fin 2) (Fin 2) R := ![![-d, 1], ![-1, 0]]
   let M4 : Matrix (Fin 2) (Fin 2) R := ![![-1, d], ![-d, d]]
@@ -227,7 +231,7 @@ theorem CCartan_five_order (d : R) (hd : d ^ 2 = d + 1) :
         _ = -1 := by
           simp [M, hd_sq_sub_one]
           calc
-            -(d * d) + d = d - d ^ 2 := by rw [pow_two]; ring
+            -(d * d) + d = d - d ^ 2 := by rw [pow_two]; abel
             _ = -1 := hd_flip
         _ = M2 0 1 := by simp [M2]
     · calc
@@ -235,7 +239,7 @@ theorem CCartan_five_order (d : R) (hd : d ^ 2 = d + 1) :
         _ = 1 := by
           simp [M, hd_sq_sub_one]
           calc
-            d * d + -d = d ^ 2 - d := by rw [pow_two]; ring
+            d * d + -d = d ^ 2 - d := by rw [pow_two]; abel
             _ = 1 := hd_sub
         _ = M2 1 0 := by simp [M2]
     · calc
@@ -244,7 +248,7 @@ theorem CCartan_five_order (d : R) (hd : d ^ 2 = d + 1) :
           simp [M]
           calc
             -(d * d) + 1 = -(d ^ 2) + 1 := by rw [pow_two]
-            _ = -d := by rw [hd]; ring
+            _ = -d := by rw [hd]; abel
         _ = M2 1 1 := by simp [M2]
   have hM3 : M2 * M = M3 := by
     have h := Matrix.two_mul_expl M2 M
@@ -277,7 +281,7 @@ theorem CCartan_five_order (d : R) (hd : d ^ 2 = d + 1) :
           simp [M, M3]
           rw [hd_sq_sub_one]
           calc
-            -(d * d) + d = d - d * d := by ring
+            -(d * d) + d = d - d * d := by abel
             _ = -1 := hd_sub_mul
         _ = M4 0 0 := by simp [M4]
     · calc
@@ -303,7 +307,7 @@ theorem CCartan_five_order (d : R) (hd : d ^ 2 = d + 1) :
           simp [M, M4]
           calc
             1 - d ^ 2 + d * d = 1 - d ^ 2 + d ^ 2 := by rw [pow_two]
-            _ = 1 := by ring
+            _ = 1 := by abel
         _ = (1 : Matrix (Fin 2) (Fin 2) R) 0 0 := by simp
     · calc
         (M4 * M) 0 1 = M4 0 0 * M 0 1 + M4 0 1 * M 1 1 := h.2.1
@@ -318,7 +322,7 @@ theorem CCartan_five_order (d : R) (hd : d ^ 2 = d + 1) :
         _ = 1 := by
           simp [M, M4]
           calc
-            d * d + -d = d ^ 2 - d := by rw [pow_two]; ring
+            d * d + -d = d ^ 2 - d := by rw [pow_two]; abel
             _ = 1 := hd_sub
         _ = (1 : Matrix (Fin 2) (Fin 2) R) 1 1 := by simp
   have hM3pow : M ^ 3 = M3 := by

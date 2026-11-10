@@ -17,6 +17,35 @@ invariant submodule is a span, not a claimed basis or two-dimensional space.
 namespace InfoGeometry.Core.PeirceQuadraticIteration
 attribute [local instance 100] LieRing.ofAssociativeRing
 open PeirceDecomposition PeirceQuadraticFrame
+
+section PureRing
+variable {A : Type*} [Ring A] {p u v : A}
+
+/-- The only needed commutation is derived from opposite-corner support in any ring `A`. -/
+theorem weight_commutes (hp : IsIdempotentElem p)
+    (hu : u ∈ peirce10 p) (hv : v ∈ peirce01 p) :
+    Commute ⁅u, v⁆ (2 * (u * v + v * u)) := by
+  have h := (quadratic_commute_bracket hp hu hv).symm.eq
+  change ⁅u, v⁆ * (2 * (u * v + v * u)) =
+    (2 * (u * v + v * u)) * ⁅u, v⁆
+  calc
+    _ = 2 * (⁅u, v⁆ * (u * v + v * u)) := by noncomm_ring
+    _ = 2 * ((u * v + v * u) * ⁅u, v⁆) := by rw [h]
+    _ = _ := by rw [mul_assoc]
+
+end PureRing
+
+section NoncommSpan
+variable (R : Type*) [Ring R] {A : Type*} [Ring A] [Module R A]
+
+/-- A native polynomially generated submodule over any ring `R`; no rank is assumed. -/
+def frameSpan (u v : A) : Submodule R A :=
+  Submodule.span R
+    (Set.range (fun n : ℕ => (2 * (u * v + v * u)) ^ n * (u + v)) ∪
+     Set.range (fun n : ℕ => (2 * (u * v + v * u)) ^ n * (u - v)))
+
+end NoncommSpan
+
 variable (R : Type*) [CommRing R] {A : Type*} [Ring A] [Algebra R A]
 
 /-- A commuting left factor passes through the actual inner derivation. -/
@@ -77,18 +106,6 @@ theorem ad_pow_odd_of_reciprocal {c t e j : A} (ht : Commute c t)
 section Peirce
 variable {p u v : A}
 
-/-- The only needed commutation is derived from opposite-corner support. -/
-theorem weight_commutes (hp : IsIdempotentElem p)
-    (hu : u ∈ peirce10 p) (hv : v ∈ peirce01 p) :
-    Commute ⁅u, v⁆ (2 * (u * v + v * u)) := by
-  have h := (quadratic_commute_bracket hp hu hv).symm.eq
-  change ⁅u, v⁆ * (2 * (u * v + v * u)) =
-    (2 * (u * v + v * u)) * ⁅u, v⁆
-  calc
-    _ = 2 * (⁅u, v⁆ * (u * v + v * u)) := by noncomm_ring
-    _ = 2 * ((u * v + v * u) * ⁅u, v⁆) := by rw [h]
-    _ = _ := by rw [mul_assoc]
-
 /-- Consume the existing sum step; do not redefine the quadratic frame. -/
 theorem weighted_sum_step (hp : IsIdempotentElem p)
     (hu : u ∈ peirce10 p) (hv : v ∈ peirce01 p) :
@@ -132,12 +149,6 @@ theorem ad_pow_difference_odd (hp : IsIdempotentElem p)
       (2 * (u * v + v * u)) ^ (2 * n + 1) * (u + v) :=
   ad_pow_odd_of_reciprocal R (weight_commutes hp hu hv)
     (weighted_difference_step R hp hu hv) (weighted_sum_step R hp hu hv) n
-
-/-- A native polynomially generated submodule; no rank is assumed. -/
-def frameSpan (u v : A) : Submodule R A :=
-  Submodule.span R
-    (Set.range (fun n : ℕ => (2 * (u * v + v * u)) ^ n * (u + v)) ∪
-     Set.range (fun n : ℕ => (2 * (u * v + v * u)) ^ n * (u - v)))
 
 /-- The full inner action preserves the generated submodule. -/
 theorem frameSpan_invariant (hp : IsIdempotentElem p)

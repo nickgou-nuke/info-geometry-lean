@@ -14,19 +14,19 @@ set_option linter.unusedSectionVars false
 
 /-- Truncated element of the 27-dimensional Albert algebra represented
     by homogeneous coordinates (X, Y, Z) in the Jordan projective plane. -/
-structure AlbertMatrix (F : Type*) [CommRing F] where
+structure AlbertMatrix (F : Type*) [Ring F] where
   X : F
   Y : F
   Z : F
 
 /-- The Freudenthal-Cartan cubic determinant on the Albert plane:
     Det(M) = X³ + Y³ + Z³ - 3XYZ. -/
-def albertDet {F : Type*} [CommRing F] (M : AlbertMatrix F) : F :=
+def albertDet {F : Type*} [Ring F] (M : AlbertMatrix F) : F :=
   M.X^3 + M.Y^3 + M.Z^3 - (3 : F) * M.X * M.Y * M.Z
 
 /-- Logarithmic spiral Primon flow acting on Albert coordinates:
     X ↦ X + (log p) Y, Y ↦ Y - (log p) X, Z ↦ Z. -/
-def albertSpiralFlow {F : Type*} [CommRing F] (log_p : F) (M : AlbertMatrix F) : AlbertMatrix F where
+def albertSpiralFlow {F : Type*} [Ring F] (log_p : F) (M : AlbertMatrix F) : AlbertMatrix F where
   X := M.X + log_p * M.Y
   Y := M.Y - log_p * M.X
   Z := M.Z
@@ -62,9 +62,9 @@ theorem albert_det_flow_expansion {F : Type*} [CommRing F]
   ring
 
 /-- 🏆 THEOREM: On the entire diagonal cusp line X = Y, the flow defect vanishes identically. -/
-theorem albert_diagonal_defect_vanishes {F : Type*} [CommRing F] (X Z : F) :
+theorem albert_diagonal_defect_vanishes {F : Type*} [Ring F] (X Z : F) :
     3 * X^2 * X - 3 * X^2 * X + 3 * Z * (X^2 - X^2) = 0 := by
-  ring
+  noncomm_ring
 
 /-- 🏆 THEOREM (Cusp Lock): At any point on the diagonal cusp locus (X = Y),
     the Albert determinant is strictly invariant under the logarithmic spiral flow. -/

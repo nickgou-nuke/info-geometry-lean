@@ -38,19 +38,19 @@ open Complex
 
 /-! ### 1. Finite Primon & Parafermionic Partition Algebra -/
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- 🏆 THEOREM 1: Exact Parafermionic Euler Factor Factorization Identity:
     (1 - u) * (1 + u + ... + u^(κ-1)) = 1 - u^κ for any ring element u -/
 theorem parafermion_euler_factor_identity (u : R) (k : ℕ) :
-    (1 - u) * (∑ a ∈ Finset.range k, u ^ a) = 1 - u ^ k := by
-  rw [mul_comm, geom_sum_mul_neg]
+    (1 - u) * (∑ a ∈ Finset.range k, u ^ a) = 1 - u ^ k :=
+  mul_neg_geom_sum u k
 
 /-- 🏆 THEOREM 2: Exact Fermionic (κ = 2) Partition Factorization Identity:
     (1 - u) * (1 + u) = 1 - u^2 -/
 theorem fermion_partition_factor_identity (u : R) :
     (1 - u) * (1 + u) = 1 - u ^ 2 := by
-  ring
+  noncomm_ring
 
 /-! ### 2. Berry-Keating / Bender Affine Spectral Coordinate Map -/
 

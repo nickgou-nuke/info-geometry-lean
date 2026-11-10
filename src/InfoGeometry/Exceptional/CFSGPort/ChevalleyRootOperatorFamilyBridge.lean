@@ -116,7 +116,7 @@ theorem pinnedFamilySign_eq (α : Fin τ.rank → ℤ) :
       ⟨Pi.single (pinnedData τ α).1 1, IsRoot.basis (pinnedData τ α).1⟩ with h | h <;>
     rcases pinnedSign_eq τ α with h' | h' <;> simp [h, h']
 
-theorem pinnedFamilySign_mul_self (R : Type u) [CommRing R]
+theorem pinnedFamilySign_mul_self (R : Type u) [Ring R]
     (α : Fin τ.rank → ℤ) :
     (F.pinnedFamilySign α : R) * (F.pinnedFamilySign α : R) = 1 := by
   rcases F.pinnedFamilySign_eq α with h | h <;> rw [h] <;> norm_num

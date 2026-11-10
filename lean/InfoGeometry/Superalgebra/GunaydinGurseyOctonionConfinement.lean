@@ -30,7 +30,7 @@ Ref: `QMS-DIR-SEC127-GUNAYDIN-GURSEY-CONFINEMENT-2026-OCT-16`
 
 namespace InfoGeometry.Superalgebra.GunaydinGursey
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. 3D Цветово Пространство (3 и 3̄ на SU(3)_c) и Барионен Детерминант -/
 
@@ -43,7 +43,7 @@ structure ColorVec3 (R : Type*) where
 
 namespace ColorVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def canonicalColorVec3Int : ColorVec3 ℤ := ⟨1, 2, 3⟩
 
@@ -78,8 +78,7 @@ def det3 (u₁ u₂ u₃ : ColorVec3 R) : R :=
 
 @[simp]
 theorem det3_basis : det3 (e1 (R := R)) e2 e3 = 1 := by
-  dsimp [det3, dot, cross, e1, e2, e3]
-  ring
+  simp [det3, dot, cross, e1, e2, e3]
 
 end ColorVec3
 
@@ -95,7 +94,7 @@ structure SplitOctonion (R : Type*) where
 
 namespace SplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def canonicalSplitOctonionInt : SplitOctonion ℤ := ⟨1, ColorVec3.e1, ColorVec3.e2, 2⟩
 
@@ -166,7 +165,7 @@ theorem gunaydin_gursey_peirce_absorption (u : ColorVec3 R) :
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
   { dsimp [e1, e2, quark, zero, mul, ColorVec3.zero,
            ColorVec3.dot, ColorVec3.sub, ColorVec3.add, ColorVec3.smul, ColorVec3.cross]
-    ext <;> ring }
+    ext <;> simp }
 
 /-! ### 4. Теореми 1, 2 и 3: 3-Кварково Скобуване, Асоциатор и Барионен Синглет -/
 
@@ -175,7 +174,7 @@ theorem gunaydin_gursey_peirce_absorption (u : ColorVec3 R) :
 - Лявото произведение (U(u₁) · U(u₂)) · U(u₃) попада изцяло върху долния идемпотент e₂!
 - Дясното произведение U(u₁) · (U(u₂) · U(u₃)) попада изцяло върху горния идемпотент e₁!
 -/
-theorem three_quark_parenthesization_split (u₁ u₂ u₃ : ColorVec3 R) :
+theorem three_quark_parenthesization_split {R : Type*} [CommRing R] (u₁ u₂ u₃ : ColorVec3 R) :
     mul (mul (quark u₁) (quark u₂)) (quark u₃) = scale (ColorVec3.det3 u₁ u₂ u₃) e2 ∧
     mul (quark u₁) (mul (quark u₂) (quark u₃)) = scale (ColorVec3.det3 u₁ u₂ u₃) e1 := by
   constructor
@@ -192,7 +191,7 @@ theorem three_quark_parenthesization_split (u₁ u₂ u₃ : ColorVec3 R) :
 отрицателния барионен детерминант по хиралния оператор K₀ = e₁ - e₂:
 [U(u₁), U(u₂), U(u₃)] = - det(u₁, u₂, u₃) • K₀!
 -/
-theorem baryon_associator_eq_neg_det_k0 (u₁ u₂ u₃ : ColorVec3 R) :
+theorem baryon_associator_eq_neg_det_k0 {R : Type*} [CommRing R] (u₁ u₂ u₃ : ColorVec3 R) :
     associator (quark u₁) (quark u₂) (quark u₃) =
       scale (- ColorVec3.det3 u₁ u₂ u₃) paraSymplecticK0 := by
   dsimp [associator, quark, paraSymplecticK0, mul, sub, scale, ColorVec3.det3, ColorVec3.zero,
@@ -201,7 +200,7 @@ theorem baryon_associator_eq_neg_det_k0 (u₁ u₂ u₃ : ColorVec3 R) :
 
 /-- В частност, за базисния триплет (U₁, U₂, U₃) асоциаторът е точно -K₀! -/
 @[simp]
-theorem basis_baryon_associator_eq_neg_k0 :
+theorem basis_baryon_associator_eq_neg_k0 {R : Type*} [CommRing R] :
     associator (U1 (R := R)) U2 U3 = neg paraSymplecticK0 := by
   dsimp [U1, U2, U3]
   rw [baryon_associator_eq_neg_det_k0, ColorVec3.det3_basis]
@@ -213,7 +212,7 @@ theorem basis_baryon_associator_eq_neg_k0 :
 Сумата от двете скобувания елиминира неасоциативната хиралност K₀ и дава
 асоциативния барионен синглет det(u₁, u₂, u₃) • 𝟙!
 -/
-theorem symmetrized_baryon_triple_is_central_singlet (u₁ u₂ u₃ : ColorVec3 R) :
+theorem symmetrized_baryon_triple_is_central_singlet {R : Type*} [CommRing R] (u₁ u₂ u₃ : ColorVec3 R) :
     symmTriple (quark u₁) (quark u₂) (quark u₃) =
       scale (ColorVec3.det3 u₁ u₂ u₃) one := by
   dsimp [symmTriple, quark, one, mul, add, scale, ColorVec3.det3, ColorVec3.zero,
@@ -229,7 +228,7 @@ theorem symmetrized_baryon_triple_is_central_singlet (u₁ u₂ u₃ : ColorVec3
 асоциатор с всяка двойка октонионни полета X, Y ∈ 𝕆_s:
 [c • 𝟙, X, Y] = 0,   [X, c • 𝟙, Y] = 0,   [X, Y, c • 𝟙] = 0!
 -/
-theorem color_singlet_in_associative_nucleus (c : R) (X Y : SplitOctonion R) :
+theorem color_singlet_in_associative_nucleus {R : Type*} [CommRing R] (c : R) (X Y : SplitOctonion R) :
     associator (scale c one) X Y = zero ∧
     associator X (scale c one) Y = zero ∧
     associator X Y (scale c one) = zero := by
@@ -242,7 +241,7 @@ end SplitOctonion
 
 /-! ### 6. Главен Синтез на Раздел 127 -/
 
-theorem gunaydin_gursey_confinement_synthesis
+theorem gunaydin_gursey_confinement_synthesis {R : Type*} [CommRing R]
     (u u₁ u₂ u₃ : ColorVec3 R) (c : R) (X Y : SplitOctonion R) :
     (SplitOctonion.mul SplitOctonion.e1 (SplitOctonion.quark u) = SplitOctonion.quark u ∧
      SplitOctonion.mul (SplitOctonion.quark u) SplitOctonion.e2 = SplitOctonion.quark u) ∧

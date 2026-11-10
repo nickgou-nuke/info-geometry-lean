@@ -249,11 +249,11 @@ instance {R : Type*} [Zero R] : Inhabited (ZornSplitOctonion R) :=
   ⟨⟨0, fun _ => 0, fun _ => 0, 0⟩⟩
 
 /-- 3D Euclidean dot product $\mathbf{x} \cdot \mathbf{y} = x_0 y_0 + x_1 y_1 + x_2 y_2$ on `Fin 3 → R`. -/
-def vec3Dot {R : Type*} [CommRing R] (x y : Fin 3 → R) : R :=
+def vec3Dot {R : Type*} [Ring R] (x y : Fin 3 → R) : R :=
   x 0 * y 0 + x 1 * y 1 + x 2 * y 2
 
 /-- 3D exterior / cross product $\mathbf{x} \times \mathbf{y}$ on `Fin 3 → R`. -/
-def vec3Cross {R : Type*} [CommRing R] (x y : Fin 3 → R) : Fin 3 → R :=
+def vec3Cross {R : Type*} [Ring R] (x y : Fin 3 → R) : Fin 3 → R :=
   ![x 1 * y 2 - x 2 * y 1,
     x 2 * y 0 - x 0 * y 2,
     x 0 * y 1 - x 1 * y 0]
@@ -321,7 +321,7 @@ $$\begin{pmatrix} a_1 & \mathbf{u}_1 \\ \mathbf{v}_1 & b_1 \end{pmatrix}
     a_2 \mathbf{v}_1 + b_1 \mathbf{v}_2 + \mathbf{u}_1 \times \mathbf{u}_2 &
     b_1 b_2 + \mathbf{v}_1 \cdot \mathbf{u}_2
   \end{pmatrix}.$$ -/
-def zornMul {R : Type*} [CommRing R] (x y : ZornSplitOctonion R) : ZornSplitOctonion R where
+def zornMul {R : Type*} [Ring R] (x y : ZornSplitOctonion R) : ZornSplitOctonion R where
   a := x.a * y.a + vec3Dot x.u y.v
   u := fun i => x.a * y.u i + y.b * x.u i - vec3Cross x.v y.v i
   v := fun i => y.a * x.v i + x.b * y.v i + vec3Cross x.u y.u i
@@ -329,7 +329,7 @@ def zornMul {R : Type*} [CommRing R] (x y : ZornSplitOctonion R) : ZornSplitOcto
 
 /-- Split-signature quadratic norm (Zorn determinant)
 $N(z) = a b - \mathbf{u} \cdot \mathbf{v}$ on `ZornSplitOctonion R`. -/
-def zornNorm {R : Type*} [CommRing R] (z : ZornSplitOctonion R) : R :=
+def zornNorm {R : Type*} [Ring R] (z : ZornSplitOctonion R) : R :=
   z.a * z.b - vec3Dot z.u z.v
 
 /-- **Zorn Split-Octonion Norm Composition Identity ($N(x y) = N(x) N(y)$)**:

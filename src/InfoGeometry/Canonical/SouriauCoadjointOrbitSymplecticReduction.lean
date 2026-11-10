@@ -7,7 +7,7 @@ set_option linter.unnecessarySeqFocus false
 
 namespace SouriauReduction
 
-variable {R L : Type*} [CommRing R] [LieRing L] [Module R L]
+variable {R L : Type*} [Ring R] [LieRing L] [Module R L]
 
 /-! The KKS pairing is formed from a native Lie-ring bracket and a linear
 functional on the Lie algebra. -/

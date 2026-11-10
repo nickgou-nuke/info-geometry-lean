@@ -34,7 +34,7 @@ open InfoGeometry.Singular.Drazin
 open TrifactorDecomposition
 open TriFacetGeometry
 
-variable {R : Type*} [CommRing R] [Invertible (2 : R)]
+variable {R : Type*} [Ring R] [Invertible (2 : R)]
 
 /-- Candidate Drazin inverse for a tripotent: the element itself. -/
 def tripotentDrazinInverse (T : R) : R := T
@@ -63,7 +63,7 @@ omit [Invertible (2 : R)] in
 theorem tripotent_drazin_projector_eq_square (T : R) :
     tripotentDrazinProjector T = T ^ 2 := by
   unfold tripotentDrazinProjector tripotentDrazinInverse
-  ring
+  noncomm_ring
 
 omit [Invertible (2 : R)] in
 /-- The tripotent Drazin support is idempotent. -/
@@ -73,7 +73,7 @@ theorem tripotent_drazin_projector_idempotent
       tripotentDrazinProjector T := by
   rw [tripotent_drazin_projector_eq_square]
   calc
-    T ^ 2 * T ^ 2 = T ^ 4 := by ring
+    T ^ 2 * T ^ 2 = T ^ 4 := by noncomm_ring
     _ = T ^ 2 := TriFacetGeometry.T_pow4 T hT
 
 /-- The Drazin support projector is exactly the active `P_plus + P_minus` sector. -/
@@ -86,9 +86,9 @@ theorem tripotent_drazin_projector_eq_active_trifactor
     T ^ 2 =
         (⅟(2 : R) * (2 : R)) * T ^ 2 := by
           rw [invOf_mul_self (2 : R)]
-          ring
+          noncomm_ring
     _ = ⅟(2 : R) * (T ^ 2 + T) + ⅟(2 : R) * (T ^ 2 - T) := by
-          ring
+          noncomm_ring
 
 omit [Invertible (2 : R)] in
 /-- The complementary Drazin null projector is exactly the `P_zero` sector. -/
@@ -106,9 +106,9 @@ theorem tripotent_annihilates_drazin_null_projector
     T * tripotentDrazinNullProjector T = 0 := by
   unfold tripotentDrazinNullProjector tripotentDrazinProjector tripotentDrazinInverse
   calc
-    T * (1 - T * T) = T - T ^ 3 := by ring
+    T * (1 - T * T) = T - T ^ 3 := by noncomm_ring
     _ = T - T := by rw [hT]
-    _ = 0 := by ring
+    _ = 0 := by noncomm_ring
 
 /--
 Bundled finite Drazin/trifactor dictionary.

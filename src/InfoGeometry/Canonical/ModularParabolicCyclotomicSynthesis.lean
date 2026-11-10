@@ -54,8 +54,7 @@ open Matrix
 
 section UniversalRingLayer
 
-variable {R : Type*} [CommRing R]
-variable {A : Type*} [Ring A] [Algebra R A]
+variable {A : Type*} [Ring A]
 
 /-!
 ## 1. Core Definitions: Dual Roots of Zero, Simplex Poles, Parabolic Shears, & Nambu 3-Bracket
@@ -326,7 +325,8 @@ lemma bruhatQuarticOp_conj_polePlus {d B : A} (h : IsDualRootOfZeroPair d B) :
 
 /-- Left-multiplication Jordan operator `L_X(Y) = X Y + Y X` in `Module.End R A` satisfies
     the commutator-derivation law `[L_X, L_Y](Z) = [[X, Y], Z]`. -/
-lemma jordanLeft_commutator_eq_lieBracket (X Y Z : A) :
+lemma jordanLeft_commutator_eq_lieBracket {R : Type*} [Ring R]
+    [Module R A] [IsScalarTower R A A] [SMulCommClass R A A] (X Y Z : A) :
     (InfoGeometry.Core.JordanMultiplicationClosure.jordanLeft (R := R) X *
        InfoGeometry.Core.JordanMultiplicationClosure.jordanLeft (R := R) Y -
      InfoGeometry.Core.JordanMultiplicationClosure.jordanLeft (R := R) Y *

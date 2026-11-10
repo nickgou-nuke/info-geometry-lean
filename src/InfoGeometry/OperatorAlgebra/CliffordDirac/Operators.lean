@@ -22,7 +22,7 @@ namespace InfoGeometry.Superalgebra.KahlerDiracWeitzenbockSynthesis
 
 open InfoGeometry.OperatorAlgebra.CliffordDirac
 
-variable {R Ω : Type*} [CommRing R] [AddCommGroup Ω] [Module R Ω]
+variable {R Ω : Type*} [Ring R] [AddCommGroup Ω] [Module R Ω]
 
 theorem diracOperator_sq_with_mixed_commutators {ι : Type*} [Fintype ι]
     (g x : ι → Module.End R Ω) :

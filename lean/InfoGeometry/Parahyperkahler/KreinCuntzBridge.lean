@@ -55,10 +55,49 @@ def CuntzPL (S1 : A) : A := S1 * star S1
 def CuntzPR (S2 : A) : A := S2 * star S2
 
 omit [Algebra ℝ A] in
-/-- The sum relation says exactly that the two range elements sum to one. -/
-theorem CuntzPL_add_CuntzPR_eq_one (S1 S2 : A)
-    (hC : S1 * star S1 + S2 * star S2 = 1) :
-    CuntzPL S1 + CuntzPR S2 = 1 := hC
+/-- Orthogonal isometric ranges have an idempotent sum. The conclusion follows
+from the two isometry equations and the vanishing mixed initial-space product;
+it does not assume that the range sum is the identity. -/
+theorem Cuntz_range_sum_idempotent (S1 S2 : A)
+    (hS1 : star S1 * S1 = 1) (hS2 : star S2 * S2 = 1)
+    (hOrth : star S1 * S2 = 0) :
+    (CuntzPL S1 + CuntzPR S2) * (CuntzPL S1 + CuntzPR S2) =
+      CuntzPL S1 + CuntzPR S2 := by
+  have hPL : CuntzPL S1 * CuntzPL S1 = CuntzPL S1 := by
+    dsimp [CuntzPL]
+    calc
+      (S1 * star S1) * (S1 * star S1) = S1 * (star S1 * S1) * star S1 := by
+        noncomm_ring
+      _ = S1 * 1 * star S1 := by rw [hS1]
+      _ = S1 * star S1 := by noncomm_ring
+  have hPR : CuntzPR S2 * CuntzPR S2 = CuntzPR S2 := by
+    dsimp [CuntzPR]
+    calc
+      (S2 * star S2) * (S2 * star S2) = S2 * (star S2 * S2) * star S2 := by
+        noncomm_ring
+      _ = S2 * 1 * star S2 := by rw [hS2]
+      _ = S2 * star S2 := by noncomm_ring
+  have hPLPR : CuntzPL S1 * CuntzPR S2 = 0 := by
+    dsimp [CuntzPL, CuntzPR]
+    calc
+      (S1 * star S1) * (S2 * star S2) =
+          S1 * (star S1 * S2) * star S2 := by noncomm_ring
+      _ = 0 := by rw [hOrth]; noncomm_ring
+  have hOrthRev : star S2 * S1 = 0 := by
+    have h := congrArg star hOrth
+    simpa [star_mul] using h
+  have hPRPL : CuntzPR S2 * CuntzPL S1 = 0 := by
+    dsimp [CuntzPL, CuntzPR]
+    calc
+      (S2 * star S2) * (S1 * star S1) =
+          S2 * (star S2 * S1) * star S1 := by noncomm_ring
+      _ = 0 := by rw [hOrthRev]; noncomm_ring
+  calc
+    (CuntzPL S1 + CuntzPR S2) * (CuntzPL S1 + CuntzPR S2) =
+        CuntzPL S1 * CuntzPL S1 + CuntzPL S1 * CuntzPR S2 +
+          CuntzPR S2 * CuntzPL S1 + CuntzPR S2 * CuntzPR S2 := by
+            noncomm_ring
+    _ = CuntzPL S1 + CuntzPR S2 := by rw [hPL, hPLPR, hPRPL, hPR]; abel
 
 omit [Algebra ℝ A] in
 /-- Isometries satisfying the range-sum relation have orthogonal initial

@@ -36,7 +36,7 @@ structure ColorVec3 (R : Type*) where
 
 namespace ColorVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : ColorVec3 R := ⟨0, 0, 0⟩
 def neg (u : ColorVec3 R) : ColorVec3 R := ⟨-u.c1, -u.c2, -u.c3⟩
@@ -57,7 +57,7 @@ def cross (u v : ColorVec3 R) : ColorVec3 R where
 def det3 (u da db : ColorVec3 R) : R :=
   dot u (cross da db)
 
-theorem cross_self_zero (grad : ColorVec3 R) :
+theorem cross_self_zero {R : Type*} [CommRing R] (grad : ColorVec3 R) :
     cross grad grad = zero := by
   dsimp [cross, zero]
   ext <;> ring
@@ -76,7 +76,7 @@ structure SplitOctonion (R : Type*) where
 
 namespace SplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : SplitOctonion R := ⟨0, ColorVec3.zero, ColorVec3.zero, 0⟩
 def one  : SplitOctonion R := ⟨1, ColorVec3.zero, ColorVec3.zero, 1⟩
@@ -116,7 +116,7 @@ def diracGradient (grad : ColorVec3 R) : SplitOctonion R :=
 theorem diracGradient_eq (grad : ColorVec3 R) :
     diracGradient grad = ⟨0, grad, grad, 0⟩ := by
   dsimp [diracGradient, quark, antiquark, add, ColorVec3.add, ColorVec3.zero]
-  ext <;> ring
+  ext <;> simp
 
 /-! ### 3. Non-Associative Madelung Vortex (Section 141) -/
 
@@ -125,7 +125,7 @@ Non-associative smoothness of the Madelung vortex in `SplitOctonion R`:
 The triple Jacobiator of three chiral phase/amplitude gradient vectors yields `-6 * det3`
 times the para-symplectic generator `paraSymplecticK0`.
 -/
-theorem madelung_phase_vortex_is_akivis_anomaly (u_S grad_a grad_b : ColorVec3 R) :
+theorem madelung_phase_vortex_is_akivis_anomaly {R : Type*} [CommRing R] (u_S grad_a grad_b : ColorVec3 R) :
     jacobiator (quark u_S) (quark grad_a) (quark grad_b) =
       scale (-6 * ColorVec3.det3 u_S grad_a grad_b) paraSymplecticK0 := by
   dsimp [jacobiator, commutator, quark, paraSymplecticK0, mul, add, sub, scale,
@@ -149,9 +149,9 @@ theorem bohm_quantum_potential_is_central_scalar (grad : ColorVec3 R)
   rw [h_curl_zero]
   dsimp [scale, one, ColorVec3.normSq, ColorVec3.zero, ColorVec3.dot, ColorVec3.sub,
          ColorVec3.add, ColorVec3.smul]
-  ext <;> ring
+  ext <;> simp
 
-theorem bohm_quantum_potential_is_central_scalar_unconditional (grad : ColorVec3 R) :
+theorem bohm_quantum_potential_is_central_scalar_unconditional {R : Type*} [CommRing R] (grad : ColorVec3 R) :
     mul (diracGradient grad) (diracGradient grad) =
       scale (ColorVec3.normSq grad) one :=
   bohm_quantum_potential_is_central_scalar grad (ColorVec3.cross_self_zero grad)

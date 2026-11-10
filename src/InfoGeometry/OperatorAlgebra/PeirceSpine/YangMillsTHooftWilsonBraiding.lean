@@ -172,9 +172,6 @@ theorem Q_mul_P (N_plus : B) (h_nil : N_plus * N_plus = 0) :
     _ = star N_plus * (0 * star N_plus) := by rw [h_nil]
     _ = 0 := by rw [zero_mul, mul_zero]
 
-theorem P_mul_N_plus (N_plus : B) (h_reg : N_plus * star N_plus * N_plus = N_plus) :
-    P N_plus * N_plus = N_plus := h_reg
-
 theorem N_plus_mul_P (N_plus : B) (h_nil : N_plus * N_plus = 0) :
     N_plus * P N_plus = 0 := by
   dsimp [P]
@@ -200,18 +197,35 @@ theorem star_N_plus_mul_P (N_plus : B) (h_reg : N_plus * star N_plus * N_plus = 
   dsimp [P]
   rw [← mul_assoc, star_N_plus_reg N_plus h_reg]
 
-theorem Q_mul_star_N_plus (N_plus : B) (h_reg : N_plus * star N_plus * N_plus = N_plus) :
-    Q N_plus * star N_plus = star N_plus :=
-  star_N_plus_reg N_plus h_reg
+/-- The regular partial-isometry link and its adjoint lie in opposite Peirce
+corners: `N₊ = P N₊ Q` and `N₋ = Q N₋ P`. -/
+theorem wilson_link_bilateral_corner_support (N_plus : B)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    P N_plus * N_plus * Q N_plus = N_plus ∧
+    Q N_plus * star N_plus * P N_plus = star N_plus := by
+  constructor
+  · dsimp [P, Q]
+    calc
+      (N_plus * star N_plus) * N_plus * (star N_plus * N_plus) =
+          (N_plus * star N_plus * N_plus) * (star N_plus * N_plus) := rfl
+      _ = N_plus * (star N_plus * N_plus) := by rw [h_reg]
+      _ = N_plus := N_plus_mul_Q N_plus h_reg
+  · dsimp [P, Q]
+    calc
+      (star N_plus * N_plus) * star N_plus * (N_plus * star N_plus) =
+          (star N_plus * N_plus * star N_plus) * (N_plus * star N_plus) := rfl
+      _ = star N_plus * (N_plus * star N_plus) := by
+        rw [star_N_plus_reg N_plus h_reg]
+      _ = star N_plus := star_N_plus_mul_P N_plus h_reg
 
 /-- The off-diagonal Peirce projection `U_plus_off = P U_+ Q` extracts `N_+`. -/
 theorem U_plus_off_eq_N_plus (N_plus : B)
     (h_nil : N_plus * N_plus = 0)
     (h_reg : N_plus * star N_plus * N_plus = N_plus) :
     U_plus_off N_plus = N_plus := by
+  have hcorner := wilson_link_bilateral_corner_support N_plus h_reg
   dsimp [U_plus_off, U_plus]
-  rw [mul_add, mul_one, P_mul_N_plus N_plus h_reg,
-      add_mul, P_mul_Q N_plus h_nil, N_plus_mul_Q N_plus h_reg, zero_add]
+  rw [mul_add, mul_one, add_mul, P_mul_Q N_plus h_nil, hcorner.1, zero_add]
 
 /-- `U_plus_off` also equals the reduced unipotent fluctuation `U_+ - 1`. -/
 theorem U_plus_off_eq_U_plus_sub_one (N_plus : B)
@@ -227,9 +241,9 @@ theorem U_minus_off_eq_star_N_plus (N_plus : B)
     (h_nil : N_plus * N_plus = 0)
     (h_reg : N_plus * star N_plus * N_plus = N_plus) :
     U_minus_off N_plus = star N_plus := by
+  have hcorner := wilson_link_bilateral_corner_support N_plus h_reg
   dsimp [U_minus_off, U_minus]
-  rw [mul_add, mul_one, Q_mul_star_N_plus N_plus h_reg,
-      add_mul, Q_mul_P N_plus h_nil, star_N_plus_mul_P N_plus h_reg, zero_add]
+  rw [mul_add, mul_one, add_mul, Q_mul_P N_plus h_nil, hcorner.2, zero_add]
 
 /-!
 ### 3. Main Theorem: ’t Hooft–Wilson Braiding `Z_center * U_plus_off + U_plus_off * Z_center = 0`
@@ -311,7 +325,9 @@ theorem Z_center_mul_N_plus (N_plus : B)
   calc (P N_plus + P N_plus - 1) * N_plus
     _ = (P N_plus + P N_plus) * N_plus - 1 * N_plus := by rw [sub_mul]
     _ = (P N_plus * N_plus + P N_plus * N_plus) - N_plus := by rw [add_mul, one_mul]
-    _ = (N_plus + N_plus) - N_plus := by rw [P_mul_N_plus N_plus h_reg]
+    _ = (N_plus + N_plus) - N_plus := by
+      simp only [P]
+      rw [h_reg]
     _ = N_plus := by rw [add_sub_self_right]
 
 /-- Right action of `Z_center` on `N_plus`: `N_+ * Z_center = -N_+`. -/

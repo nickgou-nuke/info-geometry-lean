@@ -5,6 +5,7 @@ Authors: InfoGeometry Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.LinearCombination
 
 /-!
@@ -37,7 +38,7 @@ structure ColorVec3 (R : Type*) where
 
 namespace ColorVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : ColorVec3 R := ⟨0, 0, 0⟩
 def add (u v : ColorVec3 R) : ColorVec3 R := ⟨u.c1 + v.c1, u.c2 + v.c2, u.c3 + v.c3⟩
@@ -67,7 +68,7 @@ structure SplitOctonion (R : Type*) where
 
 namespace SplitOctonion
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zero : SplitOctonion R := ⟨0, ColorVec3.zero, ColorVec3.zero, 0⟩
 def one  : SplitOctonion R := ⟨1, ColorVec3.zero, ColorVec3.zero, 1⟩
@@ -108,7 +109,7 @@ def J (X : SplitOctonion R) : SplitOctonion R :=
 theorem cpt_time_inversion_exact :
     J (paraSymplecticK0 (R := R)) = neg paraSymplecticK0 := by
   dsimp [J, paraSymplecticK0, neg, ColorVec3.neg, ColorVec3.zero]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 /-! ### 3. Seiberg-Witten Electromagnetic Duality via CPT Conjugation J -/
 
@@ -123,9 +124,9 @@ theorem seiberg_witten_electromagnetic_duality (u v : ColorVec3 R) :
     J (antiquark v) = neg (quark v) := by
   constructor
   · dsimp [J, quark, antiquark, neg, ColorVec3.neg, ColorVec3.zero]
-    ext <;> ring
+    ext <;> noncomm_ring
   · dsimp [J, quark, antiquark, neg, ColorVec3.neg, ColorVec3.zero]
-    ext <;> ring
+    ext <;> noncomm_ring
 
 /-! ### 4. Seiberg-Witten Central Charge and Monopole Condensation -/
 
@@ -140,7 +141,7 @@ def seibergWittenBpsCharge (q g : R) : SplitOctonion R :=
 BPS mass formula:
 The `(4,4)` interval norm of the Seiberg-Witten central charge equals `q^2 - g^2`.
 -/
-theorem bps_mass_formula_exact (q g : R) :
+theorem bps_mass_formula_exact {R : Type*} [CommRing R] (q g : R) :
     intervalNorm (seibergWittenBpsCharge q g) = q^2 - g^2 := by
   dsimp [intervalNorm, seibergWittenBpsCharge, add, scale, one, paraSymplecticK0,
          ColorVec3.zero, ColorVec3.dot, ColorVec3.smul, ColorVec3.add]
@@ -151,7 +152,7 @@ Monopole condensation massless threshold:
 When the BPS central charge lies on the null cone (`intervalNorm (seibergWittenBpsCharge q g) = 0`),
 the electric and magnetic squared charges coincide (`q^2 = g^2`).
 -/
-theorem monopole_condensation_massless_threshold (q g : R)
+theorem monopole_condensation_massless_threshold {R : Type*} [CommRing R] (q g : R)
     (h_bps_null : intervalNorm (seibergWittenBpsCharge q g) = 0) :
     q^2 = g^2 := by
   rw [bps_mass_formula_exact] at h_bps_null

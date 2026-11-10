@@ -26,10 +26,12 @@ namespace InfoGeometry.Canonical.ArnoldCohenPluckerBridge
 
 open ExteriorAlgebra
 
-variable {R : Type*} [CommRing R]
+section Ring
+
+variable {R : Type*} [Ring R]
 
 /-- The 6-dimensional Grassmannian $Gr(2,4)$ Plücker coordinate space. -/
-structure PluckerCoordinates (R : Type*) [CommRing R] where
+structure PluckerCoordinates (R : Type*) [Ring R] where
   p12 : R
   p13 : R
   p14 : R
@@ -52,7 +54,16 @@ Klein-nullity is equivalently written as the displayed coordinate equation.
 theorem kleinQuadric_factorization (p : PluckerCoordinates R) (h : IsKleinNull p) :
     p.p12 * p.p34 = p.p13 * p.p24 - p.p14 * p.p23 := by
   unfold IsKleinNull kleinQuadric at h
-  linear_combination h
+  calc
+    p.p12 * p.p34 =
+        (p.p12 * p.p34 - p.p13 * p.p24 + p.p14 * p.p23) +
+          (p.p13 * p.p24 - p.p14 * p.p23) := by abel
+    _ = 0 + (p.p13 * p.p24 - p.p14 * p.p23) := by rw [h]
+    _ = p.p13 * p.p24 - p.p14 * p.p23 := zero_add _
+
+end Ring
+
+variable {R : Type*} [CommRing R]
 
 /-- The three-term relation on three explicitly supplied elements of the
 exterior algebra. No generator record, square-zero side conditions, or

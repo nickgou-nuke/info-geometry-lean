@@ -30,8 +30,8 @@ All proofs are complete with 0 `sorry`s, 0 custom axioms, and 0 placeholders.
 
 namespace InfoGeometry.Modular.TrifactorTripotentUnification
 
-variable {R : Type*} [CommRing R]
-variable {A : Type*} [Ring A] [Algebra R A]
+variable {R : Type*} [Ring R]
+variable {A : Type*} [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-! =========================================================================
     1. Tripotents and the Cubic Factorization
@@ -70,6 +70,7 @@ def projMinus (inv2 : R) (T : A) : A :=
 def projZero (T : A) : A :=
   1 - T * T
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 /--
 THEOREM 2 (Partition of Unity / Completeness):
   `p_+ + p_- + p_0 = 1`
@@ -81,9 +82,10 @@ theorem peirce_partition_of_unity (inv2 : R) (h2 : (2 : R) * inv2 = 1) (T : A) :
   have h_add : (T * T + T) + (T * T - T) = (2 : R) • (T * T) := by
     rw [two_smul]
     abel_nf
-  rw [h_add, smul_smul, mul_comm inv2 2, h2, one_smul]
+  rw [h_add, smul_smul, (Commute.ofNat_right inv2 2).eq, h2, one_smul]
   abel_nf
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 /--
 THEOREM 3A (Tripotent Reconstruction):
   `p_+ - p_- = T`
@@ -95,8 +97,9 @@ theorem peirce_tripotent_reconstruction (inv2 : R) (h2 : (2 : R) * inv2 = 1) (T 
   have h_sub : (T * T + T) - (T * T - T) = (2 : R) • T := by
     rw [two_smul]
     abel_nf
-  rw [h_sub, smul_smul, mul_comm inv2 2, h2, one_smul]
+  rw [h_sub, smul_smul, (Commute.ofNat_right inv2 2).eq, h2, one_smul]
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 /--
 THEOREM 3B (Tripotent Square Reconstruction):
   `p_+ + p_- = T²`
@@ -108,12 +111,13 @@ theorem peirce_tripotent_sq_reconstruction (inv2 : R) (h2 : (2 : R) * inv2 = 1) 
   have h_add : (T * T + T) + (T * T - T) = (2 : R) • (T * T) := by
     rw [two_smul]
     abel_nf
-  rw [h_add, smul_smul, mul_comm inv2 2, h2, one_smul]
+  rw [h_add, smul_smul, (Commute.ofNat_right inv2 2).eq, h2, one_smul]
 
 /-! =========================================================================
     3. Spectral Eigenvalue Equations
     ========================================================================= -/
 
+omit [IsScalarTower R A A] in
 /--
 THEOREM 4A (Positive Eigenvalue +1):
   `T * p_+ = p_+`
@@ -121,9 +125,10 @@ THEOREM 4A (Positive Eigenvalue +1):
 theorem peirce_eigen_plus (inv2 : R) (T : A) (hT : IsTripotent T) :
     T * projPlus inv2 T = projPlus inv2 T := by
   dsimp [projPlus]
-  rw [Algebra.mul_smul_comm, mul_add, ← mul_assoc, hT]
+  rw [mul_smul_comm, mul_add, ← mul_assoc, hT]
   rw [add_comm T (T * T)]
 
+omit [IsScalarTower R A A] in
 /--
 THEOREM 4B (Negative Eigenvalue -1):
   `T * p_- = -p_-`
@@ -131,7 +136,7 @@ THEOREM 4B (Negative Eigenvalue -1):
 theorem peirce_eigen_minus (inv2 : R) (T : A) (hT : IsTripotent T) :
     T * projMinus inv2 T = - projMinus inv2 T := by
   dsimp [projMinus]
-  rw [Algebra.mul_smul_comm, mul_sub, ← mul_assoc, hT]
+  rw [mul_smul_comm, mul_sub, ← mul_assoc, hT]
   have hneg : T - T * T = - (T * T - T) := by abel_nf
   rw [hneg, smul_neg]
 
@@ -172,8 +177,8 @@ theorem peirce_idempotent_plus (inv2 : R) (h2 : (2 : R) * inv2 = 1) (T : A) (hT 
       _ = T * T + T + (T + T * T) := by rw [hT4, hT3, hT]
       _ = (T * T + T) + (T * T + T) := by abel_nf
       _ = (2 : R) • (T * T + T) := by rw [two_smul]
-  rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul, h_mul,
-      smul_smul, mul_assoc, mul_comm inv2 2, h2, mul_one]
+  rw [smul_mul_assoc, mul_smul_comm, smul_smul, h_mul,
+      smul_smul, mul_assoc, (Commute.ofNat_right inv2 2).eq, h2, mul_one]
 
 /--
 THEOREM 5B (Idempotency of p_-):
@@ -199,8 +204,8 @@ theorem peirce_idempotent_minus (inv2 : R) (h2 : (2 : R) * inv2 = 1) (T : A) (hT
       _ = T * T - T - (T - T * T) := by rw [hT4, hT3, hT]
       _ = (T * T - T) + (T * T - T) := by abel_nf
       _ = (2 : R) • (T * T - T) := by rw [two_smul]
-  rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul, h_mul,
-      smul_smul, mul_assoc, mul_comm inv2 2, h2, mul_one]
+  rw [smul_mul_assoc, mul_smul_comm, smul_smul, h_mul,
+      smul_smul, mul_assoc, (Commute.ofNat_right inv2 2).eq, h2, mul_one]
 
 /--
 THEOREM 5C (Orthogonality p_+ * p_- = 0):
@@ -224,12 +229,13 @@ theorem peirce_orthogonal_plus_minus (inv2 : R) (T : A) (hT : IsTripotent T) :
       _ = T * T * (T * T) + T * (T * T) - (T * T * T + T * T) := by rw [add_mul, add_mul]
       _ = T * T + T - (T + T * T) := by rw [hT4, hT3, hT]
       _ = 0 := by abel_nf
-  rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul, h_mul, smul_zero]
+  rw [smul_mul_assoc, mul_smul_comm, smul_smul, h_mul, smul_zero]
 
 /-! =========================================================================
     5. Trifactor Surprisal Spectral Decomposition
     ========================================================================= -/
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 /--
 MASTER THEOREM 6 (Trifactor Surprisal Spectral Resolution):
 The operator relative surprisal $\mathcal{K} = \alpha I + \beta T$ decomposes
@@ -277,7 +283,7 @@ theorem tripotent_derivation_annihilates_projPlus (inv2 : R) (T : A) (hT : IsTri
   have h_left : T * projPlus inv2 T = projPlus inv2 T := peirce_eigen_plus inv2 T hT
   have h_right : projPlus inv2 T * T = projPlus inv2 T := by
     dsimp [projPlus]
-    rw [Algebra.smul_mul_assoc, add_mul, hT, add_comm T (T * T)]
+    rw [smul_mul_assoc, add_mul, hT, add_comm T (T * T)]
   rw [h_left, h_right, sub_self]
 
 /--
@@ -290,7 +296,7 @@ theorem tripotent_derivation_annihilates_projMinus (inv2 : R) (T : A) (hT : IsTr
   have h_left : T * projMinus inv2 T = - projMinus inv2 T := peirce_eigen_minus inv2 T hT
   have h_right : projMinus inv2 T * T = - projMinus inv2 T := by
     dsimp [projMinus]
-    rw [Algebra.smul_mul_assoc, sub_mul, hT]
+    rw [smul_mul_assoc, sub_mul, hT]
     have hneg : T - T * T = - (T * T - T) := by abel_nf
     rw [hneg, smul_neg]
   rw [h_left, h_right, sub_self]

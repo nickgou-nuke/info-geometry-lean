@@ -79,7 +79,7 @@ open Matrix
 open scoped BigOperators
 
 variable {m : Type*} [Fintype m] [DecidableEq m]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-!
 ## Archetype I: Cuntz $\mathcal{O}_2$ Finite-Dimensional Trace Obstruction ($2N = N \implies N = 0$)

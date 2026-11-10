@@ -8,10 +8,10 @@ import Mathlib.Algebra.Module.Basic
 This file formalizes the abstract Lefschetz trace formula over discrete,
 isolated fixed points of the spinorial flow natively inside Lean 4.
 -/
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Abstract representation of the Graded Cohomology Vector Space -/
-structure GradedCohomology (X : Type*) (R : Type*) [CommRing R] where
+structure GradedCohomology (X : Type*) (R : Type*) [Ring R] where
   H_total : Type*
   [instAddCommGroup : AddCommGroup H_total]
   [instModule : Module R H_total]
@@ -20,7 +20,7 @@ attribute [instance] GradedCohomology.instAddCommGroup
 attribute [instance] GradedCohomology.instModule
 
 /-- Structure tracking a discrete fixed point x ∈ Fix(f) along its tangent data -/
-structure IsolatedFixedPoint (X : Type*) (R : Type*) [CommRing R] where
+structure IsolatedFixedPoint (X : Type*) (R : Type*) [Ring R] where
   point_id : ℕ
   local_det : R
   h_nonzero : local_det ≠ 0 -- Enforces non-degeneracy from Macaulay2 checks

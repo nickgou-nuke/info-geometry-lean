@@ -31,10 +31,6 @@ theorem comm_idempotencyDefect (P X : B) :
 variable {P : B} (hP : P * P = P)
 include hP
 
-theorem parity_idempotencyDefect (X : B) :
-    parityConj P (idempotencyDefect X) = idempotencyDefect (parityConj P X) :=
-  map_idempotencyDefect (parityConjRingEquiv hP).toRingHom X
-
 theorem even_idempotencyDefect (X : B) :
     evenGrade P (idempotencyDefect X) =
       idempotencyDefect (evenGrade P X) + oddGrade P X * oddGrade P X := by

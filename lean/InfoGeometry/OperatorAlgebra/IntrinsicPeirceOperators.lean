@@ -20,7 +20,7 @@ namespace InfoGeometry.OperatorAlgebra
 namespace IntrinsicPeirceOperators
 
 variable {R A : Type*}
-variable [Field R] [NeZero (2 : R)] [NonUnitalNonAssocRing A] [Module R A]
+variable [DivisionRing R] [NeZero (2 : R)] [NonUnitalNonAssocRing A] [Module R A]
 
 /-- The ordinary skew polarization of multiplication. -/
 def intrinsicCommutator (x y : A) : A := x * y - y * x

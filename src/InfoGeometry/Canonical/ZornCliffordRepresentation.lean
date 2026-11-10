@@ -1,7 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.SpinGroup
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Canonical.ZornSpinor
 
 noncomputable section
@@ -10,7 +16,9 @@ namespace InfoGeometry.Canonical.ZornClifford
 
 open InfoGeometry.Canonical.ZornMatrix
 
-variable {R : Type*} [CommRing R]
+section NoncommRing
+
+variable {R : Type*} [Ring R]
 
 lemma smul_a (c : R) (z : ZornMatrix R) : (c • z).a = c * z.a := rfl
 lemma smul_b (c : R) (z : ZornMatrix R) : (c • z).b = c * z.b := rfl
@@ -29,13 +37,13 @@ lemma sub_y (z1 z2 : ZornMatrix R) : (z1 - z2).y = z1.y - z2.y := rfl
 
 attribute [local simp] smul_a smul_b smul_x smul_y add_a add_b add_x add_y sub_a sub_b sub_x sub_y Pi.smul_apply Pi.add_apply Pi.sub_apply Pi.neg_apply Matrix.vecHead Matrix.vecTail Matrix.cons_val_zero Matrix.cons_val_one Matrix.cons_val_two Matrix.cons_val_succ
 
-/-- The canonical conjugation on Zorn matrices. -/
+/-- The canonical conjugation on Zorn matrices over any ring `R`. -/
 def zornConj (z : ZornMatrix R) : ZornMatrix R :=
   { a := z.b, b := z.a, x := -z.x, y := -z.y }
 
 theorem zornConj_add (z1 z2 : ZornMatrix R) :
     zornConj (z1 + z2) = zornConj z1 + zornConj z2 := by
-  ext <;> simp [zornConj] <;> try ring
+  ext <;> simp [zornConj] <;> abel
 
 theorem zornConj_smul (c : R) (z : ZornMatrix R) :
     zornConj (c • z) = c • zornConj z := by
@@ -44,18 +52,43 @@ theorem zornConj_smul (c : R) (z : ZornMatrix R) :
 theorem mul_add' (z1 z2 z3 : ZornMatrix R) :
     z1 * (z2 + z3) = z1 * z2 + z1 * z3 := by
   apply ZornMatrix.ext
-  · simp [mul_def, mul, dot, cross]; ring
-  · simp [mul_def, mul, dot, cross]; ring
-  · funext i; fin_cases i <;> simp [mul_def, mul, dot, cross] <;> ring
-  · funext i; fin_cases i <;> simp [mul_def, mul, dot, cross] <;> ring
+  · simp [mul_def, mul, dot, cross]; noncomm_ring
+  · simp [mul_def, mul, dot, cross]; noncomm_ring
+  · funext i; fin_cases i <;> simp [mul_def, mul, dot, cross] <;> noncomm_ring
+  · funext i; fin_cases i <;> simp [mul_def, mul, dot, cross] <;> noncomm_ring
 
 theorem add_mul' (z1 z2 z3 : ZornMatrix R) :
     (z1 + z2) * z3 = z1 * z3 + z2 * z3 := by
   apply ZornMatrix.ext
-  · simp [mul_def, mul, dot, cross]; ring
-  · simp [mul_def, mul, dot, cross]; ring
-  · funext i; fin_cases i <;> simp [mul_def, mul, dot, cross] <;> ring
-  · funext i; fin_cases i <;> simp [mul_def, mul, dot, cross] <;> ring
+  · simp [mul_def, mul, dot, cross]; noncomm_ring
+  · simp [mul_def, mul, dot, cross]; noncomm_ring
+  · funext i; fin_cases i <;> simp [mul_def, mul, dot, cross] <;> noncomm_ring
+  · funext i; fin_cases i <;> simp [mul_def, mul, dot, cross] <;> noncomm_ring
+
+/-- The Zorn norm function mapping `z ↦ a * b - x ⋅ y` over any ring `R`. -/
+def zornNormFun (z : ZornMatrix R) : R :=
+  z.a * z.b - dot z.x z.y
+
+/-- Over a general non-commutative ring `R`, `zornNormFun z - zornNormFun (zornConj z)`
+is the exact scalar commutator `[z.a, z.b] = z.a * z.b - z.b * z.a`. -/
+theorem zornNormFun_sub_conj_eq_commutator (z : ZornMatrix R) :
+    zornNormFun z - zornNormFun (zornConj z) = z.a * z.b - z.b * z.a := by
+  simp [zornNormFun, zornConj, dot]
+
+/-- Direct sum of the two chiral Zorn carriers over any ring `R`. -/
+abbrev DiracSpinor16 := ZornMatrix R × ZornMatrix R
+
+def cliffordMinus (V Ψ : ZornMatrix R) : ZornMatrix R :=
+  V * Ψ
+
+def cliffordPlus (V Ψ : ZornMatrix R) : ZornMatrix R :=
+  zornConj V * Ψ
+
+end NoncommRing
+
+variable {R : Type*} [CommRing R]
+
+attribute [local simp] smul_a smul_b smul_x smul_y add_a add_b add_x add_y sub_a sub_b sub_x sub_y Pi.smul_apply Pi.add_apply Pi.sub_apply Pi.neg_apply Matrix.vecHead Matrix.vecTail Matrix.cons_val_zero Matrix.cons_val_one Matrix.cons_val_two Matrix.cons_val_succ
 
 theorem smul_mul' (c : R) (z1 z2 : ZornMatrix R) :
     (c • z1) * z2 = c • (z1 * z2) := by
@@ -73,10 +106,6 @@ theorem mul_smul' (c : R) (z1 z2 : ZornMatrix R) :
   · funext i; fin_cases i <;> simp [mul_def, mul, dot, cross] <;> ring
   · funext i; fin_cases i <;> simp [mul_def, mul, dot, cross] <;> ring
 
-/-- The Zorn norm quadratic form mapping `z ↦ a * b - x ⋅ y`. -/
-def zornNormFun (z : ZornMatrix R) : R :=
-  z.a * z.b - dot z.x z.y
-
 /-- The Zorn norm as a genuine quadratic form over `R`. -/
 def zornNorm : QuadraticForm R (ZornMatrix R) :=
   QuadraticMap.ofPolar zornNormFun
@@ -88,15 +117,6 @@ theorem zornNorm_apply (z : ZornMatrix R) :
     zornNorm z = zornNormFun z := rfl
 
 /-! ## Carrier and Gamma Operators -/
-
-/-- Direct sum of the two chiral Zorn carriers. -/
-abbrev DiracSpinor16 := ZornMatrix R × ZornMatrix R
-
-def cliffordMinus (V Ψ : ZornMatrix R) : ZornMatrix R :=
-  V * Ψ
-
-def cliffordPlus (V Ψ : ZornMatrix R) : ZornMatrix R :=
-  zornConj V * Ψ
 
 /-- Off-diagonal gamma action associated with a typed vector. -/
 def diracGamma (V : ZornMatrix R) : Module.End R (DiracSpinor16 (R := R)) where

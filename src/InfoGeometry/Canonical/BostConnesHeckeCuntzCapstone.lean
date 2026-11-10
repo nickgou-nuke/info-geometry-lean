@@ -65,7 +65,7 @@ produce a specific Bost-Connes system.
 -/
 structure BundledBostConnesSystem
     (C_comm Op G : Type u)
-    [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
+    [Ring C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
     [Ring Op] [StarRing Op] [Algebra ℂ Op]
     [Group G] [GaloisActionData G] where
   e_rep : GroupElementRepresentation C_comm
@@ -91,7 +91,7 @@ Bost-Connes symmetry-breaking story.
 -/
 theorem bost_connes_hecke_cuntz_symmetry_breaking
     (C_comm Op G Qab : Type u)
-    [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
+    [Ring C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
     [Ring Op] [StarRing Op] [Algebra ℂ Op]
     [Group G] [GaloisActionData G] [MulAction G Qab]
     (bsys : BundledBostConnesSystem C_comm Op G)

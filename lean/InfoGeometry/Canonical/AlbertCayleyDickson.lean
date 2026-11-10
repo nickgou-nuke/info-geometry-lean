@@ -336,7 +336,7 @@ The split-quaternion carrier used as the base algebra for the next Albert step.
 
 This is the canonical `2 × 2` matrix model of split quaternions.
 -/
-abbrev SplitQuaternion (F : Type*) [CommRing F] [StarRing F] :=
+abbrev SplitQuaternion (F : Type*) [Ring F] [StarRing F] :=
   Matrix (Fin 2) (Fin 2) F
 
 /--
@@ -350,7 +350,7 @@ abbrev SplitOctonion (F : Type*) [CommRing F] [StarRing F] :=
 
 namespace SplitQuaternion
 
-variable {F : Type*} [CommRing F] [StarRing F]
+variable {F : Type*} [Ring F] [StarRing F]
 
 /-- Positive diagonal Peirce projector `E_{00}` in `SplitQuaternion F`. -/
 def peircePlus : SplitQuaternion F :=
@@ -406,7 +406,7 @@ theorem mixed_peirce_gram_corner (χ : SplitQuaternion F) :
   rw [star_mul, star_peircePlus]
   simp only [mul_assoc]
 
-theorem trace_mixed_peirce_gram_zero (χ : SplitQuaternion F) :
+theorem trace_mixed_peirce_gram_zero {F : Type*} [CommRing F] [StarRing F] (χ : SplitQuaternion F) :
     Matrix.trace (star (χ * peircePlus) * (χ * peirceMinus)) = 0 := by
   rw [mixed_peirce_gram_corner,
       Matrix.trace_mul_comm (peircePlus * (star χ * χ)) peirceMinus,
@@ -420,19 +420,19 @@ theorem diagonal_peirce_gram_decomposition (χ : SplitQuaternion F) :
   rw [star_mul, star_mul, star_peircePlus, star_peirceMinus]
   simp only [mul_assoc]
 
-theorem trace_peircePlus_sandwich (X : SplitQuaternion F) :
+theorem trace_peircePlus_sandwich {F : Type*} [CommRing F] [StarRing F] (X : SplitQuaternion F) :
     Matrix.trace (peircePlus * X * peircePlus) =
       Matrix.trace (peircePlus * X) := by
   rw [Matrix.trace_mul_comm (peircePlus * X) peircePlus,
       ← mul_assoc, peircePlus_idem]
 
-theorem trace_peirceMinus_sandwich (X : SplitQuaternion F) :
+theorem trace_peirceMinus_sandwich {F : Type*} [CommRing F] [StarRing F] (X : SplitQuaternion F) :
     Matrix.trace (peirceMinus * X * peirceMinus) =
       Matrix.trace (peirceMinus * X) := by
   rw [Matrix.trace_mul_comm (peirceMinus * X) peirceMinus,
       ← mul_assoc, peirceMinus_idem]
 
-theorem trace_peirce_gram_decomposition (χ : SplitQuaternion F) :
+theorem trace_peirce_gram_decomposition {F : Type*} [CommRing F] [StarRing F] (χ : SplitQuaternion F) :
     Matrix.trace (star χ * χ) =
       Matrix.trace (star (χ * peircePlus) * (χ * peircePlus)) +
       Matrix.trace (star (χ * peirceMinus) * (χ * peirceMinus)) := by
@@ -545,28 +545,28 @@ theorem twoSidedHyperbolicLaplace_comp
         hyperbolicKernel (lamR₂ * lamR₁) (muR₂ * muR₁) := by
       rw [hyperbolicKernel_mul, hyperbolicKernel_mul]
 
-@[simp] theorem twoSidedHyperbolicLaplace_peircePlus (lamL muL lamR muR : F) :
+@[simp] theorem twoSidedHyperbolicLaplace_peircePlus {F : Type*} [CommRing F] [StarRing F] (lamL muL lamR muR : F) :
     twoSidedHyperbolicLaplace lamL muL lamR muR (peircePlus : SplitQuaternion F) =
       (lamL * lamR) • peircePlus := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [twoSidedHyperbolicLaplace, hyperbolicKernel, peircePlus, peirceMinus]
 
-@[simp] theorem twoSidedHyperbolicLaplace_peirceMinus (lamL muL lamR muR : F) :
+@[simp] theorem twoSidedHyperbolicLaplace_peirceMinus {F : Type*} [CommRing F] [StarRing F] (lamL muL lamR muR : F) :
     twoSidedHyperbolicLaplace lamL muL lamR muR (peirceMinus : SplitQuaternion F) =
       (muL * muR) • peirceMinus := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [twoSidedHyperbolicLaplace, hyperbolicKernel, peircePlus, peirceMinus]
 
-@[simp] theorem twoSidedHyperbolicLaplace_peirceSeedD (lamL muL lamR muR : F) :
+@[simp] theorem twoSidedHyperbolicLaplace_peirceSeedD {F : Type*} [CommRing F] [StarRing F] (lamL muL lamR muR : F) :
     twoSidedHyperbolicLaplace lamL muL lamR muR (peirceSeedD : SplitQuaternion F) =
       (lamL * muR) • peirceSeedD := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [twoSidedHyperbolicLaplace, hyperbolicKernel, peircePlus, peirceMinus, peirceSeedD]
 
-@[simp] theorem twoSidedHyperbolicLaplace_peirceSeedB (lamL muL lamR muR : F) :
+@[simp] theorem twoSidedHyperbolicLaplace_peirceSeedB {F : Type*} [CommRing F] [StarRing F] (lamL muL lamR muR : F) :
     twoSidedHyperbolicLaplace lamL muL lamR muR (peirceSeedB : SplitQuaternion F) =
       (muL * lamR) • peirceSeedB := by
   ext i j
@@ -586,7 +586,7 @@ theorem peirce_four_sector_decomposition (X : SplitQuaternion F) :
       abel
 
 theorem twoSidedHyperbolicLaplace_sector_decomposition
-    (lamL muL lamR muR : F) (X : SplitQuaternion F) :
+    {F : Type*} [CommRing F] [StarRing F] (lamL muL lamR muR : F) (X : SplitQuaternion F) :
     twoSidedHyperbolicLaplace lamL muL lamR muR X =
       (lamL * lamR) • (peircePlus * X * peircePlus) +
       (muL * muR) • (peirceMinus * X * peirceMinus) +
@@ -598,7 +598,7 @@ theorem twoSidedHyperbolicLaplace_sector_decomposition
   simp only [mul_smul_comm, smul_smul]
   abel
 
-theorem symmetric_twoSidedHyperbolicLaplace_wheel_invariance (u : Fˣ) :
+theorem symmetric_twoSidedHyperbolicLaplace_wheel_invariance {F : Type*} [CommRing F] [StarRing F] (u : Fˣ) :
     twoSidedHyperbolicLaplace (u : F) (↑u⁻¹ : F) (u : F) (↑u⁻¹ : F)
         (peirceSeedD : SplitQuaternion F) = peirceSeedD ∧
       twoSidedHyperbolicLaplace (u : F) (↑u⁻¹ : F) (u : F) (↑u⁻¹ : F)
@@ -613,7 +613,7 @@ theorem symmetric_twoSidedHyperbolicLaplace_wheel_invariance (u : Fˣ) :
   · exact twoSidedHyperbolicLaplace_peircePlus (u : F) (↑u⁻¹ : F) (u : F) (↑u⁻¹ : F)
   · exact twoSidedHyperbolicLaplace_peirceMinus (u : F) (↑u⁻¹ : F) (u : F) (↑u⁻¹ : F)
 
-theorem antisymmetric_twoSidedHyperbolicLaplace_diagonal_invariance (u : Fˣ) :
+theorem antisymmetric_twoSidedHyperbolicLaplace_diagonal_invariance {F : Type*} [CommRing F] [StarRing F] (u : Fˣ) :
     twoSidedHyperbolicLaplace (u : F) (↑u⁻¹ : F) (↑u⁻¹ : F) (u : F)
         (peircePlus : SplitQuaternion F) = peircePlus ∧
       twoSidedHyperbolicLaplace (u : F) (↑u⁻¹ : F) (↑u⁻¹ : F) (u : F)
@@ -628,7 +628,7 @@ theorem antisymmetric_twoSidedHyperbolicLaplace_diagonal_invariance (u : Fˣ) :
   · exact twoSidedHyperbolicLaplace_peirceSeedD (u : F) (↑u⁻¹ : F) (↑u⁻¹ : F) (u : F)
   · exact twoSidedHyperbolicLaplace_peirceSeedB (u : F) (↑u⁻¹ : F) (↑u⁻¹ : F) (u : F)
 
-theorem trace_antisymmetric_twoSidedHyperbolicLaplace (u : Fˣ) (X : SplitQuaternion F) :
+theorem trace_antisymmetric_twoSidedHyperbolicLaplace {F : Type*} [CommRing F] [StarRing F] (u : Fˣ) (X : SplitQuaternion F) :
     Matrix.trace
         (twoSidedHyperbolicLaplace (u : F) (↑u⁻¹ : F) (↑u⁻¹ : F) (u : F) X) =
       Matrix.trace X := by
@@ -715,7 +715,7 @@ theorem bruhatS_and_hexalityU_modular_relations :
   exact ⟨hS2, hU3, by rw [hS2, hU3], hS4, hU6⟩
 
 /-- Zero-hypothesis projective idempotence and orthogonality of `movingPolePlus c s`. -/
-theorem movingPolePlus_projective_idem_and_orth (c s : F) :
+theorem movingPolePlus_projective_idem_and_orth {F : Type*} [CommRing F] [StarRing F] (c s : F) :
     movingPolePlus c s * movingPolePlus c s = (c * c + s * s) • movingPolePlus c s ∧
     movingPolePlus c s * movingPoleMinus c s = 0 ∧
     movingPolePlus c s + movingPoleMinus c s = (c * c + s * s) • (1 : SplitQuaternion F) := by
@@ -727,7 +727,7 @@ theorem movingPolePlus_projective_idem_and_orth (c s : F) :
       ring
 
 /-- Zero-hypothesis homogenized Fubini–Study chordal metric and Mostow fidelity. -/
-theorem movingPolePlus_homogenized_fubini_study_metric (c s : F) :
+theorem movingPolePlus_homogenized_fubini_study_metric {F : Type*} [CommRing F] [StarRing F] (c s : F) :
     (movingPolePlus c s - (c * c + s * s) • peircePlus) *
       (movingPolePlus c s - (c * c + s * s) • peircePlus) =
       (s * s * (c * c + s * s)) • (1 : SplitQuaternion F) ∧
@@ -739,7 +739,7 @@ theorem movingPolePlus_homogenized_fubini_study_metric (c s : F) :
       ring
 
 /-- Zero-hypothesis two-state weak-value sandwiches and linear syzygy. -/
-theorem two_state_weak_sandwich_and_syzygy (c s : F) :
+theorem two_state_weak_sandwich_and_syzygy {F : Type*} [CommRing F] [StarRing F] (c s : F) :
     peircePlus * movingPolePlus c s =
       (c * c) • peircePlus - (c * s) • (peirceSeedD : SplitQuaternion F) ∧
     peircePlus * velocityQ * movingPolePlus c s =
@@ -753,7 +753,7 @@ theorem two_state_weak_sandwich_and_syzygy (c s : F) :
       ring
 
 /-- Zero-hypothesis two-sided hyperbolic Laplace 4-sector eigen-scaling. -/
-theorem twoSidedLaplace_four_sector_scaling (lamL muL lamR muR : F) :
+theorem twoSidedLaplace_four_sector_scaling {F : Type*} [CommRing F] [StarRing F] (lamL muL lamR muR : F) :
     twoSidedLaplace lamL muL lamR muR peircePlus = (lamL * lamR) • peircePlus ∧
     twoSidedLaplace lamL muL lamR muR peirceMinus = (muL * muR) • peirceMinus ∧
     twoSidedLaplace lamL muL lamR muR seedD = (lamL * muR) • seedD ∧
@@ -847,7 +847,7 @@ theorem cartan_spinConnection_spacetimeFrame_split (X : SplitQuaternion F) :
 For any `X, Y : SplitQuaternion F`, the symmetric product `{e(X), e(Y)}` of their odd
 spacetime frame parts is a pure scalar multiple of the identity matrix `1`! -/
 theorem spacetimeFrame_anticommutator_eq_emergentMetric_smul_one
-    (X Y : SplitQuaternion F) :
+    {F : Type*} [CommRing F] [StarRing F] (X Y : SplitQuaternion F) :
     spacetimeFramePart X * spacetimeFramePart Y +
     spacetimeFramePart Y * spacetimeFramePart X =
       emergentMetric X Y • (1 : SplitQuaternion F) := by
@@ -861,7 +861,7 @@ theorem spacetimeFrame_anticommutator_eq_emergentMetric_smul_one
 For any `X, Y : SplitQuaternion F`, the commutator `[e(X), e(Y)]` of their odd spacetime
 frame parts lands purely in the even spin-connection algebra along `polarizationGamma`! -/
 theorem spacetimeFrame_commutator_eq_emergentCurvature_smul_gamma
-    (X Y : SplitQuaternion F) :
+    {F : Type*} [CommRing F] [StarRing F] (X Y : SplitQuaternion F) :
     spacetimeFramePart X * spacetimeFramePart Y -
     spacetimeFramePart Y * spacetimeFramePart X =
       emergentCurvature X Y • (polarizationGamma : SplitQuaternion F) := by
@@ -890,7 +890,7 @@ theorem spinConnection_spacetimeFrame_commutator_in_frame
 Under the antisymmetric two-sided hyperbolic gauge boost `L_{u, u⁻¹, u⁻¹, u}` (`u : Fˣ`),
 both `emergentMetric X Y` and `emergentCurvature X Y` are strictly invariant! -/
 theorem emergentMetric_and_curvature_gauge_invariant
-    (u : Fˣ) (X Y : SplitQuaternion F) :
+    {F : Type*} [CommRing F] [StarRing F] (u : Fˣ) (X Y : SplitQuaternion F) :
     emergentMetric
       (twoSidedHyperbolicLaplace (u : F) (↑u⁻¹ : F) (↑u⁻¹ : F) (u : F) X)
       (twoSidedHyperbolicLaplace (u : F) (↑u⁻¹ : F) (↑u⁻¹ : F) (u : F) Y) =
@@ -944,12 +944,12 @@ theorem singlet_add_triplet_eq_two_smul (X : SplitQuaternion F) :
     Matrix.trace (tripletPart X) = 0 := by
   refine ⟨?_, ?_⟩
   · unfold singletPart tripletPart; abel
-  · simp [tripletPart, Matrix.trace, Matrix.diag, Fin.sum_univ_two]
+  · simp [tripletPart, Matrix.trace, Matrix.diag, Fin.sum_univ_two, two_smul]
 
 /-- **Triplet × Triplet Jordan Anticommutator Lands Purely in the 1D Singlet Sector**:
     For any `X, Y : SplitQuaternion F`, `{tripletPart X, tripletPart Y}` is a pure scalar
     multiple of `1` equal to `trace(tripletPart X * tripletPart Y) • 1`! -/
-theorem tripletPart_anticommutator_in_singlet (X Y : SplitQuaternion F) :
+theorem tripletPart_anticommutator_in_singlet {F : Type*} [CommRing F] [StarRing F] (X Y : SplitQuaternion F) :
     tripletPart X * tripletPart Y + tripletPart Y * tripletPart X =
       Matrix.trace (tripletPart X * tripletPart Y) • (1 : SplitQuaternion F) := by
   ext i j
@@ -959,7 +959,7 @@ theorem tripletPart_anticommutator_in_singlet (X Y : SplitQuaternion F) :
     ring
 
 /-- **Triplet × Triplet Lie Commutator Lands Purely in the 3D Triplet Sector (`trace = 0`)**. -/
-theorem tripletPart_commutator_trace_zero (X Y : SplitQuaternion F) :
+theorem tripletPart_commutator_trace_zero {F : Type*} [CommRing F] [StarRing F] (X Y : SplitQuaternion F) :
     Matrix.trace (tripletPart X * tripletPart Y - tripletPart Y * tripletPart X) = 0 := by
   simp [tripletPart, Matrix.trace, Matrix.diag,
         Matrix.mul_apply, Fin.sum_univ_two]
@@ -969,7 +969,7 @@ theorem tripletPart_commutator_trace_zero (X Y : SplitQuaternion F) :
     For any three operators `X, Y, Z : SplitQuaternion F`, pairing the commutator
     `[tripletPart X, tripletPart Y]` with `tripletPart Z` via the Jordan anticommutator
     lands purely in the 1D Singlet sector `trace([T₁, T₂] * T₃) • 1`! -/
-theorem three_triplet_nambu_bracket_in_singlet (X Y Z : SplitQuaternion F) :
+theorem three_triplet_nambu_bracket_in_singlet {F : Type*} [CommRing F] [StarRing F] (X Y Z : SplitQuaternion F) :
     (tripletPart X * tripletPart Y - tripletPart Y * tripletPart X) * tripletPart Z +
     tripletPart Z * (tripletPart X * tripletPart Y - tripletPart Y * tripletPart X) =
       Matrix.trace ((tripletPart X * tripletPart Y - tripletPart Y * tripletPart X) *
@@ -1012,7 +1012,7 @@ theorem trace_star_mul_self_eq_sum_sq (χ : SplitQuaternion F) :
     Matrix.trace (star χ * χ) =
       χ 0 0 * χ 0 0 + χ 0 1 * χ 0 1 + χ 1 0 * χ 1 0 + χ 1 1 * χ 1 1 := by
   simp [Matrix.trace, Fin.sum_univ_two, Matrix.mul_apply]
-  ring
+  abel
 
 /-- Zero-hypothesis sum-of-squares expansion of the positive right-isospin sector Gram trace. -/
 theorem trace_star_mul_self_peircePlus_eq_sum_sq (χ : SplitQuaternion F) :
@@ -1045,7 +1045,7 @@ theorem trace_star_mul_self_peirceMinus_nonneg (χ : SplitQuaternion F) :
   exact add_nonneg (mul_self_nonneg (χ 0 1)) (mul_self_nonneg (χ 1 1))
 
 /-- Zero-hypothesis nonnegativity of the full Hilbert–Schmidt Gram trace on `SplitQuaternion F`. -/
-theorem trace_star_mul_self_nonneg (χ : SplitQuaternion F) :
+theorem trace_star_mul_self_nonneg {F : Type*} [CommRing F] [StarRing F] [LinearOrder F] [IsStrictOrderedRing F] [TrivialStar F] (χ : SplitQuaternion F) :
     0 ≤ Matrix.trace (star χ * χ) := by
   rw [trace_peirce_gram_decomposition]
   exact add_nonneg
@@ -1148,6 +1148,8 @@ theorem porter_parabolic_noncomm_witness :
 /-!
 ### LogCFT Jordan Cell, Multiplicative-to-Additive Monodromy, Temperley–Lieb (`δ = 0`), & Artin Braid Group `B₃`
 -/
+
+variable {F : Type*} [CommRing F] [StarRing F]
 
 /-- **Indecomposable LogCFT Jordan Cell (`logCftJordanCell h x = h • 1 + x • d`)**. -/
 def logCftJordanCell (h x : F) : SplitQuaternion F :=

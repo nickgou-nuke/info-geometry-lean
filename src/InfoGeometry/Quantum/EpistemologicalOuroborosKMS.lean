@@ -33,7 +33,7 @@ This module formalizes the meta-recursive synthesis:
    - Unification of the Dirac syntax graph, homological exactness, and thermal KMS branching.
 -/
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Graph Dirac operator D = d + δ -/
 def graphDirac (d delta : R) : R :=
@@ -58,9 +58,9 @@ theorem graph_dirac_sq_eq_hodge_laplacian (d delta : R)
     (graphDirac d delta) * (graphDirac d delta) = hodgeLaplacian d delta := by
   unfold graphDirac hodgeLaplacian
   calc (d + delta) * (d + delta)
-    _ = d * d + d * delta + delta * d + delta * delta := by ring
+    _ = d * d + d * delta + delta * d + delta * delta := by noncomm_ring
     _ = 0 + d * delta + delta * d + 0 := by rw [hd, hdelta]
-    _ = d * delta + delta * d := by ring
+    _ = d * delta + delta * d := by simp
 
 /-- 🏆 THEOREM 2: Chiral Grading Anticommutation with Graph Dirac Operator
     If {Γ, d} = 0 and {Γ, δ} = 0, then {Γ, D} = 0. -/
@@ -70,9 +70,9 @@ theorem chiral_grading_anticommutes_dirac (d delta gamma : R)
     anticommutator gamma (graphDirac d delta) = 0 := by
   unfold anticommutator graphDirac at *
   calc gamma * (d + delta) + (d + delta) * gamma
-    _ = (gamma * d + d * gamma) + (gamma * delta + delta * gamma) := by ring
+    _ = (gamma * d + d * gamma) + (gamma * delta + delta * gamma) := by noncomm_ring
     _ = 0 + 0 := by rw [hd, hdelta]
-    _ = 0 := by ring
+    _ = 0 := by simp
 
 /-- 🏆 THEOREM 3: KMS Modular Weight Ground State Normalization -/
 theorem kms_modular_weight_one (β : ℝ) :

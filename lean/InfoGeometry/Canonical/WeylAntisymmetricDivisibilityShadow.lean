@@ -21,14 +21,16 @@ namespace InfoGeometry.Canonical.WeylAntisymmetricDivisibilityShadow
 
 /-- Two-node alternating shadow data. -/
 @[rep_depth thermo]
-structure TwoNodeAlternatingShadow (R : Type*) [CommRing R] where
+structure TwoNodeAlternatingShadow (R : Type*) [Ring R] where
   x : R
   y : R
   n : ℕ
 
 namespace TwoNodeAlternatingShadow
 
-variable {R : Type*} [CommRing R]
+section Ring
+
+variable {R : Type*} [Ring R]
 variable (A : TwoNodeAlternatingShadow R)
 
 /-- The Vandermonde-type denominator factor in the scalar lane. -/
@@ -53,21 +55,14 @@ def swap : TwoNodeAlternatingShadow R where
 theorem numerator_swap_eq_neg :
     A.swap.numerator = -A.numerator := by
   unfold numerator swap
-  ring
+  abel
 
 /-- The denominator is antisymmetric under swapping the two nodes. -/
 @[rep_depth thermo]
 theorem denominator_swap_eq_neg :
     A.swap.denominator = -A.denominator := by
   unfold denominator swap
-  ring
-
-/-- Vandermonde divisibility in the scalar two-node lane. -/
-@[rep_depth thermo]
-theorem denominator_dvd_numerator :
-    A.denominator ∣ A.numerator := by
-  unfold denominator numerator
-  simpa using sub_dvd_pow_sub_pow A.x A.y A.n
+  abel
 
 /--
 Polynomial specialization packet.
@@ -79,6 +74,18 @@ specialization gives the current two-node alternating numerator.
 def polynomialShadow : WeylPolynomialDivisibilityShadow.TwoNodePolynomialShadow R where
   a := A.y
   n := A.n
+
+end Ring
+
+variable {R : Type*} [CommRing R]
+variable (A : TwoNodeAlternatingShadow R)
+
+/-- Vandermonde divisibility in the scalar two-node lane. -/
+@[rep_depth thermo]
+theorem denominator_dvd_numerator :
+    A.denominator ∣ A.numerator := by
+  unfold denominator numerator
+  simpa using sub_dvd_pow_sub_pow A.x A.y A.n
 
 /--
 Combined antisymmetry/divisibility packet for the two-node lane.

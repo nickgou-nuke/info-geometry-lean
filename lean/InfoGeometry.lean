@@ -627,6 +627,7 @@ import InfoGeometry.Algebra.FiveGradedLieClosure
 import InfoGeometry.Algebra.FiveGradedLieJacobi
 import InfoGeometry.Algebra.FiveGradedTKKSpec
 import InfoGeometry.Algebra.FormalSeriesCalculus
+import InfoGeometry.Algebra.FourthRootClockShift
 import InfoGeometry.Algebra.FourthRootPeirceProjectors
 import InfoGeometry.Algebra.FourthRootSpectralProjectors
 import InfoGeometry.Algebra.FractalScaleTransport
@@ -729,6 +730,8 @@ import InfoGeometry.Algebra.MadelungDerivation
 import InfoGeometry.Algebra.MadelungDerivationTests
 import InfoGeometry.Algebra.MadelungLogDensityCalculus
 import InfoGeometry.Algebra.MadelungProofDependency
+import InfoGeometry.Algebra.MajoranaClockReencoding
+import InfoGeometry.Algebra.MajoranaQuartic
 import InfoGeometry.Algebra.ManivelG2SplitOctonions
 import InfoGeometry.Algebra.ManivelMagicSquare
 import InfoGeometry.Algebra.MatrixCyclotomics
@@ -9229,6 +9232,7 @@ import InfoGeometry.Quantum.KrausInvariantGeometry
 import InfoGeometry.Quantum.LogJordanKreinCore
 import InfoGeometry.Quantum.MajoranaKramersPairingCanonical
 import InfoGeometry.Quantum.MajoranaPfaffianBridge
+import InfoGeometry.Quantum.MajoranaQuarticFour
 import InfoGeometry.Quantum.MajoranaVacuumWickFour
 import InfoGeometry.Quantum.MathieuMoonshineMockTheta
 import InfoGeometry.Quantum.MatrixFourierSL2Representation

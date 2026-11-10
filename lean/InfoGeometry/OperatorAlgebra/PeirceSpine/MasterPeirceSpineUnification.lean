@@ -203,7 +203,7 @@ theorem de_haro_seiberg_witten_finite_peirce_dilation_synthesis
   have h_md := monopole_dyon_orthogonality P1 P2 X Y h1 h2 h12 h21
   have h_ct := threeHorizonCornerScaling_transition_action P1 P2 r rinv W X Z h1 h2 h12 h21
   have h_eq := exact_duality_and_theoretical_equivalence tr.tr tr.cyclic P1 P2 X Y h1 h2 h12 h21
-  have h_tr := cyclic_trace_vanishes_on_peirce_shells tr.tr tr.cyclic P1 P2 X Y h1 h2 h12 h21
+  have h_tr := cyclic_trace_vanishes_on_peirce_shells tr P1 P2 X Y h1 h2 h12 h21
   exact ⟨rfl,
          h_qd.1, h_qd.2.1, h_qd.2.2.1,
          h_md.2.2.1, h_md.2.2.2.1, h_md.2.2.2.2,
@@ -448,7 +448,7 @@ theorem epistemic_gap_closure_bregman_hodge_virasoro_crossed_product_synthesis
          (P1 * X * waistProjector P1 P2 * Y * P2) *
          threeHorizonCornerScaling P1 P2 r1inv r1) := by
   have hHod :=
-    three_sector_algebraic_hodge_peirce_cochain_and_formal_adjoint tr.tr tr.cyclic P1 P2 X Y A Z h1 h2 h12 h21
+    three_sector_algebraic_hodge_peirce_cochain_and_formal_adjoint tr P1 P2 X Y A Z h1 h2 h12 h21
   have hFive :=
     five_grade_peirce_resolution_and_weyl_eigenvalues P1 P2 Z h1 h2 h12 h21
   have hCech :=

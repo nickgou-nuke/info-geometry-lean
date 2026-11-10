@@ -45,7 +45,7 @@ open InfoGeometry.Topology.ZornSixthRootCubicChargeTopological
 
 noncomputable section
 
-variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
+variable {𝕜 : Type*} [Field 𝕜]
 
 /-- Complex Zorn octonionic matrix carrier. -/
 abbrev Zorn := InfoGeometry.Canonical.ZornMatrix ℂ

@@ -24,7 +24,7 @@ namespace InfoGeometry.Canonical.ExteriorContractionOperatorBridge
 
 open ExteriorAlgebra
 
-variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
+variable {R V : Type*} [CommRing R] [AddCommMonoid V] [Module R V]
 
 /-- Contraction by a genuine linear functional on the exterior-algebra carrier. -/
 def contractionOp (lambda : V →ₗ[R] R) :

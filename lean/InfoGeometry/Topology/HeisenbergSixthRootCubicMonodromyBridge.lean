@@ -49,7 +49,7 @@ open InfoGeometry.Topology.ZornSixthRootCubicChargeTopological
 
 noncomputable section
 
-variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
+variable {𝕜 : Type*} [Field 𝕜]
 
 /-- The cubic-root parameter induced by squaring a sixth-root parameter. -/
 def effectiveCubicRootParameter (q : SixthRootParameter) : CubicRootParameter :=

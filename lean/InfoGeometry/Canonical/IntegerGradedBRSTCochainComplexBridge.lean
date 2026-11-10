@@ -21,7 +21,7 @@ open InfoGeometry.Canonical.GhostNumberGradedBRSTCohomologyBridge
 open InfoGeometry.Canonical.GradedBRSTOperatorSequenceBridge
 open InfoGeometry.Canonical.GradedBRSTCochainComplexBridge
 
-variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
+variable {R V : Type*} [CommRing R] [AddCommMonoid V] [Module R V]
 
 /-- **Definition**: Integer-Indexed Ghost Eigenspace E^g for Integer Ghost Numbers g : ℤ. -/
 def integerGhostEigenspace

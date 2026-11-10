@@ -416,7 +416,7 @@ theorem fermion_first_spectral_triple_unmasking
     abel
 
 /--
-**Fence `#70` (`autopoietic_lax_flow_and_constants_of_motion`, lifted to `[Ring B]` with `0 sorry`):**
+**Fence `#70` (`autopoietic_lax_flow_and_constants_of_motion`, lifted to `[Ring B]`):**
 Under the Lax Hamiltonian `V = -[P, X]²`, `P, J, Φ, Σ` are strictly conserved (`[V, ·] = 0`),
 and under any `CyclicTrace B M`, the variational gradient satisfies
 `tr(V(P, X + dX) - V(P, X) - V(P, dX)) = 2 • tr(Φ dX)`.
@@ -557,7 +557,7 @@ theorem arrow_of_time_requires_open_system
   abel
 
 /--
-**Fence `#82` (`recoiling_observer_and_geometric_phase`, `0 sorry`):**
+**Fence `#82` (`recoiling_observer_and_geometric_phase`):**
 For any moving projector `P² = P` with `dP * P + P * dP = dP`, the recoil is strictly
 off-diagonal (`P * dP * P = 0`), satisfies `[P, [P, dP]] = dP`, `[P, Gamma_obs] = dP`,
 `[Gamma_obs, P] = - dP`, and `[Gamma_Kato, P] = dP`.
@@ -716,7 +716,7 @@ theorem dark_matter_is_the_waist_condensate
   exact ⟨h_P0, h_amp.1, h_amp.2.1, h_amp.2.2.1, h_amp.2.2.2, h_bare⟩
 
 /--
-**Fence `#91` (`action_gradient_descent_is_thermodynamic_decay`, `0 sorry`):**
+**Fence `#91` (`action_gradient_descent_is_thermodynamic_decay`):**
 Under the IKKT/Connes gradient descent flow `D(P) = 0` and `D(X) = -2 Φ`, the geometric
 frame undergoes exact exponential decay: `D(J) = -2 J`, `D(Φ) = -2 Φ`, and `D(V) = -4 V`.
 -/

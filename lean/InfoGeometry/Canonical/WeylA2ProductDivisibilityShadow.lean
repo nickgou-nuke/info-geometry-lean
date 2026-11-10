@@ -27,7 +27,7 @@ open InfoGeometry.Canonical.WeylPolynomialDivisibilityShadow
 
 /-- Three-node product divisibility data. -/
 @[rep_depth thermo]
-structure ThreeNodePolynomialShadow (R : Type*) [CommRing R] where
+structure ThreeNodePolynomialShadow (R : Type*) [CommSemiring R] where
   a : R
   b : R
   c : R
@@ -40,13 +40,16 @@ variable (P : ThreeNodePolynomialShadow R)
 
 /-- The three constituent two-node shadows. -/
 @[rep_depth thermo]
-def shadowA : TwoNodePolynomialShadow R := { a := P.a, n := P.n }
+def shadowA {R₀ : Type*} [CommSemiring R₀] (P₀ : ThreeNodePolynomialShadow R₀) : TwoNodePolynomialShadow R₀ :=
+  { a := P₀.a, n := P₀.n }
 
 @[rep_depth thermo]
-def shadowB : TwoNodePolynomialShadow R := { a := P.b, n := P.n }
+def shadowB {R₀ : Type*} [CommSemiring R₀] (P₀ : ThreeNodePolynomialShadow R₀) : TwoNodePolynomialShadow R₀ :=
+  { a := P₀.b, n := P₀.n }
 
 @[rep_depth thermo]
-def shadowC : TwoNodePolynomialShadow R := { a := P.c, n := P.n }
+def shadowC {R₀ : Type*} [CommSemiring R₀] (P₀ : ThreeNodePolynomialShadow R₀) : TwoNodePolynomialShadow R₀ :=
+  { a := P₀.c, n := P₀.n }
 
 /-- Product denominator assembled from the three two-node factors. -/
 @[rep_depth thermo]

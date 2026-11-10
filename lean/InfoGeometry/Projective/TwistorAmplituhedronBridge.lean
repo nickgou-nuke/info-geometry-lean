@@ -105,8 +105,8 @@ three-point mixed relation, that target model kills the relation.
 This is not yet a theorem about concrete `d log Q` forms on `F_Q(C^4,3)`.
 -/
 theorem arnold_mixed_relation_kernel_readout
-    (R : Type*) [CommRing R]
-    (M : Type*) [AddCommGroup M] [Module R M]
+    (R : Type*) [CommSemiring R]
+    (M : Type*) [AddCommMonoid M] [Module R M]
     {A : Type*} [Semiring A]
     (w12 w23 w31 : ArnoldExterior R M)
     (φ : ArnoldExterior R M →+* A)

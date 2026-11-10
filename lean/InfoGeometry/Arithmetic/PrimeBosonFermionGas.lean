@@ -20,15 +20,17 @@ namespace InfoGeometry.Arithmetic.PrimeBosonFermionGas
 
 open scoped BigOperators
 
-variable {ι R : Type*} [Field R]
+variable {ι R : Type*}
 
 /-- Finite signed fermion / Möbius Euler factor product. -/
-def signedFermionPartition (S : Finset ι) (x : ι → R) : R :=
+def signedFermionPartition [CommRing R] (S : Finset ι) (x : ι → R) : R :=
   ∏ p ∈ S, (1 - x p)
 
 /-- Finite positive fermion Euler factor product. -/
-def positiveFermionPartition (S : Finset ι) (x : ι → R) : R :=
+def positiveFermionPartition [CommSemiring R] (S : Finset ι) (x : ι → R) : R :=
   ∏ p ∈ S, (1 + x p)
+
+variable [Field R]
 
 /-- Finite boson Euler factor product. -/
 def bosonPartition (S : Finset ι) (x : ι → R) : R :=

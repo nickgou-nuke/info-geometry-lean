@@ -1609,7 +1609,8 @@ theorem master_octacosadic_three_strand_yang_baxter_coagulation
     JW_2 e1 e2 tau * JW_2 e1 e2 tau = (1 - tau) * JW_2 e1 e2 tau ∧
     (g_braid u e1 * g_braid u e2 * g_braid u e1 - g_braid u e2 * g_braid u e1 * g_braid u e2 =
       (u * (1 + u + tau * (u * u))) * H_tl e1 e2) := by
-  exact ⟨OctacosadicBraidNode.oc_poset_chain,
+  have h_oc : OctacosadicBraidNode.OC1_ThreeStrandHalmosAporia < OctacosadicBraidNode.OC2_CubicBraidTransfer := by decide
+  exact ⟨⟨h_oc, OctacosadicBraidNode.oc_poset_chain.2⟩,
          (three_strand_halmos_commutator_aporia e1 e2 e3 h13).2,
          (three_strand_cubic_temperley_lieb_braid_transfer e1 e2 e3 tau he1 he3 h13 h121 h232 h323 h212 htau1 htau3).2.2.2.2.2.2.2,
          (jones_wenzl_second_idempotent_from_halmos_square e1 e2 tau he1 he2 h121 h212 htau1 htau2).2.2.2.2.2.2.2,

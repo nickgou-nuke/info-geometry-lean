@@ -52,17 +52,17 @@ theorem dilationEigenvalue_add (s₁ s₂ : ℂ) :
 /-! ### 2. Invariant Logarithmic de Rham 1-Form -/
 
 /-- Maurer-Cartan / de Rham logarithmic contraction pairing: D ⌟ (dx/x) = 1 -/
-def deRhamLogContraction (dilationScale formWeight : R) : R :=
+def deRhamLogContraction {R : Type*} [Mul R] (dilationScale formWeight : R) : R :=
   dilationScale * formWeight
 
 /-- Contraction is normalized to unit 1 -/
-theorem deRhamLogContraction_unit :
+theorem deRhamLogContraction_unit {R : Type*} [MulOneClass R] :
     deRhamLogContraction (1 : R) (1 : R) = 1 := by
   dsimp [deRhamLogContraction]
-  ring
+  exact mul_one 1
 
 /-- Lie derivative scaling invariance of the logarithmic form: L_D(dx/x) = 0 -/
-def lieDerivativeLogForm (dilationWeight formWeight : R) : R :=
+def lieDerivativeLogForm {R : Type*} [Ring R] (dilationWeight formWeight : R) : R :=
   dilationWeight * formWeight - formWeight * dilationWeight
 
 theorem lieDerivativeLogForm_vanishes (d w : R) :

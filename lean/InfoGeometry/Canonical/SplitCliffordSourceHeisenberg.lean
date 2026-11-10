@@ -94,7 +94,7 @@ universe u
 /-- Eventual positive-mode truncation of the lifted mode family `L.Jlift` for any
 `SplitCurrentLiftDatum`. -/
 theorem truncLift_of_splitCurrentLiftDatum
-    {𝕜 V : Type u} [Field 𝕜] [CharZero 𝕜]
+    {𝕜 V : Type u} [CommRing 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     (L : SplitCliffordSourceCurrent.SplitCurrentLiftDatum (𝕜 := 𝕜) (V := V)) :
     ∀ v : V, ∀ᶠ l : Int in atTop, L.Jlift l v = 0 := by
@@ -103,7 +103,7 @@ theorem truncLift_of_splitCurrentLiftDatum
 
 /-- Mode commutator identity for the canonical infinite current `Jinf 𝕜`. -/
 theorem canonicalInfiniteCurrent_commutator_readout
-    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
+    (𝕜 : Type*) [CommRing 𝕜]
     (m n : Int) :
     ⁅Jinf 𝕜 m, Jinf 𝕜 n⁆ =
       if m + n = 0 then (m : 𝕜) • Kinf 𝕜 else 0 := by
@@ -112,14 +112,14 @@ theorem canonicalInfiniteCurrent_commutator_readout
 
 /-- Fundamental mode pair commutator `⁅Jinf 𝕜 1, Jinf 𝕜 (-1)⁆ = (1 : 𝕜) • Kinf 𝕜`. -/
 theorem canonicalInfiniteCurrent_one_negOne
-    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] :
+    (𝕜 : Type*) [CommRing 𝕜] :
     ⁅Jinf 𝕜 1, Jinf 𝕜 (-1)⁆ = (1 : 𝕜) • Kinf 𝕜 := by
   have h := canonicalInfiniteCurrent_lie_one_neg_one (𝕜 := 𝕜)
   exact h
 
 /-- Centrality of `Kinf 𝕜` in `InfiniteCurrentAlg 𝕜`. -/
 theorem canonicalInfiniteCurrent_central
-    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
+    (𝕜 : Type*) [CommRing 𝕜]
     (Z : InfiniteCurrentAlg 𝕜) :
     ⁅Kinf 𝕜, Z⁆ = 0 := by
   have h := canonicalInfiniteCurrent_lie_central (𝕜 := 𝕜) Z

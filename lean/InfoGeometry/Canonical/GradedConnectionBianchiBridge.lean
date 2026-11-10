@@ -28,7 +28,7 @@ open InfoGeometry.Canonical.NonAbelianCovariantBianchiChernWeilBridge
 
 open BigOperators
 
-variable {R V : Type*} [Field R] [AddCommGroup V] [Module R V] {n : ℕ}
+variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] {n : ℕ}
 
 /-- **Theorem**: Matrix Exterior Derivative Operator Nilpotency d^2 A = 0 Derived Structurally from D.sq_zero. -/
 theorem matrixExteriorDerivative_sq_zero

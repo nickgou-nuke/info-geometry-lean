@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.PeirceSpine.DeHaroModelBundleDualityPoset
+import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
+import InfoGeometry.Canonical.Cl11MatrixTowerTailShift
 
 /-!
 # Operator Möbius Peirce Algebra, Parabolic/Hyperbolic/Elliptic Rotors, Finite Corner Brackets,
@@ -1317,10 +1319,10 @@ theorem virasoroCocycleCoeff12_skew (n m : ℤ) :
   by_cases h : n + m = 0
   · have h' : m + n = 0 := by omega
     have hm : m = -n := by omega
-    rw [if_pos h', if_pos h, hm]
+    simp only [h', h, ↓reduceIte, hm]
     ring
   · have h' : m + n ≠ 0 := by omega
-    rw [if_neg h', if_neg h]
+    simp only [h', h, ↓reduceIte]
     ring
 
 /-- Unconditional 3-mode Lie 2-cocycle Jacobi cyclic identity for `virasoroCocycleCoeff12`:
@@ -1335,12 +1337,12 @@ theorem virasoroCocycleCoeff12_jacobi (n m k : ℤ) :
     have h2 : (m + k) + n = 0 := by omega
     have h3 : (k + n) + m = 0 := by omega
     have hk : k = -(n + m) := by omega
-    rw [if_pos h1, if_pos h2, if_pos h3, hk]
+    simp only [h1, h2, h3, ↓reduceIte, hk]
     ring
   · have h1 : (n + m) + k ≠ 0 := h
     have h2 : (m + k) + n ≠ 0 := by omega
     have h3 : (k + n) + m ≠ 0 := by omega
-    rw [if_neg h1, if_neg h2, if_neg h3]
+    simp only [h1, h2, h3, ↓reduceIte]
     ring
 
 /--
@@ -1369,7 +1371,7 @@ theorem virasoro_cocycle_sl2_vanishing_and_jacobi_identity
     (n - m) • virasoroCocycleOp (n + m) k C_op +
       (m - k) • virasoroCocycleOp (m + k) n C_op +
       (k - n) • virasoroCocycleOp (k + n) m C_op = 0 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  refine ⟨?_, ?_, ?_, ?_, rfl, rfl, ?_⟩
   · dsimp [virasoroCocycleOp]
     rw [virasoroCocycleCoeff12_skew n m, neg_zsmul]
   · change (0 : ℤ) • C_op = 0
@@ -1378,12 +1380,8 @@ theorem virasoro_cocycle_sl2_vanishing_and_jacobi_identity
     exact zero_zsmul C_op
   · change (0 : ℤ) • C_op = 0
     exact zero_zsmul C_op
-  · dsimp [virasoroCocycleOp, virasoroCocycleCoeff12]
-    rfl
-  · dsimp [virasoroCocycleOp, virasoroCocycleCoeff12]
-    rfl
   · dsimp [virasoroCocycleOp]
-    rw [smul_smul, smul_smul, smul_smul, ← add_zsmul, ← add_zsmul,
+    rw [← mul_zsmul, ← mul_zsmul, ← mul_zsmul, ← add_zsmul, ← add_zsmul,
         virasoroCocycleCoeff12_jacobi n m k, zero_zsmul]
 
 /-- All-mode Heisenberg source loop current `J_{+,r} = V^r N_+` in `[Ring B]`. -/
@@ -1512,7 +1510,9 @@ theorem all_mode_sugawara_virasoro_mode_algebra
         _ = (V_met P X Y) ^ (r + s) * (N_plus P X * Sigma_sp P X Y) := by rw [← pow_add, Nat.add_comm]
     rw [h1, h2, ← mul_sub]
     change (V_met P X Y) ^ (r + s) * comm (Sigma_sp P X Y) (N_plus P X) = _
-    rw [hCommSigNp, mul_smul_comm, ← mul_assoc, ← pow_succ]
+    have hzR : ∀ (n : ℤ) (U V : B), U * (n • V) = n • (U * V) :=
+      fun n U V => map_zsmul (AddMonoidHom.mk' (fun v => U * v) (fun x y => mul_add U x y)) n V
+    rw [hCommSigNp, hzR, ← mul_assoc, ← pow_succ]
   · dsimp [virasoroChiralMode, sugawaraSinkMode, comm]
     have h1 : ((V_met P X Y) ^ r * Sigma_sp P X Y) * (N_minus P Y * (V_met P X Y) ^ s) =
         (Sigma_sp P X Y * N_minus P Y) * (V_met P X Y) ^ (r + s) := by
@@ -1537,12 +1537,11 @@ theorem all_mode_sugawara_virasoro_mode_algebra
             rw [← hSigVk (r + s)]; noncomm_ring
     rw [h1, h2, ← sub_mul]
     change comm (Sigma_sp P X Y) (N_minus P Y) * (V_met P X Y) ^ (r + s) = _
-    rw [hCommSigNm, smul_mul_assoc, mul_assoc, ← pow_succ']
+    have hzL : ∀ (n : ℤ) (U V : B), (n • U) * V = n • (U * V) :=
+      fun n U V => map_zsmul (AddMonoidHom.mk' (fun u => u * V) (fun x y => add_mul x y V)) n U
+    rw [hCommSigNm, hzL, mul_assoc, ← pow_succ']
   · dsimp [virasoroEvenMode]
-    calc ((V_met P X Y) ^ r * V_met P X Y) * ((V_met P X Y) ^ s * V_met P X Y)
-        = ((V_met P X Y) ^ r * (V_met P X Y) ^ s * V_met P X Y) * V_met P X Y := by noncomm_ring
-      _ = ((V_met P X Y) ^ (r + s) * V_met P X Y) * V_met P X Y := by rw [← pow_add]
-      _ = (V_met P X Y) ^ (r + s + 1) * V_met P X Y := by rw [← pow_succ]
+    rw [← pow_succ (V_met P X Y) r, ← mul_assoc, ← pow_add, Nat.add_right_comm]
   · dsimp [virasoroChiralMode, virasoroEvenMode]
     calc ((V_met P X Y) ^ r * Sigma_sp P X Y) * ((V_met P X Y) ^ s * Sigma_sp P X Y)
         = (V_met P X Y) ^ r * (Sigma_sp P X Y * (V_met P X Y) ^ s) * Sigma_sp P X Y := by noncomm_ring
@@ -1692,6 +1691,7 @@ theorem lie_exponential_nilpotent_group_law_and_eisenstein_discriminant
   · dsimp only [eisensteinRamanujanDiscriminant]
     noncomm_ring
   · dsimp only [eisensteinRamanujanDiscriminant]
+    simp only [zsmul_eq_mul, Int.cast_ofNat]
     noncomm_ring
 
 -- ============================================================================
@@ -1737,9 +1737,14 @@ theorem virasoro_central_charge_24_arithmetic
     dsimp [Phi_v, V_met, Q_pos, Q_neg, N_plus, N_minus]; amari_peirce_nf hP
   have hJV : J_mc P X Y * V_met P X Y = V_met P X Y * J_mc P X Y := by
     dsimp [J_mc, V_met, Q_pos, Q_neg, N_plus, N_minus]; amari_peirce_nf hP
+  have hzL : ∀ (n : ℤ) (U V : B), (n • U) * V = n • (U * V) :=
+    fun n U V => map_zsmul (AddMonoidHom.mk' (fun u => u * V) (fun x y => add_mul x y V)) n U
+  have hzR : ∀ (n : ℤ) (U V : B), U * (n • V) = n • (U * V) :=
+    fun n U V => map_zsmul (AddMonoidHom.mk' (fun v => U * v) (fun x y => mul_add U x y)) n V
   refine ⟨?_, ?_, ?_, ?_, ?_, rfl, rfl, ?_, ?_, ?_⟩
   · dsimp [VirasoroAnomaly24, virasoroCocycleOp, virasoroCocycleCoeff12]
-    rw [if_pos (add_neg_cancel m)]
+    have h0 : m + -m = 0 := add_neg_cancel m
+    simp only [h0, ↓reduceIte]
   · dsimp [VirasoroAnomaly24]
     have h_odd : (-m) * (-m) * (-m) - (-m) = - (m * m * m - m) := by ring
     rw [h_odd, neg_zsmul]
@@ -1747,11 +1752,11 @@ theorem virasoro_central_charge_24_arithmetic
   · change (0 : ℤ) • V_met P X Y = 0; exact zero_zsmul _
   · change (0 : ℤ) • V_met P X Y = 0; exact zero_zsmul _
   · dsimp [VirasoroAnomaly24, comm]
-    rw [mul_smul_comm, smul_mul_assoc, hSV, sub_self]
+    rw [hzR, hzL, hSV, sub_self]
   · dsimp [VirasoroAnomaly24, comm]
-    rw [mul_smul_comm, smul_mul_assoc, hPhiV, sub_self]
+    rw [hzR, hzL, hPhiV, sub_self]
   · dsimp [VirasoroAnomaly24, comm]
-    rw [mul_smul_comm, smul_mul_assoc, hJV, sub_self]
+    rw [hzR, hzL, hJV, sub_self]
 
 /-- **Unit-Metric Tetractys Modular & Steinberg–Cyclotomic-24 Presentation (`tetractys_generates_sl2_z`):**
 When `V_met P X Y = 1` in `[Ring B]`, the Tetractys operators `S = modularInversionOp P X Y = -J_mc P X Y`,
@@ -1832,12 +1837,16 @@ theorem moonshine_operator_dimensions
     dsimp [Phi_v, V_met, Q_pos, Q_neg, N_plus, N_minus]; amari_peirce_nf hP
   have hJV : J_mc P X Y * V_met P X Y = V_met P X Y * J_mc P X Y := by
     dsimp [J_mc, V_met, Q_pos, Q_neg, N_plus, N_minus]; amari_peirce_nf hP
+  have hzL : ∀ (n : ℤ) (U V : B), (n • U) * V = n • (U * V) :=
+    fun n U V => map_zsmul (AddMonoidHom.mk' (fun u => u * V) (fun x y => add_mul x y V)) n U
+  have hzR : ∀ (n : ℤ) (U V : B), U * (n • V) = n • (U * V) :=
+    fun n U V => map_zsmul (AddMonoidHom.mk' (fun v => U * v) (fun x y => mul_add U x y)) n V
   refine ⟨rfl, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · dsimp [comm]; rw [mul_smul_comm, smul_mul_assoc, hPhiV, sub_self]
-  · dsimp [comm]; rw [mul_smul_comm, smul_mul_assoc, hJV, sub_self]
-  · dsimp [comm]; rw [mul_smul_comm, smul_mul_assoc, hPhiV, sub_self]
-  · dsimp [comm]; rw [mul_smul_comm, smul_mul_assoc, hPhiV, sub_self]
-  · dsimp [VirasoroAnomaly24]; rw [smul_smul]; rfl
+  · dsimp [comm]; rw [hzR, hzL, hPhiV, sub_self]
+  · dsimp [comm]; rw [hzR, hzL, hJV, sub_self]
+  · dsimp [comm]; rw [hzR, hzL, hPhiV, sub_self]
+  · dsimp [comm]; rw [hzR, hzL, hPhiV, sub_self]
+  · dsimp [VirasoroAnomaly24]; rw [← mul_zsmul]; rfl
   · rw [← add_zsmul]; rfl
 
 /-- **Five-Graded Virasoro–Witt Peirce Tower & Scale-6/Scale-24 Cocycle Evaluations (`five_graded_virasoro_witt_tower_commutation`):**
@@ -1876,5 +1885,151 @@ theorem five_graded_virasoro_witt_tower_commutation
     ⟨hA1, hA2, hA3, hA4, hA5, hA6, hA7, hA8, hA9, hA10, hA11, hA12, hA13, hA14, hA15⟩
   exact ⟨hA1, hA2, hA3, hA4, hA5, hA6, hA7, hA8, hA9, hA10,
          hA11, hA12, hA13, hA14, hA15, rfl, rfl⟩
+
+-- ============================================================================
+-- 13. GENUINE MATHLIB `_root_.DirectLimit` (`DirectLimitSuperClosure`) AND
+--     CLIFFORD TENSOR-TOWER FINITE-HEAD × INFINITE-TAIL (`BaseLimit ≃+* TailLimit k`)
+-- ============================================================================
+
+open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
+open InfoGeometry.Clifford.Cl11TensorTower
+open InfoGeometry.Clifford.Cl11TensorTowerLimit
+open InfoGeometry.Canonical.Cl11MatrixTowerTailShift
+
+/-- **Genuine Mathlib `_root_.DirectLimit` (`DirectLimitSuperClosure`) Realization of the
+Sugawara–Heisenberg–Virasoro & 5-Graded Virasoro–Witt Tower
+(`virasoro_sugawara_direct_limit_super_closure_realization`):**
+For any one-step directed system of non-commutative operator rings `Stage : ℕ → Type u`
+`[∀ k, Ring (Stage k)]` with bonding ring homomorphisms `bond : ∀ k, Stage k →+* Stage (k + 1)`,
+let `DirectLimitSuperClosure bond := _root_.DirectLimit Stage (fun m n h => bondMap bond m n h)`
+be the genuine Mathlib algebraic direct-limit ring with canonical stage injections
+`directLimitOf bond k : Stage k →+* DirectLimitSuperClosure bond`:
+1. **Iterated Stage-to-Stage & Colimit Coherence (`k ≤ n`):**
+   Advancing a finite-moduli head cut from stage `k` to any deeper stage `n` (`hkn : k ≤ n`) via
+   the iterated bonding map `bondMap bond k n hkn` and injecting into `DirectLimitSuperClosure bond`
+   yields the exact same colimit operators as injecting at stage `k`:
+   - `directLimitOf bond n (bondMap bond k n hkn (virasoroChiralMode r P X Y)) = virasoroChiralMode r P_∞ X_∞ Y_∞`,
+   - `directLimitOf bond n (bondMap bond k n hkn (VirasoroAnomaly24 m P X Y)) = VirasoroAnomaly24 m P_∞ X_∞ Y_∞`,
+   - `directLimitOf bond n (bondMap bond k n hkn (L5_neg2 P1 P2 X)) = L5_neg2 P1_∞ P2_∞ X_∞`.
+2. **All-Mode Sugawara–Virasoro & 5-Graded Virasoro–Witt Algebra in `_root_.DirectLimit`:**
+   In the infinite colimit ring `DirectLimitSuperClosure bond`, `P_∞ = directLimitOf bond k P`,
+   `X_∞ = directLimitOf bond k X`, `Y_∞ = directLimitOf bond k Y` satisfy the full all-mode
+   Sugawara–Heisenberg–Virasoro commutator algebra, the Grade-3 Scale-24 Virasoro anomaly
+   `VirasoroAnomaly24 3 P_∞ X_∞ Y_∞ = (24 : ℤ) • V_met P_∞ X_∞ Y_∞`, and the 5-graded
+   Virasoro–Witt commutator `[L₂, L₋₂] = L₀ * V₂`.
+3. **Faithful Injection Under Injective Head-to-Tail Bonds:**
+   When every one-step bond `bond s` is injective (`hinj : ∀ s, Function.Injective (bond s)`),
+   `directLimitOf bond k (VirasoroAnomaly24 m P X Y) = 0 ↔ VirasoroAnomaly24 m P X Y = 0`. -/
+theorem virasoro_sugawara_direct_limit_super_closure_realization
+    {Stage : ℕ → Type u} [∀ k, Ring (Stage k)]
+    (bond : ∀ k : ℕ, Stage k →+* Stage (k + 1))
+    (hinj : ∀ k : ℕ, Function.Injective (bond k))
+    (k n r s : ℕ) (hkn : k ≤ n) (m : ℤ)
+    (P X Y P1 P2 : Stage k)
+    (hP : P * P = P)
+    (h1 : P1 * P1 = P1) (h2 : P2 * P2 = P2)
+    (h12 : P1 * P2 = 0) (h21 : P2 * P1 = 0) :
+    let P_inf  := directLimitOf bond k P
+    let X_inf  := directLimitOf bond k X
+    let Y_inf  := directLimitOf bond k Y
+    let P1_inf := directLimitOf bond k P1
+    let P2_inf := directLimitOf bond k P2
+    directLimitOf bond n (bondMap bond k n hkn (virasoroChiralMode r P X Y)) =
+      virasoroChiralMode r P_inf X_inf Y_inf ∧
+    directLimitOf bond n (bondMap bond k n hkn (VirasoroAnomaly24 m P X Y)) =
+      VirasoroAnomaly24 m P_inf X_inf Y_inf ∧
+    directLimitOf bond n (bondMap bond k n hkn (L5_neg2 P1 P2 X)) =
+      L5_neg2 P1_inf P2_inf X_inf ∧
+    comm (sugawaraSourceMode r P_inf X_inf Y_inf) (sugawaraSinkMode s P_inf X_inf Y_inf) =
+      virasoroChiralMode (r + s) P_inf X_inf Y_inf ∧
+    comm (virasoroChiralMode r P_inf X_inf Y_inf) (sugawaraSourceMode s P_inf X_inf Y_inf) =
+      (2 : ℤ) • sugawaraSourceMode (r + s + 1) P_inf X_inf Y_inf ∧
+    comm (virasoroChiralMode r P_inf X_inf Y_inf) (sugawaraSinkMode s P_inf X_inf Y_inf) =
+      -(2 : ℤ) • sugawaraSinkMode (r + s + 1) P_inf X_inf Y_inf ∧
+    VirasoroAnomaly24 3 P_inf X_inf Y_inf = (24 : ℤ) • V_met P_inf X_inf Y_inf ∧
+    comm (L5_pos2 P1_inf P2_inf Y_inf) (L5_neg2 P1_inf P2_inf X_inf) =
+      L5_zero P1_inf P2_inf * V5_grade2 P1_inf P2_inf X_inf Y_inf ∧
+    (directLimitOf bond k (VirasoroAnomaly24 m P X Y) = 0 ↔
+      VirasoroAnomaly24 m P X Y = 0) := by
+  have hCone : ∀ (j : ℕ) (z : Stage j),
+      directLimitOf bond (j + 1) (bond j z) = directLimitOf bond j z :=
+    fun j z => directLimitOf_bond bond j z
+  rcases virasoro_sugawara_colimit_cone_transport bond (directLimitOf bond) hCone
+      k r s P X Y P1 P2 hP h1 h2 h12 h21 with
+    ⟨hC1, _, hL1, hAlg1, hAlg2, hAlg3, hAlgL⟩
+  have hBondC : directLimitOf bond n (bondMap bond k n hkn (virasoroChiralMode r P X Y)) =
+      virasoroChiralMode r (directLimitOf bond k P) (directLimitOf bond k X) (directLimitOf bond k Y) := by
+    rw [directLimitOf_bondMap bond k n hkn, ← hCone k, hC1]
+  have hBondAnom : directLimitOf bond n (bondMap bond k n hkn (VirasoroAnomaly24 m P X Y)) =
+      VirasoroAnomaly24 m (directLimitOf bond k P) (directLimitOf bond k X) (directLimitOf bond k Y) := by
+    rw [directLimitOf_bondMap bond k n hkn]
+    dsimp [VirasoroAnomaly24, V_met, Q_pos, Q_neg, N_plus, N_minus]
+    simp only [map_zsmul, map_add, map_mul, map_sub, map_one]
+  have hBondL : directLimitOf bond n (bondMap bond k n hkn (L5_neg2 P1 P2 X)) =
+      L5_neg2 (directLimitOf bond k P1) (directLimitOf bond k P2) (directLimitOf bond k X) := by
+    rw [directLimitOf_bondMap bond k n hkn, ← hCone k, hL1]
+  have hInj : directLimitOf bond k (VirasoroAnomaly24 m P X Y) = 0 ↔
+      VirasoroAnomaly24 m P X Y = 0 :=
+    directLimitOf_eq_zero_iff_of_injective bond hinj
+  exact ⟨hBondC, hBondAnom, hBondL, hAlg1, hAlg2, hAlg3, rfl, hAlgL, hInj⟩
+
+/-- **Clifford Tensor-Tower Finite-Head × Infinite-Tail (`BaseLimit ≃+* TailLimit k`)
+Sugawara–Virasoro & Tetractys Realization
+(`clifford_head_tail_colimit_tetractys_and_virasoro_realization`):**
+In the Clifford tensor tower `Cl11TensorTowerLimit.Stage n = MatStage n` with one-step Kronecker
+head-to-tail bonding maps `stageBond n : Stage n →+* Stage (n + 1)` (`A ↦ A ⊗ I₂`), full colimit
+ring `Cl11TensorTowerLimit.Limit`, and cofinal infinite tail `TailLimit k` at head-cut depth `k`
+(`cl11MatrixLimit_tailRingEquiv k : Limit ≃+* TailLimit k`):
+1. Advancing any finite-head operator `P, X, Y : Stage n` (`P * P = P`) by one Kronecker step
+   `stageEmbed n` (`A ↦ A ⊗ I₂`) preserves its image in the infinite tail ring `TailLimit k`:
+   `cl11MatrixLimit_tailRingEquiv k (ofStage (n + 1) (stageEmbed n P)) = P_tail`,
+2. The Head-to-Tail ring isomorphism `cl11MatrixLimit_tailRingEquiv k : Limit ≃+* TailLimit k`
+   intertwines `virasoroChiralMode r`, `virasoroEvenMode r`, and `VirasoroAnomaly24 m`,
+3. In the infinite tail ring `TailLimit k`, the transported operators `P_tail, X_tail, Y_tail`
+   satisfy the full all-mode (`r, s : ℕ`) Sugawara–Heisenberg–Virasoro commutator algebra and
+   the Grade-3 Scale-24 Virasoro anomaly `VirasoroAnomaly24 3 P_tail X_tail Y_tail = (24 : ℤ) • V_met P_tail X_tail Y_tail`. -/
+theorem clifford_head_tail_colimit_tetractys_and_virasoro_realization
+    (k n r s : ℕ) (m : ℤ)
+    (P X Y : InfoGeometry.Clifford.Cl11TensorTowerLimit.Stage n)
+    (hP : P * P = P) :
+    let φ_tail := (cl11MatrixLimit_tailRingEquiv k).toRingHom
+    let P_lim  := ofStage n P
+    let X_lim  := ofStage n X
+    let Y_lim  := ofStage n Y
+    let P_tail := φ_tail P_lim
+    let X_tail := φ_tail X_lim
+    let Y_tail := φ_tail Y_lim
+    φ_tail (ofStage (n + 1) (stageEmbed n P)) = P_tail ∧
+    φ_tail (virasoroChiralMode r P_lim X_lim Y_lim) =
+      virasoroChiralMode r P_tail X_tail Y_tail ∧
+    φ_tail (VirasoroAnomaly24 m P_lim X_lim Y_lim) =
+      VirasoroAnomaly24 m P_tail X_tail Y_tail ∧
+    comm (sugawaraSourceMode r P_tail X_tail Y_tail) (sugawaraSinkMode s P_tail X_tail Y_tail) =
+      virasoroChiralMode (r + s) P_tail X_tail Y_tail ∧
+    comm (virasoroChiralMode r P_tail X_tail Y_tail) (sugawaraSourceMode s P_tail X_tail Y_tail) =
+      (2 : ℤ) • sugawaraSourceMode (r + s + 1) P_tail X_tail Y_tail ∧
+    comm (virasoroChiralMode r P_tail X_tail Y_tail) (sugawaraSinkMode s P_tail X_tail Y_tail) =
+      -(2 : ℤ) • sugawaraSinkMode (r + s + 1) P_tail X_tail Y_tail ∧
+    VirasoroAnomaly24 3 P_tail X_tail Y_tail =
+      (24 : ℤ) • V_met P_tail X_tail Y_tail := by
+  set φ_tail := (cl11MatrixLimit_tailRingEquiv k).toRingHom
+  have hP_lim : ofStage n P * ofStage n P = ofStage n P :=
+    limit_idempotent hP
+  have hP_tail : φ_tail (ofStage n P) * φ_tail (ofStage n P) = φ_tail (ofStage n P) := by
+    rw [← map_mul, hP_lim]
+  have hShift : φ_tail (ofStage (n + 1) (stageEmbed n P)) = φ_tail (ofStage n P) := by
+    rw [ofStage_apply_bond]
+  have hMapC : φ_tail (virasoroChiralMode r (ofStage n P) (ofStage n X) (ofStage n Y)) =
+      virasoroChiralMode r (φ_tail (ofStage n P)) (φ_tail (ofStage n X)) (φ_tail (ofStage n Y)) := by
+    dsimp [virasoroChiralMode, V_met, Sigma_sp, Q_pos, Q_neg, N_plus, N_minus]
+    simp only [map_mul, map_pow, map_add, map_sub, map_one]
+  have hMapA : φ_tail (VirasoroAnomaly24 m (ofStage n P) (ofStage n X) (ofStage n Y)) =
+      VirasoroAnomaly24 m (φ_tail (ofStage n P)) (φ_tail (ofStage n X)) (φ_tail (ofStage n Y)) := by
+    dsimp [VirasoroAnomaly24, V_met, Q_pos, Q_neg, N_plus, N_minus]
+    simp only [map_zsmul, map_add, map_mul, map_sub, map_one]
+  rcases all_mode_sugawara_virasoro_mode_algebra
+      (φ_tail (ofStage n P)) (φ_tail (ofStage n X)) (φ_tail (ofStage n Y)) hP_tail r s with
+    ⟨hAlg1, _, hAlg2, hAlg3, _, _⟩
+  exact ⟨hShift, hMapC, hMapA, hAlg1, hAlg2, hAlg3, rfl⟩
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset

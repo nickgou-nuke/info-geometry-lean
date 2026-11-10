@@ -7,6 +7,8 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.Basic
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent
 import InfoGeometry.OperatorAlgebra.PeirceSpine.TwoStateSandwich
 import InfoGeometry.OperatorAlgebra.PeirceSpine.QuantumAffineFlagClusterPoset
+import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
+import InfoGeometry.Canonical.Cl11MatrixTowerTailShift
 
 /-!
 # Stage D₂₈ (Archetypes U₁ → U₅): Peirce Current Modes, Quadratic Stress-Energy Analogue, Mode Products, and Idempotent Recurrence
@@ -882,6 +884,79 @@ theorem uhf_heisenberg_sugawara_virasoro_colimit_cone_transport
       (toLimit s A) (toLimit s C) n m k with ⟨hH1, hH2, hV1, hV2, _, _, _⟩
   refine ⟨hMapTower_lim k P A, ?_, hH1, hH2, hV1, hV2⟩
   rw [← hMapTower_emb k P A, hCone s, hMapTower_lim k P A]
+
+/-- **Genuine Mathlib `_root_.DirectLimit` (`DirectLimitSuperClosure`) and Clifford Tensor-Tower
+Finite-Head × Infinite-Tail (`BaseLimit ≃+* TailLimit k`) Realization of the UHF–Heisenberg–Sugawara–Virasoro Tower
+(`uhf_heisenberg_sugawara_virasoro_direct_limit_and_clifford_tail_realization`):**
+1. For any one-step directed system of non-commutative operator rings `Stage : ℕ → Type u`
+   `[∀ s, Ring (Stage s)]` with bonding ring homomorphisms `bond : ∀ s, Stage s →+* Stage (s + 1)`,
+   let `DirectLimitSuperClosure bond := _root_.DirectLimit Stage (fun m n h => bondMap bond m n h)`
+   be the genuine Mathlib algebraic direct-limit ring with canonical stage injections
+   `directLimitOf bond s : Stage s →+* DirectLimitSuperClosure bond`. Then for any stage `s ≤ t`,
+   the iterated bond `bondMap bond s t hst` commutes with `uhfIdemTower k`, maps to the same
+   colimit idempotent `uhfIdemTower k P_∞ A_∞` in `DirectLimitSuperClosure bond`, and satisfies
+   the full all-mode Heisenberg–Sugawara–Virasoro commutator/anticommutator algebra in
+   `DirectLimitSuperClosure bond`.
+2. In the Clifford tensor tower (`Cl11TensorTowerLimit.Stage`, `Cl11TensorTowerLimit.Limit`,
+   `Cl11MatrixTowerTailShift.TailLimit d` with `cl11MatrixLimit_tailRingEquiv d : Limit ≃+* TailLimit d`),
+   advancing any finite-head idempotent `Q : Cl11TensorTowerLimit.Stage s` (`Q * Q = Q`) by
+   `stageEmbed s` (`A ↦ A ⊗ I₂`) preserves `uhfIdemTower k` in the infinite tail ring `TailLimit d`
+   and satisfies the all-mode Heisenberg–Sugawara–Virasoro algebra in `TailLimit d`. -/
+theorem uhf_heisenberg_sugawara_virasoro_direct_limit_and_clifford_tail_realization
+    {Stage : ℕ → Type u} [∀ s, Ring (Stage s)]
+    (bond : ∀ s : ℕ, Stage s →+* Stage (s + 1))
+    (s t d n m k : ℕ) (hst : s ≤ t)
+    {P : Stage s} (hP : P * P = P) (A C : Stage s)
+    {Q : InfoGeometry.Clifford.Cl11TensorTowerLimit.Stage s} (hQ : Q * Q = Q)
+    (U W : InfoGeometry.Clifford.Cl11TensorTowerLimit.Stage s) :
+    let ofLim  := InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf bond
+    let P_inf  := ofLim s P
+    let A_inf  := ofLim s A
+    let C_inf  := ofLim s C
+    let φ_tail := (InfoGeometry.Canonical.Cl11MatrixTowerTailShift.cl11MatrixLimit_tailRingEquiv d).toRingHom
+    let Q_tail := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage s Q)
+    let U_tail := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage s U)
+    let W_tail := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage s W)
+    ofLim t (InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap bond s t hst (uhfIdemTower k P A)) =
+      uhfIdemTower k P_inf A_inf ∧
+    comm (heisenbergSourceMode n P_inf A_inf C_inf) (heisenbergSinkMode m P_inf A_inf C_inf) =
+      virasoroModeChiral (n + m) P_inf A_inf C_inf ∧
+    comm (virasoroModeChiral n P_inf A_inf C_inf) (heisenbergSourceMode m P_inf A_inf C_inf) =
+      (2 : ℤ) • heisenbergSourceMode (n + m + 1) P_inf A_inf C_inf ∧
+    φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage (s + 1)
+      (uhfIdemTower k (InfoGeometry.Clifford.Cl11TensorTower.stageEmbed s Q)
+        (InfoGeometry.Clifford.Cl11TensorTower.stageEmbed s U))) =
+      uhfIdemTower k Q_tail U_tail ∧
+    comm (heisenbergSourceMode n Q_tail U_tail W_tail) (heisenbergSinkMode m Q_tail U_tail W_tail) =
+      virasoroModeChiral (n + m) Q_tail U_tail W_tail ∧
+    comm (virasoroModeChiral n Q_tail U_tail W_tail) (heisenbergSourceMode m Q_tail U_tail W_tail) =
+      (2 : ℤ) • heisenbergSourceMode (n + m + 1) Q_tail U_tail W_tail := by
+  have hConeDir : ∀ (j : ℕ) (Z : Stage j),
+      InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf bond (j + 1) (bond j Z) =
+        InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf bond j Z :=
+    fun j Z => InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf_bond bond j Z
+  rcases uhf_heisenberg_sugawara_virasoro_colimit_cone_transport
+      bond (InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf bond) hConeDir
+      s hP A C n m k with ⟨hLim1, _, hH1, _, hV1, _⟩
+  have hBond :
+      InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf bond t
+        (InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap bond s t hst (uhfIdemTower k P A)) =
+        uhfIdemTower k (InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf bond s P)
+          (InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf bond s A) := by
+    rw [InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf_bondMap bond s t hst, hLim1]
+  let toTailStage : ∀ j : ℕ, InfoGeometry.Clifford.Cl11TensorTowerLimit.Stage j →+*
+      InfoGeometry.Canonical.Cl11MatrixTowerTailShift.TailLimit d :=
+    fun j => (InfoGeometry.Canonical.Cl11MatrixTowerTailShift.cl11MatrixLimit_tailRingEquiv d).toRingHom.comp
+      (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage j)
+  have hConeTail : ∀ (j : ℕ) (Z : InfoGeometry.Clifford.Cl11TensorTowerLimit.Stage j),
+      toTailStage (j + 1) (InfoGeometry.Clifford.Cl11TensorTowerLimit.stageBond j Z) = toTailStage j Z := by
+    intro j Z
+    dsimp [toTailStage, InfoGeometry.Clifford.Cl11TensorTowerLimit.stageBond]
+    rw [InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage_apply_bond]
+  rcases uhf_heisenberg_sugawara_virasoro_colimit_cone_transport
+      InfoGeometry.Clifford.Cl11TensorTowerLimit.stageBond toTailStage hConeTail
+      s hQ U W n m k with ⟨_, hTail2, hTH1, _, hTV1, _⟩
+  exact ⟨hBond, hH1, hV1, hTail2, hTH1, hTV1⟩
 
 end Primitives
 

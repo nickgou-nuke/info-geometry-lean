@@ -7,6 +7,8 @@ import Mathlib.Algebra.Ring.Defs
 import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.NormNum
+import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
+import InfoGeometry.Canonical.Cl11MatrixTowerTailShift
 
 /-!
 # Intrinsic Geometry of Attention: From Token Difference Routing to Uncertainty (`arXiv:2610.06012`)
@@ -1316,5 +1318,82 @@ theorem conformal_difference_and_multilayer_compression_valley
     noncomm_ring [hP, proj_idem hP]
   · dsimp only [attnLayerOp, pureSinkHead, sinkCornerPlus, centeredRouteOp]
     noncomm_ring [hP, proj_idem hP]
+
+/-- **Theorem (`attention_routing_direct_limit_and_clifford_head_tail_realization`, Stage `𝔖𝔊₁₅` Colimit)**:
+    Formalizes the Finite-Moduli Attention Head × Infinite Operator-Ring Tail principle across:
+    1. Mathlib's genuine algebraic direct limit `DirectLimitSuperClosure bond := _root_.DirectLimit Stage (fun m n h => bondMap bond m n h)`
+       with canonical stage injections `directLimitOf bond k : Stage k →+* DirectLimitSuperClosure bond`, and
+    2. The Clifford tensor-tower infinite tail ring `TailLimit d` (`cl11MatrixLimit_tailRingEquiv d : Cl11TensorTowerLimit.Limit ≃+* TailLimit d`):
+    Advancing the finite-head cut from stage `k` to `n` (`hkn : k ≤ n`) via `bondMap bond k n hkn`
+    or by one Kronecker step `stageEmbed k` (`A ↦ A ⊗ I₂`) preserves `attnLayerOp`, `centeredRouteOp`,
+    the multi-layer attention composition semigroup, and 3-layer compression valley annihilation
+    in both `DirectLimitSuperClosure bond` and `TailLimit d`! -/
+theorem attention_routing_direct_limit_and_clifford_head_tail_realization
+    {Stage : ℕ → Type u} [∀ k, Ring (Stage k)]
+    (bond : ∀ k : ℕ, Stage k →+* Stage (k + 1))
+    (k n d : ℕ) (hkn : k ≤ n)
+    (P X1 Z1 X2 Z2 X3 Z3 : Stage k) (hP : P * P = P)
+    (Q U1 W1 U2 W2 U3 W3 : InfoGeometry.Clifford.Cl11TensorTowerLimit.Stage k) (hQ : Q * Q = Q) :
+    let ofLim  := InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf bond
+    let P_inf  := ofLim k P
+    let X1_inf := ofLim k X1
+    let Z1_inf := ofLim k Z1
+    let X2_inf := ofLim k X2
+    let Z2_inf := ofLim k Z2
+    let X3_inf := ofLim k X3
+    let Z3_inf := ofLim k Z3
+    let φ_tail := (InfoGeometry.Canonical.Cl11MatrixTowerTailShift.cl11MatrixLimit_tailRingEquiv d).toRingHom
+    let Q_tail  := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k Q)
+    let U1_tail := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k U1)
+    let W1_tail := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k W1)
+    let U2_tail := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k U2)
+    let W2_tail := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k W2)
+    let U3_tail := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k U3)
+    let W3_tail := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k W3)
+    ofLim n (InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap bond k n hkn (attnLayerOp P X1 Z1)) =
+      attnLayerOp P_inf X1_inf Z1_inf ∧
+    (1 - P_inf) * (attnLayerOp P_inf X2_inf Z2_inf * attnLayerOp P_inf X1_inf Z1_inf) * (1 - P_inf) =
+      centeredRouteOp P_inf Z2_inf * centeredRouteOp P_inf Z1_inf ∧
+    (1 - P_inf) * (attnLayerOp P_inf X3_inf Z3_inf * pureSinkHead P_inf X2_inf * attnLayerOp P_inf X1_inf Z1_inf) * (1 - P_inf) = 0 ∧
+    φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage (k + 1)
+      (InfoGeometry.Clifford.Cl11TensorTower.stageEmbed k (attnLayerOp Q U1 W1))) =
+      attnLayerOp Q_tail U1_tail W1_tail ∧
+    (1 - Q_tail) * (attnLayerOp Q_tail U2_tail W2_tail * attnLayerOp Q_tail U1_tail W1_tail) * (1 - Q_tail) =
+      centeredRouteOp Q_tail W2_tail * centeredRouteOp Q_tail W1_tail ∧
+    (1 - Q_tail) * (attnLayerOp Q_tail U3_tail W3_tail * pureSinkHead Q_tail U2_tail * attnLayerOp Q_tail U1_tail W1_tail) * (1 - Q_tail) = 0 := by
+  set ofLim := InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf bond
+  set φ_tail := (InfoGeometry.Canonical.Cl11MatrixTowerTailShift.cl11MatrixLimit_tailRingEquiv d).toRingHom
+  have hP_inf : ofLim k P * ofLim k P = ofLim k P := by
+    rw [← map_mul, hP]
+  have hQ_lim : InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k Q *
+      InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k Q =
+      InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k Q :=
+    InfoGeometry.Clifford.Cl11TensorTowerLimit.limit_idempotent hQ
+  have hQ_tail : φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k Q) *
+      φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k Q) =
+      φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k Q) := by
+    rw [← map_mul, hQ_lim]
+  have hBond : ofLim n (InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap bond k n hkn (attnLayerOp P X1 Z1)) =
+      attnLayerOp (ofLim k P) (ofLim k X1) (ofLim k Z1) := by
+    rw [InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf_bondMap bond k n hkn]
+    dsimp [attnLayerOp, sinkCornerPlus, centeredRouteOp]
+    simp only [map_add, map_mul, map_sub, map_one]
+  have hTailShift : φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage (k + 1)
+      (InfoGeometry.Clifford.Cl11TensorTower.stageEmbed k (attnLayerOp Q U1 W1))) =
+      attnLayerOp (φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k Q))
+        (φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k U1))
+        (φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k W1)) := by
+    rw [InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage_apply_bond]
+    dsimp [attnLayerOp, sinkCornerPlus, centeredRouteOp]
+    simp only [map_add, map_mul, map_sub, map_one]
+  refine ⟨hBond, ?_, ?_, hTailShift, ?_, ?_⟩
+  · dsimp only [attnLayerOp, sinkCornerPlus, centeredRouteOp]
+    noncomm_ring [hP_inf, proj_idem hP_inf]
+  · dsimp only [attnLayerOp, pureSinkHead, sinkCornerPlus, centeredRouteOp]
+    noncomm_ring [hP_inf, proj_idem hP_inf]
+  · dsimp only [attnLayerOp, sinkCornerPlus, centeredRouteOp]
+    noncomm_ring [hQ_tail, proj_idem hQ_tail]
+  · dsimp only [attnLayerOp, pureSinkHead, sinkCornerPlus, centeredRouteOp]
+    noncomm_ring [hQ_tail, proj_idem hQ_tail]
 
 end InfoGeometry.Canonical.Arxiv261006012AttentionTokenDifferenceRoutingPoset

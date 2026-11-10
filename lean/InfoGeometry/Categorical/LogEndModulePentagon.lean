@@ -24,7 +24,7 @@ open InfoGeometry.Categorical.LogEndModuleCategory.LogEndModule
 
 universe u v
 
-variable {𝕜 : Type u} [Field 𝕜]
+variable {𝕜 : Type u} [CommRing 𝕜]
 
 /-- Mac Lane's pentagon identity for the lifted logarithmic associator. -/
 theorem pentagon_identity

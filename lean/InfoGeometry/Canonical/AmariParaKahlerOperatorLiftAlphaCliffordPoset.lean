@@ -395,4 +395,47 @@ theorem coverEdge_asymm {u v : Node} (huv : coverEdge u v) : ¬ coverEdge v u :=
   intro hvu
   exact Nat.lt_asymm (coverEdge_strict_rank huv) (coverEdge_strict_rank hvu)
 
+/-- **Inductive Colimit Cone Transport (`amari_alpha_clifford_colimit_cone_transport`):**
+    Under any compatible inductive ring cone `toLimit : ∀ k : ℕ, Stage k →+* Limit`
+    (`toLimit (k + 1) (embed k Z) = toLimit k Z`), the Peirce off-diagonal nilpotents `Q_pos, Q_neg`,
+    block-diagonal projections `X_11, X_00`, and the Amari `(1 - α²)` parabolic curvature law
+    transport functorially from finite stage `Stage k` into `Limit`. -/
+theorem amari_alpha_clifford_colimit_cone_transport
+    {Stage : ℕ → Type*} [∀ k, Ring (Stage k)]
+    {Limit : Type*} [Ring Limit]
+    (embed : ∀ k : ℕ, Stage k →+* Stage (k + 1))
+    (toLimit : ∀ k : ℕ, Stage k →+* Limit)
+    (hCone : ∀ (k : ℕ) (Z : Stage k), toLimit (k + 1) (embed k Z) = toLimit k Z)
+    (k : ℕ) (P X Z : Stage k) (hP : P * P = P) (α : ℤ) :
+    let P_inf := toLimit k P
+    let X_inf := toLimit k X
+    let Z_inf := toLimit k Z
+    let Z0_inf := X_11 P_inf Z_inf + X_00 P_inf Z_inf
+    toLimit k (Q_pos P X) = Q_pos P_inf X_inf ∧
+    toLimit k (Q_neg P X) = Q_neg P_inf X_inf ∧
+    toLimit (k + 1) (Q_pos (embed k P) (embed k X)) = Q_pos P_inf X_inf ∧
+    d_e P_inf X_inf (d_e P_inf X_inf Z0_inf) = 0 ∧
+    d_m P_inf X_inf (d_m P_inf X_inf Z0_inf) = 0 ∧
+    D_alpha_2 (d_e P_inf X_inf) (d_m P_inf X_inf) α
+        (D_alpha_2 (d_e P_inf X_inf) (d_m P_inf X_inf) α Z0_inf) =
+      (1 - α * α) • G_sum (d_e P_inf X_inf) (d_m P_inf X_inf)
+        (G_sum (d_e P_inf X_inf) (d_m P_inf X_inf) Z0_inf) := by
+  have hQp : toLimit k (Q_pos P X) = Q_pos (toLimit k P) (toLimit k X) := by
+    dsimp [Q_pos, P_perp]
+    simp only [map_mul, map_sub, map_one]
+  have hQn : toLimit k (Q_neg P X) = Q_neg (toLimit k P) (toLimit k X) := by
+    dsimp [Q_neg, P_perp]
+    simp only [map_mul, map_sub, map_one]
+  have hQpEmb : toLimit (k + 1) (Q_pos (embed k P) (embed k X)) =
+      Q_pos (toLimit k P) (toLimit k X) := by
+    have hE : embed k (Q_pos P X) = Q_pos (embed k P) (embed k X) := by
+      dsimp [Q_pos, P_perp]
+      simp only [map_mul, map_sub, map_one]
+    rw [← hE, hCone k, hQp]
+  have hP_inf : toLimit k P * toLimit k P = toLimit k P := by
+    rw [← map_mul, hP]
+  rcases peirce_diagonal_amari_alpha_parabolic_law hP_inf (toLimit k X) (toLimit k Z) α with
+    ⟨hde2, hdm2, hPar⟩
+  exact ⟨hQp, hQn, hQpEmb, hde2, hdm2, hPar⟩
+
 end InfoGeometry.Canonical.AmariParaKahlerOperatorLiftAlphaCliffordPoset

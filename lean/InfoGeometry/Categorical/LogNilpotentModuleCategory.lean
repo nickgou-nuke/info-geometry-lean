@@ -97,7 +97,7 @@ end Ring
 
 namespace LogNilpotentModule
 
-variable {𝕜 : Type u} [Field 𝕜]
+variable {𝕜 : Type u} [CommRing 𝕜]
 
 /-- Tensor product in the finite-nilpotent logarithmic category. -/
 def tensorObj (X Y : LogNilpotentModule 𝕜) : LogNilpotentModule 𝕜 where

@@ -350,27 +350,37 @@ def cross3 (u v : Fin 3 → B) : Fin 3 → B
   | 1 => u 2 * v 0 - u 0 * v 2
   | 2 => u 0 * v 1 - u 1 * v 0
 
-/-- Zorn's Split-Octonion Vector-Matrix Algebra over an arbitrary `[Ring B]`. -/
-@[ext]
-structure ZornOct (B : Type*) [Ring B] where
-  a : B
-  b : B
-  u : Fin 3 → B
-  v : Fin 3 → B
+/-- Zorn's Split-Octonion Vector-Matrix Algebra carrier `(a, b) × (u, v)` over an arbitrary `[Ring B]`. -/
+def ZornOct (B : Type*) : Type _ := (B × B) × ((Fin 3 → B) × (Fin 3 → B))
 
-instance : Zero (ZornOct B) := ⟨⟨0, 0, fun _ => 0, fun _ => 0⟩⟩
+/-- Upper-left scalar entry `a` of a Zorn vector-matrix `X : ZornOct B`. -/
+def ZornOct.a (X : ZornOct B) : B := X.1.1
+
+/-- Lower-right scalar entry `b` of a Zorn vector-matrix `X : ZornOct B`. -/
+def ZornOct.b (X : ZornOct B) : B := X.1.2
+
+/-- Upper-right 3-vector entry `u` of a Zorn vector-matrix `X : ZornOct B`. -/
+def ZornOct.u (X : ZornOct B) : Fin 3 → B := X.2.1
+
+/-- Lower-left 3-vector entry `v` of a Zorn vector-matrix `X : ZornOct B`. -/
+def ZornOct.v (X : ZornOct B) : Fin 3 → B := X.2.2
+
+/-- Constructor for a Zorn vector-matrix from `(a, b, u, v)`. -/
+def mkZornOct (a b : B) (u v : Fin 3 → B) : ZornOct B := ((a, b), (u, v))
+
+instance : Zero (ZornOct B) := ⟨mkZornOct 0 0 (fun _ => 0) (fun _ => 0)⟩
 
 /-- Zero Zorn vector-matrix inhabitant for model witnessing. -/
 instance : Inhabited (ZornOct B) := ⟨0⟩
 
 instance : Add (ZornOct B) :=
-  ⟨fun X Y => ⟨X.a + Y.a, X.b + Y.b, fun i => X.u i + Y.u i, fun i => X.v i + Y.v i⟩⟩
+  ⟨fun X Y => mkZornOct (X.a + Y.a) (X.b + Y.b) (fun i => X.u i + Y.u i) (fun i => X.v i + Y.v i)⟩
 
 instance : Sub (ZornOct B) :=
-  ⟨fun X Y => ⟨X.a - Y.a, X.b - Y.b, fun i => X.u i - Y.u i, fun i => X.v i - Y.v i⟩⟩
+  ⟨fun X Y => mkZornOct (X.a - Y.a) (X.b - Y.b) (fun i => X.u i - Y.u i) (fun i => X.v i - Y.v i)⟩
 
 instance : Neg (ZornOct B) :=
-  ⟨fun X => ⟨-X.a, -X.b, fun i => -X.u i, fun i => -X.v i⟩⟩
+  ⟨fun X => mkZornOct (-X.a) (-X.b) (fun i => -X.u i) (fun i => -X.v i)⟩
 
 /-- Zorn Vector-Matrix Multiplication over `[Ring B]`:
     $$\begin{pmatrix} a_1 & u_1 \\ v_1 & b_1 \end{pmatrix}
@@ -379,19 +389,32 @@ instance : Neg (ZornOct B) :=
                       v_1 a_2 + b_1 v_2 + u_1 \times u_2 & b_1 b_2 - v_1 \cdot u_2 \end{pmatrix}$$ -/
 instance : Mul (ZornOct B) :=
   ⟨fun X Y =>
-    { a := X.a * Y.a - dot3 X.u Y.v
-      b := X.b * Y.b - dot3 X.v Y.u
-      u := fun i => X.a * Y.u i + X.u i * Y.b + cross3 X.v Y.v i
-      v := fun i => X.v i * Y.a + X.b * Y.v i + cross3 X.u Y.u i }⟩
+    mkZornOct
+      (X.a * Y.a - dot3 X.u Y.v)
+      (X.b * Y.b - dot3 X.v Y.u)
+      (fun i => X.a * Y.u i + X.u i * Y.b + cross3 X.v Y.v i)
+      (fun i => X.v i * Y.a + X.b * Y.v i + cross3 X.u Y.u i)⟩
 
 /-- Upper-corner embedding `E_+(u)` (`a = 0, b = 0, u = u, v = 0`). -/
-def zornUpper (u : Fin 3 → B) : ZornOct B := ⟨0, 0, u, fun _ => 0⟩
+def zornUpper (u : Fin 3 → B) : ZornOct B := mkZornOct 0 0 u (fun _ => 0)
 
 /-- Lower-corner embedding `E_-(v)` (`a = 0, b = 0, u = 0, v = v`). -/
-def zornLower (v : Fin 3 → B) : ZornOct B := ⟨0, 0, fun _ => 0, v⟩
+def zornLower (v : Fin 3 → B) : ZornOct B := mkZornOct 0 0 (fun _ => 0) v
 
 /-- Non-associative Zorn Associator `Assoc(X, Y, Z) = (X * Y) * Z - X * (Y * Z)`. -/
 def zornAssoc (X Y Z : ZornOct B) : ZornOct B := (X * Y) * Z - X * (Y * Z)
+
+/-- Componentwise extensionality for `ZornOct B`. -/
+lemma ZornOct.ext {X Y : ZornOct B}
+    (ha : X.a = Y.a) (hb : X.b = Y.b)
+    (hu : ∀ i, X.u i = Y.u i) (hv : ∀ i, X.v i = Y.v i) : X = Y := by
+  rcases X with ⟨⟨xa, xb⟩, ⟨xu, xv⟩⟩
+  rcases Y with ⟨⟨ya, yb⟩, ⟨yu, yv⟩⟩
+  dsimp [ZornOct.a, ZornOct.b, ZornOct.u, ZornOct.v] at ha hb hu hv
+  have hu' : xu = yu := funext hu
+  have hv' : xv = yv := funext hv
+  subst ha hb hu' hv'
+  rfl
 
 @[simp] lemma zorn_mul_a (X Y : ZornOct B) : (X * Y).a = X.a * Y.a - dot3 X.u Y.v := rfl
 @[simp] lemma zorn_mul_b (X Y : ZornOct B) : (X * Y).b = X.b * Y.b - dot3 X.v Y.u := rfl
@@ -401,6 +424,14 @@ def zornAssoc (X Y Z : ZornOct B) : ZornOct B := (X * Y) * Z - X * (Y * Z)
     (X * Y).v i = X.v i * Y.a + X.b * Y.v i + cross3 X.u Y.u i := rfl
 @[simp] lemma zorn_sub_a (X Y : ZornOct B) : (X - Y).a = X.a - Y.a := rfl
 @[simp] lemma zorn_sub_b (X Y : ZornOct B) : (X - Y).b = X.b - Y.b := rfl
+@[simp] lemma zornUpper_a (u : Fin 3 → B) : (zornUpper u).a = 0 := rfl
+@[simp] lemma zornUpper_b (u : Fin 3 → B) : (zornUpper u).b = 0 := rfl
+@[simp] lemma zornUpper_u (u : Fin 3 → B) (i : Fin 3) : (zornUpper u).u i = u i := rfl
+@[simp] lemma zornUpper_v (u : Fin 3 → B) (i : Fin 3) : (zornUpper u).v i = 0 := rfl
+@[simp] lemma zornLower_a (v : Fin 3 → B) : (zornLower v).a = 0 := rfl
+@[simp] lemma zornLower_b (v : Fin 3 → B) : (zornLower v).b = 0 := rfl
+@[simp] lemma zornLower_u (v : Fin 3 → B) (i : Fin 3) : (zornLower v).u i = 0 := rfl
+@[simp] lemma zornLower_v (v : Fin 3 → B) (i : Fin 3) : (zornLower v).v i = v i := rfl
 
 @[simp] lemma cross3_zero (i : Fin 3) :
     cross3 (fun _ : Fin 3 => (0 : B)) (fun _ => 0) i = 0 := by
@@ -411,7 +442,7 @@ def zornAssoc (X Y Z : ZornOct B) : ZornOct B := (X * Y) * Z - X * (Y * Z)
   · omega
 
 @[simp] lemma dot3_zero_left (v : Fin 3 → B) :
-    dot3 (fun _ : Fin 3 => (0 : B)) v = 0 := by
+    dot3 (fun _ : Fin 3 → (0 : B)) v = 0 := by
   dsimp [dot3]; simp
 
 @[simp] lemma dot3_zero_right (u : Fin 3 → B) :
@@ -439,17 +470,17 @@ theorem zorn_triality_folding_and_associator_in_ring (u1 u2 u3 v1 v2 : Fin 3 →
       - dot3 (cross3 u1 u2) u3 := by
   have h_uu : ∀ x y : Fin 3 → B, zornUpper x * zornUpper y = zornLower (cross3 x y) := by
     intro x y
-    ext <;> simp [zornUpper, zornLower]
+    apply ZornOct.ext <;> simp [zornUpper_v, zornUpper_u, cross3_zero, dot3_zero_right]
   have h_vv : ∀ x y : Fin 3 → B, zornLower x * zornLower y = zornUpper (cross3 x y) := by
     intro x y
-    ext <;> simp [zornUpper, zornLower]
+    apply ZornOct.ext <;> simp [zornLower_u, zornLower_v, cross3_zero, dot3_zero_left]
   refine ⟨h_uu u1 u2, h_vv v1 v2, ?_, ?_⟩
   · dsimp [zornAssoc]
     rw [h_uu u1 u2, h_uu u2 u3]
-    simp [zornUpper, zornLower]
+    simp [zornUpper_u, zornLower_v, dot3_zero_left]
   · dsimp [zornAssoc]
     rw [h_uu u1 u2, h_uu u2 u3]
-    simp [zornUpper, zornLower]
+    simp [zornUpper_u, zornLower_v, dot3_zero_right]
 
 /-!
 ## Stage VI: Acyclic Causal Poset of the Wheeler–Single-Commutator–Zorn Synthesis

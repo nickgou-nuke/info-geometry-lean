@@ -10,6 +10,17 @@ This file packages the already-verified `Conf₃` braid-shadow readout together
 with the existing de Rham candidate packet.  It only records the product
 chart and its coordinate projections.  It does not identify the braid-shadow
 carrier with the de Rham candidate carrier.
+
+#### BUCKET 1: CLOSED FINITE THEOREMS
+The product packet retains the input triple and branch data, and its branch
+rank readouts are transported from the de Rham candidate owner.
+
+#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
+The ranks `32` and `24` require their corresponding `relationChoice` proofs.
+
+#### BUCKET 3: OPEN CLOSURE DEBT
+No analytic de Rham computation or non-discrete geometric continuity result
+is asserted by this product chart.
 -/
 
 namespace InfoGeometry.Topology.Conf3ArnoldDeRhamProductTopological
@@ -67,7 +78,9 @@ def conf3ArnoldDeRhamProductPacketOf
 theorem continuous_conf3ArnoldDeRhamProductPacketOf
     (R : Type*) [CommSemiring R] (D : ℕ) :
     Continuous (conf3ArnoldDeRhamProductPacketOf (R := R) (D := D)) := by
-  exact continuous_of_discreteTopology
+  rw [continuous_def]
+  intro s hs
+  exact isOpen_discrete _
 
 /-- The combined product packet is locally constant because the topology is
 discrete. -/
@@ -110,6 +123,59 @@ def conf3ArnoldDeRhamProductDeRhamCandidate
       InfoGeometry.Topology.Conf3DeRhamCandidateTopological.normalizedConf3DeRhamPacket
         D p data := by
   rfl
+
+/-! ## Faithfulness and branch readouts of the product packet -/
+
+/-- Equality of product packets recovers both the normalized triple and its
+finite de Rham branch data, since the second component is the source pair. -/
+theorem conf3ArnoldDeRhamProductPacketOf_eq_iff
+    (R : Type*) [CommSemiring R] (D : ℕ)
+    (p₁ p₂ : Conf3FiniteTriple)
+    (data₁ data₂ : NonIsoConf3DeRhamCooperad.ConcreteDeRhamCooperadData D) :
+    conf3ArnoldDeRhamProductPacketOf (R := R) (D := D) p₁ data₁ =
+        conf3ArnoldDeRhamProductPacketOf (R := R) (D := D) p₂ data₂ ↔
+      p₁ = p₂ ∧ data₁ = data₂ := by
+  constructor
+  · intro h
+    have hdata := congrArg Prod.snd h
+    change (p₁, data₁) = (p₂, data₂) at hdata
+    exact Prod.mk.inj hdata
+  · rintro ⟨rfl, rfl⟩
+    rfl
+
+/-- On the product/Leray branch, the combined packet's de Rham readout has
+rank `32`; the result is read from the actual second component. -/
+theorem conf3ArnoldDeRhamProductPacketOf_product_rank
+    (R : Type*) [CommSemiring R] (D : ℕ)
+    (p : Conf3FiniteTriple)
+    (data : NonIsoConf3DeRhamCooperad.ConcreteDeRhamCooperadData D)
+    (hchoice : data.relationChoice =
+      NonIsoConf3DeRhamCooperad.ModelChoice.productLeray) :
+    InfoGeometry.Topology.Conf3DeRhamCandidateTopological.conf3DeRhamBranchRank D
+      ((conf3ArnoldDeRhamProductPacketOf (R := R) (D := D) p data).2) = 32 := by
+  change InfoGeometry.Topology.Conf3DeRhamCandidateTopological.conf3DeRhamBranchRank D
+      (InfoGeometry.Topology.Conf3DeRhamCandidateTopological.normalizedConf3DeRhamPacket
+        D p data) = 32
+  exact InfoGeometry.Topology.Conf3DeRhamCandidateTopological.conf3DeRhamBranchRank_product
+    D (InfoGeometry.Topology.Conf3DeRhamCandidateTopological.normalizedConf3DeRhamPacket
+      D p data) hchoice
+
+/-- On the Orlik--Solomon alpha branch, the combined packet's de Rham readout
+has rank `24`. -/
+theorem conf3ArnoldDeRhamProductPacketOf_osAlpha_rank
+    (R : Type*) [CommSemiring R] (D : ℕ)
+    (p : Conf3FiniteTriple)
+    (data : NonIsoConf3DeRhamCooperad.ConcreteDeRhamCooperadData D)
+    (hchoice : data.relationChoice =
+      NonIsoConf3DeRhamCooperad.ModelChoice.osAlpha) :
+    InfoGeometry.Topology.Conf3DeRhamCandidateTopological.conf3DeRhamBranchRank D
+      ((conf3ArnoldDeRhamProductPacketOf (R := R) (D := D) p data).2) = 24 := by
+  change InfoGeometry.Topology.Conf3DeRhamCandidateTopological.conf3DeRhamBranchRank D
+      (InfoGeometry.Topology.Conf3DeRhamCandidateTopological.normalizedConf3DeRhamPacket
+        D p data) = 24
+  exact InfoGeometry.Topology.Conf3DeRhamCandidateTopological.conf3DeRhamBranchRank_os
+    D (InfoGeometry.Topology.Conf3DeRhamCandidateTopological.normalizedConf3DeRhamPacket
+      D p data) hchoice
 
 end
 end InfoGeometry.Topology.Conf3ArnoldDeRhamProductTopological

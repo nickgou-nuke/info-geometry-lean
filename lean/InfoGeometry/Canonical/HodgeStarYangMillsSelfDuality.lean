@@ -96,7 +96,7 @@ theorem anti_self_dual_instanton_from_bianchi
 from structural Bianchi `D_A F_A = 0` (derived strictly from `D.sq_zero`, graded 1-form
 Leibniz rule, and `|A|=1`) without primitive Bianchi or product-rule assumptions. -/
 theorem self_dual_connection_curvature_solves_graded_yang_mills
-    {R V : Type*} [Field R] [AddCommGroup V] [Module R V] [Fintype V] {n : ℕ}
+    {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] [Fintype V] {n : ℕ}
     (D : ExteriorDifferentialData R V)
     (H : HodgeStarAxioms (R := R) (V := V))
     (A : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V))
@@ -109,7 +109,7 @@ theorem self_dual_connection_curvature_solves_graded_yang_mills
 /-- Unconditional Anti-Self-Dual Yang-Mills Field Equation Solution `D_A (★ F_A) = 0`
 from structural Bianchi `D_A F_A = 0` without primitive Bianchi or product-rule assumptions. -/
 theorem anti_self_dual_connection_curvature_solves_graded_yang_mills
-    {R V : Type*} [Field R] [AddCommGroup V] [Module R V] [Fintype V] {n : ℕ}
+    {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] [Fintype V] {n : ℕ}
     (D : ExteriorDifferentialData R V)
     (H : HodgeStarAxioms (R := R) (V := V))
     (A : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V))
@@ -127,7 +127,7 @@ Unifies:
 2. Unconditional self-dual instanton implication `D_A (★ F_A) = 0`;
 3. Unconditional anti-self-dual instanton implication `D_A (★ F_A) = 0`. -/
 theorem master_graded_connection_hodge_duality_synthesis
-    {R V : Type*} [Field R] [AddCommGroup V] [Module R V] [Fintype V] {n : ℕ}
+    {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] [Fintype V] {n : ℕ}
     (D : ExteriorDifferentialData R V)
     (H : HodgeStarAxioms (R := R) (V := V))
     (A : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V))

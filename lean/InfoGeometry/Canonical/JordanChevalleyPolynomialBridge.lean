@@ -20,8 +20,8 @@ open scoped Polynomial
 open Polynomial
 open InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.JordanChevalleyBridge
 
-variable {K : Type*} [Field K]
-variable {V : Type*} [AddCommGroup V] [Module K V] [FiniteDimensional K V]
+variable {K : Type*} [CommRing K]
+variable {V : Type*} [AddCommGroup V] [Module K V]
 
 /--
 A constructive Jordan-Chevalley interpolation witness.
@@ -46,6 +46,7 @@ def nilpotentPart {f : Module.End K V} (P : JordanChevalleyInterpolation f) :
 
 /-- Jordan-Chevalley interpolation exists as an explicit existential theorem. -/
 theorem exists_jordanChevalleyInterpolation
+    {K V : Type*} [Field K] [AddCommGroup V] [Module K V] [FiniteDimensional K V]
     (f : Module.End K V) [PerfectField K] :
     ∃ P : JordanChevalleyInterpolation f,
       Polynomial.aeval f P.poly = P.split.semisimple ∧
@@ -59,7 +60,6 @@ theorem exists_jordanChevalleyInterpolation
     ⟨p, hp⟩
   exact ⟨⟨B, p, hp⟩, hp, hss, hnil, hcomm, hsum⟩
 
-omit [FiniteDimensional K V] in
 /-- The semisimple interpolation commutes with every symmetry commuting with the Hamiltonian. -/
 theorem semisimplePart_commute {f g : Module.End K V}
     (P : JordanChevalleyInterpolation f) (hfg : Commute f g) :
@@ -68,14 +68,12 @@ theorem semisimplePart_commute {f g : Module.End K V}
     (commute_of_mem_adjoin_singleton (f := f) (g := g) hfg
       (Polynomial.aeval_mem_adjoin_singleton (R := K) (p := P.poly) f))
 
-omit [FiniteDimensional K V] in
 /-- The nilpotent interpolation commutes with every symmetry commuting with the Hamiltonian. -/
 theorem nilpotentPart_commute {f g : Module.End K V}
     (P : JordanChevalleyInterpolation f) (hfg : Commute f g) :
     Commute (nilpotentPart P) g := by
   simpa [nilpotentPart] using Commute.sub_left hfg (semisimplePart_commute (P := P) hfg)
 
-omit [FiniteDimensional K V] in
 /-- The polynomial interpolation preserves both the scale and defect symmetries. -/
 theorem preserves_symmetries {f g : Module.End K V}
     (P : JordanChevalleyInterpolation f) (hfg : Commute f g) :
@@ -84,7 +82,6 @@ theorem preserves_symmetries {f g : Module.End K V}
   · exact semisimplePart_commute (P := P) hfg
   · exact nilpotentPart_commute (P := P) hfg
 
-omit [FiniteDimensional K V] in
 /-- Supersymmetry readback for the nilpotent defect sector. -/
 theorem unbroken_susy_in_jordan_blocks {f g : Module.End K V}
     (P : JordanChevalleyInterpolation f)

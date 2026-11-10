@@ -24,10 +24,10 @@ structure ZornCell (R : Type*) where
 
 namespace ZornCell
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*}
 
 /-- The Zorn determinant / split-octonion norm. -/
-def detZ (X : ZornCell R) : R :=
+def detZ [Ring R] (X : ZornCell R) : R :=
   X.r * X.s - (X.x1 * X.y1 + X.x2 * X.y2 + X.x3 * X.y3)
 
 /--
@@ -36,7 +36,7 @@ The Zorn product.
 Important sign: the lower-left cross term is `- (X.x × Y.x)`.
 With the opposite sign, determinant multiplicativity is false.
 -/
-def mulZ (X Y : ZornCell R) : ZornCell R :=
+def mulZ [Ring R] (X Y : ZornCell R) : ZornCell R :=
   {
     r := X.r * Y.r + (X.x1 * Y.y1 + X.x2 * Y.y2 + X.x3 * Y.y3)
 
@@ -50,6 +50,8 @@ def mulZ (X Y : ZornCell R) : ZornCell R :=
     y2 := Y.r * X.y2 + X.s * Y.y2 - (X.x3 * Y.x1 - X.x1 * Y.x3)
     y3 := Y.r * X.y3 + X.s * Y.y3 - (X.x1 * Y.x2 - X.x2 * Y.x1)
   }
+
+variable [CommRing R]
 
 /--
 The Zorn composition theorem:

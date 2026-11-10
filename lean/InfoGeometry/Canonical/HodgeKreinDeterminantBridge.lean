@@ -53,7 +53,7 @@ theorem det_transpose_eq (M : Matrix n n R) :
   Matrix.det_transpose M
 
 /-- Determinant of a diagonal matrix is the product of the diagonal entries. -/
-theorem det_diagonal_eq_prod {d : n → R} :
+theorem det_diagonal_eq_prod {R : Type*} [CommSemiring R] {d : n → R} :
     Matrix.det (Matrix.diagonal d) = ∏ i, d i :=
   Matrix.det_diagonal
 

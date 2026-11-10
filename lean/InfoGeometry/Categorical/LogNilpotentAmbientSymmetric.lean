@@ -41,7 +41,7 @@ open InfoGeometry.Categorical.LogNilpotentMonoidalCategory
 
 universe u v
 
-variable {𝕜 : Type u} [Field 𝕜]
+variable {𝕜 : Type u} [CommRing 𝕜]
 
 private theorem ambient_braiding_naturality_right
     (X : LogNilpotentModule 𝕜)

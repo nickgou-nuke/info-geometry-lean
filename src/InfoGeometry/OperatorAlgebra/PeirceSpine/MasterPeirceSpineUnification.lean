@@ -203,7 +203,7 @@ theorem de_haro_seiberg_witten_finite_peirce_dilation_synthesis
   have h_md := monopole_dyon_orthogonality P1 P2 X Y h1 h2 h12 h21
   have h_ct := threeHorizonCornerScaling_transition_action P1 P2 r rinv W X Z h1 h2 h12 h21
   have h_eq := exact_duality_and_theoretical_equivalence tr.tr tr.cyclic P1 P2 X Y h1 h2 h12 h21
-  have h_tr := cyclic_trace_vanishes_on_peirce_shells tr.tr tr.cyclic P1 P2 X Y h1 h2 h12 h21
+  have h_tr := cyclic_trace_vanishes_on_peirce_shells tr P1 P2 X Y h1 h2 h12 h21
   exact ⟨rfl,
          h_qd.1, h_qd.2.1, h_qd.2.2.1,
          h_md.2.2.1, h_md.2.2.2.1, h_md.2.2.2.2,
@@ -448,7 +448,7 @@ theorem epistemic_gap_closure_bregman_hodge_virasoro_crossed_product_synthesis
          (P1 * X * waistProjector P1 P2 * Y * P2) *
          threeHorizonCornerScaling P1 P2 r1inv r1) := by
   have hHod :=
-    three_sector_algebraic_hodge_peirce_cochain_and_formal_adjoint tr.tr tr.cyclic P1 P2 X Y A Z h1 h2 h12 h21
+    three_sector_algebraic_hodge_peirce_cochain_and_formal_adjoint tr P1 P2 X Y A Z h1 h2 h12 h21
   have hFive :=
     five_grade_peirce_resolution_and_weyl_eigenvalues P1 P2 Z h1 h2 h12 h21
   have hCech :=
@@ -598,5 +598,84 @@ theorem master_inductive_colimit_virasoro_temperley_lieb_transport_synthesis
   exact ⟨⟨hVir.1, hVir.2.2.2.1, hVir.2.2.2.2.2.2⟩,
          ⟨hUHF.2.1, hUHF.2.2.1⟩,
          ⟨hTL.2.2.2.2.1, hTL.2.2.2.2.2⟩⟩
+
+/-- **Master Genuine Mathlib `_root_.DirectLimit` (`DirectLimitSuperClosure`) & Clifford
+Tensor-Tower Finite-Head × Infinite-Tail (`BaseLimit ≃+* TailLimit d`) Unification
+(`master_direct_limit_super_closure_and_clifford_head_tail_unification`)**:
+Unites the genuine Mathlib algebraic direct-limit realization (`DirectLimitSuperClosure bond`)
+and the Clifford tensor-tower Head × Infinite-Tail shift realization (`cl11MatrixLimit_tailRingEquiv d : Limit ≃+* TailLimit d`)
+across:
+1. Order 33 all-mode Sugawara–Heisenberg–Virasoro, Scale-24 Virasoro anomaly, and 5-graded
+   Virasoro–Witt tower (`virasoro_sugawara_direct_limit_super_closure_realization` &
+   `clifford_head_tail_colimit_tetractys_and_virasoro_realization`),
+2. Stage `D₂₈`–`D₃₁` UHF idempotent recurrence and Heisenberg–Sugawara–Virasoro tower
+   (`uhf_heisenberg_sugawara_virasoro_direct_limit_and_clifford_tail_realization`),
+3. Stage `𝔖𝔊₁₅` multi-layer attention routing semigroup and compression valley annihilation
+   (`attention_routing_direct_limit_and_clifford_head_tail_realization`). -/
+theorem master_direct_limit_super_closure_and_clifford_head_tail_unification
+    {Stage : ℕ → Type u} [∀ k, Ring (Stage k)]
+    (bond : ∀ k : ℕ, Stage k →+* Stage (k + 1))
+    (hinj : ∀ k : ℕ, Function.Injective (bond k))
+    (k n d r s l : ℕ) (hkn : k ≤ n) (m : ℤ)
+    (P X Y P1 P2 Z1 X2 Z2 X3 Z3 : Stage k)
+    (hP : P * P = P)
+    (h1 : P1 * P1 = P1) (h2 : P2 * P2 = P2)
+    (h12 : P1 * P2 = 0) (h21 : P2 * P1 = 0)
+    (Q U W U2 W2 U3 W3 : InfoGeometry.Clifford.Cl11TensorTowerLimit.Stage k)
+    (hQ : Q * Q = Q) :
+    let ofLim  := InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf bond
+    let P_inf  := ofLim k P
+    let X_inf  := ofLim k X
+    let Y_inf  := ofLim k Y
+    let P1_inf := ofLim k P1
+    let P2_inf := ofLim k P2
+    let Z1_inf := ofLim k Z1
+    let X2_inf := ofLim k X2
+    let Z2_inf := ofLim k Z2
+    let X3_inf := ofLim k X3
+    let Z3_inf := ofLim k Z3
+    let φ_tail := (InfoGeometry.Canonical.Cl11MatrixTowerTailShift.cl11MatrixLimit_tailRingEquiv d).toRingHom
+    let Q_tail  := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k Q)
+    let U_tail  := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k U)
+    let W_tail  := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k W)
+    let U2_tail := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k U2)
+    let W2_tail := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k W2)
+    let U3_tail := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k U3)
+    let W3_tail := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k W3)
+    (ofLim n (InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap bond k n hkn
+       (virasoroChiralMode r P X Y)) = virasoroChiralMode r P_inf X_inf Y_inf ∧
+     VirasoroAnomaly24 3 P_inf X_inf Y_inf = (24 : ℤ) • V_met P_inf X_inf Y_inf ∧
+     comm (L5_pos2 P1_inf P2_inf Y_inf) (L5_neg2 P1_inf P2_inf X_inf) =
+       L5_zero P1_inf P2_inf * V5_grade2 P1_inf P2_inf X_inf Y_inf ∧
+     (ofLim k (VirasoroAnomaly24 m P X Y) = 0 ↔ VirasoroAnomaly24 m P X Y = 0)) ∧
+    (φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage (k + 1)
+       (InfoGeometry.Clifford.Cl11TensorTower.stageEmbed k Q)) = Q_tail ∧
+     comm (sugawaraSourceMode r Q_tail U_tail W_tail) (sugawaraSinkMode s Q_tail U_tail W_tail) =
+       virasoroChiralMode (r + s) Q_tail U_tail W_tail ∧
+     VirasoroAnomaly24 3 Q_tail U_tail W_tail = (24 : ℤ) • V_met Q_tail U_tail W_tail) ∧
+    (ofLim n (InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap bond k n hkn
+       (uhfIdemTower l P X)) = uhfIdemTower l P_inf X_inf ∧
+     φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage (k + 1)
+       (uhfIdemTower l (InfoGeometry.Clifford.Cl11TensorTower.stageEmbed k Q)
+         (InfoGeometry.Clifford.Cl11TensorTower.stageEmbed k U))) = uhfIdemTower l Q_tail U_tail) ∧
+    ((1 - P_inf) * (attnLayerOp P_inf X3_inf Z3_inf * pureSinkHead P_inf X2_inf * attnLayerOp P_inf X_inf Z1_inf) * (1 - P_inf) = 0 ∧
+     (1 - Q_tail) * (attnLayerOp Q_tail U3_tail W3_tail * pureSinkHead Q_tail U2_tail * attnLayerOp Q_tail U_tail W_tail) * (1 - Q_tail) = 0) := by
+  have hDir :=
+    virasoro_sugawara_direct_limit_super_closure_realization
+      bond hinj k n r s hkn m P X Y P1 P2 hP h1 h2 h12 h21
+  have hTail :=
+    clifford_head_tail_colimit_tetractys_and_virasoro_realization
+      d k r s m Q U W hQ
+  have hUHF :=
+    uhf_heisenberg_sugawara_virasoro_direct_limit_and_clifford_tail_realization
+      bond k n d r s l hkn hP X Y hQ U W
+  have hAttn :=
+    attention_routing_direct_limit_and_clifford_head_tail_realization
+      bond k n d hkn P X Z1 X2 Z2 X3 Z3 hP Q U W U2 W2 U3 W3 hQ
+  dsimp only []
+  exact ⟨⟨hDir.1, hDir.2.2.2.2.2.2.1, hDir.2.2.2.2.2.2.2.1, hDir.2.2.2.2.2.2.2.2⟩,
+         ⟨hTail.1, hTail.2.2.2.1, hTail.2.2.2.2.2.2⟩,
+         ⟨hUHF.1, hUHF.2.2.2.1⟩,
+         ⟨hAttn.2.2.1, hAttn.2.2.2.2.2⟩⟩
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine.MasterPeirceSpineUnification

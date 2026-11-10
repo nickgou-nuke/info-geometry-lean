@@ -26,17 +26,17 @@ open InfoGeometry.Algebra.PeirceDeWittChiralSplit
 variable {R n : Type*} [CommRing R] [Fintype n] [DecidableEq n]
 
 /-- Cyclic trace removes the two repeated endpoint projectors. -/
-theorem trace_sandwich_product {p q : Matrix n n R}
+theorem trace_sandwich_product {R n : Type*} [CommSemiring R] [Fintype n] {p q : Matrix n n R}
     (hp : p * p = p) (hq : q * q = q) (X Y : Matrix n n R) :
     trace ((p * X * q) * (q * Y * p)) = trace (p * X * q * Y) := by
   calc
     _ = trace ((p * X * (q * q) * Y) * p) := by
       congr 1
-      noncomm_ring
+      simp only [mul_assoc]
     _ = trace (p * (p * X * (q * q) * Y)) := trace_mul_comm _ _
     _ = trace ((p * p) * X * (q * q) * Y) := by
       congr 1
-      noncomm_ring
+      simp only [mul_assoc]
     _ = _ := by rw [hp, hq]
 
 /-- Correct four-block decomposition: off-diagonal sectors pair oppositely. -/

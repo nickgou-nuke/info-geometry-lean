@@ -624,6 +624,6 @@ theorem three_sector_algebraic_hodge_peirce_cochain_and_formal_adjoint
   refine ⟨?_, h_d_step1, h_d_step2, h_pos_adj, h_neg_adj, h_lap_adj, ?_⟩
   · dsimp only [block10, P0_waist]
     parabolic_idem_nf h1 h2 h12 h21 h1' h2' h12' h21'
-  · exact (peirce_nine_block_decomposition P1 P2 Z h1 h2 h12 h21).2.2.2.2.2.symm
+  · exact (peirce_nine_block_decomposition P1 P2 Z h1 h2 h12 h21).2.2.2.symm
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine.ThreeHorizonHodgeDecompositionPoset

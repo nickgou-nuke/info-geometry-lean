@@ -48,14 +48,14 @@ open InfoGeometry.Arithmetic.PrimeBosonFermionGas
 open InfoGeometry.Arithmetic.MobiusPrimonParity
 open InfoGeometry.Canonical.TrifactorDecomposition
 
-variable {ι R : Type*} [Field R]
+variable {ι R : Type*}
 
 /-- Ordinary fermionic primon Euler product: exterior occupation `0` or `1`. -/
-def fermionPartition (S : Finset ι) (x : ι → R) : R :=
+def fermionPartition [CommSemiring R] (S : Finset ι) (x : ι → R) : R :=
   ∏ p ∈ S, (1 + x p)
 
 /-- Second-order signed Euler correction, the finite shadow of `1 / ζ(2s)`. -/
-def secondOrderSignedPartition (S : Finset ι) (x : ι → R) : R :=
+def secondOrderSignedPartition [CommRing R] (S : Finset ι) (x : ι → R) : R :=
   ∏ p ∈ S, (1 - (x p) ^ 2)
 
 /--
@@ -64,7 +64,7 @@ Finite fermion/signed-Witten factorization.
 Per prime this is `(1+x_p)(1-x_p)=1-x_p^2`; globally it is the finite
 Euler-factor skeleton behind `Z_fermion = ζ(s)/ζ(2s)`.
 -/
-theorem fermion_mul_signed_eq_secondOrder
+theorem fermion_mul_signed_eq_secondOrder [CommRing R]
     (S : Finset ι) (x : ι → R) :
     fermionPartition S x * signedFermionPartition S x =
       secondOrderSignedPartition S x := by
@@ -73,6 +73,8 @@ theorem fermion_mul_signed_eq_secondOrder
   refine Finset.prod_congr rfl ?_
   intro p hp
   ring
+
+variable [Field R]
 
 /--
 Finite bosonic-to-fermionic conversion with the second-order correction.

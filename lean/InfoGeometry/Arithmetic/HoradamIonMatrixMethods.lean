@@ -27,7 +27,7 @@ namespace InfoGeometry.Arithmetic.HoradamIonMatrixMethods
 open Matrix
 open scoped Matrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Semiring R]
 
 /-- Horadam scalar sequence with parameters `(a,b,p,q)`. -/
 def horadam (a b p q : R) : ℕ → R
@@ -94,7 +94,7 @@ def horadamIonMatrix {N : ℕ} (a b p q : R) (n : ℕ) :
      horadamIon (N := N) a b p q (n + 1), ionScale q (horadamIon (N := N) a b p q n)]
 
 /-- One-step Horadam-ion matrix method behind Theorem 8. -/
-theorem horadamIonMatrix_mul_companionIon {N : ℕ} (a b p q : R) (n : ℕ) :
+theorem horadamIonMatrix_mul_companionIon {R : Type*} [CommSemiring R] {N : ℕ} (a b p q : R) (n : ℕ) :
     horadamIonMatrix (N := N) a b p q n * companionIon (N := N) p q =
       horadamIonMatrix (N := N) a b p q (n + 1) := by
   ext i j s
@@ -123,7 +123,7 @@ theorem horadamIonMatrix_mul_companionIon {N : ℕ} (a b p q : R) (n : ℕ) :
   · ring
 
 /-- Consolidated finite packet for the first formal slice of the paper. -/
-theorem horadam_ion_matrix_methods_packet {N : ℕ} (a b p q : R) :
+theorem horadam_ion_matrix_methods_packet {R : Type*} [CommSemiring R] {N : ℕ} (a b p q : R) :
     (∀ n : ℕ,
       horadam a b p q (n + 2) =
         p * horadam a b p q (n + 1) + q * horadam a b p q n) ∧

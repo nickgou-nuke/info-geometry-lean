@@ -9,7 +9,7 @@ namespace InfoGeometry.Projective.Sandbox.QuantumTwistorGauge
 open QuantumGrassmannian
 open QuantumTwistor
 
-variable (R : Type*) [Field R] (q : R) (u : R)
+variable (R : Type*) [CommRing R] [Inv R] (q : R) (u : R)
 
 noncomputable def gaugeFree : QuantumMatrixFree R →ₐ[R] QuantumMatrixFree R :=
   FreeAlgebra.lift R (fun idx => u • freeEntry R idx.1 idx.2)

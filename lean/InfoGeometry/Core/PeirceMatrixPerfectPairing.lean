@@ -15,7 +15,7 @@ nonzero-rank assumption is required on the idempotent.
 noncomputable section
 namespace InfoGeometry.Core.PeirceDecomposition
 open Matrix
-variable {K n : Type*} [Field K] [Fintype n] [DecidableEq n]
+variable {K n : Type*} [CommRing K] [Fintype n] [DecidableEq n]
 
 def component10Linear (P : Matrix n n K) : Module.End K (Matrix n n K) :=
   (mulRightLinearMap n K (complementIdempotent P)).comp (mulLeftLinearMap n K P)
@@ -112,25 +112,28 @@ theorem oppositeCornerTracePairing_flip_injective (P : Matrix n n K)
   apply Subtype.ext
   exact sub_eq_zero.mp hz
 
-theorem oppositeCornerTracePairing_isPerfPair (P : Matrix n n K) (hP : P * P = P) :
+theorem oppositeCornerTracePairing_isPerfPair {K n : Type*} [Field K] [Fintype n] [DecidableEq n]
+    (P : Matrix n n K) (hP : P * P = P) :
     (oppositeCornerTracePairing P).IsPerfPair :=
   LinearMap.IsPerfPair.of_injective
     (oppositeCornerTracePairing_injective P hP)
     (oppositeCornerTracePairing_flip_injective P hP)
 
-def oppositeCornerTraceDualEquiv (P : Matrix n n K) (hP : P * P = P) :
+def oppositeCornerTraceDualEquiv {K n : Type*} [Field K] [Fintype n] [DecidableEq n]
+    (P : Matrix n n K) (hP : P * P = P) :
     LinearMap.range (component10Linear P) ≃ₗ[K]
       Module.Dual K (LinearMap.range (component01Linear P)) := by
   letI := oppositeCornerTracePairing_isPerfPair P hP
   exact (oppositeCornerTracePairing P).toPerfPair
 
-@[simp] theorem oppositeCornerTraceDualEquiv_apply (P : Matrix n n K)
-    (hP : P * P = P) (X : LinearMap.range (component10Linear P))
+@[simp] theorem oppositeCornerTraceDualEquiv_apply {K n : Type*} [Field K] [Fintype n] [DecidableEq n]
+    (P : Matrix n n K) (hP : P * P = P) (X : LinearMap.range (component10Linear P))
     (Y : LinearMap.range (component01Linear P)) :
     oppositeCornerTraceDualEquiv P hP X Y = trace (X.val * Y.val) := rfl
 
 /-- Every covector on the opposite corner has a unique trace representative. -/
-theorem existsUnique_trace_representative (P : Matrix n n K) (hP : P * P = P)
+theorem existsUnique_trace_representative {K n : Type*} [Field K] [Fintype n] [DecidableEq n]
+    (P : Matrix n n K) (hP : P * P = P)
     (f : Module.Dual K (LinearMap.range (component01Linear P))) :
     ∃! X : LinearMap.range (component10Linear P),
       ∀ Y : LinearMap.range (component01Linear P), trace (X.val * Y.val) = f Y := by

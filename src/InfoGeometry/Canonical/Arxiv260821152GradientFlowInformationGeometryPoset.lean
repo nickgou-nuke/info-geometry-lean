@@ -1841,10 +1841,10 @@ theorem virasoroCocycleCoeff12_skew (n m : ℤ) :
   by_cases h : n + m = 0
   · have h' : m + n = 0 := by omega
     have hm : m = -n := by omega
-    simp only [h', h, ↓reduceIte, hm]
+    rw [if_pos h', if_pos h, hm]
     ring
   · have h' : m + n ≠ 0 := by omega
-    simp only [h', h, ↓reduceIte]
+    rw [if_neg h', if_neg h]
     ring
 
 /-- Unconditional 3-mode Lie 2-cocycle Jacobi cyclic identity for `virasoroCocycleCoeff12`:
@@ -1859,12 +1859,12 @@ theorem virasoroCocycleCoeff12_jacobi (n m k : ℤ) :
     have h2 : (m + k) + n = 0 := by omega
     have h3 : (k + n) + m = 0 := by omega
     have hk : k = -(n + m) := by omega
-    simp only [h1, h2, h3, ↓reduceIte, hk]
+    rw [if_pos h1, if_pos h2, if_pos h3, hk]
     ring
   · have h1 : (n + m) + k ≠ 0 := h
     have h2 : (m + k) + n ≠ 0 := by omega
     have h3 : (k + n) + m ≠ 0 := by omega
-    simp only [h1, h2, h3, ↓reduceIte]
+    rw [if_neg h1, if_neg h2, if_neg h3]
     ring
 
 /-- **Theorem 3 (`virasoro_cocycle_sl2_vanishing_and_jacobi_identity`)**:
@@ -1888,7 +1888,7 @@ theorem virasoro_cocycle_sl2_vanishing_and_jacobi_identity
   · change (0 : ℤ) • C_op = 0; exact zero_zsmul C_op
   · change (0 : ℤ) • C_op = 0; exact zero_zsmul C_op
   · dsimp [virasoroCocycleOp]
-    rw [smul_smul, smul_smul, smul_smul, ← add_zsmul, ← add_zsmul,
+    rw [← mul_zsmul, ← mul_zsmul, ← mul_zsmul, ← add_zsmul, ← add_zsmul,
         virasoroCocycleCoeff12_jacobi n m k, zero_zsmul]
 
 /-- Unipotent degree-1/degree-2 step factor `1 + L₋₁` on the 3-horizon Peirce tower. -/
@@ -2306,5 +2306,56 @@ theorem five_graded_virasoro_witt_tower_commutation
     ⟨hA1, hA2, hA3, hA4, hA5, hA6, hA7, hA8, hA9, hA10, hA11, hA12, hA13, hA14, hA15⟩
   exact ⟨hA1, hA2, hA3, hA4, hA5, hA6, hA7, hA8, hA9, hA10,
          hA11, hA12, hA13, hA14, hA15, rfl, rfl⟩
+
+/-- **Theorem 8 (`virasoro_sugawara_direct_limit_and_clifford_tail_realization`)**:
+    Genuine Mathlib `_root_.DirectLimit` (`DirectLimitSuperClosure bond`) and Clifford
+    Tensor-Tower Finite-Head × Infinite-Tail (`cl11MatrixLimit_tailRingEquiv k : Limit ≃+* TailLimit k`)
+    realization of the all-mode Sugawara–Heisenberg–Virasoro algebra, Scale-24 Virasoro anomaly,
+    and 5-graded Virasoro–Witt commutator tower. -/
+theorem virasoro_sugawara_direct_limit_and_clifford_tail_realization
+    {Stage : ℕ → Type u} [∀ k, Ring (Stage k)]
+    (bond : ∀ k : ℕ, Stage k →+* Stage (k + 1))
+    (hinj : ∀ k : ℕ, Function.Injective (bond k))
+    (k n d r s : ℕ) (hkn : k ≤ n) (m : ℤ)
+    (P X Y P1 P2 : Stage k)
+    (hP : P * P = P)
+    (h1 : P1 * P1 = P1) (h2 : P2 * P2 = P2)
+    (h12 : P1 * P2 = 0) (h21 : P2 * P1 = 0)
+    (Q U W : InfoGeometry.Clifford.Cl11TensorTowerLimit.Stage k)
+    (hQ : Q * Q = Q) :
+    let ofLim  := InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf bond
+    let P_inf  := ofLim k P
+    let X_inf  := ofLim k X
+    let Y_inf  := ofLim k Y
+    let P1_inf := ofLim k P1
+    let P2_inf := ofLim k P2
+    let φ_tail := (InfoGeometry.Canonical.Cl11MatrixTowerTailShift.cl11MatrixLimit_tailRingEquiv d).toRingHom
+    let Q_tail := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k Q)
+    let U_tail := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k U)
+    let W_tail := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k W)
+    ofLim n (InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap bond k n hkn
+      (InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.virasoroChiralMode r P X Y)) =
+      InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.virasoroChiralMode r P_inf X_inf Y_inf ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.VirasoroAnomaly24 3 P_inf X_inf Y_inf =
+      (24 : ℤ) • TriacontadicModularMoonshinePoset.V_met P_inf X_inf Y_inf ∧
+    comm (L5_pos2 P1_inf P2_inf Y_inf) (L5_neg2 P1_inf P2_inf X_inf) =
+      L5_zero P1_inf P2_inf * V5_grade2 P1_inf P2_inf X_inf Y_inf ∧
+    (ofLim k (InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.VirasoroAnomaly24 m P X Y) = 0 ↔
+      InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.VirasoroAnomaly24 m P X Y = 0) ∧
+    φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage (k + 1)
+      (InfoGeometry.Clifford.Cl11TensorTower.stageEmbed k Q)) = Q_tail ∧
+    comm (InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.sugawaraSourceMode r Q_tail U_tail W_tail)
+      (InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.sugawaraSinkMode s Q_tail U_tail W_tail) =
+      InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.virasoroChiralMode (r + s) Q_tail U_tail W_tail ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.VirasoroAnomaly24 3 Q_tail U_tail W_tail =
+      (24 : ℤ) • TriacontadicModularMoonshinePoset.V_met Q_tail U_tail W_tail := by
+  have hDir :=
+    InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.virasoro_sugawara_direct_limit_super_closure_realization
+      bond hinj k n r s hkn m P X Y P1 P2 hP h1 h2 h12 h21
+  have hTail :=
+    InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.clifford_head_tail_colimit_tetractys_and_virasoro_realization
+      d k r s m Q U W hQ
+  exact ⟨hDir.1, hDir.2.2.2.2.2.2.1, hDir.2.2.2.2.2.2.2.1, hDir.2.2.2.2.2.2.2.2,
+         hTail.1, hTail.2.2.2.1, hTail.2.2.2.2.2.2⟩
 
 end DuotriacontadicFiveGradedVirasoroBruhatPoset

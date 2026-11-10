@@ -27,25 +27,28 @@ open DKVars
     1. J^2 = 1
     2. J D + D J = 0 (Chirality / Anticommutation)
 -/
-inductive DKRel (R : Type*) [CommRing R] : FreeAlgebra R DKVars → FreeAlgebra R DKVars → Prop
+inductive DKRel (R : Type*) [CommSemiring R] : FreeAlgebra R DKVars → FreeAlgebra R DKVars → Prop
 | j_sq : DKRel R (FreeAlgebra.ι R J * FreeAlgebra.ι R J) 1
 | chiral : DKRel R (FreeAlgebra.ι R D * FreeAlgebra.ι R J + FreeAlgebra.ι R J * FreeAlgebra.ι R D) 0
 
 /-- The Dirac-Kähler Algebra as a foundational `RingQuot`. -/
-noncomputable def DiracKahlerAlgebra (R : Type*) [CommRing R] := RingQuot (DKRel R)
+noncomputable def DiracKahlerAlgebra (R : Type*) [CommSemiring R] := RingQuot (DKRel R)
+
+instance (R : Type*) [CommSemiring R] : Semiring (DiracKahlerAlgebra R) :=
+  RingQuot.instSemiring (DKRel R)
 
 instance (R : Type*) [CommRing R] : Ring (DiracKahlerAlgebra R) :=
   RingQuot.instRing (DKRel R)
 
-instance (R : Type*) [CommRing R] : Algebra R (DiracKahlerAlgebra R) :=
+instance (R : Type*) [CommSemiring R] : Algebra R (DiracKahlerAlgebra R) :=
   RingQuot.instAlgebra (DKRel R)
 
 /-- The canonical injection of the generators into the quotient algebra. -/
-noncomputable def dkGen (R : Type*) [CommRing R] (v : DKVars) : DiracKahlerAlgebra R :=
+noncomputable def dkGen (R : Type*) [CommSemiring R] (v : DKVars) : DiracKahlerAlgebra R :=
   RingQuot.mkAlgHom R (DKRel R) (FreeAlgebra.ι R v)
 
 /-- Verification that the algebra intrinsically satisfies J^2 = 1. -/
-theorem dkGen_J_sq (R : Type*) [CommRing R] : dkGen R J * dkGen R J = 1 := by
+theorem dkGen_J_sq (R : Type*) [CommSemiring R] : dkGen R J * dkGen R J = 1 := by
   have H : dkGen R J * dkGen R J = RingQuot.mkAlgHom R (DKRel R) (FreeAlgebra.ι R J * FreeAlgebra.ι R J) := by
     exact (map_mul (RingQuot.mkAlgHom R (DKRel R)) _ _).symm
   rw [H]
@@ -54,7 +57,7 @@ theorem dkGen_J_sq (R : Type*) [CommRing R] : dkGen R J * dkGen R J = 1 := by
   exact RingQuot.mkAlgHom_rel R (DKRel.j_sq)
 
 /-- Verification that the algebra intrinsically satisfies {D, J} = 0. -/
-theorem dkGen_chiral (R : Type*) [CommRing R] : dkGen R D * dkGen R J + dkGen R J * dkGen R D = 0 := by
+theorem dkGen_chiral (R : Type*) [CommSemiring R] : dkGen R D * dkGen R J + dkGen R J * dkGen R D = 0 := by
   have H1 : dkGen R D * dkGen R J = RingQuot.mkAlgHom R (DKRel R) (FreeAlgebra.ι R D * FreeAlgebra.ι R J) :=
     (map_mul (RingQuot.mkAlgHom R (DKRel R)) _ _).symm
   have H2 : dkGen R J * dkGen R D = RingQuot.mkAlgHom R (DKRel R) (FreeAlgebra.ι R J * FreeAlgebra.ι R D) :=

@@ -13,7 +13,7 @@ noncomputable section
 
 namespace InfoGeometry.Algebra.Cuntz
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {R A : Type*} [CommSemiring R] [Semiring A] [Algebra R A]
 
 namespace AlgebraicCuntzNPresentation
 
@@ -57,6 +57,7 @@ end AlgebraicCuntzNPresentation
 
 namespace AlgebraicCuntzNPresentation
 
+variable {R A : Type*} [CommSemiring R] [Ring A] [Algebra R A]
 variable (P : AlgebraicCuntzNPresentation R 2 A)
 
 theorem matrixUnit_two_diag : P.matrixUnit 0 0 + P.matrixUnit 1 1 = 1 := by

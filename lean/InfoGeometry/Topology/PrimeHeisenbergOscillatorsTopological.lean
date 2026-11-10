@@ -45,14 +45,16 @@ open InfoGeometry.Canonical.PrimeHeisenbergOscillators
 
 noncomputable section
 
-variable {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
-variable [AddCommGroup V] [Module 𝕜 V]
-
-instance endomorphismTopologicalSpace :
+instance endomorphismTopologicalSpace
+    {𝕜 V : Type*} [Semiring 𝕜] [AddCommMonoid V] [Module 𝕜 V] :
     TopologicalSpace (V →ₗ[𝕜] V) := ⊥
 
-instance endomorphismDiscreteTopology :
+instance endomorphismDiscreteTopology
+    {𝕜 V : Type*} [Semiring 𝕜] [AddCommMonoid V] [Module 𝕜 V] :
     DiscreteTopology (V →ₗ[𝕜] V) := DiscreteTopology.mk (Eq.refl _)
+
+variable {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
+variable [AddCommGroup V] [Module 𝕜 V]
 
 /-- The prime annihilation operator viewed as a discrete topological readout. -/
 def topologicalPrimeAnnihilation

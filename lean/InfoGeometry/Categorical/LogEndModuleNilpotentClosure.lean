@@ -36,7 +36,7 @@ open InfoGeometry.Categorical.LogEndModuleCategory.LogEndModule
 
 universe u v
 
-variable {𝕜 : Type u} [Field 𝕜]
+variable {𝕜 : Type u} [CommRing 𝕜]
 
 /-- Left tensor-leg extension of an endomorphism. -/
 def leftTensorEnd (X Y : LogEndModule 𝕜) :

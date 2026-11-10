@@ -39,7 +39,7 @@ open InfoGeometry.Categorical.LogNilpotentMonoidalUnit
 
 universe u v
 
-variable {𝕜 : Type u} [Field 𝕜]
+variable {𝕜 : Type u} [CommRing 𝕜]
 
 /-- The already-constructed logarithmic tensor data, exposed through Mathlib's
 monoidal-structure interface. -/

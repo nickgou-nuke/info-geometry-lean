@@ -26,7 +26,7 @@ open InfoGeometry.Categorical.LogNilpotentModuleCategory.LogNilpotentModule
 
 universe u v
 
-variable {𝕜 : Type u} [Field 𝕜]
+variable {𝕜 : Type u} [CommRing 𝕜]
 
 /-- Tensor unit: the scalar field with zero logarithmic endomorphism. -/
 def unitObject : LogNilpotentModule.{u, u} 𝕜 where

@@ -24,7 +24,7 @@ open InfoGeometry.Categorical.LogEndModuleCategory.LogEndModule
 
 universe u v
 
-variable {𝕜 : Type u} [Field 𝕜]
+variable {𝕜 : Type u} [CommSemiring 𝕜]
 
 /-- First braided hexagon.  Both sides map `(X ⊗ Y) ⊗ Z` to
 `Y ⊗ (Z ⊗ X)`. -/

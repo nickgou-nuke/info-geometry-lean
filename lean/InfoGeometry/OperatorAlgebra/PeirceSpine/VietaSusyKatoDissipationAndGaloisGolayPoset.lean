@@ -1189,7 +1189,7 @@ theorem clebsch_gordan_s4_idempotency_and_mutual_orthogonality (M : Mat3Op K) :
   dsimp only [Pi1, Pi2, Pi3_pos, Pi3_neg, addMat, nsmulMat, zeroMat, tr]
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
   · refine Prod.ext (Prod.ext ?_ (Prod.ext ?_ ?_))
-      (Prod.ext (Prod.ext ?_ (Prod.ext ?_ ?_)) (Prod.ext ?_ (Prod.ext ?_ ?_))) <;> abel
+      (Prod.ext (Prod.ext ?_ (Prod.ext ?_ ?_)) (Prod.ext ?_ (Prod.ext ?_ ?_))) <;> noncomm_ring
 
 /--
 **Lean `#18` Theorem 2 (`clebsch_gordan_frobenius_pythagorean_theorem`, lifted to `[Ring K]`):**

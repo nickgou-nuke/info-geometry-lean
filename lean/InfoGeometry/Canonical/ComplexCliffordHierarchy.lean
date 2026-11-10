@@ -107,11 +107,11 @@ theorem complexDim_add_two (n : Nat) :
   rw [shape_add_two, ComplexCliffordShape.tensorM2_complexDim]
 
 /-- Algebraic Jordan product used for the Clifford metric readout. -/
-def jordanProduct {A : Type*} [Ring A] (u v : A) : A :=
+def jordanProduct {A : Type*} [Semiring A] (u v : A) : A :=
   u * v + v * u
 
 /-- In a Clifford algebra, the Jordan product of generators recovers the polar form. -/
-theorem jordan_recovers_polar {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
+theorem jordan_recovers_polar {R M : Type*} [CommRing R] [AddCommMonoid M] [Module R M]
     (Q : QuadraticForm R M) (u v : M) :
     jordanProduct (CliffordAlgebra.ι Q u) (CliffordAlgebra.ι Q v) =
       algebraMap R (CliffordAlgebra Q) (QuadraticMap.polar Q u v) := by

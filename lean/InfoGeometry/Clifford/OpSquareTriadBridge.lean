@@ -110,7 +110,7 @@ theorem opSquareTriad_pivot :
 /-- Clifford orthogonality gives the ABS-style anticommutation law. -/
 theorem cliffordOrthogonal_anticommute
     {R : Type*} [CommRing R]
-    {M : Type*} [AddCommGroup M] [Module R M]
+    {M : Type*} [AddCommMonoid M] [Module R M]
     {Q : QuadraticForm R M} (v w : M) (h : Q.IsOrtho v w) :
     CliffordAlgebra.ι Q v * CliffordAlgebra.ι Q w =
       -(CliffordAlgebra.ι Q w * CliffordAlgebra.ι Q v) := by
@@ -119,7 +119,7 @@ theorem cliffordOrthogonal_anticommute
 /-- The finite Clifford volume element picks up the expected parity sign. -/
 theorem cliffordVolumeElement_involute
     {R : Type*} [CommRing R]
-    {M : Type*} [AddCommGroup M] [Module R M]
+    {M : Type*} [AddCommMonoid M] [Module R M]
     {Q : QuadraticForm R M} (vectors : List M) :
     CliffordAlgebra.involute (cliffordVolumeElement Q vectors) =
       (-1 : R) ^ vectors.length • cliffordVolumeElement Q vectors := by

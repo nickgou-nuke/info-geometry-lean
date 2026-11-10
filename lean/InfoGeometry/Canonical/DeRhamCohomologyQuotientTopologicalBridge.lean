@@ -20,7 +20,7 @@ namespace InfoGeometry.Canonical.DeRhamCohomologyQuotientTopologicalBridge
 open CategoryTheory
 open InfoGeometry.Canonical.DeRhamCohomologyQuotientBridge
 
-variable {R V W Y : Type*} [CommRing R] [AddCommGroup V] [Module R V]
+variable {R V W Y : Type*} [CommRing R] [AddCommMonoid V] [Module R V]
 
 abbrev deRhamSubmodule
     (d : Module.End R (ExteriorAlgebra R V)) :
@@ -76,7 +76,7 @@ def deRhamQuotientMkTopCat
 /-- The map induced on de Rham quotients by a continuous map of closed-form
 carriers which preserves the exact-form equivalence relation. -/
 def deRhamQuotientMap
-    [AddCommGroup W] [Module R W]
+    [AddCommMonoid W] [Module R W]
     (dV : Module.End R (ExteriorAlgebra R V))
     (dW : Module.End R (ExteriorAlgebra R W))
     (f : LinearMap.ker dV → LinearMap.ker dW)
@@ -87,7 +87,7 @@ def deRhamQuotientMap
   Quotient.lift (fun a => deRhamQuotientMk dW (f a)) h_invariant
 
 theorem continuous_deRhamQuotientMap
-    [AddCommGroup W] [Module R W]
+    [AddCommMonoid W] [Module R W]
     [TopologicalSpace (ExteriorAlgebra R V)]
     [TopologicalSpace (ExteriorAlgebra R W)]
     (dV : Module.End R (ExteriorAlgebra R V))

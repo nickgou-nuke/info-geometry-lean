@@ -44,7 +44,7 @@ open InfoGeometry.Topology.SplitCliffordChargedFockSugawaraTopological
 
 noncomputable section
 
-variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
+variable {𝕜 : Type*} [Field 𝕜]
 
 /-- Input product carrier `(ZMod 6 × WeylWord) × (𝕜 × ModeIndex ℕ)`. -/
 abbrev CyclotomicHeisenbergSugawaraInput (𝕜 : Type*) :=
@@ -52,7 +52,7 @@ abbrev CyclotomicHeisenbergSugawaraInput (𝕜 : Type*) :=
 
 /-- Output product carrier `LatentQuotient × ChargedFockSugawaraBundle 𝕜`. -/
 abbrev CyclotomicHeisenbergSugawaraOutput
-    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] :=
+    (𝕜 : Type*) [Field 𝕜] :=
   LatentQuotient × ChargedFockSugawaraBundle 𝕜
 
 /-- Product readout sending `((x, w), (a, m))` to its cyclotomic latent quotient

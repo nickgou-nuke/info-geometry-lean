@@ -245,9 +245,10 @@ lemma chiral_parity_charge_and_source_sink_currents {P : B} (hP : P * P = P) (A 
     comm (chiralParityCharge P) (axialCurrent P A C) = (2 : ℤ) • vectorCurrent P A C ∧
     anticomm (chiralParityCharge P) (vectorCurrent P A C) = 0 ∧
     anticomm (chiralParityCharge P) (axialCurrent P A C) = 0 := by
-  refine ⟨by sugawara_abel hP, by sugawara_abel hP, by sugawara_abel hP,
-          by sugawara_abel hP, by sugawara_abel hP, by sugawara_abel hP,
-          by sugawara_abel hP, by sugawara_abel hP, by sugawara_abel hP⟩
+  have hP' : P * P = P := hP
+  refine ⟨by sugawara_abel hP', by sugawara_abel hP', by sugawara_abel hP',
+          by sugawara_abel hP', by sugawara_abel hP', by sugawara_abel hP',
+          by sugawara_abel hP', by sugawara_abel hP', by sugawara_abel hP'⟩
 
 /-- **Lemma `U₂.1` (`heisenberg_current_mode_algebra`):**
 For any idempotent `P` (`P * P = P`), any `A, C : B`, and any mode index `n : ℕ`:
@@ -327,8 +328,9 @@ lemma sugawara_stress_energy_and_conformal_commutators {P : B} (hP : P * P = P) 
       (2 : ℤ) • (sugawaraTensor P A C * axialCurrent P A C) ∧
     comm (chiralSchwinger P A C) (axialCurrent P A C) =
       (2 : ℤ) • (sugawaraTensor P A C * vectorCurrent P A C) := by
-  refine ⟨by sugawara_abel hP, by sugawara_abel hP, by sugawara_abel hP, by sugawara_abel hP,
-          by sugawara_abel hP, by sugawara_abel hP, by sugawara_abel hP, by sugawara_abel hP⟩
+  have hP' : P * P = P := hP
+  refine ⟨by sugawara_abel hP', by sugawara_abel hP', by sugawara_abel hP', by sugawara_abel hP',
+          by sugawara_abel hP', by sugawara_abel hP', by sugawara_abel hP', by sugawara_abel hP'⟩
 
 /-- **Lemma `U₄.1` (`virasoro_chiral_splitting_and_central_defect`):**
 For any idempotent `P` (`P * P = P`) and any `A, C : B`:
@@ -348,7 +350,8 @@ lemma virasoro_chiral_splitting_and_central_defect {P : B} (hP : P * P = P) (A C
       idemDefect (sugawaraPlus P A C) + idemDefect (sugawaraMinus P A C) ∧
     chiralSchwinger P A C * chiralSchwinger P A C =
       sugawaraTensor P A C * sugawaraTensor P A C := by
-  refine ⟨by sugawara_abel hP, by sugawara_abel hP, by sugawara_abel hP, by sugawara_abel hP⟩
+  have hP' : P * P = P := hP
+  refine ⟨by sugawara_abel hP', by sugawara_abel hP', by sugawara_abel hP', by sugawara_abel hP'⟩
 
 /-- **Lemma `U₄.2` (`virasoro_sugawara_mode_closure`):**
 For any idempotent `P` (`P * P = P`), any `A, C : B`, and any mode indices `n, m : ℕ`, the

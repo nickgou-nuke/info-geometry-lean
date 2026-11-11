@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution
 import InfoGeometry.QuantumContext.MassAsCommutantCoupling
 import InfoGeometry.Algebra.IdempotentCornerCommutant
@@ -160,5 +165,45 @@ theorem right_multiplication_swaps_left_ideal (operator : Carrier)
   change (vector * operator) * chirality.Pright = vector * operator
   change vector * chirality.Pleft = vector at member
   rw [mul_assoc, ← Pleft_mul_swap chirality operator anticommutes, ← mul_assoc, member]
+
+/-- Remove the component along an involution. Oddness follows below from the
+displayed scalar anticommutator, rather than being part of this definition. -/
+def normalizedResidual (C : ChiralInvolution Carrier) (v : Carrier) (r : ℝ) : Carrier :=
+  v - r • C.chi
+
+/-- A scalar anticommutator determines an odd residual. -/
+theorem normalizedResidual_anticommutes (C : ChiralInvolution Carrier)
+    (v : Carrier) (r : ℝ)
+    (h : v * C.chi + C.chi * v = (2 * r) • (1 : Carrier)) :
+    normalizedResidual C v r * C.chi =
+      -(C.chi * normalizedResidual C v r) := by
+  apply add_eq_zero_iff_eq_neg.mp
+  change (v - r • C.chi) * C.chi + C.chi * (v - r • C.chi) = 0
+  calc
+    (v - r • C.chi) * C.chi + C.chi * (v - r • C.chi) =
+        (v * C.chi + C.chi * v) - (2 * r) • (1 : Carrier) := by
+      simp only [sub_mul, mul_sub, smul_mul_assoc, mul_smul_comm, C.chi_sq]
+      module
+    _ = 0 := by rw [h, sub_self]
+
+/-- The square of the normalized residual of a square-one operator.
+Vanishing of this square does not imply that the residual vanishes in an
+arbitrary real algebra. -/
+theorem normalizedResidual_sq (C : ChiralInvolution Carrier)
+    (v : Carrier) (r : ℝ) (hv : v * v = 1)
+    (h : v * C.chi + C.chi * v = (2 * r) • (1 : Carrier)) :
+    normalizedResidual C v r * normalizedResidual C v r =
+      (1 - r ^ 2) • (1 : Carrier) := by
+  calc
+    normalizedResidual C v r * normalizedResidual C v r =
+        v * v - r • (v * C.chi + C.chi * v) +
+          (r * r) • (C.chi * C.chi) := by
+      dsimp only [normalizedResidual]
+      simp only [sub_mul, mul_sub, smul_mul_assoc, mul_smul_comm, smul_smul,
+        smul_add]
+      module
+    _ = (1 - r ^ 2) • (1 : Carrier) := by
+      rw [hv, C.chi_sq, h]
+      module
 
 end InfoGeometry.CliffordWeyl

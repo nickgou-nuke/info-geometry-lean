@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Core.IdempotentTangent
 import InfoGeometry.Clifford.ChiralProjectorBerryCurvature
+import InfoGeometry.OperatorAlgebra.OperatorDefectCompletion
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.NoncommRing
 
@@ -94,6 +95,94 @@ theorem projectorCurvature_right {p : A} (hp : p * p = p) (x y : A) :
     projectorCurvature p x y * p = projectorCurvature p x y := by
   unfold projectorCurvature
   rw [mul_assoc, hp]
+
+/-- The existing compression-bracket defect, expressed using the ordered
+intersector Gram tensor. The first cross-corner term has a minus sign. -/
+theorem compressed_commutator_eq_compressedGram {p : A}
+    (hp : p * p = p) (x y : A) :
+    commutator (p * x * p) (p * y * p) =
+      p * commutator x y * p - compressedGram p x y + compressedGram p y x := by
+  have h :
+      p * commutator x y * p - commutator (p * x * p) (p * y * p) =
+        compressedGram p x y - compressedGram p y x := by
+    simpa only [commutator, compressedGram,
+      LieRing.of_associative_ring_bracket] using
+      InfoGeometry.OperatorAlgebra.DefectCompletion.compressed_commutator_defect
+        p x y hp
+  calc
+    commutator (p * x * p) (p * y * p) =
+        p * commutator x y * p -
+          (p * commutator x y * p - commutator (p * x * p) (p * y * p)) := by
+            abel
+    _ = p * commutator x y * p -
+        (compressedGram p x y - compressedGram p y x) := by rw [h]
+    _ = p * commutator x y * p - compressedGram p x y +
+        compressedGram p y x := by abel
+
+/-- Commuting ambient operators can have a compression bracket determined
+by the difference of their two ordered excursions; no nonvanishing is assumed. -/
+theorem compressed_commutator_eq_compressedGram_of_commute {p x y : A}
+    (hp : p * p = p) (hxy : Commute x y) :
+    commutator (p * x * p) (p * y * p) =
+      compressedGram p y x - compressedGram p x y := by
+  have hzero : commutator x y = 0 := sub_eq_zero.mpr hxy.eq
+  rw [compressed_commutator_eq_compressedGram hp x y, hzero,
+    mul_zero, zero_mul, zero_sub]
+  abel
+
+/-- Passing from generators to their canonical inner tangent directions
+changes the sign of the ordered intersector Gram tensor. -/
+theorem compressedGram_commutator {p : A} (hp : p * p = p) (x y : A) :
+    compressedGram p (commutator x p) (commutator y p) =
+      -compressedGram p x y := by
+  have hpp (z : A) : p * (p * z) = p * z := by rw [← mul_assoc, hp]
+  unfold compressedGram commutator
+  simp only [mul_sub, sub_mul, mul_one, one_mul, mul_assoc, hpp, hp]
+  noncomm_ring
+
+/-- Curvature on the inner tangent pair `[x,p]`, `[y,p]` is the negative
+alternating Gram tensor of the original generators. -/
+theorem projectorCurvature_commutator_eq_compressedGram {p : A}
+    (hp : p * p = p) (x y : A) :
+    projectorCurvature p (commutator x p) (commutator y p) =
+      -compressedGram p x y + compressedGram p y x := by
+  have hx : p * commutator x p + commutator x p * p = commutator x p :=
+    commutator_tangent hp x
+  have hy : p * commutator y p + commutator y p * p = commutator y p :=
+    commutator_tangent hp y
+  rw [← compressedGram_sub_swap_eq_projectorCurvature hp hx hy,
+    compressedGram_commutator hp x y, compressedGram_commutator hp y x]
+  abel
+
+/-- Compression preserves the ambient commutator up to the actual
+projector-curvature coefficient on the two canonical inner tangent directions. -/
+theorem compressed_commutator_eq_projectorCurvature {p : A}
+    (hp : p * p = p) (x y : A) :
+    commutator (p * x * p) (p * y * p) =
+      p * commutator x y * p +
+        projectorCurvature p (commutator x p) (commutator y p) := by
+  rw [compressed_commutator_eq_compressedGram hp x y,
+    projectorCurvature_commutator_eq_compressedGram hp x y]
+  abel
+
+/-- For commuting ambient generators the compressed bracket is exactly
+the projector-curvature coefficient. This equality does not assert it is nonzero. -/
+theorem compressed_commutator_eq_projectorCurvature_of_commute {p x y : A}
+    (hp : p * p = p) (hxy : Commute x y) :
+    commutator (p * x * p) (p * y * p) =
+      projectorCurvature p (commutator x p) (commutator y p) := by
+  have hzero : commutator x y = 0 := sub_eq_zero.mpr hxy.eq
+  rw [compressed_commutator_eq_projectorCurvature hp x y, hzero,
+    mul_zero, zero_mul, zero_add]
+
+/-- A generator commuting with the projection has zero inner tangent
+curvature against every second generator, even if those generators do not commute. -/
+theorem projectorCurvature_commutator_eq_zero_of_commute_left {p x : A}
+    (hx : Commute x p) (y : A) :
+    projectorCurvature p (commutator x p) (commutator y p) = 0 := by
+  have hzero : commutator x p = 0 := sub_eq_zero.mpr hx.eq
+  rw [hzero]
+  simp [projectorCurvature, commutator]
 
 section Star
 

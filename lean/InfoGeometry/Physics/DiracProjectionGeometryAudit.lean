@@ -1,0 +1,46 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Physics.DiracEnergyOddPart
+import InfoGeometry.Projective.ExteriorKleinTwoPlaneIncidence
+import InfoGeometry.OperatorAlgebra.PeirceCompressionCurvature
+
+/-! Exact declaration-level axiom probes for the normalized energy residual
+and its concrete Dirac specialization, exterior incidence, and compression
+curvature. This file must be run; its presence does not establish an axiom-audit
+result. -/
+
+#print axioms InfoGeometry.CliffordWeyl.normalizedResidual_anticommutes
+#print axioms InfoGeometry.CliffordWeyl.normalizedResidual_sq
+#print axioms InfoGeometry.OperatorAlgebra.EnergySign.energySignInvolution
+#print axioms InfoGeometry.OperatorAlgebra.EnergySign.scaledHamiltonian_inverse
+#print axioms InfoGeometry.OperatorAlgebra.EnergySign.energyResidual_eq_normalizedResidual
+#print axioms InfoGeometry.OperatorAlgebra.EnergySign.energySignInvolution_anticommutator
+#print axioms InfoGeometry.OperatorAlgebra.EnergySign.energyResidual_anticommutes_energySign
+#print axioms InfoGeometry.OperatorAlgebra.EnergySign.energyResidual_anticommutes
+#print axioms InfoGeometry.OperatorAlgebra.EnergySign.energyResidual_sq
+#print axioms InfoGeometry.OperatorAlgebra.EnergySign.energyResidual_diagonal_corners_zero
+#print axioms InfoGeometry.OperatorAlgebra.EnergySign.energyResidual_off_diagonal_decomposition
+#print axioms InfoGeometry.Physics.DiracRest.diracHamiltonian_alpha1_anticommutator
+#print axioms InfoGeometry.Physics.DiracRest.diracHamiltonian1D_sq_real
+#print axioms InfoGeometry.Physics.DiracRest.diracAlpha1_hamiltonian_anticommutator_real
+#print axioms InfoGeometry.Physics.DiracRest.diracEnergyInvolution1D
+#print axioms InfoGeometry.Physics.DiracRest.diracTrembling1D_anticommutes
+#print axioms InfoGeometry.Physics.DiracRest.diracTrembling1D_diagonal_corners_zero
+#print axioms InfoGeometry.Physics.DiracRest.diracTrembling1D_off_diagonal_decomposition
+#print axioms InfoGeometry.Physics.DiracRest.diracTrembling1D_sq
+#print axioms InfoGeometry.Physics.DiracRest.diracHamiltonian1D_massless
+#print axioms InfoGeometry.Physics.DiracRest.diracTrembling1D_massless_eq_zero
+
+#print axioms InfoGeometry.GrassmannianTower.decomposable_two_blade_sum_square
+#print axioms InfoGeometry.Projective.ExteriorKleinTwoPlaneIncidence.frame_bivector_sum_square
+#print axioms InfoGeometry.Projective.ExteriorKleinTwoPlaneIncidence.frame_bivector_sum_square_ne_zero_iff_disjoint
+#print axioms InfoGeometry.OperatorAlgebra.PeirceCompressionCurvature.compressed_commutator_eq_compressedGram
+#print axioms InfoGeometry.OperatorAlgebra.PeirceCompressionCurvature.compressed_commutator_eq_compressedGram_of_commute
+#print axioms InfoGeometry.OperatorAlgebra.PeirceCompressionCurvature.compressedGram_commutator
+#print axioms InfoGeometry.OperatorAlgebra.PeirceCompressionCurvature.projectorCurvature_commutator_eq_compressedGram
+#print axioms InfoGeometry.OperatorAlgebra.PeirceCompressionCurvature.compressed_commutator_eq_projectorCurvature
+#print axioms InfoGeometry.OperatorAlgebra.PeirceCompressionCurvature.compressed_commutator_eq_projectorCurvature_of_commute
+#print axioms InfoGeometry.OperatorAlgebra.PeirceCompressionCurvature.projectorCurvature_commutator_eq_zero_of_commute_left

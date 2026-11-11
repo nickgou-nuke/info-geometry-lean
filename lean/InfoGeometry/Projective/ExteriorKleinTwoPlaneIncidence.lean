@@ -1,6 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.DecomposableBivector
 import InfoGeometry.Projective.ExteriorKleinTwoPlaneEquiv
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Algebra.GrassmannianCartanTower
 
 /-!
 # Incidence of real two-planes on the projective Klein locus
@@ -78,6 +84,46 @@ theorem combinedFrame_wedge_eq_zero_iff_incident
     exact (InfoGeometry.Canonical.exteriorPower_ιMulti_ne_zero_of_linearIndependent _ hli) hw
   · intro hli
     exact (exteriorPower.ιMulti ℝ 4).map_linearDependent _ hli
+
+/-- The native exterior-square representatives of two nondegenerate real
+frames have square equal to twice their combined top exterior product. -/
+theorem frame_bivector_sum_square (uv st : NondegenerateExteriorFrame) :
+    ((exteriorPower.ιMulti ℝ 2 uv.1 + exteriorPower.ιMulti ℝ 2 st.1 :
+        ⋀[ℝ]^2 Vec4) : ExteriorAlgebra ℝ Vec4) ^ 2 =
+      (2 : ℝ) •
+        (exteriorPower.ιMulti ℝ 4 (combinedFrame uv st) :
+          ExteriorAlgebra ℝ Vec4) := by
+  have hframe : combinedFrame uv st = Fin.append uv.1 st.1 := by
+    funext i
+    fin_cases i <;> rfl
+  rw [hframe]
+  simpa only [Submodule.coe_add, exteriorPower.ιMulti_apply_coe] using
+    InfoGeometry.GrassmannianTower.decomposable_two_blade_sum_square ℝ uv.1 st.1
+
+/-- A sum of two framed simple bivectors has nonzero exterior square exactly
+when the two native real planes are disjoint. Frame nondegeneracy is already
+part of `NondegenerateExteriorFrame`; no metric-null or physical assumptions
+are involved. -/
+theorem frame_bivector_sum_square_ne_zero_iff_disjoint
+    (uv st : NondegenerateExteriorFrame) :
+    ((exteriorPower.ιMulti ℝ 2 uv.1 + exteriorPower.ιMulti ℝ 2 st.1 :
+        ⋀[ℝ]^2 Vec4) : ExteriorAlgebra ℝ Vec4) ^ 2 ≠ 0 ↔
+      Disjoint (frameSpan uv).1 (frameSpan st).1 := by
+  rw [frame_bivector_sum_square]
+  constructor
+  · intro hsquare
+    by_contra hdisjoint
+    have hzero : exteriorPower.ιMulti ℝ 4 (combinedFrame uv st) = 0 :=
+      (combinedFrame_wedge_eq_zero_iff_incident uv st).mpr hdisjoint
+    apply hsquare
+    simp only [hzero, Submodule.coe_zero, smul_zero]
+  · intro hdisjoint
+    apply smul_ne_zero (by norm_num : (2 : ℝ) ≠ 0)
+    intro hzero
+    have hzero' : exteriorPower.ιMulti ℝ 4 (combinedFrame uv st) = 0 := by
+      apply Subtype.ext
+      simpa only [Submodule.coe_zero] using hzero
+    exact ((combinedFrame_wedge_eq_zero_iff_incident uv st).mp hzero') hdisjoint
 
 /-- The set-level Plücker equivalence sends a framed plane to its native
 projective Klein ray. -/

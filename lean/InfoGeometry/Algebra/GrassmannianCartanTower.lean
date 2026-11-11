@@ -311,4 +311,32 @@ theorem decomposable_exterior_blade_square_zero
       _ = _ := by rfl
   rw [← hprod, hzero]
 
+/-- The square of a sum of two decomposable two-blades is twice their degree-four
+exterior product. This identity does not require nondegeneracy or cancellation
+of two. -/
+theorem decomposable_two_blade_sum_square (uv st : Fin 2 → V) :
+    (ExteriorAlgebra.ιMulti R 2 uv + ExteriorAlgebra.ιMulti R 2 st) ^ 2 =
+      (2 : R) • ExteriorAlgebra.ιMulti R 4 (Fin.append uv st) := by
+  have huv : ExteriorAlgebra.ιMulti R 2 uv * ExteriorAlgebra.ιMulti R 2 uv = 0 :=
+    decomposable_exterior_blade_square_zero (R := R) (n := 1) uv
+  have hst : ExteriorAlgebra.ιMulti R 2 st * ExteriorAlgebra.ιMulti R 2 st = 0 :=
+    decomposable_exterior_blade_square_zero (R := R) (n := 1) st
+  have hswap : ExteriorAlgebra.ιMulti R 2 st * ExteriorAlgebra.ιMulti R 2 uv =
+      ExteriorAlgebra.ιMulti R 2 uv * ExteriorAlgebra.ιMulti R 2 st := by
+    have h := ExteriorAlgebra.ιMulti_mul_ιMulti_anticomm (R := R) (u := uv) (v := st)
+    norm_num at h
+    exact h.symm
+  calc
+    (ExteriorAlgebra.ιMulti R 2 uv + ExteriorAlgebra.ιMulti R 2 st) ^ 2 =
+        ExteriorAlgebra.ιMulti R 2 uv * ExteriorAlgebra.ιMulti R 2 uv +
+        ExteriorAlgebra.ιMulti R 2 uv * ExteriorAlgebra.ιMulti R 2 st +
+        ExteriorAlgebra.ιMulti R 2 st * ExteriorAlgebra.ιMulti R 2 uv +
+        ExteriorAlgebra.ιMulti R 2 st * ExteriorAlgebra.ιMulti R 2 st := by
+      noncomm_ring
+    _ = (2 : R) •
+        (ExteriorAlgebra.ιMulti R 2 uv * ExteriorAlgebra.ιMulti R 2 st) := by
+      simp only [huv, hst, hswap, zero_add, add_zero, two_smul]
+    _ = (2 : R) • ExteriorAlgebra.ιMulti R 4 (Fin.append uv st) := by
+      rw [ExteriorAlgebra.ιMulti_mul_ιMulti]
+
 end InfoGeometry.GrassmannianTower

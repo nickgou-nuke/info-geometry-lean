@@ -202,13 +202,30 @@ Placeholder, strict screening, and semantic findings remain separately
 reported checks. Source review and selected-module CI do not establish a
 whole-repository build result.
 
-Kernel acceptance is pending the focused compilation and axiom audit. The
-first CI attempt stopped during checkout because upstream has an unrelated
-gitlink without a URL in `.gitmodules`. The workflow now fetches the exact public
-event revision without credentials or submodule traversal and checks its SHA
-before reading any source or pin files.
-The local scoped cache request has acquired the shared build lock and is
-initializing the pinned native imports. The workflow uploads its
-source-bound report and declaration audit so reviewers can inspect the
-actual completion status. A successful focused run establishes only this
-selected closure and these declarations, not a physical mass-gap theorem.
+The [focused CI run](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43033110854)
+passed for PR head `bd63817100b05d4470180dab41a34923de56dfdc`:
+
+- All 23 repository modules compiled freshly against the pinned dependencies.
+- Both selected owners compiled with zero warnings. The existing dependencies
+  `SplitQ11` and `MatrixNoncommutativity` each emitted one warning, retained in
+  the evidence rather than suppressed.
+- The recursive audit covered 22 declarations in the new owner, including
+  generated auxiliaries, and 4 in `Cl11ColimitDimension`. Its axiom union was
+  exactly `propext`, `Classical.choice`, and `Quot.sound`.
+- Placeholder, strict screening, semantic, source-hash, and evidence checks
+  passed. The uploaded `cl11-graded-operator-kernel-evidence` artifact contains
+  the report, generated audit, hashes, environment, and logs.
+
+The audited new Lean source has SHA-256
+`6e12b5d07c079ed1495ab09d867d0eadc68bc833e7c3648646de35feaa5737fa`.
+The workflow reruns when that source, its selected dependencies, the checker,
+the pins, this document, or the workflow changes.
+
+The first CI attempt stopped during checkout because upstream has an unrelated
+gitlink without a URL in `.gitmodules`. The successful workflow fetches the
+exact public event revision without credentials or submodule traversal and
+checks its SHA before reading any source or pin files. The separate
+[root CI run](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43033110439)
+still failed its path-dependency preflight. The focused success establishes
+this selected closure and these declarations; it does not establish a
+whole-repository build or a physical mass-gap theorem.

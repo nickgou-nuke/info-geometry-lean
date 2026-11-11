@@ -108,6 +108,25 @@ theorem word_mul (a b c d : ZMod 2) :
     exact SylvesterWeylBraid.pow_eq_pow_mod 2 _ (by simp) _
   simp only [Weyl.weylD, shift, clock, hs, hz, hp]
 
+/-- Transpose reverses the order of the symmetric Sylvester generators. -/
+theorem word_transpose_eq_reverse (a b : ZMod 2) :
+    (word (R := R) a b)ᵀ = clock ^ b.val * shift ^ a.val := by
+  have hx : (shift (R := R))ᵀ = shift := by
+    rw [shift_eq]
+    ext i j
+    fin_cases i <;> fin_cases j <;> rfl
+  have hz : (clock (R := R))ᵀ = clock := by
+    rw [clock_eq]
+    ext i j
+    fin_cases i <;> fin_cases j <;> rfl
+  simp only [word, Weyl.weylD, Matrix.transpose_mul, Matrix.transpose_pow, hx, hz]
+
+/-- An `XZ` factor is skew-symmetric; a real sign cannot alter this parity. -/
+theorem word_transpose (a b : ZMod 2) :
+    (word (R := R) a b)ᵀ = phase (R := R) (a * b) • word a b := by
+  rw [word_transpose_eq_reverse]
+  simpa [word, Weyl.weylD, mul_comm a b] using (word_mul (R := R) 0 b a 0)
+
 /-- The trace pairing of the four binary Weyl words is diagonal. -/
 theorem word_trace_pair (u v : ZMod 2 × ZMod 2) :
     Matrix.trace ((word (R := R) u.1 u.2)ᵀ * word v.1 v.2) =

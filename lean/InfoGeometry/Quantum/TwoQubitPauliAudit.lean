@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Quantum.TwoQubitPauliBasis
+import InfoGeometry.Quantum.TwoQubitPauliPhase
 
 /-!
-# Axiom audit for binary projective incidence and its signed matrix lift
+# Axiom audit for binary projective incidence and its signed matrix lifts
 
-This companion prints the transitive axiom dependencies of each new public
-declaration in the four source owners. It is checked with the same pinned
-Lean and Mathlib versions as those owners.
+This companion prints the transitive axiom dependencies of every public
+named declaration in the five source owners, including changes of real phase
+convention. It is checked with the same pinned Lean and Mathlib versions.
 -/
 
 -- BinaryWeyl.lean
@@ -26,6 +27,8 @@ Lean and Mathlib versions as those owners.
 #print axioms InfoGeometry.Quantum.BinaryWeyl.word
 #print axioms InfoGeometry.Quantum.BinaryWeyl.word_zero_zero
 #print axioms InfoGeometry.Quantum.BinaryWeyl.word_mul
+#print axioms InfoGeometry.Quantum.BinaryWeyl.word_transpose_eq_reverse
+#print axioms InfoGeometry.Quantum.BinaryWeyl.word_transpose
 #print axioms InfoGeometry.Quantum.BinaryWeyl.word_trace_pair
 #print axioms InfoGeometry.Quantum.BinaryWeyl.shift_clock_noncommute
 
@@ -56,6 +59,16 @@ Lean and Mathlib versions as those owners.
 #print axioms InfoGeometry.Projective.BinarySymplectic.symplectic_add_right
 #print axioms InfoGeometry.Projective.BinarySymplectic.symplectic_left_add
 #print axioms InfoGeometry.Projective.BinarySymplectic.symplectic_right_add
+#print axioms InfoGeometry.Projective.BinarySymplectic.quadraticPhase
+#print axioms InfoGeometry.Projective.BinarySymplectic.quadraticPhase_zero
+#print axioms InfoGeometry.Projective.BinarySymplectic.quadraticPhase_add
+#print axioms InfoGeometry.Projective.BinarySymplectic.rephasedCocycle
+#print axioms InfoGeometry.Projective.BinarySymplectic.rephasedCocycle_zero_left
+#print axioms InfoGeometry.Projective.BinarySymplectic.rephasedCocycle_zero_right
+#print axioms InfoGeometry.Projective.BinarySymplectic.rephasedCocycle_assoc
+#print axioms InfoGeometry.Projective.BinarySymplectic.rephasedCocycle_symplectic
+#print axioms InfoGeometry.Projective.BinarySymplectic.rephasedCocycle_self
+#print axioms InfoGeometry.Projective.BinarySymplectic.rephasedCocycle_quadraticPhase
 #print axioms InfoGeometry.Projective.BinarySymplectic.symplectic_nondegenerate
 #print axioms InfoGeometry.Projective.BinarySymplectic.points
 #print axioms InfoGeometry.Projective.BinarySymplectic.mem_points
@@ -116,3 +129,28 @@ Lean and Mathlib versions as those owners.
 #print axioms InfoGeometry.Quantum.TwoQubitPauli.trace_zero_iff_identity_coefficient_zero
 #print axioms InfoGeometry.Quantum.TwoQubitPauli.nonzero_pauli_span_eq_sl
 #print axioms InfoGeometry.Quantum.TwoQubitPauli.nonzero_pauli_span_finrank
+
+-- TwoQubitPauliPhase.lean
+#print axioms InfoGeometry.Quantum.TwoQubitPauli.rephasedPauli
+#print axioms InfoGeometry.Quantum.TwoQubitPauli.rephasedPauli_zero
+#print axioms InfoGeometry.Quantum.TwoQubitPauli.rephasedPauli_zero_of_normalized
+#print axioms InfoGeometry.Quantum.TwoQubitPauli.phase_smul_rephasedPauli
+#print axioms InfoGeometry.Quantum.TwoQubitPauli.smul_rephasedPauli_injective
+#print axioms InfoGeometry.Quantum.TwoQubitPauli.rephasedPauli_mul
+#print axioms InfoGeometry.Quantum.TwoQubitPauli.rephasedPauli_mul_self
+#print axioms InfoGeometry.Quantum.TwoQubitPauli.rephasedPauli_phase_commutation
+#print axioms InfoGeometry.Quantum.TwoQubitPauli.rephasedPauli_commute_iff
+#print axioms InfoGeometry.Quantum.TwoQubitPauli.rephasedPauli_first_factor_noncommute
+#print axioms InfoGeometry.Quantum.TwoQubitPauli.not_rephasedPauli_symplectic_product
+#print axioms InfoGeometry.Quantum.TwoQubitPauli.pauli_transpose
+#print axioms InfoGeometry.Quantum.TwoQubitPauli.rephasedPauli_transpose
+#print axioms InfoGeometry.Quantum.TwoQubitPauli.rephasedPauli_isSymm_iff
+#print axioms InfoGeometry.Quantum.TwoQubitPauli.rephasedPauli_isHermitian_iff
+#print axioms InfoGeometry.Quantum.TwoQubitPauli.rephasedPauli_xz_not_isSymm
+#print axioms InfoGeometry.Quantum.TwoQubitPauli.quadraticPauli_mul
+#print axioms InfoGeometry.Quantum.TwoQubitPauli.quadraticPauli_eq_transpose
+#print axioms InfoGeometry.Quantum.TwoQubitPauli.quadraticPauli_eq_reverse
+#print axioms InfoGeometry.Quantum.TwoQubitPauli.pauli_mul_quadraticPauli
+#print axioms InfoGeometry.Quantum.TwoQubitPauli.quadraticPauli_mul_pauli
+#print axioms InfoGeometry.Quantum.TwoQubitPauli.quadraticPauli_xz_square
+#print axioms InfoGeometry.Quantum.TwoQubitPauli.quadraticPauli_xz_product_ne_symplectic

@@ -45,6 +45,11 @@ def evaluate : {n : ℕ} → Word n → Mat n :=
       (fun _ => (1 : Mat 0))
       (fun _ previous w => previous (Fin.tail w) ⊗ₖ realSeed (w 0)) n
 
+@[simp] theorem evaluate_zero (w : Word 0) : evaluate w = (1 : Mat 0) := rfl
+
+theorem evaluate_succ {n : ℕ} (w : Word (n + 1)) :
+    evaluate w = evaluate (Fin.tail w) ⊗ₖ realSeed (w 0) := rfl
+
 /-- Each occurrence of the unique skew letter flips transpose parity. -/
 def oddEminus : {n : ℕ} → Word n → Bool :=
   fun {n} =>
@@ -53,9 +58,15 @@ def oddEminus : {n : ℕ} → Word n → Bool :=
       (fun _ previous w =>
         if w 0 = 3 then !previous (Fin.tail w) else previous (Fin.tail w)) n
 
+@[simp] theorem oddEminus_zero (w : Word 0) : oddEminus w = false := rfl
+
+theorem oddEminus_succ {n : ℕ} (w : Word (n + 1)) :
+    oddEminus w =
+      if w 0 = 3 then !oddEminus (Fin.tail w) else oddEminus (Fin.tail w) := rfl
+
 @[simp] theorem oddEminus_cons {n : ℕ} (a : Fin 4) (w : Word n) :
     oddEminus (Fin.cons a w) = if a = 3 then !oddEminus w else oddEminus w := by
-  simp [oddEminus]
+  rw [oddEminus_succ, Fin.cons_zero, Fin.tail_cons]
 
 theorem realSeed_transpose (a : Fin 4) :
     (realSeed a)ᵀ = if a = 3 then -realSeed a else realSeed a := by
@@ -73,25 +84,26 @@ theorem realSeed_orthogonal (a : Fin 4) :
 theorem evaluate_transpose {n : ℕ} (w : Word n) :
     (evaluate w)ᵀ = if oddEminus w then -evaluate w else evaluate w := by
   induction n with
-  | zero => simp [evaluate, oddEminus]
+  | zero =>
+      change (1 : Mat 0)ᵀ = 1
+      simp
   | succ n ih =>
-      change (evaluate (Fin.tail w) ⊗ₖ realSeed (w 0))ᵀ =
-        if oddEminus w then -(evaluate (Fin.tail w) ⊗ₖ realSeed (w 0))
-        else evaluate (Fin.tail w) ⊗ₖ realSeed (w 0)
-      rw [transpose_kronecker, ih, realSeed_transpose]
+      simp only [evaluate_succ]
+      rw [transpose_kronecker, ih, realSeed_transpose, oddEminus_succ]
       by_cases h : w 0 = 3 <;>
         cases hp : oddEminus (Fin.tail w) <;>
         ext i j <;>
-        simp [oddEminus, h, hp, Matrix.kroneckerMap_apply]
+        simp [h, hp, Matrix.kroneckerMap_apply]
 
 /-- Orthogonality is inherited factor by factor through the native product. -/
 theorem evaluate_orthogonal {n : ℕ} (w : Word n) :
     (evaluate w)ᵀ * evaluate w = 1 := by
   induction n with
-  | zero => simp [evaluate]
+  | zero =>
+      change (1 : Mat 0)ᵀ * 1 = 1
+      simp
   | succ n ih =>
-      change (evaluate (Fin.tail w) ⊗ₖ realSeed (w 0))ᵀ *
-        (evaluate (Fin.tail w) ⊗ₖ realSeed (w 0)) = 1
+      simp only [evaluate_succ]
       rw [transpose_kronecker, ← Matrix.mul_kronecker_mul, ih,
         realSeed_orthogonal, Matrix.one_kronecker_one]
 
@@ -120,10 +132,10 @@ theorem wordCount_eq_sum (n : ℕ) (b : Bool) :
   rw [wordCount, Fintype.card_subtype, Finset.card_filter]
 
 @[simp] theorem wordCount_zero_false : wordCount 0 false = 1 := by
-  simp [wordCount_eq_sum, oddEminus, Word]
+  simp [wordCount_eq_sum, Word]
 
 @[simp] theorem wordCount_zero_true : wordCount 0 true = 0 := by
-  simp [wordCount_eq_sum, oddEminus, Word]
+  simp [wordCount_eq_sum, Word]
 
 /-- Three head letters retain the sign; the fourth reverses it. -/
 theorem wordCount_succ (n : ℕ) (b : Bool) :
@@ -137,9 +149,11 @@ theorem wordCount_succ (n : ℕ) (b : Bool) :
   rw [Fin.sum_univ_four]
   cases b with
   | false =>
-      simp [oddEminus_cons, wordCount_eq_sum, Bool.not_eq_false_eq_eq_true] <;> omega
+      simp [oddEminus_cons, wordCount_eq_sum]
+      omega
   | true =>
-      simp [oddEminus_cons, wordCount_eq_sum, Bool.not_eq_true_eq_eq_false] <;> omega
+      simp [oddEminus_cons, wordCount_eq_sum]
+      omega
 
 theorem symmetricWordCount_succ (n : ℕ) :
     wordCount (n + 1) false = 3 * wordCount n false + wordCount n true :=

@@ -77,9 +77,23 @@ theorem diracBlock_sq_eq_zero_iff (m b : B) :
 /-- A self-adjoint mass gives self-adjointness for the chiral metric. -/
 theorem diracBlock_krein_selfAdjoint (m b : B) (hm : star m = m) :
     chiralGrading * star (diracBlock m b) * chiralGrading = diracBlock m b := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [chiralGrading, diracBlock, Matrix.mul_apply, Fin.sum_univ_two, hm]
+  have hs : star (diracBlock m b) =
+      (!![m, -b; star b, -m] : BdGBlock B) := by
+    ext i j
+    fin_cases i <;> fin_cases j
+    · change star m = m
+      exact hm
+    · change star (-star b) = -b
+      simp only [star_neg, star_star]
+    · change star b = star b
+      rfl
+    · change star (-m) = -m
+      rw [star_neg, hm]
+  rw [hs]
+  change (!![1, 0; 0, -1] : BdGBlock B) * !![m, -b; star b, -m] *
+      !![1, 0; 0, -1] = !![m, b; -star b, -m]
+  rw [Matrix.mul_fin_two, Matrix.mul_fin_two]
+  simp
 
 /-- If the mass is self-adjoint, commuting with `b` also gives the second
 commutation, but both diagonal Gram products must still be checked. -/
@@ -174,10 +188,9 @@ theorem normalizeByUnit_real_projectors_complete
       ![involutionPlusProjector (normalizeByUnit D gap) (algebraMap ℝ R (1 / 2)),
         involutionMinusProjector (normalizeByUnit D gap) (algebraMap ℝ R (1 / 2))] := by
   apply normalizeByUnit_projectors_complete D gap hcomm hsq
-  · calc
-      (2 : R) * algebraMap ℝ R (1 / 2) =
-          algebraMap ℝ R ((2 : ℝ) * (1 / 2)) := by simp
-      _ = 1 := by norm_num
+  · have hreal : (2 : ℝ) * (1 / 2) = 1 := by norm_num
+    have hmap := congrArg (algebraMap ℝ R) hreal
+    simpa only [map_mul, map_ofNat, map_one] using hmap
   · exact Algebra.commutes (1 / 2 : ℝ) (normalizeByUnit D gap)
 
 end Projectors

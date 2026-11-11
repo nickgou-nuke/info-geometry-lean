@@ -128,3 +128,29 @@ There is no causal edge from an archetypal label or from graph placement alone.
 
 Status: contract frozen before theorem-bearing edits; implementation and
 acceptance pending.
+
+## Initial verification and corrective action
+
+Run `43034510929` compiled the 256-module source closure. The existing
+dependencies and the ideal owners compiled. Three new-owner proof steps
+failed: matrix-star simplification in the signed Dirac adjoint, transport of
+the real half through `algebraMap`, and rewriting the pointwise vector star.
+The doubled metric owner also reported three unused simplifier arguments
+and an unused star-ring hypothesis. The counterexample owner was blocked
+by the Dirac import, and the axiom audit therefore did not run.
+
+The repairs make the matrix star and real algebra-map laws explicit, expand
+the pointwise star, and remove the unused arguments/hypothesis. The finite
+sharp countermodels similarly expand matrix entries before numeric
+simplification. No mathematical conclusion was weakened. The verifier now
+checks the finite counterexamples before the large colimit closure and stops
+immediately if a changed owner fails compilation or its warning gate; a
+successful run still requires the entire closure and the full native audit.
+
+The root-package attempt returned code 1 for the absent
+`external_refs/homotopy-hypothesis-lean4` dependency. This is separate from
+the source-closure result. Independent review also found unchanged baseline
+blockers in four auxiliary workflows; their downstream checks did not run.
+
+Corrective-action status: source repairs integrated; repeat kernel
+verification and final independent acceptance pending.

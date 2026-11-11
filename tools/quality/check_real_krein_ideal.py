@@ -21,12 +21,14 @@ from tools.build_lock import acquire_build_lock
 from tools.quality.check_reviewed_prs import closure
 from tools.quality.check_bilateral_kernel import audit_source
 
-OWNERS = ['InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentCornerEndEquivalence',
+OWNERS = [
+    'InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentCornerEndEquivalence',
     'InfoGeometry.OperatorAlgebra.PeirceSpine.IdealStarGramDensity',
     'InfoGeometry.Physics.KreinDiracBlock',
     'InfoGeometry.CliffordWeyl.RealDoubledIdealMetric',
+    'InfoGeometry.Examples.RealKreinIdealCounterexamples',
     'InfoGeometry.Clifford.Cl11DoubledGram',
-    'InfoGeometry.Examples.RealKreinIdealCounterexamples']
+]
 
 
 def run(command, cwd, env=None, pass_fds=()):
@@ -121,6 +123,8 @@ def main():
                     failed.add(module)
                 if module in OWNERS and warnings:
                     warned.add(module)
+                if module in OWNERS and (result.returncode or warnings):
+                    raise RuntimeError('Changed owner failed compilation or warning gate: '+module)
             if failed:
                 raise RuntimeError('Failed/blocked modules: '+', '.join(sorted(failed)))
             audit = src/'RealKreinIdealAudit.lean'

@@ -47,7 +47,7 @@ theorem two_star_squares_eq_zero_iff (x y : Limit) :
 /-- The ring-valued Gram form on the actual doubled module is definite. -/
 theorem column_gram_eq_zero_iff (v : Fin 2 → Limit) :
     star v ⬝ᵥ v = 0 ↔ v = 0 := by
-  simp only [dotProduct, Fin.sum_univ_two]
+  simp only [dotProduct, Fin.sum_univ_two, Pi.star_apply]
   rw [two_star_squares_eq_zero_iff]
   constructor
   · rintro ⟨h0, h1⟩

@@ -69,13 +69,13 @@ theorem finTwoArrow_swap (v : Fin 2 → B) :
     LinearEquiv.finTwoArrow ℝ B (andreevSwap *ᵥ v) =
       swapOp (R := ℝ) (LinearEquiv.finTwoArrow ℝ B v) := by
   ext <;> simp [LinearEquiv.finTwoArrow, andreevSwap, swapOp,
-    Matrix.mulVec, dotProduct, Fin.sum_univ_two]
+    dotProduct, Fin.sum_univ_two]
 
 theorem finTwoArrow_grading (v : Fin 2 → B) :
     LinearEquiv.finTwoArrow ℝ B (chiralGrading *ᵥ v) =
       gradingOp (R := ℝ) (LinearEquiv.finTwoArrow ℝ B v) := by
   ext <;> simp [LinearEquiv.finTwoArrow, chiralGrading, gradingOp,
-    Matrix.mulVec, dotProduct, Fin.sum_univ_two]
+    dotProduct, Fin.sum_univ_two]
 
 /-- The existing endomorphism phase uses the opposite sign convention. -/
 theorem finTwoArrow_phase (v : Fin 2 → B) :
@@ -83,7 +83,7 @@ theorem finTwoArrow_phase (v : Fin 2 → B) :
       -phaseOp (R := ℝ) (LinearEquiv.finTwoArrow ℝ B v) := by
   rw [phaseMatrix_eq]
   ext <;> simp [LinearEquiv.finTwoArrow, phaseOp_apply,
-    Matrix.mulVec, dotProduct, Fin.sum_univ_two]
+    dotProduct, Fin.sum_univ_two]
 
 end PairDictionary
 
@@ -127,6 +127,7 @@ theorem doubledMetric_star (η : B) (hη : star η = η) :
   fin_cases i <;> fin_cases j <;>
     simp [doubledMetric, Matrix.star_apply, hη]
 
+omit [StarRing B] in
 theorem doubledMetric_sq (η : B) (hη : η * η = 1) :
     doubledMetric η * doubledMetric η = 1 := by
   ext i j

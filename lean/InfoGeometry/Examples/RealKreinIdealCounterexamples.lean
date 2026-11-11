@@ -34,8 +34,8 @@ theorem chiralIdempotent_sharp_complement :
     sharp andreevSwap chiralIdempotent = 1 - chiralIdempotent := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    norm_num [sharp, andreevSwap, chiralIdempotent, Matrix.mul_apply,
-      Matrix.star_apply, Fin.sum_univ_two]
+    simp only [sharp, Matrix.mul_apply, Matrix.star_apply, Fin.sum_univ_two] <;>
+    norm_num [andreevSwap, chiralIdempotent]
 
 theorem chiralIdempotent_null : sharp andreevSwap chiralIdempotent * chiralIdempotent = 0 := by
   rw [chiralIdempotent_sharp_complement, sub_mul, one_mul, chiralIdempotent_sq, sub_self]
@@ -49,21 +49,21 @@ theorem idealVector_supported : idealVector * chiralIdempotent = idealVector := 
 theorem idealVector_sharp_gram_ne_zero : sharp andreevSwap idealVector * idealVector ≠ 0 := by
   intro h
   have h10 := congrArg (fun X : BdGBlock ℝ => X 1 0) h
-  norm_num [sharp, andreevSwap, idealVector, Matrix.mul_apply,
-    Matrix.star_apply, Fin.sum_univ_two] at h10
+  simp only [sharp, Matrix.mul_apply, Matrix.star_apply, Fin.sum_univ_two] at h10
+  norm_num [andreevSwap, idealVector] at h10
 
 theorem idealVector_sharp_gram_sq_zero :
     (sharp andreevSwap idealVector * idealVector) ^ 2 = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    norm_num [pow_two, sharp, andreevSwap, idealVector, Matrix.mul_apply,
-      Matrix.star_apply, Fin.sum_univ_two]
+    simp only [pow_two, sharp, Matrix.mul_apply, Matrix.star_apply, Fin.sum_univ_two] <;>
+    norm_num [andreevSwap, idealVector]
 
 theorem idealVector_sharp_density_zero : idealVector * sharp andreevSwap idealVector = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    norm_num [sharp, andreevSwap, idealVector, Matrix.mul_apply,
-      Matrix.star_apply, Fin.sum_univ_two]
+    simp only [sharp, Matrix.mul_apply, Matrix.star_apply, Fin.sum_univ_two] <;>
+    norm_num [andreevSwap, idealVector]
 
 /-- An involution with unit squared gap can still give a negative twisted form. -/
 theorem negative_grading_square :

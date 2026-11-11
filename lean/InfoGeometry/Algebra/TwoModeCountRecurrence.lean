@@ -33,7 +33,7 @@ theorem transition_projection_noncommuting :
   norm_num [transition, firstModeProjection, Matrix.mul_apply, Fin.sum_univ_two] at h01
 
 /-- Initial state and iteration by the transition operator. -/
-def counts : ℕ → Fin 2 → ℤ
+noncomputable def counts : ℕ → Fin 2 → ℤ
   | 0 => ![1, 0]
   | n + 1 => transition.mulVec (counts n)
 

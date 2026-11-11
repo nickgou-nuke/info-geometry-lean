@@ -1,0 +1,36 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Clifford.Cl11ChiralityGradedCAR
+
+/-! Public axiom requests for the graded CAR construction and quotient obstruction. -/
+
+#print axioms InfoGeometry.OperatorAlgebra.IntrinsicGradedAdjoint.gradedAdjoint_mulLeft_anticommutator
+#print axioms InfoGeometry.OperatorAlgebra.IntrinsicGradedAdjoint.gradedAdjoint_mulLeft_contracts
+#print axioms InfoGeometry.OperatorAlgebra.IntrinsicGradedAdjoint.gradedAdjoint_cycle_primitive
+#print axioms InfoGeometry.OperatorAlgebra.IntrinsicGradedAdjoint.gradedAdjoint_ker_eq_range
+#print axioms InfoGeometry.Clifford.Cl11ChiralityGradedCAR.limitChiralityConj_algebraMap
+#print axioms InfoGeometry.Clifford.Cl11ChiralityGradedCAR.chirality
+#print axioms InfoGeometry.Clifford.Cl11ChiralityGradedCAR.chirality_apply
+#print axioms InfoGeometry.Clifford.Cl11ChiralityGradedCAR.chirality_involutive
+#print axioms InfoGeometry.Clifford.Cl11ChiralityGradedCAR.chirality_creationMode
+#print axioms InfoGeometry.Clifford.Cl11ChiralityGradedCAR.chirality_annihilationMode
+#print axioms InfoGeometry.Clifford.Cl11ChiralityGradedCAR.creationMode_sq_zero
+#print axioms InfoGeometry.Clifford.Cl11ChiralityGradedCAR.annihilationMode_sq_zero
+#print axioms InfoGeometry.Clifford.Cl11ChiralityGradedCAR.differential
+#print axioms InfoGeometry.Clifford.Cl11ChiralityGradedCAR.homotopy
+#print axioms InfoGeometry.Clifford.Cl11ChiralityGradedCAR.differential_apply
+#print axioms InfoGeometry.Clifford.Cl11ChiralityGradedCAR.homotopy_apply
+#print axioms InfoGeometry.Clifford.Cl11ChiralityGradedCAR.differential_sq_zero
+#print axioms InfoGeometry.Clifford.Cl11ChiralityGradedCAR.homotopy_sq_zero
+#print axioms InfoGeometry.Clifford.Cl11ChiralityGradedCAR.differential_anticomm
+#print axioms InfoGeometry.Clifford.Cl11ChiralityGradedCAR.homotopy_anticomm
+#print axioms InfoGeometry.Clifford.Cl11ChiralityGradedCAR.differential_homotopy_CAR
+#print axioms InfoGeometry.Clifford.Cl11ChiralityGradedCAR.endomorphismCAR
+#print axioms InfoGeometry.Clifford.Cl11ChiralityGradedCAR.differential_homotopy_contracts
+#print axioms InfoGeometry.Clifford.Cl11ChiralityGradedCAR.differential_cycle_primitive
+#print axioms InfoGeometry.Clifford.Cl11ChiralityGradedCAR.differential_ker_eq_range
+#print axioms InfoGeometry.Clifford.Cl11ChiralityGradedCAR.differential_annihilationMode
+#print axioms InfoGeometry.Clifford.Cl11ChiralityGradedCAR.differential_not_descend_souriau

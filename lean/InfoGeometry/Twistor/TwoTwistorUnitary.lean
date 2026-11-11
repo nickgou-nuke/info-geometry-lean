@@ -96,6 +96,8 @@ theorem gram_det_helicity (Z : PairFrame) :
       Complex.normSq (wittPair (Z 0) (Z 1)) : ℝ) : ℂ) := by
   rw [gram_eq_hermitianCoordinates, Matrix.det_fin_two]
   simp [hermitianCoordinates, Complex.normSq_eq_conj_mul_self]
+  rw [show (starRingEnd ℂ) (wittPair (Z 0) (Z 1)) =
+    wittPair (Z 1) (Z 0) from wittPair_conj (Z 0) (Z 1)]
   ring
 
 theorem spinNormSq_gram (Z : PairFrame) :

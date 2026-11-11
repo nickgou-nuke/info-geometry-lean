@@ -1,0 +1,213 @@
+name: Infinite colimit graded operators (scoped)
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Clifford/**'
+      - 'lean/InfoGeometry/Algebra/**'
+      - 'lean/InfoGeometry/Canonical/Cl11TensorTower*'
+      - 'lean/InfoGeometry/Canonical/Cl55WittCAR.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/IntrinsicGradedAdjoint.lean'
+      - 'tools/quality/check_peirce_coupling.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/build_lock.py'
+      - 'docs/INFINITE_COLIMIT_GRADED_CONTRACT.md'
+      - 'docs/INFINITE_COLIMIT_GRADED_INTAKE.md'
+      - 'docs/PEIRCE_COUPLING_EPISTEMIC_CONTRACT.md'
+      - '.github/workflows/peirce-coupling.yml'
+      - '.github/workflows/infinite-colimit-graded.yml'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: infinite-colimit-graded-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Fetch exact source and pinned Mathlib
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+          SOURCE_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "https://github.com/$SOURCE_REPOSITORY.git"
+          git -C project fetch --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          python3 - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          manifest = json.loads(Path('project/lake-manifest.json').read_text())
+          pin = next(p for p in manifest['packages'] if p['name'] == 'mathlib')
+          subprocess.run(['git', 'init', 'pinned-mathlib'], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'remote', 'add', 'origin', pin['url']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'fetch', '--depth=1', 'origin', pin['rev']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'checkout', '--detach', 'FETCH_HEAD'], check=True)
+          PY
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            pinned-mathlib/.lake
+          key: infinite-colimit-graded-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - name: Install exact Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Bind source selection and fetch pinned native imports
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, subprocess, sys
+          from pathlib import Path
+          root, mathlib, out = map(Path, ('project', 'pinned-mathlib', 'verification'))
+          sys.path.insert(0, str(root.resolve()))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          targets = [
+              'InfoGeometry.Clifford.Cl11ChiralityAlgebra',
+              'InfoGeometry.Clifford.Cl11GradedDifferential',
+              'InfoGeometry.Clifford.Cl11ColimitDimension',
+              'InfoGeometry.Clifford.Cl11ChiralityTransport',
+              'InfoGeometry.OperatorAlgebra.IntrinsicGradedAdjoint',
+          ]
+          def git(*args):
+              return subprocess.check_output(['git', '-C', str(root), *args])
+          revision = git('rev-parse', 'HEAD').decode().strip()
+          assert revision == os.environ['SOURCE_REV'], 'Unexpected source checkout'
+          ordered, dependencies, native = closure(root, targets)
+          assert 'Mathlib.lean' not in native, 'Unexpected umbrella Mathlib import'
+          domain = [
+              '.github/workflows/infinite-colimit-graded.yml',
+              'docs/INFINITE_COLIMIT_GRADED_CONTRACT.md',
+              'docs/INFINITE_COLIMIT_GRADED_INTAKE.md',
+              'tools/quality/check_peirce_coupling.py',
+              'tools/quality/check_reviewed_prs.py',
+              'tools/quality/reviewed_audit_source.py',
+              'tools/build_lock.py', 'lean-toolchain', 'lake-manifest.json',
+              '.github/workflows/peirce-coupling.yml',
+              'docs/PEIRCE_COUPLING_EPISTEMIC_CONTRACT.md',
+          ]
+          paths = domain + ['lean/' + m.replace('.', '/') + '.lean' for m in ordered]
+          hashes = {}
+          for path in paths:
+              data = (root / path).read_bytes()
+              assert data == git('show', revision + ':' + path), path
+              hashes[path] = hashlib.sha256(data).hexdigest()
+          event = json.loads(Path(os.environ['GITHUB_EVENT_PATH']).read_text())
+          pr = event.get('pull_request', {})
+          selection = dict(source_revision=revision,
+              source_tree=git('rev-parse', 'HEAD^{tree}').decode().strip(),
+              event_name=os.environ['GITHUB_EVENT_NAME'],
+              pr_head=pr.get('head', {}).get('sha'), pr_base=pr.get('base', {}).get('sha'),
+              targets=targets, new_owners=targets[:2], modules=ordered,
+              repository_import_dependencies=dependencies,
+              native_import_roots=sorted(native), repository_sha256=hashes)
+          out.mkdir(exist_ok=False)
+          (out / 'selection.json').write_text(json.dumps(selection, indent=2) + '\n')
+          manifest = json.loads((root / 'lake-manifest.json').read_text())
+          pin = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          actual = subprocess.check_output(['git', '-C', str(mathlib), 'rev-parse', 'HEAD']).decode().strip()
+          assert actual == pin, 'Mathlib revision mismatch'
+          assert (mathlib / 'lean-toolchain').read_text() == (root / 'lean-toolchain').read_text()
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'infinite-colimit-graded-cache') as lock:
+              with (out / 'cache.log').open('w') as log:
+                  subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
+                      cwd=mathlib, check=True, stdout=log, stderr=subprocess.STDOUT,
+                      pass_fds=(lock.fileno(),))
+          print(f'Selected {len(ordered)} source modules and {len(native)} native import roots')
+          PY
+      - name: Fresh source closure compilation and complete selected-owner axiom audit
+        working-directory: project
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/quality/check_peirce_coupling.py \
+            --mathlib-root ../pinned-mathlib --lean "$(elan which lean)" --output ../verification \
+            --target InfoGeometry.Clifford.Cl11ChiralityAlgebra \
+            --target InfoGeometry.Clifford.Cl11GradedDifferential \
+            --target InfoGeometry.Clifford.Cl11ColimitDimension \
+            --target InfoGeometry.Clifford.Cl11ChiralityTransport \
+            --target InfoGeometry.OperatorAlgebra.IntrinsicGradedAdjoint
+      - name: Reconcile provenance and reject new-owner warnings
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, re, subprocess, sys
+          from pathlib import Path
+          root, out = Path('project'), Path('verification')
+          sys.path.insert(0, str(root.resolve()))
+          from tools.quality.reviewed_audit_source import parse_audit_output
+          def sha(path):
+              return hashlib.sha256(path.read_bytes()).hexdigest()
+          selection = json.loads((out / 'selection.json').read_text())
+          report = json.loads((out / 'report.json').read_text())
+          assert report['status'] == 'passed'
+          assert report['audit_required'] and not report['skip_audit'] and not report['incremental']
+          assert report['targets'] == selection['targets']
+          assert report['local_revision'] == selection['source_revision']
+          assert report['repository_import_dependencies'] == selection['repository_import_dependencies']
+          assert [m['module'] for m in report['modules']] == selection['modules']
+          for module in report['modules']:
+              name = module['module']
+              assert module['returncode'] == 0 and module['reused'] is False, name
+              log = (out / (name + '.log')).read_text()
+              assert module['warnings'] == len(re.findall(r'\bwarning:', log)), name
+              if name in selection['new_owners']:
+                  assert module['warnings'] == 0, name
+              assert module['artifacts'], name
+              for path, expected in module['artifacts'].items():
+                  assert sha(out / path) == expected, path
+              rel = name.replace('.', '/') + '.lean'
+              expected = selection['repository_sha256']['lean/' + rel]
+              assert report['source_sha256'][name] == sha(out / 'src' / rel) == expected, name
+          for path, expected in selection['repository_sha256'].items():
+              data = subprocess.check_output(['git', '-C', str(root), 'show',
+                  selection['source_revision'] + ':' + path])
+              assert sha(root / path) == hashlib.sha256(data).hexdigest() == expected, path
+          for path, expected in report['verification_source_sha256'].items():
+              assert selection['repository_sha256'][path] == expected, path
+          audit = (out / 'axioms.log').read_text()
+          assert not re.search(r'\bwarning:', audit)
+          counts = parse_audit_output(audit, selection['targets'])
+          assert counts == report['declaration_counts']
+          manifest = json.loads((out / 'evidence-sha256.json').read_text())
+          for path, expected in manifest.items():
+              actual = root / path[len('repository/'):] if path.startswith('repository/') else out / path
+              assert sha(actual) == expected, path
+          result = dict(status='passed', source_revision=selection['source_revision'],
+              source_tree=selection['source_tree'], new_owners=selection['new_owners'],
+              compiled_modules=len(report['modules']), audited_declarations=sum(counts.values()),
+              new_owner_warnings=0, incremental=False, audit_required=True,
+              selection_sha256=sha(out / 'selection.json'), report_sha256=sha(out / 'report.json'))
+          (out / 'domain-validation.json').write_text(json.dumps(result, indent=2) + '\n')
+          evidence = {str(p.relative_to(out)): sha(p) for p in sorted(out.rglob('*')) if p.is_file()}
+          (out / 'domain-evidence-sha256.json').write_text(json.dumps(evidence, indent=2) + '\n')
+          print(json.dumps(result, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: infinite-colimit-graded-verification
+          path: verification
+          if-no-files-found: warn

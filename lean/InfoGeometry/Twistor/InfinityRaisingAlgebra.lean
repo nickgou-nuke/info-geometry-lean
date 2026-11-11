@@ -47,7 +47,7 @@ theorem raising_car : A * Aᴴ + Aᴴ * A = 1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [infinityRaisingMatrix, Matrix.mul_apply, Matrix.conjTranspose_apply,
-      Fin.sum_univ_four, Matrix.one_apply]
+      Matrix.vecMul_apply_eq_sum, Fin.sum_univ_four, Matrix.one_apply]
 
 /-- The products cannot be interchanged: their upper-left entries differ. -/
 theorem raising_noncommute : A * Aᴴ ≠ Aᴴ * A := by
@@ -130,7 +130,7 @@ theorem raisingDeformation_sq (lam : ℂ) :
     raisingDeformation lam * raisingDeformation lam = (-lam) • (A * Aᴴ + Aᴴ * A) := by
       dsimp [raisingDeformation]
       simp only [sub_mul, mul_sub, smul_mul_assoc, mul_smul_comm,
-        raising_sq_zero, raising_adjoint_sq_zero, smul_smul, smul_zero, smul_add, neg_smul]
+        raising_sq_zero, raising_adjoint_sq_zero, smul_zero, smul_add, neg_smul]
       abel
     _ = (-lam) • (1 : Matrix (Fin 4) (Fin 4) ℂ) := by rw [raising_car]
 
@@ -150,7 +150,7 @@ theorem raisingDeformation_conjugate_product (lam : ℂ) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [raisingDeformation, upperProjector, lowerProjector, infinityRaisingMatrix,
-      Matrix.mul_apply, Matrix.conjTranspose_apply, Fin.sum_univ_four]
+      Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.vecMul_apply_eq_sum, Fin.sum_univ_four]
 
 /-- For a real parameter the conjugate-product square has the same scalar
 value as the complex-linear square. -/

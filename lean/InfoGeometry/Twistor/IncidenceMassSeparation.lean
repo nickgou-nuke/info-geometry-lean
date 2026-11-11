@@ -76,7 +76,7 @@ theorem nullSecond_lower_ne_zero : nullSecond.2 ≠ 0 :=
   nullFirst_lower_ne_zero
 
 theorem nullFirst_witt_self : wittPair nullFirst nullFirst = 0 := by
-  simp [nullFirst, wittPair, Fin.sum_univ_two]
+  simp [nullFirst, wittPair]
 
 theorem nullSecond_witt_self : wittPair nullSecond nullSecond = 0 := by
   simp [nullSecond, wittPair, Fin.sum_univ_two]

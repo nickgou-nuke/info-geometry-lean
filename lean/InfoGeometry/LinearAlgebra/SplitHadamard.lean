@@ -40,7 +40,8 @@ theorem splitHadamard_sq (J K X : R)
         (K * K) * X * (K * K) + (K * J + J * K) * X * K + (J * J) * X := by
       dsimp [splitHadamard]
       noncomm_ring
-    _ = 2 • X := by simp [hK, hanti, hJ, two_nsmul]
+    _ = 2 • X := by
+      simp only [hK, hanti, hJ, one_mul, mul_one, zero_mul, add_zero, two_nsmul]
 
 theorem splitHadamard_one (J K : R) (hK : K * K = 1) :
     splitHadamard J K 1 = 1 + J := by
@@ -57,7 +58,7 @@ theorem splitHadamard_left (J K : R)
 
 theorem splitHadamard_right (J K : R) (hK : K * K = 1) :
     splitHadamard J K K = K + J * K := by
-  simp [splitHadamard, mul_assoc, hK]
+  simp [splitHadamard, hK]
 
 /-- With `Ω = J * K`, the fourth readout is `K - Ω`. -/
 theorem splitHadamard_left_mul_right (J K : R)

@@ -148,6 +148,56 @@ theorem symplectic_add_right (u v w : Label) :
     symplectic w (v + w) = symplectic v w := by
   rw [symplectic_add_right, symplectic_self, add_zero, symplectic_comm]
 
+/-- The parity of the number of `XZ` factors in an ordered word. -/
+def quadraticPhase (v : Label) : Bit := cocycle v v
+
+@[simp] theorem quadraticPhase_zero : quadraticPhase 0 = 0 := by
+  simp [quadraticPhase]
+
+/-- The symplectic pairing is the polarization of the square/transpose parity. -/
+theorem quadraticPhase_add (v w : Label) :
+    quadraticPhase (v + w) = quadraticPhase v + quadraticPhase w + symplectic v w := by
+  simp only [quadraticPhase, cocycle_add_left, cocycle_add_right, symplectic]
+  ring
+
+/-- The product cocycle after multiplying the word at `v` by the sign `(-1)^(f v)`.
+An arbitrary `f` need not give a bilinear cocycle. -/
+def rephasedCocycle (f : Label → Bit) (v w : Label) : Bit :=
+  cocycle v w + f v + f w + f (v + w)
+
+@[simp] theorem rephasedCocycle_zero_left (f : Label → Bit) (v : Label) :
+    rephasedCocycle f 0 v = f 0 := by
+  simp [rephasedCocycle, add_assoc, CharTwo.add_self_eq_zero]
+
+@[simp] theorem rephasedCocycle_zero_right (f : Label → Bit) (v : Label) :
+    rephasedCocycle f v 0 = f 0 := by
+  simp only [rephasedCocycle, cocycle_zero_right, zero_add, add_zero]
+  ring
+
+/-- Rephasing preserves the associativity identity, without a normalization assumption. -/
+theorem rephasedCocycle_assoc (f : Label → Bit) (u v w : Label) :
+    rephasedCocycle f u v + rephasedCocycle f (u + v) w =
+      rephasedCocycle f v w + rephasedCocycle f u (v + w) := by
+  simp only [rephasedCocycle, cocycle_add_left, cocycle_add_right, add_assoc]
+  ring
+
+/-- Real signs change the ordered cocycle but preserve its commutator pairing. -/
+theorem rephasedCocycle_symplectic (f : Label → Bit) (v w : Label) :
+    rephasedCocycle f v w + rephasedCocycle f w v = symplectic v w := by
+  simp only [rephasedCocycle, symplectic, add_comm w v]
+  ring
+
+theorem rephasedCocycle_self (f : Label → Bit) (v : Label) :
+    rephasedCocycle f v v = quadraticPhase v + f 0 := by
+  simp [rephasedCocycle, quadraticPhase, add_assoc, CharTwo.add_self_eq_zero]
+
+/-- The quadratic real-sign convention reverses the cocycle; it does not replace it
+with the symplectic pairing. -/
+theorem rephasedCocycle_quadraticPhase (v w : Label) :
+    rephasedCocycle quadraticPhase v w = cocycle w v := by
+  rw [rephasedCocycle, quadraticPhase_add, symplectic]
+  ring
+
 /-- The pairing has zero radical on the full four-dimensional binary space. -/
 theorem symplectic_nondegenerate (v : Label) :
     (∀ w, symplectic v w = 0) ↔ v = 0 := by

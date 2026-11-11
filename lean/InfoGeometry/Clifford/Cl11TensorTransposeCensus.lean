@@ -39,15 +39,19 @@ abbrev Word (n : ℕ) := Fin n → Fin 4
 def realSeed : Fin 4 → Mat2 := ![1, Eplus, J1, Eminus]
 
 /-- Head insertion appends the corresponding seed on the right. -/
-def evaluate : {n : ℕ} → Word n → Mat n
-  | 0, _ => 1
-  | _n + 1, w => evaluate (Fin.tail w) ⊗ₖ realSeed (w 0)
+def evaluate : {n : ℕ} → Word n → Mat n :=
+  fun {n} =>
+    Nat.rec (motive := fun k => Word k → Mat k)
+      (fun _ => (1 : Mat 0))
+      (fun _ previous w => previous (Fin.tail w) ⊗ₖ realSeed (w 0)) n
 
 /-- Each occurrence of the unique skew letter flips transpose parity. -/
-def oddEminus : {n : ℕ} → Word n → Bool
-  | 0, _ => false
-  | _n + 1, w =>
-      if w 0 = 3 then !oddEminus (Fin.tail w) else oddEminus (Fin.tail w)
+def oddEminus : {n : ℕ} → Word n → Bool :=
+  fun {n} =>
+    Nat.rec (motive := fun k => Word k → Bool)
+      (fun _ => false)
+      (fun _ previous w =>
+        if w 0 = 3 then !previous (Fin.tail w) else previous (Fin.tail w)) n
 
 @[simp] theorem oddEminus_cons {n : ℕ} (a : Fin 4) (w : Word n) :
     oddEminus (Fin.cons a w) = if a = 3 then !oddEminus w else oddEminus w := by

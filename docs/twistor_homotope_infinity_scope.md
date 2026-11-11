@@ -40,6 +40,23 @@ This branch remains based on upstream main and does not import that draft.
 The present Hadamard action mixes the two constituent labels, while the real
 pencil is connected explicitly to the already-owned real dual-valued form.
 
+Related open drafts [#314](https://github.com/nickgou-nuke/info-geometry-lean/pull/314)
+and [#315](https://github.com/nickgou-nuke/info-geometry-lean/pull/315) already
+develop actual-packet Witt Gram covariance, unitary/Cayley invariance, ordered
+homotopes, and recurrence orbits. In particular, #315's `ConstituentWittGram`
+generalizes the Gram covariance here to every finite packet.
+[#317](https://github.com/nickgou-nuke/info-geometry-lean/pull/317) separates
+Witt and mass readouts and transports the existing operator Hadamard
+construction to native matrices. This change shares those foundations.
+Its additional focus is exact raw-versus-normalized constituent Hadamard
+scaling and the determinant-one counterexample, the parameterized real
+infinity pencil with explicit dual-form and raising-sign bridges, and the
+transpose census derived from actual indexed Kronecker-word cardinalities.
+The changed paths are disjoint at reviewed heads `b452340b`, `77b573e3`,
+`7021de11`, and `812a2102`; this is not a combined-import or merge test.
+Shared Gram and unitary interfaces should be consolidated when these drafts
+are integrated.
+
 ## Ordered homotope reconstruction
 
 For an arbitrary associative ring `A`, the existing carrier is

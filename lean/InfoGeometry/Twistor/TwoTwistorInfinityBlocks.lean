@@ -35,7 +35,9 @@ theorem finrank_range_infinityTwistor :
         Module.finrank ℂ (LinearMap.range (LinearMap.snd ℂ Spinor2 Spinor2)) :=
       Nat.add_right_cancel (h.trans hs.symm)
     _ = 2 := by
-      rw [LinearMap.range_snd, finrank_top]
+      have hr : LinearMap.range (LinearMap.snd ℂ Spinor2 Spinor2) = ⊤ :=
+        LinearMap.range_eq_top.mpr LinearMap.snd_surjective
+      rw [hr, finrank_top]
       exact Module.finrank_fin_fun
 
 def epsilon : ComplexSpacetime := !![0, 1; -1, 0]
@@ -132,8 +134,10 @@ theorem infinityLower_column_pairing (Z : PairFrame) :
     (columnEquiv Z)ᵀ * infinityLower * columnEquiv Z =
       (lowerFrame Z).det • epsilon := by
   rw [← lowerFrame_epsilon]
+  have hcol (a : Fin 4) (i : Fin 2) :
+      columnEquiv Z a i = ![(Z i).1 0, (Z i).1 1, (Z i).2 0, (Z i).2 1] a := rfl
   ext i j
-  simp [columnEquiv, infinityLower, lowerFrame, epsilon,
+  simp [hcol, infinityLower, lowerFrame, epsilon, Matrix.transpose_apply,
     Matrix.mul_apply, Fin.sum_univ_four, Fin.sum_univ_two]
 
 /-- Full covariant-infinity contraction of the actual alternating column tensor. -/
@@ -143,7 +147,9 @@ def infinityContraction (Z : PairFrame) : ℂ :=
 
 theorem infinityContraction_eq_twice_pairing (Z : PairFrame) :
     infinityContraction Z = 2 * infinityTwistor (Z 0) (Z 1) := by
-  simp [infinityContraction, infinityLower, columnEquiv, infinityTwistor,
+  have hcol (a : Fin 4) (i : Fin 2) :
+      columnEquiv Z a i = ![(Z i).1 0, (Z i).1 1, (Z i).2 0, (Z i).2 1] a := rfl
+  simp [infinityContraction, infinityLower, hcol, infinityTwistor,
     Fin.sum_univ_four]
   ring
 

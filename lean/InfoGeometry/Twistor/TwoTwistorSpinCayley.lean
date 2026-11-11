@@ -65,10 +65,10 @@ theorem eq_hermitianCoordinates (H : ComplexSpacetime) (hH : Hᴴ = H) :
   apply Matrix.ext
   intro i j
   fin_cases i <;> fin_cases j
-  · apply Complex.ext <;> simp [hermitianCoordinates, hi00]
+  · apply Complex.ext <;> simp [hermitianCoordinates, hi00] <;> ring
   · simp [hermitianCoordinates]
   · simpa [hermitianCoordinates] using h10.symm
-  · apply Complex.ext <;> simp [hermitianCoordinates, hi11]
+  · apply Complex.ext <;> simp [hermitianCoordinates, hi11] <;> ring
 
 @[simp] theorem trace_traceFree (H : ComplexSpacetime) : trace (traceFree H) = 0 := by
   simp [traceFree, Matrix.trace, Fin.sum_univ_two]
@@ -99,8 +99,7 @@ theorem spinVector_hermitianCoordinates (s₁ s₂ : ℝ) (τ : ℂ) :
   simp only [traceFree_hermitianCoordinates]
   ext i
   fin_cases i <;>
-    simp [σ1, σ2, σ3, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_two,
-      Complex.mul_re, Complex.mul_im] <;> ring
+    simp [σ1, σ2, σ3, Matrix.trace, Fin.sum_univ_two, Complex.mul_re] <;> ring
 
 /-- The correct trace sign is positive, and the quarter-trace factor is one eighth. -/
 theorem spinNormSq_hermitianCoordinates (s₁ s₂ : ℝ) (τ : ℂ) :
@@ -108,8 +107,8 @@ theorem spinNormSq_hermitianCoordinates (s₁ s₂ : ℝ) (τ : ℂ) :
       ((s₁ - s₂) ^ 2 + Complex.normSq τ) / 4 := by
   unfold spinNormSq
   rw [traceFree_sq_hermitianCoordinates]
-  simp [Matrix.trace, Fin.sum_univ_two]
-  ring
+  generalize (s₁ - s₂) ^ 2 + Complex.normSq τ = q
+  simp [Matrix.trace, Complex.mul_re] <;> ring
 
 /-- For arbitrary Hermitian input, the trace formula equals the Euclidean square
 of the three real Pauli coordinates. -/
@@ -157,6 +156,9 @@ def cayley : ComplexSpacetime := paperScale • !![(1 : ℂ), 1; -1, 1]
 @[simp] theorem star_paperScale : star paperScale = paperScale := by
   simp [paperScale]
 
+private lemma conjugate_paperScale : (starRingEnd ℂ) paperScale = paperScale :=
+  star_paperScale
+
 private lemma paperScale_mul_self : paperScale * paperScale = (1 / 2 : ℂ) := by
   linear_combination paperScale_sq / 2
 
@@ -164,23 +166,25 @@ private lemma paperScale_mul_self : paperScale * paperScale = (1 / 2 : ℂ) := b
 theorem cayley_conjTranspose_mul : cayleyᴴ * cayley = 1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [cayley, Matrix.mul_apply, Fin.sum_univ_two, paperScale_mul_self] <;> ring
+    norm_num [cayley, Matrix.mul_apply, Fin.sum_univ_two,
+      conjugate_paperScale, paperScale_mul_self]
 
 /-- Determinant one preserves the actual bivector, not merely its norm. -/
 theorem cayley_det : cayley.det = 1 := by
-  simp [cayley, Matrix.det_fin_two, paperScale_mul_self]
+  norm_num [cayley, Matrix.det_fin_two, paperScale_mul_self]
 
 /-- Cayley conjugation transfers a diagonal difference to a real off-diagonal
 entry with the indicated sign. -/
 theorem cayley_helicity_to_crossing (s : ℝ) :
     cayleyᴴ * hermitianCoordinates s (-s) 0 * cayley =
       hermitianCoordinates 0 0 (2 * (s : ℂ)) := by
+  have hs : paperScale ^ 2 = (1 / 2 : ℂ) := by
+    simpa only [pow_two] using paperScale_mul_self
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [cayley, hermitianCoordinates, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [cayley, hermitianCoordinates, Matrix.mul_apply, Fin.sum_univ_two,
+      conjugate_paperScale]
   all_goals ring_nf
-  all_goals have hs : paperScale ^ 2 = (1 / 2 : ℂ) := by
-    simpa only [pow_two] using paperScale_mul_self
   all_goals simp only [hs]
   all_goals ring
 

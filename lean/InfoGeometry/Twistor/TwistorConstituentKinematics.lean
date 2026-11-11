@@ -153,4 +153,62 @@ theorem massive_pair_witness :
     pairMassSq ((0 : Spinor2), ![1, 0]) ((0 : Spinor2), ![0, 1]) = 1 := by
   norm_num [pairMassSq, spinorMinor]
 
+section WittPairingSeparation
+
+open PenroseTwistor PerjesConventions
+
+private theorem isNullTwistor_of_witt_null (Z : Twistor4)
+    (hpi : Z.2 ≠ 0) (hnull : wittPair Z Z = 0) :
+    IsNullTwistor (wittToDiagonal Z) := by
+  constructor
+  · intro h
+    have hz : Z = 0 := wittToDiagonal.injective (by simpa using h)
+    exact hpi (congrArg Prod.snd hz)
+  · change (twistorHermitian (wittToDiagonal Z) (wittToDiagonal Z)).re = 0
+    rw [diagonal_pairing, hnull]
+    simp
+
+/-- Mutually Witt-orthogonal null twistors can have positive constituent
+mass. Both lower spinors are nonzero; neither momentum is a zero constituent. -/
+theorem null_twistors_witt_orthogonal_positive_mass :
+    ∃ Z W : Twistor4,
+      IsNullTwistor (wittToDiagonal Z) ∧ IsNullTwistor (wittToDiagonal W) ∧
+      Z.2 ≠ 0 ∧ W.2 ≠ 0 ∧ wittPair Z W = 0 ∧ pairMassSq Z W = 1 := by
+  let Z : Twistor4 := ((0 : Spinor2), ![1, 0])
+  let W : Twistor4 := ((0 : Spinor2), ![0, 1])
+  have h0 : (![1, 0] : Spinor2) ≠ 0 := by
+    intro h
+    have hc := congrFun h 0
+    norm_num at hc
+  have h1 : (![0, 1] : Spinor2) ≠ 0 := by
+    intro h
+    have hc := congrFun h 1
+    norm_num at hc
+  refine ⟨Z, W, ?_, ?_, h0, h1, ?_, ?_⟩
+  · exact isNullTwistor_of_witt_null Z h0 (by simp [Z, wittPair])
+  · exact isNullTwistor_of_witt_null W h1 (by simp [W, wittPair])
+  · simp [Z, W, wittPair]
+  · exact massive_pair_witness
+
+/-- Nonzero mutual Witt pairing does not force positive constituent mass,
+even for null twistors with two nonzero constituent momenta. -/
+theorem null_twistors_witt_pairing_I_zero_mass :
+    ∃ Z W : Twistor4,
+      IsNullTwistor (wittToDiagonal Z) ∧ IsNullTwistor (wittToDiagonal W) ∧
+      Z.2 ≠ 0 ∧ W.2 ≠ 0 ∧ wittPair Z W = Complex.I ∧ pairMassSq Z W = 0 := by
+  let Z : Twistor4 := ((0 : Spinor2), ![1, 0])
+  let W : Twistor4 := ((![Complex.I, 0] : Spinor2), ![1, 0])
+  have h0 : (![1, 0] : Spinor2) ≠ 0 := by
+    intro h
+    have hc := congrFun h 0
+    norm_num at hc
+  refine ⟨Z, W, ?_, ?_, h0, h0, ?_, ?_⟩
+  · exact isNullTwistor_of_witt_null Z h0 (by simp [Z, wittPair])
+  · apply isNullTwistor_of_witt_null W h0
+    norm_num [W, wittPair, Fin.sum_univ_two]
+  · simp [Z, W, wittPair, Fin.sum_univ_two]
+  · norm_num [Z, W, pairMassSq, spinorMinor]
+
+end WittPairingSeparation
+
 end InfoGeometry.Twistor.TwistorConstituentKinematics

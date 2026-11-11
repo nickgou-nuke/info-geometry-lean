@@ -6,3 +6,8 @@ InfoGeometry.Twistor.TwistorConstituentCCR
 InfoGeometry.Topology.KleinDeckRepresentation
 InfoGeometry.Topology.KleinCliffordPinLift
 InfoGeometry.Topology.KleinAssociatedSpinors
+InfoGeometry.OperatorAlgebra.FaithfulOperatorZornEnvelope
+InfoGeometry.Twistor.TwoTwistorHadamardFrame
+InfoGeometry.Twistor.RealInfinityMatrixPencil
+InfoGeometry.Twistor.RealInfinityMatrixPencilBridge
+InfoGeometry.Clifford.Cl11TensorTransposeCensus

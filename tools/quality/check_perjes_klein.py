@@ -15,7 +15,10 @@ from tools.quality.check_peirce_reflection import audit_source, run
 from tools.quality.check_reviewed_prs import closure
 TARGETS = (ROOT/'tools/quality/check_perjes_klein_targets.txt').read_text().splitlines()
 
-def main():
+def main(*, targets=None):
+    targets = TARGETS if targets is None else list(targets)
+    if not targets:
+        raise ValueError('At least one selected owner is required')
     parser = argparse.ArgumentParser(__doc__)
     parser.add_argument('--mathlib-root', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
@@ -23,7 +26,7 @@ def main():
     mathlib, out = args.mathlib_root.resolve(), args.output.resolve()
     out.mkdir(parents=True, exist_ok=False)
     state = {'status': 'pending', 'scope': 'exact-source closure, not root Lake build',
-             'targets': TARGETS, 'modules': [], 'axiom_audit_passed': False}
+             'targets': targets, 'modules': [], 'axiom_audit_passed': False}
     try:
         manifest = json.loads((ROOT/'lake-manifest.json').read_text())
         pin = next(p['rev'] for p in manifest['packages'] if p['name']=='mathlib')
@@ -34,7 +37,7 @@ def main():
             raise RuntimeError('Mathlib revision mismatch')
         if (mathlib/'lean-toolchain').read_text().strip()!=toolchain:
             raise RuntimeError('Toolchain mismatch')
-        ordered, dependencies, _ = closure(ROOT,TARGETS)
+        ordered, dependencies, _ = closure(ROOT,targets)
         src, lib = out/'src', out/'lib'
         src.mkdir(); lib.mkdir()
         (src/'lean-toolchain').write_text(toolchain+'\n')
@@ -79,7 +82,7 @@ def main():
                 state['failed_modules']=sorted(failed)
                 raise RuntimeError('Compilation failed; no declaration audit performed')
             audit=src/'PerjesKleinKernelAudit.lean'
-            audit.write_text(audit_source(TARGETS))
+            audit.write_text(audit_source(targets))
             evidence=run(['lean',str(audit)],src,env)
             (out/'audit.log').write_text(evidence)
             if 'AUDIT_COUNT:' not in evidence: raise RuntimeError('Audit incomplete')

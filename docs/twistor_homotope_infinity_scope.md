@@ -165,7 +165,7 @@ The census concerns indexed words in the four real seeds
 transpose multiplies their signs, so an odd number of `Eminus` letters
 reverses the sign. Word orthogonality excludes a zero evaluation.
 
-The intended exact counts are finite word counts, with recurrences
+The proved exact counts are finite word counts, with recurrences
 
 \[
 M_0=1,\quad S_0=0,\quad
@@ -237,8 +237,26 @@ finite algebraic owners do not depend on that premise.
 ## Validation
 
 Source candidates received independent semantic review before integration.
-Kernel validation and declaration-level axiom audit are pending at this
-checkpoint. No candidate or text scan is represented as a successful build.
+The [scoped native CI job](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43040559133/job/130590895092)
+completed successfully on 2026-11-11 at 14:48:25 UTC. It compiled all **61**
+project modules in its exact import closure and audited **520 declarations
+owned by 13 selected modules**. Of these, 179 declarations belong to this
+change's five selected owners; these counts include existing declarations and
+compiler-generated declarations, not just new theorems. The audit recursively
+collected only `propext`, `Quot.sound`, and `Classical.choice` as axioms and
+accepted no unsafe or partial declaration in the selected owners.
+
+The tested source revision is
+`58f807057e702a54ea4049abd3602b0949a8ce68`. GitHub compiled its pull-request test
+merge `9411f814279c7bf18444639e3a28a3e7989a41ea`; both have the identical tree
+`d26123256a4bcdc286d48addad5115420fc300ea`. The verification record in the
+[contract](twistor_homotope_infinity_contract.md) includes SHA-256 hashes of
+all six changed Lean files. The follow-up recording this result changes
+documentation only.
+
+This establishes native compilation of the 61-module closure and the full
+owned-declaration audit of the 13 selected owners. It is not an audit of every
+declaration owned by all 61 modules, nor a successful root-package build.
 
 The initial maintained root command
 `python3 tools/infra/run_locked_lake_build.py InfoGeometry.Algebra.FiniteSpinAlgebra`
@@ -246,7 +264,10 @@ acquired the shared lock and exited with code 1 during package resolution:
 the configured `external_refs/homotopy-hypothesis-lean4` directory is absent.
 No toolchain, dependency pin, root package requirement, or existing cache was
 changed to remove that failure. Focused exact-source validation uses the same
-pins and must be reported separately from root integration.
+pins and is separate from root integration. The
+[root CI job for the tested source revision](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43040558810/job/130590893627)
+also failed at the same missing `HomotopyHypothesis` package. Root integration
+remains blocked, and the PR remains a draft.
 
 The selected-source entry point delegates to the existing shared-lock,
 exact-source checker and its native owning-module axiom audit:
@@ -260,8 +281,9 @@ python3 tools/quality/check_twistor_homotope_geometry.py \
 The output directory must be fresh. The checker records the precise import
 closure, source hashes, compiler version, aggregate declaration count, and axiom
 footprint. It rejects a dependency-pin mismatch and does not reuse project
-oleans. Its successful result would cover the selected exact source closure,
-not the root Lake package.
+oleans. This focused entry point selects five owners and their 53-module
+import closure; the successful CI run above uses the broader default selection
+of 13 owners and its 61-module closure.
 
 The same five owners are added to the existing Perjes/Klein CI target list;
 its workflow also checks its preexisting targets. The new local entry point

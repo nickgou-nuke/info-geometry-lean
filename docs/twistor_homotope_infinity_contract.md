@@ -12,7 +12,40 @@ mathematical result; the separate verification status records actual execution.
   "base_revision": "c143c264bc18bbf41d692be4e270b5b7f7405702",
   "lean_toolchain": "leanprover/lean4:v4.34.1",
   "mathlib_revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
-  "verification_status": "pending_kernel_validation",
+  "verification_status": "kernel_and_selected_owner_axiom_audit_passed",
+  "verification": {
+    "source_revision": "58f807057e702a54ea4049abd3602b0949a8ce68",
+    "ci_test_merge_revision": "9411f814279c7bf18444639e3a28a3e7989a41ea",
+    "identical_source_and_test_merge_tree": "d26123256a4bcdc286d48addad5115420fc300ea",
+    "ci_job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43040559133/job/130590895092",
+    "completed_at": "2026-11-11T14:48:25Z",
+    "compiled_project_module_count": 61,
+    "selected_owner_count": 13,
+    "audited_owned_declaration_count": 520,
+    "task_owner_count": 5,
+    "task_owner_declaration_count": 179,
+    "declaration_count_scope": "All declarations owned by the selected modules, including existing and compiler-generated declarations; not only new theorems.",
+    "axiom_dependencies": [
+      "propext",
+      "Quot.sound",
+      "Classical.choice"
+    ],
+    "unsafe_or_partial_selected_owner_declarations": 0,
+    "root_integration": {
+      "status": "blocked_by_preexisting_missing_path_dependency",
+      "missing_package": "HomotopyHypothesis",
+      "missing_path": "external_refs/homotopy-hypothesis-lean4",
+      "ci_job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43040558810/job/130590893627"
+    }
+  },
+  "lean_source_sha256": {
+    "lean/InfoGeometry/Clifford/Cl11TensorTransposeCensus.lean": "8aee8d29ca82b824a9e40ac4163232883d818d3de57be79fb471b5e4f6d8cf92",
+    "lean/InfoGeometry/OperatorAlgebra/FaithfulOperatorZornEnvelope.lean": "70ea253ba1999cf72fc5da70507159ed0cd4812a025caafb09d4c995fb91771c",
+    "lean/InfoGeometry/Physics/OperatorZornMatrixAlgebra.lean": "6d8079fe96288bdc257ee26711f8ff67bc8dc470b6402243f0322dcf3cb155db",
+    "lean/InfoGeometry/Twistor/RealInfinityMatrixPencil.lean": "3ec2a64f9d4178a0264a3023785674a589f1e1d798dc1635526f52fd2f9f8e6f",
+    "lean/InfoGeometry/Twistor/RealInfinityMatrixPencilBridge.lean": "baf0caa5e4c22b983b087565f173a6b329dfe919fc7c872c3a9ded55ca97aec1",
+    "lean/InfoGeometry/Twistor/TwoTwistorHadamardFrame.lean": "65a01469d02146364a3bad3519e932eefecafb28c8c9728228804287850fe315"
+  },
   "contracts": [
     {
       "concept_id": "ordered-associative-homotope",

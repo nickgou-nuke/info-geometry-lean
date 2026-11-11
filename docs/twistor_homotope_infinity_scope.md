@@ -214,7 +214,7 @@ python3 tools/quality/check_twistor_homotope_geometry.py \
 ```
 
 The output directory must be fresh. The checker records the precise import
-closure, source hashes, compiler version, declaration counts, and axiom
+closure, source hashes, compiler version, aggregate declaration count, and axiom
 footprint. It rejects a dependency-pin mismatch and does not reuse project
 oleans. Its successful result would cover the selected exact source closure,
 not the root Lake package.

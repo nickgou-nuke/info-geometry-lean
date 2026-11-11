@@ -41,12 +41,12 @@ def realSeed : Fin 4 → Mat2 := ![1, Eplus, J1, Eminus]
 /-- Head insertion appends the corresponding seed on the right. -/
 def evaluate : {n : ℕ} → Word n → Mat n
   | 0, _ => 1
-  | n + 1, w => evaluate (Fin.tail w) ⊗ₖ realSeed (w 0)
+  | _n + 1, w => evaluate (Fin.tail w) ⊗ₖ realSeed (w 0)
 
 /-- Each occurrence of the unique skew letter flips transpose parity. -/
 def oddEminus : {n : ℕ} → Word n → Bool
   | 0, _ => false
-  | n + 1, w =>
+  | _n + 1, w =>
       if w 0 = 3 then !oddEminus (Fin.tail w) else oddEminus (Fin.tail w)
 
 @[simp] theorem oddEminus_cons {n : ℕ} (a : Fin 4) (w : Word n) :
@@ -68,7 +68,7 @@ theorem realSeed_orthogonal (a : Fin 4) :
 /-- The counted parity is the transpose sign of the actual native matrix. -/
 theorem evaluate_transpose {n : ℕ} (w : Word n) :
     (evaluate w)ᵀ = if oddEminus w then -evaluate w else evaluate w := by
-  induction n generalizing w with
+  induction n with
   | zero => simp [evaluate, oddEminus]
   | succ n ih =>
       change (evaluate (Fin.tail w) ⊗ₖ realSeed (w 0))ᵀ =
@@ -83,7 +83,7 @@ theorem evaluate_transpose {n : ℕ} (w : Word n) :
 /-- Orthogonality is inherited factor by factor through the native product. -/
 theorem evaluate_orthogonal {n : ℕ} (w : Word n) :
     (evaluate w)ᵀ * evaluate w = 1 := by
-  induction n generalizing w with
+  induction n with
   | zero => simp [evaluate]
   | succ n ih =>
       change (evaluate (Fin.tail w) ⊗ₖ realSeed (w 0))ᵀ *
@@ -131,9 +131,11 @@ theorem wordCount_succ (n : ℕ) (b : Bool) :
   change (∑ a : Fin 4, ∑ w : Word n,
     if oddEminus (Fin.cons a w) = b then 1 else 0) = _
   rw [Fin.sum_univ_four]
-  cases b <;>
-    simp [oddEminus_cons, wordCount_eq_sum, Bool.not_eq_true_eq_eq_false,
-      Bool.not_eq_false_eq_eq_true] <;> omega
+  cases b with
+  | false =>
+      simp [oddEminus_cons, wordCount_eq_sum, Bool.not_eq_false_eq_eq_true] <;> omega
+  | true =>
+      simp [oddEminus_cons, wordCount_eq_sum, Bool.not_eq_true_eq_eq_false] <;> omega
 
 theorem symmetricWordCount_succ (n : ℕ) :
     wordCount (n + 1) false = 3 * wordCount n false + wordCount n true :=
@@ -155,7 +157,7 @@ theorem wordCount_total (n : ℕ) :
       apply Finset.sum_congr rfl
       intro w _
       cases oddEminus w <;> simp
-    _ = 4 ^ n := by simp [Word, Fintype.card_fun]
+    _ = 4 ^ n := by simp [Word]
 
 /-- A positive equality expresses the parity imbalance without subtraction. -/
 theorem symmetricWordCount_eq_skew_add (n : ℕ) :

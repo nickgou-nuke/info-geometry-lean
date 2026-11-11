@@ -103,7 +103,8 @@ theorem pairWittGram_det_mix
     (pairWittGram (mix U Z)).det =
       (Complex.normSq U.det : ℂ) * (pairWittGram Z).det := by
   rw [pairWittGram_mix, Matrix.det_mul, Matrix.det_mul,
-    det_conjugateEntries, Matrix.det_transpose, Complex.normSq_eq_conj_mul_self]
+    det_conjugateEntries, Matrix.det_transpose, Complex.normSq_eq_conj_mul_self,
+    starRingEnd_apply]
   ring
 
 /-- Unitarity supplies the trace invariant that determinant one alone lacks. -/
@@ -128,7 +129,8 @@ theorem pairWittGram_det_of_unitary
   have hd : star U.det * U.det = 1 := by
     simpa only [Matrix.det_mul, Matrix.det_conjTranspose, Matrix.det_one]
       using congrArg Matrix.det hU
-  rw [pairWittGram_det_mix, Complex.normSq_eq_conj_mul_self, hd, one_mul]
+  rw [pairWittGram_det_mix, Complex.normSq_eq_conj_mul_self,
+    starRingEnd_apply, hd, one_mul]
 
 /-- Trace-free part of the actual overlap matrix; no spin interpretation is
 included in the definition. -/
@@ -253,13 +255,16 @@ theorem traceFreeDet_mass_ratio_rawHadamard
   have hZ' : (pairMassSq (Z 0) (Z 1) : ℂ) ≠ 0 := by exact_mod_cast hZ
   rw [pairWittTraceFree_det_rawHadamard, pairMassSq_rawHadamard]
   push_cast
-  field_simp [hZ'] <;> ring
+  field_simp [hZ']
 
 /-- Reuse the real `1/√2` normalization already fixed by the Perjes owner. -/
 def normalizedHadamard : Matrix (Fin 2) (Fin 2) ℂ := paperScale • rawHadamard
 
 @[simp] theorem star_paperScale : star paperScale = paperScale := by
   simp [paperScale]
+
+@[simp] theorem conj_paperScale : starRingEnd ℂ paperScale = paperScale := by
+  rw [starRingEnd_apply, star_paperScale]
 
 @[simp] theorem normalizedHadamard_conjTranspose :
     normalizedHadamardᴴ = normalizedHadamard := by
@@ -273,9 +278,7 @@ theorem normalizedHadamard_square :
   fin_cases i <;> fin_cases j <;>
     simp [normalizedHadamard, rawHadamard, Matrix.mul_apply,
       Fin.sum_univ_two, smul_eq_mul] <;>
-    first
-    | ring
-    | linear_combination paperScale_sq
+    linear_combination paperScale_sq
 
 theorem normalizedHadamard_unitary :
     normalizedHadamardᴴ * normalizedHadamard = 1 := by
@@ -330,9 +333,7 @@ theorem pairWittGram_normalizedHadamard_of_diagonal
   fin_cases i <;> fin_cases j <;>
     simp [normalizedHadamard, rawHadamard, conjugateEntries,
       Matrix.mul_apply, Fin.sum_univ_two, smul_eq_mul] <;>
-    first
-    | ring
-    | linear_combination (2 * (s : ℂ)) * paperScale_sq
+    ring_nf <;> linear_combination (2 * (s : ℂ)) * paperScale_sq
 
 /-- Determinant one does not preserve the trace-free overlap determinant.
 The witness packet has Gram matrix `1`, while its image under
@@ -346,6 +347,6 @@ theorem det_one_not_enough_for_traceFreeDet :
       ((![0, 1] : Spinor2), (![0, 1 / 2] : Spinor2))], ?_, ?_⟩
   · norm_num [Matrix.det_fin_two]
   · norm_num [pairWittTraceFree, pairWittGram, mix, wittPair,
-      Matrix.det_fin_two, Matrix.trace, Fin.sum_univ_two, smul_eq_mul]
+      Matrix.det_fin_two, Matrix.trace, Fin.sum_univ_two, smul_eq_mul, map_ofNat]
 
 end InfoGeometry.Twistor.TwoTwistorHadamardFrame

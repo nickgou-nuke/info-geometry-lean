@@ -43,7 +43,7 @@ mathematical result; the separate verification status records actual execution.
         "upper_homotope_reconstruction"
       ],
       "non_theorem_claims": [
-        "Undoubled recovery requires cancellation or inversion of two.",
+        "Undoubled recovery from the summed symmetric/skew channels requires cancellation or inversion of two.",
         "The identities do not construct a full Tits-Kantor-Koecher Lie algebra."
       ],
       "allowed_imports": [

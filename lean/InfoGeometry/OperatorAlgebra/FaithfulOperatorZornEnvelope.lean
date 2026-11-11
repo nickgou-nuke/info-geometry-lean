@@ -140,8 +140,7 @@ theorem upper_lie_triple (x z y : A) :
       upper (x * z * y + y * z * x) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [commutator, upper, lower, Matrix.mul_apply, Fin.sum_univ_two,
-      mul_assoc]
+    simp [commutator, upper, lower, mul_assoc]
 
 /-- Commuting the mixed anticommutator with an upper corner retains the
 antisymmetric part of the ordered associative triple product. -/
@@ -150,8 +149,7 @@ theorem upper_mixed_triple (x z y : A) :
       upper (x * z * y - y * z * x) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [commutator, upper, lower, Matrix.mul_apply, Fin.sum_univ_two,
-      mul_assoc]
+    simp [commutator, upper, lower, mul_assoc]
 
 /-- The symmetric and antisymmetric channels recover twice the ordered
 homotope. Recovering the undoubled product by cancellation requires a further
@@ -162,7 +160,7 @@ theorem upper_homotope_reconstruction (x z y : A) :
       (2 : ℕ) • upper (x * z * y) := by
   rw [upper_lie_triple, upper_mixed_triple, two_nsmul]
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [upper] <;> abel
+  fin_cases i <;> fin_cases j <;> simp [upper]
 
 section Algebra
 

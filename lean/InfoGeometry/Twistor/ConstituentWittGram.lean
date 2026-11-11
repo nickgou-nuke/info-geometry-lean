@@ -73,7 +73,8 @@ theorem gram_mix {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 theorem wittPair_self_im (Z : Twistor4) : (wittPair Z Z).im = 0 := by
   have h : -(wittPair Z Z).im = (wittPair Z Z).im := by
-    simpa using congrArg Complex.im (wittPair_conj Z Z)
+    simpa only [Complex.star_def, Complex.conj_im] using
+      congrArg Complex.im (wittPair_conj Z Z)
   linarith
 
 /-- The two on-diagonal entries use the owner's helicity convention. -/
@@ -101,8 +102,10 @@ theorem gram_pair_determinant (Z : Packet (Fin 2)) :
     (gram Z).det =
       ((4 * paperHelicity (Z 0) * paperHelicity (Z 1) -
         Complex.normSq (wittPair (Z 0) (Z 1)) : ℝ) : ℂ) := by
+  have hconj : (starRingEnd ℂ) (wittPair (Z 0) (Z 1)) =
+      wittPair (Z 1) (Z 0) := wittPair_conj (Z 0) (Z 1)
   rw [gram_pair_eq]
-  simp [Matrix.det_fin_two, Complex.normSq_eq_conj_mul_self]
+  simp [Matrix.det_fin_two, Complex.normSq_eq_conj_mul_self, hconj]
   ring
 
 /-- Fixed first constituent for the joint-readout section. -/
@@ -179,11 +182,13 @@ theorem traceless_gram_square (Z : Packet (Fin 2)) :
       (((paperHelicity (Z 0) - paperHelicity (Z 1)) ^ 2 +
           Complex.normSq (wittPair (Z 0) (Z 1)) : ℝ) : ℂ) •
         (1 : ComplexSpacetime) := by
+  have hconj : (starRingEnd ℂ) (wittPair (Z 0) (Z 1)) =
+      wittPair (Z 1) (Z 0) := wittPair_conj (Z 0) (Z 1)
   rw [traceless_gram_eq]
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [Matrix.mul_apply, Fin.sum_univ_two, smul_eq_mul,
-      Complex.normSq_eq_conj_mul_self] <;> push_cast <;> ring
+      Complex.normSq_eq_conj_mul_self, hconj] <;> push_cast <;> ring
 
 theorem tracelessQuadratic_gram (Z : Packet (Fin 2)) :
     tracelessQuadratic (gram Z) =

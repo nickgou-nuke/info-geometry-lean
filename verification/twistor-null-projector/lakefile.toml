@@ -1,0 +1,16 @@
+name = "twistor_null_projector_validation"
+srcDir = "../../lean"
+packagesDir = "../../.lake/packages/mathlib/.lake/packages"
+enableArtifactCache = false
+
+defaultTargets = [
+  "InfoGeometry.LinearAlgebra.IsotropicSelfAdjoint",
+  "InfoGeometry.Twistor.PenroseNullProjector"
+]
+
+[[require]]
+name = "mathlib"
+path = "../../.lake/packages/mathlib"
+
+[[lean_lib]]
+name = "InfoGeometry"

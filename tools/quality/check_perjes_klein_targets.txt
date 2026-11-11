@@ -6,3 +6,5 @@ InfoGeometry.Twistor.TwistorConstituentCCR
 InfoGeometry.Topology.KleinDeckRepresentation
 InfoGeometry.Topology.KleinCliffordPinLift
 InfoGeometry.Topology.KleinAssociatedSpinors
+InfoGeometry.LinearAlgebra.IsotropicSelfAdjoint
+InfoGeometry.Twistor.PenroseNullProjector

@@ -1,0 +1,95 @@
+name: Plucker complexes and Peirce brackets
+
+on:
+  pull_request:
+    paths:
+      - 'lean/**/*.lean'
+      - 'verification/plucker-complex/**'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/pathing.py'
+      - '.github/workflows/plucker-complex.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: plucker-complex-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore pinned dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: plucker-lean4341-d13f23b7-${{ runner.os }}-v1
+      - name: Restore checked source artifacts
+        uses: actions/cache@v4
+        with:
+          path: verification/plucker-complex/.lake/build
+          key: plucker-source-lean4341-d13f23b7-${{ runner.os }}-${{ hashFiles('lean/**/*.lean', 'verification/plucker-complex/lakefile.toml', 'verification/plucker-complex/lake-manifest.json') }}
+          restore-keys: |
+            plucker-source-lean4341-d13f23b7-${{ runner.os }}-
+      - name: Install the pinned Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.34.1
+      - name: Restore the pinned Mathlib artifacts
+        run: python3 verification/plucker-complex/check.py exe cache get
+      - name: Build the actual source owners and axiom audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/plucker-complex/check.py build 2>&1 | tee plucker-build.log
+          python3 verification/plucker-complex/check.py env lean lean/InfoGeometry/Projective/PluckerLinearComplexAudit.lean 2>&1 | tee plucker-axioms.log
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          log = Path('plucker-axioms.log').read_text()
+          audit = Path('lean/InfoGeometry/Projective/PluckerLinearComplexAudit.lean').read_text()
+          expected = set(re.findall(r'^#print axioms (\S+)', audit, re.M))
+          records = re.findall(
+              r"'([^'\n]+)' (?:depends on axioms:\s*\[([^\]]*)\]|does not depend on any axioms)",
+              log,
+          )
+          reported = {name for name, _ in records}
+          allowed = {'propext', 'Classical.choice', 'Quot.sound'}
+          dependencies = {a.strip() for _, group in records for a in group.split(',') if a.strip()}
+          missing = expected - reported
+          unapproved = dependencies - allowed
+          if missing or unapproved:
+              raise SystemExit(f'Missing audit entries: {sorted(missing)}; unapproved axioms: {sorted(unapproved)}')
+          print(f'Checked all {len(expected)} public declarations; axioms: {sorted(dependencies)}')
+          PY
+      - name: Screen the new owners
+        run: >-
+          python3 tools/infra/opengauss_screener.py --strict
+          lean/InfoGeometry/Projective/PluckerLinearComplex.lean
+          lean/InfoGeometry/Projective/PluckerLinearComplexGeometry.lean
+          lean/InfoGeometry/Projective/PluckerComplexPencil.lean
+          lean/InfoGeometry/Projective/PluckerQuadraticComplex.lean
+          lean/InfoGeometry/Projective/PluckerPeirceBracket.lean
+          lean/InfoGeometry/Projective/PluckerLinearComplexAudit.lean
+      - name: Preserve the build evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: plucker-complex-build
+          path: |
+            plucker-build.log
+            plucker-axioms.log

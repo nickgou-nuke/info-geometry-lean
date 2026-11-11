@@ -1,0 +1,20 @@
+name = "dahm_klein_validation"
+srcDir = "../../lean"
+packagesDir = "../../.lake/packages/mathlib/.lake/packages"
+enableArtifactCache = false
+
+defaultTargets = [
+  "InfoGeometry.Projective.PluckerMatrixAction",
+  "InfoGeometry.Projective.DahmLineGeometry",
+  "InfoGeometry.Projective.ExteriorKleinMatrixAction"
+]
+
+[[require]]
+name = "mathlib"
+path = "../../.lake/packages/mathlib"
+
+[[lean_lib]]
+name = "InfoGeometry"
+
+[[lean_lib]]
+name = "DAG"

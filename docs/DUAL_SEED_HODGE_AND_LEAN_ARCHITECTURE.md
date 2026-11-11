@@ -432,4 +432,3 @@ algebraic construction establishes the statements above at their exact types.
 The explicit formulas do not turn the whole imported library into a
 constructive-foundations development; foundational axiom use is audited
 separately.
-

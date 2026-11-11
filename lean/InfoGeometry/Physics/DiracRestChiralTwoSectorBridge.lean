@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Physics.TwoSectorSpectralOscillation
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.DiracPauliGamma
@@ -31,7 +36,8 @@ as an instance of `TwoSectorSpectralOscillation` with $E_0 = 0$ and $\Delta = m 
    a derivation of the Dirac velocity-operator oscillation: chirality ($L/R$) and energy sign ($E_\pm$)
    are distinct physical gradings.
 
-The results here are kernel-checked; this module introduces no custom axioms or proof holes.
+The declarations below give finite-dimensional algebraic identities. A state,
+measurement, or spacetime interpretation requires a separate construction.
 -/
 
 /-- Dirac rest-frame Hamiltonian in the Weyl basis: $H_D(m, c) = \begin{pmatrix} 0 & m c^2 \\ m c^2 & 0 \end{pmatrix}$. -/
@@ -94,6 +100,16 @@ shell in this representation; it does not supply a state or a measurement. -/
 theorem diracHamiltonian1D_sq (p m c : ℝ) :
     diracHamiltonian1D p m c * diracHamiltonian1D p m c =
       ((c ^ 2 * p ^ 2 + m ^ 2 * c ^ 4 : ℝ) : ℂ) • (1 : DiracMatrix) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [diracHamiltonian1D, diracAlpha1, gamma0, gamma1] <;> ring
+
+/-- The existing one-direction Dirac representation supplies the required
+Hamiltonian-alpha anticommutator without assuming it as a model field. -/
+theorem diracHamiltonian_alpha1_anticommutator (p m c : ℝ) :
+    diracHamiltonian1D p m c * diracAlpha1 +
+        diracAlpha1 * diracHamiltonian1D p m c =
+      (2 * c * p : ℂ) • (1 : DiracMatrix) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [diracHamiltonian1D, diracAlpha1, gamma0, gamma1] <;> ring

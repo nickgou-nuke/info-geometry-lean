@@ -1,0 +1,2988 @@
+{
+  "schema": "twistor-homotope-hosted-independent-qa-receipt-v1",
+  "issued_at_utc": "2026-11-11T14:00:35.319324+00:00",
+  "disposition": "FOCUSED_HOSTED_QA_ACCEPTED",
+  "independent_qa_acceptance": true,
+  "whole_repository_release_accepted": false,
+  "review_role": {
+    "agent": "/root/ci_acceptance_watch",
+    "role": "Non-authoring independent QA-A",
+    "scope": "Read-only source and hosted-evidence inspection, one expressly authorized focused hosted rerun, and isolated QA records. No Lean source edits, local compiler executions, local source gates, dependency mutations, or unrelated-workflow repairs."
+  },
+  "scope": "Exactly the six new mathematical owners, their declaration-owner audit, and the focused ordered-homotope/twistor verification contract at the frozen source identity below.",
+  "source_identity": {
+    "repository": "nickgou-nuke/info-geometry-lean",
+    "pr_number": 315,
+    "pr_url": "https://github.com/nickgou-nuke/info-geometry-lean/pull/315",
+    "branch": "formalize/twistor-homotope-invariants",
+    "implementation_base": "c143c264bc18bbf41d692be4e270b5b7f7405702",
+    "published_head": "77b573e3bb12de62fef132cdc2ee63ef19fbfa4c",
+    "local_checkpoint": "bf6517f231ddb30ba3abdbcfee27c3c822a782ea",
+    "hosted_merge_commit": "1b88340e467907ffcbb8d5f7295e285f16838c7e",
+    "tree": "0dff69f32d4ed42bafbb4fe975229751a6f8a6c3",
+    "hosted_merge_parents": [
+      "c143c264bc18bbf41d692be4e270b5b7f7405702",
+      "77b573e3bb12de62fef132cdc2ee63ef19fbfa4c"
+    ],
+    "post_run_pr_head": "77b573e3bb12de62fef132cdc2ee63ef19fbfa4c",
+    "post_run_pr_base": "c143c264bc18bbf41d692be4e270b5b7f7405702",
+    "post_run_pr_draft": true,
+    "frozen_source_record_sha256": "cbfa3b90d43682d099a44acf62140860215e161ddd97773cc58e895715d4e2a4",
+    "all_changed_file_sha256": {
+      ".github/workflows/twistor-homotope.yml": "cb90afa7f4ad41442903b598dd1b5830aa5160658b6e12d0e19259bf2a38e48b",
+      "docs/TWISTOR_HOMOTOPE_INVARIANTS_CONTRACT.md": "a6c71a8704a5e7b869253dd902c03dcaa3bd514b96365fcb6ec53d4bc988320d",
+      "docs/intake/TWISTOR_HOMOTOPE_STREAM_2026_11_11.txt": "e129d3b8f4db815e72294c3cd41f1d689e29e56a2a657b881aa5aefa97e7bd2c",
+      "lean/InfoGeometry/Algebra/TwoModeCountRecurrence.lean": "548f7c350f2973de236f1dd2b2508bfbac6032d9e34886cbcf764f7376545eee",
+      "lean/InfoGeometry/OperatorAlgebra/OrderedHomotope.lean": "4c0cfac569a4eec5a05e3b7256c301a7890f460718a30854cf685fb057fd8231",
+      "lean/InfoGeometry/Twistor/ConstituentCayleyGram.lean": "43f6f5e2362d8b02d595d2e96194fc76f18d0ffb8b539f5417ea9d4e6a75b9eb",
+      "lean/InfoGeometry/Twistor/ConstituentInvariantIndependence.lean": "88be70d8fdfeba2a290670ee1874b72f6a4d38392d0a0b7cb38b5d12b49959b8",
+      "lean/InfoGeometry/Twistor/ConstituentWittGram.lean": "fb876e8b6d61ae317057adfd911c4e5ebbce89e396e92cd65e979ace7f6817e9",
+      "lean/InfoGeometry/Twistor/MomentHomotopeWitness.lean": "8e18461fa07ae7b0aafcdb1557312ebe02b5f8e30918587329bfdefb77f7e09e",
+      "lean/InfoGeometry/Twistor/TwistorHomotopeAudit.lean": "02ef426ba88d83f05728f9bae8140a092d584a76c1b3fe8fedc61fe0114b2a56",
+      "verification/twistor-homotope/.gitignore": "84cd6e8c4a13d19f68e8ef0d07941cf975ff9698e1a0c38ac45116b0ff1b095d",
+      "verification/twistor-homotope/A_A_REPAIR1_REVIEW.json": "d6cfb589dcaf0d1ce7bd6bfcb717f361fb446abb10d2eea37a393d37863a8ec8",
+      "verification/twistor-homotope/A_A_REPAIR1_REVIEW.json.sha256": "d5aba4a4e624a6986e718da4f4168fb764b588a7e8f6dd6eb82a05abfe3c203e",
+      "verification/twistor-homotope/A_A_REPAIR2_REVIEW.json": "1b993012c129f354d4c95c763f25409bf18d8b1d861723f0663c499b1d600aae",
+      "verification/twistor-homotope/A_A_REPAIR2_REVIEW.json.sha256": "8851045f012a81e2f2e597ce3f87c2669815f491ada86eca5029a0eecef5e2d5",
+      "verification/twistor-homotope/A_A_REPAIR3_REVIEW.json": "56910b1df02acc41312a00e85ab4a9968dd3e691049c1ad3f14780e2ea93243d",
+      "verification/twistor-homotope/A_A_REPAIR3_REVIEW.json.sha256": "1e32dd112571390537a5b39967f02a334597fcc20172d636295b4ef5b47b1e61",
+      "verification/twistor-homotope/A_A_SOURCE_REVIEW.json": "7304e5dbab9ae28ff061276b26c02291ccc006a203f185339e269a73e3975765",
+      "verification/twistor-homotope/A_A_SOURCE_REVIEW.json.sha256": "5882f51beedc76c6afe83171965dda7e99a397b256a605d0e6d8345d8b093299",
+      "verification/twistor-homotope/A_A_VACUITY_REVIEW.json": "b38a65ce6faae04d4289cea0d0e1870a73c86519b9eb63e2cc0d2c118fa34dea",
+      "verification/twistor-homotope/A_A_VACUITY_REVIEW.json.sha256": "cdf706fcad428189d38d4708173fe6856eaf91cd6d55cfc8e6a954f496ba3f30",
+      "verification/twistor-homotope/README.md": "14a4f7c91d264e0e35b8d1dc0c234173f4be82247704bea385ce1e4ede280720",
+      "verification/twistor-homotope/RESULTS.md": "ac127e7426d7085e4123df446d9f38b2f4b46dff3245abca6e05fa26147d90d5",
+      "verification/twistor-homotope/VACUITY_REVIEW.json": "03958a9278954913cf32a6c72564401e4daa305da6940e8e960a307d60ec7ef2",
+      "verification/twistor-homotope/check.py": "18468094ed73e969c7ce9a595a0644f002234d99ce0ede41827896dff65f5d39",
+      "verification/twistor-homotope/lake-manifest.json": "dd3074b4021ddcc304f6371f1f6ab2436270e1e9eb89cf5511f5c84842fed6ad",
+      "verification/twistor-homotope/lakefile.toml": "f95ad0b3a3369f2ea2ab243f899c23ddca408c335e3c47691d20af9f74ca1624",
+      "verification/twistor-homotope/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+      "verification/twistor-homotope/verify.py": "2a9ddad54a696d49923336d89fe4e726a95b13716776b6825be9c2a623fd502e"
+    },
+    "protected_file_sha256": {
+      "lean/InfoGeometry/OperatorAlgebra/OrderedHomotope.lean": "4c0cfac569a4eec5a05e3b7256c301a7890f460718a30854cf685fb057fd8231",
+      "lean/InfoGeometry/Algebra/TwoModeCountRecurrence.lean": "548f7c350f2973de236f1dd2b2508bfbac6032d9e34886cbcf764f7376545eee",
+      "lean/InfoGeometry/Twistor/ConstituentWittGram.lean": "fb876e8b6d61ae317057adfd911c4e5ebbce89e396e92cd65e979ace7f6817e9",
+      "lean/InfoGeometry/Twistor/ConstituentCayleyGram.lean": "43f6f5e2362d8b02d595d2e96194fc76f18d0ffb8b539f5417ea9d4e6a75b9eb",
+      "lean/InfoGeometry/Twistor/ConstituentInvariantIndependence.lean": "88be70d8fdfeba2a290670ee1874b72f6a4d38392d0a0b7cb38b5d12b49959b8",
+      "lean/InfoGeometry/Twistor/MomentHomotopeWitness.lean": "8e18461fa07ae7b0aafcdb1557312ebe02b5f8e30918587329bfdefb77f7e09e",
+      "lean/InfoGeometry/Twistor/TwistorHomotopeAudit.lean": "02ef426ba88d83f05728f9bae8140a092d584a76c1b3fe8fedc61fe0114b2a56",
+      "verification/twistor-homotope/.gitignore": "84cd6e8c4a13d19f68e8ef0d07941cf975ff9698e1a0c38ac45116b0ff1b095d",
+      "verification/twistor-homotope/check.py": "18468094ed73e969c7ce9a595a0644f002234d99ce0ede41827896dff65f5d39",
+      "verification/twistor-homotope/verify.py": "2a9ddad54a696d49923336d89fe4e726a95b13716776b6825be9c2a623fd502e",
+      "verification/twistor-homotope/lakefile.toml": "f95ad0b3a3369f2ea2ab243f899c23ddca408c335e3c47691d20af9f74ca1624",
+      "verification/twistor-homotope/lake-manifest.json": "dd3074b4021ddcc304f6371f1f6ab2436270e1e9eb89cf5511f5c84842fed6ad",
+      "verification/twistor-homotope/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+      "verification/twistor-homotope/README.md": "14a4f7c91d264e0e35b8d1dc0c234173f4be82247704bea385ce1e4ede280720",
+      "verification/twistor-homotope/VACUITY_REVIEW.json": "03958a9278954913cf32a6c72564401e4daa305da6940e8e960a307d60ec7ef2",
+      ".github/workflows/twistor-homotope.yml": "cb90afa7f4ad41442903b598dd1b5830aa5160658b6e12d0e19259bf2a38e48b",
+      "docs/TWISTOR_HOMOTOPE_INVARIANTS_CONTRACT.md": "a6c71a8704a5e7b869253dd902c03dcaa3bd514b96365fcb6ec53d4bc988320d",
+      "docs/intake/TWISTOR_HOMOTOPE_STREAM_2026_11_11.txt": "e129d3b8f4db815e72294c3cd41f1d689e29e56a2a657b881aa5aefa97e7bd2c"
+    },
+    "protected_source_manifest_sha256": "d32c9ca90ccde7539f9c3309ca7a235d956e84d51f41f842c7fa33ce5a44c9e7",
+    "protected_source_manifest_hash_encoding": "SHA256 of UTF-8 JSON with sorted keys, compact comma/colon separators, no final newline."
+  },
+  "independent_source_review": {
+    "final_mathematical_review": "verification/twistor-homotope/A_A_REPAIR3_REVIEW.json",
+    "final_mathematical_review_sha256": "56910b1df02acc41312a00e85ab4a9968dd3e691049c1ad3f14780e2ea93243d",
+    "vacuity_classification_review": "verification/twistor-homotope/A_A_VACUITY_REVIEW.json",
+    "vacuity_classification_review_sha256": "b38a65ce6faae04d4289cea0d0e1870a73c86519b9eb63e2cc0d2c118fa34dea",
+    "all_five_report_checksums": {
+      "verification/twistor-homotope/A_A_REPAIR1_REVIEW.json": {
+        "actual_sha256": "d6cfb589dcaf0d1ce7bd6bfcb717f361fb446abb10d2eea37a393d37863a8ec8",
+        "sidecar": "d6cfb589dcaf0d1ce7bd6bfcb717f361fb446abb10d2eea37a393d37863a8ec8  A_A_REPAIR1_REVIEW.json"
+      },
+      "verification/twistor-homotope/A_A_REPAIR2_REVIEW.json": {
+        "actual_sha256": "1b993012c129f354d4c95c763f25409bf18d8b1d861723f0663c499b1d600aae",
+        "sidecar": "1b993012c129f354d4c95c763f25409bf18d8b1d861723f0663c499b1d600aae  A_A_REPAIR2_REVIEW.json"
+      },
+      "verification/twistor-homotope/A_A_REPAIR3_REVIEW.json": {
+        "actual_sha256": "56910b1df02acc41312a00e85ab4a9968dd3e691049c1ad3f14780e2ea93243d",
+        "sidecar": "56910b1df02acc41312a00e85ab4a9968dd3e691049c1ad3f14780e2ea93243d  A_A_REPAIR3_REVIEW.json"
+      },
+      "verification/twistor-homotope/A_A_SOURCE_REVIEW.json": {
+        "actual_sha256": "7304e5dbab9ae28ff061276b26c02291ccc006a203f185339e269a73e3975765",
+        "sidecar": "7304e5dbab9ae28ff061276b26c02291ccc006a203f185339e269a73e3975765  A_A_SOURCE_REVIEW.json"
+      },
+      "verification/twistor-homotope/A_A_VACUITY_REVIEW.json": {
+        "actual_sha256": "b38a65ce6faae04d4289cea0d0e1870a73c86519b9eb63e2cc0d2c118fa34dea",
+        "sidecar": "b38a65ce6faae04d4289cea0d0e1870a73c86519b9eb63e2cc0d2c118fa34dea  A_A_VACUITY_REVIEW.json"
+      }
+    },
+    "final_review_source_fingerprints_match": true,
+    "mathematical_scope_authority": "The preserved A-A source and repair reports; hosted compilation and this QA receipt establish distinct execution and evidence checks."
+  },
+  "independent_execution": {
+    "rerun_requests_made_by_QA": 1,
+    "rerun_request": {
+      "requested_at": "2026-11-11T13:53:10.398Z",
+      "original_job_id": 130561597286,
+      "run_id": 43032133481,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "success": true
+        },
+        "isError": false
+      }
+    },
+    "workflow_run_id": 43032133481,
+    "workflow_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43032133481",
+    "workflow_name": "Ordered homotopes and twistor invariants",
+    "attempts": [
+      {
+        "run_id": 43032133481,
+        "attempt": 1,
+        "role": "initial_complete_execution",
+        "job_id": 130561597286,
+        "job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43032133481/job/130561597286",
+        "job_started_utc": "2026-11-11T13:46:31Z",
+        "job_completed_utc": "2026-11-11T13:52:06Z",
+        "job_conclusion": "success",
+        "driver_started_utc": "2026-11-11T13:49:10.382728+00:00",
+        "driver_finished_utc": "2026-11-11T13:51:26.498651+00:00",
+        "driver_disposition": "CHECKS_PASSED",
+        "artifact": {
+          "id": 13862475703,
+          "name": "twistor-homotope-verification",
+          "size_in_bytes": 24929,
+          "url": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/actions/artifacts/13862475703",
+          "archive_download_url": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/actions/artifacts/13862475703/zip",
+          "expired": false,
+          "created_at": "2026-11-11T13:51:28Z",
+          "expires_at": "2027-02-09T13:46:16Z",
+          "updated_at": "2026-11-11T13:51:28Z",
+          "digest": "sha256:5b631e0d802b2fee0cfe27c7cd220b073ed00b52dae19f180efbfa43e62f480b",
+          "workflow_run": {
+            "id": 43032133481,
+            "repository_id": 1156582666,
+            "head_repository_id": 1156582666,
+            "head_branch": "formalize/twistor-homotope-invariants",
+            "head_sha": "77b573e3bb12de62fef132cdc2ee63ef19fbfa4c"
+          }
+        },
+        "downloaded_zip_sha256": "5b631e0d802b2fee0cfe27c7cd220b073ed00b52dae19f180efbfa43e62f480b",
+        "job_log_sha256": "a3efb2a2209da55b5913c7fbfd8243bdfd081a612d615866f760fbad871dc458",
+        "checks_json_sha256": "22e59e043f1841ae59aa69f6e27b40f06dc1563b1aa7499025c6be78d819a67b",
+        "fresh_audit_log_sha256": "7a84596e885cb8c01715775037e03564a07bd71a5f402cbeaba9a273d711d8cc",
+        "independent_inspection_sha256": "a0b189a038f3de44cac95eaeecb71a8875823e5f53c74a057414baec30aea123",
+        "commands": [
+          {
+            "label": "lean-version",
+            "argv": [
+              "lean",
+              "--version"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 0.031,
+            "stdout_sha256": "355a9a028f81641782d75d6e6b58dec70f29d2f61238a9e271690259d9bf5680",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "lake-version",
+            "argv": [
+              "lake",
+              "--version"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 0.032,
+            "stdout_sha256": "36526a338068c343bedff5daa38fec328b4f722df1e8f0b5d026d4f0f908f3a3",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "build",
+            "argv": [
+              "lake",
+              "-d",
+              "/home/runner/work/info-geometry-lean/info-geometry-lean/verification/twistor-homotope",
+              "build"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 126.37,
+            "stdout_sha256": "873e1c959e6900f76e5cd1164d26c80de1b15d3dc0fbdcbdf4279c7efb4740e4",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "fresh-audit",
+            "argv": [
+              "lake",
+              "-d",
+              "/home/runner/work/info-geometry-lean/info-geometry-lean/verification/twistor-homotope",
+              "env",
+              "lean",
+              "/home/runner/work/info-geometry-lean/info-geometry-lean/lean/InfoGeometry/Twistor/TwistorHomotopeAudit.lean"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 4.649,
+            "stdout_sha256": "7a84596e885cb8c01715775037e03564a07bd71a5f402cbeaba9a273d711d8cc",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "strict-screen",
+            "argv": [
+              "python3",
+              "tools/infra/opengauss_screener.py",
+              "--strict",
+              "--json",
+              "lean/InfoGeometry/OperatorAlgebra/OrderedHomotope.lean",
+              "lean/InfoGeometry/Algebra/TwoModeCountRecurrence.lean",
+              "lean/InfoGeometry/Twistor/ConstituentWittGram.lean",
+              "lean/InfoGeometry/Twistor/ConstituentCayleyGram.lean",
+              "lean/InfoGeometry/Twistor/ConstituentInvariantIndependence.lean",
+              "lean/InfoGeometry/Twistor/MomentHomotopeWitness.lean"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 0.153,
+            "stdout_sha256": "747443d22b8ccffb07c44835fa4a015e33c702c22548bbc3cecde756a8b81eb7",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "strict-refute",
+            "argv": [
+              "python3",
+              "tools/infra/opengauss_cli.py",
+              "refute",
+              "lean/InfoGeometry/OperatorAlgebra/OrderedHomotope.lean",
+              "lean/InfoGeometry/Algebra/TwoModeCountRecurrence.lean",
+              "lean/InfoGeometry/Twistor/ConstituentWittGram.lean",
+              "lean/InfoGeometry/Twistor/ConstituentCayleyGram.lean",
+              "lean/InfoGeometry/Twistor/ConstituentInvariantIndependence.lean",
+              "lean/InfoGeometry/Twistor/MomentHomotopeWitness.lean",
+              "--strict",
+              "--json"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 0.193,
+            "stdout_sha256": "2cc68bbb77cd15ee2b6d9b348e234834ce9f8cd1e0708b876007bd9f3980897f",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "gate4-static",
+            "argv": [
+              "python3",
+              "tools/infra/opengauss_cli.py",
+              "review",
+              "lean/InfoGeometry/OperatorAlgebra/OrderedHomotope.lean",
+              "lean/InfoGeometry/Algebra/TwoModeCountRecurrence.lean",
+              "lean/InfoGeometry/Twistor/ConstituentWittGram.lean",
+              "lean/InfoGeometry/Twistor/ConstituentCayleyGram.lean",
+              "lean/InfoGeometry/Twistor/ConstituentInvariantIndependence.lean",
+              "lean/InfoGeometry/Twistor/MomentHomotopeWitness.lean",
+              "lean/InfoGeometry/Twistor/TwistorHomotopeAudit.lean",
+              "--gate",
+              "GATE_4",
+              "--json"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 2.494,
+            "stdout_sha256": "02beba67121c0663f41ba371eabb14e4a126a45dcf8821edbbca626f65ee45c8",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "vacuity-OrderedHomotope",
+            "argv": [
+              "python3",
+              "scripts/vacuity-linter.py",
+              "lean/InfoGeometry/OperatorAlgebra/OrderedHomotope.lean",
+              "--json"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 0.031,
+            "stdout_sha256": "e896df62016325454571b369e6ecad8c849eddd48f2f1ef2450155856313b0fa",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "vacuity-TwoModeCountRecurrence",
+            "argv": [
+              "python3",
+              "scripts/vacuity-linter.py",
+              "lean/InfoGeometry/Algebra/TwoModeCountRecurrence.lean",
+              "--json"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 0.031,
+            "stdout_sha256": "8627af16a6cb76cb5eb0c7ef89eadea564b0e1f234a88e3b4c3bef185f39eed4",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "vacuity-ConstituentWittGram",
+            "argv": [
+              "python3",
+              "scripts/vacuity-linter.py",
+              "lean/InfoGeometry/Twistor/ConstituentWittGram.lean",
+              "--json"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 0.03,
+            "stdout_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "vacuity-ConstituentCayleyGram",
+            "argv": [
+              "python3",
+              "scripts/vacuity-linter.py",
+              "lean/InfoGeometry/Twistor/ConstituentCayleyGram.lean",
+              "--json"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 0.03,
+            "stdout_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "vacuity-ConstituentInvariantIndependence",
+            "argv": [
+              "python3",
+              "scripts/vacuity-linter.py",
+              "lean/InfoGeometry/Twistor/ConstituentInvariantIndependence.lean",
+              "--json"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 0.03,
+            "stdout_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "vacuity-MomentHomotopeWitness",
+            "argv": [
+              "python3",
+              "scripts/vacuity-linter.py",
+              "lean/InfoGeometry/Twistor/MomentHomotopeWitness.lean",
+              "--json"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 0.029,
+            "stdout_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "vacuity-TwistorHomotopeAudit",
+            "argv": [
+              "python3",
+              "scripts/vacuity-linter.py",
+              "lean/InfoGeometry/Twistor/TwistorHomotopeAudit.lean",
+              "--json"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 0.028,
+            "stdout_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "whitespace",
+            "argv": [
+              "git",
+              "diff",
+              "--check",
+              "c143c264bc18bbf41d692be4e270b5b7f7405702",
+              "HEAD",
+              "--",
+              "lean/InfoGeometry/OperatorAlgebra/OrderedHomotope.lean",
+              "lean/InfoGeometry/Algebra/TwoModeCountRecurrence.lean",
+              "lean/InfoGeometry/Twistor/ConstituentWittGram.lean",
+              "lean/InfoGeometry/Twistor/ConstituentCayleyGram.lean",
+              "lean/InfoGeometry/Twistor/ConstituentInvariantIndependence.lean",
+              "lean/InfoGeometry/Twistor/MomentHomotopeWitness.lean",
+              "lean/InfoGeometry/Twistor/TwistorHomotopeAudit.lean",
+              "verification/twistor-homotope/.gitignore",
+              "verification/twistor-homotope/check.py",
+              "verification/twistor-homotope/verify.py",
+              "verification/twistor-homotope/lakefile.toml",
+              "verification/twistor-homotope/lake-manifest.json",
+              "verification/twistor-homotope/lean-toolchain",
+              "verification/twistor-homotope/README.md",
+              "verification/twistor-homotope/VACUITY_REVIEW.json",
+              ".github/workflows/twistor-homotope.yml",
+              "docs/TWISTOR_HOMOTOPE_INVARIANTS_CONTRACT.md",
+              "docs/intake/TWISTOR_HOMOTOPE_STREAM_2026_11_11.txt"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 0.007,
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "fresh_audit_invocation_utc": {
+          "START": "2026-11-11T13:51:17.7110749Z",
+          "END": "2026-11-11T13:51:22.3609925Z"
+        },
+        "shared_lock": {
+          "owner": "twistor-homotope:2778",
+          "pid": 2778,
+          "acquiredAt": 1794404949.4143798
+        },
+        "build_summary": [
+          "Build completed successfully (3322 jobs)."
+        ],
+        "cache_observations": [
+          "2026-11-11T13:47:11.1031291Z Cache not found for input keys: Linux-twistor-homotope-8ffc90ad1ee0a97f16f4dcee18ddbbf2acfa02754edb8175b8a8b3adcf2a97af"
+        ],
+        "command_stdout_stderr_files_verified": 30
+      },
+      {
+        "run_id": 43032133481,
+        "attempt": 2,
+        "role": "independent_QA_rerun",
+        "job_id": 130565234717,
+        "job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43032133481/job/130565234717",
+        "job_started_utc": "2026-11-11T13:53:15Z",
+        "job_completed_utc": "2026-11-11T13:55:32Z",
+        "job_conclusion": "success",
+        "driver_started_utc": "2026-11-11T13:55:17.604413+00:00",
+        "driver_finished_utc": "2026-11-11T13:55:28.588846+00:00",
+        "driver_disposition": "CHECKS_PASSED",
+        "artifact": {
+          "id": 13861757275,
+          "name": "twistor-homotope-verification",
+          "size_in_bytes": 20040,
+          "url": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/actions/artifacts/13861757275",
+          "archive_download_url": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/actions/artifacts/13861757275/zip",
+          "expired": false,
+          "created_at": "2026-11-11T13:55:29Z",
+          "expires_at": "2027-02-09T13:53:12Z",
+          "updated_at": "2026-11-11T13:55:29Z",
+          "digest": "sha256:38970e6708ae415b494ee691fbe80f60a512cb441980511acd5e14cb29539b92",
+          "workflow_run": {
+            "id": 43032133481,
+            "repository_id": 1156582666,
+            "head_repository_id": 1156582666,
+            "head_branch": "formalize/twistor-homotope-invariants",
+            "head_sha": "77b573e3bb12de62fef132cdc2ee63ef19fbfa4c"
+          }
+        },
+        "downloaded_zip_sha256": "38970e6708ae415b494ee691fbe80f60a512cb441980511acd5e14cb29539b92",
+        "job_log_sha256": "8f9fd6615d59c85814aa5a4d8c0567c404a7fa5099c5541cc738f804d0d80271",
+        "checks_json_sha256": "b567b85202a1c672090cb5ccf95be07c1d0f39b6f82eea12f6d63d5f9b1b44c7",
+        "fresh_audit_log_sha256": "7a84596e885cb8c01715775037e03564a07bd71a5f402cbeaba9a273d711d8cc",
+        "independent_inspection_sha256": "3a9ea45f9213374f92049bc6763be64c50a1a6a0f0d356376e6b90545f2cbcea",
+        "commands": [
+          {
+            "label": "lean-version",
+            "argv": [
+              "lean",
+              "--version"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 0.03,
+            "stdout_sha256": "355a9a028f81641782d75d6e6b58dec70f29d2f61238a9e271690259d9bf5680",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "lake-version",
+            "argv": [
+              "lake",
+              "--version"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 0.031,
+            "stdout_sha256": "36526a338068c343bedff5daa38fec328b4f722df1e8f0b5d026d4f0f908f3a3",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "build",
+            "argv": [
+              "lake",
+              "-d",
+              "/home/runner/work/info-geometry-lean/info-geometry-lean/verification/twistor-homotope",
+              "build"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 1.556,
+            "stdout_sha256": "66633fb6573dbe721f1a08bf34a782e4d0929378d734559aa39acf8e4f86a920",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "fresh-audit",
+            "argv": [
+              "lake",
+              "-d",
+              "/home/runner/work/info-geometry-lean/info-geometry-lean/verification/twistor-homotope",
+              "env",
+              "lean",
+              "/home/runner/work/info-geometry-lean/info-geometry-lean/lean/InfoGeometry/Twistor/TwistorHomotopeAudit.lean"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 4.044,
+            "stdout_sha256": "7a84596e885cb8c01715775037e03564a07bd71a5f402cbeaba9a273d711d8cc",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "strict-screen",
+            "argv": [
+              "python3",
+              "tools/infra/opengauss_screener.py",
+              "--strict",
+              "--json",
+              "lean/InfoGeometry/OperatorAlgebra/OrderedHomotope.lean",
+              "lean/InfoGeometry/Algebra/TwoModeCountRecurrence.lean",
+              "lean/InfoGeometry/Twistor/ConstituentWittGram.lean",
+              "lean/InfoGeometry/Twistor/ConstituentCayleyGram.lean",
+              "lean/InfoGeometry/Twistor/ConstituentInvariantIndependence.lean",
+              "lean/InfoGeometry/Twistor/MomentHomotopeWitness.lean"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 0.117,
+            "stdout_sha256": "747443d22b8ccffb07c44835fa4a015e33c702c22548bbc3cecde756a8b81eb7",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "strict-refute",
+            "argv": [
+              "python3",
+              "tools/infra/opengauss_cli.py",
+              "refute",
+              "lean/InfoGeometry/OperatorAlgebra/OrderedHomotope.lean",
+              "lean/InfoGeometry/Algebra/TwoModeCountRecurrence.lean",
+              "lean/InfoGeometry/Twistor/ConstituentWittGram.lean",
+              "lean/InfoGeometry/Twistor/ConstituentCayleyGram.lean",
+              "lean/InfoGeometry/Twistor/ConstituentInvariantIndependence.lean",
+              "lean/InfoGeometry/Twistor/MomentHomotopeWitness.lean",
+              "--strict",
+              "--json"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 0.156,
+            "stdout_sha256": "2cc68bbb77cd15ee2b6d9b348e234834ce9f8cd1e0708b876007bd9f3980897f",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "gate4-static",
+            "argv": [
+              "python3",
+              "tools/infra/opengauss_cli.py",
+              "review",
+              "lean/InfoGeometry/OperatorAlgebra/OrderedHomotope.lean",
+              "lean/InfoGeometry/Algebra/TwoModeCountRecurrence.lean",
+              "lean/InfoGeometry/Twistor/ConstituentWittGram.lean",
+              "lean/InfoGeometry/Twistor/ConstituentCayleyGram.lean",
+              "lean/InfoGeometry/Twistor/ConstituentInvariantIndependence.lean",
+              "lean/InfoGeometry/Twistor/MomentHomotopeWitness.lean",
+              "lean/InfoGeometry/Twistor/TwistorHomotopeAudit.lean",
+              "--gate",
+              "GATE_4",
+              "--json"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 4.236,
+            "stdout_sha256": "02beba67121c0663f41ba371eabb14e4a126a45dcf8821edbbca626f65ee45c8",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "vacuity-OrderedHomotope",
+            "argv": [
+              "python3",
+              "scripts/vacuity-linter.py",
+              "lean/InfoGeometry/OperatorAlgebra/OrderedHomotope.lean",
+              "--json"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 0.024,
+            "stdout_sha256": "e896df62016325454571b369e6ecad8c849eddd48f2f1ef2450155856313b0fa",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "vacuity-TwoModeCountRecurrence",
+            "argv": [
+              "python3",
+              "scripts/vacuity-linter.py",
+              "lean/InfoGeometry/Algebra/TwoModeCountRecurrence.lean",
+              "--json"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 0.024,
+            "stdout_sha256": "8627af16a6cb76cb5eb0c7ef89eadea564b0e1f234a88e3b4c3bef185f39eed4",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "vacuity-ConstituentWittGram",
+            "argv": [
+              "python3",
+              "scripts/vacuity-linter.py",
+              "lean/InfoGeometry/Twistor/ConstituentWittGram.lean",
+              "--json"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 0.027,
+            "stdout_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "vacuity-ConstituentCayleyGram",
+            "argv": [
+              "python3",
+              "scripts/vacuity-linter.py",
+              "lean/InfoGeometry/Twistor/ConstituentCayleyGram.lean",
+              "--json"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 0.028,
+            "stdout_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "vacuity-ConstituentInvariantIndependence",
+            "argv": [
+              "python3",
+              "scripts/vacuity-linter.py",
+              "lean/InfoGeometry/Twistor/ConstituentInvariantIndependence.lean",
+              "--json"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 0.024,
+            "stdout_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "vacuity-MomentHomotopeWitness",
+            "argv": [
+              "python3",
+              "scripts/vacuity-linter.py",
+              "lean/InfoGeometry/Twistor/MomentHomotopeWitness.lean",
+              "--json"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 0.023,
+            "stdout_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "vacuity-TwistorHomotopeAudit",
+            "argv": [
+              "python3",
+              "scripts/vacuity-linter.py",
+              "lean/InfoGeometry/Twistor/TwistorHomotopeAudit.lean",
+              "--json"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 0.024,
+            "stdout_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "whitespace",
+            "argv": [
+              "git",
+              "diff",
+              "--check",
+              "c143c264bc18bbf41d692be4e270b5b7f7405702",
+              "HEAD",
+              "--",
+              "lean/InfoGeometry/OperatorAlgebra/OrderedHomotope.lean",
+              "lean/InfoGeometry/Algebra/TwoModeCountRecurrence.lean",
+              "lean/InfoGeometry/Twistor/ConstituentWittGram.lean",
+              "lean/InfoGeometry/Twistor/ConstituentCayleyGram.lean",
+              "lean/InfoGeometry/Twistor/ConstituentInvariantIndependence.lean",
+              "lean/InfoGeometry/Twistor/MomentHomotopeWitness.lean",
+              "lean/InfoGeometry/Twistor/TwistorHomotopeAudit.lean",
+              "verification/twistor-homotope/.gitignore",
+              "verification/twistor-homotope/check.py",
+              "verification/twistor-homotope/verify.py",
+              "verification/twistor-homotope/lakefile.toml",
+              "verification/twistor-homotope/lake-manifest.json",
+              "verification/twistor-homotope/lean-toolchain",
+              "verification/twistor-homotope/README.md",
+              "verification/twistor-homotope/VACUITY_REVIEW.json",
+              ".github/workflows/twistor-homotope.yml",
+              "docs/TWISTOR_HOMOTOPE_INVARIANTS_CONTRACT.md",
+              "docs/intake/TWISTOR_HOMOTOPE_STREAM_2026_11_11.txt"
+            ],
+            "exit_code": 0,
+            "duration_seconds": 0.005,
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "fresh_audit_invocation_utc": {
+          "START": "2026-11-11T13:55:19.3024595Z",
+          "END": "2026-11-11T13:55:23.3473007Z"
+        },
+        "shared_lock": {
+          "owner": "twistor-homotope:7156",
+          "pid": 7156,
+          "acquiredAt": 1794405313.9715946
+        },
+        "build_summary": [
+          "Build completed successfully (3316 jobs)."
+        ],
+        "cache_observations": [
+          "2026-11-11T13:53:47.5478391Z Cache hit for: Linux-twistor-homotope-8ffc90ad1ee0a97f16f4dcee18ddbbf2acfa02754edb8175b8a8b3adcf2a97af",
+          "2026-11-11T13:55:03.8674987Z Cache restored from key: Linux-twistor-homotope-8ffc90ad1ee0a97f16f4dcee18ddbbf2acfa02754edb8175b8a8b3adcf2a97af"
+        ],
+        "command_stdout_stderr_files_verified": 30
+      }
+    ],
+    "both_attempts_protected_sources_identical": true,
+    "both_attempts_audit_enumerations_identical": true,
+    "both_attempts_vacuity_results_identical": true,
+    "both_attempts_compiled_file_hashes_identical": true,
+    "cache_scope": "Attempt 1 did not restore the focused Actions cache and built the focused source after retrieving the pinned dependency cache. Attempt 2 restored that Actions cache and completed its Lake build with replayed cached diagnostics, followed by a separate fresh Lean invocation of TwistorHomotopeAudit.lean. No cache-free re-elaboration of every owner is claimed for attempt 2."
+  },
+  "environment": {
+    "lean": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+    "lake": "Lake version 5.0.0-src+5045d00 (Lean version 4.34.1)",
+    "python": "3.12.16 (main, Oct 26 2026, 02:50:49) [GCC 13.3.0]",
+    "python_dependency": {
+      "jsonschema": "4.23.0"
+    },
+    "dependency_revisions_and_status": [
+      {
+        "name": "mathlib",
+        "revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+        "status_before": "",
+        "status_after": ""
+      },
+      {
+        "name": "plausible",
+        "revision": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+        "status_before": "",
+        "status_after": ""
+      },
+      {
+        "name": "LeanSearchClient",
+        "revision": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+        "status_before": "",
+        "status_after": ""
+      },
+      {
+        "name": "importGraph",
+        "revision": "e928b72544873815af278d38681b31c0293588e3",
+        "status_before": "",
+        "status_after": ""
+      },
+      {
+        "name": "proofwidgets",
+        "revision": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5",
+        "status_before": "",
+        "status_after": ""
+      },
+      {
+        "name": "aesop",
+        "revision": "355695d523e41d0554926416cba2a2b3544fbbc9",
+        "status_before": "",
+        "status_after": ""
+      },
+      {
+        "name": "Qq",
+        "revision": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+        "status_before": "",
+        "status_after": ""
+      },
+      {
+        "name": "batteries",
+        "revision": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+        "status_before": "",
+        "status_after": ""
+      },
+      {
+        "name": "Cli",
+        "revision": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204",
+        "status_before": "",
+        "status_after": ""
+      }
+    ],
+    "dependency_count": 9,
+    "all_dependency_revisions_match_root_pins": true,
+    "all_dependency_status_before_and_after_empty": true
+  },
+  "kernel_and_declaration_evidence": {
+    "declaration_count": 116,
+    "theorem_declaration_count": 99,
+    "named_source_theorem_count": 70,
+    "private_source_theorem_count": 6,
+    "owner_counts": {
+      "InfoGeometry.Algebra.TwoModeCountRecurrence": 35,
+      "InfoGeometry.Twistor.ConstituentCayleyGram": 19,
+      "InfoGeometry.OperatorAlgebra.OrderedHomotope": 24,
+      "InfoGeometry.Twistor.ConstituentInvariantIndependence": 5,
+      "InfoGeometry.Twistor.ConstituentWittGram": 32,
+      "InfoGeometry.Twistor.MomentHomotopeWitness": 1
+    },
+    "axiom_usage_counts": {
+      "propext": 110,
+      "Quot.sound": 103,
+      "Classical.choice": 99
+    },
+    "named_source_membership": [
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "qualified_source_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.product_assoc",
+        "private": false,
+        "runtime_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.product_assoc",
+        "axioms": [
+          "propext"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "qualified_source_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.product_add_left",
+        "private": false,
+        "runtime_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.product_add_left",
+        "axioms": [
+          "propext"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "qualified_source_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.product_add_right",
+        "private": false,
+        "runtime_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.product_add_right",
+        "axioms": [
+          "propext"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "qualified_source_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.map_product",
+        "private": false,
+        "runtime_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.map_product",
+        "axioms": [
+          "propext"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "qualified_source_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.jordan_comm",
+        "private": false,
+        "runtime_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.jordan_comm",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "qualified_source_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.bracket_skew",
+        "private": false,
+        "runtime_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.bracket_skew",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "qualified_source_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.bracket_self",
+        "private": false,
+        "runtime_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.bracket_self",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "qualified_source_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.jordan_self",
+        "private": false,
+        "runtime_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.jordan_self",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "qualified_source_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.jordan_add_bracket",
+        "private": false,
+        "runtime_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.jordan_add_bracket",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "qualified_source_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.product_sub_jordan",
+        "private": false,
+        "runtime_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.product_sub_jordan",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "qualified_source_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.bracket_eq_zero_iff",
+        "private": false,
+        "runtime_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.bracket_eq_zero_iff",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "qualified_source_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.bracket_ne_zero_iff",
+        "private": false,
+        "runtime_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.bracket_ne_zero_iff",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "qualified_source_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.jordan_associator",
+        "private": false,
+        "runtime_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.jordan_associator",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "qualified_source_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.bracket_jacobi",
+        "private": false,
+        "runtime_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.bracket_jacobi",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "qualified_source_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.jordan_identity",
+        "private": false,
+        "runtime_name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.jordan_identity",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "qualified_source_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.transition_projection_noncommuting",
+        "private": false,
+        "runtime_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.transition_projection_noncommuting",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "qualified_source_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_zero_first",
+        "private": false,
+        "runtime_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_zero_first",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "qualified_source_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_zero_second",
+        "private": false,
+        "runtime_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_zero_second",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "qualified_source_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_succ_first",
+        "private": false,
+        "runtime_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_succ_first",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "qualified_source_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_succ_second",
+        "private": false,
+        "runtime_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_succ_second",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "qualified_source_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_eq_power",
+        "private": false,
+        "runtime_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_eq_power",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "qualified_source_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.sum_difference_intertwining",
+        "private": false,
+        "runtime_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.sum_difference_intertwining",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "qualified_source_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_sum",
+        "private": false,
+        "runtime_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_sum",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "qualified_source_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_difference",
+        "private": false,
+        "runtime_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_difference",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "qualified_source_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.twice_first",
+        "private": false,
+        "runtime_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.twice_first",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "qualified_source_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.twice_second",
+        "private": false,
+        "runtime_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.twice_second",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "qualified_source_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_nonneg_ordered",
+        "private": false,
+        "runtime_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_nonneg_ordered",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "qualified_source_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_upper_bound",
+        "private": false,
+        "runtime_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_upper_bound",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "qualified_source_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.spectral_power_bound",
+        "private": false,
+        "runtime_name": "InfoGeometry.Algebra.TwoModeCountRecurrence.spectral_power_bound",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentWittGram.gram_hermitian",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentWittGram.gram_hermitian",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentWittGram.wittPair_sum_left",
+        "private": true,
+        "runtime_name": "_private.InfoGeometry.Twistor.ConstituentWittGram.0.InfoGeometry.Twistor.ConstituentWittGram.wittPair_sum_left",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentWittGram.wittPair_sum_right",
+        "private": true,
+        "runtime_name": "_private.InfoGeometry.Twistor.ConstituentWittGram.0.InfoGeometry.Twistor.ConstituentWittGram.wittPair_sum_right",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentWittGram.wittPair_smul_left",
+        "private": true,
+        "runtime_name": "_private.InfoGeometry.Twistor.ConstituentWittGram.0.InfoGeometry.Twistor.ConstituentWittGram.wittPair_smul_left",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentWittGram.wittPair_smul_right",
+        "private": true,
+        "runtime_name": "_private.InfoGeometry.Twistor.ConstituentWittGram.0.InfoGeometry.Twistor.ConstituentWittGram.wittPair_smul_right",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentWittGram.gram_mix",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentWittGram.gram_mix",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentWittGram.wittPair_self_im",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentWittGram.wittPair_self_im",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentWittGram.wittPair_self_eq_helicity",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentWittGram.wittPair_self_eq_helicity",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentWittGram.gram_pair_eq",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentWittGram.gram_pair_eq",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentWittGram.gram_pair_determinant",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentWittGram.gram_pair_determinant",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentWittGram.realization_infinity",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentWittGram.realization_infinity",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentWittGram.realization_witt",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentWittGram.realization_witt",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentWittGram.realization_first_null",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentWittGram.realization_first_null",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentWittGram.realization_second_null",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentWittGram.realization_second_null",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentWittGram.realization_mass",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentWittGram.realization_mass",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentWittGram.joint_readouts_surjective",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentWittGram.joint_readouts_surjective",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentWittGram.realization_gram",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentWittGram.realization_gram",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentWittGram.realization_gram_determinant",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentWittGram.realization_gram_determinant",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentWittGram.traceless_gram_eq",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentWittGram.traceless_gram_eq",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentWittGram.traceless_gram_square",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentWittGram.traceless_gram_square",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentWittGram.tracelessQuadratic_gram",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentWittGram.tracelessQuadratic_gram",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentWittGram.tracelessQuadratic_gram_nonneg",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentWittGram.tracelessQuadratic_gram_nonneg",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentCayleyGram.column_right_mix",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentCayleyGram.column_right_mix",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentCayleyGram.gram_right_mix",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentCayleyGram.gram_right_mix",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentCayleyGram.right_mix_inverse",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentCayleyGram.right_mix_inverse",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentCayleyGram.transpose_unitary",
+        "private": true,
+        "runtime_name": "_private.InfoGeometry.Twistor.ConstituentCayleyGram.0.InfoGeometry.Twistor.ConstituentCayleyGram.transpose_unitary",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentCayleyGram.momentum_right_mix",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentCayleyGram.momentum_right_mix",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentCayleyGram.trace_gram_right_mix",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentCayleyGram.trace_gram_right_mix",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentCayleyGram.traceless_conjugate",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentCayleyGram.traceless_conjugate",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentCayleyGram.tracelessQuadratic_conjugate",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentCayleyGram.tracelessQuadratic_conjugate",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentCayleyGram.paperScale_star",
+        "private": true,
+        "runtime_name": "_private.InfoGeometry.Twistor.ConstituentCayleyGram.0.InfoGeometry.Twistor.ConstituentCayleyGram.paperScale_star",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentCayleyGram.cayley_conjTranspose_mul",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentCayleyGram.cayley_conjTranspose_mul",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentCayleyGram.cayley_mul_conjTranspose",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentCayleyGram.cayley_mul_conjTranspose",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentCayleyGram.cayley_det",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentCayleyGram.cayley_det",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentCayleyGram.cayley_diagonal_conjugation",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentCayleyGram.cayley_diagonal_conjugation",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentCayleyGram.gram_cayley_of_diagonal",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentCayleyGram.gram_cayley_of_diagonal",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentCayleyGram.cayley_preserves_momentum",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentCayleyGram.cayley_preserves_momentum",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentCayleyGram.cayley_preserves_tracelessQuadratic",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentCayleyGram.cayley_preserves_tracelessQuadratic",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentInvariantIndependence",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentInvariantIndependence.realize_nonnegative",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentInvariantIndependence.realize_nonnegative",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentInvariantIndependence",
+        "qualified_source_name": "InfoGeometry.Twistor.ConstituentInvariantIndependence.invariants_algebraicIndependent",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.ConstituentInvariantIndependence.invariants_algebraicIndependent",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.MomentHomotopeWitness",
+        "qualified_source_name": "InfoGeometry.Twistor.MomentHomotopeWitness.square_zero_kernel_noncommuting",
+        "private": false,
+        "runtime_name": "InfoGeometry.Twistor.MomentHomotopeWitness.square_zero_kernel_noncommuting",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      }
+    ],
+    "declarations": [
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.transition.eq_1",
+        "axioms": [
+          "propext",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "name": "_private.InfoGeometry.Twistor.ConstituentCayleyGram.0.InfoGeometry.Twistor.ConstituentCayleyGram.transpose_unitary",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.jordan",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "name": "InfoGeometry.Twistor.PerjesConventions.paperScale.eq_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.map_product",
+        "axioms": [
+          "propext"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "name": "InfoGeometry.Twistor.ConstituentCayleyGram.tracelessQuadratic_conjugate",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentInvariantIndependence",
+        "name": "InfoGeometry.Twistor.ConstituentInvariantIndependence.invariants_algebraicIndependent",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_zero_first",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "_private.InfoGeometry.Twistor.ConstituentWittGram.0.InfoGeometry.Twistor.ConstituentWittGram.wittPair_smul_left",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "name": "InfoGeometry.Twistor.ConstituentCayleyGram.cayley_conjTranspose_mul",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "name": "InfoGeometry.Twistor.ConstituentCayleyGram.cayley.eq_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "name": "InfoGeometry.Twistor.ConstituentCayleyGram.right_mix_inverse",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.sum_difference_intertwining",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.product.eq_1",
+        "axioms": []
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "name": "InfoGeometry.Twistor.ConstituentCayleyGram.cayley_mul_conjTranspose",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.product_assoc",
+        "axioms": [
+          "propext"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.firstModeProjection",
+        "axioms": [
+          "propext",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.jordan_add_bracket",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.product_add_right",
+        "axioms": [
+          "propext"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.jordan_comm",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.realization_mass",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.transition_projection_noncommuting",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_upper_bound",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.twice_first._proof_1_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_zero_second",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentInvariantIndependence",
+        "name": "InfoGeometry.Twistor.ConstituentInvariantIndependence.realize_nonnegative",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "_private.InfoGeometry.Twistor.ConstituentWittGram.0.InfoGeometry.Twistor.ConstituentWittGram.wittPair_sum_right",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "name": "InfoGeometry.Twistor.ConstituentCayleyGram.gram_cayley_of_diagonal",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.product",
+        "axioms": []
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.bracket_self",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.gram_hermitian",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_difference",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts.match_1",
+        "axioms": []
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "name": "InfoGeometry.Twistor.ConstituentCayleyGram.column_right_mix",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_nonneg_ordered._proof_1_4",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.traceless",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.transition",
+        "axioms": [
+          "propext",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "name": "InfoGeometry.Twistor.ConstituentCayleyGram.traceless_conjugate",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.traceless_gram_eq",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_upper_bound._proof_1_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.product_sub_jordan._abel_1_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_sum",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "_private.InfoGeometry.Algebra.TwoModeCountRecurrence.0.InfoGeometry.Algebra.TwoModeCountRecurrence.counts.match_1.eq_2",
+        "axioms": []
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "_private.InfoGeometry.Twistor.ConstituentWittGram.0.InfoGeometry.Twistor.ConstituentWittGram.wittPair_smul_right",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts.eq_2",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.realization_first_null",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.gram_mix",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.firstModeProjection.eq_1",
+        "axioms": [
+          "propext",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.bracket_eq_zero_iff",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.realization_second_null",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.wittPair_self_im",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "name": "InfoGeometry.Twistor.ConstituentCayleyGram.cayley_preserves_tracelessQuadratic",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.realizationSecond.eq_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_nonneg_ordered",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "name": "InfoGeometry.Twistor.ConstituentCayleyGram.trace_gram_right_mix",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "_private.InfoGeometry.Algebra.TwoModeCountRecurrence.0.InfoGeometry.Algebra.TwoModeCountRecurrence.counts.match_1.eq_1",
+        "axioms": []
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.realization_witt",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.realization_gram_determinant",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts._sunfold",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.twice_first",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "name": "InfoGeometry.Twistor.ConstituentCayleyGram.momentum_right_mix",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.jordan_identity",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.spectral_power_bound._proof_1_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.traceless_gram_square",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_eq_power",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.jordan_self",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentInvariantIndependence",
+        "name": "InfoGeometry.Twistor.ConstituentInvariantIndependence.invariants._proof_1",
+        "axioms": [
+          "propext"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.product_sub_jordan",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.product_add_left",
+        "axioms": [
+          "propext"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.bracket_eq_zero_iff._simp_1_2",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_succ_first",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "name": "InfoGeometry.Twistor.ConstituentCayleyGram.cayley_diagonal_conjugation",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.bracket_jacobi",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentInvariantIndependence",
+        "name": "InfoGeometry.Twistor.ConstituentInvariantIndependence.invariants",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "name": "InfoGeometry.Twistor.ConstituentCayleyGram.cayley_det",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.bracket.eq_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.spectral_power_bound",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts.eq_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.gram_pair_eq",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.bracket",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentInvariantIndependence",
+        "name": "InfoGeometry.Twistor.ConstituentInvariantIndependence.invariants.eq_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_difference._proof_1_4",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.jordan_associator",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.gram.eq_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.realizationFirst.eq_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.joint_readouts_surjective",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "_private.InfoGeometry.Algebra.TwoModeCountRecurrence.0.InfoGeometry.Algebra.TwoModeCountRecurrence.counts.match_1.splitter",
+        "axioms": []
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts._f",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.bracket_skew",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.traceless._proof_1",
+        "axioms": [
+          "propext"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.realizationSecond",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.gram_pair_determinant",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.wittPair_self_eq_helicity",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.MomentHomotopeWitness",
+        "name": "InfoGeometry.Twistor.MomentHomotopeWitness.square_zero_kernel_noncommuting",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.tracelessQuadratic_gram_nonneg",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "_private.InfoGeometry.Twistor.ConstituentWittGram.0.InfoGeometry.Twistor.ConstituentWittGram.wittPair_sum_left",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.realization_infinity",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.bracket_ne_zero_iff",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.jordan.eq_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "name": "InfoGeometry.Twistor.ConstituentCayleyGram.cayley_preserves_momentum",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.tracelessQuadratic",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.tracelessQuadratic_gram",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts.eq_def",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.realization_gram",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "name": "_private.InfoGeometry.Twistor.ConstituentCayleyGram.0.InfoGeometry.Twistor.ConstituentCayleyGram.paperScale_star",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_succ_second",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.gram",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "name": "InfoGeometry.Twistor.ConstituentCayleyGram.cayley",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.realizationFirst",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts_sum._proof_1_4",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+        "name": "InfoGeometry.Twistor.ConstituentCayleyGram.gram_right_mix",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.twice_second._proof_1_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Algebra.TwoModeCountRecurrence",
+        "name": "InfoGeometry.Algebra.TwoModeCountRecurrence.twice_second",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+        "name": "InfoGeometry.OperatorAlgebra.OrderedHomotope.bracket_eq_zero_iff._simp_1_3",
+        "axioms": [
+          "propext"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Twistor.ConstituentWittGram",
+        "name": "InfoGeometry.Twistor.ConstituentWittGram.traceless.eq_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      }
+    ],
+    "additional_runtime_theorem_declarations_beyond_named_source": 29,
+    "non_theorem_runtime_declarations": 17,
+    "allowed_transitive_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "axiom_counts_are_overlapping": true,
+    "audit_rejection_policy": "Every owned axiom declaration and every owned unsafe or partial declaration, including generated constants, is rejected. Every transitive axiom outside the three-entry allowlist is rejected.",
+    "fresh_audit_success_markers_per_attempt": 1,
+    "fresh_audit_stdout_sha256": "7a84596e885cb8c01715775037e03564a07bd71a5f402cbeaba9a273d711d8cc",
+    "fresh_output_identical_across_attempts": true,
+    "fresh_execution_provenance": "Distinct timestamped CHECK_START/CHECK_END fresh-audit events in each job log and a separately hashed stdout log; deterministic identical output is not treated as evidence of only one invocation."
+  },
+  "source_gate_results": {
+    "strict_screen": {
+      "violations": {},
+      "quarantined_packets": []
+    },
+    "strict_refute": [
+      {
+        "filename": "lean/InfoGeometry/OperatorAlgebra/OrderedHomotope.lean",
+        "clean": true,
+        "total_traps": 0,
+        "errors": [],
+        "warnings": [],
+        "verdict": "PASS"
+      },
+      {
+        "filename": "lean/InfoGeometry/Algebra/TwoModeCountRecurrence.lean",
+        "clean": true,
+        "total_traps": 0,
+        "errors": [],
+        "warnings": [],
+        "verdict": "PASS"
+      },
+      {
+        "filename": "lean/InfoGeometry/Twistor/ConstituentWittGram.lean",
+        "clean": true,
+        "total_traps": 0,
+        "errors": [],
+        "warnings": [],
+        "verdict": "PASS"
+      },
+      {
+        "filename": "lean/InfoGeometry/Twistor/ConstituentCayleyGram.lean",
+        "clean": true,
+        "total_traps": 0,
+        "errors": [],
+        "warnings": [],
+        "verdict": "PASS"
+      },
+      {
+        "filename": "lean/InfoGeometry/Twistor/ConstituentInvariantIndependence.lean",
+        "clean": true,
+        "total_traps": 0,
+        "errors": [],
+        "warnings": [],
+        "verdict": "PASS"
+      },
+      {
+        "filename": "lean/InfoGeometry/Twistor/MomentHomotopeWitness.lean",
+        "clean": true,
+        "total_traps": 0,
+        "errors": [],
+        "warnings": [],
+        "verdict": "PASS"
+      }
+    ],
+    "static_gate4": [
+      {
+        "target_file": "lean/InfoGeometry/OperatorAlgebra/OrderedHomotope.lean",
+        "gate": "GATE_4",
+        "verdict": "STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED",
+        "sorry_count": 0,
+        "admit_count": 0,
+        "custom_axioms": null,
+        "kernel_checked": false,
+        "trap_violations": [],
+        "scope_inflation_warnings": [],
+        "summary": "Static checks passed; Lean compilation and theorem axiom audit were not run.",
+        "verification_status": "not_requested",
+        "review_authority": "automated_source_preflight",
+        "independent_semantic_audit_performed": false
+      },
+      {
+        "target_file": "lean/InfoGeometry/Algebra/TwoModeCountRecurrence.lean",
+        "gate": "GATE_4",
+        "verdict": "STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED",
+        "sorry_count": 0,
+        "admit_count": 0,
+        "custom_axioms": null,
+        "kernel_checked": false,
+        "trap_violations": [],
+        "scope_inflation_warnings": [],
+        "summary": "Static checks passed; Lean compilation and theorem axiom audit were not run.",
+        "verification_status": "not_requested",
+        "review_authority": "automated_source_preflight",
+        "independent_semantic_audit_performed": false
+      },
+      {
+        "target_file": "lean/InfoGeometry/Twistor/ConstituentWittGram.lean",
+        "gate": "GATE_4",
+        "verdict": "STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED",
+        "sorry_count": 0,
+        "admit_count": 0,
+        "custom_axioms": null,
+        "kernel_checked": false,
+        "trap_violations": [],
+        "scope_inflation_warnings": [],
+        "summary": "Static checks passed; Lean compilation and theorem axiom audit were not run.",
+        "verification_status": "not_requested",
+        "review_authority": "automated_source_preflight",
+        "independent_semantic_audit_performed": false
+      },
+      {
+        "target_file": "lean/InfoGeometry/Twistor/ConstituentCayleyGram.lean",
+        "gate": "GATE_4",
+        "verdict": "STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED",
+        "sorry_count": 0,
+        "admit_count": 0,
+        "custom_axioms": null,
+        "kernel_checked": false,
+        "trap_violations": [],
+        "scope_inflation_warnings": [],
+        "summary": "Static checks passed; Lean compilation and theorem axiom audit were not run.",
+        "verification_status": "not_requested",
+        "review_authority": "automated_source_preflight",
+        "independent_semantic_audit_performed": false
+      },
+      {
+        "target_file": "lean/InfoGeometry/Twistor/ConstituentInvariantIndependence.lean",
+        "gate": "GATE_4",
+        "verdict": "STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED",
+        "sorry_count": 0,
+        "admit_count": 0,
+        "custom_axioms": null,
+        "kernel_checked": false,
+        "trap_violations": [],
+        "scope_inflation_warnings": [],
+        "summary": "Static checks passed; Lean compilation and theorem axiom audit were not run.",
+        "verification_status": "not_requested",
+        "review_authority": "automated_source_preflight",
+        "independent_semantic_audit_performed": false
+      },
+      {
+        "target_file": "lean/InfoGeometry/Twistor/MomentHomotopeWitness.lean",
+        "gate": "GATE_4",
+        "verdict": "STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED",
+        "sorry_count": 0,
+        "admit_count": 0,
+        "custom_axioms": null,
+        "kernel_checked": false,
+        "trap_violations": [],
+        "scope_inflation_warnings": [],
+        "summary": "Static checks passed; Lean compilation and theorem axiom audit were not run.",
+        "verification_status": "not_requested",
+        "review_authority": "automated_source_preflight",
+        "independent_semantic_audit_performed": false
+      },
+      {
+        "target_file": "lean/InfoGeometry/Twistor/TwistorHomotopeAudit.lean",
+        "gate": "GATE_4",
+        "verdict": "STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED",
+        "sorry_count": 0,
+        "admit_count": 0,
+        "custom_axioms": null,
+        "kernel_checked": false,
+        "trap_violations": [],
+        "scope_inflation_warnings": [],
+        "summary": "Static checks passed; Lean compilation and theorem axiom audit were not run.",
+        "verification_status": "not_requested",
+        "review_authority": "automated_source_preflight",
+        "independent_semantic_audit_performed": false
+      }
+    ],
+    "gate4_scope": "All seven records explicitly set kernel_checked=false and report STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED. Kernel/audit evidence is supplied by the separate commands, not by Gate4.",
+    "staged_hook_scope": "Gate4 invokes the existing staged hook on a clean hosted index; this does not independently reproduce the author precommit-hook execution over a staged source delta.",
+    "vacuity_raw_results_and_classifications": [
+      {
+        "path": "lean/InfoGeometry/OperatorAlgebra/OrderedHomotope.lean",
+        "raw_result": {
+          "honesty_score": 0.65,
+          "vacuity_score": 0.35,
+          "findings": [
+            {
+              "severity": 0.3,
+              "name": "no_hyp_use",
+              "match": "T X Y ",
+              "reason": "Theorem with parameters but proof doesn't reference them — potential vacuity"
+            }
+          ]
+        },
+        "classification": "SOURCE_REVIEWED_FALSE_POSITIVE",
+        "review": {
+          "source_sha256": "4c0cfac569a4eec5a05e3b7256c301a7890f460718a30854cf685fb057fd8231",
+          "observation": "Observed in workflow run 43030148810, job 130554799603; first match is jordan_comm.",
+          "expected_findings": [
+            {
+              "severity": 0.3,
+              "name": "no_hyp_use",
+              "match": "T X Y ",
+              "reason": "Theorem with parameters but proof doesn't reference them — potential vacuity"
+            }
+          ],
+          "reviewed_declarations": [
+            "jordan_comm",
+            "bracket_skew",
+            "bracket_self",
+            "jordan_self"
+          ],
+          "mathematical_basis": "These universally quantified algebra elements occur in the goal. Definition unfolding, additive commutativity, and module normalization operate on the actual ordered products in that goal. There is no proposition hypothesis carrying the conclusion. The regex captures a whole binder-name string and does not inspect Lean proof dependence."
+        }
+      },
+      {
+        "path": "lean/InfoGeometry/Algebra/TwoModeCountRecurrence.lean",
+        "raw_result": {
+          "honesty_score": 0.65,
+          "vacuity_score": 0.35,
+          "findings": [
+            {
+              "severity": 0.3,
+              "name": "no_hyp_use",
+              "match": "n ",
+              "reason": "Theorem with parameters but proof doesn't reference them — potential vacuity"
+            }
+          ]
+        },
+        "classification": "SOURCE_REVIEWED_FALSE_POSITIVE",
+        "review": {
+          "source_sha256": "548f7c350f2973de236f1dd2b2508bfbac6032d9e34886cbcf764f7376545eee",
+          "observation": "Conditional classification from source review. Run 43030148810 stopped before this scan; applicability must be established by exact emitted findings in the next run.",
+          "expected_findings": [
+            {
+              "severity": 0.3,
+              "name": "no_hyp_use",
+              "match": "n ",
+              "reason": "Theorem with parameters but proof doesn't reference them — potential vacuity"
+            }
+          ],
+          "reviewed_declarations": [
+            "counts_upper_bound",
+            "spectral_power_bound"
+          ],
+          "mathematical_basis": "The proofs explicitly instantiate the previously proved sum, difference, and nonnegativity theorems at n, then derive the bounds arithmetically. The regex captures trailing whitespace in the binder-name string and can miss n at the end of the first proof line. There is no unused proposition assumption or assumed bound."
+        }
+      },
+      {
+        "path": "lean/InfoGeometry/Twistor/ConstituentWittGram.lean",
+        "raw_result": {
+          "honesty_score": 1.0,
+          "vacuity_score": 0.0,
+          "findings": []
+        },
+        "classification": "NO_FINDINGS"
+      },
+      {
+        "path": "lean/InfoGeometry/Twistor/ConstituentCayleyGram.lean",
+        "raw_result": {
+          "honesty_score": 1.0,
+          "vacuity_score": 0.0,
+          "findings": []
+        },
+        "classification": "NO_FINDINGS"
+      },
+      {
+        "path": "lean/InfoGeometry/Twistor/ConstituentInvariantIndependence.lean",
+        "raw_result": {
+          "honesty_score": 1.0,
+          "vacuity_score": 0.0,
+          "findings": []
+        },
+        "classification": "NO_FINDINGS"
+      },
+      {
+        "path": "lean/InfoGeometry/Twistor/MomentHomotopeWitness.lean",
+        "raw_result": {
+          "honesty_score": 1.0,
+          "vacuity_score": 0.0,
+          "findings": []
+        },
+        "classification": "NO_FINDINGS"
+      },
+      {
+        "path": "lean/InfoGeometry/Twistor/TwistorHomotopeAudit.lean",
+        "raw_result": {
+          "honesty_score": 1.0,
+          "vacuity_score": 0.0,
+          "findings": []
+        },
+        "classification": "NO_FINDINGS"
+      }
+    ],
+    "vacuity_no_findings_files": 5,
+    "vacuity_exact_source_reviewed_false_positive_files": 2,
+    "vacuity_unreviewed_findings": 0,
+    "vacuity_classification_manifest_sha256": "03958a9278954913cf32a6c72564401e4daa305da6940e8e960a307d60ec7ef2",
+    "vacuity_linter_sha256": "76b0241f4e62dbd01c6e9b160ef1f8af9caf7bf2b6461ea713f4ca18a5dc8033",
+    "recurrence_conditional_classification_now_observed_and_activated": true,
+    "vacuity_scope": "Regex heuristic results, with only the exact two no_hyp_use severity-0.3 finding arrays accepted against fixed source and linter hashes. No proof-hole, True substitution, assumed-conclusion, circular-proof, or other finding class is classified. This is not a Lean-AST semantic proof of non-vacuity.",
+    "whitespace_command": {
+      "label": "whitespace",
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "c143c264bc18bbf41d692be4e270b5b7f7405702",
+        "HEAD",
+        "--",
+        "lean/InfoGeometry/OperatorAlgebra/OrderedHomotope.lean",
+        "lean/InfoGeometry/Algebra/TwoModeCountRecurrence.lean",
+        "lean/InfoGeometry/Twistor/ConstituentWittGram.lean",
+        "lean/InfoGeometry/Twistor/ConstituentCayleyGram.lean",
+        "lean/InfoGeometry/Twistor/ConstituentInvariantIndependence.lean",
+        "lean/InfoGeometry/Twistor/MomentHomotopeWitness.lean",
+        "lean/InfoGeometry/Twistor/TwistorHomotopeAudit.lean",
+        "verification/twistor-homotope/.gitignore",
+        "verification/twistor-homotope/check.py",
+        "verification/twistor-homotope/verify.py",
+        "verification/twistor-homotope/lakefile.toml",
+        "verification/twistor-homotope/lake-manifest.json",
+        "verification/twistor-homotope/lean-toolchain",
+        "verification/twistor-homotope/README.md",
+        "verification/twistor-homotope/VACUITY_REVIEW.json",
+        ".github/workflows/twistor-homotope.yml",
+        "docs/TWISTOR_HOMOTOPE_INVARIANTS_CONTRACT.md",
+        "docs/intake/TWISTOR_HOMOTOPE_STREAM_2026_11_11.txt"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.005,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "invariance_and_artifacts": {
+    "protected_files_match_committed_HEAD_before_and_after": true,
+    "tracked_source_diff_to_HEAD_empty_before_and_after": true,
+    "source_invariance": true,
+    "unchanged_root_control_sha256": {
+      "AGENTS.md": "6b8fa71b06145b75e52c18e884f91f6f2c3ad99ff7303fe41f28911dcbc7963b",
+      ".githooks/pre-commit": "1d686a385aaa998a9777ed77ca8214a2b418e076d30e9abd089c383d69f993be",
+      ".githooks/pre-push": "5ea58fd402899bf7e8c04f26158146dd429485fab636367fd6671df207dfbaaf",
+      "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+      "lake-manifest.json": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+      "lakefile.lean": "a9bc1bbce7c0180926819efd65a847484004f49291acfb3a9d239c8c64c2fdd6",
+      "lakefile.toml": "4b493ada108e662af1b2d213a2ff93746010e034e069a37b4c31041fd758213c",
+      "pyproject.toml": "81e0a67885dd400d1357f835c8a3db8397ab73157c10b67635cd54e78f3314c0",
+      "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df",
+      "tools/infra/build.py": "76575073b6fbf1054511ede20792e549ac216238f2519b2a2c2215d0aa646dc0",
+      "tools/infra/opengauss_screener.py": "8905eaa68b63c82709aca70e05b86249b74df297a96e6d7bae8b037331b9448b",
+      "tools/infra/opengauss_cli.py": "fa210dde57fc129ada5645926285c8a6e1b6ab7cdd3354747279aa5702f1f18c",
+      "tools/infra/opengauss_ground_truth_contract.py": "212f394f0e7ee766c67210dd07f367e81f032785eb429da216911b4d916f13c9",
+      "tools/quality/proof_proxy_staged_gate.py": "eaa861d929ad9465586504f30f65ddc64eb96f8198bee65b3039c8d4fb813db9",
+      "scripts/vacuity-linter.py": "76b0241f4e62dbd01c6e9b160ef1f8af9caf7bf2b6461ea713f4ca18a5dc8033"
+    },
+    "root_controls_match_implementation_base": true,
+    "dependency_invariance": true,
+    "compiled_artifact_sha256": {
+      "verification/twistor-homotope/.lake/build/lib/lean/InfoGeometry/OperatorAlgebra/OrderedHomotope.olean": "a3885c5758517eb52f1cb4b5635beb982af30bc913f73def90b13d34246ddd29",
+      "verification/twistor-homotope/.lake/build/lib/lean/InfoGeometry/OperatorAlgebra/OrderedHomotope.ilean": "e937795f9cbc1a6b47a45e99bfef7459a4dd71d92da9cda6faaf881eda2e219f",
+      "verification/twistor-homotope/.lake/build/lib/lean/InfoGeometry/Algebra/TwoModeCountRecurrence.olean": "1e5912cd524a351f99737cf625ed55244a7add4cf6246686b8ba388cfcbc5c72",
+      "verification/twistor-homotope/.lake/build/lib/lean/InfoGeometry/Algebra/TwoModeCountRecurrence.ilean": "aa58f98d6249dbf5bd7252c87ef9b620e6bbe2e1c0af514a8b4f277256424147",
+      "verification/twistor-homotope/.lake/build/lib/lean/InfoGeometry/Twistor/ConstituentWittGram.olean": "1d3d9f80d1b0aa0cb153cade5103920baa491e3bf5df8e1a2b3cacb63948149d",
+      "verification/twistor-homotope/.lake/build/lib/lean/InfoGeometry/Twistor/ConstituentWittGram.ilean": "6e319c3e6563dbb02c37d709779f026e68bdf7661e2c04bab770a7beb4f12388",
+      "verification/twistor-homotope/.lake/build/lib/lean/InfoGeometry/Twistor/ConstituentCayleyGram.olean": "9cce5dd61e7f737d39c9e08dd66dc3ca8c1e7e3389cd5b22deb4e56e2ff151d9",
+      "verification/twistor-homotope/.lake/build/lib/lean/InfoGeometry/Twistor/ConstituentCayleyGram.ilean": "41f1f098fecaa9bef0342e8610101a3b014d9bef4900a6e0407830da3fc23493",
+      "verification/twistor-homotope/.lake/build/lib/lean/InfoGeometry/Twistor/ConstituentInvariantIndependence.olean": "fd5ec3707faebffec93c97c7279a8f101d0e9b9422dc58f23dd5f38da5a1f9b1",
+      "verification/twistor-homotope/.lake/build/lib/lean/InfoGeometry/Twistor/ConstituentInvariantIndependence.ilean": "3e9e112cb77af3661485c65f4da2cf6618c3915166e0088128a03835ae9a0f52",
+      "verification/twistor-homotope/.lake/build/lib/lean/InfoGeometry/Twistor/MomentHomotopeWitness.olean": "90ad7d4ae8114d42fc4c2cce24c2c27b9996f4e5fdb28ead7f5a86d459861750",
+      "verification/twistor-homotope/.lake/build/lib/lean/InfoGeometry/Twistor/MomentHomotopeWitness.ilean": "4c633b6b6d5bc9186dfba93629c13f552545e0a3c4641cb678894eeff1ec9834",
+      "verification/twistor-homotope/.lake/build/lib/lean/InfoGeometry/Twistor/TwistorHomotopeAudit.olean": "323abc80b4d714e91b2b028a227c6df438f944a597d651386294ee3cbf22123a",
+      "verification/twistor-homotope/.lake/build/lib/lean/InfoGeometry/Twistor/TwistorHomotopeAudit.ilean": "44076acd48a11fc7564f9b662fc3b2bf20784e56ec4aad0da9d285d3f88a6b6a"
+    },
+    "compiled_artifact_count": 14,
+    "compiled_hash_provenance": "The reviewed driver hashed seven .olean and seven .ilean files on each hosted runner. All 14 fingerprints are identical across attempts. The uploaded artifact contains logs and checks.json, not the compiled binary files; QA checked the emitted fingerprint coverage and equality."
+  },
+  "nonblocking_diagnostics": {
+    "build_warning_count": 27,
+    "new_owner_warning_count": 4,
+    "new_owner_warnings": [
+      "warning: ../../lean/InfoGeometry/OperatorAlgebra/OrderedHomotope.lean:80:17: This simp argument is unused:",
+      "warning: ../../lean/InfoGeometry/Twistor/ConstituentWittGram.lean:177:4: Unused tactic linter: `push_cast` does nothing",
+      "warning: ../../lean/InfoGeometry/Twistor/ConstituentWittGram.lean:191:50: Unused tactic linter: `push_cast` does nothing",
+      "warning: ../../lean/InfoGeometry/Twistor/ConstituentCayleyGram.lean:133:4: Unused tactic linter: `push_cast` does nothing"
+    ],
+    "inherited_warning_count": 23,
+    "scope": "The scoped commands succeeded with these diagnostics. This receipt does not claim a warnings-as-errors build or a clean whole-repository style gate."
+  },
+  "evidence_preservation": {
+    "evidence_index_file": "HOSTED_QA_EVIDENCE_INDEX.json",
+    "evidence_index_sha256": "17650c4a605620afbbd651b033c912b4a76812ffe4e7f0e60c0e55084aef5175",
+    "evidence_file_count": 77,
+    "local_evidence_directory": "/workspace/scratch/b119c75f3f8f/qa-twistor",
+    "upstream_artifact_ids": [
+      13862475703,
+      13861757275
+    ],
+    "receipt_policy": "Issued once with a SHA256 sidecar and read-only local file permissions. The checksum detects changed bytes; this is not a cryptographic signature or WORM-storage claim.",
+    "publication_policy": "Preserve these receipt bytes. A later report-only commit may add this receipt and update RESULTS without changing the protected mathematical, audit, verification, workflow, contract, or intake bytes. Acceptance remains bound to the frozen tree and recorded protected-source hashes."
+  },
+  "scope_exclusions": [
+    "Whole-repository/root integration and unrelated GitHub workflows",
+    "Default root Lake target or local long-running build completion",
+    "Independent re-execution of the author staged precommit/prepush hooks",
+    "Warnings-as-errors or whole-repository style acceptance",
+    "Physical spin or particle representations, stabilizer/group classifications, quantum spectra, Clifford-dimension identification, and unlimited tower interpretations",
+    "Merge approval or repository release approval"
+  ],
+  "remaining_scoped_acceptance_blockers": []
+}

@@ -38,7 +38,7 @@ theorem finrank_range_infinityTwistor :
       have hr : LinearMap.range (LinearMap.snd ℂ Spinor2 Spinor2) = ⊤ :=
         LinearMap.range_eq_top.mpr LinearMap.snd_surjective
       rw [hr, finrank_top]
-      exact Module.finrank_fin_fun
+      exact Module.finrank_fin_fun ℂ
 
 def epsilon : ComplexSpacetime := !![0, 1; -1, 0]
 

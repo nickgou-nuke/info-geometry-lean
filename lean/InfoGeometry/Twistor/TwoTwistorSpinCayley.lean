@@ -65,10 +65,12 @@ theorem eq_hermitianCoordinates (H : ComplexSpacetime) (hH : Hᴴ = H) :
   apply Matrix.ext
   intro i j
   fin_cases i <;> fin_cases j
-  · apply Complex.ext <;> simp [hermitianCoordinates, hi00] <;> ring
+  · apply Complex.ext <;> simp [hermitianCoordinates, hi00]
+    ring
   · simp [hermitianCoordinates]
   · simpa [hermitianCoordinates] using h10.symm
-  · apply Complex.ext <;> simp [hermitianCoordinates, hi11] <;> ring
+  · apply Complex.ext <;> simp [hermitianCoordinates, hi11]
+    ring
 
 @[simp] theorem trace_traceFree (H : ComplexSpacetime) : trace (traceFree H) = 0 := by
   simp [traceFree, Matrix.trace, Fin.sum_univ_two]
@@ -108,7 +110,8 @@ theorem spinNormSq_hermitianCoordinates (s₁ s₂ : ℝ) (τ : ℂ) :
   unfold spinNormSq
   rw [traceFree_sq_hermitianCoordinates]
   generalize (s₁ - s₂) ^ 2 + Complex.normSq τ = q
-  simp [Matrix.trace, Complex.mul_re] <;> ring
+  simp [Matrix.trace, Complex.mul_re]
+  ring
 
 /-- For arbitrary Hermitian input, the trace formula equals the Euclidean square
 of the three real Pauli coordinates. -/

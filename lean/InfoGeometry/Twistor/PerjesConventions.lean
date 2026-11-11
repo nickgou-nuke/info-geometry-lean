@@ -60,6 +60,27 @@ def wittDual (Z : Twistor4) : Module.Dual ℂ Twistor4 where
   simp [wittPair, Fin.sum_univ_two, mul_comm]
   ring
 
+/-- The Hermitian Gram determinant is distinct from the determinant of the
+sum of lower-spinor momentum dyads. -/
+theorem wittGram_determinant (Z W : Twistor4) :
+    (!![wittPair Z Z, wittPair Z W;
+        wittPair W Z, wittPair W W]).det =
+      wittPair Z Z * wittPair W W - (Complex.normSq (wittPair Z W) : ℂ) := by
+  rw [Matrix.det_fin_two]
+  change wittPair Z Z * wittPair W W - wittPair Z W * wittPair W Z = _
+  rw [← wittPair_conj Z W, Complex.normSq_eq_conj_mul_self]
+  simp only [starRingEnd_apply]
+  ring
+
+/-- On two Witt-null vectors the Gram determinant is nonpositive, with the
+opposite sign to the squared norm of the mutual pairing. -/
+theorem wittGram_determinant_of_null (Z W : Twistor4)
+    (hZ : wittPair Z Z = 0) (hW : wittPair W W = 0) :
+    (!![wittPair Z Z, wittPair Z W;
+        wittPair W Z, wittPair W W]).det =
+      -(Complex.normSq (wittPair Z W) : ℂ) := by
+  rw [wittGram_determinant, hZ, hW, zero_mul, zero_sub]
+
 @[simp] theorem wittPair_smul (c : ℂ) (Z W : Twistor4) :
     wittPair (c • Z) (c • W) = (star c * c) * wittPair Z W := by
   simp [wittPair, Fin.sum_univ_two, smul_eq_mul]

@@ -95,6 +95,17 @@ theorem infinityConjugate_eq_sharp_dual (Z : Twistor4) :
     infinityConjugate (infinityConjugate Z) = 0 := by
   ext a <;> fin_cases a <;> simp [infinityConjugate, raiseSpinor]
 
+/-- This nonzero antilinear square-zero map is not an idempotent projector,
+even when regarded only as an unbundled function. -/
+theorem infinityConjugate_not_idempotent :
+    ¬ ∀ Z : Twistor4,
+      infinityConjugate (infinityConjugate Z) = infinityConjugate Z := by
+  intro h
+  have heq := h ((0 : Spinor2), ![1, 0])
+  rw [infinityConjugate_sq] at heq
+  have hc := congrArg (fun Z : Twistor4 => Z.1 1) heq
+  norm_num [infinityConjugate, raiseSpinor] at hc
+
 @[simp] theorem infinityConjugate_add (Z W : Twistor4) :
     infinityConjugate (Z + W) = infinityConjugate Z + infinityConjugate W := by
   ext a <;> fin_cases a <;> simp [infinityConjugate, raiseSpinor, add_comm]

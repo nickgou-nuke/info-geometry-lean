@@ -1,0 +1,1392 @@
+{
+  "schema": "dahm-klein-hosted-qa-v1",
+  "disposition": "HOSTED_KERNEL_AXIOM_SCREEN_ACCEPTED",
+  "full_qa_release_accepted": false,
+  "qa_agent": "/root/ci_acceptance_watch",
+  "generation_agents": [
+    "/root",
+    "/root/exterior_reconstruction"
+  ],
+  "source_review_agent": "/root/publication_review",
+  "source_review_basis": "Explicit parent handoff: previously reviewed mathematical source and workflow unchanged; published tree frozen for this rerun.",
+  "handoff": "Explicit /root handoff: rerun only focused job130493991879 at frozen tree202d72551f6ea23c2da25b1ad337efeccf5d2980, with full release/source gates pending.",
+  "recorded_utc": "2026-11-11T12:49:23.194864+00:00",
+  "repository": "nickgou-nuke/info-geometry-lean",
+  "pull_request": 310,
+  "pull_request_url": "https://github.com/nickgou-nuke/info-geometry-lean/pull/310",
+  "head_commit": "51dc2dc48fdcfca8ac2e400b0ef236d9621c7cac",
+  "base_commit": "c143c264bc18bbf41d692be4e270b5b7f7405702",
+  "hosted_checkout_commit": "503dfadd399a36e400b9f223daa18a4216469a79",
+  "verified_source_tree": "202d72551f6ea23c2da25b1ad337efeccf5d2980",
+  "integrity": {
+    "published_head_and_checkout_tree_equal": true,
+    "tree_verification_endpoint": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/git/commits/503dfadd399a36e400b9f223daa18a4216469a79",
+    "checkout_parents": [
+      "c143c264bc18bbf41d692be4e270b5b7f7405702",
+      "51dc2dc48fdcfca8ac2e400b0ef236d9621c7cac"
+    ],
+    "pre_and_post_rerun_pr_head_equal": true,
+    "local_same_tree_commit": "5e58560e31eb4fa13b817ce58caca9bd3ed34e0a",
+    "source_sha256": {
+      ".github/workflows/dahm-klein.yml": "37f6200f1f85ccc21c44cd4385f0338ee0301a4c0b5a0840000ced4b2dd7b0f5",
+      "docs/DAHM_KLEIN_OPERATOR_ACTION_CONTRACT.md": "8eceb1a88fc24202035f9c210d8cc55b7c2a2fd7a74d463e4f8241664158c238",
+      "lean/InfoGeometry/Projective/ExteriorKleinBoost.lean": "6a5e4e1416d781d71fbcfb3acaf20bda71a1a3868dd9212b82153e85acb83381",
+      "lean/InfoGeometry/Projective/ExteriorKleinDeterminantCovariance.lean": "04fff1b58a1f34bdee2c4fec156770a8e791276a5fcac125826eee06e66c36dc",
+      "lean/InfoGeometry/Projective/ExteriorKleinIncidenceAction.lean": "df39009bf2fb51e3c6fa6c3c66f0e508db278b2597f9543ff028acce9ef384ee",
+      "lean/InfoGeometry/Projective/ExteriorKleinOperatorAction.lean": "78391e65ae61f0d1927bf6227f2bb1181ff96494958a9cfef883e3f6e59fe54b",
+      "lean/InfoGeometry/Projective/ExteriorKleinOperatorAudit.lean": "0063314120d5ad421ac591428ed3d9e29ed41444743b47866cc19bff7743c599",
+      "lean/InfoGeometry/Projective/ExteriorKleinOperatorExamples.lean": "328b53fde60c51bd387716a924951665a0d5e29288c52bd7ed92d2ffb20dc634",
+      "verification/dahm-klein/README.md": "0cdbd8d6405039b8974a90ece70fd83d26c22b5d4c22c448bd8a5122d459058b",
+      "verification/dahm-klein/RESULTS.md": "be40bc868d76624051d6cd04a60692cbaf3284e771e7465c2d760c07a0aa33e3",
+      "verification/dahm-klein/check.py": "baa7d0d0f766ec3b349e55de0a63e83999f30f79fa21d7cb5e80ecc5307afe67",
+      "verification/dahm-klein/lake-manifest.json": "3aa760b3ca6717371c04741d1aebba86ca91d9331af3b5d181a715cc44a08aba",
+      "verification/dahm-klein/lakefile.toml": "bde391b0e57a940db092cd59671eb2681a52502efc1c5f57be2afd1336d4134d",
+      "verification/dahm-klein/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b"
+    },
+    "source_fingerprint_sha256": "b0c71b58e06b7217fd52385606059f5f26c1f04da83a23bd87c43ae8a783f0a1",
+    "artifact_archive_matches_github_sha256": true,
+    "artifact_sha256": "4f8cc5b5a510f99beb773e309a868bfb5269bc563365dd5fee2f151d1b3f1515"
+  },
+  "execution": {
+    "provider": "GitHub Actions",
+    "workflow": "Native exterior Klein operator action",
+    "workflow_path": ".github/workflows/dahm-klein.yml",
+    "run_id": 43012096492,
+    "run_attempt": 2,
+    "job_id": 130529780389,
+    "job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43012096492/job/130529780389",
+    "rerun_request": {
+      "tool": "github_rerun_workflow_job",
+      "requested_job_id": 130493991879,
+      "success": true,
+      "initiator_role": "QA-A"
+    },
+    "started_at_utc": "2026-11-11T12:43:08Z",
+    "finished_at_utc": "2026-11-11T12:45:22Z",
+    "status": "completed",
+    "conclusion": "success",
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 1
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 2
+      },
+      {
+        "name": "Run actions/cache@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 3
+      },
+      {
+        "name": "Install the pinned Lean toolchain",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 4
+      },
+      {
+        "name": "Retrieve the pinned dependency cache",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 5
+      },
+      {
+        "name": "Build the native operator action and audit",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 6
+      },
+      {
+        "name": "Screen the mathematical source",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 7
+      },
+      {
+        "name": "Run actions/upload-artifact@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 8
+      },
+      {
+        "name": "Post Run actions/cache@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 15
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 16
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 17
+      }
+    ],
+    "lean_observed": "Lean 4.34.1, commit 5045d0056413266e57c625dcd7c365b10e377c52",
+    "declared_mathlib_pin": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+    "commands": [
+      {
+        "command": "lean --version",
+        "evidence": "pinned dependency cache step succeeded"
+      },
+      {
+        "command": "python3 verification/dahm-klein/check.py exe cache get",
+        "evidence": "cache.log; workflow step succeeded"
+      },
+      {
+        "command": "python3 verification/dahm-klein/check.py build",
+        "evidence": "build.log: completed successfully, 8976 jobs"
+      },
+      {
+        "command": "python3 verification/dahm-klein/check.py env lean \"$PWD/lean/InfoGeometry/Projective/ExteriorKleinOperatorAudit.lean\"",
+        "evidence": "separate fresh Lean execution; audit.log plus timestamped job.log"
+      },
+      {
+        "command": "python3 tools/infra/opengauss_screener.py --strict lean/InfoGeometry/Projective/ExteriorKleinOperatorAction.lean lean/InfoGeometry/Projective/ExteriorKleinDeterminantCovariance.lean lean/InfoGeometry/Projective/ExteriorKleinOperatorExamples.lean lean/InfoGeometry/Projective/ExteriorKleinBoost.lean lean/InfoGeometry/Projective/ExteriorKleinIncidenceAction.lean",
+        "evidence": "screen.log: all five files passed, 0 traps"
+      }
+    ],
+    "command_success_basis": "Each shell step uses set -euo pipefail; all corresponding workflow steps succeeded. Command-specific output is preserved separately.",
+    "cache_scope": "Attempt 1 compiled the new owners successfully (8982 total Lake jobs). QA attempt 2 restored the existing cache, completed the focused build (8976 total jobs), replayed cached audit build output, then executed the audit source afresh in a distinct Lean command. No claim of a cache-free recompilation is made for attempt 2.",
+    "local_compiler_or_test_invocations_by_this_qa_agent": [],
+    "local_source_or_dependency_mutations_by_this_qa_agent": []
+  },
+  "declaration_audit": {
+    "fresh_success_marker_count": 1,
+    "owned_declarations": 96,
+    "theorem_declarations_including_generated": 77,
+    "named_source_theorems": 37,
+    "additional_generated_theorem_declarations": 40,
+    "non_theorem_declarations": 19,
+    "owner_declaration_counts": {
+      "InfoGeometry.Projective.ExteriorKleinIncidenceAction": 9,
+      "InfoGeometry.Projective.ExteriorKleinOperatorExamples": 28,
+      "InfoGeometry.Projective.ExteriorKleinBoost": 18,
+      "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance": 26,
+      "InfoGeometry.Projective.ExteriorKleinOperatorAction": 15
+    },
+    "unique_names": 96,
+    "every_named_source_theorem_present_under_correct_owner": true,
+    "named_theorem_membership": [
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinBoost",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.bivectorAction_boost01",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinBoost",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.boost01_det",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinBoost",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.boost01_preserves_minkowski",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinBoost",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.boost01_preserves_klein",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinBoost",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.boost01_preserves_fourCoordinateSector",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.coordinateBasis_eq_standardFrame",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.topExteriorCoordinate_ιMulti_eq_basis_det",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.topExteriorCoordinate_map",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.exteriorKleinPolar_pair",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.exteriorKleinPolar_map_pair",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.exteriorKleinPolar_map",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.exteriorKleinPolar_map_eq_zero_iff",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.exteriorKleinPolar_map_of_det_one",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.exteriorKleinQuadraticForm_map",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.kleinForm_bivectorAction",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.exteriorKleinQuadraticForm_map_of_det_one",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.kleinForm_bivectorAction_of_det_one",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.kleinForm_bivectorAction_eq_zero_iff",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinIncidenceAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.incidenceForm_coordinates",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinIncidenceAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.incidenceForm_bivectorAction",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinIncidenceAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.incidenceForm_pluckerEquiv",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinIncidenceAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.incidenceFiber_pluckerEquiv_image",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.exteriorMap_pair",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.bivectorAction_intertwines",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.bivectorAction_wedge",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.bivectorAction_id",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.bivectorAction_comp",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.bivectorAction_injective",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.bivectorEquiv_apply",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.shears_noncommute",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.induced_shear_commutator_p03",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.induced_shears_noncommute",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.kleinForm_fourCoordinateSector",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.fourCoordinateSector_null_iff",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.quarterTurn_preserves_minkowski",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.wedge_tz_in_fourCoordinateSector",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.quarterTurn_exits_fourCoordinateSector",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      }
+    ],
+    "all_declarations": [
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinIncidenceAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.pluckerCoordinateEquiv._proof_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.shear12.eq_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinBoost",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.boost01_preserves_minkowski",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinBoost",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.boost01._proof_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.finFourIndexEquiv._proof_3",
+        "axioms": [
+          "propext"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.coordinateBasis_eq_standardFrame",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinBoost",
+        "name": "_private.InfoGeometry.Projective.ExteriorKleinBoost.0.InfoGeometry.Projective.ExteriorKleinOperatorAction.boost01.match_1.splitter",
+        "axioms": []
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.shear01.eq_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.finFourIndexEquiv._proof_1",
+        "axioms": [
+          "propext"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.shear01._proof_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinIncidenceAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.pluckerCoordinateEquiv.eq_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.exteriorMap_pair",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.bivectorAction_intertwines",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.quarterTurn._proof_2",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinBoost",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.bivectorAction_boost01",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.fourCoordinateSector_null_iff",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.kleinForm_fourCoordinateSector",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "_private.InfoGeometry.Projective.ExteriorKleinDeterminantCovariance.0.InfoGeometry.Projective.ExteriorKleinOperatorAction.finFourIndexEquiv.match_1.eq_1",
+        "axioms": []
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.kleinForm_bivectorAction_of_det_one",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinBoost",
+        "name": "_private.InfoGeometry.Projective.ExteriorKleinBoost.0.InfoGeometry.Projective.ExteriorKleinOperatorAction.boost01.match_1.eq_4",
+        "axioms": []
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "_private.InfoGeometry.Projective.ExteriorKleinDeterminantCovariance.0.InfoGeometry.Projective.ExteriorKleinOperatorAction.finFourIndexEquiv.match_1.splitter",
+        "axioms": []
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.quarterTurn_preserves_minkowski",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "_private.InfoGeometry.Projective.ExteriorKleinDeterminantCovariance.0.InfoGeometry.Projective.ExteriorKleinOperatorAction.finFourIndexEquiv.match_1.eq_4",
+        "axioms": []
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.shear01._proof_2",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.FourCoordinateSector.eq_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.bivectorAction_injective",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "_private.InfoGeometry.Projective.ExteriorKleinOperatorExamples.0.InfoGeometry.Projective.ExteriorKleinOperatorAction.shear01.match_1.eq_2",
+        "axioms": []
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinBoost",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.boost01_preserves_fourCoordinateSector",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.shears_noncommute",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.exteriorKleinPolar_map_pair",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.induced_shear_commutator_p03",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.exteriorKleinPolar_pair",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinBoost",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.boostBivector01._proof_2",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.wedge_tz_in_fourCoordinateSector",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.bivectorAction_comp",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.shear01",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinBoost",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.boostBivector01.eq_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.topExteriorCoordinate_map",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinIncidenceAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.pluckerCoordinateEquiv",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinIncidenceAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.pluckerCoordinateEquiv._proof_2",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinBoost",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.boostBivector01._proof_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.bivectorAction._proof_2",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.bivectorAction_id",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.finFourIndexEquiv.match_1",
+        "axioms": []
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinIncidenceAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.incidenceForm_coordinates",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.shear12",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.finFourIndexEquiv.eq_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinIncidenceAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.incidenceForm_bivectorAction",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinIncidenceAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.incidenceForm_pluckerEquiv",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.exteriorKleinPolar_map_eq_zero_iff",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.exteriorKleinQuadraticForm_map",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinIncidenceAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.incidenceFiber_pluckerEquiv_image",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.topExteriorCoordinate_ιMulti_eq_basis_det",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinBoost",
+        "name": "_private.InfoGeometry.Projective.ExteriorKleinBoost.0.InfoGeometry.Projective.ExteriorKleinOperatorAction.boost01.match_1.eq_3",
+        "axioms": []
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.coordinateBasis",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.bivectorEquiv._proof_2",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.quarterTurn_exits_fourCoordinateSector",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinBoost",
+        "name": "_private.InfoGeometry.Projective.ExteriorKleinBoost.0.InfoGeometry.Projective.ExteriorKleinOperatorAction.boost01.match_1.eq_2",
+        "axioms": []
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.quarterTurn",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinBoost",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.boost01.match_1",
+        "axioms": []
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.bivectorAction.eq_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.bivectorActionMonoidHom",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.shear01.match_1",
+        "axioms": []
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "_private.InfoGeometry.Projective.ExteriorKleinOperatorExamples.0.InfoGeometry.Projective.ExteriorKleinOperatorAction.shear01.match_1.eq_1",
+        "axioms": []
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.bivectorEquiv._proof_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinBoost",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.boost01_det",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.kleinForm_bivectorAction_eq_zero_iff",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.bivectorAction",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "_private.InfoGeometry.Projective.ExteriorKleinOperatorExamples.0.InfoGeometry.Projective.ExteriorKleinOperatorAction.shear01.match_1.eq_4",
+        "axioms": []
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinBoost",
+        "name": "_private.InfoGeometry.Projective.ExteriorKleinBoost.0.InfoGeometry.Projective.ExteriorKleinOperatorAction.boost01.match_1.eq_1",
+        "axioms": []
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinBoost",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.boost01_preserves_klein",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "_private.InfoGeometry.Projective.ExteriorKleinOperatorExamples.0.InfoGeometry.Projective.ExteriorKleinOperatorAction.shear01.match_1.splitter",
+        "axioms": []
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.bivectorAction_wedge",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.FourCoordinateSector",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.bivectorEquiv",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinIncidenceAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.pluckerEquiv",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.finFourIndexEquiv",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.bivectorEquiv_apply",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.quarterTurn._proof_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.exteriorKleinQuadraticForm_map_of_det_one",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.exteriorKleinPolar_map",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.shear12._proof_2",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "_private.InfoGeometry.Projective.ExteriorKleinOperatorExamples.0.InfoGeometry.Projective.ExteriorKleinOperatorAction.shear01.match_1.eq_3",
+        "axioms": []
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "_private.InfoGeometry.Projective.ExteriorKleinDeterminantCovariance.0.InfoGeometry.Projective.ExteriorKleinOperatorAction.finFourIndexEquiv.match_1.eq_3",
+        "axioms": []
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.kleinForm_bivectorAction",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.quarterTurn.eq_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.shear12._proof_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.coordinateBasis.eq_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "_private.InfoGeometry.Projective.ExteriorKleinDeterminantCovariance.0.InfoGeometry.Projective.ExteriorKleinOperatorAction.finFourIndexEquiv.match_1.eq_2",
+        "axioms": []
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorExamples",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.induced_shears_noncommute",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.exteriorKleinPolar_map_of_det_one",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinBoost",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.boost01._proof_2",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinBoost",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.boost01",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinDeterminantCovariance",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.finFourIndexEquiv._proof_2",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinOperatorAction",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.bivectorAction._proof_1",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      {
+        "owner": "InfoGeometry.Projective.ExteriorKleinBoost",
+        "name": "InfoGeometry.Projective.ExteriorKleinOperatorAction.boostBivector01",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      }
+    ],
+    "observed_axiom_union": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_usage_counts_overlapping": {
+      "propext": 78,
+      "Classical.choice": 76,
+      "Quot.sound": 76
+    },
+    "audit_rejections_enforced_by_executed_source": [
+      "introduced local axiom declarations",
+      "unsafe or partial owned declarations",
+      "transitive axioms outside propext/Classical.choice/Quot.sound"
+    ]
+  },
+  "axiom_classification": {
+    "propext": "Standard propositional extensionality used by Lean/Mathlib equality, extensionality and simplification infrastructure; no new local axiom.",
+    "Classical.choice": "Native noncomputable exterior/bivector equivalence uses LinearEquiv.ofBijective; the action and inverse/injectivity construction inherit Mathlib choice infrastructure. The covariance result is proved, not supplied as an assumed field.",
+    "Quot.sound": "Standard quotient soundness inherited through native exterior/Clifford algebra and real-number infrastructure; no new quotient axiom.",
+    "precision": "These semantic roles follow source inspection and the prior independent source review; they are not a unique origin attribution for every transitive dependency edge."
+  },
+  "warnings": {
+    "new_source": "Six unnecessarySeqFocus linter hints in ExteriorKleinOperatorExamples at lines 33,36,47,50,112,115; no Lean errors in the focused run.",
+    "existing_dependencies": "Additional warnings from unchanged imported owners; the successful run is not warnings-as-errors acceptance.",
+    "checkout_cleanup": "Git emits a missing external_refs/auto-ontology submodule URL warning during checkout cleanup; the focused job remains successful."
+  },
+  "raw_evidence": {
+    "attempt2/dahm-klein-verification.zip": {
+      "sha256": "4f8cc5b5a510f99beb773e309a868bfb5269bc563365dd5fee2f151d1b3f1515",
+      "bytes": 6600
+    },
+    "attempt2/job.log": {
+      "sha256": "c9ee70642bf2c33ced13ad302ba7311b690ca089e970643ed5df966524044014",
+      "bytes": 132610
+    },
+    "attempt2/metadata.json": {
+      "sha256": "3ae7c4ae5dba5ab944df024af0f55e0529754a38a19c78c1e4ff3cc790adcd15",
+      "bytes": 11932
+    },
+    "attempt2/artifact/audit.log": {
+      "sha256": "ad16f5cd3a23b1a09dc7fdfc5dd78ac8b322f8f6f551036bfaaaf052c2579c37",
+      "bytes": 19518
+    },
+    "attempt2/artifact/build.log": {
+      "sha256": "74498558cce96d2aabad9d13f08cca38eff1ca2bbc8fd69194b15bdbea8e9097",
+      "bytes": 52907
+    },
+    "attempt2/artifact/cache.log": {
+      "sha256": "440eea4591956816874b3f7a963ab7f27eb8a5356ceee431e03330097d5d8ca8",
+      "bytes": 7333
+    },
+    "attempt2/artifact/screen.log": {
+      "sha256": "ed719d5cdf9396793ecdd81a3c7c14ce0a3814c9a08538ff6267c1a01a37f8aa",
+      "bytes": 78
+    }
+  },
+  "artifact": {
+    "id": 13855602955,
+    "name": "dahm-klein-verification",
+    "sha256": "4f8cc5b5a510f99beb773e309a868bfb5269bc563365dd5fee2f151d1b3f1515",
+    "url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43012096492/artifacts/13855602955",
+    "created_at": "2026-11-11T12:45:19Z",
+    "expires_at": "2027-02-09T12:43:10Z"
+  },
+  "accepted_scope": [
+    "focused source compilation evidence at the verified tree",
+    "QA-initiated hosted focused build revalidation",
+    "fresh declaration ownership and allowed-axiom audit",
+    "strict source screen of five mathematical owners",
+    "source/checkout/artifact integrity and named-theorem membership"
+  ],
+  "still_pending_for_full_earlier_qa_release": [
+    "strict OpenGauss refute and static Gate 4 preflight from the earlier full acceptance plan",
+    "regex vacuity scan with manual classification as required",
+    "broader style/traceability signoff and the full earlier acceptance receipt",
+    "staged-index, root-control and dependency-worktree before/after invariance from the earlier local runner",
+    "compiled .olean/.ilean artifact fingerprint coverage from the earlier local runner"
+  ],
+  "not_certified": [
+    "local long-running build completion",
+    "root integration and local pre-push success",
+    "whole-repository release or unrelated workflow success",
+    "projective-ray quotient action, group/real-form classification, or physical unification"
+  ],
+  "limitations": "Checksums identify these evidence bytes; this is not signed or WORM storage. A hosted limited-scope receipt does not claim the still-pending full earlier QA release."
+}

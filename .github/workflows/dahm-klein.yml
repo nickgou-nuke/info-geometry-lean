@@ -1,0 +1,71 @@
+name: Native exterior Klein operator action
+
+on:
+  pull_request:
+    paths:
+      - 'lean/**'
+      - 'verification/dahm-klein/**'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/infra/opengauss_screener.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/dahm-klein.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dahm-klein-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            verification/dahm-klein/.lake
+          key: ${{ runner.os }}-dahm-klein-${{ hashFiles('verification/dahm-klein/lean-toolchain', 'verification/dahm-klein/lake-manifest.json') }}
+      - name: Install the pinned Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.34.1
+      - name: Retrieve the pinned dependency cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p verification/dahm-klein/logs
+          lean --version
+          python3 verification/dahm-klein/check.py exe cache get 2>&1 | tee verification/dahm-klein/logs/cache.log
+      - name: Build the native operator action and audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/dahm-klein/check.py build 2>&1 | tee verification/dahm-klein/logs/build.log
+          python3 verification/dahm-klein/check.py env lean "$PWD/lean/InfoGeometry/Projective/ExteriorKleinOperatorAudit.lean" 2>&1 | tee verification/dahm-klein/logs/audit.log
+      - name: Screen the mathematical source
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/infra/opengauss_screener.py --strict \
+            lean/InfoGeometry/Projective/ExteriorKleinOperatorAction.lean \
+            lean/InfoGeometry/Projective/ExteriorKleinDeterminantCovariance.lean \
+            lean/InfoGeometry/Projective/ExteriorKleinOperatorExamples.lean \
+            lean/InfoGeometry/Projective/ExteriorKleinBoost.lean \
+            lean/InfoGeometry/Projective/ExteriorKleinIncidenceAction.lean 2>&1 | tee verification/dahm-klein/logs/screen.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dahm-klein-verification
+          path: verification/dahm-klein/logs

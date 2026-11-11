@@ -8,3 +8,6 @@ InfoGeometry.Topology.KleinCliffordPinLift
 InfoGeometry.Topology.KleinAssociatedSpinors
 InfoGeometry.LinearAlgebra.IsotropicSelfAdjoint
 InfoGeometry.Twistor.PenroseNullProjector
+InfoGeometry.LinearAlgebra.SplitHadamard
+InfoGeometry.Twistor.IncidenceMassSeparation
+InfoGeometry.Twistor.InfinityRaisingAlgebra

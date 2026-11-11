@@ -41,7 +41,7 @@ AUDIT = "lean/InfoGeometry/Twistor/TwistorHomotopeAudit.lean"
 PROTECTED = PATHS + [AUDIT] + [
     "verification/twistor-homotope/" + p for p in
     [".gitignore", "check.py", "verify.py", "lakefile.toml", "lake-manifest.json",
-     "lean-toolchain", "README.md"]
+     "lean-toolchain", "README.md", "VACUITY_REVIEW.json"]
 ] + [
     ".github/workflows/twistor-homotope.yml",
     "docs/TWISTOR_HOMOTOPE_INVARIANTS_CONTRACT.md",
@@ -267,10 +267,31 @@ def main() -> None:
         gate = json.loads(run("gate4-static", ["python3", "tools/infra/opengauss_cli.py", "review", *PATHS, AUDIT, "--gate", "GATE_4", "--json"]))
         require(len(gate) == len(PATHS) + 1 and all(not r["trap_violations"] and not r["scope_inflation_warnings"] and not r["kernel_checked"] for r in gate),
                 "Static Gate4 has findings or mislabels kernel execution")
+        vacuity_review = json.loads((PROJECT / "VACUITY_REVIEW.json").read_text())
+        require(digest((ROOT / "scripts/vacuity-linter.py").read_bytes()) ==
+                vacuity_review["linter_sha256"], "Reviewed vacuity linter changed")
+        require(set(vacuity_review["cases"]) <= set(PATHS), "Unknown vacuity review owner")
+        require(all(f["name"] == "no_hyp_use" and f["severity"] == 0.3
+                    for case in vacuity_review["cases"].values()
+                    for f in case["expected_findings"]),
+                "Only the reviewed textual parameter-occurrence heuristic is eligible")
+        report["vacuity"] = []
+        unreviewed = []
         for path in PATHS + [AUDIT]:
             result = json.loads(run("vacuity-" + Path(path).stem,
                                     ["python3", "scripts/vacuity-linter.py", path, "--json"]))
-            require(not result["findings"], "Vacuity heuristic needs manual classification")
+            entry = {"path": path, "raw_result": result, "classification": "NO_FINDINGS"}
+            if result["findings"]:
+                review = vacuity_review["cases"].get(path)
+                if review and before[path] == review["source_sha256"] and \
+                        result["findings"] == review["expected_findings"]:
+                    entry["classification"] = "SOURCE_REVIEWED_FALSE_POSITIVE"
+                    entry["review"] = review
+                else:
+                    entry["classification"] = "UNREVIEWED"
+                    unreviewed.append(path)
+            report["vacuity"].append(entry)
+        checkpoint()
         run("whitespace", ["git", "diff", "--check", BASE, "HEAD", "--", *PROTECTED])
         artifacts = {}
         for stem in MATH + ["InfoGeometry/Twistor/TwistorHomotopeAudit"]:
@@ -293,6 +314,7 @@ def main() -> None:
                     "Dependency worktree status changed: " + dependency["name"])
         report["dependency_invariance"] = True
         report["source_invariance"] = True
+        require(not unreviewed, "Vacuity heuristic needs manual classification: " + ", ".join(unreviewed))
         report["disposition"] = "CHECKS_PASSED"
         print("TWISTOR_HOMOTOPE_CHECKS_PASSED", count, theorem_count, len(membership), flush=True)
     except Exception as error:

@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-11-11T13:24:29.876429+00:00",
+  "review_role": "Independent A-A semantic and source review",
+  "result": "SOURCE_DELTA_PASS",
+  "scope": "Exactly one line changes the syntactic conjugation form in a private Cayley scalar helper. Public theorem statements, proof bodies, declarations and mathematical boundaries are unchanged.",
+  "prior_review": {
+    "path": "/workspace/scratch/b119c75f3f8f/qa-twistor/A_A_REPAIR1_REVIEW.json",
+    "sha256": "d6cfb589dcaf0d1ce7bd6bfcb717f361fb446abb10d2eea37a393d37863a8ec8",
+    "reviewed_local_commit": "9a276f9a1c4945711c2672bd589d7b36d8ce9ba9",
+    "reviewed_local_tree": "e6490c27482f9eab3c13719bd0bcfafb16da0fac",
+    "retained_scope": "The initial source review and REPAIR1 conclusions remain applicable to all unchanged source and corrected mathematical boundaries."
+  },
+  "reviewed_repair_identity": {
+    "checkout": "/workspace/scratch/b119c75f3f8f/twistor-homotope-lean",
+    "local_commit": "d5a33cc3686eb9c881c12cc3731674e86d4485f0",
+    "local_tree": "5708faa952dd845202351ef16d0e3db046595f65",
+    "evidence": "Reviewer read Git HEAD/tree and a clean working tree. The complete changed-file list since REPAIR1 contains only ConstituentCayleyGram.lean; its diff contains the single helper-target substitution. No workflow or gate changed.",
+    "publication_scope": "No independent assertion is made about a subsequently published REPAIR2 commit."
+  },
+  "files": [
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/OrderedHomotope.lean",
+      "kind": "math_owner",
+      "sha256": "4c0cfac569a4eec5a05e3b7256c301a7890f460718a30854cf685fb057fd8231",
+      "named_source_theorems_and_lemmas": 15,
+      "private_source_theorems_and_lemmas": 0,
+      "previous_sha256": "4c0cfac569a4eec5a05e3b7256c301a7890f460718a30854cf685fb057fd8231",
+      "changed_since_repair1_review": false
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/TwoModeCountRecurrence.lean",
+      "kind": "math_owner",
+      "sha256": "c6170114cf5a5964f7e1de88393efa0021d5f1d0c706c63a1f3523c91b5301d4",
+      "named_source_theorems_and_lemmas": 14,
+      "private_source_theorems_and_lemmas": 0,
+      "previous_sha256": "c6170114cf5a5964f7e1de88393efa0021d5f1d0c706c63a1f3523c91b5301d4",
+      "changed_since_repair1_review": false
+    },
+    {
+      "path": "lean/InfoGeometry/Twistor/ConstituentWittGram.lean",
+      "kind": "math_owner",
+      "sha256": "fb876e8b6d61ae317057adfd911c4e5ebbce89e396e92cd65e979ace7f6817e9",
+      "named_source_theorems_and_lemmas": 22,
+      "private_source_theorems_and_lemmas": 4,
+      "previous_sha256": "fb876e8b6d61ae317057adfd911c4e5ebbce89e396e92cd65e979ace7f6817e9",
+      "changed_since_repair1_review": false
+    },
+    {
+      "path": "lean/InfoGeometry/Twistor/ConstituentCayleyGram.lean",
+      "kind": "math_owner",
+      "sha256": "43f6f5e2362d8b02d595d2e96194fc76f18d0ffb8b539f5417ea9d4e6a75b9eb",
+      "named_source_theorems_and_lemmas": 16,
+      "private_source_theorems_and_lemmas": 2,
+      "previous_sha256": "43ca2f2f8f0de996c675ff2772fb5b6c17277c2e9b1372932111a88e1e893a76",
+      "changed_since_repair1_review": true
+    },
+    {
+      "path": "lean/InfoGeometry/Twistor/ConstituentInvariantIndependence.lean",
+      "kind": "math_owner",
+      "sha256": "88be70d8fdfeba2a290670ee1874b72f6a4d38392d0a0b7cb38b5d12b49959b8",
+      "named_source_theorems_and_lemmas": 2,
+      "private_source_theorems_and_lemmas": 0,
+      "previous_sha256": "88be70d8fdfeba2a290670ee1874b72f6a4d38392d0a0b7cb38b5d12b49959b8",
+      "changed_since_repair1_review": false
+    },
+    {
+      "path": "lean/InfoGeometry/Twistor/MomentHomotopeWitness.lean",
+      "kind": "math_owner",
+      "sha256": "8e18461fa07ae7b0aafcdb1557312ebe02b5f8e30918587329bfdefb77f7e09e",
+      "named_source_theorems_and_lemmas": 1,
+      "private_source_theorems_and_lemmas": 0,
+      "previous_sha256": "8e18461fa07ae7b0aafcdb1557312ebe02b5f8e30918587329bfdefb77f7e09e",
+      "changed_since_repair1_review": false
+    },
+    {
+      "path": "lean/InfoGeometry/Twistor/TwistorHomotopeAudit.lean",
+      "kind": "declaration_audit",
+      "sha256": "02ef426ba88d83f05728f9bae8140a092d584a76c1b3fe8fedc61fe0114b2a56",
+      "previous_sha256": "02ef426ba88d83f05728f9bae8140a092d584a76c1b3fe8fedc61fe0114b2a56",
+      "changed_since_repair1_review": false
+    },
+    {
+      "path": "docs/TWISTOR_HOMOTOPE_INVARIANTS_CONTRACT.md",
+      "kind": "contract",
+      "sha256": "a6c71a8704a5e7b869253dd902c03dcaa3bd514b96365fcb6ec53d4bc988320d",
+      "previous_sha256": "a6c71a8704a5e7b869253dd902c03dcaa3bd514b96365fcb6ec53d4bc988320d",
+      "changed_since_repair1_review": false
+    }
+  ],
+  "repair1_ci_evidence": {
+    "log_path": "/workspace/scratch/b119c75f3f8f/qa-twistor/repair1-job.log",
+    "log_sha256": "b7dc8d455a9ea86d650cebc17713569c2840326cb21e294605a053fb33a46db8",
+    "head_recorded_by_log": "0cc9836b483145f634429fb97113a994dc8114ad",
+    "base_recorded_by_log": "c143c264bc18bbf41d692be4e270b5b7f7405702",
+    "checkout_context": "The log records a PR merge checkout of the stated head into the stated base.",
+    "overall_build": "FAILED: CHECK_END build 1",
+    "owners_reported_built": [
+      "InfoGeometry.OperatorAlgebra.OrderedHomotope",
+      "InfoGeometry.Algebra.TwoModeCountRecurrence",
+      "InfoGeometry.Twistor.MomentHomotopeWitness",
+      "InfoGeometry.Twistor.ConstituentWittGram",
+      "InfoGeometry.Twistor.ConstituentInvariantIndependence"
+    ],
+    "only_reported_failed_owner": "InfoGeometry.Twistor.ConstituentCayleyGram",
+    "diagnostics_reviewed": "The two unitary-product proofs and diagonal-conjugation proof leave six scalar goals containing (starRingEnd complex) paperScale. Each associated simplification warns that the old paperScale_star helper was unused.",
+    "representative_residual_goal": "(starRingEnd complex) paperScale * paperScale * 2 - paperScale^2 * 2 = 0",
+    "scope_limit": "These five-owner build observations belong to the REPAIR1 hosted run and source hashes unchanged by REPAIR2. They do not establish aggregate build success, audit success or independent acceptance of the repaired snapshot."
+  },
+  "repair_review": {
+    "declaration": "InfoGeometry.Twistor.ConstituentCayleyGram.paperScale_star (private)",
+    "old_target": "star paperScale = paperScale",
+    "new_target": "(starRingEnd ℂ) paperScale = paperScale",
+    "proof_body": "Unchanged: simp [paperScale]",
+    "semantic_assessment": "Both forms express conjugation fixing the same real scalar. The new target matches the exact starRingEnd expression shown by the actual residual goals. The existing entrywise proofs then normalize scalar complex arithmetic; no matrix commutativity or extra physical claim is introduced.",
+    "mathematical_normalization": "The Cayley matrix, paperScale normalization, positive off-diagonal conversion sign, whole momentum preservation and traceless quadratic invariant remain unchanged.",
+    "source_decision": "PASS",
+    "in_memory_reverse_substitution_sha256": "43ca2f2f8f0de996c675ff2772fb5b6c17277c2e9b1372932111a88e1e893a76",
+    "reverse_substitution_result": "Matches the prior approved Cayley hash 43ca2f2f8f0de996c675ff2772fb5b6c17277c2e9b1372932111a88e1e893a76."
+  },
+  "source_inventory": {
+    "math_owner_count": 6,
+    "named_source_theorems_and_lemmas": 70,
+    "private_source_theorems_and_lemmas_included": 6,
+    "per_owner_counts": {
+      "OrderedHomotope": 15,
+      "TwoModeCountRecurrence": 14,
+      "ConstituentWittGram": 22,
+      "ConstituentCayleyGram": 16,
+      "ConstituentInvariantIndependence": 2,
+      "MomentHomotopeWitness": 1
+    },
+    "change": "None.",
+    "runtime_declaration_count": null,
+    "runtime_theorem_count": null
+  },
+  "remaining_source_repairs": [],
+  "validation_status": {
+    "a_a_repair2_source_review": "PASS",
+    "repaired_snapshot_kernel_build": "PENDING_HOSTED_RERUN",
+    "runtime_declaration_and_axiom_audit": "PENDING",
+    "hosted_independent_qa": "PENDING",
+    "root_repository_integration": "OUTSIDE_THIS_REVIEW_SCOPE",
+    "reviewer_execution": "Read-only source/Git/log inspection and isolated analysis-record creation. No compilation, tests, source gates, reviewed-source edits, dependency changes or process management performed."
+  }
+}

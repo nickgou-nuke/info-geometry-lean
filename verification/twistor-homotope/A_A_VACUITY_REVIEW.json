@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-11-11T13:44:33.671121+00:00",
+  "review_role": "Independent A-A mathematical and source classification",
+  "result": "TWO_CASE_CLASSIFICATION_SOURCE_PASS",
+  "scope": "One observed no_hyp_use false positive for the exact OrderedHomotope source and one expressly conditional recurrence classification. This review neither executes the linter nor grants aggregate verification or independent-QA acceptance.",
+  "prior_mathematical_review": {
+    "path": "/workspace/scratch/b119c75f3f8f/qa-twistor/A_A_REPAIR3_REVIEW.json",
+    "sha256": "56910b1df02acc41312a00e85ab4a9968dd3e691049c1ad3f14780e2ea93243d",
+    "mathematical_source_changes_since_that_review": "None."
+  },
+  "classification_identity": {
+    "linter_path": "scripts/vacuity-linter.py",
+    "linter_sha256": "76b0241f4e62dbd01c6e9b160ef1f8af9caf7bf2b6461ea713f4ca18a5dc8033",
+    "manifest_path": "verification/twistor-homotope/VACUITY_REVIEW.json",
+    "manifest_sha256": "03958a9278954913cf32a6c72564401e4daa305da6940e8e960a307d60ec7ef2",
+    "driver_path": "verification/twistor-homotope/verify.py",
+    "inspected_driver_sha256": "2a9ddad54a696d49923336d89fe4e726a95b13716776b6825be9c2a623fd502e",
+    "driver_review_scope": "Read for consistency with the two-case mathematical scope; implementation and execution acceptance belong to separate QA review.",
+    "kernel_audit_sha256": "02ef426ba88d83f05728f9bae8140a092d584a76c1b3fe8fedc61fe0114b2a56"
+  },
+  "observed_case": {
+    "status": "OBSERVED_SOURCE_REVIEWED_FALSE_POSITIVE",
+    "path": "lean/InfoGeometry/OperatorAlgebra/OrderedHomotope.lean",
+    "source_sha256": "4c0cfac569a4eec5a05e3b7256c301a7890f460718a30854cf685fb057fd8231",
+    "raw_output_path": "/workspace/scratch/b119c75f3f8f/qa-twistor/run4/artifact/vacuity-OrderedHomotope.stdout.log",
+    "raw_output_sha256": "e896df62016325454571b369e6ecad8c849eddd48f2f1ef2450155856313b0fa",
+    "raw_result": {
+      "honesty_score": 0.65,
+      "vacuity_score": 0.35,
+      "findings": [
+        {
+          "severity": 0.3,
+          "name": "no_hyp_use",
+          "match": "T X Y ",
+          "reason": "Theorem with parameters but proof doesn't reference them — potential vacuity"
+        }
+      ]
+    },
+    "exact_eligible_findings": [
+      {
+        "severity": 0.3,
+        "name": "no_hyp_use",
+        "match": "T X Y ",
+        "reason": "Theorem with parameters but proof doesn't reference them — potential vacuity"
+      }
+    ],
+    "first_matching_declaration_from_source_review": "jordan_comm",
+    "related_declarations_reviewed": [
+      {
+        "name": "jordan_comm",
+        "mathematical_basis": "The half-sum J_T(X,Y) is symmetric by additive commutativity of the two actual ordered products. The simplifier instantiates its rule against the parameter-bearing goal."
+      },
+      {
+        "name": "bracket_skew",
+        "mathematical_basis": "Exchanging the inputs negates their normalized half-difference. smul_sub and module normalize the actual ordered products in the goal."
+      },
+      {
+        "name": "bracket_self",
+        "mathematical_basis": "Alternation K_T(X,X)=0 follows from subtracting the same ordered product from itself. This is a structural bracket law, without an assumed conclusion or proof hole."
+      },
+      {
+        "name": "jordan_self",
+        "mathematical_basis": "The rational half combines two copies of X*T*X into one copy, proving J_T(X,X)=X*T*X on the actual ring carrier."
+      }
+    ],
+    "classification_reason": "T, X and Y are universally quantified algebra elements, not proposition hypotheses carrying the result. Goal-directed simplification and module normalization use these elements without requiring their names to occur in the tactic text. The regex captures the whole binder string including whitespace and does not inspect proof-term dependence.",
+    "manifest_mathematical_basis_decision": "PASS"
+  },
+  "conditional_case": {
+    "status": "NOT_OBSERVED_CONDITIONAL_SOURCE_REVIEW_ONLY",
+    "path": "lean/InfoGeometry/Algebra/TwoModeCountRecurrence.lean",
+    "source_sha256": "548f7c350f2973de236f1dd2b2508bfbac6032d9e34886cbcf764f7376545eee",
+    "scan_observed": false,
+    "raw_output_path": null,
+    "exact_conditionally_eligible_findings": [
+      {
+        "severity": 0.3,
+        "name": "no_hyp_use",
+        "match": "n ",
+        "reason": "Theorem with parameters but proof doesn't reference them — potential vacuity"
+      }
+    ],
+    "reviewed_declarations": [
+      {
+        "name": "counts_upper_bound",
+        "mathematical_basis": "From M_n+S_n=4^n and S_n>=0, the proof derives M_n<=4^n. It explicitly supplies n to counts_sum and counts_nonneg_ordered."
+      },
+      {
+        "name": "spectral_power_bound",
+        "mathematical_basis": "From M_n+S_n=4^n, M_n-S_n=2^n and S_n>=0, the proof derives 2^n<=4^n. It explicitly supplies n to all prerequisite theorems."
+      }
+    ],
+    "classification_reason": "The regex may capture the trailing space in the binder string n and miss the explicitly supplied n at the end of the first proof line. Neither theorem assumes the bound it proves.",
+    "activation_condition": "Applicable only if a later actual scan emits exactly the listed finding array, including severity, name, match with trailing space and reason, for this source hash and the unchanged linter hash. Different or additional findings remain unclassified. An empty scan is simply NO_FINDINGS.",
+    "manifest_mathematical_basis_decision": "PASS_AS_CONDITIONAL_ONLY"
+  },
+  "heuristic_implementation_observation": {
+    "implementation": "re.findall with re.MULTILINE, without a Lean AST or DOTALL.",
+    "reporting_limit": "Only the first match of each category per file is reported; the payload does not enumerate every matching declaration.",
+    "simp_vacuous": "No classification is granted. The current bare-by-simp end-of-line pattern does not match the inline (by simp) Z zero-skewness side proof."
+  },
+  "actual_run4_context": {
+    "workflow_run_id": "43030148810",
+    "workflow_run_attempt": "1",
+    "job_id_from_parent_manifest": 130554799603,
+    "artifact_git_head": "78fa01214a8762e87fd857dcf880dbef76d85073",
+    "artifact_git_tree": "2e3121bec4f5652c4780c6c36e2fff99d4d333d4",
+    "checks_path": "/workspace/scratch/b119c75f3f8f/qa-twistor/run4/artifact/checks.json",
+    "checks_sha256": "2d9560373df51b1b533fe09dc055b33c914856563d4da4c3237295cfdc630c97",
+    "original_disposition_preserved": "CHECKS_FAILED",
+    "independent_qa_acceptance": false,
+    "successful_executed_steps": [
+      "build",
+      "fresh-audit",
+      "strict-screen",
+      "strict-refute",
+      "gate4-static"
+    ],
+    "fresh_audit": {
+      "declaration_count": 116,
+      "theorem_declaration_count": 99,
+      "named_source_theorem_count": 70,
+      "source_membership_entries": 70,
+      "private_source_membership_entries": 6,
+      "stdout_path": "/workspace/scratch/b119c75f3f8f/qa-twistor/run4/artifact/fresh-audit.stdout.log",
+      "stdout_sha256": "7a84596e885cb8c01715775037e03564a07bd71a5f402cbeaba9a273d711d8cc"
+    },
+    "static_gate_scope": "Strict screen has no violations; all six refute results are PASS and clean; all seven Gate4 results have empty trap/scope warnings and explicitly report kernel_checked=false.",
+    "stop_reason": "The prior driver stopped after the observed OrderedHomotope vacuity finding. Remaining six vacuity scans and later completion steps were not executed in this run.",
+    "scope_limit": "This mathematical classification does not retroactively change CHECKS_FAILED into an executed aggregate PASS."
+  },
+  "acceptance_boundaries": [
+    "Exactly the two source files, exact source fingerprints, exact linter fingerprint and exact complete finding arrays described here are eligible.",
+    "Only no_hyp_use at severity 0.3 is classified. No proof-hole, True substitution, assumed-conclusion, circular-proof or other finding category is classified.",
+    "Preserve raw emitted outputs and distinguish NO_FINDINGS, SOURCE_REVIEWED_FALSE_POSITIVE and UNREVIEWED.",
+    "Collect all seven actual scans; any unmatched or additional finding requires review and fails aggregate acceptance.",
+    "The recurrence case remains conditional until its actual matching output exists.",
+    "Independent QA must inspect emitted results and review the driver/manifest mechanism before final acceptance."
+  ],
+  "validation_status": {
+    "observed_ordered_mathematical_classification": "PASS",
+    "recurrence_mathematical_eligibility": "CONDITIONAL_ONLY_NOT_OBSERVED",
+    "manifest_two_case_mathematical_scope": "PASS",
+    "manifest_driver_qa_acceptance": "PENDING_SEPARATE_QA",
+    "complete_seven_scan_run": "PENDING",
+    "independent_qa_acceptance": "PENDING",
+    "reviewer_execution": "Read-only source/Git/artifact inspection and isolated analysis-record creation. No linter execution, compilation, tests, gates, mathematical-source edits or kernel-audit changes performed."
+  }
+}

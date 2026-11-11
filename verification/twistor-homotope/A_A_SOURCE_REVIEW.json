@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-11-11T13:11:38.143226+00:00",
+  "review_role": "Independent A-A semantic and source review",
+  "result": "SOURCE_PASS",
+  "scope": "Six mathematical owners, their declaration-audit source, and the corrected contract; source inspection only.",
+  "source_identity": {
+    "checkout": "/workspace/scratch/b119c75f3f8f/twistor-homotope-lean",
+    "branch": "formalize/twistor-homotope-invariants",
+    "base_commit": "c143c264bc18bbf41d692be4e270b5b7f7405702",
+    "reviewed_local_commit": "b2f0de54c10863165c2e8f1c721779fc79129df3",
+    "reviewed_local_tree": "f2f1e41bdbe1e9991fc01cb329c14c76ce424870",
+    "local_identity_evidence": "Reviewer read the commit/tree from Git and observed a clean working tree.",
+    "published_remote_commit": "cea83dec67792315d0e8330b6fc8373b32f5f21c",
+    "published_remote_tree": "f2f1e41bdbe1e9991fc01cb329c14c76ce424870",
+    "remote_identity_evidence": "Parent-observed publication evidence: GitHub create-tree response matched the local tree before create-commit; PR 315 snapshot confirmed this remote head and the stated base. The remote commit is absent from the reviewer checkout object database and was not independently fetched by this reviewer."
+  },
+  "files": [
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/OrderedHomotope.lean",
+      "kind": "math_owner",
+      "sha256": "4c0cfac569a4eec5a05e3b7256c301a7890f460718a30854cf685fb057fd8231",
+      "named_source_theorems_and_lemmas": 15,
+      "private_source_theorems_and_lemmas": 0
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/TwoModeCountRecurrence.lean",
+      "kind": "math_owner",
+      "sha256": "74f5afbcb609d19e45fc4e9312d04bcd09b180b681ba2109a28b8644179d8311",
+      "named_source_theorems_and_lemmas": 14,
+      "private_source_theorems_and_lemmas": 0
+    },
+    {
+      "path": "lean/InfoGeometry/Twistor/ConstituentWittGram.lean",
+      "kind": "math_owner",
+      "sha256": "7f0ae1bb84fa51496b1f77b84788a8e5814adbe45cbf4f79576b9d044fef32a4",
+      "named_source_theorems_and_lemmas": 22,
+      "private_source_theorems_and_lemmas": 4
+    },
+    {
+      "path": "lean/InfoGeometry/Twistor/ConstituentCayleyGram.lean",
+      "kind": "math_owner",
+      "sha256": "43ca2f2f8f0de996c675ff2772fb5b6c17277c2e9b1372932111a88e1e893a76",
+      "named_source_theorems_and_lemmas": 16,
+      "private_source_theorems_and_lemmas": 2
+    },
+    {
+      "path": "lean/InfoGeometry/Twistor/ConstituentInvariantIndependence.lean",
+      "kind": "math_owner",
+      "sha256": "88be70d8fdfeba2a290670ee1874b72f6a4d38392d0a0b7cb38b5d12b49959b8",
+      "named_source_theorems_and_lemmas": 2,
+      "private_source_theorems_and_lemmas": 0
+    },
+    {
+      "path": "lean/InfoGeometry/Twistor/MomentHomotopeWitness.lean",
+      "kind": "math_owner",
+      "sha256": "8e18461fa07ae7b0aafcdb1557312ebe02b5f8e30918587329bfdefb77f7e09e",
+      "named_source_theorems_and_lemmas": 1,
+      "private_source_theorems_and_lemmas": 0
+    },
+    {
+      "path": "lean/InfoGeometry/Twistor/TwistorHomotopeAudit.lean",
+      "kind": "declaration_audit",
+      "sha256": "02ef426ba88d83f05728f9bae8140a092d584a76c1b3fe8fedc61fe0114b2a56"
+    },
+    {
+      "path": "docs/TWISTOR_HOMOTOPE_INVARIANTS_CONTRACT.md",
+      "kind": "contract",
+      "sha256": "a6c71a8704a5e7b869253dd902c03dcaa3bd514b96365fcb6ec53d4bc988320d"
+    }
+  ],
+  "source_inventory": {
+    "math_owner_count": 6,
+    "named_source_theorems_and_lemmas": 70,
+    "private_source_theorems_and_lemmas_included": 6,
+    "public_named_source_theorems_and_lemmas": 64,
+    "runtime_declaration_count": null,
+    "runtime_theorem_count": null,
+    "count_scope": "Named source declarations only; generated/kernel-visible declaration totals require audit execution. Private runtime names may be mangled."
+  },
+  "corrected_mathematical_boundaries": [
+    "The associative fixed-kernel product is X*T*Y. Its half-sum and half-difference retain ordered multiplication in a rational algebra; nonzero bracket requires unequal ordered products.",
+    "Normalized associator orientation is J(J(X,Y),Z)-J(X,J(Y,Z))=K(Y,K(X,Z)); cyclic Jacobi uses the same fixed kernel throughout.",
+    "The noncommuting homotope witness uses actual native 4-by-4 null moment matrices with T*T=0, X*X=0 and K_T(X,1) nonzero; its kernel is therefore nonzero.",
+    "With Omega=[[0,1],[-1,0]], J=diag(0,Omega) satisfies J squared=-diag(0,I); Sigma*J is the distinct square-zero operator. The lower alternating form is not a nilpotent projector.",
+    "Native pairMassSq is the momentum determinant, while the repository paper-normalized mass square is twice it. Gram determinant is independently 4*s1*s2-normSq(tau).",
+    "For the Hermitian pair Gram matrix, H0 squared=((s1-s2) squared+normSq(tau))*I, and its positive quadratic invariant is trace(H0 squared)/2. No Wigner spin representation is identified.",
+    "The explicit null-pair section realizes arbitrary complex infinity and Witt readouts jointly without an implicit nonzero-frame assumption. AlgebraicIndependent over the reals is claimed for the actual two packet functions using realization and polynomial extensionality on an infinite nonnegative real box.",
+    "Right column mixing is native mix U-transpose. Unitary mixing preserves the whole momentum matrix and conjugates Gram; this is not a matrix commutator statement between the mixing matrix and momentum.",
+    "The specified Cayley matrix sends diag(2*s,-2*s) to [[0,2*s],[2*s,0]] under conjugation with the displayed positive sign, preserving the traceless quadratic invariant and momentum.",
+    "The recurrence has initial values (1,0), transition [[3,1],[1,3]], sum 4^n and difference 2^n. Sum/difference rows intertwine an integer diagonal action without claiming an integral change of basis or Clifford-dimension identification. Its actual transition fails to commute with the named first-mode projection.",
+    "For null columns the defect 2*pairMassSq-det(Gram) is nonnegative, and strict positivity requires at least one nonzero relevant pairing. Bounded spin as positive mass tends to zero does not alone imply divergent pitch; zero spin and proportional decay are counterexamples.",
+    "General stabilizer classifications, Pauli-Lubanski construction, Weinberg-Witten attribution, representation limits, quantum spin spectrum, colour emergence, cohomological identification and an unlimited Gr(k,4) tower remain unproved interpretation or construction debt.",
+    "Dependencies follow actual proofs: the null moment witness does not depend on Jacobi; readout realization does not depend on Gram determinant; the recurrence is a separate branch. Acyclic labels and a tautological master bundle do not establish the claims."
+  ],
+  "latest_delta_review": {
+    "decision": "PASS",
+    "witness_calculation": "For T=[[3,1],[1,3]] and P=[[1,0],[0,0]], T*P=[[3,0],[1,0]] and P*T=[[3,1],[0,0]]. The proof extracts entry (0,1), obtaining 0=1 from a hypothetical equality.",
+    "collateral_change_check": "In-memory removal of exactly the new projection definition and witness theorem restored the previously approved recurrence hash; removal of exactly the new T1 sentence restored the previously approved contract hash.",
+    "prior_recurrence_sha256": "09ed09af4d80a6b0dadfb12cd25c6a0cef087f05244bccae861b4f1f98546850",
+    "prior_contract_sha256": "8f9d4c892d942ffbbef3fc179197c7e6b1e6261d5ffa6a495081799741f1b127"
+  },
+  "audit_source_scope": "The audit enumerates imported kernel-visible declarations owned by the six modules, rejects new axioms and unsafe or partial code, and permits only propext, Classical.choice and Quot.sound in transitive axiom dependencies. Actual audit output is pending.",
+  "remaining_source_repairs": [],
+  "validation_status": {
+    "a_a_source_review": "PASS",
+    "kernel_elaboration": "PENDING",
+    "hosted_independent_qa": "PENDING",
+    "runtime_declaration_and_axiom_audit": "PENDING",
+    "root_repository_integration": "OUTSIDE_THIS_REVIEW_SCOPE",
+    "reviewer_execution": "No compilation, tests, source gates, source edits, dependency changes or process management performed. This JSON and its checksum are isolated analysis records."
+  }
+}

@@ -28,7 +28,9 @@ It performs:
 - Complete owner/declaration and named-theorem membership checks.
 - Strict OpenGauss screening and refutation.
 - Static Gate 4, explicitly recorded as not a kernel check.
-- Regex vacuity scanning, with findings requiring explicit review.
+- Regex vacuity scanning, retaining every raw result. Only the exact findings
+  and source hashes in `VACUITY_REVIEW.json` receive the documented mathematical
+  classification; all unreviewed findings fail the driver.
 - Scoped whitespace, dependency pin, source fingerprint, and compiled-artifact checks.
 - Exact committed-source equality and unchanged root controls and dependency worktrees.
 

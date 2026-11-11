@@ -24,9 +24,9 @@ basis construction and counting theorem.
 namespace InfoGeometry.Algebra.HadamardRecurrence
 
 /-- The natural-number orbit of the recurrence. -/
-def counts : ℕ → ℕ × ℕ
-  | 0 => (1, 0)
-  | k + 1 => (3 * (counts k).1 + (counts k).2, (counts k).1 + 3 * (counts k).2)
+def counts : ℕ → ℕ × ℕ :=
+  Nat.rec (motive := fun _ => ℕ × ℕ) (1, 0)
+    (fun _ p => (3 * p.1 + p.2, p.1 + 3 * p.2))
 
 @[simp] theorem counts_zero : counts 0 = (1, 0) := rfl
 

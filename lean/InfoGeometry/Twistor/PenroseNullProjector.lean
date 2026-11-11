@@ -120,8 +120,7 @@ theorem incidenceProjection_finrank_range (X : ComplexSpacetime) :
     Module.finrank ℂ (incidenceProjection X).range = 2 := by
   rw [incidenceProjection_range,
     LinearMap.finrank_range_of_inj (incidenceEmbedding_injective X)]
-  simpa [Spinor2, InfoGeometry.Algebra.FiniteSpin.Vec2C] using
-    (Module.finrank_pi (R := ℂ) (ι := Fin 2))
+  exact Module.finrank_fin_fun ℂ
 
 /-- A nonzero lower spinor supplies a nonzero fixed vector of the projector. -/
 theorem incidenceProjection_ne_zero (X : ComplexSpacetime) :

@@ -19,10 +19,10 @@ Scope: algebraic linear maps and finite complex incidence submodules. Risk
 class R2 for reuse of existing owner structures; physical interpretations and
 global geometric identifications remain outside the theorem contract.
 
-Current disposition: the two complete source candidates passed independent
-semantic review and independent static QA. Native compilation, axiom
-inspection, and final native acceptance are pending (`[qa_blocked]`). This
-section must be updated only from observed check results.
+This contract records source reviews and native results at their exact
+revisions. Root integration remains incomplete. The current checks and body
+of [PR #307](https://github.com/nickgou-nuke/info-geometry-lean/pull/307) report
+the latest native outcome; an earlier run is not a certificate for later bytes.
 
 ## Claim ledger
 
@@ -233,18 +233,50 @@ Independent static QA also observed the strict source screener exit 0 with
 zero traps, the nonempty staged proof gate exit 0, and the staged whitespace
 check exit 0. Live and staged bytes of both Lean owners matched those hashes.
 The Python verifier passed a syntax-only AST parse; its native path has not
-yet executed. The 16 explicit source declarations are an inventory, not an
-observed native declaration-audit count.
+yet executed.
 
-Local native preparation is waiting for the maintained shared build lock.
-No local Lean compilation or axiom result is inferred from that waiting
-process. The registered Perjes/Klein CI run must likewise be inspected before
-any CI success is reported.
+The first actual [Perjes/Klein CI run](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/42996946019)
+passed for PR head `6058b67987cbe970bd2fea6531d469a38e087e27` and checked merge
+revision `670c6766a61716a388d165655a341847ae461c6d`. Both have source tree
+`ee0226cc54248a1bdbfb649c56e4c46b41dc7ce9`. Independent QA reconciled all 30
+copied repository-source hashes with the exact Git blobs and checked every
+compiler return code. All 30 compiled successfully.
+
+The complete native audit covered 358 declarations owned by the ten selected
+modules. Of these, the new generic owner contributes two and the Penrose
+owner contributes fifteen: fourteen explicit declarations and the generated
+`incidenceEmbedding._proof_1`. The generic owner uses only `propext` and
+`Quot.sound`; the Penrose owner's footprint additionally includes
+`Classical.choice`. No other axiom appeared. The audit itself emitted no
+warning or error. These are observed native counts, distinct from the sixteen
+explicit source declarations.
+
+That successful run emitted no warning for the generic owner and one for the
+Penrose owner: an unnecessary `simpa` in the final rank calculation. The
+subsequent minimal correction uses the native `Module.finrank_fin_fun` lemma
+directly. Its Penrose source hash is
+`38db215435ac4496e938d9e0a083be9e8bec09ff825cf480fd2eaf4e5a41a745`.
+Independent source reviews confirm that this changes no statement, import or
+hypothesis. The earlier CI run checks the original hash, not this correction;
+the later PR check must establish the result for the corrected bytes.
+
+This observed CI run is the existing 30-owner Perjes checker, not an execution
+of the new 14-owner scoped verifier. Existing imported/selected owners emitted
+66 other warnings; the run is not a whole-closure zero-warning certificate.
+
+Local Lean compilation has not executed while the maintained shared build
+lock is occupied. No native result is inferred from queued preparation.
+The new scoped verifier's own runtime acceptance remains pending.
 
 The current root path preflight exits 1 because the recorded
 `HomotopyHypothesis` and `Atlas` path packages are absent and the `GIFT`
 gitlink is uninitialized. No substitutes or dependency-pin changes are
 introduced. Root integration acceptance remains separate from scoped checks.
+The [remote root build](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/42996946123)
+also stopped at the missing `HomotopyHypothesis` package. Other repository-wide
+checks reported archival proof debt and a pre-existing case collision between
+`Physics/PellisFineStructure.lean` and `Physics/PellisfineStructure.lean`.
+These files are unchanged by this PR.
 
 ## Primary mathematical references
 

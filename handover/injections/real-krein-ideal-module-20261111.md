@@ -126,8 +126,8 @@ There is no causal edge from an archetypal label or from graph placement alone.
 - Final report records source/artifact hashes, exact commands, CI revision,
   independent findings, and any repository-level blocker separately.
 
-Status: contract frozen before theorem-bearing edits; implementation and
-acceptance pending.
+Initial status: contract frozen before theorem-bearing edits; implementation
+and acceptance were pending. The final receipt below supersedes this status.
 
 ## Initial verification and corrective action
 
@@ -152,5 +152,106 @@ The root-package attempt returned code 1 for the absent
 the source-closure result. Independent review also found unchanged baseline
 blockers in four auxiliary workflows; their downstream checks did not run.
 
-Corrective-action status: source repairs integrated; repeat kernel
-verification and final independent acceptance pending.
+Corrective-action status before the repeat run: source repairs integrated;
+repeat kernel verification and final independent acceptance were pending.
+
+## Final verification receipt
+
+The six mathematical owners and their exact repository source closure passed
+the pinned Lean kernel verification. This acceptance covers those sources and
+the stated mathematical contracts; the root-package integration gate remains
+blocked by an unchanged missing external dependency.
+
+### Revisions and reproducible evidence
+
+- Draft PR: <https://github.com/nickgou-nuke/info-geometry-lean/pull/320>.
+- Successful run: <https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43038097284>.
+- Job: `130582247920`, completed with conclusion `success`.
+- Source branch head: `1940127f1dc908a5dae8aeeb6dea6050175c6b15`.
+- Actual CI checkout: PR merge `fd7a6b2b6ecd4114bfa7a0b852a9ab47c5d4b6c8`.
+- Local source commit: `8df8acf54fb875b732a8560a194d8b25d69f30a8`.
+- All three commits have source tree `bae2fb9b3a924bf17d86623c8773e17147922822`.
+  The CI merge parents are the recorded base and source branch head.
+- Compiler: Lean `4.34.1`, commit
+  `5045d0056413266e57c625dcd7c365b10e377c52`, release build.
+- Mathlib: `d13f23b723b8a846827a245b89c10fc7d3f11612`; all eight recorded
+  dependency package pins also matched.
+- Artifact: `real-krein-ideal-verification`, ID `13864733453`.
+- Artifact ZIP SHA-256:
+  `36eaecbe626190f64fe37cfa79ce4e0e5fac5176927cc6e68da04549af7d2779`.
+
+The exact workflow command, from the checkout parent directory, was:
+
+```sh
+python3 project/tools/quality/check_real_krein_ideal.py \
+  --mathlib-root pinned-mathlib --output verification
+```
+
+The artifact contains `status.json`, `audit.log`, the actual compiler version,
+all per-module logs, all 256 copied source files, and the separately scoped
+root-package log and JSON result. Every recorded source SHA-256 matched both
+the archived copy and the local source. The acceptance receipt is a subsequent
+documentation-only change; no verified Lean source, verifier, workflow, or pin
+is changed by this receipt.
+
+### Results
+
+| Check | Result |
+|---|---|
+| Exact repository import closure, including `DAG.Basic` | 256 / 256 modules compiled |
+| Direct Mathlib import roots | 162 |
+| Changed mathematical owners | 6 / 6 compiled, each with zero warnings |
+| Native owner declaration audit | 105 declarations audited, including generated and private declarations |
+| Explicit source declaration coverage | 76 / 76 included in the native audit |
+| Permitted axiom closure | Exactly `propext`, `Classical.choice`, `Quot.sound` |
+| Strict proof screening of all six owners | Exit 0; no violations or quarantined packets |
+| Installed staged proof gate | Passed on both theorem-bearing commits |
+| Source hashes after compilation and artifact download | 256 / 256 matched |
+
+Existing dependencies can have warnings; the zero-warning claim applies to
+the six changed owners. The native audit follows every declaration owned by
+those modules, rather than relying on a hand-selected theorem list. It rejects
+unsafe or partial declarations and axioms outside the three listed foundations.
+
+Independent semantic review accepted the stated mathematical scope. The
+independent acceptance reviewer returned `ACCEPTED_WITH_LIMITED_SCOPE` after
+checking the sources, the strict audit generator, all archive payloads and
+source hashes, the exact compiler/package pins, and the remote Git tree
+identity. Explicit/native declaration counts were respectively 13/30 for
+`TripotentCornerEndEquivalence`, 14/14 for `IdealStarGramDensity`, 11/16 for
+`KreinDiracBlock`, 18/23 for `RealDoubledIdealMetric`, 13/15 for the examples,
+and 7/7 for `Cl11DoubledGram`. No explicit declaration was missing from the
+native audit. The reviewer authored no repository changes and ran no local
+build; acceptance relies on the checked remote native compilation and audit
+evidence together with independent source/evidence reconciliation.
+
+### Source fingerprints
+
+| Mathematical owner | SHA-256 |
+|---|---|
+| `OperatorAlgebra.PeirceSpine.TripotentCornerEndEquivalence` | `4622631817bc2b513325a18cf2c2c195ecb2e3ff68e3e4d59eaf045f070ef49f` |
+| `OperatorAlgebra.PeirceSpine.IdealStarGramDensity` | `ffba454e5bf271fc97dec40f9d707662879c9826c6866bc5f6600866bf26d165` |
+| `Physics.KreinDiracBlock` | `f1438509cf614a837cce4b6a1dce97b4bba88099fea0cd1d4cb929a436f3c1d5` |
+| `CliffordWeyl.RealDoubledIdealMetric` | `ffd203bc646361234a3ed1c473221d4a9f42303ebbdc76b21ebcb6e245f06a7f` |
+| `Examples.RealKreinIdealCounterexamples` | `35df0d1a493d9ede4fea95b50685258e968439f48719e525e61fa45f322410de` |
+| `Clifford.Cl11DoubledGram` | `532e740d27bc22ad78f8323ccd2f3e7058865c0eaa3e993de724afdccf8466fb` |
+
+### Integration gate and remaining scope
+
+The separate command
+`python3 tools/infra/run_locked_lake_build.py --all-default-targets`
+acquired the maintained lock and returned 1 because
+`external_refs/homotopy-hypothesis-lean4` is absent. The successful dedicated
+workflow records this failure; it does not certify a successful root build.
+
+The existing Post-Build Quality Gate run `43038097491`, job `130582249067`,
+failed in the preceding build for the same missing dependency. Its actual
+`post_build_gate.sh --full` step was skipped. No full post-build or pre-push
+gate pass is claimed. Independent comparison with the recorded base also
+confirmed existing case-collision, submodule-configuration, and Python-syntax
+blockers in auxiliary workflows. Their files are unchanged by this PR.
+
+Local compile attempts respected the occupied shared build lock; no competing
+build was killed or bypassed. The pinned isolated CI execution supplies the
+source verification evidence. The PR remains draft with these integration
+limitations recorded.

@@ -100,7 +100,7 @@ theorem tracelessQuadratic_conjugate (U H : ComplexSpacetime)
 /-- The normalized real Cayley matrix, viewed in the native complex matrix ring. -/
 def cayley : ComplexSpacetime := paperScale • !![1, 1; -1, 1]
 
-private theorem paperScale_star : star paperScale = paperScale := by
+private theorem paperScale_star : (starRingEnd ℂ) paperScale = paperScale := by
   simp [paperScale]
 
 theorem cayley_conjTranspose_mul : cayleyᴴ * cayley = 1 := by

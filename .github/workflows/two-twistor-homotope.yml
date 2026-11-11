@@ -1,0 +1,62 @@
+name: Two-twistor invariants and ordered homotopes
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Twistor/**'
+      - 'lean/InfoGeometry/Algebra/AssociativeHomotope.lean'
+      - 'lean/InfoGeometry/Algebra/HadamardRecurrence.lean'
+      - 'tools/quality/check_two_twistor_homotope.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/check_bilateral_kernel.py'
+      - 'tools/build_lock.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/two-twistor-homotope.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: two-twistor-homotope-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  kernel-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: project
+      - name: Fetch pinned Mathlib
+        run: |
+          python3 - <<'PY'
+          import json, pathlib, subprocess
+          root = pathlib.Path('project')
+          pin = next(p for p in json.loads((root/'lake-manifest.json').read_text())['packages'] if p['name']=='mathlib')
+          subprocess.run(['git','init','pinned-mathlib'], check=True)
+          subprocess.run(['git','-C','pinned-mathlib','remote','add','origin',pin['url']], check=True)
+          subprocess.run(['git','-C','pinned-mathlib','fetch','--depth=1','origin',pin['rev']], check=True)
+          subprocess.run(['git','-C','pinned-mathlib','checkout','--detach','FETCH_HEAD'], check=True)
+          PY
+      - name: Install exact toolchain and hydrate cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+          cd pinned-mathlib
+          "$HOME/.elan/bin/lake" exe cache get
+      - name: Compile exact source closure and audit declarations
+        run: |
+          python3 project/tools/quality/check_two_twistor_homotope.py \
+            --mathlib-root pinned-mathlib --output verification
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: two-twistor-homotope-verification
+          path: |
+            verification/**/*.log
+            verification/**/*.json
+            verification/**/*.txt
+            verification/src

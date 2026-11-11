@@ -195,7 +195,7 @@ python3 tools/quality/check_clifford_dirac.py \
   --target InfoGeometry.Clifford.Cl11ColimitDimension
 ```
 
-Acceptance must explicitly check zero warnings in the new owner, no reused
+Acceptance must explicitly check zero warnings in both selected owners, no reused
 compilation rows, and only
 `propext`, `Classical.choice`, and `Quot.sound` as axiom dependencies.
 Placeholder, strict screening, and semantic findings remain separately
@@ -203,8 +203,12 @@ reported checks. Source review and selected-module CI do not establish a
 whole-repository build result.
 
 Kernel acceptance is pending the focused compilation and axiom audit. The
-initial local scoped cache request was waiting for the shared build lock;
-the draft PR makes that pending state explicit. The workflow uploads its
+first CI attempt stopped during checkout because upstream has an unrelated
+gitlink without a URL in `.gitmodules`. The workflow now fetches the exact public
+event revision without credentials or submodule traversal and checks its SHA
+before reading any source or pin files.
+The local scoped cache request has acquired the shared build lock and is
+initializing the pinned native imports. The workflow uploads its
 source-bound report and declaration audit so reviewers can inspect the
 actual completion status. A successful focused run establishes only this
 selected closure and these declarations, not a physical mass-gap theorem.

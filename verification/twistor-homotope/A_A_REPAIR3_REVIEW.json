@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-11-11T13:35:16.324072+00:00",
+  "review_role": "Independent A-A semantic and source review",
+  "result": "SOURCE_DELTA_PASS",
+  "scope": "The sole source change marks the mathematical recurrence definition counts noncomputable, suppressing compiler-generated executable recursion scaffolding while retaining its kernel definition, defining equations and theorem proofs.",
+  "prior_review": {
+    "path": "/workspace/scratch/b119c75f3f8f/qa-twistor/A_A_REPAIR2_REVIEW.json",
+    "sha256": "1b993012c129f354d4c95c763f25409bf18d8b1d861723f0663c499b1d600aae",
+    "reviewed_local_commit": "d5a33cc3686eb9c881c12cc3731674e86d4485f0",
+    "reviewed_local_tree": "5708faa952dd845202351ef16d0e3db046595f65",
+    "retained_scope": "All previous mathematical boundaries and unchanged-source conclusions remain applicable."
+  },
+  "reviewed_repair_identity": {
+    "checkout": "/workspace/scratch/b119c75f3f8f/twistor-homotope-lean",
+    "local_commit": "41b6c84e3419f789487fb9b01833785be255b685",
+    "local_tree": "2e3121bec4f5652c4780c6c36e2fff99d4d333d4",
+    "evidence": "Reviewer read Git HEAD/tree, observed a clean working tree, and inspected the complete changed-file list and one-line source diff since REPAIR2.",
+    "publication_scope": "No independent assertion is made about a subsequently published REPAIR3 commit."
+  },
+  "files": [
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/OrderedHomotope.lean",
+      "kind": "math_owner",
+      "sha256": "4c0cfac569a4eec5a05e3b7256c301a7890f460718a30854cf685fb057fd8231",
+      "named_source_theorems_and_lemmas": 15,
+      "private_source_theorems_and_lemmas": 0,
+      "previous_sha256": "4c0cfac569a4eec5a05e3b7256c301a7890f460718a30854cf685fb057fd8231",
+      "changed_since_repair2_review": false
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/TwoModeCountRecurrence.lean",
+      "kind": "math_owner",
+      "sha256": "548f7c350f2973de236f1dd2b2508bfbac6032d9e34886cbcf764f7376545eee",
+      "named_source_theorems_and_lemmas": 14,
+      "private_source_theorems_and_lemmas": 0,
+      "previous_sha256": "c6170114cf5a5964f7e1de88393efa0021d5f1d0c706c63a1f3523c91b5301d4",
+      "changed_since_repair2_review": true
+    },
+    {
+      "path": "lean/InfoGeometry/Twistor/ConstituentWittGram.lean",
+      "kind": "math_owner",
+      "sha256": "fb876e8b6d61ae317057adfd911c4e5ebbce89e396e92cd65e979ace7f6817e9",
+      "named_source_theorems_and_lemmas": 22,
+      "private_source_theorems_and_lemmas": 4,
+      "previous_sha256": "fb876e8b6d61ae317057adfd911c4e5ebbce89e396e92cd65e979ace7f6817e9",
+      "changed_since_repair2_review": false
+    },
+    {
+      "path": "lean/InfoGeometry/Twistor/ConstituentCayleyGram.lean",
+      "kind": "math_owner",
+      "sha256": "43f6f5e2362d8b02d595d2e96194fc76f18d0ffb8b539f5417ea9d4e6a75b9eb",
+      "named_source_theorems_and_lemmas": 16,
+      "private_source_theorems_and_lemmas": 2,
+      "previous_sha256": "43f6f5e2362d8b02d595d2e96194fc76f18d0ffb8b539f5417ea9d4e6a75b9eb",
+      "changed_since_repair2_review": false
+    },
+    {
+      "path": "lean/InfoGeometry/Twistor/ConstituentInvariantIndependence.lean",
+      "kind": "math_owner",
+      "sha256": "88be70d8fdfeba2a290670ee1874b72f6a4d38392d0a0b7cb38b5d12b49959b8",
+      "named_source_theorems_and_lemmas": 2,
+      "private_source_theorems_and_lemmas": 0,
+      "previous_sha256": "88be70d8fdfeba2a290670ee1874b72f6a4d38392d0a0b7cb38b5d12b49959b8",
+      "changed_since_repair2_review": false
+    },
+    {
+      "path": "lean/InfoGeometry/Twistor/MomentHomotopeWitness.lean",
+      "kind": "math_owner",
+      "sha256": "8e18461fa07ae7b0aafcdb1557312ebe02b5f8e30918587329bfdefb77f7e09e",
+      "named_source_theorems_and_lemmas": 1,
+      "private_source_theorems_and_lemmas": 0,
+      "previous_sha256": "8e18461fa07ae7b0aafcdb1557312ebe02b5f8e30918587329bfdefb77f7e09e",
+      "changed_since_repair2_review": false
+    },
+    {
+      "path": "lean/InfoGeometry/Twistor/TwistorHomotopeAudit.lean",
+      "kind": "declaration_audit",
+      "sha256": "02ef426ba88d83f05728f9bae8140a092d584a76c1b3fe8fedc61fe0114b2a56",
+      "previous_sha256": "02ef426ba88d83f05728f9bae8140a092d584a76c1b3fe8fedc61fe0114b2a56",
+      "changed_since_repair2_review": false
+    },
+    {
+      "path": "docs/TWISTOR_HOMOTOPE_INVARIANTS_CONTRACT.md",
+      "kind": "contract",
+      "sha256": "a6c71a8704a5e7b869253dd902c03dcaa3bd514b96365fcb6ec53d4bc988320d",
+      "previous_sha256": "a6c71a8704a5e7b869253dd902c03dcaa3bd514b96365fcb6ec53d4bc988320d",
+      "changed_since_repair2_review": false
+    }
+  ],
+  "unchanged_controls": {
+    "scripts/vacuity-linter.py": "76b0241f4e62dbd01c6e9b160ef1f8af9caf7bf2b6461ea713f4ca18a5dc8033",
+    "verification/twistor-homotope/verify.py": "46d2c5f8befbbc698ef094c11a3bf1d192d44c231de0eb02848e6c13250a8880",
+    "audit_scope": "The declaration audit remains byte-for-byte unchanged and still rejects every owned unsafe or partial declaration, including generated declarations."
+  },
+  "repair2_ci_evidence": {
+    "run_id": 43028682486,
+    "run_id_provenance": "Parent-provided identity of the third hosted run.",
+    "log_path": "/workspace/scratch/b119c75f3f8f/qa-twistor/repair2-job.log",
+    "log_sha256": "728e8a5d4d0e7562117bbda6f52b7022472a96d8935c01aea49c282f957e211e",
+    "head_recorded_by_log": "be0cda0f2c1f9c60698fbd57c3b9001538457b5c",
+    "base_recorded_by_log": "c143c264bc18bbf41d692be4e270b5b7f7405702",
+    "overall_build": "FAILED: CHECK_END build 1",
+    "owner_compilation_scope": "All six mathematical owner modules were successfully available to the audit. The retained console tail explicitly reports Built for Gram, Independence and Cayley; audit declaration records additionally demonstrate imported OrderedHomotope, recurrence and MomentHomotopeWitness owners. Earlier successful builds of the latter three at unchanged hashes were also recorded in REPAIR2 review.",
+    "audit_status": "FAILED, before a complete audit pass or declaration-count summary.",
+    "exact_audit_failure": "TWISTOR_HOMOTOPE_AUDIT_FAILURE: unsafe or partial declaration InfoGeometry.Algebra.TwoModeCountRecurrence.counts._unsafe_rec",
+    "remaining_check_scope": "The driver stops on the failed build. No fresh-audit success, downstream static-gate success, vacuity result or independent acceptance is established by this run."
+  },
+  "installed_lean_source_evidence": {
+    "toolchain": "leanprover/lean4:v4.34.1",
+    "files": [
+      {
+        "path": "/home/agent/.elan/toolchains/leanprover--lean4---v4.34.1/src/lean/Lean/Elab/PreDefinition/Basic.lean",
+        "sha256": "46a2876ccbe1efc4cc491dc24658fea5e972544a64da888334fe2ffcc9c1a5c7"
+      },
+      {
+        "path": "/home/agent/.elan/toolchains/leanprover--lean4---v4.34.1/src/lean/Lean/Elab/PreDefinition/Structural/Main.lean",
+        "sha256": "8a86ae2d1bae7f1b6c3e52a86f20e3460eecf0dbb7f7a891a16f89971d36be29"
+      }
+    ],
+    "observations": [
+      "Basic.shouldGenCodeFor is !preDef.kind.isTheorem && !preDef.modifiers.isNoncomputable.",
+      "Basic.addNonRecAux adds a definition with DefinitionSafety.safe unless the source explicitly carries the unsafe modifier; adding the noncomputable tag does not replace the kernel definition with an axiom.",
+      "Structural.structuralRecursion first adds the structurally transformed kernel definition through addNonRec, then invokes addAndCompilePartialRec for executable scaffolding.",
+      "Basic.addAndCompilePartialRec is guarded by preDefs.all shouldGenCodeFor and constructs the Compiler.mkUnsafeRecName auxiliary with DefinitionSafety.partial.",
+      "Consequently, marking this single definition noncomputable prevents that auxiliary-generation branch while retaining the same mathematical recurrence and equation infrastructure."
+    ]
+  },
+  "repair_review": {
+    "declaration": "InfoGeometry.Algebra.TwoModeCountRecurrence.counts",
+    "old_header": "def counts : ℕ → Fin 2 → ℤ",
+    "new_header": "noncomputable def counts : ℕ → Fin 2 → ℤ",
+    "mathematical_effect": "None: initial state, transition matrix, structural recursion body, theorem statements, hypotheses and proof bodies are unchanged.",
+    "execution_effect": "Native executable code generation for counts is suppressed; the kernel mathematical definition and proofs remain subject to normal checking.",
+    "audit_effect": "No audit exception or weakened gate is introduced. The next hosted run must independently demonstrate that no rejected auxiliary remains.",
+    "source_decision": "PASS",
+    "in_memory_reverse_substitution_sha256": "c6170114cf5a5964f7e1de88393efa0021d5f1d0c706c63a1f3523c91b5301d4",
+    "reverse_substitution_result": "Matches the prior approved recurrence hash c6170114cf5a5964f7e1de88393efa0021d5f1d0c706c63a1f3523c91b5301d4."
+  },
+  "source_inventory": {
+    "math_owner_count": 6,
+    "named_source_theorems_and_lemmas": 70,
+    "private_source_theorems_and_lemmas_included": 6,
+    "per_owner_counts": {
+      "OrderedHomotope": 15,
+      "TwoModeCountRecurrence": 14,
+      "ConstituentWittGram": 22,
+      "ConstituentCayleyGram": 16,
+      "ConstituentInvariantIndependence": 2,
+      "MomentHomotopeWitness": 1
+    },
+    "change": "No named source declaration added or removed; generated runtime declaration totals remain pending.",
+    "runtime_declaration_count": null,
+    "runtime_theorem_count": null
+  },
+  "vacuity_assessment": {
+    "status": "PROSPECTIVE_ONLY",
+    "scan_executed_by_reviewer": false,
+    "classification_or_waiver_added": false,
+    "condition": "Only actual emitted findings at exact source hashes may receive a later mathematical classification. No hole, True substitution, assumed conclusion or circular proof is waived."
+  },
+  "remaining_source_repairs": [],
+  "validation_status": {
+    "a_a_repair3_source_review": "PASS",
+    "repaired_snapshot_kernel_build": "PENDING_HOSTED_RERUN",
+    "runtime_declaration_and_axiom_audit": "PENDING_HOSTED_RERUN",
+    "downstream_source_gates_and_vacuity_scan": "PENDING",
+    "hosted_independent_qa": "PENDING",
+    "root_repository_integration": "OUTSIDE_THIS_REVIEW_SCOPE",
+    "reviewer_execution": "Read-only source/Git/installed-Lean/log inspection and isolated analysis-record creation. No compilation, tests, source gates, reviewed-source edits, dependency changes or process management performed."
+  }
+}

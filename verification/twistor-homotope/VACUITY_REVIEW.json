@@ -1,0 +1,35 @@
+{
+  "schema": "twistor-homotope-vacuity-source-review-v1",
+  "linter_sha256": "76b0241f4e62dbd01c6e9b160ef1f8af9caf7bf2b6461ea713f4ca18a5dc8033",
+  "scope": "Source-reviewed false positives of the regex parameter-occurrence heuristic. Actual findings remain in command logs and checks.json. All other findings require review and fail the driver.",
+  "cases": {
+    "lean/InfoGeometry/OperatorAlgebra/OrderedHomotope.lean": {
+      "source_sha256": "4c0cfac569a4eec5a05e3b7256c301a7890f460718a30854cf685fb057fd8231",
+      "observation": "Observed in workflow run 43030148810, job 130554799603; first match is jordan_comm.",
+      "expected_findings": [
+        {
+          "severity": 0.3,
+          "name": "no_hyp_use",
+          "match": "T X Y ",
+          "reason": "Theorem with parameters but proof doesn't reference them — potential vacuity"
+        }
+      ],
+      "reviewed_declarations": ["jordan_comm", "bracket_skew", "bracket_self", "jordan_self"],
+      "mathematical_basis": "These universally quantified algebra elements occur in the goal. Definition unfolding, additive commutativity, and module normalization operate on the actual ordered products in that goal. There is no proposition hypothesis carrying the conclusion. The regex captures a whole binder-name string and does not inspect Lean proof dependence."
+    },
+    "lean/InfoGeometry/Algebra/TwoModeCountRecurrence.lean": {
+      "source_sha256": "548f7c350f2973de236f1dd2b2508bfbac6032d9e34886cbcf764f7376545eee",
+      "observation": "Conditional classification from source review. Run 43030148810 stopped before this scan; applicability must be established by exact emitted findings in the next run.",
+      "expected_findings": [
+        {
+          "severity": 0.3,
+          "name": "no_hyp_use",
+          "match": "n ",
+          "reason": "Theorem with parameters but proof doesn't reference them — potential vacuity"
+        }
+      ],
+      "reviewed_declarations": ["counts_upper_bound", "spectral_power_bound"],
+      "mathematical_basis": "The proofs explicitly instantiate the previously proved sum, difference, and nonnegativity theorems at n, then derive the bounds arithmetically. The regex captures trailing whitespace in the binder-name string and can miss n at the end of the first proof line. There is no unused proposition assumption or assumed bound."
+    }
+  }
+}

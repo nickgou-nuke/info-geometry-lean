@@ -1,6 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Physics.ConnesDiracOperatorFromBdG
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib
+import InfoGeometry.Algebra.MatrixNoncommutativity
+import Mathlib.Tactic
 import Mathlib.Algebra.Ring.TransferInstance
 import Mathlib.LinearAlgebra.Matrix.ConjTranspose
 

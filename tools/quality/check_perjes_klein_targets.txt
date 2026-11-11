@@ -11,3 +11,8 @@ InfoGeometry.Twistor.PenroseNullProjector
 InfoGeometry.LinearAlgebra.SplitHadamard
 InfoGeometry.Twistor.IncidenceMassSeparation
 InfoGeometry.Twistor.InfinityRaisingAlgebra
+InfoGeometry.OperatorAlgebra.FaithfulOperatorZornEnvelope
+InfoGeometry.Twistor.TwoTwistorHadamardFrame
+InfoGeometry.Twistor.RealInfinityMatrixPencil
+InfoGeometry.Twistor.RealInfinityMatrixPencilBridge
+InfoGeometry.Clifford.Cl11TensorTransposeCensus

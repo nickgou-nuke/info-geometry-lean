@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.OperatorZornDiracRepresentation
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.OfAssociative
@@ -115,6 +120,47 @@ theorem diagonal_injective :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [lower, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Reading the upper-right entry recovers the embedded coefficient. -/
+theorem upper_injective :
+    Function.Injective (upper : A → Envelope A) := by
+  intro a b hab
+  exact congrArg (fun M : Envelope A => M 0 1) hab
+
+/-- The alternating corner sandwich retains the ordered product `x * z * y`. -/
+theorem upper_lower_upper (x z y : A) :
+    upper x * lower z * upper y = upper (x * z * y) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [upper, lower, Matrix.mul_apply, Fin.sum_univ_two, mul_assoc]
+
+/-- The iterated commutator is the symmetric associative triple product. -/
+theorem upper_lie_triple (x z y : A) :
+    commutator (commutator (upper x) (lower z)) (upper y) =
+      upper (x * z * y + y * z * x) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [commutator, upper, lower, mul_assoc]
+
+/-- Commuting the mixed anticommutator with an upper corner retains the
+antisymmetric part of the ordered associative triple product. -/
+theorem upper_mixed_triple (x z y : A) :
+    commutator (upper x * lower z + lower z * upper x) (upper y) =
+      upper (x * z * y - y * z * x) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [commutator, upper, lower, mul_assoc]
+
+/-- The symmetric and antisymmetric channels recover twice the ordered
+homotope. Recovering the undoubled product by cancellation requires a further
+hypothesis on the coefficient ring. -/
+theorem upper_homotope_reconstruction (x z y : A) :
+    commutator (commutator (upper x) (lower z)) (upper y) +
+        commutator (upper x * lower z + lower z * upper x) (upper y) =
+      (2 : ℕ) • upper (x * z * y) := by
+  rw [upper_lie_triple, upper_mixed_triple, two_nsmul]
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [upper]
 
 section Algebra
 

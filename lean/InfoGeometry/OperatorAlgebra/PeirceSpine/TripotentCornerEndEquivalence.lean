@@ -140,4 +140,61 @@ noncomputable def idempotentCornerEndEquiv (e : B) (he : e * e = e) :
         exact hsmulVal
       _ = (f x : B) := by rw [hgen]
 
+/-- A right multiplier preserves `B p` precisely when its value on `p` is
+supported on the right by `p`. The multiplier itself need not lie in `p B p`. -/
+theorem idempotentLeftIdeal_rightMul_preserves_iff
+    (p : B) (hp : p * p = p) (a : B) :
+    (∀ x ∈ idempotentLeftIdeal p hp,
+      x * a ∈ idempotentLeftIdeal p hp) ↔ p * a * p = p * a := by
+  change (∀ x : B, x * p = x → (x * a) * p = x * a) ↔
+    p * a * p = p * a
+  constructor
+  · intro h
+    exact h p hp
+  · intro ha x hx
+    calc
+      (x * a) * p = ((x * p) * a) * p := by rw [hx]
+      _ = x * (p * a * p) := by simp only [mul_assoc]
+      _ = x * (p * a) := by rw [ha]
+      _ = x * a := by rw [← mul_assoc, hx]
+
+/-- The exact obstruction to preserving the left ideal is its outgoing
+off-diagonal corner `p * a * (1 - p)`. -/
+theorem idempotentLeftIdeal_rightMul_preserves_iff_mul_one_sub_eq_zero
+    (p : B) (hp : p * p = p) (a : B) :
+    (∀ x ∈ idempotentLeftIdeal p hp,
+      x * a ∈ idempotentLeftIdeal p hp) ↔ p * a * (1 - p) = 0 := by
+  rw [idempotentLeftIdeal_rightMul_preserves_iff, mul_sub, mul_one, sub_eq_zero]
+  exact eq_comm
+
+/-- Compress an ambient multiplier into the existing native corner. -/
+def idempotentCornerCompression (p : B) (hp : p * p = p) (a : B) :
+    idempotentCorner p hp :=
+  ⟨p * a * p, ⟨a, rfl⟩⟩
+
+@[simp] theorem idempotentCornerCompression_val
+    (p : B) (hp : p * p = p) (a : B) :
+    (idempotentCornerCompression p hp a).val = p * a * p := rfl
+
+/-- On `B p`, every preserving multiplier acts through its corner
+compression. The converse preservation criterion is proved above. -/
+theorem idempotentLeftIdeal_mul_cornerCompression
+    (p : B) (hp : p * p = p) (a : B) (ha : p * a * p = p * a)
+    (x : idempotentLeftIdeal p hp) :
+    (x : B) * (idempotentCornerCompression p hp a).val = (x : B) * a := by
+  have hx : (x : B) * p = (x : B) := x.property
+  change (x : B) * (p * a * p) = (x : B) * a
+  rw [ha, ← mul_assoc, hx]
+
+/-- The existing opposite-corner representation is exactly the induced
+right multiplication by any ambient multiplier satisfying the criterion. -/
+theorem idempotentCornerRightMul_compression_apply
+    (p : B) (hp : p * p = p) (a : B) (ha : p * a * p = p * a)
+    (x : idempotentLeftIdeal p hp) :
+    (idempotentCornerRightMul p hp
+      (MulOpposite.op (idempotentCornerCompression p hp a)) x : B) =
+      (x : B) * a := by
+  change (x : B) * (idempotentCornerCompression p hp a).val = (x : B) * a
+  exact idempotentLeftIdeal_mul_cornerCompression p hp a ha x
+
 end InfoGeometry.OperatorAlgebra.PeirceSpine

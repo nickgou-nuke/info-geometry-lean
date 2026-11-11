@@ -1,0 +1,257 @@
+# Real doubled ideal modules: theorem contract
+
+## Intake and provenance
+
+- Task: turn the attached generated mathematical stream into canonical Lean 4 / Mathlib theorems.
+- Intake: `Pasted text(20261111-134359).txt`, supplied in this conversation on 2026-11-11.
+- SHA-256: `89a73eeaf422b2e9b16c5deb69587b8487d633e184860fa1eb2b7d241ccac00f`.
+- The source attachment is preserved separately; its rhetoric is not proof evidence.
+- Base: `c143c264bc18bbf41d692be4e270b5b7f7405702`.
+- Branch: `feat/real-krein-ideal-module`.
+- Pins: Lean `v4.34.1`, Mathlib `d13f23b723b8a846827a245b89c10fc7d3f11612`.
+
+## Carriers, operations, and actual dependencies
+
+The generic coefficient carrier is a possibly noncommutative unital ring `B`.
+Star results add `[StarRing B]`; positivity is not inferred from this class.
+The doubled column carrier is `Fin 2 → B`, canonically equivalent to `B × B`.
+Its operators are native `Matrix (Fin 2) (Fin 2) B`, already named `BdGBlock B`.
+Matrix entries act from the left. This action is real-linear for real algebras
+and right-`B`-linear, not generally left-`B`-linear.
+
+The ideal carrier is the existing native `idempotentLeftIdeal p hp : Submodule B B`.
+The corner is Mathlib's `IsIdempotentElem.Corner`; its existing opposite-ring
+equivalence with `Module.End B (idempotentLeftIdeal p hp)` must be reused.
+No alternate ideal or corner carrier is to be introduced.
+
+The concrete infinite coefficient ring is exactly
+`Cl11TensorTowerLimit.Limit`, the existing algebraic direct limit of full real
+matrix stages under `A ↦ A ⊗ I₂`. Its star is the stagewise transpose star.
+The faithful stage maps and star-algebra universal property are already proved
+in `Cl11StarAlgebraColimit`. `Cl11StarAlgebraFiltration` supplies a strict native
+subalgebra chain, common finite stages, and algebraic infinite dimensionality.
+No identification with `SplitCliffordInfinity`, Clifford reversion, or a Hilbert
+completion is assumed.
+
+## Existing owners read and reused
+
+| Claim | Existing owner / declarations |
+|---|---|
+| Native ideal and opposite corner | `OperatorAlgebra.PeirceSpine.TripotentCornerEndEquivalence`: `idempotentLeftIdeal`, `idempotentCornerEndEquiv` |
+| Scalar-linear commutant | `Algebra.IdempotentCornerCommutant`: `leftIdealCommutant_eq_rightCornerRange`, `rightCornerAction_cornerMul` |
+| Ordered sandwich composition | `Core.PeirceBilateralAction`: `bilateral_comp`, `bilateral_mul_defect` |
+| Idempotence obstruction | `Core.IdempotencyDefect.defect` |
+| Native doubled matrices | `Physics.BdGChiralBlockMatrix`: `BdGBlock`, `chiralGrading`, `andreevSwap`, full square with commutators |
+| Actual doubled endomorphisms | `OperatorAlgebra.LieJordanCliffordDouble`: `swapOp`, `gradingOp`, `phaseOp` |
+| Ring-valued column pairing | `CliffordWeyl.SpinorBilinearSoldering`: `diracRow`, `bilinear` |
+| Noncommutative metric adjunction | `CliffordWeyl.DiracSolderOperatorAction.bilinear_metric_adjoint_action` |
+| Twisted star | `Canonical.SpinorialCore.KreinAdjoint`: `sharp`, `sharp_mul`, `sharp_involutive` |
+| Involution projectors | `Algebra.CyclotomicOperatorProjectors`: the noncommutative `_of_commute` projector lemmas |
+| Faithful positive colimit trace | `Canonical.TensorExactCurvatureTrace`: `normalizedTraceLimit_star_mul_self_nonneg`, `normalizedTraceLimit_star_mul_self_eq_zero_iff` |
+
+The general ring/star sections are reused without importing their later
+commutative specializations as hypotheses for operator claims.
+
+## Atomic targets and dependency order
+
+1. **Support / duality.** For `p*p=p`, right multiplication by `a` preserves
+   `Bp` iff `p*a*p=p*a`, equivalently `p*a*(1-p)=0`. The induced endomorphism
+   equals the existing right action of the corner representative `p*a*p`.
+   Star exchanges `x*p=x` with `star p * star x = star x` without assuming
+   `star p=p`.
+2. **Rectangular pairing.** If `φ*p=φ` and `ψ*p=ψ`, then
+   `star p * (star φ * ψ) * p = star φ * ψ`.
+   Whole-ideal isotropy is equivalent to the vanishing of all sandwiches
+   `star p * a * p`, not the single product `star p*p`.
+3. **Ordered Gram / density mechanics.** For `N=star ψ*ψ` and `ρ=ψ*star ψ`,
+   prove `ρ^(n+1)=ψ*N^n*star ψ`,
+   `defect ρ=ψ*(N-p)*star ψ` under `ψ*p=ψ`, the sufficient normalization
+   implication, and right-unitary density invariance. No bijection between
+   generators and densities is asserted.
+4. **Doubled metric.** For a self-adjoint involution `η`, construct the native
+   matrix `G=diag(η,-η)`. Prove `G*=G`, `G²=1`, the real matrix generator
+   identities, and cancellation of the column pairing
+   `bilinear G G v w = star v ⬝ᵥ w`.
+   Distinguish this from the operator sharp `G*star X*G`: the extra left
+   factor `G` in operator-ideal products must not be silently dropped.
+5. **Actual-colimit definiteness.** Reuse the established faithful trace to
+   prove the two-square zero criterion in `Limit`, then strict definiteness
+   of the doubled column Gram and `star X*X=0 ↔ X=0` for `BdGBlock Limit`.
+   This proves algebraic definiteness for the chosen star; it does not equip
+   an arbitrary `StarRing` with an order or establish a Hilbert completion.
+6. **Noncommutative Dirac defect.** For
+   `D = !![m,b; -star b,-m]`, retain both ordered diagonal products and both
+   off-diagonal commutators in `D²`. Give the exact square-zero criterion.
+   If an invertible gap commutes with `D` and `D²=V²`, normalize to an
+   involution and reuse the existing projector lemmas. The hypotheses are
+   parameters, not an inferred mass-domination theorem.
+7. **Countermodels.** Prove finite exact real-matrix witnesses for the false
+   isotropy and exceptional-horizon implications. Their scope is finite
+   counterexample evidence; they do not replace generic operator theorems.
+
+These dependencies form a DAG: support precedes rectangular pairing and
+density identities; metric cancellation and actual-colimit trace faithfulness
+jointly precede doubled definiteness; the full Dirac square and the explicit
+gap hypotheses precede the normalized involution and projector conclusions.
+There is no causal edge from an archetypal label or from graph placement alone.
+
+## Rejected or unproved interpretations
+
+| Intake claim | Disposition |
+|---|---|
+| `star p*p=0` makes the entire ideal isotropic | False; prove countermodel and exact sandwich criterion. |
+| Right multiplication preserves `Bp` only for `a∈pBp` | False; the exact criterion is `pap=pa`, with `1` an immediate exception to the stronger claim. |
+| `star p≠p` forces zero norm | False; non-self-adjoint idempotents can have nonzero positive Gram. |
+| Star duality forces a unique doubling | Not a deduction; the doubled carrier is explicitly constructed. |
+| `Bp ⊕ Bq` is preserved by every `Mat₂(B)` | False in general; distinct ideals require cross-block support conditions. `Mat₂(B)diag(p,q)` is a matrix ideal with four entries. |
+| Every corner element is a gauge automorphism | False; invertible or unitary corner elements require the corresponding hypotheses. |
+| Cancelling the metric proves positivity in every star ring | False; positivity is specialized to the established faithful real-matrix colimit. |
+| Full real matrix rings are formally real in the ordinary sum-of-squares sense | False (`J²=-1`); use proper transpose star and positive trace terminology. |
+| Diagonal horizon equalities imply `D²=0` | False without the off-diagonal commutator conditions. |
+| A central invertible gap alone supplies a positive dynamical metric | False; even a negative scalar mass gives the opposite metric orientation. |
+| Physical CPT theorem, particles, ghosts, Jordan-ideal classification, Morita equivalence | Open interpretation/classification debt; no theorem with these stronger names is promoted. |
+
+## Authoring and acceptance
+
+- Generation: parent plus isolated candidate proposals from the ideal and
+  operator workers. Parent reviews and integrates into canonical owners.
+- Semantic audit: independent `math_audit`, read-only.
+- Acceptance: independent `acceptance_qa`, read-only source/artifact review.
+- Required evidence: exact pinned compilation of the changed owners and
+  repository import closure; strict proof screening; native declaration and
+  axiom audit permitting only `propext`, `Classical.choice`, `Quot.sound`;
+  no new-owner warnings; staged hook; root-package gate attempted and scoped.
+- All local compilation, tests, and cache operations use the maintained
+  shared build lock. No dependency updates, cache deletion, or lock bypass.
+- Final report records source/artifact hashes, exact commands, CI revision,
+  independent findings, and any repository-level blocker separately.
+
+Initial status: contract frozen before theorem-bearing edits; implementation
+and acceptance were pending. The final receipt below supersedes this status.
+
+## Initial verification and corrective action
+
+Run `43034510929` compiled the 256-module source closure. The existing
+dependencies and the ideal owners compiled. Three new-owner proof steps
+failed: matrix-star simplification in the signed Dirac adjoint, transport of
+the real half through `algebraMap`, and rewriting the pointwise vector star.
+The doubled metric owner also reported three unused simplifier arguments
+and an unused star-ring hypothesis. The counterexample owner was blocked
+by the Dirac import, and the axiom audit therefore did not run.
+
+The repairs make the matrix star and real algebra-map laws explicit, expand
+the pointwise star, and remove the unused arguments/hypothesis. The finite
+sharp countermodels similarly expand matrix entries before numeric
+simplification. No mathematical conclusion was weakened. The verifier now
+checks the finite counterexamples before the large colimit closure and stops
+immediately if a changed owner fails compilation or its warning gate; a
+successful run still requires the entire closure and the full native audit.
+
+The root-package attempt returned code 1 for the absent
+`external_refs/homotopy-hypothesis-lean4` dependency. This is separate from
+the source-closure result. Independent review also found unchanged baseline
+blockers in four auxiliary workflows; their downstream checks did not run.
+
+Corrective-action status before the repeat run: source repairs integrated;
+repeat kernel verification and final independent acceptance were pending.
+
+## Final verification receipt
+
+The six mathematical owners and their exact repository source closure passed
+the pinned Lean kernel verification. This acceptance covers those sources and
+the stated mathematical contracts; the root-package integration gate remains
+blocked by an unchanged missing external dependency.
+
+### Revisions and reproducible evidence
+
+- Draft PR: <https://github.com/nickgou-nuke/info-geometry-lean/pull/320>.
+- Successful run: <https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43038097284>.
+- Job: `130582247920`, completed with conclusion `success`.
+- Source branch head: `1940127f1dc908a5dae8aeeb6dea6050175c6b15`.
+- Actual CI checkout: PR merge `fd7a6b2b6ecd4114bfa7a0b852a9ab47c5d4b6c8`.
+- Local source commit: `8df8acf54fb875b732a8560a194d8b25d69f30a8`.
+- All three commits have source tree `bae2fb9b3a924bf17d86623c8773e17147922822`.
+  The CI merge parents are the recorded base and source branch head.
+- Compiler: Lean `4.34.1`, commit
+  `5045d0056413266e57c625dcd7c365b10e377c52`, release build.
+- Mathlib: `d13f23b723b8a846827a245b89c10fc7d3f11612`; all eight recorded
+  dependency package pins also matched.
+- Artifact: `real-krein-ideal-verification`, ID `13864733453`.
+- Artifact ZIP SHA-256:
+  `36eaecbe626190f64fe37cfa79ce4e0e5fac5176927cc6e68da04549af7d2779`.
+
+The exact workflow command, from the checkout parent directory, was:
+
+```sh
+python3 project/tools/quality/check_real_krein_ideal.py \
+  --mathlib-root pinned-mathlib --output verification
+```
+
+The artifact contains `status.json`, `audit.log`, the actual compiler version,
+all per-module logs, all 256 copied source files, and the separately scoped
+root-package log and JSON result. Every recorded source SHA-256 matched both
+the archived copy and the local source. The acceptance receipt is a subsequent
+documentation-only change; no verified Lean source, verifier, workflow, or pin
+is changed by this receipt.
+
+### Results
+
+| Check | Result |
+|---|---|
+| Exact repository import closure, including `DAG.Basic` | 256 / 256 modules compiled |
+| Direct Mathlib import roots | 162 |
+| Changed mathematical owners | 6 / 6 compiled, each with zero warnings |
+| Native owner declaration audit | 105 declarations audited, including generated and private declarations |
+| Explicit source declaration coverage | 76 / 76 included in the native audit |
+| Permitted axiom closure | Exactly `propext`, `Classical.choice`, `Quot.sound` |
+| Strict proof screening of all six owners | Exit 0; no violations or quarantined packets |
+| Installed staged proof gate | Passed on both theorem-bearing commits |
+| Source hashes after compilation and artifact download | 256 / 256 matched |
+
+Existing dependencies can have warnings; the zero-warning claim applies to
+the six changed owners. The native audit follows every declaration owned by
+those modules, rather than relying on a hand-selected theorem list. It rejects
+unsafe or partial declarations and axioms outside the three listed foundations.
+
+Independent semantic review accepted the stated mathematical scope. The
+independent acceptance reviewer returned `ACCEPTED_WITH_LIMITED_SCOPE` after
+checking the sources, the strict audit generator, all archive payloads and
+source hashes, the exact compiler/package pins, and the remote Git tree
+identity. Explicit/native declaration counts were respectively 13/30 for
+`TripotentCornerEndEquivalence`, 14/14 for `IdealStarGramDensity`, 11/16 for
+`KreinDiracBlock`, 18/23 for `RealDoubledIdealMetric`, 13/15 for the examples,
+and 7/7 for `Cl11DoubledGram`. No explicit declaration was missing from the
+native audit. The reviewer authored no repository changes and ran no local
+build; acceptance relies on the checked remote native compilation and audit
+evidence together with independent source/evidence reconciliation.
+
+### Source fingerprints
+
+| Mathematical owner | SHA-256 |
+|---|---|
+| `OperatorAlgebra.PeirceSpine.TripotentCornerEndEquivalence` | `4622631817bc2b513325a18cf2c2c195ecb2e3ff68e3e4d59eaf045f070ef49f` |
+| `OperatorAlgebra.PeirceSpine.IdealStarGramDensity` | `ffba454e5bf271fc97dec40f9d707662879c9826c6866bc5f6600866bf26d165` |
+| `Physics.KreinDiracBlock` | `f1438509cf614a837cce4b6a1dce97b4bba88099fea0cd1d4cb929a436f3c1d5` |
+| `CliffordWeyl.RealDoubledIdealMetric` | `ffd203bc646361234a3ed1c473221d4a9f42303ebbdc76b21ebcb6e245f06a7f` |
+| `Examples.RealKreinIdealCounterexamples` | `35df0d1a493d9ede4fea95b50685258e968439f48719e525e61fa45f322410de` |
+| `Clifford.Cl11DoubledGram` | `532e740d27bc22ad78f8323ccd2f3e7058865c0eaa3e993de724afdccf8466fb` |
+
+### Integration gate and remaining scope
+
+The separate command
+`python3 tools/infra/run_locked_lake_build.py --all-default-targets`
+acquired the maintained lock and returned 1 because
+`external_refs/homotopy-hypothesis-lean4` is absent. The successful dedicated
+workflow records this failure; it does not certify a successful root build.
+
+The existing Post-Build Quality Gate run `43038097491`, job `130582249067`,
+failed in the preceding build for the same missing dependency. Its actual
+`post_build_gate.sh --full` step was skipped. No full post-build or pre-push
+gate pass is claimed. Independent comparison with the recorded base also
+confirmed existing case-collision, submodule-configuration, and Python-syntax
+blockers in auxiliary workflows. Their files are unchanged by this PR.
+
+Local compile attempts respected the occupied shared build lock; no competing
+build was killed or bypassed. The pinned isolated CI execution supplies the
+source verification evidence. The PR remains draft with these integration
+limitations recorded.

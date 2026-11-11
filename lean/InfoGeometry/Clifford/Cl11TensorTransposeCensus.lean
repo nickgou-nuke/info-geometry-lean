@@ -88,7 +88,9 @@ theorem evaluate_transpose {n : ℕ} (w : Word n) :
       change (1 : Mat 0)ᵀ = 1
       simp
   | succ n ih =>
-      simp only [evaluate_succ]
+      change (evaluate (Fin.tail w) ⊗ₖ realSeed (w 0))ᵀ =
+        if oddEminus w then -(evaluate (Fin.tail w) ⊗ₖ realSeed (w 0))
+        else evaluate (Fin.tail w) ⊗ₖ realSeed (w 0)
       rw [transpose_kronecker, ih, realSeed_transpose, oddEminus_succ]
       by_cases h : w 0 = 3 <;>
         cases hp : oddEminus (Fin.tail w) <;>
@@ -103,7 +105,8 @@ theorem evaluate_orthogonal {n : ℕ} (w : Word n) :
       change (1 : Mat 0)ᵀ * 1 = 1
       simp
   | succ n ih =>
-      simp only [evaluate_succ]
+      change (evaluate (Fin.tail w) ⊗ₖ realSeed (w 0))ᵀ *
+        (evaluate (Fin.tail w) ⊗ₖ realSeed (w 0)) = 1
       rw [transpose_kronecker, ← Matrix.mul_kronecker_mul, ih,
         realSeed_orthogonal, Matrix.one_kronecker_one]
 

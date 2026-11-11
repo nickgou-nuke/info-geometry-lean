@@ -219,8 +219,8 @@ claim about the whole repository or a fresh kernel audit of these modules.
 | Berry transport | `Canonical/BerryConnection.deriv_berryOfOperator_expTransport_at_zero` | A derivative of the operator readout under exponential conjugation is the corresponding commutator readout. |
 | Projector curvature | `Clifford/ChiralProjectorBerryCurvature.projectorCurvature` | The algebraic expression `P * [dPi,dPj] * P` accepts its three arguments as ring elements; the definition does not construct a differentiable projector family or require idempotency. |
 | Finite relative modular action | `Physics/FiniteRelativeModularOperator.relativeModularOperator` | The actual linear map `X ↦ rho * X * sigmaInv` has ordered composition laws; inverse statements require explicit inverse equations. |
-| Majorana-labelled protection | `Holography/MajoranaPlabicZeroModes.majorana_zero_mode_topological_protection` | The theorem type states `openHamiltonian w * danglingEdge = 0` on its four-component carrier. It supplies no perturbation family, locality hypothesis, or spectral-gap stability estimate. |
-| Photon/Goldstone proposal | `Canonical/PhotonicParabolicTransfer` and `Canonical/PionChiralGoldstoneNative` | The inspected results prove shear composition and finite symmetric-pair/CAR identities respectively. Neither inspected owner identifies photons with Goldstone modes. |
+| Majorana-labelled protection | `Holography/MajoranaPlabicZeroModes.majorana_zero_mode_topological_protection` | The theorem type states `mul (openHamiltonian w) danglingEdge = zero` on its custom four-component carrier. It supplies no perturbation family, locality hypothesis, or spectral-gap stability estimate. |
+| Photon/Goldstone proposal | `Canonical/PhotonicParabolicTransfer` and `Canonical/PionChiralGoldstoneNative` | The inspected results prove shear composition and symmetric-pair/CAR identities respectively. Neither inspected owner identifies photons with Goldstone modes. |
 
 There is also a specific interface issue in
 `Canonical/ConnesTomitaModularAutomorphismBridge.RadonNikodymCocycle`, consumed

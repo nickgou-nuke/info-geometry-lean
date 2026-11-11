@@ -1,0 +1,137 @@
+name: Dual-seed joint centralizer (scoped)
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Core/DualSeedCentralizer.lean'
+      - 'lean/InfoGeometry/Core/DualSeedTilt.lean'
+      - 'lean/InfoGeometry/Canonical/JointCentralizerGeometry.lean'
+      - 'lean/InfoGeometry/Canonical/JointCentralizerGeometryAudit.lean'
+      - 'lean/InfoGeometry/Canonical/JointCentralizerDynamics.lean'
+      - 'lean/InfoGeometry/Canonical/JointCentralizerDynamicsAudit.lean'
+      - 'lean/InfoGeometry/Canonical/JointCentralizerTilt.lean'
+      - 'lean/InfoGeometry/Canonical/JointCentralizerTiltAudit.lean'
+      - 'lean/InfoGeometry/Core/DualSeedHodgeOperators.lean'
+      - 'lean/InfoGeometry/Core/DualSeedHodge.lean'
+      - 'lean/InfoGeometry/Canonical/JointCentralizerHodgeAudit.lean'
+      - 'docs/DUAL_SEED_JOINT_CENTRALIZER.md'
+      - 'docs/DUAL_SEED_FLOW_AND_TOWER_BOUNDARIES.md'
+      - 'docs/DUAL_SEED_TILT_AND_DERIVATION_BOUNDARIES.md'
+      - 'docs/DUAL_SEED_HODGE_AND_LEAN_ARCHITECTURE.md'
+      - '.github/workflows/joint-centralizer.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: joint-centralizer-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  source-closure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Fetch exact repository and pinned Mathlib sources
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "https://github.com/${{ github.repository }}.git"
+          git -C project fetch --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          python3 - <<'PY'
+          import json, pathlib, subprocess
+          project = pathlib.Path('project')
+          manifest = json.loads((project / 'lake-manifest.json').read_text())
+          pin = next(p for p in manifest['packages'] if p['name'] == 'mathlib')
+          subprocess.run(['git', 'init', 'pinned-mathlib'], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'remote', 'add', 'origin', pin['url']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'fetch', '--depth=1', 'origin', pin['rev']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'checkout', '--detach', 'FETCH_HEAD'], check=True)
+          PY
+      - name: Install the exact Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Hydrate the exact Mathlib import closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import pathlib, subprocess, sys
+          sys.path.insert(0, str(pathlib.Path('project').resolve()))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          targets = ['InfoGeometry.Core.DualSeedCentralizer',
+                     'InfoGeometry.Canonical.JointCentralizerGeometry',
+                     'InfoGeometry.Canonical.JointCentralizerGeometryAudit',
+                     'InfoGeometry.Canonical.JointCentralizerDynamics',
+                     'InfoGeometry.Canonical.JointCentralizerDynamicsAudit',
+                     'InfoGeometry.Core.DualSeedTilt',
+                     'InfoGeometry.Canonical.JointCentralizerTilt',
+                     'InfoGeometry.Canonical.JointCentralizerTiltAudit',
+                     'InfoGeometry.Core.DualSeedHodgeOperators',
+                     'InfoGeometry.Core.DualSeedHodge',
+                     'InfoGeometry.Canonical.JointCentralizerHodgeAudit']
+          _, _, native = closure(pathlib.Path('project'), targets)
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'joint-centralizer-cache', block=True):
+              subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
+                             cwd='pinned-mathlib', check=True)
+          PY
+      - name: Compile exact sources and audit every new declaration
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 project/tools/quality/check_clifford_dirac.py \
+            --mathlib-root pinned-mathlib --output verification \
+            --target InfoGeometry.Core.DualSeedCentralizer \
+            --target InfoGeometry.Canonical.JointCentralizerGeometry \
+            --target InfoGeometry.Canonical.JointCentralizerGeometryAudit \
+            --target InfoGeometry.Canonical.JointCentralizerDynamics \
+            --target InfoGeometry.Canonical.JointCentralizerDynamicsAudit \
+            --target InfoGeometry.Core.DualSeedTilt \
+            --target InfoGeometry.Canonical.JointCentralizerTilt \
+            --target InfoGeometry.Canonical.JointCentralizerTiltAudit \
+            --target InfoGeometry.Core.DualSeedHodgeOperators \
+            --target InfoGeometry.Core.DualSeedHodge \
+            --target InfoGeometry.Canonical.JointCentralizerHodgeAudit
+          python3 - <<'PY'
+          import json, pathlib, sys
+          report = json.loads(pathlib.Path('verification/report.json').read_text())
+          if report['status'] != 'passed':
+              sys.exit('Source closure or declaration audit failed')
+          selected = {m['module']: m for m in report['modules'] if m['module'] in report['targets']}
+          if set(selected) != set(report['targets']):
+              sys.exit('Missing selected target verification')
+          if any(m['returncode'] != 0 or m['warnings'] != 0 for m in selected.values()):
+              sys.exit('New target failed or emitted warnings')
+          PY
+      - name: Screen the changed mathematical owners
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd project
+          python3 tools/infra/opengauss_screener.py --strict \
+            lean/InfoGeometry/Core/DualSeedCentralizer.lean \
+            lean/InfoGeometry/Canonical/JointCentralizerGeometry.lean \
+            lean/InfoGeometry/Canonical/JointCentralizerGeometryAudit.lean \
+            lean/InfoGeometry/Canonical/JointCentralizerDynamics.lean \
+            lean/InfoGeometry/Canonical/JointCentralizerDynamicsAudit.lean \
+            lean/InfoGeometry/Core/DualSeedTilt.lean \
+            lean/InfoGeometry/Canonical/JointCentralizerTilt.lean \
+            lean/InfoGeometry/Canonical/JointCentralizerTiltAudit.lean \
+            lean/InfoGeometry/Core/DualSeedHodgeOperators.lean \
+            lean/InfoGeometry/Core/DualSeedHodge.lean \
+            lean/InfoGeometry/Canonical/JointCentralizerHodgeAudit.lean
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: joint-centralizer-verification
+          path: |
+            verification/*.json
+            verification/*.log
+            verification/src

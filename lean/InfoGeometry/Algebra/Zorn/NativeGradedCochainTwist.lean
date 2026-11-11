@@ -1,7 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Algebra.Zorn.CochainTwistSeparation
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.MatrixCayleyDicksonSeparation
-import InfoGeometry.Clifford.Cl11Matrix
+import InfoGeometry.Clifford.BinaryPauli
 
 /-!
 # An explicit binary twist between the native matrix and Zorn basis tables
@@ -33,8 +39,7 @@ open InfoGeometry.Clifford.Cl11Matrix
 
 /-- Four homogeneous core elements; the third bit is deliberately ignored. -/
 def coreGrade (x : Z2Grade) : RealCore :=
-  if x 0 = 0 then (if x 1 = 0 then 1 else J1)
-  else (if x 1 = 0 then Eplus else Eminus)
+  InfoGeometry.Clifford.BinaryPauli.localWord (x 0, x 1)
 
 /-- Homogeneous elements of the associative central-complex doubling. -/
 def matrixGrade (x : Z2Grade) : ComplexMatrix :=
@@ -90,16 +95,8 @@ private theorem zorn_neg_eq (X : SplitCarrier) :
 private theorem coreGrade_mul (x y : Z2Grade) :
     coreGrade x * coreGrade y =
       (signUnit (x 1 * y 0) : ℝ) • coreGrade (x + y) := by
-  rcases bit_cases (x 0) with hx0 | hx0 <;>
-    rcases bit_cases (x 1) with hx1 | hx1 <;>
-    rcases bit_cases (y 0) with hy0 | hy0 <;>
-    rcases bit_cases (y 1) with hy1 | hy1
-  all_goals
-    ext i j
-    fin_cases i <;> fin_cases j <;>
-      norm_num [coreGrade, signUnit, Matrix.mul_apply, Fin.sum_univ_two,
-        Eplus, Eminus, J1, Pi.add_apply, zmod_two, zmod_one_add_one,
-        hx0, hx1, hy0, hy1]
+  simpa [coreGrade, Pi.add_apply] using
+    InfoGeometry.Clifford.BinaryPauli.localWord_mul (x 0, x 1) (y 0, y 1)
 
 /-- All 64 products are computed using ordinary complex matrix multiplication. -/
 theorem matrixGrade_mul (x y : Z2Grade) :
@@ -128,7 +125,8 @@ theorem splitGrade_mul (x y : Z2Grade) :
     rcases bit_cases (y 2) with hy2 | hy2
   all_goals
     simp [splitGrade, splitDouble_mul, splitDouble_coordinates,
-      coreGrade, splitCochain, splitExponent, coreConj, Eplus, Eminus, J1,
+      coreGrade, InfoGeometry.Clifford.BinaryPauli.localWord,
+      splitCochain, splitExponent, coreConj, Eplus, Eminus, J1,
       signUnit, ZornMatrix.mul, ZornMatrix.smul, Vec3.dot, Vec3.cross,
       Vec3.add, Vec3.sub, Vec3.smul, Pi.add_apply, zmod_two,
       zmod_one_add_one, zorn_neg_eq, hx0, hx1, hx2, hy0, hy1, hy2] <;>

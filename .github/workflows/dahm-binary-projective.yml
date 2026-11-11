@@ -1,0 +1,166 @@
+name: Dahm binary projective kernel check
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Clifford/BinaryPauli.lean'
+      - 'lean/InfoGeometry/Incidence/BinaryProjectiveGeometry.lean'
+      - 'lean/InfoGeometry/Incidence/BinaryPauliGeometry.lean'
+      - 'lean/InfoGeometry/Algebra/Zorn/NativeGradedCochainTwist.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Clifford/SplitQ11.lean'
+      - 'lean/InfoGeometry/Clifford/Cl11Matrix.lean'
+      - 'lean/InfoGeometry/Algebra/Zorn/Z2ThreeCochainBridge.lean'
+      - 'lean/InfoGeometry/Algebra/Zorn/CochainTwistSeparation.lean'
+      - 'lean/InfoGeometry/Algebra/ZornMatrix.lean'
+      - 'lean/InfoGeometry/Algebra/ZornVectorMatrix.lean'
+      - 'lean/InfoGeometry/Canonical/SplitOctonionGogberashviliNormBridge.lean'
+      - 'lean/InfoGeometry/Canonical/SplitOctonionSignalMultiplication.lean'
+      - 'lean/InfoGeometry/Canonical/SplitOctonionGogberashviliVectorMultiplicationBridge.lean'
+      - 'lean/InfoGeometry/Algebra/ZornMatrixTransportedAdditive.lean'
+      - 'lean/InfoGeometry/Algebra/ZornMatrixRealModule.lean'
+      - 'lean/InfoGeometry/Algebra/Zorn/MatrixCayleyDicksonSeparation.lean'
+      - 'tools/infra/opengauss_screener.py'
+      - 'tools/quality/check_clifford_dirac.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/build_lock.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'docs/DAHM_BINARY_PROJECTIVE_GEOMETRY.md'
+      - '.github/workflows/dahm-binary-projective.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dahm-binary-projective-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      DAHM_REVIEW_TARGETS: >-
+        InfoGeometry.Clifford.BinaryPauli
+        InfoGeometry.Incidence.BinaryProjectiveGeometry
+        InfoGeometry.Incidence.BinaryPauliGeometry
+        InfoGeometry.Algebra.Zorn.NativeGradedCochainTwist
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: project
+          persist-credentials: false
+      - name: Screen the four selected source owners
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os, subprocess, sys
+          targets = os.environ['DAHM_REVIEW_TARGETS'].split()
+          paths = ['lean/' + module.replace('.', '/') + '.lean' for module in targets]
+          subprocess.run([sys.executable, 'tools/infra/opengauss_screener.py',
+                          '--strict', *paths], check=True)
+          PY
+      - name: Read exact dependency pins
+        id: pins
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          manifest = json.loads(Path('project/lake-manifest.json').read_text())
+          revision = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'mathlib={revision}\n')
+          PY
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: ${{ steps.pins.outputs.mathlib }}
+          path: mathlib
+          persist-credentials: false
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            mathlib/.lake
+          key: dahm-binary-projective-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Fetch the pinned native import cache
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os, subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('project').resolve()))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          targets = os.environ['DAHM_REVIEW_TARGETS'].split()
+          _, _, native = closure(Path('project'), targets)
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'dahm-binary-projective-cache') as lock:
+              subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
+                             cwd='mathlib', check=True, pass_fds=(lock.fileno(),))
+          PY
+      - name: Compile the complete source closure and audit every selected declaration
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os, subprocess, sys
+          targets = os.environ['DAHM_REVIEW_TARGETS'].split()
+          command = [sys.executable, 'tools/quality/check_clifford_dirac.py',
+                     '--mathlib-root', '../mathlib',
+                     '--output', '../dahm-binary-projective-report']
+          for module in targets:
+              command.extend(['--target', module])
+          subprocess.run(command, check=True)
+          PY
+      - name: Require four warning-free owners and complete native audit counts
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          targets = os.environ['DAHM_REVIEW_TARGETS'].split()
+          report = json.loads(Path('dahm-binary-projective-report/report.json').read_text())
+          if report.get('status') != 'passed' or report.get('audit_required') is not True:
+              raise SystemExit('The full selected-owner native audit did not pass')
+          if report.get('targets') != targets:
+              raise SystemExit('The checker target list differs from the selected owners')
+          rows = report.get('modules', [])
+          modules = {row['module']: row for row in rows}
+          if len(modules) != len(rows):
+              raise SystemExit('Duplicate module compilation records')
+          for module in targets:
+              result = modules.get(module, {})
+              if result.get('returncode') != 0 or result.get('warnings') != 0:
+                  raise SystemExit(f'Selected owner failed or emitted warnings: {module}')
+              if result.get('reused') is not False:
+                  raise SystemExit(f'Selected owner was not freshly compiled: {module}')
+          counts = report.get('declaration_counts', {})
+          if set(counts) != set(targets) or any(count <= 0 for count in counts.values()):
+              raise SystemExit('Missing or empty native declaration audit for a selected owner')
+          print('All four selected owners compiled without warnings; native audit counts:', counts)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dahm-binary-projective-kernel-evidence
+          path: |
+            dahm-binary-projective-report/report.json
+            dahm-binary-projective-report/evidence-sha256.json
+            dahm-binary-projective-report/environment.json
+            dahm-binary-projective-report/src/CliffordDiracAudit.lean
+            dahm-binary-projective-report/*.log
+          if-no-files-found: warn

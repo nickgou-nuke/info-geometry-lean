@@ -201,7 +201,7 @@ theorem differential_not_descend_souriau (s : SouriauState countableCAR) (i : â„
       (Quotient.mk (AbstractGNSState.gnsSetoid s.functional) (annihilationMode i) :
         s.functional.gnsQuotient) =
       Quotient.mk (AbstractGNSState.gnsSetoid s.functional) 0 := by
-    simpa only [mul_one] using souriau_vacuum_annihilated s i
+    simpa [countableCAR] using souriau_vacuum_annihilated s i
   have hunit :
       (Quotient.mk (AbstractGNSState.gnsSetoid s.functional) (1 : Limit) :
         s.functional.gnsQuotient) =

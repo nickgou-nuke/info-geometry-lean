@@ -57,9 +57,8 @@ theorem localWord_mul (x y : LocalLabel) :
   all_goals
     ext i j
     fin_cases i <;> fin_cases j <;>
-      norm_num [localWord, signUnit, Eplus, Eminus, J1,
-        Matrix.mul_apply, Fin.sum_univ_two, CharTwo.two_eq_zero,
-        CharTwo.add_self_eq_zero]
+      simp [localWord, signUnit, Eplus, Eminus, J1,
+        Matrix.mul_apply, Fin.sum_univ_two, CharTwo.add_self_eq_zero]
 
 @[simp] theorem localWord_zero : localWord 0 = 1 := by
   simp [localWord]

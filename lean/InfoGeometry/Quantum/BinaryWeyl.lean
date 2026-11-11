@@ -119,13 +119,20 @@ theorem word_transpose_eq_reverse (a b : ZMod 2) :
     rw [clock_eq]
     ext i j
     fin_cases i <;> fin_cases j <;> rfl
-  simp only [word, Weyl.weylD, Matrix.transpose_mul, Matrix.transpose_pow, hx, hz]
+  simp only [word, Weyl.weylD, Matrix.transpose_mul, Matrix.transpose_pow]
+  change clockᵀ ^ b.val * shiftᵀ ^ a.val = clock ^ b.val * shift ^ a.val
+  rw [hz, hx]
+  rfl
 
 /-- An `XZ` factor is skew-symmetric; a real sign cannot alter this parity. -/
 theorem word_transpose (a b : ZMod 2) :
     (word (R := R) a b)ᵀ = phase (R := R) (a * b) • word a b := by
   rw [word_transpose_eq_reverse]
-  simpa [word, Weyl.weylD, mul_comm a b] using (word_mul (R := R) 0 b a 0)
+  have hleft : word (R := R) 0 b * word a 0 = clock ^ b.val * shift ^ a.val := by
+    simp [word, Weyl.weylD, shift, clock]
+    rfl
+  rw [← hleft, word_mul]
+  simp only [zero_add, add_zero, mul_comm b a]
 
 /-- The trace pairing of the four binary Weyl words is diagonal. -/
 theorem word_trace_pair (u v : ZMod 2 × ZMod 2) :

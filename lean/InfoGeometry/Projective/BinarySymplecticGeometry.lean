@@ -44,6 +44,9 @@ theorem finrank_label : Module.finrank Bit Label = 4 := by
 theorem bit_eq_zero_or_one (a : Bit) : a = 0 ∨ a = 1 := by
   exact (show ∀ a : Bit, a = 0 ∨ a = 1 by decide) a
 
+@[simp] theorem bit_mul_two (a : Bit) : a * 2 = 0 := by
+  rcases bit_eq_zero_or_one a with rfl | rfl <;> decide
+
 /-- Binary projectivization never identifies two distinct nonzero vectors. -/
 theorem projectivization_mk_eq_iff (v w : Label) (hv : v ≠ 0) (hw : w ≠ 0) :
     Projectivization.mk Bit v hv = Projectivization.mk Bit w hw ↔ v = w := by
@@ -172,20 +175,23 @@ def rephasedCocycle (f : Label → Bit) (v w : Label) : Bit :=
 @[simp] theorem rephasedCocycle_zero_right (f : Label → Bit) (v : Label) :
     rephasedCocycle f v 0 = f 0 := by
   simp only [rephasedCocycle, cocycle_zero_right, zero_add, add_zero]
-  ring
+  ring_nf
+  simp
 
 /-- Rephasing preserves the associativity identity, without a normalization assumption. -/
 theorem rephasedCocycle_assoc (f : Label → Bit) (u v w : Label) :
     rephasedCocycle f u v + rephasedCocycle f (u + v) w =
       rephasedCocycle f v w + rephasedCocycle f u (v + w) := by
   simp only [rephasedCocycle, cocycle_add_left, cocycle_add_right, add_assoc]
-  ring
+  ring_nf
+  simp
 
 /-- Real signs change the ordered cocycle but preserve its commutator pairing. -/
 theorem rephasedCocycle_symplectic (f : Label → Bit) (v w : Label) :
     rephasedCocycle f v w + rephasedCocycle f w v = symplectic v w := by
   simp only [rephasedCocycle, symplectic, add_comm w v]
-  ring
+  ring_nf
+  simp
 
 theorem rephasedCocycle_self (f : Label → Bit) (v : Label) :
     rephasedCocycle f v v = quadraticPhase v + f 0 := by
@@ -196,7 +202,8 @@ with the symplectic pairing. -/
 theorem rephasedCocycle_quadraticPhase (v w : Label) :
     rephasedCocycle quadraticPhase v w = cocycle w v := by
   rw [rephasedCocycle, quadraticPhase_add, symplectic]
-  ring
+  ring_nf
+  simp
 
 /-- The pairing has zero radical on the full four-dimensional binary space. -/
 theorem symplectic_nondegenerate (v : Label) :

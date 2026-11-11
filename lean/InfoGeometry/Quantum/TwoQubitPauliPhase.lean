@@ -59,7 +59,10 @@ theorem rephasedPauli_mul (f : Label → Bit) (v w : Label) :
   simp only [rephasedPauli, smul_mul_assoc, mul_smul_comm, pauli_mul,
     smul_smul, ← phase_add]
   congr 2
-  simp [rephasedCocycle, add_assoc, CharTwo.add_self_eq_zero, add_comm, add_left_comm]
+  simp only [rephasedCocycle]
+  simp only [add_assoc]
+  rw [CharTwo.add_self_eq_zero]
+  abel
 
 /-- No normalization assumption on `f` is needed for the matrix square law. -/
 theorem rephasedPauli_mul_self (f : Label → Bit) (v : Label) :

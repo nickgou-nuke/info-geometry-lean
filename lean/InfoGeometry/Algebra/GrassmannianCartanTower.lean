@@ -324,7 +324,8 @@ theorem decomposable_two_blade_sum_square (uv st : Fin 2 → V) :
   have hswap : ExteriorAlgebra.ιMulti R 2 st * ExteriorAlgebra.ιMulti R 2 uv =
       ExteriorAlgebra.ιMulti R 2 uv * ExteriorAlgebra.ιMulti R 2 st := by
     have h := ExteriorAlgebra.ιMulti_mul_ιMulti_anticomm (R := R) (u := uv) (v := st)
-    norm_num at h
+    have hsign : ((-1 : ℤˣ) ^ (2 * 2)) = 1 := by norm_num
+    rw [hsign, one_smul] at h
     exact h.symm
   calc
     (ExteriorAlgebra.ιMulti R 2 uv + ExteriorAlgebra.ιMulti R 2 st) ^ 2 =

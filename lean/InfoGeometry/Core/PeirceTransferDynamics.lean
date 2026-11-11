@@ -88,11 +88,16 @@ theorem compression_transfer_power_eq (p t a b : R) (hp : p * p = p)
         (p * a * (1 - p)) * (t ^ n * b * p) := by
           simpa only [mul_assoc] using hbase
     _ = (p * a * (1 - p)) * (t ^ n * ((1 - p) * b * p)) := by
-      rw [hinsert, mul_sub, hremove, sub_zero]
+      rw [hinsert]
+      calc
+        _ = (p * a * (1 - p)) * (t ^ n * b * p) -
+            (p * a * (1 - p)) * (p * b * p) := by
+          rw [hremove, sub_zero]
+        _ = _ := by rw [← mul_sub]
     _ = (p * a * (1 - p)) * ((t - p) ^ n * ((1 - p) * b * p)) := by
       rw [pow_mul_annihilated p t _ hpt hright n]
     _ = (p * a * (1 - p)) * ((1 - p) * t * (1 - p)) ^ n * ((1 - p) * b * p) := by
-      rw [excitation_compression_eq_sub p t hp htp hpt, mul_assoc]
+      simp only [excitation_compression_eq_sub p t hp htp hpt, mul_assoc]
 
 end Ring
 

@@ -122,6 +122,14 @@ categorical naturality goal to its matrix equation before entrywise
 extensionality. These are corrected without changing the target statements;
 the tower and exhaustive audit still require a successful fresh run.
 
+The third focused run
+[`43196920834`](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43196920834)
+successfully compiled all three mathematical owners. The exhaustive audit
+then rejected the equation compiler's generated `stage._unsafe_rec` helper.
+The stage definition now uses the native `Nat.rec` directly, preserving both
+definitional equations. The audit remains unchanged and must pass on a fresh
+run; no generated declaration is excluded from its checks.
+
 The local focused `check.py build` remains queued behind the shared build lock.
 The root file wrapper with `--no-wait-for-build-lock` previously returned exit 2
 for that occupied lock. No successful compiler or axiom-audit pass is claimed.

@@ -62,9 +62,8 @@ def amplification : 𝟭 RingCat.{u} ⟶ matrixFunctor n where
     · simp [Matrix.scalar_apply, RingHom.mapMatrix_apply, h]
 
 /-- Iterated full matrix rings, with the original ring at stage zero. -/
-def stage (A : RingCat.{u}) : ℕ → RingCat.{u}
-  | 0 => A
-  | k + 1 => (matrixFunctor n).obj (stage A k)
+def stage (A : RingCat.{u}) : ℕ → RingCat.{u} :=
+  Nat.rec A (fun _ B => (matrixFunctor n).obj B)
 
 /-- The successor homomorphism is the component of the natural amplification. -/
 def bond (A : RingCat.{u}) (k : ℕ) : stage n A k →+* stage n A (k + 1) :=

@@ -52,6 +52,8 @@ jobs:
           fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.34.1
+          "$HOME/.elan/bin/lean" --version
+          "$HOME/.elan/bin/lake" --version
       - name: Restore the pinned Mathlib artifacts
         run: python3 verification/symplectic-cut-periods/check.py exe cache get
       - name: Check complete source inventory

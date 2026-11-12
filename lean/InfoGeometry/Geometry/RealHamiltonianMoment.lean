@@ -103,8 +103,15 @@ theorem hasDerivAt_weightedRotation (J : V →L[ℝ] V)
       (q • J (rotation J (q * t) x)) t := by
   have hscalar : HasDerivAt (fun s : ℝ => q * s) q t := by
     simpa using (hasDerivAt_id t).const_mul q
-  simpa only [Function.comp_apply] using
-    (hasDerivAt_rotation J hJ (q * t) x).scomp t hscalar
+  have hvalue : (-Real.sin (q * t) * q) • x +
+      (Real.cos (q * t) * q) • J x = q • J (rotation J (q * t) x) := by
+    simp only [rotation_apply, map_add, map_smul, square_apply J hJ]
+    module
+  change HasDerivAt
+    (fun s => Real.cos (q * s) • x + Real.sin (q * s) • J x)
+    (q • J (rotation J (q * t) x)) t
+  rw [← hvalue]
+  exact (hscalar.cos.smul_const x).add (hscalar.sin.smul_const (J x))
 
 end Rotation
 

@@ -48,6 +48,7 @@ complete declaration axiom audit, independent semantic audit and separate QA.
    Picard–Fuchs equation. Parameters and theorem statements remain real;
    native Mathlib dependencies may use complex analysis internally.
 
+Risk class: R4 (analytic constructions and operator identities).
 These are analytic and real operator claims, not a finite numerical witness.
 Native definitions and theorem types, rather than the number of declarations,
 determine the accepted scope.
@@ -58,8 +59,9 @@ determine the accepted scope.
   predicate on real-linear maps.
 - `Geometry.ParaHessianMixedPotential`: real doubled-space exchange/grading,
   continuous maps and actual Fréchet derivative patterns.
-- `AmariBinarySimplexBridge` and `LogOddsSimplexGeometry`: logistic/logit and
-  its derivative. These owners are reused rather than redefined.
+- `Analysis.BipolarCrossRatioLog` and `Analysis.BipolarCayleyOccupation`:
+  the existing real logistic function and its logarithmic-odds inverse.
+  The transport layer proves the genuine derivative of this owned chart.
 - Mathlib inner-product calculus, `JacobianOneDim`, Beta/Gamma distributions,
   and improper exponential integrals provide the analytic foundations.
 - The central-complex-structure operator owner is not used to impose an
@@ -68,6 +70,14 @@ determine the accepted scope.
 The bounded lexical search for symplectic-cut and quantum-Lebesgue owners is
 not asserted to be an exhaustive absence proof. Candidate authors inspect the
 relevant owners and imports before integration.
+
+The first candidate reused `AmariBinarySimplexBridge` through
+`LogOddsSimplexGeometry`. Its import closure reaches `Canonical.Triality`
+and the optional Architect metadata tooling. Initial focused CI exposed that
+dependency; the root-pinned LeanArchitect revision also has a recorded
+Lean 4.34.1 callback incompatibility. The implementation therefore reuses the
+already-existing lighter real logistic chart above, with the same mathematical
+formula. Existing owner files, annotations, and dependency pins are preserved.
 
 ## Source corrections and open debt
 

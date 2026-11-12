@@ -78,7 +78,7 @@ theorem integrable_classicalDensity (a : ℝ) {b d : ℝ} (hb : 0 < b) (hd : 0 <
     (fun c => exp ((-b) * c) / (a * (b + d))))
   apply Integrable.piecewise measurableSet_Iic
   · exact (integrableOn_exp_mul_Iic hd 0).div_const _
-  · simpa only [compl_Iic] using
+  · simpa only [compl_Iic, IntegrableOn] using
       (integrableOn_exp_mul_Ioi (neg_neg_of_pos hb) 0).div_const (a * (b + d))
 
 /-- Integrating the cut level reconstructs the classical volume, equation (3.7). -/
@@ -88,7 +88,7 @@ theorem integral_classicalDensity {a b d : ℝ} (ha : 0 < a) (hb : 0 < b)
   have hleft := (integrableOn_exp_mul_Iic hd 0).div_const (a * (b + d))
   have hright : IntegrableOn (fun c : ℝ => exp ((-b) * c) / (a * (b + d)))
       (Iic (0 : ℝ))ᶜ := by
-    simpa only [compl_Iic] using
+    simpa only [compl_Iic, IntegrableOn] using
       (integrableOn_exp_mul_Ioi (neg_neg_of_pos hb) 0).div_const (a * (b + d))
   change (∫ c, (Iic (0 : ℝ)).piecewise
     (fun c => exp (d * c) / (a * (b + d)))
@@ -105,7 +105,7 @@ theorem hasDerivWithinAt_classicalDensity_left (a b d : ℝ) :
     HasDerivWithinAt (classicalDensity a b d) (d / (a * (b + d))) (Iic 0) 0 := by
   have h : HasDerivAt (fun c : ℝ => exp (d * c) / (a * (b + d)))
       (d / (a * (b + d))) 0 := by
-    simpa only [mul_zero, exp_zero, one_mul] using
+    simpa only [id_eq, mul_zero, exp_zero, one_mul, mul_one] using
       (((hasDerivAt_id (0 : ℝ)).const_mul d).exp.div_const (a * (b + d)))
   exact h.hasDerivWithinAt.congr_of_mem
     (fun c hc => classicalDensity_of_nonpos a b d hc) (by simp)
@@ -115,7 +115,7 @@ theorem hasDerivWithinAt_classicalDensity_right (a b d : ℝ) :
     HasDerivWithinAt (classicalDensity a b d) ((-b) / (a * (b + d))) (Ici 0) 0 := by
   have h : HasDerivAt (fun c : ℝ => exp ((-b) * c) / (a * (b + d)))
       ((-b) / (a * (b + d))) 0 := by
-    simpa only [mul_zero, exp_zero, one_mul] using
+    simpa only [id_eq, mul_zero, exp_zero, one_mul, mul_one] using
       (((hasDerivAt_id (0 : ℝ)).const_mul (-b)).exp.div_const (a * (b + d)))
   exact h.hasDerivWithinAt.congr_of_mem
     (fun c hc => classicalDensity_of_nonneg a b d hc) (by simp)
@@ -130,7 +130,7 @@ theorem not_differentiableAt_classicalDensity_zero {a b d : ℝ}
   have hright := (uniqueDiffWithinAt_Ici (0 : ℝ)).eq_deriv _
     (hasDerivWithinAt_classicalDensity_right a b d) h.hasDerivAt.hasDerivWithinAt
   have hden : a * (b + d) ≠ 0 := (mul_pos ha (add_pos hb hd)).ne'
-  have hbad : d = -b := (div_left_inj hden).mp (hleft.trans hright.symm)
+  have hbad : d = -b := (div_left_inj' hden).mp (hleft.trans hright.symm)
   linarith
 
 end InfoGeometry.Analysis.SymplecticCutClassicalDensity

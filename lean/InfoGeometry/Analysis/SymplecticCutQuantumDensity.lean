@@ -28,7 +28,7 @@ symplectic quotient, or an identification with the classical cut density.
 noncomputable section
 
 open MeasureTheory Set
-open InfoGeometry.Canonical.AmariBinarySimplexBridge
+open InfoGeometry.Analysis.BipolarCrossRatioLog
 open InfoGeometry.Analysis.LogisticBetaTransport
 
 namespace InfoGeometry.Analysis.SymplecticCutQuantumDensity

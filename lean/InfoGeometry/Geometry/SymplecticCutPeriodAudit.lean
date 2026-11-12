@@ -99,6 +99,8 @@ The validator compares actual Lean axiom output with this complete list.
 
 #print axioms InfoGeometry.Analysis.LogisticBetaTransport.logistic_injective
 #print axioms InfoGeometry.Analysis.LogisticBetaTransport.logistic_image_univ
+#print axioms InfoGeometry.Analysis.LogisticBetaTransport.hasDerivAt_logistic
+#print axioms InfoGeometry.Analysis.LogisticBetaTransport.logistic_jacobian_pos
 #print axioms InfoGeometry.Analysis.LogisticBetaTransport.integral_comp_logistic
 #print axioms InfoGeometry.Analysis.LogisticBetaTransport.integrable_comp_logistic_iff
 #print axioms InfoGeometry.Analysis.LogisticBetaTransport.betaPDFReal_nonneg

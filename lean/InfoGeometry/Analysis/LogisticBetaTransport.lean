@@ -3,14 +3,15 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-import InfoGeometry.Analysis.LogOddsSimplexGeometry
+import InfoGeometry.Analysis.BipolarCayleyOccupation
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.MeasureTheory.Function.JacobianOneDim
 import Mathlib.Probability.Distributions.Beta
 
 /-!
 # The real logistic chart and the beta integral
 
-This module extends the existing real logistic/logit chart by its Bochner
+This module extends the existing real logistic/log-odds chart by its Bochner
 change-of-variables theorem.  It then transports Mathlib's normalized beta
 density from `(0, 1)` to the real line.  Integrability and normalization are
 proved from the native beta integral, not accepted as premises.
@@ -24,48 +25,66 @@ Gromov--Witten construction is encoded here.
 noncomputable section
 
 open MeasureTheory Set
-open InfoGeometry.Canonical.AmariBinarySimplexBridge
-open InfoGeometry.Analysis.LogOddsSimplexGeometry
+open InfoGeometry.Analysis.BipolarCrossRatioLog
+open InfoGeometry.Analysis.BipolarCayleyOccupation
 
 namespace InfoGeometry.Analysis.LogisticBetaTransport
 
 theorem logistic_injective : Function.Injective logistic := by
   intro x y h
-  simpa only [logit_logistic] using congrArg logit h
+  simpa only [logOdds_logistic] using congrArg logOdds h
 
 theorem logistic_image_univ : logistic '' (Set.univ : Set ℝ) = Set.Ioo 0 1 := by
   ext p
   constructor
   · rintro ⟨c, _, rfl⟩
-    exact logistic_mem_Ioo c
+    exact ⟨logistic_pos c, logistic_lt_one c⟩
   · intro hp
-    exact ⟨logit p, Set.mem_univ _, logistic_logit hp⟩
+    exact ⟨logOdds p, Set.mem_univ _, logistic_logOdds hp.1 hp.2⟩
 
-/-- The existing Bernoulli Fisher coefficient is precisely the Jacobian of
-the logistic chart, for arbitrary real Bochner integrands. -/
+/-- The derivative of the existing real logistic chart, proved by the native
+quotient rule. -/
+theorem hasDerivAt_logistic (c : ℝ) :
+    HasDerivAt logistic (logistic c * (1 - logistic c)) c := by
+  have hden : 1 + Real.exp c ≠ 0 := by positivity
+  have hden' : HasDerivAt (fun x : ℝ => 1 + Real.exp x) (Real.exp c) c := by
+    simpa using (Real.hasDerivAt_exp c).const_add 1
+  have hquot : HasDerivAt logistic
+      ((Real.exp c * (1 + Real.exp c) - Real.exp c * Real.exp c) /
+        (1 + Real.exp c) ^ 2) c :=
+    (Real.hasDerivAt_exp c).div hden' hden
+  apply hquot.congr_deriv
+  unfold logistic
+  field_simp [hden] <;> ring
+
+theorem logistic_jacobian_pos (c : ℝ) :
+    0 < logistic c * (1 - logistic c) :=
+  mul_pos (logistic_pos c) (sub_pos.mpr (logistic_lt_one c))
+
+/-- The explicit positive Jacobian gives change of variables through the
+existing logistic chart, for arbitrary real Bochner integrands. -/
 theorem integral_comp_logistic {E : Type*} [NormedAddCommGroup E]
     [NormedSpace ℝ E] (f : ℝ → E) :
-    (∫ c, fisherExp c • f (logistic c)) = ∫ p in Set.Ioo (0 : ℝ) 1, f p := by
+    (∫ c, (logistic c * (1 - logistic c)) • f (logistic c)) =
+      ∫ p in Set.Ioo (0 : ℝ) 1, f p := by
   have h := integral_image_eq_integral_abs_deriv_smul
-    (f := logistic) (f' := fisherExp) measurableSet_univ
-    (fun c _ => by
-      simpa only [fisherExp] using (hasDerivAt_logistic c).hasDerivWithinAt)
+    (f := logistic) (f' := fun c => logistic c * (1 - logistic c)) measurableSet_univ
+    (fun c _ => (hasDerivAt_logistic c).hasDerivWithinAt)
     logistic_injective.injOn f
-  simpa only [logistic_image_univ, abs_of_pos (fisherExp_pos _), setIntegral_univ]
+  simpa only [logistic_image_univ, abs_of_pos (logistic_jacobian_pos _), setIntegral_univ]
     using h.symm
 
 /-- The same chart transports integrability, including endpoint singularities
 of an integrand on the open unit interval. -/
 theorem integrable_comp_logistic_iff {E : Type*} [NormedAddCommGroup E]
     [NormedSpace ℝ E] (f : ℝ → E) :
-    Integrable (fun c => fisherExp c • f (logistic c)) ↔
+    Integrable (fun c => (logistic c * (1 - logistic c)) • f (logistic c)) ↔
       IntegrableOn f (Set.Ioo (0 : ℝ) 1) := by
   have h := integrableOn_image_iff_integrableOn_abs_deriv_smul
-    (f := logistic) (f' := fisherExp) measurableSet_univ
-    (fun c _ => by
-      simpa only [fisherExp] using (hasDerivAt_logistic c).hasDerivWithinAt)
+    (f := logistic) (f' := fun c => logistic c * (1 - logistic c)) measurableSet_univ
+    (fun c _ => (hasDerivAt_logistic c).hasDerivWithinAt)
     logistic_injective.injOn f
-  simpa only [logistic_image_univ, abs_of_pos (fisherExp_pos _), integrableOn_univ]
+  simpa only [logistic_image_univ, abs_of_pos (logistic_jacobian_pos _), integrableOn_univ]
     using h.symm
 
 /-- Mathlib's real beta density is nonnegative when its two shape
@@ -99,15 +118,14 @@ theorem integral_betaPDFReal_Ioo {α β : ℝ} (hα : 0 < α) (hβ : 0 < β) :
     simpa only [ProbabilityTheory.betaPDFReal, if_neg hp]
 
 /-- The normalized beta density expressed in the real logit coordinate.
-The Jacobian is the existing Bernoulli Fisher coefficient. -/
+The explicit factor `logistic c * (1 - logistic c)` is the proved Jacobian. -/
 def betaLogitDensity (α β c : ℝ) : ℝ :=
-  fisherExp c * ProbabilityTheory.betaPDFReal α β (logistic c)
+  (logistic c * (1 - logistic c)) * ProbabilityTheory.betaPDFReal α β (logistic c)
 
 theorem betaLogitDensity_pos {α β : ℝ} (hα : 0 < α) (hβ : 0 < β) (c : ℝ) :
     0 < betaLogitDensity α β c := by
-  exact mul_pos (fisherExp_pos c)
-    (ProbabilityTheory.betaPDFReal_pos (logistic_mem_Ioo c).1
-      (logistic_mem_Ioo c).2 hα hβ)
+  exact mul_pos (logistic_jacobian_pos c)
+    (ProbabilityTheory.betaPDFReal_pos (logistic_pos c) (logistic_lt_one c) hα hβ)
 
 theorem integrable_betaLogitDensity {α β : ℝ} (hα : 0 < α) (hβ : 0 < β) :
     Integrable (betaLogitDensity α β) := by
@@ -140,15 +158,15 @@ theorem betaLogitDensity_eq_exp_div (α β c : ℝ) :
         (1 / ProbabilityTheory.beta α β) *
           (logistic c ^ (α - 1) * logistic c) *
           ((1 - logistic c) ^ (β - 1) * (1 - logistic c)) := by
-      simp only [betaLogitDensity, fisherExp, ProbabilityTheory.betaPDFReal,
-        if_pos (logistic_mem_Ioo c)]
+      simp only [betaLogitDensity, ProbabilityTheory.betaPDFReal,
+        if_pos ⟨logistic_pos c, logistic_lt_one c⟩]
       ring
     _ = (1 / ProbabilityTheory.beta α β) *
         logistic c ^ α * (1 - logistic c) ^ β := by
       rw [Real.rpow_sub_one (logistic_pos c).ne' α,
         div_mul_cancel₀ _ (logistic_pos c).ne',
-        Real.rpow_sub_one (one_sub_logistic_pos c).ne' β,
-        div_mul_cancel₀ _ (one_sub_logistic_pos c).ne']
+        Real.rpow_sub_one (sub_pos.mpr (logistic_lt_one c)).ne' β,
+        div_mul_cancel₀ _ (sub_pos.mpr (logistic_lt_one c)).ne']
     _ = Real.exp (α * c) /
         (ProbabilityTheory.beta α β * (1 + Real.exp c) ^ (α + β)) := by
       rw [hcomp, logistic, Real.div_rpow (Real.exp_pos c).le hc.le α,

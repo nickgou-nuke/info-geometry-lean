@@ -1,0 +1,165 @@
+### I. SOLVE : THE FUNDAMENTAL BINARY CUT
+
+Passing the completed formalization and colimit audit through Socratic elenchus—stripping away editorial framing, proof-assistant syntax, and conversational prompts—uncovers a decisive epistemic cut concealed beneath its apparent completeness: **Global Morita-Balanced Scalar Reduction vs. Rank-Asymmetric Zero-Mode Kernels & Internal Day-Convolution Colimits**.
+
+Even while demonstrating non-scalar Casimir witnesses, the discourse splits algebraic-analytic reality asymmetrically into:
+
+1. **Conscious Thesis ($\Theta_+$) — Unitary Global Invertibility, Scalar Dichotomy, & Externalized Localization:**
+   The assertion that on-shell cyclotomic closure ($\delta(V) = 0$) coincides with global unit specialization ($V = 1$, where $P_{\mathrm{sa}}|_{V=1} = 1 - P$); that inverting $V$ alone ($\mathcal{U}[V^{-1}]$) embeds $\mathcal{U}$ faithfully into full $2 \times 2$ matrix units $\{P, 1 - P, V^{-1}N_+, N_-\}$ without loss of kernel sectors; that operator mass-gap coercivity reduces to the scalar dichotomy $0 \le \delta(v/m^2) \iff (v = 0 \lor m^2 \le v)$; that flipping the chirality of $\omega_J$ to $-P + J$ leaves $\tau_1 = -N_+ - \Sigma$ intact; and that the Cayley inverse $W = (1 + V)^{-1}$ may be supplied externally on par with singular multiplicative colimits.
+
+2. **Repressed Shadow Complement ($\Theta_+^\perp$) — The Fivefold Rank-Kernel, Chirality, and Colimit Obstruction:**
+   Five exact non-commutative structures suppressed by $\Theta_+$'s assumptions:
+   * **The Schism Between $\delta(V) = 0$ and $V = 1$ (Emergence of the Zero-Mode Spine $P_0 := 1 - V$):** In any realization with asymmetric Peirce ranks ($\mathrm{rank}\,P \neq \mathrm{rank}(1 - P)$, e.g., $P = E_{11} \in M_3(\mathbb{R})$), $V = 1$ is algebraically **impossible** because $N_+ N_- = P$ and $N_- N_+ = 1 - P$ would force Murray–von Neumann rank equality $\mathrm{rank}\,P = \mathrm{rank}(1 - P)$. Instead, on-shell idempotence $\delta(V) = 0$ ($V^2 = V \neq 1$) leaves a non-vanishing zero-mode kernel $P_0 := 1 - V \neq 0$, equalizing reflection squares ($\tau_1^2 - \tau_0^2 = \delta(V) = 0$) while *breaking* global cyclotomic closure precisely along $P_0$ ($\omega_J^2 - \bar{\omega}_J = P_0 \neq 0$).
+   * **Zero-Divisor Annihilation in $\mathcal{U}[V^{-1}]$ vs. Faithfulness in $\mathcal{U}[(1+V)^{-1}]$:** Whenever $P_0 = \ker(V) \neq \{0\}$ ($V P_0 = 0$), $V$ is a zero divisor in $\mathcal{U}$: the localization colimit $\mathcal{U}[V^{-1}]$ **annihilates $P_0$** ($\ker(\mathcal{U} \to \mathcal{U}[V^{-1}]) \neq \{0\}$), collapsing $\mathbb{Z}$-rank $5$ ($\mathbb{Z}P_0 \oplus M_2(\mathbb{Z})$) to rank $4$, whereas $1 + V$ remains strictly regular ($\ker(\cdot(1+V)) = \{0\}$), embedding $\mathcal{U} \hookrightarrow \mathcal{U}[(1+V)^{-1}]$ with zero information loss.
+   * **Failure of the Scalar Coercivity Dichotomy on Non-Scalar Operators:** For any operator $V \ge 0$ possessing both gauge/rank zero-modes ($\ker V \neq \{0\}$) and gapped modes ($m^2 > 0$, e.g., $V = \mathrm{diag}(1, 1, 0)$ at $m = 1$), $\delta(V/m^2) = 0 \ge 0$ holds while *both* $V = 0$ and $V \ge m^2 \cdot 1$ are **false**; operator coercivity bounds $V$ strictly above its support projection $\Pi_{\mathrm{supp}}(V)$, never above $1$.
+   * **Chiral Orbit Severance ($\omega_J' \tau_0 - \tau_1 = 2\Sigma \neq 0$):** Redefining $\omega_J' := -P + J$ while retaining $\tau_1 := -N_+ - \Sigma$ breaks the $S_3$ generator law $\tau_1 = \omega_J \tau_0$, since $(-P + J)\Phi = -N_+ + \Sigma \neq -N_+ - \Sigma$.
+   * **Module-vs.-Ring Colimit Obstruction:** Multiplication $\cdot s : \mathcal{U} \to \mathcal{U}$ is **not** a ring homomorphism ($s(XY) \neq (sX)(sY)$); constructing $W = (1 + V)^{-1}$ and $u_J$ *internally* requires equipping the directed module colimit $\varinjlim_{k \in (\mathbb{N},\le)} \mathcal{U}$ with graded monoidal Day convolution $[k, X]\cdot[\ell, Y] := [k+\ell, XY]$ over $(\mathbb{N}, +)$ and verifying $s^* = s$.
+
+This cut is **strictly asymmetric and non-commutative**: the canonical map $\mathcal{U} \to \mathcal{U}[V^{-1}]$ irreversibly erases $P_0$, whereas $\mathcal{U} \hookrightarrow \mathcal{U}[(1+V)^{-1}]$ preserves $P_0$ and flips only the paired support sheets $Q_+ \leftrightarrow Q_-$.
+
+---
+
+### II. THE FOURFOLD RELATIONAL ANATOMY
+
+Isolating the directional mechanics across the active support $V$ and the unpaired kernel $P_0$ reveals four distinct relational quadrants:
+
+1. **Internal Self-Consistency (Characteristic-Free Corner Identities & Centrality of $V$ in $\mathcal{U}$):**
+   Within any unital associative ring $B$ with $\delta(P) = 0$, $V = Q_+ + Q_-$ satisfies $Q_+ = V P$, $Q_- = V(1 - P)$, and $[V, P] = [V, N_+] = [V, N_-] = 0$ even when $V$ fails to commute with ambient elements of $B$. The equivalence $\delta(P + Y) = Y^2 \iff P Y P = P_\perp Y P_\perp = 0$, the sign-exact unipotent laws $(1 \pm N_+)P(1 \mp N_+) = P \mp N_+$, the scale-$4$ Klein Reynolds annihilation $\Pi_{\mathrm{Klein}}^{(4)}(N_\pm) = 0$, and the operator Pythagorean identity $(1 - V)^2 - 4J^2 = (1 + V)^2$ hold universally over $\mathbb{Z}$.
+
+2. **Outward Projection (Morita-Symmetric Extrapolation & Scalar Reduction):**
+   Consciousness projects properties of balanced $2 \times 2$ scalar-Casimir models onto general asymmetric rings: equating $\delta(V) = 0$ with $V = 1$, assuming $P_{\mathrm{sa}}$ swaps $P$ with $1 - P$ on the unit shell regardless of rank mismatch, modeling operator spectra via total scalar orders $(v = 0 \lor v \ge m^2)$, mixing opposite chiralities between $\omega_J$ and $\tau_1$, and treating localization $\cdot s$ as a naive colimit without distinguishing zero-divisor kernels from positive-definite shifts.
+
+3. **Inward Shadow-Intrusion (Kernel Persistence, Torsion Rank Jump, & Chiral Mismatch):**
+   Four exact algebraic counter-phenomena intrude into $\Theta_+$:
+   * *The Rank-$5$ Torsion Split:* When $\delta(V) = 0$ with $P_0 := 1 - V \neq 0$, $(V - 1)P = -P_0 P$ and $V P_0 = 0$ split $\mathcal{U}$ into $\mathbb{Z}P_0 \oplus M_2(\mathbb{Z})$ of $\mathbb{Z}$-rank $5$ (rather than $4$), proving $\{1, P, N_+, N_-\}$ has $\mathbb{Z}[V]$-torsion whenever $V$ is annihilated by a non-zero kernel;
+   * *Partial-Flip Intrusion in $P_{\mathrm{sa}}$:* On an on-shell partial isometry ($\delta(V) = 0,\; P_0 = P_{0,+} + P_{0,-} \neq 0$, where $P_{0,+} := P(1-V)$ and $P_{0,-} := P_\perp(1-V)$), $P_{\mathrm{sa}}$ evaluates not to $1 - P = Q_- + P_{0,-}$, but to **$Q_- + P_{0,+}$**—inverting $Q_+ \leftrightarrow Q_-$ while leaving the unpaired defect $P_{0,+}$ fixed!
+   * *Chiral Orbit Intrusion:* Computing $\omega_J' \Phi - \tau_1 = (-P + J)\Phi - (-N_+ - \Sigma) = 2\Sigma$ exposes an uncancelled torsion $2\Sigma$ unless $\omega_J = -(P + J)$ and $\tau_1 = \omega_J \Phi = -N_+ - \Sigma$ share identical chirality;
+   * *Multi-Sector Coercivity Intrusion:* Non-zero operators $V$ with non-trivial $\ker(V)$ satisfy $V^2 \ge m^2 V$ while violating $V \ge m^2 \cdot 1$ on every vector in $\ker(V)\setminus\{0\}$.
+
+4. **The Autonomous Unexamined Ground (Endogenous Trivalent KKT Decomposition & Graded Day-Convolution $*$-Colimit):**
+   Beneath $(B, P, A, C)$ lies a self-assembling trivalent KKT structure: at $\delta(V) = 0$, the corner squares $(Q_+, 1 - V, Q_-)$ automatically form three mutually orthogonal idempotents over $\mathbb{Z}$ summing to $1$ with tripotent $\Sigma = Q_+ - Q_-$ ($\tau(\Sigma) = 0$), while off-shell ($V$ arbitrary), the internal Day-convolution $*$-colimit $\mathcal{U}_\infty := \varinjlim_{k \in (\mathbb{N},+)} (\mathcal{U} \xrightarrow{\cdot(1+V)} \mathcal{U})$ constructs unitary Cayley transitions purely from polynomial cocone pairs $[k, X]$ without external inverses or square roots.
+
+---
+
+### III. THE TRANSCENDENT FUNCTION
+
+Pairing **Universal Polynomial Corner Mechanics** with **Asymmetric Kernel Conservation & Internal Colimit Localization** ignites the fourfold transcendent function:
+
+1. **Shared Substantive Gravity:**
+   **The Support-Kernel Duality of $V = Q_+ + Q_-$ and $1 - V$.** Both the active paired gauge dynamics (supported on $Q_+ \oplus Q_-$) and the protected topological/rank index (supported on $\ker V$, measured on-shell by $P_0 = 1 - V$) are governed by the same central element $V \in Z(\mathcal{U})$: $V$ drives the curvature commutator $-[\Phi, [\Phi, J]] = -4VJ$ on the active sector while $1 + V$ shields the zero-mode kernel from annihilation during localization.
+
+2. **Directional Tension:**
+   The irreversible **Kernel-Erasing vs. Kernel-Preserving Colimit Tension** between singular localization $\mathcal{U} \to \mathcal{U}[V^{-1}]$ (which quotients out $\mathrm{ann}_{\mathcal{U}}(V^\infty)$, forcing artificial Morita balance) and regular Cayley localization $\mathcal{U} \hookrightarrow \mathcal{U}[(1+V)^{-1}]$ (which embeds $\mathcal{U}$ faithfully whenever $X^*(1+V)X = 0 \implies X = 0$), locked against the **Finite-Stage Positivity vs. Uniform Colimit Gap Tension** across inductive shells $k \to \infty$.
+
+3. **Integrative Bridge:**
+   **Internal Day-Convolution $*$-Localization $\mathcal{U}_\infty$ & Purely Algebraic $3$-Sum Regularity.**
+   * Equipping $\bigsqcup_{k \in \mathbb{N}} \{k\} \times \mathcal{U} / {\sim}$ ($(k, X) \sim (\ell, Y) \iff \exists m,\; (1+V)^{m-k}X = (1+V)^{m-\ell}Y$) with graded multiplication $[k, X]\cdot[\ell, Y] := [k+\ell, XY]$ and $[k, X]^* := [k, X^*]$ produces the inverse $W_\infty := [1, 1]$ ($[0, 1+V]\cdot[1, 1] = [1, 1+V] \sim [0, 1]$) and unitary Cayley cocycle $u_{J,\infty} := [1,\; 1 - V + 2J]$ **entirely internally**.
+   * In any strongly faithful $*$-ring ($\sum_{i=1}^3 Y_i^* Y_i = 0 \implies Y_1 = 0$, holding over $\mathbb{Q}$ and $\mathbb{R}$ without Banach norms), $(1 + V)X = 0$ implies
+     $$0 = X^*(1 + N_+^* N_+ + N_+ N_+^*)X = X^* X + (N_+ X)^*(N_+ X) + (N_+^* X)^*(N_+^* X) \implies X = 0,$$
+     proving purely algebraically that $\iota : \mathcal{U} \hookrightarrow \mathcal{U}_\infty$ has trivial kernel!
+
+4. **Perspectival Transformation from the Round-Trip Encounter:**
+   Completing the round trip unifies the two great arcs of our entire investigation—the **Horizon-KKT Tripartition ($P_+ + P_0 + P_- = 1$)** and the **Single-Idempotent Defect Calculus ($\delta(X) = X^2 - X$)**:
+   * The third projector $P_0$ ("the dark spine") is not an external addition to binary Peirce algebra $P + P_\perp = 1$: whenever $\delta(V) = 0$ in an asymmetric space, $P$ and $P_\perp$ refine endogenously into $(Q_+, P_0 = 1 - V, Q_-)$ with $\tau(\Sigma) = 0$;
+   * The unitary Cayley flip $P_{\mathrm{sa}} = u_J P u_J^*$ is revealed as an **exact partial-isometry Weyl reflection** that swaps paired excitations $Q_+ \leftrightarrow Q_-$ while leaving topological zero-modes $P_{0,+}$ invariant.
+
+---
+
+### IV. THE SOCRATIC APORIA ($\Phi^2 \neq \Phi$) & THE META-COGNITIVE TOWER
+
+Measuring the exact self-square defect $\delta(X) = X^2 - X$ recursively up four levels exposes how each resolution generates the next structural horizon:
+
+* **Rung 1 (The Chiral $S_3$ Orbit & Unipotent Sign Aporia — $(\omega_J' \Phi)^2 = (\omega_J \Phi)^2$ yet $\omega_J' \Phi \neq \tau_1$):**
+  * *Thesis $\Phi_1$:* Flipping chirality $J \mapsto -J$ in $\omega_J' = -P + J$ preserves $\omega_J'^2 - \bar{\omega}_J' = 1 - V$ and $(\tau_1)^2 - \tau_0^2 = \delta(V)$, just as $(1 - N_+)P(1 + N_+)$ and $(1 + N_+)P(1 - N_+)$ share the same Gram defect $\delta(P'(P')^*) = \bar{\delta}(Q_+)$.
+  * *Self-Square Defect:* Sharing equal squares masks linear sign inversions! Because $(1 \mp N_+)P(1 \pm N_+) = P \pm N_+$ have opposite skew-defects $\mp J$, and because $\omega_J' \Phi = -N_+ + \Sigma$ differs from $\tau_1 = -N_+ - \Sigma$ by $2\Sigma$, mixing opposite chiralities destroys the group multiplication table ($\tau_1 \neq \omega_J' \tau_0$), requiring strict chiral alignment $\omega_J := -(P + J),\; \bar{\omega}_J := -(1 - P) + J,\; \tau_1 := \omega_J \Phi = -N_+ - \Sigma$.
+
+* **Rung 2 (The On-Shell Idempotent vs. Unit Aporia — $\delta(V) = 0$ with $1 - V = P_0 \neq 0$):**
+  * *Meta-Thesis $\Phi_2$:* With chiral signs aligned, enforcing the on-shell idempotent law $\delta(V) = V^2 - V = 0$ closes the full $S_3$ group ($\omega_J^3 = 1$) and sets $P_{\mathrm{sa}} = 1 - P$.
+  * *Self-Square Defect:* In any ring $B$, $\delta(V) = 0$ forces $\delta(Q_+) = 0$ and $\delta(Q_-) = 0$, yet does **not** force $1 - V = 0$: the residual operator $P_0 := 1 - V$ satisfies $\delta(P_0) = 0$ ($P_0^2 = P_0$). Whenever $P_0 \neq 0$ (forced whenever $\mathrm{rank}\,P \neq \mathrm{rank}(1 - P)$), $\tau_1^2 = \tau_0^2$ holds while $\omega_J$ fails cube-root closure by $\omega_J^3 - 1 = (\omega_J - 1)P_0 \neq 0$, and $P_{\mathrm{sa}}|_{\delta(V)=0} = Q_- + P(1 - V) \neq 1 - P$.
+
+* **Rung 3 (The Singular-vs.-Regular Colimit Kernel Aporia — $V P_0 = 0$ vs. $(1 + V)X = 0 \implies X = 0$):**
+  * *Meta-Thesis $\Phi_3$:* Invert $V$ via the filtered colimit $\varinjlim_{k} (\mathcal{U} \xrightarrow{\cdot V} \mathcal{U})$ to eliminate $P_0$ and turn $\mathcal{U}$ into $2 \times 2$ matrix units $\{P, 1 - P, V^{-1}N_+, N_-\}$.
+  * *Self-Square Defect:* Because $V P_0 = \delta(V) = 0$ on $P_0$, $[0, P_0] \sim [1, V P_0] = [1, 0]$ collapses to zero in $\mathcal{U}[V^{-1}]$—erasing the topological zero-mode index rather than resolving it! Only the shifted Day-convolution $*$-colimit along $s = 1 + V$ preserves $\delta(P_0) = 0$ faithfully ($\iota(P_0) \neq 0$ since $(1 + V)^m P_0 = P_0 \neq 0$) while internally generating $W_\infty = [1, 1]$ and $u_{J,\infty}$ ($u_{J,\infty}^* u_{J,\infty} = 1_\infty$).
+
+* **Rung 4 (The Operator Support-Coercivity & Colimit Infrared Aporia — $\delta(V/m^2) \ge 0$ vs. Inductive Shell Decay):**
+  * *Meta-Thesis $\Phi_4$:* Within the faithful Cayley $*$-colimit $\mathcal{U}_\infty$, positive coercivity $\delta(V/m^2) \ge 0$ implies $V = 0 \lor V \ge m^2 \cdot 1$, and strict positivity $V_k > 0$ at every finite stage $k$ guarantees a mass gap in the inductive limit $\varinjlim_k \mathcal{A}_k$.
+  * *Final Generative Defect:* First, when $P_0 = \ker(V) \neq \{0\}$ and $V \neq 0$, $\delta(V/m^2) \ge 0$ is equivalent not to $V \ge m^2 \cdot 1$ (which fails on $P_0$), but to **support-projected coercivity** $V \ge m^2 \Pi_{\mathrm{supp}}(V)$, where $\Pi_{\mathrm{supp}}(V)$ satisfies $\delta(\Pi_{\mathrm{supp}}(V)) = 0$. Second, across an inductive tower of shells $k \in \mathbb{N}$ with $V_k = (k+1)^{-1} \Pi_k > 0$, each finite stage satisfies $\delta(V_k / m_k^2) \ge 0$ for $m_k = (k+1)^{-1/2} > 0$, yet no uniform $m > 0$ satisfies $\delta(V_k / m^2) \ge 0$ for all $k$: $\delta(V/m^2) \ge 0$ is **not preserved under filtered colimits** without a uniform scale-invariant lower bound!
+
+---
+
+### V. COAGULA : ACYCLIC CAUSAL POSET $(\mathfrak{P}, \prec)$, CANONICAL AXIOMS, DEDUCTIONS & MASTER SYNTHESIS
+
+#### 5.1. Acyclic Causal Poset of Irreducible Archetypes $(\mathfrak{P}, \prec)$
+
+Every covering relation satisfies $G_i \prec G_j \implies i < j$, forming a strictly acyclic causal poset from primordial defect polarization ($G_0$) to Necessary synthesis ($G_9$):
+
+* $G_0$ (**Universal Defect & Jordan Primitive**): Unital associative ring $B$ with $\delta(X) = X^2 - X$, $\bar{\delta}(X) = X^2 + X$, $\tau(X) = X^3 - X$, and $\{X,Y\} = \delta(X+Y) - \delta(X) - \delta(Y)$.
+* $G_1$ (**Peirce Seed, Odd-Corner Law & Centrality of $V$ in $\mathcal{U}$**): Seed $\delta(P) = 0$, characteristic-free equivalence $\delta(P+Y) = Y^2 \iff P Y P = P_\perp Y P_\perp = 0$, and subalgebra $\mathcal{U} = \mathbb{Z}\langle 1, P, N_+, N_- \rangle$ with $V = Q_+ + Q_- \in Z(\mathcal{U})$. *(Covering relation: $G_0 \prec G_1$)*
+* $G_2$ (**Chiral-Aligned Off-Shell $S_3$ Braiding & Scale-$4$ Klein Projector**): Aligned generators $\omega_J = -(P + J)$, $\bar{\omega}_J = -P_\perp + J$, $\tau_0 = \Phi$, $\tau_1 = \omega_J \Phi = -N_+ - \Sigma$, $\tau_2 = \bar{\omega}_J \Phi = -N_- + \Sigma$ ($\tau_0 + \tau_1 + \tau_2 = 0$, $\tau_1^2 - \tau_0^2 = \delta(V)$, $\omega_J^2 - \bar{\omega}_J = 1 - V$), and exact scale-$4$ Reynolds operator $\Pi_{\mathrm{Klein}}^{(4)}$. *(Covering relation: $G_1 \prec G_2$)*
+* $G_3$ (**Endogenous Trivalent KKT Decomposition on the $\delta(V) = 0$ Locus**): Exact equivalence $\delta(V) = 0 \iff (\delta(Q_+) = 0 \land \delta(Q_-) = 0)$, generating orthogonal idempotents $(Q_+, P_0 = 1 - V, Q_-)$ summing to $1$ over $\mathbb{Z}$ with tripotent $\Sigma = Q_+ - Q_-$ ($\tau(\Sigma) = 0$) and separating $\delta(V) = 0$ from $V = 1$. *(Covering relations: $G_0 \prec G_3,\; G_2 \prec G_3$)*
+* $G_4$ (**Sign-Exact Oblique Unipotent Conjugation & Strong $3$-Sum $*$-Faithfulness**): Forward/inverse unipotent laws $(1 \pm N_+)P(1 \mp N_+) = P \mp N_+$ with Gram defect $\delta(P'(P')^*) = \bar{\delta}(Q_+)$, alongside $3$-sum $*$-positivity ($\sum_{i=1}^3 Y_i^* Y_i = 0 \implies Y_1 = 0$) enforcing $[P, A] \neq 0 \iff V \neq 0$ (for $A^* = \pm A$) and $\ker_{\mathcal{U}}(\cdot(1+V)) = \{0\}$. *(Covering relation: $G_1 \prec G_4$)*
+* $G_5$ (**Kernel-Erasing vs. Kernel-Preserving Day-Convolution $*$-Colimits**): Internal graded Day-convolution $*$-ring construction $\mathcal{U}[s^{-1}] := \varinjlim_{k \in (\mathbb{N},+)} (\mathcal{U} \xrightarrow{\cdot s} \mathcal{U})$ for central self-adjoint $s$, proving $\ker(\iota_V) \supseteq \mathbb{Z}P_0$ when $\delta(V) = 0$ whereas $\ker(\iota_{1+V}) = \{0\}$ universally under $G_4$. *(Covering relations: $G_3 \prec G_5,\; G_4 \prec G_5$)*
+* $G_6$ (**Internal Cocone Emergence of $W_\infty$, $u_{J,\infty}$, & Partial-Flip $P_{\mathrm{sa},\infty}$**): Realization of $W_\infty = [1, 1]$ and unitary $u_{J,\infty} = [1,\; 1 - V + 2J]$ inside $\mathcal{U}[(1+V)^{-1}]$ via $(1 - V)^2 - 4J^2 = (1 + V)^2$, yielding $P_{\mathrm{sa},\infty}$ which flips $Q_+ \leftrightarrow Q_-$ while fixing $P(1 - V)$ on $\delta(V) = 0$. *(Covering relations: $G_3 \prec G_6,\; G_5 \prec G_6$)*
+* $G_7$ (**Support-Projected Operator Coercivity Law**): Operator spectral equivalence $\delta(V/m^2) \ge 0 \iff V \ge m^2 \Pi_{\mathrm{supp}}(V)$ (allowing $\ker V \neq \{0\}$ while refuting naive $V \ge m^2 \cdot 1$). *(Covering relations: $G_0 \prec G_7,\; G_4 \prec G_7$)*
+* $G_8$ (**Non-Commutation of Mass Gaps with Inductive Shell Colimits**): Proof that stagewise strict positivity $V_k > 0$ across a directed system $(\mathcal{A}_k)_{k \in \mathbb{N}}$ fails to induce colimit coercivity $\delta(V_\infty / m^2) \ge 0$ unless $m_k \ge m > 0$ is bounded uniformly away from zero. *(Covering relations: $G_5 \prec G_8,\; G_7 \prec G_8$)*
+* $G_9$ (**Necessary Synthesis — Complete Colimit, Trivalent-Spine & Coercive Closure**): Exact deductive unification of polynomial Peirce algebra, endogenous trivalent KKT horizon spines $P_0 = 1 - V$, faithful Day-convolution Cayley localization, and uniform support coercivity. *(Covering relations: $G_2 \prec G_9,\; G_6 \prec G_9,\; G_8 \prec G_9$)*
+
+---
+
+#### 5.2. Canonical Philosophical-Algebraic Axioms
+
+* **Axiom I (Associative Ring & Defect Maps — from $G_0$):**
+  Let $B$ be a unital associative ring with $\delta(X) := X^2 - X$, $\bar{\delta}(X) := X^2 + X$, $\tau(X) := X^3 - X$, $[X,Y] := XY - YX$, and $\{X,Y\} := XY + YX$.
+
+* **Axiom II (Peirce Corner System & Chiral Alignment — from $G_1, G_2$):**
+  Given $P \in B$ with $\delta(P) = 0$, $P_\perp := 1 - P$, and $A, C \in B$, set $N_+ := P A P_\perp$, $N_- := P_\perp C P$, $\Phi := N_+ + N_-$, $J := N_+ - N_-$, $Q_+ := N_+ N_-$, $Q_- := N_- N_+$, $V := Q_+ + Q_-$, $\Sigma := Q_+ - Q_-$, $\omega_J := -(P + J)$, $\bar{\omega}_J := -P_\perp + J$, $\tau_0 := \Phi$, $\tau_1 := \omega_J \Phi$, $\tau_2 := \bar{\omega}_J \Phi$, and let $\mathcal{U} \subseteq B$ be the unital subring generated by $\{P, N_+, N_-\}$.
+
+* **Axiom III (Strongly Faithful $3$-Sum $*$-Structure — from $G_4$):**
+  An involutive gauge realization $(B, *, P, A)$ is a $*$-ring with $P^* = P$, $A^* = \pm A$, $C := A^*$, satisfying strong $3$-sum faithfulness: $\forall Y_1, Y_2, Y_3 \in B,\; Y_1^* Y_1 + Y_2^* Y_2 + Y_3^* Y_3 = 0 \implies Y_1 = Y_2 = Y_3 = 0$.
+
+* **Axiom IV (Directed Day-Convolution Quotient — from $G_5$):**
+  For any central self-adjoint element $s \in Z(\mathcal{U})$ ($s^* = s$), define $\mathcal{U}[s^{-1}] := (\mathbb{N} \times \mathcal{U})/{\sim}$, where $(k, X) \sim (\ell, Y) \iff \exists m \ge \max(k,\ell),\; s^{m-k}X = s^{m-\ell}Y$, with operations $[k,X] + [\ell,Y] := [k+\ell,\, s^\ell X + s^k Y]$, $[k,X]\cdot[\ell,Y] := [k+\ell,\, XY]$, $[k,X]^* := [k, X^*]$, and canonical map $\iota_s(X) := [0, X]$.
+
+* **Axiom V (Ordered Positive Cone & Support Coercivity — from $G_7, G_8$):**
+  In a $C^*$- or spectral $*$-realization with positive cone $B_+$ and support projection $\Pi_{\mathrm{supp}}(V)$ of $V \in B_+$ ($\delta(\Pi_{\mathrm{supp}}(V)) = 0$, $\Pi_{\mathrm{supp}}(V) V = V$), a family $\{V_k\}_{k \in I}$ is *uniformly gapped* if $\exists m \in \mathbb{R}_{>0}$ such that $\delta(V_k / m^2) \in B_+$ for all $k \in I$.
+
+---
+
+#### 5.3. Unbroken Chain of Self-Verifying Deductions
+
+* **Deduction D1 (Chiral-Exact $S_3$ Orbit & Endogenous Trivalent KKT Decomposition at $\delta(V) = 0$ — from Axioms I, II; edges $G_0 \prec G_1 \prec G_2 \prec G_3$):**
+  *Proof:* Under Axiom II, $\tau_1 = \omega_J \Phi = (-P - J)(N_+ + N_-) = -N_+ - J\Phi = -N_+ - \Sigma$ and $\tau_2 = \bar{\omega}_J \Phi = (-P_\perp + J)(N_+ + N_-) = -N_- + \Sigma$, so $\tau_0 + \tau_1 + \tau_2 = (N_+ + N_-) + (-N_+ - \Sigma) + (-N_- + \Sigma) = 0$, $\omega_J^2 - \bar{\omega}_J = (P + J - V) - (-1 + P + J) = 1 - V$, and $\tau_1^2 - \tau_0^2 = V^2 - V = \delta(V)$ (whereas $\omega_J' := -P + J$ gives $\omega_J' \Phi - \tau_1 = 2\Sigma$). Because $Q_+ \in P B P$, $Q_- \in P_\perp B P_\perp$, and $Q_+ Q_- = Q_- Q_+ = 0$, we have $\delta(V) = \delta(Q_+) + \delta(Q_-)$. If $\delta(V) = 0$, multiplying by $P$ on both sides yields $P \delta(V) P = \delta(Q_+) = 0$, whence $\delta(Q_-) = \delta(V) - \delta(Q_+) = 0$. Setting $P_+ := Q_+$, $P_- := Q_-$, and $P_0 := 1 - V$:
+  1. $P_+ + P_0 + P_- = 1$, $\delta(P_+) = \delta(P_-) = 0$, and $\delta(P_0) = (1 - V)^2 - (1 - V) = \delta(V) = 0$;
+  2. $P_+ P_- = 0$, $P_+ P_0 = Q_+(1 - Q_+ - Q_-) = -\delta(Q_+) = 0 = P_0 P_+$, and $P_- P_0 = 0 = P_0 P_-$;
+  3. $\Sigma = P_+ - P_-$ satisfies $\Sigma^2 = P_+ + P_- = V$ and $\tau(\Sigma) = \Sigma^3 - \Sigma = (P_+ + P_-)(P_+ - P_-) - (P_+ - P_-) = 0$.
+  Thus $\delta(V) = 0$ endogenously constructs a denominator-free trivalent Peirce-KKT system over $\mathbb{Z}$, while $\omega_J^3 - 1 = (\omega_J - 1)(1 - V) = (\omega_J - 1)P_0$ vanishes if and only if $P_0 = 0$ ($V = 1$). $\blacksquare$
+
+* **Deduction D2 (Well-Definedness & $3$-Sum Injectivity of the Internal Cayley $*$-Colimit vs. Kernel Erasure in $\mathcal{U}[V^{-1}]$ — from Axioms II, III, IV & D1; edges $G_3, G_4 \prec G_5$):**
+  *Proof:* Because $s \in Z(\mathcal{U})$ and $s^* = s$, if $(k, X) \sim (k', X')$ via $s^{m-k}X = s^{m-k'}X'$, then $s^{m-k}(XY) = (s^{m-k}X)Y = (s^{m-k'}X')Y = s^{m-k'}(X'Y)$ and $s^{m-k} X^* = (s^{m-k}X)^* = (s^{m-k'}X')^* = s^{m-k'}(X')^*$, proving that $\mathcal{U}[s^{-1}]$ is a well-defined unital associative $*$-ring with $\ker(\iota_s) = \{X \in \mathcal{U} \mid \exists m \ge 1,\; s^m X = 0\}$.
+  1. For $s = V$ (or $2V$): whenever $\delta(V) = 0$ with $P_0 = 1 - V \neq 0$ (e.g., $B = M_3(\mathbb{K}), P = E_{11}, A = E_{12} + E_{21}$ where $P_0 = E_{33} \neq 0$), $V P_0 = 0 \implies P_0 \in \ker(\iota_V)$, annihilating $P_0$.
+  2. For $s = 1 + V$ under Axiom III ($N_- = N_+^*$): suppose $(1 + V)X = 0$ for $X \in B$. Left-multiplying by $X^*$ gives:
+     $$0 = X^*(1 + N_+ N_+^* + N_+^* N_+)X = X^* X + (N_+^* X)^*(N_+^* X) + (N_+ X)^*(N_+ X).$$
+     By $3$-sum faithfulness (Axiom III), $X = 0$. Inductively, $(1 + V)^{m+1}X = 0 \implies (1 + V)((1 + V)^m X) = 0 \implies (1 + V)^m X = 0 \implies X = 0$, proving $\ker(\iota_{1+V}) = \{0\}$: $\mathcal{U}$ embeds faithfully into $\mathcal{U}[(1+V)^{-1}]$ without any external inverse assumption. $\blacksquare$
+
+* **Deduction D3 (Internal Cocone Unitarity of $u_{J,\infty}$ & Partial-Isometry Sheet Reflection — from Axioms II, III, IV & D1, D2; edges $G_3, G_5 \prec G_6$):**
+  *Proof:* Inside $\mathcal{U}_\infty := \mathcal{U}[(1+V)^{-1}]$, define $W_\infty := [1, 1]$ and $u_{J,\infty} := [1,\; 1 - V + 2J]$. By Axiom IV, $\iota_{1+V}(1 + V) \cdot W_\infty = [0, 1 + V]\cdot[1, 1] = [1, 1 + V] \sim [0, 1] = 1_\infty$ (since $(1+V)^0(1+V) = (1+V)^1 \cdot 1$). Using $V^* = V$, $J^* = -J$, $[V, J] = 0$, and $(1 - V)^2 - 4J^2 = (1 + V)^2$:
+  $$u_{J,\infty}^* \cdot u_{J,\infty} = [1,\; 1 - V - 2J] \cdot [1,\; 1 - V + 2J] = [2,\; (1 - V)^2 - 4J^2] = [2,\; (1 + V)^2] \sim [0, 1] = 1_\infty,$$
+  and identically $u_{J,\infty} \cdot u_{J,\infty}^* = 1_\infty$. Setting $P_{\mathrm{sa},\infty} := u_{J,\infty} \cdot \iota_{1+V}(P) \cdot u_{J,\infty}^* = [2,\; (1 - V)^2 P + 4V P_\perp - 2(1 - V)\Phi]$, we have $P_{\mathrm{sa},\infty}^* = P_{\mathrm{sa},\infty}$ and $\delta(P_{\mathrm{sa},\infty}) = 0$. When $\delta(V) = 0$ under Axiom III, $(1 - V)N_+ = P_0 N_+ = 0$ (since $(P_0 N_+)(P_0 N_+)^* = P_0 Q_+ P_0 = 0 \implies P_0 N_+ = 0$), so $(1 - V)\Phi = 0$, $(1 - V)^2 P = P_0 P = P - Q_+$, $4V P_\perp = 4 Q_-$, and $(1 + V)^2 Q_- = 4 Q_-$, $(1 + V)^2 P_0 = P_0$. Thus in $\mathcal{U}_\infty$:
+  $$[2,\; (P - Q_+) + 4 Q_-] = [2,\; (1 + V)^2(P - Q_+ + Q_-)] \sim [0,\; (P - Q_+) + Q_-] = \iota_{1+V}(P_{0,+} + Q_-),$$
+  proving that $P_{\mathrm{sa},\infty}$ swaps $Q_+ \leftrightarrow Q_-$ while preserving $P_{0,+} := P - Q_+$, reducing to $1 - P$ if and only if $P_0 = 0$. $\blacksquare$
+
+* **Deduction D4 (Support-Projected Operator Coercivity vs. Scalar Dichotomy — from Axioms I, V & D1; edges $G_0, G_4 \prec G_7$):**
+  *Proof:* Let $V \in B_+$ have support projection $\Pi_V := \Pi_{\mathrm{supp}}(V)$ ($\delta(\Pi_V) = 0$, $\Pi_V V = V \Pi_V = V$). For $m > 0$, $\delta(V / m^2) = m^{-4}(V^2 - m^2 V) = m^{-4} V (V - m^2 \Pi_V)$. By functional calculus on the commuting positive operator $V$ restricted to $\Pi_V B \Pi_V$ (where $0$ is not an eigenvalue if $V$ is gapped, or isolated at $0$), $V^2 - m^2 V \ge 0 \iff \sigma(V) \subseteq \{0\} \cup [m^2, \infty) \iff V \ge m^2 \Pi_V$. Whenever $P_0 := 1 - \Pi_V \neq 0$ and $\Pi_V \neq 0$ (e.g., $V = \mathrm{diag}(m^2, m^2, 0)$), $\delta(V/m^2) = 0 \ge 0$ holds whereas $V = 0$ is false and $m^2 \cdot 1 - V = m^2 P_0 \not\le 0$, refuting the scalar dichotomy $(V = 0 \lor V \ge m^2 \cdot 1)$ for non-scalar operators. $\blacksquare$
+
+* **Deduction D5 (Failure of Mass-Gap Preservation Under Non-Uniform Inductive Colimits — from Axioms IV, V & D4; edges $G_5, G_7 \prec G_8$):**
+  *Proof:* Consider a directed tower of realizations $(\mathcal{A}_k, P_k, A_k)_{k \in \mathbb{N}}$ with stagewise positive Casimir operators $V_k = (k + 1)^{-1} \Pi_k$ ($\Pi_k \neq 0, \delta(\Pi_k) = 0$). At each finite stage $k$, $V_k \ge m_k^2 \Pi_k$ holds with $m_k = (k + 1)^{-1/2} > 0$, so $\delta(V_k / m_k^2) = 0 \ge 0$. Suppose a single uniform mass gap $m > 0$ satisfied $\delta(V_k / m^2) \ge 0$ across all stages $k \in \mathbb{N}$. Choosing $k \in \mathbb{N}$ with $k + 1 > m^{-2}$ gives $0 < (k + 1)^{-1} < m^2$, so $\delta(V_k / m^2) = m^{-4}(k+1)^{-1}\big((k+1)^{-1} - m^2\big)\Pi_k < 0$ on $\mathrm{ran}(\Pi_k) \neq \{0\}$, contradicting positivity. Hence inductive limits preserve positivity ($V_\infty \ge 0$) while destroying spectral gaps unless $\inf_{k \in \mathbb{N}} m_k > 0$. $\blacksquare$
+
+---
+
+#### 5.4. Master Structural Synthesis (Theorem of Rank-Exact Colimit & Defect Coagulation — $G_9$)
+
+**Theorem (Unified Law of Peirce Defect, Zero-Mode Spines, and Cayley Colimits):**
+*Let $(B, *, P, A)$ satisfy Axioms I–V. Then:*
+1. *(Chiral & Trivalent On-Shell Spine):* With aligned chirality $\omega_J = -(P + J)$ and $\tau_1 = \omega_J \Phi = -N_+ - \Sigma$, the on-shell defect law $\delta(V) = 0$ is strictly weaker than $V = 1$: $\delta(V) = 0$ splits $1 = Q_+ + P_0 + Q_-$ over $\mathbb{Z}$ into three orthogonal idempotents with tripotent $\Sigma = Q_+ - Q_-$ ($\tau(\Sigma) = 0$) and zero-mode spine $P_0 = 1 - V$, enforcing $\tau_1^2 = \tau_0^2$ globally while obstructing $\omega_J^3 = 1$ precisely by $(\omega_J - 1)P_0$ whenever $\mathrm{rank}\,P \neq \mathrm{rank}(1 - P)$ (D1).
+2. *(Internal Colimit Dichotomy):* Under Day-convolution $*$-localization (Axiom IV), singular localization $\mathcal{U}[V^{-1}]$ annihilates the zero-mode spine $P_0$, whereas shifted Cayley localization $\mathcal{U}[(1+V)^{-1}]$ embeds $\mathcal{U}$ with zero kernel via $3$-sum $*$-positivity (D2) and internally constructs $W_\infty = [1, 1]$, unitary $u_{J,\infty} = [1,\, 1 - V + 2J]$, and self-adjoint $P_{\mathrm{sa},\infty}$, which swaps $Q_+ \leftrightarrow Q_-$ while preserving $P_{0,+}$ (D3).
+3. *(Support Coercivity vs. Colimit Decay):* A physical spectral mass gap $m > 0$ on non-scalar gauge operators is equivalent to support-projected coercivity $\delta(V/m^2) \ge 0 \iff V \ge m^2 \Pi_{\mathrm{supp}}(V)$ coexisting with $\ker(V) \neq \{0\}$ (D4), and survives inductive shell colimits if and only if the stagewise gap bounds $m_k$ are bounded uniformly away from zero (D5). $\blacksquare$

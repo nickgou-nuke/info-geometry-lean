@@ -1,0 +1,115 @@
+name: Peirce kernel localization
+
+on:
+  pull_request:
+    paths:
+      - 'lean/**/*.lean'
+      - 'verification/peirce-kernel-localization/**'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/infra/opengauss_screener.py'
+      - 'tools/pathing.py'
+      - '.github/workflows/peirce-kernel-localization.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: peirce-kernel-localization-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Record checked commit and tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            git rev-parse HEAD
+            git rev-parse 'HEAD^{tree}'
+            git status --short
+          } | tee peirce-kernel-revision.log
+      - name: Restore pinned dependencies
+        id: dependencies
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: real-plucker-lean4341-d13f23b7-${{ runner.os }}-v1
+      - name: Restore checked source artifacts
+        id: source
+        uses: actions/cache/restore@v4
+        with:
+          path: verification/peirce-kernel-localization/.lake/build
+          key: peirce-kernel-source-lean4341-d13f23b7-${{ runner.os }}-${{ hashFiles('lean/**/*.lean', 'verification/peirce-kernel-localization/lakefile.toml', 'verification/peirce-kernel-localization/lake-manifest.json') }}
+          restore-keys: |
+            peirce-kernel-source-lean4341-d13f23b7-${{ runner.os }}-
+      - name: Install the pinned Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.34.1
+          "$HOME/.elan/bin/lean" --version
+          "$HOME/.elan/bin/lake" --version
+      - name: Restore the pinned Mathlib artifacts
+        run: python3 verification/peirce-kernel-localization/check.py exe cache get
+      - name: Check explicit public source inventory
+        run: python3 verification/peirce-kernel-localization/audit.py
+      - name: Build source owners and audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/peirce-kernel-localization/check.py build 2>&1 | tee peirce-kernel-build.log
+      - name: Inspect transitive axiom dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/peirce-kernel-localization/check.py env lean lean/InfoGeometry/OperatorAlgebra/PeirceSpine/KernelLocalizationAudit.lean 2>&1 | tee peirce-kernel-axioms.log
+          python3 verification/peirce-kernel-localization/audit.py --log peirce-kernel-axioms.log
+      - name: Screen new mathematics
+        run: >-
+          python3 tools/infra/opengauss_screener.py --strict
+          lean/InfoGeometry/Algebra/CentralPowerLocalization.lean
+          lean/InfoGeometry/Algebra/CentralPowerLocalizationStar.lean
+          lean/InfoGeometry/Algebra/CentralPowerLocalizationColimit.lean
+          lean/InfoGeometry/Analysis/RealStarSquareFaithfulness.lean
+          lean/InfoGeometry/Analysis/RealSupportCoercivity.lean
+          lean/InfoGeometry/OperatorAlgebra/PeirceSpine/OnShellKernel.lean
+          lean/InfoGeometry/OperatorAlgebra/PeirceSpine/CayleyKernelRegularity.lean
+          lean/InfoGeometry/OperatorAlgebra/PeirceSpine/CayleyKernelLocalization.lean
+          lean/InfoGeometry/OperatorAlgebra/PeirceSpine/KernelMatrixWitness.lean
+      - name: Save pinned dependency artifacts
+        if: always() && steps.dependencies.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: ${{ steps.dependencies.outputs.cache-primary-key }}
+      - name: Save checked source artifacts
+        if: always() && steps.source.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: verification/peirce-kernel-localization/.lake/build
+          key: ${{ steps.source.outputs.cache-primary-key }}
+      - name: Preserve validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: peirce-kernel-localization-build
+          path: |
+            peirce-kernel-build.log
+            peirce-kernel-axioms.log
+            peirce-kernel-revision.log

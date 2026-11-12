@@ -168,39 +168,149 @@ transfer/composition/kernel statements; explicit dense countermodels.
 
 ## Verification record
 
-Source review and independent static QA were completed on 12 November 2026.
-The public inventory contains 77 declarations: 72 theorems and five definitions.
-The audit companion names every public declaration exactly once.
+Verification date: 12 November 2026. The selected theorem surface is kernel
+verified at commit `f618bcb3a5bce952d7c68ddd82f04dfe33e0e573`, tree
+`8f57f2f363db690ca87227964bbf5419cbfb7d79`. The public inventory contains
+77 declarations: 72 theorems and five definitions. The audit companion names
+every public declaration exactly once.
 
-- Independent A-A source review: PASS for the stated algebraic and conditional
-  claims. This is not kernel acceptance.
-- Strict refutation of the five new Lean files and the aggregate import file:
-  exit 0, with no reported traps.
+### Compiler and independent evidence
+
+- Independent A-A source and evidence review: PASS for the complete ten-file
+  diff against `a392af178af1fe2bcba2ba39eb405700c6ee103c`.
+- Independent QA-A disposition: `ACCEPTED_WITH_LIMITED_SCOPE` for the five
+  new owner/audit Lean files. The `All.lean` import edit was statically screened
+  but the aggregate module was not compiled.
+- Compiler: Lean 4.34.1, commit
+  `5045d0056413266e57c625dcd7c365b10e377c52`.
+- Mathlib: `d13f23b723b8a846827a245b89c10fc7d3f11612`.
+  Root and focused toolchain/dependency pins are unchanged.
+
+| Verification | Run / attempt | Job | Result |
+| --- | --- | --- | --- |
+| Initial kernel verification | 43197259546 / 1 | [131111274229](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43197259546/job/131111274229) | PASS |
+| Independent QA-A rerun | 43197259546 / 2 | [131115495570](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43197259546/job/131115495570) | PASS |
+
+Both attempts completed successfully at the same source commit. QA-A requested
+the second attempt once, independently downloaded its evidence, verified its
+archive digest, and reconciled the actual fresh compiler/axiom records with
+the current source inventory. The coordinator also inspected the completed
+job metadata and actual compiler log.
+
+Evidence archives:
+
+- [Initial verification](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43197259546/artifacts/13934116504),
+  SHA-256 `437bd5703d7aa2a2fc63098c8c5aa726ce222cf816d14ec309938656708eb2ef`.
+- [Independent QA-A rerun](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43197259546/artifacts/13935030345),
+  SHA-256 `70c3c1eb7253e4eeafa160469076418e1aa4065ce84b85b59a1ab0057c1a0779`.
+
+The evidence covers the explicit owner-audit target, all five sequential fresh
+Lean elaborations, and reconciliation of the actual fresh axiom output with
+the complete public inventory. Every declaration uses only the permitted
+foundational axioms `propext`, `Classical.choice`, and `Quot.sound`, or a subset
+of them. Exact-head, dependency-revision, source-integrity, and evidence-upload
+checks also passed. A cache hit did not replace the fresh owner elaborations:
+each fresh owner wrote the `.olean` consumed by the following owners and audit.
+
+Four linter warnings in the fresh owner checks remain: two unused
+simplification arguments and two unused-section-instance warnings. A-A and
+QA-A reviewed them as nonmaterial to the theorem statements and proofs. The
+dependency build also reports warnings in existing imported owners; this is
+not a warnings-as-errors certificate.
+
+### Reproduction commands
+
+The successful workflow used the existing serialized focused verifier. From
+the repository root, its decisive commands were:
+
+```bash
+set -euo pipefail
+python3 verification/language-symmetry/check.py exe cache get
+python3 verification/language-symmetry/check.py env lean --version
+python3 verification/language-symmetry/check.py build \
+  InfoGeometry.OperatorAlgebra.HorizonCompressionPairingAudit
+
+horizon_sources=(
+  lean/InfoGeometry/OperatorAlgebra/UnitaryCornerCompression.lean
+  lean/InfoGeometry/OperatorAlgebra/TripotentMiddlePairing.lean
+  lean/InfoGeometry/OperatorAlgebra/TripotentCornerDynamics.lean
+  lean/InfoGeometry/Canonical/HorizonCompressionCounterexamples.lean
+  lean/InfoGeometry/OperatorAlgebra/HorizonCompressionPairingAudit.lean
+)
+for horizon_source in "${horizon_sources[@]}"; do
+  horizon_relative="${horizon_source#lean/}"
+  horizon_output="$PWD/verification/language-symmetry/.lake/build/lib/lean/${horizon_relative%.lean}.olean"
+  mkdir -p "$(dirname "$horizon_output")"
+  python3 verification/language-symmetry/check.py env lean --root="$PWD/lean" \
+    -o "$horizon_output" "$PWD/$horizon_source"
+done
+```
+
+The workflow separately checks source/audit inventory equality, exactly one
+actual axiom record for each public declaration, and the allowed axiom set.
+Its source is `.github/workflows/horizon-compression-pairing.yml`; the public
+job logs and uploaded evidence retain the results.
+
+### Verified source manifest
+
+These hashes identify the compiled owners and audit. The later documentation
+record update does not change these sources, the verifier, workflow, or pins.
+
+| Source under `lean/InfoGeometry/` | SHA-256 |
+| --- | --- |
+| `OperatorAlgebra/UnitaryCornerCompression.lean` | `7a058ead23a482eea743bf923ae54c7555118accb21cb3147dba872036bbb86c` |
+| `OperatorAlgebra/TripotentMiddlePairing.lean` | `d2c6e7849262ad8a411101ed0e47bc14c94f921ce7226abadb5857e6f4263306` |
+| `OperatorAlgebra/TripotentCornerDynamics.lean` | `643675a2c37593a3d7425960439e14bb6279b8d2f584e4b0d45808c50de6b589` |
+| `Canonical/HorizonCompressionCounterexamples.lean` | `53b703e33539d5b6a63eb3778d9d3706f7c2fa57a3555230fc1979c372920d62` |
+| `OperatorAlgebra/HorizonCompressionPairingAudit.lean` | `4d341a0a61aa6c6f84207544b161261e4e8b6dacb1f0e87b6c77b5fdcc3766bd` |
+
+### Independent static checks
+
+- Strict refutation of all six changed Lean files: exit 0, no reported traps.
 - Static Gate 4 on the five new Lean files: exit 0, explicitly
-  `STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED`.
+  `STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED`. Its static result is distinct from
+  the compiler evidence above.
 - Warning-strict semantic-vacuity scan: exit 1, with 13 `trivial_surface`
-  warnings. Independent QA read the flagged direct compression laws, projector
+  warnings. Independent QA inspected the direct compression laws, projector
   adjoint formulas, and dense-frame calculations and found no vacuous premise
-  or carrier substitution. Their short proofs were retained.
-- Declaration/audit inventory and `git diff --check`: passed.
+  or carrier substitution. The warnings and short proofs remain visible.
+- Complete declaration/audit inventory, dependency-pin integrity, and
+  `git diff --check`: passed.
 
-Kernel verification is still pending. The first local focused build was
-cancelled while waiting for another job's active shared build lock, before
-Lake or Lean started. A scoped GitHub workflow builds the audit target and
-freshly elaborates all five new Lean files on an independent runner. Its
-result must be inspected before any axiom-dependency or compilation acceptance
-is claimed. Draft publication does not constitute theorem acceptance.
+QA-A independently repeated these static checks against the unchanged
+`f618bcb3a5bce952d7c68ddd82f04dfe33e0e573` checkout, checked the full committed
+diff against the implementation base, and verified all nine focused dependency
+revisions. It reproduced exactly the same 77-declaration inventory and 13
+reviewed semantic warnings. No local compiler was started and no tracked
+source was changed during that independent cycle.
 
-Root Lean and Mathlib pins remain unchanged. The existing focused
-`verification/language-symmetry` project is reused with explicit targets;
-its missing `DAG` library registration is added because the selected native
-owner closure imports `DAG.Basic`. Its cache command now runs from the focused
-project directory so dependency archives hydrate that project's package paths;
-source checks retain the repository-root working directory and shared lock.
-Runtime package-location overrides point
-to all nine exact, clean root package revisions without changing pinned
-dependencies. A focused build is not a root-package or `InfoGeometry.All`
-build. The preexisting missing Homotopy/Atlas paths and uninitialized GIFT
-gitlink remain separate root-package integration constraints. A fresh
-`python3 tools/infra/ci_bootstrap.py paths` check returned exit 1 with those
-three constraints on 12 November 2026.
+### Integration scope and remaining constraints
+
+The existing focused `verification/language-symmetry` project is reused with
+explicit targets. Its missing `DAG` library registration is added because the
+selected native owner closure imports `DAG.Basic`. Its cache command runs from
+the focused project directory so dependency archives hydrate that project's
+package paths; source checks retain the repository-root working directory and
+shared lock. CI uses the pinned focused manifest without local package-location
+overrides.
+
+A focused build does not certify the root package or `InfoGeometry.All`.
+The root path preflight
+`python3 tools/infra/ci_bootstrap.py paths --report <report.json>` returned exit 1
+on 12 November 2026: the HomotopyHypothesis and Atlas path dependencies lack
+sources/configuration, and the GIFT gitlink is uninitialized. These preexisting
+root-package constraints are outside this change.
+
+Two inspected general CI jobs also fail before their Lean checks: the
+[style job](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43194302403/job/131101170393)
+reports the existing `PellisFineStructure.lean` / `PellisfineStructure.lean`
+case collision, and
+[reviewed integration](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43194302456/job/131101170890)
+reports the missing submodule URL
+for `external_refs/auto-ontology`. The two colliding files, `.gitmodules`, and
+that gitlink are unchanged by this branch. These observations do not diagnose
+all other repository workflows.
+
+The branch remains a draft under the previously authorized publication
+exception for those existing integration constraints. It is not merged and
+does not claim that the root pre-push gate or whole-repository CI passed.

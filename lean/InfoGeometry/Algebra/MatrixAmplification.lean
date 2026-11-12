@@ -57,16 +57,16 @@ theorem scalar_commute_iff [Nonempty n] (x y : A) :
 
 /-- The opposite matrix units have a diagonal commutator in every ring. -/
 theorem single_commutator (i j : n) :
-    ⁅Matrix.single i j (1 : A), Matrix.single j i 1⁆ =
-      Matrix.single i i 1 - Matrix.single j j 1 := by
+    ⁅Matrix.single i j (1 : A), Matrix.single j i (1 : A)⁆ =
+      Matrix.single i i (1 : A) - Matrix.single j j (1 : A) := by
   simp only [Ring.lie_def, Matrix.single_mul_single_same, one_mul]
 
 /-- Two distinct indices exhibit a nonzero commutator over any nontrivial ring. -/
 theorem single_commutator_ne_zero [Nontrivial A] {i j : n} (hij : i ≠ j) :
-    ⁅Matrix.single i j (1 : A), Matrix.single j i 1⁆ ≠ 0 := by
+    ⁅Matrix.single i j (1 : A), Matrix.single j i (1 : A)⁆ ≠ 0 := by
   intro h
   have hii := congrArg (fun M : Matrix n n A => M i i) h
-  exact one_ne_zero (by
+  exact (one_ne_zero : (1 : A) ≠ 0) (by
     simpa [single_commutator, Matrix.single_apply, hij, hij.symm] using hii)
 
 /-- An off-diagonal unit is not in the scalar amplification image. -/
@@ -74,7 +74,8 @@ theorem single_not_mem_range_scalar [Nontrivial A] {i j : n} (hij : i ≠ j) :
     Matrix.single i j (1 : A) ∉ Set.range (Matrix.scalar n : A → Matrix n n A) := by
   rintro ⟨a, ha⟩
   have hij' := congrArg (fun M : Matrix n n A => M i j) ha
-  exact zero_ne_one (by simpa [Matrix.scalar_apply, hij] using hij')
+  exact (zero_ne_one : (0 : A) ≠ 1) (by
+    simpa [Matrix.scalar_apply, hij] using hij')
 
 /-- The amplification is a proper embedding whenever the index type has two
 distinct elements and the coefficient ring is nontrivial. -/
@@ -90,6 +91,7 @@ section Trace
 variable {n : Type v} [Fintype n] [DecidableEq n]
 variable {A : Type u} [CommRing A]
 
+omit [DecidableEq n] in
 /-- Ordinary matrix trace annihilates commutators over commutative coefficients. -/
 theorem trace_commutator_zero (x y : Matrix n n A) : Matrix.trace ⁅x, y⁆ = 0 := by
   rw [Ring.lie_def, Matrix.trace_sub, Matrix.trace_mul_comm x y, sub_self]

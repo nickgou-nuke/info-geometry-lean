@@ -106,13 +106,21 @@ Preparation on 12 November 2026:
 - Installed staged and pre-commit proof gates: `proof_proxy_staged_gate: ok`.
 - `git diff --check`: passed.
 
-Kernel status is **pending**. The focused command
-`python3 verification/matrix-amplification/check.py build InfoGeometry.Algebra.MatrixAmplification`
-is queued behind the existing shared build lock. The root file wrapper with
-`--no-wait-for-build-lock` returned exit 2 for that occupied lock. No compiler
-or axiom-audit pass is claimed. The audit source is prepared to enumerate every
-owned declaration in all three mathematical modules, including generated and
-private declarations; its actual count must come from fresh Lean output.
+Kernel status is **pending repair validation**. The first focused CI run
+[`43195670598`](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43195670598)
+installed the pinned environment and compiled the three reused owners. Lean
+reported missing coefficient annotations on matrix units and an unresolved
+codomain for the categorical cocone components. Explicit coefficient types
+and the existing lift's `Limit := s.pt` argument address those elaboration
+errors; the next compiler run must validate these changes and the tower.
+
+The local focused `check.py build` remains queued behind the shared build lock.
+The root file wrapper with `--no-wait-for-build-lock` previously returned exit 2
+for that occupied lock. No successful compiler or axiom-audit pass is claimed.
+The audit source enumerates every owned declaration in all three mathematical
+modules, including generated and private declarations; its actual count must
+come from fresh Lean output. Draft PR publication was explicitly authorized
+with these pending checks and the separate root gate disclosed.
 
 Separately, `python3 tools/infra/ci_bootstrap.py paths` reports missing,
 untracked `HomotopyHypothesis` and `Atlas` path dependencies, and the

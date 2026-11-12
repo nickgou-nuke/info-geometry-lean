@@ -62,7 +62,7 @@ def cocone : Cocone (diagram bond) where
 /-- Native categorical cocone naturality supplies the one-step compatibility
 needed by the existing universal ring-homomorphism lift. -/
 theorem cocone_compatible (s : Cocone (diagram bond)) :
-    CompatibleCone bond (fun k => (s.ι.app k).hom) := by
+    CompatibleCone (Limit := s.pt) bond (fun k => (s.ι.app k).hom) := by
   intro k x
   have h := s.w (homOfLE (Nat.le_succ k))
   rw [diagram_map_succ] at h
@@ -71,7 +71,8 @@ theorem cocone_compatible (s : Cocone (diagram bond)) :
 /-- Every categorical cocone descends through the existing algebraic lift. -/
 def descend (s : Cocone (diagram bond)) : (cocone bond).pt ⟶ s.pt :=
   RingCat.ofHom
-    (directLimitLift bond (fun k => (s.ι.app k).hom) (cocone_compatible bond s))
+    (directLimitLift (Limit := s.pt) bond (fun k => (s.ι.app k).hom)
+      (cocone_compatible bond s))
 
 /-- The concrete direct-limit carrier satisfies the native categorical
 universal property, including uniqueness. -/
@@ -82,7 +83,7 @@ def isColimit : IsColimit (cocone bond) where
     rfl
   uniq s m hm := by
     apply RingCat.hom_ext
-    apply directLimitLift_unique bond (fun k => (s.ι.app k).hom)
+    apply directLimitLift_unique (Limit := s.pt) bond (fun k => (s.ι.app k).hom)
       (cocone_compatible bond s) m.hom
     intro k
     exact congrArg RingCat.Hom.hom (hm k)

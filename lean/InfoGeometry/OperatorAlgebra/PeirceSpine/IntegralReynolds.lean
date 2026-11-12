@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized
+import Mathlib.Tactic.Module
 
 /-!
 # The integral four-sandwich Reynolds operator
@@ -37,7 +38,8 @@ def integralReynolds (P A C : B) : B →+ B where
   map_zero' := by
     simp only [grpId, grpPhi, grpJ, grpSig, mul_zero, zero_mul, neg_zero, add_zero]
   map_add' X Y := by
-    simp only [grpId, grpPhi, grpJ, grpSig, mul_add, add_mul, neg_add_rev] <;> abel
+    simp only [grpId, grpPhi, grpJ, grpSig, mul_add, add_mul, neg_add_rev]
+    abel
 
 @[simp]
 theorem integralReynolds_apply (P A C X : B) :
@@ -52,7 +54,8 @@ theorem integralReynolds_eq_sandwich (P A C X : B) :
           genJ P A C * X * genJ P A C) +
         genSig P A C * X * genSig P A C := by
   simp only [integralReynolds_apply, grpId, grpPhi, grpJ, grpSig, pow_two,
-    mul_sub] <;> abel
+    mul_sub]
+  abel
 
 /-- The Fourier owner uses twice the integral four-sandwich sum. -/
 theorem fourierV_eq_two_integralReynolds (P A C X : B) :
@@ -67,13 +70,15 @@ include hP
 theorem integralReynolds_mass_mul (A C X : B) :
     integralReynolds P A C (genV P A C * X) =
       genV P A C * integralReynolds P A C X := by
-  simp only [integralReynolds_apply, grpId, grpPhi, grpJ, grpSig] <;> peirce_nf hP
+  simp only [integralReynolds_apply, grpId, grpPhi, grpJ, grpSig]
+  peirce_nf hP
 
 /-- Right multiplication by the mass also commutes with the integral operator. -/
 theorem integralReynolds_mul_mass (A C X : B) :
     integralReynolds P A C (X * genV P A C) =
       integralReynolds P A C X * genV P A C := by
-  simp only [integralReynolds_apply, grpId, grpPhi, grpJ, grpSig] <;> peirce_nf hP
+  simp only [integralReynolds_apply, grpId, grpPhi, grpJ, grpSig]
+  peirce_nf hP
 
 /-- The mass centralizer is invariant under the integral operator. -/
 theorem integralReynolds_commute_mass (A C X : B)
@@ -96,7 +101,8 @@ theorem integralReynolds_comp_defect (A C X : B) :
           (2 : ℤ) •
             (genPhi P A C * comm X (genV P A C) * genPhi P A C -
               genJ P A C * comm X (genV P A C) * genJ P A C)) := by
-  simp only [integralReynolds_apply, grpId, grpPhi, grpJ, grpSig] <;> peirce_nf hP
+  simp only [integralReynolds_apply, grpId, grpPhi, grpJ, grpSig]
+  peirce_nf hP
 
 /-- On the mass centralizer, composing the integral operator with itself
 multiplies its output by `4 V²`. This is a scaled idempotence law, without
@@ -117,29 +123,33 @@ theorem fourierV_comp_of_commute (A C X : B)
     fourierV P A C (fourierV P A C X) =
       (8 : ℤ) • ((genV P A C * genV P A C) * fourierV P A C X) := by
   simp only [fourierV_eq_two_integralReynolds, map_zsmul,
-    integralReynolds_comp_of_commute hP A C X hVX, mul_smul_comm, smul_smul]
-  norm_num
+    integralReynolds_comp_of_commute hP A C X hVX, mul_smul_comm]
+  module
 
 /-- The first generator has the unnormalized scale `4 V²`. -/
 theorem integralReynolds_one (A C : B) :
     integralReynolds P A C 1 = (4 : ℤ) • (genV P A C * genV P A C) := by
-  simp only [integralReynolds_apply, grpId, grpPhi, grpJ, grpSig] <;> peirce_nf hP
+  simp only [integralReynolds_apply, grpId, grpPhi, grpJ, grpSig]
+  peirce_nf hP
 
 /-- The cut has the unnormalized scale `2 V²`. In particular, the integral
 operator is not claimed to hit the whole scalar coefficient ring. -/
 theorem integralReynolds_cut (A C : B) :
     integralReynolds P A C P = (2 : ℤ) • (genV P A C * genV P A C) := by
-  simp only [integralReynolds_apply, grpId, grpPhi, grpJ, grpSig] <;> peirce_nf hP
+  simp only [integralReynolds_apply, grpId, grpPhi, grpJ, grpSig]
+  peirce_nf hP
 
 /-- The integral operator annihilates the upper Peirce generator. -/
 theorem integralReynolds_conePlus (A C : B) :
     integralReynolds P A C (conePlus P A) = 0 := by
-  simp only [integralReynolds_apply, grpId, grpPhi, grpJ, grpSig] <;> peirce_nf hP
+  simp only [integralReynolds_apply, grpId, grpPhi, grpJ, grpSig]
+  peirce_nf hP
 
 /-- The integral operator annihilates the lower Peirce generator. -/
 theorem integralReynolds_coneMinus (A C : B) :
     integralReynolds P A C (coneMinus P C) = 0 := by
-  simp only [integralReynolds_apply, grpId, grpPhi, grpJ, grpSig] <;> peirce_nf hP
+  simp only [integralReynolds_apply, grpId, grpPhi, grpJ, grpSig]
+  peirce_nf hP
 
 /-- On integer linear combinations of the four generators, the output is
 an even integer multiple of `V²`. This is an evaluation formula, not a basis
@@ -151,22 +161,24 @@ theorem integralReynolds_four_generator_zsmul (A C : B) (a b c d : ℤ) :
   rw [map_add, map_add, map_add, map_zsmul, map_zsmul, map_zsmul, map_zsmul,
     integralReynolds_one hP, integralReynolds_cut hP,
     integralReynolds_conePlus hP, integralReynolds_coneMinus hP]
-  simp only [smul_zero, add_zero, smul_smul]
-  rw [mul_comm a (4 : ℤ), mul_comm b (2 : ℤ), add_smul]
+  simp only [smul_zero, add_zero]
+  module
 
 /-- Conjugation by the Peirce sign intertwines the integral operator on all
 ambient inputs, before any mass-centralizer hypothesis is imposed. -/
 theorem integralReynolds_parity_covariant (A C X : B) :
     invS P * integralReynolds P A C X * invS P =
       integralReynolds P A C (invS P * X * invS P) := by
-  simp only [integralReynolds_apply, grpId, grpPhi, grpJ, grpSig] <;> peirce_nf hP
+  simp only [integralReynolds_apply, grpId, grpPhi, grpJ, grpSig]
+  peirce_nf hP
 
 /-- The exact defect of invariance under parity conjugation. -/
 theorem integralReynolds_parity_defect (A C X : B) :
     integralReynolds P A C (invS P * X * invS P) - integralReynolds P A C X =
       genV P A C * comm X (genV P A C) -
         invS P * (genV P A C * comm X (genV P A C)) * invS P := by
-  simp only [integralReynolds_apply, grpId, grpPhi, grpJ, grpSig] <;> peirce_nf hP
+  simp only [integralReynolds_apply, grpId, grpPhi, grpJ, grpSig]
+  peirce_nf hP
 
 /-- On the mass centralizer, parity conjugation does not change the output. -/
 theorem integralReynolds_parity_of_commute (A C X : B)

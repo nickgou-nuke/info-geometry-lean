@@ -72,14 +72,14 @@ including when the parameter vanishes: the cut and upper arrow do not commute. -
 theorem parameterOrder_noncommutative [Nontrivial R] (v : R) :
     ∃ M N : parameterOrder v, M * N ≠ N * M := by
   let P : parameterOrder v := ⟨Matrix.single 0 0 1, by
-    simp [mem_parameterOrder, Matrix.single_apply]⟩
+    simp [mem_parameterOrder]⟩
   let N : parameterOrder v := ⟨Matrix.single 0 1 1, by
-    simp [mem_parameterOrder, Matrix.single_apply]⟩
+    simp [mem_parameterOrder]⟩
   refine ⟨P, N, ?_⟩
   intro h
   have h01 := congrArg
     (fun M : parameterOrder v => (M : Matrix (Fin 2) (Fin 2) R) 0 1) h
-  simpa [P, N, Matrix.mul_apply, Fin.sum_univ_two, Matrix.single_apply] using h01
+  simp [P, N, Matrix.mul_apply, Fin.sum_univ_two, Matrix.single_apply] at h01
 
 /-- A unit parameter gives every matrix, in every characteristic. -/
 theorem parameterOrder_eq_top_of_isUnit {v : R} (hv : IsUnit v) :
@@ -89,7 +89,7 @@ theorem parameterOrder_eq_top_of_isUnit {v : R} (hv : IsUnit v) :
   change v ∣ M 1 0
   rcases hv with ⟨u, rfl⟩
   refine ⟨↑(u⁻¹) * M 1 0, ?_⟩
-  simp [mul_assoc]
+  simp
 
 /-- The missing matrix unit detects exactly whether the parameter is a unit. -/
 theorem parameterOrder_eq_top_iff {v : R} :
@@ -98,7 +98,7 @@ theorem parameterOrder_eq_top_iff {v : R} :
   intro h
   have hm : Matrix.single (1 : Fin 2) (0 : Fin 2) (1 : R) ∈ parameterOrder v := by
     rw [h]
-    exact Subalgebra.mem_top
+    exact Algebra.mem_top
   have hd : v ∣ (1 : R) := by
     simpa only [mem_parameterOrder, Matrix.single_apply_same] using hm
   exact isUnit_of_dvd_one hd
@@ -128,7 +128,7 @@ theorem cliffordCoordinateMatrix_det (v : R) :
     (cliffordCoordinateMatrix v).det = -4 * v := by
   rw [Matrix.det_succ_column_zero]
   simp [cliffordCoordinateMatrix, Fin.sum_univ_succ, Matrix.det_fin_three]
-  <;> ring
+  ring
 
 end Parameter
 
@@ -164,7 +164,8 @@ def coordinateEquiv : (Fin 4 → R[X]) ≃ₗ[R[X]] polynomialOrder R where
     fin_cases i <;> fin_cases j
     · change (M : Matrix (Fin 2) (Fin 2) R[X]) 1 1 +
         ((M : Matrix (Fin 2) (Fin 2) R[X]) 0 0 -
-          (M : Matrix (Fin 2) (Fin 2) R[X]) 1 1) = _
+          (M : Matrix (Fin 2) (Fin 2) R[X]) 1 1) =
+        (M : Matrix (Fin 2) (Fin 2) R[X]) 0 0
       ring
     · rfl
     · change X * ((M : Matrix (Fin 2) (Fin 2) R[X]) 1 0).divX =
@@ -216,8 +217,7 @@ theorem basis_coe (i : Fin 4) :
         Matrix.single 0 1 (1 : R[X]),
         Matrix.single 1 0 (X : R[X])] i := by
   fin_cases i <;> apply Matrix.ext <;> intro j k <;> fin_cases j <;> fin_cases k <;>
-    simp [basis, Module.Basis.coe_ofEquivFun, coordinateEquiv,
-      Pi.single_apply, Matrix.single_apply, Matrix.one_apply]
+    simp [basis, Module.Basis.coe_ofEquivFun, coordinateEquiv]
 
 /-- The polynomial coordinates of any order element are its native basis
 coordinates; this exposes the complete representation map. -/
@@ -239,9 +239,8 @@ theorem cliffordFrame_coe (i : Fin 4) :
         Matrix.single 0 1 (1 : R[X]) * Matrix.single 1 0 (X : R[X]) -
           Matrix.single 1 0 (X : R[X]) * Matrix.single 0 1 (1 : R[X])] i := by
   fin_cases i <;> apply Matrix.ext <;> intro j k <;> fin_cases j <;> fin_cases k <;>
-    simp [cliffordFrame, coordinateEquiv_apply, cliffordCoordinateMatrix,
-      Matrix.col, Matrix.single_apply, Matrix.one_apply, Matrix.mul_apply,
-      Fin.sum_univ_two] <;> ring
+    simp [cliffordFrame, coordinateEquiv_apply, cliffordCoordinateMatrix, Matrix.col]
+  ring
 
 /-- The change-of-generators matrix is an actual native `Basis.toMatrix`. -/
 theorem basis_toMatrix_cliffordFrame :
@@ -278,7 +277,7 @@ private theorem polynomial_basis_noncommutative [Nontrivial R] :
     (basis R 2 : Matrix (Fin 2) (Fin 2) R[X]) * (basis R 1)
   intro h
   have h01 := congrArg (fun M : Matrix (Fin 2) (Fin 2) R[X] => M 0 1) h
-  simpa [basis_coe, Matrix.mul_apply, Fin.sum_univ_two, Matrix.single_apply] using h01
+  simp [basis_coe, Matrix.mul_apply, Fin.sum_univ_two, Matrix.single_apply] at h01
 
 end PolynomialNoncommutativity
 

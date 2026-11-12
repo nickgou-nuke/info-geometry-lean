@@ -34,6 +34,8 @@ section Ring
 
 variable {P : B} (hP : P * P = P) (A C : B)
 
+include hP
+
 /-- The plus and minus factors of the skew generator multiply to `1+V`. -/
 theorem cayley_factor_product :
     (1 - genJ P A C) * (1 + genJ P A C) = 1 + genV P A C := by
@@ -85,6 +87,8 @@ section Star
 
 variable [StarRing B] {P : B} (hP : P * P = P) (hPs : star P = P)
 variable (X : B) [Invertible (1 + genV P X (star X))]
+
+include hP hPs
 
 /-- The existing generic resolvent proves unitarity after both inverse
 fields have been constructed from the invertibility of `1+V`. -/
@@ -139,6 +143,7 @@ theorem peirceCayley_conjugate_isIdempotent :
       (peirceCayley P X (star X) * P * star (peirceCayley P X (star X))) :=
   (show IsIdempotentElem P from hP).map (peirceCayleyAut hP hPs X)
 
+omit hP in
 /-- Unitary transport retains self-adjointness of the cut. -/
 theorem peirceCayley_conjugate_isSelfAdjoint :
     IsSelfAdjoint

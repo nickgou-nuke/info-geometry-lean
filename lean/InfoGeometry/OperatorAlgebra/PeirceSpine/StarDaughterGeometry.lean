@@ -32,17 +32,18 @@ theorem conjPlusInv_cut {P : B} (hP : P * P = P) (A : B) :
 
 section Star
 
-variable [StarRing B] {P : B} (hP : P * P = P) (hPs : star P = P)
+variable [StarRing B] {P : B}
 
 /-- The star defect of the existing upper chart is the skew generator. -/
-theorem projChartPlus_star_defect (A : B) :
+theorem projChartPlus_star_defect (hPs : star P = P) (A : B) :
     star (projChartPlus P A) - projChartPlus P A = genJ P A (star A) := by
   simp only [projChartPlus, star_sub, hPs, star_conePlus hPs, genJ]
   abel
 
 /-- A self-adjoint upper daughter must have zero upper corner, even
 without an order, a norm, or properness of the star pairing. -/
-theorem projChartPlus_isSelfAdjoint_iff (A : B) :
+theorem projChartPlus_isSelfAdjoint_iff
+    (hP : P * P = P) (hPs : star P = P) (A : B) :
     IsSelfAdjoint (projChartPlus P A) ↔ conePlus P A = 0 := by
   constructor
   · intro h
@@ -55,7 +56,8 @@ theorem projChartPlus_isSelfAdjoint_iff (A : B) :
     simpa only [projChartPlus, h, sub_zero] using (show IsSelfAdjoint P from hPs)
 
 /-- The nontrivial upper shear is not unitary for a self-adjoint cut. -/
-theorem one_add_conePlus_mem_unitary_iff (A : B) :
+theorem one_add_conePlus_mem_unitary_iff
+    (hP : P * P = P) (hPs : star P = P) (A : B) :
     1 + conePlus P A ∈ unitary B ↔ conePlus P A = 0 := by
   constructor
   · intro h
@@ -70,14 +72,15 @@ theorem one_add_conePlus_mem_unitary_iff (A : B) :
     simp [h]
 
 /-- The daughter's Gram product keeps the upper-corner Gram term. -/
-theorem projChartPlus_gram (A : B) :
+theorem projChartPlus_gram (hP : P * P = P) (hPs : star P = P) (A : B) :
     projChartPlus P A * star (projChartPlus P A) =
       P + conePlus P A * coneMinus P (star A) := by
   simp only [projChartPlus, star_sub, hPs, star_conePlus hPs]
   peirce_nf hP
 
 /-- Squaring the Gram product gives its exact idempotency defect. -/
-theorem projChartPlus_gram_defect (A : B) :
+theorem projChartPlus_gram_defect
+    (hP : P * P = P) (hPs : star P = P) (A : B) :
     (projChartPlus P A * star (projChartPlus P A)) ^ 2 -
         projChartPlus P A * star (projChartPlus P A) =
       (conePlus P A * coneMinus P (star A)) ^ 2 +
@@ -88,7 +91,8 @@ theorem projChartPlus_gram_defect (A : B) :
 
 /-- The Gram defect is an actual star square. This algebraic identity
 does not presuppose that the star ring carries an order. -/
-theorem projChartPlus_gram_defect_star_square (A : B) :
+theorem projChartPlus_gram_defect_star_square
+    (hP : P * P = P) (hPs : star P = P) (A : B) :
     (projChartPlus P A * star (projChartPlus P A)) ^ 2 -
         projChartPlus P A * star (projChartPlus P A) =
       (conePlus P A * coneMinus P (star A) + conePlus P A) *
@@ -100,6 +104,7 @@ theorem projChartPlus_gram_defect_star_square (A : B) :
 
 /-- Properness detects the nonzero Gram defect of a nontrivial daughter. -/
 theorem projChartPlus_gram_defect_eq_zero_iff
+    (hP : P * P = P) (hPs : star P = P)
     (hproper : ∀ X : B, star X * X = 0 → X = 0) (A : B) :
     (projChartPlus P A * star (projChartPlus P A)) ^ 2 -
         projChartPlus P A * star (projChartPlus P A) = 0 ↔
@@ -123,7 +128,7 @@ theorem projChartPlus_gram_defect_eq_zero_iff
 
 /-- Once the upper corner vanishes, star symmetry of the amplitude also
 forces the lower corner to vanish. -/
-theorem coneMinus_eq_zero_of_conePlus_eq_zero
+theorem coneMinus_eq_zero_of_conePlus_eq_zero (hPs : star P = P)
     {A : B} (hA : star A = A ∨ star A = -A) (hN : conePlus P A = 0) :
     coneMinus P A = 0 := by
   have hstar := congrArg star hN
@@ -134,6 +139,7 @@ theorem coneMinus_eq_zero_of_conePlus_eq_zero
 
 /-- A self-adjoint or skew-adjoint amplitude has no one-sided blind spot. -/
 theorem comm_cut_eq_zero_iff_conePlus_eq_zero
+    (hP : P * P = P) (hPs : star P = P)
     {A : B} (hA : star A = A ∨ star A = -A) :
     comm P A = 0 ↔ conePlus P A = 0 := by
   have hsplit : comm P A = conePlus P A - coneMinus P A := by
@@ -151,6 +157,7 @@ theorem comm_cut_eq_zero_iff_conePlus_eq_zero
 /-- The existing faithful Gram criterion now detects the entire cut
 commutator, under the amplitude's explicit star relation. -/
 theorem genV_eq_zero_iff_comm_cut_eq_zero
+    (hP : P * P = P) (hPs : star P = P)
     (hproper : ∀ X : B, star X * X = 0 → X = 0)
     {A : B} (hA : star A = A ∨ star A = -A) :
     genV P A (star A) = 0 ↔ comm P A = 0 := by

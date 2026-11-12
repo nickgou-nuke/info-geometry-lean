@@ -91,8 +91,17 @@ theorem peirceThreeRotation_add (A C : B) (hV : genV P A C = 1)
     sub_eq_zero.mp (by simpa [hV] using haa)
   have hbb' : cubeRootOpConj P A C * cubeRootOpConj P A C = cubeRootOp P A C :=
     sub_eq_zero.mp (by simpa [hV] using hbb)
-  fin_cases i <;> fin_cases j <;>
-    simp +decide [peirceThreeRotation, haa', hbb', hab, hba, hV]
+  have cases3 (k : ZMod 3) : k = 0 ∨ k = 1 ∨ k = 2 := by
+    fin_cases k <;> decide
+  have h11 : (1 : ZMod 3) + 1 = 2 := by decide
+  have h12 : (1 : ZMod 3) + 2 = 0 := by decide
+  have h21 : (2 : ZMod 3) + 1 = 0 := by decide
+  have h22 : (2 : ZMod 3) + 2 = 1 := by decide
+  rcases cases3 i with rfl | rfl | rfl <;>
+    rcases cases3 j with rfl | rfl | rfl <;>
+    simp only [zero_add, add_zero, h11, h12, h21, h22,
+      peirceThreeRotation_zero, peirceThreeRotation_one, peirceThreeRotation_two,
+      one_mul, mul_one, haa', hbb', hab, hba, hV]
 
 include hP in
 /-- Reflection reverses the cyclic parameter. The braiding is valid even off shell. -/
@@ -101,7 +110,13 @@ theorem peirceThreeRotation_mul_phi (A C : B) (i : ZMod 3) :
       genPhi P A C * peirceThreeRotation P A C (-i) := by
   obtain ⟨_, _, _, _, _, ha, hb, _⟩ :=
     archetype_A59_s3_operator_cyclotomic_braiding_and_reflections hP A C
-  fin_cases i <;> simp +decide [peirceThreeRotation, ha, hb]
+  have cases3 (k : ZMod 3) : k = 0 ∨ k = 1 ∨ k = 2 := by
+    fin_cases k <;> decide
+  have hneg1 : -(1 : ZMod 3) = 2 := by decide
+  have hneg2 : -(2 : ZMod 3) = 1 := by decide
+  rcases cases3 i with rfl | rfl | rfl <;>
+    simp only [neg_zero, hneg1, hneg2, peirceThreeRotation_zero,
+      peirceThreeRotation_one, peirceThreeRotation_two, one_mul, mul_one, ha, hb]
 
 /-- The native order-six dihedral group acts by the Peirce operators on the
 unit shell. Mathlib's `sr i` is reflection followed by rotation. -/

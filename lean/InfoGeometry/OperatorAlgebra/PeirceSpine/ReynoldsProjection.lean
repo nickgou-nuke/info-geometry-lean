@@ -103,7 +103,8 @@ theorem sandwichLinearMap_fixed_iff (s : B) (hs : s * s = 1) (x : B) :
   constructor
   · intro hx
     have h := congrArg (fun y : B => y * s) hx
-    simpa only [sandwichLinearMap, mul_assoc, hs, mul_one] using h
+    change (s * x * s) * s = x * s at h
+    simpa only [mul_assoc, hs, mul_one] using h
   · intro hx
     change s * x * s = x
     rw [hx, mul_assoc, hs, mul_one]
@@ -137,9 +138,11 @@ theorem range_reynoldsProjection (A C : B) (hV : genV P A C = 1) :
     (archetype_A2_peirce_cartan_grading_and_tangent_closure hP A C).1
   rw [reynoldsProjection,
     InfoGeometry.Algebra.CommutingInvolutionProjection.range_average
-      _ _ (phiUnitSquareEquiv_involutive hP A C hV)
+      (sandwichLinearMap (genPhi P A C) (genPhi P A C))
+      (sandwichLinearMap (invS P) (invS P))
+      (fun x => phiUnitSquareEquiv_involutive hP A C hV x)
       (fun x => (parityConj_involutive_ring_action hP x 1).1)
-      (phiUnitSquareEquiv_commutes_parity hP A C hV)]
+      (fun x => phiUnitSquareEquiv_commutes_parity hP A C hV x)]
   ext x
   change x ∈ InfoGeometry.Algebra.CommutingInvolutionProjection.jointFixed _ _ ↔
     x ∈ Subalgebra.centralizer ℝ ({genPhi P A C, invS P} : Set B)

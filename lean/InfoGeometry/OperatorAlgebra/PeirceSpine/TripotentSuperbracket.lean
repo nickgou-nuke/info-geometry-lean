@@ -73,7 +73,7 @@ theorem superBracket_mem_fiveGradeRange {T X Y : A} {i j k : FiveGrade}
   have hXY := mul_mem_fiveGradeRange hT hk hX hY
   have hYX : Y * X ∈ fiveGradeRange T k :=
     mul_mem_fiveGradeRange hT (by simpa only [add_comm] using hk) hY hX
-  unfold superBracket anticommutator commutator
+  unfold superBracket anticommutator InfoGeometry.Algebra.SupergradedBracket.commutator
   split_ifs
   · exact (fiveGradeRange T k).add_mem hXY hYX
   · exact (fiveGradeRange T k).sub_mem hXY hYX
@@ -88,6 +88,8 @@ theorem superBracket_eq_zero_of_fiveGrade_sum_not_mem
   have houtR : (fiveGradeValue i : ℝ) + (fiveGradeValue j : ℝ) ∉
       Set.range (fun k : FiveGrade => (fiveGradeValue k : ℝ)) := by
     rintro ⟨k, hk⟩
+    change (fiveGradeValue k : ℝ) =
+      (fiveGradeValue i : ℝ) + (fiveGradeValue j : ℝ) at hk
     apply hout
     refine ⟨k, ?_⟩
     exact_mod_cast hk
@@ -96,7 +98,8 @@ theorem superBracket_eq_zero_of_fiveGrade_sum_not_mem
   have hYX : Y * X = 0 :=
     mul_eq_zero_of_weight_not_mem hT hY hX
       (by simpa only [add_comm] using houtR)
-  simp [superBracket, anticommutator, commutator, hXY, hYX]
+  simp [superBracket, anticommutator,
+    InfoGeometry.Algebra.SupergradedBracket.commutator, hXY, hYX]
 
 /-- The signed bracket with its codomain restricted to the proved sum grade. -/
 def fiveGradeSuperBracket {T : A} (hT : T * T * T = T)

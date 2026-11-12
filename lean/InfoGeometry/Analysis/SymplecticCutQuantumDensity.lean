@@ -82,6 +82,7 @@ theorem hasDerivAt_quantumDensity (a b d c : ℝ) :
     hasDerivAt_const_mul d
   have h := ((hlin.sub (hlog.const_mul (b + d))).exp).const_mul
     (Real.Gamma a * Real.Gamma (b + d))
+  simp only [Pi.sub_apply] at h
   have hf : quantumDensity a b d = fun x =>
       Real.Gamma a * Real.Gamma (b + d) *
         Real.exp (d * x - (b + d) * Real.log (1 + Real.exp x)) :=

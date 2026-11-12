@@ -153,7 +153,7 @@ theorem inclusion_single_commutator_ne_zero [Nontrivial A]
     ⁅inclusion n A (k + 1) (Matrix.single i j (1 : stage n A k)),
       inclusion n A (k + 1) (Matrix.single j i (1 : stage n A k))⁆ ≠ 0 := by
   intro h
-  exact single_commutator_ne_zero hij
+  exact single_commutator_ne_zero (A := stage n A k) hij
     ((inclusion_commutator_eq_zero_iff n A (k + 1) _ _).mp h)
 
 end Faithfulness

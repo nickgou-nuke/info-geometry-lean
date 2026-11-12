@@ -1,0 +1,23 @@
+{
+  "algorithm": "SHA256",
+  "base_commit": "a392af178af1fe2bcba2ba39eb405700c6ee103c",
+  "recorded_utc": "2026-11-12T20:00:30.843802+00:00",
+  "qa_receipt_sha256": "dd0d27a7fe71ec2d81537e84d40943604dcbc800ee35eb88e18509150a5adceb",
+  "files": {
+    ".githooks/pre-push": "6e0a8824299d493b1e39350413164ae45c5663c261658635e2d4962b6ae1d8c2",
+    "docs/CLIFFORD_PEIRCE_WALSH_CONTRACT.md": "0e76606bca47d6a05fc0e192332c56c54127976af327c2f3c2d700d30745a84d",
+    "lean/InfoGeometry/All.lean": "5d82cecfea0ee81bcfa61b00ab2eabfc2aa8123fb32b495cf5a0feea0d8a56d5",
+    "lean/InfoGeometry/Canonical/CliffordPeirceWalshAudit.lean": "dfb55996aeac65fc56f2e93b532e60bdc72ff6ea407b1a7c219d9224d9d28bdd",
+    "lean/InfoGeometry/Clifford/OperatorValuedJonesWalsh.lean": "cc68c096d3debc84d68a4bdcebbe3cb081f76ad958a890a0a3f4359fac02f737",
+    "lean/InfoGeometry/OperatorAlgebra/StarSymplecticSqueeze.lean": "52efd51d70296b884ea94115a69d18020ea2dcb65f3b1b5405ed619c7bfa7003",
+    "scripts/quality/post_build_gate.sh": "ef6a02211a0d6f905bb985b906864994f8745dde1746f03daf9623f47c878197",
+    "tests/quality/test_clifford_peirce_walsh_gate_routing.py": "17e5e2df5a3702ab6be4497fe01cfc2b037301f27908f9dc93f84774586fc116",
+    "tests/quality/test_pre_push_ref_range.py": "50b0a2a4f76d6b2167a82c32f4975ece327cff00079ed864aa9f5b808a704705",
+    "verification/clifford-peirce-walsh/README.md": "0d8ebb044f95b04025dd3c7ed5597b4dd697ad6f72a02091d8f6fea9aac4a6cb",
+    "verification/clifford-peirce-walsh/check.py": "a6209f562b887f88eb8376762041b4fb183aef59d52f1a37e40798c398567fe4",
+    "verification/clifford-peirce-walsh/lake-manifest.json": "6a5e0c1c7cd7cae732af2bace914ad2ecf9abcae2abeb0b16176ae6d0788bda5",
+    "verification/clifford-peirce-walsh/lakefile.lean": "39859150b8eba2d632512fec8a2f60b0dc9d1e73eb7671497c50f759a4b79289",
+    "verification/clifford-peirce-walsh/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b"
+  },
+  "scope": "Fourteen promoted source, contract, setup, hook and test files matched the independently reviewed infrastructure input manifest. This results document and the copied receipt are added after verification."
+}

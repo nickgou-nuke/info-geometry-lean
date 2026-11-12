@@ -43,20 +43,24 @@ while read -r local_ref local_oid remote_ref remote_oid || [[ -n "${local_ref:-}
     # The gate reads source from the worktree. Do not let uncommitted Lean or
     # gate changes make that source differ from the commit being pushed.
     if ! git diff --quiet "$local_commit" -- lean src lean_sandbox proofs verification/spinorial-core \
+        verification/clifford-peirce-walsh \
         lib/InfoGeometryCore lakefile.lean lakefile.src.lean lake-manifest.json lean-toolchain \
         .githooks scripts/quality tools/quality tools/infra; then
         echo "[pre-push] refusing to certify a worktree with modified proof/gate sources" >&2
         exit 1
     fi
     untracked_sources="$(git ls-files --others --exclude-standard -- lean src lean_sandbox proofs verification/spinorial-core \
+        verification/clifford-peirce-walsh \
         lib/InfoGeometryCore lakefile.lean lakefile.src.lean lake-manifest.json lean-toolchain \
         .githooks scripts/quality tools/quality tools/infra)"
     ignored_lean_sources="$(git ls-files --others --ignored --exclude-standard -- \
         'lean/*.lean' 'lean/**/*.lean' 'src/*.lean' 'src/**/*.lean' 'lean_sandbox/*.lean' 'lean_sandbox/**/*.lean' \
         'proofs/*.lean' 'proofs/**/*.lean' 'verification/spinorial-core/*.lean' \
         'verification/spinorial-core/**/*.lean' 'lib/InfoGeometryCore/*.lean' \
+        'verification/clifford-peirce-walsh/*.lean' 'verification/clifford-peirce-walsh/**/*.lean' \
         'lib/InfoGeometryCore/**/*.lean' ':(exclude)lean/.lake/**' \
         ':(exclude)lean_sandbox/.lake/**' ':(exclude)proofs/.lake/**' \
+        ':(exclude)verification/clifford-peirce-walsh/.lake/**' \
         ':(exclude)verification/spinorial-core/.lake/**' ':(exclude)lib/InfoGeometryCore/.lake/**' | while IFS= read -r path; do
             [[ -f "$path" && "$path" == *.lean ]] || continue
             ignore_match="$(git check-ignore -v -- "$path" || true)"

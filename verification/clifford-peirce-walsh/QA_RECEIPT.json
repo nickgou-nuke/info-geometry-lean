@@ -1,0 +1,615 @@
+{
+  "role": "QA-A",
+  "agent": "/root/clifford_independent_qa",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "completed_utc": "2026-11-12T19:58:16.742358+00:00",
+  "base": "a392af178af1fe2bcba2ba39eb405700c6ee103c",
+  "current_git_head": "a392af178af1fe2bcba2ba39eb405700c6ee103c",
+  "current_git_status": "M  .githooks/pre-push\nA  docs/CLIFFORD_PEIRCE_WALSH_CONTRACT.md\nM  lean/InfoGeometry/All.lean\nA  lean/InfoGeometry/Canonical/CliffordPeirceWalshAudit.lean\nA  lean/InfoGeometry/Clifford/OperatorValuedJonesWalsh.lean\nA  lean/InfoGeometry/OperatorAlgebra/StarSymplecticSqueeze.lean\nM  scripts/quality/post_build_gate.sh\nA  tests/quality/test_clifford_peirce_walsh_gate_routing.py\nM  tests/quality/test_pre_push_ref_range.py\nA  verification/clifford-peirce-walsh/README.md\nA  verification/clifford-peirce-walsh/check.py\nA  verification/clifford-peirce-walsh/lake-manifest.json\nA  verification/clifford-peirce-walsh/lakefile.lean\nA  verification/clifford-peirce-walsh/lean-toolchain\n",
+  "attempt_accepted": 2,
+  "owner_edits_by_qa": false,
+  "independence": "This QA agent is distinct from the theorem author, the initial semantic A-A, and the final scope A-A; it reran decisive checks against frozen current bytes.",
+  "source_audit_receipts": {
+    "tmp/clifford-peirce-walsh/aa/final-scope-aa.json": {
+      "sha256": "465776aa085b71688729c515d5219f6c7fbdc893fe11bb40520a45caaf59f417",
+      "status": "PASS"
+    },
+    "tmp/clifford-peirce-walsh/aa/gate-route-aa.json": {
+      "sha256": "a046db938f8910045cc6785ec018d060b27909f88404dd062e12e4f0318a8813",
+      "status": "PASS"
+    },
+    "tmp/clifford-peirce-walsh/aa/push-guard-aa.json": {
+      "sha256": "71562a1b571ee149b7d9e28e2ca8e783d4c1fbf7dbd67c12f889884fac11a8d5",
+      "status": "PASS"
+    },
+    "tmp/clifford-peirce-walsh/aa/heuristic-disposition.json": {
+      "sha256": "af7303381f86b9e1aeda93d64710f921dbca1a8af28ab7fdde37b2da2d927950",
+      "status": "PASS_WITH_RETAINED_ADVISORIES"
+    }
+  },
+  "reviewed_manifests": {
+    "reviewed-inputs.json": {
+      "sha256": "dd034a0784d2af2d8ed9fcc3079ca43579ad769333ef283307d06e1ac875c814",
+      "protected_file_count": 47
+    },
+    "infrastructure-reviewed-inputs.json": {
+      "sha256": "7f70c72975ab7f92e75b9b76e240b3e1a69fb00f956e08ed4d34bd7c5bdcaa70",
+      "protected_file_count": 49
+    }
+  },
+  "exact_native_launcher": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "/workspace/scratch/f5b13f1aceb8/info-geometry-lean/verification/clifford-peirce-walsh/check.py",
+    "env",
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "/workspace/scratch/f5b13f1aceb8/info-geometry-lean/tmp/clifford-peirce-walsh/qa/run_independent_qa.py"
+  ],
+  "exact_infrastructure_launcher": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "/workspace/scratch/f5b13f1aceb8/info-geometry-lean/verification/clifford-peirce-walsh/check.py",
+    "env",
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "/workspace/scratch/f5b13f1aceb8/info-geometry-lean/tmp/clifford-peirce-walsh/qa/run_infrastructure_qa.py"
+  ],
+  "native_checks": [
+    {
+      "name": "lean-version",
+      "kind": "compiler_identity",
+      "argv": [
+        "lean",
+        "--version"
+      ],
+      "cwd": "/workspace/scratch/f5b13f1aceb8/info-geometry-lean",
+      "started_utc": "2026-11-12T19:52:06.433428+00:00",
+      "log": "tmp/clifford-peirce-walsh/qa/lean-version.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-12T19:52:06.475827+00:00",
+      "elapsed_seconds": 0.042,
+      "log_sha256": "355a9a028f81641782d75d6e6b58dec70f29d2f61238a9e271690259d9bf5680",
+      "warning_count": 0,
+      "warning_lines": [],
+      "error_lines": []
+    },
+    {
+      "name": "screener",
+      "kind": "static",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Clifford/OperatorValuedJonesWalsh.lean",
+        "lean/InfoGeometry/OperatorAlgebra/StarSymplecticSqueeze.lean",
+        "lean/InfoGeometry/Canonical/CliffordPeirceWalshAudit.lean",
+        "lean/InfoGeometry/All.lean",
+        "--strict"
+      ],
+      "cwd": "/workspace/scratch/f5b13f1aceb8/info-geometry-lean",
+      "started_utc": "2026-11-12T19:52:06.480541+00:00",
+      "log": "tmp/clifford-peirce-walsh/qa/screener.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-12T19:52:06.812413+00:00",
+      "elapsed_seconds": 0.332,
+      "log_sha256": "ed719d5cdf9396793ecdd81a3c7c14ce0a3814c9a08538ff6267c1a01a37f8aa",
+      "warning_count": 0,
+      "warning_lines": [],
+      "error_lines": []
+    },
+    {
+      "name": "refute",
+      "kind": "static",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tools/infra/opengauss_cli.py",
+        "refute",
+        "lean/InfoGeometry/Clifford/OperatorValuedJonesWalsh.lean",
+        "lean/InfoGeometry/OperatorAlgebra/StarSymplecticSqueeze.lean",
+        "lean/InfoGeometry/Canonical/CliffordPeirceWalshAudit.lean",
+        "lean/InfoGeometry/All.lean",
+        "--strict",
+        "--json"
+      ],
+      "cwd": "/workspace/scratch/f5b13f1aceb8/info-geometry-lean",
+      "started_utc": "2026-11-12T19:52:06.828608+00:00",
+      "log": "tmp/clifford-peirce-walsh/qa/refute.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-12T19:52:07.116799+00:00",
+      "elapsed_seconds": 0.288,
+      "log_sha256": "c1f94ddcc366318be2d88b129c80605769adfb39992f52b64c62a771153ec43d",
+      "warning_count": 0,
+      "warning_lines": [],
+      "error_lines": []
+    },
+    {
+      "name": "gate4-source",
+      "kind": "static",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tools/infra/opengauss_cli.py",
+        "review",
+        "lean/InfoGeometry/Clifford/OperatorValuedJonesWalsh.lean",
+        "lean/InfoGeometry/OperatorAlgebra/StarSymplecticSqueeze.lean",
+        "lean/InfoGeometry/Canonical/CliffordPeirceWalshAudit.lean",
+        "lean/InfoGeometry/All.lean",
+        "--gate",
+        "GATE_4",
+        "--json"
+      ],
+      "cwd": "/workspace/scratch/f5b13f1aceb8/info-geometry-lean",
+      "started_utc": "2026-11-12T19:52:07.122433+00:00",
+      "log": "tmp/clifford-peirce-walsh/qa/gate4-source.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-12T19:55:20.183395+00:00",
+      "elapsed_seconds": 193.061,
+      "log_sha256": "d92cd22250374e9ad269ea89935b7c876887fc67d41729295d1a05daaaa35f0f",
+      "warning_count": 0,
+      "warning_lines": [],
+      "error_lines": []
+    },
+    {
+      "name": "semantic-vacuity",
+      "kind": "static",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tools/quality/semantic_vacuity_gate.py",
+        "lean/InfoGeometry/Clifford/OperatorValuedJonesWalsh.lean",
+        "lean/InfoGeometry/OperatorAlgebra/StarSymplecticSqueeze.lean",
+        "lean/InfoGeometry/Canonical/CliffordPeirceWalshAudit.lean",
+        "lean/InfoGeometry/All.lean",
+        "--json-out",
+        "/workspace/scratch/f5b13f1aceb8/info-geometry-lean/tmp/clifford-peirce-walsh/qa/semantic-vacuity.json",
+        "--fail-on",
+        "error"
+      ],
+      "cwd": "/workspace/scratch/f5b13f1aceb8/info-geometry-lean",
+      "started_utc": "2026-11-12T19:55:20.190642+00:00",
+      "log": "tmp/clifford-peirce-walsh/qa/semantic-vacuity.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-12T19:55:20.281341+00:00",
+      "elapsed_seconds": 0.09,
+      "log_sha256": "35a8ed628f2bab0d21c2c1dd7d73725ed5fd1687ba8feccbac89e8da5938e9ba",
+      "warning_count": 0,
+      "warning_lines": [],
+      "error_lines": []
+    },
+    {
+      "name": "advisory-OperatorValuedJonesWalsh",
+      "kind": "static_advisory",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "scripts/vacuity-linter.py",
+        "lean/InfoGeometry/Clifford/OperatorValuedJonesWalsh.lean",
+        "--json"
+      ],
+      "cwd": "/workspace/scratch/f5b13f1aceb8/info-geometry-lean",
+      "started_utc": "2026-11-12T19:55:20.286389+00:00",
+      "log": "tmp/clifford-peirce-walsh/qa/advisory-OperatorValuedJonesWalsh.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-12T19:55:20.321028+00:00",
+      "elapsed_seconds": 0.034,
+      "log_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e",
+      "warning_count": 0,
+      "warning_lines": [],
+      "error_lines": []
+    },
+    {
+      "name": "advisory-StarSymplecticSqueeze",
+      "kind": "static_advisory",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "scripts/vacuity-linter.py",
+        "lean/InfoGeometry/OperatorAlgebra/StarSymplecticSqueeze.lean",
+        "--json"
+      ],
+      "cwd": "/workspace/scratch/f5b13f1aceb8/info-geometry-lean",
+      "started_utc": "2026-11-12T19:55:20.325600+00:00",
+      "log": "tmp/clifford-peirce-walsh/qa/advisory-StarSymplecticSqueeze.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-12T19:55:20.358159+00:00",
+      "elapsed_seconds": 0.032,
+      "log_sha256": "2b883b12429c1e5510aeae17dd10edc94a5a09dcb2f50b6cd8e43d6461c9c1db",
+      "warning_count": 0,
+      "warning_lines": [],
+      "error_lines": []
+    },
+    {
+      "name": "advisory-CliffordPeirceWalshAudit",
+      "kind": "static_advisory",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "scripts/vacuity-linter.py",
+        "lean/InfoGeometry/Canonical/CliffordPeirceWalshAudit.lean",
+        "--json"
+      ],
+      "cwd": "/workspace/scratch/f5b13f1aceb8/info-geometry-lean",
+      "started_utc": "2026-11-12T19:55:20.363308+00:00",
+      "log": "tmp/clifford-peirce-walsh/qa/advisory-CliffordPeirceWalshAudit.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-12T19:55:20.398355+00:00",
+      "elapsed_seconds": 0.035,
+      "log_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e",
+      "warning_count": 0,
+      "warning_lines": [],
+      "error_lines": []
+    },
+    {
+      "name": "advisory-All",
+      "kind": "static_advisory",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "scripts/vacuity-linter.py",
+        "lean/InfoGeometry/All.lean",
+        "--json"
+      ],
+      "cwd": "/workspace/scratch/f5b13f1aceb8/info-geometry-lean",
+      "started_utc": "2026-11-12T19:55:20.405467+00:00",
+      "log": "tmp/clifford-peirce-walsh/qa/advisory-All.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-12T19:55:20.454636+00:00",
+      "elapsed_seconds": 0.048,
+      "log_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e",
+      "warning_count": 0,
+      "warning_lines": [],
+      "error_lines": []
+    },
+    {
+      "name": "aggregate-build",
+      "kind": "native_build",
+      "argv": [
+        "lake",
+        "-d",
+        "/workspace/scratch/f5b13f1aceb8/info-geometry-lean/verification/clifford-peirce-walsh",
+        "build",
+        "InfoGeometry.Canonical.CliffordPeirceWalshAudit"
+      ],
+      "cwd": "/workspace/scratch/f5b13f1aceb8/info-geometry-lean",
+      "started_utc": "2026-11-12T19:55:20.463473+00:00",
+      "log": "tmp/clifford-peirce-walsh/qa/aggregate-build.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-12T19:55:46.210434+00:00",
+      "elapsed_seconds": 25.747,
+      "log_sha256": "f2d6374a7323cbc72978b6963aa9ba59c5d556ce8a613d16d35ec0e7ac466f07",
+      "warning_count": 4,
+      "warning_lines": [
+        "warning: ../../lean/InfoGeometry/Clifford/OperatorValuedJones.lean:40:67: This simp argument is unused:",
+        "warning: ../../lean/InfoGeometry/Core/PeirceDecomposition.lean:192:55: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice",
+        "warning: ../../lean/InfoGeometry/Geometry/AssociativeGaugeConnection.lean:57:0: automatically included section variable(s) unused in theorem `InfoGeometry.Geometry.AssociativeGaugeConnection.curvature_antisymm`:",
+        "warning: ../../lean/InfoGeometry/Geometry/AssociativeGaugeConnection.lean:121:0: automatically included section variable(s) unused in theorem `InfoGeometry.Geometry.AssociativeGaugeConnection.cyclic_conjugate`:"
+      ],
+      "error_lines": []
+    },
+    {
+      "name": "direct-walsh",
+      "kind": "native_direct",
+      "argv": [
+        "lean",
+        "/workspace/scratch/f5b13f1aceb8/info-geometry-lean/lean/InfoGeometry/Clifford/OperatorValuedJonesWalsh.lean"
+      ],
+      "cwd": "/workspace/scratch/f5b13f1aceb8/info-geometry-lean",
+      "started_utc": "2026-11-12T19:55:46.219130+00:00",
+      "log": "tmp/clifford-peirce-walsh/qa/direct-walsh.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-12T19:55:51.416165+00:00",
+      "elapsed_seconds": 5.197,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "warning_count": 0,
+      "warning_lines": [],
+      "error_lines": []
+    },
+    {
+      "name": "direct-squeeze",
+      "kind": "native_direct",
+      "argv": [
+        "lean",
+        "/workspace/scratch/f5b13f1aceb8/info-geometry-lean/lean/InfoGeometry/OperatorAlgebra/StarSymplecticSqueeze.lean"
+      ],
+      "cwd": "/workspace/scratch/f5b13f1aceb8/info-geometry-lean",
+      "started_utc": "2026-11-12T19:55:51.428540+00:00",
+      "log": "tmp/clifford-peirce-walsh/qa/direct-squeeze.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-12T19:55:56.878955+00:00",
+      "elapsed_seconds": 5.449,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "warning_count": 0,
+      "warning_lines": [],
+      "error_lines": []
+    },
+    {
+      "name": "fresh-audit",
+      "kind": "native_direct_audit",
+      "argv": [
+        "lean",
+        "/workspace/scratch/f5b13f1aceb8/info-geometry-lean/tmp/clifford-peirce-walsh/qa/FreshCliffordPeirceWalshAudit.lean"
+      ],
+      "cwd": "/workspace/scratch/f5b13f1aceb8/info-geometry-lean",
+      "started_utc": "2026-11-12T19:55:56.885244+00:00",
+      "log": "tmp/clifford-peirce-walsh/qa/fresh-audit.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-12T19:56:02.047069+00:00",
+      "elapsed_seconds": 5.161,
+      "log_sha256": "bc6bc4727ff11e4585772cce42e40c31ce08a2b2ea8272e72bdce97e5a04ab04",
+      "warning_count": 0,
+      "warning_lines": [],
+      "error_lines": []
+    }
+  ],
+  "infrastructure_checks": [
+    {
+      "name": "syntax-post-build-gate",
+      "argv": [
+        "bash",
+        "-n",
+        "scripts/quality/post_build_gate.sh"
+      ],
+      "cwd": "/workspace/scratch/f5b13f1aceb8/info-geometry-lean",
+      "started_utc": "2026-11-12T19:56:40.865699+00:00",
+      "log": "tmp/clifford-peirce-walsh/qa/syntax-post-build-gate.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-12T19:56:40.869599+00:00",
+      "elapsed_seconds": 0.003,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "syntax-pre-push",
+      "argv": [
+        "bash",
+        "-n",
+        ".githooks/pre-push"
+      ],
+      "cwd": "/workspace/scratch/f5b13f1aceb8/info-geometry-lean",
+      "started_utc": "2026-11-12T19:56:40.872995+00:00",
+      "log": "tmp/clifford-peirce-walsh/qa/syntax-pre-push.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-12T19:56:40.875834+00:00",
+      "elapsed_seconds": 0.003,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "package-routing-tests",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/quality",
+        "-p",
+        "test_clifford_peirce_walsh_gate_routing.py",
+        "-v"
+      ],
+      "cwd": "/workspace/scratch/f5b13f1aceb8/info-geometry-lean",
+      "started_utc": "2026-11-12T19:56:40.879284+00:00",
+      "log": "tmp/clifford-peirce-walsh/qa/package-routing-tests.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-12T19:56:42.151619+00:00",
+      "elapsed_seconds": 1.272,
+      "log_sha256": "d1e06a0ae4f623ab39d43885bae47e9682874f95a2c9ef49ff462344ad1f16db",
+      "tests_run": 7
+    },
+    {
+      "name": "pre-push-regression-tests",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/quality",
+        "-p",
+        "test_pre_push_ref_range.py",
+        "-v"
+      ],
+      "cwd": "/workspace/scratch/f5b13f1aceb8/info-geometry-lean",
+      "started_utc": "2026-11-12T19:56:42.159666+00:00",
+      "log": "tmp/clifford-peirce-walsh/qa/pre-push-regression-tests.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-12T19:56:44.038560+00:00",
+      "elapsed_seconds": 1.878,
+      "log_sha256": "8b59623e6c54deec8cd54b4a08992ecda5ecef1cc2c37dc049f503c71c882909",
+      "tests_run": 25
+    }
+  ],
+  "native_audit": {
+    "owners": {
+      "InfoGeometry.Clifford.OperatorValuedJonesWalsh": 53,
+      "InfoGeometry.OperatorAlgebra.StarSymplecticSqueeze": 45,
+      "InfoGeometry.Clifford.OperatorValuedJones": 54,
+      "InfoGeometry.Algebra.IdempotentProjector": 35,
+      "InfoGeometry.Geometry.AssociativeGaugeConnection": 28,
+      "InfoGeometry.OperatorAlgebra.LieJordanEndomorphisms": 46
+    },
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "declarations": 261,
+    "theorems_including_generated": 202,
+    "owner_count": 6
+  },
+  "aggregate_build_jobs": 3106,
+  "compiler": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "mathlib_revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "dependency_state_before_and_after_identical": true,
+  "dependency_checkouts": [
+    {
+      "name": "plausible",
+      "expected": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+      "actual": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+      "tracked_status": ""
+    },
+    {
+      "name": "LeanSearchClient",
+      "expected": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+      "actual": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+      "tracked_status": ""
+    },
+    {
+      "name": "importGraph",
+      "expected": "e928b72544873815af278d38681b31c0293588e3",
+      "actual": "e928b72544873815af278d38681b31c0293588e3",
+      "tracked_status": ""
+    },
+    {
+      "name": "proofwidgets",
+      "expected": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5",
+      "actual": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5",
+      "tracked_status": ""
+    },
+    {
+      "name": "aesop",
+      "expected": "355695d523e41d0554926416cba2a2b3544fbbc9",
+      "actual": "355695d523e41d0554926416cba2a2b3544fbbc9",
+      "tracked_status": ""
+    },
+    {
+      "name": "Qq",
+      "expected": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+      "actual": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+      "tracked_status": ""
+    },
+    {
+      "name": "batteries",
+      "expected": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+      "actual": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+      "tracked_status": ""
+    },
+    {
+      "name": "Cli",
+      "expected": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204",
+      "actual": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204",
+      "tracked_status": ""
+    },
+    {
+      "name": "mathlib",
+      "expected": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+      "actual": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+      "tracked_status": ""
+    }
+  ],
+  "native_fingerprint_checkpoints": 28,
+  "infrastructure_fingerprint_checkpoints": 10,
+  "all_fingerprint_checks_matched": true,
+  "current_frozen_inputs_still_match": true,
+  "native_lease": {
+    "owner": "clifford-peirce-walsh:6",
+    "pid": 6,
+    "acquiredAt": 1794513124.7988632
+  },
+  "infrastructure_lease": {
+    "owner": "clifford-peirce-walsh:6",
+    "pid": 6,
+    "acquiredAt": 1794513399.623686
+  },
+  "aggregate_warnings": [
+    "warning: ../../lean/InfoGeometry/Clifford/OperatorValuedJones.lean:40:67: This simp argument is unused:",
+    "warning: ../../lean/InfoGeometry/Core/PeirceDecomposition.lean:192:55: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice",
+    "warning: ../../lean/InfoGeometry/Geometry/AssociativeGaugeConnection.lean:57:0: automatically included section variable(s) unused in theorem `InfoGeometry.Geometry.AssociativeGaugeConnection.curvature_antisymm`:",
+    "warning: ../../lean/InfoGeometry/Geometry/AssociativeGaugeConnection.lean:121:0: automatically included section variable(s) unused in theorem `InfoGeometry.Geometry.AssociativeGaugeConnection.cyclic_conjugate`:"
+  ],
+  "aggregate_warning_disposition": "Four existing-owner lint diagnostics: one unused simp argument in OperatorValuedJones, one unnecessary sequence-focus warning in Core.PeirceDecomposition, and two unused section-variable warnings in AssociativeGaugeConnection. No source change or suppression was made.",
+  "direct_new_owner_warning_count": 0,
+  "static_gate4_dispositions": [
+    {
+      "file": "lean/InfoGeometry/Clifford/OperatorValuedJonesWalsh.lean",
+      "verdict": "STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED",
+      "sorry_count": 0,
+      "admit_count": 0,
+      "traps": []
+    },
+    {
+      "file": "lean/InfoGeometry/OperatorAlgebra/StarSymplecticSqueeze.lean",
+      "verdict": "STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED",
+      "sorry_count": 0,
+      "admit_count": 0,
+      "traps": []
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CliffordPeirceWalshAudit.lean",
+      "verdict": "STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED",
+      "sorry_count": 0,
+      "admit_count": 0,
+      "traps": []
+    },
+    {
+      "file": "lean/InfoGeometry/All.lean",
+      "verdict": "STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED",
+      "sorry_count": 0,
+      "admit_count": 0,
+      "traps": []
+    }
+  ],
+  "semantic_vacuity_findings": [],
+  "semantic_vacuity_coverage_complete": true,
+  "retained_advisory_findings": [
+    {
+      "severity": 0.3,
+      "name": "simp_vacuous",
+      "match": "",
+      "reason": "`by simp` without arguments \u2014 may or may not be vacuous depending on context"
+    },
+    {
+      "severity": 0.3,
+      "name": "no_hyp_use",
+      "match": "u v ",
+      "reason": "Theorem with parameters but proof doesn't reference them \u2014 potential vacuity"
+    }
+  ],
+  "retained_advisory_dispositions": [
+    {
+      "name": "simp_vacuous",
+      "disposition": "Nonblocking: bare simp proves required zero and unit membership fields; it does not replace the nontrivial closure proofs."
+    },
+    {
+      "name": "no_hyp_use",
+      "match": "u v ",
+      "disposition": "Nonblocking: squeeze_mul uses both unit inputs through unfolding and simplification after extensionality. Its lower-right equality is exactly the composition of inverse-product reversal and star anti-multiplicativity."
+    }
+  ],
+  "test_methods_passed": 32,
+  "remaining_substantive_requests": [],
+  "scope_limits": [
+    "Acceptance covers the declared arbitrary-ring algebraic statements, six complete selected owner modules, and the checked routing/ref-guard behavior.",
+    "All.lean received source checks, not a native whole-root build. Root default targets and unrelated optional dependencies are not certified.",
+    "PeirceParityClosure and PeirceParityTorsion remain source-reviewed prior art outside the final native target.",
+    "The interrupted first attempt has no successful aggregate or axiom-audit result and is not acceptance evidence.",
+    "The 32 regression methods use temporary Git repositories and command-recorder fixtures. They do not certify an actual full/incremental root publication-gate run or remote CI.",
+    "No analytic, topological, physical, tensor-colimit, or stronger classification interpretation is inferred."
+  ],
+  "prior_attempt": {
+    "disposition": "INCONCLUSIVE_INTERRUPTED",
+    "archive": "tmp/clifford-peirce-walsh/qa/interrupted-phase1-20261112T194202Z",
+    "finished_native_checks": [],
+    "positive_observations_only": [
+      "Lean compiler identity exit 0",
+      "Strict static screener exit 0"
+    ],
+    "no_final_exit_result": true
+  },
+  "evidence_sha256": {
+    "tmp/clifford-peirce-walsh/qa/native-qa-results.json": "ba6dbdd04286de8bc5f82fb057d53635ee3193eb2318a473dbada4d8edb1066e",
+    "tmp/clifford-peirce-walsh/qa/launcher-result.json": "30b1e98b5b2e07a0c5fe143b9ebfafc71d20da417233b8a9f09c1837f9b9e678",
+    "tmp/clifford-peirce-walsh/qa/wrapper.log": "ea178000b57f318a6e2b4c199f82cb564ba73a2bd8b1e60b68ed00c9edba738c",
+    "tmp/clifford-peirce-walsh/qa/aggregate-build.log": "f2d6374a7323cbc72978b6963aa9ba59c5d556ce8a613d16d35ec0e7ac466f07",
+    "tmp/clifford-peirce-walsh/qa/direct-walsh.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tmp/clifford-peirce-walsh/qa/direct-squeeze.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tmp/clifford-peirce-walsh/qa/fresh-audit.log": "bc6bc4727ff11e4585772cce42e40c31ce08a2b2ea8272e72bdce97e5a04ab04",
+    "tmp/clifford-peirce-walsh/qa/lean-version.log": "355a9a028f81641782d75d6e6b58dec70f29d2f61238a9e271690259d9bf5680",
+    "tmp/clifford-peirce-walsh/qa/screener.log": "ed719d5cdf9396793ecdd81a3c7c14ce0a3814c9a08538ff6267c1a01a37f8aa",
+    "tmp/clifford-peirce-walsh/qa/refute.log": "c1f94ddcc366318be2d88b129c80605769adfb39992f52b64c62a771153ec43d",
+    "tmp/clifford-peirce-walsh/qa/gate4-source.log": "d92cd22250374e9ad269ea89935b7c876887fc67d41729295d1a05daaaa35f0f",
+    "tmp/clifford-peirce-walsh/qa/semantic-vacuity.json": "19222b17d2e9c6f19ba4400edbf9c424a61770c4539f7451d1894249002b8c0b",
+    "tmp/clifford-peirce-walsh/qa/advisory-StarSymplecticSqueeze.log": "2b883b12429c1e5510aeae17dd10edc94a5a09dcb2f50b6cd8e43d6461c9c1db",
+    "tmp/clifford-peirce-walsh/qa/infrastructure-qa-results.json": "73f83ac24ba4aeb5ba48c4bb8d4e9acceca876f7e177ea767084fa9d3a7160a2",
+    "tmp/clifford-peirce-walsh/qa/infrastructure-launcher-result.json": "60fd58aa799ff76ae7936c4a2275f03e48acea3cd4fc5db223251254d08bd29c",
+    "tmp/clifford-peirce-walsh/qa/infrastructure-wrapper.log": "c017914756729f2ea8dcbdd054e8d15fff5fc6d89843240872f428d99d874530",
+    "tmp/clifford-peirce-walsh/qa/syntax-post-build-gate.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tmp/clifford-peirce-walsh/qa/syntax-pre-push.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tmp/clifford-peirce-walsh/qa/package-routing-tests.log": "d1e06a0ae4f623ab39d43885bae47e9682874f95a2c9ef49ff462344ad1f16db",
+    "tmp/clifford-peirce-walsh/qa/pre-push-regression-tests.log": "8b59623e6c54deec8cd54b4a08992ecda5ecef1cc2c37dc049f503c71c882909",
+    "tmp/clifford-peirce-walsh/qa/reviewed-inputs.json": "dd034a0784d2af2d8ed9fcc3079ca43579ad769333ef283307d06e1ac875c814",
+    "tmp/clifford-peirce-walsh/qa/infrastructure-reviewed-inputs.json": "7f70c72975ab7f92e75b9b76e240b3e1a69fb00f956e08ed4d34bd7c5bdcaa70",
+    "tmp/clifford-peirce-walsh/qa/source-review.json": "1f4df9c2f015248509243489358370caaad2cea9980f984dcce06ef5c4a7c6e6",
+    "tmp/clifford-peirce-walsh/qa/input-amendment-001.json": "5ca53377163363a2593bedba7a068d0812ce75ba80b34c6176ed0927ddc043e1",
+    "tmp/clifford-peirce-walsh/qa/input-amendment-002.json": "a57da47eb2d95e682ab1bfb21ab334d7dd2c4d8e94831a08c56b8ceeaf3b0037",
+    "tmp/clifford-peirce-walsh/qa/interrupted-run-disposition.json": "eeb288f0f1f85af8f142a97643577ad76b14725fc3c5eae580feb3763e576249"
+  }
+}

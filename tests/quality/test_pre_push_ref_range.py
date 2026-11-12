@@ -204,6 +204,96 @@ class PrePushRefRangeTests(unittest.TestCase):
         self.assertIn("modified proof/gate sources", result.stderr)
         self.assertEqual(self.gate_calls(), [])
 
+    def _commit_clifford_validation_package(self) -> Path:
+        package = self.repo / "verification" / "clifford-peirce-walsh"
+        package.mkdir(parents=True)
+        for name, content in (
+            ("check.py", "# committed validation checker\n"),
+            ("lakefile.lean", "-- committed validation configuration\n"),
+            ("lake-manifest.json", "{}\n"),
+            ("lean-toolchain", "leanprover/lean4:v4.34.1\n"),
+        ):
+            (package / name).write_text(content, encoding="utf-8")
+        self.git("add", "verification/clifford-peirce-walsh")
+        self.git("commit", "-qm", "add committed validation package")
+        self.head = self.git("rev-parse", "HEAD")
+        return package
+
+    def test_modified_clifford_validation_files_are_rejected_before_gate(self) -> None:
+        package = self._commit_clifford_validation_package()
+        for name in ("check.py", "lakefile.lean", "lake-manifest.json", "lean-toolchain"):
+            source = package / name
+            original = source.read_text(encoding="utf-8")
+            source.write_text(original + "uncommitted modification\n", encoding="utf-8")
+            with self.subTest(name=name):
+                result = self.run_hook(
+                    f"refs/heads/main {self.head} refs/heads/main {self.base}\n"
+                )
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("modified proof/gate sources", result.stderr)
+                self.assertEqual(self.gate_calls(), [])
+            source.write_text(original, encoding="utf-8")
+
+    def test_untracked_clifford_validation_lean_shadows_are_rejected(self) -> None:
+        for relative in ("Injected.lean", "Nested/Injected.lean"):
+            source = self.repo / "verification" / "clifford-peirce-walsh" / relative
+            source.parent.mkdir(parents=True, exist_ok=True)
+            source.write_text("-- source absent from the pushed tree\n", encoding="utf-8")
+            with self.subTest(relative=relative):
+                result = self.run_hook(
+                    f"refs/heads/main {self.head} refs/heads/main {self.base}\n"
+                )
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("untracked proof/gate sources", result.stderr)
+                self.assertIn("verification/clifford-peirce-walsh/" + relative, result.stderr)
+                self.assertEqual(self.gate_calls(), [])
+            source.unlink()
+
+    def test_locally_ignored_clifford_validation_lean_shadows_are_rejected(self) -> None:
+        for relative in ("Injected.lean", "Nested/TempInjected.lean"):
+            path = "verification/clifford-peirce-walsh/" + relative
+            source = self.repo / path
+            source.parent.mkdir(parents=True, exist_ok=True)
+            source.write_text("-- locally ignored source\n", encoding="utf-8")
+            with (self.repo / ".git" / "info" / "exclude").open("a", encoding="utf-8") as exclude:
+                exclude.write(path + "\n")
+            with self.subTest(relative=relative):
+                result = self.run_hook(
+                    f"refs/heads/main {self.head} refs/heads/main {self.base}\n"
+                )
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("ignored non-scratch Lean sources", result.stderr)
+                self.assertIn(path, result.stderr)
+                self.assertEqual(self.gate_calls(), [])
+            source.unlink()
+
+    def test_committed_clifford_validation_package_reaches_gate(self) -> None:
+        self._commit_clifford_validation_package()
+        result = self.run_hook(
+            f"refs/heads/main {self.head} refs/heads/main {self.base}\n"
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(
+            self.gate_calls(),
+            [f"--incremental --base={self.base} --head={self.head}"],
+        )
+
+    def test_ignored_clifford_validation_lake_artifacts_reach_gate(self) -> None:
+        package = self._commit_clifford_validation_package()
+        artifact = package / ".lake" / "build" / "Generated.lean"
+        artifact.parent.mkdir(parents=True)
+        artifact.write_text("-- generated package artifact\n", encoding="utf-8")
+        with (self.repo / ".git" / "info" / "exclude").open("a", encoding="utf-8") as exclude:
+            exclude.write("verification/clifford-peirce-walsh/.lake/\n")
+        result = self.run_hook(
+            f"refs/heads/main {self.head} refs/heads/main {self.base}\n"
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(
+            self.gate_calls(),
+            [f"--incremental --base={self.base} --head={self.head}"],
+        )
+
     def test_ignored_lean_source_is_rejected_before_gate(self) -> None:
         injected = self.repo / "lean" / "Injected.lean"
         injected.write_text(

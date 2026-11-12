@@ -1,0 +1,84 @@
+name: Faithful matrix amplification colimit
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Algebra/MatrixAmplification.lean'
+      - 'lean/InfoGeometry/Algebra/DirectLimitSuperClosureLemmas.lean'
+      - 'lean/InfoGeometry/Algebra/InductiveSuperClosureLemmas.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Categorical/SequentialRingColimit.lean'
+      - 'lean/InfoGeometry/Categorical/MatrixAmplificationTower.lean'
+      - 'lean/InfoGeometry/Categorical/MatrixAmplificationAudit.lean'
+      - 'verification/matrix-amplification/**'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/matrix-amplification.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: matrix-amplification-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+            verification/matrix-amplification/.lake
+          key: ${{ runner.os }}-matrix-amplification-${{ hashFiles('verification/matrix-amplification/lean-toolchain', 'verification/matrix-amplification/lake-manifest.json') }}
+      - name: Install the pinned Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.34.1
+      - name: Retrieve pinned dependency artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p verification/matrix-amplification/logs
+          python3 verification/matrix-amplification/check.py exe cache get 2>&1 | tee verification/matrix-amplification/logs/cache.log
+      - name: Build the mathematical owners and declaration audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/matrix-amplification/check.py build 2>&1 | tee verification/matrix-amplification/logs/build.log
+      - name: Freshly audit every owned declaration
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/matrix-amplification/check.py env lean lean/InfoGeometry/Categorical/MatrixAmplificationAudit.lean 2>&1 | tee verification/matrix-amplification/logs/axioms.log
+          python3 - <<'PY'
+          from pathlib import Path
+          from tools.quality.reviewed_audit_source import parse_audit_output
+          targets = [
+              'InfoGeometry.Algebra.MatrixAmplification',
+              'InfoGeometry.Categorical.SequentialRingColimit',
+              'InfoGeometry.Categorical.MatrixAmplificationTower',
+          ]
+          print(parse_audit_output(Path('verification/matrix-amplification/logs/axioms.log').read_text(), targets))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: matrix-amplification-verification
+          path: verification/matrix-amplification/logs

@@ -60,8 +60,7 @@ theorem matrix_genV (v : R) :
   apply Matrix.ext
   intro i j
   fin_cases i <;> fin_cases j <;>
-    simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.single_apply,
-      Matrix.algebraMap_matrix_apply]
+    simp [Matrix.algebraMap_matrix_apply]
 
 /-- The exact integral Reynolds formula on every full two-by-two matrix. -/
 theorem matrix_integralReynolds (v : R) (M : Mat₂) :
@@ -91,10 +90,13 @@ theorem integralReynolds_range_parameterOrder (v : R) :
     exact (matrix_integralReynolds v (M : Mat₂)).symm
   · rintro ⟨r, rfl⟩
     have hm : (Matrix.single 0 0 r : Mat₂) ∈ parameterOrder v := by
-      simp [mem_parameterOrder, Matrix.single_apply]
+      simp [mem_parameterOrder]
     refine ⟨⟨Matrix.single 0 0 r, hm⟩, ?_⟩
+    change integralReynolds (Matrix.single 0 0 (1 : R) : Mat₂)
+        (Matrix.single 0 1 (1 : R)) (Matrix.single 1 0 v) (Matrix.single 0 0 r) =
+      algebraMap R Mat₂ (2 * v ^ 2 * r)
     rw [matrix_integralReynolds]
-    simp [Matrix.single_apply]
+    simp
 
 /-- Over a nontrivial polynomial ring the integral Reynolds image misses
 the identity, so it is not all scalar matrices. This applies to `ℤ[X]`. -/
@@ -106,9 +108,13 @@ theorem one_not_mem_integralReynolds_range_polynomialOrder [Nontrivial R] :
           (Matrix.single 0 1 (1 : R[X])) (Matrix.single 1 0 (X : R[X]))
           (M : Matrix (Fin 2) (Fin 2) R[X])) := by
   rintro ⟨M, hM⟩
+  change integralReynolds
+      (Matrix.single 0 0 (1 : R[X]) : Matrix (Fin 2) (Fin 2) R[X])
+      (Matrix.single 0 1 (1 : R[X])) (Matrix.single 1 0 (X : R[X]))
+      (M : Matrix (Fin 2) (Fin 2) R[X]) = 1 at hM
   rw [matrix_integralReynolds] at hM
   have hzero := congrArg
     (fun N : Matrix (Fin 2) (Fin 2) R[X] => Polynomial.eval (0 : R) (N 0 0)) hM
-  simpa [Matrix.algebraMap_matrix_apply, Matrix.one_apply] using hzero
+  simp [Matrix.algebraMap_matrix_apply] at hzero
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine.IntegralOrder

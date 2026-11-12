@@ -41,7 +41,8 @@ theorem integralReynolds_test_eq :
       (star (frameUnit 0 1)) (frameUnit 0 2) = frameUnit 0 2 := by
   rw [integralReynolds_eq_sandwich]
   simp only [adjoint_pair_metric]
-  simp [genPhi, genJ, genSig, comm, conePlus, coneMinus, frameUnit_star,
+  simp [genPhi, genJ, genSig, InfoGeometry.OperatorAlgebra.PeirceSpine.comm,
+    conePlus, coneMinus, frameUnit_star,
     mul_add, add_mul, mul_sub, sub_mul, pow_two, frameUnit_mul]
 
 /-- The centralizer hypothesis genuinely excludes the test operator. -/

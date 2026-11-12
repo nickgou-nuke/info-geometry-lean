@@ -79,7 +79,7 @@ theorem parameterOrder_noncommutative [Nontrivial R] (v : R) :
   intro h
   have h01 := congrArg
     (fun M : parameterOrder v => (M : Matrix (Fin 2) (Fin 2) R) 0 1) h
-  simp [P, N, Matrix.mul_apply, Fin.sum_univ_two, Matrix.single_apply] at h01
+  simp [P, N] at h01
 
 /-- A unit parameter gives every matrix, in every characteristic. -/
 theorem parameterOrder_eq_top_of_isUnit {v : R} (hv : IsUnit v) :
@@ -155,7 +155,7 @@ def coordinateEquiv : (Fin 4 → R[X]) ≃ₗ[R[X]] polynomialOrder R where
     ((M : Matrix (Fin 2) (Fin 2) R[X]) 1 0).divX]
   left_inv c := by
     funext i
-    fin_cases i <;> simp [divX_X_mul] <;> ring
+    fin_cases i <;> simp [divX_X_mul]
   right_inv M := by
     apply Subtype.ext
     rcases M.property with ⟨d, hd⟩
@@ -176,7 +176,8 @@ def coordinateEquiv : (Fin 4 → R[X]) ≃ₗ[R[X]] polynomialOrder R where
     apply Subtype.ext
     apply Matrix.ext
     intro i j
-    fin_cases i <;> fin_cases j <;> simp [mul_add] <;> ring
+    fin_cases i <;> fin_cases j <;> simp [mul_add]
+    ring
   map_smul' a c := by
     apply Subtype.ext
     apply Matrix.ext
@@ -277,7 +278,7 @@ private theorem polynomial_basis_noncommutative [Nontrivial R] :
     (basis R 2 : Matrix (Fin 2) (Fin 2) R[X]) * (basis R 1)
   intro h
   have h01 := congrArg (fun M : Matrix (Fin 2) (Fin 2) R[X] => M 0 1) h
-  simp [basis_coe, Matrix.mul_apply, Fin.sum_univ_two, Matrix.single_apply] at h01
+  simp [basis_coe, Matrix.mul_apply, Matrix.single_apply] at h01
 
 end PolynomialNoncommutativity
 

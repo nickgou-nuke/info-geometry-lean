@@ -114,6 +114,14 @@ codomain for the categorical cocone components. Explicit coefficient types
 and the existing lift's `Limit := s.pt` argument address those elaboration
 errors; the next compiler run must validate these changes and the tower.
 
+The second focused run
+[`43196376766`](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43196376766)
+successfully compiled `MatrixAmplification` and `SequentialRingColimit`.
+It exposed two malformed existential binders and the need to reduce the
+categorical naturality goal to its matrix equation before entrywise
+extensionality. These are corrected without changing the target statements;
+the tower and exhaustive audit still require a successful fresh run.
+
 The local focused `check.py build` remains queued behind the shared build lock.
 The root file wrapper with `--no-wait-for-build-lock` previously returned exit 2
 for that occupied lock. No successful compiler or axiom-audit pass is claimed.

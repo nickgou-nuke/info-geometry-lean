@@ -51,11 +51,15 @@ def matrixFunctor : RingCat.{u} ⥤ RingCat.{u} where
 def amplification : 𝟭 RingCat.{u} ⟶ matrixFunctor n where
   app A := RingCat.ofHom (Matrix.scalar n)
   naturality A B f := by
-    ext a i j
+    apply RingCat.hom_ext
+    apply RingHom.ext
+    intro a
+    change Matrix.scalar n (f.hom a) = f.hom.mapMatrix (Matrix.scalar n a)
+    ext i j
     by_cases h : i = j
     · subst j
-      simp [matrixFunctor, Matrix.scalar_apply, RingHom.mapMatrix_apply]
-    · simp [matrixFunctor, Matrix.scalar_apply, RingHom.mapMatrix_apply, h]
+      simp [Matrix.scalar_apply, RingHom.mapMatrix_apply]
+    · simp [Matrix.scalar_apply, RingHom.mapMatrix_apply, h]
 
 /-- Iterated full matrix rings, with the original ring at stage zero. -/
 def stage (A : RingCat.{u}) : ℕ → RingCat.{u}
@@ -89,14 +93,14 @@ instance (A : RingCat.{u}) : HasColimit (diagram n A) :=
 
 /-- Every element of the algebraic colimit has a finite-stage representative. -/
 theorem exists_stage (A : RingCat.{u}) (x : Limit n A) :
-    ∃ k (a : stage n A k), inclusion n A k a = x := by
+    ∃ (k : ℕ) (a : stage n A k), inclusion n A k a = x := by
   obtain ⟨k, a, h⟩ := DirectLimit.exists_eq_mk
     (fun i j h => bondMap (bond n A) i j h) x
   exact ⟨k, a, h.symm⟩
 
 /-- Two arbitrary limit elements can be represented at one common finite stage. -/
 theorem exists_common_stage (A : RingCat.{u}) (x y : Limit n A) :
-    ∃ k (a b : stage n A k), inclusion n A k a = x ∧ inclusion n A k b = y := by
+    ∃ (k : ℕ) (a b : stage n A k), inclusion n A k a = x ∧ inclusion n A k b = y := by
   obtain ⟨k, a, b, hx, hy⟩ := DirectLimit.exists_eq_mk₂
     (fun i j h => bondMap (bond n A) i j h) x y
   exact ⟨k, a, b, hx.symm, hy.symm⟩

@@ -8,6 +8,7 @@ import InfoGeometry.Examples.RealMatrixModeWitness
 import InfoGeometry.Twistor.RealConstructs
 import InfoGeometry.Twistor.RealConstructsAudit
 import InfoGeometry.Physics.NuclearTwistorSectorAudit
+import InfoGeometry.Quantum.RealificationAudit
 import InfoGeometry.AllExhaustive
 import Experimental.Sandbox.Topology.KleinBieberbachWeyl
 import InfoGeometry.Exceptional.CFSGPort.All

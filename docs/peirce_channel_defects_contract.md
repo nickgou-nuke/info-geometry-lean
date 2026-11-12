@@ -40,7 +40,7 @@ and prose supplied navigation, not verification evidence.
 Write `V = genV P A C`, `Phi = genPhi P A C`, `J = genJ P A C`, and
 `Sigma = genSig P A C`, with `P * P = P`. Let `H` denote the existing
 `hProj` channels and `F` the corresponding existing `fourier` channels.
-For arbitrary `X : B`, the intended identities are:
+For arbitrary `X : B`, the proved identities are:
 
 \[
 \begin{aligned}
@@ -71,7 +71,7 @@ The coefficient two must multiply the entire sum.
 ## Adjoint-pair contract
 
 In a ring with star, assume explicitly that
-`star x * x = 0` implies `x = 0`. For `N * N = 0`, prove
+`star x * x = 0` implies `x = 0`. For `N * N = 0`, the theorem establishes
 
 \[
 NN^*+N^*N=0\quad\Longleftrightarrow\quad N=0.
@@ -132,21 +132,72 @@ different constructions. No bundle-patching theorem is added by this change.
 
 Independent semantic and infrastructure source review passed for all three
 modules, this contract, and the scoped workflow. The staged proof gate passed.
-The computed project import closure contains 38 modules.
+The two proof-only name qualifications in the matrix module received a
+separate independent review; no theorem statement or hypothesis changed.
 
-The local command
-`python3 tools/infra/run_locked_lake_build.py InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized`
-exited with code 2 because the shared build lock was held by another task
-(`structural-gaps:3`). No compiler was stopped and no lock or cache was removed.
+**Scoped kernel verification passed** in
+[run 43200522642](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43200522642).
+It checked source head `e06b6e9d753aebc730861850524339bb4aeeb199` through PR merge
+revision `42ddb1433f8d953fa9ea40c060600700a50f65f2`, using
+`leanprover/lean4:v4.34.1` and the unchanged Mathlib pin
+`d13f23b723b8a846827a245b89c10fc7d3f11612`.
 
-The isolated CI command is:
+- All 38 modules in the selected project import closure compiled successfully.
+- All 55 declarations owned by the three added modules, including generated
+  auxiliaries, passed the native declaration audit. Dependencies were confined
+  to `propext`, `Classical.choice`, and `Quot.sound`; unsafe and partial
+  declarations are rejected by the checker.
+- The three new modules emitted no warnings or errors. Warnings in imported,
+  unchanged modules remain visible in the artifact.
+- The downloaded artifact's digest was verified, and the recorded source
+  hashes of all three new owners matched the reviewed local files.
+
+The
+[verification artifact](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43200522642/artifacts/13934679253)
+contains the source snapshot, per-module logs, declaration audit, and status
+JSON. Its ZIP SHA256 is
+`579a06caab430a4304e5fa1f858e8e2d01a3aad99b32458a7eee487166acf43f`.
+
+| New owner | Verified source SHA256 |
+| --- | --- |
+| `PeirceSpine.HomogenizedFourierDefect` | `a116f561304336c31b0aefa8493cf77c77eca996b7830f941e252e63f4938518` |
+| `PeirceSpine.StarMetricNondegeneracy` | `f3e669a11893211fb42a62560630e3f34444edc170d650dc7364dd6b54dc6893` |
+| `Canonical.PeirceChannelCounterexamples` | `874df68e08e4aeb705194a6fa9f0a4dbc77c2c1a40d27d5a9556811b65e3a1e5` |
+
+The successful CI command was:
 
 ```bash
 python3 project/tools/quality/check_peirce_channel_defects.py \
   --mathlib-root pinned-mathlib --output verification
 ```
 
-Status: kernel verification pending. Success will be recorded only after the
-exact-source closure and every declaration owned by the added modules pass the
-pinned Lean checker. Repository-wide build status is separate from this
-selected-source check; dependency pins and existing quality gates are unchanged.
+The first scoped run compiled 37 of 38 modules and failed at two ambiguous
+`comm` simplifier arguments in the matrix examples. Fully qualifying those
+arguments fixed the failure; the successful run above checked the repair and
+then performed the declaration audit.
+
+### Outstanding repository gates
+
+This is selected-source verification, not a successful root Lake build or a
+completed local pre-push gate for the Lean change.
+
+- The initial local locked build exited with code 2 because another task held
+  the shared build lock. A later invocation of the actual pre-push hook for
+  the repair range also waited for that lock. Only that waiting invocation
+  was cancelled (exit 130); no compiler was started by it, and no other
+  compiler, lock, or cache was removed.
+- The
+  [root quality workflow](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43200522378)
+  failed before Lean compilation because the checkout lacked
+  `external_refs/homotopy-hypothesis-lean4`. Its post-build quality step was
+  skipped.
+- The
+  [style workflow](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43200522673)
+  failed on the existing case collision between
+  `Physics/PellisFineStructure.lean` and `Physics/PellisfineStructure.lean`.
+
+Those package paths and files are unchanged by this PR. The final reporting
+commit changes only this contract; the verified Lean owners, dependency pins,
+checker, and workflow remain byte-identical to the successful run. The PR is
+available for review; this record does not certify repository-wide acceptance
+or authorize a merge.

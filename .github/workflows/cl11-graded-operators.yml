@@ -1,12 +1,20 @@
-name: Infinite Clifford graded operator kernel check
+name: Clifford operators and gauge algebra kernel check
 
 on:
   pull_request:
     paths:
       - 'lean/InfoGeometry/Clifford/Cl11*.lean'
+      - 'lean/InfoGeometry/Clifford/Cl22QuaternionCayley.lean'
+      - 'lean/InfoGeometry/Algebra/UnitriangularBCH.lean'
+      - 'lean/InfoGeometry/Quantum/OperatorWeylHolonomy.lean'
+      - 'lean/InfoGeometry/LatticeGauge/FinitePlaquette.lean'
+      - 'lean/InfoGeometry/Geometry/AssociativeGaugeConnection.lean'
+      - 'lean/InfoGeometry/Canonical/CliffordHolonomyCurvature.lean'
       - 'lean/InfoGeometry/Clifford/JordanWigner*.lean'
       - 'lean/InfoGeometry/Clifford/TowerMatrix.lean'
       - 'lean/InfoGeometry/Clifford/SplitQ11.lean'
+      - 'lean/InfoGeometry/Clifford/SplitAtomDoubling.lean'
+      - 'lean/InfoGeometry/Clifford/SplitAtomDoubling/**'
       - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
       - 'lean/InfoGeometry/Algebra/MatrixNoncommutativity.lean'
       - 'lean/InfoGeometry/Algebra/TensorAlgebraCanonical.lean'
@@ -25,6 +33,8 @@ on:
       - 'tools/infra/opengauss_screener.py'
       - 'tools/build_lock.py'
       - 'docs/CLIFFORD_COLIMIT_GRADED_OPERATOR_BRIDGE.md'
+      - 'docs/KLEIN_TWIST_GRADED_DOUBLING.md'
+      - 'docs/CLIFFORD_HOLONOMY_CURVATURE_CONTRACT.md'
       - 'lean-toolchain'
       - 'lake-manifest.json'
       - '.github/workflows/cl11-graded-operators.yml'
@@ -44,7 +54,16 @@ jobs:
     env:
       CL11_GRADED_TARGETS: >-
         ["InfoGeometry.Clifford.Cl11GradedOperatorAction",
-        "InfoGeometry.Clifford.Cl11ColimitDimension"]
+        "InfoGeometry.Clifford.Cl11ColimitDimension",
+        "InfoGeometry.Clifford.SplitAtomDoubling.Basic",
+        "InfoGeometry.Clifford.Cl11KleinTwist",
+        "InfoGeometry.Clifford.Cl11BrauerWeylGenerators",
+        "InfoGeometry.Clifford.SplitAtomDoubling",
+        "InfoGeometry.Algebra.UnitriangularBCH",
+        "InfoGeometry.Quantum.OperatorWeylHolonomy",
+        "InfoGeometry.Geometry.AssociativeGaugeConnection",
+        "InfoGeometry.Clifford.Cl22QuaternionCayley",
+        "InfoGeometry.Canonical.CliffordHolonomyCurvature"]
     steps:
       - name: Check out the exact public repository revision
         shell: bash
@@ -123,6 +142,22 @@ jobs:
           python3 tools/quality/placeholder_audit.py --strict --root lean/InfoGeometry/Clifford/Cl11GradedOperatorAction.lean
           python3 tools/infra/opengauss_screener.py --strict lean/InfoGeometry/Clifford/Cl11GradedOperatorAction.lean
           python3 tools/quality/semantic_vacuity_gate.py lean/InfoGeometry/Clifford/Cl11GradedOperatorAction.lean --fail-on error --json-out ../cl11-graded-report/semantic-vacuity.json
+          extension_owners=(
+            lean/InfoGeometry/Clifford/SplitAtomDoubling/Basic.lean
+            lean/InfoGeometry/Clifford/Cl11KleinTwist.lean
+            lean/InfoGeometry/Clifford/Cl11BrauerWeylGenerators.lean
+            lean/InfoGeometry/Clifford/SplitAtomDoubling.lean
+            lean/InfoGeometry/Algebra/UnitriangularBCH.lean
+            lean/InfoGeometry/Quantum/OperatorWeylHolonomy.lean
+            lean/InfoGeometry/Geometry/AssociativeGaugeConnection.lean
+            lean/InfoGeometry/Clifford/Cl22QuaternionCayley.lean
+            lean/InfoGeometry/Canonical/CliffordHolonomyCurvature.lean
+          )
+          for owner in "${extension_owners[@]}"; do
+            python3 tools/quality/placeholder_audit.py --strict --root "$owner"
+            python3 tools/infra/opengauss_screener.py --strict "$owner"
+          done
+          python3 tools/quality/semantic_vacuity_gate.py "${extension_owners[@]}" --fail-on error --json-out ../cl11-graded-report/semantic-vacuity-klein.json
       - name: Reconcile scope and bind verification evidence
         working-directory: project
         shell: bash
@@ -152,6 +187,24 @@ jobs:
               assert semantic[field] == [owner], field
           assert semantic['fail_on'] == 'error' and not semantic['fail_prefixes']
           assert semantic['severity_counts'].get('error', 0) == 0
+          klein = json.loads((out / 'semantic-vacuity-klein.json').read_text())
+          extension_owners = {
+              'lean/InfoGeometry/Clifford/SplitAtomDoubling/Basic.lean',
+              'lean/InfoGeometry/Clifford/Cl11KleinTwist.lean',
+              'lean/InfoGeometry/Clifford/Cl11BrauerWeylGenerators.lean',
+              'lean/InfoGeometry/Clifford/SplitAtomDoubling.lean',
+              'lean/InfoGeometry/Algebra/UnitriangularBCH.lean',
+              'lean/InfoGeometry/Quantum/OperatorWeylHolonomy.lean',
+              'lean/InfoGeometry/Geometry/AssociativeGaugeConnection.lean',
+              'lean/InfoGeometry/Clifford/Cl22QuaternionCayley.lean',
+              'lean/InfoGeometry/Canonical/CliffordHolonomyCurvature.lean',
+          }
+          assert klein['coverage_complete'] and not klein['read_failures']
+          assert klein['files_selected'] == klein['files_scanned'] == len(extension_owners)
+          for field in ['source_paths', 'successfully_read_paths', 'scope_roots']:
+              assert set(klein[field]) == extension_owners, field
+          assert klein['fail_on'] == 'error' and not klein['fail_prefixes']
+          assert klein['severity_counts'].get('error', 0) == 0
           index_path = out / 'evidence-sha256.json'
           index = json.loads(index_path.read_text())
           for name, expected in index.items():
@@ -159,13 +212,15 @@ jobs:
               assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, name
           for name in ['.github/workflows/cl11-graded-operators.yml',
                        'docs/CLIFFORD_COLIMIT_GRADED_OPERATOR_BRIDGE.md',
+                       'docs/KLEIN_TWIST_GRADED_DOUBLING.md',
+                       'docs/CLIFFORD_HOLONOMY_CURVATURE_CONTRACT.md',
                        'tools/quality/placeholder_audit.py',
                        'tools/quality/semantic_vacuity_gate.py',
                        'tools/quality/semantic_vacuity_patterns.json',
                        'tools/infra/opengauss_screener.py',
                        'lean-toolchain', 'lake-manifest.json']:
               index['repository/' + name] = hashlib.sha256(Path(name).read_bytes()).hexdigest()
-          for name in ['semantic-vacuity.json', 'environment.json']:
+          for name in ['semantic-vacuity.json', 'semantic-vacuity-klein.json', 'environment.json']:
               index[name] = hashlib.sha256((out / name).read_bytes()).hexdigest()
           index_path.write_text(json.dumps(index, indent=2) + '\n')
           PY
@@ -178,6 +233,7 @@ jobs:
             cl11-graded-report/evidence-sha256.json
             cl11-graded-report/environment.json
             cl11-graded-report/semantic-vacuity.json
+            cl11-graded-report/semantic-vacuity-klein.json
             cl11-graded-report/src/CliffordDiracAudit.lean
             cl11-graded-report/*.log
           if-no-files-found: warn

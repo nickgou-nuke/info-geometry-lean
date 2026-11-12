@@ -1,0 +1,625 @@
+{
+  "placeholder-AssociativeBianchi.json": {
+    "schema": "info_geometry.placeholder_audit.v2",
+    "generated_at": "2026-11-12T20:30:39.602102+00:00",
+    "root": "lean/InfoGeometry/Geometry/AssociativeBianchi.lean",
+    "authority_tier": "heuristic-proxy",
+    "summary": {
+      "module_count": 0,
+      "scanned_count": 1,
+      "finding_count": 0,
+      "hard_count": 0,
+      "soft_count": 0,
+      "advisory_count": 0,
+      "provenance": {
+        "hard_failures": 0,
+        "soft_findings": 0,
+        "advisory_findings": 0
+      }
+    },
+    "modules": [],
+    "findings": []
+  },
+  "placeholder-CliffordHolonomyCurvature.json": {
+    "schema": "info_geometry.placeholder_audit.v2",
+    "generated_at": "2026-11-12T20:30:39.792368+00:00",
+    "root": "lean/InfoGeometry/Canonical/CliffordHolonomyCurvature.lean",
+    "authority_tier": "heuristic-proxy",
+    "summary": {
+      "module_count": 1,
+      "scanned_count": 1,
+      "finding_count": 1,
+      "hard_count": 0,
+      "soft_count": 1,
+      "advisory_count": 0,
+      "provenance": {
+        "hard_failures": 0,
+        "soft_findings": 1,
+        "advisory_findings": 0
+      }
+    },
+    "modules": [
+      {
+        "path": "lean/InfoGeometry/Canonical/CliffordHolonomyCurvature.lean",
+        "module": "InfoGeometry.Canonical.CliffordHolonomyCurvature",
+        "finding_count": 1,
+        "hard_count": 0,
+        "soft_count": 1,
+        "advisory_count": 0,
+        "findings": [
+          {
+            "file": "lean/InfoGeometry/Canonical/CliffordHolonomyCurvature.lean",
+            "module": "InfoGeometry.Canonical.CliffordHolonomyCurvature",
+            "line": 38,
+            "declaration_kind": "theorem",
+            "declaration_name": "spinor_curvature_eq_iff",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "36:       D secondAxis - E firstAxis + 2 * thirdAxis := by\n37:   rw [curvature, add_sub_assoc, first_second_commutator]\n38: \n39: \n40: theorem spinor_curvature_eq_iff (D E : Module.End ℤ (Block2 (Block2 B))) :",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false
+          }
+        ]
+      }
+    ],
+    "findings": [
+      {
+        "file": "lean/InfoGeometry/Canonical/CliffordHolonomyCurvature.lean",
+        "module": "InfoGeometry.Canonical.CliffordHolonomyCurvature",
+        "line": 38,
+        "declaration_kind": "theorem",
+        "declaration_name": "spinor_curvature_eq_iff",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "36:       D secondAxis - E firstAxis + 2 * thirdAxis := by\n37:   rw [curvature, add_sub_assoc, first_second_commutator]\n38: \n39: \n40: theorem spinor_curvature_eq_iff (D E : Module.End ℤ (Block2 (Block2 B))) :",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      }
+    ]
+  },
+  "placeholder-InnerConjugation.json": {
+    "schema": "info_geometry.placeholder_audit.v2",
+    "generated_at": "2026-11-12T20:30:40.060924+00:00",
+    "root": "lean/InfoGeometry/OperatorAlgebra/InnerConjugation.lean",
+    "authority_tier": "heuristic-proxy",
+    "summary": {
+      "module_count": 1,
+      "scanned_count": 1,
+      "finding_count": 2,
+      "hard_count": 0,
+      "soft_count": 2,
+      "advisory_count": 0,
+      "provenance": {
+        "hard_failures": 0,
+        "soft_findings": 2,
+        "advisory_findings": 0
+      }
+    },
+    "modules": [
+      {
+        "path": "lean/InfoGeometry/OperatorAlgebra/InnerConjugation.lean",
+        "module": "InfoGeometry.OperatorAlgebra.InnerConjugation",
+        "finding_count": 2,
+        "hard_count": 0,
+        "soft_count": 2,
+        "advisory_count": 0,
+        "findings": [
+          {
+            "file": "lean/InfoGeometry/OperatorAlgebra/InnerConjugation.lean",
+            "module": "InfoGeometry.OperatorAlgebra.InnerConjugation",
+            "line": 65,
+            "declaration_kind": "theorem",
+            "declaration_name": "innerConjugation_idempotent_iff",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "63:     rw [map_pow] at h\n64:     simpa [innerConjugationRingEquiv, innerConjugation, mul_assoc] using h\n65: \n66: \n67: theorem innerConjugation_idempotent_iff (u : Aˣ) (x : A) :",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false
+          },
+          {
+            "file": "lean/InfoGeometry/OperatorAlgebra/InnerConjugation.lean",
+            "module": "InfoGeometry.OperatorAlgebra.InnerConjugation",
+            "line": 289,
+            "declaration_kind": "theorem",
+            "declaration_name": "innerConjugationNat_zero",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "287:     εW εχ εN (unit_pow_commutes u gW hW n)\n288:     (unit_pow_commutes u gχ hχ n) (unit_pow_commutes u gN hN n) hx\n289: \n290: theorem innerConjugationNat_zero (u : Aˣ) (x : A) :\n291:     innerConjugationNat u 0 x = x := by",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false
+          }
+        ]
+      }
+    ],
+    "findings": [
+      {
+        "file": "lean/InfoGeometry/OperatorAlgebra/InnerConjugation.lean",
+        "module": "InfoGeometry.OperatorAlgebra.InnerConjugation",
+        "line": 65,
+        "declaration_kind": "theorem",
+        "declaration_name": "innerConjugation_idempotent_iff",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "63:     rw [map_pow] at h\n64:     simpa [innerConjugationRingEquiv, innerConjugation, mul_assoc] using h\n65: \n66: \n67: theorem innerConjugation_idempotent_iff (u : Aˣ) (x : A) :",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      },
+      {
+        "file": "lean/InfoGeometry/OperatorAlgebra/InnerConjugation.lean",
+        "module": "InfoGeometry.OperatorAlgebra.InnerConjugation",
+        "line": 289,
+        "declaration_kind": "theorem",
+        "declaration_name": "innerConjugationNat_zero",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "287:     εW εχ εN (unit_pow_commutes u gW hW n)\n288:     (unit_pow_commutes u gχ hχ n) (unit_pow_commutes u gN hN n) hx\n289: \n290: theorem innerConjugationNat_zero (u : Aˣ) (x : A) :\n291:     innerConjugationNat u 0 x = x := by",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      }
+    ]
+  },
+  "placeholder-QuadraticNoncommutativeIdentity.json": {
+    "schema": "info_geometry.placeholder_audit.v2",
+    "generated_at": "2026-11-12T20:30:40.000501+00:00",
+    "root": "lean/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.lean",
+    "authority_tier": "heuristic-proxy",
+    "summary": {
+      "module_count": 1,
+      "scanned_count": 1,
+      "finding_count": 2,
+      "hard_count": 0,
+      "soft_count": 2,
+      "advisory_count": 0,
+      "provenance": {
+        "hard_failures": 0,
+        "soft_findings": 2,
+        "advisory_findings": 0
+      }
+    },
+    "modules": [
+      {
+        "path": "lean/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.lean",
+        "module": "InfoGeometry.OperatorAlgebra.QuadraticNoncommutativeIdentity",
+        "finding_count": 2,
+        "hard_count": 0,
+        "soft_count": 2,
+        "advisory_count": 0,
+        "findings": [
+          {
+            "file": "lean/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.lean",
+            "module": "InfoGeometry.OperatorAlgebra.QuadraticNoncommutativeIdentity",
+            "line": 29,
+            "declaration_kind": "theorem",
+            "declaration_name": "RingHom.map_grandCanonicalOperator",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "27:     (β H μ N μχ Q : A) : A :=\n28:   β * (H - μ * N - μχ * Q)\n29: \n30: theorem RingHom.map_grandCanonicalOperator\n31:     {B : Type*} [Ring B] (φ : A →+* B)",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false
+          },
+          {
+            "file": "lean/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.lean",
+            "module": "InfoGeometry.OperatorAlgebra.QuadraticNoncommutativeIdentity",
+            "line": 102,
+            "declaration_kind": "theorem",
+            "declaration_name": "RingHom.map_quadraticCommutator",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "100:   dsimp [quadraticCommutator]\n101:   noncomm_ring\n102: \n103: theorem RingHom.map_quadraticCommutator\n104:     {B : Type*} [Ring B] (f : A →+* B) (x y : A) :",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false
+          }
+        ]
+      }
+    ],
+    "findings": [
+      {
+        "file": "lean/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.lean",
+        "module": "InfoGeometry.OperatorAlgebra.QuadraticNoncommutativeIdentity",
+        "line": 29,
+        "declaration_kind": "theorem",
+        "declaration_name": "RingHom.map_grandCanonicalOperator",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "27:     (β H μ N μχ Q : A) : A :=\n28:   β * (H - μ * N - μχ * Q)\n29: \n30: theorem RingHom.map_grandCanonicalOperator\n31:     {B : Type*} [Ring B] (φ : A →+* B)",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      },
+      {
+        "file": "lean/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.lean",
+        "module": "InfoGeometry.OperatorAlgebra.QuadraticNoncommutativeIdentity",
+        "line": 102,
+        "declaration_kind": "theorem",
+        "declaration_name": "RingHom.map_quadraticCommutator",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "100:   dsimp [quadraticCommutator]\n101:   noncomm_ring\n102: \n103: theorem RingHom.map_quadraticCommutator\n104:     {B : Type*} [Ring B] (f : A →+* B) (x y : A) :",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      }
+    ]
+  },
+  "placeholder-QuaternionCayleyPair.json": {
+    "schema": "info_geometry.placeholder_audit.v2",
+    "generated_at": "2026-11-12T20:30:39.318147+00:00",
+    "root": "lean/InfoGeometry/Algebra/QuaternionCayleyPair.lean",
+    "authority_tier": "heuristic-proxy",
+    "summary": {
+      "module_count": 0,
+      "scanned_count": 1,
+      "finding_count": 0,
+      "hard_count": 0,
+      "soft_count": 0,
+      "advisory_count": 0,
+      "provenance": {
+        "hard_failures": 0,
+        "soft_findings": 0,
+        "advisory_findings": 0
+      }
+    },
+    "modules": [],
+    "findings": []
+  },
+  "placeholder-SplitAtomQuaternion.json": {
+    "schema": "info_geometry.placeholder_audit.v2",
+    "generated_at": "2026-11-12T20:30:39.425987+00:00",
+    "root": "lean/InfoGeometry/Clifford/SplitAtomQuaternion.lean",
+    "authority_tier": "heuristic-proxy",
+    "summary": {
+      "module_count": 0,
+      "scanned_count": 1,
+      "finding_count": 0,
+      "hard_count": 0,
+      "soft_count": 0,
+      "advisory_count": 0,
+      "provenance": {
+        "hard_failures": 0,
+        "soft_findings": 0,
+        "advisory_findings": 0
+      }
+    },
+    "modules": [],
+    "findings": []
+  },
+  "placeholder-StrictUpper3.json": {
+    "schema": "info_geometry.placeholder_audit.v2",
+    "generated_at": "2026-11-12T20:30:39.139476+00:00",
+    "root": "lean/InfoGeometry/Algebra/StrictUpper3.lean",
+    "authority_tier": "heuristic-proxy",
+    "summary": {
+      "module_count": 1,
+      "scanned_count": 1,
+      "finding_count": 1,
+      "hard_count": 0,
+      "soft_count": 1,
+      "advisory_count": 0,
+      "provenance": {
+        "hard_failures": 0,
+        "soft_findings": 1,
+        "advisory_findings": 0
+      }
+    },
+    "modules": [
+      {
+        "path": "lean/InfoGeometry/Algebra/StrictUpper3.lean",
+        "module": "InfoGeometry.Algebra.StrictUpper3",
+        "finding_count": 1,
+        "hard_count": 0,
+        "soft_count": 1,
+        "advisory_count": 0,
+        "findings": [
+          {
+            "file": "lean/InfoGeometry/Algebra/StrictUpper3.lean",
+            "module": "InfoGeometry.Algebra.StrictUpper3",
+            "line": 77,
+            "declaration_kind": "theorem",
+            "declaration_name": "cube_zero",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "75:   ext i j\n76:   fin_cases i <;> fin_cases j <;> simp [upper]\n77: \n78: theorem cube_zero (X : Strict3 A) : (X : Mat3 A) ^ 3 = 0 := by\n79:   simpa only [pow_succ, pow_zero, one_mul] using triple_mul_zero X X X",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false
+          }
+        ]
+      }
+    ],
+    "findings": [
+      {
+        "file": "lean/InfoGeometry/Algebra/StrictUpper3.lean",
+        "module": "InfoGeometry.Algebra.StrictUpper3",
+        "line": 77,
+        "declaration_kind": "theorem",
+        "declaration_name": "cube_zero",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "75:   ext i j\n76:   fin_cases i <;> fin_cases j <;> simp [upper]\n77: \n78: theorem cube_zero (X : Strict3 A) : (X : Mat3 A) ^ 3 = 0 := by\n79:   simpa only [pow_succ, pow_zero, one_mul] using triple_mul_zero X X X",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      }
+    ]
+  },
+  "placeholder-StrictUpperBCH3.json": {
+    "schema": "info_geometry.placeholder_audit.v2",
+    "generated_at": "2026-11-12T20:30:39.235438+00:00",
+    "root": "lean/InfoGeometry/Algebra/StrictUpperBCH3.lean",
+    "authority_tier": "heuristic-proxy",
+    "summary": {
+      "module_count": 1,
+      "scanned_count": 1,
+      "finding_count": 1,
+      "hard_count": 0,
+      "soft_count": 1,
+      "advisory_count": 0,
+      "provenance": {
+        "hard_failures": 0,
+        "soft_findings": 1,
+        "advisory_findings": 0
+      }
+    },
+    "modules": [
+      {
+        "path": "lean/InfoGeometry/Algebra/StrictUpperBCH3.lean",
+        "module": "InfoGeometry.Algebra.StrictUpperBCH3",
+        "finding_count": 1,
+        "hard_count": 0,
+        "soft_count": 1,
+        "advisory_count": 0,
+        "findings": [
+          {
+            "file": "lean/InfoGeometry/Algebra/StrictUpperBCH3.lean",
+            "module": "InfoGeometry.Algebra.StrictUpperBCH3",
+            "line": 134,
+            "declaration_kind": "theorem",
+            "declaration_name": "bch_neg",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "132:   rw [expUnit_val]\n133:   simp\n134: \n135: theorem bch_neg (X : Strict3 A) : bch X (-X) = 0 := by\n136:   simp [bch]",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false
+          }
+        ]
+      }
+    ],
+    "findings": [
+      {
+        "file": "lean/InfoGeometry/Algebra/StrictUpperBCH3.lean",
+        "module": "InfoGeometry.Algebra.StrictUpperBCH3",
+        "line": 134,
+        "declaration_kind": "theorem",
+        "declaration_name": "bch_neg",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "132:   rw [expUnit_val]\n133:   simp\n134: \n135: theorem bch_neg (X : Strict3 A) : bch X (-X) = 0 := by\n136:   simp [bch]",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      }
+    ]
+  },
+  "placeholder-ThermalBogoliubovCAR.json": {
+    "schema": "info_geometry.placeholder_audit.v2",
+    "generated_at": "2026-11-12T20:30:39.852062+00:00",
+    "root": "lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean",
+    "authority_tier": "heuristic-proxy",
+    "summary": {
+      "module_count": 1,
+      "scanned_count": 1,
+      "finding_count": 3,
+      "hard_count": 0,
+      "soft_count": 3,
+      "advisory_count": 0,
+      "provenance": {
+        "hard_failures": 0,
+        "soft_findings": 3,
+        "advisory_findings": 0
+      }
+    },
+    "modules": [
+      {
+        "path": "lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean",
+        "module": "InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR",
+        "finding_count": 3,
+        "hard_count": 0,
+        "soft_count": 3,
+        "advisory_count": 0,
+        "findings": [
+          {
+            "file": "lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean",
+            "module": "InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR",
+            "line": 58,
+            "declaration_kind": "theorem",
+            "declaration_name": "RingHom.map_operatorThermalCreator",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "56: \n57: omit [Module R A] in\n58: theorem RingHom.map_operatorThermalCreator\n59:     {B : Type*} [Semiring B] (φ : A →+* B) (c b u v : A) :\n60:     φ (operatorThermalCreator c b u v) =",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false
+          },
+          {
+            "file": "lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean",
+            "module": "InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR",
+            "line": 151,
+            "declaration_kind": "theorem",
+            "declaration_name": "thermalAnnihilator_map",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "149: variable {R : Type*} [CommSemiring R]\n150: variable {A : Type*} [Semiring A] [Algebra R A]\n151: \n152: theorem thermalAnnihilator_map\n153:     {B : Type*} [Semiring B] [Algebra R B]",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false
+          },
+          {
+            "file": "lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean",
+            "module": "InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR",
+            "line": 158,
+            "declaration_kind": "theorem",
+            "declaration_name": "thermalCreator_map",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "156:       thermalAnnihilator (φ a) (φ d) u v := by\n157:   simp [thermalAnnihilator]\n158: \n159: theorem thermalCreator_map\n160:     {B : Type*} [Semiring B] [Algebra R B]",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false
+          }
+        ]
+      }
+    ],
+    "findings": [
+      {
+        "file": "lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean",
+        "module": "InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR",
+        "line": 58,
+        "declaration_kind": "theorem",
+        "declaration_name": "RingHom.map_operatorThermalCreator",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "56: \n57: omit [Module R A] in\n58: theorem RingHom.map_operatorThermalCreator\n59:     {B : Type*} [Semiring B] (φ : A →+* B) (c b u v : A) :\n60:     φ (operatorThermalCreator c b u v) =",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      },
+      {
+        "file": "lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean",
+        "module": "InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR",
+        "line": 151,
+        "declaration_kind": "theorem",
+        "declaration_name": "thermalAnnihilator_map",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "149: variable {R : Type*} [CommSemiring R]\n150: variable {A : Type*} [Semiring A] [Algebra R A]\n151: \n152: theorem thermalAnnihilator_map\n153:     {B : Type*} [Semiring B] [Algebra R B]",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      },
+      {
+        "file": "lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean",
+        "module": "InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR",
+        "line": 158,
+        "declaration_kind": "theorem",
+        "declaration_name": "thermalCreator_map",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "156:       thermalAnnihilator (φ a) (φ d) u v := by\n157:   simp [thermalAnnihilator]\n158: \n159: theorem thermalCreator_map\n160:     {B : Type*} [Semiring B] [Algebra R B]",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      }
+    ]
+  },
+  "placeholder-ThreeZ2OperatorGradings.json": {
+    "schema": "info_geometry.placeholder_audit.v2",
+    "generated_at": "2026-11-12T20:30:39.914529+00:00",
+    "root": "lean/InfoGeometry/OperatorAlgebra/ThreeZ2OperatorGradings.lean",
+    "authority_tier": "heuristic-proxy",
+    "summary": {
+      "module_count": 0,
+      "scanned_count": 1,
+      "finding_count": 0,
+      "hard_count": 0,
+      "soft_count": 0,
+      "advisory_count": 0,
+      "provenance": {
+        "hard_failures": 0,
+        "soft_findings": 0,
+        "advisory_findings": 0
+      }
+    },
+    "modules": [],
+    "findings": []
+  },
+  "placeholder-WeightedPermutationHolonomy.json": {
+    "schema": "info_geometry.placeholder_audit.v2",
+    "generated_at": "2026-11-12T20:30:39.733429+00:00",
+    "root": "lean/InfoGeometry/OperatorAlgebra/WeightedPermutationHolonomy.lean",
+    "authority_tier": "heuristic-proxy",
+    "summary": {
+      "module_count": 1,
+      "scanned_count": 1,
+      "finding_count": 1,
+      "hard_count": 0,
+      "soft_count": 1,
+      "advisory_count": 0,
+      "provenance": {
+        "hard_failures": 0,
+        "soft_findings": 1,
+        "advisory_findings": 0
+      }
+    },
+    "modules": [
+      {
+        "path": "lean/InfoGeometry/OperatorAlgebra/WeightedPermutationHolonomy.lean",
+        "module": "InfoGeometry.OperatorAlgebra.WeightedPermutationHolonomy",
+        "finding_count": 1,
+        "hard_count": 0,
+        "soft_count": 1,
+        "advisory_count": 0,
+        "findings": [
+          {
+            "file": "lean/InfoGeometry/OperatorAlgebra/WeightedPermutationHolonomy.lean",
+            "module": "InfoGeometry.OperatorAlgebra.WeightedPermutationHolonomy",
+            "line": 79,
+            "declaration_kind": "theorem",
+            "declaration_name": "coe_diagonalUnit_inv",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "77: \n78: @[simp]\n79: theorem coe_diagonalUnit_inv (V : I → Aˣ) :\n80:     (↑((diagonalUnit V)⁻¹) : Matrix I I A) =\n81:       Matrix.diagonal (fun i => (↑((V i)⁻¹) : A)) :=",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false
+          }
+        ]
+      }
+    ],
+    "findings": [
+      {
+        "file": "lean/InfoGeometry/OperatorAlgebra/WeightedPermutationHolonomy.lean",
+        "module": "InfoGeometry.OperatorAlgebra.WeightedPermutationHolonomy",
+        "line": 79,
+        "declaration_kind": "theorem",
+        "declaration_name": "coe_diagonalUnit_inv",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "77: \n78: @[simp]\n79: theorem coe_diagonalUnit_inv (V : I → Aˣ) :\n80:     (↑((diagonalUnit V)⁻¹) : Matrix I I A) =\n81:       Matrix.diagonal (fun i => (↑((V i)⁻¹) : A)) :=",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      }
+    ]
+  }
+}

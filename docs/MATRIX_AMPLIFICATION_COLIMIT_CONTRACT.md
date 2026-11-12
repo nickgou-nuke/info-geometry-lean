@@ -106,37 +106,57 @@ Preparation on 12 November 2026:
 - Installed staged and pre-commit proof gates: `proof_proxy_staged_gate: ok`.
 - `git diff --check`: passed.
 
-Kernel status is **pending repair validation**. The first focused CI run
-[`43195670598`](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43195670598)
-installed the pinned environment and compiled the three reused owners. Lean
-reported missing coefficient annotations on matrix units and an unresolved
-codomain for the categorical cocone components. Explicit coefficient types
-and the existing lift's `Limit := s.pt` argument address those elaboration
-errors; the next compiler run must validate these changes and the tower.
+Kernel status is **PASS for the three mathematical owners**. Focused CI run
+[`43197957178`](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43197957178)
+completed successfully on commit
+`802fb260ae0052a31d89302179d48243f64072a7`, tree
+`d5575ea242af8f18c3bdc52b8a63c9a9becd6340`. The independently checked local
+source tree was identical. The run executed both commands:
 
-The second focused run
-[`43196376766`](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43196376766)
-successfully compiled `MatrixAmplification` and `SequentialRingColimit`.
-It exposed two malformed existential binders and the need to reduce the
-categorical naturality goal to its matrix equation before entrywise
-extensionality. These are corrected without changing the target statements;
-the tower and exhaustive audit still require a successful fresh run.
+```bash
+python3 verification/matrix-amplification/check.py build
+python3 verification/matrix-amplification/check.py env lean lean/InfoGeometry/Categorical/MatrixAmplificationAudit.lean
+```
 
-The third focused run
-[`43196920834`](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43196920834)
-successfully compiled all three mathematical owners. The exhaustive audit
-then rejected the equation compiler's generated `stage._unsafe_rec` helper.
-The stage definition now uses the native `Nat.rec` directly, preserving both
-definitional equations. The audit remains unchanged and must pass on a fresh
-run; no generated declaration is excluded from its checks.
+The focused build reported success (3102 Lake jobs). Its declaration audit
+and the separate fresh audit both passed. The workflow's audit parser checked
+completion and owner coverage. Fresh Lean output gives:
 
-The local focused `check.py build` remains queued behind the shared build lock.
-The root file wrapper with `--no-wait-for-build-lock` previously returned exit 2
-for that occupied lock. No successful compiler or axiom-audit pass is claimed.
-The audit source enumerates every owned declaration in all three mathematical
-modules, including generated and private declarations; its actual count must
-come from fresh Lean output. Draft PR publication was explicitly authorized
-with these pending checks and the separate root gate disclosed.
+| Mathematical owner | Audited declarations |
+|---|---:|
+| `InfoGeometry.Algebra.MatrixAmplification` | 13 |
+| `InfoGeometry.Categorical.SequentialRingColimit` | 15 |
+| `InfoGeometry.Categorical.MatrixAmplificationTower` | 30 |
+| **Total** | **58** |
+
+The axiom union is exactly `[propext, Classical.choice, Quot.sound]`.
+Independent QA reconciled 58 distinct declaration names and the per-owner
+counts, and verified that the CI merge checkout and reviewed head have the
+same tree.
+The audit includes generated and private declarations, rejects unsafe and
+partial declarations, and rejects every axiom outside that allowed set. Its
+source is unchanged from the initial draft publication. The three owners
+contain 43 explicit mathematical declarations, including 27 theorems; the
+larger audit count includes generated declarations.
+
+CI-guided repairs made coefficient and cocone codomain types explicit, exposed
+the matrix naturality equation before entrywise extensionality, and corrected
+two existential binders. The recursive stage definition now uses native
+`Nat.rec`, preserving its defining equations while avoiding an owned
+`stage._unsafe_rec` helper. An explicit stage coefficient type supplies the
+existing nontriviality instance in the commutator theorem. No hypothesis was
+strengthened, and the audit and configured quality gates were not weakened.
+Lean reported non-failing simplification and local-instance style suggestions;
+no linter was disabled.
+
+Local kernel execution did not start because another task held the shared
+build lock. After CI supplied the successful build and fresh audit, the still
+queued local wrapper was interrupted before it launched Lake. No other build
+process or shared lock was changed. Draft publication was explicitly
+authorized with the initially pending kernel checks and the separate root
+gate disclosed. Kernel acceptance is now established by the linked CI run;
+whole-repository acceptance remains separate. The `Categorical.All` integration
+is present but is not built by this focused target.
 
 Separately, `python3 tools/infra/ci_bootstrap.py paths` reports missing,
 untracked `HomotopyHypothesis` and `Atlas` path dependencies, and the

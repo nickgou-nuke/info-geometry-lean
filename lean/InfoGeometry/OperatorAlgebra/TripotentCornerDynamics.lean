@@ -81,6 +81,7 @@ theorem tripotent_schwarz_defect (S x : A) (u : unitary A)
       _ = projPos S * star y * (projNeg S * projZero S) * y * projPos S := by
         simp only [mul_assoc]
       _ = 0 := by rw [projNeg_mul_projZero_eq_zero hS]; simp
+  dsimp only [y] at hcross hcross'
   rw [UnitaryCornerCompression.schwarz_defect _ _ _ _ hp]
   simp only [UnitaryCornerCompression.transfer, hsplit, add_mul, star_add,
     mul_add, hcross, hcross', add_zero, zero_add]
@@ -119,7 +120,7 @@ theorem paired_square_of_partial_inverses {S B C : A}
   calc
     (B + C) ^ 2 = projPos S + projNeg S := by
       simp only [pow_two, add_mul, mul_add, extreme_square_zero hS hB,
-        hCC, hBC, hCB, zero_add, add_zero]
+        hCC, hBC, hCB, zero_add, add_zero, add_comm]
     _ = 1 - projZero S :=
       (PeirceSpine.one_sub_projZero_eq_projPos_add_projNeg S).symm
 

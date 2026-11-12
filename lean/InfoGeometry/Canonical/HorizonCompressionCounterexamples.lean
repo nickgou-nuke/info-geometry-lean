@@ -52,7 +52,7 @@ theorem exchange_selfAdjoint : IsSelfAdjoint exchange := by
 theorem exchange_sq : exchange * exchange = 1 := by
   calc
     _ = frameUnit 0 0 + frameUnit 1 1 + frameUnit 2 2 + frameUnit 3 3 := by
-      simp [exchange, add_mul, mul_add, frameUnit_mul]
+      simp [exchange, add_mul, mul_add, frameUnit_mul, add_comm]
     _ = 1 := frame_diagonal_sum
 
 /-- The exchange is an inhabitant of Mathlib's native unitary group. -/

@@ -91,11 +91,19 @@ jobs:
         lean/InfoGeometry/OperatorAlgebra/HorizonCompressionPairingAudit.lean
     steps:
       - name: Check out the actual PR head
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          persist-credentials: false
-          submodules: false
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os, re
+          if re.fullmatch(r'[0-9a-f]{40}', os.environ['HORIZON_EXPECTED_HEAD']) is None:
+              raise SystemExit('Invalid expected commit SHA')
+          PY
+          # This public repository needs no checkout credential. Avoid traversing
+          # unrelated legacy gitlinks during checkout-action credential cleanup.
+          git init .
+          git remote add origin https://github.com/nickgou-nuke/info-geometry-lean.git
+          git -c protocol.version=2 fetch --no-tags --depth=1 origin "$HORIZON_EXPECTED_HEAD"
+          git checkout --detach FETCH_HEAD
 
       - name: Verify the checked revision and unchanged dependency pins
         run: |
@@ -320,6 +328,7 @@ jobs:
         if: always()
         run: |
           set -euo pipefail
+          mkdir -p horizon-report
           read -r -a horizon_sources <<< "$HORIZON_FILES"
           git diff --exit-code -- lean-toolchain lakefile.lean lakefile.toml lake-manifest.json \
             verification/language-symmetry/lean-toolchain \

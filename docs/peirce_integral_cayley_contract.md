@@ -28,7 +28,7 @@ unitarity and self-adjoint daughter conclusions additionally assume a native
 The star conclusions in `StarDaughterGeometry` also use a self-adjoint cut;
 the proper-star zero criteria explicitly carry their properness hypothesis.
 
-| Atom | Correct scope and planned owner | Intake correction |
+| Atom | Owner and proved scope | Intake correction |
 |---|---|---|
 | Integral scale-four sandwich | `IntegralReynolds`: composition on the centralizer of `V`; evaluations on the cut and corners | Relative centrality is not ambient centrality; unrestricted scaled idempotence is false. |
 | Ambient counterexample | `Canonical.PeirceIntegralReynoldsCounterexample`: the existing full real 4-by-4 dense frame gives `VX=X`, `XV=0`, `KX=X`, and failure of the unrestricted scale-four law | The centralizer condition has a concrete noncommutative obstruction. |
@@ -51,7 +51,7 @@ proper-star zero criterion. `PeirceChannelCounterexamples` already supplies
 the lower-corner blind spot and a nonzero singular Gram matrix with an
 explicit annihilator. These results are reused rather than claimed as new.
 `IndividuatedCayley.VerifiedUnitaryResolvent` owns generic starred-ring Cayley
-unitarity; the new work must construct its inverse fields from `1+V`.
+unitarity; the new work constructs its inverse fields from `1+V`.
 At the endpoint `V=1`, the arbitrary-ring Cayley conclusion still requires
 invertibility of `1+V`, which is invertibility of `2` there. This is a
 different issue from the integral order's full-matrix criterion, which
@@ -100,6 +100,69 @@ transition cocycles, analytic limits, and any physical mass-gap conclusion
 remain outside the proved contract. Root-Lake coverage must be reported
 separately from a pinned focused source-closure check.
 
-Validation is pending; no candidate is marked kernel verified by this initial
-contract. Final declaration counts, commands, and observed limitations will
-be recorded after compilation and independent review.
+## Validation record — 2026-11-12
+
+The complete proof sources passed the
+[focused CI run](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43242943544)
+for PR #332. The published proof revision is
+`1e523804d70cd472754147039d9053dcfb04ef76`; GitHub checked the synthetic merge
+revision `0143bd3223f9d15d5273c1a4c3fd8975902ab2eb`. Both revisions have the
+same Git tree, `743c6fe7c00870bf85df208f9f3bc9c751ace60e`, also matching
+local commit `ac11b4ff52e461e5d106641675c9a6631935f389`.
+This validation-record update changes documentation only.
+
+The workflow freshly compiled all **53 repository modules** in the selected
+import closure against the pinned environment above. It then audited all
+**218 declarations owned by the ten selected modules**, including generated
+and private declarations. Of these, **163 belong to the seven new owners**.
+
+| Owner | Audited declarations | Origin |
+|---|---:|---|
+| `PeirceSpine.IntegralOrder` | 49 | New |
+| `PeirceSpine.IntegralReynolds` | 35 | New |
+| `PeirceSpine.IntegralOrderReynolds` | 11 | New |
+| `PeirceSpine.StarDaughterGeometry` | 21 | New |
+| `PeirceSpine.UnitaryCayley` | 32 | New |
+| `OperatorAlgebra.PositiveSpectralGap` | 11 | New |
+| `Canonical.PeirceIntegralReynoldsCounterexample` | 4 | New |
+| `PeirceSpine.HomogenizedFourierDefect` | 33 | PR #329 |
+| `PeirceSpine.StarMetricNondegeneracy` | 6 | PR #329 |
+| `Canonical.PeirceChannelCounterexamples` | 16 | PR #329 |
+
+Here `PeirceSpine` abbreviates `InfoGeometry.OperatorAlgebra.PeirceSpine`;
+the other prefixes are relative to `InfoGeometry`. The per-owner counts
+reconcile exactly with the native audit's `AUDIT_COUNT: 218`.
+The only observed axioms were `propext`, `Classical.choice`, and `Quot.sound`.
+The audit rejects unsafe/partial declarations and any additional axiom.
+All seven new owners compiled without warnings; existing dependency warnings
+remain visible in the uploaded logs.
+
+The workflow command, from the parent of its fresh `project` checkout, is:
+
+```bash
+python3 project/tools/quality/check_peirce_integral_cayley.py \
+  --mathlib-root pinned-mathlib --output verification
+```
+
+The checker records copied sources, source hashes, the checked revision,
+toolchain, compilation logs, and the native axiom audit in the workflow
+artifact. It requires a new output directory. The final source-semantic
+gate selected all seven new modules and reported zero findings; the normal
+`proof_proxy_staged_gate.py` also passed for each code commit.
+
+### Root build and repository-wide checks
+
+The maintained `tools/infra/run_locked_lake_build.py` wrapper was run on all
+seven new owners under the shared build lock. It exited with code 1 before
+owner compilation because the configured `HomotopyHypothesis` package
+directory, `external_refs/homotopy-hypothesis-lean4`, is absent. Read-only
+preflight also confirmed absent configurations for `external_refs/atlas-lean`
+and `external_refs/gift-framework-core`. No root-build success is claimed.
+
+Other repository-wide jobs retain separate existing failures: the tracked
+Lean debt gate reports 878 findings in 91 forensic/fixture files, with zero
+package findings; the idempotent-chart checker has a Python syntax error in
+the unchanged `tools/quality/check_operator_geometry.py`; and the docs job
+cannot obtain the repository's GitHub Pages configuration. These do not
+constitute a passing repository-wide gate. The focused kernel and axiom
+result above has its explicitly stated scope.

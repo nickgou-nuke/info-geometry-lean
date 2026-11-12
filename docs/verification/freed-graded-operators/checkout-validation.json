@@ -1,0 +1,92 @@
+{
+  "observed_checkout_failure": "actions/checkout authentication cleanup invokes git submodule foreach, which fails for the pre-existing missing external_refs/auto-ontology URL even when sparse checkout excludes the path.",
+  "replacement": "Existing repository direct public-fetch pattern; no token supplied or persisted; exact HEAD assertion.",
+  "records": [
+    {
+      "command": [
+        "git",
+        "-C",
+        "/workspace/scratch/d18a558d1d7d/freed-sparse-checkout-probe",
+        "fetch",
+        "--no-tags",
+        "--depth=1",
+        "origin",
+        "297d513a44fdb76cded0b565aecfe78c6d70d083"
+      ],
+      "returncode": 0,
+      "output": "From /workspace/scratch/d18a558d1d7d/info-geometry-lean\n * branch              297d513a44fdb76cded0b565aecfe78c6d70d083 -> FETCH_HEAD\n"
+    },
+    {
+      "command": [
+        "git",
+        "-C",
+        "/workspace/scratch/d18a558d1d7d/freed-sparse-checkout-probe",
+        "checkout",
+        "--detach",
+        "FETCH_HEAD"
+      ],
+      "returncode": 0,
+      "output": "HEAD is now at 297d513a Record independent proof acceptance and integration limits\n"
+    },
+    {
+      "command": [
+        "git",
+        "-C",
+        "/workspace/scratch/d18a558d1d7d/freed-sparse-checkout-probe",
+        "rev-parse",
+        "HEAD"
+      ],
+      "returncode": 0,
+      "output": "297d513a44fdb76cded0b565aecfe78c6d70d083\n"
+    },
+    {
+      "command": [
+        "git",
+        "-C",
+        "/workspace/scratch/d18a558d1d7d/freed-sparse-checkout-probe",
+        "fetch",
+        "--no-tags",
+        "--no-recurse-submodules",
+        "--depth=1",
+        "origin",
+        "297d513a44fdb76cded0b565aecfe78c6d70d083"
+      ],
+      "returncode": 0,
+      "output": "From /workspace/scratch/d18a558d1d7d/info-geometry-lean\n * branch              297d513a44fdb76cded0b565aecfe78c6d70d083 -> FETCH_HEAD\n"
+    },
+    {
+      "command": [
+        "git",
+        "-C",
+        "/workspace/scratch/d18a558d1d7d/freed-sparse-checkout-probe",
+        "-c",
+        "submodule.recurse=false",
+        "checkout",
+        "--detach",
+        "FETCH_HEAD"
+      ],
+      "returncode": 0,
+      "output": "HEAD is now at 297d513a Record independent proof acceptance and integration limits\n"
+    }
+  ],
+  "source_modules": [
+    "InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness",
+    "InfoGeometry.Algebra.FiniteSpinAlgebra",
+    "InfoGeometry.Algebra.SupermatrixKoszul",
+    "InfoGeometry.Algebra.FreedAdditiveCocycle",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.GradedTraceMoments",
+    "InfoGeometry.OperatorAlgebra.FreedGradedCalculus",
+    "InfoGeometry.OperatorAlgebra.FreedDefectChannels",
+    "InfoGeometry.Canonical.FreedOperatorAlgebra"
+  ],
+  "source_hashes_match": true,
+  "verification_helper_hashes_match": true,
+  "yaml_parsed": true,
+  "permissions": {
+    "contents": "read"
+  },
+  "scope": "Local exact-ref fetch and checkout using local origin; GitHub HTTPS fetch still requires remote CI observation. No Lean source or verification helper changed."
+}

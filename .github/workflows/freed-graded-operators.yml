@@ -38,10 +38,18 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
-        with:
-          path: project
-          persist-credentials: false
+      - name: Fetch exact public source without traversing external submodules
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+          SOURCE_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "${GITHUB_SERVER_URL}/${SOURCE_REPOSITORY}.git"
+          git -C project fetch --no-tags --no-recurse-submodules --depth=1 origin "$SOURCE_REV"
+          git -C project -c submodule.recurse=false checkout --detach FETCH_HEAD
+          test "$(git -C project rev-parse HEAD)" = "$SOURCE_REV"
       - name: Read exact dependency pins
         id: pins
         shell: bash

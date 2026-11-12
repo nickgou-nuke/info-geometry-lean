@@ -126,8 +126,9 @@ unchanged. The upstream draft preserves the focused, independently accepted
 source and this integration limitation; it is not a merge-ready certificate.
 
 The actual pre-commit hook passed for both source commits, including the
-coefficient-unit spelling repair. The final documentation commit only adds
-this evidence; it does not change the accepted Lean source. The report's
+coefficient-unit spelling repair. Subsequent commits add
+verification evidence and repair the CI checkout bootstrap; they do not change
+the accepted Lean source or verification helpers. The report's
 `local_revision` identifies the local source checkpoint. Source SHA-256 values
 provide the exact comparison with the published tree, whose Git commit may
 have different commit metadata.
@@ -141,6 +142,32 @@ strict placeholder scans. It runs the semantic heuristic at its error
 threshold, preserving the complete warning report as an artifact. The strict
 warning-threshold run above remains an exit-1 result, with its 17 findings
 individually reviewed. No remote CI pass is asserted by this local report.
+
+## Remote CI checkout repair
+
+The first dedicated GitHub run failed before Lean at the project checkout:
+
+```text
+fatal: No url found for submodule path 'external_refs/auto-ontology' in .gitmodules
+```
+
+[Initial job log](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43283876909/job/131411999099).
+The checkout action's authentication cleanup traversed pre-existing external
+gitlinks, including the unconfigured path. A local reproduction confirmed that
+sparse selection alone does not avoid that index traversal.
+
+The focused workflow now uses the exact public shallow-fetch pattern already
+used by `peirce-reflection.yml` and `supercolor-closure.yml`. It fetches the
+requested GitHub commit, disables recursive submodule operations, checks out
+that commit detached, and asserts its `HEAD` before running repository code.
+The source checkout receives no authentication token. The existing read-only
+workflow permission and Mathlib checkout configuration remain in place.
+
+Local validation checked the fetch/checkout commands and YAML, reconciled all
+11 accepted source hashes and every verification-helper hash, and preserved
+its exact commands in [checkout validation](freed-graded-operators/checkout-validation.json).
+It did not rerun unchanged Lean proofs or claim a remote CI pass. Current
+remote results are visible on [the draft PR checks](https://github.com/nickgou-nuke/info-geometry-lean/pull/335/checks).
 
 ## Durable evidence
 

@@ -137,6 +137,7 @@ theorem rankOne_adjoint_commutator_apply (u v : E)
     (hu : ‖u‖ = 1) (hv : ‖v‖ = 1) (huv : inner ℝ u v = 0) :
     comm (rankOne ℝ u v) (star (rankOne ℝ u v)) u = u := by
   have hvu : inner ℝ v u = 0 := by rw [real_inner_comm, huv]
+  rw [show star (rankOne ℝ u v) = rankOne ℝ v u from adjoint_rankOne u v]
   change rankOne ℝ u v (rankOne ℝ v u u) - rankOne ℝ v u (rankOne ℝ u v u) = u
   simp [rankOne_apply, real_inner_self_eq_norm_sq, hu, hv, hvu]
 

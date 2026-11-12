@@ -41,7 +41,8 @@ theorem mem_jointFixed_iff (f g : M →ₗ[ℝ] M) (x : M) :
 theorem first_average (f g : M →ₗ[ℝ] M)
     (hf : Function.Involutive f) (x : M) :
     f (average f g x) = average f g x := by
-  simp only [average_apply, map_smul, map_add, hf]
+  have hff (y : M) : f (f y) = y := hf y
+  simp only [average_apply, map_smul, map_add, hff]
   congr 1
   abel
 
@@ -49,7 +50,8 @@ theorem second_average (f g : M →ₗ[ℝ] M)
     (hg : Function.Involutive g) (hfg : Function.Commute f g) (x : M) :
     g (average f g x) = average f g x := by
   have hgf (y : M) : g (f y) = f (g y) := (hfg y).symm
-  simp only [average_apply, map_smul, map_add, hgf, hg]
+  have hgg (y : M) : g (g y) = y := hg y
+  simp only [average_apply, map_smul, map_add, hgf, hgg]
   congr 1
   abel
 

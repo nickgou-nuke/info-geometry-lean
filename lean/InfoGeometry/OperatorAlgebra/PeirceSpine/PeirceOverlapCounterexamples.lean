@@ -5,7 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Basic
 import Mathlib.Data.Matrix.Basis
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic.NormNum
 
 /-!
@@ -27,20 +27,25 @@ private theorem e_mul {n : ℕ} (i j k l : Fin n) :
   by_cases h : j = k
   · subst k
     simp [e]
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     simpa [e] using Matrix.single_mul_single_of_ne (1 : ℝ) i j k h (1 : ℝ)
 
 /-- The original three-dimensional pair has a nonzero reverse product. -/
 theorem three_dimensional_pair_overlap :
-    (Matrix.single (0 : Fin 3) 1 (1 : ℝ) * Matrix.single 2 0 1 +
-      Matrix.single 2 0 1 * Matrix.single 0 1 1) = Matrix.single 2 1 1 := by
+    (Matrix.single (0 : Fin 3) (1 : Fin 3) (1 : ℝ) *
+        Matrix.single (2 : Fin 3) (0 : Fin 3) (1 : ℝ) +
+      Matrix.single (2 : Fin 3) (0 : Fin 3) (1 : ℝ) *
+        Matrix.single (0 : Fin 3) (1 : Fin 3) (1 : ℝ)) =
+      Matrix.single (2 : Fin 3) (1 : Fin 3) (1 : ℝ) := by
   change e (0 : Fin 3) 1 * e 2 0 + e 2 0 * e 0 1 = e 2 1
   simp [e_mul]
 
 /-- In particular the proposed `E₁₂,E₃₁` zero-overlap claim is false. -/
 theorem three_dimensional_pair_overlap_ne_zero :
-    (Matrix.single (0 : Fin 3) 1 (1 : ℝ) * Matrix.single 2 0 1 +
-      Matrix.single 2 0 1 * Matrix.single 0 1 1) ≠ 0 := by
+    (Matrix.single (0 : Fin 3) (1 : Fin 3) (1 : ℝ) *
+        Matrix.single (2 : Fin 3) (0 : Fin 3) (1 : ℝ) +
+      Matrix.single (2 : Fin 3) (0 : Fin 3) (1 : ℝ) *
+        Matrix.single (0 : Fin 3) (1 : Fin 3) (1 : ℝ)) ≠ 0 := by
   rw [three_dimensional_pair_overlap]
   intro h
   have hentry := congrArg (fun M : Matrix (Fin 3) (Fin 3) ℝ => M 2 1) h
@@ -64,7 +69,7 @@ theorem three_dimensional_nonzero_coupling_zero_multiplier :
     simp [coneMinus, sub_mul, e_mul]
   simp only [genV, genJ, genPhi, anticomm, hup, hdown]
   refine ⟨three_dimensional_pair_overlap_ne_zero, ?_, ?_⟩
-  · simp [mul_add, add_mul, mul_sub, sub_mul, e_mul]
+  · simp [mul_sub, e_mul]
   · simp [pow_succ, mul_add, add_mul, e_mul]
 
 /-- The cut retains the first and fourth coordinate directions. -/

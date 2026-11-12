@@ -25,6 +25,7 @@ namespace InfoGeometry.OperatorAlgebra.PeirceSpine
 
 variable {B : Type*} [Ring B] {P : B} (hP : P * P = P)
 
+include hP in
 /-- The exact residual on arbitrary ambient inputs; `V` is not assumed
 central in the ambient ring. -/
 theorem hProjV_sub_fourierV (A C X : B) :
@@ -35,6 +36,7 @@ theorem hProjV_sub_fourierV (A C X : B) :
   simp only [fourierV, grpId, grpPhi, grpJ, grpSig, comm]
   noncomm_ring
 
+include hP in
 /-- Agreement is valid on the centralizer of `V`. -/
 theorem hProjV_eq_fourierV_of_commute (A C X : B)
     (hVX : Commute (genV P A C) X) :
@@ -56,24 +58,28 @@ theorem twice_weightedSandwichSum (P A C X : B) :
   simp only [weightedSandwichSum, fourierV, grpId, grpPhi, grpJ, grpSig]
   noncomm_ring
 
+include hP in
 theorem weightedSandwichSum_genV (A C : B) :
     weightedSandwichSum P A C (genV P A C) =
       (5 : ℤ) • (genV P A C * genV P A C * genV P A C) := by
   simp only [weightedSandwichSum]
   peirce_nf hP
 
+include hP in
 theorem weightedSandwichSum_genPhi (A C : B) :
     weightedSandwichSum P A C (genPhi P A C) =
       genV P A C * genV P A C * genPhi P A C := by
   simp only [weightedSandwichSum]
   peirce_nf hP
 
+include hP in
 theorem weightedSandwichSum_genJ (A C : B) :
     weightedSandwichSum P A C (genJ P A C) =
       genV P A C * genV P A C * genJ P A C := by
   simp only [weightedSandwichSum]
   peirce_nf hP
 
+include hP in
 theorem weightedSandwichSum_genSig (A C : B) :
     weightedSandwichSum P A C (genSig P A C) =
       genV P A C * genV P A C * genSig P A C := by
@@ -108,6 +114,7 @@ def reynoldsProjection (P A C : B) : B →ₗ[ℝ] B :=
     (sandwichLinearMap (genPhi P A C) (genPhi P A C))
     (sandwichLinearMap (invS P) (invS P))
 
+include hP in
 /-- On the unit shell, normalization produces an idempotent endomorphism. -/
 theorem reynoldsProjection_isIdempotentElem (A C : B)
     (hV : genV P A C = 1) : IsIdempotentElem (reynoldsProjection P A C) := by
@@ -118,6 +125,7 @@ theorem reynoldsProjection_isIdempotentElem (A C : B)
   · intro x
     exact phiUnitSquareEquiv_commutes_parity hP A C hV x
 
+include hP in
 /-- The output space is the full common centralizer, rather than a list of
 four checked generator values. -/
 theorem range_reynoldsProjection (A C : B) (hV : genV P A C = 1) :
@@ -140,6 +148,7 @@ theorem range_reynoldsProjection (A C : B) (hV : genV P A C = 1) :
     Subalgebra.mem_centralizer_iff]
   simp
 
+include hP in
 /-- The normalized linear projection is exactly the existing Fourier channel
 divided by eight, on every ambient operator. -/
 theorem reynoldsProjection_eq_fourierV (A C X : B) (hV : genV P A C = 1) :
@@ -157,6 +166,7 @@ theorem reynoldsProjection_eq_fourierV (A C X : B) (hV : genV P A C = 1) :
   simp only [two_smul]
   module
 
+include hP in
 /-- The same normalization applies to the homogenized channel on `V = 1`. -/
 theorem reynoldsProjection_eq_hProjV (A C X : B) (hV : genV P A C = 1) :
     reynoldsProjection P A C X = (1 / 8 : ℝ) • hProjV P A C X := by

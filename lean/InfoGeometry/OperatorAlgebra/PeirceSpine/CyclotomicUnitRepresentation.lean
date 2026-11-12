@@ -29,6 +29,7 @@ open InfoGeometry.Algebra.OrthogonalPolynomial
 variable {B : Type*} [Ring B]
 variable {P : B} (hP : P * P = P)
 
+include hP in
 /-- The third cyclotomic polynomial vanishes exactly on the unit shell. -/
 theorem cubeRoot_cyclotomic_eq_zero_iff (A C : B) :
     cyclotomicThree (cubeRootOp P A C) = 0 ↔ genV P A C = 1 := by
@@ -36,6 +37,7 @@ theorem cubeRoot_cyclotomic_eq_zero_iff (A C : B) :
     archetype_A58_operator_cyclotomic_roots_and_discriminants hP A C
   rw [h, sub_eq_zero, eq_comm]
 
+include hP in
 /-- Equality of the first two reflection squares only requires `V² = V`. -/
 theorem s3Refl_square_eq_iff_defect_zero (A C : B) :
     s3Refl1 P A C * s3Refl1 P A C = s3Refl0 P A C * s3Refl0 P A C ↔
@@ -43,6 +45,7 @@ theorem s3Refl_square_eq_iff_defect_zero (A C : B) :
   obtain ⟨_, _, h0, h1, _⟩ := s3Refl_components_squares_and_anticomm hP A C
   rw [h1, h0, idempotencyDefect_eq_zero_iff]
 
+include hP in
 /-- Reflection-square equality collapses the complete positive defect orbit. -/
 theorem s3Refl_square_eq_defect_iterates_zero (A C : B)
     (h : s3Refl1 P A C * s3Refl1 P A C = s3Refl0 P A C * s3Refl0 P A C)
@@ -50,6 +53,7 @@ theorem s3Refl_square_eq_defect_iterates_zero (A C : B)
   exact idempotencyDefect_iterates_succ_eq_zero
     ((s3Refl_square_eq_iff_defect_zero hP A C).mp h) n
 
+include hP in
 /-- Arbitrary integer polynomials split over the two cycles, with the exact
 constant correction. This includes polynomials beyond the defect iteration. -/
 theorem genV_polynomial_cycle_split (A C : B) (p : Polynomial ℤ) :
@@ -69,12 +73,13 @@ def peirceThreeRotation (P A C : B) (i : ZMod 3) : B :=
 
 @[simp] theorem peirceThreeRotation_one (P A C : B) :
     peirceThreeRotation P A C 1 = cubeRootOp P A C := by
-  norm_num [peirceThreeRotation]
+  simp +decide [peirceThreeRotation]
 
 @[simp] theorem peirceThreeRotation_two (P A C : B) :
     peirceThreeRotation P A C 2 = cubeRootOpConj P A C := by
-  norm_num [peirceThreeRotation]
+  simp +decide [peirceThreeRotation]
 
+include hP in
 /-- On `V = 1`, the rotation values preserve cyclic addition. -/
 theorem peirceThreeRotation_add (A C : B) (hV : genV P A C = 1)
     (i j : ZMod 3) :
@@ -87,15 +92,16 @@ theorem peirceThreeRotation_add (A C : B) (hV : genV P A C = 1)
   have hbb' : cubeRootOpConj P A C * cubeRootOpConj P A C = cubeRootOp P A C :=
     sub_eq_zero.mp (by simpa [hV] using hbb)
   fin_cases i <;> fin_cases j <;>
-    norm_num [peirceThreeRotation, haa', hbb', hab, hba, hV]
+    simp +decide [peirceThreeRotation, haa', hbb', hab, hba, hV]
 
+include hP in
 /-- Reflection reverses the cyclic parameter. The braiding is valid even off shell. -/
 theorem peirceThreeRotation_mul_phi (A C : B) (i : ZMod 3) :
     peirceThreeRotation P A C i * genPhi P A C =
       genPhi P A C * peirceThreeRotation P A C (-i) := by
   obtain ⟨_, _, _, _, _, ha, hb, _⟩ :=
     archetype_A59_s3_operator_cyclotomic_braiding_and_reflections hP A C
-  fin_cases i <;> norm_num [peirceThreeRotation, ha, hb]
+  fin_cases i <;> simp +decide [peirceThreeRotation, ha, hb]
 
 /-- The native order-six dihedral group acts by the Peirce operators on the
 unit shell. Mathlib's `sr i` is reflection followed by rotation. -/

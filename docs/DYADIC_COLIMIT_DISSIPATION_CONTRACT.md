@@ -209,12 +209,119 @@ the Lean build and complete declaration audit supply the theorem checks.
 The Lean and Mathlib pins are unchanged: Lean `v4.34.1`, Mathlib
 `d13f23b723b8a846827a245b89c10fc7d3f11612`.
 
-Validation is in progress. Source authors prepared isolated candidates;
-independent review checks the precise carrier and hypotheses; root integration
-and kernel checks are separate. The focused verifier from PR #327 is used for
-these owners, with the repository's shared build lock. It does not certify
-the root project's optional path dependencies or unrelated targets.
+### Successful focused verification
 
-The final record will report exact compilation, complete owned-declaration
-axiom audit, staged proof gate and root pre-push outcomes. It must distinguish
-successful focused checks from any root-package failure.
+[Focused CI run 43243826406](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43243826406)
+completed successfully on 2026-11-12. Its
+[verification job](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43243826406/job/131271043628)
+records the regression tests, compilation, fresh declaration audit and
+[verification artifact](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43243826406/artifacts/13956438033).
+
+The checked PR head is `dcda4fc6e0ba0070aa6fb72f7ac2bfe03d4f8bb0`.
+CI checked merge commit `f66501529642bba27ab1b9ce041a22ee3cdffde7` against the
+stated PR #327 base. Its tree is
+`757052680e876f2c8c233c16b843a3fb0f6dc906`, identical to the published head tree
+and the reviewed local commit `827735cfd6e6c810a067a99ac34c4d983f36d12a`.
+The validation-record commit adds documentation to those verified sources.
+
+The workflow ran these commands under the existing shared build lock:
+
+```bash
+python3 -m pytest \
+  tests/test_opengauss_existential_witness.py \
+  tests/test_opengauss_protocols.py \
+  tests/test_native_matrix_witness.py \
+  tests/test_proof_proxy_staged_gate.py \
+  tests/test_proof_proxy_partial_commit.py \
+  tests/test_proof_proxy_diff_gate.py -q
+python3 verification/matrix-amplification/check.py build InfoGeometry.Canonical.DyadicColimitDissipationAudit
+python3 verification/matrix-amplification/check.py env lean lean/InfoGeometry/Canonical/DyadicColimitDissipationAudit.lean
+```
+
+Observed results:
+
+- **190 tests passed**, including the 15 new existential-witness regression
+  methods and the five existing suites.
+- All four mathematical owners and the audit module compiled. Lake reported
+  `Build completed successfully (3111 jobs)`, including their dependencies.
+- The separate fresh audit completed successfully. Its `AUDIT_DECL` records
+  were reconciled with the reported counts per owner, with **108 distinct
+  declarations** in total. The build's earlier audit output was not counted
+  a second time.
+
+| Owned module | Distinct declarations |
+| --- | ---: |
+| `Canonical.DyadicMatrixTraceColimit` | 47 |
+| `Modular.GKSLDissipationIdentity` | 21 |
+| `Categorical.MatrixAmplificationShellSymmetry` | 38 |
+| `Canonical.DyadicMatrixTraceShellSymmetry` | 2 |
+| **Total** | **108** |
+
+The audit includes private and generated declarations, including all six
+private `matrixLift_*` helpers in the shell-symmetry owner. The observed axiom
+union is exactly `[propext, Classical.choice, Quot.sound]`. The audit rejects
+unsafe or partial owned declarations and every other axiom; no owner is
+excluded from this check.
+
+The precise verified source hashes are:
+
+| Source | SHA-256 |
+| --- | --- |
+| `Canonical/DyadicMatrixTraceColimit.lean` | `70dc4fdea271b3fed2c7ccdb4c3a8703a6b23b0458ceb8cefe77399a51633c3a` |
+| `Modular/GKSLDissipationIdentity.lean` | `20d4aba92e396239513957c17dc60acb4f92f45b78d193964c3ccfcb020a6594` |
+| `Categorical/MatrixAmplificationShellSymmetry.lean` | `525f24e0322ba672bf5e7a640b8eba0f5af8162f52d92f03775e19b68e93cf02` |
+| `Canonical/DyadicMatrixTraceShellSymmetry.lean` | `c4dc6115e278fa5936715157d76d49e17cae94555858f6f8f23f7ab5b98f1d64` |
+| `Canonical/DyadicColimitDissipationAudit.lean` | `acf074d9ac5d0cc98b5300e345d9bb0379564b44e2c8dfcb686021d6979c5cf0` |
+| `tools/infra/opengauss_screener.py` | `c393a3ed9b35e7edb4fc69ee4a075cb4a7dfd757f5c25e7a23a03088eaf38eb4` |
+| `tests/test_opengauss_existential_witness.py` | `b018f90eff78f288c2535af30c46e01a74cc64f3f965256af3d91398cc47a00d` |
+| `.github/workflows/dyadic-colimit-dissipation.yml` | `d2f5b1c5b876ca1e48390e4f024529a2ee6100380585427f7cf6d0387ca68326` |
+
+The Lean paths in this table are relative to `lean/InfoGeometry/`; the other
+paths are relative to the repository root. The installed staged proof gate
+and pre-commit hook passed on the integrated mathematical revision, and
+`git diff --check` passed. Independent source review was performed separately
+from authoring and execution. The successful Lean run retains three
+nonblocking unused-simp-argument warnings in the new shell-symmetry file,
+plus style warnings in imported owners.
+
+### Limits of the release evidence
+
+The focused build and axiom audit verify the four selected owners against
+their imported prerequisites at the stated pins. Exhaustive declaration
+enumeration is restricted to those four owners. This does not certify the
+root project's optional path dependencies or unrelated targets.
+
+The actual local pre-push hook was attempted but waited on the build lock
+held by another task. Its queued wrapper was stopped before Lake launched;
+this is not a completed root pre-push check. A separate root path preflight,
+`python3 tools/infra/ci_bootstrap.py paths`, failed because `HomotopyHypothesis`
+and `Atlas` have missing/untracked path sources and the GIFT gitlink is
+uninitialized. No shared lock, other task, dependency pin, cache or hook was
+altered to bypass these conditions.
+
+The other workflow results below were inspected on 2026-11-12 at head
+`ebb2c8f643995de257a74953dc99c79cdb15c951`, using merge commit
+`eedd09dfffc5e558514827a877ff59858d113d4d`.
+
+The repository-wide
+[Sorry Gate for that revision](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43242996529/job/131268185573)
+reported **878 findings across 91 files**, all classified by that audit as
+`forensic_or_fixture`; none names these four new owners. This is a separate
+repository-wide failure, not a successful whole-repository build.
+
+Additional jobs inspected on that revision failed before screening or Lean:
+
+- [Peirce superoperator](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43242996755/job/131268185520),
+  [Dahm binary projective](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43242995879/job/131268182174),
+  and [real star colimit](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43242995820/job/131268181539)
+  fail during checkout because `external_refs/auto-ontology` has no URL in
+  `.gitmodules`. The base and head have the identical `.gitmodules` blob
+  `335da0a78aee55c16c07f2de34ff34a97bf17a23`, which omits that path.
+- [Thesis and documentation](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43242995988/job/131268280683)
+  fail at GitHub Pages configuration with HTTP 404; the subsequent Lean and
+  documentation steps are skipped. This workflow is unchanged by the PR.
+
+The resulting acceptance is the D5 trace, generic D7 star-ring identities,
+D8 outer ring automorphism and the actual D5–D8 trace-invariance bridge.
+It does not provide a star structure or coherent Lindblad dynamics on the
+dyadic colimit, nor the analytic or physical consequences listed above.

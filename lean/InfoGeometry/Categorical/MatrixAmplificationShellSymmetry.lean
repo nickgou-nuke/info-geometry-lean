@@ -99,7 +99,7 @@ private theorem matrixLift_involutive (R : Type) [Ring R] (e : R ≃+* R)
   apply Matrix.ext
   intro i j
   simp only [matrixLift_apply]
-  fin_cases i <;> fin_cases j <;> simp [he]
+  fin_cases i <;> fin_cases j <;> simp <;> exact he _
 
 private theorem matrixLift_scalar (R : Type) [Ring R] (e : R ≃+* R) (x : R) :
     (e.mapMatrix.trans (shellConjugation R)) (Matrix.scalar (Fin 2) x) =

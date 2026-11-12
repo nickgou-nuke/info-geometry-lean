@@ -34,6 +34,11 @@ namespace InfoGeometry.Categorical.MatrixAmplificationShellSymmetry
 
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 
+-- Expose the existing recursive carrier to matrix extensionality and the
+-- implicit transparency used by native map and entry simplification.
+attribute [local reducible] MatrixAmplificationTower.stage
+  MatrixAmplificationTower.matrixFunctor
+
 variable (A : Type) [Ring A]
 
 /-- The existing full binary matrix stage, with no change of carrier. -/
@@ -48,12 +53,10 @@ def shellSignUnit (R : Type) [Ring R] : (Matrix (Fin 2) (Fin 2) R)ˣ where
   inv := Matrix.diagonal (fun i => if i = 0 then 1 else -1)
   val_inv := by
     ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [Matrix.diagonal_mul_diagonal, Matrix.diagonal_apply]
+    fin_cases i <;> fin_cases j <;> simp
   inv_val := by
     ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [Matrix.diagonal_mul_diagonal, Matrix.diagonal_apply]
+    fin_cases i <;> fin_cases j <;> simp
 
 /-- Native conjugation by the sign unit on one fresh shell. -/
 def shellConjugation (R : Type) [Ring R] :
@@ -86,7 +89,7 @@ theorem stageSymmetry_succ_apply (n : ℕ) (M : Stage A (n + 1)) (i j : Fin 2) :
         stageSymmetry A n (M i j) *
         (if j = 0 then (1 : Stage A n) else -1) := by
   change shellConjugation (Stage A n) ((stageSymmetry A n).mapMatrix M) i j = _
-  simpa only [shellConjugation_apply]
+  simp only [shellConjugation_apply, RingEquiv.mapMatrix_apply, Matrix.map_apply]
 
 /-- Diagonal entries are changed only by the preceding stage symmetry. -/
 @[simp]
@@ -100,7 +103,7 @@ in the preceding, possibly noncommutative, coefficient ring. -/
 theorem trace_stageSymmetry_succ (n : ℕ) (M : Stage A (n + 1)) :
     Matrix.trace (stageSymmetry A (n + 1) M) =
       stageSymmetry A n (Matrix.trace M) := by
-  simp only [Matrix.trace, stageSymmetry_succ_diagonal, map_sum]
+  simp only [Matrix.trace, Matrix.diag_apply, stageSymmetry_succ_diagonal, map_sum]
 
 /-- Every stage symmetry squares to the identity. -/
 theorem stageSymmetry_involutive (n : ℕ) : Function.Involutive (stageSymmetry A n) := by
@@ -108,7 +111,8 @@ theorem stageSymmetry_involutive (n : ℕ) : Function.Involutive (stageSymmetry 
   | zero => intro X; rfl
   | succ n ih =>
     intro M
-    ext i j
+    apply Matrix.ext
+    intro i j
     simp only [stageSymmetry_succ_apply]
     fin_cases i <;> fin_cases j <;> simp [map_mul, ih]
 
@@ -118,7 +122,8 @@ theorem stageSymmetry_bond (n : ℕ) (X : Stage A n) :
       MatrixAmplificationTower.bond (Fin 2) (RingCat.of A) n (stageSymmetry A n X) := by
   change stageSymmetry A (n + 1) (Matrix.scalar (Fin 2) X) =
     Matrix.scalar (Fin 2) (stageSymmetry A n X)
-  ext i j
+  apply Matrix.ext
+  intro i j
   rw [stageSymmetry_succ_apply]
   fin_cases i <;> fin_cases j <;> simp [Matrix.scalar_apply]
 
@@ -167,7 +172,8 @@ def freshShell (n : ℕ) : Carrier A :=
 theorem stageSymmetry_fresh (n : ℕ) :
     stageSymmetry A (n + 1) (Matrix.single 0 1 (1 : Stage A n)) =
       -Matrix.single 0 1 (1 : Stage A n) := by
-  ext i j
+  apply Matrix.ext
+  intro i j
   rw [stageSymmetry_succ_apply]
   fin_cases i <;> fin_cases j <;> simp [Matrix.single_apply]
 
@@ -175,7 +181,8 @@ theorem stageSymmetry_fresh (n : ℕ) :
 @[simp]
 theorem colimitSymmetry_freshShell (n : ℕ) :
     colimitSymmetry A (freshShell A n) = -freshShell A n := by
-  simp only [freshShell, colimitSymmetry_inclusion, stageSymmetry_fresh, map_neg]
+  unfold freshShell
+  rw [colimitSymmetry_inclusion, stageSymmetry_fresh, map_neg]
 
 /-- A fresh scalar-coefficient matrix unit commutes with the entire preceding
 stage, even when that coefficient ring is noncommutative. -/
@@ -201,9 +208,11 @@ theorem freshShell_ne_zero [Nontrivial A] (n : ℕ) : freshShell A n ≠ 0 := by
   intro h
   have hm : (Matrix.single 0 1 (1 : Stage A n) : Stage A (n + 1)) = 0 := by
     apply MatrixAmplificationTower.inclusion_injective (Fin 2) (RingCat.of A) (n + 1)
-    simpa only [freshShell, map_zero] using h
+    exact h.trans (map_zero
+      (MatrixAmplificationTower.inclusion (Fin 2) (RingCat.of A) (n + 1))).symm
   have he := congrArg (fun M : Matrix (Fin 2) (Fin 2) (Stage A n) => M 0 1) hm
-  exact (one_ne_zero : (1 : Stage A n) ≠ 0) (by simpa using he)
+  change (1 : Stage A n) = 0 at he
+  exact (one_ne_zero : (1 : Stage A n) ≠ 0) he
 
 /-- Invertibility of two excludes equality of the fresh matrix unit and its negative.
 Only the original seed needs an invertibility assumption. -/
@@ -213,15 +222,17 @@ theorem freshShell_ne_neg [Nontrivial A] [Invertible (2 : A)] (n : ℕ) :
   have hm : (Matrix.single 0 1 (1 : Stage A n) : Stage A (n + 1)) =
       -Matrix.single 0 1 (1 : Stage A n) := by
     apply MatrixAmplificationTower.inclusion_injective (Fin 2) (RingCat.of A) (n + 1)
-    simpa only [freshShell, map_neg] using h
-  have he : (1 : Stage A n) = -1 := by
-    simpa using congrArg (fun M : Matrix (Fin 2) (Fin 2) (Stage A n) => M 0 1) hm
+    exact h.trans (map_neg
+      (MatrixAmplificationTower.inclusion (Fin 2) (RingCat.of A) (n + 1))
+      (Matrix.single 0 1 (1 : Stage A n))).symm
+  have he := congrArg (fun M : Matrix (Fin 2) (Fin 2) (Stage A n) => M 0 1) hm
+  change (1 : Stage A n) = -1 at he
   have htwo : (2 : Stage A n) = 0 := by
     simpa only [one_add_one_eq_two, neg_add_cancel] using
       congrArg (fun z : Stage A n => z + 1) he
   have hseed : (2 : A) = 0 := by
     apply MatrixAmplificationTower.transition_injective (Fin 2) (RingCat.of A) 0 n (Nat.zero_le n)
-    simpa using htwo
+    simpa only [map_ofNat, map_zero] using htwo
   exact Invertible.ne_zero (2 : A) hseed
 
 /-- No unit of the actual algebraic colimit implements the shell symmetry.
@@ -239,7 +250,7 @@ theorem colimitSymmetry_ne_inner [Nontrivial A] [Invertible (2 : A)]
   have hfixed : colimitSymmetry A (freshShell A n) = freshShell A n := by
     rw [hinner]
     change (u : Carrier A) * freshShell A n * (↑(u⁻¹) : Carrier A) = freshShell A n
-    rw [hcomm.eq, mul_assoc, Units.val_inv, mul_one]
+    rw [hcomm.eq, mul_assoc, Units.mul_inv, mul_one]
   exact freshShell_ne_neg A n (hfixed.symm.trans (colimitSymmetry_freshShell A n))
 
 end InfoGeometry.Categorical.MatrixAmplificationShellSymmetry

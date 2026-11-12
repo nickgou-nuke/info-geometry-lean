@@ -23,6 +23,8 @@ namespace InfoGeometry.Canonical.DyadicMatrixTraceShellSymmetry
 open DyadicMatrixTraceColimit
 open InfoGeometry.Categorical
 
+attribute [local reducible] MatrixAmplificationTower.stage MatrixAmplificationTower.matrixFunctor
+
 variable (K : Type) [CommRing K] [Invertible (2 : K)]
 
 /-- Every recursively normalized stage trace is invariant under the constructed

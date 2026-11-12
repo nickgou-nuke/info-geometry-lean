@@ -31,6 +31,9 @@ open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 
 open InfoGeometry.Categorical
 
+-- Matrix formulas need to see the native successor carrier during rewriting.
+attribute [local reducible] MatrixAmplificationTower.stage MatrixAmplificationTower.matrixFunctor
+
 variable (K : Type) [CommRing K]
 
 /-- The existing binary amplification stages, with the coefficient ring at zero. -/
@@ -136,7 +139,8 @@ theorem stageTrace_bond (n : ℕ) (x : Stage K n) :
     stageTrace K (n + 1) (bondAlg K n x) = stageTrace K n x := by
   rw [stageTrace_succ_apply]
   have ht : Matrix.trace (bondAlg K n x) = x + x := by
-    simp [bondAlg, Matrix.trace, Matrix.scalar_apply, Fin.sum_univ_two]
+    change Matrix.trace (Matrix.scalar (Fin 2) x) = x + x
+    simp [Matrix.trace, Matrix.diag, Matrix.scalar_apply, Fin.sum_univ_two]
   rw [ht, map_add, ← two_mul, ← mul_assoc, invOf_mul_self, one_mul]
 
 /-- Every normalized finite-stage trace is unital. -/
@@ -152,7 +156,9 @@ uses cyclicity of the previous stage, preserving the multiplication order. -/
 theorem stageTrace_mul_comm (n : ℕ) (x y : Stage K n) :
     stageTrace K n (x * y) = stageTrace K n (y * x) := by
   induction n with
-  | zero => exact mul_comm x y
+  | zero =>
+      change (x : K) * (y : K) = (y : K) * (x : K)
+      exact mul_comm (x : K) (y : K)
   | succ n ih =>
       rw [stageTrace_succ_apply, stageTrace_succ_apply]
       congr 1

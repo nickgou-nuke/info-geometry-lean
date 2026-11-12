@@ -210,9 +210,8 @@ quintic proof uses the decomposition/projector eigenvalues already owned by
 `Core/TripotentAdjoint`; it does not import the later `TripotentEigenspaces`
 module. The Lean import graph remains acyclic.
 
-The new proof scripts have passed independent semantic source review. Kernel
-validation is pending at this checkpoint. The maintained focused entry point
-is:
+The new proof scripts have passed independent semantic source review and the
+focused Lean kernel/axiom check described below. The maintained entry point is:
 
 ```bash
 python3 tools/quality/check_tripotent_super_flow.py \
@@ -227,11 +226,73 @@ foundational axioms are `propext`, `Classical.choice`, and `Quot.sound`.
 Source hashes and logs are emitted by that checker. The matching GitHub
 Actions workflow runs the same entry point and uploads its evidence.
 
-Local root preflight was launched for `InfoGeometry.Core.TripotentAdjoint`.
-At this checkpoint it is still waiting for a previously held shared build
-lock, before Lake has run. No completed root build is claimed. The declared
-path dependencies `external_refs/homotopy-hypothesis-lean4` and
-`external_refs/atlas-lean` are absent in this fresh checkout; they have not
-been fabricated or removed from the manifest. Pins and existing quality
-gates are unchanged. Final verification results must be recorded separately
-from this pending checkpoint.
+### Accepted exact-source verification
+
+[PR #323](https://github.com/nickgou-nuke/info-geometry-lean/pull/323) publishes
+the implementation. The successful
+[kernel run](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43186269116)
+checks PR source head `44bb7b23f3e63a117117d2034dc792748381923a` merged with
+base `a392af178af1fe2bcba2ba39eb405700c6ee103c`. Its exact checkout is
+`076dd77ceb68234b5905415813c9f7db9c1aa38e`.
+
+| Check | Observed result |
+| --- | --- |
+| Independent semantic review | Accepted all four owners and reviewed the elaboration repairs |
+| Staged proof gate and installed pre-commit hook | Passed on each code checkpoint |
+| Exact-source Lean compilation | All 57 project modules passed |
+| Diagnostics in the four new modules | No errors or warnings |
+| Native owning-module declaration audit | All 63 declarations passed, including generated/private declarations |
+| Collected axioms | Exactly the permitted set `propext`, `Classical.choice`, `Quot.sound` |
+| Unsafe/partial target declarations and unapproved axioms | None accepted by the audit |
+| Workflow | Completed successfully; evidence artifact uploaded |
+
+CI used Lean `v4.34.1` and Mathlib
+`d13f23b723b8a846827a245b89c10fc7d3f11612`. The exact command was:
+
+```bash
+python3 project/tools/quality/check_tripotent_super_flow.py \
+  --mathlib-root pinned-mathlib --output verification
+```
+
+The [verification artifact](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43186269116/artifacts/13929825031)
+contains the source snapshot, source hashes, per-module logs, status JSON,
+Lean version, cache log, and declaration audit. Its archive SHA256 is
+`74f5a750b8eea10c7cdf0f8962c78176a43f950d1b4a5700b05987960aa47583`.
+
+| Verified Lean owner | Source SHA256 |
+| --- | --- |
+| `Core/TripotentAdjointRigidity.lean` | `848790681b7d516e82219cb3bc3edc98433de6bdbde993d8deb4de0f910a6056` |
+| `OperatorAlgebra/PeirceSpine/TripotentSuperbracket.lean` | `477d3baba04e4c968bbc5d9a7789cc040da16db815e5e2724b0f81e2dec221a0` |
+| `Canonical/TripotentSuperbracketExample.lean` | `a36c9452d1f42cdc7c6a100455d8fcb00a1f401b120a16e9da19d0a6c6ad86a6` |
+| `OperatorAlgebra/TripotentExponentialFlow.lean` | `1ecdb20607ab62973058c82e52e72e9dda5465b10646761247d4c1215e59f33f` |
+
+The final reporting change edits this document only; it does not alter these
+verified Lean sources or the checker/workflow. Earlier failed attempts found
+proof-script elaboration issues (finite-case normalization, a zero cast, an
+ambiguous commutator name, and a beta-redex before a cast). Those were repaired
+without adding premises or weakening conclusions. Axiom auditing ran only
+after all modules compiled successfully.
+
+### Root-package and other CI boundaries
+
+The [root build on the verified source head](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43186269516)
+exited 1 before Lean elaboration because the declared path package
+`external_refs/homotopy-hypothesis-lean4` is absent. The local checkout also
+lacks `external_refs/atlas-lean`. Local root preflight was launched for
+`InfoGeometry.Core.TripotentAdjoint` but remains waiting on a previously held
+shared build lock. No running process was stopped and no lock or cache was
+deleted. Root-package acceptance and a successful pre-push gate are not
+claimed.
+
+Other observed failures are outside this change: the repository-wide style
+check finds the existing `PellisFineStructure.lean` / `PellisfineStructure.lean`
+case collision; recursive submodule checkout encounters an `auto-ontology`
+gitlink without a URL in `.gitmodules`; and the separate idempotent-chart
+workflow encounters an existing unclosed parenthesis in
+`tools/quality/check_operator_geometry.py`. The repository-wide debt gate
+also remains red. The relevant existing files and configuration are unchanged
+from the PR base. The successful 57-module closure does not certify those
+other surfaces or the whole repository.
+
+The PR remains a draft with these boundaries recorded. Existing quality gates
+and dependency pins are unchanged.

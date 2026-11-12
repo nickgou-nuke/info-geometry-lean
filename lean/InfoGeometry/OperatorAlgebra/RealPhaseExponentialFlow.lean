@@ -118,6 +118,7 @@ theorem phaseFlow_mem_phaseAlgebra (J K : A) (hJ : star J = -J)
     (hK : star K = K) (hJK : Commute J K) (t : ℝ) (x : phaseAlgebra J) :
     phaseFlow J K hJ hK hJK (Multiplicative.ofAdd t) (x : A) ∈ phaseAlgebra J := by
   apply (mem_phaseAlgebra_iff _ _).mpr
+  rw [commute_iff_eq]
   have hx := (mem_phaseAlgebra_iff _ _).mp x.2
   have ht := congrArg (phaseFlow J K hJ hK hJK (Multiplicative.ofAdd t)) hx.eq
   simpa only [map_mul, phaseFlow_fixes_phase J K hJ hK hJK t] using ht

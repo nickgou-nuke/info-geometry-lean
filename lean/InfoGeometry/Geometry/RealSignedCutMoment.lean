@@ -94,7 +94,8 @@ theorem hasFDerivAt_planeEnergy (X : Plane E) :
 
 theorem planeOmega_generator (X : Plane E) :
     planeOmega (planeJ X) = planeEnergyDerivative X := by
-  ext V
+  apply ContinuousLinearMap.ext
+  intro V
   simp [planeEnergyDerivative] <;> ring
 
 /-- The actual derivative identity on the entirely real auxiliary carrier. -/
@@ -118,16 +119,26 @@ def planeRotation (t : ℝ) : Plane E →L[ℝ] Plane E :=
 
 theorem planeRotation_add (s t : ℝ) :
     planeRotation (E := E) (s + t) =
-      (planeRotation s).comp (planeRotation t) :=
-  rotation_add planeJ planeJ_complexStructure s t
+      (planeRotation s).comp (planeRotation t) := by
+  change rotation (V := Plane E) (planeJ (E := E)) (s + t) =
+    (rotation (V := Plane E) (planeJ (E := E)) s).comp
+      (rotation (V := Plane E) (planeJ (E := E)) t)
+  exact rotation_add (V := Plane E) (planeJ (E := E))
+    (planeJ_complexStructure (E := E)) s t
 
 theorem planeRotation_periodic :
-    Function.Periodic (planeRotation (E := E)) (2 * Real.pi) :=
-  rotation_periodic planeJ
+    Function.Periodic (planeRotation (E := E)) (2 * Real.pi) := by
+  change Function.Periodic (rotation (V := Plane E) (planeJ (E := E)))
+    (2 * Real.pi)
+  exact rotation_periodic (V := Plane E) (planeJ (E := E))
 
 theorem hasDerivAt_planeRotation (t : ℝ) (X : Plane E) :
-    HasDerivAt (fun s => planeRotation s X) (planeJ (planeRotation t X)) t :=
-  hasDerivAt_rotation planeJ planeJ_complexStructure t X
+    HasDerivAt (fun s => planeRotation s X) (planeJ (planeRotation t X)) t := by
+  change HasDerivAt
+    (fun s => rotation (V := Plane E) (planeJ (E := E)) s X)
+    (planeJ (E := E) (rotation (V := Plane E) (planeJ (E := E)) t X)) t
+  exact hasDerivAt_rotation (V := Plane E) (planeJ (E := E))
+    (planeJ_complexStructure (E := E)) t X
 
 theorem productPairing_planeRotation (t : ℝ) (U V : Plane E) :
     ParaHessianMixedPotential.productPairing (planeRotation t U) (planeRotation t V) =
@@ -220,7 +231,8 @@ theorem hasFDerivAt_cutMoment (ωM : M →L[ℝ] M →L[ℝ] ℝ)
         q • (planeOmega (planeJ X.2)).comp
           (ContinuousLinearMap.snd ℝ M (Plane E)) =
       productOmega ωM (cutGenerator v q X) := by
-    ext V
+    apply ContinuousLinearMap.ext
+    intro V
     change ωM (v X.1) V.1 + q * planeOmega (planeJ X.2) V.2 =
       ωM (v X.1) V.1 + planeOmega (q • planeJ X.2) V.2
     simp only [map_smul, ContinuousLinearMap.smul_apply, smul_eq_mul]
@@ -234,8 +246,14 @@ theorem hasFDerivAt_positiveCutMoment (ωM : M →L[ℝ] M →L[ℝ] ℝ)
     (hμ : HasFDerivAt μ (ωM (v X.1)) X.1) :
     HasFDerivAt (fun Y : M × Plane E => μ Y.1 - planeEnergy Y.2)
       (productOmega ωM (v X.1, -planeJ X.2)) X := by
-  simpa [cutMoment, cutGenerator, sub_eq_add_neg] using
-    hasFDerivAt_cutMoment ωM μ v (-1) X hμ
+  have h := hasFDerivAt_cutMoment (E := E) ωM μ v (-1) X hμ
+  have hfunction : cutMoment (E := E) μ (-1) =
+      (fun Y : M × Plane E => μ Y.1 - planeEnergy Y.2) := by
+    funext Y
+    change μ Y.1 + (-1 : ℝ) * planeEnergy Y.2 = μ Y.1 - planeEnergy Y.2
+    ring
+  rw [hfunction] at h
+  simpa only [cutGenerator, neg_one_smul] using h
 
 /-- Direct auxiliary rotation gives `μ + energy`. -/
 theorem hasFDerivAt_negativeCutMoment (ωM : M →L[ℝ] M →L[ℝ] ℝ)
@@ -243,8 +261,14 @@ theorem hasFDerivAt_negativeCutMoment (ωM : M →L[ℝ] M →L[ℝ] ℝ)
     (hμ : HasFDerivAt μ (ωM (v X.1)) X.1) :
     HasFDerivAt (fun Y : M × Plane E => μ Y.1 + planeEnergy Y.2)
       (productOmega ωM (v X.1, planeJ X.2)) X := by
-  simpa [cutMoment, cutGenerator] using
-    hasFDerivAt_cutMoment ωM μ v 1 X hμ
+  have h := hasFDerivAt_cutMoment (E := E) ωM μ v 1 X hμ
+  have hfunction : cutMoment (E := E) μ 1 =
+      (fun Y : M × Plane E => μ Y.1 + planeEnergy Y.2) := by
+    funext Y
+    change μ Y.1 + (1 : ℝ) * planeEnergy Y.2 = μ Y.1 + planeEnergy Y.2
+    rw [one_mul]
+  rw [hfunction] at h
+  simpa only [cutGenerator, one_smul] using h
 
 def signedProductFlow (ρ : ℝ → M → M) (q t : ℝ) (X : M × Plane E) :
     M × Plane E :=
@@ -255,8 +279,15 @@ theorem hasDerivAt_signedProductFlow (ρ : ℝ → M → M) (v : M → M)
     (hρ : HasDerivAt (fun s => ρ s X.1) (v (ρ t X.1)) t) :
     HasDerivAt (fun s => signedProductFlow ρ q s X)
       (cutGenerator v q (signedProductFlow ρ q t X)) t := by
-  exact hρ.prodMk
-    (hasDerivAt_weightedRotation planeJ planeJ_complexStructure q t X.2)
+  have haux : HasDerivAt
+      (fun s => planeRotation (E := E) (q * s) X.2)
+      (q • planeJ (E := E) (planeRotation (E := E) (q * t) X.2)) t := by
+    exact hasDerivAt_weightedRotation (V := Plane E) (planeJ (E := E))
+      (planeJ_complexStructure (E := E)) q t X.2
+  change HasDerivAt
+    (fun s => (ρ s X.1, planeRotation (E := E) (q * s) X.2))
+    (v (ρ t X.1), q • planeJ (E := E) (planeRotation (E := E) (q * t) X.2)) t
+  exact hρ.prodMk haux
 
 theorem cutMoment_signedProductFlow (ρ : ℝ → M → M) (μ : M → ℝ)
     (q t : ℝ) (X : M × Plane E) (hμ : μ (ρ t X.1) = μ X.1) :
@@ -271,7 +302,7 @@ theorem signedProductFlow_add (ρ : ℝ → M → M) (q s t : ℝ)
   · exact hρ X.1
   · change planeRotation (q * (s + t)) X.2 =
       planeRotation (q * s) (planeRotation (q * t) X.2)
-    rw [mul_add, planeRotation_add]
+    rw [mul_add, planeRotation_add, ContinuousLinearMap.comp_apply]
 
 end Product
 

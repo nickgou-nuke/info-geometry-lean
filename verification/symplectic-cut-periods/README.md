@@ -38,7 +38,7 @@ unsafe bypasses. These checks complement, rather than replace, semantic review.
 
 ## Acceptance status
 
-The initial source checkpoint contains proof candidates awaiting focused CI.
-No successful compiler run is asserted by the existence of this package.
-The final PR records the checked commit, CI result, independent A-A and QA-A
-dispositions, and any remaining limitations or unrelated baseline failures.
+A source checkpoint alone is not an acceptance certificate. The PR's final
+validation record identifies the checked commit, CI result, independent A-A
+and QA-A dispositions, and any remaining limitations or unrelated baseline
+failures. The existence of this package does not assert a successful build.

@@ -55,7 +55,7 @@ theorem hasDerivAt_logistic (c : ℝ) :
     (Real.hasDerivAt_exp c).div hden' hden
   apply hquot.congr_deriv
   unfold logistic
-  field_simp [hden] <;> ring
+  field_simp [hden]
 
 theorem logistic_jacobian_pos (c : ℝ) :
     0 < logistic c * (1 - logistic c) :=
@@ -68,7 +68,8 @@ theorem integral_comp_logistic {E : Type*} [NormedAddCommGroup E]
     (∫ c, (logistic c * (1 - logistic c)) • f (logistic c)) =
       ∫ p in Set.Ioo (0 : ℝ) 1, f p := by
   have h := integral_image_eq_integral_abs_deriv_smul
-    (f := logistic) (f' := fun c => logistic c * (1 - logistic c)) measurableSet_univ
+    (s := Set.univ) (f := logistic) (f' := fun c => logistic c * (1 - logistic c))
+    MeasurableSet.univ
     (fun c _ => (hasDerivAt_logistic c).hasDerivWithinAt)
     logistic_injective.injOn f
   simpa only [logistic_image_univ, abs_of_pos (logistic_jacobian_pos _), setIntegral_univ]
@@ -81,7 +82,8 @@ theorem integrable_comp_logistic_iff {E : Type*} [NormedAddCommGroup E]
     Integrable (fun c => (logistic c * (1 - logistic c)) • f (logistic c)) ↔
       IntegrableOn f (Set.Ioo (0 : ℝ) 1) := by
   have h := integrableOn_image_iff_integrableOn_abs_deriv_smul
-    (f := logistic) (f' := fun c => logistic c * (1 - logistic c)) measurableSet_univ
+    (s := Set.univ) (f := logistic) (f' := fun c => logistic c * (1 - logistic c))
+    MeasurableSet.univ
     (fun c _ => (hasDerivAt_logistic c).hasDerivWithinAt)
     logistic_injective.injOn f
   simpa only [logistic_image_univ, abs_of_pos (logistic_jacobian_pos _), integrableOn_univ]
@@ -93,7 +95,7 @@ theorem betaPDFReal_nonneg {α β : ℝ} (hα : 0 < α) (hβ : 0 < β) (p : ℝ)
     0 ≤ ProbabilityTheory.betaPDFReal α β p := by
   by_cases hp : 0 < p ∧ p < 1
   · exact (ProbabilityTheory.betaPDFReal_pos hp.1 hp.2 hα hβ).le
-  · simp only [ProbabilityTheory.betaPDFReal, if_neg hp, le_refl]
+  · simp only [ProbabilityTheory.betaPDFReal, ite_eq_right hp, le_refl]
 
 /-- Bochner normalization of the existing native beta density. -/
 theorem integral_betaPDFReal {α β : ℝ} (hα : 0 < α) (hβ : 0 < β) :
@@ -115,7 +117,8 @@ theorem integral_betaPDFReal_Ioo {α β : ℝ} (hα : 0 < α) (hβ : 0 < β) :
   rw [setIntegral_eq_integral_of_forall_compl_eq_zero]
   · exact integral_betaPDFReal hα hβ
   · intro p hp
-    simpa only [ProbabilityTheory.betaPDFReal, if_neg hp]
+    have hp' : ¬ (0 < p ∧ p < 1) := hp
+    simp only [ProbabilityTheory.betaPDFReal, ite_eq_right hp']
 
 /-- The normalized beta density expressed in the real logit coordinate.
 The explicit factor `logistic c * (1 - logistic c)` is the proved Jacobian. -/
@@ -129,7 +132,9 @@ theorem betaLogitDensity_pos {α β : ℝ} (hα : 0 < α) (hβ : 0 < β) (c : �
 
 theorem integrable_betaLogitDensity {α β : ℝ} (hα : 0 < α) (hβ : 0 < β) :
     Integrable (betaLogitDensity α β) := by
-  simpa only [betaLogitDensity, smul_eq_mul] using
+  change Integrable (fun c : ℝ =>
+    (logistic c * (1 - logistic c)) * ProbabilityTheory.betaPDFReal α β (logistic c))
+  simpa only [smul_eq_mul] using
     (integrable_comp_logistic_iff (ProbabilityTheory.betaPDFReal α β)).2
       (integrable_betaPDFReal hα hβ).integrableOn
 
@@ -150,6 +155,7 @@ theorem betaLogitDensity_eq_exp_div (α β c : ℝ) :
       Real.exp (α * c) /
         (ProbabilityTheory.beta α β * (1 + Real.exp c) ^ (α + β)) := by
   have hc : 0 < 1 + Real.exp c := by positivity
+  have hp : 0 < logistic c ∧ logistic c < 1 := ⟨logistic_pos c, logistic_lt_one c⟩
   have hcomp : 1 - logistic c = 1 / (1 + Real.exp c) := by
     unfold logistic
     field_simp [hc.ne'] <;> ring
@@ -159,7 +165,7 @@ theorem betaLogitDensity_eq_exp_div (α β c : ℝ) :
           (logistic c ^ (α - 1) * logistic c) *
           ((1 - logistic c) ^ (β - 1) * (1 - logistic c)) := by
       simp only [betaLogitDensity, ProbabilityTheory.betaPDFReal,
-        if_pos ⟨logistic_pos c, logistic_lt_one c⟩]
+        ite_eq_left hp]
       ring
     _ = (1 / ProbabilityTheory.beta α β) *
         logistic c ^ α * (1 - logistic c) ^ β := by

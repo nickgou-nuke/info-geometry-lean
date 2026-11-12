@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 
+import InfoGeometry.Algebra.MatrixAmplification
 import InfoGeometry.Categorical.MatrixAmplificationTower
 import Mathlib.Algebra.GroupWithZero.Invertible
 import Mathlib.Data.Matrix.Composition
@@ -30,9 +31,6 @@ namespace InfoGeometry.Canonical.DyadicMatrixTraceColimit
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 
 open InfoGeometry.Categorical
-
--- Matrix formulas need to see the native successor carrier during rewriting.
-attribute [local reducible] MatrixAmplificationTower.stage MatrixAmplificationTower.matrixFunctor
 
 variable (K : Type) [CommRing K]
 
@@ -137,10 +135,10 @@ theorem stageTrace_succ_apply (n : ℕ) (x : Stage K (n + 1)) :
 @[simp]
 theorem stageTrace_bond (n : ℕ) (x : Stage K n) :
     stageTrace K (n + 1) (bondAlg K n x) = stageTrace K n x := by
-  rw [stageTrace_succ_apply]
-  have ht : Matrix.trace (bondAlg K n x) = x + x := by
-    change Matrix.trace (Matrix.scalar (Fin 2) x) = x + x
-    simp [Matrix.trace, Matrix.diag, Matrix.scalar_apply, Fin.sum_univ_two]
+  change ⅟(2 : K) * stageTrace K n (Matrix.trace (Matrix.scalar (Fin 2) x)) =
+    stageTrace K n x
+  have ht : Matrix.trace (Matrix.scalar (Fin 2) x) = x + x := by
+    simp [Matrix.trace, Matrix.diag, Matrix.scalar_apply, two_mul]
   rw [ht, map_add, ← two_mul, ← mul_assoc, invOf_mul_self, one_mul]
 
 /-- Every normalized finite-stage trace is unital. -/
@@ -156,17 +154,17 @@ uses cyclicity of the previous stage, preserving the multiplication order. -/
 theorem stageTrace_mul_comm (n : ℕ) (x y : Stage K n) :
     stageTrace K n (x * y) = stageTrace K n (y * x) := by
   induction n with
-  | zero =>
-      change (x : K) * (y : K) = (y : K) * (x : K)
-      exact mul_comm (x : K) (y : K)
+  | zero => exact @mul_comm K _ x y
   | succ n ih =>
-      rw [stageTrace_succ_apply, stageTrace_succ_apply]
-      congr 1
-      simp only [Matrix.trace, Matrix.diag_apply, Fin.sum_univ_two,
-        Matrix.mul_apply, map_add]
-      rw [ih (x 0 0) (y 0 0), ih (x 0 1) (y 1 0),
-        ih (x 1 0) (y 0 1), ih (x 1 1) (y 1 1)]
-      ac_rfl
+      have htrace (a b : Matrix (Fin 2) (Fin 2) (Stage K n)) :
+          stageTrace K n (Matrix.trace (a * b)) =
+            stageTrace K n (Matrix.trace (b * a)) := by
+        simp only [Matrix.trace, Matrix.diag_apply, Fin.sum_univ_two,
+          Matrix.mul_apply, map_add]
+        rw [ih (a 0 0) (b 0 0), ih (a 0 1) (b 1 0),
+          ih (a 1 0) (b 0 1), ih (a 1 1) (b 1 1)]
+        ac_rfl
+      exact congrArg (fun c : K => ⅟(2 : K) * c) (htrace x y)
 
 /-- Compatibility along every interval of the existing directed system. -/
 theorem stageTrace_transition (i j : ℕ) (h : i ≤ j) (x : Stage K i) :
@@ -230,12 +228,41 @@ theorem colimitTrace_unique (τ : Carrier K →ₗ[K] K)
 theorem stageTrace_single_offdiag (n : ℕ) (i j : Fin 2) (hij : i ≠ j)
     (a : Stage K n) :
     stageTrace K (n + 1) (Matrix.single i j a) = 0 := by
-  rw [stageTrace_succ_apply, Matrix.trace_single_eq_of_ne i j a hij, map_zero, mul_zero]
+  change ⅟(2 : K) * stageTrace K n
+    (Matrix.trace (Matrix.single i j a : Matrix (Fin 2) (Fin 2) (Stage K n))) = 0
+  rw [Matrix.trace_single_eq_of_ne i j a hij, map_zero, mul_zero]
 
 @[simp]
 theorem stageTrace_single_diag (n : ℕ) (i : Fin 2) (a : Stage K n) :
     stageTrace K (n + 1) (Matrix.single i i a) = ⅟(2 : K) * stageTrace K n a := by
-  rw [stageTrace_succ_apply, Matrix.trace_single_eq_same]
+  change ⅟(2 : K) * stageTrace K n
+    (Matrix.trace (Matrix.single i i a : Matrix (Fin 2) (Fin 2) (Stage K n))) = _
+  rw [Matrix.trace_single_eq_same]
+
+/-- Every full binary shell contains a noncommuting pair with zero individual
+normalized traces and nonzero product trace. The pair consists of the two
+opposite off-diagonal matrix units over the entire preceding stage. -/
+theorem stageTrace_noncommuting_witness [Nontrivial K] (n : ℕ) :
+    ∃ X Y : Matrix (Fin 2) (Fin 2) (Stage K n),
+      X * Y ≠ Y * X ∧
+        stageTrace K (n + 1) X = 0 ∧
+        stageTrace K (n + 1) Y = 0 ∧
+        stageTrace K (n + 1) (X * Y) = ⅟(2 : K) := by
+  let X : Matrix (Fin 2) (Fin 2) (Stage K n) := Matrix.single 0 1 1
+  let Y : Matrix (Fin 2) (Fin 2) (Stage K n) := Matrix.single 1 0 1
+  refine ⟨X, Y, ?_, ?_, ?_, ?_⟩
+  · intro hxy
+    apply InfoGeometry.Algebra.MatrixAmplification.single_commutator_ne_zero
+      (A := Stage K n) (i := (0 : Fin 2)) (j := 1) (by decide)
+    change X * Y - Y * X = 0
+    exact sub_eq_zero.mpr hxy
+  · exact stageTrace_single_offdiag K n 0 1 (by decide) (1 : Stage K n)
+  · exact stageTrace_single_offdiag K n 1 0 (by decide) (1 : Stage K n)
+  · change ⅟(2 : K) * stageTrace K n (Matrix.trace (X * Y)) = ⅟(2 : K)
+    have hproduct : X * Y = Matrix.single (0 : Fin 2) 0 (1 : Stage K n) := by
+      dsimp only [X, Y]
+      rw [Matrix.single_mul_single_same, one_mul]
+    rw [hproduct, Matrix.trace_single_eq_same, stageTrace_one, mul_one]
 
 /-- Opposite off-diagonal units expose the error in treating trace as a ring homomorphism. -/
 theorem stageTrace_not_multiplicative [Nontrivial K] (n : ℕ) :
@@ -243,11 +270,12 @@ theorem stageTrace_not_multiplicative [Nontrivial K] (n : ℕ) :
       stageTrace K (n + 1) (x * y) =
         stageTrace K (n + 1) x * stageTrace K (n + 1) y := by
   intro h
-  have hw := h (Matrix.single (0 : Fin 2) 1 (1 : Stage K n))
-    (Matrix.single (1 : Fin 2) 0 (1 : Stage K n))
+  obtain ⟨X, Y, _, hX, hY, hXY⟩ := stageTrace_noncommuting_witness K n
   have hz : (⅟(2 : K)) = 0 := by
-    simpa [Matrix.single_mul_single_same, stageTrace_single_offdiag,
-      stageTrace_single_diag] using hw
+    calc
+      ⅟(2 : K) = stageTrace K (n + 1) (X * Y) := hXY.symm
+      _ = stageTrace K (n + 1) X * stageTrace K (n + 1) Y := h X Y
+      _ = 0 := by rw (transparency := .default) [hX, hY, mul_zero]
   exact Invertible.ne_zero (⅟(2 : K)) hz
 
 /-- The actual colimit functional is likewise not multiplicative. -/

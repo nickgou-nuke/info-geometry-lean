@@ -23,8 +23,6 @@ namespace InfoGeometry.Canonical.DyadicMatrixTraceShellSymmetry
 open DyadicMatrixTraceColimit
 open InfoGeometry.Categorical
 
-attribute [local reducible] MatrixAmplificationTower.stage MatrixAmplificationTower.matrixFunctor
-
 variable (K : Type) [CommRing K] [Invertible (2 : K)]
 
 /-- Every recursively normalized stage trace is invariant under the constructed
@@ -38,7 +36,7 @@ theorem stageTrace_stageSymmetry (n : ℕ) :
   | zero => intro x; rfl
   | succ n ih =>
       intro x
-      rw [stageTrace_succ_apply,
+      rw (transparency := .default) [stageTrace_succ_apply,
         MatrixAmplificationShellSymmetry.trace_stageSymmetry_succ,
         ih, stageTrace_succ_apply]
 
@@ -50,7 +48,7 @@ theorem colimitTrace_colimitSymmetry (x : Carrier K) :
       colimitTrace K x := by
   obtain ⟨n, a, rfl⟩ :=
     MatrixAmplificationTower.exists_stage (Fin 2) (RingCat.of K) x
-  rw [MatrixAmplificationShellSymmetry.colimitSymmetry_inclusion]
+  rw (transparency := .default) [MatrixAmplificationShellSymmetry.colimitSymmetry_inclusion]
   change stageTrace K n (MatrixAmplificationShellSymmetry.stageSymmetry K n a) =
     stageTrace K n a
   exact stageTrace_stageSymmetry K n a

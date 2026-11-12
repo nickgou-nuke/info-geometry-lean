@@ -805,6 +805,35 @@ def check_authored_axioms_and_holes(source: str) -> list[TrapViolation]:
     return violations
 
 
+def _outer_lean_binder_groups(text: str) -> list[tuple[int, int, str]] | None:
+    """Read balanced outer binder groups without promoting nested arguments."""
+    pairs = {"(": ")", "[": "]", "{": "}", "⦃": "⦄"}
+    groups: list[tuple[int, int, str]] = []
+    position = 0
+    while position < len(text):
+        char = text[position]
+        if char not in pairs:
+            if char in pairs.values():
+                return None
+            position += 1
+            continue
+        start = position
+        stack = [pairs[char]]
+        position += 1
+        while position < len(text) and stack:
+            char = text[position]
+            if char in pairs:
+                stack.append(pairs[char])
+            elif char in pairs.values():
+                if char != stack.pop():
+                    return None
+            position += 1
+        if stack:
+            return None
+        groups.append((start, position, text[start:position]))
+    return groups
+
+
 def _witness_has_only_typeclass_binders(
     binders_and_name: str,
     *,
@@ -817,7 +846,12 @@ def _witness_has_only_typeclass_binders(
         "",
         binders_and_name,
     )
-    for binder in re.findall(r"\[([^\[\]]*)\]", prefix):
+    groups = _outer_lean_binder_groups(prefix)
+    if groups is None:
+        return False
+    class_groups = [(start, end, group) for start, end, group in groups if group[0] == "["]
+    for _start, _end, group in class_groups:
+        binder = group[1:-1]
         if re.search(r"\b(?:IsEmpty|Subsingleton|False)\b", binder):
             return False
         expanded_binder = _expand_local_type_alias(source, binder) if source else binder
@@ -827,7 +861,8 @@ def _witness_has_only_typeclass_binders(
         ):
             return False
         if target_type_name is not None:
-            binder_rhs = binder.split(":", 1)[1] if ":" in binder else binder
+            parsed_binder = _top_level_result_type(binder)
+            binder_rhs = parsed_binder[1] if parsed_binder is not None else binder
             class_name = re.match(r"\s*([A-Za-z_][A-Za-z0-9_'.]*)", binder_rhs)
             if class_name and _typeclass_binder_supplies_target(
                 source, class_name.group(1), target_type_name
@@ -835,11 +870,18 @@ def _witness_has_only_typeclass_binders(
                 return False
     if any(token in prefix for token in ("≠", "!=", "False", "Commute")):
         return False
+    # Class arguments such as `(2 : K)` in `[Invertible (2 : K)]` are not
+    # theorem premises. Mask whole balanced class groups only after the
+    # forbidden-class and supplied-target checks above have inspected them.
+    ordinary_prefix = list(prefix)
+    for start, end, _group in class_groups:
+        ordinary_prefix[start:end] = " " * (end - start)
+    ordinary_prefix = "".join(ordinary_prefix)
     # Type parameters such as `{R : Type*}` are harmless; term assumptions
     # could supply the witness or make its conclusion follow by elimination.
     binder_pattern = r"[({⦃]([^(){}⦃⦄]*)[)}⦄]"
     local_type_params: set[str] = set()
-    for binder in re.findall(binder_pattern, prefix):
+    for binder in re.findall(binder_pattern, ordinary_prefix):
         if ":" not in binder:
             return False
         names_part, binder_type_raw = binder.split(":", 1)
@@ -853,8 +895,7 @@ def _witness_has_only_typeclass_binders(
         if target_type_name is not None and binder_type in local_type_params:
             continue
         return False
-    remaining = re.sub(r"\[[^\[\]]*\]", "", prefix)
-    remaining = re.sub(binder_pattern, "", remaining)
+    remaining = re.sub(binder_pattern, "", ordinary_prefix)
     return not re.search(r"[({⦃]", remaining)
 
 
@@ -1545,9 +1586,76 @@ def _native_nullary_matrix_carriers(source: str) -> dict[str, tuple[str, str, st
     return carriers
 
 
+def _typed_matrix_existential_witness(
+    result: str,
+) -> tuple[str, str, tuple[str, str, str]] | None:
+    """Recognize only `∃ x y : Matrix ..., x*y ≠ y*x` and stronger conjunctions.
+
+    This bounded native form does not infer carriers from global constants,
+    erase operand ascriptions, or search inside a weaker logical proposition.
+    """
+    identifier = r"[A-Za-z_][A-Za-z0-9_']*"
+    prefix = re.match(rf"\s*∃\s+({identifier})\s+({identifier})\s*:\s*", result)
+    if prefix is None or prefix.group(1) == prefix.group(2):
+        return None
+    left, right = prefix.groups()
+    type_start = prefix.end()
+    head = re.match(r"Matrix\b", result[type_start:])
+    if head is None:
+        return None
+    position = type_start + head.end()
+    for _ in range(3):
+        atom = _balanced_lean_atom(result, position)
+        if atom is None:
+            return None
+        _value, position = atom
+    # The complete bound type must be Matrix, not a function/product having
+    # a Matrix occurrence. Keep the coefficient's full native atom intact.
+    suffix = result[position:].lstrip()
+    if not suffix.startswith(","):
+        return None
+    carrier = _matrix_carrier_at(result[type_start:position])
+    if carrier is None:
+        return None
+    body = suffix[1:].strip()
+    if re.search(r"→|->|↔|∨|¬|∃|\b(?:Exists|Or|Not)\b", body):
+        return None
+    pair = re.match(
+        rf"({identifier})\s*\*\s*({identifier})\s*≠\s*"
+        rf"({identifier})\s*\*\s*({identifier})(?=\s*(?:∧|$))", body,
+    )
+    if pair is None or pair.groups() != (left, right, right, left):
+        return None
+    remainder = body[pair.end():].strip()
+    if remainder and (not remainder.startswith("∧") or not remainder[1:].strip()):
+        return None
+    return left, right, carrier
+
+
 def _witness_matches_matrix_carriers(source: str, binders: str, result: str,
                                      required_carriers: set[tuple[str, str, str]]) -> bool:
     """Require the two product operands in the witness to belong to this carrier."""
+    if re.search(r"∃|\bExists\b", result):
+        existential = _typed_matrix_existential_witness(result)
+        if existential is None:
+            return False
+        left, right, carrier = existential
+        declarations = _native_witness_declarations(source)
+        if not _native_witness_notation_is_supported(source):
+            return False
+        if any(name in {"Matrix", "Fin", "Exists"} for _kind, name in declarations):
+            return False
+        if any(kind in {"axiom", "opaque", "postulate"} for kind, _name in declarations):
+            return False
+        if check_authored_axioms_and_holes(source):
+            return False
+        notations = _active_nullary_matrix_notations(source, len(source))
+        if any(name in notations for name in {"Matrix", "Fin", "Exists", left, right}):
+            return False
+        # Only the existential's own complete type supplies this carrier.
+        # Additional typeclass assumptions do not justify specialization to
+        # some other coefficient ring, even when that ring is nontrivial.
+        return carrier in required_carriers
     inline_specializations = {
         k.strip(): v.strip()
         for k, v in re.findall(r"\(\s*([A-Za-z_]\w*)\s*:=\s*([^()]+)\)", result)
@@ -1803,17 +1911,25 @@ def _has_closed_noncommutativity_witness(
         proof_body = declaration[assignment + 2:] if assignment is not None else ""
         if set(re.findall(r"(?:«[^»\n]+»|[^\W\d][\w']*)", proof_body)) & unsafe_names:
             continue
-        class_binders = re.findall(r"\[([^\[\]]*)\]", binders)
-        class_names = [
-            found.group(1)
-            for binder in class_binders
-            if (
-                found := re.match(
-                    r"\s*([A-Za-z_][A-Za-z0-9_'.]*)",
-                    binder.split(":", 1)[1] if ":" in binder else binder,
+        ambient_binders = _ambient_variable_declarations(source, match.start())
+        all_binders = " ".join([binders, *ambient_binders])
+        binder_groups = _outer_lean_binder_groups(all_binders)
+        if binder_groups is None:
+            continue
+        class_names: list[tuple[str, list[str]]] = []
+        for _start, _end, group in binder_groups:
+            if group[0] != "[":
+                continue
+            binder = group[1:-1]
+            parsed_binder = _top_level_result_type(binder)
+            binder_rhs = parsed_binder[1] if parsed_binder is not None else binder
+            found = re.match(r"\s*([A-Za-z_][A-Za-z0-9_'.]*)", binder_rhs)
+            if found:
+                instance_names = (
+                    re.findall(r"[A-Za-z_][A-Za-z0-9_']*", parsed_binder[0])
+                    if parsed_binder is not None else []
                 )
-            )
-        ]
+                class_names.append((found.group(1), instance_names))
         effective_proof_body = re.sub(
             r"\blet\s+_\s*:=\s*[^;\n]+(?=;|$)", "", proof_body
         )
@@ -1822,17 +1938,27 @@ def _has_closed_noncommutativity_witness(
                 source, class_name, required_carriers
             )
             and (
-                re.search(rf"\b{re.escape(class_name)}\s*\.", effective_proof_body)
+                any(
+                    re.search(rf"\b{re.escape(name)}\s*\.", effective_proof_body)
+                    for name in [class_name, *instance_names]
+                )
                 or re.search(rf"\bopen\s+[^\n]*\b{re.escape(class_name)}\b", source)
             )
-            for class_name in class_names
+            for class_name, instance_names in class_names
         ):
             continue
-        ambient_binders = _ambient_variable_declarations(source, match.start())
-        if not _witness_has_only_typeclass_binders(
-            " ".join([binders, *ambient_binders]), source=source
-        ):
+        if not _witness_has_only_typeclass_binders(all_binders, source=source):
             continue
+        if re.search(r"∃|\bExists\b", result):
+            existential = _typed_matrix_existential_witness(result)
+            if existential is None:
+                continue
+            expected = required_carriers if required_carriers is not None else {existential[2]}
+            if not _witness_matches_matrix_carriers(
+                raw_source[:match.start()], all_binders, result, expected
+            ):
+                continue
+            return True
         if re.search(_NONCOMMUTATIVITY_PATTERNS, normalized_result):
             if required_carriers is not None and not _witness_matches_matrix_carriers(
                 raw_source[:match.start()], " ".join([binders, *ambient_binders]),

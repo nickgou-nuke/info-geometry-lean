@@ -34,11 +34,6 @@ namespace InfoGeometry.Categorical.MatrixAmplificationShellSymmetry
 
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 
--- Expose the existing recursive carrier to matrix extensionality and the
--- implicit transparency used by native map and entry simplification.
-attribute [local reducible] MatrixAmplificationTower.stage
-  MatrixAmplificationTower.matrixFunctor
-
 variable (A : Type) [Ring A]
 
 /-- The existing full binary matrix stage, with no change of carrier. -/
@@ -75,6 +70,53 @@ theorem shellConjugation_apply (R : Type) [Ring R]
     M * (Matrix.diagonal (fun k : Fin 2 => if k = 0 then (1 : R) else -1))) i j = _
   simp only [Matrix.mul_diagonal, Matrix.diagonal_mul]
 
+-- Prove the finite-shell calculations on their explicit native matrix type.
+-- The stage lemmas below transport these proofs by definitional equality,
+-- without changing reducibility metadata of the existing tower.
+private theorem matrixLift_apply (R : Type) [Ring R] (e : R ≃+* R)
+    (M : Matrix (Fin 2) (Fin 2) R) (i j : Fin 2) :
+    (e.mapMatrix.trans (shellConjugation R)) M i j =
+      (if i = 0 then (1 : R) else -1) * e (M i j) *
+        (if j = 0 then (1 : R) else -1) :=
+  shellConjugation_apply R (e.mapMatrix M) i j
+
+private theorem matrixLift_diagonal (R : Type) [Ring R] (e : R ≃+* R)
+    (M : Matrix (Fin 2) (Fin 2) R) (i : Fin 2) :
+    (e.mapMatrix.trans (shellConjugation R)) M i i = e (M i i) := by
+  rw [matrixLift_apply]
+  fin_cases i <;> simp
+
+private theorem matrixLift_trace (R : Type) [Ring R] (e : R ≃+* R)
+    (M : Matrix (Fin 2) (Fin 2) R) :
+    Matrix.trace ((e.mapMatrix.trans (shellConjugation R)) M) =
+      e (Matrix.trace M) := by
+  simp only [Matrix.trace, Matrix.diag_apply, matrixLift_diagonal, map_sum]
+
+private theorem matrixLift_involutive (R : Type) [Ring R] (e : R ≃+* R)
+    (he : Function.Involutive e) :
+    Function.Involutive (e.mapMatrix.trans (shellConjugation R)) := by
+  intro M
+  apply Matrix.ext
+  intro i j
+  simp only [matrixLift_apply]
+  fin_cases i <;> fin_cases j <;> simp [he]
+
+private theorem matrixLift_scalar (R : Type) [Ring R] (e : R ≃+* R) (x : R) :
+    (e.mapMatrix.trans (shellConjugation R)) (Matrix.scalar (Fin 2) x) =
+      Matrix.scalar (Fin 2) (e x) := by
+  apply Matrix.ext
+  intro i j
+  rw [matrixLift_apply]
+  fin_cases i <;> fin_cases j <;> simp [Matrix.scalar_apply]
+
+private theorem matrixLift_fresh (R : Type) [Ring R] (e : R ≃+* R) :
+    (e.mapMatrix.trans (shellConjugation R)) (Matrix.single 0 1 (1 : R)) =
+      -Matrix.single 0 1 (1 : R) := by
+  apply Matrix.ext
+  intro i j
+  rw [matrixLift_apply]
+  fin_cases i <;> fin_cases j <;> simp [Matrix.single_apply]
+
 /-- Apply the preceding symmetry entrywise and the fresh sign conjugation
 on every successor shell. Stage zero is the identity of the arbitrary seed. -/
 def stageSymmetry : (n : ℕ) → Stage A n ≃+* Stage A n :=
@@ -88,44 +130,38 @@ theorem stageSymmetry_succ_apply (n : ℕ) (M : Stage A (n + 1)) (i j : Fin 2) :
       (if i = 0 then (1 : Stage A n) else -1) *
         stageSymmetry A n (M i j) *
         (if j = 0 then (1 : Stage A n) else -1) := by
-  change shellConjugation (Stage A n) ((stageSymmetry A n).mapMatrix M) i j = _
-  simp only [shellConjugation_apply, RingEquiv.mapMatrix_apply, Matrix.map_apply]
+  with_unfolding_all
+    exact matrixLift_apply (Stage A n) (stageSymmetry A n) M i j
 
 /-- Diagonal entries are changed only by the preceding stage symmetry. -/
 @[simp]
 theorem stageSymmetry_succ_diagonal (n : ℕ) (M : Stage A (n + 1)) (i : Fin 2) :
     stageSymmetry A (n + 1) M i i = stageSymmetry A n (M i i) := by
-  rw [stageSymmetry_succ_apply]
-  fin_cases i <;> simp
+  with_unfolding_all
+    exact matrixLift_diagonal (Stage A n) (stageSymmetry A n) M i
 
 /-- The ordinary matrix trace of one shell is equivariant. Its value remains
 in the preceding, possibly noncommutative, coefficient ring. -/
 theorem trace_stageSymmetry_succ (n : ℕ) (M : Stage A (n + 1)) :
     Matrix.trace (stageSymmetry A (n + 1) M) =
       stageSymmetry A n (Matrix.trace M) := by
-  simp only [Matrix.trace, Matrix.diag_apply, stageSymmetry_succ_diagonal, map_sum]
+  with_unfolding_all
+    exact matrixLift_trace (Stage A n) (stageSymmetry A n) M
 
 /-- Every stage symmetry squares to the identity. -/
 theorem stageSymmetry_involutive (n : ℕ) : Function.Involutive (stageSymmetry A n) := by
   induction n with
   | zero => intro X; rfl
   | succ n ih =>
-    intro M
-    apply Matrix.ext
-    intro i j
-    simp only [stageSymmetry_succ_apply]
-    fin_cases i <;> fin_cases j <;> simp [map_mul, ih]
+    with_unfolding_all
+      exact matrixLift_involutive (Stage A n) (stageSymmetry A n) ih
 
 /-- The stage ring equivalences commute with the actual successor bond. -/
 theorem stageSymmetry_bond (n : ℕ) (X : Stage A n) :
     stageSymmetry A (n + 1) (MatrixAmplificationTower.bond (Fin 2) (RingCat.of A) n X) =
       MatrixAmplificationTower.bond (Fin 2) (RingCat.of A) n (stageSymmetry A n X) := by
-  change stageSymmetry A (n + 1) (Matrix.scalar (Fin 2) X) =
-    Matrix.scalar (Fin 2) (stageSymmetry A n X)
-  apply Matrix.ext
-  intro i j
-  rw [stageSymmetry_succ_apply]
-  fin_cases i <;> fin_cases j <;> simp [Matrix.scalar_apply]
+  with_unfolding_all
+    exact matrixLift_scalar (Stage A n) (stageSymmetry A n) X
 
 /-- The existing direct-limit construction descends the coherent family. -/
 def colimitSymmetryHom : Carrier A →+* Carrier A :=
@@ -172,17 +208,19 @@ def freshShell (n : ℕ) : Carrier A :=
 theorem stageSymmetry_fresh (n : ℕ) :
     stageSymmetry A (n + 1) (Matrix.single 0 1 (1 : Stage A n)) =
       -Matrix.single 0 1 (1 : Stage A n) := by
-  apply Matrix.ext
-  intro i j
-  rw [stageSymmetry_succ_apply]
-  fin_cases i <;> fin_cases j <;> simp [Matrix.single_apply]
+  with_unfolding_all
+    exact matrixLift_fresh (Stage A n) (stageSymmetry A n)
 
 /-- The descended symmetry negates every fresh-shell witness. -/
 @[simp]
 theorem colimitSymmetry_freshShell (n : ℕ) :
     colimitSymmetry A (freshShell A n) = -freshShell A n := by
-  unfold freshShell
-  rw [colimitSymmetry_inclusion, stageSymmetry_fresh, map_neg]
+  let y : Stage A (n + 1) := Matrix.single 0 1 (1 : Stage A n)
+  let f : Stage A (n + 1) →+* Carrier A :=
+    MatrixAmplificationTower.inclusion (Fin 2) (RingCat.of A) (n + 1)
+  with_unfolding_all
+    exact (colimitSymmetry_inclusion A (n + 1) y).trans
+      ((congrArg f (stageSymmetry_fresh A n)).trans (map_neg f y))
 
 /-- A fresh scalar-coefficient matrix unit commutes with the entire preceding
 stage, even when that coefficient ring is noncommutative. -/
@@ -231,8 +269,13 @@ theorem freshShell_ne_neg [Nontrivial A] [Invertible (2 : A)] (n : ℕ) :
     simpa only [one_add_one_eq_two, neg_add_cancel] using
       congrArg (fun z : Stage A n => z + 1) he
   have hseed : (2 : A) = 0 := by
-    apply MatrixAmplificationTower.transition_injective (Fin 2) (RingCat.of A) 0 n (Nat.zero_le n)
-    simpa only [map_ofNat, map_zero] using htwo
+    let f : A →+* Stage A n :=
+      bondMap (MatrixAmplificationTower.bond (Fin 2) (RingCat.of A)) 0 n (Nat.zero_le n)
+    have hf : f (2 : A) = f 0 :=
+      (map_ofNat f 2).trans (htwo.trans (map_zero f).symm)
+    with_unfolding_all
+      exact MatrixAmplificationTower.transition_injective
+        (Fin 2) (RingCat.of A) 0 n (Nat.zero_le n) hf
   exact Invertible.ne_zero (2 : A) hseed
 
 /-- No unit of the actual algebraic colimit implements the shell symmetry.

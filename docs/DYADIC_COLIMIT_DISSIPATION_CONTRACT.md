@@ -75,6 +75,10 @@ Acceptance targets:
 - `stageTrace_not_multiplicative`, `colimitTrace_not_multiplicative`: under
   `[Nontrivial K]`, opposite off-diagonal units exhibit the obstruction to
   treating this trace as a ring homomorphism.
+- `stageTrace_noncommuting_witness`: the same pair in the full matrix shell
+  has unequal products in opposite orders, zero individual traces, and product
+  trace `⅟(2 : K)`. Its noncommutation is proved using the existing matrix-unit
+  commutator owner, imported directly.
 - `stageThreeEquiv`: an explicit native algebra equivalence between the third
   stage and full matrices indexed by `Fin 2 × (Fin 2 × Fin 2)`. The index set has
   eight elements. This is an `8 × 8` matrix ring, not an eight-dimensional
@@ -121,6 +125,10 @@ The nonnegativity corollary adds the explicit `PartialOrder` and
 These are identities for arbitrary elements, not just scalar or self-adjoint
 inputs. They do not construct a completely positive semigroup, a time
 parameter, a Kubo–Mori metric, a modular operator or a recurrence theorem.
+This owner does not separately equip the dyadic colimit with a star operation
+or construct a coherent family of jump operators on that carrier. The generic
+star-ring identities and their transport laws are available for such a future
+construction; they do not supply its compatibility data.
 The algebraic tower relation
 
 \[
@@ -178,9 +186,27 @@ and then on the actual colimit. No additional carrier or quotient is introduced.
 Together with the D8 nontriviality hypothesis, this yields a specific
 trace-preserving outer ring automorphism of the same algebraic colimit.
 
+## Source-screening compatibility
+
+The explicit matrix witness exposed two limitations in the staged source
+screener. It treated the type ascription inside `[Invertible (2 : K)]` as an
+ordinary term assumption, and it did not track the operators bound by a
+top-level typed existential. Consequently it rejected the concrete
+noncommuting pair even after the generic matrix witness owner was imported
+directly.
+
+The associated parser repair preserves the existing class, assumption,
+taint and carrier checks. It recognizes a bounded native matrix existential
+whose leading conjunct guarantees noncommutation. Conditional, disjunctive,
+assumed, tainted and mismatched-carrier evidence must still be rejected.
+`tests/test_opengauss_existential_witness.py` records these cases, and the
+focused workflow also runs the existing screener, staged-gate, partial-commit
+and diff-gate suites under the shared lock. These are parser regressions;
+the Lean build and complete declaration audit supply the theorem checks.
+
 ## Validation and release record
 
-Toolchain and dependency pins are unchanged: Lean `v4.34.1`, Mathlib
+The Lean and Mathlib pins are unchanged: Lean `v4.34.1`, Mathlib
 `d13f23b723b8a846827a245b89c10fc7d3f11612`.
 
 Validation is in progress. Source authors prepared isolated candidates;

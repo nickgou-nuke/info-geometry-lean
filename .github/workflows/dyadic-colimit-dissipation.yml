@@ -18,7 +18,16 @@ on:
       - 'verification/matrix-amplification/**'
       - 'tools/build_lock.py'
       - 'tools/infra/build.py'
+      - 'tools/infra/opengauss_screener.py'
       - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/proof_proxy_staged_gate.py'
+      - 'tools/quality/proof_proxy_diff_gate.py'
+      - 'tests/test_opengauss_existential_witness.py'
+      - 'tests/test_opengauss_protocols.py'
+      - 'tests/test_native_matrix_witness.py'
+      - 'tests/test_proof_proxy_staged_gate.py'
+      - 'tests/test_proof_proxy_partial_commit.py'
+      - 'tests/test_proof_proxy_diff_gate.py'
       - 'lean-toolchain'
       - 'lake-manifest.json'
       - '.github/workflows/dyadic-colimit-dissipation.yml'
@@ -40,6 +49,32 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install the source-screening test runner
+        run: python3 -m pip install pytest==8.3.5
+      - name: Check source-screening regressions under the shared lock
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p verification/matrix-amplification/logs/dyadic-colimit
+          python3 - <<'PY' 2>&1 | tee verification/matrix-amplification/logs/dyadic-colimit/source-screening.log
+          import subprocess
+          import sys
+          from tools.build_lock import acquire_build_lock
+          tests = [
+              'tests/test_opengauss_existential_witness.py',
+              'tests/test_opengauss_protocols.py',
+              'tests/test_native_matrix_witness.py',
+              'tests/test_proof_proxy_staged_gate.py',
+              'tests/test_proof_proxy_partial_commit.py',
+              'tests/test_proof_proxy_diff_gate.py',
+          ]
+          lock = acquire_build_lock(None, 'dyadic-colimit-source-screening', block=True)
+          try:
+              result = subprocess.run([sys.executable, '-m', 'pytest', *tests, '-q'])
+          finally:
+              lock.release()
+          raise SystemExit(result.returncode)
+          PY
       - uses: actions/cache@v4
         with:
           path: |

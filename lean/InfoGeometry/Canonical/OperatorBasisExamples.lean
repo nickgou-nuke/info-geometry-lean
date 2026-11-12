@@ -121,7 +121,7 @@ theorem select_false_true : select ℂ quotientWords ∅ [false, true] = {false}
   have hsecond : quotientWords true ∈ candidateSpan ℂ quotientWords {false} := by
     rw [quotientWords_true_eq_false]
     exact mem_candidateSpan ℂ quotientWords (Finset.mem_singleton_self false)
-  rw [select_cons, if_neg hfirst, Finset.insert_empty, select_cons, if_pos hsecond,
+  rw [select_cons, ite_eq_right hfirst, Finset.insert_empty, select_cons, ite_eq_left hsecond,
     select_nil]
 
 /-- Reversing priority retains the other original word label in the same quotient. -/
@@ -131,7 +131,7 @@ theorem select_true_false : select ℂ quotientWords ∅ [true, false] = {true} 
   have hsecond : quotientWords false ∈ candidateSpan ℂ quotientWords {true} := by
     rw [← quotientWords_true_eq_false]
     exact mem_candidateSpan ℂ quotientWords (Finset.mem_singleton_self true)
-  rw [select_cons, if_neg hfirst, Finset.insert_empty, select_cons, if_pos hsecond,
+  rw [select_cons, ite_eq_right hfirst, Finset.insert_empty, select_cons, ite_eq_left hsecond,
     select_nil]
 
 theorem priority_changes_survivors :

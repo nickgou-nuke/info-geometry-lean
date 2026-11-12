@@ -67,7 +67,7 @@ The projector is Mathlib's average of this twisted representation:
 P_\chi=|G|^{-1}\sum_{g\in G}\chi(g)^{-1}\rho(g).
 \]
 
-The intended new results expose the weighted formula and character equations,
+The results expose the weighted formula and character equations,
 prove naturality under equivariant linear maps using the same character,
 and establish the exact projected-span identity
 
@@ -90,7 +90,7 @@ Let `R : Submodule k V` satisfy
 `forall g, R <= R.comap (rho g)`. This is the explicit stability hypothesis
 needed to use `Representation.quotient`. Write `q = R.mkQ`.
 
-The intended bridge is the actual intertwining identity
+The bridge is the actual intertwining identity
 
 \[
 q(P_\chi v)=\overline P_\chi(qv),
@@ -103,7 +103,7 @@ E_\chi(V)/(R\cap E_\chi(V))\ \simeq_k\ E_\chi(V/R).
 \]
 
 The denominator on the left is represented precisely as the submodule
-`R.comap E.subtype` of `E = E_chi(V)`. Surjectivity is to be proved by lifting
+`R.comap E.subtype` of `E = E_chi(V)`. Surjectivity is proved by lifting
 a quotient vector and averaging its lift; it is not a supplied proof field.
 The equivalence uses Mathlib's linear-map quotient-by-kernel theorem.
 
@@ -180,7 +180,7 @@ contains that algorithmic error.
 
 ## Dependency order
 
-The proved dependency order is intended to be:
+The formal dependency order is:
 
 1. Native representations, averaging, spans, and quotient maps.
 2. Character twist and projector naturality.
@@ -192,16 +192,101 @@ The proved dependency order is intended to be:
 No physical classification, renormalization theorem, or correctness of the
 package's syntactic normalization is supplied by these dependencies alone.
 
+## Implemented public surface
+
+| Owner | Explicit public declarations |
+|---|---:|
+| `Algebra/CyclicQuotient.lean` | 12 |
+| `Algebra/FiniteGroupCharacterProjection.lean` | 17 |
+| `Algebra/CharacterRelationQuotient.lean` | 9 |
+| `LinearAlgebra/OrderedQuotientBasis.lean` | 31 |
+| `Algebra/FreeOperatorSymmetry.lean` | 9 |
+| `Canonical/OperatorBasisExamples.lean` | 31 |
+| **Total audited** | **109** |
+
+The cyclic owner count includes its nine pre-existing declarations and three
+new declarations. The new development therefore adds 100 explicit public
+declarations. The count includes definitions and computation lemmas, not only
+major mathematical theorems. `Algebra/OperatorBasisAudit.lean` enumerates the
+complete surface, and `InfoGeometry.All` imports all seven files.
+
 ## Verification record
 
-Implementation and verification are in progress. No new declaration is yet
-reported as kernel accepted. Lean/Mathlib pins remain unchanged. The focused
-`verification/language-symmetry` workspace is reused with explicit targets;
-cache commands run from that workspace so non-Mathlib dependency artifacts
-are extracted into its package paths. Source checks retain the canonical
-repository-root working directory and the shared build lock.
+Lean `v4.34.1` and Mathlib
+`d13f23b723b8a846827a245b89c10fc7d3f11612` remain pinned. The observed Lean
+executable reports commit `5045d0056413266e57c625dcd7c365b10e377c52`;
+Lake reports `5.0.0-src+5045d00`. All nine focused dependency checkouts match
+the manifest and have clean source trees.
 
-Final acceptance requires independent source review, serialized explicit
-owner builds, fresh file elaboration, a complete public-declaration axiom
-audit, semantic/source checks, and an independent QA repeat. Focused results
-will not be reported as a root-package or aggregate `InfoGeometry.All` build.
+The explicit owner/audit build succeeded:
+
+```bash
+python3 verification/language-symmetry/check.py build \
+  InfoGeometry.Algebra.OperatorBasisAudit
+```
+
+Its 109 unique axiom records matched the audit inventory exactly, with only
+`propext`, `Classical.choice`, and `Quot.sound`. Independent source review
+closed against the hashes below after the compilation-driven repairs.
+
+Independent QA then freshly elaborated all seven files sequentially from
+15:12:31 to 15:13:15 UTC on 12 November 2026. One invocation of the maintained
+wrapper held the shared lock across the complete pass. Each compiler command
+used `lean --root=<repository>/lean -o <focused-olean> <absolute-source>`;
+later files imported the fresh earlier outputs. All seven exits were 0, with
+zero compiler warnings. The 109 source declarations, audit entries, and fresh
+axiom records matched exactly once; only the three permitted axioms occurred.
+Source/configuration hashes and all nine dependency identities remained
+unchanged. This QA certifies the recorded source hashes, including the repairs,
+not the original failed `e3ce1b4` committed tree. The receipt SHA-256 is
+`986663d3e1ac2f41b9b5e8ed53f306dbb939b99ad41a36c3b812350bc6106cdb`.
+
+The final semantic-vacuity diagnostic covered all seven files and reported
+17 `trivial_surface` warnings and zero errors. Its warning-level diagnostic
+exited 1; this is not a zero-warning result. The independent reviewer examined
+all findings as meaningful computation rules, canonical quotient-map formulas,
+and native API lemmas. The workflow retains their full JSON and text output
+and fails on errors. The strict source screen and normal staged proof hook
+also passed. No warning suppression was added.
+
+The first CI run on `e3ce1b4d007965e2f9f2f15561476e41abd3b45e` reached
+compilation and exposed selector API/parser/coercion errors. Those errors were
+repaired without changing the selector algorithm, weakening its conclusions,
+or introducing proof holes. The exact build log and subsequent verification
+remain distinguishable from the initial source-only review.
+
+The repaired sources are locally verified and are being published to
+[PR #333](https://github.com/nickgou-nuke/info-geometry-lean/pull/333).
+The dedicated `Operator symmetry and ordered quotient bases` workflow will
+repeat the build, all seven fresh elaborations, and the complete axiom
+reconciliation against the actual published head. Its result is recorded
+separately from the successful local verification.
+
+### Verified source fingerprints
+
+The independent source review and fresh elaboration refer to these exact
+SHA-256 values. Paths are relative to `lean/InfoGeometry/`.
+
+| Source | SHA-256 |
+|---|---|
+| `Algebra/CyclicQuotient.lean` | `88fa3eb27d64e068187b6e295dac09dc1d16f089a17c331270f2c7a4ee97c79a` |
+| `Algebra/FiniteGroupCharacterProjection.lean` | `47195078d5d6430f4a4ab5fbce0ae222fb87495caa308920f56ae89b57969238` |
+| `Algebra/CharacterRelationQuotient.lean` | `0376792430bcdf8ecbb7384c80bf6bad0f57175e54609ccb287f620234188c54` |
+| `LinearAlgebra/OrderedQuotientBasis.lean` | `ad22f4230f294865638811eab8418bfdbeaefa39c06d8c3c135808aa55fa6ae1` |
+| `Algebra/FreeOperatorSymmetry.lean` | `317b85709f57ae197c967d5041447a6cd543573ad120609126377b177520e875` |
+| `Canonical/OperatorBasisExamples.lean` | `6d0d2b6e98287e87921b572f16ea0f22bb10e7091b1c7cf72fdcb24df665973b` |
+| `Algebra/OperatorBasisAudit.lean` | `b5162c58abe880cd3d99b025024b331e4e1220202ba85d4dfa025d62fda9e63d` |
+
+### Integration boundary
+
+The focused workspace uses the repository's actual `lean` source tree and
+explicit targets. Cache commands run from that workspace so non-Mathlib cache
+archives resolve their relative package paths correctly; source checks keep
+the canonical repository-root working directory and shared build lock.
+
+The root path preflight and the initial repository-wide CI still report
+missing HomotopyHypothesis and Atlas configurations and an uninitialized GIFT
+gitlink. The root pre-push gate and aggregate `InfoGeometry.All` build are not
+certified by the focused results. Draft publication was explicitly authorized
+with that integration boundary; no dependency pins or placeholder packages
+were substituted. PR #333 remains separate from the RNQT and horizon PRs.

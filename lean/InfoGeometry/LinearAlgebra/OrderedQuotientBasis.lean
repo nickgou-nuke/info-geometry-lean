@@ -41,6 +41,7 @@ variable (v : ι → V)
 def candidateSpan (s : Finset ι) : Submodule K V :=
   Submodule.span K (v '' (s : Set ι))
 
+omit [DecidableEq ι] in
 @[simp]
 theorem candidateSpan_empty : candidateSpan K v ∅ = ⊥ := by
   simp [candidateSpan]
@@ -49,12 +50,14 @@ theorem candidateSpan_union (s t : Finset ι) :
     candidateSpan K v (s ∪ t) = candidateSpan K v s ⊔ candidateSpan K v t := by
   simp only [candidateSpan, Finset.coe_union, Set.image_union, Submodule.span_union]
 
+omit [DecidableEq ι] in
 theorem candidateSpan_mono {s t : Finset ι} (h : s ⊆ t) :
     candidateSpan K v s ≤ candidateSpan K v t := by
   apply Submodule.span_mono
   rintro x ⟨i, hi, rfl⟩
   exact ⟨i, h hi, rfl⟩
 
+omit [DecidableEq ι] in
 theorem mem_candidateSpan {s : Finset ι} {i : ι} (hi : i ∈ s) :
     v i ∈ candidateSpan K v s :=
   Submodule.subset_span ⟨i, hi, rfl⟩
@@ -63,7 +66,7 @@ theorem candidateSpan_insert_of_mem (s : Finset ι) (i : ι)
     (hi : v i ∈ candidateSpan K v s) :
     candidateSpan K v (insert i s) = candidateSpan K v s := by
   unfold candidateSpan
-  rw [Finset.coe_insert, Set.image_insert]
+  rw [Finset.coe_insert, Set.image_insert_eq]
   exact Submodule.span_insert_eq_span hi
 
 /-- Scan in list order, retaining a candidate exactly when it enlarges the current span. -/
@@ -90,9 +93,9 @@ theorem initial_subset_select (s : Finset ι) (order : List ι) :
   | nil => exact fun _ hi => hi
   | cons i order ih =>
       by_cases hi : v i ∈ candidateSpan K v s
-      · rw [select_cons, if_pos hi]
+      · rw [select_cons, ite_eq_left hi]
         exact ih s
-      · rw [select_cons, if_neg hi]
+      · rw [select_cons, ite_eq_right hi]
         exact (Finset.subset_insert i s).trans (ih (insert i s))
 
 /-- Every retained label was present initially or occurs in the processing list. -/
@@ -104,10 +107,10 @@ theorem select_subset (s : Finset ι) (order : List ι) :
         (show s ⊆ s from fun _ hi => hi)
   | cons i order ih =>
       by_cases hi : v i ∈ candidateSpan K v s
-      · rw [select_cons, if_pos hi, List.toFinset_cons]
+      · rw [select_cons, ite_eq_left hi, List.toFinset_cons]
         exact (ih s).trans
           (Finset.union_subset_union_right (Finset.subset_insert i order.toFinset))
-      · rw [select_cons, if_neg hi]
+      · rw [select_cons, ite_eq_right hi]
         simpa only [List.toFinset_cons, Finset.insert_union, Finset.union_insert] using
           ih (insert i s)
 
@@ -119,9 +122,9 @@ theorem linearIndepOn_select (s : Finset ι) (order : List ι)
   | nil => exact hs
   | cons i order ih =>
       by_cases hi : v i ∈ candidateSpan K v s
-      · rw [select_cons, if_pos hi]
+      · rw [select_cons, ite_eq_left hi]
         exact ih s hs
-      · rw [select_cons, if_neg hi]
+      · rw [select_cons, ite_eq_right hi]
         apply ih (insert i s)
         simpa only [Finset.coe_insert] using hs.insert hi
 
@@ -132,29 +135,29 @@ theorem candidateSpan_select (s : Finset ι) (order : List ι) :
   | nil => simp only [select_nil, List.toFinset_nil, Finset.union_empty]
   | cons i order ih =>
       by_cases hi : v i ∈ candidateSpan K v s
-      · rw [select_cons, if_pos hi, ih s, List.toFinset_cons, Finset.union_insert]
+      · rw [select_cons, ite_eq_left hi, ih s, List.toFinset_cons, Finset.union_insert]
         exact (candidateSpan_insert_of_mem K v (s ∪ order.toFinset) i
           ((candidateSpan_mono K v Finset.subset_union_left) hi)).symm
-      · rw [select_cons, if_neg hi, ih (insert i s), List.toFinset_cons,
+      · rw [select_cons, ite_eq_right hi, ih (insert i s), List.toFinset_cons,
           Finset.insert_union, Finset.union_insert]
 
 /-- Processing consecutive lists is the same as resuming from the first result. -/
-theorem select_append (s : Finset ι) (prefix suffix : List ι) :
-    select K v s (prefix ++ suffix) = select K v (select K v s prefix) suffix := by
-  induction prefix generalizing s with
+theorem select_append (s : Finset ι) (front suffix : List ι) :
+    select K v s (front ++ suffix) = select K v (select K v s front) suffix := by
+  induction front generalizing s with
   | nil => rfl
-  | cons i prefix ih =>
+  | cons i front ih =>
       by_cases hi : v i ∈ candidateSpan K v s
-      · simp only [List.cons_append, select_cons, if_pos hi]
+      · simp only [List.cons_append, select_cons, ite_eq_left hi]
         exact ih s
-      · simp only [List.cons_append, select_cons, if_neg hi]
+      · simp only [List.cons_append, select_cons, ite_eq_right hi]
         exact ih (insert i s)
 
 /-- Extending the processing list preserves every previously retained label. -/
-theorem select_prefix_subset (s : Finset ι) (prefix suffix : List ι) :
-    select K v s prefix ⊆ select K v s (prefix ++ suffix) := by
+theorem select_prefix_subset (s : Finset ι) (front suffix : List ι) :
+    select K v s front ⊆ select K v s (front ++ suffix) := by
   rw [select_append]
-  exact initial_subset_select K v (select K v s prefix) suffix
+  exact initial_subset_select K v (select K v s front) suffix
 
 /-- A label already dependent on the current span can never enter at a later occurrence. -/
 theorem notMem_select_of_mem_span (s : Finset ι) (order : List ι) {i : ι}
@@ -164,9 +167,9 @@ theorem notMem_select_of_mem_span (s : Finset ι) (order : List ι) {i : ι}
   | nil => exact hi
   | cons j order ih =>
       by_cases hj : v j ∈ candidateSpan K v s
-      · rw [select_cons, if_pos hj]
+      · rw [select_cons, ite_eq_left hj]
         exact ih s hi hspan
-      · rw [select_cons, if_neg hj]
+      · rw [select_cons, ite_eq_right hj]
         have hij : i ≠ j := fun heq => hj (heq ▸ hspan)
         have hi' : i ∉ insert j s := by
           simp only [Finset.mem_insert, not_or]
@@ -177,21 +180,21 @@ theorem notMem_select_of_mem_span (s : Finset ι) (order : List ι) {i : ι}
 /-- Both retention and rejection decisions on an already processed prefix are stable.
 
 Repeated labels in the suffix cannot change a decision made on the prefix. -/
-theorem select_prefix_inter (s : Finset ι) (prefix suffix : List ι) :
-    select K v s (prefix ++ suffix) ∩ (s ∪ prefix.toFinset) = select K v s prefix := by
+theorem select_prefix_inter (s : Finset ι) (front suffix : List ι) :
+    select K v s (front ++ suffix) ∩ (s ∪ front.toFinset) = select K v s front := by
   ext i
   constructor
   · intro hi
     obtain ⟨hfinal, hseen⟩ := Finset.mem_inter.mp hi
     by_contra hnot
-    have hspan : v i ∈ candidateSpan K v (select K v s prefix) := by
+    have hspan : v i ∈ candidateSpan K v (select K v s front) := by
       rw [candidateSpan_select]
       exact mem_candidateSpan K v hseen
-    apply notMem_select_of_mem_span K v (select K v s prefix) suffix hnot hspan
+    apply notMem_select_of_mem_span K v (select K v s front) suffix hnot hspan
     simpa only [select_append] using hfinal
   · intro hi
     exact Finset.mem_inter.mpr
-      ⟨select_prefix_subset K v s prefix suffix hi, select_subset K v s prefix hi⟩
+      ⟨select_prefix_subset K v s front suffix hi, select_subset K v s front hi⟩
 
 /-- The retained candidates themselves form a native basis of their span.
 
@@ -207,24 +210,27 @@ noncomputable def selectedBasis (s : Finset ι) (order : List ι)
   exact (Module.Basis.span hli).map
     (LinearEquiv.ofEq _ _ (by
       unfold candidateSpan
-      rw [Set.image_eq_range]))
+      rw [Set.image_eq_range]
+      rfl))
 
 @[simp]
 theorem selectedBasis_apply (s : Finset ι) (order : List ι)
     (hs : LinearIndepOn K v (s : Set ι)) (i : {i // i ∈ select K v s order}) :
     (selectedBasis K v s order hs i : V) = v i.1 := by
-  simp only [selectedBasis, Module.Basis.map_apply, LinearEquiv.coe_ofEq_apply,
-    Module.Basis.coe_span_apply]
+  simp only [selectedBasis, Module.Basis.map_apply, LinearEquiv.coe_ofEq_apply]
+  exact Module.Basis.coe_span_apply _ i
 
 section Quotient
 
 variable (R : Submodule K V)
 
+omit [DecidableEq ι] in
 /-- The quotient candidates span precisely the image of the original candidate span. -/
 theorem candidateSpan_quotient (s : Finset ι) :
     candidateSpan K (R.mkQ ∘ v) s = (candidateSpan K v s).map R.mkQ := by
   simp only [candidateSpan, Submodule.map_span, Set.image_image, Function.comp_def]
 
+omit [DecidableEq ι] in
 /-- Dependence in the quotient is dependence modulo the relation submodule. -/
 theorem quotient_mem_candidateSpan_iff (s : Finset ι) (i : ι) :
     R.mkQ (v i) ∈ candidateSpan K (R.mkQ ∘ v) s ↔
@@ -249,9 +255,10 @@ theorem select_union_eq_quotient (s : Finset ι) (hR : candidateSpan K v s = R)
   | cons i order ih =>
       have htest := mem_candidateSpan_union_iff_quotient K v R s hR t i
       by_cases hi : R.mkQ (v i) ∈ candidateSpan K (R.mkQ ∘ v) t
-      · rw [select_cons, if_pos (htest.mpr hi), select_cons, if_pos hi]
+      · rw [select_cons, ite_eq_left (htest.mpr hi), select_cons, Function.comp_apply, ite_eq_left hi]
         exact ih t
-      · rw [select_cons, if_neg (fun h => hi (htest.mp h)), select_cons, if_neg hi]
+      · rw [select_cons, ite_eq_right (fun h => hi (htest.mp h)), select_cons,
+          Function.comp_apply, ite_eq_right hi]
         simpa only [Finset.union_insert] using ih (insert i t)
 
 /-- Starting ordinary selection with relation generators has exactly the quotient survivors. -/

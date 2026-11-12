@@ -1,0 +1,337 @@
+name: Horizon compression and ordered pairing
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/OperatorAlgebra/UnitaryCornerCompression.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/TripotentMiddlePairing.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/TripotentCornerDynamics.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/HorizonCompressionPairingAudit.lean'
+      - 'lean/InfoGeometry/Canonical/HorizonCompressionCounterexamples.lean'
+      - 'lean/InfoGeometry/Canonical/TripotentMatrixExample.lean'
+      - 'lean/InfoGeometry/Canonical/Drazin.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Core/DiracSuperalgebra.lean'
+      - 'lean/InfoGeometry/Core/IdempotencyDefect.lean'
+      - 'lean/InfoGeometry/Core/IdempotentCartan.lean'
+      - 'lean/InfoGeometry/Core/IdempotentSymmetricOverlap.lean'
+      - 'lean/InfoGeometry/Core/JordanAssociator.lean'
+      - 'lean/InfoGeometry/Core/JordanAssociatorRing.lean'
+      - 'lean/InfoGeometry/Core/JordanPeirceDecomposition.lean'
+      - 'lean/InfoGeometry/Core/PeirceCompressionCStar.lean'
+      - 'lean/InfoGeometry/Core/PeirceCompressionDefect.lean'
+      - 'lean/InfoGeometry/Core/PeirceCoupledCorners.lean'
+      - 'lean/InfoGeometry/Core/PeirceDecomposition.lean'
+      - 'lean/InfoGeometry/Core/PeirceGrading.lean'
+      - 'lean/InfoGeometry/Core/PeirceStarCharges.lean'
+      - 'lean/InfoGeometry/Core/SuperGrassmannianSusy.lean'
+      - 'lean/InfoGeometry/Core/TripotentAdjoint.lean'
+      - 'lean/InfoGeometry/Core/TripotentDefect.lean'
+      - 'lean/InfoGeometry/Core/TripotentEigenspaces.lean'
+      - 'lean/InfoGeometry/Meta/Architecture.lean'
+      - 'lean/InfoGeometry/Meta/OwnerTarget.lean'
+      - 'lean/InfoGeometry/NCG/TripotentMatrixGeometry.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Basic.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Supercharge.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceSpine/TripotentParity.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/SuperTKKConformalClosure.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/TKKConformalClosure.lean'
+      - 'lean/InfoGeometry/Physics/Algebra/TripotentFiveGradingDecomposition.lean'
+      - 'lean/InfoGeometry/Physics/Algebra/TripotentLeftRightPeirceProjectors.lean'
+      - 'lean/InfoGeometry/Physics/Algebra/TripotentPeirceProjectors.lean'
+      - 'lean/InfoGeometry/Physics/TripotentAdjointDerivation.lean'
+      - 'lean/InfoGeometry/Singular/Drazin.lean'
+      - 'lean/InfoGeometry/Singular/MetricAlgebraicProjectionDefect.lean'
+      - 'lean/InfoGeometry/Singular/MoorePenrose.lean'
+      - 'lean/InfoGeometry/Singular/MoorePenroseChiralDefects.lean'
+      - 'lean/InfoGeometry/Singular/MoorePenroseSectors.lean'
+      - 'lean/InfoGeometry/Singular/SquareZeroChiralHodge.lean'
+      - 'lean/InfoGeometry/Singular/SquareZeroMoorePenrose.lean'
+      - 'lean/DAG/Basic.lean'
+      - 'lean/InfoGeometry/All.lean'
+      - 'verification/language-symmetry/check.py'
+      - 'verification/language-symmetry/lakefile.toml'
+      - 'verification/language-symmetry/lake-manifest.json'
+      - 'verification/language-symmetry/lean-toolchain'
+      - 'lean-toolchain'
+      - 'lakefile.lean'
+      - 'lakefile.toml'
+      - 'lake-manifest.json'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/pathing.py'
+      - 'tools/infra/opengauss_screener.py'
+      - 'tools/quality/semantic_vacuity_gate.py'
+      - 'tools/quality/semantic_vacuity_patterns.json'
+      - 'docs/HORIZON_COMPRESSION_PAIRING_CONTRACT.md'
+      - '.github/workflows/horizon-compression-pairing.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: horizon-compression-pairing-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    defaults:
+      run:
+        shell: bash
+    env:
+      HORIZON_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+      HORIZON_FILES: >-
+        lean/InfoGeometry/OperatorAlgebra/UnitaryCornerCompression.lean
+        lean/InfoGeometry/OperatorAlgebra/TripotentMiddlePairing.lean
+        lean/InfoGeometry/OperatorAlgebra/TripotentCornerDynamics.lean
+        lean/InfoGeometry/Canonical/HorizonCompressionCounterexamples.lean
+        lean/InfoGeometry/OperatorAlgebra/HorizonCompressionPairingAudit.lean
+    steps:
+      - name: Check out the actual PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          submodules: false
+
+      - name: Verify the checked revision and unchanged dependency pins
+        run: |
+          set -euo pipefail
+          mkdir -p horizon-report
+          python3 - <<'PY' 2>&1 | tee horizon-report/pins.log
+          import hashlib, json, os, re, subprocess, tomllib
+          from pathlib import Path
+          expected = os.environ['HORIZON_EXPECTED_HEAD']
+          if re.fullmatch(r'[0-9a-f]{40}', expected) is None:
+              raise SystemExit('Invalid expected commit SHA')
+          head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          if head != expected:
+              raise SystemExit(f'Checked revision {head} differs from requested head {expected}')
+          pin = 'd13f23b723b8a846827a245b89c10fc7d3f11612'
+          url = 'https://github.com/leanprover-community/mathlib4.git'
+          records = {}
+          manifests = []
+          for root in (Path('.'), Path('verification/language-symmetry')):
+              if root != Path('.') and (root / 'lakefile.lean').exists():
+                  raise SystemExit(f'Unexpected alternative Lake configuration: {root}')
+              toolchain = (root / 'lean-toolchain').read_text().strip()
+              config = tomllib.loads((root / 'lakefile.toml').read_text())
+              manifest = json.loads((root / 'lake-manifest.json').read_text())
+              requirement = [p for p in config['require'] if p['name'] == 'mathlib']
+              packages = {p['name']: p for p in manifest['packages']}
+              if len(packages) != len(manifest['packages']):
+                  raise SystemExit(f'Duplicate package names: {root}')
+              if toolchain != 'leanprover/lean4:v4.34.1':
+                  raise SystemExit(f'Wrong Lean pin: {root}')
+              if len(requirement) != 1 or (requirement[0].get('git'), requirement[0].get('rev')) != (url, pin):
+                  raise SystemExit(f'Wrong Mathlib requirement: {root}')
+              if root == Path('.'):
+                  # The root has a primary Lean configuration and a retained TOML
+                  # configuration. The focused project uses only its own TOML.
+                  primary = (root / 'lakefile.lean').read_text()
+                  requirements = re.findall(r'^require\s+mathlib\s+from\s+git\s+"([^"]+)"\s*@\s*"([^"]+)"', primary, re.M)
+                  if len(requirements) != 1 or requirements[0][0] != url or requirements[0][1] not in {pin, 'v4.34.1'}:
+                      raise SystemExit('Unexpected root Mathlib requirement')
+              if (packages['mathlib'].get('url'), packages['mathlib'].get('rev'), packages['mathlib'].get('type')) != (url, pin, 'git'):
+                  raise SystemExit(f'Wrong Mathlib manifest pin: {root}')
+              if manifest['packagesDir'] != '.lake/packages':
+                  raise SystemExit(f'Unexpected package location: {root}')
+              manifests.append(packages)
+              for name in ('lean-toolchain', 'lakefile.lean', 'lakefile.toml', 'lake-manifest.json'):
+                  path = root / name
+                  if path.exists():
+                      records[str(path)] = hashlib.sha256(path.read_bytes()).hexdigest()
+          for name, package in manifests[1].items():
+              if name not in manifests[0] or any(package.get(k) != manifests[0][name].get(k) for k in ('type', 'url', 'rev')):
+                  raise SystemExit(f'Focused/root package pin mismatch: {name}')
+          focused = tomllib.loads(Path('verification/language-symmetry/lakefile.toml').read_text())
+          if focused.get('srcDir') != '../../lean' or not {'InfoGeometry', 'DAG'} <= {p['name'] for p in focused['lean_lib']}:
+              raise SystemExit('Focused project must compile the existing InfoGeometry and DAG sources')
+          report = {'head': head, 'lean': 'leanprover/lean4:v4.34.1', 'mathlib': pin, 'configuration_sha256': records}
+          Path('horizon-report/pins.json').write_text(json.dumps(report, indent=2) + '\n')
+          print(json.dumps(report, indent=2))
+          PY
+
+      - name: Strictly screen the five source files
+        run: |
+          set -euo pipefail
+          read -r -a horizon_sources <<< "$HORIZON_FILES"
+          python3 tools/infra/opengauss_screener.py --strict "${horizon_sources[@]}" 2>&1 | tee horizon-report/strict-screen.log
+
+      - name: Record semantic-vacuity findings and fail on errors
+        run: |
+          set -euo pipefail
+          read -r -a horizon_sources <<< "$HORIZON_FILES"
+          python3 tools/quality/semantic_vacuity_gate.py "${horizon_sources[@]}" \
+            --fail-on error --top 1000 --json-out horizon-report/vacuity.json 2>&1 | tee horizon-report/vacuity.log
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          report = json.loads(Path('horizon-report/vacuity.json').read_text())
+          sources = set(os.environ['HORIZON_FILES'].split())
+          if not report['coverage_complete'] or set(report['successfully_read_paths']) != sources:
+              raise SystemExit('Incomplete semantic-vacuity source coverage')
+          warnings = report['severity_counts'].get('warning', 0)
+          summary = (
+              '### Semantic-vacuity review\n\n'
+              f'Observed warnings: {warnings}. Reviewed source baseline: 13 trivial_surface warnings.\n\n'
+              'The gate fails on errors. Warnings remain visible in this summary and the retained JSON/log.\n\n'
+          )
+          for finding in report['findings']:
+              summary += f"- {finding['file']}:{finding['line']} — {finding['severity']}/{finding['category']}: {finding['subject']}\n"
+          print(summary)
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as output:
+              output.write(summary)
+          PY
+
+      - name: Restore pinned Lean and dependency artifacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            verification/language-symmetry/.lake/packages
+          key: horizon-deps-lean4341-d13f23b7-${{ runner.os }}-${{ hashFiles('verification/language-symmetry/lake-manifest.json') }}-v1
+
+      - name: Restore source build artifacts
+        uses: actions/cache@v4
+        with:
+          path: verification/language-symmetry/.lake/build
+          key: horizon-source-lean4341-d13f23b7-${{ runner.os }}-${{ hashFiles('lean/**/*.lean', 'lean-toolchain', 'lakefile.lean', 'lakefile.toml', 'lake-manifest.json', 'verification/language-symmetry/lakefile.toml', 'verification/language-symmetry/lake-manifest.json', '.github/workflows/horizon-compression-pairing.yml') }}
+          restore-keys: |
+            horizon-source-lean4341-d13f23b7-${{ runner.os }}-
+
+      - name: Install the pinned Lean toolchain
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/horizon-elan-init.sh"
+            sh "$RUNNER_TEMP/horizon-elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.34.1 2>&1 | tee horizon-report/toolchain-install.log
+
+      - name: Hydrate the pinned Mathlib cache through the existing wrapper
+        run: |
+          set -euo pipefail
+          python3 verification/language-symmetry/check.py exe cache get 2>&1 | tee horizon-report/cache.log
+          python3 verification/language-symmetry/check.py env lean --version 2>&1 | tee horizon-report/lean-version.log
+          python3 - <<'PY' 2>&1 | tee horizon-report/dependency-revisions.log
+          import json, re, subprocess
+          from pathlib import Path
+          focused = Path('verification/language-symmetry')
+          manifest = json.loads((focused / 'lake-manifest.json').read_text())
+          for package in manifest['packages']:
+              name = package['name']
+              if package['type'] != 'git' or re.fullmatch(r'[A-Za-z0-9_-]+', name) is None:
+                  raise SystemExit(f'Unexpected focused package: {name}')
+              root = focused / '.lake/packages' / name
+              actual = subprocess.check_output(['git', '-C', str(root), 'rev-parse', 'HEAD'], text=True).strip()
+              if actual != package['rev']:
+                  raise SystemExit(f'Checkout revision mismatch: {name}: {actual}')
+              if subprocess.check_output(['git', '-C', str(root), 'status', '--porcelain', '--untracked-files=no'], text=True).strip():
+                  raise SystemExit(f'Modified dependency source: {name}')
+              print(f'{name}: {actual}')
+          if re.search(r'Lean \(version 4\.34\.1(?:,|\))', Path('horizon-report/lean-version.log').read_text()) is None:
+              raise SystemExit('Running Lean does not report version 4.34.1')
+          PY
+
+      - name: Build the explicit owner audit target
+        run: |
+          set -euo pipefail
+          python3 verification/language-symmetry/check.py build \
+            InfoGeometry.OperatorAlgebra.HorizonCompressionPairingAudit 2>&1 | tee horizon-report/build.log
+
+      - name: Freshly elaborate every owner and the audit sequentially
+        run: |
+          set -euo pipefail
+          read -r -a horizon_sources <<< "$HORIZON_FILES"
+          for horizon_source in "${horizon_sources[@]}"; do
+            horizon_relative="${horizon_source#lean/}"
+            horizon_output="$PWD/verification/language-symmetry/.lake/build/lib/lean/${horizon_relative%.lean}.olean"
+            horizon_log="horizon-report/${horizon_relative##*/}.log"
+            mkdir -p "$(dirname "$horizon_output")"
+            # A source-cache hit never substitutes for these five fresh kernel elaborations.
+            # Writing the fresh owner oleans ensures later owners and the audit import this pass.
+            python3 verification/language-symmetry/check.py env lean --root="$PWD/lean" \
+              -o "$horizon_output" "$PWD/$horizon_source" 2>&1 | tee "$horizon_log"
+          done
+
+      - name: Reconcile all 77 public declarations and their exact axiom output
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' 2>&1 | tee horizon-report/axiom-check.log
+          import hashlib, json, os, re
+          from pathlib import Path
+          from tools.infra.opengauss_screener import _strip_lean_comments_and_strings
+          sources = [Path(p) for p in os.environ['HORIZON_FILES'].split()]
+          public = []
+          counts = {}
+          declaration = re.compile(
+              r'(?m)^[ \t]*(?:@\[[^\]]*\]\s*)*'
+              r'(?P<mods>(?:(?:private|protected|noncomputable|unsafe|partial|local|scoped|public)\s+)*)'
+              r'(?P<kind>def|theorem|lemma|abbrev|opaque|instance|structure|class|inductive|axiom|constant)\s+'
+              r"(?P<name>[A-Za-z_][A-Za-z0-9_'.]*)"
+          )
+          for source in sources[:-1]:
+              module = str(source.with_suffix(''))[len('lean/'):].replace('/', '.')
+              clean = _strip_lean_comments_and_strings(source.read_text())
+              if re.findall(r'(?m)^\s*namespace\s+(\S+)', clean) != [module]:
+                  raise SystemExit(f'Owner namespace shape changed: {source}')
+              owned = []
+              for match in declaration.finditer(clean):
+                  if 'private' in match['mods'].split():
+                      continue
+                  if match['kind'] not in {'def', 'theorem', 'lemma'} or '.' in match['name']:
+                      raise SystemExit(f'Public declaration shape needs explicit review: {source}: {match[0]}')
+                  owned.append(module + '.' + match['name'])
+              public.extend(owned)
+              counts[module] = len(owned)
+          audit = _strip_lean_comments_and_strings(sources[-1].read_text())
+          expected = re.findall(r'(?m)^#print axioms (\S+)\s*$', audit)
+          if len(public) != 77 or len(set(public)) != 77 or len(expected) != 77 or len(set(expected)) != 77 or set(public) != set(expected):
+              raise SystemExit(f'Public/audit inventory mismatch: public={len(public)}, audit={len(expected)}, missing={sorted(set(public)-set(expected))}, extra={sorted(set(expected)-set(public))}')
+          log = Path('horizon-report/HorizonCompressionPairingAudit.lean.log').read_text()
+          records = re.findall(
+              r"'([^'\n]+)' (?:depends on axioms:\s*\[([^\]]*)\]|does not depend on any axioms)",
+              log,
+          )
+          reported = [name for name, _ in records]
+          if len(reported) != 77 or len(set(reported)) != 77 or set(reported) != set(expected):
+              raise SystemExit(f'Incomplete, duplicate, or unexpected axiom output: count={len(reported)}, missing={sorted(set(expected)-set(reported))}, extra={sorted(set(reported)-set(expected))}')
+          allowed = {'propext', 'Classical.choice', 'Quot.sound'}
+          dependencies = {name: sorted({a.strip() for a in group.split(',') if a.strip()}) for name, group in records}
+          unapproved = {name: sorted(set(axioms)-allowed) for name, axioms in dependencies.items() if set(axioms)-allowed}
+          if unapproved:
+              raise SystemExit(f'Unapproved axiom dependencies: {unapproved}')
+          report = {
+              'public_count': 77, 'owner_counts': counts, 'declarations': dependencies,
+              'source_sha256': {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources},
+              'head': json.loads(Path('horizon-report/pins.json').read_text())['head'],
+          }
+          Path('horizon-report/axioms.json').write_text(json.dumps(report, indent=2, sort_keys=True) + '\n')
+          print(f'Checked all 77 public declarations exactly once; allowed axioms only: {sorted(allowed)}')
+          print(json.dumps(counts, indent=2))
+          PY
+
+      - name: Confirm verification did not rewrite source or configuration
+        if: always()
+        run: |
+          set -euo pipefail
+          read -r -a horizon_sources <<< "$HORIZON_FILES"
+          git diff --exit-code -- lean-toolchain lakefile.lean lakefile.toml lake-manifest.json \
+            verification/language-symmetry/lean-toolchain \
+            verification/language-symmetry/lakefile.toml \
+            verification/language-symmetry/lake-manifest.json \
+            "${horizon_sources[@]}" 2>&1 | tee horizon-report/source-integrity.log
+
+      - name: Preserve the verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: horizon-compression-pairing-${{ github.run_id }}-${{ github.run_attempt }}
+          path: horizon-report/
+          if-no-files-found: warn
+          retention-days: 30

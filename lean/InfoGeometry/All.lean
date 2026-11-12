@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Canonical.PeirceStarColimit
+import InfoGeometry.OperatorAlgebra.HorizonCompressionPairingAudit
 import InfoGeometry.Examples.RealMatrixModeWitness
 import InfoGeometry.Twistor.RealConstructs
 import InfoGeometry.Twistor.RealConstructsAudit

@@ -5,6 +5,8 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Basic
 import Mathlib.Data.Int.Cast.Lemmas
+import Mathlib.Algebra.Algebra.Basic
+import Mathlib.Algebra.Module.Torsion.Basic
 
 /-!
 # Division-free tripotent defect identities
@@ -235,5 +237,43 @@ theorem colorTripotent_commutes_with_diagonal_corners
         (colorTripotent P_R P_G * P_G) * Y * P_G -
           P_G * Y * (P_G * colorTripotent P_R P_G) := by noncomm_ring
       _ = 0 := by rw [hTG, hGT]; noncomm_ring
+
+section ScalarSquare
+
+variable {R : Type*} [CommRing R] [Algebra R B]
+
+/-- A scalar-square law fixes the tripotent defect without commuting any
+two elements of the coefficient algebra. -/
+theorem tripotentDefect_of_square_eq_smul_one {T : B} {c : R}
+    (hT : T * T = c • (1 : B)) :
+    tripotentDefect T = (c - 1) • T := by
+  rw [tripotentDefect, hT, smul_mul_assoc, one_mul, sub_smul, one_smul]
+
+/-- The zero-color polynomial for a scalar-square operator is itself scalar. -/
+theorem triProj0_of_square_eq_smul_one {T : B} {c : R}
+    (hT : T * T = c • (1 : B)) :
+    triProj0 T = (1 - c) • (1 : B) := by
+  rw [triProj0, hT, sub_smul, one_smul]
+
+/-- Over a torsion-free scalar action, a nonzero scalar-square operator is
+tripotent exactly at scalar square one. -/
+theorem tripotentDefect_eq_zero_iff_scalar_one [NoZeroSMulDivisors R B]
+    {T : B} {c : R} (hT : T * T = c • (1 : B)) (hne : T ≠ 0) :
+    tripotentDefect T = 0 ↔ c = 1 := by
+  rw [tripotentDefect_of_square_eq_smul_one hT]
+  constructor
+  · intro h
+    exact sub_eq_zero.mp ((eq_zero_or_eq_zero_of_smul_eq_zero h).resolve_right hne)
+  · rintro rfl
+    simp
+
+/-- Such a tripotent has no third zero-color component. -/
+theorem triProj0_eq_zero_of_scalar_square_tripotent [NoZeroSMulDivisors R B]
+    {T : B} {c : R} (hT : T * T = c • (1 : B)) (hne : T ≠ 0)
+    (htri : tripotentDefect T = 0) : triProj0 T = 0 := by
+  have hc := (tripotentDefect_eq_zero_iff_scalar_one hT hne).mp htri
+  rw [triProj0_of_square_eq_smul_one hT, hc, sub_self, zero_smul]
+
+end ScalarSquare
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine

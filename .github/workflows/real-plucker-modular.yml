@@ -1,0 +1,84 @@
+name: Real Plucker geometry and phase dynamics
+
+on:
+  pull_request:
+    paths:
+      - 'lean/**/*.lean'
+      - 'verification/real-plucker-modular/**'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/infra/opengauss_screener.py'
+      - 'tools/pathing.py'
+      - '.github/workflows/real-plucker-modular.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: real-plucker-modular-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore pinned dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: real-plucker-lean4341-d13f23b7-${{ runner.os }}-v1
+      - name: Restore checked source artifacts
+        uses: actions/cache@v4
+        with:
+          path: verification/real-plucker-modular/.lake/build
+          key: real-plucker-source-lean4341-d13f23b7-${{ runner.os }}-${{ hashFiles('lean/**/*.lean', 'verification/real-plucker-modular/lakefile.toml', 'verification/real-plucker-modular/lake-manifest.json') }}
+          restore-keys: |
+            real-plucker-source-lean4341-d13f23b7-${{ runner.os }}-
+      - name: Install the pinned Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.34.1
+      - name: Restore the pinned Mathlib artifacts
+        run: python3 verification/real-plucker-modular/check.py exe cache get
+      - name: Build source owners and inspect axioms
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/real-plucker-modular/audit.py
+          python3 verification/real-plucker-modular/check.py build 2>&1 | tee real-plucker-build.log
+          python3 verification/real-plucker-modular/check.py env lean lean/InfoGeometry/Twistor/RealPluckerModularAudit.lean 2>&1 | tee real-plucker-axioms.log
+          python3 verification/real-plucker-modular/audit.py --log real-plucker-axioms.log
+      - name: Screen new mathematics and amended scalar-square owner
+        run: >-
+          python3 tools/infra/opengauss_screener.py --strict
+          lean/InfoGeometry/Projective/PluckerAffineScrew.lean
+          lean/InfoGeometry/Twistor/PluckerGraphChartEquiv.lean
+          lean/InfoGeometry/Geometry/PluckerPotentialBoundary.lean
+          lean/InfoGeometry/Algebra/RegularCentralizer.lean
+          lean/InfoGeometry/OperatorAlgebra/RealPhaseInnerDerivation.lean
+          lean/InfoGeometry/OperatorAlgebra/RealPhaseExponentialFlow.lean
+          lean/InfoGeometry/OperatorAlgebra/PeirceSpine/TripotentDefect.lean
+          lean/InfoGeometry/Twistor/InfinityPencilBoundary.lean
+          lean/InfoGeometry/Twistor/RealPluckerModularAudit.lean
+      - name: Report the existing potential-only structure screen
+        run: python3 tools/infra/opengauss_screener.py lean/InfoGeometry/Geometry/PluckerDualFlatBridge.lean
+      - name: Preserve validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: real-plucker-modular-build
+          path: |
+            real-plucker-build.log
+            real-plucker-axioms.log

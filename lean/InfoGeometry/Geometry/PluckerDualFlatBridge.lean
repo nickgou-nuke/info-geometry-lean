@@ -1,18 +1,23 @@
-/- SPDX-License-Identifier: Apache-2.0 -/
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 
 import Mathlib.Analysis.Calculus.FDeriv.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import InfoGeometry.Projective.Quadrics.PluckerKlein
 import InfoGeometry.Geometry.DualFlat
 
 /-!
 # Plücker-Grassmannian Dual-Flat Bridge
 
-This module formalizes the bridge between Grassmannian / Plücker projective geometry
-and Hessian information geometry:
+This module supplies a normalized Plücker chart and potential-dependent
+Bregman expressions. Regularity and convexity of the potential are additional
+requirements; they are not fields of `PluckerHessianGeometry` below.
 
 1. **Plücker Affine Chart**:
    Standard 4D affine chart on the Klein quadric $Gr(2,4) \hookrightarrow \mathbb{P}(\Lambda^2 \mathbb{R}^4)$
@@ -25,13 +30,15 @@ and Hessian information geometry:
    satisfying the Klein quadric relation:
    $$p_{01} p_{23} - p_{02} p_{13} + p_{03} p_{12} = 0$$
 
-3. **Hessian & Dual Flat Structure**:
-   Transport of the Hessian potential $\psi(u)$, metric tensor $g_u = \nabla^2 \psi(u)$,
-   dual expectation coordinates $\eta = \nabla \psi(u)$, and Bregman divergence onto
-   the Plücker affine chart.
+3. **Potential and derivative expression**:
+   A chosen function $\psi(u)$ determines `fderiv`-based covectors and a
+   Bregman expression. A positive Hessian metric or dual affine connections
+   are not constructed here. `PluckerPotentialBoundary` proves regularity
+   and strict convexity for one explicit independent-coordinate potential.
 
-4. **Pythagorean Identity on Plücker Geometry**:
-   The three-point divergence identity and orthogonal decomposition hold on the Plücker chart.
+4. **Three-point identity**:
+   The algebraic identity includes its covector correction term. A
+   Pythagorean equality follows only when that term vanishes.
 -/
 
 noncomputable section
@@ -64,7 +71,8 @@ theorem reconstructPlucker_satisfies_klein (u : PluckerAffineChart) :
   dsimp [reconstructPlucker]
   ring
 
-/-- Hessian geometry structure on the Plücker affine chart. -/
+/-- Potential data on the Plücker chart. The historical name does not supply
+regularity, convexity, a Hessian metric, or dual affine connections. -/
 structure PluckerHessianGeometry where
   potential : PluckerAffineChart → ℝ
 

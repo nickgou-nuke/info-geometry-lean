@@ -1,0 +1,160 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Projective.PluckerAffineScrew
+import InfoGeometry.Twistor.PluckerGraphChartEquiv
+import InfoGeometry.Geometry.PluckerDualFlatBridge
+import InfoGeometry.Geometry.PluckerPotentialBoundary
+import InfoGeometry.Algebra.RegularCentralizer
+import InfoGeometry.OperatorAlgebra.RealPhaseInnerDerivation
+import InfoGeometry.OperatorAlgebra.RealPhaseExponentialFlow
+import InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentDefect
+import InfoGeometry.Twistor.InfinityPencilBoundary
+
+/-!
+# Real Plücker and modular-boundary declaration audit
+
+This module audits the explicitly declared public definitions and theorems
+in the nine mathematical owners above, including reused declarations
+in the two amended owners. It is a validation target, not an umbrella import.
+Regenerate with `python3 verification/real-plucker-modular/audit.py --write`.
+The validator compares actual Lean axiom output with this complete list.
+-/
+
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.Vec3
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.directionMomentEquiv
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.kleinQ_directionMoment
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.affineLine_plucker
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.normalPlane
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.mem_normalPlane
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.pitch
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.pitch_apply
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.axisFoot
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.axisFoot_coe
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.direction_normSq_ne_zero
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.axisFoot_cross
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.pitch_reconstruct
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.axisFoot_reconstruct
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.screwDecomposition
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.existsUnique_axis_pitch
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.pitch_eq_zero_iff_klein
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.klein_iff_exists_affine_point
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.pitch_translation
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.pitch_scale
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.axisFoot_scale
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.axisFoot_translation
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.dualVector
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.dualVector_dot_self
+#print axioms InfoGeometry.Projective.PluckerAffineScrew.dualVector_dot_self_eq_one_iff
+
+#print axioms InfoGeometry.Twistor.PluckerGraphChartEquiv.normalizedGraphEquiv
+
+#print axioms InfoGeometry.Geometry.PluckerDualFlatBridge.PluckerAffineChart
+#print axioms InfoGeometry.Geometry.PluckerDualFlatBridge.reconstructPlucker
+#print axioms InfoGeometry.Geometry.PluckerDualFlatBridge.reconstructPlucker_satisfies_klein
+#print axioms InfoGeometry.Geometry.PluckerDualFlatBridge.PluckerHessianGeometry
+#print axioms InfoGeometry.Geometry.PluckerDualFlatBridge.pluckerDualCoord
+#print axioms InfoGeometry.Geometry.PluckerDualFlatBridge.pluckerBregman
+#print axioms InfoGeometry.Geometry.PluckerDualFlatBridge.pluckerBregman_self
+#print axioms InfoGeometry.Geometry.PluckerDualFlatBridge.pluckerBregman_three_point
+
+#print axioms InfoGeometry.Geometry.PluckerPotentialBoundary.ambientPluckerPotential
+#print axioms InfoGeometry.Geometry.PluckerPotentialBoundary.ambientPluckerPotential_formula
+#print axioms InfoGeometry.Geometry.PluckerPotentialBoundary.ambientPluckerPotential_midpoint_violation
+#print axioms InfoGeometry.Geometry.PluckerPotentialBoundary.ambientPluckerPotential_not_convex
+#print axioms InfoGeometry.Geometry.PluckerPotentialBoundary.chartPotential
+#print axioms InfoGeometry.Geometry.PluckerPotentialBoundary.chartPotential_jensen_gap
+#print axioms InfoGeometry.Geometry.PluckerPotentialBoundary.chartPotential_strictConvex
+#print axioms InfoGeometry.Geometry.PluckerPotentialBoundary.chartGradient
+#print axioms InfoGeometry.Geometry.PluckerPotentialBoundary.chartGradient_apply
+#print axioms InfoGeometry.Geometry.PluckerPotentialBoundary.hasFDerivAt_chartPotential
+#print axioms InfoGeometry.Geometry.PluckerPotentialBoundary.quadraticChartGeometry
+#print axioms InfoGeometry.Geometry.PluckerPotentialBoundary.quadraticChart_dualCoord
+#print axioms InfoGeometry.Geometry.PluckerPotentialBoundary.quadraticChart_bregman
+#print axioms InfoGeometry.Geometry.PluckerPotentialBoundary.quadraticChart_bregman_nonneg
+#print axioms InfoGeometry.Geometry.PluckerPotentialBoundary.quadraticChart_bregman_eq_zero_iff
+
+#print axioms InfoGeometry.Algebra.RegularCentralizer.leftCentralizer
+#print axioms InfoGeometry.Algebra.RegularCentralizer.mem_leftCentralizer_iff
+#print axioms InfoGeometry.Algebra.RegularCentralizer.rightRegularHom
+#print axioms InfoGeometry.Algebra.RegularCentralizer.rightRegularHom_apply
+#print axioms InfoGeometry.Algebra.RegularCentralizer.rightRegularHom_mem_leftCentralizer
+#print axioms InfoGeometry.Algebra.RegularCentralizer.leftCentralizer_eq_rightRegularHom_range
+#print axioms InfoGeometry.Algebra.RegularCentralizer.rightToCentralizer
+#print axioms InfoGeometry.Algebra.RegularCentralizer.regularCentralizerEquiv
+#print axioms InfoGeometry.Algebra.RegularCentralizer.regularCentralizerEquiv_apply
+#print axioms InfoGeometry.Algebra.RegularCentralizer.regularCentralizerEquiv_symm_apply
+#print axioms InfoGeometry.Algebra.RegularCentralizer.centralizer_ne_proper_corner
+#print axioms InfoGeometry.Algebra.RegularCentralizer.realStar
+#print axioms InfoGeometry.Algebra.RegularCentralizer.realStar_apply
+#print axioms InfoGeometry.Algebra.RegularCentralizer.realStar_square
+#print axioms InfoGeometry.Algebra.RegularCentralizer.realStar_leftRegular
+#print axioms InfoGeometry.Algebra.RegularCentralizer.realStar_rightRegular
+
+#print axioms InfoGeometry.OperatorAlgebra.RealPhaseInnerDerivation.generator
+#print axioms InfoGeometry.OperatorAlgebra.RealPhaseInnerDerivation.phaseAlgebra
+#print axioms InfoGeometry.OperatorAlgebra.RealPhaseInnerDerivation.mem_phaseAlgebra_iff
+#print axioms InfoGeometry.OperatorAlgebra.RealPhaseInnerDerivation.innerDerivative_factor
+#print axioms InfoGeometry.OperatorAlgebra.RealPhaseInnerDerivation.generator_commutes_phase
+#print axioms InfoGeometry.OperatorAlgebra.RealPhaseInnerDerivation.innerDerivative_mem_phaseAlgebra
+#print axioms InfoGeometry.OperatorAlgebra.RealPhaseInnerDerivation.phaseDerivation
+#print axioms InfoGeometry.OperatorAlgebra.RealPhaseInnerDerivation.phaseDerivation_apply
+#print axioms InfoGeometry.OperatorAlgebra.RealPhaseInnerDerivation.phaseDerivation_leibniz
+#print axioms InfoGeometry.OperatorAlgebra.RealPhaseInnerDerivation.phaseDerivation_eq_zero_iff
+#print axioms InfoGeometry.OperatorAlgebra.RealPhaseInnerDerivation.generator_star
+#print axioms InfoGeometry.OperatorAlgebra.RealPhaseInnerDerivation.innerDerivative_star
+#print axioms InfoGeometry.OperatorAlgebra.RealPhaseInnerDerivation.innerDerivative_selfAdjoint
+
+#print axioms InfoGeometry.OperatorAlgebra.RealPhaseExponentialFlow.unitaryFlow
+#print axioms InfoGeometry.OperatorAlgebra.RealPhaseExponentialFlow.unitaryFlow_apply
+#print axioms InfoGeometry.OperatorAlgebra.RealPhaseExponentialFlow.phaseFlow
+#print axioms InfoGeometry.OperatorAlgebra.RealPhaseExponentialFlow.phaseFlow_apply_eq_expTransport
+#print axioms InfoGeometry.OperatorAlgebra.RealPhaseExponentialFlow.phaseFlow_neg
+#print axioms InfoGeometry.OperatorAlgebra.RealPhaseExponentialFlow.hasDerivAt_phaseFlow_zero
+#print axioms InfoGeometry.OperatorAlgebra.RealPhaseExponentialFlow.hasDerivAt_phaseFlow
+#print axioms InfoGeometry.OperatorAlgebra.RealPhaseExponentialFlow.phaseFlow_fixes_phase
+#print axioms InfoGeometry.OperatorAlgebra.RealPhaseExponentialFlow.phaseFlow_mem_phaseAlgebra
+#print axioms InfoGeometry.OperatorAlgebra.RealPhaseExponentialFlow.hasDerivAt_phaseFlow_phaseAlgebra
+
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.tripotentDefect
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.triProj0
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.triProjPlus
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.triProjMinus
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.tripotentDefect_eq_add_one_mul_defect
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.tripotentDefect_eq_sub_one_mul_defectBar
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.triProj_scaled_partition
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.triProj_scaled_reconstruction
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.triProjPlus_mul_triProjMinus
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.triProj0_mul_triProjPlus
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.triProj0_mul_triProjMinus
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.triProjMinus_square_residual
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.triProjPlus_square_residual
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.triProj0_idempotent_of_tripotent
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.tripotent_scaled_color_projector_laws
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.colorTripotent
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.colorBlue
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.orthogonal_idempotents_color_tripotent
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.colorBlue_three_corner_decomposition
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.colorTripotent_corner_charge
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.colorTripotent_commutes_with_diagonal_corners
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.tripotentDefect_of_square_eq_smul_one
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.triProj0_of_square_eq_smul_one
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.tripotentDefect_eq_zero_iff_scalar_one
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.triProj0_eq_zero_of_scalar_square_tripotent
+
+#print axioms InfoGeometry.Twistor.InfinityPencilBoundary.raisedInfinityMatrix_cube
+#print axioms InfoGeometry.Twistor.InfinityPencilBoundary.raisedInfinityMatrix_tripotent_iff
+#print axioms InfoGeometry.Twistor.InfinityPencilBoundary.raisedInfinityMatrix_zeroColor
+#print axioms InfoGeometry.Twistor.InfinityPencilBoundary.raisedInfinityMatrix_tripotent_zeroColor
+#print axioms InfoGeometry.Twistor.InfinityPencilBoundary.no_tripotent_with_nonzero_zeroColor
+#print axioms InfoGeometry.Twistor.InfinityPencilBoundary.flat_not_tripotent
+#print axioms InfoGeometry.Twistor.InfinityPencilBoundary.flat_zeroColor_eq_one
+#print axioms InfoGeometry.Twistor.InfinityPencilBoundary.pencilEnd
+#print axioms InfoGeometry.Twistor.InfinityPencilBoundary.pencilEnd_apply
+#print axioms InfoGeometry.Twistor.InfinityPencilBoundary.pencilEnd_sq
+#print axioms InfoGeometry.Twistor.InfinityPencilBoundary.pencilEnd_ne_zero
+#print axioms InfoGeometry.Twistor.InfinityPencilBoundary.flat_range_le_ker
+#print axioms InfoGeometry.Twistor.InfinityPencilBoundary.flat_zeroColor_range_ne_ker
+#print axioms InfoGeometry.Twistor.InfinityPencilBoundary.pencilEnd_ker_eq_bot

@@ -22,9 +22,9 @@ double adjoint, to which the existing quintic rigidity applies.
 
 No identification with the modular flow of a specified state is assumed or
 concluded. The zero-grade range is the centralizer of S, equivalently the
-kernel of ad_S. The zero-eigenspace of S in an ambient representation is a
-different object; equality with that space or with the algebra's center is
-not asserted.
+kernel of ad_S. It need not be the center of the ambient algebra, and no
+identification with the zero-eigenspace of S in an ambient representation is
+asserted.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.TripotentExponentialFlow
@@ -44,8 +44,9 @@ variable {A : Type*} [Ring A] [Algebra ℝ A]
 theorem mem_fiveGradeRange_zero_iff_commute {S X : A} (hS : S * S * S = S) :
     X ∈ fiveGradeRange S .zero ↔ Commute S X := by
   rw [fiveGradeRange_eq_eigenspace hS .zero, Module.End.mem_eigenspace_iff]
-  change S * X - X * S = (0 : ℝ) • X ↔ S * X = X * S
-  simp only [zero_smul, sub_eq_zero]
+  simp only [fiveGradeValue, Int.cast_zero, zero_smul]
+  change S * X - X * S = 0 ↔ S * X = X * S
+  exact sub_eq_zero
 
 end Algebraic
 
@@ -169,6 +170,7 @@ theorem expTransport_mem_fiveGradeRange_iff {H S : A} (hHS : Commute H S)
   · intro h
     exact expTransport_mem_fiveGradeRange hHS k h t
 
+omit [NormedAlgebra ℚ A] in
 /-- It already suffices that the orbit of S remains in its own degree-zero
 range. Differentiating this condition gives a vanishing double adjoint;
 tripotency makes the double-adjoint kernel equal the centralizer. -/

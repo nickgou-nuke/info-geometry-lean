@@ -132,8 +132,8 @@ nonabelian.
 
 ## Interpretation boundaries and countermodel targets
 
-1. Degree zero is the centralizer of S. It is generally larger than
-   `P0 * A * P0` and is not the center of A.
+1. Degree zero is the centralizer of S. It can be strictly larger than
+   `P0 * A * P0` and need not equal the center of A.
 2. A vector in the zero-eigenspace of S is not automatically annihilated by
    all negative grades. The dense-matrix witness above formalizes this
    obstruction without replacing the noncommutative carrier.
@@ -195,11 +195,12 @@ flowchart TD
   B --> C["Range multiplication and parity"]
   C --> D["Signed closure and typed Jacobi"]
   D --> E["Dense matrix witnesses"]
-  B --> F["Adjoint quintic"]
+  A --> F["Adjoint quintic"]
   F --> G["Double-adjoint kernel rigidity"]
   H["Banach exponential conjugation"] --> I["Projector covariance"]
   A --> I
   I --> J["Grade preservation iff commutation"]
+  B --> J
   G --> J
   H --> J
 ```

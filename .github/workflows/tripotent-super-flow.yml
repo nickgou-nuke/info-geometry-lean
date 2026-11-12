@@ -2,18 +2,8 @@ name: Tripotent signed brackets and operator flow (scoped)
 on:
   pull_request:
     paths:
-      - 'lean/InfoGeometry/Core/Tripotent*.lean'
-      - 'lean/InfoGeometry/Physics/Algebra/Tripotent*.lean'
-      - 'lean/InfoGeometry/OperatorAlgebra/PeirceSpine/**'
-      - 'lean/InfoGeometry/OperatorAlgebra/TripotentExponentialFlow.lean'
-      - 'lean/InfoGeometry/OperatorAlgebra/ConservedOperatorFlow.lean'
-      - 'lean/InfoGeometry/Canonical/Tripotent*Example.lean'
-      - 'lean/InfoGeometry/Canonical/TransportLieDerivative.lean'
-      - 'lean/InfoGeometry/Algebra/Supergraded*.lean'
-      - 'tools/quality/check_tripotent_super_flow.py'
-      - 'tools/quality/check_perjes_klein.py'
-      - 'tools/quality/check_peirce_reflection.py'
-      - 'tools/quality/check_reviewed_prs.py'
+      - 'lean/**'
+      - 'tools/quality/**'
       - 'lean-toolchain'
       - 'lake-manifest.json'
       - '.github/workflows/tripotent-super-flow.yml'

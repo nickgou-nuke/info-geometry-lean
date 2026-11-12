@@ -51,7 +51,9 @@ theorem fiveGradeParity_add {i j k : FiveGrade}
     (hk : fiveGradeValue i + fiveGradeValue j = fiveGradeValue k) :
     fiveGradeParity k = Bool.xor (fiveGradeParity i) (fiveGradeParity j) := by
   cases i <;> cases j <;> cases k <;>
-    norm_num [fiveGradeValue, fiveGradeParity, Bool.xor] at hk ⊢
+    first
+    | rfl
+    | norm_num [fiveGradeValue] at hk
 
 /-- The bracket's parity label agrees with the existing Peirce involution. -/
 theorem parityConj_projZero_eq_fiveGradeParity {T X : A}

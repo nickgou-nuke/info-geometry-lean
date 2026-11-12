@@ -92,7 +92,10 @@ theorem peirceThreeRotation_add (A C : B) (hV : genV P A C = 1)
   have hbb' : cubeRootOpConj P A C * cubeRootOpConj P A C = cubeRootOp P A C :=
     sub_eq_zero.mp (by simpa [hV] using hbb)
   have cases3 (k : ZMod 3) : k = 0 ∨ k = 1 ∨ k = 2 := by
-    fin_cases k <;> decide
+    fin_cases k
+    · exact Or.inl rfl
+    · exact Or.inr (Or.inl rfl)
+    · exact Or.inr (Or.inr rfl)
   have h11 : (1 : ZMod 3) + 1 = 2 := by decide
   have h12 : (1 : ZMod 3) + 2 = 0 := by decide
   have h21 : (2 : ZMod 3) + 1 = 0 := by decide
@@ -111,7 +114,10 @@ theorem peirceThreeRotation_mul_phi (A C : B) (i : ZMod 3) :
   obtain ⟨_, _, _, _, _, ha, hb, _⟩ :=
     archetype_A59_s3_operator_cyclotomic_braiding_and_reflections hP A C
   have cases3 (k : ZMod 3) : k = 0 ∨ k = 1 ∨ k = 2 := by
-    fin_cases k <;> decide
+    fin_cases k
+    · exact Or.inl rfl
+    · exact Or.inr (Or.inl rfl)
+    · exact Or.inr (Or.inr rfl)
   have hneg1 : -(1 : ZMod 3) = 2 := by decide
   have hneg2 : -(2 : ZMod 3) = 1 := by decide
   rcases cases3 i with rfl | rfl | rfl <;>

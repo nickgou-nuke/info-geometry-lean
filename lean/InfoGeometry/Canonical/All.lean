@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Algebra.CyclicMatrixCurvature
+import InfoGeometry.Algebra.StablePaddingEquivalence
+import InfoGeometry.Algebra.HyperbolicPresentationTransport
 import InfoGeometry.Canonical.OperatorContentNetwork
 import InfoGeometry.Canonical.DiscreteFrameCommutator
 import InfoGeometry.Canonical.ZornMovingCornerBoundary

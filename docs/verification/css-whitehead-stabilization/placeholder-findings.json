@@ -1,0 +1,496 @@
+{
+  "InfoGeometry.Algebra.ElementaryMatrixOperators.placeholder.json": {
+    "schema": "info_geometry.placeholder_audit.v2",
+    "generated_at": "2026-11-12T22:25:18.090333+00:00",
+    "root": "lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean",
+    "authority_tier": "heuristic-proxy",
+    "summary": {
+      "module_count": 1,
+      "scanned_count": 1,
+      "finding_count": 1,
+      "hard_count": 0,
+      "soft_count": 1,
+      "advisory_count": 0,
+      "provenance": {
+        "hard_failures": 0,
+        "soft_findings": 1,
+        "advisory_findings": 0
+      }
+    },
+    "modules": [
+      {
+        "path": "lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean",
+        "module": "InfoGeometry.Algebra.ElementaryMatrixOperators",
+        "finding_count": 1,
+        "hard_count": 0,
+        "soft_count": 1,
+        "advisory_count": 0,
+        "findings": [
+          {
+            "file": "lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean",
+            "module": "InfoGeometry.Algebra.ElementaryMatrixOperators",
+            "line": 225,
+            "declaration_kind": "theorem",
+            "declaration_name": "coe_reindexUnit",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "223: \n224: @[simp]\n225: theorem coe_reindexUnit (e : m \u2243 n) (U : (Matrix m m A)\u02e3) :\n226:     (reindexUnit e U : Matrix n n A) = Matrix.reindex e e (U : Matrix m m A) := rfl\n227: ",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false
+          }
+        ]
+      }
+    ],
+    "findings": [
+      {
+        "file": "lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean",
+        "module": "InfoGeometry.Algebra.ElementaryMatrixOperators",
+        "line": 225,
+        "declaration_kind": "theorem",
+        "declaration_name": "coe_reindexUnit",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "223: \n224: @[simp]\n225: theorem coe_reindexUnit (e : m \u2243 n) (U : (Matrix m m A)\u02e3) :\n226:     (reindexUnit e U : Matrix n n A) = Matrix.reindex e e (U : Matrix m m A) := rfl\n227: ",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      }
+    ]
+  },
+  "InfoGeometry.Algebra.HyperbolicPresentationTransport.placeholder.json": {
+    "schema": "info_geometry.placeholder_audit.v2",
+    "generated_at": "2026-11-12T22:25:18.367549+00:00",
+    "root": "lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean",
+    "authority_tier": "heuristic-proxy",
+    "summary": {
+      "module_count": 1,
+      "scanned_count": 1,
+      "finding_count": 2,
+      "hard_count": 0,
+      "soft_count": 2,
+      "advisory_count": 0,
+      "provenance": {
+        "hard_failures": 0,
+        "soft_findings": 2,
+        "advisory_findings": 0
+      }
+    },
+    "modules": [
+      {
+        "path": "lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean",
+        "module": "InfoGeometry.Algebra.HyperbolicPresentationTransport",
+        "finding_count": 2,
+        "hard_count": 0,
+        "soft_count": 2,
+        "advisory_count": 0,
+        "findings": [
+          {
+            "file": "lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean",
+            "module": "InfoGeometry.Algebra.HyperbolicPresentationTransport",
+            "line": 77,
+            "declaration_kind": "theorem",
+            "declaration_name": "coe_hyperbolicLift",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "75: \n76: @[simp]\n77: theorem coe_hyperbolicLift (U : (Matrix n n A)\u02e3) :\n78:     (hyperbolicLift U : Matrix (n \u2295 n) (n \u2295 n) A) =\n79:       Matrix.fromBlocks (U : Matrix n n A) 0 0 (\u2191U\u207b\u00b9 : Matrix n n A)\u1d34 := rfl",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false
+          },
+          {
+            "file": "lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean",
+            "module": "InfoGeometry.Algebra.HyperbolicPresentationTransport",
+            "line": 116,
+            "declaration_kind": "theorem",
+            "declaration_name": "skewForm_conjTranspose",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "114: \n115: omit [Fintype n] in\n116: theorem skewForm_conjTranspose :\n117:     (skewForm : Matrix (n \u2295 n) (n \u2295 n) A)\u1d34 = -skewForm := by\n118:   simp [skewForm, Matrix.fromBlocks_conjTranspose, Matrix.fromBlocks_neg]",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false
+          }
+        ]
+      }
+    ],
+    "findings": [
+      {
+        "file": "lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean",
+        "module": "InfoGeometry.Algebra.HyperbolicPresentationTransport",
+        "line": 77,
+        "declaration_kind": "theorem",
+        "declaration_name": "coe_hyperbolicLift",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "75: \n76: @[simp]\n77: theorem coe_hyperbolicLift (U : (Matrix n n A)\u02e3) :\n78:     (hyperbolicLift U : Matrix (n \u2295 n) (n \u2295 n) A) =\n79:       Matrix.fromBlocks (U : Matrix n n A) 0 0 (\u2191U\u207b\u00b9 : Matrix n n A)\u1d34 := rfl",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      },
+      {
+        "file": "lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean",
+        "module": "InfoGeometry.Algebra.HyperbolicPresentationTransport",
+        "line": 116,
+        "declaration_kind": "theorem",
+        "declaration_name": "skewForm_conjTranspose",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "114: \n115: omit [Fintype n] in\n116: theorem skewForm_conjTranspose :\n117:     (skewForm : Matrix (n \u2295 n) (n \u2295 n) A)\u1d34 = -skewForm := by\n118:   simp [skewForm, Matrix.fromBlocks_conjTranspose, Matrix.fromBlocks_neg]",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      }
+    ]
+  },
+  "InfoGeometry.Algebra.StablePaddingEquivalence.placeholder.json": {
+    "schema": "info_geometry.placeholder_audit.v2",
+    "generated_at": "2026-11-12T22:25:18.297675+00:00",
+    "root": "lean/InfoGeometry/Algebra/StablePaddingEquivalence.lean",
+    "authority_tier": "heuristic-proxy",
+    "summary": {
+      "module_count": 1,
+      "scanned_count": 1,
+      "finding_count": 1,
+      "hard_count": 0,
+      "soft_count": 1,
+      "advisory_count": 0,
+      "provenance": {
+        "hard_failures": 0,
+        "soft_findings": 1,
+        "advisory_findings": 0
+      }
+    },
+    "modules": [
+      {
+        "path": "lean/InfoGeometry/Algebra/StablePaddingEquivalence.lean",
+        "module": "InfoGeometry.Algebra.StablePaddingEquivalence",
+        "finding_count": 1,
+        "hard_count": 0,
+        "soft_count": 1,
+        "advisory_count": 0,
+        "findings": [
+          {
+            "file": "lean/InfoGeometry/Algebra/StablePaddingEquivalence.lean",
+            "module": "InfoGeometry.Algebra.StablePaddingEquivalence",
+            "line": 61,
+            "declaration_kind": "theorem",
+            "declaration_name": "appendZeroRows_natAdd",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "59: \n60: @[simp]\n61: theorem appendZeroRows_natAdd {m n : \u2115} (M : Matrix (Fin m) (Fin n) A)\n62:     (r : \u2115) (i : Fin r) (j : Fin n) :\n63:     appendZeroRows M r (Fin.natAdd m i) j = 0 := by",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false
+          }
+        ]
+      }
+    ],
+    "findings": [
+      {
+        "file": "lean/InfoGeometry/Algebra/StablePaddingEquivalence.lean",
+        "module": "InfoGeometry.Algebra.StablePaddingEquivalence",
+        "line": 61,
+        "declaration_kind": "theorem",
+        "declaration_name": "appendZeroRows_natAdd",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "59: \n60: @[simp]\n61: theorem appendZeroRows_natAdd {m n : \u2115} (M : Matrix (Fin m) (Fin n) A)\n62:     (r : \u2115) (i : Fin r) (j : Fin n) :\n63:     appendZeroRows M r (Fin.natAdd m i) j = 0 := by",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      }
+    ]
+  },
+  "InfoGeometry.Algebra.StablePresentationEquivalence.placeholder.json": {
+    "schema": "info_geometry.placeholder_audit.v2",
+    "generated_at": "2026-11-12T22:25:18.233261+00:00",
+    "root": "lean/InfoGeometry/Algebra/StablePresentationEquivalence.lean",
+    "authority_tier": "heuristic-proxy",
+    "summary": {
+      "module_count": 0,
+      "scanned_count": 1,
+      "finding_count": 0,
+      "hard_count": 0,
+      "soft_count": 0,
+      "advisory_count": 0,
+      "provenance": {
+        "hard_failures": 0,
+        "soft_findings": 0,
+        "advisory_findings": 0
+      }
+    },
+    "modules": [],
+    "findings": []
+  },
+  "InfoGeometry.Algebra.WhiteheadStabilization.placeholder.json": {
+    "schema": "info_geometry.placeholder_audit.v2",
+    "generated_at": "2026-11-12T22:25:18.162994+00:00",
+    "root": "lean/InfoGeometry/Algebra/WhiteheadStabilization.lean",
+    "authority_tier": "heuristic-proxy",
+    "summary": {
+      "module_count": 1,
+      "scanned_count": 1,
+      "finding_count": 3,
+      "hard_count": 0,
+      "soft_count": 3,
+      "advisory_count": 0,
+      "provenance": {
+        "hard_failures": 0,
+        "soft_findings": 3,
+        "advisory_findings": 0
+      }
+    },
+    "modules": [
+      {
+        "path": "lean/InfoGeometry/Algebra/WhiteheadStabilization.lean",
+        "module": "InfoGeometry.Algebra.WhiteheadStabilization",
+        "finding_count": 3,
+        "hard_count": 0,
+        "soft_count": 3,
+        "advisory_count": 0,
+        "findings": [
+          {
+            "file": "lean/InfoGeometry/Algebra/WhiteheadStabilization.lean",
+            "module": "InfoGeometry.Algebra.WhiteheadStabilization",
+            "line": 75,
+            "declaration_kind": "theorem",
+            "declaration_name": "coe_balancedUnit",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "73: \n74: @[simp]\n75: theorem coe_balancedUnit (U : (Matrix m m A)\u02e3) :\n76:     (balancedUnit U : Matrix (m \u2295 m) (m \u2295 m) A) =\n77:       Matrix.fromBlocks (U : Matrix m m A) 0 0 (\u2191U\u207b\u00b9 : Matrix m m A) := rfl",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false
+          },
+          {
+            "file": "lean/InfoGeometry/Algebra/WhiteheadStabilization.lean",
+            "module": "InfoGeometry.Algebra.WhiteheadStabilization",
+            "line": 107,
+            "declaration_kind": "theorem",
+            "declaration_name": "stabilization_identity",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "105: \n106: variable {n : Type*} [Fintype n] [DecidableEq n]\n107: \n108: \n109: theorem stabilization_identity (M : Matrix m n A)",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false
+          },
+          {
+            "file": "lean/InfoGeometry/Algebra/WhiteheadStabilization.lean",
+            "module": "InfoGeometry.Algebra.WhiteheadStabilization",
+            "line": 117,
+            "declaration_kind": "theorem",
+            "declaration_name": "zeroRow_stabilization_identity",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "115:         (1 : Matrix m m A) := by\n116:   simp [Matrix.fromBlocks_multiply]\n117: \n118: \n119: ",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false
+          }
+        ]
+      }
+    ],
+    "findings": [
+      {
+        "file": "lean/InfoGeometry/Algebra/WhiteheadStabilization.lean",
+        "module": "InfoGeometry.Algebra.WhiteheadStabilization",
+        "line": 75,
+        "declaration_kind": "theorem",
+        "declaration_name": "coe_balancedUnit",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "73: \n74: @[simp]\n75: theorem coe_balancedUnit (U : (Matrix m m A)\u02e3) :\n76:     (balancedUnit U : Matrix (m \u2295 m) (m \u2295 m) A) =\n77:       Matrix.fromBlocks (U : Matrix m m A) 0 0 (\u2191U\u207b\u00b9 : Matrix m m A) := rfl",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      },
+      {
+        "file": "lean/InfoGeometry/Algebra/WhiteheadStabilization.lean",
+        "module": "InfoGeometry.Algebra.WhiteheadStabilization",
+        "line": 107,
+        "declaration_kind": "theorem",
+        "declaration_name": "stabilization_identity",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "105: \n106: variable {n : Type*} [Fintype n] [DecidableEq n]\n107: \n108: \n109: theorem stabilization_identity (M : Matrix m n A)",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      },
+      {
+        "file": "lean/InfoGeometry/Algebra/WhiteheadStabilization.lean",
+        "module": "InfoGeometry.Algebra.WhiteheadStabilization",
+        "line": 117,
+        "declaration_kind": "theorem",
+        "declaration_name": "zeroRow_stabilization_identity",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "115:         (1 : Matrix m m A) := by\n116:   simp [Matrix.fromBlocks_multiply]\n117: \n118: \n119: ",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      }
+    ]
+  },
+  "InfoGeometry.Canonical.SpinorialCore.KreinAdjoint.placeholder.json": {
+    "schema": "info_geometry.placeholder_audit.v2",
+    "generated_at": "2026-11-12T22:25:18.436412+00:00",
+    "root": "lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean",
+    "authority_tier": "heuristic-proxy",
+    "summary": {
+      "module_count": 1,
+      "scanned_count": 1,
+      "finding_count": 4,
+      "hard_count": 0,
+      "soft_count": 4,
+      "advisory_count": 0,
+      "provenance": {
+        "hard_failures": 0,
+        "soft_findings": 4,
+        "advisory_findings": 0
+      }
+    },
+    "modules": [
+      {
+        "path": "lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean",
+        "module": "InfoGeometry.Canonical.SpinorialCore.KreinAdjoint",
+        "finding_count": 4,
+        "hard_count": 0,
+        "soft_count": 4,
+        "advisory_count": 0,
+        "findings": [
+          {
+            "file": "lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean",
+            "module": "InfoGeometry.Canonical.SpinorialCore.KreinAdjoint",
+            "line": 20,
+            "declaration_kind": "theorem",
+            "declaration_name": "sharp_add",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "18: \n19: def sharp (J X : A) : A := J * star X * J\n20: \n21: theorem sharp_add (J X Y : A) : sharp J (X + Y) = sharp J X + sharp J Y := by\n22:   simp [sharp, mul_add, add_mul]",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false
+          },
+          {
+            "file": "lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean",
+            "module": "InfoGeometry.Canonical.SpinorialCore.KreinAdjoint",
+            "line": 23,
+            "declaration_kind": "theorem",
+            "declaration_name": "sharp_neg",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "21: theorem sharp_add (J X Y : A) : sharp J (X + Y) = sharp J X + sharp J Y := by\n22:   simp [sharp, mul_add, add_mul]\n23: \n24: theorem sharp_neg (J X : A) : sharp J (-X) = -sharp J X := by\n25:   simp [sharp]",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false
+          },
+          {
+            "file": "lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean",
+            "module": "InfoGeometry.Canonical.SpinorialCore.KreinAdjoint",
+            "line": 26,
+            "declaration_kind": "theorem",
+            "declaration_name": "sharp_sub",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "24: theorem sharp_neg (J X : A) : sharp J (-X) = -sharp J X := by\n25:   simp [sharp]\n26: \n27: theorem sharp_sub (J X Y : A) : sharp J (X - Y) = sharp J X - sharp J Y := by\n28:   simp [sharp, mul_sub, sub_mul]",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false
+          },
+          {
+            "file": "lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean",
+            "module": "InfoGeometry.Canonical.SpinorialCore.KreinAdjoint",
+            "line": 29,
+            "declaration_kind": "theorem",
+            "declaration_name": "sharp_one",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "27: theorem sharp_sub (J X Y : A) : sharp J (X - Y) = sharp J X - sharp J Y := by\n28:   simp [sharp, mul_sub, sub_mul]\n29: \n30: theorem sharp_one (J : A) (hJ : J * J = 1) : sharp J 1 = 1 := by\n31:   simpa [sharp] using hJ",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false
+          }
+        ]
+      }
+    ],
+    "findings": [
+      {
+        "file": "lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean",
+        "module": "InfoGeometry.Canonical.SpinorialCore.KreinAdjoint",
+        "line": 20,
+        "declaration_kind": "theorem",
+        "declaration_name": "sharp_add",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "18: \n19: def sharp (J X : A) : A := J * star X * J\n20: \n21: theorem sharp_add (J X Y : A) : sharp J (X + Y) = sharp J X + sharp J Y := by\n22:   simp [sharp, mul_add, add_mul]",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      },
+      {
+        "file": "lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean",
+        "module": "InfoGeometry.Canonical.SpinorialCore.KreinAdjoint",
+        "line": 23,
+        "declaration_kind": "theorem",
+        "declaration_name": "sharp_neg",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "21: theorem sharp_add (J X Y : A) : sharp J (X + Y) = sharp J X + sharp J Y := by\n22:   simp [sharp, mul_add, add_mul]\n23: \n24: theorem sharp_neg (J X : A) : sharp J (-X) = -sharp J X := by\n25:   simp [sharp]",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      },
+      {
+        "file": "lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean",
+        "module": "InfoGeometry.Canonical.SpinorialCore.KreinAdjoint",
+        "line": 26,
+        "declaration_kind": "theorem",
+        "declaration_name": "sharp_sub",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "24: theorem sharp_neg (J X : A) : sharp J (-X) = -sharp J X := by\n25:   simp [sharp]\n26: \n27: theorem sharp_sub (J X Y : A) : sharp J (X - Y) = sharp J X - sharp J Y := by\n28:   simp [sharp, mul_sub, sub_mul]",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      },
+      {
+        "file": "lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean",
+        "module": "InfoGeometry.Canonical.SpinorialCore.KreinAdjoint",
+        "line": 29,
+        "declaration_kind": "theorem",
+        "declaration_name": "sharp_one",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "27: theorem sharp_sub (J X Y : A) : sharp J (X - Y) = sharp J X - sharp J Y := by\n28:   simp [sharp, mul_sub, sub_mul]\n29: \n30: theorem sharp_one (J : A) (hJ : J * J = 1) : sharp J 1 = 1 := by\n31:   simpa [sharp] using hJ",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      }
+    ]
+  }
+}

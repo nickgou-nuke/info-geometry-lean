@@ -1,0 +1,148 @@
+name: CSS Whitehead stabilization kernel check
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean'
+      - 'lean/InfoGeometry/Algebra/WhiteheadStabilization.lean'
+      - 'lean/InfoGeometry/Algebra/StablePresentationEquivalence.lean'
+      - 'lean/InfoGeometry/Algebra/StablePaddingEquivalence.lean'
+      - 'lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean'
+      - 'lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean'
+      - 'lean/InfoGeometry/Canonical/All.lean'
+      - 'tools/quality/check_clifford_dirac.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/build_lock.py'
+      - 'tools/quality/placeholder_audit.py'
+      - 'tools/quality/semantic_vacuity_gate.py'
+      - 'tools/quality/semantic_vacuity_patterns.json'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/css-whitehead-stabilization.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: css-whitehead-stabilization-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Fetch exact public source without traversing external submodules
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+          SOURCE_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "${GITHUB_SERVER_URL}/${SOURCE_REPOSITORY}.git"
+          git -C project fetch --no-tags --no-recurse-submodules --depth=1 origin "$SOURCE_REV"
+          git -C project -c submodule.recurse=false checkout --detach FETCH_HEAD
+          test "$(git -C project rev-parse HEAD)" = "$SOURCE_REV"
+      - name: Read exact dependency pins
+        id: pins
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          manifest = json.loads(Path('project/lake-manifest.json').read_text())
+          revision = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'mathlib={revision}\n')
+          PY
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: ${{ steps.pins.outputs.mathlib }}
+          path: mathlib
+          persist-credentials: false
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            mathlib/.lake
+          key: css-whitehead-stabilization-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Fetch the pinned native import cache
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('project').resolve()))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          _, _, native = closure(Path('project'), ['InfoGeometry.Algebra.ElementaryMatrixOperators', 'InfoGeometry.Algebra.WhiteheadStabilization', 'InfoGeometry.Algebra.StablePresentationEquivalence', 'InfoGeometry.Algebra.StablePaddingEquivalence', 'InfoGeometry.Algebra.HyperbolicPresentationTransport', 'InfoGeometry.Canonical.SpinorialCore.KreinAdjoint'])
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'css-native-cache') as lock:
+              subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
+                  cwd='mathlib', check=True, pass_fds=(lock.fileno(),))
+          PY
+      - name: Check exact source closure and all target declarations
+        working-directory: project
+        shell: bash
+        run: |
+          python3 tools/quality/check_clifford_dirac.py \
+            --mathlib-root ../mathlib --output ../css-report \
+            --target InfoGeometry.Algebra.ElementaryMatrixOperators \
+            --target InfoGeometry.Algebra.WhiteheadStabilization \
+            --target InfoGeometry.Algebra.StablePresentationEquivalence \
+            --target InfoGeometry.Algebra.StablePaddingEquivalence \
+            --target InfoGeometry.Algebra.HyperbolicPresentationTransport \
+            --target InfoGeometry.Canonical.SpinorialCore.KreinAdjoint
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('../css-report/report.json').read_text())
+          assert report['status'] == 'passed', report
+          selected = [m for m in report['modules'] if m['module'] in report['targets']]
+          assert len(selected) == len(report['targets'])
+          assert all(m['returncode'] == 0 and m['warnings'] == 0 for m in selected), selected
+          PY
+      - name: Check placeholders and semantic vacuity
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import subprocess
+          files = [
+              'lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean',
+              'lean/InfoGeometry/Algebra/WhiteheadStabilization.lean',
+              'lean/InfoGeometry/Algebra/StablePresentationEquivalence.lean',
+              'lean/InfoGeometry/Algebra/StablePaddingEquivalence.lean',
+              'lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean',
+              'lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean',
+          ]
+          for path in files:
+              subprocess.run(['python3', 'tools/quality/placeholder_audit.py',
+                  '--root', path, '--strict'], check=True)
+          subprocess.run(['python3', 'tools/quality/semantic_vacuity_gate.py',
+              *files, '--fail-on', 'error', '--json-out',
+              '../css-report/semantic.json'], check=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: css-whitehead-stabilization-evidence
+          path: |
+            css-report/report.json
+            css-report/evidence-sha256.json
+            css-report/src/CliffordDiracAudit.lean
+            css-report/*.log
+            css-report/semantic.json
+          if-no-files-found: warn

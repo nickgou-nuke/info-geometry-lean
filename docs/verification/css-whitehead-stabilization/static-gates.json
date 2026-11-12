@@ -1,0 +1,455 @@
+{
+  "checkpoint": "abd22cd4badf6df017cc85fa137cb2160f48eca9",
+  "base": "a392af178af1fe2bcba2ba39eb405700c6ee103c",
+  "native_output": "/workspace/scratch/d18a558d1d7d/css-rigidity-qa",
+  "source_sha256": {
+    "InfoGeometry.Algebra.ElementaryMatrixOperators": "71c041a3bcc3ef6be614ada7e31f9f8e67deee1e5bd4229e675bb145d83abdca",
+    "InfoGeometry.Algebra.WhiteheadStabilization": "e860509e7bd0f4e81f66140f6d7e36690fbd9917efc0bd05ce943a9574681a80",
+    "InfoGeometry.Algebra.StablePresentationEquivalence": "aa0cb9fdbc010289ebee7d649ec6eccc3d140c16a45971e14f343e6b62a176ca",
+    "InfoGeometry.Algebra.StablePaddingEquivalence": "4fcc593c8b5ad260c3a520681dc79f9501baa29cfbeb426882d79aafcec2d581",
+    "InfoGeometry.Algebra.HyperbolicPresentationTransport": "cf0b2c003261493420b58120f5a37313c28db3665fb64d191c3a251749555f25",
+    "InfoGeometry.Canonical.SpinorialCore.KreinAdjoint": "a6fa1871a8e165c9e75b8ea868538bb9fc0cb161e44189010d3ba9b8ba835f65"
+  },
+  "named_theorem_counts": {
+    "InfoGeometry.Algebra.ElementaryMatrixOperators": 25,
+    "InfoGeometry.Algebra.WhiteheadStabilization": 10,
+    "InfoGeometry.Algebra.StablePresentationEquivalence": 17,
+    "InfoGeometry.Algebra.StablePaddingEquivalence": 13,
+    "InfoGeometry.Algebra.HyperbolicPresentationTransport": 16,
+    "InfoGeometry.Canonical.SpinorialCore.KreinAdjoint": 16
+  },
+  "banned_token_findings": [],
+  "base_comparisons": {
+    "lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean": {
+      "same_as_base": true,
+      "sha256": "a6fa1871a8e165c9e75b8ea868538bb9fc0cb161e44189010d3ba9b8ba835f65"
+    },
+    "lean-toolchain": {
+      "same_as_base": true,
+      "sha256": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b"
+    },
+    "lake-manifest.json": {
+      "same_as_base": true,
+      "sha256": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98"
+    }
+  },
+  "dependency_status": [
+    {
+      "path": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib",
+      "status": "",
+      "returncode": 0,
+      "head": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+      "expected": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+      "revision_matches": true
+    },
+    {
+      "path": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/packages/Cli",
+      "status": "",
+      "returncode": 0,
+      "head": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204",
+      "expected": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204",
+      "revision_matches": true
+    },
+    {
+      "path": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/packages/LeanSearchClient",
+      "status": "",
+      "returncode": 0,
+      "head": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+      "expected": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+      "revision_matches": true
+    },
+    {
+      "path": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/packages/Qq",
+      "status": "",
+      "returncode": 0,
+      "head": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+      "expected": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+      "revision_matches": true
+    },
+    {
+      "path": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/packages/aesop",
+      "status": "",
+      "returncode": 0,
+      "head": "355695d523e41d0554926416cba2a2b3544fbbc9",
+      "expected": "355695d523e41d0554926416cba2a2b3544fbbc9",
+      "revision_matches": true
+    },
+    {
+      "path": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/packages/batteries",
+      "status": " T docs/README.md\n",
+      "returncode": 0,
+      "head": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+      "expected": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+      "revision_matches": true
+    },
+    {
+      "path": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/packages/importGraph",
+      "status": "",
+      "returncode": 0,
+      "head": "e928b72544873815af278d38681b31c0293588e3",
+      "expected": "e928b72544873815af278d38681b31c0293588e3",
+      "revision_matches": true
+    },
+    {
+      "path": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/packages/plausible",
+      "status": "",
+      "returncode": 0,
+      "head": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+      "expected": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+      "revision_matches": true
+    },
+    {
+      "path": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/packages/proofwidgets",
+      "status": "",
+      "returncode": 0,
+      "head": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5",
+      "expected": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5",
+      "revision_matches": true
+    }
+  ],
+  "records": [
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/workspace/scratch/d18a558d1d7d/css-rigidity-lean",
+      "returncode": 0,
+      "output": "abd22cd4badf6df017cc85fa137cb2160f48eca9\n"
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain"
+      ],
+      "cwd": "/workspace/scratch/d18a558d1d7d/css-rigidity-lean",
+      "returncode": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/css-qa-candidates/InfoGeometry.Algebra.ElementaryMatrixOperators.placeholder.json"
+      ],
+      "cwd": "/workspace/scratch/d18a558d1d7d/css-rigidity-lean",
+      "returncode": 0,
+      "output": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-12T22:25:18.090478+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **1**\n- Total findings: **1** (hard=0, soft=1, advisory=0)\n\n## `InfoGeometry.Algebra.ElementaryMatrixOperators`\n- path: `lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean`\n- findings: 1 (hard=0, soft=1, advisory=0)\n\n- L225: **SOFT** `skeletal-proof` in `theorem coe_reindexUnit`\n  - proof appears to be tactic-automation-only or skeletal\n  - `223: `\n\n\n"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/Algebra/WhiteheadStabilization.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/css-qa-candidates/InfoGeometry.Algebra.WhiteheadStabilization.placeholder.json"
+      ],
+      "cwd": "/workspace/scratch/d18a558d1d7d/css-rigidity-lean",
+      "returncode": 0,
+      "output": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-12T22:25:18.163188+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **1**\n- Total findings: **3** (hard=0, soft=3, advisory=0)\n\n## `InfoGeometry.Algebra.WhiteheadStabilization`\n- path: `lean/InfoGeometry/Algebra/WhiteheadStabilization.lean`\n- findings: 3 (hard=0, soft=3, advisory=0)\n\n- L75: **SOFT** `skeletal-proof` in `theorem coe_balancedUnit`\n  - proof appears to be tactic-automation-only or skeletal\n  - `73: `\n- L107: **SOFT** `skeletal-proof` in `theorem stabilization_identity`\n  - proof appears to be tactic-automation-only or skeletal\n  - `105: `\n- L117: **SOFT** `skeletal-proof` in `theorem zeroRow_stabilization_identity`\n  - proof appears to be tactic-automation-only or skeletal\n  - `115:         (1 : Matrix m m A) := by`\n\n\n"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/Algebra/StablePresentationEquivalence.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/css-qa-candidates/InfoGeometry.Algebra.StablePresentationEquivalence.placeholder.json"
+      ],
+      "cwd": "/workspace/scratch/d18a558d1d7d/css-rigidity-lean",
+      "returncode": 0,
+      "output": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-12T22:25:18.233394+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **0**\n- Total findings: **0** (hard=0, soft=0, advisory=0)\n\nNo placeholder-trust findings detected.\n\n"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/Algebra/StablePaddingEquivalence.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/css-qa-candidates/InfoGeometry.Algebra.StablePaddingEquivalence.placeholder.json"
+      ],
+      "cwd": "/workspace/scratch/d18a558d1d7d/css-rigidity-lean",
+      "returncode": 0,
+      "output": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-12T22:25:18.297792+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **1**\n- Total findings: **1** (hard=0, soft=1, advisory=0)\n\n## `InfoGeometry.Algebra.StablePaddingEquivalence`\n- path: `lean/InfoGeometry/Algebra/StablePaddingEquivalence.lean`\n- findings: 1 (hard=0, soft=1, advisory=0)\n\n- L61: **SOFT** `skeletal-proof` in `theorem appendZeroRows_natAdd`\n  - proof appears to be tactic-automation-only or skeletal\n  - `59: `\n\n\n"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/css-qa-candidates/InfoGeometry.Algebra.HyperbolicPresentationTransport.placeholder.json"
+      ],
+      "cwd": "/workspace/scratch/d18a558d1d7d/css-rigidity-lean",
+      "returncode": 0,
+      "output": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-12T22:25:18.367677+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **1**\n- Total findings: **2** (hard=0, soft=2, advisory=0)\n\n## `InfoGeometry.Algebra.HyperbolicPresentationTransport`\n- path: `lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean`\n- findings: 2 (hard=0, soft=2, advisory=0)\n\n- L77: **SOFT** `skeletal-proof` in `theorem coe_hyperbolicLift`\n  - proof appears to be tactic-automation-only or skeletal\n  - `75: `\n- L116: **SOFT** `skeletal-proof` in `theorem skewForm_conjTranspose`\n  - proof appears to be tactic-automation-only or skeletal\n  - `114: `\n\n\n"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/css-qa-candidates/InfoGeometry.Canonical.SpinorialCore.KreinAdjoint.placeholder.json"
+      ],
+      "cwd": "/workspace/scratch/d18a558d1d7d/css-rigidity-lean",
+      "returncode": 0,
+      "output": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-12T22:25:18.436563+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **1**\n- Total findings: **4** (hard=0, soft=4, advisory=0)\n\n## `InfoGeometry.Canonical.SpinorialCore.KreinAdjoint`\n- path: `lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean`\n- findings: 4 (hard=0, soft=4, advisory=0)\n\n- L20: **SOFT** `skeletal-proof` in `theorem sharp_add`\n  - proof appears to be tactic-automation-only or skeletal\n  - `18: `\n- L23: **SOFT** `skeletal-proof` in `theorem sharp_neg`\n  - proof appears to be tactic-automation-only or skeletal\n  - `21: theorem sharp_add (J X Y : A) : sharp J (X + Y) = sharp J X + sharp J Y := by`\n- L26: **SOFT** `skeletal-proof` in `theorem sharp_sub`\n  - proof appears to be tactic-automation-only or skeletal\n  - `24: theorem sharp_neg (J X : A) : sharp J (-X) = -sharp J X := by`\n- L29: **SOFT** `skeletal-proof` in `theorem sharp_one`\n  - proof appears to be tactic-automation-only or skeletal\n  - `27: theorem sharp_sub (J X Y : A) : sharp J (X - Y) = sharp J X - sharp J Y := by`\n\n\n"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/quality/semantic_vacuity_gate.py",
+        "lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean",
+        "lean/InfoGeometry/Algebra/WhiteheadStabilization.lean",
+        "lean/InfoGeometry/Algebra/StablePresentationEquivalence.lean",
+        "lean/InfoGeometry/Algebra/StablePaddingEquivalence.lean",
+        "lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean",
+        "lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean",
+        "--fail-on",
+        "warning",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/css-qa-candidates/semantic.json"
+      ],
+      "cwd": "/workspace/scratch/d18a558d1d7d/css-rigidity-lean",
+      "returncode": 1,
+      "output": "Semantic vacuity audit\n======================\nroots: lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean, lean/InfoGeometry/Algebra/WhiteheadStabilization.lean, lean/InfoGeometry/Algebra/StablePresentationEquivalence.lean, lean/InfoGeometry/Algebra/StablePaddingEquivalence.lean, lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean, lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean\npatterns: /workspace/scratch/d18a558d1d7d/css-rigidity-lean/tools/quality/semantic_vacuity_patterns.json\nsemantic_vacuity: 18\nwarning: 18\ntrivial_surface: 18\n  - lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean:60 [warning/trivial_surface] coe_elementaryUnit: rfl\n  - lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean:64 [warning/trivial_surface] coe_elementaryUnit_inv: rfl\n  - lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean:126 [warning/trivial_surface] coe_upperUnit: rfl\n  - lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean:130 [warning/trivial_surface] coe_lowerUnit: rfl\n  - lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean:225 [warning/trivial_surface] coe_reindexUnit: rfl\n  - lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean:48 [warning/trivial_surface] inverseAdjoint_apply: rfl\n  - lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean:51 [warning/trivial_surface] coe_inverseAdjoint: rfl\n  - lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean:56 [warning/trivial_surface] inverseAdjoint_involutive: by\n  - lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean:77 [warning/trivial_surface] coe_hyperbolicLift: rfl\n  - lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean:116 [warning/trivial_surface] skewForm_conjTranspose: by\n  - lean/InfoGeometry/Algebra/StablePaddingEquivalence.lean:61 [warning/trivial_surface] appendZeroRows_natAdd: by\n  - lean/InfoGeometry/Algebra/WhiteheadStabilization.lean:42 [warning/trivial_surface] coe_blockDiagonalUnit: rfl\n  - lean/InfoGeometry/Algebra/WhiteheadStabilization.lean:75 [warning/trivial_surface] coe_balancedUnit: rfl\n  - lean/InfoGeometry/Algebra/WhiteheadStabilization.lean:109 [warning/trivial_surface] stabilization_identity: by\n  - lean/InfoGeometry/Algebra/WhiteheadStabilization.lean:120 [warning/trivial_surface] zeroRow_stabilization_identity: by\n  - lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean:21 [warning/trivial_surface] sharp_add: by\n  - lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean:24 [warning/trivial_surface] sharp_neg: by\n  - lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean:27 [warning/trivial_surface] sharp_sub: by\n"
+    },
+    {
+      "command": [
+        "git",
+        "show",
+        "a392af178af1fe2bcba2ba39eb405700c6ee103c:lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean"
+      ],
+      "cwd": "/workspace/scratch/d18a558d1d7d/css-rigidity-lean",
+      "returncode": 0,
+      "output": "/-\nCopyright (c) 2026 InfoGeometry Authors. All rights reserved.\nReleased under Apache 2.0 license as described in the file LICENSE.\nAuthors: InfoGeometry Engine Contributors\n-/\nimport Mathlib\n\n/-!\n# Fundamental symmetries and the Krein adjoint\n\nThe indefinite adjoint is not silently substituted for the positive Hilbert\nadjoint. A rational matrix witness separates their respective isometries.\n-/\n\nnamespace InfoGeometry.Canonical.SpinorialCore.Krein\n\nvariable {A : Type*} [Ring A] [StarRing A]\n\ndef sharp (J X : A) : A := J * star X * J\n\ntheorem sharp_add (J X Y : A) : sharp J (X + Y) = sharp J X + sharp J Y := by\n  simp [sharp, mul_add, add_mul]\n\ntheorem sharp_neg (J X : A) : sharp J (-X) = -sharp J X := by\n  simp [sharp]\n\ntheorem sharp_sub (J X Y : A) : sharp J (X - Y) = sharp J X - sharp J Y := by\n  simp [sharp, mul_sub, sub_mul]\n\ntheorem sharp_one (J : A) (hJ : J * J = 1) : sharp J 1 = 1 := by\n  simpa [sharp] using hJ\n\ntheorem sharp_mul (J X Y : A) (hJ : J * J = 1) :\n    sharp J (X * Y) = sharp J Y * sharp J X := by\n  simp only [sharp, star_mul]\n  calc\n    J * (star Y * star X) * J = J * star Y * (J * J) * star X * J := by\n      rw [hJ]; simp [mul_assoc]\n    _ = (J * star Y * J) * (J * star X * J) := by noncomm_ring\n\ntheorem sharp_involutive (J : A) (hs : star J = J) (hJ : J * J = 1) :\n    Function.Involutive (sharp J) := by\n  intro X\n  simp only [sharp, star_mul, star_star, hs]\n  calc\n    J * (J * (X * J)) * J = (J * J) * X * (J * J) := by noncomm_ring\n    _ = X := by rw [hJ]; simp\n\ndef IsIsometry (J U : A) : Prop := star U * J * U = J\n\n/-- The form-preservation defect splits into the commutation defect and the\nordinary isometry defect. No invertibility or symmetry assumptions are needed. -/\ntheorem isometry_defect_decomposition (J U : A) :\n    star U * J * U - J =\n      star U * (J * U - U * J) + (star U * U - 1) * J := by\n  noncomm_ring\n\n/-- For an ordinary isometry, preserving `J` means exactly that its\ncommutation defect is annihilated by its adjoint. This remains valid for\nnon-surjective isometries. -/\ntheorem isIsometry_iff_adjoint_mul_commutator_zero (J U : A)\n    (hU : star U * U = 1) :\n    IsIsometry J U \u2194 star U * (J * U - U * J) = 0 := by\n  unfold IsIsometry\n  rw [\u2190 sub_eq_zero, isometry_defect_decomposition, hU, sub_self, zero_mul, add_zero]\n\n/-- For a two-sided unitary, form preservation is exactly commutation with\nthe form operator. The operator `J` need not be self-adjoint or involutive. -/\ntheorem isIsometry_iff_commute_of_unitary (J U : A)\n    (hleft : star U * U = 1) (hright : U * star U = 1) :\n    IsIsometry J U \u2194 Commute J U := by\n  rw [isIsometry_iff_adjoint_mul_commutator_zero J U hleft]\n  constructor\n  \u00b7 intro h\n    have hh := congrArg (fun x => U * x) h\n    rw [\u2190 mul_assoc, hright, one_mul, mul_zero] at hh\n    exact sub_eq_zero.mp hh\n  \u00b7 intro h\n    rw [h.eq, sub_self, mul_zero]\n\ntheorem isIsometry_iff_sharp_mul (J U : A) (hJ : J * J = 1) :\n    IsIsometry J U \u2194 sharp J U * U = 1 := by\n  constructor\n  \u00b7 intro h\n    change J * star U * J * U = 1\n    calc\n      J * star U * J * U = J * (star U * J * U) := by noncomm_ring\n      _ = 1 := by rw [h, hJ]\n  \u00b7 intro h\n    have hh := congrArg (fun x : A => J * x) h\n    change J * (J * star U * J * U) = J * 1 at hh\n    have hr : J * (J * star U * J * U) = (J * J) * (star U * J * U) := by\n      noncomm_ring\n    rw [hr, hJ, one_mul, mul_one] at hh\n    exact hh\n\ntheorem isIsometry_mul (J U V : A) (hU : IsIsometry J U) (hV : IsIsometry J V) :\n    IsIsometry J (U * V) := by\n  change star (U * V) * J * (U * V) = J\n  rw [star_mul]\n  calc\n    star V * star U * J * (U * V) = star V * (star U * J * U) * V := by\n      noncomm_ring\n    _ = J := by rw [hU]; exact hV\n\n/-- Skew operators remain skew under the ordinary commutator bracket. -/\ntheorem sharp_commutator (J X Y : A) (hJ : J * J = 1)\n    (hX : sharp J X = -X) (hY : sharp J Y = -Y) :\n    sharp J (X * Y - Y * X) = -(X * Y - Y * X) := by\n  rw [sharp_sub, sharp_mul J X Y hJ, sharp_mul J Y X hJ, hX, hY]\n  noncomm_ring\n\n/-- The algebraic adjoint calculation for a Clifford boost product. -/\ntheorem clifford_boost_skew (J W : A) (hs : star J = J)\n    (hJ : J * J = 1) (hW : star W = -W) :\n    sharp J (J * W) = -(J * W) := by\n  simp only [sharp, star_mul, hs, hW]\n  calc\n    J * (-W * J) * J = -(J * W) * (J * J) := by noncomm_ring\n    _ = -(J * W) := by rw [hJ, mul_one]\n\nnamespace Counterexample\nopen Matrix\n\ndef signature : Matrix (Fin 2) (Fin 2) \u211a := !![1, 0; 0, -1]\ndef boost : Matrix (Fin 2) (Fin 2) \u211a := !![5 / 4, 3 / 4; 3 / 4, 5 / 4]\n\n/-- The indefinite boost does not commute with its preserved form operator. -/\ntheorem signature_boost_noncommute : signature * boost \u2260 boost * signature := by\n  intro h\n  have h01 := congrArg (fun M : Matrix (Fin 2) (Fin 2) \u211a => M 0 1) h\n  norm_num [signature, boost, Matrix.mul_apply, Fin.sum_univ_two] at h01\n\ntheorem boost_preserves_signature : boost.transpose * signature * boost = signature := by\n  ext i j\n  fin_cases i <;> fin_cases j <;>\n    norm_num [boost, signature, Matrix.mul_apply, Fin.sum_univ_two, Matrix.transpose_apply]\n\ntheorem boost_not_orthogonal : boost.transpose * boost \u2260 1 := by\n  intro h\n  have h0 := congrArg (fun M : Matrix (Fin 2) (Fin 2) \u211a => M 0 0) h\n  norm_num [boost, Matrix.mul_apply, Fin.sum_univ_two, Matrix.transpose_apply] at h0\n\nend Counterexample\nend InfoGeometry.Canonical.SpinorialCore.Krein\n"
+    },
+    {
+      "command": [
+        "git",
+        "show",
+        "a392af178af1fe2bcba2ba39eb405700c6ee103c:lean-toolchain"
+      ],
+      "cwd": "/workspace/scratch/d18a558d1d7d/css-rigidity-lean",
+      "returncode": 0,
+      "output": "leanprover/lean4:v4.34.1\n"
+    },
+    {
+      "command": [
+        "git",
+        "show",
+        "a392af178af1fe2bcba2ba39eb405700c6ee103c:lake-manifest.json"
+      ],
+      "cwd": "/workspace/scratch/d18a558d1d7d/css-rigidity-lean",
+      "returncode": 0,
+      "output": "{\"version\": \"1.2.0\",\n \"packagesDir\": \".lake/packages\",\n \"packages\":\n [{\"url\": \"https://github.com/leanprover-community/mathlib4.git\",\n   \"type\": \"git\",\n   \"subDir\": null,\n   \"scope\": \"\",\n   \"rev\": \"d13f23b723b8a846827a245b89c10fc7d3f11612\",\n   \"name\": \"mathlib\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inputRev\": \"v4.34.1\",\n   \"inherited\": false,\n   \"configFile\": \"lakefile.lean\"},\n  {\"url\": \"https://github.com/lean-dojo/LeanCopilot.git\",\n   \"type\": \"git\",\n   \"subDir\": null,\n   \"scope\": \"\",\n   \"rev\": \"c360b5df5d8a67ed8f1a8769aa157f6adca7dd53\",\n   \"name\": \"LeanCopilot\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inputRev\": \"c360b5df5d8a67ed8f1a8769aa157f6adca7dd53\",\n   \"inherited\": false,\n   \"configFile\": \"lakefile.lean\"},\n  {\"type\": \"path\",\n   \"scope\": \"\",\n   \"name\": \"HomotopyHypothesis\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inherited\": false,\n   \"dir\": \"external_refs/homotopy-hypothesis-lean4\",\n   \"configFile\": \"lakefile.lean\"},\n  {\"type\": \"path\",\n   \"scope\": \"\",\n   \"name\": \"Atlas\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inherited\": false,\n   \"dir\": \"external_refs/atlas-lean\",\n   \"configFile\": \"lakefile.toml\"},\n  {\"type\": \"path\",\n   \"scope\": \"\",\n   \"name\": \"GIFT\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inherited\": false,\n   \"dir\": \"external_refs/gift-framework-core\",\n   \"configFile\": \"lakefile.lean\"},\n  {\"url\": \"https://github.com/leanprover/doc-gen4.git\",\n   \"type\": \"git\",\n   \"subDir\": null,\n   \"scope\": \"\",\n   \"rev\": \"953c8992d174b4e56955e01e101d46668c68f2bb\",\n   \"name\": \"\u00abdoc-gen4\u00bb\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inputRev\": \"v4.34.1\",\n   \"inherited\": false,\n   \"configFile\": \"lakefile.lean\"},\n  {\"url\": \"https://github.com/hanwenzhu/LeanArchitect.git\",\n   \"type\": \"git\",\n   \"subDir\": null,\n   \"scope\": \"\",\n   \"rev\": \"54d3fb249685db8e5a564e0b3f331cff77991607\",\n   \"name\": \"LeanArchitect\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inputRev\": \"54d3fb249685db8e5a564e0b3f331cff77991607\",\n   \"inherited\": false,\n   \"configFile\": \"lakefile.lean\"},\n  {\"url\": \"https://github.com/oOo0oOo/LeanParanoia.git\",\n   \"type\": \"git\",\n   \"subDir\": null,\n   \"scope\": \"\",\n   \"rev\": \"11c2385ade3cc417d69ce837bfda9d2c5b1d61ab\",\n   \"name\": \"paranoia\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inputRev\": \"11c2385ade3cc417d69ce837bfda9d2c5b1d61ab\",\n   \"inherited\": false,\n   \"configFile\": \"lakefile.toml\"},\n  {\"url\": \"https://github.com/Paper-Proof/paperproof.git\",\n   \"type\": \"git\",\n   \"subDir\": \"lean\",\n   \"scope\": \"\",\n   \"rev\": \"c85fb0b45ce9ebaaa4715c7d043aadda80306c46\",\n   \"name\": \"Paperproof\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inputRev\": \"c85fb0b45ce9ebaaa4715c7d043aadda80306c46\",\n   \"inherited\": false,\n   \"configFile\": \"lakefile.lean\"},\n  {\"type\": \"path\",\n   \"scope\": \"\",\n   \"name\": \"InfoGeometryCore\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inherited\": false,\n   \"dir\": \"lib/InfoGeometryCore\",\n   \"configFile\": \"lakefile.lean\"},\n  {\"url\": \"https://github.com/leanprover-community/plausible\",\n   \"type\": \"git\",\n   \"subDir\": null,\n   \"scope\": \"leanprover-community\",\n   \"rev\": \"118aa17ee84656b8bd727fef7c458ee8c833385c\",\n   \"name\": \"plausible\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inputRev\": \"main\",\n   \"inherited\": true,\n   \"configFile\": \"lakefile.toml\"},\n  {\"url\": \"https://github.com/leanprover-community/LeanSearchClient\",\n   \"type\": \"git\",\n   \"subDir\": null,\n   \"scope\": \"leanprover-community\",\n   \"rev\": \"ddf04cf3949fa556442341e87d47f9f6e6074707\",\n   \"name\": \"LeanSearchClient\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inputRev\": \"main\",\n   \"inherited\": true,\n   \"configFile\": \"lakefile.toml\"},\n  {\"url\": \"https://github.com/leanprover-community/import-graph\",\n   \"type\": \"git\",\n   \"subDir\": null,\n   \"scope\": \"leanprover-community\",\n   \"rev\": \"e928b72544873815af278d38681b31c0293588e3\",\n   \"name\": \"importGraph\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inputRev\": \"main\",\n   \"inherited\": true,\n   \"configFile\": \"lakefile.toml\"},\n  {\"url\": \"https://github.com/leanprover-community/ProofWidgets4\",\n   \"type\": \"git\",\n   \"subDir\": null,\n   \"scope\": \"leanprover-community\",\n   \"rev\": \"106ff4fafc74ef4ac99d81dbf3ab399118f497a5\",\n   \"name\": \"proofwidgets\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inputRev\": \"main\",\n   \"inherited\": true,\n   \"configFile\": \"lakefile.lean\"},\n  {\"url\": \"https://github.com/leanprover-community/aesop\",\n   \"type\": \"git\",\n   \"subDir\": null,\n   \"scope\": \"leanprover-community\",\n   \"rev\": \"355695d523e41d0554926416cba2a2b3544fbbc9\",\n   \"name\": \"aesop\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inputRev\": \"master\",\n   \"inherited\": true,\n   \"configFile\": \"lakefile.toml\"},\n  {\"url\": \"https://github.com/leanprover-community/quote4\",\n   \"type\": \"git\",\n   \"subDir\": null,\n   \"scope\": \"leanprover-community\",\n   \"rev\": \"6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259\",\n   \"name\": \"Qq\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inputRev\": \"master\",\n   \"inherited\": true,\n   \"configFile\": \"lakefile.toml\"},\n  {\"url\": \"https://github.com/leanprover-community/batteries\",\n   \"type\": \"git\",\n   \"subDir\": null,\n   \"scope\": \"leanprover-community\",\n   \"rev\": \"f2effa3d803fda822b1f97b806c47cf2adfbcbc2\",\n   \"name\": \"batteries\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inputRev\": \"main\",\n   \"inherited\": true,\n   \"configFile\": \"lakefile.toml\"},\n  {\"url\": \"https://github.com/PatrickMassot/checkdecls.git\",\n   \"type\": \"git\",\n   \"subDir\": null,\n   \"scope\": \"\",\n   \"rev\": \"3d425859e73fcfbef85b9638c2a91708ef4a22d4\",\n   \"name\": \"checkdecls\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inputRev\": \"3d425859e73fcfbef85b9638c2a91708ef4a22d4\",\n   \"inherited\": true,\n   \"configFile\": \"lakefile.lean\"},\n  {\"url\": \"https://github.com/leanprover/leansqlite\",\n   \"type\": \"git\",\n   \"subDir\": null,\n   \"scope\": \"\",\n   \"rev\": \"f9cdb9eacb5c8b8ecc02ee9fd9e568d7d28c1416\",\n   \"name\": \"leansqlite\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inputRev\": \"main\",\n   \"inherited\": true,\n   \"configFile\": \"lakefile.lean\"},\n  {\"url\": \"https://github.com/leanprover/lean4-cli\",\n   \"type\": \"git\",\n   \"subDir\": null,\n   \"scope\": \"leanprover\",\n   \"rev\": \"e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204\",\n   \"name\": \"Cli\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inputRev\": \"v4.34.0\",\n   \"inherited\": true,\n   \"configFile\": \"lakefile.toml\"},\n  {\"url\": \"https://github.com/fgdorais/lean4-unicode-basic\",\n   \"type\": \"git\",\n   \"subDir\": null,\n   \"scope\": \"\",\n   \"rev\": \"ff04f5c424e50e23476d3539c7c0cc4956e971ad\",\n   \"name\": \"UnicodeBasic\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inputRev\": \"ff04f5c424e50e23476d3539c7c0cc4956e971ad\",\n   \"inherited\": true,\n   \"configFile\": \"lakefile.lean\"},\n  {\"url\": \"https://github.com/dupuisf/BibtexQuery\",\n   \"type\": \"git\",\n   \"subDir\": null,\n   \"scope\": \"\",\n   \"rev\": \"058ada3acad7dd0d55657476bf292c8e02a2f650\",\n   \"name\": \"BibtexQuery\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inputRev\": \"058ada3acad7dd0d55657476bf292c8e02a2f650\",\n   \"inherited\": true,\n   \"configFile\": \"lakefile.toml\"},\n  {\"url\": \"https://github.com/acmepjz/md4lean\",\n   \"type\": \"git\",\n   \"subDir\": null,\n   \"scope\": \"\",\n   \"rev\": \"7e097e9a076d5fbe48aa39aceee871af0d011101\",\n   \"name\": \"MD4Lean\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inputRev\": \"7e097e9a076d5fbe48aa39aceee871af0d011101\",\n   \"inherited\": true,\n   \"configFile\": \"lakefile.lean\"},\n  {\"url\": \"https://github.com/leanprover/lean4checker.git\",\n   \"type\": \"git\",\n   \"subDir\": null,\n   \"scope\": \"\",\n   \"rev\": \"b1efea26e138821953e43dfb8fe63770ccb766d1\",\n   \"name\": \"lean4checker\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inputRev\": \"master\",\n   \"inherited\": true,\n   \"configFile\": \"lakefile.toml\"}],\n \"name\": \"infogeometry\",\n \"lakeDir\": \".lake\",\n \"fixedToolchain\": false}\n"
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "cwd": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib",
+      "returncode": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib",
+      "returncode": 0,
+      "output": "d13f23b723b8a846827a245b89c10fc7d3f11612\n"
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "cwd": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/packages/Cli",
+      "returncode": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/packages/Cli",
+      "returncode": 0,
+      "output": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204\n"
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "cwd": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/packages/LeanSearchClient",
+      "returncode": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/packages/LeanSearchClient",
+      "returncode": 0,
+      "output": "ddf04cf3949fa556442341e87d47f9f6e6074707\n"
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "cwd": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/packages/Qq",
+      "returncode": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/packages/Qq",
+      "returncode": 0,
+      "output": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259\n"
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "cwd": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/packages/aesop",
+      "returncode": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/packages/aesop",
+      "returncode": 0,
+      "output": "355695d523e41d0554926416cba2a2b3544fbbc9\n"
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "cwd": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/packages/batteries",
+      "returncode": 0,
+      "output": " T docs/README.md\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/packages/batteries",
+      "returncode": 0,
+      "output": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2\n"
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "cwd": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/packages/importGraph",
+      "returncode": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/packages/importGraph",
+      "returncode": 0,
+      "output": "e928b72544873815af278d38681b31c0293588e3\n"
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "cwd": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/packages/plausible",
+      "returncode": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/packages/plausible",
+      "returncode": 0,
+      "output": "118aa17ee84656b8bd727fef7c458ee8c833385c\n"
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "cwd": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/packages/proofwidgets",
+      "returncode": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/packages/proofwidgets",
+      "returncode": 0,
+      "output": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5\n"
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain"
+      ],
+      "cwd": "/workspace/scratch/d18a558d1d7d/css-rigidity-lean",
+      "returncode": 0,
+      "output": ""
+    }
+  ]
+}

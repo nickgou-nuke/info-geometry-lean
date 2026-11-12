@@ -1,0 +1,11 @@
+[locked-lake-build] requesting lock for InfoGeometry.Algebra.StablePaddingEquivalence InfoGeometry.Algebra.HyperbolicPresentationTransport
+[locked-lake-build] acquired /tmp/info-geometry-build.lock
+[locked-lake-build] executing: lake build InfoGeometry.Algebra.StablePaddingEquivalence InfoGeometry.Algebra.HyperbolicPresentationTransport
+info: [root]: lakefile.lean and lakefile.toml are both present; using lakefile.lean
+info: mathlib: cloning https://github.com/leanprover-community/mathlib4.git
+info: mathlib: checking out revision 'd13f23b723b8a846827a245b89c10fc7d3f11612'
+info: LeanCopilot: cloning https://github.com/lean-dojo/LeanCopilot.git
+info: LeanCopilot: checking out revision 'c360b5df5d8a67ed8f1a8769aa157f6adca7dd53'
+error: HomotopyHypothesis: package directory not found: /workspace/scratch/d18a558d1d7d/css-rigidity-lean/external_refs/homotopy-hypothesis-lean4
+[locked-lake-build] lake build exited with code 1
+[locked-lake-build] released /tmp/info-geometry-build.lock

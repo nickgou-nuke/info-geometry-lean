@@ -1,0 +1,19 @@
+{
+  "docs/verification/css-whitehead-stabilization/axiom-audit.txt": "b71c2f09097ebcca8fed8c612cc227c6d551a96790bd20bca40ae48eb7be135c",
+  "docs/verification/css-whitehead-stabilization/findings-dispositions.json": "30f50a802f843b5b67f9778b904c2a73b336a7f22f55d6fb04004937cbf673ed",
+  "docs/verification/css-whitehead-stabilization/independent-acceptance.md": "a1f559b91f5839f20a487150e4b095da905597d1ffbb6d43ed36835510a98c93",
+  "docs/verification/css-whitehead-stabilization/native-logs.json": "3fbac903bd6d54d850a3cfe205ce3ad650e7d11815356b5259bacf3fd65febc7",
+  "docs/verification/css-whitehead-stabilization/placeholder-findings.json": "7a04854202daaaf47a972b12a3a2abfba9e9afd2045cee240345af40c51bfccc",
+  "docs/verification/css-whitehead-stabilization/reviewer-evidence-sha256.json": "779a26f7821f2603f6c06ce8b75d88b92f6d5ce22fbd16f3e35c184b80a53a18",
+  "docs/verification/css-whitehead-stabilization/root-build.json": "cc9a484bdd4ec4d1149031744f30aa0edb497ef4b93cd6160dbcf47f6ce00059",
+  "docs/verification/css-whitehead-stabilization/root-build.txt": "e7555970c7b865c403922fc2e113588692cc537cf49f57fd2558c7f645215d38",
+  "docs/verification/css-whitehead-stabilization/run-static-review.py": "7c4873d09515d56235baf7bfd30318a50f2242dbf7f6cc2e1e0dd0aa56704c1f",
+  "docs/verification/css-whitehead-stabilization/semantic-findings.json": "74d0adde054539419a34c7915ead9ee2c9ddeb0e7aa4bd68dd094552b73308cc",
+  "docs/verification/css-whitehead-stabilization/source-checkpoint.json": "0cab0c0608918b76b75bd3716f670eb5b16a3b077f576c68b66d42fba283236c",
+  "docs/verification/css-whitehead-stabilization/source-closure.json": "a8b020fd7d8763b30a14f6884d2e75df5f368977f12a45df306bd0f152a6812f",
+  "docs/verification/css-whitehead-stabilization/source-commit.txt": "819b2c302e5206f67ca642fb6bc5d634d4a4ad7cab21f307ba56052629f8cb8b",
+  "docs/verification/css-whitehead-stabilization/source-pre-push.json": "fab40a00d93bca3c1a9629faead97b6694273a695050d68a51c1fccaf5011532",
+  "docs/verification/css-whitehead-stabilization/source-pre-push.txt": "3ace67551c0e89d0d1d5fb4fdbeb7d979e788f5be8a9d61530faf729b0cba222",
+  "docs/verification/css-whitehead-stabilization/static-gates.json": "ea5fcdeaea915bfee4f145be1392c1d4525d567a7276a1cfb9adc396ff3b3a9a",
+  "docs/verification/CSS_WHITEHEAD_STABILIZATION_VERIFICATION.md": "9ead1f62fe689a0c22201e020178d72ed68ab5046a97f1d78586a41559b2fe89"
+}

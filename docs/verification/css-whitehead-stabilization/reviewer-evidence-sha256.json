@@ -1,0 +1,11 @@
+{
+  "independent-acceptance.md": "a1f559b91f5839f20a487150e4b095da905597d1ffbb6d43ed36835510a98c93",
+  "source-closure.json": "a8b020fd7d8763b30a14f6884d2e75df5f368977f12a45df306bd0f152a6812f",
+  "axiom-audit.txt": "b71c2f09097ebcca8fed8c612cc227c6d551a96790bd20bca40ae48eb7be135c",
+  "native-logs.json": "3fbac903bd6d54d850a3cfe205ce3ad650e7d11815356b5259bacf3fd65febc7",
+  "static-gates.json": "ea5fcdeaea915bfee4f145be1392c1d4525d567a7276a1cfb9adc396ff3b3a9a",
+  "placeholder-findings.json": "7a04854202daaaf47a972b12a3a2abfba9e9afd2045cee240345af40c51bfccc",
+  "semantic-findings.json": "74d0adde054539419a34c7915ead9ee2c9ddeb0e7aa4bd68dd094552b73308cc",
+  "findings-dispositions.json": "30f50a802f843b5b67f9778b904c2a73b336a7f22f55d6fb04004937cbf673ed",
+  "run-static-review.py": "7c4873d09515d56235baf7bfd30318a50f2242dbf7f6cc2e1e0dd0aa56704c1f"
+}

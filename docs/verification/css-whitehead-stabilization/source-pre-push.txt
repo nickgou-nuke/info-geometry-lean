@@ -1,0 +1,242 @@
+[pre-push] new ref detected; classifying every pushed range and origin/main ancestry before full root gate
+[pre-push] classifying a392af178af1fe2bcba2ba39eb405700c6ee103c..abd22cd4badf6df017cc85fa137cb2160f48eca9
+═══════════════════════════════════════════════════
+  POST-BUILD QUALITY GATE (incremental mode)
+═══════════════════════════════════════════════════
+Root: /workspace/scratch/d18a558d1d7d/css-rigidity-lean
+Time: 2026-11-12 22:27:27Z
+
+▶ Incremental diff analysis: a392af178af1fe2bcba2ba39eb405700c6ee103c..abd22cd4badf6df017cc85fa137cb2160f48eca9
+  Modified Lean files:
+    - lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean
+    - lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean
+    - lean/InfoGeometry/Algebra/StablePaddingEquivalence.lean
+    - lean/InfoGeometry/Algebra/StablePresentationEquivalence.lean
+    - lean/InfoGeometry/Algebra/WhiteheadStabilization.lean
+    - lean/InfoGeometry/Canonical/All.lean
+▶ Locked Lake build (incremental targets)
+[locked-lake-build] requesting lock for InfoGeometry.Algebra.ElementaryMatrixOperators InfoGeometry.Algebra.HyperbolicPresentationTransport InfoGeometry.Algebra.StablePaddingEquivalence InfoGeometry.Algebra.StablePresentationEquivalence InfoGeometry.Algebra.WhiteheadStabilization InfoGeometry.Canonical.All
+[locked-lake-build] acquired /tmp/info-geometry-build.lock
+[locked-lake-build] .lake/packages/mathlib has no compiled .olean cache; hydrating via `lake exe cache get`...
+info: [root]: lakefile.lean and lakefile.toml are both present; using lakefile.lean
+error: HomotopyHypothesis: package directory not found: /workspace/scratch/d18a558d1d7d/css-rigidity-lean/external_refs/homotopy-hypothesis-lean4
+[locked-lake-build] executing: lake build InfoGeometry.Algebra.ElementaryMatrixOperators InfoGeometry.Algebra.HyperbolicPresentationTransport InfoGeometry.Algebra.StablePaddingEquivalence InfoGeometry.Algebra.StablePresentationEquivalence InfoGeometry.Algebra.WhiteheadStabilization InfoGeometry.Canonical.All
+info: [root]: lakefile.lean and lakefile.toml are both present; using lakefile.lean
+error: HomotopyHypothesis: package directory not found: /workspace/scratch/d18a558d1d7d/css-rigidity-lean/external_refs/homotopy-hypothesis-lean4
+[locked-lake-build] lake build exited with code 1
+[locked-lake-build] released /tmp/info-geometry-build.lock
+  ❌ Locked Lake build (incremental targets) (exit code: 1)
+▶ Axiom & Debt Audit (incremental)
+🔍 Running info-geometry-lean Axiom & Debt Audit...
+✅ Audit complete!
+   Total Lean Files: 6
+   Clean Files (0 sorries): 6
+   Files with Debt: 0
+   Total Open Gaps (sorry/axiom/admit): 0
+   Report saved to: /workspace/scratch/d18a558d1d7d/css-rigidity-lean/artifacts/axiom_audit_report.json
+  ✅ Axiom & Debt Audit (incremental)
+▶ Semantic Content Audit (incremental)
+{
+  "blocking_finding_count": 0,
+  "category_counts": {},
+  "finding_count": 0,
+  "manifest_only_module_count": 22,
+  "manifested_without_current_findings": 22,
+  "modules_reported": 22,
+  "modules_with_current_findings": 0,
+  "modules_with_findings": 0,
+  "review_finding_count": 0,
+  "selected_file_count": 27019,
+  "semantic_status_counts": {
+    "manifested_quarantine_no_current_findings": 22
+  }
+}
+  ✅ Semantic Content Audit (incremental) (no issues found)
+▶ Tracked Lean Scope Audit
+Tracked Lean scope audit
+=========================
+tracked Lean files: 56383
+debt files: 91
+debt findings: 878
+lake_package: 0
+forensic_or_fixture: 878
+unclassified_nonpackage: 0
+  .spectral-sandbox/LocalityPrinciple.lean [forensic_or_fixture] (5)
+  agent_memory_recovery/AmbroseSinger.lean/2026-07-01_03-11-13_a1dcc981.lean [forensic_or_fixture] (2)
+  agent_memory_recovery/AmbroseSinger.lean/2026-07-01_03-11-50_de48bcb2.lean [forensic_or_fixture] (1)
+  agent_memory_recovery/AmbroseSinger.lean/2026-07-01_03-13-36_a1dcc981.lean [forensic_or_fixture] (1)
+  agent_memory_recovery/AnomalyTubuleStability.lean/2026-07-06_19-33-23_e77d5adf.lean [forensic_or_fixture] (4)
+  agent_memory_recovery/AnyonFiniteSpinBraid.lean/2026-07-06_03-41-05_da7ef78e.lean [forensic_or_fixture] (2)
+  agent_memory_recovery/CliffordFunctorSandbox.lean/2026-07-06_04-07-58_518b5a46.lean [forensic_or_fixture] (2)
+  agent_memory_recovery/CliffordFunctorSandbox.lean/2026-07-06_04-09-42_7fb20554.lean [forensic_or_fixture] (1)
+  agent_memory_recovery/CliffordFunctorSandbox.lean/2026-07-06_04-10-15_7fb20554.lean [forensic_or_fixture] (1)
+  agent_memory_recovery/CliffordFunctorSandbox.lean/2026-07-06_04-10-44_518b5a46.lean [forensic_or_fixture] (1)
+  agent_memory_recovery/ClosureDebtTest.lean/2026-07-06_03-41-06_4c52faed.lean [forensic_or_fixture] (6)
+  agent_memory_recovery/CuntzFibonacciBraidInclusion.lean/2026-07-06_03-08-23_35f96c11.lean [forensic_or_fixture] (1)
+  agent_memory_recovery/CuntzFibonacciBraidInclusion.lean/2026-07-06_03-16-33_35f96c11.lean [forensic_or_fixture] (1)
+  agent_memory_recovery/HadjiivanovMonodromyProjection.lean/2026-07-05_18-26-39_56f34cca.lean [forensic_or_fixture] (2)
+  agent_memory_recovery/KinematicLieAlgebra.lean/2026-07-06_02-59-11_1a22bff9.lean [forensic_or_fixture] (1)
+  agent_memory_recovery/KinematicLieAlgebra.lean/2026-07-06_03-06-36_1a22bff9.lean [forensic_or_fixture] (1)
+  agent_memory_recovery/MajoranaPolyaHilbertSocket.lean/2026-07-06_04-06-15_3503088e.lean [forensic_or_fixture] (3)
+  agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-06-11_6aadb3be.lean [forensic_or_fixture] (27)
+  agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-09-01_088a60ea.lean [forensic_or_fixture] (27)
+  agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-11-03_9b2a1430.lean [forensic_or_fixture] (27)
+  agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-18-24_3cd8ebee.lean [forensic_or_fixture] (27)
+  agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-20-55_9d1295ea.lean [forensic_or_fixture] (27)
+  agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-23-07_2a79680d.lean [forensic_or_fixture] (27)
+  agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-25-49_16aca7e0.lean [forensic_or_fixture] (27)
+  agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-28-39_cdf24636.lean [forensic_or_fixture] (27)
+  agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-33-44_ffca5b56.lean [forensic_or_fixture] (27)
+  agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-39-29_239faf15.lean [forensic_or_fixture] (27)
+  agent_memory_recovery/MobiusGeometry.lean/2026-07-01_03-35-02_070fe0d3.lean [forensic_or_fixture] (20)
+  agent_memory_recovery/PoincareMetric.lean/2026-07-01_03-24-22_3a5006e5.lean [forensic_or_fixture] (1)
+  agent_memory_recovery/SusceptibilityHessian.lean/2026-07-06_04-06-49_63048b67.lean [forensic_or_fixture] (17)
+  agent_memory_recovery/SusceptibilityHessian.lean/2026-07-06_04-07-28_63048b67.lean [forensic_or_fixture] (4)
+  agent_memory_recovery/TestMobiusGeometry.lean/2026-07-06_04-07-59_376f2747.lean [forensic_or_fixture] (1)
+  agent_memory_recovery/VirasoroAlgebra.lean/2026-07-01_02-36-00_ffdcad14.lean [forensic_or_fixture] (5)
+  agent_memory_recovery/VirasoroAlgebra.lean/2026-07-01_02-44-38_22888e20.lean [forensic_or_fixture] (5)
+  agent_memory_recovery/ZetaBraneCantorDirac.lean/2026-07-06_03-35-24_3cf06cd9.lean [forensic_or_fixture] (1)
+  agent_memory_recovery/untracked_lean/AmbroseSinger.lean [forensic_or_fixture] (1)
+  agent_memory_recovery/untracked_lean/CuntzFibonacciBraidInclusion.lean [forensic_or_fixture] (1)
+  agent_memory_recovery/untracked_lean/KinematicLieAlgebra.lean [forensic_or_fixture] (1)
+  agent_memory_recovery/untracked_lean/PoincareMetric.lean [forensic_or_fixture] (1)
+  agent_memory_recovery/untracked_lean/VirasoroAlgebra.lean [forensic_or_fixture] (5)
+  agent_memory_recovery_stitched/AmbroseSinger.lean [forensic_or_fixture] (4)
+  agent_memory_recovery_stitched/AnomalyTubuleStability.lean [forensic_or_fixture] (4)
+  agent_memory_recovery_stitched/AnyonFiniteSpinBraid.lean [forensic_or_fixture] (2)
+  agent_memory_recovery_stitched/CliffordFunctorSandbox.lean [forensic_or_fixture] (3)
+  agent_memory_recovery_stitched/ClosureDebtTest.lean [forensic_or_fixture] (6)
+  agent_memory_recovery_stitched/CuntzFibonacciBraidInclusion.lean [forensic_or_fixture] (1)
+  agent_memory_recovery_stitched/HadjiivanovMonodromyProjection.lean [forensic_or_fixture] (2)
+  agent_memory_recovery_stitched/KinematicLieAlgebra.lean [forensic_or_fixture] (1)
+  agent_memory_recovery_stitched/MajoranaPolyaHilbertSocket.lean [forensic_or_fixture] (3)
+  agent_memory_recovery_stitched/MobiusGeometry.lean [forensic_or_fixture] (290)
+  agent_memory_recovery_stitched/PoincareMetric.lean [forensic_or_fixture] (1)
+  agent_memory_recovery_stitched/SusceptibilityHessian.lean [forensic_or_fixture] (21)
+  agent_memory_recovery_stitched/TestMobiusGeometry.lean [forensic_or_fixture] (1)
+  agent_memory_recovery_stitched/VirasoroAlgebra.lean [forensic_or_fixture] (5)
+  agent_memory_recovery_stitched/ZetaBraneCantorDirac.lean [forensic_or_fixture] (1)
+  agent_writes_recovery_v4/lean/InfoGeometry/Kaehler/AmbroseSinger.lean [forensic_or_fixture] (1)
+  agent_writes_recovery_v4/lean/InfoGeometry/Kaehler/PoincareMetric.lean [forensic_or_fixture] (1)
+  archive/scratch_recovery/debug_ite.lean [forensic_or_fixture] (1)
+  archive/scratch_recovery/sandbox_asano_induction.lean [forensic_or_fixture] (2)
+  archive/scratch_recovery/sandbox_fredholm_verification.lean [forensic_or_fixture] (10)
+  archive/scratch_recovery/sandbox_hamiltonian.lean [forensic_or_fixture] (1)
+  archive/scratch_recovery/sandbox_ontology_check.lean [forensic_or_fixture] (8)
+  archive/scratch_recovery/sandbox_split_gas.lean [forensic_or_fixture] (2)
+  archive/scratch_recovery/test4.lean [forensic_or_fixture] (3)
+  archive/upstream_snapshot_20260906/sources/lean/InfoGeometry/Eval/ClosureDebtTest.lean [forensic_or_fixture] (6)
+  archive/upstream_snapshot_20260906/sources/lean/InfoGeometry/New.lean [forensic_or_fixture] (32)
+  archive/upstream_snapshot_20260906/sources/lean/InfoGeometry/Relativity/OliveiraMaiaZornWeylFrame.lean [forensic_or_fixture] (3)
+  archive/upstream_snapshot_20260906/sources/lean/InfoGeometry/Relativity/SO44LorentzZornEmbedding.lean [forensic_or_fixture] (2)
+  archive/upstream_snapshot_20260906/sources/lean/scripts/generated_blueprints.lean [forensic_or_fixture] (1)
+  lean_sandbox/CARFockBridge.lean [forensic_or_fixture] (2)
+  lean_sandbox/CAR_comm_lemmas.lean [forensic_or_fixture] (2)
+  lean_sandbox/CompleteEckmannProof.lean [forensic_or_fixture] (1)
+  lean_sandbox/Eckmann_proof.lean [forensic_or_fixture] (3)
+  lean_sandbox/GaussianEliminationFix.lean [forensic_or_fixture] (5)
+  lean_sandbox/HarmonicKMSBridge.lean [forensic_or_fixture] (1)
+  lean_sandbox/HarmonicKMS_Decomposed.lean [forensic_or_fixture] (5)
+  lean_sandbox/HarmonicKMS_LemmaChain.lean [forensic_or_fixture] (6)
+  lean_sandbox/HarmonicKMS_fixed.lean [forensic_or_fixture] (1)
+  lean_sandbox/OrthogonalRank.lean [forensic_or_fixture] (1)
+  lean_sandbox/PHOAS_decomposed.lean [forensic_or_fixture] (4)
+  lean_sandbox/su3_formalization/Phase1_SpecialUnitary.lean [forensic_or_fixture] (2)
+  lean_sandbox/su3_formalization/Phase3_StructureConstants.lean [forensic_or_fixture] (8)
+  lean_sandbox/su3_formalization/Phase4_GellMannBridge.lean [forensic_or_fixture] (26)
+  sandbox/Cl55GenericEquivalence.lean [forensic_or_fixture] (10)
+  sandbox/bilingual_physical_sector.lean [forensic_or_fixture] (1)
+  tests/lean/InfoGeometry/Lint/PauliTest.lean [forensic_or_fixture] (2)
+  tools/multisystem/major_restore_non_overwriting/lean/InfoGeometry/Recovered/CliffordMatrixBridge.lean [forensic_or_fixture] (1)
+  tools/multisystem/major_restore_non_overwriting/lean/InfoGeometry/Recovered/MajoranaTensorBridge.lean [forensic_or_fixture] (7)
+  tools/multisystem/major_restore_non_overwriting/lean/InfoGeometry/Recovered/SplitExponential.lean [forensic_or_fixture] (1)
+  tools/multisystem/major_restore_non_overwriting/lean/InfoGeometry/Recovered/SplitQuaternionMatricesRecovered.lean [forensic_or_fixture] (2)
+  tools/multisystem/major_restore_non_overwriting/lean/InfoGeometry/Recovered/TwistorAmplituhedronPluckerBridge.lean [forensic_or_fixture] (1)
+  ✅ Tracked Lean Scope Audit
+▶ Quarantined Lean Artifact Audit
+Quarantined Lean artifact audit
+================================
+quarantine files: 83
+files with debt: 76
+debt findings: 796
+  .spectral-sandbox/LocalityPrinciple.lean.disabled (5)
+  agent_memory_recovery/AmbroseSinger.lean/2026-07-01_03-11-13_a1dcc981.lean.disabled (2)
+  agent_memory_recovery/AmbroseSinger.lean/2026-07-01_03-11-50_de48bcb2.lean.disabled (1)
+  agent_memory_recovery/AmbroseSinger.lean/2026-07-01_03-13-36_a1dcc981.lean.disabled (1)
+  agent_memory_recovery/AnomalyTubuleStability.lean/2026-07-06_19-33-23_e77d5adf.lean.disabled (4)
+  agent_memory_recovery/AnyonFiniteSpinBraid.lean/2026-07-06_03-41-05_da7ef78e.lean.disabled (2)
+  agent_memory_recovery/CliffordFunctorSandbox.lean/2026-07-06_04-07-58_518b5a46.lean.disabled (2)
+  agent_memory_recovery/CliffordFunctorSandbox.lean/2026-07-06_04-09-42_7fb20554.lean.disabled (1)
+  agent_memory_recovery/CliffordFunctorSandbox.lean/2026-07-06_04-10-15_7fb20554.lean.disabled (1)
+  agent_memory_recovery/CliffordFunctorSandbox.lean/2026-07-06_04-10-44_518b5a46.lean.disabled (1)
+  agent_memory_recovery/CuntzFibonacciBraidInclusion.lean/2026-07-06_03-08-23_35f96c11.lean.disabled (1)
+  agent_memory_recovery/CuntzFibonacciBraidInclusion.lean/2026-07-06_03-16-33_35f96c11.lean.disabled (1)
+  agent_memory_recovery/HadjiivanovMonodromyProjection.lean/2026-07-05_18-26-39_56f34cca.lean.disabled (2)
+  agent_memory_recovery/KinematicLieAlgebra.lean/2026-07-06_02-59-11_1a22bff9.lean.disabled (1)
+  agent_memory_recovery/KinematicLieAlgebra.lean/2026-07-06_03-06-36_1a22bff9.lean.disabled (1)
+  agent_memory_recovery/MajoranaPolyaHilbertSocket.lean/2026-07-06_04-06-15_3503088e.lean.disabled (3)
+  agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-06-11_6aadb3be.lean.disabled (27)
+  agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-09-01_088a60ea.lean.disabled (27)
+  agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-11-03_9b2a1430.lean.disabled (27)
+  agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-18-24_3cd8ebee.lean.disabled (27)
+  agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-20-55_9d1295ea.lean.disabled (27)
+  agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-23-07_2a79680d.lean.disabled (27)
+  agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-25-49_16aca7e0.lean.disabled (27)
+  agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-28-39_cdf24636.lean.disabled (27)
+  agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-33-44_ffca5b56.lean.disabled (27)
+  agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-39-29_239faf15.lean.disabled (27)
+  agent_memory_recovery/MobiusGeometry.lean/2026-07-01_03-35-02_070fe0d3.lean.disabled (20)
+  agent_memory_recovery/SusceptibilityHessian.lean/2026-07-06_04-06-49_63048b67.lean.disabled (17)
+  agent_memory_recovery/SusceptibilityHessian.lean/2026-07-06_04-07-28_63048b67.lean.disabled (4)
+  agent_memory_recovery/TestMobiusGeometry.lean/2026-07-06_04-07-59_376f2747.lean.disabled (1)
+  agent_memory_recovery/VirasoroAlgebra.lean/2026-07-01_02-36-00_ffdcad14.lean.disabled (5)
+  agent_memory_recovery/VirasoroAlgebra.lean/2026-07-01_02-44-38_22888e20.lean.disabled (5)
+  agent_memory_recovery/ZetaBraneCantorDirac.lean/2026-07-06_03-35-24_3cf06cd9.lean.disabled (1)
+  agent_memory_recovery/untracked_lean/AmbroseSinger.lean.disabled (1)
+  agent_memory_recovery/untracked_lean/CuntzFibonacciBraidInclusion.lean.disabled (1)
+  agent_memory_recovery/untracked_lean/KinematicLieAlgebra.lean.disabled (1)
+  agent_memory_recovery/untracked_lean/VirasoroAlgebra.lean.disabled (5)
+  agent_memory_recovery_stitched/AmbroseSinger.lean.disabled (4)
+  agent_memory_recovery_stitched/AnomalyTubuleStability.lean.disabled (4)
+  agent_memory_recovery_stitched/AnyonFiniteSpinBraid.lean.disabled (2)
+  agent_memory_recovery_stitched/CliffordFunctorSandbox.lean.disabled (3)
+  agent_memory_recovery_stitched/CuntzFibonacciBraidInclusion.lean.disabled (1)
+  agent_memory_recovery_stitched/HadjiivanovMonodromyProjection.lean.disabled (2)
+  agent_memory_recovery_stitched/KinematicLieAlgebra.lean.disabled (1)
+  agent_memory_recovery_stitched/MajoranaPolyaHilbertSocket.lean.disabled (3)
+  agent_memory_recovery_stitched/MobiusGeometry.lean.disabled (290)
+  agent_memory_recovery_stitched/SusceptibilityHessian.lean.disabled (21)
+  agent_memory_recovery_stitched/TestMobiusGeometry.lean.disabled (1)
+  agent_memory_recovery_stitched/VirasoroAlgebra.lean.disabled (5)
+  agent_memory_recovery_stitched/ZetaBraneCantorDirac.lean.disabled (1)
+  agent_writes_recovery_v4/lean/InfoGeometry/Kaehler/AmbroseSinger.lean.disabled (1)
+  archive/scratch_recovery/debug_ite.lean.disabled (1)
+  archive/scratch_recovery/sandbox_asano_induction.lean.disabled (2)
+  archive/scratch_recovery/sandbox_fredholm_verification.lean.disabled (10)
+  archive/scratch_recovery/sandbox_hamiltonian.lean.disabled (1)
+  archive/scratch_recovery/sandbox_ontology_check.lean.disabled (8)
+  archive/scratch_recovery/sandbox_split_gas.lean.disabled (2)
+  archive/scratch_recovery/test4.lean.disabled (3)
+  lean_sandbox/CARFockBridge.lean.disabled (2)
+  lean_sandbox/CAR_comm_lemmas.lean.disabled (2)
+  lean_sandbox/CompleteEckmannProof.lean.disabled (1)
+  lean_sandbox/Eckmann_proof.lean.disabled (3)
+  lean_sandbox/GaussianEliminationFix.lean.disabled (5)
+  lean_sandbox/HarmonicKMSBridge.lean.disabled (1)
+  lean_sandbox/HarmonicKMS_Decomposed.lean.disabled (5)
+  lean_sandbox/HarmonicKMS_LemmaChain.lean.disabled (6)
+  lean_sandbox/HarmonicKMS_fixed.lean.disabled (1)
+  lean_sandbox/OrthogonalRank.lean.disabled (1)
+  lean_sandbox/su3_formalization/Phase1_SpecialUnitary.lean.disabled (2)
+  lean_sandbox/su3_formalization/Phase3_StructureConstants.lean.disabled (8)
+  lean_sandbox/su3_formalization/Phase4_GellMannBridge.lean.disabled (26)
+  tests/lean/InfoGeometry/Lint/PauliTest.lean.disabled (2)
+  tools/multisystem/major_restore_non_overwriting/lean/InfoGeometry/Recovered/CliffordMatrixBridge.lean.disabled (1)
+  tools/multisystem/major_restore_non_overwriting/lean/InfoGeometry/Recovered/SplitExponential.lean.disabled (1)
+  tools/multisystem/major_restore_non_overwriting/lean/InfoGeometry/Recovered/SplitQuaternionMatricesRecovered.lean.disabled (2)
+  tools/multisystem/major_restore_non_overwriting/lean/InfoGeometry/Recovered/TwistorAmplituhedronPluckerBridge.lean.disabled (1)
+  ✅ Quarantined Lean Artifact Audit
+
+═══════════════════════════════════════════════════
+  ❌ SOME CHECKS FAILED / GATES FOUND ISSUES
+═══════════════════════════════════════════════════

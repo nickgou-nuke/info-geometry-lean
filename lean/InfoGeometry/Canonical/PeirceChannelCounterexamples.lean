@@ -113,7 +113,8 @@ theorem adjoint_pair_metric_not_isUnit :
 /-- A lower-only amplitude does not commute with the chosen cut. -/
 theorem lower_amplitude_commutator_ne_zero :
     comm (frameUnit 0 0) (frameUnit 1 0) ≠ 0 := by
-  simpa [comm, frameUnit_mul] using neg_ne_zero.mpr (frameUnit_ne_zero 1 0)
+  simpa [InfoGeometry.OperatorAlgebra.PeirceSpine.comm, frameUnit_mul]
+    using neg_ne_zero.mpr (frameUnit_ne_zero 1 0)
 
 /-- Nevertheless, the selected upper channel and its adjoint are zero.
 Thus nonzero `[P,A]` alone does not imply nonzero `genV P A (star A)`. -/
@@ -129,7 +130,8 @@ theorem mass_channel_discrepancy :
         fourierV (frameUnit 0 0) (frameUnit 0 1) (star (frameUnit 0 1)) (frameUnit 0 2) =
       (3 : ℤ) • frameUnit 0 2 := by
   rw [hProjV_sub_fourierV one_channel_cut.1]
-  simp [adjoint_pair_metric, comm, mul_add, add_mul, frameUnit_mul]
+  simp [adjoint_pair_metric, InfoGeometry.OperatorAlgebra.PeirceSpine.comm,
+    mul_add, add_mul, frameUnit_mul]
 
 /-- Equality of the homogenized and Fourier mass channels cannot be
 asserted on all elements of the ambient noncommutative algebra. -/

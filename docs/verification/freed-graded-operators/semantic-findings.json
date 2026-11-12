@@ -1,0 +1,179 @@
+{
+  "authority": "lexical heuristics; not a semantic or kernel proof",
+  "blocking_severity_counts": {
+    "warning": 17
+  },
+  "counts": {
+    "trivial_surface": 17
+  },
+  "coverage_complete": true,
+  "fail_on": "warning",
+  "fail_prefixes": [],
+  "files_scanned": 5,
+  "files_selected": 5,
+  "findings": [
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/Algebra/SupermatrixKoszul.lean",
+      "line": 43,
+      "severity": "warning",
+      "subject": "evenBlock_apply00"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/Algebra/SupermatrixKoszul.lean",
+      "line": 47,
+      "severity": "warning",
+      "subject": "evenBlock_apply01"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/Algebra/SupermatrixKoszul.lean",
+      "line": 51,
+      "severity": "warning",
+      "subject": "evenBlock_apply10"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/Algebra/SupermatrixKoszul.lean",
+      "line": 55,
+      "severity": "warning",
+      "subject": "evenBlock_apply11"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/Algebra/SupermatrixKoszul.lean",
+      "line": 59,
+      "severity": "warning",
+      "subject": "oddBlock_apply00"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/Algebra/SupermatrixKoszul.lean",
+      "line": 63,
+      "severity": "warning",
+      "subject": "oddBlock_apply01"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/Algebra/SupermatrixKoszul.lean",
+      "line": 67,
+      "severity": "warning",
+      "subject": "oddBlock_apply10"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/Algebra/SupermatrixKoszul.lean",
+      "line": 71,
+      "severity": "warning",
+      "subject": "oddBlock_apply11"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/Canonical/FreedOperatorAlgebra.lean",
+      "line": 36,
+      "severity": "warning",
+      "subject": "superTrace_repeated_defect"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FreedDefectChannels.lean",
+      "line": 163,
+      "severity": "warning",
+      "subject": "plus_cut_commute_diagonal"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FreedDefectChannels.lean",
+      "line": 172,
+      "severity": "warning",
+      "subject": "walshPlus_commute_symmetric"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FreedDefectChannels.lean",
+      "line": 176,
+      "severity": "warning",
+      "subject": "walshMinus_commute_symmetric"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FreedGradedCalculus.lean",
+      "line": 38,
+      "severity": "warning",
+      "subject": "superTrace_evenBlock"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by simp [superTrace]",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FreedGradedCalculus.lean",
+      "line": 41,
+      "severity": "warning",
+      "subject": "superTrace_oddBlock"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FreedGradedCalculus.lean",
+      "line": 76,
+      "severity": "warning",
+      "subject": "superTrace_even_odd_commutator"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FreedGradedCalculus.lean",
+      "line": 82,
+      "severity": "warning",
+      "subject": "superTrace_elementary_odd_vanish_iff"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FreedGradedCalculus.lean",
+      "line": 179,
+      "severity": "warning",
+      "subject": "comm_square_zero"
+    }
+  ],
+  "pattern_version": 1,
+  "read_failures": [],
+  "scope_roots": [
+    "lean/InfoGeometry/Algebra/SupermatrixKoszul.lean",
+    "lean/InfoGeometry/Algebra/FreedAdditiveCocycle.lean",
+    "lean/InfoGeometry/OperatorAlgebra/FreedGradedCalculus.lean",
+    "lean/InfoGeometry/OperatorAlgebra/FreedDefectChannels.lean",
+    "lean/InfoGeometry/Canonical/FreedOperatorAlgebra.lean"
+  ],
+  "severity_counts": {
+    "warning": 17
+  },
+  "source_paths": [
+    "lean/InfoGeometry/Algebra/FreedAdditiveCocycle.lean",
+    "lean/InfoGeometry/Algebra/SupermatrixKoszul.lean",
+    "lean/InfoGeometry/Canonical/FreedOperatorAlgebra.lean",
+    "lean/InfoGeometry/OperatorAlgebra/FreedDefectChannels.lean",
+    "lean/InfoGeometry/OperatorAlgebra/FreedGradedCalculus.lean"
+  ],
+  "successfully_read_paths": [
+    "lean/InfoGeometry/Algebra/FreedAdditiveCocycle.lean",
+    "lean/InfoGeometry/Algebra/SupermatrixKoszul.lean",
+    "lean/InfoGeometry/Canonical/FreedOperatorAlgebra.lean",
+    "lean/InfoGeometry/OperatorAlgebra/FreedDefectChannels.lean",
+    "lean/InfoGeometry/OperatorAlgebra/FreedGradedCalculus.lean"
+  ],
+  "tracked": false
+}

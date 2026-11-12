@@ -1,0 +1,196 @@
+{
+  "status": "passed",
+  "scope": "Exact repository source closure and native axiom audit",
+  "targets": [
+    "InfoGeometry.Algebra.SupermatrixKoszul",
+    "InfoGeometry.Algebra.FreedAdditiveCocycle",
+    "InfoGeometry.OperatorAlgebra.FreedGradedCalculus",
+    "InfoGeometry.OperatorAlgebra.FreedDefectChannels",
+    "InfoGeometry.Canonical.FreedOperatorAlgebra"
+  ],
+  "modules": [
+    {
+      "module": "InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/OperatorAlgebra/FiniteMatrixNoncommutativeWitness.olean": "75bdcb76fe61f2722727e8ad8d77ae783eed89687e9fc3b89f000424c481553d"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Algebra/FiniteSpinAlgebra.olean": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Algebra.SupermatrixKoszul",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Algebra/SupermatrixKoszul.olean": "b99bc2b7fb9247b448d3bc834897239816106c70ad95d73650384850d3da9fc4"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Algebra.FreedAdditiveCocycle",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Algebra/FreedAdditiveCocycle.olean": "ee21e7f1484e09de08739291e9ebd0bd0f5e569e20947dfe514fcd7283ebf476"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/OperatorAlgebra/PeirceSpine/Basic.olean": "429e5b0edf7f9c31f9e1d7df6f57cc4d5387124c7fa8f4f7ebeb73d089d73f6d"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge",
+      "returncode": 0,
+      "warnings": 4,
+      "artifacts": {
+        "lib/InfoGeometry/OperatorAlgebra/PeirceSpine/Supercharge.olean": "d43f573e55b0cf57862439f1361d4451a664bbd8b956520b665cebb3eb597711"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/OperatorAlgebra/PeirceSpine/Tetraktys.olean": "de7fa53352a972ed19bc625b977a162eb55794b5085b3bfe213843befd8454c6"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.GradedTraceMoments",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/OperatorAlgebra/PeirceSpine/GradedTraceMoments.olean": "d93f4c3a64d4495d3c2939d67d891d956a7a4ad3ebc970f901608a7f159ed2f7"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.FreedGradedCalculus",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/OperatorAlgebra/FreedGradedCalculus.olean": "328cca328ca8910b19fb60ef38b157744ded10a4ae3e291b91f22ef0ea8f2964"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.FreedDefectChannels",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/OperatorAlgebra/FreedDefectChannels.olean": "e091c1abc017b965d4a9e6ae50d563e7d19f1e40b565ae35453d1bc15ccbffd4"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Canonical.FreedOperatorAlgebra",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Canonical/FreedOperatorAlgebra.olean": "7ba6e169244daa381bf2d0f2b089d3620b3cd516ad407c4ddbd2c29d3701237e"
+      },
+      "reused": false
+    }
+  ],
+  "audit_required": true,
+  "verification_source_sha256": {
+    "tools/quality/check_clifford_dirac.py": "fcf6fbb9845e0ee2a85bdb3778c5fe74345a9ae7a2e97e871d0a89d3e98e7db0",
+    "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+    "tools/quality/reviewed_audit_source.py": "df953460ee18e79606afa03f1634e0d299730582c24971888649cf68d18bcbf4",
+    "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df"
+  },
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "source_sha256": {
+    "InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness": "f3f6aa453cc4391727fd978ae4f516054ad6d8ad5d2da36f86e817eecebe0057",
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+    "InfoGeometry.Algebra.SupermatrixKoszul": "5a9376ece8d14e23f146f4fbbc0f51ef89c257156391ff139708ab5a5c6f09a1",
+    "InfoGeometry.Algebra.FreedAdditiveCocycle": "97bb83c73533d53a24bed8096615ff15de4c18417522e2e4bd0c8119ae19cd8d",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic": "6657ac06e9dfde8930808192b874c3c7d7738ad89a22d18c06c207d47a949327",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge": "708761b07efd0e3382eae5c93909ee380796ff2b8855b0256dbb6ee4265255a6",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys": "75b924dc4f5b96b7f65492cee82cafabd433409fa34b70d0f0e733066227a767",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.GradedTraceMoments": "d24f2822870772acb172dbba0790faec35093f26aa00c1eaac0bd40aca53ca8a",
+    "InfoGeometry.OperatorAlgebra.FreedGradedCalculus": "c9286e296ed039847e505b7b5669c462eaa45c725af9eec24f4be6a1974ec8ad",
+    "InfoGeometry.OperatorAlgebra.FreedDefectChannels": "a518abb88fb80a2af53683c46c39c8b01ebd53ae74d65a90e09ed3a5e818bd2b",
+    "InfoGeometry.Canonical.FreedOperatorAlgebra": "f42e04d550eb119d4390c4df6e432d41121b6a0b7b0eeba268b5072435c1ebf6"
+  },
+  "fingerprints": {
+    "InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness": "010024edb38f695abf62d8933087d40fc082e991e22f397f1fc66ca0da8cbec3",
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "6318527c4fbd65bca67b505b6a77a74eb750cf957768c7af3f06c163dce9bc28",
+    "InfoGeometry.Algebra.SupermatrixKoszul": "9f58d4a47c9fade14e884c6f8b9a2dccc502abe6e3ffc7b0b529600cd57e29e4",
+    "InfoGeometry.Algebra.FreedAdditiveCocycle": "57c7973acd645f8b7e48cc26486a6744b2352f145c9b104e1333792272d83e4e",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic": "371a57bd773e984157376f429c529671f2d42b2860f852a66a6067319a797c0d",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge": "d0726f858a437212a6ef8ace20999e21ae6a31e1680ae719c50cad3e57d75532",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys": "01cec090c776b00aaf2912a84bfbc1eb60daa4f05d98fe61609c43c7721d8ead",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.GradedTraceMoments": "93365e6a4531b97cf177c0bdbaf65264e0376a87a3313cf9a4e47ef823e03d6e",
+    "InfoGeometry.OperatorAlgebra.FreedGradedCalculus": "5eefc67b977390b26276dffd42af8d8c1c1089ca360c49fd11cc52f7c4d98245",
+    "InfoGeometry.OperatorAlgebra.FreedDefectChannels": "84a27c13475f20a38bc398849e30147381dc1b84eaa947888dd78291b6ce3a76",
+    "InfoGeometry.Canonical.FreedOperatorAlgebra": "aa9c4821459c35b0aa07777c35413a5e169774096feb7baba098d8fb3a829fc3"
+  },
+  "repository_import_dependencies": {
+    "InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness": [],
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": [],
+    "InfoGeometry.Algebra.SupermatrixKoszul": [
+      "InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Algebra.FreedAdditiveCocycle": [
+      "InfoGeometry.Algebra.SupermatrixKoszul"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic": [],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge": [
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys": [
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.GradedTraceMoments": [
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys"
+    ],
+    "InfoGeometry.OperatorAlgebra.FreedGradedCalculus": [
+      "InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness",
+      "InfoGeometry.Algebra.SupermatrixKoszul",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.GradedTraceMoments"
+    ],
+    "InfoGeometry.OperatorAlgebra.FreedDefectChannels": [
+      "InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness",
+      "InfoGeometry.Algebra.SupermatrixKoszul"
+    ],
+    "InfoGeometry.Canonical.FreedOperatorAlgebra": [
+      "InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness",
+      "InfoGeometry.Algebra.FreedAdditiveCocycle",
+      "InfoGeometry.OperatorAlgebra.FreedGradedCalculus",
+      "InfoGeometry.OperatorAlgebra.FreedDefectChannels"
+    ]
+  },
+  "local_revision": "0f13168fe772575c1ede5f9a4594282467f72a39",
+  "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "declaration_counts": {
+    "InfoGeometry.Algebra.SupermatrixKoszul": 22,
+    "InfoGeometry.Algebra.FreedAdditiveCocycle": 30,
+    "InfoGeometry.OperatorAlgebra.FreedGradedCalculus": 36,
+    "InfoGeometry.OperatorAlgebra.FreedDefectChannels": 47,
+    "InfoGeometry.Canonical.FreedOperatorAlgebra": 4
+  },
+  "axioms": [
+    "[propext, Classical.choice, Quot.sound]"
+  ]
+}

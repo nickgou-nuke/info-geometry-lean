@@ -1,0 +1,99 @@
+name: Real symplectic cut periods
+
+on:
+  pull_request:
+    paths:
+      - 'lean/**/*.lean'
+      - 'verification/symplectic-cut-periods/**'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/infra/opengauss_screener.py'
+      - 'tools/pathing.py'
+      - '.github/workflows/symplectic-cut-periods.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: symplectic-cut-periods-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore pinned dependencies
+        id: dependencies
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: real-plucker-lean4341-d13f23b7-${{ runner.os }}-v1
+      - name: Restore checked source artifacts
+        id: source
+        uses: actions/cache/restore@v4
+        with:
+          path: verification/symplectic-cut-periods/.lake/build
+          key: symplectic-cut-source-lean4341-d13f23b7-${{ runner.os }}-${{ hashFiles('lean/**/*.lean', 'verification/symplectic-cut-periods/lakefile.toml', 'verification/symplectic-cut-periods/lake-manifest.json') }}
+          restore-keys: |
+            symplectic-cut-source-lean4341-d13f23b7-${{ runner.os }}-
+      - name: Install the pinned Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.34.1
+      - name: Restore the pinned Mathlib artifacts
+        run: python3 verification/symplectic-cut-periods/check.py exe cache get
+      - name: Check complete source inventory
+        run: python3 verification/symplectic-cut-periods/audit.py
+      - name: Build source owners
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/symplectic-cut-periods/check.py build 2>&1 | tee symplectic-cut-build.log
+      - name: Inspect transitive axiom dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/symplectic-cut-periods/check.py env lean lean/InfoGeometry/Geometry/SymplecticCutPeriodAudit.lean 2>&1 | tee symplectic-cut-axioms.log
+          python3 verification/symplectic-cut-periods/audit.py --log symplectic-cut-axioms.log
+      - name: Screen new mathematics
+        run: >-
+          python3 tools/infra/opengauss_screener.py --strict
+          lean/InfoGeometry/Geometry/RealHamiltonianMoment.lean
+          lean/InfoGeometry/Geometry/RealSignedCutMoment.lean
+          lean/InfoGeometry/Analysis/SymplecticCutClassicalDensity.lean
+          lean/InfoGeometry/Analysis/LogisticBetaTransport.lean
+          lean/InfoGeometry/Analysis/SymplecticCutQuantumDensity.lean
+      - name: Save pinned dependency artifacts
+        if: always() && steps.dependencies.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: ${{ steps.dependencies.outputs.cache-primary-key }}
+      - name: Save checked source artifacts
+        if: always() && steps.source.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: verification/symplectic-cut-periods/.lake/build
+          key: ${{ steps.source.outputs.cache-primary-key }}
+      - name: Preserve validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: symplectic-cut-periods-build
+          path: |
+            symplectic-cut-build.log
+            symplectic-cut-axioms.log

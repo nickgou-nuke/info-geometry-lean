@@ -1,0 +1,127 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Geometry.RealHamiltonianMoment
+import InfoGeometry.Geometry.RealSignedCutMoment
+import InfoGeometry.Analysis.SymplecticCutClassicalDensity
+import InfoGeometry.Analysis.LogisticBetaTransport
+import InfoGeometry.Analysis.SymplecticCutQuantumDensity
+
+/-!
+# Symplectic cut period declaration audit
+
+This module audits the explicitly declared public definitions and theorems
+in the five mathematical owners above. Private helper dependencies
+are audited transitively. This is a validation target, not an umbrella import.
+Regenerate with `python3 verification/symplectic-cut-periods/audit.py --write`.
+The validator compares actual Lean axiom output with this complete list.
+-/
+
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.square_apply
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.rotation
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.rotation_apply
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.rotation_zero
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.rotation_add
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.rotation_neg_left
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.rotation_neg_right
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.rotation_periodic
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.map_rotation
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.hasDerivAt_rotation
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.hasDerivAt_weightedRotation
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.omega
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.omega_apply
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.inner_map_left
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.inner_map_map
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.omega_skew
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.omega_self
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.omega_nondegenerate
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.quadraticMoment
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.omega_generator
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.hasFDerivAt_quadraticMoment
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.fderiv_quadraticMoment
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.inner_rotation
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.quadraticMoment_rotation
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.norm_rotation
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.omega_rotation
+
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.Plane
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.planeJ
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.planeJ_apply
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.planeJ_complexStructure
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.planeOmega
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.planeOmega_apply
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.planeOmega_eq_existing
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.planeOmega_skew
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.planeOmega_nondegenerate
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.planeEnergy
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.planeEnergyDerivative
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.hasFDerivAt_planeEnergy
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.planeOmega_generator
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.hasFDerivAt_planeEnergy_moment
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.fderiv_planeEnergy
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.planeRotation
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.planeRotation_apply
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.planeRotation_add
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.planeRotation_periodic
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.hasDerivAt_planeRotation
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.productPairing_planeRotation
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.planeEnergy_eq_pairing
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.planeEnergy_rotation
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.planeOmega_eq_pairing
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.planeOmega_rotation
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.productOmega
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.productOmega_apply
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.productOmega_skew
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.productOmega_nondegenerate
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.cutMoment
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.cutGenerator
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.hasFDerivAt_cutMoment
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.hasFDerivAt_positiveCutMoment
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.hasFDerivAt_negativeCutMoment
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.signedProductFlow
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.hasDerivAt_signedProductFlow
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.cutMoment_signedProductFlow
+#print axioms InfoGeometry.Geometry.RealSignedCutMoment.signedProductFlow_add
+
+#print axioms InfoGeometry.Analysis.SymplecticCutClassicalDensity.classicalDensity
+#print axioms InfoGeometry.Analysis.SymplecticCutClassicalDensity.classicalDensity_of_nonpos
+#print axioms InfoGeometry.Analysis.SymplecticCutClassicalDensity.classicalDensity_of_nonneg
+#print axioms InfoGeometry.Analysis.SymplecticCutClassicalDensity.classicalDensity_zero
+#print axioms InfoGeometry.Analysis.SymplecticCutClassicalDensity.classicalDensity_pos
+#print axioms InfoGeometry.Analysis.SymplecticCutClassicalDensity.continuous_classicalDensity
+#print axioms InfoGeometry.Analysis.SymplecticCutClassicalDensity.integrable_classicalDensity
+#print axioms InfoGeometry.Analysis.SymplecticCutClassicalDensity.integral_classicalDensity
+#print axioms InfoGeometry.Analysis.SymplecticCutClassicalDensity.hasDerivWithinAt_classicalDensity_left
+#print axioms InfoGeometry.Analysis.SymplecticCutClassicalDensity.hasDerivWithinAt_classicalDensity_right
+#print axioms InfoGeometry.Analysis.SymplecticCutClassicalDensity.not_differentiableAt_classicalDensity_zero
+
+#print axioms InfoGeometry.Analysis.LogisticBetaTransport.logistic_injective
+#print axioms InfoGeometry.Analysis.LogisticBetaTransport.logistic_image_univ
+#print axioms InfoGeometry.Analysis.LogisticBetaTransport.integral_comp_logistic
+#print axioms InfoGeometry.Analysis.LogisticBetaTransport.integrable_comp_logistic_iff
+#print axioms InfoGeometry.Analysis.LogisticBetaTransport.betaPDFReal_nonneg
+#print axioms InfoGeometry.Analysis.LogisticBetaTransport.integral_betaPDFReal
+#print axioms InfoGeometry.Analysis.LogisticBetaTransport.integrable_betaPDFReal
+#print axioms InfoGeometry.Analysis.LogisticBetaTransport.integral_betaPDFReal_Ioo
+#print axioms InfoGeometry.Analysis.LogisticBetaTransport.betaLogitDensity
+#print axioms InfoGeometry.Analysis.LogisticBetaTransport.betaLogitDensity_pos
+#print axioms InfoGeometry.Analysis.LogisticBetaTransport.integrable_betaLogitDensity
+#print axioms InfoGeometry.Analysis.LogisticBetaTransport.integral_betaLogitDensity
+#print axioms InfoGeometry.Analysis.LogisticBetaTransport.betaLogitDensity_eq_exp_div
+
+#print axioms InfoGeometry.Analysis.SymplecticCutQuantumDensity.quantumDensity
+#print axioms InfoGeometry.Analysis.SymplecticCutQuantumDensity.quantumVolume
+#print axioms InfoGeometry.Analysis.SymplecticCutQuantumDensity.quantumDensity_eq_exp
+#print axioms InfoGeometry.Analysis.SymplecticCutQuantumDensity.contDiff_quantumDensity
+#print axioms InfoGeometry.Analysis.SymplecticCutQuantumDensity.hasDerivAt_quantumDensity
+#print axioms InfoGeometry.Analysis.SymplecticCutQuantumDensity.deriv_quantumDensity
+#print axioms InfoGeometry.Analysis.SymplecticCutQuantumDensity.picardFuchs_quantumDensity
+#print axioms InfoGeometry.Analysis.SymplecticCutQuantumDensity.quantumDensity_pos
+#print axioms InfoGeometry.Analysis.SymplecticCutQuantumDensity.quantumVolume_pos
+#print axioms InfoGeometry.Analysis.SymplecticCutQuantumDensity.quantumDensity_phase_reflection
+#print axioms InfoGeometry.Analysis.SymplecticCutQuantumDensity.quantumDensity_eq_volume_mul_betaLogitDensity
+#print axioms InfoGeometry.Analysis.SymplecticCutQuantumDensity.integrable_quantumDensity
+#print axioms InfoGeometry.Analysis.SymplecticCutQuantumDensity.integral_quantumDensity
+#print axioms InfoGeometry.Analysis.SymplecticCutQuantumDensity.integral_quantumDensity_halves

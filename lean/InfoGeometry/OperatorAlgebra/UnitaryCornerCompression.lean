@@ -43,7 +43,7 @@ def transfer (p : A) (u : unitary A) (x : A) : A :=
 
 @[simp] theorem compress_one (p : A) (u : unitary A)
     (hp : IsIdempotentElem p) : compress p u 1 = p := by
-  simpa only [compress, map_one, mul_one] using hp
+  simpa only [compress, map_one, mul_one] using hp.eq
 
 @[simp] theorem compress_identity (p x : A) :
     compress p (1 : unitary A) x = p * x * p := by
@@ -72,7 +72,7 @@ theorem projection_defect_eq_gram (p q : A) (u : unitary A)
       star (transfer p u q) * transfer p u q := by
   have hstar : star (compress p u q) = compress p u q := by
     rw [← compress_star p u q hp.isSelfAdjoint, hq.isSelfAdjoint.star_eq]
-  simpa only [hq.isSelfAdjoint.star_eq, hq.isIdempotentElem, hstar, pow_two] using
+  simpa only [hq.isSelfAdjoint.star_eq, hq.isIdempotentElem.eq, hstar, pow_two] using
     schwarz_defect p u q q hp
 
 /-- The defect of preserving the *corner* identity uses the reverse unitary
@@ -89,7 +89,7 @@ theorem corner_unit_defect (p : A) (u : unitary A)
     calc
       _ = p * (u : A) * ((1 - p) * (1 - p)) * star (u : A) * p := by
         simp only [mul_assoc]
-      _ = _ := by rw [hc]
+      _ = _ := by rw [hc.eq]
   rw [hgram]
   unfold compress
   rw [Unitary.conjStarAlgAut_apply]
@@ -97,8 +97,8 @@ theorem corner_unit_defect (p : A) (u : unitary A)
     p - p * ((u : A) * p * star (u : A)) * p =
         p * ((u : A) * star (u : A)) * p -
           p * (u : A) * p * star (u : A) * p := by
-      rw [Unitary.coe_mul_star_self]
-      simp only [mul_one, hp.isIdempotentElem, mul_assoc]
+      rw [Unitary.mul_star_self_of_mem u.prop]
+      simp only [mul_one, hp.isIdempotentElem.eq, mul_assoc]
     _ = _ := by noncomm_ring
 
 /-- Composition loses all three omitted Peirce blocks of the intermediate
@@ -119,14 +119,14 @@ theorem composition_defect (p : A) (u v : unitary A) (x : A) :
 private theorem conjugate_cut (p : A) (u : unitary A)
     (hu : Commute (u : A) p) : Unitary.conjStarAlgAut ℤ A u p = p := by
   rw [Unitary.conjStarAlgAut_apply, hu.eq, mul_assoc,
-    Unitary.coe_mul_star_self, mul_one]
+    Unitary.mul_star_self_of_mem u.prop, mul_one]
 
 /-- A unitary commuting with the cut cannot leak through that cut. -/
 theorem unitary_transfer_zero_of_commute (p : A) (u : unitary A)
     (hp : IsIdempotentElem p) (hu : Commute (u : A) p) :
     (1 - p) * (u : A) * p = 0 := by
   rw [mul_assoc, hu.eq, ← mul_assoc]
-  simp only [sub_mul, one_mul, hp, sub_self, zero_mul]
+  simp only [sub_mul, one_mul, hp.eq, sub_self, zero_mul]
 
 /-- On a preserved corner the observed map is the actual ambient automorphism. -/
 theorem compress_eq_conjugate_of_supported (p x : A) (u : unitary A)
@@ -145,7 +145,7 @@ theorem composition_of_commute (p : A) (u v : unitary A) (x : A)
   have hpp (y : A) : p * (p * y * p) * p = p * y * p := by
     calc
       _ = (p * p) * y * (p * p) := by simp only [mul_assoc]
-      _ = _ := by rw [hp]
+      _ = _ := by rw [hp.eq]
   exact (hpp _).symm
 
 end Algebra

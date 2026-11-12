@@ -204,7 +204,7 @@ theorem paired_charge {S B : A} (hS : S * S * S = S) (hSs : star S = S)
   calc
     _ = (S * B - B * S) + (S * star B - star B * S) := by noncomm_ring
     _ = (2 : ℝ) • B + (-2 : ℝ) • star B := by rw [extreme_charge hS hB, hneg]
-    _ = _ := by simp only [smul_sub, neg_smul, sub_eq_add_neg]
+    _ = _ := by rw [smul_sub, neg_smul, sub_eq_add_neg]
 
 /-- A nonzero supported pairing genuinely breaks the Cartan commutation relation. -/
 theorem paired_charge_eq_zero_iff {S B : A}

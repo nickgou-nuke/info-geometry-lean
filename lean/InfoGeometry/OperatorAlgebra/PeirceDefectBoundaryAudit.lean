@@ -1,0 +1,120 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Algebra.CommutingInvolutionProjection
+import InfoGeometry.Algebra.OrthogonalPolynomial
+import InfoGeometry.OperatorAlgebra.PeirceSpine.CyclotomicUnitRepresentation
+import InfoGeometry.OperatorAlgebra.PeirceSpine.ReynoldsProjection
+import InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceHilbertPositivity
+import InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceOverlapCounterexamples
+import InfoGeometry.OperatorAlgebra.PeirceSpine.DefectNoncollapseMatrix
+
+/-!
+# Peirce defect boundary declaration audit
+
+This module audits the explicitly declared public definitions and theorems
+in the seven mathematical owners above. Private helper dependencies
+are audited transitively. This is a validation target, not an umbrella import.
+Regenerate with `python3 verification/peirce-defect-boundaries/audit.py --write`.
+The validator compares actual Lean axiom output with this complete list.
+-/
+
+#print axioms InfoGeometry.Algebra.CommutingInvolutionProjection.average
+#print axioms InfoGeometry.Algebra.CommutingInvolutionProjection.average_apply
+#print axioms InfoGeometry.Algebra.CommutingInvolutionProjection.jointFixed
+#print axioms InfoGeometry.Algebra.CommutingInvolutionProjection.mem_jointFixed_iff
+#print axioms InfoGeometry.Algebra.CommutingInvolutionProjection.first_average
+#print axioms InfoGeometry.Algebra.CommutingInvolutionProjection.second_average
+#print axioms InfoGeometry.Algebra.CommutingInvolutionProjection.average_of_fixed
+#print axioms InfoGeometry.Algebra.CommutingInvolutionProjection.average_eq_self_iff
+#print axioms InfoGeometry.Algebra.CommutingInvolutionProjection.average_isIdempotentElem
+#print axioms InfoGeometry.Algebra.CommutingInvolutionProjection.range_average
+#print axioms InfoGeometry.Algebra.CommutingInvolutionProjection.projection
+#print axioms InfoGeometry.Algebra.CommutingInvolutionProjection.projection_fixed
+#print axioms InfoGeometry.Algebra.CommutingInvolutionProjection.jointFixed_isCompl_ker_projection
+
+#print axioms InfoGeometry.Algebra.OrthogonalPolynomial.add_pow_succ_of_orthogonal
+#print axioms InfoGeometry.Algebra.OrthogonalPolynomial.eval₂_add_of_orthogonal
+#print axioms InfoGeometry.Algebra.OrthogonalPolynomial.eval₂_add_of_orthogonal_of_coeff_zero
+#print axioms InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect_iterates_succ_eq_zero
+
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.cubeRoot_cyclotomic_eq_zero_iff
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.s3Refl_square_eq_iff_defect_zero
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.s3Refl_square_eq_defect_iterates_zero
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.genV_polynomial_cycle_split
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.peirceThreeRotation
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.peirceThreeRotation_zero
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.peirceThreeRotation_one
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.peirceThreeRotation_two
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.peirceThreeRotation_add
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.peirceThreeRotation_mul_phi
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.peirceDihedralMonoidHom
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.peirceDihedralUnitHom
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.peirceDihedralUnitHom_rotation
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.peirceDihedralUnitHom_reflection
+
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.hProjV_sub_fourierV
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.hProjV_eq_fourierV_of_commute
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.weightedSandwichSum
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.twice_weightedSandwichSum
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.weightedSandwichSum_genV
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.weightedSandwichSum_genPhi
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.weightedSandwichSum_genJ
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.weightedSandwichSum_genSig
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.sandwichLinearMap
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.sandwichLinearMap_fixed_iff
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.reynoldsProjection
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.reynoldsProjection_isIdempotentElem
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.range_reynoldsProjection
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.reynoldsProjection_eq_fourierV
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.reynoldsProjection_eq_hProjV
+
+#print axioms InfoGeometry.OperatorAlgebra.BoundedHomotopyCoercivity.hodge_isPositive
+#print axioms InfoGeometry.OperatorAlgebra.BoundedHomotopyCoercivity.hodge_eq_zero_iff
+#print axioms InfoGeometry.OperatorAlgebra.BoundedHomotopyCoercivity.hodge_rankOne
+#print axioms InfoGeometry.OperatorAlgebra.BoundedHomotopyCoercivity.hodge_rankOne_apply_eq_zero_iff
+#print axioms InfoGeometry.OperatorAlgebra.BoundedHomotopyCoercivity.no_coercive_bound_of_common_zero_mode
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.rankOne_transfer_square_zero
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.genV_hilbert_isPositive
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.genV_hilbert_ker
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.genV_hilbert_eq_zero_iff
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus_rankOne
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.genV_rankOne
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.rankOne_adjoint_commutator_apply
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.rankOne_adjoint_not_commute
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.genV_rankOne_no_coercive_bound
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.genV_rankOne_ne_zero
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus_rankOne_reverse
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.genV_rankOne_reverse_eq_zero
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.rankOne_cut_reverse_not_commute
+
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceOverlapCounterexamples.three_dimensional_pair_overlap
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceOverlapCounterexamples.three_dimensional_pair_overlap_ne_zero
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceOverlapCounterexamples.three_dimensional_nonzero_coupling_zero_multiplier
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceOverlapCounterexamples.independentCut
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceOverlapCounterexamples.independentUpper
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceOverlapCounterexamples.independentLower
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceOverlapCounterexamples.independentCut_idempotent
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceOverlapCounterexamples.independentUpper_corner
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceOverlapCounterexamples.independentLower_corner
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceOverlapCounterexamples.independentUpper_ne_zero
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceOverlapCounterexamples.independentLower_ne_zero
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceOverlapCounterexamples.independentUpper_mul_lower
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceOverlapCounterexamples.independentLower_mul_upper
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceOverlapCounterexamples.independent_genV_eq_zero
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceOverlapCounterexamples.independent_cut_upper_not_commute
+
+#print axioms InfoGeometry.OperatorAlgebra.PeirceDefectNoncollapse.Op
+#print axioms InfoGeometry.OperatorAlgebra.PeirceDefectNoncollapse.cut
+#print axioms InfoGeometry.OperatorAlgebra.PeirceDefectNoncollapse.upper
+#print axioms InfoGeometry.OperatorAlgebra.PeirceDefectNoncollapse.lower
+#print axioms InfoGeometry.OperatorAlgebra.PeirceDefectNoncollapse.cut_idempotent
+#print axioms InfoGeometry.OperatorAlgebra.PeirceDefectNoncollapse.seed_corner_values
+#print axioms InfoGeometry.OperatorAlgebra.PeirceDefectNoncollapse.corner_products_noncommute
+#print axioms InfoGeometry.OperatorAlgebra.PeirceDefectNoncollapse.metric_value
+#print axioms InfoGeometry.OperatorAlgebra.PeirceDefectNoncollapse.metric_isAlgebraic
+#print axioms InfoGeometry.OperatorAlgebra.PeirceDefectNoncollapse.metric_defect_iterates
+#print axioms InfoGeometry.OperatorAlgebra.PeirceDefectNoncollapse.metric_defect_iterates_ne_zero
+#print axioms InfoGeometry.OperatorAlgebra.PeirceDefectNoncollapse.algebraic_metric_without_eventual_vanishing

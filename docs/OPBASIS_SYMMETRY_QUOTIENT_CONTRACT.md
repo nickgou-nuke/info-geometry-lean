@@ -133,7 +133,7 @@ q(W)\subseteq V/R,
 equivalently of `W/(R.comap W.subtype)`. It is a basis of all `V/R` only if
 `R sup W = top`. The ambient module itself need not be finite dimensional.
 
-To connect this formulation to Listing 3, prove the relations-first bridge:
+The proved relations-first bridge connects this formulation to Listing 3:
 when an initial set of labels spans `R`, ordinary selection starting with
 that set agrees with adjoining that set to selection of quotient classes.
 This set equality only needs a spanning initial set; independence of the
@@ -255,12 +255,22 @@ repaired without changing the selector algorithm, weakening its conclusions,
 or introducing proof holes. The exact build log and subsequent verification
 remain distinguishable from the initial source-only review.
 
-The repaired sources are locally verified and are being published to
-[PR #333](https://github.com/nickgou-nuke/info-geometry-lean/pull/333).
-The dedicated `Operator symmetry and ordered quotient bases` workflow will
-repeat the build, all seven fresh elaborations, and the complete axiom
-reconciliation against the actual published head. Its result is recorded
-separately from the successful local verification.
+The repaired sources were published to
+[PR #333](https://github.com/nickgou-nuke/info-geometry-lean/pull/333) at commit
+`7658b2ad349e4aff7664955057c92d52102dfe2c`. The dedicated
+`Operator symmetry and ordered quotient bases`
+[workflow run 43245769400](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43245769400)
+completed successfully against that exact PR head. Job `131277863367` passed
+the explicit audit build, all seven fresh sequential elaborations, the
+109-entry source/audit/axiom reconciliation, and source/configuration integrity
+checks. Its semantic diagnostic retained the same 17 warnings and zero errors.
+The run preserved its logs, source fingerprints, and axiom inventory in
+[artifact 13957151629](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43245769400/artifacts/13957151629),
+whose uploaded ZIP SHA-256 is
+`515970ca1ae52c66bc4be8f23f1c0175f0c6fcae39dd599abecd4580d93a4643`.
+This upstream result is separate from, and agrees with, the successful local
+verification. Subsequent documentation-only commits preserve the seven source
+fingerprints below; their workflow status remains available on the PR.
 
 ### Verified source fingerprints
 

@@ -1,0 +1,135 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Algebra.CyclicQuotient
+import InfoGeometry.Algebra.FiniteGroupCharacterProjection
+import InfoGeometry.Algebra.CharacterRelationQuotient
+import InfoGeometry.LinearAlgebra.OrderedQuotientBasis
+import InfoGeometry.Algebra.FreeOperatorSymmetry
+import InfoGeometry.Canonical.OperatorBasisExamples
+
+/-!
+# Complete public-declaration axiom audit for operator basis selection
+
+Includes all explicit public declarations in the six owners, including the
+existing cyclic quotient owner. The focused workflow reconciles this list
+against source declarations and fresh kernel output, and permits only
+`propext`, `Classical.choice`, and `Quot.sound`.
+-/
+
+#print axioms InfoGeometry.Algebra.CyclicQuotient.commutatorSpan
+#print axioms InfoGeometry.Algebra.CyclicQuotient.CyclicModule
+#print axioms InfoGeometry.Algebra.CyclicQuotient.cyclicClass
+#print axioms InfoGeometry.Algebra.CyclicQuotient.cyclicClass_mul_comm
+#print axioms InfoGeometry.Algebra.CyclicQuotient.descLinear
+#print axioms InfoGeometry.Algebra.CyclicQuotient.descLinear_class
+#print axioms InfoGeometry.Algebra.CyclicQuotient.commutatorSpan_le_comap_algHom
+#print axioms InfoGeometry.Algebra.CyclicQuotient.map
+#print axioms InfoGeometry.Algebra.CyclicQuotient.map_class
+#print axioms InfoGeometry.Algebra.CyclicQuotient.map_unique
+#print axioms InfoGeometry.Algebra.CyclicQuotient.desc
+#print axioms InfoGeometry.Algebra.CyclicQuotient.desc_class
+
+#print axioms InfoGeometry.Algebra.FiniteGroupCharacterProjection.twist
+#print axioms InfoGeometry.Algebra.FiniteGroupCharacterProjection.twist_apply
+#print axioms InfoGeometry.Algebra.FiniteGroupCharacterProjection.sector
+#print axioms InfoGeometry.Algebra.FiniteGroupCharacterProjection.mem_sector_iff
+#print axioms InfoGeometry.Algebra.FiniteGroupCharacterProjection.projector
+#print axioms InfoGeometry.Algebra.FiniteGroupCharacterProjection.projector_apply
+#print axioms InfoGeometry.Algebra.FiniteGroupCharacterProjection.projector_mem
+#print axioms InfoGeometry.Algebra.FiniteGroupCharacterProjection.projector_id
+#print axioms InfoGeometry.Algebra.FiniteGroupCharacterProjection.projector_isProj
+#print axioms InfoGeometry.Algebra.FiniteGroupCharacterProjection.projector_idempotent
+#print axioms InfoGeometry.Algebra.FiniteGroupCharacterProjection.range_projector
+#print axioms InfoGeometry.Algebra.FiniteGroupCharacterProjection.projector_natural
+#print axioms InfoGeometry.Algebra.FiniteGroupCharacterProjection.projector_mem_of_stable
+#print axioms InfoGeometry.Algebra.FiniteGroupCharacterProjection.span_projector_image
+#print axioms InfoGeometry.Algebra.FiniteGroupCharacterProjection.span_projector_image_of_span_top
+#print axioms InfoGeometry.Algebra.FiniteGroupCharacterProjection.map_projector_eq_inf
+#print axioms InfoGeometry.Algebra.FiniteGroupCharacterProjection.span_projector_image_of_stable
+
+#print axioms InfoGeometry.Algebra.CharacterRelationQuotient.quotientIntertwining
+#print axioms InfoGeometry.Algebra.CharacterRelationQuotient.mkQ_mem_sector
+#print axioms InfoGeometry.Algebra.CharacterRelationQuotient.sectorQuotientMap
+#print axioms InfoGeometry.Algebra.CharacterRelationQuotient.sectorQuotientMap_apply
+#print axioms InfoGeometry.Algebra.CharacterRelationQuotient.ker_sectorQuotientMap
+#print axioms InfoGeometry.Algebra.CharacterRelationQuotient.mkQ_projector
+#print axioms InfoGeometry.Algebra.CharacterRelationQuotient.sectorQuotientMap_surjective
+#print axioms InfoGeometry.Algebra.CharacterRelationQuotient.sectorQuotientEquiv
+#print axioms InfoGeometry.Algebra.CharacterRelationQuotient.sectorQuotientEquiv_mk
+
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.candidateSpan
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.candidateSpan_empty
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.candidateSpan_union
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.candidateSpan_mono
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.mem_candidateSpan
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.candidateSpan_insert_of_mem
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.select
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.select_nil
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.select_cons
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.initial_subset_select
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.select_subset
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.linearIndepOn_select
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.candidateSpan_select
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.select_append
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.select_prefix_subset
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.notMem_select_of_mem_span
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.select_prefix_inter
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.selectedBasis
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.selectedBasis_apply
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.candidateSpan_quotient
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.quotient_mem_candidateSpan_iff
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.mem_candidateSpan_union_iff_quotient
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.select_union_eq_quotient
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.select_relations_first
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.select_relation_prefix
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.select_sdiff_relations
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.select_relation_prefix_sdiff
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.quotientBasis
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.quotientBasis_apply
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.quotientBasisOfSpan
+#print axioms InfoGeometry.LinearAlgebra.OrderedQuotientBasis.quotientBasisOfSpan_apply
+
+#print axioms InfoGeometry.Algebra.FreeOperatorSymmetry.rename
+#print axioms InfoGeometry.Algebra.FreeOperatorSymmetry.rename_ι
+#print axioms InfoGeometry.Algebra.FreeOperatorSymmetry.rename_one
+#print axioms InfoGeometry.Algebra.FreeOperatorSymmetry.rename_mul
+#print axioms InfoGeometry.Algebra.FreeOperatorSymmetry.representation
+#print axioms InfoGeometry.Algebra.FreeOperatorSymmetry.representation_apply
+#print axioms InfoGeometry.Algebra.FreeOperatorSymmetry.commutator_stable
+#print axioms InfoGeometry.Algebra.FreeOperatorSymmetry.cyclicSectorEquiv
+#print axioms InfoGeometry.Algebra.FreeOperatorSymmetry.cyclicSectorEquiv_mk
+
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.WordAlgebra
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.x
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.y
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.matrixEvaluation
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.matrixEvaluation_x
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.matrixEvaluation_y
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.xy_ne_yx
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.augmentation
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.cyclicEvaluation
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.cyclicEvaluation_class
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.cyclicEvaluation_xy
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.cyclic_xy_ne_zero
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.cyclic_xy_eq_yx
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.words
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.quotientWords
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.quotientWords_true_eq_false
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.quotientWords_ne_zero
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.select_false_true
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.select_true_false
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.priority_changes_survivors
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.initial_matrix_fixed
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.later_matrix_fixed
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.later_projection_defect_entry
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.later_projection_not_fixed
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.symmetryP
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.symmetryQ
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.symmetryP_sq
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.symmetryQ_sq
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.half_average_symmetryP
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.half_average_symmetryQ
+#print axioms InfoGeometry.Canonical.OperatorBasisExamples.consecutive_half_averages_not_fixed

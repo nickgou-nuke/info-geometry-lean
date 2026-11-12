@@ -37,7 +37,10 @@ def main() -> int:
     process = None
     try:
         print("[language-symmetry] " + " ".join(command), flush=True)
-        process = subprocess.Popen(command, cwd=ROOT, start_new_session=(os.name == "posix"))
+        # Non-Mathlib cache archives use paths relative to the focused project.
+        # Source checks continue to run from the canonical repository root.
+        child_cwd = PROJECT if args[:2] == ["exe", "cache"] else ROOT
+        process = subprocess.Popen(command, cwd=child_cwd, start_new_session=(os.name == "posix"))
         try:
             return process.wait()
         except KeyboardInterrupt:

@@ -600,3 +600,10 @@ import InfoGeometry.Canonical.ArnoldParaKahlerBCFW
 import InfoGeometry.Algebra.ZornAlternativeLaws
 import InfoGeometry.OperatorAlgebra.PeirceTwistedComplex
 import InfoGeometry.Quantum.KrausBoundaryDuality
+import InfoGeometry.Algebra.CyclicQuotient
+import InfoGeometry.Algebra.FiniteGroupCharacterProjection
+import InfoGeometry.Algebra.CharacterRelationQuotient
+import InfoGeometry.LinearAlgebra.OrderedQuotientBasis
+import InfoGeometry.Algebra.FreeOperatorSymmetry
+import InfoGeometry.Canonical.OperatorBasisExamples
+import InfoGeometry.Algebra.OperatorBasisAudit

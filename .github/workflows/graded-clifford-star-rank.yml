@@ -16,11 +16,11 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
-concurrency:
-  group: graded-clifford-star-rank-${{ github.head_ref || github.ref_name }}
-  cancel-in-progress: false
 jobs:
   kernel-check:
+    concurrency:
+      group: graded-clifford-star-rank-kernel-${{ github.head_ref || github.ref_name }}
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -86,6 +86,9 @@ jobs:
             verification/**/*.txt
             verification/src
   source-gates:
+    concurrency:
+      group: graded-clifford-star-rank-${{ github.head_ref || github.ref_name }}
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:

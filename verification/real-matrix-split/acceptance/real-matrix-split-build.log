@@ -1,0 +1,199 @@
+[real-matrix-split] waiting for the shared build lock
+[real-matrix-split] lake -d /home/runner/work/info-geometry-lean/info-geometry-lean/verification/real-matrix-split build
+ℹ [3109/3109] Replayed InfoGeometry.OperatorAlgebra.RealMatrixSplitAudit
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:27:0: 'InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint' does not depend on any axioms
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:28:0: 'InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.mul_adjoint' depends on axioms: [propext]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:29:0: 'InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.compatibility_defect' depends on axioms: [propext]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:30:0: 'InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint_eq_star_iff' depends on axioms: [propext]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:31:0: 'InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint_eq_self_iff_of_selfAdjoint' depends on axioms: [propext]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:32:0: 'InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint_mul' depends on axioms: [propext]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:33:0: 'InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint_involutive' depends on axioms: [propext, Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:35:0: 'InfoGeometry.Physics.metriplecticVelocity' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:36:0: 'InfoGeometry.Physics.energyRate' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:37:0: 'InfoGeometry.Physics.entropyRate' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:38:0: 'InfoGeometry.Physics.metriplecticVelocity_eq_zero_of_degenerate' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:39:0: 'InfoGeometry.Physics.metriplectic_stationary_rates' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:40:0: 'InfoGeometry.Physics.entropyRate_eq_zero_of_degenerate' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:41:0: 'InfoGeometry.Physics.entropyRate_eq_onsager_quadratic' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:42:0: 'InfoGeometry.Physics.energy_conserved' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:43:0: 'InfoGeometry.Physics.entropy_nondecreasing' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:44:0: 'InfoGeometry.Physics.casimir_conserved' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:45:0: 'InfoGeometry.Physics.symmetricPart' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:46:0: 'InfoGeometry.Physics.antisymmetricPart' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:47:0: 'InfoGeometry.Physics.symmetricPart_transpose' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:48:0: 'InfoGeometry.Physics.antisymmetricPart_transpose' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:49:0: 'InfoGeometry.Physics.symmetricPart_add_antisymmetricPart' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:50:0: 'InfoGeometry.Physics.symmetricPart_eq_of_symmetric_add_skew' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:51:0: 'InfoGeometry.Physics.antisymmetricPart_eq_of_symmetric_add_skew' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:53:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplit.selfAdjointPart_eq_half' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:54:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplit.skewAdjointPart_eq_half' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:55:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplit.square_of_split' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:56:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplit.transpose_normal_defect_of_split' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:57:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplit.transpose_normal_defect' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:58:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplit.isStarNormal_iff_parts_commute' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:59:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplit.selfAdjointPart_congruence' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:60:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplit.skewAdjointPart_congruence' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:62:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.toBilin'_adjoint_split' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:63:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.selfAdjointPart_toBilin'_isSymm' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:64:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.toBilin'_swap_of_transpose_eq_neg' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:65:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.toBilin'_isAlt_of_transpose_eq_neg' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:66:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.skewAdjointPart_toBilin'_isAlt' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:67:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.even_card_of_transpose_eq_neg_det_ne_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:68:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.even_card_of_skew_toBilin'_nondegenerate' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:70:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleMatrix' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:71:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleMetric' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:72:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleSkew' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:73:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleRaised' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:74:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sample_selfAdjointPart' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:75:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sample_skewAdjointPart' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:76:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleMetric_isSymm' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:77:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleSkew_transpose' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:78:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleMetric_posDef' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:79:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleMetric_det' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:80:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleSkew_det' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:81:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleSkew_toBilin'_nondegenerate' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:82:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sample_commutator' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:83:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sample_parts_do_not_commute' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:84:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleMetric_inv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:85:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleRaised_eq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:86:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleRaised_sq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:87:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleRaised_not_complex' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:88:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.invertible_with_zero_skew_part' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:89:0: 'InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.invertible_with_zero_symmetric_part' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:91:0: 'InfoGeometry.OperatorAlgebra.RealMetricAdjoint.raisedIndex_isSkewAdjoint' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:92:0: 'InfoGeometry.OperatorAlgebra.RealMetricAdjoint.raisedIndex_skew_identity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:93:0: 'InfoGeometry.OperatorAlgebra.RealMetricAdjoint.raisedIndex_toBilin'' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:94:0: 'InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_matrix' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:95:0: 'InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_nonsingInvUnit' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:96:0: 'InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_isAdjointPair' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:97:0: 'InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_unique' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:98:0: 'InfoGeometry.OperatorAlgebra.RealMetricAdjoint.isSelfAdjoint_iff_weightedAdjoint' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:99:0: 'InfoGeometry.OperatorAlgebra.RealMetricAdjoint.isSkewAdjoint_iff_weightedAdjoint' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:100:0: 'InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_add' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:101:0: 'InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_sub' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:102:0: 'InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_smul' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:103:0: 'InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_involutive' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:104:0: 'InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_symmetric_part' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:105:0: 'InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_skew_part' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:106:0: 'InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_split' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:107:0: 'InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_symmetric_part_unique' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:108:0: 'InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_skew_part_unique' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:110:0: 'InfoGeometry.Physics.symmetricPart_eq_selfAdjointPart' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:111:0: 'InfoGeometry.Physics.antisymmetricPart_eq_skewAdjointPart' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:112:0: 'InfoGeometry.Physics.symmetricPart_antisymmetricPart_normal_defect' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean:113:0: 'InfoGeometry.Physics.symmetricPart_antisymmetricPart_commute_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Build completed successfully (3109 jobs).

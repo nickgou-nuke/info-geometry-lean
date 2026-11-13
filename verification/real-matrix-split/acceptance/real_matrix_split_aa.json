@@ -1,0 +1,427 @@
+{
+  "schema_version": 1,
+  "task_id": "real-matrix-split-A-A",
+  "role": "independent_source_auditor",
+  "agent": "/root/symmetric_intake_audit",
+  "recorded_at_utc": "2026-11-13 08:57:49 UTC",
+  "verdict": "ACCEPTED_PENDING_KERNEL",
+  "verdict_scope": "Final source-only A-A review. No kernel correctness, build success, axiom acceptance, remote CI outcome, or release acceptance is certified.",
+  "source_review_pass": true,
+  "kernel_acceptance": false,
+  "repository": {
+    "full_name": "nickgou-nuke/info-geometry-lean",
+    "root": "/workspace/scratch/9009f3c86480/info-geometry-lean",
+    "commit": "090f72c0e5bbfdbfceb69d26f580c0b853822be6",
+    "tree": "e5ced5dfa7499c9e0a4474cb307eec132fc072ce",
+    "implementation_base": "a392af178af1fe2bcba2ba39eb405700c6ee103c",
+    "git_status_short_observed": "",
+    "pull_request": 349,
+    "pull_request_metadata_source": "Parent assignment; no independent network inspection performed in this A-A pass.",
+    "configured_lean_toolchain": "leanprover/lean4:v4.34.1",
+    "mathlib_checkout_head_observed": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+    "runtime_lean_version_observed": null,
+    "published_head_parent_reported": "df6667224192e9a649173dd919039d8c4c77f7d1",
+    "published_tree_parent_reported": "e5ced5dfa7499c9e0a4474cb307eec132fc072ce",
+    "published_equivalence_scope": "The observed local tree equals the published tree value supplied by the parent. The published commit was not independently fetched in this A-A review."
+  },
+  "independence": {
+    "theorem_author": false,
+    "repository_files_edited": false,
+    "builds_run": false,
+    "tests_run": false,
+    "audit_or_check_scripts_executed": false,
+    "writes_limited_to": [
+      "/workspace/scratch/9009f3c86480/candidates/real_matrix_split_aa.json",
+      "/workspace/scratch/9009f3c86480/candidates/real_matrix_split_aa.sha256"
+    ]
+  },
+  "scope": {
+    "carrier": "Full real Matrix n n R algebra with R = Real; finite index type for multiplication, determinants, and bilinear forms; concrete witnesses on Fin 2.",
+    "objects": "Native selfAdjointPart/skewAdjointPart, Matrix.toBilin', Matrix.PosDef, bilinear nondegeneracy, Matrix.IsAdjointPair/IsSelfAdjoint/IsSkewAdjoint, and the existing unit-weighted adjoint.",
+    "operator_order": "Both mixed products are preserved. No diagonal, scalar, or commuting surrogate replaces matrix multiplication.",
+    "hypotheses": "Units or nonzero determinants provide invertibility. Metric symmetry is explicit where needed for involutivity and skew-adjointness. Positive definiteness and A^2 = -I are not inferred from symmetry/nondegeneracy.",
+    "excluded_claims": [
+      "Smooth manifold or differential-form bundle construction",
+      "Closedness d omega = 0",
+      "Integrable complex or Kahler structure",
+      "Whole-repository or mirrored src-lane validation",
+      "Kernel or axiom acceptance from source review alone"
+    ]
+  },
+  "files": {
+    "owner_sources": [
+      {
+        "path": "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean",
+        "sha256": "307acf4c4b342577f94826381c9b814c1f8879087a69b927612a2cf1c795d0ea",
+        "bytes": 2580,
+        "lines": 69,
+        "absolute_path": "/workspace/scratch/9009f3c86480/info-geometry-lean/lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean"
+      },
+      {
+        "path": "lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean",
+        "sha256": "8fede4a70e3dc75c72ef241dba5b41ca7e8be8f30a39e4cdc6667bcbf447aefc",
+        "bytes": 10693,
+        "lines": 277,
+        "absolute_path": "/workspace/scratch/9009f3c86480/info-geometry-lean/lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean"
+      },
+      {
+        "path": "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean",
+        "sha256": "8d70afaa49ddcd37a43c1b2b9c3a72f33e4c4a0f264071a0a745009682657d6c",
+        "bytes": 4520,
+        "lines": 97,
+        "absolute_path": "/workspace/scratch/9009f3c86480/info-geometry-lean/lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean"
+      },
+      {
+        "path": "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean",
+        "sha256": "beefd53df1720109b3b45b4a1b4fbac574bd5afca3e14a1838e9896c7e670fa5",
+        "bytes": 3505,
+        "lines": 76,
+        "absolute_path": "/workspace/scratch/9009f3c86480/info-geometry-lean/lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean"
+      },
+      {
+        "path": "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean",
+        "sha256": "c0ea7130c2954a8e6b35c64780e95d0f83ef95b787592c9a4534be628bfb9f03",
+        "bytes": 5529,
+        "lines": 146,
+        "absolute_path": "/workspace/scratch/9009f3c86480/info-geometry-lean/lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean"
+      },
+      {
+        "path": "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+        "sha256": "b520f5eb138e736cf19aabe1fdf9ae1a5ed7c55d11230e4db7f48c5c29ea4697",
+        "bytes": 8587,
+        "lines": 183,
+        "absolute_path": "/workspace/scratch/9009f3c86480/info-geometry-lean/lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean"
+      },
+      {
+        "path": "lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean",
+        "sha256": "1d777d83b308caa324e2dc2129865a1b9a347599ca7360a0dd107666654f2c58",
+        "bytes": 2114,
+        "lines": 53,
+        "absolute_path": "/workspace/scratch/9009f3c86480/info-geometry-lean/lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean"
+      }
+    ],
+    "supporting_sources_and_configuration": [
+      {
+        "path": "verification/real-matrix-split/audit.py",
+        "absolute_path": "/workspace/scratch/9009f3c86480/info-geometry-lean/verification/real-matrix-split/audit.py",
+        "sha256": "e759bf7479a4771e1f6bd3ed6b0bd30e045af8b6f56884314c7f662553e2822f",
+        "bytes": 11359,
+        "lines": 249
+      },
+      {
+        "path": "verification/real-matrix-split/check.py",
+        "absolute_path": "/workspace/scratch/9009f3c86480/info-geometry-lean/verification/real-matrix-split/check.py",
+        "sha256": "0d7ea354bca9a816daae378c119166491a07874409ca428e57da13a738844eb7",
+        "bytes": 1476,
+        "lines": 47
+      },
+      {
+        "path": "verification/real-matrix-split/lakefile.toml",
+        "absolute_path": "/workspace/scratch/9009f3c86480/info-geometry-lean/verification/real-matrix-split/lakefile.toml",
+        "sha256": "dcf2219aa553e9393f6f38393dac3b5d71a7ae9cd8e90ae2fb5c619641ed164d",
+        "bytes": 395,
+        "lines": 12
+      },
+      {
+        "path": "verification/real-matrix-split/lean-toolchain",
+        "absolute_path": "/workspace/scratch/9009f3c86480/info-geometry-lean/verification/real-matrix-split/lean-toolchain",
+        "sha256": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+        "bytes": 25,
+        "lines": 1
+      },
+      {
+        "path": "verification/real-matrix-split/lake-manifest.json",
+        "absolute_path": "/workspace/scratch/9009f3c86480/info-geometry-lean/verification/real-matrix-split/lake-manifest.json",
+        "sha256": "83b14f297f31ef94c682891f4e249fe5e2ef63e95efe6e9ae9a0ba814f117155",
+        "bytes": 3534,
+        "lines": 117
+      },
+      {
+        "path": "docs/REAL_MATRIX_SPLIT_CONTRACT.md",
+        "absolute_path": "/workspace/scratch/9009f3c86480/info-geometry-lean/docs/REAL_MATRIX_SPLIT_CONTRACT.md",
+        "sha256": "a9591229bcf0edc10c90c89dd96b7f289fbc2f440611601fb08d5609236b44fe",
+        "bytes": 10284,
+        "lines": 185
+      },
+      {
+        "path": "verification/real-matrix-split/README.md",
+        "absolute_path": "/workspace/scratch/9009f3c86480/info-geometry-lean/verification/real-matrix-split/README.md",
+        "sha256": "36f1da1a69da12f32d756772fd16894146e6b98b31688ff7dea3fc2abbf88a2e",
+        "bytes": 3711,
+        "lines": 65
+      },
+      {
+        "path": ".github/workflows/real-matrix-split.yml",
+        "absolute_path": "/workspace/scratch/9009f3c86480/info-geometry-lean/.github/workflows/real-matrix-split.yml",
+        "sha256": "59fee00761c7f9fe5a3cd090369df47c1621a85272e907b56621ad0fe035f037",
+        "bytes": 4780,
+        "lines": 117
+      },
+      {
+        "path": "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAll.lean",
+        "absolute_path": "/workspace/scratch/9009f3c86480/info-geometry-lean/lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAll.lean",
+        "sha256": "74dd4000aaa9c3c0e98706556d06e91ce04b060d6faa957c6097d9ca489a7e8a",
+        "bytes": 660,
+        "lines": 18
+      },
+      {
+        "path": "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean",
+        "absolute_path": "/workspace/scratch/9009f3c86480/info-geometry-lean/lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean",
+        "sha256": "56d9537cbfba1991c565a258816beea481b833ba9459c171119cd058f796d076",
+        "bytes": 7796,
+        "lines": 113
+      },
+      {
+        "path": "lean-toolchain",
+        "absolute_path": "/workspace/scratch/9009f3c86480/info-geometry-lean/lean-toolchain",
+        "sha256": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+        "bytes": 25,
+        "lines": 1
+      },
+      {
+        "path": "lake-manifest.json",
+        "absolute_path": "/workspace/scratch/9009f3c86480/info-geometry-lean/lake-manifest.json",
+        "sha256": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+        "bytes": 7656,
+        "lines": 234
+      }
+    ]
+  },
+  "owner_findings": [
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean",
+      "status": "SOURCE_PASS",
+      "finding": "Native half-formulas, ordered square expansion, correctly signed normality defect, normality/commutation equivalence, and congruence covariance have appropriate hypotheses. Singular P is legitimate for the algebraic congruence identities."
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean",
+      "status": "SOURCE_PASS",
+      "finding": "Native bilinear split, symmetry, alternation, and even-cardinality obstruction are correctly stated. The two CharZero.eq_neg_self_iff uses derive zero from equality with the additive negative over Real and preserve the mathematical content of the former scalar linarith steps."
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean",
+      "status": "SOURCE_PASS",
+      "finding": "The original matrix is linked to its native parts. Positivity, nondegeneracy, noncommutation, actual inverse, and A = G^-1 Omega are separate explicit claims. A^2 = -(1/4) I and A^2 != -I form a connected Fin 2 counterexample. The degeneracy examples are accurately described as invertible matrices with a zero part in positive dimension."
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+      "status": "SOURCE_PASS",
+      "finding": "The existing weighted-adjoint owner is reused. Unit invertibility is genuine. Adjoint-pair existence and uniqueness legitimately omit metric symmetry; involutivity and eigenspace membership explicitly require it. Relative self/skew-adjoint predicate orientations are correct. Raised-index skewness uses all required G/Omega hypotheses; bilinear evaluation only needs invertibility. No alternative global Star instance is introduced."
+    },
+    {
+      "path": "lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean",
+      "status": "SOURCE_PASS",
+      "finding": "Equalities link the established Physics parts to native Mathlib parts, and the two noncommutative results are transported through those equalities. The bridge does not replace existing reconstruction/uniqueness or derive unrelated GENERIC assumptions."
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean",
+      "status": "SOURCE_PASS",
+      "finding": "Only its broad import was narrowed. Existing algebraic declaration content remains unchanged in the reviewed commit."
+    },
+    {
+      "path": "lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean",
+      "status": "SOURCE_PASS",
+      "finding": "Only its broad import was narrowed and the standard header added. Existing mathematical declarations remain unchanged. Recompilation is still necessary to validate the narrowed import closure."
+    }
+  ],
+  "warning_provenance": "The five heuristic warning identifiers were supplied by the parent. This A-A independently read the corresponding declarations and proof bodies; it did not rerun the semantic-vacuity tool.",
+  "warning_reviews": [
+    {
+      "symbol": "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_add",
+      "path": "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+      "line": 117,
+      "origin": "new",
+      "heuristic": "trivial_surface",
+      "verdict": "LEGITIMATE_ALGEBRAIC_API_LAW",
+      "reason": "A general additivity identity for arbitrary full real matrices and a unit weight. Its proof uses star additivity and distributivity rather than a premise that restates the conclusion. It is a small genuine linearity law, not a vacuous certificate.",
+      "consumers_or_role": [
+        "weightedAdjoint_symmetric_part",
+        "weightedAdjoint_symmetric_part_unique",
+        "weightedAdjoint_skew_part_unique"
+      ],
+      "required_change": false
+    },
+    {
+      "symbol": "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_sub",
+      "path": "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+      "line": 122,
+      "origin": "new",
+      "heuristic": "trivial_surface",
+      "verdict": "LEGITIMATE_ALGEBRAIC_API_LAW",
+      "reason": "A general subtraction identity for the same weighted operation. It is proved from star_sub and ring distributivity and is required for the skew eigenspace calculation.",
+      "consumers_or_role": [
+        "weightedAdjoint_skew_part"
+      ],
+      "required_change": false
+    },
+    {
+      "symbol": "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_smul",
+      "path": "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+      "line": 127,
+      "origin": "new",
+      "heuristic": "trivial_surface",
+      "verdict": "LEGITIMATE_ALGEBRAIC_API_LAW",
+      "reason": "A real scalar-compatibility law. Trivial scalar star is valid because coefficients are Real, and multiplication by a real scalar commutes with matrix multiplication in the indicated module sense. No self-adjointness of the weight is assumed or needed.",
+      "consumers_or_role": [
+        "weightedAdjoint_symmetric_part",
+        "weightedAdjoint_skew_part"
+      ],
+      "required_change": false
+    },
+    {
+      "symbol": "InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.mul_adjoint",
+      "path": "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean",
+      "line": 24,
+      "origin": "existing_unchanged",
+      "heuristic": "trivial_surface",
+      "verdict": "LEGITIMATE_ALGEBRAIC_API_LAW",
+      "reason": "This cancels an actual unit in w * (w^-1 * star x * w). It connects the coordinate weighted adjoint to its defining bilinear adjoint-pair equation. The arbitrary star-ring carrier and noncommutative order are retained.",
+      "consumers_or_role": [
+        "RealMetricAdjoint.weightedAdjoint_isAdjointPair",
+        "WeightedAdjointCompatibility.compatibility_defect"
+      ],
+      "required_change": false
+    },
+    {
+      "symbol": "InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint_mul",
+      "path": "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean",
+      "line": 53,
+      "origin": "existing_unchanged",
+      "heuristic": "trivial_surface",
+      "verdict": "LEGITIMATE_ALGEBRAIC_API_LAW",
+      "reason": "This is anti-multiplicativity in a full associative star ring, with reversed factor order on the right. It relies on star_mul and unit cancellation; it is neither a scalar/commuting replacement nor an assumed conclusion.",
+      "consumers_or_role": [
+        "Existing weighted-adjoint API law; mathematical declaration unchanged"
+      ],
+      "required_change": false
+    }
+  ],
+  "prior_findings": [
+    {
+      "id": "A-A-01",
+      "original_issue": "The axiom-log regex excluded apostrophes in declaration names.",
+      "path": "verification/real-matrix-split/audit.py",
+      "line": 217,
+      "disposition": "CLOSED_AT_SOURCE_LEVEL",
+      "observed_fix": "The name capture is now greedy and line-bounded, ([^\\n]+), before an explicit quote and diagnostic suffix, so internal apostrophes in toBilin' declarations are admitted.",
+      "remaining_runtime_obligation": "Run the repaired checker on one fresh Lean #print axioms invocation covering the exact current inventory."
+    }
+  ],
+  "contract_and_tooling_findings": [
+    {
+      "status": "SOURCE_PASS",
+      "path": "docs/REAL_MATRIX_SPLIT_CONTRACT.md",
+      "finding": "Determinant/nondegeneracy and positivity criteria are attributed to native Mathlib. The contract does not claim new metric iff or q_M = q_G declarations. It distinguishes zero-component Fin 2 witnesses, congruence from similarity, and the manifold closure boundary."
+    },
+    {
+      "status": "SOURCE_PASS",
+      "path": "verification/real-matrix-split/audit.py",
+      "finding": "Current source explicitly limits the inventory to named public declarations in seven owners. Duplicate, missing, unexpected records and unapproved axiom names are rejected by design. Private helpers and compiler-generated declarations are not separately enumerated, and that limitation is documented."
+    },
+    {
+      "status": "SOURCE_PASS",
+      "path": "verification/real-matrix-split/check.py",
+      "finding": "The wrapper source invokes the maintained workspace-integrity checks and acquires the shared build lock. No execution of this wrapper occurred in this audit."
+    },
+    {
+      "status": "SOURCE_PASS",
+      "path": "verification/real-matrix-split/lakefile.toml",
+      "finding": "Focused source root points to canonical lean/. Lean toolchain text equals the root, and all nine displayed focused Git pins match the corresponding root manifest entries by name, URL, revision and subdirectory."
+    },
+    {
+      "status": "SOURCE_PASS",
+      "path": ".github/workflows/real-matrix-split.yml",
+      "finding": "The inspected workflow records the checked revision, invokes the focused locked build, performs a fresh audit elaboration, parses the resulting log, screens the sources and uploads logs. This is source inspection only; no CI result is certified."
+    }
+  ],
+  "source_observations": {
+    "explicit_print_axioms_heads_observed": 81,
+    "print_head_count_method": "Counted the reviewed audit module's #print axioms source lines in memory; did not execute audit.py.",
+    "focused_git_pins_matching_root": 9,
+    "open_required_source_corrections": [],
+    "mathematical_countermodels": "Independent arithmetic matches the supplied Fin 2 example. Kernel proofs of the candidate declarations remain pending.",
+    "native_charzero_reference": {
+      "path": ".lake/packages/mathlib/Mathlib/Algebra/Ring/CharZero.lean",
+      "line": 96,
+      "statement": "CharZero.eq_neg_self_iff : a = -a <-> a = 0"
+    },
+    "source_integrity_checks": "All 19 recorded source/configuration hashes matched the reviewed snapshot in a final SHA-256 read immediately before writing this record; HEAD remained 090f72c0e5bbfdbfceb69d26f580c0b853822be6 and git status --short was empty."
+  },
+  "actions_performed": [
+    "Read repository HEAD, tree, status and commit summary using git.",
+    "Read all seven owner sources, both import/audit modules, the contract, focused README, workflow, scripts and package configuration.",
+    "Computed SHA-256 metadata directly from the reviewed bytes.",
+    "Read pinned native source references and source-searched CharZero.eq_neg_self_iff.",
+    "Compared focused dependency metadata to root metadata in memory.",
+    "Adjudicated the five reported trivial_surface warnings by independently inspecting their actual statements, proof bodies and uses.",
+    "Read the exact b8eaa561-to-090f72c0 source delta and the native CharP.Invertible import source; refreshed changed owner hashes."
+  ],
+  "actions_not_performed": [
+    "No Lean or Lake invocation",
+    "No owner compilation or test execution",
+    "No execution of audit.py, check.py, screener, refute, vacuity linter, or unit tests",
+    "No #print axioms output generated or accepted",
+    "No remote CI inspection",
+    "No repository source edits or commits",
+    "No whole-repository acceptance"
+  ],
+  "final_qa_obligations": [
+    "Compile the exact final owner hashes through the focused locked package, including both owners with narrowed imports.",
+    "Elaborate RealMatrixSplitAudit.lean afresh and run the repaired parser on that single invocation's log.",
+    "Confirm all 81 inventoried heads have exactly one record and no axiom outside propext, Classical.choice and Quot.sound.",
+    "Complete the required placeholder, static screening and semantic-vacuity gates; retain the five map-law classifications above.",
+    "Capture actual runtime versions, checked commit/tree and final source hashes.",
+    "Obtain a delta source review if compiler repairs or other integration changes modify any reviewed mathematics."
+  ],
+  "artifact_integrity": {
+    "json_path": "/workspace/scratch/9009f3c86480/candidates/real_matrix_split_aa.json",
+    "checksum_path": "/workspace/scratch/9009f3c86480/candidates/real_matrix_split_aa.sha256",
+    "checksum_scope": "SHA-256 integrity digest only; no immutable or signed-ledger claim."
+  },
+  "delta_review": {
+    "from_commit": "b8eaa5615fb051f82cdc0e2ff86b3c7250776e41",
+    "to_local_commit": "090f72c0e5bbfdbfceb69d26f580c0b853822be6",
+    "to_tree": "e5ced5dfa7499c9e0a4474cb307eec132fc072ce",
+    "disposition": "SOURCE_PASS",
+    "theorem_statements_unchanged": true,
+    "prior_source_hashes": [
+      {
+        "path": "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean",
+        "sha256": "60056c496b69d482020ca3c692e2568850e17298f89346d0a9a0c4226db3ea57",
+        "bytes": 4480,
+        "lines": 96
+      },
+      {
+        "path": "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean",
+        "sha256": "d25efb38023fca8858a643782fe2939584fa8c8433275bdcdb1923fcbcacd5fe",
+        "bytes": 5478,
+        "lines": 145
+      },
+      {
+        "path": "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+        "sha256": "71e7bac9aeb0c4067ff563b0542f157d20d109985d329def2b5e7ac4112b9ea6",
+        "bytes": 8442,
+        "lines": 181
+      }
+    ],
+    "changes": [
+      {
+        "path": "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean",
+        "change": "Added import Mathlib.Algebra.CharP.Invertible.",
+        "reason": "Supplies native numeric Invertible instances required by the existing selfAdjointPart/skewAdjointPart API. No custom axiom, substitute instance, or theorem weakening was introduced."
+      },
+      {
+        "path": "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean",
+        "change": "Added simp only [h1, mul_zero, zero_mul, add_zero] in the x 1 = 0 branch of sampleMetric_posDef.",
+        "reason": "Substitutes the actual branch hypothesis before nlinarith. The all-nonzero-vector positivity target and its case split are unchanged."
+      },
+      {
+        "path": "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+        "change": "Added explicit change to Matrix.IsAdjointPair H H M M / M (-M) in the reverse directions of the native self/skew predicate equivalences.",
+        "reason": "Exposes the definitions of the native predicates for elaboration. Both theorem types and the orientation of the adjoint-pair equations remain unchanged."
+      }
+    ],
+    "compiler_report_provenance": "The parent reported initial CI elaboration errors and partial success; A-A inspected only the exact source delta and does not certify any CI or compiler result.",
+    "record_history": "No prior b8 record was written: the final integrity guard detected this source update and deferred writing until this delta review."
+  }
+}

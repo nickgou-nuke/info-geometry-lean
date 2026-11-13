@@ -1,0 +1,117 @@
+name: Real matrix decomposition
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit*.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean'
+      - 'lean/InfoGeometry/Physics/FiniteMetriplectic*.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'verification/real-matrix-split/**'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/infra/opengauss_screener.py'
+      - 'tools/pathing.py'
+      - '.github/workflows/real-matrix-split.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: real-matrix-split-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Record checked commit and tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            git rev-parse HEAD
+            git rev-parse 'HEAD^{tree}'
+            git status --short
+          } | tee real-matrix-split-revision.log
+      - name: Restore pinned dependencies
+        id: dependencies
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: real-matrix-split-deps-lean4341-d13f23b7-${{ runner.os }}-v1
+      - name: Restore checked source artifacts
+        id: source
+        uses: actions/cache/restore@v4
+        with:
+          path: verification/real-matrix-split/.lake/build
+          key: real-matrix-split-source-lean4341-d13f23b7-${{ runner.os }}-${{ hashFiles('lean/**/*.lean', 'verification/real-matrix-split/lakefile.toml', 'verification/real-matrix-split/lake-manifest.json') }}
+          restore-keys: |
+            real-matrix-split-source-lean4341-d13f23b7-${{ runner.os }}-
+      - name: Install the pinned Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.34.1
+          "$HOME/.elan/bin/lean" --version
+          "$HOME/.elan/bin/lake" --version
+      - name: Restore the pinned Mathlib artifacts
+        run: python3 verification/real-matrix-split/check.py exe cache get
+      - name: Check explicit public source inventory
+        run: python3 verification/real-matrix-split/audit.py
+      - name: Build source owners and audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/real-matrix-split/check.py build 2>&1 | tee real-matrix-split-build.log
+      - name: Inspect transitive axiom dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/real-matrix-split/check.py env lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean 2>&1 | tee real-matrix-split-axioms.log
+          python3 verification/real-matrix-split/audit.py --log real-matrix-split-axioms.log
+      - name: Screen new mathematics
+        run: >-
+          python3 tools/infra/opengauss_screener.py --strict
+          lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean
+          lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean
+          lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean
+          lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean
+          lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean
+          lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean
+          lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean
+      - name: Save pinned dependency artifacts
+        if: always() && steps.dependencies.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: ${{ steps.dependencies.outputs.cache-primary-key }}
+      - name: Save checked source artifacts
+        if: always() && steps.source.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: verification/real-matrix-split/.lake/build
+          key: ${{ steps.source.outputs.cache-primary-key }}
+      - name: Preserve validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: real-matrix-split-build
+          path: |
+            real-matrix-split-build.log
+            real-matrix-split-axioms.log
+            real-matrix-split-revision.log

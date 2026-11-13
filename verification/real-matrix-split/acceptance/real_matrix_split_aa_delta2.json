@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "task_id": "real-matrix-split-A-A-delta2",
+  "role": "independent_source_auditor",
+  "agent": "/root/symmetric_intake_audit",
+  "recorded_at_utc": "2026-11-13 09:03:38 UTC",
+  "verdict": "ACCEPTED_PENDING_KERNEL",
+  "scope": "Source-only delta review. No Lean/Lake invocation, tests, audit-script execution, CI verification, axiom-output acceptance, or kernel acceptance.",
+  "source_review_pass": true,
+  "kernel_acceptance": false,
+  "baseline": {
+    "record_path": "/workspace/scratch/9009f3c86480/candidates/real_matrix_split_aa.json",
+    "checksum_path": "/workspace/scratch/9009f3c86480/candidates/real_matrix_split_aa.sha256",
+    "record_sha256": "4629eb8ec8a33fef4decded4e3310e5d5f24b7bbbce8fa2238bce3639786461d",
+    "local_commit": "090f72c0e5bbfdbfceb69d26f580c0b853822be6",
+    "tree": "e5ced5dfa7499c9e0a4474cb307eec132fc072ce",
+    "preserved": true
+  },
+  "reviewed_snapshot": {
+    "repository": "nickgou-nuke/info-geometry-lean",
+    "root": "/workspace/scratch/9009f3c86480/info-geometry-lean",
+    "observed_local_commit": "e87f9455966213df062fed9a8507fcb97f1d33ab",
+    "observed_parent_commit": "090f72c0e5bbfdbfceb69d26f580c0b853822be6",
+    "observed_tree": "700c4648345511e894b371c950b385ffceb254ac",
+    "observed_git_status_short": "",
+    "published_equivalent_parent_reported": "3ccf5664775950733e24b6113a022cbf63b82619",
+    "published_tree_parent_reported": "700c4648345511e894b371c950b385ffceb254ac",
+    "remote_verification": "Published equivalence is supplied by the parent; the matching local tree and file hashes were directly observed."
+  },
+  "changes": [
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean",
+      "previous_sha256": "8d70afaa49ddcd37a43c1b2b9c3a72f33e4c4a0f264071a0a745009682657d6c",
+      "sha256": "cc89c98b6981294b33583f7e0538fdc3f5b995a6da192ad4e2992a7a0a73fa7e",
+      "bytes": 4548,
+      "lines": 98,
+      "changed": true,
+      "disposition": "SOURCE_PASS",
+      "declaration": "InfoGeometry.OperatorAlgebra.RealMatrixSplit.transpose_normal_defect",
+      "theorem_statement_changed": false,
+      "proof_change": "Replaced raw subtype membership with selfAdjoint.isSelfAdjoint (x := selfAdjointPart Real M) in the symmetric witness conversion.",
+      "reason": "The existing native lemma supplies IsSelfAdjoint for a native selfAdjoint element. The following real-matrix star-to-transpose simplification establishes the same symmetry premise required by transpose_normal_defect_of_split. No hypothesis, conclusion, carrier, or product order changed.",
+      "native_reference": {
+        "path": ".lake/packages/mathlib/Mathlib/Algebra/Star/SelfAdjoint.lean",
+        "line": 415,
+        "statement": "lemma isSelfAdjoint {x : selfAdjoint R} : IsSelfAdjoint (x : R)"
+      }
+    },
+    {
+      "path": "verification/real-matrix-split/lake-manifest.json",
+      "previous_sha256": "83b14f297f31ef94c682891f4e249fe5e2ef63e95efe6e9ae9a0ba814f117155",
+      "sha256": "1b81b6f9df04f90d3810e153c91fadb52e97e6c272b50323bfe07314d5892e58",
+      "bytes": 3567,
+      "lines": 117,
+      "changed": true,
+      "disposition": "SOURCE_PASS",
+      "change": "mathlib.inputRev changed from v4.34.1 to d13f23b723b8a846827a245b89c10fc7d3f11612.",
+      "resolved_dependency_changed": false,
+      "reason": "The requested revision metadata now equals the exact SHA already required by the focused lakefile. The resolved rev, URL, root dependency pins, dependency inventory, and Lean toolchain are unchanged.",
+      "resolved_mathlib_revision": "d13f23b723b8a846827a245b89c10fc7d3f11612"
+    }
+  ],
+  "inherited_unchanged_inventory": {
+    "baseline_inventory_count": 19,
+    "changed_files": 2,
+    "unchanged_files": 17,
+    "all_unchanged_hashes_match_baseline": true,
+    "unchanged_paths": [
+      "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean",
+      "lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean",
+      "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean",
+      "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean",
+      "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+      "lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean",
+      "verification/real-matrix-split/audit.py",
+      "verification/real-matrix-split/check.py",
+      "verification/real-matrix-split/lakefile.toml",
+      "verification/real-matrix-split/lean-toolchain",
+      "docs/REAL_MATRIX_SPLIT_CONTRACT.md",
+      "verification/real-matrix-split/README.md",
+      ".github/workflows/real-matrix-split.yml",
+      "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAll.lean",
+      "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean",
+      "lean-toolchain",
+      "lake-manifest.json"
+    ],
+    "reconstruction": "The current 19-file fingerprint is the preserved baseline record with the two SHA-256 overrides above."
+  },
+  "inherited_semantic_findings": {
+    "five_map_law_warning_classifications": "Remain valid; all corresponding declarations are unchanged.",
+    "A_A_01_apostrophe_parser_fix": "Remains closed at source level; audit.py is unchanged.",
+    "native_determinant_and_positivity_attribution": "Unchanged and remains appropriate.",
+    "finite_scope_and_complex_structure_boundary": "Unchanged. No geometric or A^2 = -I overclaim introduced."
+  },
+  "required_source_corrections": [],
+  "parent_reported_ci_context": "Parent reports CI2 compiled the metric-adjoint and example owners and exposed this core witness conversion issue. This delta review did not inspect CI logs and does not certify that report.",
+  "pending_qa": [
+    "CI3 or an independent final locked build must compile the exact final source tree.",
+    "Generate fresh #print axioms output for all 81 inventoried heads and validate it with the repaired parser.",
+    "Complete remaining final QA gates and record actual results and runtime versions.",
+    "Request a further delta review if any reviewed mathematics or verification assumptions change."
+  ],
+  "performed_actions": [
+    "Read git HEAD, HEAD~1, tree, status and exact HEAD~1-to-HEAD diff.",
+    "Read the changed theorem context and native selfAdjoint.isSelfAdjoint source reference.",
+    "Read and hash the preserved baseline record and all 19 previously recorded files.",
+    "Confirmed exactly two changed hashes and seventeen unchanged hashes.",
+    "Repeated all 19 hash comparisons immediately before writing this delta."
+  ],
+  "independence": {
+    "repository_files_edited": false,
+    "builds_run": false,
+    "tests_run": false,
+    "kernel_accepted": false
+  },
+  "artifacts": {
+    "json_path": "/workspace/scratch/9009f3c86480/candidates/real_matrix_split_aa_delta2.json",
+    "checksum_path": "/workspace/scratch/9009f3c86480/candidates/real_matrix_split_aa_delta2.sha256",
+    "checksum_scope": "SHA-256 integrity digest; no immutable/signed-ledger claim."
+  }
+}

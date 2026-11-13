@@ -1,0 +1,510 @@
+{
+  "schema_version": 1,
+  "role": "independent_QA_A",
+  "agent": "/root/matrix_split_acceptance",
+  "status": "STATIC_CHECKS_PASSED_REMOTE_ACCEPTANCE_PENDING",
+  "recorded_at_utc": "2026-11-13T09:05:38.879373+00:00",
+  "execution_scope": "Local read-only source/log analysis only; no local Lean or Lake command executed.",
+  "git_head": "e87f9455966213df062fed9a8507fcb97f1d33ab",
+  "git_tree": "700c4648345511e894b371c950b385ffceb254ac",
+  "working_tree_scope": "clean",
+  "source_sha256_before": {
+    "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean": "307acf4c4b342577f94826381c9b814c1f8879087a69b927612a2cf1c795d0ea",
+    "lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean": "8fede4a70e3dc75c72ef241dba5b41ca7e8be8f30a39e4cdc6667bcbf447aefc",
+    "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean": "cc89c98b6981294b33583f7e0538fdc3f5b995a6da192ad4e2992a7a0a73fa7e",
+    "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean": "beefd53df1720109b3b45b4a1b4fbac574bd5afca3e14a1838e9896c7e670fa5",
+    "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean": "c0ea7130c2954a8e6b35c64780e95d0f83ef95b787592c9a4534be628bfb9f03",
+    "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean": "b520f5eb138e736cf19aabe1fdf9ae1a5ed7c55d11230e4db7f48c5c29ea4697",
+    "lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean": "1d777d83b308caa324e2dc2129865a1b9a347599ca7360a0dd107666654f2c58",
+    "verification/real-matrix-split/audit.py": "e759bf7479a4771e1f6bd3ed6b0bd30e045af8b6f56884314c7f662553e2822f",
+    "verification/real-matrix-split/check.py": "0d7ea354bca9a816daae378c119166491a07874409ca428e57da13a738844eb7",
+    "verification/real-matrix-split/lakefile.toml": "dcf2219aa553e9393f6f38393dac3b5d71a7ae9cd8e90ae2fb5c619641ed164d",
+    "verification/real-matrix-split/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "verification/real-matrix-split/lake-manifest.json": "1b81b6f9df04f90d3810e153c91fadb52e97e6c272b50323bfe07314d5892e58",
+    "docs/REAL_MATRIX_SPLIT_CONTRACT.md": "a9591229bcf0edc10c90c89dd96b7f289fbc2f440611601fb08d5609236b44fe",
+    "verification/real-matrix-split/README.md": "36f1da1a69da12f32d756772fd16894146e6b98b31688ff7dea3fc2abbf88a2e",
+    ".github/workflows/real-matrix-split.yml": "59fee00761c7f9fe5a3cd090369df47c1621a85272e907b56621ad0fe035f037",
+    "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAll.lean": "74dd4000aaa9c3c0e98706556d06e91ce04b060d6faa957c6097d9ca489a7e8a",
+    "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean": "56d9537cbfba1991c565a258816beea481b833ba9459c171119cd058f796d076",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lake-manifest.json": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98"
+  },
+  "source_sha256_after": {
+    "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean": "307acf4c4b342577f94826381c9b814c1f8879087a69b927612a2cf1c795d0ea",
+    "lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean": "8fede4a70e3dc75c72ef241dba5b41ca7e8be8f30a39e4cdc6667bcbf447aefc",
+    "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean": "cc89c98b6981294b33583f7e0538fdc3f5b995a6da192ad4e2992a7a0a73fa7e",
+    "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean": "beefd53df1720109b3b45b4a1b4fbac574bd5afca3e14a1838e9896c7e670fa5",
+    "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean": "c0ea7130c2954a8e6b35c64780e95d0f83ef95b787592c9a4534be628bfb9f03",
+    "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean": "b520f5eb138e736cf19aabe1fdf9ae1a5ed7c55d11230e4db7f48c5c29ea4697",
+    "lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean": "1d777d83b308caa324e2dc2129865a1b9a347599ca7360a0dd107666654f2c58",
+    "verification/real-matrix-split/audit.py": "e759bf7479a4771e1f6bd3ed6b0bd30e045af8b6f56884314c7f662553e2822f",
+    "verification/real-matrix-split/check.py": "0d7ea354bca9a816daae378c119166491a07874409ca428e57da13a738844eb7",
+    "verification/real-matrix-split/lakefile.toml": "dcf2219aa553e9393f6f38393dac3b5d71a7ae9cd8e90ae2fb5c619641ed164d",
+    "verification/real-matrix-split/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "verification/real-matrix-split/lake-manifest.json": "1b81b6f9df04f90d3810e153c91fadb52e97e6c272b50323bfe07314d5892e58",
+    "docs/REAL_MATRIX_SPLIT_CONTRACT.md": "a9591229bcf0edc10c90c89dd96b7f289fbc2f440611601fb08d5609236b44fe",
+    "verification/real-matrix-split/README.md": "36f1da1a69da12f32d756772fd16894146e6b98b31688ff7dea3fc2abbf88a2e",
+    ".github/workflows/real-matrix-split.yml": "59fee00761c7f9fe5a3cd090369df47c1621a85272e907b56621ad0fe035f037",
+    "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAll.lean": "74dd4000aaa9c3c0e98706556d06e91ce04b060d6faa957c6097d9ca489a7e8a",
+    "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean": "56d9537cbfba1991c565a258816beea481b833ba9459c171119cd058f796d076",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lake-manifest.json": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98"
+  },
+  "source_hashes_stable": true,
+  "auditor_records": [
+    {
+      "path": "/workspace/scratch/9009f3c86480/candidates/real_matrix_split_aa.json",
+      "sha256": "4629eb8ec8a33fef4decded4e3310e5d5f24b7bbbce8fa2238bce3639786461d"
+    },
+    {
+      "path": "/workspace/scratch/9009f3c86480/candidates/real_matrix_split_aa_delta2.json",
+      "sha256": "49aceed7b605d9cdbbcde4444bd7003f7d41bc3fe5a5ed07ac8a44b5f5d86b2b"
+    }
+  ],
+  "tool_sha256": {
+    "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df",
+    "tools/infra/build.py": "76575073b6fbf1054511ede20792e549ac216238f2519b2a2c2215d0aa646dc0",
+    "tools/infra/opengauss_screener.py": "8905eaa68b63c82709aca70e05b86249b74df297a96e6d7bae8b037331b9448b",
+    "tools/infra/opengauss_cli.py": "fa210dde57fc129ada5645926285c8a6e1b6ab7cdd3354747279aa5702f1f18c",
+    "tools/quality/proof_proxy_staged_gate.py": "eaa861d929ad9465586504f30f65ddc64eb96f8198bee65b3039c8d4fb813db9",
+    "tools/quality/semantic_vacuity_gate.py": "cfd9a8e4108610a8221a74a28330849b02c064536f245fb411bc989eba2ac27f",
+    "tools/quality/semantic_vacuity_patterns.json": "01cd14be0fdb966fbe93e93d2729d6822dc375c85f6338a7d67b70758fd87082",
+    "tools/quality/semantic_regression_gate.py": "324fe75e45d09f86f7c951568ba1e0b7e96151fd7894350d140992f5e9558521",
+    "scripts/vacuity-linter.py": "76b0241f4e62dbd01c6e9b160ef1f8af9caf7bf2b6461ea713f4ca18a5dc8033"
+  },
+  "declarations": [
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplit.isStarNormal_iff_parts_commute",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplit.selfAdjointPart_congruence",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplit.selfAdjointPart_eq_half",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplit.skewAdjointPart_congruence",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplit.skewAdjointPart_eq_half",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplit.square_of_split",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplit.transpose_normal_defect",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplit.transpose_normal_defect_of_split",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.invertible_with_zero_skew_part",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.invertible_with_zero_symmetric_part",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleMatrix",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleMetric",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleMetric_det",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleMetric_inv",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleMetric_isSymm",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleMetric_posDef",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleRaised",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleRaised_eq",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleRaised_not_complex",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleRaised_sq",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleSkew",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleSkew_det",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleSkew_toBilin'_nondegenerate",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleSkew_transpose",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sample_commutator",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sample_parts_do_not_commute",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sample_selfAdjointPart",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sample_skewAdjointPart",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.even_card_of_skew_toBilin'_nondegenerate",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.even_card_of_transpose_eq_neg_det_ne_zero",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.selfAdjointPart_toBilin'_isSymm",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.skewAdjointPart_toBilin'_isAlt",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.toBilin'_adjoint_split",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.toBilin'_isAlt_of_transpose_eq_neg",
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.toBilin'_swap_of_transpose_eq_neg",
+    "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.isSelfAdjoint_iff_weightedAdjoint",
+    "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.isSkewAdjoint_iff_weightedAdjoint",
+    "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.raisedIndex_isSkewAdjoint",
+    "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.raisedIndex_skew_identity",
+    "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.raisedIndex_toBilin'",
+    "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_add",
+    "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_involutive",
+    "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_isAdjointPair",
+    "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_matrix",
+    "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_nonsingInvUnit",
+    "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_skew_part",
+    "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_skew_part_unique",
+    "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_smul",
+    "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_split",
+    "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_sub",
+    "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_symmetric_part",
+    "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_symmetric_part_unique",
+    "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_unique",
+    "InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint",
+    "InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint_eq_self_iff_of_selfAdjoint",
+    "InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint_eq_star_iff",
+    "InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint_involutive",
+    "InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint_mul",
+    "InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.compatibility_defect",
+    "InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.mul_adjoint",
+    "InfoGeometry.Physics.antisymmetricPart",
+    "InfoGeometry.Physics.antisymmetricPart_eq_of_symmetric_add_skew",
+    "InfoGeometry.Physics.antisymmetricPart_eq_skewAdjointPart",
+    "InfoGeometry.Physics.antisymmetricPart_transpose",
+    "InfoGeometry.Physics.casimir_conserved",
+    "InfoGeometry.Physics.energyRate",
+    "InfoGeometry.Physics.energy_conserved",
+    "InfoGeometry.Physics.entropyRate",
+    "InfoGeometry.Physics.entropyRate_eq_onsager_quadratic",
+    "InfoGeometry.Physics.entropyRate_eq_zero_of_degenerate",
+    "InfoGeometry.Physics.entropy_nondecreasing",
+    "InfoGeometry.Physics.metriplecticVelocity",
+    "InfoGeometry.Physics.metriplecticVelocity_eq_zero_of_degenerate",
+    "InfoGeometry.Physics.metriplectic_stationary_rates",
+    "InfoGeometry.Physics.symmetricPart",
+    "InfoGeometry.Physics.symmetricPart_add_antisymmetricPart",
+    "InfoGeometry.Physics.symmetricPart_antisymmetricPart_commute_iff",
+    "InfoGeometry.Physics.symmetricPart_antisymmetricPart_normal_defect",
+    "InfoGeometry.Physics.symmetricPart_eq_of_symmetric_add_skew",
+    "InfoGeometry.Physics.symmetricPart_eq_selfAdjointPart",
+    "InfoGeometry.Physics.symmetricPart_transpose"
+  ],
+  "declaration_counts": {
+    "InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility": 7,
+    "InfoGeometry.Physics.FiniteMetriplecticDynamics": 17,
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplit": 8,
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry": 7,
+    "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples": 20,
+    "InfoGeometry.OperatorAlgebra.RealMetricAdjoint": 18,
+    "InfoGeometry.Physics.FiniteMetriplecticMatrixSplit": 4
+  },
+  "commands": [
+    {
+      "label": "source_inventory",
+      "argv": [
+        "python3",
+        "verification/real-matrix-split/audit.py"
+      ],
+      "shell_command": "python3 verification/real-matrix-split/audit.py",
+      "cwd": ".",
+      "started_at_utc": "2026-11-13T09:05:35.343449+00:00",
+      "finished_at_utc": "2026-11-13T09:05:35.453513+00:00",
+      "exit_code": 0,
+      "log": "artifacts/qms/real-matrix-split-qa-20261113/source_inventory.log",
+      "log_sha256": "3a344732512d89abd590b5d61d3cf24d899cdb856f9433e4e983cc1cf6ceecdf"
+    },
+    {
+      "label": "strict_screener",
+      "argv": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "--strict",
+        "--json",
+        "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean",
+        "lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean",
+        "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean",
+        "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean",
+        "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean",
+        "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+        "lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean"
+      ],
+      "shell_command": "python3 tools/infra/opengauss_screener.py --strict --json lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean",
+      "cwd": ".",
+      "started_at_utc": "2026-11-13T09:05:35.453841+00:00",
+      "finished_at_utc": "2026-11-13T09:05:35.748231+00:00",
+      "exit_code": 0,
+      "log": "artifacts/qms/real-matrix-split-qa-20261113/strict_screener.log",
+      "log_sha256": "747443d22b8ccffb07c44835fa4a015e33c702c22548bbc3cecde756a8b81eb7"
+    },
+    {
+      "label": "strict_refute",
+      "argv": [
+        "python3",
+        "tools/infra/opengauss_cli.py",
+        "refute",
+        "--strict",
+        "--json",
+        "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean",
+        "lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean",
+        "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean",
+        "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean",
+        "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean",
+        "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+        "lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean"
+      ],
+      "shell_command": "python3 tools/infra/opengauss_cli.py refute --strict --json lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean",
+      "cwd": ".",
+      "started_at_utc": "2026-11-13T09:05:35.749000+00:00",
+      "finished_at_utc": "2026-11-13T09:05:36.057727+00:00",
+      "exit_code": 0,
+      "log": "artifacts/qms/real-matrix-split-qa-20261113/strict_refute.log",
+      "log_sha256": "1394e15b9a8c3109039310acb9de30bd196444cfd54bb34f21f1151106f2ae74"
+    },
+    {
+      "label": "semantic_vacuity",
+      "argv": [
+        "python3",
+        "tools/quality/semantic_vacuity_gate.py",
+        "--fail-on",
+        "error",
+        "--json-out",
+        "artifacts/qms/real-matrix-split-qa-20261113/semantic_vacuity.json",
+        "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean",
+        "lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean",
+        "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean",
+        "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean",
+        "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean",
+        "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+        "lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean"
+      ],
+      "shell_command": "python3 tools/quality/semantic_vacuity_gate.py --fail-on error --json-out artifacts/qms/real-matrix-split-qa-20261113/semantic_vacuity.json lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean",
+      "cwd": ".",
+      "started_at_utc": "2026-11-13T09:05:36.057994+00:00",
+      "finished_at_utc": "2026-11-13T09:05:36.166973+00:00",
+      "exit_code": 0,
+      "log": "artifacts/qms/real-matrix-split-qa-20261113/semantic_vacuity.log",
+      "log_sha256": "5769fc4985ebab14c1fe681e6c328f43cea608da848d4ed4426d8d7494447d65"
+    },
+    {
+      "label": "existing_owner_semantic_regression",
+      "argv": [
+        "python3",
+        "tools/quality/semantic_regression_gate.py",
+        "--base",
+        "a392af178af1fe2bcba2ba39eb405700c6ee103c",
+        "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean",
+        "lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean"
+      ],
+      "shell_command": "python3 tools/quality/semantic_regression_gate.py --base a392af178af1fe2bcba2ba39eb405700c6ee103c lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean",
+      "cwd": ".",
+      "started_at_utc": "2026-11-13T09:05:36.167138+00:00",
+      "finished_at_utc": "2026-11-13T09:05:36.413318+00:00",
+      "exit_code": 0,
+      "log": "artifacts/qms/real-matrix-split-qa-20261113/existing_owner_semantic_regression.log",
+      "log_sha256": "b0d56d44ebb653828e6427381075f71ff3b16a592d5f79749081d3ca041454a7"
+    },
+    {
+      "label": "staged_gate_cli",
+      "argv": [
+        "python3",
+        "tools/quality/proof_proxy_staged_gate.py",
+        "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean",
+        "lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean",
+        "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean",
+        "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean",
+        "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean",
+        "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+        "lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean",
+        "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAll.lean",
+        "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean"
+      ],
+      "shell_command": "python3 tools/quality/proof_proxy_staged_gate.py lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAll.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean",
+      "cwd": ".",
+      "started_at_utc": "2026-11-13T09:05:36.413488+00:00",
+      "finished_at_utc": "2026-11-13T09:05:37.215046+00:00",
+      "exit_code": 0,
+      "log": "artifacts/qms/real-matrix-split-qa-20261113/staged_gate_cli.log",
+      "log_sha256": "15636963213bd1e0893ddeb031ca330861b34fbde83171eaf5ccca90b606f2e2"
+    },
+    {
+      "label": "vacuity_linter_1",
+      "argv": [
+        "python3",
+        "scripts/vacuity-linter.py",
+        "--json",
+        "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean"
+      ],
+      "shell_command": "python3 scripts/vacuity-linter.py --json lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean",
+      "cwd": ".",
+      "started_at_utc": "2026-11-13T09:05:38.186612+00:00",
+      "finished_at_utc": "2026-11-13T09:05:38.253998+00:00",
+      "exit_code": 0,
+      "log": "artifacts/qms/real-matrix-split-qa-20261113/vacuity_linter_1.log",
+      "log_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e"
+    },
+    {
+      "label": "vacuity_linter_2",
+      "argv": [
+        "python3",
+        "scripts/vacuity-linter.py",
+        "--json",
+        "lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean"
+      ],
+      "shell_command": "python3 scripts/vacuity-linter.py --json lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean",
+      "cwd": ".",
+      "started_at_utc": "2026-11-13T09:05:38.254227+00:00",
+      "finished_at_utc": "2026-11-13T09:05:38.309286+00:00",
+      "exit_code": 0,
+      "log": "artifacts/qms/real-matrix-split-qa-20261113/vacuity_linter_2.log",
+      "log_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e"
+    },
+    {
+      "label": "vacuity_linter_3",
+      "argv": [
+        "python3",
+        "scripts/vacuity-linter.py",
+        "--json",
+        "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean"
+      ],
+      "shell_command": "python3 scripts/vacuity-linter.py --json lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean",
+      "cwd": ".",
+      "started_at_utc": "2026-11-13T09:05:38.309439+00:00",
+      "finished_at_utc": "2026-11-13T09:05:38.371890+00:00",
+      "exit_code": 0,
+      "log": "artifacts/qms/real-matrix-split-qa-20261113/vacuity_linter_3.log",
+      "log_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e"
+    },
+    {
+      "label": "vacuity_linter_4",
+      "argv": [
+        "python3",
+        "scripts/vacuity-linter.py",
+        "--json",
+        "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean"
+      ],
+      "shell_command": "python3 scripts/vacuity-linter.py --json lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean",
+      "cwd": ".",
+      "started_at_utc": "2026-11-13T09:05:38.372194+00:00",
+      "finished_at_utc": "2026-11-13T09:05:38.428771+00:00",
+      "exit_code": 0,
+      "log": "artifacts/qms/real-matrix-split-qa-20261113/vacuity_linter_4.log",
+      "log_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e"
+    },
+    {
+      "label": "vacuity_linter_5",
+      "argv": [
+        "python3",
+        "scripts/vacuity-linter.py",
+        "--json",
+        "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean"
+      ],
+      "shell_command": "python3 scripts/vacuity-linter.py --json lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean",
+      "cwd": ".",
+      "started_at_utc": "2026-11-13T09:05:38.428908+00:00",
+      "finished_at_utc": "2026-11-13T09:05:38.544426+00:00",
+      "exit_code": 0,
+      "log": "artifacts/qms/real-matrix-split-qa-20261113/vacuity_linter_5.log",
+      "log_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e"
+    },
+    {
+      "label": "vacuity_linter_6",
+      "argv": [
+        "python3",
+        "scripts/vacuity-linter.py",
+        "--json",
+        "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean"
+      ],
+      "shell_command": "python3 scripts/vacuity-linter.py --json lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+      "cwd": ".",
+      "started_at_utc": "2026-11-13T09:05:38.545501+00:00",
+      "finished_at_utc": "2026-11-13T09:05:38.628218+00:00",
+      "exit_code": 0,
+      "log": "artifacts/qms/real-matrix-split-qa-20261113/vacuity_linter_6.log",
+      "log_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e"
+    },
+    {
+      "label": "vacuity_linter_7",
+      "argv": [
+        "python3",
+        "scripts/vacuity-linter.py",
+        "--json",
+        "lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean"
+      ],
+      "shell_command": "python3 scripts/vacuity-linter.py --json lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean",
+      "cwd": ".",
+      "started_at_utc": "2026-11-13T09:05:38.628390+00:00",
+      "finished_at_utc": "2026-11-13T09:05:38.682798+00:00",
+      "exit_code": 0,
+      "log": "artifacts/qms/real-matrix-split-qa-20261113/vacuity_linter_7.log",
+      "log_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e"
+    }
+  ],
+  "indexed_source_gate": {
+    "checked_paths": [
+      "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean",
+      "lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean",
+      "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean",
+      "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean",
+      "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean",
+      "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+      "lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean",
+      "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAll.lean",
+      "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean"
+    ],
+    "checked_count": 9,
+    "failures": [],
+    "authority": "Maintained staged-gate check_text and active-index checks applied explicitly to final committed index blobs; ordinary staged CLI had zero changed staged blobs."
+  },
+  "placeholder_scope": [
+    "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean",
+    "lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean",
+    "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean",
+    "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean",
+    "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean",
+    "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+    "lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean",
+    "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAll.lean",
+    "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean",
+    "lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean"
+  ],
+  "placeholder_findings": [],
+  "semantic_warning_review": [
+    {
+      "symbol": "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_add",
+      "path": "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+      "line": 117,
+      "origin": "new",
+      "heuristic": "trivial_surface",
+      "verdict": "LEGITIMATE_ALGEBRAIC_API_LAW",
+      "reason": "A general additivity identity for arbitrary full real matrices and a unit weight. Its proof uses star additivity and distributivity rather than a premise that restates the conclusion. It is a small genuine linearity law, not a vacuous certificate.",
+      "consumers_or_role": [
+        "weightedAdjoint_symmetric_part",
+        "weightedAdjoint_symmetric_part_unique",
+        "weightedAdjoint_skew_part_unique"
+      ],
+      "required_change": false
+    },
+    {
+      "symbol": "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_sub",
+      "path": "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+      "line": 122,
+      "origin": "new",
+      "heuristic": "trivial_surface",
+      "verdict": "LEGITIMATE_ALGEBRAIC_API_LAW",
+      "reason": "A general subtraction identity for the same weighted operation. It is proved from star_sub and ring distributivity and is required for the skew eigenspace calculation.",
+      "consumers_or_role": [
+        "weightedAdjoint_skew_part"
+      ],
+      "required_change": false
+    },
+    {
+      "symbol": "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_smul",
+      "path": "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+      "line": 127,
+      "origin": "new",
+      "heuristic": "trivial_surface",
+      "verdict": "LEGITIMATE_ALGEBRAIC_API_LAW",
+      "reason": "A real scalar-compatibility law. Trivial scalar star is valid because coefficients are Real, and multiplication by a real scalar commutes with matrix multiplication in the indicated module sense. No self-adjointness of the weight is assumed or needed.",
+      "consumers_or_role": [
+        "weightedAdjoint_symmetric_part",
+        "weightedAdjoint_skew_part"
+      ],
+      "required_change": false
+    },
+    {
+      "symbol": "InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.mul_adjoint",
+      "path": "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean",
+      "line": 24,
+      "origin": "existing_unchanged",
+      "heuristic": "trivial_surface",
+      "verdict": "LEGITIMATE_ALGEBRAIC_API_LAW",
+      "reason": "This cancels an actual unit in w * (w^-1 * star x * w). It connects the coordinate weighted adjoint to its defining bilinear adjoint-pair equation. The arbitrary star-ring carrier and noncommutative order are retained.",
+      "consumers_or_role": [
+        "RealMetricAdjoint.weightedAdjoint_isAdjointPair",
+        "WeightedAdjointCompatibility.compatibility_defect"
+      ],
+      "required_change": false
+    },
+    {
+      "symbol": "InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint_mul",
+      "path": "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean",
+      "line": 53,
+      "origin": "existing_unchanged",
+      "heuristic": "trivial_surface",
+      "verdict": "LEGITIMATE_ALGEBRAIC_API_LAW",
+      "reason": "This is anti-multiplicativity in a full associative star ring, with reversed factor order on the right. It relies on star_mul and unit cancellation; it is neither a scalar/commuting replacement nor an assumed conclusion.",
+      "consumers_or_role": [
+        "Existing weighted-adjoint API law; mathematical declaration unchanged"
+      ],
+      "required_change": false
+    }
+  ],
+  "semantic_regression_scope": "The two pre-existing owners whose imports changed; the new laws are analyzed by the all-seven-owner semantic scan and independent semantic review.",
+  "tool_path_fallback": "The SOP example tools/scripts/vacuity-linter.py is absent; maintained scripts/vacuity-linter.py and tools/quality/semantic_vacuity_gate.py were executed."
+}

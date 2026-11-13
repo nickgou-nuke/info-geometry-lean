@@ -115,3 +115,6 @@
 [submodule "external_refs/CFSG"]
 	path = external_refs/CFSG
 	url = https://github.com/AxiomMath/CFSG.git
+[submodule "external_refs/grothendieck-riemann-roch"]
+	path = external_refs/grothendieck-riemann-roch
+	url = https://github.com/grothendiecklabs/grothendieck-riemann-roch.git

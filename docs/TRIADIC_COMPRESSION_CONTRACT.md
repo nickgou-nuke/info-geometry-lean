@@ -97,6 +97,13 @@ is
 \rho-\rho^2=(p x q)(q x p)+(p x r)(r x p).
 \]
 
+The binary identity `rho-rho*rho = p*x*(1-p)*x*p` follows from
+`p*p=p` and `x*x=x` before choosing the split `1-p=q+r`. The tripotent
+specialization resolves this complement into two channels and does not assume
+that either channel or sector is nonzero. It does not establish a necessity
+of a nonzero middle sector. If `p*x*q != 0` is supplied as a hypothesis, that
+hypothesis already supplies `q != 0`.
+
 When `star t=t` and `star x=x`, set `a=q*x*p` and `b=r*x*p`. The same expression
 is `star a*a + star b*b`. The real-Hilbert synthesis is
 
@@ -130,6 +137,12 @@ For a descending compatible finite flag `p_0,...,p_n`, iteration gives
 
 These are exact finite identities, not assertions that every new correction is
 nonzero. Repeating the same boundary contributes a zero relative sector.
+
+The defect function must remain fixed throughout the recursion. From `t³=t`
+one gets `t⁴=t²`, so `Delta(t²)=t²-t⁴=0`. The quantity `1-t²=projZero t`
+is instead the complementary projector, measuring failure of `t` to square
+to the ambient identity. Calling it the idempotency defect of `t²` would
+switch to a different defect function at the third level.
 
 The recursion stops at explicit additional hypotheses. Specifying an infinity
 operator does not identify its kernel with the zero spectral sector until that
@@ -175,6 +188,7 @@ or a new Lean theorem about a `PartialOrder` object.
 | Orthogonal corner equals the full ambient commutant | False when the observed projector is nonzero; strict inclusion is proved |
 | Both channels nonzero imply positive definite defect / faithful compression | False; explicit singular `4×4` compression and the exact common-kernel criterion supplied |
 | A nonidempotent compressed element contradicts the idempotence of the compression map | False: these are two different multiplication/composition operations |
+| `Delta(S²)=1-S²=P₀` for `Delta(Y)=Y-Y²` | False: `S³=S` implies `Delta(S²)=0`; `P₀` is the complementary projector |
 | Compression is a reduced density operator / proves entanglement | Not in general: compression differs from partial trace and need not have trace one |
 | Krein self-adjointness supplies Hilbert positivity | False without a separate positive structure; ring identities remain valid |
 | Odd elements automatically anticommute | False; oddness controls product parity, not Grassmann relations |
@@ -185,6 +199,44 @@ or a new Lean theorem about a `PartialOrder` object.
 | Bregman divergence must differ on every reversed pair | False; the exact three-point identity is the valid reusable result |
 | Supertrace arithmetic identifies a unique quantum field theory | Requires an actual representation, trace, quantization and anomaly calculation |
 | Kerr resonances, Andreev reflection, photons, Einstein equations, universal triadic necessity | Open physical/mathematical targets; no implication supplied by these algebraic hypotheses |
+
+### Nilpotence and kernel annihilation are different data
+
+For a Peirce element `epsilon=p*a*q`, the equations `p*p=p` and `q*p=0`
+give `p*epsilon=epsilon`, `epsilon*p=0`, and `epsilon*epsilon=0` by
+associativity. If `epsilon != 0`, it is therefore not central in the ambient
+algebra. Treating it as a central dual-number parameter requires a separately
+specified compatible representation or restriction to an algebra on which it
+commutes with every coefficient. Nilpotence alone does not supply this
+coefficient compatibility.
+
+Likewise, `I*P0=0` implies `(I*I)*P0=0`, but this only records annihilation of
+the selected kernel sector. The restriction of `I` to `range P0` is already
+the zero map. This equation does not establish global nilpotence of `I`, nor
+does it construct a nonzero nilpotent on that range. Any stronger property of
+a particular infinity operator or its cosmological deformation needs its own
+operator construction and compatibility theorem.
+
+### Analytic asymmetry is a separate condition
+
+An explanatory calculation, not an additional Lean theorem in this package,
+removes the ambiguity in the proposed Bregman asymmetry claim. On `R²`, let
+`psi(x,y)=x²+y²+exp(y)`. Its Hessian is
+`diag(2, 2+exp(y))`, positive definite everywhere, while its third derivative
+is the tensor `exp(y) dy⊗dy⊗dy`, nonzero at every point. For `u=(1,0)` and
+`v=(-1,0)`, both potential values are `2`, and the gradients are `(2,1)` and
+`(-2,1)`. Therefore the canonical Bregman formula gives
+
+\[
+D_\psi(u,v)=D_\psi(v,u)=4.
+\]
+
+A nonzero tensor can have zero contraction along the direction joining the
+selected points. Thus tensor nonvanishing does not imply asymmetry for every
+pair. Separately, `psi(x)=x⁴` is strictly convex but has zero second derivative
+at the origin, so strict convexity alone does not imply an everywhere
+positive-definite Hessian. These analytic examples do not affect the scope
+or count of the compiled operator-algebra theorems.
 
 ### Literal commutant identification makes the proposed axioms inconsistent
 

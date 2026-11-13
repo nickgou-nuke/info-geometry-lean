@@ -1,0 +1,46 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Core.TripotentIntegerGrading
+import InfoGeometry.Core.TripotentSpectralSubmodule
+import InfoGeometry.Core.TripotentCornerGeneration
+import InfoGeometry.Core.TripotentExtremeKernels
+import InfoGeometry.Core.TripotentJordanPair
+import InfoGeometry.Core.TripotentStarGrading
+import InfoGeometry.Core.TripotentGradeTransport
+import InfoGeometry.OperatorAlgebra.TripotentExponentialFlow
+import InfoGeometry.Canonical.TripotentIntegerStructureExample
+
+/-!
+# Public theorem audit for the tripotent integer structure
+
+The focused checker additionally enumerates every declaration owned by these
+modules and rejects unsafe/partial declarations and non-foundational axioms.
+These explicit commands expose the principal mathematical interfaces.
+-/
+
+#print axioms InfoGeometry.Core.TripotentAdjoint.adGrade_isInternal
+#print axioms InfoGeometry.Core.TripotentAdjoint.adGradeGradedAlgebra
+#print axioms InfoGeometry.Core.TripotentAdjoint.adGradeDecomposeAlgEquiv
+#print axioms InfoGeometry.Core.TripotentAdjoint.adGradeSuperBracket_jacobi
+#print axioms InfoGeometry.Core.TripotentAdjoint.fiveGradeProjector_eq_aeval_lagrange
+#print axioms InfoGeometry.Core.TripotentAdjoint.invariantFiveGradeLinearEquiv
+#print axioms InfoGeometry.Core.TripotentExtremeKernels.range_projZero_lt_ker_posTwo
+#print axioms InfoGeometry.Core.TripotentExtremeKernels.range_projZero_lt_ker_negTwo
+#print axioms InfoGeometry.Core.TripotentExtremeKernels.range_projZero_lt_sup_range_projPos
+#print axioms InfoGeometry.Core.TripotentExtremeKernels.range_projZero_lt_sup_range_projNeg
+#print axioms InfoGeometry.Core.TripotentExtremeKernels.ker_posTwo_inf_ker_negTwo_eq_range_projZero
+#print axioms InfoGeometry.Core.TripotentAdjoint.anticommutatorSpan_posOne_eq_middleCornerSpan
+#print axioms InfoGeometry.Core.TripotentAdjoint.anticommutatorSpan_negOne_eq_middleCornerSpan
+#print axioms InfoGeometry.Core.TripotentJordanPair.tripotentExtremeJordanPair
+#print axioms InfoGeometry.Core.TripotentAdjoint.skewAdjointExtremeJordanPair
+#print axioms InfoGeometry.Core.TripotentAdjoint.eq_zero_of_skewAdjoint_mem_adGrade_of_selfAdjoint
+#print axioms InfoGeometry.Core.TripotentAdjoint.paired_corner_eq_middle_implies_zero
+#print axioms InfoGeometry.Core.TripotentAdjoint.commute_sum_mul_iff_grouped_adGrades_eq_zero
+#print axioms InfoGeometry.Core.TripotentAdjoint.unit_conjugate_mem_adGrade_iff
+#print axioms InfoGeometry.Core.TripotentAdjoint.unit_conjugate_mem_adGrade_neg_iff
+#print axioms InfoGeometry.OperatorAlgebra.TripotentExponentialFlow.all_adGrades_preserved_iff_commute
+#print axioms InfoGeometry.OperatorAlgebra.TripotentExponentialFlow.expTransport_opposite_grade_product_iff
+#print axioms InfoGeometry.Canonical.TripotentIntegerStructureExample.triplePlus_raising_ne_zero

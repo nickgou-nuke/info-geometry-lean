@@ -166,9 +166,24 @@ theorem headTensorEquiv_involute (n : ℕ) (x : Clsplit (n + 1)) :
         tensorParity (CliffordAlgebra.evenOdd (Qsplit n)) (nativeParity n)
           (nativeParity_even n) (nativeParity_odd n)
           (headTensorEquiv n (CliffordAlgebra.ι (Qsplit (n + 1)) v))
+    have hg := headTensorEquiv_ι n v
+    have htail : nativeParity n (CliffordAlgebra.ι (Qsplit n) v.2) =
+        -CliffordAlgebra.ι (Qsplit n) v.2 :=
+      nativeParity_odd n (CliffordAlgebra.ι_mem_evenOdd_one (Qsplit n) v.2)
+    let p := tensorParity (CliffordAlgebra.evenOdd (Qsplit n)) (nativeParity n)
+      (nativeParity_even n) (nativeParity_odd n)
+    have hsum : p
+        ((CliffordAlgebra.ι q11 v.1 ᵍ⊗ₜ (1 : Clsplit n)) +
+          ((1 : CliffordAlgebra q11) ᵍ⊗ₜ CliffordAlgebra.ι (Qsplit n) v.2)) =
+        -((CliffordAlgebra.ι q11 v.1 ᵍ⊗ₜ (1 : Clsplit n)) +
+          ((1 : CliffordAlgebra q11) ᵍ⊗ₜ CliffordAlgebra.ι (Qsplit n) v.2)) := by
+      dsimp only [p]
+      simp only [map_add, tensorParity_tmul, CliffordAlgebra.involute_ι, map_one, htail]
+      simp only [GradedTensorProduct.tmul, TensorProduct.neg_tmul,
+        TensorProduct.tmul_neg, map_neg, neg_add]
     rw [CliffordAlgebra.involute_ι, map_neg]
-    simp [nativeParity, GradedTensorProduct.tmul, TensorProduct.neg_tmul,
-      TensorProduct.tmul_neg]
+    exact (congrArg (fun z => -z) hg).trans
+      (hsum.symm.trans (congrArg p hg.symm))
   exact AlgHom.congr_fun h x
 
 /-- Native parity exchanges both matrix coordinates and applies tail parity. -/

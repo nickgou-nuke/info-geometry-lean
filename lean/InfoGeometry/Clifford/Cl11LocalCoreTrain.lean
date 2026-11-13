@@ -95,6 +95,8 @@ theorem consTensor_smul_head (n : ℕ) (r : ℝ) (a : CliffordAlgebra q11)
   | tmul x b =>
       change consNative n (r • a) x ⊗ₜ[ℝ] b = r • (consNative n a x ⊗ₜ[ℝ] b)
       rw [consNative_smul_head n r a x]
+      exact ((TensorProduct.mk ℝ (Clsplit (n + 1)) B).flip b).map_smul r
+        (consNative n a x)
   | add x y hx hy =>
       rw [(consTensor B n (r • a)).map_add x y,
         (consTensor B n a).map_add x y, hx, hy, smul_add]
@@ -119,8 +121,22 @@ already established native four-word synthesis; the tail need not be pure. -/
 theorem wordReconstruct_localAtom (n : ℕ) (v : Fin 4 → ℝ) (c : Words n → B) :
     wordReconstruct B (n + 1) (fun w => v (w 0) • c (Fin.tail w)) =
       consTensor B n (localAtom v) (wordReconstruct B n c) := by
+  have hsmul (a : CliffordAlgebra q11) (r : ℝ) :
+      consTensor B n a (wordReconstruct B n (fun w => r • c w)) =
+        r • consTensor B n a (wordReconstruct B n c) :=
+    ((consTensor B n a).comp (wordReconstruct B n).toLinearMap).map_smul r c
   rw [wordReconstruct_succ, consTensor_localAtom, Fin.sum_univ_four]
-  simp [basisAtom, map_smul]
+  change
+    consTensor B n (basisAtom 0) (wordReconstruct B n (fun w => v 0 • c w)) +
+        consTensor B n (basisAtom 1) (wordReconstruct B n (fun w => v 1 • c w)) +
+      consTensor B n (basisAtom 2) (wordReconstruct B n (fun w => v 2 • c w)) +
+      consTensor B n (basisAtom 3) (wordReconstruct B n (fun w => v 3 • c w)) =
+    v 0 • consTensor B n (basisAtom 0) (wordReconstruct B n c) +
+        v 1 • consTensor B n (basisAtom 1) (wordReconstruct B n c) +
+      v 2 • consTensor B n (basisAtom 2) (wordReconstruct B n c) +
+      v 3 • consTensor B n (basisAtom 3) (wordReconstruct B n c)
+  rw [hsmul (basisAtom 0) (v 0), hsmul (basisAtom 1) (v 1),
+    hsmul (basisAtom 2) (v 2), hsmul (basisAtom 3) (v 3)]
 
 /-- The same actual local contraction with a single terminal B coefficient.
 Every local W atom still belongs to the real Clifford quotient. -/
@@ -136,8 +152,13 @@ private theorem coeff_cons_smul {n r s : ℕ}
     (fun w => (Train.cons core tail).coeff i w • b) =
       ∑ j : Fin s, (fun w => core (w 0) i j • (tail.coeff j (Fin.tail w) • b)) := by
   funext w
-  simp only [Train.coeff, Matrix.of_apply, Finset.sum_apply, Finset.sum_smul,
-    mul_smul, Fin.tail]
+  rw [Finset.sum_apply]
+  change (∑ j : Fin s, core (w 0) i j * tail.coeff j (Fin.tail w)) • b =
+    ∑ j : Fin s, core (w 0) i j • (tail.coeff j (Fin.tail w) • b)
+  rw [Finset.sum_smul]
+  apply Finset.sum_congr rfl
+  intro j _
+  exact mul_smul (core (w 0) i j) (tail.coeff j (Fin.tail w)) b
 
 /-- Equality with global word synthesis is a theorem about the independently
 defined local-W contraction, including its full terminal boundary vector. -/
@@ -149,13 +170,15 @@ theorem wordReconstruct_trainCoeff (b : B) :
       rfl
   | n + 1, _, .cons core tail, i => by
       rw [coeff_cons_smul B core tail i b, map_sum]
-      simp_rw [wordReconstruct_localAtom]
-      change (∑ j, consTensor B n (localCore core i j)
-        (wordReconstruct B n (fun w => tail.coeff j w • b))) =
+      change (∑ j, wordReconstruct B (n + 1)
+        (fun w => core (w 0) i j • (tail.coeff j (Fin.tail w) • b))) =
           ∑ j, consTensor B n (localCore core i j) (localCoreContraction B b tail j)
       apply Finset.sum_congr rfl
       intro j _
-      rw [wordReconstruct_trainCoeff b tail j]
+      exact (wordReconstruct_localAtom B n (fun α => core α i j)
+        (fun w => tail.coeff j w • b)).trans
+          (congrArg (consTensor B n (localCore core i j))
+            (wordReconstruct_trainCoeff b tail j))
 
 /-- The coefficient contraction is the ordinary extension of the actual
 native scalar contraction by one terminal coefficient. -/

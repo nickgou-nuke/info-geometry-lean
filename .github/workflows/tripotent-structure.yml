@@ -1,0 +1,141 @@
+name: Tripotent integer grading and structural boundaries (scoped)
+on:
+  pull_request:
+    paths:
+      - 'lean/**'
+      - 'tools/quality/**'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/tripotent-structure.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: tripotent-structure-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  kernel-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Fetch exact source and pinned Mathlib
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "https://github.com/${{ github.repository }}.git"
+          git -C project fetch --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          python3 - <<'PY'
+          import json, pathlib, subprocess
+          root = pathlib.Path('project')
+          spec = json.loads((root / 'lake-manifest.json').read_text())
+          pin = next(p for p in spec['packages'] if p['name'] == 'mathlib')
+          subprocess.run(['git', 'init', 'pinned-mathlib'], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'remote', 'add', 'origin', pin['url']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'fetch', '--depth=1', 'origin', pin['rev']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'checkout', '--detach', 'FETCH_HEAD'], check=True)
+          PY
+      - name: Install exact toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Compile exact source closure and audit owned declarations
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 project/tools/quality/check_tripotent_structure.py \
+            --mathlib-root pinned-mathlib --output verification
+      - name: Print immutable verification identity and status
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          for name in ['lean-version.txt', 'status.json']:
+              path = Path('verification') / name
+              if path.exists():
+                  print(f'VERIFICATION_FILE {name}')
+                  print(path.read_text())
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tripotent-structure-verification
+          path: |
+            verification/**/*.log
+            verification/**/*.json
+            verification/**/*.txt
+            verification/src
+  source-gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Fetch the exact target and task base
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+          TASK_BASE: c23aa651772224079271a35a0acca5a3f9767354
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "https://github.com/${{ github.repository }}.git"
+          git -C project fetch --depth=1 origin "$SOURCE_REV" "$TASK_BASE"
+          git -C project checkout --detach "$SOURCE_REV"
+          mkdir gate-evidence
+      - name: Install the pinned validation prerequisites
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m venv qa-env
+          qa-env/bin/pip install jsonschema==4.23.0
+          echo "$GITHUB_WORKSPACE/qa-env/bin" >> "$GITHUB_PATH"
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Run the unchanged staged proof gate on the actual task range
+        shell: bash
+        env:
+          TASK_BASE: c23aa651772224079271a35a0acca5a3f9767354
+        run: |
+          set -euo pipefail
+          cd project
+          TESTED_HEAD="$(git rev-parse HEAD)"
+          TESTED_TREE="$(git rev-parse HEAD^{tree})"
+          git diff --name-only --diff-filter=ACMR "$TASK_BASE" "$TESTED_HEAD" -- '*.lean' | sort > ../gate-evidence/range-lean.txt
+          test -s ../gate-evidence/range-lean.txt
+          trap 'git reset --soft "$TESTED_HEAD"' EXIT
+          git reset --soft "$TASK_BASE"
+          test "$(git write-tree)" = "$TESTED_TREE"
+          git diff --cached --name-only --diff-filter=ACMR -- '*.lean' | sort > ../gate-evidence/staged-lean.txt
+          cmp ../gate-evidence/range-lean.txt ../gate-evidence/staged-lean.txt
+          python3 tools/quality/proof_proxy_staged_gate.py 2>&1 | tee ../gate-evidence/staged-gate.log
+      - name: Attempt the unchanged incremental root quality gate
+        if: always()
+        shell: bash
+        env:
+          TASK_BASE: c23aa651772224079271a35a0acca5a3f9767354
+        run: |
+          set -euo pipefail
+          cd project
+          TESTED_HEAD="$(git rev-parse HEAD)"
+          bash scripts/quality/post_build_gate.sh --incremental --base="$TASK_BASE" --head="$TESTED_HEAD" 2>&1 | tee ../gate-evidence/incremental-root-gate.log
+      - name: Attempt the unchanged full root quality gate
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd project
+          bash scripts/quality/post_build_gate.sh 2>&1 | tee ../gate-evidence/full-root-gate.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tripotent-structure-source-gates
+          path: gate-evidence

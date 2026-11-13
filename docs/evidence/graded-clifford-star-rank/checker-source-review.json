@@ -1,0 +1,18 @@
+{
+  "role": "independent QA-A",
+  "status": "source_review_only",
+  "source_base": "ce34c806983f97e7ff3c95b5d06081bd93534c5b",
+  "source_sha256": {
+    "tools/quality/check_graded_clifford_star_rank.py": "ec3cc3a79ed538cba1b1812169cc1709a2d18f5cfbd7a5a4ee622db7cb6d2f20",
+    ".github/workflows/graded-clifford-star-rank.yml": "9dde4b499093b3ca273bf208a185988128e68689e464f1d502c466493a084ee1",
+    "tools/quality/reviewed_audit_source.py": "a976c910f5efb4611b1626d714e3197310d92648ffae56513e94a49ae5f0f206",
+    "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+    "tools/quality/proof_proxy_staged_gate.py": "eaa861d929ad9465586504f30f65ddc64eb96f8198bee65b3039c8d4fb813db9",
+    "tools/infra/opengauss_screener.py": "8905eaa68b63c82709aca70e05b86249b74df297a96e6d7bae8b037331b9448b",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lake-manifest.json": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98"
+  },
+  "compiler_execution": "not run",
+  "github_writes": "none",
+  "source_revision": "e6c2ee74776dc6eb700888d84fd50519f525c1b3"
+}

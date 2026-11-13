@@ -1,0 +1,16 @@
+{
+  "review": "scheduling only; no compiler execution",
+  "local_revision": "3e94a365e0f01d29e07da442a3bb31b1763328f9",
+  "remote_revision": "b7ce9313f5010a7c54e2570b62558e16978a611d",
+  "tree": "09d481c1c53f815588a2d23e0a1264148846baed",
+  "prior_local": "e77105c1a80a8c8b04cb405d67691bbabe8cf8b2",
+  "changed_paths": [
+    ".github/workflows/graded-clifford-star-rank.yml"
+  ],
+  "workflow_sha256": "69ef8c4b3b6774ee771e1387b7b545a98c973c971f972cea008501e389d6d0a8",
+  "acceptance_commands_unchanged": true,
+  "proof_sources_unchanged": true,
+  "kernel_group": "graded-clifford-star-rank-kernel-${{ github.head_ref || github.ref_name }}",
+  "source_gate_group": "graded-clifford-star-rank-${{ github.head_ref || github.ref_name }}",
+  "cancel_in_progress": false
+}

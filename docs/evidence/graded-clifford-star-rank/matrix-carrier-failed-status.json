@@ -1,0 +1,245 @@
+{
+  "status": "failed",
+  "targets": [
+    "InfoGeometry.Clifford.Cl11GradedAdjoint",
+    "InfoGeometry.Clifford.GradedTensorCutRank",
+    "InfoGeometry.Clifford.Cl11UntwistCutRank",
+    "InfoGeometry.Clifford.Cl11GradedProjectorDefects",
+    "InfoGeometry.LinearAlgebra.FiniteRealAnticommutation",
+    "InfoGeometry.Clifford.GradedUnrollingCounterexamples"
+  ],
+  "modules": [
+    {
+      "module": "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Clifford.SplitQ11",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Clifford.Cl11Matrix",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Clifford.FreedCliffordSuspension",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Core.IdempotentGraphReflectionOrder",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Core.IdempotencyDefect",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceDecomposition",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Core.IdempotentCartan",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Core.IdempotentTangent",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Core.IdempotentGraphGrassmannian",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Core.IdempotentDefectIteration",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectTower",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.BimetricSheetGeometry",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.TwoStateModularShiftGeometry",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.LieJordanEndomorphisms",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceHadamardNative",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.InnerGradedMorita",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.GradedMatrixMorita",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Clifford.Cl11GradedMorita",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Clifford.Cl11GradedTensorMorita",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Clifford.Cl11GradedAdjoint",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Clifford.GradedTensorCutRank",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Clifford.Cl11UntwistCutRank",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.MatrixNoncommutativity",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Clifford.TowerMatrix",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.TensorAlgebraCanonical",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.FiniteTensorDeterminantStabilization",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Clifford.Cl11TensorTower",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Clifford.JordanWignerBridge",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Clifford.JordanWignerCAR",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.Cl11TensorTowerLocalParity",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.Cl11TensorTowerGlobalParity",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.Cl11TensorTowerCrossSiteCAR",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Core.AnticommutingSum",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Parafermion.DeWittTetractysRealParafermionPoset",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.TetractysRealCliffordTwistorBridge",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Clifford.Cl11JordanWignerCARBridge",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Clifford.Cl11GradedProjectorDefects",
+      "returncode": 1
+    },
+    {
+      "module": "InfoGeometry.LinearAlgebra.FiniteRealAnticommutation",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Clifford.GradedUnrollingCounterexamples",
+      "returncode": 0
+    }
+  ],
+  "scope": "exact source closure; root gates reported separately",
+  "axiom_audit_passed": false,
+  "revision": "d63b4147338572054b3d4eab45260602928ae227",
+  "tree": "d727e3cf617319f1caa5d6ed5ba8026342facfed",
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "source_sha256": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+    "InfoGeometry.Clifford.SplitQ11": "a071dd78892818d197a0c187f901bf0cc7da3b3f13e201a14af1442affadacb0",
+    "InfoGeometry.Clifford.Cl11Matrix": "c95d89d20b10271d66e9cbe1632f04d57b817f118d92867b5121c55d7c4f7f85",
+    "InfoGeometry.Clifford.FreedCliffordSuspension": "9a9c76a649ce9b8b7b2ae36a4f5acb67100d3b5906c5937e5f5f1f67164701bc",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic": "6657ac06e9dfde8930808192b874c3c7d7738ad89a22d18c06c207d47a949327",
+    "InfoGeometry.Core.IdempotentGraphReflectionOrder": "73b3aaa4f2d48bbc511236ce687e8f9ee9b3da82f0af05ee8fd1d85e38716248",
+    "InfoGeometry.Core.IdempotencyDefect": "2d7b8fa580abe148fc70a39f8e1831b5505fb7f6a3920f3a79a0ba35bfee5590",
+    "InfoGeometry.Core.PeirceDecomposition": "b2426391a1841cbdb35bdef72138b5ab1553508c82c22ea930aa23f164de9bd9",
+    "InfoGeometry.Core.IdempotentCartan": "460c5eafe4d6496a2276f7788a2fccfb8aa5c9bbd4839cf45f5571abfb66c16f",
+    "InfoGeometry.Core.IdempotentTangent": "ade44f681a822491eb2a10a13cddc8264030e44387484255dc2a4cbce4559c5e",
+    "InfoGeometry.Core.IdempotentGraphGrassmannian": "e12a3b1c976623da3c7b1a3fd54ab376e66edb61788c82a4264ded3b074e212a",
+    "InfoGeometry.Core.IdempotentDefectIteration": "d0cfa24254beecf79c9ce0ff918f1a0fd1c359a1e7e4d0c34d700d61c8c085d9",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge": "708761b07efd0e3382eae5c93909ee380796ff2b8855b0256dbb6ee4265255a6",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectTower": "97887958e07ce2f3ae3cef83300a4f0b384c0ccbd965c7a82dc786ed27d4c687",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys": "75b924dc4f5b96b7f65492cee82cafabd433409fa34b70d0f0e733066227a767",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.BimetricSheetGeometry": "9951847cac6ec2dba821835070decace4a49ea7308965432f1262162dbd81991",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TwoStateModularShiftGeometry": "7ac67c0776c3f256ba23deeb92315d2ccb9217ea3b53ca108d7ce736146a7749",
+    "InfoGeometry.OperatorAlgebra.LieJordanEndomorphisms": "b652e114afb8ab5c161796d5b1b3a189e87e768228ca77d1316fcc646adc52fe",
+    "InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness": "f3f6aa453cc4391727fd978ae4f516054ad6d8ad5d2da36f86e817eecebe0057",
+    "InfoGeometry.OperatorAlgebra.PeirceHadamardNative": "79b97988a464868ffa9bc739502b59ef1c9ae13b19b6296798739e64b4f10819",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.InnerGradedMorita": "943b0b61cce2a525a8cc9dd07433b6a3ce805446e3fba646e9bfc1fefdaa0fd1",
+    "InfoGeometry.OperatorAlgebra.GradedMatrixMorita": "7179d2a5c6c28d5458623e7908c3d8cc17e694b962cec72aa9ccb514726648d1",
+    "InfoGeometry.Clifford.Cl11GradedMorita": "b0011f1c0b9157a18f7237fe1e9f0514d8c55b8850e33409f244ed643fe85419",
+    "InfoGeometry.Clifford.Cl11GradedTensorMorita": "18d797dbf7943d847d85aea59bb4779a4b5130c585d8139053cc5df8f0298c59",
+    "InfoGeometry.Clifford.Cl11GradedAdjoint": "3cfd3f3ba84d1696edde9c07940161948d96c0ecd4f05316af1de5a9de2f72f2",
+    "InfoGeometry.Clifford.GradedTensorCutRank": "7d72537012ee6e289fc1c06bc49c100ed89215e88760633c4caad122b80c2174",
+    "InfoGeometry.Clifford.Cl11UntwistCutRank": "e66706561dae1b754528be595d9b9d5b40f25890fdc4c767cc9d03fb9e8081f5",
+    "InfoGeometry.Algebra.MatrixNoncommutativity": "3e743d3b84a0b0c0a228f57fd4c0d580eb99c7dbd759e89a5eb91cecc832f6f8",
+    "InfoGeometry.Clifford.TowerMatrix": "3489868cb323fad6ea3aed08cae00729cae4ec8f36e6da4ca42c460aa892876b",
+    "InfoGeometry.Algebra.TensorAlgebraCanonical": "5113f55b600724f212c9a5520a9e0f67b535dc8c90ebe52493bebbeaa4a6ec2b",
+    "InfoGeometry.Algebra.FiniteTensorDeterminantStabilization": "bcc18fb0bada6b50b96d41ab37e3a01246c2da3421041a1ed74abd2e492d0fc4",
+    "InfoGeometry.Clifford.Cl11TensorTower": "1e08191d55b0c7827239332bcc9ba68b97d2c2004772d485ab0b19e2c00dc9ea",
+    "InfoGeometry.Clifford.JordanWignerBridge": "30d1c1e0213593b210d94a1948e43ecfdd56c7d0c2483ed0b4f236e685990c41",
+    "InfoGeometry.Clifford.JordanWignerCAR": "bf89a0a8d8eb7f3c8cf7a61777491afb0e5cb3c20c94a406e457fd55dc02f17d",
+    "InfoGeometry.Canonical.Cl11TensorTowerLocalParity": "8d29ca65a5379644c7267189c254d633161c2d3558c3e046381fa575946f789b",
+    "InfoGeometry.Canonical.Cl11TensorTowerGlobalParity": "f59f803080ae9a275fa658a3850fef72c723697214ee921a1e7ad25df93d515a",
+    "InfoGeometry.Canonical.Cl11TensorTowerCrossSiteCAR": "218512dc1bca920ad46b9598cad0c36603ef2b909c9d7dcd7b92fe9aafe11c7c",
+    "InfoGeometry.Core.AnticommutingSum": "7b1be8f4975aadafc179e34925468e5fd7dbf6560148c68ac539bcb5e482fe15",
+    "InfoGeometry.Parafermion.DeWittTetractysRealParafermionPoset": "c234f05fb4abea3700ca6d2ffd8782a984632a40579fafc873be3ebc5126303e",
+    "InfoGeometry.Canonical.TetractysRealCliffordTwistorBridge": "715d1ecbaae973776de02c81613d05f7a6374185adb44d823733df14a3e51d29",
+    "InfoGeometry.Clifford.Cl11JordanWignerCARBridge": "9f4acef0cb295e8936c2285b3dbf3b4d6cdb0576a28636db252ffa91a0a1c00d",
+    "InfoGeometry.Clifford.Cl11GradedProjectorDefects": "8a8d44df4745fe9de2ee5e9552efe433aeba46502901274022227a1216c90b2e",
+    "InfoGeometry.LinearAlgebra.FiniteRealAnticommutation": "6ff63798bde7ae22a89d4b58c95d492207b26e81bba7f039a23fe5a831f23cff",
+    "InfoGeometry.Clifford.GradedUnrollingCounterexamples": "11a8334a63215c5f443c14821042915259cd8e059ca88b0ff06e3d62cbdd52b2"
+  },
+  "failed_modules": [
+    "InfoGeometry.Clifford.Cl11GradedProjectorDefects"
+  ],
+  "error": "Compilation failed; no declaration audit performed"
+}

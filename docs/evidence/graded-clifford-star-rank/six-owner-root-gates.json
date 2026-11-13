@@ -1,0 +1,38 @@
+{
+  "run": 43418871874,
+  "source_revision": "b7ce9313f5010a7c54e2570b62558e16978a611d",
+  "source_tree": "09d481c1c53f815588a2d23e0a1264148846baed",
+  "job": 131863561357,
+  "job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43418871874/job/131863561357",
+  "staged_gate": "passed",
+  "incremental_root_gate": "failed",
+  "full_root_gate": "failed",
+  "failing_checks": [
+    "Locked Lake build (incremental targets)",
+    "Locked Lake build (InfoGeometry.All)"
+  ],
+  "failure": "HomotopyHypothesis: package directory not found: project/external_refs/homotopy-hypothesis-lean4",
+  "root_compilation_reached": false,
+  "incremental_gap_scan": {
+    "files": 6,
+    "gaps": 0
+  },
+  "full_active_gap_scan": {
+    "files": 28124,
+    "gaps": 0
+  },
+  "semantic_vacuity_report": {
+    "informational": true,
+    "findings": 72680,
+    "blocking_prefix_findings": 33116,
+    "errors": 862,
+    "warnings": 71818
+  },
+  "root_gate_acceptance": false,
+  "artifact": {
+    "id": 14032784973,
+    "name": "graded-clifford-star-rank-source-gates",
+    "zip_sha256": "f51651c982c4a6770b842598918f081c90591953dc0facac7e0fae4e59524031",
+    "url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43418871874/artifacts/14032784973"
+  }
+}

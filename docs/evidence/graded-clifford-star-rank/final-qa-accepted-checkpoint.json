@@ -1,0 +1,161 @@
+{
+  "status": "accepted for focused six-owner kernel and native all-owned audit scope",
+  "qa_role": "independent QA-A; no mathematical source authoring or repairs; no local Lean/Lake execution; GitHub read-only",
+  "source_revision": "ec36632a52860b8e710cd6b1c258a5c6f649d06e",
+  "source_tree": "21b365c94f4e44fb853d342c7f7ecc04f07be35b",
+  "local_identical_tree_revision": "722881370030a13e61664d5d255899f566454c97",
+  "local_tree": "21b365c94f4e44fb853d342c7f7ecc04f07be35b",
+  "tree_matches": true,
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "mathlib_revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "run": 43423534561,
+  "job": 131879141494,
+  "job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43423534561/job/131879141494",
+  "source_modules": 44,
+  "compiled_modules": 44,
+  "source_mismatches": [],
+  "source_sha256": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+    "InfoGeometry.Clifford.SplitQ11": "a071dd78892818d197a0c187f901bf0cc7da3b3f13e201a14af1442affadacb0",
+    "InfoGeometry.Clifford.Cl11Matrix": "c95d89d20b10271d66e9cbe1632f04d57b817f118d92867b5121c55d7c4f7f85",
+    "InfoGeometry.Clifford.FreedCliffordSuspension": "9a9c76a649ce9b8b7b2ae36a4f5acb67100d3b5906c5937e5f5f1f67164701bc",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic": "6657ac06e9dfde8930808192b874c3c7d7738ad89a22d18c06c207d47a949327",
+    "InfoGeometry.Core.IdempotentGraphReflectionOrder": "73b3aaa4f2d48bbc511236ce687e8f9ee9b3da82f0af05ee8fd1d85e38716248",
+    "InfoGeometry.Core.IdempotencyDefect": "2d7b8fa580abe148fc70a39f8e1831b5505fb7f6a3920f3a79a0ba35bfee5590",
+    "InfoGeometry.Core.PeirceDecomposition": "b2426391a1841cbdb35bdef72138b5ab1553508c82c22ea930aa23f164de9bd9",
+    "InfoGeometry.Core.IdempotentCartan": "460c5eafe4d6496a2276f7788a2fccfb8aa5c9bbd4839cf45f5571abfb66c16f",
+    "InfoGeometry.Core.IdempotentTangent": "ade44f681a822491eb2a10a13cddc8264030e44387484255dc2a4cbce4559c5e",
+    "InfoGeometry.Core.IdempotentGraphGrassmannian": "e12a3b1c976623da3c7b1a3fd54ab376e66edb61788c82a4264ded3b074e212a",
+    "InfoGeometry.Core.IdempotentDefectIteration": "d0cfa24254beecf79c9ce0ff918f1a0fd1c359a1e7e4d0c34d700d61c8c085d9",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge": "708761b07efd0e3382eae5c93909ee380796ff2b8855b0256dbb6ee4265255a6",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectTower": "97887958e07ce2f3ae3cef83300a4f0b384c0ccbd965c7a82dc786ed27d4c687",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys": "75b924dc4f5b96b7f65492cee82cafabd433409fa34b70d0f0e733066227a767",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.BimetricSheetGeometry": "9951847cac6ec2dba821835070decace4a49ea7308965432f1262162dbd81991",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TwoStateModularShiftGeometry": "7ac67c0776c3f256ba23deeb92315d2ccb9217ea3b53ca108d7ce736146a7749",
+    "InfoGeometry.OperatorAlgebra.LieJordanEndomorphisms": "b652e114afb8ab5c161796d5b1b3a189e87e768228ca77d1316fcc646adc52fe",
+    "InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness": "f3f6aa453cc4391727fd978ae4f516054ad6d8ad5d2da36f86e817eecebe0057",
+    "InfoGeometry.OperatorAlgebra.PeirceHadamardNative": "79b97988a464868ffa9bc739502b59ef1c9ae13b19b6296798739e64b4f10819",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.InnerGradedMorita": "943b0b61cce2a525a8cc9dd07433b6a3ce805446e3fba646e9bfc1fefdaa0fd1",
+    "InfoGeometry.OperatorAlgebra.GradedMatrixMorita": "7179d2a5c6c28d5458623e7908c3d8cc17e694b962cec72aa9ccb514726648d1",
+    "InfoGeometry.Clifford.Cl11GradedMorita": "b0011f1c0b9157a18f7237fe1e9f0514d8c55b8850e33409f244ed643fe85419",
+    "InfoGeometry.Clifford.Cl11GradedTensorMorita": "18d797dbf7943d847d85aea59bb4779a4b5130c585d8139053cc5df8f0298c59",
+    "InfoGeometry.Clifford.Cl11GradedAdjoint": "3cfd3f3ba84d1696edde9c07940161948d96c0ecd4f05316af1de5a9de2f72f2",
+    "InfoGeometry.Clifford.GradedTensorCutRank": "7d72537012ee6e289fc1c06bc49c100ed89215e88760633c4caad122b80c2174",
+    "InfoGeometry.Clifford.Cl11UntwistCutRank": "e66706561dae1b754528be595d9b9d5b40f25890fdc4c767cc9d03fb9e8081f5",
+    "InfoGeometry.Algebra.MatrixNoncommutativity": "3e743d3b84a0b0c0a228f57fd4c0d580eb99c7dbd759e89a5eb91cecc832f6f8",
+    "InfoGeometry.Clifford.TowerMatrix": "3489868cb323fad6ea3aed08cae00729cae4ec8f36e6da4ca42c460aa892876b",
+    "InfoGeometry.Algebra.TensorAlgebraCanonical": "5113f55b600724f212c9a5520a9e0f67b535dc8c90ebe52493bebbeaa4a6ec2b",
+    "InfoGeometry.Algebra.FiniteTensorDeterminantStabilization": "bcc18fb0bada6b50b96d41ab37e3a01246c2da3421041a1ed74abd2e492d0fc4",
+    "InfoGeometry.Clifford.Cl11TensorTower": "1e08191d55b0c7827239332bcc9ba68b97d2c2004772d485ab0b19e2c00dc9ea",
+    "InfoGeometry.Clifford.JordanWignerBridge": "30d1c1e0213593b210d94a1948e43ecfdd56c7d0c2483ed0b4f236e685990c41",
+    "InfoGeometry.Clifford.JordanWignerCAR": "bf89a0a8d8eb7f3c8cf7a61777491afb0e5cb3c20c94a406e457fd55dc02f17d",
+    "InfoGeometry.Canonical.Cl11TensorTowerLocalParity": "8d29ca65a5379644c7267189c254d633161c2d3558c3e046381fa575946f789b",
+    "InfoGeometry.Canonical.Cl11TensorTowerGlobalParity": "f59f803080ae9a275fa658a3850fef72c723697214ee921a1e7ad25df93d515a",
+    "InfoGeometry.Canonical.Cl11TensorTowerCrossSiteCAR": "218512dc1bca920ad46b9598cad0c36603ef2b909c9d7dcd7b92fe9aafe11c7c",
+    "InfoGeometry.Core.AnticommutingSum": "7b1be8f4975aadafc179e34925468e5fd7dbf6560148c68ac539bcb5e482fe15",
+    "InfoGeometry.Parafermion.DeWittTetractysRealParafermionPoset": "c234f05fb4abea3700ca6d2ffd8782a984632a40579fafc873be3ebc5126303e",
+    "InfoGeometry.Canonical.TetractysRealCliffordTwistorBridge": "715d1ecbaae973776de02c81613d05f7a6374185adb44d823733df14a3e51d29",
+    "InfoGeometry.Clifford.Cl11JordanWignerCARBridge": "9f4acef0cb295e8936c2285b3dbf3b4d6cdb0576a28636db252ffa91a0a1c00d",
+    "InfoGeometry.Clifford.Cl11GradedProjectorDefects": "c464904edc97f6b0187a47bef83ac2ad9fb4addc6527ba7394f39e3e1038b309",
+    "InfoGeometry.LinearAlgebra.FiniteRealAnticommutation": "6ff63798bde7ae22a89d4b58c95d492207b26e81bba7f039a23fe5a831f23cff",
+    "InfoGeometry.Clifford.GradedUnrollingCounterexamples": "11a8334a63215c5f443c14821042915259cd8e059ca88b0ff06e3d62cbdd52b2"
+  },
+  "owner_sha256": {
+    "InfoGeometry.Clifford.Cl11GradedAdjoint": "3cfd3f3ba84d1696edde9c07940161948d96c0ecd4f05316af1de5a9de2f72f2",
+    "InfoGeometry.Clifford.GradedTensorCutRank": "7d72537012ee6e289fc1c06bc49c100ed89215e88760633c4caad122b80c2174",
+    "InfoGeometry.Clifford.Cl11UntwistCutRank": "e66706561dae1b754528be595d9b9d5b40f25890fdc4c767cc9d03fb9e8081f5",
+    "InfoGeometry.Clifford.Cl11GradedProjectorDefects": "c464904edc97f6b0187a47bef83ac2ad9fb4addc6527ba7394f39e3e1038b309",
+    "InfoGeometry.LinearAlgebra.FiniteRealAnticommutation": "6ff63798bde7ae22a89d4b58c95d492207b26e81bba7f039a23fe5a831f23cff",
+    "InfoGeometry.Clifford.GradedUnrollingCounterexamples": "11a8334a63215c5f443c14821042915259cd8e059ca88b0ff06e3d62cbdd52b2"
+  },
+  "control_sha256": {
+    "tools/quality/check_graded_clifford_star_rank.py": "e903d3c663b20773fa1777887cc3613cbd47068b9f34592ae480615fe035b144",
+    ".github/workflows/graded-clifford-star-rank.yml": "69ef8c4b3b6774ee771e1387b7b545a98c973c971f972cea008501e389d6d0a8",
+    "tools/quality/reviewed_audit_source.py": "a976c910f5efb4611b1626d714e3197310d92648ffae56513e94a49ae5f0f206",
+    "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+    "tools/quality/proof_proxy_staged_gate.py": "eaa861d929ad9465586504f30f65ddc64eb96f8198bee65b3039c8d4fb813db9",
+    "tools/infra/opengauss_screener.py": "8905eaa68b63c82709aca70e05b86249b74df297a96e6d7bae8b037331b9448b",
+    "scripts/quality/post_build_gate.sh": "548ecf9d42268fbef3a4a89b5c90834568a7e9c5ad046d78bf78a6bfce7bcf8a",
+    "tools/infra/run_locked_lake_build.py": "10c9d567f310dc76bfb406596dda5a8364367f8269158d09ab2646a4790162c2",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lake-manifest.json": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98"
+  },
+  "audit": {
+    "passed": true,
+    "total": 197,
+    "declarations_by_owner": {
+      "InfoGeometry.Clifford.GradedTensorCutRank": 48,
+      "InfoGeometry.Clifford.Cl11GradedProjectorDefects": 67,
+      "InfoGeometry.Clifford.Cl11GradedAdjoint": 27,
+      "InfoGeometry.Clifford.GradedUnrollingCounterexamples": 30,
+      "InfoGeometry.LinearAlgebra.FiniteRealAnticommutation": 10,
+      "InfoGeometry.Clifford.Cl11UntwistCutRank": 15
+    },
+    "counts_match_status": true,
+    "total_markers": [
+      197
+    ],
+    "module_count_markers": {
+      "InfoGeometry.Clifford.Cl11GradedAdjoint": 27,
+      "InfoGeometry.Clifford.GradedTensorCutRank": 48,
+      "InfoGeometry.Clifford.Cl11UntwistCutRank": 15,
+      "InfoGeometry.Clifford.Cl11GradedProjectorDefects": 67,
+      "InfoGeometry.LinearAlgebra.FiniteRealAnticommutation": 10,
+      "InfoGeometry.Clifford.GradedUnrollingCounterexamples": 30
+    },
+    "duplicate_declarations": 0,
+    "private_declaration_count": 12,
+    "private_by_owner": {
+      "InfoGeometry.Clifford.Cl11GradedProjectorDefects": 11,
+      "InfoGeometry.Clifford.GradedUnrollingCounterexamples": 1
+    },
+    "allowed_and_observed_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "unsafe_or_partial_declarations_rejected_by_native_auditor": true,
+    "extracted_native_audit_sha256": "0577782ed32b9ac356bddb31f22df05dc60a4c50552e74db481719bee201b685",
+    "extraction": "Every native AUDIT marker retained from the immutable job log after removing timestamp prefixes."
+  },
+  "warnings_as_errors": false,
+  "compiler_warning_count": 20,
+  "artifact": {
+    "id": 14034992802,
+    "zip_sha256": "15a2535c8067b462b55c8119b5b56f47872c432b9d2bd5a9f9e635c2e5c587e2",
+    "url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43423534561/artifacts/14034992802"
+  },
+  "source_gate_state_at_review": {
+    "same_run_source_gate": "pending",
+    "latest_completed_staged_gate": {
+      "run": 43421672670,
+      "revision": "21211692cf87418572b56aee50c5bf3337e48782",
+      "status": "passed"
+    },
+    "latest_completed_root_gates": {
+      "run": 43420674640,
+      "revision": "b910386b2fc215d154d50474783dd9212dfce8fc",
+      "incremental": "failed",
+      "full": "failed",
+      "failure": "missing external_refs/homotopy-hypothesis-lean4 before root compilation"
+    }
+  },
+  "acceptance_boundaries": [
+    "44 repository closure modules were compiled; all-owned declaration audit covers the six selected owners (197 declarations), including private/generated declarations.",
+    "No full repository integration acceptance; root gates reported separately.",
+    "Compiler warnings remain; no warnings-as-errors claim.",
+    "Documentation-only successors require independent proof/closure/control byte comparison before transferring focused evidence."
+  ],
+  "compiler_warnings": {
+    "selected_owner_warning_count": 5,
+    "inherited_warning_count": 15,
+    "selected_owner_warnings": [
+      "Cl11GradedAdjoint.represent_tensorAdjoint: unused StarModule section hypothesis",
+      "GradedTensorCutRank.cutRank_le_right: unused finite-left section hypothesis",
+      "GradedTensorCutRank: proof-local letI style suggestion",
+      "Cl11GradedProjectorDefects: unused simp argument in the two-factor entry calculation",
+      "FiniteRealAnticommutation: deprecated Mathlib.Data.Real.Basic import"
+    ],
+    "no_warnings_as_errors_claim": true
+  }
+}

@@ -17,6 +17,10 @@ import «InfoGeometry».«KK».«PinLinearDiracTransport»
 import «InfoGeometry».«KK».«PinFredholmTransport»
 import «InfoGeometry».«Canonical».«SplitCliffordHeadMorita»
 import «InfoGeometry».«Canonical».«MaurerCartanCurvature»
+import «InfoGeometry».«Geometry».«KleinPinSmoothMorita»
+import «InfoGeometry».«Geometry».«KleinPinFrameFamily»
+import «InfoGeometry».«Geometry».«KleinPinMoritaFamily»
+import «InfoGeometry».«KK».«FreedPinAnalyticCompatibility»
 import Lean.Util.CollectAxioms
 import Lean.Elab.Command
 
@@ -25,7 +29,7 @@ open Lean Elab Command
 run_cmd do
   let env ← getEnv
   let moduleNames := env.header.moduleNames
-  let targets : Array Name := #[`«InfoGeometry».«Clifford».«FreedPinRepresentation», `«InfoGeometry».«OperatorAlgebra».«GradedMatrixMorita», `«InfoGeometry».«Clifford».«Cl11GradedMorita», `«InfoGeometry».«Clifford».«Cl11GradedTensorMorita», `«InfoGeometry».«Geometry».«KleinPinDirac», `«InfoGeometry».«Geometry».«KleinPinGradedDirac», `«InfoGeometry».«Clifford».«FreedKleinRepresentation», `«InfoGeometry».«KK».«LinearDiracTransport», `«InfoGeometry».«KK».«CompactPhaseObstruction», `«InfoGeometry».«KK».«LinearDiracExponentialTransport», `«InfoGeometry».«KK».«PinLinearDiracTransport», `«InfoGeometry».«KK».«PinFredholmTransport», `«InfoGeometry».«Canonical».«SplitCliffordHeadMorita», `«InfoGeometry».«Canonical».«MaurerCartanCurvature»]
+  let targets : Array Name := #[`«InfoGeometry».«Clifford».«FreedPinRepresentation», `«InfoGeometry».«OperatorAlgebra».«GradedMatrixMorita», `«InfoGeometry».«Clifford».«Cl11GradedMorita», `«InfoGeometry».«Clifford».«Cl11GradedTensorMorita», `«InfoGeometry».«Geometry».«KleinPinDirac», `«InfoGeometry».«Geometry».«KleinPinGradedDirac», `«InfoGeometry».«Clifford».«FreedKleinRepresentation», `«InfoGeometry».«KK».«LinearDiracTransport», `«InfoGeometry».«KK».«CompactPhaseObstruction», `«InfoGeometry».«KK».«LinearDiracExponentialTransport», `«InfoGeometry».«KK».«PinLinearDiracTransport», `«InfoGeometry».«KK».«PinFredholmTransport», `«InfoGeometry».«Canonical».«SplitCliffordHeadMorita», `«InfoGeometry».«Canonical».«MaurerCartanCurvature», `«InfoGeometry».«Geometry».«KleinPinSmoothMorita», `«InfoGeometry».«Geometry».«KleinPinFrameFamily», `«InfoGeometry».«Geometry».«KleinPinMoritaFamily», `«InfoGeometry».«KK».«FreedPinAnalyticCompatibility»]
   let commandOnly : Array Name := #[]
   for target in targets do
     unless moduleNames.contains target do

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -243,5 +248,26 @@ private lemma minus_square (hT : T * T * T = T) :
     _ = 0 := by rw [hT]; simp
 
 end
+
+section Star
+
+variable [StarRing R] [StarModule ℝ R] {T : R}
+
+/-- The positive spectral polynomial respects a compatible real involution. -/
+@[simp] theorem star_projPos (hT : star T = T) :
+    star (projPos T) = projPos T := by
+  simp only [projPos, star_smul, star_add, star_mul, star_trivial, hT]
+
+/-- The negative spectral polynomial respects a compatible real involution. -/
+@[simp] theorem star_projNeg (hT : star T = T) :
+    star (projNeg T) = projNeg T := by
+  simp only [projNeg, star_smul, star_sub, star_mul, star_trivial, hT]
+
+/-- The zero spectral polynomial is self-adjoint when the input is. -/
+@[simp] theorem star_projZero (hT : star T = T) :
+    star (projZero T) = projZero T := by
+  simp only [projZero, star_sub, star_one, star_mul, hT]
+
+end Star
 end
 end InfoGeometry.Physics.Algebra

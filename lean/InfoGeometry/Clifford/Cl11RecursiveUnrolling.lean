@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.Clifford.Cl11GradedUnrolling
+import InfoGeometry.Algebra.MatrixNoncommutativity
 import InfoGeometry.Clifford.SplitCliffordMatrixEquiv
 import Mathlib.Data.Matrix.Composition
 import Mathlib.LinearAlgebra.Matrix.Unique
@@ -36,6 +37,13 @@ open InfoGeometry.Clifford.SplitCliffordMatrixEquiv
 
 abbrev Bits (n : ℕ) := Fin n → Fin 2
 abbrev RealMatrix (n : ℕ) := Matrix (Bits n) (Bits n) ℝ
+
+open InfoGeometry.Algebra.MatrixNoncommutativity in
+/-- At every depth, the outer two-by-two blocks retain a noncommuting pair. -/
+theorem realBlock_noncommuting (n : ℕ) :
+    (swapMatrix : Matrix (Fin 2) (Fin 2) (RealMatrix n)) * tiltedMatrix ≠
+      tiltedMatrix * swapMatrix :=
+  swapMatrix_mul_tiltedMatrix_ne
 
 /-- The actual recursive quadratic form with its head written as `q11`. -/
 def headIsometry (n : ℕ) :

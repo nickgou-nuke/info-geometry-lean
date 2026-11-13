@@ -100,7 +100,10 @@ jobs:
                      audit.read_text().replace('«', '').replace('»', '').splitlines()
                      if line.startswith('import InfoGeometry.')]
           paths = [Path('lean') / (m.replace('.', '/') + '.lean') for m in modules]
-          paths += [audit, Path('lean-toolchain'), Path('lake-manifest.json')]
+          paths += [audit, Path('lean-toolchain'), Path('lake-manifest.json'),
+                    Path('verification/freed-pin-compatibility/lean-toolchain'),
+                    Path('verification/freed-pin-compatibility/lakefile.toml'),
+                    Path('verification/freed-pin-compatibility/lake-manifest.json')]
           report = {
               'commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
               'toolchain': Path('lean-toolchain').read_text().strip(),

@@ -50,6 +50,7 @@ theorem eval_append {k m : ℕ} (left : Matrix Unit σ B)
         ((List.ofFn fun i : Fin m => core (Fin.natAdd k i) (v i)).prod * right)) () () := by
   simp only [eval, List.ofFn_add, List.prod_append,
     Fin.append_left', Fin.append_right, Matrix.mul_assoc]
+  rfl
 
 /-- Ordered diagonal products reduce to ordered products of their entries. -/
 theorem prod_diagonal_ofFn (n : ℕ) (d : Fin n → σ → B) :
@@ -57,12 +58,12 @@ theorem prod_diagonal_ofFn (n : ℕ) (d : Fin n → σ → B) :
       Matrix.diagonal (fun s => (List.ofFn fun i => d i s).prod) := by
   calc
     _ = Matrix.diagonal (List.ofFn d).prod := by
-      simpa only [List.map_ofFn] using
+      simpa only [List.map_ofFn, Function.comp_apply, Matrix.diagonalRingHom_apply] using
         (map_list_prod (Matrix.diagonalRingHom σ B) (List.ofFn d)).symm
     _ = _ := by
       apply congrArg Matrix.diagonal
       funext s
-      simp only [Pi.list_prod_apply, List.map_ofFn]
+      simp only [Pi.list_prod_apply, List.map_ofFn, Function.comp_apply]
 
 end OrderedContraction
 
@@ -75,6 +76,7 @@ def wordSelector {n : ℕ} (i : Fin n) (a : ι) :
     Matrix (Fin n → ι) (Fin n → ι) B :=
   Matrix.diagonal (fun word => if word i = a then 1 else 0)
 
+omit [Fintype ι] in
 /-- All local coordinate tests select exactly one full word. -/
 theorem prod_coordinate_indicators (n : ℕ) :
     ∀ w x : Fin n → ι,
@@ -93,7 +95,7 @@ theorem prod_coordinate_indicators (n : ℕ) :
         · have h : w = x := by
             funext i
             exact Fin.cases hzero (fun j => congrFun htail j) i
-          simp [hzero, htail, h]
+          simp [h]
         · have h : w ≠ x := fun h =>
             htail (congrArg (fun f : Fin (n + 1) → ι => fun i : Fin n => f i.succ) h)
           simp [hzero, htail, h]
@@ -116,7 +118,10 @@ theorem eval_full_word_train {n : ℕ} (c : (Fin n → ι) → B) (x : Fin n →
     eval (fun _ _ => 1) (wordSelector (B := B)) (fun w _ => c w) x = c x := by
   unfold eval
   rw [wordSelector_product]
-  simp [Matrix.mul_apply, Matrix.diagonal, ite_mul]
+  change (∑ w : Fin n → ι,
+    (∑ v : Fin n → ι, (1 : B) *
+      (if v = w then if v = x then 1 else 0 else 0)) * c w) = c x
+  simp [ite_mul]
 
 /-- Every finite coefficient tensor admits an exact open-boundary train.
 The displayed witnesses use the actual full-word bond space. -/

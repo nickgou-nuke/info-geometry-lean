@@ -185,6 +185,40 @@ theorem nativeChain_matrix_entry (n : ℕ) (a : Fin n → CliffordAlgebra q11)
       ∏ k, cl11EquivMat (a k * J1_cl ^ (suffixParity n p k).toNat) (i k) (j k) := by
   rw [nativeChain_matrix_suffixParity n a p h, ordinaryChain_apply]
 
+/-! ## Closed-form inverse on homogeneous ordinary chains -/
+
+/-- The correcting volume is even under the native Clifford involution. -/
+@[simp] theorem atomInvolute_K : CliffordAlgebra.involute J1_cl = J1_cl := by
+  simp [J1_cl, map_mul, CliffordAlgebra.involute_ι]
+
+/-- The same right correction undoes itself; no factors are reordered. -/
+@[simp] theorem atom_right_K_twice (a : CliffordAlgebra q11) (p : Bool) :
+    (a * J1_cl ^ p.toNat) * J1_cl ^ p.toNat = a := by
+  cases p <;> simp [mul_assoc, InfoGeometry.Clifford.Cl11GradedMorita.J1_cl_sq]
+
+/-- Multiplication by the even volume preserves the atom's specified parity. -/
+theorem atom_right_K_homogeneous (a : CliffordAlgebra q11) (p s : Bool)
+    (h : CliffordAlgebra.involute a = if p then -a else a) :
+    CliffordAlgebra.involute (a * J1_cl ^ s.toNat) =
+      if p then -(a * J1_cl ^ s.toNat) else a * J1_cl ^ s.toNat := by
+  rw [map_mul, map_pow, atomInvolute_K, h]
+  cases p <;> simp
+
+/-- The closed-form homogeneous inverse has the same suffix correction as
+the forward readback. This is proved through the actual Clifford algebra
+equivalence, and includes the empty chain and zero homogeneous atoms. -/
+theorem unrollNative_ordinaryChain_suffixParity (n : ℕ)
+    (a : Fin n → CliffordAlgebra q11) (p : Fin n → Bool)
+    (h : ∀ i, CliffordAlgebra.involute (a i) = if p i then -(a i) else a i) :
+    unrollNative n (ordinaryChain n (fun i => cl11EquivMat (a i))) =
+      nativeChain n (fun i => a i * J1_cl ^ (suffixParity n p i).toNat) := by
+  apply (leftMatrixEquiv n).injective
+  rw [reconstruct_unrollNative,
+    nativeChain_matrix_suffixParity n
+      (fun i => a i * J1_cl ^ (suffixParity n p i).toNat) p
+      (fun i => atom_right_K_homogeneous (a i) (p i) (suffixParity n p i) (h i))]
+  simp only [atom_right_K_twice]
+
 /-! ## Exact simple-chain criterion in corrected Clifford word coordinates -/
 
 /-- Real coordinates of one actual Clifford atom, in order `(1, η, K, Ω)`. -/
@@ -231,6 +265,18 @@ theorem coefficientChain_matrix_suffixParity (n : ℕ)
         (ordinaryChain n
           (fun i => cl11EquivMat (a i * J1_cl ^ (suffixParity n p i).toNat))) := by
   rw [leftCoefficientEquiv_tmul, nativeChain_matrix_suffixParity n a p h]
+
+/-- Closed-form homogeneous inversion with one unchanged terminal coefficient.
+The algebra B may be noncommutative, and the empty stage retains exactly b. -/
+theorem unrollCoefficients_ordinaryChain_suffixParity (n : ℕ)
+    (a : Fin n → CliffordAlgebra q11) (p : Fin n → Bool)
+    (h : ∀ i, CliffordAlgebra.involute (a i) = if p i then -(a i) else a i) (b : B) :
+    unrollCoefficients B n
+        (coefficientReadback B n b (ordinaryChain n (fun i => cl11EquivMat (a i)))) =
+      nativeChain n (fun i => a i * J1_cl ^ (suffixParity n p i).toNat) ⊗ₜ[ℝ] b := by
+  apply (leftCoefficientEquiv B n).injective
+  rw [reconstruct_unrollCoefficients, leftCoefficientEquiv_tmul,
+    ← unrollNative_ordinaryChain_suffixParity n a p h, reconstruct_unrollNative]
 
 /-- A simple coefficient tensor with exactly one terminal `B` leg. -/
 def pureCoefficients (n : ℕ) (a : Fin n → CliffordAlgebra q11) (b : B) : Words n → B :=

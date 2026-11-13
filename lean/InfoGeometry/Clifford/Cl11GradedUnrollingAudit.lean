@@ -3,6 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+
 import «InfoGeometry».«Clifford».«SplitCliffordMatrixEquiv»
 import «InfoGeometry».«Clifford».«Cl11GradedUnrolling»
 import «InfoGeometry».«Clifford».«Cl11RecursiveUnrolling»
@@ -13,6 +14,7 @@ import «InfoGeometry».«Tensor».«RankMinimalTensorTrain»
 import «InfoGeometry».«Tensor».«TensorTrainMatricization»
 import «InfoGeometry».«Clifford».«Cl11PureTensorObstruction»
 import «InfoGeometry».«Clifford».«Cl11TensorTrainSynthesis»
+import «InfoGeometry».«Clifford».«Cl11LocalCoreTrain»
 import Lean.Util.CollectAxioms
 import Lean.Elab.Command
 
@@ -21,7 +23,7 @@ open Lean Elab Command
 run_cmd do
   let env ← getEnv
   let moduleNames := env.header.moduleNames
-  let targets : Array Name := #[`«InfoGeometry».«Clifford».«SplitCliffordMatrixEquiv», `«InfoGeometry».«Clifford».«Cl11GradedUnrolling», `«InfoGeometry».«Clifford».«Cl11RecursiveUnrolling», `«InfoGeometry».«Clifford».«Cl11HomogeneousChains», `«InfoGeometry».«Algebra».«MatrixRankFactorization», `«InfoGeometry».«Tensor».«ExactTensorTrain», `«InfoGeometry».«Tensor».«RankMinimalTensorTrain», `«InfoGeometry».«Tensor».«TensorTrainMatricization», `«InfoGeometry».«Clifford».«Cl11PureTensorObstruction», `«InfoGeometry».«Clifford».«Cl11TensorTrainSynthesis»]
+  let targets : Array Name := #[`«InfoGeometry».«Clifford».«SplitCliffordMatrixEquiv», `«InfoGeometry».«Clifford».«Cl11GradedUnrolling», `«InfoGeometry».«Clifford».«Cl11RecursiveUnrolling», `«InfoGeometry».«Clifford».«Cl11HomogeneousChains», `«InfoGeometry».«Algebra».«MatrixRankFactorization», `«InfoGeometry».«Tensor».«ExactTensorTrain», `«InfoGeometry».«Tensor».«RankMinimalTensorTrain», `«InfoGeometry».«Tensor».«TensorTrainMatricization», `«InfoGeometry».«Clifford».«Cl11PureTensorObstruction», `«InfoGeometry».«Clifford».«Cl11TensorTrainSynthesis», `«InfoGeometry».«Clifford».«Cl11LocalCoreTrain»]
   let commandOnly : Array Name := #[]
   for target in targets do
     unless moduleNames.contains target do

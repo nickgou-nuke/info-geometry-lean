@@ -199,7 +199,7 @@ theorem exists_rank_minimal_train (q n : ℕ) :
         · rw [Train.bond_cons_succ, hminimal j, cutRank_succ]
           change cutRank q n (Fin M.rank) R j.succ =
             cutRank q n (Fin r × Fin q) M j.succ
-          rw [← hLR]
+          conv_rhs => rw [← hLR]
           exact (cutRank_mul_eq_of_left_inverse q n L Q hQL R j.succ).symm
 
 /-- Simultaneous minimality against every other exact train follows from

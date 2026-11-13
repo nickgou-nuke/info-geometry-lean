@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.Clifford.Cl11GradedTensorMorita
+import InfoGeometry.Algebra.MatrixNoncommutativity
 import Mathlib.Tactic.Module
 
 /-!
@@ -33,6 +34,7 @@ open InfoGeometry.OperatorAlgebra.PeirceHadamardNative
 universe u
 variable {A : Type u} [Ring A] [Algebra ℝ A]
 
+@[instance_reducible]
 private def invertibleTwo : Invertible (2 : A) where
   invOf := algebraMap ℝ A (1 / 2)
   invOf_mul_self := by
@@ -76,10 +78,9 @@ theorem coefficientWalsh_apply (M : Matrix (Fin 2) (Fin 2) A) :
 
 theorem coefficientWalsh_involutive : Function.Involutive (coefficientWalsh (A := A)) := by
   intro M
+  rw [coefficientWalsh_apply, coefficientWalsh_apply]
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp only [coefficientWalsh_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.of_apply] <;> module
+  fin_cases i <;> fin_cases j <;> simp <;> module
 
 /-- Ordinary four coefficients, in the order `(1, η, K, Ω)`. -/
 def coefficients (M : Matrix (Fin 2) (Fin 2) A) : Fin 4 → A :=
@@ -130,10 +131,19 @@ def correction (c : Fin 4 → A) : Fin 4 → A :=
 
 theorem correction_involutive (hθ : Function.Involutive θ) :
     Function.Involutive (correction θ) := by
+  have hpair (a b : A) :
+      evenPart θ (evenPart θ a + oddPart θ b) +
+        oddPart θ (evenPart θ b + oddPart θ a) = a := by
+    dsimp only [evenPart, oddPart]
+    simp only [map_smul, map_add, map_sub, hθ a, hθ b]
+    module
   intro c
   funext i
-  fin_cases i <;>
-    simp [correction, evenPart, oddPart, hθ, map_smul, map_add, map_sub] <;> module
+  fin_cases i
+  · exact hpair (c 0) (c 2)
+  · exact hpair (c 1) (c 3)
+  · exact hpair (c 2) (c 0)
+  · exact hpair (c 3) (c 1)
 
 def correctionEquiv (hθ : Function.Involutive θ) : (Fin 4 → A) ≃ₗ[ℝ] (Fin 4 → A) where
   toFun := correction θ
@@ -175,6 +185,7 @@ theorem tensorMatrixEquivOriginal_one (a : A) :
   rw [tensorToMatrix_tmul_matrix, map_one, coefficientWalsh_apply]
   ext i j
   fin_cases i <;> fin_cases j <;> simp [evenPart, oddPart]
+  module
 
 theorem tensorMatrixEquivOriginal_eta (a : A) :
     tensorMatrixEquivOriginal θ 𝒜 hEven hOdd
@@ -191,7 +202,8 @@ theorem tensorMatrixEquivOriginal_K (a : A) :
   change coefficientWalsh (tensorToMatrix 𝒜 θ hEven hOdd (_ ᵍ⊗ₜ a)) = _
   rw [tensorToMatrix_tmul_matrix, cl11StandardEquiv_J1_cl, coefficientWalsh_apply]
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [evenPart, oddPart, Eplus] <;> module
+  fin_cases i <;> fin_cases j <;> simp [evenPart, oddPart, Eplus]
+  module
 
 theorem tensorMatrixEquivOriginal_omega (a : A) :
     tensorMatrixEquivOriginal θ 𝒜 hEven hOdd
@@ -298,6 +310,7 @@ theorem tensorMatrixEquivOriginal_symm_apply (M : Matrix (Fin 2) (Fin 2) A) :
     correction_involutive θ (coefficientParity_involutive 𝒜 θ hEven hOdd),
     synthesize_coefficients]
 
+include hEven hOdd in
 /-- The explicit inverse retains multiplication in the native graded algebra. -/
 theorem explicitUnroll_mul (M N : Matrix (Fin 2) (Fin 2) A) :
     tensorExpansion 𝒜 (correction θ (coefficients (M * N))) =

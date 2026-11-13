@@ -28,12 +28,14 @@ equivalence and the pinned Lean/Mathlib environment.
    and canonical Clifford parity identified with conjugation by the recursive
    tensor power of `K`.
 7. Exact recursive inverse, real-linear word coordinates, and native synthesis.
-8. Homogeneous native chains with suffix-parity correction; simple chains
+8. Homogeneous native chains with forward and inverse suffix-parity correction; simple chains
    characterized by factorization of the corrected coefficient tensor.
 9. Actual ordered matrix-core contraction, exact image-basis factorization with
    a left inverse, and one compatible train attaining all positive cut ranks.
 10. Explicit prefix/suffix reindexing and native Clifford readback of the
     contracted train, including comparison with every other exact train.
+11. Independently defined local Clifford cores, contracted through native
+    graded head insertion and proved equal to the same global word synthesis.
 
 Each dependency is a map, an inverse identity, or a stated implication. Naming
 a dependency DAG establishes no additional theorem. No psychological or physical
@@ -74,13 +76,14 @@ All entries below describe the declared source targets, pending kernel checking.
 | `Clifford.Cl11GradedUnrolling` | `coefficientEquiv`, `correctionEquiv`, `tensorMatrixEquivOriginal`, `tensorMatrixEquivOriginal_symm_apply` | Four original-basis blocks, involutive odd-tail exchanges, and actual native graded inverse. |
 | `Clifford.Cl11RecursiveUnrolling` | `leftMatrixEquiv`, `matrixParity_eq_gamma_conj`, `unrollCoefficients_succ`, `binaryUnroll_succ` | Actual left-head recursive construction; explicit binary indices and four corrected recursive calls. |
 | Same | `wordCoefficientEquiv`, `wordReconstruct`, `wordReconstruct_succ` | All word coefficients and their synthesis through actual native Clifford heads. |
-| `Clifford.Cl11HomogeneousChains` | `nativeChain_matrix_suffixParity`, `coefficientChain_matrix_suffixParity`, `unrollCoefficients_pure_chain_iff` | Suffix parity comes from actual native homogeneity; real site atoms and one terminal coefficient; empty and zero cases included. |
+| `Clifford.Cl11HomogeneousChains` | `nativeChain_matrix_suffixParity`, `unrollNative_ordinaryChain_suffixParity`, `unrollCoefficients_ordinaryChain_suffixParity`, `unrollCoefficients_pure_chain_iff` | Forward and inverse suffix parity come from actual native homogeneity; real site atoms and one terminal coefficient; empty and zero cases included. |
 | `Algebra.MatrixRankFactorization` | `exists_rank_factorization_with_left_inverse`, `rank_isLeast_factor_width`, `rank_le_one_iff_pure` | Actual image-basis factorization `L * R = M`, `Q * L = 1`; least width, including zero; two-factor outer-product criterion. |
 | `Tensor.ExactTensorTrain` | `eval_full_word_train`, `matricize_eval_eq_mul`, `matricize_eval_rank_le` | Ordered exact contraction over a semiring; native rank bounds over a field. The full-word witness does not claim compression. |
 | `Tensor.RankMinimalTensorTrain` | `exists_rank_minimal_train`, `cutRank_coeff_le_bond`, `exists_bondwise_minimal_exact_train` | One actual variable-bond train attains every positive cut rank simultaneously; every competing exact train obeys the lower bound. |
 | `Tensor.TensorTrainMatricization` | `cutRank_scalar_eq_matricize_rank`, `scalar_four_letter_cutRank_le` | Explicit row equivalence to `Fin.append` matricization; bound `4 ^ min k m`. |
 | `Clifford.Cl11PureTensorObstruction` | `controlledTensor_not_simple`, `pairMatrixEquiv_controlled`, `controlledMatrix_not_single_chain` | Native controlled-`K` two-factor tensor is not simple; readback is four-by-four in two-by-two blocks. |
 | `Clifford.Cl11TensorTrainSynthesis` | `trainMatrix_eq_iff`, `exists_exact_clifford_train`, `exists_minimal_clifford_train` | Exact matrix readback of the corrected tensor; arbitrary-algebra existence and real scalar simultaneous minimality. |
+| `Clifford.Cl11LocalCoreTrain` | `localCore`, `nativeCoreContraction`, `wordReconstruct_trainCoeff_native`, `trainMatrix_eq_nativeCoreReadback` | Actual real local Clifford atoms and variable-bond sums; comparison with word synthesis and matrix readback; original terminal vector retained. |
 
 ## Rank and boundary qualifications
 
@@ -96,12 +99,15 @@ Positive cuts include the terminal vector bond; that bond can be zero for the
 zero tensor. Classical basis selection supplies exact existence, not a
 numerical approximation algorithm.
 
-The bridge contracts scalar or `B`-valued cores and then applies native
-`wordReconstruct`. It does not separately define the intake's Clifford-valued
-local `W` cores or prove the displayed sum of graded `W\)-chain products.
-Absorption of the terminal vector into a last core with fixed right boundary
-dimension one is also not a separate theorem here. Equality with the older
-right-head spinor coordinates remains outside the claims.
+The general bridge contracts scalar or `B`-valued cores and then applies native
+`wordReconstruct`. The local-core owner separately constructs each real `W`
+entry as a sum of actual Clifford atoms and contracts the internal bond sums
+through native graded head insertion. Its optional coefficient extension uses
+one common terminal `b : B` multiplying a real train; it does not assert that
+arbitrary `B`-valued cores have that form. Absorption of the terminal vector
+into a last core with fixed right boundary dimension one remains a separate
+target. Equality with the older right-head spinor coordinates is also outside
+the claims.
 
 ## Existing owners inspected and reused
 
@@ -122,10 +128,11 @@ right-head spinor coordinates remains outside the claims.
 
 ### Completed source work
 
-Independent read-only reviews covered the original nine mathematical owners,
-including the TT-to-Clifford synthesis bridge. They found no semantic blocker at
-the declared scope. Review of the added homogeneous-chain owner is recorded in
-the recovery evidence when completed. No source review is a kernel certificate.
+Independent read-only reviews covered all eleven mathematical owners, including
+the homogeneous inverse extension and the independently defined local Clifford
+cores. They found no semantic blocker at the declared scope. Subsequent proof
+repairs are checked against the actual compiler diagnostics. No source review
+is a kernel certificate.
 
 The recovered source snapshots are recorded in
 `verification/cl11-graded-unrolling/recovery-evidence.json`. Exact hash matches
@@ -151,8 +158,14 @@ execution environment then became unavailable. Consequently:
   for the final recovered tree;
 - no local full-repository acceptance is claimed.
 
+The first focused CI run, [43406594970](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43406594970),
+reached the new owners and reported elaboration errors in `ExactTensorTrain`,
+`RankMinimalTensorTrain`, `SplitCliffordMatrixEquiv`, and `Cl11GradedUnrolling`.
+The matrix-rank factorization owner compiled. The follow-up proof scripts repair
+those reported errors; acceptance of the complete closure remains pending.
+
 The published draft includes a focused CI workflow using Lean `v4.34.1` and
-Mathlib `d13f23b723b8a846827a245b89c10fc7d3f11612`. It builds all ten owners,
+Mathlib `d13f23b723b8a846827a245b89c10fc7d3f11612`. It builds all eleven owners,
 audits every owned declaration, and records exact source hashes. Allowed
 foundational axioms remain only `propext`, `Classical.choice`, and `Quot.sound`.
 A workflow definition or a queued run is not a successful check.

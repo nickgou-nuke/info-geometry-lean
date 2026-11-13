@@ -131,6 +131,6 @@ theorem unroll_expansion (n : ℕ)
   simp only [reconstruct_unroll, map_sum, coefficientMatrixEquiv_tmul]
   simp only [← splitSpinorAlgEquiv_apply, AlgEquiv.apply_symm_apply]
   simpa [Matrix.map_single, Algebra.algebraMap_eq_smul_one, Fintype.sum_prod_type] using
-    (Matrix.matrix_eq_sum_single M).symm
+    Matrix.matrix_eq_sum_single M
 
 end InfoGeometry.Clifford.SplitCliffordMatrixEquiv

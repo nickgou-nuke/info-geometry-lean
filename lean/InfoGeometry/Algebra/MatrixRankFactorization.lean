@@ -113,6 +113,7 @@ theorem rank_le_one_iff_pure (M : Matrix m n K) :
     ext i j
     exact (h i j).symm
 
+omit [Fintype m] [Fintype n] in
 /-- One nonzero two-by-two minor obstructs every single pure coefficient
 factorization. This criterion needs no custom tensor-rank definition. -/
 theorem not_pure_of_cross_mul_ne (M : Matrix m n K) (i j : m) (k l : n)
@@ -121,7 +122,11 @@ theorem not_pure_of_cross_mul_ne (M : Matrix m n K) (i j : m) (k l : n)
   rintro ⟨u, v, h⟩
   apply hminor
   rw [h i k, h j l, h i l, h j k]
-  ring
+  calc
+    (u i * v k) * (u j * v l) = (u i * u j) * (v k * v l) :=
+      mul_mul_mul_comm _ _ _ _
+    _ = (u i * u j) * (v l * v k) := by rw [mul_comm (v k) (v l)]
+    _ = (u i * v l) * (u j * v k) := (mul_mul_mul_comm _ _ _ _).symm
 
 /-- The signed-half coefficient minor occurring in the controlled-`K`
 example, with rows `(I, η)` and columns `(I, K)` in the intake convention. -/
@@ -158,7 +163,7 @@ theorem reshape_mul_eq_kronecker_mul
   ext ab z
   rcases ab with ⟨i, j⟩
   simp [Matrix.mul_apply, Fintype.sum_prod_type,
-    Matrix.kronecker_apply, Matrix.one_apply, mul_ite, ite_mul]
+    Matrix.one_apply, mul_ite, ite_mul]
 
 /-- A proved left inverse makes the reshape step rank-preserving. This is
 the algebraic step required by successive minimal-rank tensor factorizations. -/

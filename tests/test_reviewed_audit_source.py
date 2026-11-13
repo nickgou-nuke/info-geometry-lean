@@ -68,7 +68,8 @@ class GeneratedAuditFixtures(unittest.TestCase):
         generated = audit_source(["Fixture.Nonempty", "Fixture.ImportOnly"])
         self.assertIn("for (name, info) in env.constants do", generated)
         self.assertIn("env.getModuleIdxFor? name", generated)
-        self.assertIn("let owner := env.header.moduleNames[idx.toNat]!", generated)
+        self.assertIn("let moduleNames := env.header.moduleNames", generated)
+        self.assertIn("let owner := moduleNames[idx.toNat]!", generated)
         self.assertIn("if !targets.contains owner then continue", generated)
         self.assertEqual(generated.count("ownerCounts := ownerCounts.insert owner"), 1)
         self.assertNotIn("ownerCounts := ownerCounts.insert target", generated)
@@ -77,7 +78,7 @@ class GeneratedAuditFixtures(unittest.TestCase):
         generated = audit_source(["Fixture.A", "Fixture.Empty"])
         expected = 'throwError "No declarations audited in reviewed module: {target}"'
         self.assertIn(expected, generated)
-        self.assertIn("unless env.header.moduleNames.contains target do", generated)
+        self.assertIn("unless moduleNames.contains target do", generated)
         self.assertLess(generated.index("ownerCounts := ownerCounts.insert owner"), generated.index(expected))
         self.assertLess(generated.index(expected), generated.index('logInfo m!"AUDIT_COUNT:'))
 
@@ -159,7 +160,7 @@ class CommandRoleFixtures(unittest.TestCase):
 
     def test_zero_owned_and_presence_checks_without_skipping_declarations(self):
         generated = audit_source(self.targets)
-        self.assertIn('unless env.header.moduleNames.contains target do', generated)
+        self.assertIn('unless moduleNames.contains target do', generated)
         self.assertIn('if commandOnly.contains target then\n      if moduleCount != 0 then', generated)
         self.assertIn('Command-only module owns declarations:', generated)
         loop = generated.split('for (name, info) in env.constants do', 1)[1].split('  for target in targets do', 1)[0]

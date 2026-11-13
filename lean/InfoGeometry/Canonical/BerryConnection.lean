@@ -1,7 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Quantum.GeometricTensorOperatorLift
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.BogoliubovTransport
+import InfoGeometry.Canonical.MaurerCartanCurvature
 import InfoGeometry.Canonical.WeylGaugeOperatorLift
 import InfoGeometry.Canonical.ConformalUnification
 import InfoGeometry.Topology.TwistedCohomologyWeyl
@@ -314,21 +320,6 @@ noncomputable def hestenesBerryTwoForm
     hestenesMetricTwoForm hMod A
       (InfoGeometry.Krein.clockAxis (E := E) u) v := by
   exact hestenesBerryTwoForm_apply_complex_i (E := E) hMod A u v
-
-/--
-Operator Maurer-Cartan curvature bracket on doubled real space.
--/
-noncomputable def hestenesMaurerCartanCurvature
-    (X Y : EndH) : EndH :=
-  transportCommutator (E := E) X Y
-
-theorem hestenesMaurerCartanCurvature_skew
-    (X Y : EndH) :
-    hestenesMaurerCartanCurvature X Y
-      =
-    -hestenesMaurerCartanCurvature Y X := by
-  unfold hestenesMaurerCartanCurvature transportCommutator
-  abel
 
 /--
 Generic Berry transport law under exponential conjugation:

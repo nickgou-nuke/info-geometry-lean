@@ -106,10 +106,11 @@ def audit_source(targets: object, command_only: object = None) -> str:
     module_names = ", ".join("`" + module for module in names)
     return imports + '\nimport Lean.Util.CollectAxioms\nimport Lean.Elab.Command\n\nopen Lean Elab Command\n\n' + f'''run_cmd do
   let env ← getEnv
+  let moduleNames := env.header.moduleNames
   let targets : Array Name := #[{module_names}]
   let commandOnly : Array Name := #[{role_names}]
   for target in targets do
-    unless env.header.moduleNames.contains target do
+    unless moduleNames.contains target do
       throwError "Selected module not imported: {{target}}"
   let allowed : Array Name := #[`propext, `Classical.choice, `Quot.sound]
   let mut count : Nat := 0
@@ -117,7 +118,7 @@ def audit_source(targets: object, command_only: object = None) -> str:
   let mut allAxioms : Array Name := #[]
   for (name, info) in env.constants do
     let some idx := env.getModuleIdxFor? name | continue
-    let owner := env.header.moduleNames[idx.toNat]!
+    let owner := moduleNames[idx.toNat]!
     if !targets.contains owner then continue
     if info.isUnsafe || info.isPartial then
       throwError "Unsafe or partial declaration in reviewed module: {{name}}"

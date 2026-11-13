@@ -5,20 +5,29 @@ root Lean and Mathlib revisions. It shares ordinary dependency directories
 inside this independent checkout; no Lake directory is symlinked. Its own
 build products remain under this verification project's `.lake/build`.
 
-From the repository root, with Lean `v4.34.1` on `PATH`:
+After committing the implementation, run from the repository root with Lean
+`v4.34.1` on `PATH`:
 
 ```bash
-python3 verification/triadic-compression/check.py build
-python3 verification/triadic-compression/check.py env lean \
-  "$PWD/lean/InfoGeometry/Core/TripotentCompressionAudit.lean"
+python3 verification/triadic-compression/audit.py
 ```
 
-`check.py` uses the existing workspace-integrity check and global build lock.
+The driver first builds the audit target and then runs the Lean audit afresh.
+Each subprocess uses `check.py`, the existing workspace-integrity check, and
+the global build lock. Invoke the driver directly; do not wrap it in `check.py`.
+The driver requires the selected sources and configurations to match the
+committed bytes before and after verification, and checks dependency revisions.
+Its JSON result and full command logs are written to the ignored `logs/`
+directory. Use `--output PATH` to choose the JSON destination.
+
 The audit enumerates all declarations owned by the selected nine modules,
 checks transitive axiom dependencies against `propext`, `Classical.choice`,
 and `Quot.sound`, and rejects newly introduced axioms or unsafe declarations.
-It also emits direct dependencies between the audited owner declarations.
-This makes the mathematical dependency graph inspectable from Lean terms.
+It emits direct references from declaration types and proof/definition bodies
+between the selected owner declarations. The driver checks complete inventory,
+two expected proof dependencies, edge endpoints, and acyclicity, and records a
+deterministic topological ordering. This is an inspectable dependency graph of
+Lean declarations, not a newly formalized theorem about a `PartialOrder` object.
 
 The focused build does not certify the root's unrelated path dependencies,
 all default targets, or its publication gate. Root integration status and

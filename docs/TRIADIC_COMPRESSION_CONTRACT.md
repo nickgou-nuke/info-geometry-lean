@@ -161,7 +161,11 @@ flowchart TD
 The already owned five-grading, parity, Bregman identity, and inner-derivation
 criterion form separate branches. No compression-to-gravity edge is asserted.
 The source preflight found no current declaration-DAG artifacts in this checkout;
-the diagram is a source-reviewed dependency account, not a claimed graph refresh.
+the diagram is a source-reviewed dependency account. The new native audit
+separately enumerates direct references in declaration types and proof/definition
+bodies for its nine selected owners. Its driver validates this induced graph
+and exports a topological ordering. This is not a repository-wide graph refresh
+or a new Lean theorem about a `PartialOrder` object.
 
 ## Corrections and open targets
 

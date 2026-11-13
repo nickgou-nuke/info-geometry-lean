@@ -22,6 +22,11 @@
 
 ## Kernel and integration checks
 
-The serialized compiler runs are pending. No Lean compilation, declaration-
-axiom audit, full-project success, or publication acceptance is claimed by this
-interim record. Replace this section with actual results before delivery.
+The first serialized focused build exited 0: all 67 new mathematical theorems
+and lemmas compiled. The native axiom inventory passed for 268 declarations,
+including 243 theorem declarations in the nine selected owners.
+
+Independent verification of the revised type-and-proof dependency extraction
+and source-bound driver is pending. No full-project success or publication
+acceptance is claimed by this interim record. Replace this section with actual
+independent results before delivery.

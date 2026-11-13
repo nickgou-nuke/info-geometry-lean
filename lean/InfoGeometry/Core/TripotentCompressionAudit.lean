@@ -8,14 +8,16 @@ import InfoGeometry.Core.TripotentCompressionHilbert
 import InfoGeometry.Core.CornerCentrality
 import InfoGeometry.OperatorAlgebra.TriadicCompressionCounterexample
 import Lean.Util.CollectAxioms
+import Lean.Util.FoldConsts
 import Lean.Elab.Command
 
 /-!
 # Declaration and dependency audit for tripotent compression
 
 Audit every declaration owned by the selected modules, including private and
-generated declarations. Direct term dependencies are reported separately from
-transitive foundational axioms. Neither report proves a physical interpretation.
+generated declarations. Direct dependencies from both declaration types and
+proof/definition values are reported separately from transitive foundational
+axioms. Neither report proves a physical interpretation.
 -/
 
 open Lean Elab Command
@@ -57,12 +59,16 @@ run_cmd do
     counts := counts.insert owner ((counts.find? owner).getD 0 + 1)
     if let .thmInfo _ := info then theoremCount := theoremCount + 1
     logInfo m!"TRIADIC_COMPRESSION_DECL: {owner}: {name}: {axioms}"
-    if let some value := info.value? then
+    let mut dependencies := info.type.getUsedConstants
+    if let some value := info.value? (allowOpaque := true) then
       for dependency in value.getUsedConstants do
-        let some depIdx := env.getModuleIdxFor? dependency | continue
-        let some depOwner := modules[depIdx.toNat]? | continue
-        if owners.contains depOwner then
-          logInfo m!"TRIADIC_COMPRESSION_EDGE: {dependency} -> {name}"
+        unless dependencies.contains dependency do
+          dependencies := dependencies.push dependency
+    for dependency in dependencies do
+      let some depIdx := env.getModuleIdxFor? dependency | continue
+      let some depOwner := modules[depIdx.toNat]? | continue
+      if owners.contains depOwner then
+        logInfo m!"TRIADIC_COMPRESSION_EDGE: {dependency} -> {name}"
   for owner in owners do
     let n := (counts.find? owner).getD 0
     if n == 0 then throwError "TRIADIC_COMPRESSION_AUDIT_FAILURE: empty owner {owner}"

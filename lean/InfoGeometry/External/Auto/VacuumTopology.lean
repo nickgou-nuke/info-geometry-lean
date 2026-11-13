@@ -4,6 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Topology.Basic
+import Mathlib.Topology.Order
+import Mathlib.Topology.Constructions.SumProd
+import Mathlib.Topology.Instances.Real.Lemmas
 import Mathlib.Data.Fintype.Basic
 import Mathlib.Data.Real.Basic
 
@@ -20,6 +23,9 @@ namespace VacuumTopology
 
 /-- The topological space consisting of one point. -/
 abbrev VacuumSpace := Unit
+
+/-- The singleton is equipped with its unique topology. -/
+local instance : TopologicalSpace VacuumSpace := ⊥
 
 /-- Every two points of the chosen space agree. -/
 theorem vacuum_points_equal (x y : VacuumSpace) : x = y := by

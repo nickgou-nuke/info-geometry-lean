@@ -23,8 +23,8 @@ variable {R A : Type*} [Ring R] [Ring A] [Module R A] [IsScalarTower R A A]
 theorem pairMatrixLinear_weight (d B : A) (u v : R) :
     pairMatrixLinear d B (!![v * v, 0; 0, u * u] : Matrix (Fin 2) (Fin 2) R) =
       kmsModularWeight u v d B := by
-  simp [pairMatrixLinear_apply, pairMatrixUnit, kmsModularWeight, projPlus, projMinus,
-    add_comm]
+  simp [pairMatrixLinear, pairMatrixUnit, kmsModularWeight, projPlus, projMinus]
+  abel
 
 /-- Transport a weighted operator identity through a cyclic linear functional. -/
 theorem cyclic_weighted_balance (τ : A →ₗ[R] R)

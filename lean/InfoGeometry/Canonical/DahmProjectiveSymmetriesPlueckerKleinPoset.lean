@@ -147,10 +147,22 @@ theorem lorentz_boost_invariance_of_pluecker_quadric_and_4d_line_spacetime
 
 /-- A general `4 × 4` projective collineation matrix `a_{αβ}` on `P³`: -/
 structure Mat4 (R : Type u) where
-  a00 : R; a01 : R; a02 : R; a03 : R
-  a10 : R; a11 : R; a12 : R; a13 : R
-  a20 : R; a21 : R; a22 : R; a23 : R
-  a30 : R; a31 : R; a32 : R; a33 : R
+  a00 : R
+  a01 : R
+  a02 : R
+  a03 : R
+  a10 : R
+  a11 : R
+  a12 : R
+  a13 : R
+  a20 : R
+  a21 : R
+  a22 : R
+  a23 : R
+  a30 : R
+  a31 : R
+  a32 : R
+  a33 : R
 
 /-- Determinant of a `4 × 4` matrix `A : Mat4 R`: -/
 def det4 (A : Mat4 R) : R :=
@@ -163,8 +175,12 @@ def det4 (A : Mat4 R) : R :=
 
 /-- Plücker 6-vector `(p01, p02, p03, p23, p31, p12)` formed from two `P³` points `x, y`: -/
 structure Pluecker6 (R : Type u) where
-  p01 : R; p02 : R; p03 : R
-  p23 : R; p31 : R; p12 : R
+  p01 : R
+  p02 : R
+  p03 : R
+  p23 : R
+  p31 : R
+  p12 : R
 
 /-- Dahm's 6-Vector Product `[𝔄 · 𝔅]` (Eq. 6, p. 10): -/
 def sixProduct (U V : Pluecker6 R) : R :=
@@ -225,7 +241,6 @@ theorem general_collineation_6_product_and_pluecker_quadric_invariance
      p.p03 * p.p12 * sixProduct (col03 A) (col12 A)) =
       det4 A * kleinQuadric p := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
-  · dsimp [sixProduct, kleinQuadric, det4, col01, col23, col02, col31, col03, col12]
-    ring
+    dsimp [sixProduct, kleinQuadric, det4, col01, col23, col02, col31, col03, col12] <;> ring
 
 end DahmProjectiveSymmetriesPlueckerKleinPoset

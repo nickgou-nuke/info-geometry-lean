@@ -27,6 +27,7 @@ theorem linearMap_trace_mul_zero_of_anticommute
     LinearMap.trace K M (A * B) = 0 := by
   have htrace := congrArg (LinearMap.trace K M) h
   rw [map_add, map_zero, LinearMap.trace_mul_comm K B A] at htrace
-  exact add_self_eq_zero.mp htrace
+  apply (IsAddTorsionFree.nsmul_right_injective (n := 2) (M := K) (by norm_num)).eq_iff.mp
+  simpa only [two_nsmul, zero_nsmul, add_zero] using htrace
 
 end InfoGeometry.LinearAlgebra.TraceAnticommutation

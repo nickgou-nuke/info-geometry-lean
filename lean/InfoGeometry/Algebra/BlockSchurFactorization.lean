@@ -88,14 +88,14 @@ This refutes unrestricted multiplicativity without altering the ratio owner. -/
 theorem scalar_schur_ratio_counterexample :
     let L := schurLower
     let U := schurUpper
-    Supergeometry.Berezinian.isRegularD L 1 ∧
-      Supergeometry.Berezinian.isRegularD U 1 ∧
-      Supergeometry.Berezinian.isRegularD (L * U) (1 / 2) ∧
+    L 1 1 * (1 : ℚ) = 1 ∧
+      U 1 1 * (1 : ℚ) = 1 ∧
+      (L * U) 1 1 * (1 / 2 : ℚ) = 1 ∧
       Supergeometry.Berezinian.berezinian (L * U) (1 / 2) = 1 / 4 ∧
       Supergeometry.Berezinian.berezinian (L * U) (1 / 2) ≠
         Supergeometry.Berezinian.berezinian L 1 *
           Supergeometry.Berezinian.berezinian U 1 := by
-  norm_num [schurLower, schurUpper, Supergeometry.Berezinian.isRegularD,
-    Supergeometry.Berezinian.berezinian, Matrix.mul_apply, Fin.sum_univ_two]
+  norm_num [schurLower, schurUpper, Supergeometry.Berezinian.berezinian,
+    Matrix.mul_apply, Fin.sum_univ_two]
 
 end InfoGeometry.Algebra.BlockSchurFactorization

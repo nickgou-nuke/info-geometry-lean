@@ -106,4 +106,50 @@ theorem clock_shift_matrices_noncommute :
   apply Units.ext
   exact h.eq
 
+/-! ### Audit of the proposed square-zero block holonomy
+
+The following nested operator-matrix example checks the proposed block
+holonomy with the same noncommutative coefficient ring `M₂(ℤ)`. For these
+specific `X` and `Z`, the lower-right block is `[[1, -2], [-1, 1]]`, not
+`1 - F₋`.
+Consequently the claimed decomposition `Q = 1 + diag(N₊, -F₋)` is false.
+-/
+
+abbrev NestedCoeff := Matrix (Fin 2) (Fin 2) Coeff
+
+def wittFPlus : Coeff := !![0, 1; 0, 0]
+def wittFMinus : Coeff := !![0, 0; 1, 0]
+def wittSigma : Coeff := !![0, 1; 1, 0]
+def wittGamma : Coeff := !![1, 0; 0, -1]
+def proposedNPlus : Coeff := !![-1, -1; 1, 1]
+
+def proposedBlockShift : NestedCoeff :=
+  !![![0, 1 - wittFPlus], ![1 + wittFPlus, 0]]
+
+def proposedBlockClock : NestedCoeff :=
+  !![![wittSigma, 0], ![0, wittGamma]]
+
+def proposedBlockNilpotent : NestedCoeff :=
+  !![![proposedNPlus, 0], ![0, -wittFMinus]]
+
+def proposedBlockHolonomy : NestedCoeff :=
+  (proposedBlockClock * proposedBlockShift) *
+    (proposedBlockClock * proposedBlockShift)
+
+/-- The actual lower-right block of the proposed plaquette holonomy. -/
+theorem proposedBlockHolonomy_lowerRight :
+    proposedBlockHolonomy 1 1 = !![1, -2; -1, 1] := by
+  decide
+
+/-- This corrects the advertised nilpotent decomposition: its lower-right
+block disagrees over the noncommutative operator coefficient ring `M₂(ℤ)`. -/
+theorem proposedBlockHolonomy_ne_one_add_nilpotent :
+    proposedBlockHolonomy ≠ 1 + proposedBlockNilpotent := by
+  intro h
+  have h11 := congrArg (fun M : NestedCoeff => M 1 1) h
+  have h01 := congrArg (fun M : Coeff => M 0 1) h11
+  norm_num [proposedBlockHolonomy_lowerRight, proposedBlockHolonomy,
+    proposedBlockNilpotent, proposedNPlus, wittFMinus, wittFPlus,
+    wittSigma, wittGamma] at h01
+
 end InfoGeometry.Weyl.OperatorBraidingExamples

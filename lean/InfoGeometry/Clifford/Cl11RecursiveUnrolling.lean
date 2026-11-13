@@ -108,7 +108,7 @@ def flatten (B : Type*) [Ring B] [Algebra ℝ B] (n : ℕ) :
     (flatten B n).symm M a b i j = M (Fin.cons a i) (Fin.cons b j) := rfl
 
 /-- Recursion through native graded tensor steps, with a real empty stage. -/
-def leftMatrixEquiv : (n : ℕ) → Clsplit n ≃ₐ[ℝ] RealMatrix n
+noncomputable def leftMatrixEquiv : (n : ℕ) → Clsplit n ≃ₐ[ℝ] RealMatrix n
   | 0 =>
       (splitSpinorAlgEquiv 0).trans
         (Matrix.reindexAlgEquiv ℝ ℝ (Equiv.ofUnique (Fin 1) (Bits 0)))
@@ -225,7 +225,7 @@ theorem matrixParity_succ (n : ℕ)
   fin_cases i <;> fin_cases j <;> rfl
 
 /-- The explicitly recursive tensor power of the swap matrix `K`. -/
-def gamma : (n : ℕ) → RealMatrix n
+noncomputable def gamma : (n : ℕ) → RealMatrix n
   | 0 => 1
   | n + 1 => flatten ℝ n !![0, gamma n; gamma n, 0]
 
@@ -548,16 +548,16 @@ theorem unrollCoefficients_succ (n : ℕ) (M : CoefficientMatrix B (n + 1)) :
     synthesize_coefficients, AlgEquiv.apply_symm_apply]
 
 /-- Concrete binary indexing: the Clifford head is the most significant bit. -/
-def bitsFinEquiv : (n : ℕ) → Bits n ≃ Fin (2 ^ n)
-  | 0 =>
-      { toFun := fun _ => 0
-        invFun := fun _ i => Fin.elim0 i
-        left_inv := fun x => by funext i; exact Fin.elim0 i
-        right_inv := fun i => by fin_cases i; rfl }
-  | n + 1 =>
+def bitsFinEquiv : (n : ℕ) → Bits n ≃ Fin (2 ^ n) :=
+  Nat.rec (motive := fun n => Bits n ≃ Fin (2 ^ n))
+    { toFun := fun _ => 0
+      invFun := fun _ i => Fin.elim0 i
+      left_inv := fun x => by funext i; exact Fin.elim0 i
+      right_inv := fun i => by fin_cases i; rfl }
+    (fun n ih =>
       (Fin.consEquiv fun _ : Fin (n + 1) => Fin 2).symm.trans
-        (((Equiv.refl (Fin 2)).prodCongr (bitsFinEquiv n)).trans
-          (finProdFinEquiv.trans (finCongr (by simp [pow_succ, Nat.mul_comm]))))
+        (((Equiv.refl (Fin 2)).prodCongr ih).trans
+          (finProdFinEquiv.trans (finCongr (by simp [pow_succ, Nat.mul_comm])))))
 
 /-- The explicit matrix reindexing preserves the complete coefficient algebra. -/
 def binaryMatrixEquiv (n : ℕ) :
@@ -600,7 +600,7 @@ abbrev Words (n : ℕ) := Fin n → Fin 4
 
 /-- The exact `4^n` coefficient tensor extracted by the corrected block
 algorithm. Its structure is real-linear, with the full B-valued last leg. -/
-def wordCoefficientEquiv : (n : ℕ) →
+noncomputable def wordCoefficientEquiv : (n : ℕ) →
     CoefficientMatrix B n ≃ₗ[ℝ] (Words n → B)
   | 0 =>
       (Matrix.uniqueLinearEquiv (m := Bits 0) (n := Bits 0) (R := ℝ) (A := B)).trans

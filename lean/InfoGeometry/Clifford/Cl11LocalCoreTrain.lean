@@ -64,7 +64,7 @@ def localCore {r s : ℕ} (core : Fin 4 → Matrix (Fin r) (Fin s) ℝ) :
 
 /-- Contract the local W matrices using actual native graded head insertion.
 The base case is the supplied scalar terminal vector, not a unit boundary. -/
-def nativeCoreContraction :
+noncomputable def nativeCoreContraction :
     {n r : ℕ} → Train ℝ 4 n r → Fin r → Clsplit n
   | _, _, .nil boundary, i => boundary i • (1 : Clsplit 0)
   | n + 1, _, .cons core tail, i =>
@@ -140,7 +140,7 @@ theorem wordReconstruct_localAtom (n : ℕ) (v : Fin 4 → ℝ) (c : Words n →
 
 /-- The same actual local contraction with a single terminal B coefficient.
 Every local W atom still belongs to the real Clifford quotient. -/
-def localCoreContraction (b : B) :
+noncomputable def localCoreContraction (b : B) :
     {n r : ℕ} → Train ℝ 4 n r → Fin r → (Clsplit n ⊗[ℝ] B)
   | _, _, .nil boundary, i => (1 : Clsplit 0) ⊗ₜ[ℝ] (boundary i • b)
   | n + 1, _, .cons core tail, i =>

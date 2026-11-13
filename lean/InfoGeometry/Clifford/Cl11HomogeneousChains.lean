@@ -35,20 +35,21 @@ open InfoGeometry.Clifford.Cl11GradedUnrolling
 open InfoGeometry.Clifford.Cl11RecursiveUnrolling
 
 /-- A chain of actual real Clifford atoms, with site zero on the left. -/
-def nativeChain : (n : ℕ) → (Fin n → CliffordAlgebra q11) → Clsplit n
+noncomputable def nativeChain : (n : ℕ) → (Fin n → CliffordAlgebra q11) → Clsplit n
   | 0, _ => 1
   | n + 1, a => consNative n (a 0) (nativeChain n (Fin.tail a))
 
 /-- XOR of the specified site parities. -/
-def totalParity : (n : ℕ) → (Fin n → Bool) → Bool
-  | 0, _ => false
-  | n + 1, p => Bool.xor (p 0) (totalParity n (Fin.tail p))
+def totalParity : (n : ℕ) → (Fin n → Bool) → Bool :=
+  Nat.rec (motive := fun n => (Fin n → Bool) → Bool)
+    (fun _ => false)
+    (fun _ ih p => Bool.xor (p 0) (ih (Fin.tail p)))
 
 /-- The parity of all strictly later sites, in the chain's actual order. -/
-def suffixParity : (n : ℕ) → (Fin n → Bool) → Fin n → Bool
-  | 0, _ => fun i => Fin.elim0 i
-  | n + 1, p =>
-      Fin.cons (totalParity n (Fin.tail p)) (suffixParity n (Fin.tail p))
+def suffixParity : (n : ℕ) → (Fin n → Bool) → Fin n → Bool :=
+  Nat.rec (motive := fun n => (Fin n → Bool) → Fin n → Bool)
+    (fun _ i => Fin.elim0 i)
+    (fun n ih p => Fin.cons (totalParity n (Fin.tail p)) (ih (Fin.tail p)))
 
 @[simp] theorem nativeChain_zero (a : Fin 0 → CliffordAlgebra q11) :
     nativeChain 0 a = 1 := rfl
@@ -141,7 +142,7 @@ theorem prependMatrix_eq_kronecker (n : ℕ) (A : Matrix (Fin 2) (Fin 2) ℝ)
   rfl
 
 /-- Ordered ordinary Kronecker synthesis, including its scalar empty stage. -/
-def ordinaryChain : (n : ℕ) →
+noncomputable def ordinaryChain : (n : ℕ) →
     (Fin n → Matrix (Fin 2) (Fin 2) ℝ) → RealMatrix n
   | 0, _ => 1
   | n + 1, a => prependMatrix n (a 0) (ordinaryChain n (Fin.tail a))

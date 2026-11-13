@@ -1,0 +1,147 @@
+name: Knutsen localization kernel check
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/OperatorAlgebra/ProjectionLocalization.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean'
+      - 'lean/InfoGeometry/Clifford/WeylFrameMasks.lean'
+      - 'lean/InfoGeometry/Analysis/PorosityIteration.lean'
+      - 'lean/InfoGeometry/Analysis/MetricPorosity.lean'
+      - 'lean/InfoGeometry/Analysis/MultiscaleLocalization.lean'
+      - 'lean/InfoGeometry/Core/IdempotencyDefect.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Core/PeirceDecomposition.lean'
+      - 'lean/InfoGeometry/Core/PeirceCompressionDefect.lean'
+      - 'lean/InfoGeometry/Core/PeirceCompressionCStar.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/NoncommutativeGradedTrace.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/NoncommutativeKrausChannel.lean'
+      - 'lean/InfoGeometry/Algebra/NonCommutativeIsometry.lean'
+      - 'lean/InfoGeometry/Clifford/OperatorValuedJones.lean'
+      - 'verification/knutsen-localization/targets.json'
+      - 'tools/quality/check_clifford_dirac.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/placeholder_audit.py'
+      - 'tools/quality/semantic_vacuity_gate.py'
+      - 'tools/build_lock.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/knutsen-localization.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: knutsen-localization-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: project
+          persist-credentials: false
+      - name: Read exact dependency pins
+        id: pins
+        shell: bash
+        run: |
+          python3 - <<'PYTHON'
+          import json, os
+          from pathlib import Path
+          manifest = json.loads(Path('project/lake-manifest.json').read_text())
+          revision = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'mathlib={revision}\n')
+          PYTHON
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: ${{ steps.pins.outputs.mathlib }}
+          path: mathlib
+          persist-credentials: false
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            mathlib/.lake
+          key: knutsen-localization-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Fetch pinned native import cache
+        shell: bash
+        run: |
+          python3 - <<'PYTHON'
+          import json, subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('project').resolve()))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          roots = json.loads(Path('project/verification/knutsen-localization/targets.json').read_text())
+          _, _, native = closure(Path('project'), roots)
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'knutsen-cache') as lock:
+              subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
+                  cwd='mathlib', check=True, pass_fds=(lock.fileno(),))
+          PYTHON
+      - name: Compile and audit every declaration in the complete source closure
+        working-directory: project
+        run: |
+          python3 - <<'PYTHON'
+          import json, subprocess, sys
+          from pathlib import Path
+          from tools.quality.check_reviewed_prs import closure
+          roots = json.loads(Path('verification/knutsen-localization/targets.json').read_text())
+          owners, _, _ = closure(Path.cwd(), roots)
+          command = [sys.executable, 'tools/quality/check_clifford_dirac.py',
+                     '--mathlib-root', '../mathlib', '--output', '../knutsen-report']
+          for module in owners:
+              command += ['--target', module]
+          subprocess.run(command, check=True)
+          report = json.loads(Path('../knutsen-report/report.json').read_text())
+          warnings = [m for m in report['modules'] if m['module'] in roots and m['warnings']]
+          if warnings:
+              raise SystemExit(f'New owner warnings: {warnings}')
+          PYTHON
+      - name: Check placeholders and semantic errors
+        working-directory: project
+        run: |
+          python3 - <<'PYTHON'
+          import json, subprocess, sys
+          from pathlib import Path
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          roots = json.loads(Path('verification/knutsen-localization/targets.json').read_text())
+          report = Path('../knutsen-report')
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'knutsen-static') as lock:
+              for module in roots:
+                  source = 'lean/' + module.replace('.', '/') + '.lean'
+                  for kind, command in [
+                      ('placeholder', [sys.executable, 'tools/quality/placeholder_audit.py', '--root', source, '--strict']),
+                      ('semantic', [sys.executable, 'tools/quality/semantic_vacuity_gate.py', source, '--fail-on', 'error'])]:
+                      result = subprocess.run(command, text=True, stdout=subprocess.PIPE,
+                          stderr=subprocess.STDOUT, pass_fds=(lock.fileno(),))
+                      (report / (module + '.' + kind + '.log')).write_text(result.stdout)
+                      print(result.stdout)
+                      result.check_returncode()
+          PYTHON
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: knutsen-localization-evidence
+          path: |
+            knutsen-report/report.json
+            knutsen-report/evidence-sha256.json
+            knutsen-report/src/CliffordDiracAudit.lean
+            knutsen-report/*.log
+          if-no-files-found: warn

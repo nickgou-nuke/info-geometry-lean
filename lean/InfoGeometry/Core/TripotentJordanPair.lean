@@ -43,9 +43,9 @@ theorem lie_eq_zero_of_mem_same_extreme {S X Z : A} (hS : S * S * S = S)
 /-- Restrict the ordinary double commutator to opposite homogeneous
 intersections with a native Lie subalgebra. -/
 def extremeTriple (p : LieSubalgebra ℝ A) (S : A) (k : ℤ)
-    (X : p.toSubmodule ⊓ adGrade S k)
-    (Y : p.toSubmodule ⊓ adGrade S (-k))
-    (Z : p.toSubmodule ⊓ adGrade S k) : p.toSubmodule ⊓ adGrade S k :=
+    (X : ↥(p.toSubmodule ⊓ adGrade S k))
+    (Y : ↥(p.toSubmodule ⊓ adGrade S (-k)))
+    (Z : ↥(p.toSubmodule ⊓ adGrade S k)) : ↥(p.toSubmodule ⊓ adGrade S k) :=
   ⟨⁅⁅(X : A), (Y : A)⁆, (Z : A)⁆, by
     constructor
     · exact p.lie_mem (p.lie_mem X.property.1 Y.property.1) Z.property.1
@@ -55,8 +55,8 @@ def extremeTriple (p : LieSubalgebra ℝ A) (S : A) (k : ℤ)
 
 /-- The triple product is additive in its first argument. -/
 theorem extremeTriple_add_left (p : LieSubalgebra ℝ A) (S : A) (k : ℤ)
-    (X X' Z : p.toSubmodule ⊓ adGrade S k)
-    (Y : p.toSubmodule ⊓ adGrade S (-k)) :
+    (X X' Z : ↥(p.toSubmodule ⊓ adGrade S k))
+    (Y : ↥(p.toSubmodule ⊓ adGrade S (-k))) :
     extremeTriple p S k (X + X') Y Z =
       extremeTriple p S k X Y Z + extremeTriple p S k X' Y Z := by
   apply Subtype.ext
@@ -66,8 +66,8 @@ theorem extremeTriple_add_left (p : LieSubalgebra ℝ A) (S : A) (k : ℤ)
 
 /-- The triple product is additive in its middle argument. -/
 theorem extremeTriple_add_middle (p : LieSubalgebra ℝ A) (S : A) (k : ℤ)
-    (X Z : p.toSubmodule ⊓ adGrade S k)
-    (Y Y' : p.toSubmodule ⊓ adGrade S (-k)) :
+    (X Z : ↥(p.toSubmodule ⊓ adGrade S k))
+    (Y Y' : ↥(p.toSubmodule ⊓ adGrade S (-k))) :
     extremeTriple p S k X (Y + Y') Z =
       extremeTriple p S k X Y Z + extremeTriple p S k X Y' Z := by
   apply Subtype.ext
@@ -77,8 +77,8 @@ theorem extremeTriple_add_middle (p : LieSubalgebra ℝ A) (S : A) (k : ℤ)
 
 /-- The triple product is additive in its last argument. -/
 theorem extremeTriple_add_right (p : LieSubalgebra ℝ A) (S : A) (k : ℤ)
-    (X Z Z' : p.toSubmodule ⊓ adGrade S k)
-    (Y : p.toSubmodule ⊓ adGrade S (-k)) :
+    (X Z Z' : ↥(p.toSubmodule ⊓ adGrade S k))
+    (Y : ↥(p.toSubmodule ⊓ adGrade S (-k))) :
     extremeTriple p S k X Y (Z + Z') =
       extremeTriple p S k X Y Z + extremeTriple p S k X Y Z' := by
   apply Subtype.ext
@@ -88,8 +88,8 @@ theorem extremeTriple_add_right (p : LieSubalgebra ℝ A) (S : A) (k : ℤ)
 
 /-- The triple product is real linear in its first argument. -/
 theorem extremeTriple_smul_left (p : LieSubalgebra ℝ A) (S : A) (k : ℤ)
-    (c : ℝ) (X Z : p.toSubmodule ⊓ adGrade S k)
-    (Y : p.toSubmodule ⊓ adGrade S (-k)) :
+    (c : ℝ) (X Z : ↥(p.toSubmodule ⊓ adGrade S k))
+    (Y : ↥(p.toSubmodule ⊓ adGrade S (-k))) :
     extremeTriple p S k (c • X) Y Z = c • extremeTriple p S k X Y Z := by
   apply Subtype.ext
   change ⁅⁅c • (X : A), (Y : A)⁆, (Z : A)⁆ =
@@ -98,8 +98,8 @@ theorem extremeTriple_smul_left (p : LieSubalgebra ℝ A) (S : A) (k : ℤ)
 
 /-- The triple product is real linear in its middle argument. -/
 theorem extremeTriple_smul_middle (p : LieSubalgebra ℝ A) (S : A) (k : ℤ)
-    (c : ℝ) (X Z : p.toSubmodule ⊓ adGrade S k)
-    (Y : p.toSubmodule ⊓ adGrade S (-k)) :
+    (c : ℝ) (X Z : ↥(p.toSubmodule ⊓ adGrade S k))
+    (Y : ↥(p.toSubmodule ⊓ adGrade S (-k))) :
     extremeTriple p S k X (c • Y) Z = c • extremeTriple p S k X Y Z := by
   apply Subtype.ext
   change ⁅⁅(X : A), c • (Y : A)⁆, (Z : A)⁆ =
@@ -108,8 +108,8 @@ theorem extremeTriple_smul_middle (p : LieSubalgebra ℝ A) (S : A) (k : ℤ)
 
 /-- The triple product is real linear in its last argument. -/
 theorem extremeTriple_smul_right (p : LieSubalgebra ℝ A) (S : A) (k : ℤ)
-    (c : ℝ) (X Z : p.toSubmodule ⊓ adGrade S k)
-    (Y : p.toSubmodule ⊓ adGrade S (-k)) :
+    (c : ℝ) (X Z : ↥(p.toSubmodule ⊓ adGrade S k))
+    (Y : ↥(p.toSubmodule ⊓ adGrade S (-k))) :
     extremeTriple p S k X Y (c • Z) = c • extremeTriple p S k X Y Z := by
   apply Subtype.ext
   change ⁅⁅(X : A), (Y : A)⁆, c • (Z : A)⁆ =
@@ -127,8 +127,8 @@ private theorem double_lie_outer (X Y Z : A) (hXZ : ⁅X, Z⁆ = 0) :
 /-- Commutativity of the extreme grade supplies the required outer symmetry. -/
 theorem extremeTriple_outer (p : LieSubalgebra ℝ A) {S : A}
     (hS : S * S * S = S) {k : ℤ} (hk : k = 2 ∨ k = -2)
-    (X Z : p.toSubmodule ⊓ adGrade S k)
-    (Y : p.toSubmodule ⊓ adGrade S (-k)) :
+    (X Z : ↥(p.toSubmodule ⊓ adGrade S k))
+    (Y : ↥(p.toSubmodule ⊓ adGrade S (-k))) :
     extremeTriple p S k X Y Z = extremeTriple p S k Z Y X := by
   apply Subtype.ext
   exact double_lie_outer (X : A) (Y : A) (Z : A)
@@ -149,8 +149,8 @@ private theorem double_lie_fundamental (X Y U V W : A) :
 extreme intersections and proved ordinary-Lie identities. -/
 def tripotentExtremeJordanPair (p : LieSubalgebra ℝ A) (S : A)
     (hS : S * S * S = S) : TKKJordanPairData.JordanPair ℝ where
-  Vplus := p.toSubmodule ⊓ adGrade S 2
-  Vminus := p.toSubmodule ⊓ adGrade S (-2)
+  Vplus := ↥(p.toSubmodule ⊓ adGrade S 2)
+  Vminus := ↥(p.toSubmodule ⊓ adGrade S (-2))
   plus_add := inferInstance
   minus_add := inferInstance
   plus_module := inferInstance

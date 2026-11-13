@@ -39,7 +39,8 @@ theorem fiveGradeLagrangePolynomial_eval_self (k : FiveGrade) :
 
 theorem fiveGradeLagrangePolynomial_eval_of_ne {i j : FiveGrade} (hij : i ≠ j) :
     (fiveGradeLagrangePolynomial i).eval (fiveGradeValue j : ℝ) = 0 := by
-  exact Lagrange.eval_basis_of_ne hij (Finset.mem_univ j)
+  exact Lagrange.eval_basis_of_ne
+    (v := fun k : FiveGrade => (fiveGradeValue k : ℝ)) hij (Finset.mem_univ j)
 
 theorem fiveGradeLagrangePolynomial_natDegree (k : FiveGrade) :
     (fiveGradeLagrangePolynomial k).natDegree = 4 := by
@@ -112,7 +113,8 @@ theorem fiveGradeRange_comap_eq_restrict_eigenspace {S : A}
     (hS : S * S * S = S) (p : Submodule ℝ A)
     (hp : ∀ X ∈ p, LieAlgebra.ad ℝ A S X ∈ p) (k : FiveGrade) :
     (fiveGradeRange S k).comap p.subtype =
-      ((LieAlgebra.ad ℝ A S).restrict hp).eigenspace (fiveGradeValue k : ℝ) := by
+      Module.End.eigenspace ((LieAlgebra.ad ℝ A S).restrict hp)
+        (fiveGradeValue k : ℝ) := by
   rw [fiveGradeRange_eq_eigenspace hS]
   exact ((LieAlgebra.ad ℝ A S).genEigenspace_restrict p 1
     (fiveGradeValue k : ℝ) hp).symm
@@ -125,7 +127,7 @@ theorem isInternal_fiveGradeRange_comap_of_ad_invariant {S : A}
   apply DirectSum.isInternal_submodule_of_iSupIndep_of_iSup_eq_top
   · simpa only [fiveGradeRange_comap_eq_restrict_eigenspace hS p hp,
       Function.comp_def] using
-      (((LieAlgebra.ad ℝ A S).restrict hp).eigenspaces_iSupIndep.comp
+      ((Module.End.eigenspaces_iSupIndep ((LieAlgebra.ad ℝ A S).restrict hp)).comp
         fiveGradeValue_real_injective)
   · apply Submodule.map_injective_of_injective (f := p.subtype) Subtype.coe_injective
     simp only [Submodule.map_iSup, Submodule.map_comap_subtype, Submodule.map_top,

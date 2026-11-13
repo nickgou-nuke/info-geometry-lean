@@ -32,11 +32,15 @@ variable {A : Type*} [Ring A] [Algebra ℝ A]
 tripotence. -/
 instance adGradeGradedMonoid (S : A) : SetLike.GradedMonoid (adGrade S) where
   one_mem := by simp [mem_adGrade_iff, adOp]
-  mul_mem := mul_mem_adGrade_add
+  mul_mem := by
+    intro i j X Y hX hY
+    exact mul_mem_adGrade_add hX hY
 
 /-- Distinct integer adjoint eigenspaces are independent. -/
 theorem adGrade_iSupIndep (S : A) : iSupIndep (adGrade S) := by
-  simp_rw [adGrade_eq_eigenspace]
+  have hf : adGrade S = fun k : ℤ => (LieAlgebra.ad ℝ A S).eigenspace (k : ℝ) :=
+    funext (adGrade_eq_eigenspace S)
+  rw [hf]
   exact (LieAlgebra.ad ℝ A S).eigenspaces_iSupIndep.comp
     (Int.cast_injective (α := ℝ))
 
@@ -88,6 +92,7 @@ theorem adGrade_isInternal {S : A} (hS : S * S * S = S) :
     (adGrade_iSupIndep S) (iSup_adGrade_eq_top hS)
 
 /-- A genuine Mathlib graded-algebra structure on the existing integer family. -/
+@[instance_reducible]
 def adGradeGradedAlgebra {S : A} (hS : S * S * S = S) : GradedAlgebra (adGrade S) :=
   (adGrade_isInternal hS).gradedAlgebra
 
@@ -147,13 +152,8 @@ theorem adGradeSuperBracket_jacobi {S : A} {i j k : ℤ}
         (adGradeSuperBracket Y (adGradeSuperBracket Z X) : A) +
       gradedSign (R := ℝ) (integerGradeParity k) (integerGradeParity j) •
         (adGradeSuperBracket Z (adGradeSuperBracket X Y) : A) = 0 := by
-  change gradedSign (R := ℝ) _ _ • superBracket _ (integerGradeParity (j + k))
-      (X : A) (superBracket _ _ (Y : A) (Z : A)) +
-    gradedSign (R := ℝ) _ _ • superBracket _ (integerGradeParity (k + i))
-      (Y : A) (superBracket _ _ (Z : A) (X : A)) +
-    gradedSign (R := ℝ) _ _ • superBracket _ (integerGradeParity (i + j))
-      (Z : A) (superBracket _ _ (X : A) (Y : A)) = 0
-  simp only [integerGradeParity_add]
-  exact superBracket_superJacobi (R := ℝ) _ _ _ (X : A) (Y : A) (Z : A)
+  simpa only [adGradeSuperBracket, integerGradeParity_add] using
+    superBracket_superJacobi (R := ℝ) (integerGradeParity i) (integerGradeParity j)
+      (integerGradeParity k) (X : A) (Y : A) (Z : A)
 
 end InfoGeometry.Core.TripotentAdjoint

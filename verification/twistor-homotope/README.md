@@ -32,12 +32,39 @@ It performs:
   and source hashes in `VACUITY_REVIEW.json` receive the documented mathematical
   classification; all unreviewed findings fail the driver.
 - Scoped whitespace, dependency pin, source fingerprint, and compiled-artifact checks.
-- Exact committed-source equality and unchanged root controls and dependency worktrees.
+- Exact committed-source equality, reviewed root-control references, and unchanged
+  dependency worktrees. Every protected source and root control must remain
+  unchanged throughout the run.
 
 Logs and `checks.json` are written under `logs/` and retained by the GitHub
 workflow as an artifact. A successful driver run records `CHECKS_PASSED`;
 independent QA still needs to rerun and inspect the frozen workflow before a
 separate acceptance claim is made.
+
+## Reviewed root controls
+
+Fourteen root controls remain byte-for-byte bound to the original implementation
+base, `c143c264bc18bbf41d692be4e270b5b7f7405702`. The sole updated reference is
+`tools/infra/opengauss_screener.py`, pinned to
+`8b270668ea5ce0f0361f606ed09dc94f28922a78` (SHA256
+`10d3ec0a64ef37359598aff9c8ee709490a615ecbe13ca1b857a99006b7bd422`).
+That revision adds a token boundary to the T16 `commutator` pattern: a projection
+of a named commutator matrix is not a scalar commutator. The existing regression
+suite retains positive detection of scalar projections inside a commutator and
+adds coverage of the identifier-prefix false positive.
+
+The verifier still requires each root control to equal both its committed `HEAD`
+source and its exact reviewed revision. A different committed screener change,
+an uncommitted change, or a change to another control fails verification. The
+before/after fingerprint checks still cover all fifteen controls. Regression
+tests in `tests/test_twistor_homotope_controls.py` exercise these boundaries using
+temporary Git repositories; the projective-rank workflow runs them alongside the
+OpenGauss regressions.
+
+The v2 execution report records every control's reference revision and SHA256,
+and separates the fourteen unchanged controls from the one reviewed update.
+Historical `RESULTS.md` and hosted QA receipts describe their original revisions
+and have not been rewritten as evidence for this migration.
 
 ## Mathematical boundaries
 

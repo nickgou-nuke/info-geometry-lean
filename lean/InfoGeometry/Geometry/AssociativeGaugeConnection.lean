@@ -54,6 +54,7 @@ theorem connection_leibniz (D : Module.End R A) (hD : IsLeibniz D) (a x y : A) :
 def curvature (D E : Module.End R A) (a b : A) : A :=
   D b - E a + a * b - b * a
 
+omit [SMulCommClass R A A] in
 theorem curvature_antisymm (D E : Module.End R A) (a b : A) :
     curvature D E a b = -curvature E D b a := by
   simp only [curvature]
@@ -118,6 +119,7 @@ theorem curvature_gauge_covariant (D E : Module.End R A)
       _ = _ := by rw [curvature_action D E hD hE hcomm]
   simpa [conjugate, mul_assoc] using haction (↑g⁻¹ : A)
 
+omit [SMulCommClass R A A] in
 theorem cyclic_conjugate (τ : A →ₗ[R] R)
     (hcyclic : ∀ x y, τ (x * y) = τ (y * x)) (g : Aˣ) (x : A) :
     τ (conjugate g x) = τ x := by
@@ -128,6 +130,7 @@ theorem cyclic_conjugate (τ : A →ₗ[R] R)
 def cyclicAction {ι : Type*} [Fintype ι] (τ : A →ₗ[R] R) (F : ι → ι → A) : R :=
   ∑ i, ∑ j, τ (F i j * F i j)
 
+omit [SMulCommClass R A A] in
 theorem cyclicAction_conjugate {ι : Type*} [Fintype ι] (τ : A →ₗ[R] R)
     (hcyclic : ∀ x y, τ (x * y) = τ (y * x)) (g : Aˣ) (F : ι → ι → A) :
     cyclicAction τ (fun i j => conjugate g (F i j)) = cyclicAction τ F := by
@@ -143,5 +146,75 @@ theorem connectionAction_gauge_invariant {ι : Type*} [Fintype ι]
         cyclicAction τ (fun i j => curvature (D i) (D j) (a i) (a j)) := by
   simp_rw [curvature_gauge_covariant _ _ (hD _) (hD _) (hcomm _ _)]
   exact cyclicAction_conjugate τ hcyclic g _
+
+/-! ## Adjoint connection and the differential Bianchi identity -/
+
+section Adjoint
+
+variable [IsScalarTower R A A]
+
+/-- The connection induced on the algebra of endomorphisms of the regular
+right module. Unlike the fundamental connection, this obeys Leibniz. -/
+def adjointCovariantDerivative (D : Module.End R A) (a : A) : Module.End R A :=
+  D + innerDerivative a
+
+@[simp] theorem adjointCovariantDerivative_apply (D : Module.End R A) (a x : A) :
+    adjointCovariantDerivative D a x = D x + (a * x - x * a) := rfl
+
+theorem adjointCovariantDerivative_isLeibniz
+    (D : Module.End R A) (hD : IsLeibniz D) (a : A) :
+    IsLeibniz (adjointCovariantDerivative D a) := by
+  intro x y
+  simp only [adjointCovariantDerivative_apply, hD x y]
+  noncomm_ring
+
+/-- The commutator of adjoint connections acts by the commutator with curvature.
+It does not determine central curvature, which the fundamental action detects. -/
+theorem adjoint_curvature_action (D E : Module.End R A)
+    (hD : IsLeibniz D) (hE : IsLeibniz E)
+    (hcomm : ∀ x, D (E x) = E (D x)) (a b x : A) :
+    adjointCovariantDerivative D a (adjointCovariantDerivative E b x) -
+      adjointCovariantDerivative E b (adjointCovariantDerivative D a x) =
+        curvature D E a b * x - x * curvature D E a b := by
+  simp only [adjointCovariantDerivative_apply, map_add, map_sub,
+    hD b x, hD x b, hE a x, hE x a, curvature, hcomm]
+  noncomm_ring
+
+/-- The exact second Bianchi identity in three commuting differential directions.
+No constancy or commutativity of the connection coefficients is assumed. -/
+theorem curvature_bianchi (D E G : Module.End R A)
+    (hD : IsLeibniz D) (hE : IsLeibniz E) (hG : IsLeibniz G)
+    (hDE : ∀ x, D (E x) = E (D x))
+    (hEG : ∀ x, E (G x) = G (E x))
+    (hGD : ∀ x, G (D x) = D (G x)) (a b c : A) :
+    adjointCovariantDerivative D a (curvature E G b c) +
+      adjointCovariantDerivative E b (curvature G D c a) +
+      adjointCovariantDerivative G c (curvature D E a b) = 0 := by
+  simp only [adjointCovariantDerivative_apply, curvature, map_sub, map_add,
+    hD b c, hD c b, hE c a, hE a c, hG a b, hG b a, hDE, hEG, hGD]
+  noncomm_ring
+
+end Adjoint
+
+omit [SMulCommClass R A A] in
+/-- The derivative, mixed cubic, and quartic terms retain their order.
+The two mixed products cannot in general be replaced by twice one of them. -/
+theorem curvature_square_split (D E : Module.End R A) (a b : A) :
+    curvature D E a b ^ 2 =
+      (D b - E a) ^ 2 +
+      (D b - E a) * (a * b - b * a) +
+      (a * b - b * a) * (D b - E a) +
+      (a * b - b * a) ^ 2 := by
+  unfold curvature
+  noncomm_ring
+
+/-- The square transforms by the same conjugation, before taking any trace. -/
+theorem curvature_square_gauge_covariant (D E : Module.End R A)
+    (hD : IsLeibniz D) (hE : IsLeibniz E)
+    (hcomm : ∀ x, D (E x) = E (D x)) (a b : A) (g : Aˣ) :
+    curvature D E (gaugePotential D a g) (gaugePotential E b g) ^ 2 =
+      conjugate g (curvature D E a b ^ 2) := by
+  rw [curvature_gauge_covariant D E hD hE hcomm]
+  simpa only [pow_two] using conjugate_mul g (curvature D E a b) (curvature D E a b)
 
 end InfoGeometry.Geometry.AssociativeGaugeConnection

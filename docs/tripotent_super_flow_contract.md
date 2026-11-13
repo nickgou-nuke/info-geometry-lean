@@ -278,10 +278,11 @@ after all modules compiled successfully.
 The [root build on the verified source head](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43186269516)
 exited 1 before Lean elaboration because the declared path package
 `external_refs/homotopy-hypothesis-lean4` is absent. The local checkout also
-lacks `external_refs/atlas-lean`. Local root preflight was launched for
-`InfoGeometry.Core.TripotentAdjoint` but remains waiting on a previously held
-shared build lock. No running process was stopped and no lock or cache was
-deleted. Root-package acceptance and a successful pre-push gate are not
+lacks `external_refs/atlas-lean`. At the verification checkpoint recorded
+above, a local root preflight for `InfoGeometry.Core.TripotentAdjoint` had
+been launched and was waiting on a previously held shared build lock. Its
+subsequent local outcome is not established by the recorded evidence.
+No running process was stopped and no lock or cache was deleted. Root-package acceptance and a successful pre-push gate are not
 claimed.
 
 Other observed failures are outside this change: the repository-wide style
@@ -294,5 +295,6 @@ also remains red. The relevant existing files and configuration are unchanged
 from the PR base. The successful 57-module closure does not certify those
 other surfaces or the whole repository.
 
-The PR remains a draft with these boundaries recorded. Existing quality gates
-and dependency pins are unchanged.
+The pull request's current review status is recorded in GitHub. The scoped
+verification above does not certify the root package or the publication gate.
+Existing quality gates and dependency pins are unchanged.

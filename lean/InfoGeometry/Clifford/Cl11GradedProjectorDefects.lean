@@ -176,6 +176,46 @@ theorem tripleProjection_scaling_defect :
   rw [smul_mul_assoc, mul_smul_comm, smul_smul, tripleWord_square, smul_smul]
   norm_num [smul_smul]
 
+/-- The explicit carrier of the third tensor stage, with the seed factor retained. -/
+private abbrev Binary3 := ((Fin 1 × Fin 2) × Fin 2) × Fin 2
+
+/-- Pointwise expansion of the actual first JW generator, before matrix unfolding. -/
+private theorem jwMajoranaPlus_three_zero_apply (r c : Binary3) :
+    jwMajoranaPlus 3 0 r c =
+      (((1 : Matrix (Fin 1) (Fin 1) ℝ) r.1.1.1 c.1.1.1 *
+          wittCreationBase r.1.1.2 c.1.1.2) *
+        (1 : Matrix (Fin 2) (Fin 2) ℝ) r.1.2 c.1.2) *
+          (1 : Matrix (Fin 2) (Fin 2) ℝ) r.2 c.2 +
+      (((1 : Matrix (Fin 1) (Fin 1) ℝ) r.1.1.1 c.1.1.1 *
+          wittAnnihilationBase r.1.1.2 c.1.1.2) *
+        (1 : Matrix (Fin 2) (Fin 2) ℝ) r.1.2 c.1.2) *
+          (1 : Matrix (Fin 2) (Fin 2) ℝ) r.2 c.2 := by
+  rfl
+
+/-- Pointwise expansion retains the chirality factor before the second site. -/
+private theorem jwMajoranaPlus_three_one_apply (r c : Binary3) :
+    jwMajoranaPlus 3 1 r c =
+      (((1 : Matrix (Fin 1) (Fin 1) ℝ) r.1.1.1 c.1.1.1 *
+          gamma_chiral_base r.1.1.2 c.1.1.2) *
+        wittCreationBase r.1.2 c.1.2) *
+          (1 : Matrix (Fin 2) (Fin 2) ℝ) r.2 c.2 +
+      (((1 : Matrix (Fin 1) (Fin 1) ℝ) r.1.1.1 c.1.1.1 *
+          gamma_chiral_base r.1.1.2 c.1.1.2) *
+        wittAnnihilationBase r.1.2 c.1.2) *
+          (1 : Matrix (Fin 2) (Fin 2) ℝ) r.2 c.2 := by
+  rfl
+
+/-- Pointwise expansion retains both preceding chirality factors at the third site. -/
+private theorem jwMajoranaPlus_three_two_apply (r c : Binary3) :
+    jwMajoranaPlus 3 2 r c =
+      (((1 : Matrix (Fin 1) (Fin 1) ℝ) r.1.1.1 c.1.1.1 *
+          gamma_chiral_base r.1.1.2 c.1.1.2) *
+        gamma_chiral_base r.1.2 c.1.2) * wittCreationBase r.2 c.2 +
+      (((1 : Matrix (Fin 1) (Fin 1) ℝ) r.1.1.1 c.1.1.1 *
+          gamma_chiral_base r.1.1.2 c.1.1.2) *
+        gamma_chiral_base r.1.2 c.1.2) * wittAnnihilationBase r.2 c.2 := by
+  rfl
+
 /-- The all-zero coordinate of the existing tensor-stage spinor module. -/
 def vacuumIndex : Idx 3 := ((((0 : Fin 1), 0), 0), 0)
 
@@ -190,12 +230,11 @@ theorem represented_pairWord_vacuum :
         (((Fin 1 × Fin 2) × Fin 2) × Fin 2) ℝ)
       ((((0 : Fin 1), 0), 0), 0) ((((0 : Fin 1), 0), 0), 0) = 1
   simp only [Matrix.mul_apply, Matrix.add_apply]
-  norm_num [e, vacuumIndex, jwMajoranaPlus, jwCreation, jwAnnihilation, jwStringWithBase,
-    globalChirality, kronPow, Idx, gamma_chiral_base, gamma_0_base, gamma_1_base,
+  simp only [e, jwMajoranaPlus_three_zero_apply,
+    jwMajoranaPlus_three_one_apply, jwMajoranaPlus_three_two_apply]
+  norm_num [gamma_chiral_base, gamma_0_base, gamma_1_base,
     wittCreationBase, wittAnnihilationBase, Cl11Matrix.J1, Cl11Matrix.Eminus,
-    Matrix.mul_apply, Matrix.kronecker_apply, Fintype.sum_prod_type, Fin.sum_univ_succ] <;>
-    norm_num [Matrix.add_apply, Pi.add_apply, Matrix.kroneckerMap, Matrix.of_apply,
-      Matrix.one_apply]
+    Matrix.mul_apply, Matrix.one_apply, Fintype.sum_prod_type, Fin.sum_univ_succ]
 
 theorem represented_tripleWord_vacuum :
     jwCliffordRepresentation 3 tripleWord vacuumIndex vacuumIndex = 1 := by
@@ -209,12 +248,11 @@ theorem represented_tripleWord_vacuum :
         (((Fin 1 × Fin 2) × Fin 2) × Fin 2) ℝ)
       ((((0 : Fin 1), 0), 0), 0) ((((0 : Fin 1), 0), 0), 0) = 1
   simp only [Matrix.mul_apply, Matrix.add_apply]
-  norm_num [e, vacuumIndex, jwMajoranaPlus, jwCreation, jwAnnihilation, jwStringWithBase,
-    globalChirality, kronPow, Idx, gamma_chiral_base, gamma_0_base, gamma_1_base,
+  simp only [e, jwMajoranaPlus_three_zero_apply,
+    jwMajoranaPlus_three_one_apply, jwMajoranaPlus_three_two_apply]
+  norm_num [gamma_chiral_base, gamma_0_base, gamma_1_base,
     wittCreationBase, wittAnnihilationBase, Cl11Matrix.J1, Cl11Matrix.Eminus,
-    Matrix.mul_apply, Matrix.kronecker_apply, Fintype.sum_prod_type, Fin.sum_univ_succ] <;>
-    norm_num [Matrix.add_apply, Pi.add_apply, Matrix.kroneckerMap, Matrix.of_apply,
-      Matrix.one_apply]
+    Matrix.mul_apply, Matrix.one_apply, Fintype.sum_prod_type, Fin.sum_univ_succ]
 
 theorem represented_tripleMiddleWord_vacuum :
     jwCliffordRepresentation 3 tripleMiddleWord vacuumIndex vacuumIndex = 0 := by
@@ -228,12 +266,11 @@ theorem represented_tripleMiddleWord_vacuum :
         (((Fin 1 × Fin 2) × Fin 2) × Fin 2) ℝ)
       ((((0 : Fin 1), 0), 0), 0) ((((0 : Fin 1), 0), 0), 0) = 0
   simp only [Matrix.mul_apply, Matrix.add_apply]
-  norm_num [e, vacuumIndex, jwMajoranaPlus, jwCreation, jwAnnihilation, jwStringWithBase,
-    globalChirality, kronPow, Idx, gamma_chiral_base, gamma_0_base, gamma_1_base,
+  simp only [e, jwMajoranaPlus_three_zero_apply,
+    jwMajoranaPlus_three_one_apply, jwMajoranaPlus_three_two_apply]
+  norm_num [gamma_chiral_base, gamma_0_base, gamma_1_base,
     wittCreationBase, wittAnnihilationBase, Cl11Matrix.J1, Cl11Matrix.Eminus,
-    Matrix.mul_apply, Matrix.kronecker_apply, Fintype.sum_prod_type, Fin.sum_univ_succ] <;>
-    norm_num [Matrix.add_apply, Pi.add_apply, Matrix.kroneckerMap, Matrix.of_apply,
-      Matrix.one_apply]
+    Matrix.mul_apply, Matrix.one_apply, Fintype.sum_prod_type, Fin.sum_univ_succ]
 
 /-- The failed extension of `q² = 2q` has an exact nonzero matrix-entry defect. -/
 theorem represented_tripleWord_scaling_defect :

@@ -82,9 +82,12 @@ private theorem positive_quadratic (i : Fin 3) :
 
 private theorem positive_polar (i j : Fin 3) (hij : i ≠ j) :
     QuadraticMap.polar Q33 (Pi.single (Sum.inl i) 1) (Pi.single (Sum.inl j) 1) = 0 := by
-  fin_cases i <;> fin_cases j <;>
-    norm_num [Q33, QuadraticMap.polar, QuadraticMap.weightedSumSquares_apply,
-      Fintype.sum_sum_type, Fin.sum_univ_succ, Pi.single_apply, jwCliffordWeight] at hij ⊢
+  fin_cases i <;> fin_cases j
+  all_goals
+    first
+    | exact (hij rfl).elim
+    | norm_num [Q33, QuadraticMap.polar, QuadraticMap.weightedSumSquares_apply,
+        Fintype.sum_sum_type, Fin.sum_univ_succ, Pi.single_apply, jwCliffordWeight]
 
 theorem positive_square (i : Fin 3) : positive i * positive i = 1 := by
   rw [positive, CliffordAlgebra.ι_sq_scalar, positive_quadratic, map_one]
@@ -174,11 +177,17 @@ theorem tripleProjection_scaling_defect :
   norm_num [smul_smul]
 
 /-- The all-zero coordinate of the existing tensor-stage spinor module. -/
-def vacuumIndex : Idx 3 := (((0, 0), 0), 0)
+def vacuumIndex : Idx 3 := ((((0 : Fin 1), 0), 0), 0)
 
 theorem represented_pairWord_vacuum :
     jwCliffordRepresentation 3 pairWord vacuumIndex vacuumIndex = 1 := by
   simp only [pairWord, map_mul, map_add, map_one, represented_positive]
+  change
+    ((1 + jwMajoranaPlus 3 0) * (1 + jwMajoranaPlus 3 1) :
+      Matrix (((Fin 1 × Fin 2) × Fin 2) × Fin 2)
+        (((Fin 1 × Fin 2) × Fin 2) × Fin 2) ℝ)
+      ((((0 : Fin 1), 0), 0), 0) ((((0 : Fin 1), 0), 0), 0) = 1
+  simp only [Matrix.mul_apply, Matrix.add_apply]
   norm_num [vacuumIndex, jwMajoranaPlus, jwCreation, jwAnnihilation, jwStringWithBase,
     globalChirality, kronPow, Idx, gamma_chiral_base, gamma_0_base, gamma_1_base,
     wittCreationBase, wittAnnihilationBase, Cl11Matrix.J1, Cl11Matrix.Eminus,
@@ -187,6 +196,13 @@ theorem represented_pairWord_vacuum :
 theorem represented_tripleWord_vacuum :
     jwCliffordRepresentation 3 tripleWord vacuumIndex vacuumIndex = 1 := by
   simp only [tripleWord, map_mul, map_add, map_one, represented_positive]
+  change
+    ((1 + jwMajoranaPlus 3 0) * (1 + jwMajoranaPlus 3 1) *
+        (1 + jwMajoranaPlus 3 2) :
+      Matrix (((Fin 1 × Fin 2) × Fin 2) × Fin 2)
+        (((Fin 1 × Fin 2) × Fin 2) × Fin 2) ℝ)
+      ((((0 : Fin 1), 0), 0), 0) ((((0 : Fin 1), 0), 0), 0) = 1
+  simp only [Matrix.mul_apply, Matrix.add_apply]
   norm_num [vacuumIndex, jwMajoranaPlus, jwCreation, jwAnnihilation, jwStringWithBase,
     globalChirality, kronPow, Idx, gamma_chiral_base, gamma_0_base, gamma_1_base,
     wittCreationBase, wittAnnihilationBase, Cl11Matrix.J1, Cl11Matrix.Eminus,
@@ -195,6 +211,13 @@ theorem represented_tripleWord_vacuum :
 theorem represented_tripleMiddleWord_vacuum :
     jwCliffordRepresentation 3 tripleMiddleWord vacuumIndex vacuumIndex = 0 := by
   simp only [tripleMiddleWord, map_mul, map_add, map_one, represented_positive]
+  change
+    ((1 + jwMajoranaPlus 3 0) * jwMajoranaPlus 3 1 *
+        (1 + jwMajoranaPlus 3 2) :
+      Matrix (((Fin 1 × Fin 2) × Fin 2) × Fin 2)
+        (((Fin 1 × Fin 2) × Fin 2) × Fin 2) ℝ)
+      ((((0 : Fin 1), 0), 0), 0) ((((0 : Fin 1), 0), 0), 0) = 0
+  simp only [Matrix.mul_apply, Matrix.add_apply]
   norm_num [vacuumIndex, jwMajoranaPlus, jwCreation, jwAnnihilation, jwStringWithBase,
     globalChirality, kronPow, Idx, gamma_chiral_base, gamma_0_base, gamma_1_base,
     wittCreationBase, wittAnnihilationBase, Cl11Matrix.J1, Cl11Matrix.Eminus,

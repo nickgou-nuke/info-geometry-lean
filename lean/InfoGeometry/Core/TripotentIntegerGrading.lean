@@ -105,7 +105,7 @@ def adGradeDecomposeAlgEquiv {S : A} (hS : S * S * S = S) :
 def integerGradeParity (k : ℤ) : Bool := decide (k % 2 = 1)
 
 theorem integerGradeParity_add (i j : ℤ) :
-    integerGradeParity (i + j) = integerGradeParity i ^^ integerGradeParity j := by
+    integerGradeParity (i + j) = (integerGradeParity i ^^ integerGradeParity j) := by
   have hi : i % 2 = 0 ∨ i % 2 = 1 := by omega
   have hj : j % 2 = 0 ∨ j % 2 = 1 := by omega
   rcases hi with hi | hi <;> rcases hj with hj | hj <;>

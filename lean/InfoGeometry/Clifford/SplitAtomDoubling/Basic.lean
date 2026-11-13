@@ -3,20 +3,10 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-import Mathlib.Data.Matrix.Basic
-import Mathlib.Data.Matrix.Mul
 import Mathlib.LinearAlgebra.Matrix.Notation
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Tactic.FinCases
+import Mathlib.Tactic
 
-/-!
-# Noncommutative block doubling
-
-The original ring-valued definitions and proofs of `SplitAtomDoubling`, isolated
-from the real Clifford classification imports. The old owner imports this file
-and preserves every declaration name. The convention is
-`negative = !![0, 1; -1, 0]`, opposite to the intake's negative-square generator.
--/
+/-! Basic sign-twisted block identities over an arbitrary noncommutative ring. -/
 
 namespace InfoGeometry.Clifford.SplitAtomDoubling
 

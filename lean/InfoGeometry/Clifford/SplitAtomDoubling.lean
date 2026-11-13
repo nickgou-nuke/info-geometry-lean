@@ -3,25 +3,12 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-import InfoGeometry.Clifford.Cl11KleinTwist
-import InfoGeometry.Clifford.Cl11BrauerWeylGenerators
+import InfoGeometry.Clifford.SplitAtomDoubling.Basic
 import InfoGeometry.Clifford.Cl11Matrix
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.BottPeriodicity
 
-/-!
-# Sign-twisted matrix doubling above the existing graded Clifford tower
-
-`BottPeriodicity.splitBottStep` remains the owner of the graded tensor
-factorization.  Here we prove the concrete block identities needed to
-pass to an ordinary matrix model: old odd generators acquire opposite
-diagonal signs.  The twisted map is additive and is not in general multiplicative. The
-repeated diagonal map is an actual ring homomorphism.
-
-No octonion multiplication or exceptional Lie algebra is identified with
-these associative matrices, and no unproved all-stage Clifford equivalence
-is introduced.
--/
+/-! Split block doubling and the existing real matrix-model dimensions. -/
 
 namespace InfoGeometry.Clifford.SplitAtomDoubling
 

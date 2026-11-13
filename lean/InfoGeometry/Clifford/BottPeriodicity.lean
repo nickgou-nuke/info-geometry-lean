@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.ClNN
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
@@ -10,13 +15,14 @@ open scoped TensorProduct
 Search-facing split Bott periodicity façade for the repo's recursive
 `Cl(n,n)` tower.
 
-The theorem-bearing owner is `InfoGeometry.Clifford.Tower.clsplit_succ_equiv`:
+The theorem-bearing owner is `InfoGeometry.CliffordTower.clsplit_succ_equiv`:
 
 `Cl(n+1,n+1) ≃ Cl(1,1) ᵍ⊗ Cl(n,n)`.
 
-This file gives that owner theorem the expected Bott-periodicity names.  It
-does not assert the full real eightfold classification, nor the unproved matrix
-classification `Cl(n,n) ≃ M(2^n, ℝ)` for all `n`.
+This file gives that owner theorem the expected Bott-periodicity names.
+The all-stage matrix classification `Cl(n,n) ≃ M(2^n, ℝ)` is proved in the
+separate owner `Cl11SplitTowerMatrixEquiv`. Neither owner asserts the full
+real eightfold classification.
 -/
 
 namespace InfoGeometry.Clifford.BottPeriodicity

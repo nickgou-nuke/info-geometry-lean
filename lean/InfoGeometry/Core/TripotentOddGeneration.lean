@@ -50,7 +50,9 @@ private theorem span_anticommutators_sup_eq_mul (U V : Submodule ℝ A)
     intro x hx y hy
     have hanti : x * y + y * x ∈ Submodule.span ℝ
         {z : A | ∃ x ∈ U ⊔ V, ∃ y ∈ U ⊔ V, z = x * y + y * x} :=
-      Submodule.subset_span ⟨x, le_sup_left hx, y, le_sup_right hy, rfl⟩
+      Submodule.subset_span
+        ⟨x, (le_sup_left : U ≤ U ⊔ V) hx,
+          y, (le_sup_right : V ≤ U ⊔ V) hy, rfl⟩
     simpa only [hVU y hy x hx, add_zero] using hanti
 
 /-- Products of two joint corner ranges vanish when the touching Peirce
@@ -103,11 +105,11 @@ theorem adGrade_one_eq_sup_jointPeirceRanges {S : A} (hS : S * S * S = S) :
   · apply sup_le
     · rintro x ⟨y, rfl⟩
       rw [mem_adGrade_iff]
-      simpa [peirceScalar] using
+      simpa [peirceScalar, adOp] using
         jointPeirceProjector_adjoint_weight hS .pos .zero y
     · rintro x ⟨y, rfl⟩
       rw [mem_adGrade_iff]
-      simpa [peirceScalar] using
+      simpa [peirceScalar, adOp] using
         jointPeirceProjector_adjoint_weight hS .zero .neg y
 
 /-- Degree `-1` is the sum of the two corners ordered from the negative
@@ -131,11 +133,11 @@ theorem adGrade_neg_one_eq_sup_jointPeirceRanges {S : A} (hS : S * S * S = S) :
   · apply sup_le
     · rintro x ⟨y, rfl⟩
       rw [mem_adGrade_iff]
-      simpa [peirceScalar] using
+      simpa [peirceScalar, adOp] using
         jointPeirceProjector_adjoint_weight hS .neg .zero y
     · rintro x ⟨y, rfl⟩
       rw [mem_adGrade_iff]
-      simpa [peirceScalar] using
+      simpa [peirceScalar, adOp] using
         jointPeirceProjector_adjoint_weight hS .zero .pos y
 
 /-- The span of positive odd anticommutators is exactly the product of

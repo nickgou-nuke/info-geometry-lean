@@ -90,6 +90,7 @@ theorem adGrade_eq_bot_of_not_mem {S : A} (hS : S * S * S = S)
   rintro ⟨i, hi⟩
   apply hk
   refine ⟨i, ?_⟩
+  change (fiveGradeValue i : ℝ) = (k : ℝ) at hi
   exact_mod_cast hi
 
 /-- In particular, the integer grading has support in the interval `[-2,2]`. -/
@@ -106,6 +107,7 @@ theorem opposite_degree_product_commute {S X Y : A} {k : ℤ}
     Commute S (X * Y) := by
   have h := mul_mem_adGrade_add hX hY
   rw [add_neg_cancel, mem_adGrade_iff] at h
+  change S * (X * Y) = (X * Y) * S
   simpa only [Int.cast_zero, zero_smul, adOp, sub_eq_zero] using h
 
 end InfoGeometry.Core.TripotentAdjoint

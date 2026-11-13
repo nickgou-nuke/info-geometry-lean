@@ -133,7 +133,7 @@ jobs:
         run: |
           set -euo pipefail
           cd project
-          bash scripts/quality/post_build_gate.sh 2>&1 | tee ../gate-evidence/full-root-gate.log
+          bash scripts/quality/post_build_gate.sh --full 2>&1 | tee ../gate-evidence/full-root-gate.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:

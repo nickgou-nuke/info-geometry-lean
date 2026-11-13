@@ -26,15 +26,15 @@ variable {A : Type*} [Ring A] [Algebra ℝ A]
 theorem mem_adGrade_two_iff_corner {S N : A} (hS : S * S * S = S) :
     N ∈ adGrade S 2 ↔ projPos S * (N * projNeg S) = N := by
   change N ∈ adGrade S (fiveGradeValue .posTwo) ↔ _
-  rw [adGrade_fiveGradeValue hS, mem_fiveGradeRange_iff_projector_fixed hS]
-  rfl
+  rw [adGrade_fiveGradeValue hS]
+  exact mem_fiveGradeRange_iff_projector_fixed hS .posTwo
 
 /-- Negative extreme membership is exactly the reversed corner. -/
 theorem mem_adGrade_neg_two_iff_corner {S N : A} (hS : S * S * S = S) :
     N ∈ adGrade S (-2) ↔ projNeg S * (N * projPos S) = N := by
   change N ∈ adGrade S (fiveGradeValue .negTwo) ↔ _
-  rw [adGrade_fiveGradeValue hS, mem_fiveGradeRange_iff_projector_fixed hS]
-  rfl
+  rw [adGrade_fiveGradeValue hS]
+  exact mem_fiveGradeRange_iff_projector_fixed hS .negTwo
 
 /-- A corner annihilates every right projector with a different input label. -/
 theorem corner_mul_projector_eq_zero {S N : A} (hS : S * S * S = S)
@@ -121,7 +121,12 @@ theorem middle_range_lt_sup_output_range {S N : Module.End ℝ V}
   ext v
   have houtput : N v ∈ LinearMap.range (peirceProjector S a) :=
     ⟨N (peirceProjector S b v), congrArg (fun T : Module.End ℝ V => T v) hN⟩
-  have hmiddle : N v ∈ LinearMap.range (projZero S) := hback (le_sup_right houtput)
+  have hsum : N v ∈ LinearMap.range (projZero S) ⊔
+      LinearMap.range (peirceProjector S a) :=
+    (show LinearMap.range (peirceProjector S a) ≤
+      LinearMap.range (projZero S) ⊔ LinearMap.range (peirceProjector S a) from
+        le_sup_right) houtput
+  have hmiddle : N v ∈ LinearMap.range (projZero S) := hback hsum
   exact (Submodule.disjoint_def.mp (disjoint_peirce_projector_ranges hS ha.symm))
     (N v) hmiddle houtput
 
@@ -166,29 +171,33 @@ theorem range_zero_sup_range_neg_le_ker {S N : Module.End ℝ V}
     (hS : S * S * S = S) (hN : N ∈ adGrade S (-2)) :
     LinearMap.range (projZero S) ⊔ LinearMap.range (projNeg S) ≤ LinearMap.ker N := by
   have hc := (mem_adGrade_neg_two_iff_corner hS).mp hN
-  exact sup_le (projector_range_le_corner_ker hS hc (by decide))
-    (projector_range_le_corner_ker hS hc (by decide))
+  exact sup_le
+    (projector_range_le_corner_ker hS (a := .neg) (b := .pos) (c := .zero) hc (by decide))
+    (projector_range_le_corner_ker hS (a := .neg) (b := .pos) (c := .neg) hc (by decide))
 
 /-- The positive extreme kernel contains the middle and positive ranges. -/
 theorem range_zero_sup_range_pos_le_ker {S N : Module.End ℝ V}
     (hS : S * S * S = S) (hN : N ∈ adGrade S 2) :
     LinearMap.range (projZero S) ⊔ LinearMap.range (projPos S) ≤ LinearMap.ker N := by
   have hc := (mem_adGrade_two_iff_corner hS).mp hN
-  exact sup_le (projector_range_le_corner_ker hS hc (by decide))
-    (projector_range_le_corner_ker hS hc (by decide))
+  exact sup_le
+    (projector_range_le_corner_ker hS (a := .pos) (b := .neg) (c := .zero) hc (by decide))
+    (projector_range_le_corner_ker hS (a := .pos) (b := .neg) (c := .pos) hc (by decide))
 
 /-- A single nonzero negative extreme cannot recover the middle range as its kernel. -/
 theorem range_zero_lt_ker_neg_two {S N : Module.End ℝ V}
     (hS : S * S * S = S) (hN : N ∈ adGrade S (-2)) (hne : N ≠ 0) :
     LinearMap.range (projZero S) < LinearMap.ker N :=
-  middle_range_lt_corner_ker hS ((mem_adGrade_neg_two_iff_corner hS).mp hN)
+  middle_range_lt_corner_ker hS (a := .neg) (b := .pos)
+    ((mem_adGrade_neg_two_iff_corner hS).mp hN)
     (by decide) (by decide) (by decide) hne
 
 /-- The same strict obstruction holds for a nonzero positive extreme. -/
 theorem range_zero_lt_ker_two {S N : Module.End ℝ V}
     (hS : S * S * S = S) (hN : N ∈ adGrade S 2) (hne : N ≠ 0) :
     LinearMap.range (projZero S) < LinearMap.ker N :=
-  middle_range_lt_corner_ker hS ((mem_adGrade_two_iff_corner hS).mp hN)
+  middle_range_lt_corner_ker hS (a := .pos) (b := .neg)
+    ((mem_adGrade_two_iff_corner hS).mp hN)
     (by decide) (by decide) (by decide) hne
 
 /-- The full strict negative-kernel chain; the two summand ranges are
@@ -198,7 +207,8 @@ theorem negative_extreme_kernel_chain {S N : Module.End ℝ V}
     (LinearMap.range (projZero S) <
       LinearMap.range (projZero S) ⊔ LinearMap.range (projNeg S)) ∧
     (LinearMap.range (projZero S) ⊔ LinearMap.range (projNeg S) ≤ LinearMap.ker N) :=
-  ⟨middle_range_lt_sup_output_range hS ((mem_adGrade_neg_two_iff_corner hS).mp hN)
+  ⟨middle_range_lt_sup_output_range hS (a := .neg) (b := .pos)
+      ((mem_adGrade_neg_two_iff_corner hS).mp hN)
       (by decide) hne,
     range_zero_sup_range_neg_le_ker hS hN⟩
 
@@ -208,7 +218,8 @@ theorem positive_extreme_kernel_chain {S N : Module.End ℝ V}
     (LinearMap.range (projZero S) <
       LinearMap.range (projZero S) ⊔ LinearMap.range (projPos S)) ∧
     (LinearMap.range (projZero S) ⊔ LinearMap.range (projPos S) ≤ LinearMap.ker N) :=
-  ⟨middle_range_lt_sup_output_range hS ((mem_adGrade_two_iff_corner hS).mp hN)
+  ⟨middle_range_lt_sup_output_range hS (a := .pos) (b := .neg)
+      ((mem_adGrade_two_iff_corner hS).mp hN)
       (by decide) hne,
     range_zero_sup_range_pos_le_ker hS hN⟩
 

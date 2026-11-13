@@ -62,7 +62,8 @@ theorem fiveGradeProjector_eq_aeval_lagrange {S : A} (hS : S * S * S = S)
     · change (Lagrange.basis Finset.univ
         (fun j : FiveGrade => (fiveGradeValue j : ℝ)) k).eval
           (fiveGradeValue j : ℝ) • fiveGradeProjector S j x = _
-      rw [Lagrange.eval_basis_of_ne hkj (Finset.mem_univ j), zero_smul]
+      rw [Lagrange.eval_basis_of_ne
+        (v := fun j : FiveGrade => (fiveGradeValue j : ℝ)) hkj (Finset.mem_univ j), zero_smul]
       exact (fiveGradeProjector_apply_range_eq_zero_of_ne hS hkj
         ⟨fiveGradeProjector S j x, ⟨x, rfl⟩⟩).symm
   apply LinearMap.ext
@@ -101,7 +102,8 @@ theorem fiveGradeRange_comap_eq_restrict_eigenspace {S : A}
     (hS : S * S * S = S) (q : Submodule ℝ A)
     (hq : q ≤ q.comap (LieAlgebra.ad ℝ A S)) (k : FiveGrade) :
     (fiveGradeRange S k).comap q.subtype =
-      ((LieAlgebra.ad ℝ A S).restrict (fun x hx => hq hx)).eigenspace
+      Module.End.eigenspace
+        ((LieAlgebra.ad ℝ A S).restrict (p := q) (q := q) (fun x hx => hq hx))
         (fiveGradeValue k : ℝ) := by
   rw [fiveGradeRange_eq_eigenspace hS]
   exact ((LieAlgebra.ad ℝ A S).genEigenspace_restrict q 1
@@ -114,7 +116,7 @@ theorem fiveGradeRange_comap_isInternal {S : A} (hS : S * S * S = S)
     DirectSum.IsInternal
       (fun k : FiveGrade => (fiveGradeRange S k).comap q.subtype) := by
   let Dq : Module.End ℝ q :=
-    (LieAlgebra.ad ℝ A S).restrict (fun x hx => hq hx)
+    (LieAlgebra.ad ℝ A S).restrict (p := q) (q := q) (fun x hx => hq hx)
   have hgrades :
       (fun k : FiveGrade => (fiveGradeRange S k).comap q.subtype) =
         (fun k : FiveGrade => Dq.eigenspace (fiveGradeValue k : ℝ)) := by

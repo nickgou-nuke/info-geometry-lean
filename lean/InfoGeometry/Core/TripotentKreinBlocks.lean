@@ -17,8 +17,8 @@ the corner obtained by exchanging the two labels and reversing both signs.
 The final readbacks are identities for actual elements in the existing integer
 grades. A Krein-skew element of degree zero is `C - sharp C + M`, where `C`
 and `M` are its existing positive and middle diagonal projections. A Krein-skew
-element of degree one is `B - sharp B`, where `B` is its existing positive-to-
-middle corner. These identities neither assert nonzero components nor classify
+element of degree one is `B - sharp B`, where `B` is its existing `(+, 0)`
+corner. These identities neither assert nonzero components nor classify
 the middle corner as a particular gauge algebra.
 -/
 

@@ -102,7 +102,7 @@ spectrum, or bounded `CFC.log` of a noninvertible density, cannot replace this
 step. `commuting_unit_preserves_adGrade` supplies the subsequent algebraic
 implication only after actual commutation has been established.
 
-## Validation record at draft preservation
+## Validation history and acceptance
 
 - Independent source-semantic review accepted all ten candidates at their
   stated hypotheses; this is not kernel certification.
@@ -118,9 +118,27 @@ implication only after actual commutation has been established.
   audits every declaration owned by the ten selected modules. Only the
   foundational axioms `propext`, `Classical.choice`, and `Quot.sound` are
   permitted. No root toolchain or dependency pin is changed.
-- Until that workflow and the recorded source checks finish, this is an
-  unverified draft. A focused result is not a whole-repository build certificate.
-  Required root checks and unrelated blockers must be reported separately.
+- The first remote run, [43404383399](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43404383399),
+  tested the tree of preservation commit
+  `9ba1c218912ab8112d45aa03934abd4d72bc5d45` through PR merge
+  `e160677928b34e11d5eb18b2278a5260e57adc4a`. It processed a closure of
+  58 repository modules: 51 compiled, three failed, and four were blocked by
+  those failures. The fail-closed checker did not perform a declaration audit.
+- On that first run, the actual nonempty staged proof gate passed. Its changed
+  Lean-source audit covered all ten owners and found zero proof gaps; the
+  semantic-content, tracked-scope and quarantine checks also passed.
+  The incremental root build stopped at the missing dependency
+  `external_refs/homotopy-hypothesis-lean4`.
+- The first step labelled as a full root gate omitted `--full` and therefore
+  invoked the script's default incremental mode. It failed on shallow-history
+  resolution of `HEAD~1`; it was not evidence of a full-mode attempt. The
+  repaired workflow explicitly passes `--full`.
+- Compiler repair commits preserve the theorem statements and hypotheses.
+  Subsequent exact-source compilation, declaration-axiom results and root-gate
+  outcomes are recorded separately in [PR #352](https://github.com/nickgou-nuke/info-geometry-lean/pull/352)
+  and its immutable workflow runs. A focused result is not a whole-repository
+  build certificate. Required root checks and unrelated blockers must be
+  reported separately.
 
 ## Explicit interpretation limits
 

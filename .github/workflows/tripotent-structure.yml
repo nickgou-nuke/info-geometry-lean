@@ -93,6 +93,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install --yes ripgrep
+          rg --version
           python3 -m venv qa-env
           qa-env/bin/pip install jsonschema==4.23.0
           echo "$GITHUB_WORKSPACE/qa-env/bin" >> "$GITHUB_PATH"

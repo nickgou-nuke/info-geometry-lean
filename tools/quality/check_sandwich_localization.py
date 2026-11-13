@@ -20,6 +20,7 @@ TARGETS = (
     "InfoGeometry.Algebra.SandwichLocalization",
     "InfoGeometry.Algebra.SandwichLocalizationActions",
     "InfoGeometry.Algebra.SandwichLocalizationStar",
+    "InfoGeometry.Algebra.SandwichBalancedTensor",
     "InfoGeometry.Algebra.OneSidedLocalizationBoundary",
     "InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley",
     "InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge",

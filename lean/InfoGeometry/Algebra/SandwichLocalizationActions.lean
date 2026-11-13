@@ -62,7 +62,8 @@ noncomputable def sandwich (s : B) (a b : ℕ) (u v : B)
     change repr s (k + c + a) (u * (s ^ c * x * s ^ d) * v) (l + d + b) =
       repr s (k + a) (u * x * v) (l + b)
     rw [sandwich_reorder s u v x hu hv]
-    convert repr_bond s (k + a) (l + b) c d (u * x * v) using 1 <;> omega)
+    simpa only [Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using
+      repr_bond s (k + a) (l + b) c d (u * x * v))
 
 @[simp] theorem sandwich_repr (s : B) (a b : ℕ) (u v : B)
     (hu : Commute s u) (hv : Commute s v) (k l : ℕ) (x : B) :
@@ -76,7 +77,11 @@ theorem sandwich_comp (s : B) (a b c d : ℕ) (u v w z : B)
       sandwich s (c + a) (d + b) (u * w) (z * v) (hu.mul_right hw) (hz.mul_right hv) := by
   ext q
   obtain ⟨k, x, l, rfl⟩ := exists_repr s q
-  simp only [AddMonoidHom.comp_apply, sandwich_repr, Nat.add_assoc, mul_assoc]
+  change sandwich s a b u v hu hv
+      (sandwich s c d w z hw hz (repr s k x l)) =
+    sandwich s (c + a) (d + b) (u * w) (z * v)
+      (hu.mul_right hw) (hz.mul_right hv) (repr s k x l)
+  simp only [sandwich_repr, Nat.add_assoc, mul_assoc]
 
 private noncomputable def leftStage (s : B) (a : ℕ) :
     Centralizer s →+ AddMonoid.End (Space s) where
@@ -85,12 +90,14 @@ private noncomputable def leftStage (s : B) (a : ℕ) :
     ext q
     obtain ⟨k, x, l, rfl⟩ := exists_repr s q
     simp only [sandwich_repr, Subring.coe_zero, zero_mul, mul_one, repr_zero,
-      AddMonoidHom.zero_apply]
+      AddMonoid.End.zero_apply]
   map_add' u v := by
     ext q
     obtain ⟨k, x, l, rfl⟩ := exists_repr s q
-    simp only [sandwich_repr, Subring.coe_add, add_mul, mul_one, repr_add_same,
-      AddMonoidHom.add_apply]
+    change repr s (k + a) (((u : B) + (v : B)) * x * 1) (l + 0) =
+      repr s (k + a) ((u : B) * x * 1) (l + 0) +
+        repr s (k + a) ((v : B) * x * 1) (l + 0)
+    simp only [add_mul, mul_one, repr_add_same]
 
 private theorem leftStage_bond (s : B) (a n : ℕ) (u : Centralizer s) :
     leftStage s (a + n) (denominator s ^ n * u) = leftStage s a u := by
@@ -111,9 +118,12 @@ private theorem leftActionAdd_repr (s : B) (a : ℕ) (u : Centralizer s) :
 
 /-- The localized left action is a constructed ring homomorphism to additive endomorphisms. -/
 noncomputable def leftAction (s : B) : Scalars s →+* AddMonoid.End (Space s) where
-  __ := leftActionAdd s
+  toFun q := leftActionAdd s q
+  map_zero' := (leftActionAdd s).map_zero
+  map_add' q r := (leftActionAdd s).map_add q r
   map_one' := by
-    have hone : (1 : Scalars s) = CentralPowerLocalization.repr (denominator s) 0 1 := by simp
+    have hone : (1 : Scalars s) = CentralPowerLocalization.repr (denominator s) 0 1 := by
+      simp only [CentralPowerLocalization.repr_zero, map_one]
     rw [hone, leftActionAdd_repr]
     ext q
     obtain ⟨k, x, l, rfl⟩ := exists_repr s q
@@ -148,12 +158,14 @@ private noncomputable def rightStage (s : B) (a : ℕ) :
   map_zero' := by
     ext q
     obtain ⟨k, x, l, rfl⟩ := exists_repr s q
-    simp only [sandwich_repr, Subring.coe_zero, mul_zero, repr_zero, AddMonoidHom.zero_apply]
+    simp only [sandwich_repr, Subring.coe_zero, mul_zero, repr_zero, AddMonoid.End.zero_apply]
   map_add' u v := by
     ext q
     obtain ⟨k, x, l, rfl⟩ := exists_repr s q
-    simp only [sandwich_repr, Subring.coe_add, mul_add, repr_add_same,
-      AddMonoidHom.add_apply]
+    change repr s (k + 0) (1 * x * ((u : B) + (v : B))) (l + a) =
+      repr s (k + 0) (1 * x * (u : B)) (l + a) +
+        repr s (k + 0) (1 * x * (v : B)) (l + a)
+    simp only [mul_add, repr_add_same]
 
 private theorem rightStage_bond (s : B) (a n : ℕ) (u : Centralizer s) :
     rightStage s (a + n) (denominator s ^ n * u) = rightStage s a u := by
@@ -180,7 +192,8 @@ noncomputable def rightAction (s : B) : (Scalars s)ᵐᵒᵖ →+* AddMonoid.End
   map_add' q r := (rightActionAdd s).map_add q.unop r.unop
   map_one' := by
     change rightActionAdd s 1 = 1
-    have hone : (1 : Scalars s) = CentralPowerLocalization.repr (denominator s) 0 1 := by simp
+    have hone : (1 : Scalars s) = CentralPowerLocalization.repr (denominator s) 0 1 := by
+      simp only [CentralPowerLocalization.repr_zero, map_one]
     rw [hone, rightActionAdd_repr]
     ext q
     obtain ⟨k, x, l, rfl⟩ := exists_repr s q

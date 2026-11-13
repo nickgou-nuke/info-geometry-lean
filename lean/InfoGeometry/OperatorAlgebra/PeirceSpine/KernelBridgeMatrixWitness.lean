@@ -51,7 +51,7 @@ private theorem complement_P8 : 1 - P8 = E 4 4 + E 5 5 + E 6 6 + E 7 7 := by
   abel
 
 macro "matrix_units" : tactic =>
-  `(tactic| (norm_num [mul_add, add_mul, mul_sub, sub_mul, neg_mul, mul_neg,
+  `(tactic| (norm_num [-Matrix.smul_single, mul_add, add_mul, mul_sub, sub_mul, neg_mul, mul_neg,
     smul_mul_assoc, mul_smul_comm, smul_smul, smul_add, smul_sub,
     Matrix.single_mul_single_same, Matrix.single_mul_single_of_ne] <;> module))
 
@@ -307,7 +307,7 @@ theorem matrix_unit_not_in_elliptic_centralizer :
     E 0 0 ∉ Subring.centralizer ({elliptic8} : Set Op8) := by
   intro h
   have hc := Subring.mem_centralizer_iff.mp h elliptic8 (by simp)
-  have h01 := congrArg (fun X : Op8 => X 0 1) hc.eq
+  have h01 := congrArg (fun X : Op8 => X 0 1) hc
   norm_num [elliptic8, mul_add, add_mul, mul_sub, sub_mul,
     Matrix.single_mul_single_same, Matrix.single_mul_single_of_ne,
     Matrix.single_apply] at h01
@@ -319,7 +319,43 @@ theorem seed_ring_ne_top : Subring.closure ({P8, Atilde8, elliptic8} : Set Op8) 
     trivial
   exact matrix_unit_not_in_elliptic_centralizer (seed_ring_le_elliptic_centralizer hm)
 
-def offShell8 : Op8 := (3 / 5 : ℝ) • A8 + (4 / 5 : ℝ) • G8
+/-- A single upper matrix unit is an actual nonzero element of degree two. -/
+theorem upper_matrix_unit_degree_two :
+    comm (genSig P8 Atilde8 Atilde8) (E 0 6) = (2 : ℤ) • (E 0 6) := by
+  rw [sigma_Atilde8]
+  unfold comm
+  matrix_units
+
+theorem upper_matrix_unit_nonzero : (E 0 6 : Op8) ≠ 0 := by
+  intro h
+  have h06 := congrArg (fun X : Op8 => X 0 6) h
+  norm_num [Matrix.single_apply] at h06
+
+/-- This upper matrix unit does not commute with the elliptic operator. -/
+theorem upper_matrix_unit_not_in_elliptic_centralizer :
+    E 0 6 ∉ Subring.centralizer ({elliptic8} : Set Op8) := by
+  intro h
+  have hc := Subring.mem_centralizer_iff.mp h elliptic8 (by simp)
+  have h16 := congrArg (fun X : Op8 => X 1 6) hc
+  norm_num [elliptic8, mul_add, add_mul, mul_sub, sub_mul,
+    Matrix.single_mul_single_same, Matrix.single_mul_single_of_ne,
+    Matrix.single_apply] at h16
+
+/-- The seed-generated subring misses a nonzero element of the upper extreme grade. -/
+theorem upper_matrix_unit_not_in_seed_ring :
+    E 0 6 ∉ Subring.closure ({P8, Atilde8, elliptic8} : Set Op8) := by
+  intro h
+  exact upper_matrix_unit_not_in_elliptic_centralizer (seed_ring_le_elliptic_centralizer h)
+
+/-- The nonzero square established above does not make these seeds generate
+the whole degree-two corner. -/
+theorem degree_two_not_contained_in_seed_ring :
+    ¬ ∀ X : Op8, comm (genSig P8 Atilde8 Atilde8) X = (2 : ℤ) • X →
+      X ∈ Subring.closure ({P8, Atilde8, elliptic8} : Set Op8) := by
+  intro h
+  exact upper_matrix_unit_not_in_seed_ring (h (E 0 6) upper_matrix_unit_degree_two)
+
+noncomputable def offShell8 : Op8 := (3 / 5 : ℝ) • A8 + (4 / 5 : ℝ) • G8
 
 theorem offShell8_selfAdjoint : star offShell8 = offShell8 := by
   norm_num [offShell8, A8, G8, Matrix.star_eq_conjTranspose] <;> module

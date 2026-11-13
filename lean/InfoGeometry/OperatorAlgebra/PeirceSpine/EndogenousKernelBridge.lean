@@ -111,12 +111,12 @@ theorem onShell_kernel_bridge_comm {P : B} (hP : P * P = P) (A C X Y : B)
     calc
       _ = (p * p - m * p) * X * e + (p * e - m * e) * Y * m := by
         noncomm_ring
-      _ = _ := by rw [hpp, hmp, hpe, hme]; simp
+      _ = _ := by rw [hpp, hmp, hpe, hme]; simp [p, m, e]
   have hr : (p * X * e + e * Y * m) * (p - m) = -(e * Y * m) := by
     calc
       _ = p * X * (e * p - e * m) + e * Y * (m * p - m * m) := by
         noncomm_ring
-      _ = _ := by rw [hep, hem, hmp, hmm]; simp
+      _ = _ := by rw [hep, hem, hmp, hmm]; simp [p, m, e]
   rw [hl, hr, sub_neg_eq_add]
 
 /-- The square is the ordered through-kernel product, with no surjectivity claim. -/
@@ -136,7 +136,7 @@ theorem onShell_kernel_bridge_square {P : B} (hP : P * P = P) (A C X Y : B)
     _ = p * X * (e * p) * X * e + p * X * (e * e) * Y * m +
         e * Y * (m * p) * X * e + e * Y * (m * e) * Y * m := by
       noncomm_ring
-    _ = _ := by rw [hep, he, hmp, hme]; simp
+    _ = _ := by rw [hep, he, hmp, hme]; simp [p, m, e]
 
 /-- The through-kernel charge made from the diagonal part and the corrected bridge. -/
 def endogenousCharge (P A : B) : B :=

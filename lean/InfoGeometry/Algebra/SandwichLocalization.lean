@@ -66,16 +66,19 @@ theorem exists_repr (s : B) (z : Space s) :
 theorem repr_bond (s : B) (k l a b : ℕ) (x : B) :
     repr s (k + a) (s ^ a * x * s ^ b) (l + b) = repr s k x l := by
   have h : (k, l) ≤ (k + a, l + b) := ⟨Nat.le_add_right _ _, Nat.le_add_right _ _⟩
-  simpa only [transition_apply, Nat.add_sub_cancel_left] using
-    (DirectLimit.mk_apply (f := transition s) (k, l) (k + a, l + b) x h)
+  simpa only [repr, transition_apply, Nat.add_sub_cancel_left] using
+    (DirectLimit.mk_apply (F := fun _ : ℕ × ℕ => B)
+      (f := transition s) (k, l) (k + a, l + b) x h)
 
 @[simp] theorem repr_zero (s : B) (k l : ℕ) : repr s k 0 l = 0 :=
   (DirectLimit.zero_def (f := transition s) (k, l)).symm
 
 /-- Equal-stage addition is inherited from the native additive direct limit. -/
 theorem repr_add_same (s : B) (k l : ℕ) (x y : B) :
-    repr s k (x + y) l = repr s k x l + repr s k y l :=
-  (DirectLimit.add_def (f := transition s) (k, l) x y).symm
+    repr s k (x + y) l = repr s k x l + repr s k y l := by
+  simpa only [repr] using
+    (DirectLimit.add_def (G := fun _ : ℕ × ℕ => B)
+      (f := transition s) (k, l) x y).symm
 
 /-- Native additive stage maps. -/
 def stage (s : B) (k l : ℕ) : B →+ Space s where
@@ -118,7 +121,9 @@ theorem repr_eq_iff_common_stage (s : B) (k l k' l' : ℕ) (x y : B) :
 theorem pow_left_injective (s : B) (hs : Function.Injective (s * ·)) (n : ℕ) :
     Function.Injective (s ^ n * ·) := by
   induction n with
-  | zero => simpa only [pow_zero, one_mul] using (Function.injective_id : Function.Injective (id : B → B))
+  | zero =>
+      intro x y h
+      simpa only [pow_zero, one_mul] using h
   | succ n hn =>
       intro x y h
       apply hn
@@ -128,7 +133,9 @@ theorem pow_left_injective (s : B) (hs : Function.Injective (s * ·)) (n : ℕ) 
 theorem pow_right_injective (s : B) (hs : Function.Injective (· * s)) (n : ℕ) :
     Function.Injective (· * s ^ n) := by
   induction n with
-  | zero => simpa only [pow_zero, mul_one] using (Function.injective_id : Function.Injective (id : B → B))
+  | zero =>
+      intro x y h
+      simpa only [pow_zero, mul_one] using h
   | succ n hn =>
       intro x y h
       apply hn
@@ -139,11 +146,12 @@ theorem pow_right_injective (s : B) (hs : Function.Injective (· * s)) (n : ℕ)
 theorem stage_injective (s : B)
     (hleft : Function.Injective (s * ·)) (hright : Function.Injective (· * s))
     (k l : ℕ) : Function.Injective (stage s k l) := by
-  apply DirectLimit.mk_injective
-  intro i j h x y he
-  apply pow_left_injective s hleft (j.1 - i.1)
-  apply pow_right_injective s hright (j.2 - i.2)
-  exact he
+  intro x y he
+  obtain ⟨a, b, _, _, _, _, hab⟩ :=
+    (repr_eq_iff_common_stage s k l k l x y).mp he
+  apply pow_left_injective s hleft (a - k)
+  apply pow_right_injective s hright (b - l)
+  exact hab
 
 /-- Clearing denominators is exact for a two-sided regular element. -/
 theorem repr_eq_iff_cross (s : B)

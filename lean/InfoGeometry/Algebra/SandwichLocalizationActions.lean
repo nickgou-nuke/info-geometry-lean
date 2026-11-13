@@ -126,7 +126,7 @@ noncomputable def leftAction (s : B) : Scalars s →+* AddMonoid.End (Space s) w
       leftActionAdd_repr]
     ext z
     obtain ⟨k, x, l, rfl⟩ := exists_repr s z
-    simp only [AddMonoid.End.mul_apply, sandwich_repr, Subring.coe_mul,
+    simp only [AddMonoid.End.coe_mul, Function.comp_apply, sandwich_repr, Subring.coe_mul,
       mul_one, Nat.add_zero, mul_assoc]
     congr 1
     omega
@@ -194,7 +194,7 @@ noncomputable def rightAction (s : B) : (Scalars s)ᵐᵒᵖ →+* AddMonoid.End
       rightActionAdd_repr, rightActionAdd_repr]
     ext z
     obtain ⟨k, x, l, rfl⟩ := exists_repr s z
-    simp only [AddMonoid.End.mul_apply, sandwich_repr, Subring.coe_mul,
+    simp only [AddMonoid.End.coe_mul, Function.comp_apply, sandwich_repr, Subring.coe_mul,
       one_mul, Nat.add_zero, mul_assoc, Nat.add_assoc]
 
 /-- The native right module, expressed as a left module over the opposite ring. -/

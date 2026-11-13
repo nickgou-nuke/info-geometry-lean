@@ -27,7 +27,9 @@ theorem parity_square_defect (V : B) :
 
 /-- The elementary dyadic inverse formula has exactly the same defect. -/
 theorem shifted_dyadic_defect (V : B) :
-    (1 + V) * (2 - V) - 2 = -(V * V - V) := by noncomm_ring
+    (1 + V) * (2 - V) - 2 = -(V * V - V) := by
+  rw [← one_add_one_eq_two]
+  noncomm_ring
 
 /-- The signed cycle has a universal cubic defect, before imposing on-shell equations. -/
 theorem genSig_cubic_defect {P : B} (hP : P * P = P) (A C : B) :
@@ -74,7 +76,7 @@ theorem onShell_integral_numerator_unitary {P : B} (hP : P * P = P)
   dsimp only
   have hs : star (1 - genV P A (star A) + genJ P A (star A)) =
       1 - genV P A (star A) - genJ P A (star A) := by
-    simp only [star_add, star_sub, star_one, star_genV hPs, star_genJ hPs,
+    simp only [star_add, star_sub, star_neg, star_one, star_genV hPs, star_genJ hPs,
       sub_eq_add_neg]
   rw [hs]
   obtain ⟨hl, hr⟩ := integral_numerator_defects hP A (star A)

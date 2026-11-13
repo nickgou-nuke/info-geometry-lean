@@ -97,6 +97,7 @@ theorem positive_resolvent {S : Submodule ℝ H} {D : S →ₗ[ℝ] H}
         (positiveAmbientPin Q g)) R).resolvent := by
   rw [positive_action]
 
+omit [CompleteSpace H] in
 /-- Parameter continuity is the same condition along either representation route. -/
 theorem positive_continuous_iff {B : Type*} [TopologicalSpace B] (g : B → pin Q) :
     Continuous (fun b => (pinRepresentation Q (positiveRepresentation Q ρ) (g b) :
@@ -162,6 +163,7 @@ theorem negative_resolvent {S : Submodule ℝ H} {D : S →ₗ[ℝ] H}
         (negativeAmbientPin Q g)) R).resolvent := by
   rw [negative_action]
 
+omit [CompleteSpace H] in
 theorem negative_continuous_iff {B : Type*} [TopologicalSpace B] (g : B → pin (-Q)) :
     Continuous (fun b => (pinRepresentation (-Q) (negativeRepresentation Q ρ) (g b) :
       H →L[ℝ] H)) ↔

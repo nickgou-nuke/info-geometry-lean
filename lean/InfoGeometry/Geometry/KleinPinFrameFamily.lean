@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Clifford.FreedKleinRepresentation
+import InfoGeometry.Clifford.FreedPinRepresentation
 import InfoGeometry.Geometry.KleinPinGradedDirac
 
 /-!
@@ -40,7 +41,7 @@ open InfoGeometry.Clifford.NormalizedVectorPin
 open InfoGeometry.Clifford.FreedPinRepresentation
 open scoped Matrix ContDiff
 
-/-- Actual matrix units act invertibly on the existing complex spinor fibre. -/
+/-- Actual invertible matrices act on the existing complex spinor fibre. -/
 def unitFrame (a : Matˣ) : Spinor ≃ₗ[ℂ] Spinor where
   toFun := a.val.mulVec
   invFun := a.inv.mulVec
@@ -56,17 +57,20 @@ def unitFrameHom : Matˣ →* (Spinor ≃ₗ[ℂ] Spinor) where
   toFun := unitFrame
   map_one' := by ext s; simp [unitFrame]
   map_mul' a b := by
-    ext s
-    exact (Matrix.mulVec_mulVec a.val b.val s).symm
+    apply LinearEquiv.ext
+    intro s
+    change (a.val * b.val).mulVec s = a.val.mulVec (b.val.mulVec s)
+    exact (Matrix.mulVec_mulVec s a.val b.val).symm
 
 /-- The concrete source action of the particular normalized Pin construction. -/
 def pinFrame : pin positiveForm →* (Spinor ≃ₗ[ℂ] Spinor) :=
-  unitFrameHom.comp (pinRepresentation positiveForm positiveRepresentation)
+  unitFrameHom.comp (pinRepresentation positiveForm
+    InfoGeometry.Topology.KleinCliffordPinLift.positiveRepresentation)
 
 @[simp] theorem pinFrame_apply (g : pin positiveForm) (s : Spinor) :
     pinFrame g s =
-      (positiveRepresentation ((g : (CliffordAlgebra positiveForm)ˣ) :
-        CliffordAlgebra positiveForm)).mulVec s := rfl
+      (InfoGeometry.Topology.KleinCliffordPinLift.positiveRepresentation
+        ((g : (CliffordAlgebra positiveForm)ˣ) : CliffordAlgebra positiveForm)).mulVec s := rfl
 
 /-- This action equals the represented ordered positive suspension for every
 actual Pin element, rather than only for a chosen matrix generator. -/
@@ -112,20 +116,23 @@ def realFrame (U : Spinor ≃ₗ[ℂ] Spinor) : Spinor ≃L[ℝ] Spinor :=
 @[simp] theorem realFrame_symm_apply (U : Spinor ≃ₗ[ℂ] Spinor) (s : Spinor) :
     (realFrame U).symm s = U.symm s := rfl
 
+@[simp] theorem realFrame_clm_apply (U : Spinor ≃ₗ[ℂ] Spinor) (s : Spinor) :
+    (realFrame U : Spinor →L[ℝ] Spinor) s = U s := rfl
+
 /-- Forward transport satisfies the conjugated deck law by construction. -/
 def frameSection (U : Spinor ≃ₗ[ℂ] Spinor) (sector : Bool)
     (ψ : equivariantSections (monodromy sector)) :
     equivariantSections (framedMonodromy U sector) :=
-  ⟨fun p => U (ψ p), by
+  ⟨fun p => U (ψ.val p), by
     intro g p
-    change U (ψ (deckAction g p)) = U (monodromy sector g (U.symm (U (ψ p))))
+    change U (ψ.val (deckAction g p)) = U (monodromy sector g (U.symm (U (ψ.val p))))
     rw [ψ.property g p, U.symm_apply_apply]⟩
 
 /-- The inverse frame really returns a section with the original deck law. -/
 def unframeSection (U : Spinor ≃ₗ[ℂ] Spinor) (sector : Bool)
     (ψ : equivariantSections (framedMonodromy U sector)) :
     equivariantSections (monodromy sector) :=
-  ⟨fun p => U.symm (ψ p), by
+  ⟨fun p => U.symm (ψ.val p), by
     intro g p
     have h := congrArg U.symm (ψ.property g p)
     simpa only [framedMonodromy, conjugateMonodromy_apply,
@@ -160,10 +167,15 @@ instance framedSmoothSectionsAddCommGroup (U : Spinor ≃ₗ[ℂ] Spinor) (secto
 smoothness in both directions from the actual bounded fibre maps. -/
 def frameSmoothEquiv (U : Spinor ≃ₗ[ℂ] Spinor) (sector : Bool) :
     smoothSections sector ≃ₗ[ℝ] framedSmoothSections U sector where
-  toFun ψ := ⟨frameSection U sector ψ.val,
-    (realFrame U).contDiff.comp (smoothSection_contDiff sector ψ)⟩
-  invFun ψ := ⟨unframeSection U sector ψ.val,
-    (realFrame U).symm.contDiff.comp ψ.property⟩
+  toFun ψ := ⟨frameSection U sector ψ.val, by
+    change ContDiff ℝ ∞ (fun p => U (ψ.val.val p))
+    simpa only [Function.comp_apply, realFrame_apply] using
+      (realFrame U).contDiff.comp (smoothSection_contDiff sector ψ)⟩
+  invFun ψ := ⟨unframeSection U sector ψ.val, by
+    have hψ : ContDiff ℝ ∞ (ψ.val : PlanePoint → Spinor) := ψ.property
+    change ContDiff ℝ ∞ (fun p => U.symm (ψ.val.val p))
+    simpa only [Function.comp_apply, realFrame_symm_apply] using
+      (realFrame U).symm.contDiff.comp hψ⟩
   left_inv ψ := by
     apply Subtype.ext
     apply Subtype.ext
@@ -192,6 +204,12 @@ def frameSmoothEquiv (U : Spinor ≃ₗ[ℂ] Spinor) (sector : Bool) :
 @[simp] theorem frameSmoothEquiv_symm_apply (U : Spinor ≃ₗ[ℂ] Spinor)
     (sector : Bool) (ψ : framedSmoothSections U sector) (p : PlanePoint) :
     ((frameSmoothEquiv U sector).symm ψ).val.val p = U.symm (ψ.val.val p) := rfl
+
+/-- Expose the transported field without unfolding the domain-equivalence proof. -/
+theorem frameSmoothEquiv_field (U : Spinor ≃ₗ[ℂ] Spinor)
+    (sector : Bool) (ψ : smoothSections sector) :
+    ((frameSmoothEquiv U sector ψ).val : PlanePoint → Spinor) =
+      fun p => U (ψ.val.val p) := rfl
 
 /-- A further frame `U` maps the domain already framed by `V` to the domain
 framed by the ordered product `U * V`. -/
@@ -230,7 +248,7 @@ theorem framedDirac_intertwine (U : Spinor ≃ₗ[ℂ] Spinor)
       (realFrame U : Spinor →L[ℝ] Spinor).comp (fderiv ℝ ψ p) :=
     ((realFrame U).toContinuousLinearMap.hasFDerivAt.comp p (hψ p).hasFDerivAt).fderiv
   rw [framedDirac, hd]
-  simp only [ContinuousLinearMap.comp_apply, realFrame_apply,
+  simp only [ContinuousLinearMap.comp_apply, realFrame_clm_apply,
     frameCoefficient_apply, U.symm_apply_apply, dirac, map_add]
 
 /-- The framed differential operator has a proved smooth equivariant domain
@@ -251,7 +269,7 @@ theorem framedDiracSmoothLinear_apply (U : Spinor ≃ₗ[ℂ] Spinor)
     (smoothSection_differentiable sector χ) p
   have heq : (fun x => U (χ.val.val x)) = (ψ.val : PlanePoint → Spinor) := by
     funext x
-    exact U.apply_symm_apply (ψ.val.val x)
+    simp only [χ, frameSmoothEquiv_symm_apply, U.apply_symm_apply]
   rw [heq] at h
   exact h.symm
 
@@ -291,8 +309,9 @@ theorem framedVolumeAction_intertwine (U : Spinor ≃ₗ[ℂ] Spinor) (s : Spino
 
 theorem framedVolumeAction_sq (U : Spinor ≃ₗ[ℂ] Spinor) (s : Spinor) :
     framedVolumeAction U (framedVolumeAction U s) = -s := by
-  simp [framedVolumeAction, frameCoefficient_apply,
-    InfoGeometry.Clifford.FreedKleinRepresentation.volumeAction_sq]
+  simp only [framedVolumeAction, frameCoefficient_apply, U.symm_apply_apply,
+    InfoGeometry.Clifford.FreedKleinRepresentation.volumeAction_sq, map_neg,
+    U.apply_symm_apply]
 
 /-- The concrete reduced operator is the transported volume composed with the
 transported differential operator; both factors use the same frame. -/
@@ -331,7 +350,7 @@ theorem framedSuspendedDiracSmoothLinear_apply (U : Spinor ≃ₗ[ℂ] Spinor)
     (smoothSection_differentiable sector χ) p
   have heq : (fun x => U (χ.val.val x)) = (ψ.val : PlanePoint → Spinor) := by
     funext x
-    exact U.apply_symm_apply (ψ.val.val x)
+    simp only [χ, frameSmoothEquiv_symm_apply, U.apply_symm_apply]
   rw [heq] at h
   exact h.symm
 
@@ -489,7 +508,7 @@ theorem circleFrame_apply (t : ℝ) (s : Spinor) :
   ext i
   fin_cases i <;>
     simp [circleVector, vectorPlus, Matrix.mulVec, dotProduct, Fin.sum_univ_two,
-      gammaX_apply, gammaY_apply, smul_eq_mul] <;> ring
+      gammaX_apply, gammaY_apply, add_comm]
 
 theorem circleFrame_sq (t : ℝ) : circleFrame t * circleFrame t = 1 := by
   rw [← map_mul pinFrame, circlePin_sq, map_one]
@@ -505,7 +524,12 @@ theorem circleFrames_noncommute :
     ¬ Commute (circleFrame 0) (circleFrame (Real.pi / 2)) := by
   intro h
   have he := congrArg (fun U : Spinor ≃ₗ[ℂ] Spinor => U ![1, 0] 1) h.eq
-  norm_num [LinearEquiv.mul_apply, circleFrame_apply, gammaX_apply, gammaY_apply] at he
+  change circleFrame 0 (circleFrame (Real.pi / 2) ![1, 0]) 1 =
+    circleFrame (Real.pi / 2) (circleFrame 0 ![1, 0]) 1 at he
+  simp only [circleFrame_apply, Real.cos_zero, Real.sin_zero,
+    Real.cos_pi_div_two, Real.sin_pi_div_two, one_smul, zero_smul,
+    zero_add, add_zero] at he
+  norm_num [gammaX_apply, gammaY_apply] at he
 
 /-- Smoothness of evaluated frame transport is derived from the explicit
 family formula. No continuity of an unspecified Pin parameter map is assumed. -/
@@ -516,15 +540,16 @@ theorem circleFrame_field_contDiff (ψ : PlanePoint → Spinor)
     gammaX.contDiff.comp (hψ.comp contDiff_snd)
   have hy : ContDiff ℝ ∞ (fun z : ℝ × PlanePoint => gammaY (ψ z.2)) :=
     gammaY.contDiff.comp (hψ.comp contDiff_snd)
-  simpa only [circleFrame_apply] using
+  simpa only [circleFrame_apply, Function.comp_apply, Pi.smul_apply, Pi.add_apply] using
     ((Real.contDiff_cos.comp contDiff_fst).smul hx).add
       ((Real.contDiff_sin.comp contDiff_fst).smul hy)
 
 /-- The smoothly varying frame acts on the actual smooth section domain. -/
 theorem circleSection_joint_contDiff (sector : Bool) (ψ : smoothSections sector) :
     ContDiff ℝ ∞ (fun z : ℝ × PlanePoint =>
-      (frameSmoothEquiv (circleFrame z.1) sector ψ).val.val z.2) :=
-  circleFrame_field_contDiff _ (smoothSection_contDiff sector ψ)
+      (frameSmoothEquiv (circleFrame z.1) sector ψ).val.val z.2) := by
+  simpa only [frameSmoothEquiv_apply] using
+    circleFrame_field_contDiff _ (smoothSection_contDiff sector ψ)
 
 /-- In the constructed domain identification, the evaluated geometric
 operator family is jointly smooth in parameter and base point. -/
@@ -537,6 +562,7 @@ theorem circleDirac_joint_contDiff (sector : Bool) (ψ : smoothSections sector) 
         ((frameSmoothEquiv (circleFrame z.1) sector ψ).val : PlanePoint → Spinor) z.2) =
       (fun z : ℝ × PlanePoint => circleFrame z.1 (dirac (ψ.val : PlanePoint → Spinor) z.2)) := by
     funext z
+    rw [frameSmoothEquiv_field]
     exact framedDirac_intertwine (circleFrame z.1) _
       (smoothSection_differentiable sector ψ) z.2
   rw [heq]
@@ -555,6 +581,7 @@ theorem circleSuspendedDirac_joint_contDiff (sector : Bool) (ψ : smoothSections
         (InfoGeometry.Clifford.FreedKleinRepresentation.suspendedDirac
           (ψ.val : PlanePoint → Spinor) z.2)) := by
     funext z
+    rw [frameSmoothEquiv_field]
     exact framedSuspendedDirac_intertwine (circleFrame z.1) _
       (smoothSection_differentiable sector ψ) z.2
   rw [heq]

@@ -109,7 +109,7 @@ theorem dirac_volume (ψ : PlanePoint → Spinor)
     (volumeAction.hasFDerivAt.comp p (hψ p).hasFDerivAt).fderiv
   simp only [dirac, hf, ContinuousLinearMap.comp_apply]
   ext i
-  fin_cases i <;> simp [gammaX_apply, gammaY_apply, volumeAction_apply] <;> abel
+  fin_cases i <;> (simp [gammaX_apply, gammaY_apply, volumeAction_apply]; abel)
 
 /-- This commutation equation holds on the actual smooth sections. -/
 theorem dirac_volume_smooth (ψ : smoothSections false) :
@@ -135,9 +135,21 @@ def sectorCoordinates : TotalSections ≃ₗ[ℝ] (Fin 2 → smoothSections fals
   toFun ψ := ![ψ.1, volumeEquiv.symm ψ.2]
   invFun v := (v 0, volumeEquiv (v 1))
   left_inv ψ := by simp
-  right_inv v := by ext i; fin_cases i <;> simp
-  map_add' ψ χ := by ext i; fin_cases i <;> simp
-  map_smul' r ψ := by ext i; fin_cases i <;> simp
+  right_inv v := by
+    funext i
+    fin_cases i
+    · rfl
+    · exact volumeEquiv.symm_apply_apply (v 1)
+  map_add' ψ χ := by
+    funext i
+    fin_cases i
+    · rfl
+    · exact volumeEquiv.symm.map_add ψ.2 χ.2
+  map_smul' r ψ := by
+    funext i
+    fin_cases i
+    · rfl
+    · exact volumeEquiv.symm.map_smul r ψ.2
 
 @[simp] theorem sectorCoordinates_zero (ψ : TotalSections) :
     sectorCoordinates ψ 0 = ψ.1 := rfl
@@ -160,14 +172,14 @@ theorem sectorCoordinates_dirac (v : Fin 2 → smoothSections false) :
     sectorCoordinates (gradedDirac (sectorCoordinates.symm v)) =
       ![-(suspendedDiracSmoothLinear false (v 1)),
         -(suspendedDiracSmoothLinear false (v 0))] := by
-  ext i
+  funext i
   fin_cases i
-  · change diracSmoothLinear true (volumeSmoothLinear false (v 1)) = _
+  · change diracSmoothLinear true (volumeSmoothLinear false (v 1)) =
+      -(suspendedDiracSmoothLinear false (v 1))
     rw [dirac_volume_smooth, ← suspendedDirac_factor]
-    rfl
-  · change -(volumeSmoothLinear true (diracSmoothLinear false (v 0))) = _
+  · change -(volumeSmoothLinear true (diracSmoothLinear false (v 0))) =
+      -(suspendedDiracSmoothLinear false (v 0))
     rw [← suspendedDirac_factor]
-    rfl
 
 /-- The full coefficient algebra consists of all real linear operators on
 one concrete smooth sector; it is not assumed commutative. -/
@@ -229,7 +241,9 @@ theorem sectorCoordinates_matrixAction (M : Matrix (Fin 2) (Fin 2) Coeff)
         (sectorCoordinates ψ))) = _
   rw [sectorCoordinates.apply_symm_apply]
   funext i
-  exact Fin.sum_univ_two _
+  change (∑ j : Fin 2, M i j (sectorCoordinates ψ j)) =
+    M i 0 (sectorCoordinates ψ 0) + M i 1 (sectorCoordinates ψ 1)
+  exact Fin.sum_univ_two (fun j : Fin 2 => M i j (sectorCoordinates ψ j))
 
 /-- Full operator-valued matrix evaluation intertwines the actual native
 matrix module action. -/
@@ -237,8 +251,10 @@ theorem sectorCoordinates_matrixAction_smul (M : Matrix (Fin 2) (Fin 2) Coeff)
     (ψ : TotalSections) :
     sectorCoordinates (matrixAction M ψ) = M • sectorCoordinates ψ := by
   rw [sectorCoordinates_matrixAction]
-  ext i
-  exact (Fin.sum_univ_two _).symm
+  funext i
+  change M i 0 (sectorCoordinates ψ 0) + M i 1 (sectorCoordinates ψ 1) =
+    ∑ j : Fin 2, M i j (sectorCoordinates ψ j)
+  exact (Fin.sum_univ_two (fun j : Fin 2 => M i j (sectorCoordinates ψ j))).symm
 
 /-- The first diagonal matrix unit is exactly the positive-sector projection. -/
 theorem matrixAction_corner (ψ : TotalSections) :
@@ -331,7 +347,7 @@ def lowerCornerMatrix : Matrix (Fin 2) (Fin 2) Coeff := Matrix.single 1 0 1
 /-- The actual coefficient-valued corner matrices do not commute. -/
 theorem cornerMatrices_noncomm :
     upperCornerMatrix * lowerCornerMatrix ≠ lowerCornerMatrix * upperCornerMatrix := by
-  letI : Nontrivial Coeff :=
+  let : Nontrivial Coeff :=
     ⟨⟨suspendedDiracSmoothLinear false, 0, suspendedOperator_ne_zero⟩⟩
   exact matrix_units_noncomm (A := Coeff)
 

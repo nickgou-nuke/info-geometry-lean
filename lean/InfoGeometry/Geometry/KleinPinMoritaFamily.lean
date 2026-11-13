@@ -90,7 +90,7 @@ theorem framedSectorCoordinates_frame (U : Spinor ≃ₗ[ℂ] Spinor)
     (ψ : TotalSections) :
     framedSectorCoordinates U (frameTotalEquiv U ψ) =
       coordinateFrame U (sectorCoordinates ψ) := by
-  ext i
+  funext i
   rw [framedSectorCoordinates_apply, (frameTotalEquiv U).symm_apply_apply]
   rfl
 
@@ -136,7 +136,7 @@ private theorem coordinateFrame_symm_single (U : Spinor ≃ₗ[ℂ] Spinor)
     (j : Fin 2) (ψ : framedSmoothSections U false) :
     (coordinateFrame U).symm (Pi.single j ψ) =
       Pi.single j ((frameSmoothEquiv U false).symm ψ) := by
-  ext i
+  funext i
   by_cases h : i = j
   · subst i
     simp
@@ -148,7 +148,9 @@ theorem framedOperatorMatrix_natural (U : Spinor ≃ₗ[ℂ] Spinor)
     (T : Module.End ℝ TotalSections) :
     framedOperatorMatrix U (totalOperatorFrame U T) =
       (coefficientFrame U).mapMatrix (operatorMatrix T) := by
-  ext i j ψ
+  funext i j
+  apply LinearMap.ext
+  intro ψ
   rw [framedOperatorMatrix_apply, framedSectorCoordinates_symm_apply,
     totalOperatorFrame_apply, (frameTotalEquiv U).symm_apply_apply,
     framedSectorCoordinates_frame, coordinateFrame_apply,
@@ -180,7 +182,7 @@ theorem framedOperatorMatrix_grading (U : Spinor ≃ₗ[ℂ] Spinor) :
     framedOperatorMatrix U (framedGrading U) = !![1, 0; 0, -1] := by
   rw [← totalOperatorFrame_grading, framedOperatorMatrix_natural,
     operatorMatrix_grading]
-  ext i j
+  funext i j
   fin_cases i <;> fin_cases j <;> simp [AlgEquiv.mapMatrix_apply]
 
 /-- The entire framed differential operator has the transported reduced
@@ -190,7 +192,7 @@ theorem framedOperatorMatrix_dirac (U : Spinor ≃ₗ[ℂ] Spinor) :
       !![0, -framedSuspendedDiracSmoothLinear U false;
          -framedSuspendedDiracSmoothLinear U false, 0] := by
   rw [← totalOperatorFrame_dirac, framedOperatorMatrix_natural, operatorMatrix_dirac]
-  ext i j
+  funext i j
   fin_cases i <;> fin_cases j <;>
     simp [AlgEquiv.mapMatrix_apply, coefficientFrame_suspended]
 

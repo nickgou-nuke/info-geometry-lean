@@ -152,8 +152,10 @@ theorem adGradeSuperBracket_jacobi {S : A} {i j k : ℤ}
         (adGradeSuperBracket Y (adGradeSuperBracket Z X) : A) +
       gradedSign (R := ℝ) (integerGradeParity k) (integerGradeParity j) •
         (adGradeSuperBracket Z (adGradeSuperBracket X Y) : A) = 0 := by
-  simpa only [adGradeSuperBracket, integerGradeParity_add] using
-    superBracket_superJacobi (R := ℝ) (integerGradeParity i) (integerGradeParity j)
-      (integerGradeParity k) (X : A) (Y : A) (Z : A)
+  have h := superBracket_superJacobi (R := ℝ) (integerGradeParity i)
+    (integerGradeParity j) (integerGradeParity k) (X : A) (Y : A) (Z : A)
+  rw [← integerGradeParity_add j k, ← integerGradeParity_add k i,
+    ← integerGradeParity_add i j] at h
+  exact h
 
 end InfoGeometry.Core.TripotentAdjoint

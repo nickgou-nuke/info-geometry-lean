@@ -51,7 +51,7 @@ def extremeTriple (p : LieSubalgebra ℝ A) (S : A) (k : ℤ)
     · exact p.lie_mem (p.lie_mem X.property.1 Y.property.1) Z.property.1
     · have hXY := commutator_mem_adGrade_add X.property.2 Y.property.2
       have hXYZ := commutator_mem_adGrade_add hXY Z.property.2
-      simpa only [add_neg_cancel, zero_add, Ring.lie_def] using hXYZ⟩
+      simpa only [SetLike.mem_coe, add_neg_cancel, zero_add, Ring.lie_def] using hXYZ⟩
 
 /-- The triple product is additive in its first argument. -/
 theorem extremeTriple_add_left (p : LieSubalgebra ℝ A) (S : A) (k : ℤ)

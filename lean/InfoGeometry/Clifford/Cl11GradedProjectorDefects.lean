@@ -182,13 +182,15 @@ def vacuumIndex : Idx 3 := ((((0 : Fin 1), 0), 0), 0)
 theorem represented_pairWord_vacuum :
     jwCliffordRepresentation 3 pairWord vacuumIndex vacuumIndex = 1 := by
   simp only [pairWord, map_mul, map_add, map_one, represented_positive]
+  let e : Fin 3 → Matrix (((Fin 1 × Fin 2) × Fin 2) × Fin 2)
+      (((Fin 1 × Fin 2) × Fin 2) × Fin 2) ℝ := jwMajoranaPlus 3
   change
-    ((1 + jwMajoranaPlus 3 0) * (1 + jwMajoranaPlus 3 1) :
+    ((1 + e 0) * (1 + e 1) :
       Matrix (((Fin 1 × Fin 2) × Fin 2) × Fin 2)
         (((Fin 1 × Fin 2) × Fin 2) × Fin 2) ℝ)
       ((((0 : Fin 1), 0), 0), 0) ((((0 : Fin 1), 0), 0), 0) = 1
   simp only [Matrix.mul_apply, Matrix.add_apply]
-  norm_num [vacuumIndex, jwMajoranaPlus, jwCreation, jwAnnihilation, jwStringWithBase,
+  norm_num [e, vacuumIndex, jwMajoranaPlus, jwCreation, jwAnnihilation, jwStringWithBase,
     globalChirality, kronPow, Idx, gamma_chiral_base, gamma_0_base, gamma_1_base,
     wittCreationBase, wittAnnihilationBase, Cl11Matrix.J1, Cl11Matrix.Eminus,
     Matrix.mul_apply, Matrix.kronecker_apply, Fintype.sum_prod_type, Fin.sum_univ_succ]
@@ -196,14 +198,16 @@ theorem represented_pairWord_vacuum :
 theorem represented_tripleWord_vacuum :
     jwCliffordRepresentation 3 tripleWord vacuumIndex vacuumIndex = 1 := by
   simp only [tripleWord, map_mul, map_add, map_one, represented_positive]
+  let e : Fin 3 → Matrix (((Fin 1 × Fin 2) × Fin 2) × Fin 2)
+      (((Fin 1 × Fin 2) × Fin 2) × Fin 2) ℝ := jwMajoranaPlus 3
   change
-    ((1 + jwMajoranaPlus 3 0) * (1 + jwMajoranaPlus 3 1) *
-        (1 + jwMajoranaPlus 3 2) :
+    ((1 + e 0) * (1 + e 1) *
+        (1 + e 2) :
       Matrix (((Fin 1 × Fin 2) × Fin 2) × Fin 2)
         (((Fin 1 × Fin 2) × Fin 2) × Fin 2) ℝ)
       ((((0 : Fin 1), 0), 0), 0) ((((0 : Fin 1), 0), 0), 0) = 1
   simp only [Matrix.mul_apply, Matrix.add_apply]
-  norm_num [vacuumIndex, jwMajoranaPlus, jwCreation, jwAnnihilation, jwStringWithBase,
+  norm_num [e, vacuumIndex, jwMajoranaPlus, jwCreation, jwAnnihilation, jwStringWithBase,
     globalChirality, kronPow, Idx, gamma_chiral_base, gamma_0_base, gamma_1_base,
     wittCreationBase, wittAnnihilationBase, Cl11Matrix.J1, Cl11Matrix.Eminus,
     Matrix.mul_apply, Matrix.kronecker_apply, Fintype.sum_prod_type, Fin.sum_univ_succ]
@@ -211,14 +215,16 @@ theorem represented_tripleWord_vacuum :
 theorem represented_tripleMiddleWord_vacuum :
     jwCliffordRepresentation 3 tripleMiddleWord vacuumIndex vacuumIndex = 0 := by
   simp only [tripleMiddleWord, map_mul, map_add, map_one, represented_positive]
+  let e : Fin 3 → Matrix (((Fin 1 × Fin 2) × Fin 2) × Fin 2)
+      (((Fin 1 × Fin 2) × Fin 2) × Fin 2) ℝ := jwMajoranaPlus 3
   change
-    ((1 + jwMajoranaPlus 3 0) * jwMajoranaPlus 3 1 *
-        (1 + jwMajoranaPlus 3 2) :
+    ((1 + e 0) * e 1 *
+        (1 + e 2) :
       Matrix (((Fin 1 × Fin 2) × Fin 2) × Fin 2)
         (((Fin 1 × Fin 2) × Fin 2) × Fin 2) ℝ)
       ((((0 : Fin 1), 0), 0), 0) ((((0 : Fin 1), 0), 0), 0) = 0
   simp only [Matrix.mul_apply, Matrix.add_apply]
-  norm_num [vacuumIndex, jwMajoranaPlus, jwCreation, jwAnnihilation, jwStringWithBase,
+  norm_num [e, vacuumIndex, jwMajoranaPlus, jwCreation, jwAnnihilation, jwStringWithBase,
     globalChirality, kronPow, Idx, gamma_chiral_base, gamma_0_base, gamma_1_base,
     wittCreationBase, wittAnnihilationBase, Cl11Matrix.J1, Cl11Matrix.Eminus,
     Matrix.mul_apply, Matrix.kronecker_apply, Fintype.sum_prod_type, Fin.sum_univ_succ]

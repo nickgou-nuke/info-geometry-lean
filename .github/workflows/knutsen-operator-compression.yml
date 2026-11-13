@@ -1,0 +1,423 @@
+name: Knutsen operator compression native check
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/OperatorAlgebra/IsometricCompression.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/FiniteFrameMultipliers.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFamilies.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PauliAveraging.lean'
+      - 'lean/InfoGeometry/Analysis/GeometricPorosity.lean'
+      - 'lean/InfoGeometry/Core/IdempotencyDefect.lean'
+      - 'lean/InfoGeometry/Core/PeirceDecomposition.lean'
+      - 'lean/InfoGeometry/Core/PeirceCompressionDefect.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Clifford/OperatorValuedJones.lean'
+      - 'docs/KNUTSEN_OPERATOR_LOCALIZATION.md'
+      - 'tools/quality/check_clifford_dirac.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/build_lock.py'
+      - 'tools/infra/run_locked_lean.py'
+      - 'tools/infra/run_locked_lake_build.py'
+      - 'tools/infra/build.py'
+      - '.githooks/pre-push'
+      - 'scripts/quality/post_build_gate.sh'
+      - 'lakefile.lean'
+      - 'lake-manifest.json'
+      - 'lean-toolchain'
+      - '.github/workflows/knutsen-operator-compression.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: knutsen-operator-compression-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  native-closure-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      KNUTSEN_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      KNUTSEN_TARGETS: >-
+        InfoGeometry.OperatorAlgebra.IsometricCompression
+        InfoGeometry.OperatorAlgebra.FiniteFrameMultipliers
+        InfoGeometry.OperatorAlgebra.FiniteOperatorFamilies
+        InfoGeometry.OperatorAlgebra.PauliAveraging
+        InfoGeometry.Analysis.GeometricPorosity
+    steps:
+      - name: Check out the exact public head and complete main ancestry
+        timeout-minutes: 3
+        shell: bash
+        run: |
+          [[ "$KNUTSEN_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]
+          # Direct public checkout avoids unrelated unmapped gitlinks and stores no credentials.
+          git init project
+          git -C project remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
+          git -C project -c protocol.version=2 fetch --no-tags origin \
+            +refs/heads/main:refs/remotes/origin/main "$KNUTSEN_HEAD_SHA"
+          git -C project checkout --detach "$KNUTSEN_HEAD_SHA"
+          test "$(git -C project rev-parse HEAD)" = "$KNUTSEN_HEAD_SHA"
+          test "$(git -C project rev-parse --is-shallow-repository)" = false
+      - name: Bind head and read exact dependency pins
+        id: pins
+        timeout-minutes: 1
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess
+          from pathlib import Path
+          project = Path('project')
+          out = Path(os.environ['RUNNER_TEMP']) / 'knutsen-operator-compression-evidence'
+          out.mkdir()
+          def git(*args):
+              return subprocess.check_output(['git', *args], cwd=project, text=True).strip()
+          head = git('rev-parse', 'HEAD')
+          assert head == os.environ['KNUTSEN_HEAD_SHA']
+          assert not git('status', '--porcelain')
+          manifest = json.loads((project / 'lake-manifest.json').read_text())
+          pin = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          context = dict(head=head, tree=git('rev-parse', 'HEAD^{tree}'),
+                         origin_main=git('rev-parse', 'refs/remotes/origin/main'),
+                         toolchain=(project / 'lean-toolchain').read_text().strip(),
+                         mathlib=pin, targets=os.environ['KNUTSEN_TARGETS'].split(),
+                         run_id=os.environ['GITHUB_RUN_ID'],
+                         run_attempt=os.environ['GITHUB_RUN_ATTEMPT'])
+          (out / 'context.json').write_text(json.dumps(context, indent=2) + '\n')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write(f'mathlib={pin}\n')
+          PY
+      - name: Check out pinned Mathlib independently
+        timeout-minutes: 3
+        uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: ${{ steps.pins.outputs.mathlib }}
+          path: mathlib
+          persist-credentials: false
+      - uses: actions/cache@v4
+        timeout-minutes: 3
+        with:
+          path: |
+            ~/.elan
+            mathlib/.lake
+          key: knutsen-operator-compression-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - name: Install the pinned Lean toolchain
+        timeout-minutes: 5
+        shell: bash
+        run: |
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          pinned_toolchain="$(tr -d '\r\n' < project/lean-toolchain)"
+          "$HOME/.elan/bin/elan" toolchain install "$pinned_toolchain"
+          echo "ELAN_TOOLCHAIN=$pinned_toolchain" >> "$GITHUB_ENV"
+      - name: Hydrate only the native import closure under the shared lock
+        timeout-minutes: 20
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess, sys
+          from pathlib import Path
+          project, mathlib = Path('project').resolve(), Path('mathlib').resolve()
+          out = Path(os.environ['RUNNER_TEMP']) / 'knutsen-operator-compression-evidence'
+          sys.path.insert(0, str(project))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          targets = os.environ['KNUTSEN_TARGETS'].split()
+          ordered, _, native = closure(project, targets)
+          assert (mathlib / 'lean-toolchain').read_text() == (project / 'lean-toolchain').read_text()
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'knutsen-operator-compression-cache') as lock:
+              with (out / 'cache.log').open('w') as log:
+                  subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
+                                 cwd=mathlib, check=True, pass_fds=(lock.fileno(),),
+                                 stdout=log, stderr=subprocess.STDOUT)
+          bindings = []
+          manifest = json.loads((mathlib / 'lake-manifest.json').read_text())
+          for package in manifest['packages']:
+              assert package['type'] == 'git'
+              path = mathlib / '.lake/packages' / package['name']
+              assert not path.is_symlink() and (path / '.git').is_dir()
+              actual = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=path, text=True).strip()
+              assert actual == package['rev'], package['name']
+              subprocess.run(['git', 'diff', '--exit-code', 'HEAD', '--'], cwd=path, check=True)
+              bindings.append(dict(name=package['name'], revision=actual))
+          (out / 'dependency-bindings.json').write_text(json.dumps(bindings, indent=2) + '\n')
+          (out / 'expected-closure.json').write_text(json.dumps(ordered, indent=2) + '\n')
+          PY
+      - name: Fresh native compilation and every-owned-declaration axiom audit
+        id: native
+        timeout-minutes: 45
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os, subprocess, sys
+          from pathlib import Path
+          out = Path(os.environ['RUNNER_TEMP']) / 'knutsen-operator-compression-evidence'
+          command = [sys.executable, 'tools/quality/check_clifford_dirac.py',
+                     '--mathlib-root', '../mathlib', '--output', str(out / 'native')]
+          for target in os.environ['KNUTSEN_TARGETS'].split():
+              command.extend(['--target', target])
+          subprocess.run(command, check=True)
+          PY
+      - name: Require the exact fresh closure, warning-free new owners, and complete axiom coverage
+        id: native_acceptance
+        timeout-minutes: 1
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, re, subprocess
+          from pathlib import Path
+          out = Path(os.environ['RUNNER_TEMP']) / 'knutsen-operator-compression-evidence'
+          targets = os.environ['KNUTSEN_TARGETS'].split()
+          report = json.loads((out / 'native/report.json').read_text())
+          expected = json.loads((out / 'expected-closure.json').read_text())
+          context = json.loads((out / 'context.json').read_text())
+          assert report['status'] == 'passed' and report['audit_required'] is True
+          assert report['targets'] == targets
+          assert report['local_revision'] == os.environ['KNUTSEN_HEAD_SHA']
+          assert report['mathlib'] == context['mathlib'] and report['toolchain'] == context['toolchain']
+          rows = report['modules']
+          modules = {m['module']: m for m in rows}
+          assert len(modules) == len(rows) and set(modules) == set(expected)
+          assert all(m['returncode'] == 0 and m['reused'] is False for m in rows)
+          assert all(modules[t]['warnings'] == 0 for t in targets)
+          assert set(report['declaration_counts']) == set(targets)
+          assert all(report['declaration_counts'][t] > 0 for t in targets)
+          assert len(report['axioms']) == 1
+          axioms = set(re.findall(r'[A-Za-z_][A-Za-z0-9_.]*', report['axioms'][0]))
+          assert axioms <= {'propext', 'Classical.choice', 'Quot.sound'}
+          assert set(report['source_sha256']) == set(expected)
+          assert set(report['verification_source_sha256']) == {
+              'tools/quality/check_clifford_dirac.py', 'tools/quality/check_reviewed_prs.py',
+              'tools/quality/reviewed_audit_source.py', 'tools/build_lock.py'}
+          for module, expected_hash in report['source_sha256'].items():
+              path = Path('lean') / (module.replace('.', '/') + '.lean')
+              assert hashlib.sha256(path.read_bytes()).hexdigest() == expected_hash, module
+              copied = out / 'native/src' / (module.replace('.', '/') + '.lean')
+              assert hashlib.sha256(copied.read_bytes()).hexdigest() == expected_hash, module
+          for path, expected_hash in report['verification_source_sha256'].items():
+              assert hashlib.sha256(Path(path).read_bytes()).hexdigest() == expected_hash, path
+          assert subprocess.check_output(['git', 'status', '--porcelain'], text=True).strip() == ''
+          print('Native closure passed:', len(rows), 'modules; declaration counts:', report['declaration_counts'])
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
+              f.write('## Native selected-owner verification passed\n\n')
+              f.write(f'Freshly compiled {len(rows)} source-closure modules; all five new owners have zero warnings.\n\n')
+              f.write(f'All-owned audit counts: {report["declaration_counts"]}. Axioms: {sorted(axioms)}.\n\n')
+              f.write('Root package diagnostics below are separate and may fail; this is not a whole-repository certificate.\n')
+          PY
+      - name: Bind native evidence before any root diagnostic
+        id: native_evidence_binding
+        if: always()
+        timeout-minutes: 1
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          out = Path(os.environ['RUNNER_TEMP']) / 'knutsen-operator-compression-evidence'
+          out.mkdir(exist_ok=True)
+          files = {str(p.relative_to(out)): hashlib.sha256(p.read_bytes()).hexdigest()
+                   for p in sorted(out.rglob('*')) if p.is_file() and p.name != 'artifact-sha256.json'}
+          for relative in ['.github/workflows/knutsen-operator-compression.yml',
+                           'docs/KNUTSEN_OPERATOR_LOCALIZATION.md', 'lean-toolchain', 'lake-manifest.json']:
+              p = Path('project') / relative
+              if p.is_file():
+                  files['repository/' + relative] = hashlib.sha256(p.read_bytes()).hexdigest()
+          (out / 'artifact-sha256.json').write_text(json.dumps(files, indent=2) + '\n')
+          PY
+      - name: Upload native evidence before any root diagnostic
+        id: native_evidence
+        uses: actions/upload-artifact@v4
+        if: always()
+        timeout-minutes: 3
+        with:
+          name: knutsen-operator-compression-evidence-${{ github.run_id }}-${{ github.run_attempt }}-native
+          path: ${{ runner.temp }}/knutsen-operator-compression-evidence
+          if-no-files-found: error
+          retention-days: 30
+      - name: Record bounded root file, targeted Lake, and actual pre-push diagnostics
+        if: ${{ steps.native_acceptance.outcome == 'success' && steps.native_evidence_binding.outcome == 'success' && steps.native_evidence.outcome == 'success' }}
+        continue-on-error: true
+        timeout-minutes: 10
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import ctypes, hashlib, json, os, shutil, signal, subprocess, sys, time
+          from pathlib import Path
+          out = Path(os.environ['RUNNER_TEMP']) / 'knutsen-operator-compression-diagnostics'
+          out.mkdir()
+          native = Path(os.environ['RUNNER_TEMP']) / 'knutsen-operator-compression-evidence'
+          shutil.copyfile(native / 'context.json', out / 'native-context.json')
+          targets = os.environ['KNUTSEN_TARGETS'].split()
+          def git(*args):
+              return subprocess.check_output(['git', *args], text=True, timeout=10).strip()
+          head, tree, base = git('rev-parse', 'HEAD'), git('rev-parse', 'HEAD^{tree}'), git('rev-parse', 'origin/main')
+          assert head == os.environ['KNUTSEN_HEAD_SHA']
+          branch = os.environ.get('GITHUB_HEAD_REF') or os.environ['GITHUB_REF_NAME']
+          subprocess.run(['git', 'check-ref-format', '--branch', branch], check=True, timeout=10)
+          hook_input = f'refs/heads/{branch} {head} refs/heads/{branch} ' + '0' * 40 + '\n'
+          lake = shutil.which('lake')
+          assert lake
+          commands = [
+              ('root-file', [sys.executable, 'tools/infra/run_locked_lean.py', '--wait-for-build-lock',
+                             '--lake', lake, 'lean/InfoGeometry/OperatorAlgebra/IsometricCompression.lean'], None),
+              ('root-targeted-lake', [sys.executable, 'tools/infra/run_locked_lake_build.py',
+                                      '--wait-for-build-lock', *targets], None),
+              ('actual-pre-push', ['bash', '.githooks/pre-push', 'origin',
+                                  os.environ['GITHUB_SERVER_URL'] + '/' + os.environ['GITHUB_REPOSITORY'] + '.git'], hook_input),
+          ]
+          record = dict(head=head, tree=tree, origin_main=base, worktree_before=git('status', '--porcelain'),
+                        command_timeout_seconds=120, status='running',
+                        native_manifest_sha256=hashlib.sha256((native / 'artifact-sha256.json').read_bytes()).hexdigest(),
+                        commands=[dict(name=name, argv=argv, stdin=stdin, status='not_started')
+                                  for name, argv, stdin in commands])
+          def save():
+              temporary = out / 'root-diagnostics.json.tmp'
+              temporary.write_text(json.dumps(record, indent=2) + '\n')
+              temporary.replace(out / 'root-diagnostics.json')
+          save()
+          # build.py starts Lake in another session. Adopt orphaned descendants so
+          # cleanup can also terminate and reap that separate process group.
+          libc = ctypes.CDLL(None, use_errno=True)
+          if libc.prctl(36, 1, 0, 0, 0) != 0:  # PR_SET_CHILD_SUBREAPER
+              raise OSError(ctypes.get_errno(), 'cannot enable diagnostic child subreaper')
+          interrupted_signal = None
+          def request_interrupt(signum, frame):
+              global interrupted_signal
+              interrupted_signal = signum
+          signal.signal(signal.SIGTERM, request_interrupt)
+          signal.signal(signal.SIGINT, request_interrupt)
+          def descendants():
+              table = {}
+              for entry in Path('/proc').iterdir():
+                  if not entry.name.isdigit():
+                      continue
+                  try:
+                      stat = (entry / 'stat').read_text()
+                      fields = stat[stat.rfind(')') + 2:].split()
+                      table[int(entry.name)] = (int(fields[1]), int(fields[2]))
+                  except (FileNotFoundError, ProcessLookupError):
+                      pass
+              found = {os.getpid()}
+              while True:
+                  expanded = found | {pid for pid, (parent, _) in table.items() if parent in found}
+                  if expanded == found:
+                      return {pid: table[pid][1] for pid in found if pid != os.getpid()}
+                  found = expanded
+          def terminate_and_reap(proc):
+              deadline, terminated = time.monotonic() + 5, set()
+              while True:
+                  proc.poll()
+                  if proc.returncode is not None:
+                      while True:
+                          try:
+                              if os.waitpid(-1, os.WNOHANG)[0] == 0:
+                                  break
+                          except ChildProcessError:
+                              break
+                  children = descendants()
+                  if not children:
+                      return dict(complete=True, terminated_pids=sorted(terminated))
+                  # Kill all descendant groups, including nested Lake sessions;
+                  # individual kills cover any child still in our own group.
+                  for group in set(children.values()) - {os.getpgrp()}:
+                      try:
+                          os.killpg(group, signal.SIGKILL)
+                      except ProcessLookupError:
+                          pass
+                  for pid in children:
+                      try:
+                          os.kill(pid, signal.SIGKILL)
+                      except ProcessLookupError:
+                          pass
+                  terminated.update(children)
+                  if time.monotonic() >= deadline:
+                      return dict(complete=False, terminated_pids=sorted(terminated), remaining=descendants())
+                  try:
+                      proc.wait(timeout=0.1)
+                  except subprocess.TimeoutExpired:
+                      pass
+                  time.sleep(0.02)
+          for row in record['commands']:
+              if interrupted_signal is not None:
+                  break
+              row.update(started_at=time.time(), status='running', returncode=None)
+              save()
+              with (out / (row['name'] + '.log')).open('w') as log:
+                  try:
+                      proc = subprocess.Popen(row['argv'], stdin=subprocess.PIPE if row['stdin'] is not None else subprocess.DEVNULL,
+                                              stdout=log, stderr=subprocess.STDOUT, text=True, start_new_session=True)
+                  except OSError as error:
+                      row.update(status='launch_error', error=str(error))
+                  else:
+                      row['pid'] = proc.pid
+                      deadline, first = time.monotonic() + 120, True
+                      try:
+                          while True:
+                              if interrupted_signal is not None:
+                                  row.update(status='interrupted', signal=interrupted_signal)
+                                  break
+                              remaining = deadline - time.monotonic()
+                              if remaining <= 0:
+                                  row['status'] = 'timeout'
+                                  break
+                              try:
+                                  proc.communicate(input=row['stdin'] if first else None, timeout=min(0.25, remaining))
+                                  row['status'] = 'interrupted' if interrupted_signal is not None else 'completed'
+                                  break
+                              except subprocess.TimeoutExpired:
+                                  first = False
+                      finally:
+                          row['cleanup'] = terminate_and_reap(proc)
+                          row['returncode'] = proc.returncode
+                          if row['status'] == 'completed' and row['cleanup']['terminated_pids']:
+                              row.update(status='interrupted', reason='command exited with descendants still running')
+              row['finished_at'] = time.time()
+              record['worktree_after'] = git('status', '--porcelain')
+              save()
+              if not row.get('cleanup', {}).get('complete', True):
+                  break
+          record.update(status='interrupted' if interrupted_signal is not None else 'completed',
+                        interrupted_signal=interrupted_signal, finished_at=time.time())
+          save()
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
+              f.write('\n## Separate root diagnostics\n\n')
+              for row in record['commands']:
+                  f.write(f'- {row["name"]}: {row["status"]}, exit {row.get("returncode")}; see its saved log.\n')
+              f.write('\nThe pre-push hook was invoked unchanged; its printed stage labels do not establish full-root coverage.\n')
+          raise SystemExit(int(any(row['status'] != 'completed' or row.get('returncode') != 0
+                                   or not row.get('cleanup', {}).get('complete', False)
+                                   for row in record['commands'])))
+          PY
+      - name: Bind separate diagnostic evidence
+        if: always()
+        timeout-minutes: 1
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          out = Path(os.environ['RUNNER_TEMP']) / 'knutsen-operator-compression-diagnostics'
+          out.mkdir(exist_ok=True)
+          files = {str(p.relative_to(out)): hashlib.sha256(p.read_bytes()).hexdigest()
+                   for p in sorted(out.rglob('*')) if p.is_file() and p.name != 'artifact-sha256.json'}
+          (out / 'artifact-sha256.json').write_text(json.dumps(files, indent=2) + '\n')
+          PY
+      - name: Upload separate diagnostic evidence
+        uses: actions/upload-artifact@v4
+        if: always()
+        timeout-minutes: 3
+        with:
+          name: knutsen-operator-compression-evidence-${{ github.run_id }}-${{ github.run_attempt }}-root-diagnostics
+          path: ${{ runner.temp }}/knutsen-operator-compression-diagnostics
+          if-no-files-found: error
+          retention-days: 30

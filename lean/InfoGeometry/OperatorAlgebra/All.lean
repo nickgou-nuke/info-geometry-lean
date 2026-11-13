@@ -318,6 +318,8 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentMoritaForwardFunctor
 import InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentCornerEndEquivalence
 import InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentMoritaD39Synthesis
 
+import InfoGeometry.OperatorAlgebra.PeirceDefectBoundaryAll
+
 namespace InfoGeometry.OperatorAlgebra
 
 /-!

@@ -53,35 +53,57 @@ def suffixParity : (n : ℕ) → (Fin n → Bool) → Fin n → Bool
 @[simp] theorem nativeChain_zero (a : Fin 0 → CliffordAlgebra q11) :
     nativeChain 0 a = 1 := rfl
 
+/-- Fixing the tail leaves the actual native head insertion as a linear map. -/
+private def headConsLinear (n : ℕ) (x : Clsplit n) :
+    CliffordAlgebra q11 →ₗ[ℝ] Clsplit (n + 1) :=
+  (headTensorEquiv n).symm.toLinearMap.comp
+    ((GradedTensorProduct.of ℝ (CliffordAlgebra.evenOdd q11)
+      (CliffordAlgebra.evenOdd (Qsplit n))).toLinearMap.comp
+        ((TensorProduct.mk ℝ (CliffordAlgebra q11) (Clsplit n)).flip x))
+
 theorem consNative_add_head (n : ℕ) (a b : CliffordAlgebra q11) (x : Clsplit n) :
     consNative n (a + b) x = consNative n a x + consNative n b x := by
-  simp only [consNative_apply, GradedTensorProduct.tmul, TensorProduct.add_tmul, map_add]
+  exact map_add (headConsLinear n x) a b
 
 theorem consNative_smul_head (n : ℕ) (r : ℝ) (a : CliffordAlgebra q11)
     (x : Clsplit n) :
     consNative n (r • a) x = r • consNative n a x := by
-  simp only [consNative_apply, GradedTensorProduct.tmul, TensorProduct.smul_tmul,
-    TensorProduct.tmul_smul, map_smul]
+  exact map_smul (headConsLinear n x) r a
 
 @[simp] theorem consNative_neg_head (n : ℕ) (a : CliffordAlgebra q11)
     (x : Clsplit n) :
     consNative n (-a) x = -consNative n a x := by
-  simp only [consNative_apply, GradedTensorProduct.tmul, TensorProduct.neg_tmul, map_neg]
+  exact map_neg (headConsLinear n x) a
 
 @[simp] theorem consNative_zero_head (n : ℕ) (x : Clsplit n) :
     consNative n (0 : CliffordAlgebra q11) x = 0 := by
-  simp [consNative_apply, GradedTensorProduct.tmul]
+  exact map_zero (headConsLinear n x)
 
 @[simp] theorem nativeChain_zero_head (n : ℕ) (a : Fin n → CliffordAlgebra q11) :
     nativeChain (n + 1) (Fin.cons 0 a) = 0 := by
-  simp [nativeChain]
+  change consNative n (0 : CliffordAlgebra q11) (nativeChain n a) = 0
+  exact consNative_zero_head n (nativeChain n a)
 
 theorem nativeParity_consNative (n : ℕ) (a : CliffordAlgebra q11) (x : Clsplit n) :
     nativeParity (n + 1) (consNative n a x) =
       consNative n (CliffordAlgebra.involute a) (nativeParity n x) := by
+  change nativeParity (n + 1)
+      ((headTensorEquiv n).symm (a ᵍ⊗ₜ x)) =
+    (headTensorEquiv n).symm
+      (CliffordAlgebra.involute a ᵍ⊗ₜ nativeParity n x)
   apply (headTensorEquiv n).injective
-  rw [headTensorEquiv_involute]
-  simp only [consNative_apply, AlgEquiv.apply_symm_apply, tensorParity_tmul]
+  exact
+    (headTensorEquiv_involute n
+      ((headTensorEquiv n).symm (a ᵍ⊗ₜ x))).trans
+      ((congrArg
+        (tensorParity (CliffordAlgebra.evenOdd (Qsplit n)) (nativeParity n)
+          (nativeParity_even n) (nativeParity_odd n))
+        ((headTensorEquiv n).apply_symm_apply (a ᵍ⊗ₜ x))).trans
+        ((tensorParity_tmul (CliffordAlgebra.evenOdd (Qsplit n))
+          (nativeParity n) (nativeParity_even n) (nativeParity_odd n)
+          a x).trans
+          ((headTensorEquiv n).apply_symm_apply
+            (CliffordAlgebra.involute a ᵍ⊗ₜ nativeParity n x)).symm))
 
 /-- Homogeneity is checked against the actual native Clifford involution. -/
 theorem nativeChain_homogeneous (n : ℕ) (a : Fin n → CliffordAlgebra q11)
@@ -89,7 +111,7 @@ theorem nativeChain_homogeneous (n : ℕ) (a : Fin n → CliffordAlgebra q11)
     (h : ∀ i, CliffordAlgebra.involute (a i) = if p i then -(a i) else a i) :
     nativeParity n (nativeChain n a) =
       if totalParity n p then -nativeChain n a else nativeChain n a := by
-  induction n generalizing a p with
+  induction n with
   | zero => simp [nativeChain, totalParity]
   | succ n ih =>
       have ht := ih (Fin.tail a) (Fin.tail p) (fun i => h i.succ)
@@ -124,8 +146,12 @@ def ordinaryChain : (n : ℕ) →
 theorem ordinaryChain_apply (n : ℕ) (a : Fin n → Matrix (Fin 2) (Fin 2) ℝ)
     (i j : Bits n) :
     ordinaryChain n a i j = ∏ k, a k (i k) (j k) := by
-  induction n generalizing a i j with
-  | zero => simp [ordinaryChain, Subsingleton.elim i j]
+  induction n with
+  | zero =>
+      have hij : i = j := Subsingleton.elim _ _
+      subst j
+      change (1 : RealMatrix 0) i i = _
+      exact (Matrix.one_apply_eq i).trans (Fin.prod_univ_zero _).symm
   | succ n ih =>
       rw [ordinaryChain, prependMatrix_apply, ih, Fin.prod_univ_succ]
       rfl
@@ -163,7 +189,7 @@ theorem nativeChain_matrix_suffixParity (n : ℕ) (a : Fin n → CliffordAlgebra
     leftMatrixEquiv n (nativeChain n a) =
       ordinaryChain n
         (fun i => cl11EquivMat (a i * J1_cl ^ (suffixParity n p i).toNat)) := by
-  induction n generalizing a p with
+  induction n with
   | zero => simp [nativeChain, ordinaryChain]
   | succ n ih =>
       calc
@@ -245,13 +271,13 @@ theorem consNative_atom_expansion (n : ℕ) (a : CliffordAlgebra q11) (x : Clspl
       atomCoordinates a 2 • consNative n J1_cl x +
       atomCoordinates a 3 • consNative n (CliffordAlgebra.ι q11 (0, 1)) x := by
   calc
-    consNative n a x = consNative n
+    consNative n a x = headConsLinear n x
         (atomCoordinates a 0 • (1 : CliffordAlgebra q11) +
           atomCoordinates a 1 • CliffordAlgebra.ι q11 (1, 0) +
           atomCoordinates a 2 • J1_cl +
-          atomCoordinates a 3 • CliffordAlgebra.ι q11 (0, 1)) x :=
-      congrArg (fun y => consNative n y x) (atom_expansion a)
-    _ = _ := by simp only [consNative_add_head, consNative_smul_head]
+          atomCoordinates a 3 • CliffordAlgebra.ι q11 (0, 1)) :=
+      congrArg (headConsLinear n x) (atom_expansion a)
+    _ = _ := by simp only [map_add, map_smul] <;> rfl
 
 universe u
 variable (B : Type u) [Ring B] [Algebra ℝ B]
@@ -305,11 +331,20 @@ theorem pureCoefficients_cons (n : ℕ) (a : Fin (n + 1) → CliffordAlgebra q11
 theorem wordReconstruct_pureCoefficients (n : ℕ) (a : Fin n → CliffordAlgebra q11)
     (b : B) :
     wordReconstruct B n (pureCoefficients B n a b) = nativeChain n a ⊗ₜ[ℝ] b := by
-  induction n generalizing a with
-  | zero => simp [wordReconstruct_zero, nativeChain]
+  induction n with
+  | zero =>
+      exact (wordReconstruct_zero B (pureCoefficients B 0 a b)).trans
+        (congrArg (fun y => (1 : Clsplit 0) ⊗ₜ[ℝ] y)
+          (pureCoefficients_zero_stage B a b default))
   | succ n ih =>
       rw [wordReconstruct_succ]
-      simp only [pureCoefficients_cons, map_smul, ih, consTensor_tmul]
+      simp only [pureCoefficients_cons, map_smul, ih]
+      rw [consTensor_tmul B n (1 : CliffordAlgebra q11) (nativeChain n (Fin.tail a)) b,
+        consTensor_tmul B n (CliffordAlgebra.ι q11 (1, 0))
+          (nativeChain n (Fin.tail a)) b,
+        consTensor_tmul B n J1_cl (nativeChain n (Fin.tail a)) b,
+        consTensor_tmul B n (CliffordAlgebra.ι q11 (0, 1))
+          (nativeChain n (Fin.tail a)) b]
       conv_rhs =>
         rw [nativeChain,
           consNative_atom_expansion n (a 0) (nativeChain n (Fin.tail a))]

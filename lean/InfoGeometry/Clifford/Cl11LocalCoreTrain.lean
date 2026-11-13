@@ -80,9 +80,12 @@ theorem consTensor_add_head (n : ℕ) (a a' : CliffordAlgebra q11)
     consTensor B n (a + a') z = consTensor B n a z + consTensor B n a' z := by
   induction z using TensorProduct.inductionOn with
   | tmul x b =>
-      simp only [consTensor_tmul, consNative_add_head, TensorProduct.add_tmul]
+      change consNative n (a + a') x ⊗ₜ[ℝ] b =
+        consNative n a x ⊗ₜ[ℝ] b + consNative n a' x ⊗ₜ[ℝ] b
+      rw [consNative_add_head n a a' x, TensorProduct.add_tmul]
   | add x y hx hy =>
-      simp only [map_add, hx, hy]
+      rw [(consTensor B n (a + a')).map_add x y,
+        (consTensor B n a).map_add x y, (consTensor B n a').map_add x y, hx, hy]
       abel
 
 theorem consTensor_smul_head (n : ℕ) (r : ℝ) (a : CliffordAlgebra q11)
@@ -90,14 +93,26 @@ theorem consTensor_smul_head (n : ℕ) (r : ℝ) (a : CliffordAlgebra q11)
     consTensor B n (r • a) z = r • consTensor B n a z := by
   induction z using TensorProduct.inductionOn with
   | tmul x b =>
-      simp only [consTensor_tmul, consNative_smul_head, TensorProduct.smul_tmul,
-        TensorProduct.tmul_smul]
-  | add x y hx hy => simp only [map_add, hx, hy, smul_add]
+      change consNative n (r • a) x ⊗ₜ[ℝ] b = r • (consNative n a x ⊗ₜ[ℝ] b)
+      rw [consNative_smul_head n r a x]
+  | add x y hx hy =>
+      rw [(consTensor B n (r • a)).map_add x y,
+        (consTensor B n a).map_add x y, hx, hy, smul_add]
 
 theorem consTensor_localAtom (n : ℕ) (v : Fin 4 → ℝ) (z : Clsplit n ⊗[ℝ] B) :
     consTensor B n (localAtom v) z =
       ∑ α, v α • consTensor B n (basisAtom α) z := by
-  simp only [localAtom, Fin.sum_univ_four, consTensor_add_head, consTensor_smul_head]
+  simp only [localAtom, Fin.sum_univ_four]
+  rw [consTensor_add_head B n
+      (v 0 • basisAtom 0 + v 1 • basisAtom 1 + v 2 • basisAtom 2)
+      (v 3 • basisAtom 3) z,
+    consTensor_add_head B n (v 0 • basisAtom 0 + v 1 • basisAtom 1)
+      (v 2 • basisAtom 2) z,
+    consTensor_add_head B n (v 0 • basisAtom 0) (v 1 • basisAtom 1) z,
+    consTensor_smul_head B n (v 0) (basisAtom 0) z,
+    consTensor_smul_head B n (v 1) (basisAtom 1) z,
+    consTensor_smul_head B n (v 2) (basisAtom 2) z,
+    consTensor_smul_head B n (v 3) (basisAtom 3) z]
 
 /-- A local atom acts on an arbitrary tail coefficient tensor through the
 already established native four-word synthesis; the tail need not be pure. -/

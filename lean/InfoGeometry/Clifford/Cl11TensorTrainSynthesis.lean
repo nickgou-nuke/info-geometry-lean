@@ -95,7 +95,7 @@ theorem exists_minimal_clifford_train (n : ℕ) (M : CoefficientMatrix ℝ n) :
   obtain ⟨T, hT, hminimal⟩ := exists_rank_minimal_train 4 n 1 C
   refine ⟨T, (trainMatrix_eq_iff ℝ T M).mpr hT, hminimal, ?_⟩
   intro S hS k
-  have hSC := (trainMatrix_eq_iff ℝ S M).mp hS
+  have hSC : S.coeff = C := (trainMatrix_eq_iff ℝ S M).mp hS
   rw [hminimal k, ← hSC]
   exact cutRank_coeff_le_bond S k.succ
 

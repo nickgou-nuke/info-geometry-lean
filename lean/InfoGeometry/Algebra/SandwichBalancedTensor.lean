@@ -109,12 +109,16 @@ noncomputable def evaluateTensor (s : B) : Total s →ₗ[ℤ] Space s :=
 
 private theorem scalar_of_left (s : B) (c : Centralizer s) (x : B) :
     CentralPowerLocalization.of (denominator s) c • of s x = of s ((c : B) * x) := by
+  change CentralPowerLocalization.of (denominator s) c • repr s 0 x 0 =
+    repr s 0 ((c : B) * x) 0
   simpa only [CentralPowerLocalization.repr_zero, Nat.zero_add, Nat.add_zero] using
     left_smul_repr s 0 0 0 c x
 
 private theorem scalar_of_right (s : B) (c : Centralizer s) (x : B) :
     MulOpposite.op (CentralPowerLocalization.of (denominator s) c) • of s x =
       of s (x * (c : B)) := by
+  change MulOpposite.op (CentralPowerLocalization.of (denominator s) c) • repr s 0 x 0 =
+    repr s 0 (x * (c : B)) 0
   simpa only [CentralPowerLocalization.repr_zero, Nat.zero_add, Nat.add_zero] using
     right_smul_repr s 0 0 0 c x
 
@@ -149,6 +153,9 @@ theorem evaluate_pure_repr (s : B) (k l : ℕ) (u v : Centralizer s) (x : B) :
         (CentralPowerLocalization.repr (denominator s) l v)) =
       repr s k ((u : B) * x * (v : B)) l := by
   rw [evaluate_pure]
+  change CentralPowerLocalization.repr (denominator s) k u •
+      (MulOpposite.op (CentralPowerLocalization.repr (denominator s) l v) • repr s 0 x 0) =
+    repr s k ((u : B) * x * (v : B)) l
   simpa only [Nat.zero_add] using bimodule_repr s k l 0 0 u v x
 
 private theorem repr_one_mul_of (s : B) (k : ℕ) (u : Centralizer s) :

@@ -193,7 +193,9 @@ theorem represented_pairWord_vacuum :
   norm_num [e, vacuumIndex, jwMajoranaPlus, jwCreation, jwAnnihilation, jwStringWithBase,
     globalChirality, kronPow, Idx, gamma_chiral_base, gamma_0_base, gamma_1_base,
     wittCreationBase, wittAnnihilationBase, Cl11Matrix.J1, Cl11Matrix.Eminus,
-    Matrix.mul_apply, Matrix.kronecker_apply, Fintype.sum_prod_type, Fin.sum_univ_succ]
+    Matrix.mul_apply, Matrix.kronecker_apply, Fintype.sum_prod_type, Fin.sum_univ_succ] <;>
+    norm_num [Matrix.add_apply, Pi.add_apply, Matrix.kroneckerMap, Matrix.of_apply,
+      Matrix.one_apply]
 
 theorem represented_tripleWord_vacuum :
     jwCliffordRepresentation 3 tripleWord vacuumIndex vacuumIndex = 1 := by
@@ -210,7 +212,9 @@ theorem represented_tripleWord_vacuum :
   norm_num [e, vacuumIndex, jwMajoranaPlus, jwCreation, jwAnnihilation, jwStringWithBase,
     globalChirality, kronPow, Idx, gamma_chiral_base, gamma_0_base, gamma_1_base,
     wittCreationBase, wittAnnihilationBase, Cl11Matrix.J1, Cl11Matrix.Eminus,
-    Matrix.mul_apply, Matrix.kronecker_apply, Fintype.sum_prod_type, Fin.sum_univ_succ]
+    Matrix.mul_apply, Matrix.kronecker_apply, Fintype.sum_prod_type, Fin.sum_univ_succ] <;>
+    norm_num [Matrix.add_apply, Pi.add_apply, Matrix.kroneckerMap, Matrix.of_apply,
+      Matrix.one_apply]
 
 theorem represented_tripleMiddleWord_vacuum :
     jwCliffordRepresentation 3 tripleMiddleWord vacuumIndex vacuumIndex = 0 := by
@@ -227,7 +231,9 @@ theorem represented_tripleMiddleWord_vacuum :
   norm_num [e, vacuumIndex, jwMajoranaPlus, jwCreation, jwAnnihilation, jwStringWithBase,
     globalChirality, kronPow, Idx, gamma_chiral_base, gamma_0_base, gamma_1_base,
     wittCreationBase, wittAnnihilationBase, Cl11Matrix.J1, Cl11Matrix.Eminus,
-    Matrix.mul_apply, Matrix.kronecker_apply, Fintype.sum_prod_type, Fin.sum_univ_succ]
+    Matrix.mul_apply, Matrix.kronecker_apply, Fintype.sum_prod_type, Fin.sum_univ_succ] <;>
+    norm_num [Matrix.add_apply, Pi.add_apply, Matrix.kroneckerMap, Matrix.of_apply,
+      Matrix.one_apply]
 
 /-- The failed extension of `q² = 2q` has an exact nonzero matrix-entry defect. -/
 theorem represented_tripleWord_scaling_defect :

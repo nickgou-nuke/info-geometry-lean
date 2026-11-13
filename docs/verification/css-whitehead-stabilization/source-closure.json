@@ -1,0 +1,123 @@
+{
+  "status": "passed",
+  "scope": "Exact repository source closure and native axiom audit",
+  "targets": [
+    "InfoGeometry.Algebra.ElementaryMatrixOperators",
+    "InfoGeometry.Algebra.WhiteheadStabilization",
+    "InfoGeometry.Algebra.StablePresentationEquivalence",
+    "InfoGeometry.Algebra.StablePaddingEquivalence",
+    "InfoGeometry.Algebra.HyperbolicPresentationTransport",
+    "InfoGeometry.Canonical.SpinorialCore.KreinAdjoint"
+  ],
+  "modules": [
+    {
+      "module": "InfoGeometry.Algebra.ElementaryMatrixOperators",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Algebra/ElementaryMatrixOperators.olean": "1970f8dad015e91e0d9fe9e90999336de2581b471a84b4fee717d2941918d47e"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Algebra.WhiteheadStabilization",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Algebra/WhiteheadStabilization.olean": "f324314a759c4afe99735928e7cace26fd52458301a6d833003d43767641698a"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Algebra.StablePresentationEquivalence",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Algebra/StablePresentationEquivalence.olean": "59cce2edb5564afbdfdf6d4064bf1cfd03529f0a74223be9a8221fe5369c17ab"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Algebra.StablePaddingEquivalence",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Algebra/StablePaddingEquivalence.olean": "b4bf05e23428fac5b77a11f256015c7dc7250eee01dbe4a138e66ec11183a025"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Canonical.SpinorialCore.KreinAdjoint",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.olean": "bf650a93b18860a24dbeaea0edaa0080bfd03ea23777e4bf30007d71d3482c8e"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Algebra.HyperbolicPresentationTransport",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Algebra/HyperbolicPresentationTransport.olean": "59ba85ee30b19ebd6503b7941ba02f8d492a0b18f86cbf775893a390ed5ad854"
+      },
+      "reused": false
+    }
+  ],
+  "audit_required": true,
+  "verification_source_sha256": {
+    "tools/quality/check_clifford_dirac.py": "fcf6fbb9845e0ee2a85bdb3778c5fe74345a9ae7a2e97e871d0a89d3e98e7db0",
+    "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+    "tools/quality/reviewed_audit_source.py": "df953460ee18e79606afa03f1634e0d299730582c24971888649cf68d18bcbf4",
+    "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df"
+  },
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "source_sha256": {
+    "InfoGeometry.Algebra.ElementaryMatrixOperators": "71c041a3bcc3ef6be614ada7e31f9f8e67deee1e5bd4229e675bb145d83abdca",
+    "InfoGeometry.Algebra.WhiteheadStabilization": "e860509e7bd0f4e81f66140f6d7e36690fbd9917efc0bd05ce943a9574681a80",
+    "InfoGeometry.Algebra.StablePresentationEquivalence": "aa0cb9fdbc010289ebee7d649ec6eccc3d140c16a45971e14f343e6b62a176ca",
+    "InfoGeometry.Algebra.StablePaddingEquivalence": "4fcc593c8b5ad260c3a520681dc79f9501baa29cfbeb426882d79aafcec2d581",
+    "InfoGeometry.Canonical.SpinorialCore.KreinAdjoint": "a6fa1871a8e165c9e75b8ea868538bb9fc0cb161e44189010d3ba9b8ba835f65",
+    "InfoGeometry.Algebra.HyperbolicPresentationTransport": "cf0b2c003261493420b58120f5a37313c28db3665fb64d191c3a251749555f25"
+  },
+  "fingerprints": {
+    "InfoGeometry.Algebra.ElementaryMatrixOperators": "c9d9fa61303c840696e8bf2f2579228eb94df7f56573f3b9db2fdd264fdb035b",
+    "InfoGeometry.Algebra.WhiteheadStabilization": "f6cec169bf92d156afb43b1f379efaeb384d5f2e4bc24dda7fb4c998d0311a53",
+    "InfoGeometry.Algebra.StablePresentationEquivalence": "dac0c5a065316ae45c9b76c409285b5081760c23595de5920f6a88ac10a25088",
+    "InfoGeometry.Algebra.StablePaddingEquivalence": "e5fb02c0f240b3a184e3ab9c9cdecd67ad9279a731c66225635bf25b5bea3e4e",
+    "InfoGeometry.Canonical.SpinorialCore.KreinAdjoint": "83ac57ed76e43e6d6c5b9b4810dc0c2e85363427fbe7645115ecc0ef03a7ed9d",
+    "InfoGeometry.Algebra.HyperbolicPresentationTransport": "55a65abf22cd63f03ac91596662b8dafb22e64f7dc6845412d5ed30f0f804d51"
+  },
+  "repository_import_dependencies": {
+    "InfoGeometry.Algebra.ElementaryMatrixOperators": [],
+    "InfoGeometry.Algebra.WhiteheadStabilization": [
+      "InfoGeometry.Algebra.ElementaryMatrixOperators"
+    ],
+    "InfoGeometry.Algebra.StablePresentationEquivalence": [
+      "InfoGeometry.Algebra.WhiteheadStabilization"
+    ],
+    "InfoGeometry.Algebra.StablePaddingEquivalence": [
+      "InfoGeometry.Algebra.StablePresentationEquivalence"
+    ],
+    "InfoGeometry.Canonical.SpinorialCore.KreinAdjoint": [],
+    "InfoGeometry.Algebra.HyperbolicPresentationTransport": [
+      "InfoGeometry.Algebra.WhiteheadStabilization",
+      "InfoGeometry.Canonical.SpinorialCore.KreinAdjoint"
+    ]
+  },
+  "local_revision": "abd22cd4badf6df017cc85fa137cb2160f48eca9",
+  "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "declaration_counts": {
+    "InfoGeometry.Algebra.ElementaryMatrixOperators": 42,
+    "InfoGeometry.Algebra.WhiteheadStabilization": 14,
+    "InfoGeometry.Algebra.StablePresentationEquivalence": 43,
+    "InfoGeometry.Algebra.StablePaddingEquivalence": 21,
+    "InfoGeometry.Algebra.HyperbolicPresentationTransport": 26,
+    "InfoGeometry.Canonical.SpinorialCore.KreinAdjoint": 25
+  },
+  "axioms": [
+    "[propext, Classical.choice, Quot.sound]"
+  ]
+}

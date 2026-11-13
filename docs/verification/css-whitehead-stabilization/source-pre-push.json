@@ -1,0 +1,13 @@
+{
+  "command": [
+    ".githooks/pre-push",
+    "origin",
+    "https://github.com/nickgou-nuke/info-geometry-lean.git"
+  ],
+  "stdin": "refs/heads/codex/css-whitehead-stabilization abd22cd4badf6df017cc85fa137cb2160f48eca9 refs/heads/codex/css-whitehead-stabilization 0000000000000000000000000000000000000000\n",
+  "source_commit": "abd22cd4badf6df017cc85fa137cb2160f48eca9",
+  "base": "a392af178af1fe2bcba2ba39eb405700c6ee103c",
+  "returncode": 1,
+  "seconds": 195.774,
+  "PATH_prepend": "/workspace/scratch/4796737fb777/lean-environment/lean-4.34.1-linux/bin"
+}

@@ -1,0 +1,10 @@
+proof_proxy_staged_gate: ok
+[codex/css-whitehead-stabilization abd22cd4] Formalize constructive Whitehead stabilization and padded matrix equivalence
+ 8 files changed, 1433 insertions(+)
+ create mode 100644 .github/workflows/css-whitehead-stabilization.yml
+ create mode 100644 docs/CSS_WHITEHEAD_STABILIZATION_CONTRACT.md
+ create mode 100644 lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean
+ create mode 100644 lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean
+ create mode 100644 lean/InfoGeometry/Algebra/StablePaddingEquivalence.lean
+ create mode 100644 lean/InfoGeometry/Algebra/StablePresentationEquivalence.lean
+ create mode 100644 lean/InfoGeometry/Algebra/WhiteheadStabilization.lean

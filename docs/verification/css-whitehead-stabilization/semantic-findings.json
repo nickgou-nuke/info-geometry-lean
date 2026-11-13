@@ -1,0 +1,190 @@
+{
+  "authority": "lexical heuristics; not a semantic or kernel proof",
+  "blocking_severity_counts": {
+    "warning": 18
+  },
+  "counts": {
+    "trivial_surface": 18
+  },
+  "coverage_complete": true,
+  "fail_on": "warning",
+  "fail_prefixes": [],
+  "files_scanned": 6,
+  "files_selected": 6,
+  "findings": [
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean",
+      "line": 60,
+      "severity": "warning",
+      "subject": "coe_elementaryUnit"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean",
+      "line": 64,
+      "severity": "warning",
+      "subject": "coe_elementaryUnit_inv"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean",
+      "line": 126,
+      "severity": "warning",
+      "subject": "coe_upperUnit"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean",
+      "line": 130,
+      "severity": "warning",
+      "subject": "coe_lowerUnit"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean",
+      "line": 225,
+      "severity": "warning",
+      "subject": "coe_reindexUnit"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean",
+      "line": 48,
+      "severity": "warning",
+      "subject": "inverseAdjoint_apply"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean",
+      "line": 51,
+      "severity": "warning",
+      "subject": "coe_inverseAdjoint"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean",
+      "line": 56,
+      "severity": "warning",
+      "subject": "inverseAdjoint_involutive"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean",
+      "line": 77,
+      "severity": "warning",
+      "subject": "coe_hyperbolicLift"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean",
+      "line": 116,
+      "severity": "warning",
+      "subject": "skewForm_conjTranspose"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/Algebra/StablePaddingEquivalence.lean",
+      "line": 61,
+      "severity": "warning",
+      "subject": "appendZeroRows_natAdd"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/Algebra/WhiteheadStabilization.lean",
+      "line": 42,
+      "severity": "warning",
+      "subject": "coe_blockDiagonalUnit"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/Algebra/WhiteheadStabilization.lean",
+      "line": 75,
+      "severity": "warning",
+      "subject": "coe_balancedUnit"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/Algebra/WhiteheadStabilization.lean",
+      "line": 109,
+      "severity": "warning",
+      "subject": "stabilization_identity"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/Algebra/WhiteheadStabilization.lean",
+      "line": 120,
+      "severity": "warning",
+      "subject": "zeroRow_stabilization_identity"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean",
+      "line": 21,
+      "severity": "warning",
+      "subject": "sharp_add"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean",
+      "line": 24,
+      "severity": "warning",
+      "subject": "sharp_neg"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean",
+      "line": 27,
+      "severity": "warning",
+      "subject": "sharp_sub"
+    }
+  ],
+  "pattern_version": 1,
+  "read_failures": [],
+  "scope_roots": [
+    "lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean",
+    "lean/InfoGeometry/Algebra/WhiteheadStabilization.lean",
+    "lean/InfoGeometry/Algebra/StablePresentationEquivalence.lean",
+    "lean/InfoGeometry/Algebra/StablePaddingEquivalence.lean",
+    "lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean",
+    "lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean"
+  ],
+  "severity_counts": {
+    "warning": 18
+  },
+  "source_paths": [
+    "lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean",
+    "lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean",
+    "lean/InfoGeometry/Algebra/StablePaddingEquivalence.lean",
+    "lean/InfoGeometry/Algebra/StablePresentationEquivalence.lean",
+    "lean/InfoGeometry/Algebra/WhiteheadStabilization.lean",
+    "lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean"
+  ],
+  "successfully_read_paths": [
+    "lean/InfoGeometry/Algebra/ElementaryMatrixOperators.lean",
+    "lean/InfoGeometry/Algebra/HyperbolicPresentationTransport.lean",
+    "lean/InfoGeometry/Algebra/StablePaddingEquivalence.lean",
+    "lean/InfoGeometry/Algebra/StablePresentationEquivalence.lean",
+    "lean/InfoGeometry/Algebra/WhiteheadStabilization.lean",
+    "lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean"
+  ],
+  "tracked": false
+}

@@ -5,6 +5,8 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Algebra.CyclicMatrixCurvature
 import InfoGeometry.Canonical.FreedOperatorAlgebra
+import InfoGeometry.Algebra.StablePaddingEquivalence
+import InfoGeometry.Algebra.HyperbolicPresentationTransport
 import InfoGeometry.Canonical.OperatorContentNetwork
 import InfoGeometry.Canonical.DiscreteFrameCommutator
 import InfoGeometry.Canonical.ZornMovingCornerBoundary

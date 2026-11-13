@@ -47,21 +47,25 @@ namespace Train
 /-- Ordered contraction, retaining the incoming bond as the matrix row. -/
 def coeff {K : Type u} [Semiring K] {q : ℕ} :
     {n r : ℕ} → Train K q n r → Matrix (Fin r) (Fin n → Fin q) K :=
-  fun {_ _} T =>
-    Train.rec (motive := fun n r _ => Matrix (Fin r) (Fin n → Fin q) K)
-      (fun {_} boundary => Matrix.of fun a _ => boundary a)
-      (fun {_ _ _} core _ ih => Matrix.of fun a word =>
-        ∑ j, core (word 0) a j * ih j (fun i => word i.succ))
-      T
+  fun {n _} T =>
+    Nat.rec (motive := fun n => {r : ℕ} → Train K q n r →
+        Matrix (Fin r) (Fin n → Fin q) K)
+      (fun {_} T => match T with
+        | .nil boundary => Matrix.of fun a _ => boundary a)
+      (fun _ ih {_} T => match T with
+        | .cons core tail => Matrix.of fun a word =>
+            ∑ j, core (word 0) a j * ih tail j (fun i => word i.succ))
+      n T
 
 /-- The actual dimension of the incoming bond and each successive bond. -/
 def bond {K : Type u} {q : ℕ} :
     {n r : ℕ} → Train K q n r → Fin (n + 1) → ℕ :=
-  fun {_ _} T =>
-    Train.rec (motive := fun n _ _ => Fin (n + 1) → ℕ)
+  fun {n _} T =>
+    Nat.rec (motive := fun n => {r : ℕ} → Train K q n r → Fin (n + 1) → ℕ)
       (fun {r} _ _ => r)
-      (fun {_ r _} _ _ ih => Fin.cases r ih)
-      T
+      (fun _ ih {r} T => match T with
+        | .cons _ tail => Fin.cases r (ih tail))
+      n T
 
 @[simp] theorem bond_zero {K : Type u} {q n r : ℕ} (T : Train K q n r) :
     T.bond 0 = r := by
@@ -74,11 +78,14 @@ def bond {K : Type u} {q : ℕ} :
 /-- The actual terminal boundary vector, indexed by the final bond. -/
 def terminalBoundary {K : Type u} {q : ℕ} :
     {n r : ℕ} → (T : Train K q n r) → Fin (T.bond (Fin.last n)) → K :=
-  fun {_ _} T =>
-    Train.rec (motive := fun n _ T => Fin (T.bond (Fin.last n)) → K)
-      (fun {_} boundary => boundary)
-      (fun {_ _ _} _ _ ih => ih)
-      T
+  fun {n _} T =>
+    Nat.rec (motive := fun n => {r : ℕ} →
+        (T : Train K q n r) → Fin (T.bond (Fin.last n)) → K)
+      (fun {_} T => match T with
+        | .nil boundary => boundary)
+      (fun _ ih {_} T => match T with
+        | .cons _ tail => ih tail)
+      n T
 
 /-- Absorb the terminal vector into the last actual core, in multiplication
 order. A positive-length train then ends at a one-dimensional unit boundary.
@@ -86,16 +93,17 @@ An empty train is unchanged because it has no core into which to absorb its
 boundary. Earlier cores and bond dimensions remain unchanged. -/
 def absorbTerminalBoundary {K : Type u} [Semiring K] {q : ℕ} :
     {n r : ℕ} → Train K q n r → Train K q n r :=
-  fun {_ _} T =>
-    Train.rec (motive := fun n r _ => Train K q n r)
-      (fun {_} boundary => .nil boundary)
-      (fun {n _ _} core tail ih =>
-        match n, tail, ih with
-        | 0, .nil boundary, _ =>
-            .cons (fun a => Matrix.of fun i (_ : Fin 1) =>
-              ∑ j, core a i j * boundary j) (.nil fun _ : Fin 1 => 1)
-        | _ + 1, _, normalized => .cons core normalized)
-      T
+  fun {n _} T =>
+    Nat.rec (motive := fun n => {r : ℕ} → Train K q n r → Train K q n r)
+      (fun {_} T => T)
+      (fun n ih {_} T => match T with
+        | .cons core tail =>
+            match n, tail, ih tail with
+            | 0, .nil boundary, _ =>
+                .cons (fun a => Matrix.of fun i (_ : Fin 1) =>
+                  ∑ j, core a i j * boundary j) (.nil fun _ : Fin 1 => 1)
+            | _ + 1, _, normalized => .cons core normalized)
+      n T
 
 @[simp] theorem absorbTerminalBoundary_nil {K : Type u} [Semiring K] {q r : ℕ}
     (boundary : Fin r → K) :

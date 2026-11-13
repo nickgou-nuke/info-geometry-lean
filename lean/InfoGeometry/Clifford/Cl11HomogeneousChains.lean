@@ -116,9 +116,11 @@ theorem nativeChain_homogeneous (n : ℕ) (a : Fin n → CliffordAlgebra q11)
   | zero => simp [nativeChain, totalParity]
   | succ n ih =>
       have ht := ih (Fin.tail a) (Fin.tail p) (fun i => h i.succ)
-      rw [nativeChain, nativeParity_consNative, h 0, ht]
+      have hpar : totalParity (n + 1) p =
+          Bool.xor (p 0) (totalParity n (Fin.tail p)) := rfl
+      rw [nativeChain, nativeParity_consNative, h 0, ht, hpar]
       cases hp : p 0 <;> cases hs : totalParity n (Fin.tail p) <;>
-        simp [nativeChain, totalParity, hp, hs]
+        simp [nativeChain, hp, hs]
       · exact consNative_neg_head n (a 0) (nativeChain n (Fin.tail a))
       · exact (congrArg (fun z => -z)
           (consNative_neg_head n (a 0) (nativeChain n (Fin.tail a)))).trans (neg_neg _)

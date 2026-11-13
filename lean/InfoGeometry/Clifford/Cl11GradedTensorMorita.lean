@@ -65,13 +65,14 @@ def tail (θ : A ≃ₐ[ℝ] A) : A →ₐ[ℝ] Matrix (Fin 2) (Fin 2) A where
 
 private theorem scalar_comm (r : ℝ) (a : A) :
     algebraMap ℝ A r * a = a * algebraMap ℝ A r :=
-  (Algebra.commutes r a).eq
+  Algebra.commutes r a
 
 variable (𝒜 : ZMod 2 → Submodule ℝ A) [GradedAlgebra 𝒜]
 variable (θ : A ≃ₐ[ℝ] A)
 variable (hEven : ∀ {a : A}, a ∈ 𝒜 0 → θ a = a)
 variable (hOdd : ∀ {a : A}, a ∈ 𝒜 1 → θ a = -a)
 
+include 𝒜 hEven hOdd in
 /-- The sign action on the native homogeneous components forces the
 coefficient automorphism to be involutive on the entire algebra. -/
 theorem coefficientParity_involutive : Function.Involutive θ := by
@@ -87,6 +88,8 @@ theorem coefficientParity_involutive : Function.Involutive θ := by
   intro a
   exact LinearMap.congr_fun h a
 
+include hEven hOdd in
+omit [GradedAlgebra 𝒜] in
 /-- The exact supercommutation relation needed by the native graded tensor
 product. Only real head coefficients commute with the residual algebra. -/
 theorem head_tail_supercommute {i j : ZMod 2}
@@ -94,31 +97,45 @@ theorem head_tail_supercommute {i j : ZMod 2}
     head (A := A) x * tail θ a =
       (-1 : ℤˣ) ^ (j * i) • (tail θ a * head (A := A) x) := by
   fin_cases i <;> fin_cases j
-  · have ha := hEven a.property
+  · change head (A := A) x * tail θ a =
+      (-1 : ℤˣ) ^ (0 : ZMod 2) • (tail θ a * head (A := A) x)
+    rw [uzpow_zero, one_smul]
+    have ha := hEven a.property
     ext r s
     fin_cases r <;> fin_cases s <;>
       simp [Matrix.mul_apply, Fin.sum_univ_two, ha, ← scalar_comm]
-  · have ha := hOdd a.property
+  · change head (A := A) x * tail θ a =
+      (-1 : ℤˣ) ^ (0 : ZMod 2) • (tail θ a * head (A := A) x)
+    rw [uzpow_zero, one_smul]
+    have ha := hOdd a.property
     obtain ⟨hx01, hx10⟩ := cl11StandardEquiv_even_offDiagonal x.property
     ext r s
     fin_cases r <;> fin_cases s <;>
       simp [Matrix.mul_apply, Fin.sum_univ_two, ha, hx01, hx10, ← scalar_comm]
-  · have ha := hEven a.property
+  · change head (A := A) x * tail θ a =
+      (-1 : ℤˣ) ^ (0 : ZMod 2) • (tail θ a * head (A := A) x)
+    rw [uzpow_zero, one_smul]
+    have ha := hEven a.property
     ext r s
     fin_cases r <;> fin_cases s <;>
       simp [Matrix.mul_apply, Fin.sum_univ_two, ha, ← scalar_comm]
-  · have ha := hOdd a.property
+  · change head (A := A) x * tail θ a =
+      (-1 : ℤˣ) ^ (1 : ZMod 2) • (tail θ a * head (A := A) x)
+    rw [uzpow_one, Units.neg_smul, one_smul]
+    have ha := hOdd a.property
     obtain ⟨hx00, hx11⟩ := cl11StandardEquiv_odd_diagonal x.property
     ext r s
     fin_cases r <;> fin_cases s <;>
-      simp [Matrix.mul_apply, Fin.sum_univ_two, ha, hx00, hx11,
-        Units.smul_def, ← scalar_comm]
+      simp [Matrix.mul_apply, Matrix.vecMul_apply_eq_sum,
+        Fin.sum_univ_two, ha, hx00, hx11, ← scalar_comm]
 
 /-- The representation is constructed by the native graded tensor lift. -/
 def tensorToMatrix :
     (CliffordAlgebra.evenOdd q11 ᵍ⊗[ℝ] 𝒜) →ₐ[ℝ] Matrix (Fin 2) (Fin 2) A :=
   GradedTensorProduct.lift (CliffordAlgebra.evenOdd q11) 𝒜
-    (head (A := A)) (tail θ) (head_tail_supercommute 𝒜 θ hEven hOdd)
+    (head (A := A)) (tail θ) (by
+      intro i j x a
+      exact head_tail_supercommute 𝒜 θ hEven hOdd x a)
 
 @[simp] theorem tensorToMatrix_tmul (x : CliffordAlgebra q11) (a : A) :
     tensorToMatrix 𝒜 θ hEven hOdd (x ᵍ⊗ₜ a) = head x * tail θ a := rfl
@@ -199,7 +216,7 @@ theorem matrixToTensor_tensorToMatrix
     (GradedTensorProduct.of ℝ (CliffordAlgebra.evenOdd q11) 𝒜).surjective z
   induction t using TensorProduct.inductionOn with
   | tmul x a => exact matrixToTensor_tmul 𝒜 θ hEven hOdd x a
-  | add x y hx hy => simpa only [map_add, hx, hy]
+  | add x y hx hy => simp only [map_add, hx, hy]
 
 /-- Every matrix is reached; the coefficient algebra may be infinite-dimensional. -/
 theorem tensorToMatrix_matrixToTensor (M : Matrix (Fin 2) (Fin 2) A) :
@@ -237,7 +254,8 @@ theorem tensor_matrix_units_noncomm [Nontrivial A] :
   intro h
   apply matrix_units_noncomm (A := A)
   have hm := congrArg (tensorMatrixEquiv 𝒜 θ hEven hOdd) h
-  simpa only [map_mul, AlgEquiv.apply_symm_apply] using hm
+  simpa only [map_mul, AlgEquiv.apply_symm_apply,
+    upperMatrixUnit, lowerMatrixUnit] using hm
 
 /-- Product parity is defined independently of the matrix presentation by
 the native tensor product of the two canonical parity maps. -/
@@ -271,7 +289,7 @@ theorem tensorParity_compatible
     (GradedTensorProduct.of ℝ (CliffordAlgebra.evenOdd q11) 𝒜).surjective z
   induction t using TensorProduct.inductionOn with
   | tmul x a => exact tensorParity_tmul_compatible 𝒜 θ hEven hOdd x a
-  | add x y hx hy => simpa only [map_add, hx, hy]
+  | add x y hx hy => simp only [map_add, hx, hy]
 
 /-- The independently specified product parity preserves multiplication,
 as certified by the faithful matrix presentation. -/

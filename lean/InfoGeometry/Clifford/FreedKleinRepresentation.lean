@@ -268,21 +268,27 @@ domain, whose differential coefficients are the suspended representation. -/
 def suspendedDiracSmoothLinear (sector : Bool) :
     smoothSections sector →ₗ[ℝ] smoothSections sector where
   toFun ψ :=
-    ⟨suspendedDiracSection sector ψ.val (ψ.property.differentiable (by simp)),
-      suspendedDirac_smooth _ ψ.property⟩
+    ⟨suspendedDiracSection sector ψ.val (smoothSection_differentiable sector ψ),
+      suspendedDirac_smooth _ (smoothSection_contDiff sector ψ)⟩
   map_add' ψ χ := by
     apply Subtype.ext
     apply Subtype.ext
+    change suspendedDirac
+        ((ψ.val : PlanePoint → Spinor) + (χ.val : PlanePoint → Spinor)) =
+      suspendedDirac (ψ.val : PlanePoint → Spinor) +
+        suspendedDirac (χ.val : PlanePoint → Spinor)
     funext p
     simp only [suspendedDirac_eq_volume_dirac,
-      dirac_add _ _ (ψ.property.differentiable (by simp))
-        (χ.property.differentiable (by simp)), Pi.add_apply, map_add]
+      dirac_add _ _ (smoothSection_differentiable sector ψ)
+        (smoothSection_differentiable sector χ), Pi.add_apply, map_add]
   map_smul' r ψ := by
     apply Subtype.ext
     apply Subtype.ext
+    change suspendedDirac (r • (ψ.val : PlanePoint → Spinor)) =
+      r • suspendedDirac (ψ.val : PlanePoint → Spinor)
     funext p
     simp only [suspendedDirac_eq_volume_dirac,
-      dirac_smul r _ (ψ.property.differentiable (by simp)),
+      dirac_smul r _ (smoothSection_differentiable sector ψ),
       Pi.smul_apply, map_smul]
 
 /-- The same-sector operator has a concrete nonzero differential image. -/

@@ -122,16 +122,16 @@ theorem pin_kernelSector_finiteDimensional {S : Submodule ℝ H} (D : S →ₗ[�
 /-- The dimension difference for two transported sectors is independent of the
 Pin frame. With finite chiral projectors, this is the chiral kernel formula. -/
 theorem pin_kernelDifference_family {B : Type*} (g : B → pin Q)
-    {S : Submodule ℝ H} (D : S →ₗ[ℝ] H) (P₊ P₋ : H →L[ℝ] H) (s t : B) :
+    {S : Submodule ℝ H} (D : S →ₗ[ℝ] H) (Pplus Pminus : H →L[ℝ] H) (s t : B) :
     (Module.finrank ℝ (kernelSector (operator (continuousPinAction Q ρ (g s)) D)
-      ((continuousPinAction Q ρ (g s)).conjContinuousAlgEquiv P₊)) : ℤ) -
+      ((continuousPinAction Q ρ (g s)).conjContinuousAlgEquiv Pplus)) : ℤ) -
       (Module.finrank ℝ (kernelSector (operator (continuousPinAction Q ρ (g s)) D)
-        ((continuousPinAction Q ρ (g s)).conjContinuousAlgEquiv P₋)) : ℤ) =
+        ((continuousPinAction Q ρ (g s)).conjContinuousAlgEquiv Pminus)) : ℤ) =
     (Module.finrank ℝ (kernelSector (operator (continuousPinAction Q ρ (g t)) D)
-      ((continuousPinAction Q ρ (g t)).conjContinuousAlgEquiv P₊)) : ℤ) -
+      ((continuousPinAction Q ρ (g t)).conjContinuousAlgEquiv Pplus)) : ℤ) -
       (Module.finrank ℝ (kernelSector (operator (continuousPinAction Q ρ (g t)) D)
-        ((continuousPinAction Q ρ (g t)).conjContinuousAlgEquiv P₋)) : ℤ) :=
-  chiralKernelDifference_family (fun b => continuousPinAction Q ρ (g b)) D P₊ P₋ s t
+        ((continuousPinAction Q ρ (g t)).conjContinuousAlgEquiv Pminus)) : ℤ) :=
+  chiralKernelDifference_family (fun b => continuousPinAction Q ρ (g b)) D Pplus Pminus s t
 
 section Complete
 
@@ -156,7 +156,7 @@ theorem continuous_pin_inverse_family {B : Type*} [TopologicalSpace B]
     (g : B → pin Q)
     (hg : Continuous (fun b => (pinRepresentation Q ρ (g b) : H →L[ℝ] H))) :
     Continuous (fun b => ((continuousPinAction Q ρ (g b)).symm : H →L[ℝ] H)) := by
-  change Continuous (fun b => ((pinRepresentation Q ρ (g b))⁻¹ : H →L[ℝ] H))
+  change Continuous (fun b => (↑((pinRepresentation Q ρ (g b))⁻¹) : H →L[ℝ] H))
   apply continuous_iff_continuousAt.mpr
   intro b
   simpa only [Function.comp_def, Ring.inverse_unit] using
@@ -246,12 +246,18 @@ theorem positive_pin_fixed_chiralKernel_finrank {S : Submodule ℝ H}
       Module.finrank ℝ (kernelSector D (((2 : ℝ)⁻¹) • (1 - Γ))) := by
   obtain ⟨hPlus, hMinus⟩ := positive_pin_conjugate_chiralProjectors Q ρ Γ hΓ g
   constructor
-  · simpa only [hPlus] using
-      pin_kernelSector_finrank Q (positiveRepresentation Q ρ) D
-        (((2 : ℝ)⁻¹) • (1 + Γ)) g
-  · simpa only [hMinus] using
-      pin_kernelSector_finrank Q (positiveRepresentation Q ρ) D
-        (((2 : ℝ)⁻¹) • (1 - Γ)) g
+  · exact (congrArg
+      (fun P : H →L[ℝ] H => Module.finrank ℝ (kernelSector
+        (operator (continuousPinAction Q (positiveRepresentation Q ρ) g) D) P))
+      hPlus).symm.trans
+        (pin_kernelSector_finrank Q (positiveRepresentation Q ρ) D
+          (((2 : ℝ)⁻¹) • (1 + Γ)) g)
+  · exact (congrArg
+      (fun P : H →L[ℝ] H => Module.finrank ℝ (kernelSector
+        (operator (continuousPinAction Q (positiveRepresentation Q ρ) g) D) P))
+      hMinus).symm.trans
+        (pin_kernelSector_finrank Q (positiveRepresentation Q ρ) D
+          (((2 : ℝ)⁻¹) • (1 - Γ)) g)
 
 /-- Domain invariance is derived from the target vector actions and their
 Clifford generation, including the inverse of every source Pin element. -/

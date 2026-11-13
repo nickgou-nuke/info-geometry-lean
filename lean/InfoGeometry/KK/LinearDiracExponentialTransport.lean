@@ -27,7 +27,7 @@ theorem expAutomorphism_symm_toContinuousLinearMap
     (G : H →L[ℝ] H) (t : ℝ) :
     ((expAutomorphism G t).symm : H →L[ℝ] H) =
       NormedSpace.exp (t • (-G)) := by
-  letI := NormedSpace.invertibleExp (t • G)
+  let _ := NormedSpace.invertibleExp (t • G)
   change ⅟(NormedSpace.exp (t • G)) = NormedSpace.exp (t • (-G))
   rw [NormedSpace.invOf_exp]
   simp only [smul_neg]

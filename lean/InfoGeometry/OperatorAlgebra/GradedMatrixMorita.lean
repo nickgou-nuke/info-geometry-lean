@@ -56,7 +56,7 @@ theorem matrix_units_noncomm [Nontrivial A] :
   intro h
   have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) A => M 0 0) h
   simp [upperMatrixUnit, lowerMatrixUnit,
-    Matrix.mul_apply, Fin.sum_univ_two, Matrix.single] at h00
+    Matrix.mul_apply, Matrix.single] at h00
 
 private def matrixGradeHom (θ : A →+* A) :
     Matrix (Fin 2) (Fin 2) A →+* Matrix (Fin 2) (Fin 2) A where

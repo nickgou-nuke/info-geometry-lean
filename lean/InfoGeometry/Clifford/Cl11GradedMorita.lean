@@ -149,8 +149,10 @@ theorem cl11StandardEquiv_grade (x : CliffordAlgebra q11) :
     cl11StandardEquiv ((CliffordAlgebra.involuteEquiv (Q := q11)).toRingEquiv x) =
       matrixGrade (RingEquiv.refl ℝ) (cl11StandardEquiv x) := by
   rw [matrixGrade_eq_parity_conj]
-  simpa only [RingEquiv.refl_apply, Matrix.map_id, Eplus] using
-    cl11StandardEquiv_involute x
+  change cl11StandardEquiv (CliffordAlgebra.involute x) =
+    Eplus * (cl11StandardEquiv x).map id * Eplus
+  rw [Matrix.map_id]
+  exact cl11StandardEquiv_involute x
 
 /-- Homogeneous even Clifford elements have zero off-diagonal entries in
 the standard graded representation. -/

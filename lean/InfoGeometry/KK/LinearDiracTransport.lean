@@ -278,13 +278,13 @@ theorem chiralKernelDifference_family
 
 section Resolvent
 
-variable [CompleteSpace H]
-
 /-- Compactness is preserved by continuous linear conjugation. -/
 theorem isCompactOperator_boundedConjugate
     (e : H ≃L[ℝ] H) (A : H →L[ℝ] H) (hA : IsCompactOperator A) :
     IsCompactOperator (ContinuousLinearEquiv.conjContinuousAlgEquiv e A) := by
   exact (hA.comp_clm (e.symm : H →L[ℝ] H)).clm_comp (e : H →L[ℝ] H)
+
+variable [CompleteSpace H]
 
 /-- Construct the compact linear resolvent of the transported operator. -/
 def resolvent

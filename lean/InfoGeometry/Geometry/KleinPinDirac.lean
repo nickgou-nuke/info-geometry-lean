@@ -71,7 +71,7 @@ theorem cliffordVolume_anticommute (v : Tangent) :
     cliffordVolume * vectorPlus v = -(vectorPlus v * cliffordVolume) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [cliffordVolume, vectorPlus, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+    simp [cliffordVolume, vectorPlus, Matrix.mul_apply, Fin.sum_univ_two]
 
 def gammaX : Spinor →L[ℝ] Spinor := clifford ![1, 0]
 def gammaY : Spinor →L[ℝ] Spinor := clifford ![0, 1]
@@ -277,7 +277,7 @@ theorem dirac_add (ψ χ : PlanePoint → Spinor)
     (hψ : Differentiable ℝ ψ) (hχ : Differentiable ℝ χ) :
     dirac (ψ + χ) = dirac ψ + dirac χ := by
   funext p
-  simp only [dirac, fderiv_add (hψ p) (hχ p), ContinuousLinearMap.add_apply,
+  simp only [dirac, fderiv_add (hψ p) (hχ p), add_apply,
     map_add, Pi.add_apply]
   abel
 
@@ -293,7 +293,7 @@ def differentiableSections (sector : Bool) :
   carrier := {ψ | Differentiable ℝ (ψ : PlanePoint → Spinor)}
   zero_mem' := differentiable_const _
   add_mem' hψ hχ := hψ.add hχ
-  smul_mem' r ψ hψ := hψ.const_smul r
+  smul_mem' r _ψ hψ := hψ.const_smul r
 
 /-- The constructed differential operator as a real linear map with an
 explicit domain and the correctly twisted equivariant target. -/
@@ -318,26 +318,50 @@ property of the underlying function, independent of the quotient carrier. -/
 def smoothSections (sector : Bool) :
     Submodule ℝ (equivariantSections (monodromy sector)) where
   carrier := {ψ | ContDiff ℝ ∞ (ψ : PlanePoint → Spinor)}
-  zero_mem' := contDiff_const
-  add_mem' hψ hχ := hψ.add hχ
-  smul_mem' r ψ hψ := hψ.const_smul r
+  zero_mem' := by
+    change ContDiff ℝ ∞ (fun _ : PlanePoint => (0 : Spinor))
+    exact contDiff_const
+  add_mem' := by
+    intro ψ χ hψ hχ
+    change ContDiff ℝ ∞ (ψ : PlanePoint → Spinor) at hψ
+    change ContDiff ℝ ∞ (χ : PlanePoint → Spinor) at hχ
+    change ContDiff ℝ ∞ ((ψ : PlanePoint → Spinor) + (χ : PlanePoint → Spinor))
+    exact hψ.add hχ
+  smul_mem' := by
+    intro r ψ hψ
+    change ContDiff ℝ ∞ (ψ : PlanePoint → Spinor) at hψ
+    change ContDiff ℝ ∞ (r • (ψ : PlanePoint → Spinor))
+    exact hψ.const_smul r
+
+/-- The smooth-domain property on the explicitly typed underlying field. -/
+theorem smoothSection_contDiff (sector : Bool) (ψ : smoothSections sector) :
+    ContDiff ℝ ∞ (ψ.val : PlanePoint → Spinor) :=
+  ψ.property
+
+theorem smoothSection_differentiable (sector : Bool) (ψ : smoothSections sector) :
+    Differentiable ℝ (ψ.val : PlanePoint → Spinor) :=
+  (smoothSection_contDiff sector ψ).differentiable (by simp)
 
 /-- The actual differential operator between the two smooth equivariance
 sectors, with smoothness of its output proved from Fréchet calculus. -/
 def diracSmoothLinear (sector : Bool) :
     smoothSections sector →ₗ[ℝ] smoothSections (!sector) where
   toFun ψ :=
-    ⟨diracSection sector ψ.val (ψ.property.differentiable (by simp)),
-      dirac_smooth _ ψ.property⟩
+    ⟨diracSection sector ψ.val (smoothSection_differentiable sector ψ),
+      dirac_smooth _ (smoothSection_contDiff sector ψ)⟩
   map_add' ψ χ := by
     apply Subtype.ext
     apply Subtype.ext
-    exact dirac_add _ _ (ψ.property.differentiable (by simp))
-      (χ.property.differentiable (by simp))
+    change dirac ((ψ.val : PlanePoint → Spinor) + (χ.val : PlanePoint → Spinor)) =
+      dirac (ψ.val : PlanePoint → Spinor) + dirac (χ.val : PlanePoint → Spinor)
+    exact dirac_add _ _ (smoothSection_differentiable sector ψ)
+      (smoothSection_differentiable sector χ)
   map_smul' r ψ := by
     apply Subtype.ext
     apply Subtype.ext
-    exact dirac_smul r _ (ψ.property.differentiable (by simp))
+    change dirac (r • (ψ.val : PlanePoint → Spinor)) =
+      r • dirac (ψ.val : PlanePoint → Spinor)
+    exact dirac_smul r _ (smoothSection_differentiable sector ψ)
 
 /-! ## A nonzero field with a nonzero Dirac image -/
 
@@ -393,7 +417,11 @@ theorem cosineField_differentiable : Differentiable ℝ cosineField :=
 
 theorem cosineField_smooth : ContDiff ℝ ∞ cosineField := by
   unfold cosineField
-  fun_prop
+  apply contDiff_pi.mpr
+  intro i
+  have harg : ContDiff ℝ ∞ (fun p : PlanePoint => 2 * Real.pi * p.1) :=
+    contDiff_const.mul contDiff_fst
+  exact Complex.ofRealCLM.contDiff.comp (Real.contDiff_cos.comp harg)
 
 theorem dirac_cosineField (p : PlanePoint) :
     dirac cosineField p =
@@ -402,7 +430,7 @@ theorem dirac_cosineField (p : PlanePoint) :
   ext i
   fin_cases i <;>
     simp [cosineFieldDerivative, gammaX_apply, gammaY_apply,
-      ContinuousLinearMap.pi_apply, Complex.ofRealCLM_apply] <;> ring
+      Complex.ofRealCLM_apply] <;> ring
 
 theorem cosineField_nonzero : cosineField (0, 0) ≠ 0 := by
   intro h

@@ -48,7 +48,8 @@ jobs:
           git -c protocol.version=2 fetch --depth=1 --no-tags --no-recurse-submodules origin "$SOURCE_REVISION"
           git -c advice.detachedHead=false checkout --detach FETCH_HEAD
           test "$(git rev-parse HEAD)" = "$SOURCE_REVISION"
-      - uses: actions/cache@v4
+      - uses: actions/cache/restore@v4
+        id: pinned_cache
         with:
           path: |
             ~/.elan
@@ -74,7 +75,47 @@ jobs:
           git diff --exit-code -- lean-toolchain lake-manifest.json \
             verification/freed-pin-compatibility/lean-toolchain \
             verification/freed-pin-compatibility/lake-manifest.json
-      - name: Build the complete focused closure and audit all owned declarations
+      - name: Save the hydrated pinned dependencies
+        if: steps.pinned_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: ${{ steps.pinned_cache.outputs.cache-primary-key }}
+      - name: Build representation, geometric, and domain foundations
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/freed-pin-compatibility/check.py build \
+            InfoGeometry.OperatorAlgebra.GradedMatrixMorita \
+            InfoGeometry.Clifford.FreedPinRepresentation \
+            InfoGeometry.Geometry.KleinPinDirac \
+            InfoGeometry.KK.LinearDiracTransport \
+            InfoGeometry.KK.CompactPhaseObstruction \
+            InfoGeometry.Canonical.MaurerCartanCurvature \
+            2>&1 | tee verification/freed-pin-compatibility/artifacts/foundations.log
+      - name: Build Clifford, operator, and family compatibility
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/freed-pin-compatibility/check.py build \
+            InfoGeometry.Clifford.Cl11GradedMorita \
+            InfoGeometry.Geometry.KleinPinGradedDirac \
+            InfoGeometry.Clifford.FreedKleinRepresentation \
+            InfoGeometry.KK.PinFredholmTransport \
+            2>&1 | tee verification/freed-pin-compatibility/artifacts/compatibility.log
+      - name: Build graded tensor and tower compatibility
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/freed-pin-compatibility/check.py build \
+            InfoGeometry.Clifford.Cl11GradedTensorMorita \
+            2>&1 | tee verification/freed-pin-compatibility/artifacts/tensor.log
+          python3 verification/freed-pin-compatibility/check.py build \
+            InfoGeometry.Canonical.SplitCliffordHeadMorita \
+            2>&1 | tee verification/freed-pin-compatibility/artifacts/tower.log
+      - name: Audit every owned declaration in the complete focused closure
         shell: bash
         run: |
           set -euo pipefail

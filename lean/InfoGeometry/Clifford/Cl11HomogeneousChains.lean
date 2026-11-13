@@ -118,6 +118,9 @@ theorem nativeChain_homogeneous (n : ℕ) (a : Fin n → CliffordAlgebra q11)
       rw [nativeChain, nativeParity_consNative, h 0, ht]
       cases hp : p 0 <;> cases hs : totalParity n (Fin.tail p) <;>
         simp [nativeChain, totalParity, hp, hs]
+      · exact consNative_neg_head n (a 0) (nativeChain n (Fin.tail a))
+      · exact (congrArg (fun z => -z)
+          (consNative_neg_head n (a 0) (nativeChain n (Fin.tail a)))).trans (neg_neg _)
 
 /-- Ordinary Kronecker prepend with the head bit first. -/
 def prependMatrix (n : ℕ) (A : Matrix (Fin 2) (Fin 2) ℝ) (T : RealMatrix n) :

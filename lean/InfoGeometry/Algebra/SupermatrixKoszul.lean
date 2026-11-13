@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness
 import Mathlib.LinearAlgebra.Matrix.Notation
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -13,6 +19,9 @@ content is the finite block multiplication table:
 * even times odd is odd;
 * odd times even is odd;
 * odd times odd is even.
+
+All four multiplication laws preserve coefficient order and require only a
+semiring; the coefficients need not commute.
 -/
 
 namespace InfoGeometry.Algebra.SupermatrixKoszul
@@ -65,7 +74,7 @@ def parityBlock {R : Type*} [Zero R] [One R] [Neg R] : Matrix (Fin 2) (Fin 2) R 
 
 /-- Even block matrices are closed under matrix multiplication. -/
 theorem evenBlock_mul_evenBlock
-    {R : Type*} [CommSemiring R] (a d e f : R) :
+    {R : Type*} [Semiring R] (a d e f : R) :
     evenBlock a d * evenBlock e f = evenBlock (a * e) (d * f) := by
   ext i j
   fin_cases i
@@ -78,7 +87,7 @@ theorem evenBlock_mul_evenBlock
 
 /-- Even times odd is odd. -/
 theorem evenBlock_mul_oddBlock
-    {R : Type*} [CommSemiring R] (a d b c : R) :
+    {R : Type*} [Semiring R] (a d b c : R) :
     evenBlock a d * oddBlock b c = oddBlock (a * b) (d * c) := by
   ext i j
   fin_cases i
@@ -91,7 +100,7 @@ theorem evenBlock_mul_oddBlock
 
 /-- Odd times even is odd. -/
 theorem oddBlock_mul_evenBlock
-    {R : Type*} [CommSemiring R] (b c a d : R) :
+    {R : Type*} [Semiring R] (b c a d : R) :
     oddBlock b c * evenBlock a d = oddBlock (b * d) (c * a) := by
   ext i j
   fin_cases i
@@ -104,7 +113,7 @@ theorem oddBlock_mul_evenBlock
 
 /-- Odd block matrices multiply to an even block matrix. -/
 theorem oddBlock_mul_oddBlock
-    {R : Type*} [CommSemiring R] (b c e f : R) :
+    {R : Type*} [Semiring R] (b c e f : R) :
     oddBlock b c * oddBlock e f = evenBlock (b * f) (c * e) := by
   ext i j
   fin_cases i

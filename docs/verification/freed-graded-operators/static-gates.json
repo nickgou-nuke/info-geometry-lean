@@ -1,0 +1,95 @@
+{
+  "records": [
+    {
+      "label": "placeholder-SupermatrixKoszul",
+      "command": [
+        "python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/Algebra/SupermatrixKoszul.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/freed-qa-accepted-recheck/placeholder-SupermatrixKoszul.json"
+      ],
+      "returncode": 0,
+      "output": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-12T18:42:52.399445+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **0**\n- Total findings: **0** (hard=0, soft=0, advisory=0)\n\nNo placeholder-trust findings detected.\n\n"
+    },
+    {
+      "label": "placeholder-FreedAdditiveCocycle",
+      "command": [
+        "python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/Algebra/FreedAdditiveCocycle.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/freed-qa-accepted-recheck/placeholder-FreedAdditiveCocycle.json"
+      ],
+      "returncode": 0,
+      "output": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-12T18:42:52.496942+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **1**\n- Total findings: **1** (hard=0, soft=1, advisory=0)\n\n## `InfoGeometry.Algebra.FreedAdditiveCocycle`\n- path: `lean/InfoGeometry/Algebra/FreedAdditiveCocycle.lean`\n- findings: 1 (hard=0, soft=1, advisory=0)\n\n- L172: **SOFT** `skeletal-proof` in `theorem balancedGauge_conjugate_lift`\n  - proof appears to be tactic-automation-only or skeletal\n  - `170:   simp only [diagonalGauge, productDefect, evenBlock_mul_evenBlock]`\n\n\n"
+    },
+    {
+      "label": "placeholder-FreedGradedCalculus",
+      "command": [
+        "python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/OperatorAlgebra/FreedGradedCalculus.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/freed-qa-accepted-recheck/placeholder-FreedGradedCalculus.json"
+      ],
+      "returncode": 0,
+      "output": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-12T18:42:52.555614+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **1**\n- Total findings: **3** (hard=0, soft=3, advisory=0)\n\n## `InfoGeometry.OperatorAlgebra.FreedGradedCalculus`\n- path: `lean/InfoGeometry/OperatorAlgebra/FreedGradedCalculus.lean`\n- findings: 3 (hard=0, soft=3, advisory=0)\n\n- L75: **SOFT** `skeletal-proof` in `theorem superTrace_even_odd_commutator`\n  - proof appears to be tactic-automation-only or skeletal\n  - `73:   simp only [PeirceSpine.comm, evenBlock_mul_evenBlock, map_sub, superTrace_evenBlock]`\n- L177: **SOFT** `skeletal-proof` in `theorem comm_square_zero`\n  - proof appears to be tactic-automation-only or skeletal\n  - `175: `\n- L90: **SOFT** `injected-hypothesis-surface` in `variable <file-level>`\n  - section variable assumptions detected\n  - `88: `\n\n\n"
+    },
+    {
+      "label": "placeholder-FreedDefectChannels",
+      "command": [
+        "python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/OperatorAlgebra/FreedDefectChannels.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/freed-qa-accepted-recheck/placeholder-FreedDefectChannels.json"
+      ],
+      "returncode": 0,
+      "output": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-12T18:42:52.652712+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **1**\n- Total findings: **3** (hard=0, soft=3, advisory=0)\n\n## `InfoGeometry.OperatorAlgebra.FreedDefectChannels`\n- path: `lean/InfoGeometry/OperatorAlgebra/FreedDefectChannels.lean`\n- findings: 3 (hard=0, soft=3, advisory=0)\n\n- L162: **SOFT** `skeletal-proof` in `theorem plus_cut_commute_diagonal`\n  - proof appears to be tactic-automation-only or skeletal\n  - `160:   rw [\u2190 commute_swap_iff]`\n- L171: **SOFT** `skeletal-proof` in `theorem walshPlus_commute_symmetric`\n  - proof appears to be tactic-automation-only or skeletal\n  - `169:   show evenBlock 0 1 * evenBlock a d = evenBlock a d * evenBlock 0 1`\n- L175: **SOFT** `skeletal-proof` in `theorem walshMinus_commute_symmetric`\n  - proof appears to be tactic-automation-only or skeletal\n  - `173:     Commute walshPlus (evenBlock h0 h0 + oddBlock h1 h1) := by`\n\n\n"
+    },
+    {
+      "label": "placeholder-FreedOperatorAlgebra",
+      "command": [
+        "python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/Canonical/FreedOperatorAlgebra.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/freed-qa-accepted-recheck/placeholder-FreedOperatorAlgebra.json"
+      ],
+      "returncode": 0,
+      "output": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-12T18:42:52.707308+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **0**\n- Total findings: **0** (hard=0, soft=0, advisory=0)\n\nNo placeholder-trust findings detected.\n\n"
+    },
+    {
+      "label": "semantic",
+      "command": [
+        "python3",
+        "tools/quality/semantic_vacuity_gate.py",
+        "lean/InfoGeometry/Algebra/SupermatrixKoszul.lean",
+        "lean/InfoGeometry/Algebra/FreedAdditiveCocycle.lean",
+        "lean/InfoGeometry/OperatorAlgebra/FreedGradedCalculus.lean",
+        "lean/InfoGeometry/OperatorAlgebra/FreedDefectChannels.lean",
+        "lean/InfoGeometry/Canonical/FreedOperatorAlgebra.lean",
+        "--fail-on",
+        "warning",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/freed-qa-accepted-recheck/semantic.json"
+      ],
+      "returncode": 1,
+      "output": "Semantic vacuity audit\n======================\nroots: lean/InfoGeometry/Algebra/SupermatrixKoszul.lean, lean/InfoGeometry/Algebra/FreedAdditiveCocycle.lean, lean/InfoGeometry/OperatorAlgebra/FreedGradedCalculus.lean, lean/InfoGeometry/OperatorAlgebra/FreedDefectChannels.lean, lean/InfoGeometry/Canonical/FreedOperatorAlgebra.lean\npatterns: /workspace/scratch/d18a558d1d7d/info-geometry-lean/tools/quality/semantic_vacuity_patterns.json\nsemantic_vacuity: 17\nwarning: 17\ntrivial_surface: 17\n  - lean/InfoGeometry/Algebra/SupermatrixKoszul.lean:43 [warning/trivial_surface] evenBlock_apply00: by\n  - lean/InfoGeometry/Algebra/SupermatrixKoszul.lean:47 [warning/trivial_surface] evenBlock_apply01: by\n  - lean/InfoGeometry/Algebra/SupermatrixKoszul.lean:51 [warning/trivial_surface] evenBlock_apply10: by\n  - lean/InfoGeometry/Algebra/SupermatrixKoszul.lean:55 [warning/trivial_surface] evenBlock_apply11: by\n  - lean/InfoGeometry/Algebra/SupermatrixKoszul.lean:59 [warning/trivial_surface] oddBlock_apply00: by\n  - lean/InfoGeometry/Algebra/SupermatrixKoszul.lean:63 [warning/trivial_surface] oddBlock_apply01: by\n  - lean/InfoGeometry/Algebra/SupermatrixKoszul.lean:67 [warning/trivial_surface] oddBlock_apply10: by\n  - lean/InfoGeometry/Algebra/SupermatrixKoszul.lean:71 [warning/trivial_surface] oddBlock_apply11: by\n  - lean/InfoGeometry/Canonical/FreedOperatorAlgebra.lean:36 [warning/trivial_surface] superTrace_repeated_defect: rfl\n  - lean/InfoGeometry/OperatorAlgebra/FreedDefectChannels.lean:163 [warning/trivial_surface] plus_cut_commute_diagonal: by\n  - lean/InfoGeometry/OperatorAlgebra/FreedDefectChannels.lean:172 [warning/trivial_surface] walshPlus_commute_symmetric: by\n  - lean/InfoGeometry/OperatorAlgebra/FreedDefectChannels.lean:176 [warning/trivial_surface] walshMinus_commute_symmetric: by\n  - lean/InfoGeometry/OperatorAlgebra/FreedGradedCalculus.lean:38 [warning/trivial_surface] superTrace_evenBlock: rfl\n  - lean/InfoGeometry/OperatorAlgebra/FreedGradedCalculus.lean:41 [warning/trivial_surface] superTrace_oddBlock: by simp [superTrace]\n  - lean/InfoGeometry/OperatorAlgebra/FreedGradedCalculus.lean:76 [warning/trivial_surface] superTrace_even_odd_commutator: by\n  - lean/InfoGeometry/OperatorAlgebra/FreedGradedCalculus.lean:82 [warning/trivial_surface] superTrace_elementary_odd_vanish_iff: by\n  - lean/InfoGeometry/OperatorAlgebra/FreedGradedCalculus.lean:179 [warning/trivial_surface] comm_square_zero: by\n"
+    }
+  ],
+  "ban_findings": [],
+  "target_warnings_zero": true,
+  "hashes_reconciled": true
+}

@@ -1,0 +1,7 @@
+[locked-lake-build] requesting lock for InfoGeometry.Canonical.FreedOperatorAlgebra
+[locked-lake-build] acquired /tmp/info-geometry-build.lock
+[locked-lake-build] executing: lake build InfoGeometry.Canonical.FreedOperatorAlgebra
+info: [root]: lakefile.lean and lakefile.toml are both present; using lakefile.lean
+error: HomotopyHypothesis: package directory not found: /workspace/scratch/d18a558d1d7d/info-geometry-lean/external_refs/homotopy-hypothesis-lean4
+[locked-lake-build] lake build exited with code 1
+[locked-lake-build] released /tmp/info-geometry-build.lock

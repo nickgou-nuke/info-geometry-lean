@@ -1,0 +1,12 @@
+{
+  "command": [
+    "bash",
+    ".githooks/pre-push",
+    "origin",
+    "https://github.com/nickgou-nuke/info-geometry-lean.git"
+  ],
+  "stdin": "refs/heads/codex/freed-graded-operator-algebra 0f13168fe772575c1ede5f9a4594282467f72a39 refs/heads/codex/freed-graded-operator-algebra 0000000000000000000000000000000000000000\n",
+  "local_revision": "0f13168fe772575c1ede5f9a4594282467f72a39",
+  "returncode": 1,
+  "log": "/workspace/scratch/d18a558d1d7d/freed-pre-push.log"
+}

@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Core.TripotentAdjointRigidity
 import InfoGeometry.Core.TripotentEigenspaces
+import InfoGeometry.Core.TripotentGradeTransport
 import InfoGeometry.OperatorAlgebra.ConservedOperatorFlow
 
 /-!
@@ -243,6 +244,50 @@ theorem expTransport_mul_generator_mem_fiveGradeRange_iff {J K S : A}
       _ = (S * J) * K := by rw [hJ.eq]
       _ = S * (J * K) := mul_assoc S J K
   exact expTransport_mem_fiveGradeRange_iff hJK k X t
+
+/-- A commuting generator preserves every integer adjoint grade, even when
+the grading element is not tripotent. -/
+theorem expTransport_mem_adGrade {H S X : A} (hHS : Commute H S)
+    {k : ℤ} (hX : X ∈ adGrade S k) (t : ℝ) :
+    expTransport H X t ∈ adGrade S k := by
+  rw [mem_adGrade_iff] at hX ⊢
+  have hSfixed := (conserved_iff_commute H S).mpr hHS t
+  calc
+    adOp S (expTransport H X t) = expTransport H (adOp S X) t := by
+      simp only [adOp, expTransport_sub_seed, flow_mul, hSfixed]
+    _ = (k : ℝ) • expTransport H X t := by rw [hX, flow_smul]
+
+/-- Inverse time gives equality of each integer grade under the flow. -/
+theorem expTransport_mem_adGrade_iff {H S : A} (hHS : Commute H S)
+    (k : ℤ) (X : A) (t : ℝ) :
+    expTransport H X t ∈ adGrade S k ↔ X ∈ adGrade S k := by
+  constructor
+  · intro h
+    have hi := expTransport_mem_adGrade hHS h (-t)
+    simpa only [flow_inverse] using hi
+  · intro h
+    exact expTransport_mem_adGrade hHS h t
+
+/-- The all-integer version of the proved tripotent flow rigidity theorem. -/
+theorem all_adGrades_preserved_iff_commute {H S : A} (hS : S * S * S = S) :
+    (∀ (t : ℝ) (k : ℤ) (X : A), X ∈ adGrade S k →
+      expTransport H X t ∈ adGrade S k) ↔ Commute H S := by
+  constructor
+  · intro h
+    apply (gradeZero_preserved_iff_commute hS).mp
+    intro t X hX
+    rw [fiveGradeRange_eq_adGrade hS] at hX ⊢
+    exact h t 0 X hX
+  · intro h t k X hX
+    exact expTransport_mem_adGrade h hX t
+
+/-- Opposite-grade factors give a grading-preserving product generator;
+neither factor is required separately to commute with the tripotent. -/
+theorem expTransport_opposite_grade_product_iff {J K S : A} {m : ℤ}
+    (hJ : J ∈ adGrade S m) (hK : K ∈ adGrade S (-m))
+    (k : ℤ) (X : A) (t : ℝ) :
+    expTransport (J * K) X t ∈ adGrade S k ↔ X ∈ adGrade S k :=
+  expTransport_mem_adGrade_iff (commute_mul_of_opposite_adGrades hJ hK).symm k X t
 
 end Exponential
 end InfoGeometry.OperatorAlgebra.TripotentExponentialFlow

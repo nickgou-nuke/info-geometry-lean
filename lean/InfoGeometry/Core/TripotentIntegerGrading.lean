@@ -4,15 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Core.TripotentEigenspaces
+import InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentSuperbracket
 import Mathlib.RingTheory.GradedAlgebra.Basic
 
 /-!
-# The native integer grading of a tripotent adjoint
+# The native integer grading of a tripotent algebra
 
-The homogeneous submodules are the existing `adGrade S k`. Their direct sum
-is internal, and their actual multiplication gives a native `GradedAlgebra`.
-The index is all of `ℤ`; components outside the five weights are zero.
-No finite-dimensionality or nonzero-occurrence hypothesis is imposed.
+The existing `adGrade S k` family is a Mathlib internal direct sum and graded
+algebra when `S³ = S`. No second grade carrier is introduced. The signed
+bracket has a uniform integer formulation, including intermediate weights
+outside `[-2,2]`; those components are the zero submodule.
 -/
 
 noncomputable section
@@ -20,91 +21,163 @@ noncomputable section
 namespace InfoGeometry.Core.TripotentAdjoint
 
 open InfoGeometry.Physics.Algebra
+open InfoGeometry.Algebra.SupergradedBracket
+open InfoGeometry.OperatorAlgebra.PeirceSpine
 open scoped DirectSum
 
 attribute [local instance 100] LieRing.ofAssociativeRing
 
 variable {A : Type*} [Ring A] [Algebra ℝ A]
 
-/-- The existing integer component agrees with the existing finite label. -/
-theorem adGrade_fiveGradeValue {S : A} (hS : S * S * S = S) (k : FiveGrade) :
-    adGrade S (fiveGradeValue k) = fiveGradeRange S k := by
-  rw [adGrade_eq_eigenspace, fiveGradeRange_eq_eigenspace hS]
-
-/-- Multiplication and the unit on the actual integer eigenspaces. -/
+/-- The existing integer eigenspaces are multiplicatively graded, even without
+tripotence. -/
 instance adGradeGradedMonoid (S : A) : SetLike.GradedMonoid (adGrade S) where
-  one_mem := by
-    rw [mem_adGrade_iff]
-    simp [adOp]
-  mul_mem _ _ _ _ hx hy := mul_mem_adGrade_add hx hy
+  one_mem := by simp [mem_adGrade_iff, adOp]
+  mul_mem := by
+    intro i j X Y hX hY
+    exact mul_mem_adGrade_add hX hY
 
-/-- Distinct integer eigenspaces are independent over the real field. -/
+/-- Distinct integer adjoint eigenspaces are independent. -/
 theorem adGrade_iSupIndep (S : A) : iSupIndep (adGrade S) := by
-  have hgrades : adGrade S =
-      (fun k : ℤ => (LieAlgebra.ad ℝ A S).eigenspace (k : ℝ)) := by
-    funext k
-    exact adGrade_eq_eigenspace S k
-  rw [hgrades]
+  have hf : adGrade S = fun k : ℤ => (LieAlgebra.ad ℝ A S).eigenspace (k : ℝ) :=
+    funext (adGrade_eq_eigenspace S)
+  rw [hf]
   exact (LieAlgebra.ad ℝ A S).eigenspaces_iSupIndep.comp
-    (show Function.Injective (fun k : ℤ => (k : ℝ)) from Int.cast_injective)
+    (Int.cast_injective (α := ℝ))
 
-/-- The five existing polynomial components span every element of the algebra. -/
-theorem adGrade_iSup_eq_top {S : A} (hS : S * S * S = S) :
+/-- An integer outside the five existing labels has zero grade. -/
+theorem adGrade_eq_bot_of_not_mem {S : A} (hS : S * S * S = S) {k : ℤ}
+    (hk : k ∉ Set.range fiveGradeValue) : adGrade S k = ⊥ := by
+  rw [adGrade_eq_eigenspace]
+  apply eigenspace_eq_bot_of_not_mem_fiveGradeValue hS
+  rintro ⟨j, hj⟩
+  apply hk
+  exact ⟨j, Int.cast_injective hj⟩
+
+/-- The native integer grading is supported on the closed interval `[-2,2]`. -/
+theorem adGrade_eq_bot_of_outside {S : A} (hS : S * S * S = S) {k : ℤ}
+    (hk : k < -2 ∨ 2 < k) : adGrade S k = ⊥ := by
+  apply adGrade_eq_bot_of_not_mem hS
+  rintro ⟨j, rfl⟩
+  cases j <;> norm_num [fiveGradeValue] at hk
+
+/-- The old finite projector ranges are exactly the corresponding integer grades. -/
+theorem fiveGradeRange_eq_adGrade {S : A} (hS : S * S * S = S) (k : FiveGrade) :
+    fiveGradeRange S k = adGrade S (fiveGradeValue k) := by
+  rw [fiveGradeRange_eq_eigenspace hS, adGrade_eq_eigenspace]
+
+/-- Compatibility orientation for clients that state the integer grade first. -/
+theorem adGrade_fiveGradeValue {S : A} (hS : S * S * S = S) (k : FiveGrade) :
+    adGrade S (fiveGradeValue k) = fiveGradeRange S k :=
+  (fiveGradeRange_eq_adGrade hS k).symm
+
+/-- Five-component reconstruction proves that the integer eigenspaces span
+the entire algebra. -/
+theorem iSup_adGrade_eq_top {S : A} (hS : S * S * S = S) :
     (⨆ k : ℤ, adGrade S k) = ⊤ := by
   apply top_unique
   intro x _
-  have hc (k : FiveGrade) :
-      fiveGradeProjector S k x ∈ ⨆ n : ℤ, adGrade S n := by
+  have hm (k : FiveGrade) :
+      fiveGradeProjector S k x ∈ ⨆ j : ℤ, adGrade S j := by
     apply (le_iSup (adGrade S) (fiveGradeValue k))
-    rw [adGrade_fiveGradeValue hS]
+    rw [← fiveGradeRange_eq_adGrade hS]
     exact ⟨x, rfl⟩
-  have hr := fiveGrade_recompose_decompose S x
+  have hrec := fiveGrade_recompose_decompose S x
   change fiveGradeProjector S .negTwo x + fiveGradeProjector S .negOne x +
     fiveGradeProjector S .zero x + fiveGradeProjector S .posOne x +
-    fiveGradeProjector S .posTwo x = x at hr
-  rw [← hr]
-  exact add_mem (add_mem (add_mem (add_mem (hc .negTwo) (hc .negOne))
-    (hc .zero)) (hc .posOne)) (hc .posTwo)
+    fiveGradeProjector S .posTwo x = x at hrec
+  rw [← hrec]
+  exact Submodule.add_mem _ (Submodule.add_mem _ (Submodule.add_mem _
+    (Submodule.add_mem _ (hm .negTwo) (hm .negOne)) (hm .zero)) (hm .posOne))
+    (hm .posTwo)
 
-/-- The integer-indexed eigenspace decomposition is an actual internal direct sum. -/
+/-- Compatibility name for the spanning theorem. -/
+theorem adGrade_iSup_eq_top {S : A} (hS : S * S * S = S) :
+    (⨆ k : ℤ, adGrade S k) = ⊤ := iSup_adGrade_eq_top hS
+
+/-- The original algebra is the native internal direct sum of its integer grades. -/
 theorem adGrade_isInternal {S : A} (hS : S * S * S = S) :
     DirectSum.IsInternal (adGrade S) :=
   DirectSum.isInternal_submodule_of_iSupIndep_of_iSup_eq_top
-    (adGrade_iSupIndep S) (adGrade_iSup_eq_top hS)
+    (adGrade_iSupIndep S) (iSup_adGrade_eq_top hS)
 
-/-- The constructed Mathlib graded algebra, on the original algebra carrier. -/
-def tripotentIntegerGradedAlgebra {S : A} (hS : S * S * S = S) :
-    GradedAlgebra (adGrade S) :=
+/-- A genuine Mathlib graded-algebra structure on the existing integer family. -/
+@[instance_reducible]
+def adGradeGradedAlgebra {S : A} (hS : S * S * S = S) : GradedAlgebra (adGrade S) :=
   (adGrade_isInternal hS).gradedAlgebra
 
-/-- The native external direct sum is algebra-isomorphic to the original carrier. -/
+/-- Decomposition preserves the original associative multiplication and unit. -/
+def adGradeDecomposeAlgEquiv {S : A} (hS : S * S * S = S) :
+    A ≃ₐ[ℝ] DirectSum ℤ (fun k => adGrade S k) :=
+  (adGrade_isInternal hS).coeAlgEquiv.symm
+
+/-- Compatibility name with the direct sum equivalence oriented toward `A`. -/
+def tripotentIntegerGradedAlgebra {S : A} (hS : S * S * S = S) :
+    GradedAlgebra (adGrade S) := adGradeGradedAlgebra hS
+
 def tripotentIntegerDirectSumEquiv {S : A} (hS : S * S * S = S) :
-    (⨁ k : ℤ, adGrade S k) ≃ₐ[ℝ] A :=
-  (adGrade_isInternal hS).coeAlgEquiv
+    (⨁ k : ℤ, adGrade S k) ≃ₐ[ℝ] A := (adGrade_isInternal hS).coeAlgEquiv
 
-/-- Components outside the five integer weights vanish. -/
-theorem adGrade_eq_bot_of_not_mem {S : A} (hS : S * S * S = S)
-    {k : ℤ} (hk : k ∉ Set.range fiveGradeValue) : adGrade S k = ⊥ := by
-  rw [adGrade_eq_eigenspace]
-  apply eigenspace_eq_bot_of_not_mem_fiveGradeValue hS
-  rintro ⟨i, hi⟩
-  apply hk
-  refine ⟨i, ?_⟩
-  change (fiveGradeValue i : ℝ) = (k : ℝ) at hi
-  exact_mod_cast hi
+/-- Integer degree modulo two, with negative odd integers also odd. -/
+def integerGradeParity (k : ℤ) : Bool := decide (k % 2 = 1)
 
-/-- In particular, the integer grading has support in the interval `[-2,2]`. -/
-theorem adGrade_eq_bot_of_outside {S : A} (hS : S * S * S = S)
-    {k : ℤ} (hk : k < -2 ∨ 2 < k) : adGrade S k = ⊥ := by
-  apply adGrade_eq_bot_of_not_mem hS
-  rintro ⟨i, rfl⟩
-  cases i <;> norm_num [fiveGradeValue] at hk
+theorem integerGradeParity_add (i j : ℤ) :
+    integerGradeParity (i + j) = (integerGradeParity i ^^ integerGradeParity j) := by
+  have hi : i % 2 = 0 ∨ i % 2 = 1 := by omega
+  have hj : j % 2 = 0 ∨ j % 2 = 1 := by omega
+  rcases hi with hi | hi <;> rcases hj with hj | hj <;>
+    simp [integerGradeParity, Int.add_emod, hi, hj, Bool.xor]
 
-/-- Opposite degrees give a degree-zero composite without either factor
-being required to centralize the tripotent. -/
+/-- The integer parity agrees with the existing middle-projector involution. -/
+theorem parityConj_projZero_of_mem_adGrade {S X : A}
+    (hS : S * S * S = S) {k : ℤ} (hX : X ∈ adGrade S k) :
+    parityConj (projZero S) X = if integerGradeParity k then -X else X := by
+  by_cases hk : k ∈ Set.range fiveGradeValue
+  · obtain ⟨j, rfl⟩ := hk
+    rw [← fiveGradeRange_eq_adGrade hS] at hX
+    simpa only [integerGradeParity, ← fiveGradeParity_eq_mod_two] using
+      parityConj_projZero_eq_fiveGradeParity hS j hX
+  · rw [adGrade_eq_bot_of_not_mem hS hk, Submodule.mem_bot] at hX
+    simp [hX, parityConj]
+
+/-- The signed associative bracket lands in the summed integer grade. -/
+theorem superBracket_mem_adGrade {S X Y : A} {i j : ℤ}
+    (hX : X ∈ adGrade S i) (hY : Y ∈ adGrade S j) :
+    superBracket (integerGradeParity i) (integerGradeParity j) X Y ∈
+      adGrade S (i + j) := by
+  have hXY := mul_mem_adGrade_add hX hY
+  have hYX : Y * X ∈ adGrade S (i + j) := by
+    simpa only [add_comm] using mul_mem_adGrade_add hY hX
+  unfold superBracket anticommutator InfoGeometry.Algebra.SupergradedBracket.commutator
+  split_ifs
+  · exact (adGrade S (i + j)).add_mem hXY hYX
+  · exact (adGrade S (i + j)).sub_mem hXY hYX
+
+/-- Homogeneous signed bracket, with no finite-label sum premise. -/
+def adGradeSuperBracket {S : A} {i j : ℤ}
+    (X : adGrade S i) (Y : adGrade S j) : adGrade S (i + j) :=
+  ⟨superBracket (integerGradeParity i) (integerGradeParity j) (X : A) (Y : A),
+    superBracket_mem_adGrade X.property Y.property⟩
+
+/-- Uniform signed Jacobi for the integer grading. The equality is in the
+ambient algebra so associative reindexing needs no artificial casts. -/
+theorem adGradeSuperBracket_jacobi {S : A} {i j k : ℤ}
+    (X : adGrade S i) (Y : adGrade S j) (Z : adGrade S k) :
+    gradedSign (R := ℝ) (integerGradeParity i) (integerGradeParity k) •
+        (adGradeSuperBracket X (adGradeSuperBracket Y Z) : A) +
+      gradedSign (R := ℝ) (integerGradeParity j) (integerGradeParity i) •
+        (adGradeSuperBracket Y (adGradeSuperBracket Z X) : A) +
+      gradedSign (R := ℝ) (integerGradeParity k) (integerGradeParity j) •
+        (adGradeSuperBracket Z (adGradeSuperBracket X Y) : A) = 0 := by
+  have h := superBracket_superJacobi (R := ℝ) (integerGradeParity i)
+    (integerGradeParity j) (integerGradeParity k) (X : A) (Y : A) (Z : A)
+  rw [← integerGradeParity_add j k, ← integerGradeParity_add k i,
+    ← integerGradeParity_add i j] at h
+  exact h
+
+/-- Opposite integer degrees multiply into the degree-zero centralizer. -/
 theorem opposite_degree_product_commute {S X Y : A} {k : ℤ}
-    (hX : X ∈ adGrade S k) (hY : Y ∈ adGrade S (-k)) :
-    Commute S (X * Y) := by
+    (hX : X ∈ adGrade S k) (hY : Y ∈ adGrade S (-k)) : Commute S (X * Y) := by
   have h := mul_mem_adGrade_add hX hY
   rw [add_neg_cancel, mem_adGrade_iff] at h
   change S * (X * Y) = (X * Y) * S

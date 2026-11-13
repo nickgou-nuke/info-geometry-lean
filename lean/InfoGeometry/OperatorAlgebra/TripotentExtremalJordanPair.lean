@@ -36,7 +36,8 @@ theorem same_extreme_product_eq_zero {S x z : A} (hS : S * S * S = S)
     {i : ℤ} (hi : i = -2 ∨ i = 2)
     (hx : x ∈ adGrade S i) (hz : z ∈ adGrade S i) : x * z = 0 := by
   have h := mul_mem_adGrade_add hx hz
-  have hout : i + i < -2 ∨ 2 < i + i := by omega
+  have hout : i + i < -2 ∨ 2 < i + i := by
+    rcases hi with rfl | rfl <;> norm_num
   rw [adGrade_eq_bot_of_outside hS hout] at h
   exact h
 
@@ -67,29 +68,29 @@ theorem jordanTriple_mem_extreme_intersection {S x y z : A}
     exact L.lie_mem (L.lie_mem hx.1 hy.1) hz.1
   · have hxyz := mul_mem_adGrade_add (mul_mem_adGrade_add hx.2 hy.2) hz.2
     have hzyx := mul_mem_adGrade_add (mul_mem_adGrade_add hz.2 hy.2) hx.2
-    simpa only [hij, zero_add] using add_mem hxyz hzyx
+    simpa only [jordanTriple, hij, zero_add] using add_mem hxyz hzyx
 
 /-- The subtype triple is constructed from multiplication, with closure
 proved above. Its algebraic identities are not assumed as fields. -/
 def restrictedExtremeTriple {S : A} (hS : S * S * S = S)
     (L : LieSubalgebra ℝ A) {i j : ℤ} (hi : i = -2 ∨ i = 2) (hij : i + j = 0)
-    (x : L.toSubmodule ⊓ adGrade S i) (y : L.toSubmodule ⊓ adGrade S j)
-    (z : L.toSubmodule ⊓ adGrade S i) : L.toSubmodule ⊓ adGrade S i :=
+    (x : ↥(L.toSubmodule ⊓ adGrade S i)) (y : ↥(L.toSubmodule ⊓ adGrade S j))
+    (z : ↥(L.toSubmodule ⊓ adGrade S i)) : ↥(L.toSubmodule ⊓ adGrade S i) :=
   ⟨jordanTriple (x : A) (y : A) (z : A),
     jordanTriple_mem_extreme_intersection hS L hi hij x.property y.property z.property⟩
 
 /-- Agreement with the nested ordinary Lie bracket in the ambient algebra. -/
 theorem coe_restrictedExtremeTriple_eq_double_lie {S : A} (hS : S * S * S = S)
     (L : LieSubalgebra ℝ A) {i j : ℤ} (hi : i = -2 ∨ i = 2) (hij : i + j = 0)
-    (x : L.toSubmodule ⊓ adGrade S i) (y : L.toSubmodule ⊓ adGrade S j)
-    (z : L.toSubmodule ⊓ adGrade S i) :
+    (x : ↥(L.toSubmodule ⊓ adGrade S i)) (y : ↥(L.toSubmodule ⊓ adGrade S j))
+    (z : ↥(L.toSubmodule ⊓ adGrade S i)) :
     (restrictedExtremeTriple hS L hi hij x y z : A) = ⁅⁅(x : A), (y : A)⁆, (z : A)⁆ :=
   (double_lie_eq_jordanTriple hS hi x.property.2 z.property.2 (y : A)).symm
 
 /-- Additivity in the first argument, simultaneously for both extremes. -/
 theorem restrictedExtremeTriple_add_left {S : A} (hS : S * S * S = S)
     (L : LieSubalgebra ℝ A) {i j : ℤ} (hi : i = -2 ∨ i = 2) (hij : i + j = 0)
-    (x x' z : L.toSubmodule ⊓ adGrade S i) (y : L.toSubmodule ⊓ adGrade S j) :
+    (x x' z : ↥(L.toSubmodule ⊓ adGrade S i)) (y : ↥(L.toSubmodule ⊓ adGrade S j)) :
     restrictedExtremeTriple hS L hi hij (x + x') y z =
       restrictedExtremeTriple hS L hi hij x y z +
         restrictedExtremeTriple hS L hi hij x' y z := by
@@ -101,7 +102,7 @@ theorem restrictedExtremeTriple_add_left {S : A} (hS : S * S * S = S)
 /-- Additivity in the middle argument. -/
 theorem restrictedExtremeTriple_add_middle {S : A} (hS : S * S * S = S)
     (L : LieSubalgebra ℝ A) {i j : ℤ} (hi : i = -2 ∨ i = 2) (hij : i + j = 0)
-    (x z : L.toSubmodule ⊓ adGrade S i) (y y' : L.toSubmodule ⊓ adGrade S j) :
+    (x z : ↥(L.toSubmodule ⊓ adGrade S i)) (y y' : ↥(L.toSubmodule ⊓ adGrade S j)) :
     restrictedExtremeTriple hS L hi hij x (y + y') z =
       restrictedExtremeTriple hS L hi hij x y z +
         restrictedExtremeTriple hS L hi hij x y' z := by
@@ -113,7 +114,7 @@ theorem restrictedExtremeTriple_add_middle {S : A} (hS : S * S * S = S)
 /-- Additivity in the last argument. -/
 theorem restrictedExtremeTriple_add_right {S : A} (hS : S * S * S = S)
     (L : LieSubalgebra ℝ A) {i j : ℤ} (hi : i = -2 ∨ i = 2) (hij : i + j = 0)
-    (x z z' : L.toSubmodule ⊓ adGrade S i) (y : L.toSubmodule ⊓ adGrade S j) :
+    (x z z' : ↥(L.toSubmodule ⊓ adGrade S i)) (y : ↥(L.toSubmodule ⊓ adGrade S j)) :
     restrictedExtremeTriple hS L hi hij x y (z + z') =
       restrictedExtremeTriple hS L hi hij x y z +
         restrictedExtremeTriple hS L hi hij x y z' := by
@@ -125,7 +126,7 @@ theorem restrictedExtremeTriple_add_right {S : A} (hS : S * S * S = S)
 /-- Real linearity in the first argument. -/
 theorem restrictedExtremeTriple_smul_left {S : A} (hS : S * S * S = S)
     (L : LieSubalgebra ℝ A) {i j : ℤ} (hi : i = -2 ∨ i = 2) (hij : i + j = 0)
-    (r : ℝ) (x z : L.toSubmodule ⊓ adGrade S i) (y : L.toSubmodule ⊓ adGrade S j) :
+    (r : ℝ) (x z : ↥(L.toSubmodule ⊓ adGrade S i)) (y : ↥(L.toSubmodule ⊓ adGrade S j)) :
     restrictedExtremeTriple hS L hi hij (r • x) y z =
       r • restrictedExtremeTriple hS L hi hij x y z := by
   apply Subtype.ext
@@ -135,7 +136,7 @@ theorem restrictedExtremeTriple_smul_left {S : A} (hS : S * S * S = S)
 /-- Real linearity in the middle argument. -/
 theorem restrictedExtremeTriple_smul_middle {S : A} (hS : S * S * S = S)
     (L : LieSubalgebra ℝ A) {i j : ℤ} (hi : i = -2 ∨ i = 2) (hij : i + j = 0)
-    (r : ℝ) (x z : L.toSubmodule ⊓ adGrade S i) (y : L.toSubmodule ⊓ adGrade S j) :
+    (r : ℝ) (x z : ↥(L.toSubmodule ⊓ adGrade S i)) (y : ↥(L.toSubmodule ⊓ adGrade S j)) :
     restrictedExtremeTriple hS L hi hij x (r • y) z =
       r • restrictedExtremeTriple hS L hi hij x y z := by
   apply Subtype.ext
@@ -145,7 +146,7 @@ theorem restrictedExtremeTriple_smul_middle {S : A} (hS : S * S * S = S)
 /-- Real linearity in the last argument. -/
 theorem restrictedExtremeTriple_smul_right {S : A} (hS : S * S * S = S)
     (L : LieSubalgebra ℝ A) {i j : ℤ} (hi : i = -2 ∨ i = 2) (hij : i + j = 0)
-    (r : ℝ) (x z : L.toSubmodule ⊓ adGrade S i) (y : L.toSubmodule ⊓ adGrade S j) :
+    (r : ℝ) (x z : ↥(L.toSubmodule ⊓ adGrade S i)) (y : ↥(L.toSubmodule ⊓ adGrade S j)) :
     restrictedExtremeTriple hS L hi hij x y (r • z) =
       r • restrictedExtremeTriple hS L hi hij x y z := by
   apply Subtype.ext
@@ -156,14 +157,14 @@ theorem restrictedExtremeTriple_smul_right {S : A} (hS : S * S * S = S)
 ambient pair is obtained by taking `L = ⊤`. No involution is required. -/
 def lieSubalgebraExtremeJordanPair {S : A} (hS : S * S * S = S)
     (L : LieSubalgebra ℝ A) : TKKJordanPairData.JordanPair ℝ where
-  Vplus := L.toSubmodule ⊓ adGrade S 2
-  Vminus := L.toSubmodule ⊓ adGrade S (-2)
+  Vplus := ↥(L.toSubmodule ⊓ adGrade S 2)
+  Vminus := ↥(L.toSubmodule ⊓ adGrade S (-2))
   plus_add := inferInstance
   minus_add := inferInstance
   plus_module := inferInstance
   minus_module := inferInstance
-  triplePlus := restrictedExtremeTriple hS L (Or.inr rfl) (by norm_num)
-  tripleMinus := restrictedExtremeTriple hS L (Or.inl rfl) (by norm_num)
+  triplePlus := restrictedExtremeTriple hS L (i := 2) (j := -2) (Or.inr rfl) (by norm_num)
+  tripleMinus := restrictedExtremeTriple hS L (i := -2) (j := 2) (Or.inl rfl) (by norm_num)
   triplePlus_outer := by
     intro x y z
     apply Subtype.ext

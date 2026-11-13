@@ -36,7 +36,7 @@ theorem algEquiv_mem_adGrade_iff (f : A ≃ₐ[ℝ] A) (S X : A) (k : ℤ) :
     f X ∈ adGrade (f S) k ↔ X ∈ adGrade S k := by
   rw [mem_adGrade_iff, mem_adGrade_iff]
   have heq : adOp (f S) (f X) = f (adOp S X) := by simp [adOp]
-  rw [heq, ← f.map_smul]
+  rw [heq, ← map_smul f (k : ℝ) X]
   exact f.injective.eq_iff
 
 /-- A stationary grading element gives grade preservation for any actual
@@ -161,6 +161,7 @@ theorem fiveGradeProjector_mul_expansion {S : A} (hS : S * S * S = S)
     _ = ∑ i : FiveGrade, ∑ j : FiveGrade,
         fiveGradeProjector S k (fiveGradeProjector S i J * fiveGradeProjector S j K) := by
       simp only [Finset.sum_mul, Finset.mul_sum, map_sum]
+      exact Finset.sum_comm
     _ = _ := by
       apply Finset.sum_congr rfl
       intro i _

@@ -157,7 +157,8 @@ theorem middle_range_lt_corner_ker {S N : Module.End ℝ V}
   obtain ⟨w, hw⟩ := hback hk
   have hfix : projZero S (N v) = N v := by
     calc
-      projZero S (N v) = projZero S (projZero S w) := congrArg (projZero S) hw.symm
+      projZero S (N v) = projZero S (projZero S w) :=
+        congrArg (fun x : V => (projZero S : Module.End ℝ V) x) hw.symm
       _ = projZero S w :=
         congrArg (fun T : Module.End ℝ V => T w) (projZero_idempotent hS)
       _ = N v := hw
@@ -236,7 +237,7 @@ theorem dual_negative_kernel_eq {S Nplus Nminus : Module.End ℝ V}
       rw [← hpm, Module.End.mul_apply, hv', map_zero]
     apply Submodule.mem_sup.mpr
     refine ⟨projZero S v, ⟨v, rfl⟩, projNeg S v, ⟨v, rfl⟩, ?_⟩
-    have hsum := congrArg (fun T : Module.End ℝ V => T v) (proj_sum_eq_id S)
+    have hsum := congrArg (fun T : Module.End ℝ V => T v) (proj_sum_eq_id (T := S))
     simpa only [LinearMap.add_apply, Module.End.one_apply, hpv, zero_add] using hsum
   · exact range_zero_sup_range_neg_le_ker hS hm
 
@@ -253,7 +254,7 @@ theorem dual_positive_kernel_eq {S Nplus Nminus : Module.End ℝ V}
       rw [← hmp, Module.End.mul_apply, hv', map_zero]
     apply Submodule.mem_sup.mpr
     refine ⟨projZero S v, ⟨v, rfl⟩, projPos S v, ⟨v, rfl⟩, ?_⟩
-    have hsum := congrArg (fun T : Module.End ℝ V => T v) (proj_sum_eq_id S)
+    have hsum := congrArg (fun T : Module.End ℝ V => T v) (proj_sum_eq_id (T := S))
     simpa only [LinearMap.add_apply, Module.End.one_apply, hmv, add_zero, add_comm] using hsum
   · exact range_zero_sup_range_pos_le_ker hS hp
 
@@ -273,7 +274,7 @@ theorem dual_extreme_kernel_inf {S Nplus Nminus : Module.End ℝ V}
     have hmv : projNeg S v = 0 := by
       rw [← hmp, Module.End.mul_apply, hvp, map_zero]
     refine ⟨v, ?_⟩
-    have hsum := congrArg (fun T : Module.End ℝ V => T v) (proj_sum_eq_id S)
+    have hsum := congrArg (fun T : Module.End ℝ V => T v) (proj_sum_eq_id (T := S))
     simpa only [LinearMap.add_apply, Module.End.one_apply, hpv, hmv,
       zero_add, add_zero] using hsum
   · exact le_inf

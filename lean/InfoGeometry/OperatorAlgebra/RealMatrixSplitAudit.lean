@@ -1,0 +1,113 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility
+import InfoGeometry.Physics.FiniteMetriplecticDynamics
+import InfoGeometry.OperatorAlgebra.RealMatrixSplit
+import InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry
+import InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples
+import InfoGeometry.OperatorAlgebra.RealMetricAdjoint
+import InfoGeometry.Physics.FiniteMetriplecticMatrixSplit
+
+/-!
+# Real matrix split declaration audit
+
+This target audits the explicitly named public declarations, including
+named instances, in the seven mathematical owners above. It does not
+enumerate Lean-generated declarations. Dependencies of private helpers
+are audited transitively through the listed heads.
+
+Regenerate with `python3 verification/real-matrix-split/audit.py --write`.
+Source inventory, kernel compilation, axiom checking, and semantic
+review are separate checks. This target is not an umbrella import.
+-/
+
+#print axioms InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint
+#print axioms InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.mul_adjoint
+#print axioms InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.compatibility_defect
+#print axioms InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint_eq_star_iff
+#print axioms InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint_eq_self_iff_of_selfAdjoint
+#print axioms InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint_mul
+#print axioms InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint_involutive
+
+#print axioms InfoGeometry.Physics.metriplecticVelocity
+#print axioms InfoGeometry.Physics.energyRate
+#print axioms InfoGeometry.Physics.entropyRate
+#print axioms InfoGeometry.Physics.metriplecticVelocity_eq_zero_of_degenerate
+#print axioms InfoGeometry.Physics.metriplectic_stationary_rates
+#print axioms InfoGeometry.Physics.entropyRate_eq_zero_of_degenerate
+#print axioms InfoGeometry.Physics.entropyRate_eq_onsager_quadratic
+#print axioms InfoGeometry.Physics.energy_conserved
+#print axioms InfoGeometry.Physics.entropy_nondecreasing
+#print axioms InfoGeometry.Physics.casimir_conserved
+#print axioms InfoGeometry.Physics.symmetricPart
+#print axioms InfoGeometry.Physics.antisymmetricPart
+#print axioms InfoGeometry.Physics.symmetricPart_transpose
+#print axioms InfoGeometry.Physics.antisymmetricPart_transpose
+#print axioms InfoGeometry.Physics.symmetricPart_add_antisymmetricPart
+#print axioms InfoGeometry.Physics.symmetricPart_eq_of_symmetric_add_skew
+#print axioms InfoGeometry.Physics.antisymmetricPart_eq_of_symmetric_add_skew
+
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplit.selfAdjointPart_eq_half
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplit.skewAdjointPart_eq_half
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplit.square_of_split
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplit.transpose_normal_defect_of_split
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplit.transpose_normal_defect
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplit.isStarNormal_iff_parts_commute
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplit.selfAdjointPart_congruence
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplit.skewAdjointPart_congruence
+
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.toBilin'_adjoint_split
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.selfAdjointPart_toBilin'_isSymm
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.toBilin'_swap_of_transpose_eq_neg
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.toBilin'_isAlt_of_transpose_eq_neg
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.skewAdjointPart_toBilin'_isAlt
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.even_card_of_transpose_eq_neg_det_ne_zero
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.even_card_of_skew_toBilin'_nondegenerate
+
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleMatrix
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleMetric
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleSkew
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleRaised
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sample_selfAdjointPart
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sample_skewAdjointPart
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleMetric_isSymm
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleSkew_transpose
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleMetric_posDef
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleMetric_det
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleSkew_det
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleSkew_toBilin'_nondegenerate
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sample_commutator
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sample_parts_do_not_commute
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleMetric_inv
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleRaised_eq
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleRaised_sq
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleRaised_not_complex
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.invertible_with_zero_skew_part
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.invertible_with_zero_symmetric_part
+
+#print axioms InfoGeometry.OperatorAlgebra.RealMetricAdjoint.raisedIndex_isSkewAdjoint
+#print axioms InfoGeometry.OperatorAlgebra.RealMetricAdjoint.raisedIndex_skew_identity
+#print axioms InfoGeometry.OperatorAlgebra.RealMetricAdjoint.raisedIndex_toBilin'
+#print axioms InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_matrix
+#print axioms InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_nonsingInvUnit
+#print axioms InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_isAdjointPair
+#print axioms InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_unique
+#print axioms InfoGeometry.OperatorAlgebra.RealMetricAdjoint.isSelfAdjoint_iff_weightedAdjoint
+#print axioms InfoGeometry.OperatorAlgebra.RealMetricAdjoint.isSkewAdjoint_iff_weightedAdjoint
+#print axioms InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_add
+#print axioms InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_sub
+#print axioms InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_smul
+#print axioms InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_involutive
+#print axioms InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_symmetric_part
+#print axioms InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_skew_part
+#print axioms InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_split
+#print axioms InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_symmetric_part_unique
+#print axioms InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_skew_part_unique
+
+#print axioms InfoGeometry.Physics.symmetricPart_eq_selfAdjointPart
+#print axioms InfoGeometry.Physics.antisymmetricPart_eq_skewAdjointPart
+#print axioms InfoGeometry.Physics.symmetricPart_antisymmetricPart_normal_defect
+#print axioms InfoGeometry.Physics.symmetricPart_antisymmetricPart_commute_iff

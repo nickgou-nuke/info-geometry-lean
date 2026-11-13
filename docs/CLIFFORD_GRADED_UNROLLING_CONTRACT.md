@@ -2,9 +2,11 @@
 
 ## Status and source
 
-This draft contains complete Lean proof scripts that still require kernel
-acceptance. Independent source reviews are recorded separately below. Neither
-a source review nor the absence of proof placeholders is a successful Lean build.
+The eleven selected mathematical owners have passed the focused Lean build and
+exhaustive declaration-axiom audit at `3a183d7a527cfea5ede84c301bc4b1e681a0028e`. The
+[checked evidence](../verification/cl11-graded-unrolling/checked-evidence.json)
+identifies the exact revision and verification run. The staged source gate and
+repository-wide SorryGate remain failed as recorded below.
 
 The input is the user attachment `Pasted text(20261113-085735).txt`, preserved
 byte-for-byte in `handover/injections/cl11-graded-unrolling-source.md`.
@@ -70,7 +72,8 @@ singular matrices.
 
 ## Declaration map
 
-All entries below describe the declared source targets, pending kernel checking.
+The declarations below belong to the eleven selected owners covered by the
+checked build and exhaustive audit. Their precise scope is part of the contract.
 
 | Owner | Main declarations | Exact scope |
 | --- | --- | --- |
@@ -135,80 +138,68 @@ right-head spinor coordinates remains outside the claims.
 
 ## Verification record
 
-### Completed source work
+### Checked selected-owner result
+
+The [focused CI job](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43421680904/job/131872938214)
+on `3a183d7a527cfea5ede84c301bc4b1e681a0028e` completed the selected-owner build and a fresh Lean
+execution of `Cl11GradedUnrollingAudit.lean` with warnings treated as errors.
+The [checked evidence receipt](../verification/cl11-graded-unrolling/checked-evidence.json)
+records this result separately from the historical source-recovery record.
+
+| Check | Result | Coverage |
+| --- | --- | --- |
+| Focused kernel build | PASS | All eleven mathematical owners and their required imports. |
+| Exhaustive declaration-axiom audit | PASS | `470` declarations across all eleven selected owners, including private and generated declarations. |
+| Observed axiom dependencies | `[propext, Classical.choice, Quot.sound]` | Transitive dependencies collected through Lean's native `Lean.collectAxioms`. |
+| Canonical audit-source comparison | Exact match | The tracked audit source matches `tools.quality.reviewed_audit_source.audit_source` for the same eleven owners. |
+
+The audit selects declarations by native module ownership, requires a positive
+count for every selected owner, and rejects unsafe or partial owned declarations.
+Its only allowed foundational axioms are `propext`, `Classical.choice`, and
+`Quot.sound`. The observed set above is taken from the completed audit output.
+The generator comparison and the fresh Lean execution are separate checks.
+
+The implementation uses explicit `noncomputable` declarations for recursive
+real Clifford constructions and native `Nat.rec` folds for computational train,
+indexing, and parity operations. Generic semiring contraction and terminal
+normalization retain their computational scope. These changes avoid newly owned
+unsafe recursive runtime helpers without changing the exhaustive audit, its
+owner selection, or its axiom allowlist.
+
+The workflow uses Lean `v4.34.1` and Mathlib
+`d13f23b723b8a846827a245b89c10fc7d3f11612`. Its
+`cl11-graded-unrolling-evidence` artifact contains the build and fresh audit logs,
+plus `source-evidence.json` identifying the exact checked commit, toolchain,
+selected owners, and source hashes. Reused build traces do not replace the fresh
+final audit. This result covers the selected owners and their import closure;
+root integration remains a separate requirement.
+
+### Separate checks and outstanding failures
+
+| Check | Recorded result | Evidence and scope |
+| --- | --- | --- |
+| Staged source gate, 2026-11-13 UTC | FAIL: one T16 finding | `Cl11RecursiveUnrolling.lean:44`; imported and nested matrix-carrier recognition remains unresolved. |
+| Root SorryGate, 2026-11-13 UTC | FAIL: 91 debt files, 878 findings | [Run 43421680575, job 131872936887](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43421680575/job/131872936887); repository-wide debt gate. |
+| Local full acceptance | INCOMPLETE | The local prerequisite build ended with wrapper exit 247 after subprocess exit 137. |
+
+The T16 finding concerns `Matrix (Fin 2) (Fin 2) (RealMatrix n)`. The explicit
+native witness `realBlock_noncommuting` compiled in the preceding focused checks
+and belongs to the checked owner. The scanner does not recognize the imported
+witness specialization on this nested carrier. The source gate remains failed;
+its criteria are unchanged. The root SorryGate failure is
+also unresolved. No local full-repository acceptance is claimed, and the focused
+result does not clear either separate gate. The PR remains a draft while those
+acceptance requirements are unresolved.
+
+### Source provenance and review
 
 Independent read-only reviews covered all eleven mathematical owners, including
-the homogeneous inverse extension and the independently defined local Clifford
-cores. They found no semantic blocker at the declared scope. Subsequent proof
-repairs are checked against the actual compiler diagnostics. No source review
-is a kernel certificate.
+the homogeneous inverse, terminal-boundary normalization, and native local-core
+bridge. Source review and hash identity establish different facts from the
+kernel and axiom results above.
 
-The recovered source snapshots are recorded in
-`verification/cl11-graded-unrolling/recovery-evidence.json`. Exact hash matches
-are distinguished there from any reconstructed source interval. The original
-attachment was recovered and its original SHA-256 verified.
-
-### Local execution boundary
-
-The pinned Mathlib cache hydration completed successfully. The first focused
-build failed before checking the new proofs because the workspace disk was
-full. A temporary native Lake configuration retained the exact dependency
-revisions, selected the independent checkout's sources, and placed generated
-outputs on the temporary filesystem. No cache was deleted and no dependency
-pin or toolchain was changed.
-
-The queued retry reached Lake, emitted a package-directory relocation warning,
-and terminated with return code 247 before reporting a theorem result. The
-execution environment then became unavailable. At that recovery checkpoint:
-
-- no new owner had a successful local kernel build;
-- the selected-owner axiom audit had not completed;
-- the tracked pre-commit source gate and root integration gate had not run
-  for the final recovered tree;
-- no local full-repository acceptance is claimed.
-
-The first focused CI run, [43406594970](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43406594970),
-reached the new owners and reported elaboration errors in `ExactTensorTrain`,
-`RankMinimalTensorTrain`, `SplitCliffordMatrixEquiv`, and `Cl11GradedUnrolling`.
-The matrix-rank factorization owner compiled. The follow-up proof scripts repair
-those reported errors; acceptance of the complete closure remains pending.
-
-The second focused run,
-[43408976175](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43408976175),
-compiled `SplitCliffordMatrixEquiv`, `Cl11GradedUnrolling`,
-`MatrixRankFactorization`, and `RankMinimalTensorTrain` on commit
-`4ad3bced5caf5f76b969b1d0237869609911f5be`. Three owners still reported
-elaboration failures: `ExactTensorTrain`, `Cl11PureTensorObstruction`, and
-`Cl11RecursiveUnrolling`. Their dependent owners and the exhaustive audit
-remain blocked until a subsequent successful build.
-
-The third focused run,
-[43411000804](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43411000804),
-on `b6c097c737975c74ef8d6798b32921e0658410fc`, additionally compiled
-`ExactTensorTrain` and `Cl11PureTensorObstruction`, for six accepted owners at
-that revision. It reported errors in `TensorTrainMatricization` and
-`Cl11RecursiveUnrolling`; their dependent owners and the exhaustive audit
-remained blocked. The following source revision also adds independently
-reviewed terminal-boundary normalization and its native Clifford bridge.
-Those additions and all diagnostic repairs still require a successful run.
-
-The tracked staged source gate was subsequently executed. Its remaining T16
-finding is on the nested coefficient carrier `Matrix (Fin 2) (Fin 2)
-(RealMatrix n)`. The owner exposes `realBlock_noncommuting`, which specializes
-the existing matrix witness to that exact carrier. Independent inspection
-found that the scanner does not resolve the imported operands' types and its
-generic specialization recognizer does not handle matrix coefficient rings;
-its raw and expanded carrier strings also differ. The gate remains failed,
-and the explicit witness still requires the full Lean check. This record does
-not claim source-gate acceptance or alter its criteria.
-
-The published draft includes a focused CI workflow using Lean `v4.34.1` and
-Mathlib `d13f23b723b8a846827a245b89c10fc7d3f11612`. It builds all eleven owners,
-audits every owned declaration, and records exact source hashes. Allowed
-foundational axioms remain only `propext`, `Classical.choice`, and `Quot.sound`.
-A workflow definition or a queued run is not a successful check.
-
-Root integration remains a separate requirement. The unchanged baseline PR
-already reports unrelated optional-package/recursive-checkout failures; those
-historical results are context, not a fresh run on this tree. This PR must remain
-a draft until its actual checks and any reported proof errors are resolved.
+[recovery-evidence.json](../verification/cl11-graded-unrolling/recovery-evidence.json)
+remains the unchanged historical recovery record. It distinguishes exact recovered
+hash matches from reconstructed source intervals. The original attachment and its
+SHA-256 are preserved. The checked evidence receipt records the later execution
+result without rewriting that history.

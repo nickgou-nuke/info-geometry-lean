@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "repository": "nickgou-nuke/info-geometry-lean",
+  "pull_request": "https://github.com/nickgou-nuke/info-geometry-lean/pull/354",
+  "base_commit": "ce34c806983f97e7ff3c95b5d06081bd93534c5b",
+  "checked_commit": "3a183d7a527cfea5ede84c301bc4b1e681a0028e",
+  "input": {
+    "path": "handover/injections/cl11-graded-unrolling-source.md",
+    "sha256": "4c2d41da3c0f692a6e414e03f9c6aaa3066497cae21bc4335b37535f83c8e9d7"
+  },
+  "verification": {
+    "status": "success",
+    "job": 131872938214,
+    "url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43421680904",
+    "scope": "Eleven selected mathematical owners and their required imports; exhaustive owned-declaration audit checks transitive axiom dependencies.",
+    "run": 43421680904,
+    "kernel_build": "success",
+    "fresh_exhaustive_audit": "success",
+    "artifact_id": 14034337911,
+    "artifact_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43421680904/artifacts/14034337911",
+    "fresh_audit_warning_as_error": true
+  },
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "mathlib_revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "dependency_sha256": {
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lake-manifest.json": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+    "verification/freed-pin-compatibility/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "verification/freed-pin-compatibility/lakefile.toml": "690685c5f588ed0dfcd72dae05ebfbbff76066f3300fc599210d13208649e6e4",
+    "verification/freed-pin-compatibility/lake-manifest.json": "d6047d5272c564806df4c9ecc1a653a45b6869453c8624a293a8856781bf4152",
+    "tools/quality/reviewed_audit_source.py": "a976c910f5efb4611b1626d714e3197310d92648ffae56513e94a49ae5f0f206"
+  },
+  "owners": [
+    {
+      "module": "InfoGeometry.Clifford.SplitCliffordMatrixEquiv",
+      "path": "lean/InfoGeometry/Clifford/SplitCliffordMatrixEquiv.lean",
+      "sha256": "bc406566bf950c5870605ab33a4da5a954cbf870cbd22eb53de54b06f93803c7",
+      "git_blob": "81bc225a31a2572462c78678b284997e2c9409d5",
+      "owned_declarations": 22
+    },
+    {
+      "module": "InfoGeometry.Clifford.Cl11GradedUnrolling",
+      "path": "lean/InfoGeometry/Clifford/Cl11GradedUnrolling.lean",
+      "sha256": "f7a4feabe026f3c94ffac0951442b8c04647d540e9c100ed33fcd84c714e65c5",
+      "git_blob": "cc8d95a0b202bb31fdfe0dca474070468a23ef69",
+      "owned_declarations": 57
+    },
+    {
+      "module": "InfoGeometry.Clifford.Cl11RecursiveUnrolling",
+      "path": "lean/InfoGeometry/Clifford/Cl11RecursiveUnrolling.lean",
+      "sha256": "bae79677923abee59a9b292eaa170e535117078a1e6d32076201a3025bd12f2d",
+      "git_blob": "d4b4c7f9fcb8d93941cd1b5786a8ac0e1c628f93",
+      "owned_declarations": 129
+    },
+    {
+      "module": "InfoGeometry.Clifford.Cl11HomogeneousChains",
+      "path": "lean/InfoGeometry/Clifford/Cl11HomogeneousChains.lean",
+      "sha256": "abcab30f316cb0e172469834c89cc55b5bddd87e523557090f3fdf72389605bb",
+      "git_blob": "b085dbcd3b4e7813f2b05000e263915b8e0df4f4",
+      "owned_declarations": 69
+    },
+    {
+      "module": "InfoGeometry.Algebra.MatrixRankFactorization",
+      "path": "lean/InfoGeometry/Algebra/MatrixRankFactorization.lean",
+      "sha256": "a377574952995f068b4f48976e88d8afa559c80d6ddfda2b4362a5809463277f",
+      "git_blob": "456b7df71676af460cd6b8b66c047420e40f4c0a",
+      "owned_declarations": 15
+    },
+    {
+      "module": "InfoGeometry.Tensor.ExactTensorTrain",
+      "path": "lean/InfoGeometry/Tensor/ExactTensorTrain.lean",
+      "sha256": "b1c2d5f6e2169492a31cba42d4809a9d51081369f521bc6d1cfd41894f672d99",
+      "git_blob": "02386a8a99bb84123bc14568e46d2f248b5352b1",
+      "owned_declarations": 15
+    },
+    {
+      "module": "InfoGeometry.Tensor.RankMinimalTensorTrain",
+      "path": "lean/InfoGeometry/Tensor/RankMinimalTensorTrain.lean",
+      "sha256": "aef5c873c6a3166742dd34aacf6c128dca096bf1f909127096d2d31c1c26990e",
+      "git_blob": "1e2102ef26d4c17dc9bc7fa2de35672050307071",
+      "owned_declarations": 72
+    },
+    {
+      "module": "InfoGeometry.Tensor.TensorTrainMatricization",
+      "path": "lean/InfoGeometry/Tensor/TensorTrainMatricization.lean",
+      "sha256": "46e9602352210e3501b0119e97aec8862660d869940f22a7fb160677b880adde",
+      "git_blob": "b7adfb6071a3d5cf5cdb05a5b47cd03b36cd0211",
+      "owned_declarations": 6
+    },
+    {
+      "module": "InfoGeometry.Clifford.Cl11PureTensorObstruction",
+      "path": "lean/InfoGeometry/Clifford/Cl11PureTensorObstruction.lean",
+      "sha256": "684857d0fca7ebdcda037d7e83088f0e125cfbd9f961be39c000bb3141f15bd6",
+      "git_blob": "1d42c7d998c6ce36c714def3797fbdc864a62a39",
+      "owned_declarations": 30
+    },
+    {
+      "module": "InfoGeometry.Clifford.Cl11TensorTrainSynthesis",
+      "path": "lean/InfoGeometry/Clifford/Cl11TensorTrainSynthesis.lean",
+      "sha256": "3d6aad4e8fbe9749433477238435b431daefeaa98ad5937daac9f96cd40b6e46",
+      "git_blob": "57dde7c41198bd97a9216274ee313ad564efee28",
+      "owned_declarations": 11
+    },
+    {
+      "module": "InfoGeometry.Clifford.Cl11LocalCoreTrain",
+      "path": "lean/InfoGeometry/Clifford/Cl11LocalCoreTrain.lean",
+      "sha256": "ee2f64032575e89132904e33003f1c3a963218295a64e2f9c58ed8763bfc9589",
+      "git_blob": "eaf447974161262df54b13a23997f77d10360df2",
+      "owned_declarations": 44
+    }
+  ],
+  "audit": {
+    "path": "lean/InfoGeometry/Clifford/Cl11GradedUnrollingAudit.lean",
+    "sha256": "df1b5b78b62bc64338c0833d1ec3ea7c5a33a4fcbaa7ad5c64d7838d05d25288",
+    "generator_exact_match": true,
+    "allowed_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "unsafe_and_partial_rejected": true,
+    "includes_private_and_generated": true,
+    "owned_declaration_total": 470,
+    "encountered_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "unique_declaration_names": true,
+    "fresh_marker_sha256": "e483059aab47b8bfcef51996705362350107625a0119442ad1d80f6355aaa625",
+    "marker_sha256_scope": "Fresh AUDIT_* stdout lines extracted from the completed CI job, joined with LF and ending in LF."
+  },
+  "staged_source_gate": {
+    "result": "failure",
+    "command": "python3 tools/quality/proof_proxy_staged_gate.py",
+    "findings": 1,
+    "code": "T16",
+    "path": "lean/InfoGeometry/Clifford/Cl11RecursiveUnrolling.lean",
+    "line": 44,
+    "native_witness": "InfoGeometry.Clifford.Cl11RecursiveUnrolling.realBlock_noncommuting",
+    "review": "Imported operands and the nested matrix coefficient carrier are not recognized by the scanner; its failed result is retained.",
+    "stdout_sha256": "d4827d1ba6d34f6c021f5a2c4dc883f877e3dd8d6629077d1217fb1d61106846",
+    "output": "proof_proxy_staged_gate: FAIL\n  - lean/InfoGeometry/Clifford/Cl11RecursiveUnrolling.lean:44: OpenGauss T16 Semantic Surrogate / Missing Non-Commutativity Witness: File declares non-commutative algebra or matrix structures (e.g. Matrix (Fin n) or CliffordAlgebra) but lacks an explicit non-commutativity witness (e.g. matI * matJ ≠ matJ * matI, [A, B] ≠ 0, or anticommutator {i, j} = 0) or an imported witness module. ((swapMatrix : Matrix (Fin 2) (Fin 2) (RealMatrix n)) * tiltedMatrix ≠)\n",
+    "native_witness_audited": true
+  },
+  "root_sorry_gate": {
+    "result": "failure",
+    "run": 43421680575,
+    "job": 131872936887,
+    "commit": "3a183d7a527cfea5ede84c301bc4b1e681a0028e",
+    "debt_files": 91,
+    "debt_findings": 878,
+    "tracked_lean_files": 56407
+  },
+  "qualifications": [
+    "One arbitrary possibly noncommutative real coefficient algebra B in the general unrolling.",
+    "Local Clifford cores have real scalar entries, with one optional common terminal coefficient in B.",
+    "Minimal ranks refer to corrected coefficient unfoldings; fixed positive-length terminal boundary is a convention and does not assert terminal-rank minimality.",
+    "Empty trains retain their scalar boundary.",
+    "Selected-owner acceptance does not establish whole-repository integration acceptance."
+  ]
+}

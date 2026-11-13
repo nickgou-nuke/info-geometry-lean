@@ -1,0 +1,876 @@
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.elliptic8.eq_1: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.pow_left_injective: [propext]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.lower_times_charge_value: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: _private.InfoGeometry.Algebra.SandwichLocalizationActions.0.InfoGeometry.Algebra.SandwichLocalization.leftActionAdd: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.scalarNumerator.congr_simp: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceDefectIdentities: InfoGeometry.OperatorAlgebra.PeirceSpine.genSig_cubic_defect._abel_1_1: [propext]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.endogenousKernelBridge_is_odd: [propext]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.A8.eq_1: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.toBalanced: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.offShell8._proof_3: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.additiveDesc_unique: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.sandwich._proof_6: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.denominator: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.D8: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.leftAction: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.elliptic8_star: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.balancedStarAddMonoid._proof_1: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.Scalars: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.star_ellipticArrowSum: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceDefectIdentities: InfoGeometry.OperatorAlgebra.PeirceSpine.shifted_dyadic_defect: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: _private.InfoGeometry.Algebra.SandwichBalancedTensor.0.InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.rightLinear._proof_3: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.OneSidedLocalizationBoundary: InfoGeometry.Algebra.OneSidedLocalizationBoundary.Rel: []
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceDefectIdentities: InfoGeometry.OperatorAlgebra.PeirceSpine.shifted_dyadic_defect._abel_1_1: [propext]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.U8_value._abel_1_2: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.sandwich: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.balance_right: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.equivalence_left_smul: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness._aux_InfoGeometry_OperatorAlgebra_PeirceSpine_KernelBridgeMatrixWitness___macroRules_InfoGeometry_OperatorAlgebra_PeirceSpine_KernelBridgeMatrixWitness_tacticMatrix_units_1: []
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.balancedStarAddMonoid: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.P8._proof_1: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.pure: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.rightAction._proof_1: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.spaceStarAddMonoid._proof_1: []
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: _private.InfoGeometry.Algebra.SandwichLocalizationActions.0.InfoGeometry.Algebra.SandwichLocalization.rightStage_bond: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: _private.InfoGeometry.Algebra.SandwichLocalizationActions.0.InfoGeometry.Algebra.SandwichLocalization.rightActionAdd_repr: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.balancedStar: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.spaceStar: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.offShell8_odd_eigenvectors: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.ellipticArrowSum_selfAdjoint: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceDefectIdentities: InfoGeometry.OperatorAlgebra.PeirceSpine.onShell_integral_numerator_anticommutes: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.Balanced: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.rightAction._proof_4: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.evaluate_pure: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley.ambientCayley_of: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.equivalenceLeft._proof_3: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.G8: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.evaluate_pure_repr: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceDefectIdentities: InfoGeometry.OperatorAlgebra.PeirceSpine.onShell_integral_numerator_reverses: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.elliptic8_star._abel_1_2: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.elliptic8: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.star_repr: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: _private.InfoGeometry.Algebra.SandwichBalancedTensor.0.InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.right_denominator_bond: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.right_smul_pure: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.inverseStage_bond: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.inverseStage._proof_2: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.cycles_Atilde8: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.inverseStage: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.tacticMatrix_units: []
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.cayleyEquiv_star: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.starMap._proof_1: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.directedSystem._proof_3: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.lower_A8: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.U8_reverses_sigma: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceDefectIdentities: InfoGeometry.OperatorAlgebra.PeirceSpine.parity_square_defect._abel_1_1: [propext]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley.shift: []
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.inverseStage._proof_3: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley.ambientCayley._proof_3: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.seed_ring_le_elliptic_centralizer: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.sandwich._proof_2: []
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.centralizerStarRing._proof_1: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.commute_star_right: []
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.upper_matrix_unit_nonzero: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.rightModule: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.denominatorCentral: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.rightAction._proof_3: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.relations_le_ker_evaluateTensor: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.endogenousCharge_value: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.spaceStarAddMonoid: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.denominator._proof_1: []
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.endogenousCharge.eq_1: []
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.equivalence_symm_repr: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.evaluate: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.leftAction._proof_3: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.repr_eq_iff_cross: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.endogenousCharge_degree_one: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceDefectIdentities: InfoGeometry.OperatorAlgebra.PeirceSpine.integral_numerator_defects._abel_1_1: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: _private.InfoGeometry.Algebra.SandwichLocalizationActions.0.InfoGeometry.Algebra.SandwichLocalization.leftStage._proof_1: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.toBalanced_evaluate: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.matrix_unit_not_in_elliptic_centralizer: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.Space: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.metric_Atilde8: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.sandwich._proof_5: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.centralizerStarRing._proof_7: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.centralizer_commute: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley.ambientCayley._proof_2: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: _private.InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.0.InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.complement_P8._abel_1_1: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.lower_times_charge_not_degree_one: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.compressed_D8_cube: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.transition.congr_simp: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.repr_zero: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley.ambientCayley._proof_1: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.onShell_kernel_bridge_comm._abel_1_1: [propext]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.U8_star_value: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.endogenousKernelBridge: []
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.seed8_star: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.upper_matrix_unit_not_in_seed_ring: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.Centralizer: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.kernel_Atilde8: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.ellipticArrowSum_active_square: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.transition: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: _private.InfoGeometry.Algebra.SandwichBalancedTensor.0.InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.tripleLinear._proof_1: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.stage_injective: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.repr: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.leftAction._proof_5: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.equivalenceLeft._proof_1: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: _private.InfoGeometry.Algebra.SandwichBalancedTensor.0.InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.scalar_of_right: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.cayleyEquiv_eq_scalar_action: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.P8.eq_1: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.elliptic_commutator_value: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.sandwich._proof_3: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: _private.InfoGeometry.Algebra.SandwichLocalizationActions.0.InfoGeometry.Algebra.SandwichLocalization.leftStage._proof_5: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.inverseStage._proof_6: [propext]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley.shift_right_injective: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: _private.InfoGeometry.Algebra.SandwichLocalizationStar.0.InfoGeometry.Algebra.SandwichLocalization.sandwich_norm_cancel: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.spaceStarAddMonoid._proof_2: []
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.endogenousCharge_square_comm: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.evaluateTensor_tmul: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.D8_square: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: _private.InfoGeometry.Algebra.SandwichBalancedTensor.0.InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.scalar_of_left: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.seed8_star._abel_1_5: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.inverseStage._proof_7: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: _private.InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.0.InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.one_eq_units: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: _private.InfoGeometry.Algebra.SandwichLocalizationActions.0.InfoGeometry.Algebra.SandwichLocalization.leftStage._proof_4: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: _private.InfoGeometry.Algebra.SandwichBalancedTensor.0.InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.tripleLinear._proof_2: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.sandwich_repr: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.OneSidedLocalizationBoundary: InfoGeometry.Algebra.OneSidedLocalizationBoundary.mul_congr_iff_centralizer: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.repr_bond: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.sandwich._proof_7: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: _private.InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.0.InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness._aux_InfoGeometry_OperatorAlgebra_PeirceSpine_KernelBridgeMatrixWitness___macroRules__private_InfoGeometry_OperatorAlgebra_PeirceSpine_KernelBridgeMatrixWitness_0_InfoGeometry_OperatorAlgebra_PeirceSpine_KernelBridgeMatrixWitness_termE_1: []
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.U8.eq_1: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.repr_add_same: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.equivalence_star: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: _private.InfoGeometry.Algebra.SandwichLocalizationActions.0.InfoGeometry.Algebra.SandwichLocalization.rightActionAdd: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.sandwich_comp: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley.ambientCayley_star: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.scalarActionsCommute: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley.shiftSelfAdjoint: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.stage._proof_2: []
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.leftAction._proof_1: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: _private.InfoGeometry.Algebra.SandwichLocalizationActions.0.InfoGeometry.Algebra.SandwichLocalization.rightStage._proof_2: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.inverseStage._proof_5: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.cayleyEquiv._proof_3: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley.ambientCayley: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.endogenousCharge_square: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.left_smul_repr: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.elliptic8_commutes: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.elliptic_commutator_factorization: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.U8_value: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.offShell8.eq_1: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.OneSidedLocalizationBoundary: _private.InfoGeometry.Algebra.OneSidedLocalizationBoundary.0.InfoGeometry.Algebra.OneSidedLocalizationBoundary.commute_star: []
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.metric_Atilde8_idempotent: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.equivalenceRight._proof_1: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.seed_ring_le_elliptic_centralizer._simp_1_2: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.rightModule: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.toBalanced_repr: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.endogenousKernelBridge_supported: [propext]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.offShell8_selfAdjoint: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.spaceStarAddMonoid._proof_4: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceDefectIdentities: InfoGeometry.OperatorAlgebra.PeirceSpine.onShell_integral_numerator_unitary: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: _private.InfoGeometry.Algebra.SandwichBalancedTensor.0.InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.rightLinear: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.Space._proof_1: [propext]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.endogenousCharge_mem_seed_ring: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.odd_perturbation_fills_support: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.endogenousKernelBridge_is_odd._abel_1_2: [propext]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.metric_Atilde8._abel_1_1: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.U8_unitary_products: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.Atilde8: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.toBalanced_evaluate_pure: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley.numerator_commute: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.of: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.ellipticArrowSum: []
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley.ambient_embedding_injective: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.transition_apply: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: _private.InfoGeometry.Algebra.SandwichBalancedTensor.0.InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.of_mul_repr_one: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.balance_left: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: _private.InfoGeometry.Algebra.SandwichLocalizationActions.0.InfoGeometry.Algebra.SandwichLocalization.leftActionAdd_repr: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.starMap: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.lower_commutes_metric: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.of_injective: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.transition._proof_2: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.star_right_smul: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.spaceStarAddMonoid._proof_3: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.star_of: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.ellipticArrowSum_eq_neg_mul_genJ: [propext]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.lower_times_charge_degree_minus_one: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.ellipticArrowSum.eq_1: []
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceDefectIdentities: InfoGeometry.OperatorAlgebra.PeirceSpine.parity_square_defect: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: _private.InfoGeometry.Algebra.SandwichBalancedTensor.0.InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.rightLinear._proof_2: []
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.leftModule: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.rightAction: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.balancedStarAddMonoid._proof_2: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.additiveDesc._proof_2: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.offShell8_defect: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.star_left_smul: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.cayleyEquiv_repr: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.offShell8_metric_not_idempotent: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: _private.InfoGeometry.Algebra.SandwichBalancedTensor.0.InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.tripleLinear: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.evenGrade_Atilde8: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.P8_idempotent: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.U8_partial_flip: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.offShell8._proof_1: [propext]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.endogenousCharge_square_nonzero: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.existsUnique_additiveDesc: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.upper_A8: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.endogenousKernelBridge_eq_odd_sandwich._abel_1_1: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.additiveDesc_repr: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: _private.InfoGeometry.Algebra.SandwichLocalizationActions.0.InfoGeometry.Algebra.SandwichLocalization.leftStage._proof_3: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.sigma_Atilde8: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.evenGrade_D8: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.denominatorSelfAdjoint: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.evaluateTensor: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.star_right_smul: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.repr_eq_iff_common_stage: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.offShell8_sigma: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.additiveDesc: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.endogenousKernelBridge_eq_odd_sandwich: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: _private.InfoGeometry.Algebra.SandwichBalancedTensor.0.InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.middleLinear._proof_2: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.cayleyEquiv.congr_simp: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.coe_star_centralizer: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.additiveDesc._proof_3: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.directedSystem._proof_2: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.arrows_Atilde8: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.endogenousKernelBridge.eq_1: []
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.centralizerStarRing: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.endogenousKernelBridge_eq_odd_sandwich._abel_1_2: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.equivalence_pure: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.scalarNumerator: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.offShell8: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.endogenousKernelBridge_value: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.star_pure: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: _private.InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.0.InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.complement_P8: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.centralizerStarRing._proof_2: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.endogenousCharge_comm: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.Atilde8.eq_1: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.seed_ring_ne_top: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.Op8: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.cayleyEquiv._proof_2: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.elliptic_commutator_nonzero: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.cayleyEquiv: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.seed_ring_le_elliptic_centralizer._simp_1_1: [propext]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.offShell8_commutes_elliptic: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley.shift.eq_1: []
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.evaluateTensor._proof_1: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.evenGrade_A8: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.evaluate_toBalanced: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: _private.InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.0.InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.termE: []
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.upper_matrix_unit_degree_two: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.D8.eq_1: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.right_smul_repr: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.commute_peirce_arrows: [propext]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.degree_two_not_contained_in_seed_ring: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley.ambient_fraction_eq_iff: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.ellipticArrowSum_square: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.bimodule_repr: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.centralizerStarRing._proof_3: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: _private.InfoGeometry.Algebra.SandwichBalancedTensor.0.InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.rightLinear._proof_4: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.elliptic8_commutes_Atilde8: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.pow_right_injective: []
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.equivalenceLeft: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.onShell_kernel_bridge_square._abel_1_1: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.equivalence_right_smul: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.repr.eq_1: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.pow_right_injective._simp_1_1: []
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.D8_A8_D8: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.endogenousCharge: []
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.inverseStage._proof_8: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: _private.InfoGeometry.Algebra.SandwichLocalizationActions.0.InfoGeometry.Algebra.SandwichLocalization.rightStage: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.cayleyEquiv._proof_1: []
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceDefectIdentities: InfoGeometry.OperatorAlgebra.PeirceSpine.integral_numerator_defects: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.exists_repr: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.OneSidedLocalizationBoundary: InfoGeometry.Algebra.OneSidedLocalizationBoundary.Rel.eq_1: []
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.inverseStage._proof_4: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.inverseStage._proof_1: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.cayleyEquiv._proof_4: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.star_endogenousKernelBridge: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.centralizerStarRing._proof_5: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.endogenousKernelBridge_mem_seed_ring: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.equivalenceRight: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.leftAction._proof_4: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.ellipticArrowSum_square._abel_1_1: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.repr_neg: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: _private.InfoGeometry.Algebra.SandwichBalancedTensor.0.InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.left_denominator_bond: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.A8: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: _private.InfoGeometry.Algebra.SandwichLocalizationActions.0.InfoGeometry.Algebra.SandwichLocalization.sandwich_reorder: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.sandwich._proof_1: []
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceDefectIdentities: InfoGeometry.OperatorAlgebra.PeirceSpine.integral_numerator_defects._abel_1_2: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.leftModule: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.centralizerStarRing._proof_4: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.equivalence: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.onShell_kernel_bridge_square: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.repr_add: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: _private.InfoGeometry.Algebra.SandwichBalancedTensor.0.InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.repr_one_mul_of: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: _private.InfoGeometry.Algebra.SandwichLocalizationActions.0.InfoGeometry.Algebra.SandwichLocalization.leftStage._proof_6: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.leftAction._proof_2: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: _private.InfoGeometry.Algebra.SandwichLocalizationActions.0.InfoGeometry.Algebra.SandwichLocalization.leftStage._proof_2: []
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceDefectIdentities: InfoGeometry.OperatorAlgebra.PeirceSpine.onShell_integral_numerator_anticommutes._abel_1_1: [propext]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.upper_matrix_unit_not_in_elliptic_centralizer: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.Total: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.stage_apply: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceDefectIdentities: InfoGeometry.OperatorAlgebra.PeirceSpine.onShell_integral_numerator_anticommutes._abel_1_2: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.stage._proof_1: []
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.offShell8_metric: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: _private.InfoGeometry.Algebra.SandwichLocalizationActions.0.InfoGeometry.Algebra.SandwichLocalization.leftStage_bond: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.kernel_Atilde8._abel_1_1: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.support8_traces: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: _private.InfoGeometry.Algebra.SandwichLocalizationActions.0.InfoGeometry.Algebra.SandwichLocalization.rightStage._proof_1: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: _private.InfoGeometry.Algebra.SandwichLocalizationActions.0.InfoGeometry.Algebra.SandwichLocalization.leftStage: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.seed8_noncommuting: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.additiveDesc._proof_1: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.cayleyEquiv_selfAdjoint: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.scalarActionsCommute: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.scalarNumerator._proof_1: []
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.endogenousKernelBridge_is_odd._abel_1_1: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: _private.InfoGeometry.Algebra.SandwichBalancedTensor.0.InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.middleLinear._proof_1: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.rightAction._proof_2: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.seed8_star._abel_1_4: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.relations: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.U8: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.left_smul_pure: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.stage: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley: InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley.ambientCayley_inverse: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.coe_denominator: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.offShell8._proof_2: [propext]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.G8.eq_1: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.inverseStage_apply: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.star_left_smul: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.OneSidedLocalizationBoundary: InfoGeometry.Algebra.OneSidedLocalizationBoundary.star_congr_iff_centralizer: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.endogenousCharge_square_upper: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.endogenousCharge_square_comm._abel_1_1: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.equivalenceLeft._proof_2: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.directedSystem: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.centralizerStarRing._proof_6: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.ellipticArrowSum_square_kernel: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.sandwich.congr_simp: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationActions: InfoGeometry.Algebra.SandwichLocalization.sandwich._proof_4: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: _private.InfoGeometry.Algebra.SandwichBalancedTensor.0.InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.rightLinear._proof_1: []
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge: InfoGeometry.OperatorAlgebra.PeirceSpine.onShell_kernel_bridge_comm: [propext,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: _private.InfoGeometry.Algebra.SandwichBalancedTensor.0.InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.middleLinear: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceDefectIdentities: InfoGeometry.OperatorAlgebra.PeirceSpine.genSig_cubic_defect: [propext]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalization: InfoGeometry.Algebra.SandwichLocalization.transition._proof_1: [propext]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.P8: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichLocalizationStar: InfoGeometry.Algebra.SandwichLocalization.cayley_scalar_unitary: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.G8_nonzero: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.Algebra.SandwichBalancedTensor: InfoGeometry.Algebra.SandwichLocalization.BalancedTensor.equivalenceLeft._proof_4: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_DECL: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness: InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness.elliptic8_square: [propext,
+ Classical.choice,
+ Quot.sound]
+AUDIT_AXIOMS: [propext, Classical.choice, Quot.sound]
+AUDIT_COUNT: 355

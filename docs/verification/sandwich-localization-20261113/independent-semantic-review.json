@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "receipt_created_at_utc": "2026-11-13 12:33:05 UTC",
+  "reviewer": {
+    "task": "/root/math_audit",
+    "role": "Independent mathematical source reviewer",
+    "mathematical_source_author": false,
+    "authored_or_edited_reviewed_lean_sources": false,
+    "performed_lean_or_lake_compilation": false,
+    "performed_lean_tests": false,
+    "role_note": "Reviewed mathematical contracts, complete candidate sources, compiler-directed proof deltas, and final immutable integration. Supplied review comments and documentation wording; did not author or edit the nine mathematical owners."
+  },
+  "outcome": "Semantic acceptance of the exact nine-owner mathematical source integration.",
+  "repository": "nickgou-nuke/info-geometry-lean",
+  "proof_commit": "436cdbed57deb267d6e90c2040d8ad5db57d52bf",
+  "proof_tree": "876c9b59f273084ba8405bcac708cd65d3d0bb46",
+  "review_method": "Fetched all nine complete Lean source files through the GitHub connector at the immutable proof commit, computed SHA256 values, and compared full contents with retained independently reviewed final snapshots. Every source matched exactly. No historical review timestamp is asserted; the timestamp above records receipt creation only.",
+  "source_count": 9,
+  "sources": [
+    {
+      "path": "lean/InfoGeometry/Algebra/SandwichLocalization.lean",
+      "sha256": "d26deee8bfb9be9adba768e435c040b03cd00fdaabc0640a39bf78ad569279bd",
+      "git_blob_sha": "5adcb0ee8937b4142b1d790969796158cb31ced0",
+      "byte_identical_to_reviewed_snapshot": true
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/SandwichLocalizationActions.lean",
+      "sha256": "1cff2600c491497beb64185491a621d8b8c5654294866e6eb4a106a003196de6",
+      "git_blob_sha": "6c9dc7ae80061d824a439870970f56d3a6019350",
+      "byte_identical_to_reviewed_snapshot": true
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/SandwichLocalizationStar.lean",
+      "sha256": "3492552dfa642b6a9e9139b6a316fe576dfee1d3badf905c1cf7a6a08090bdd9",
+      "git_blob_sha": "1585231f7b8b86c30d36676b9f944c89f8c69d8e",
+      "byte_identical_to_reviewed_snapshot": true
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/OneSidedLocalizationBoundary.lean",
+      "sha256": "9ad03f004f4dcdf46dbd026669c4fde0b3652d001eedb0c2a9cdb866cb7e80d8",
+      "git_blob_sha": "1aed89bf2ddefaaa69c2e45ebda61718097c7fa9",
+      "byte_identical_to_reviewed_snapshot": true
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/SandwichBalancedTensor.lean",
+      "sha256": "250752a54f9610e4a90ab6d4f06ce569a124bc06b7f9b5370adcfe4238f43745",
+      "git_blob_sha": "5588fb9627e1d3d52c74b45a53dfa8cd698997f0",
+      "byte_identical_to_reviewed_snapshot": true
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/SandwichCayley.lean",
+      "sha256": "4cc45389c456d09ebf4199023e1160f87abbcae387077fe3b187d6ea75525b48",
+      "git_blob_sha": "d595659ba8bc9d48cbfdd1565f46590f7ac1bc90",
+      "byte_identical_to_reviewed_snapshot": true
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/EndogenousKernelBridge.lean",
+      "sha256": "fb3eaacbe2998bb19ccb0a763c260d81aedf3f48dab07688dac1f27a4ae7396e",
+      "git_blob_sha": "ad40ba222ef3ad078aa856d77fde263313e80733",
+      "byte_identical_to_reviewed_snapshot": true
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/PeirceDefectIdentities.lean",
+      "sha256": "eae31dce10024c013a052baf1ba42423074821661643f21ba54ac6ef5972d9db",
+      "git_blob_sha": "9b33a47f655d468842e3298959b8591f73eff67d",
+      "byte_identical_to_reviewed_snapshot": true
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/KernelBridgeMatrixWitness.lean",
+      "sha256": "e5b1a485e5957bc55ddaf0b38c20a8f5744d9ceb7283293f68fdeef5618505be",
+      "git_blob_sha": "384cb7ae4e2721ff0be6b8cfcd2cfe33a9255cf6",
+      "byte_identical_to_reviewed_snapshot": true
+    }
+  ],
+  "accepted_mathematical_scope": [
+    "Native two-index additive DirectLimit over an arbitrary associative Ring B. Construction requires no regularity; two-sided regularity supplies faithful stage embeddings and the exact unsaturated cross-multiplication criterion.",
+    "Actual localized-centralizer left and opposite-ring right Module structures with commuting scalar actions. Self-adjoint denominators support the swapped additive involution and exchange-of-actions identities.",
+    "Native integer tensor products quotiented by both full-centralizer balancing families, with correctly ordered coefficients. Constructed evaluation and inverse give an actual equivalence without regularity. Native transported left/right modules, outer-factor formulas, commuting actions, and involution compatibility establish the balanced star-bimodule identification.",
+    "Constructed star-preserving Cayley AddEquiv on the entire ambient localization from the two ordered norm identities, connected to the actual scalar action and Peirce denominator. Faithful ambient inclusion is conditional on the stated star-faithfulness hypotheses.",
+    "Corrected endogenous bridge and charge in the native seed-generated Subring. Their support and degree/square equations retain the stated on-shell hypotheses. Generic elliptic identities retain the separate commutation, square, and star hypotheses.",
+    "Universal polynomial defect identities retain exact coefficients and arbitrary-ring scope. The on-shell integral numerator is unitary and reverses the signed cycle by conjugation.",
+    "Concrete native real 8-by-8 matrix witness with noncommuting seeds, nonzero charge square, signed elliptic commutator, and exact counterexamples delimiting extreme-sector reconstruction, individual-degree closure under the metric centralizer, and disappearance of odd adjoint eigenvectors off shell."
+  ],
+  "scope_guards": [
+    "The two denominator indices form a directed system; no automatic direct-sum Z^2 grading of the quotient is asserted.",
+    "No multiplication of arbitrary ambient sandwich fractions or universal classification of ring extensions is asserted.",
+    "Cayley dressing is not asserted to be an ordinary LinearEquiv over the whole localized centralizer.",
+    "Native Subring generation is not replaced by real Subalgebra generation, full-matrix generation, or a general Clifford/Kantor/TKK classification.",
+    "Generic commutator equations do not assert distinct integer eigenspaces in arbitrary characteristic.",
+    "Signed-cycle reversal by the integral unitary does not assert that the unitary squares to one.",
+    "The valid finite identity Q^2=N_plus does not reconstruct the whole degree-two sector; the explicit E06 obstruction is retained.",
+    "No KMS, scattering, Goldstone, helicity, anomaly-cancellation, physical pairing, or global Morita-equivalence theorem follows from this source acceptance.",
+    "This receipt records semantic source acceptance only. Compilation, declaration-audit counts, artifact integrity, and source-gate outcomes belong to separate execution QA.",
+    "No whole-repository or publication-gate acceptance is asserted."
+  ]
+}

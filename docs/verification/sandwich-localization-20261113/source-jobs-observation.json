@@ -1,0 +1,23 @@
+{
+  "observed_at_utc": "2026-11-13T12:29:15Z",
+  "observer": "/root/build_environment",
+  "scope": "Read-only observation of existing jobs, with no rerun or cancellation",
+  "jobs": [
+    {
+      "run_id": 43422227216,
+      "job_id": 131874764267,
+      "source_commit": "f079edae966d5d20fe96ab04119f3e545b8863d0",
+      "status": "in_progress",
+      "staged_gate": "success",
+      "incremental_gate": "failure",
+      "active_step": "Attempt the unchanged full root quality gate"
+    },
+    {
+      "run_id": 43423042151,
+      "job_id": 131877493835,
+      "source_commit": "436cdbed57deb267d6e90c2040d8ad5db57d52bf",
+      "status": "pending"
+    }
+  ],
+  "whole_root_acceptance": false
+}

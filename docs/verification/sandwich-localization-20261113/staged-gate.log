@@ -1,0 +1,16 @@
+TESTED_HEAD 436cdbed57deb267d6e90c2040d8ad5db57d52bf
+TESTED_TREE 876c9b59f273084ba8405bcac708cd65d3d0bb46
+TASK_BASE b76d9e1e6da2ba8c1d7505ca791ef81c57d0db92
+STAGED_LEAN_COUNT 9
+lean/InfoGeometry/Algebra/OneSidedLocalizationBoundary.lean
+lean/InfoGeometry/Algebra/SandwichBalancedTensor.lean
+lean/InfoGeometry/Algebra/SandwichLocalization.lean
+lean/InfoGeometry/Algebra/SandwichLocalizationActions.lean
+lean/InfoGeometry/Algebra/SandwichLocalizationStar.lean
+lean/InfoGeometry/OperatorAlgebra/PeirceSpine/EndogenousKernelBridge.lean
+lean/InfoGeometry/OperatorAlgebra/PeirceSpine/KernelBridgeMatrixWitness.lean
+lean/InfoGeometry/OperatorAlgebra/PeirceSpine/PeirceDefectIdentities.lean
+lean/InfoGeometry/OperatorAlgebra/PeirceSpine/SandwichCayley.lean
+COMMAND python3 tools/quality/proof_proxy_staged_gate.py
+proof_proxy_staged_gate: ok
+EXIT_CODE 0

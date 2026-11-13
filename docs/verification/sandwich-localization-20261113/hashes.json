@@ -1,0 +1,92 @@
+{
+  "repository": "nickgou-nuke/info-geometry-lean",
+  "pull_request": 356,
+  "base_commit": "b76d9e1e6da2ba8c1d7505ca791ef81c57d0db92",
+  "tested_source_commit": "436cdbed57deb267d6e90c2040d8ad5db57d52bf",
+  "tested_checkout_commit": "fc49365c7a55eb721fb3a9e9ffe90aadfe8f3392",
+  "tested_tree": "876c9b59f273084ba8405bcac708cd65d3d0bb46",
+  "lean_version": "4.34.1",
+  "compiler_commit": "5045d0056413266e57c625dcd7c365b10e377c52",
+  "mathlib_commit": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "run_id": 43423042151,
+  "kernel_job_id": 131877494159,
+  "artifact_id": 14035182640,
+  "artifact_sha256": "8bbfca8b8e3de21566f842161289601b85e965dd41996f3243a044efc46fc957",
+  "artifact_bytes": 135567,
+  "mathematical_sources_sha256": {
+    "InfoGeometry.Algebra.SandwichLocalization": "d26deee8bfb9be9adba768e435c040b03cd00fdaabc0640a39bf78ad569279bd",
+    "InfoGeometry.Algebra.SandwichLocalizationActions": "1cff2600c491497beb64185491a621d8b8c5654294866e6eb4a106a003196de6",
+    "InfoGeometry.Algebra.SandwichLocalizationStar": "3492552dfa642b6a9e9139b6a316fe576dfee1d3badf905c1cf7a6a08090bdd9",
+    "InfoGeometry.Algebra.SandwichBalancedTensor": "250752a54f9610e4a90ab6d4f06ce569a124bc06b7f9b5370adcfe4238f43745",
+    "InfoGeometry.Algebra.OneSidedLocalizationBoundary": "9ad03f004f4dcdf46dbd026669c4fde0b3652d001eedb0c2a9cdb866cb7e80d8",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley": "4cc45389c456d09ebf4199023e1160f87abbcae387077fe3b187d6ea75525b48",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge": "fb3eaacbe2998bb19ccb0a763c260d81aedf3f48dab07688dac1f27a4ae7396e",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceDefectIdentities": "eae31dce10024c013a052baf1ba42423074821661643f21ba54ac6ef5972d9db",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness": "e5b1a485e5957bc55ddaf0b38c20a8f5744d9ceb7283293f68fdeef5618505be"
+  },
+  "controls_sha256": {
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lake-manifest.json": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+    "tools/quality/check_perjes_klein.py": "205223886a6b76b949b5bdf6a6cd1f80b2f8b283f00f74bd7cd293ab46cb6180",
+    "tools/quality/check_peirce_reflection.py": "6ac9db6fa7d40fdb88b1094c31a314acc79aad0f297cbca98a38f5c3378d6e9e",
+    "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+    "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df",
+    "tools/quality/check_sandwich_localization.py": "ea77f397cb104f7448343be28f22fc56663ab428e3bf6d96671f1a12950066e3",
+    ".github/workflows/sandwich-localization.yml": "b0c1cc0e5f4a3ffa2f6453a9018a5d44b4e765d16e2d8ed58669baa19b2e484b"
+  },
+  "evidence_files": {
+    "artifact-inspection.json": {
+      "sha256": "a954fa45005231bfdd3f9edbcd5dcadf7dd1e24db458de84e0325b85798dc298",
+      "bytes": 73176
+    },
+    "audit-program.txt": {
+      "sha256": "0a0675148e73977f1e1587f3424b47bb044b5bbad126c50566832347fb80fae4",
+      "bytes": 2087
+    },
+    "audit.log": {
+      "sha256": "f67b8f5f708d6533f46c56955ba3757030f0b8fa154225288acb44f57f9e256e",
+      "bytes": 64179
+    },
+    "compilation-logs.json": {
+      "sha256": "36a8d0d24ae92ca44ff14ea6a9e7fc73f408c33e7821de45b1296a96bf1d62eb",
+      "bytes": 25224
+    },
+    "earlier-root-job-log.json": {
+      "sha256": "f3fe8a19af838fd416b7ffc5553f5202062d29a0d30d1a670a822af17e688051",
+      "bytes": 89065
+    },
+    "earlier-theory-findings.json": {
+      "sha256": "fc2f43488fa53d295cf50c62528ed1c48308ff6255a9f32b90d19c2d53c2bdf5",
+      "bytes": 2447
+    },
+    "independent-qa-review.json": {
+      "sha256": "d709fc24cb39a502059fce146d7bff2d40e00a03542ad8e0069e9241bf480c88",
+      "bytes": 12788
+    },
+    "independent-semantic-review.json": {
+      "sha256": "62347822b20438ac67ea06bba0ec1f351591d329eaa667a1dd9a2833b62f41df",
+      "bytes": 7100
+    },
+    "kernel-job-log.json": {
+      "sha256": "ab48b3d9a5b913d946597693f7ebe9a6dea0a175b5350f6f02a64fdeeec6906d",
+      "bytes": 134327
+    },
+    "lean-version.txt": {
+      "sha256": "355a9a028f81641782d75d6e6b58dec70f29d2f61238a9e271690259d9bf5680",
+      "bytes": 106
+    },
+    "source-jobs-observation.json": {
+      "sha256": "614beed303b273357ae2da2f71d09bc0062c74d7ad295d20ebb763723e97da0a",
+      "bytes": 695
+    },
+    "staged-gate.log": {
+      "sha256": "58c60c81b46a0f1fa7053e8f506406539e953f6dabbfb75e2485922547047bda",
+      "bytes": 846
+    },
+    "status.json": {
+      "sha256": "4b0284a1a581a86a8c53cbeb50520422c46271c9e98e84afa95f2e294cb33f31",
+      "bytes": 9483
+    }
+  },
+  "manifest_scope": "Hashes of every sibling evidence file; this manifest does not hash itself"
+}

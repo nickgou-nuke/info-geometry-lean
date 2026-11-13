@@ -1,0 +1,200 @@
+name: Hilbert localization kernel and axiom check
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Analysis/HilbertLocalization*.lean'
+      - 'lean/InfoGeometry/Analysis/HilbertGramDuality.lean'
+      - 'lean/InfoGeometry/Core/IdempotencyDefect.lean'
+      - 'lean/InfoGeometry/Core/PeirceDecomposition.lean'
+      - 'lean/InfoGeometry/Core/PeirceCompression*.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PartnerEigenspaces.lean'
+      - 'tools/quality/check_clifford_dirac.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/placeholder_audit.py'
+      - 'tools/quality/audit_constructivity.py'
+      - 'tools/quality/common.py'
+      - 'tools/quality/semantic_vacuity_gate.py'
+      - 'tools/quality/semantic_vacuity_patterns.json'
+      - 'tools/infra/opengauss_screener.py'
+      - 'tools/build_lock.py'
+      - 'tools/pathing.py'
+      - 'docs/HILBERT_LOCALIZATION_GRAM_CONTRACT.md'
+      - 'verification/hilbert-localization/**'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/hilbert-localization.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hilbert-localization-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      SOURCE_REV: ${{ github.event.pull_request.head.sha || github.sha }}
+      HILBERT_TARGETS: >-
+        ["InfoGeometry.Analysis.HilbertLocalization",
+        "InfoGeometry.Analysis.HilbertLocalizationEnergy",
+        "InfoGeometry.Analysis.HilbertGramDuality"]
+    steps:
+      - name: Check out the exact proposed source revision
+        shell: bash
+        run: |
+          git init project
+          git -C project remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
+          git -C project -c protocol.version=2 fetch --no-tags --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          test "$(git -C project rev-parse HEAD)" = "$SOURCE_REV"
+      - name: Read exact dependency pins
+        id: pins
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          manifest = json.loads(Path('project/lake-manifest.json').read_text())
+          revision = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'mathlib={revision}\n')
+          PY
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: ${{ steps.pins.outputs.mathlib }}
+          path: mathlib
+          persist-credentials: false
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            mathlib/.lake
+          key: hilbert-localization-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Fetch pinned native imports
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('project').resolve()))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          targets = json.loads(os.environ['HILBERT_TARGETS'])
+          _, _, native = closure(Path('project'), targets)
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'hilbert-localization-cache') as lock:
+              subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
+                  cwd='mathlib', check=True, pass_fds=(lock.fileno(),))
+          PY
+      - name: Compile the complete source closure and audit every owned declaration
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess, sys
+          command = [sys.executable, 'tools/quality/check_clifford_dirac.py',
+                     '--mathlib-root', '../mathlib', '--output', '../hilbert-report']
+          for target in json.loads(os.environ['HILBERT_TARGETS']):
+              command.extend(['--target', target])
+          subprocess.run(command, check=True)
+          PY
+      - name: Check all three owners for placeholders and semantic findings
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess, sys
+          paths = ['lean/' + t.replace('.', '/') + '.lean'
+                   for t in json.loads(os.environ['HILBERT_TARGETS'])]
+          for path in paths:
+              subprocess.run([sys.executable, 'tools/quality/placeholder_audit.py',
+                              '--strict', '--root', path], check=True)
+              subprocess.run([sys.executable, 'tools/infra/opengauss_screener.py',
+                              '--strict', path], check=True)
+          subprocess.run([sys.executable, 'tools/quality/semantic_vacuity_gate.py',
+                          *paths, '--fail-on', 'error', '--json-out',
+                          '../hilbert-report/semantic-vacuity.json'], check=True)
+          PY
+      - name: Require fresh compilation, zero new-owner warnings, and exact source hashes
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, subprocess
+          from pathlib import Path
+          out = Path('../hilbert-report')
+          targets = json.loads(os.environ['HILBERT_TARGETS'])
+          paths = ['lean/' + t.replace('.', '/') + '.lean' for t in targets]
+          report = json.loads((out / 'report.json').read_text())
+          assert report['status'] == 'passed' and report['targets'] == targets
+          assert report['audit_required']
+          assert report['local_revision'] == os.environ['SOURCE_REV']
+          assert subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip() == os.environ['SOURCE_REV']
+          modules = {m['module']: m for m in report['modules']}
+          assert len(modules) == len(report['modules'])
+          assert all(m['returncode'] == 0 and not m['reused'] for m in modules.values())
+          assert all(modules[t]['warnings'] == 0 for t in targets)
+          assert set(report['declaration_counts']) == set(targets)
+          assert all(report['declaration_counts'][t] > 0 for t in targets)
+          for module, expected in report['source_sha256'].items():
+              path = Path('lean') / (module.replace('.', '/') + '.lean')
+              assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, module
+          semantic = json.loads((out / 'semantic-vacuity.json').read_text())
+          assert semantic['coverage_complete'] and not semantic['read_failures']
+          assert semantic['files_selected'] == semantic['files_scanned'] == len(paths)
+          for field in ['source_paths', 'successfully_read_paths', 'scope_roots']:
+              assert sorted(semantic[field]) == sorted(paths), field
+          assert semantic['fail_on'] == 'error' and not semantic['fail_prefixes']
+          assert semantic['severity_counts'].get('error', 0) == 0
+          index_path = out / 'evidence-sha256.json'
+          index = json.loads(index_path.read_text())
+          for name, expected in index.items():
+              path = Path(name.removeprefix('repository/')) if name.startswith('repository/') else out / name
+              assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, name
+          for name in ['.github/workflows/hilbert-localization.yml',
+                       'docs/HILBERT_LOCALIZATION_GRAM_CONTRACT.md',
+                       'tools/quality/placeholder_audit.py',
+                       'tools/quality/audit_constructivity.py',
+                       'tools/quality/common.py',
+                       'tools/quality/semantic_vacuity_gate.py',
+                       'tools/quality/semantic_vacuity_patterns.json',
+                       'tools/infra/opengauss_screener.py',
+                       'tools/pathing.py',
+                       'lean-toolchain', 'lake-manifest.json']:
+              index['repository/' + name] = hashlib.sha256(Path(name).read_bytes()).hexdigest()
+          for name in ['semantic-vacuity.json', 'environment.json']:
+              index[name] = hashlib.sha256((out / name).read_bytes()).hexdigest()
+          index_path.write_text(json.dumps(index, indent=2) + '\n')
+          print('HILBERT_ACCEPTED_REVISION:', report['local_revision'])
+          print('HILBERT_ACCEPTED_SOURCE_SHA256:', json.dumps({t: report['source_sha256'][t] for t in targets}, sort_keys=True))
+          print('HILBERT_ACCEPTED_DECLARATIONS:', json.dumps(report['declaration_counts'], sort_keys=True))
+          print('HILBERT_ACCEPTED_AXIOMS:', json.dumps(report['axioms']))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hilbert-localization-kernel-evidence
+          path: |
+            hilbert-report/report.json
+            hilbert-report/evidence-sha256.json
+            hilbert-report/environment.json
+            hilbert-report/semantic-vacuity.json
+            hilbert-report/src/CliffordDiracAudit.lean
+            hilbert-report/*.log
+          if-no-files-found: warn

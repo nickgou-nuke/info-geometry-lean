@@ -1,0 +1,106 @@
+name: Freed Pin compatibility
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Clifford/Freed*.lean'
+      - 'lean/InfoGeometry/Clifford/NormalizedVectorPin.lean'
+      - 'lean/InfoGeometry/Clifford/Cl11*.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/GradedMatrixMorita.lean'
+      - 'lean/InfoGeometry/Geometry/KleinPin*.lean'
+      - 'lean/InfoGeometry/KK/LinearDirac*.lean'
+      - 'lean/InfoGeometry/KK/Pin*Transport.lean'
+      - 'lean/InfoGeometry/KK/CompactPhaseObstruction.lean'
+      - 'lean/InfoGeometry/Canonical/SplitClifford*.lean'
+      - 'verification/freed-pin-compatibility/**'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/freed-pin-compatibility.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: freed-pin-compatibility-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          submodules: false
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: freed-pin-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'verification/freed-pin-compatibility/lake-manifest.json') }}
+      - name: Install the pinned Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < lean-toolchain)"
+      - name: Hydrate the exact focused dependency cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p verification/freed-pin-compatibility/artifacts
+          python3 verification/freed-pin-compatibility/check.py exe cache get \
+            2>&1 | tee verification/freed-pin-compatibility/artifacts/cache.log
+          git diff --exit-code -- lean-toolchain lake-manifest.json \
+            verification/freed-pin-compatibility/lean-toolchain \
+            verification/freed-pin-compatibility/lake-manifest.json
+      - name: Build the complete focused closure and audit all owned declarations
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/freed-pin-compatibility/check.py build \
+            2>&1 | tee verification/freed-pin-compatibility/artifacts/build.log
+          python3 verification/freed-pin-compatibility/check.py env lean \
+            -DwarningAsError=true \
+            "$GITHUB_WORKSPACE/lean/InfoGeometry/Clifford/FreedPinCompatibilityAudit.lean" \
+            2>&1 | tee verification/freed-pin-compatibility/artifacts/axioms.log
+      - name: Record the source tree and toolchain
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, subprocess
+          from pathlib import Path
+          root = Path('.')
+          audit = root / 'lean/InfoGeometry/Clifford/FreedPinCompatibilityAudit.lean'
+          modules = []
+          for line in audit.read_text().replace('«', '').replace('»', '').splitlines():
+              if line.startswith('import InfoGeometry.'):
+                  modules.append(line.split()[1])
+          paths = [root / 'lean' / (m.replace('.', '/') + '.lean') for m in modules]
+          report = {
+              'commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
+              'toolchain': Path('lean-toolchain').read_text().strip(),
+              'owners': modules,
+              'source_sha256': {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
+              'scope': 'Focused owners and full import closure; root acceptance remains separate',
+          }
+          output = Path('verification/freed-pin-compatibility/artifacts')
+          output.mkdir(parents=True, exist_ok=True)
+          (output / 'source-evidence.json').write_text(json.dumps(report, indent=2) + '\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: freed-pin-compatibility-evidence
+          path: verification/freed-pin-compatibility/artifacts/*
+          if-no-files-found: warn

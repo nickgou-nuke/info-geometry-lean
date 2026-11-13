@@ -4972,6 +4972,7 @@ import InfoGeometry.Canonical.Pin55TKKSymmetricPairBridge
 import InfoGeometry.Canonical.Pin55WallpaperQuotientBridge
 import InfoGeometry.Canonical.Pin55WeylWallpaper
 import InfoGeometry.Canonical.PinModularPeirceBostConnesBridge
+import InfoGeometry.Canonical.PinOperatorFamilyBridge
 import InfoGeometry.Canonical.PionChiralGoldstoneNative
 import InfoGeometry.Canonical.PionHestenesNormalization
 import InfoGeometry.Canonical.PoincareBallInversionCapstone
@@ -7142,6 +7143,8 @@ import InfoGeometry.Clifford.FiniteTiltDiracShellBridge
 import InfoGeometry.Clifford.FiniteTiltDiracShellChiralSplit
 import InfoGeometry.Clifford.FockCarDyadCalibration
 import InfoGeometry.Clifford.FoundationalInvolutionsBridge
+import InfoGeometry.Clifford.FreedCliffordSuspension
+import InfoGeometry.Clifford.NormalizedVectorPin
 import InfoGeometry.Clifford.FourFrameVolumeAndParavector
 import InfoGeometry.Clifford.G2Cl55ChiralEquivarianceBridge
 import InfoGeometry.Clifford.G2Cl55ChiralHodgeEquivarianceBridge

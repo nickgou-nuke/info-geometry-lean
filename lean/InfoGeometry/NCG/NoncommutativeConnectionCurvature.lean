@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Ring.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Algebra.Basic
@@ -36,6 +41,13 @@ structure AlgebraDerivation (R A : Type*) [Ring R] [Ring A] [Module R A] where
   leibniz' : ∀ x y, toLinearMap (x * y) = toLinearMap x * y + x * toLinearMap y
 
 namespace AlgebraDerivation
+
+/-- The zero linear derivation exists for every pair of ring coefficients. -/
+def zero : AlgebraDerivation R A where
+  toLinearMap := 0
+  leibniz' := by intros; simp
+
+instance : Inhabited (AlgebraDerivation R A) := ⟨zero⟩
 
 variable (D : AlgebraDerivation R A)
 
@@ -251,7 +263,8 @@ theorem gaugeTransform_add (u : Aˣ) (X Y : A) :
   simp only [add_mul, mul_add]
 
 /-- The gauge action bundled as an `R`-linear endomorphism. -/
-def gaugeTransformLinear [IsScalarTower R A A] [SMulCommClass R A A] (u : Aˣ) : A →ₗ[R] A where
+def gaugeTransformLinear [IsScalarTower R A A] [SMulCommClass R A A]
+    (u : Aˣ) : A →ₗ[R] A where
   toFun := gaugeTransform u
   map_add' X Y := gaugeTransform_add u X Y
   map_smul' r X := gaugeTransform_smul u r X
@@ -488,6 +501,22 @@ theorem maurer_cartan_flatness (u : Aˣ) :
   rw [pureGaugeForm_sq, add_neg_cancel]
 
 end AlgebraDerivation
+
+/-- Algebraic cubic Chern--Simons element for two operator-ring elements. -/
+def noncommutativeChernSimonsCubic (Φ D : A) : A :=
+  Φ * D + D * Φ + D * D * D
+
+/-- The cubic Chern--Simons element transgresses the square of the shifted
+curvature.  This is an identity in the associative, possibly noncommutative
+ring `A`; no commutativity or scalar representation is assumed. -/
+theorem noncommutativeChernSimonsTransgression (Φ D : A) :
+    (D * noncommutativeChernSimonsCubic Φ D +
+        noncommutativeChernSimonsCubic Φ D * D) -
+      ((D * Φ - Φ * D) * D - D * (D * Φ - Φ * D)) +
+      2 * (Φ * Φ) =
+    2 * ((Φ + D * D) * (Φ + D * D)) := by
+  dsimp [noncommutativeChernSimonsCubic]
+  noncomm_ring
 
 end InfoGeometry.NCG
 

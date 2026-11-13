@@ -1002,6 +1002,7 @@ lean_lib StandaloneMathematics where
     `GrandPartitionRational,
     `GrandPartitionRobustPoisson,
     `GrandPartitionTransform,
+    `GrandUnifiedNoncommutativeOperatorSynthesis,
     `lean.InfoGeometry.Spectral.Spectrum.Basic,
     `NonIsoConf3OrlikSolomon,
     `SplitOctonionBraidSU3,

@@ -1,0 +1,14 @@
+Semantic vacuity audit
+======================
+roots: lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean
+patterns: /home/runner/work/info-geometry-lean/info-geometry-lean/project/tools/quality/semantic_vacuity_patterns.json
+semantic_vacuity: 7
+warning: 7
+trivial_surface: 7
+  - lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean:68 [warning/trivial_surface] matrixMultiplier_one: by
+  - lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean:131 [warning/trivial_surface] multiplier_const: rfl
+  - lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean:134 [warning/trivial_surface] multiplier_add: by
+  - lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean:138 [warning/trivial_surface] multiplier_star: by
+  - lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean:152 [warning/trivial_surface] multiplier_indicator: by
+  - lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean:168 [warning/trivial_surface] gram_apply: rfl
+  - lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean:206 [warning/trivial_surface] trace_gram: rfl

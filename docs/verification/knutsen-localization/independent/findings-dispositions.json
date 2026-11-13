@@ -1,0 +1,539 @@
+{
+  "status": "reviewed",
+  "reviewer": "/root/knutsen_independent_review",
+  "at_utc": "2026-11-13T07:23:21.437179+00:00",
+  "source_sha256": {
+    "lean/InfoGeometry/OperatorAlgebra/ProjectionLocalization.lean": "8cdaa903a48ab3d0605a1e536a4d0f071705a3c9007ff494b8a44b6eed653323",
+    "lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean": "2e2386e14cf832c7a15dfbe69a0c1b64d4a729308e25b42ec0392ad352d7b9fd",
+    "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean": "65ae94daf25a6e36eeeaeea163af5526a3c9a6998bbd7ef637c9330b70145d98",
+    "lean/InfoGeometry/Clifford/WeylFrameMasks.lean": "9738b8591a1513b379dce55ea0231cea861614ae28ad6394cf5699c89c1cda56",
+    "lean/InfoGeometry/Analysis/PorosityIteration.lean": "7a06cca338bcec02e8b19800565b3546a50abd9b86aacf75784d3deadc7cd260",
+    "lean/InfoGeometry/Analysis/MetricPorosity.lean": "13ce57fb3645d89bb616f59db00ab3ef9ca78e040e69e6ba461db31540fad064",
+    "lean/InfoGeometry/Analysis/MultiscaleLocalization.lean": "bd6a126f4fe633ed3029aa6055a3eafe667ad0bfb163d3eeacd68258411f7f3b"
+  },
+  "raw_strict_semantic_returncode": 1,
+  "raw_strict_semantic_gate_passed": false,
+  "placeholder": {
+    "hard": 0,
+    "soft": 8,
+    "advisory": 0,
+    "strict_returncodes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "semantic": {
+    "warnings": 13,
+    "errors": 0,
+    "category": "trivial_surface",
+    "strict_returncode": 1
+  },
+  "unresolved_findings": 0,
+  "dispositions": [
+    {
+      "scanner": "placeholder_audit",
+      "original_finding": {
+        "file": "lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean",
+        "module": "InfoGeometry.OperatorAlgebra.IsometryCornerLocalization",
+        "line": 124,
+        "declaration_kind": "theorem",
+        "declaration_name": "embedding_compression",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "122:     (isometryCornerEquiv hv (star x)).val = star (isometryCornerEquiv hv x).val :=\n123:   map_star (isometryEmbedding hv) x\n124: \n125: \n126: theorem embedding_compression {v : A} (hv : star v * v = 1) (s : A) :",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      },
+      "source_sha256": "2e2386e14cf832c7a15dfbe69a0c1b64d4a729308e25b42ec0392ad352d7b9fd",
+      "report": {
+        "path": "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/placeholder-IsometryCornerLocalization.json",
+        "sha256": "6661d2bbfa464a537686e8a4c9ea00756cae474dcfb2af8d05c8fcd33b281646"
+      },
+      "disposition": "accepted_as_proved_algebra_or_definitional_api",
+      "reason": "After unfolding the actual embedding, compression, and range projection, both sides are the same ordered product v * star(v) * s * v * star(v) up to associativity. The isometry hypothesis types the bundled embedding; the product identity itself requires no additional cancellation. This is a real range-corner compatibility equation used in the subsequent transport theorems.",
+      "proof_validation": "Fresh native kernel elaboration and transitive axiom audit passed.",
+      "unresolved": false
+    },
+    {
+      "scanner": "placeholder_audit",
+      "original_finding": {
+        "file": "lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean",
+        "module": "InfoGeometry.OperatorAlgebra.IsometryCornerLocalization",
+        "line": 144,
+        "declaration_kind": "theorem",
+        "declaration_name": "compression_star",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "142:     compression v (rangeProjection v * s * rangeProjection v) = compression v s := by\n143:   rw [\u2190 embedding_compression hv s, compression_embedding hv]\n144: \n145: \n146: theorem compression_star (v s : A) :",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      },
+      "source_sha256": "2e2386e14cf832c7a15dfbe69a0c1b64d4a729308e25b42ec0392ad352d7b9fd",
+      "report": {
+        "path": "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/placeholder-IsometryCornerLocalization.json",
+        "sha256": "6661d2bbfa464a537686e8a4c9ea00756cae474dcfb2af8d05c8fcd33b281646"
+      },
+      "disposition": "accepted_as_proved_algebra_or_definitional_api",
+      "reason": "Unfolding compression and applying star_mul, star_star, and associativity proves adjoint compatibility for every symbol. The argument does not assume the symbol is self-adjoint and supports the later star-projection criterion.",
+      "proof_validation": "Fresh native kernel elaboration and transitive axiom audit passed.",
+      "unresolved": false
+    },
+    {
+      "scanner": "placeholder_audit",
+      "original_finding": {
+        "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+        "module": "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame",
+        "line": 67,
+        "declaration_kind": "theorem",
+        "declaration_name": "matrixMultiplier_one",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "65:   simp only [Matrix.add_apply, matrixMultiplier_apply, Pi.add_apply, mul_add, add_mul,\n66:     Finset.sum_add_distrib]\n67: \n68: theorem matrixMultiplier_one (S : Matrix \u03ba \u03b9 B) :\n69:     matrixMultiplier S (fun _ => 1) = S * S\u1d34 := by",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      },
+      "source_sha256": "65ae94daf25a6e36eeeaeea163af5526a3c9a6998bbd7ef637c9330b70145d98",
+      "report": {
+        "path": "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/placeholder-FiniteOperatorFrame.json",
+        "sha256": "6ec9323b50e32150a1cca32e566c4ac30b25ebefbbe5b52da4f986e3cbfdbd06"
+      },
+      "disposition": "accepted_as_proved_algebra_or_definitional_api",
+      "reason": "Unfolding S * diagonal(1) * S\u1d34 reduces the middle factor to the native identity matrix and uses Matrix.mul_one. This is the unit-symbol specialization of an independently defined multiplier, not an assumed conclusion. It is used in the complementary-symbol reconstruction.",
+      "proof_validation": "Fresh native kernel elaboration and transitive axiom audit passed.",
+      "unresolved": false
+    },
+    {
+      "scanner": "placeholder_audit",
+      "original_finding": {
+        "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+        "module": "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame",
+        "line": 129,
+        "declaration_kind": "theorem",
+        "declaration_name": "multiplier_const",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "127: def multiplier (\u03c6 b : \u03b9 \u2192 B) : B :=\n128:   \u2211 i, \u03c6 i * b i * star (\u03c6 i)\n129: \n130: \n131: theorem multiplier_const (\u03c6 : \u03b9 \u2192 B) (x : B) :",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      },
+      "source_sha256": "65ae94daf25a6e36eeeaeea163af5526a3c9a6998bbd7ef637c9330b70145d98",
+      "report": {
+        "path": "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/placeholder-FiniteOperatorFrame.json",
+        "sha256": "6ec9323b50e32150a1cca32e566c4ac30b25ebefbbe5b52da4f986e3cbfdbd06"
+      },
+      "disposition": "accepted_as_proved_algebra_or_definitional_api",
+      "reason": "The constant-symbol multiplier and the existing krausChannel have the same finite ordered sum by definition. The rfl lemma records reuse of the established Kraus owner and is explicitly documented as a definitional bridge; it is not presented as a new analytic estimate.",
+      "proof_validation": "Fresh native kernel elaboration and transitive axiom audit passed.",
+      "unresolved": false
+    },
+    {
+      "scanner": "placeholder_audit",
+      "original_finding": {
+        "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+        "module": "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame",
+        "line": 133,
+        "declaration_kind": "theorem",
+        "declaration_name": "multiplier_add",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "131: theorem multiplier_const (\u03c6 : \u03b9 \u2192 B) (x : B) :\n132:     multiplier \u03c6 (fun _ => x) = krausChannel \u03c6 x := rfl\n133: \n134: theorem multiplier_add (\u03c6 b c : \u03b9 \u2192 B) :\n135:     multiplier \u03c6 (b + c) = multiplier \u03c6 b + multiplier \u03c6 c := by",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      },
+      "source_sha256": "65ae94daf25a6e36eeeaeea163af5526a3c9a6998bbd7ef637c9330b70145d98",
+      "report": {
+        "path": "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/placeholder-FiniteOperatorFrame.json",
+        "sha256": "6ec9323b50e32150a1cca32e566c4ac30b25ebefbbe5b52da4f986e3cbfdbd06"
+      },
+      "disposition": "accepted_as_proved_algebra_or_definitional_api",
+      "reason": "Finite summation and both distributive laws give symbol additivity while retaining the order \u03c6 i * b i * star(\u03c6 i). The explicit simp list names these genuine ring and sum identities and assumes no commutativity or desired equality.",
+      "proof_validation": "Fresh native kernel elaboration and transitive axiom audit passed.",
+      "unresolved": false
+    },
+    {
+      "scanner": "placeholder_audit",
+      "original_finding": {
+        "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+        "module": "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame",
+        "line": 137,
+        "declaration_kind": "theorem",
+        "declaration_name": "multiplier_star",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "135:     multiplier \u03c6 (b + c) = multiplier \u03c6 b + multiplier \u03c6 c := by\n136:   simp only [multiplier, Pi.add_apply, mul_add, add_mul, Finset.sum_add_distrib]\n137: \n138: theorem multiplier_star (\u03c6 b : \u03b9 \u2192 B) :\n139:     star (multiplier \u03c6 b) = multiplier \u03c6 (fun i => star (b i)) := by",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      },
+      "source_sha256": "65ae94daf25a6e36eeeaeea163af5526a3c9a6998bbd7ef637c9330b70145d98",
+      "report": {
+        "path": "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/placeholder-FiniteOperatorFrame.json",
+        "sha256": "6ec9323b50e32150a1cca32e566c4ac30b25ebefbbe5b52da4f986e3cbfdbd06"
+      },
+      "disposition": "accepted_as_proved_algebra_or_definitional_api",
+      "reason": "star_sum and star_mul reverse each summand, star_star cancels the double involution, and associativity restores the stated order. The short proof derives the adjoint law from StarRing, with no self-adjoint-symbol or commutativity assumption.",
+      "proof_validation": "Fresh native kernel elaboration and transitive axiom audit passed.",
+      "unresolved": false
+    },
+    {
+      "scanner": "placeholder_audit",
+      "original_finding": {
+        "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+        "module": "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame",
+        "line": 150,
+        "declaration_kind": "theorem",
+        "declaration_name": "multiplier_indicator",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "148:     abel\n149:   rw [h, multiplier_const]\n150: \n151: \n152: theorem multiplier_indicator [DecidableEq \u03b9] (\u03c6 : \u03b9 \u2192 B) (s : Finset \u03b9) :",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      },
+      "source_sha256": "65ae94daf25a6e36eeeaeea163af5526a3c9a6998bbd7ef637c9330b70145d98",
+      "report": {
+        "path": "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/placeholder-FiniteOperatorFrame.json",
+        "sha256": "6ec9323b50e32150a1cca32e566c4ac30b25ebefbbe5b52da4f986e3cbfdbd06"
+      },
+      "disposition": "accepted_as_proved_algebra_or_definitional_api",
+      "reason": "The proof unfolds the multiplier, distributes multiplication through the zero/one conditional, and simplifies the finite sum to the selected indices. The selected Finset is arbitrary. This establishes the mask-to-partial-frame-sum bridge consumed by WeylFrameMasks.",
+      "proof_validation": "Fresh native kernel elaboration and transitive axiom audit passed.",
+      "unresolved": false
+    },
+    {
+      "scanner": "placeholder_audit",
+      "original_finding": {
+        "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+        "module": "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame",
+        "line": 203,
+        "declaration_kind": "theorem",
+        "declaration_name": "trace_gram",
+        "finding": "skeletal-proof",
+        "severity": "soft",
+        "detail": "proof appears to be tactic-automation-only or skeletal",
+        "snippet": "201:   intro k hk\n202:   simp only [gram_apply, mul_assoc]\n203: \n204: \n205: ",
+        "graph_grounded_signal": "none",
+        "heuristic_signal": "skeletal-proof",
+        "hard_verdict_allowed": false
+      },
+      "source_sha256": "65ae94daf25a6e36eeeaeea163af5526a3c9a6998bbd7ef637c9330b70145d98",
+      "report": {
+        "path": "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/placeholder-FiniteOperatorFrame.json",
+        "sha256": "6ec9323b50e32150a1cca32e566c4ac30b25ebefbbe5b52da4f986e3cbfdbd06"
+      },
+      "disposition": "accepted_as_proved_algebra_or_definitional_api",
+      "reason": "Native Matrix.trace unfolds to the sum of the diagonal entries of the actual Gram matrix. The equality is definitionally true and keeps its value in the coefficient ring. It neither assumes nor claims cyclicity over a noncommutative ring.",
+      "proof_validation": "Fresh native kernel elaboration and transitive axiom audit passed.",
+      "unresolved": false
+    },
+    {
+      "scanner": "semantic_vacuity_gate",
+      "original_finding": {
+        "category": "trivial_surface",
+        "detail": "by",
+        "file": "lean/InfoGeometry/Clifford/WeylFrameMasks.lean",
+        "line": 126,
+        "severity": "warning",
+        "subject": "card_balancedSelection"
+      },
+      "source_sha256": "9738b8591a1513b379dce55ea0231cea861614ae28ad6394cf5699c89c1cda56",
+      "report": {
+        "path": "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/semantic-findings.json",
+        "sha256": "476bb7856edb3e5721892c4c36b155818cc649d4170fa38f15b57f524efdb667"
+      },
+      "disposition": "accepted_as_proved_algebra_or_definitional_api",
+      "reason": "The explicitly defined Finset {0, 2} in Fin 4 has two distinct members, which native finite-set simplification proves. This small auxiliary lemma supports the separately proved equal-cardinality but different-operator witness; no metric porosity claim is attached.",
+      "proof_validation": "Fresh native kernel elaboration and transitive axiom audit passed.",
+      "unresolved": false
+    },
+    {
+      "scanner": "semantic_vacuity_gate",
+      "original_finding": {
+        "category": "trivial_surface",
+        "detail": "by",
+        "file": "lean/InfoGeometry/Clifford/WeylFrameMasks.lean",
+        "line": 129,
+        "severity": "warning",
+        "subject": "card_parallelSelection"
+      },
+      "source_sha256": "9738b8591a1513b379dce55ea0231cea861614ae28ad6394cf5699c89c1cda56",
+      "report": {
+        "path": "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/semantic-findings.json",
+        "sha256": "476bb7856edb3e5721892c4c36b155818cc649d4170fa38f15b57f524efdb667"
+      },
+      "disposition": "accepted_as_proved_algebra_or_definitional_api",
+      "reason": "The explicitly defined Finset {0, 1} in Fin 4 has two distinct members, which native finite-set simplification proves. Its role is the cardinality side of the explicit mask counterexample; the operator inequalities are established in separate theorems.",
+      "proof_validation": "Fresh native kernel elaboration and transitive axiom audit passed.",
+      "unresolved": false
+    },
+    {
+      "scanner": "semantic_vacuity_gate",
+      "original_finding": {
+        "category": "trivial_surface",
+        "detail": "by",
+        "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+        "line": 68,
+        "severity": "warning",
+        "subject": "matrixMultiplier_one"
+      },
+      "source_sha256": "65ae94daf25a6e36eeeaeea163af5526a3c9a6998bbd7ef637c9330b70145d98",
+      "report": {
+        "path": "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/semantic-findings.json",
+        "sha256": "476bb7856edb3e5721892c4c36b155818cc649d4170fa38f15b57f524efdb667"
+      },
+      "disposition": "accepted_as_proved_algebra_or_definitional_api",
+      "reason": "Unfolding S * diagonal(1) * S\u1d34 reduces the middle factor to the native identity matrix and uses Matrix.mul_one. This is the unit-symbol specialization of an independently defined multiplier, not an assumed conclusion. It is used in the complementary-symbol reconstruction.",
+      "proof_validation": "Fresh native kernel elaboration and transitive axiom audit passed.",
+      "unresolved": false
+    },
+    {
+      "scanner": "semantic_vacuity_gate",
+      "original_finding": {
+        "category": "trivial_surface",
+        "detail": "rfl",
+        "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+        "line": 131,
+        "severity": "warning",
+        "subject": "multiplier_const"
+      },
+      "source_sha256": "65ae94daf25a6e36eeeaeea163af5526a3c9a6998bbd7ef637c9330b70145d98",
+      "report": {
+        "path": "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/semantic-findings.json",
+        "sha256": "476bb7856edb3e5721892c4c36b155818cc649d4170fa38f15b57f524efdb667"
+      },
+      "disposition": "accepted_as_proved_algebra_or_definitional_api",
+      "reason": "The constant-symbol multiplier and the existing krausChannel have the same finite ordered sum by definition. The rfl lemma records reuse of the established Kraus owner and is explicitly documented as a definitional bridge; it is not presented as a new analytic estimate.",
+      "proof_validation": "Fresh native kernel elaboration and transitive axiom audit passed.",
+      "unresolved": false
+    },
+    {
+      "scanner": "semantic_vacuity_gate",
+      "original_finding": {
+        "category": "trivial_surface",
+        "detail": "by",
+        "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+        "line": 134,
+        "severity": "warning",
+        "subject": "multiplier_add"
+      },
+      "source_sha256": "65ae94daf25a6e36eeeaeea163af5526a3c9a6998bbd7ef637c9330b70145d98",
+      "report": {
+        "path": "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/semantic-findings.json",
+        "sha256": "476bb7856edb3e5721892c4c36b155818cc649d4170fa38f15b57f524efdb667"
+      },
+      "disposition": "accepted_as_proved_algebra_or_definitional_api",
+      "reason": "Finite summation and both distributive laws give symbol additivity while retaining the order \u03c6 i * b i * star(\u03c6 i). The explicit simp list names these genuine ring and sum identities and assumes no commutativity or desired equality.",
+      "proof_validation": "Fresh native kernel elaboration and transitive axiom audit passed.",
+      "unresolved": false
+    },
+    {
+      "scanner": "semantic_vacuity_gate",
+      "original_finding": {
+        "category": "trivial_surface",
+        "detail": "by",
+        "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+        "line": 138,
+        "severity": "warning",
+        "subject": "multiplier_star"
+      },
+      "source_sha256": "65ae94daf25a6e36eeeaeea163af5526a3c9a6998bbd7ef637c9330b70145d98",
+      "report": {
+        "path": "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/semantic-findings.json",
+        "sha256": "476bb7856edb3e5721892c4c36b155818cc649d4170fa38f15b57f524efdb667"
+      },
+      "disposition": "accepted_as_proved_algebra_or_definitional_api",
+      "reason": "star_sum and star_mul reverse each summand, star_star cancels the double involution, and associativity restores the stated order. The short proof derives the adjoint law from StarRing, with no self-adjoint-symbol or commutativity assumption.",
+      "proof_validation": "Fresh native kernel elaboration and transitive axiom audit passed.",
+      "unresolved": false
+    },
+    {
+      "scanner": "semantic_vacuity_gate",
+      "original_finding": {
+        "category": "trivial_surface",
+        "detail": "by",
+        "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+        "line": 152,
+        "severity": "warning",
+        "subject": "multiplier_indicator"
+      },
+      "source_sha256": "65ae94daf25a6e36eeeaeea163af5526a3c9a6998bbd7ef637c9330b70145d98",
+      "report": {
+        "path": "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/semantic-findings.json",
+        "sha256": "476bb7856edb3e5721892c4c36b155818cc649d4170fa38f15b57f524efdb667"
+      },
+      "disposition": "accepted_as_proved_algebra_or_definitional_api",
+      "reason": "The proof unfolds the multiplier, distributes multiplication through the zero/one conditional, and simplifies the finite sum to the selected indices. The selected Finset is arbitrary. This establishes the mask-to-partial-frame-sum bridge consumed by WeylFrameMasks.",
+      "proof_validation": "Fresh native kernel elaboration and transitive axiom audit passed.",
+      "unresolved": false
+    },
+    {
+      "scanner": "semantic_vacuity_gate",
+      "original_finding": {
+        "category": "trivial_surface",
+        "detail": "rfl",
+        "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+        "line": 168,
+        "severity": "warning",
+        "subject": "gram_apply"
+      },
+      "source_sha256": "65ae94daf25a6e36eeeaeea163af5526a3c9a6998bbd7ef637c9330b70145d98",
+      "report": {
+        "path": "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/semantic-findings.json",
+        "sha256": "476bb7856edb3e5721892c4c36b155818cc649d4170fa38f15b57f524efdb667"
+      },
+      "disposition": "accepted_as_proved_algebra_or_definitional_api",
+      "reason": "This is the native matrix entry equation for the separately defined Gram matrix, proved by definitional reduction. Such an API equation does not claim an independent Gram estimate; the nontrivial Gram square and projection consequences are separately proved.",
+      "proof_validation": "Fresh native kernel elaboration and transitive axiom audit passed.",
+      "unresolved": false
+    },
+    {
+      "scanner": "semantic_vacuity_gate",
+      "original_finding": {
+        "category": "trivial_surface",
+        "detail": "rfl",
+        "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+        "line": 206,
+        "severity": "warning",
+        "subject": "trace_gram"
+      },
+      "source_sha256": "65ae94daf25a6e36eeeaeea163af5526a3c9a6998bbd7ef637c9330b70145d98",
+      "report": {
+        "path": "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/semantic-findings.json",
+        "sha256": "476bb7856edb3e5721892c4c36b155818cc649d4170fa38f15b57f524efdb667"
+      },
+      "disposition": "accepted_as_proved_algebra_or_definitional_api",
+      "reason": "Native Matrix.trace unfolds to the sum of the diagonal entries of the actual Gram matrix. The equality is definitionally true and keeps its value in the coefficient ring. It neither assumes nor claims cyclicity over a noncommutative ring.",
+      "proof_validation": "Fresh native kernel elaboration and transitive axiom audit passed.",
+      "unresolved": false
+    },
+    {
+      "scanner": "semantic_vacuity_gate",
+      "original_finding": {
+        "category": "trivial_surface",
+        "detail": "rfl",
+        "file": "lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean",
+        "line": 61,
+        "severity": "warning",
+        "subject": "isometryEmbedding_apply"
+      },
+      "source_sha256": "2e2386e14cf832c7a15dfbe69a0c1b64d4a729308e25b42ec0392ad352d7b9fd",
+      "report": {
+        "path": "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/semantic-findings.json",
+        "sha256": "476bb7856edb3e5721892c4c36b155818cc649d4170fa38f15b57f524efdb667"
+      },
+      "disposition": "accepted_as_proved_algebra_or_definitional_api",
+      "reason": "The rfl equation exposes the actual function of the previously constructed non-unital star-ring homomorphism. Its map_mul field uses the one-sided isometry hypothesis; injectivity and the corner equivalence are proved separately. This accessor is not a substitute for those constructions.",
+      "proof_validation": "Fresh native kernel elaboration and transitive axiom audit passed.",
+      "unresolved": false
+    },
+    {
+      "scanner": "semantic_vacuity_gate",
+      "original_finding": {
+        "category": "trivial_surface",
+        "detail": "rfl",
+        "file": "lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean",
+        "line": 64,
+        "severity": "warning",
+        "subject": "compression_apply"
+      },
+      "source_sha256": "2e2386e14cf832c7a15dfbe69a0c1b64d4a729308e25b42ec0392ad352d7b9fd",
+      "report": {
+        "path": "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/semantic-findings.json",
+        "sha256": "476bb7856edb3e5721892c4c36b155818cc649d4170fa38f15b57f524efdb667"
+      },
+      "disposition": "accepted_as_proved_algebra_or_definitional_api",
+      "reason": "The rfl equation exposes the function of the independently defined additive compression map. It makes no ambient multiplicativity claim and contains no assumed target equality.",
+      "proof_validation": "Fresh native kernel elaboration and transitive axiom audit passed.",
+      "unresolved": false
+    },
+    {
+      "scanner": "semantic_vacuity_gate",
+      "original_finding": {
+        "category": "trivial_surface",
+        "detail": "by",
+        "file": "lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean",
+        "line": 126,
+        "severity": "warning",
+        "subject": "embedding_compression"
+      },
+      "source_sha256": "2e2386e14cf832c7a15dfbe69a0c1b64d4a729308e25b42ec0392ad352d7b9fd",
+      "report": {
+        "path": "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/semantic-findings.json",
+        "sha256": "476bb7856edb3e5721892c4c36b155818cc649d4170fa38f15b57f524efdb667"
+      },
+      "disposition": "accepted_as_proved_algebra_or_definitional_api",
+      "reason": "After unfolding the actual embedding, compression, and range projection, both sides are the same ordered product v * star(v) * s * v * star(v) up to associativity. The isometry hypothesis types the bundled embedding; the product identity itself requires no additional cancellation. This is a real range-corner compatibility equation used in the subsequent transport theorems.",
+      "proof_validation": "Fresh native kernel elaboration and transitive axiom audit passed.",
+      "unresolved": false
+    },
+    {
+      "scanner": "semantic_vacuity_gate",
+      "original_finding": {
+        "category": "trivial_surface",
+        "detail": "by",
+        "file": "lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean",
+        "line": 146,
+        "severity": "warning",
+        "subject": "compression_star"
+      },
+      "source_sha256": "2e2386e14cf832c7a15dfbe69a0c1b64d4a729308e25b42ec0392ad352d7b9fd",
+      "report": {
+        "path": "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/semantic-findings.json",
+        "sha256": "476bb7856edb3e5721892c4c36b155818cc649d4170fa38f15b57f524efdb667"
+      },
+      "disposition": "accepted_as_proved_algebra_or_definitional_api",
+      "reason": "Unfolding compression and applying star_mul, star_star, and associativity proves adjoint compatibility for every symbol. The argument does not assume the symbol is self-adjoint and supports the later star-projection criterion.",
+      "proof_validation": "Fresh native kernel elaboration and transitive axiom audit passed.",
+      "unresolved": false
+    }
+  ],
+  "compiler_warnings": [
+    {
+      "module": "InfoGeometry.Core.PeirceDecomposition",
+      "line": 192,
+      "column": 55,
+      "warning": "Used tac1 <;> tac2 where (tac1; tac2) would suffice",
+      "linter": "linter.unnecessarySeqFocus",
+      "disposition": "retained_existing_dependency_style_warning",
+      "reason": "The unchanged imported owner compiled successfully. This is a tactic-sequencing style lint, not an open goal or extra axiom. No linter was disabled and the complete log is preserved.",
+      "source_sha256": "b2426391a1841cbdb35bdef72138b5ab1553508c82c22ea930aa23f164de9bd9",
+      "log": {
+        "path": "/workspace/scratch/d18a558d1d7d/knutsen-ci-candidates/run-43383097703/InfoGeometry.Core.PeirceDecomposition.log",
+        "sha256": "6fc309835b601a9d601baa56a2b99179685ed64781a4fd099e8f9e7ffced9edf"
+      }
+    },
+    {
+      "module": "InfoGeometry.Clifford.OperatorValuedJones",
+      "line": 40,
+      "column": 67,
+      "warning": "This simp argument is unused: Matrix.mul_apply",
+      "linter": "linter.unusedSimpArgs",
+      "disposition": "retained_existing_dependency_style_warning",
+      "reason": "The unchanged imported Jones owner compiled successfully. The unused simp lemma is redundant proof syntax; the verified mathematical statement and axiom dependencies are unaffected. No linter was disabled and the complete log is preserved.",
+      "source_sha256": "2e2f78503a9b37400abfdb3e4855efccecc3aeae45c56aa6dd55aa7461c48887",
+      "log": {
+        "path": "/workspace/scratch/d18a558d1d7d/knutsen-ci-candidates/run-43383097703/InfoGeometry.Clifford.OperatorValuedJones.log",
+        "sha256": "6555b31355c7e95426c4855a32a97da3c7c40fba1f79b1da5d95b4376f1d5abc"
+      }
+    }
+  ],
+  "policy_unchanged": true,
+  "interpretation": "Raw scanner findings and exit codes remain preserved. Human semantic review accepts these short, kernel-checked algebraic or definitional lemmas at their actual scope; it does not relabel the warning-threshold scanner as passed."
+}

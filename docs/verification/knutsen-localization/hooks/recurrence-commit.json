@@ -1,0 +1,13 @@
+{
+  "at_utc": "2026-11-13T07:03:58.214411+00:00",
+  "command": [
+    "git",
+    "commit",
+    "-F",
+    "/workspace/scratch/d18a558d1d7d/knutsen-recurrence-commit-message.txt"
+  ],
+  "returncode": 0,
+  "output": "proof_proxy_staged_gate: ok\n[codex/knutsen-localization 0149b1f0] Keep porosity recurrence in the safe kernel proof surface\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+  "head": "0149b1f0a017b423d318b54e84662a7e6dd32022",
+  "tree": "aab7f242a88a942848b2d48f9d193272b9abe735"
+}

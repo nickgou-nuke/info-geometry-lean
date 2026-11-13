@@ -1,0 +1,765 @@
+﻿2026-11-13T07:04:30.0579914Z Current runner version: '2.338.2'
+2026-11-13T07:04:30.0607095Z ##[group]Runner Image Provisioner
+2026-11-13T07:04:30.0608228Z Hosted Compute Agent
+2026-11-13T07:04:30.0608874Z Version: 20261028.624
+2026-11-13T07:04:30.0609611Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-13T07:04:30.0610385Z Build Date: 2026-10-28T21:51:42Z
+2026-11-13T07:04:30.0611132Z Worker ID: {905a0f8a-be85-4cfc-98bc-40f5ba1a4561}
+2026-11-13T07:04:30.0611960Z Region: westcentralus
+2026-11-13T07:04:30.0612587Z Cloud: Azure
+2026-11-13T07:04:30.0613200Z ##[endgroup]
+2026-11-13T07:04:30.0614683Z ##[group]Operating System
+2026-11-13T07:04:30.0615390Z Ubuntu
+2026-11-13T07:04:30.0616084Z 24.04.5
+2026-11-13T07:04:30.0616650Z LTS
+2026-11-13T07:04:30.0617455Z ##[endgroup]
+2026-11-13T07:04:30.0618092Z ##[group]Runner Image
+2026-11-13T07:04:30.0618793Z Image: ubuntu-24.04
+2026-11-13T07:04:30.0619464Z Version: 20261101.360.1
+2026-11-13T07:04:30.0620860Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261101.360/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-13T07:04:30.0622557Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261101.360
+2026-11-13T07:04:30.0623621Z ##[endgroup]
+2026-11-13T07:04:30.0624880Z ##[group]GITHUB_TOKEN Permissions
+2026-11-13T07:04:30.0627347Z Contents: read
+2026-11-13T07:04:30.0628091Z Metadata: read
+2026-11-13T07:04:30.0628706Z ##[endgroup]
+2026-11-13T07:04:30.0630964Z Secret source: Actions
+2026-11-13T07:04:30.0632105Z Cache mode: write
+2026-11-13T07:04:30.0632827Z Prepare workflow directory
+2026-11-13T07:04:30.0996352Z Prepare all required actions
+2026-11-13T07:04:30.1046110Z Getting action download info
+2026-11-13T07:04:30.4403785Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-13T07:04:30.5414354Z Download action repository 'actions/cache@v4' (SHA:0057852bfaa89a56745cba8c7296529d2fc39830)
+2026-11-13T07:04:30.6423600Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-13T07:04:30.8564067Z Complete job name: kernel-and-axioms
+2026-11-13T07:04:30.9468991Z ##[group]Run actions/checkout@v4
+2026-11-13T07:04:30.9469975Z with:
+2026-11-13T07:04:30.9470424Z   path: project
+2026-11-13T07:04:30.9470893Z   persist-credentials: true
+2026-11-13T07:04:30.9471400Z   submodules: false
+2026-11-13T07:04:30.9471904Z   repository: nickgou-nuke/info-geometry-lean
+2026-11-13T07:04:30.9476135Z   token: ***
+2026-11-13T07:04:30.9476582Z   ssh-strict: true
+2026-11-13T07:04:30.9477215Z   ssh-user: git
+2026-11-13T07:04:30.9477643Z   clean: true
+2026-11-13T07:04:30.9478095Z   sparse-checkout-cone-mode: true
+2026-11-13T07:04:30.9478628Z   fetch-depth: 1
+2026-11-13T07:04:30.9479069Z   fetch-tags: false
+2026-11-13T07:04:30.9479525Z   show-progress: true
+2026-11-13T07:04:30.9479993Z   lfs: false
+2026-11-13T07:04:30.9480423Z   set-safe-directory: true
+2026-11-13T07:04:30.9480930Z   allow-unsafe-pr-checkout: false
+2026-11-13T07:04:30.9481655Z ##[endgroup]
+2026-11-13T07:04:31.2144855Z Syncing repository: nickgou-nuke/info-geometry-lean
+2026-11-13T07:04:31.2147287Z ##[group]Getting Git version info
+2026-11-13T07:04:31.2148578Z Working directory is '/home/runner/work/info-geometry-lean/info-geometry-lean/project'
+2026-11-13T07:04:31.2150346Z [command]/usr/bin/git version
+2026-11-13T07:04:31.2230229Z git version 2.56.0
+2026-11-13T07:04:31.2249936Z ##[endgroup]
+2026-11-13T07:04:31.2266065Z Temporarily overriding HOME='/home/runner/work/_temp/db0e5541-0ec8-4e61-97f5-41218f2b081c' before making global git config changes
+2026-11-13T07:04:31.2268489Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-13T07:04:31.2272748Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/info-geometry-lean/info-geometry-lean/project
+2026-11-13T07:04:31.2323294Z ##[group]Initializing the repository
+2026-11-13T07:04:31.2328706Z [command]/usr/bin/git init /home/runner/work/info-geometry-lean/info-geometry-lean/project
+2026-11-13T07:04:31.2440845Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-13T07:04:31.2442749Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-13T07:04:31.2443837Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-13T07:04:31.2444610Z hint: call:
+2026-11-13T07:04:31.2445048Z hint:
+2026-11-13T07:04:31.2551815Z hint: 	git config --global init.defaultBranch <name>
+2026-11-13T07:04:31.2552798Z hint:
+2026-11-13T07:04:31.2553632Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-13T07:04:31.2555083Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-13T07:04:31.2556292Z hint:
+2026-11-13T07:04:31.2561132Z hint: 	git branch -m <name>
+2026-11-13T07:04:31.2561994Z hint:
+2026-11-13T07:04:31.2563001Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-13T07:04:31.2565037Z Initialized empty Git repository in /home/runner/work/info-geometry-lean/info-geometry-lean/project/.git/
+2026-11-13T07:04:31.2568296Z [command]/usr/bin/git remote add origin https://github.com/nickgou-nuke/info-geometry-lean
+2026-11-13T07:04:31.2570727Z ##[endgroup]
+2026-11-13T07:04:31.2571745Z ##[group]Disabling automatic garbage collection
+2026-11-13T07:04:31.2572429Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-13T07:04:31.2573835Z ##[endgroup]
+2026-11-13T07:04:31.2574550Z ##[group]Setting up auth
+2026-11-13T07:04:31.2575272Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-13T07:04:31.2610944Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-13T07:04:31.2997750Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-13T07:04:31.3037593Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-13T07:04:31.3309013Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-13T07:04:31.3345606Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-13T07:04:31.3605501Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-13T07:04:31.3649432Z ##[endgroup]
+2026-11-13T07:04:31.3650289Z ##[group]Fetching the repository
+2026-11-13T07:04:31.3661651Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +8e9221d29001ebe80558237992ce9be8a35920af:refs/remotes/pull/345/merge
+2026-11-13T07:04:42.3663193Z From https://github.com/nickgou-nuke/info-geometry-lean
+2026-11-13T07:04:42.3665300Z  * [new ref]           8e9221d29001ebe80558237992ce9be8a35920af -> pull/345/merge
+2026-11-13T07:04:42.3675378Z ##[endgroup]
+2026-11-13T07:04:42.3677346Z ##[group]Determining the checkout info
+2026-11-13T07:04:42.3679236Z ##[endgroup]
+2026-11-13T07:04:42.3684975Z [command]/usr/bin/git sparse-checkout disable
+2026-11-13T07:04:42.3747710Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-13T07:04:42.3781949Z ##[group]Checking out the ref
+2026-11-13T07:04:42.3786007Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/345/merge
+2026-11-13T07:04:43.4536456Z Updating files:   6% (4726/70713)
+2026-11-13T07:04:43.5423976Z Updating files:   7% (4950/70713)
+2026-11-13T07:04:43.5875838Z Updating files:   8% (5658/70713)
+2026-11-13T07:04:43.6284047Z Updating files:   9% (6365/70713)
+2026-11-13T07:04:43.6738448Z Updating files:  10% (7072/70713)
+2026-11-13T07:04:43.7180643Z Updating files:  11% (7779/70713)
+2026-11-13T07:04:43.7611000Z Updating files:  12% (8486/70713)
+2026-11-13T07:04:43.8021459Z Updating files:  13% (9193/70713)
+2026-11-13T07:04:43.8430486Z Updating files:  14% (9900/70713)
+2026-11-13T07:04:43.8839911Z Updating files:  15% (10607/70713)
+2026-11-13T07:04:43.9241837Z Updating files:  16% (11315/70713)
+2026-11-13T07:04:43.9655189Z Updating files:  17% (12022/70713)
+2026-11-13T07:04:44.0100207Z Updating files:  18% (12729/70713)
+2026-11-13T07:04:44.0518773Z Updating files:  19% (13436/70713)
+2026-11-13T07:04:44.0922858Z Updating files:  20% (14143/70713)
+2026-11-13T07:04:44.1398235Z Updating files:  21% (14850/70713)
+2026-11-13T07:04:44.1818954Z Updating files:  22% (15557/70713)
+2026-11-13T07:04:44.2230570Z Updating files:  23% (16264/70713)
+2026-11-13T07:04:44.2638929Z Updating files:  24% (16972/70713)
+2026-11-13T07:04:44.3065601Z Updating files:  25% (17679/70713)
+2026-11-13T07:04:44.3613704Z Updating files:  26% (18386/70713)
+2026-11-13T07:04:44.4022747Z Updating files:  27% (19093/70713)
+2026-11-13T07:04:44.4341049Z Updating files:  28% (19800/70713)
+2026-11-13T07:04:44.4429839Z Updating files:  28% (20351/70713)
+2026-11-13T07:04:44.4823965Z Updating files:  29% (20507/70713)
+2026-11-13T07:04:44.5242478Z Updating files:  30% (21214/70713)
+2026-11-13T07:04:44.5624181Z Updating files:  31% (21922/70713)
+2026-11-13T07:04:44.6008788Z Updating files:  32% (22629/70713)
+2026-11-13T07:04:44.6324987Z Updating files:  33% (23336/70713)
+2026-11-13T07:04:44.6644847Z Updating files:  34% (24043/70713)
+2026-11-13T07:04:44.6966383Z Updating files:  35% (24750/70713)
+2026-11-13T07:04:44.7278119Z Updating files:  36% (25457/70713)
+2026-11-13T07:04:44.7641905Z Updating files:  37% (26164/70713)
+2026-11-13T07:04:44.7955709Z Updating files:  38% (26871/70713)
+2026-11-13T07:04:44.8284364Z Updating files:  39% (27579/70713)
+2026-11-13T07:04:44.8604195Z Updating files:  40% (28286/70713)
+2026-11-13T07:04:44.8916784Z Updating files:  41% (28993/70713)
+2026-11-13T07:04:44.9225194Z Updating files:  42% (29700/70713)
+2026-11-13T07:04:44.9539977Z Updating files:  43% (30407/70713)
+2026-11-13T07:04:44.9857554Z Updating files:  44% (31114/70713)
+2026-11-13T07:04:45.0170204Z Updating files:  45% (31821/70713)
+2026-11-13T07:04:45.0574958Z Updating files:  46% (32528/70713)
+2026-11-13T07:04:45.1227607Z Updating files:  47% (33236/70713)
+2026-11-13T07:04:45.1693345Z Updating files:  48% (33943/70713)
+2026-11-13T07:04:45.2193147Z Updating files:  49% (34650/70713)
+2026-11-13T07:04:45.4338066Z Updating files:  50% (35357/70713)
+2026-11-13T07:04:45.4338760Z Updating files:  51% (36064/70713)
+2026-11-13T07:04:45.4955159Z Updating files:  51% (36067/70713)
+2026-11-13T07:04:45.9439929Z Updating files:  52% (36771/70713)
+2026-11-13T07:04:46.0348742Z Updating files:  53% (37478/70713)
+2026-11-13T07:04:46.0993121Z Updating files:  54% (38186/70713)
+2026-11-13T07:04:46.1459102Z Updating files:  55% (38893/70713)
+2026-11-13T07:04:46.1916226Z Updating files:  56% (39600/70713)
+2026-11-13T07:04:46.2330511Z Updating files:  57% (40307/70713)
+2026-11-13T07:04:46.2803947Z Updating files:  58% (41014/70713)
+2026-11-13T07:04:46.3253628Z Updating files:  59% (41721/70713)
+2026-11-13T07:04:46.3674867Z Updating files:  60% (42428/70713)
+2026-11-13T07:04:46.4108967Z Updating files:  61% (43135/70713)
+2026-11-13T07:04:46.4339056Z Updating files:  62% (43843/70713)
+2026-11-13T07:04:46.4512308Z Updating files:  62% (44246/70713)
+2026-11-13T07:04:46.4923535Z Updating files:  63% (44550/70713)
+2026-11-13T07:04:46.5371706Z Updating files:  64% (45257/70713)
+2026-11-13T07:04:46.5786750Z Updating files:  65% (45964/70713)
+2026-11-13T07:04:46.6210487Z Updating files:  66% (46671/70713)
+2026-11-13T07:04:46.6696334Z Updating files:  67% (47378/70713)
+2026-11-13T07:04:46.7115097Z Updating files:  68% (48085/70713)
+2026-11-13T07:04:46.7542454Z Updating files:  69% (48792/70713)
+2026-11-13T07:04:46.7921548Z Updating files:  70% (49500/70713)
+2026-11-13T07:04:46.8263623Z Updating files:  71% (50207/70713)
+2026-11-13T07:04:46.8659552Z Updating files:  72% (50914/70713)
+2026-11-13T07:04:46.9055435Z Updating files:  73% (51621/70713)
+2026-11-13T07:04:46.9577554Z Updating files:  74% (52328/70713)
+2026-11-13T07:04:46.9987279Z Updating files:  75% (53035/70713)
+2026-11-13T07:04:47.0377768Z Updating files:  76% (53742/70713)
+2026-11-13T07:04:47.0752794Z Updating files:  77% (54450/70713)
+2026-11-13T07:04:47.1150865Z Updating files:  78% (55157/70713)
+2026-11-13T07:04:47.1518371Z Updating files:  79% (55864/70713)
+2026-11-13T07:04:47.1902552Z Updating files:  80% (56571/70713)
+2026-11-13T07:04:47.2217261Z Updating files:  81% (57278/70713)
+2026-11-13T07:04:47.2531086Z Updating files:  82% (57985/70713)
+2026-11-13T07:04:47.2846255Z Updating files:  83% (58692/70713)
+2026-11-13T07:04:47.3165234Z Updating files:  84% (59399/70713)
+2026-11-13T07:04:47.3512896Z Updating files:  85% (60107/70713)
+2026-11-13T07:04:47.3847705Z Updating files:  86% (60814/70713)
+2026-11-13T07:04:47.4186408Z Updating files:  87% (61521/70713)
+2026-11-13T07:04:47.4340067Z Updating files:  88% (62228/70713)
+2026-11-13T07:04:47.4513160Z Updating files:  88% (62557/70713)
+2026-11-13T07:04:47.4822607Z Updating files:  89% (62935/70713)
+2026-11-13T07:04:47.5130112Z Updating files:  90% (63642/70713)
+2026-11-13T07:04:47.5443450Z Updating files:  91% (64349/70713)
+2026-11-13T07:04:47.5761391Z Updating files:  92% (65056/70713)
+2026-11-13T07:04:47.6074300Z Updating files:  93% (65764/70713)
+2026-11-13T07:04:47.6391457Z Updating files:  94% (66471/70713)
+2026-11-13T07:04:47.6855173Z Updating files:  95% (67178/70713)
+2026-11-13T07:04:47.7321876Z Updating files:  96% (67885/70713)
+2026-11-13T07:04:47.8071997Z Updating files:  97% (68592/70713)
+2026-11-13T07:04:47.8438383Z Updating files:  98% (69299/70713)
+2026-11-13T07:04:47.8793746Z Updating files:  99% (70006/70713)
+2026-11-13T07:04:47.8794572Z Updating files: 100% (70713/70713)
+2026-11-13T07:04:47.8794974Z Updating files: 100% (70713/70713), done.
+2026-11-13T07:04:47.9472978Z Note: switching to 'refs/remotes/pull/345/merge'.
+2026-11-13T07:04:47.9477330Z 
+2026-11-13T07:04:47.9477765Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-13T07:04:47.9478538Z changes and commit them, and you can discard any commits you make in this
+2026-11-13T07:04:47.9479654Z state without impacting any branches by switching back to a branch.
+2026-11-13T07:04:47.9480106Z 
+2026-11-13T07:04:47.9480397Z If you want to create a new branch to retain commits you create, you may
+2026-11-13T07:04:47.9481103Z do so (now or later) by using -c with the switch command. Example:
+2026-11-13T07:04:47.9481504Z 
+2026-11-13T07:04:47.9481676Z   git switch -c <new-branch-name>
+2026-11-13T07:04:47.9481948Z 
+2026-11-13T07:04:47.9482112Z Or undo this operation with:
+2026-11-13T07:04:47.9482356Z 
+2026-11-13T07:04:47.9482494Z   git switch -
+2026-11-13T07:04:47.9482675Z 
+2026-11-13T07:04:47.9483014Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-13T07:04:47.9483501Z 
+2026-11-13T07:04:47.9484062Z HEAD is now at 8e9221d2 Merge 3f7282ceb5076e16bae8acc696adffd3771494c9 into a392af178af1fe2bcba2ba39eb405700c6ee103c
+2026-11-13T07:04:47.9603386Z ##[endgroup]
+2026-11-13T07:04:47.9652817Z [command]/usr/bin/git log -1 --format=%H
+2026-11-13T07:04:47.9679640Z 8e9221d29001ebe80558237992ce9be8a35920af
+2026-11-13T07:04:47.9922776Z ##[group]Run git -C project config --local --unset-all http.https://github.com/.extraheader
+2026-11-13T07:04:47.9923582Z [36;1mgit -C project config --local --unset-all http.https://github.com/.extraheader[0m
+2026-11-13T07:04:47.9949265Z shell: /usr/bin/bash -e {0}
+2026-11-13T07:04:47.9949560Z ##[endgroup]
+2026-11-13T07:04:48.0080953Z ##[group]Run python3 - <<'PYTHON'
+2026-11-13T07:04:48.0081289Z [36;1mpython3 - <<'PYTHON'[0m
+2026-11-13T07:04:48.0081549Z [36;1mimport json, os[0m
+2026-11-13T07:04:48.0081799Z [36;1mfrom pathlib import Path[0m
+2026-11-13T07:04:48.0082207Z [36;1mmanifest = json.loads(Path('project/lake-manifest.json').read_text())[0m
+2026-11-13T07:04:48.0082794Z [36;1mrevision = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')[0m
+2026-11-13T07:04:48.0083282Z [36;1mwith open(os.environ['GITHUB_OUTPUT'], 'a') as output:[0m
+2026-11-13T07:04:48.0083860Z [36;1m    output.write(f'mathlib={revision}\n')[0m
+2026-11-13T07:04:48.0084154Z [36;1mPYTHON[0m
+2026-11-13T07:04:48.0107079Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-13T07:04:48.0107489Z ##[endgroup]
+2026-11-13T07:04:48.0571349Z ##[group]Run actions/checkout@v4
+2026-11-13T07:04:48.0571624Z with:
+2026-11-13T07:04:48.0571861Z   repository: leanprover-community/mathlib4
+2026-11-13T07:04:48.0572182Z   ref: d13f23b723b8a846827a245b89c10fc7d3f11612
+2026-11-13T07:04:48.0572472Z   path: mathlib
+2026-11-13T07:04:48.0572700Z   persist-credentials: false
+2026-11-13T07:04:48.0575300Z   token: ***
+2026-11-13T07:04:48.0575503Z   ssh-strict: true
+2026-11-13T07:04:48.0575716Z   ssh-user: git
+2026-11-13T07:04:48.0575917Z   clean: true
+2026-11-13T07:04:48.0576140Z   sparse-checkout-cone-mode: true
+2026-11-13T07:04:48.0576405Z   fetch-depth: 1
+2026-11-13T07:04:48.0576620Z   fetch-tags: false
+2026-11-13T07:04:48.0576841Z   show-progress: true
+2026-11-13T07:04:48.0577362Z   lfs: false
+2026-11-13T07:04:48.0577641Z   submodules: false
+2026-11-13T07:04:48.0577861Z   set-safe-directory: true
+2026-11-13T07:04:48.0578116Z   allow-unsafe-pr-checkout: false
+2026-11-13T07:04:48.0578368Z ##[endgroup]
+2026-11-13T07:04:48.1465181Z Syncing repository: leanprover-community/mathlib4
+2026-11-13T07:04:48.1472300Z ##[group]Getting Git version info
+2026-11-13T07:04:48.1473207Z Working directory is '/home/runner/work/info-geometry-lean/info-geometry-lean/mathlib'
+2026-11-13T07:04:48.1506081Z [command]/usr/bin/git version
+2026-11-13T07:04:48.1578910Z git version 2.56.0
+2026-11-13T07:04:48.1599493Z ##[endgroup]
+2026-11-13T07:04:48.1613716Z Temporarily overriding HOME='/home/runner/work/_temp/f52870e8-3299-4b95-8bb1-da5ba20d838a' before making global git config changes
+2026-11-13T07:04:48.1614499Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-13T07:04:48.1618917Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/info-geometry-lean/info-geometry-lean/mathlib
+2026-11-13T07:04:48.1659647Z ##[group]Initializing the repository
+2026-11-13T07:04:48.1664798Z [command]/usr/bin/git init /home/runner/work/info-geometry-lean/info-geometry-lean/mathlib
+2026-11-13T07:04:48.1711962Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-13T07:04:48.1712939Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-13T07:04:48.1713532Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-13T07:04:48.1714011Z hint: call:
+2026-11-13T07:04:48.1714222Z hint:
+2026-11-13T07:04:48.1714498Z hint: 	git config --global init.defaultBranch <name>
+2026-11-13T07:04:48.1715098Z hint:
+2026-11-13T07:04:48.1715631Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-13T07:04:48.1716494Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-13T07:04:48.1717304Z hint:
+2026-11-13T07:04:48.1717813Z hint: 	git branch -m <name>
+2026-11-13T07:04:48.1718235Z hint:
+2026-11-13T07:04:48.1718735Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-13T07:04:48.1719724Z Initialized empty Git repository in /home/runner/work/info-geometry-lean/info-geometry-lean/mathlib/.git/
+2026-11-13T07:04:48.1726470Z [command]/usr/bin/git remote add origin https://github.com/leanprover-community/mathlib4
+2026-11-13T07:04:48.1765999Z ##[endgroup]
+2026-11-13T07:04:48.1770906Z ##[group]Disabling automatic garbage collection
+2026-11-13T07:04:48.1771462Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-13T07:04:48.1806156Z ##[endgroup]
+2026-11-13T07:04:48.1806726Z ##[group]Setting up auth
+2026-11-13T07:04:48.1814568Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-13T07:04:48.1851632Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-13T07:04:48.2108081Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-13T07:04:48.2145686Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-13T07:04:48.2397055Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-13T07:04:48.2434840Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-13T07:04:48.2697354Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-13T07:04:48.2742273Z ##[endgroup]
+2026-11-13T07:04:48.2742874Z ##[group]Fetching the repository
+2026-11-13T07:04:48.2751806Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin d13f23b723b8a846827a245b89c10fc7d3f11612
+2026-11-13T07:04:56.7976115Z From https://github.com/leanprover-community/mathlib4
+2026-11-13T07:04:56.7976845Z  * branch            d13f23b723b8a846827a245b89c10fc7d3f11612 -> FETCH_HEAD
+2026-11-13T07:04:56.7982407Z ##[endgroup]
+2026-11-13T07:04:56.7983164Z ##[group]Determining the checkout info
+2026-11-13T07:04:56.7985709Z ##[endgroup]
+2026-11-13T07:04:56.7991606Z [command]/usr/bin/git sparse-checkout disable
+2026-11-13T07:04:56.8045371Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-13T07:04:56.8075004Z ##[group]Checking out the ref
+2026-11-13T07:04:56.8079714Z [command]/usr/bin/git checkout --progress --force d13f23b723b8a846827a245b89c10fc7d3f11612
+2026-11-13T07:04:57.5529680Z Note: switching to 'd13f23b723b8a846827a245b89c10fc7d3f11612'.
+2026-11-13T07:04:57.5530100Z 
+2026-11-13T07:04:57.5531856Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-13T07:04:57.5532640Z changes and commit them, and you can discard any commits you make in this
+2026-11-13T07:04:57.5533412Z state without impacting any branches by switching back to a branch.
+2026-11-13T07:04:57.5533843Z 
+2026-11-13T07:04:57.5534147Z If you want to create a new branch to retain commits you create, you may
+2026-11-13T07:04:57.5534827Z do so (now or later) by using -c with the switch command. Example:
+2026-11-13T07:04:57.5535212Z 
+2026-11-13T07:04:57.5535382Z   git switch -c <new-branch-name>
+2026-11-13T07:04:57.5535644Z 
+2026-11-13T07:04:57.5535756Z Or undo this operation with:
+2026-11-13T07:04:57.5535921Z 
+2026-11-13T07:04:57.5536012Z   git switch -
+2026-11-13T07:04:57.5536139Z 
+2026-11-13T07:04:57.5536350Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-13T07:04:57.5536653Z 
+2026-11-13T07:04:57.5536797Z HEAD is now at d13f23b chore: bump toolchain to v4.34.1
+2026-11-13T07:04:57.5575794Z ##[endgroup]
+2026-11-13T07:04:57.5600478Z [command]/usr/bin/git log -1 --format=%H
+2026-11-13T07:04:57.5634628Z d13f23b723b8a846827a245b89c10fc7d3f11612
+2026-11-13T07:04:57.5644925Z ##[group]Removing auth
+2026-11-13T07:04:57.5649257Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-13T07:04:57.5683105Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-13T07:04:57.5946342Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-13T07:04:57.5973957Z http.https://github.com/.extraheader
+2026-11-13T07:04:57.5981690Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-13T07:04:57.6015322Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-13T07:04:57.6275083Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-13T07:04:57.6310281Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-13T07:04:57.6571854Z ##[endgroup]
+2026-11-13T07:04:57.7406436Z ##[group]Run actions/cache@v4
+2026-11-13T07:04:57.7406725Z with:
+2026-11-13T07:04:57.7407122Z   path: ~/.elan
+mathlib/.lake
+
+2026-11-13T07:04:57.7407631Z   key: knutsen-localization-Linux-6111e0bf13d4b0355505ef09f3b4f82e3e3647ef6e6b4135d43ef29af0ee6995
+2026-11-13T07:04:57.7408159Z   enableCrossOsArchive: false
+2026-11-13T07:04:57.7408414Z   fail-on-cache-miss: false
+2026-11-13T07:04:57.7408662Z   lookup-only: false
+2026-11-13T07:04:57.7408884Z   save-always: false
+2026-11-13T07:04:57.7409100Z ##[endgroup]
+2026-11-13T07:04:57.8528838Z (node:2627) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-13T07:04:57.8529704Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-13T07:04:58.0677247Z Cache not found for input keys: knutsen-localization-Linux-6111e0bf13d4b0355505ef09f3b4f82e3e3647ef6e6b4135d43ef29af0ee6995
+2026-11-13T07:04:58.0778858Z ##[group]Run if [ ! -x "$HOME/.elan/bin/elan" ]; then
+2026-11-13T07:04:58.0779268Z [36;1mif [ ! -x "$HOME/.elan/bin/elan" ]; then[0m
+2026-11-13T07:04:58.0779858Z [36;1m  curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"[0m
+2026-11-13T07:04:58.0780498Z [36;1m  sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none[0m
+2026-11-13T07:04:58.0780847Z [36;1mfi[0m
+2026-11-13T07:04:58.0781084Z [36;1mecho "$HOME/.elan/bin" >> "$GITHUB_PATH"[0m
+2026-11-13T07:04:58.0781528Z [36;1m"$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"[0m
+2026-11-13T07:04:58.0804036Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-13T07:04:58.0804410Z ##[endgroup]
+2026-11-13T07:04:58.1671355Z info: downloading installer
+2026-11-13T07:04:59.4401465Z info: downloading https://releases.lean-lang.org/lean4/v4.34.1/lean-4.34.1-linux.tar.zst
+2026-11-13T07:05:03.0697660Z info: installing /home/runner/.elan/toolchains/leanprover--lean4---v4.34.1
+2026-11-13T07:05:10.4145744Z 
+2026-11-13T07:05:10.4531530Z leanprover/lean4:v4.34.1 installed - Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)
+2026-11-13T07:05:10.4532107Z 
+2026-11-13T07:05:10.4585168Z ##[group]Run python3 - <<'PYTHON'
+2026-11-13T07:05:10.4585516Z [36;1mpython3 - <<'PYTHON'[0m
+2026-11-13T07:05:10.4585797Z [36;1mimport json, subprocess, sys[0m
+2026-11-13T07:05:10.4586095Z [36;1mfrom pathlib import Path[0m
+2026-11-13T07:05:10.4586433Z [36;1msys.path.insert(0, str(Path('project').resolve()))[0m
+2026-11-13T07:05:10.4587092Z [36;1mfrom tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH[0m
+2026-11-13T07:05:10.4587593Z [36;1mfrom tools.quality.check_reviewed_prs import closure[0m
+2026-11-13T07:05:10.4588178Z [36;1mroots = json.loads(Path('project/verification/knutsen-localization/targets.json').read_text())[0m
+2026-11-13T07:05:10.4588701Z [36;1m_, _, native = closure(Path('project'), roots)[0m
+2026-11-13T07:05:10.4589117Z [36;1mwith BuildLock(DEFAULT_BUILD_LOCK_PATH, 'knutsen-cache') as lock:[0m
+2026-11-13T07:05:10.4589602Z [36;1m    subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],[0m
+2026-11-13T07:05:10.4590077Z [36;1m        cwd='mathlib', check=True, pass_fds=(lock.fileno(),))[0m
+2026-11-13T07:05:10.4590432Z [36;1mPYTHON[0m
+2026-11-13T07:05:10.4615138Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-13T07:05:10.4615499Z ##[endgroup]
+2026-11-13T07:05:11.6401687Z info: plausible: cloning https://github.com/leanprover-community/plausible
+2026-11-13T07:05:12.1673777Z info: plausible: checking out revision '118aa17ee84656b8bd727fef7c458ee8c833385c'
+2026-11-13T07:05:12.1824377Z info: LeanSearchClient: cloning https://github.com/leanprover-community/LeanSearchClient
+2026-11-13T07:05:12.6577548Z info: LeanSearchClient: checking out revision 'ddf04cf3949fa556442341e87d47f9f6e6074707'
+2026-11-13T07:05:12.6727651Z info: importGraph: cloning https://github.com/leanprover-community/import-graph
+2026-11-13T07:05:13.3157919Z info: importGraph: checking out revision 'e928b72544873815af278d38681b31c0293588e3'
+2026-11-13T07:05:13.3367149Z info: proofwidgets: cloning https://github.com/leanprover-community/ProofWidgets4
+2026-11-13T07:05:14.2554101Z info: proofwidgets: checking out revision '106ff4fafc74ef4ac99d81dbf3ab399118f497a5'
+2026-11-13T07:05:14.8891095Z info: aesop: cloning https://github.com/leanprover-community/aesop
+2026-11-13T07:05:15.7785155Z info: aesop: checking out revision '355695d523e41d0554926416cba2a2b3544fbbc9'
+2026-11-13T07:05:15.7991488Z info: Qq: cloning https://github.com/leanprover-community/quote4
+2026-11-13T07:05:16.6292179Z info: Qq: checking out revision '6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259'
+2026-11-13T07:05:16.6765435Z info: batteries: cloning https://github.com/leanprover-community/batteries
+2026-11-13T07:05:19.6730701Z info: batteries: checking out revision 'f2effa3d803fda822b1f97b806c47cf2adfbcbc2'
+2026-11-13T07:05:19.7122001Z info: Cli: cloning https://github.com/leanprover/lean4-cli
+2026-11-13T07:05:20.2406356Z info: Cli: checking out revision 'e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204'
+2026-11-13T07:05:20.6620688Z ✔ [1/12] Built Cache.Cli (337ms)
+2026-11-13T07:05:20.7608365Z ✔ [5/42] Built Cache.Lean (395ms)
+2026-11-13T07:05:20.8601155Z ✔ [6/42] Built Cache.Cli:c.o (181ms)
+2026-11-13T07:05:20.9602208Z ✔ [7/42] Built Cache.Lean:c.o (213ms)
+2026-11-13T07:05:21.0625624Z ✔ [8/42] Built Cache.Env (401ms)
+2026-11-13T07:05:21.3632487Z ✔ [9/42] Built Cache.Env:c.o (216ms)
+2026-11-13T07:05:21.6636227Z ✔ [10/42] Built Cache.Infra (529ms)
+2026-11-13T07:05:21.7639171Z ✔ [11/42] Built Batteries.Tactic.OpenPrivate (1.1s)
+2026-11-13T07:05:21.8640198Z ✔ [12/42] Built Cache.Infra:c.o (250ms)
+2026-11-13T07:05:23.1654924Z ✔ [13/42] Built Batteries.Tactic.OpenPrivate:c.o (1.4s)
+2026-11-13T07:05:23.2656181Z ✔ [14/42] Built Cache.IO (1.5s)
+2026-11-13T07:05:24.1663344Z ✔ [15/42] Built Cache.Hashing (843ms)
+2026-11-13T07:05:24.7672023Z ✔ [16/42] Built Cache.Hashing:c.o (590ms)
+2026-11-13T07:05:24.9674234Z ✔ [17/42] Built Cache.IO:c.o (1.6s)
+2026-11-13T07:05:26.1687845Z ✔ [18/42] Built Cache.Requests (2.0s)
+2026-11-13T07:05:26.7708399Z ✔ [19/42] Built Cache.Marker (600ms)
+2026-11-13T07:05:26.9703036Z ✔ [20/42] Built Cache.Marker:c.o (182ms)
+2026-11-13T07:05:27.5802004Z ✔ [21/42] Built Cache.Upload.Dest (859ms)
+2026-11-13T07:05:27.7804014Z ✔ [22/42] Built Cache.Query (989ms)
+2026-11-13T07:05:27.7817808Z ✔ [23/42] Built Cache.Upload.Dest:c.o (176ms)
+2026-11-13T07:05:28.1861703Z ✔ [24/42] Built Cache.Query:c.o (424ms)
+2026-11-13T07:05:28.5898364Z ✔ [25/42] Built Cache.Upload.Rclone (944ms)
+2026-11-13T07:05:28.6888394Z ✔ [26/42] Built Cache.Upload.Curl (916ms)
+2026-11-13T07:05:28.8878447Z ✔ [27/42] Built Cache.Upload.Rclone:c.o (278ms)
+2026-11-13T07:05:28.9888293Z ✔ [28/42] Built Cache.Upload.Curl:c.o (284ms)
+2026-11-13T07:05:29.1898411Z ✔ [29/42] Built Cache.Warning (1.0s)
+2026-11-13T07:05:29.5883035Z ✔ [30/42] Built Cache.Requests:c.o (3.4s)
+2026-11-13T07:05:29.5884192Z ✔ [31/42] Built Cache.Warning:c.o (341ms)
+2026-11-13T07:05:29.7888512Z ✔ [32/42] Built Cache.Upload.Azure (908ms)
+2026-11-13T07:05:29.8883344Z ✔ [33/42] Built Cache.Upload.S3 (956ms)
+2026-11-13T07:05:29.8885211Z ✔ [34/42] Built Cache.Upload.Azure:c.o (168ms)
+2026-11-13T07:05:30.1889860Z ✔ [35/42] Built Cache.Upload.S3:c.o (318ms)
+2026-11-13T07:05:30.4892832Z ✔ [36/42] Built Cache.Upload.Defs (603ms)
+2026-11-13T07:05:30.6896165Z ✔ [37/42] Built Cache.Upload.Defs:c.o (159ms)
+2026-11-13T07:05:31.0901725Z ✔ [38/42] Built Cache.Upload (562ms)
+2026-11-13T07:05:31.1902792Z ✔ [39/42] Built Cache.Upload:c.o (117ms)
+2026-11-13T07:05:32.1904017Z ✔ [40/42] Built Cache.Main (1.1s)
+2026-11-13T07:05:33.0915254Z ✔ [41/42] Built Cache.Main:c.o (921ms)
+2026-11-13T07:05:33.8952879Z ✔ [42/42] Built cache:exe (784ms)
+2026-11-13T07:05:36.6715870Z Current branch: HEAD
+2026-11-13T07:05:36.6716450Z Using cache from origin: (some leanprover-community/mathlib4)
+2026-11-13T07:05:36.6717672Z Attempting to download 3081 file(s) from leanprover-community/mathlib4 cache at https://cache.mathlib.org/mathlib4-master
+2026-11-13T07:05:36.8454289Z 
+2026-11-13T07:05:36.9468379Z Downloaded: 1 file(s) [attempted 1/3081 = 0%, 58 KB/s], Decompressed: 0
+2026-11-13T07:05:37.0488335Z Downloaded: 63 file(s) [attempted 63/3081 = 2%, 398 KB/s], Decompressed: 12
+2026-11-13T07:05:37.1565532Z Downloaded: 193 file(s) [attempted 193/3081 = 6%, 3581 KB/s], Decompressed: 24
+2026-11-13T07:05:37.2571126Z Downloaded: 272 file(s) [attempted 272/3081 = 8%, 166 KB/s], Decompressed: 24
+2026-11-13T07:05:37.3651168Z Downloaded: 373 file(s) [attempted 373/3081 = 12%, 871 KB/s], Decompressed: 92
+2026-11-13T07:05:37.4812626Z Downloaded: 474 file(s) [attempted 474/3081 = 15%, 1940 KB/s], Decompressed: 92
+2026-11-13T07:05:37.5860945Z Downloaded: 580 file(s) [attempted 580/3081 = 18%, 2735 KB/s], Decompressed: 92
+2026-11-13T07:05:37.6980396Z Downloaded: 686 file(s) [attempted 686/3081 = 22%, 497 KB/s], Decompressed: 92
+2026-11-13T07:05:37.8038378Z Downloaded: 802 file(s) [attempted 802/3081 = 26%, 4387 KB/s], Decompressed: 92
+2026-11-13T07:05:37.9093674Z Downloaded: 929 file(s) [attempted 929/3081 = 30%, 236 KB/s], Decompressed: 92
+2026-11-13T07:05:38.0324425Z Downloaded: 1030 file(s) [attempted 1030/3081 = 33%, 399 KB/s], Decompressed: 92
+2026-11-13T07:05:38.1318464Z Downloaded: 1134 file(s) [attempted 1134/3081 = 36%, 1518 KB/s], Decompressed: 325
+2026-11-13T07:05:38.2473126Z Downloaded: 1208 file(s) [attempted 1208/3081 = 39%, 297 KB/s], Decompressed: 325
+2026-11-13T07:05:38.3495527Z Downloaded: 1314 file(s) [attempted 1314/3081 = 42%, 574 KB/s], Decompressed: 325
+2026-11-13T07:05:38.4505156Z Downloaded: 1427 file(s) [attempted 1427/3081 = 46%, 429 KB/s], Decompressed: 325
+2026-11-13T07:05:38.5503827Z Downloaded: 1571 file(s) [attempted 1571/3081 = 50%, 201 KB/s], Decompressed: 325
+2026-11-13T07:05:38.6518209Z Downloaded: 1702 file(s) [attempted 1702/3081 = 55%, 377 KB/s], Decompressed: 325
+2026-11-13T07:05:38.7551444Z Downloaded: 1829 file(s) [attempted 1829/3081 = 59%, 2953 KB/s], Decompressed: 325
+2026-11-13T07:05:38.8623931Z Downloaded: 1949 file(s) [attempted 1949/3081 = 63%, 4078 KB/s], Decompressed: 325
+2026-11-13T07:05:38.9692178Z Downloaded: 2064 file(s) [attempted 2064/3081 = 66%, 984 KB/s], Decompressed: 325
+2026-11-13T07:05:39.0737286Z Downloaded: 2182 file(s) [attempted 2182/3081 = 70%, 1168 KB/s], Decompressed: 325
+2026-11-13T07:05:39.1753472Z Downloaded: 2290 file(s) [attempted 2290/3081 = 74%, 467 KB/s], Decompressed: 325
+2026-11-13T07:05:39.2828518Z Downloaded: 2396 file(s) [attempted 2396/3081 = 77%, 1903 KB/s], Decompressed: 325
+2026-11-13T07:05:39.3838689Z Downloaded: 2487 file(s) [attempted 2487/3081 = 80%, 1477 KB/s], Decompressed: 325
+2026-11-13T07:05:39.4866042Z Downloaded: 2591 file(s) [attempted 2591/3081 = 84%, 93 KB/s], Decompressed: 325
+2026-11-13T07:05:39.5908242Z Downloaded: 2730 file(s) [attempted 2730/3081 = 88%, 5419 KB/s], Decompressed: 325
+2026-11-13T07:05:39.6896127Z Downloaded: 2860 file(s) [attempted 2860/3081 = 92%, 1451 KB/s], Decompressed: 325
+2026-11-13T07:05:39.7660501Z Downloaded: 2980 file(s) [attempted 2980/3081 = 96%, 188 KB/s], Decompressed: 325
+2026-11-13T07:05:39.7661691Z Downloaded: 3081 file(s) [attempted 3081/3081 = 100%, 188 KB/s], Decompressed: 325
+2026-11-13T07:05:47.1286560Z Decompressed 3081 file(s)
+2026-11-13T07:05:47.1287169Z Already decompressed 3081 file(s)
+2026-11-13T07:05:47.2122688Z ##[group]Run python3 - <<'PYTHON'
+2026-11-13T07:05:47.2123041Z [36;1mpython3 - <<'PYTHON'[0m
+2026-11-13T07:05:47.2123312Z [36;1mimport json, subprocess, sys[0m
+2026-11-13T07:05:47.2123605Z [36;1mfrom pathlib import Path[0m
+2026-11-13T07:05:47.2123943Z [36;1mfrom tools.quality.check_reviewed_prs import closure[0m
+2026-11-13T07:05:47.2124469Z [36;1mroots = json.loads(Path('verification/knutsen-localization/targets.json').read_text())[0m
+2026-11-13T07:05:47.2125179Z [36;1mowners, _, _ = closure(Path.cwd(), roots)[0m
+2026-11-13T07:05:47.2125600Z [36;1mcommand = [sys.executable, 'tools/quality/check_clifford_dirac.py',[0m
+2026-11-13T07:05:47.2126109Z [36;1m           '--mathlib-root', '../mathlib', '--output', '../knutsen-report'][0m
+2026-11-13T07:05:47.2126490Z [36;1mfor module in owners:[0m
+2026-11-13T07:05:47.2126763Z [36;1m    command += ['--target', module][0m
+2026-11-13T07:05:47.2127296Z [36;1msubprocess.run(command, check=True)[0m
+2026-11-13T07:05:47.2127730Z [36;1mreport = json.loads(Path('../knutsen-report/report.json').read_text())[0m
+2026-11-13T07:05:47.2128280Z [36;1mwarnings = [m for m in report['modules'] if m['module'] in roots and m['warnings']][0m
+2026-11-13T07:05:47.2128692Z [36;1mif warnings:[0m
+2026-11-13T07:05:47.2128992Z [36;1m    raise SystemExit(f'New owner warnings: {warnings}')[0m
+2026-11-13T07:05:47.2129321Z [36;1mPYTHON[0m
+2026-11-13T07:05:47.2150053Z shell: /usr/bin/bash -e {0}
+2026-11-13T07:05:47.2150318Z ##[endgroup]
+2026-11-13T07:05:47.6000538Z Waiting for shared build lock
+2026-11-13T07:05:48.9060664Z CHECK InfoGeometry.Core.IdempotencyDefect exit 0 warnings 0
+2026-11-13T07:05:51.9412544Z CHECK InfoGeometry.Algebra.FiniteSpinAlgebra exit 0 warnings 0
+2026-11-13T07:05:55.1824869Z CHECK InfoGeometry.Core.PeirceDecomposition exit 0 warnings 1
+2026-11-13T07:05:59.0260766Z CHECK InfoGeometry.Core.PeirceCompressionDefect exit 0 warnings 0
+2026-11-13T07:06:02.0585172Z CHECK InfoGeometry.Core.PeirceCompressionCStar exit 0 warnings 0
+2026-11-13T07:06:04.5837196Z CHECK InfoGeometry.OperatorAlgebra.ProjectionLocalization exit 0 warnings 0
+2026-11-13T07:06:07.5019368Z CHECK InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace exit 0 warnings 0
+2026-11-13T07:06:10.2291394Z CHECK InfoGeometry.OperatorAlgebra.NoncommutativeKrausChannel exit 0 warnings 0
+2026-11-13T07:06:12.5479852Z CHECK InfoGeometry.Algebra.NonCommutativeIsometry exit 0 warnings 0
+2026-11-13T07:06:15.6386820Z CHECK InfoGeometry.OperatorAlgebra.IsometryCornerLocalization exit 0 warnings 0
+2026-11-13T07:06:18.5903083Z CHECK InfoGeometry.OperatorAlgebra.FiniteOperatorFrame exit 0 warnings 0
+2026-11-13T07:06:22.3394880Z CHECK InfoGeometry.Clifford.OperatorValuedJones exit 0 warnings 1
+2026-11-13T07:06:33.7675077Z CHECK InfoGeometry.Clifford.WeylFrameMasks exit 0 warnings 0
+2026-11-13T07:06:35.3755759Z CHECK InfoGeometry.Analysis.PorosityIteration exit 0 warnings 0
+2026-11-13T07:06:37.3386233Z CHECK InfoGeometry.Analysis.MetricPorosity exit 0 warnings 0
+2026-11-13T07:06:38.9054981Z CHECK InfoGeometry.Analysis.MultiscaleLocalization exit 0 warnings 0
+2026-11-13T07:07:17.4356748Z AXIOM AUDIT {'InfoGeometry.Core.IdempotencyDefect': 23, 'InfoGeometry.Algebra.FiniteSpinAlgebra': 86, 'InfoGeometry.Core.PeirceDecomposition': 60, 'InfoGeometry.Core.PeirceCompressionDefect': 62, 'InfoGeometry.Core.PeirceCompressionCStar': 5, 'InfoGeometry.OperatorAlgebra.ProjectionLocalization': 11, 'InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace': 20, 'InfoGeometry.OperatorAlgebra.NoncommutativeKrausChannel': 18, 'InfoGeometry.Algebra.NonCommutativeIsometry': 8, 'InfoGeometry.OperatorAlgebra.IsometryCornerLocalization': 44, 'InfoGeometry.OperatorAlgebra.FiniteOperatorFrame': 31, 'InfoGeometry.Clifford.OperatorValuedJones': 54, 'InfoGeometry.Clifford.WeylFrameMasks': 31, 'InfoGeometry.Analysis.PorosityIteration': 21, 'InfoGeometry.Analysis.MetricPorosity': 11, 'InfoGeometry.Analysis.MultiscaleLocalization': 5} ['[propext, Classical.choice, Quot.sound]']
+2026-11-13T07:07:17.7268654Z PASSED
+2026-11-13T07:07:17.7485554Z ##[group]Run python3 - <<'PYTHON'
+2026-11-13T07:07:17.7485929Z [36;1mpython3 - <<'PYTHON'[0m
+2026-11-13T07:07:17.7486198Z [36;1mimport json, subprocess, sys[0m
+2026-11-13T07:07:17.7486490Z [36;1mfrom pathlib import Path[0m
+2026-11-13T07:07:17.7486860Z [36;1mfrom tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH[0m
+2026-11-13T07:07:17.7487785Z [36;1mroots = json.loads(Path('verification/knutsen-localization/targets.json').read_text())[0m
+2026-11-13T07:07:17.7488537Z [36;1mreport = Path('../knutsen-report')[0m
+2026-11-13T07:07:17.7488951Z [36;1mwith BuildLock(DEFAULT_BUILD_LOCK_PATH, 'knutsen-static') as lock:[0m
+2026-11-13T07:07:17.7489346Z [36;1m    for module in roots:[0m
+2026-11-13T07:07:17.7489668Z [36;1m        source = 'lean/' + module.replace('.', '/') + '.lean'[0m
+2026-11-13T07:07:17.7490015Z [36;1m        for kind, command in [[0m
+2026-11-13T07:07:17.7490573Z [36;1m            ('placeholder', [sys.executable, 'tools/quality/placeholder_audit.py', '--root', source, '--strict']),[0m
+2026-11-13T07:07:17.7491307Z [36;1m            ('semantic', [sys.executable, 'tools/quality/semantic_vacuity_gate.py', source, '--fail-on', 'error'])]:[0m
+2026-11-13T07:07:17.7491930Z [36;1m            result = subprocess.run(command, text=True, stdout=subprocess.PIPE,[0m
+2026-11-13T07:07:17.7492442Z [36;1m                stderr=subprocess.STDOUT, pass_fds=(lock.fileno(),))[0m
+2026-11-13T07:07:17.7492897Z [36;1m            (report / (module + '.' + kind + '.log')).write_text(result.stdout)[0m
+2026-11-13T07:07:17.7493292Z [36;1m            print(result.stdout)[0m
+2026-11-13T07:07:17.7493593Z [36;1m            result.check_returncode()[0m
+2026-11-13T07:07:17.7493873Z [36;1mPYTHON[0m
+2026-11-13T07:07:17.7515232Z shell: /usr/bin/bash -e {0}
+2026-11-13T07:07:17.7515508Z ##[endgroup]
+2026-11-13T07:07:18.7945390Z # Lean Placeholder Trust Audit
+2026-11-13T07:07:18.7946089Z 
+2026-11-13T07:07:18.7946250Z Generated: `2026-11-13T07:07:17.859526+00:00`
+2026-11-13T07:07:18.7946508Z 
+2026-11-13T07:07:18.7946611Z - Modules scanned: **1**
+2026-11-13T07:07:18.7947099Z - Modules with findings: **0**
+2026-11-13T07:07:18.7947394Z - Total findings: **0** (hard=0, soft=0, advisory=0)
+2026-11-13T07:07:18.7947617Z 
+2026-11-13T07:07:18.7947740Z No placeholder-trust findings detected.
+2026-11-13T07:07:18.7947940Z 
+2026-11-13T07:07:18.7947944Z 
+2026-11-13T07:07:18.7948041Z Semantic vacuity audit
+2026-11-13T07:07:18.7948263Z ======================
+2026-11-13T07:07:18.7948613Z roots: lean/InfoGeometry/OperatorAlgebra/ProjectionLocalization.lean
+2026-11-13T07:07:18.7949334Z patterns: /home/runner/work/info-geometry-lean/info-geometry-lean/project/tools/quality/semantic_vacuity_patterns.json
+2026-11-13T07:07:18.7949884Z semantic_vacuity: 0
+2026-11-13T07:07:18.7950012Z 
+2026-11-13T07:07:18.7950123Z # Lean Placeholder Trust Audit
+2026-11-13T07:07:18.7950285Z 
+2026-11-13T07:07:18.7950404Z Generated: `2026-11-13T07:07:18.007302+00:00`
+2026-11-13T07:07:18.7950604Z 
+2026-11-13T07:07:18.7950704Z - Modules scanned: **1**
+2026-11-13T07:07:18.7950953Z - Modules with findings: **1**
+2026-11-13T07:07:18.7951241Z - Total findings: **2** (hard=0, soft=2, advisory=0)
+2026-11-13T07:07:18.7951462Z 
+2026-11-13T07:07:18.7951649Z ## `InfoGeometry.OperatorAlgebra.IsometryCornerLocalization`
+2026-11-13T07:07:18.7952149Z - path: `lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean`
+2026-11-13T07:07:18.7952564Z - findings: 2 (hard=0, soft=2, advisory=0)
+2026-11-13T07:07:18.7952752Z 
+2026-11-13T07:07:18.7952983Z - L124: **SOFT** `skeletal-proof` in `theorem embedding_compression`
+2026-11-13T07:07:18.7953417Z   - proof appears to be tactic-automation-only or skeletal
+2026-11-13T07:07:18.7953905Z   - `122:     (isometryCornerEquiv hv (star x)).val = star (isometryCornerEquiv hv x).val :=`
+2026-11-13T07:07:18.7954395Z - L144: **SOFT** `skeletal-proof` in `theorem compression_star`
+2026-11-13T07:07:18.7954775Z   - proof appears to be tactic-automation-only or skeletal
+2026-11-13T07:07:18.7955621Z   - `142:     compression v (rangeProjection v * s * rangeProjection v) = compression v s := by`
+2026-11-13T07:07:18.7955975Z 
+2026-11-13T07:07:18.7955979Z 
+2026-11-13T07:07:18.7955982Z 
+2026-11-13T07:07:18.7956083Z Semantic vacuity audit
+2026-11-13T07:07:18.7956304Z ======================
+2026-11-13T07:07:18.7956637Z roots: lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean
+2026-11-13T07:07:18.7957502Z patterns: /home/runner/work/info-geometry-lean/info-geometry-lean/project/tools/quality/semantic_vacuity_patterns.json
+2026-11-13T07:07:18.7958222Z semantic_vacuity: 4
+2026-11-13T07:07:18.7958433Z warning: 4
+2026-11-13T07:07:18.7958629Z trivial_surface: 4
+2026-11-13T07:07:18.7959152Z   - lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean:61 [warning/trivial_surface] isometryEmbedding_apply: rfl
+2026-11-13T07:07:18.7960017Z   - lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean:64 [warning/trivial_surface] compression_apply: rfl
+2026-11-13T07:07:18.7960860Z   - lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean:126 [warning/trivial_surface] embedding_compression: by
+2026-11-13T07:07:18.7961681Z   - lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean:146 [warning/trivial_surface] compression_star: by
+2026-11-13T07:07:18.7962131Z 
+2026-11-13T07:07:18.7962238Z # Lean Placeholder Trust Audit
+2026-11-13T07:07:18.7962408Z 
+2026-11-13T07:07:18.7962520Z Generated: `2026-11-13T07:07:18.154287+00:00`
+2026-11-13T07:07:18.7962716Z 
+2026-11-13T07:07:18.7962816Z - Modules scanned: **1**
+2026-11-13T07:07:18.7963053Z - Modules with findings: **1**
+2026-11-13T07:07:18.7963338Z - Total findings: **6** (hard=0, soft=6, advisory=0)
+2026-11-13T07:07:18.7963550Z 
+2026-11-13T07:07:18.7963712Z ## `InfoGeometry.OperatorAlgebra.FiniteOperatorFrame`
+2026-11-13T07:07:18.7964131Z - path: `lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean`
+2026-11-13T07:07:18.7964511Z - findings: 6 (hard=0, soft=6, advisory=0)
+2026-11-13T07:07:18.7964703Z 
+2026-11-13T07:07:18.7964882Z - L67: **SOFT** `skeletal-proof` in `theorem matrixMultiplier_one`
+2026-11-13T07:07:18.7965282Z   - proof appears to be tactic-automation-only or skeletal
+2026-11-13T07:07:18.7965763Z   - `65:   simp only [Matrix.add_apply, matrixMultiplier_apply, Pi.add_apply, mul_add, add_mul,`
+2026-11-13T07:07:18.7966251Z - L129: **SOFT** `skeletal-proof` in `theorem multiplier_const`
+2026-11-13T07:07:18.7966635Z   - proof appears to be tactic-automation-only or skeletal
+2026-11-13T07:07:18.7967426Z   - `127: def multiplier (φ b : ι → B) : B :=`
+2026-11-13T07:07:18.7967793Z - L133: **SOFT** `skeletal-proof` in `theorem multiplier_add`
+2026-11-13T07:07:18.7968188Z   - proof appears to be tactic-automation-only or skeletal
+2026-11-13T07:07:18.7968621Z   - `131: theorem multiplier_const (φ : ι → B) (x : B) :`
+2026-11-13T07:07:18.7968988Z - L137: **SOFT** `skeletal-proof` in `theorem multiplier_star`
+2026-11-13T07:07:18.7969356Z   - proof appears to be tactic-automation-only or skeletal
+2026-11-13T07:07:18.7969836Z   - `135:     multiplier φ (b + c) = multiplier φ b + multiplier φ c := by`
+2026-11-13T07:07:18.7970303Z - L150: **SOFT** `skeletal-proof` in `theorem multiplier_indicator`
+2026-11-13T07:07:18.7970716Z   - proof appears to be tactic-automation-only or skeletal
+2026-11-13T07:07:18.7971036Z   - `148:     abel`
+2026-11-13T07:07:18.7971297Z - L203: **SOFT** `skeletal-proof` in `theorem trace_gram`
+2026-11-13T07:07:18.7971651Z   - proof appears to be tactic-automation-only or skeletal
+2026-11-13T07:07:18.7971978Z   - `201:   intro k hk`
+2026-11-13T07:07:18.7972119Z 
+2026-11-13T07:07:18.7972123Z 
+2026-11-13T07:07:18.7972127Z 
+2026-11-13T07:07:18.7972220Z Semantic vacuity audit
+2026-11-13T07:07:18.7972438Z ======================
+2026-11-13T07:07:18.7972746Z roots: lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean
+2026-11-13T07:07:18.7973508Z patterns: /home/runner/work/info-geometry-lean/info-geometry-lean/project/tools/quality/semantic_vacuity_patterns.json
+2026-11-13T07:07:18.7974086Z semantic_vacuity: 7
+2026-11-13T07:07:18.7974609Z warning: 7
+2026-11-13T07:07:18.7974818Z trivial_surface: 7
+2026-11-13T07:07:18.7975312Z   - lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean:68 [warning/trivial_surface] matrixMultiplier_one: by
+2026-11-13T07:07:18.7976085Z   - lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean:131 [warning/trivial_surface] multiplier_const: rfl
+2026-11-13T07:07:18.7977074Z   - lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean:134 [warning/trivial_surface] multiplier_add: by
+2026-11-13T07:07:18.7977987Z   - lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean:138 [warning/trivial_surface] multiplier_star: by
+2026-11-13T07:07:18.7978742Z   - lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean:152 [warning/trivial_surface] multiplier_indicator: by
+2026-11-13T07:07:18.7979481Z   - lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean:168 [warning/trivial_surface] gram_apply: rfl
+2026-11-13T07:07:18.7980195Z   - lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean:206 [warning/trivial_surface] trace_gram: rfl
+2026-11-13T07:07:18.7980592Z 
+2026-11-13T07:07:18.7980694Z # Lean Placeholder Trust Audit
+2026-11-13T07:07:18.7980863Z 
+2026-11-13T07:07:18.7980977Z Generated: `2026-11-13T07:07:18.299938+00:00`
+2026-11-13T07:07:18.7981177Z 
+2026-11-13T07:07:18.7981273Z - Modules scanned: **1**
+2026-11-13T07:07:18.7981514Z - Modules with findings: **0**
+2026-11-13T07:07:18.7981811Z - Total findings: **0** (hard=0, soft=0, advisory=0)
+2026-11-13T07:07:18.7982025Z 
+2026-11-13T07:07:18.7982148Z No placeholder-trust findings detected.
+2026-11-13T07:07:18.7982333Z 
+2026-11-13T07:07:18.7982336Z 
+2026-11-13T07:07:18.7982433Z Semantic vacuity audit
+2026-11-13T07:07:18.7982648Z ======================
+2026-11-13T07:07:18.7982917Z roots: lean/InfoGeometry/Clifford/WeylFrameMasks.lean
+2026-11-13T07:07:18.7983499Z patterns: /home/runner/work/info-geometry-lean/info-geometry-lean/project/tools/quality/semantic_vacuity_patterns.json
+2026-11-13T07:07:18.7984029Z semantic_vacuity: 2
+2026-11-13T07:07:18.7984262Z warning: 2
+2026-11-13T07:07:18.7984459Z trivial_surface: 2
+2026-11-13T07:07:18.7984897Z   - lean/InfoGeometry/Clifford/WeylFrameMasks.lean:126 [warning/trivial_surface] card_balancedSelection: by
+2026-11-13T07:07:18.7985586Z   - lean/InfoGeometry/Clifford/WeylFrameMasks.lean:129 [warning/trivial_surface] card_parallelSelection: by
+2026-11-13T07:07:18.7985970Z 
+2026-11-13T07:07:18.7986067Z # Lean Placeholder Trust Audit
+2026-11-13T07:07:18.7986228Z 
+2026-11-13T07:07:18.7986341Z Generated: `2026-11-13T07:07:18.441921+00:00`
+2026-11-13T07:07:18.7986537Z 
+2026-11-13T07:07:18.7986624Z - Modules scanned: **1**
+2026-11-13T07:07:18.7986863Z - Modules with findings: **0**
+2026-11-13T07:07:18.7987359Z - Total findings: **0** (hard=0, soft=0, advisory=0)
+2026-11-13T07:07:18.7987563Z 
+2026-11-13T07:07:18.7987679Z No placeholder-trust findings detected.
+2026-11-13T07:07:18.7987863Z 
+2026-11-13T07:07:18.7987869Z 
+2026-11-13T07:07:18.7987964Z Semantic vacuity audit
+2026-11-13T07:07:18.7988187Z ======================
+2026-11-13T07:07:18.7988461Z roots: lean/InfoGeometry/Analysis/PorosityIteration.lean
+2026-11-13T07:07:18.7989054Z patterns: /home/runner/work/info-geometry-lean/info-geometry-lean/project/tools/quality/semantic_vacuity_patterns.json
+2026-11-13T07:07:18.7989571Z semantic_vacuity: 0
+2026-11-13T07:07:18.7989703Z 
+2026-11-13T07:07:18.7989799Z # Lean Placeholder Trust Audit
+2026-11-13T07:07:18.7989959Z 
+2026-11-13T07:07:18.7990069Z Generated: `2026-11-13T07:07:18.581312+00:00`
+2026-11-13T07:07:18.7990253Z 
+2026-11-13T07:07:18.7990350Z - Modules scanned: **1**
+2026-11-13T07:07:18.7990581Z - Modules with findings: **0**
+2026-11-13T07:07:18.7990842Z - Total findings: **0** (hard=0, soft=0, advisory=0)
+2026-11-13T07:07:18.7991036Z 
+2026-11-13T07:07:18.7991151Z No placeholder-trust findings detected.
+2026-11-13T07:07:18.7991331Z 
+2026-11-13T07:07:18.7991334Z 
+2026-11-13T07:07:18.7991422Z Semantic vacuity audit
+2026-11-13T07:07:18.7991629Z ======================
+2026-11-13T07:07:18.7992027Z roots: lean/InfoGeometry/Analysis/MetricPorosity.lean
+2026-11-13T07:07:18.7992587Z patterns: /home/runner/work/info-geometry-lean/info-geometry-lean/project/tools/quality/semantic_vacuity_patterns.json
+2026-11-13T07:07:18.7993103Z semantic_vacuity: 0
+2026-11-13T07:07:18.7993223Z 
+2026-11-13T07:07:18.7993325Z # Lean Placeholder Trust Audit
+2026-11-13T07:07:18.7993470Z 
+2026-11-13T07:07:18.7993577Z Generated: `2026-11-13T07:07:18.721379+00:00`
+2026-11-13T07:07:18.7993750Z 
+2026-11-13T07:07:18.7993851Z - Modules scanned: **1**
+2026-11-13T07:07:18.7994206Z - Modules with findings: **0**
+2026-11-13T07:07:18.7994468Z - Total findings: **0** (hard=0, soft=0, advisory=0)
+2026-11-13T07:07:18.7994672Z 
+2026-11-13T07:07:18.7994783Z No placeholder-trust findings detected.
+2026-11-13T07:07:18.7994970Z 
+2026-11-13T07:07:18.7994973Z 
+2026-11-13T07:07:18.7995072Z Semantic vacuity audit
+2026-11-13T07:07:18.7995288Z ======================
+2026-11-13T07:07:18.7995615Z roots: lean/InfoGeometry/Analysis/MultiscaleLocalization.lean
+2026-11-13T07:07:18.7996219Z patterns: /home/runner/work/info-geometry-lean/info-geometry-lean/project/tools/quality/semantic_vacuity_patterns.json
+2026-11-13T07:07:18.7996733Z semantic_vacuity: 0
+2026-11-13T07:07:18.7997059Z 
+2026-11-13T07:07:18.8064456Z ##[group]Run actions/upload-artifact@v4
+2026-11-13T07:07:18.8064780Z with:
+2026-11-13T07:07:18.8065010Z   name: knutsen-localization-evidence
+2026-11-13T07:07:18.8065647Z   path: knutsen-report/report.json
+knutsen-report/evidence-sha256.json
+knutsen-report/src/CliffordDiracAudit.lean
+knutsen-report/*.log
+
+2026-11-13T07:07:18.8066275Z   if-no-files-found: warn
+2026-11-13T07:07:18.8066520Z   compression-level: 6
+2026-11-13T07:07:18.8066750Z   overwrite: false
+2026-11-13T07:07:18.8067235Z   include-hidden-files: false
+2026-11-13T07:07:18.8067488Z ##[endgroup]
+2026-11-13T07:07:19.0031052Z (node:3386) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-13T07:07:19.0031766Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-13T07:07:19.0155333Z With the provided path, there will be 34 files uploaded
+2026-11-13T07:07:19.0162784Z Artifact name is valid!
+2026-11-13T07:07:19.0163637Z Root directory input is valid!
+2026-11-13T07:07:19.3686076Z Beginning upload of artifact content to blob storage
+2026-11-13T07:07:19.4298715Z (node:3386) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-13T07:07:19.6940300Z Uploaded bytes 19829
+2026-11-13T07:07:19.7531640Z Finished uploading artifact content to blob storage!
+2026-11-13T07:07:19.7532658Z SHA256 digest of uploaded artifact zip is 848fa6c5663cf19fbc48a5570ac3bf40ce0d1441f49ab5bdfd5162fc667b91d3
+2026-11-13T07:07:19.7533550Z Finalizing artifact upload
+2026-11-13T07:07:20.1147255Z Artifact knutsen-localization-evidence.zip successfully finalized. Artifact ID 14017786847
+2026-11-13T07:07:20.1148558Z Artifact knutsen-localization-evidence has been successfully uploaded! Final size is 19829 bytes. Artifact ID is 14017786847
+2026-11-13T07:07:20.1154468Z Artifact download URL: https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43383097703/artifacts/14017786847
+2026-11-13T07:07:20.2010828Z Post job cleanup.
+2026-11-13T07:07:20.3198676Z (node:3410) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-13T07:07:20.3199573Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-13T07:07:20.3393148Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/runner/work/info-geometry-lean/info-geometry-lean --files-from manifest.txt --use-compress-program zstdmt
+2026-11-13T07:07:35.1903329Z (node:3410) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-13T07:07:36.1798356Z Sent 0 of 1578676067 (0.0%), 0.0 MBs/sec
+2026-11-13T07:07:37.1755285Z Sent 469762048 of 1578676067 (29.8%), 223.9 MBs/sec
+2026-11-13T07:07:38.1804940Z Sent 603979776 of 1578676067 (38.3%), 191.9 MBs/sec
+2026-11-13T07:07:39.1818852Z Sent 1073741824 of 1578676067 (68.0%), 255.9 MBs/sec
+2026-11-13T07:07:40.1777186Z Sent 1511567203 of 1578676067 (95.7%), 288.1 MBs/sec
+2026-11-13T07:07:40.2654579Z Sent 1578676067 of 1578676067 (100.0%), 295.7 MBs/sec
+2026-11-13T07:07:40.6430545Z Cache saved with key: knutsen-localization-Linux-6111e0bf13d4b0355505ef09f3b4f82e3e3647ef6e6b4135d43ef29af0ee6995
+2026-11-13T07:07:40.6609496Z Post job cleanup.
+2026-11-13T07:07:40.7499751Z [command]/usr/bin/git version
+2026-11-13T07:07:40.7538349Z git version 2.56.0
+2026-11-13T07:07:40.7573831Z Temporarily overriding HOME='/home/runner/work/_temp/7b42c319-ed9a-474d-a836-721c721d3376' before making global git config changes
+2026-11-13T07:07:40.7574605Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-13T07:07:40.7579430Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/info-geometry-lean/info-geometry-lean/mathlib
+2026-11-13T07:07:40.7622342Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-13T07:07:40.7662671Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-13T07:07:40.7934149Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-13T07:07:40.7969066Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-13T07:07:40.8234791Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-13T07:07:40.8273076Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-13T07:07:40.8735880Z Post job cleanup.
+2026-11-13T07:07:40.9698424Z [command]/usr/bin/git version
+2026-11-13T07:07:40.9742281Z git version 2.56.0
+2026-11-13T07:07:40.9781502Z Temporarily overriding HOME='/home/runner/work/_temp/3c1f810b-a227-4669-9580-7e71a5f1ffa7' before making global git config changes
+2026-11-13T07:07:40.9784078Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-13T07:07:40.9785430Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/info-geometry-lean/info-geometry-lean/project
+2026-11-13T07:07:40.9826627Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-13T07:07:40.9864446Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-13T07:07:41.0216421Z fatal: No url found for submodule path 'external_refs/auto-ontology' in .gitmodules
+2026-11-13T07:07:41.0274248Z ##[warning]The process '/usr/bin/git' failed with exit code 128
+2026-11-13T07:07:41.0407499Z Cleaning up orphan processes
+2026-11-13T07:07:41.0742307Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/cache@v4, actions/checkout@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+

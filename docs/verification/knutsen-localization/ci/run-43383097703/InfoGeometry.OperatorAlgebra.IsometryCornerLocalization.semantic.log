@@ -1,0 +1,11 @@
+Semantic vacuity audit
+======================
+roots: lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean
+patterns: /home/runner/work/info-geometry-lean/info-geometry-lean/project/tools/quality/semantic_vacuity_patterns.json
+semantic_vacuity: 4
+warning: 4
+trivial_surface: 4
+  - lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean:61 [warning/trivial_surface] isometryEmbedding_apply: rfl
+  - lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean:64 [warning/trivial_surface] compression_apply: rfl
+  - lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean:126 [warning/trivial_surface] embedding_compression: by
+  - lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean:146 [warning/trivial_surface] compression_star: by

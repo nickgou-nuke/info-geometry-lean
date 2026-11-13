@@ -1,0 +1,4 @@
+/workspace/scratch/d18a558d1d7d/knutsen-dev/src/InfoGeometry/Analysis/PorosityIteration.lean:6:0: warning: 
+'Mathlib.Data.Real.Basic' has been deprecated: please replace this import by
+
+import Mathlib.Basic.Real.Basic

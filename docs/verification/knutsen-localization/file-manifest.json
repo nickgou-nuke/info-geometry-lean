@@ -1,0 +1,592 @@
+{
+  "schema": "knutsen-selected-evidence.v2",
+  "created_at_utc": "2026-11-13T07:24:01.869604+00:00",
+  "scope": "Selected receipts and preserved intake; excludes this manifest and parent-authored README",
+  "native_status": "passed",
+  "native_origin": {
+    "execution": "fresh GitHub Actions",
+    "source_directory": "knutsen-ci-candidates/run-43383097703",
+    "packaged_directory": "native",
+    "ci": {
+      "run": 43383097703,
+      "job": 131745210917,
+      "artifact": 14017786847,
+      "head_sha": "3f7282ceb5076e16bae8acc696adffd3771494c9",
+      "test_merge_commit": "8e9221d29001ebe80558237992ce9be8a35920af",
+      "artifact_sha256": "848fa6c5663cf19fbc48a5570ac3bf40ce0d1441f49ab5bdfd5162fc667b91d3"
+    },
+    "local_repaired_native_completed": false
+  },
+  "independent_status": "passed",
+  "selected_source_sha256": {
+    "InfoGeometry.Core.IdempotencyDefect": "2d7b8fa580abe148fc70a39f8e1831b5505fb7f6a3920f3a79a0ba35bfee5590",
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+    "InfoGeometry.Core.PeirceDecomposition": "b2426391a1841cbdb35bdef72138b5ab1553508c82c22ea930aa23f164de9bd9",
+    "InfoGeometry.Core.PeirceCompressionDefect": "f2e657ca40ff91a996b503c141c2b1f79b2173204a04aadf7afc8c2013bf7c8d",
+    "InfoGeometry.Core.PeirceCompressionCStar": "609b74f6f9e6153817253c10bcf54e72670424bd17595990c60c7bb5d8b801bd",
+    "InfoGeometry.OperatorAlgebra.ProjectionLocalization": "8cdaa903a48ab3d0605a1e536a4d0f071705a3c9007ff494b8a44b6eed653323",
+    "InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace": "ca56806d3cccde9b983c44a65cfc2e2aa1c95626a56f1149f9e482e6dca306b6",
+    "InfoGeometry.OperatorAlgebra.NoncommutativeKrausChannel": "d11b4db5ae54468ec5972d5f2806f942646abc6b81400537fd6f0115f7df1699",
+    "InfoGeometry.Algebra.NonCommutativeIsometry": "30ecdd565426d485990be480b8d85db305696da870823000efdb9e24927415bb",
+    "InfoGeometry.OperatorAlgebra.IsometryCornerLocalization": "2e2386e14cf832c7a15dfbe69a0c1b64d4a729308e25b42ec0392ad352d7b9fd",
+    "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame": "65ae94daf25a6e36eeeaeea163af5526a3c9a6998bbd7ef637c9330b70145d98",
+    "InfoGeometry.Clifford.OperatorValuedJones": "2e2f78503a9b37400abfdb3e4855efccecc3aeae45c56aa6dd55aa7461c48887",
+    "InfoGeometry.Clifford.WeylFrameMasks": "9738b8591a1513b379dce55ea0231cea861614ae28ad6394cf5699c89c1cda56",
+    "InfoGeometry.Analysis.PorosityIteration": "7a06cca338bcec02e8b19800565b3546a50abd9b86aacf75784d3deadc7cd260",
+    "InfoGeometry.Analysis.MetricPorosity": "13ce57fb3645d89bb616f59db00ab3ef9ca78e040e69e6ba461db31540fad064",
+    "InfoGeometry.Analysis.MultiscaleLocalization": "bd6a126f4fe633ed3029aa6055a3eafe667ad0bfb163d3eeacd68258411f7f3b"
+  },
+  "audited_declarations": 490,
+  "files": {
+    "intake.txt": {
+      "sha256": "bd31543386a90075f8bea22af36bdc630983313f5148eb6e2de6f2bfdfdb7db0",
+      "bytes": 27681,
+      "action": "preserved"
+    },
+    "ci/ci-audit.json": {
+      "sha256": "511385f5e7a0d6a0e20140a2b4f69dbaf89938617b65198fd9edbff547911736",
+      "bytes": 8464,
+      "source": "knutsen-ci-candidates/ci-audit.json",
+      "action": "copied"
+    },
+    "ci/current-code-head/job-131745210694-excerpts.log": {
+      "sha256": "6866e4935b190cbcb2055b8dd4982b515020501404ce25b05f153117a1368e9a",
+      "bytes": 1682,
+      "source": "knutsen-ci-candidates/current-code-head/job-131745210694-excerpts.log",
+      "action": "copied"
+    },
+    "ci/current-code-head/job-131745247308-excerpts.log": {
+      "sha256": "ccef382edb0cb671dacadc2388b38045b413cf86c309df69609f5c9a9224d1d3",
+      "bytes": 3921,
+      "source": "knutsen-ci-candidates/current-code-head/job-131745247308-excerpts.log",
+      "action": "copied"
+    },
+    "ci/current-code-head/provenance.json": {
+      "sha256": "2af4394c9f260fd75ff116e201fb3f0c481a7aa7fab674fd945f8eaa74e60cc7",
+      "bytes": 2093,
+      "source": "knutsen-ci-candidates/current-code-head/provenance.json",
+      "action": "copied"
+    },
+    "ci/job-131739737258-excerpts.log": {
+      "sha256": "b65d1a11102b2bd808bea4f01d30cbe912cc852bb42da6ac6634583398734b52",
+      "bytes": 2502,
+      "source": "knutsen-ci-candidates/job-131739737258-excerpts.log",
+      "action": "copied"
+    },
+    "ci/job-131739738244-excerpts.log": {
+      "sha256": "84b762f3e65e5472316155e4f6ec6471bc056507cc52aa4e07bdcefb609d62de",
+      "bytes": 1885,
+      "source": "knutsen-ci-candidates/job-131739738244-excerpts.log",
+      "action": "copied"
+    },
+    "ci/job-131739786131-excerpts.log": {
+      "sha256": "676a394336a11d06b38484e9f1a44040d5594a74bee4c1aa916726db9b7749f9",
+      "bytes": 7858,
+      "source": "knutsen-ci-candidates/job-131739786131-excerpts.log",
+      "action": "copied"
+    },
+    "ci/run-43382041378/axioms.log": {
+      "sha256": "8fcac2cac3c6642b1e1f94dbf82cc1527f87b61a99ccd8fb42b7430f747e089b",
+      "bytes": 18375,
+      "source": "knutsen-ci-candidates/run-43382041378/axioms.log",
+      "action": "copied"
+    },
+    "ci/run-43382041378/job-excerpts.log": {
+      "sha256": "d5e775a2a83cc35cdec58b4d382a32f3476e4a218612fea8f50774f39de5e671",
+      "bytes": 4888,
+      "source": "knutsen-ci-candidates/run-43382041378/job-excerpts.log",
+      "action": "copied"
+    },
+    "ci/run-43382041378/job-steps-observation.json": {
+      "sha256": "009e8c6bdc7fb1a4b142c2aa5e151a8d1f25364ad3879ce8a638d756410667c0",
+      "bytes": 2289,
+      "source": "knutsen-ci-candidates/run-43382041378/job-steps-observation.json",
+      "action": "copied"
+    },
+    "ci/run-43382041378/report.json": {
+      "sha256": "06fe87c1f0afb645eab132db0ba64a2a48653058f52de12773728badee337fa5",
+      "bytes": 12410,
+      "source": "knutsen-ci-candidates/run-43382041378/report.json",
+      "action": "copied"
+    },
+    "ci/run-43383097703/InfoGeometry.Analysis.MetricPorosity.placeholder.log": {
+      "sha256": "190109d66fd661731393a53316a28f76059c560ece597a43a3ad16c25c48a74c",
+      "bytes": 230,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.Analysis.MetricPorosity.placeholder.log",
+      "action": "copied"
+    },
+    "ci/run-43383097703/InfoGeometry.Analysis.MetricPorosity.semantic.log": {
+      "sha256": "5c417682059fdde81d568aa4a9ac1eaf45c2c02e11c39d3eb303b88e9dea53ce",
+      "bytes": 239,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.Analysis.MetricPorosity.semantic.log",
+      "action": "copied"
+    },
+    "ci/run-43383097703/InfoGeometry.Analysis.MultiscaleLocalization.placeholder.log": {
+      "sha256": "9b7d0b6fdc8acc544b90c9c9baef6bb85821a72a2dc3ab925c9e3e06f7362ce6",
+      "bytes": 230,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.Analysis.MultiscaleLocalization.placeholder.log",
+      "action": "copied"
+    },
+    "ci/run-43383097703/InfoGeometry.Analysis.MultiscaleLocalization.semantic.log": {
+      "sha256": "a02d2098f519bd90e38b51b6c093a94d9f8e6c46e79690d33590046f1906f9f3",
+      "bytes": 247,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.Analysis.MultiscaleLocalization.semantic.log",
+      "action": "copied"
+    },
+    "ci/run-43383097703/InfoGeometry.Analysis.PorosityIteration.placeholder.log": {
+      "sha256": "e00be98d47a3fa8f96bb50d1ae25a150a52b2a50c130b51ae6870ef17fedc197",
+      "bytes": 230,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.Analysis.PorosityIteration.placeholder.log",
+      "action": "copied"
+    },
+    "ci/run-43383097703/InfoGeometry.Analysis.PorosityIteration.semantic.log": {
+      "sha256": "bb75b8a38219c152b3785065bb5cb9682d1ac3af52807f1bd8f12f0d0bbb69fe",
+      "bytes": 242,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.Analysis.PorosityIteration.semantic.log",
+      "action": "copied"
+    },
+    "ci/run-43383097703/InfoGeometry.Clifford.WeylFrameMasks.placeholder.log": {
+      "sha256": "353d8183b78103166bde9c1645c879d0d92123c1cc71108654a0c9d32227dd0e",
+      "bytes": 230,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.Clifford.WeylFrameMasks.placeholder.log",
+      "action": "copied"
+    },
+    "ci/run-43383097703/InfoGeometry.Clifford.WeylFrameMasks.semantic.log": {
+      "sha256": "c60b3488da925a83c0ee7003b14d5213f8dce5f56fe024490ea7656788eade2a",
+      "bytes": 485,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.Clifford.WeylFrameMasks.semantic.log",
+      "action": "copied"
+    },
+    "ci/run-43383097703/InfoGeometry.OperatorAlgebra.FiniteOperatorFrame.placeholder.log": {
+      "sha256": "60021f43da3d24fef2d2b1519bd73d5ab252043e67096f351131ebd299679d54",
+      "bytes": 1427,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.OperatorAlgebra.FiniteOperatorFrame.placeholder.log",
+      "action": "copied"
+    },
+    "ci/run-43383097703/InfoGeometry.OperatorAlgebra.FiniteOperatorFrame.semantic.log": {
+      "sha256": "40e15e0225b2ade7398683bb8c573e6ebd14ac1d81f67ada3006b1f3891fa031",
+      "bytes": 1074,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.OperatorAlgebra.FiniteOperatorFrame.semantic.log",
+      "action": "copied"
+    },
+    "ci/run-43383097703/InfoGeometry.OperatorAlgebra.IsometryCornerLocalization.placeholder.log": {
+      "sha256": "c6c224e4ba8108c6892e6209bb2fc030c23b87e04ed951f0a396f33b553c4d44",
+      "bytes": 814,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.OperatorAlgebra.IsometryCornerLocalization.placeholder.log",
+      "action": "copied"
+    },
+    "ci/run-43383097703/InfoGeometry.OperatorAlgebra.IsometryCornerLocalization.semantic.log": {
+      "sha256": "b7ad3b620cd2ccd1c9c5c70d071054e3f86aa1f7009f92d88bafb75314976fc1",
+      "bytes": 785,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.OperatorAlgebra.IsometryCornerLocalization.semantic.log",
+      "action": "copied"
+    },
+    "ci/run-43383097703/InfoGeometry.OperatorAlgebra.ProjectionLocalization.placeholder.log": {
+      "sha256": "064fcf187cd8570393b73bbae893bbd197cf2970b6441ae596b249255a94d2d1",
+      "bytes": 230,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.OperatorAlgebra.ProjectionLocalization.placeholder.log",
+      "action": "copied"
+    },
+    "ci/run-43383097703/InfoGeometry.OperatorAlgebra.ProjectionLocalization.semantic.log": {
+      "sha256": "e85885b375357ef308982f777b6012838a24998371bb4d46de9aa5cf504053f3",
+      "bytes": 254,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.OperatorAlgebra.ProjectionLocalization.semantic.log",
+      "action": "copied"
+    },
+    "ci/run-43383097703/artifact.json": {
+      "sha256": "7f53cfe35881e86eeb62dc25621f968525794db6c54335be4dc6830e1edf9685",
+      "bytes": 875,
+      "source": "knutsen-ci-candidates/run-43383097703/artifact.json",
+      "action": "copied"
+    },
+    "ci/run-43383097703/independent-artifact-reconciliation.json": {
+      "sha256": "0fe4ac89d878a8cec608434f887fb517ffc051e592d3f63b563c9f51b006455c",
+      "bytes": 3890,
+      "source": "knutsen-ci-candidates/run-43383097703/independent-artifact-reconciliation.json",
+      "action": "copied"
+    },
+    "ci/run-43383097703/job.json": {
+      "sha256": "b5a49cf99b47c54339bd16f8fca4f5df4eb6bbf0d1a0c061dfd7a7f1d4e34a4c",
+      "bytes": 2645,
+      "source": "knutsen-ci-candidates/run-43383097703/job.json",
+      "action": "copied"
+    },
+    "ci/run-43383097703/job.log": {
+      "sha256": "1f0d0c1bfe61a3dd4f84705a0447c67a06c2a02c9aa0ff42679fdc447bf10491",
+      "bytes": 60676,
+      "source": "knutsen-ci-candidates/run-43383097703/job.log",
+      "action": "copied"
+    },
+    "environment/cache-repair.json": {
+      "sha256": "a13f4a8f2d67fc0c1f55c0c49a8b21e7fbf2b1af8f61a87e7bb563b24088b095",
+      "bytes": 2048,
+      "source": "knutsen-cache-repair.json",
+      "action": "copied"
+    },
+    "environment/dependency-pins.json": {
+      "sha256": "7d5093080f906e29d0ebed6d619f9519ef0d9bde0c9a5aeca0f62efda43b5887",
+      "bytes": 1430,
+      "source": "knutsen-dependency-pins.json",
+      "action": "copied"
+    },
+    "hooks/ci-commit.json": {
+      "sha256": "c2bdf53ba43d2cf57eabccc533852c86e88713fa84c9cbd5ff2dfdcf6a511b35",
+      "bytes": 481,
+      "source": "knutsen-ci-commit.json",
+      "action": "copied"
+    },
+    "hooks/ci-commit.txt": {
+      "sha256": "7079a22dd90b481270c45d3e45cfac264301e76657998bb4ec5839aaff6a3154",
+      "bytes": 163,
+      "source": "knutsen-ci-commit.txt",
+      "action": "copied"
+    },
+    "hooks/recurrence-commit.json": {
+      "sha256": "9916ed1997dbb4cb2325306c0594c6b58d1f3abd532680d6a02ce02df08ddf8d",
+      "bytes": 499,
+      "source": "knutsen-recurrence-commit.json",
+      "action": "copied"
+    },
+    "hooks/recurrence-commit.txt": {
+      "sha256": "156e440c769069f2e476fd8c4cdaf122838bd20da3287131b952f36262d005f5",
+      "bytes": 171,
+      "source": "knutsen-recurrence-commit.txt",
+      "action": "copied"
+    },
+    "hooks/source-commit.json": {
+      "sha256": "9b5f2a6da8826fa4c4101ba6797525b20cff4123ded9c8e848aa32ffb28b36c3",
+      "bytes": 1287,
+      "source": "knutsen-source-commit.json",
+      "action": "copied"
+    },
+    "hooks/source-commit.txt": {
+      "sha256": "2afdfcb585c6fe75d3dc82a1bf6338e3d4dab71e1f1bc22f6c91d32cca26238e",
+      "bytes": 1015,
+      "source": "knutsen-source-commit.txt",
+      "action": "copied"
+    },
+    "hooks/source-pre-push.json": {
+      "sha256": "8d49b9b8abd6c4bdb6eb43c3715d822b83b620d46c4983c6b074edaf881ce8a9",
+      "bytes": 20838,
+      "source": "knutsen-source-pre-push.json",
+      "action": "copied"
+    },
+    "hooks/source-pre-push.txt": {
+      "sha256": "7e4074b1567b9df1d23f9a89df795c86ed6a27366f171ae54c1089d700864639",
+      "bytes": 19428,
+      "source": "knutsen-source-pre-push.txt",
+      "action": "copied"
+    },
+    "independent/acceptance.json": {
+      "sha256": "90db463ab6676456a784c289969ca0043b6525df1104eae82be7fb1acb0e797c",
+      "bytes": 8893,
+      "source": "knutsen-qa-candidates/acceptance.json",
+      "action": "copied"
+    },
+    "independent/cancelled-final-local-native.console.txt": {
+      "sha256": "4d731139e69913823cdb67390d6b1a521789689815ad9a4c8f982fe835edc6ce",
+      "bytes": 30,
+      "source": "knutsen-qa-candidates/cancelled-final-local-native.console.txt",
+      "action": "copied"
+    },
+    "independent/cancelled-final-local-native.invocation.json": {
+      "sha256": "9e3f1fd6a1f0c450e23163a8ecd8908a55d1e1a4d57df787ef27c1ef6a74c7b0",
+      "bytes": 4933,
+      "source": "knutsen-qa-candidates/cancelled-final-local-native.invocation.json",
+      "action": "copied"
+    },
+    "independent/cancelled-final-local-native.json": {
+      "sha256": "06d95557a1945633fb598e147405e354e15ec4fc9d931b4e40127662de98204c",
+      "bytes": 5847,
+      "source": "knutsen-qa-candidates/cancelled-final-local-native.json",
+      "action": "copied"
+    },
+    "independent/cancelled-native-acceptance-console.txt": {
+      "sha256": "4d731139e69913823cdb67390d6b1a521789689815ad9a4c8f982fe835edc6ce",
+      "bytes": 30,
+      "source": "knutsen-qa-candidates/cancelled-native-acceptance-console.txt",
+      "action": "copied"
+    },
+    "independent/cancelled-native-acceptance-invocation.json": {
+      "sha256": "738b433045dccf70042ae209dc7a48ce9a7cf99481b7a33332eefbffdf9ca0d4",
+      "bytes": 4933,
+      "source": "knutsen-qa-candidates/cancelled-native-acceptance-invocation.json",
+      "action": "copied"
+    },
+    "independent/cancelled-native-acceptance.json": {
+      "sha256": "369aa8bd31fe754e6c8e603bd8ca8a28ac4b5e3bf372ae126d06cde96e0a43ff",
+      "bytes": 5822,
+      "source": "knutsen-qa-candidates/cancelled-native-acceptance.json",
+      "action": "copied"
+    },
+    "independent/findings-dispositions.json": {
+      "sha256": "5b34609e230c62a1800f7b67cc5cf07dc9b1089cc1bd7b08e9550feb37401131",
+      "bytes": 30946,
+      "source": "knutsen-qa-candidates/findings-dispositions.json",
+      "action": "copied"
+    },
+    "independent/independent-acceptance.md": {
+      "sha256": "7a9c0f8333151c1a4bc1630e187423db97e054b576c97325eaa6d5dfec697c7f",
+      "bytes": 15620,
+      "source": "knutsen-qa-candidates/independent-acceptance.md",
+      "action": "copied"
+    },
+    "independent/independent-ci-native-review.json": {
+      "sha256": "5ce14a9fc048e2ae9a3cbc56a603c3f3300d122afb46a33b1538debe93ecf86f",
+      "bytes": 5046,
+      "source": "knutsen-qa-candidates/independent-ci-native-review.json",
+      "action": "copied"
+    },
+    "independent/noncomputable-source-review.json": {
+      "sha256": "4f87e376d8e2341054d0fd7cfc3be5d596e95ca65e8deb78ef5a88fa0a3c38c3",
+      "bytes": 1132,
+      "source": "knutsen-qa-candidates/noncomputable-source-review.json",
+      "action": "copied"
+    },
+    "independent/placeholder-FiniteOperatorFrame.json": {
+      "sha256": "6ec9323b50e32150a1cca32e566c4ac30b25ebefbbe5b52da4f986e3cbfdbd06",
+      "bytes": 10154,
+      "source": "knutsen-qa-candidates/placeholder-FiniteOperatorFrame.json",
+      "action": "copied"
+    },
+    "independent/placeholder-IsometryCornerLocalization.json": {
+      "sha256": "6661d2bbfa464a537686e8a4c9ea00756cae474dcfb2af8d05c8fcd33b281646",
+      "bytes": 4017,
+      "source": "knutsen-qa-candidates/placeholder-IsometryCornerLocalization.json",
+      "action": "copied"
+    },
+    "independent/placeholder-MetricPorosity.json": {
+      "sha256": "d588b1b3484b2e713fca0655e93caa2524df28731a944271186d7ec564a158b6",
+      "bytes": 505,
+      "source": "knutsen-qa-candidates/placeholder-MetricPorosity.json",
+      "action": "copied"
+    },
+    "independent/placeholder-MultiscaleLocalization.json": {
+      "sha256": "50f5305fc632551c89386e3fa73c5594a8060701500391a7837852dcb7c3ebdd",
+      "bytes": 513,
+      "source": "knutsen-qa-candidates/placeholder-MultiscaleLocalization.json",
+      "action": "copied"
+    },
+    "independent/placeholder-PorosityIteration.json": {
+      "sha256": "e706d3daa71d1c3d7d1184bbb1e4ff6ed5691c62cfedfa359c366282487b9514",
+      "bytes": 508,
+      "source": "knutsen-qa-candidates/placeholder-PorosityIteration.json",
+      "action": "copied"
+    },
+    "independent/placeholder-ProjectionLocalization.json": {
+      "sha256": "7f91a599fb5c9b1587afad805aa3398bd2e74b32966d70d59ca8a31bcb4b4dad",
+      "bytes": 520,
+      "source": "knutsen-qa-candidates/placeholder-ProjectionLocalization.json",
+      "action": "copied"
+    },
+    "independent/placeholder-WeylFrameMasks.json": {
+      "sha256": "13dd69e418386c15c9358a9e677a1d5991c1eb1417c067adb2fffefafc24bbb8",
+      "bytes": 505,
+      "source": "knutsen-qa-candidates/placeholder-WeylFrameMasks.json",
+      "action": "copied"
+    },
+    "independent/repaired-source-review.json": {
+      "sha256": "22bf47fcf8690fd4e1d6d02ba54a06d6ed00d26718eb5968f83cadc025ff44fe",
+      "bytes": 1455,
+      "source": "knutsen-qa-candidates/repaired-source-review.json",
+      "action": "copied"
+    },
+    "independent/semantic-findings.json": {
+      "sha256": "476bb7856edb3e5721892c4c36b155818cc649d4170fa38f15b57f524efdb667",
+      "bytes": 4853,
+      "source": "knutsen-qa-candidates/semantic-findings.json",
+      "action": "copied"
+    },
+    "independent/semantic-findings.txt": {
+      "sha256": "f20cc185444f4c94b467061fb2973461b0bee8f11d3876e083e8dc73e5ec08f5",
+      "bytes": 2117,
+      "source": "knutsen-qa-candidates/semantic-findings.txt",
+      "action": "copied"
+    },
+    "independent/static-gates.json": {
+      "sha256": "412a2b676cb36e4093836ec4748ea968767ffec33282f650479e4047f9a1a814",
+      "bytes": 5392,
+      "source": "knutsen-qa-candidates/static-gates.json",
+      "action": "copied"
+    },
+    "initial-development/InfoGeometry.Analysis.MultiscaleLocalization.log": {
+      "sha256": "bc6dfcb9780bcdc0c06c2a771d18056d7120c5904d2636bb5c5e055206cdcf25",
+      "bytes": 979,
+      "source": "knutsen-qa-candidates/initial-development/InfoGeometry.Analysis.MultiscaleLocalization.log",
+      "action": "copied"
+    },
+    "initial-development/InfoGeometry.Analysis.PorosityIteration.log": {
+      "sha256": "2fda8734893ac50c99c9e06c2a588a474fb924d6bf40f64288142927df08a560",
+      "bytes": 218,
+      "source": "knutsen-qa-candidates/initial-development/InfoGeometry.Analysis.PorosityIteration.log",
+      "action": "copied"
+    },
+    "initial-development/InfoGeometry.Clifford.WeylFrameMasks.log": {
+      "sha256": "9542236d4ab25ce7bd952f4e06fe54a4ccf02c0fe0f33eeba43ad5d63dc7e667",
+      "bytes": 5845,
+      "source": "knutsen-qa-candidates/initial-development/InfoGeometry.Clifford.WeylFrameMasks.log",
+      "action": "copied"
+    },
+    "initial-development/InfoGeometry.OperatorAlgebra.IsometryCornerLocalization.log": {
+      "sha256": "982440c58499695c7a278b9c78eb8c382e17b09bdb633cf16d4fee8cbe2a7783",
+      "bytes": 323,
+      "source": "knutsen-qa-candidates/initial-development/InfoGeometry.OperatorAlgebra.IsometryCornerLocalization.log",
+      "action": "copied"
+    },
+    "initial-development/report.json": {
+      "sha256": "418e627e52d2d31c6637ceb8ca5d30b00d00e22623bdb375a0779701cf33a134",
+      "bytes": 11674,
+      "source": "knutsen-qa-candidates/initial-development/report.json",
+      "action": "copied"
+    },
+    "initial-development/sha256.json": {
+      "sha256": "a0c9f32c5833e5cf0a2c3e742d1a0c65c4afe56c8698e80168062695655813de",
+      "bytes": 574,
+      "source": "knutsen-qa-candidates/initial-development/sha256.json",
+      "action": "copied"
+    },
+    "native/InfoGeometry.Algebra.FiniteSpinAlgebra.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.Algebra.FiniteSpinAlgebra.log",
+      "action": "copied"
+    },
+    "native/InfoGeometry.Algebra.NonCommutativeIsometry.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.Algebra.NonCommutativeIsometry.log",
+      "action": "copied"
+    },
+    "native/InfoGeometry.Analysis.MetricPorosity.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.Analysis.MetricPorosity.log",
+      "action": "copied"
+    },
+    "native/InfoGeometry.Analysis.MultiscaleLocalization.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.Analysis.MultiscaleLocalization.log",
+      "action": "copied"
+    },
+    "native/InfoGeometry.Analysis.PorosityIteration.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.Analysis.PorosityIteration.log",
+      "action": "copied"
+    },
+    "native/InfoGeometry.Clifford.OperatorValuedJones.log": {
+      "sha256": "6555b31355c7e95426c4855a32a97da3c7c40fba1f79b1da5d95b4376f1d5abc",
+      "bytes": 346,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.Clifford.OperatorValuedJones.log",
+      "action": "copied"
+    },
+    "native/InfoGeometry.Clifford.WeylFrameMasks.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.Clifford.WeylFrameMasks.log",
+      "action": "copied"
+    },
+    "native/InfoGeometry.Core.IdempotencyDefect.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.Core.IdempotencyDefect.log",
+      "action": "copied"
+    },
+    "native/InfoGeometry.Core.PeirceCompressionCStar.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.Core.PeirceCompressionCStar.log",
+      "action": "copied"
+    },
+    "native/InfoGeometry.Core.PeirceCompressionDefect.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.Core.PeirceCompressionDefect.log",
+      "action": "copied"
+    },
+    "native/InfoGeometry.Core.PeirceDecomposition.log": {
+      "sha256": "6fc309835b601a9d601baa56a2b99179685ed64781a4fd099e8f9e7ffced9edf",
+      "bytes": 277,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.Core.PeirceDecomposition.log",
+      "action": "copied"
+    },
+    "native/InfoGeometry.OperatorAlgebra.FiniteOperatorFrame.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.OperatorAlgebra.FiniteOperatorFrame.log",
+      "action": "copied"
+    },
+    "native/InfoGeometry.OperatorAlgebra.IsometryCornerLocalization.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.OperatorAlgebra.IsometryCornerLocalization.log",
+      "action": "copied"
+    },
+    "native/InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace.log",
+      "action": "copied"
+    },
+    "native/InfoGeometry.OperatorAlgebra.NoncommutativeKrausChannel.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.OperatorAlgebra.NoncommutativeKrausChannel.log",
+      "action": "copied"
+    },
+    "native/InfoGeometry.OperatorAlgebra.ProjectionLocalization.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source": "knutsen-ci-candidates/run-43383097703/InfoGeometry.OperatorAlgebra.ProjectionLocalization.log",
+      "action": "copied"
+    },
+    "native/axioms.log": {
+      "sha256": "5fcc15ba782ccccb08b3738d409e412ddf08fdb8ac8d28f28a05649f08a0ccf9",
+      "bytes": 61377,
+      "source": "knutsen-ci-candidates/run-43383097703/axioms.log",
+      "action": "copied"
+    },
+    "native/evidence-sha256.json": {
+      "sha256": "eea62135e3913cec1f103eac1e3906bb1c16a7c2b4af430ebda1b65a7b10ba9f",
+      "bytes": 2683,
+      "source": "knutsen-ci-candidates/run-43383097703/evidence-sha256.json",
+      "action": "copied"
+    },
+    "native/report.json": {
+      "sha256": "cb7405074f2e33c88082ae786d453d1a1fe4c2eba6823e6f0d52562bb8a4dd84",
+      "bytes": 13331,
+      "source": "knutsen-ci-candidates/run-43383097703/report.json",
+      "action": "copied"
+    },
+    "native/src/CliffordDiracAudit.lean.txt": {
+      "sha256": "5c062e70958f17563ab30961cba01c765f41c1722b33d03f93c867c12515f5f0",
+      "bytes": 4033,
+      "source": "knutsen-ci-candidates/run-43383097703/src/CliffordDiracAudit.lean",
+      "action": "copied",
+      "original_artifact_relative_path": "src/CliffordDiracAudit.lean"
+    },
+    "repairs/PorosityIteration.proposal.json": {
+      "sha256": "262fa7dea10f8f71413caa8c4cab2e0ab2436f6b021658d615ff6a4bc04dd5d6",
+      "bytes": 576,
+      "source": "knutsen-repair-candidates/PorosityIteration.proposal.json",
+      "action": "copied"
+    },
+    "repairs/WeylFrameMasks.compile.json": {
+      "sha256": "099c2eed0d8e19d6441152a63ac7188bfb68d8d64d2630f07c839344100f7c69",
+      "bytes": 229,
+      "source": "knutsen-repair-candidates/WeylFrameMasks.compile.json",
+      "action": "copied"
+    },
+    "repairs/WeylFrameMasks.compile.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source": "knutsen-repair-candidates/WeylFrameMasks.compile.log",
+      "action": "copied"
+    }
+  },
+  "optional_receipts_absent": [
+    "knutsen-ci-candidates/run-43383097703/job-excerpts.log",
+    "knutsen-ci-candidates/run-43383097703/job-steps-observation.json"
+  ]
+}

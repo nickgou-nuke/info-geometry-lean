@@ -1,0 +1,77 @@
+{
+  "run": 43383097703,
+  "job": 131745210917,
+  "head": "3f7282ceb5076e16bae8acc696adffd3771494c9",
+  "artifact": 14017786847,
+  "artifact_sha256": "848fa6c5663cf19fbc48a5570ac3bf40ce0d1441f49ab5bdfd5162fc667b91d3",
+  "status": "passed",
+  "audit_required": true,
+  "fresh_modules": 16,
+  "module_count": 16,
+  "all_modules_exit_zero": true,
+  "new_owner_warnings": {
+    "InfoGeometry.OperatorAlgebra.ProjectionLocalization": 0,
+    "InfoGeometry.OperatorAlgebra.IsometryCornerLocalization": 0,
+    "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame": 0,
+    "InfoGeometry.Clifford.WeylFrameMasks": 0,
+    "InfoGeometry.Analysis.PorosityIteration": 0,
+    "InfoGeometry.Analysis.MetricPorosity": 0,
+    "InfoGeometry.Analysis.MultiscaleLocalization": 0
+  },
+  "reused_owner_warnings": {
+    "InfoGeometry.Core.PeirceDecomposition": 1,
+    "InfoGeometry.Clifford.OperatorValuedJones": 1
+  },
+  "declaration_counts": {
+    "InfoGeometry.Core.IdempotencyDefect": 23,
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": 86,
+    "InfoGeometry.Core.PeirceDecomposition": 60,
+    "InfoGeometry.Core.PeirceCompressionDefect": 62,
+    "InfoGeometry.Core.PeirceCompressionCStar": 5,
+    "InfoGeometry.OperatorAlgebra.ProjectionLocalization": 11,
+    "InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace": 20,
+    "InfoGeometry.OperatorAlgebra.NoncommutativeKrausChannel": 18,
+    "InfoGeometry.Algebra.NonCommutativeIsometry": 8,
+    "InfoGeometry.OperatorAlgebra.IsometryCornerLocalization": 44,
+    "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame": 31,
+    "InfoGeometry.Clifford.OperatorValuedJones": 54,
+    "InfoGeometry.Clifford.WeylFrameMasks": 31,
+    "InfoGeometry.Analysis.PorosityIteration": 21,
+    "InfoGeometry.Analysis.MetricPorosity": 11,
+    "InfoGeometry.Analysis.MultiscaleLocalization": 5
+  },
+  "total_declarations": 490,
+  "axioms": [
+    "[propext, Classical.choice, Quot.sound]"
+  ],
+  "source_hash_match_all16": true,
+  "verifier_hash_match_all4": true,
+  "artifact_evidence_checksums_valid": true,
+  "new_owner_source_sha256": {
+    "InfoGeometry.OperatorAlgebra.ProjectionLocalization": "8cdaa903a48ab3d0605a1e536a4d0f071705a3c9007ff494b8a44b6eed653323",
+    "InfoGeometry.OperatorAlgebra.IsometryCornerLocalization": "2e2386e14cf832c7a15dfbe69a0c1b64d4a729308e25b42ec0392ad352d7b9fd",
+    "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame": "65ae94daf25a6e36eeeaeea163af5526a3c9a6998bbd7ef637c9330b70145d98",
+    "InfoGeometry.Clifford.WeylFrameMasks": "9738b8591a1513b379dce55ea0231cea861614ae28ad6394cf5699c89c1cda56",
+    "InfoGeometry.Analysis.PorosityIteration": "7a06cca338bcec02e8b19800565b3546a50abd9b86aacf75784d3deadc7cd260",
+    "InfoGeometry.Analysis.MetricPorosity": "13ce57fb3645d89bb616f59db00ab3ef9ca78e040e69e6ba461db31540fad064",
+    "InfoGeometry.Analysis.MultiscaleLocalization": "bd6a126f4fe633ed3029aa6055a3eafe667ad0bfb163d3eeacd68258411f7f3b"
+  },
+  "verification_source_sha256": {
+    "tools/quality/check_clifford_dirac.py": "fcf6fbb9845e0ee2a85bdb3778c5fe74345a9ae7a2e97e871d0a89d3e98e7db0",
+    "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+    "tools/quality/reviewed_audit_source.py": "df953460ee18e79606afa03f1634e0d299730582c24971888649cf68d18bcbf4",
+    "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df"
+  },
+  "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "ci_checkout_revision": "8e9221d29001ebe80558237992ce9be8a35920af",
+  "static_summary": {
+    "placeholder_hard": 0,
+    "placeholder_soft": 8,
+    "semantic_errors": 0,
+    "semantic_warnings": 13,
+    "strict_placeholder_exit": "passed",
+    "semantic_error_threshold_exit": "passed",
+    "semantic_warning_threshold": "not run in CI"
+  }
+}

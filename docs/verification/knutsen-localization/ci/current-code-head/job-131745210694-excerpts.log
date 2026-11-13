@@ -1,0 +1,18 @@
+2026-11-13T07:04:45.9140402Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-13T07:04:45.9140571Z 
+2026-11-13T07:04:45.9140771Z HEAD is now at 8e9221d2 Merge 3f7282ceb5076e16bae8acc696adffd3771494c9 into a392af178af1fe2bcba2ba39eb405700c6ee103c
+2026-11-13T07:04:45.9255514Z ##[endgroup]
+2026-11-13T07:04:45.9297774Z [command]/usr/bin/git log -1 --format=%H
+2026-11-13T07:04:45.9320928Z 8e9221d29001ebe80558237992ce9be8a35920af
+2026-11-13T07:04:45.9434701Z ##[end-action id=__leanprover-community_lint-style-action.__actions_checkout;outcome=success;conclusion=success;duration_ms=14336]
+2026-11-13T07:04:45.9550721Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-13T07:04:45.9550915Z ##[endgroup]
+2026-11-13T07:04:46.0071014Z ./lean/InfoGeometry/Physics/PellisFineStructure.lean
+2026-11-13T07:04:46.0071373Z ./lean/InfoGeometry/Physics/PellisfineStructure.lean
+2026-11-13T07:04:46.0579225Z find: ‘standard output’: Broken pipe
+2026-11-13T07:04:46.0579423Z find: write error
+2026-11-13T07:04:46.0581762Z [1;31mFound files or folders with same name but different case.[0m
+2026-11-13T07:04:46.0594848Z ##[error]Process completed with exit code 1.
+2026-11-13T07:04:46.0601227Z ##[end-action id=__leanprover-community_lint-style-action.__credfeto_action-case-checker.__run;outcome=failure;conclusion=failure;duration_ms=109]
+2026-11-13T07:04:46.0610991Z ##[end-action id=__leanprover-community_lint-style-action.__credfeto_action-case-checker;outcome=failure;conclusion=failure;duration_ms=117]
+2026-11-13T07:04:46.0613153Z ##[start-action display=Look for ignored files;id=__leanprover-community_lint-style-action.__run_3]

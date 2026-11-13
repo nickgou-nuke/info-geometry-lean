@@ -1,0 +1,25 @@
+2026-11-13T06:50:01.1858836Z f5b06abbc8b701df061e5d490fa722a7c8dcfec3
+2026-11-13T06:50:01.1968252Z ##[end-action id=__leanprover-community_lint-style-action.__actions_checkout;outcome=success;conclusion=success;duration_ms=15023]
+2026-11-13T06:50:01.1971308Z ##[start-action display=Check Case Sensitivity;id=__leanprover-community_lint-style-action.__credfeto_action-case-checker]
+2026-11-13T06:50:01.2003606Z ##[group]Run credfeto/action-case-checker@cb652aeab29ed363bbdb7d9ee1bfcc010c46cac5
+2026-11-13T06:50:01.2003850Z ##[endgroup]
+2026-11-13T06:50:01.2006911Z ##[start-action display=Run $GITHUB_ACTION_PATH/checkcase;id=__leanprover-community_lint-style-action.__credfeto_action-case-checker.__run]
+2026-11-13T06:50:01.2039258Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-13T06:50:01.2039469Z ##[endgroup]
+2026-11-13T06:50:01.2593084Z ./lean/InfoGeometry/Physics/PellisFineStructure.lean
+2026-11-13T06:50:01.2593545Z ./lean/InfoGeometry/Physics/PellisfineStructure.lean
+2026-11-13T06:50:01.3123995Z find: ‘standard output’: Broken pipe
+2026-11-13T06:50:01.3124319Z find: write error
+2026-11-13T06:50:01.3126693Z [1;31mFound files or folders with same name but different case.[0m
+2026-11-13T06:50:01.3140294Z ##[error]Process completed with exit code 1.
+2026-11-13T06:50:01.3146745Z ##[end-action id=__leanprover-community_lint-style-action.__credfeto_action-case-checker.__run;outcome=failure;conclusion=failure;duration_ms=113]
+2026-11-13T06:50:01.3157114Z ##[end-action id=__leanprover-community_lint-style-action.__credfeto_action-case-checker;outcome=failure;conclusion=failure;duration_ms=118]
+2026-11-13T06:50:01.3159339Z ##[start-action display=Look for ignored files;id=__leanprover-community_lint-style-action.__run_3]
+2026-11-13T06:50:01.4148255Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-13T06:50:01.4178981Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-13T06:50:01.4419452Z fatal: No url found for submodule path 'external_refs/auto-ontology' in .gitmodules
+2026-11-13T06:50:01.4455431Z ##[warning]The process '/usr/bin/git' failed with exit code 128
+2026-11-13T06:50:01.4514782Z ##[end-action id=__30c2b180-5dd7-4a76-8236-58675e174ba0.__actions_checkout;outcome=success;conclusion=success;duration_ms=112]
+2026-11-13T06:50:01.4560497Z Cleaning up orphan processes
+
+

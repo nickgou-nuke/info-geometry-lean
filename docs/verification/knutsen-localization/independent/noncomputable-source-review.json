@@ -1,0 +1,18 @@
+{
+  "status": "source_review_passed",
+  "native_acceptance": "pending",
+  "reviewer": "/root/knutsen_independent_review",
+  "at_utc": "2026-11-13T07:04:23.357308+00:00",
+  "local_head": "0149b1f0a017b423d318b54e84662a7e6dd32022",
+  "source": "lean/InfoGeometry/Analysis/PorosityIteration.lean",
+  "source_sha256": "7a06cca338bcec02e8b19800565b3546a50abd9b86aacf75784d3deadc7cd260",
+  "sole_change_from_prior_review": "explicit noncomputable modifier on remainingPorosity",
+  "theorem_statements_equations_and_proofs_changed": false,
+  "reason": "The maintained native audit rejects unsafe generated declarations. Pinned Lean code generation checks explicit modifiers.isNoncomputable; a noncomputable section has a distinct error-logging effect. The keyword suppresses executable helper generation without weakening the kernel recurrence or axiom policy.",
+  "compiler_source_inspected": [
+    "Lean/Elab/PreDefinition/Basic.lean:shouldGenCodeFor",
+    "Lean/Elab/PreDefinition/Basic.lean:addAndCompilePartialRec",
+    "Lean/Elab/PreDefinition/Structural/Main.lean:structuralRecursion"
+  ],
+  "production_edits_by_reviewer": false
+}

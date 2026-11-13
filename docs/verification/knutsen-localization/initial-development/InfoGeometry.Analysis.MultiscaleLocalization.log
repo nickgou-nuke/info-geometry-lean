@@ -1,0 +1,12 @@
+/workspace/scratch/d18a558d1d7d/knutsen-dev/src/InfoGeometry/Analysis/MultiscaleLocalization.lean:74:14: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  LE Type
+
+Hint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.
+/workspace/scratch/d18a558d1d7d/knutsen-dev/src/InfoGeometry/Analysis/MultiscaleLocalization.lean:74:16: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  OfNat Type 0
+numerals are polymorphic in Lean, but the numeral `0` cannot be used in a context where the expected type is
+  Type
+due to the absence of the instance above
+
+Hint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.
+/workspace/scratch/d18a558d1d7d/knutsen-dev/src/InfoGeometry/Analysis/MultiscaleLocalization.lean:91:26: error(lean.unknownIdentifier): Unknown constant `List.length_ne_zero_iff.mpr`

@@ -1,0 +1,37 @@
+{
+  "at_utc": "2026-11-13T06:55:39.152718+00:00",
+  "mathlib_revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "source_file_sha256": "e4c11db5e888464c81ab8668daedbe8c9e26ee697c32b66a08713c643dac183b",
+  "copied": [
+    {
+      "path": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/RingTheory/Idempotents.olean",
+      "action": "copied matching pinned artifact",
+      "sha256": "198298cafed545569b3e7a4f03e5e9b44267b39014be7ac36acc7c521d034f9a"
+    },
+    {
+      "path": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/RingTheory/Idempotents.olean.hash",
+      "action": "copied matching pinned artifact",
+      "sha256": "38fb8f1fd802fb60c1ee6da9d4af906de61109ec6640f3e41a1df09e59d0d65d"
+    },
+    {
+      "path": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/RingTheory/Idempotents.olean.private",
+      "action": "copied matching pinned artifact",
+      "sha256": "ee530ae98d8a7be34a8b06d4d454ff57577c23568a2c428b597db78795935e8f"
+    },
+    {
+      "path": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/RingTheory/Idempotents.olean.private.hash",
+      "action": "copied matching pinned artifact",
+      "sha256": "8e39fcc4f41658a8a365c1777ef6be62ee6d0ed8efd4c63479d66bb44a625ac3"
+    },
+    {
+      "path": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/RingTheory/Idempotents.olean.server",
+      "action": "copied matching pinned artifact",
+      "sha256": "629ffe17b44d5527e02f567a885b677f1ca51e0bb8ac16945e7fca925553dd14"
+    },
+    {
+      "path": "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/RingTheory/Idempotents.olean.server.hash",
+      "action": "copied matching pinned artifact",
+      "sha256": "c7b2dfd1a8abf1c5c6ada32d50053549e4a24e25da06fdce6a84d3b99ccc8cc1"
+    }
+  ]
+}

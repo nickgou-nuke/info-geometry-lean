@@ -1,0 +1,13 @@
+{
+  "time": "2026-11-13T06:54:50.240464+00:00",
+  "command": [
+    "git",
+    "commit",
+    "-F",
+    "/workspace/scratch/d18a558d1d7d/knutsen-ci-commit-message.txt"
+  ],
+  "returncode": 0,
+  "output": "proof_proxy_staged_gate: ok\n[codex/knutsen-localization 30298b01] Fix isolated Knutsen checkout credential cleanup\n 1 file changed, 6 insertions(+), 1 deletion(-)\n",
+  "head": "30298b01c0cf5be04805764b87a93cef787611ac",
+  "tree": "ca1905d31672d81535ad1fd9ec422acf3bd01827"
+}

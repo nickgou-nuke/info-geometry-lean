@@ -1,0 +1,20 @@
+Semantic vacuity audit
+======================
+roots: lean/InfoGeometry/OperatorAlgebra/ProjectionLocalization.lean, lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean, lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean, lean/InfoGeometry/Clifford/WeylFrameMasks.lean, lean/InfoGeometry/Analysis/PorosityIteration.lean, lean/InfoGeometry/Analysis/MetricPorosity.lean, lean/InfoGeometry/Analysis/MultiscaleLocalization.lean
+patterns: /workspace/scratch/d18a558d1d7d/knutsen-localization-lean/tools/quality/semantic_vacuity_patterns.json
+semantic_vacuity: 13
+warning: 13
+trivial_surface: 13
+  - lean/InfoGeometry/Clifford/WeylFrameMasks.lean:126 [warning/trivial_surface] card_balancedSelection: by
+  - lean/InfoGeometry/Clifford/WeylFrameMasks.lean:129 [warning/trivial_surface] card_parallelSelection: by
+  - lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean:68 [warning/trivial_surface] matrixMultiplier_one: by
+  - lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean:131 [warning/trivial_surface] multiplier_const: rfl
+  - lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean:134 [warning/trivial_surface] multiplier_add: by
+  - lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean:138 [warning/trivial_surface] multiplier_star: by
+  - lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean:152 [warning/trivial_surface] multiplier_indicator: by
+  - lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean:168 [warning/trivial_surface] gram_apply: rfl
+  - lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean:206 [warning/trivial_surface] trace_gram: rfl
+  - lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean:61 [warning/trivial_surface] isometryEmbedding_apply: rfl
+  - lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean:64 [warning/trivial_surface] compression_apply: rfl
+  - lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean:126 [warning/trivial_surface] embedding_compression: by
+  - lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean:146 [warning/trivial_surface] compression_star: by

@@ -1,0 +1,62 @@
+2026-11-13T07:04:49.2287256Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-13T07:04:49.2287636Z 
+2026-11-13T07:04:49.2288081Z HEAD is now at 8e9221d2 Merge 3f7282ceb5076e16bae8acc696adffd3771494c9 into a392af178af1fe2bcba2ba39eb405700c6ee103c
+2026-11-13T07:04:49.2406160Z ##[endgroup]
+2026-11-13T07:04:49.2452800Z [command]/usr/bin/git log -1 --format=%H
+2026-11-13T07:04:49.2476450Z 8e9221d29001ebe80558237992ce9be8a35920af
+2026-11-13T07:04:49.2774468Z ##[group]Run if [ "false" = "true" ]; then
+2026-11-13T07:05:01.3529916Z shell: /usr/bin/bash -e {0}
+2026-11-13T07:05:01.3530368Z ##[endgroup]
+2026-11-13T07:05:01.5334655Z Path dependencies are not reproducible from this checkout. Restore the recorded sources; do not substitute an upstream branch or a stub package.
+2026-11-13T07:05:01.5335843Z {
+2026-11-13T07:05:01.5358983Z   "schema": "info_geometry.ci_path_preflight.v1",
+2026-11-13T07:05:01.5379663Z   "revision": "8e9221d29001ebe80558237992ce9be8a35920af",
+2026-11-13T07:05:01.5380287Z   "ok": false,
+2026-11-13T07:05:01.5380663Z   "packages": [
+2026-11-13T07:05:01.5381027Z     {
+2026-11-13T07:05:01.5381406Z       "name": "HomotopyHypothesis",
+2026-11-13T07:05:01.5382001Z       "dir": "external_refs/homotopy-hypothesis-lean4",
+2026-11-13T07:05:01.5383059Z       "config": "lakefile.lean",
+2026-11-13T07:05:01.5383502Z       "directory_exists": false,
+2026-11-13T07:05:01.5383925Z       "config_exists": false,
+2026-11-13T07:05:01.5384344Z       "source_kind": "untracked",
+2026-11-13T07:05:01.5384752Z       "errors": [
+2026-11-13T07:05:01.5385095Z         "missing_config",
+2026-11-13T07:05:01.5385428Z         "untracked_path_dependency"
+2026-11-13T07:05:01.5385679Z       ],
+2026-11-13T07:05:01.5385861Z       "ok": false
+2026-11-13T07:05:01.5386052Z     },
+2026-11-13T07:05:01.5386232Z     {
+2026-11-13T07:05:01.5386413Z       "name": "Atlas",
+2026-11-13T07:05:01.5386646Z       "dir": "external_refs/atlas-lean",
+2026-11-13T07:05:01.5386923Z       "config": "lakefile.toml",
+2026-11-13T07:05:01.5387171Z       "directory_exists": false,
+2026-11-13T07:05:01.5387420Z       "config_exists": false,
+2026-11-13T07:05:01.5387664Z       "source_kind": "untracked",
+2026-11-13T07:05:01.5387903Z       "errors": [
+2026-11-13T07:05:01.5388108Z         "missing_config",
+2026-11-13T07:05:01.5388736Z         "untracked_path_dependency"
+2026-11-13T07:05:01.5388984Z       ],
+2026-11-13T07:05:01.5389176Z       "ok": false
+2026-11-13T07:05:01.5389363Z     },
+2026-11-13T07:05:01.5389536Z     {
+2026-11-13T07:05:01.5389717Z       "name": "GIFT",
+2026-11-13T07:05:01.5389958Z       "dir": "external_refs/gift-framework-core",
+2026-11-13T07:05:01.5390259Z       "config": "lakefile.lean",
+2026-11-13T07:05:01.5390506Z       "directory_exists": true,
+2026-11-13T07:05:01.5390748Z       "config_exists": false,
+2026-11-13T07:05:01.5391307Z       "pinned_commit": "e6f3c3ac2140c2324fb2ae029c32233e73aa5e92",
+2026-11-13T07:05:01.5391647Z       "errors": [
+2026-11-13T07:05:01.5391857Z         "missing_config",
+2026-11-13T07:05:01.5392102Z         "uninitialized_gitlink"
+2026-11-13T07:05:01.5392340Z       ],
+2026-11-13T07:05:01.5392519Z       "ok": false
+2026-11-13T07:05:01.5392750Z     },
+2026-11-13T07:05:01.5392927Z     {
+2026-11-13T07:05:35.0876589Z info: LeanCopilot: cloning https://github.com/lean-dojo/LeanCopilot.git
+2026-11-13T07:05:35.5023239Z info: LeanCopilot: checking out revision 'c360b5df5d8a67ed8f1a8769aa157f6adca7dd53'
+2026-11-13T07:05:38.1477005Z error: HomotopyHypothesis: package directory not found: /home/runner/work/info-geometry-lean/info-geometry-lean/external_refs/homotopy-hypothesis-lean4
+2026-11-13T07:05:38.2625452Z [locked-lake-build] lake build exited with code 1
+2026-11-13T07:05:38.2626701Z [locked-lake-build] released /tmp/info-geometry-build.lock
+2026-11-13T07:05:38.2646785Z ## Compiler Bridge Smoke Summary
+2026-11-13T07:05:38.2648555Z 

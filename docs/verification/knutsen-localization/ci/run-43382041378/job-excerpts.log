@@ -1,0 +1,47 @@
+2026-11-13T06:55:45.3251652Z a99a0654fc171664a69bb8458f235e5f51c4dcff
+2026-11-13T06:55:45.3518932Z ##[group]Run git -C project config --local --unset-all http.https://github.com/.extraheader
+2026-11-13T06:55:45.3519902Z [36;1mgit -C project config --local --unset-all http.https://github.com/.extraheader[0m
+2026-11-13T06:55:45.3545802Z shell: /usr/bin/bash -e {0}
+2026-11-13T06:55:45.3546087Z ##[endgroup]
+2026-11-13T06:55:45.3681868Z ##[group]Run python3 - <<'PYTHON'
+2026-11-13T06:55:55.0515470Z http.https://github.com/.extraheader
+2026-11-13T06:55:55.0524305Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-13T06:55:55.0562269Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-13T06:55:55.0824406Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-13T06:55:55.0863903Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-13T06:56:50.8650035Z Waiting for shared build lock
+2026-11-13T06:56:52.2437453Z CHECK InfoGeometry.Core.IdempotencyDefect exit 0 warnings 0
+2026-11-13T06:56:55.5159799Z CHECK InfoGeometry.Algebra.FiniteSpinAlgebra exit 0 warnings 0
+2026-11-13T06:56:58.9845418Z CHECK InfoGeometry.Core.PeirceDecomposition exit 0 warnings 1
+2026-11-13T06:57:03.1002750Z CHECK InfoGeometry.Core.PeirceCompressionDefect exit 0 warnings 0
+2026-11-13T06:57:06.3224690Z CHECK InfoGeometry.Core.PeirceCompressionCStar exit 0 warnings 0
+2026-11-13T06:57:08.9549900Z CHECK InfoGeometry.OperatorAlgebra.ProjectionLocalization exit 0 warnings 0
+2026-11-13T06:57:12.0315968Z CHECK InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace exit 0 warnings 0
+2026-11-13T06:57:14.8978613Z CHECK InfoGeometry.OperatorAlgebra.NoncommutativeKrausChannel exit 0 warnings 0
+2026-11-13T06:57:17.2907711Z CHECK InfoGeometry.Algebra.NonCommutativeIsometry exit 0 warnings 0
+2026-11-13T06:57:20.4809719Z CHECK InfoGeometry.OperatorAlgebra.IsometryCornerLocalization exit 0 warnings 0
+2026-11-13T06:57:23.6683931Z CHECK InfoGeometry.OperatorAlgebra.FiniteOperatorFrame exit 0 warnings 0
+2026-11-13T06:57:27.7795233Z CHECK InfoGeometry.Clifford.OperatorValuedJones exit 0 warnings 1
+2026-11-13T06:57:40.9400300Z CHECK InfoGeometry.Clifford.WeylFrameMasks exit 0 warnings 0
+2026-11-13T06:57:42.6402530Z CHECK InfoGeometry.Analysis.PorosityIteration exit 0 warnings 0
+2026-11-13T06:57:44.6494080Z CHECK InfoGeometry.Analysis.MetricPorosity exit 0 warnings 0
+2026-11-13T06:57:46.2508947Z CHECK InfoGeometry.Analysis.MultiscaleLocalization exit 0 warnings 0
+2026-11-13T06:58:05.1318384Z Traceback (most recent call last):
+2026-11-13T06:58:05.1321209Z   File "/home/runner/work/info-geometry-lean/info-geometry-lean/project/tools/quality/check_clifford_dirac.py", line 193, in <module>
+2026-11-13T06:58:05.1322648Z     main()
+2026-11-13T06:58:05.1323849Z   File "/home/runner/work/info-geometry-lean/info-geometry-lean/project/tools/quality/check_clifford_dirac.py", line 163, in main
+2026-11-13T06:58:05.1325154Z     raise RuntimeError('Native axiom audit failed; see axioms.log')
+2026-11-13T06:58:05.1339651Z RuntimeError: Native axiom audit failed; see axioms.log
+2026-11-13T06:58:05.2151063Z Traceback (most recent call last):
+2026-11-13T06:58:05.2151637Z   File "<stdin>", line 10, in <module>
+2026-11-13T06:58:05.2152246Z   File "/usr/lib/python3.12/subprocess.py", line 571, in run
+2026-11-13T06:58:06.5947422Z Artifact knutsen-localization-evidence has been successfully uploaded! Final size is 11089 bytes. Artifact ID is 14017486180
+2026-11-13T06:58:06.5954408Z Artifact download URL: https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43382041378/artifacts/14017486180
+2026-11-13T06:58:06.6188263Z Post job cleanup.
+2026-11-13T06:58:06.7098976Z [command]/usr/bin/git version
+2026-11-13T06:58:06.7142662Z git version 2.56.1
+2026-11-13T06:58:06.9695952Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-13T06:58:07.0115548Z fatal: No url found for submodule path 'external_refs/auto-ontology' in .gitmodules
+2026-11-13T06:58:07.0173986Z ##[warning]The process '/usr/bin/git' failed with exit code 128
+2026-11-13T06:58:07.0301182Z Cleaning up orphan processes
+2026-11-13T06:58:07.0681830Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/cache@v4, actions/checkout@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

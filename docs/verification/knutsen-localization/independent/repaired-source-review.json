@@ -1,0 +1,22 @@
+{
+  "reviewer": "/root/knutsen_independent_review",
+  "at_utc": "2026-11-13T06:53:26.783870+00:00",
+  "local_head": "26c53a3a7ae6d9a12b4b83604767c801791dc99c",
+  "source_sha256": {
+    "InfoGeometry.OperatorAlgebra.ProjectionLocalization": "8cdaa903a48ab3d0605a1e536a4d0f071705a3c9007ff494b8a44b6eed653323",
+    "InfoGeometry.OperatorAlgebra.IsometryCornerLocalization": "2e2386e14cf832c7a15dfbe69a0c1b64d4a729308e25b42ec0392ad352d7b9fd",
+    "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame": "65ae94daf25a6e36eeeaeea163af5526a3c9a6998bbd7ef637c9330b70145d98",
+    "InfoGeometry.Clifford.WeylFrameMasks": "9738b8591a1513b379dce55ea0231cea861614ae28ad6394cf5699c89c1cda56",
+    "InfoGeometry.Analysis.PorosityIteration": "71947960f5e31b26cd4b6f40dbe55de203da1ea3c50a73a1bdbd9d2b1356229d",
+    "InfoGeometry.Analysis.MetricPorosity": "13ce57fb3645d89bb616f59db00ab3ef9ca78e040e69e6ba461db31540fad064",
+    "InfoGeometry.Analysis.MultiscaleLocalization": "bd6a126f4fe633ed3029aa6055a3eafe667ad0bfb163d3eeacd68258411f7f3b"
+  },
+  "source_review": "PASS",
+  "native_acceptance": "PENDING",
+  "repairs_reviewed": [
+    "WeylFrameMasks: simplifier expansion and unused-proof-argument cleanup; original operator equations preserved",
+    "PorosityIteration: nondeprecated pinned Real import",
+    "MultiscaleLocalization: explicit NNReal type and pinned positive-length-to-nonzero API; theorem statements preserved"
+  ],
+  "independent_tests_executed": false
+}

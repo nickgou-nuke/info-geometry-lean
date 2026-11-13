@@ -1,0 +1,10 @@
+{
+  "source": "/workspace/scratch/d18a558d1d7d/knutsen-localization-lean/lean/InfoGeometry/Analysis/PorosityIteration.lean",
+  "candidate": "/workspace/scratch/d18a558d1d7d/knutsen-repair-candidates/PorosityIteration.lean",
+  "before_sha256": "71947960f5e31b26cd4b6f40dbe55de203da1ea3c50a73a1bdbd9d2b1356229d",
+  "after_sha256": "7a06cca338bcec02e8b19800565b3546a50abd9b86aacf75784d3deadc7cd260",
+  "sole_change": "explicit noncomputable modifier on remainingPorosity",
+  "theorem_statements_and_proof_bodies_changed": false,
+  "build_run": false,
+  "audit_modified": false
+}

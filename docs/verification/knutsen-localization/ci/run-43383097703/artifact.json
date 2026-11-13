@@ -1,0 +1,23 @@
+{
+  "artifacts": [
+    {
+      "id": 14017786847,
+      "name": "knutsen-localization-evidence",
+      "size_in_bytes": 19829,
+      "url": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/actions/artifacts/14017786847",
+      "archive_download_url": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/actions/artifacts/14017786847/zip",
+      "expired": false,
+      "created_at": "2026-11-13T07:07:19Z",
+      "expires_at": "2027-02-11T07:04:25Z",
+      "updated_at": "2026-11-13T07:07:19Z",
+      "digest": "sha256:848fa6c5663cf19fbc48a5570ac3bf40ce0d1441f49ab5bdfd5162fc667b91d3",
+      "workflow_run": {
+        "id": 43383097703,
+        "repository_id": 1156582666,
+        "head_repository_id": 1156582666,
+        "head_branch": "codex/knutsen-localization",
+        "head_sha": "3f7282ceb5076e16bae8acc696adffd3771494c9"
+      }
+    }
+  ]
+}

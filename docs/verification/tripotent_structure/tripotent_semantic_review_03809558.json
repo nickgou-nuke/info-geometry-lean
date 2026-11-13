@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "review_kind": "independent_source_semantic_audit",
+  "reviewer": "root/tripotent_intake_audit",
+  "repository": "nickgou-nuke/info-geometry-lean",
+  "pull_request": 352,
+  "source_revision": "038095581cf383fcf6586a65a1df50fce2eac5fa",
+  "verdict": "accepted_at_stated_algebraic_scope_pending_kernel_validation",
+  "semantic_blockers": [],
+  "builds_or_tests_run_by_reviewer": false,
+  "axiom_audit_run_by_reviewer": false,
+  "source_or_github_mutations_by_reviewer": false,
+  "intake_sha256": "91f298d175b92810a214d6696f4a4a588c2fa231ee5058449a8a74c0bf89d2c8",
+  "reviewed_owner_sha256": {
+    "lean/InfoGeometry/Core/TripotentAdjointDefect.lean": "e6c7d4c4b66cc81380375b4860ebad87e353addeb7ab9bdc639711d55e858279",
+    "lean/InfoGeometry/Core/TripotentIntegerGrading.lean": "a9cbb59b746b7c4a2e2d766fe3c58030a8ce5950e98f5ae005d0d536529d9fc3",
+    "lean/InfoGeometry/Core/TripotentInvariantSubspaces.lean": "c6e3040495aceaaa6b12c903e168c7ea78f1342bb03d4dd1800469c56c80ea40",
+    "lean/InfoGeometry/Core/TripotentInvolution.lean": "bf3c999295708a36178bca8b7a7888a582123bc5b6fe5a28d6b2a2b5104c8a3a",
+    "lean/InfoGeometry/Core/TripotentKreinBlocks.lean": "c71e7ccb1408e9fd7a27681d68b49a18e719c847855423f591f3b63167cd2584",
+    "lean/InfoGeometry/Core/TripotentOddGeneration.lean": "e7ca2e81a3eca8091a82da897a6c763d0921f95528e9c6f1062784afb0134b44",
+    "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/TripotentIntegerSuperbracket.lean": "dd28d994f37f87416f9f76cbaa4907f288173a2025b3a5464441d64564292089",
+    "lean/InfoGeometry/OperatorAlgebra/TripotentCornerActions.lean": "a89575a4f5c091213bbc04d62e7a6c99c22d7056fdeb2381ed252183ed770a1c",
+    "lean/InfoGeometry/OperatorAlgebra/TripotentExtremalJordanPair.lean": "870d173e9078d43e246d16d48d5d107d3d46dc6f876078d227cb56ce5e20f530",
+    "lean/InfoGeometry/OperatorAlgebra/TripotentGradeTransport.lean": "190c3518043cf26bf9add88fa7b7fc4f623cf6451ae833daa3dca5334d77760c"
+  },
+  "reused_owners_inspected": [
+    "lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean",
+    "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/PullbackTriple.lean",
+    "lean/InfoGeometry/Canonical/TKKJordanPairData.lean",
+    "lean/InfoGeometry/Physics/Algebra/TripotentFiveGradingDecomposition.lean",
+    "lean/InfoGeometry/Physics/Algebra/TripotentLeftRightPeirceProjectors.lean"
+  ],
+  "accepted_scope": [
+    "Arbitrary unital associative real algebra, retaining noncommutative multiplication.",
+    "Native integer eigenspaces, internal direct sum, graded multiplication and algebra equivalence.",
+    "Actual sum-degree homogeneous superbrackets and unrestricted integer super-Jacobi.",
+    "Lagrange polynomial aeval identification before invariant-submodule and Lie-subalgebra restriction.",
+    "Strict kernel and dual-kernel statements about nonzero actual Module.End operators.",
+    "Constructed extreme Jordan pair with outer and fundamental identities, double-commutator agreement and separate additivity/scalar-linearity laws.",
+    "Exact ordinary and Krein skew-invariance criteria; explicit obstruction to ordinary-skew superclosure.",
+    "Actual Krein block readbacks under the stated fundamental-symmetry hypotheses.",
+    "Odd-anticommutator spans equal native finite-sum corner-submodule products.",
+    "Genuine algebra-automorphism and unit-conjugation grade transport, with cancellation grouped by total degree.",
+    "Correct quartic defect with coefficient 12 and no unconditional nonvanishing claim."
+  ],
+  "material_boundaries": [
+    "The quintic is an annihilating polynomial; missing grades and a zero extreme Jordan pair are allowed.",
+    "Krein skewness is sufficient for the stated invariance, not a classification or nontriviality theorem.",
+    "The JordanPair bundle lacks trilinearity fields, but this construction separately proves all six shared add/smul laws.",
+    "Dual product equations are sufficient for kernel isolation, not necessary.",
+    "The corner-span criterion is neither single-anticommutator surjectivity nor global Morita equivalence.",
+    "Full centralizer-normalizer classification, prescribed gauge/conformal identifications and unbounded state-specific Stone/Tomita/KMS construction are not asserted."
+  ],
+  "proof_delta_reviews": [
+    {
+      "candidate": "TripotentCornerActions.fixed.lean",
+      "result": "accepted_as_elaboration_only_pending_kernel_validation",
+      "changes": "One explicit Module.End action lambda and three explicit (T := S) argument applications; theorem statements and hypotheses unchanged."
+    }
+  ]
+}

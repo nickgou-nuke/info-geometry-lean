@@ -1,0 +1,355 @@
+{
+  "observed_at": "2026-11-13 10:55:37 UTC",
+  "final_branch_ref": {
+    "ref": "refs/heads/formalize/tripotent-krein-morita-boundaries",
+    "node_id": "REF_kwDORPANCtoANnJlZnMvaGVhZHMvZm9ybWFsaXplL3RyaXBvdGVudC1rcmVpbi1tb3JpdGEtYm91bmRhcmllcw",
+    "url": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/git/refs/heads/formalize/tripotent-krein-morita-boundaries",
+    "object": {
+      "sha": "337d7ef1c9433d342e92ead649f95b6e2481780a",
+      "type": "commit",
+      "url": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/git/commits/337d7ef1c9433d342e92ead649f95b6e2481780a"
+    }
+  },
+  "commits": [
+    {
+      "sha": "4199341fb43a758fde569b72fe0e1b9fa9cd9f58",
+      "tree": "bb9f7fb6180b53cf92ce433386f9781f2c95c18b",
+      "parents": [
+        "c23aa651772224079271a35a0acca5a3f9767354",
+        "7dda7101e3340adab4bf85d535895b445854e3ea"
+      ],
+      "api_url": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/git/commits/4199341fb43a758fde569b72fe0e1b9fa9cd9f58",
+      "html_url": "https://github.com/nickgou-nuke/info-geometry-lean/commit/4199341fb43a758fde569b72fe0e1b9fa9cd9f58"
+    },
+    {
+      "sha": "38aece91848c1654e7a8f4a0612de8c2d05ce533",
+      "tree": "d51c5028909b7bc77706cf7ae31474fc78af1130",
+      "parents": [
+        "c23aa651772224079271a35a0acca5a3f9767354",
+        "337d7ef1c9433d342e92ead649f95b6e2481780a"
+      ],
+      "api_url": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/git/commits/38aece91848c1654e7a8f4a0612de8c2d05ce533",
+      "html_url": "https://github.com/nickgou-nuke/info-geometry-lean/commit/38aece91848c1654e7a8f4a0612de8c2d05ce533"
+    }
+  ],
+  "first_run": {
+    "run_id": 43409179642,
+    "head_sha": "7dda7101e3340adab4bf85d535895b445854e3ea",
+    "artifact": {
+      "id": 14029207237,
+      "name": "tripotent-structure-verification",
+      "size_in_bytes": 203953,
+      "url": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/actions/artifacts/14029207237",
+      "archive_download_url": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/actions/artifacts/14029207237/zip",
+      "expired": false,
+      "created_at": "2026-11-13T10:36:12Z",
+      "expires_at": "2027-02-11T10:27:21Z",
+      "updated_at": "2026-11-13T10:36:12Z",
+      "digest": "sha256:ba0c834b160e24a84df4552408d5737fab62e42e0dddfb717d493bc5d5aa15ae",
+      "workflow_run": {
+        "id": 43409179642,
+        "repository_id": 1156582666,
+        "head_repository_id": 1156582666,
+        "head_branch": "formalize/tripotent-krein-morita-boundaries",
+        "head_sha": "7dda7101e3340adab4bf85d535895b445854e3ea"
+      }
+    },
+    "kernel_job": {
+      "id": 131831152975,
+      "run_id": 43409179642,
+      "workflow_name": "Tripotent integer grading and structural boundaries (scoped)",
+      "head_branch": "formalize/tripotent-krein-morita-boundaries",
+      "run_url": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/actions/runs/43409179642",
+      "run_attempt": 1,
+      "node_id": "CR_kwDORPANCs8AAAAesb_BTw",
+      "head_sha": "7dda7101e3340adab4bf85d535895b445854e3ea",
+      "url": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/actions/jobs/131831152975",
+      "html_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43409179642/job/131831152975",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-13T10:27:43Z",
+      "started_at": "2026-11-13T10:28:18Z",
+      "completed_at": "2026-11-13T10:36:14Z",
+      "name": "kernel-check",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-13T10:28:19Z",
+          "completed_at": "2026-11-13T10:28:21Z"
+        },
+        {
+          "name": "Fetch exact source and pinned Mathlib",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-13T10:28:21Z",
+          "completed_at": "2026-11-13T10:28:34Z"
+        },
+        {
+          "name": "Install exact toolchain",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-13T10:28:34Z",
+          "completed_at": "2026-11-13T10:28:51Z"
+        },
+        {
+          "name": "Compile exact source closure and audit owned declarations",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-13T10:28:51Z",
+          "completed_at": "2026-11-13T10:36:07Z"
+        },
+        {
+          "name": "Print immutable verification identity and status",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-13T10:36:07Z",
+          "completed_at": "2026-11-13T10:36:07Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-13T10:36:07Z",
+          "completed_at": "2026-11-13T10:36:12Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-13T10:36:12Z",
+          "completed_at": "2026-11-13T10:36:12Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/check-runs/131831152975",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000023310,
+      "runner_name": "GitHub Actions 1000023310",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  },
+  "second_run": {
+    "run_id": 43409480149,
+    "head_sha": "337d7ef1c9433d342e92ead649f95b6e2481780a",
+    "artifact": {
+      "id": 14029369284,
+      "name": "tripotent-structure-verification",
+      "size_in_bytes": 203819,
+      "url": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/actions/artifacts/14029369284",
+      "archive_download_url": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/actions/artifacts/14029369284/zip",
+      "expired": false,
+      "created_at": "2026-11-13T10:53:45Z",
+      "expires_at": "2027-02-11T10:29:48Z",
+      "updated_at": "2026-11-13T10:53:45Z",
+      "digest": "sha256:62422c7e0d8df0199cd415fa90941e7f906fe62ebd9bf297196f387733fdba10",
+      "workflow_run": {
+        "id": 43409480149,
+        "repository_id": 1156582666,
+        "head_repository_id": 1156582666,
+        "head_branch": "formalize/tripotent-krein-morita-boundaries",
+        "head_sha": "337d7ef1c9433d342e92ead649f95b6e2481780a"
+      }
+    },
+    "kernel_job": {
+      "id": 131838779166,
+      "run_id": 43409480149,
+      "workflow_name": "Tripotent integer grading and structural boundaries (scoped)",
+      "head_branch": "formalize/tripotent-krein-morita-boundaries",
+      "run_url": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/actions/runs/43409480149",
+      "run_attempt": 1,
+      "node_id": "CR_kwDORPANCs8AAAAesjQfHg",
+      "head_sha": "337d7ef1c9433d342e92ead649f95b6e2481780a",
+      "url": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/actions/jobs/131838779166",
+      "html_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43409480149/job/131838779166",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-13T10:45:10Z",
+      "started_at": "2026-11-13T10:45:15Z",
+      "completed_at": "2026-11-13T10:53:47Z",
+      "name": "kernel-check",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-13T10:45:16Z",
+          "completed_at": "2026-11-13T10:45:16Z"
+        },
+        {
+          "name": "Fetch exact source and pinned Mathlib",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-13T10:45:16Z",
+          "completed_at": "2026-11-13T10:45:41Z"
+        },
+        {
+          "name": "Install exact toolchain",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-13T10:45:41Z",
+          "completed_at": "2026-11-13T10:45:58Z"
+        },
+        {
+          "name": "Compile exact source closure and audit owned declarations",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-13T10:45:58Z",
+          "completed_at": "2026-11-13T10:53:44Z"
+        },
+        {
+          "name": "Print immutable verification identity and status",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-13T10:53:44Z",
+          "completed_at": "2026-11-13T10:53:44Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-13T10:53:44Z",
+          "completed_at": "2026-11-13T10:53:46Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-13T10:53:46Z",
+          "completed_at": "2026-11-13T10:53:46Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/check-runs/131838779166",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000023349,
+      "runner_name": "GitHub Actions 1000023349",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  },
+  "latest_source_gate": {
+    "id": 131838779960,
+    "name": "source-gates",
+    "status": "in_progress",
+    "conclusion": null,
+    "run_id": 43409480149,
+    "logs_url": null,
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 1
+      },
+      {
+        "name": "Fetch the exact target and task base",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 2
+      },
+      {
+        "name": "Install the pinned validation prerequisites",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 3
+      },
+      {
+        "name": "Run the unchanged staged proof gate on the actual task range",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 4
+      },
+      {
+        "name": "Attempt the unchanged incremental root quality gate",
+        "status": "completed",
+        "conclusion": "failure",
+        "number": 5
+      },
+      {
+        "name": "Attempt the unchanged full root quality gate",
+        "status": "in_progress",
+        "conclusion": null,
+        "number": 6
+      },
+      {
+        "name": "Run actions/upload-artifact@v4",
+        "status": "pending",
+        "conclusion": null,
+        "number": 7
+      }
+    ]
+  },
+  "latest_kernel": {
+    "id": 131838779166,
+    "name": "kernel-check",
+    "status": "completed",
+    "conclusion": "success",
+    "run_id": 43409480149,
+    "logs_url": null,
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 1
+      },
+      {
+        "name": "Fetch exact source and pinned Mathlib",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 2
+      },
+      {
+        "name": "Install exact toolchain",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 3
+      },
+      {
+        "name": "Compile exact source closure and audit owned declarations",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 4
+      },
+      {
+        "name": "Print immutable verification identity and status",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 5
+      },
+      {
+        "name": "Run actions/upload-artifact@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 6
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 7
+      }
+    ]
+  },
+  "independent_execution_description": "Two separate pull_request-triggered workflow runs, each attempt1, with independent artifact/source/audit verification by QA. No manual rerun was requested or performed.",
+  "manual_rerun_requested": false
+}

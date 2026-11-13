@@ -1,0 +1,276 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/tripotent_acceptance",
+  "review_kind": "independent_exact_source_mathematical_acceptance",
+  "observed_at": "2026-11-13 10:55:37 UTC",
+  "repository": "nickgou-nuke/info-geometry-lean",
+  "pull_request": 352,
+  "pull_request_url": "https://github.com/nickgou-nuke/info-geometry-lean/pull/352",
+  "branch": "formalize/tripotent-krein-morita-boundaries",
+  "accepted_head": "337d7ef1c9433d342e92ead649f95b6e2481780a",
+  "accepted_tree": "d51c5028909b7bc77706cf7ae31474fc78af1130",
+  "mathematical_source_checkpoint": "7dda7101e3340adab4bf85d535895b445854e3ea",
+  "task_base": "c23aa651772224079271a35a0acca5a3f9767354",
+  "verdict": "accepted_for_the_ten_stated_algebraic_owners_and_their_exact_58_module_closure",
+  "mathematical_source_accepted": true,
+  "whole_repository_acceptance": false,
+  "merge_acceptance": false,
+  "acceptance_scope": "Native Lean compilation of the exact 58-module repository import closure, combined imports of all 10 target owners, and complete ownership-based declaration axiom audits, plus separately preserved semantic source review. No claim beyond the declared hypotheses or the task contract.",
+  "intake": {
+    "bytes": 44529,
+    "sha256": "91f298d175b92810a214d6696f4a4a588c2fa231ee5058449a8a74c0bf89d2c8"
+  },
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "mathlib_pin": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "actual_lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "targets": [
+    "InfoGeometry.Core.TripotentIntegerGrading",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentIntegerSuperbracket",
+    "InfoGeometry.Core.TripotentInvariantSubspaces",
+    "InfoGeometry.Core.TripotentOddGeneration",
+    "InfoGeometry.Core.TripotentInvolution",
+    "InfoGeometry.OperatorAlgebra.TripotentCornerActions",
+    "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+    "InfoGeometry.OperatorAlgebra.TripotentGradeTransport",
+    "InfoGeometry.Core.TripotentKreinBlocks",
+    "InfoGeometry.Core.TripotentAdjointDefect"
+  ],
+  "owned_declaration_count": 157,
+  "owned_declaration_counts": {
+    "InfoGeometry.Core.TripotentAdjointDefect": 2,
+    "InfoGeometry.Core.TripotentIntegerGrading": 11,
+    "InfoGeometry.Core.TripotentInvariantSubspaces": 6,
+    "InfoGeometry.Core.TripotentInvolution": 34,
+    "InfoGeometry.Core.TripotentKreinBlocks": 18,
+    "InfoGeometry.Core.TripotentOddGeneration": 10,
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentIntegerSuperbracket": 13,
+    "InfoGeometry.OperatorAlgebra.TripotentCornerActions": 19,
+    "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair": 27,
+    "InfoGeometry.OperatorAlgebra.TripotentGradeTransport": 17
+  },
+  "axiom_allowlist": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "observed_axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+  ],
+  "native_audit_method": {
+    "enumeration": "env.constants, filtered using env.getModuleIdxFor? and env.header.moduleNames for exactly the ten target modules",
+    "dependency_collector": "Lean.collectAxioms",
+    "unsafe_or_partial_declarations": "rejected by the reviewed Lean audit command",
+    "generated_and_private_declarations": "included whenever owned by a target module in the compiled environment",
+    "generator_source_sha256": "6ac9db6fa7d40fdb88b1094c31a314acc79aad0f297cbca98a38f5c3378d6e9e",
+    "generated_audit_source_sha256": "971ee74d2d5173815901abacf915e7aacf2fe6610d0521b27285a9e43d657a8c",
+    "native_audit_log_sha256_both_runs": "c8ba2889259efc324b12af708dcd7e7e8cad5200f2c3a3f791e42d0d42bdccb0"
+  },
+  "independent_execution": {
+    "method": "Two separate pull_request-triggered workflow runs, each attempt1, with independent artifact/source/audit verification by QA. No manual rerun was requested or performed.",
+    "separate_workflow_run_count": 2,
+    "manual_github_rerun_api_invoked": false,
+    "independent_artifact_verifications": 2,
+    "all_58_source_hashes_identical_between_runs": true,
+    "all_157_owned_declaration_records_identical_between_runs": true,
+    "native_audit_logs_byte_identical": true,
+    "kernel_check_workflow_block_byte_identical": true,
+    "kernel_check_block_sha256": "008109cc8603bb86e845264055114f57d3a36fd924bcd43f55c109d9f703075c",
+    "workflow_delta": "337d adds only apt update, ripgrep install, and rg --version in source-gates prerequisites. No proof, checker, gate-script, threshold, or Lean/Mathlib-pin change.",
+    "workflow_delta_evidence": {
+      "file": "qa-a-workflow-drift-337d7ef1.json",
+      "sha256": "e3c28e30b69dc330e69ecf8f84e1e9160ec8453d6e670564be1ddb3f0b7c2674",
+      "bytes": 2372
+    }
+  },
+  "runs": [
+    {
+      "run_id": 43409179642,
+      "run_attempt": 1,
+      "run_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43409179642",
+      "kernel_job_id": 131831152975,
+      "kernel_job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43409179642/job/131831152975",
+      "kernel_conclusion": "success",
+      "published_head": "7dda7101e3340adab4bf85d535895b445854e3ea",
+      "tested_merge": "4199341fb43a758fde569b72fe0e1b9fa9cd9f58",
+      "tested_tree": "bb9f7fb6180b53cf92ce433386f9781f2c95c18b",
+      "tested_commit_api": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/git/commits/4199341fb43a758fde569b72fe0e1b9fa9cd9f58",
+      "tested_parents": [
+        "c23aa651772224079271a35a0acca5a3f9767354",
+        "7dda7101e3340adab4bf85d535895b445854e3ea"
+      ],
+      "source_snapshot": {
+        "file": "qa-a-source-snapshot-7dda7101.json",
+        "sha256": "768f13dbc34c37c91a0290c20fd864eafe684b5b5681d82db90c4e6a538d9c9c",
+        "bytes": 21838
+      },
+      "artifact_verification": {
+        "file": "qa-a-artifact-verification-7dda7101-attempt1.json",
+        "sha256": "65d86d805da37e66b6736dbcdf115678204e623016b4386adff2754eb88d4472",
+        "bytes": 50576
+      },
+      "parsed_checker_status": {
+        "file": "status-43409179642-attempt1.json",
+        "sha256": "3cbe122c041bbc6af47e512c20fea98f36bc4cf4ce28820ab62b999d21dd7d56",
+        "bytes": 13537
+      },
+      "artifact_id": 14029207237,
+      "artifact_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43409179642/artifacts/14029207237",
+      "artifact_zip_sha256": "ba0c834b160e24a84df4552408d5737fab62e42e0dddfb717d493bc5d5aa15ae",
+      "artifact_zip_digest_recomputed": true,
+      "job_log_sha256": "30fc93584aca6d53b736d407fa9308887be88de941cf2f34c04930462b4fdaa6",
+      "audit_log_sha256": "c8ba2889259efc324b12af708dcd7e7e8cad5200f2c3a3f791e42d0d42bdccb0",
+      "audit_source_sha256": "971ee74d2d5173815901abacf915e7aacf2fe6610d0521b27285a9e43d657a8c",
+      "fresh_repository_compilations": 58,
+      "native_owned_declaration_audit_count": 157,
+      "timing": {
+        "job_started_at": "2026-11-13T10:28:18Z",
+        "job_completed_at": "2026-11-13T10:36:14Z",
+        "job_seconds": 476.0,
+        "combined_cache_setup_compile_audit_step_seconds": 436.0,
+        "first_module_completion": "2026-11-13T10:30:01.1162356Z",
+        "last_module_completion": "2026-11-13T10:33:30.5183936Z",
+        "module_completion_window_seconds": 209.402158,
+        "audit_count_timestamp": "2026-11-13T10:36:07.5679763Z",
+        "last_compile_mark_to_audit_count_seconds": 157.049583,
+        "limits": "The module-completion window excludes cache setup and the first module runtime; the final interval includes audit generation and wrapper overhead. Exact total compilation-only runtime is not logged."
+      },
+      "artifact_verifier_command": "python3 -B verify_tripotent_remote_artifact.py --snapshot qa-a-source-snapshot-7dda7101.json --artifact-root verification-43409179642-attempt1 --job-log kernel-check-131831152975.log --repository /workspace/scratch/9009f3c86480/tripotent-krein-continuation --output qa-a-artifact-verification-7dda7101-attempt1.json"
+    },
+    {
+      "run_id": 43409480149,
+      "run_attempt": 1,
+      "run_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43409480149",
+      "kernel_job_id": 131838779166,
+      "kernel_job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43409480149/job/131838779166",
+      "kernel_conclusion": "success",
+      "published_head": "337d7ef1c9433d342e92ead649f95b6e2481780a",
+      "tested_merge": "38aece91848c1654e7a8f4a0612de8c2d05ce533",
+      "tested_tree": "d51c5028909b7bc77706cf7ae31474fc78af1130",
+      "tested_commit_api": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/git/commits/38aece91848c1654e7a8f4a0612de8c2d05ce533",
+      "tested_parents": [
+        "c23aa651772224079271a35a0acca5a3f9767354",
+        "337d7ef1c9433d342e92ead649f95b6e2481780a"
+      ],
+      "source_snapshot": {
+        "file": "qa-a-source-snapshot-337d7ef1.json",
+        "sha256": "62a463ac0f111a7907ba5198b160d3539effad648c80b099d781e606422f09f2",
+        "bytes": 22586
+      },
+      "artifact_verification": {
+        "file": "qa-a-artifact-verification-337d7ef1-attempt1.json",
+        "sha256": "78a2f91927464cd706b18134165be324d567e8d35dfe1779fe4abae217525aca",
+        "bytes": 50576
+      },
+      "parsed_checker_status": {
+        "file": "status-43409480149-attempt1.json",
+        "sha256": "1d33956b788b23a18ca539c77a0ab298c2792babdeb6fe172842138f8b381fe1",
+        "bytes": 13537
+      },
+      "artifact_id": 14029369284,
+      "artifact_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43409480149/artifacts/14029369284",
+      "artifact_zip_sha256": "62422c7e0d8df0199cd415fa90941e7f906fe62ebd9bf297196f387733fdba10",
+      "artifact_zip_digest_recomputed": true,
+      "job_log_sha256": "63ea871a3b81d48ff82d591b20360c1c8ec47b6c7331e10c482a30fc0c7d44c2",
+      "audit_log_sha256": "c8ba2889259efc324b12af708dcd7e7e8cad5200f2c3a3f791e42d0d42bdccb0",
+      "audit_source_sha256": "971ee74d2d5173815901abacf915e7aacf2fe6610d0521b27285a9e43d657a8c",
+      "fresh_repository_compilations": 58,
+      "native_owned_declaration_audit_count": 157,
+      "timing": {
+        "job_started_at": "2026-11-13T10:45:15Z",
+        "job_completed_at": "2026-11-13T10:53:47Z",
+        "job_seconds": 512.0,
+        "combined_cache_setup_compile_audit_step_seconds": 466.0,
+        "first_module_completion": "2026-11-13T10:47:03.3739713Z",
+        "last_module_completion": "2026-11-13T10:49:59.4133738Z",
+        "module_completion_window_seconds": 176.039402,
+        "audit_count_timestamp": "2026-11-13T10:53:44.6971758Z",
+        "last_compile_mark_to_audit_count_seconds": 225.283802,
+        "limits": "The module-completion window excludes cache setup and the first module runtime; the final interval includes audit generation and wrapper overhead. Exact total compilation-only runtime is not logged."
+      },
+      "artifact_verifier_command": "python3 -B verify_tripotent_remote_artifact.py --snapshot qa-a-source-snapshot-337d7ef1.json --artifact-root verification-43409480149-attempt1 --job-log kernel-check-131838779166.log --repository /workspace/scratch/9009f3c86480/tripotent-krein-continuation --output qa-a-artifact-verification-337d7ef1-attempt1.json"
+    }
+  ],
+  "semantic_source_review": {
+    "file": "tripotent_semantic_review_repair4.json",
+    "sha256": "4ca7e3eed9e1f3b61a4856e22fd047895528c49b50fffbea0001f0f772e117d0",
+    "bytes": 4072
+  },
+  "verifier": {
+    "file": "verify_tripotent_remote_artifact.py",
+    "sha256": "469f8494e5d4ec7b1e9ecc35a21073ab9ef4b968efe1b359f524a951bc21fdf3",
+    "bytes": 7393
+  },
+  "verifier_independent_source_review": {
+    "file": "tripotent_verifier_semantic_review.json",
+    "sha256": "85d6dc1ff3e3f5f03352206ef35fe9043037c7cf4405c3dc49577c77d927f439",
+    "bytes": 2808
+  },
+  "verifier_scope": "Checks authenticated completed remote artifacts and their exact source, compiler version, compiled module records and complete owned-declaration audit; immutable GitHub commit/tree correspondence is verified separately in this acceptance record.",
+  "source_and_root_gates": {
+    "first_run_final_evidence": {
+      "file": "qa-a-source-gates-7dda7101.json",
+      "sha256": "82d465303cac9af55e7cf29faeb0c906b21462d88f382d007b9fcd43a2b4ae1a",
+      "bytes": 2682
+    },
+    "first_run_actual_outcomes": {
+      "staged_nonempty_ten_owner_range": "passed and artifact range verified",
+      "incremental_root": "failed",
+      "explicit_full_root": "failed",
+      "observed_build_blocker": "external_refs/homotopy-hypothesis-lean4 package directory missing",
+      "observed_theory_scan_limitation": "rg missing despite success label; repaired prerequisite is separately checked in second run"
+    },
+    "latest_run_observed_at": "2026-11-13 10:55:37 UTC",
+    "latest_run_id": 43409480149,
+    "latest_source_job_id": 131838779960,
+    "latest_source_job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43409480149/job/131838779960",
+    "latest_source_job_status": "in_progress",
+    "latest_source_job_conclusion": null,
+    "latest_prerequisite_step": {
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "latest_staged_task_range_step": {
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "latest_incremental_root_step": {
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    "latest_full_root_step": {
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "latest_artifact_upload_step": {
+      "status": "pending",
+      "conclusion": null
+    },
+    "latest_root_failure_log_retrieved": false,
+    "latest_root_failure_cause_inferred": false,
+    "latest_full_completion_or_success_claimed": false,
+    "completion_policy": "Scope accepted after two successful focused executions and independent evidence checks. No extra wait solely for the latest redundant full root attempt; earlier unchanged root attempts have actual documented blockers."
+  },
+  "commands_and_execution": {
+    "focused_workflow_command": "python3 project/tools/quality/check_tripotent_structure.py --mathlib-root pinned-mathlib --output verification",
+    "cache_command": "lake exe cache get",
+    "lean_path_command": "lake env printenv LEAN_PATH",
+    "version_command": "lean --version",
+    "source_compilation_command_template": "lean -o <verification/lib/module.olean> <verification/src/module.lean> (serialized for all 58 modules in closure order)",
+    "native_audit_command": "lean <verification/src/PerjesKleinKernelAudit.lean>",
+    "staged_gate_command": "python3 tools/quality/proof_proxy_staged_gate.py on actual nonempty staged task-base-to-tested-tree range",
+    "incremental_gate_command": "bash scripts/quality/post_build_gate.sh --incremental --base=c23aa651772224079271a35a0acca5a3f9767354 --head=<tested_merge>",
+    "full_gate_command": "bash scripts/quality/post_build_gate.sh --full",
+    "local_lean_or_lake_invoked_by_QA": false,
+    "source_or_ref_mutations_by_QA": false,
+    "tests_beyond_requested_scope": false
+  },
+  "interpretation_limits": [
+    "No whole-repository or every-default-target build certificate.",
+    "No proof that all five grades or any extreme component are nonzero.",
+    "No global Morita equivalence or single-anticommutator surjectivity.",
+    "No prescribed conformal/gauge classification or unbounded Stone/Tomita/KMS theorem.",
+    "The source contract and independent semantic review retain all stated carrier, hypothesis and analytic boundaries."
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "acceptance_record": {
+    "file": "qa-a-acceptance-337d7ef1.json",
+    "sha256": "929485ee8dec3ee33270e939f3c28f6b1c0fd7fe3c401ebbac2b65a8ededcf6b",
+    "bytes": 15514
+  },
+  "files": [
+    {
+      "source_path": "/workspace/scratch/9009f3c86480/candidates/tripotent-qa/qa-a-acceptance-337d7ef1.json",
+      "preserve_name": "qa-a-acceptance-337d7ef1.json",
+      "sha256": "929485ee8dec3ee33270e939f3c28f6b1c0fd7fe3c401ebbac2b65a8ededcf6b",
+      "bytes": 15514
+    },
+    {
+      "source_path": "/workspace/scratch/9009f3c86480/candidates/tripotent-qa/qa-a-source-snapshot-7dda7101.json",
+      "preserve_name": "qa-a-source-snapshot-7dda7101.json",
+      "sha256": "768f13dbc34c37c91a0290c20fd864eafe684b5b5681d82db90c4e6a538d9c9c",
+      "bytes": 21838
+    },
+    {
+      "source_path": "/workspace/scratch/9009f3c86480/candidates/tripotent-qa/qa-a-source-snapshot-337d7ef1.json",
+      "preserve_name": "qa-a-source-snapshot-337d7ef1.json",
+      "sha256": "62a463ac0f111a7907ba5198b160d3539effad648c80b099d781e606422f09f2",
+      "bytes": 22586
+    },
+    {
+      "source_path": "/workspace/scratch/9009f3c86480/candidates/tripotent-qa/qa-a-artifact-verification-7dda7101-attempt1.json",
+      "preserve_name": "qa-a-artifact-verification-7dda7101-attempt1.json",
+      "sha256": "65d86d805da37e66b6736dbcdf115678204e623016b4386adff2754eb88d4472",
+      "bytes": 50576
+    },
+    {
+      "source_path": "/workspace/scratch/9009f3c86480/candidates/tripotent-qa/qa-a-artifact-verification-337d7ef1-attempt1.json",
+      "preserve_name": "qa-a-artifact-verification-337d7ef1-attempt1.json",
+      "sha256": "78a2f91927464cd706b18134165be324d567e8d35dfe1779fe4abae217525aca",
+      "bytes": 50576
+    },
+    {
+      "source_path": "/workspace/scratch/9009f3c86480/candidates/tripotent-qa/status-43409179642-attempt1.json",
+      "preserve_name": "status-43409179642-attempt1.json",
+      "sha256": "3cbe122c041bbc6af47e512c20fea98f36bc4cf4ce28820ab62b999d21dd7d56",
+      "bytes": 13537
+    },
+    {
+      "source_path": "/workspace/scratch/9009f3c86480/candidates/tripotent-qa/status-43409480149-attempt1.json",
+      "preserve_name": "status-43409480149-attempt1.json",
+      "sha256": "1d33956b788b23a18ca539c77a0ab298c2792babdeb6fe172842138f8b381fe1",
+      "bytes": 13537
+    },
+    {
+      "source_path": "/workspace/scratch/9009f3c86480/candidates/tripotent-qa/qa-a-source-gates-7dda7101.json",
+      "preserve_name": "qa-a-source-gates-7dda7101.json",
+      "sha256": "82d465303cac9af55e7cf29faeb0c906b21462d88f382d007b9fcd43a2b4ae1a",
+      "bytes": 2682
+    },
+    {
+      "source_path": "/workspace/scratch/9009f3c86480/candidates/tripotent-qa/qa-a-workflow-drift-337d7ef1.json",
+      "preserve_name": "qa-a-workflow-drift-337d7ef1.json",
+      "sha256": "e3c28e30b69dc330e69ecf8f84e1e9160ec8453d6e670564be1ddb3f0b7c2674",
+      "bytes": 2372
+    },
+    {
+      "source_path": "/workspace/scratch/9009f3c86480/candidates/tripotent-qa/qa-a-final-remote-evidence.json",
+      "preserve_name": "qa-a-final-remote-evidence.json",
+      "sha256": "056cc54ba9baf3bef788ff0f542cf6d777aa5f972b68f5c89c9be6565330e3df",
+      "bytes": 12657
+    },
+    {
+      "source_path": "/workspace/scratch/9009f3c86480/candidates/tripotent-qa/verify_tripotent_remote_artifact.py",
+      "preserve_name": "verify_tripotent_remote_artifact.py",
+      "sha256": "469f8494e5d4ec7b1e9ecc35a21073ab9ef4b968efe1b359f524a951bc21fdf3",
+      "bytes": 7393
+    },
+    {
+      "source_path": "/workspace/scratch/9009f3c86480/candidates/tripotent_verifier_semantic_review.json",
+      "preserve_name": "tripotent_verifier_semantic_review.json",
+      "sha256": "85d6dc1ff3e3f5f03352206ef35fe9043037c7cf4405c3dc49577c77d927f439",
+      "bytes": 2808
+    },
+    {
+      "source_path": "/workspace/scratch/9009f3c86480/candidates/tripotent_semantic_review_03809558.json",
+      "preserve_name": "tripotent_semantic_review_03809558.json",
+      "sha256": "e84be1dbcc4007b6b4f1fab5630c513cb46a1c3692f70d39474057f2daf79cff",
+      "bytes": 4560
+    },
+    {
+      "source_path": "/workspace/scratch/9009f3c86480/candidates/tripotent_semantic_review_repair3.json",
+      "preserve_name": "tripotent_semantic_review_repair3.json",
+      "sha256": "89d39298d1dd824ab4f36d23c042097b95c58fbaab3e4d07e20c5e0a7c483e77",
+      "bytes": 4144
+    },
+    {
+      "source_path": "/workspace/scratch/9009f3c86480/candidates/tripotent_semantic_review_repair4.json",
+      "preserve_name": "tripotent_semantic_review_repair4.json",
+      "sha256": "4ca7e3eed9e1f3b61a4856e22fd047895528c49b50fffbea0001f0f772e117d0",
+      "bytes": 4072
+    }
+  ],
+  "excluded_bulk_evidence": "Downloaded ZIPs, decoded full job logs and copied closure trees remain in candidates; immutable URLs and hashes are preserved in the compact evidence."
+}

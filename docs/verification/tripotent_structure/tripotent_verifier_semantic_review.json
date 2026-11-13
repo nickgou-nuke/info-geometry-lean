@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "review_kind": "independent_source_semantic_verifier_review",
+  "reviewer": "root/tripotent_intake_audit",
+  "helper_path": "/workspace/scratch/9009f3c86480/candidates/tripotent-qa/verify_tripotent_remote_artifact.py",
+  "helper_sha256": "469f8494e5d4ec7b1e9ecc35a21073ab9ef4b968efe1b359f524a951bc21fdf3",
+  "reviewed_snapshot_path": "/workspace/scratch/9009f3c86480/candidates/tripotent-qa/qa-a-source-snapshot-7dda7101.json",
+  "reviewed_published_revision": "7dda7101e3340adab4bf85d535895b445854e3ea",
+  "reviewed_source_tree": "bb9f7fb6180b53cf92ce433386f9781f2c95c18b",
+  "verdict": "accepted_at_bounded_artifact_verification_scope",
+  "concrete_remaining_blockers": [],
+  "closed_gaps": [
+    {
+      "gap": "Python optimization could disable assertion-based acceptance guards.",
+      "resolution": "An explicit non-assert RuntimeError rejects execution when __debug__ is false, before evidence processing."
+    },
+    {
+      "gap": "The mutable locally imported audit generator was not bound to its reviewed source hash.",
+      "resolution": "All four checker/generator files must match the frozen snapshot hashes. The verifier extracts and executes only the hash-bound self-contained audit_source AST function, without importing the mutable checkout modules."
+    },
+    {
+      "gap": "The actual Lean version was recorded but not compared with the pinned toolchain.",
+      "resolution": "The actual Lean version must contain the exact pinned version and following delimiter; the copied lean-toolchain must also match the snapshot exactly."
+    }
+  ],
+  "preserved_checks": [
+    "Exact ordered module closure, successful return codes, no failed modules and matching CHECK records in the job log.",
+    "Every copied repository source hash matches the frozen snapshot.",
+    "Generated native audit source matches the reviewed generator output.",
+    "Every selected owner has audit records; declaration names are unique; the completion count matches the parsed records.",
+    "Audit records in the artifact and authenticated job log agree; parsed axiom dependencies stay within the foundational allowlist."
+  ],
+  "scope": "Verification of authenticated completed remote artifacts against the reviewed frozen snapshot, combined with a separate immutable GitHub commit/tree correspondence check. The helper parses existing evidence and does not run Lean or Lake.",
+  "review_boundary": {
+    "source_only_review": true,
+    "helper_executed_by_reviewer": false,
+    "tests_or_builds_run_by_reviewer": false,
+    "lean_or_lake_run_by_reviewer": false,
+    "source_or_github_modified_by_reviewer": false,
+    "kernel_acceptance_issued": false,
+    "commit_tree_provenance": "Required separately; not inferred from the artifact or certified by this helper review."
+  }
+}

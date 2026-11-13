@@ -14,18 +14,30 @@ unchanged dependencies. Mathlib remains pinned to
 The [theorem contract](../../docs/HILBERT_LOCALIZATION_GRAM_CONTRACT.md)
 states the carriers, hypotheses, existing owners, and remaining analytic work.
 
-## Current status
+## Verification evidence
 
-Independent mathematical and owner-reuse review passed. The initial six
-dependency modules compiled; unchanged `Core.PeirceDecomposition` emitted one
-`unnecessarySeqFocus` style warning. An isolated development import-path issue
-was corrected by placing the freshly compiled dependency artifacts in the
-same module root as the candidates.
+The first dedicated [CI run](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43385697633)
+checked revision `722d3235ce9a310830d5fd84e3ab7b9d8b24651e`.
+All nine repository closure modules compiled freshly, and the native audit
+checked 87 declarations owned by the three new modules: 58 localization,
+6 energy, and 23 Gram-duality declarations. Their only axiom dependencies
+were `propext`, `Classical.choice`, and `Quot.sound`. Strict placeholder and
+source screening passed; semantic screening reported zero errors and five
+reviewed direct-identity warnings.
 
-The initial energy-module check found one final simplification mismatch and
-two style warnings. Repairs are present. The repaired owner checks and final
-native axiom audit are pending in the shared local build queue. This record
-does not certify the new modules as kernel accepted yet.
+That run did not pass the final acceptance gate: the localization owner
+emitted one `unnecessarySimpa` warning. The zero-power proof now uses `simp`
+directly. The unchanged dependency `Core.PeirceDecomposition` separately
+emitted one `unnecessarySeqFocus` warning; it is not a new-owner warning.
+The zero-warning gate remains enabled.
+
+The initial evidence artifact is `14017824393`; its downloaded ZIP was
+independently checked against SHA-256
+`765b1ebb7257424c445a7cfbbd62acb2ab65dc8b91e261fad51453c8ae16ba7b`.
+Independent mathematical and owner-reuse review also covered the proposed
+source files. The latest run attached to [PR #346](https://github.com/nickgou-nuke/info-geometry-lean/pull/346)
+is the authoritative acceptance result for its exact head; the earlier
+compiler success alone does not certify a later revision.
 
 The dedicated [GitHub workflow](../../.github/workflows/hilbert-localization.yml)
 checks the exact proposed head revision on an independent runner. Its success

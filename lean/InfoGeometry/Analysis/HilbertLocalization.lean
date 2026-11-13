@@ -165,7 +165,7 @@ theorem embed_pow_succ (V : E →ₗᵢ[𝕜] F) (T : E →L[𝕜] E) (n : ℕ) 
 theorem localization_pow_toeplitz (V : E →ₗᵢ[𝕜] F) (S : F →L[𝕜] F) (n : ℕ) :
     localization V (toeplitz V S ^ n) = localization V S ^ n := by
   cases n with
-  | zero => simpa [localization, one_def] using V.adjoint_comp_self
+  | zero => simp [localization, one_def]
   | succ n =>
     rw [← embed_localization, ← embed_pow_succ, localization_embed]
 

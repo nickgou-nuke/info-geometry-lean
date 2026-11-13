@@ -1,0 +1,915 @@
+{
+  "schema_version": 1,
+  "task_id": "real-matrix-split-QA-A",
+  "role": "independent_acceptance_quality_agent",
+  "agent": "/root/matrix_split_acceptance",
+  "recorded_at_utc": "2026-11-13T09:11:35.940544+00:00",
+  "verdict": "ACCEPTED",
+  "verdict_scope": "Focused finite real-matrix theorem contract, together with the two preserved owners recompiled and audited for import compatibility. This is not a whole-repository or all-PR-checks certificate.",
+  "scope_label": "finite-stage; conditional metric assertions with explicit hypotheses",
+  "release_classification": "theorem_backed",
+  "status_tags": [
+    "kernel_verified",
+    "axiom_audited",
+    "release_ready"
+  ],
+  "independence": {
+    "theorem_author": false,
+    "mathematical_sources_modified": false,
+    "pins_modified": false,
+    "acceptance_rerun_triggered_by": "/root/matrix_split_acceptance",
+    "local_lean_or_lake_invocations": 0,
+    "local_actions": "Read-only source/log analysis and QA evidence writes only.",
+    "publication_action_taken_by_qa": false,
+    "merge_authorized_or_performed": false
+  },
+  "repository": {
+    "full_name": "nickgou-nuke/info-geometry-lean",
+    "implementation_base": "a392af178af1fe2bcba2ba39eb405700c6ee103c",
+    "local_head": "e87f9455966213df062fed9a8507fcb97f1d33ab",
+    "local_tree": "700c4648345511e894b371c950b385ffceb254ac",
+    "git_status_short_at_final_check": "",
+    "working_tree_scope": "clean",
+    "published_head": "3ccf5664775950733e24b6113a022cbf63b82619",
+    "published_head_evidence": "Independently fetched commit metadata and rerun artifact workflow_run.head_sha.",
+    "ci_checked_commit": "8cf45fe1ff995762eebb31141e9ff5a223b14209",
+    "ci_checked_tree": "700c4648345511e894b371c950b385ffceb254ac",
+    "equivalence": "The CI pull-request checkout commit is a distinct merge commit; its recorded tree exactly equals the frozen local tree. All 19 reviewed source/configuration hashes stayed unchanged before, during, and after QA."
+  },
+  "runtime": {
+    "execution_host": "Isolated GitHub Actions ubuntu-latest runner",
+    "configured_lean_toolchain": "leanprover/lean4:v4.34.1",
+    "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+    "lake_version": "Lake version 5.0.0-src+5045d00 (Lean version 4.34.1)",
+    "mathlib_revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+    "pins": "Focused toolchain and all nine Git dependency URL/revision/subdirectory pins matched root pins. Focused inputRev equals the existing exact Mathlib SHA.",
+    "local_kernel_execution": "Not performed: the unrelated local shared compiler lock remained occupied. The QA rerun was independently triggered and observed on an isolated remote runner.",
+    "process_visibility": "Local ps was PID-namespaced and was not treated as evidence of global compiler idleness."
+  },
+  "remote_verification": {
+    "workflow": "Real matrix decomposition",
+    "run_id": 43397981020,
+    "original_successful_job_id": 131793494358,
+    "independent_rerun_job_id": 131794588066,
+    "job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43397981020/job/131794588066",
+    "run_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43397981020",
+    "api_request": {
+      "tool": "mcp__codex_apps__github_rerun_workflow_job",
+      "arguments": {
+        "repo_full_name": "nickgou-nuke/info-geometry-lean",
+        "job_id": 131793494358
+      },
+      "success": true
+    },
+    "conclusion": "success",
+    "commands": [
+      "python3 verification/real-matrix-split/check.py exe cache get",
+      "python3 verification/real-matrix-split/audit.py",
+      "python3 verification/real-matrix-split/check.py build",
+      "python3 verification/real-matrix-split/check.py env lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean",
+      "python3 verification/real-matrix-split/audit.py --log real-matrix-split-axioms.log",
+      "python3 tools/infra/opengauss_screener.py --strict lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean"
+    ],
+    "command_result_basis": "Each decisive workflow step completed successfully; the build log reports successful completion, and the fresh axiom parser reports 81 distinct permitted records.",
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 1
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 2
+      },
+      {
+        "name": "Record checked commit and tree",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 3
+      },
+      {
+        "name": "Restore pinned dependencies",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 4
+      },
+      {
+        "name": "Restore checked source artifacts",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 5
+      },
+      {
+        "name": "Install the pinned Lean toolchain",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 6
+      },
+      {
+        "name": "Restore the pinned Mathlib artifacts",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 7
+      },
+      {
+        "name": "Check explicit public source inventory",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 8
+      },
+      {
+        "name": "Build source owners and audit",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 9
+      },
+      {
+        "name": "Inspect transitive axiom dependencies",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 10
+      },
+      {
+        "name": "Screen new mathematics",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 11
+      },
+      {
+        "name": "Save pinned dependency artifacts",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 12
+      },
+      {
+        "name": "Save checked source artifacts",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 13
+      },
+      {
+        "name": "Preserve validation evidence",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 14
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 28
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 29
+      }
+    ],
+    "lake_build": "Incremental dependency-aware focused build, 3109 jobs reported; existing caches preserved. This is not a cache-cleared or whole-repository build.",
+    "fresh_audit": "The separate env lean invocation re-elaborated RealMatrixSplitAudit.lean and regenerated its stdout. Only that invocation's artifact log was used for final axiom parsing.",
+    "artifact_id": 14023388549,
+    "artifact_digest": "sha256:4ebc1aa64676a63d2cb5d502c7bce63f327c2ccd1c54f20e3022fdfd49c6c5d0",
+    "artifact_digest_matched_download_bytes": true,
+    "artifact_expires_at": "2027-02-11T09:04:48Z",
+    "artifact_upload_collision": false
+  },
+  "source_sha256": {
+    "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean": "307acf4c4b342577f94826381c9b814c1f8879087a69b927612a2cf1c795d0ea",
+    "lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean": "8fede4a70e3dc75c72ef241dba5b41ca7e8be8f30a39e4cdc6667bcbf447aefc",
+    "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean": "cc89c98b6981294b33583f7e0538fdc3f5b995a6da192ad4e2992a7a0a73fa7e",
+    "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean": "beefd53df1720109b3b45b4a1b4fbac574bd5afca3e14a1838e9896c7e670fa5",
+    "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean": "c0ea7130c2954a8e6b35c64780e95d0f83ef95b787592c9a4534be628bfb9f03",
+    "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean": "b520f5eb138e736cf19aabe1fdf9ae1a5ed7c55d11230e4db7f48c5c29ea4697",
+    "lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean": "1d777d83b308caa324e2dc2129865a1b9a347599ca7360a0dd107666654f2c58",
+    "verification/real-matrix-split/audit.py": "e759bf7479a4771e1f6bd3ed6b0bd30e045af8b6f56884314c7f662553e2822f",
+    "verification/real-matrix-split/check.py": "0d7ea354bca9a816daae378c119166491a07874409ca428e57da13a738844eb7",
+    "verification/real-matrix-split/lakefile.toml": "dcf2219aa553e9393f6f38393dac3b5d71a7ae9cd8e90ae2fb5c619641ed164d",
+    "verification/real-matrix-split/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "verification/real-matrix-split/lake-manifest.json": "1b81b6f9df04f90d3810e153c91fadb52e97e6c272b50323bfe07314d5892e58",
+    "docs/REAL_MATRIX_SPLIT_CONTRACT.md": "a9591229bcf0edc10c90c89dd96b7f289fbc2f440611601fb08d5609236b44fe",
+    "verification/real-matrix-split/README.md": "36f1da1a69da12f32d756772fd16894146e6b98b31688ff7dea3fc2abbf88a2e",
+    ".github/workflows/real-matrix-split.yml": "59fee00761c7f9fe5a3cd090369df47c1621a85272e907b56621ad0fe035f037",
+    "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAll.lean": "74dd4000aaa9c3c0e98706556d06e91ce04b060d6faa957c6097d9ca489a7e8a",
+    "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean": "56d9537cbfba1991c565a258816beea481b833ba9459c171119cd058f796d076",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lake-manifest.json": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98"
+  },
+  "source_hashes_stable": true,
+  "axiom_acceptance": {
+    "explicit_public_heads": 81,
+    "mathematical_owners": 7,
+    "declaration_counts": {
+      "InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility": 7,
+      "InfoGeometry.Physics.FiniteMetriplecticDynamics": 17,
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplit": 8,
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry": 7,
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples": 20,
+      "InfoGeometry.OperatorAlgebra.RealMetricAdjoint": 18,
+      "InfoGeometry.Physics.FiniteMetriplecticMatrixSplit": 4
+    },
+    "accepted_declarations": [
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplit.isStarNormal_iff_parts_commute",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplit.selfAdjointPart_congruence",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplit.selfAdjointPart_eq_half",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplit.skewAdjointPart_congruence",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplit.skewAdjointPart_eq_half",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplit.square_of_split",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplit.transpose_normal_defect",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplit.transpose_normal_defect_of_split",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.invertible_with_zero_skew_part",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.invertible_with_zero_symmetric_part",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleMatrix",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleMetric",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleMetric_det",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleMetric_inv",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleMetric_isSymm",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleMetric_posDef",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleRaised",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleRaised_eq",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleRaised_not_complex",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleRaised_sq",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleSkew",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleSkew_det",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleSkew_toBilin'_nondegenerate",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleSkew_transpose",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sample_commutator",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sample_parts_do_not_commute",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sample_selfAdjointPart",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sample_skewAdjointPart",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.even_card_of_skew_toBilin'_nondegenerate",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.even_card_of_transpose_eq_neg_det_ne_zero",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.selfAdjointPart_toBilin'_isSymm",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.skewAdjointPart_toBilin'_isAlt",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.toBilin'_adjoint_split",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.toBilin'_isAlt_of_transpose_eq_neg",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.toBilin'_swap_of_transpose_eq_neg",
+      "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.isSelfAdjoint_iff_weightedAdjoint",
+      "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.isSkewAdjoint_iff_weightedAdjoint",
+      "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.raisedIndex_isSkewAdjoint",
+      "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.raisedIndex_skew_identity",
+      "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.raisedIndex_toBilin'",
+      "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_add",
+      "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_involutive",
+      "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_isAdjointPair",
+      "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_matrix",
+      "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_nonsingInvUnit",
+      "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_skew_part",
+      "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_skew_part_unique",
+      "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_smul",
+      "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_split",
+      "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_sub",
+      "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_symmetric_part",
+      "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_symmetric_part_unique",
+      "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_unique",
+      "InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint",
+      "InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint_eq_self_iff_of_selfAdjoint",
+      "InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint_eq_star_iff",
+      "InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint_involutive",
+      "InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint_mul",
+      "InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.compatibility_defect",
+      "InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.mul_adjoint",
+      "InfoGeometry.Physics.antisymmetricPart",
+      "InfoGeometry.Physics.antisymmetricPart_eq_of_symmetric_add_skew",
+      "InfoGeometry.Physics.antisymmetricPart_eq_skewAdjointPart",
+      "InfoGeometry.Physics.antisymmetricPart_transpose",
+      "InfoGeometry.Physics.casimir_conserved",
+      "InfoGeometry.Physics.energyRate",
+      "InfoGeometry.Physics.energy_conserved",
+      "InfoGeometry.Physics.entropyRate",
+      "InfoGeometry.Physics.entropyRate_eq_onsager_quadratic",
+      "InfoGeometry.Physics.entropyRate_eq_zero_of_degenerate",
+      "InfoGeometry.Physics.entropy_nondecreasing",
+      "InfoGeometry.Physics.metriplecticVelocity",
+      "InfoGeometry.Physics.metriplecticVelocity_eq_zero_of_degenerate",
+      "InfoGeometry.Physics.metriplectic_stationary_rates",
+      "InfoGeometry.Physics.symmetricPart",
+      "InfoGeometry.Physics.symmetricPart_add_antisymmetricPart",
+      "InfoGeometry.Physics.symmetricPart_antisymmetricPart_commute_iff",
+      "InfoGeometry.Physics.symmetricPart_antisymmetricPart_normal_defect",
+      "InfoGeometry.Physics.symmetricPart_eq_of_symmetric_add_skew",
+      "InfoGeometry.Physics.symmetricPart_eq_selfAdjointPart",
+      "InfoGeometry.Physics.symmetricPart_transpose"
+    ],
+    "new_public_heads": 57,
+    "new_theorems": 53,
+    "new_concrete_matrix_definitions": 4,
+    "preserved_public_heads": 24,
+    "missing_records": 0,
+    "duplicate_records": 0,
+    "unexpected_records": 0,
+    "unapproved_axioms": [],
+    "foundational_axioms_used": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "classification": {
+      "propext": "Standard propositional extensionality inherited through native Lean/Mathlib algebraic proofs.",
+      "Classical.choice": "Standard Mathlib classical real/vector/matrix infrastructure, including native noncomputable inverse constructions; no new local axiom or theorem-as-assumption was introduced.",
+      "Quot.sound": "Standard quotient soundness inherited through native Lean/Mathlib real and algebraic infrastructure."
+    },
+    "source_inventory_limit": "Explicitly named public heads only; private/helper dependencies are included transitively. Compiler-generated declarations are not independently enumerated.",
+    "internal_apostrophe_names": [
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitExamples.sampleSkew_toBilin'_nondegenerate",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.even_card_of_skew_toBilin'_nondegenerate",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.selfAdjointPart_toBilin'_isSymm",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.skewAdjointPart_toBilin'_isAlt",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.toBilin'_adjoint_split",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.toBilin'_isAlt_of_transpose_eq_neg",
+      "InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.toBilin'_swap_of_transpose_eq_neg",
+      "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.raisedIndex_toBilin'"
+    ],
+    "independent_literal_parser_count": 81,
+    "local_fresh_log_parser_command": [
+      "python3",
+      "verification/real-matrix-split/audit.py",
+      "--log",
+      "artifacts/qms/real-matrix-split-qa-20261113/real-matrix-split-axioms.log"
+    ],
+    "local_parser_exit_code": 0,
+    "negative_parser_probes": [
+      {
+        "case": "missing_record",
+        "rejected": true,
+        "diagnostic": "Missing: ['InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint']; unexpected: []; duplicate records: []; unapproved axioms: []"
+      },
+      {
+        "case": "duplicate_record",
+        "rejected": true,
+        "diagnostic": "Missing: []; unexpected: []; duplicate records: ['InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint']; unapproved axioms: []"
+      },
+      {
+        "case": "unexpected_declaration",
+        "rejected": true,
+        "diagnostic": "Missing: ['InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint']; unexpected: ['InfoGeometry.QA.UnexpectedDeclaration']; duplicate records: []; unapproved axioms: []"
+      },
+      {
+        "case": "unapproved_axiom",
+        "rejected": true,
+        "diagnostic": "Missing: []; unexpected: []; duplicate records: []; unapproved axioms: ['sorryAx']"
+      }
+    ]
+  },
+  "static_acceptance": {
+    "static_results_path": "artifacts/qms/real-matrix-split-qa-20261113/static_results.json",
+    "static_results_sha256": "3c970938f93d4afc51d3547722f37430916316d153cad326b1bb395c6fb9a185",
+    "commands": [
+      {
+        "label": "source_inventory",
+        "argv": [
+          "python3",
+          "verification/real-matrix-split/audit.py"
+        ],
+        "shell_command": "python3 verification/real-matrix-split/audit.py",
+        "cwd": ".",
+        "started_at_utc": "2026-11-13T09:05:35.343449+00:00",
+        "finished_at_utc": "2026-11-13T09:05:35.453513+00:00",
+        "exit_code": 0,
+        "log": "artifacts/qms/real-matrix-split-qa-20261113/source_inventory.log",
+        "log_sha256": "3a344732512d89abd590b5d61d3cf24d899cdb856f9433e4e983cc1cf6ceecdf"
+      },
+      {
+        "label": "strict_screener",
+        "argv": [
+          "python3",
+          "tools/infra/opengauss_screener.py",
+          "--strict",
+          "--json",
+          "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean",
+          "lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean",
+          "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean",
+          "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean",
+          "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean",
+          "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+          "lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean"
+        ],
+        "shell_command": "python3 tools/infra/opengauss_screener.py --strict --json lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean",
+        "cwd": ".",
+        "started_at_utc": "2026-11-13T09:05:35.453841+00:00",
+        "finished_at_utc": "2026-11-13T09:05:35.748231+00:00",
+        "exit_code": 0,
+        "log": "artifacts/qms/real-matrix-split-qa-20261113/strict_screener.log",
+        "log_sha256": "747443d22b8ccffb07c44835fa4a015e33c702c22548bbc3cecde756a8b81eb7"
+      },
+      {
+        "label": "strict_refute",
+        "argv": [
+          "python3",
+          "tools/infra/opengauss_cli.py",
+          "refute",
+          "--strict",
+          "--json",
+          "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean",
+          "lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean",
+          "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean",
+          "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean",
+          "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean",
+          "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+          "lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean"
+        ],
+        "shell_command": "python3 tools/infra/opengauss_cli.py refute --strict --json lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean",
+        "cwd": ".",
+        "started_at_utc": "2026-11-13T09:05:35.749000+00:00",
+        "finished_at_utc": "2026-11-13T09:05:36.057727+00:00",
+        "exit_code": 0,
+        "log": "artifacts/qms/real-matrix-split-qa-20261113/strict_refute.log",
+        "log_sha256": "1394e15b9a8c3109039310acb9de30bd196444cfd54bb34f21f1151106f2ae74"
+      },
+      {
+        "label": "semantic_vacuity",
+        "argv": [
+          "python3",
+          "tools/quality/semantic_vacuity_gate.py",
+          "--fail-on",
+          "error",
+          "--json-out",
+          "artifacts/qms/real-matrix-split-qa-20261113/semantic_vacuity.json",
+          "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean",
+          "lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean",
+          "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean",
+          "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean",
+          "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean",
+          "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+          "lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean"
+        ],
+        "shell_command": "python3 tools/quality/semantic_vacuity_gate.py --fail-on error --json-out artifacts/qms/real-matrix-split-qa-20261113/semantic_vacuity.json lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean",
+        "cwd": ".",
+        "started_at_utc": "2026-11-13T09:05:36.057994+00:00",
+        "finished_at_utc": "2026-11-13T09:05:36.166973+00:00",
+        "exit_code": 0,
+        "log": "artifacts/qms/real-matrix-split-qa-20261113/semantic_vacuity.log",
+        "log_sha256": "5769fc4985ebab14c1fe681e6c328f43cea608da848d4ed4426d8d7494447d65"
+      },
+      {
+        "label": "existing_owner_semantic_regression",
+        "argv": [
+          "python3",
+          "tools/quality/semantic_regression_gate.py",
+          "--base",
+          "a392af178af1fe2bcba2ba39eb405700c6ee103c",
+          "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean",
+          "lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean"
+        ],
+        "shell_command": "python3 tools/quality/semantic_regression_gate.py --base a392af178af1fe2bcba2ba39eb405700c6ee103c lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean",
+        "cwd": ".",
+        "started_at_utc": "2026-11-13T09:05:36.167138+00:00",
+        "finished_at_utc": "2026-11-13T09:05:36.413318+00:00",
+        "exit_code": 0,
+        "log": "artifacts/qms/real-matrix-split-qa-20261113/existing_owner_semantic_regression.log",
+        "log_sha256": "b0d56d44ebb653828e6427381075f71ff3b16a592d5f79749081d3ca041454a7"
+      },
+      {
+        "label": "staged_gate_cli",
+        "argv": [
+          "python3",
+          "tools/quality/proof_proxy_staged_gate.py",
+          "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean",
+          "lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean",
+          "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean",
+          "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean",
+          "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean",
+          "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+          "lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean",
+          "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAll.lean",
+          "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean"
+        ],
+        "shell_command": "python3 tools/quality/proof_proxy_staged_gate.py lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAll.lean lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean",
+        "cwd": ".",
+        "started_at_utc": "2026-11-13T09:05:36.413488+00:00",
+        "finished_at_utc": "2026-11-13T09:05:37.215046+00:00",
+        "exit_code": 0,
+        "log": "artifacts/qms/real-matrix-split-qa-20261113/staged_gate_cli.log",
+        "log_sha256": "15636963213bd1e0893ddeb031ca330861b34fbde83171eaf5ccca90b606f2e2"
+      },
+      {
+        "label": "vacuity_linter_1",
+        "argv": [
+          "python3",
+          "scripts/vacuity-linter.py",
+          "--json",
+          "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean"
+        ],
+        "shell_command": "python3 scripts/vacuity-linter.py --json lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean",
+        "cwd": ".",
+        "started_at_utc": "2026-11-13T09:05:38.186612+00:00",
+        "finished_at_utc": "2026-11-13T09:05:38.253998+00:00",
+        "exit_code": 0,
+        "log": "artifacts/qms/real-matrix-split-qa-20261113/vacuity_linter_1.log",
+        "log_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e"
+      },
+      {
+        "label": "vacuity_linter_2",
+        "argv": [
+          "python3",
+          "scripts/vacuity-linter.py",
+          "--json",
+          "lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean"
+        ],
+        "shell_command": "python3 scripts/vacuity-linter.py --json lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean",
+        "cwd": ".",
+        "started_at_utc": "2026-11-13T09:05:38.254227+00:00",
+        "finished_at_utc": "2026-11-13T09:05:38.309286+00:00",
+        "exit_code": 0,
+        "log": "artifacts/qms/real-matrix-split-qa-20261113/vacuity_linter_2.log",
+        "log_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e"
+      },
+      {
+        "label": "vacuity_linter_3",
+        "argv": [
+          "python3",
+          "scripts/vacuity-linter.py",
+          "--json",
+          "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean"
+        ],
+        "shell_command": "python3 scripts/vacuity-linter.py --json lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean",
+        "cwd": ".",
+        "started_at_utc": "2026-11-13T09:05:38.309439+00:00",
+        "finished_at_utc": "2026-11-13T09:05:38.371890+00:00",
+        "exit_code": 0,
+        "log": "artifacts/qms/real-matrix-split-qa-20261113/vacuity_linter_3.log",
+        "log_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e"
+      },
+      {
+        "label": "vacuity_linter_4",
+        "argv": [
+          "python3",
+          "scripts/vacuity-linter.py",
+          "--json",
+          "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean"
+        ],
+        "shell_command": "python3 scripts/vacuity-linter.py --json lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitGeometry.lean",
+        "cwd": ".",
+        "started_at_utc": "2026-11-13T09:05:38.372194+00:00",
+        "finished_at_utc": "2026-11-13T09:05:38.428771+00:00",
+        "exit_code": 0,
+        "log": "artifacts/qms/real-matrix-split-qa-20261113/vacuity_linter_4.log",
+        "log_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e"
+      },
+      {
+        "label": "vacuity_linter_5",
+        "argv": [
+          "python3",
+          "scripts/vacuity-linter.py",
+          "--json",
+          "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean"
+        ],
+        "shell_command": "python3 scripts/vacuity-linter.py --json lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitExamples.lean",
+        "cwd": ".",
+        "started_at_utc": "2026-11-13T09:05:38.428908+00:00",
+        "finished_at_utc": "2026-11-13T09:05:38.544426+00:00",
+        "exit_code": 0,
+        "log": "artifacts/qms/real-matrix-split-qa-20261113/vacuity_linter_5.log",
+        "log_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e"
+      },
+      {
+        "label": "vacuity_linter_6",
+        "argv": [
+          "python3",
+          "scripts/vacuity-linter.py",
+          "--json",
+          "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean"
+        ],
+        "shell_command": "python3 scripts/vacuity-linter.py --json lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+        "cwd": ".",
+        "started_at_utc": "2026-11-13T09:05:38.545501+00:00",
+        "finished_at_utc": "2026-11-13T09:05:38.628218+00:00",
+        "exit_code": 0,
+        "log": "artifacts/qms/real-matrix-split-qa-20261113/vacuity_linter_6.log",
+        "log_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e"
+      },
+      {
+        "label": "vacuity_linter_7",
+        "argv": [
+          "python3",
+          "scripts/vacuity-linter.py",
+          "--json",
+          "lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean"
+        ],
+        "shell_command": "python3 scripts/vacuity-linter.py --json lean/InfoGeometry/Physics/FiniteMetriplecticMatrixSplit.lean",
+        "cwd": ".",
+        "started_at_utc": "2026-11-13T09:05:38.628390+00:00",
+        "finished_at_utc": "2026-11-13T09:05:38.682798+00:00",
+        "exit_code": 0,
+        "log": "artifacts/qms/real-matrix-split-qa-20261113/vacuity_linter_7.log",
+        "log_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e"
+      }
+    ],
+    "strict_screener": "PASS; zero traps in seven mathematical owners",
+    "strict_refute": "PASS; zero traps in seven mathematical owners; lexical screening, not model search",
+    "semantic_vacuity": "PASS at the maintained error threshold; zero errors and exactly five classified trivial_surface warnings",
+    "semantic_warning_reviews": [
+      {
+        "symbol": "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_add",
+        "path": "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+        "line": 117,
+        "origin": "new",
+        "heuristic": "trivial_surface",
+        "verdict": "LEGITIMATE_ALGEBRAIC_API_LAW",
+        "reason": "A general additivity identity for arbitrary full real matrices and a unit weight. Its proof uses star additivity and distributivity rather than a premise that restates the conclusion. It is a small genuine linearity law, not a vacuous certificate.",
+        "consumers_or_role": [
+          "weightedAdjoint_symmetric_part",
+          "weightedAdjoint_symmetric_part_unique",
+          "weightedAdjoint_skew_part_unique"
+        ],
+        "required_change": false
+      },
+      {
+        "symbol": "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_sub",
+        "path": "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+        "line": 122,
+        "origin": "new",
+        "heuristic": "trivial_surface",
+        "verdict": "LEGITIMATE_ALGEBRAIC_API_LAW",
+        "reason": "A general subtraction identity for the same weighted operation. It is proved from star_sub and ring distributivity and is required for the skew eigenspace calculation.",
+        "consumers_or_role": [
+          "weightedAdjoint_skew_part"
+        ],
+        "required_change": false
+      },
+      {
+        "symbol": "InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_smul",
+        "path": "lean/InfoGeometry/OperatorAlgebra/RealMetricAdjoint.lean",
+        "line": 127,
+        "origin": "new",
+        "heuristic": "trivial_surface",
+        "verdict": "LEGITIMATE_ALGEBRAIC_API_LAW",
+        "reason": "A real scalar-compatibility law. Trivial scalar star is valid because coefficients are Real, and multiplication by a real scalar commutes with matrix multiplication in the indicated module sense. No self-adjointness of the weight is assumed or needed.",
+        "consumers_or_role": [
+          "weightedAdjoint_symmetric_part",
+          "weightedAdjoint_skew_part"
+        ],
+        "required_change": false
+      },
+      {
+        "symbol": "InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.mul_adjoint",
+        "path": "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean",
+        "line": 24,
+        "origin": "existing_unchanged",
+        "heuristic": "trivial_surface",
+        "verdict": "LEGITIMATE_ALGEBRAIC_API_LAW",
+        "reason": "This cancels an actual unit in w * (w^-1 * star x * w). It connects the coordinate weighted adjoint to its defining bilinear adjoint-pair equation. The arbitrary star-ring carrier and noncommutative order are retained.",
+        "consumers_or_role": [
+          "RealMetricAdjoint.weightedAdjoint_isAdjointPair",
+          "WeightedAdjointCompatibility.compatibility_defect"
+        ],
+        "required_change": false
+      },
+      {
+        "symbol": "InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint_mul",
+        "path": "lean/InfoGeometry/OperatorAlgebra/WeightedAdjointCompatibility.lean",
+        "line": 53,
+        "origin": "existing_unchanged",
+        "heuristic": "trivial_surface",
+        "verdict": "LEGITIMATE_ALGEBRAIC_API_LAW",
+        "reason": "This is anti-multiplicativity in a full associative star ring, with reversed factor order on the right. It relies on star_mul and unit cancellation; it is neither a scalar/commuting replacement nor an assumed conclusion.",
+        "consumers_or_role": [
+          "Existing weighted-adjoint API law; mathematical declaration unchanged"
+        ],
+        "required_change": false
+      }
+    ],
+    "existing_owner_regression": "PASS for the two import-narrowed existing owners",
+    "indexed_source_gate": "Maintained check_text/header/import checks explicitly passed all nine final indexed Lean blobs. The ordinary staged CLI had zero changed staged blobs after commits and is not used as sole coverage evidence.",
+    "placeholder_scan": "No forbidden proof construct in the nine changed Lean files plus existing FiniteSpinAlgebra dependency",
+    "vacuity_linter": "All seven mathematical owners returned no findings",
+    "tool_path_fallback": "The SOP example tools/scripts/vacuity-linter.py is absent; maintained scripts/vacuity-linter.py and tools/quality/semantic_vacuity_gate.py were executed.",
+    "tools_sha256": {
+      "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df",
+      "tools/infra/build.py": "76575073b6fbf1054511ede20792e549ac216238f2519b2a2c2215d0aa646dc0",
+      "tools/infra/opengauss_screener.py": "8905eaa68b63c82709aca70e05b86249b74df297a96e6d7bae8b037331b9448b",
+      "tools/infra/opengauss_cli.py": "fa210dde57fc129ada5645926285c8a6e1b6ab7cdd3354747279aa5702f1f18c",
+      "tools/quality/proof_proxy_staged_gate.py": "eaa861d929ad9465586504f30f65ddc64eb96f8198bee65b3039c8d4fb813db9",
+      "tools/quality/semantic_vacuity_gate.py": "cfd9a8e4108610a8221a74a28330849b02c064536f245fb411bc989eba2ac27f",
+      "tools/quality/semantic_vacuity_patterns.json": "01cd14be0fdb966fbe93e93d2729d6822dc375c85f6338a7d67b70758fd87082",
+      "tools/quality/semantic_regression_gate.py": "324fe75e45d09f86f7c951568ba1e0b7e96151fd7894350d140992f5e9558521",
+      "scripts/vacuity-linter.py": "76b0241f4e62dbd01c6e9b160ef1f8af9caf7bf2b6461ea713f4ca18a5dc8033"
+    }
+  },
+  "independent_semantic_review": {
+    "baseline": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/aa_baseline.json",
+      "sha256": "4629eb8ec8a33fef4decded4e3310e5d5f24b7bbbce8fa2238bce3639786461d",
+      "bytes": 24202
+    },
+    "delta2": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/aa_delta2.json",
+      "sha256": "49aceed7b605d9cdbbcde4444bd7003f7d41bc3fe5a5ed07ac8a44b5f5d86b2b",
+      "bytes": 6918
+    },
+    "source_disposition": "ACCEPTED_PENDING_KERNEL; final kernel and axiom obligations are now discharged by this independent rerun",
+    "remaining_required_source_corrections": []
+  },
+  "corrective_actions_closed": [
+    {
+      "finding": "Apostrophes in declaration names were rejected by the initial log regex.",
+      "closure": "The repaired parser accepted the single fresh 81-record log, including eight apostrophe-bearing names; independent literal parsing agreed, and four corrupted-log cases were rejected."
+    },
+    {
+      "finding": "Initial CI exposed missing native numeric Invertible import, native adjoint-predicate elaboration, and positivity-branch simplification.",
+      "closure": "Root repaired imports/proof bodies without changing statements; independent semantic delta review and the final focused build passed."
+    },
+    {
+      "finding": "Second CI exposed self-adjoint subtype membership versus predicate conversion.",
+      "closure": "The proof uses native selfAdjoint.isSelfAdjoint; final source, build, and axiom audit passed."
+    },
+    {
+      "finding": "Focused manifest requested-revision metadata differed from its already pinned SHA.",
+      "closure": "inputRev now equals the unchanged resolved SHA and focused requirement; no manifest-out-of-date warning remains in the independent rerun."
+    },
+    {
+      "finding": "Contract pointed to the wrong source file for Matrix.isAdjointPair_equiv'.",
+      "closure": "Attribution was corrected to the native bilinear-form specialization before the frozen snapshot."
+    }
+  ],
+  "warnings": {
+    "lean_build_warnings": [],
+    "semantic_warnings": 5,
+    "non_proof_workflow_warnings": [
+      "2026-11-13T09:07:15.5092105Z ##[warning]The process '/usr/bin/git' failed with exit code 128",
+      "2026-11-13T09:07:15.5584744Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/cache/restore@v4, actions/checkout@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/"
+    ],
+    "warning_interpretation": "The semantic findings are useful map laws, separately reviewed. The successful CI job also reports post-checkout submodule cleanup and action runtime deprecation warnings; neither is a Lean theorem result."
+  },
+  "limits": [
+    "No local Lean/Lake rerun was performed; kernel/build acceptance is from the independently triggered isolated remote job.",
+    "No root default-target, whole repository, or mirrored src-lane certificate is claimed. Other repository workflows are outside this acceptance record.",
+    "No smooth manifold, differential-form closedness, integrability, Kahler construction, completion, or physical consequence is established.",
+    "Metric invertibility, metric symmetry where required, and skew-form nondegeneracy remain explicit hypotheses; positivity is proved for the stated Fin 2 example.",
+    "The declaration audit is bounded to 81 explicitly named public heads and transitive dependencies; it does not enumerate the whole Lean environment.",
+    "No additional broad Python unit suite or unrelated theorem builds were run; they are outside the focused acceptance scope."
+  ],
+  "evidence_files": {
+    "aa_baseline.json": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/aa_baseline.json",
+      "sha256": "4629eb8ec8a33fef4decded4e3310e5d5f24b7bbbce8fa2238bce3639786461d",
+      "bytes": 24202
+    },
+    "aa_delta2.json": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/aa_delta2.json",
+      "sha256": "49aceed7b605d9cdbbcde4444bd7003f7d41bc3fe5a5ed07ac8a44b5f5d86b2b",
+      "bytes": 6918
+    },
+    "artifact_metadata.json": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/artifact_metadata.json",
+      "sha256": "8a3727dbb01bccc6f7d692bf2b5c1dbc5fce3c23b0e74689955647bef0b071ed",
+      "bytes": 786
+    },
+    "evidence_checks.py": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/evidence_checks.py",
+      "sha256": "3d59f5f8474eb261ea5efbed20eb463122b5721231321804c0437143715e6736",
+      "bytes": 5949
+    },
+    "evidence_results.json": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/evidence_results.json",
+      "sha256": "3ff28b397495e8eaa66685b29e37a55ab91ad7c3f92fc4e187dff2c65aad5541",
+      "bytes": 20104
+    },
+    "evidence_results.sha256": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/evidence_results.sha256",
+      "sha256": "76c1446721373bd233548d7eb74075814ac8c6216f7baad8b70068e1c83d8eeb",
+      "bytes": 88
+    },
+    "existing_owner_semantic_regression.log": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/existing_owner_semantic_regression.log",
+      "sha256": "b0d56d44ebb653828e6427381075f71ff3b16a592d5f79749081d3ca041454a7",
+      "bytes": 52
+    },
+    "fresh_axiom_parser.log": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/fresh_axiom_parser.log",
+      "sha256": "23887ac102644b8ade3789c694498b8fefba0371b9e1bc67804cd3624cb92929",
+      "bytes": 174
+    },
+    "indexed_source_gate.json": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/indexed_source_gate.json",
+      "sha256": "c447b1efb1eba734bdbb939186f054911305072557e812889c71a795211f121b",
+      "bytes": 852
+    },
+    "published_commit_metadata.json": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/published_commit_metadata.json",
+      "sha256": "84803022bc4b1ca2f4ac794edf40cdf9623a4451060bd136301c401134f48aa4",
+      "bytes": 1492
+    },
+    "real-matrix-split-axioms.log": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/real-matrix-split-axioms.log",
+      "sha256": "68ee2f8a2b715ec1c6d43bd025272e31da59d0487a124e717ed16a25fad28734",
+      "bytes": 10650
+    },
+    "real-matrix-split-build.log": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/real-matrix-split-build.log",
+      "sha256": "4a35dae5f9747c228488627abfc66fb576e61b3733e1acf790cfa2400b17c8c9",
+      "bytes": 17035
+    },
+    "real-matrix-split-revision.log": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/real-matrix-split-revision.log",
+      "sha256": "2fe72ada26c3b6f1ec24233ae385c9b09c08fcb9bca5e61d8a11a562fdc7dd77",
+      "bytes": 82
+    },
+    "remote_evidence.zip": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/remote_evidence.zip",
+      "sha256": "4ebc1aa64676a63d2cb5d502c7bce63f327c2ccd1c54f20e3022fdfd49c6c5d0",
+      "bytes": 2894
+    },
+    "remote_job.log": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/remote_job.log",
+      "sha256": "c037416d1276f2492ebcf5d7d76a312b05df3b246c1103f023c18b7820551598",
+      "bytes": 74734
+    },
+    "remote_job_metadata.json": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/remote_job_metadata.json",
+      "sha256": "45708f4f80fe6370969bd2d7e661acb8e30988c5565cd04ebe6f3ca7a61b5141",
+      "bytes": 2799
+    },
+    "rerun_receipt.json": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/rerun_receipt.json",
+      "sha256": "d905c305b9d7d1be2f5c0b978dfb8f8b239ce15f72bd347f4c7e9aa19f91a5a0",
+      "bytes": 7349
+    },
+    "semantic_vacuity.json": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/semantic_vacuity.json",
+      "sha256": "ced7b325ed002669f86300f90dbc01abbdbe6b58c1e5b79102196fc6b4e46a53",
+      "bytes": 3095
+    },
+    "semantic_vacuity.log": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/semantic_vacuity.log",
+      "sha256": "5769fc4985ebab14c1fe681e6c328f43cea608da848d4ed4426d8d7494447d65",
+      "bytes": 1220
+    },
+    "source_inventory.log": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/source_inventory.log",
+      "sha256": "3a344732512d89abd590b5d61d3cf24d899cdb856f9433e4e983cc1cf6ceecdf",
+      "bytes": 61
+    },
+    "staged_gate_cli.log": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/staged_gate_cli.log",
+      "sha256": "15636963213bd1e0893ddeb031ca330861b34fbde83171eaf5ccca90b606f2e2",
+      "bytes": 28
+    },
+    "static_checks.py": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/static_checks.py",
+      "sha256": "70155c16d214c35804e491f46290fa4f684dd3c823fe779215a8cafefb4d1e60",
+      "bytes": 7520
+    },
+    "static_results.json": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/static_results.json",
+      "sha256": "3c970938f93d4afc51d3547722f37430916316d153cad326b1bb395c6fb9a185",
+      "bytes": 31559
+    },
+    "static_results.sha256": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/static_results.sha256",
+      "sha256": "c75e2b09cfb39942a6ab861b2744ca6310439c79b0f090476197ac87231bc95d",
+      "bytes": 86
+    },
+    "strict_refute.log": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/strict_refute.log",
+      "sha256": "1394e15b9a8c3109039310acb9de30bd196444cfd54bb34f21f1151106f2ae74",
+      "bytes": 1331
+    },
+    "strict_screener.log": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/strict_screener.log",
+      "sha256": "747443d22b8ccffb07c44835fa4a015e33c702c22548bbc3cecde756a8b81eb7",
+      "bytes": 52
+    },
+    "vacuity_linter_1.log": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/vacuity_linter_1.log",
+      "sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e",
+      "bytes": 69
+    },
+    "vacuity_linter_2.log": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/vacuity_linter_2.log",
+      "sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e",
+      "bytes": 69
+    },
+    "vacuity_linter_3.log": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/vacuity_linter_3.log",
+      "sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e",
+      "bytes": 69
+    },
+    "vacuity_linter_4.log": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/vacuity_linter_4.log",
+      "sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e",
+      "bytes": 69
+    },
+    "vacuity_linter_5.log": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/vacuity_linter_5.log",
+      "sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e",
+      "bytes": 69
+    },
+    "vacuity_linter_6.log": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/vacuity_linter_6.log",
+      "sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e",
+      "bytes": 69
+    },
+    "vacuity_linter_7.log": {
+      "path": "artifacts/qms/real-matrix-split-qa-20261113/vacuity_linter_7.log",
+      "sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e",
+      "bytes": 69
+    }
+  },
+  "integrity": "SHA-256 digests bind the recorded bytes; no signed, immutable, WORM, or tamper-evident ledger claim is made.",
+  "qa_record_path": "artifacts/qms/real-matrix-split-qa-20261113/qa.json",
+  "qa_checksum_path": "artifacts/qms/real-matrix-split-qa-20261113/qa.sha256"
+}

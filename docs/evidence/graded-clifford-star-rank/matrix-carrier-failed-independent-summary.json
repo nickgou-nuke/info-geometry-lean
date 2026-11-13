@@ -1,0 +1,22 @@
+{
+  "run": 43419844394,
+  "job": 131866800400,
+  "source_revision": "d63b4147338572054b3d4eab45260602928ae227",
+  "source_tree": "d727e3cf617319f1caa5d6ed5ba8026342facfed",
+  "local_identical_tree_revision": "baa571872bde38d4a62c0e24e4b01b9e2c93ead5",
+  "local_tree": "d727e3cf617319f1caa5d6ed5ba8026342facfed",
+  "tree_matches": true,
+  "source_modules": 44,
+  "source_mismatches": [],
+  "compiled_modules": 43,
+  "failed_modules": [
+    "InfoGeometry.Clifford.Cl11GradedProjectorDefects"
+  ],
+  "axiom_audit_passed": false,
+  "acceptance": "failed; no axiom audit executed",
+  "warnings_as_errors": false,
+  "artifact": {
+    "id": 14034130307,
+    "zip_sha256": "cacdff8030aff32a3a4e4799f062a79089dd3f60babb5063dfed1ac7bf941e1a"
+  }
+}

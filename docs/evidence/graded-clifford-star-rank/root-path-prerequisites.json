@@ -1,0 +1,19 @@
+{
+  "source_revision": "d63b4147338572054b3d4eab45260602928ae227",
+  "local_identical_tree_revision": "baa571872bde38d4a62c0e24e4b01b9e2c93ead5",
+  "tree": "d727e3cf617319f1caa5d6ed5ba8026342facfed",
+  "path_requirements_in_lakefile": [
+    "external_refs/gift-framework-core",
+    "external_refs/atlas-lean",
+    "external_refs/homotopy-hypothesis-lean4"
+  ],
+  "tracked_gift_gitlink": "e6f3c3ac2140c2324fb2ae029c32233e73aa5e92",
+  "tracked_atlas_gitlink": null,
+  "tracked_homotopy_gitlink": null,
+  "gitmodules_has_gift": true,
+  "gitmodules_has_atlas": false,
+  "gitmodules_has_homotopy": false,
+  "observed_first_root_failure": "HomotopyHypothesis: package directory not found",
+  "boundary": "existing root path-package configuration/checkout prerequisite; ordinary submodule initialization does not supply an unconfigured path",
+  "dependency_configuration_modified_by_task": false
+}

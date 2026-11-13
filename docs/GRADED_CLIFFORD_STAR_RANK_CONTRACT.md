@@ -29,10 +29,16 @@ intake's quartet, and the signs and order are retained explicitly.
 
 ## Implemented mathematical owners
 
-The six source owners below contain complete proof candidates. The first remote
-run found elaboration errors in three of the initial four owners; those errors
-were repaired, and a fresh exact-revision run is required before any kernel
-acceptance claim. Independent source review does not replace that run.
+The six source owners below are kernel checked at published commit
+`ec36632a52860b8e710cd6b1c258a5c6f649d06e`, tree
+`21b365c94f4e44fb853d342c7f7ecc04f07be35b`. All 44 modules in their exact
+repository-local source closure compiled, and the native ownership audit passed
+for all 197 declarations belonging to the six owners, including private and
+generated declarations. The only observed axioms were `propext`,
+`Classical.choice`, and `Quot.sound`. Independent QA reconciled every source
+hash and all declaration counts against the successful run. See the
+[acceptance evidence](evidence/graded-clifford-star-rank/README.md) for exact
+commands, hashes, warnings, and the separate root-integration limitation.
 
 1. **Transpose-compatible adjoint** (`Cl11GradedAdjoint.lean`). Construct the head anti-involution by
    pulling real matrix transpose back through `cl11StandardEquiv`. Construct
@@ -74,10 +80,13 @@ acceptance claim. Independent source review does not replace that run.
    the argument neither assumes that representation is injective nor treats
    entry evaluation as multiplicative.
 
-All owners require complete native Lean proofs before acceptance.
-Candidates are not kernel evidence. Exact source closure compilation,
-owned-declaration axiom auditing, independent semantic review, staged proof
-gate, and root quality gates remain separately reported acceptance surfaces.
+Exact source closure compilation, owned-declaration axiom auditing,
+independent semantic review, the staged proof gate, and root quality gates
+are separate acceptance surfaces. The first two passed at the exact revision
+above; this does not establish whole-repository integration. The unchanged
+incremental and full root gates encounter a missing required
+`external_refs/homotopy-hypothesis-lean4` package before root compilation.
+Earlier failed checkpoints remain labeled as failures in the evidence.
 
 ## Exact equations and carrier boundaries
 

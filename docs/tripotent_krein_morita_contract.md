@@ -37,9 +37,10 @@ as an unbounded modular-flow theorem.
 | OperatorAlgebra.TripotentGradeTransport | Native algebra-automorphism covariance, unit conjugation, reversal, stationary transport and fixed-total-degree cancellation of composite generators | Existing grades, native ConjAct and component multiplication |
 | Core.TripotentAdjointDefect | Native endomorphism identity D⁴ - D² = 12 • (Π₂ + Π₋₂), without a nonvanishing claim | Existing eigenpower evaluation and reconstruction |
 
-Each row is a proof target until its exact source passes Lean. Source-semantic
-review, compilation and axiom audit are different checks. No definition
-assumes the desired construction as a witness field.
+All ten owners have now passed the exact-source Lean checks and native
+declaration-axiom audit documented in the acceptance record below.
+Source-semantic review, compilation and axiom audit remain distinct checks.
+No definition assumes the desired construction as a witness field.
 
 ## Corrections required by the intake
 
@@ -104,41 +105,49 @@ implication only after actual commutation has been established.
 
 ## Validation history and acceptance
 
-- Independent source-semantic review accepted all ten candidates at their
-  stated hypotheses; this is not kernel certification.
-- Local exact-source attempts 1 and 2 copied closures of 40 and 56 repository
-  modules respectively. Both stopped at the cache setup step with ENOSPC
-  while creating the independent Mathlib `.lake/config` directory.
-- Zero repository modules were compiled in those attempts; neither reached
-  the declaration axiom audit. The environment subsequently became unavailable.
-- The source snapshots were recovered byte-for-byte from retained tool output
-  and independently reviewed snapshots. Each Lean owner's SHA256 was checked
-  against its reviewed content. The intake hash and byte count also match.
-- The focused remote workflow compiles the exact selected source closure and
-  audits every declaration owned by the ten selected modules. Only the
-  foundational axioms `propext`, `Classical.choice`, and `Quot.sound` are
-  permitted. No root toolchain or dependency pin is changed.
-- The first remote run, [43404383399](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43404383399),
-  tested the tree of preservation commit
-  `9ba1c218912ab8112d45aa03934abd4d72bc5d45` through PR merge
-  `e160677928b34e11d5eb18b2278a5260e57adc4a`. It processed a closure of
-  58 repository modules: 51 compiled, three failed, and four were blocked by
-  those failures. The fail-closed checker did not perform a declaration audit.
-- On that first run, the actual nonempty staged proof gate passed. Its changed
-  Lean-source audit covered all ten owners and found zero proof gaps; the
-  semantic-content, tracked-scope and quarantine checks also passed.
-  The incremental root build stopped at the missing dependency
-  `external_refs/homotopy-hypothesis-lean4`.
-- The first step labelled as a full root gate omitted `--full` and therefore
-  invoked the script's default incremental mode. It failed on shallow-history
-  resolution of `HEAD~1`; it was not evidence of a full-mode attempt. The
-  repaired workflow explicitly passes `--full`.
-- Compiler repair commits preserve the theorem statements and hypotheses.
-  Subsequent exact-source compilation, declaration-axiom results and root-gate
-  outcomes are recorded separately in [PR #352](https://github.com/nickgou-nuke/info-geometry-lean/pull/352)
-  and its immutable workflow runs. A focused result is not a whole-repository
-  build certificate. Required root checks and unrelated blockers must be
-  reported separately.
+**The selected mathematical source is accepted.** Two separate fresh CI runs
+compiled all 58 modules in its exact repository-source closure and audited all
+157 declarations owned by the ten modules. The owners contain 101 named
+source theorems, including four private theorems. The observed axiom union is
+exactly `propext`, `Classical.choice`, and `Quot.sound`.
+
+The [scoped acceptance report](tripotent_structure_acceptance.md) links the
+independent source reviews, both exact-source snapshots, both complete
+ownership-audit records, the independently reviewed artifact verifier, and the
+checksummed final QA record. QA independently checked both downloaded
+artifacts and their immutable commit/tree identities. The two native audit
+logs and all 58 module-log hashes are byte-identical.
+
+| Successful execution | Source checkpoint | Kernel job |
+|---|---|---|
+| First | `7dda7101e3340adab4bf85d535895b445854e3ea` | [131831152975](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43409179642/job/131831152975) |
+| Second | `337d7ef1c9433d342e92ead649f95b6e2481780a` | [131838779166](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43409480149/job/131838779166) |
+
+All 58 proof-source files, the focused kernel job, checker files and dependency
+pins are identical between these checkpoints. The sole intervening change
+installs and verifies `ripgrep` before the source/root gates. No manual job
+rerun or third focused run was requested for acceptance.
+
+Earlier local attempts stopped during cache setup with ENOSPC and compiled
+zero repository modules. Earlier remote iterations compiled respectively
+51, 55 and 56 modules out of 58; each stopped before the declaration audit
+because compilation failed. The reviewed repairs corrected elaboration and
+proof terms while preserving theorem statements, hypotheses and ordered
+noncommutative products. Those failed attempts are not acceptance evidence.
+
+The completed first successful run passed the actual nonempty staged gate on
+exactly the ten owner paths. Its unchanged incremental and explicit full root
+builds failed at `external_refs/homotopy-hypothesis-lean4`. Its theory scan also
+emitted missing-`rg` errors despite a successful wrapper exit; that scan is not
+accepted as substantive execution. At the final QA observation on
+2026-11-13 at 10:55:37 UTC, the second run's prerequisite and staged steps had
+passed, its incremental root gate had failed, and its explicit full root gate
+was still in progress. The preserved record does not infer the latest failure
+cause or full-check completion.
+
+This is scoped mathematical-source acceptance, not a whole-repository build
+certificate or merge acceptance. The existing root gates and pins remain
+unchanged; their integration boundary is reported separately.
 
 ## Explicit interpretation limits
 

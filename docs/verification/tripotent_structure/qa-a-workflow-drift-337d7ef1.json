@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "repository": "nickgou-nuke/info-geometry-lean",
+  "observed_by": "/root/tripotent_acceptance",
+  "verified_checkpoint": "7dda7101e3340adab4bf85d535895b445854e3ea",
+  "verified_checkpoint_tree": "bb9f7fb6180b53cf92ce433386f9781f2c95c18b",
+  "observed_branch_head": "337d7ef1c9433d342e92ead649f95b6e2481780a",
+  "observed_branch_tree": "d51c5028909b7bc77706cf7ae31474fc78af1130",
+  "parents": [
+    "7dda7101e3340adab4bf85d535895b445854e3ea"
+  ],
+  "commit_message": "ci: install ripgrep before unchanged tripotent quality gates\n\nThe Theory Audit shell checks emitted command-not-found errors while the\nwrapper returned success. Install and verify ripgrep in the disposable runner\nbefore executing the existing source and root gates. No proof source, gate,\nthreshold or Lean/Mathlib pin is changed.",
+  "commit_api": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/git/commits/337d7ef1c9433d342e92ead649f95b6e2481780a",
+  "compare_api": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/compare/7dda7101e3340adab4bf85d535895b445854e3ea...337d7ef1c9433d342e92ead649f95b6e2481780a",
+  "comparison": {
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0,
+    "total_commits": 1,
+    "changed_files": [
+      {
+        "path": ".github/workflows/tripotent-structure.yml",
+        "status": "modified",
+        "blob_sha": "b0bb29d06668f20a359a705909a6e6fef031b3a7",
+        "additions": 3,
+        "deletions": 0,
+        "patch": "@@ -93,6 +93,9 @@ jobs:\n         shell: bash\n         run: |\n           set -euo pipefail\n+          sudo apt-get update\n+          sudo apt-get install --yes ripgrep\n+          rg --version\n           python3 -m venv qa-env\n           qa-env/bin/pip install jsonschema==4.23.0\n           echo \"$GITHUB_WORKSPACE/qa-env/bin\" >> \"$GITHUB_PATH\""
+      }
+    ]
+  },
+  "proof_source_equivalence": "All 58 repository source modules, target list, checkers, Lean/Mathlib pins and gate scripts are unchanged by the complete one-file diff.",
+  "workflow_difference": "Three prerequisite-installation lines in the source-gates job; kernel-check job unchanged.",
+  "rerun_mutation_issued_during_drift": false,
+  "author_identity_assessed": false,
+  "acceptance_limit": "This is a source-equivalence observation; it is not a kernel or root-gate acceptance for the new tree."
+}

@@ -1,0 +1,398 @@
+{
+  "local_head": "06a62b03fc7f7dd2571932516c4e7001a108c495",
+  "local_tree": "bb9f7fb6180b53cf92ce433386f9781f2c95c18b",
+  "published_head": "7dda7101e3340adab4bf85d535895b445854e3ea",
+  "published_tree": "bb9f7fb6180b53cf92ce433386f9781f2c95c18b",
+  "status": "",
+  "source_authority": "immutable Git blobs at local HEAD; sparse checkout incomplete",
+  "intake": {
+    "bytes": 44529,
+    "sha256": "91f298d175b92810a214d6696f4a4a588c2fa231ee5058449a8a74c0bf89d2c8"
+  },
+  "targets": [
+    "InfoGeometry.Core.TripotentIntegerGrading",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentIntegerSuperbracket",
+    "InfoGeometry.Core.TripotentInvariantSubspaces",
+    "InfoGeometry.Core.TripotentOddGeneration",
+    "InfoGeometry.Core.TripotentInvolution",
+    "InfoGeometry.OperatorAlgebra.TripotentCornerActions",
+    "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+    "InfoGeometry.OperatorAlgebra.TripotentGradeTransport",
+    "InfoGeometry.Core.TripotentKreinBlocks",
+    "InfoGeometry.Core.TripotentAdjointDefect"
+  ],
+  "ordered_closure": [
+    "InfoGeometry.Algebra.FiniteSpinAlgebra",
+    "InfoGeometry.Physics.TripotentAdjointDerivation",
+    "InfoGeometry.Physics.Algebra.TripotentPeirceProjectors",
+    "InfoGeometry.Physics.Algebra.TripotentLeftRightPeirceProjectors",
+    "InfoGeometry.OperatorAlgebra.TKKConformalClosure",
+    "InfoGeometry.Meta.OwnerTarget",
+    "InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure",
+    "InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition",
+    "InfoGeometry.Core.TripotentAdjoint",
+    "InfoGeometry.Core.TripotentEigenspaces",
+    "InfoGeometry.Core.TripotentIntegerGrading",
+    "InfoGeometry.Core.IdempotencyDefect",
+    "InfoGeometry.Core.PeirceDecomposition",
+    "InfoGeometry.Core.PeirceGrading",
+    "InfoGeometry.Singular.MoorePenrose",
+    "InfoGeometry.Singular.Drazin",
+    "InfoGeometry.Singular.MetricAlgebraicProjectionDefect",
+    "InfoGeometry.Singular.MoorePenroseSectors",
+    "DAG.Basic",
+    "InfoGeometry.Meta.Architecture",
+    "InfoGeometry.Canonical.Drazin",
+    "InfoGeometry.Singular.SquareZeroMoorePenrose",
+    "InfoGeometry.Core.JordanPeirceDecomposition",
+    "InfoGeometry.Core.JordanAssociatorRing",
+    "InfoGeometry.Core.JordanAssociator",
+    "InfoGeometry.Core.IdempotentSymmetricOverlap",
+    "InfoGeometry.Singular.MoorePenroseChiralDefects",
+    "InfoGeometry.Singular.SquareZeroChiralHodge",
+    "InfoGeometry.Core.DiracSuperalgebra",
+    "InfoGeometry.Core.SuperGrassmannianSusy",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentParity",
+    "InfoGeometry.Algebra.InvariantTransport",
+    "InfoGeometry.Algebra.SupergradedBracket",
+    "InfoGeometry.Algebra.SupergradedJordanLieSplit",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentSuperbracket",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentIntegerSuperbracket",
+    "InfoGeometry.Core.TripotentInvariantSubspaces",
+    "InfoGeometry.Core.TripotentOddGeneration",
+    "InfoGeometry.Canonical.SpinorialCore.KreinAdjoint",
+    "InfoGeometry.Core.TripotentInvolution",
+    "InfoGeometry.OperatorAlgebra.TripotentCornerActions",
+    "InfoGeometry.Canonical.TKKJordanPairData",
+    "InfoGeometry.Core.IdempotentGraphReflectionOrder",
+    "InfoGeometry.Core.IdempotentCartan",
+    "InfoGeometry.Core.IdempotentTangent",
+    "InfoGeometry.Core.IdempotentGraphGrassmannian",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.InnerPullback",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Bergman",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.PullbackTriple",
+    "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+    "InfoGeometry.OperatorAlgebra.TripotentGradeTransport",
+    "InfoGeometry.Core.TripotentKreinBlocks",
+    "InfoGeometry.Core.TripotentAdjointDefect"
+  ],
+  "closure_count": 58,
+  "dependencies": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": [],
+    "InfoGeometry.Physics.TripotentAdjointDerivation": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Physics.Algebra.TripotentPeirceProjectors": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Physics.Algebra.TripotentLeftRightPeirceProjectors": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Physics.TripotentAdjointDerivation",
+      "InfoGeometry.Physics.Algebra.TripotentPeirceProjectors"
+    ],
+    "InfoGeometry.OperatorAlgebra.TKKConformalClosure": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Meta.OwnerTarget": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.OperatorAlgebra.TKKConformalClosure",
+      "InfoGeometry.Meta.OwnerTarget"
+    ],
+    "InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Physics.Algebra.TripotentLeftRightPeirceProjectors",
+      "InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure"
+    ],
+    "InfoGeometry.Core.TripotentAdjoint": [
+      "InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition"
+    ],
+    "InfoGeometry.Core.TripotentEigenspaces": [
+      "InfoGeometry.Core.TripotentAdjoint"
+    ],
+    "InfoGeometry.Core.TripotentIntegerGrading": [
+      "InfoGeometry.Core.TripotentEigenspaces"
+    ],
+    "InfoGeometry.Core.IdempotencyDefect": [],
+    "InfoGeometry.Core.PeirceDecomposition": [
+      "InfoGeometry.Core.IdempotencyDefect",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Core.PeirceGrading": [
+      "InfoGeometry.Core.PeirceDecomposition"
+    ],
+    "InfoGeometry.Singular.MoorePenrose": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Singular.Drazin": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Singular.MoorePenrose"
+    ],
+    "InfoGeometry.Singular.MetricAlgebraicProjectionDefect": [
+      "InfoGeometry.Singular.MoorePenrose",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Singular.Drazin"
+    ],
+    "InfoGeometry.Singular.MoorePenroseSectors": [
+      "InfoGeometry.Singular.MetricAlgebraicProjectionDefect"
+    ],
+    "DAG.Basic": [],
+    "InfoGeometry.Meta.Architecture": [
+      "DAG.Basic"
+    ],
+    "InfoGeometry.Canonical.Drazin": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Meta.Architecture",
+      "InfoGeometry.Singular.Drazin"
+    ],
+    "InfoGeometry.Singular.SquareZeroMoorePenrose": [
+      "InfoGeometry.Singular.MoorePenroseSectors",
+      "InfoGeometry.Canonical.Drazin"
+    ],
+    "InfoGeometry.Core.JordanPeirceDecomposition": [
+      "InfoGeometry.Core.PeirceDecomposition",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Core.JordanAssociatorRing": [],
+    "InfoGeometry.Core.JordanAssociator": [
+      "InfoGeometry.Core.JordanPeirceDecomposition",
+      "InfoGeometry.Core.JordanAssociatorRing",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Core.IdempotentSymmetricOverlap": [],
+    "InfoGeometry.Singular.MoorePenroseChiralDefects": [
+      "InfoGeometry.Singular.SquareZeroMoorePenrose",
+      "InfoGeometry.Core.JordanAssociator",
+      "InfoGeometry.Core.IdempotentSymmetricOverlap"
+    ],
+    "InfoGeometry.Singular.SquareZeroChiralHodge": [
+      "InfoGeometry.Singular.MoorePenroseChiralDefects"
+    ],
+    "InfoGeometry.Core.DiracSuperalgebra": [
+      "InfoGeometry.Singular.SquareZeroChiralHodge"
+    ],
+    "InfoGeometry.Core.SuperGrassmannianSusy": [
+      "InfoGeometry.Core.DiracSuperalgebra"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic": [],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge": [
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentParity": [
+      "InfoGeometry.Core.PeirceGrading",
+      "InfoGeometry.Core.SuperGrassmannianSusy",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge",
+      "InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition"
+    ],
+    "InfoGeometry.Algebra.InvariantTransport": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Algebra.SupergradedBracket": [
+      "InfoGeometry.Algebra.InvariantTransport",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Algebra.SupergradedJordanLieSplit": [
+      "InfoGeometry.Algebra.SupergradedBracket",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentSuperbracket": [
+      "InfoGeometry.Core.TripotentEigenspaces",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentParity",
+      "InfoGeometry.Algebra.SupergradedJordanLieSplit"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentIntegerSuperbracket": [
+      "InfoGeometry.Core.TripotentIntegerGrading",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentSuperbracket"
+    ],
+    "InfoGeometry.Core.TripotentInvariantSubspaces": [
+      "InfoGeometry.Core.TripotentEigenspaces"
+    ],
+    "InfoGeometry.Core.TripotentOddGeneration": [
+      "InfoGeometry.Core.TripotentEigenspaces"
+    ],
+    "InfoGeometry.Canonical.SpinorialCore.KreinAdjoint": [],
+    "InfoGeometry.Core.TripotentInvolution": [
+      "InfoGeometry.Core.TripotentAdjoint",
+      "InfoGeometry.Canonical.SpinorialCore.KreinAdjoint"
+    ],
+    "InfoGeometry.OperatorAlgebra.TripotentCornerActions": [
+      "InfoGeometry.Core.TripotentIntegerGrading"
+    ],
+    "InfoGeometry.Canonical.TKKJordanPairData": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Core.IdempotentGraphReflectionOrder": [],
+    "InfoGeometry.Core.IdempotentCartan": [
+      "InfoGeometry.Core.PeirceDecomposition"
+    ],
+    "InfoGeometry.Core.IdempotentTangent": [
+      "InfoGeometry.Core.IdempotentCartan"
+    ],
+    "InfoGeometry.Core.IdempotentGraphGrassmannian": [
+      "InfoGeometry.Core.IdempotentGraphReflectionOrder",
+      "InfoGeometry.Core.IdempotentTangent"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.InnerPullback": [
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic",
+      "InfoGeometry.Core.IdempotentGraphGrassmannian"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys": [
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized": [
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent": [
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized",
+      "InfoGeometry.Core.IdempotentGraphGrassmannian"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Bergman": [
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.PullbackTriple": [
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.InnerPullback",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Bergman"
+    ],
+    "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair": [
+      "InfoGeometry.Core.TripotentIntegerGrading",
+      "InfoGeometry.Canonical.TKKJordanPairData",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.PullbackTriple"
+    ],
+    "InfoGeometry.OperatorAlgebra.TripotentGradeTransport": [
+      "InfoGeometry.Core.TripotentIntegerGrading"
+    ],
+    "InfoGeometry.Core.TripotentKreinBlocks": [
+      "InfoGeometry.Core.TripotentInvolution",
+      "InfoGeometry.Core.TripotentEigenspaces"
+    ],
+    "InfoGeometry.Core.TripotentAdjointDefect": [
+      "InfoGeometry.Core.TripotentAdjoint"
+    ]
+  },
+  "native_mathlib_imports": [
+    "Mathlib.lean",
+    "Mathlib/Algebra/Algebra/Basic.lean",
+    "Mathlib/Algebra/Algebra/Operations.lean",
+    "Mathlib/Algebra/DirectSum/Module.lean",
+    "Mathlib/Algebra/Lie/Basic.lean",
+    "Mathlib/Algebra/Lie/OfAssociative.lean",
+    "Mathlib/Algebra/Lie/Subalgebra.lean",
+    "Mathlib/Algebra/Module/Basic.lean",
+    "Mathlib/Algebra/Module/Defs.lean",
+    "Mathlib/Algebra/Polynomial/AlgebraMap.lean",
+    "Mathlib/Algebra/Ring/Action/ConjAct.lean",
+    "Mathlib/Algebra/Ring/Basic.lean",
+    "Mathlib/Algebra/Ring/Equiv.lean",
+    "Mathlib/Algebra/Ring/Hom/Defs.lean",
+    "Mathlib/Algebra/Ring/Idempotent.lean",
+    "Mathlib/Algebra/Star/Basic.lean",
+    "Mathlib/Algebra/Star/Module.lean",
+    "Mathlib/Algebra/Star/StarProjection.lean",
+    "Mathlib/Analysis/InnerProductSpace/Adjoint.lean",
+    "Mathlib/Analysis/InnerProductSpace/Projection/Basic.lean",
+    "Mathlib/Analysis/InnerProductSpace/Projection/Submodule.lean",
+    "Mathlib/Analysis/Normed/Operator/Banach.lean",
+    "Mathlib/Analysis/Normed/Operator/Basic.lean",
+    "Mathlib/Basic/Real/Basic.lean",
+    "Mathlib/Data/Fin/Basic.lean",
+    "Mathlib/Data/Matrix/Basis.lean",
+    "Mathlib/Data/Real/Basic.lean",
+    "Mathlib/Data/Set/Basic.lean",
+    "Mathlib/LinearAlgebra/Eigenspace/Basic.lean",
+    "Mathlib/LinearAlgebra/Eigenspace/Minpoly.lean",
+    "Mathlib/LinearAlgebra/FiniteDimensional/Basic.lean",
+    "Mathlib/LinearAlgebra/Lagrange.lean",
+    "Mathlib/LinearAlgebra/Projection.lean",
+    "Mathlib/LinearAlgebra/QuadraticForm/Basic.lean",
+    "Mathlib/RingTheory/Artinian/Module.lean",
+    "Mathlib/RingTheory/GradedAlgebra/Basic.lean",
+    "Mathlib/Tactic.lean",
+    "Mathlib/Tactic/Abel.lean",
+    "Mathlib/Tactic/FinCases.lean",
+    "Mathlib/Tactic/IntervalCases.lean",
+    "Mathlib/Tactic/NoncommRing.lean",
+    "Mathlib/Tactic/NormNum.lean",
+    "Mathlib/Tactic/Ring.lean"
+  ],
+  "source_sha256": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+    "InfoGeometry.Physics.TripotentAdjointDerivation": "a80c69a0f750b35172be7a54e8721f68966dc56eba90a16dece936acde54cb33",
+    "InfoGeometry.Physics.Algebra.TripotentPeirceProjectors": "fba6d2cddddd44ceb1234f5c7b4c64b4d7823f706755a19478e7ddf297a3698e",
+    "InfoGeometry.Physics.Algebra.TripotentLeftRightPeirceProjectors": "4c9802696a32015c784c17e6d80d1f6000e5c2b64cb87a0635cf263bd35f8165",
+    "InfoGeometry.OperatorAlgebra.TKKConformalClosure": "c0a386a36337ff4ceae87f7d400f05f72c641f68a64bff51f7a6dd97ea18ba7b",
+    "InfoGeometry.Meta.OwnerTarget": "824ac23fa5a0f002b220a4547d7e26bb98fb4ddbe4b82f76f027aee02e3c6dab",
+    "InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure": "d26baa60bf0f7d71c47d66b8dd2c9a978989f860ceaef8ab931ccf55162ff7fe",
+    "InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition": "ecaa6ee264b35522231857be3bfba488ef8df628f3d21ceb08da2b5a05145a66",
+    "InfoGeometry.Core.TripotentAdjoint": "c835f1b5f7e3a834b05beffc2951470e732981ea0ec5298ca2d1ce165f1ff1c0",
+    "InfoGeometry.Core.TripotentEigenspaces": "6cf65bfe34ab558109a5de8e7b63598469ca484fed45037a360f2178f68b1df2",
+    "InfoGeometry.Core.TripotentIntegerGrading": "a9cbb59b746b7c4a2e2d766fe3c58030a8ce5950e98f5ae005d0d536529d9fc3",
+    "InfoGeometry.Core.IdempotencyDefect": "2d7b8fa580abe148fc70a39f8e1831b5505fb7f6a3920f3a79a0ba35bfee5590",
+    "InfoGeometry.Core.PeirceDecomposition": "b2426391a1841cbdb35bdef72138b5ab1553508c82c22ea930aa23f164de9bd9",
+    "InfoGeometry.Core.PeirceGrading": "f6fe99208f8d0947ff9f99b62625ad7a21a99b9a4f62908824ddb5c4c3a1b11c",
+    "InfoGeometry.Singular.MoorePenrose": "a2b9f006df7fc1bbc9ce107aeab98048464d70724e88c224f5dd828a2d7ebfe6",
+    "InfoGeometry.Singular.Drazin": "4275265884df968d70d064f497215be602c63b40c0b90d506b2268961f1fbe7a",
+    "InfoGeometry.Singular.MetricAlgebraicProjectionDefect": "82e17cb8b2af47f6f75d4d606f55a93f939c143191297b3bef20323fe360adf1",
+    "InfoGeometry.Singular.MoorePenroseSectors": "d74d7f659942d8a2e6ab65316d1049427ee3027e13b5224ba9d3a83f0bcb3132",
+    "DAG.Basic": "2bbf84bc9ffef91cff27903df6dc762fc61c10ca7566ae35b6eec7223f4cd2ef",
+    "InfoGeometry.Meta.Architecture": "9dcc8c20a4511508942911e3a26afbc208b357fc5eb4f9fdb0dd82d42654c662",
+    "InfoGeometry.Canonical.Drazin": "e991b7d1c6b5fe8c1577c9949ed27d7e2c7f6395c721b3c54eabd1d5c42e0e27",
+    "InfoGeometry.Singular.SquareZeroMoorePenrose": "f00a4254e0928c0d634da8d915d014162576985cbb051e825fbec504d3e49d47",
+    "InfoGeometry.Core.JordanPeirceDecomposition": "74aab0f34a7b618ab3a3ea867e8010893ef7457df7243222792602270b3e3261",
+    "InfoGeometry.Core.JordanAssociatorRing": "120e038c4477fb37e9cf291052a5cdd38b89ad8811bcb311fcc3ecdc7b6eeec0",
+    "InfoGeometry.Core.JordanAssociator": "283b80ccd518e134430832657657bdc66c98a71b737447f08acfcb33c5ab0a43",
+    "InfoGeometry.Core.IdempotentSymmetricOverlap": "6d7e6ded3525b0515c974f7cbcd72ddbe153eb5c361f4cfd4ef0de2defc5067d",
+    "InfoGeometry.Singular.MoorePenroseChiralDefects": "778792593499fe4643ff3b5bcc212fceacfcab7f948b2bd3b2856ed3f3a20934",
+    "InfoGeometry.Singular.SquareZeroChiralHodge": "7ce60156d35e8e70abb5f8d2ec71e7e44d40b469f9b668923ac65c275e9b91a0",
+    "InfoGeometry.Core.DiracSuperalgebra": "a0fba78ffa87e8d4ab1703f936d63631351b9353a8fbe8d8f71e4266434629c3",
+    "InfoGeometry.Core.SuperGrassmannianSusy": "ae2d74212010efc46685c0d855be30aa69c8879fdd8a0a590aa9e1bbff875637",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic": "6657ac06e9dfde8930808192b874c3c7d7738ad89a22d18c06c207d47a949327",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge": "708761b07efd0e3382eae5c93909ee380796ff2b8855b0256dbb6ee4265255a6",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentParity": "bd5d66ffa04e47e150bc7e656917728e61f9d0b0dd4323a36706797c2bab222f",
+    "InfoGeometry.Algebra.InvariantTransport": "f2a88885de225277badd3a54c45cbea2db3b02d5eb234b5b9416ca0781fdaceb",
+    "InfoGeometry.Algebra.SupergradedBracket": "cc8c0f8654905fa663afcd0d98662ec809b6c01662640b97dc8f7b0e59c9fe42",
+    "InfoGeometry.Algebra.SupergradedJordanLieSplit": "38e66d54b77a20379efbe2bb88da069434b5737ceac7d8879b2919f80b62c2f4",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentSuperbracket": "477d3baba04e4c968bbc5d9a7789cc040da16db815e5e2724b0f81e2dec221a0",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentIntegerSuperbracket": "dd28d994f37f87416f9f76cbaa4907f288173a2025b3a5464441d64564292089",
+    "InfoGeometry.Core.TripotentInvariantSubspaces": "c6e3040495aceaaa6b12c903e168c7ea78f1342bb03d4dd1800469c56c80ea40",
+    "InfoGeometry.Core.TripotentOddGeneration": "e7ca2e81a3eca8091a82da897a6c763d0921f95528e9c6f1062784afb0134b44",
+    "InfoGeometry.Canonical.SpinorialCore.KreinAdjoint": "a6fa1871a8e165c9e75b8ea868538bb9fc0cb161e44189010d3ba9b8ba835f65",
+    "InfoGeometry.Core.TripotentInvolution": "bf3c999295708a36178bca8b7a7888a582123bc5b6fe5a28d6b2a2b5104c8a3a",
+    "InfoGeometry.OperatorAlgebra.TripotentCornerActions": "21e04816b6bf25e81f889f6f511e5c1bb7a677d0ce26eaa5381f1cb3062f6e9f",
+    "InfoGeometry.Canonical.TKKJordanPairData": "b09e8b03910f8e95afa6a3bf6db7c2fc23b646bf70079ae1e64d081a4b312944",
+    "InfoGeometry.Core.IdempotentGraphReflectionOrder": "73b3aaa4f2d48bbc511236ce687e8f9ee9b3da82f0af05ee8fd1d85e38716248",
+    "InfoGeometry.Core.IdempotentCartan": "460c5eafe4d6496a2276f7788a2fccfb8aa5c9bbd4839cf45f5571abfb66c16f",
+    "InfoGeometry.Core.IdempotentTangent": "ade44f681a822491eb2a10a13cddc8264030e44387484255dc2a4cbce4559c5e",
+    "InfoGeometry.Core.IdempotentGraphGrassmannian": "e12a3b1c976623da3c7b1a3fd54ab376e66edb61788c82a4264ded3b074e212a",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.InnerPullback": "038210a4eb449e44e1f3be1b3e25c32560a5040954be721cdbcda5bb6a255cb6",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys": "75b924dc4f5b96b7f65492cee82cafabd433409fa34b70d0f0e733066227a767",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized": "1abad94188df38d1ef5bcaf7fc10a061b36180d61c74a6207468cfa7a5a646fa",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent": "3ab943fe3d1a0bb9c399559c43924bd5ed3195c8fa98762828661a84dbac2478",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Bergman": "a6b63ba781993fbbd384f64d46512cb6495976a47415bd56ec0010957183054a",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.PullbackTriple": "ac6797616f74a5b8195bbd5fd97b5c2f76ead98814e27ea58766e037b3a077d3",
+    "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair": "d36c58402e564d3afe015bf3171e2f2d1c830aa1da915f90e289f64ba8b73438",
+    "InfoGeometry.OperatorAlgebra.TripotentGradeTransport": "8dfe081d821a1a9be177d37eee990a8884aecc346d587d62f8896977b54dc740",
+    "InfoGeometry.Core.TripotentKreinBlocks": "c71e7ccb1408e9fd7a27681d68b49a18e719c847855423f591f3b63167cd2584",
+    "InfoGeometry.Core.TripotentAdjointDefect": "e6c7d4c4b66cc81380375b4860ebad87e353addeb7ab9bdc639711d55e858279"
+  },
+  "tool_sha256": {
+    "AGENTS.md": "6b8fa71b06145b75e52c18e884f91f6f2c3ad99ff7303fe41f28911dcbc7963b",
+    "docs/tripotent_krein_morita_contract.md": "0a4637416263837578a147d18f7525964fabcccf445286acbd735319eeda63eb",
+    ".github/workflows/tripotent-structure.yml": "4140ce0f67109fc9fef1b5d5f05011706ba6b10453e2e1e423839a26b19656c7",
+    "tools/quality/check_tripotent_structure.py": "8ccca013c2741d634ab77e94242f71a0901966614077e645eac90500b61528c0",
+    "tools/quality/check_perjes_klein.py": "205223886a6b76b949b5bdf6a6cd1f80b2f8b283f00f74bd7cd293ab46cb6180",
+    "tools/quality/check_peirce_reflection.py": "6ac9db6fa7d40fdb88b1094c31a314acc79aad0f297cbca98a38f5c3378d6e9e",
+    "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lake-manifest.json": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98"
+  },
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "mathlib_pin": "d13f23b723b8a846827a245b89c10fc7d3f11612"
+}

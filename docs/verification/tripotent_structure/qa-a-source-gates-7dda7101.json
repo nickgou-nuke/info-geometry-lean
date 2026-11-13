@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "repository": "nickgou-nuke/info-geometry-lean",
+  "published_head": "7dda7101e3340adab4bf85d535895b445854e3ea",
+  "tested_merge": "4199341fb43a758fde569b72fe0e1b9fa9cd9f58",
+  "tree": "bb9f7fb6180b53cf92ce433386f9781f2c95c18b",
+  "run_id": 43409179642,
+  "job_id": 131831154289,
+  "job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43409179642/job/131831154289",
+  "status": "completed",
+  "conclusion": "failure",
+  "staged_task_range": {
+    "status": "passed",
+    "nonempty": true,
+    "exact_ten_owner_paths": [
+      "lean/InfoGeometry/Core/TripotentAdjointDefect.lean",
+      "lean/InfoGeometry/Core/TripotentIntegerGrading.lean",
+      "lean/InfoGeometry/Core/TripotentInvariantSubspaces.lean",
+      "lean/InfoGeometry/Core/TripotentInvolution.lean",
+      "lean/InfoGeometry/Core/TripotentKreinBlocks.lean",
+      "lean/InfoGeometry/Core/TripotentOddGeneration.lean",
+      "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/TripotentIntegerSuperbracket.lean",
+      "lean/InfoGeometry/OperatorAlgebra/TripotentCornerActions.lean",
+      "lean/InfoGeometry/OperatorAlgebra/TripotentExtremalJordanPair.lean",
+      "lean/InfoGeometry/OperatorAlgebra/TripotentGradeTransport.lean"
+    ],
+    "range_matches_staged": true,
+    "matches_snapshot_targets": true,
+    "task_base": "c23aa651772224079271a35a0acca5a3f9767354"
+  },
+  "root_gate_results": {
+    "incremental": "failed",
+    "full": "failed",
+    "full_mode_actually_invoked": true,
+    "root_build_blocker": "HomotopyHypothesis: package directory not found: external_refs/homotopy-hypothesis-lean4",
+    "theory_scan_limitation": "Repeated rg: command not found; Theory Audit wrapper nevertheless returned success. No clean theory-scan acceptance."
+  },
+  "artifact_id": 14029612399,
+  "artifact_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43409179642/artifacts/14029612399",
+  "zip_sha256": "d6676f95f535b2bd2c3e7d7541d1bb606e34c9f8fc2c80da012899087fbd333b",
+  "zip_digest_matches_api": true,
+  "file_sha256": {
+    "full-root-gate.log": "8b04571942f8c87092ae1a47ac378d23eb25714063e59749e18996d40c9588e2",
+    "incremental-root-gate.log": "a11be0f28a97f89c419e8415cffbf3e4d0ddc947a041f04aeed7a25ffdad90b9",
+    "range-lean.txt": "d9accfdfa3ad9eb6042363422b9795b9c44780a2bb36c03604bbe07fc0ce49a0",
+    "staged-gate.log": "15636963213bd1e0893ddeb031ca330861b34fbde83171eaf5ccca90b606f2e2",
+    "staged-lean.txt": "d9accfdfa3ad9eb6042363422b9795b9c44780a2bb36c03604bbe07fc0ce49a0"
+  },
+  "job_log_sha256": "11d8926e3f79d224cd9224da5a8ac65303bd48d68079b04bf1a970ef908220a9",
+  "job_log_bytes": 83403,
+  "whole_repository_acceptance": false
+}

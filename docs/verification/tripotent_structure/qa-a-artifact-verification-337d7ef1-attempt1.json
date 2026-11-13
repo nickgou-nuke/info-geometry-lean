@@ -1,0 +1,1473 @@
+{
+  "schema_version": 1,
+  "verifier": "verify_tripotent_remote_artifact.py",
+  "verifier_sha256": "469f8494e5d4ec7b1e9ecc35a21073ab9ef4b968efe1b359f524a951bc21fdf3",
+  "verdict": "remote_artifact_matches_exact_frozen_source_and_complete_owned_declaration_audit",
+  "repository_source_modified": false,
+  "local_lean_or_lake_invoked": false,
+  "source_snapshot_sha256": "62a463ac0f111a7907ba5198b160d3539effad648c80b099d781e606422f09f2",
+  "checked_revision": "38aece91848c1654e7a8f4a0612de8c2d05ce533",
+  "required_source_tree": "d51c5028909b7bc77706cf7ae31474fc78af1130",
+  "tree_correspondence": "Must also be established with immutable GitHub commit metadata; not inferred from this artifact.",
+  "scope": "exact-source closure, not root Lake build",
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "actual_lean_version_matches_toolchain_pin": true,
+  "compiled_repository_modules": 58,
+  "compiled_modules_in_job_log_match_status": true,
+  "all_copied_source_hashes_match_snapshot": true,
+  "native_audit_source_matches_reviewed_generator": true,
+  "reviewed_checker_hashes_match_frozen_snapshot": true,
+  "audit_generator_sha256": "6ac9db6fa7d40fdb88b1094c31a314acc79aad0f297cbca98a38f5c3378d6e9e",
+  "optimized_python_rejected": true,
+  "owned_declaration_count": 157,
+  "owned_declaration_counts": {
+    "InfoGeometry.Core.TripotentAdjointDefect": 2,
+    "InfoGeometry.Core.TripotentIntegerGrading": 11,
+    "InfoGeometry.Core.TripotentInvariantSubspaces": 6,
+    "InfoGeometry.Core.TripotentInvolution": 34,
+    "InfoGeometry.Core.TripotentKreinBlocks": 18,
+    "InfoGeometry.Core.TripotentOddGeneration": 10,
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentIntegerSuperbracket": 13,
+    "InfoGeometry.OperatorAlgebra.TripotentCornerActions": 19,
+    "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair": 27,
+    "InfoGeometry.OperatorAlgebra.TripotentGradeTransport": 17
+  },
+  "axiom_allowlist": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+  ],
+  "observed_axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+  ],
+  "status_sha256": "1d33956b788b23a18ca539c77a0ab298c2792babdeb6fe172842138f8b381fe1",
+  "audit_source_sha256": "971ee74d2d5173815901abacf915e7aacf2fe6610d0521b27285a9e43d657a8c",
+  "audit_log_sha256": "c8ba2889259efc324b12af708dcd7e7e8cad5200f2c3a3f791e42d0d42bdccb0",
+  "lean_version_sha256": "355a9a028f81641782d75d6e6b58dec70f29d2f61238a9e271690259d9bf5680",
+  "job_log_sha256": "63ea871a3b81d48ff82d591b20360c1c8ec47b6c7331e10c482a30fc0c7d44c2",
+  "module_log_sha256": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Physics.TripotentAdjointDerivation": "318cb9d49d48ff0c392393d8d11f9c684273e44c800a84efd669cef2ac9606fa",
+    "InfoGeometry.Physics.Algebra.TripotentPeirceProjectors": "6fb9e896989831ec8b4b167f4d41ccb1d784b23bffcacda0d9636a635f6ca310",
+    "InfoGeometry.Physics.Algebra.TripotentLeftRightPeirceProjectors": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.OperatorAlgebra.TKKConformalClosure": "e657e9f2e843c569005c679d8dc7c10021f7f25c81a9a7a477155a43f33a8f80",
+    "InfoGeometry.Meta.OwnerTarget": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure": "b5e4668977921639988558e90cad150df31765282d1ff2d9c86a02d059567e0c",
+    "InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Core.TripotentAdjoint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Core.TripotentEigenspaces": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Core.TripotentIntegerGrading": "9451ebc14adb95006acdf539a83635c73d6791df291ea7ce52e42b3eb3757131",
+    "InfoGeometry.Core.IdempotencyDefect": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Core.PeirceDecomposition": "62f82cdc1953a432cbceb72085021456021fd0dff8d512da3ce8d66348462f38",
+    "InfoGeometry.Core.PeirceGrading": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Singular.MoorePenrose": "2e1e4a729a1a792e005b80b91cf986319d6e90f236b6fc127d5afce08619518d",
+    "InfoGeometry.Singular.Drazin": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Singular.MetricAlgebraicProjectionDefect": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Singular.MoorePenroseSectors": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "DAG.Basic": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Meta.Architecture": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Canonical.Drazin": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Singular.SquareZeroMoorePenrose": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Core.JordanPeirceDecomposition": "efc691e57019741c89c098f94dac10248d4e8227b7d5548d377c81b190dd49b0",
+    "InfoGeometry.Core.JordanAssociatorRing": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Core.JordanAssociator": "87f14fe60d6d52c25b4f9f7e8e09ce9761dd2b7655945e6382dba0d4001f8c51",
+    "InfoGeometry.Core.IdempotentSymmetricOverlap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Singular.MoorePenroseChiralDefects": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Singular.SquareZeroChiralHodge": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Core.DiracSuperalgebra": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Core.SuperGrassmannianSusy": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge": "73f34b3cb30194b5fdc553c26d2dd5a425e824b65a775fef7708f96ee1659453",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentParity": "d084d8e57c282d79bebf7d80fa608c25aea6fef755668e76636e9b90aad07f39",
+    "InfoGeometry.Algebra.InvariantTransport": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Algebra.SupergradedBracket": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Algebra.SupergradedJordanLieSplit": "ce9ccd0ad3192a6a20dafb718077357b5bc702a3a0cfd3394b3fb08453d2064d",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentSuperbracket": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentIntegerSuperbracket": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Core.TripotentInvariantSubspaces": "063c7cd613ba3bbf242bc58fa15cb2d1a03976adcef25d8fc08b5c42838f6006",
+    "InfoGeometry.Core.TripotentOddGeneration": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Canonical.SpinorialCore.KreinAdjoint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Core.TripotentInvolution": "09df5ed1aca6a7383bda7c25c224ab6b01b2bc0ab45174afd5796f8dc83d0b08",
+    "InfoGeometry.OperatorAlgebra.TripotentCornerActions": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Canonical.TKKJordanPairData": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Core.IdempotentGraphReflectionOrder": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Core.IdempotentCartan": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Core.IdempotentTangent": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.Core.IdempotentGraphGrassmannian": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.InnerPullback": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent": "b25951ab4c5870da365a3df0a755009d2b891313d4d5035cb2941013fd66377b",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Bergman": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.PullbackTriple": "e9483646757f75aff57f7d6405f9809981423d8a4ebe75d4657b59f2887d11e4",
+    "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "InfoGeometry.OperatorAlgebra.TripotentGradeTransport": "82044bf12afe62f7a5b1ae238a2200426590f9f0e79c61b797b2b1195db2c526",
+    "InfoGeometry.Core.TripotentKreinBlocks": "824197ac9692f1432d51dc4fdccd40bdcda28840322c788db65867a410f2f03d",
+    "InfoGeometry.Core.TripotentAdjointDefect": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "owned_declarations": [
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.lieSubalgebraExtremeJordanPair._proof_7",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.mem_sharpSkewLieSubalgebra",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentKreinBlocks",
+      "name": "_private.InfoGeometry.Core.TripotentKreinBlocks.0.InfoGeometry.Physics.Algebra.instReprPeirceSign.repr.match_1.eq_1",
+      "axioms": []
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.ad_mem_skewAdjoint_iff",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.ad_preserves_sharpSkew_of_skew",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentKreinBlocks",
+      "name": "InfoGeometry.Core.TripotentAdjoint.sharp_projZero",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentCornerActions",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentCornerActions.negative_extreme_kernel_chain",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport.unitConjugation",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.lieSubalgebraExtremeJordanPair",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvariantSubspaces",
+      "name": "InfoGeometry.Core.TripotentAdjoint.fiveGradeRange_comap_eq_restrict_eigenspace",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentIntegerGrading",
+      "name": "InfoGeometry.Core.TripotentAdjoint.opposite_degree_product_commute",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "_private.InfoGeometry.Core.TripotentInvolution.0.InfoGeometry.Core.TripotentAdjoint.commutator_neg_iff_sum_commute",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.skewAdjointLieSubalgebra",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.sharpSkewLieSubalgebra",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentKreinBlocks",
+      "name": "InfoGeometry.Core.TripotentAdjoint.sharp_jointPeirceProjector_of_skew",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport.commute_iff_nonzero_components_vanish",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.ad_preserves_sharpSkew_iff",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.sharp_mem_adGrade_neg_iff_of_selfAdjoint",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvariantSubspaces",
+      "name": "InfoGeometry.Core.TripotentAdjoint.adInvariant_lieSubalgebra_fiveGrade_decomposition",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvariantSubspaces",
+      "name": "InfoGeometry.Core.TripotentAdjoint.fiveGradeRange_comap_isInternal",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentCornerActions",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentCornerActions.range_zero_sup_range_neg_le_ker",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.restrictedExtremeTriple_add_right._abel_1_1",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentIntegerSuperbracket",
+      "name": "InfoGeometry.OperatorAlgebra.PeirceSpine.superBracket_mem_adGrade",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.lieSubalgebraExtremeJordanPair._proof_4",
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentIntegerGrading",
+      "name": "InfoGeometry.Core.TripotentAdjoint.tripotentIntegerDirectSumEquiv",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentCornerActions",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentCornerActions.corner_square_eq_zero",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentOddGeneration",
+      "name": "_private.InfoGeometry.Core.TripotentOddGeneration.0.InfoGeometry.Core.TripotentAdjoint.span_anticommutators_sup_eq_mul",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentIntegerSuperbracket",
+      "name": "InfoGeometry.OperatorAlgebra.PeirceSpine.integerParity_add._proof_1_1",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.star_mem_adGrade_of_skewAdjoint",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentCornerActions",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentCornerActions.range_zero_lt_ker_neg_two",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.sharp_mem_adGrade_of_skewAdjoint",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.lieSubalgebraExtremeJordanPair._abel_1",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentCornerActions",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentCornerActions.dual_extreme_kernel_inf",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentIntegerSuperbracket",
+      "name": "InfoGeometry.OperatorAlgebra.PeirceSpine.integerParity_fiveGradeValue",
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.jordanTriple_mem_extreme_intersection",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport.commute_iff_nonzero_components_vanish._simp_1_1",
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport.fiveGradeProjector_product_components",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentIntegerGrading",
+      "name": "InfoGeometry.Core.TripotentAdjoint.adGrade_isInternal",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.lieSubalgebraExtremeJordanPair._proof_5",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.mem_skewAdjointLieSubalgebra",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.star_mem_adGrade_neg_of_selfAdjoint",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentAdjointDefect",
+      "name": "InfoGeometry.Core.TripotentAdjoint.ad_quartic_defect_apply_fiveGradeProjector",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport.commuting_unit_preserves_adGrade",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentCornerActions",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentCornerActions.disjoint_peirce_projector_ranges",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentIntegerSuperbracket",
+      "name": "InfoGeometry.OperatorAlgebra.PeirceSpine.integerSuperBracket._proof_1",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "_private.InfoGeometry.Core.TripotentInvolution.0.InfoGeometry.Core.TripotentAdjoint.sharp_smul",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentCornerActions",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentCornerActions.range_zero_lt_ker_two",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.star_mem_adGrade_neg_iff_of_selfAdjoint",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentIntegerSuperbracket",
+      "name": "InfoGeometry.OperatorAlgebra.PeirceSpine.integerSuperBracket_jacobi._proof_2",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentCornerActions",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentCornerActions.dual_positive_kernel_eq",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvariantSubspaces",
+      "name": "InfoGeometry.Core.TripotentAdjoint.fiveGradeProjector_preserves_adInvariant",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentOddGeneration",
+      "name": "InfoGeometry.Core.TripotentAdjoint.span_adGrade_one_anticommutators_eq_corner_product",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.sharpSkewLieSubalgebra._proof_3",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentKreinBlocks",
+      "name": "InfoGeometry.Physics.Algebra.peirceProjector.eq_3",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentOddGeneration",
+      "name": "InfoGeometry.Core.TripotentAdjoint.mul_eq_zero_of_mem_jointPeirceRanges",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentCornerActions",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentCornerActions.positive_extreme_kernel_chain",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.lieSubalgebraExtremeJordanPair._proof_2",
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport.sum_fiveGradeProjector",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.double_lie_eq_jordanTriple",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentKreinBlocks",
+      "name": "_private.InfoGeometry.Core.TripotentKreinBlocks.0.InfoGeometry.Physics.Algebra.instReprPeirceSign.repr.match_1.eq_3",
+      "axioms": []
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentKreinBlocks",
+      "name": "_private.InfoGeometry.Core.TripotentKreinBlocks.0.InfoGeometry.Physics.Algebra.instReprPeirceSign.repr.match_1.splitter",
+      "axioms": []
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.star_mem_adGrade_iff_of_skewAdjoint",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentOddGeneration",
+      "name": "InfoGeometry.Core.TripotentAdjoint.adGrade_one_eq_sup_jointPeirceRanges",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.restrictedExtremeTriple_add_left._abel_1_1",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentIntegerGrading",
+      "name": "InfoGeometry.Core.TripotentAdjoint.adGrade_eq_bot_of_outside",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.restrictedExtremeTriple_add_middle._abel_1_1",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.lieSubalgebraExtremeJordanPair._abel_2",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentCornerActions",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentCornerActions.projector_range_le_corner_ker",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport.reversing_algEquiv_mem_iff",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentOddGeneration",
+      "name": "InfoGeometry.Physics.Algebra.fiveGradeRange.eq_1",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentCornerActions",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentCornerActions.middle_range_lt_corner_ker",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.skewAdjointLieSubalgebra._proof_1",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentKreinBlocks",
+      "name": "InfoGeometry.Core.TripotentAdjoint.sharpSkew_grade_zero_readback",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.mem_sharpSkewLieSubalgebra._simp_1",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentCornerActions",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentCornerActions.mem_adGrade_neg_two_iff_corner",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.double_lie_eq_jordanTriple._abel_1_1",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentIntegerSuperbracket",
+      "name": "InfoGeometry.OperatorAlgebra.PeirceSpine.parityConj_projZero_eq_integerParity",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.restrictedExtremeTriple._proof_1",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.sharp_mem_adGrade_iff_of_skewAdjoint",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport.mem_adGrade_neg_grader_iff",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentIntegerSuperbracket",
+      "name": "InfoGeometry.OperatorAlgebra.PeirceSpine.integerParity_add",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentIntegerGrading",
+      "name": "InfoGeometry.Core.TripotentAdjoint.adGrade_fiveGradeValue",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport.mem_adGrade_neg_grader_iff._abel_1_1",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentIntegerGrading",
+      "name": "InfoGeometry.Core.TripotentAdjoint.tripotentIntegerGradedAlgebra",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentOddGeneration",
+      "name": "InfoGeometry.Core.TripotentAdjoint.span_adGrade_neg_one_anticommutators_eq_corner_product",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.mem_skewAdjointLieSubalgebra._simp_1",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentOddGeneration",
+      "name": "InfoGeometry.Core.TripotentAdjoint.jointPeirce_through_zero_product",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentCornerActions",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentCornerActions.corner_mul_input_projector",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentKreinBlocks",
+      "name": "InfoGeometry.Core.TripotentAdjoint.sharp_middle_corner_of_skew",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentIntegerSuperbracket",
+      "name": "InfoGeometry.OperatorAlgebra.PeirceSpine.integerSuperBracket",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.lieSubalgebraExtremeJordanPair._proof_8",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport.anticommuting_unit_map_adGrade",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentOddGeneration",
+      "name": "InfoGeometry.Core.TripotentAdjoint.adGrade_neg_one_eq_sup_jointPeirceRanges",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.lieSubalgebraExtremeJordanPair._proof_1",
+      "axioms": []
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport.commute_product_iff_grouped_sums_vanish",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.restrictedExtremeTriple_smul_middle",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.restrictedExtremeTriple_add_middle",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentIntegerGrading",
+      "name": "InfoGeometry.Core.TripotentAdjoint.adGrade_iSup_eq_top",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentCornerActions",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentCornerActions.middle_range_lt_sup_output_range",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.ad_mem_sharpSkew_iff",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentIntegerSuperbracket",
+      "name": "InfoGeometry.OperatorAlgebra.PeirceSpine.integerSuperBracket_jacobi._proof_1",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport.fixed_algEquiv_mem_adGrade_iff",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentIntegerGrading",
+      "name": "InfoGeometry.Core.TripotentAdjoint.adGrade_iSupIndep",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentCornerActions",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentCornerActions.mem_adGrade_two_iff_corner",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.anticommutator_mem_sharpSkew_iff_eq_zero",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport.unitConjugation._proof_1",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentKreinBlocks",
+      "name": "InfoGeometry.Core.TripotentAdjoint.sharp_projPos",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.same_extreme_product_eq_zero",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentAdjointDefect",
+      "name": "InfoGeometry.Core.TripotentAdjoint.ad_quartic_defect",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentIntegerSuperbracket",
+      "name": "InfoGeometry.OperatorAlgebra.PeirceSpine.integerParity.eq_1",
+      "axioms": []
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.ad_preserves_skewAdjoint_iff",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.sharp_eq_neg_of_selfAdjoint_anticommute",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.restrictedExtremeTriple_add_left",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.sharpSkewLieSubalgebra._proof_2",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentCornerActions",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentCornerActions.range_zero_sup_range_pos_le_ker",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentKreinBlocks",
+      "name": "InfoGeometry.Core.TripotentAdjoint.sharp_peirceProjector",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentIntegerSuperbracket",
+      "name": "InfoGeometry.OperatorAlgebra.PeirceSpine.integerSuperBracket_jacobi._proof_3",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentKreinBlocks",
+      "name": "InfoGeometry.Core.TripotentAdjoint.sharpSkew_grade_zero_readback._abel_1_1",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentOddGeneration",
+      "name": "InfoGeometry.Core.TripotentAdjoint.span_adGrade_one_anticommutators_eq_two_iff",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.restrictedExtremeTriple_smul_right",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport.algEquiv_mem_adGrade_iff",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.coe_restrictedExtremeTriple_eq_double_lie",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentKreinBlocks",
+      "name": "_private.InfoGeometry.Core.TripotentKreinBlocks.0.InfoGeometry.Core.TripotentAdjoint.swap_peirce_zero",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvariantSubspaces",
+      "name": "InfoGeometry.Core.TripotentAdjoint.fiveGradeProjector_eq_aeval_lagrange",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentKreinBlocks",
+      "name": "InfoGeometry.Core.TripotentAdjoint.sharp_projNeg",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport.fiveGradeProjector_mul_expansion",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentIntegerGrading",
+      "name": "InfoGeometry.Core.TripotentAdjoint.adGrade_eq_bot_of_not_mem",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.restrictedExtremeTriple_add_right",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentIntegerGrading",
+      "name": "InfoGeometry.Core.TripotentAdjoint.opposite_degree_product_commute._simp_1_1",
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.sharpSkewLieSubalgebra._proof_1",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentKreinBlocks",
+      "name": "InfoGeometry.Core.TripotentAdjoint.sharp_jointPeirceProjector",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentKreinBlocks",
+      "name": "InfoGeometry.Core.TripotentAdjoint.sharpSkew_grade_one_readback",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentIntegerSuperbracket",
+      "name": "InfoGeometry.OperatorAlgebra.PeirceSpine.integerParity",
+      "axioms": []
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "_private.InfoGeometry.Core.TripotentInvolution.0.InfoGeometry.Core.TripotentAdjoint.commutator_neg_iff_sum_commute._abel_1_1",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.sharp_mem_adGrade_neg_of_selfAdjoint",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.sharp_anticommutator_of_skew",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvariantSubspaces",
+      "name": "InfoGeometry.Core.TripotentAdjoint.iSup_inf_fiveGradeRange_eq_of_adInvariant",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentOddGeneration",
+      "name": "InfoGeometry.Core.TripotentAdjoint.span_adGrade_neg_one_anticommutators_eq_neg_two_iff",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentIntegerSuperbracket",
+      "name": "InfoGeometry.OperatorAlgebra.PeirceSpine.integerSuperBracket_jacobi",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.sharp_mem_adGrade_neg_of_selfAdjoint._abel_1_1",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport.reversing_algEquiv_map_adGrade",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentKreinBlocks",
+      "name": "InfoGeometry.Physics.Algebra.peirceProjector.eq_2",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.adGrade_inf_skewAdjoint_eq_bot",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.star_mem_adGrade_neg_of_selfAdjoint._abel_1_1",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentCornerActions",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentCornerActions.dual_negative_kernel_eq",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.skewAdjointLieSubalgebra._abel_1",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.lieSubalgebraExtremeJordanPair._proof_3",
+      "axioms": []
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentIntegerGrading",
+      "name": "InfoGeometry.Core.TripotentAdjoint.adGradeGradedMonoid",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.restrictedExtremeTriple_smul_left",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentInvolution",
+      "name": "InfoGeometry.Core.TripotentAdjoint.ad_preserves_skewAdjoint_of_skew",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.restrictedExtremeTriple",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentCornerActions",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentCornerActions.projector_mul_corner_eq_zero",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentKreinBlocks",
+      "name": "_private.InfoGeometry.Core.TripotentKreinBlocks.0.InfoGeometry.Physics.Algebra.instReprPeirceSign.repr.match_1.eq_2",
+      "axioms": []
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair.lieSubalgebraExtremeJordanPair._proof_6",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentGradeTransport.anticommuting_unit_not_commute",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.Core.TripotentKreinBlocks",
+      "name": "InfoGeometry.Physics.Algebra.peirceProjector.eq_1",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.TripotentCornerActions",
+      "name": "InfoGeometry.OperatorAlgebra.TripotentCornerActions.corner_mul_projector_eq_zero",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    }
+  ]
+}

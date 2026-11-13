@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "review_kind": "independent_source_semantic_repair_delta",
+  "reviewer": "root/tripotent_intake_audit",
+  "repository": "nickgou-nuke/info-geometry-lean",
+  "pull_request": 352,
+  "baseline_review": "tripotent_semantic_review_repair3.json",
+  "initial_review": "tripotent_semantic_review_03809558.json",
+  "baseline_published_revision": "19ec590f6f92937b73fe9673b6bc7a50569d8bd1",
+  "local_revision": "06a62b03fc7f7dd2571932516c4e7001a108c495",
+  "published_revision": "7dda7101e3340adab4bf85d535895b445854e3ea",
+  "source_tree": "bb9f7fb6180b53cf92ce433386f9781f2c95c18b",
+  "revision_evidence": "Local revision, tree and source hashes read directly. Published-revision mapping to the same tree supplied by the integrating parent.",
+  "verdict": "source_semantics_accepted_at_stated_algebraic_scope_pending_kernel_validation",
+  "semantic_blockers": [],
+  "accepted_owner_count": 10,
+  "accepted_scope": "All ten mathematical owners retain the previously accepted noncommutative real-algebra contract. The two additional reviewed proof/elaboration repairs preserve every hypothesis, intended carrier, ordered product and mathematical conclusion. Earlier source-review records and all their scope and analytic boundaries remain unchanged.",
+  "reviewed_owner_sha256": {
+    "lean/InfoGeometry/Core/TripotentAdjointDefect.lean": "e6c7d4c4b66cc81380375b4860ebad87e353addeb7ab9bdc639711d55e858279",
+    "lean/InfoGeometry/Core/TripotentIntegerGrading.lean": "a9cbb59b746b7c4a2e2d766fe3c58030a8ce5950e98f5ae005d0d536529d9fc3",
+    "lean/InfoGeometry/Core/TripotentInvariantSubspaces.lean": "c6e3040495aceaaa6b12c903e168c7ea78f1342bb03d4dd1800469c56c80ea40",
+    "lean/InfoGeometry/Core/TripotentInvolution.lean": "bf3c999295708a36178bca8b7a7888a582123bc5b6fe5a28d6b2a2b5104c8a3a",
+    "lean/InfoGeometry/Core/TripotentKreinBlocks.lean": "c71e7ccb1408e9fd7a27681d68b49a18e719c847855423f591f3b63167cd2584",
+    "lean/InfoGeometry/Core/TripotentOddGeneration.lean": "e7ca2e81a3eca8091a82da897a6c763d0921f95528e9c6f1062784afb0134b44",
+    "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/TripotentIntegerSuperbracket.lean": "dd28d994f37f87416f9f76cbaa4907f288173a2025b3a5464441d64564292089",
+    "lean/InfoGeometry/OperatorAlgebra/TripotentCornerActions.lean": "21e04816b6bf25e81f889f6f511e5c1bb7a677d0ce26eaa5381f1cb3062f6e9f",
+    "lean/InfoGeometry/OperatorAlgebra/TripotentExtremalJordanPair.lean": "d36c58402e564d3afe015bf3171e2f2d1c830aa1da915f90e289f64ba8b73438",
+    "lean/InfoGeometry/OperatorAlgebra/TripotentGradeTransport.lean": "8dfe081d821a1a9be177d37eee990a8884aecc346d587d62f8896977b54dc740"
+  },
+  "accepted_deltas": [
+    {
+      "owner": "lean/InfoGeometry/OperatorAlgebra/TripotentCornerActions.lean",
+      "candidate": "TripotentCornerActions.fixed2.lean",
+      "description": "Adds zero_add to the simp set in dual_positive_kernel_eq, resolving the remaining additive identity. The operator action, hypotheses and kernel equality are unchanged."
+    },
+    {
+      "owner": "lean/InfoGeometry/OperatorAlgebra/TripotentExtremalJordanPair.lean",
+      "candidate": "TripotentExtremalJordanPair.fixed2.lean",
+      "description": "Makes the triple's target grade membership explicit, rewrites both product-membership hypotheses using hij and zero_add, then applies the target submodule's add_mem. Pins all linearity and nested fundamental-identity terms to the ambient algebra A with explicit coercions and explicit fundamental-theorem arguments. Triple products, argument order, carriers, hypotheses and conclusions are unchanged."
+    }
+  ],
+  "verification_boundary": {
+    "lean_run_by_reviewer": false,
+    "builds_or_tests_run_by_reviewer": false,
+    "axiom_audit_run_by_reviewer": false,
+    "kernel_acceptance_issued": false,
+    "source_or_github_mutations_by_reviewer": false,
+    "earlier_review_records_modified": false,
+    "kernel_validation_owner": "root/tripotent_acceptance",
+    "ci_and_kernel_status": "Not certified by this source-review record. The earlier failed compilation is historical evidence only."
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "review_kind": "independent_source_semantic_repair_delta",
+  "reviewer": "root/tripotent_intake_audit",
+  "repository": "nickgou-nuke/info-geometry-lean",
+  "pull_request": 352,
+  "baseline_review": "tripotent_semantic_review_03809558.json",
+  "baseline_revision": "038095581cf383fcf6586a65a1df50fce2eac5fa",
+  "local_revision": "9d6c7986b6998f047f9186218eebc739edae617d",
+  "published_revision": "19ec590f6f92937b73fe9673b6bc7a50569d8bd1",
+  "source_tree": "9f641ae3809fdc71c595208a64fe53821e6ab2ad",
+  "revision_evidence": "Local revision, tree and source hashes read directly. Published-revision mapping to the same tree supplied by the integrating parent.",
+  "verdict": "source_semantics_accepted_at_stated_algebraic_scope_pending_kernel_validation",
+  "semantic_blockers": [],
+  "accepted_owner_count": 10,
+  "accepted_scope": "All ten mathematical owners retain the previously accepted noncommutative real-algebra contract. Only the three reviewed proof/elaboration repairs are added; no hypothesis, intended carrier, ordered product or mathematical conclusion is weakened. The baseline review and its interpretation and analytic boundaries remain unchanged.",
+  "reviewed_owner_sha256": {
+    "lean/InfoGeometry/Core/TripotentAdjointDefect.lean": "e6c7d4c4b66cc81380375b4860ebad87e353addeb7ab9bdc639711d55e858279",
+    "lean/InfoGeometry/Core/TripotentIntegerGrading.lean": "a9cbb59b746b7c4a2e2d766fe3c58030a8ce5950e98f5ae005d0d536529d9fc3",
+    "lean/InfoGeometry/Core/TripotentInvariantSubspaces.lean": "c6e3040495aceaaa6b12c903e168c7ea78f1342bb03d4dd1800469c56c80ea40",
+    "lean/InfoGeometry/Core/TripotentInvolution.lean": "bf3c999295708a36178bca8b7a7888a582123bc5b6fe5a28d6b2a2b5104c8a3a",
+    "lean/InfoGeometry/Core/TripotentKreinBlocks.lean": "c71e7ccb1408e9fd7a27681d68b49a18e719c847855423f591f3b63167cd2584",
+    "lean/InfoGeometry/Core/TripotentOddGeneration.lean": "e7ca2e81a3eca8091a82da897a6c763d0921f95528e9c6f1062784afb0134b44",
+    "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/TripotentIntegerSuperbracket.lean": "dd28d994f37f87416f9f76cbaa4907f288173a2025b3a5464441d64564292089",
+    "lean/InfoGeometry/OperatorAlgebra/TripotentCornerActions.lean": "68334372cc4e3c62e185feac414c34f0588ca298cb2e9d2cec6ad45ff247b8d7",
+    "lean/InfoGeometry/OperatorAlgebra/TripotentExtremalJordanPair.lean": "a6caa76fbef066e6c215daaa3f38bba3e472762f70d86d768ce3f68a792de1ad",
+    "lean/InfoGeometry/OperatorAlgebra/TripotentGradeTransport.lean": "8dfe081d821a1a9be177d37eee990a8884aecc346d587d62f8896977b54dc740"
+  },
+  "accepted_deltas": [
+    {
+      "owner": "lean/InfoGeometry/OperatorAlgebra/TripotentCornerActions.lean",
+      "description": "One explicit Module.End action lambda and three explicit (T := S) argument applications. Actual module action, strictness hypotheses and kernel conclusions are unchanged."
+    },
+    {
+      "owner": "lean/InfoGeometry/OperatorAlgebra/TripotentExtremalJordanPair.lean",
+      "description": "Explicit intersection-subtype coercions, explicit positive/negative extreme indices and unfolding jordanTriple in the closure simplification. The same-extreme product proof now explicitly splits hi with rcases and uses norm_num instead of implicit use by omega. The same carriers, triple products, identities, linearity laws and hypotheses are preserved."
+    },
+    {
+      "owner": "lean/InfoGeometry/OperatorAlgebra/TripotentGradeTransport.lean",
+      "description": "Explicit native map_smul application and Finset.sum_comm after mapped double-sum expansion. Only summation order changes; the order of noncommutative factors and all transport and cancellation conclusions are preserved."
+    }
+  ],
+  "verification_boundary": {
+    "lean_run_by_reviewer": false,
+    "builds_or_tests_run_by_reviewer": false,
+    "axiom_audit_run_by_reviewer": false,
+    "kernel_acceptance_issued": false,
+    "source_or_github_mutations_by_reviewer": false,
+    "baseline_review_modified": false,
+    "current_ci_run": "43407891681",
+    "kernel_validation_owner": "root/tripotent_acceptance",
+    "ci_and_kernel_status": "Not certified by this source-review record."
+  }
+}

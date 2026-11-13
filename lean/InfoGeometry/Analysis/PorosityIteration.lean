@@ -25,7 +25,7 @@ namespace InfoGeometry.Analysis.PorosityIteration
 open Finset
 
 /-- Remaining porosity after successive geometric losses. -/
-def remainingPorosity (ν : ℝ) : ℕ → ℝ
+noncomputable def remainingPorosity (ν : ℝ) : ℕ → ℝ
   | 0 => ν
   | n + 1 => remainingPorosity ν n - (ν / 3) ^ (n + 1)
 

@@ -33,14 +33,6 @@ namespace InfoGeometry.Geometry.AssociativeGaugeConnection
 variable {R A : Type*} [Ring R] [Ring A] [Module R A]
   [SMulCommClass R A A] [IsScalarTower R A A]
 
-/-- The connection on the adjoint module, `D + ad(a)`. -/
-def adjointCovariantDerivative (D : Module.End R A) (a : A) : Module.End R A :=
-  D + innerDerivative (R := R) a
-
-@[simp] theorem adjointCovariantDerivative_apply
-    (D : Module.End R A) (a x : A) :
-    adjointCovariantDerivative D a x = D x + (a * x - x * a) := rfl
-
 /-- The adjoint connection is the existing fundamental connection minus
 right multiplication by the same potential. -/
 theorem adjointCovariantDerivative_eq_covariantDerivative_sub
@@ -49,14 +41,6 @@ theorem adjointCovariantDerivative_eq_covariantDerivative_sub
       covariantDerivative D a - LinearMap.mulRight R a := by
   ext x
   change D x + (a * x - x * a) = (D x + a * x) - x * a
-  noncomm_ring
-
-/-- An adjoint connection preserves the associative Leibniz rule. -/
-theorem adjointCovariantDerivative_isLeibniz
-    (D : Module.End R A) (hD : IsLeibniz D) (a : A) :
-    IsLeibniz (adjointCovariantDerivative D a) := by
-  intro x y
-  simp only [adjointCovariantDerivative_apply, hD x y]
   noncomm_ring
 
 /-- The full adjoint commutator retains the commutator of the base operators. -/
@@ -70,16 +54,6 @@ theorem adjoint_commutator_action
   simp only [adjointCovariantDerivative_apply, map_add, map_sub,
     hD b x, hD x b, hE a x, hE x a, curvature]
   noncomm_ring
-
-/-- With commuting base operators, the adjoint commutator is `ad(F)`. -/
-theorem adjoint_curvature_action
-    (D E : Module.End R A) (hD : IsLeibniz D) (hE : IsLeibniz E)
-    (hcomm : ∀ x, D (E x) = E (D x)) (a b x : A) :
-    adjointCovariantDerivative D a (adjointCovariantDerivative E b x) -
-        adjointCovariantDerivative E b (adjointCovariantDerivative D a x) =
-      curvature D E a b * x - x * curvature D E a b := by
-  simpa only [hcomm x, sub_self, zero_add] using
-    adjoint_commutator_action D E hD hE a b x
 
 /-- The cyclic covariant curvature sum has exactly the indicated defects
 when the three base operators are not assumed to commute. -/
@@ -111,19 +85,5 @@ theorem cyclicBianchi
         adjointCovariantDerivative G c (curvature D E a b) = 0 := by
   simpa only [hDE c, hEG a, hGD b, sub_self, add_zero] using
     cyclicBianchi_defect D E G hD hE hG a b c
-
-omit [SMulCommClass R A A] [IsScalarTower R A A] in
-/-- The raw curvature square keeps the two ordered cubic terms and the
-quartic commutator square. This identity needs neither Leibniz nor commuting
-base operators. -/
-theorem curvature_square_expansion
-    (D E : Module.End R A) (a b : A) :
-    curvature D E a b * curvature D E a b =
-      (D b - E a) * (D b - E a) +
-        (D b - E a) * (a * b - b * a) +
-        (a * b - b * a) * (D b - E a) +
-        (a * b - b * a) * (a * b - b * a) := by
-  simp only [curvature]
-  noncomm_ring
 
 end InfoGeometry.Geometry.AssociativeGaugeConnection

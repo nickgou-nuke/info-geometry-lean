@@ -61,7 +61,8 @@ theorem tripotent_schwarz_defect (S x : A) (u : unitary A)
         (projNeg S * Unitary.conjStarAlgAut ℤ A u x * projPos S) := by
   let y := Unitary.conjStarAlgAut ℤ A u x
   have hp : IsStarProjection (projPos S) :=
-    ⟨projPos_idempotent hS, star_projPos hSs⟩
+    ⟨projPos_idempotent hS,
+      InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.star_projPos hSs⟩
   have hsplit : 1 - projPos S = projZero S + projNeg S := by
     calc
       _ = (projPos S + projZero S + projNeg S) - projPos S := by
@@ -69,14 +70,18 @@ theorem tripotent_schwarz_defect (S x : A) (u : unitary A)
       _ = _ := by abel
   have hcross : star (projZero S * y * projPos S) *
       (projNeg S * y * projPos S) = 0 := by
-    simp only [star_mul, star_projPos hSs, star_projZero hSs]
+    simp only [star_mul,
+      InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.star_projPos hSs,
+      InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.star_projZero hSs]
     calc
       _ = projPos S * star y * (projZero S * projNeg S) * y * projPos S := by
         simp only [mul_assoc]
       _ = 0 := by rw [projZero_mul_projNeg_eq_zero hS]; simp
   have hcross' : star (projNeg S * y * projPos S) *
       (projZero S * y * projPos S) = 0 := by
-    simp only [star_mul, star_projPos hSs, star_projNeg hSs]
+    simp only [star_mul,
+      InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.star_projPos hSs,
+      InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.star_projNeg hSs]
     calc
       _ = projPos S * star y * (projNeg S * projZero S) * y * projPos S := by
         simp only [mul_assoc]

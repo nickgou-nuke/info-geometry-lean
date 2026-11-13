@@ -34,23 +34,35 @@ variable {B : Type*} [Ring B]
 
 abbrev Nested (B : Type*) := Block2 (Block2 B)
 
-def axisI : Nested B := -fourGenerators (Sum.inl 1)
-def axisJ : Nested B := -fourGenerators (Sum.inr 1)
+private def indexI : GeneratorIndex 2 := .inl true
+private def indexJ : GeneratorIndex 2 := .inr (.inl true)
+
+def axisI : Nested B := generator B 2 indexI
+def axisJ : Nested B := generator B 2 indexJ
 def axisK : Nested B := axisI * axisJ
 
 @[simp] theorem axisI_square : (axisI : Nested B) * axisI = -1 := by
-  simpa [axisI, fourSquares, splitSquares] using
-    (fourGenerators_square (B := B) (Sum.inl 1))
+  change generator B 2 indexI * generator B 2 indexI = -1
+  have hs : generatorSign 2 indexI = true := rfl
+  rw [generator_square (A := B) 2 indexI, hs]
+  simp
 
 @[simp] theorem axisJ_square : (axisJ : Nested B) * axisJ = -1 := by
-  simpa [axisJ, fourSquares, splitSquares] using
-    (fourGenerators_square (B := B) (Sum.inr 1))
+  change generator B 2 indexJ * generator B 2 indexJ = -1
+  have hs : generatorSign 2 indexJ = true := rfl
+  rw [generator_square (A := B) 2 indexJ, hs]
+  simp
 
 theorem axes_anticommute :
     (axisI : Nested B) * axisJ + axisJ * axisI = 0 := by
-  simpa [axisI, axisJ] using
-    (fourGenerators_pairwise (B := B)
-      (i := Sum.inl 1) (j := Sum.inr 1) (by decide))
+  classical
+  have hpair := generator_pairwise (A := B) 2
+    (i := indexI) (j := indexJ) (by
+      change (Sum.inl true : GeneratorIndex 2) ≠ Sum.inr (.inl true)
+      simp)
+  change generator B 2 indexI * generator B 2 indexJ +
+    generator B 2 indexJ * generator B 2 indexI = 0
+  exact hpair
 
 @[simp] theorem axisI_mul_axisJ : (axisI : Nested B) * axisJ = axisK := rfl
 

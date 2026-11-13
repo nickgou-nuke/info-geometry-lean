@@ -322,7 +322,7 @@ theorem seed_ring_ne_top : Subring.closure ({P8, Atilde8, elliptic8} : Set Op8) 
 /-- A single upper matrix unit is an actual nonzero element of degree two. -/
 theorem upper_matrix_unit_degree_two :
     comm (genSig P8 Atilde8 Atilde8) (E 0 6) = (2 : ℤ) • (E 0 6) := by
-  rw [sigma_Atilde8]
+  rw [sigma_Atilde8, two_smul]
   unfold comm
   matrix_units
 

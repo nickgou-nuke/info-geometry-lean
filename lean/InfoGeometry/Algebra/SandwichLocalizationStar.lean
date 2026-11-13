@@ -24,7 +24,8 @@ variable (s : B) [hself : Fact (star s = s)]
 instance centralizerStarRing : StarRing (Centralizer s) where
   star u := ⟨star (u : B), by
     intro x hx
-    rcases Set.mem_singleton_iff.mp hx with rfl
+    have hx' : x = s := Set.mem_singleton_iff.mp hx
+    subst x
     have h := congrArg star (centralizer_commute s u).eq
     simpa only [star_mul, hself.out] using h.symm⟩
   star_involutive u := Subtype.ext (star_star (u : B))
@@ -83,6 +84,7 @@ theorem star_right_smul (q : Scalars s) (z : Space s) :
     star_repr, coe_star_centralizer, star_mul]
 
 theorem commute_star_right (a : B) (ha : Commute s a) : Commute s (star a) := by
+  change s * star a = star a * s
   have h := congrArg star ha.eq
   simpa only [star_mul, hself.out] using h.symm
 
@@ -157,6 +159,8 @@ theorem cayleyEquiv_eq_scalar_action (a : B) (ha : Commute s a)
   dsimp only [CentralPowerLocalization.cayley]
   simp only [cayleyEquiv_repr, CentralPowerLocalization.star_repr,
     left_smul_repr, right_smul_repr, coe_star_centralizer]
-  rfl
+  change repr s (k + 1) (a * x * star a) (l + 1) =
+    repr s (k + 1) (a * (x * star a)) (l + 1)
+  rw [mul_assoc]
 
 end InfoGeometry.Algebra.SandwichLocalization

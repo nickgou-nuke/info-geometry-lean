@@ -35,7 +35,8 @@ theorem mul_congr_iff_centralizer (s : B) (R : Subring B) (hs : s ∈ R) :
   constructor
   · intro h x hx
     intro t ht
-    rcases Set.mem_singleton_iff.mp ht with rfl
+    have ht' : t = s := Set.mem_singleton_iff.mp ht
+    subst t
     have he := h 0 0 0 1 ⟨x, hx⟩ ⟨x, hx⟩ 1 ⟨s, hs⟩ rfl
       (by simp only [Rel, pow_one, pow_zero, Subring.coe_one, mul_one, one_mul])
     simpa only [Rel, Nat.add_zero, Nat.zero_add, pow_zero, pow_one,
@@ -65,6 +66,7 @@ variable [StarRing B]
 
 private theorem commute_star (s x : B) (hs : star s = s) (hx : Commute s x) :
     Commute s (star x) := by
+  change s * star x = star x * s
   simpa only [star_mul, hs] using (congrArg star hx.eq).symm
 
 /-- Numerator star respects the stated one-sided relation exactly on a
@@ -78,7 +80,8 @@ theorem star_congr_iff_centralizer (s : B) (hself : star s = s)
   constructor
   · intro h x hx
     intro t ht
-    rcases Set.mem_singleton_iff.mp ht with rfl
+    have ht' : t = s := Set.mem_singleton_iff.mp ht
+    subst t
     have he := h 0 1 ⟨x, hx⟩ ⟨s * x, R.mul_mem hs hx⟩
       (by simp only [Rel, pow_zero, pow_one, one_mul])
     have hc : s * star x = star x * s := by

@@ -1,0 +1,21 @@
+{
+  "schema": "info_geometry.placeholder_audit.v2",
+  "generated_at": "2026-11-13T07:22:36.822346+00:00",
+  "root": "lean/InfoGeometry/OperatorAlgebra/ProjectionLocalization.lean",
+  "authority_tier": "heuristic-proxy",
+  "summary": {
+    "module_count": 0,
+    "scanned_count": 1,
+    "finding_count": 0,
+    "hard_count": 0,
+    "soft_count": 0,
+    "advisory_count": 0,
+    "provenance": {
+      "hard_failures": 0,
+      "soft_findings": 0,
+      "advisory_findings": 0
+    }
+  },
+  "modules": [],
+  "findings": []
+}

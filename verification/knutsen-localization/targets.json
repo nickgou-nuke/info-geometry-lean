@@ -1,0 +1,9 @@
+[
+  "InfoGeometry.OperatorAlgebra.ProjectionLocalization",
+  "InfoGeometry.OperatorAlgebra.IsometryCornerLocalization",
+  "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame",
+  "InfoGeometry.Clifford.WeylFrameMasks",
+  "InfoGeometry.Analysis.PorosityIteration",
+  "InfoGeometry.Analysis.MetricPorosity",
+  "InfoGeometry.Analysis.MultiscaleLocalization"
+]

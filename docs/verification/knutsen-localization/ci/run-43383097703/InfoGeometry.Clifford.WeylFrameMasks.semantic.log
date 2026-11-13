@@ -1,0 +1,9 @@
+Semantic vacuity audit
+======================
+roots: lean/InfoGeometry/Clifford/WeylFrameMasks.lean
+patterns: /home/runner/work/info-geometry-lean/info-geometry-lean/project/tools/quality/semantic_vacuity_patterns.json
+semantic_vacuity: 2
+warning: 2
+trivial_surface: 2
+  - lean/InfoGeometry/Clifford/WeylFrameMasks.lean:126 [warning/trivial_surface] card_balancedSelection: by
+  - lean/InfoGeometry/Clifford/WeylFrameMasks.lean:129 [warning/trivial_surface] card_parallelSelection: by

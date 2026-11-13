@@ -1,0 +1,106 @@
+/workspace/scratch/d18a558d1d7d/knutsen-dev/src/InfoGeometry/Clifford/WeylFrameMasks.lean:59:59: warning: This simp argument is unused:
+  Fin.sum_univ_succ
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [peirceWindow, Matrix.single, Matrix.mul_apply]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/workspace/scratch/d18a558d1d7d/knutsen-dev/src/InfoGeometry/Clifford/WeylFrameMasks.lean:69:0: warning: automatically included section variable(s) unused in theorem `InfoGeometry.Clifford.WeylFrameMasks.windowAtoms_eq`:
+  [StarRing B]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [StarRing B] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+/workspace/scratch/d18a558d1d7d/knutsen-dev/src/InfoGeometry/Clifford/WeylFrameMasks.lean:76:46: warning: This simp argument is unused:
+  Fin.sum_univ_succ
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [windowAtoms, weylFamily, peirceWindow, I_mat, Gamma_mat, J_mat, K_mat, Matrix.single, Matrix.mul_apply]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/workspace/scratch/d18a558d1d7d/knutsen-dev/src/InfoGeometry/Clifford/WeylFrameMasks.lean:86:54: error: `noncomm_ring` simp lemmas don't apply; try `abel` instead
+case «0».«1»
+B : Type u_1
+inst✝¹ : Ring B
+inst✝ : StarRing B
+M : Matrix (Fin 2) (Fin 2) B
+⊢ (![1, 0] ᵥ* (M * star !![1, 0; 0, 1])) 1 +
+      ((![1, 0] ᵥ* (M * star !![1, 0; 0, -1])) 1 +
+        ((![0, 1] ᵥ* (M * star !![0, 1; 1, 0])) 1 + (![0, -1] ᵥ* (M * star !![0, -1; 1, 0])) 1)) =
+    0
+/workspace/scratch/d18a558d1d7d/knutsen-dev/src/InfoGeometry/Clifford/WeylFrameMasks.lean:86:54: error: `noncomm_ring` simp lemmas don't apply; try `abel` instead
+case «1».«0»
+B : Type u_1
+inst✝¹ : Ring B
+inst✝ : StarRing B
+M : Matrix (Fin 2) (Fin 2) B
+⊢ (![0, 1] ᵥ* (M * star !![1, 0; 0, 1])) 0 +
+      ((![0, -1] ᵥ* (M * star !![1, 0; 0, -1])) 0 +
+        ((![1, 0] ᵥ* (M * star !![0, 1; 1, 0])) 0 + (![1, 0] ᵥ* (M * star !![0, -1; 1, 0])) 0)) =
+    0
+/workspace/scratch/d18a558d1d7d/knutsen-dev/src/InfoGeometry/Clifford/WeylFrameMasks.lean:81:79: error: unsolved goals
+case «1».«1»
+B : Type u_1
+inst✝¹ : Ring B
+inst✝ : StarRing B
+M : Matrix (Fin 2) (Fin 2) B
+⊢ (![0, 1] ᵥ* (M * star !![1, 0; 0, 1])) 1 +
+      ((![0, -1 • 1] ᵥ* (M * star !![1, 0; 0, -1 • 1])) 1 +
+        ((![1, 0] ᵥ* (M * star !![0, 1; 1, 0])) 1 + (![1, 0] ᵥ* (M * star !![0, -1 • 1; 1, 0])) 1)) =
+    2 • M 0 0 + 2 • M 1 1
+/workspace/scratch/d18a558d1d7d/knutsen-dev/src/InfoGeometry/Clifford/WeylFrameMasks.lean:80:8: error: (kernel) declaration has metavariables 'InfoGeometry.Clifford.WeylFrameMasks.weyl_twirl'
+/workspace/scratch/d18a558d1d7d/knutsen-dev/src/InfoGeometry/Clifford/WeylFrameMasks.lean:85:6: warning: This simp argument is unused:
+  Matrix.mul_apply
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [krausChannel, weylFamily, I_mat, Gamma_mat, J_mat, K_mat, Matrix.star_apply, Fin.sum_univ_succ,
+    Matrix.scalar_apply, Matrix.diagonal_apply]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/workspace/scratch/d18a558d1d7d/knutsen-dev/src/InfoGeometry/Clifford/WeylFrameMasks.lean:85:24: warning: This simp argument is unused:
+  Matrix.star_apply
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [krausChannel, weylFamily, I_mat, Gamma_mat, J_mat, K_mat, Matrix.mul_apply, Fin.sum_univ_succ,
+    Matrix.scalar_apply, Matrix.diagonal_apply]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/workspace/scratch/d18a558d1d7d/knutsen-dev/src/InfoGeometry/Clifford/WeylFrameMasks.lean:86:27: warning: This simp argument is unused:
+  Matrix.diagonal_apply
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [krausChannel, weylFamily, I_mat, Gamma_mat, J_mat, K_mat, Matrix.mul_apply, Matrix.star_apply,
+    Fin.sum_univ_succ, Matrix.scalar_apply]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/workspace/scratch/d18a558d1d7d/knutsen-dev/src/InfoGeometry/Clifford/WeylFrameMasks.lean:97:31: warning: This simp argument is unused:
+  Matrix.diagonal_apply
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Matrix.scalar_apply, nsmul_eq_mul]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/workspace/scratch/d18a558d1d7d/knutsen-dev/src/InfoGeometry/Clifford/WeylFrameMasks.lean:147:25: warning: This simp argument is unused:
+  Fin.sum_univ_succ
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [balancedSelection, peirceWindow, Matrix.single, Matrix.mul_apply, Matrix.star_apply]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/workspace/scratch/d18a558d1d7d/knutsen-dev/src/InfoGeometry/Clifford/WeylFrameMasks.lean:156:25: warning: This simp argument is unused:
+  Fin.sum_univ_succ
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [parallelSelection, peirceWindow, Matrix.single, Matrix.mul_apply, Matrix.star_apply]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/workspace/scratch/d18a558d1d7d/knutsen-dev/src/InfoGeometry/Clifford/WeylFrameMasks.lean:165:6: warning: This simp argument is unused:
+  Fin.sum_univ_succ
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [peirceWindow, Matrix.single, Matrix.mul_apply, Matrix.star_apply]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/workspace/scratch/d18a558d1d7d/knutsen-dev/src/InfoGeometry/Clifford/WeylFrameMasks.lean:173:2: warning: Try `simp at h11` instead of `simpa using h11`
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`

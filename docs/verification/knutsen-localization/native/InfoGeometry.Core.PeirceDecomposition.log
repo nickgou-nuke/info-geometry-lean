@@ -1,0 +1,3 @@
+/home/runner/work/info-geometry-lean/info-geometry-lean/knutsen-report/src/InfoGeometry/Core/PeirceDecomposition.lean:192:55: warning: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`

@@ -1,0 +1,147 @@
+{
+  "schema": "knutsen_ci_audit.v1",
+  "head": "5dda37ab3042947da99ab7c769138f1bcdf5e2bf",
+  "merge_commit": "f5b06abbc8b701df061e5d490fa722a7c8dcfec3",
+  "workflow_candidate": "/workspace/scratch/d18a558d1d7d/knutsen-ci-candidates/knutsen-localization.yml",
+  "workflow_source_sha256": "1bbb02fe3db25e7caaacc682eca7497b3ec312dd6d454c9986f0dff4c37a8438",
+  "workflow_candidate_sha256": "80b3971c8c34f4a36f1093abbd58f8898d3745c731341fe296782775d875e3a9",
+  "jobs": [
+    {
+      "workflow": "Knutsen localization kernel check",
+      "run": 43381397097,
+      "job": 131739738244,
+      "url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43381397097/job/131739738244",
+      "stage": "First actions/checkout@v4, removing auth",
+      "error": "No url found for submodule path 'external_refs/auto-ontology' in .gitmodules",
+      "returncode": 128,
+      "lean_started": false,
+      "post_cleanup": "warning only; successful step"
+    },
+    {
+      "workflow": "Lean style lint",
+      "run": 43381396862,
+      "job": 131739737258,
+      "url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43381396862/job/131739737258",
+      "stage": "case-sensitivity checker",
+      "error": "lean/InfoGeometry/Physics/PellisFineStructure.lean collides with PellisfineStructure.lean",
+      "returncode": 1
+    },
+    {
+      "workflow": "CI",
+      "run": 43381396897,
+      "job": 131739786131,
+      "url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43381396897/job/131739786131",
+      "stage": "Validate local Lake package checkouts",
+      "error": "HomotopyHypothesis and Atlas untracked missing path packages; GIFT uninitialized gitlink; compiler-bridge smoke reports missing HomotopyHypothesis",
+      "returncode": 1
+    }
+  ],
+  "sources": [
+    "https://github.com/actions/checkout/blob/11d5960a326750d5838078e36cf38b85af677262/src/main.ts",
+    "https://github.com/actions/checkout/blob/11d5960a326750d5838078e36cf38b85af677262/src/git-auth-helper.ts",
+    "https://github.com/actions/checkout/blob/11d5960a326750d5838078e36cf38b85af677262/src/git-source-provider.ts",
+    "https://github.com/git/git/blob/v2.56.0/builtin/submodule--helper.c"
+  ],
+  "repair": {
+    "description": "Keep credential for first checkout only; immediately unset exact local HTTP extraheader before dependency or source execution. Native dependency checkout remains persist-credentials:false.",
+    "permission_scope": "contents:read remains unchanged; submodules:false explicit; no tokens printed",
+    "fail_closed": "Single git config --unset-all command returns nonzero on missing key or any Git error, failing the step. No ignored errors.",
+    "post_cleanup": "Pinned checkout main.ts cleanup catches all errors and reports core.warning; job failure is not raised.",
+    "remaining": "Fresh dedicated run required to observe cache, compilation, native audit and static checks."
+  },
+  "validation": "Read-only source/log audit only. No build, compile, test, PR mutation or rerun performed.",
+  "baseline_scope": "Case-colliding Pellis files and malformed auto-ontology gitlink are present at base a392af178af1fe2bcba2ba39eb405700c6ee103c; .gitmodules, lake-manifest.json and lakefile.lean have no base-to-HEAD diff.",
+  "repair_publication": {
+    "head": "475acd7b1bb32e1943b597892e56bebf6ee05f8f",
+    "tree": "ca1905d31672d81535ad1fd9ec422acf3bd01827",
+    "run": 43382041378,
+    "job": 131741799694,
+    "status": "completed",
+    "url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43382041378/job/131741799694",
+    "conclusion": "failure",
+    "checkout": "passed",
+    "immediate_credential_removal": "passed",
+    "native_import_cache": "passed",
+    "all_source_modules_compiled": true,
+    "modules": 16,
+    "new_owner_warnings": 0,
+    "audit_error": "Unsafe or partial declaration in reviewed module: InfoGeometry.Analysis.PorosityIteration.remainingPorosity._unsafe_rec",
+    "post_cleanup": "success with pre-existing gitlink warning",
+    "artifact_id": 14017486180,
+    "artifact_sha256": "7009cc23fd115e6365508cb7cd8287460d28c19121214f64547c3bb3b9188b0a",
+    "artifact_directory": "/workspace/scratch/d18a558d1d7d/knutsen-ci-candidates/run-43382041378",
+    "next_repair_candidate": "Explicit noncomputable def remainingPorosity; source precedent TwoModeCountRecurrence.counts and verification/twistor-homotope/RESULTS.md. Not yet applied or tested by CI auditor."
+  },
+  "final_publication": {
+    "run": 43383097703,
+    "job": 131745210917,
+    "head": "3f7282ceb5076e16bae8acc696adffd3771494c9",
+    "artifact": 14017786847,
+    "artifact_sha256": "848fa6c5663cf19fbc48a5570ac3bf40ce0d1441f49ab5bdfd5162fc667b91d3",
+    "status": "passed",
+    "audit_required": true,
+    "fresh_modules": 16,
+    "module_count": 16,
+    "all_modules_exit_zero": true,
+    "new_owner_warnings": {
+      "InfoGeometry.OperatorAlgebra.ProjectionLocalization": 0,
+      "InfoGeometry.OperatorAlgebra.IsometryCornerLocalization": 0,
+      "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame": 0,
+      "InfoGeometry.Clifford.WeylFrameMasks": 0,
+      "InfoGeometry.Analysis.PorosityIteration": 0,
+      "InfoGeometry.Analysis.MetricPorosity": 0,
+      "InfoGeometry.Analysis.MultiscaleLocalization": 0
+    },
+    "reused_owner_warnings": {
+      "InfoGeometry.Core.PeirceDecomposition": 1,
+      "InfoGeometry.Clifford.OperatorValuedJones": 1
+    },
+    "declaration_counts": {
+      "InfoGeometry.Core.IdempotencyDefect": 23,
+      "InfoGeometry.Algebra.FiniteSpinAlgebra": 86,
+      "InfoGeometry.Core.PeirceDecomposition": 60,
+      "InfoGeometry.Core.PeirceCompressionDefect": 62,
+      "InfoGeometry.Core.PeirceCompressionCStar": 5,
+      "InfoGeometry.OperatorAlgebra.ProjectionLocalization": 11,
+      "InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace": 20,
+      "InfoGeometry.OperatorAlgebra.NoncommutativeKrausChannel": 18,
+      "InfoGeometry.Algebra.NonCommutativeIsometry": 8,
+      "InfoGeometry.OperatorAlgebra.IsometryCornerLocalization": 44,
+      "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame": 31,
+      "InfoGeometry.Clifford.OperatorValuedJones": 54,
+      "InfoGeometry.Clifford.WeylFrameMasks": 31,
+      "InfoGeometry.Analysis.PorosityIteration": 21,
+      "InfoGeometry.Analysis.MetricPorosity": 11,
+      "InfoGeometry.Analysis.MultiscaleLocalization": 5
+    },
+    "total_declarations": 490,
+    "axioms": [
+      "[propext, Classical.choice, Quot.sound]"
+    ],
+    "source_hash_match_all16": true,
+    "verifier_hash_match_all4": true,
+    "artifact_evidence_checksums_valid": true,
+    "new_owner_source_sha256": {
+      "InfoGeometry.OperatorAlgebra.ProjectionLocalization": "8cdaa903a48ab3d0605a1e536a4d0f071705a3c9007ff494b8a44b6eed653323",
+      "InfoGeometry.OperatorAlgebra.IsometryCornerLocalization": "2e2386e14cf832c7a15dfbe69a0c1b64d4a729308e25b42ec0392ad352d7b9fd",
+      "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame": "65ae94daf25a6e36eeeaeea163af5526a3c9a6998bbd7ef637c9330b70145d98",
+      "InfoGeometry.Clifford.WeylFrameMasks": "9738b8591a1513b379dce55ea0231cea861614ae28ad6394cf5699c89c1cda56",
+      "InfoGeometry.Analysis.PorosityIteration": "7a06cca338bcec02e8b19800565b3546a50abd9b86aacf75784d3deadc7cd260",
+      "InfoGeometry.Analysis.MetricPorosity": "13ce57fb3645d89bb616f59db00ab3ef9ca78e040e69e6ba461db31540fad064",
+      "InfoGeometry.Analysis.MultiscaleLocalization": "bd6a126f4fe633ed3029aa6055a3eafe667ad0bfb163d3eeacd68258411f7f3b"
+    },
+    "verification_source_sha256": {
+      "tools/quality/check_clifford_dirac.py": "fcf6fbb9845e0ee2a85bdb3778c5fe74345a9ae7a2e97e871d0a89d3e98e7db0",
+      "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+      "tools/quality/reviewed_audit_source.py": "df953460ee18e79606afa03f1634e0d299730582c24971888649cf68d18bcbf4",
+      "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df"
+    },
+    "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+    "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+    "ci_conclusion": "success",
+    "all_job_steps_successful": true,
+    "static_placeholder_strict": "passed",
+    "static_semantic_error_threshold": "passed; warning findings preserved in per-module logs",
+    "source_repair": "Explicit noncomputable def remainingPorosity; strict audit unchanged"
+  }
+}

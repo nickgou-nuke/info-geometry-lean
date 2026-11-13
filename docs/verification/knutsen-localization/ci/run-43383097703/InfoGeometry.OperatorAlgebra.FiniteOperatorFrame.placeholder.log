@@ -1,0 +1,32 @@
+# Lean Placeholder Trust Audit
+
+Generated: `2026-11-13T07:07:18.154287+00:00`
+
+- Modules scanned: **1**
+- Modules with findings: **1**
+- Total findings: **6** (hard=0, soft=6, advisory=0)
+
+## `InfoGeometry.OperatorAlgebra.FiniteOperatorFrame`
+- path: `lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean`
+- findings: 6 (hard=0, soft=6, advisory=0)
+
+- L67: **SOFT** `skeletal-proof` in `theorem matrixMultiplier_one`
+  - proof appears to be tactic-automation-only or skeletal
+  - `65:   simp only [Matrix.add_apply, matrixMultiplier_apply, Pi.add_apply, mul_add, add_mul,`
+- L129: **SOFT** `skeletal-proof` in `theorem multiplier_const`
+  - proof appears to be tactic-automation-only or skeletal
+  - `127: def multiplier (φ b : ι → B) : B :=`
+- L133: **SOFT** `skeletal-proof` in `theorem multiplier_add`
+  - proof appears to be tactic-automation-only or skeletal
+  - `131: theorem multiplier_const (φ : ι → B) (x : B) :`
+- L137: **SOFT** `skeletal-proof` in `theorem multiplier_star`
+  - proof appears to be tactic-automation-only or skeletal
+  - `135:     multiplier φ (b + c) = multiplier φ b + multiplier φ c := by`
+- L150: **SOFT** `skeletal-proof` in `theorem multiplier_indicator`
+  - proof appears to be tactic-automation-only or skeletal
+  - `148:     abel`
+- L203: **SOFT** `skeletal-proof` in `theorem trace_gram`
+  - proof appears to be tactic-automation-only or skeletal
+  - `201:   intro k hk`
+
+

@@ -1,0 +1,20 @@
+# Lean Placeholder Trust Audit
+
+Generated: `2026-11-13T07:07:18.007302+00:00`
+
+- Modules scanned: **1**
+- Modules with findings: **1**
+- Total findings: **2** (hard=0, soft=2, advisory=0)
+
+## `InfoGeometry.OperatorAlgebra.IsometryCornerLocalization`
+- path: `lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean`
+- findings: 2 (hard=0, soft=2, advisory=0)
+
+- L124: **SOFT** `skeletal-proof` in `theorem embedding_compression`
+  - proof appears to be tactic-automation-only or skeletal
+  - `122:     (isometryCornerEquiv hv (star x)).val = star (isometryCornerEquiv hv x).val :=`
+- L144: **SOFT** `skeletal-proof` in `theorem compression_star`
+  - proof appears to be tactic-automation-only or skeletal
+  - `142:     compression v (rangeProjection v * s * rangeProjection v) = compression v s := by`
+
+

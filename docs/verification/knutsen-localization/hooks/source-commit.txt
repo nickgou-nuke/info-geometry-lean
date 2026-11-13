@@ -1,0 +1,15 @@
+proof_proxy_staged_gate: ok
+[codex/knutsen-localization 26c53a3a] Formalize projection localization, finite frames, and porosity
+ 14 files changed, 2010 insertions(+)
+ create mode 100644 .github/workflows/knutsen-localization.yml
+ create mode 100644 docs/KNUTSEN_LOCALIZATION_CONTRACT.md
+ create mode 100644 docs/verification/knutsen-localization/intake.txt
+ create mode 100644 lean/InfoGeometry/Analysis/MetricPorosity.lean
+ create mode 100644 lean/InfoGeometry/Analysis/MultiscaleLocalization.lean
+ create mode 100644 lean/InfoGeometry/Analysis/PorosityIteration.lean
+ create mode 100644 lean/InfoGeometry/Clifford/WeylFrameMasks.lean
+ create mode 100644 lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean
+ create mode 100644 lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean
+ create mode 100644 lean/InfoGeometry/OperatorAlgebra/ProjectionLocalization.lean
+ create mode 100644 verification/knutsen-localization/README.md
+ create mode 100644 verification/knutsen-localization/targets.json

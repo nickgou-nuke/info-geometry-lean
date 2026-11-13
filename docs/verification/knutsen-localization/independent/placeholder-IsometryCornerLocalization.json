@@ -1,0 +1,89 @@
+{
+  "schema": "info_geometry.placeholder_audit.v2",
+  "generated_at": "2026-11-13T07:22:36.903793+00:00",
+  "root": "lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean",
+  "authority_tier": "heuristic-proxy",
+  "summary": {
+    "module_count": 1,
+    "scanned_count": 1,
+    "finding_count": 2,
+    "hard_count": 0,
+    "soft_count": 2,
+    "advisory_count": 0,
+    "provenance": {
+      "hard_failures": 0,
+      "soft_findings": 2,
+      "advisory_findings": 0
+    }
+  },
+  "modules": [
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean",
+      "module": "InfoGeometry.OperatorAlgebra.IsometryCornerLocalization",
+      "finding_count": 2,
+      "hard_count": 0,
+      "soft_count": 2,
+      "advisory_count": 0,
+      "findings": [
+        {
+          "file": "lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean",
+          "module": "InfoGeometry.OperatorAlgebra.IsometryCornerLocalization",
+          "line": 124,
+          "declaration_kind": "theorem",
+          "declaration_name": "embedding_compression",
+          "finding": "skeletal-proof",
+          "severity": "soft",
+          "detail": "proof appears to be tactic-automation-only or skeletal",
+          "snippet": "122:     (isometryCornerEquiv hv (star x)).val = star (isometryCornerEquiv hv x).val :=\n123:   map_star (isometryEmbedding hv) x\n124: \n125: \n126: theorem embedding_compression {v : A} (hv : star v * v = 1) (s : A) :",
+          "graph_grounded_signal": "none",
+          "heuristic_signal": "skeletal-proof",
+          "hard_verdict_allowed": false
+        },
+        {
+          "file": "lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean",
+          "module": "InfoGeometry.OperatorAlgebra.IsometryCornerLocalization",
+          "line": 144,
+          "declaration_kind": "theorem",
+          "declaration_name": "compression_star",
+          "finding": "skeletal-proof",
+          "severity": "soft",
+          "detail": "proof appears to be tactic-automation-only or skeletal",
+          "snippet": "142:     compression v (rangeProjection v * s * rangeProjection v) = compression v s := by\n143:   rw [\u2190 embedding_compression hv s, compression_embedding hv]\n144: \n145: \n146: theorem compression_star (v s : A) :",
+          "graph_grounded_signal": "none",
+          "heuristic_signal": "skeletal-proof",
+          "hard_verdict_allowed": false
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "file": "lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean",
+      "module": "InfoGeometry.OperatorAlgebra.IsometryCornerLocalization",
+      "line": 124,
+      "declaration_kind": "theorem",
+      "declaration_name": "embedding_compression",
+      "finding": "skeletal-proof",
+      "severity": "soft",
+      "detail": "proof appears to be tactic-automation-only or skeletal",
+      "snippet": "122:     (isometryCornerEquiv hv (star x)).val = star (isometryCornerEquiv hv x).val :=\n123:   map_star (isometryEmbedding hv) x\n124: \n125: \n126: theorem embedding_compression {v : A} (hv : star v * v = 1) (s : A) :",
+      "graph_grounded_signal": "none",
+      "heuristic_signal": "skeletal-proof",
+      "hard_verdict_allowed": false
+    },
+    {
+      "file": "lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean",
+      "module": "InfoGeometry.OperatorAlgebra.IsometryCornerLocalization",
+      "line": 144,
+      "declaration_kind": "theorem",
+      "declaration_name": "compression_star",
+      "finding": "skeletal-proof",
+      "severity": "soft",
+      "detail": "proof appears to be tactic-automation-only or skeletal",
+      "snippet": "142:     compression v (rangeProjection v * s * rangeProjection v) = compression v s := by\n143:   rw [\u2190 embedding_compression hv s, compression_embedding hv]\n144: \n145: \n146: theorem compression_star (v s : A) :",
+      "graph_grounded_signal": "none",
+      "heuristic_signal": "skeletal-proof",
+      "hard_verdict_allowed": false
+    }
+  ]
+}

@@ -1,0 +1,201 @@
+{
+  "schema": "info_geometry.placeholder_audit.v2",
+  "generated_at": "2026-11-13T07:22:36.974229+00:00",
+  "root": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+  "authority_tier": "heuristic-proxy",
+  "summary": {
+    "module_count": 1,
+    "scanned_count": 1,
+    "finding_count": 6,
+    "hard_count": 0,
+    "soft_count": 6,
+    "advisory_count": 0,
+    "provenance": {
+      "hard_failures": 0,
+      "soft_findings": 6,
+      "advisory_findings": 0
+    }
+  },
+  "modules": [
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+      "module": "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame",
+      "finding_count": 6,
+      "hard_count": 0,
+      "soft_count": 6,
+      "advisory_count": 0,
+      "findings": [
+        {
+          "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+          "module": "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame",
+          "line": 67,
+          "declaration_kind": "theorem",
+          "declaration_name": "matrixMultiplier_one",
+          "finding": "skeletal-proof",
+          "severity": "soft",
+          "detail": "proof appears to be tactic-automation-only or skeletal",
+          "snippet": "65:   simp only [Matrix.add_apply, matrixMultiplier_apply, Pi.add_apply, mul_add, add_mul,\n66:     Finset.sum_add_distrib]\n67: \n68: theorem matrixMultiplier_one (S : Matrix \u03ba \u03b9 B) :\n69:     matrixMultiplier S (fun _ => 1) = S * S\u1d34 := by",
+          "graph_grounded_signal": "none",
+          "heuristic_signal": "skeletal-proof",
+          "hard_verdict_allowed": false
+        },
+        {
+          "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+          "module": "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame",
+          "line": 129,
+          "declaration_kind": "theorem",
+          "declaration_name": "multiplier_const",
+          "finding": "skeletal-proof",
+          "severity": "soft",
+          "detail": "proof appears to be tactic-automation-only or skeletal",
+          "snippet": "127: def multiplier (\u03c6 b : \u03b9 \u2192 B) : B :=\n128:   \u2211 i, \u03c6 i * b i * star (\u03c6 i)\n129: \n130: \n131: theorem multiplier_const (\u03c6 : \u03b9 \u2192 B) (x : B) :",
+          "graph_grounded_signal": "none",
+          "heuristic_signal": "skeletal-proof",
+          "hard_verdict_allowed": false
+        },
+        {
+          "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+          "module": "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame",
+          "line": 133,
+          "declaration_kind": "theorem",
+          "declaration_name": "multiplier_add",
+          "finding": "skeletal-proof",
+          "severity": "soft",
+          "detail": "proof appears to be tactic-automation-only or skeletal",
+          "snippet": "131: theorem multiplier_const (\u03c6 : \u03b9 \u2192 B) (x : B) :\n132:     multiplier \u03c6 (fun _ => x) = krausChannel \u03c6 x := rfl\n133: \n134: theorem multiplier_add (\u03c6 b c : \u03b9 \u2192 B) :\n135:     multiplier \u03c6 (b + c) = multiplier \u03c6 b + multiplier \u03c6 c := by",
+          "graph_grounded_signal": "none",
+          "heuristic_signal": "skeletal-proof",
+          "hard_verdict_allowed": false
+        },
+        {
+          "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+          "module": "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame",
+          "line": 137,
+          "declaration_kind": "theorem",
+          "declaration_name": "multiplier_star",
+          "finding": "skeletal-proof",
+          "severity": "soft",
+          "detail": "proof appears to be tactic-automation-only or skeletal",
+          "snippet": "135:     multiplier \u03c6 (b + c) = multiplier \u03c6 b + multiplier \u03c6 c := by\n136:   simp only [multiplier, Pi.add_apply, mul_add, add_mul, Finset.sum_add_distrib]\n137: \n138: theorem multiplier_star (\u03c6 b : \u03b9 \u2192 B) :\n139:     star (multiplier \u03c6 b) = multiplier \u03c6 (fun i => star (b i)) := by",
+          "graph_grounded_signal": "none",
+          "heuristic_signal": "skeletal-proof",
+          "hard_verdict_allowed": false
+        },
+        {
+          "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+          "module": "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame",
+          "line": 150,
+          "declaration_kind": "theorem",
+          "declaration_name": "multiplier_indicator",
+          "finding": "skeletal-proof",
+          "severity": "soft",
+          "detail": "proof appears to be tactic-automation-only or skeletal",
+          "snippet": "148:     abel\n149:   rw [h, multiplier_const]\n150: \n151: \n152: theorem multiplier_indicator [DecidableEq \u03b9] (\u03c6 : \u03b9 \u2192 B) (s : Finset \u03b9) :",
+          "graph_grounded_signal": "none",
+          "heuristic_signal": "skeletal-proof",
+          "hard_verdict_allowed": false
+        },
+        {
+          "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+          "module": "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame",
+          "line": 203,
+          "declaration_kind": "theorem",
+          "declaration_name": "trace_gram",
+          "finding": "skeletal-proof",
+          "severity": "soft",
+          "detail": "proof appears to be tactic-automation-only or skeletal",
+          "snippet": "201:   intro k hk\n202:   simp only [gram_apply, mul_assoc]\n203: \n204: \n205: ",
+          "graph_grounded_signal": "none",
+          "heuristic_signal": "skeletal-proof",
+          "hard_verdict_allowed": false
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+      "module": "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame",
+      "line": 67,
+      "declaration_kind": "theorem",
+      "declaration_name": "matrixMultiplier_one",
+      "finding": "skeletal-proof",
+      "severity": "soft",
+      "detail": "proof appears to be tactic-automation-only or skeletal",
+      "snippet": "65:   simp only [Matrix.add_apply, matrixMultiplier_apply, Pi.add_apply, mul_add, add_mul,\n66:     Finset.sum_add_distrib]\n67: \n68: theorem matrixMultiplier_one (S : Matrix \u03ba \u03b9 B) :\n69:     matrixMultiplier S (fun _ => 1) = S * S\u1d34 := by",
+      "graph_grounded_signal": "none",
+      "heuristic_signal": "skeletal-proof",
+      "hard_verdict_allowed": false
+    },
+    {
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+      "module": "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame",
+      "line": 129,
+      "declaration_kind": "theorem",
+      "declaration_name": "multiplier_const",
+      "finding": "skeletal-proof",
+      "severity": "soft",
+      "detail": "proof appears to be tactic-automation-only or skeletal",
+      "snippet": "127: def multiplier (\u03c6 b : \u03b9 \u2192 B) : B :=\n128:   \u2211 i, \u03c6 i * b i * star (\u03c6 i)\n129: \n130: \n131: theorem multiplier_const (\u03c6 : \u03b9 \u2192 B) (x : B) :",
+      "graph_grounded_signal": "none",
+      "heuristic_signal": "skeletal-proof",
+      "hard_verdict_allowed": false
+    },
+    {
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+      "module": "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame",
+      "line": 133,
+      "declaration_kind": "theorem",
+      "declaration_name": "multiplier_add",
+      "finding": "skeletal-proof",
+      "severity": "soft",
+      "detail": "proof appears to be tactic-automation-only or skeletal",
+      "snippet": "131: theorem multiplier_const (\u03c6 : \u03b9 \u2192 B) (x : B) :\n132:     multiplier \u03c6 (fun _ => x) = krausChannel \u03c6 x := rfl\n133: \n134: theorem multiplier_add (\u03c6 b c : \u03b9 \u2192 B) :\n135:     multiplier \u03c6 (b + c) = multiplier \u03c6 b + multiplier \u03c6 c := by",
+      "graph_grounded_signal": "none",
+      "heuristic_signal": "skeletal-proof",
+      "hard_verdict_allowed": false
+    },
+    {
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+      "module": "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame",
+      "line": 137,
+      "declaration_kind": "theorem",
+      "declaration_name": "multiplier_star",
+      "finding": "skeletal-proof",
+      "severity": "soft",
+      "detail": "proof appears to be tactic-automation-only or skeletal",
+      "snippet": "135:     multiplier \u03c6 (b + c) = multiplier \u03c6 b + multiplier \u03c6 c := by\n136:   simp only [multiplier, Pi.add_apply, mul_add, add_mul, Finset.sum_add_distrib]\n137: \n138: theorem multiplier_star (\u03c6 b : \u03b9 \u2192 B) :\n139:     star (multiplier \u03c6 b) = multiplier \u03c6 (fun i => star (b i)) := by",
+      "graph_grounded_signal": "none",
+      "heuristic_signal": "skeletal-proof",
+      "hard_verdict_allowed": false
+    },
+    {
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+      "module": "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame",
+      "line": 150,
+      "declaration_kind": "theorem",
+      "declaration_name": "multiplier_indicator",
+      "finding": "skeletal-proof",
+      "severity": "soft",
+      "detail": "proof appears to be tactic-automation-only or skeletal",
+      "snippet": "148:     abel\n149:   rw [h, multiplier_const]\n150: \n151: \n152: theorem multiplier_indicator [DecidableEq \u03b9] (\u03c6 : \u03b9 \u2192 B) (s : Finset \u03b9) :",
+      "graph_grounded_signal": "none",
+      "heuristic_signal": "skeletal-proof",
+      "hard_verdict_allowed": false
+    },
+    {
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+      "module": "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame",
+      "line": 203,
+      "declaration_kind": "theorem",
+      "declaration_name": "trace_gram",
+      "finding": "skeletal-proof",
+      "severity": "soft",
+      "detail": "proof appears to be tactic-automation-only or skeletal",
+      "snippet": "201:   intro k hk\n202:   simp only [gram_apply, mul_assoc]\n203: \n204: \n205: ",
+      "graph_grounded_signal": "none",
+      "heuristic_signal": "skeletal-proof",
+      "hard_verdict_allowed": false
+    }
+  ]
+}

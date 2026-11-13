@@ -1,0 +1,5 @@
+Semantic vacuity audit
+======================
+roots: lean/InfoGeometry/OperatorAlgebra/ProjectionLocalization.lean
+patterns: /home/runner/work/info-geometry-lean/info-geometry-lean/project/tools/quality/semantic_vacuity_patterns.json
+semantic_vacuity: 0

@@ -1,0 +1,109 @@
+2026-11-13T06:50:21.6441720Z shell: /usr/bin/bash -e {0}
+2026-11-13T06:50:21.6442056Z ##[endgroup]
+2026-11-13T06:50:21.7784502Z Path dependencies are not reproducible from this checkout. Restore the recorded sources; do not substitute an upstream branch or a stub package.
+2026-11-13T06:50:21.7785406Z {
+2026-11-13T06:50:21.7786173Z   "schema": "info_geometry.ci_path_preflight.v1",
+2026-11-13T06:50:21.7786733Z   "revision": "f5b06abbc8b701df061e5d490fa722a7c8dcfec3",
+2026-11-13T06:50:21.7787553Z   "packages": [
+2026-11-13T06:50:21.7787825Z     {
+2026-11-13T06:50:21.7788087Z       "name": "HomotopyHypothesis",
+2026-11-13T06:50:21.7788445Z       "dir": "external_refs/homotopy-hypothesis-lean4",
+2026-11-13T06:50:21.7788942Z       "config": "lakefile.lean",
+2026-11-13T06:50:21.7789254Z       "directory_exists": false,
+2026-11-13T06:50:21.7789544Z       "config_exists": false,
+2026-11-13T06:50:21.7789852Z       "source_kind": "untracked",
+2026-11-13T06:50:21.7790139Z       "errors": [
+2026-11-13T06:50:21.7790409Z         "missing_config",
+2026-11-13T06:50:21.7790919Z         "untracked_path_dependency"
+2026-11-13T06:50:21.7791205Z       ],
+2026-11-13T06:50:21.7791453Z       "ok": false
+2026-11-13T06:50:21.7791955Z     },
+2026-11-13T06:50:21.7792179Z     {
+2026-11-13T06:50:21.7792450Z       "name": "Atlas",
+2026-11-13T06:50:21.7792733Z       "dir": "external_refs/atlas-lean",
+2026-11-13T06:50:21.7793047Z       "config": "lakefile.toml",
+2026-11-13T06:50:21.7793369Z       "directory_exists": false,
+2026-11-13T06:50:21.7793655Z       "config_exists": false,
+2026-11-13T06:50:21.7793952Z       "source_kind": "untracked",
+2026-11-13T06:50:21.7794230Z       "errors": [
+2026-11-13T06:50:21.7794470Z         "missing_config",
+2026-11-13T06:50:21.7794834Z         "untracked_path_dependency"
+2026-11-13T06:50:21.7795116Z       ],
+2026-11-13T06:50:21.7795360Z       "ok": false
+2026-11-13T06:50:21.7795596Z     },
+2026-11-13T06:50:21.7795810Z     {
+2026-11-13T06:50:21.7796092Z       "name": "GIFT",
+2026-11-13T06:50:21.7796386Z       "dir": "external_refs/gift-framework-core",
+2026-11-13T06:50:21.7796717Z       "config": "lakefile.lean",
+2026-11-13T06:50:21.7797009Z       "directory_exists": true,
+2026-11-13T06:50:21.7797679Z       "source_kind": "gitlink",
+2026-11-13T06:50:21.7798051Z       "pinned_commit": "e6f3c3ac2140c2324fb2ae029c32233e73aa5e92",
+2026-11-13T06:50:21.7798397Z       "errors": [
+2026-11-13T06:50:21.7798658Z         "missing_config",
+2026-11-13T06:50:21.7798936Z         "uninitialized_gitlink"
+2026-11-13T06:50:21.7799245Z       ],
+2026-11-13T06:50:21.7799485Z       "ok": false
+2026-11-13T06:50:21.7799712Z     },
+2026-11-13T06:50:21.7801446Z       "config_exists": true,
+2026-11-13T06:50:21.7801802Z       "source_kind": "tracked",
+2026-11-13T06:50:21.7802088Z       "errors": [],
+2026-11-13T06:50:21.7802375Z       "ok": true
+2026-11-13T06:50:21.7802614Z     }
+2026-11-13T06:50:21.7802851Z   ],
+2026-11-13T06:50:21.7803266Z   "scope": "Direct path-package availability/provenance; not compilation or a transitive dependency audit"
+2026-11-13T06:50:21.7803771Z }
+2026-11-13T06:50:21.7858502Z ##[error]Process completed with exit code 1.
+2026-11-13T06:50:21.7941336Z ##[group]Run actions/upload-artifact@v4
+2026-11-13T06:50:21.7942025Z with:
+2026-11-13T06:50:21.7942402Z   name: ci-path-dependencies-43381396897-1
+2026-11-13T06:50:22.9964111Z (node:2203) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-13T06:50:22.9965355Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-13T06:50:22.9993815Z ##[warning]No files were found with the provided path: .artifacts/runtime-acceptance-43381396897-1/. No artifacts will be uploaded.
+2026-11-13T06:50:23.0663053Z ##[group]Run python3 - <<'PY'
+2026-11-13T06:50:23.0663993Z [36;1mpython3 - <<'PY'[0m
+2026-11-13T06:50:23.0664317Z [36;1mimport json[0m
+2026-11-13T06:50:55.5582623Z info: LeanCopilot: cloning https://github.com/lean-dojo/LeanCopilot.git
+2026-11-13T06:50:56.4443809Z info: LeanCopilot: checking out revision 'c360b5df5d8a67ed8f1a8769aa157f6adca7dd53'
+2026-11-13T06:50:58.4635964Z error: HomotopyHypothesis: package directory not found: /home/runner/work/info-geometry-lean/info-geometry-lean/external_refs/homotopy-hypothesis-lean4
+2026-11-13T06:50:58.5550407Z [locked-lake-build] lake build exited with code 1
+2026-11-13T06:50:58.5552197Z [locked-lake-build] released /tmp/info-geometry-build.lock
+2026-11-13T06:50:58.5566494Z ## Compiler Bridge Smoke Summary
+2026-11-13T06:50:58.5567343Z |---|---|---|---|
+2026-11-13T06:50:58.5567552Z 
+2026-11-13T06:50:58.5568257Z Smoke summary failed: RuntimeError: failed to build required executable target: compilerBridgeServer
+2026-11-13T06:50:58.5568683Z 
+2026-11-13T06:50:58.5568800Z ```
+2026-11-13T06:50:58.5569058Z Traceback (most recent call last):
+2026-11-13T06:50:58.5580442Z             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-13T06:50:58.5580905Z   File "/home/runner/work/info-geometry-lean/info-geometry-lean/tools/infra/build.py", line 514, in ensure_built_executable
+2026-11-13T06:50:58.5581428Z     raise RuntimeError(f"failed to build required executable target: {target}")
+2026-11-13T06:50:58.5582185Z RuntimeError: failed to build required executable target: compilerBridgeServer
+2026-11-13T06:50:58.5582508Z ```
+2026-11-13T06:50:58.5582610Z 
+2026-11-13T06:50:58.5712040Z ##[group]Run actions/upload-artifact@v4
+artifacts/leantrail/conformance_lock_gate.md
+artifacts/leantrail/path_locks.jsonl
+artifacts/leantrail/path_lock_ci_*.json. No artifacts will be uploaded.
+2026-11-13T06:50:59.7456691Z ##[group]Run actions/upload-artifact@v4
+2026-11-13T06:50:59.7456960Z with:
+2026-11-13T06:50:59.7457209Z   name: superorganism-verification-pilot-43381396897-1
+2026-11-13T06:50:59.8895567Z (node:2322) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-13T06:50:59.8896628Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-13T06:50:59.8920889Z ##[warning]No files were found with the provided path: reports/verification/pilot/superorganism-pilot-43381396897-1/. No artifacts will be uploaded.
+2026-11-13T06:50:59.9026566Z ##[group]Run actions/cache/save@v4
+2026-11-13T06:50:59.9026808Z with:
+2026-11-13T06:50:59.9027064Z   path: reports/verification/pilot/state
+2026-11-13T06:51:00.1543095Z The least common ancestor is /home/runner/work/info-geometry-lean/info-geometry-lean/reports/dag. This will be the root directory of the artifact
+2026-11-13T06:51:00.1553707Z ##[warning]No files were found with the provided path: reports/dag/hypothesis-debt-index.json
+reports/dag/hypothesis-debt-index.md. No artifacts will be uploaded.
+2026-11-13T06:51:00.1731477Z Post job cleanup.
+2026-11-13T06:51:00.2459849Z [command]/usr/bin/git version
+2026-11-13T06:51:00.2489114Z git version 2.56.1
+2026-11-13T06:51:00.2552593Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-13T06:51:00.2578548Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-13T06:51:00.2818190Z fatal: No url found for submodule path 'external_refs/auto-ontology' in .gitmodules
+2026-11-13T06:51:00.2842375Z ##[warning]The process '/usr/bin/git' failed with exit code 128
+2026-11-13T06:51:00.2938588Z Cleaning up orphan processes
+2026-11-13T06:51:00.3216200Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/cache/save@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
+

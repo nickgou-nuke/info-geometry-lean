@@ -1,0 +1,50 @@
+{
+  "head": "3f7282ceb5076e16bae8acc696adffd3771494c9",
+  "merge_revision": "8e9221d29001ebe80558237992ce9be8a35920af",
+  "base": "a392af178af1fe2bcba2ba39eb405700c6ee103c",
+  "dedicated_workflow": {
+    "run": 43383097703,
+    "conclusion": "success"
+  },
+  "representative_baseline_failures": [
+    {
+      "name": "CI",
+      "run": 43383097585,
+      "job": 131745247308,
+      "conclusion": "failure",
+      "url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43383097585/job/131745247308",
+      "failed_step": "Validate local Lake package checkouts",
+      "package_errors": {
+        "HomotopyHypothesis": [
+          "missing_config",
+          "untracked_path_dependency"
+        ],
+        "Atlas": [
+          "missing_config",
+          "untracked_path_dependency"
+        ],
+        "GIFT": [
+          "missing_config",
+          "uninitialized_gitlink"
+        ]
+      },
+      "root_baseline_build": "skipped after preflight failure",
+      "additional_observed_lake_attempt": "Compiler-bridge smoke command attempted Lake; exited1 because HomotopyHypothesis package directory absent."
+    },
+    {
+      "name": "Lean style lint",
+      "run": 43383097857,
+      "job": 131745210694,
+      "conclusion": "failure",
+      "url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43383097857/job/131745210694",
+      "failed_step": "Case-sensitivity checker inside mathlib style linter",
+      "error": "PellisFineStructure.lean and PellisfineStructure.lean differ only by case",
+      "paths": [
+        "lean/InfoGeometry/Physics/PellisFineStructure.lean",
+        "lean/InfoGeometry/Physics/PellisfineStructure.lean"
+      ]
+    }
+  ],
+  "source_comparison": "Earlier read-only git inspection confirmed case-colliding files and malformed auto-ontology gitlink present at base; .gitmodules, lake-manifest.json, lakefile.lean have no change in this PR. This observation reconfirms actual failure at the repaired code head.",
+  "performed": "Read-only job/log queries and saving brief excerpts; no reruns, source changes, or CI mutations."
+}

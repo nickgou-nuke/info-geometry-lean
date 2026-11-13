@@ -1,0 +1,153 @@
+{
+  "authority": "lexical heuristics; not a semantic or kernel proof",
+  "blocking_severity_counts": {
+    "warning": 13
+  },
+  "counts": {
+    "trivial_surface": 13
+  },
+  "coverage_complete": true,
+  "fail_on": "warning",
+  "fail_prefixes": [],
+  "files_scanned": 7,
+  "files_selected": 7,
+  "findings": [
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/Clifford/WeylFrameMasks.lean",
+      "line": 126,
+      "severity": "warning",
+      "subject": "card_balancedSelection"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/Clifford/WeylFrameMasks.lean",
+      "line": 129,
+      "severity": "warning",
+      "subject": "card_parallelSelection"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+      "line": 68,
+      "severity": "warning",
+      "subject": "matrixMultiplier_one"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+      "line": 131,
+      "severity": "warning",
+      "subject": "multiplier_const"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+      "line": 134,
+      "severity": "warning",
+      "subject": "multiplier_add"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+      "line": 138,
+      "severity": "warning",
+      "subject": "multiplier_star"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+      "line": 152,
+      "severity": "warning",
+      "subject": "multiplier_indicator"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+      "line": 168,
+      "severity": "warning",
+      "subject": "gram_apply"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+      "line": 206,
+      "severity": "warning",
+      "subject": "trace_gram"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean",
+      "line": 61,
+      "severity": "warning",
+      "subject": "isometryEmbedding_apply"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean",
+      "line": 64,
+      "severity": "warning",
+      "subject": "compression_apply"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean",
+      "line": 126,
+      "severity": "warning",
+      "subject": "embedding_compression"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean",
+      "line": 146,
+      "severity": "warning",
+      "subject": "compression_star"
+    }
+  ],
+  "pattern_version": 1,
+  "read_failures": [],
+  "scope_roots": [
+    "lean/InfoGeometry/OperatorAlgebra/ProjectionLocalization.lean",
+    "lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean",
+    "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+    "lean/InfoGeometry/Clifford/WeylFrameMasks.lean",
+    "lean/InfoGeometry/Analysis/PorosityIteration.lean",
+    "lean/InfoGeometry/Analysis/MetricPorosity.lean",
+    "lean/InfoGeometry/Analysis/MultiscaleLocalization.lean"
+  ],
+  "severity_counts": {
+    "warning": 13
+  },
+  "source_paths": [
+    "lean/InfoGeometry/Analysis/MetricPorosity.lean",
+    "lean/InfoGeometry/Analysis/MultiscaleLocalization.lean",
+    "lean/InfoGeometry/Analysis/PorosityIteration.lean",
+    "lean/InfoGeometry/Clifford/WeylFrameMasks.lean",
+    "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+    "lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean",
+    "lean/InfoGeometry/OperatorAlgebra/ProjectionLocalization.lean"
+  ],
+  "successfully_read_paths": [
+    "lean/InfoGeometry/Analysis/MetricPorosity.lean",
+    "lean/InfoGeometry/Analysis/MultiscaleLocalization.lean",
+    "lean/InfoGeometry/Analysis/PorosityIteration.lean",
+    "lean/InfoGeometry/Clifford/WeylFrameMasks.lean",
+    "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+    "lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean",
+    "lean/InfoGeometry/OperatorAlgebra/ProjectionLocalization.lean"
+  ],
+  "tracked": false
+}

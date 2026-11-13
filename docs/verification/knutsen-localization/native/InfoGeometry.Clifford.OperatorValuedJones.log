@@ -1,0 +1,7 @@
+/home/runner/work/info-geometry-lean/info-geometry-lean/knutsen-report/src/InfoGeometry/Clifford/OperatorValuedJones.lean:40:67: warning: This simp argument is unused:
+  Matrix.mul_apply
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [J_mat, Gamma_mat]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`

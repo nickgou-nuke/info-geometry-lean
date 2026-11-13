@@ -4,6 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Canonical.CliffordPeirceWalshAudit
+import InfoGeometry.OperatorAlgebra.IsometryCornerLocalization
+import InfoGeometry.Clifford.WeylFrameMasks
+import InfoGeometry.Analysis.MetricPorosity
+import InfoGeometry.Analysis.MultiscaleLocalization
 import InfoGeometry.Canonical.PeirceStarColimit
 import InfoGeometry.OperatorAlgebra.HorizonCompressionPairingAudit
 import InfoGeometry.Examples.RealMatrixModeWitness

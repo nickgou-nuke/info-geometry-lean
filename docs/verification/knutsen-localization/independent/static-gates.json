@@ -1,0 +1,125 @@
+{
+  "reviewer": "/root/knutsen_independent_review",
+  "at_utc": "2026-11-13T07:22:37.377294+00:00",
+  "root": "/workspace/scratch/d18a558d1d7d/knutsen-localization-lean",
+  "source_sha256": {
+    "lean/InfoGeometry/OperatorAlgebra/ProjectionLocalization.lean": "8cdaa903a48ab3d0605a1e536a4d0f071705a3c9007ff494b8a44b6eed653323",
+    "lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean": "2e2386e14cf832c7a15dfbe69a0c1b64d4a729308e25b42ec0392ad352d7b9fd",
+    "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean": "65ae94daf25a6e36eeeaeea163af5526a3c9a6998bbd7ef637c9330b70145d98",
+    "lean/InfoGeometry/Clifford/WeylFrameMasks.lean": "9738b8591a1513b379dce55ea0231cea861614ae28ad6394cf5699c89c1cda56",
+    "lean/InfoGeometry/Analysis/PorosityIteration.lean": "7a06cca338bcec02e8b19800565b3546a50abd9b86aacf75784d3deadc7cd260",
+    "lean/InfoGeometry/Analysis/MetricPorosity.lean": "13ce57fb3645d89bb616f59db00ab3ef9ca78e040e69e6ba461db31540fad064",
+    "lean/InfoGeometry/Analysis/MultiscaleLocalization.lean": "bd6a126f4fe633ed3029aa6055a3eafe667ad0bfb163d3eeacd68258411f7f3b"
+  },
+  "source_unchanged_after_scans": true,
+  "checker_sha256": {
+    "tools/quality/placeholder_audit.py": "ffc09051c8dc13d6e46b931c01b66d7d82eff31090216006acd83919c32e8602",
+    "tools/quality/semantic_vacuity_gate.py": "cfd9a8e4108610a8221a74a28330849b02c064536f245fb411bc989eba2ac27f",
+    "tools/quality/semantic_vacuity_patterns.json": "01cd14be0fdb966fbe93e93d2729d6822dc375c85f6338a7d67b70758fd87082",
+    "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df"
+  },
+  "commands": [
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/OperatorAlgebra/ProjectionLocalization.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/placeholder-ProjectionLocalization.json"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/placeholder-IsometryCornerLocalization.json"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/placeholder-FiniteOperatorFrame.json"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/Clifford/WeylFrameMasks.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/placeholder-WeylFrameMasks.json"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/Analysis/PorosityIteration.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/placeholder-PorosityIteration.json"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/Analysis/MetricPorosity.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/placeholder-MetricPorosity.json"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/Analysis/MultiscaleLocalization.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/placeholder-MultiscaleLocalization.json"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tools/quality/semantic_vacuity_gate.py",
+        "lean/InfoGeometry/OperatorAlgebra/ProjectionLocalization.lean",
+        "lean/InfoGeometry/OperatorAlgebra/IsometryCornerLocalization.lean",
+        "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean",
+        "lean/InfoGeometry/Clifford/WeylFrameMasks.lean",
+        "lean/InfoGeometry/Analysis/PorosityIteration.lean",
+        "lean/InfoGeometry/Analysis/MetricPorosity.lean",
+        "lean/InfoGeometry/Analysis/MultiscaleLocalization.lean",
+        "--fail-on",
+        "warning",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/knutsen-qa-candidates/semantic-findings.json"
+      ],
+      "returncode": 1
+    }
+  ]
+}

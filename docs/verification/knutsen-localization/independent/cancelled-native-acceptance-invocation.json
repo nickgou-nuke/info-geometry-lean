@@ -1,0 +1,125 @@
+{
+  "reviewer": "/root/knutsen_independent_review",
+  "at_utc": "2026-11-13T06:57:49.520168+00:00",
+  "command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "tools/quality/check_clifford_dirac.py",
+    "--mathlib-root",
+    "/workspace/scratch/66380c6bf432/info-geometry-lean/.lake/packages/mathlib",
+    "--lean",
+    "/workspace/scratch/f5b13f1aceb8/lean-environment/lean-4.34.1-linux/bin/lean",
+    "--output",
+    "/workspace/scratch/d18a558d1d7d/knutsen-dev",
+    "--incremental",
+    "--target",
+    "InfoGeometry.Core.IdempotencyDefect",
+    "--target",
+    "InfoGeometry.Algebra.FiniteSpinAlgebra",
+    "--target",
+    "InfoGeometry.Core.PeirceDecomposition",
+    "--target",
+    "InfoGeometry.Core.PeirceCompressionDefect",
+    "--target",
+    "InfoGeometry.Core.PeirceCompressionCStar",
+    "--target",
+    "InfoGeometry.OperatorAlgebra.ProjectionLocalization",
+    "--target",
+    "InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace",
+    "--target",
+    "InfoGeometry.OperatorAlgebra.NoncommutativeKrausChannel",
+    "--target",
+    "InfoGeometry.Algebra.NonCommutativeIsometry",
+    "--target",
+    "InfoGeometry.OperatorAlgebra.IsometryCornerLocalization",
+    "--target",
+    "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame",
+    "--target",
+    "InfoGeometry.Clifford.OperatorValuedJones",
+    "--target",
+    "InfoGeometry.Clifford.WeylFrameMasks",
+    "--target",
+    "InfoGeometry.Analysis.PorosityIteration",
+    "--target",
+    "InfoGeometry.Analysis.MetricPorosity",
+    "--target",
+    "InfoGeometry.Analysis.MultiscaleLocalization"
+  ],
+  "root": "/workspace/scratch/d18a558d1d7d/knutsen-localization-lean",
+  "local_head": "30298b01c0cf5be04805764b87a93cef787611ac",
+  "new_owners": [
+    "InfoGeometry.OperatorAlgebra.ProjectionLocalization",
+    "InfoGeometry.OperatorAlgebra.IsometryCornerLocalization",
+    "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame",
+    "InfoGeometry.Clifford.WeylFrameMasks",
+    "InfoGeometry.Analysis.PorosityIteration",
+    "InfoGeometry.Analysis.MetricPorosity",
+    "InfoGeometry.Analysis.MultiscaleLocalization"
+  ],
+  "all_audited_targets": [
+    "InfoGeometry.Core.IdempotencyDefect",
+    "InfoGeometry.Algebra.FiniteSpinAlgebra",
+    "InfoGeometry.Core.PeirceDecomposition",
+    "InfoGeometry.Core.PeirceCompressionDefect",
+    "InfoGeometry.Core.PeirceCompressionCStar",
+    "InfoGeometry.OperatorAlgebra.ProjectionLocalization",
+    "InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace",
+    "InfoGeometry.OperatorAlgebra.NoncommutativeKrausChannel",
+    "InfoGeometry.Algebra.NonCommutativeIsometry",
+    "InfoGeometry.OperatorAlgebra.IsometryCornerLocalization",
+    "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame",
+    "InfoGeometry.Clifford.OperatorValuedJones",
+    "InfoGeometry.Clifford.WeylFrameMasks",
+    "InfoGeometry.Analysis.PorosityIteration",
+    "InfoGeometry.Analysis.MetricPorosity",
+    "InfoGeometry.Analysis.MultiscaleLocalization"
+  ],
+  "repository_import_dependencies": {
+    "InfoGeometry.Core.IdempotencyDefect": [],
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": [],
+    "InfoGeometry.Core.PeirceDecomposition": [
+      "InfoGeometry.Core.IdempotencyDefect",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Core.PeirceCompressionDefect": [
+      "InfoGeometry.Core.IdempotencyDefect",
+      "InfoGeometry.Core.PeirceDecomposition"
+    ],
+    "InfoGeometry.Core.PeirceCompressionCStar": [
+      "InfoGeometry.Core.PeirceCompressionDefect"
+    ],
+    "InfoGeometry.OperatorAlgebra.ProjectionLocalization": [
+      "InfoGeometry.Core.PeirceCompressionCStar"
+    ],
+    "InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace": [],
+    "InfoGeometry.OperatorAlgebra.NoncommutativeKrausChannel": [
+      "InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace"
+    ],
+    "InfoGeometry.Algebra.NonCommutativeIsometry": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.OperatorAlgebra.IsometryCornerLocalization": [
+      "InfoGeometry.OperatorAlgebra.ProjectionLocalization",
+      "InfoGeometry.OperatorAlgebra.NoncommutativeKrausChannel",
+      "InfoGeometry.Algebra.NonCommutativeIsometry"
+    ],
+    "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame": [
+      "InfoGeometry.OperatorAlgebra.NoncommutativeKrausChannel"
+    ],
+    "InfoGeometry.Clifford.OperatorValuedJones": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Clifford.WeylFrameMasks": [
+      "InfoGeometry.Clifford.OperatorValuedJones",
+      "InfoGeometry.OperatorAlgebra.FiniteOperatorFrame"
+    ],
+    "InfoGeometry.Analysis.PorosityIteration": [],
+    "InfoGeometry.Analysis.MetricPorosity": [
+      "InfoGeometry.Analysis.PorosityIteration"
+    ],
+    "InfoGeometry.Analysis.MultiscaleLocalization": [
+      "InfoGeometry.Analysis.PorosityIteration"
+    ]
+  },
+  "incremental_compilation": true,
+  "fresh_native_axiom_audit_required": true
+}

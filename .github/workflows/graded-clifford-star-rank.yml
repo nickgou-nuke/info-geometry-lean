@@ -4,6 +4,8 @@ on:
     paths:
       - 'lean/InfoGeometry/Clifford/Cl11GradedAdjoint.lean'
       - 'lean/InfoGeometry/Clifford/GradedTensorCutRank.lean'
+      - 'lean/InfoGeometry/Clifford/Cl11UntwistCutRank.lean'
+      - 'lean/InfoGeometry/Clifford/Cl11GradedProjectorDefects.lean'
       - 'lean/InfoGeometry/Clifford/GradedUnrollingCounterexamples.lean'
       - 'lean/InfoGeometry/LinearAlgebra/FiniteRealAnticommutation.lean'
       - 'lean/InfoGeometry/Clifford/Cl11GradedTensorMorita.lean'

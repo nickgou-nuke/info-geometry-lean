@@ -116,7 +116,7 @@ theorem blockPositive_blockSwap_anticommutes :
       Matrix.diagonal_mul_diagonal _ _
     _ = Matrix.diagonal (fun _ : Fin 3 => -(J1 * Eplus)) := by
       simp only [positive_swap_anticommutes]
-    _ = -(Matrix.diagonal (fun _ : Fin 3 => J1 * Eplus)) := Matrix.diagonal_neg _
+    _ = -(Matrix.diagonal (fun _ : Fin 3 => J1 * Eplus)) := (Matrix.diagonal_neg _).symm
     _ = -(blockSwap * blockPositive) := by
       rw [blockSwap, blockPositive, Matrix.diagonal_mul_diagonal]
 
@@ -124,9 +124,12 @@ theorem blockPositive_blockSwap_anticommutes :
 theorem blockPositive_blockSwap_noncommuting :
     blockPositive * blockSwap ≠ blockSwap * blockPositive := by
   intro h
-  have h01 := congrArg (fun M : Block3 => M 0 0 0 1) h
-  norm_num [blockPositive, blockSwap, Matrix.diagonal_mul_diagonal,
-    Eplus, J1, Matrix.mul_apply, Fin.sum_univ_two] at h01
+  have hblocks : Matrix.diagonal (fun _ : Fin 3 => Eplus * J1) =
+      Matrix.diagonal (fun _ : Fin 3 => J1 * Eplus) := by
+    simpa only [blockPositive, blockSwap, Matrix.diagonal_mul_diagonal] using h
+  have h01 := congrArg (fun M : Block3 => M 0 0 0 1) hblocks
+  norm_num [Matrix.diagonal_apply_eq, Eplus, J1, Matrix.mul_apply,
+    Fin.sum_univ_two] at h01
 
 /-- Flattening transports the ordered anticommutation identity. -/
 theorem flattened_anticommutes :

@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.LinearAlgebra.Contraction
 import Mathlib.LinearAlgebra.Dimension.Constructions
 import Mathlib.LinearAlgebra.Dimension.LinearMap
 import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 import Mathlib.LinearAlgebra.TensorProduct.Map
+import Mathlib.RingTheory.TensorProduct.Finite
 import Mathlib.Tactic.Module
 
 /-!
@@ -70,7 +71,8 @@ def cutRank (t : V ⊗[ℝ] W) : ℕ :=
   Module.finrank ℝ (LinearMap.range (contraction t))
 
 @[simp] theorem cutRank_zero : cutRank (0 : V ⊗[ℝ] W) = 0 := by
-  simp [cutRank]
+  unfold cutRank
+  rw [map_zero (contraction (V := V) (W := W)), LinearMap.range_zero, finrank_bot]
 
 section FiniteLeft
 
@@ -152,6 +154,7 @@ theorem cutRank_operator_tail_le_min
     (t : V ⊗[ℝ] (U ⊗[ℝ] B)) :
     cutRank t ≤ min (Module.finrank ℝ V)
       (Module.finrank ℝ U * Module.finrank ℝ B) := by
+  letI : FiniteDimensional ℝ (U ⊗[ℝ] B) := Module.Finite.tensorProduct ℝ U B
   simpa only [Module.finrank_tensorProduct] using cutRank_le_min t
 
 end FiniteLeft
@@ -310,7 +313,7 @@ def parityTwist (T : Module.End ℝ V) (θ : Module.End ℝ W) :
       x ⊗ₜ[ℝ] ((1 / 2 : ℝ) • (y + θ y)) +
         T x ⊗ₜ[ℝ] ((1 / 2 : ℝ) • (y - θ y)) := rfl
 
-/-- Both parity decompositions are constructed, rather than supplied as proof fields. -/
+/-- Two involutive real linear operators determine an involutive parity twist. -/
 theorem parityTwist_involutive
     (T : Module.End ℝ V) (θ : Module.End ℝ W)
     (hT : T.comp T = LinearMap.id) (hθ : θ.comp θ = LinearMap.id) :

@@ -24,6 +24,8 @@ from tools.quality.reviewed_audit_source import audit_source, parse_audit_output
 TARGETS = [
     "InfoGeometry.Clifford.Cl11GradedAdjoint",
     "InfoGeometry.Clifford.GradedTensorCutRank",
+    "InfoGeometry.Clifford.Cl11UntwistCutRank",
+    "InfoGeometry.Clifford.Cl11GradedProjectorDefects",
     "InfoGeometry.LinearAlgebra.FiniteRealAnticommutation",
     "InfoGeometry.Clifford.GradedUnrollingCounterexamples",
 ]

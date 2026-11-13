@@ -181,6 +181,8 @@ theorem tensorAdjoint_idempotent
 
 variable (hStar : ∀ a : A, θ (star a) = star (θ a))
 
+include hStar
+
 /-- Product parity commutes with the adjoint on every tensor, not only on
 homogeneous simple tensors. -/
 theorem tensorAdjoint_parity
@@ -207,13 +209,23 @@ theorem tensorAdjoint_tmul_homogeneous {i j : ZMod 2}
   apply (tensorMatrixEquiv 𝒜 θ hEven hOdd).injective
   rw [represent_tensorAdjoint]
   fin_cases i <;> fin_cases j
-  · simp only [zero_mul, uzpow_zero, one_smul]
+  · change (tensorMatrixEquiv 𝒜 θ hEven hOdd
+        ((x : CliffordAlgebra q11) ᵍ⊗ₜ (a : A)))ᴴ =
+      tensorMatrixEquiv 𝒜 θ hEven hOdd
+        ((-1 : ℤˣ) ^ (0 : ZMod 2) •
+          (headAdjoint (x : CliffordAlgebra q11) ᵍ⊗ₜ star (a : A)))
+    rw [uzpow_zero, one_smul]
     rw [tensorMatrixEquiv_apply, tensorMatrixEquiv_apply,
       tensorToMatrix_tmul_matrix, tensorToMatrix_tmul_matrix, represent_headAdjoint]
     have ha := hEven a.property
     ext r s
     fin_cases r <;> fin_cases s <;> simp [ha, hStar, Matrix.conjTranspose_apply]
-  · simp only [zero_mul, uzpow_zero, one_smul]
+  · change (tensorMatrixEquiv 𝒜 θ hEven hOdd
+        ((x : CliffordAlgebra q11) ᵍ⊗ₜ (a : A)))ᴴ =
+      tensorMatrixEquiv 𝒜 θ hEven hOdd
+        ((-1 : ℤˣ) ^ (0 : ZMod 2) •
+          (headAdjoint (x : CliffordAlgebra q11) ᵍ⊗ₜ star (a : A)))
+    rw [uzpow_zero, one_smul]
     rw [tensorMatrixEquiv_apply, tensorMatrixEquiv_apply,
       tensorToMatrix_tmul_matrix, tensorToMatrix_tmul_matrix, represent_headAdjoint]
     have ha := hOdd a.property
@@ -221,13 +233,23 @@ theorem tensorAdjoint_tmul_homogeneous {i j : ZMod 2}
     ext r s
     fin_cases r <;> fin_cases s <;>
       simp [ha, hStar, hx01, hx10, Matrix.conjTranspose_apply]
-  · simp only [mul_zero, uzpow_zero, one_smul]
+  · change (tensorMatrixEquiv 𝒜 θ hEven hOdd
+        ((x : CliffordAlgebra q11) ᵍ⊗ₜ (a : A)))ᴴ =
+      tensorMatrixEquiv 𝒜 θ hEven hOdd
+        ((-1 : ℤˣ) ^ (0 : ZMod 2) •
+          (headAdjoint (x : CliffordAlgebra q11) ᵍ⊗ₜ star (a : A)))
+    rw [uzpow_zero, one_smul]
     rw [tensorMatrixEquiv_apply, tensorMatrixEquiv_apply,
       tensorToMatrix_tmul_matrix, tensorToMatrix_tmul_matrix, represent_headAdjoint]
     have ha := hEven a.property
     ext r s
     fin_cases r <;> fin_cases s <;> simp [ha, hStar, Matrix.conjTranspose_apply]
-  · simp only [one_mul, uzpow_one, Units.neg_smul, one_smul, map_neg]
+  · change (tensorMatrixEquiv 𝒜 θ hEven hOdd
+        ((x : CliffordAlgebra q11) ᵍ⊗ₜ (a : A)))ᴴ =
+      tensorMatrixEquiv 𝒜 θ hEven hOdd
+        ((-1 : ℤˣ) ^ (1 : ZMod 2) •
+          (headAdjoint (x : CliffordAlgebra q11) ᵍ⊗ₜ star (a : A)))
+    rw [uzpow_one, Units.neg_smul, one_smul, map_neg]
     rw [tensorMatrixEquiv_apply, tensorMatrixEquiv_apply,
       tensorToMatrix_tmul_matrix, tensorToMatrix_tmul_matrix, represent_headAdjoint]
     have ha := hOdd a.property

@@ -17,8 +17,9 @@ actual internal bonds and prepends each local atom through `consNative`.
 It is defined without calling the global word-coordinate reconstruction.
 
 The comparison with `wordReconstruct` is proved by induction on the supplied
-train. Its bond dimensions may vary, including zero, and its terminal vector
-is retained. Absorbing that vector into the last core is not claimed here.
+train. Its bond dimensions may vary, including zero. At positive length,
+terminal-vector absorption gives a unit right boundary while preserving
+every interior bond and the same native matrix readback.
 The optional coefficient version retains exactly one terminal B factor.
 -/
 
@@ -112,7 +113,7 @@ def localCoreContraction (b : B) :
     {n r : ℕ} → Train ℝ 4 n r → Fin r → (Clsplit n ⊗[ℝ] B)
   | _, _, .nil boundary, i => (1 : Clsplit 0) ⊗ₜ[ℝ] (boundary i • b)
   | n + 1, _, .cons core tail, i =>
-      ∑ j, consTensor B n (localCore core i j) (localCoreContraction B b tail j)
+      ∑ j, consTensor B n (localCore core i j) (localCoreContraction b tail j)
 
 private theorem coeff_cons_smul {n r s : ℕ}
     (core : Fin 4 → Matrix (Fin r) (Fin s) ℝ) (tail : Train ℝ 4 n s)
@@ -139,7 +140,7 @@ theorem wordReconstruct_trainCoeff (b : B) :
           ∑ j, consTensor B n (localCore core i j) (localCoreContraction B b tail j)
       apply Finset.sum_congr rfl
       intro j _
-      rw [wordReconstruct_trainCoeff B b tail j]
+      rw [wordReconstruct_trainCoeff b tail j]
 
 /-- The coefficient contraction is the ordinary extension of the actual
 native scalar contraction by one terminal coefficient. -/
@@ -155,7 +156,7 @@ theorem localCoreContraction_eq_native (b : B) :
       rw [TensorProduct.sum_tmul]
       apply Finset.sum_congr rfl
       intro j _
-      rw [localCoreContraction_eq_native B b tail j, consTensor_tmul]
+      rw [localCoreContraction_eq_native b tail j, consTensor_tmul]
 
 end Coefficients
 
@@ -179,5 +180,51 @@ theorem trainMatrix_eq_nativeCoreReadback {n : ℕ} (T : Train ℝ 4 n 1) :
   rw [trainMatrix, trainSynthesis_eq_nativeCoreContraction, leftCoefficientEquiv_tmul]
   ext i j
   simp [coefficientReadback_apply]
+
+/-- Absorbing the terminal vector preserves the matrix reconstructed from
+the actual, ordered train coefficients. -/
+@[simp] theorem trainMatrix_absorbTerminalBoundary {n : ℕ} (T : Train ℝ 4 n 1) :
+    trainMatrix ℝ T.absorbTerminalBoundary = trainMatrix ℝ T := by
+  apply (wordCoefficientEquiv ℝ n).injective
+  simp only [wordCoefficient_trainMatrix, Train.absorbTerminalBoundary_coeff]
+
+/-- Terminal normalization also preserves the independently defined native
+local Clifford-core contraction after its faithful matrix readback. -/
+theorem nativeCoreReadback_absorbTerminalBoundary {n : ℕ} (T : Train ℝ 4 n 1) :
+    leftMatrixEquiv n (nativeCoreContraction T.absorbTerminalBoundary 0) =
+      leftMatrixEquiv n (nativeCoreContraction T 0) := by
+  rw [← trainMatrix_eq_nativeCoreReadback, trainMatrix_absorbTerminalBoundary,
+    trainMatrix_eq_nativeCoreReadback]
+
+/-- Every positive-length matrix has a native local-core train with both
+outer bond dimensions one and a unit terminal vector. All interior bonds
+attain the corrected unfolding ranks and are minimal among exact trains.
+The terminal bond is a boundary convention, not an interior rank claim. -/
+theorem exists_unitBoundary_minimal_native_core_train (n : ℕ)
+    (M : CoefficientMatrix ℝ (n + 1)) :
+    ∃ T : Train ℝ 4 (n + 1) 1,
+      T.bond (Fin.last (n + 1)) = 1 ∧
+      T.terminalBoundary = 1 ∧
+      leftMatrixEquiv (n + 1) (nativeCoreContraction T 0) = M ∧
+      (∀ k : Fin n, T.bond k.succ.castSucc =
+        cutRank 4 (n + 1) (Fin 1)
+          (Matrix.of fun _ word => wordCoefficientEquiv ℝ (n + 1) M word)
+          k.succ.castSucc) ∧
+      (∀ S : Train ℝ 4 (n + 1) 1,
+        leftMatrixEquiv (n + 1) (nativeCoreContraction S 0) = M →
+        ∀ k : Fin n, T.bond k.succ.castSucc ≤ S.bond k.succ.castSucc) := by
+  obtain ⟨T, hT, hminimal, hlower⟩ := exists_minimal_clifford_train (n + 1) M
+  refine ⟨T.absorbTerminalBoundary, Train.absorbTerminalBoundary_bond_last T,
+    Train.absorbTerminalBoundary_terminalBoundary T, ?_, ?_, ?_⟩
+  · rw [← trainMatrix_eq_nativeCoreReadback, trainMatrix_absorbTerminalBoundary]
+    exact hT
+  · intro k
+    rw [Train.absorbTerminalBoundary_bond_castSucc]
+    exact hminimal k.castSucc
+  · intro S hS k
+    rw [Train.absorbTerminalBoundary_bond_castSucc]
+    apply hlower S ?_ k.castSucc
+    rw [trainMatrix_eq_nativeCoreReadback]
+    exact hS
 
 end InfoGeometry.Clifford.Cl11LocalCoreTrain

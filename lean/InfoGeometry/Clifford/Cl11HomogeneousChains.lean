@@ -60,7 +60,8 @@ theorem consNative_add_head (n : ℕ) (a b : CliffordAlgebra q11) (x : Clsplit n
 theorem consNative_smul_head (n : ℕ) (r : ℝ) (a : CliffordAlgebra q11)
     (x : Clsplit n) :
     consNative n (r • a) x = r • consNative n a x := by
-  simp only [consNative_apply, GradedTensorProduct.tmul, TensorProduct.smul_tmul, map_smul]
+  simp only [consNative_apply, GradedTensorProduct.tmul, TensorProduct.smul_tmul,
+    TensorProduct.tmul_smul, map_smul]
 
 @[simp] theorem consNative_neg_head (n : ℕ) (a : CliffordAlgebra q11)
     (x : Clsplit n) :
@@ -312,7 +313,7 @@ theorem wordReconstruct_pureCoefficients (n : ℕ) (a : Fin n → CliffordAlgebr
       conv_rhs =>
         rw [nativeChain,
           consNative_atom_expansion n (a 0) (nativeChain n (Fin.tail a))]
-      simp only [TensorProduct.add_tmul, TensorProduct.smul_tmul]
+      simp only [TensorProduct.add_tmul, TensorProduct.smul_tmul, TensorProduct.tmul_smul]
 
 /-- A native simple-chain representation is equivalent to outer-product word
 coefficients. This applies to every length, including zero, and includes the

@@ -68,8 +68,9 @@ def headTensorEquiv (n : ℕ) :
     (CliffordAlgebra.map (headIsometry n).toIsometry
       (CliffordAlgebra.ι (Qsplit (n + 1)) v)) = _
   rw [CliffordAlgebra.map_apply_ι]
-  simpa [headIsometry] using
-    (CliffordAlgebra.ofProd_ι_mk (Q₁ := q11) (Q₂ := Qsplit n) v.1 v.2)
+  change CliffordAlgebra.ofProd q11 (Qsplit n)
+    (CliffordAlgebra.ι (q11.prod (Qsplit n)) (v.1, v.2)) = _
+  exact CliffordAlgebra.ofProd_ι_mk (Q₁ := q11) (Q₂ := Qsplit n) v.1 v.2
 
 abbrev nativeParity (n : ℕ) : Clsplit n ≃ₐ[ℝ] Clsplit n :=
   CliffordAlgebra.involuteEquiv
@@ -165,8 +166,8 @@ theorem headTensorEquiv_involute (n : ℕ) (x : Clsplit (n + 1)) :
         tensorParity (CliffordAlgebra.evenOdd (Qsplit n)) (nativeParity n)
           (nativeParity_even n) (nativeParity_odd n)
           (headTensorEquiv n (CliffordAlgebra.ι (Qsplit (n + 1)) v))
-    simp only [CliffordAlgebra.involute_ι, map_neg, headTensorEquiv_ι,
-      map_add, tensorParity_tmul, map_one]
+    rw [CliffordAlgebra.involute_ι, map_neg]
+    simp only [headTensorEquiv_ι, map_add, tensorParity_tmul, map_one]
     simp [nativeParity, GradedTensorProduct.tmul, TensorProduct.neg_tmul,
       TensorProduct.tmul_neg]
   exact AlgHom.congr_fun h x
@@ -245,7 +246,7 @@ theorem gamma_conj_flatten (n : ℕ) (M : Matrix (Fin 2) (Fin 2) (RealMatrix n))
     intro i j
     fin_cases i <;> fin_cases j <;> rfl
   rw [hM]
-  simp only [Matrix.mul_fin_two, zero_mul, mul_zero, zero_add, add_zero]
+  simp only [Matrix.mul_fin_two, zero_mul, mul_zero, zero_add, add_zero] <;> rfl
 
 /-- The actual transported Clifford grading is exactly the matrix conjugation
 used by the intake's recursive algorithm. -/
@@ -600,7 +601,9 @@ def wordCoefficientEquiv : (n : ℕ) →
                 (Fin.consEquiv fun _ : Fin (n + 1) => Fin 4).symm))))
 
 @[simp] theorem wordCoefficientEquiv_zero (M : CoefficientMatrix B 0) (w : Words 0) :
-    wordCoefficientEquiv B 0 M w = M default default := rfl
+    wordCoefficientEquiv B 0 M w = M default default := by
+  change M _ _ = M default default
+  exact congrArg₂ M (Subsingleton.elim _ _) (Subsingleton.elim _ _)
 
 /-- Each coefficient is the recursive tail coefficient selected by the first
 Clifford basis label, after the specified parity correction. -/
@@ -630,7 +633,10 @@ theorem wordReconstruct_zero (c : Words 0 → B) :
     wordReconstruct B 0 c = (1 : Clsplit 0) ⊗ₜ[ℝ] c default := by
   change unrollCoefficients B 0 ((wordCoefficientEquiv B 0).symm c) = _
   rw [unrollCoefficients_zero]
-  rfl
+  have hentry : (wordCoefficientEquiv B 0).symm c default default = c default := by
+    simpa only [wordCoefficientEquiv_zero] using
+      congrFun ((wordCoefficientEquiv B 0).apply_symm_apply c) (default : Words 0)
+  rw [hentry]
 
 /-- The coefficient tensor's synthesis follows actual graded Clifford heads
 in site order and retains one terminal B coefficient. -/

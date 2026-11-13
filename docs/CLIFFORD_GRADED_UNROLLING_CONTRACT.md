@@ -36,6 +36,9 @@ equivalence and the pinned Lean/Mathlib environment.
     contracted train, including comparison with every other exact train.
 11. Independently defined local Clifford cores, contracted through native
     graded head insertion and proved equal to the same global word synthesis.
+12. Ordered absorption of a positive-length train's terminal vector into its
+    last core, fixing the outer dimensions to one while preserving all
+    interior ranks and the same native matrix reconstruction.
 
 Each dependency is a map, an inverse identity, or a stated implication. Naming
 a dependency DAG establishes no additional theorem. No psychological or physical
@@ -80,10 +83,11 @@ All entries below describe the declared source targets, pending kernel checking.
 | `Algebra.MatrixRankFactorization` | `exists_rank_factorization_with_left_inverse`, `rank_isLeast_factor_width`, `rank_le_one_iff_pure` | Actual image-basis factorization `L * R = M`, `Q * L = 1`; least width, including zero; two-factor outer-product criterion. |
 | `Tensor.ExactTensorTrain` | `eval_full_word_train`, `matricize_eval_eq_mul`, `matricize_eval_rank_le` | Ordered exact contraction over a semiring; native rank bounds over a field. The full-word witness does not claim compression. |
 | `Tensor.RankMinimalTensorTrain` | `exists_rank_minimal_train`, `cutRank_coeff_le_bond`, `exists_bondwise_minimal_exact_train` | One actual variable-bond train attains every positive cut rank simultaneously; every competing exact train obeys the lower bound. |
+| Same | `Train.absorbTerminalBoundary`, coefficient/bond/boundary preservation theorems | Ordered last-core absorption over an arbitrary semiring; empty train unchanged; positive-length final bond and boundary fixed to one; every earlier bond preserved. |
 | `Tensor.TensorTrainMatricization` | `cutRank_scalar_eq_matricize_rank`, `scalar_four_letter_cutRank_le` | Explicit row equivalence to `Fin.append` matricization; bound `4 ^ min k m`. |
 | `Clifford.Cl11PureTensorObstruction` | `controlledTensor_not_simple`, `pairMatrixEquiv_controlled`, `controlledMatrix_not_single_chain` | Native controlled-`K` two-factor tensor is not simple; readback is four-by-four in two-by-two blocks. |
 | `Clifford.Cl11TensorTrainSynthesis` | `trainMatrix_eq_iff`, `exists_exact_clifford_train`, `exists_minimal_clifford_train` | Exact matrix readback of the corrected tensor; arbitrary-algebra existence and real scalar simultaneous minimality. |
-| `Clifford.Cl11LocalCoreTrain` | `localCore`, `nativeCoreContraction`, `wordReconstruct_trainCoeff_native`, `trainMatrix_eq_nativeCoreReadback` | Actual real local Clifford atoms and variable-bond sums; comparison with word synthesis and matrix readback; original terminal vector retained. |
+| `Clifford.Cl11LocalCoreTrain` | `localCore`, `nativeCoreContraction`, `wordReconstruct_trainCoeff_native`, `trainMatrix_eq_nativeCoreReadback`, `exists_unitBoundary_minimal_native_core_train` | Actual real local Clifford atoms and variable-bond sums; exact matrix readback; positive-length unit boundaries with simultaneous interior-cut minimality. |
 
 ## Rank and boundary qualifications
 
@@ -96,8 +100,12 @@ Minimal TT ranks are native ranks of the corrected coefficient unfoldings,
 not ranks of the original matrix. The representation allows `Fin 0` bonds.
 The incoming dimension is supplied and excluded from the minimality equality.
 Positive cuts include the terminal vector bond; that bond can be zero for the
-zero tensor. Classical basis selection supplies exact existence, not a
-numerical approximation algorithm.
+zero tensor. Terminal absorption then fixes the final dimension to one for
+positive length and preserves every earlier bond. The resulting fixed-boundary
+theorem asserts minimality only at interior cuts; it makes no terminal-rank
+minimality claim. Empty trains retain their scalar boundary, which equals a
+unit boundary exactly when that scalar is one. Classical basis selection
+supplies exact existence, not a numerical approximation algorithm.
 
 The general bridge contracts scalar or `B`-valued cores and then applies native
 `wordReconstruct`. The local-core owner separately constructs each real `W`
@@ -105,9 +113,10 @@ entry as a sum of actual Clifford atoms and contracts the internal bond sums
 through native graded head insertion. Its optional coefficient extension uses
 one common terminal `b : B` multiplying a real train; it does not assert that
 arbitrary `B`-valued cores have that form. Absorption of the terminal vector
-into a last core with fixed right boundary dimension one remains a separate
-target. Equality with the older right-head spinor coordinates is also outside
-the claims.
+into the last actual core gives a fixed right boundary dimension one at
+positive length; the native local-core bridge proves exact reconstruction and
+interior minimality after that normalization. Equality with the older
+right-head spinor coordinates remains outside the claims.
 
 ## Existing owners inspected and reused
 
@@ -172,6 +181,16 @@ compiled `SplitCliffordMatrixEquiv`, `Cl11GradedUnrolling`,
 elaboration failures: `ExactTensorTrain`, `Cl11PureTensorObstruction`, and
 `Cl11RecursiveUnrolling`. Their dependent owners and the exhaustive audit
 remain blocked until a subsequent successful build.
+
+The third focused run,
+[43411000804](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43411000804),
+on `b6c097c737975c74ef8d6798b32921e0658410fc`, additionally compiled
+`ExactTensorTrain` and `Cl11PureTensorObstruction`, for six accepted owners at
+that revision. It reported errors in `TensorTrainMatricization` and
+`Cl11RecursiveUnrolling`; their dependent owners and the exhaustive audit
+remained blocked. The following source revision also adds independently
+reviewed terminal-boundary normalization and its native Clifford bridge.
+Those additions and all diagnostic repairs still require a successful run.
 
 The tracked staged source gate was subsequently executed. Its remaining T16
 finding is on the nested coefficient carrier `Matrix (Fin 2) (Fin 2)

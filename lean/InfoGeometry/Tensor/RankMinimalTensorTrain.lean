@@ -65,6 +65,87 @@ def bond {K : Type u} {q : ℕ} :
     (core : Fin q → Matrix (Fin r) (Fin s) K) (tail : Train K q n s)
     (k : Fin (n + 1)) : (Train.cons core tail).bond k.succ = tail.bond k := rfl
 
+/-- The actual terminal boundary vector, indexed by the final bond. -/
+def terminalBoundary {K : Type u} {q : ℕ} :
+    {n r : ℕ} → (T : Train K q n r) → Fin (T.bond (Fin.last n)) → K
+  | _, _, .nil boundary => boundary
+  | _, _, .cons _ tail => terminalBoundary tail
+
+/-- Absorb the terminal vector into the last actual core, in multiplication
+order. A positive-length train then ends at a one-dimensional unit boundary.
+An empty train is unchanged because it has no core into which to absorb its
+boundary. Earlier cores and bond dimensions remain unchanged. -/
+def absorbTerminalBoundary {K : Type u} [Semiring K] {q : ℕ} :
+    {n r : ℕ} → Train K q n r → Train K q n r
+  | 0, _, .nil boundary => .nil boundary
+  | 1, _, .cons core (.nil boundary) =>
+      .cons (fun a => Matrix.of fun i (_ : Fin 1) =>
+        ∑ j, core a i j * boundary j) (.nil fun _ : Fin 1 => 1)
+  | n + 2, _, .cons core tail => .cons core (absorbTerminalBoundary tail)
+
+@[simp] theorem absorbTerminalBoundary_nil {K : Type u} [Semiring K] {q r : ℕ}
+    (boundary : Fin r → K) :
+    absorbTerminalBoundary (Train.nil (q := q) boundary) = Train.nil boundary := rfl
+
+/-- Ordered contraction is preserved, including for the empty chain. -/
+@[simp] theorem absorbTerminalBoundary_coeff {K : Type u} [Semiring K] {q : ℕ} :
+    ∀ {n r : ℕ} (T : Train K q n r), (absorbTerminalBoundary T).coeff = T.coeff
+  | 0, _, .nil _ => rfl
+  | 1, _, .cons core (.nil boundary) => by
+      ext a word
+      change (∑ _ : Fin 1, (∑ j, core (word 0) a j * boundary j) * 1) =
+        ∑ j, core (word 0) a j * boundary j
+      simp
+  | n + 2, _, .cons core tail => by
+      ext a word
+      change (∑ j, core (word 0) a j *
+        (absorbTerminalBoundary tail).coeff j (fun i => word i.succ)) =
+          ∑ j, core (word 0) a j * tail.coeff j (fun i => word i.succ)
+      rw [absorbTerminalBoundary_coeff tail]
+
+/-- Every bond before the final boundary is preserved; the index zero case
+includes the supplied incoming boundary dimension. -/
+@[simp] theorem absorbTerminalBoundary_bond_castSucc
+    {K : Type u} [Semiring K] {q : ℕ} :
+    ∀ {n r : ℕ} (T : Train K q n r) (k : Fin n),
+      (absorbTerminalBoundary T).bond k.castSucc = T.bond k.castSucc
+  | 0, _, .nil _, k => Fin.elim0 k
+  | 1, _, .cons core (.nil boundary), k => by
+      have hk : k = 0 := Subsingleton.elim _ _
+      subst k
+      rfl
+  | n + 2, _, .cons core tail, k => by
+      refine Fin.cases ?_ (fun j => ?_) k
+      · rfl
+      · exact absorbTerminalBoundary_bond_castSucc tail j
+
+/-- A nonempty normalized train has final bond dimension one. -/
+@[simp] theorem absorbTerminalBoundary_bond_last
+    {K : Type u} [Semiring K] {q : ℕ} :
+    ∀ {n r : ℕ} (T : Train K q (n + 1) r),
+      (absorbTerminalBoundary T).bond (Fin.last (n + 1)) = 1
+  | 0, _, .cons _ (.nil _) => rfl
+  | n + 1, _, .cons _ tail => absorbTerminalBoundary_bond_last tail
+
+/-- The actual final vector of a nonempty normalized train is the unit. -/
+@[simp] theorem absorbTerminalBoundary_terminalBoundary
+    {K : Type u} [Semiring K] {q : ℕ} :
+    ∀ {n r : ℕ} (T : Train K q (n + 1) r),
+      (absorbTerminalBoundary T).terminalBoundary = 1
+  | 0, _, .cons _ (.nil _) => rfl
+  | n + 1, _, .cons _ tail => absorbTerminalBoundary_terminalBoundary tail
+
+/-- With no physical core, replacing a scalar boundary by the unit preserves
+its coefficient exactly when that scalar already equals one. -/
+theorem nil_scalar_coeff_eq_unit_iff {K : Type u} [Semiring K] {q : ℕ} (a : K) :
+    (Train.nil (q := q) (fun _ : Fin 1 => a)).coeff =
+      (Train.nil (q := q) (fun _ : Fin 1 => (1 : K))).coeff ↔ a = 1 := by
+  constructor
+  · intro h
+    exact congrArg (fun M : Matrix (Fin 1) (Fin 0 → Fin q) K => M 0 Fin.elim0) h
+  · rintro rfl
+    rfl
+
 end Train
 
 /-- Move one physical coordinate from the column side to the row side. -/

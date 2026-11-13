@@ -58,6 +58,15 @@ and `RankMinimalTensorTrain`. It still failed in `ExactTensorTrain`,
 downstream owners and exhaustive audit from running. Further proof repairs
 address those exact diagnostics; their presence is not a successful build.
 
+The third [focused CI run](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43411000804),
+on `b6c097c737975c74ef8d6798b32921e0658410fc`, compiled six selected owners:
+the preceding four, `ExactTensorTrain`, and `Cl11PureTensorObstruction`.
+`TensorTrainMatricization` and `Cl11RecursiveUnrolling` still reported errors;
+the remaining dependent owners and exhaustive audit were blocked. The next
+revision also includes positive-length terminal-boundary normalization and
+its native local-core reconstruction/minimality bridge. Independent review
+of those sources is recorded separately from their pending kernel result.
+
 A completed kernel build of the full selected closure, exhaustive
 declaration-axiom audit, and root integration acceptance remain pending.
 Independent source review and source identity checks do not substitute for

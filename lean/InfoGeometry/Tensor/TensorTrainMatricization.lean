@@ -51,7 +51,7 @@ theorem cutRank_eq_prefixMatricize_rank (q m k : ℕ) :
   induction k with
   | zero =>
       intro σ C
-      rw [cutRank_zero]
+      rw [Fin.mk_zero, cutRank_zero]
       let e : σ ≃ σ × (Fin 0 → Fin q) :=
         { toFun := fun a => (a, Fin.elim0)
           invFun := Prod.fst
@@ -85,16 +85,16 @@ theorem cutRank_eq_prefixMatricize_rank (q m k : ℕ) :
               e (Equiv.refl (Fin m → Fin q)) =
             prefixMatricize (q := q) (m := m) (k := k) (advance C) := by
         ext row suffix
-        rcases row with ⟨⟨a, b⟩, prefix⟩
-        change C a ((Fin.append (Fin.cons b prefix) suffix) ∘
+        rcases row with ⟨⟨a, b⟩, prefixWord⟩
+        change C a ((Fin.append (Fin.cons b prefixWord) suffix) ∘
             Fin.cast (Nat.add_comm m (k + 1))) =
-          C a (Fin.cons b ((Fin.append prefix suffix) ∘
+          C a (Fin.cons b ((Fin.append prefixWord suffix) ∘
             Fin.cast (Nat.add_comm m k)))
         apply congrArg (C a)
         rw [Fin.append_cons]
-        change (Fin.cons b (Fin.append prefix suffix)) ∘
+        change (Fin.cons b (Fin.append prefixWord suffix)) ∘
             Fin.cast (congrArg Nat.succ (Nat.add_comm m k)) = _
-        exact cons_comp_cast (Nat.add_comm m k) b (Fin.append prefix suffix)
+        exact cons_comp_cast (Nat.add_comm m k) b (Fin.append prefixWord suffix)
       have hRank := Matrix.rank_submatrix
         (prefixMatricize (q := q) (m := m) (k := k + 1) C)
         e (Equiv.refl (Fin m → Fin q))
@@ -111,7 +111,7 @@ theorem cutRank_scalar_eq_matricize_rank (q m k : ℕ)
         (fun word => c (word ∘ Fin.cast (Nat.add_comm m k)))).rank := by
   rw [cutRank_eq_prefixMatricize_rank]
   let e : (Fin k → Fin q) ≃ Fin 1 × (Fin k → Fin q) :=
-    { toFun := fun prefix => (0, prefix)
+    { toFun := fun prefixWord => (0, prefixWord)
       invFun := Prod.snd
       left_inv := fun _ => rfl
       right_inv := fun p => by

@@ -58,12 +58,12 @@ theorem prod_diagonal_ofFn (n : ℕ) (d : Fin n → σ → B) :
       Matrix.diagonal (fun s => (List.ofFn fun i => d i s).prod) := by
   calc
     _ = Matrix.diagonal (List.ofFn d).prod := by
-      simpa only [List.map_ofFn, Function.comp_apply, Matrix.diagonalRingHom_apply] using
+      simpa only [List.map_ofFn, Function.comp_def, Matrix.diagonalRingHom_apply] using
         (map_list_prod (Matrix.diagonalRingHom σ B) (List.ofFn d)).symm
     _ = _ := by
       apply congrArg Matrix.diagonal
       funext s
-      simp only [Pi.list_prod_apply, List.map_ofFn, Function.comp_apply]
+      simp only [Pi.list_prod_apply, List.map_ofFn, Function.comp_def]
 
 end OrderedContraction
 

@@ -150,11 +150,11 @@ pin or toolchain was changed.
 
 The queued retry reached Lake, emitted a package-directory relocation warning,
 and terminated with return code 247 before reporting a theorem result. The
-execution environment then became unavailable. Consequently:
+execution environment then became unavailable. At that recovery checkpoint:
 
-- no new owner has a successful local kernel build;
-- the selected-owner axiom audit has not completed;
-- the tracked pre-commit source gate and root integration gate have not run
+- no new owner had a successful local kernel build;
+- the selected-owner axiom audit had not completed;
+- the tracked pre-commit source gate and root integration gate had not run
   for the final recovered tree;
 - no local full-repository acceptance is claimed.
 
@@ -163,6 +163,25 @@ reached the new owners and reported elaboration errors in `ExactTensorTrain`,
 `RankMinimalTensorTrain`, `SplitCliffordMatrixEquiv`, and `Cl11GradedUnrolling`.
 The matrix-rank factorization owner compiled. The follow-up proof scripts repair
 those reported errors; acceptance of the complete closure remains pending.
+
+The second focused run,
+[43408976175](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43408976175),
+compiled `SplitCliffordMatrixEquiv`, `Cl11GradedUnrolling`,
+`MatrixRankFactorization`, and `RankMinimalTensorTrain` on commit
+`4ad3bced5caf5f76b969b1d0237869609911f5be`. Three owners still reported
+elaboration failures: `ExactTensorTrain`, `Cl11PureTensorObstruction`, and
+`Cl11RecursiveUnrolling`. Their dependent owners and the exhaustive audit
+remain blocked until a subsequent successful build.
+
+The tracked staged source gate was subsequently executed. Its remaining T16
+finding is on the nested coefficient carrier `Matrix (Fin 2) (Fin 2)
+(RealMatrix n)`. The owner exposes `realBlock_noncommuting`, which specializes
+the existing matrix witness to that exact carrier. Independent inspection
+found that the scanner does not resolve the imported operands' types and its
+generic specialization recognizer does not handle matrix coefficient rings;
+its raw and expanded carrier strings also differ. The gate remains failed,
+and the explicit witness still requires the full Lean check. This record does
+not claim source-gate acceptance or alter its criteria.
 
 The published draft includes a focused CI workflow using Lean `v4.34.1` and
 Mathlib `d13f23b723b8a846827a245b89c10fc7d3f11612`. It builds all eleven owners,

@@ -57,7 +57,8 @@ def headIsometry (n : ℕ) :
 def headTensorEquiv (n : ℕ) :
     Clsplit (n + 1) ≃ₐ[ℝ]
       (CliffordAlgebra.evenOdd q11 ᵍ⊗[ℝ] CliffordAlgebra.evenOdd (Qsplit n)) :=
-  (CliffordAlgebra.equivOfIsometry (headIsometry n)).trans CliffordAlgebra.prodEquiv
+  (CliffordAlgebra.equivOfIsometry (headIsometry n)).trans
+    (CliffordAlgebra.prodEquiv q11 (Qsplit n))
 
 @[simp] theorem headTensorEquiv_ι (n : ℕ) (v : SplitSpace (n + 1)) :
     headTensorEquiv n (CliffordAlgebra.ι (Qsplit (n + 1)) v) =
@@ -109,8 +110,7 @@ def flatten (B : Type*) [Ring B] [Algebra ℝ B] (n : ℕ) :
 def leftMatrixEquiv : (n : ℕ) → Clsplit n ≃ₐ[ℝ] RealMatrix n
   | 0 =>
       (splitSpinorAlgEquiv 0).trans
-        ((Matrix.uniqueAlgEquiv (m := Fin 1) (R := ℝ) (A := ℝ)).trans
-          (Matrix.uniqueAlgEquiv (m := Bits 0) (R := ℝ) (A := ℝ)).symm)
+        (Matrix.reindexAlgEquiv ℝ ℝ (Equiv.ofUnique (Fin 1) (Bits 0)))
   | n + 1 =>
       (nativeStepEquiv n).trans
         ((leftMatrixEquiv n).mapMatrix.trans (flatten ℝ n))
@@ -161,10 +161,12 @@ theorem headTensorEquiv_involute (n : ℕ) (x : Clsplit (n + 1)) :
     apply LinearMap.ext
     intro v
     change headTensorEquiv n (CliffordAlgebra.involute
-      (CliffordAlgebra.ι (Qsplit (n + 1)) v)) = _
+      (CliffordAlgebra.ι (Qsplit (n + 1)) v)) =
+        tensorParity (CliffordAlgebra.evenOdd (Qsplit n)) (nativeParity n)
+          (nativeParity_even n) (nativeParity_odd n)
+          (headTensorEquiv n (CliffordAlgebra.ι (Qsplit (n + 1)) v))
     simp only [CliffordAlgebra.involute_ι, map_neg, headTensorEquiv_ι,
-      AlgHom.comp_apply, AlgEquiv.toAlgHom_eq_coe, map_add,
-      tensorParity_tmul, map_one]
+      map_add, tensorParity_tmul, map_one]
     simp [nativeParity, GradedTensorProduct.tmul, TensorProduct.neg_tmul,
       TensorProduct.tmul_neg]
   exact AlgHom.congr_fun h x
@@ -190,7 +192,15 @@ theorem matrixParity_succ (n : ℕ)
   have h : (leftMatrixEquiv (n + 1)).symm (flatten ℝ n M) =
       (nativeStepEquiv n).symm (M.map (unrollNative n)) := by
     apply (leftMatrixEquiv (n + 1)).injective
-    simp [leftMatrixEquiv_succ, unrollNative, Matrix.map_map]
+    rw [AlgEquiv.apply_symm_apply]
+    change flatten ℝ n M = flatten ℝ n
+      ((nativeStepEquiv n ((nativeStepEquiv n).symm (M.map (unrollNative n)))).map
+        (leftMatrixEquiv n))
+    rw [AlgEquiv.apply_symm_apply]
+    apply congrArg (flatten ℝ n)
+    apply Matrix.ext
+    intro i j
+    exact ((leftMatrixEquiv n).apply_symm_apply (M i j)).symm
   change leftMatrixEquiv (n + 1)
     (nativeParity (n + 1) ((leftMatrixEquiv (n + 1)).symm (flatten ℝ n M))) = _
   rw [h, leftMatrixEquiv_succ, nativeStepEquiv_involute,
@@ -230,9 +240,12 @@ theorem gamma_conj_flatten (n : ℕ) (M : Matrix (Fin 2) (Fin 2) (RealMatrix n))
   change flatten ℝ n _ * flatten ℝ n M * flatten ℝ n _ = _
   rw [← map_mul, ← map_mul]
   apply congrArg (flatten ℝ n)
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [Matrix.mul_apply, Fin.sum_univ_two, mul_assoc]
+  have hM : M = !![M 0 0, M 0 1; M 1 0, M 1 1] := by
+    apply Matrix.ext
+    intro i j
+    fin_cases i <;> fin_cases j <;> rfl
+  rw [hM]
+  simp only [Matrix.mul_fin_two, zero_mul, mul_zero, zero_add, add_zero]
 
 /-- The actual transported Clifford grading is exactly the matrix conjugation
 used by the intake's recursive algorithm. -/
@@ -370,10 +383,11 @@ private theorem coefficientParity_eq_gamma_conj (n : ℕ) (z : Clsplit n ⊗[ℝ
       (nativeGamma n ⊗ₜ[ℝ] (1 : B)) * z * (nativeGamma n ⊗ₜ[ℝ] (1 : B)) := by
   induction z using TensorProduct.inductionOn with
   | tmul x b =>
-      simp only [coefficientParity, Algebra.TensorProduct.congr_apply,
-        Algebra.TensorProduct.map_tmul,
-        AlgEquiv.refl_apply, Algebra.TensorProduct.tmul_mul_tmul, one_mul, mul_one]
+      change (nativeParity n x ⊗ₜ[ℝ] b) =
+        (nativeGamma n ⊗ₜ[ℝ] (1 : B)) * (x ⊗ₜ[ℝ] b) *
+          (nativeGamma n ⊗ₜ[ℝ] (1 : B))
       rw [nativeParity_eq_gamma_conj]
+      simp only [Algebra.TensorProduct.tmul_mul_tmul, one_mul, mul_one]
   | add x y hx hy => simp only [map_add, hx, hy, mul_add, add_mul]
 
 /-- The full coefficient-algebra grading is the same known permutation-matrix
@@ -415,7 +429,10 @@ theorem nativeStepEquiv_consNative (n : ℕ) (a : CliffordAlgebra q11) (x : Clsp
     nativeStepEquiv n (consNative n a x) =
       tensorMatrixEquivOriginal (nativeParity n) (CliffordAlgebra.evenOdd (Qsplit n))
         (nativeParity_even n) (nativeParity_odd n) (a ᵍ⊗ₜ x) := by
-  simp [nativeStepEquiv, consNative_apply]
+  change tensorMatrixEquivOriginal (nativeParity n) (CliffordAlgebra.evenOdd (Qsplit n))
+    (nativeParity_even n) (nativeParity_odd n)
+    (headTensorEquiv n ((headTensorEquiv n).symm (a ᵍ⊗ₜ x))) = _
+  rw [AlgEquiv.apply_symm_apply]
 
 private def headBlock {A : Type*} [Ring A] [Algebra ℝ A]
     (θ : A ≃ₐ[ℝ] A) (a : CliffordAlgebra q11) (x : A) : Matrix (Fin 2) (Fin 2) A :=
@@ -447,9 +464,12 @@ theorem leftCoefficientEquiv_consTensor (n : ℕ) (a : CliffordAlgebra q11)
         (leftCoefficientEquiv B n z)) := by
   induction z using TensorProduct.inductionOn with
   | tmul x b =>
-      simp only [consTensor_tmul, leftCoefficientEquiv_tmul, leftMatrixEquiv_succ,
-        nativeStepEquiv_consNative, coefficientReadback_flatten]
-      rw [tensorMatrixEquivOriginal_tmul_entries]
+      change leftCoefficientEquiv B (n + 1) (consNative n a x ⊗ₜ[ℝ] b) =
+        flatten B n (headBlock (coefficientMatrixParity B n) a
+          (leftCoefficientEquiv B n (x ⊗ₜ[ℝ] b)))
+      conv_rhs => rw [leftCoefficientEquiv_tmul]
+      rw [leftCoefficientEquiv_tmul, leftMatrixEquiv_succ, nativeStepEquiv_consNative,
+        coefficientReadback_flatten, tensorMatrixEquivOriginal_tmul_entries]
       apply congrArg (flatten B n)
       change ((headBlock (nativeParity n) a x).map
         ((coefficientReadback B n b).comp (leftMatrixEquiv n).toLinearMap)) = _
@@ -501,11 +521,15 @@ theorem unrollCoefficients_succ (n : ℕ) (M : CoefficientMatrix B (n + 1)) :
       consTensor B n J1_cl (unrollCoefficients B n (V 2)) +
       consTensor B n (CliffordAlgebra.ι q11 (0, 1)) (unrollCoefficients B n (V 3)) := by
   dsimp only
+  have hcorr := correction_involutive (coefficientMatrixParity B n)
+    (coefficientMatrixParity_involutive B n) (coefficients ((flatten B n).symm M))
   apply (leftCoefficientEquiv B (n + 1)).injective
-  simp only [reconstruct_unrollCoefficients, map_add, leftCoefficientEquiv_consTensor]
-  rw [← map_add, ← map_add, ← map_add, headBlock_basis_sum,
-    correction_involutive (coefficientMatrixParity B n)
-      (coefficientMatrixParity_involutive B n),
+  rw [reconstruct_unrollCoefficients, map_add, map_add, map_add,
+    leftCoefficientEquiv_consTensor, leftCoefficientEquiv_consTensor,
+    leftCoefficientEquiv_consTensor, leftCoefficientEquiv_consTensor,
+    reconstruct_unrollCoefficients, reconstruct_unrollCoefficients,
+    reconstruct_unrollCoefficients, reconstruct_unrollCoefficients]
+  rw [← map_add, ← map_add, ← map_add, headBlock_basis_sum, hcorr,
     synthesize_coefficients, AlgEquiv.apply_symm_apply]
 
 /-- Concrete binary indexing: the Clifford head is the most significant bit. -/
@@ -570,7 +594,7 @@ def wordCoefficientEquiv : (n : ℕ) →
       (flatten B n).symm.toLinearEquiv.trans
         ((gradedCoefficientEquiv (coefficientMatrixParity B n)
           (coefficientMatrixParity_involutive B n)).trans
-          ((LinearEquiv.piCongrRight fun _ : Fin 4 => wordCoefficientEquiv B n).trans
+          ((LinearEquiv.piCongrRight fun _ : Fin 4 => wordCoefficientEquiv n).trans
             ((LinearEquiv.curry ℝ B (Fin 4) (Words n)).symm.trans
               (LinearEquiv.funCongrLeft ℝ B
                 (Fin.consEquiv fun _ : Fin (n + 1) => Fin 4).symm))))
@@ -620,11 +644,12 @@ theorem wordReconstruct_succ (n : ℕ) (c : Words (n + 1) → B) :
         (wordReconstruct B n (fun w => c (Fin.cons 2 w))) +
       consTensor B n (CliffordAlgebra.ι q11 (0, 1))
         (wordReconstruct B n (fun w => c (Fin.cons 3 w))) := by
+  have hcorr := correction_involutive (coefficientMatrixParity B n)
+    (coefficientMatrixParity_involutive B n)
+    (fun a : Fin 4 => (wordCoefficientEquiv B n).symm
+      (fun w => c (Fin.cons a w)))
   change unrollCoefficients B (n + 1) ((wordCoefficientEquiv B (n + 1)).symm c) = _
   rw [wordCoefficientEquiv_symm_succ, unrollCoefficients_succ]
-  simp only [AlgEquiv.symm_apply_apply, coefficients_synthesize,
-    correction_involutive (coefficientMatrixParity B n)
-      (coefficientMatrixParity_involutive B n)]
-  rfl
+  simp only [AlgEquiv.symm_apply_apply, coefficients_synthesize, hcorr] <;> rfl
 
 end InfoGeometry.Clifford.Cl11RecursiveUnrolling

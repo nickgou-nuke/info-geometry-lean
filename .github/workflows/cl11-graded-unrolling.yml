@@ -77,6 +77,13 @@ jobs:
             ~/.elan
             .lake/packages
           key: ${{ steps.pinned_cache.outputs.cache-primary-key }}
+      - uses: actions/cache/restore@v4
+        id: focused_build_cache
+        with:
+          path: verification/freed-pin-compatibility/.lake/build
+          key: cl11-build-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'verification/freed-pin-compatibility/lake-manifest.json', 'verification/freed-pin-compatibility/lakefile.toml') }}-${{ github.event.pull_request.head.sha || github.sha }}
+          restore-keys: |
+            cl11-build-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'verification/freed-pin-compatibility/lake-manifest.json', 'verification/freed-pin-compatibility/lakefile.toml') }}-
       - name: Compile all selected owners and audit every owned declaration
         shell: bash
         run: |
@@ -88,6 +95,11 @@ jobs:
             -DwarningAsError=true \
             "$GITHUB_WORKSPACE/lean/InfoGeometry/Clifford/Cl11GradedUnrollingAudit.lean" \
             2>&1 | tee verification/cl11-graded-unrolling/artifacts/axioms.log
+      - uses: actions/cache/save@v4
+        if: always() && steps.focused_build_cache.outcome == 'success' && steps.focused_build_cache.outputs.cache-hit != 'true'
+        with:
+          path: verification/freed-pin-compatibility/.lake/build
+          key: ${{ steps.focused_build_cache.outputs.cache-primary-key }}
       - name: Record exact source evidence
         if: always()
         shell: bash

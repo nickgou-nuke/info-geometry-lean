@@ -58,14 +58,19 @@ def tensorMinor : Pair →ₗ[ℝ] Mat2 :=
 
 @[simp] theorem tensorMinor_tmul (x y : C) (i j : Fin 2) :
     tensorMinor (x ᵍ⊗ₜ y) i j = headCoordinate i x * tailCoordinate j y := by
-  simp [tensorMinor, GradedTensorProduct.tmul]
+  change (TensorProduct.lid ℝ ℝ)
+    (TensorProduct.map (headCoordinate i) (tailCoordinate j)
+      ((GradedTensorProduct.of ℝ (CliffordAlgebra.evenOdd q11)
+        (CliffordAlgebra.evenOdd q11)).symm (x ᵍ⊗ₜ y))) = _
+  simp [GradedTensorProduct.tmul]
 
 theorem tensorMinor_controlled : tensorMinor controlledTensor = 1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [controlledTensor, map_add, tensorMinor_tmul, headCoordinate,
       tailCoordinate, positiveCorner, negativeCorner, J1_cl, map_mul,
-      Eplus_mul_Eminus, Eplus, J1]
+      Eplus_mul_Eminus, Eplus, Eminus, J1, Matrix.vecMul, dotProduct,
+      Fin.sum_univ_two]
 
 /-- The controlled-`K` tensor is not one graded product, even when its two
 factors are allowed to be arbitrary inhomogeneous Clifford elements. -/
@@ -104,7 +109,7 @@ theorem pairMatrixEquiv_controlled :
   fin_cases i <;> fin_cases j <;> fin_cases a <;> fin_cases b <;>
     norm_num [evenPart, oddPart, positiveCorner, negativeCorner, J1_cl,
       CliffordAlgebra.involuteEquiv, CliffordAlgebra.involute_ι,
-      map_mul, Eplus_mul_Eminus, Eplus, Eminus, J1]
+      map_mul, map_ofNat, Matrix.ofNat_apply, Eplus_mul_Eminus, Eplus, Eminus, J1]
 
 /-- A concrete four-by-four matrix (written in two-by-two blocks) has no
 single graded Clifford factorization. Singular/invertible input restrictions

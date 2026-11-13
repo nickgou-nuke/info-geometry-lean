@@ -48,10 +48,27 @@ After recovery, the matrix-rank factorization owner compiled locally. The first
 [focused CI run](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43406594970)
 reported concrete elaboration errors in four new owners. The follow-up sources
 repair those diagnostics and add the homogeneous inverse and actual local
-Clifford-core contraction. A completed kernel build of the full selected closure,
-exhaustive declaration-axiom audit, and root integration acceptance remain
-pending. Independent source review and source identity checks do not substitute
-for those checks.
+Clifford-core contraction.
+
+The second [focused CI run](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43408976175),
+on `4ad3bced5caf5f76b969b1d0237869609911f5be`, compiled
+`SplitCliffordMatrixEquiv`, `Cl11GradedUnrolling`, `MatrixRankFactorization`,
+and `RankMinimalTensorTrain`. It still failed in `ExactTensorTrain`,
+`Cl11PureTensorObstruction`, and `Cl11RecursiveUnrolling`, preventing the
+downstream owners and exhaustive audit from running. Further proof repairs
+address those exact diagnostics; their presence is not a successful build.
+
+A completed kernel build of the full selected closure, exhaustive
+declaration-axiom audit, and root integration acceptance remain pending.
+Independent source review and source identity checks do not substitute for
+those checks. The workflow retains native build traces between revisions;
+Lake invalidates changed sources, and the final declaration audit runs afresh.
+
+The tracked staged source gate was executed and retains one T16 finding on
+the nested matrix coefficient carrier in `Cl11RecursiveUnrolling`. The owner
+contains the explicit native witness `realBlock_noncommuting`; the scanner's
+imported-carrier resolution does not recognize this specialization. The gate
+is recorded as failed, independently of the pending Lean result.
 
 This focused selection covers its named owners and imported dependencies.
 Root integration, optional packages, and unrelated repository files remain

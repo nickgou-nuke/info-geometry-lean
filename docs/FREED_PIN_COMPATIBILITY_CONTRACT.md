@@ -236,3 +236,37 @@ PR #338 remains a published draft. Promotion still requires reproducible root
 package/submodule configuration and a successful root integration gate. The
 focused acceptance does not establish a concrete Klein Hilbert/Fredholm model,
 a concrete Klein Morita corner, or a geometric/differential `KO` pushforward.
+
+## Concrete follow-up contract
+
+The repeated request to connect the machinery to this particular Pin
+construction is being implemented beyond the accepted checkpoint above.
+The new targets are not covered by its 682-declaration audit until a new
+focused build and exhaustive audit complete.
+
+| New owner target | Construction and acceptance obligation |
+| --- | --- |
+| Concrete smooth Morita realization | Use the actual volume action to identify the two smooth Klein sectors. Construct coordinates on their doubled domain, identify its full endomorphism algebra with matrices over the first sector's noncommutative endomorphism ring, compare grading, and compute the actual differential operator matrix. Instantiate the existing graded module equivalence. Recover the reduced differential operator through an explicit off-diagonal entry or head-compensated corner; the ordinary diagonal corner of the odd operator is zero. |
+| Concrete Pin frame family | Construct frame changes from the actual represented normalized Pin elements. Conjugate the deck monodromy and Clifford coefficients together, prove smooth-domain and derivative compatibility and quotient descent, and retain the ordered group composition. Construct an explicit normalized-vector trigonometric family and derive its represented parameter continuity. |
+| Joint Morita and frame compatibility | Transport the volume with the same frame, prove the square of smooth-sector coordinate maps commutes, and prove naturality of every entry of the full operator-valued matrix. Compare the actual geometric grading, differential operator, represented split head, and compensated corner; derive joint smoothness of evaluated coordinates and reduced differential images for the explicit Pin family. |
+| Analytic suspension compatibility | Compare the pullback Pin action with the actual ambient even-Pin inclusion as continuous linear equivalences. Prove equality of image domains, transported graphs, resolvents, and continuous native Fredholm families, for both suspension signs and with the source analytic hypotheses unchanged. |
+
+The new targets are implemented in `Geometry.KleinPinSmoothMorita`,
+`Geometry.KleinPinFrameFamily`, `Geometry.KleinPinMoritaFamily`, and
+`KK.FreedPinAnalyticCompatibility`. Independent source review found no
+mathematical sign, order, carrier, or assumption defect. The expanded audit
+selects all eighteen mathematical owners. New kernel acceptance is pending.
+Local single-owner compiler attempts terminated with exit 247 before Lean
+diagnostics (the profiled attempt reported 843204 KiB maximum resident memory);
+the maintained upstream workflow will supply independent compiler evidence.
+
+The new targets preserve the distinction between an actual algebraic Morita
+object and an operator that is linear or superlinear for its coefficient
+action. No centrality of the concrete differential operator is assumed.
+An arbitrary fibre Pin frame need not preserve a fixed Klein deck law; the
+family target therefore constructs the transported deck law explicitly.
+The concrete Hilbert/Sobolev realization, its Fredholm seed, and differential
+`KO` pushforward remain analytic construction targets unless separately proved.
+The new coefficient ring is the full endomorphism algebra of the concrete
+positive smooth sector. No representation of the separate canonical infinite
+Clifford tail in that coefficient ring has been constructed here.

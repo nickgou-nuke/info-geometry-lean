@@ -10,6 +10,7 @@ on:
       - 'lean/InfoGeometry/Geometry/KleinPin*.lean'
       - 'lean/InfoGeometry/KK/LinearDirac*.lean'
       - 'lean/InfoGeometry/KK/Pin*Transport.lean'
+      - 'lean/InfoGeometry/KK/FreedPin*.lean'
       - 'lean/InfoGeometry/KK/CompactPhaseObstruction.lean'
       - 'lean/InfoGeometry/Canonical/SplitClifford*.lean'
       - 'lean/InfoGeometry/Canonical/MaurerCartanCurvature.lean'
@@ -105,6 +106,16 @@ jobs:
             InfoGeometry.Clifford.FreedKleinRepresentation \
             InfoGeometry.KK.PinFredholmTransport \
             2>&1 | tee verification/freed-pin-compatibility/artifacts/compatibility.log
+      - name: Build concrete Klein Morita and Pin frame compatibility
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/freed-pin-compatibility/check.py build \
+            InfoGeometry.Geometry.KleinPinSmoothMorita \
+            InfoGeometry.Geometry.KleinPinFrameFamily \
+            InfoGeometry.KK.FreedPinAnalyticCompatibility \
+            InfoGeometry.Geometry.KleinPinMoritaFamily \
+            2>&1 | tee verification/freed-pin-compatibility/artifacts/concrete-compatibility.log
       - name: Build compatibility with the actual Clifford tower
         shell: bash
         run: |

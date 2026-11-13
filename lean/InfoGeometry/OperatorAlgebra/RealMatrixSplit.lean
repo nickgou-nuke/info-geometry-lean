@@ -64,7 +64,8 @@ theorem transpose_normal_defect (M : Matrix n n ℝ) :
         (selfAdjointPart ℝ M : Matrix n n ℝ)) := by
   apply transpose_normal_defect_of_split
   · simpa only [IsSelfAdjoint, Matrix.star_eq_conjTranspose,
-      Matrix.conjTranspose_eq_transpose_of_trivial] using (selfAdjointPart ℝ M).property
+      Matrix.conjTranspose_eq_transpose_of_trivial]
+      using selfAdjoint.isSelfAdjoint (x := selfAdjointPart ℝ M)
   · simpa only [skewAdjoint.mem_iff, Matrix.star_eq_conjTranspose,
       Matrix.conjTranspose_eq_transpose_of_trivial] using (skewAdjointPart ℝ M).property
   · exact StarModule.selfAdjointPart_add_skewAdjointPart ℝ M

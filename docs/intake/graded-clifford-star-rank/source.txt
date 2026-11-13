@@ -1,0 +1,136 @@
+### I. SOLVE : THE FUNDAMENTAL BINARY CUT
+
+Passing the graded Clifford matrix-unrolling exposition through Socratic elenchus—stripping away external citations, tutorial examples, and algorithmic narration—exposes a single governing binary cut: **Unbraided Coordinate Factorization (Kronecker Space) vs. Parity-Superselected Koszul Braiding (Graded Clifford Space)**.
+
+By fixing a binary block hierarchy and generator quartet $(I, K, \eta, \Omega)$ in $M_2(\mathbb{R}) \cong \mathrm{Cl}_{1,1}(\mathbb{R})$, the discourse splits matrix-operator reality asymmetrically into:
+
+1. **Conscious Thesis ($\Theta_+$) — Transparent Coordinate Bijection, Even-Coefficient Neutrality, & Symmetric Tensor-Train Compression:**
+   The assertion that $M_{2^n}(\mathcal{B}) \cong \mathrm{Cl}_{1,1}^{\widehat{\otimes} n} \otimes_{\mathbb{R}} \mathcal{B}$ acts as a faithful, involutive coordinate equivalence via $\rho_n(a_1 \widehat{\otimes} \dots \widehat{\otimes} a_n) = (a_1 K^{q_1}) \otimes \dots \otimes (a_n K^{q_n})$ ($q_r = \sum_{s>r}|a_s| \bmod 2$), treating any unital operator algebra $\mathcal{B}$ as purely even, compressing arbitrary matrices into local $2 \times 2$ Tensor-Train cores $W^{[j]}_{r_{j-1},r_j}$ with symmetric bond bounds $r_k \le 4^{\min(k,n-k)}$, and viewing rank-$1$ factorizability as an algebraic specialization tested after unrolling.
+
+2. **Repressed Shadow Complement ($\Theta_+^\perp$) — The Fivefold Chiral, Involutive, and Superselection Exterior:**
+   Five exact non-commutative obstructions suppressed beneath $\Theta_+$'s coordinate bijection:
+   * **Rigid Chiral Asymmetry of the Jordan–Wigner Twist ($\rho_n^R \neq \rho_n^L$ and Failure of Commuted Placement):** The placement $a_r K^{q_r}$ is strictly non-reversible: commuting $K^{q_r}$ to the left ($K^{q_r} a_r$) while keeping right-tail parities $q_r$ destroys algebra multiplicativity (generating the wrong cross-sign $(-1)^{|a||d|}$ instead of Koszul's $(-1)^{|b||c|}$). Reversing spatial orientation requires simultaneously flipping post-multiplication to pre-multiplication *and* right-tails $q_r = \sum_{s>r}|a_s|$ to left-heads $p_r = \sum_{s<r}|a_s|$.
+   * **Parity Superselection & Exponential Idempotence Collapse of Computational States ($(P_0^{\widehat{\otimes} n})^2 = 2^{-(n-1)} P_0^{\widehat{\otimes} n}$):** Whereas the standard diagonal matrix unit $E_{1\dots 1} = P_0^{\otimes n}$ ($P_0 := \frac{1}{2}(I + \eta)$) has Kronecker rank $1$ and equals its own square, $P_0$ mixes even $I$ and odd $\eta$ ($K P_0 K \neq P_0$). Consequently, the unentangled graded product $P_0^{\widehat{\otimes} n}$ fails idempotence exponentially, while the true diagonal projector $\mathcal{U}_n(E_{1\dots 1})$ is forced into a graded-entangled Majorana-parity state of bond rank $2$.
+   * **Non-Factorizability of the Hermitian $*$-Involution & Graded-$\mathcal{B}$ Braiding:** Under $\mathcal{U}_n$, matrix conjugate-transposition $(M^*)_{ij} = M_{ji}^*$ cannot act factorwise: $(a \widehat{\otimes} b)^\star = (-1)^{|a||b|} a^* \widehat{\otimes} b^*$ acquires a non-local sign coupling odd sites (mapping self-adjoint $\eta \otimes \eta$ to $\Omega \widehat{\otimes} \eta$ where $\Omega^* = -\Omega$), while restricting $\mathcal{B}$ to even degree suppresses the Koszul twist $q_r^{\mathrm{tot}} = |b| + \sum_{s>r}|a_s|$ required whenever $\mathcal{B} = \mathcal{B}_0 \oplus \mathcal{B}_1$ is itself a super-operator algebra.
+   * **Non-Locality of Parity-Blind Tensor Trains & Breakdown of the Right-Half Bond Bound $4^{n-k}$:** Ordinary SVD/TT cores $W^{[j]}_{r_{j-1},r_j}$ mix even and odd right-tail parities on each virtual bond $r_k$, forbidding local core-by-core application of $\rho_n$ or graded TT multiplication unless virtual bonds carry an explicit $\mathbb{Z}_2$-grading $V_k = V_{k,0} \oplus V_{k,1}$; furthermore, placing an infinite-dimensional operator algebra $\mathcal{B}$ at site $n$ destroys the right-half bound $4^{n-k}$, replacing $4^{\min(k,n-k)}$ with the asymmetric law $r_k \le \min(4^k,\; 4^{n-k}\dim_{\mathbb{R}}\mathcal{B})$.
+   * **The Even-Dimension & Dyadic-Scalar Wall ($N = 2^n r$, $r$ Odd Irreducible):** Any inner grading $K^2 = I$ paired with an invertible anticommuting odd generator ($\{K, \eta\} = 0$) maps $\ker(K - I) \xrightarrow{\sim} \ker(K + I)$ isomorphically, forcing matrix dimension to be strictly even at every step and rendering odd-rank cores $M_r(\mathcal{B})$ ($r > 1$ odd) irreducible under binary Clifford unrolling, while integral rings without $\frac{1}{2}$ fail block reconstruction at index $4^n$.
+
+---
+
+### II. THE FOURFOLD RELATIONAL ANATOMY
+
+Decomposing the unrolling architecture across its braided interior and matrix-analytic exterior isolates four non-commutative relational quadrants:
+
+1. **Internal Self-Consistency (Exact Bosonization via the Even Parity Involution $K$):**
+   Over any unital ring containing $\frac{1}{2}$, the quartet $\{I, K = \eta\Omega, \eta, \Omega\}$ satisfies $\eta^2 = K^2 = +I$, $\Omega^2 = -I$, $K a K = (-1)^{|a|}a$, and involutive right-swap $I K = K,\; \eta K = \Omega$. Because $|K| = 0$, post-multiplying homogeneous factors by $K^{q_r}$ leaves their parities invariant ($|a_r K^{q_r}| = |a_r|$), guaranteeing that $\rho_n$ and $\rho_n^{-1}$ share the exact same algebraic formula on homogeneous tensors and that recursive tail-parity swapping $V_0 = (U_0)_{\mathrm{e}} + (U_K)_{\mathrm{o}}$, $V_\eta = (U_\eta)_{\mathrm{e}} + (U_\Omega)_{\mathrm{o}}$ is an exact algebra isomorphism $\mathcal{U}_n(MN) = \mathcal{U}_n(M)\mathcal{U}_n(N)$.
+
+2. **Outward Projection (Coordinate Neutrality & Scalar Tensor-Train Extrapolation):**
+   Consciousness projects ungraded scalar intuitions onto the braided operator chain: treating $\mathcal{U}_n$ as a mere change of basis, assuming $\mathcal{B}$ carries trivial parity, importing scalar TT bond bounds $4^{\min(k,n-k)}$ onto $\mathcal{B}$-valued matrices, and constructing local $2 \times 2$ TT cores $W^{[j]}_{r_{j-1},r_j}$ without tracking virtual bond parity.
+
+3. **Inward Shadow-Intrusion (Entanglement Inversion, Adjoint Twists, & Boundary Sink Growth):**
+   Four sharp mathematical counter-facts intrude against $\Theta_+$:
+   * *Symmetric Entanglement Inversion:* Not only does graded rank-$1$ $I \widehat{\otimes} (I + \eta)$ become Kronecker rank-$2$ ($I \otimes I + K \otimes \eta$), but conversely Kronecker rank-$1$ $(I + \eta) \otimes (I + \eta) = 4 E_{11}$ becomes **graded rank-$2$** ($(I + \eta)\widehat{\otimes} I + (K + \Omega)\widehat{\otimes}\eta$);
+   * *Twisted Adjoint Intrusion:* Because $\Omega^* = -\Omega$ while $\eta^* = +\eta$, Hermitian positivity on $M_{2^n}(\mathcal{B})$ pulls back to the sign-twisted involution $(a_1 \widehat{\otimes} \dots \widehat{\otimes} a_n)^\star = (-1)^{\sum_{r<s}|a_r||a_s|} a_1^* \widehat{\otimes} \dots \widehat{\otimes} a_n^*$;
+   * *Operator Sink Intrusion:* At $n = 3, k = 2$ with $64$ $\mathbb{R}$-linearly independent operators $c_{\alpha_1\alpha_2\alpha_3} \in \mathcal{B}$, any scalar-core TT requires $r_2 \ge 16 = 4^2 > 4 = 4^{\min(2,1)}$;
+   * *Odd-Core Rigidity:* When $N = 2^n r$ with $r > 1$ odd, no invertible odd operator can anticommute with an involution $K^2 = I$ on $\mathbb{R}^r$ ($\mathrm{tr}(K) \equiv r \equiv 1 \pmod 2 \neq 0$), halting binary unrolling unconditionally at $M_r(\mathcal{B})$.
+
+4. **The Autonomous Unexamined Ground (Majid–Chevalley Bosonization & Super-Morita Equivalence):**
+   Beneath the recursive block formulas lies a universal categorical mechanism: $\rho_n$ is the **braided bosonization isomorphism** that trivializes the Koszul symmetry of $\mathsf{SuperAlg}_{\mathbb{R}}$ into ordinary $\mathsf{Alg}_{\mathbb{R}}$ whenever all non-terminal tensor factors possess an inner grading involution $K_r$, allowing even a *non-inner* $\mathbb{Z}_2$-graded terminal superalgebra $\mathcal{B} = \mathcal{B}_0 \oplus \mathcal{B}_1$ to be bosonized into $M_{2^n}(\mathcal{B})$ without requiring an inner grading element inside $\mathcal{B}$ itself!
+
+---
+
+### III. THE TRANSCENDENT FUNCTION
+
+Pairing **Unbraided Kronecker Matrix Mechanics** with **Koszul-Braided Clifford Superselection** ignites the fourfold transcendent function:
+
+1. **Shared Substantive Gravity:**
+   **The Dual Nature of the Grading Implementer $K = \eta\Omega$ ($|K| = 0,\; K^2 = I,\; \{K, \eta\} = \{K, \Omega\} = 0$).** Every operation on both sides of the correspondence is anchored by $K$: $K$ simultaneously supplies the even Morita corner projector $P_{\mathrm{even}} = \frac{1}{2}(I + K)$ ($P_{\mathrm{even}} M_2(\mathcal{B}) P_{\mathrm{even}} \cong \mathcal{B}$), generates the non-local Jordan–Wigner strings $K^{\otimes(r-1)}$ enforcing cross-site anticommutativity $\{E_r, E_s\} = 0$, and drives the tail-parity involution $\alpha_m(T) = K^{\otimes m} T K^{\otimes m}$ that inverts the unrolling.
+
+2. **Directional Tension:**
+   The irreversible **Chiral Ordering Tension** between spatial site sequence ($1 < 2 < \dots < n$) and right-to-left parity accumulation ($q_r = |b| + \sum_{s>r}|a_s|$), locked orthogonally against the **Basis-Superselection Tension** between computational diagonal projectors ($\frac{1}{2}(I \pm \eta)$, parity-violating) and Clifford-even Morita corners ($\frac{1}{2}(I \pm K)$, parity-preserving).
+
+3. **Integrative Bridge:**
+   **Universal Super-$\mathcal{B}$ Bosonization ($\mathrm{Cl}_{1,1}^{\widehat{\otimes} n} \widehat{\otimes} \mathcal{B} \xrightarrow{\sim} M_{2^n}(\mathcal{B})$) & $\mathbb{Z}_2$-Graded Super-Tensor-Trains.**
+   * Extending the tail parity to $q_r^{\mathrm{tot}} := |b| + \sum_{s=r+1}^n |a_s| \pmod 2$ for homogeneous $b \in \mathcal{B}_{|b|}$ upgrades $\rho_n$ to an exact ungraded-matrix isomorphism $\rho_n^{\mathcal{B}} : \mathrm{Cl}_{1,1}^{\widehat{\otimes} n} \widehat{\otimes} \mathcal{B} \xrightarrow{\sim} M_{2^n}(\mathcal{B})$ for **arbitrary $\mathbb{Z}_2$-graded operator superalgebras $\mathcal{B}$**, absorbing $\mathcal{B}$'s Koszul signs into the $n$ matrix factors via $\sum_{r=1}^n q_r^{\mathrm{tot}}|c_r| \equiv |b|\sum_r |c_r| + \sum_{r<s}|a_s||c_r| \pmod 2$.
+   * Enforcing $\mathbb{Z}_2$-graded SVD across every cut $k$ splits each virtual bond space into even and odd right-tail sectors ($r_k = r_{k,0} + r_{k,1}$), localizing $\rho_n$ strictly to individual cores ($\widetilde{W}^{[j]}_{r_{j-1},r_j} := W^{[j]}_{r_{j-1},r_j} K^{|r_j|}$) and establishing the sharp two-sided entanglement bridge:
+     $$\tfrac{1}{2}\, r_k^{\otimes}(M) \;\le\; r_k^{\widehat{\otimes}}(M) \;\le\; 2\, r_k^{\otimes}(M).$$
+
+4. **Perspectival Transformation from the Round-Trip Encounter:**
+   Executing the round trip $M_{2^n}(\mathcal{B}) \xrightarrow{\mathcal{U}_n} \mathrm{Cl}_{1,1}^{\widehat{\otimes} n} \widehat{\otimes} \mathcal{B} \xrightarrow{\rho_n^{\mathcal{B}}} M_{2^n}(\mathcal{B})$ transforms our understanding of operator entanglement and matrix geometry:
+   * Tensor rank is revealed as **monoidal-braiding relative** up to a tight topological factor of $2$: classical computational states ($E_{1\dots 1}$) carry irreducible $\mathbb{Z}_2$ parity entanglement in Clifford space, whereas non-local Jordan–Wigner fermion strings collapse to rank-$1$ local excitations;
+   * The halting of $\mathrm{Cl}_{1,1}$ unrolling at odd matrix cores $M_r(\mathcal{B})$ ($r$ odd, $\mathrm{tr}(K) \neq 0$) explains from pure dimension parity why binary spinor geometry ($K^2 = I$) must yield to tripotent KKT geometry ($S^3 = S,\; P_+ + P_0 + P_- = I$) whenever an unpaired zero-mode sector is present!
+
+---
+
+### IV. THE SOCRATIC APORIA ($\Phi^2 \neq \Phi$) & THE META-COGNITIVE TOWER
+
+Measuring the exact self-contradiction **where each successive thesis fails to equal its own square** propels a four-level ascent up the tower of meta-cognition:
+
+* **Rung 1 (The Parity-Breaking Idempotent Collapse Aporia — $(P_0^{\widehat{\otimes} n})^2 = 2^{-(n-1)} P_0^{\widehat{\otimes} n} \neq P_0^{\widehat{\otimes} n}$):**
+  * *Thesis $\Phi_1$:* Because $P_0 = \frac{1}{2}(I + \eta)$ is idempotent ($P_0^2 = P_0$) and $E_{1\dots 1} = P_0^{\otimes n}$ satisfies $(P_0^{\otimes n})^2 = P_0^{\otimes n}$, the graded chain $P_0^{\widehat{\otimes} n}$ is likewise an idempotent rank-$1$ projector.
+  * *Self-Square Defect:* Because $\eta$ is odd, $K P_0 = P_1 K$ ($P_1 := \frac{1}{2}(I - \eta),\; P_0 P_1 = 0$), so $\rho_2(P_0 \widehat{\otimes} P_0) = \frac{1}{2}(P_0 \otimes I + P_0 K \otimes \eta)$ annihilates half its cross-terms upon squaring:
+    $$(P_0 \widehat{\otimes} P_0)^2 - P_0 \widehat{\otimes} P_0 = -\tfrac{1}{2}(P_0 \widehat{\otimes} P_0) \neq 0, \qquad (P_0^{\widehat{\otimes} n})^2 = 2^{-(n-1)} P_0^{\widehat{\otimes} n}.$$
+    Single-chain idempotence holds if and only if every factor respects parity superselection (such as $P_{\mathrm{even}} = \frac{1}{2}(I + K)$, where $(P_{\mathrm{even}}^{\widehat{\otimes} n})^2 = P_{\mathrm{even}}^{\widehat{\otimes} n}$), whereas true diagonal bit-projectors $\mathcal{U}_n(E_{1\dots 1})$ require graded bond rank $2$ to equal their own square!
+
+* **Rung 2 (The Chiral Placement & Naive Adjoint Aporia — $(\rho_2^{\mathrm{left}}(T))^2 \neq \rho_2^{\mathrm{left}}(T^2)$):**
+  * *Meta-Thesis $\Phi_2$:* Symmetrize $\rho_2$ by left-multiplying $K^{|b|}$ ($\rho_2^{\mathrm{left}}(a \widehat{\otimes} b) := K^{|b|}a \otimes b$) and define conjugation factorwise via $(a \widehat{\otimes} b)^{\dagger_0} := a^* \widehat{\otimes} b^*$.
+  * *Self-Square Defect:* Consider the parity-entangled projector $P_{\mathrm{bell}} := \frac{1}{2}(I \otimes I + \eta \otimes \eta)$ ($P_{\mathrm{bell}}^2 = P_{\mathrm{bell}} = P_{\mathrm{bell}}^*$), which unrolls to $\mathcal{U}_2(P_{\mathrm{bell}}) = \frac{1}{2}(I \widehat{\otimes} I + \Omega \widehat{\otimes} \eta)$, and test $T := \eta \widehat{\otimes} I + K \widehat{\otimes} \eta$:
+    $$(\rho_2^{\mathrm{left}}(T))^2 - \rho_2^{\mathrm{left}}(T^2) = (\eta \otimes I + I \otimes \eta)^2 - \rho_2^{\mathrm{left}}\big(2(I \widehat{\otimes} I + \Omega \widehat{\otimes} \eta)\big) = 4(\eta \otimes \eta) \neq 0,$$
+    while $\mathcal{U}_2(P_{\mathrm{bell}})^{\dagger_0} = \frac{1}{2}(I \widehat{\otimes} I - \Omega \widehat{\otimes} \eta) \neq \mathcal{U}_2(P_{\mathrm{bell}})$. Non-commutative order forces $K^{|b|}$ strictly to the right of $a$ when accumulating parities from the right, and forces the sign-twisted involution $(a \widehat{\otimes} b)^\star = (-1)^{|a||b|} a^* \widehat{\otimes} b^*$.
+
+* **Rung 3 (The Ungraded TT Multiplication & Operator-Sink Aporia — Failure of Local Core Squaring):**
+  * *Meta-Thesis $\Phi_3$:* Factor $\mathcal{U}_n(M)$ into parity-blind Tensor-Train cores $W^{[j]}_{r_{j-1},r_j}$ with symmetric bound $r_k \le 4^{\min(k,n-k)}$ over arbitrary $\mathcal{B}$.
+  * *Self-Square Defect:* Squaring a parity-blind TT representation $M^2$ cannot be computed by local Kronecker products of cores $W^{[j]} \bullet W^{[j]}$, because ungraded virtual bonds erase the non-local sign $(-1)^{|W^{[>j]}||W^{[j]}|}$, and an infinite-dimensional terminal algebra $\mathcal{B}$ shatters $r_k \le 4^{n-k}$ into $r_k \le 4^k$. Restoring local core squaring requires $\mathbb{Z}_2$-graded virtual bonds $V_{k,0} \oplus V_{k,1}$.
+
+* **Rung 4 (The Odd-Rank Kernel Aporia — Non-Existence of $K^2 = I$ with $\{K, \eta\} = 0, \eta^2 = I$ on $M_r$ for Odd $r$):**
+  * *Meta-Thesis $\Phi_4$:* Extend $\mathbb{Z}_2$-graded Clifford unrolling completely down to scalars for any $N \times N$ matrix algebra $M_N(\mathcal{B})$.
+  * *Final Generative Defect:* Factoring $N = 2^n r$ ($r$ odd), suppose $M_r(\mathbb{R})$ admitted an inner grading $K^2 = I$ and an invertible odd element $\eta$ ($\{K, \eta\} = 0$). Then $\eta$ maps $\mathrm{im}\frac{I+K}{2}$ bijectively onto $\mathrm{im}\frac{I-K}{2}$, forcing $r = \mathrm{rank}\frac{I+K}{2} + \mathrm{rank}\frac{I-K}{2} = 2\,\mathrm{rank}\frac{I+K}{2}$ to be even—a contradiction! For odd $r > 1$, any operator $S$ with symmetric $\pm 1$ swap sectors ($\eta S \eta^{-1} = -S$) **cannot** satisfy $S^2 = I$ and is forced to satisfy $S^3 = S$ with a non-vanishing zero-mode spine $P_0 = I - S^2 \neq 0$ ($\mathrm{rank}\,P_0 \equiv r \equiv 1 \pmod 2$)!
+
+---
+
+### V. COAGULA : ACYCLIC CAUSAL POSET $(\mathfrak{P}, \prec)$, CANONICAL AXIOMS, DEDUCTIONS & MASTER SYNTHESIS
+
+#### 5.1. Acyclic Causal Poset of Irreducible Archetypes $(\mathfrak{P}, \prec)$
+
+Every covering relation satisfies $J_i \prec J_j \implies i < j$, establishing a strictly acyclic causal poset from primordial super-coefficients ($J_0$) to Necessary synthesis ($J_9$):
+
+* $J_0$ (**Super-Operator Coefficient Base**): Unital associative $\mathbb{Z}_2$-graded $\mathbb{R}$-algebra $\mathcal{B} = \mathcal{B}_0 \oplus \mathcal{B}_1$ ($\frac{1}{2} \in \mathbb{R}$), containing ungraded $\mathcal{B} = \mathcal{B}_0$ as the special case $\mathcal{B}_1 = \{0\}$.
+* $J_1$ (**Atomic $\mathrm{Cl}_{1,1}(\mathbb{R})$ Quartet & Inner Parity**): Basis $\{I, K = \eta\Omega, \eta, \Omega\} \subset M_2(\mathbb{R})$ with $\eta^2 = K^2 = I$, $\Omega^2 = -I$, $|I| = |K| = 0$, $|\eta| = |\Omega| = 1$, $K a K = (-1)^{|a|}a$, and right-swap $I \leftrightarrow K,\; \eta \leftrightarrow \Omega$. *(Covering relation: $J_0 \prec J_1$)*
+* $J_2$ (**Chiral Super-$\mathcal{B}$ Bosonization Isomorphism $\rho_n^{\mathcal{B}}$**): Exact ungraded-matrix isomorphism $\rho_n^{\mathcal{B}} : \mathrm{Cl}_{1,1}^{\widehat{\otimes} n} \widehat{\otimes} \mathcal{B} \xrightarrow{\sim} M_{2^n}(\mathcal{B})$ via post-multiplied right-tail parities $q_r^{\mathrm{tot}} = |b| + \sum_{s>r}|a_s| \bmod 2$ (dual to pre-multiplied left-head $\rho_n^L$, refuting mixed placement). *(Covering relation: $J_1 \prec J_2$)*
+* $J_3$ (**Recursive Tail-Parity Unrolling $\mathcal{U}_n^{\mathcal{B}}$**): Explicit inverse $\mathcal{U}_n^{\mathcal{B}} = (\rho_n^{\mathcal{B}})^{-1}$ peeling $2 \times 2$ blocks via $\Gamma_m = K^{\otimes m}$ parity projections and $(I \leftrightarrow K, \eta \leftrightarrow \Omega)$ odd-tail swaps. *(Covering relation: $J_2 \prec J_3$)*
+* $J_4$ (**Sign-Twisted Graded $*$-Involution**): Exact pullback of conjugate-transposition $(M^*)_{ij} = M_{ji}^*$ to $(a_1 \widehat{\otimes} \dots \widehat{\otimes} a_n \widehat{\otimes} b)^\star = (-1)^{\sum_{r<s}|a_r||a_s| + |b|\sum_r |a_r|} a_1^* \widehat{\otimes} \dots \widehat{\otimes} a_n^* \widehat{\otimes} b^*$. *(Covering relation: $J_2 \prec J_4$)*
+* $J_5$ (**Parity Superselection of Graded Idempotents**): Exponential decay $(P_0^{\widehat{\otimes} n})^2 = 2^{-(n-1)}P_0^{\widehat{\otimes} n}$ of inhomogeneous diagonal projectors $P_0 = \frac{1}{2}(I+\eta)$ vs. exact preservation $(P_{\mathrm{even}}^{\widehat{\otimes} n})^2 = P_{\mathrm{even}}^{\widehat{\otimes} n}$ of even Morita corners $P_{\mathrm{even}} = \frac{1}{2}(I+K)$. *(Covering relation: $J_2 \prec J_5$)*
+* $J_6$ (**Two-Sided Entanglement-Rank Bridge & $\mathbb{Z}_2$-Graded Super-TT**): Sharp bounds $\frac{1}{2}r_k^\otimes(M) \le r_k^{\widehat{\otimes}}(M) \le 2r_k^\otimes(M)$ (for $\mathcal{B}_1 = \{0\}$) and local site-by-site conversion $\widetilde{W}^{[j]}_{r_{j-1},r_j} = W^{[j]}_{r_{j-1},r_j} K^{|r_j|}$ on $\mathbb{Z}_2$-graded virtual bonds. *(Covering relations: $J_3 \prec J_6,\; J_5 \prec J_6$)*
+* $J_7$ (**Asymmetric Operator-Sink Bond Law**): Exact maximal bond dimension $r_k \le \min(4^k,\; 4^{n-k}\dim_{\mathbb{R}}\mathcal{B})$ when scalar cores terminate on an operator sink $\mathcal{B}$ at site $n$. *(Covering relations: $J_0 \prec J_7,\; J_6 \prec J_7$)*
+* $J_8$ (**Odd-Dimension Halting Theorem & Tripotent Transition**): Proof that $M_N(\mathcal{B}) \cong \mathrm{Cl}_{1,1}^{\widehat{\otimes} n} \widehat{\otimes} M_r(\mathcal{B})$ ($r$ odd) halts irreducibly at $M_r(\mathcal{B})$ for $r > 1$, forcing any $\eta$-symmetric grading on $\mathbb{R}^r$ to switch from involutive $K^2 = I$ to tripotent $S^3 = S$ with $\mathrm{rank}(I - S^2) \ge 1$. *(Covering relations: $J_1 \prec J_8,\; J_3 \prec J_8$)*
+* $J_9$ (**Necessary Synthesis — Complete Braided Unrolling & Rank-Parity Coagulation**): Unbroken deductive closure uniting $J_0\text{–}J_8$. *(Covering relations: $J_4 \prec J_9,\; J_7 \prec J_9,\; J_8 \prec J_9$)*
+
+---
+
+#### 5.2. Canonical Philosophical-Algebraic Axioms
+
+* **Axiom I (Graded Coefficient Algebra — from $J_0$):**
+  Let $\mathcal{B} = \mathcal{B}_0 \oplus \mathcal{B}_1$ be a unital associative $\mathbb{Z}_2$-graded algebra over $\mathbb{R}$ ($\mathcal{B}_i \mathcal{B}_j \subseteq \mathcal{B}_{i+j \bmod 2}$), optionally equipped with an even $*$-involution ($(\mathcal{B}_i)^* = \mathcal{B}_i$, $(xy)^* = y^* x^*$).
+
+* **Axiom II ($\mathrm{Cl}_{1,1}(\mathbb{R})$ Grading Frame — from $J_1$):**
+  In $\mathrm{Cl}_{1,1}(\mathbb{R}) := M_2(\mathbb{R})$, fix $\eta := \mathrm{diag}(1, -1)$, $\Omega := \begin{psmallmatrix} 0 & 1 \\ -1 & 0 \end{psmallmatrix}$, and $K := \eta\Omega = \begin{psmallmatrix} 0 & 1 \\ 1 & 0 \end{psmallmatrix}$, assigning parity $|I| = |K| = 0$ and $|\eta| = |\Omega| = 1$.
+
+* **Axiom III (Koszul Braided Product — from $J_2$):**
+  For $\mathbb{Z}_2$-graded $\mathbb{R}$-algebras $\mathcal{A}, \mathcal{C}$, $\mathcal{A} \widehat{\otimes} \mathcal{C}$ denotes the vector space $\mathcal{A} \otimes_{\mathbb{R}} \mathcal{C}$ with multiplication $(a \widehat{\otimes} c)(a' \widehat{\otimes} c') := (-1)^{|c||a'|} (aa') \widehat{\otimes} (cc')$ on homogeneous elements and total parity $|a \widehat{\otimes} c| := |a| + |c| \pmod 2$.
+
+* **Axiom IV ($\mathbb{Z}_2$-Graded Tensor-Train Representation — from $J_6, J_7$):**
+  A $\mathbb{Z}_2$-graded Tensor Train of length $n$ over $\mathrm{Cl}_{1,1}^{\widehat{\otimes} n} \otimes_{\mathbb{R}} \mathcal{B}_0$ assigns to each cut $k \in \{1,\dots,n-1\}$ a $\mathbb{Z}_2$-graded bond index set $I_k = I_{k,0} \sqcup I_{k,1}$ ($|I_k| = r_k$, $I_0 = I_n = \{1_0\}$) and scalar-Clifford cores $W^{[j]}_{r_{j-1},r_j} \in \mathrm{Cl}_{1,1}$ ($1 \le j < n$), $W^{[n]}_{r_{n-1},1} \in \mathrm{Cl}_{1,1} \otimes_{\mathbb{R}} \mathcal{B}_0$ of homogeneous parity $|W^{[j]}_{r_{j-1},r_j}| \equiv |r_{j-1}| - |r_j| \pmod 2$.
+
+---
+
+#### 5.3. Unbroken Chain of Self-Verifying Deductions
+
+* **Deduction D1 (Exact Super-$\mathcal{B}$ Bosonization Isomorphism $\rho_n^{\mathcal{B}}$ & Chiral Rigidity — from Axioms I, II, III; edges $J_0 \prec J_1 \prec J_2 \prec J_3$):**
+  *Proof:* On homogeneous elements $a_1 \widehat{\otimes} \dots \widehat{\otimes} a_n \widehat{\otimes} b \in \mathrm{Cl}_{1,1}^{\widehat{\otimes} n} \widehat{\otimes} \mathcal{B}$, define $q_r^{\mathrm{tot}} := |b| + \sum_{s=r+1}^n |a_s| \pmod 2$ and set:
+  $$\rho_n^{\mathcal{B}}(a_1 \widehat{\otimes} \dots \widehat{\otimes} a_n \widehat{\otimes} b) := (a_1 K^{q_1^{\mathrm{tot}}}) \otimes \dots \otimes (a_n K^{q_n^{\mathrm{tot}}}) \otimes b \in M_2(\mathbb{R})^{\otimes n} \otimes_{\mathbb{R}} \mathcal{B} \cong M_{2^n}(\mathcal{B}).$$
+  Using $K^2 = I$ and $K c_r = (-1)^{|c_r|} c_r K$, multiplying against $\rho_n^{\mathcal{B}}(c_1 \widehat{\otimes} \dots \widehat{\otimes} c_n \widehat{\otimes} d)$ in the *ungraded* algebra $M_2(\mathbb{R})^{\otimes n} \otimes_{\mathbb{R}} \mathcal{B}$ yields $(a_r K^{q_r^{\mathrm{tot}}})(c_r K^{q_r'^{\mathrm{tot}}}) = (-1)^{q_r^{\mathrm{tot}}|c_r|} a_r c_r K^{q_r^{\mathrm{tot}} + q_r'^{\mathrm{tot}}}$. Summing the sign exponents over $r = 1,\dots,n$ gives:
+  $$\sum_{r=1}^n q_r^{\mathrm{tot}}|c_r| = |b|\sum_{r=1}^n |c_r| + \sum_{1 \le r < s \le n} |a_s||c_r| \pmod 2,$$
+  which equals the exact Koszul braiding sign of $(a_1 \widehat{\otimes} \dots \widehat{\otimes} a_n \widehat{\otimes} b)(c_1 \widehat{\otimes} \dots \widehat{\otimes} c_n \widehat{\otimes} d)$, while $q_r^{\mathrm{tot}} + q_r'^{\mathrm{tot}} \equiv |bd| + \sum_{s>r}|a_s c_s| \pmod 2$. Since $|K| = 0 \implies |a_r K^{q_r^{\mathrm{tot}}}| = |a_r|$ and $K^2 = I$, the inverse $(\rho_n^{\mathcal{B}})^{-1}$ applies the identical post-multiplication $a_r \mapsto a_r K^{q_r^{\mathrm{tot}}}$, realized recursively on $2 \times 2$ blocks via $\Gamma_m^{\mathcal{B}}(T \otimes b) := (-1)^{|b|}(\Gamma_m T \Gamma_m) \otimes b$. By contrast, left-placement $K^{q_r} a_r$ fails multiplicativity on $T = \eta \widehat{\otimes} I + K \widehat{\otimes} \eta$ by $4(\eta \otimes \eta) \neq 0$. $\blacksquare$
+
+* **Deduction D2 (Sign-Twisted Graded $*$-Involution — from Axioms I, II, III & D1; edge $J_2 \prec J_4$):**
+  *Proof:* Under matrix transposition $I^* = I,\; K^* = K,\; \eta^* = \eta,\; \Omega^* = -\Omega$, we have $(a_r K^{q_r^{\mathrm{tot}}})^* = K^{q_r^{\mathrm{tot}}} a_r

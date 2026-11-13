@@ -1,0 +1,120 @@
+name: Graded Clifford unrolling
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Clifford/Cl11*.lean'
+      - 'lean/InfoGeometry/Clifford/SplitCliffordMatrixEquiv.lean'
+      - 'lean/InfoGeometry/Tensor/ExactTensorTrain.lean'
+      - 'lean/InfoGeometry/Algebra/MatrixRankFactorization.lean'
+      - 'lean/InfoGeometry/Tensor/RankMinimalTensorTrain.lean'
+      - 'lean/InfoGeometry/Tensor/TensorTrainMatricization.lean'
+      - 'verification/freed-pin-compatibility/**'
+      - 'verification/cl11-graded-unrolling/**'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/cl11-graded-unrolling.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cl11-unrolling-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Fetch the exact source revision
+        shell: bash
+        env:
+          SOURCE_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/$SOURCE_REPOSITORY.git"
+          git -c protocol.version=2 fetch --depth=1 --no-tags --no-recurse-submodules origin "$SOURCE_REVISION"
+          git -c advice.detachedHead=false checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$SOURCE_REVISION"
+      - uses: actions/cache/restore@v4
+        id: pinned_cache
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: freed-pin-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'verification/freed-pin-compatibility/lake-manifest.json') }}
+      - name: Install the pinned Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < lean-toolchain)"
+      - name: Hydrate the exact dependency cache through the shared lock
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p verification/cl11-graded-unrolling/artifacts
+          python3 verification/freed-pin-compatibility/check.py exe cache get Mathlib \
+            2>&1 | tee verification/cl11-graded-unrolling/artifacts/cache.log
+          git diff --exit-code -- lean-toolchain lake-manifest.json \
+            verification/freed-pin-compatibility/lean-toolchain \
+            verification/freed-pin-compatibility/lake-manifest.json
+      - uses: actions/cache/save@v4
+        if: steps.pinned_cache.outputs.cache-hit != 'true'
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: ${{ steps.pinned_cache.outputs.cache-primary-key }}
+      - name: Compile all selected owners and audit every owned declaration
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/freed-pin-compatibility/check.py build \
+            InfoGeometry.Clifford.Cl11GradedUnrollingAudit \
+            2>&1 | tee verification/cl11-graded-unrolling/artifacts/build.log
+          python3 verification/freed-pin-compatibility/check.py env lean \
+            -DwarningAsError=true \
+            "$GITHUB_WORKSPACE/lean/InfoGeometry/Clifford/Cl11GradedUnrollingAudit.lean" \
+            2>&1 | tee verification/cl11-graded-unrolling/artifacts/axioms.log
+      - name: Record exact source evidence
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, subprocess
+          from pathlib import Path
+          audit = Path('lean/InfoGeometry/Clifford/Cl11GradedUnrollingAudit.lean')
+          modules = [line.split()[1] for line in
+                     audit.read_text().replace('«', '').replace('»', '').splitlines()
+                     if line.startswith('import InfoGeometry.')]
+          paths = [Path('lean') / (m.replace('.', '/') + '.lean') for m in modules]
+          paths += [audit, Path('lean-toolchain'), Path('lake-manifest.json')]
+          report = {
+              'commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
+              'toolchain': Path('lean-toolchain').read_text().strip(),
+              'owners': modules,
+              'source_sha256': {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
+              'scope': 'Selected owners and their import closure; root integration is separate',
+          }
+          output = Path('verification/cl11-graded-unrolling/artifacts')
+          output.mkdir(parents=True, exist_ok=True)
+          (output / 'source-evidence.json').write_text(json.dumps(report, indent=2) + '\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cl11-graded-unrolling-evidence
+          path: verification/cl11-graded-unrolling/artifacts/*
+          if-no-files-found: warn

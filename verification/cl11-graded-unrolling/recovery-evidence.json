@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "base_commit": "ce34c806983f97e7ff3c95b5d06081bd93534c5b",
+  "lean_toolchain": "leanprover/lean4:v4.34.1",
+  "mathlib_commit": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "status": "draft: source review completed; kernel and axiom acceptance pending",
+  "original_reviewed_sources": [
+    {
+      "path": "lean/InfoGeometry/Clifford/SplitCliffordMatrixEquiv.lean",
+      "sha256": "f25ebcdde341bb9b3e7af0afb9cc62a5c61d86b8c05225d5310050212a52d44b",
+      "recovered_exactly": true
+    },
+    {
+      "path": "lean/InfoGeometry/Clifford/Cl11GradedUnrolling.lean",
+      "sha256": "3efbd527cc0c259655bd691d64cfdaaef289498a82ec4e7de65a62b3444830ee",
+      "recovered_exactly": true
+    },
+    {
+      "path": "lean/InfoGeometry/Clifford/Cl11RecursiveUnrolling.lean",
+      "sha256": "824145f378dc2ec5dbb9e4ac3107ed60536747cd047e61a741111badcfe6ddd0",
+      "recovered_exactly": true
+    },
+    {
+      "path": "lean/InfoGeometry/Clifford/Cl11PureTensorObstruction.lean",
+      "sha256": "b22d75e0e57233b0ef99e254dd9269960c055f712d52763f1a6fb9de3fdfc115",
+      "recovered_exactly": true
+    },
+    {
+      "path": "lean/InfoGeometry/Clifford/Cl11TensorTrainSynthesis.lean",
+      "sha256": "3600911223bf9670cfd17f7e5ef954b752cd759ccccde173f428391772a183cb",
+      "recovered_exactly": true
+    },
+    {
+      "path": "lean/InfoGeometry/Tensor/ExactTensorTrain.lean",
+      "sha256": "21a9dd389391a0c28d99a8f8ce0ffd85860384403bcb7e2ac53d56636a37ade9",
+      "recovered_exactly": true
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/MatrixRankFactorization.lean",
+      "sha256": "926afa9d22ddca1e7c7dfe4335ff7ee2bf17be7e49975a3e9bf18493f3d8567f",
+      "recovered_exactly": true
+    },
+    {
+      "path": "lean/InfoGeometry/Tensor/RankMinimalTensorTrain.lean",
+      "sha256": "bdd05a626b3e3ff72fa669069f2cfcf8f29f02a835c03af1f3e6afd5eeff20ce",
+      "recovered_exactly": true
+    },
+    {
+      "path": "lean/InfoGeometry/Tensor/TensorTrainMatricization.lean",
+      "sha256": "2dac5abd7e8fce39f5eccf7c05c035ad1007eb612487078a5f56f1826a63113b",
+      "recovered_exactly": true
+    }
+  ],
+  "homogeneous_chain_source": {
+    "path": "lean/InfoGeometry/Clifford/Cl11HomogeneousChains.lean",
+    "sha256": "68af31177291ce913144ddfa101ffb37054c0698d923039d161e7abc2da82afa",
+    "recovery": "Creation/edit records plus explicit conv_rhs correction",
+    "independent_source_review": "No semantic blocker; no compilation performed"
+  },
+  "intake": {
+    "path": "handover/injections/cl11-graded-unrolling-source.md",
+    "sha256": "4c2d41da3c0f692a6e414e03f9c6aaa3066497cae21bc4335b37535f83c8e9d7",
+    "recovered_exactly": true
+  },
+  "source_identity_note": "Original recursion was recovered from persistent workspace after restart. The reconstructed 24-line candidate interval is not used.",
+  "local_execution": [
+    {
+      "step": "Pinned Mathlib cache hydration",
+      "exit_code": 0
+    },
+    {
+      "step": "Initial focused build",
+      "exit_code": 1,
+      "result": "No space left on device before new proof checking"
+    },
+    {
+      "step": "Relocated focused retry",
+      "exit_code": 247,
+      "result": "Reached Lake; no theorem result before execution environment became unavailable"
+    },
+    {
+      "step": "Environment recovery",
+      "result": "Persistent workspace restored; original nine source hashes matched"
+    }
+  ],
+  "source_scan": {
+    "method": "In-memory comment/string-aware targeted token scan",
+    "files": [
+      "lean/InfoGeometry/Clifford/SplitCliffordMatrixEquiv.lean",
+      "lean/InfoGeometry/Clifford/Cl11GradedUnrolling.lean",
+      "lean/InfoGeometry/Clifford/Cl11TensorTrainSynthesis.lean",
+      "lean/InfoGeometry/Clifford/Cl11PureTensorObstruction.lean",
+      "lean/InfoGeometry/Tensor/ExactTensorTrain.lean",
+      "lean/InfoGeometry/Algebra/MatrixRankFactorization.lean",
+      "lean/InfoGeometry/Tensor/RankMinimalTensorTrain.lean",
+      "lean/InfoGeometry/Tensor/TensorTrainMatricization.lean",
+      "lean/InfoGeometry/Clifford/Cl11GradedUnrollingAudit.lean",
+      "lean/InfoGeometry/Clifford/Cl11HomogeneousChains.lean",
+      "lean/InfoGeometry/Clifford/Cl11RecursiveUnrolling.lean"
+    ],
+    "forbidden_tokens_found": [],
+    "scope": "Text screening only; not the tracked staged gate or Lean axiom audit"
+  },
+  "gates": {
+    "focused_kernel": "pending",
+    "exhaustive_axioms": "pending",
+    "tracked_staged_gate": "not completed for final tree",
+    "root_integration": "not completed for final tree"
+  },
+  "source_sha256": {
+    "lean/InfoGeometry/Clifford/SplitCliffordMatrixEquiv.lean": "f25ebcdde341bb9b3e7af0afb9cc62a5c61d86b8c05225d5310050212a52d44b",
+    "lean/InfoGeometry/Clifford/Cl11GradedUnrolling.lean": "3efbd527cc0c259655bd691d64cfdaaef289498a82ec4e7de65a62b3444830ee",
+    "lean/InfoGeometry/Clifford/Cl11TensorTrainSynthesis.lean": "3600911223bf9670cfd17f7e5ef954b752cd759ccccde173f428391772a183cb",
+    "lean/InfoGeometry/Clifford/Cl11PureTensorObstruction.lean": "b22d75e0e57233b0ef99e254dd9269960c055f712d52763f1a6fb9de3fdfc115",
+    "handover/injections/cl11-graded-unrolling-source.md": "4c2d41da3c0f692a6e414e03f9c6aaa3066497cae21bc4335b37535f83c8e9d7",
+    "lean/InfoGeometry/Tensor/ExactTensorTrain.lean": "21a9dd389391a0c28d99a8f8ce0ffd85860384403bcb7e2ac53d56636a37ade9",
+    "lean/InfoGeometry/Algebra/MatrixRankFactorization.lean": "926afa9d22ddca1e7c7dfe4335ff7ee2bf17be7e49975a3e9bf18493f3d8567f",
+    "lean/InfoGeometry/Tensor/RankMinimalTensorTrain.lean": "bdd05a626b3e3ff72fa669069f2cfcf8f29f02a835c03af1f3e6afd5eeff20ce",
+    "lean/InfoGeometry/Tensor/TensorTrainMatricization.lean": "2dac5abd7e8fce39f5eccf7c05c035ad1007eb612487078a5f56f1826a63113b",
+    "lean/InfoGeometry/Clifford/Cl11GradedUnrollingAudit.lean": "a933f0336563f5db24a4469875b76a2e6389b3235cce2a03de829987119a4801",
+    ".github/workflows/cl11-graded-unrolling.yml": "f7e0462f16b04a50ba484b47ec4dc66eaa06d3c840011be8bd7499605cc3efb8",
+    "lean/InfoGeometry/Clifford/Cl11HomogeneousChains.lean": "68af31177291ce913144ddfa101ffb37054c0698d923039d161e7abc2da82afa",
+    "docs/CLIFFORD_GRADED_UNROLLING_CONTRACT.md": "0aa75bfc8dfd65c5e66d085c38f539553f5cf6d7dcc4731c9422e33149ce4f36",
+    "verification/cl11-graded-unrolling/README.md": "ce37b6dfa3924bfe8c892cd8045b308db3944c2234c50feaccc15eee56e5e565",
+    "lean/InfoGeometry/Clifford/Cl11RecursiveUnrolling.lean": "824145f378dc2ec5dbb9e4ac3107ed60536747cd047e61a741111badcfe6ddd0"
+  },
+  "semantic_boundaries": [
+    "Left-head representation constructed independently; no equality with older right-head coordinate map",
+    "Rank statements apply to field-valued corrected coefficients",
+    "Minimality excludes supplied incoming bond and permits zero-dimensional bonds",
+    "Terminal-vector absorption and local Clifford-valued W-core contraction are not separately formalized",
+    "Forward homogeneous suffix readback proved in source; separate closed-form homogeneous inverse is not stated"
+  ]
+}

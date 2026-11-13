@@ -44,6 +44,7 @@ PROTECTED = PATHS + [AUDIT] + [
      "lean-toolchain", "README.md", "VACUITY_REVIEW.json"]
 ] + [
     ".github/workflows/twistor-homotope.yml",
+    "tests/test_twistor_homotope_controls.py",
     "docs/TWISTOR_HOMOTOPE_INVARIANTS_CONTRACT.md",
     "docs/intake/TWISTOR_HOMOTOPE_STREAM_2026_11_11.txt",
 ]
@@ -56,6 +57,12 @@ CONTROLS = [
     "tools/infra/opengauss_ground_truth_contract.py",
     "tools/quality/proof_proxy_staged_gate.py", "scripts/vacuity-linter.py",
 ]
+# The T16 identifier-boundary correction is reviewed with positive and negative
+# regressions in tests/test_opengauss_protocols.py at this immutable revision.
+# Every other control remains bound to BASE; this is not a current-HEAD waiver.
+CONTROL_SOURCE_REVISIONS = {
+    "tools/infra/opengauss_screener.py": "8b270668ea5ce0f0361f606ed09dc94f28922a78",
+}
 
 
 def digest(data: bytes) -> str:
@@ -86,11 +93,16 @@ def verify_committed_sources() -> None:
 
 
 def control_fingerprints() -> dict:
+    require(set(CONTROL_SOURCE_REVISIONS) <= set(CONTROLS),
+            "Reviewed reference names an unknown root control")
     hashes = {}
     for path in CONTROLS:
         current = (ROOT / path).read_bytes()
-        require(current == committed_bytes("HEAD", path) == committed_bytes(BASE, path),
-                "Root control differs from implementation base: " + path)
+        reference = CONTROL_SOURCE_REVISIONS.get(path, BASE)
+        require(current == committed_bytes("HEAD", path),
+                "Root control differs from committed source: " + path)
+        require(current == committed_bytes(reference, path),
+                "Root control differs from reviewed reference " + reference + ": " + path)
         hashes[path] = digest(current)
     return hashes
 
@@ -163,13 +175,21 @@ def main() -> None:
     verify_committed_sources()
     controls_before = control_fingerprints()
     report = {
-        "schema": "twistor-homotope-executed-checks-v1",
+        "schema": "twistor-homotope-executed-checks-v2",
         "disposition": "RUNNING", "independent_qa_acceptance": False,
         "started_utc": datetime.now(timezone.utc).isoformat(),
         "git_head": head, "git_tree": git("rev-parse", "HEAD^{tree}"),
         "implementation_base": BASE, "source_sha256": before,
         "python_version": sys.version,
-        "unchanged_root_control_sha256": controls_before,
+        "root_control_reference_revisions": {
+            path: CONTROL_SOURCE_REVISIONS.get(path, BASE) for path in CONTROLS},
+        "root_control_sha256": controls_before,
+        "unchanged_root_control_sha256": {
+            path: sha for path, sha in controls_before.items()
+            if path not in CONTROL_SOURCE_REVISIONS},
+        "reviewed_root_control_updates": {
+            path: {"revision": revision, "sha256": controls_before[path]}
+            for path, revision in CONTROL_SOURCE_REVISIONS.items()},
         "workflow_run_id": os.environ.get("GITHUB_RUN_ID"),
         "workflow_run_attempt": os.environ.get("GITHUB_RUN_ATTEMPT"),
         "shared_lock": lock, "commands": [],

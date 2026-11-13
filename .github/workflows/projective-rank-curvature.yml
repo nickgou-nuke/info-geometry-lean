@@ -18,6 +18,9 @@ on:
       - 'lean/InfoGeometry/OperatorAlgebra/CentralCurvingBianchi.lean'
       - 'handover/injections/gapped-torsion-anomalies-20261112.txt'
       - 'tests/test_opengauss_protocols.py'
+      - 'tests/test_twistor_homotope_controls.py'
+      - 'verification/twistor-homotope/verify.py'
+      - 'verification/twistor-homotope/README.md'
       - 'tools/quality/check_clifford_dirac.py'
       - 'tools/quality/check_reviewed_prs.py'
       - 'tools/quality/reviewed_audit_source.py'
@@ -120,7 +123,7 @@ jobs:
               subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
                   cwd='mathlib', check=True, pass_fds=(lock.fileno(),))
           PY
-      - name: Run strict screener regressions
+      - name: Run strict screener and control-reference regressions
         working-directory: project
         shell: bash
         run: |
@@ -132,7 +135,8 @@ jobs:
           out.mkdir(exist_ok=True)
           with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'projective-rank-screener-tests') as lock:
               result = subprocess.run([sys.executable, '-m', 'pytest',
-                  'tests/test_opengauss_protocols.py', '-q'], text=True,
+                  'tests/test_opengauss_protocols.py',
+                  'tests/test_twistor_homotope_controls.py', '-q'], text=True,
                   stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                   pass_fds=(lock.fileno(),))
           (out / 'screener-regression.log').write_text(result.stdout)
@@ -218,6 +222,9 @@ jobs:
                        'tools/quality/semantic_vacuity_patterns.json',
                        'tools/infra/opengauss_screener.py',
                        'tests/test_opengauss_protocols.py',
+                       'tests/test_twistor_homotope_controls.py',
+                       'verification/twistor-homotope/verify.py',
+                       'verification/twistor-homotope/README.md',
                        'lean-toolchain', 'lake-manifest.json']:
               index['repository/' + name] = hashlib.sha256(Path(name).read_bytes()).hexdigest()
           for path in sorted(out.glob('*.json')):

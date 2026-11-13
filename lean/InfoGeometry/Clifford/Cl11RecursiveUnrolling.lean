@@ -167,7 +167,6 @@ theorem headTensorEquiv_involute (n : ℕ) (x : Clsplit (n + 1)) :
           (nativeParity_even n) (nativeParity_odd n)
           (headTensorEquiv n (CliffordAlgebra.ι (Qsplit (n + 1)) v))
     rw [CliffordAlgebra.involute_ι, map_neg]
-    simp only [headTensorEquiv_ι, map_add, tensorParity_tmul, map_one]
     simp [nativeParity, GradedTensorProduct.tmul, TensorProduct.neg_tmul,
       TensorProduct.tmul_neg]
   exact AlgHom.congr_fun h x

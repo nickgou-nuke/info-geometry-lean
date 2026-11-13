@@ -1,0 +1,204 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Algebra.CentralPowerLocalization
+import InfoGeometry.Algebra.CentralPowerLocalizationStar
+import InfoGeometry.Algebra.CentralPowerLocalizationColimit
+import InfoGeometry.Analysis.RealStarSquareFaithfulness
+import InfoGeometry.Analysis.RealSupportCoercivity
+import InfoGeometry.OperatorAlgebra.PeirceSpine.OnShellKernel
+import InfoGeometry.OperatorAlgebra.PeirceSpine.CayleyKernelRegularity
+import InfoGeometry.OperatorAlgebra.PeirceSpine.CayleyKernelLocalization
+import InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness
+
+/-!
+# Peirce kernel localization declaration audit
+
+This target audits the explicitly named public declarations, including
+named instances, in the nine mathematical owners above. It does not
+enumerate Lean-generated declarations. Dependencies of private helpers
+are audited transitively through the listed heads.
+
+Regenerate with `python3 verification/peirce-kernel-localization/audit.py --write`.
+Source inventory, kernel compilation, axiom checking, and semantic
+review are separate checks. This target is not an umbrella import.
+-/
+
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.power_commute
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.denominator_commute
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.powersOreSet
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.Away
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.repr
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.of
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.repr_zero
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.repr_zero_numerator
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.repr_mul
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.repr_add
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.repr_add_same
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.repr_bond
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.fraction_eq_iff_cross
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.repr_eq_iff
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.repr_eq_iff_common_stage
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.exists_repr
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.of_eq_zero_iff
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.of_eq_zero_of_mul_eq_zero
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.power_mul_eq_zero
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.of_injective
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.not_injective_of_annihilator
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.inverse
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.of_mul_inverse
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.inverse_mul_of
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.lift
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.lift_of
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.lift_unique
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.existsUnique_lift_of_isUnit
+
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.star_denominator
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.star_cross_product
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.fraction_star_congr
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.starMap
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.awayStar
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.star_repr
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.awayInvolutiveStar
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.awayStarMul
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.awayStarRing
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.star_of
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.star_inverse
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.repr_self_power
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.cayley
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.star_cayley_mul
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.cayley_mul_star
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.cayley_unitary
+
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.transition
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.transition_zero
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.transition_comp
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.stage
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.stage_transition
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.stageLinearMap
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.bonding_preserves_one_iff
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.cocone_value_eq
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.descFun
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.descFun_repr
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.additiveDesc
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.additiveDesc_repr
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.additiveDesc_unique
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.existsUnique_additiveDesc
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.moduleDesc
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.moduleDesc_repr
+#print axioms InfoGeometry.Algebra.CentralPowerLocalization.existsUnique_moduleDesc
+
+#print axioms InfoGeometry.Analysis.RealStarSquareFaithfulness.three_star_squares_first
+#print axioms InfoGeometry.Analysis.RealStarSquareFaithfulness.three_star_squares_eq_zero
+#print axioms InfoGeometry.Analysis.RealStarSquareFaithfulness.star_square_eq_zero
+
+#print axioms InfoGeometry.Analysis.RealSupportCoercivity.not_positive_sub_identity_of_kernel
+#print axioms InfoGeometry.Analysis.RealSupportCoercivity.isPositive_iff_of_orthonormal_eigenbasis
+#print axioms InfoGeometry.Analysis.RealSupportCoercivity.supportProjection
+#print axioms InfoGeometry.Analysis.RealSupportCoercivity.supportProjection_range
+#print axioms InfoGeometry.Analysis.RealSupportCoercivity.supportProjection_ker
+#print axioms InfoGeometry.Analysis.RealSupportCoercivity.supportProjection_idempotent
+#print axioms InfoGeometry.Analysis.RealSupportCoercivity.supportProjection_isSymmetric
+#print axioms InfoGeometry.Analysis.RealSupportCoercivity.supportProjection_mul
+#print axioms InfoGeometry.Analysis.RealSupportCoercivity.supportProjection_apply_eigenvector
+#print axioms InfoGeometry.Analysis.RealSupportCoercivity.gap_defect_positive_iff_support_bound
+#print axioms InfoGeometry.Analysis.RealSupportCoercivity.gap_defect_nonneg_iff_support_le
+#print axioms InfoGeometry.Analysis.RealSupportCoercivity.decliningScale
+#print axioms InfoGeometry.Analysis.RealSupportCoercivity.decliningProjection
+#print axioms InfoGeometry.Analysis.RealSupportCoercivity.decliningScale_pos
+#print axioms InfoGeometry.Analysis.RealSupportCoercivity.decliningProjection_defect
+#print axioms InfoGeometry.Analysis.RealSupportCoercivity.decliningProjection_positive
+#print axioms InfoGeometry.Analysis.RealSupportCoercivity.decliningProjection_own_gap
+#print axioms InfoGeometry.Analysis.RealSupportCoercivity.exists_decliningScale_lt
+#print axioms InfoGeometry.Analysis.RealSupportCoercivity.decliningProjection_no_uniform_gap
+
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.generatedPeirceRing
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.cut_mem_generatedPeirceRing
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus_mem_generatedPeirceRing
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus_mem_generatedPeirceRing
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.genV_mem_generatedPeirceRing
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.genJ_mem_generatedPeirceRing
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.genV_commute_of_mem_generated
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.genV_idempotent_iff_qgt_idempotent
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.onShell_kernel_idempotent
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.onShell_genV_kernel_products
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.onShell_shift_fixes_kernel
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.onShell_shift_pow_fixes_kernel
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.onShell_partition_sum
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.onShell_kernel_cycle_products
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.onShell_genSig_square
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.onShell_genSig_cube
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.star_mem_generatedPeirceRing
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.generatedPeirceRingStarRing
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.coe_star_generatedPeirceRing
+
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.cayleyKernelNumerator
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.cayleyKernelNumeratorConj
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.cayleyKernelNumerator_mem_generated
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.cayleyKernelNumerator_products
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.star_cayleyKernelNumerator
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.cayleyKernelNumerator_star_products
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.star_proper_of_three_square_faithful
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.one_add_genV_mul_eq_zero_iff
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.one_add_genV_pow_mul_eq_zero_iff
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.one_add_genV_mul_injective
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.onShell_kernel_mul_conePlus_eq_zero
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.onShell_conePlus_inner_regular
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.onShell_isMoorePenroseInverse
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.onShell_kernel_annihilates_arrows
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.onShell_three_star_projections
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.onShell_cayleyKernelNumerator_partial_flip
+
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.CayleyKernelLocalization.seed
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.CayleyKernelLocalization.metric
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.CayleyKernelLocalization.shift
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.CayleyKernelLocalization.numerator
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.CayleyKernelLocalization.lowerCycle
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.CayleyKernelLocalization.metricCentral
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.CayleyKernelLocalization.shiftCentral
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.CayleyKernelLocalization.metricSelfAdjoint
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.CayleyKernelLocalization.shiftSelfAdjoint
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.CayleyKernelLocalization.localizedCayley
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.CayleyKernelLocalization.localizedCayley_unitary
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.CayleyKernelLocalization.localizedProjection
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.CayleyKernelLocalization.localizedProjection_isStarProjection
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.CayleyKernelLocalization.localizedProjection_partial_flip
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.CayleyKernelLocalization.singular_kills_kernel
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.CayleyKernelLocalization.singular_not_injective
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.CayleyKernelLocalization.shifted_kernel_ne_zero
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.CayleyKernelLocalization.shifted_injective
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.CayleyKernelLocalization.shifted_injective_real_hilbert
+
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.Op3
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.cut3
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.coupling3
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.paired3
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.zeroMode3
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.cut3_projection
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.coupling3_selfAdjoint
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.coupling3_noncommuting
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.metric3_value
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.metric3_idempotent
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.metric3_ne_zero
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.metric3_ne_one
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.kernel3_value
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.kernel3_ne_zero
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.metric3_kills_kernel
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.shifted_metric3_fixes_kernel
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.Op4
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.cut4
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.coupling4
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.kernelPlus4
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.kernelMinus4
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.cut4_projection
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.coupling4_selfAdjoint
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.coupling4_noncommuting
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.metric4_value
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.metric4_idempotent
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.kernelPlus4_value
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.kernelMinus4_value
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.kernel4_corners_mem_generated
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.kernel4_corners_nonzero
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.KernelMatrixWitness.kernel4_corners_independent

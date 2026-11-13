@@ -109,7 +109,7 @@ theorem dirac_volume (ψ : PlanePoint → Spinor)
     (volumeAction.hasFDerivAt.comp p (hψ p).hasFDerivAt).fderiv
   simp only [dirac, hf, ContinuousLinearMap.comp_apply]
   ext i
-  fin_cases i <;> simp [gammaX_apply, gammaY_apply, volumeAction_apply]
+  fin_cases i <;> simp [gammaX_apply, gammaY_apply, volumeAction_apply, add_comm]
 
 /-- This commutation equation holds on the actual smooth sections. -/
 theorem dirac_volume_smooth (ψ : smoothSections false) :

@@ -46,7 +46,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           path: project
-          persist-credentials: false
+          # Unrelated gitlinks lack .gitmodules entries, so checkout's recursive
+          # cleanup fails. Remove this checkout's credential directly below.
+          persist-credentials: true
+          submodules: false
+      - name: Remove project checkout credential
+        run: git -C project config --local --unset-all http.https://github.com/.extraheader
       - name: Read exact dependency pins
         id: pins
         shell: bash

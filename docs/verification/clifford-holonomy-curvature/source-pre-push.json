@@ -1,0 +1,13 @@
+{
+  "command": [
+    "bash",
+    ".githooks/pre-push",
+    "origin",
+    "https://github.com/nickgou-nuke/info-geometry-lean.git"
+  ],
+  "stdin": "refs/heads/codex/ordered-bch-holonomy-curvature 3a584a2859ebe5854f1c0f906cfb917c9c548249 refs/heads/codex/ordered-bch-holonomy-curvature 0000000000000000000000000000000000000000\n",
+  "returncode": 1,
+  "head": "3a584a2859ebe5854f1c0f906cfb917c9c548249",
+  "base": "a392af178af1fe2bcba2ba39eb405700c6ee103c",
+  "timestamp_utc": "2026-11-12T20:38:21.715422+00:00"
+}

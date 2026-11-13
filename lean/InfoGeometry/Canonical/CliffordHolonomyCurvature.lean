@@ -3,82 +3,80 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-import InfoGeometry.Algebra.UnitriangularBCH
-import InfoGeometry.Clifford.Cl22QuaternionCayley
-import InfoGeometry.Quantum.OperatorWeylHolonomy
+import InfoGeometry.Clifford.SplitAtomQuaternion
+import InfoGeometry.Algebra.StrictUpperBCH3
+import InfoGeometry.Geometry.AssociativeBianchi
+import InfoGeometry.OperatorAlgebra.WeightedPermutationHolonomy
 
 /-!
-# Explicit specializations connecting operator holonomy to BCH and quaternion axes
+# Clifford pairs, exact BCH coordinates, and operator curvature
 
-These are actual maps between the independently constructed lanes. The BCH
-exponential provides unit labels for the permutation lattice, whose holonomy
-is exactly one plus the nilpotent matrix bracket. Quaternion Cayley units give
-a second nonflat holonomy, with the characteristic-two boundary explicit.
-The imported quaternion owner separately realizes constant-axis differential
-curvature. No limiting map from discrete holonomy to derivatives is asserted.
+The imported owners describe independent algebraic branches. The substantive
+bridge here uses the constructed nested quaternion pair as connection
+potentials. Its curvature has the stated constant-axis value when the corresponding
+base derivatives annihilate those axes. Zero derivations provide an explicit
+realization; the existing gauge owner then transports this curvature by units.
+
+The coefficient ring may itself be `Module.End R M` with no finite-dimensional
+hypothesis. No continuum limit, Clifford classification over arbitrary scalar
+rings, compact Lie group, or analytic field theory is inferred.
 -/
 
 namespace InfoGeometry.Canonical.CliffordHolonomyCurvature
 
-open InfoGeometry.Algebra.UnitriangularBCH
-open InfoGeometry.Quantum.OperatorWeylHolonomy
-open InfoGeometry.Clifford.Cl22QuaternionCayley
+open InfoGeometry.Clifford.SplitAtomDoubling
+open InfoGeometry.Clifford.SplitAtomQuaternion
+open InfoGeometry.Geometry.AssociativeGaugeConnection
 
-variable {ι A : Type*} [Ring A]
+variable {B : Type*} [Ring B]
 
-/-- Constant exponential edge labels turn the lattice plaquette into the exact
-noncommutative BCH commutator. No finiteness of the vertex type is needed. -/
-theorem unipotent_holonomy [Invertible (2 : A)] (σ : Equiv.Perm ι)
-    (x y : BCH3 A) (i : ι) :
-    ((holonomy σ (fun _ => expUnitHom y) (fun _ => expUnitHom x) i :
-        (Matrix (Fin 3) (Fin 3) A)ˣ) : Matrix (Fin 3) (Fin 3) A) =
-      1 + (nilpotentMatrix x * nilpotentMatrix y -
-        nilpotentMatrix y * nilpotentMatrix x) :=
-  expUnitHom_commutator x y
+/-- The derivative correction and the actual quaternion commutator. -/
+theorem spinor_curvature_formula (D E : Module.End ℤ (Block2 (Block2 B))) :
+    curvature D E firstAxis secondAxis =
+      D secondAxis - E firstAxis + 2 * thirdAxis := by
+  rw [curvature, add_sub_assoc, first_second_commutator]
 
-/-- The same BCH curvature is the diagonal of the group commutator of the
-actual weighted permutation and vertex matrices. -/
-theorem unipotent_matrix_commutator [Fintype ι] [DecidableEq ι]
-    [Invertible (2 : A)] (σ : Equiv.Perm ι) (x y : BCH3 A) :
-    (((vertexUnit (fun _ : ι => expUnitHom x) *
-        shiftUnit σ (fun _ => expUnitHom y) *
-        (vertexUnit (fun _ : ι => expUnitHom x))⁻¹ *
-        (shiftUnit σ (fun _ => expUnitHom y))⁻¹) :
-        (Matrix ι ι (Matrix (Fin 3) (Fin 3) A))ˣ) :
-        Matrix ι ι (Matrix (Fin 3) (Fin 3) A)) =
-      Matrix.diagonal (fun _ =>
-        1 + (nilpotentMatrix x * nilpotentMatrix y -
-          nilpotentMatrix y * nilpotentMatrix x)) := by
-  rw [← holonomyUnit_eq_group_commutator]
-  change Matrix.diagonal (fun i =>
-    ((holonomy σ (fun _ => expUnitHom y) (fun _ => expUnitHom x) i :
-      (Matrix (Fin 3) (Fin 3) A)ˣ) : Matrix (Fin 3) (Fin 3) A)) = _
-  congr 1
-  funext i
-  exact unipotent_holonomy σ x y i
+/-- The constant value occurs exactly when the two derivative terms cancel. -/
+theorem spinor_curvature_eq_iff (D E : Module.End ℤ (Block2 (Block2 B))) :
+    curvature D E firstAxis secondAxis = 2 * thirdAxis ↔
+      D secondAxis = E firstAxis := by
+  simp only [spinor_curvature_formula, add_eq_right, sub_eq_zero]
 
-/-- The quaternion Cayley factors supply genuinely nonflat operator holonomy
-whenever the displayed twice-identity is nonzero. -/
-theorem quaternion_holonomy_ne_one [Invertible (2 : Nested A)]
-    (h2 : (2 : Nested A) ≠ 0) (σ : Equiv.Perm ι) (i : ι) :
-    holonomy σ
-      (fun _ => cayleyUnit (axisJ : Nested A) axisJ_square)
-      (fun _ => cayleyUnit (axisI : Nested A) axisI_square) i ≠ 1 := by
-  intro h
-  have hc := (holonomy_eq_one_iff_edge_commutes σ _ _ i).mp h
-  have hm := congrArg (fun u : (Nested A)ˣ => (u : Nested A)) hc
-  exact cayley_factors_do_not_commute h2 hm
+/-- A constant-axis specialization with explicit sufficient hypotheses. -/
+theorem spinor_curvature
+    (D E : Module.End ℤ (Block2 (Block2 B)))
+    (hD : D secondAxis = 0) (hE : E firstAxis = 0) :
+    curvature D E firstAxis secondAxis = 2 * thirdAxis := by
+  simpa only [curvature, hD, hE, sub_self, zero_add] using
+    (first_second_commutator (B := B))
 
-/-- The nonflat quaternion plaquette obstructs commutation in its full
-weighted matrix representation whenever a vertex is supplied. -/
-theorem quaternion_matrix_do_not_commute [Fintype ι] [DecidableEq ι]
-    [Invertible (2 : Nested A)] (h2 : (2 : Nested A) ≠ 0)
-    (σ : Equiv.Perm ι) (i : ι) :
-    ¬ Commute
-      (vertexUnit (fun _ : ι => cayleyUnit (axisI : Nested A) axisI_square))
-      (shiftUnit σ (fun _ => cayleyUnit (axisJ : Nested A) axisJ_square)) := by
-  intro h
-  have hflat := (holonomy_eq_one_iff_matrix_commute σ _ _).mpr h
-  exact quaternion_holonomy_ne_one h2 σ i (congrFun hflat i)
+/-- A constructed constant-curvature example over every coefficient ring. -/
+theorem spinor_curvature_zero :
+    curvature (0 : Module.End ℤ (Block2 (Block2 B))) 0 firstAxis secondAxis =
+      2 * thirdAxis :=
+  spinor_curvature 0 0 rfl rfl
+
+/-- The curvature acts on unrestricted nested operator matrices. -/
+theorem spinor_curvature_action
+    (D E : Module.End ℤ (Block2 (Block2 B)))
+    (hD : IsLeibniz D) (hE : IsLeibniz E)
+    (hcomm : ∀ X, D (E X) = E (D X))
+    (hDaxis : D secondAxis = 0) (hEaxis : E firstAxis = 0)
+    (X : Block2 (Block2 B)) :
+    covariantDerivative D firstAxis (covariantDerivative E secondAxis X) -
+      covariantDerivative E secondAxis (covariantDerivative D firstAxis X) =
+        (2 * thirdAxis) * X := by
+  rw [curvature_action D E hD hE hcomm, spinor_curvature D E hDaxis hEaxis]
+
+/-- Existing affine gauge transport applied to the actual constant spinor
+curvature, with arbitrary units of the full operator matrix ring. -/
+theorem spinor_curvature_zero_gauge (u : (Block2 (Block2 B))ˣ) :
+    curvature (0 : Module.End ℤ (Block2 (Block2 B))) 0
+      (gaugePotential (R := ℤ) 0 firstAxis u) (gaugePotential (R := ℤ) 0 secondAxis u) =
+        conjugate u (2 * thirdAxis) := by
+  have hzero : IsLeibniz (0 : Module.End ℤ (Block2 (Block2 B))) := by
+    intro X Y
+    simp
+  rw [curvature_gauge_covariant 0 0 hzero hzero (fun _ => rfl), spinor_curvature_zero]
 
 end InfoGeometry.Canonical.CliffordHolonomyCurvature

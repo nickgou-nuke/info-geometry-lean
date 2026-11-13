@@ -1,0 +1,14 @@
+{
+  "source-closure.json": "95794da55390c30963abe045c4c247555e408cbf2c7960e821c581a75b74f00c",
+  "axiom-audit.txt": "b130ad1d24e6776753e74099dcd88d78f52362decdc7191b7aa661e2867fa9b1",
+  "native-logs.json": "801f26fbf225892a5d49ed97e88cc8a81e5bafff5aa366c20770509b2ff00854",
+  "static-gates.json": "c74e427b06f995ceacb76a424518d910985ac10cfd34e299c065331daab8b768",
+  "semantic-findings.json": "1ee33e0e3e169ce1a5b115ed1c82dd6b7514c4ce7658b8776c49632b257b9906",
+  "placeholder-findings.json": "91b166dc3d96c6ced3969b2d9b70ea200782e58056bde40c4203063dbf2e9dc6",
+  "independent-acceptance.md": "f6d18a61a2ca982fb6cf267763fc7411d41e4070922d12f7bc82e670f39d5438",
+  "root-build.json": "a3ae27bffd4f326a6b0fb8381ce2897076f82b80cb3afae9372d59814b2e37d3",
+  "root-build.txt": "ffbecf31a1bc74274726e990281b54db59397bef19595832406cc36f537e50a9",
+  "source-pre-push.json": "11bf5d8a50e87ba5da6e197a47453cd6beecb0e8409338124ad99f1ccefe726e",
+  "source-pre-push.txt": "74294abd42d66768dca75083933ef3826cd9b19e316056e6d6b5a2d9e8374820",
+  "../CLIFFORD_HOLONOMY_CURVATURE_VERIFICATION.md": "1ef24a0e868b0343e86ec2a28ab4687c0779e899b14ff71c2583b37d06967276"
+}

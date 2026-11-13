@@ -1,0 +1,237 @@
+{
+  "authority": "lexical heuristics; not a semantic or kernel proof",
+  "blocking_severity_counts": {
+    "warning": 22
+  },
+  "counts": {
+    "trivial_surface": 22
+  },
+  "coverage_complete": true,
+  "fail_on": "warning",
+  "fail_prefixes": [],
+  "files_scanned": 11,
+  "files_selected": 11,
+  "findings": [
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/Algebra/QuaternionCayleyPair.lean",
+      "line": 154,
+      "severity": "warning",
+      "subject": "coe_cayleyFactorUnit"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/Algebra/QuaternionCayleyPair.lean",
+      "line": 157,
+      "severity": "warning",
+      "subject": "coe_cayleyFactorUnit_inv"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/Algebra/StrictUpper3.lean",
+      "line": 92,
+      "severity": "warning",
+      "subject": "onePlusUnit_val"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/Algebra/StrictUpper3.lean",
+      "line": 95,
+      "severity": "warning",
+      "subject": "onePlusUnit_inv_val"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/Algebra/StrictUpperBCH3.lean",
+      "line": 135,
+      "severity": "warning",
+      "subject": "bch_neg"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/Algebra/StrictUpperBCH3.lean",
+      "line": 154,
+      "severity": "warning",
+      "subject": "expEquiv_unit"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/Algebra/StrictUpperBCH3.lean",
+      "line": 174,
+      "severity": "warning",
+      "subject": "expMulEquiv_unit"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/Canonical/CliffordHolonomyCurvature.lean",
+      "line": 40,
+      "severity": "warning",
+      "subject": "spinor_curvature_eq_iff"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/Geometry/AssociativeBianchi.lean",
+      "line": 40,
+      "severity": "warning",
+      "subject": "adjointCovariantDerivative_apply"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/OperatorAlgebra/InnerConjugation.lean",
+      "line": 50,
+      "severity": "warning",
+      "subject": "innerConjugationRingEquiv_apply"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/InnerConjugation.lean",
+      "line": 290,
+      "severity": "warning",
+      "subject": "innerConjugationNat_zero"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.lean",
+      "line": 30,
+      "severity": "warning",
+      "subject": "RingHom.map_grandCanonicalOperator"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.lean",
+      "line": 103,
+      "severity": "warning",
+      "subject": "RingHom.map_quadraticCommutator"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean",
+      "line": 58,
+      "severity": "warning",
+      "subject": "RingHom.map_operatorThermalCreator"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean",
+      "line": 152,
+      "severity": "warning",
+      "subject": "thermalAnnihilator_map"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean",
+      "line": 159,
+      "severity": "warning",
+      "subject": "thermalCreator_map"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/OperatorAlgebra/WeightedPermutationHolonomy.lean",
+      "line": 74,
+      "severity": "warning",
+      "subject": "coe_diagonalUnit"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/OperatorAlgebra/WeightedPermutationHolonomy.lean",
+      "line": 79,
+      "severity": "warning",
+      "subject": "coe_diagonalUnit_inv"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/OperatorAlgebra/WeightedPermutationHolonomy.lean",
+      "line": 94,
+      "severity": "warning",
+      "subject": "coe_permutationUnit"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/OperatorAlgebra/WeightedPermutationHolonomy.lean",
+      "line": 99,
+      "severity": "warning",
+      "subject": "coe_permutationUnit_inv"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/OperatorAlgebra/WeightedPermutationHolonomy.lean",
+      "line": 108,
+      "severity": "warning",
+      "subject": "coe_weightedShift"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/OperatorAlgebra/WeightedPermutationHolonomy.lean",
+      "line": 114,
+      "severity": "warning",
+      "subject": "coe_weightedShift_inv"
+    }
+  ],
+  "pattern_version": 1,
+  "read_failures": [],
+  "scope_roots": [
+    "lean/InfoGeometry/Algebra/StrictUpper3.lean",
+    "lean/InfoGeometry/Algebra/StrictUpperBCH3.lean",
+    "lean/InfoGeometry/Algebra/QuaternionCayleyPair.lean",
+    "lean/InfoGeometry/Clifford/SplitAtomQuaternion.lean",
+    "lean/InfoGeometry/Geometry/AssociativeBianchi.lean",
+    "lean/InfoGeometry/OperatorAlgebra/WeightedPermutationHolonomy.lean",
+    "lean/InfoGeometry/Canonical/CliffordHolonomyCurvature.lean",
+    "lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean",
+    "lean/InfoGeometry/OperatorAlgebra/ThreeZ2OperatorGradings.lean",
+    "lean/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.lean",
+    "lean/InfoGeometry/OperatorAlgebra/InnerConjugation.lean"
+  ],
+  "severity_counts": {
+    "warning": 22
+  },
+  "source_paths": [
+    "lean/InfoGeometry/Algebra/QuaternionCayleyPair.lean",
+    "lean/InfoGeometry/Algebra/StrictUpper3.lean",
+    "lean/InfoGeometry/Algebra/StrictUpperBCH3.lean",
+    "lean/InfoGeometry/Canonical/CliffordHolonomyCurvature.lean",
+    "lean/InfoGeometry/Clifford/SplitAtomQuaternion.lean",
+    "lean/InfoGeometry/Geometry/AssociativeBianchi.lean",
+    "lean/InfoGeometry/OperatorAlgebra/InnerConjugation.lean",
+    "lean/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.lean",
+    "lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean",
+    "lean/InfoGeometry/OperatorAlgebra/ThreeZ2OperatorGradings.lean",
+    "lean/InfoGeometry/OperatorAlgebra/WeightedPermutationHolonomy.lean"
+  ],
+  "successfully_read_paths": [
+    "lean/InfoGeometry/Algebra/QuaternionCayleyPair.lean",
+    "lean/InfoGeometry/Algebra/StrictUpper3.lean",
+    "lean/InfoGeometry/Algebra/StrictUpperBCH3.lean",
+    "lean/InfoGeometry/Canonical/CliffordHolonomyCurvature.lean",
+    "lean/InfoGeometry/Clifford/SplitAtomQuaternion.lean",
+    "lean/InfoGeometry/Geometry/AssociativeBianchi.lean",
+    "lean/InfoGeometry/OperatorAlgebra/InnerConjugation.lean",
+    "lean/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.lean",
+    "lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean",
+    "lean/InfoGeometry/OperatorAlgebra/ThreeZ2OperatorGradings.lean",
+    "lean/InfoGeometry/OperatorAlgebra/WeightedPermutationHolonomy.lean"
+  ],
+  "tracked": false
+}

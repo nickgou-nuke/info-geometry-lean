@@ -1,0 +1,212 @@
+{
+  "records": [
+    {
+      "label": "placeholder-StrictUpper3",
+      "command": [
+        "python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/Algebra/StrictUpper3.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/chain-qa-review/placeholder-StrictUpper3.json"
+      ],
+      "returncode": 0,
+      "output": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-12T20:30:39.139598+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **1**\n- Total findings: **1** (hard=0, soft=1, advisory=0)\n\n## `InfoGeometry.Algebra.StrictUpper3`\n- path: `lean/InfoGeometry/Algebra/StrictUpper3.lean`\n- findings: 1 (hard=0, soft=1, advisory=0)\n\n- L77: **SOFT** `skeletal-proof` in `theorem cube_zero`\n  - proof appears to be tactic-automation-only or skeletal\n  - `75:   ext i j`\n\n\n"
+    },
+    {
+      "label": "placeholder-StrictUpperBCH3",
+      "command": [
+        "python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/Algebra/StrictUpperBCH3.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/chain-qa-review/placeholder-StrictUpperBCH3.json"
+      ],
+      "returncode": 0,
+      "output": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-12T20:30:39.235557+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **1**\n- Total findings: **1** (hard=0, soft=1, advisory=0)\n\n## `InfoGeometry.Algebra.StrictUpperBCH3`\n- path: `lean/InfoGeometry/Algebra/StrictUpperBCH3.lean`\n- findings: 1 (hard=0, soft=1, advisory=0)\n\n- L134: **SOFT** `skeletal-proof` in `theorem bch_neg`\n  - proof appears to be tactic-automation-only or skeletal\n  - `132:   rw [expUnit_val]`\n\n\n"
+    },
+    {
+      "label": "placeholder-QuaternionCayleyPair",
+      "command": [
+        "python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/Algebra/QuaternionCayleyPair.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/chain-qa-review/placeholder-QuaternionCayleyPair.json"
+      ],
+      "returncode": 0,
+      "output": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-12T20:30:39.318296+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **0**\n- Total findings: **0** (hard=0, soft=0, advisory=0)\n\nNo placeholder-trust findings detected.\n\n"
+    },
+    {
+      "label": "placeholder-SplitAtomQuaternion",
+      "command": [
+        "python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/Clifford/SplitAtomQuaternion.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/chain-qa-review/placeholder-SplitAtomQuaternion.json"
+      ],
+      "returncode": 0,
+      "output": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-12T20:30:39.426118+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **0**\n- Total findings: **0** (hard=0, soft=0, advisory=0)\n\nNo placeholder-trust findings detected.\n\n"
+    },
+    {
+      "label": "placeholder-AssociativeBianchi",
+      "command": [
+        "python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/Geometry/AssociativeBianchi.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/chain-qa-review/placeholder-AssociativeBianchi.json"
+      ],
+      "returncode": 0,
+      "output": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-12T20:30:39.602327+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **0**\n- Total findings: **0** (hard=0, soft=0, advisory=0)\n\nNo placeholder-trust findings detected.\n\n"
+    },
+    {
+      "label": "placeholder-WeightedPermutationHolonomy",
+      "command": [
+        "python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/OperatorAlgebra/WeightedPermutationHolonomy.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/chain-qa-review/placeholder-WeightedPermutationHolonomy.json"
+      ],
+      "returncode": 0,
+      "output": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-12T20:30:39.733555+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **1**\n- Total findings: **1** (hard=0, soft=1, advisory=0)\n\n## `InfoGeometry.OperatorAlgebra.WeightedPermutationHolonomy`\n- path: `lean/InfoGeometry/OperatorAlgebra/WeightedPermutationHolonomy.lean`\n- findings: 1 (hard=0, soft=1, advisory=0)\n\n- L79: **SOFT** `skeletal-proof` in `theorem coe_diagonalUnit_inv`\n  - proof appears to be tactic-automation-only or skeletal\n  - `77: `\n\n\n"
+    },
+    {
+      "label": "placeholder-CliffordHolonomyCurvature",
+      "command": [
+        "python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/Canonical/CliffordHolonomyCurvature.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/chain-qa-review/placeholder-CliffordHolonomyCurvature.json"
+      ],
+      "returncode": 0,
+      "output": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-12T20:30:39.792484+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **1**\n- Total findings: **1** (hard=0, soft=1, advisory=0)\n\n## `InfoGeometry.Canonical.CliffordHolonomyCurvature`\n- path: `lean/InfoGeometry/Canonical/CliffordHolonomyCurvature.lean`\n- findings: 1 (hard=0, soft=1, advisory=0)\n\n- L38: **SOFT** `skeletal-proof` in `theorem spinor_curvature_eq_iff`\n  - proof appears to be tactic-automation-only or skeletal\n  - `36:       D secondAxis - E firstAxis + 2 * thirdAxis := by`\n\n\n"
+    },
+    {
+      "label": "placeholder-ThermalBogoliubovCAR",
+      "command": [
+        "python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/chain-qa-review/placeholder-ThermalBogoliubovCAR.json"
+      ],
+      "returncode": 0,
+      "output": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-12T20:30:39.852217+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **1**\n- Total findings: **3** (hard=0, soft=3, advisory=0)\n\n## `InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR`\n- path: `lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean`\n- findings: 3 (hard=0, soft=3, advisory=0)\n\n- L58: **SOFT** `skeletal-proof` in `theorem RingHom.map_operatorThermalCreator`\n  - proof appears to be tactic-automation-only or skeletal\n  - `56: `\n- L151: **SOFT** `skeletal-proof` in `theorem thermalAnnihilator_map`\n  - proof appears to be tactic-automation-only or skeletal\n  - `149: variable {R : Type*} [CommSemiring R]`\n- L158: **SOFT** `skeletal-proof` in `theorem thermalCreator_map`\n  - proof appears to be tactic-automation-only or skeletal\n  - `156:       thermalAnnihilator (\u03c6 a) (\u03c6 d) u v := by`\n\n\n"
+    },
+    {
+      "label": "placeholder-ThreeZ2OperatorGradings",
+      "command": [
+        "python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/OperatorAlgebra/ThreeZ2OperatorGradings.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/chain-qa-review/placeholder-ThreeZ2OperatorGradings.json"
+      ],
+      "returncode": 0,
+      "output": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-12T20:30:39.914657+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **0**\n- Total findings: **0** (hard=0, soft=0, advisory=0)\n\nNo placeholder-trust findings detected.\n\n"
+    },
+    {
+      "label": "placeholder-QuadraticNoncommutativeIdentity",
+      "command": [
+        "python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/chain-qa-review/placeholder-QuadraticNoncommutativeIdentity.json"
+      ],
+      "returncode": 0,
+      "output": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-12T20:30:40.000624+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **1**\n- Total findings: **2** (hard=0, soft=2, advisory=0)\n\n## `InfoGeometry.OperatorAlgebra.QuadraticNoncommutativeIdentity`\n- path: `lean/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.lean`\n- findings: 2 (hard=0, soft=2, advisory=0)\n\n- L29: **SOFT** `skeletal-proof` in `theorem RingHom.map_grandCanonicalOperator`\n  - proof appears to be tactic-automation-only or skeletal\n  - `27:     (\u03b2 H \u03bc N \u03bc\u03c7 Q : A) : A :=`\n- L102: **SOFT** `skeletal-proof` in `theorem RingHom.map_quadraticCommutator`\n  - proof appears to be tactic-automation-only or skeletal\n  - `100:   dsimp [quadraticCommutator]`\n\n\n"
+    },
+    {
+      "label": "placeholder-InnerConjugation",
+      "command": [
+        "python3",
+        "tools/quality/placeholder_audit.py",
+        "--root",
+        "lean/InfoGeometry/OperatorAlgebra/InnerConjugation.lean",
+        "--strict",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/chain-qa-review/placeholder-InnerConjugation.json"
+      ],
+      "returncode": 0,
+      "output": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-12T20:30:40.061063+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **1**\n- Total findings: **2** (hard=0, soft=2, advisory=0)\n\n## `InfoGeometry.OperatorAlgebra.InnerConjugation`\n- path: `lean/InfoGeometry/OperatorAlgebra/InnerConjugation.lean`\n- findings: 2 (hard=0, soft=2, advisory=0)\n\n- L65: **SOFT** `skeletal-proof` in `theorem innerConjugation_idempotent_iff`\n  - proof appears to be tactic-automation-only or skeletal\n  - `63:     rw [map_pow] at h`\n- L289: **SOFT** `skeletal-proof` in `theorem innerConjugationNat_zero`\n  - proof appears to be tactic-automation-only or skeletal\n  - `287:     \u03b5W \u03b5\u03c7 \u03b5N (unit_pow_commutes u gW hW n)`\n\n\n"
+    },
+    {
+      "label": "semantic",
+      "command": [
+        "python3",
+        "tools/quality/semantic_vacuity_gate.py",
+        "lean/InfoGeometry/Algebra/StrictUpper3.lean",
+        "lean/InfoGeometry/Algebra/StrictUpperBCH3.lean",
+        "lean/InfoGeometry/Algebra/QuaternionCayleyPair.lean",
+        "lean/InfoGeometry/Clifford/SplitAtomQuaternion.lean",
+        "lean/InfoGeometry/Geometry/AssociativeBianchi.lean",
+        "lean/InfoGeometry/OperatorAlgebra/WeightedPermutationHolonomy.lean",
+        "lean/InfoGeometry/Canonical/CliffordHolonomyCurvature.lean",
+        "lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean",
+        "lean/InfoGeometry/OperatorAlgebra/ThreeZ2OperatorGradings.lean",
+        "lean/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.lean",
+        "lean/InfoGeometry/OperatorAlgebra/InnerConjugation.lean",
+        "--fail-on",
+        "warning",
+        "--json-out",
+        "/workspace/scratch/d18a558d1d7d/chain-qa-review/semantic.json"
+      ],
+      "returncode": 1,
+      "output": "Semantic vacuity audit\n======================\nroots: lean/InfoGeometry/Algebra/StrictUpper3.lean, lean/InfoGeometry/Algebra/StrictUpperBCH3.lean, lean/InfoGeometry/Algebra/QuaternionCayleyPair.lean, lean/InfoGeometry/Clifford/SplitAtomQuaternion.lean, lean/InfoGeometry/Geometry/AssociativeBianchi.lean, lean/InfoGeometry/OperatorAlgebra/WeightedPermutationHolonomy.lean, lean/InfoGeometry/Canonical/CliffordHolonomyCurvature.lean, lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean, lean/InfoGeometry/OperatorAlgebra/ThreeZ2OperatorGradings.lean, lean/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.lean, lean/InfoGeometry/OperatorAlgebra/InnerConjugation.lean\npatterns: /workspace/scratch/d18a558d1d7d/clifford-holonomy-lean/tools/quality/semantic_vacuity_patterns.json\nsemantic_vacuity: 22\nwarning: 22\ntrivial_surface: 22\n  - lean/InfoGeometry/Algebra/QuaternionCayleyPair.lean:154 [warning/trivial_surface] coe_cayleyFactorUnit: rfl\n  - lean/InfoGeometry/Algebra/QuaternionCayleyPair.lean:157 [warning/trivial_surface] coe_cayleyFactorUnit_inv: rfl\n  - lean/InfoGeometry/Algebra/StrictUpper3.lean:92 [warning/trivial_surface] onePlusUnit_val: rfl\n  - lean/InfoGeometry/Algebra/StrictUpper3.lean:95 [warning/trivial_surface] onePlusUnit_inv_val: rfl\n  - lean/InfoGeometry/Algebra/StrictUpperBCH3.lean:135 [warning/trivial_surface] bch_neg: by\n  - lean/InfoGeometry/Algebra/StrictUpperBCH3.lean:154 [warning/trivial_surface] expEquiv_unit: rfl\n  - lean/InfoGeometry/Algebra/StrictUpperBCH3.lean:174 [warning/trivial_surface] expMulEquiv_unit: rfl\n  - lean/InfoGeometry/Canonical/CliffordHolonomyCurvature.lean:40 [warning/trivial_surface] spinor_curvature_eq_iff: by\n  - lean/InfoGeometry/Geometry/AssociativeBianchi.lean:40 [warning/trivial_surface] adjointCovariantDerivative_apply: rfl\n  - lean/InfoGeometry/OperatorAlgebra/InnerConjugation.lean:50 [warning/trivial_surface] innerConjugationRingEquiv_apply: rfl\n  - lean/InfoGeometry/OperatorAlgebra/InnerConjugation.lean:290 [warning/trivial_surface] innerConjugationNat_zero: by\n  - lean/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.lean:30 [warning/trivial_surface] RingHom.map_grandCanonicalOperator: by\n  - lean/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.lean:103 [warning/trivial_surface] RingHom.map_quadraticCommutator: by\n  - lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean:58 [warning/trivial_surface] RingHom.map_operatorThermalCreator: by\n  - lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean:152 [warning/trivial_surface] thermalAnnihilator_map: by\n  - lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean:159 [warning/trivial_surface] thermalCreator_map: by\n  - lean/InfoGeometry/OperatorAlgebra/WeightedPermutationHolonomy.lean:74 [warning/trivial_surface] coe_diagonalUnit: rfl\n  - lean/InfoGeometry/OperatorAlgebra/WeightedPermutationHolonomy.lean:79 [warning/trivial_surface] coe_diagonalUnit_inv: rfl\n  - lean/InfoGeometry/OperatorAlgebra/WeightedPermutationHolonomy.lean:94 [warning/trivial_surface] coe_permutationUnit: rfl\n  - lean/InfoGeometry/OperatorAlgebra/WeightedPermutationHolonomy.lean:99 [warning/trivial_surface] coe_permutationUnit_inv: rfl\n  - lean/InfoGeometry/OperatorAlgebra/WeightedPermutationHolonomy.lean:108 [warning/trivial_surface] coe_weightedShift: rfl\n  - lean/InfoGeometry/OperatorAlgebra/WeightedPermutationHolonomy.lean:114 [warning/trivial_surface] coe_weightedShift_inv: rfl\n"
+    }
+  ],
+  "ban_findings": [],
+  "target_warnings_zero": true,
+  "hashes_reconciled": true,
+  "helpers_reconciled": true,
+  "source_revision": "3a584a2859ebe5854f1c0f906cfb917c9c548249",
+  "static_source_sha256": {
+    "tools/quality/placeholder_audit.py": "ffc09051c8dc13d6e46b931c01b66d7d82eff31090216006acd83919c32e8602",
+    "tools/quality/semantic_vacuity_gate.py": "cfd9a8e4108610a8221a74a28330849b02c064536f245fb411bc989eba2ac27f",
+    "tools/quality/semantic_vacuity_patterns.json": "01cd14be0fdb966fbe93e93d2729d6822dc375c85f6338a7d67b70758fd87082"
+  },
+  "existing_owner_body_comparison": {
+    "lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean": true,
+    "lean/InfoGeometry/OperatorAlgebra/ThreeZ2OperatorGradings.lean": true,
+    "lean/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.lean": true,
+    "lean/InfoGeometry/OperatorAlgebra/InnerConjugation.lean": true
+  },
+  "imported_warning_sources": {
+    "lean/InfoGeometry/Clifford/SplitQ11.lean": {
+      "warnings": 1,
+      "unchanged_from_base": true
+    },
+    "lean/InfoGeometry/Clifford/SplitAtomDoubling.lean": {
+      "warnings": 6,
+      "unchanged_from_base": true
+    },
+    "lean/InfoGeometry/Geometry/AssociativeGaugeConnection.lean": {
+      "warnings": 2,
+      "unchanged_from_base": true
+    }
+  }
+}

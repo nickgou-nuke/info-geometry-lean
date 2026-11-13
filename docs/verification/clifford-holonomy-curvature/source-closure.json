@@ -1,0 +1,365 @@
+{
+  "status": "passed",
+  "scope": "Exact repository source closure and native axiom audit",
+  "targets": [
+    "InfoGeometry.Algebra.StrictUpper3",
+    "InfoGeometry.Algebra.StrictUpperBCH3",
+    "InfoGeometry.Algebra.QuaternionCayleyPair",
+    "InfoGeometry.Clifford.SplitAtomQuaternion",
+    "InfoGeometry.Geometry.AssociativeBianchi",
+    "InfoGeometry.OperatorAlgebra.WeightedPermutationHolonomy",
+    "InfoGeometry.Canonical.CliffordHolonomyCurvature",
+    "InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR",
+    "InfoGeometry.OperatorAlgebra.ThreeZ2OperatorGradings",
+    "InfoGeometry.OperatorAlgebra.QuadraticNoncommutativeIdentity",
+    "InfoGeometry.OperatorAlgebra.InnerConjugation"
+  ],
+  "modules": [
+    {
+      "module": "InfoGeometry.Algebra.StrictUpper3",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Algebra/StrictUpper3.olean": "d2305099c5ce6cce249dbda001d12e246281467c98e2d21bb9871b6f6da9e1b7"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Algebra.StrictUpperBCH3",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Algebra/StrictUpperBCH3.olean": "26f8e51269e55a9205939f67b051c704bec381ca72dfe8067640dc8e252ebc0a"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Algebra/FiniteSpinAlgebra.olean": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.olean": "a40f43c74597630b3e6e5bd7826ac0dd8ceab133da56295e3964d7a54a3fa40c"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.ThreeZ2OperatorGradings",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/OperatorAlgebra/ThreeZ2OperatorGradings.olean": "be6c2b9f8e80bc1549b05e8b9d9dfe7b187dc779e12f80868a7fa025892ec5cd"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.QuadraticNoncommutativeIdentity",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.olean": "217b8c39233a6cb36f8f7d53119b14c676742c30d80b6d62c232efdb5c4ed3f8"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.InnerConjugation",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/OperatorAlgebra/InnerConjugation.olean": "65c4f2ff53f2fc891d7d268964faedbc4e3ed41d3d377e484239d4ad7c0ee465"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.QuadraticRotorUnit",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/OperatorAlgebra/QuadraticRotorUnit.olean": "70d86444c8ca619d517de8c5a8001025e199f28dfaeb4a468bbdc6b49def79b9"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Algebra.QuaternionCayleyPair",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Algebra/QuaternionCayleyPair.olean": "caeaad0cd0263514af35eb951660c5b1337ab1d26f8969127c11f1f5640cd85c"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Clifford.SplitQ11",
+      "returncode": 0,
+      "warnings": 1,
+      "artifacts": {
+        "lib/InfoGeometry/Clifford/SplitQ11.olean": "9e710b0254523f005893fc1692ab4a3e7a205adee1642ee4fa7dfb302f661e2a"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Clifford.Cl11Matrix",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Clifford/Cl11Matrix.olean": "3cfd75e841a3f4a3306fdf47aafbea9c042ea0cd48836df47459a6abd8768c79"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Clifford.Tower",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Clifford/Tower.olean": "810587c3a73bc31889b488e75e589cda21074080728528dbfa8147836d8bf0ff"
+      },
+      "reused": false
+    },
+    {
+      "module": "DAG.Basic",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/DAG/Basic.olean": "726d1188435d9b20dd353ed15ef2e3060df258de6f9a8a488ce017a76e5075a2"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Meta.Architecture",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Meta/Architecture.olean": "88e8b69102bcfb80eda7879dd32f3e07330477da7449d9a725907633b53b77bf"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Clifford.ClNN",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Clifford/ClNN.olean": "40357c85606c9d73d226484b7ca6fdef57b73015254897eb13c30bb180e5e18e"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Clifford.BottPeriodicity",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Clifford/BottPeriodicity.olean": "c240bb8e455921a21ef0a5181d58ea1cb4cf4cc5150fb3105801083f89f5b8b6"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Clifford.SplitAtomDoubling",
+      "returncode": 0,
+      "warnings": 6,
+      "artifacts": {
+        "lib/InfoGeometry/Clifford/SplitAtomDoubling.olean": "5bb7eb315edfee9eeaf077805d1255e438f30945204ed7a79c9b62488a22fea4"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Clifford.SplitAtomQuaternion",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Clifford/SplitAtomQuaternion.olean": "38f8641e12348a1903d960f82b5006e6abc8a42f60d0dd1996a3ea49c84ccb7b"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Geometry.AssociativeGaugeConnection",
+      "returncode": 0,
+      "warnings": 2,
+      "artifacts": {
+        "lib/InfoGeometry/Geometry/AssociativeGaugeConnection.olean": "bb8614b898f40c86152e63081d27c39a32afd4b8e64f6d09fffdee99877ade40"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Geometry.AssociativeBianchi",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Geometry/AssociativeBianchi.olean": "809b37a9cb188d6c9c8c3cbf2f83e0dd3200e335cf6c65ac060f666b5da8b431"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.WeightedPermutationHolonomy",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/OperatorAlgebra/WeightedPermutationHolonomy.olean": "a726433896ebc644023ad88f506947098537d92b57a5ca0b1a57f52709bd931f"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Canonical.CliffordHolonomyCurvature",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Canonical/CliffordHolonomyCurvature.olean": "84064a932dc993890c6870fd20f3480ce28ba1306850381098fb14234d39cdf7"
+      },
+      "reused": false
+    }
+  ],
+  "audit_required": true,
+  "verification_source_sha256": {
+    "tools/quality/check_clifford_dirac.py": "fcf6fbb9845e0ee2a85bdb3778c5fe74345a9ae7a2e97e871d0a89d3e98e7db0",
+    "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+    "tools/quality/reviewed_audit_source.py": "df953460ee18e79606afa03f1634e0d299730582c24971888649cf68d18bcbf4",
+    "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df"
+  },
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "source_sha256": {
+    "InfoGeometry.Algebra.StrictUpper3": "0bf219fb012d4254625b4cd82115ed0793a06efe2539563dc48970cfb531c526",
+    "InfoGeometry.Algebra.StrictUpperBCH3": "36dcd293e932128b0145250a63675a1d5c7e31bd6bfc9366d2d1aaad566196e9",
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+    "InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR": "6214daf3dd3c7943566958fa6237b08f986bad330a89ed5c3b7b08a51af93dce",
+    "InfoGeometry.OperatorAlgebra.ThreeZ2OperatorGradings": "c2a4373b4a27cddf3a7b176582180e719c9286c89dd632dce6bec530118809a6",
+    "InfoGeometry.OperatorAlgebra.QuadraticNoncommutativeIdentity": "7a6e81146d8056c560c20885226d1b89856cb4fdb7e3ba9d1884dc64796e9f97",
+    "InfoGeometry.OperatorAlgebra.InnerConjugation": "ad4d4c83ff3e2f011d45cf25a89db9445d166245d97a36d597161c4a9fb4af80",
+    "InfoGeometry.OperatorAlgebra.QuadraticRotorUnit": "a106026016037f1add136944e93f93faebedb6bd3ed447a1b4c7b856c30719c4",
+    "InfoGeometry.Algebra.QuaternionCayleyPair": "62a62710400c49736cf18ba68943231d6478957d6f9ec13ef9cb3a2ca1db6371",
+    "InfoGeometry.Clifford.SplitQ11": "a071dd78892818d197a0c187f901bf0cc7da3b3f13e201a14af1442affadacb0",
+    "InfoGeometry.Clifford.Cl11Matrix": "c95d89d20b10271d66e9cbe1632f04d57b817f118d92867b5121c55d7c4f7f85",
+    "InfoGeometry.Clifford.Tower": "de46b8f540dc3e39e3481b430858408a5044470d58091823b5f7912e0a296e22",
+    "DAG.Basic": "2bbf84bc9ffef91cff27903df6dc762fc61c10ca7566ae35b6eec7223f4cd2ef",
+    "InfoGeometry.Meta.Architecture": "9dcc8c20a4511508942911e3a26afbc208b357fc5eb4f9fdb0dd82d42654c662",
+    "InfoGeometry.Clifford.ClNN": "160c1837439611fbf22cb4920ed2ae0599447ecd16f539cacb42c9a231751d05",
+    "InfoGeometry.Clifford.BottPeriodicity": "b628619f52c128711e6cf29447a6a8d646461c6b2f18f5e8286d06a704b0ebff",
+    "InfoGeometry.Clifford.SplitAtomDoubling": "a96de114ecdb89472bd028a07b066c8277c9c555262389310ecb6f375fe8ec20",
+    "InfoGeometry.Clifford.SplitAtomQuaternion": "8b3b01538a569374dc547ccdc072488437f35de40169b6a66f788edce696190c",
+    "InfoGeometry.Geometry.AssociativeGaugeConnection": "db70504d363630422219c3dc473d5d7d0316b9abde543fed2f358969184d65d1",
+    "InfoGeometry.Geometry.AssociativeBianchi": "c794ea38c63de886468a00e0f5fcc800c8a9603266cb146988ceface3ca28b14",
+    "InfoGeometry.OperatorAlgebra.WeightedPermutationHolonomy": "52bbf73db89ebeba4209133e57471f85cb603b68b2f3f5f222028a6f0bb4614e",
+    "InfoGeometry.Canonical.CliffordHolonomyCurvature": "3f38f1ae83b73122bbe34a05e9fbe22a835a8df879666a51bf29fe86ad9328fe"
+  },
+  "fingerprints": {
+    "InfoGeometry.Algebra.StrictUpper3": "3f1171e4e929c1f4e55504f1fcc1f854a59f0ac079c39e6cf5432ae95932c3a0",
+    "InfoGeometry.Algebra.StrictUpperBCH3": "7e2738565dabdba203c587f8daa148cb474648d29699953256a00d9fbb680e81",
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "6318527c4fbd65bca67b505b6a77a74eb750cf957768c7af3f06c163dce9bc28",
+    "InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR": "f7a5ecc3b63eb7c7d057b293b74deeeee29d9c7e5e4a85efa71af4107a676f25",
+    "InfoGeometry.OperatorAlgebra.ThreeZ2OperatorGradings": "7ee616db0dbdd0bcae5afbca79200b925f5e7e2c641dde466b24f877f445225c",
+    "InfoGeometry.OperatorAlgebra.QuadraticNoncommutativeIdentity": "c3bed12c3da18f6e018fe8ffb018bd243f205fa524dfbb4efd7c2139318bc724",
+    "InfoGeometry.OperatorAlgebra.InnerConjugation": "d589d6497befc59248613e3b91de063d44547692e6bf770370459bedad2f8242",
+    "InfoGeometry.OperatorAlgebra.QuadraticRotorUnit": "4f688dce1195794d8fbc3762668ee2d8618dde47360bc82d0545436e68da4460",
+    "InfoGeometry.Algebra.QuaternionCayleyPair": "5780071b1631f8412fc9968c4ab970adaf7419c4a701be45cc927fe38a162d82",
+    "InfoGeometry.Clifford.SplitQ11": "6d2b656831610217f06c791351faa13931834f3b173e20f4f2e97ea348070a9e",
+    "InfoGeometry.Clifford.Cl11Matrix": "aeea6cfa55e0c652131c2bac0e04f4b22f4691d43b6ce5019e849fd88e3046a4",
+    "InfoGeometry.Clifford.Tower": "ef8ecc5f6d73bcb400d4ee4d3d3442bc02a395a4f6c9c4cad6277e3d07429763",
+    "DAG.Basic": "759c99819d54ff93d468b6ee808ce2c1dccc1ebb50e66c05b0fec48c6f03199b",
+    "InfoGeometry.Meta.Architecture": "869d32c577648124a20a19e20b17aababa8025ba77efb44b089b0244bf2198cd",
+    "InfoGeometry.Clifford.ClNN": "b55475479fcfdb22c81f09e843378692916f94074ffc4b710ce5cc5e32d6f2aa",
+    "InfoGeometry.Clifford.BottPeriodicity": "02673ae3c8477454c5ab04eb387fccc48a59eb58138e4b5492535d6a028c7cb2",
+    "InfoGeometry.Clifford.SplitAtomDoubling": "7cb20e48abfd46032e82b6a2f9570b612f5da16a6767fe660d4865b29dc65649",
+    "InfoGeometry.Clifford.SplitAtomQuaternion": "69c4b9697d9d32fd09703e70b68b39b0e7957366d127bdd543de42ee7c15d276",
+    "InfoGeometry.Geometry.AssociativeGaugeConnection": "80344f12fb86bc7f700abf4c196f989b726a54eed7a7ccdc665edba99e0e20fb",
+    "InfoGeometry.Geometry.AssociativeBianchi": "ca65db1a3f86f111f0f32625518f038db27450997b6bdb700db9e36012a611dd",
+    "InfoGeometry.OperatorAlgebra.WeightedPermutationHolonomy": "b0bfd4ca803f05a5e05bfcfc83bf41a6f08e5149034c0fb22c49cc68b9bcd28e",
+    "InfoGeometry.Canonical.CliffordHolonomyCurvature": "1a0e5c0636ed7751751fe531bfb5b6cd940d8ae07aa52ec3441151d514f2535a"
+  },
+  "repository_import_dependencies": {
+    "InfoGeometry.Algebra.StrictUpper3": [],
+    "InfoGeometry.Algebra.StrictUpperBCH3": [
+      "InfoGeometry.Algebra.StrictUpper3"
+    ],
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": [],
+    "InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.OperatorAlgebra.ThreeZ2OperatorGradings": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.OperatorAlgebra.QuadraticNoncommutativeIdentity": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.OperatorAlgebra.InnerConjugation": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR",
+      "InfoGeometry.OperatorAlgebra.ThreeZ2OperatorGradings",
+      "InfoGeometry.OperatorAlgebra.QuadraticNoncommutativeIdentity"
+    ],
+    "InfoGeometry.OperatorAlgebra.QuadraticRotorUnit": [
+      "InfoGeometry.OperatorAlgebra.InnerConjugation"
+    ],
+    "InfoGeometry.Algebra.QuaternionCayleyPair": [
+      "InfoGeometry.OperatorAlgebra.QuadraticRotorUnit"
+    ],
+    "InfoGeometry.Clifford.SplitQ11": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Clifford.Cl11Matrix": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Clifford.SplitQ11"
+    ],
+    "InfoGeometry.Clifford.Tower": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Clifford.SplitQ11"
+    ],
+    "DAG.Basic": [],
+    "InfoGeometry.Meta.Architecture": [
+      "DAG.Basic"
+    ],
+    "InfoGeometry.Clifford.ClNN": [
+      "InfoGeometry.Clifford.Tower",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Meta.Architecture"
+    ],
+    "InfoGeometry.Clifford.BottPeriodicity": [
+      "InfoGeometry.Clifford.ClNN",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Meta.Architecture"
+    ],
+    "InfoGeometry.Clifford.SplitAtomDoubling": [
+      "InfoGeometry.Clifford.Cl11Matrix",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Clifford.BottPeriodicity"
+    ],
+    "InfoGeometry.Clifford.SplitAtomQuaternion": [
+      "InfoGeometry.Clifford.SplitAtomDoubling",
+      "InfoGeometry.Algebra.QuaternionCayleyPair"
+    ],
+    "InfoGeometry.Geometry.AssociativeGaugeConnection": [],
+    "InfoGeometry.Geometry.AssociativeBianchi": [
+      "InfoGeometry.Geometry.AssociativeGaugeConnection"
+    ],
+    "InfoGeometry.OperatorAlgebra.WeightedPermutationHolonomy": [],
+    "InfoGeometry.Canonical.CliffordHolonomyCurvature": [
+      "InfoGeometry.Clifford.SplitAtomQuaternion",
+      "InfoGeometry.Algebra.StrictUpperBCH3",
+      "InfoGeometry.Geometry.AssociativeBianchi",
+      "InfoGeometry.OperatorAlgebra.WeightedPermutationHolonomy"
+    ]
+  },
+  "local_revision": "3a584a2859ebe5854f1c0f906cfb917c9c548249",
+  "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "declaration_counts": {
+    "InfoGeometry.Algebra.StrictUpper3": 48,
+    "InfoGeometry.Algebra.StrictUpperBCH3": 39,
+    "InfoGeometry.Algebra.QuaternionCayleyPair": 29,
+    "InfoGeometry.Clifford.SplitAtomQuaternion": 16,
+    "InfoGeometry.Geometry.AssociativeBianchi": 15,
+    "InfoGeometry.OperatorAlgebra.WeightedPermutationHolonomy": 51,
+    "InfoGeometry.Canonical.CliffordHolonomyCurvature": 8,
+    "InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR": 27,
+    "InfoGeometry.OperatorAlgebra.ThreeZ2OperatorGradings": 20,
+    "InfoGeometry.OperatorAlgebra.QuadraticNoncommutativeIdentity": 30,
+    "InfoGeometry.OperatorAlgebra.InnerConjugation": 32
+  },
+  "axioms": [
+    "[propext, Classical.choice, Quot.sound]"
+  ]
+}

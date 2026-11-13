@@ -3,7 +3,6 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
@@ -174,7 +173,7 @@ lemma thermalAnticommutator_expand (x₁ x₂ y₁ y₂ : A) (c₁ c₂ d₁ d�
   simp only [mul_add, add_mul, smul_add, smul_smul,
     Algebra.smul_mul_assoc, Algebra.mul_smul_comm]
   rw [mul_comm d₁ c₁, mul_comm d₁ c₂, mul_comm d₂ c₁, mul_comm d₂ c₂]
-  simp only [add_assoc, add_left_comm, add_comm]
+  simp only [add_assoc, add_left_comm]
 
 theorem thermal_bogoliubov_nilpotent_ann
     (a d : A) (u v : R)

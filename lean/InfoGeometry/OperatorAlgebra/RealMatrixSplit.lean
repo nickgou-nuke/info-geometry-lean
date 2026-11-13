@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 
+import Mathlib.Algebra.CharP.Invertible
 import Mathlib.Algebra.Star.Module
 import Mathlib.Basic.Real.Star
 import Mathlib.LinearAlgebra.Matrix.ConjTranspose

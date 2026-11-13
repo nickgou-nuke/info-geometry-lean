@@ -67,6 +67,7 @@ theorem sampleMetric_posDef : sampleMetric.PosDef := by
         apply hx
         ext i
         fin_cases i <;> simp_all
+      simp only [h1, mul_zero, zero_mul, add_zero]
       nlinarith [sq_pos_of_ne_zero h0]
     · nlinarith [sq_nonneg (x 0 + x 1), sq_pos_of_ne_zero h1]
 

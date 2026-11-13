@@ -100,6 +100,7 @@ theorem isSelfAdjoint_iff_weightedAdjoint (w : (Matrix n n ℝ)ˣ) (M : Matrix n
   · intro h
     exact (weightedAdjoint_unique w h).symm
   · intro h
+    change (w : Matrix n n ℝ).IsAdjointPair (w : Matrix n n ℝ) M M
     simpa only [h] using weightedAdjoint_isAdjointPair w M
 
 /-- Metric skew-adjointness agrees with the native matrix predicate. -/
@@ -109,6 +110,7 @@ theorem isSkewAdjoint_iff_weightedAdjoint (w : (Matrix n n ℝ)ˣ) (M : Matrix n
   · intro h
     exact (weightedAdjoint_unique w h).symm
   · intro h
+    change (w : Matrix n n ℝ).IsAdjointPair (w : Matrix n n ℝ) M (-M)
     simpa only [h] using weightedAdjoint_isAdjointPair w M
 
 /-- The weighted adjoint is additive on the full matrix algebra. -/

@@ -24,10 +24,11 @@ open Lean Elab Command
 
 run_cmd do
   let env ← getEnv
+  let moduleNames := env.header.moduleNames
   let targets : Array Name := #[`«InfoGeometry».«Clifford».«FreedPinRepresentation», `«InfoGeometry».«OperatorAlgebra».«GradedMatrixMorita», `«InfoGeometry».«Clifford».«Cl11GradedMorita», `«InfoGeometry».«Clifford».«Cl11GradedTensorMorita», `«InfoGeometry».«Geometry».«KleinPinDirac», `«InfoGeometry».«Geometry».«KleinPinGradedDirac», `«InfoGeometry».«Clifford».«FreedKleinRepresentation», `«InfoGeometry».«KK».«LinearDiracTransport», `«InfoGeometry».«KK».«CompactPhaseObstruction», `«InfoGeometry».«KK».«LinearDiracExponentialTransport», `«InfoGeometry».«KK».«PinLinearDiracTransport», `«InfoGeometry».«KK».«PinFredholmTransport», `«InfoGeometry».«Canonical».«SplitCliffordHeadMorita», `«InfoGeometry».«Canonical».«MaurerCartanCurvature»]
   let commandOnly : Array Name := #[]
   for target in targets do
-    unless env.header.moduleNames.contains target do
+    unless moduleNames.contains target do
       throwError "Selected module not imported: {target}"
   let allowed : Array Name := #[`propext, `Classical.choice, `Quot.sound]
   let mut count : Nat := 0
@@ -35,7 +36,7 @@ run_cmd do
   let mut allAxioms : Array Name := #[]
   for (name, info) in env.constants do
     let some idx := env.getModuleIdxFor? name | continue
-    let owner := env.header.moduleNames[idx.toNat]!
+    let owner := moduleNames[idx.toNat]!
     if !targets.contains owner then continue
     if info.isUnsafe || info.isPartial then
       throwError "Unsafe or partial declaration in reviewed module: {name}"

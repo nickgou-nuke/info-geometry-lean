@@ -37,8 +37,8 @@ def main() -> int:
     process = None
     try:
         print("[language-symmetry] " + " ".join(command), flush=True)
-        # Mathlib's cache extracts non-Mathlib package archives relative to cwd.
-        # Hydrate this project's package directory; source-file checks stay at ROOT.
+        # Non-Mathlib cache archives use paths relative to the focused project.
+        # Source-file checks continue to run from the canonical repository root.
         child_cwd = PROJECT if args[:2] == ["exe", "cache"] else ROOT
         process = subprocess.Popen(command, cwd=child_cwd, start_new_session=(os.name == "posix"))
         try:

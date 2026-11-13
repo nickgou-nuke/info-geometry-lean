@@ -2292,6 +2292,7 @@ import InfoGeometry.Canonical.KreinRindlerBogoliubovBridge
 import InfoGeometry.Canonical.IwasawaMaurerCartanBdGBridge
 import InfoGeometry.Canonical.KMSShearTubuleKleinPrimonBridge
 import InfoGeometry.Canonical.PinModularPeirceBostConnesBridge
+import InfoGeometry.Canonical.PinOperatorFamilyBridge
 import InfoGeometry.Canonical.CanonicalZornAlbertE6Bridge
 import InfoGeometry.Canonical.CanonicalZornAmariMoebiusBridge
 import InfoGeometry.Canonical.CanonicalZornD4E6TrialityBridge

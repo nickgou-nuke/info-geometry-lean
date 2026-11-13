@@ -169,13 +169,17 @@ def frameSmoothEquiv (U : Spinor ≃ₗ[ℂ] Spinor) (sector : Bool) :
     smoothSections sector ≃ₗ[ℝ] framedSmoothSections U sector where
   toFun ψ := ⟨frameSection U sector ψ.val, by
     change ContDiff ℝ ∞ (fun p => U (ψ.val.val p))
-    simpa only [Function.comp_apply, realFrame_apply] using
-      (realFrame U).contDiff.comp (smoothSection_contDiff sector ψ)⟩
+    have hd := (realFrame U).contDiff.comp (smoothSection_contDiff sector ψ)
+    refine contDiffOn_univ.mp (hd.contDiffOn.congr ?_)
+    intro p _
+    rfl⟩
   invFun ψ := ⟨unframeSection U sector ψ.val, by
     have hψ : ContDiff ℝ ∞ (ψ.val : PlanePoint → Spinor) := ψ.property
     change ContDiff ℝ ∞ (fun p => U.symm (ψ.val.val p))
-    simpa only [Function.comp_apply, realFrame_symm_apply] using
-      (realFrame U).symm.contDiff.comp hψ⟩
+    have hd := (realFrame U).symm.contDiff.comp hψ
+    refine contDiffOn_univ.mp (hd.contDiffOn.congr ?_)
+    intro p _
+    rfl⟩
   left_inv ψ := by
     apply Subtype.ext
     apply Subtype.ext
@@ -540,9 +544,11 @@ theorem circleFrame_field_contDiff (ψ : PlanePoint → Spinor)
     gammaX.contDiff.comp (hψ.comp contDiff_snd)
   have hy : ContDiff ℝ ∞ (fun z : ℝ × PlanePoint => gammaY (ψ z.2)) :=
     gammaY.contDiff.comp (hψ.comp contDiff_snd)
-  simpa only [circleFrame_apply, Function.comp_apply, Pi.smul_apply, Pi.add_apply] using
-    ((Real.contDiff_cos.comp contDiff_fst).smul hx).add
-      ((Real.contDiff_sin.comp contDiff_fst).smul hy)
+  have hd := ((Real.contDiff_cos.comp contDiff_fst).smul hx).add
+    ((Real.contDiff_sin.comp contDiff_fst).smul hy)
+  refine contDiffOn_univ.mp (hd.contDiffOn.congr ?_)
+  intro z _
+  simpa only [Pi.smul_apply', Function.comp_apply] using circleFrame_apply z.1 (ψ z.2)
 
 /-- The smoothly varying frame acts on the actual smooth section domain. -/
 theorem circleSection_joint_contDiff (sector : Bool) (ψ : smoothSections sector) :

@@ -30,6 +30,9 @@ and invertibility of two.
 
 noncomputable section
 
+set_option backward.defeqAttrib.useBackward true
+set_option backward.isDefEq.respectTransparency false
+
 open CategoryTheory
 open scoped Matrix Matrix.Module
 
@@ -64,13 +67,13 @@ private def matrixGradeHom (θ : A →+* A) :
   map_mul' M N := by
     ext i j
     fin_cases i <;> fin_cases j <;>
-      simp [Matrix.mul_apply, Fin.sum_univ_two, map_add, map_mul, neg_add]
+      simp [Matrix.mul_apply, Fin.sum_univ_two, map_add, map_mul, add_comm]
   map_zero' := by
     ext i j
     fin_cases i <;> fin_cases j <;> simp
   map_add' M N := by
     ext i j
-    fin_cases i <;> fin_cases j <;> simp [map_add, neg_add]
+    fin_cases i <;> fin_cases j <;> simp [map_add, add_comm]
 
 /-- The coefficient grading combined with the standard `1|1` matrix grading. -/
 def matrixGrade (θ : A ≃+* A) :
@@ -97,14 +100,17 @@ theorem matrixGrade_eq_parity_conj (θ : A ≃+* A) (M : Matrix (Fin 2) (Fin 2) 
       !![(1 : A), 0; 0, -1] * M.map θ * !![(1 : A), 0; 0, -1] := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [Matrix.mul_apply, Fin.sum_univ_two]
+    simp only [matrixGrade_apply, Matrix.mul_apply, Fin.sum_univ_two,
+      Matrix.of_apply, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.map_apply,
+      one_mul, zero_mul, add_zero, zero_add, mul_one, mul_zero,
+      neg_mul, mul_neg, neg_neg]
 
 /-- The matrix automorphism is involutive when the coefficient grading is. -/
 theorem matrixGrade_involutive (θ : A ≃+* A) (hθ : Function.Involutive θ) :
     Function.Involutive (matrixGrade θ) := by
   intro M
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [hθ]
+  fin_cases i <;> fin_cases j <;> simp <;> exact hθ _
 
 @[simp] theorem matrixGrade_scalar (θ : A ≃+* A) (a : A) :
     matrixGrade θ (Matrix.scalar (Fin 2) a) = Matrix.scalar (Fin 2) (θ a) := by
@@ -200,7 +206,8 @@ variable {B : Type u} [Ring B] (η : B ≃+* B)
 def restrict (f : A →+* B) (hf : ∀ a, f (θ a) = η (f a)) :
     GradedModuleCat η ⥤ GradedModuleCat θ where
   obj Y :=
-    { V := (ModuleCat.restrictScalars f).obj Y.V
+    letI := Module.compHom Y.V f
+    { V := ModuleCat.of A Y.V
       grade := Y.grade
       grade_smul := by
         intro a x
@@ -209,8 +216,8 @@ def restrict (f : A →+* B) (hf : ∀ a, f (θ a) = η (f a)) :
       grade_sq := Y.grade_sq }
   map g :=
     ⟨(ModuleCat.restrictScalars f).map g.hom, g.comm⟩
-  map_id X := by apply GradedModuleCat.Hom.ext; exact Functor.map_id _ _
-  map_comp f g := by apply GradedModuleCat.Hom.ext; exact Functor.map_comp _ _ _
+  map_id X := by apply GradedModuleCat.Hom.ext; exact CategoryTheory.Functor.map_id _ _
+  map_comp f g := by apply GradedModuleCat.Hom.ext; exact CategoryTheory.Functor.map_comp _ _ _
 
 /-- A proved algebra-presentation change transports the actual graded module
 category. The hypothesis is the grading equation for the given ring map, not
@@ -253,7 +260,7 @@ def vectorGrade {M N : Type u} [AddCommGroup M] [AddCommGroup N] (γ : M →+ N)
     (Fin 2 → M) →+ (Fin 2 → N) where
   toFun v := ![γ (v 0), -γ (v 1)]
   map_zero' := by ext i; fin_cases i <;> simp
-  map_add' v w := by ext i; fin_cases i <;> simp [map_add, neg_add]
+  map_add' v w := by ext i; fin_cases i <;> simp [map_add, add_comm]
 
 @[simp] theorem vectorGrade_zero {M N : Type u} [AddCommGroup M] [AddCommGroup N]
     (γ : M →+ N) (v : Fin 2 → M) : vectorGrade γ v 0 = γ (v 0) := rfl
@@ -262,14 +269,14 @@ def vectorGrade {M N : Type u} [AddCommGroup M] [AddCommGroup N] (γ : M →+ N)
     (γ : M →+ N) (v : Fin 2 → M) : vectorGrade γ v 1 = -γ (v 1) := rfl
 
 /-- The matrix Morita induction functor on objects, with its actual grading. -/
-def liftObj (X : GradedModuleCat θ) : GradedModuleCat (matrixGrade θ) where
-  V := (ModuleCat.toMatrixModCat A (Fin 2)).obj X.V
+abbrev liftObj (X : GradedModuleCat θ) : GradedModuleCat (matrixGrade θ) where
+  V := ModuleCat.of (Matrix (Fin 2) (Fin 2) A) (Fin 2 → X.V)
   grade := vectorGrade X.grade
   grade_smul a v := by
     ext i
     fin_cases i <;>
       simp [vectorGrade, Matrix.Module.smul_def, Fin.sum_univ_two,
-        X.grade_smul, map_add, smul_neg, neg_smul, neg_add]
+        X.grade_smul, map_add, smul_neg, neg_smul, add_comm]
   grade_sq v := by
     ext i
     fin_cases i <;> simp [vectorGrade, X.grade_sq]
@@ -280,9 +287,12 @@ def lift : GradedModuleCat θ ⥤ GradedModuleCat (matrixGrade θ) where
     ⟨(ModuleCat.toMatrixModCat A (Fin 2)).map f.hom, by
       intro v
       ext i
-      fin_cases i <;> simp [liftObj, vectorGrade, f.comm]⟩
-  map_id X := by apply GradedModuleCat.Hom.ext; exact Functor.map_id _ _
-  map_comp f g := by apply GradedModuleCat.Hom.ext; exact Functor.map_comp _ _ _
+      fin_cases i
+      · exact f.comm (v 0)
+      · change f.hom (-X.grade (v 1)) = -Y.grade (f.hom (v 1))
+        rw [map_neg, f.comm]⟩
+  map_id X := by apply GradedModuleCat.Hom.ext; exact CategoryTheory.Functor.map_id _ _
+  map_comp f g := by apply GradedModuleCat.Hom.ext; exact CategoryTheory.Functor.map_comp _ _ _
 
 local instance matrixCoefficientModule (M : ModuleCat (Matrix (Fin 2) (Fin 2) A)) :
     Module A M := Module.compHom M (Matrix.scalar (Fin 2))
@@ -292,15 +302,15 @@ local instance matrixCoefficientScalarTower (M : ModuleCat (Matrix (Fin 2) (Fin 
   MatrixModCat.isScalarTower_toModuleCat A M
 
 private theorem grade_mem_corner (Y : GradedModuleCat (matrixGrade θ))
-    (x : (MatrixModCat.toModuleCat A (0 : Fin 2)).obj Y.V) :
+    (x : MatrixModCat.toModuleCatObj A Y.V (0 : Fin 2)) :
     Y.grade (x : Y.V) ∈ MatrixModCat.toModuleCatObj A Y.V (0 : Fin 2) := by
   rcases x.property with ⟨z, hz⟩
   refine ⟨Y.grade z, ?_⟩
   rw [← hz, Y.grade_smul, matrixGrade_corner]
 
 /-- The invariant `E₀₀` corner carries the original coefficient grading. -/
-def reduceObj (Y : GradedModuleCat (matrixGrade θ)) : GradedModuleCat θ where
-  V := (MatrixModCat.toModuleCat A (0 : Fin 2)).obj Y.V
+abbrev reduceObj (Y : GradedModuleCat (matrixGrade θ)) : GradedModuleCat θ where
+  V := ModuleCat.of A (MatrixModCat.toModuleCatObj A Y.V (0 : Fin 2))
   grade :=
     { toFun x := ⟨Y.grade (x : Y.V), grade_mem_corner θ Y x⟩
       map_zero' := by apply Subtype.ext; exact Y.grade.map_zero
@@ -319,8 +329,8 @@ def reduce : GradedModuleCat (matrixGrade θ) ⥤ GradedModuleCat θ where
       intro x
       apply Subtype.ext
       exact f.comm (x : X.V)⟩
-  map_id X := by apply GradedModuleCat.Hom.ext; exact Functor.map_id _ _
-  map_comp f g := by apply GradedModuleCat.Hom.ext; exact Functor.map_comp _ _ _
+  map_id X := by apply GradedModuleCat.Hom.ext; exact CategoryTheory.Functor.map_id _ _
+  map_comp f g := by apply GradedModuleCat.Hom.ext; exact CategoryTheory.Functor.map_comp _ _ _
 
 private def unitComponent (X : GradedModuleCat θ) :
     X ≅ (reduce θ).obj ((lift θ).obj X) :=
@@ -338,15 +348,15 @@ private def counitComponent (Y : GradedModuleCat (matrixGrade θ)) :
   GradedModuleCat.isoOfUnderlying
     ((ModuleCat.matrixEquivalence A (0 : Fin 2)).counitIso.app Y.V) (by
       intro v
-      change (∑ i : Fin 2, Matrix.single i 0 (1 : A) •
+      change (∑ i : Fin 2, Matrix.single i (0 : Fin 2) (1 : A) •
           ((vectorGrade (reduceObj θ Y).grade v) i : Y.V)) =
-        Y.grade (∑ i : Fin 2, Matrix.single i 0 (1 : A) • (v i : Y.V))
+        Y.grade (∑ i : Fin 2, Matrix.single i (0 : Fin 2) (1 : A) • (v i : Y.V))
       simp only [Fin.sum_univ_two, vectorGrade_zero, vectorGrade_one,
         map_add, Y.grade_smul, matrixGrade_corner, matrixGrade_lower]
-      change Matrix.single (0 : Fin 2) 0 (1 : A) • Y.grade (v 0 : Y.V) +
-          Matrix.single (1 : Fin 2) 0 (1 : A) • (-Y.grade (v 1 : Y.V)) =
-        Matrix.single (0 : Fin 2) 0 (1 : A) • Y.grade (v 0 : Y.V) +
-          (-Matrix.single (1 : Fin 2) 0 (1 : A)) • Y.grade (v 1 : Y.V)
+      change Matrix.single (0 : Fin 2) (0 : Fin 2) (1 : A) • Y.grade (v 0 : Y.V) +
+          Matrix.single (1 : Fin 2) (0 : Fin 2) (1 : A) • (-Y.grade (v 1 : Y.V)) =
+        Matrix.single (0 : Fin 2) (0 : Fin 2) (1 : A) • Y.grade (v 0 : Y.V) +
+          (-Matrix.single (1 : Fin 2) (0 : Fin 2) (1 : A)) • Y.grade (v 1 : Y.V)
       simp only [smul_neg, neg_smul])
 
 private def unitIso : 𝟭 (GradedModuleCat θ) ≅ lift θ ⋙ reduce θ :=
@@ -394,7 +404,10 @@ theorem mapMatrixModule_even {X Y : GradedModuleCat θ} (D : X.V →ₗ[A] Y.V)
     D.mapMatrixModule (Fin 2) ((liftObj θ X).grade v) =
       (liftObj θ Y).grade (D.mapMatrixModule (Fin 2) v) := by
   ext i
-  fin_cases i <;> simp [liftObj, vectorGrade, hD]
+  fin_cases i
+  · exact hD (v 0)
+  · change D (-X.grade (v 1)) = -Y.grade (D (v 1))
+    rw [map_neg, hD]
 
 /-- Odd coefficient-linear operators retain their anticommutation with the
 module grading after induction. -/
@@ -403,7 +416,10 @@ theorem mapMatrixModule_odd {X Y : GradedModuleCat θ} (D : X.V →ₗ[A] Y.V)
     D.mapMatrixModule (Fin 2) ((liftObj θ X).grade v) =
       -(liftObj θ Y).grade (D.mapMatrixModule (Fin 2) v) := by
   ext i
-  fin_cases i <;> simp [liftObj, vectorGrade, hD]
+  fin_cases i
+  · exact hD (v 0)
+  · change D (-X.grade (v 1)) = -(-Y.grade (D (v 1)))
+    rw [map_neg, hD]
 
 /-- A coefficient-superlinear operator lifts with the head parity sign.
 This retains supercommutation with arbitrary noncommuting coefficients. -/
@@ -416,7 +432,7 @@ def liftSemilinearOperator {X Y : GradedModuleCat θ}
     ext i
     fin_cases i <;>
       simp [vectorGrade, Matrix.Module.smul_def, Fin.sum_univ_two,
-        D.map_smulₛₗ, map_add, smul_neg, neg_smul, neg_add]
+        D.map_smulₛₗ, map_add, smul_neg, neg_smul, add_comm]
 
 /-- A superlinear matrix operator preserves the Morita corner because its
 coefficient grading fixes `E₀₀`. The restricted map remains superlinear over
@@ -445,15 +461,15 @@ theorem counit_intertwines_semilinear {Y Z : GradedModuleCat (matrixGrade θ)}
     ((matrixEquivalence θ).counitIso.hom.app Z).hom
         (liftSemilinearOperator θ (reduceSemilinearOperator θ D) v) =
       D (((matrixEquivalence θ).counitIso.hom.app Y).hom v) := by
-  change (∑ i : Fin 2, Matrix.single i 0 (1 : A) •
+  change (∑ i : Fin 2, Matrix.single i (0 : Fin 2) (1 : A) •
       ((vectorGrade (reduceSemilinearOperator θ D).toAddMonoidHom v) i : Z.V)) =
-    D (∑ i : Fin 2, Matrix.single i 0 (1 : A) • (v i : Y.V))
+    D (∑ i : Fin 2, Matrix.single i (0 : Fin 2) (1 : A) • (v i : Y.V))
   simp only [Fin.sum_univ_two, vectorGrade_zero, vectorGrade_one, map_add,
     D.map_smulₛₗ, matrixGrade_corner, matrixGrade_lower]
-  change Matrix.single (0 : Fin 2) 0 (1 : A) • D (v 0 : Y.V) +
-      Matrix.single (1 : Fin 2) 0 (1 : A) • (-D (v 1 : Y.V)) =
-    Matrix.single (0 : Fin 2) 0 (1 : A) • D (v 0 : Y.V) +
-      (-Matrix.single (1 : Fin 2) 0 (1 : A)) • D (v 1 : Y.V)
+  change Matrix.single (0 : Fin 2) (0 : Fin 2) (1 : A) • D (v 0 : Y.V) +
+      Matrix.single (1 : Fin 2) (0 : Fin 2) (1 : A) • (-D (v 1 : Y.V)) =
+    Matrix.single (0 : Fin 2) (0 : Fin 2) (1 : A) • D (v 0 : Y.V) +
+      (-Matrix.single (1 : Fin 2) (0 : Fin 2) (1 : A)) • D (v 1 : Y.V)
   simp only [smul_neg, neg_smul]
 
 /-- The actual Morita unit also intertwines a coefficient-superlinear
@@ -475,7 +491,10 @@ theorem liftSemilinearOperator_odd {X Y : GradedModuleCat θ}
     liftSemilinearOperator θ D ((liftObj θ X).grade v) =
       -(liftObj θ Y).grade (liftSemilinearOperator θ D v) := by
   ext i
-  fin_cases i <;> simp [liftSemilinearOperator, liftObj, vectorGrade, hD]
+  fin_cases i
+  · exact hD (v 0)
+  · change -D (-X.grade (v 1)) = -(-Y.grade (-D (v 1)))
+    rw [map_neg, hD, map_neg]
 
 theorem reduceSemilinearOperator_odd {Y Z : GradedModuleCat (matrixGrade θ)}
     (D : Y.V →ₛₗ[(matrixGrade θ).toRingHom] Z.V)

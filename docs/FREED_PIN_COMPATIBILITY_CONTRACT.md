@@ -86,7 +86,13 @@ inspection, source/debt screening, and independent mathematical review.
 Permitted foundational axioms are `propext`, `Classical.choice`, and
 `Quot.sound`. Root integration gates remain separate from the focused build.
 The focused project reuses root-pinned dependencies; no root dependency,
-toolchain, gate, or unrelated source is changed to obtain acceptance.
+toolchain, or gate is changed to obtain acceptance. The pre-existing
+Maurer-Cartan curvature definition and its skewness theorem are extracted,
+unchanged and in the same namespace, from `BerryConnection` into the focused
+`MaurerCartanCurvature` owner. `BerryConnection` re-exports that owner, and
+`BogoliubovVielbein` imports it directly. This narrows the quasilattice
+operator's dependency closure without changing its mathematical definitions
+or the genuine blueprint annotations in other owners.
 
 This initial contract records targets, not completed proofs. The final
 verification record must identify the accepted source bytes, commands, results,
@@ -100,7 +106,14 @@ declarations. Source review found no mathematical sign, order, carrier, or
 circularity defect; it is not kernel acceptance.
 
 The pinned dependency cache has been hydrated successfully. The initial local
-kernel build is queued behind other live jobs using the shared build lock.
+kernel build found elaboration errors in the new matrix Morita and represented
+Pin owners; repairs are in progress. It also exposed the pinned
+LeanArchitect package's incompatibility with the pinned Lean API. The focused
+curvature extraction removes that metadata dependency from the quasilattice
+closure, while preserving its original declarations. The audit now selects
+fourteen owners, including the extracted curvature owner.
+
 The focused GitHub Actions workflow runs the same project and declaration
-audit on an independent runner. Compilation and the axiom audit are pending;
-no current whole-root or geometric analytic-index certificate is claimed.
+audit on an independent runner. Kernel acceptance and the axiom audit remain
+pending; no current whole-root or geometric analytic-index certificate is
+claimed.

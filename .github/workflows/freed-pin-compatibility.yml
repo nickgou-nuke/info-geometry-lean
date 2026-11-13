@@ -12,6 +12,9 @@ on:
       - 'lean/InfoGeometry/KK/Pin*Transport.lean'
       - 'lean/InfoGeometry/KK/CompactPhaseObstruction.lean'
       - 'lean/InfoGeometry/Canonical/SplitClifford*.lean'
+      - 'lean/InfoGeometry/Canonical/MaurerCartanCurvature.lean'
+      - 'lean/InfoGeometry/Canonical/BogoliubovVielbein.lean'
+      - 'lean/InfoGeometry/Canonical/QuasilatticeDirac.lean'
       - 'verification/freed-pin-compatibility/**'
       - 'tools/build_lock.py'
       - 'tools/infra/build.py'
@@ -26,7 +29,7 @@ permissions:
 
 concurrency:
   group: freed-pin-compatibility-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   kernel-and-axioms:

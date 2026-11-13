@@ -59,14 +59,15 @@ theorem positiveRepresentation_pair (Q : QuadraticForm R M)
     (ρ : CliffordAlgebra (positiveForm Q) →ₐ[R] A) (v w : M) :
     positiveRepresentation Q ρ (ι Q v * ι Q w) =
       ρ (ι (positiveForm Q) (v, 0)) * ρ (ι (positiveForm Q) (w, 0)) := by
-  simp only [positiveRepresentation, AlgHom.comp_apply, positiveMap_ι_mul_ι, map_mul]
+  change ρ (positiveMap Q (ι Q v * ι Q w)) = _
+  rw [positiveMap_ι_mul_ι, map_mul]
 
 theorem negativeRepresentation_pair (Q : QuadraticForm R M)
     (ρ : CliffordAlgebra (negativeForm Q) →ₐ[R] A) (v w : M) :
     negativeRepresentation Q ρ (ι (-Q) v * ι (-Q) w) =
       -(ρ (ι (negativeForm Q) (v, 0)) * ρ (ι (negativeForm Q) (w, 0))) := by
-  simp only [negativeRepresentation, AlgHom.comp_apply, negativeMap_ι_mul_ι,
-    map_neg, map_mul]
+  change ρ (negativeMap Q (ι (-Q) v * ι (-Q) w)) = _
+  rw [negativeMap_ι_mul_ι, map_neg, map_mul]
 
 /-- A Clifford representation induces an action of the actual normalized Pin group. -/
 def pinRepresentation (Q : QuadraticForm R M) (ρ : CliffordAlgebra Q →ₐ[R] A) :

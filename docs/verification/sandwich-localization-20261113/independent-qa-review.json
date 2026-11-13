@@ -1,0 +1,247 @@
+{
+  "reviewed_at_utc": "2026-11-13T12:22:58.406179+00:00",
+  "reviewer": "/root/build_environment",
+  "role": "Execution and artifact reviewer, independent of mathematical source authorship. Authored the task-specific thin wrapper and initial workflow, which were separately reviewed by /root and /root/math_audit.",
+  "repository": "nickgou-nuke/info-geometry-lean",
+  "pull_request": 356,
+  "base_commit": "b76d9e1e6da2ba8c1d7505ca791ef81c57d0db92",
+  "tested_source_commit": "436cdbed57deb267d6e90c2040d8ad5db57d52bf",
+  "tested_checkout_commit": "fc49365c7a55eb721fb3a9e9ffe90aadfe8f3392",
+  "tested_tree": "876c9b59f273084ba8405bcac708cd65d3d0bb46",
+  "run_id": 43423042151,
+  "kernel_job_id": 131877494159,
+  "kernel_job_conclusion": "success",
+  "command": "python3 project/tools/quality/check_sandwich_localization.py --mathlib-root pinned-mathlib --output verification",
+  "artifact_id": 14035182640,
+  "artifact_size": 135567,
+  "artifact_sha256": "8bbfca8b8e3de21566f842161289601b85e965dd41996f3243a044efc46fc957",
+  "decoded_kernel_job_log_sha256": "2d786355e3d952ff4fc90e45c1deb9dc7eeaee205d3c12b283ce5e8ccfbfaf3f",
+  "reviewed_source_sha256": {
+    "InfoGeometry.Algebra.SandwichLocalization": "d26deee8bfb9be9adba768e435c040b03cd00fdaabc0640a39bf78ad569279bd",
+    "InfoGeometry.Algebra.SandwichLocalizationActions": "1cff2600c491497beb64185491a621d8b8c5654294866e6eb4a106a003196de6",
+    "InfoGeometry.Algebra.SandwichLocalizationStar": "3492552dfa642b6a9e9139b6a316fe576dfee1d3badf905c1cf7a6a08090bdd9",
+    "InfoGeometry.Algebra.SandwichBalancedTensor": "250752a54f9610e4a90ab6d4f06ce569a124bc06b7f9b5370adcfe4238f43745",
+    "InfoGeometry.Algebra.OneSidedLocalizationBoundary": "9ad03f004f4dcdf46dbd026669c4fde0b3652d001eedb0c2a9cdb866cb7e80d8",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley": "4cc45389c456d09ebf4199023e1160f87abbcae387077fe3b187d6ea75525b48",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge": "fb3eaacbe2998bb19ccb0a763c260d81aedf3f48dab07688dac1f27a4ae7396e",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceDefectIdentities": "eae31dce10024c013a052baf1ba42423074821661643f21ba54ac6ef5972d9db",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness": "e5b1a485e5957bc55ddaf0b38c20a8f5744d9ceb7283293f68fdeef5618505be"
+  },
+  "controls_sha256": {
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lake-manifest.json": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+    "tools/quality/check_perjes_klein.py": "205223886a6b76b949b5bdf6a6cd1f80b2f8b283f00f74bd7cd293ab46cb6180",
+    "tools/quality/check_peirce_reflection.py": "6ac9db6fa7d40fdb88b1094c31a314acc79aad0f297cbca98a38f5c3378d6e9e",
+    "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+    "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df",
+    "tools/quality/check_sandwich_localization.py": "ea77f397cb104f7448343be28f22fc56663ab428e3bf6d96671f1a12950066e3",
+    ".github/workflows/sandwich-localization.yml": "b0c1cc0e5f4a3ffa2f6453a9018a5d44b4e765d16e2d8ed58669baa19b2e484b"
+  },
+  "root_evidence": {
+    "latest_completed": {
+      "source_commit": "fb2918d3bfb971d5225e81bae0cee1121ad531cf",
+      "tested_checkout_commit": "5e5b36d1347a55986b18841b4209928e3ee8e89b",
+      "run_id": 43421170036,
+      "job_id": 131871247180,
+      "staged_gate_exit": 0,
+      "incremental_root_gate_exit": 1,
+      "full_root_gate_exit": 1,
+      "root_build_failure": "HomotopyHypothesis: package directory not found: external_refs/homotopy-hypothesis-lean4",
+      "scoped_debt_files": 9,
+      "scoped_debt_findings": 0,
+      "full_debt_files": 28121,
+      "full_debt_findings": 0,
+      "tracked_scope": {
+        "lake_package": 0,
+        "forensic_or_fixture": 878
+      },
+      "vacuity": {
+        "command_exit": 0,
+        "threshold": "--fail-on error --fail-prefix lean/",
+        "total": 72651,
+        "global_errors": 862,
+        "global_warnings": 71789,
+        "lean_prefix_findings": 33087,
+        "interpretation": "Thresholded lexical audit; not finding-free. Exit zero applies the configured prefix and severity filters."
+      },
+      "theory_audit": {
+        "report_generation_exit": 0,
+        "diagnostics": [
+          "sort: write failed: 'standard output': Broken pipe",
+          "sort: write error"
+        ],
+        "interpretation": "Report generation only; subcommands are masked with || true, so exit zero is not an enforced finding-free gate."
+      },
+      "artifact_id": 14035616044,
+      "artifact_sha256": "0cb0b7cc5b4aae8aa2eda7d1e0d7146bc30678cee1ffab9f4425bf2c95f29bc5",
+      "decoded_job_log_sha256": "7456653a57f0b316207529705c3a68d39c55eaac2d24f23ba6b91bb76f386292"
+    },
+    "later_jobs_at_observation": [
+      {
+        "source_commit": "f079edae966d5d20fe96ab04119f3e545b8863d0",
+        "run_id": 43422227216,
+        "job_id": 131874764267,
+        "status": "in_progress",
+        "staged_gate": "success",
+        "active_step": "Attempt the unchanged incremental root quality gate"
+      },
+      {
+        "source_commit": "436cdbed57deb267d6e90c2040d8ad5db57d52bf",
+        "run_id": 43423042151,
+        "job_id": 131877493835,
+        "status": "pending"
+      }
+    ],
+    "scope_boundary": "Completed root-gate evidence belongs to its own earlier checkout. No root-gate success or failure is attributed to the tested source commit from another revision.",
+    "dependency_provenance": {
+      "HomotopyHypothesis": "Path-only manifest entry; no tracked source/config, gitlink, submodule URL, or immutable revision at the task base.",
+      "Atlas": "Path-only manifest entry; no tracked source/config, gitlink, submodule URL, or immutable revision at the task base. Historical inventory mentions short hash 34ffed3 from a maintainer-local archive, without a reproducible pinned provisioning route.",
+      "GIFT": "Pinned gitlink e6f3c3ac2140c2324fb2ae029c32233e73aa5e92 can use ordinary submodule initialization, which does not resolve the preceding HomotopyHypothesis/Atlas blockers."
+    },
+    "tested_source_static_gate": {
+      "execution_by": "/root",
+      "independent_evidence_readback_by": "/root/build_environment",
+      "source_commit": "436cdbed57deb267d6e90c2040d8ad5db57d52bf",
+      "tree": "876c9b59f273084ba8405bcac708cd65d3d0bb46",
+      "base": "b76d9e1e6da2ba8c1d7505ca791ef81c57d0db92",
+      "command": "python3 tools/quality/proof_proxy_staged_gate.py",
+      "staged_lean_count": 9,
+      "staged_paths": [
+        "lean/InfoGeometry/Algebra/OneSidedLocalizationBoundary.lean",
+        "lean/InfoGeometry/Algebra/SandwichBalancedTensor.lean",
+        "lean/InfoGeometry/Algebra/SandwichLocalization.lean",
+        "lean/InfoGeometry/Algebra/SandwichLocalizationActions.lean",
+        "lean/InfoGeometry/Algebra/SandwichLocalizationStar.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/EndogenousKernelBridge.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/KernelBridgeMatrixWitness.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/PeirceDefectIdentities.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/SandwichCayley.lean"
+      ],
+      "exit_code": 0,
+      "log_sha256": "58c60c81b46a0f1fa7053e8f506406539e953f6dabbfb75e2485922547047bda",
+      "log_bytes": 846,
+      "gate_source_sha256": "eaa861d929ad9465586504f30f65ddc64eb96f8198bee65b3039c8d4fb813db9",
+      "gate_source_unchanged_from_base": true,
+      "restored_HEAD_and_tree_independently_observed": true,
+      "current_nine_owner_bytes_independently_match_reviewed_hashes": true,
+      "scope": "Complete nine-owner task-range static staged proof gate only; no Lean compilation or root Lake acceptance."
+    }
+  },
+  "limits": [
+    "Focused exact-source closure and nine-owner declaration audit only; not the full root Lake package, umbrella All module, or repository-wide acceptance.",
+    "The 355 audited constants include definitions, instances and generated declarations; 162 is the separately reconciled count of named source theorem/lemma declarations.",
+    "Allowed axioms are propext, Classical.choice and Quot.sound; no axiom-free claim is made.",
+    "No local Lean compilation, new tests, workflow reruns, workflow cancellations, dependency substitutions, or root gate modifications were performed for this readback.",
+    "The review certifies the immutable tested source/tree. Later metadata-only commits require source/control identity checks, not retroactive attribution of CI to a different commit."
+  ],
+  "evidence_files": {
+    "round5-kernel-verification.zip": {
+      "sha256": "8bbfca8b8e3de21566f842161289601b85e965dd41996f3243a044efc46fc957",
+      "bytes": 135567
+    },
+    "round5-status.json": {
+      "sha256": "4b0284a1a581a86a8c53cbeb50520422c46271c9e98e84afa95f2e294cb33f31",
+      "bytes": 9483
+    },
+    "round5-audit.log": {
+      "sha256": "f67b8f5f708d6533f46c56955ba3757030f0b8fa154225288acb44f57f9e256e",
+      "bytes": 64179
+    },
+    "round5-lean-version.txt": {
+      "sha256": "355a9a028f81641782d75d6e6b58dec70f29d2f61238a9e271690259d9bf5680",
+      "bytes": 106
+    },
+    "round5-PerjesKleinKernelAudit.lean": {
+      "sha256": "0a0675148e73977f1e1587f3424b47bb044b5bbad126c50566832347fb80fae4",
+      "bytes": 2087
+    },
+    "round5-artifact-inspection.json": {
+      "sha256": "a954fa45005231bfdd3f9edbcd5dcadf7dd1e24db458de84e0325b85798dc298",
+      "bytes": 73176
+    },
+    "round5-audit-declarations.json": {
+      "sha256": "8b98dd3fb5f6be6f81304e34229dfb923254d188f458d19beb169a811ab2f67d",
+      "bytes": 86494
+    },
+    "final-local-staged.log": {
+      "sha256": "58c60c81b46a0f1fa7053e8f506406539e953f6dabbfb75e2485922547047bda",
+      "bytes": 846
+    }
+  },
+  "acceptance": {
+    "focused_scope_accepted": true,
+    "whole_root_accepted": false,
+    "compiled_modules": 38,
+    "compiled_module_exit_codes_all_zero": true,
+    "fresh_owned_declaration_audit": true,
+    "audited_unique_constants": 355,
+    "named_theorems_covered_once": 162,
+    "private_named_theorems_covered_once": 15,
+    "every_target_owner_nonzero": true,
+    "per_owner": {
+      "InfoGeometry.Algebra.SandwichLocalization": {
+        "audited_constants": 37,
+        "named_theorems": 17,
+        "private_named_theorems": 0
+      },
+      "InfoGeometry.Algebra.SandwichLocalizationActions": {
+        "audited_constants": 52,
+        "named_theorems": 12,
+        "private_named_theorems": 5
+      },
+      "InfoGeometry.Algebra.SandwichLocalizationStar": {
+        "audited_constants": 38,
+        "named_theorems": 12,
+        "private_named_theorems": 1
+      },
+      "InfoGeometry.Algebra.SandwichBalancedTensor": {
+        "audited_constants": 71,
+        "named_theorems": 28,
+        "private_named_theorems": 6
+      },
+      "InfoGeometry.Algebra.OneSidedLocalizationBoundary": {
+        "audited_constants": 5,
+        "named_theorems": 3,
+        "private_named_theorems": 1
+      },
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley": {
+        "audited_constants": 14,
+        "named_theorems": 7,
+        "private_named_theorems": 0
+      },
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge": {
+        "audited_constants": 29,
+        "named_theorems": 16,
+        "private_named_theorems": 0
+      },
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceDefectIdentities": {
+        "audited_constants": 14,
+        "named_theorems": 7,
+        "private_named_theorems": 0
+      },
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness": {
+        "audited_constants": 95,
+        "named_theorems": 60,
+        "private_named_theorems": 2
+      }
+    },
+    "allowed_axiom_union": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "forbidden_axioms": [],
+    "unsafe_or_partial_declarations_rejected_by_executed_audit": true,
+    "archive_and_job_audit_records_identical": true,
+    "all_38_source_snapshot_hashes_match_status": true,
+    "all_9_reviewed_source_hashes_match": true,
+    "branch_tree_equals_tested_merge_tree": true,
+    "task_diff_from_base": "13 added paths only; no existing protected controls, root gate, pins, or dependencies modified",
+    "compiler_warning_lines_in_closure": 28,
+    "compiler_warning_lines_in_nine_targets": 9
+  },
+  "version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "receipt_kind": "Named reviewer evidence receipt; not a digital signature",
+  "previous_receipt_sha256": "f5b044acfb98fce888ddb21b41ac3e7067e91ea20e16690ea3040e89897cf519"
+}

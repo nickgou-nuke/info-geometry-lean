@@ -12,11 +12,20 @@ commit `b76d9e1e6da2ba8c1d7505ca791ef81c57d0db92`. This extension does not
 assume that PR #334 or PR #352 has merged. Lean `v4.34.1` and Mathlib
 `d13f23b723b8a846827a245b89c10fc7d3f11612` are unchanged.
 
-Initial state: complete proof candidates, independently reviewed mathematically;
-compiler and final acceptance results are pending. Source review is not a
-Lean compilation result. The focused workflow records the exact source closure,
-owner declaration audit and source hashes when it runs. Whole-repository
-acceptance is a separate question.
+At proof commit `436cdbed57deb267d6e90c2040d8ad5db57d52bf`, all nine selected
+mathematical owners and their complete 38-module repository-source import closure
+compiled successfully with the pinned toolchain. The native ownership audit checked
+355 distinct declarations, covering all 162 named theorem/lemma declarations,
+including all 15 private theorems. The union of transitive axiom dependencies was
+exactly `propext`, `Classical.choice`, and `Quot.sound`. Independent semantic
+readback confirmed that all nine integrated sources were byte-identical to the
+reviewed snapshots.
+
+This is acceptance of the exact focused mathematical sources. Whole-repository
+acceptance remains withheld: the broader root gates have not passed. The
+[verification report](SANDWICH_LOCALIZATION_VERIFICATION.md) records the immutable
+execution identity, source hashes, coverage, warnings, and root-gate state at its
+stated observation time.
 
 ## Formal intent
 

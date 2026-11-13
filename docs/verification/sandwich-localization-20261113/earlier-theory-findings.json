@@ -1,0 +1,62 @@
+{
+  "scope": "Exact excerpts from an earlier root report; not a final-head compilation result",
+  "source_commit": "02a5c46d8acafce087f6dd811238cd26264cb3df",
+  "checkout_commit": "ae700c72308af6d21ac9a5f139e66ed17404845b",
+  "run_id": 43418386188,
+  "source_job_id": 131861912356,
+  "artifact_id": 14032614823,
+  "artifact_sha256": "b921f9d0eaae4617a4293556672c47d22d6e00f2956e7bdf29d5ef97f07bf134",
+  "report_path": "project/reports/theory_audit.md",
+  "report_sha256": "eba3322b986ab68acdad092b97729d5439dd86112c611713f12fd4a978a3fa43",
+  "report_byte_length": 2117817,
+  "excerpts": [
+    {
+      "line": 4171,
+      "text": "[orphaned-check] Orphaned top-level Lean file in lean/: GrandPartitionProbability.lean"
+    },
+    {
+      "line": 4177,
+      "text": "Forbidden quarantined import: InfoGeometry.Canonical.CuntzCanonicalKMSFunctional in lean/InfoGeometry.lean:2551"
+    },
+    {
+      "line": 4178,
+      "text": "Forbidden quarantined import: InfoGeometry.Canonical.SplitG2HodgeWedgeCharacterization in lean/InfoGeometry.lean:4301"
+    },
+    {
+      "line": 4179,
+      "text": "Forbidden quarantined import: InfoGeometry.Exploration.Symphony.Basic in lean/InfoGeometry.lean:6009"
+    },
+    {
+      "line": 4180,
+      "text": "Forbidden quarantined import: InfoGeometry.Canonical.CalabiYauGrandDualityBridge in lean/InfoGeometry.lean:2108"
+    },
+    {
+      "line": 4181,
+      "text": "Forbidden quarantined import: InfoGeometry.Canonical.OperatorObservationPrequantumBridge in lean/InfoGeometry.lean:3673"
+    },
+    {
+      "line": 4182,
+      "text": "Forbidden quarantined import: InfoGeometry.Canonical.StandardSplitQuaternionCalibrationBridge in lean/InfoGeometry.lean:4450"
+    },
+    {
+      "line": 4183,
+      "text": "Forbidden quarantined import: InfoGeometry.Quantum.DoubleCopyBridge in lean/InfoGeometry.lean:9157"
+    },
+    {
+      "line": 4184,
+      "text": "Forbidden quarantined import: InfoGeometry.Canonical.CheegerMullerAnalyticTorsionBridge in lean/InfoGeometry.lean:2297"
+    },
+    {
+      "line": 4185,
+      "text": "Forbidden quarantined import: InfoGeometry.Canonical.ExpectationBilinearCommutantCorrespondence in lean/InfoGeometry.lean:2792"
+    },
+    {
+      "line": 4186,
+      "text": "Forbidden quarantined import: InfoGeometry.Canonical.ChiralTorsionBridge in lean/InfoGeometry.lean:2351"
+    },
+    {
+      "line": 4187,
+      "text": "Quarantine import boundary check failed."
+    }
+  ]
+}

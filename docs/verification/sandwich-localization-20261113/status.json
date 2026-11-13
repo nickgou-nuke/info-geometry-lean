@@ -1,0 +1,213 @@
+{
+  "status": "passed",
+  "scope": "exact-source closure, not root Lake build",
+  "targets": [
+    "InfoGeometry.Algebra.SandwichLocalization",
+    "InfoGeometry.Algebra.SandwichLocalizationActions",
+    "InfoGeometry.Algebra.SandwichLocalizationStar",
+    "InfoGeometry.Algebra.SandwichBalancedTensor",
+    "InfoGeometry.Algebra.OneSidedLocalizationBoundary",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceDefectIdentities",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness"
+  ],
+  "modules": [
+    {
+      "module": "InfoGeometry.Algebra.SandwichLocalization",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.CentralPowerLocalization",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.CentralPowerLocalizationColimit",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.SandwichLocalizationActions",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.CentralPowerLocalizationStar",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.SandwichLocalizationStar",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.SandwichBalancedTensor",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.OneSidedLocalizationBoundary",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Core.IdempotentGraphReflectionOrder",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Core.IdempotencyDefect",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceDecomposition",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Core.IdempotentCartan",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Core.IdempotentTangent",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Core.IdempotentGraphGrassmannian",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Core.IdempotentDefectIteration",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectTower",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.StarGrading",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.PeirceRegularityIdentities",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.OnShellKernel",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Singular.MoorePenrose",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Singular.Drazin",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Singular.MetricAlgebraicProjectionDefect",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Singular.MoorePenroseSectors",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.Singular.MoorePenroseSquareZero",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.CayleyKernelRegularity",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.Bergman",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.TransferDefect",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.BoundaryDependence",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceDefectIdentities",
+      "returncode": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness",
+      "returncode": 0
+    }
+  ],
+  "axiom_audit_passed": true,
+  "revision": "fc49365c7a55eb721fb3a9e9ffe90aadfe8f3392",
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "source_sha256": {
+    "InfoGeometry.Algebra.SandwichLocalization": "d26deee8bfb9be9adba768e435c040b03cd00fdaabc0640a39bf78ad569279bd",
+    "InfoGeometry.Algebra.CentralPowerLocalization": "6e8d313405718777ce152e6c4ef85a5b58b6366f25cca27ce67bcdd7fd16d1ac",
+    "InfoGeometry.Algebra.CentralPowerLocalizationColimit": "7ae22c33ece1da1f984dd23d22c5aa07a308b037120518fd83f6617a3c485c01",
+    "InfoGeometry.Algebra.SandwichLocalizationActions": "1cff2600c491497beb64185491a621d8b8c5654294866e6eb4a106a003196de6",
+    "InfoGeometry.Algebra.CentralPowerLocalizationStar": "6216e38d4b59859f082b5bec4fc22bcc220835bb0e59e2a68b2804cc324ce131",
+    "InfoGeometry.Algebra.SandwichLocalizationStar": "3492552dfa642b6a9e9139b6a316fe576dfee1d3badf905c1cf7a6a08090bdd9",
+    "InfoGeometry.Algebra.SandwichBalancedTensor": "250752a54f9610e4a90ab6d4f06ce569a124bc06b7f9b5370adcfe4238f43745",
+    "InfoGeometry.Algebra.OneSidedLocalizationBoundary": "9ad03f004f4dcdf46dbd026669c4fde0b3652d001eedb0c2a9cdb866cb7e80d8",
+    "InfoGeometry.Core.IdempotentGraphReflectionOrder": "73b3aaa4f2d48bbc511236ce687e8f9ee9b3da82f0af05ee8fd1d85e38716248",
+    "InfoGeometry.Core.IdempotencyDefect": "2d7b8fa580abe148fc70a39f8e1831b5505fb7f6a3920f3a79a0ba35bfee5590",
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+    "InfoGeometry.Core.PeirceDecomposition": "b2426391a1841cbdb35bdef72138b5ab1553508c82c22ea930aa23f164de9bd9",
+    "InfoGeometry.Core.IdempotentCartan": "460c5eafe4d6496a2276f7788a2fccfb8aa5c9bbd4839cf45f5571abfb66c16f",
+    "InfoGeometry.Core.IdempotentTangent": "ade44f681a822491eb2a10a13cddc8264030e44387484255dc2a4cbce4559c5e",
+    "InfoGeometry.Core.IdempotentGraphGrassmannian": "e12a3b1c976623da3c7b1a3fd54ab376e66edb61788c82a4264ded3b074e212a",
+    "InfoGeometry.Core.IdempotentDefectIteration": "d0cfa24254beecf79c9ce0ff918f1a0fd1c359a1e7e4d0c34d700d61c8c085d9",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic": "6657ac06e9dfde8930808192b874c3c7d7738ad89a22d18c06c207d47a949327",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge": "708761b07efd0e3382eae5c93909ee380796ff2b8855b0256dbb6ee4265255a6",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectTower": "97887958e07ce2f3ae3cef83300a4f0b384c0ccbd965c7a82dc786ed27d4c687",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.StarGrading": "c3f6221dea4a4638ae86ee9e3e6f7bc7829ccc724eb56746b40c4498167c5fae",
+    "InfoGeometry.Algebra.PeirceRegularityIdentities": "6e98db5c5fda192a79a035a11e0f3b4326280ab4d2eb1b73040499d086622f85",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.OnShellKernel": "767ba768e8c460cf051807d81c4dde95c32f6c12fda344e29b315b07ffec7b93",
+    "InfoGeometry.Singular.MoorePenrose": "a2b9f006df7fc1bbc9ce107aeab98048464d70724e88c224f5dd828a2d7ebfe6",
+    "InfoGeometry.Singular.Drazin": "4275265884df968d70d064f497215be602c63b40c0b90d506b2268961f1fbe7a",
+    "InfoGeometry.Singular.MetricAlgebraicProjectionDefect": "82e17cb8b2af47f6f75d4d606f55a93f939c143191297b3bef20323fe360adf1",
+    "InfoGeometry.Singular.MoorePenroseSectors": "d74d7f659942d8a2e6ab65316d1049427ee3027e13b5224ba9d3a83f0bcb3132",
+    "InfoGeometry.Singular.MoorePenroseSquareZero": "ac7c1890ddbf176cf230e16571591ac7b9466c0af228e466d186398ae73b89c7",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.CayleyKernelRegularity": "e4171d7e32b81f1abba8a6867dc471e0243a631d3c8ced3a568f0ade12511ff7",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCayley": "4cc45389c456d09ebf4199023e1160f87abbcae387077fe3b187d6ea75525b48",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys": "75b924dc4f5b96b7f65492cee82cafabd433409fa34b70d0f0e733066227a767",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized": "1abad94188df38d1ef5bcaf7fc10a061b36180d61c74a6207468cfa7a5a646fa",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent": "3ab943fe3d1a0bb9c399559c43924bd5ed3195c8fa98762828661a84dbac2478",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Bergman": "a6b63ba781993fbbd384f64d46512cb6495976a47415bd56ec0010957183054a",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TransferDefect": "ccecfc65f72f05a1baba0be15ceabb8ba473beb6876f7aa2a34deeaa287ae632",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.BoundaryDependence": "9a7cd889cfa550be9b1aca0a2b68f22058fa34db67de85dce55b3b203b6b90b0",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.EndogenousKernelBridge": "fb3eaacbe2998bb19ccb0a763c260d81aedf3f48dab07688dac1f27a4ae7396e",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceDefectIdentities": "eae31dce10024c013a052baf1ba42423074821661643f21ba54ac6ef5972d9db",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.KernelBridgeMatrixWitness": "e5b1a485e5957bc55ddaf0b38c20a8f5744d9ceb7283293f68fdeef5618505be"
+  }
+}

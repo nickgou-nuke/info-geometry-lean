@@ -9,3 +9,6 @@ rev = "d13f23b723b8a846827a245b89c10fc7d3f11612"
 
 [[lean_lib]]
 name = "InfoGeometry"
+
+[[lean_lib]]
+name = "DAG"

@@ -1,0 +1,102 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.OperatorAlgebra.UnitaryCornerCompression
+import InfoGeometry.OperatorAlgebra.TripotentMiddlePairing
+import InfoGeometry.OperatorAlgebra.TripotentCornerDynamics
+import InfoGeometry.Canonical.HorizonCompressionCounterexamples
+
+/-!
+# Axiom inventory for corner dynamics and ordered pairing
+
+All public definitions and theorems in the four implementation owners are
+listed explicitly. This audit certifies their actual Lean types and hypotheses;
+it adds no KMS, Markov, spectral-gap, anomaly, or radiation claim.
+-/
+
+/- lean/InfoGeometry/OperatorAlgebra/UnitaryCornerCompression.lean -/
+#print axioms InfoGeometry.OperatorAlgebra.UnitaryCornerCompression.compress
+#print axioms InfoGeometry.OperatorAlgebra.UnitaryCornerCompression.transfer
+#print axioms InfoGeometry.OperatorAlgebra.UnitaryCornerCompression.compress_zero
+#print axioms InfoGeometry.OperatorAlgebra.UnitaryCornerCompression.compress_one
+#print axioms InfoGeometry.OperatorAlgebra.UnitaryCornerCompression.compress_identity
+#print axioms InfoGeometry.OperatorAlgebra.UnitaryCornerCompression.compress_star
+#print axioms InfoGeometry.OperatorAlgebra.UnitaryCornerCompression.schwarz_defect
+#print axioms InfoGeometry.OperatorAlgebra.UnitaryCornerCompression.projection_defect_eq_gram
+#print axioms InfoGeometry.OperatorAlgebra.UnitaryCornerCompression.corner_unit_defect
+#print axioms InfoGeometry.OperatorAlgebra.UnitaryCornerCompression.composition_defect
+#print axioms InfoGeometry.OperatorAlgebra.UnitaryCornerCompression.unitary_transfer_zero_of_commute
+#print axioms InfoGeometry.OperatorAlgebra.UnitaryCornerCompression.compress_eq_conjugate_of_supported
+#print axioms InfoGeometry.OperatorAlgebra.UnitaryCornerCompression.composition_of_commute
+#print axioms InfoGeometry.OperatorAlgebra.UnitaryCornerCompression.schwarz_defect_eq_zero_iff
+#print axioms InfoGeometry.OperatorAlgebra.UnitaryCornerCompression.norm_schwarz_defect
+#print axioms InfoGeometry.OperatorAlgebra.UnitaryCornerCompression.corner_unital_iff
+#print axioms InfoGeometry.OperatorAlgebra.UnitaryCornerCompression.schwarz_defect_posSemidef
+#print axioms InfoGeometry.OperatorAlgebra.UnitaryCornerCompression.projection_trace_deficit_pos_iff
+
+/- lean/InfoGeometry/OperatorAlgebra/TripotentMiddlePairing.lean -/
+#print axioms InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.middlePairing
+#print axioms InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.wrong_left_order_zero
+#print axioms InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.middlePairing_contract
+#print axioms InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.middlePairing_support
+#print axioms InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.extreme_mem_posTwo
+#print axioms InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.middlePairing_mem_posTwo
+#print axioms InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.extreme_mem_peirce10
+#print axioms InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.extreme_zero_sector
+#print axioms InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.extreme_square_zero
+#print axioms InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.extreme_charge
+#print axioms InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.extreme_parity
+#print axioms InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.star_extreme_square_zero
+#print axioms InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.star_projPos
+#print axioms InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.star_projNeg
+#print axioms InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.star_projZero
+#print axioms InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.star_extreme_support
+#print axioms InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.star_extreme_mem_negTwo
+#print axioms InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.paired_square
+#print axioms InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.paired_zero_sector
+#print axioms InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.paired_square_zero_sector
+#print axioms InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.paired_charge
+#print axioms InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.paired_charge_eq_zero_iff
+#print axioms InfoGeometry.OperatorAlgebra.TripotentMiddlePairing.paired_parity
+
+/- lean/InfoGeometry/OperatorAlgebra/TripotentCornerDynamics.lean -/
+#print axioms InfoGeometry.OperatorAlgebra.TripotentCornerDynamics.commute_projPos
+#print axioms InfoGeometry.OperatorAlgebra.TripotentCornerDynamics.commute_projNeg
+#print axioms InfoGeometry.OperatorAlgebra.TripotentCornerDynamics.commute_projZero
+#print axioms InfoGeometry.OperatorAlgebra.TripotentCornerDynamics.tripotent_schwarz_defect
+#print axioms InfoGeometry.OperatorAlgebra.TripotentCornerDynamics.paired_square_of_partial_inverses
+#print axioms InfoGeometry.OperatorAlgebra.TripotentCornerDynamics.exponential_commute_projPos
+#print axioms InfoGeometry.OperatorAlgebra.TripotentCornerDynamics.exponential_no_leakage
+#print axioms InfoGeometry.OperatorAlgebra.TripotentCornerDynamics.phase_generated_no_leakage
+#print axioms InfoGeometry.OperatorAlgebra.TripotentCornerDynamics.paired_square_kernel_of_partial_inverses
+#print axioms InfoGeometry.OperatorAlgebra.TripotentCornerDynamics.paired_kernel_eq_middle_range
+#print axioms InfoGeometry.OperatorAlgebra.TripotentCornerDynamics.paired_square_kernel_eq_middle_range
+
+/- lean/InfoGeometry/Canonical/HorizonCompressionCounterexamples.lean -/
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.frame_diagonal_sum
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.exchange
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.exchange_selfAdjoint
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.exchange_sq
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.exchangeUnitary
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.coe_exchangeUnitary
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.exchangeUnitary_mul_self
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.exchange_conjugate_cut
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.raw_transfer_eq
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.raw_transfer_ne_zero
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.compressed_cut_zero
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.actual_transfer_zero
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.cut_schwarz_defect_zero
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.corner_identity_not_preserved
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.double_exchange_compression
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.iterated_exchange_compression
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.compression_composition_fails
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.ordered_transition_support
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.wrong_order_zero
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.ordered_product_eq
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.ordered_product_ne_zero
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.outer_partial_inverses
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.odd_witness_fixed
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.odd_witness_square
+#print axioms InfoGeometry.Canonical.HorizonCompressionCounterexamples.odd_witness_square_ne_zero

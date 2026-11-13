@@ -28,9 +28,8 @@ variable {A B : Type*} [Ring A] [Algebra ℝ A] [Ring B] [Algebra ℝ B]
 /-- Degree zero is the full centralizer, without requiring tripotence. -/
 theorem mem_adGrade_zero_iff_commute (S X : A) :
     X ∈ adGrade S 0 ↔ Commute S X := by
-  rw [mem_adGrade_iff]
-  change S * X - X * S = (0 : ℝ) • X ↔ S * X = X * S
-  rw [zero_smul, sub_eq_zero]
+  simp only [mem_adGrade_iff, Int.cast_zero, zero_smul, adOp, sub_eq_zero,
+    commute_iff_eq]
 
 /-- Algebra equivalences transport integer eigenspaces with their generator. -/
 theorem algEquiv_mem_adGrade_iff (f : A ≃ₐ[ℝ] B) (S X : A) (k : ℤ) :
@@ -174,9 +173,13 @@ theorem commute_sum_mul_iff_grouped_adGrades_eq_zero
       J p.1 * K p.2 ∈ adGrade S (p.1 + p.2) :=
     mul_mem_adGrade_add (hJ p.1 (Finset.mem_product.mp hp).1)
       (hK p.2 (Finset.mem_product.mp hp).2)
-  simpa only [Finset.sum_product] using
-    commute_sum_iff_grouped_adGrades_eq_zero (s.product t)
-      (fun p : ℤ × ℤ => p.1 + p.2) (fun p => J p.1 * K p.2) S hproduct
+  have h := commute_sum_iff_grouped_adGrades_eq_zero (s.product t)
+    (fun p : ℤ × ℤ => p.1 + p.2) (fun p => J p.1 * K p.2) S hproduct
+  have hsum : (∑ p ∈ s.product t, J p.1 * K p.2) =
+      ∑ m ∈ s, ∑ n ∈ t, J m * K n :=
+    Finset.sum_product s t (fun p : ℤ × ℤ => J p.1 * K p.2)
+  rw [hsum] at h
+  exact h
 
 /-- Conjugation by a unit commuting with the generator preserves every grade,
 with no tripotence or analytic-flow hypothesis. -/

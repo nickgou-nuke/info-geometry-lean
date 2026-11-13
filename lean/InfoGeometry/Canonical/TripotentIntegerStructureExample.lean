@@ -97,6 +97,8 @@ theorem triplePlus_raising_ne_zero :
     denseJordanPair.triplePlus raising lowering raising ≠ 0 := by
   intro h
   apply extreme_lie_triple_ne_zero
-  exact congrArg (fun X : denseJordanPair.Vplus => (X : Mat)) h
+  change extremeTriple (⊤ : LieSubalgebra ℝ Mat) tripotent 2
+    raising lowering raising = 0 at h
+  exact congrArg Subtype.val h
 
 end InfoGeometry.Canonical.TripotentIntegerStructureExample

@@ -106,7 +106,9 @@ def generatorSign : (n : ℕ) → GeneratorIndex n → Bool :=
 /-- The recursive Jordan–Wigner family in full nested operator matrices. -/
 def generator (A : Type*) [Ring A] : (n : ℕ) → GeneratorIndex n → Nested A n :=
   Nat.rec (motive := fun n => GeneratorIndex n → Nested A n)
-    (fun i => Empty.elim i) (fun _ previous => doubleGenerator previous)
+    (fun i => Empty.elim i)
+    (fun n previous =>
+      @doubleGenerator (Nested A n) (nestedRing A n) (GeneratorIndex n) previous)
 
 theorem generator_square (n : ℕ) (i : GeneratorIndex n) :
     generator A n i * generator A n i = if generatorSign n i then -1 else 1 := by

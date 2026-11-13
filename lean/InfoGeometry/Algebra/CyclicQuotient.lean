@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.LinearAlgebra.Quotient.Basic
 import Mathlib.Algebra.Ring.Hom.Defs
+import Mathlib.Algebra.Algebra.Hom
 
 /-!
 # Additive commutator quotient and nonunital functoriality
@@ -32,6 +33,41 @@ theorem cyclicClass_mul_comm (x y : A) :
   rw [← map_sub]
   exact (Submodule.Quotient.mk_eq_zero (commutatorSpan R A)).mpr
     (Submodule.subset_span ⟨x, y, rfl⟩)
+
+section LinearDescent
+
+variable {R A}
+
+/-- A linear cyclic functional factors through the same commutator quotient over its
+coefficient ring. This retains the original coefficient-linear structure. -/
+def descLinear {M : Type*} [AddCommGroup M] [Module R M] (t : A →ₗ[R] M)
+    (ht : ∀ x y, t (x * y) = t (y * x)) : CyclicModule R A →ₗ[R] M :=
+  (commutatorSpan R A).liftQ t (by
+    rw [commutatorSpan, Submodule.span_le]
+    rintro c ⟨x, y, rfl⟩
+    change t (x * y - y * x) = 0
+    rw [map_sub, ht, sub_self])
+
+@[simp] theorem descLinear_class {M : Type*} [AddCommGroup M] [Module R M]
+    (t : A →ₗ[R] M) (ht : ∀ x y, t (x * y) = t (y * x)) (x : A) :
+    descLinear t ht (cyclicClass R A x) = t x := rfl
+
+end LinearDescent
+
+section AlgebraMap
+
+variable {k B C : Type*} [CommRing k] [Ring B] [Ring C] [Algebra k B] [Algebra k C]
+
+/-- An algebra map preserves the linear commutator relation space. -/
+theorem commutatorSpan_le_comap_algHom (f : B →ₐ[k] C) :
+    commutatorSpan k B ≤ (commutatorSpan k C).comap f.toLinearMap := by
+  rw [commutatorSpan, Submodule.span_le]
+  rintro c ⟨x, y, rfl⟩
+  change f (x * y - y * x) ∈ commutatorSpan k C
+  rw [map_sub, map_mul, map_mul]
+  exact Submodule.subset_span ⟨f x, f y, rfl⟩
+
+end AlgebraMap
 
 variable {B C : Type*} [Ring B] [Ring C]
 

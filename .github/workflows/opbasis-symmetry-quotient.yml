@@ -1,0 +1,319 @@
+name: Operator symmetry and ordered quotient bases
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/opbasis-symmetry-quotient.yml'
+      - 'docs/OPBASIS_SYMMETRY_QUOTIENT_CONTRACT.md'
+      - 'lake-manifest.json'
+      - 'lakefile.lean'
+      - 'lakefile.toml'
+      - 'lean-toolchain'
+      - 'lean/InfoGeometry/Algebra/CharacterRelationQuotient.lean'
+      - 'lean/InfoGeometry/Algebra/CyclicQuotient.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteGroupCharacterProjection.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Algebra/FreeOperatorSymmetry.lean'
+      - 'lean/InfoGeometry/Algebra/OperatorBasisAudit.lean'
+      - 'lean/InfoGeometry/All.lean'
+      - 'lean/InfoGeometry/Canonical/OperatorBasisExamples.lean'
+      - 'lean/InfoGeometry/Core/IdempotencyDefect.lean'
+      - 'lean/InfoGeometry/Core/IdempotentCartan.lean'
+      - 'lean/InfoGeometry/Core/PeirceDecomposition.lean'
+      - 'lean/InfoGeometry/LinearAlgebra/OrderedQuotientBasis.lean'
+      - 'lean/InfoGeometry/Modular/Choi.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/OperatorGeometryExamples.lean'
+      - 'lean/InfoGeometry/Quantum/ChoiCompletePositivity.lean'
+      - 'lean/InfoGeometry/Quantum/KrausAmplificationCP.lean'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/infra/opengauss_screener.py'
+      - 'tools/pathing.py'
+      - 'tools/quality/semantic_vacuity_gate.py'
+      - 'tools/quality/semantic_vacuity_patterns.json'
+      - 'verification/language-symmetry/check.py'
+      - 'verification/language-symmetry/lake-manifest.json'
+      - 'verification/language-symmetry/lakefile.toml'
+      - 'verification/language-symmetry/lean-toolchain'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: opbasis-symmetry-quotient-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    defaults:
+      run:
+        shell: bash
+    env:
+      OPBASIS_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+      OPBASIS_FILES: >-
+        lean/InfoGeometry/Algebra/CyclicQuotient.lean
+        lean/InfoGeometry/Algebra/FiniteGroupCharacterProjection.lean
+        lean/InfoGeometry/Algebra/CharacterRelationQuotient.lean
+        lean/InfoGeometry/LinearAlgebra/OrderedQuotientBasis.lean
+        lean/InfoGeometry/Algebra/FreeOperatorSymmetry.lean
+        lean/InfoGeometry/Canonical/OperatorBasisExamples.lean
+        lean/InfoGeometry/Algebra/OperatorBasisAudit.lean
+    steps:
+      - name: Check out the actual PR head
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os, re
+          if re.fullmatch(r'[0-9a-f]{40}', os.environ['OPBASIS_EXPECTED_HEAD']) is None:
+              raise SystemExit('Invalid expected commit SHA')
+          PY
+          # This public repository needs no checkout credential. Avoid traversing
+          # unrelated legacy gitlinks during checkout-action credential cleanup.
+          git init .
+          git remote add origin https://github.com/nickgou-nuke/info-geometry-lean.git
+          git -c protocol.version=2 fetch --no-tags --depth=1 origin "$OPBASIS_EXPECTED_HEAD"
+          git checkout --detach FETCH_HEAD
+
+      - name: Verify the checked revision and unchanged dependency pins
+        run: |
+          set -euo pipefail
+          mkdir -p opbasis-report
+          python3 - <<'PY' 2>&1 | tee opbasis-report/pins.log
+          import hashlib, json, os, re, subprocess, tomllib
+          from pathlib import Path
+          expected = os.environ['OPBASIS_EXPECTED_HEAD']
+          if re.fullmatch(r'[0-9a-f]{40}', expected) is None:
+              raise SystemExit('Invalid expected commit SHA')
+          head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          if head != expected:
+              raise SystemExit(f'Checked revision {head} differs from requested head {expected}')
+          pin = 'd13f23b723b8a846827a245b89c10fc7d3f11612'
+          url = 'https://github.com/leanprover-community/mathlib4.git'
+          records = {}
+          manifests = []
+          for root in (Path('.'), Path('verification/language-symmetry')):
+              if root != Path('.') and (root / 'lakefile.lean').exists():
+                  raise SystemExit(f'Unexpected alternative Lake configuration: {root}')
+              toolchain = (root / 'lean-toolchain').read_text().strip()
+              config = tomllib.loads((root / 'lakefile.toml').read_text())
+              manifest = json.loads((root / 'lake-manifest.json').read_text())
+              requirement = [p for p in config['require'] if p['name'] == 'mathlib']
+              packages = {p['name']: p for p in manifest['packages']}
+              if len(packages) != len(manifest['packages']):
+                  raise SystemExit(f'Duplicate package names: {root}')
+              if toolchain != 'leanprover/lean4:v4.34.1':
+                  raise SystemExit(f'Wrong Lean pin: {root}')
+              if len(requirement) != 1 or (requirement[0].get('git'), requirement[0].get('rev')) != (url, pin):
+                  raise SystemExit(f'Wrong Mathlib requirement: {root}')
+              if root == Path('.'):
+                  # The root has a primary Lean configuration and a retained TOML
+                  # configuration. The focused project uses only its own TOML.
+                  primary = (root / 'lakefile.lean').read_text()
+                  requirements = re.findall(r'^require\s+mathlib\s+from\s+git\s+"([^"]+)"\s*@\s*"([^"]+)"', primary, re.M)
+                  if len(requirements) != 1 or requirements[0][0] != url or requirements[0][1] not in {pin, 'v4.34.1'}:
+                      raise SystemExit('Unexpected root Mathlib requirement')
+              if (packages['mathlib'].get('url'), packages['mathlib'].get('rev'), packages['mathlib'].get('type')) != (url, pin, 'git'):
+                  raise SystemExit(f'Wrong Mathlib manifest pin: {root}')
+              if manifest['packagesDir'] != '.lake/packages':
+                  raise SystemExit(f'Unexpected package location: {root}')
+              manifests.append(packages)
+              for name in ('lean-toolchain', 'lakefile.lean', 'lakefile.toml', 'lake-manifest.json'):
+                  path = root / name
+                  if path.exists():
+                      records[str(path)] = hashlib.sha256(path.read_bytes()).hexdigest()
+          for name, package in manifests[1].items():
+              if name not in manifests[0] or any(package.get(k) != manifests[0][name].get(k) for k in ('type', 'url', 'rev')):
+                  raise SystemExit(f'Focused/root package pin mismatch: {name}')
+          focused = tomllib.loads(Path('verification/language-symmetry/lakefile.toml').read_text())
+          if focused.get('srcDir') != '../../lean' or not {'InfoGeometry'} <= {p['name'] for p in focused['lean_lib']}:
+              raise SystemExit('Focused project must compile the existing InfoGeometry sources')
+          report = {'head': head, 'lean': 'leanprover/lean4:v4.34.1', 'mathlib': pin, 'configuration_sha256': records}
+          Path('opbasis-report/pins.json').write_text(json.dumps(report, indent=2) + '\n')
+          print(json.dumps(report, indent=2))
+          PY
+
+      - name: Strictly screen all seven source files
+        run: |
+          set -euo pipefail
+          read -r -a opbasis_sources <<< "$OPBASIS_FILES"
+          python3 tools/infra/opengauss_screener.py --strict "${opbasis_sources[@]}" 2>&1 | tee opbasis-report/strict-screen.log
+
+      - name: Record semantic-vacuity findings and fail on errors
+        run: |
+          set -euo pipefail
+          read -r -a opbasis_sources <<< "$OPBASIS_FILES"
+          python3 tools/quality/semantic_vacuity_gate.py "${opbasis_sources[@]}" \
+            --fail-on error --top 1000 --json-out opbasis-report/vacuity.json 2>&1 | tee opbasis-report/vacuity.log
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          report = json.loads(Path('opbasis-report/vacuity.json').read_text())
+          sources = set(os.environ['OPBASIS_FILES'].split())
+          if not report['coverage_complete'] or set(report['successfully_read_paths']) != sources:
+              raise SystemExit('Incomplete semantic-vacuity source coverage')
+          warnings = report['severity_counts'].get('warning', 0)
+          summary = (
+              '### Semantic-vacuity review\n\n'
+              f'Observed warnings: {warnings}. All findings are retained for independent source review.\n\n'
+              'The gate fails on errors. Warnings remain visible in this summary and the retained JSON/log.\n\n'
+          )
+          for finding in report['findings']:
+              summary += f"- {finding['file']}:{finding['line']} — {finding['severity']}/{finding['category']}: {finding['subject']}\n"
+          print(summary)
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as output:
+              output.write(summary)
+          PY
+
+      - name: Restore pinned Lean and dependency artifacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            verification/language-symmetry/.lake/packages
+          key: opbasis-deps-lean4341-d13f23b7-${{ runner.os }}-${{ hashFiles('verification/language-symmetry/lake-manifest.json') }}-v1
+
+      - name: Restore source build artifacts
+        uses: actions/cache@v4
+        with:
+          path: verification/language-symmetry/.lake/build
+          key: opbasis-source-lean4341-d13f23b7-${{ runner.os }}-${{ hashFiles('lean/**/*.lean', 'lean-toolchain', 'lakefile.lean', 'lakefile.toml', 'lake-manifest.json', 'verification/language-symmetry/lakefile.toml', 'verification/language-symmetry/lake-manifest.json', '.github/workflows/opbasis-symmetry-quotient.yml') }}
+          restore-keys: |
+            opbasis-source-lean4341-d13f23b7-${{ runner.os }}-
+
+      - name: Install the pinned Lean toolchain
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/opbasis-elan-init.sh"
+            sh "$RUNNER_TEMP/opbasis-elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.34.1 2>&1 | tee opbasis-report/toolchain-install.log
+
+      - name: Hydrate the pinned Mathlib cache through the existing wrapper
+        run: |
+          set -euo pipefail
+          python3 verification/language-symmetry/check.py exe cache get 2>&1 | tee opbasis-report/cache.log
+          python3 verification/language-symmetry/check.py env lean --version 2>&1 | tee opbasis-report/lean-version.log
+          python3 - <<'PY' 2>&1 | tee opbasis-report/dependency-revisions.log
+          import json, re, subprocess
+          from pathlib import Path
+          focused = Path('verification/language-symmetry')
+          manifest = json.loads((focused / 'lake-manifest.json').read_text())
+          for package in manifest['packages']:
+              name = package['name']
+              if package['type'] != 'git' or re.fullmatch(r'[A-Za-z0-9_-]+', name) is None:
+                  raise SystemExit(f'Unexpected focused package: {name}')
+              root = focused / '.lake/packages' / name
+              actual = subprocess.check_output(['git', '-C', str(root), 'rev-parse', 'HEAD'], text=True).strip()
+              if actual != package['rev']:
+                  raise SystemExit(f'Checkout revision mismatch: {name}: {actual}')
+              if subprocess.check_output(['git', '-C', str(root), 'status', '--porcelain', '--untracked-files=no'], text=True).strip():
+                  raise SystemExit(f'Modified dependency source: {name}')
+              print(f'{name}: {actual}')
+          if re.search(r'Lean \(version 4\.34\.1(?:,|\))', Path('opbasis-report/lean-version.log').read_text()) is None:
+              raise SystemExit('Running Lean does not report version 4.34.1')
+          PY
+
+      - name: Build the explicit owner audit target
+        run: |
+          set -euo pipefail
+          python3 verification/language-symmetry/check.py build \
+            InfoGeometry.Algebra.OperatorBasisAudit 2>&1 | tee opbasis-report/build.log
+
+      - name: Freshly elaborate every owner and the audit sequentially
+        run: |
+          set -euo pipefail
+          read -r -a opbasis_sources <<< "$OPBASIS_FILES"
+          for opbasis_source in "${opbasis_sources[@]}"; do
+            opbasis_relative="${opbasis_source#lean/}"
+            opbasis_output="$PWD/verification/language-symmetry/.lake/build/lib/lean/${opbasis_relative%.lean}.olean"
+            opbasis_log="opbasis-report/${opbasis_relative##*/}.log"
+            mkdir -p "$(dirname "$opbasis_output")"
+            # A source-cache hit never substitutes for these seven fresh kernel elaborations.
+            # Writing the fresh owner oleans ensures later owners and the audit import this pass.
+            python3 verification/language-symmetry/check.py env lean --root="$PWD/lean" \
+              -o "$opbasis_output" "$PWD/$opbasis_source" 2>&1 | tee "$opbasis_log"
+          done
+
+      - name: Reconcile the complete public inventory and exact axiom output
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' 2>&1 | tee opbasis-report/axiom-check.log
+          import hashlib, json, os, re
+          from pathlib import Path
+          from tools.infra.opengauss_screener import _strip_lean_comments_and_strings
+          sources = [Path(p) for p in os.environ['OPBASIS_FILES'].split()]
+          public = []
+          counts = {}
+          declaration = re.compile(
+              r'(?m)^[ \t]*(?:@\[[^\]]*\]\s*)*'
+              r'(?P<mods>(?:(?:private|protected|noncomputable|unsafe|partial|local|scoped|public)\s+)*)'
+              r'(?P<kind>def|theorem|lemma|abbrev|opaque|instance|structure|class|inductive|axiom|constant)\s+'
+              r"(?P<name>[^\W\d][\w'.]*)"
+          )
+          for source in sources[:-1]:
+              module = str(source.with_suffix(''))[len('lean/'):].replace('/', '.')
+              clean = _strip_lean_comments_and_strings(source.read_text())
+              if re.findall(r'(?m)^\s*namespace\s+(\S+)', clean) != [module]:
+                  raise SystemExit(f'Owner namespace shape changed: {source}')
+              owned = []
+              for match in declaration.finditer(clean):
+                  if 'private' in match['mods'].split():
+                      continue
+                  if match['kind'] not in {'def', 'theorem', 'lemma', 'abbrev'} or '.' in match['name']:
+                      raise SystemExit(f'Public declaration shape needs explicit review: {source}: {match[0]}')
+                  owned.append(module + '.' + match['name'])
+              public.extend(owned)
+              counts[module] = len(owned)
+          audit = _strip_lean_comments_and_strings(sources[-1].read_text())
+          expected = re.findall(r'(?m)^#print axioms (\S+)\s*$', audit)
+          count = len(public)
+          if count == 0 or len(set(public)) != count or len(expected) != count or len(set(expected)) != count or set(public) != set(expected):
+              raise SystemExit(f'Public/audit inventory mismatch: public={len(public)}, audit={len(expected)}, missing={sorted(set(public)-set(expected))}, extra={sorted(set(expected)-set(public))}')
+          log = Path('opbasis-report/OperatorBasisAudit.lean.log').read_text()
+          records = re.findall(
+              r"'([^'\n]+)' (?:depends on axioms:\s*\[([^\]]*)\]|does not depend on any axioms)",
+              log,
+          )
+          reported = [name for name, _ in records]
+          if len(reported) != count or len(set(reported)) != count or set(reported) != set(expected):
+              raise SystemExit(f'Incomplete, duplicate, or unexpected axiom output: count={len(reported)}, missing={sorted(set(expected)-set(reported))}, extra={sorted(set(reported)-set(expected))}')
+          allowed = {'propext', 'Classical.choice', 'Quot.sound'}
+          dependencies = {name: sorted({a.strip() for a in group.split(',') if a.strip()}) for name, group in records}
+          unapproved = {name: sorted(set(axioms)-allowed) for name, axioms in dependencies.items() if set(axioms)-allowed}
+          if unapproved:
+              raise SystemExit(f'Unapproved axiom dependencies: {unapproved}')
+          report = {
+              'public_count': count, 'owner_counts': counts, 'declarations': dependencies,
+              'source_sha256': {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources},
+              'head': json.loads(Path('opbasis-report/pins.json').read_text())['head'],
+          }
+          Path('opbasis-report/axioms.json').write_text(json.dumps(report, indent=2, sort_keys=True) + '\n')
+          print(f'Checked all {count} public declarations exactly once; allowed axioms only: {sorted(allowed)}')
+          print(json.dumps(counts, indent=2))
+          PY
+
+      - name: Confirm verification did not rewrite source or configuration
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p opbasis-report
+          read -r -a opbasis_sources <<< "$OPBASIS_FILES"
+          git diff --exit-code -- lean-toolchain lakefile.lean lakefile.toml lake-manifest.json \
+            verification/language-symmetry/lean-toolchain \
+            verification/language-symmetry/lakefile.toml \
+            verification/language-symmetry/lake-manifest.json \
+            "${opbasis_sources[@]}" 2>&1 | tee opbasis-report/source-integrity.log
+
+      - name: Preserve the verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: opbasis-symmetry-quotient-${{ github.run_id }}-${{ github.run_attempt }}
+          path: opbasis-report/
+          if-no-files-found: warn
+          retention-days: 30

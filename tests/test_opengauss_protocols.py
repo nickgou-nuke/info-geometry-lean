@@ -856,6 +856,30 @@ def test_detect_trap_t16_homomorphism_rejection():
     assert len(t16_2) >= 1
 
 
+@pytest.mark.parametrize("projection", ["det", "trace", "omega"])
+def test_t16_projection_of_named_commutator_is_not_scalar_collapse(projection):
+    code = f"theorem measured : commutatorMatrix.{projection} = 1 := by decide"
+    violations = screen_lean_content(code)
+    assert not any(
+        v.trap_id == "T16" and "Homomorphism" in v.trap_name
+        for v in violations
+    )
+
+
+@pytest.mark.parametrize("expression", [
+    "commutator (Matrix.trace A) (Matrix.trace B)",
+    "commutator(Matrix.trace A) (Matrix.trace B)",
+    "commutator A.trace B.trace",
+    "⁅Matrix.trace A, Matrix.trace B⁆",
+])
+def test_t16_still_rejects_scalar_projection_before_commutator(expression):
+    violations = screen_lean_content(f"def collapsed := {expression}")
+    assert any(
+        v.trap_id == "T16" and "Homomorphism" in v.trap_name
+        for v in violations
+    )
+
+
 def test_detect_trap_t16_missing_noncommutative_witness():
     """Require a witness when square matrices are used as an operator algebra."""
     code_no_witness = """

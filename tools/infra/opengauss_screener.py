@@ -393,7 +393,7 @@ def check_homomorphism_rejection(lines: list[str]) -> list[TrapViolation]:
 
     # Pattern 1: commutator or Lie bracket directly wrapping scalar/trace projections
     pat_bracket_scalar = re.compile(
-        r"(?:\bcommutator\s*\(?\s*|⁅\s*)(?:(?:Matrix\.)?trace|tr\b|det\b|[A-Za-z0-9_]*\.(?:omega|trace|tr|det)\b)"
+        r"(?:\bcommutator\b\s*\(?\s*|⁅\s*)(?:(?:Matrix\.)?trace|tr\b|det\b|[A-Za-z0-9_]*\.(?:omega|trace|tr|det)\b)"
     )
     # Pattern 2: scalar product difference of linear/trace mappings mimicking a commutator
     pat_trace_product_diff = re.compile(

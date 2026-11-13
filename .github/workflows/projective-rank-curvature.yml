@@ -1,0 +1,236 @@
+name: Projective rank torsion and noncommutative curvature
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Cocycle/TransitionDefect.lean'
+      - 'lean/InfoGeometry/Geometry/AssociativeGaugeConnection.lean'
+      - 'lean/InfoGeometry/Geometry/TwistedCurvatureTransport.lean'
+      - 'lean/InfoGeometry/Algebra/CyclicMatrix*.lean'
+      - 'lean/InfoGeometry/Algebra/OrthogonalCommutatorExample.lean'
+      - 'lean/InfoGeometry/Algebra/NonAssocDerivation.lean'
+      - 'lean/InfoGeometry/Algebra/DerivationLieLane*.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Canonical/ProjectiveFoundation.lean'
+      - 'lean/InfoGeometry/Canonical/ProjectiveRankTorsion.lean'
+      - 'lean/InfoGeometry/Canonical/PolynomialCurvingObstruction.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/DerivationDifferentialForms.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/CentralCurvingBianchi.lean'
+      - 'handover/injections/gapped-torsion-anomalies-20261112.txt'
+      - 'tests/test_opengauss_protocols.py'
+      - 'tools/quality/check_clifford_dirac.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/placeholder_audit.py'
+      - 'tools/quality/audit_constructivity.py'
+      - 'tools/pathing.py'
+      - 'tools/quality/semantic_vacuity_gate.py'
+      - 'tools/quality/semantic_vacuity_patterns.json'
+      - 'tools/infra/opengauss_screener.py'
+      - 'tools/build_lock.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'docs/GERBE_CURVATURE_RANK_CONTRACT.md'
+      - '.github/workflows/projective-rank-curvature.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: projective-rank-curvature-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      RANK_CURVATURE_TARGETS: >-
+        [
+          "InfoGeometry.Cocycle.TransitionDefect",
+          "InfoGeometry.Geometry.TwistedCurvatureTransport",
+          "InfoGeometry.Algebra.CyclicMatrixDifferential",
+          "InfoGeometry.Canonical.ProjectiveRankTorsion",
+          "InfoGeometry.OperatorAlgebra.CentralCurvingBianchi",
+          "InfoGeometry.Canonical.PolynomialCurvingObstruction",
+          "InfoGeometry.Algebra.OrthogonalCommutatorExample"
+        ]
+    steps:
+      - name: Check out the exact public repository revision
+        shell: bash
+        run: |
+          # No submodule initialization or credentials are needed for this source closure.
+          # Direct checkout avoids traversal of unrelated unmapped upstream gitlinks.
+          git init project
+          git -C project remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
+          git -C project -c protocol.version=2 fetch --no-tags --depth=1 origin "$GITHUB_SHA"
+          git -C project checkout --detach FETCH_HEAD
+          test "$(git -C project rev-parse HEAD)" = "$GITHUB_SHA"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned regression runner
+        run: python3 -m pip install pytest==9.2.0
+      - name: Read exact dependency pins
+        id: pins
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          manifest = json.loads(Path('project/lake-manifest.json').read_text())
+          revision = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'mathlib={revision}\n')
+          PY
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: ${{ steps.pins.outputs.mathlib }}
+          path: mathlib
+          persist-credentials: false
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            mathlib/.lake
+          key: projective-rank-curvature-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Fetch pinned native imports
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('project').resolve()))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          targets = json.loads(os.environ['RANK_CURVATURE_TARGETS'])
+          _, _, native = closure(Path('project'), targets)
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'projective-rank-curvature-cache') as lock:
+              subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
+                  cwd='mathlib', check=True, pass_fds=(lock.fileno(),))
+          PY
+      - name: Run strict screener regressions
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import subprocess, sys
+          from pathlib import Path
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          out = Path('../projective-rank-curvature-report')
+          out.mkdir(exist_ok=True)
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'projective-rank-screener-tests') as lock:
+              result = subprocess.run([sys.executable, '-m', 'pytest',
+                  'tests/test_opengauss_protocols.py', '-q'], text=True,
+                  stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                  pass_fds=(lock.fileno(),))
+          (out / 'screener-regression.log').write_text(result.stdout)
+          print(result.stdout)
+          result.check_returncode()
+          PY
+      - name: Compile complete source closure and audit owned declarations
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess, sys
+          command = [sys.executable, 'tools/quality/check_clifford_dirac.py',
+                     '--mathlib-root', '../mathlib', '--output', '../projective-rank-curvature-report']
+          for target in json.loads(os.environ['RANK_CURVATURE_TARGETS']):
+              command.extend(['--target', target])
+          subprocess.run(command, check=True)
+          PY
+      - name: Check placeholders, strict screening, and semantic findings
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY_SCAN'
+          import json, os, subprocess, sys
+          from pathlib import Path
+          out = Path('../projective-rank-curvature-report')
+          owners = ['lean/' + t.replace('.', '/') + '.lean'
+                    for t in json.loads(os.environ['RANK_CURVATURE_TARGETS'])]
+          for index, owner in enumerate(owners):
+              subprocess.run([sys.executable, 'tools/quality/placeholder_audit.py',
+                  '--strict', '--root', owner, '--json-out',
+                  str(out / f'placeholder-{index}.json')], check=True)
+          result = subprocess.run([sys.executable, 'tools/infra/opengauss_screener.py',
+              '--strict', *owners, '--json'], text=True,
+              stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          (out / 'opengauss.json').write_text(result.stdout)
+          print(result.stdout)
+          result.check_returncode()
+          subprocess.run([sys.executable, 'tools/quality/semantic_vacuity_gate.py',
+              *owners, '--fail-on', 'error', '--json-out',
+              str(out / 'semantic-vacuity.json')], check=True)
+          PY_SCAN
+      - name: Reconcile scope and bind verification evidence
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          out = Path('../projective-rank-curvature-report')
+          targets = json.loads(os.environ['RANK_CURVATURE_TARGETS'])
+          report = json.loads((out / 'report.json').read_text())
+          assert report['status'] == 'passed' and report['targets'] == targets
+          assert report['audit_required']
+          modules = {m['module']: m for m in report['modules']}
+          assert len(modules) == len(report['modules'])
+          assert all(m['returncode'] == 0 and not m['reused'] for m in modules.values())
+          assert all(modules[t]['warnings'] == 0 for t in targets)
+          assert set(report['declaration_counts']) == set(targets)
+          assert all(report['declaration_counts'][t] > 0 for t in targets)
+          for module, expected in report['source_sha256'].items():
+              path = Path('lean') / (module.replace('.', '/') + '.lean')
+              assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, module
+          semantic = json.loads((out / 'semantic-vacuity.json').read_text())
+          owners = ['lean/' + t.replace('.', '/') + '.lean' for t in targets]
+          assert semantic['coverage_complete'] and not semantic['read_failures']
+          assert semantic['files_selected'] == semantic['files_scanned'] == len(owners)
+          for field in ['source_paths', 'successfully_read_paths', 'scope_roots']:
+              assert sorted(semantic[field]) == sorted(owners), field
+          assert semantic['fail_on'] == 'error' and not semantic['fail_prefixes']
+          assert semantic['severity_counts'].get('error', 0) == 0
+          index_path = out / 'evidence-sha256.json'
+          index = json.loads(index_path.read_text())
+          for name, expected in index.items():
+              path = Path(name.removeprefix('repository/')) if name.startswith('repository/') else out / name
+              assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, name
+          for name in ['.github/workflows/projective-rank-curvature.yml',
+                       'docs/GERBE_CURVATURE_RANK_CONTRACT.md',
+                       'tools/quality/placeholder_audit.py',
+                       'tools/quality/audit_constructivity.py',
+                       'tools/pathing.py',
+                       'tools/quality/semantic_vacuity_gate.py',
+                       'tools/quality/semantic_vacuity_patterns.json',
+                       'tools/infra/opengauss_screener.py',
+                       'tests/test_opengauss_protocols.py',
+                       'lean-toolchain', 'lake-manifest.json']:
+              index['repository/' + name] = hashlib.sha256(Path(name).read_bytes()).hexdigest()
+          for path in sorted(out.glob('*.json')):
+              if path != index_path:
+                  index[path.name] = hashlib.sha256(path.read_bytes()).hexdigest()
+          index_path.write_text(json.dumps(index, indent=2) + '\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: projective-rank-curvature-kernel-evidence
+          path: |
+            projective-rank-curvature-report/*.json
+            projective-rank-curvature-report/src/CliffordDiracAudit.lean
+            projective-rank-curvature-report/*.log
+          if-no-files-found: warn

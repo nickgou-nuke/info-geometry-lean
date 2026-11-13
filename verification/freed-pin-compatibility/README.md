@@ -2,14 +2,18 @@
 
 This project builds the exact repository owners under `../../lean`. It uses
 the root-pinned Lean, Mathlib, and LeanArchitect revisions, with the shared
-package directory and the repository's shared build lock. It does not change
-the root package, its dependency pins, or its quality gates.
+package directory and the repository's shared build lock. It preserves
+the root package, its dependency pins, quality-gate criteria, and root gate
+entrypoints.
 
 From the repository root, with the pinned `lake` executable on `PATH`:
 
 ```sh
 python3 verification/freed-pin-compatibility/check.py exe cache get
 python3 verification/freed-pin-compatibility/check.py build
+python3 verification/freed-pin-compatibility/check.py env lean \
+  -DwarningAsError=true \
+  "$PWD/lean/InfoGeometry/Clifford/FreedPinCompatibilityAudit.lean"
 ```
 
 The default target is
@@ -37,3 +41,14 @@ The source contracts and final validation record belong in
 selected import closure and its declaration audit. It does not certify
 unrelated root default targets, the root optional path dependencies, or
 geometric/differential `KO` constructions outside the declared scope.
+
+## Accepted code checkpoint
+
+[CI run 43394851127](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43394851127)
+passed the full focused closure and both audit executions at
+`8f5bbd0bbc297ce407b184e17eda75510ccba067`. Both executions audited 682
+declarations from all 14 selected owners and reported only `propext`,
+`Classical.choice`, and `Quot.sound`; the direct audit passed with warnings
+treated as errors. Root integration remains blocked by the separately
+recorded submodule/path-package failures. See the contract for exact owner
+counts, inputs, remaining mathematical edges, and integration evidence.

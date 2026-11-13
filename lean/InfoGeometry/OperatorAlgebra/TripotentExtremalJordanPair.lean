@@ -66,9 +66,11 @@ theorem jordanTriple_mem_extreme_intersection {S x y z : A}
   constructor
   · rw [← double_lie_eq_jordanTriple hS hi hx.2 hz.2]
     exact L.lie_mem (L.lie_mem hx.1 hy.1) hz.1
-  · have hxyz := mul_mem_adGrade_add (mul_mem_adGrade_add hx.2 hy.2) hz.2
+  · change x * y * z + z * y * x ∈ adGrade S i
+    have hxyz := mul_mem_adGrade_add (mul_mem_adGrade_add hx.2 hy.2) hz.2
     have hzyx := mul_mem_adGrade_add (mul_mem_adGrade_add hz.2 hy.2) hx.2
-    simpa only [jordanTriple, hij, zero_add] using add_mem hxyz hzyx
+    rw [hij, zero_add] at hxyz hzyx
+    exact (adGrade S i).add_mem hxyz hzyx
 
 /-- The subtype triple is constructed from multiplication, with closure
 proved above. Its algebraic identities are not assumed as fields. -/
@@ -95,7 +97,9 @@ theorem restrictedExtremeTriple_add_left {S : A} (hS : S * S * S = S)
       restrictedExtremeTriple hS L hi hij x y z +
         restrictedExtremeTriple hS L hi hij x' y z := by
   apply Subtype.ext
-  change jordanTriple ((x : A) + x') y z = jordanTriple x y z + jordanTriple x' y z
+  change jordanTriple (B := A) ((x : A) + (x' : A)) (y : A) (z : A) =
+    jordanTriple (B := A) (x : A) (y : A) (z : A) +
+      jordanTriple (B := A) (x' : A) (y : A) (z : A)
   simp only [jordanTriple, add_mul, mul_add]
   abel
 
@@ -107,7 +111,9 @@ theorem restrictedExtremeTriple_add_middle {S : A} (hS : S * S * S = S)
       restrictedExtremeTriple hS L hi hij x y z +
         restrictedExtremeTriple hS L hi hij x y' z := by
   apply Subtype.ext
-  change jordanTriple x ((y : A) + y') z = jordanTriple x y z + jordanTriple x y' z
+  change jordanTriple (B := A) (x : A) ((y : A) + (y' : A)) (z : A) =
+    jordanTriple (B := A) (x : A) (y : A) (z : A) +
+      jordanTriple (B := A) (x : A) (y' : A) (z : A)
   simp only [jordanTriple, add_mul, mul_add]
   abel
 
@@ -119,7 +125,9 @@ theorem restrictedExtremeTriple_add_right {S : A} (hS : S * S * S = S)
       restrictedExtremeTriple hS L hi hij x y z +
         restrictedExtremeTriple hS L hi hij x y z' := by
   apply Subtype.ext
-  change jordanTriple x y ((z : A) + z') = jordanTriple x y z + jordanTriple x y z'
+  change jordanTriple (B := A) (x : A) (y : A) ((z : A) + (z' : A)) =
+    jordanTriple (B := A) (x : A) (y : A) (z : A) +
+      jordanTriple (B := A) (x : A) (y : A) (z' : A)
   simp only [jordanTriple, add_mul, mul_add]
   abel
 
@@ -130,7 +138,8 @@ theorem restrictedExtremeTriple_smul_left {S : A} (hS : S * S * S = S)
     restrictedExtremeTriple hS L hi hij (r • x) y z =
       r • restrictedExtremeTriple hS L hi hij x y z := by
   apply Subtype.ext
-  change jordanTriple (r • (x : A)) y z = r • jordanTriple x y z
+  change jordanTriple (B := A) (r • (x : A)) (y : A) (z : A) =
+    r • jordanTriple (B := A) (x : A) (y : A) (z : A)
   simp only [jordanTriple, Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_add]
 
 /-- Real linearity in the middle argument. -/
@@ -140,7 +149,8 @@ theorem restrictedExtremeTriple_smul_middle {S : A} (hS : S * S * S = S)
     restrictedExtremeTriple hS L hi hij x (r • y) z =
       r • restrictedExtremeTriple hS L hi hij x y z := by
   apply Subtype.ext
-  change jordanTriple x (r • (y : A)) z = r • jordanTriple x y z
+  change jordanTriple (B := A) (x : A) (r • (y : A)) (z : A) =
+    r • jordanTriple (B := A) (x : A) (y : A) (z : A)
   simp only [jordanTriple, Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_add]
 
 /-- Real linearity in the last argument. -/
@@ -150,7 +160,8 @@ theorem restrictedExtremeTriple_smul_right {S : A} (hS : S * S * S = S)
     restrictedExtremeTriple hS L hi hij x y (r • z) =
       r • restrictedExtremeTriple hS L hi hij x y z := by
   apply Subtype.ext
-  change jordanTriple x y (r • (z : A)) = r • jordanTriple x y z
+  change jordanTriple (B := A) (x : A) (y : A) (r • (z : A)) =
+    r • jordanTriple (B := A) (x : A) (y : A) (z : A)
   simp only [jordanTriple, Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_add]
 
 /-- The concrete extreme Jordan pair of any native Lie subalgebra. The
@@ -176,18 +187,28 @@ def lieSubalgebraExtremeJordanPair {S : A} (hS : S * S * S = S)
   triplePlus_fundamental := by
     intro x u w y v
     apply Subtype.ext
-    change jordanTriple (x : A) y (jordanTriple u v w) -
-        jordanTriple u v (jordanTriple x y w) =
-      jordanTriple (jordanTriple x y u) v w - jordanTriple u (jordanTriple y x v) w
-    rw [jordanTriple_fundamental]
+    change jordanTriple (B := A) (x : A) (y : A)
+        (jordanTriple (B := A) (u : A) (v : A) (w : A)) -
+      jordanTriple (B := A) (u : A) (v : A)
+        (jordanTriple (B := A) (x : A) (y : A) (w : A)) =
+      jordanTriple (B := A)
+        (jordanTriple (B := A) (x : A) (y : A) (u : A)) (v : A) (w : A) -
+      jordanTriple (B := A) (u : A)
+        (jordanTriple (B := A) (y : A) (x : A) (v : A)) (w : A)
+    rw [jordanTriple_fundamental (x : A) (y : A) (u : A) (v : A) (w : A)]
     abel
   tripleMinus_fundamental := by
     intro x u w y v
     apply Subtype.ext
-    change jordanTriple (x : A) y (jordanTriple u v w) -
-        jordanTriple u v (jordanTriple x y w) =
-      jordanTriple (jordanTriple x y u) v w - jordanTriple u (jordanTriple y x v) w
-    rw [jordanTriple_fundamental]
+    change jordanTriple (B := A) (x : A) (y : A)
+        (jordanTriple (B := A) (u : A) (v : A) (w : A)) -
+      jordanTriple (B := A) (u : A) (v : A)
+        (jordanTriple (B := A) (x : A) (y : A) (w : A)) =
+      jordanTriple (B := A)
+        (jordanTriple (B := A) (x : A) (y : A) (u : A)) (v : A) (w : A) -
+      jordanTriple (B := A) (u : A)
+        (jordanTriple (B := A) (y : A) (x : A) (v : A)) (w : A)
+    rw [jordanTriple_fundamental (x : A) (y : A) (u : A) (v : A) (w : A)]
     abel
 
 end InfoGeometry.OperatorAlgebra.TripotentExtremalJordanPair

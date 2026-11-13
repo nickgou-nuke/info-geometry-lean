@@ -255,7 +255,7 @@ theorem dual_positive_kernel_eq {S Nplus Nminus : Module.End ℝ V}
     apply Submodule.mem_sup.mpr
     refine ⟨projZero S v, ⟨v, rfl⟩, projPos S v, ⟨v, rfl⟩, ?_⟩
     have hsum := congrArg (fun T : Module.End ℝ V => T v) (proj_sum_eq_id (T := S))
-    simpa only [LinearMap.add_apply, Module.End.one_apply, hmv, add_zero, add_comm] using hsum
+    simpa only [LinearMap.add_apply, Module.End.one_apply, hmv, zero_add, add_zero, add_comm] using hsum
   · exact range_zero_sup_range_pos_le_ker hS hp
 
 /-- Two dual extreme operators with the specified product equations isolate

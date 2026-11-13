@@ -8,8 +8,9 @@ operators, domains, and operator families. The baseline is
 `1369d7181834704a5879e2e5dfcc0e1ad931131a`, based on upstream
 `a392af178af1fe2bcba2ba39eb405700c6ee103c`.
 
-The focused construction and exhaustive declaration audit have passed at the
-accepted code checkpoint recorded below. Lean `v4.34.1`, the root dependency
+The focused construction and expanded declaration audit have passed at the
+concrete checkpoint recorded below: 973 declarations across all eighteen
+selected mathematical owners, checked twice. Lean `v4.34.1`, the root dependency
 revisions, the quality-gate criteria, and the root gate entrypoints are
 unchanged. The audit implementation caches an immutable module-name array;
 its coverage and rejection criteria are unchanged. The constructions reuse
@@ -37,6 +38,18 @@ determines exhaustive declaration coverage.
 | Operator domains and Pin families | `KK.LinearDiracTransport`: `domainEquiv`, `operator`, `dense_domain`, `closed_graph`, `kernelSectorEquiv`, `resolvent_shifted`; `KK.PinLinearDiracTransport`: `pin_operator_mul_on_domain`, `positive_pin_domain_eq`, `continuous_pin_inverse_family`, `continuous_pin_conjugate_family`, `continuous_pin_resolvent_family` | A supplied domain `S` and operator `D : S →ₗ[ℝ] H` are transported to their actual images and conjugates. Density, closed graph, and compact resolvent data are transported from explicit inputs; the right-resolvent equation uses source shifted-operator injectivity. Banach-space families retain the explicit operator-norm continuity hypothesis on represented unit values. |
 | Native Fredholm families | `KK.PinFredholmTransport`: `isFredholm_conjugate_iff`, `index_conjugate`, `pinFredholmFamily`, `pinFredholmFamily_index`, `pin_eventually_fredholm_index`, `exponentialFredholmFamily`, `exponentialFredholmFamily_index` | A bounded seed satisfying native `ContinuousLinearMap.IsFredholm` gives continuous Pin-conjugacy and exponential families in the Fredholm subtype. The native kernel-minus-cokernel index is preserved, and native local stability also controls nearby operators. Exponential continuity is derived in `KK.LinearDiracTransport.continuous_conjugate_expAutomorphism`. |
 
+### Concrete follow-up declaration map
+
+The four owners below extend the earlier accepted base and are included in
+the accepted 973-declaration audit recorded in the concrete follow-up section.
+
+| Layer | Namespace and key declarations | Exact result and inputs |
+| --- | --- | --- |
+| Concrete smooth Morita realization | `Geometry.KleinPinSmoothMorita`: `volumeEquiv`, `sectorCoordinates`, `operatorMatrix`, `operatorMatrix_dirac`, `cliffordHeadRepresentation`, `concreteObject`, `concreteCornerIso`, `concreteReconstructionIso`, `compensated_dirac_corner`, `gradedDirac_reconstruction` | The actual volume identifies the two smooth Klein sectors. Native matrix coordinates retain every coefficient in `End ℝ S₀`, identify geometric grading, and compute the complete Dirac matrix. The concrete graded object, corner, and even reconstruction use the existing Morita equivalence. An odd head involution recovers the nonzero reduced operator from its compensated corner. |
+| Concrete Pin frame family | `Geometry.KleinPinFrameFamily`: `pinFrame`, `pinFrame_eq_suspended`, `frameSmoothEquiv`, `framedDiracSmoothLinear_apply`, `frameAssociatedEquiv`, `frameTotalEquiv_dirac`, `circlePin`, `circleFrames_noncommute`, `circleSuspendedDirac_joint_contDiff` | Actual normalized Pin elements act on the specified spinor fibre. Their frame changes transport deck monodromy, Clifford coefficients, smooth domains, quotient descent, grading, and volume. The first-order differential formula is compared by the chain rule. The explicit normalized circle family has jointly smooth evaluated fields and differential images. |
+| Joint frame and reduction comparison | `Geometry.KleinPinMoritaFamily`: `framedSectorCoordinates_frame`, `framedOperatorMatrix_natural`, `framedOperatorMatrix_dirac`, `framedCliffordHead_grading`, `compensated_corner_intertwine`, `circleCorner_joint_contDiff` | The same frame commutes with the actual sector-coordinate square and conjugates every entry of the full noncommutative operator matrix. The represented Clifford head, independent grading, and head-compensated corner obey this comparison; the reduced family satisfies `A_U U = U A` on its actual smooth domains. |
+| Analytic suspension comparison | `KK.FreedPinAnalyticCompatibility`: `evenPinInclusion`, `positive_action`, `negative_action`, `positive_operator`, `negative_operator`, `positive_graph`, `negative_graph`, `positive_resolvent`, `negative_resolvent`, `positive_fredholmFamily`, `negative_fredholmFamily` | The pullback and actual ambient even-Pin routes give equal continuous actions, transported domains, graphs, operators, resolvents, and continuous maps into the native Fredholm subtype. Both signs preserve the explicitly supplied analytic seed and continuity hypotheses. |
+
 ## Preconditions and conventions
 
 The general matrix category consists of semilinear additive involutions over a
@@ -54,6 +67,23 @@ action contributes a second sector change. The two-dimensional Klein model is
 not identified with the repository's three-dimensional quaternion model.
 Neither ambient evenness nor the smooth-domain doubling supplies a grading on
 the original irreducible spinor fibre.
+
+For the concrete smooth reduction, let `S₀` and `S₁` be the two actual smooth
+sectors, `K` their Clifford volume map, and `A = KD` the same-sector operator.
+The coordinate equivalence is `T(ψ₀, ψ₁) = (ψ₀, -Kψ₁)`. It gives
+`T D T⁻¹ = [[0,-A],[-A,0]]` over the full ring `End ℝ S₀`. The ordinary
+diagonal corner vanishes. The explicitly represented odd involution with
+matrix `[[0,-1],[-1,0]]` converts this to `diag(A,A)`, whose corner is `A`.
+The differential operator is treated as an element of this full coefficient
+ring; it is not assumed linear or superlinear over every coefficient operator.
+
+For a frame `U`, the family constructs the deck law `U ρ U⁻¹`, coefficient
+maps `U γᵢ U⁻¹`, and volume `K_U = U K U⁻¹` together. Its domain equivalence
+maps `ψ` to `Uψ`. The comparison `D_U U = U D` follows from differentiation,
+and hence `A_U U = U A` holds for the actual reduced operators. The general
+frame formulas specialize to the represented normalized Pin group, including
+the explicit family `(cos t, sin t)`. Smoothness is asserted for evaluated
+fields and differential images in these domain identifications.
 
 An analytic domain is an actual `Submodule`, and an unbounded operator is a
 linear map on that domain. Density, closed graph, and compact-resolvent data are
@@ -85,13 +115,15 @@ resolvent transport; kernel equivalences and Fredholm transport precede index
 invariance. No index or geometric interpretation is used to justify an earlier
 algebraic identity.
 
-The concrete Klein smooth operator is connected to the particular Pin
-construction through its full algebra representation, normalized glide-reflection element,
-differential coefficients, and smooth domains. It is **not yet instantiated
-as an object of the split-tower Morita equivalence**, and no concrete Morita
-corner reduction of that operator is constructed. The general algebraic
-operator-reconstruction theorem and the concrete differential construction
-remain separate results.
+The concrete follow-up connects the Klein smooth operator to the particular
+Pin construction through its full algebra representation, normalized
+glide-reflection element, differential coefficients, actual smooth domains,
+and a graded matrix/Clifford-head Morita object. Its explicit head-compensated
+corner is the same-sector differential operator, and that reduction obeys
+the same Pin frame family. This is distinct from constructing a representation
+of the separate canonical infinite Clifford tail into `End ℝ S₀`. That tail
+representation, and therefore an identification with the canonical split-tower
+module, remain absent.
 
 The concrete operator also has no constructed `L²`/Sobolev completion here and
 has not been instantiated as the generic closed-domain or bounded Fredholm
@@ -103,13 +135,39 @@ Klein deck lattice. A curved Pin-frame bundle, geometric elliptic regularity,
 a general family index in `KO(B)`, and differential `KO` groups and pushforwards
 remain separate construction targets.
 
+### Analytic source boundary
+
+The bounded source review inspected the Klein geometric owners, split-Krein
+domain and resolvent interfaces, Cantor/Cuntz analytic owners, bounded `L²`
+multiplier owner, and the pinned native Fourier, `lp`, compact-operator, and
+Fredholm APIs. No complete declaration-graph absence claim is made.
+
+[`Canonical/KreinCarrierInstances/Carrier.lean`](../lean/InfoGeometry/Canonical/KreinCarrierInstances/Carrier.lean)
+defines `KleinBottleCarrier` as `WithLp 2 (ℝ × ℝ)`, a finite-dimensional chart
+carrier. It is not the Hilbert space of spinor sections needed here.
+[`KK/RealSplitKreinUnboundedCycle.lean`](../lean/InfoGeometry/KK/RealSplitKreinUnboundedCycle.lean)
+stores density, closed graph, and resolvent data as input fields; its regularity
+theorem reads those fields. These owners therefore cannot discharge the
+concrete operator's analytic hypotheses by themselves.
+
+Native `UnitAddTorus.mFourierBasis`, `lp.mapCLM`, `lp.hasSum_single`, and
+`isCompactOperator_of_tendsto` supply useful ingredients for a later compact
+Fourier model with full finite matrix blocks. The first missing geometric
+comparison is an actual Hilbert inclusion of the existing smooth Klein
+sections, followed by a proof that Fourier transformation takes their
+Fréchet-defined Dirac operator to the appropriate block multiplier and that
+the equivariant finite Fourier modes form a dense core. A weighted sequence
+domain without that comparison would leave the particular geometric operator
+unidentified. None of these future analytic conclusions is inferred from the
+smooth Morita or frame identities in this PR.
+
 ## Verification record
 
 ### Acceptance policy
 
 Acceptance requires exact focused kernel builds, exhaustive declaration axiom
 inspection, source/debt screening, and independent mathematical review. The
-audit selects fourteen mathematical owners, including private and generated
+expanded audit selects eighteen mathematical owners, including private and generated
 declarations. It rejects unsafe and partial declarations, requires a positive
 count for every owner, and allows only `propext`, `Classical.choice`, and
 `Quot.sound`. The focused build does not certify unrelated root default targets
@@ -122,15 +180,15 @@ to `Canonical.MaurerCartanCurvature`. `BerryConnection` re-exports that owner;
 closure without changing the mathematical declarations, dependency pins, or
 genuine blueprint annotations elsewhere.
 
-### Accepted code and exhaustive audit
+### Earlier accepted base and exhaustive audit
 
 [Focused CI run 43394851127](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43394851127)
 completed successfully at upstream commit
 `8f5bbd0bbc297ce407b184e17eda75510ccba067`, tree
 `f17d6496cb73e2e2b1bb72bf1c5206ee2d79e053`. The corresponding local checkpoint
 is `4ffd54100330803359fce34fda4c26f957951702`, with the same tree. This is the
-accepted code checkpoint; subsequent documentation changes do not alter the
-mathematical owners or audit source certified by that run.
+accepted base checkpoint. The later concrete checkpoint below separately
+certifies the four added owners and expanded audit.
 
 | Validation | Observed result |
 | --- | --- |
@@ -210,12 +268,13 @@ local full build or audit.
 ### Root integration status
 
 Root integration has **not** passed. Two completed upstream workflows for the
-accepted PR head identify failures before the relevant integration builds:
+concrete follow-up head `bc3cea7eebc70360085200126ebb3fca101508e2` identify
+failures before the relevant integration builds:
 
 | Workflow | Observed blocker |
 | --- | --- |
-| [Reviewed PR Integration, run 43394851591](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43394851591) | Recursive checkout failed with `No url found for submodule path 'external_refs/auto-ontology' in .gitmodules`; the kernel and audit steps were skipped. |
-| [Root CI, run 43394851587](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43394851587) | Path-package preflight found missing/untracked HomotopyHypothesis and Atlas package configurations, plus an uninitialized pinned GIFT gitlink. The baseline build was skipped. A later smoke-summary attempt also reported that the HomotopyHypothesis package directory was absent. |
+| [Reviewed PR Integration, run 43469885061](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43469885061) | Recursive checkout failed with `No url found for submodule path 'external_refs/auto-ontology' in .gitmodules`; the kernel and audit steps were skipped. |
+| [Root CI, run 43469884527](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43469884527) | Path-package preflight found missing/untracked HomotopyHypothesis and Atlas package configurations, plus an uninitialized pinned GIFT gitlink. The baseline build was skipped. A later smoke-summary attempt also reported that the HomotopyHypothesis package directory was absent. |
 
 The relevant `.gitmodules`, root Lake configuration, dependency manifest, and
 Lean toolchain are unchanged from the stated upstream baseline. These errors
@@ -223,28 +282,30 @@ are separate from the successful focused proof run. No substitute package,
 dependency revision, or relaxed acceptance criterion was introduced.
 
 The tracked local pre-push hook was also invoked manually over the full
-follow-up range
-`1369d7181834704a5879e2e5dfcc0e1ad931131a..4ffd54100330803359fce34fda4c26f957951702`.
-Its workspace/ref prechecks and changed-owner classification completed. It
-then waited for the shared build lock and was interrupted while still queued
-(exit 130), after the completed upstream blockers were inspected. It produced
-no root build or post-build acceptance result. The unrelated lock holder was
-left running. Publication through the GitHub connector does not itself execute
-the local pre-push hook.
+concrete follow-up range
+`1369d7181834704a5879e2e5dfcc0e1ad931131a..f7693d40d29b6d957063b5fa9e0a6e76d426818b`.
+Its workspace/ref prechecks and classification of 21 changed Lean owners
+completed, and it acquired the shared build lock. The Lake child terminated
+with signal 9 (wrapper exit 247), and the semantic source audit later exited
+137. The separate source debt scan found no `sorry`, `axiom`, or `admit` in
+those 21 files. Tracked-scope and quarantine classification completed. This
+was a failed root gate, not kernel or semantic acceptance. The cause of the
+local process termination was not established. Publication through the GitHub
+connector does not itself execute the local pre-push hook.
 
 PR #338 remains a published draft. Promotion still requires reproducible root
 package/submodule configuration and a successful root integration gate. The
-focused acceptance does not establish a concrete Klein Hilbert/Fredholm model,
-a concrete Klein Morita corner, or a geometric/differential `KO` pushforward.
+focused acceptance now includes the concrete smooth Klein Morita corner and
+its joint Pin frame family. It does not claim a concrete Klein
+Hilbert/Fredholm model or a geometric/differential `KO` pushforward.
 
 ## Concrete follow-up contract
 
-The repeated request to connect the machinery to this particular Pin
-construction is being implemented beyond the accepted checkpoint above.
-The new targets are not covered by its 682-declaration audit until a new
-focused build and exhaustive audit complete.
+The four concrete owners extend the earlier accepted checkpoint and satisfy
+the following construction contract. Their kernel builds and expanded
+exhaustive audit have completed successfully.
 
-| New owner target | Construction and acceptance obligation |
+| New owner target | Construction specified by the contract |
 | --- | --- |
 | Concrete smooth Morita realization | Use the actual volume action to identify the two smooth Klein sectors. Construct coordinates on their doubled domain, identify its full endomorphism algebra with matrices over the first sector's noncommutative endomorphism ring, compare grading, and compute the actual differential operator matrix. Instantiate the existing graded module equivalence. Recover the reduced differential operator through an explicit off-diagonal entry or head-compensated corner; the ordinary diagonal corner of the odd operator is zero. |
 | Concrete Pin frame family | Construct frame changes from the actual represented normalized Pin elements. Conjugate the deck monodromy and Clifford coefficients together, prove smooth-domain and derivative compatibility and quotient descent, and retain the ordered group composition. Construct an explicit normalized-vector trigonometric family and derive its represented parameter continuity. |
@@ -254,11 +315,57 @@ focused build and exhaustive audit complete.
 The new targets are implemented in `Geometry.KleinPinSmoothMorita`,
 `Geometry.KleinPinFrameFamily`, `Geometry.KleinPinMoritaFamily`, and
 `KK.FreedPinAnalyticCompatibility`. Independent source review found no
-mathematical sign, order, carrier, or assumption defect. The expanded audit
-selects all eighteen mathematical owners. New kernel acceptance is pending.
-Local single-owner compiler attempts terminated with exit 247 before Lean
-diagnostics (the profiled attempt reported 843204 KiB maximum resident memory);
-the maintained upstream workflow will supply independent compiler evidence.
+mathematical sign, order, carrier, or assumption defect. Compiler-guided
+repairs made the subtype evaluation, extensionality depth, smooth function
+comparisons, and componentwise arithmetic explicit without changing the
+mathematical statements or weakening the audit.
+
+### Accepted concrete checkpoint
+
+[Focused CI run 43469884874](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43469884874)
+completed successfully at upstream commit
+`bc3cea7eebc70360085200126ebb3fca101508e2`, tree
+`6428205d009042434a42fb3bc903367eee351776`. The corresponding local commit is
+`4555cb54074cd67d19d4edf7443f8afead8dc75f`, with the same tree. Subsequent
+documentation changes preserve all eighteen mathematical owner files and the
+audit source certified by this run.
+
+| Validation | Observed result |
+| --- | --- |
+| Representation, geometric, and domain foundations | Passed; 8993 build jobs. |
+| Existing Clifford tensor, operator, and family compatibility | Passed; 9020 build jobs. |
+| All four concrete follow-up owners, including the joint comparison | Passed; 9023 build jobs. |
+| Actual algebraic Clifford tower | Passed; 3597 build jobs. |
+| Complete focused default-target closure | Passed; 9059 build jobs. |
+| Exhaustive audit during the default-target build | Passed; 973 distinct declarations across all 18 selected owners. |
+| Direct audit with `-DwarningAsError=true` | Passed; the same 973 declaration names and owner counts. |
+| Reported axiom dependencies in both executions | Exactly `[propext, Classical.choice, Quot.sound]`. |
+
+The two exhaustive logs were reconciled by exact ordered declaration name and
+owner, with no duplicates. Every owner had a positive count, and the counts
+summed to 973 in both executions. The fourteen earlier owner counts remain
+exactly as listed above. The four added owners contribute 291 declarations:
+
+| Mathematical owner | Audited declarations |
+| --- | ---: |
+| Earlier fourteen owners | 682 |
+| `Geometry.KleinPinSmoothMorita` | 89 |
+| `Geometry.KleinPinFrameFamily` | 120 |
+| `Geometry.KleinPinMoritaFamily` | 49 |
+| `KK.FreedPinAnalyticCompatibility` | 33 |
+| **All eighteen owners** | **973** |
+
+The build reports two nonfatal unused-simplifier-argument lints in
+`KleinPinMoritaFamily.coordinateFrame_symm_single`; these are repeated when
+Lake replays that owner. There are no proof errors. The direct exhaustive
+audit with warnings treated as errors passed. The existing audit generator
+and its previously passing 27 fixture tests are unchanged.
+
+The workflow uploaded all stage logs and the source/toolchain receipt in the
+[freed-pin-compatibility-evidence artifact](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43469884874/artifacts/14061865897).
+Local single-owner compiler attempts had terminated with exit 247 before
+Lean diagnostics (the profiled attempt reported 843204 KiB maximum resident
+memory); the completed upstream run provides the kernel acceptance evidence.
 
 The new targets preserve the distinction between an actual algebraic Morita
 object and an operator that is linear or superlinear for its coefficient

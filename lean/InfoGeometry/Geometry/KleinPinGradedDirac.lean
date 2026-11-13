@@ -23,6 +23,16 @@ noncomputable section
 
 namespace InfoGeometry.Geometry.KleinPinDirac
 
+open InfoGeometry.Topology.KleinAssociatedSpinors
+
+/-- Expose the native additive groups of the two nested submodule carriers.
+Both layers retain their inherited pointwise operations. -/
+instance smoothSectionsAddCommGroup (sector : Bool) :
+    AddCommGroup (smoothSections sector) := by
+  letI : AddCommGroup (equivariantSections (monodromy sector)) :=
+    Submodule.addCommGroup (equivariantSections (monodromy sector))
+  exact Submodule.addCommGroup (smoothSections sector)
+
 /-- The actual invariant smooth domain, retaining both deck-equivariance
 sectors as separate summands. -/
 abbrev TotalSections := smoothSections false × smoothSections true
@@ -30,8 +40,14 @@ abbrev TotalSections := smoothSections false × smoothSections true
 /-- The explicit involutive grading of the doubled smooth-section domain. -/
 def grading : Module.End ℝ TotalSections where
   toFun ψ := (ψ.1, -ψ.2)
-  map_add' ψ χ := by apply Prod.ext <;> simp
-  map_smul' r ψ := by apply Prod.ext <;> simp
+  map_add' ψ χ := by
+    apply Prod.ext
+    · rfl
+    · exact neg_add ψ.2 χ.2
+  map_smul' r ψ := by
+    apply Prod.ext
+    · rfl
+    · exact (smul_neg r ψ.2).symm
 
 /-- The differential operator is off diagonal because its equivariance
 sector interchange was proved from the chain rule. -/
@@ -50,7 +66,10 @@ def gradedDirac : Module.End ℝ TotalSections where
 theorem grading_sq : grading * grading = (1 : Module.End ℝ TotalSections) := by
   apply LinearMap.ext
   intro ψ
-  apply Prod.ext <;> simp [Module.End.mul_apply]
+  apply Prod.ext
+  · rfl
+  · change - -ψ.2 = ψ.2
+    exact neg_neg ψ.2
 
 /-- The constructed differential operator is odd for the constructed
 grading, with no supplied anticommutation hypothesis. -/
@@ -58,7 +77,10 @@ theorem grading_dirac_anticommute :
     grading * gradedDirac = -(gradedDirac * grading) := by
   apply LinearMap.ext
   intro ψ
-  apply Prod.ext <;> simp [Module.End.mul_apply]
+  apply Prod.ext
+  · change diracSmoothLinear true ψ.2 = -(diracSmoothLinear true (-ψ.2))
+    rw [map_neg, neg_neg]
+  · rfl
 
 /-- The nonconstant smooth section from the differential owner gives an
 explicit nonzero value of the graded differential operator. -/

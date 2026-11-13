@@ -51,7 +51,7 @@ def targetVector : (Tangent × ℝ) →ₗ[ℝ] Mat where
     simp only [Prod.fst_add, Prod.snd_add, map_add, add_mul, neg_add, add_smul]
     abel
   map_smul' r x := by
-    simp [smul_add, smul_neg, smul_mul_assoc, smul_smul, smul_eq_mul]
+    simp [smul_add, smul_neg, smul_smul, smul_eq_mul]
 
 /-- The square law has the exact signature and scalar convention of the
 native suspended quadratic form. -/
@@ -60,9 +60,9 @@ theorem targetVector_sq (x : Tangent × ℝ) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [targetVector, cliffordVolume, vectorPlus, Matrix.mul_apply,
-      Fin.sum_univ_two, targetForm, FreedCliffordSuspension.positiveForm_apply,
+      Fin.sum_univ_two, targetForm,
       positiveForm_apply, Matrix.algebraMap_matrix_apply, smul_eq_mul] <;>
-    push_cast <;> ring
+    ring
 
 /-- An actual algebra homomorphism on Freed's full suspended Clifford algebra. -/
 def representation : CliffordAlgebra targetForm →ₐ[ℝ] Mat :=
@@ -177,7 +177,7 @@ def volumeAction : Spinor →L[ℝ] Spinor :=
     volumeAction s = ![-s 1, s 0] := by
   ext i
   fin_cases i <;>
-    simp [volumeAction, cliffordVolume, vectorPlus, Matrix.mul_apply,
+    simp [volumeAction, cliffordVolume, vectorPlus,
       Matrix.mulVec, dotProduct, Fin.sum_univ_two]
 
 theorem volumeAction_sq (s : Spinor) : volumeAction (volumeAction s) = -s := by

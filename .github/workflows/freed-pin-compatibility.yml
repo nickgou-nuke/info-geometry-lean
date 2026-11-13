@@ -95,23 +95,20 @@ jobs:
             InfoGeometry.KK.CompactPhaseObstruction \
             InfoGeometry.Canonical.MaurerCartanCurvature \
             2>&1 | tee verification/freed-pin-compatibility/artifacts/foundations.log
-      - name: Build Clifford, operator, and family compatibility
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 verification/freed-pin-compatibility/check.py build \
-            InfoGeometry.Clifford.Cl11GradedMorita \
-            InfoGeometry.Geometry.KleinPinGradedDirac \
-            InfoGeometry.Clifford.FreedKleinRepresentation \
-            InfoGeometry.KK.PinFredholmTransport \
-            2>&1 | tee verification/freed-pin-compatibility/artifacts/compatibility.log
-      - name: Build graded tensor and tower compatibility
+      - name: Build Clifford tensor, operator, and family compatibility
         shell: bash
         run: |
           set -euo pipefail
           python3 verification/freed-pin-compatibility/check.py build \
             InfoGeometry.Clifford.Cl11GradedTensorMorita \
-            2>&1 | tee verification/freed-pin-compatibility/artifacts/tensor.log
+            InfoGeometry.Geometry.KleinPinGradedDirac \
+            InfoGeometry.Clifford.FreedKleinRepresentation \
+            InfoGeometry.KK.PinFredholmTransport \
+            2>&1 | tee verification/freed-pin-compatibility/artifacts/compatibility.log
+      - name: Build compatibility with the actual Clifford tower
+        shell: bash
+        run: |
+          set -euo pipefail
           python3 verification/freed-pin-compatibility/check.py build \
             InfoGeometry.Canonical.SplitCliffordHeadMorita \
             2>&1 | tee verification/freed-pin-compatibility/artifacts/tower.log

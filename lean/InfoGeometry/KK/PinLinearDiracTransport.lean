@@ -160,7 +160,8 @@ theorem continuous_pin_inverse_family {B : Type*} [TopologicalSpace B]
   apply continuous_iff_continuousAt.mpr
   intro b
   simpa only [Function.comp_def, Ring.inverse_unit] using
-    (NormedRing.inverse_continuousAt (pinRepresentation Q ρ (g b))).comp hg.continuousAt
+    (NormedRing.inverse_continuousAt (pinRepresentation Q ρ (g b))).comp_of_eq
+      (hg.continuousAt (x := b)) rfl
 
 /-- The conjugated bounded operator is a genuine operator-norm continuous
 family whenever the represented Pin operators are operator-norm continuous. -/

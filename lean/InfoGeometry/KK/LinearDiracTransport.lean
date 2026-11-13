@@ -43,8 +43,11 @@ def domainEquiv (e : H ≃L[ℝ] H) (S : Submodule ℝ H) :
     (e : H ≃L[ℝ] H) (S : Submodule ℝ H) (x : domain e S) :
     ((domainEquiv e S).symm x : H) = e.symm x := by
   apply e.injective
-  simpa using congrArg (fun y : domain e S => (y : H))
-    ((domainEquiv e S).apply_symm_apply x)
+  calc
+    e ((domainEquiv e S).symm x : H) = (x : H) :=
+      congrArg (fun y : domain e S => (y : H))
+        ((domainEquiv e S).apply_symm_apply x)
+    _ = e (e.symm x) := (e.apply_symm_apply x).symm
 
 @[simp] theorem mem_domain_iff
     (e : H ≃L[ℝ] H) (S : Submodule ℝ H) (x : H) :
@@ -123,7 +126,7 @@ theorem graph_operator_eq_preimage
 /-- Domain density survives every continuous linear change of coordinates. -/
 theorem dense_domain (e : H ≃L[ℝ] H) (S : Submodule ℝ H)
     (hS : Dense (S : Set H)) : Dense (domain e S : Set H) := by
-  rw [dense_iff_closure_eq, domain_coe, ← e.toHomeomorph.image_closure, hS.closure_eq]
+  rw [dense_iff_closure_eq, domain_coe, ← e.image_closure, hS.closure_eq]
   rw [Set.image_univ, Set.range_eq_univ.mpr e.surjective]
 
 /-- Closedness is proved by the explicit inverse coordinate map on the graph. -/
@@ -205,7 +208,8 @@ theorem zeroModes_operator
   · rintro ⟨y, ⟨z, hz, rfl⟩, rfl⟩
     refine ⟨domainEquiv e S z, ?_, rfl⟩
     change operator e D (domainEquiv e S z) = 0
-    simp [hz]
+    change D z = 0 at hz
+    simp only [operator_domainEquiv, hz, map_zero]
 
 theorem range_boundedConjugate
     (e : H ≃L[ℝ] H) (A : H →L[ℝ] H) :
@@ -290,13 +294,13 @@ def resolvent
   shift := R.shift
   resolvent := ContinuousLinearEquiv.conjContinuousAlgEquiv e R.resolvent
   resolvent_preserves_domain x := by
-    rw [mem_domain_iff]
-    simpa [ContinuousLinearEquiv.conjContinuousAlgEquiv_apply_apply] using R.resolvent_preserves_domain (e.symm x)
+    change e (R.resolvent (e.symm x)) ∈ S.map e.toLinearEquiv.toLinearMap
+    exact ⟨R.resolvent (e.symm x), R.resolvent_preserves_domain (e.symm x), rfl⟩
   left_resolvent x := by
     have hdomain :
         (⟨ContinuousLinearEquiv.conjContinuousAlgEquiv e R.resolvent x, by
-          rw [mem_domain_iff]
-          simpa [ContinuousLinearEquiv.conjContinuousAlgEquiv_apply_apply] using R.resolvent_preserves_domain (e.symm x)⟩ :
+          change e (R.resolvent (e.symm x)) ∈ S.map e.toLinearEquiv.toLinearMap
+          exact ⟨R.resolvent (e.symm x), R.resolvent_preserves_domain (e.symm x), rfl⟩⟩ :
           domain e S) =
         domainEquiv e S
           ⟨R.resolvent (e.symm x), R.resolvent_preserves_domain (e.symm x)⟩ := by

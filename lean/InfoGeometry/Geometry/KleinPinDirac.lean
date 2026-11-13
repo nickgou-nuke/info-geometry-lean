@@ -40,7 +40,8 @@ open InfoGeometry.Topology.KleinQuotientDeckInvariants
 open InfoGeometry.Topology.KleinDeckRepresentation
 open InfoGeometry.Topology.KleinCliffordPinLift
 open InfoGeometry.Topology.KleinAssociatedSpinors
-open scoped KleinDeckRepresentation Matrix ContDiff
+open scoped InfoGeometry.Topology.KleinDeckRepresentation
+open scoped Matrix ContDiff
 
 /-- The existing positive Clifford action, now as real continuous operators
 on its existing complex spinor fibre. -/
@@ -93,7 +94,7 @@ def reflection (sector : Bool) : Spinor ≃ₗ[ℂ] Spinor where
   invFun s := if sector then -![s 1, s 0] else ![s 1, s 0]
   left_inv s := by cases sector <;> ext i <;> fin_cases i <;> simp
   right_inv s := by cases sector <;> ext i <;> fin_cases i <;> simp
-  map_add' s t := by cases sector <;> ext i <;> fin_cases i <;> simp
+  map_add' s t := by cases sector <;> ext i <;> fin_cases i <;> simp [add_comm]
   map_smul' z s := by cases sector <;> ext i <;> fin_cases i <;> simp
 
 theorem reflection_false_native (s : Spinor) :
@@ -237,8 +238,13 @@ theorem dirac_equivariant (sector : Bool)
   have hx := congrArg (fun L : PlanePoint →L[ℝ] Spinor =>
     L (signR g.n • ((1, 0) : PlanePoint))) hc
   have hy := congrArg (fun L : PlanePoint →L[ℝ] Spinor => L (0, 1)) hc
-  simp only [ContinuousLinearMap.comp_apply, deckDerivative_horizontal, map_smul,
-    monodromyCLM_apply] at hx
+  change (fderiv ℝ (ψ : PlanePoint → Spinor) (deckAction g p))
+      (deckDerivative g (signR g.n • ((1, 0) : PlanePoint))) =
+    monodromyCLM sector g
+      (fderiv ℝ (ψ : PlanePoint → Spinor) p
+        (signR g.n • ((1, 0) : PlanePoint))) at hx
+  rw [deckDerivative_horizontal] at hx
+  simp only [map_smul, monodromyCLM_apply] at hx
   simp only [ContinuousLinearMap.comp_apply, deckDerivative_vertical,
     monodromyCLM_apply] at hy
   rw [dirac, hx, hy, map_smul, gammaX_monodromy, gammaY_monodromy,

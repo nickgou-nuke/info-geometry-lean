@@ -45,7 +45,7 @@ def splitOneIsometry : (Qsplit 1).IsometryEquiv q11 where
   toLinearEquiv := LinearEquiv.prodUnique
     (R := ℝ) (M := ℝ × ℝ) (M₂ := SplitSpace 0)
   map_app' x := by
-    change q11 x.1 = Q11 x.1 + 0
+    change q11 x.1 = InfoGeometry.CliffordTower.Q11 x.1 + 0
     simp only [q11_eq_splitQ11, add_zero]
 
 /-- The native Clifford algebra identification induced by that isometry. -/
@@ -68,7 +68,7 @@ private theorem cliffordMap_involute
     apply CliffordAlgebra.hom_ext
     apply LinearMap.ext
     intro v
-    simp only [AlgHom.comp_apply, LinearMap.comp_apply,
+    simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, AlgHom.comp_apply,
       CliffordAlgebra.map_apply_ι, CliffordAlgebra.involute_ι, map_neg]
   exact AlgHom.congr_fun h x
 
@@ -234,6 +234,26 @@ private theorem headTailLift_involute_tmul (k : ℕ)
         headTailLift_tmul_stage, splitCliffordHeadTailInfinityInvolute_ofStage,
         finiteHeadTailInvolute_tmul]
 
+private theorem headTailAlgEquiv_apply (k : ℕ)
+    (z : CliffordAlgebra.evenOdd (Qsplit k) ᵍ⊗[ℝ] splitCliffordTailGrade 0) :
+    splitCliffordInfinity_headTailGradedTensorAlgEquiv k z =
+      splitCliffordHeadTailInfinity_ringEquiv k
+        (splitCliffordHeadTailGradedTensorLift k z) := by
+  simp only [splitCliffordInfinity_headTailGradedTensorAlgEquiv,
+    AlgEquiv.trans_apply, splitCliffordHeadTailGradedTensorAlgEquiv,
+    AlgEquiv.ofBijective_apply]
+  rfl
+
+private theorem headTailRingEquiv_involute (k : ℕ)
+    (x : SplitCliffordHeadTailInfinity k) :
+    splitCliffordInfinityInvolute (splitCliffordHeadTailInfinity_ringEquiv k x) =
+      splitCliffordHeadTailInfinity_ringEquiv k
+        (splitCliffordHeadTailInfinityInvolute k x) := by
+  have h := RingHom.congr_fun
+    (splitCliffordHeadTailInfinity_ringEquiv_grade_involution k) x
+  simpa only [RingHom.comp_apply, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom,
+    RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom] using h
+
 /-- The existing head--tail equivalence intertwines the canonical original
 limit involution with factorwise Clifford/tail parity. -/
 theorem headTailEquiv_involute_tmul (k : ℕ)
@@ -241,22 +261,10 @@ theorem headTailEquiv_involute_tmul (k : ℕ)
     infinityParity (splitCliffordInfinity_headTailGradedTensorAlgEquiv k (a ᵍ⊗ₜ b)) =
       splitCliffordInfinity_headTailGradedTensorAlgEquiv k
         (CliffordAlgebra.involute a ᵍ⊗ₜ tailParity 0 b) := by
-  change splitCliffordInfinityInvolute
-      (splitCliffordHeadTailInfinity_ringEquiv k
-        (splitCliffordHeadTailGradedTensorLift k (a ᵍ⊗ₜ b))) =
-    splitCliffordHeadTailInfinity_ringEquiv k
-      (splitCliffordHeadTailGradedTensorLift k
-        (CliffordAlgebra.involute a ᵍ⊗ₜ tailParity 0 b))
-  have h := RingHom.congr_fun
-    (splitCliffordHeadTailInfinity_ringEquiv_grade_involution k)
-      (splitCliffordHeadTailGradedTensorLift k (a ᵍ⊗ₜ b))
-  change splitCliffordInfinityInvolute
-      (splitCliffordHeadTailInfinity_ringEquiv k
-        (splitCliffordHeadTailGradedTensorLift k (a ᵍ⊗ₜ b))) =
-    splitCliffordHeadTailInfinity_ringEquiv k
-      (splitCliffordHeadTailInfinityInvolute k
-        (splitCliffordHeadTailGradedTensorLift k (a ᵍ⊗ₜ b))) at h
-  rw [h, headTailLift_involute_tmul]
+  rw [infinityParity_apply, headTailAlgEquiv_apply, headTailAlgEquiv_apply,
+    ← headTailLift_involute_tmul]
+  exact headTailRingEquiv_involute k
+    (splitCliffordHeadTailGradedTensorLift k (a ᵍ⊗ₜ b))
 
 /-- The actual algebraic Clifford direct limit is a matrix algebra over its
 entire algebraic tail, with the existing one-head factorization reused. -/
@@ -271,8 +279,9 @@ def splitInfinityMatrixEquiv :
     (z : CliffordAlgebra.evenOdd (Qsplit 1) ᵍ⊗[ℝ] splitCliffordTailGrade 0) :
     splitInfinityMatrixEquiv (splitCliffordInfinity_headTailGradedTensorAlgEquiv 1 z) =
       splitHeadMatrixEquiv (splitCliffordTailGrade 0) (tailParity 0)
-        (tailParity_even 0) (tailParity_odd 0) z :=
-  congrArg _ ((splitCliffordInfinity_headTailGradedTensorAlgEquiv 1).symm_apply_apply z)
+        (tailParity_even 0) (tailParity_odd 0) z := by
+  simp only [splitInfinityMatrixEquiv, AlgEquiv.trans_apply,
+    AlgEquiv.symm_apply_apply]
 
 /-- The matrix presentation preserves the canonical grading of the actual
 algebraic colimit, not merely a newly transported grading. -/
@@ -292,7 +301,7 @@ theorem splitInfinityMatrixEquiv_grade (x : SplitCliffordInfinity) :
       exact splitHeadMatrixEquiv_involute_tmul
         (splitCliffordTailGrade 0) (tailParity 0)
         (tailParity_even 0) (tailParity_odd 0) a b
-  | add a b ha hb => simpa only [map_add, ha, hb]
+  | add a b ha hb => simp only [map_add, ha, hb]
 
 /-- The actual canonical graded module category of the algebraic direct
 limit reduces to modules over its full graded tail. -/
@@ -338,7 +347,17 @@ theorem finiteHeadMatrixEquiv_bond (m n : ℕ) (h : m ≤ n) :
   change finiteHeadMatrixEquiv n (splitCliffordHeadTailMap 1 m n h (a ᵍ⊗ₜ b)) =
     (splitCliffordMap m n h).mapMatrix (finiteHeadMatrixEquiv m (a ᵍ⊗ₜ b))
   rw [hb]
-  simp only [finiteHeadMatrixEquiv, splitHeadMatrixEquiv_tmul_entries]
+  change splitHeadMatrixEquiv (CliffordAlgebra.evenOdd (Qsplit n)) (finiteParity n)
+      (finiteParity_even n) (finiteParity_odd n) (a ᵍ⊗ₜ splitCliffordMap m n h b) =
+    (splitCliffordMap m n h).mapMatrix
+      (splitHeadMatrixEquiv (CliffordAlgebra.evenOdd (Qsplit m)) (finiteParity m)
+        (finiteParity_even m) (finiteParity_odd m) (a ᵍ⊗ₜ b))
+  rw [splitHeadMatrixEquiv_tmul_entries
+        (CliffordAlgebra.evenOdd (Qsplit n)) (finiteParity n)
+        (finiteParity_even n) (finiteParity_odd n) a (splitCliffordMap m n h b),
+      splitHeadMatrixEquiv_tmul_entries
+        (CliffordAlgebra.evenOdd (Qsplit m)) (finiteParity m)
+        (finiteParity_even m) (finiteParity_odd m) a b]
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [AlgHom.mapMatrix_apply, finiteParity, splitCliffordMap_involute]

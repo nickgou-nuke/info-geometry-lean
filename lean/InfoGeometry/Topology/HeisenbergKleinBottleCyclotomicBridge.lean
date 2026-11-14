@@ -101,8 +101,7 @@ theorem heisenbergBoundaryAtlasReadout_root_independent
     heisenbergBoundaryAtlasReadout (𝕜 := 𝕜) α q =
       heisenbergBoundaryAtlasReadout (𝕜 := 𝕜) α q' := by
   unfold heisenbergBoundaryAtlasReadout
-  rw [InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.canonicalAtlas_heisenberg,
-    InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.canonicalAtlas_heisenberg]
+  rfl
 
 /-- The Klein-bottle cubic charge induced by a sixth-root parameter has order three. -/
 theorem heisenbergKleinCyclotomicReadout_charge_cube
@@ -156,5 +155,6 @@ theorem isLocallyConstant_heisenbergKleinCyclotomicReadout (α : 𝕜) :
     IsLocallyConstant (heisenbergKleinCyclotomicReadout (𝕜 := 𝕜) α) := by
   unfold heisenbergKleinCyclotomicReadout
   exact IsLocallyConstant.of_discrete
+    (f := heisenbergKleinCyclotomicReadout (𝕜 := 𝕜) α)
 
 end InfoGeometry.Topology.HeisenbergKleinBottleCyclotomicBridge

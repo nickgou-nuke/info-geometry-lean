@@ -36,7 +36,7 @@ open InfoGeometry.Topology.HeisenbergCyclotomicAtlasTopological
 
 noncomputable section
 
-variable {𝕜 : Type*} [Field 𝕜]
+variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
 
 /-- The combined Heisenberg boundary / cyclotomic root readout. -/
 def boundaryCyclotomicReadout (α : 𝕜) (q : SixthRootParameter) :
@@ -66,8 +66,7 @@ theorem heisenbergBoundaryAtlasReadout_root_independent
     heisenbergBoundaryAtlasReadout (𝕜 := 𝕜) α q =
       heisenbergBoundaryAtlasReadout (𝕜 := 𝕜) α q' := by
   unfold heisenbergBoundaryAtlasReadout
-  rw [InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.canonicalAtlas_heisenberg,
-    InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.canonicalAtlas_heisenberg]
+  rfl
 
 /-- The combined boundary/cyclotomic readout is continuous via `Continuous.prodMk`. -/
 theorem continuous_boundaryCyclotomicReadout (α : 𝕜) :
@@ -86,6 +85,7 @@ theorem isLocallyConstant_boundaryCyclotomicReadout (α : 𝕜) :
     IsLocallyConstant (boundaryCyclotomicReadout (𝕜 := 𝕜) α) := by
   unfold boundaryCyclotomicReadout
   exact IsLocallyConstant.of_discrete
+    (f := boundaryCyclotomicReadout (𝕜 := 𝕜) α)
 
 end
 end InfoGeometry.Topology.HeisenbergCyclotomicBoundaryBridge

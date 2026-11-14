@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
@@ -20,7 +25,7 @@ open InfoGeometry.Canonical.MatrixTracedChernWeilBridge
 open InfoGeometry.Canonical.TracedChernWeilCohomologyClassBridge
 open BigOperators
 
-variable {R V : Type*} [CommSemiring R] [AddCommMonoid V] [Module R V] {n : ℕ}
+variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] {n : ℕ}
 
 /-- **Definition**: Matrix Curvature Wedge Square F ∧ F = F * F. -/
 def matrixCurvatureWedgeSquare
@@ -34,7 +39,7 @@ theorem trace_matrixCurvatureWedgeSquare_eq
     matrixTraceForm (matrixCurvatureWedgeSquare F) = matrixTraceForm (F * F) :=
   rfl
 
-variable {R' V' : Type*} [CommRing R'] [AddCommMonoid V'] [Module R' V']
+variable {R' V' : Type*} [CommRing R'] [AddCommGroup V'] [Module R' V']
 
 /-- **Theorem**: Master Matrix Curvature Wedge Square & Chern-Weil Identification Synthesis.
     Unifies:

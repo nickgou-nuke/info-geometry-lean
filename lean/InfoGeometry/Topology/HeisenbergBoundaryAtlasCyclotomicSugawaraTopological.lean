@@ -140,6 +140,7 @@ theorem isLocallyConstant_boundaryAtlasCyclotomicSugawaraReadout :
     IsLocallyConstant (boundaryAtlasCyclotomicSugawaraReadout (𝕜 := 𝕜)) := by
   unfold boundaryAtlasCyclotomicSugawaraReadout
   exact IsLocallyConstant.of_discrete
+    (f := boundaryAtlasCyclotomicSugawaraReadout (𝕜 := 𝕜))
 
 /-- The Sugawara central generator readout is preserved in the combined bundle. -/
 theorem boundaryAtlasCyclotomicSugawaraReadout_currentSugawara_central

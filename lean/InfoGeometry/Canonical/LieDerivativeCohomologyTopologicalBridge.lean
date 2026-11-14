@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Category.TopCat.Basic
@@ -26,7 +31,7 @@ open InfoGeometry.Canonical.DeRhamCohomologyQuotientBridge
 open InfoGeometry.Canonical.DeRhamCohomologyQuotientTopologicalBridge
 open InfoGeometry.Canonical.LieDerivativeCohomologyClassZeroBridge
 
-variable {R V : Type*} [CommRing R] [AddCommMonoid V] [Module R V]
+variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
 
 /-- Lie derivative restricted to the closed-form carrier. -/
 def lieDerivativeClosedMap

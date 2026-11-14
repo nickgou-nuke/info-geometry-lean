@@ -136,8 +136,8 @@ theorem continuous_topologicalHeisenbergFiniteModeBoundaryBundle :
 /-- The canonical boundary bundle section is locally constant on the discrete Heisenberg carrier. -/
 theorem isLocallyConstant_topologicalHeisenbergFiniteModeBoundaryBundle :
     IsLocallyConstant (topologicalHeisenbergFiniteModeBoundaryBundle (𝕜 := 𝕜)) := by
-  unfold topologicalHeisenbergFiniteModeBoundaryBundle
   exact IsLocallyConstant.of_discrete
+    (f := topologicalHeisenbergFiniteModeBoundaryBundle (𝕜 := 𝕜))
 
 /-- The boundary bundle viewed as a `TopCat` object. -/
 abbrev topCat : TopCat :=

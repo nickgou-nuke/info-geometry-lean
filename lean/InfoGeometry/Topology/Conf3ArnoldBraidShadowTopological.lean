@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.Conf3ArnoldNormalizationTopological
@@ -19,19 +24,19 @@ open InfoGeometry.Topology.ArtinBraidS3Quotient
 
 noncomputable section
 
-variable {R : Type*} [CommSemiring R]
+variable {R : Type*} [CommRing R]
 abbrev Conf3FiniteTriple :=
   InfoGeometry.Topology.MobiusFiniteTripleNormalizationTopological.FiniteTriple
 
 /-- The combined Conf₃ Arnold packet and braid shadow packet. -/
-abbrev Conf3ArnoldBraidShadowPacket (R : Type*) [CommSemiring R] :=
+abbrev Conf3ArnoldBraidShadowPacket (R : Type*) [CommRing R] :=
   InfoGeometry.Topology.Conf3ArnoldNormalizationTopological.Conf3ArnoldPacket R ×
     (Equiv.Perm (Fin 3) × Equiv.Perm (Fin 3))
 
-instance conf3ArnoldBraidShadowPacketTopologicalSpace (R : Type*) [CommSemiring R] :
+instance conf3ArnoldBraidShadowPacketTopologicalSpace (R : Type*) [CommRing R] :
     TopologicalSpace (Conf3ArnoldBraidShadowPacket R) := ⊥
 
-instance conf3ArnoldBraidShadowPacketDiscreteTopology (R : Type*) [CommSemiring R] :
+instance conf3ArnoldBraidShadowPacketDiscreteTopology (R : Type*) [CommRing R] :
     DiscreteTopology (Conf3ArnoldBraidShadowPacket R) := ⟨rfl⟩
 
 /-- The canonical braid shadow packet uses the adjacent transpositions in `S₃`. -/

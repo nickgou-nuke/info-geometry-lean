@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Projective.TwistorAmplituhedronBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -51,8 +56,8 @@ theorem synthesis_readout_of_explicit_comparison
     (arithmetic : ArithmeticDatum)
     (target : GeometryDatum)
     (hComparison : toGeometry arithmetic = target) :
-    toGeometry arithmetic = target :=
-  hComparison
+    toGeometry arithmetic = target := by
+  rw [hComparison]
 
 /--
 Comparison readouts compose.  This is the safe corridor for later chains such
@@ -81,8 +86,8 @@ This is still purely algebraic: it does not construct concrete `d log Q` forms
 or prove a BCFW recursion theorem.
 -/
 theorem arnold_kernel_synthesis_boundary_zero
-    (R : Type*) [CommSemiring R]
-    (M : Type*) [AddCommMonoid M] [Module R M]
+    (R : Type*) [CommRing R]
+    (M : Type*) [AddCommGroup M] [Module R M]
     {Target : Type*} [Semiring Target]
     (w12 w23 w31 : ArnoldExterior R M)
     (toTarget : ArnoldExterior R M →+* Target)

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.AltlandZirnbauerKTheoryBridge
@@ -41,6 +46,8 @@ def azFullTable (c : AZClass) (d : ℕ) : TopologicalGroup :=
   | AZClass.DIII, 1 => TopologicalGroup.Z2
   | AZClass.DIII, 2 => TopologicalGroup.Z2
   | AZClass.DIII, 3 => TopologicalGroup.Z
+  -- Three-dimensional class AII carries the strong ℤ₂ invariant.
+  | AZClass.AII, 3 => TopologicalGroup.Z2
   -- Default trivial topology for other cells
   | _, _ => TopologicalGroup.Zero
 

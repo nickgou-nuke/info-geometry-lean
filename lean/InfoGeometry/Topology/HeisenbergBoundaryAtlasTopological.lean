@@ -94,7 +94,7 @@ theorem continuous_topologicalHeisenbergBoundaryAtlas :
 theorem isLocallyConstant_topologicalHeisenbergBoundaryAtlas :
     IsLocallyConstant (topologicalHeisenbergBoundaryAtlas (𝕜 := 𝕜)) := by
   unfold topologicalHeisenbergBoundaryAtlas
-  exact IsLocallyConstant.of_discrete
+  exact IsLocallyConstant.of_discrete (f := topologicalHeisenbergBoundaryAtlas (𝕜 := 𝕜))
 
 end
 end InfoGeometry.Topology.HeisenbergBoundaryAtlasTopological

@@ -62,6 +62,10 @@ lemma towerTrace_neg : ∀ {n : ℕ} (X : ClTower n A), towerTrace n (-X) = -tow
       have h_neg : -X 0 0 + -X 1 1 = -(X 0 0 + X 1 1) := by abel
       rw [h_neg, towerTrace_neg]
 
+lemma towerTrace_sub {n : ℕ} (X Y : ClTower n A) :
+    towerTrace n (X - Y) = towerTrace n X - towerTrace n Y := by
+  rw [sub_eq_add_neg, towerTrace_add, towerTrace_neg, ← sub_eq_add_neg]
+
 def superTrace {n : ℕ} (M : ClTower n A) : A :=
   towerTrace n (gammaTowerOp n * M)
 
@@ -114,6 +118,54 @@ theorem towerTrace_diagEmbed (n : ℕ) (X : ClTower n A) :
     towerTrace (n + 1) (diagEmbed n X) = 2 • towerTrace n X := by
   dsimp [towerTrace, rgTowerDecimate, diagEmbed]
   rw [towerTrace_add, two_smul]
+
+def irStatePullback {n : ℕ} (ρ : ClTower (n + 1) A) : ClTower n A := ρ 0 0
+
+def rgStatePullback {n : ℕ} (ρ : ClTower (n + 1) A) : ClTower n A :=
+  ρ 0 0 + ρ 1 1
+
+def chiralStatePullback {n : ℕ} (ρ : ClTower (n + 1) A) : ClTower n A :=
+  ρ 0 0 - ρ 1 1
+
+/-- The finite-stage state/observable pairings for corner and diagonal
+embeddings. The coefficient ring may be noncommutative; no cyclic-trace law is
+used. -/
+theorem observable_state_pairing_adjunctions
+    {n : ℕ} (ρ : ClTower (n + 1) A) (O B : ClTower n A) :
+    towerTrace (n + 1) (ρ * cantorEmbed n O) =
+        towerTrace n (irStatePullback ρ * O) ∧
+    superTrace (n := n + 1) (ρ * cantorEmbed n O) =
+        superTrace (n := n) (irStatePullback ρ * O) ∧
+    towerTrace (n + 1) (ρ * diagEmbed n B) =
+        towerTrace n (rgStatePullback ρ * B) ∧
+    superTrace (n := n + 1) (ρ * diagEmbed n B) =
+        superTrace (n := n) (chiralStatePullback ρ * B) := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · simp [towerTrace, rgTowerDecimate, cantorEmbed, irStatePullback,
+      Matrix.mul_apply, Fin.sum_univ_two]
+  · simp [superTrace, gammaTowerOp, towerTrace, rgTowerDecimate,
+      cantorEmbed, irStatePullback, Matrix.mul_apply, Fin.sum_univ_two]
+  · have h00 : (ρ * diagEmbed n B) 0 0 = ρ 0 0 * B := by
+      simp [diagEmbed, mat2, Matrix.mul_apply, Fin.sum_univ_two]
+    have h11 : (ρ * diagEmbed n B) 1 1 = ρ 1 1 * B := by
+      simp [diagEmbed, mat2, Matrix.mul_apply, Fin.sum_univ_two]
+    change towerTrace n ((ρ * diagEmbed n B) 0 0 +
+      (ρ * diagEmbed n B) 1 1) = towerTrace n ((ρ 0 0 + ρ 1 1) * B)
+    rw [h00, h11, add_mul, towerTrace_add]
+  · let T : ClTower (n + 1) A := gammaTowerOp (n + 1) * (ρ * diagEmbed n B)
+    have h00 : T 0 0 = gammaTowerOp n * (ρ 0 0 * B) := by
+      dsimp [T]
+      simp [gammaTowerOp, diagEmbed, mat2, Matrix.mul_apply, Fin.sum_univ_two]
+    have h11 : T 1 1 = -(gammaTowerOp n * (ρ 1 1 * B)) := by
+      dsimp [T]
+      simp [gammaTowerOp, diagEmbed, mat2, Matrix.mul_apply, Fin.sum_univ_two]
+    simp only [superTrace, towerTrace, rgTowerDecimate]
+    dsimp [chiralStatePullback]
+    change towerTrace n ((T 0 0) + (T 1 1)) =
+      towerTrace n (gammaTowerOp n * ((ρ 0 0 - ρ 1 1) * B))
+    rw [h00, h11, towerTrace_add, towerTrace_neg, ← sub_eq_add_neg, ← towerTrace_sub]
+    congr 1
+    noncomm_ring
 
 /-- **Inter-Scale Transition and Trace Compatibility Theorem ($\mathcal{M}\mathcal{G}_1$ & $\mathcal{M}\mathcal{G}_2$)**:
 1. $\iota_{\mathrm{Cantor}}^{(n)}$ is a multiplicative homomorphism mapping $\Pi_{\mathcal{C}_n} \mapsto \Pi_{\mathcal{C}_{n+1}}$,

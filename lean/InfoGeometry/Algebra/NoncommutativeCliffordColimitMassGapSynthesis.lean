@@ -77,7 +77,7 @@ universe u
 private theorem cltower_noncomm_witness {A : Type u} [Ring A] [Nontrivial A] (n : ℕ) :
     ∃ X Y : Matrix (Fin 2) (Fin 2) (ClTower A n), X * Y ≠ Y * X := by
   let _ : Ring (ClTower A n) := instRingClTower n
-  haveI : Nontrivial (ClTower A n) := by
+  have : Nontrivial (ClTower A n) := by
     induction n with
     | zero => infer_instance
     | succ n ih =>

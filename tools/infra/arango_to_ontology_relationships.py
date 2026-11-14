@@ -16,7 +16,6 @@ import json
 import os
 from pathlib import Path
 import sys
-from datetime import datetime, timezone
 
 _HERE = Path(__file__).resolve().parent
 _REPO_ROOT = _HERE.parents[1]
@@ -33,6 +32,12 @@ try:
 except ImportError:  # pragma: no cover - offline/dry-run environments without python-arango
     ArangoClient = None  # type: ignore[assignment,misc]
 from decl_graph_generation import resolve_decl_graph_generation, validate_generation_id
+from ontology_bridge_common import refresh_legacy_pg_connect, resolve_arango_env
+from ontology_bridge_data import (
+    ensure_term_term_table,
+    run_offline_jsonl_dry_run,
+    validate_dependency_edges,
+)
 
 
 ARANGO_ENDPOINT = os.environ.get("ARANGO_ENDPOINT", "")
@@ -49,41 +54,12 @@ PG_CONNECT = {
 }
 
 
-def now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat()
-
-
 def _resolve_arango_env(database_override: str | None = None) -> tuple[str, str, str, str]:
-    endpoint = os.environ.get("ARANGO_ENDPOINT") or ARANGO_ENDPOINT
-    database = database_override or os.environ.get("ARANGO_DATABASE") or ARANGO_DATABASE
-    user = os.environ.get("ARANGO_USER") or ARANGO_USER
-    password = os.environ.get("ARANGO_PASS") or ARANGO_PASS
-    if not (endpoint and database and user and password):
-        try:
-            from arango_env import (
-                arango_database,
-                arango_endpoint,
-                arango_password,
-                arango_username,
-                load_repo_arango_env,
-            )
-            load_repo_arango_env()
-            endpoint = endpoint or arango_endpoint()
-            database = database or arango_database()
-            user = user or arango_username()
-            password = password or arango_password()
-        except Exception:
-            pass
-    return endpoint, database or "infogeometry", user, password
+    return resolve_arango_env(database_override)
 
 
 def get_pg_connect() -> dict[str, str]:
-    PG_CONNECT["user"] = os.environ.get("POSTGRES_USER", PG_CONNECT.get("user", ""))
-    PG_CONNECT["password"] = os.environ.get("POSTGRES_PASSWORD", PG_CONNECT.get("password", ""))
-    PG_CONNECT["host"] = os.environ.get("POSTGRES_HOST", PG_CONNECT.get("host", "localhost"))
-    PG_CONNECT["port"] = os.environ.get("POSTGRES_PORT", PG_CONNECT.get("port", "5433"))
-    PG_CONNECT["dbname"] = os.environ.get("POSTGRES_DATABASE", PG_CONNECT.get("dbname", "auto_ontology"))
-    return PG_CONNECT
+    return refresh_legacy_pg_connect(PG_CONNECT)
 
 
 def connect_arango(database: str):
@@ -91,25 +67,6 @@ def connect_arango(database: str):
     client = ArangoClient(hosts=endpoint)
     return client.db(
         db_name, username=user, password=password, verify=True
-    )
-
-
-def ensure_term_term_table(cur):
-    """Create the term__term association table if it does not exist."""
-    cur.execute(
-        """
-        CREATE TABLE IF NOT EXISTS term__term (
-            src_term_id   text NOT NULL,
-            dst_term_id   text NOT NULL,
-            kind          text NOT NULL,
-            created_at    timestamptz NOT NULL DEFAULT now(),
-            PRIMARY KEY (src_term_id, dst_term_id, kind)
-        );
-        CREATE INDEX IF NOT EXISTS ix_term__term_dst
-            ON term__term (dst_term_id);
-        CREATE INDEX IF NOT EXISTS ix_term__term_kind
-            ON term__term (kind);
-        """
     )
 
 
@@ -181,30 +138,6 @@ def copy_relationships(cur, pairs: list[tuple[str, str, str]]) -> None:
     )
 
 
-def validate_dependency_edges(db, edge_collection: str, decl_collection: str) -> None:
-    """Reject untyped, mis-keyed, foreign, or dangling edges before PG writes."""
-    invalid = list(db.aql.execute(
-        """
-        FOR e IN @@edges
-          LET src = IS_STRING(e.src) ? e.src : ""
-          LET dst = IS_STRING(e.dst) ? e.dst : ""
-          LET expectedFrom = CONCAT(@decls, "/d_", SUBSTRING(SHA256(src), 0, 40))
-          LET expectedTo = CONCAT(@decls, "/d_", SUBSTRING(SHA256(dst), 0, 40))
-          LET source = DOCUMENT(expectedFrom)
-          LET destination = DOCUMENT(expectedTo)
-          FILTER src == "" OR dst == "" OR e.kind NOT IN ["type", "value"]
-            OR e._from != expectedFrom OR e._to != expectedTo
-            OR source == null OR destination == null
-            OR source.name != src OR destination.name != dst
-          LIMIT 5
-          RETURN e._key
-        """,
-        bind_vars={"@edges": edge_collection, "decls": decl_collection},
-    ))
-    if invalid:
-        raise ValueError(f"invalid dependency edges in {edge_collection!r}: {invalid}")
-
-
 def _write_report(report_path: str | None, payload: dict) -> None:
     if report_path:
         out = Path(report_path)
@@ -242,9 +175,8 @@ def main() -> int:
     if args.decls_jsonl or args.edges_jsonl:
         if not (args.dry_run and args.decls_jsonl and args.edges_jsonl):
             ap.error("offline relationship validation requires --dry-run, --decls-jsonl, and --edges-jsonl")
-        from arango_to_ontology import _run_offline_jsonl_dry_run
         args.deployment_uuid = None
-        return _run_offline_jsonl_dry_run(args)
+        return run_offline_jsonl_dry_run(args)
 
     if args.generation_id is not None and not args.legacy_additive and not args.dry_run:
         ap.error(

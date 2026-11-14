@@ -8,6 +8,7 @@ import InfoGeometry.Canonical.PeirceMatrixUnitCompletion
 /-! Composition of completed active-corner units and normalized boosts. -/
 namespace InfoGeometry.Canonical.PeirceHyperbolicComposition
 open ReflexiveNilpotentFlows PeirceMatrixUnitCompletion
+section Base
 variable {R A : Type*} [Ring R] [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 variable {d B : A} (hd : d*d=0) (hB : B*B=0)
   (hr : d*B*d=d) (hs : B*d*B=B)
@@ -22,6 +23,8 @@ def completedUnitHom : (Matrix (Fin 2) (Fin 2) R)ˣ →* Aˣ where
     apply Units.ext
     exact (completedMatrix_mul hd hB hr hs (M : Matrix (Fin 2) (Fin 2) R)
       (N : Matrix (Fin 2) (Fin 2) R)).symm
+
+end Base
 
 section CommScalars
 variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]

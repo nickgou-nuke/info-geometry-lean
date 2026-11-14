@@ -1,6 +1,15 @@
 from __future__ import annotations
 
-from tools.infra.evolution_taxonomy import CATEGORY_IDS, classify, iter_labels
+import copy
+
+import pytest
+
+from tools.infra.evolution_taxonomy import (
+    CATEGORY_IDS,
+    classify,
+    iter_labels,
+    validate_label_record,
+)
 
 
 def test_classify_emits_nonhierarchical_facets_with_evidence() -> None:
@@ -21,6 +30,16 @@ def test_classify_emits_nonhierarchical_facets_with_evidence() -> None:
     assert all(label["evidence"] and label["evidenceKinds"] for label in labels)
 
 
+def test_rule_and_path_evidence_kinds_are_both_retained() -> None:
+    [label] = classify("Add tests", "", ["tests/test_parser.py"])
+
+    assert label["category"] == "Test Evolution"
+    assert label["evidence"] == [
+        "subject-body-rule:Test Evolution", "path-hint:Test Evolution",
+    ]
+    assert label["evidenceKinds"] == ["pathHint", "subjectBodyRule"]
+
+
 def test_unmatched_commit_is_labeled_as_weak_default_not_species() -> None:
     labels = classify("miscellaneous work", "", [])
 
@@ -33,6 +52,24 @@ def test_unmatched_commit_is_labeled_as_weak_default_not_species() -> None:
         "status": "weak_rule",
     }]
     assert "species" not in labels[0]
+
+
+def test_weak_label_validator_keeps_reviewed_taxonomy_out_of_this_contract() -> None:
+    record = next(iter_labels([{
+        "type": "commit", "sha": "abc123", "subject": "fix parser",
+        "body": "", "paths": ["src/parser.py"],
+    }]))
+    validate_label_record(record)
+
+    reviewed = copy.deepcopy(record)
+    reviewed["schema"] = "info_geometry.reviewed_taxonomy_annotation.v4"
+    with pytest.raises(ValueError, match="unsupported schema or method"):
+        validate_label_record(reviewed)
+
+    wrong_category_id = copy.deepcopy(record)
+    wrong_category_id["labels"][0]["categoryId"] = "semanticArchetype"
+    with pytest.raises(ValueError, match="violates"):
+        validate_label_record(wrong_category_id)
 
 
 def test_streamed_labels_have_versioned_schema_and_keep_commit_identity() -> None:

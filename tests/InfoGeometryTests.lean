@@ -193,7 +193,7 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 
 -- Split Clifford/Sato declaration availability checks (these #checks are not an independent QMS audit)
 #check InfoGeometry.SuperGrassmannian.SplitCliffordColimit.compile_split_clifford_dimension_arithmetic
-#check InfoGeometry.SuperGrassmannian.MajoranaCAR.compile_majorana_car_superalgebra
+#check InfoGeometry.SuperGrassmannian.MajoranaCAR.ladder_matrix_unit_multiplication_table
 #check InfoGeometry.SuperGrassmannian.RealSuperGrassmannianModule.compile_scalar_one_one_graded_algebra
 #check InfoGeometry.SuperGrassmannian.RealSuperGrassmannianOperatorBlocks.operator_block_mul_assoc
 #check InfoGeometry.SuperGrassmannian.RealSuperGrassmannianOperatorBlocks.operator_block_superbracket_supertrace_zero
@@ -230,10 +230,10 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Algebra.RealAlbertMatrix.mul_adjointQuad_eq_norm_smul_unit
 #check InfoGeometry.Projective.SplitComposition.compile_split_composition_projective_space
 #check InfoGeometry.Projective.SplitQuaternionMotivicHopf.compile_split_quaternion_motivic_hopf
-#check InfoGeometry.OperatorAlgebra.QCCRCuntzToeplitz.compile_qccr_cuntz_toeplitz
+#check InfoGeometry.OperatorAlgebra.QCCRCuntzToeplitz.bracket_zero
 #check InfoGeometry.Epistemology.DistributedProofStateNetwork.compile_distributed_proof_state_network
-#check InfoGeometry.Exceptional.AlbertAlgebra.compile_albert_algebra_certificate
-#check InfoGeometry.Exceptional.F4DerivationsAlbert.compile_f4_derivations_albert
+#check InfoGeometry.Exceptional.AlbertAlgebra.jordanCrossProduct_one
+#check InfoGeometry.Exceptional.F4DerivationsAlbert.innerDerivation_trace_free
 #check InfoGeometry.Exceptional.AlbertDerivations.compile_albert_derivation_certificate
 #check InfoGeometry.SuperGrassmannian.WeylBerezinian.compile_weyl_berezinian_deformation
 #check InfoGeometry.Exceptional.AlbertBPSNilpotentOrbits.compile_albert_bps_nilpotent_orbits

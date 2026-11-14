@@ -41,14 +41,64 @@ from tools.infra.arango_env import (
     arango_password,
     load_repo_arango_env,
 )
-from igf.graph.decl_schema import decl_key, edge_key
+from igf.graph.decl_schema import EDGE_KINDS, decl_key, edge_key
+from tools.infra.decl_graph_generation import (
+    validate_generation_counts,
+    validate_generation_id,
+    validate_generation_metadata,
+)
+
+
+def _normalize_generation_record(doc: object, decl_collection: str) -> tuple[str, dict]:
+    """Validate one immutable-generation stream row and attach canonical identity."""
+    if not isinstance(doc, dict):
+        raise ValueError("stream record must be a JSON object")
+    edge_fields = {"src", "dst", "_from", "_to"}
+    if edge_fields.intersection(doc):
+        if set(("src", "dst", "kind")) - doc.keys():
+            raise ValueError("dependency edge requires src, dst, and kind")
+        src, dst, kind = doc["src"], doc["dst"], doc["kind"]
+        if (not isinstance(src, str) or not src or not isinstance(dst, str) or not dst
+                or kind not in EDGE_KINDS):
+            raise ValueError("dependency edge has an invalid endpoint or kind")
+        expected_from = f"{decl_collection}/{decl_key(src)}"
+        expected_to = f"{decl_collection}/{decl_key(dst)}"
+        expected_key = edge_key(src, kind, dst)
+        if (doc.get("_from", expected_from) != expected_from
+                or doc.get("_to", expected_to) != expected_to
+                or doc.get("_key", expected_key) != expected_key):
+            raise ValueError("dependency edge identity is not canonical for this generation")
+        normalized = dict(doc, _key=expected_key, _from=expected_from, _to=expected_to)
+        return "edge", normalized
+
+    name = doc.get("name")
+    if not isinstance(name, str) or not name:
+        raise ValueError("declaration requires a non-empty name")
+    expected_key = decl_key(name)
+    if any(doc[field] != expected_key for field in ("key", "_key") if field in doc):
+        raise ValueError("declaration key is not canonical for its name")
+    normalized = dict(doc, _key=expected_key)
+    return "decl", normalized
 
 
 def stream_to_arango(
     root: Path, import_root: str, namespace: str, database: str, run_mode: str,
-    generation_id: str | None = None, build_fingerprint: str | None = None,
+    generation_id: str | None = None, build_fingerprint: str | None = None, *,
+    expected_source_hash: str | None = None,
+    expected_olean_hash: str | None = None,
 ) -> int:
-    """Stream JSONL from dagIndexer directly to ArangoDB."""
+    """Stream JSONL from dagIndexer directly to ArangoDB.
+
+    Immutable generations fail closed: the stream must be valid, unique, complete,
+    and tied to the expected source/olean snapshot before its receipt is published.
+    """
+    if generation_id is not None:
+        try:
+            validate_generation_id(generation_id)
+            validate_generation_metadata(build_fingerprint, import_root, namespace)
+        except ValueError as exc:
+            print(f"[refresh-decl-graph] invalid generation preflight: {exc}", file=sys.stderr)
+            return 1
     load_repo_arango_env(root)
 
     # Build the streaming command
@@ -62,6 +112,11 @@ def stream_to_arango(
         cmd = ["lake", "env", "lean", "--run", "lean/DAG/Indexer.lean", import_root, namespace, "--stream"]
 
     print(f"[refresh-decl-graph] streaming: {' '.join(cmd)}", flush=True)
+
+    # Do not contact ArangoDB if the selected exporter artifact is absent.
+    if run_mode == "exe" and not (root / ".lake" / "build" / "bin" / "dagIndexer").is_file():
+        print("[refresh-decl-graph] missing built dagIndexer executable", file=sys.stderr)
+        return 1
 
     # Connect to ArangoDB
     try:
@@ -93,23 +148,23 @@ def stream_to_arango(
             db.create_collection(coll_name, edge=is_edge)
             print(f"[refresh-decl-graph] Created collection: {coll_name}")
 
-    # Stream JSONL to ArangoDB
+    # Stream JSONL to ArangoDB.  Generation-mode validation errors are recorded
+    # while the pipe is drained, so the child cannot block on a full stdout pipe.
     proc = subprocess.Popen(cmd, cwd=root, stdout=subprocess.PIPE, stderr=None, text=True)
 
     decl_count = 0
     edge_count = 0
     batch_size = 5000
-    decl_batch = []
-    edge_batch = []
+    decl_batch: list[dict] = []
+    edge_batch: list[dict] = []
+    stream_error: str | None = None
+
     def import_batch(collection_name: str, batch: list[dict]) -> None:
-        """Append one stream batch to a collection truncated before this run."""
         result = db[collection_name].import_bulk(
             batch, overwrite=False, on_duplicate="replace"
         )
         if isinstance(result, dict) and int(result.get("errors", 0) or 0) > 0:
-            raise RuntimeError(
-                f"Arango import errors in {collection_name}: {result}"
-            )
+            raise RuntimeError(f"Arango import errors in {collection_name}: {result}")
 
     try:
         for line in proc.stdout:
@@ -118,32 +173,46 @@ def stream_to_arango(
                 continue
             try:
                 doc = json.loads(line)
-            except json.JSONDecodeError:
+            except json.JSONDecodeError as exc:
+                if generation_id is not None and stream_error is None:
+                    stream_error = f"invalid JSONL record: {exc}"
                 continue
 
-            # Determine if it's a decl or edge by checking for src/dst fields (streaming format) or _from/_to (file format)
-            if ("_from" in doc and "_to" in doc) or ("src" in doc and "dst" in doc):
-                # Convert streaming format (src/dst/kind) to ArangoDB format (_from/_to)
+            if generation_id is not None:
+                try:
+                    row_kind, doc = _normalize_generation_record(doc, decl_collection)
+                except ValueError as exc:
+                    if stream_error is None:
+                        stream_error = str(exc)
+                    continue
+                batch = edge_batch if row_kind == "edge" else decl_batch
+                batch.append(doc)
+                if len(batch) >= batch_size:
+                    collection = edge_collection if row_kind == "edge" else decl_collection
+                    import_batch(collection, batch)
+                    if row_kind == "edge":
+                        edge_count += len(batch)
+                        edge_batch = []
+                    else:
+                        decl_count += len(batch)
+                        decl_batch = []
+                continue
+
+            # Legacy additive mode preserves its permissive input behavior.
+            if (("_from" in doc and "_to" in doc)
+                    or ("src" in doc and "dst" in doc)):
                 if "src" in doc and "dst" in doc:
-                    # Shared schema keys (igf.graph.decl_schema == DAG.Schema in Lean);
-                    # deterministic edge keys make re-imports idempotent.
                     doc["kind"] = doc.get("kind", "type")
                     doc["_from"] = f"{decl_collection}/{decl_key(doc['src'])}"
                     doc["_to"] = f"{decl_collection}/{decl_key(doc['dst'])}"
                     doc.setdefault("_key", edge_key(doc["src"], doc["kind"], doc["dst"]))
                 edge_batch.append(doc)
                 if len(edge_batch) >= batch_size:
-                    # Endpoint declarations may occur later in the alphabetical
-                    # declaration stream.  Preserve every emitted edge now and
-                    # validate endpoints only after the declaration stream ends.
                     import_batch(edge_collection, edge_batch)
                     edge_count += len(edge_batch)
                     edge_batch = []
             else:
-                # Ensure _key exists
                 if "name" in doc:
-                    # The Lean indexer now emits `key` (DAG.Schema.declKey); fall back
-                    # to the identical Python formula for older producers.
                     doc["_key"] = doc.get("key") or decl_key(doc["name"])
                 decl_batch.append(doc)
                 if len(decl_batch) >= batch_size:
@@ -151,23 +220,48 @@ def stream_to_arango(
                     decl_count += len(decl_batch)
                     decl_batch = []
 
-        # Flush remaining batches
-        if decl_batch:
-            import_batch(decl_collection, decl_batch)
-            decl_count += len(decl_batch)
-        if edge_batch:
-            import_batch(edge_collection, edge_batch)
-            edge_count += len(edge_batch)
-            edge_batch = []
-
+        if stream_error is None:
+            if decl_batch:
+                import_batch(decl_collection, decl_batch)
+                decl_count += len(decl_batch)
+                decl_batch = []
+            if edge_batch:
+                import_batch(edge_collection, edge_batch)
+                edge_count += len(edge_batch)
+                edge_batch = []
+    except UnicodeError:
+        # Preserve decoding/stream errors for callers while still reaping the child.
+        raise
+    except Exception as exc:
+        stream_error = str(exc)
+        try:
+            for _line in proc.stdout:
+                pass
+        except UnicodeError:
+            raise
+        except Exception:
+            pass
+    finally:
+        if proc.stdout is not None:
+            proc.stdout.close()
         proc.wait()
-        if proc.returncode != 0:
-            print(f"[refresh-decl-graph] Indexer failed with exit code {proc.returncode}", file=sys.stderr)
-            return proc.returncode
 
-    except Exception as e:
-        print(f"[refresh-decl-graph] Streaming import failed: {e}", file=sys.stderr)
+    if stream_error is not None:
+        print(f"[refresh-decl-graph] Streaming import failed: {stream_error}", file=sys.stderr)
         return 1
+    if proc.returncode != 0:
+        print(f"[refresh-decl-graph] Indexer failed with exit code {proc.returncode}", file=sys.stderr)
+        return proc.returncode
+    if generation_id is not None:
+        if decl_count == 0:
+            print("[refresh-decl-graph] immutable generation has no declarations", file=sys.stderr)
+            return 1
+        if ((expected_source_hash is not None
+             and compute_lean_source_hash(root) != expected_source_hash)
+                or (expected_olean_hash is not None
+                    and compute_olean_content_hash(root) != expected_olean_hash)):
+            print("[refresh-decl-graph] source/olean snapshot changed during export", file=sys.stderr)
+            return 1
 
     # Now every declaration is present, so endpoint validation cannot discard a
     # forward reference merely because its target appeared later in the stream.
@@ -179,11 +273,20 @@ def stream_to_arango(
       COLLECT WITH COUNT INTO removed
       RETURN removed
     """
-    orphan_rows = list(db.aql.execute(orphan_query, bind_vars={"@edgeCollection": edge_collection}))
+    orphan_binds = {"@edgeCollection": edge_collection}
+    if generation_id is not None:
+        orphan_query = orphan_query.replace(
+            "      FILTER from_doc == null OR to_doc == null",
+            "      FILTER from_doc == null OR to_doc == null "
+            "OR !IS_SAME_COLLECTION(@declCollection, e._from) "
+            "OR !IS_SAME_COLLECTION(@declCollection, e._to)",
+        )
+        orphan_binds["declCollection"] = decl_collection
+    orphan_rows = list(db.aql.execute(orphan_query, bind_vars=orphan_binds))
     orphan_edges = orphan_rows[0] if orphan_rows else 0
-    if generation_id and orphan_edges:
+    if generation_id is not None and orphan_edges:
         print(
-            f"[refresh-decl-graph] immutable generation has {orphan_edges} dangling edges; "
+            f"[refresh-decl-graph] immutable generation has {orphan_edges} dangling or foreign edges; "
             "not publishing it",
             file=sys.stderr,
         )
@@ -198,7 +301,27 @@ def stream_to_arango(
         removed_edges = removed_rows[0] if removed_rows else 0
     valid_edge_count = db.collection(edge_collection).count()
 
-    if generation_id:
+    if generation_id is not None:
+        declaration_rows = db.collection(decl_collection).count()
+        if declaration_rows != decl_count:
+            print(
+                f"[refresh-decl-graph] declaration count mismatch: emitted={decl_count}, "
+                f"stored={declaration_rows}; not publishing it",
+                file=sys.stderr,
+            )
+            return 1
+        if valid_edge_count != edge_count:
+            print(
+                f"[refresh-decl-graph] edge count mismatch: emitted={edge_count}, "
+                f"stored={valid_edge_count}; not publishing it",
+                file=sys.stderr,
+            )
+            return 1
+        try:
+            validate_generation_counts(decl_count, edge_count, valid_edge_count, removed_edges)
+        except ValueError as exc:
+            print(f"[refresh-decl-graph] invalid immutable generation: {exc}", file=sys.stderr)
+            return 1
         generations = "decl_graph_generations"
         if not db.has_collection(generations):
             db.create_collection(generations)
@@ -320,13 +443,16 @@ def main() -> int:
 def _run_refresh(args: argparse.Namespace, root: Path, build_lock: BuildLock) -> int:
     # Streaming mode: pipe directly to ArangoDB
     if args.stream:
-        if args.generation_id and not args.build_fingerprint:
-            raise SystemExit("--build-fingerprint is required with --generation-id")
-        if args.generation_id and (
-            len(args.generation_id) > 32
-            or not all(ch.isalnum() or ch in "_-" for ch in args.generation_id)
-        ):
-            raise SystemExit("--generation-id must be at most 32 letters, digits, '_' or '-'")
+        if args.generation_id is not None:
+            if not args.build_fingerprint:
+                raise SystemExit("--build-fingerprint is required with --generation-id")
+            try:
+                validate_generation_id(args.generation_id)
+                validate_generation_metadata(
+                    args.build_fingerprint, args.import_root, args.namespace
+                )
+            except ValueError as exc:
+                raise SystemExit(f"invalid immutable generation metadata: {exc}") from exc
         return stream_to_arango(
             root, args.import_root, args.namespace, args.arango_db, args.run_mode,
             args.generation_id, args.build_fingerprint,

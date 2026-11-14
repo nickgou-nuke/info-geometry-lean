@@ -54,8 +54,9 @@ structure HodgeStarAxioms where
   star_sq_law : star.comp star = (s : R) • LinearMap.id
   star_degree_reversal :
     ∀ {k : ℕ} {x : ExteriorAlgebra R V},
-      IsHomogeneousExteriorDegree k x →
-      IsHomogeneousExteriorDegree (Fintype.card V - k) (star x)
+      ExteriorHomogeneousDegreeBridge.IsHomogeneousExteriorDegree k x →
+      ExteriorHomogeneousDegreeBridge.IsHomogeneousExteriorDegree
+        (Fintype.card V - k) (star x)
 
 /-- Self-dual instanton solves vacuum Yang–Mills `D_A (★ F_A) = 0` from Bianchi
 `D_A F_A = 0`, assuming only the Hodge star endomorphism and the explicit

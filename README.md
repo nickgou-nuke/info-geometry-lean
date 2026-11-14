@@ -7,10 +7,12 @@ comparisons developed through human–AI collaboration. Its research motivation
 includes the spinorial *prima materia* program; the mathematical claims are the
 statements in the Lean owners, with their actual hypotheses.
 
-> Documentation source review: 2026-11-03, against
+> The linked documentation audit records a source review from 2026-11-03 at
 > [`214f7bcf733e`](https://github.com/nickgou-nuke/info-geometry-lean/commit/214f7bcf733eaf4720913bc2c082936f2480d3fc).
-> This records source inspection, not a fresh full build. See the
-> [audit and verification scope](docs/DOCUMENTATION_SOURCE_AUDIT_2026-11-03.md).
+> Selected pipeline instructions were reconciled on 2026-11-14 against the
+> current checkout (`38ad371b2981de71621fb0358a9c674470f52198`); this is not a
+> fresh full documentation or build audit. See the
+> [historical audit scope](docs/DOCUMENTATION_SOURCE_AUDIT_2026-11-03.md).
 
 ## Start here
 
@@ -18,6 +20,7 @@ statements in the Lean owners, with their actual hypotheses.
 |---|---|
 | Set up and run a scoped check | [Getting started](docs/GETTING_STARTED.md) |
 | Work as a coding or mathematical agent | [AGENTS.md](AGENTS.md), then the [canonical pipeline](docs/CANONICAL_AGENT_PIPELINE.md) |
+| Operate taxonomy, phylogeny, and ontology preflight scripts | [Pipeline operator manual](docs/PIPELINE_OPERATOR_MANUAL.md) |
 | Find maintained guides and historical notes | [Documentation map](docs/README.md) |
 | Explore the main Lean source | [lean/InfoGeometry/](lean/InfoGeometry/) and [InfoGeometry.All](lean/InfoGeometry/All.lean) |
 | Trace operator-algebra owners | [OperatorAlgebra guide](lean/InfoGeometry/OperatorAlgebra/README.md) and [Peirce archetype ledger](docs/PEIRCE_OPERATOR_ARCHETYPES.md) |
@@ -45,6 +48,9 @@ Each linked owner supplies the precise typeclasses and hypotheses.
 | Algebraic Cuntz shift | Injectivity of the existing canonical shift from a generator-level left inverse | [CuntzHoppingCantorLattice](lean/InfoGeometry/NCG/CuntzHoppingCantorLattice.lean) |
 | Finite matrix Lax data | Trace cancellations and the determinant/nonzero-kernel equivalence | [LaxPairIsospectralMassGap](lean/InfoGeometry/NCG/LaxPairIsospectralMassGap.lean) |
 | Split-octonion derivations | A stabilizer predicate and consequences for a parameterized derivation family | [GunaydinGurseySU3Stabilizer](lean/InfoGeometry/NCG/GunaydinGurseySU3Stabilizer.lean) |
+| Character sectors and ordered quotient bases | Finite-group character averaging, stable-relation quotient descent, and priority-ordered basis selection in quotient modules | [Operator-basis contract](docs/OPBASIS_SYMMETRY_QUOTIENT_CONTRACT.md), [owner audit](lean/InfoGeometry/Algebra/OperatorBasisAudit.lean) |
+| Clifford Pin suspension | Ordered algebra equivalences into even Clifford algebras with one added direction, plus injective maps on explicitly defined normalized-vector subgroups | [Freed Clifford suspension](lean/InfoGeometry/Clifford/FreedCliffordSuspension.lean), [normalized-vector Pin groups](lean/InfoGeometry/Clifford/NormalizedVectorPin.lean), [scope and verification note](docs/FREED_PIN_CLIFFORD_EMBEDDINGS.md) |
+| Finite noncommutative Gabor algebra | Frame and Gram identities over a star ring, including the Parseval projection identity; no positivity or analytic frame bounds are asserted | [NoncommutativeGaborFrame](lean/InfoGeometry/OperatorAlgebra/NoncommutativeGaborFrame.lean) |
 
 For a concrete example, `OperatorRPABlock.rpa_square` retains the full operator
 commutator when squaring `[[a,b],[-b,-a]]`. Its off-diagonal square vanishes

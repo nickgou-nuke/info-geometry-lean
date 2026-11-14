@@ -55,7 +55,7 @@ theorem wickContraction_current
     (C : RawCARModeCompletion A) (m n : Int) :
     CCRBracketCompleted C (normalOrderedCurrent C m) (normalOrderedCurrent C n) =
       if m + n = 0 then m • completedCentral C else 0 := by
-  dsimp; simpa using normalOrderedCurrent_heisenberg_from_matrixUnit C m n
+  simpa using normalOrderedCurrent_heisenberg_from_matrixUnit C m n
 
 /-- Finite-cutoff CAR current commutator decomposition into the boundary term
 and the window-crossing central term. -/
@@ -65,7 +65,7 @@ theorem wickContraction_cutoffBoundary
         (RawCARModeCompletion.cutoffCurrent C N n) =
       RawCARModeCompletion.cutoffBoundaryTerm C N m n +
         RawCARModeCompletion.cutoffWindowCrossingTerm C N m n := by
-  dsimp; simpa using
+  simpa using
     RawCARModeCompletion.cutoffCurrent_commutator_eq_boundary_add_windowCrossing C N m n
 
 end WickMechanism
@@ -167,8 +167,8 @@ theorem tensorModularAtom_currentSugawara_readout :
       ∧ (tensorModularAtom_toCurrentSugawaraMorphism (𝕜 := 𝕜) (α := α)).virasoro =
         (tensorModularAtom_toCurrentHeisenbergRep (𝕜 := 𝕜) (α := α)).currentSugawaraRepresentation := by
   constructor
-  · exact CurrentSugawaraMorphism.ofHeisenberg_heisenberg _
-  · exact CurrentSugawaraMorphism.ofHeisenberg_virasoro _
+  · exact (tensorModularAtomHeisenbergWitness 𝕜 α).toCurrentSugawaraMorphism_readout.1
+  · exact (tensorModularAtomHeisenbergWitness 𝕜 α).toCurrentSugawaraMorphism_readout.2
 
 end ChargedFockWitness
 

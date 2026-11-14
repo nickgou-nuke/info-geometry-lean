@@ -24,6 +24,7 @@ from tools.infra.arango_env import (
     load_repo_arango_env,
     normalized_darwin_arango_env,
 )
+from tools.infra.evolution_taxonomy import METHOD_VERSION, classify
 
 try:
     from arango.client import ArangoClient
@@ -138,8 +139,6 @@ def _decl_names_in_added(added_lines: Iterable[str], module: str) -> list[str]:
 
 def _change_labels(message: str, paths: list[str]) -> list[dict]:
     """Reuse the repo's multi-label weak rules; no rank or ancestry inference."""
-    from tools.infra.evolution_taxonomy import classify
-
     return classify(message, "", paths)
 
 
@@ -170,7 +169,7 @@ def iter_commits() -> Iterable[dict]:
             "message": message,
             "pathChangeHash": path_change_hash,
             "changeLabels": _change_labels(message, paths),
-            "changeLabelMethod": "weak-rule-v3",
+            "changeLabelMethod": METHOD_VERSION,
             "modulePaths": paths,
         }
     return_code = process.wait()

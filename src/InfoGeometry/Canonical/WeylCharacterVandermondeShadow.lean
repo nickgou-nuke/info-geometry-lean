@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Spin44CharacterShadow
@@ -85,6 +91,7 @@ theorem denominator_eq_vandermonde :
   unfold VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant
     VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.matrix
   rw [P.denominatorWitness_nodes]
+  congr 1
 
 /-- The denominator zero-locus is exactly collision of two distinct nodes. -/
 @[rep_depth thermo]

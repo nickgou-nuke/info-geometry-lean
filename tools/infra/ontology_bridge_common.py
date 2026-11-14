@@ -12,7 +12,7 @@ import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, MutableMapping
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 _SRC = _REPO_ROOT / "src"
@@ -26,32 +26,61 @@ from igf.config.env_aliases import (  # noqa: E402
 from igf.config.model import ArangoConfig  # noqa: E402
 
 
-def get_arango_config() -> ArangoConfig:
-    """Resolve Arango connection config lazily.
+def resolve_arango_env(database_override: str | None = None) -> tuple[str, str, str, str]:
+    """Resolve the legacy bridge tuple without requiring credentials.
 
-    Loads repo-local env (``configs/local/hive_arango.env`` if present) without
-    overriding explicitly set variables, then normalizes aliases.  Returns an
-    :class:`ArangoConfig`; raises :class:`ValueError` if user/password are
-    missing.
+    The historical bridge CLIs allow ``--help`` and offline validation to run
+    without credentials. Preserve their connection defaults here; actual
+    connection callers that require credentials should use
+    :func:`get_arango_config`.
     """
     load_repo_arango_env(_REPO_ROOT)
     raw = normalized_arango_env()
-    if not raw["user"]:
+    return (
+        os.environ.get("ARANGO_ENDPOINT") or raw["endpoint"],
+        database_override or os.environ.get("ARANGO_DATABASE") or raw["database"],
+        raw["user"] or "root",
+        raw["password"],
+    )
+
+
+def get_arango_config() -> ArangoConfig:
+    """Resolve validated Arango credentials lazily.
+
+    Loads repo-local env (``configs/local/hive_arango.env`` if present) without
+    overriding explicitly set variables, then normalizes aliases. Raises
+    :class:`ValueError` if user/password are missing.
+    """
+    endpoint, database, user, password = resolve_arango_env()
+    if not os.environ.get("ARANGO_USER") and not os.environ.get("ARANGO_USERNAME"):
+        user = ""
+    if not user:
         raise ValueError(
             "ARANGO_USER / ARANGO_USERNAME not set (and no repo-local "
             "hive_arango.env found supplying them)"
         )
-    if not raw["password"]:
+    if not password:
         raise ValueError(
             "ARANGO_PASS / ARANGO_PASSWORD not set (and no repo-local "
             "hive_arango.env found supplying them)"
         )
-    return ArangoConfig(
-        endpoint=raw["endpoint"],
-        database=raw["database"],
-        user=raw["user"],
-        password=raw["password"],
-    )
+    return ArangoConfig(endpoint=endpoint, database=database, user=user, password=password)
+
+
+def refresh_legacy_pg_connect(target: MutableMapping[str, Any]) -> MutableMapping[str, Any]:
+    """Refresh the legacy CLI's permissive PostgreSQL keyword arguments.
+
+    Unlike :func:`get_pg_connect`, this preserves the old behavior of returning
+    empty credentials so import/help and dry-run paths remain usable offline.
+    """
+    target.update({
+        "user": os.environ.get("POSTGRES_USER", ""),
+        "password": os.environ.get("POSTGRES_PASSWORD", ""),
+        "host": os.environ.get("POSTGRES_HOST", "localhost"),
+        "port": os.environ.get("POSTGRES_PORT", "5433"),
+        "dbname": os.environ.get("POSTGRES_DATABASE", "auto_ontology"),
+    })
+    return target
 
 
 def get_pg_connect() -> dict[str, Any]:

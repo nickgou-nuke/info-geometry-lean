@@ -1,6 +1,7 @@
 """Offline unit tests for darwin_phylogeny_dashboard.py (repo-phylogeny/v2, labels, edges & tooltip)."""
 from __future__ import annotations
 
+import gzip
 import json
 from pathlib import Path
 import tempfile
@@ -21,6 +22,7 @@ class DarwinPhylogenyDashboardTests(unittest.TestCase):
         self.phylogeny_payload = {
             "schema": "repo-phylogeny/v2",
             "repository": "https://github.com/example/fixture",
+            "source": {"head": self.sha_leaf},
             "commits": [
                 {
                     "sha": self.sha_root,
@@ -87,9 +89,61 @@ class DarwinPhylogenyDashboardTests(unittest.TestCase):
         ])
         self.assertEqual(rc, 0)
         html = out_html.read_text(encoding="utf-8")
-        self.assertIn("Commit archetypes", html)
+        self.assertIn("Weak commit-change labels", html)
         self.assertIn("habitat cohabitation (non-transitive):", html)
         self.assertIn(self.sha_leaf[:10], html)
+
+    def test_renders_source_ontology_as_separate_carrier(self) -> None:
+        source_map = {
+            "schema": "info_geometry.refactoring_map.v1",
+            "generatedAt": "2026-11-14T00:00:00Z",
+            "sourceSnapshot": {
+                "gitHead": "3" * 40,
+                "pathCount": 12,
+                "worktreeDirty": True,
+                "worktreeConsistentDuringScan": True,
+                "pathContentManifestSha256": "a" * 64,
+            },
+            "summary": {
+                "roleCounts": {"lean_source": 8, "test_or_fixture": 4},
+                "ownerCount": 2,
+                "ambiguousOwnerArtifactCount": 1,
+                "compilerFingerprintJoinedFileCount": 0,
+            },
+            "topology": {
+                "typedEdgeCounts": {"lean_source_import": 6},
+                "coarseGrainMethod": "Lake target or path prefix",
+                "coarseGroups": [
+                    {"id": "lake:InfoGeometry", "artifactCount": 8},
+                    {"id": "tests", "artifactCount": 4},
+                ],
+                "structuralCohortCandidates": [],
+                "neighborhoodCohortCandidates": [],
+            },
+            "compilerArtifactEvidence": {"status": "stale_source_generation"},
+        }
+        source_map_path = self.root / "source-map.json.gz"
+        with gzip.open(source_map_path, "wt", encoding="utf-8") as stream:
+            json.dump(source_map, stream)
+
+        summary = dashboard.load_source_map_summary(source_map_path)
+        self.assertEqual(summary["pathCount"], 12)
+        self.assertEqual(summary["compilerArtifactEvidenceStatus"], "stale_source_generation")
+        self.assertEqual(summary["coarseGroups"][0]["id"], "lake:InfoGeometry")
+
+        out_html = self.root / "out_source_map.html"
+        rc = dashboard.main([
+            "--phylogeny-json", str(self.phylogeny_path),
+            "--source-map", str(source_map_path),
+            "--out", str(out_html),
+        ])
+        self.assertEqual(rc, 0)
+        html = out_html.read_text(encoding="utf-8")
+        self.assertIn("Current source ontology", html)
+        self.assertIn("lean_source", html)
+        self.assertIn("stale_source_generation", html)
+        self.assertIn('"headAlignment":"mismatch"', html)
+        self.assertIn("not a compiler declaration graph", html)
 
     def test_renders_labels_archetypes_and_exact_vs_cohabitation_counts(self) -> None:
         labels_path = self.root / "labels.jsonl"

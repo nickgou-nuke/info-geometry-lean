@@ -40,6 +40,7 @@ from tools.infra.arango_env import (
     load_repo_arango_env,
 )
 from tools.infra.graph_components import tarjan_scc
+from tools.infra.evolution_taxonomy import METHOD_VERSION
 
 try:
     from arango.client import ArangoClient
@@ -241,7 +242,7 @@ def change_facet_summary(db) -> dict:
             labeled_commits += 1
         category_commit_counts.update(seen)
     return {
-        "method": "weak-rule-v3",
+        "method": METHOD_VERSION,
         "hierarchical": False,
         "commits": commits,
         "labeledCommits": labeled_commits,

@@ -1,9 +1,13 @@
 # Canonical agent pipeline
 
-Source reviewed on 2026-11-03 against
-`214f7bcf733eaf4720913bc2c082936f2480d3fc`. This is an operational map of the
-tracked implementation, not a claim that optional services are running or that
-the complete repository has passed a fresh build.
+The broader command-routing map was last source-reviewed on 2026-11-03 against
+`214f7bcf733eaf4720913bc2c082936f2480d3fc`. Selected Python pipeline-runner
+and ontology-bridge instructions were reconciled on 2026-11-14 against current
+scripts. The checkout `HEAD` is `38ad371b2981de71621fb0358a9c674470f52198`
+(2026-11-13) and has staged and unstaged changes, including Lean owners and Lake
+imports. This document remains an operational routing map, not a fresh full
+audit of those changes, a claim that optional services are running, or evidence
+that the complete repository has passed a build.
 
 The [root agent policy](../AGENTS.md) governs acceptance and changes.
 [RUNBOOK.md](../RUNBOOK.md) defines validation coverage. Use this page for

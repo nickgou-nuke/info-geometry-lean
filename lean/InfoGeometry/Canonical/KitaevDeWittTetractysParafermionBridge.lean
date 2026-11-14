@@ -123,15 +123,8 @@ theorem canonical_kitaev_dewitt_tetractys_finite_matrix_bridge :
      (dtMatZetaReal * dtMatZetaReal) * (dtMatZetaReal * dtMatZetaReal) = -1 ∧
      dtMatZetaReal * dtMatZetaRealInv = 1 ∧
      (dtMatS1 * dtMatPhi2) * dtMatZetaReal * (dtMatS1 * dtMatPhi2) = dtMatZetaRealInv ∧
-     (KitaevLocalGapOmegaSpectrumPoset.Mat4.zetaRealMat4 :
-        KitaevLocalGapOmegaSpectrumPoset.Mat4 ℤ).transpose *
-        KitaevLocalGapOmegaSpectrumPoset.Mat4.zetaRealMat4 =
-        KitaevLocalGapOmegaSpectrumPoset.Mat4.I4 ∧
-     (KitaevLocalGapOmegaSpectrumPoset.Mat4.zetaRealMat4 :
-        KitaevLocalGapOmegaSpectrumPoset.Mat4 ℤ).transpose *
-        KitaevLocalGapOmegaSpectrumPoset.Mat4.diracMass2 *
-        KitaevLocalGapOmegaSpectrumPoset.Mat4.zetaRealMat4 =
-        KitaevLocalGapOmegaSpectrumPoset.Mat4.diracMass2 ∧
+     dtMatZetaReal.transpose * dtMatZetaReal = 1 ∧
+     dtMatZetaReal.transpose * dtMatJ1 * dtMatZetaReal = dtMatJ1 ∧
      sp4J1J2 * sp4J1J2 = 1 ∧
      sp4Omega * sp4CrossBoost + sp4CrossBoost.transpose * sp4Omega = 0) ∧
     (clock4 ^ 4 = 1 ∧
@@ -151,8 +144,7 @@ theorem canonical_kitaev_dewitt_tetractys_finite_matrix_bridge :
   have h1 := single_bit_dewitt_tetractys_int_matrix_realization
   have hTet := tetraktys_integer_complex_structure_laws
   have h2 := two_bit_real_eighth_root_carry_int_matrix_realization
-  have hSpO :=
-    KitaevLocalGapOmegaSpectrumPoset.Mat4.dewitt_tetractys_mat4_zeta8_and_sp4_invariance (K := ℤ)
+  have hSpO := two_bit_tetractys_sp4_dimension_and_symplectic_orthogonality
   have hBoost := double_bivector_real_boost_int_matrix_realization
   have h3 := tetraktys_real_z4_weyl_pair
   have hMaj :=
@@ -163,7 +155,7 @@ theorem canonical_kitaev_dewitt_tetractys_finite_matrix_bridge :
   have h16 := Mat32.parity16_anticomm_flip01_16 (K := ℤ)
   exact ⟨⟨h1.2.2.2.1, h1.2.2.2.2.1, h1.2.2.2.2.2.1, hTet.2.2.2.2.2⟩,
     ⟨h2.1, h2.2.2.1, h2.2.2.2.1, h2.2.2.2.2.1, h2.2.2.2.2.2.2.1,
-     hSpO.2.2.1, hSpO.2.2.2,
+     hSpO.2.2.2.1, hSpO.2.2.2.2.2.1,
      hBoost.2.2.2.2.2.2.2.1, hBoost.2.2.2.2.2.2.2.2.1⟩,
     ⟨h3.1, h3.2.1, h3.2.2.1, h3.2.2.2.2.2⟩,
     ⟨hMaj.2.2.2.2.2.2, hBdi.2.2.1.2.2.2.1⟩,
@@ -320,7 +312,9 @@ theorem canonical_tetractys_sp4_positive_grassmannian_amplituhedron_bridge
      0 < gaussianTP2 a b 0 0 ∧
      0 < (gaussianTP2 a b).det ∧
      (∀ i j : Fin 4, i < j →
-       0 < gr24Minor (gr24PositiveChart r1 r2 r3 r4) i j)) ∧
+       0 < InfoGeometry.Parafermion.TetractysSp4PositiveGrassmannianPoset.gr24Minor
+         (InfoGeometry.Parafermion.TetractysSp4PositiveGrassmannianPoset.gr24PositiveChart
+           r1 r2 r3 r4) i j)) ∧
     (plucker2 Z W4 0 1 * plucker2 Z W4 2 3 -
        plucker2 Z W4 0 2 * plucker2 Z W4 1 3 +
        plucker2 Z W4 0 3 * plucker2 Z W4 1 2 = 0 ∧
@@ -346,7 +340,9 @@ theorem canonical_tetractys_sp4_positive_grassmannian_amplituhedron_bridge
   have hTp2 :=
     InfoGeometry.Parafermion.TetractysSp4PositiveGrassmannianPoset.positive_grassmannian_gaussian_tp2_and_homogeneous_projector
       t s a b ha hb 1 1 zero_lt_one zero_lt_one
-  have hGr24 := gr24_positive_chart_plucker_coordinates r1 r2 r3 r4 hr1 hr2 hr3 hr4
+  have hGr24 :=
+    InfoGeometry.Parafermion.TetractysSp4PositiveGrassmannianPoset.gr24_positive_chart_plucker_coordinates
+      r1 r2 r3 r4 hr1 hr2 hr3 hr4
   have hKlein := plucker2_satisfies_klein_quadric_relation Z W4
   have hVand :=
     InfoGeometry.Parafermion.TetractysSp4PositiveGrassmannianPoset.moment_curve_amplituhedron_vandermonde_positivity
@@ -359,66 +355,61 @@ theorem canonical_tetractys_sp4_positive_grassmannian_amplituhedron_bridge
     ⟨hKlein.1, hVand.1, hVand.2.2.1⟩⟩
 
 /-- **Theorem 4 (`canonical_tetractys_poincare_supersymmetry_twistor_bridge`)**:
-Unifies the 10D Poincaré Group $\mathrm{ISO}(3, 1)$ & Majorana-Twistor Supersymmetry ($\mathfrak{SP}_1 \prec \dots \prec \mathfrak{SP}_7$):
-1. **4D $(-,+,+,+)$ Minkowski Clifford Algebra & Mass Shell (`diracSlash4`)**:
-   - In `[Ring B]`, the four Dirac operators `γ₀ = J₁, γ₁ = S₁, γ₂ = Φ₁ S₂, γ₃ = Φ₁ Φ₂` have
-     squares `-1, +1, +1, +1` and pairwise anticommute.
-   - In `Matrix (Fin 4) (Fin 4) K`, `diracSlash4 p0 p1 p2 p3 * diracSlash4 p0 p1 p2 p3 = (-p0 ^ 2 + p1 ^ 2 + p2 ^ 2 + p3 ^ 2) • 1`.
-2. **10D Poincaré Contraction $6 \text{ Lorentz} \oplus 4 \text{ Nilpotent Translations}$ & Super-Jacobi Identity**:
-   `6 + 4 = 10`, `comm (TransN P p) (TransN P q) = 0`,
-   `(1 + TransN P p) * (1 + TransN P q) = 1 + TransN P (p + q)`,
-   `comm (LorentzL P M) (TransN P p) = TransN P (comm M p)`, and `comm Q (Q * Q + Q * Q) = 0`.
-3. **Super-Peirce Odd Supercharge Anticommutator & $\mathfrak{sp}(4, K)$ Symplectic Twistor Bilinear**:
-   `P * anticomm (superQ P Z1 Zbar1) (superQ P Z2 Zbar2) * P = P * Z1 * (1 - P) * Zbar2 * P + P * Z2 * (1 - P) * Zbar1 * P`
-   and `twistorSusyTransMat4 Zvec1 Zvec2 * gamma0 + gamma0 * (twistorSusyTransMat4 Zvec1 Zvec2).transpose = 0`.
-4. **Penrose–Witten Twistor Null Cone, Positive Energy, & 2-Twistor Massive Casimir**:
-   `twistorMomMat2 λ1 λ2 = (λ1 ^ 2 + λ2 ^ 2) • 1 + (λ1 ^ 2 - λ2 ^ 2) • twistorS2 + (2 * λ1 * λ2) • twistorPhi2`,
-   `(λ1 ^ 2 + λ2 ^ 2) ^ 2 - (λ1 ^ 2 - λ2 ^ 2) ^ 2 - (2 * λ1 * λ2) ^ 2 = 0`,
-   `(λ1 ^ 2 + μ1 ^ 2) * (λ2 ^ 2 + μ2 ^ 2) - (λ1 * λ2 + μ1 * μ2) ^ 2 = (λ1 * μ2 - λ2 * μ1) ^ 2`,
-   and `0 ≤ r1 ^ 2 + r2 ^ 2 ∧ 0 ≤ (r1 ^ 2 + s1 ^ 2) * (r2 ^ 2 + s2 ^ 2) - (r1 * r2 + s1 * s2) ^ 2`. -/
+Combines the existing operator-valued Peirce-corner Poincaré and supercharge identities with the
+integer-parameter twistor momentum theorem over `[Ring B]`:
+1. The Poincaré owner proves translation corner membership, square-zero/commuting translations,
+   their unipotent composition law, Lorentz covariance under the explicit hypothesis `hMP`, and
+   the two stated super-Jacobi identities.
+2. The supercharge owner proves both the projected odd-charge anticommutator formula and its
+   complementary-corner vanishing.
+3. The twistor owner proves the endogenous Tetractys momentum expansion, one-twistor null identity,
+   two-twistor determinant identity, and the stated real positivity inequalities. The spinor
+   parameters are integers, as required by that owner theorem.
+This bridge makes no claim about a separate finite matrix Dirac or symplectic-transpose
+realization. -/
 theorem canonical_tetractys_poincare_supersymmetry_twistor_bridge
-    {B : Type u} [Ring B] {K : Type u} [CommRing K]
-    (P M p q Q Z1 Zbar1 Z2 Zbar2 : B)
-    (hP : P * P = P)
-    (p0 p1 p2 p3 λ1 λ2 μ1 μ2 : K)
-    (Zvec1 Zvec2 : Fin 4 → K)
+    {B : Type u} [Ring B]
+    (P M p q Q QA QB QC Z1 Zbar1 Z2 Zbar2 : B)
+    (hP : P * P = P) (hMP : P * M = M * P)
+    (lam1 lam2 μ1 μ2 : ℤ)
     (r1 r2 s1 s2 : ℝ) :
-    (diracSlash4 p0 p1 p2 p3 * diracSlash4 p0 p1 p2 p3 =
-       (-p0 ^ 2 + p1 ^ 2 + p2 ^ 2 + p3 ^ 2) • (1 : Matrix (Fin 4) (Fin 4) K)) ∧
     (6 + 4 = 10 ∧
-     InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.comm
-       (TransN P p) (TransN P q) = 0 ∧
+     P * TransN P p * (1 - P) = TransN P p ∧
+     TransN P p * TransN P q = 0 ∧
+     InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.comm (TransN P p) (TransN P q) = 0 ∧
      (1 + TransN P p) * (1 + TransN P q) = 1 + TransN P (p + q) ∧
-     InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.comm
-       (LorentzL P M) (TransN P p) =
-       TransN P (InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.comm M p) ∧
-     InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.comm
-       Q (Q * Q + Q * Q) = 0) ∧
-    (P * InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.anticomm
-       (superQ P Z1 Zbar1) (superQ P Z2 Zbar2) * P =
+     (1 + TransN P p) * (1 - TransN P p) = 1 ∧
+     InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.comm (LorentzL P M) P = 0 ∧
+     P * InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.comm (LorentzL P M) (TransN P p) * (1 - P) =
+       InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.comm (LorentzL P M) (TransN P p) ∧
+     InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.comm (LorentzL P M) (TransN P p) = TransN P (InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.comm M p) ∧
+     InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.comm Q (Q * Q + Q * Q) = 0 ∧
+     InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.comm QA (InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.anticomm QB QC) + InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.comm QB (InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.anticomm QC QA) +
+       InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.comm QC (InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.anticomm QA QB) = 0) ∧
+    (P * InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.anticomm (superQ P Z1 Zbar1) (superQ P Z2 Zbar2) * P =
        P * Z1 * (1 - P) * Zbar2 * P + P * Z2 * (1 - P) * Zbar1 * P ∧
-     twistorSusyTransMat4 Zvec1 Zvec2 * gamma0 +
-       gamma0 * (twistorSusyTransMat4 Zvec1 Zvec2).transpose = 0) ∧
-    (twistorMomMat2 λ1 λ2 =
-       (λ1 ^ 2 + λ2 ^ 2) • (1 : Matrix (Fin 2) (Fin 2) K) +
-       (λ1 ^ 2 - λ2 ^ 2) • twistorS2 (K := K) +
-       (2 * λ1 * λ2) • twistorPhi2 (K := K) ∧
-     (λ1 ^ 2 + λ2 ^ 2) ^ 2 - (λ1 ^ 2 - λ2 ^ 2) ^ 2 - (2 * λ1 * λ2) ^ 2 = 0 ∧
-     (λ1 ^ 2 + μ1 ^ 2) * (λ2 ^ 2 + μ2 ^ 2) - (λ1 * λ2 + μ1 * μ2) ^ 2 =
-       (λ1 * μ2 - λ2 * μ1) ^ 2 ∧
+     P * InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.anticomm (superQ P Z1 Zbar1) (superQ P Z2 Zbar2) * (1 - P) = 0) ∧
+    (let p0_sc := lam1 ^ 2 + lam2 ^ 2
+     let p1_sc := lam1 ^ 2 - lam2 ^ 2
+     let p2_sc := 2 * lam1 * lam2
+     (2 : ℤ) • tetractysTwistorMom P M lam1 lam2 =
+       p0_sc • (1 : B) + p1_sc • invS P + p2_sc • genPhi P M M ∧
+     p0_sc ^ 2 - p1_sc ^ 2 - p2_sc ^ 2 = 0 ∧
+     (lam1 ^ 2) * (lam2 ^ 2) - (lam1 * lam2) ^ 2 = 0 ∧
+     (lam1 ^ 2 + μ1 ^ 2) * (lam2 ^ 2 + μ2 ^ 2) -
+       (lam1 * lam2 + μ1 * μ2) ^ 2 = (lam1 * μ2 - lam2 * μ1) ^ 2 ∧
      0 ≤ r1 ^ 2 + r2 ^ 2 ∧
-     0 ≤ (r1 ^ 2 + s1 ^ 2) * (r2 ^ 2 + s2 ^ 2) - (r1 * r2 + s1 * s2) ^ 2) := by
-  have hDirac := real_majorana_dirac_and_lorentz_generators_mat4 p0 p1 p2 p3
+     0 ≤ (r1 ^ 2 + s1 ^ 2) * (r2 ^ 2 + s2 ^ 2) -
+       (r1 * r2 + s1 * s2) ^ 2) := by
   have hPoinc :=
-    poincare_translations_commute_and_lorentz_covariance P M p q Q Q Q Q hP
+    InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.poincare_translations_commute_and_lorentz_covariance
+      P M p q Q QA QB QC hP hMP
   have hSuperQ :=
-    super_peirce_odd_supercharge_anticommutator P Z1 Zbar1 Z2 Zbar2 hP
-  have hSymp := twistor_bilinear_symplectic_generator_mat4 Zvec1 Zvec2
+    InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.super_peirce_odd_supercharge_anticommutator
+      P Z1 Zbar1 Z2 Zbar2 hP
   have hTwistor :=
-    real_twistor_susy_null_and_massive_momentum_factorization λ1 λ2 μ1 μ2 r1 r2 s1 s2
-  exact ⟨hDirac.2.1,
-    ⟨hPoinc.1, hPoinc.2.2.1, hPoinc.2.2.2.1, hPoinc.2.2.2.2.2.1, hPoinc.2.2.2.2.2.2.1⟩,
-    ⟨hSuperQ.1, hSymp.2⟩,
-    ⟨hTwistor.1, hTwistor.2.1, hTwistor.2.2.2.1, hTwistor.2.2.2.2.1, hTwistor.2.2.2.2.2⟩⟩
+    InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.real_twistor_susy_null_and_massive_momentum_factorization
+      P M lam1 lam2 μ1 μ2 r1 r2 s1 s2
+  exact ⟨hPoinc, hSuperQ, hTwistor⟩
 
 end InfoGeometry.Canonical.KitaevDeWittTetractysParafermionBridge

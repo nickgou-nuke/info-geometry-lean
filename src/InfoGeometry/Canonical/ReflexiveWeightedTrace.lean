@@ -18,13 +18,15 @@ namespace InfoGeometry.Canonical.ReflexiveNilpotentFlows
 open UnifiedGeometryOperatorSignificance
 
 variable {R A : Type*} [Ring R] [Ring A] [Module R A] [IsScalarTower R A A]
+  [SMulCommClass R A A]
 
 /-- The two weights have the same ordering as the existing support owner. -/
 theorem pairMatrixLinear_weight (d B : A) (u v : R) :
     pairMatrixLinear d B (!![v * v, 0; 0, u * u] : Matrix (Fin 2) (Fin 2) R) =
       kmsModularWeight u v d B := by
-  simp [pairMatrixLinear_apply, pairMatrixUnit, kmsModularWeight, projPlus, projMinus,
-    add_comm]
+  rw [pairMatrixLinear_apply]
+  simp [pairMatrixUnit, kmsModularWeight, projPlus, projMinus]
+  abel
 
 /-- Transport a weighted operator identity through a cyclic linear functional. -/
 theorem cyclic_weighted_balance (τ : A →ₗ[R] R)

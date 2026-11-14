@@ -10,6 +10,7 @@ import InfoGeometry.Canonical.PeirceHyperbolicComplement
 complement is fixed, so full support is unnecessary. -/
 namespace InfoGeometry.Canonical.PeirceMatrixUnitCompletion
 open ReflexiveNilpotentFlows
+section Base
 variable {R A : Type*} [Ring R] [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 def completedMatrix (d B : A) (M : Matrix (Fin 2) (Fin 2) R) : A :=
@@ -20,6 +21,11 @@ theorem completedMatrix_one {d B : A} :
   rw [completedMatrix, pairMatrixLinear_one]
   simp [complement]
 
+end Base
+
+section Main
+variable {R A : Type*} [Ring R] [Ring A] [Module R A] [IsScalarTower R A A]
+  [SMulCommClass R A A]
 variable {d B : A} (hd : d*d=0) (hB : B*B=0)
   (hr : d*B*d=d) (hs : B*d*B=B)
 include hd hB hr hs
@@ -67,6 +73,8 @@ theorem completedMatrix_sandwich (M X N : Matrix (Fin 2) (Fin 2) R) :
     ← pairMatrixLinear_mul hd hB hr hs, mul_add,
     matrix_mul_complement hd hB hr hs, zero_add,
     ← pairMatrixLinear_mul hd hB hr hs]
+
+end Main
 
 section CommScalars
 variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]

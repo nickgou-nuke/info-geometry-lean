@@ -203,6 +203,11 @@ theorem chiralAlbert_quadTrace (θ : R) :
     (chiralAlbert θ).quadTrace = 3 * θ^2 := by
   dsimp [H3Zorn.quadTrace, jordanQuadraticTrace, traceBilin, chiralAlbert, diagonalAlbert]
   simp only [ZornVectorMatrix.zero_mul, ZornVectorMatrix.trace_zero, ZornVectorMatrix.conj_zero, add_zero]
+  have hz : ZornVectorMatrix.zero.trace = (0 : R) := by
+    change (0 : R) + 0 = 0
+    simp
+  rw [hz]
+  simp only [smul_zero, add_zero]
   noncomm_ring
 
 /-- Freudenthal cubic determinant of the chiral Albert element is θ³. -/

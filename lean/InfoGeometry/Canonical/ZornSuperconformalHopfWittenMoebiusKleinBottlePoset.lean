@@ -183,8 +183,8 @@ theorem paraSymplecticK0_involution_and_det :
   refine ⟨?_, ?_, ?_, ?_⟩
   · refine ext_fields ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ <;> (dsimp [mulZ, paraSymplecticK0, oneZ]; noncomm_ring)
   · dsimp [detZ, paraSymplecticK0]; noncomm_ring
-  · dsimp [traceZ, paraSymplecticK0]; noncomm_ring
-  · dsimp [superTraceZ, paraSymplecticK0]; noncomm_ring
+  · dsimp [traceZ, paraSymplecticK0]; abel
+  · dsimp [superTraceZ, paraSymplecticK0]; norm_num
 
 /-- **Explicit Non-Commutativity & Non-Associativity Witnesses (`zornCell_noncommutative_and_nonassociative`):**
 On `ZornCell ℤ`, the Zorn product `mulZ` is both strictly non-commutative and strictly

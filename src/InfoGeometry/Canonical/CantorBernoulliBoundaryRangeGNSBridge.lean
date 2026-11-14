@@ -465,6 +465,7 @@ coefficient, whereas the normalized gauge/GNS state kills it.  This theorem
 is the precise obstruction to promoting the diagonal square to an ambient
 state-preserving spatial--GNS intertwiner. -/
 
+set_option maxHeartbeats 5000000 in
 theorem spatialState_boundaryRep_offDiagonal_ne_gaugeGNSColimit :
     spatialState.functional
         (boundaryRep 1
@@ -479,9 +480,12 @@ theorem spatialState_boundaryRep_offDiagonal_ne_gaugeGNSColimit :
           gaugeGNSColimitVacuum⟫_ℂ := by
   rw [matrixUnit_generator_transport]
   change cantorVacuumState (vLeft * star vRight) ≠ _
+  have hwords :
+      List.ofFn (fun _ : Fin 1 => false) ≠
+        List.ofFn (fun _ : Fin 1 => true) := by decide
   rw [spatialState_offDiagonal_generator,
     gaugeGNSColimitVacuum_bitWordMatrixUnit_eq_phi0,
-    phi0_monomial]
-  simp [canonicalGaugeState_word]
+    phi0_monomial, canonicalGaugeState_word, if_neg hwords]
+  norm_num
 
 end InfoGeometry.Canonical.CantorBernoulliBoundaryRangeGNSBridge

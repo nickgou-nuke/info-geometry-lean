@@ -17,6 +17,7 @@ from tools.infra.arango_env import (
     arango_password,
     load_repo_arango_env,
 )
+from tools.infra.evolution_taxonomy import METHOD_VERSION
 from arango.client import ArangoClient
 
 
@@ -38,9 +39,9 @@ def taxonomy_summary(database) -> Iterable[dict]:
       WITH COUNT INTO commitCount
       SORT category
       RETURN {category, categoryId, commitCount,
-              method: "weak-rule-v3", hierarchy: false}
+              method: @method, hierarchy: false}
     """
-    return database.aql.execute(query)
+    return database.aql.execute(query, bind_vars={"method": METHOD_VERSION})
 
 
 def category_emergence(database, category: str) -> Iterable[dict]:

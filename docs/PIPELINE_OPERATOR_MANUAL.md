@@ -1,10 +1,11 @@
 # Pipeline Operator Manual — QMS-PLAN-PIPE-001
 
 **Repository:** info-geometry-lean  
-**Version:** 1.0  
-**Status:** Current (consolidated operator manual)  
-**Governing Policy:** [`AGENTS.md`](AGENTS.md), [`docs/RUNBOOK.md`](docs/RUNBOOK.md), [`docs/ALCHEMICAL_QMS_SOP.md`](docs/ALCHEMICAL_QMS_SOP.md), [`WARNING_DO_NOT_RUN_CACHE.md`](WARNING_DO_NOT_RUN_CACHE.md)  
-**Source Review Baseline:** `214f7bcf733eaf4720913bc2c082936f2480d3fc` (Lean 4.34.1 / Mathlib `d13f23b723b8a846827a245b89c10fc7d3f11612`)  
+**Version:** 1.1\
+**Status:** Maintained; selected pipeline and taxonomy sections reconciled 2026-11-14\
+**Governing Policy:** [`AGENTS.md`](../AGENTS.md), [`RUNBOOK.md`](RUNBOOK.md), [`ALCHEMICAL_QMS_SOP.md`](ALCHEMICAL_QMS_SOP.md), [`WARNING_DO_NOT_RUN_CACHE.md`](../WARNING_DO_NOT_RUN_CACHE.md)\
+**Source Review Baseline:** `214f7bcf733eaf4720913bc2c082936f2480d3fc` (Lean 4.34.1 / Mathlib `d13f23b723b8a846827a245b89c10fc7d3f11612`)\
+**Current Checkout at Reconciliation:** `38ad371b2981de71621fb0358a9c674470f52198`; staged and unstaged changes remain.\
 **Lean Toolchain:** `leanprover/lean4:v4.34.1` (managed via `elan`)  
 **Python:** 3.10+ with `pytest`, `psycopg`, `python-arango`
 
@@ -31,7 +32,7 @@
 
 ## Authority & Roles
 
-Per [`docs/ALCHEMICAL_QMS_SOP.md`](docs/ALCHEMICAL_QMS_SOP.md) (`QMS-SOP-ALC-001` v4.1), the pipeline operates under role separation:
+Per [`ALCHEMICAL_QMS_SOP.md`](ALCHEMICAL_QMS_SOP.md) (`QMS-SOP-ALC-001` v4.1), the pipeline operates under role separation:
 
 | QMS Role | Agent ID | Responsibility | Prohibition |
 |---|---|---|---|
@@ -140,16 +141,16 @@ python3 tools/quality/proof_proxy_staged_gate.py
 ### Step 2.1 — Run taxonomy contract tests
 
 ```bash
-python3 -m pytest tests/test_evolution_taxonomy.py tests/test_repository_phylogeny_export.py tests/test_decl_graph_generation.py tests/test_ontology_term_integrity.py tests/test_ontology_relationship_identity.py tests/test_arango_ontology_bridge.py tests/test_darwin_phylogeny_dashboard.py
+python3 -m pytest tests/test_evolution_taxonomy.py tests/test_evolution_ingest_preservation.py tests/test_repository_phylogeny_export.py tests/test_decl_graph_generation.py tests/test_ontology_term_integrity.py tests/test_ontology_relationship_identity.py tests/test_arango_ontology_bridge.py tests/test_darwin_phylogeny_dashboard.py
 ```
 
 **Expected:** All pass (live endpoint tests requiring external services are skipped).
 
-### Step 2.2 — Cross-layer contract
+### Step 2.2 — Keep the label contracts distinct
 
-The test `test_category_ids_match_lean_darwin_commit_taxonomy_contract` asserts a 12-element bijection between Lean `ChangeCategory.id` string literals (`lean/InfoGeometry/Graph/DarwinCommitTaxonomy.lean` lines 19–32, 37–49) and Python `CATEGORY_IDS` values (`tools/infra/evolution_taxonomy.py` lines 39–52).
+The Python `CATEGORY_IDS` vocabulary and Lean `ChangeCategory.id` are separate interfaces. The current Python tests do **not** assert a 12-element bijection between them; do not describe that test as present. `validate_label_record()` checks the Python weak-label schema, method, category IDs, and evidence provenance. It does not validate Lean declarations or promote weak labels to reviewed taxonomy.
 
-**This is a Level 5 schema convention, not a mathematical equivalence.**
+Any future cross-language string-alignment test would establish only a Level 5 schema convention, not a mathematical equivalence.
 
 ---
 
@@ -168,6 +169,18 @@ python3 tools/infra/arango_to_ontology_relationships.py --dry-run --edges-jsonl 
 ```
 
 **Expected:** Exit code 0, JSON report emitted with `status: "dry_run_ok"` and SHA-256 `source_digest`.
+
+### Step 3.1a — Materialize a source-bound offline ontology bundle
+
+After refreshing `artifacts/dag/index` with `tools/infra/refresh_decl_graph.py`, build a portable candidate bundle:
+
+```bash
+python3 tools/infra/build_ontology_bundle.py \
+    --index-dir artifacts/dag/index \
+    --out-dir artifacts/ontology/bundles/<new-generation-name>
+```
+
+The builder verifies the export's file digests and current source/OLean hashes, validates declaration identities and dependency endpoints, and writes canonical `terms.jsonl`, `module_memberships.jsonl`, `relationships.jsonl`, and `bundle_receipt.json`. SQLite staging bounds memory for repository-scale exports; output is published atomically and an existing bundle is never overwritten. This is an offline projection artifact, not reviewed archetype semantics, a database write, or proof evidence.
 
 ### Step 3.2 — Generation-pinned projection (requires live ArangoDB + PostgreSQL)
 
@@ -216,38 +229,49 @@ python3 tools/repository_evolution/phylogeny_export.py \
 ```bash
 python3 tools/infra/darwin_phylogeny_dashboard.py \
     --phylogeny-json <path/to/repo-phylogeny.json> \
+    --labels <path/to/weak-commit-labels.jsonl> \
+    --source-map <path/to/source-ontology.json.gz> \
     --out reports/darwin_phylogeny.html
 ```
 
-**Tip tooltip renders:** per-commit `n.labels` (`category (ruleWeightPercent%)`), `n.exact`, and `n.cohabitation` split as `exact: N · habitat cohabitation (non-transitive): M`.
+**Views and tooltip:** the source-map panel reports its Git HEAD and whether it matches the phylogeny export's HEAD; it does not merge their carriers. Per-commit tooltips render weak `n.labels`, `n.exact`, and `n.cohabitation` split as `exact: N · habitat cohabitation (non-transitive): M`.
 
 ---
 
 ## Phase 5 — Full Pipeline Runner (`scripts/run_pipeline.sh`)
 
-**Unified runner** for the four-stage pipeline with a SHA-256 run receipt:
+**Unified runner** for the pipeline with a SHA-256 run receipt:
 
 ```bash
-./scripts/run_pipeline.sh [--skip-lean-build] [--generation-id <ID>] [--report-dir <DIR>]
+./scripts/run_pipeline.sh [--skip-lean-build] [--generation-id <ID>] \
+  [--since <UTC>] [--until <UTC>] [--report-dir <DIR>]
+# Optional runtime overrides: PIPELINE_PYTHON_BIN=/path/to/python PIPELINE_PYTEST_BIN=/path/to/python
 ```
 
 **Stages:**
 1. Narrow locked Lean build (5 ontology/taxonomy/phylogenesis owners)
-2. Python taxonomy & cross-layer contract tests
-3. Phylogeny export + dashboard generation (from live git log or JSON fixture)
-4. ArangoDB → Auto-Ontology bridge dry-run (offline) or generation-pinned projection (with `--generation-id`)
+2. Selected offline Python regressions
+3. Current-worktree source ontology map (`info_geometry.refactoring_map.v1`)
+4. All-ref Git commit/path extraction, weak commit-label JSONL, and path-habitat summaries
+5. Git ancestry export (`repo-phylogeny/v2`)
+6. Dashboard combining separate source-map and commit-phylogeny views, with weak labels
+7. Ontology bridge read-only preflight: synthetic offline contract fixture by default; with `--generation-id`, read-only declaration and relationship checks against that Arango generation. Neither mode writes to PostgreSQL.
 
-**Output:** `run_receipt.json` with `git_head`, `git_status_clean`, per-stage exit codes, durations, and SHA-256 artifact digests.
+**Output:** `run_receipt.json` (`info_geometry.pipeline_run_receipt.v2`) with `git_head`, `git_status_clean`, per-stage exit codes, durations, artifact paths, and SHA-256 digests. The default UTC calendar-year window and `--since` / `--until` override apply to the phylogeny export; `--until` is exclusive. The source map snapshots the current worktree, while extracted commit/path streams and weak labels cover all available Git refs; the dashboard displays labels only for commits in its phylogeny window.
 
 **Example successful run:**
 ```json
 {
-  "schema": "info_geometry.pipeline_run_receipt.v1",
+  "schema": "info_geometry.pipeline_run_receipt.v2",
   "stages": {
     "lean_build": {"exit_code": 0, "duration_seconds": 4},
     "taxonomy_tests": {"exit_code": 0, "duration_seconds": 2},
-    "phylogeny_export": {"exit_code": 0, "duration_seconds": 0},
-    "dashboard": {"exit_code": 0, "duration_seconds": 0},
+    "source_ontology": {"exit_code": 0, "duration_seconds": 8},
+    "commit_path_extraction": {"exit_code": 0, "duration_seconds": 25},
+    "weak_commit_taxonomy": {"exit_code": 0, "duration_seconds": 2},
+    "path_habitats": {"exit_code": 0, "duration_seconds": 1},
+    "phylogeny_export": {"exit_code": 0, "duration_seconds": 1},
+    "dashboard": {"exit_code": 0, "duration_seconds": 1},
     "ontology_bridge": {"exit_code": 0, "duration_seconds": 0}
   },
   "overall_exit_code": 0
@@ -264,7 +288,7 @@ python3 tools/infra/darwin_phylogeny_dashboard.py \
 | **Level 3–4** | AGENTS.md, RUNBOOK.md, QMS SOPs, PIPELINE_IMPROVEMENT_AND_REFACTORING_PLAN.md | `[qms_document_controlled]` | Governance, scope, contracts, audits |
 | **Level 5** | Python weak-rule labels, Git commit phylogeny, ArangoDB/PostgreSQL projections, Auto-Ontology terms | `[navigation_metadata]` / `[computational_witness]` | Navigation, observability, traceability **only** — never proof authority |
 
-**Never conflate:** A Python weak-rule label or a Git commit phylogeny edge is **not** a Lean theorem. A fingerprint match is a candidate identifier, not proof of declaration identity.
+**Never conflate:** A Python weak-rule label or a Git commit phylogeny edge is **not** a Lean theorem. The source-map panel uses separate file/Lake/import evidence and is not a compiler declaration DAG. A fingerprint match is a candidate identifier, not proof of declaration identity.
 
 ---
 
@@ -345,7 +369,7 @@ End every pipeline execution turn with a QMS-compliant report containing:
 | OpenGauss screener | `python3 tools/infra/opengauss_screener.py <file.lean> --strict` |
 | Context preflight | `python3 tools/infra/context_preflight.py "question" --include-external` |
 | Taxonomy tests | `python3 -m pytest tests/test_evolution_taxonomy.py` |
-| Full pipeline | `./scripts/run_pipeline.sh [--skip-lean-build] [--generation-id <ID>] [--report-dir <DIR>]` |
+| Full pipeline | `./scripts/run_pipeline.sh [--skip-lean-build] [--generation-id <ID>] [--since <UTC>] [--until <UTC>] [--report-dir <DIR>]` |
 | Dry-run ontology bridge | `python3 tools/infra/arango_to_ontology.py --dry-run --decls-jsonl <file> --report-json <file>` |
 | Generate pipeline receipt | `scripts/run_pipeline.sh` (emits `run_receipt.json`) |
 

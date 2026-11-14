@@ -1,3 +1,16 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import Mathlib.Algebra.Ring.Defs
+import Mathlib.Algebra.Algebra.Defs
+import Mathlib.LinearAlgebra.Dimension.Finrank
+import Mathlib.Data.ZMod.Basic
+import Mathlib.Tactic
+import InfoGeometry.Algebra.KaplanskyZeroDivisorArchetype
+
 /-!
 # Kaplansky–Clifford Bridge: Idempotents, Nilpotents, and Zero Divisors
 
@@ -13,24 +26,18 @@ Key results:
 4. The Chevalley spinor idempotent `e₀ = np` satisfies `e₀² = e₀`
 -/
 
-import Mathlib.Algebra.Ring.Defs
-import Mathlib.Algebra.Algebra.Defs
-import Mathlib.LinearAlgebra.Finrank
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Tactic
-
 namespace KaplanskyCliffordBridge
 
 open Ring
 
 /-- The Peirce projectors associated to a split involution `ε² = 1`. -/
-structure PeirceProjectors (R : Type*) [Ring R] where
+structure PeirceProjectors (R : Type*) [Ring R] [Algebra ℚ R] where
   P_plus : R
   P_minus : R
   involution : R
   h_square : involution * involution = 1
-  h_P_plus : P_plus = (1 + involution) / 2
-  h_P_minus : P_minus = (1 - involution) / 2
+  h_P_plus : P_plus = (⅟(2 : ℚ)) • (1 + involution)
+  h_P_minus : P_minus = (⅟(2 : ℚ)) • (1 - involution)
   h_idempotent_plus : P_plus * P_plus = P_plus
   h_idempotent_minus : P_minus * P_minus = P_minus
   h_orthogonal : P_plus * P_minus = 0
@@ -44,80 +51,64 @@ structure SplitInvolution (R : Type*) [Ring R] where
   h_not_neg_one : elem ≠ -1
 
 /-- Construct Peirce projectors from a split involution. -/
-def peirceFromSplitInvolution {R : Type*} [Ring R] [Algebra ℚ R] (s : SplitInvolution R) :
+def peirceFromSplitInvolution {R : Type*} [Ring R] [Algebra ℚ R]
+    (s : SplitInvolution R) :
     PeirceProjectors R := by
-  have h₂_inv : (2 : R) ≠ 0 := by
-    intro h
-    have h₃ : (2 : ℚ) = 0 := by
-      norm_cast at h ⊢
-      <;> simp_all [Algebra.map_eq_zero_iff]
-      <;> aesop
-    norm_num at h₃
-  refine' ⟨(1 + s.elem) / 2, (1 - s.elem) / 2, s.elem, s.h_square, by rfl, by rfl, _, _, _, _⟩
+  refine ⟨(⅟(2 : ℚ)) • (1 + s.elem), (⅟(2 : ℚ)) • (1 - s.elem),
+    s.elem, s.h_square, rfl, rfl, ?_, ?_, ?_, ?_⟩
   · -- P₊² = P₊
-    calc
-      ((1 + s.elem) / 2) * ((1 + s.elem) / 2) = (1 + s.elem + s.elem + s.elem * s.elem) / 4 := by
-        ring_nf
-        <;> field_simp [h₂_inv]
-        <;> ring_nf
-      _ = (1 + s.elem + s.elem + 1) / 4 := by
-        rw [s.h_square]
-        <;> ring_nf
-      _ = (2 + 2 * s.elem) / 4 := by ring_nf
-      _ = (1 + s.elem) / 2 := by
-        field_simp [h₂_inv]
-        <;> ring_nf
-        <;> simp_all [two_mul]
-        <;> field_simp [h₂_inv]
-        <;> ring_nf
+    rw [smul_mul_smul]
+    have hsq : (1 + s.elem) * (1 + s.elem) = (2 : ℚ) • (1 + s.elem) := by
+      calc
+        (1 + s.elem) * (1 + s.elem) = 1 + s.elem + s.elem + s.elem * s.elem := by
+          noncomm_ring
+        _ = 1 + s.elem + s.elem + 1 := by rw [s.h_square]
+        _ = (1 + s.elem) + (1 + s.elem) := by abel
+        _ = (2 : ℚ) • (1 + s.elem) := by rw [two_smul]
+    rw [hsq, ← mul_smul]
+    have hcoeff : (⅟(2 : ℚ) * ⅟(2 : ℚ)) * 2 = ⅟(2 : ℚ) := by
+      calc
+        (⅟(2 : ℚ) * ⅟(2 : ℚ)) * 2 = ⅟(2 : ℚ) * (⅟(2 : ℚ) * 2) := by rw [mul_assoc]
+        _ = ⅟(2 : ℚ) * 1 := by rw [invOf_mul_self]
+        _ = ⅟(2 : ℚ) := by rw [mul_one]
+    rw [hcoeff]
   · -- P₋² = P₋
-    calc
-      ((1 - s.elem) / 2) * ((1 - s.elem) / 2) = (1 - s.elem - s.elem + s.elem * s.elem) / 4 := by
-        ring_nf
-        <;> field_simp [h₂_inv]
-        <;> ring_nf
-      _ = (1 - s.elem - s.elem + 1) / 4 := by
-        rw [s.h_square]
-        <;> ring_nf
-      _ = (2 - 2 * s.elem) / 4 := by ring_nf
-      _ = (1 - s.elem) / 2 := by
-        field_simp [h₂_inv]
-        <;> ring_nf
-        <;> simp_all [two_mul]
-        <;> field_simp [h₂_inv]
-        <;> ring_nf
+    rw [smul_mul_smul]
+    have hsq : (1 - s.elem) * (1 - s.elem) = (2 : ℚ) • (1 - s.elem) := by
+      calc
+        (1 - s.elem) * (1 - s.elem) = 1 - s.elem - s.elem + s.elem * s.elem := by
+          noncomm_ring
+        _ = 1 - s.elem - s.elem + 1 := by rw [s.h_square]
+        _ = (1 - s.elem) + (1 - s.elem) := by abel
+        _ = (2 : ℚ) • (1 - s.elem) := by rw [two_smul]
+    rw [hsq, ← mul_smul]
+    have hcoeff : (⅟(2 : ℚ) * ⅟(2 : ℚ)) * 2 = ⅟(2 : ℚ) := by
+      calc
+        (⅟(2 : ℚ) * ⅟(2 : ℚ)) * 2 = ⅟(2 : ℚ) * (⅟(2 : ℚ) * 2) := by rw [mul_assoc]
+        _ = ⅟(2 : ℚ) * 1 := by rw [invOf_mul_self]
+        _ = ⅟(2 : ℚ) := by rw [mul_one]
+    rw [hcoeff]
   · -- P₊ P₋ = 0
-    calc
-      ((1 + s.elem) / 2) * ((1 - s.elem) / 2) = (1 - s.elem + s.elem - s.elem * s.elem) / 4 := by
-        ring_nf
-        <;> field_simp [h₂_inv]
-        <;> ring_nf
-      _ = (1 - 1) / 4 := by
-        rw [s.h_square]
-        <;> ring_nf
-      _ = 0 := by simp [h₂_inv]
+    rw [smul_mul_smul]
+    have hcross : (1 + s.elem) * (1 - s.elem) = 0 := by
+      calc
+        (1 + s.elem) * (1 - s.elem) = 1 - s.elem * s.elem := by noncomm_ring
+        _ = 0 := by rw [s.h_square]; noncomm_ring
+    rw [hcross, smul_zero]
   · -- P₊ + P₋ = 1
-    calc
-      ((1 + s.elem) / 2) + ((1 - s.elem) / 2) = (1 + s.elem + 1 - s.elem) / 2 := by
-        ring_nf
-        <;> field_simp [h₂_inv]
-        <;> ring_nf
-      _ = 2 / 2 := by ring_nf
-      _ = 1 := by
-        field_simp [h₂_inv]
-        <;> simp_all [two_mul]
+    rw [← smul_add]
+    have hsum : (1 + s.elem) + (1 - s.elem) = (2 : ℚ) • (1 : R) := by
+      calc
+        (1 + s.elem) + (1 - s.elem) = 1 + 1 := by noncomm_ring
+        _ = (2 : ℚ) • (1 : R) := by rw [two_smul]
+    rw [hsum, ← mul_smul, invOf_mul_self, one_smul]
 
 /-- Over 𝔽₂, the element `ε + 1` is a square-zero nilpotent when `ε² = 1`. -/
 theorem splitInvolutionToNilpotent (p : ℕ) (hp : p.Prime) (hp2 : p = 2) :
     ∀ (ε : ZMod p), ε * ε = 1 → (ε + 1) * (ε + 1) = 0 := by
+  subst p
   intro ε hε
-  have h : p = 2 := hp2
-  subst_vars
-  fin_cases ε <;> simp_all (config := {decide := true})
-  <;> norm_num at * <;>
-  (try contradiction) <;>
-  (try ring_nf at *) <;>
-  (try simp_all [ZMod.nat_cast_self])
+  exact InfoGeometry.Algebra.KaplanskyZeroDivisor.charTwo_involution_add_one_is_nilpotent hε
 
 /-- Non-trivial idempotents yield zero divisors. -/
 theorem idempotentYieldsZeroDivisor {R : Type*} [Ring R] {e : R} (h_idem : e * e = e) (h_ne_zero : e ≠ 0) (h_ne_one : e ≠ 1) :
@@ -127,13 +118,11 @@ theorem idempotentYieldsZeroDivisor {R : Type*} [Ring R] {e : R} (h_idem : e * e
     exact h_ne_zero
   · -- 1 - e ≠ 0
     intro h
-    apply h_ne_one
-    apply eq_of_sub_eq_zero
-    simpa [sub_eq_zero] using h
+    exact h_ne_one ((sub_eq_zero.mp h).symm)
   · -- e * (1 - e) = 0
     calc
-      e * (1 - e) = e * 1 - e * e := by rw [mul_sub]
-      _ = e - e := by rw [h_idem, one_mul]
+      e * (1 - e) = e - e * e := by rw [mul_sub, mul_one]
+      _ = e - e := by rw [h_idem]
       _ = 0 := by simp
 
 /-- Chevalley spinor idempotent construction. -/
@@ -153,62 +142,28 @@ theorem chevalleyIdempotentSquare {R : Type*} [Ring R] (d : ChevalleySpinorData 
   calc
     (d.n * d.p) * (d.n * d.p) = d.n * (d.p * d.n) * d.p := by
       simp [mul_assoc]
-    _ = d.n * 0 * d.p := by rw [d.h_n_p_zero]
+    _ = d.n * 0 * d.p := by rw [d.h_p_n_zero]
     _ = 0 := by simp
-    _ = d.n * d.p := by
-      have h : d.n * d.p = 0 := by
-        calc
-          d.n * d.p = d.n * d.p := rfl
-          _ = 0 := by
-            have h₁ : d.n * d.p = 0 := d.h_n_p_zero
-            rw [h₁]
-      rw [h]
-      <;> simp [d.h_n_sq_zero, d.h_p_sq]
+    _ = d.n * d.p := by rw [d.h_n_p_zero]
 
-/- The Cheballey idempotent yields a non-trivial idempotent when n, p ≠ 0 and the ring is non-degenerate. -/
-theorem chevalleyIdempotentNonTrivial {R : Type*} [Ring R] (d : ChevalleySpinorData R)
-    (h_n_ne_zero : d.n ≠ 0) (h_p_ne_zero : d.p ≠ 0) (h_np_ne_zero : d.n * d.p ≠ 0) :
-    chevalleyIdempotent d ≠ 0 ∧ chevalleyIdempotent d ≠ 1 → 
-    ∃ (a b : R), a ≠ 0 ∧ b ≠ 0 ∧ a * b = 0 := by
-  intro h_ne h_ne_one
-  have h_idem : (chevalleyIdempotent d) * (chevalleyIdempotent d) = chevalleyIdempotent d := chevalleyIdempotentSquare d
-  have h₁ : ∃ (a b : R), a ≠ 0 ∧ b ≠ 0 ∧ a * b = 0 := idempotentYieldsZeroDivisor h_idem (by
-    intro h
-    apply h_ne
-    simp_all [chevalleyIdempotent]
-    ) (by
-    intro h
-    apply h_ne_one
-    simp_all [chevalleyIdempotent]
-    )
-  exact h₁
+/-- The current data imposes `n * p = 0`, so the named element is always zero. -/
+theorem chevalleyIdempotent_eq_zero {R : Type*} [Ring R] (d : ChevalleySpinorData R) :
+    chevalleyIdempotent d = 0 := d.h_n_p_zero
 
 /-- Characteristic 2 collapse: split involution becomes nilpotent. -/
-theorem charTwoSplitInvolutionNilpotent (R : Type*) [Ring R] [Algebra (ZMod 2) R] (ε : R)
+theorem charTwoSplitInvolutionNilpotent (R : Type*) [Ring R] [CharP R 2] (ε : R)
     (hε : ε * ε = 1) : (ε + 1) * (ε + 1) = 0 := by
+  have htwo : (2 : R) = 0 := CharP.cast_eq_zero R 2
+  have hone : (1 : R) + 1 = 0 := by
+    calc
+      (1 : R) + 1 = (2 : ℕ) • (1 : R) := by rw [two_smul]
+      _ = 0 := by simpa using congrArg (fun x : R => x * (1 : R)) htwo
   calc
-    (ε + 1) * (ε + 1) = ε * ε + ε + ε + 1 := by ring
-    _ = ε * ε + 2 * ε + 1 := by ring
-    _ = ε * ε + 1 := by
-      have h₂ : (2 : R) = 0 := by
-        haveI : Algebra (ZMod 2) R := inferInstance
-        simp [Algebra.map_two]
-        <;>
-        (try contradiction) <;>
-        (try simp_all [Algebra.map_eq_zero_iff]) <;>
-        (try norm_num)
-      rw [h₂]
-      <;> simp [two_mul, add_zero]
-    _ = 1 + 1 := by rw [hε] <;> ring
-    _ = 0 := by
-      haveI : Algebra (ZMod 2) R := inferInstance
-      have h₂ : (2 : R) = 0 := by
-        simp [Algebra.map_two]
-        <;>
-        (try contradiction) <;>
-        (try simp_all [Algebra.map_eq_zero_iff]) <;>
-        (try norm_num)
-      simp [h₂]
+    (ε + 1) * (ε + 1) = ε * ε + (ε + ε) + 1 := by noncomm_ring
+    _ = 1 + 1 := by
+      have hεε : ε + ε = 0 := by rw [← two_mul, htwo, zero_mul]
+      simp [hε, hεε]
+    _ = 0 := hone
 
 /-- Left and right annihilator ideals from zero divisors. -/
 def leftAnnihilator {R : Type*} [Ring R] (S : Set R) : Set R :=
@@ -217,10 +172,12 @@ def leftAnnihilator {R : Type*} [Ring R] (S : Set R) : Set R :=
 def rightAnnihilator {R : Type*} [Ring R] (S : Set R) : Set R :=
   {x : R | ∀ s ∈ S, s * x = 0}
 
-theorem zeroDivisorYieldsIdeals {R : Type*} [Ring R] {α β : R} (h : α * β = 0) (hα : α ≠ 0) (hβ : β ≠ 0) :
+theorem zeroDivisorYieldsAnnihilatingSubsets {R : Type*} [Ring R] {α β : R}
+    (h : α * β = 0) :
     (∃ (I : Set R), I.Nonempty ∧ ∀ x ∈ I, x * β = 0) ∧
     (∃ (J : Set R), J.Nonempty ∧ ∀ y ∈ J, α * y = 0) := by
-  refine' ⟨⟨{α}, ⟨α, hα⟩, _⟩, ⟨{β}, ⟨β, hβ⟩, _⟩⟩
+  refine ⟨⟨{α}, ⟨α, Set.mem_singleton α⟩, ?_⟩,
+    ⟨{β}, ⟨β, Set.mem_singleton β⟩, ?_⟩⟩
   · -- Right ideal: α * β = 0
     intro x hx
     simp only [Set.mem_singleton_iff] at hx
@@ -236,38 +193,24 @@ theorem zeroDivisorYieldsIdeals {R : Type*} [Ring R] {α β : R} (h : α * β = 
 def defectSpace {R : Type*} [AddCommGroup R] (d : R → R) (δ : R → R) : Set R :=
   {x : R | d x = 0 ∧ δ x = 0}
 
-theorem defectSpaceProperties {R : Type*} [AddCommGroup R] (d δ : R → R)
-    (h_d_sq : ∀ x, d (d x) = 0) (h_δ_sq : ∀ x, δ (δ x) = 0) :
-    Submodule R (defectSpace d δ) := by
-  refine' ⟨_, _, _⟩
-  · -- Contains 0
-    simp [defectSpace]
-    <;> simp_all [h_d_sq, h_δ_sq]
+def defectSpaceSubmodule {R : Type*} [Ring R] (d δ : R →ₗ[R] R) :
+    Submodule R R := by
+  refine
+    { carrier := defectSpace d δ
+      zero_mem' := by simp [defectSpace]
+      add_mem' := ?_
+      smul_mem' := ?_ }
   · -- Closed under addition
     intro x y hx hy
-    simp only [defectSpace, Set.mem_setOf_eq] at hx hy ⊢
-    constructor <;>
-    (try simp_all [add_assoc]) <;>
-    (try simp_all [d, δ]) <;>
-    (try aesop) <;>
-    (try
-      {
-        simp_all [h_d_sq, h_δ_sq]
-        <;>
-        abel
-      })
+    simp only [defectSpace, Set.mem_ofPred_eq] at hx hy ⊢
+    constructor
+    · rw [map_add, hx.1, hy.1, add_zero]
+    · rw [map_add, hx.2, hy.2, add_zero]
   · -- Closed under scalar multiplication
     intro c x hx
-    simp only [defectSpace, Set.mem_setOf_eq] at hx ⊢
-    constructor <;>
-    (try simp_all [smul_smul]) <;>
-    (try simp_all [d, δ]) <;>
-    (try aesop) <;>
-    (try
-      {
-        simp_all [h_d_sq, h_δ_sq]
-        <;>
-        abel
-      })
+    simp only [defectSpace, Set.mem_ofPred_eq] at hx ⊢
+    constructor
+    · rw [map_smul, hx.1, smul_zero]
+    · rw [map_smul, hx.2, smul_zero]
 
 end KaplanskyCliffordBridge

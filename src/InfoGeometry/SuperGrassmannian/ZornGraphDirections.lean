@@ -62,10 +62,21 @@ theorem mem_nativeIdempotentDirections (T : Module.End R (ZornVectorMatrix R)) :
   change graphProjector 0 * splitEquiv.conj T + splitEquiv.conj T * graphProjector 0 =
     splitEquiv.conj T ↔ _
   rw [← conjugate_left_E11]
+  change
+    (splitEquiv.conj
+        (L_map (R := R) ZornVectorMatrix.E11 * T +
+          T * L_map (R := R) ZornVectorMatrix.E11) =
+      splitEquiv.conj T) ↔ _
   have hm (A B : Module.End R (ZornVectorMatrix R)) :
       splitEquiv.conj (A * B) = splitEquiv.conj A * splitEquiv.conj B :=
     splitEquiv.conj_comp B A
-  rw [← hm, ← hm, ← map_add, splitEquiv.conj.injective.eq_iff]
+  constructor
+  · intro h
+    exact splitEquiv.conj.injective h
+  · intro h
+    have h' := congrArg splitEquiv.conj h
+    rw [map_add, hm, hm] at h'
+    exact h'
 
 /-- Both independently varying corners, transported back to the actual octonion module. -/
 def nativeDirectionsEquiv :

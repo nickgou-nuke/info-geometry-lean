@@ -903,6 +903,11 @@ lean_lib InfoGeometry where
   -- them and wire them into the provided library surface.
   globs := #[.andSubmodules `InfoGeometry]
 
+-- The Grothendieck–Riemann–Roch port is maintained as a separate library
+-- because its Stacks dependency has a substantially larger build surface.
+lean_lib GRR where
+  globs := #[.andSubmodules `GRR]
+
 -- OAI is compiled from the inspected external checkout against the root
 -- Mathlib pin, without resolving its unrelated workspace-wide dependencies.
 lean_lib OAI where
@@ -1168,3 +1173,4 @@ lean_lib Experimental where
 
 
 require mathlib from git "https://github.com/leanprover-community/mathlib4.git" @ "v4.34.1"
+require Stacks from "external_refs/Stacks"

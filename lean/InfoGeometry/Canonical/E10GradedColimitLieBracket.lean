@@ -84,6 +84,13 @@ lemma heightCutoff_le_union (A : ℤ → Submodule R L) (N : ℕ) :
   unfold heightCutoffUnion
   exact le_iSup (heightCutoff A) N
 
+lemma heightCutoff_directed (A : ℤ → Submodule R L) :
+    Directed (· ≤ ·) (heightCutoff A) := by
+  intro N M
+  refine ⟨max N M, ?_, ?_⟩
+  · exact heightCutoff_mono A (le_max_left N M)
+  · exact heightCutoff_mono A (le_max_right N M)
+
 /-- **Exhaustiveness of the Root-Height Cutoff Union (`heightCutoffUnion_eq_iSup_all`):**
 The supremum of all finite root-height cutoffs $\bigsqcup_{N \in \mathbb{N}} \mathfrak{g}_{\le N}$
 equals the full supremum $\bigsqcup_{i \in \mathbb{Z}} A_i$ of all graded components. -/
@@ -93,14 +100,12 @@ theorem heightCutoffUnion_eq_iSup_all (A : ℤ → Submodule R L) :
   · unfold heightCutoffUnion heightCutoff
     apply iSup_le
     intro N
-    apply iSup_le
-    intro i
-    apply iSup_le
-    intro _
-    exact le_iSup A i
+    rw [Submodule.span_le]
+    rintro x ⟨i, _, hxi⟩
+    exact (le_iSup A i) hxi
   · apply iSup_le
     intro i
-    exact le_trans (component_le_heightCutoff A i.natAbs i (le_of_eq (Int.natCast_natAbs i).symm))
+    exact le_trans (component_le_heightCutoff A i.natAbs i (Nat.le_refl _))
       (heightCutoff_le_union A i.natAbs)
 
 /-- **Lie Span Closure of the Cutoff Union (`heightCutoffUnion_lieSpan_le`):**
@@ -111,15 +116,17 @@ theorem heightCutoffUnion_lieSpan_le
     (A : ℤ → Submodule R L)
     (hGrad : ∀ {i j : ℤ} {x y : L}, x ∈ A i → y ∈ A j → ⁅x, y⁆ ∈ A (i + j)) :
     lieSpan (heightCutoffUnion A) (heightCutoffUnion A) ≤ heightCutoffUnion A := by
-  unfold heightCutoffUnion
-  rw [lieSpan_le_iff_left]
-  apply iSup_le
-  intro N
-  rw [← lieSpan_le_iff_left, lieSpan_le_iff_right]
-  apply iSup_le
-  intro M
-  rw [← lieSpan_le_iff_right]
-  exact le_trans (heightCutoff_lie_le A hGrad N M) (heightCutoff_le_union A (N + M))
+  rw [lieSpan_le_iff]
+  intro x hx y hy
+  have hdir := heightCutoff_directed A
+  rcases (Submodule.mem_iSup_of_directed (heightCutoff A) hdir).mp hx with ⟨N, hxN⟩
+  rcases (Submodule.mem_iSup_of_directed (heightCutoff A) hdir).mp hy with ⟨M, hyM⟩
+  have hstage : ⁅x, y⁆ ∈ heightCutoff A (N + M) := by
+    apply (lieSpan_le_iff (heightCutoff A N) (heightCutoff A M)
+      (heightCutoff A (N + M))).mp (heightCutoff_lie_le A hGrad N M)
+    · exact hxN
+    · exact hyM
+  exact (Submodule.mem_iSup_of_directed (heightCutoff A) hdir).mpr ⟨N + M, hstage⟩
 
 /-- **Elementwise Lie Bracket Closure (`heightCutoffUnion_lie_mem`):**
 If $x, y \in \mathrm{heightCutoffUnion}\;A$, then their Lie bracket $\⁅x, y\⁆$ belongs to

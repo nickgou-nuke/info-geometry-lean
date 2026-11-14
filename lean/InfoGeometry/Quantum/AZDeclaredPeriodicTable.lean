@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.AltlandZirnbauerKTheoryBridge
@@ -35,6 +41,7 @@ def declaredPeriodicTableEntry (c : AZClass) (d : ℕ) : PeriodicTableEntry :=
   | AZClass.BDI, 3 => .integers
   | AZClass.DIII, 1 | AZClass.DIII, 2 => .zModTwo
   | AZClass.DIII, 3 => .integers
+  | AZClass.AII, 3 => .zModTwo
   | _, _ => .zero
 
 /-- The declared class-D, dimension-one entry is `zModTwo`. -/

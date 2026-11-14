@@ -34,6 +34,12 @@ try:
 except ImportError:  # pragma: no cover - offline/dry-run environments without python-arango
     ArangoClient = None  # type: ignore[assignment,misc]
 from decl_graph_generation import resolve_decl_graph_generation, validate_generation_id
+from ontology_bridge_common import refresh_legacy_pg_connect, resolve_arango_env
+from ontology_bridge_data import (
+    ensure_term_term_table,
+    run_offline_jsonl_dry_run,
+    validate_dependency_edges,
+)
 
 
 ARANGO_ENDPOINT = os.environ.get("ARANGO_ENDPOINT", "")
@@ -55,36 +61,11 @@ def now_iso() -> str:
 
 
 def _resolve_arango_env(database_override: str | None = None) -> tuple[str, str, str, str]:
-    endpoint = os.environ.get("ARANGO_ENDPOINT") or ARANGO_ENDPOINT
-    database = database_override or os.environ.get("ARANGO_DATABASE") or ARANGO_DATABASE
-    user = os.environ.get("ARANGO_USER") or ARANGO_USER
-    password = os.environ.get("ARANGO_PASS") or ARANGO_PASS
-    if not (endpoint and database and user and password):
-        try:
-            from arango_env import (
-                arango_database,
-                arango_endpoint,
-                arango_password,
-                arango_username,
-                load_repo_arango_env,
-            )
-            load_repo_arango_env()
-            endpoint = endpoint or arango_endpoint()
-            database = database or arango_database()
-            user = user or arango_username()
-            password = password or arango_password()
-        except Exception:
-            pass
-    return endpoint, database or "infogeometry", user, password
+    return resolve_arango_env(database_override)
 
 
 def get_pg_connect() -> dict[str, str]:
-    PG_CONNECT["user"] = os.environ.get("POSTGRES_USER", PG_CONNECT.get("user", ""))
-    PG_CONNECT["password"] = os.environ.get("POSTGRES_PASSWORD", PG_CONNECT.get("password", ""))
-    PG_CONNECT["host"] = os.environ.get("POSTGRES_HOST", PG_CONNECT.get("host", "localhost"))
-    PG_CONNECT["port"] = os.environ.get("POSTGRES_PORT", PG_CONNECT.get("port", "5433"))
-    PG_CONNECT["dbname"] = os.environ.get("POSTGRES_DATABASE", PG_CONNECT.get("dbname", "auto_ontology"))
-    return PG_CONNECT
+    return refresh_legacy_pg_connect(PG_CONNECT)
 
 
 def connect_arango(database: str):
@@ -208,102 +189,8 @@ def _write_report(report_path: str | None, payload: dict) -> None:
 
 
 def _run_offline_jsonl_dry_run(args) -> int:
-    from igf.graph.decl_schema import decl_key, edge_key
-    from decl_projection import DEFAULT_DEPLOYMENT_UUID, Source, source_digest
-
-    decls_path = Path(args.decls_jsonl)
-    if not decls_path.is_file():
-        raise SystemExit(f"declarations JSONL file not found: {decls_path}")
-    seen_names: set[str] = set()
-    decl_by_key: dict[str, dict] = {}
-    modules: set[str] = set()
-    for line_no, raw in enumerate(decls_path.read_text(encoding="utf-8").splitlines(), start=1):
-        text = raw.strip()
-        if not text:
-            continue
-        doc = json.loads(text)
-        if not isinstance(doc, dict):
-            raise SystemExit(f"{decls_path}:{line_no}: declaration record must be a JSON object")
-        name = doc.get("name")
-        if not isinstance(name, str) or not name.strip():
-            raise SystemExit("declaration source contains a missing name or identity")
-        if name in seen_names:
-            raise SystemExit("declaration source contains duplicate names")
-        seen_names.add(name)
-        expected_key = decl_key(name)
-        key = doc.get("_key") or doc.get("key") or expected_key
-        if key != expected_key:
-            raise SystemExit(f"{decls_path}:{line_no}: declaration key mismatch for {name!r}")
-        module = doc.get("module") or "Unknown"
-        modules.add(module)
-        payload = {**doc, "_key": key, "name": name, "module": module}
-        decl_by_key[key] = payload
-
-    if not decl_by_key:
-        raise SystemExit(f"refusing empty declaration import from {str(decls_path)!r}")
-
-    edge_by_key: dict[str, tuple[str, str, str, str, dict]] = {}
-    if args.edges_jsonl:
-        edges_path = Path(args.edges_jsonl)
-        if not edges_path.is_file():
-            raise SystemExit(f"edges JSONL file not found: {edges_path}")
-        for line_no, raw in enumerate(edges_path.read_text(encoding="utf-8").splitlines(), start=1):
-            text = raw.strip()
-            if not text:
-                continue
-            edge = json.loads(text)
-            if not isinstance(edge, dict):
-                raise SystemExit(f"{edges_path}:{line_no}: edge record must be a JSON object")
-            src = edge.get("src")
-            dst = edge.get("dst")
-            kind = edge.get("kind")
-            if (not isinstance(src, str) or not src or not isinstance(dst, str) or not dst
-                    or kind not in ("type", "value")):
-                raise SystemExit(f"{edges_path}:{line_no}: invalid dependency edge")
-            src_k = decl_key(src)
-            dst_k = decl_key(dst)
-            if src_k not in decl_by_key or dst_k not in decl_by_key:
-                raise SystemExit(f"{edges_path}:{line_no}: dangling edge endpoint {src!r} -> {dst!r}")
-            ekey = edge.get("_key") or edge.get("key") or edge_key(src, kind, dst)
-            if ekey != edge_key(src, kind, dst):
-                raise SystemExit(f"{edges_path}:{line_no}: edge key mismatch")
-            epayload = {**edge, "_key": ekey, "src": src, "dst": dst, "kind": kind}
-            edge_by_key[ekey] = (ekey, src_k, dst_k, kind, epayload)
-
-    dep_uuid = UUID(args.deployment_uuid) if args.deployment_uuid else DEFAULT_DEPLOYMENT_UUID
-    source = Source(dep_uuid, args.arango_db or "infogeometry")
-    sorted_decls = [
-        (k, decl_by_key[k]["name"], decl_by_key[k]["module"], decl_by_key[k])
-        for k in sorted(decl_by_key, key=lambda x: x.encode("utf-8"))
-    ]
-    sorted_edges = [
-        edge_by_key[k]
-        for k in sorted(edge_by_key, key=lambda x: x.encode("utf-8"))
-    ]
-    receipt = {
-        "_key": args.generation_id or "offline_dry_run",
-        "schema": "info_geometry.decl_graph_generation.v1",
-        "status": "complete",
-        "declarationCount": len(sorted_decls),
-        "validEdgeCount": len(sorted_edges),
-    }
-    digest = source_digest(source, receipt, sorted_decls, sorted_edges)
-    report = {
-        "status": "dry_run_ok",
-        "mode": "offline_jsonl",
-        "generation_id": args.generation_id or "offline_dry_run",
-        "source_id": str(dep_uuid),
-        "arango_database": source.arango_database,
-        "expected_decl_count": len(sorted_decls),
-        "loaded_decl_count": 0,
-        "expected_edge_count": len(sorted_edges),
-        "loaded_edge_count": 0,
-        "module_count": len(modules),
-        "source_digest": digest,
-    }
-    _write_report(args.report_json, report)
-    print(json.dumps(report, sort_keys=True))
-    return 0
+    """Compatibility wrapper for the shared offline projection validator."""
+    return run_offline_jsonl_dry_run(args)
 
 
 def _run_pinned_generation_projection(args, db, generation: dict, decl_collection: str, total: int) -> int:
@@ -314,8 +201,6 @@ def _run_pinned_generation_projection(args, db, generation: dict, decl_collectio
         Source,
         source_digest,
     )
-    from arango_to_ontology_relationships import ensure_term_term_table, validate_dependency_edges
-
     edge_collection = generation["edgeCollection"]
     if not edge_collection.replace("_", "").isalnum():
         raise SystemExit(f"unsafe edge collection name: {edge_collection!r}")

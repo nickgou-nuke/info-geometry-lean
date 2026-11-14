@@ -5,6 +5,8 @@ import subprocess
 from tools.infra import darwin_commit_graph
 from tools.infra.darwin_evolution_algorithms import change_facet_summary
 from tools.infra.darwin_commit_graph import iter_parent_edges
+from tools.infra.darwin_commit_taxonomy import taxonomy_summary
+from tools.infra.evolution_taxonomy import METHOD_VERSION
 
 
 def test_parent_edges_point_from_each_parent_to_child_and_keep_slot() -> None:
@@ -39,6 +41,19 @@ def test_parent_edges_point_from_each_parent_to_child_and_keep_slot() -> None:
             "parent_slot": 1,
         },
     ]
+
+
+def test_commit_taxonomy_summary_uses_the_weak_label_method_version() -> None:
+    class Database:
+        class AQL:
+            def execute(self, query, *, bind_vars):
+                assert "method: @method" in query
+                assert bind_vars == {"method": METHOD_VERSION}
+                return []
+
+        aql = AQL()
+
+    assert list(taxonomy_summary(Database())) == []
 
 
 def test_missing_shallow_boundary_parent_is_not_emitted_as_edge() -> None:

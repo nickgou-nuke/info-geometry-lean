@@ -93,3 +93,52 @@ lean_lib SrcLane where
     .one `test_rpow,
     .one `test_selfconcordance
   ]
+
+-- The source transition tree imports these repository and reference modules
+-- just as the canonical lean/ workspace does. Compile them in the isolated
+-- src-build output so imports resolve without sharing duplicate InfoGeometry
+-- module artifacts between the two workspaces.
+lean_lib proofs where
+  srcDir := "."
+  globs := #[.submodules `proofs]
+
+lean_lib OAI where
+  srcDir := "external_refs/openai-math/lean"
+  roots := #[
+    `OAI.GroupTheory.BooneHigman.Main,
+    `OAI.GroupTheory.BooneHigman.TwistedSimplicity,
+    `OAI.GroupTheory.FiniteType.TwistedBrinSeparated,
+    `OAI.GroupTheory.SimpleAmenable.PolygonGeometry.ShiftedSlots,
+    `OAI.GroupTheory.SimpleAmenable.Main
+  ]
+  globs := #[
+    .submodules `OAI.Analysis.Cuntz,
+    .submodules `OAI.Analysis.Quasitrace,
+    .submodules `OAI.Algebra.OrderedStates,
+    .submodules `OAI.GroupTheory.FiniteType,
+    .submodules `OAI.GroupTheory.FiniteLattice,
+    .submodules `OAI.GroupTheory.BooneHigman,
+    .submodules `OAI.GroupTheory.SimpleOvergroups,
+    .submodules `OAI.Computability,
+    .submodules `OAI.Combinatorics.PerfectMatching,
+    .submodules `OAI.GroupTheory.SimpleAmenable,
+    `OAI.GroupTheory.SimpleAmenable.Arithmetic.PolygonArithmetic,
+    `OAI.GroupTheory.SimpleAmenable.Configurations.TrackPoint,
+    `OAI.GroupTheory.SimpleAmenable.PolygonGeometry.PolygonAction,
+    `OAI.GroupTheory.SimpleAmenable.PolygonGeometry.TupleChartDomain,
+    `OAI.GroupTheory.SimpleAmenable.PolygonGeometry.Supported,
+    `OAI.GroupTheory.SimpleAmenable.PolygonGeometry.ShiftedSlots
+  ]
+
+lean_lib Coxeter where
+  srcDir := "external_refs/lean-coxeter"
+  roots := #[
+    `Coxeter.Basic,
+    `Coxeter.PermutationRepresentation,
+    `Coxeter.StrongExchange,
+    `Coxeter.Bruhat,
+    `Coxeter.Data.List.Lemmas,
+    `Coxeter.LinearAlgebra.BilinearForm,
+    `Coxeter.LinearAlgebra.TwoDim,
+    `Coxeter.Order.Directed
+  ]

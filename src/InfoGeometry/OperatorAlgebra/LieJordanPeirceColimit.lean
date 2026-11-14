@@ -428,13 +428,15 @@ theorem stage_dualPlus_bond (n : ℕ) (H S X : Stage n) :
     ofStage (n + 1)
       (dualPlus ℝ (stageEmbed n H) (stageEmbed n S) (stageEmbed n X)) =
       ofStage n (dualPlus ℝ H S X) := by
-  rw [← map_dualPlus ℝ (stageEmbed n), ofStage_apply_bond]
+  rw [← InfoGeometry.OperatorAlgebra.LieJordanDuality.map_dualPlus
+    (stageEmbed n) H S X, ofStage_apply_bond]
 
 theorem stage_dualMinus_bond (n : ℕ) (H S X : Stage n) :
     ofStage (n + 1)
       (dualMinus ℝ (stageEmbed n H) (stageEmbed n S) (stageEmbed n X)) =
       ofStage n (dualMinus ℝ H S X) := by
-  rw [← map_dualMinus ℝ (stageEmbed n), ofStage_apply_bond]
+  rw [← InfoGeometry.OperatorAlgebra.LieJordanDuality.map_dualMinus
+    (stageEmbed n) H S X, ofStage_apply_bond]
 
 /-- The complementary corner identity holds on the actual limit. -/
 theorem limit_complementary_corner (n : ℕ) (p : Stage n) (hp : p * p = p)

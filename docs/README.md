@@ -1,9 +1,12 @@
 # Documentation map
 
 > Status: `current authority`
-> Source reviewed: 2026-11-03 at `214f7bcf733eaf4720913bc2c082936f2480d3fc`.
-> Scope: maintained entry points and source routing. Linked research notes and
-> historical reports retain their own scope and verification dates.
+> The documentation map received a broad source review on 2026-11-03 at
+> `214f7bcf733eaf4720913bc2c082936f2480d3fc`; selected pipeline links and
+> instructions were reconciled on 2026-11-14. The checkout `HEAD` is
+> `38ad371b2981de71621fb0358a9c674470f52198` and has staged and unstaged source
+> changes. This is not a full documentation or build audit. Linked research notes
+> and historical reports retain their own scope and verification dates.
 
 Start with the [project README](../README.md),
 [getting-started guide](GETTING_STARTED.md), and [AGENTS.md](../AGENTS.md).
@@ -18,6 +21,7 @@ An index entry, graph relation, or filename does not establish a theorem.
 | [AGENTS.md](../AGENTS.md) | Source authority, proof acceptance, ownership, build serialization, and dependency preservation |
 | [Getting started](GETTING_STARTED.md) | Checkout, pinned dependencies, and scoped validation commands |
 | [Canonical pipeline](CANONICAL_AGENT_PIPELINE.md) | Implementation-backed commands and optional runtime prerequisites |
+| [Pipeline operator manual](PIPELINE_OPERATOR_MANUAL.md) | Taxonomy, phylogeny, ontology preflight, and pipeline-runner contracts |
 | [Hive agent commandments](HIVE_AGENT_COMMANDMENTS.md) | Compact operating checklist subordinate to root policy |
 | [Deep-search protocol](REPO_DEEP_SEARCH_PROTOCOL.md) | Multi-lane discovery and precise absence/novelty claims |
 | [Cache policy](../WARNING_DO_NOT_RUN_CACHE.md) | Cache preservation and the build helper's hydration behavior |
@@ -33,6 +37,8 @@ An index entry, graph relation, or filename does not establish a theorem.
 | Categorical owners and finite-to-limit interfaces | [Categorical infrastructure map](CATEGORICAL_INFRASTRUCTURE_MAP.md) |
 | CAR, Krein carriers, and projectivization | [Topic scope note](../README-CURRENT.md) |
 | Nuclear operator parity, RPA, and phonon commutators | [Nuclear operator synthesis](NUCLEAR_OPERATOR_SYNTHESIS.md), [theorem contract](NUCLEAR_OPERATOR_PARITY_CONTRACT.md) |
+| Finite-group character sectors and ordered quotient bases | [Operator symmetry/quotient contract](OPBASIS_SYMMETRY_QUOTIENT_CONTRACT.md), [Lean owner audit](../lean/InfoGeometry/Algebra/OperatorBasisAudit.lean) |
+| Clifford Pin suspension and normalized-vector subgroups | [Freed Clifford embedding scope](FREED_PIN_CLIFFORD_EMBEDDINGS.md), [suspension owner](../lean/InfoGeometry/Clifford/FreedCliffordSuspension.lean), [Pin owner](../lean/InfoGeometry/Clifford/NormalizedVectorPin.lean) |
 | Two-sheeted operator transport and its remaining bridges | [Framework progress note](TWO_SHEETED_YANG_MILLS_FRAMEWORK_PROGRESS.md) |
 | Souriau/Bost–Connes claims | [Transition status](SOURIAU_BOST_CONNES_TRANSITION_STATUS.md) |
 | Owner/translator separation | [Bilingual spine policy](BILINGUAL_SPINE_POLICY.md) |

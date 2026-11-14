@@ -119,6 +119,24 @@ lean/DAG/*
 lean/InfoGeometry/*
 ```
 
+Current source paths worth including in discovery (their presence is not by
+itself evidence that every surrounding claim or downstream target is verified):
+
+```text
+lean/InfoGeometry/Algebra/FiniteGroupCharacterProjection.lean
+lean/InfoGeometry/Algebra/CharacterRelationQuotient.lean
+lean/InfoGeometry/LinearAlgebra/OrderedQuotientBasis.lean
+lean/InfoGeometry/Clifford/FreedCliffordSuspension.lean
+lean/InfoGeometry/Clifford/NormalizedVectorPin.lean
+lean/InfoGeometry/OperatorAlgebra/NoncommutativeGaborFrame.lean
+```
+
+The operator-basis owners have a focused contract and verification record in
+[`OPBASIS_SYMMETRY_QUOTIENT_CONTRACT.md`](OPBASIS_SYMMETRY_QUOTIENT_CONTRACT.md);
+the Clifford suspension owners and their scope are documented in
+[`FREED_PIN_CLIFFORD_EMBEDDINGS.md`](FREED_PIN_CLIFFORD_EMBEDDINGS.md). Check
+those records against the exact checkout source before reusing their claims.
+
 Core commands:
 
 ```bash

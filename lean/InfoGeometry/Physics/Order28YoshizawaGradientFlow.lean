@@ -100,7 +100,7 @@ lemma peirceNilMinus_sq_zero (P Y : B) (hP : P * P = P) :
 
 /-- **Bridge 1 (`souriau_brockett_centrifugal_dewitt_lock`)**:
 Radial entropy-gradient pull `-brockettIrrotational J Φ` identically balances twice the
-Souriau rotational Coriolis precession `2 • souriauRotational Σ Φ = 0`. At second order,
+Souriau rotational Coriolis precession `2 • souriauRotational sigmaBivector Φ = 0`. At second order,
 the outward centrifugal push balances the inward parabolic well pull. -/
 theorem souriau_brockett_centrifugal_dewitt_lock (P X Y : B) (hP : P * P = P) :
     let Np := peirceNilPlus P X
@@ -108,29 +108,71 @@ theorem souriau_brockett_centrifugal_dewitt_lock (P X Y : B) (hP : P * P = P) :
     let Φ  := peirceVielbein P X Y
     let J  := peirceSymplecticJ P X Y
     let V  := peirceMetricHeight P X Y
-    let Σ  := peirceSpinBivector P X Y
-    souriauRotational Σ Φ = 2 • (V * J) ∧
+    let sigmaBivector := peirceSpinBivector P X Y
+    souriauRotational sigmaBivector Φ = 2 • (V * J) ∧
     brockettIrrotational J Φ = 4 • (V * J) ∧
-    -brockettIrrotational J Φ + 2 • souriauRotational Σ Φ = 0 ∧
-    comm Σ (comm Σ Φ) = 4 • (V * V * Φ) ∧
+    -brockettIrrotational J Φ + 2 • souriauRotational sigmaBivector Φ = 0 ∧
+    comm sigmaBivector (comm sigmaBivector Φ) = 4 • (V * V * Φ) ∧
     V * comm J (comm J Φ) = -(4 • (V * V * Φ)) ∧
-    comm Σ (comm Σ Φ) + V * comm J (comm J Φ) = 0 ∧
+    comm sigmaBivector (comm sigmaBivector Φ) + V * comm J (comm J Φ) = 0 ∧
     J * J = -V ∧
     Φ * Φ = V ∧
     comm P Φ = J ∧
     comm P J = Φ := by
   have hNp := peirceNilPlus_sq_zero P X hP
   have hNm := peirceNilMinus_sq_zero P Y hP
+  have hNp_left (Z : B) : peirceNilPlus P X * (peirceNilPlus P X * Z) = 0 := by
+    rw [← mul_assoc, hNp, zero_mul]
+  have hNm_left (Z : B) : peirceNilMinus P Y * (peirceNilMinus P Y * Z) = 0 := by
+    rw [← mul_assoc, hNm, zero_mul]
+  have hNp_right (Z : B) : (Z * peirceNilPlus P X) * peirceNilPlus P X = 0 := by
+    rw [mul_assoc, hNp, mul_zero]
+  have hNm_right (Z : B) : (Z * peirceNilMinus P Y) * peirceNilMinus P Y = 0 := by
+    rw [mul_assoc, hNm, mul_zero]
+  have hPlusMinus : peirceNilPlus P X * peirceNilMinus P Y *
+      peirceNilMinus P Y * peirceNilPlus P X = 0 := by
+    calc peirceNilPlus P X * peirceNilMinus P Y *
+          peirceNilMinus P Y * peirceNilPlus P X
+        = peirceNilPlus P X *
+          (peirceNilMinus P Y * peirceNilMinus P Y) * peirceNilPlus P X := by noncomm_ring
+      _ = 0 := by rw [hNm]; noncomm_ring
+  have hMinusPlus : peirceNilMinus P Y * peirceNilPlus P X *
+      peirceNilPlus P X * peirceNilMinus P Y = 0 := by
+    calc peirceNilMinus P Y * peirceNilPlus P X *
+          peirceNilPlus P X * peirceNilMinus P Y
+        = peirceNilMinus P Y *
+          (peirceNilPlus P X * peirceNilPlus P X) * peirceNilMinus P Y := by noncomm_ring
+      _ = 0 := by rw [hNp]; noncomm_ring
+  have hPlusMinus (P X Y : B) (hP : P * P = P) :
+      peirceNilPlus P X * peirceNilMinus P Y *
+        peirceNilMinus P Y * peirceNilPlus P X = 0 := by
+    calc peirceNilPlus P X * peirceNilMinus P Y *
+          peirceNilMinus P Y * peirceNilPlus P X
+        = peirceNilPlus P X *
+          (peirceNilMinus P Y * peirceNilMinus P Y) * peirceNilPlus P X := by noncomm_ring
+      _ = 0 := by rw [peirceNilMinus_sq_zero P Y hP]; noncomm_ring
+  have hMinusPlus (P X Y : B) (hP : P * P = P) :
+      peirceNilMinus P Y * peirceNilPlus P X *
+        peirceNilPlus P X * peirceNilMinus P Y = 0 := by
+    calc peirceNilMinus P Y * peirceNilPlus P X *
+          peirceNilPlus P X * peirceNilMinus P Y
+        = peirceNilMinus P Y *
+          (peirceNilPlus P X * peirceNilPlus P X) * peirceNilMinus P Y := by noncomm_ring
+      _ = 0 := by rw [peirceNilPlus_sq_zero P X hP]; noncomm_ring
   dsimp [souriauRotational, brockettIrrotational, peirceSpinBivector,
     peirceMetricHeight, peirceVielbein, peirceSymplecticJ, comm, anticomm]
-  refine ⟨by noncomm_ring [hNp, hNm],
-    by noncomm_ring [hNp, hNm],
-    by noncomm_ring [hNp, hNm],
-    by noncomm_ring [hNp, hNm],
-    by noncomm_ring [hNp, hNm],
-    by noncomm_ring [hNp, hNm],
-    by noncomm_ring [hNp, hNm],
-    by noncomm_ring [hNp, hNm],
+  refine ⟨by noncomm_ring [hNp, hNm, hNp_left, hNm_left, hNp_right, hNm_right,
+      hPlusMinus P X Y hP, hMinusPlus P X Y hP],
+    by noncomm_ring [hNp, hNm, hNp_left, hNm_left, hNp_right, hNm_right,
+      hPlusMinus P X Y hP, hMinusPlus P X Y hP],
+    by noncomm_ring [hNp, hNm, hNp_left, hNm_left, hNp_right, hNm_right,
+      hPlusMinus P X Y hP, hMinusPlus P X Y hP],
+    by noncomm_ring [hNp, hNm, hNp_left, hNm_left, hNp_right, hNm_right,
+      hPlusMinus P X Y hP, hMinusPlus P X Y hP],
+    by noncomm_ring [hNp, hNm, hNp_left, hNm_left, hNp_right, hNm_right],
+    by noncomm_ring [hNp, hNm, hNp_left, hNm_left, hNp_right, hNm_right],
+    by noncomm_ring [hNp, hNm, hNp_left, hNm_left, hNp_right, hNm_right],
+    by noncomm_ring [hNp, hNm, hNp_left, hNm_left, hNp_right, hNm_right],
     by dsimp [peirceNilPlus, peirceNilMinus]; noncomm_ring [hP, proj_idem hP],
     by dsimp [peirceNilPlus, peirceNilMinus]; noncomm_ring [hP, proj_idem hP]⟩
 
@@ -146,24 +188,88 @@ theorem pseudo_hessian_split_clifford_signature (P X Y : B) (hP : P * P = P) :
     let Φ := peirceVielbein P X Y
     let J := peirceSymplecticJ P X Y
     let V := peirceMetricHeight P X Y
-    let Σ := peirceSpinBivector P X Y
+    let sigmaBivector := peirceSpinBivector P X Y
     Φ * Φ = V ∧
     J * J = -V ∧
-    Σ * Σ = V * V ∧
+    sigmaBivector * sigmaBivector = V * V ∧
     Φ * Φ + J * J = 0 ∧
     Φ * Φ - J * J = 2 • V ∧
     anticomm Φ J = 0 ∧
-    comm Φ J = -2 • Σ ∧
+    comm Φ J = -2 • sigmaBivector ∧
     (J + Φ) * (J + Φ) = 0 ∧
     (Φ - J) * (Φ - J) = 0 := by
   have hNp := peirceNilPlus_sq_zero P X hP
   have hNm := peirceNilMinus_sq_zero P Y hP
+  have hNp_left (Z : B) : peirceNilPlus P X * (peirceNilPlus P X * Z) = 0 := by
+    rw [← mul_assoc, hNp, zero_mul]
+  have hNm_left (Z : B) : peirceNilMinus P Y * (peirceNilMinus P Y * Z) = 0 := by
+    rw [← mul_assoc, hNm, zero_mul]
+  have hNp_right (Z : B) : (Z * peirceNilPlus P X) * peirceNilPlus P X = 0 := by
+    rw [mul_assoc, hNp, mul_zero]
+  have hNm_right (Z : B) : (Z * peirceNilMinus P Y) * peirceNilMinus P Y = 0 := by
+    rw [mul_assoc, hNm, mul_zero]
   dsimp [peirceVielbein, peirceSymplecticJ, peirceMetricHeight, peirceSpinBivector, comm, anticomm]
-  refine ⟨by noncomm_ring [hNp, hNm], by noncomm_ring [hNp, hNm],
-    by noncomm_ring [hNp, hNm], by noncomm_ring [hNp, hNm],
-    by noncomm_ring [hNp, hNm], by noncomm_ring [hNp, hNm],
-    by noncomm_ring [hNp, hNm], by noncomm_ring [hNp, hNm],
-    by noncomm_ring [hNp, hNm]⟩
+  refine ⟨by noncomm_ring [hNp, hNm, hNp_left, hNm_left, hNp_right, hNm_right],
+    by noncomm_ring [hNp, hNm, hNp_left, hNm_left, hNp_right, hNm_right],
+    by noncomm_ring [hNp, hNm, hNp_left, hNm_left, hNp_right, hNm_right],
+    by noncomm_ring [hNp, hNm, hNp_left, hNm_left, hNp_right, hNm_right],
+    by noncomm_ring [hNp, hNm, hNp_left, hNm_left, hNp_right, hNm_right],
+    by noncomm_ring [hNp, hNm, hNp_left, hNm_left, hNp_right, hNm_right],
+    by noncomm_ring [hNp, hNm, hNp_left, hNm_left, hNp_right, hNm_right],
+    by noncomm_ring [hNp, hNm, hNp_left, hNm_left, hNp_right, hNm_right],
+    by noncomm_ring [hNp, hNm, hNp_left, hNm_left, hNp_right, hNm_right]⟩
+
+lemma peirce_alpha_square (P X Y : B) (hP : P * P = P) (α : ℤ) :
+    (peirceVielbein P X Y + α • peirceSymplecticJ P X Y) *
+      (peirceVielbein P X Y + α • peirceSymplecticJ P X Y) =
+      (1 - α * α) • peirceMetricHeight P X Y := by
+  have hCliff := pseudo_hessian_split_clifford_signature P X Y hP
+  have hPhi2 := hCliff.1
+  have hJ2 := hCliff.2.1
+  have hAnti := hCliff.2.2.2.2.2.1
+  dsimp [anticomm] at hAnti
+  have hLast : peirceSymplecticJ P X Y *
+      (↑α * (peirceSymplecticJ P X Y * ↑α)) =
+      ↑α * ↑α * (peirceSymplecticJ P X Y * peirceSymplecticJ P X Y) := by
+    calc peirceSymplecticJ P X Y *
+          (↑α * (peirceSymplecticJ P X Y * ↑α))
+        = peirceSymplecticJ P X Y *
+          ((↑α * peirceSymplecticJ P X Y) * ↑α) := by rw [mul_assoc]
+      _ = peirceSymplecticJ P X Y *
+          ((peirceSymplecticJ P X Y * ↑α) * ↑α) := by
+            rw [Int.cast_comm α (peirceSymplecticJ P X Y)]
+      _ = (peirceSymplecticJ P X Y * peirceSymplecticJ P X Y) *
+          (↑α * ↑α) := by noncomm_ring
+      _ = ↑α * ↑α *
+          (peirceSymplecticJ P X Y * peirceSymplecticJ P X Y) := by
+            rw [← Int.cast_mul]
+            exact (Int.cast_comm (α * α)
+              (peirceSymplecticJ P X Y * peirceSymplecticJ P X Y)).symm
+  have hLast' : ↑α * (peirceSymplecticJ P X Y *
+      (peirceSymplecticJ P X Y * ↑α)) =
+      ↑α * ↑α * (peirceSymplecticJ P X Y * peirceSymplecticJ P X Y) := by
+    noncomm_ring [Int.cast_comm α
+      (peirceSymplecticJ P X Y * peirceSymplecticJ P X Y)]
+  calc (peirceVielbein P X Y + α • peirceSymplecticJ P X Y) *
+       (peirceVielbein P X Y + α • peirceSymplecticJ P X Y)
+      = peirceVielbein P X Y * peirceVielbein P X Y +
+        α • (peirceSymplecticJ P X Y * peirceVielbein P X Y +
+             peirceVielbein P X Y * peirceSymplecticJ P X Y) +
+        (α * α) • (peirceSymplecticJ P X Y * peirceSymplecticJ P X Y) := by
+          simp only [add_mul, mul_add, zsmul_eq_mul, Int.cast_mul]
+          noncomm_ring [Int.cast_comm α (peirceVielbein P X Y),
+            Int.cast_comm α (peirceSymplecticJ P X Y),
+            Int.cast_comm α (peirceSymplecticJ P X Y * peirceVielbein P X Y),
+            Int.cast_comm α (peirceVielbein P X Y * peirceSymplecticJ P X Y),
+            Int.cast_comm α (peirceSymplecticJ P X Y * peirceSymplecticJ P X Y)]
+          rw [hLast, hLast']
+    _ = peirceMetricHeight P X Y + α • 0 +
+        (α * α) • (-peirceMetricHeight P X Y) := by
+          rw [hPhi2, hJ2, add_comm (peirceSymplecticJ P X Y * peirceVielbein P X Y), hAnti]
+    _ = (1 - α * α) • peirceMetricHeight P X Y := by
+          simp only [zsmul_zero, add_zero, zsmul_neg]
+          rw [zsmul_eq_mul, zsmul_eq_mul, Int.cast_sub, Int.cast_one, Int.cast_mul]
+          noncomm_ring
 
 theorem amari_alpha_connection_universal_curvature_law (P X Y : B) (hP : P * P = P)
     (α : ℤ) (Z : B) :
@@ -174,35 +280,11 @@ theorem amari_alpha_connection_universal_curvature_law (P X Y : B) (hP : P * P =
     solderedAlphaConn P X Y α (solderedAlphaConn P X Y α Z) = (1 - α * α) • (V * Z) ∧
     solderedAlphaConn P X Y 1 (solderedAlphaConn P X Y 1 Z) = 0 ∧
     solderedAlphaConn P X Y (-1) (solderedAlphaConn P X Y (-1) Z) = 0 := by
-  have hCliff := pseudo_hessian_split_clifford_signature P X Y hP
-  have hPhi2 := hCliff.1
-  have hJ2 := hCliff.2.1
-  have hAnti := hCliff.2.2.2.2.1
+  have hSq := peirce_alpha_square P X Y hP α
   refine ⟨?_, ?_, ?_, ?_⟩
-  · dsimp [anticomm] at hAnti
-    calc (peirceVielbein P X Y + α • peirceSymplecticJ P X Y) *
-         (peirceVielbein P X Y + α • peirceSymplecticJ P X Y)
-        = peirceVielbein P X Y * peirceVielbein P X Y +
-          α • (peirceSymplecticJ P X Y * peirceVielbein P X Y +
-               peirceVielbein P X Y * peirceSymplecticJ P X Y) +
-          (α * α) • (peirceSymplecticJ P X Y * peirceSymplecticJ P X Y) := by noncomm_ring
-      _ = peirceMetricHeight P X Y + α • 0 + (α * α) • (-peirceMetricHeight P X Y) := by
-        rw [hPhi2, hJ2, add_comm (peirceSymplecticJ P X Y * peirceVielbein P X Y), hAnti]
-      _ = (1 - α * α) • peirceMetricHeight P X Y := by noncomm_ring
+  · exact hSq
   · dsimp [solderedAlphaConn]
-    have hSq : (peirceVielbein P X Y + α • peirceSymplecticJ P X Y) *
-               (peirceVielbein P X Y + α • peirceSymplecticJ P X Y) =
-               (1 - α * α) • peirceMetricHeight P X Y := by
-      dsimp [anticomm] at hAnti
-      calc (peirceVielbein P X Y + α • peirceSymplecticJ P X Y) *
-           (peirceVielbein P X Y + α • peirceSymplecticJ P X Y)
-          = peirceVielbein P X Y * peirceVielbein P X Y +
-            α • (peirceSymplecticJ P X Y * peirceVielbein P X Y +
-                 peirceVielbein P X Y * peirceSymplecticJ P X Y) +
-            (α * α) • (peirceSymplecticJ P X Y * peirceSymplecticJ P X Y) := by noncomm_ring
-        _ = peirceMetricHeight P X Y + α • 0 + (α * α) • (-peirceMetricHeight P X Y) := by
-          rw [hPhi2, hJ2, add_comm (peirceSymplecticJ P X Y * peirceVielbein P X Y), hAnti]
-        _ = (1 - α * α) • peirceMetricHeight P X Y := by noncomm_ring
+    have hSq := peirce_alpha_square P X Y hP α
     calc (peirceVielbein P X Y + α • peirceSymplecticJ P X Y) *
          ((peirceVielbein P X Y + α • peirceSymplecticJ P X Y) * Z)
         = ((peirceVielbein P X Y + α • peirceSymplecticJ P X Y) *
@@ -213,12 +295,7 @@ theorem amari_alpha_connection_universal_curvature_law (P X Y : B) (hP : P * P =
     have h1 : (1 - (1 : ℤ) * 1) = 0 := by ring
     have hSq1 : (peirceVielbein P X Y + (1 : ℤ) • peirceSymplecticJ P X Y) *
                 (peirceVielbein P X Y + (1 : ℤ) • peirceSymplecticJ P X Y) = 0 := by
-      dsimp [anticomm] at hAnti
-      calc (peirceVielbein P X Y + (1 : ℤ) • peirceSymplecticJ P X Y) *
-           (peirceVielbein P X Y + (1 : ℤ) • peirceSymplecticJ P X Y)
-          = (1 - (1 : ℤ) * 1) • peirceMetricHeight P X Y := by noncomm_ring [hPhi2, hJ2, hAnti]
-        _ = 0 • peirceMetricHeight P X Y := by rw [h1]
-        _ = 0 := by noncomm_ring
+      simpa using peirce_alpha_square P X Y hP 1
     calc (peirceVielbein P X Y + (1 : ℤ) • peirceSymplecticJ P X Y) *
          ((peirceVielbein P X Y + (1 : ℤ) • peirceSymplecticJ P X Y) * Z)
         = ((peirceVielbein P X Y + (1 : ℤ) • peirceSymplecticJ P X Y) *
@@ -229,12 +306,7 @@ theorem amari_alpha_connection_universal_curvature_law (P X Y : B) (hP : P * P =
     have hNeg1 : (1 - (-1 : ℤ) * -1) = 0 := by ring
     have hSqNeg1 : (peirceVielbein P X Y + (-1 : ℤ) • peirceSymplecticJ P X Y) *
                    (peirceVielbein P X Y + (-1 : ℤ) • peirceSymplecticJ P X Y) = 0 := by
-      dsimp [anticomm] at hAnti
-      calc (peirceVielbein P X Y + (-1 : ℤ) • peirceSymplecticJ P X Y) *
-           (peirceVielbein P X Y + (-1 : ℤ) • peirceSymplecticJ P X Y)
-          = (1 - (-1 : ℤ) * -1) • peirceMetricHeight P X Y := by noncomm_ring [hPhi2, hJ2, hAnti]
-        _ = 0 • peirceMetricHeight P X Y := by rw [hNeg1]
-        _ = 0 := by noncomm_ring
+      simpa using peirce_alpha_square P X Y hP (-1)
     calc (peirceVielbein P X Y + (-1 : ℤ) • peirceSymplecticJ P X Y) *
          ((peirceVielbein P X Y + (-1 : ℤ) • peirceSymplecticJ P X Y) * Z)
         = ((peirceVielbein P X Y + (-1 : ℤ) • peirceSymplecticJ P X Y) *
@@ -247,6 +319,29 @@ theorem amari_alpha_connection_universal_curvature_law (P X Y : B) (hP : P * P =
 def sheetGramianPlus (P X Y : B) : B := peirceNilPlus P X * peirceNilMinus P Y
 def sheetGramianMinus (P X Y : B) : B := peirceNilMinus P Y * peirceNilPlus P X
 
+lemma nilpotent_pair_bott_identities (x y : B) (hx : x * x = 0) (hy : y * y = 0) :
+    (x * y) * (y * x) = 0 ∧
+    (y * x) * (x * y) = 0 ∧
+    (1 - (x * y + y * x)) = (1 - x * y) * (1 - y * x) ∧
+    (1 - (x * y - y * x)) = (1 - x * y) * (1 + y * x) ∧
+    (1 - (x * y + y * x)) * (1 + (x * y + y * x)) =
+      1 - (x * y + y * x) * (x * y + y * x) := by
+  have hxy : x * y * y * x = 0 := by
+    calc x * y * y * x = x * (y * y) * x := by noncomm_ring
+      _ = 0 := by rw [hy]; noncomm_ring
+  have hyx : y * x * x * y = 0 := by
+    calc y * x * x * y = y * (x * x) * y := by noncomm_ring
+      _ = 0 := by rw [hx]; noncomm_ring
+  have hxy' : x * y * (y * x) = 0 := by
+    calc x * y * (y * x) = x * y * y * x := by noncomm_ring
+      _ = 0 := hxy
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · simpa [mul_assoc] using hxy
+  · simpa [mul_assoc] using hyx
+  · noncomm_ring [hxy']
+  · noncomm_ring [hxy']
+  · noncomm_ring
+
 /-- **Bridge 3 (`sheet_gramian_factorization_and_four_way_bott_diamond`)**:
 Sheet Gramians `Q_+ = N_+ N_-` and `Q_- = N_- N_+` factor the two-sheet log-determinant
 `1 - V = (1 - Q_+)(1 - Q_-)` and satisfy the 4-way Bott diamond. -/
@@ -254,33 +349,50 @@ theorem sheet_gramian_factorization_and_four_way_bott_diamond (P X Y : B) (hP : 
     let Qp := sheetGramianPlus P X Y
     let Qm := sheetGramianMinus P X Y
     let V  := peirceMetricHeight P X Y
-    let Σ  := peirceSpinBivector P X Y
+    let sigmaBivector := peirceSpinBivector P X Y
     let J  := peirceSymplecticJ P X Y
     let Φ  := peirceVielbein P X Y
     Qp * Qm = 0 ∧
     Qm * Qp = 0 ∧
     (1 - V) = (1 - Qp) * (1 - Qm) ∧
-    (1 - Σ) = (1 - Qp) * (1 + Qm) ∧
+    (1 - sigmaBivector) = (1 - Qp) * (1 + Qm) ∧
     (1 - V) * (1 + V) = 1 - V * V ∧
-    (1 - Σ) * (1 + Σ) = 1 - V * V ∧
+    (1 - sigmaBivector) * (1 + sigmaBivector) = 1 - V * V ∧
     (1 - J * J) * (1 + J * J) = 1 - V * V ∧
     (1 - Φ * Φ) * (1 + Φ * Φ) = 1 - V * V := by
   have hNp := peirceNilPlus_sq_zero P X hP
   have hNm := peirceNilMinus_sq_zero P Y hP
+  have hBott := nilpotent_pair_bott_identities
+    (peirceNilPlus P X) (peirceNilMinus P Y) hNp hNm
   have hCliff := pseudo_hessian_split_clifford_signature P X Y hP
   have hPhi2 := hCliff.1
   have hJ2 := hCliff.2.1
   have hSigma2 := hCliff.2.2.1
-  dsimp [sheetGramianPlus, sheetGramianMinus, peirceMetricHeight, peirceSpinBivector,
-    peirceVielbein, peirceSymplecticJ]
-  refine ⟨by noncomm_ring [hNp, hNm],
-    by noncomm_ring [hNp, hNm],
-    by noncomm_ring [hNp, hNm],
-    by noncomm_ring [hNp, hNm],
-    by noncomm_ring,
-    by noncomm_ring [hSigma2],
-    by noncomm_ring [hJ2],
-    by noncomm_ring [hPhi2]⟩
+  rcases hBott with ⟨hQpq, hQmp, hVfactor, hSigfactor, hVbott⟩
+  have hSigma2' : peirceSpinBivector P X Y * peirceSpinBivector P X Y =
+      peirceMetricHeight P X Y * peirceMetricHeight P X Y := by
+    simpa [peirceSpinBivector, peirceMetricHeight] using hSigma2
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · simpa [sheetGramianPlus, sheetGramianMinus] using hQpq
+  · simpa [sheetGramianPlus, sheetGramianMinus] using hQmp
+  · simpa [sheetGramianPlus, sheetGramianMinus, peirceMetricHeight] using hVfactor
+  · simpa [sheetGramianPlus, sheetGramianMinus, peirceSpinBivector] using hSigfactor
+  · simpa [peirceMetricHeight] using hVbott
+  · calc (1 - peirceSpinBivector P X Y) * (1 + peirceSpinBivector P X Y) =
+          1 - peirceSpinBivector P X Y * peirceSpinBivector P X Y := by noncomm_ring
+      _ = 1 - peirceMetricHeight P X Y * peirceMetricHeight P X Y := by rw [hSigma2']
+  · calc (1 - peirceSymplecticJ P X Y * peirceSymplecticJ P X Y) *
+          (1 + peirceSymplecticJ P X Y * peirceSymplecticJ P X Y) =
+          1 - (peirceSymplecticJ P X Y * peirceSymplecticJ P X Y) *
+            (peirceSymplecticJ P X Y * peirceSymplecticJ P X Y) := by noncomm_ring
+      _ = 1 - peirceMetricHeight P X Y * peirceMetricHeight P X Y := by
+          rw [hJ2]; noncomm_ring
+  · calc (1 - peirceVielbein P X Y * peirceVielbein P X Y) *
+          (1 + peirceVielbein P X Y * peirceVielbein P X Y) =
+          1 - (peirceVielbein P X Y * peirceVielbein P X Y) *
+            (peirceVielbein P X Y * peirceVielbein P X Y) := by noncomm_ring
+      _ = 1 - peirceMetricHeight P X Y * peirceMetricHeight P X Y := by
+          rw [hPhi2]
 
 /-! ### Part 4: Elliptic Moduli & Seiberg–Witten Monodromy -/
 
@@ -396,13 +508,11 @@ theorem logarithmic_jordan_cell_and_tripotent_quintic_isogeny
     adH5 H X - (5 : ℤ) • adH3 H X + (4 : ℤ) • adH H X = 0 ∧
     (∀ u : (ZMod 24)ˣ, u ^ 2 = 1) := by
   refine ⟨?_, ?_, ?_, by decide⟩
-  · dsimp
-    calc (P + N_nil) * (P + N_nil) - (P + N_nil)
+  · calc (P + N_nil) * (P + N_nil) - (P + N_nil)
         = P * P + P * N_nil + N_nil * P + N_nil * N_nil - P - N_nil := by noncomm_ring
       _ = P + N_nil + N_nil + 0 - P - N_nil := by rw [hP, hPN, hNP, hNil]
       _ = N_nil := by noncomm_ring
-  · dsimp
-    have hT : (P + N_nil) * (P + N_nil) - (P + N_nil) = N_nil := by
+  · have hT : (P + N_nil) * (P + N_nil) - (P + N_nil) = N_nil := by
       calc (P + N_nil) * (P + N_nil) - (P + N_nil)
           = P * P + P * N_nil + N_nil * P + N_nil * N_nil - P - N_nil := by noncomm_ring
         _ = P + N_nil + N_nil + 0 - P - N_nil := by rw [hP, hPN, hNP, hNil]

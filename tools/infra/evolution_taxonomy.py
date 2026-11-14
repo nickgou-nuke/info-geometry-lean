@@ -36,6 +36,10 @@ PATH_HINTS: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"^vendor/|^third_party/|^deps/|\.lock$|go\.mod|Cargo\.toml|package\.json"), "Dependency/Vendor/Third-party sync"),
 ]
 
+LABEL_SCHEMA = "info_geometry.commit_change_labels.v1"
+METHOD_VERSION = "weak-rule-v3"
+
+
 CATEGORY_IDS = {
     "Revert/Backout": "revertBackout",
     "Security Hardening": "securityHardening",
@@ -52,21 +56,56 @@ CATEGORY_IDS = {
 }
 
 
+def _evidence_kinds(evidence: Iterable[str]) -> list[str]:
+    return sorted({
+        "subjectBodyRule" if item.startswith("subject-body-rule:") else
+        "pathHint" if item.startswith("path-hint:") else
+        "defaultNoRuleMatch" if item == "default:no-rule-match" else
+        "other"
+        for item in evidence
+    })
+
+
 def _label(category: str, weight: float, evidence: list[str]) -> dict:
     return {
         "category": category,
         "categoryId": CATEGORY_IDS[category],
         "ruleWeightPercent": int(round(weight * 100)),
         "evidence": evidence,
-        "evidenceKinds": sorted({
-            "subjectBodyRule" if item.startswith("subject-body-rule:") else
-            "pathHint" if item.startswith("path-hint:") else
-            "defaultNoRuleMatch" if item == "default:no-rule-match" else
-            "other"
-            for item in evidence
-        }),
+        "evidenceKinds": _evidence_kinds(evidence),
         "status": "weak_rule",
     }
+
+
+def validate_label_record(record: object) -> None:
+    """Reject records outside the versioned weak commit-label contract."""
+    if (not isinstance(record, dict) or record.get("schema") != LABEL_SCHEMA
+            or record.get("method") != METHOD_VERSION):
+        raise ValueError("label record has an unsupported schema or method")
+    if not isinstance(record.get("sha"), str) or not record["sha"]:
+        raise ValueError("label record requires a non-empty commit SHA")
+    labels = record.get("labels")
+    if not isinstance(labels, list) or not labels:
+        raise ValueError("label record requires a non-empty labels list")
+    categories: set[str] = set()
+    for label in labels:
+        if not isinstance(label, dict):
+            raise ValueError("each weak label must be an object")
+        category = label.get("category")
+        if (not isinstance(category, str) or category not in CATEGORY_IDS
+                or category in categories):
+            raise ValueError("weak labels must use unique known categories")
+        categories.add(category)
+        weight = label.get("ruleWeightPercent")
+        evidence = label.get("evidence")
+        if (label.get("categoryId") != CATEGORY_IDS[category]
+                or label.get("status") != "weak_rule"
+                or isinstance(weight, bool) or not isinstance(weight, int)
+                or not 0 <= weight <= 100
+                or not isinstance(evidence, list) or not evidence
+                or any(not isinstance(item, str) or not item for item in evidence)
+                or label.get("evidenceKinds") != _evidence_kinds(evidence)):
+            raise ValueError(f"weak label {category!r} violates its category/evidence contract")
 
 
 def classify(subject: str, body: str,
@@ -88,6 +127,9 @@ def classify(subject: str, body: str,
                 seen_path_evidence.add(evidence)
                 if category in by_category:
                     by_category[category]["evidence"].append(evidence)
+                    by_category[category]["evidenceKinds"] = _evidence_kinds(
+                        by_category[category]["evidence"]
+                    )
                 else:
                     by_category[category] = _label(category, .5, [evidence])
     if not by_category:
@@ -105,10 +147,12 @@ def iter_labels(records: Iterable[dict], path_index: sqlite3.Connection | None =
             paths = (row[0] for row in path_index.execute(
                 "SELECT path FROM commit_paths WHERE sha = ?", (commit["sha"],)
             ))
-        labels = classify(commit.get("subject", ""), commit.get("body", ""), paths)
-        yield {"schema": "info_geometry.commit_change_labels.v1",
-               "sha": commit["sha"], "labels": labels,
-               "method": "weak-rule-v3"}
+        record = {"schema": LABEL_SCHEMA,
+                  "sha": commit["sha"],
+                  "labels": classify(commit.get("subject", ""), commit.get("body", ""), paths),
+                  "method": METHOD_VERSION}
+        validate_label_record(record)
+        yield record
 
 
 def iter_jsonl(source: TextIO) -> Iterator[dict]:

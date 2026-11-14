@@ -61,12 +61,25 @@ theorem hyperbolic_orbit_composition (u v e f : R)
       PeirceHyperbolicOrbit.hyperbolicPlus e f d B *
       (↑(hyperbolicUnit hd hB hr hs u v hu)⁻¹ : A) =
       PeirceHyperbolicOrbit.hyperbolicPlus (u*e+v*f) (u*f+v*e) d B := by
-  rw [← hyperbolicUnit_conjugates_plus hd hB hr hs e f he,
-    ← hyperbolicUnit_conjugates_plus hd hB hr hs (u*e+v*f) (u*f+v*e)
+  rw [← hyperbolicUnit_conjugates_plus hd hB hr hs hd hB hr hs e f he,
+    ← hyperbolicUnit_conjugates_plus hd hB hr hs hd hB hr hs (u*e+v*f) (u*f+v*e)
       (hyperbolic_norm_comp u v e f hu he)]
-  simp only [← hyperbolicUnit_mul hd hB hr hs u v e f hu he,
-    mul_inv_rev, Units.val_mul]
-  noncomm_ring
+  calc
+    (hyperbolicUnit hd hB hr hs u v hu : A) *
+        ((hyperbolicUnit hd hB hr hs e f he : A) * (d * B) *
+          (↑(hyperbolicUnit hd hB hr hs e f he)⁻¹ : A)) *
+        (↑(hyperbolicUnit hd hB hr hs u v hu)⁻¹ : A) =
+      (↑(hyperbolicUnit hd hB hr hs u v hu *
+        hyperbolicUnit hd hB hr hs e f he : Aˣ) : A) * (d * B) *
+        (↑(hyperbolicUnit hd hB hr hs u v hu *
+          hyperbolicUnit hd hB hr hs e f he)⁻¹ : A) := by
+            simp only [Units.val_mul, mul_inv_rev]
+            noncomm_ring
+    _ = (hyperbolicUnit hd hB hr hs (u*e+v*f) (u*f+v*e)
+          (hyperbolic_norm_comp u v e f hu he) : A) * (d * B) *
+        (↑(hyperbolicUnit hd hB hr hs (u*e+v*f) (u*f+v*e)
+          (hyperbolic_norm_comp u v e f hu he))⁻¹ : A) := by
+            rw [hyperbolicUnit_mul hd hB hr hs hd hB hr hs u v e f hu he]
 
 end CommScalars
 end InfoGeometry.Canonical.PeirceHyperbolicComposition

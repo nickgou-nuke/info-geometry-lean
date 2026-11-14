@@ -28,6 +28,7 @@ from tools.infra.arango_env import (  # noqa: E402
     load_repo_arango_env,
     normalized_darwin_arango_env,
 )
+from tools.infra.evolution_taxonomy import validate_label_record  # noqa: E402
 
 
 def _records(stream: TextIO) -> Iterator[dict]:
@@ -126,6 +127,7 @@ def ingest(db, commit_path: Path, label_path: Path | None = None,
                         label = next(label_records)
                     except StopIteration as exc:
                         raise ValueError("label JSONL ended before commit JSONL") from exc
+                    validate_label_record(label)
                     if label.get("sha") != commit.get("sha"):
                         raise ValueError("label/commit order or SHA mismatch")
                     label_batch.append({"_key": label["sha"], **label})

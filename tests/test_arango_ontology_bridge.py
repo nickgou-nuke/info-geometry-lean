@@ -54,6 +54,7 @@ from arango_to_ontology import (  # noqa: E402
     get_pg_connect as pg_connect_ontology,
     _run_offline_jsonl_dry_run as dry_run_decls,
 )
+import arango_to_ontology_relationships as relationship_cli  # noqa: E402
 from arango_to_ontology_relationships import (  # noqa: E402
     _resolve_arango_env as resolve_arango_rels,
     get_pg_connect as pg_connect_rels,
@@ -193,6 +194,31 @@ class DryRunTests(unittest.TestCase):
         finally:
             import shutil
             shutil.rmtree(tmp_dir, ignore_errors=True)
+
+    def test_relationship_cli_uses_shared_offline_validator(self):
+        """The relationship CLI routes offline pair validation through the shared helper."""
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            decls = root / "decls.jsonl"
+            edges = root / "edges.jsonl"
+            _write_jsonl(decls, [
+                {"name": "InfoGeometry.A", "module": "InfoGeometry"},
+                {"name": "InfoGeometry.B", "module": "InfoGeometry"},
+            ])
+            _write_jsonl(edges, [
+                {"src": "InfoGeometry.A", "dst": "InfoGeometry.B", "kind": "type"},
+            ])
+            output = io.StringIO()
+            with patch.object(sys, "argv", [
+                "arango_to_ontology_relationships", "--dry-run",
+                "--decls-jsonl", str(decls), "--edges-jsonl", str(edges),
+            ]), redirect_stdout(output):
+                self.assertEqual(relationship_cli.main(), 0)
+            report = json.loads(output.getvalue())
+        self.assertEqual(report["status"], "dry_run_ok")
+        self.assertEqual(report["expected_decl_count"], 2)
+        self.assertEqual(report["expected_edge_count"], 1)
+        self.assertEqual(report["loaded_edge_count"], 0)
 
     def test_dry_run_rejects_invalid_key(self):
         """Dry run rejects declaration records with mismatched _key."""

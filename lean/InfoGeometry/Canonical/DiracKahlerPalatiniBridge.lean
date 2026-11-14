@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
@@ -11,13 +17,13 @@ open ExteriorAlgebra
 open InfoGeometry.Canonical.EinsteinHilbertPalatiniActionBridge
 open BigOperators
 
-variable {R V : Type*} [CommRing R] [AddCommMonoid V] [Module R V]
+variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
 
 /-- 
 Представя структурата на Dirac-Kähler операторите: външния диференциал d 
 и неговия формален кодиференциал δ.
 -/
-structure DiracKahlerSystem (R V : Type*) [CommRing R] [AddCommMonoid V] [Module R V] where
+structure DiracKahlerSystem (R V : Type*) [CommRing R] [AddCommGroup V] [Module R V] where
   d_op : Module.End R (ExteriorAlgebra R V)
   delta_op : Module.End R (ExteriorAlgebra R V)
   d_sq_zero : d_op ∘ₗ d_op = 0

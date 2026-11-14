@@ -110,11 +110,7 @@ noncomputable def readout :
 @[simp] theorem projection_readout :
     readout (𝕜 := 𝕜) ≫ projection (𝕜 := 𝕜) = 𝟙 _ := by
   apply TopCat.hom_ext
-  ext p
-  · unfold readout projection Bundle.α
-    exact Eq.refl _
-  · unfold readout projection Bundle.q
-    exact Eq.refl _
+  rfl
 
 /-- Pointwise evaluation of `readout ≫ projection` at `p : 𝕜 × SixthRootParameter`. -/
 @[simp] theorem projection_readout_apply (p : 𝕜 × SixthRootParameter) :

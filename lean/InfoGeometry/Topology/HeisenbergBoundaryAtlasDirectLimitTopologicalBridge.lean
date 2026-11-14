@@ -42,7 +42,7 @@ open InfoGeometry.Topology.HeisenbergFiniteModeDirectLimitTopological
 open InfoGeometry.Canonical.HeisenbergFiniteModeDirectLimitBridge
 open CategoryTheory CategoryTheory.Limits
 
-variable {𝕜 : Type*} [Field 𝕜]
+variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
 
 /-- The finite-mode component of `topologicalHeisenbergBoundaryAtlas α` is identically
 the canonical finite-mode colimit linear map. -/
@@ -51,7 +51,7 @@ theorem boundaryAtlas_finiteModeMap_eq_colimitMap
     (topologicalHeisenbergBoundaryAtlas (𝕜 := 𝕜) α).2.finiteModeMap.hom =
       (InfoGeometry.Canonical.heisenbergFiniteModeColimitMap (𝕜 := 𝕜)).hom := by
   unfold topologicalHeisenbergBoundaryAtlas
-  rw [InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas_finiteModeMap]
+  rfl
 
 /-- Every element `X` of `HeisenbergAlgebra 𝕜` lies in the image of a finite stage `s`
 under `topologicalHeisenbergFiniteModeDirectLimitMap`. -/

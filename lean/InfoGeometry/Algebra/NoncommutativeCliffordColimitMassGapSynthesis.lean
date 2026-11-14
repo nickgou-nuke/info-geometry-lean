@@ -104,6 +104,26 @@ lemma towerTrace_zero : ∀ (n : ℕ), towerTrace (0 : ClTower A n) = 0
       dsimp [towerTrace]
       rw [towerTrace_zero n, add_zero]
 
+lemma towerTrace_add : ∀ {n : ℕ} (X Y : ClTower A n),
+    towerTrace (X + Y) = towerTrace X + towerTrace Y
+  | 0, _, _ => rfl
+  | _ + 1, X, Y => by
+      simp only [towerTrace, Matrix.add_apply]
+      rw [towerTrace_add (X 0 0) (Y 0 0), towerTrace_add (X 1 1) (Y 1 1)]
+      abel
+
+lemma towerTrace_neg : ∀ {n : ℕ} (X : ClTower A n),
+    towerTrace (-X) = -towerTrace X
+  | 0, _ => rfl
+  | _ + 1, X => by
+      simp only [towerTrace, Matrix.neg_apply]
+      rw [towerTrace_neg (X 0 0), towerTrace_neg (X 1 1)]
+      abel
+
+lemma towerTrace_sub {n : ℕ} (X Y : ClTower A n) :
+    towerTrace (X - Y) = towerTrace X - towerTrace Y := by
+  rw [sub_eq_add_neg, towerTrace_add, towerTrace_neg, ← sub_eq_add_neg]
+
 def chiralityOp : ∀ (n : ℕ), ClTower A n
   | 0     => (1 : A)
   | n + 1 => mat2 (chiralityOp n) 0 0 (-chiralityOp n)
@@ -121,6 +141,19 @@ section ArchetypeCL1_CL2_ColimitSetoidAndQuotient
 def bottEmbed {n : ℕ} (X : ClTower A n) : ClTower A (n + 1) :=
   mat2 X 0 0 0
 
+/-- Unital bulk embedding `X ↦ diag(X, X)` at one tower step. -/
+def diagEmbed {n : ℕ} (X : ClTower A n) : ClTower A (n + 1) :=
+  mat2 X 0 0 X
+
+/-- The upper-left block of a state, paired with a Bott-corner observable. -/
+def irStatePullback {n : ℕ} (ρ : ClTower A (n + 1)) : ClTower A n := ρ 0 0
+
+/-- The sum of diagonal state blocks, paired with a bulk observable. -/
+def rgStatePullback {n : ℕ} (ρ : ClTower A (n + 1)) : ClTower A n := ρ 0 0 + ρ 1 1
+
+/-- The signed diagonal state blocks, paired with a bulk observable under supertrace. -/
+def chiralStatePullback {n : ℕ} (ρ : ClTower A (n + 1)) : ClTower A n := ρ 0 0 - ρ 1 1
+
 theorem bottEmbed_add {n : ℕ} (X Y : ClTower A n) :
     bottEmbed (X + Y) = bottEmbed X + bottEmbed Y := by
   apply ext_fin2 <;> simp [bottEmbed]
@@ -128,6 +161,53 @@ theorem bottEmbed_add {n : ℕ} (X Y : ClTower A n) :
 theorem bottEmbed_mul {n : ℕ} (X Y : ClTower A n) :
     bottEmbed (X * Y) = bottEmbed X * bottEmbed Y := by
   apply ext_fin2 <;> simp [bottEmbed]
+
+theorem towerTrace_bottEmbed {n : ℕ} (X : ClTower A n) :
+    towerTrace (bottEmbed X) = towerTrace X := by
+  simp [towerTrace, bottEmbed, towerTrace_zero]
+
+theorem towerTrace_diagEmbed {n : ℕ} (X : ClTower A n) :
+    towerTrace (diagEmbed X) = 2 • towerTrace X := by
+  simp [towerTrace, diagEmbed, two_smul]
+
+theorem superTrace_diagEmbed {n : ℕ} (X : ClTower A n) :
+    superTrace (diagEmbed X) = 0 := by
+  simp [superTrace, diagEmbed, chiralityOp, towerTrace, towerTrace_neg]
+
+/-- Finite-stage trace adjunctions for corner and bulk embeddings. -/
+theorem towerTrace_state_embedding_adjunction {n : ℕ}
+    (ρ : ClTower A (n + 1)) (O B : ClTower A n) :
+    towerTrace (n := n + 1) (ρ * bottEmbed O) =
+        towerTrace (n := n) (irStatePullback ρ * O) ∧
+    towerTrace (n := n + 1) (ρ * (diagEmbed (n := n) B : ClTower A (n + 1))) =
+        towerTrace (n := n) (rgStatePullback ρ * B) := by
+  constructor
+  · simp [towerTrace, bottEmbed, irStatePullback, Matrix.mul_apply,
+      Fin.sum_univ_two, towerTrace_zero]
+  · have h00 : (ρ * diagEmbed B) 0 0 = ρ 0 0 * B := by
+      simp [diagEmbed, mat2, Matrix.mul_apply, Fin.sum_univ_two]
+    have h11 : (ρ * diagEmbed B) 1 1 = ρ 1 1 * B := by
+      simp [diagEmbed, mat2, Matrix.mul_apply, Fin.sum_univ_two]
+    change towerTrace ((ρ * diagEmbed B) 0 0) +
+      towerTrace ((ρ * diagEmbed B) 1 1) =
+      towerTrace ((ρ 0 0 + ρ 1 1) * B)
+    rw [h00, h11, add_mul, towerTrace_add]
+
+/-! The following adjunctions retain arbitrary matrix-valued states and
+observables; no commutativity or scalarization of the coefficient ring is used. -/
+theorem observable_state_supertrace_adjunctions {n : ℕ}
+    (ρ : ClTower A (n + 1)) (O B : ClTower A n) :
+    superTrace (n := n + 1) (ρ * (bottEmbed O : ClTower A (n + 1))) =
+        superTrace (n := n) (irStatePullback ρ * O) ∧
+    superTrace (n := n + 1) (ρ * (diagEmbed (n := n) B : ClTower A (n + 1))) =
+        superTrace (n := n) (chiralStatePullback ρ * B) := by
+  constructor
+  · simp [superTrace, towerTrace, bottEmbed, irStatePullback, chiralityOp,
+      mat2, Matrix.mul_apply, Fin.sum_univ_two, towerTrace_zero]
+  · simp [superTrace, towerTrace, diagEmbed, chiralStatePullback, chiralityOp,
+      mat2, Matrix.mul_apply, Fin.sum_univ_two, towerTrace_neg]
+    rw [sub_mul, mul_sub, towerTrace_sub]
+    abel
 
 /-- Iterated multi-step Bott embedding $\iota_{\mathrm{Bott}}^{(k)} : \mathcal{C}\ell_n(A) \to \mathcal{C}\ell_{n+k}(A)$. -/
 def bottEmbedIter : ∀ {n : ℕ} (k : ℕ), ClTower A n → ClTower A (n + k)

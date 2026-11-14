@@ -453,7 +453,8 @@ lemma clInfSuperTrace_sub (x y : ClInf A) :
   dsimp only [clInfSuperTrace, toClInf]
   rw [Quotient.lift_mk, Quotient.lift_mk, Quotient.lift_mk]
   dsimp only [superTrace]
-  rw [mul_sub, towerTrace_sub]
+  rw [mul_sub,
+    InfoGeometry.Algebra.NoncommutativeCliffordColimitMassGapSynthesis.towerTrace_sub]
 
 /-- `clInfSuperTrace` is **globally 1-Lipschitz** on `ClInfOp A` (independent of scale `n`). -/
 theorem clInfSuperTrace_global_lipschitz (x y : ClInfOp A) :

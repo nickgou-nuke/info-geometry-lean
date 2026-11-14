@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Algebra.FiniteSpinAlgebra
@@ -73,9 +78,9 @@ theorem jordanCell_mulVec_apply (Δ : 𝕜) (w : Fin 2 → 𝕜) :
 
 end Ring
 
-section CommRing
+section Field
 
-variable {𝕜 V : Type*} [CommRing 𝕜]
+variable {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
 variable [AddCommGroup V] [Module 𝕜 V]
 
 local instance : LieRing (Module.End 𝕜 V) := LieRing.ofAssociativeRing
@@ -124,7 +129,7 @@ def makeLogVirasoroRepresentation
     have h2 : c ⁅x, y⁆ = (ρ x).commutator (c y) + (c x).commutator (ρ y) := hc x y
     rw [h1, h2]
 
-end CommRing
+end Field
 
 variable {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
 variable [AddCommGroup V] [Module 𝕜 V]

@@ -1,4 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import Mathlib.Basic.Real.Basic
+import InfoGeometry.Algebra.MatrixNoncommutativity
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Conjugation
 
@@ -21,7 +28,35 @@ noncomputable section
 
 namespace InfoGeometry.Physics.CentralizerInvariance
 
-variable {R : Type*} [CommRing R] {M : Type*} [AddCommMonoid M] [Module R M] (Q : QuadraticForm R M)
+private noncomputable def witnessQ : QuadraticForm ℝ (Fin 2 → ℝ) :=
+  QuadraticMap.weightedSumSquares ℝ ![1, 1]
+
+private noncomputable def cliffordE0 : CliffordAlgebra witnessQ :=
+  CliffordAlgebra.ι witnessQ ![1, 0]
+
+private noncomputable def cliffordE1 : CliffordAlgebra witnessQ :=
+  CliffordAlgebra.ι witnessQ ![0, 1]
+
+/-- Explicit non-commutativity witness for `CliffordAlgebra`. -/
+theorem clifford_noncomm_witness :
+    cliffordE0 * cliffordE1 ≠ cliffordE1 * cliffordE0 := by
+  intro h
+  let f : (Fin 2 → ℝ) →ₗ[ℝ] Matrix (Fin 2) (Fin 2) ℝ :=
+    { toFun := fun v => v 0 • !![1, 0; 0, -1] + v 1 • !![0, 1; 1, 0]
+      map_add' := fun u v => by simp [add_smul]
+      map_smul' := fun r v => by ext i j; fin_cases i <;> fin_cases j <;> simp }
+  have hf : ∀ v, f v * f v = algebraMap ℝ (Matrix (Fin 2) (Fin 2) ℝ) (witnessQ v) := by
+    intro v
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [f, witnessQ, QuadraticMap.weightedSumSquares_apply, Matrix.mul_apply,
+        Fin.sum_univ_two, Algebra.algebraMap_eq_smul_one] <;> ring
+  have hmap := congrArg (CliffordAlgebra.lift witnessQ ⟨f, hf⟩) h
+  simp only [cliffordE0, cliffordE1, map_mul, CliffordAlgebra.lift_ι_apply] at hmap
+  have h01 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 1) hmap
+  norm_num [f, Matrix.mul_apply, Fin.sum_univ_two] at h01
+
+variable {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M] (Q : QuadraticForm R M)
 
 /--
 The twisted-conjugation (sandwich) action of a unit g ∈ Cl(Q)× on an

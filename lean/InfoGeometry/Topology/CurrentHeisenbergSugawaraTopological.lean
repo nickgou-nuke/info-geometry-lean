@@ -17,8 +17,8 @@ continuous, locally constant map `topologicalCurrentSugawaraReadout`.
 - BUCKET 1 (Established Mathematical Target & Existing Owners):
   * `InfoGeometry.Canonical.CurrentSugawaraBridge`: `CurrentHeisenbergRep`,
     `CurrentHeisenbergRep.currentSugawaraRepresentation`,
-    `CurrentHeisenbergRep.currentSugawaraRepresentation_cgen`,
-    `CurrentHeisenbergRep.currentSugawaraRepresentation_lgen`.
+    `CurrentHeisenbergRep.currentSugawaraRepresentation_central`,
+    `CurrentHeisenbergRep.currentSugawaraRepresentation_lgen_apply`.
 - BUCKET 2 (Deconfabulation):
   * All evaluation, generator, continuity, and local constancy theorems are proved
     via explicit unfolding.
@@ -77,7 +77,7 @@ def topologicalCurrentSugawaraReadout (H : CurrentHeisenbergRep 𝕜 V) :
     topologicalCurrentSugawaraReadout (𝕜 := 𝕜) (V := V) H (VirasoroAlgebra.cgen 𝕜) =
       (1 : V →ₗ[𝕜] V) := by
   unfold topologicalCurrentSugawaraReadout
-  exact H.currentSugawaraRepresentation_cgen
+  exact H.currentSugawaraRepresentation_central
 
 /-- Evaluation of `topologicalCurrentSugawaraReadout H` on the Virasoro stress generator `lgen n`. -/
 @[simp] theorem topologicalCurrentSugawaraReadout_lgen
@@ -85,7 +85,7 @@ def topologicalCurrentSugawaraReadout (H : CurrentHeisenbergRep 𝕜 V) :
     topologicalCurrentSugawaraReadout (𝕜 := 𝕜) (V := V) H (VirasoroAlgebra.lgen 𝕜 n) =
       H.sugawaraStressMode n := by
   unfold topologicalCurrentSugawaraReadout
-  exact H.currentSugawaraRepresentation_lgen n
+  exact H.currentSugawaraRepresentation_lgen_apply n
 
 /-- The Sugawara readout is continuous for the discrete topology on the source. -/
 theorem continuous_topologicalCurrentSugawaraReadout :
@@ -97,7 +97,7 @@ theorem continuous_topologicalCurrentSugawaraReadout :
 theorem isLocallyConstant_topologicalCurrentSugawaraReadout :
     IsLocallyConstant (topologicalCurrentSugawaraReadout (𝕜 := 𝕜) (V := V)) := by
   unfold topologicalCurrentSugawaraReadout
-  exact IsLocallyConstant.of_discrete
+  exact IsLocallyConstant.of_discrete (f := topologicalCurrentSugawaraReadout (𝕜 := 𝕜) (V := V))
 
 end
 end InfoGeometry.Topology.CurrentHeisenbergSugawaraTopological

@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.CuntzN
+import InfoGeometry.Algebra.MatrixNoncommutativity
 
 /-!
 # Matrix representations derived from a Cuntz presentation
@@ -12,6 +18,20 @@ does not identify a formal linear dagger with complex conjugation.
 noncomputable section
 
 namespace InfoGeometry.Algebra.Cuntz
+
+section MatrixWitness
+variable {R : Type*} [CommSemiring R] [Nontrivial R]
+
+private def witnessE01 : Matrix (Fin 2) (Fin 2) R := !![0, 1; 0, 0]
+private def witnessE10 : Matrix (Fin 2) (Fin 2) R := !![0, 0; 1, 0]
+
+theorem matrixTwo_noncomm_witness :
+    (witnessE01 : Matrix (Fin 2) (Fin 2) R) * witnessE10 ≠ witnessE10 * witnessE01 := by
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) R => M 0 0) h
+  simp [witnessE01, witnessE10, Matrix.mul_apply, Fin.sum_univ_two] at h00
+
+end MatrixWitness
 
 variable {R A : Type*} [CommSemiring R] [Semiring A] [Algebra R A]
 
@@ -102,14 +122,14 @@ def matrixTwoHom : Matrix (Fin 2) (Fin 2) R →ₐ[R] A where
 
 include P in
 /-- A cyclic functional on a two-isometry Cuntz presentation vanishes at `1`. -/
-theorem cyclic_value_one_eq_zero (τ : A →ₗ[R] R)
+theorem cyclic_value_one_eq_zero [IsLeftCancelAdd R] (τ : A →ₗ[R] R)
     (hcyclic : ∀ a b, τ (a * b) = τ (b * a)) : τ 1 = 0 := by
   have h := P.cyclic_value_one τ hcyclic
   have h' : τ 1 + 0 = τ 1 + τ 1 := by simpa [two_mul] using h
   exact (add_left_cancel h').symm
 
 include P in
-theorem no_normalized_cyclic_functional [Nontrivial R] :
+theorem no_normalized_cyclic_functional [Nontrivial R] [IsLeftCancelAdd R] :
     ¬ ∃ τ : A →ₗ[R] R, τ 1 = 1 ∧ ∀ a b, τ (a * b) = τ (b * a) := by
   rintro ⟨τ, hnorm, hcyclic⟩
   have hzero := P.cyclic_value_one_eq_zero τ hcyclic

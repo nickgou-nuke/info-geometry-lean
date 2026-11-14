@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Group.Defs
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.HestenesOddSector
@@ -13,7 +18,7 @@ open InfoGeometry.Clifford.SplitOctonionsDualProduct
 open InfoGeometry.Clifford.SplitOctonionsDualProduct.SplitOctonion
 open CliffordAlgebra
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [CommRing R] [Invertible (2 : R)]
 variable {M : Type*} [AddCommGroup M] [Module R M]
 variable (Q : QuadraticForm R M)
 variable (v0 : M) (hv0_norm : Q v0 = 1)

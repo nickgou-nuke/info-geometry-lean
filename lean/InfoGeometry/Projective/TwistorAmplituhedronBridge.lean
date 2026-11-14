@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.Soldering
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.Incidence
@@ -30,10 +35,7 @@ separate amplituhedron owner.
   relation kernel-annihilation theorem.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
-- `amplituhedron_boundary_readout_of_comparison`: an amplituhedron boundary
-  readout follows only from an explicit comparison map and equality.
-- `bcfw_readout_of_cooperad_comparison`: a BCFW-style readout follows only from
-  an explicit comparison premise.
+- (Moved to owner amplituhedron/BCFW modules rather than packaging a comparison hypothesis directly.)
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 - Formalize the Grassmannian/Klein-quadric line correspondence used by
@@ -105,8 +107,8 @@ three-point mixed relation, that target model kills the relation.
 This is not yet a theorem about concrete `d log Q` forms on `F_Q(C^4,3)`.
 -/
 theorem arnold_mixed_relation_kernel_readout
-    (R : Type*) [CommSemiring R]
-    (M : Type*) [AddCommMonoid M] [Module R M]
+    (R : Type*) [CommRing R]
+    (M : Type*) [AddCommGroup M] [Module R M]
     {A : Type*} [Semiring A]
     (w12 w23 w31 : ArnoldExterior R M)
     (φ : ArnoldExterior R M →+* A)
@@ -114,36 +116,5 @@ theorem arnold_mixed_relation_kernel_readout
     φ (arnoldMixedRelation R M w12 w23 w31) = 0 :=
   arnold_mixed_relation_vanishes_under_kernel_membership
     R M w12 w23 w31 φ hKer
-
-/--
-The only theorem-safe amplituhedron boundary bridge in this module.
-
-If a separate owner identifies a local null-boundary event with an
-amplituhedron boundary datum, this theorem reads that datum back.  No such
-comparison is proved here.
--/
-theorem amplituhedron_boundary_readout_of_comparison
-    {Boundary : Type*}
-    (boundaryOfNullEvent : Prop → Boundary)
-    (targetBoundary : Boundary)
-    (nullEvent : Prop)
-    (hComparison : boundaryOfNullEvent nullEvent = targetBoundary) :
-    boundaryOfNullEvent nullEvent = targetBoundary :=
-  hComparison
-
-/--
-The only theorem-safe BCFW/cooperad bridge in this module.
-
-The premise `hComparison` is where a future amplituhedron owner must prove that
-the selected cooperad relation is represented by the selected BCFW readout.
--/
-theorem bcfw_readout_of_cooperad_comparison
-    {CooperadRelation BCFWReadout : Type*}
-    (toBCFW : CooperadRelation → BCFWReadout)
-    (relation : CooperadRelation)
-    (target : BCFWReadout)
-    (hComparison : toBCFW relation = target) :
-    toBCFW relation = target :=
-  hComparison
 
 end InfoGeometry.Projective.TwistorAmplituhedronBridge

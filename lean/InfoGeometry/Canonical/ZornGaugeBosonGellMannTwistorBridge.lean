@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Ring.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
@@ -189,7 +194,7 @@ theorem gm7_trace : Matrix.trace (gm7 (R := R)) = 0 := by
   rw [Matrix.trace_fin_three]; simp [gm7]
 
 theorem gm8_trace : Matrix.trace (gm8 (R := R)) = 0 := by
-  rw [Matrix.trace_fin_three]; simp [gm8]; noncomm_ring
+  rw [Matrix.trace_fin_three]; simp [gm8]; norm_num
 
 /-!
 ### Stratum 26.4: Zorn Commutator Generating the Krein Grading J = P₊ - P₋

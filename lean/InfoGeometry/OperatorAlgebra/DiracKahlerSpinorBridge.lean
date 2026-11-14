@@ -39,12 +39,12 @@ variable {R S E : Type*} [Semiring R] [AddCommMonoid S] [Module R S] [AddCommMon
 /-- Transport of a Dirac–Kähler operator `d + dstar` along any `R`-linear equivalence
 `e : S ≃ₗ[R] E` over an arbitrary `[Semiring R]`. -/
 def transportDiracKahlerOp (e : S ≃ₗ[R] E) (d dstar : Module.End R E) : Module.End R S :=
-  e.symm.conj (d + dstar)
+  e.symm.toLinearMap.comp ((d + dstar).comp e.toLinearMap)
 
 /-- Transport of the Hodge–de Rham Laplacian `d ∘ₗ dstar + dstar ∘ₗ d` along any
 `R`-linear equivalence `e : S ≃ₗ[R] E` over an arbitrary `[Semiring R]`. -/
 def transportLaplacianOp (e : S ≃ₗ[R] E) (d dstar : Module.End R E) : Module.End R S :=
-  e.symm.conj (d.comp dstar + dstar.comp d)
+  e.symm.toLinearMap.comp ((d.comp dstar + dstar.comp d).comp e.toLinearMap)
 
 /-- Over any `[Semiring R]`, the operator identity `(d + dstar)² = d ∘ dstar + dstar ∘ d`
 for square-zero endomorphisms `d² = 0`, `dstar² = 0` survives conjugation by any
@@ -55,13 +55,19 @@ theorem transport_dirac_kahler_sq_eq_laplacian
     (transportDiracKahlerOp e d dstar).comp (transportDiracKahlerOp e d dstar) =
       transportLaplacianOp e d dstar := by
   have h_base : (d + dstar).comp (d + dstar) = d.comp dstar + dstar.comp d := by
-    rw [LinearMap.add_comp, LinearMap.comp_add, LinearMap.comp_add, hd2, hdstar2,
-      zero_add, add_zero, add_comm (dstar.comp d) (d.comp dstar)]
+    simp only [LinearMap.add_comp, LinearMap.comp_add, hd2, hdstar2,
+      zero_add, add_zero]
+    abel
   apply LinearMap.ext
   intro v
-  dsimp [transportDiracKahlerOp, transportLaplacianOp, LinearEquiv.conj]
-  simp only [LinearEquiv.apply_symm_apply]
-  exact congr_arg e.symm (LinearMap.congr_fun h_base (e v))
+  simp only [transportDiracKahlerOp, transportLaplacianOp, LinearMap.comp_apply]
+  calc
+    e.symm ((d + dstar) (e (e.symm ((d + dstar) (e v))))) =
+        e.symm ((d + dstar) ((d + dstar) (e v))) := by
+      exact congrArg (fun z : E => e.symm ((d + dstar) z))
+        (e.apply_symm_apply ((d + dstar) (e v)))
+    _ = e.symm ((d.comp dstar + dstar.comp d) (e v)) :=
+      congrArg e.symm (LinearMap.congr_fun h_base (e v))
 
 end SemiringEndTransport
 
@@ -95,7 +101,7 @@ def spinDiracKahlerOp
     (spinEq : SpinorExteriorEquiv (R:=R) (V_base:=V_base))
     (d dstar : Module.End R (ExteriorAlgebra R V_base)) : 
     Module.End R (Fin 32 → R) :=
-  spinEq.equiv.symm.conj (diracKahlerOp d dstar)
+  LinearEquiv.conj spinEq.equiv.symm (diracKahlerOp d dstar)
 
 /--
 The Hodge-de Rham Laplacian transported to the spinor carrier.
@@ -104,7 +110,7 @@ def spinLaplacianOp
     (spinEq : SpinorExteriorEquiv (R:=R) (V_base:=V_base))
     (d dstar : Module.End R (ExteriorAlgebra R V_base)) : 
     Module.End R (Fin 32 → R) :=
-  spinEq.equiv.symm.conj (hodgeDeRhamLaplacian d dstar)
+  LinearEquiv.conj spinEq.equiv.symm (hodgeDeRhamLaplacian d dstar)
 
 /--
 The finite operator identity `D² = Δ` survives transport to the spinor carrier.

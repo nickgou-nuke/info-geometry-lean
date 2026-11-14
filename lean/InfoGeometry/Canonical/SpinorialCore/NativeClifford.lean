@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.SpinorialCore.Algebra
 
 /-!
@@ -12,7 +17,7 @@ namespace InfoGeometry.Canonical.SpinorialCore
 
 /-- Native Clifford specialization of the mixed-sign product theorem. -/
 theorem clifford_mixed_bivector_square
-    {R M : Type*} [CommRing R] [AddCommMonoid M] [Module R M]
+    {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
     (Q : QuadraticForm R M) (v w : M)
     (hv : Q v = 1) (hw : Q w = -1) (ho : Q.IsOrtho v w) :
     (CliffordAlgebra.ι Q v * CliffordAlgebra.ι Q w) *
@@ -82,6 +87,12 @@ theorem mixed_car : annihilation * creation + creation * annihilation = 1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [creation, annihilation, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem positive_negative_noncomm :
+    positiveGenerator * negativeGenerator ≠ negativeGenerator * positiveGenerator := by
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 0) h
+  norm_num [positiveGenerator, negativeGenerator, Matrix.mul_apply, Fin.sum_univ_two] at h00
 
 end RealAtom
 end InfoGeometry.Canonical.SpinorialCore

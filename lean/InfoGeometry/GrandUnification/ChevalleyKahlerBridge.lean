@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.CliffordAlgebra.Contraction
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 
@@ -38,7 +43,7 @@ Archetype 2: The Pure Spinor Vacuum.
 The unexcited state of the universe is simply the scalar unit `1`
 in the static geometric boundary.
 -/
-noncomputable def pureSpinorVacuum {R₀ M₀ : Type*} [CommSemiring R₀] [AddCommMonoid M₀] [Module R₀ M₀] :
+noncomputable def pureSpinorVacuum {R₀ M₀ : Type*} [CommRing R₀] [AddCommGroup M₀] [Module R₀ M₀] :
     ExteriorAlgebra R₀ M₀ := 1
 
 /-- 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -16,15 +21,15 @@ namespace InfoGeometry.Feynman.FeynmanTwistedDeRhamComplex
 
 noncomputable section
 
-variable {R : Type*} [CommSemiring R]
-variable {M : Type*} [AddCommMonoid M] [Module R M]
+variable {R : Type*} [CommRing R]
+variable {M : Type*} [AddCommGroup M] [Module R M]
 
-abbrev Forms (R : Type*) [CommSemiring R] (M : Type*) [AddCommMonoid M]
+abbrev Forms (R : Type*) [CommRing R] (M : Type*) [AddCommGroup M]
     [Module R M] := ExteriorAlgebra R M
 
 /-- A twist together with the square-zero property needed for `d_ω² = 0`. -/
-structure TwistedOneForm (R : Type*) [CommSemiring R]
-    (M : Type*) [AddCommMonoid M] [Module R M] where
+structure TwistedOneForm (R : Type*) [CommRing R]
+    (M : Type*) [AddCommGroup M] [Module R M] where
   carrier : Forms R M
   square_zero : carrier * carrier = 0
 

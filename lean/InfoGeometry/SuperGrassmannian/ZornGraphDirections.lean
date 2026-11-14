@@ -65,14 +65,21 @@ theorem mem_nativeIdempotentDirections (T : Module.End R (ZornVectorMatrix R)) :
   have hm (A B : Module.End R (ZornVectorMatrix R)) :
       splitEquiv.conj (A * B) = splitEquiv.conj A * splitEquiv.conj B :=
     splitEquiv.conj_comp B A
-  rw [← hm, ← hm, ← map_add, splitEquiv.conj.injective.eq_iff]
+  change splitEquiv.conj (L_map (R := R) ZornVectorMatrix.E11) * splitEquiv.conj T +
+      splitEquiv.conj T * splitEquiv.conj (L_map (R := R) ZornVectorMatrix.E11) =
+      splitEquiv.conj T ↔ _
+  have hadd := splitEquiv.conj.map_add
+      (L_map (R := R) ZornVectorMatrix.E11 * T)
+      (T * L_map (R := R) ZornVectorMatrix.E11)
+  rw [← hm, ← hm, ← hadd]
+  exact (LinearEquiv.conj (splitEquiv (R := R))).injective.eq_iff
 
 /-- Both independently varying corners, transported back to the actual octonion module. -/
 def nativeDirectionsEquiv :
     ((Positive R →ₗ[R] Negative R) × (Negative R →ₗ[R] Positive R)) ≃ₗ[R]
       nativeIdempotentDirections (R := R) :=
   (idempotentDirectionsEquiv (R := R) (M := Positive R) (N := Negative R)).trans
-    ((splitEquiv (R := R)).conj.ofSubmodule'
+    ((LinearEquiv.conj (splitEquiv (R := R))).ofSubmodule'
       (idempotentDirections (R := R) (M := Positive R) (N := Negative R))).symm
 
 /-- The previously verified CAR odd space embeds in the idempotent directions. -/

@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.DeterminantCore
+import InfoGeometry.Algebra.MatrixNoncommutativity
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
 import InfoGeometry.Canonical.ManifoldDegreeCore
@@ -53,7 +59,7 @@ theorem det_transpose_eq (M : Matrix n n R) :
   Matrix.det_transpose M
 
 /-- Determinant of a diagonal matrix is the product of the diagonal entries. -/
-theorem det_diagonal_eq_prod {R : Type*} [CommSemiring R] {d : n → R} :
+theorem det_diagonal_eq_prod {R : Type*} [CommRing R] {d : n → R} :
     Matrix.det (Matrix.diagonal d) = ∏ i, d i :=
   Matrix.det_diagonal
 
@@ -97,9 +103,19 @@ theorem det_one_add_nilpotent_2x2 (a : R) :
 
 /-- Trace-determinant sum identity for 2x2 real matrices. -/
 theorem det_add_trace_relation_2x2 (A B : Matrix (Fin 2) (Fin 2) ℝ) :
-    Matrix.det (A + B) = Matrix.det A + Matrix.det B + Matrix.trace A * Matrix.trace B - Matrix.trace (A * B) := by
+    Matrix.det (A + B) =
+      Matrix.det A + Matrix.det B + Matrix.trace A * Matrix.trace B -
+        Matrix.trace (A * B) := by
   simp [Matrix.det_fin_two, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_two]
   ring
+
+/-- Explicit non-commutativity witness for `2 × 2` real matrices. -/
+theorem matrix_two_real_noncomm_witness :
+    (!![(0 : ℝ), 1; 0, 0] : Matrix (Fin 2) (Fin 2) ℝ) * !![0, 0; 1, 0] ≠
+      !![0, 0; 1, 0] * !![(0 : ℝ), 1; 0, 0] := by
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 0) h
+  norm_num [Matrix.mul_apply, Fin.sum_univ_two] at h00
 
 end MatrixFacts
 

@@ -82,11 +82,11 @@ theorem virasoro_commutation (s : Finset ℤ) (m n : ℤ)
          (if (m + n : ℤ) = 0 then S.bridge.virasoro.central else 0)) := by
   have h₁ : ⁅L_sugawara A S e s m, L_sugawara A S e s n⁆ =
       ⁅sugawaraFactor S • modeSum A e s m, sugawaraFactor S • modeSum A e s n⁆ := by
-    dsimp; simp [L_sugawara]
+    simp [L_sugawara]
   rw [h₁]
   have h₂ : ⁅sugawaraFactor S • modeSum A e s m, sugawaraFactor S • modeSum A e s n⁆ =
       (sugawaraFactor S * sugawaraFactor S : ℝ) • ⁅modeSum A e s m, modeSum A e s n⁆ := by
-    dsimp; simp only [h_comm]
+    simp only [h_comm]
     simp only [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, smul_sub]
     rw [mul_comm]
     simp only [smul_smul]
@@ -124,7 +124,7 @@ theorem virasoro_commutation (s : Finset ℤ) (m n : ℤ)
              (S.bridge.level + S.bridge.dualCoxeterNumber)) *
             ((m : ℝ) ^ 3 - (m : ℝ)) / 12))) •
          (if (m + n : ℤ) = 0 then S.bridge.virasoro.central else 0)) := by
-      dsimp; simp only [smul_add, smul_smul, mul_assoc]
+      simp only [smul_add, smul_smul, mul_assoc]
     _ = ((m - n : ℝ) • L_sugawara A S e s (m + n)) +
         (((S.bridge.level * S.bridge.finiteDimension) /
           (S.bridge.level + S.bridge.dualCoxeterNumber) / 12 *

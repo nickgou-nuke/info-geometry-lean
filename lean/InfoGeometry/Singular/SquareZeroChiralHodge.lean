@@ -455,6 +455,81 @@ theorem squareZero_chiralHodge_same_order_star_transport
     simpa only [star_mul, star_zero] using congrArg star ha
   exact squareZero_chiralHodge_decomposition h_same h_star_a
 
+/-- **Algebraic Hodge--Helmholtz element decomposition.**
+Every element `x : R` splits into exact (`P₊ x`), coexact (`P₋ x`), and
+harmonic (`P₀ x`) components. -/
+theorem hodge_helmholtz_element_split (a m x : R) :
+    exactSupport a m * x + coexactSupport a m * x + harmonicSupport a m * x = x := by
+  rw [← add_mul, ← add_mul]
+  unfold harmonicSupport
+  simp
+
+private theorem exactSupport_mul_forward (h : IsMoorePenroseInverse a m)
+    (ha : a * a = 0) :
+    exactSupport a m * a = a := by
+  have h1 := chiralSupport_mul_eq_self h ha
+  unfold chiralSupport coexactSupport at h1
+  rw [sub_mul, mul_assoc m a a, ha, mul_zero, sub_zero] at h1
+  exact h1
+
+private theorem coexactSupport_mul_inverse (h : IsMoorePenroseInverse a m)
+    (ha : a * a = 0) :
+    coexactSupport a m * m = m := by
+  have h1 := chiralSupport_mul_inverse_eq_neg h ha
+  have hm : m * m = 0 := h.inverse_sq_eq_zero ha
+  unfold chiralSupport exactSupport at h1
+  rw [sub_mul, mul_assoc a m m, hm, mul_zero, zero_sub, neg_inj] at h1
+  exact h1
+
+/-- **Hodge kernel theorem (`ker 𝒟 = ker a ∩ ker m`).**
+An element `x` lies in the kernel of `𝒟 = a + m` if and only if it is
+annihilated by both `a` and `m`. -/
+theorem normalizedDirac_mul_eq_zero_iff (h : IsMoorePenroseInverse a m)
+    (ha : a * a = 0) (x : R) :
+    normalizedDirac a m * x = 0 ↔ a * x = 0 ∧ m * x = 0 := by
+  constructor
+  · intro hx
+    unfold normalizedDirac at hx
+    have hax : a * x = 0 := by
+      have hm0 : m * ((a + m) * x) = 0 := by rw [hx, mul_zero]
+      have hmm : m * m = 0 := h.inverse_sq_eq_zero ha
+      rw [add_mul, mul_add, ← mul_assoc m m x, hmm, zero_mul, add_zero] at hm0
+      have hma : m * (a * x) = 0 := by simpa [mul_assoc] using hm0
+      calc
+        a * x = (exactSupport a m * a) * x := by rw [exactSupport_mul_forward h ha]
+        _ = a * (m * (a * x)) := by simp only [exactSupport, mul_assoc]
+        _ = 0 := by rw [hma, mul_zero]
+    have hmx : m * x = 0 := by
+      have h0 : a * ((a + m) * x) = 0 := by rw [hx, mul_zero]
+      rw [add_mul, mul_add, ← mul_assoc a a x, ha, zero_mul, zero_add] at h0
+      have ham : a * (m * x) = 0 := by simpa [mul_assoc] using h0
+      calc
+        m * x = (coexactSupport a m * m) * x := by rw [coexactSupport_mul_inverse h ha]
+        _ = m * (a * (m * x)) := by simp only [coexactSupport, mul_assoc]
+        _ = 0 := by rw [ham, mul_zero]
+    exact ⟨hax, hmx⟩
+  · rintro ⟨hax, hmx⟩
+    unfold normalizedDirac
+    rw [add_mul, hax, hmx, add_zero]
+
+/-- **Harmonic characterization of `ker 𝒟`.**
+An element `x` lies in `ker (a + m)` if and only if it is fixed by the
+harmonic projector `P₀ = 1 - P₊ - P₋`. -/
+theorem normalizedDirac_mul_eq_zero_iff_harmonicSupport
+    (h : IsMoorePenroseInverse a m) (ha : a * a = 0) (x : R) :
+    normalizedDirac a m * x = 0 ↔ harmonicSupport a m * x = x := by
+  constructor
+  · intro hx
+    obtain ⟨hax, hmx⟩ := (normalizedDirac_mul_eq_zero_iff h ha x).1 hx
+    unfold harmonicSupport exactSupport coexactSupport
+    rw [sub_mul, sub_mul, one_mul, mul_assoc a m x, hmx, mul_zero,
+      mul_assoc m a x, hax, mul_zero, sub_zero, sub_zero]
+  · intro hx
+    calc
+      normalizedDirac a m * x = normalizedDirac a m * (harmonicSupport a m * x) := by rw [hx]
+      _ = (normalizedDirac a m * harmonicSupport a m) * x := by simp only [mul_assoc]
+      _ = 0 := by rw [normalizedDirac_mul_harmonicSupport h ha, zero_mul]
+
 end IsMoorePenroseInverse
 
 end InfoGeometry.Singular.MoorePenrose

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
@@ -18,7 +23,7 @@ open InfoGeometry.Canonical.DeRhamCohomologyQuotientBridge
 open InfoGeometry.Canonical.MatrixTracedChernWeilBridge
 open BigOperators
 
-variable {R V : Type*} [CommRing R] [AddCommMonoid V] [Module R V] {n : ℕ}
+variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] {n : ℕ}
 
 /-- **Definition**: Traced Chern-Weil Cohomology Class [Tr(F ∧ F)] ∈ H_d = ker d / range d. -/
 def tracedChernWeilCohomologyClass

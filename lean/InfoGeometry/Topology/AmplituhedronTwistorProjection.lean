@@ -1,4 +1,8 @@
-
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Algebra.BigOperators.Fin
@@ -24,11 +28,11 @@ or locality/unitarity statements.
 
 namespace AmplituhedronTwistorProjection
 
-theorem twistorBracket_skew {R : Type*} [Ring R] (Y : Matrix (Fin 2) (Fin 4) R) (Z : Matrix (Fin 4) (Fin 4) R) (a b : Fin 4) :
+theorem twistorBracket_skew {R : Type*} [CommRing R] (Y : Matrix (Fin 2) (Fin 4) R) (Z : Matrix (Fin 4) (Fin 4) R) (a b : Fin 4) :
     twistorBracket Y Z b a = - twistorBracket Y Z a b := by
-  dsimp [twistorBracket, det4]
-  simp
-  noncomm_ring
+  fin_cases a <;> fin_cases b <;>
+    ( simp [twistorBracket, det4, twistorMatrix]
+      ring1 )
 
 variable {R : Type*} [CommRing R]
 

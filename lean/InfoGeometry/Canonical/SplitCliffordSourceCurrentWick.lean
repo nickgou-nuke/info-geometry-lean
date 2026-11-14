@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Lie.Basic
 import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Algebra.FiniteSpinAlgebra
@@ -1420,10 +1425,11 @@ noncomputable def externalInfiniteJ_currentHeisenbergRep
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
     _root_.InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep
       𝕜
-      (VirasoroProject.ChargedFockSpace 𝕜 α) where
-  J := externalInfiniteJ 𝕜 α
-  trunc := externalInfiniteJ_splitLiftTruncation (𝕜 := 𝕜) α
-  comm := externalInfiniteJ_heisenberg_comm_full (𝕜 := 𝕜) α
+      (VirasoroProject.ChargedFockSpace 𝕜 α) :=
+  _root_.InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep.mk
+    (externalInfiniteJ 𝕜 α)
+    (externalInfiniteJ_splitLiftTruncation (𝕜 := 𝕜) α)
+    (externalInfiniteJ_heisenberg_comm_full (𝕜 := 𝕜) α)
 
 /--
 Direct full Heisenberg commutator law read from the constructed
@@ -1740,7 +1746,9 @@ theorem heisenberg_comm_zero_offdiag
     (externalInfiniteJ 𝕜 α m).commutator (externalInfiniteJ 𝕜 α n) = 0 := by
   have hfull :=
     externalInfiniteJ_currentHeisenbergRep_comm_full (𝕜 := 𝕜) α m n
-  simpa [externalInfiniteJ_currentHeisenbergRep, hmn] using hfull
+  simpa [externalInfiniteJ_currentHeisenbergRep,
+    _root_.InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep.mk,
+    _root_.InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep.J, hmn] using hfull
 
 theorem heisenberg_comm_central_diag
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
@@ -1752,7 +1760,9 @@ theorem heisenberg_comm_central_diag
             VirasoroProject.ChargedFockSpace 𝕜 α) := by
   have hfull :=
     externalInfiniteJ_currentHeisenbergRep_comm_full (𝕜 := 𝕜) α m n
-  simpa [externalInfiniteJ_currentHeisenbergRep, hmn] using hfull
+  simpa [externalInfiniteJ_currentHeisenbergRep,
+    _root_.InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep.mk,
+    _root_.InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep.J, hmn] using hfull
 
 theorem heisenberg_comm_full
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (m n : Int) :
@@ -1764,7 +1774,9 @@ theorem heisenberg_comm_full
               VirasoroProject.ChargedFockSpace 𝕜 α)
       else
         0 := by
-  simpa [externalInfiniteJ_currentHeisenbergRep] using
+  simpa [externalInfiniteJ_currentHeisenbergRep,
+    _root_.InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep.mk,
+    _root_.InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep.J] using
     externalInfiniteJ_currentHeisenbergRep_comm_full (𝕜 := 𝕜) α m n
 
 /--

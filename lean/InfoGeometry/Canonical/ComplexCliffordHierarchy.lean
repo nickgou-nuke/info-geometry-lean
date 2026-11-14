@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
@@ -111,7 +116,7 @@ def jordanProduct {A : Type*} [Semiring A] (u v : A) : A :=
   u * v + v * u
 
 /-- In a Clifford algebra, the Jordan product of generators recovers the polar form. -/
-theorem jordan_recovers_polar {R M : Type*} [CommRing R] [AddCommMonoid M] [Module R M]
+theorem jordan_recovers_polar {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
     (Q : QuadraticForm R M) (u v : M) :
     jordanProduct (CliffordAlgebra.ι Q u) (CliffordAlgebra.ι Q v) =
       algebraMap R (CliffordAlgebra Q) (QuadraticMap.polar Q u v) := by

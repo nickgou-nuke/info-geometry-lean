@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Projective.KleinQuadricGrothendieckDeRham
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.ArnoldRelations
@@ -36,7 +41,7 @@ theorem finite_bridge_packet :
   (∀ (R : ℝ) (hR : 0 < R) (n : ℤ),
     Complex.exp ((n : ℂ) * (∮ z in C((0 : ℂ), R), grothendieck_dlog z)) =
       (1 : ℂ)) ∧
-  (∀ {R : Type*} [CommSemiring R] {M : Type*} [AddCommMonoid M] [Module R M]
+  (∀ {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
     {A : Type*} [Semiring A]
     (w12 w23 w31 : ArnoldExterior R M) (φ : ArnoldExterior R M →+* A),
     arnoldMixedRelation R M w12 w23 w31 ∈ RingHom.ker φ →

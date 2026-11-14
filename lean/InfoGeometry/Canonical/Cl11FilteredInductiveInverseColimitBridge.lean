@@ -123,7 +123,15 @@ theorem traceReadout_stage_apply (n : ℕ) (x : Stage n) :
 
 def dualTraceTransition {m n : ℕ} (h : m ≤ n) :
     (Stage n →ₗ[ℝ] ℝ) →ₗ[ℝ] (Stage m →ₗ[ℝ] ℝ) :=
-  FilteredColimit.InductiveCocone.dualInverseTransition directSystem h
+  { toFun := fun φ => φ.comp (directSystem.f h)
+    map_add' := by
+      intro φ ψ
+      ext x
+      rfl
+    map_smul' := by
+      intro c φ
+      ext x
+      rfl }
 
 theorem dualTraceTransition_apply
     {m n : ℕ} (h : m ≤ n) (φ : Stage n →ₗ[ℝ] ℝ) (x : Stage m) :
@@ -135,6 +143,7 @@ theorem normalizedTrace_dual_compatibility
     dualTraceTransition h
         (InfoGeometry.Clifford.Cl11MarkovJonesEngine.normalizedTraceLinear n) x =
       InfoGeometry.Clifford.Cl11MarkovJonesEngine.normalizedTraceLinear m x := by
+  change normalizedTrace n (stageEmbedMap h x) = normalizedTrace m x
   exact normalizedTrace_stageEmbedMap h x
 
 theorem bondMap_smul

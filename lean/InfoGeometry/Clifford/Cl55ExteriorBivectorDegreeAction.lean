@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.Cl55ExteriorBivectorDerivation
 import InfoGeometry.Canonical.ExteriorHomogeneousDegreeBridge
 
@@ -19,7 +24,7 @@ open InfoGeometry.Clifford.Cl55ExteriorBivectorDerivation
 open InfoGeometry.Clifford.Clifford55
 open InfoGeometry.Clifford.BivectorVectorRepresentation
 
-variable {R V : Type*} [CommSemiring R] [AddCommMonoid V] [Module R V]
+variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
 
 private def wordSpan (n : ℕ) : Submodule R (ExteriorAlgebra R V) :=
   Submodule.span R (Set.range fun v : Fin n → V =>

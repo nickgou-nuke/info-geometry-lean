@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ExteriorContractionCARBridge
@@ -21,7 +26,7 @@ open InfoGeometry.Canonical.GhostNumberGradedBRSTCohomologyBridge
 open InfoGeometry.Canonical.GradedBRSTOperatorSequenceBridge
 open InfoGeometry.Canonical.GradedBRSTCochainComplexBridge
 
-variable {R V : Type*} [CommRing R] [AddCommMonoid V] [Module R V]
+variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
 
 /-- **Definition**: Integer-Indexed Ghost Eigenspace E^g for Integer Ghost Numbers g : ℤ. -/
 def integerGhostEigenspace

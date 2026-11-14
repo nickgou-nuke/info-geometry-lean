@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.CliffordAlgebra.Contraction
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
@@ -18,8 +23,8 @@ namespace InfoGeometry.Physics.PureSpinor
 
 variable {R V W W_star : Type*} [CommRing R]
 variable [AddCommMonoid V] [Module R V]
-variable [AddCommMonoid W] [Module R W]
-variable [AddCommMonoid W_star] [Module R W_star]
+variable [AddCommGroup W] [Module R W]
+variable [AddCommGroup W_star] [Module R W_star]
 
 variable (Q : QuadraticForm R V)
 variable (W_inject : W →ₗ[R] V)

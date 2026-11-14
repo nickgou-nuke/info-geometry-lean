@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
@@ -10,12 +15,12 @@ open LinearMap
 open ExteriorAlgebra
 
 variable {R : Type*} [CommRing R]
-variable {W : Type*} [AddCommMonoid W] [Module R W]
+variable {W : Type*} [AddCommGroup W] [Module R W]
 
-abbrev DualSpace (R W : Type*) [CommSemiring R] [AddCommMonoid W] [Module R W] :=
+abbrev DualSpace (R W : Type*) [CommSemiring R] [AddCommGroup W] [Module R W] :=
   W →ₗ[R] R
 
-abbrev SplitV (R W : Type*) [CommSemiring R] [AddCommMonoid W] [Module R W] :=
+abbrev SplitV (R W : Type*) [CommSemiring R] [AddCommGroup W] [Module R W] :=
   W × DualSpace R W
 
 def splitBilin : LinearMap.BilinForm R (SplitV R W) :=
@@ -28,7 +33,7 @@ def splitBilin : LinearMap.BilinForm R (SplitV R W) :=
 def splitQ : QuadraticForm R (SplitV R W) :=
   splitBilin.toQuadraticMap
 
-abbrev SpinorSpace (R W : Type*) [CommSemiring R] [AddCommMonoid W] [Module R W] :=
+abbrev SpinorSpace (R W : Type*) [CommRing R] [AddCommGroup W] [Module R W] :=
   ExteriorAlgebra R W
 
 def actionWedge : W →ₗ[R] Module.End R (SpinorSpace R W) where

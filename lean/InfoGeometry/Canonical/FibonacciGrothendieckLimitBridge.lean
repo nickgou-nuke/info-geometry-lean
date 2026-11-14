@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.FibonacciGrothendieckRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FibonacciGrothendieckLimit
@@ -22,8 +27,8 @@ open Filter
 
 universe u
 
-variable {𝕜 V : Type u} [Semiring 𝕜]
-variable [AddCommMonoid V] [Module 𝕜 V]
+variable {𝕜 V : Type u} [Field 𝕜]
+variable [AddCommGroup V] [Module 𝕜 V]
 
 abbrev fibFusionClass := InfoGeometry.Canonical.FibonacciGrothendieckLimit.fibFusionClass
 abbrev fibFusionGrothendieckColimit :=

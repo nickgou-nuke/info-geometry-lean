@@ -38,7 +38,7 @@ open VirasoroProject
 
 noncomputable section
 
-variable {𝕜 : Type*} [Field 𝕜]
+variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
 
 instance heisenbergFiniteModeColimitTopologicalSpace :
     TopologicalSpace (heisenbergFiniteModeColimit (𝕜 := 𝕜)) := ⊥
@@ -88,8 +88,8 @@ theorem injective_topologicalHeisenbergFiniteModeColimitMap :
 /-- The finite-mode Heisenberg colimit map is locally constant for the discrete topology. -/
 theorem isLocallyConstant_topologicalHeisenbergFiniteModeColimitMap :
     IsLocallyConstant (topologicalHeisenbergFiniteModeColimitMap (𝕜 := 𝕜)) := by
-  unfold topologicalHeisenbergFiniteModeColimitMap
   exact IsLocallyConstant.of_discrete
+    (f := topologicalHeisenbergFiniteModeColimitMap (𝕜 := 𝕜))
 
 end
 end InfoGeometry.Topology.HeisenbergFiniteModeColimitTopological

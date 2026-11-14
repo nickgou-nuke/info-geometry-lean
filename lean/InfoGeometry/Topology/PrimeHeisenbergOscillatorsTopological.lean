@@ -84,7 +84,8 @@ theorem isLocallyConstant_topologicalPrimeAnnihilation
     IsLocallyConstant (fun p : ℕ =>
       topologicalPrimeAnnihilation (𝕜 := 𝕜) (V := V) H p) := by
   unfold topologicalPrimeAnnihilation
-  exact IsLocallyConstant.of_discrete
+  exact IsLocallyConstant.of_discrete (f := fun p : ℕ =>
+    topologicalPrimeAnnihilation (𝕜 := 𝕜) (V := V) H p)
 
 /-- The prime creation operator viewed as a discrete topological readout. -/
 def topologicalPrimeCreation
@@ -114,7 +115,8 @@ theorem isLocallyConstant_topologicalPrimeCreation
     IsLocallyConstant (fun p : ℕ =>
       topologicalPrimeCreation (𝕜 := 𝕜) (V := V) H p) := by
   unfold topologicalPrimeCreation
-  exact IsLocallyConstant.of_discrete
+  exact IsLocallyConstant.of_discrete (f := fun p : ℕ =>
+    topologicalPrimeCreation (𝕜 := 𝕜) (V := V) H p)
 
 /-- The prime annihilation operator on the charged Fock space, topologically read. -/
 def topologicalChargedFockPrimeAnnihilation

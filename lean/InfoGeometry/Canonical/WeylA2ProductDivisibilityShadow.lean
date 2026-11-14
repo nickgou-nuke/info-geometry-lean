@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.WeylPolynomialDivisibilityShadow
@@ -27,7 +32,7 @@ open InfoGeometry.Canonical.WeylPolynomialDivisibilityShadow
 
 /-- Three-node product divisibility data. -/
 @[rep_depth thermo]
-structure ThreeNodePolynomialShadow (R : Type*) [CommSemiring R] where
+structure ThreeNodePolynomialShadow (R : Type*) [CommRing R] where
   a : R
   b : R
   c : R
@@ -40,15 +45,15 @@ variable (P : ThreeNodePolynomialShadow R)
 
 /-- The three constituent two-node shadows. -/
 @[rep_depth thermo]
-def shadowA {R₀ : Type*} [CommSemiring R₀] (P₀ : ThreeNodePolynomialShadow R₀) : TwoNodePolynomialShadow R₀ :=
+def shadowA {R₀ : Type*} [CommRing R₀] (P₀ : ThreeNodePolynomialShadow R₀) : TwoNodePolynomialShadow R₀ :=
   { a := P₀.a, n := P₀.n }
 
 @[rep_depth thermo]
-def shadowB {R₀ : Type*} [CommSemiring R₀] (P₀ : ThreeNodePolynomialShadow R₀) : TwoNodePolynomialShadow R₀ :=
+def shadowB {R₀ : Type*} [CommRing R₀] (P₀ : ThreeNodePolynomialShadow R₀) : TwoNodePolynomialShadow R₀ :=
   { a := P₀.b, n := P₀.n }
 
 @[rep_depth thermo]
-def shadowC {R₀ : Type*} [CommSemiring R₀] (P₀ : ThreeNodePolynomialShadow R₀) : TwoNodePolynomialShadow R₀ :=
+def shadowC {R₀ : Type*} [CommRing R₀] (P₀ : ThreeNodePolynomialShadow R₀) : TwoNodePolynomialShadow R₀ :=
   { a := P₀.c, n := P₀.n }
 
 /-- Product denominator assembled from the three two-node factors. -/

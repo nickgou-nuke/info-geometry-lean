@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.ZornBraidColimit
@@ -8,7 +13,7 @@ open InfoGeometry.Categorical.ZornBraidColimit
 
 universe u
 
-variable (R : Type u) [CommSemiring R]
+variable (R : Type u) [CommRing R]
 variable {J : Type u} [Category.{u} J] [IsFiltered J]
 
 variable (ZornSequence : J ⥤ ModuleCat.{u} R)

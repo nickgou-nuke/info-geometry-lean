@@ -58,8 +58,7 @@ theorem continuous_topologicalHeisenbergModeDegree :
 /-- The cyclotomic degree readout is locally constant on the discrete integer mode domain. -/
 theorem isLocallyConstant_topologicalHeisenbergModeDegree :
     IsLocallyConstant topologicalHeisenbergModeDegree := by
-  unfold topologicalHeisenbergModeDegree
-  exact IsLocallyConstant.of_discrete
+  exact IsLocallyConstant.of_discrete (f := topologicalHeisenbergModeDegree)
 
 end
 end InfoGeometry.Topology.HeisenbergCyclotomicModeTopological

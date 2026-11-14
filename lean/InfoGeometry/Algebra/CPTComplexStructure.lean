@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Cl11Fermions
@@ -143,5 +148,126 @@ theorem euler_operator_reverses_chiral_sheets :
       abel
     _ = atom.r0 * atom.r5 * (1 - atom.r0) := by
       rw [mul_sub, mul_one]
+
+/-- The complex structure `J = r5` also exchanges the two chiral sheets: `P₊ J = J P₋`. -/
+theorem complexStructure_reverses_chiral_sheets :
+    chiralProjectorPlus atom * ComplexStructure atom =
+      ComplexStructure atom * chiralProjectorMinus atom := by
+  dsimp [chiralProjectorPlus, chiralProjectorMinus, ComplexStructure]
+  rw [smul_mul_assoc, mul_smul_comm]
+  congr 1
+  calc
+    (1 + atom.r0) * atom.r5 = atom.r5 + atom.r0 * atom.r5 := by rw [add_mul, one_mul]
+    _ = atom.r5 - atom.r5 * atom.r0 := by rw [atom.anticommute]; abel
+    _ = atom.r5 * (1 - atom.r0) := by rw [mul_sub, mul_one]
+
+/-! ## 4. Two-sheeted coupled isotropic basis and hypercomplex/complex split -/
+
+/-- Forward isotropic null sheet generator `n₊ = (r0 + r5) / 2`. -/
+def isotropicSheetPlus : K := (1/2 : ℝ) • (atom.r0 + atom.r5)
+
+/-- Backward isotropic null sheet generator `n₋ = (r0 - r5) / 2`. -/
+def isotropicSheetMinus : K := (1/2 : ℝ) • (atom.r0 - atom.r5)
+
+/-- The forward sheet generator is isotropic (nilpotent of index 2): `n₊² = 0`. -/
+theorem isotropicSheetPlus_sq :
+    isotropicSheetPlus atom * isotropicSheetPlus atom = 0 := by
+  dsimp [isotropicSheetPlus]
+  rw [smul_mul_smul]
+  have h : (atom.r0 + atom.r5) * (atom.r0 + atom.r5) = 0 := by
+    calc
+      (atom.r0 + atom.r5) * (atom.r0 + atom.r5)
+          = atom.r0 * atom.r0 + (atom.r0 * atom.r5 + atom.r5 * atom.r0) + atom.r5 * atom.r5 := by
+            noncomm_ring
+      _ = 1 + (-(atom.r5 * atom.r0) + atom.r5 * atom.r0) + (-1) := by
+            rw [atom.r0_sq, atom.r5_sq, atom.anticommute]
+      _ = 0 := by abel
+  rw [h, smul_zero]
+
+/-- The backward sheet generator is isotropic (nilpotent of index 2): `n₋² = 0`. -/
+theorem isotropicSheetMinus_sq :
+    isotropicSheetMinus atom * isotropicSheetMinus atom = 0 := by
+  dsimp [isotropicSheetMinus]
+  rw [smul_mul_smul]
+  have h : (atom.r0 - atom.r5) * (atom.r0 - atom.r5) = 0 := by
+    calc
+      (atom.r0 - atom.r5) * (atom.r0 - atom.r5)
+          = atom.r0 * atom.r0 - (atom.r0 * atom.r5 + atom.r5 * atom.r0) + atom.r5 * atom.r5 := by
+            noncomm_ring
+      _ = 1 - (-(atom.r5 * atom.r0) + atom.r5 * atom.r0) + (-1) := by
+            rw [atom.r0_sq, atom.r5_sq, atom.anticommute]
+      _ = 0 := by abel
+  rw [h, smul_zero]
+
+/-- Coupled isotropic sheets satisfy the CAR/Witt pairing `n₊ n₋ = (1 - B)/2`. -/
+theorem isotropicSheetPlus_mul_minus :
+    isotropicSheetPlus atom * isotropicSheetMinus atom =
+      (1/2 : ℝ) • (1 - EulerOperator atom) := by
+  dsimp [isotropicSheetPlus, isotropicSheetMinus, EulerOperator, ComplexStructure]
+  rw [smul_mul_smul]
+  have h : (atom.r0 + atom.r5) * (atom.r0 - atom.r5) = (2 : ℝ) • (1 - atom.r0 * atom.r5) := by
+    have hanti : atom.r5 * atom.r0 = -(atom.r0 * atom.r5) := by
+      rw [atom.anticommute, neg_neg]
+    calc
+      (atom.r0 + atom.r5) * (atom.r0 - atom.r5)
+          = atom.r0 * atom.r0 - atom.r0 * atom.r5 + atom.r5 * atom.r0 - atom.r5 * atom.r5 := by
+            noncomm_ring
+      _ = 1 - atom.r0 * atom.r5 - atom.r0 * atom.r5 - (-1) := by
+            rw [atom.r0_sq, atom.r5_sq, hanti]; abel
+      _ = (2 : ℝ) • (1 - atom.r0 * atom.r5) := by
+            rw [two_smul]; noncomm_ring
+  rw [h, smul_smul]
+  norm_num
+
+/-- Coupled isotropic sheets satisfy the dual CAR/Witt pairing `n₋ n₊ = (1 + B)/2`. -/
+theorem isotropicSheetMinus_mul_plus :
+    isotropicSheetMinus atom * isotropicSheetPlus atom =
+      (1/2 : ℝ) • (1 + EulerOperator atom) := by
+  dsimp [isotropicSheetPlus, isotropicSheetMinus, EulerOperator, ComplexStructure]
+  rw [smul_mul_smul]
+  have h : (atom.r0 - atom.r5) * (atom.r0 + atom.r5) = (2 : ℝ) • (1 + atom.r0 * atom.r5) := by
+    have hanti : atom.r5 * atom.r0 = -(atom.r0 * atom.r5) := by
+      rw [atom.anticommute, neg_neg]
+    calc
+      (atom.r0 - atom.r5) * (atom.r0 + atom.r5)
+          = atom.r0 * atom.r0 + atom.r0 * atom.r5 - atom.r5 * atom.r0 - atom.r5 * atom.r5 := by
+            noncomm_ring
+      _ = 1 + atom.r0 * atom.r5 + atom.r0 * atom.r5 - (-1) := by
+            rw [atom.r0_sq, atom.r5_sq, hanti]; abel
+      _ = (2 : ℝ) • (1 + atom.r0 * atom.r5) := by
+            rw [two_smul]; noncomm_ring
+  rw [h, smul_smul]
+  norm_num
+
+/-- The two coupled isotropic sheets satisfy the canonical anticommutation relation
+`n₊ n₋ + n₋ n₊ = 1`. -/
+theorem isotropicSheets_anticommute :
+    isotropicSheetPlus atom * isotropicSheetMinus atom +
+      isotropicSheetMinus atom * isotropicSheetPlus atom = 1 := by
+  rw [isotropicSheetPlus_mul_minus, isotropicSheetMinus_mul_plus, ← smul_add]
+  have h : (1 - EulerOperator atom) + (1 + EulerOperator atom) = (2 : ℝ) • (1 : K) := by
+    rw [two_smul]; abel
+  rw [h, smul_smul]
+  norm_num
+
+/-- The hyperbolic generator `r0` is the sum of the two isotropic sheets: `n₊ + n₋ = r0`. -/
+theorem isotropicSheets_sum_eq_r0 :
+    isotropicSheetPlus atom + isotropicSheetMinus atom = atom.r0 := by
+  dsimp [isotropicSheetPlus, isotropicSheetMinus]
+  rw [← smul_add]
+  have h : (atom.r0 + atom.r5) + (atom.r0 - atom.r5) = (2 : ℝ) • atom.r0 := by
+    rw [two_smul]; abel
+  rw [h, smul_smul]
+  norm_num
+
+/-- The complex structure `r5` is the difference of the two isotropic sheets: `n₊ - n₋ = r5`. -/
+theorem isotropicSheets_sub_eq_r5 :
+    isotropicSheetPlus atom - isotropicSheetMinus atom = atom.r5 := by
+  dsimp [isotropicSheetPlus, isotropicSheetMinus]
+  rw [← smul_sub]
+  have h : (atom.r0 + atom.r5) - (atom.r0 - atom.r5) = (2 : ℝ) • atom.r5 := by
+    rw [two_smul]; abel
+  rw [h, smul_smul]
+  norm_num
 
 end InfoGeometry.Algebra.CPT

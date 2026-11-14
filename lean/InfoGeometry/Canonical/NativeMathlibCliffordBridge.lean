@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Conjugation
@@ -8,7 +13,7 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.NativeMathlibCliffordBridge
 
-variable {R V : Type*} [CommRing R] [AddCommMonoid V] [Module R V]
+variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
 
 /-- **Theorem**: Definitional Equivalence between CliffordAlgebra (0) and ExteriorAlgebra R V.
     In Mathlib, ExteriorAlgebra R V is definitionally CliffordAlgebra (0 : QuadraticForm R V). -/

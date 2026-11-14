@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.HestenesPhaseSemilinear
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.BilingualAnalyticity
@@ -346,5 +351,110 @@ noncomputable def bilingualAnalyticAtEquiv
     rfl
 
 end Equivalences
+
+section MadelungMetricSymplectic
+
+variable {E F : Type 0}
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
+
+local notation "H₂E" => DoubledSpace E
+local notation "H₂F" => DoubledSpace F
+
+open InfoGeometry.Geometry.BilingualAnalyticity in
+/-- A continuous real-linear map is a Hestenes-holomorphic differential iff it
+intertwines the Madelung bivector rotor `R(θ) = cos θ • 1 + sin θ • clockAxis`
+for all `θ : ℝ`. -/
+@[rep_depth krein]
+theorem isHestenesHolomorphicDifferential_iff_rotor_equivariant
+    (dF : H₂E →L[ℝ] H₂F) :
+    IsHestenesHolomorphicDifferential (E := E) (F := F) dF ↔
+      ∀ (θ : ℝ) (v : H₂E),
+        dF (bivectorRotor (InfoGeometry.Krein.clockAxis (E := E)) θ v) =
+          bivectorRotor (InfoGeometry.Krein.clockAxis (E := F)) θ (dF v) := by
+  unfold IsHestenesHolomorphicDifferential
+  constructor
+  · intro hHolo θ v
+    simp only [bivectorRotor, add_apply, smul_apply, one_apply_eq_self]
+    have hv : dF (InfoGeometry.Krein.clockAxis (E := E) v) =
+        InfoGeometry.Krein.clockAxis (E := F) (dF v) :=
+      DFunLike.congr_fun hHolo v
+    rw [map_add, map_smul, map_smul, hv]
+  · intro hRot
+    apply ContinuousLinearMap.ext
+    intro v
+    have hPi := hRot (Real.pi / 2) v
+    simpa [bivectorRotor, Real.cos_pi_div_two, Real.sin_pi_div_two] using hPi
+
+/-- Canonical symplectic form `ω(u, v) = ⟪clockAxis u, v⟫_ℝ` paired with the
+Hilbert metric `g(u, v) = ⟪u, v⟫_ℝ` on `DoubledSpace E`. -/
+@[rep_depth krein]
+noncomputable def doubledSymplecticForm (u v : H₂E) : ℝ :=
+  ⟪InfoGeometry.Krein.clockAxis (E := E) u, v⟫_ℝ
+
+/-- Antisymmetry of `doubledSymplecticForm`: `ω(u, v) = -ω(v, u)`. -/
+@[rep_depth krein]
+theorem doubledSymplecticForm_antisymm (u v : H₂E) :
+    doubledSymplecticForm (E := E) u v = -doubledSymplecticForm (E := E) v u := by
+  unfold doubledSymplecticForm
+  rw [InfoGeometry.Krein.clockAxis_apply, InfoGeometry.Krein.clockAxis_apply]
+  rw [WithLp.prod_inner_apply, WithLp.prod_inner_apply]
+  simp only [inner_neg_left]
+  change -⟪WithLp.snd u, WithLp.fst v⟫_ℝ + ⟪WithLp.fst u, WithLp.snd v⟫_ℝ =
+    -(-⟪WithLp.snd v, WithLp.fst u⟫_ℝ + ⟪WithLp.fst v, WithLp.snd u⟫_ℝ)
+  rw [real_inner_comm (WithLp.snd u) (WithLp.fst v),
+    real_inner_comm (WithLp.fst u) (WithLp.snd v)]
+  ring
+
+/-- Madelung phase-axis orthogonality: `ω(u, u) = ⟪clockAxis u, u⟫_ℝ = 0`. -/
+@[rep_depth krein]
+theorem doubledSymplecticForm_self (u : H₂E) :
+    doubledSymplecticForm (E := E) u u = 0 := by
+  have h := doubledSymplecticForm_antisymm (E := E) u u
+  linarith
+
+/-- Metric–symplectic Kähler compatibility: `ω(u, clockAxis v) = ⟪u, v⟫_ℝ`. -/
+@[rep_depth krein]
+theorem doubledSymplecticForm_clockAxis_right (u v : H₂E) :
+    doubledSymplecticForm (E := E) u (InfoGeometry.Krein.clockAxis (E := E) v) =
+      ⟪u, v⟫_ℝ := by
+  unfold doubledSymplecticForm
+  rw [InfoGeometry.Krein.clockAxis_apply, InfoGeometry.Krein.clockAxis_apply]
+  rw [WithLp.prod_inner_apply, WithLp.prod_inner_apply]
+  simp only [WithLp.fst, WithLp.snd, inner_neg_left, inner_neg_right, neg_neg]
+  ring
+
+/-- The Madelung bivector rotor `cos θ • 1 + sin θ • clockAxis` is norm-preserving
+on `DoubledSpace E`. -/
+@[rep_depth krein]
+theorem clockRotor_norm_eq (θ : ℝ) (u : H₂E) :
+    ‖InfoGeometry.Geometry.BilingualAnalyticity.bivectorRotor
+        (InfoGeometry.Krein.clockAxis (E := E)) θ u‖ = ‖u‖ := by
+  have hsq :
+      ‖InfoGeometry.Geometry.BilingualAnalyticity.bivectorRotor
+          (InfoGeometry.Krein.clockAxis (E := E)) θ u‖ ^ 2 = ‖u‖ ^ 2 := by
+    have happly :
+        InfoGeometry.Geometry.BilingualAnalyticity.bivectorRotor
+            (InfoGeometry.Krein.clockAxis (E := E)) θ u =
+          Real.cos θ • u + Real.sin θ • InfoGeometry.Krein.clockAxis (E := E) u := by
+      simp [InfoGeometry.Geometry.BilingualAnalyticity.bivectorRotor]
+    rw [happly, norm_add_sq_real]
+    have horth :
+        ⟪Real.cos θ • u, Real.sin θ • InfoGeometry.Krein.clockAxis (E := E) u⟫_ℝ = 0 := by
+      rw [inner_smul_left, inner_smul_right, real_inner_comm]
+      have hself : ⟪InfoGeometry.Krein.clockAxis (E := E) u, u⟫_ℝ = 0 :=
+        doubledSymplecticForm_self (E := E) u
+      rw [hself]
+      simp
+    rw [horth, norm_smul, norm_smul, InfoGeometry.Krein.clockAxis_norm]
+    simp only [Real.norm_eq_abs, mul_pow, sq_abs]
+    calc
+      Real.cos θ ^ 2 * ‖u‖ ^ 2 + 2 * 0 + Real.sin θ ^ 2 * ‖u‖ ^ 2
+          = (Real.cos θ ^ 2 + Real.sin θ ^ 2) * ‖u‖ ^ 2 := by ring
+      _ = 1 * ‖u‖ ^ 2 := by rw [Real.cos_sq_add_sin_sq]
+      _ = ‖u‖ ^ 2 := one_mul _
+  exact (sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _)).mp hsq
+
+end MadelungMetricSymplectic
 
 end InfoGeometry.Canonical.HestenesAnalyticity

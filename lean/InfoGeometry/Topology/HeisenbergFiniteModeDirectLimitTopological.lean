@@ -38,7 +38,7 @@ open VirasoroProject
 
 noncomputable section
 
-variable {𝕜 : Type*} [Field 𝕜]
+variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
 
 instance heisenbergFiniteModeDirectLimitTopologicalSpace :
     TopologicalSpace (heisenbergFiniteModeDirectLimit (𝕜 := 𝕜)) := ⊥
@@ -83,13 +83,15 @@ theorem injective_topologicalHeisenbergFiniteModeDirectLimitMap :
     Function.Injective
       (topologicalHeisenbergFiniteModeDirectLimitMap (𝕜 := 𝕜)) := by
   rw [topologicalHeisenbergFiniteModeDirectLimitMap_eq]
-  exact heisenbergFiniteModeDirectLimitMap_injective (𝕜 := 𝕜)
+  rw [heisenbergFiniteModeDirectLimitMap_eq]
+  exact InfoGeometry.Canonical.heisenbergFiniteModeColimitMap_injective (𝕜 := 𝕜)
 
 /-- The direct-limit readout is locally constant for the discrete topology. -/
 theorem isLocallyConstant_topologicalHeisenbergFiniteModeDirectLimitMap :
     IsLocallyConstant (topologicalHeisenbergFiniteModeDirectLimitMap (𝕜 := 𝕜)) := by
   unfold topologicalHeisenbergFiniteModeDirectLimitMap
   exact IsLocallyConstant.of_discrete
+    (f := topologicalHeisenbergFiniteModeDirectLimitMap (𝕜 := 𝕜))
 
 end
 end InfoGeometry.Topology.HeisenbergFiniteModeDirectLimitTopological

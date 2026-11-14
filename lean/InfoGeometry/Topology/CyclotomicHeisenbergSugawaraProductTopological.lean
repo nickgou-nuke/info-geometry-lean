@@ -6,111 +6,72 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.CyclotomicLatentQuotientTopological
-import InfoGeometry.Topology.HeisenbergBoundaryAtlasTopological
 import InfoGeometry.Topology.SplitCliffordChargedFockSugawaraTopological
 
 /-!
-# Topological Product Readout for Cyclotomic Latent Quotients and Charged-Fock Sugawara Morphisms
+# Product Readout for Cyclotomic Heisenberg Data and Charged-Fock Sugawara Operators
 
-This module defines the product input space
-`CyclotomicHeisenbergSugawaraInput 𝕜 = (ZMod 6 × WeylWord) × (𝕜 × ModeIndex ℕ)`
-and the product readout `cyclotomicHeisenbergSugawaraReadout` into
-`LatentQuotient × ChargedFockSugawaraBundle 𝕜`, proving its coordinate formulas,
-continuity, local constancy, and invariance under `reflectionAct`.
-
-- BUCKET 1 (Real Math in This File):
-- `CyclotomicHeisenbergSugawaraInput`, `CyclotomicHeisenbergSugawaraOutput`
-- `cyclotomicHeisenbergSugawaraReadout`,
-  `cyclotomicHeisenbergSugawaraReadout_fst`,
-  `cyclotomicHeisenbergSugawaraReadout_snd`
-- `continuous_cyclotomicHeisenbergSugawaraReadout`,
-  `isLocallyConstant_cyclotomicHeisenbergSugawaraReadout`,
-  `cyclotomicHeisenbergSugawaraReadout_reflection_invariant`,
-  `cyclotomicHeisenbergSugawaraReadout_latent_and_sugawara`
-
-- BUCKET 2 (Meaningful Mathematical Results Used):
-- `InfoGeometry.Topology.CyclotomicLatentQuotientTopological`
-- `InfoGeometry.Topology.SplitCliffordChargedFockSugawaraTopological`
-
-- BUCKET 3 (Excluded Wrapper Patterns):
-- Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
+The input carrier is built from the existing cyclotomic parameter and natural Weyl
+exponents, together with a coefficient parameter. The output pairs the existing
+finite latent quotient readout with the represented charged-Fock Sugawara bundle.
+This module does not posit a separate mode-index type or a reflection action on the
+input that is absent from the owning constructions.
 -/
 
 namespace InfoGeometry.Topology.CyclotomicHeisenbergSugawaraProductTopological
 
 open InfoGeometry.Topology.CyclotomicLatentQuotientTopological
-open InfoGeometry.Topology.HeisenbergBoundaryAtlasTopological
+open InfoGeometry.Topology.HeisenbergCyclotomicAtlasTopological
 open InfoGeometry.Topology.SplitCliffordChargedFockSugawaraTopological
 
 noncomputable section
 
-variable {𝕜 : Type*} [Field 𝕜]
+variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
 
-/-- Input product carrier `(ZMod 6 × WeylWord) × (𝕜 × ModeIndex ℕ)`. -/
+/-- Input data for the product readout: a sixth-root parameter, two natural Weyl
+exponents, and a coefficient parameter. -/
 abbrev CyclotomicHeisenbergSugawaraInput (𝕜 : Type*) :=
-  (ZMod 6 × WeylWord) × (𝕜 × ModeIndex ℕ)
+  (SixthRootParameter × (ℕ × ℕ)) × 𝕜
 
-/-- Output product carrier `LatentQuotient × ChargedFockSugawaraBundle 𝕜`. -/
-abbrev CyclotomicHeisenbergSugawaraOutput
-    (𝕜 : Type*) [Field 𝕜] :=
+/-- Product output of the latent quotient and charged-Fock Sugawara readouts. -/
+abbrev CyclotomicHeisenbergSugawaraOutput (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] :=
   LatentQuotient × ChargedFockSugawaraBundle 𝕜
 
-/-- Product readout sending `((x, w), (a, m))` to its cyclotomic latent quotient
-class and its charged-Fock Sugawara bundle value at `a`. -/
+/-- The product readout retains the finite cyclotomic quotient and the represented
+Sugawara operator family. -/
 def cyclotomicHeisenbergSugawaraReadout
     (p : CyclotomicHeisenbergSugawaraInput 𝕜) :
     CyclotomicHeisenbergSugawaraOutput 𝕜 :=
-  (latentQuotientProj p.1,
-    representedChargedFockSugawaraBundle (𝕜 := 𝕜) p.2.1)
+  (cyclotomicLatentQuotientReadout p.1,
+    representedChargedFockSugawaraBundle (𝕜 := 𝕜) p.2)
 
-/-- First coordinate of `cyclotomicHeisenbergSugawaraReadout`. -/
 @[simp] theorem cyclotomicHeisenbergSugawaraReadout_fst
     (p : CyclotomicHeisenbergSugawaraInput 𝕜) :
     (cyclotomicHeisenbergSugawaraReadout (𝕜 := 𝕜) p).1 =
-      latentQuotientProj p.1 := by
-  unfold cyclotomicHeisenbergSugawaraReadout
-  rfl
+      cyclotomicLatentQuotientReadout p.1 := rfl
 
-/-- Second coordinate of `cyclotomicHeisenbergSugawaraReadout`. -/
 @[simp] theorem cyclotomicHeisenbergSugawaraReadout_snd
     (p : CyclotomicHeisenbergSugawaraInput 𝕜) :
     (cyclotomicHeisenbergSugawaraReadout (𝕜 := 𝕜) p).2 =
-      representedChargedFockSugawaraBundle (𝕜 := 𝕜) p.2.1 := by
-  unfold cyclotomicHeisenbergSugawaraReadout
-  rfl
+      representedChargedFockSugawaraBundle (𝕜 := 𝕜) p.2 := rfl
 
-/-- Continuity of `cyclotomicHeisenbergSugawaraReadout`. -/
+/-- Continuity follows componentwise from the native readout owners. -/
 theorem continuous_cyclotomicHeisenbergSugawaraReadout :
     Continuous (cyclotomicHeisenbergSugawaraReadout (𝕜 := 𝕜)) := by
-  unfold cyclotomicHeisenbergSugawaraReadout
-  exact Continuous.prodMk
-    (continuous_latentQuotientProj.comp continuous_fst)
-    ((continuous_representedChargedFockSugawaraBundle (𝕜 := 𝕜)).comp
-      (continuous_fst.comp continuous_snd))
+  exact continuous_of_discreteTopology
 
-/-- Local constancy of `cyclotomicHeisenbergSugawaraReadout`. -/
+/-- The product readout is locally constant on the discrete input carrier. -/
 theorem isLocallyConstant_cyclotomicHeisenbergSugawaraReadout :
     IsLocallyConstant (cyclotomicHeisenbergSugawaraReadout (𝕜 := 𝕜)) := by
-  have h := IsLocallyConstant.of_discrete
+  exact IsLocallyConstant.of_discrete
     (f := cyclotomicHeisenbergSugawaraReadout (𝕜 := 𝕜))
-  exact h
 
-/-- Reflection invariance of `cyclotomicHeisenbergSugawaraReadout` in the first factor. -/
-theorem cyclotomicHeisenbergSugawaraReadout_reflection_invariant
-    (xw : ZMod 6 × WeylWord) (am : 𝕜 × ModeIndex ℕ) :
-    cyclotomicHeisenbergSugawaraReadout (𝕜 := 𝕜) (reflectionAct xw, am) =
-      cyclotomicHeisenbergSugawaraReadout (𝕜 := 𝕜) (xw, am) := by
-  unfold cyclotomicHeisenbergSugawaraReadout
-  rw [latentQuotientProj_reflectionAct]
-
-/-- Explicit coordinate decomposition of `cyclotomicHeisenbergSugawaraReadout`. -/
-theorem cyclotomicHeisenbergSugawaraReadout_latent_and_sugawara
-    (x : ZMod 6) (w : WeylWord) (a : 𝕜) (m : ModeIndex ℕ) :
-    cyclotomicHeisenbergSugawaraReadout (𝕜 := 𝕜) ((x, w), (a, m)) =
-      (latentQuotientProj (x, w),
-       representedChargedFockSugawaraBundle (𝕜 := 𝕜) a) := by
-  unfold cyclotomicHeisenbergSugawaraReadout
-  rfl
+/-- Explicit readout at a cyclotomic parameter, Weyl exponent pair, and coefficient. -/
+theorem cyclotomicHeisenbergSugawaraReadout_components
+    (q : SixthRootParameter) (a b : ℕ) (α : 𝕜) :
+    cyclotomicHeisenbergSugawaraReadout (𝕜 := 𝕜) ((q, (a, b)), α) =
+      (cyclotomicLatentQuotientReadout (q, (a, b)),
+        representedChargedFockSugawaraBundle (𝕜 := 𝕜) α) := rfl
 
 end
 end InfoGeometry.Topology.CyclotomicHeisenbergSugawaraProductTopological

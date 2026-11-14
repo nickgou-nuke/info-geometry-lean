@@ -62,7 +62,10 @@ theorem graded_connection_curvature_bianchi
     covariantDerivative A D.d (curvatureFromConnection D.d A) = 0 := by
   have hd2_A := matrixExteriorDerivative_sq_zero D A
   have h_d_A_square := matrix_one_form_square_leibniz D A hA
-  exact curvatureFromConnection_bianchi A D.d hd2_A h_d_A_square
+  dsimp [covariantDerivative, curvatureFromConnection, matrixCommutator]
+  rw [matrixExteriorDerivative_add, hd2_A, h_d_A_square, zero_add,
+    Matrix.mul_add, Matrix.add_mul, Matrix.mul_assoc A A A]
+  abel
 
 /-- **Theorem**: Master Graded Connection Bianchi Synthesis.
     Unifies:

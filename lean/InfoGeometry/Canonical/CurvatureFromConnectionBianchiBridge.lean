@@ -57,7 +57,7 @@ theorem matrixCommutator_cube_zero [CommRing R] [Module R V]
   rw [Matrix.mul_assoc]
   rw [sub_self]
 
-variable [Field R] [Module R V]
+variable [CommRing R] [Module R V]
 
 /-- **Theorem**: Genuine Derivation of Connection Curvature Bianchi Identity D_A F_A = 0 from Nilpotency d² = 0 & Derivation Product Rule. -/
 theorem curvatureFromConnection_bianchi
@@ -89,7 +89,8 @@ theorem unconditional_self_dual_yang_mills
     (h_self_dual : isSelfDualCurvature star (curvatureFromConnection d A)) :
     covariantDerivative A d (matrixHodgeStar star (curvatureFromConnection d A)) = 0 := by
   have h_bianchi := curvatureFromConnection_bianchi A d hd2_A h_d_A_square
-  exact self_dual_connection_curvature_solves_yang_mills star A d h_self_dual h_bianchi
+  rw [h_self_dual]
+  exact h_bianchi
 
 /-- **Theorem**: Unconditional Anti-Self-Dual Yang-Mills Field Equation Solution D_A (★ F_A) = 0 without Primitive Bianchi Assumption. -/
 theorem unconditional_anti_self_dual_yang_mills
@@ -103,7 +104,9 @@ theorem unconditional_anti_self_dual_yang_mills
     (h_anti_self_dual : isAntiSelfDualCurvature star (curvatureFromConnection d A)) :
     covariantDerivative A d (matrixHodgeStar star (curvatureFromConnection d A)) = 0 := by
   have h_bianchi := curvatureFromConnection_bianchi A d hd2_A h_d_A_square
-  exact anti_self_dual_connection_curvature_solves_yang_mills star A d h_anti_self_dual h_bianchi
+  rw [h_anti_self_dual, covariantDerivative_neg]
+  rw [h_bianchi]
+  exact neg_zero
 
 /-- **Theorem**: Master Connection Curvature Bianchi & Dual Instanton Synthesis.
     Unifies:

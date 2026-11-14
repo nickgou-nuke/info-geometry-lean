@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.Conf3ArnoldBraidShadowTopological
@@ -32,22 +38,22 @@ abbrev Conf3FiniteTriple :=
   InfoGeometry.Topology.MobiusFiniteTripleNormalizationTopological.FiniteTriple
 
 /-- The combined `Conf₃` braid-shadow / de Rham candidate packet. -/
-abbrev Conf3ArnoldDeRhamProductPacket (R : Type*) [CommSemiring R] (D : ℕ) :=
+abbrev Conf3ArnoldDeRhamProductPacket (R : Type*) [CommRing R] (D : ℕ) :=
   InfoGeometry.Topology.Conf3ArnoldBraidShadowTopological.Conf3ArnoldBraidShadowPacket R ×
     InfoGeometry.Topology.Conf3DeRhamCandidateTopological.Conf3DeRhamCandidatePacket D
 
 instance conf3ArnoldDeRhamProductPacketTopologicalSpace
-    (R : Type*) [CommSemiring R] (D : ℕ) :
+    (R : Type*) [CommRing R] (D : ℕ) :
     TopologicalSpace (Conf3ArnoldDeRhamProductPacket R D) := ⊥
 
 instance conf3ArnoldDeRhamProductPacketDiscreteTopology
-    (R : Type*) [CommSemiring R] (D : ℕ) :
+    (R : Type*) [CommRing R] (D : ℕ) :
     DiscreteTopology (Conf3ArnoldDeRhamProductPacket R D) := ⟨rfl⟩
 
 /-- The canonical product packet built from a normalized finite triple and a
 de Rham candidate branch. -/
 def conf3ArnoldDeRhamProductPacketOf
-    (R : Type*) [CommSemiring R] (D : ℕ)
+    (R : Type*) [CommRing R] (D : ℕ)
     (p : Conf3FiniteTriple)
     (data : NonIsoConf3DeRhamCooperad.ConcreteDeRhamCooperadData D) :
     Conf3ArnoldDeRhamProductPacket R D :=
@@ -57,7 +63,7 @@ def conf3ArnoldDeRhamProductPacketOf
       D p data)
 
 @[simp] theorem conf3ArnoldDeRhamProductPacketOf_fst
-    (R : Type*) [CommSemiring R] (D : ℕ)
+    (R : Type*) [CommRing R] (D : ℕ)
     (p : Conf3FiniteTriple)
     (data : NonIsoConf3DeRhamCooperad.ConcreteDeRhamCooperadData D) :
     (conf3ArnoldDeRhamProductPacketOf (R := R) (D := D) p data).1 =
@@ -66,7 +72,7 @@ def conf3ArnoldDeRhamProductPacketOf
   rfl
 
 @[simp] theorem conf3ArnoldDeRhamProductPacketOf_snd
-    (R : Type*) [CommSemiring R] (D : ℕ)
+    (R : Type*) [CommRing R] (D : ℕ)
     (p : Conf3FiniteTriple)
     (data : NonIsoConf3DeRhamCooperad.ConcreteDeRhamCooperadData D) :
     (conf3ArnoldDeRhamProductPacketOf (R := R) (D := D) p data).2 =
@@ -76,7 +82,7 @@ def conf3ArnoldDeRhamProductPacketOf
 
 /-- The combined product packet is continuous because the topology is discrete. -/
 theorem continuous_conf3ArnoldDeRhamProductPacketOf
-    (R : Type*) [CommSemiring R] (D : ℕ) :
+    (R : Type*) [CommRing R] (D : ℕ) :
     Continuous (conf3ArnoldDeRhamProductPacketOf (R := R) (D := D)) := by
   rw [continuous_def]
   intro s hs
@@ -85,14 +91,14 @@ theorem continuous_conf3ArnoldDeRhamProductPacketOf
 /-- The combined product packet is locally constant because the topology is
 discrete. -/
 theorem isLocallyConstant_conf3ArnoldDeRhamProductPacketOf
-    (R : Type*) [CommSemiring R] (D : ℕ) :
+    (R : Type*) [CommRing R] (D : ℕ) :
     IsLocallyConstant (conf3ArnoldDeRhamProductPacketOf (R := R) (D := D)) := by
   exact IsLocallyConstant.of_discrete
     (f := conf3ArnoldDeRhamProductPacketOf (R := R) (D := D))
 
 /-- The braid-shadow component readout. -/
 def conf3ArnoldDeRhamProductBraidShadow
-    (R : Type*) [CommSemiring R] (D : ℕ)
+    (R : Type*) [CommRing R] (D : ℕ)
     (p : Conf3FiniteTriple)
     (data : NonIsoConf3DeRhamCooperad.ConcreteDeRhamCooperadData D) :
     InfoGeometry.Topology.Conf3ArnoldBraidShadowTopological.Conf3ArnoldBraidShadowPacket R :=
@@ -100,14 +106,14 @@ def conf3ArnoldDeRhamProductBraidShadow
 
 /-- The de Rham candidate component readout. -/
 def conf3ArnoldDeRhamProductDeRhamCandidate
-    (R : Type*) [CommSemiring R] (D : ℕ)
+    (R : Type*) [CommRing R] (D : ℕ)
     (p : Conf3FiniteTriple)
     (data : NonIsoConf3DeRhamCooperad.ConcreteDeRhamCooperadData D) :
     InfoGeometry.Topology.Conf3DeRhamCandidateTopological.Conf3DeRhamCandidatePacket D :=
   (conf3ArnoldDeRhamProductPacketOf (R := R) (D := D) p data).2
 
 @[simp] theorem conf3ArnoldDeRhamProductBraidShadow_eq
-    (R : Type*) [CommSemiring R] (D : ℕ)
+    (R : Type*) [CommRing R] (D : ℕ)
     (p : Conf3FiniteTriple)
     (data : NonIsoConf3DeRhamCooperad.ConcreteDeRhamCooperadData D) :
     conf3ArnoldDeRhamProductBraidShadow (R := R) (D := D) p data =
@@ -116,7 +122,7 @@ def conf3ArnoldDeRhamProductDeRhamCandidate
   rfl
 
 @[simp] theorem conf3ArnoldDeRhamProductDeRhamCandidate_eq
-    (R : Type*) [CommSemiring R] (D : ℕ)
+    (R : Type*) [CommRing R] (D : ℕ)
     (p : Conf3FiniteTriple)
     (data : NonIsoConf3DeRhamCooperad.ConcreteDeRhamCooperadData D) :
     conf3ArnoldDeRhamProductDeRhamCandidate (R := R) (D := D) p data =
@@ -129,7 +135,7 @@ def conf3ArnoldDeRhamProductDeRhamCandidate
 /-- Equality of product packets recovers both the normalized triple and its
 finite de Rham branch data, since the second component is the source pair. -/
 theorem conf3ArnoldDeRhamProductPacketOf_eq_iff
-    (R : Type*) [CommSemiring R] (D : ℕ)
+    (R : Type*) [CommRing R] (D : ℕ)
     (p₁ p₂ : Conf3FiniteTriple)
     (data₁ data₂ : NonIsoConf3DeRhamCooperad.ConcreteDeRhamCooperadData D) :
     conf3ArnoldDeRhamProductPacketOf (R := R) (D := D) p₁ data₁ =
@@ -146,7 +152,7 @@ theorem conf3ArnoldDeRhamProductPacketOf_eq_iff
 /-- On the product/Leray branch, the combined packet's de Rham readout has
 rank `32`; the result is read from the actual second component. -/
 theorem conf3ArnoldDeRhamProductPacketOf_product_rank
-    (R : Type*) [CommSemiring R] (D : ℕ)
+    (R : Type*) [CommRing R] (D : ℕ)
     (p : Conf3FiniteTriple)
     (data : NonIsoConf3DeRhamCooperad.ConcreteDeRhamCooperadData D)
     (hchoice : data.relationChoice =
@@ -163,7 +169,7 @@ theorem conf3ArnoldDeRhamProductPacketOf_product_rank
 /-- On the Orlik--Solomon alpha branch, the combined packet's de Rham readout
 has rank `24`. -/
 theorem conf3ArnoldDeRhamProductPacketOf_osAlpha_rank
-    (R : Type*) [CommSemiring R] (D : ℕ)
+    (R : Type*) [CommRing R] (D : ℕ)
     (p : Conf3FiniteTriple)
     (data : NonIsoConf3DeRhamCooperad.ConcreteDeRhamCooperadData D)
     (hchoice : data.relationChoice =

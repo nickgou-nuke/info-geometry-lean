@@ -49,7 +49,7 @@ open InfoGeometry.Topology.ZornSixthRootCubicChargeTopological
 
 noncomputable section
 
-variable {𝕜 : Type*} [Field 𝕜]
+variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
 
 /-- The cubic-root parameter induced by squaring a sixth-root parameter. -/
 def effectiveCubicRootParameter (q : SixthRootParameter) : CubicRootParameter :=
@@ -94,8 +94,7 @@ theorem heisenbergBoundaryAtlasReadout_root_independent
     heisenbergBoundaryAtlasReadout (𝕜 := 𝕜) α q =
       heisenbergBoundaryAtlasReadout (𝕜 := 𝕜) α q' := by
   unfold heisenbergBoundaryAtlasReadout
-  rw [InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.canonicalAtlas_heisenberg,
-    InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.canonicalAtlas_heisenberg]
+  rfl
 
 /-- The effective cubic-root parameter satisfies `ω^3 = 1`. -/
 theorem heisenbergSixthRootCubicMonodromyReadout_root_cube
@@ -138,6 +137,7 @@ theorem isLocallyConstant_heisenbergSixthRootCubicMonodromyReadout (α : 𝕜) :
     IsLocallyConstant (heisenbergSixthRootCubicMonodromyReadout (𝕜 := 𝕜) α) := by
   unfold heisenbergSixthRootCubicMonodromyReadout
   exact IsLocallyConstant.of_discrete
+    (f := heisenbergSixthRootCubicMonodromyReadout (𝕜 := 𝕜) α)
 
 end
 

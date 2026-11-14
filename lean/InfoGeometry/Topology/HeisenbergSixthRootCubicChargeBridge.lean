@@ -45,7 +45,7 @@ open InfoGeometry.Topology.ZornSixthRootCubicChargeTopological
 
 noncomputable section
 
-variable {𝕜 : Type*} [Field 𝕜]
+variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
 
 /-- Complex Zorn octonionic matrix carrier. -/
 abbrev Zorn := InfoGeometry.Canonical.ZornMatrix ℂ
@@ -94,8 +94,7 @@ theorem heisenbergBoundaryAtlasReadout_root_independent
     heisenbergBoundaryAtlasReadout (𝕜 := 𝕜) α q =
       heisenbergBoundaryAtlasReadout (𝕜 := 𝕜) α q' := by
   unfold heisenbergBoundaryAtlasReadout
-  rw [InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.canonicalAtlas_heisenberg,
-    InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.canonicalAtlas_heisenberg]
+  rfl
 
 /-- The effective cube root in `heisenbergSixthRootCubicChargeReadout α q` satisfies `ω^3 = 1`. -/
 theorem heisenbergSixthRootCubicChargeReadout_root_cube
@@ -125,6 +124,7 @@ theorem isLocallyConstant_heisenbergSixthRootCubicChargeReadout (α : 𝕜) :
     IsLocallyConstant (heisenbergSixthRootCubicChargeReadout (𝕜 := 𝕜) α) := by
   unfold heisenbergSixthRootCubicChargeReadout
   exact IsLocallyConstant.of_discrete
+    (f := heisenbergSixthRootCubicChargeReadout (𝕜 := 𝕜) α)
 
 end
 end InfoGeometry.Topology.HeisenbergSixthRootCubicChargeBridge

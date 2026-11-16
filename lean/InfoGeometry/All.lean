@@ -7,6 +7,10 @@ import InfoGeometry.Physics.InformationEnergy.TraceErasure
 import InfoGeometry.Physics.InformationEnergy.ThermalSpectrum
 import InfoGeometry.Physics.InformationEnergy.EnergyAccounting
 import InfoGeometry.Physics.InformationEnergy.MomentumBalance
+import InfoGeometry.Physics.InformationEnergy.BinaryErasure
+import InfoGeometry.Physics.InformationEnergy.EffectiveStateCount
+import InfoGeometry.Physics.InformationEnergy.Jarzynski
+import InfoGeometry.Physics.InformationEnergy.ObservableErasure
 import InfoGeometry.Holographic.ArithmeticGeometry
 import InfoGeometry.Holographic.BoundaryReconstruction
 import InfoGeometry.Holographic.CurvatureObstruction

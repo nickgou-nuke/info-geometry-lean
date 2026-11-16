@@ -26,7 +26,7 @@ variable {V : Type*} [AddCommGroup V] [Module ℂ V]
 /-- Conjugate linearity reverses the imaginary scalar. -/
 theorem map_I_smul (T : V →ₗ⋆[ℂ] V) (v : V) :
     T (Complex.I • v) = -Complex.I • T v := by
-  simpa using map_smulₛₗ T Complex.I v
+  simp
 
 /-- A conjugate-linear map with square minus the identity has no nonzero
 complex eigenvectors. No norm or finite-dimensional hypothesis is needed. -/
@@ -39,7 +39,7 @@ theorem eq_zero_of_eigenvector (T : V →ₗ⋆[ℂ] V)
   have hs : (Complex.normSq c : ℂ) • v = -v := by
     calc
       (Complex.normSq c : ℂ) • v = (star c * c) • v := by rw [hnorm]
-      _ = T (T v) := by rw [hv, map_smulₛₗ, hv, smul_smul]
+      _ = T (T v) := by rw [hv, map_smulₛₗ, hv, smul_smul]; rfl
       _ = -v := hT v
   have hz : ((Complex.normSq c : ℂ) + 1) • v = 0 := by
     rw [add_smul, one_smul, hs, neg_add_cancel]
@@ -80,7 +80,7 @@ commutativity of the algebra is required. -/
 theorem half_average_defect (t : A) :
     ((1 / 2 : ℝ) • (1 + t)) * ((1 / 2 : ℝ) • (1 + t)) -
       (1 / 2 : ℝ) • (1 + t) = (1 / 4 : ℝ) • (t * t - 1) := by
-  simp only [smul_mul_assoc, mul_smul_comm, smul_smul,
+  simp only [smul_mul_assoc, mul_smul_comm,
     add_mul, mul_add, one_mul, mul_one]
   module
 

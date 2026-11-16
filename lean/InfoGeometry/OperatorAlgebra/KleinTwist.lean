@@ -67,7 +67,7 @@ theorem twist_mul_one_add_phase (Γ j : A) (hj : j * j = -1)
   have hp := (commute_plus Γ j hjΓ).eq
   have hq := (commute_minus Γ j hjΓ).eq
   have hdiff : projectorPlus Γ - projectorMinus Γ = Γ := by
-    simpa [projectorWeight] using projectorWeight_one_neg_one Γ
+    simpa [projectorWeight, sub_eq_add_neg] using projectorWeight_one_neg_one Γ
   calc
     twist Γ j * (1 + j) =
         projectorPlus Γ + projectorMinus Γ + j * (projectorPlus Γ - projectorMinus Γ) := by
@@ -106,14 +106,13 @@ theorem orderOf_twist (Γ j : A) (hΓ : Γ * Γ = 1) (hj : j * j = -1)
   exact orderOf_eq_prime_pow (p := 2) (n := 1) htwo (twist_fourth Γ j hΓ hj hjΓ)
 
 @[simp] theorem twist_one (j : A) : twist 1 j = 1 := by
-  simp [twist, projectorPlus, projectorMinus]
-  module
+  simp [twist, projectorPlus, projectorMinus] <;> module
 
 private theorem plus_mul_odd (Γ C : A) (hC : Γ * C = -(C * Γ)) :
     projectorPlus Γ * C = C * projectorMinus Γ := by
   simp only [projectorPlus, projectorMinus, smul_mul_assoc, mul_smul_comm]
   congr 1
-  simp only [add_mul, mul_sub, one_mul, mul_one, hC, sub_eq_add_neg]
+  rw [add_mul, mul_sub, one_mul, mul_one, hC, sub_eq_add_neg]
 
 private theorem minus_mul_odd (Γ C : A) (hC : Γ * C = -(C * Γ)) :
     projectorMinus Γ * C = C * projectorPlus Γ := by
@@ -145,17 +144,17 @@ theorem twist_odd (Γ j C : A) (hΓ : Γ * Γ = 1)
     simp only [neg_mul, sub_neg_eq_add, sub_mul, mul_add]
     rw [projectorMinus_mul_projectorPlus Γ hΓ, hqp, hpp, hpq]
     have hdiff : projectorPlus Γ - projectorMinus Γ = Γ := by
-      simpa [projectorWeight] using projectorWeight_one_neg_one Γ
+      simpa [projectorWeight, sub_eq_add_neg] using projectorWeight_one_neg_one Γ
     calc
-      0 + j * projectorMinus Γ - (j * projectorPlus Γ + 0) =
-          -j * (projectorPlus Γ - projectorMinus Γ) := by noncomm_ring
-      _ = -j * Γ := by rw [hdiff]
+      0 - j * projectorPlus Γ + (j * projectorMinus Γ - 0) =
+          -(j * (projectorPlus Γ - projectorMinus Γ)) := by noncomm_ring
+      _ = -(j * Γ) := by rw [hdiff]
   rw [hswap, mul_assoc, hprod]
   calc
     C * (-j * Γ) = -j * (C * Γ) := by
       rw [← mul_assoc, mul_neg, hjC.eq.symm]
       noncomm_ring
-    _ = j * Γ * C := by rw [← neg_mul, ← hC]; noncomm_ring
+    _ = j * Γ * C := by rw [neg_mul, ← mul_neg, ← hC, ← mul_assoc]
 
 /-- Exact ordered commutator/anticommutator conversion for two odd operators. -/
 theorem twisted_commutator (Γ j A₁ C : A) (hΓ : Γ * Γ = 1)
@@ -185,8 +184,11 @@ theorem twisted_commute_iff (Γ j A₁ C : A) (hΓ : Γ * Γ = 1) (hj : j * j = 
       _ = 1 := by rw [hj]; simpa using hΓ
   constructor
   · intro h
-    have := congrArg (fun x => (Γ * j) * x) h
-    simpa only [← mul_assoc, hinv, one_mul, mul_zero] using this
+    calc
+      A₁ * C + C * A₁ = ((Γ * j) * (-j * Γ)) * (A₁ * C + C * A₁) := by
+        rw [hinv, one_mul]
+      _ = (Γ * j) * ((-j * Γ) * (A₁ * C + C * A₁)) := mul_assoc _ _ _
+      _ = 0 := by rw [h, mul_zero]
   · intro h
     rw [h, mul_zero]
 
@@ -214,7 +216,7 @@ theorem star_twist (Γ j : A) (hΓ : star Γ = Γ) (hj : star j = -j)
 theorem twist_mem_unitary (Γ j : A) (hΓ : Γ * Γ = 1) (hj : j * j = -1)
     (hjΓ : Commute j Γ) (hΓs : star Γ = Γ) (hjs : star j = -j) :
     twist Γ j ∈ unitary A := by
-  rw [unitary.mem_iff, star_twist Γ j hΓs hjs hjΓ]
+  rw [Unitary.mem_iff, star_twist Γ j hΓs hjs hjΓ]
   exact ⟨twist_neg_phase_mul Γ j hΓ hj hjΓ, twist_mul_neg_phase Γ j hΓ hj hjΓ⟩
 
 end Star

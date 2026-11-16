@@ -112,8 +112,9 @@ ZCZ^{-1}=j\Gamma C,\qquad
 \]
 
 `twisted_commute_iff` proves the equivalence of twisted commutation and
-anticommutation. Its reverse implication uses an explicit left inverse of
-`-j*Γ`; no no-zero-divisors hypothesis or scalar reduction is used.
+anticommutation. The implication from twisted commutation to anticommutation
+uses an explicit left inverse of `-j*Γ`; no no-zero-divisors hypothesis or
+scalar reduction is used.
 `map_twist` proves phase reversal under an actual rational algebra
 homomorphism fixing the grading and negating the phase.
 
@@ -175,7 +176,102 @@ No new reachability graph or assertion of physical inevitability is added.
 
 ## Validation receipt
 
-Native validation and the final independent acceptance receipt will be
-recorded here after completion. Source review has passed the mathematical
-contract; that review is not a substitute for Lean elaboration or axiom audit.
-Dependency pins and root package configuration are unchanged.
+### Successful native execution
+
+The [focused workflow run 43936948363](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43936948363)
+and [kernel-and-axioms job 133543931204](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43936948363/job/133543931204)
+completed successfully on 2026-11-16.
+
+- Published proof revision: `93cfcebd143fe5aead4e8d56c3bc7d7e7a3537e3`.
+- Tested PR merge revision: `19a3010257b1270f2fa09723d39be41d1a295887`.
+- Lean: `leanprover/lean4:v4.34.1`, compiler commit `5045d0056413266e57c625dcd7c365b10e377c52`.
+- Mathlib: `d13f23b723b8a846827a245b89c10fc7d3f11612`.
+- The maintained `tools/quality/check_clifford_dirac.py` checker compiled all
+  **23 modules** in the exact repository source closure, without reusing
+  repository compilation artifacts. The scope is the three changed owners
+  plus their five existing nonaggregate direct consumers and dependencies.
+- Native axiom enumeration covered **259 declarations**, including private
+  and generated declarations. Their transitive axiom dependencies are exactly
+  `propext`, `Classical.choice`, and `Quot.sound`; no `sorryAx` or custom axiom
+  was accepted.
+
+| Audited owner | Declarations |
+| --- | ---: |
+| `Algebra.AntilinearSquare` | 10 |
+| `OperatorAlgebra.KleinTwist` | 25 |
+| `Quantum.ComplexKramersAntiunitary` | 29 |
+| `Quantum.KramersPhaseGlideRepresentation` | 10 |
+| `Quantum.FiveGradedKramersModule` | 89 |
+| `Quantum.FiniteDIIIAntiunitary` | 37 |
+| `OperatorAlgebra.TwoBoundaryWeakValueZorn` | 54 |
+| `OperatorAlgebra.OperatorZornTwinFormalism` | 5 |
+
+The three changed owners have **zero native Lean warnings**. The closure has
+18 native warnings in seven unchanged modules; this receipt does not claim
+a warning-free repository. The workflow separately enforces zero warnings
+in the changed owners.
+
+The strict placeholder checks passed with zero hard findings and two soft
+automation-only findings (`map_I_smul` and the existing
+`timeReversal_antiunitary`). The semantic-vacuity error gate passed with zero
+errors and nine heuristic warnings. Those warnings concern canonical scalar
+transport, an application equation, algebra-homomorphism simplification, the
+existing `H2` abbreviation, zero/coordinate identities, and the existing
+fourth-power consequence. Source review checked these as actual elementary
+identities or existing API surfaces; they are not missing proofs or semantic
+substitutions. Native elaboration and the declaration axiom audit supply the
+separate proof evidence.
+
+### Source and evidence reconciliation
+
+The downloaded [evidence artifact 14262185784](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43936948363/artifacts/14262185784)
+contains the report, copied source closure, generated audit source, and native
+logs. All 23 copied-source hashes match both the report and the local source
+tree corresponding to the published proof revision. All 30 evidence-manifest
+entries match, including four verifier/helper source hashes checked against
+the repository. The report's merge revision matches GitHub PR metadata.
+The archive records hashes of native `.olean` outputs but does not contain
+those binaries; no independent rehash of uploaded binaries is claimed.
+
+| Changed owner | Source SHA-256 |
+| --- | --- |
+| `Algebra.AntilinearSquare` | `6681463e110723e83bb5dbac632285bd3ed27e65dc10c3de1246d31b3e1510cd` |
+| `OperatorAlgebra.KleinTwist` | `c3cbbab74946a01651ca71c721c4e1b222c3619c3d361a9c9a9c5a868c8ef467` |
+| `Quantum.ComplexKramersAntiunitary` | `3df0a75c0823ce87a235570f4871e1c6c17017b73ba554c995e8a690d219ef74` |
+
+- Evidence ZIP SHA-256: `fbdbeba3133e879b128347b5175d285119472bbdf734d3ee86c231b00b183762`.
+- `report.json` SHA-256: `b8ac1e6bd9fa9d486d7ba79b67bdca1340dc3dab1ad9b7cec41e7a813614c9d4`.
+
+Independent mathematical source review accepted the noncommutative contracts,
+carrier choices, explicit hypotheses, and interpretation boundaries. The
+installed staged proof/header gate also passed on the task's nonempty Lean
+changes. Independent read-only evidence review also passed: it reconciled the
+ZIP/report digests, all 30 manifest entries, all 23 copied/live sources, the
+four verifier hashes, job success and gate execution, and 259 unique audited
+declarations (64 in changed owners and 195 in consumer owners). It separately
+adjudicated all nine semantic warnings and both soft placeholder findings.
+That review did not perform a second local compilation or modify the proofs.
+
+### Repairs and remaining integration debt
+
+Earlier runs are retained as unsuccessful attempts, not acceptance evidence.
+The initial checkout failure exposed an unrelated missing submodule URL, so
+the focused workflow fetches the exact commit without traversing unrelated
+submodules. Native diagnostics then identified normalization/API-name errors;
+the corresponding proof steps were repaired. A subsequent warning cleanup
+exposed a coordinate-tactic sequencing error, which was repaired before the
+successful run above. The theorem statements were not weakened, and no
+warnings or proof-trust checks were disabled.
+
+The separate [root integration run 43936948572](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/43936948572)
+failed during the maintained `--all-default-targets` build because the
+configured `HomotopyHypothesis` package directory
+`external_refs/homotopy-hypothesis-lean4` is absent. The subsequent repository
+quality-gate step was skipped. Local native validation and the local pre-push
+gate remained waiting on the shared build lock; neither is claimed to have
+passed. This PR therefore remains a draft and does not claim repository-wide
+integration success.
+
+Dependency pins, root package configuration, and the maintained checker are
+unchanged. The final receipt update changes this contract only; the verified
+Lean sources and verifier hashes remain those listed above.

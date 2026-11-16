@@ -30,11 +30,18 @@ jobs:
     timeout-minutes: 45
     env:
       CPT_TARGETS: '["InfoGeometry.Algebra.AntilinearSquare", "InfoGeometry.OperatorAlgebra.KleinTwist", "InfoGeometry.Quantum.ComplexKramersAntiunitary"]'
+      CPT_CONSUMERS: '["InfoGeometry.Quantum.KramersPhaseGlideRepresentation", "InfoGeometry.Quantum.FiveGradedKramersModule", "InfoGeometry.Quantum.FiniteDIIIAntiunitary", "InfoGeometry.OperatorAlgebra.TwoBoundaryWeakValueZorn", "InfoGeometry.OperatorAlgebra.OperatorZornTwinFormalism"]'
     steps:
-      - uses: actions/checkout@v4
-        with:
-          path: project
-          persist-credentials: false
+      - name: Fetch exact source without submodule traversal
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+          SOURCE_REPOSITORY: ${{ github.repository }}
+        run: |
+          git init project
+          git -C project remote add origin "https://github.com/${SOURCE_REPOSITORY}.git"
+          git -C project fetch --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
       - name: Read exact dependency pins
         id: pins
         shell: bash
@@ -77,7 +84,7 @@ jobs:
           sys.path.insert(0, str(Path('project').resolve()))
           from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
           from tools.quality.check_reviewed_prs import closure
-          _, _, native = closure(Path('project'), json.loads(os.environ['CPT_TARGETS']))
+          _, _, native = closure(Path('project'), json.loads(os.environ['CPT_TARGETS']) + json.loads(os.environ['CPT_CONSUMERS']))
           with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'cpt-grading-cache') as lock:
               subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
                   cwd='mathlib', check=True, pass_fds=(lock.fileno(),))
@@ -90,7 +97,7 @@ jobs:
           targets = json.loads(os.environ['CPT_TARGETS'])
           cmd = ['python3', 'tools/quality/check_clifford_dirac.py',
                  '--mathlib-root', '../mathlib', '--output', '../cpt-grading-report']
-          for target in targets:
+          for target in targets + json.loads(os.environ['CPT_CONSUMERS']):
               cmd += ['--target', target]
           subprocess.run(cmd, check=True)
           report = json.loads(pathlib.Path('../cpt-grading-report/report.json').read_text())

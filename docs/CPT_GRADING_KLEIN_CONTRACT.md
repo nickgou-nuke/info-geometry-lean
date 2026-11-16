@@ -37,7 +37,7 @@ The following declarations determine the mathematical boundaries.
 | Chirality/eigenvalue exchange | `Physics.ChiralEigenspaceEquivalence.map_eigenspace`, `eigenspaceEquiv`; `Physics.FiniteChiralSpectralSymmetry.anticommuting_maps_eigenmode_neg` | Existing native linear-map/eigenspace results retained. No new claim of nonfactorizability of physical CPT. |
 | Information loss after channel iteration | `PeirceSpine.PeirceCoarseGrainedDynamics.no_density_recovery_after_evolution`, `exists_cptp_coarse_grained_no_recovery` | Reused as the exact corrected statement in place of a claimed general CPT-breaking theorem. |
 | Exact density-recovery boundary | `PeirceSpine.PeircePositiveCollision.density_recovery_iff_trivial` | Existing characterization: universal recovery is equivalent to `P = 0 ∨ P = 1`. |
-| Covariance despite information loss | `PeirceSpine.PeirceChannelDynamics.corner_channel_pinching_covariant`, `PeirceCoarseGrainedDynamics.evolve_pinching` | Covariance is compatible with the preceding no-recovery theorem. |
+| Pinching covariance despite information loss | `PeirceSpine.PeirceChannelDynamics.corner_channel_pinching_covariant`, `PeirceCoarseGrainedDynamics.evolve_pinching` | Covariance is compatible with the preceding no-recovery theorem. |
 | Semilinear channel reversal | `Quantum.SemilinearBoundaryReversal.sheetConj_krausMap`, `reversed_trace_preserving_iff` | Existing full matrix algebra result: reversed trace preservation requires original unitality. |
 
 Searches for Klein-root, statistics-phase, and anticommutator-to-commutator
@@ -146,7 +146,7 @@ requires a separate construction and compatibility theorem.
 | A finite bit tower automatically triggers Nielsen–Ninomiya. | Lattice/locality/translation/chirality hypotheses must be established. No lattice no-go result is inferred from finite algebra alone. |
 | Failure of Lorentz invariance implies CPT failure by Greenberg. | This reverses the relevant implication. |
 | Any Kraus rank above one forbids all recovery. | Input/output dimensions and the meaning of inverse matter; adding a fixed mixed ancilla has a CPTP left inverse. The repository's actual state-collision theorem is used. |
-| Nonrecoverability means symmetry covariance is broken. | Distinct properties. The existing covariance and no-recovery theorems can hold together. |
+| Nonrecoverability means symmetry covariance is broken. | Distinct properties. The existing pinching-covariance and no-recovery theorems can hold together. |
 | The displayed graph's terminal vertex proves unique physical synthesis. | A chosen dependency order does not prove missing physical implications. The supplied height also skips values along covers and is not a graded-poset rank as written. |
 
 ## Actual dependency order

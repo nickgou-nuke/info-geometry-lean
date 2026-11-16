@@ -1,0 +1,154 @@
+{
+  "schema": "info_geometry.opengauss.ground_truth_theorem_contract.v1",
+  "contract_id": "contact-spectral-compilation-2026-11-16",
+  "semantic_status": "human_asserted_not_kernel_verified",
+  "claim": "Construct the normalized Sp4 endpoint Moore-Penrose pair and precise full-module Weyl/folding readouts; normalize the existing Hilbert Gram equivalence as a native linear isometry; derive finite full-matrix heat-supertrace constancy and explicit balanced zero-index examples with different kernels. Reuse existing generic owners and the unchanged finite dependency order. Connect the existing finite kernel/cokernel index to the actual adjoint-kernel dimension difference by native rank-nullity.",
+  "carrier": {
+    "type": "Matrix (Fin 4) (Fin 4) ℝ for contact endpoints; native eigenspace submodules of bounded adjoint Gram operators on complete real or complex Hilbert spaces; arbitrary finite full real matrices for heat supertraces.",
+    "operations": [
+      "Ordered native matrix multiplication and star",
+      "Native continuous linear equivalence, adjoint, eigenspace and linear isometry equivalence",
+      "NormedSpace.exp of a finite full matrix with actual convergence",
+      "Native finite partial order already owned by ContactDependencyPoset"
+    ],
+    "conventions": [
+      "Zero-based Lean matrix indexing; E14 = entry (0,3).",
+      "Use exactly Sp4Contact.omega; global chirality diag(1,1,-1,-1) differs from contact H.",
+      "The completed endpoint Weyl unit uses d=F,b=E, while fullRotation=-omega additionally rotates the middle plane.",
+      "Positive Gram eigenvalue λ is real; algebraic partner equivalence only requires a nonzero field eigenvalue."
+    ]
+  },
+  "owner_declarations": [
+    {
+      "qualified_name": "InfoGeometry.Algebra.Sp4Contact.zPlus",
+      "source_path": "lean/InfoGeometry/Algebra/Sp4Contact.lean",
+      "source_sha256": "b6bdfdfbc2d604334df15290dd3b371a89c0e4900764eac7800aed09994ca470",
+      "status_assertion": "definition",
+      "kind": "def",
+      "source_line": 163,
+      "source_end_line": 163,
+      "lean_statement": "def zPlus : Sp",
+      "source_excerpt": "def zPlus : Sp := generator 9"
+    },
+    {
+      "qualified_name": "InfoGeometry.Algebra.Sp4Contact.zMinus",
+      "source_path": "lean/InfoGeometry/Algebra/Sp4Contact.lean",
+      "source_sha256": "b6bdfdfbc2d604334df15290dd3b371a89c0e4900764eac7800aed09994ca470",
+      "status_assertion": "definition",
+      "kind": "def",
+      "source_line": 154,
+      "source_end_line": 154,
+      "lean_statement": "def zMinus : Sp",
+      "source_excerpt": "def zMinus : Sp := generator 0"
+    },
+    {
+      "qualified_name": "InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse",
+      "source_path": "lean/InfoGeometry/Singular/MoorePenrose.lean",
+      "source_sha256": "a2b9f006df7fc1bbc9ce107aeab98048464d70724e88c224f5dd828a2d7ebfe6",
+      "status_assertion": "definition",
+      "kind": "def",
+      "source_line": 28,
+      "source_end_line": 28,
+      "lean_statement": "def IsMoorePenroseInverse (A B : R) : Prop",
+      "source_excerpt": "def IsMoorePenroseInverse (A B : R) : Prop :="
+    },
+    {
+      "qualified_name": "InfoGeometry.Core.PeirceWeylUnits.weyl_square",
+      "source_path": "lean/InfoGeometry/Core/PeirceWeylUnits.lean",
+      "source_sha256": "5eb71d9838b58c30f823b772f6b6d953ee2f625e44089fe6586e15a113f97fe9",
+      "status_assertion": "asserted_proved",
+      "kind": "theorem",
+      "source_line": 88,
+      "source_end_line": 89,
+      "lean_statement": "theorem weyl_square (h : IsMoorePenroseInverse d b) (hd : d * d = 0) : weylElement d b * weylElement d b = harmonicSupport d b - activeSupport d b",
+      "source_excerpt": "theorem weyl_square (h : IsMoorePenroseInverse d b) (hd : d * d = 0) :\n    weylElement d b * weylElement d b = harmonicSupport d b - activeSupport d b := by"
+    },
+    {
+      "qualified_name": "InfoGeometry.Analysis.HilbertGramDuality.gramEigenspaceEquiv",
+      "source_path": "lean/InfoGeometry/Analysis/HilbertGramDuality.lean",
+      "source_sha256": "12db6c5c9d34bec29b668dfa99d44ac42031f491d053bea0881dd6ec9836342b",
+      "status_assertion": "definition",
+      "kind": "def",
+      "source_line": 39,
+      "source_end_line": 42,
+      "lean_statement": "def gramEigenspaceEquiv (A : E →L[𝕜] F) (μ : 𝕜) (hμ : μ ≠ 0) : Module.End.eigenspace (A† ∘L A).toLinearMap μ ≃L[𝕜] Module.End.eigenspace (A ∘L A†).toLinearMap μ where toLinearEquiv",
+      "source_excerpt": "def gramEigenspaceEquiv (A : E →L[𝕜] F) (μ : 𝕜) (hμ : μ ≠ 0) :\n    Module.End.eigenspace (A† ∘L A).toLinearMap μ ≃L[𝕜]\n      Module.End.eigenspace (A ∘L A†).toLinearMap μ where\n  toLinearEquiv := nonzeroEigenspaceEquiv A.toLinearMap A.adjoint.toLinearMap μ hμ"
+    },
+    {
+      "qualified_name": "InfoGeometry.Analysis.HilbertGramDuality.norm_sq_gramEigenspaceEquiv",
+      "source_path": "lean/InfoGeometry/Analysis/HilbertGramDuality.lean",
+      "source_sha256": "12db6c5c9d34bec29b668dfa99d44ac42031f491d053bea0881dd6ec9836342b",
+      "status_assertion": "asserted_proved",
+      "kind": "theorem",
+      "source_line": 137,
+      "source_end_line": 139,
+      "lean_statement": "theorem norm_sq_gramEigenspaceEquiv (A : E →L[𝕜] F) (μ : 𝕜) (hμ : μ ≠ 0) (x : Module.End.eigenspace (A† ∘L A).toLinearMap μ) : ‖gramEigenspaceEquiv A μ hμ x‖ ^ 2 = RCLike.re μ * ‖x‖ ^ 2",
+      "source_excerpt": "theorem norm_sq_gramEigenspaceEquiv (A : E →L[𝕜] F) (μ : 𝕜) (hμ : μ ≠ 0)\n    (x : Module.End.eigenspace (A† ∘L A).toLinearMap μ) :\n    ‖gramEigenspaceEquiv A μ hμ x‖ ^ 2 = RCLike.re μ * ‖x‖ ^ 2 :="
+    },
+    {
+      "qualified_name": "InfoGeometry.OperatorAlgebra.FiniteParitySupertrace.supertrace_mul_comm_of_odd_left",
+      "source_path": "lean/InfoGeometry/OperatorAlgebra/FiniteParitySupertrace.lean",
+      "source_sha256": "977f298e4c64f938229639c030482d2e72547fff0f0af2419ef2d667a26dff66",
+      "status_assertion": "asserted_proved",
+      "kind": "theorem",
+      "source_line": 346,
+      "source_end_line": 350,
+      "lean_statement": "theorem supertrace_mul_comm_of_odd_left (sign : n → ℝ) (A B : Matrix n n ℝ) (hA : IsOdd sign A) : supertrace sign (A * B) = -supertrace sign (B * A)",
+      "source_excerpt": "theorem supertrace_mul_comm_of_odd_left\n    (sign : n → ℝ)\n    (A B : Matrix n n ℝ)\n    (hA : IsOdd sign A) :\n    supertrace sign (A * B) = -supertrace sign (B * A) := by"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.SpinorialCore.polynomial_supertrace",
+      "source_path": "lean/InfoGeometry/Canonical/SpinorialCore/FiniteSupertrace.lean",
+      "source_sha256": "255e4b4be28f7f31ecbd9c172e35436f2be28caf6d37dc86a9c44e7b93d43d56",
+      "status_assertion": "asserted_proved",
+      "kind": "theorem",
+      "source_line": 46,
+      "source_end_line": 49,
+      "lean_statement": "theorem polynomial_supertrace (N : ℕ) (c : Fin (N + 1) → R) (A : Matrix m n R) (B : Matrix n m R) : polynomialTrace N c (A * B) - polynomialTrace N c (B * A) = c 0 * ((Fintype.card m : R) - (Fintype.card n : R))",
+      "source_excerpt": "theorem polynomial_supertrace (N : ℕ) (c : Fin (N + 1) → R)\n    (A : Matrix m n R) (B : Matrix n m R) :\n    polynomialTrace N c (A * B) - polynomialTrace N c (B * A) =\n      c 0 * ((Fintype.card m : R) - (Fintype.card n : R)) := by"
+    },
+    {
+      "qualified_name": "InfoGeometry.Order.ContactDependencyPoset.terminal_isLUB",
+      "source_path": "lean/InfoGeometry/Order/ContactDependencyPoset.lean",
+      "source_sha256": "0dbc1be4ad2cbdd1292698ee37734c8a87ad35d5bdfa6d1fb8e0d8013f38c396",
+      "status_assertion": "asserted_proved",
+      "kind": "theorem",
+      "source_line": 165,
+      "source_end_line": 165,
+      "lean_statement": "theorem terminal_isLUB : IsLUB ({holonomy, bianchi} : Set Node) synthesis",
+      "source_excerpt": "theorem terminal_isLUB : IsLUB ({holonomy, bianchi} : Set Node) synthesis := by"
+    }
+  ],
+  "imports": [
+    "InfoGeometry.Algebra.Sp4Contact",
+    "InfoGeometry.Core.PeirceWeylUnits",
+    "InfoGeometry.Analysis.HilbertGramDuality",
+    "InfoGeometry.OperatorAlgebra.FiniteParitySupertrace",
+    "Mathlib.Analysis.Normed.Algebra.MatrixExponential"
+  ],
+  "consumers": [
+    "InfoGeometry.Algebra.Sp4ContactPoles",
+    "InfoGeometry.Analysis.HilbertGramIsometry",
+    "InfoGeometry.OperatorAlgebra.FiniteParityHeatSupertrace",
+    "InfoGeometry.OperatorAlgebra.Sp4ContactSupertrace",
+    "InfoGeometry.Analysis.FiniteChiralIndex"
+  ],
+  "smallest_gap": {
+    "declaration_name": "InfoGeometry.Algebra.Sp4Contact.endpoints_moorePenrose",
+    "lean_signature": "theorem endpoints_moorePenrose : InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse (zPlus : Mat) (zMinus : Mat)",
+    "pantograph_expression": "InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse (InfoGeometry.Algebra.Sp4Contact.zPlus : InfoGeometry.Algebra.Sp4Contact.Mat) (InfoGeometry.Algebra.Sp4Contact.zMinus : InfoGeometry.Algebra.Sp4Contact.Mat)",
+    "description": "Prove all four Penrose equations for the actual standard contact endpoints, enabling the existing generic support and Weyl laws. The remaining supported gaps and rejected analytic inferences are recorded in docs/CONTACT_SPECTRAL_COMPILATION_CONTRACT.md."
+  },
+  "out_of_scope": [
+    "Universal APS/Callias eta formula or compulsory noncompact scale drift",
+    "Unbounded Dirac domains, continuum spectral decomposition, KMS analytic continuation",
+    "Spin or metaplectic covering classification and physical parity identification",
+    "Unspecified obstruction colimit and philosophical uniqueness",
+    "Whole-repository acceptance inferred from scoped native checks"
+  ],
+  "discovery_receipt": {
+    "path": "docs/contracts/contact-spectral-compilation-discovery.json",
+    "sha256": "ec5ce3e2638ba68b2fc9746dbaf1af7cbd89777f83d9938ee0f16eb04cd2176d",
+    "query": "zPlus zMinus IsMoorePenroseInverse weyl_square gramEigenspaceEquiv norm_sq_gramEigenspaceEquiv supertrace_mul_comm_of_odd_left polynomial_supertrace terminal_isLUB"
+  }
+}

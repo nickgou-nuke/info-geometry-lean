@@ -106,7 +106,8 @@ theorem orderOf_twist (Γ j : A) (hΓ : Γ * Γ = 1) (hj : j * j = -1)
   exact orderOf_eq_prime_pow (p := 2) (n := 1) htwo (twist_fourth Γ j hΓ hj hjΓ)
 
 @[simp] theorem twist_one (j : A) : twist 1 j = 1 := by
-  simp [twist, projectorPlus, projectorMinus] <;> module
+  simp [twist, projectorPlus, projectorMinus]
+  module
 
 private theorem plus_mul_odd (Γ C : A) (hC : Γ * C = -(C * Γ)) :
     projectorPlus Γ * C = C * projectorMinus Γ := by

@@ -64,10 +64,10 @@ def timeReversal : H2 ≃ₗ⋆[ℂ] H2 where
     fin_cases i <;> simp
   map_add' u v := by
     ext i
-    fin_cases i <;> simp <;> ring
+    fin_cases i <;> (simp; ring)
   map_smul' c v := by
     ext i
-    fin_cases i <;> simp [Pi.smul_apply] <;> ring
+    fin_cases i <;> simp [Pi.smul_apply]
 
 @[simp] theorem timeReversal_apply_zero (v : H2) :
     timeReversal v 0 = -star (v 1) := rfl

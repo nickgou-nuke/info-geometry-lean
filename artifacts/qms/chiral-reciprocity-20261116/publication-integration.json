@@ -1,0 +1,81 @@
+{
+  "schema": "info_geometry.chiral_reciprocity_publication_integration.v1",
+  "recorded_utc": "2026-11-16T18:47:41.188009+00:00",
+  "base_commit": "08c34e03f610b452e03422037949196dc7d92d6d",
+  "branch": "codex/chiral-reciprocity-20261116",
+  "qa_receipt_sha256": "2cad0d535b6fa9740fe0351d70c71611093a500e9a0ebb2e4f744a9673c137f9",
+  "qa_packet_checksums_sha256": "04283c0e8d7325f12d6cacae77718d0bae7d4716ed846839424b571b6150c258",
+  "qa_packet_files_preserved_unchanged": {
+    "README.md": "63bda719fe6a4353328662a4081401810fad37f7a38171eaab11c44eb8a11b3e",
+    "aa-doc-delta-review.md": "8d4940a1fb8bd362dba6a73a5c7fdf50aac1a95cb9175ad66337be6185a80a87",
+    "aa-source-delta-final.md": "f46be5933c5587eddb64b47b0d7fb179a24552c3774ae70d112563e22608121a",
+    "aa-source-delta-review.md": "ade9a8d22b075d5b3b7595ba049c45e4e33e3748bb64f14413d2f41ff9b57b9a",
+    "aa-source-review.md": "4bc63e5413fe42394b2fdb545e51695b54bd8cbb1277f94d27ff68f4b770e459",
+    "aa-source-t16-review.md": "a778557a7e79b867d572021a4a9040e577456d5b6aab80b489e1483da52ba555",
+    "capa-history.json": "9ddf1c8e355711857ee6fae951df0bc237309944c8ebb20b19f54aae99dace9a",
+    "checksums.json": "04283c0e8d7325f12d6cacae77718d0bae7d4716ed846839424b571b6150c258",
+    "command-ledger.json": "f564f791e11e0b26c25beaffd4128c43a876eff98601501eb6eb493203bc9003",
+    "dependency-warnings.log": "bea9801e574f4075818000a8f35f93924494ba2d60e317d8e276c852a5931e49",
+    "native-axioms.log": "b80c5188d818317d891a79290cbb31acf6a4d5c60df7cb0c69d2af8f17a891bc",
+    "native-evidence-sha256.json": "331cbe63927e8c243be0ae8eea2ede69489bfc506d20ea4da08e86eac591413f",
+    "native-report.json": "7024f87cd4592d79fff016c77bb9615a55598f090d83da4ff059ace6dbed9bbf",
+    "qa-acceptance.json": "2cad0d535b6fa9740fe0351d70c71611093a500e9a0ebb2e4f744a9673c137f9",
+    "qa-review.md": "9c1bb095bd67be4fc578cef39eef2b51e2961d73d923444bb70231936bd6933b",
+    "root-path-preflight.json": "6d1f1c6c528dfa847a0dcbb7aeb687f68839a6e5e1c5a4164e576dd167cb467d",
+    "source-gate-receipts.json": "26d035b37b3d2336f2d58df7a7bf9903de8c3b87db93ec2d840950f9b3b3c8d3",
+    "source-index-fingerprint.json": "f55edad47e6493ee92628edeb05e57462502cd91ddb7b6ab1bec973f24e42c78"
+  },
+  "all_eight_compiled_source_hashes_match": {
+    "lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+    "lean/InfoGeometry/OperatorAlgebra/PartnerEigenspaces.lean": "ed9131818752823e408f081b29394176b9d88cb0484bd3d0a8fb4e6149588cb6",
+    "lean/InfoGeometry/Analysis/HilbertGramDuality.lean": "12db6c5c9d34bec29b668dfa99d44ac42031f491d053bea0881dd6ec9836342b",
+    "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean": "64975ff850e1e32ac98e07a52c2d315e83dcc98a0c60833a854bcbd7d7ddbae9",
+    "lean/InfoGeometry/Singular/MoorePenrose.lean": "a2b9f006df7fc1bbc9ce107aeab98048464d70724e88c224f5dd828a2d7ebfe6",
+    "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean": "aa016bd2a2711ba481373d23496f3e115e84602c0b4321a3e7731ecc219b1f30",
+    "lean/InfoGeometry/OperatorAlgebra/NoncommutativeGradedTrace.lean": "ca56806d3cccde9b983c44a65cfc2e2aa1c95626a56f1149f9e482e6dca306b6",
+    "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean": "cdde658faa0d10ab862a648062b405c3178eeff0a504bfd0a1be223ccdef3451"
+  },
+  "all_lean_task_files_and_contract_preserved": {
+    "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean": "64975ff850e1e32ac98e07a52c2d315e83dcc98a0c60833a854bcbd7d7ddbae9",
+    "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean": "aa016bd2a2711ba481373d23496f3e115e84602c0b4321a3e7731ecc219b1f30",
+    "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean": "cdde658faa0d10ab862a648062b405c3178eeff0a504bfd0a1be223ccdef3451",
+    "docs/CHIRAL_RECIPROCITY_CONTRACT.md": "0594dfd47f6ba9a253a4d4f0cf1ce1a5f8ad6c27d49ed146a963274f4d565328",
+    "lean/InfoGeometry/All.lean": "5bd6c78068eab621d0ba45fc64a5f1da9ba7172295a2ab3fddf69a469537d09f"
+  },
+  "documentation_update": {
+    "path": "docs/CHIRAL_RECIPROCITY_FORMALIZATION.md",
+    "qa_frozen_sha256": "d4ce080275e295eb34152f00f23759d2ced56abae5648d3e664383fedfb6effa",
+    "independently_reviewed_candidate_sha256": "12f80d1cc306fbe3fff7f9df6efbf5a25fff9a95a288465b7eb4338158ddd1dc",
+    "final_sha256": "ff75e21f41dd8491e5e1a512769e05088404f5ea5b56d27037ebde6f56925c23",
+    "changes": [
+      "Reviewed display-math delimiters and precise real/complex derivative source-ledger example.",
+      "Replace development status with completed QA facts, exact commands/hashes, and root preflight limitations."
+    ],
+    "theorem_statements_proofs_and_formulas_unchanged": true
+  },
+  "publication_hook_status_at_this_snapshot": "Actual Git pre-commit and committed-range pre-push/post-build checks are the next phase; actual outcomes are recorded in the PR body and external publication receipt.",
+  "scope": "No whole-root or InfoGeometry.All compilation certificate is claimed.",
+  "whitespace_review": {
+    "whole_diff_check_exit_code": 2,
+    "whole_diff_findings": [
+      "dependency-warnings.log:2: trailing whitespace",
+      "dependency-warnings.log:19: trailing whitespace"
+    ],
+    "reason": "The unchanged raw compiler warning transcript contains two native Try this: diagnostics ending in a space. The exact accepted log bytes and QA checksums are preserved.",
+    "lean_and_documentation_diff_check_exit_code": 0,
+    "lean_and_documentation_diff_check_command": [
+      "git",
+      "diff",
+      "--check",
+      "HEAD",
+      "--",
+      "docs/CHIRAL_RECIPROCITY_CONTRACT.md",
+      "docs/CHIRAL_RECIPROCITY_FORMALIZATION.md",
+      "lean/InfoGeometry/All.lean",
+      "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean",
+      "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean",
+      "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean"
+    ],
+    "no_whitespace_configuration_or_gate_changes": true
+  }
+}

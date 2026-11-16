@@ -1,5 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Algebra.AntilinearSquare
 
 /-! Canonical complex Kramers antiunitary on `ℂ²`.
 
@@ -91,6 +97,13 @@ theorem timeReversal_antiunitary (u v : H2) :
   simp [standardInner, timeReversal]
   ring
 
+/-- The existing Kramers operator has no nonzero eigenvector for any complex
+eigenvalue. This specializes the general semilinear negative-square theorem. -/
+theorem timeReversal_eigenvector_eq_zero {v : H2} {c : ℂ}
+    (hv : timeReversal v = c • v) : v = 0 :=
+  InfoGeometry.Algebra.AntilinearSquare.eq_zero_of_eigenvector
+    timeReversal.toLinearMap timeReversal_sq hv
+
 @[simp] theorem timeReversal_kramers_orthogonal (v : H2) :
     standardInner v (timeReversal v) = 0 := by
   simp [standardInner, timeReversal]
@@ -99,19 +112,7 @@ theorem timeReversal_antiunitary (u v : H2) :
 theorem timeReversal_ne_self_of_ne_zero {v : H2} (hv : v ≠ 0) :
     timeReversal v ≠ v := by
   intro hfixed
-  have hneg : -v = v := by
-    have hs : timeReversal (timeReversal v) = timeReversal v :=
-      congrArg timeReversal hfixed
-    calc
-      -v = timeReversal (timeReversal v) := (timeReversal_sq v).symm
-      _ = timeReversal v := hs
-      _ = v := hfixed
-  have htwo : (2 : ℂ) • v = 0 := by
-    calc
-      (2 : ℂ) • v = v + v := by simp [two_smul]
-      _ = -v + v := by rw [hneg]
-      _ = 0 := neg_add_cancel v
-  exact hv ((smul_eq_zero.mp htwo).resolve_left (by norm_num))
+  exact hv (timeReversal_eigenvector_eq_zero (c := 1) (by simpa using hfixed))
 
 theorem timeReversal_preserves_real_eigenvalue
     (A : Module.End ℂ H2)

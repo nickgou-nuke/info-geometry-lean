@@ -1,4 +1,13 @@
-import InfoGeometry.Canonical.SpinorialCore.Algebra
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+import Mathlib.LinearAlgebra.Matrix.Trace
+import Mathlib.LinearAlgebra.Dimension.Constructions
+import Mathlib.Tactic.Zify
+import Lean.Elab.Tactic.Omega
 
 /-!
 # Finite-dimensional index and the trivalent counting defect
@@ -38,7 +47,8 @@ theorem trivalent_helicity_defect (black white edges external : ℕ) (k : ℤ)
     (hhandshake : 3 * black + 3 * white = 2 * edges + external)
     (hk : k = 2 * (black : ℤ) + (white : ℤ) - (edges : ℤ)) :
     2 * k - (external : ℤ) = vertexDefect black white := by
-  unfold vertexDefect
+  rw [hk, vertexDefect]
+  zify at hhandshake
   omega
 
 theorem paired_vertex_insertion_invariant (black white pairs : ℕ) :

@@ -3,6 +3,16 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.Physics.InformationEnergy.TraceErasure
+import InfoGeometry.Physics.InformationEnergy.ThermalSpectrum
+import InfoGeometry.Physics.InformationEnergy.EnergyAccounting
+import InfoGeometry.Physics.InformationEnergy.MomentumBalance
+import InfoGeometry.Holographic.ArithmeticGeometry
+import InfoGeometry.Holographic.BoundaryReconstruction
+import InfoGeometry.Holographic.CurvatureObstruction
+import InfoGeometry.Holographic.MonoidCounterexample
+import InfoGeometry.Holographic.PathAmplitudes
+import InfoGeometry.Holographic.RateBudget
 import InfoGeometry.Canonical.CliffordPeirceWalshAudit
 import InfoGeometry.OperatorAlgebra.IsometryCornerLocalization
 import InfoGeometry.Clifford.WeylFrameMasks

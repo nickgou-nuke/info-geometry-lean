@@ -1,0 +1,46 @@
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.outcomeWeight_pos_iff._simp_1_1
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.backward_defect_eq_commutators._simp_1_1
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.branchAmplitude.congr_simp
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.branchAmplitude._proof_1
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.outcomeWeight_pos_iff
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.normalizer.congr_simp
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.normalizer_eq_overlap_of_fixed
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.normalizer_le_one
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.branchAmplitude
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.normalizer
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.outcomeWeight_eq_sum_gram
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.outcomeWeight_nonneg
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.normalizer_sub_overlap
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.sum_probability._simp_1_2
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.branchAmplitude._proof_7
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.gram_trace_re_eq_zero_iff
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.normalizer.eq_1
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.gram_trace_re_pos_iff
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.normalizer_pos_iff
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.probability_nonneg
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.normalizer_pos_iff._simp_1_2
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.probability
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.trace_branchAmplitude
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.branchAmplitude._proof_3
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.normalizer_eq_trace
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.backward_defect_eq_commutators._simp_1_2
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.outcomeWeight.congr_simp
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.outcomeWeight_pos_iff._simp_1_2
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.backward_defect_eq_commutators
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.probability_le_one
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.outcomeWeight
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.sum_effect_outcomeWeight
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.branchAmplitude._proof_6
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.outcomeWeight.eq_1
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.branchAmplitude._proof_2
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.branchAmplitude._proof_5
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.krausMap_comp
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.gram_trace_re_nonneg
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.probability.eq_1
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.sum_probability
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.normalizer_nonneg
+AUDIT_DECL: InfoGeometry.Quantum.BoundaryInstrument: InfoGeometry.Quantum.BoundaryInstrument.branchAmplitude._proof_4
+AUDIT_MODULE_COUNT: InfoGeometry.Quantum.BoundaryInstrument: 42
+AUDIT_MODULE: InfoGeometry.Quantum.BoundaryInstrument
+AUDIT_AXIOMS: [propext, Classical.choice, Quot.sound]
+AUDIT_COUNT: 42

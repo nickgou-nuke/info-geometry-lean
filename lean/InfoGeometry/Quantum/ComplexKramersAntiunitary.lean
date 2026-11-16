@@ -64,7 +64,8 @@ def timeReversal : H2 ≃ₗ⋆[ℂ] H2 where
     fin_cases i <;> simp
   map_add' u v := by
     ext i
-    fin_cases i <;> (simp; ring)
+    fin_cases i <;> simp
+    ring
   map_smul' c v := by
     ext i
     fin_cases i <;> simp [Pi.smul_apply]

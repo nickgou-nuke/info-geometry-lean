@@ -84,8 +84,8 @@ theorem half_average_defect (t : A) :
     add_mul, mul_add, one_mul, mul_one]
   module
 
-/-- Averaging a negative-square operator is not a projection: its exact
-idempotence defect is minus one half of the identity. -/
+/-- Averaging a negative-square operator has idempotence defect minus one
+half of the identity. -/
 theorem half_average_defect_of_negative_square (t : A) (ht : t * t = -1) :
     ((1 / 2 : ℝ) • (1 + t)) * ((1 / 2 : ℝ) • (1 + t)) -
       (1 / 2 : ℝ) • (1 + t) = -(1 / 2 : ℝ) • (1 : A) := by

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Algebra.Bilinear
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -114,5 +119,25 @@ theorem leftCommutant_eq_rightActionRange :
     simpa [leftAction, rightAction, LinearMap.comp_apply] using hx.symm
   · rintro T ⟨b, rfl⟩
     exact rightAction_mem_leftCommutant (R := R) b
+
+
+/-- Right multiplication is unchanged by a complete left Kraus family.
+The expression uses multiplication by `star (V i)`; it does not assume an
+inner product or identify that multiplication with a Hilbert adjoint. -/
+theorem rightAction_kraus_invariant [StarRing A] {ι : Type*} [Fintype ι]
+    (V : ι → A) (B : A) (hV : ∑ i, star (V i) * V i = 1) :
+    (∑ i, (leftAction (R := R) (star (V i))).comp
+      ((rightAction (R := R) B).comp (leftAction (R := R) (V i)))) =
+        rightAction (R := R) B := by
+  ext x
+  simp only [LinearMap.sum_apply, LinearMap.comp_apply,
+    leftAction_apply, rightAction_apply]
+  simp only [← mul_assoc, ← Finset.sum_mul, hV, one_mul]
+
+/-- Star reflection changes left multiplication by `star a` into right
+multiplication by `a`, with both conjugations written explicitly. -/
+theorem star_leftAction_star [StarRing A] (a x : A) :
+    star (leftAction (R := R) (star a) (star x)) = rightAction (R := R) a x := by
+  simp only [leftAction_apply, rightAction_apply, star_mul, star_star]
 
 end InfoGeometry.Physics.RegularBimoduleCommutant

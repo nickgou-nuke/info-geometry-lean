@@ -250,3 +250,30 @@ The installed `.githooks/pre-commit` invoked the maintained
 `d317a75658c1e4c4ee0e8aacbcf5b7b1d7165129`. The staged check included the four owners and the
 `All.lean` import update. This is a source gate; native and root-package
 acceptance remain outstanding as recorded above.
+
+### Inherited workflow parse repair
+
+The initial PR publication at `4294d5203cc541372827e77e3bd591371461a1ca`
+triggered push run
+[44102868315](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44102868315),
+which failed before any job started. The existing
+`.github/workflows/post-build-gate.yml` had a stray unindented `EOF` at its end;
+that file was byte-identical to main `08c34e03f610b452e03422037949196dc7d92d6d`.
+The follow-up removes only that final line. All preceding bytes, including
+the build, source-debt, transitive-axiom and semantic gate commands, are retained.
+
+Original workflow SHA-256:
+`80194bec8768280edde0556d8dd4bdf3cf0d73b4bb4098c6a4e14d76de5ca132`.
+Repaired workflow SHA-256:
+`97f7c6287ce153a7843d88da34a4013547acafa0317de8b7823e761c142df10c`.
+
+Independent QA observed YAML parsing fail on the original bare `EOF` and
+succeed after its removal. The existing job and all triggers are retained;
+all eight actual shell `run` blocks remain verbatim unchanged and pass
+`bash -n`. Static repair receipt SHA-256:
+`a2ba4ca866f4f5d9a5f4be0b203d303a63f3e1a0663e24a4480a584e64ef1c06`.
+This is parser/shell-syntax evidence, not a workflow execution result.
+
+The four Lean owner hashes and the focused native-check workflow remain the
+reviewed snapshots above. This configuration repair does not establish native
+elaboration, an axiom-audit pass, or root-package acceptance.

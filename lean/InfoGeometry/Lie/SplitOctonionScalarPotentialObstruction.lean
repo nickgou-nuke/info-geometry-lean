@@ -83,7 +83,7 @@ theorem sandwich_trace_eq_zero_of_skew_conj (X K : CanonicalZorn)
   have htrace : realZornTrace K = 0 := by
     unfold realZornTrace
     linarith
-  rw [sandwich_trace, htrace, _root_.mul_zero]
+  rw [sandwich_trace, htrace, MulZeroClass.mul_zero]
 
 /-- The other bracketing has the same vanishing scalar readout. -/
 theorem sandwich_trace_right_eq_zero_of_skew_conj (X K : CanonicalZorn)

@@ -105,6 +105,7 @@ theorem qgtBerryMatrix_transpose (ψ : NormalizedState H) (X : ι → EndH) :
   change -2 * (QGT ψ (X j) (X i)).im = -(-2 * (QGT ψ (X i) (X j)).im)
   linarith
 
+omit [CompleteSpace H] in
 /-- Exact entry decomposition, with the sign fixed by `berryCurvature = -2 Im QGT`. -/
 theorem qgtMatrix_apply_decomposition (ψ : NormalizedState H) (X : ι → EndH)
     (i j : ι) :
@@ -113,12 +114,13 @@ theorem qgtMatrix_apply_decomposition (ψ : NormalizedState H) (X : ι → EndH)
         (Complex.I / 2) * (qgtBerryMatrix ψ X i j : ℂ) := by
   apply Complex.ext <;>
     simp [qgtMatrix, qgtMetricMatrix, qgtBerryMatrix, fubiniStudyMetric,
-      berryCurvature, Complex.div_re, Complex.div_im] <;> ring
+      berryCurvature]
 
 /-- Complex column coefficients form new operators before any state readout. -/
 def mixOperatorFamily [Fintype ι] (C : Matrix ι κ ℂ) (X : ι → EndH) : κ → EndH :=
   fun j => ∑ i, C i j • X i
 
+omit [CompleteSpace H] in
 /-- Horizontal projection commutes with finite complex linear combinations of operators. -/
 theorem projOrth_mixOperatorFamily [Fintype ι]
     (ψ : NormalizedState H) (C : Matrix ι κ ℂ) (X : ι → EndH) (j : κ) :
@@ -136,6 +138,7 @@ theorem qgtMatrix_mixOperatorFamily [Fintype ι]
   simp only [Matrix.gram_apply, projOrth_mixOperatorFamily, sum_inner, inner_sum,
     inner_smul_left, inner_smul_right, Matrix.mul_apply, Matrix.conjTranspose_apply,
     RCLike.star_def, Finset.mul_sum]
+  conv_lhs => rw [Finset.sum_comm]
   apply Finset.sum_congr rfl
   intro i hi
   apply Finset.sum_congr rfl

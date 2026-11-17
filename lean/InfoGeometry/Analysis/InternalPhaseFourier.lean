@@ -50,6 +50,7 @@ def fourierKernel (K : H →L[ℝ] H) (ξ x : ℝ) (v : H) : H :=
 def fourierIntegral (K : H →L[ℝ] H) (f : ℝ → H) (ξ : ℝ) : H :=
   ∫ x : ℝ, fourierKernel K ξ x (f x)
 
+omit [CompleteSpace H] in
 /-- An integrable signal has an integrable internal-phase kernel at every frequency. -/
 theorem integrable_fourierKernel (K : H →L[ℝ] H)
     {f : ℝ → H} (hf : Integrable f) (ξ : ℝ) :
@@ -72,12 +73,14 @@ theorem integrable_fourierKernel (K : H →L[ℝ] H)
           Real.abs_sin_le_one (2 * Real.pi * ξ * x))
   exact hcos.sub hsin
 
+omit [CompleteSpace H] in
 /-- At frequency zero the kernel reduces to the original signal. -/
 theorem fourierIntegral_zero (K : H →L[ℝ] H) (f : ℝ → H) :
     fourierIntegral K f 0 = ∫ x : ℝ, f x := by
   simp only [fourierIntegral, fourierKernel, mul_zero, zero_mul,
     Real.cos_zero, Real.sin_zero, one_smul, zero_smul, sub_zero]
 
+omit [CompleteSpace H] [CompleteSpace G] in
 /-- A bounded real-linear intertwiner preserving the phase axis preserves the kernel. -/
 theorem map_fourierKernel_of_intertwines
     (K : H →L[ℝ] H) (L : G →L[ℝ] G) (T : H →L[ℝ] G)
@@ -87,6 +90,7 @@ theorem map_fourierKernel_of_intertwines
     exact congrArg (fun A : H →L[ℝ] G => A v) hTK
   simp only [fourierKernel, map_sub, map_smul, hv]
 
+omit [CompleteSpace H] [CompleteSpace G] in
 /-- Reversing the phase axis changes the sign of the frequency in the kernel. -/
 theorem map_fourierKernel_of_antiintertwines
     (K : H →L[ℝ] H) (L : G →L[ℝ] G) (T : H →L[ℝ] G)

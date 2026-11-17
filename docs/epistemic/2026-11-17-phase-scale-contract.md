@@ -266,9 +266,10 @@ selected coverage and reported zero findings. A lexical scan found no proof
 placeholders, custom axioms, unsafe declarations, or `native_decide` in the new
 owners. These are not substitutes for kernel verification.
 
-Native compilation of the exact ten-module source closure and recursive axiom
-inspection of every declaration owned by the three new modules remain pending
-the shared compiler queue. The maintained checker is unchanged. The focused
+Native compilation of the exact ten-module source closure has reached all ten
+modules, but the selected run failed in the QGT congruence proof as recorded
+below. Recursive axiom inspection has not yet run. A successful fresh native
+check is required. The maintained checker is unchanged. The focused
 [`phase-scale-qgt.yml`](../../.github/workflows/phase-scale-qgt.yml) workflow
 uses the same checker on a GitHub runner, reads the exact dependency pins,
 requires zero warnings in the new owners, runs the selected semantic gate,
@@ -292,6 +293,26 @@ checks that `HEAD` equals the requested `github.sha`. This preserves the
 pull-request merge-commit scope and avoids recursive submodule traversal.
 The separate pinned Mathlib checkout and all mathematical acceptance checks
 are unchanged. A subsequent successful native run is still required.
+
+The replacement [run 44088120137](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44088120137)
+for head `ef993816e550ec6c440fa0a818066a178a2c2704` successfully fetched the exact
+source, installed the pinned compiler, and obtained the native import cache.
+`InternalPhaseFourier` and `DoubledInternalPhaseFourier` compiled; the former
+had four unused-section-variable warnings and the latter had zero warnings.
+`QGTMatrix` failed in `qgtMatrix_mixOperatorFamily`: the inner-product expansion
+put the two finite sums in the opposite order to the matrix product. Its
+pointwise goal was therefore false before reindexing. It also emitted six
+unused-assumption/tactic warnings. The recursive declaration audit and selected
+zero-warning/semantic steps were skipped; the run retained its evidence artifact.
+
+The source repair explicitly swaps the two left-hand finite sums with
+`conv_lhs => rw [Finset.sum_comm]` before termwise scalar normalization. It
+preserves the ordered operators, inner-product arguments, and `Cᴴ Q C`
+statement. Declaration-local `omit` commands remove only the reported unused
+completeness assumptions; unused decomposition simp arguments and an unreachable
+`ring` are removed. No linter or acceptance check is disabled. Independent
+source review agrees with this reindexing; native acceptance of the repair
+remains a separate pending check.
 
 Initial published head `00fcd6afbabdfe747a96df7dbd2b9b6d0ae4d587` has the
 following observed CI failures. The relevant failing scripts/configuration

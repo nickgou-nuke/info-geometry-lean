@@ -1,6 +1,6 @@
 # Krein twin duality validation record
 
-## Initial source checkpoint — 2026-11-17
+## Current source checkpoint — 2026-11-17
 
 Status: **draft; native compilation and axiom acceptance pending**.
 
@@ -36,6 +36,26 @@ process was stopped and the maintained checker restarted on the committed
 sources. The canonical shared compiler lock was observed occupied throughout;
 its holder was not interrupted and no replacement lock was used.
 
+## Repaired source identity
+
+The repaired source checkpoint is remote commit
+`2ebcfd88c96c2e3bb0aeaf024e1e538cad04ece6`, corresponding to local commit
+`e246d448ab02eb6432802e56f555e448594e0b65`. Their complete source trees both
+have Git tree ID `2563e3eeb1cfcd827efe781571587370b0fc01d6`.
+The repaired-source placeholder and semantic checks were rerun successfully.
+
+| Owner | Source SHA-256 |
+|---|---|
+| `Krein.ExchangedProjectionPairing` | `c234bf77c54e5e85d1ef4df5d9c320f5a286675a7ea0839ad69f7c0eaf4149e9` |
+| `CliffordWeyl.KreinTwinIdealPairing` | `1baa92eb8838d6ff6d9320600ec4bad087cec6104da2fc602ec9a9e9344a00f0` |
+| `Krein.LoxodromicPairingFlow` | `b999ae34d08c8bfa736db6846e724f618aa7a5740da091589f2eac065ded4412` |
+
+The [second native run, 44055290321](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44055290321),
+checks that exact remote commit. At the reporting checkpoint it was queued,
+with no runner assigned and no new compiler or axiom-audit result. A local
+attempt was likewise waiting on the occupied canonical build lock. Neither
+queue is represented as successful verification.
+
 ## Native verification command
 
 From the independent repository checkout:
@@ -44,7 +64,7 @@ From the independent repository checkout:
 python3 tools/quality/check_clifford_dirac.py \
   --mathlib-root /workspace/scratch/44e3088154ac/mathlib4 \
   --lean /workspace/scratch/50ddde16aff2/runtime/lean-4.34.1-linux/bin/lean \
-  --output /workspace/scratch/0878f2086cff/verification-twin-pairing-current \
+  --output /workspace/scratch/0878f2086cff/verification-twin-pairing-repair1 \
   --incremental \
   --target InfoGeometry.Krein.ExchangedProjectionPairing \
   --target InfoGeometry.CliffordWeyl.KreinTwinIdealPairing \
@@ -71,6 +91,23 @@ fatal: No url found for submodule path 'external_refs/auto-ontology' in .gitmodu
 
 Its later compilation and audit steps were skipped. This is an observed
 repository checkout failure, not a diagnostic from any new Lean declaration.
+
+Other repository-wide jobs on the same initial PR checkpoint had independent
+baseline failures:
+
+| Job | Observed result |
+|---|---|
+| [Post-Build Quality Gate 44053257933](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44053257933) | The maintained locked `lake build` command failed because `external_refs/homotopy-hypothesis-lean4` is absent. The later quality-gate step was skipped. |
+| [Lean style lint 44053257743](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44053257743) | Case-sensitivity checking found the existing `lean/docs` and `lean/Docs` directory collision before Lean style lint ran. |
+| [Sorry Gate 44053257758](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44053257758) | The tracked-source audit reported 878 findings in 91 files, all classified as archive/fixture material. None is one of the three new owners. |
+
+Independent comparison verified that all 91 listed debt files have identical
+Git object IDs at the base revision and repair checkpoint, and that both
+case-colliding directory trees and the root package configurations are
+unchanged. These runs checked merge revision
+`d9c2c4afe44b24827694930957de75db9227c9b5`, containing the initial task head;
+they are not represented as executions of a later repair revision.
+
 The dedicated [Krein twin duality run 44053258035](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44053258035)
 successfully fetched the exact PR source and pinned Mathlib checkout. On source
 commit `69252237b6e1e41879e7127b8ede04a0d986454c`, all 29 pre-existing dependency

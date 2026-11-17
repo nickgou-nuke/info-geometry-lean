@@ -53,7 +53,8 @@ theorem paravector_hermitianCoordinates
   apply Matrix.ext
   intro i j
   apply Complex.ext <;> fin_cases i <;> fin_cases j <;>
-    simp [paravector, hermitianCoordinates, h00, h11, h10] <;> ring
+    simp [paravector, hermitianCoordinates, h00, h11, h10]
+  all_goals ring
 
 /-- The universal even-Clifford map sends `ι(v) γ₀` to its actual
 paravector matrix. -/
@@ -62,8 +63,8 @@ theorem clPlusToPauli_vector_time (v : V14) :
       paravector v := by
   rw [clPlusToPauli_on_pair]
   have htime : paravectorConj (basisVec 0) = 1 := by
-    ext i j <;> fin_cases i <;> fin_cases j <;>
-      simp [paravectorConj, basisVec]
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp [paravectorConj, basisVec]
   rw [htime, mul_one]
 
 /-- Coordinates are read from the entire faithful Gram image, with no

@@ -89,6 +89,7 @@ The rate is a real number, not a Clifford generator. -/
 def projectedGram (γ : ℝ) (R : Matrix m n ℝ) (h : n → ℝ) : Matrix n n ℝ :=
   γ • ((R * energyProjector h)ᵀ * (R * energyProjector h))
 
+omit [DecidableEq m] in
 @[simp] theorem projectedGram_transpose (γ : ℝ) (R : Matrix m n ℝ) (h : n → ℝ) :
     (projectedGram γ R h)ᵀ = projectedGram γ R h := by
   simp [projectedGram, Matrix.transpose_mul, Matrix.transpose_smul]
@@ -118,6 +119,7 @@ theorem projectedGram_symmetric (γ : ℝ) (R : Matrix m n ℝ) (h u v : n → �
       dot_transpose_mulVec _ _ _
     _ = _ := dotProduct_comm _ _
 
+omit [DecidableEq m] in
 @[simp] theorem projectedGram_energy (γ : ℝ) (R : Matrix m n ℝ) (h : n → ℝ) :
     projectedGram γ R h *ᵥ h = 0 := by
   simp [projectedGram, Matrix.smul_mulVec, ← Matrix.mulVec_mulVec]

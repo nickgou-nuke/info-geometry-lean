@@ -36,17 +36,20 @@ open HestenesHermitianMatrixBridge
 
 private theorem adjugate_add_two (A B : HestenesPauliSheetBridge.Sheet) :
     Matrix.adjugate (A + B) = Matrix.adjugate A + Matrix.adjugate B := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [Matrix.adjugate_fin_two]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.adjugate_fin_two, add_comm]
 
 private theorem adjugate_paravector (v : V14) :
     Matrix.adjugate (paravector v) = paravectorConj v := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [Matrix.adjugate_fin_two, paravector, paravectorConj]
 
 private theorem adjugate_paravectorConj (v : V14) :
     Matrix.adjugate (paravectorConj v) = paravector v := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [Matrix.adjugate_fin_two, paravector, paravectorConj]
 
 theorem reverseEven_pair (u v : V14) :
@@ -81,8 +84,8 @@ theorem clPlusToPauli_reverseEven (ψ : ClPlus14) :
             algebraMap ℝ ClPlus14 r := rfl
       rw [hr, hs]
       simp only [clPlusToPauli.commutes, Matrix.algebraMap_eq_diagonal]
-      ext i j <;> fin_cases i <;> fin_cases j <;>
-        simp [Matrix.adjugate_fin_two]
+      ext i j
+      fin_cases i <;> fin_cases j <;> simp
   | add x y hx hy ihx ihy =>
       change clPlusToPauli (reverseEven (⟨x, hx⟩ + ⟨y, hy⟩)) =
         Matrix.adjugate (clPlusToPauli (⟨x, hx⟩ + ⟨y, hy⟩))
@@ -130,20 +133,21 @@ theorem liftComplexCoeff_one_commute (z : ℂ) (ψ : ClPlus14) :
   change liftComplexCoeff z 1 * ψ = ψ * liftComplexCoeff z 1
   apply clPlusToPauli_injective
   simp only [map_mul, clPlusToPauli_liftComplexCoeff, map_one]
-  simp [smul_mul_assoc, mul_smul_comm]
+  rw [smul_mul_assoc, mul_smul_comm, one_mul, mul_one]
 
 theorem liftComplexCoeff_one_mul (z w : ℂ) :
     liftComplexCoeff z 1 * liftComplexCoeff w 1 = liftComplexCoeff (z * w) 1 := by
   apply clPlusToPauli_injective
   simp only [map_mul, clPlusToPauli_liftComplexCoeff, map_one]
-  simp [smul_mul_assoc, mul_smul_comm, smul_smul]
+  rw [smul_mul_assoc, mul_smul_comm, one_mul, smul_smul]
 
 theorem reverseEven_liftComplexCoeff_one (z : ℂ) :
     reverseEven (liftComplexCoeff z 1) = liftComplexCoeff z 1 := by
   apply clPlusToPauli_injective
   rw [clPlusToPauli_reverseEven]
   simp only [clPlusToPauli_liftComplexCoeff, map_one]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [Matrix.adjugate_fin_two]
 
 theorem hestenesAdjoint_liftComplexCoeff_one (z : ℂ) :
@@ -151,7 +155,8 @@ theorem hestenesAdjoint_liftComplexCoeff_one (z : ℂ) :
   apply clPlusToPauli_injective
   rw [clPlusToPauli_hestenesAdjoint, clPlusToPauli_liftComplexCoeff,
     clPlusToPauli_liftComplexCoeff, map_one]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [Matrix.conjTranspose_apply]
 
 theorem gamma_zero_conjugate_liftComplexCoeff_one (z : ℂ) :
@@ -199,12 +204,13 @@ theorem liftComplexCoeff_star_mul_self (z : ℂ) :
     rw [mul_comm, Complex.star_def, Complex.mul_conj, Complex.normSq_apply]
     simp only [pow_two]
   rw [hz]
-  simp [liftComplexCoeff]
+  simp only [liftComplexCoeff, Complex.ofReal_re, Complex.ofReal_im,
+    zero_smul, add_zero]
 
 theorem volumeEven_sq : volumeEven * volumeEven = -(1 : ClPlus14) := by
   apply clPlusToPauli_injective
   rw [map_mul, clPlusToPauli_volumeEven, map_neg, map_one]
-  simp [smul_mul_assoc, mul_smul_comm, smul_smul, Complex.I_sq]
+  simp [smul_smul]
 
 /-- Multiplication by the pseudoscalar negates its previous coefficient. -/
 theorem mul_reverseEven_mul_volumeEven (ψ : ClPlus14) :
@@ -253,10 +259,10 @@ theorem sandwich_gamma_mem_odd (ψ : ClPlus14) (i : Fin 4) :
   have hγ : gamma i ∈ CliffordAlgebra.evenOdd Q14 1 :=
     CliffordAlgebra.ι_mem_evenOdd_one Q14 (basisVec i)
   have hr : CliffordAlgebra.reverse (ψ : Cl14) ∈ CliffordAlgebra.evenOdd Q14 0 :=
-    CliffordAlgebra.reverse_mem_evenOdd_iff.mpr hψ
+    (CliffordAlgebra.reverse_mem_evenOdd_iff (Q := Q14)).2 hψ
   have hp := SetLike.mul_mem_graded hψ hγ
   have hq := SetLike.mul_mem_graded hp hr
-  simpa only [zero_add, add_zero] using hq
+  simpa only [sandwich, zero_add, add_zero] using hq
 
 /-- The right paravector of the current is the native Hermitian Gram product. -/
 theorem diracCurrent_mul_gamma_zero (ψ : ClPlus14) :

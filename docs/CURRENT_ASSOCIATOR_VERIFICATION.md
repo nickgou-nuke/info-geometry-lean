@@ -2,15 +2,29 @@
 
 ## Acceptance status
 
-**Native compilation and the declaration axiom audit are pending.** This is a
-source-reviewed formalization with complete proposed Lean proofs, not a claim of
-kernel-verified completion. Publication remains a draft until the native evidence
-is available and assessed.
+**Native acceptance is pending a repaired-head rerun.** The first exact-head
+workflow, [44058874892](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44058874892),
+reached native compilation at commit
+`4625e30cc8635797e74dad50269cc9b9e2acafd1` and failed. It found five proof/API
+errors in `HestenesCurrentAlgebra`, an over-simplified quaternion norm goal in
+`SplitOctonionScalarPotential`, and a missing definition unfolding in
+`SplitOctonionProjectedDissipation`. `HestenesCurrentGeometry` was blocked by
+its algebra dependency. The selected files also produced 22 warnings.
 
-The local nonblocking build-lock preflight found the repository's shared lock
-occupied by a `clifford-dirac` process. No competing compiler or cache hydration
-was started, and the lock was not deleted, replaced, or bypassed. The upstream
-workflow provides an independent runner while preserving the same lock discipline.
+The repair preserves every theorem statement. It fixes the actual pinned APIs,
+ordered scalar-action rewrites, explicit graded membership and definition
+unfolding, and removes the exact reported unused arguments/section assumptions.
+The failed run's artifact was downloaded, SHA256-verified against GitHub, and
+inspected against the published source hashes; its archive SHA256 is
+`3b963d4cdae0e3dc3b63359908e5cd0b2eebc6b78aa6588ab122787b6ff29acb`.
+A new exact-head run must compile all owners and complete the native axiom audit
+before acceptance. Publication remains a draft while that evidence is pending.
+
+The local nonblocking build-lock preflight again found the repository's shared
+lock occupied by a `clifford-dirac` process. No competing compiler or cache
+hydration was started, and the lock was not deleted, replaced, or bypassed.
+The upstream workflow provides an independent runner while preserving the same
+lock discipline.
 
 ## Exact source scope
 

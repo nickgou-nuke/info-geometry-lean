@@ -26,15 +26,14 @@ namespace SplitOctonion.ScalarPotential
 symmetric, although the split-octonion product is not commutative. -/
 theorem scalar_pairing_symm (x y : SplitOctonion) :
     (x * splitConj y).a.re = (y * splitConj x).a.re := by
-  simp [splitConj, mul_a, Quaternion.re_mul]
+  simp [splitConj, mul_a]
   ring
 
 /-- The scalar sandwich has a fixed bracketing; no associative rewrite of
 the split-octonion product is used. -/
 theorem scalar_sandwich (x u : SplitOctonion) :
     ((x * u) * splitConj x).a.re = normSQ x * u.a.re := by
-  simp [splitConj, normSQ, mul_a, mul_b, Quaternion.re_mul,
-    Quaternion.imI_mul, Quaternion.imJ_mul, Quaternion.imK_mul]
+  simp [splitConj, normSQ, mul_a, mul_b]
   ring
 
 /-- An imaginary middle factor gives the identically zero proposed scalar
@@ -47,15 +46,16 @@ theorem scalar_sandwich_zero (x u : SplitOctonion) (hu : u.a.re = 0) :
 theorem normSQ_add (x y : SplitOctonion) :
     normSQ (x + y) = normSQ x + normSQ y +
       2 * (x * splitConj y).a.re := by
-  simp [normSQ, splitConj, mul_a, Quaternion.re_mul]
+  simp [normSQ, splitConj, mul_a]
   ring
 
 /-- The scalar pairing is nondegenerate on all eight real coordinates. -/
 theorem scalar_pairing_nondegenerate (x : SplitOctonion)
     (hx : ∀ y : SplitOctonion, (x * splitConj y).a.re = 0) : x = 0 := by
   have ha : Quaternion.normSq x.a = 0 := by
-    have h := hx ⟨x.a, 0⟩
-    simpa [splitConj, mul_a, ← normSq_eq_re_mul_star] using h
+    rw [normSq_eq_re_mul_star]
+    simpa only [splitConj, mul_a, neg_zero, star_zero, zero_mul, add_zero]
+      using hx ⟨x.a, 0⟩
   have hb : Quaternion.normSq x.b = 0 := by
     have h := hx ⟨0, x.b⟩
     have hneg : -(Quaternion.normSq x.b) = 0 := by

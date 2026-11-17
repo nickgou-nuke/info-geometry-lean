@@ -83,6 +83,7 @@ def associatorMatrix (a b : κ → SplitOctonion) :
     Matrix (κ × Coordinate) Coordinate ℝ :=
   LinearMap.toMatrix' (associatorFamily a b)
 
+omit [Fintype κ] [DecidableEq κ] in
 theorem associatorMatrix_mulVec (a b : κ → SplitOctonion) (v : Coordinate → ℝ) :
     associatorMatrix a b *ᵥ v = fun p =>
       coordinates (associator (coordinates.symm v) (a p.1) (b p.1)) p.2 := by
@@ -147,7 +148,7 @@ theorem associator_production_pos_iff (γ : ℝ) (hγ : 0 < γ)
     (projectedGram γ (associatorMatrix a b) (coordinates h) *ᵥ coordinates v) ↔ _
   rw [projectedGram_contraction_pos_iff γ hγ, ne_eq,
     associatorMatrix_mulVec_eq_zero_iff]
-  simp only [not_forall]
+  simp only [not_forall, projectedForce]
 
 /-- A concrete existing Onsager interface, with its laws derived from the actual
 associator maps and a nonnegative real rate. -/

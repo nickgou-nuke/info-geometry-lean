@@ -247,6 +247,16 @@ These are static/source evidence. Scoped CI compiles the 19-module repository
 closure, including the new owner, then audits the new owner's declarations.
 Zero warnings are required in that owner.
 
+## Follow-up: quaternion probes and reservoir construction
+
+The later attachment is mapped in
+[the projected-Gram and reservoir supplement](PROJECTED_GRAM_RESERVOIR_CONTRACT.md).
+It adds a distinct quaternion-projected probe form and an explicit pointwise
+reservoir lift, with separate operator types, kernel theorems, and verification
+obligations. It also records the current overlap with PRs #385 and #386.
+The historical missing-owner observations above refer to the earlier source
+snapshot; the supplement supplies the updated comparison.
+
 ## Primary references
 
 - [R1] Dale, Herrero, Morales-Lladosa, *Essential Fierz identities for a fermionic field*, especially §4.2: https://arxiv.org/pdf/2206.00639

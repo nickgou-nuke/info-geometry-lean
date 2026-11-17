@@ -8,6 +8,10 @@ builds on the existing phase-observable owners in upstream
 [PR #372](https://github.com/nickgou-nuke/info-geometry-lean/pull/372), at
 revision `0953827c47dafa198b2ab442b585719cc2ecd9c8`. The PR is stacked on
 `formalize/fourier-dirac-covariance-bridges`; that dependency remains a draft.
+The branch also incorporates upstream compiler-repair revision
+`fd4a9f929a99b17adaeb6f8a3d2aa78141285324`. In particular, the existing
+finite-family commutator theorem retains its corrected explicit sum expansion;
+its statement and all of this extension's geometric-phase contracts are unchanged.
 
 The original attachment is preserved byte for byte in
 [`intake/2026-11-17-real-hestenes-uncertainty.txt`](intake/2026-11-17-real-hestenes-uncertainty.txt).

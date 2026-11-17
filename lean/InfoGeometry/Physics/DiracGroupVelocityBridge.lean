@@ -64,7 +64,7 @@ theorem hasDerivAt_diracPositiveEnergy1D (p m c : ℝ)
         (2 * c ^ 2 * p) p := by
     convert (hasDerivAt_add_const_iff (m ^ 2 * c ^ 4)).mpr
       (HasDerivAt.const_mul (c ^ 2) (HasDerivAt.pow (hasDerivAt_id p) 2))
-      using 1 <;> ring
+      using 1 <;> simp only [Pi.pow_apply, id_eq] <;> ring
   have hroot :
       HasDerivAt (fun q : ℝ => diracPositiveEnergy1D q m c)
         ((2 * c ^ 2 * p) / (2 * diracPositiveEnergy1D p m c)) p :=

@@ -69,6 +69,9 @@ reviews at the stated revision, not a fresh whole-repository certificate.
 | `Geometry/AssociativeGaugeConnection.lean` | Fundamental/adjoint connections, inhomogeneous gauge law, curvature covariance and Bianchi identities | Total algebraic linear maps; a spatial differential realization needs its own domain and calculus. |
 | `Physics/DiracRestChiralTwoSectorBridge.lean` | Native 4-by-4 Hamiltonian square `H(p)^2 = (c²p² + m²c⁴)I` and velocity/commutator identities | A momentum-fiber matrix theorem. |
 | `Physics/FourVectorDiracReadout.lean` | Both directions between algebraic mass shell and a nonzero kernel spinor | Finite symbol, not existence of PDE solutions. |
+| `Quantum/Realification.lean`: `realifyRingHom`, `realify_conjTranspose`, `realify_commutes_internalJ` | Faithful ordered complex-matrix representation as real block matrices, conjugate-transpose compatibility, and commutation with the constructed real phase | At `n = Fin 4`, gives eight real coordinates. The native doubled-Hilbert CLM realization is a separate transport. |
+| `Quantum/RealificationStates.lean` and `Quantum/RealificationCategory.lean`: `realify_mulVec`, `dotProduct_realifyVector`, `realify_posSemidef_iff`, `coordinateIso_naturality` | Actual vector/action intertwiner, positive pairing and matrix positivity preservation/reflection, and a categorical coordinate isomorphism | These prove algebraic compatibility; they do not supply the final continuous Hilbert isometry to `DoubledSpace`. |
+| `Krein/MajoranaBdGSheetBridge.lean`: `nambuDoubledEquiv` | An actual real linear equivalence from eight Nambu coordinates to `DoubledSpace (EuclideanSpace ℝ (Fin 4))` | Reusable carrier map; the bounded consumer search found no composition realizing the Dirac matrix/phase/CLM-adjoint contract. |
 | `QuantumGeometry/Projective/QGT.lean`: `berryCurvature_skewAdjoint_commutator`, `lie_rep_uncertainty_bound` | Normalized complex-Hilbert horizontal Gram tensor, actual skew-adjoint commutator expectation and uncertainty for a supplied skew-adjoint Lie representation | An existing complex bounded-generator endpoint; it does not construct or integrate a particular representation. The new theorem targets the native real doubled carrier. |
 | `Canonical/OperatorialUncertainty.lean` | Positive real doubled-carrier Bessel bound and phase-linear channel inequalities | The previous API did not identify its phase term with the actual observable commutator. |
 | `Quantum/QuantumCramerRaoBound.lean`: `quantum_cramer_rao_bound` | Real finite-matrix SLD bound with `rho = Rᵀ R`, self-adjointness and explicit trace hypotheses | Genuine noncommutative matrix inequality; trace-one normalization and a differentiable density family are not constructed. No universal spacetime Fisher tensor is asserted. |
@@ -92,6 +95,29 @@ on complex matrices, not the Hermitian Minkowski action `X ↦ g X g†`.
 sheets; this does not establish inequivalent Weyl chiralities.
 The super-Poincaré presentation supplies its displayed supercharge relation
 as a field. None of those interfaces by itself constructs emergent spacetime.
+
+### The finite Dirac and real phase carriers
+
+There is already a concrete algebraic realification, with
+
+\[
+\mathcal R(A)=\begin{pmatrix}\Re A&-\Im A\\\Im A&\Re A\end{pmatrix},
+\qquad J=\begin{pmatrix}0&-1\\1&0\end{pmatrix}.
+\]
+
+It preserves ordered multiplication and the adjoint, and satisfies
+`realify A *ᵥ realifyVector z = realifyVector (A *ᵥ z)`.
+The constructed `J` has exactly the sign of native `complex_i`, sending
+`(x,y)` to `(-y,x)`. Thus the four-component complex Dirac matrices already
+have an eight-real-coordinate algebraic action preserving the internal phase.
+
+The remaining bridge to the new uncertainty owner is the positive Hilbert
+transport into `DoubledSpace (EuclideanSpace ℝ (Fin 4))`, together with
+intertwining of the matrix action and identification of the native CLM adjoint.
+The existing `nambuDoubledEquiv` is reusable real-linear carrier infrastructure;
+this source review does not claim that the required combined Hilbert transport
+has already been constructed. The doubled real Zorn carrier in
+`Canonical/ZornCliffordRepresentation.lean` is instead sixteen-dimensional.
 
 ## New exact contracts
 
@@ -303,20 +329,33 @@ explanation, not a freshly certified global declaration DAG.
 
 The new owners have independent source reviews. Source review found correct
 commutator orientations, explicit compatibility conditions, and nonvacuous
-noncommutative models. The first pinned CI kernel run compiled the connection
-bridge and the extracted Gram owner. It reported elaboration errors in the
-Zorn coordinate calculation, phase-operator notation and finite-sum expansion,
-and scalar derivative imports; the uncertainty consumer was consequently
-blocked. Those proof scripts have been repaired without weakening their
-statements. A fresh complete focused kernel run, native axiom collection and
-source gates are pending at this checkpoint.
+noncommutative models. The installed `proof_proxy_staged_gate`, whitespace
+check, strict placeholder audits of all seven changed proof files, and the
+semantic-vacuity gate with `--fail-on warning` passed on the repaired source.
+These source checks do not establish kernel elaboration.
 
-The CI checkout now fetches the exact public revision without traversing
+The first pinned CI kernel run compiled the connection bridge and the
+extracted Gram owner. It reported elaboration errors in the Zorn coordinate
+calculation, phase-operator notation and finite-sum expansion, and scalar
+derivative imports; the uncertainty consumer was consequently blocked.
+Those proof scripts were repaired without weakening their statements in
+source revision `0953827c47dafa198b2ab442b585719cc2ecd9c8`.
+
+[PR #372](https://github.com/nickgou-nuke/info-geometry-lean/pull/372) records
+the latest acceptance status. Its `Fourier Dirac phase bridges (scoped)`
+workflow checks all six new owners, their complete 40-module source closure,
+and every declaration owned by the six targets. The native audit admits only
+`propext`, `Classical.choice`, and `Quot.sound`. The uploaded report records
+source and verifier hashes so that a result can be matched to the actual
+proof sources. A queued run or a source-only pass is not a kernel certificate.
+
+The CI checkout fetches the exact public revision without traversing
 unrelated, incompletely configured external submodules. The verification
-helper and existing gates are unchanged. The local root pre-push check is
-also queued behind the repository's shared build lock.
+helper, existing build gates and dependency pins are unchanged. The local
+root pre-push check also uses the repository's shared build lock.
 
 The existing canonical forwarding owner's full import closure still reaches
-`Architect`; success of the small new closure will not certify that larger
-owner or the root Lake package. Final command results must be recorded here
-before claiming a checked implementation.
+`Architect`; success of the small new closure does not certify that larger
+owner or the root Lake package. The full repository gate is a separate
+acceptance scope, and its outcome must be reported separately from a focused
+kernel/axiom pass.

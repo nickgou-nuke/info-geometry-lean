@@ -27,13 +27,16 @@ open RealSpacetimeQuaternion RealSpacetimeSpinor RealSpacetimeObserver RightPhas
 theorem volume_sq : (volume : Cl14) * (volume : Cl14) = -1 := by
   apply quaternionRep_injective
   simp only [map_mul, quaternionRep_volume, map_neg, map_one]
-  ext i j <;> fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
+  apply Matrix.ext
+  intro i j <;> fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem volume_anticommutes_gamma (i : Fin 4) :
     (volume : Cl14) * gamma i = -(gamma i * (volume : Cl14)) := by
   apply quaternionRep_injective
   simp only [map_mul, map_neg, quaternionRep_volume, quaternionRep_gamma]
-  fin_cases i <;> ext j k <;> fin_cases j <;> fin_cases k <;> ext <;>
+  apply Matrix.ext
+  intro j k
+  fin_cases i <;> fin_cases j <;> fin_cases k <;> ext <;>
     norm_num [vectorMatrix, basisVec, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem volume_commutes_even (x : ClPlus14) : volume * x = x * volume := by
@@ -42,7 +45,8 @@ theorem volume_commutes_even (x : ClPlus14) : volume * x = x * volume := by
   change quaternionRep ((volume : Cl14) * (x : Cl14)) =
     quaternionRep ((x : Cl14) * (volume : Cl14))
   rw [map_mul, map_mul, quaternionRep_volume, quaternionRep_even_shape x]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  apply Matrix.ext
+  intro i j <;> fin_cases i <;> fin_cases j <;>
     simp [evenMatrix, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem time_phase_sq :
@@ -51,28 +55,32 @@ theorem time_phase_sq :
   change quaternionRep ((gamma 0 * (gamma 2 * gamma 1)) *
     (gamma 0 * (gamma 2 * gamma 1))) = _
   simp only [map_mul, map_neg, map_one, quaternionRep_gamma]
-  ext i j <;> fin_cases i <;> fin_cases j <;> ext <;>
+  apply Matrix.ext
+  intro i j <;> fin_cases i <;> fin_cases j <;> ext <;>
     norm_num [vectorMatrix, basisVec, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem time_volume_sq :
     (gamma 0 * (volume : Cl14)) * (gamma 0 * (volume : Cl14)) = 1 := by
   apply quaternionRep_injective
   simp only [map_mul, map_one, quaternionRep_volume, quaternionRep_gamma_zero]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  apply Matrix.ext
+  intro i j <;> fin_cases i <;> fin_cases j <;>
     norm_num [timeMatrix, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem spatial_volume_sq :
     (gamma 3 * (volume : Cl14)) * (gamma 3 * (volume : Cl14)) = -1 := by
   apply quaternionRep_injective
   simp only [map_mul, map_neg, map_one, quaternionRep_volume, quaternionRep_gamma]
-  ext i j <;> fin_cases i <;> fin_cases j <;> ext <;>
+  apply Matrix.ext
+  intro i j <;> fin_cases i <;> fin_cases j <;> ext <;>
     norm_num [vectorMatrix, basisVec, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem phase_mul_sigma_three : (phaseBivector : Cl14) * sigma 2 = (volume : Cl14) := by
   apply quaternionRep_injective
   change quaternionRep ((gamma 2 * gamma 1) * (gamma 3 * gamma 0)) = _
   simp only [map_mul, quaternionRep_gamma, quaternionRep_volume]
-  ext i j <;> fin_cases i <;> fin_cases j <;> ext <;>
+  apply Matrix.ext
+  intro i j <;> fin_cases i <;> fin_cases j <;> ext <;>
     norm_num [vectorMatrix, basisVec, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem volume_mul_sigma_three : (volume : Cl14) * sigma 2 = (phaseBivector : Cl14) := by
@@ -80,13 +88,15 @@ theorem volume_mul_sigma_three : (volume : Cl14) * sigma 2 = (phaseBivector : Cl
   change quaternionRep ((volume : Cl14) * (gamma 3 * gamma 0)) =
     quaternionRep (gamma 2 * gamma 1)
   simp only [map_mul, quaternionRep_gamma, quaternionRep_volume]
-  ext i j <;> fin_cases i <;> fin_cases j <;> ext <;>
+  apply Matrix.ext
+  intro i j <;> fin_cases i <;> fin_cases j <;> ext <;>
     norm_num [vectorMatrix, basisVec, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem time_mul_sigma_three : gamma 0 * sigma 2 = -gamma 3 := by
   apply quaternionRep_injective
   simp only [sigma, map_mul, map_neg, quaternionRep_gamma]
-  ext i j <;> fin_cases i <;> fin_cases j <;> ext <;>
+  apply Matrix.ext
+  intro i j <;> fin_cases i <;> fin_cases j <;> ext <;>
     norm_num [vectorMatrix, basisVec, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem spatial_mul_sigma_three : gamma 3 * sigma 2 = -gamma 0 := by

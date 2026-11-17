@@ -36,7 +36,8 @@ theorem timeProjector_isIdempotentElem : IsIdempotentElem timeProjector := by
   change timeProjector * timeProjector = timeProjector
   apply quaternionRep_injective
   simp only [map_mul, quaternionRep_timeProjector]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  apply Matrix.ext
+  intro i j <;> fin_cases i <;> fin_cases j <;>
     simp [Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem timeProjector_ne_zero : timeProjector ≠ 0 := by
@@ -70,7 +71,8 @@ theorem quaternionRep_second_column_eq_zero {x : Cl14}
 theorem quaternionRep_eq_first_column {x : Cl14}
     (hx : x ∈ timeProjectorLeftIdeal) :
     quaternionRep x = !![quaternionRep x 0 0, 0; quaternionRep x 1 0, 0] := by
-  ext i j
+  apply Matrix.ext
+  intro i j
   fin_cases i <;> fin_cases j
   · rfl
   · exact quaternionRep_second_column_eq_zero hx 0
@@ -83,7 +85,8 @@ theorem matrixPreimage_first_column_mem (p q : Quaternion ℝ) :
   rw [mem_timeProjectorLeftIdeal_iff]
   apply quaternionRep_injective
   simp only [map_mul, quaternionRep_matrixPreimage, quaternionRep_timeProjector]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  apply Matrix.ext
+  intro i j <;> fin_cases i <;> fin_cases j <;>
     simp [Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- Actual first-column coordinates for the native Clifford left ideal. -/
@@ -124,7 +127,8 @@ theorem exists_first_column_ne_zero {x : Cl14}
   apply hx0
   apply quaternionRep_injective
   rw [map_zero]
-  ext i j
+  apply Matrix.ext
+  intro i j
   fin_cases j
   · exact not_not.mp ((not_exists.mp h) i)
   · exact quaternionRep_second_column_eq_zero hx i
@@ -137,7 +141,8 @@ theorem exists_left_mul_eq_timeProjector {x : Cl14}
   refine ⟨matrixPreimage (Matrix.single 0 j (quaternionRep x j 0)⁻¹), ?_⟩
   apply quaternionRep_injective
   simp only [map_mul, quaternionRep_matrixPreimage, quaternionRep_timeProjector]
-  ext i k
+  apply Matrix.ext
+  intro i k
   fin_cases i <;> fin_cases k
   · rw [Matrix.single_mul_apply_same]
     exact inv_mul_cancel₀ hj

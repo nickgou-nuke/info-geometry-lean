@@ -28,7 +28,8 @@ def timeMatrix : QuaternionMatrix := !![1, 0; 0, -1]
 
 @[simp] theorem quaternionRep_gamma_zero : quaternionRep (gamma 0) = timeMatrix := by
   rw [quaternionRep_gamma]
-  ext i j <;> fin_cases i <;> fin_cases j <;> ext <;>
+  apply Matrix.ext
+  intro i j <;> fin_cases i <;> fin_cases j <;> ext <;>
     simp [vectorMatrix, basisVec, timeMatrix]
 
 @[simp] theorem timeMatrix_sq : timeMatrix * timeMatrix = 1 := by
@@ -53,12 +54,14 @@ theorem quaternionRep_reverse (a : Cl14) :
   induction a using CliffordAlgebra.induction with
   | algebraMap r =>
       simp only [CliffordAlgebra.reverse.commutes, quaternionRep.commutes]
-      ext i j <;> fin_cases i <;> fin_cases j <;> ext <;>
+      apply Matrix.ext
+      intro i j <;> fin_cases i <;> fin_cases j <;> ext <;>
         simp [matrixReverse, timeMatrix, Matrix.mul_apply, Fin.sum_univ_two,
           Matrix.star_apply, Algebra.algebraMap_eq_smul_one]
   | ι v =>
       simp only [CliffordAlgebra.reverse_ι, quaternionRep_iota]
-      ext i j <;> fin_cases i <;> fin_cases j <;> ext <;>
+      apply Matrix.ext
+      intro i j <;> fin_cases i <;> fin_cases j <;> ext <;>
         simp [matrixReverse, timeMatrix, vectorMatrix, Matrix.mul_apply,
           Fin.sum_univ_two, Matrix.star_apply]
   | mul a b ha hb =>
@@ -81,7 +84,8 @@ def evenMatrix (p q : Quaternion ℝ) : QuaternionMatrix := !![p, q; -q, p]
 
 theorem evenMatrix_mul (p q r s : Quaternion ℝ) :
     evenMatrix p q * evenMatrix r s = evenMatrix (p * r - q * s) (p * s + q * r) := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  apply Matrix.ext
+  intro i j <;> fin_cases i <;> fin_cases j <;>
     simp [evenMatrix, Matrix.mul_apply, Fin.sum_univ_two] <;> noncomm_ring
 
 private theorem even_shape_add {A B : QuaternionMatrix}
@@ -89,7 +93,8 @@ private theorem even_shape_add {A B : QuaternionMatrix}
     (hB : B = evenMatrix (B 0 0) (B 0 1)) :
     A + B = evenMatrix ((A + B) 0 0) ((A + B) 0 1) := by
   rw [hA, hB]
-  ext i j <;> fin_cases i <;> fin_cases j <;> simp [evenMatrix]
+  apply Matrix.ext
+  intro i j <;> fin_cases i <;> fin_cases j <;> simp [evenMatrix]
 
 private theorem even_shape_mul {A B : QuaternionMatrix}
     (hA : A = evenMatrix (A 0 0) (A 0 1))
@@ -102,7 +107,8 @@ private theorem vector_pair_even_shape (v w : V14) :
     vectorMatrix v * vectorMatrix w =
       evenMatrix ((vectorMatrix v * vectorMatrix w) 0 0)
         ((vectorMatrix v * vectorMatrix w) 0 1) := by
-  ext i j <;> fin_cases i <;> fin_cases j <;> ext <;>
+  apply Matrix.ext
+  intro i j <;> fin_cases i <;> fin_cases j <;> ext <;>
     simp [vectorMatrix, evenMatrix, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
 
 theorem quaternionRep_even_shape (x : ClPlus14) :
@@ -112,7 +118,8 @@ theorem quaternionRep_even_shape (x : ClPlus14) :
   induction x, hx using CliffordAlgebra.even_induction with
   | algebraMap r =>
       rw [quaternionRep.commutes]
-      ext i j <;> fin_cases i <;> fin_cases j <;>
+      apply Matrix.ext
+      intro i j <;> fin_cases i <;> fin_cases j <;>
         simp [evenMatrix, Algebra.algebraMap_eq_smul_one]
   | add x y hx hy ihx ihy =>
       simpa only [map_add] using even_shape_add ihx ihy
@@ -144,7 +151,8 @@ def volume : ClPlus14 := evenPair 0 1 * evenPair 2 3
 @[simp] theorem quaternionRep_volume :
     quaternionRep (volume : Cl14) = !![0, -1; 1, 0] := by
   simp only [volume, Subalgebra.coe_mul, evenPair_val, map_mul, quaternionRep_gamma]
-  ext i j <;> fin_cases i <;> fin_cases j <;> ext <;>
+  apply Matrix.ext
+  intro i j <;> fin_cases i <;> fin_cases j <;> ext <;>
     norm_num [vectorMatrix, basisVec, Matrix.mul_apply, Fin.sum_univ_two]
 
 def spinorOfCoordinates (x : Quaternion ℝ × Quaternion ℝ) : ClPlus14 :=
@@ -155,7 +163,8 @@ theorem quaternionRep_spinorOfCoordinates (x : Quaternion ℝ × Quaternion ℝ)
   simp only [spinorOfCoordinates, Subalgebra.coe_sub, Subalgebra.coe_mul,
     evenQuaternion_val, map_sub, map_mul, quaternionRep_volume,
     quaternionRep_diagonalQuaternion]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  apply Matrix.ext
+  intro i j <;> fin_cases i <;> fin_cases j <;>
     simp [evenMatrix, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem spinorCoordinates_injective : Function.Injective spinorCoordinates := by

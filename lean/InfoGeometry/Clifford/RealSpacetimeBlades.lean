@@ -70,7 +70,8 @@ def bladeMatrix : Fin 16 → QuaternionMatrix
     quaternionRep (blade i) = bladeMatrix i := by
   fin_cases i <;>
     simp only [blade, bladeMatrix, map_one, map_mul, quaternionRep_gamma] <;>
-    ext r c <;> fin_cases r <;> fin_cases c <;> ext <;>
+    apply Matrix.ext <;>
+    intro r c <;> fin_cases r <;> fin_cases c <;> ext <;>
     norm_num [vectorMatrix, basisVec, timeMatrix, quaternionI, quaternionJ,
       quaternionK, Matrix.mul_apply, Fin.sum_univ_two]
 
@@ -160,7 +161,8 @@ def negativeBladeIndices : Finset (Fin 16) := {2, 3, 4, 8, 9, 10, 11, 12, 13, 15
 theorem blade_mul_self (i : Fin 16) :
     blade i * blade i = if i ∈ negativeBladeIndices then -(1 : Cl14) else 1 := by
   fin_cases i <;> apply quaternionRep_injective <;>
-    ext r c <;> fin_cases r <;> fin_cases c <;> ext <;>
+    apply Matrix.ext <;>
+    intro r c <;> fin_cases r <;> fin_cases c <;> ext <;>
     norm_num [map_mul, negativeBladeIndices, quaternionRep_blade, bladeMatrix,
       timeMatrix, quaternionI, quaternionJ, quaternionK,
       Matrix.mul_apply, Fin.sum_univ_two]

@@ -37,13 +37,16 @@ def vectorMatrix : V14 →ₗ[ℝ] QuaternionMatrix where
   toFun v := !![⟨v 0, 0, 0, 0⟩, ⟨0, v 1, v 2, v 3⟩;
                ⟨0, v 1, v 2, v 3⟩, ⟨-v 0, 0, 0, 0⟩]
   map_add' v w := by
-    ext i j <;> fin_cases i <;> fin_cases j <;> ext <;> simp
+    apply Matrix.ext
+    intro i j <;> fin_cases i <;> fin_cases j <;> ext <;> simp
   map_smul' r v := by
-    ext i j <;> fin_cases i <;> fin_cases j <;> ext <;> simp
+    apply Matrix.ext
+    intro i j <;> fin_cases i <;> fin_cases j <;> ext <;> simp
 
 theorem vectorMatrix_sq (v : V14) :
     vectorMatrix v * vectorMatrix v = algebraMap ℝ QuaternionMatrix (Q14 v) := by
-  ext i j <;> fin_cases i <;> fin_cases j <;> ext <;>
+  apply Matrix.ext
+  intro i j <;> fin_cases i <;> fin_cases j <;> ext <;>
     simp [vectorMatrix, Q14_apply, qCoeff, Fin.sum_univ_four,
       Matrix.mul_apply, Fin.sum_univ_two, Algebra.algebraMap_eq_smul_one] <;> ring
 
@@ -68,7 +71,8 @@ def diagonalQuaternion (q : Quaternion ℝ) : Cl14 :=
     quaternionRep (diagonalQuaternion q) = !![q, 0; 0, q] := by
   simp only [diagonalQuaternion, map_add, map_smul, map_one, map_mul,
     quaternionRep_gamma]
-  ext i j <;> fin_cases i <;> fin_cases j <;> ext <;>
+  apply Matrix.ext
+  intro i j <;> fin_cases i <;> fin_cases j <;> ext <;>
     simp [vectorMatrix, basisVec, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
 
 /-- The first diagonal matrix unit in the intrinsic Clifford algebra. -/
@@ -77,7 +81,8 @@ def timeProjector : Cl14 := (1 / 2 : ℝ) • (1 + gamma 0)
 @[simp] theorem quaternionRep_timeProjector :
     quaternionRep timeProjector = !![1, 0; 0, 0] := by
   simp only [timeProjector, map_smul, map_add, map_one, quaternionRep_gamma]
-  ext i j <;> fin_cases i <;> fin_cases j <;> ext <;>
+  apply Matrix.ext
+  intro i j <;> fin_cases i <;> fin_cases j <;> ext <;>
     norm_num [vectorMatrix, basisVec]
 
 /-- The real off-diagonal swap is a product of three spatial generators. -/
@@ -86,7 +91,8 @@ def spatialSwap : Cl14 := -(gamma 1 * gamma 2 * gamma 3)
 @[simp] theorem quaternionRep_spatialSwap :
     quaternionRep spatialSwap = !![0, 1; 1, 0] := by
   simp only [spatialSwap, map_neg, map_mul, quaternionRep_gamma]
-  ext i j <;> fin_cases i <;> fin_cases j <;> ext <;>
+  apply Matrix.ext
+  intro i j <;> fin_cases i <;> fin_cases j <;> ext <;>
     norm_num [vectorMatrix, basisVec, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- An explicit preimage of every quaternion matrix. -/
@@ -101,7 +107,8 @@ theorem quaternionRep_matrixPreimage (A : QuaternionMatrix) :
   simp only [matrixPreimage, map_add, map_mul, map_sub, map_one,
     quaternionRep_timeProjector, quaternionRep_spatialSwap,
     quaternionRep_diagonalQuaternion]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  apply Matrix.ext
+  intro i j <;> fin_cases i <;> fin_cases j <;>
     simp [Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem quaternionRep_surjective : Function.Surjective quaternionRep :=

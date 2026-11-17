@@ -49,8 +49,8 @@ theorem leftRightCommutator_apply_first (y z X : Z) :
     leftRightCommutator (R := ℝ) y z X = _root_.associator X y z := by
   rw [ZornVectorMatrix.zorn_leftRightCommutator_apply]
   exact alternative_associator_cycle
-    ZornVectorMatrix.zorn_left_alternative
-    ZornVectorMatrix.zorn_right_alternative X y z
+    InfoGeometry.Algebra.zorn_left_alternative
+    InfoGeometry.Algebra.zorn_right_alternative X y z
 
 /-- The full, unnormalized 8-by-8 associator Gram form. Bilinearity is
 inherited from the existing linear regular actions and coefficient pairing. -/
@@ -111,7 +111,7 @@ theorem associatorGram_zero_iff_basis (X : Z) :
     apply Finset.sum_eq_zero
     intro j _
     rw [h i j]
-    simp
+    simp only [map_zero, LinearMap.zero_apply]
 
 /-- The two parameter slots of the actual associator form a native bilinear
 map. This is only an arity adapter used for basis extensionality. -/
@@ -149,7 +149,7 @@ theorem associator_basis_zero_iff (X : Z) :
       exact h i j
     intro y z
     change associatorParameters X y z = 0
-    rw [hmap]
+    simp only [hmap, LinearMap.zero_apply]
   · intro h i j
     exact h _ _
 
@@ -160,7 +160,8 @@ theorem canonical_associator_transport (X Y W : CZ) :
       _root_.associator (canonicalVectorEquiv X)
         (canonicalVectorEquiv Y) (canonicalVectorEquiv W) := by
   simp only [Zorn.associatorDefect, canonicalVectorEquiv_sub,
-    canonicalVectorEquiv_mul, _root_.associator_apply]
+    canonicalVectorEquiv_mul, _root_.associator_apply, zvm_mul_def,
+    _root_.sub_eq_add_neg, zvm_add_def, zvm_neg_def, ZornVectorMatrix.sub]
 
 /-- Exact scalar-nucleus characterization on the vector carrier, transported
 from the existing nonzero-associator theorem on the canonical carrier. -/
@@ -182,7 +183,7 @@ theorem associator_zero_iff_scalar (X : Z) :
     refine ⟨r, ?_⟩
     have h := congrArg canonicalVectorEquiv hr
     simpa only [Equiv.apply_symm_apply, canonicalVectorEquiv_smul,
-      canonicalVectorEquiv_one] using h
+      canonicalVectorEquiv_one, zvm_smul_def] using h
   · rintro ⟨r, rfl⟩ y z
     have hs : r • (ZornVectorMatrix.one : Z) = ZornVectorMatrix.scalar r := by
       ext i <;> simp [ZornVectorMatrix.smul, ZornVectorMatrix.one,
@@ -213,7 +214,7 @@ theorem associatorGram_left_kernel_iff_scalar (X : Z) :
     apply Finset.sum_eq_zero
     intro j _
     rw [hX]
-    simp
+    simp only [map_zero, LinearMap.zero_apply]
 
 theorem associatorGram_pos_of_not_scalar {X : Z}
     (hX : ¬ ∃ r : ℝ, X = r • (ZornVectorMatrix.one : Z)) :

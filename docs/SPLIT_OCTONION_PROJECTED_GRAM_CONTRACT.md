@@ -4,7 +4,7 @@ This review covers the complete attachment `Pasted text(20261117-091117).txt`. T
 
 ## 1. Concrete new construction
 
-The isolated candidate `ProjectedGramDissipation.lean` uses namespace `InfoGeometry.Analysis.ProjectedGramDissipation`. Let `H` and `F` be complete real inner-product spaces, let `ι` be a finite index type, and let `R i : H →L[ℝ] F` be actual bounded linear maps. Define
+The implementation `ProjectedGramDissipation.lean` uses namespace `InfoGeometry.Analysis.ProjectedGramDissipation`. Let `H` and `F` be complete real inner-product spaces, let `ι` be a finite index type, and let `R i : H →L[ℝ] F` be actual bounded linear maps. Define
 
 \[
 P_h=\operatorname{proj}_{(\mathbb Rh)^\perp},\qquad
@@ -54,6 +54,8 @@ The bounded reuse search found no existing owner proving this complete projected
 | `associatorDissipator_isPositive`, `associatorDissipator_energy` | Derives positivity for `γ ≥ 0` and annihilation of the energy direction. |
 | `inner_associatorDissipator_self` | Gives the sum of squared positive coordinate norms of the actual projected associators. |
 | `inner_associatorDissipator_self_eq_zero_iff`, `associatorDissipator_apply_eq_zero_iff` | For `γ ≠ 0`, zero quadratic value or zero operator action is equivalent to every projected associator vanishing. |
+| `QuaternionPairWitness.associator_j_ell_iell`, `associator_j_ell_iell_ne_zero` | Computes `[j,ℓ,iℓ] = -2k ≠ 0` in the existing quaternion-pair split-octonion model. |
+| `QuaternionPairWitness.associatorMap_ell_iell_apply_j_ne_zero`, `associatorMap_ell_iell_ne_zero` | Transports the concrete nonzero value through any supplied linear coordinate equivalence, proving the actual bounded associator operator is nonzero. |
 
 A concrete existing coordinate choice is `InfoGeometry.Canonical.splitOctonionDoubledQuaternionEquiv` in [SplitOctonionBogoliubovCarrierBridge.lean](https://github.com/nickgou-nuke/info-geometry-lean/blob/20a3bfeaa0ddb6e3f00b31dff874eddeec72827c/lean/InfoGeometry/Canonical/SplitOctonionBogoliubovCarrierBridge.lean). It maps the root split-octonion type to the positive L² product of two four-dimensional Euclidean spaces, and its owner supplies finite dimensionality. The ordinary product `E4 × E4` in that file is an intermediate coordinate space; the positive Hilbert carrier is `WithLp 2 (E4 × E4)`. The minimal adapter does not import the full carrier-bridge owner. This keeps the coordinate choice explicit without duplicating its construction or identifying the positive norm with the split composition form.
 
@@ -99,6 +101,8 @@ take `j = (j,0)`, `ℓ = (0,1)`, and `iℓ = (0,i)`. Then
 \]
 
 The vector `j` lies in the quaternion subalgebra. Thus allowing the generator indices to range over all seven ambient imaginary directions does not give zero associator Gram dissipation on that subalgebra. A sufficient corrected condition is that the projected direction and both generator arguments belong to the same associative subalgebra. The exact general condition is the joint-kernel statement in the candidate.
+
+The adapter now includes this calculation in `QuaternionPairWitness`, using the existing split-octonion multiplication and native quaternion component equalities. The nonzero operator conclusion follows from its value at the transported `j`; it is not an assumed field. This witness concerns the unprojected associator map. Positivity or strict positivity after an energy projection still requires the stated rate and projected-image conditions.
 
 ## 4. Dynamics and statistical obligations
 

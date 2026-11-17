@@ -110,4 +110,49 @@ theorem associatorDissipator_apply_eq_zero_iff
     (ProjectedGramDissipation.dissipator_apply_eq_zero_iff γ hγ h
       (fun p : ι × ι => associatorMap e (g p.1) (g p.2)) x)
 
+namespace QuaternionPairWitness
+
+/-- The quaternion `j` in the first component of the existing pair model. -/
+def j : SplitOctonion := ⟨⟨0, 0, 1, 0⟩, 0⟩
+
+/-- The doubling direction in the existing pair model. -/
+def ell : SplitOctonion := ⟨0, 1⟩
+
+/-- The product `i * ell`, written in the existing pair coordinates. -/
+def iell : SplitOctonion := ⟨0, ⟨0, 1, 0, 0⟩⟩
+
+/-- The quaternion `k` in the first component of the existing pair model. -/
+def k : SplitOctonion := ⟨⟨0, 0, 0, 1⟩, 0⟩
+
+/-- The exact ambient associator is nonzero despite `j` having zero second
+quaternion component. The calculation reduces to native real components. -/
+theorem associator_j_ell_iell :
+    SplitOctonion.associator j ell iell = (-2 : ℝ) • k := by
+  apply SplitOctonion.ext <;>
+    apply QuaternionAlgebra.ext <;>
+    norm_num [SplitOctonion.associator, j, ell, iell, k,
+      SplitOctonion.mul_a, SplitOctonion.mul_b]
+
+theorem associator_j_ell_iell_ne_zero :
+    SplitOctonion.associator j ell iell ≠ 0 := by
+  intro hzero
+  have hk := congrArg (fun z : SplitOctonion => z.a.imK) hzero
+  rw [associator_j_ell_iell] at hk
+  norm_num [k] at hk
+
+theorem associatorMap_ell_iell_apply_j_ne_zero
+    (e : SplitOctonion ≃ₗ[ℝ] H) :
+    associatorMap e ell iell (e j) ≠ 0 := by
+  intro hzero
+  rw [associatorMap_apply_coordinate] at hzero
+  exact associator_j_ell_iell_ne_zero (e.map_eq_zero_iff.mp hzero)
+
+theorem associatorMap_ell_iell_ne_zero
+    (e : SplitOctonion ≃ₗ[ℝ] H) : associatorMap e ell iell ≠ 0 := by
+  intro hzero
+  apply associatorMap_ell_iell_apply_j_ne_zero e
+  simp [hzero]
+
+end QuaternionPairWitness
+
 end InfoGeometry.Analysis.SplitOctonionProjectedGram

@@ -153,10 +153,12 @@ def loxodromicIsometryEquiv
       map_add, smul_add]
     module
   map_smul' c x := by
-    change realLoxodromicAction K J t θ (c • x) = c • realLoxodromicAction K J t θ x
-    simp only [realLoxodromicAction, realBoostAction, realRotorAction,
-      map_smul, smul_add, smul_smul]
-    module
+    let boost : Module.End ℝ V :=
+      Real.cosh t • LinearMap.id + Real.sinh t • K
+    let rotor : Module.End ℝ V :=
+      Real.cos θ • LinearMap.id + Real.sin θ • J
+    change (boost.comp rotor) (c • x) = c • (boost.comp rotor) x
+    exact (boost.comp rotor).map_smul c x
   map_app' := realLoxodromicAction_pairing B K J hK hJ hKB hJB t θ
 
 /-- A common elliptic rotation preserves the positive boost eigenspace. -/

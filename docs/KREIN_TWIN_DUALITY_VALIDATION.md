@@ -72,17 +72,38 @@ before normalization. No theorem conclusion, noncommutative product order,
 carrier, dependency pin, or acceptance rule is weakened.
 
 The candidates were independently proposed and parent-reviewed against the
-complete native goal states. Native acceptance of this repair remains pending.
+complete native goal states. The exact remote repair commit
+`6d1af173f79dcbd8af1e56e461ba4079492d8409` was checked by
+[run 44087804066](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44087804066).
+Both `ExchangedProjectionPairing` and `KreinTwinIdealPairing` compiled with zero
+warnings. The flow owner had zero warnings and one remaining scalar-linearity
+error; the audit was not reached. All 29 unchanged dependency owners compiled.
 The prior local waiting attempt produced no environment, compiler log, or
 report, and its process session is no longer registered; it is not verification
 evidence. A fresh local attempt must use the current source snapshot and the
 same occupied shared lock.
 
-| Current owner | Source SHA-256 |
+| Second-repair owner | Source SHA-256 |
 |---|---|
 | `Krein.ExchangedProjectionPairing` | `c234bf77c54e5e85d1ef4df5d9c320f5a286675a7ea0839ad69f7c0eaf4149e9` |
 | `CliffordWeyl.KreinTwinIdealPairing` | `826ea74e4f30788d6c37ccd276dad7c498418aec5e00c204b05cbf2cf221e674` |
 | `Krein.LoxodromicPairingFlow` | `41804fce487d282c6e05deb1a36a721c29770b7bb8622fd887fb76d697f776b5` |
+
+## Third proof repair
+
+The remaining flow proof now identifies the boost and rotor as native real
+endomorphisms, and proves scalar preservation using `LinearMap.map_smul` on
+their composition. The preceding simplification had left an addition inside
+the outer endomorphism opaque to module normalization. No declaration type
+or mathematical hypothesis is changed. This source repair still requires
+native compilation and the complete declaration audit.
+
+The second-repair local attempt acquired the canonical lock but failed with
+`No space left on device` before compiling any module. Its own later retry
+remained waiting, with no compiler process or native artifacts, and was stopped
+once the remote diagnostic made that snapshot obsolete. The occupied lock's
+other holder was not interrupted. Task-owned clean source worktrees were made
+sparse to recover storage; no dependency cache was removed.
 
 ## Native verification command
 
@@ -92,7 +113,7 @@ From the independent repository checkout:
 python3 tools/quality/check_clifford_dirac.py \
   --mathlib-root /workspace/scratch/44e3088154ac/mathlib4 \
   --lean /workspace/scratch/50ddde16aff2/runtime/lean-4.34.1-linux/bin/lean \
-  --output /workspace/scratch/0878f2086cff/verification-twin-pairing-repair2 \
+  --output /workspace/scratch/0878f2086cff/verification-twin-pairing-repair3 \
   --incremental \
   --target InfoGeometry.Krein.ExchangedProjectionPairing \
   --target InfoGeometry.CliffordWeyl.KreinTwinIdealPairing \

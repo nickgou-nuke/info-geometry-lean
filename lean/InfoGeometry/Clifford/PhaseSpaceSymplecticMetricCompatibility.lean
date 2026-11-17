@@ -54,7 +54,9 @@ theorem neutralOmega_compRight_neg_phase (G : MetricDatum E) :
 theorem neutralOmega_para_antisymplectic (X Y : PhaseSpaceCarrier E) :
     neutralOmega (neutralParaInvolution X) (neutralParaInvolution Y) =
       -neutralOmega X Y := by
-  simp [sub_eq_add_neg]
+  rw [neutralOmega_apply, neutralOmega_apply]
+  change (-Y.2 X.1) - (-X.2 Y.1) = -(Y.2 X.1 - X.2 Y.1)
+  rw [_root_.neg_sub_neg, _root_.neg_sub]
 
 /-- The positive-sign complex endomorphism preserves the common symplectic form. -/
 theorem neg_phase_symplectic (G : MetricDatum E) (X Y : PhaseSpaceCarrier E) :
@@ -72,13 +74,15 @@ theorem neg_phase_symplectic (G : MetricDatum E) (X Y : PhaseSpaceCarrier E) :
 /-- The ordered complex-para product is the already constructed polarization. -/
 theorem neg_phase_mul_para (G : MetricDatum E) :
     (-phase G) * neutralParaInvolution = (ofMetric G).polarization := by
-  rw [neg_mul, phase, para_polarization_anticommute, neg_mul, neg_neg]
-  rw [mul_assoc, neutralParaInvolution_sq, mul_one]
+  rw [_root_.neg_mul, phase, para_polarization_anticommute,
+    _root_.neg_mul, _root_.neg_neg]
+  rw [_root_.mul_assoc, neutralParaInvolution_sq, _root_.mul_one]
 
 /-- Reversing the order negates the same polarization. -/
 theorem para_mul_neg_phase (G : MetricDatum E) :
     neutralParaInvolution * (-phase G) = -(ofMetric G).polarization := by
-  rw [mul_neg, phase, ← mul_assoc, neutralParaInvolution_sq, one_mul]
+  rw [_root_.mul_neg, phase, ← _root_.mul_assoc,
+    neutralParaInvolution_sq, _root_.one_mul]
 
 section Nondegenerate
 
@@ -91,7 +95,7 @@ theorem generalizedMetric_para_isometry (G : MetricDatum E)
       (ofMetric G).generalizedMetricForm X Y := by
   have ha : (-phase G) * neutralParaInvolution =
       -(neutralParaInvolution * (-phase G)) := by
-    rw [neg_phase_mul_para, para_mul_neg_phase, neg_neg]
+    rw [neg_phase_mul_para, para_mul_neg_phase, _root_.neg_neg]
   have h := (isometry_iff_anticommute (neutralOmega (E := E))
     neutralOmega_nondegenerate.2 (-phase G) neutralParaInvolution
     neutralParaInvolution_sq neutralOmega_para_antisymplectic).mpr ha
@@ -104,11 +108,11 @@ theorem neutral_to_generalized_intertwiner_iff (G : MetricDatum E)
     (canonicalNeutralBilin (E := E)).compLeft T = (ofMetric G).generalizedMetricForm ↔
       T = (ofMetric G).polarization := by
   have hI : (-phase G) * (-phase G) = -1 := by
-    rw [neg_mul_neg, phase_sq]
+    rw [_root_.neg_mul_neg, phase_sq]
   have h := metric_intertwiner_unique (neutralOmega (E := E))
     neutralOmega_nondegenerate hI neutralParaInvolution_sq (neg_phase_symplectic G) T
   rw [neutralOmega_compLeft_para, neutralOmega_compRight_neg_phase,
-    para_mul_neg_phase, neg_neg] at h
+    para_mul_neg_phase, _root_.neg_neg] at h
   exact h
 
 end Nondegenerate

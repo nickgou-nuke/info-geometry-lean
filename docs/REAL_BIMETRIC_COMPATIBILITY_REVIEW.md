@@ -135,3 +135,41 @@ not accepted.
 
 This focused workflow does not certify the root Lake package or
 `InfoGeometry.All`. Those gates remain required separately.
+
+## Native elaboration repair, 2026-11-17
+
+The reattached `Pasted text(20261117-125255).txt` has the same 33,409-byte
+content and SHA256 as the original intake recorded in the contract. The
+continuation therefore repairs this existing PR rather than creating another
+owner for the same statements.
+
+The [first focused native run](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44065838743)
+checked source `bf4d94533f76834e325b5c36725fb76f00481260`. Its downloaded
+evidence ZIP was verified against SHA256
+`70d9a2c89ebbf78fe4333d3b6a593a2d9946ecf12375b6cbb82c0d7afda83bae`.
+The general owner compiled with a deprecated-import warning; the oblique
+owner failed to match a transported `Matrix.toLin'` equality to its bundled
+endomorphism target; the phase-space consumer had an additive rearrangement
+goal and rewrites resolving to specialized imported negation lemmas.
+The native axiom audit was not reached in that run.
+
+The repair preserves every one of the 53 theorem statements and all five
+definitions:
+
+- Replace the deprecated real-number forwarding import with its native
+  `Mathlib.Basic.Real.Basic` owner at the unchanged Mathlib pin.
+- Expose the actual `Matrix.toLin'` compositions and identity in the
+  anticommutator transport, retaining both ordered products.
+- Qualify the intended root ring identities in the phase-space consumer.
+- Expand the two form-evaluation readbacks through their native owner
+  lemmas before simplifying their scalar expressions.
+- Remove only the tactic sequencing and unused simplifier arguments
+  identified by the failed native run.
+
+The explicit form readbacks also resolve the earlier skeletal/trivial-surface
+heuristic findings without changing the scanner or any theorem contract.
+The renewed semantic audit with `--fail-on warning` reports zero findings.
+Independent source review, the installed commit hook, the focused compiler
+and complete axiom audit, and the root integration gate remain separate
+checks. The PR records their latest outcomes and exact checked revisions;
+this repair history does not itself assert a native or whole-package pass.

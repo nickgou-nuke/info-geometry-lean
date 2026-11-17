@@ -46,13 +46,14 @@ def obliqueMatrix (a : ℝ) : Mat2 :=
 theorem obliqueMatrix_eq (a : ℝ) : obliqueMatrix a = !![1, a; 0, -1] := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [obliqueMatrix, K_mat, J_mat, I_mat] <;> ring
+    (simp [obliqueMatrix, K_mat, J_mat, I_mat]; ring)
 
 /-- The existing symplectic form, bundled by the native matrix-to-form equivalence. -/
 def omega : LinearMap.BilinForm ℝ R2 := Matrix.toBilin' I_mat
 
 @[simp] theorem omega_apply (x y : R2) : omega x y = omega2 x y := by
-  simp [omega, Matrix.toBilin'_apply, I_mat, Fin.sum_univ_two, omega2, sub_eq_add_neg]
+  rw [omega, Matrix.toBilin'_apply]
+  simp [I_mat, Fin.sum_univ_two, omega2, sub_eq_add_neg]
 
 /-- Negating the existing elliptic seed gives positivity in the right-slot convention. -/
 def complexOp : Module.End ℝ R2 := Matrix.toLin' (-I_mat)
@@ -160,11 +161,13 @@ theorem matrix_anticommutator (a : ℝ) :
     (-I_mat) * obliqueMatrix a + obliqueMatrix a * (-I_mat) = a • (1 : Mat2) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [I_mat, obliqueMatrix_eq, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [I_mat, obliqueMatrix_eq]
 
 /-- Transport the ordered matrix identity to native endomorphisms. -/
 theorem operator_anticommutator (a : ℝ) :
     complexOp * obliqueOp a + obliqueOp a * complexOp = a • (1 : Module.End ℝ R2) := by
+  change (-I_mat).toLin'.comp (obliqueMatrix a).toLin' +
+    (obliqueMatrix a).toLin'.comp (-I_mat).toLin' = a • LinearMap.id
   have h := congrArg (fun M : Mat2 => Matrix.toLin' M) (matrix_anticommutator a)
   simpa only [map_add, map_smul, Matrix.toLin'_mul, Matrix.toLin'_one] using h
 

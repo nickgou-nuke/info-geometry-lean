@@ -230,7 +230,15 @@ Acceptance of the new owner requires an exact source revision, native elaboratio
 of its actual dependency closure, theorem/axiom evidence, and independent review
 of carrier fidelity and nonvacuity. A source-only gate or scoped CI on another
 PR cannot discharge these obligations. Whole-root failures remain separately visible.
-At this document's drafting stage, the new Gram owner has no claimed native result.
+The [first focused native run](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44058459909)
+compiled the 18 existing dependency owners and failed in the new Gram owner.
+The diagnostics concern the namespace of the alternative laws, zero linear-map
+evaluation, and compatibility between native operations and the explicit Zorn
+operations. The repair qualifies the actual alternative-law owners and uses
+the existing `zvm_*_def` compatibility lemmas with controlled simplification.
+Independent source review confirmed that the theorem statements, hypotheses,
+full product, and probe family remain unchanged. A successful fresh native
+result and axiom audit are still required; source review is not acceptance.
 Reported preparation checks passed: staged proof-proxy gate, strict placeholder
 audit, semantic-vacuity error gate, and workflow syntax/coverage/permissions checks.
 The placeholder audit has no hard findings and one soft finding on `basisIndex_card`,
@@ -238,6 +246,16 @@ which uses ordinary kernel `decide`; the semantic-vacuity audit has zero finding
 These are static/source evidence. Scoped CI compiles the 19-module repository
 closure, including the new owner, then audits the new owner's declarations.
 Zero warnings are required in that owner.
+
+## Follow-up: quaternion probes and reservoir construction
+
+The later attachment is mapped in
+[the projected-Gram and reservoir supplement](PROJECTED_GRAM_RESERVOIR_CONTRACT.md).
+It adds a distinct quaternion-projected probe form and an explicit pointwise
+reservoir lift, with separate operator types, kernel theorems, and verification
+obligations. It also records the current overlap with PRs #385 and #386.
+The historical missing-owner observations above refer to the earlier source
+snapshot; the supplement supplies the updated comparison.
 
 ## Primary references
 

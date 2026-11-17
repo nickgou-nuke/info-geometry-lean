@@ -49,8 +49,8 @@ theorem leftRightCommutator_apply_first (y z X : Z) :
     leftRightCommutator (R := ℝ) y z X = _root_.associator X y z := by
   rw [ZornVectorMatrix.zorn_leftRightCommutator_apply]
   exact alternative_associator_cycle
-    zorn_left_alternative
-    zorn_right_alternative X y z
+    InfoGeometry.Algebra.zorn_left_alternative
+    InfoGeometry.Algebra.zorn_right_alternative X y z
 
 /-- The full, unnormalized 8-by-8 associator Gram form. Bilinearity is
 inherited from the existing linear regular actions and coefficient pairing. -/
@@ -160,9 +160,8 @@ theorem canonical_associator_transport (X Y W : CZ) :
       _root_.associator (canonicalVectorEquiv X)
         (canonicalVectorEquiv Y) (canonicalVectorEquiv W) := by
   simp only [Zorn.associatorDefect, canonicalVectorEquiv_sub,
-    canonicalVectorEquiv_mul, _root_.associator_apply]
-  simp only [zvm_mul_def, _root_.sub_eq_add_neg, zvm_add_def, zvm_neg_def,
-    ZornVectorMatrix.sub]
+    canonicalVectorEquiv_mul, _root_.associator_apply, zvm_mul_def,
+    _root_.sub_eq_add_neg, zvm_add_def, zvm_neg_def, ZornVectorMatrix.sub]
 
 /-- Exact scalar-nucleus characterization on the vector carrier, transported
 from the existing nonzero-associator theorem on the canonical carrier. -/

@@ -1,4 +1,4 @@
-name: Full real Zorn associator Gram kernel check
+name: Zorn associator Grams and GENERIC reservoir kernel check
 
 on:
   pull_request:
@@ -22,11 +22,21 @@ on:
       - 'lean/InfoGeometry/Canonical/GunaydinGurseyTripleProducts.lean'
       - 'lean/InfoGeometry/Canonical/CattoGurseySplitBasis.lean'
       - 'lean/InfoGeometry/Algebra/ZornAssociatorGram.lean'
+      - 'lean/InfoGeometry/Algebra/ZornQuaternionAssociatorGram.lean'
+      - 'lean/InfoGeometry/Thermo/GenericMetriplecticFlow.lean'
+      - 'lean/InfoGeometry/Thermo/BilinearMetriplecticReduction.lean'
+      - 'lean/InfoGeometry/Thermo/GenericReservoirLift.lean'
       - 'tools/quality/check_clifford_dirac.py'
       - 'tools/quality/reviewed_audit_source.py'
       - 'tools/quality/check_reviewed_prs.py'
       - 'tools/quality/placeholder_audit.py'
       - 'tools/quality/semantic_vacuity_gate.py'
+      - 'tools/quality/semantic_vacuity_patterns.json'
+      - 'tools/quality/audit_constructivity.py'
+      - 'tools/quality/common.py'
+      - 'tools/pathing.py'
+      - 'tools/__init__.py'
+      - 'tools/quality/__init__.py'
       - 'tools/build_lock.py'
       - 'lean-toolchain'
       - 'lake-manifest.json'
@@ -45,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      GRAM_TARGETS: '["InfoGeometry.Algebra.ZornAssociatorGram"]'
+      GRAM_TARGETS: '["InfoGeometry.Algebra.ZornAssociatorGram", "InfoGeometry.Algebra.ZornQuaternionAssociatorGram", "InfoGeometry.Thermo.GenericReservoirLift"]'
     steps:
       - name: Fetch exact source without submodule traversal
         shell: bash

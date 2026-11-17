@@ -1,6 +1,6 @@
 # Projected full Zorn Gram: source and verification review
 
-Date: 2026-11-17. This is a draft extension of [PR #384](https://github.com/nickgou-nuke/info-geometry-lean/pull/384), pinned at `6a0971cfb93e614ecccd29a44274f9bbf98706ae`, whose parent is main `08c34e03f610b452e03422037949196dc7d92d6d`.
+Date: 2026-11-17. This is a draft extension of [PR #384](https://github.com/nickgou-nuke/info-geometry-lean/pull/384), now integrated with current parent `26b70f741356e387695bd3c9b71694599cb1c2a3`, which advances the original `6a0971cfb93e614ecccd29a44274f9bbf98706ae` base. Main remains `08c34e03f610b452e03422037949196dc7d92d6d`.
 
 **Disposition:** the first dedicated projected-Gram run compiled 23 of 24 repository modules. The base Gram target compiled with one unused-simp warning; the projected owner reported two extensionality errors and zero warnings. All three diagnostics have minimal proof-only repairs below. Fresh complete native elaboration, zero target warnings, compiled declaration-axiom acceptance, and broader integration remain outstanding. No native pass is inferred from source review or publication.
 
@@ -8,7 +8,7 @@ Date: 2026-11-17. This is a draft extension of [PR #384](https://github.com/nick
 
 | File | SHA-256 | Scope |
 |---|---|---|
-| `lean/InfoGeometry/Algebra/ZornAssociatorGram.lean` | `cda02d35a39993ff1d37a6c364ed7d2cd1272da4ddcc591ad3cec4989ffac548` | Repair seven actual elaboration errors in the existing full-family Gram owner; preserve every declaration, statement, definition, carrier and import |
+| `lean/InfoGeometry/Algebra/ZornAssociatorGram.lean` | `38f269a2ee26a3a9be53a0b0769df4aace60601ec7b611328513166f693ffa97` | Retain the current parent owner and remove only its CI-confirmed unused simp argument; preserve every declaration, statement, definition, carrier and import |
 | `lean/InfoGeometry/Algebra/ZornProjectedAssociatorGram.lean` | `94793cf5c0651799a086a6ffc379818516ac0cc5f4f12dbe4f50a38a69f2aca6` | Construct the energy projection and compressed bilinear form; prove the exact quadratic zero set and left radical, including both trace cases and zero energy |
 | `docs/sources/zorn_projected_gram_intake_20261117.txt` | `1fef0d88c605c9d59f6590503b776362454f6b30b5022bbdec25dc1b12960e48` | Preserve the complete 36,565-byte supplied input without normalization |
 | `.github/workflows/zorn-projected-associator-gram.yml` | `0a377941312fb42c5359a0e47394fea861b24b9a93d64c3938022905fc5f4a6c` | Dedicated fresh native/source acceptance for both changed owners |
@@ -57,7 +57,7 @@ The compiled parent dependencies also reported 67 baseline warnings: 27 in `Zorn
 
 ## 4. Actual scoped source checks
 
-Receipt: `/workspace/scratch/a6c715447467/verification/zorn-projected-source/receipt.json`. It binds both current Lean hashes to the following actual commands and exit statuses.
+Receipt: `/workspace/scratch/a6c715447467/verification/zorn-projected-current-base-source/receipt.json`. It binds both current Lean hashes to the following actual commands and exit statuses.
 
 | Check | Observed result |
 |---|---|
@@ -95,3 +95,13 @@ No merge is requested by this draft, and the parent PR's unresolved native accep
 Artifact `14332948774` has ZIP SHA-256 `2abeeb35c572b2b3bc8d719888481294fa376f37754671637fcf2403f51e8ec7`. Both target files were reconciled byte-for-byte across the artifact, exact remote head, and local checkout. Inverse substitutions reconstruct both original sources exactly. Every statement, hypothesis, definition, import, and other proof remains unchanged.
 
 The run also recorded 69 warnings in unchanged dependency owners. It failed before the compiled declaration-axiom audit. These diagnostics do not establish native acceptance; a fresh complete run is required for the repaired source hashes in the current identity table. The four scoped source checks were repeated for the repair; their advisory findings remain the disclosed ones above.
+
+## 8. Current-parent integration
+
+The parent branch advanced from `6a0971cfb93e614ecccd29a44274f9bbf98706ae` through `534fec27c21a020d8d35f98f0d9b8d6e933381fc` to `26b70f741356e387695bd3c9b71694599cb1c2a3`. The earlier dirty mergeability report was caused by this branch advance; a metadata refresh exposed the current base. Both intervening raw commit objects, all seven changed blobs, and their tree identities were verified before integration.
+
+Only `ZornAssociatorGram.lean` changed on both branches. Resolution takes the current parent's exact owner source and removes only `LinearMap.zero_apply` at the CI-confirmed unused-argument location. Its qualified alternative-law names and combined canonical transport simplification are preserved. Every upstream addition, including `ZornQuaternionAssociatorGram`, `GenericReservoirLift`, their contract, and expanded parent workflow, remains byte-for-byte unchanged.
+
+The projected owner keeps SHA-256 `94793cf5c0651799a086a6ffc379818516ac0cc5f4f12dbe4f50a38a69f2aca6`. The integrated Gram has SHA-256 `38f269a2ee26a3a9be53a0b0769df4aace60601ec7b611328513166f693ffa97`. All four scoped source gates were repeated with the same thresholds, and the actual maintained resolver still returns the 24-module closure for the two selected targets. The inherited parent additions are not imported by those two targets and are not certified by this focused workflow.
+
+The normal commit hook checks the full staged integration after the unchanged parent import sources are materialized. Publication retains both histories through an ordinary forward branch update. Fresh native acceptance is still required; neither the failed run on older bytes nor source review accepts the parent's revised proof scripts.

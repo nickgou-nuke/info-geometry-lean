@@ -192,6 +192,7 @@ import InfoGeometry.Canonical.ParaKahlerMaurerCartanQGT
 import InfoGeometry.Canonical.LogosPartiturePoset
 import InfoGeometry.Canonical.ChiralCausalCone
 import InfoGeometry.Canonical.HestenesClPlus14
+import InfoGeometry.Canonical.HestenesNativeDiracCurrent
 import InfoGeometry.Canonical.TwoSheetThreeColorWeylFinite
 import InfoGeometry.Canonical.HestenesPauliSheetBridgeFinite
 import InfoGeometry.Canonical.A2QutritCartanDecomposition

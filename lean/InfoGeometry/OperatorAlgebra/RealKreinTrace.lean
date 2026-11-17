@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility
-import Mathlib.Basic.Real.Star
+import Mathlib.Algebra.Order.Star.Real
 import Mathlib.LinearAlgebra.Matrix.ConjTranspose
 import Mathlib.LinearAlgebra.Matrix.PosDef
 import Mathlib.LinearAlgebra.Matrix.Trace
@@ -51,6 +51,7 @@ theorem parity_add (η A B : Matrix n n ℝ) :
     parity η (A + B) = parity η A + parity η B := by
   simp only [parity, mul_add, add_mul]
 
+omit [DecidableEq n] in
 theorem parity_sub (η A B : Matrix n n ℝ) :
     parity η (A - B) = parity η A - parity η B := by
   simp only [parity, mul_sub, sub_mul]
@@ -75,6 +76,7 @@ theorem parity_involutive (η : Matrix n n ℝ) (hη : η * η = 1)
       simp only [parity, mul_assoc]
     _ = A := by rw [hη, one_mul, mul_one]
 
+omit [DecidableEq n] in
 theorem parity_transpose (η : Matrix n n ℝ) (hsym : ηᵀ = η)
     (A : Matrix n n ℝ) : (parity η A)ᵀ = parity η Aᵀ := by
   simp only [parity, transpose_mul, hsym, mul_assoc]
@@ -190,11 +192,13 @@ def evenPart (η A : Matrix n n ℝ) : Matrix n n ℝ :=
 def oddPart (η A : Matrix n n ℝ) : Matrix n n ℝ :=
   (1 / 2 : ℝ) • (A - parity η A)
 
+omit [DecidableEq n] in
 theorem evenPart_add_oddPart (η A : Matrix n n ℝ) :
     evenPart η A + oddPart η A = A := by
   dsimp [evenPart, oddPart]
   module
 
+omit [DecidableEq n] in
 theorem parity_eq_evenPart_sub_oddPart (η A : Matrix n n ℝ) :
     parity η A = evenPart η A - oddPart η A := by
   dsimp [evenPart, oddPart]
@@ -239,15 +243,18 @@ theorem transposeWeightedTrace_add_right (L R A B C : Matrix n n ℝ) :
       transposeWeightedTrace L R A B + transposeWeightedTrace L R A C := by
   simp only [transposeWeightedTrace, mul_add, trace_add]
 
+omit [DecidableEq n] in
 theorem transposeWeightedTrace_sub_left (L R A B C : Matrix n n ℝ) :
     transposeWeightedTrace L R (A - B) C =
       transposeWeightedTrace L R A C - transposeWeightedTrace L R B C := by
   simp only [transposeWeightedTrace, transpose_sub, mul_sub, sub_mul, trace_sub]
 
+omit [DecidableEq n] in
 theorem transposeWeightedTrace_neg_left (L R A B : Matrix n n ℝ) :
     transposeWeightedTrace L R (-A) B = -transposeWeightedTrace L R A B := by
   simp only [transposeWeightedTrace, transpose_neg, mul_neg, neg_mul, trace_neg]
 
+omit [DecidableEq n] in
 theorem transposeWeightedTrace_neg_right (L R A B : Matrix n n ℝ) :
     transposeWeightedTrace L R A (-B) = -transposeWeightedTrace L R A B := by
   simp only [transposeWeightedTrace, mul_neg, trace_neg]

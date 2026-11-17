@@ -12,6 +12,30 @@ The source starts from `08c34e03f610b452e03422037949196dc7d92d6d`, with unchange
 Lean `v4.34.1` and Mathlib
 `d13f23b723b8a846827a245b89c10fc7d3f11612`.
 
+## First native run and source repair
+
+The first exact-head workflow,
+[44052828391](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44052828391),
+reached native compilation at commit
+`e2d21dce41f45d56c672ad03f9487b608664cd2e` and failed. Toolchain setup and cache
+hydration succeeded. `RealMetricAdjoint` needed explicit matrix coercions on
+both factors of the square-one hypotheses. `RealKreinTrace` lacked the native
+`StarOrderedRing ℝ` instance import. The two files also reported thirteen
+warnings. `WeightedAdjointCompatibility` and `RealKreinDensityCounterexample`
+compiled with zero warnings; `RealMetricTransport` was blocked by its dependency.
+The native declaration audit was not reached.
+
+The source repair supplies the explicit coercions, imports the actual instance
+owner `Mathlib.Algebra.Order.Star.Real`, and addresses the reported unused
+simplifications and section assumptions. It preserves the real matrix carriers
+and theorem conclusions. Both repaired files received independent source/API
+review. No dependency pin, checker, build lock, linter setting, or CI acceptance
+gate was changed. A fresh exact-head run is required before native acceptance.
+
+The failed artifact was downloaded and matched GitHub's recorded SHA256:
+`4e75a6ee16ee62c4118a3bf9b906b16228523feddf9de6c726f44c656f911e40`.
+Its source snapshots match the exact failed commit.
+
 ## Selected owners
 
 | Module under `InfoGeometry` | Added explicit theorems | Added definitions |

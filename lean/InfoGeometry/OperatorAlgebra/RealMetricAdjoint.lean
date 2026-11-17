@@ -207,7 +207,7 @@ theorem weightedAdjoint_eq_iff_scalar_multiple
     intro x
     change x * ((↑w : Matrix n n ℝ) * (↑z⁻¹ : Matrix n n ℝ)) =
       ((↑w : Matrix n n ℝ) * (↑z⁻¹ : Matrix n n ℝ)) * x
-    simp [hc, smul_mul_assoc, mul_smul_comm]
+    simp [hc]
 
 /-- In positive dimension, an invertible weight cannot be the zero multiple
 of another weight. No positivity or symmetry assumption is needed. -/
@@ -220,8 +220,8 @@ theorem weightedAdjoint_eq_iff_nonzero_scalar_multiple [Nonempty n]
     obtain ⟨c, hc⟩ := (weightedAdjoint_eq_iff_scalar_multiple w z).mp h
     refine ⟨c, ?_, hc⟩
     intro hzero
-    apply w.ne_zero
-    simpa [hzero] using hc
+    rw [hzero, zero_smul] at hc
+    exact w.ne_zero hc
   · rintro ⟨c, _, hc⟩
     exact (weightedAdjoint_eq_iff_scalar_multiple w z).mpr ⟨c, hc⟩
 
@@ -230,8 +230,8 @@ global sign ambiguity. Symmetry is not needed for this recovery statement;
 the existing involutivity theorem uses it as a sufficient hypothesis. -/
 theorem weightedAdjoint_eq_iff_eq_or_neg [Nonempty n]
     (w z : (Matrix n n ℝ)ˣ)
-    (hw : (↑w : Matrix n n ℝ) * ↑w = 1)
-    (hz : (↑z : Matrix n n ℝ) * ↑z = 1) :
+    (hw : (↑w : Matrix n n ℝ) * (↑w : Matrix n n ℝ) = 1)
+    (hz : (↑z : Matrix n n ℝ) * (↑z : Matrix n n ℝ) = 1) :
     adjoint w = adjoint z ↔
       (↑w : Matrix n n ℝ) = ↑z ∨ (↑w : Matrix n n ℝ) = -(↑z : Matrix n n ℝ) := by
   constructor
@@ -241,8 +241,8 @@ theorem weightedAdjoint_eq_iff_eq_or_neg [Nonempty n]
       calc
         (c * c) • (1 : Matrix n n ℝ) =
             (c • (↑z : Matrix n n ℝ)) * (c • (↑z : Matrix n n ℝ)) := by
-          simp [smul_mul_assoc, mul_smul_comm, smul_smul, hz]
-        _ = (↑w : Matrix n n ℝ) * ↑w := by rw [← hc]
+          simp [smul_smul, hz]
+        _ = (↑w : Matrix n n ℝ) * (↑w : Matrix n n ℝ) := by rw [← hc]
         _ = 1 := hw
     obtain ⟨i⟩ := ‹Nonempty n›
     have hcc : c * c = 1 := by

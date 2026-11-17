@@ -137,9 +137,19 @@ hard findings; the semantic-vacuity error gate passed, retaining three advisory
 warnings for elementary component/linearity lemmas. The workflow also passed
 independent source review and YAML/embedded-Python syntax checks.
 
-Exact-source native compilation and the declaration axiom audit are pending.
-The maintained checker is queued on the shared build lock; the queued command
-is not compilation evidence. The focused workflow repeats those checks at the
-repository's exact pins and requires zero warnings in the three new owners.
+The [first focused native run](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44056949763)
+failed. It exposed an incorrectly elaborated operation/identity in
+`metric_mul_self`, a symmetry rewrite, a finite-sum binder, and a derivative
+proof error, plus tactic warnings. `ScalarKineticBalance` was blocked by the
+stress owner; the new declarations did not complete their axiom audit.
+
+The repair explicitly types both metric operands and the identity as native
+four-by-four matrices, keeps the subtraction inside the finite-sum binder,
+and uses `HasDerivAt.congr_deriv` for the quotient-rule result. Independent
+source review checked these repairs against the pinned Mathlib APIs without
+adding hypotheses to the stress, density, or limit claims. Observed tactic
+warnings are also repaired. Fresh native compilation and declaration axiom
+auditing are required before acceptance. A queued checker is not compilation
+evidence. The focused workflow requires zero warnings in the three new owners.
 The installed publication gate and whole-root dependency integration are
 separate requirements; no whole-repository build result is claimed here.

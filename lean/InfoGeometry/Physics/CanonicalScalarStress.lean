@@ -56,10 +56,12 @@ def homogeneousCovector (u : ℝ) : Fin 4 → ℝ := ![u, 0, 0, 0]
 
 /-- This fixed orthonormal metric is also its inverse. -/
 theorem metric_mul_self :
-    (fisherKreinLorentz4 : Matrix (Fin 4) (Fin 4) ℝ) * fisherKreinLorentz4 = 1 := by
+    (fisherKreinLorentz4 : Matrix (Fin 4) (Fin 4) ℝ) *
+      (fisherKreinLorentz4 : Matrix (Fin 4) (Fin 4) ℝ) =
+      (1 : Matrix (Fin 4) (Fin 4) ℝ) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    norm_num [Matrix.mul_apply, Fin.sum_univ_four, fisherKreinLorentz4,
+    norm_num [Matrix.mul_apply, Matrix.one_apply, Fin.sum_univ_four, fisherKreinLorentz4,
       fisherKreinReflect4, fisherUnit4, delta4, modularTimeCovector4]
 
 private theorem metric_symmetric (i j : Fin 4) :
@@ -67,7 +69,7 @@ private theorem metric_symmetric (i j : Fin 4) :
   by_cases hij : i = j
   · subst j
     rfl
-  · rw [fisherKreinLorentz4_offdiag hij, fisherKreinLorentz4_offdiag hij.symm]
+  · rw [fisherKreinLorentz4_offdiag hij, fisherKreinLorentz4_offdiag (Ne.symm hij)]
 
 theorem spatialGradientSq_nonneg (v : Fin 4 → ℝ) : 0 ≤ spatialGradientSq v :=
   Finset.sum_nonneg fun _ _ => sq_nonneg _
@@ -77,7 +79,8 @@ theorem derivativeContraction_eq (v : Fin 4 → ℝ) :
     derivativeContraction v = -(v 0) ^ 2 + spatialGradientSq v := by
   simp [derivativeContraction, spatialGradientSq, Fin.sum_univ_four,
     Fin.sum_univ_three, fisherKreinLorentz4, fisherKreinReflect4, fisherUnit4,
-    delta4, modularTimeCovector4] <;> ring
+    delta4, modularTimeCovector4]
+  ring
 
 /-- The full scalar stress tensor is symmetric. -/
 theorem stressTensor_symmetric (lambda : ℝ) (v : Fin 4 → ℝ) (i j : Fin 4) :
@@ -112,7 +115,8 @@ theorem meanSpatialStress_stressTensor (lambda : ℝ) (v : Fin 4 → ℝ) :
       lambda / 2 * (v 0) ^ 2 - lambda / 6 * spatialGradientSq v := by
   unfold meanSpatialStress
   simp_rw [stressTensor_spatial_diag]
-  simp [spatialGradientSq, Fin.sum_univ_three] <;> ring
+  simp [spatialGradientSq, Fin.sum_univ_three]
+  ring
 
 theorem energyDensity_nonneg (lambda : ℝ) (v : Fin 4 → ℝ) (hlambda : 0 ≤ lambda) :
     0 ≤ energyDensity lambda v := by
@@ -272,8 +276,8 @@ theorem averagedStress_meanSpatialStress (s : Finset alpha) (w : alpha → ℝ)
   rw [meanSpatialStress_averagedStress]
   calc
     _ = ∑ a ∈ s,
-        (lambda / 2) * (w a * (v a 0) ^ 2) -
-          (lambda / 6) * (w a * spatialGradientSq (v a)) := by
+        ((lambda / 2) * (w a * (v a 0) ^ 2) -
+          (lambda / 6) * (w a * spatialGradientSq (v a))) := by
       apply Finset.sum_congr rfl
       intro a _
       rw [meanSpatialStress_stressTensor]

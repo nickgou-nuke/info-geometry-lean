@@ -2,14 +2,14 @@
 
 Date: 2026-11-17. This is a draft extension of [PR #384](https://github.com/nickgou-nuke/info-geometry-lean/pull/384), pinned at `6a0971cfb93e614ecccd29a44274f9bbf98706ae`, whose parent is main `08c34e03f610b452e03422037949196dc7d92d6d`.
 
-**Disposition:** independent mathematical/source review and all scoped source checks pass at the identities below. Fresh native elaboration, zero target warnings, compiled declaration-axiom acceptance, and broader integration remain outstanding. The parent PR's initial native run failed; its actual failures are repaired in this branch. No native pass is inferred from source review or publication.
+**Disposition:** the first dedicated projected-Gram run compiled 23 of 24 repository modules. The base Gram target compiled with one unused-simp warning; the projected owner reported two extensionality errors and zero warnings. All three diagnostics have minimal proof-only repairs below. Fresh complete native elaboration, zero target warnings, compiled declaration-axiom acceptance, and broader integration remain outstanding. No native pass is inferred from source review or publication.
 
 ## 1. Exact integrated scope
 
 | File | SHA-256 | Scope |
 |---|---|---|
-| `lean/InfoGeometry/Algebra/ZornAssociatorGram.lean` | `6f96d600df68ad5fd05f5b9cbd9668d0c816448951ee0c454696e3c969e3abec` | Repair seven actual elaboration errors in the existing full-family Gram owner; preserve every declaration, statement, definition, carrier and import |
-| `lean/InfoGeometry/Algebra/ZornProjectedAssociatorGram.lean` | `856a263b3968334a6bbe8321a94534ea6ca7a2649e03856f4caabd209c123746` | Construct the energy projection and compressed bilinear form; prove the exact quadratic zero set and left radical, including both trace cases and zero energy |
+| `lean/InfoGeometry/Algebra/ZornAssociatorGram.lean` | `cda02d35a39993ff1d37a6c364ed7d2cd1272da4ddcc591ad3cec4989ffac548` | Repair seven actual elaboration errors in the existing full-family Gram owner; preserve every declaration, statement, definition, carrier and import |
+| `lean/InfoGeometry/Algebra/ZornProjectedAssociatorGram.lean` | `94793cf5c0651799a086a6ffc379818516ac0cc5f4f12dbe4f50a38a69f2aca6` | Construct the energy projection and compressed bilinear form; prove the exact quadratic zero set and left radical, including both trace cases and zero energy |
 | `docs/sources/zorn_projected_gram_intake_20261117.txt` | `1fef0d88c605c9d59f6590503b776362454f6b30b5022bbdec25dc1b12960e48` | Preserve the complete 36,565-byte supplied input without normalization |
 | `.github/workflows/zorn-projected-associator-gram.yml` | `0a377941312fb42c5359a0e47394fea861b24b9a93d64c3938022905fc5f4a6c` | Dedicated fresh native/source acceptance for both changed owners |
 
@@ -83,3 +83,15 @@ Independent syntax/structure review passed YAML parsing, all seven Bash payloads
 The actual maintained nonblocking lock probe observed another native build holding `/tmp/info-geometry-build.lock`. The lock is not bypassed, replaced, or treated as stale from its PID text. No local compiler result for this integrated candidate is claimed. Tracked hooks are installed; the actual normal staged-hook result and publication identity will be recorded in the PR body. Broader root-package/pre-push and whole-repository acceptance remain separate outstanding gates.
 
 No merge is requested by this draft, and the parent PR's unresolved native acceptance is not hidden by the new source review. Fresh hosted evidence must establish both exact repaired owners together.
+
+## 7. Actual dedicated projected-Gram failure and repair
+
+[Run 44090454258, job 134063901185](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44090454258/job/134063901185) checked merge `f4564dac477b2cab377c19c1a497d8b5110b8b90` for head `42aff50c7db9a69caf56c4270b6cd816ef49856b` over base `6a0971cfb93e614ecccd29a44274f9bbf98706ae`. The pinned cache stage succeeded. Twenty-three of the 24 closure modules compiled; the projected owner failed.
+
+`ZornAssociatorGram` compiled with zero errors and one warning: `LinearMap.zero_apply` was an unused simp argument in `associatorGram_zero_iff_basis`. The repair removes only that argument. The tested source had SHA-256 `6f96d600df68ad5fd05f5b9cbd9668d0c816448951ee0c454696e3c969e3abec`.
+
+`ZornProjectedAssociatorGram` reported exactly two errors and zero warnings, in `energyProjection_zero` and `energyProjection_idempotent`. Recursive `ext x` had already descended into the Zorn `.a` coordinate before the existing whole-vector `change` step. Both proofs now use `apply LinearMap.ext` followed by `intro x`, retaining the complete vector goal. The tested source had SHA-256 `856a263b3968334a6bbe8321a94534ea6ca7a2649e03856f4caabd209c123746`.
+
+Artifact `14332948774` has ZIP SHA-256 `2abeeb35c572b2b3bc8d719888481294fa376f37754671637fcf2403f51e8ec7`. Both target files were reconciled byte-for-byte across the artifact, exact remote head, and local checkout. Inverse substitutions reconstruct both original sources exactly. Every statement, hypothesis, definition, import, and other proof remains unchanged.
+
+The run also recorded 69 warnings in unchanged dependency owners. It failed before the compiled declaration-axiom audit. These diagnostics do not establish native acceptance; a fresh complete run is required for the repaired source hashes in the current identity table. The four scoped source checks were repeated for the repair; their advisory findings remain the disclosed ones above.

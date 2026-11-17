@@ -44,7 +44,8 @@ def energyProjection (h : Z) : Module.End ℝ Z :=
   rw [normalizedDyad_apply]
 
 @[simp] theorem energyProjection_zero : energyProjection (0 : Z) = 1 := by
-  ext x
+  apply LinearMap.ext
+  intro x
   change energyProjection 0 x = x
   rw [energyProjection_apply, smul_zero, sub_zero]
 
@@ -74,7 +75,8 @@ theorem energyProjection_fixed_of_orthogonal (h x : Z)
 
 theorem energyProjection_idempotent (h : Z) :
     energyProjection h * energyProjection h = energyProjection h := by
-  ext x
+  apply LinearMap.ext
+  intro x
   change energyProjection h (energyProjection h x) = energyProjection h x
   exact energyProjection_fixed_of_orthogonal h _ (energyProjection_orthogonal h x)
 

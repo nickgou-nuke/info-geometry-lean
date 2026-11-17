@@ -84,12 +84,37 @@ Their role is to expose computed definitions or connect existing native operatio
 
 ## Dedicated workflow review
 
-The reconstructed `.github/workflows/hodge-commutant.yml` has reviewed source SHA-256
+The initial reconstructed `.github/workflows/hodge-commutant.yml` had reviewed source SHA-256
 `8f6262cd8aa694c3416776a4f2f34edda41f49f85645913e5ededb88ecc2f05b`.
+The current checkout-repaired workflow has SHA-256
+`495ae8b5eb4a7f4d21b5873218f6765faca9f5799ac27d9eaf7298bdbc916acc`.
 
 Its static review parsed the YAML and five embedded Python blocks. Independent review confirmed the selected five owners' complete 18-module project import closure and preservation of verification inputs. The workflow uses the repository pins and maintained closure/axiom machinery, preserves source reports, and binds scoped reports to the kernel evidence it is intended to produce.
 
 This workflow was reconstructed from the committed baseline template and current helper interfaces; no old workflow hash exists. YAML parsing and Python syntax checks do not mean that GitHub Actions ran successfully.
+
+### Observed hosted checkout failure and repair
+
+[The initial dedicated run](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44045173114)
+failed in `actions/checkout@v4` before the Lean installation or proof checks began.
+The action's credential-removal phase invoked `git submodule foreach --recursive`,
+which failed because `external_refs/auto-ontology` has no URL in `.gitmodules`.
+That gitlink and missing mapping already occur at the recorded baseline. No
+native result or evidence artifact was produced by this failed run.
+
+The repair changes only the initial project checkout. It initializes an independent
+Git repository, fetches the exact public `GITHUB_SHA` without credentials or recursive
+submodule operations, checks out a detached head, and requires exact SHA equality.
+Its sparse paths include all canonical Lean sources, tools, pins, workflow, and
+provenance documents. Sparse checkout alone does not fix the credential-cleanup
+failure; avoiding that unnecessary traversal is the operative change.
+
+Independent review checked Bash syntax, all five Python blocks, all 18 resolved
+project imports, and all 14 verification inputs. Every subsequent workflow step,
+permission, event, and verification threshold is unchanged. The five Lean source
+hashes and the source-check receipts above remain unchanged. A fresh hosted run
+of the repaired workflow is still required for native acceptance.
+
 
 ## Native acceptance and publication status
 
@@ -99,7 +124,7 @@ This workflow was reconstructed from the committed baseline template and current
 | Fresh declaration-axiom audit | Pending with the native check |
 | Allowed axioms restricted to `propext`, `Classical.choice`, `Quot.sound` | Acceptance requirement; no fresh result claimed |
 | Native warnings or errors for the restored five-owner closure | No final current result recorded here |
-| Remote workflow run for the published head | Pending/unverified |
+| Remote workflow run for the published head | Initial run failed before Lean; repaired checkout awaits a fresh native result |
 | Draft publication | Authorized; publishing a draft does not change any verification status above |
 
 A fresh run directory is designated `verification/final-integrated` in the current workspace. A queued process, an empty log, or a prepared output directory is not a successful native check. Update this record using the actual completed receipt and the exact checked source hashes.

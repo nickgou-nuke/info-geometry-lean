@@ -50,10 +50,32 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
-        with:
-          path: project
-          persist-credentials: false
+      - name: Check out exact public project revision
+        shell: bash
+        env:
+          GIT_TERMINAL_PROMPT: '0'
+        run: |
+          set -euo pipefail
+          test ! -e project
+          git init project
+          git -C project remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -C project sparse-checkout init --no-cone
+          git -C project sparse-checkout set --no-cone --stdin <<'SPARSE'
+          /lean/
+          /tools/
+          /lean-toolchain
+          /lake-manifest.json
+          /lakefile.lean
+          /AGENTS.md
+          /LICENSE
+          /.github/workflows/hodge-commutant.yml
+          /docs/HODGE_COMMUTANT_CONTRACT.md
+          /docs/HODGE_COMMUTANT_REVIEW.md
+          /docs/sources/hodge_commutant_intake_20261116.txt
+          SPARSE
+          git -C project fetch --no-recurse-submodules --no-tags --depth=1 origin "$GITHUB_SHA"
+          git -C project checkout --detach --no-recurse-submodules FETCH_HEAD
+          test "$(git -C project rev-parse HEAD)" = "$GITHUB_SHA"
       - name: Read exact dependency pins
         id: pins
         shell: bash

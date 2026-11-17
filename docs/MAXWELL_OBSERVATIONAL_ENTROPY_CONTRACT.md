@@ -24,7 +24,8 @@ for the same intake during implementation. This PR is stacked on its exact
 head `80ff2c99e31ec5fb263ac31553ccbd3e53635d77` and adds the operator-log and
 support consequences it leaves open. The fixed environment is Lean
 `v4.34.1` and Mathlib `d13f23b723b8a846827a245b89c10fc7d3f11612`.
-No dependency, lock, or gate changes belong to this work.
+Dependency pins, the shared lock, and gate commands remain unchanged. The
+existing post-build workflow receives the syntax repair recorded below.
 
 The new CFC owner is
 `InfoGeometry.Canonical.TwoSheetObservationalEntropy`, on full matrices over
@@ -348,3 +349,14 @@ python3 tools/quality/check_clifford_dirac.py \
 
 The PR's validation record states the observed native and integration status;
 a workflow definition or queued job is not a successful check.
+
+### Existing workflow syntax repair
+
+The first publication exposed a preexisting failure of
+`.github/workflows/post-build-gate.yml`: push run
+[44101904999](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44101904999)
+failed without creating jobs. The unchanged baseline file ended in a literal
+`EOF` line, which reproduced a YAML `ScannerError` at line 82. Removing only
+that final line makes the workflow parse. All 13 steps, branch triggers,
+timeouts, build commands, and audit commands are retained. This repair does
+not constitute a pass of any of those checks.

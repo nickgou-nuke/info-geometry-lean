@@ -150,7 +150,7 @@ theorem hilbertSchmidtInner_left_mul (A X Y : HS2) :
     hilbertSchmidtInner (A * X) Y =
       hilbertSchmidtInner X (A.conjTranspose * Y) := by
   simp only [hilbertSchmidtInner, Matrix.mul_apply,
-    Matrix.conjTranspose_apply, Fin.sum_univ_two, star_add, star_mul, star_star]
+    Matrix.conjTranspose_apply, Fin.sum_univ_two, star_add, star_mul]
   ring
 
 /-- The finite Hilbert--Schmidt adjoint of right multiplication is right
@@ -159,7 +159,7 @@ theorem hilbertSchmidtInner_right_mul (B X Y : HS2) :
     hilbertSchmidtInner (X * B) Y =
       hilbertSchmidtInner X (Y * B.conjTranspose) := by
   simp only [hilbertSchmidtInner, Matrix.mul_apply,
-    Matrix.conjTranspose_apply, Fin.sum_univ_two, star_add, star_mul, star_star]
+    Matrix.conjTranspose_apply, Fin.sum_univ_two, star_add, star_mul]
   ring
 
 

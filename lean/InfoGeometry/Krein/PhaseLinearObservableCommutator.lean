@@ -50,7 +50,7 @@ theorem phase_pair_neg_swap_of_star_eq_neg
     ⟪P x, y⟫_ℝ = ⟪x, (star P) y⟫_ℝ := (P.adjoint_inner_right x y).symm
     _ = -⟪P y, x⟫_ℝ := by
       rw [hPstar]
-      simp only [ContinuousLinearMap.neg_apply, inner_neg_right,
+      simp only [neg_apply, inner_neg_right,
         real_inner_comm x (P y)]
 
 /-- A self-adjoint observable commuting with any skew phase has zero

@@ -276,8 +276,22 @@ and preserves the native evidence. It does not certify the root Lake build.
 
 The root path-package preflight found missing `HomotopyHypothesis` and `Atlas`
 configurations with untracked dependency paths, plus an uninitialized `GIFT`
-gitlink. Both root compiler wrappers are still queued; neither has produced a
-successful root build result.
+gitlink. Earlier queued local sessions ended without reports. A fresh selected
+native check was queued on 17 November; no successful root build result exists.
+
+The first focused [run 44054152325](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44054152325)
+for head `441f95c93cce4734788738715662eda503244b3d` failed before native work.
+`actions/checkout` fetched the merge commit successfully, then failed while
+removing authentication because its recursive submodule traversal encountered
+`external_refs/auto-ontology` without a `.gitmodules` URL. Lean compilation,
+axiom inspection, and semantic checks were all skipped. No evidence artifact
+was produced by that run.
+
+The focused workflow now fetches the public source without credentials and
+checks that `HEAD` equals the requested `github.sha`. This preserves the
+pull-request merge-commit scope and avoids recursive submodule traversal.
+The separate pinned Mathlib checkout and all mathematical acceptance checks
+are unchanged. A subsequent successful native run is still required.
 
 Initial published head `00fcd6afbabdfe747a96df7dbd2b9b6d0ae4d587` has the
 following observed CI failures. The relevant failing scripts/configuration

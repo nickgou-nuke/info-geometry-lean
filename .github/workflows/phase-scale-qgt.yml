@@ -36,10 +36,25 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
-      - uses: actions/checkout@v4
-        with:
-          path: project
-          persist-credentials: false
+      # This public source checkout avoids recursive submodule auth cleanup.
+      # github.sha preserves pull-request merge-commit verification.
+      - name: Fetch and verify the exact source commit
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+          SOURCE_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          test ! -e project
+          git init project
+          git -C project remote add origin "https://github.com/${SOURCE_REPO}.git"
+          git -C project fetch --no-tags --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          actual_rev="$(git -C project rev-parse HEAD)"
+          if [ "$actual_rev" != "$SOURCE_REV" ]; then
+            echo 'Source checkout differs from the requested workflow commit' >&2
+            exit 1
+          fi
       - name: Read exact dependency pins
         id: pins
         shell: bash

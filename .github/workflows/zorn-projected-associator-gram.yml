@@ -1,0 +1,259 @@
+name: Native projected Zorn associator Gram
+
+on:
+  pull_request:
+    paths:
+      - 'lean/**'
+      - 'tools/quality/check_clifford_dirac.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/build_lock.py'
+      - 'tools/quality/placeholder_audit.py'
+      - 'tools/quality/audit_constructivity.py'
+      - 'tools/quality/common.py'
+      - 'tools/pathing.py'
+      - 'tools/quality/semantic_vacuity_gate.py'
+      - 'tools/quality/semantic_vacuity_patterns.json'
+      - 'tools/infra/opengauss_screener.py'
+      - 'docs/ZORN_PROJECTED_GRAM_CONTRACT.md'
+      - 'docs/ZORN_PROJECTED_GRAM_REVIEW.md'
+      - 'docs/sources/zorn_projected_gram_intake_20261117.txt'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/zorn-projected-associator-gram.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: zorn-projected-associator-gram-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+  ZORN_PROJECTED_GRAM_TARGETS: >-
+    InfoGeometry.Algebra.ZornAssociatorGram
+    InfoGeometry.Algebra.ZornProjectedAssociatorGram
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out exact public project revision
+        shell: bash
+        env:
+          GIT_TERMINAL_PROMPT: '0'
+        run: |
+          set -euo pipefail
+          test ! -e project
+          git init project
+          git -C project remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -C project sparse-checkout init --no-cone
+          git -C project sparse-checkout set --no-cone --stdin <<'SPARSE'
+          /lean/
+          /tools/
+          /lean-toolchain
+          /lake-manifest.json
+          /lakefile.lean
+          /AGENTS.md
+          /LICENSE
+          /.github/workflows/zorn-projected-associator-gram.yml
+          /docs/ZORN_PROJECTED_GRAM_CONTRACT.md
+          /docs/ZORN_PROJECTED_GRAM_REVIEW.md
+          /docs/sources/zorn_projected_gram_intake_20261117.txt
+          SPARSE
+          git -C project fetch --no-recurse-submodules --no-tags --depth=1 origin "$GITHUB_SHA"
+          git -C project checkout --detach --no-recurse-submodules FETCH_HEAD
+          test "$(git -C project rev-parse HEAD)" = "$GITHUB_SHA"
+      - name: Read exact dependency pins
+        id: pins
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          manifest = json.loads(Path('project/lake-manifest.json').read_text())
+          revision = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'mathlib={revision}\n')
+          PY
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: ${{ steps.pins.outputs.mathlib }}
+          path: mathlib
+          persist-credentials: false
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            mathlib/.lake
+          key: zorn-projected-associator-gram-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Fetch the pinned native import cache
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os, subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('project').resolve()))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          targets = os.environ['ZORN_PROJECTED_GRAM_TARGETS'].split()
+          _, _, native = closure(Path('project'), targets)
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'zorn-projected-associator-gram-cache') as lock:
+              subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
+                  cwd='mathlib', check=True, pass_fds=(lock.fileno(),))
+          PY
+      - name: Check fresh exact closure and every owner declaration's axioms
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path.cwd()))
+          from tools.quality.check_reviewed_prs import closure
+          from tools.quality.reviewed_audit_source import parse_audit_output
+          targets = os.environ['ZORN_PROJECTED_GRAM_TARGETS'].split()
+          assert len(targets) == len(set(targets)) == 2
+          out = Path('../zorn-projected-associator-gram-report')
+          assert not out.exists(), 'Acceptance output must be fresh'
+          inputs = ['tools/quality/check_clifford_dirac.py', 'tools/quality/check_reviewed_prs.py',
+              'tools/quality/reviewed_audit_source.py', 'tools/build_lock.py',
+              'tools/quality/placeholder_audit.py', 'tools/quality/audit_constructivity.py',
+              'tools/quality/common.py', 'tools/pathing.py', 'tools/quality/semantic_vacuity_gate.py',
+              'tools/quality/semantic_vacuity_patterns.json', 'tools/infra/opengauss_screener.py',
+              'lean-toolchain', 'lake-manifest.json', '.github/workflows/zorn-projected-associator-gram.yml',
+              'docs/ZORN_PROJECTED_GRAM_CONTRACT.md', 'docs/ZORN_PROJECTED_GRAM_REVIEW.md',
+              'docs/sources/zorn_projected_gram_intake_20261117.txt']
+          digest = lambda path: hashlib.sha256(Path(path).read_bytes()).hexdigest()
+          before = {path: digest(path) for path in inputs}
+          command = [sys.executable, 'tools/quality/check_clifford_dirac.py',
+              '--mathlib-root', '../mathlib', '--output', str(out)]
+          command += [arg for target in targets for arg in ('--target', target)]
+          subprocess.run(command, check=True)
+          report = json.loads((out / 'report.json').read_text())
+          ordered, dependencies, native = closure(Path.cwd(), targets)
+          assert report['status'] == 'passed' and report['audit_required'] is True
+          assert report['targets'] == targets
+          assert report['local_revision'] == os.environ['GITHUB_SHA']
+          assert report['verification_source_sha256'] == {path: before[path] for path in inputs[:4]}
+          assert [item['module'] for item in report['modules']] == ordered
+          assert report['repository_import_dependencies'] == dependencies
+          assert set(report['source_sha256']) == set(ordered)
+          assert all(item['returncode'] == 0 and item['reused'] is False for item in report['modules'])
+          assert all(item['warnings'] == 0 for item in report['modules'] if item['module'] in targets)
+          counts = parse_audit_output((out / 'axioms.log').read_text(), targets)
+          assert report['declaration_counts'] == counts and all(counts[target] > 0 for target in targets)
+          for module, expected in report['source_sha256'].items():
+              relative = Path(module.replace('.', '/') + '.lean')
+              assert digest(Path('lean') / relative) == digest(out / 'src' / relative) == expected
+          paths = ['lean/' + target.replace('.', '/') + '.lean' for target in targets]
+          source_hashes = {path: digest(path) for path in paths}
+          for target, path in zip(targets, paths):
+              assert source_hashes[path] == report['source_sha256'][target]
+          scope = {
+              'native_targets': targets,
+              'scoped_source_paths': paths,
+              'repository_module_count': len(ordered),
+              'repository_dependency_count': len(ordered) - len(targets),
+              'native_import_root_count': len(native),
+              'declaration_counts': counts,
+              'audited_declaration_count': sum(counts.values()),
+              'source_sha256': source_hashes,
+          }
+          (out / 'scope-summary.json').write_text(json.dumps(scope, indent=2) + '\n')
+          assert before == {path: digest(path) for path in inputs}
+          (out / 'workflow-inputs.json').write_text(json.dumps(before, indent=2) + '\n')
+          PY
+      - name: Check strict placeholders, scoped semantic findings, and operator witnesses
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, subprocess, sys
+          from pathlib import Path
+          out = Path('../zorn-projected-associator-gram-report')
+          targets = os.environ['ZORN_PROJECTED_GRAM_TARGETS'].split()
+          assert len(targets) == len(set(targets)) == 2
+          paths = ['lean/' + target.replace('.', '/') + '.lean' for target in targets]
+          assert all(Path(path).is_file() for path in paths)
+          scope = json.loads((out / 'scope-summary.json').read_text())
+          assert scope['native_targets'] == targets and scope['scoped_source_paths'] == paths
+          digest = lambda path: hashlib.sha256(Path(path).read_bytes()).hexdigest()
+          assert scope['source_sha256'] == {path: digest(path) for path in paths}
+          def run_logged(command, name, json_output=False):
+              result = subprocess.run(command, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+              (out / (name + ('.json' if json_output else '.log'))).write_text(result.stdout)
+              (out / (name + '.stderr.log')).write_text(result.stderr)
+              if result.returncode:
+                  raise RuntimeError(f'{name} failed with exit {result.returncode}; see preserved output')
+          for target, path in zip(targets, paths):
+              run_logged([sys.executable, 'tools/quality/placeholder_audit.py', '--root', path,
+                  '--strict', '--json-out', str(out / ('placeholder.' + target + '.json'))],
+                  'placeholder.' + target)
+          run_logged([sys.executable, 'tools/quality/semantic_vacuity_gate.py', *paths,
+              '--fail-on', 'error', '--json-out', str(out / 'semantic-vacuity.json')], 'semantic-vacuity')
+          run_logged([sys.executable, 'tools/infra/opengauss_screener.py', '--strict', '--json', *paths],
+              'opengauss', json_output=True)
+          semantic = json.loads((out / 'semantic-vacuity.json').read_text())
+          assert semantic['coverage_complete'] and not semantic['read_failures']
+          assert semantic['files_selected'] == semantic['files_scanned'] == len(paths)
+          assert set(semantic['source_paths']) == set(semantic['successfully_read_paths']) == set(paths)
+          assert semantic['fail_on'] == 'error' and not semantic['blocking_severity_counts'].get('error', 0)
+          assert json.loads((out / 'opengauss.json').read_text())['violations'] == {}
+          for target in targets:
+              audit = json.loads((out / ('placeholder.' + target + '.json')).read_text())
+              assert audit['summary']['scanned_count'] == 1
+              assert audit['summary']['provenance']['hard_failures'] == 0
+          assert scope['source_sha256'] == {path: digest(path) for path in paths}
+          PY
+      - name: Bind scoped reports and unchanged verification inputs to kernel evidence
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          out = Path('../zorn-projected-associator-gram-report')
+          digest = lambda path: hashlib.sha256(Path(path).read_bytes()).hexdigest()
+          index_path = out / 'evidence-sha256.json'
+          index = json.loads(index_path.read_text())
+          for name, expected in index.items():
+              path = Path(name.removeprefix('repository/')) if name.startswith('repository/') else out / name
+              assert digest(path) == expected, name
+          inputs = json.loads((out / 'workflow-inputs.json').read_text())
+          for name, expected in inputs.items():
+              assert digest(name) == expected, name
+              index['repository/' + name] = expected
+          report = json.loads((out / 'report.json').read_text())
+          for module, expected in report['source_sha256'].items():
+              relative = Path(module.replace('.', '/') + '.lean')
+              assert digest(Path('lean') / relative) == digest(out / 'src' / relative) == expected
+              index[str(Path('src') / relative)] = expected
+          scope = json.loads((out / 'scope-summary.json').read_text())
+          for name, expected in scope['source_sha256'].items():
+              assert digest(name) == expected, name
+              index['repository/' + name] = expected
+          for path in sorted([*out.glob('*.json'), *out.glob('*.log')]):
+              if path != index_path:
+                  index[str(path.relative_to(out))] = digest(path)
+          index_path.write_text(json.dumps(index, indent=2) + '\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: zorn-projected-associator-gram-kernel-evidence
+          path: zorn-projected-associator-gram-report
+          if-no-files-found: warn

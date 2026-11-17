@@ -74,10 +74,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
-        with:
-          path: project
-          persist-credentials: false
+      - name: Fetch the exact public source without traversing external submodules
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+          SOURCE_REPOSITORY: ${{ github.repository }}
+        run: |
+          git init project
+          git -C project remote add origin "https://github.com/${SOURCE_REPOSITORY}.git"
+          git -C project fetch --no-recurse-submodules --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          test "$(git -C project rev-parse HEAD)" = "$SOURCE_REV"
       - name: Read exact Mathlib pin
         id: pins
         shell: bash

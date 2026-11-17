@@ -57,7 +57,15 @@ theorem dominationFactor_eq_top_iff (ρ σ : A) :
 /-- Finiteness is witnessed by an actual positive finite domination coefficient. -/
 theorem dominationFactor_lt_top_iff (ρ σ : A) :
     dominationFactor ρ σ < ⊤ ↔ ∃ c : ℝ≥0, 0 < c ∧ ρ ≤ (c : ℝ) • σ := by
-  simp only [dominationFactor, iInf_lt_top, ENNReal.coe_lt_top, exists_prop, and_true]
+  classical
+  constructor
+  · intro hfinite
+    by_contra hnone
+    have htop : dominationFactor ρ σ = ⊤ :=
+      (dominationFactor_eq_top_iff ρ σ).mpr fun c hc hd => hnone ⟨c, hc, hd⟩
+    exact (ne_of_lt hfinite) htop
+  · rintro ⟨c, hc, hd⟩
+    exact (dominationFactor_le hc hd).trans_lt ENNReal.coe_lt_top
 
 /-- The extended logarithm retains the infeasible-support case. -/
 theorem maxRelativeEntropy_eq_top_iff (ρ σ : A) :

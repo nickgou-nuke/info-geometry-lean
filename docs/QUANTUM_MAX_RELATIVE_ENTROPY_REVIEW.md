@@ -83,6 +83,14 @@ existing `FiniteSpinAlgebra` owner, whose closed complex-matrix witness
 already a transitive dependency. No new algebra, duplicate witness definitions,
 or gate changes were introduced. Actual retry outcomes are recorded separately.
 
+The independent strict semantic scan subsequently flagged the original
+single-line simplification proof of `dominationFactor_lt_top_iff` as a
+`trivial_surface` warning. Its statement is substantive and unchanged. The
+proof now explicitly constructs the two logical directions: absence of every
+feasible coefficient forces top, contradicting the finite bound; an actual
+finite coefficient bounds the infimum strictly below top. This exposes the
+certificate argument without disabling or weakening the strict scan.
+
 ## Verification status at the source checkpoint
 
 The toolchain is unchanged: Lean `leanprover/lean4:v4.34.1`, Mathlib

@@ -82,8 +82,9 @@ theorem projectedGram_nonneg (R : ι → E →L[ℝ] F) (h x : E) :
 /-- Energy degeneracy is constructed by the projection, including at h = 0. -/
 theorem projectedGram_energy (R : ι → E →L[ℝ] F) (h : E) :
     projectedGram R h h = 0 := by
-  simp [projectedGram,
-    Submodule.starProjection_orthogonalComplement_singleton_eq_zero]
+  simp only [projectedGram, sum_apply, ContinuousLinearMap.comp_apply,
+    Submodule.starProjection_orthogonalComplement_singleton_eq_zero,
+    map_zero, Finset.sum_const_zero]
 
 /-- The metric bracket annihilates energy in its first argument as well. -/
 theorem projectedGram_energy_pairing (R : ι → E →L[ℝ] F) (h x : E) :
@@ -100,9 +101,9 @@ theorem projectedGram_quadratic_eq_zero_iff (R : ι → E →L[ℝ] F) (h x : E)
     have hi : ‖R i ((ℝ ∙ h)ᗮ.starProjection x)‖ ^ 2 = 0 :=
       (Finset.sum_eq_zero_iff_of_nonneg (fun j _ => sq_nonneg _)).mp hz i
         (Finset.mem_univ i)
-    exact norm_eq_zero.mp (pow_eq_zero hi)
+    exact norm_eq_zero.mp (sq_eq_zero_iff.mp hi)
   · intro hz
-    simp [hz]
+    simp only [hz, norm_zero, zero_pow two_ne_zero, Finset.sum_const_zero]
 
 /-- The operator kernel is exactly the intersection of the projected kernels. -/
 theorem projectedGram_apply_eq_zero_iff (R : ι → E →L[ℝ] F) (h x : E) :
@@ -113,7 +114,8 @@ theorem projectedGram_apply_eq_zero_iff (R : ι → E →L[ℝ] F) (h x : E) :
     apply (projectedGram_quadratic_eq_zero_iff R h x).mp
     rw [hx, inner_zero_right]
   · intro hx
-    simp [projectedGram, hx]
+    simp only [projectedGram, sum_apply, ContinuousLinearMap.comp_apply, hx,
+      map_zero, Finset.sum_const_zero]
 
 /-- Strict production needs a nonzero projected channel; nonassociativity alone
 does not establish that condition in an associator specialization. -/
@@ -180,7 +182,7 @@ theorem projectedGramFlow_energy_rate (R : ι → E →L[ℝ] F) (h s : E)
     (J : E →L[ℝ] E) (hJ : J.adjoint = -J) (γ : ℝ) (hγ : 0 ≤ γ) :
     inner ℝ h (projectedGramFlow R h s J γ hγ).totalFlow = 0 := by
   have hskew := ContinuousLinearMap.adjoint_inner_right J h h
-  rw [hJ, ContinuousLinearMap.neg_apply, inner_neg_right, real_inner_comm (J h) h]
+  rw [hJ, neg_apply, inner_neg_right, real_inner_comm h (J h)]
     at hskew
   have hrev : inner ℝ h (J h) = 0 := by linarith
   change inner ℝ h (J h + γ • projectedGram R h s) = 0
@@ -195,7 +197,7 @@ theorem projectedGramFlow_entropy_rate (R : ι → E →L[ℝ] F) (h s : E)
       γ * ∑ i, ‖R i ((ℝ ∙ h)ᗮ.starProjection s)‖ ^ 2 := by
   have hrev : inner ℝ s (J h) = 0 := by
     rw [← ContinuousLinearMap.adjoint_inner_left J h s, hJ,
-      ContinuousLinearMap.neg_apply, hJs, neg_zero, inner_zero_left]
+      neg_apply, hJs, neg_zero, inner_zero_left]
   change inner ℝ s (J h + γ • projectedGram R h s) = _
   rw [inner_add_right, hrev, zero_add, real_inner_smul_right, projectedGram_quadratic]
 

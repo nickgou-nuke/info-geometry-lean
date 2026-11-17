@@ -1,5 +1,40 @@
 # Projected associator dissipation: source and verification record
 
+## Follow-up intake and first native repair
+
+The attachment `Pasted text(20261117-091101).txt` is byte-identical to the
+input above: 36,565 bytes with the same SHA256. The existing PR #383 is the
+submission for this intake. The [independent mathematical audit](ASSOCIATOR_DISSIPATION_INTAKE_AUDIT.md)
+checks the proposed repairs themselves and records the remaining false or
+conditional claims, including the full symplectic/Casimir obstruction, ambient
+associator kernels, Gibbs integrability, Ricci conventions, Legendre hypotheses,
+Landauer assumptions, and the ungraded dependency graph.
+
+The [first scoped native run](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44058302546)
+executed on exact head `ee97e5cd9a1848e94ba96b0edb926239ed427a79` and failed.
+The generic projected-Gram owner had simplifier/orientation failures, and the
+scalar-potential owner resolved a scalar zero-product rewrite to an unrelated
+opened Zorn lemma. The concrete associator owner was blocked; the all-owned
+axiom audit did not run. These failures supersede the initial queued status
+recorded below.
+
+The repair changes proof bodies only. It keeps the native projection intact
+until the relevant zero/channel hypotheses apply, uses the exact square-zero
+lemma and inner-product orientation, qualifies the real zero-product lemma,
+and resolves the observed deprecation/unused-binder warnings. All 38 declarations
+in the two edited owners retain their statements and mathematical definitions.
+
+| Repaired owner | SHA256 after independent source review |
+|---|---|
+| `Thermo/ProjectedGramDissipation.lean` | `70ec77d06fed07d88e0a2027d7b8460fd0eef0eddfb3c3da755d056e1d9db87b` |
+| `Lie/SplitOctonionScalarPotentialObstruction.lean` | `4700a1cf16867dd4bc944336e40c31d4536d58c6d2c0b673ca5b6a51b2a9f1af` |
+
+Independent repair source review passed. Its receipt SHA256 is
+`b1a8334fc72dab220cc2d29e9fa645d0c836d7b49fd49b151c843758657f45f7`.
+Fresh compilation, zero-warning acceptance for all three owners, complete
+owned-declaration axiom audit, and independent execution QA remain required.
+The repaired source is not represented as kernel-accepted until those results exist.
+
 ## Intake and source identity
 
 This change encodes a finite split-algebra instance and a general real-Hilbert

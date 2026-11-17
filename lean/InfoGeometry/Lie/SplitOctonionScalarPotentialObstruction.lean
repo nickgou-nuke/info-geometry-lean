@@ -83,7 +83,7 @@ theorem sandwich_trace_eq_zero_of_skew_conj (X K : CanonicalZorn)
   have htrace : realZornTrace K = 0 := by
     unfold realZornTrace
     linarith
-  rw [sandwich_trace, htrace, mul_zero]
+  rw [sandwich_trace, htrace, _root_.mul_zero]
 
 /-- The other bracketing has the same vanishing scalar readout. -/
 theorem sandwich_trace_right_eq_zero_of_skew_conj (X K : CanonicalZorn)
@@ -142,7 +142,9 @@ def ellParaComplex : ParaComplexStructure CanonicalZorn where
 /-- Concrete neutral data: both laws are proved for the actual form and multiplication. -/
 def ellNeutralDatum : Datum ellParaComplex where
   form := neutralForm
-  symmetric X Y := polarPair_symm _ _
+  symmetric X Y := polarPair_symm
+    (InfoGeometry.Canonical.ZornMatrix.coordLinearEquiv X)
+    (InfoGeometry.Canonical.ZornMatrix.coordLinearEquiv Y)
   anti_isometry := neutralForm_ellLeftMul
 
 /-- The positive eigenspace is isotropic for the full normalized split form. -/

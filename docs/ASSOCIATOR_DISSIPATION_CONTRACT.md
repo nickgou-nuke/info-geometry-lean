@@ -40,3 +40,11 @@ This package makes no claim about Jacobi identities, differentiable energies or 
 ## Validation record
 
 Source review, fresh compilation of the selected owners and source closure, zero warnings for the three owners, native declaration audit, independent QA, staged gate and push/root gate are separate acceptance surfaces. The scoped workflow invokes the unchanged maintained checker with no repository-artifact reuse or audit bypass. It does not certify `InfoGeometry.All` or a root Lake build. Native and integration status must be read from the dated review record, not inferred from the presence of source files.
+
+## Follow-up mathematical review
+
+The byte-identical follow-up attachment is audited in
+[the independent intake review](ASSOCIATOR_DISSIPATION_INTAKE_AUDIT.md).
+Its counterexamples and analytic hypotheses clarify the boundary of this
+finite operator construction; they are mathematical review, not additional
+Lean theorems or an extension of the selected native verification targets.

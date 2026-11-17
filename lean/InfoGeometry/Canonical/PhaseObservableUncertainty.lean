@@ -9,8 +9,10 @@ import InfoGeometry.Krein.InternalPhaseGram
 /-!
 # Commutator uncertainty for real phase-preserving observables
 
-The existing doubled-Hilbert Bessel inequality supplies the positive Gram
-bound.  `PhaseLinearObservableCommutator` identifies its phase term with the
+The low-level Bessel inequality supplies the positive Gram bound for any
+norm-preserving skew phase on the doubled Hilbert carrier. The canonical
+phase APIs remain specializations of that general bound.
+`PhaseLinearObservableCommutator` identifies its phase term with the
 expectation of the actual ordered operator commutator.  Thus this owner
 derives the Robertson--Schrödinger and Robertson bounds without assuming a
 Cramér--Rao inequality or a canonical commutation relation.
@@ -36,6 +38,48 @@ local notation "H₂" => DoubledSpace E
 local notation "EndH" => DoubledEnd E
 local notation "Iop" => complex_i (E := E)
 
+/-- The full arbitrary-shift bound for any norm-preserving real phase
+with skew pairing. The phase square law is not required separately. -/
+theorem centered_robertson_schrodinger_of_phase
+    (P : EndH)
+    (hPnorm : ∀ x : H₂, ‖P x‖ = ‖x‖)
+    (hPskew : ∀ x y : H₂, ⟪P x, y⟫_ℝ = -⟪P y, x⟫_ℝ)
+    (A B : EndH) (hA : IsSelfAdjoint A) (hB : IsSelfAdjoint B)
+    (hAP : A.comp P = P.comp A) (hBP : B.comp P = P.comp B)
+    (a b : ℝ) (ψ : H₂) :
+    (⟪centeredVector A a ψ, centeredVector B b ψ⟫_ℝ) ^ 2 +
+        (1 / 4 : ℝ) * (⟪P ψ, (A.comp B - B.comp A) ψ⟫_ℝ) ^ 2 ≤
+      ‖centeredVector A a ψ‖ ^ 2 * ‖centeredVector B b ψ‖ ^ 2 := by
+  have hphase := twice_centered_phase_pair_eq_commutator_of_phase
+    P hPskew A B hA hB hAP hBP a b ψ
+  have harea := InternalPhaseGram.inner_sq_add_operator_inner_sq_le P hPnorm
+    (fun x => InternalPhaseGram.phase_pair_self_zero_of_neg_swap P hPskew x)
+    (centeredVector A a ψ) (centeredVector B b ψ)
+  calc
+    (⟪centeredVector A a ψ, centeredVector B b ψ⟫_ℝ) ^ 2 +
+        (1 / 4 : ℝ) * (⟪P ψ, (A.comp B - B.comp A) ψ⟫_ℝ) ^ 2 =
+      (⟪centeredVector A a ψ, centeredVector B b ψ⟫_ℝ) ^ 2 +
+        (⟪P (centeredVector A a ψ), centeredVector B b ψ⟫_ℝ) ^ 2 := by
+          rw [← hphase]
+          ring
+    _ ≤ ‖centeredVector A a ψ‖ ^ 2 * ‖centeredVector B b ψ‖ ^ 2 := harea
+
+/-- The Robertson bound for arbitrary real shifts and an arbitrary
+norm-preserving skew phase. -/
+theorem centered_robertson_of_phase
+    (P : EndH)
+    (hPnorm : ∀ x : H₂, ‖P x‖ = ‖x‖)
+    (hPskew : ∀ x y : H₂, ⟪P x, y⟫_ℝ = -⟪P y, x⟫_ℝ)
+    (A B : EndH) (hA : IsSelfAdjoint A) (hB : IsSelfAdjoint B)
+    (hAP : A.comp P = P.comp A) (hBP : B.comp P = P.comp B)
+    (a b : ℝ) (ψ : H₂) :
+    (1 / 4 : ℝ) * (⟪P ψ, (A.comp B - B.comp A) ψ⟫_ℝ) ^ 2 ≤
+      ‖centeredVector A a ψ‖ ^ 2 * ‖centeredVector B b ψ‖ ^ 2 := by
+  have h := centered_robertson_schrodinger_of_phase
+    P hPnorm hPskew A B hA hB hAP hBP a b ψ
+  have hcov := sq_nonneg (⟪centeredVector A a ψ, centeredVector B b ψ⟫_ℝ)
+  linarith
+
 /-- The full covariance-plus-commutator uncertainty bound for actual
 self-adjoint real observables preserving the internal phase. -/
 theorem centered_robertson_schrodinger
@@ -46,17 +90,9 @@ theorem centered_robertson_schrodinger
     (⟪centeredVector A a ψ, centeredVector B b ψ⟫_ℝ) ^ 2 +
         (1 / 4 : ℝ) * (⟪Iop ψ, (A.comp B - B.comp A) ψ⟫_ℝ) ^ 2 ≤
       ‖centeredVector A a ψ‖ ^ 2 * ‖centeredVector B b ψ‖ ^ 2 := by
-  have hphase := twice_centered_phase_pair_eq_commutator A B hA hB hAI hBI a b ψ
-  have harea := InternalPhaseGram.inner_sq_add_phase_inner_sq_le
-    (E := E) (centeredVector A a ψ) (centeredVector B b ψ)
-  calc
-    (⟪centeredVector A a ψ, centeredVector B b ψ⟫_ℝ) ^ 2 +
-        (1 / 4 : ℝ) * (⟪Iop ψ, (A.comp B - B.comp A) ψ⟫_ℝ) ^ 2 =
-      (⟪centeredVector A a ψ, centeredVector B b ψ⟫_ℝ) ^ 2 +
-        (⟪Iop (centeredVector A a ψ), centeredVector B b ψ⟫_ℝ) ^ 2 := by
-          rw [← hphase]
-          ring
-    _ ≤ ‖centeredVector A a ψ‖ ^ 2 * ‖centeredVector B b ψ‖ ^ 2 := harea
+  exact centered_robertson_schrodinger_of_phase Iop
+    (fun x => complex_i_norm x) (fun x y => InternalPhaseGram.phase_pair_neg_swap x y)
+    A B hA hB hAI hBI a b ψ
 
 /-- Dropping the nonnegative real covariance square gives the Robertson
 commutator lower bound. -/
@@ -67,9 +103,9 @@ theorem centered_robertson
     (a b : ℝ) (ψ : H₂) :
     (1 / 4 : ℝ) * (⟪Iop ψ, (A.comp B - B.comp A) ψ⟫_ℝ) ^ 2 ≤
       ‖centeredVector A a ψ‖ ^ 2 * ‖centeredVector B b ψ‖ ^ 2 := by
-  have h := centered_robertson_schrodinger A B hA hB hAI hBI a b ψ
-  have hcov := sq_nonneg (⟪centeredVector A a ψ, centeredVector B b ψ⟫_ℝ)
-  linarith
+  exact centered_robertson_of_phase Iop
+    (fun x => complex_i_norm x) (fun x y => InternalPhaseGram.phase_pair_neg_swap x y)
+    A B hA hB hAI hBI a b ψ
 
 /-- With a unit state and its actual mean, the centered Hilbert squared
 norm is the second moment minus the squared mean. -/

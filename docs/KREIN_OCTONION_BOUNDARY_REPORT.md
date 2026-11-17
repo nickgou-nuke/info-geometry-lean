@@ -70,7 +70,9 @@ reported from current commands.
 | Staged proof gate | PASS, exit 0 | Repeated by the installed pre-commit hook after the scalar-type clarification. |
 | Root targeted Lake build | BLOCKED, exit 1 | Package initialization stopped at the absent `HomotopyHypothesis` directory, before compiling the new modules. |
 | Five-file axiom/debt source scan | PASS | Five clean files; zero `sorry`/`axiom`/`admit` gaps. This is not an elaborated axiom audit. |
-| Installed pre-push gate | NOT PASSED | Exact-commit attempt reached the failed root build; the remaining repository-wide source scans were still running at this checkpoint. |
+| Repository semantic-content scan | PASS | 27,280 selected Lean files; zero current findings. Lexical scope only. |
+| Tracked Lean scope and quarantine audits | PASS | Both maintained source audits completed successfully. |
+| Installed pre-push gate | FAILED, exit 1 | The targeted root build was blocked by missing `HomotopyHypothesis`; all subsequent source audits passed. |
 
 A current nonwaiting invocation of `run_locked_lake_build.py` with the five
 targets returned exit 2 before compilation: the shared lock was held by
@@ -79,6 +81,8 @@ that lock. This is a scheduling result, not a Lean elaboration failure.
 
 The installed pre-push hook was subsequently invoked for the actual new-ref
 record at local commit `dc769a9bb0903bbc11f293072cb6ca489a0d62d2`.
+The five Lean blobs in that gate snapshot and the published candidate are
+identical; subsequent changes update this validation record only.
 Its locked five-target build acquired the shared lock, checked out the pinned
 Mathlib and LeanCopilot dependencies, and returned:
 

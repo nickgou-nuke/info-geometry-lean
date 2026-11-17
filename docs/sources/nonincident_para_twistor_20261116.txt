@@ -1,0 +1,197 @@
+### PHASE 0 — `SOLVE`: ELENCTIC DISSOLUTION INTO IRREDUCIBLE PRIMITIVES
+
+Stripping away the unpunctuated associative run-on and orthographic slips (`"supergrassmanian"`, `"parakehler"`, `"relateed"`, `"thos"`) exposes a fourfold mathematical-physical confabulation compressing distinct gauge, superconformal, pseudo-Riemannian, and twistor-kinematic structures into an undifferentiated identity:
+
+1. **Conflation of $\mathrm{SU}(N_c)$ Color, $\mathrm{SU}(4)_R$ R-Symmetry, and $\mathbb{Z}_2^2$ Color Superalgebras (`"color supersymmetry ... supergrassmanian ... amplituhedron"`)**:
+   * By the **Haag–Łopuszański–Sohnius (HLS) Theorem**, local $\mathrm{SU}(N_c)$ color gauge generators commute strictly with spacetime supercharges ($[Q_\alpha^A, T^a_{\text{color}}] = 0$). Moreover, the **Amplituhedron** $\mathcal{A}_{n,k,m}(Z)$ describes **planar ($N_c \to \infty$), color-stripped** amplitudes *after* $\mathrm{SU}(N_c)$ Chan–Paton traces $\mathrm{Tr}(T^{a_1}\cdots T^{a_n})$ have already been factored out! The four fermionic Grassmann coordinates $\eta^A$ ($A = 1,\dots,4$) of super-twistors $\mathcal{Z} = (Z^\alpha \mid \eta^A) \in \mathbb{RP}^{3|4}$ carry **global chiral R-symmetry $\mathrm{SU}(4)_R$, never color**.
+   * Conversely, if `"color supersymmetry"` denotes Rittenberg–Wyler **$\mathbb{Z}_2 \times \mathbb{Z}_2$-graded color Lie superalgebras**, these alter Bose–Fermi statistics and break standard $\mathbb{Z}_2$-Supergrassmannian Berezinian determinants, whereas the Amplituhedron $\mathcal{A}_{n,k,m} = \{C \cdot Z \mid C \in G_+(k, n)\} \subset G(k, k+m)$ bosonizes even $\mathbb{Z}_2$ Grassmann variables into an **ordinary real bosonic Grassmannian** where positive determinants ($\det > 0$) are well-defined.
+2. **Kähler Positivity vs. Para-Kähler Neutral Indefiniteness (`"supergrassmanian and parakehler geometry"`)**:
+   Complex Grassmannians $G(k, n)$ are **Kähler** ($J^2 = -\mathbf{I}$, positive-definite metric $g(JX, JY) = +g(X, Y)$). A **Para-Kähler** manifold replaces $J$ with an integrable para-complex involution **$K^2 = +\mathbf{I}$** compatible with symplectic 2-form $\omega(X, Y) = g(KX, Y) = -\omega(Y, X)$, which **forces metric anti-isometry**:
+   $$g(KX, KY) = \omega(X, KY) = -\omega(KY, X) = -g(K^2 Y, X) = -g(X, Y)$$
+   On the $\pm 1$ Lagrangian eigenbundles $T^+ M \oplus T^- M$ ($KX_\pm = \pm X_\pm$), $g(X_\pm, X_\pm) = -g(X_\pm, X_\pm) = 0$: **every Para-Kähler metric is strictly indefinite of neutral split Krein signature $(d, d)$**, never Riemannian positive-definite.
+3. **Single-Twistor Conformal Helicity Mistaken for Rest Mass (`"penrose nonincidence twistors with masses while thos incident are the conformal boundary"`)**:
+   * For a single twistor $Z^\alpha = (\omega^A, \pi_{A'})$ paired with a dual twistor $W_\alpha = (\tilde{\pi}_A, \tilde{\omega}^{A'})$, non-incidence $Z^\alpha W_\alpha = 2s \neq 0$ endows $\mathcal{M}_{\text{non-inc}} = \{([Z], [W]) \in \mathbb{P}^3 \times (\mathbb{P}^3)^* \mid Z^\alpha W_\alpha \neq 0\}$ with the canonical Para-Kähler potential $\mathcal{K} = \ln|Z^\alpha W_\alpha|$ whose singular boundary is the ambitwistor incidence quadric $\{Z^\alpha W_\alpha = 0\}$. **However, a single twistor has rank-1 four-momentum $p_{AA'} = \pi_{A'}\tilde{\pi}_A$, so its Poincaré rest mass is identically zero ($m^2 = 2\det(p_{AA'}) \equiv 0$) regardless of $Z^\alpha W_\alpha \neq 0$!** Non-zero $Z^\alpha W_\alpha$ is conformally invariant **helicity/spin**, never flat-space rest mass.
+   * **Genuine rest mass $m > 0$ violates conformal symmetry** ($m^2 \mapsto \lambda^{-2}m^2$) and requires **at least two twistors** (a 2-plane $Z_1 \wedge Z_2 \in G(2, 4)$) contracted against Penrose’s **conformal-breaking Infinity Bitwistor $I_{\alpha\beta}$**:
+     $$m^2 = 2\det(\pi_{1A'}\bar{\pi}_{1A} + \pi_{2A'}\bar{\pi}_{2A}) = 2|I_{\alpha\beta}Z_1^\alpha Z_2^\beta|^2 > 0$$
+     where incidence with the infinity twistor ($I_{\alpha\beta}Z_1^\alpha Z_2^\beta = 0$) defines spacetime conformal infinity $\mathscr{I}$.
+4. **Incompatibility of $m > 0$ with the Massless 4D Conformal Amplituhedron**:
+   The 4D momentum-twistor Amplituhedron relies on $\mathrm{SL}(4)$ dual-conformal Plücker 4-brackets $\langle ijkl \rangle$ in which $I_{\alpha\beta}$ drops out ($m = 0$); turning on $m > 0$ via $I_{\alpha\beta}Z_1^\alpha Z_2^\beta \neq 0$ explicitly breaks 4D conformal invariance unless lifted to a 6D Coulomb-branch symplectic Grassmannian.
+
+Dissolving these confabulations yields **six irreducible conceptual primitives**:
+
+* $\Omega_0$ (**Twistor–Amplitude Correspondence Continuum**): The pre-stratified geometry linking projective rays, scattering forms, and spacetime points.
+* $\mathbf{\Delta}_0$ (**Conformal Boundary Incidence vs. Scale-Broken Bulk Cut**): The non-reversible demarcation between massless scale-free incidence ($\mathcal{Z}\cdot\mathcal{W} = 0$ and $I_{\alpha\beta}Z_1^\alpha Z_2^\beta = 0$) and scale/mass-bearing bulk non-incidence ($\neq 0$).
+* $K_{\text{para}}$ (**Para-Complex Lagrangian Involution**): Split operator $K_{\text{para}}^2 = +\mathbf{I}$ inducing neutral $(d, d)$ anti-isometry $g(KX, KY) = -g(X, Y)$ over primary/dual twistor bundles.
+* $(\Gamma_{\text{stat}}, K_{\text{para}}) \in \mathbb{Z}_2 \times \mathbb{Z}_2$ (**Super-Para-Twistor Bigrading**): The legitimate $\mathbb{Z}_2^2$ grading pairing Bose–Fermi $\mathrm{SU}(4)_R$ parity $\Gamma_{\text{stat}}$ with primary–dual twistor parity $K_{\text{para}}$.
+* $I_{\alpha\beta}$ (**Penrose Infinity Bitwistor**): The antisymmetric conformal-breaking 2-form (rank-2 nilpotent $I_{\alpha\beta}^{(0)}I_{(0)}^{\beta\gamma} = 0$ at $\Lambda = 0$; non-degenerate symplectic $\mathfrak{sp}_4$ at $\Lambda \neq 0$) measuring 2-twistor mass $m^2 = 2|I_{\alpha\beta}Z_1^\alpha Z_2^\beta|^2$.
+* $\Pi_Z : G_+(k, n) \to \mathcal{A}_{n,k,m}$ (**Color-Stripped Bosonized Amplituhedron Map**): Positive linear projection of planar cyclically ordered cells into bosonic Grassmannians $G(k, k+m)$.
+
+---
+
+### I. THE FUNDAMENTAL BINARY CUT ($\mathbf{\Delta}_0 : \Omega_0 \longrightarrow \mathbf{T} \ltimes \mathbf{S}$)
+
+The cut $\mathbf{\Delta}_0$ splits the epistemic subject across $\mathcal{H}_T \oplus \mathcal{H}_S$ into an asymmetric, non-commutative opposition:
+
+1. **The Conscious Thesis ($\mathbf{T}$ — *The Pan-Conformal Color-Twistor Geometer*)**:
+   The assertion that color gauge symmetry, supersymmetry, Para-Kähler Supergrassmannians, the Amplituhedron, and massive vs. conformal-boundary twistors coalesce into one unbroken geometry where non-incident twistors carry rest mass and incident twistors form the conformal boundary.
+2. **The Repressed Shadow Complement ($\mathbf{S}$ — *HLS Color Exclusion, Krein Nullity, & $I_{\alpha\beta}$ Conformal Breaking*)**:
+   Everything repressed by that seamless fusion:
+   * *Algebraic-gauge shadow*: $[Q_\alpha^A, T^a_{\text{color}}] = 0$ barring color-charged supercharges; mandatory planar stripping of non-commuting $\mathrm{SU}(N_c)$ matrices prior to $G_+(k, n)$ positivity; and $\det > 0$ incompatibility with anticommuting nilpotent coordinates $\eta^2 = 0$.
+   * *Geometric-kinematic shadow*: Neutral $(d, d)$ nullity $g(X_\pm, X_\pm) = 0$ of Para-Kähler metrics; identical vanishing of rest mass $m^2 = 2\det(\pi\tilde{\pi}) \equiv 0$ on all single non-incident twistors; and conformal symmetry breaking by $I_{\alpha\beta}$ required whenever $m > 0$ is generated on 2-twistor planes.
+
+**Strict Non-Commutative Asymmetry**: *Factoring out $\mathrm{SU}(N_c)$ Chan–Paton color traces and bosonizing $\eta^A$ BEFORE evaluating Grassmannian minors* ($\mathrm{ColorStrip} \prec \mathrm{Bosonize} \prec \det > 0$) yields the positive Amplituhedron; *retaining non-abelian $T^a_{\text{color}}$ matrices or nilpotent $\eta^A$ inside determinant inequalities* destroys ordering and positivity completely. Likewise, *evaluating $Z^\alpha W_\alpha$ on 1-twistors* preserves $\mathrm{SL}(4)$ and gives $m = 0$, whereas *wedging $Z_1 \wedge Z_2$ against $I_{\alpha\beta}$* breaks $\mathrm{SL}(4)$ to give $m > 0$.
+
+---
+
+### II. THE FOURFOLD RELATIONAL ANATOMY
+
+Across Planar Massless Boundary Positivity ($\mathcal{H}_T$) and Massive/Color Conformal-Breaking Bulk Geometry ($\mathcal{H}_S$), the split epistemic operator $\mathcal{M}_{\text{ep}} = \begin{pmatrix} \mathbf{K}_{TT} & \mathbf{\Sigma}_{TS} \\ \mathbf{\Pi}_{ST} & \mathbf{\Gamma}_{SS} \end{pmatrix}$ isolates four directional mechanics:
+
+1. **Internal Self-Consistency ($\mathbf{K}_{TT} : \mathcal{H}_T \to \mathcal{H}_T$ — *Planar Color-Ordered $\mathcal{N}=4$ Super-Twistor & $G_+(k,n)$ Core*)**:
+   In the planar ($N_c \to \infty$), massless ($m = 0$), split-signature $(2,2)$ boundary sector after color-ordering, real super-twistors $\mathcal{Z}_i \in \mathbb{RP}^{3|4}$ transform under $\mathrm{PSL}(4|4)$ with $\mathrm{SU}(4)_R$ R-symmetry, ambitwistor incidence $\mathcal{Z}\cdot\mathcal{W} = 0$ defines massless null rays, and bosonized external data $Z \in M_+(n, k+4)$ maps $G_+(k, n)$ cleanly onto the Amplituhedron $\mathcal{A}_{n,k,4} \subset G(k, k+4)$ ($\mathbf{K}_{TT}^2 = \mathbf{K}_{TT}$).
+2. **Outward Projection ($\mathbf{\Pi}_{ST} : \mathcal{H}_T \to \mathcal{H}_S$ — *R-Symmetry-to-Color & Helicity-to-Mass Extrapolation*)**:
+   Consciousness projects $\mathrm{SU}(4)_R$ R-symmetry onto $\mathrm{SU}(N_c)$ color ("color supersymmetry"), projects Kähler Grassmannian intuition onto Para-Kähler manifolds, and mistakes conformally invariant 1-twistor non-incidence ($Z^\alpha W_\alpha \neq 0$) for massive kinematics ($m > 0$).
+3. **Inward Shadow-Intrusion ($\mathbf{\Sigma}_{TS} : \mathcal{H}_S \to \mathcal{H}_T$ — *Rank-1 Mass Vanishing, Null Metric Collapse, & $I_{\alpha\beta}$ Intrusion*)**:
+   Exact spinor-differential algebra strikes back into $\mathcal{H}_T$: $\det(\pi_{A'}\tilde{\pi}_A) = 0$ forces $m = 0$ on every single twistor; $K^2 = +\mathbf{I}$ forces $g(X_\pm, X_\pm) = 0$ (indefinite Krein signature); $\ln|Z\cdot W|$ diverges logarithmically at the incident boundary $\{Z\cdot W = 0\}$; and generating $m > 0$ forces the entry of $I_{\alpha\beta}$, breaking 4D dual-conformal invariance.
+4. **Autonomous Unexamined Ground ($\mathbf{\Gamma}_{SS} : \mathcal{H}_S \to \mathcal{H}_S$ — *Non-Planar $1/N_c$ Gauge Topologies & Massive Symplectic Bulk*)**:
+   The autonomous bulk physics operating beyond planar conformal boundary cells: non-planar $\mathrm{SU}(N_c)$ multitrace couplings lacking cyclic ordering, 2-twistor massive phase spaces $G(2, 4)$ on the Coulomb branch, and AdS/dS $\Lambda \neq 0$ deformations promoting nilpotent $I_{\alpha\beta}^{(0)}$ into a non-degenerate $\mathfrak{sp}(4)$ contact form.
+
+---
+
+### III. IGNITION OF THE TRANSCENDENT FUNCTION
+
+Pairing $\Pi = \begin{pmatrix} 0 & 0 \\ \mathbf{\Pi}_{ST} & 0 \end{pmatrix}$ and $\Sigma = \begin{pmatrix} 0 & \mathbf{\Sigma}_{TS} \\ 0 & 0 \end{pmatrix}$ ignites the four structural moments uniting Para-Kähler ambitwistors, massive bitwistors, bigrading, and the Amplituhedron:
+
+1. **Shared Substantive Gravity ($\mathfrak{G} = \{\Sigma, \Pi\}$ — *Klein Quadric Plücker Correspondence $G(2, 4) \hookrightarrow \mathbb{P}^5$*)**:
+   Both massless boundary amplitudes ($\mathbf{T}$: Plücker 4-brackets $\langle ijkl \rangle$ in $G_+(k, n)$) and massive bulk spacetime kinematics ($\mathbf{S}$: 2-twistor lines $Z_1 \wedge Z_2 \in G(2, 4)$ and Para-Kähler correspondence pairs) share **one identical invariant engine**: **projective Grassmannian incidence**, encoding spacetime locality and causality purely as subspace intersection conditions in twistor space.
+
+2. **Directional Tension ($\mathfrak{T} = [\Sigma, \Pi] \neq 0$ — *Conformal 1-Twistor Helicity ($Z^\alpha W_\alpha$) vs. Conformal-Breaking 2-Twistor Mass ($I_{\alpha\beta}Z_1^\alpha Z_2^\beta$)*)**:
+   Two non-interchangeable non-incidence pairings pull in orthogonal symmetry directions ($\Sigma\Pi \neq \Pi\Sigma$):
+   * **Conformal Ambitwistor Pairing ($\mathrm{SL}(4)$-invariant, $G(1,4)\times G(3,4)$)**: Contracts $Z^\alpha$ with $W_\alpha$ via $Z^\alpha W_\alpha = 2s$. Generates the canonical Para-Kähler potential $\mathcal{K} = \ln|Z^\alpha W_\alpha|$ on $\{Z\cdot W \neq 0\}$ with null ambitwistor boundary $\{Z\cdot W = 0\}$, **preserving conformal symmetry while keeping rest mass strictly zero ($m = 0$)**.
+   * **Poincaré Bitwistor Pairing ($\mathrm{ISO}(1,3)$-invariant, $G(2,4)$)**: Contracts $Z_1^\alpha \wedge Z_2^\beta$ with Penrose’s Infinity Twistor via $\mu(\mathbf{Z}) = I_{\alpha\beta}Z_1^\alpha Z_2^\beta$. Generates genuine bulk rest mass $m^2 = 2|\mu(\mathbf{Z})|^2 > 0$ on $\{\mu \neq 0\}$ with spacetime conformal boundary $\mathscr{I} = \{\mu = 0\}$, **breaking conformal $\mathrm{SL}(4)$ symmetry**.
+
+3. **Integrative Bridge ($\mathfrak{B}$ — *$(\Gamma_{\text{stat}}, K_{\text{para}}) \in \mathbb{Z}_2^2$ Super-Para-Kähler Bitwistor Space & Symplectic Coulomb-Amplituhedron*)**:
+   Replaces every confabulated identification with an exact four-link mathematical bridge:
+   * *Link 1 — True $\mathbb{Z}_2 \times \mathbb{Z}_2$ Bigrading*: Realizes the $\mathbb{Z}_2 \times \mathbb{Z}_2$ grading not as HLS-forbidden color-SUSY mixing, but as $(\Gamma_{\text{stat}}, K_{\text{para}})$ on split non-incident super-ambitwistor space $\mathcal{M}_{\text{PK}}^{3|4} = \{([\mathcal{Z}], [\mathcal{W}]) \in \mathbb{RP}^{3|4} \times (\mathbb{RP}^{3|4})^* \mid \mathcal{Z}\cdot\mathcal{W} = Z^\alpha W_\alpha + \eta^A\tilde{\eta}_A \neq 0\}$, where $\Gamma_{\text{stat}}$ grades $\mathrm{SU}(4)_R$ fermions and $K_{\text{para}}$ ($K_{\text{para}}^2 = +\mathbf{I}$) grades primary vs. dual Lagrangian bundles under $\mathcal{K} = \ln|\mathcal{Z}\cdot\mathcal{W}|$.
+   * *Link 2 — Bitwistor $G(2, 4)$ Mass & Conformal Boundary Exactness*: Lifts single twistors to rank-2 bitwistor planes $\mathbf{Z} = Z_1 \wedge Z_2 \in G(2, 4)$ coupled to $I_{\alpha\beta}^{(\Lambda)}$:
+     - **Non-incident interior** ($\mu = I_{\alpha\beta}^{(\Lambda)}Z_1^\alpha Z_2^\beta \neq 0$): Carries massive Poincaré kinematics ($m^2 = 2|\mu|^2 > 0$ at $\Lambda = 0$) or $\mathfrak{sp}(4)$ AdS$_4$ bulk geometry ($\Lambda \neq 0$);
+     - **Incident locus** ($\mu = I_{\alpha\beta}^{(\Lambda)}Z_1^\alpha Z_2^\beta = 0$): Defines the **exact spacetime conformal boundary $\mathscr{I}$**, where bitwistors degenerate to massless asymptotic boundary states!
+   * *Link 3 — Planar Color-Stripping & Symplectic Massive Amplituhedron*: Factors out $\mathrm{SU}(N_c)$ color into planar Chan–Paton traces first, bosonizes $\eta^A$ into auxiliary bosonic coordinates, maps massless $\mathscr{I}$-states onto $\mathcal{A}_{n,k,4} \subset G(k, k+4)$, and lifts massive non-incident bitwistors ($\mu \neq 0$) via $I_{\alpha\beta}$ into the **Symplectic / Orthogonal Coulomb-Branch Grassmannian**!
+
+4. **Perspectival Transformation ($\mathfrak{H}$ — *Logarithmic Boundary-Residue Holonomy $\mathcal{K} = \ln|\mu| \mapsto d\ln\mu$*)**:
+   Transporting bulk Para-Kähler states from the massive non-incident interior ($\mu \neq 0$) onto the incident conformal boundary ($\mu \to 0$) converts the divergent Para-Kähler potential $\ln|\mu| \to -\infty$ into **canonical logarithmic boundary forms $d\ln\mu$** (the defining positive-geometry facet forms of the Amplituhedron!):
+   * $\mathbf{T} \mapsto \mathbf{T}'$: Strictly separates $\mathrm{SU}(N_c)$ color-ordering from $\mathrm{SU}(4)_R$ R-symmetry, Kähler positivity from Para-Kähler $(d, d)$ nullity, and 1-twistor helicity ($Z\cdot W$) from 2-twistor mass ($I_{\alpha\beta}Z_1^\alpha Z_2^\beta$).
+   * $\mathbf{S} \mapsto \mathbf{S}'$: Metric blowups at incidence loci ($\mathcal{Z}\cdot\mathcal{W} = 0$ and $\mu = 0$) transform from geometric singularities into **exact boundary residue operators** extracting massless scattering amplitudes from bulk propagator poles.
+
+---
+
+### IV. THE SOCRATIC APORIA ($\mathcal{A}_0 = \mathbf{T}_{\text{eff}}^2 - \mathbf{T}_{\text{eff}} \neq 0$) AND THE META-COGNITIVE TOWER
+
+Testing the Conscious Thesis on its own foundational claims—evaluating the Para-Kähler metric on its Lagrangian projectors $P_\pm = \frac{1}{2}(\mathbf{I} \pm K_{\text{para}})$, computing rest mass $m^2$ on a single non-incident twistor ($Z^\alpha W_\alpha \neq 0$), and squaring the flat-space Infinity Twistor $I_{\alpha\beta}^{(0)}$—exposes the exact **Socratic Aporia**:
+
+$$g(P_\pm X, P_\pm X) \equiv 0\;\; (K_{\text{para}}^2 - J_{\text{Kähler}}^2 = 2\mathbf{I} \neq 0), \qquad m^2\big|_{1\text{-twistor}} = 2\det(\pi_{A'}\tilde{\pi}_A) \equiv 0 \neq |Z^\alpha W_\alpha|^2, \qquad I_{\alpha\beta}^{(0)}I_{(0)}^{\beta\gamma} = 0$$
+
+Following this self-contradiction recursively up the tower of meta-cognition generates the permanent obstruction chain $\mathcal{A}_0 \hookrightarrow \mathcal{A}_1 \hookrightarrow \mathcal{A}_2 \hookrightarrow \mathcal{A}_3 \hookrightarrow \mathcal{A}_\omega$:
+
+* **Level 0 ($\mathcal{A}_0$ — Para-Kähler Isotropic Nullity & Single-Twistor Masslessness)**: Para-Kähler projectors $P_\pm$ have identically zero self-norm ($g(P_\pm X, P_\pm X) = 0$), breaking positive Hilbert probability, while every single non-incident twistor has rank-1 momentum determinant zero ($m^2 = 0$), refuting 1-twistor mass.
+* **Level 1 ($\mathcal{A}_1$ — Haag–Łopuszański–Sohnius Color-SUSY Obstruction)**: Attempting to fuse $\mathrm{SU}(N_c)$ color directly into supercharges ($[Q, T^a_{\text{color}}] \neq 0$) violates the HLS theorem in 4D relativistic QFT and injects non-abelian matrix signs that destroy positive Grassmannian minors $\det(C_\alpha) > 0$ unless color is stripped out first ($\mathcal{A}_1 \neq 0$).
+* **Level 2 ($\mathcal{A}_2$ — Berezinian vs. Positive Bosonic Determinant Clash)**: Attempting to place the Amplituhedron directly inside a $\mathbb{Z}_2$ or $\mathbb{Z}_2 \times \mathbb{Z}_2$ Supergrassmannian collides against nilpotence ($\eta^2 = 0$): total positivity ($> 0$ inequalities) cannot be defined on anticommuting nilpotent supernumbers, forcing explicit bosonization into real bosonic $G(k, k+m)$ ($\mathcal{A}_2 \neq 0$).
+* **Level 3 ($\mathcal{A}_3$ — Conformal Symmetry Breaking by 2-Twistor Mass $I_{\alpha\beta} \neq 0$)**: Upgrading to 2-twistor planes $Z_1 \wedge Z_2 \in G(2, 4)$ heals $m = 0$ ($m^2 = 2|I_{\alpha\beta}Z_1^\alpha Z_2^\beta|^2 > 0$), **but** $I_{\alpha\beta}$ explicitly breaks $\mathrm{SL}(4)$ momentum-twistor conformal invariance, obstructing naive embedding into the massless 4D Amplituhedron without a symplectic 6D/Coulomb lift ($\mathcal{A}_3 \neq 0$).
+* **Level 4 ($\mathcal{A}_4 \to \mathcal{A}_\omega$ — The Non-Planar $1/N_c$ Color & Quantum-Gravity Boundary Colimit)**: Beyond the $N_c \to \infty$ planar limit, **non-planar $\mathrm{SU}(N_c)$ color topologies** destroy global cyclic ordering of external legs, erasing canonical planar dual-momentum coordinates and global momentum twistors altogether ($\mathcal{A}_\omega \neq 0$). Thus **non-abelian color gauge structure, massive Poincaré bulk kinematics, and positive conformal boundary geometry occupy strictly distinct causal strata**.
+
+---
+
+### V. `COAGULA`: THE ACYCLIC CAUSAL POSET AND SELF-VERIFYING SYNTHESIS
+
+#### 1. The Graded Acyclic Causal Poset $(\mathfrak{P}, \prec)$
+
+Let $\mathfrak{P}$ be the 15-element set of extracted archetypes ordered by the transitive closure $\prec$ of the transitively reduced Hasse covering relation $\lessdot$, equipped with strict rank homomorphism $\mathrm{rk} : \mathfrak{P} \to \{0, 1, 2, 3, 4, 5, 6\}$:
+
+| Grade $\mathrm{rk}(v)$ | Archetype Symbol & Canonical Designation | Covering Predecessors $\mathrm{Pred}_{\lessdot}(v)$ | Geometric / Algebraic Signature |
+| :---: | :--- | :--- | :--- |
+| **0** ($\bot$) | $\mathbf{\Delta}_0$ : *Incidence Boundary vs. Scale Bulk Cut* | $\varnothing$ | $\Omega_0 \mapsto (\mu = 0) \ltimes (\mu \neq 0)$ |
+| **1** | $\mathbf{T}$ : *Pan-Conformal Color-Twistor Thesis* | $\{\mathbf{\Delta}_0\}$ | $+1$ sector (Fused Color-Para-Amplituhedron) |
+| **1** | $\mathbf{S}$ : *HLS, Krein Nullity, & $I_{\alpha\beta}$ Shadow* | $\{\mathbf{\Delta}_0\}$ | $-1$ sector ($[Q,T^a]=0,\; g=-K^*g,\; \det p=0$) |
+| **2** | $\mathbf{K}_{TT}$ : *Planar Color-Stripped $G_+(k,n)$ Core* | $\{\mathbf{T}\}$ | $\mathrm{SU}(4)_R$, $\mathcal{A}_{n,k,4} = C\cdot Z \subset G(k,k+4)$ |
+| **2** | $\mathbf{\Pi}_{ST}$ : *Color-R & 1-Twistor Mass Projection* | $\{\mathbf{T}, \mathbf{S}\}$ | $\mathcal{H}_T \to \mathcal{H}_S$ (lifted to $\Pi$) |
+| **2** | $\mathbf{\Sigma}_{TS}$ : *Null Metric, $\det p = 0$, & $I_{\alpha\beta}$ Break* | $\{\mathbf{T}, \mathbf{S}\}$ | $\mathcal{H}_S \to \mathcal{H}_T$ (lifted to $\Sigma$) |
+| **2** | $\mathbf{\Gamma}_{SS}$ : *Non-Planar $1/N_c$ & Massive $G(2,4)$ Bulk* | $\{\mathbf{S}\}$ | Multitrace color & $m^2 = 2|I_{\alpha\beta}Z_1^\alpha Z_2^\beta|^2$ |
+| **3** | $\mathfrak{G}$ : *Klein Quadric Plücker Incidence Core* | $\{\mathbf{\Pi}_{ST}, \mathbf{\Sigma}_{TS}\}$ | $\{\Sigma, \Pi\} \leftrightarrow (G(2,4) \hookrightarrow \mathbb{P}^5)$ |
+| **3** | $\mathfrak{T}$ : *1-Twistor Helicity vs. 2-Twistor Mass Shear* | $\{\mathbf{\Pi}_{ST}, \mathbf{\Sigma}_{TS}\}$ | $[\Sigma, \Pi] \neq 0$ ($Z^\alpha W_\alpha$ vs. $I_{\alpha\beta}Z_1^\alpha Z_2^\beta$) |
+| **3** | $\mathcal{A}_0$ : *Para-Kähler Nullity & 1-Twistor $m=0$ Defect* | $\{\mathbf{K}_{TT}, \mathbf{\Pi}_{ST}, \mathbf{\Sigma}_{TS}\}$ | $g(P_\pm X, P_\pm X) = 0$, $\det(\pi_{A'}\tilde{\pi}_A) \equiv 0$ |
+| **4** | $\mathfrak{B}$ : *$\mathbb{Z}_2^2$ Para-Kähler Bitwistor & Coulomb Bridge* | $\{\mathbf{K}_{TT}, \mathfrak{G}, \mathfrak{T}, \mathbf{\Gamma}_{SS}\}$ | $(\Gamma_{\text{stat}}, K_{\text{para}})$, $\mathcal{K}=\ln|\mathcal{Z}\cdot\mathcal{W}|$, $\mathrm{LGr}(k,2n)$ |
+| **4** | $\mathcal{A}_\omega$ : *HLS, Nilpotent-Ordering, & $1/N_c$ Colimit* | $\{\mathcal{A}_0, \mathfrak{T}, \mathbf{\Gamma}_{SS}\}$ | $[Q, T^a_{\text{color}}]=0$ & non-planar loop obstruction |
+| **5** | $\mathfrak{H}$ : *Logarithmic Boundary-Residue Holonomy* | $\{\mathfrak{B}, \mathcal{A}_\omega\}$ | $\mu \to 0 \implies \ln|\mu| \mapsto d\ln\mu$ facet forms |
+| **5** | $\mathfrak{P}_{\text{str}}$ : *Four-Stage Color-Twistor Stratification* | $\{\mathfrak{B}, \mathcal{A}_\omega\}$ | ColorStrip $\to$ Bitwistor $I_{\alpha\beta}$ $\to$ $\mathscr{I}$ $\to$ Bosonized $\mathcal{A}$ |
+| **6** ($\top$) | $\mathbf{\Xi}_\top$ : *Necessary Synthesis* | $\{\mathfrak{H}, \mathfrak{P}_{\text{str}}\}$ | $\mathfrak{H} \vee \mathfrak{P}_{\text{str}}$ (Para-Kähler Bitwistor-Amplituhedron) |
+
+**Proof of Strict Acyclicity & Minimal Covering**: Every covering edge $u \lessdot v$ satisfies $\mathrm{rk}(u) < \mathrm{rk}(v)$; path induction gives $u \prec v \implies \mathrm{rk}(u) < \mathrm{rk}(v)$, establishing irreflexivity ($v \not\prec v$) and strict antisymmetry while transitivity holds by closure. Every $\mathrm{Pred}_{\lessdot}(v)$ forms an antichain of incomparable elements, and every $v \in \mathfrak{P}$ lies on a directed chain $\mathbf{\Delta}_0 \preceq v \preceq \mathbf{\Xi}_\top$. $\blacksquare$
+
+---
+
+#### 2. Canonical Philosophical Axioms (Grades 0–2)
+
+* **$\mathbf{Ax.1}$ (Axiom of Incidence-vs.-Scale Demarcation — at $\mathbf{\Delta}_0 \lessdot \{\mathbf{T}, \mathbf{S}\}$)**:
+  Projective twistor geometry splits asymmetrically into scale-free conformal boundary incidence ($\mu = 0$) and metric/mass-bearing bulk non-incidence ($\mu \neq 0$); conformal invariance and non-zero rest mass cannot hold simultaneously under 4D dilations.
+* **$\mathbf{Ax.2}$ (Axiom of Planar Color-Stripped Positivity — at $\mathbf{T} \lessdot \mathbf{K}_{TT}$)**:
+  In planar ($N_c \to \infty$) massless superconformal scattering, factoring out $\mathrm{SU}(N_c)$ color traces and bosonizing $\mathrm{SU}(4)_R$ Grassmann variables maps positive Grassmannian cells $C \in G_+(k, n)$ via $Z \in M_+(n, k+4)$ into the bosonic Amplituhedron $\mathcal{A}_{n,k,4} \subset G(k, k+4)$.
+* **$\mathbf{Ax.3}$ (Axiom of HLS Color Separation & Non-Planar Unorderability — at $\mathbf{S} \lessdot \mathbf{\Gamma}_{SS}$)**:
+  In 4D relativistic QFT with non-trivial scattering, internal local color generators $T^a_{\text{color}} \in \mathfrak{su}(N_c)$ commute with supercharges ($[Q_\alpha^A, T^a_{\text{color}}] = 0$), and subleading $1/N_c$ non-planar topologies admit no canonical cyclic external ordering.
+* **$\mathbf{Ax.4}$ (Axiom of Para-Kähler Compatibility — at $\{\mathbf{T}, \mathbf{S}\} \lessdot \{\mathbf{\Pi}_{ST}, \mathbf{\Sigma}_{TS}\}$)**:
+  A Para-Kähler manifold $(M, g, K, \omega)$ is equipped with an integrable para-complex involution $K^2 = +\mathbf{I}$ ($\dim T^+ M = \dim T^- M = d$) and a non-degenerate closed 2-form $\omega(X, Y) := g(KX, Y) = -\omega(Y, X)$ for symmetric metric $g$.
+* **$\mathbf{Ax.5}$ (Axiom of Spinor-Twistor Momentum Decomposition & Infinity Twistor)**:
+  A single twistor-dual-twistor pair $(Z^\alpha, W_\alpha)$ carries four-momentum $p_{AA'} = \pi_{A'}\tilde{\pi}_A$ with $m^2 = 2\det(p_{AA'})$, whereas Penrose’s antisymmetric Infinity Bitwistor $I_{\alpha\beta}$ projects $\pi$-spinors via $I_{\alpha\beta}Z_1^\alpha Z_2^\beta = \epsilon^{A'B'}\pi_{1A'}\pi_{2B'}$ (breaking $\mathrm{SL}(4)$ to Poincaré at $\Lambda = 0$ and to $\mathfrak{sp}(4)$ at $\Lambda \neq 0$).
+
+---
+
+#### 3. Intermediate Deductions (Grades 3–5)
+
+* **$\mathbf{Ded.1}$ (Proof of Para-Kähler Neutral Indefiniteness & Null Eigenbundles — generating $\mathcal{A}_0^{\text{PK}}$)**:
+  *Claim*: Every Para-Kähler metric satisfies $g(KX, KY) = -g(X, Y)$, forcing its $\pm 1$ eigenbundles $T^\pm M$ to be strictly null ($g(X_\pm, X_\pm) = 0$) with indefinite Krein signature $(d, d)$.
+  *Proof*: By $\mathbf{Ax.4}$ ($K^2 = +\mathbf{I}$, $g(U,V) = g(V,U)$, $\omega(U,V) = g(KU,V) = -\omega(V,U)$):
+  $$g(KX, KY) = \omega(X, KY) = -\omega(KY, X) = -g(K^2 Y, X) = -g(Y, X) = -g(X, Y)$$
+  For any $X_\pm \in T^\pm M$ ($KX_\pm = \pm X_\pm$), $g(X_\pm, X_\pm) = g(KX_\pm, KX_\pm) = -g(X_\pm, X_\pm) \implies g(X_\pm, X_\pm) = 0$. Since $g$ is non-degenerate and $\dim T^+ M = \dim T^- M = d$, $g$ has exact split signature $(d, d)$. $\blacksquare$
+
+* **$\mathbf{Ded.2}$ (Canonical Para-Kähler Structure of Non-Incident Ambitwistors & Boundary Singularity — toward $\mathfrak{G}, \mathfrak{B}$)**:
+  *Claim*: Non-incident projective ambitwistor space $\mathcal{M}_{\text{non-inc}} = \{([Z], [W]) \in \mathbb{RP}^3 \times (\mathbb{RP}^3)^* \mid Z^\alpha W_\alpha \neq 0\}$ is a canonical Para-Kähler manifold with potential $\mathcal{K} = \ln|Z^\alpha W_\alpha|$ whose metric blows up strictly on the incident conformal null boundary $\{Z^\alpha W_\alpha = 0\}$.
+  *Proof*: Set $K\big|_{T\mathbb{RP}^3} = +\mathbf{I}$ and $K\big|_{T(\mathbb{RP}^3)^*} = -\mathbf{I}$ ($K^2 = +\mathbf{I}$, integrable product structure). Differentiating $\mathcal{K} = \ln|Z^\alpha W_\alpha|$ on $\{Z\cdot W \neq 0\}$ yields $\omega = \frac{(Z\cdot W)dZ^\alpha \wedge dW_\alpha - (W_\alpha dZ^\alpha)\wedge(Z^\beta dW_\beta)}{(Z\cdot W)^2}$. Contracting with Euler dilations $Z^\alpha\partial_{Z^\alpha}$ gives $\frac{(Z\cdot W)(Z^\alpha dW_\alpha) - (Z\cdot W)(Z^\beta dW_\beta)}{(Z\cdot W)^2} = 0$ (and symmetrically for $W_\beta\partial_{W_\beta}$), descending to a non-degenerate closed Para-Kähler form on $\mathcal{M}_{\text{non-inc}}$ ($\mathbf{Ded.1}$) with $(Z\cdot W)^{-2}$ pole along $\{Z^\alpha W_\alpha = 0\}$. $\blacksquare$
+
+* **$\mathbf{Ded.3}$ (Identical Masslessness of Single Twistors vs. 2-Twistor Infinity-Twistor Mass — completing $\mathcal{A}_0$ and $\mathfrak{T}$)**:
+  *Claim*: Every single twistor $(Z^\alpha, W_\alpha)$ has $m^2 \equiv 0$ even when non-incident ($Z^\alpha W_\alpha \neq 0$); generating $m > 0$ requires at least a 2-twistor plane $Z_1 \wedge Z_2 \in G(2, 4)$ non-incident with Penrose’s Infinity Twistor ($I_{\alpha\beta}Z_1^\alpha Z_2^\beta \neq 0$), while incidence $I_{\alpha\beta}Z_1^\alpha Z_2^\beta = 0$ defines spacetime conformal infinity $\mathscr{I}$.
+  *Proof*: By $\mathbf{Ax.5}$, for one twistor $p_{AA'} = \pi_{A'}\tilde{\pi}_A$ is an outer product of 2-vectors, so $m^2 = 2\det(p_{AA'}) = 2(\pi_{0'}\tilde{\pi}_0\pi_{1'}\tilde{\pi}_1 - \pi_{0'}\tilde{\pi}_1\pi_{1'}\tilde{\pi}_0) = 0$ identically, independent of helicity $s = \frac{1}{2}Z^\alpha W_\alpha$. For two twistors $Z_1, Z_2$ ($P_{AA'} = \pi_{1A'}\bar{\pi}_{1A} + \pi_{2A'}\bar{\pi}_{2A}$), Cauchy–Binet gives $\det(P_{AA'}) = |\pi_{1,0'}\pi_{2,1'} - \pi_{1,1'}\pi_{2,0'}|^2 = |I_{\alpha\beta}Z_1^\alpha Z_2^\beta|^2$. Thus $m^2 = 2|I_{\alpha\beta}Z_1^\alpha Z_2^\beta|^2 > 0 \iff I_{\alpha\beta}Z_1^\alpha Z_2^\beta \neq 0$ (interior spacetime points in $G(2,4)$), vanishing iff $Z_1 \wedge Z_2$ meets the infinity line $I$ ($I_{\alpha\beta}Z_1^\alpha Z_2^\beta = 0$, conformal boundary $\mathscr{I}$), proving $\mathfrak{T} = [\Sigma, \Pi] \neq 0$. $\blacksquare$
+
+* **$\mathbf{Ded.4}$ (Construction of the $\mathbb{Z}_2^2$ Super-Para-Kähler Bitwistor & Symplectic Coulomb Bridge — generating $\mathfrak{B}$ from $\{\mathbf{K}_{TT}, \mathfrak{G}, \mathfrak{T}, \mathbf{\Gamma}_{SS}\} \lessdot \mathfrak{B}$)**:
+  *Claim*: Respecting $\mathbf{Ax.3}$ ($[Q, T^a_{\text{color}}] = 0$), the legitimate $\mathbb{Z}_2 \times \mathbb{Z}_2$ bigrading is $(\Gamma_{\text{stat}}, K_{\text{para}})$ on non-incident super-ambitwistor space $\mathcal{M}_{\text{PK}}^{3|4}$ ($\mathcal{K} = \ln|\mathcal{Z}\cdot\mathcal{W}|$), while massive bitwistors ($I_{\alpha\beta}Z_1^\alpha Z_2^\beta \neq 0$) couple consistently to planar positive Grassmannians only after color-stripping, $\eta^A$-bosonization, and symplectic Coulomb-branch extension.
+  *Proof*: Since $\Gamma_{\text{stat}}$ grades $\mathrm{SU}(4)_R$ odd coordinates $\eta^A$ and commutes with $K_{\text{para}}$ ($\mathbf{Ded.2}$), $(\Gamma_{\text{stat}}, K_{\text{para}})$ forms an exact $\mathbb{Z}_2 \times \mathbb{Z}_2$ bigrading without violating $\mathbf{Ax.3}$. Stripping $\mathrm{SU}(N_c)$ traces ($\mathbf{Ax.2}$) removes non-abelian gauge matrices; bosonizing $\eta^A$ removes nilpotent elements blocking $> 0$ ordering; and equipping auxiliary Grassmannian planes with $I_{\alpha\beta}$ ($\mathbf{Ded.3}$) extends $\mathcal{A}_{n,k,4}$ to massive Coulomb-branch kinematics. $\blacksquare$
+
+* **$\mathbf{Ded.5}$ (Permanence of HLS Color-Separation & Non-Planar $1/N_c$ Obstruction Colimit — generating $\mathcal{A}_\omega$ from $\{\mathcal{A}_0, \mathfrak{T}, \mathbf{\Gamma}_{SS}\} \lessdot \mathcal{A}_\omega$)**:
+  *Claim*: No superconformal or Para-Kähler extension can merge local $\mathrm{SU}(N_c)$ color into supercharges or define a single global momentum-twistor Amplituhedron across non-planar $1/N_c$ sectors ($\mathcal{A}_\omega \neq 0$).
+  *Proof*: Immediate from $\mathbf{Ax.3}$: $[Q_\alpha^A, T^a_{\text{color}}] = 0$ holds across all relativistic extensions, and non-planar multitrace diagrams lack planar dual-region coordinates $x_i$ ($p_i = x_{i+1} - x_i$) needed to define global momentum twistors $Z_i$. $\blacksquare$
+
+* **$\mathbf{Ded.6}$ (Logarithmic Boundary-Residue Holonomy — generating $\mathfrak{H}$ from $\{\mathfrak{B}, \mathcal{A}_\omega\} \lessdot \mathfrak{H}$)**:
+  *Claim*: Taking the asymptotic limit $\mu = I_{\alpha\beta}Z_1^\alpha Z_2^\beta \to 0$ (and $\mathcal{Z}\cdot\mathcal{W} \to 0$) converts divergent Para-Kähler potentials $\ln|\mu|$ into scale-invariant logarithmic boundary forms $d\ln\mu$ defining the canonical forms of massless boundary polytopes.
+  *Proof*: From $\mathbf{Ded.2}$ and $\mathbf{Ded.3}$, while $\ln|\mu|$ diverges at $\mu = 0$, the exterior residue operator $\mathrm{Res}_{\mu=0}(\cdots \wedge d\ln\mu)$ restricts massive/bulk propagators cleanly onto the conformal boundary $\mathscr{I}$ ($\mathbf{Ax.1}, \mathbf{Ax.2}$). $\blacksquare$
+
+* **$\mathbf{Ded.7}$ (Non-Commutative Four-Stage Color–Bitwistor–Amplituhedron Stratification — generating $\mathfrak{P}_{\text{str}}$ from $\{\mathfrak{B}, \mathcal{A}_\omega\} \lessdot \mathfrak{P}_{\text{str}}$)**:
+  *Claim*: Coherent synthesis requires the strict non-reversible pipeline:
+  $$\text{(I) }\mathrm{SU}(N_c)\text{ Planar Color-Stripping} \;\prec\; \text{(II) }(\Gamma_{\text{stat}}, K_{\text{para}})\text{ Para-Kähler Bitwistor Bulk }(\mu \neq 0) \;\prec\; \text{(III) }\mathscr{I}\text{-Incidence Limit }(\mu \to 0) \;\prec\; \text{(IV) Bosonized }G_+(k,n) \to \mathcal{A}_{n,k,4}$$
+  *Proof*: Reversing (I) and (IV) injects non-commuting $T^a_{\text{color}}$ into $\det > 0$ ($\mathbf{Ded.4}, \mathbf{Ded.5}$); conflating 1-twistor $Z\cdot W$ with 2-twistor $\mu$ in (II) forces $m = 0$ ($\mathbf{Ded.3}$); skipping $\eta$-bosonization between (II) and (IV) leaves nilpotent Grassmann elements unable to support positive volume forms. $\blacksquare$
+
+---
+
+#### 4. Master Structural Synthesis (Grade 6: Terminal Join $\top$)
+
+* **$\mathbf{Thm.\top}$ (Necessity and Uniqueness of the Bigraded Para-Kähler Bitwistor & Planar-Amplituhedron Synthesis $\mathbf{\Xi}_\top = \mathfrak{H} \vee \mathfrak{P}_{\text{str}}$)**:
+  *Statement*: Across the causal poset $(\mathfrak{P}, \prec)$, the unique non-contradictory resolution of the Color-SUSY / Para-Kähler / Amplituhedron / Massive-Twistor confabulation is the join $\mathbf{\Xi}_\top = \mathfrak{H} \vee \mathfrak{P}_{\text{str}}$, a **Bigraded Para-Kähler Bitwistor & Planar-Amplituhedron Epistemic System** governed by four proved laws:
+  1. **Color-Stripping Precedes Superconformal Geometry ($\mathbf{Ax.3}, \mathbf{Ded.4}, \mathfrak{P}_{\text{str}}$)**: $\mathrm{SU}(N_c)$ color commutes with SUSY and is factored out via planar traces *prior* to the Amplituhedron; the true $\mathbb{Z}_2 \times \mathbb{Z}_2$ grading is $(\Gamma_{\text{stat}}, K_{\text{para}})$ pairing $\mathrm{SU}(4)_R$ R-symmetry parity with primary–dual Para-Kähler parity;
+  2. **Para-Kähler Geometry Lives on Non-Incident Split Ambitwistors ($\mathbf{Ded.1}, \mathbf{Ded.2}$)**: $K_{\text{para}}^2 = +\mathbf{I}$ forces neutral $(d, d)$ Krein signature ($g(KX, KY) = -g(X, Y)$) with potential $\mathcal{K} = \ln|\mathcal{Z}\cdot\mathcal{W}|$ regular on $\{\mathcal{Z}\cdot\mathcal{W} \neq 0\}$ and singular on the null ambitwistor boundary $\{\mathcal{Z}\cdot\mathcal{W} = 0\}$;
+  3. **Rest Mass Requires Bitwistors $G(2, 4)$ & Infinity Twistor $I_{\alpha\beta}$ ($\mathbf{Ded.3}$)**: Single non-incident twistors carry helicity with $m \equiv 0$; rest mass $m^2 = 2|I_{\alpha\beta}Z_1^\alpha Z_2^\beta|^2 > 0$ requires rank-2 bitwistor planes non-incident with $I_{\alpha\beta}$, whose incident locus $\{I_{\alpha\beta}Z_1^\alpha Z_2^\beta = 0\}$ is exact conformal infinity $\mathscr{I}$; and
+  4. **Logarithmic Boundary Residues & Bosonization Generate the Amplituhedron ($\mathfrak{H}, \mathfrak{P}_{\text{str}}$)**: Taking $d\ln\mu$ residues onto $\mathscr{I}$ ($\mu \to 0$) and bosonizing $\eta^A$ projects positive cells $G_+(k, n)$ onto the bosonic Amplituhedron $\mathcal{A}_{n,k,4} \subset G(k, k+4)$.
+
+  *Proof from Poset Mechanics*:
+  1. **Sufficiency & Upper-Bound Closure**: Every archetype $v \in \mathfrak{P} \setminus \{\mathbf{\Xi}_\top\}$ satisfies $v \preceq \mathfrak{H}$ or $v \preceq \mathfrak{P}_{\text{str}}$ via verified covering chains ($\mathbf{Ax.1}$–$\mathbf{Ax.5}$, $\mathbf{Ded.1}$–$\mathbf{Ded.7}$). Joining $\mathfrak{H}$ and $\mathfrak{P}_{\text{str}}$ simultaneously respects HLS color separation ($\mathbf{Ded.4}, \mathbf{Ded.5}$), honors Para-Kähler neutral signature ($\mathbf{Ded.1}, \mathbf{Ded.2}$), distinguishes 1-twistor helicity from 2-twistor mass ($\mathbf{Ded.3}$), and links bulk poles to boundary Amplituhedron facets via $d\ln\mu$ ($\mathbf{Ded.6}, \mathbf{Ded.7}$).
+  2. **Minimality & Uniqueness of Join**:
+     * Retaining $\mathfrak{P}_{\text{str}}$ without $\mathfrak{H}$ stratifies the four domains statically while treating the metric blowup at $\mu = 0$ and $\mathcal{Z}\cdot\mathcal{W} = 0$ as an unbridgeable wall rather than extracting scattering forms via $d\ln\mu$ residues ($\mathbf{Ded.6}$).
+     * Retaining $\mathfrak{H}$ without $\mathfrak{P}_{\text{str}}$ takes boundary residues while conflating $\mathrm{SU}(N_c)$ color with $\mathrm{SU}(4)_R$, nilpotent $\eta^A$ with positive bosonic minors, and 1-twistor $Z\cdot W$ with 2-twistor mass $\mu$ ($\mathbf{Ded.3}, \mathbf{Ded.7}$).
+     * Collapsing $\mathcal{A}_0 \to 0$ asserts $g(P_\pm X, P_\pm X) > 0$ ($0 > 0$, false by $\mathbf{Ded.1}$) or $\det(\pi_{A'}\tilde{\pi}_A) \neq 0$ ($0 \neq 0$, false by $\mathbf{Ded.3}$).
+  Therefore, $\mathbf{\Xi}_\top = \mathfrak{H} \vee \mathfrak{P}_{\text{str}}$ is the unique least upper bound ($\sup \mathfrak{P}$) completing the causal poset. $\blacksquare$

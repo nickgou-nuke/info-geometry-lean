@@ -115,9 +115,11 @@ The proof order is: Clifford generator relations â†’ complementary projectors â†
 
 The new owner imports the existing `HestenesHermitianAdjoint`, which already depends on native `HestenesClPlus14`, native even reversion, and the proven even/Pauli algebra construction. Their established carriers, definitions and theorem statements are reused unchanged.
 
-The Hestenes chain genuinely uses the finite sheet definitions in `TwoSheetThreeColorWeylFinite`. That owner did not use its `ChiralCausalCone` import. Removing only that import disconnects unrelated historical `proofs.*` paths that the maintained scoped Mathlib resolver cannot resolve in this lane. Both direct Hestenes consumers use the finite sheet definitions; the two aggregate consumers already import `ChiralCausalCone` explicitly. The whole owner and these consumers were independently inspected. All theorem bodies in the sheet owner remain unchanged; it also receives the required source header.
+The Hestenes chain genuinely uses the finite sheet definitions in `TwoSheetThreeColorWeylFinite`. That owner did not use its `ChiralCausalCone` import. Removing only that import disconnects unrelated historical `proofs.*` paths that the maintained scoped Mathlib resolver cannot resolve in this lane. Both direct Hestenes consumers use the finite sheet definitions; the two aggregate consumers already import `ChiralCausalCone` explicitly. The whole owner and these consumers were independently inspected. The sheet owner receives the required source header. After the first hosted native run reported 20 target warnings, its proof tactics were simplified at those exact warning sites; all theorem statements remain unchanged.
 
-No dependency pin, verifier helper, uncertainty owner, umbrella import, or other PR branch is changed. Maintained closure resolution on the actual integrated source succeeds with 11 repository modules and 13 direct Mathlib import roots.
+The first hosted run also exposed a missing direct import in `HestenesEvenPauliEquiv`: `Mathlib.LinearAlgebra.Complex.FiniteDimensional` supplies both `Complex.finrank_real_complex` and the real finite-dimensional complex instance needed by its existing proofs. This import, the required header, and repairs to its six recorded tactic warnings are now included. Because it is an edited owner, it joins the native declaration, zero-warning, source, and hash audits. No theorem statement or carrier changes.
+
+No dependency pin, verifier helper, uncertainty owner, umbrella import, or other PR branch is changed. Maintained closure resolution on the actual integrated source succeeds with 11 repository modules and 14 direct Mathlib import roots.
 
 ## 4. Intake claims requiring correction or additional constructions
 
@@ -145,6 +147,6 @@ For the physical and analytic distinctions, see Hiai, [Concise lectures on selec
 
 ## Acceptance scope
 
-The dedicated workflow compiles the complete resolved closure of two native targets: the new spectral-corner owner and the finite sheet owner with its import trim. It audits every declaration owned by both targets, rejects target warnings, and runs source guards on both selected Lean files. The current closure has 11 repository modules. A successful scoped run would not establish a successful complete repository build, native acceptance of the other draft PRs, or the unresolved analytic/physical bridges above.
+The dedicated workflow compiles the complete resolved closure of three native targets: the new spectral-corner owner, the finite sheet owner with its import trim and warning repairs, and the existing even/Pauli equivalence with its missing direct import and warning repairs. It audits every declaration owned by all three targets, rejects target warnings, and runs source guards on all three selected Lean files. The current closure has 11 repository modules. A successful scoped run would not establish a successful complete repository build, native acceptance of the other draft PRs, or the unresolved analytic/physical bridges above.
 
 See [HESTENES_SPECTRAL_CORNERS_REVIEW.md](HESTENES_SPECTRAL_CORNERS_REVIEW.md) for exact hashes, observed results, and pending gates.

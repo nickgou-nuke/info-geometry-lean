@@ -80,22 +80,22 @@ theorem sheet_projectors :
     sheetMinus * sheetPlus = 0 ∧
     sheetPlus + sheetMinus = (1 : M2C) := by
   repeat' constructor
-  · ext i j <;> fin_cases i <;> fin_cases j <;> simp [sheetPlus, Matrix.mul_apply, Fin.sum_univ_two]
-  · ext i j <;> fin_cases i <;> fin_cases j <;> simp [sheetMinus, Matrix.mul_apply, Fin.sum_univ_two]
-  · ext i j <;> fin_cases i <;> fin_cases j <;> simp [sheetPlus, sheetMinus, Matrix.mul_apply, Fin.sum_univ_two]
-  · ext i j <;> fin_cases i <;> fin_cases j <;> simp [sheetPlus, sheetMinus, Matrix.mul_apply, Fin.sum_univ_two]
-  · ext i j <;> fin_cases i <;> fin_cases j <;> simp [sheetPlus, sheetMinus]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [sheetPlus, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [sheetMinus, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [sheetPlus, sheetMinus, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [sheetPlus, sheetMinus, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [sheetPlus, sheetMinus]
 
 theorem sheet_parity :
     sheetGamma * sheetGamma = (1 : M2C) ∧
     sheetFlip * sheetFlip = (1 : M2C) ∧
     sheetFlip * sheetGamma * sheetFlip = -sheetGamma := by
   refine ⟨?_, ?_, ?_⟩
-  · ext i j <;> fin_cases i <;> fin_cases j <;>
+  · ext i j; fin_cases i <;> fin_cases j <;>
       simp [sheetGamma, sheetPlus, sheetMinus, Matrix.mul_apply, Fin.sum_univ_two]
-  · ext i j <;> fin_cases i <;> fin_cases j <;>
+  · ext i j; fin_cases i <;> fin_cases j <;>
       simp [sheetFlip, Matrix.mul_apply, Fin.sum_univ_two]
-  · ext i j <;> fin_cases i <;> fin_cases j <;>
+  · ext i j; fin_cases i <;> fin_cases j <;>
       simp [sheetFlip, sheetGamma, sheetPlus, sheetMinus,
         Matrix.mul_apply, Fin.sum_univ_two]
 
@@ -106,7 +106,7 @@ theorem sheet_CAR :
     sheetRaise * sheetLower - sheetLower * sheetRaise = sheetGamma := by
   repeat' constructor
   all_goals
-    ext i j <;> fin_cases i <;> fin_cases j <;>
+    ext i j; fin_cases i <;> fin_cases j <;>
       simp [sheetRaise, sheetLower, sheetGamma, sheetPlus, sheetMinus,
         Matrix.mul_apply, Fin.sum_univ_two]
 
@@ -121,14 +121,14 @@ theorem color_weyl (ω : ℂ) (hω : ω ^ 2 + ω + 1 = 0) :
     colorClock ω ^ 3 = (1 : M3C) ∧
     colorClock ω * colorShift = ω • (colorShift * colorClock ω) := by
   refine ⟨?_, ?_, ?_⟩
-  · ext i j <;> fin_cases i <;> fin_cases j <;>
+  · ext i j; fin_cases i <;> fin_cases j <;>
       simp [colorShift, Matrix.mul_apply, Fin.sum_univ_three, pow_succ]
-  · ext i j <;> fin_cases i <;> fin_cases j <;>
+  · ext i j; fin_cases i <;> fin_cases j <;>
       simp [colorClock, pow_succ, Matrix.mul_apply, Fin.sum_univ_three,
         omega_mul_three ω hω, omega_mul_six ω hω]
-  · ext i j <;> fin_cases i <;> fin_cases j <;>
+  · ext i j; fin_cases i <;> fin_cases j <;>
       simp [colorShift, colorClock, Matrix.mul_apply, Fin.sum_univ_three,
-        pow_two, omega_mul_three ω hω]
+        pow_two]
     simpa [mul_assoc] using (omega_mul_three ω hω).symm
 
 theorem color_reflection_relations (ω : ℂ) (hω : ω ^ 2 + ω + 1 = 0) :
@@ -136,13 +136,12 @@ theorem color_reflection_relations (ω : ℂ) (hω : ω ^ 2 + ω + 1 = 0) :
     colorReflection * colorShift * colorReflection = colorShift ^ 2 ∧
     colorReflection * colorClock ω * colorReflection = colorClock ω ^ 2 := by
   refine ⟨?_, ?_, ?_⟩
-  · ext i j <;> fin_cases i <;> fin_cases j <;>
+  · ext i j; fin_cases i <;> fin_cases j <;>
       simp [colorReflection, Matrix.mul_apply, Fin.sum_univ_three]
-  · ext i j <;> fin_cases i <;> fin_cases j <;>
+  · ext i j; fin_cases i <;> fin_cases j <;>
       simp [colorReflection, colorShift, pow_two, Matrix.mul_apply, Fin.sum_univ_three]
-  · ext i j <;> fin_cases i <;> fin_cases j <;>
-      simp [colorReflection, colorClock, pow_two, Matrix.mul_apply, Fin.sum_univ_three,
-        omega_mul_three ω hω]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [colorReflection, colorClock, pow_two, Matrix.mul_apply, Fin.sum_univ_three]
     calc
       ω = ω * 1 := by ring
       _ = ω * (ω * ω * ω) := by rw [omega_mul_three ω hω]
@@ -153,7 +152,7 @@ theorem tensor_factor_commute (A : M2C) (B : M3C) :
       tensor (1 : M2C) B * tensor A (1 : M3C) := by
   simp only [tensor]
   rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul]
-  simp [mul_comm]
+  simp
 
 @[simp] theorem tensor_one : tensor (1 : M2C) (1 : M3C) = (1 : M6C) := by
   ext ⟨i, a⟩ ⟨j, b⟩
@@ -168,10 +167,10 @@ theorem six_state_relations :
   refine ⟨?_, ?_, ?_⟩
   · simp only [tensor]
     rw [← Matrix.mul_kronecker_mul, sheet_parity.1]
-    simpa using tensor_one
+    simp
   · simp only [tensor]
     rw [← Matrix.mul_kronecker_mul, sheet_parity.2.1]
-    simpa using tensor_one
+    simp
   · simp only [tensor]
     rw [← Matrix.mul_kronecker_mul]
     simp

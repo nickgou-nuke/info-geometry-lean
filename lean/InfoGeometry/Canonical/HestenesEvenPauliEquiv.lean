@@ -1,8 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.HestenesPauliSheetBridgeFinite
 import Mathlib.LinearAlgebra.CliffordAlgebra.Contraction
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Grading
 import Mathlib.LinearAlgebra.ExteriorPower.Basis
 import Mathlib.LinearAlgebra.Dimension.Constructions
+import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 
 /-! # The real algebra equivalence `Cl⁺(1,3) ≃ M₂(ℂ)` -/
 
@@ -96,19 +102,19 @@ def pauli3 : Sheet := !![1, 0; 0, -1]
 
 @[simp] theorem clPlusToPauli_sigma0 : clPlusToPauli (sigmaEven 0) = pauli1 := by
   rw [sigmaEven, clPlusToPauli_on_pair]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j; fin_cases i <;> fin_cases j <;>
     simp [paravector, paravectorConj, basisVec, pauli1,
       Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp] theorem clPlusToPauli_sigma1 : clPlusToPauli (sigmaEven 1) = pauli2 := by
   rw [sigmaEven, clPlusToPauli_on_pair]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j; fin_cases i <;> fin_cases j <;>
     simp [paravector, paravectorConj, basisVec, pauli2,
       Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp] theorem clPlusToPauli_sigma2 : clPlusToPauli (sigmaEven 2) = pauli3 := by
   rw [sigmaEven, clPlusToPauli_on_pair]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j; fin_cases i <;> fin_cases j <;>
     simp [paravector, paravectorConj, basisVec, pauli3,
       Matrix.mul_apply, Fin.sum_univ_two]
 
@@ -117,7 +123,7 @@ def volumeEven : ClPlus14 := sigmaEven 0 * sigmaEven 1 * sigmaEven 2
 @[simp] theorem clPlusToPauli_volumeEven :
     clPlusToPauli volumeEven = Complex.I • (1 : Sheet) := by
   simp [volumeEven]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j; fin_cases i <;> fin_cases j <;>
     simp [pauli1, pauli2, pauli3, Matrix.mul_apply, Fin.sum_univ_two]
 
 def pauliCoeff0 (A : Sheet) : ℂ := (A 0 0 + A 1 1) / 2
@@ -139,15 +145,14 @@ theorem clPlusToPauli_liftComplexCoeff (z : ℂ) (x : ClPlus14) :
   rw [liftComplexCoeff, map_add, map_smul, map_smul, map_mul,
     clPlusToPauli_volumeEven]
   ext i j
-  simp [Complex.ext_iff]
-  <;> ring
+  simp [Complex.ext_iff]; ring
 
 theorem clPlusToPauli_pauliPreimage (A : Sheet) :
     clPlusToPauli (pauliPreimage A) = A := by
   rw [pauliPreimage, map_add, map_add, map_add]
   simp only [clPlusToPauli_liftComplexCoeff, map_one,
     clPlusToPauli_sigma0, clPlusToPauli_sigma1, clPlusToPauli_sigma2]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j; fin_cases i <;> fin_cases j <;>
     simp [pauliCoeff0, pauliCoeff1, pauliCoeff2, pauliCoeff3,
       pauli1, pauli2, pauli3]
   all_goals ring_nf

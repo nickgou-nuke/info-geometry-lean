@@ -83,7 +83,7 @@ def projectorMinus : ClPlus14 :=
           1 - sigmaEven 0 * sigmaEven 0 := by noncomm_ring
       _ = 0 := by rw [sigmaEven_zero_sq, sub_self]
   simp only [projectorPlus, projectorMinus, smul_mul_assoc, mul_smul_comm,
-    smul_smul, h, smul_zero]
+    h, smul_zero]
 
 @[simp] theorem projectorMinus_mul_projectorPlus :
     projectorMinus * projectorPlus = 0 := by
@@ -93,7 +93,7 @@ def projectorMinus : ClPlus14 :=
           1 - sigmaEven 0 * sigmaEven 0 := by noncomm_ring
       _ = 0 := by rw [sigmaEven_zero_sq, sub_self]
   simp only [projectorPlus, projectorMinus, smul_mul_assoc, mul_smul_comm,
-    smul_smul, h, smul_zero]
+    h, smul_zero]
 
 @[simp] theorem projectorPlus_add_projectorMinus :
     projectorPlus + projectorMinus = 1 := by
@@ -205,7 +205,7 @@ private theorem transverse_sq : sigmaEven 2 * sigmaEven 2 = 1 := by
         gamma 3 * (gamma 0 * gamma 3) * gamma 0 := by simp only [mul_assoc]
     _ = 1 := by
       rw [h03]
-      simp only [mul_neg, neg_mul, ← mul_assoc, gamma_three_sq,
+      simp only [mul_neg, ← mul_assoc, gamma_three_sq,
         neg_one_mul, neg_neg, gamma_zero_sq]
 
 private theorem transverse_mul_beta :

@@ -38,6 +38,7 @@ env:
   HESTENES_SPECTRAL_TARGETS: >-
     InfoGeometry.Canonical.HestenesSpectralCorners
     InfoGeometry.Canonical.TwoSheetThreeColorWeylFinite
+    InfoGeometry.Canonical.HestenesEvenPauliEquiv
 
 jobs:
   kernel-and-axioms:
@@ -132,7 +133,7 @@ jobs:
           from tools.quality.check_reviewed_prs import closure
           from tools.quality.reviewed_audit_source import parse_audit_output
           targets = os.environ['HESTENES_SPECTRAL_TARGETS'].split()
-          assert len(targets) == len(set(targets)) == 2
+          assert len(targets) == len(set(targets)) == 3
           out = Path('../hestenes-spectral-corners-report')
           assert not out.exists(), 'Acceptance output must be fresh'
           inputs = ['tools/quality/check_clifford_dirac.py', 'tools/quality/check_reviewed_prs.py',
@@ -195,7 +196,7 @@ jobs:
           from pathlib import Path
           out = Path('../hestenes-spectral-corners-report')
           targets = os.environ['HESTENES_SPECTRAL_TARGETS'].split()
-          assert len(targets) == len(set(targets)) == 2
+          assert len(targets) == len(set(targets)) == 3
           paths = ['lean/' + target.replace('.', '/') + '.lean' for target in targets]
           assert all(Path(path).is_file() for path in paths)
           scope = json.loads((out / 'scope-summary.json').read_text())

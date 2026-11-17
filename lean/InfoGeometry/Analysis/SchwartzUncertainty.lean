@@ -52,10 +52,10 @@ theorem deriv_position (f : SchwartzMap ℝ H) (a : ℝ) :
         (SchwartzMap.derivCLM ℝ H f) := by
   have hg : (fun x : ℝ => x - a).HasTemperateGrowth := by fun_prop
   ext x
-  simp only [SchwartzMap.derivCLM_apply, SchwartzMap.add_apply,
+  simp only [SchwartzMap.derivCLM_apply, add_apply,
     SchwartzMap.smulLeftCLM_apply_apply hg]
   rw [SchwartzMap.smulLeftCLM_apply hg]
-  simpa [add_comm] using
+  simpa only [Pi.smul_def', one_smul, add_comm] using
     (((hasDerivAt_id x).sub_const a).smul (f.hasDerivAt x)).deriv
 
 /-- Integration by parts identifies the position/derivative pairing exactly.
@@ -86,7 +86,7 @@ theorem real_inner_position_deriv (f : SchwartzMap ℝ H) (a : ℝ) :
       f + SchwartzMap.smulLeftCLM H (fun x : ℝ => x - a) d :=
     deriv_position f a
   rw [hderiv, toL2_add, inner_add_right, hmove,
-    real_inner_self_eq_norm_sq, real_inner_comm (d.toLp 2 volume) (q.toLp 2 volume)] at hibp
+    real_inner_self_eq_norm_sq, real_inner_comm (q.toLp 2 volume) (d.toLp 2 volume)] at hibp
   change inner ℝ (q.toLp 2 volume) (d.toLp 2 volume) = _
   linarith
 
@@ -106,7 +106,7 @@ end Real
 
 section Complex
 
-variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
+variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
 
 private theorem toL2_sub (f g : SchwartzMap ℝ H) :
     (f - g).toLp 2 volume = f.toLp 2 volume - g.toLp 2 volume :=
@@ -124,7 +124,7 @@ theorem norm_sq_le_two_mul_position_mul_shifted_deriv
       2 * ‖(SchwartzMap.smulLeftCLM H (fun x : ℝ => x - a) f).toLp 2 volume‖ *
         ‖(SchwartzMap.derivCLM ℝ H f -
           ((2 * (Real.pi : ℂ) * Complex.I) * b) • f).toLp 2 volume‖ := by
-  letI : InnerProductSpace ℝ H := InnerProductSpace.complexToReal
+  let : InnerProductSpace ℝ H := InnerProductSpace.complexToReal
   let q := SchwartzMap.smulLeftCLM H (fun x : ℝ => x - a) f
   let d := SchwartzMap.derivCLM ℝ H f
   let c : ℂ := (2 * (Real.pi : ℂ) * Complex.I) * b
@@ -132,11 +132,13 @@ theorem norm_sq_le_two_mul_position_mul_shifted_deriv
   have hzero : inner ℝ (q.toLp 2 volume) ((c • f).toLp 2 volume) = 0 := by
     rw [real_inner_toL2]
     have hpoint (x : ℝ) : inner ℝ (q x) ((c • f) x) = 0 := by
-      simp only [q, SchwartzMap.smulLeftCLM_apply_apply hg, SchwartzMap.smul_apply,
+      simp only [q, SchwartzMap.smulLeftCLM_apply_apply hg, smul_apply,
         real_inner_smul_left]
       have hself : inner ℝ (f x) (c • f x) = 0 := by
         change (inner ℂ (f x) (c • f x)).re = 0
-        simp [c, inner_smul_right, inner_self_eq_norm_sq_to_K, Complex.mul_re]
+        have hc : c.re = 0 := by simp [c]
+        simp only [inner_smul_right, Complex.mul_re, hc, inner_self_im,
+          zero_mul, mul_zero, sub_zero]
       rw [hself, mul_zero]
     simp_rw [hpoint]
     simp
@@ -149,6 +151,8 @@ theorem norm_sq_le_two_mul_position_mul_shifted_deriv
   change ‖f.toLp 2 volume‖ ^ 2 ≤
     2 * ‖q.toLp 2 volume‖ * ‖(d - c • f).toLp 2 volume‖
   nlinarith
+
+variable [CompleteSpace H]
 
 /-- The Fourier transform of the centered derivative is the centered frequency
 multiplier, with the native factor `2 * π * I`. -/
@@ -165,10 +169,10 @@ theorem fourier_shifted_deriv (f : SchwartzMap ℝ H) (b : ℝ) :
   rw [sub_eq_add_neg, FourierTransform.fourier_add, FourierTransform.fourier_neg,
     FourierTransform.fourier_smul, hd,
     CliffordWaveletNativeL2.fourier_lineDeriv_eq_frequencyMultiplication]
-  have hg : (fun ξ : ℝ => inner ℝ ξ (1 : ℝ)).HasTemperateGrowth := by fun_prop
+  have hg : (fun ξ : ℝ => ξ).HasTemperateGrowth := by fun_prop
   have hg' : (fun ξ : ℝ => ξ - b).HasTemperateGrowth := by fun_prop
   ext ξ
-  simp only [SchwartzMap.add_apply, SchwartzMap.neg_apply, SchwartzMap.smul_apply,
+  simp only [add_apply, neg_apply, smul_apply,
     SchwartzMap.smulLeftCLM_apply_apply hg, SchwartzMap.smulLeftCLM_apply_apply hg',
     Real.inner_apply, mul_one]
   rw [← Complex.coe_smul, ← Complex.coe_smul, smul_smul, smul_smul,
@@ -188,7 +192,7 @@ theorem norm_shifted_deriv_eq_two_pi_mul_frequency
           (FourierTransform.fourier f)).toLp 2 volume‖ := by
   rw [← CliffordWaveletNativeL2.norm_fourier_toL2_eq,
     fourier_shifted_deriv, toL2_smul, norm_smul]
-  simp [norm_mul, Real.norm_eq_abs, abs_of_pos Real.pi_pos]
+  simp [Real.norm_eq_abs, abs_of_pos Real.pi_pos]
 
 /-- Position/frequency uncertainty for Hilbert-valued Schwartz functions and
 arbitrary real centers. Frequency is measured in cycles per unit coordinate. -/
@@ -207,6 +211,7 @@ theorem norm_sq_le_four_pi_mul_position_mul_frequency
       norm_sq_le_two_mul_position_mul_shifted_deriv f a b
     _ = _ := by rw [norm_shifted_deriv_eq_two_pi_mul_frequency]; ring
 
+omit [CompleteSpace H] in
 /-- With momentum `P = -I * ħ * d/dx`, the same estimate has the physical
 constant `|ħ| / 2`. This is a moment estimate about position `a` and momentum zero. -/
 theorem abs_hbar_mul_norm_sq_le_two_mul_position_mul_momentum
@@ -214,11 +219,11 @@ theorem abs_hbar_mul_norm_sq_le_two_mul_position_mul_momentum
     |ħ| * ‖f.toLp 2 volume‖ ^ 2 ≤
       2 * ‖(SchwartzMap.smulLeftCLM H (fun x : ℝ => x - a) f).toLp 2 volume‖ *
         ‖((-Complex.I * (ħ : ℂ)) • (SchwartzMap.derivCLM ℝ H f)).toLp 2 volume‖ := by
-  letI : InnerProductSpace ℝ H := InnerProductSpace.complexToReal
+  let : InnerProductSpace ℝ H := InnerProductSpace.complexToReal
   have h := mul_le_mul_of_nonneg_left
     (norm_sq_le_two_mul_position_mul_deriv f a) (abs_nonneg ħ)
   rw [toL2_smul, norm_smul]
-  have hc : ‖-Complex.I * (ħ : ℂ)‖ = |ħ| := by simp [norm_mul, Real.norm_eq_abs]
+  have hc : ‖-Complex.I * (ħ : ℂ)‖ = |ħ| := by simp [Real.norm_eq_abs]
   rw [hc]
   nlinarith
 

@@ -193,13 +193,24 @@ This change deliberately reuses that surface instead of adding another alias.
 
 ## Attachment reconciliation
 
-The three follow-up attachments are audited in
+The first three follow-up attachments are audited in
 [Hestenes phase, bilinears, and real flow](HESTENES_ATTACHMENT_RECONCILIATION.md).
 That note fixes the Fourier phase-order sign, distinguishes positive and
 indefinite pairings, and separates Lorentz covariance from conservation,
 boundedness, irreversibility, and modular identification. Its additional
 calculations explain the scope; they are not claimed as new kernel-verified
 declarations.
+
+The later split-octonion and metriplectic attachment is audited in
+[Projected Gram dissipation and corrected contracts](SPLIT_OCTONION_PROJECTED_GRAM_CONTRACT.md).
+It supplies the additional native `Analysis.ProjectedGramDissipation` owner: an
+actual orthogonal energy projection, a finite sum of constrained adjoint Gram
+operators, positivity at nonnegative rates, energy annihilation, and an exact
+joint-kernel characterization at nonzero rates.
+`Analysis.SplitOctonionProjectedGram` constructs the bounded associator maps
+from the existing right-regular defect in explicit positive coordinates and
+derives the corresponding energy and joint-kernel laws. The note separates these laws
+from geometric, statistical, and thermodynamic assumptions.
 
 ## Search and acceptance boundary
 

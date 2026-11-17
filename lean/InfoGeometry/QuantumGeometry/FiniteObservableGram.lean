@@ -33,7 +33,6 @@ open scoped InnerProductSpace ComplexOrder
 namespace InfoGeometry.QuantumGeometry.FiniteObservableGram
 
 variable {d n : Type*} [Fintype d] [DecidableEq d]
-variable [Fintype n] [DecidableEq n]
 
 /-- The actual vector-state expectation of a full complex matrix. -/
 def expectation (ψ : EuclideanSpace ℂ d) (A : Matrix d d ℂ) : ℂ :=
@@ -123,10 +122,7 @@ theorem fluctuation_inner (ψ : EuclideanSpace ℂ d)
   simp only [fluctuation, inner_sub_left, inner_sub_right, inner_smul_left,
     inner_smul_right, hψ, mul_one]
   rw [← hconj]
-  change _ = _ - starRingEnd ℂ (expectation ψ A) * expectation ψ B
-  rw [mul_comm (expectation ψ B) (starRingEnd ℂ (expectation ψ A))]
-  unfold expectation
-  abel
+  simp only [sub_self, mul_zero, sub_zero, expectation]
 
 @[simp] theorem uncertaintyGram_apply (ψ : EuclideanSpace ℂ d)
     (A : n → Matrix d d ℂ) (a b : n) :
@@ -145,12 +141,12 @@ theorem uncertaintyGram_isHermitian (ψ : EuclideanSpace ℂ d) (A : n → Matri
     (uncertaintyGram ψ A).IsHermitian :=
   Matrix.isHermitian_gram ℂ _
 
-theorem uncertaintyGram_posSemidef (ψ : EuclideanSpace ℂ d) (A : n → Matrix d d ℂ) :
+theorem uncertaintyGram_posSemidef [Fintype n] (ψ : EuclideanSpace ℂ d) (A : n → Matrix d d ℂ) :
     (uncertaintyGram ψ A).PosSemidef :=
   Matrix.posSemidef_gram ℂ _
 
 /-- The full complex coefficient quadratic form is a squared norm, not a pairwise proxy. -/
-theorem uncertaintyGram_quadratic (ψ : EuclideanSpace ℂ d)
+theorem uncertaintyGram_quadratic [Fintype n] (ψ : EuclideanSpace ℂ d)
     (A : n → Matrix d d ℂ) (z : n → ℂ) :
     star z ⬝ᵥ (uncertaintyGram ψ A *ᵥ z) =
       (‖∑ a, z a • fluctuation ψ (A a)‖ : ℂ) ^ 2 := by
@@ -160,12 +156,14 @@ theorem uncertaintyGram_quadratic (ψ : EuclideanSpace ℂ d)
 theorem covariance_transpose (ψ : EuclideanSpace ℂ d) (A : n → Matrix d d ℂ) :
     (covariance ψ A)ᵀ = covariance ψ A := by
   ext a b
-  exact inner_re_symm _ _
+  change (⟪fluctuation ψ (A b), fluctuation ψ (A a)⟫_ℂ).re =
+    (⟪fluctuation ψ (A a), fluctuation ψ (A b)⟫_ℂ).re
+  exact inner_re_symm (𝕜 := ℂ) _ _
 
 /-- Restricting the Hilbert pairing to real scalars proves real covariance positivity. -/
-theorem covariance_posSemidef (ψ : EuclideanSpace ℂ d) (A : n → Matrix d d ℂ) :
+theorem covariance_posSemidef [Fintype n] (ψ : EuclideanSpace ℂ d) (A : n → Matrix d d ℂ) :
     (covariance ψ A).PosSemidef := by
-  letI : InnerProductSpace ℝ (EuclideanSpace ℂ d) :=
+  let : InnerProductSpace ℝ (EuclideanSpace ℂ d) :=
     InnerProductSpace.rclikeToReal ℂ (EuclideanSpace ℂ d)
   change (Matrix.gram ℝ (fun a => fluctuation ψ (A a))).PosSemidef
   exact Matrix.posSemidef_gram ℝ _
@@ -203,9 +201,8 @@ theorem uncertaintyGram_im (ψ : EuclideanSpace ℂ d)
     (hψ : ⟪ψ, ψ⟫_ℂ = 1) (A : n → Matrix d d ℂ) (a b : n)
     (hAa : (A a).IsHermitian) (hAb : (A b).IsHermitian) :
     (uncertaintyGram ψ A a b).im = commutatorMatrix ψ A a b := by
-  have hswap : -(uncertaintyGram ψ A b a).im = (uncertaintyGram ψ A a b).im := by
-    simpa [Complex.star_def] using
-      congrArg Complex.im ((uncertaintyGram_isHermitian ψ A).apply a b)
+  have hswap : -(uncertaintyGram ψ A b a).im = (uncertaintyGram ψ A a b).im :=
+    (inner_im_symm (𝕜 := ℂ) (fluctuation ψ (A a)) (fluctuation ψ (A b))).symm
   have hcomm := congrArg Complex.im (uncertaintyGram_sub_swap ψ hψ A a b hAa hAb)
   simp only [Complex.sub_im] at hcomm
   unfold commutatorMatrix
@@ -232,7 +229,7 @@ theorem uncertaintyGram_decomposition (ψ : EuclideanSpace ℂ d)
   simpa only [mul_comm] using (Complex.re_add_im (uncertaintyGram ψ A a b)).symm
 
 /-- The `n`-observable matrix uncertainty inequality. -/
-theorem covariance_add_I_commutator_posSemidef (ψ : EuclideanSpace ℂ d)
+theorem covariance_add_I_commutator_posSemidef [Fintype n] (ψ : EuclideanSpace ℂ d)
     (hψ : ⟪ψ, ψ⟫_ℂ = 1) (A : n → Matrix d d ℂ)
     (hA : ∀ a, (A a).IsHermitian) :
     ((covariance ψ A).map Complex.ofReal +
@@ -244,10 +241,16 @@ theorem covariance_add_I_commutator_posSemidef (ψ : EuclideanSpace ℂ d)
 theorem uncertaintyGram_eq_rightGram (ψ : EuclideanSpace ℂ d) (A : n → Matrix d d ℂ) :
     uncertaintyGram ψ A =
       InfoGeometry.Krein.FiniteDiracGramSquare.rightGram (fluctuationColumns ψ A) := by
+  have hcol (a : n) : WithLp.toLp 2 ((fluctuationColumns ψ A)ᵀ a) =
+      fluctuation ψ (A a) := by
+    ext i
+    rfl
   ext a b
-  simpa [uncertaintyGram, Matrix.gram, fluctuationColumns,
+  simpa only [hcol, uncertaintyGram_apply,
     InfoGeometry.Krein.FiniteDiracGramSquare.rightGram] using
       (inner_matrix_col_col (fluctuationColumns ψ A) (fluctuationColumns ψ A) a b)
+
+variable [Fintype n] [DecidableEq n]
 
 /-- The doubled operator square has the actual observable uncertainty matrix as its right block. -/
 theorem fluctuation_dirac_sq (ψ : EuclideanSpace ℂ d) (A : n → Matrix d d ℂ) :

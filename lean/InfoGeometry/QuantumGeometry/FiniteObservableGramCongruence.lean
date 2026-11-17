@@ -28,7 +28,7 @@ open scoped InnerProductSpace ComplexOrder
 namespace InfoGeometry.QuantumGeometry.FiniteObservableGram
 
 variable {d n k : Type*} [Fintype d] [DecidableEq d]
-variable [Fintype n] [DecidableEq n] [Fintype k] [DecidableEq k]
+variable [Fintype n]
 
 /-- Column coefficients mix full matrices before taking any expectation. -/
 def mixObservables (C : Matrix n k ℂ) (A : n → Matrix d d ℂ) : k → Matrix d d ℂ :=
@@ -58,6 +58,7 @@ theorem uncertaintyGram_mixObservables (ψ : EuclideanSpace ℂ d)
   intro j hj
   ring
 
+omit [Fintype d] [DecidableEq d] in
 /-- Real coefficient changes preserve the Hermitian observable class. -/
 theorem mixObservables_real_isHermitian (C : Matrix n k ℝ)
     (A : n → Matrix d d ℂ) (hA : ∀ a, (A a).IsHermitian) (b : k) :
@@ -82,6 +83,7 @@ theorem covariance_mixObservables_real (ψ : EuclideanSpace ℂ d)
     Complex.star_def, Complex.conj_ofReal, Complex.re_sum, Complex.mul_re,
     Complex.ofReal_re, Complex.ofReal_im, zero_mul, mul_zero, sub_zero] using h
 
+omit [Fintype n] in
 /-- Matrix-level conversion from commutator expectations to the imaginary Gram part. -/
 theorem commutatorMatrix_eq_im (ψ : EuclideanSpace ℂ d)
     (hψ : ⟪ψ, ψ⟫_ℂ = 1) (A : n → Matrix d d ℂ)
@@ -113,7 +115,7 @@ theorem real_uncertainty_block_posSemidef (ψ : EuclideanSpace ℂ d)
     (hA : ∀ a, (A a).IsHermitian) :
     (Matrix.fromBlocks (covariance ψ A) (-commutatorMatrix ψ A)
       (commutatorMatrix ψ A) (covariance ψ A)).PosSemidef := by
-  letI : InnerProductSpace ℝ (EuclideanSpace ℂ d) :=
+  let : InnerProductSpace ℝ (EuclideanSpace ℂ d) :=
     InnerProductSpace.rclikeToReal ℂ (EuclideanSpace ℂ d)
   let v : n ⊕ n → EuclideanSpace ℂ d :=
     Sum.elim (fun a => fluctuation ψ (A a))
@@ -150,6 +152,7 @@ theorem real_uncertainty_block_posSemidef (ψ : EuclideanSpace ℂ d)
   rw [← hblock]
   exact Matrix.posSemidef_gram ℝ v
 
+omit [Fintype n] in
 /-- Every two-observable minor obeys the covariance-inclusive uncertainty bound. -/
 theorem two_observable_uncertainty (ψ : EuclideanSpace ℂ d)
     (hψ : ⟪ψ, ψ⟫_ℂ = 1) (A : n → Matrix d d ℂ) (a b : n)

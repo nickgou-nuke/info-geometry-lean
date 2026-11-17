@@ -45,6 +45,7 @@ namespace InfoGeometry.QuantumGeometry.RealPhaseObservableGram
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
 variable (J : H ≃ₗᵢ[ℝ] H) (hJ : ∀ x, J (J x) = -x)
 
+include hJ in
 /-- An orthogonal square root of minus one is skew for the real inner product. -/
 theorem inner_phase_left (u v : H) :
     ⟪J u, v⟫_ℝ = -⟪u, J v⟫_ℝ := by
@@ -52,11 +53,13 @@ theorem inner_phase_left (u v : H) :
   rw [hJ u, inner_neg_left] at h
   exact h.symm
 
+include hJ in
 @[simp] theorem inner_phase_self (u : H) : ⟪J u, u⟫_ℝ = 0 := by
   have hskew := inner_phase_left J hJ u u
   have hsym := real_inner_comm u (J u)
   linarith
 
+include hJ in
 @[simp] theorem inner_self_phase (u : H) : ⟪u, J u⟫_ℝ = 0 := by
   rw [real_inner_comm]
   exact inner_phase_self J hJ u
@@ -65,12 +68,14 @@ theorem inner_phase_left (u v : H) :
 def phaseGram {n : Type*} (v : n → H) : Matrix n n ℝ :=
   fun a b => ⟪J (v a), v b⟫_ℝ
 
+include hJ in
 theorem phaseGram_transpose {n : Type*} (v : n → H) :
     (phaseGram J v).transpose = -phaseGram J v := by
   ext a b
   change ⟪J (v b), v a⟫_ℝ = -⟪J (v a), v b⟫_ℝ
   rw [inner_phase_left J hJ, real_inner_comm (v b) (J (v a))]
 
+include hJ in
 /-- The real block is an actual Gram matrix, with the phase sign fixed by its family. -/
 theorem real_block_eq_gram {n : Type*} (v : n → H) :
     Matrix.fromBlocks (Matrix.gram ℝ v) (-phaseGram J v)
@@ -91,12 +96,14 @@ theorem real_block_eq_gram {n : Type*} (v : n → H) :
       change ⟪v a, v b⟫_ℝ = ⟪J (v a), J (v b)⟫_ℝ
       exact (J.inner_map_map (v a) (v b)).symm
 
+include hJ in
 theorem real_block_posSemidef {n : Type*} [Finite n] (v : n → H) :
     (Matrix.fromBlocks (Matrix.gram ℝ v) (-phaseGram J v)
       (phaseGram J v) (Matrix.gram ℝ v)).PosSemidef := by
   rw [real_block_eq_gram J hJ]
   exact Matrix.posSemidef_gram ℝ _
 
+include hJ in
 /-- Bessel's inequality on the perpendicular real pair `(u,J u)`. -/
 theorem inner_sq_add_phase_inner_sq_le (u v : H) :
     ⟪u, v⟫_ℝ ^ 2 + ⟪J u, v⟫_ℝ ^ 2 ≤ ‖u‖ ^ 2 * ‖v‖ ^ 2 := by
@@ -161,9 +168,9 @@ theorem covariance_apply_eq_product {n : Type*} (ψ : H) (hψ : ⟪ψ, ψ⟫_ℝ
   simp only [covariance, Matrix.gram_apply, fluctuation,
     inner_sub_left, inner_sub_right, real_inner_smul_left, real_inner_smul_right, hψ]
   rw [hAa ψ (A b ψ), real_inner_comm (A a ψ) ψ]
-  simp only [mul_one, mul_sub,
-    mul_comm ⟪ψ, A a ψ⟫_ℝ ⟪ψ, A b ψ⟫_ℝ, sub_self, sub_zero, mul_zero]
+  simp only [mul_one, sub_self, sub_zero]
 
+include hJ in
 /-- A symmetric observable commuting with the phase has zero phase expectation. -/
 theorem phase_apply_inner_self_zero (A : H →ₗ[ℝ] H) (hA : A.IsSymmetric)
     (hAJ : Function.Commute A J) (ψ : H) : ⟪J (A ψ), ψ⟫_ℝ = 0 := by
@@ -172,6 +179,7 @@ theorem phase_apply_inner_self_zero (A : H →ₗ[ℝ] H) (hA : A.IsSymmetric)
   rw [hAJ ψ, real_inner_comm ψ (J (A ψ))] at hsym
   linarith
 
+include hJ in
 /-- The unit-state fluctuation correction leaves the phase cross term unchanged
 for symmetric phase-commuting observables, for every `ψ`. -/
 theorem phase_fluctuation_eq (ψ : H) (A B : H →ₗ[ℝ] H)
@@ -186,6 +194,7 @@ theorem phase_fluctuation_eq (ψ : H) (A B : H →ₗ[ℝ] H)
     real_inner_smul_left, real_inner_smul_right, hA0, hB0,
     inner_phase_self J hJ ψ, mul_zero, sub_zero]
 
+include hJ in
 /-- The noncommutative operator identity fixes the sign and the factor one half. -/
 theorem phase_inner_eq_commutator (ψ : H) (A B : H →ₗ[ℝ] H)
     (hA : A.IsSymmetric) (hB : B.IsSymmetric)
@@ -199,6 +208,7 @@ theorem phase_inner_eq_commutator (ψ : H) (A B : H →ₗ[ℝ] H)
   simp only [LinearMap.sub_apply, Module.End.mul_apply, map_sub, inner_sub_right]
   linarith
 
+include hJ in
 theorem phase_fluctuation_eq_commutator (ψ : H) (A B : H →ₗ[ℝ] H)
     (hA : A.IsSymmetric) (hB : B.IsSymmetric)
     (hAJ : Function.Commute A J) (hBJ : Function.Commute B J) :
@@ -207,6 +217,7 @@ theorem phase_fluctuation_eq_commutator (ψ : H) (A B : H →ₗ[ℝ] H)
   rw [phase_fluctuation_eq J hJ ψ A B hA hB hAJ hBJ]
   exact phase_inner_eq_commutator J hJ ψ A B hA hB hAJ hBJ
 
+include hJ in
 theorem phaseGram_fluctuation_eq_commutatorMatrix {n : Type*}
     (ψ : H) (A : n → H →ₗ[ℝ] H)
     (hA : ∀ a, (A a).IsSymmetric) (hAJ : ∀ a, Function.Commute (A a) J) :
@@ -215,6 +226,7 @@ theorem phaseGram_fluctuation_eq_commutatorMatrix {n : Type*}
   exact phase_fluctuation_eq_commutator J hJ ψ (A a) (A b)
     (hA a) (hA b) (hAJ a) (hAJ b)
 
+include hJ in
 /-- Positive semidefiniteness of the complete real fluctuation-and-commutator
 block. For a unit state its diagonal blocks are covariance matrices. -/
 theorem real_uncertainty_block_posSemidef {n : Type*} [Finite n]
@@ -225,6 +237,7 @@ theorem real_uncertainty_block_posSemidef {n : Type*} [Finite n]
   rw [← phaseGram_fluctuation_eq_commutatorMatrix J hJ ψ A hA hAJ]
   exact real_block_posSemidef J hJ (fun a => fluctuation ψ (A a))
 
+include hJ in
 /-- The two-observable Gram bound, interpreted as the covariance-inclusive
 uncertainty relation when the state is normalized. -/
 theorem two_observable_uncertainty {n : Type*}

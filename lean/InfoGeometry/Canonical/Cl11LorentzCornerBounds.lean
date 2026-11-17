@@ -65,7 +65,7 @@ theorem norm_modularAdjointFlow_uPlus_le_iff
       Real.exp (2 * t) * ‖uPlus X A‖ ≤ ‖uPlus X A‖ ↔
         Real.exp (2 * t) ≤ 1 := by
     simpa only [one_mul] using
-      (mul_le_mul_iff_right₀ hn :
+      (mul_le_mul_iff_left₀ hn :
         Real.exp (2 * t) * ‖uPlus X A‖ ≤ 1 * ‖uPlus X A‖ ↔
           Real.exp (2 * t) ≤ 1)
   rw [hscale, Real.exp_le_one_iff]
@@ -82,7 +82,7 @@ theorem norm_modularAdjointFlow_uMinus_le_iff
       Real.exp (-2 * t) * ‖uMinus X A‖ ≤ ‖uMinus X A‖ ↔
         Real.exp (-2 * t) ≤ 1 := by
     simpa only [one_mul] using
-      (mul_le_mul_iff_right₀ hn :
+      (mul_le_mul_iff_left₀ hn :
         Real.exp (-2 * t) * ‖uMinus X A‖ ≤ 1 * ‖uMinus X A‖ ↔
           Real.exp (-2 * t) ≤ 1)
   rw [hscale, Real.exp_le_one_iff]
@@ -100,7 +100,7 @@ theorem norm_modularAdjointFlow_uPlus_eq_iff
     have he : Real.exp (2 * t) = 1 := by
       apply mul_right_cancel₀ (ne_of_gt hn)
       simpa only [one_mul] using h
-    have ht := Real.exp_eq_one_iff.mp he
+    have ht := (Real.exp_eq_one_iff (2 * t)).mp he
     linarith
   · rintro rfl
     simp
@@ -117,7 +117,7 @@ theorem norm_modularAdjointFlow_uMinus_eq_iff
     have he : Real.exp (-2 * t) = 1 := by
       apply mul_right_cancel₀ (ne_of_gt hn)
       simpa only [one_mul] using h
-    have ht := Real.exp_eq_one_iff.mp he
+    have ht := (Real.exp_eq_one_iff (-2 * t)).mp he
     linarith
   · rintro rfl
     simp
@@ -127,6 +127,6 @@ theorem modularAdjointFlow_neg_apply
     (X : RealSplitCl11Action H) (t : ℝ) (A : EndH) :
     modularAdjointFlow X (-t) (modularAdjointFlow X t A) = A := by
   rw [← modularAdjointFlow_add, neg_add_cancel]
-  simp [modularAdjointFlow, modularFlow, channelBoost]
+  simp [modularAdjointFlow, modularFlow, channelBoost, ← ContinuousLinearMap.one_def]
 
 end InfoGeometry.Canonical.Cl11LorentzCornerBounds

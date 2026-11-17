@@ -19,6 +19,7 @@ on:
       - 'lake-manifest.json'
       - 'docs/OPERATOR_VOLUME_WAVEPACKET_UNCERTAINTY.md'
       - 'docs/HESTENES_ATTACHMENT_RECONCILIATION.md'
+      - 'docs/SPLIT_OCTONION_PROJECTED_GRAM_CONTRACT.md'
       - '.github/workflows/operator-volume-wavepacket-uncertainty.yml'
   workflow_dispatch:
 
@@ -44,7 +45,9 @@ jobs:
           "InfoGeometry.QuantumGeometry.FiniteObservableGramCongruence",
           "InfoGeometry.QuantumGeometry.FiniteObservableGramExamples",
           "InfoGeometry.QuantumGeometry.RealPhaseObservableGram",
-          "InfoGeometry.Analysis.SchwartzUncertainty"
+          "InfoGeometry.Analysis.SchwartzUncertainty",
+          "InfoGeometry.Analysis.ProjectedGramDissipation",
+          "InfoGeometry.Analysis.SplitOctonionProjectedGram"
         ]
     steps:
       - name: Check out the exact published head revision
@@ -183,6 +186,7 @@ jobs:
           for name in ['.github/workflows/operator-volume-wavepacket-uncertainty.yml',
                        'docs/OPERATOR_VOLUME_WAVEPACKET_UNCERTAINTY.md',
                        'docs/HESTENES_ATTACHMENT_RECONCILIATION.md',
+                       'docs/SPLIT_OCTONION_PROJECTED_GRAM_CONTRACT.md',
                        'tools/quality/placeholder_audit.py',
                        'tools/quality/audit_constructivity.py',
                        'tools/quality/common.py',

@@ -71,7 +71,9 @@ def ellCliffordRepresentation :
 @[simp] theorem ellCliffordRepresentation_ι (v : Space3) :
     ellCliffordRepresentation (CliffordAlgebra.ι (Qdiag3 1 1 1) v) =
       imaginaryLeftMul (ellEmbedding v) := by
-  simp [ellCliffordRepresentation, ellCliffordIsometry]
+  simp only [ellCliffordRepresentation, AlgHom.comp_apply, CliffordAlgebra.map_apply_ι,
+    splitOctonionLeftCliffordRepresentation_ι]
+  rfl
 
 /-- The three represented positive generators, ordered by the quaternion axes. -/
 def triad (i : Fin 3) : Module.End ℝ CanonicalZorn :=
@@ -91,12 +93,14 @@ theorem triad_eq_leftMultiplication (i : Fin 3) :
   fin_cases i <;> ext j <;>
     simp [ellEmbedding, imaginaryCoordLinearEquiv, e0, e1, e2,
       cartesianZornLinearEquiv, ellAxis, axis]
-  all_goals fin_cases j <;> simp [Pi.single_apply]
+  all_goals fin_cases j <;> simp
 
 @[simp] theorem triad_sq (i : Fin 3) : triad i * triad i = 1 := by
   unfold triad
   rw [← map_mul, CliffordAlgebra.ι_sq_scalar]
-  fin_cases i <;> simp [Qdiag3, e0, e1, e2]
+  have hq : Qdiag3 1 1 1 (![e0, e1, e2] i) = 1 := by
+    fin_cases i <;> norm_num [Qdiag3, e0, e1, e2]
+  rw [hq, map_one, map_one]
 
 theorem triad_anticommutator (i j : Fin 3) (hij : i ≠ j) :
     triad i * triad j + triad j * triad i = 0 := by

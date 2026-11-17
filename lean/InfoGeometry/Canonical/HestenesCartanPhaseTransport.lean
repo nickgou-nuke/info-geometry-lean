@@ -37,8 +37,9 @@ def interleavedRealifyAlgHom : M2C →ₐ[ℝ] Matrix4R :=
         simp only [interleavedRealify, realify_add, mul_add, add_mul]
       map_smul' r A := by
         have hr : realify (r • A) = r • realify A := by
-          simpa only [RCLike.real_smul_eq_coe_smul] using realify_real_smul r A
-        simp only [interleavedRealify, hr, mul_smul_comm, smul_mul_assoc] }
+          rw [RCLike.real_smul_eq_coe_smul (K := ℂ) r A]
+          exact realify_real_smul r A
+        simp only [interleavedRealify, hr, mul_smul_comm, smul_mul_assoc, RingHom.id_apply] }
     interleavedRealify_one interleavedRealify_mul
 
 /-- The faithful real representation of the native even spacetime algebra. -/

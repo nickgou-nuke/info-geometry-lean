@@ -1,29 +1,27 @@
-# Klein formalization: verification report
+# Klein formalization: verification protocol and execution record
 
-## Acceptance status
+## Acceptance and published source
 
-**Draft publication with native verification pending.** The reviewed source
-candidate has been restored byte-for-byte and committed. The current recovery
-uses the exact pinned Lean distribution and Mathlib source. Its first cache
-recovery attempt timed out after 600 seconds without acquiring the shared
-build lock; no cache or compiler command ran in that attempt. A subsequent
-ordinary queued acquisition is in progress at this documentation checkpoint.
+The authoritative current native result is the **Klein crossed product
+(scoped kernel)** workflow for the exact head of
+[upstream draft PR #371](https://github.com/nickgou-nuke/info-geometry-lean/pull/371).
+A successful check requires compilation of the complete selected source
+closure, the native declaration axiom audit, and zero warnings in each of
+the four selected owners. Source review, text scans, and publication as a
+draft do not independently establish kernel acceptance.
 
-The dedicated `Klein crossed product (scoped kernel)` GitHub Actions workflow
-will check the exact PR head on an independent runner. Publication as a draft
-is not a kernel-acceptance certificate. The repaired three owners still need
-the completed native rerun and selected-owner declaration axiom audit below.
+The initial published commit is
+`7f1093f99c0b97bb3bc55a55f7b181d18bbbc5a3`, whose tree
+`074ac3dc28970c1a6de4711f76823ac871f5d7a2` was read back from upstream and
+matched the reviewed local tree. Its first workflow run is recorded below.
+Subsequent heads must obtain their own native check; do not treat the older
+failed result as either a proof of a repaired source or a new failure of it.
 
-Work branch: `codex/klein-crossed-product-20261116`, based on
-`08c34e03f610b452e03422037949196dc7d92d6d`. The recovered source tree is
-`62ae67e7a9e3ffed9477d49883cdfb91e6f163d7`, locally checkpointed as
-`895f01afc7cc62b3337460a60e3a7f85103fb154`; subsequent changes add the focused
-CI workflow and its review. The earlier split-spinor PR #363 is separate.
-
-See [the contract](KLEIN_CROSSED_PRODUCT_CONTRACT.md) for precise carriers,
-hypotheses, existing owners, corrections, and open mathematical boundaries.
-See [the review](KLEIN_CROSSED_PRODUCT_REVIEW.md) for independent inspection
-of the original candidates and the subsequent compiler repairs.
+The work branch is `codex/klein-crossed-product-20261116`, based on
+`08c34e03f610b452e03422037949196dc7d92d6d`. The earlier split-spinor PR #363
+is separate. See [the contract](KLEIN_CROSSED_PRODUCT_CONTRACT.md) for exact
+carriers, hypotheses, and open mathematical boundaries, and
+[the review](KLEIN_CROSSED_PRODUCT_REVIEW.md) for independent source review.
 
 ## Source scope
 
@@ -35,75 +33,81 @@ of the original candidates and the subsequent compiler repairs.
 | Existing `OperatorAlgebra/Z2ProjectorWeights.lean` | 4 | 0 |
 | **Total** | **39: 38 public and one private** | **10** |
 
-These are source-declaration counts, not counts from a completed axiom audit.
-The entire changed projector owner, including its ten pre-existing theorems
-and three definitions, is selected for checking. `InfoGeometry.All` imports
-the three new modules. The maintained scoped checker selects four owners and
-their exact ten-module repository source closure.
+These are source-declaration counts. The native audit also covers generated
+owned declarations and the ten pre-existing theorems and three definitions
+in the changed projector owner. `InfoGeometry.All` imports the three new
+modules. The selected four owners have an exact ten-module repository source
+closure; the workflow does not compile the full aggregator.
 
-## Completed validation
+## Source checks and independent review
 
-| Check | Observed result | Actual scope |
-| --- | --- | --- |
-| Independent mathematical and pinned-API reviews | Passed | Different reviewers inspected authors' candidates, compiler repairs, and final source/documentation consistency. |
-| Strict placeholder audit of the final four owners | Exit 0 | No hard findings; soft lexical findings were reviewed. |
-| Final semantic vacuity gate, blocking level `error` | Exit 0 | Two reviewed warning-level findings remain. |
-| Final OpenGauss screener with `--strict` | Exit 0 | No reported violations. |
-| Installed staged proof gate during the source checkpoint commit | Exit 0 | Actual output: `proof_proxy_staged_gate: ok`; staged source and aggregate import checks ran. |
-| `git diff --check` and `git diff --cached --check` | Passed at checkpoint | Source-format checks, separate from compilation. |
-| Recovery checkpoint staged proof gate, 2026-11-17 | Exit 0 | The actual hook accepted the restored eight-file source snapshot. |
-| Focused CI source and syntax review | Passed | Independent review, YAML parse, Bash syntax, and embedded Python AST; not an executed workflow result. |
+The four owners passed strict placeholder checks, the semantic vacuity gate
+at blocking level `error`, and the strict OpenGauss screener. The semantic
+scan has two reviewed warning-level findings: `matrix_trace` and the unchanged
+`AlgHom.map_projectorWeight`. These are meaningful computational statements,
+not vacuous conclusions. Their proofs were not padded to avoid lexical flags.
+The independent mathematical and pinned-API reviews cover the original
+candidates and all compiler repairs.
 
-The two remaining semantic warnings concern `matrix_trace` and the unchanged
-`AlgHom.map_projectorWeight`. These compute the actual matrix trace and
-preservation of a projector expression by an algebra homomorphism. Their
-short proofs are substantive. An earlier warning about
-`traceCoefficient_fixed` disappeared after a necessary native proof repair;
-proofs were not padded to avoid lexical findings. Three unused definitional
-coercion aliases were removed during source review.
+The installed staged proof gate ran successfully for the recovered source
+checkpoint and subsequent commits. `git diff --check` also passed. Current
+source hashes, exact arguments, and exit codes are retained in the local
+verification evidence; these checks are distinct from native compilation.
 
-The first warning-level semantic scan and first OpenGauss scan failed.
-Historical results are retained separately from the later successful scans.
-`final-static-gates.json` records the complete argument arrays, exit codes,
-and hashes of the exact repaired sources.
+The CI workflow passed independent source review, YAML parsing, shell syntax
+checking, and parsing of all embedded Python. Its reviewed SHA-256 is
+`20992d957874409297718d5c1330d2bcc1beab32ec3f43960153aa2d3d5dc3f2`.
 
-## Historical native compiler observations, 2026-11-16
+## Native execution history
 
-The first ordinary maintained-checker pass obtained the lock and checked all
-ten modules. Seven modules compiled successfully. This included the new
-`CARTwoSidedIdeal` owner with zero warnings. Seven warnings appeared in two
-unchanged dependencies: five in `SplitCliffordAlgebras` and two in
-`CPTComplexStructure`.
+### Initial local pass, 2026-11-16
 
-Three selected owners failed that first pass:
+Seven of ten modules compiled. The CAR owner had zero warnings. Three selected
+owners needed proof-body repairs: explicit skew product-to-monomial rewriting,
+explicit involutivity/map-zero simplification in the matrix calculations, and
+`sub_eq_zero` for the projector equivalences. Their statements, assumptions,
+carriers, and product order were unchanged. The axiom audit was not reached.
 
-- The skew-polynomial coefficient proof needed the product-to-monomial rewrite
-  before simplification could expand the constant subtraction.
-- The quadratic matrix proofs needed explicit instances of the involutivity
-  hypothesis and a `map_zero` rewrite. Unused simplifier arguments were removed.
-- The two projector equivalence proofs needed an explicit `sub_eq_zero` rule.
+The following repaired-source attempt could not obtain the shared lock and
+returned `Shared lock unavailable after 600 seconds` with an empty module
+result list. Its old compiler logs are historical, not fresh diagnostics on
+the repaired bodies.
 
-The reviewed repairs were integrated without changing theorem statements,
-carriers, assumptions, or multiplication order. The first pass did not reach
-its axiom audit. Its source snapshots, report, and module logs are archived
-under `first-native-pass`; those old failures are not a check of the repaired
-proof bodies.
+### Recovery and first upstream pass, 2026-11-17
 
-An ordinary incremental rerun waited for the lock, but its tool session later
-became unavailable without new compiler results. The subsequent bounded
-retry also could not acquire the lock and returned the explicit 600-second
-wait error above. The latest report fingerprints the repaired source closure,
-but contains no compilation result. Retained module logs from the first pass
-must not be mistaken for new diagnostics on those repairs.
+The saved source tree was restored exactly as
+`62ae67e7a9e3ffed9477d49883cdfb91e6f163d7`, then the focused CI workflow and
+its review were added. The pinned compiler archive checksum was verified
+before extraction, and the independent Mathlib checkout matched the exact pin.
+Two local recovery attempts timed out after 600 seconds each while acquiring
+the shared lock. Neither attempt ran a cache or compiler command; no holder
+was terminated and the lock was not bypassed.
 
-## Environment and reproducible command
+[Upstream run 44045834678](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44045834678)
+successfully recovered the pinned dependencies and compiled nine of ten
+modules. The quadratic matrix, CAR ideal, and projector owners all compiled
+with zero warnings. Seven warnings occurred in unchanged dependencies:
+five in `SplitCliffordAlgebras` and two in `CPTComplexStructure`.
 
-- Lean: `leanprover/lean4:v4.34.1`.
-- Mathlib: `d13f23b723b8a846827a245b89c10fc7d3f11612`.
-- Dependency/toolchain pins and maintained checker sources were not changed.
-- The previous session hydrated the required cache without deleting cache roots; the restored session must recover those missing artifacts again.
+The skew coefficient proof still failed: its restricted simplifier left
+`(if True then φ u - u else 0) = 0`, and `if_pos` was deprecated. The final
+minimal repair keeps the explicit monomial rewrite and replaces that step
+with `simpa [coeff_monomial] using hcoeff`. A different reviewer checked it
+against the pinned source. That run did not reach the declaration audit;
+acceptance of the repair is determined by the subsequent exact-head workflow.
+The complete first-run source snapshots, report, and logs are retained in its
+[verification artifact](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44045834678/artifacts/14312065892).
 
-The ordinary maintained command, from the repository root, is:
+## Reproduce the native check
+
+Use Lean `leanprover/lean4:v4.34.1` and Mathlib
+`d13f23b723b8a846827a245b89c10fc7d3f11612`. The official Linux compiler
+archive SHA-256 is
+`47bf4bbd78f70c2e9670598ab7124d92b6efb7330ff33e5fbb4030f6fd72e4e4`.
+No dependency pin or maintained checker was changed.
+
+From an independent repository checkout, with the pinned runtime and Mathlib
+initialized according to the shared-lock/cache policy:
 
 ```bash
 python3 tools/quality/check_clifford_dirac.py \
@@ -113,70 +117,35 @@ python3 tools/quality/check_clifford_dirac.py \
   --target InfoGeometry.Algebra.SkewPolynomialFactorization \
   --target InfoGeometry.Algebra.QuadraticCrossedProduct \
   --target InfoGeometry.Algebra.CARTwoSidedIdeal \
-  --target InfoGeometry.OperatorAlgebra.Z2ProjectorWeights \
-  --incremental
+  --target InfoGeometry.OperatorAlgebra.Z2ProjectorWeights
 ```
 
-The historical final bounded native attempt used
-`/workspace/scratch/ecf0f7649d13/verification-klein/retry_shared_lock.py`
-as the Python entry point with the same remaining arguments. The full
-invocation is recorded in `bounded-retry-launcher.json`. Launcher SHA-256:
-`206bf34526f6694aefe9e376902778d22294081629fd0882d4ad1f0b7fab2628`.
+Substitute only runtime/output paths for another machine. Do not add
+`--skip-audit`. The native audit checks every declaration owned by each
+selected target, including private/generated declarations, against the
+allowed foundational axioms `propext`, `Classical.choice`, and `Quot.sound`.
+It rejects unsafe or partial declarations and reconciles the ownership counts.
 
-An independent review confirmed that this launcher repeatedly calls the
-original exclusive lock acquisition on the same lock path. It changes only
-contention scheduling: 50 ms retries, periodic notices, and a timeout check
-after a failed attempt exceeds 600 seconds. It preserves descriptor handling,
-release, inherited lock descriptors, compiler commands, fingerprint/artifact
-checks, and the final declaration audit. Its source, hash, and invocation are
-included so the custom launcher is explicit; it is not described as an
-unmodified invocation. The timeout concerns acquisition retries, not the
-running compiler or a fairness guarantee.
+The focused CI workflow fetches the exact PR head, checks the unchanged pins,
+verifies fresh compiler downloads, and restores only pinned dependencies.
+Cache hydration and compilation use the original shared lock, with its
+file descriptor inherited by relevant subprocesses. Each run and attempt has
+fresh repository output. A report guard additionally requires the exact head,
+target list, successful native audit, and zero warnings in all selected owners.
+Reports, logs, source snapshots, and audit output are uploaded on completion.
 
-The command omits `--skip-audit`. A successful continuation must check every
-declaration owned by the selected targets against the allowed foundational
-axioms `propext`, `Classical.choice`, and `Quot.sound`. That acceptance step is
-still outstanding.
+## Separate integration boundaries
 
-## Current recovery and CI
+A scoped native success does not certify the full `InfoGeometry.All` aggregator
+or root Lake workspace. The fresh checkout lacks the declared path packages
+`external_refs/homotopy-hypothesis-lean4` and `external_refs/atlas-lean`.
+An earlier split-spinor pre-push attempt failed on the first of these; that
+historical execution is not a new root gate run for this patch. No missing
+source URL or revision is invented, and the existing root hooks and quality
+workflows remain unchanged.
 
-The fresh checkout is based on the same upstream revision, and the restored
-source tree and all four source-check hashes match the saved candidate.
-The official Linux Lean archive was downloaded and its SHA-256 verified as
-`47bf4bbd78f70c2e9670598ab7124d92b6efb7330ff33e5fbb4030f6fd72e4e4`
-before extraction. The independent Mathlib checkout is exactly at the
-unchanged pin above. No dependency metadata or maintained checker is changed.
-
-The first cache recovery attempt on 2026-11-17 executed zero cache/compiler
-commands because the lock remained occupied. The next request uses the
-original blocking lock acquisition, with a deadline only while acquiring
-that lock; the deadline is disabled before any compiler process can start.
-Neither attempt terminates another holder or bypasses the shared lock.
-
-The focused workflow fetches the exact PR head, checks the same pins and
-compiler checksum, derives cache roots from the current source closure, and
-runs the maintained four-target command with its native audit enabled. It
-uses fresh output for each run and attempt, then explicitly requires zero
-warnings in all four selected owners. Logs, reports, source snapshots, and
-audit output are retained as a workflow artifact. The workflow and its
-review are part of this patch; execution results must be inspected separately.
-
-## Repository build boundary
-
-The earlier split-spinor pre-push attempt observed a missing path package,
-`external_refs/homotopy-hypothesis-lean4`. The fresh checkout also lacks that
-package and the separate `external_refs/atlas-lean` path package. Their
-absence is a current filesystem observation; the earlier failed root gate
-is not presented as a new gate execution on this patch.
-
-No completed local root pre-push or full Lake certificate is claimed for
-this draft. A passing scoped workflow would still cover only the selected
-owners and their exact source closure, not every declaration imported by
-`InfoGeometry.All` or every repository target. The existing root hooks and
-quality workflows remain unchanged. No missing dependency URL or revision
-has been invented.
-
-The next acceptance step is to inspect a completed current native compilation
-and declaration axiom audit, repair any concrete failures, and bind the result
-to the published source. All preceding failed attempts remain historical
-evidence, not substitutes for that successful result.
+The first PR style job also failed before running the Lean linter because
+both `lean/Docs` and `lean/docs` exist. Both directory trees are already
+present at the base revision and unchanged by this patch. This repository
+case-collision failure is separate from the selected-owner compiler results.
+The PR remains a draft while root integration is unresolved.

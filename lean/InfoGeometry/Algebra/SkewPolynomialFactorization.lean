@@ -70,7 +70,7 @@ theorem ordered_difference_of_squares_iff (u : R) :
     have hcoeff := congrArg (fun p : SkewPolynomial R => coeff p 1) h
     rw [C_mul_X_eq_monomial] at hcoeff
     have hzero : φ u - u = 0 := by
-      simpa only [coeff_monomial, if_pos rfl, coeff_zero] using hcoeff
+      simpa [coeff_monomial] using hcoeff
     exact sub_eq_zero.mp hzero
   · intro h
     simp only [h, sub_self, map_zero, zero_mul]

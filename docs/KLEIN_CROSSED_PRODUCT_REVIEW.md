@@ -127,6 +127,18 @@ See the claim ledger and source references in
 
 ## Scoped CI review, 2026-11-17
 
+The first upstream run compiled nine of ten closure modules. The quadratic,
+CAR, and projector owners each compiled with zero warnings. The skew
+coefficient proof still left an `if True` expression because its restricted
+simplifier did not reduce that branch, and `if_pos` was deprecated at the
+pinned Lean version. A different reviewer checked the minimal final repair:
+retain the explicit `C_mul_X_eq_monomial` rewrite and use
+`simpa [coeff_monomial] using hcoeff`. The pinned default simplifier supplies
+the reflexive-condition, `ite_true`, and `coeff_zero` reductions. Removing
+the restricted simplifier changes no statement, assumption, or ordered
+product. Current native acceptance is recorded by the exact-head workflow,
+separately from this source review.
+
 An independent reviewer inspected the new
 `.github/workflows/klein-crossed-product.yml` against the maintained checker
 and shared-lock implementation. The reviewed workflow SHA-256 is

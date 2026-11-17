@@ -614,3 +614,4 @@ import InfoGeometry.LinearAlgebra.OrderedQuotientBasis
 import InfoGeometry.Algebra.FreeOperatorSymmetry
 import InfoGeometry.Canonical.OperatorBasisExamples
 import InfoGeometry.Algebra.OperatorBasisAudit
+import InfoGeometry.Canonical.MatrixGibbsEntropy

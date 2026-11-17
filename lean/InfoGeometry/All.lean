@@ -629,3 +629,4 @@ import InfoGeometry.Quantum.KrausCommutatorGeometry
 import InfoGeometry.Quantum.KrausFixedEffectCounterexample
 import InfoGeometry.Quantum.InstrumentHistory
 import InfoGeometry.Canonical.InstrumentHistoryGNS
+import InfoGeometry.Canonical.MatrixGibbsEntropy

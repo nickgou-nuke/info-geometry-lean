@@ -126,6 +126,62 @@ nonzero-function premise is hidden. For normalized signals, choosing the
 actual means gives the usual centered moment interpretation. The module also
 exposes the corresponding derivative/momentum norm estimate with `|hbar|`.
 
+### Intrinsic real phase and noncommuting observables
+
+Owner: `InfoGeometry.QuantumGeometry.RealPhaseObservableGram`.
+
+The carrier is an arbitrary real inner-product space. The phase is a native
+real linear isometric equivalence `J` with `J (J x) = -x`. These hypotheses
+derive the skew identity `<J u,v> = -<u,J v>` and perpendicularity of `u` and
+`J u`. Native finite Bessel then gives
+
+`<u,v>^2 + <J u,v>^2 <= ||u||^2 * ||v||^2`.
+
+For any vector family, `C_ab = <v_a,v_b>` and `K_ab = <J v_a,v_b>` give the
+positive semidefinite real block `[[C,-K],[K,C]]`, identified with the actual
+Gram matrix of `(v_a,J v_a)`.
+
+The observable specialization uses actual symmetric real linear maps `A_a`
+commuting with `J`. Different observables need not commute. For the vectors
+`v_a = A_a psi - <psi,A_a psi> psi`, it derives the ordered identity
+
+`K_ab = -(1/2) * <psi, J ((A_a A_b - A_b A_a) psi)>`.
+
+The covariance-inclusive inequality is `C_ab^2 + K_ab^2 <= C_aa C_bb`.
+These Gram and commutator results hold without normalization; the usual
+centering and covariance-as-product-expectation interpretation uses a unit
+state, which is an explicit hypothesis of that entry theorem. Only the matrix
+positivity theorem requires a finite observable index. The Hilbert carrier
+does not require completeness, finite dimension, or complex scalars.
+
+This generalizes the native Bessel argument already used for a particular
+doubled carrier in `Canonical.OperatorialUncertainty`. It does not identify
+the full eight-dimensional even-Clifford observer pairing with a particular
+Hilbert structure. That representation-and-pairing compatibility is a separate
+obligation from the algebraic volume transport above.
+
+### Positive norms of the Lorentz operator corners
+
+Owner: `InfoGeometry.Canonical.Cl11LorentzCornerBounds`.
+
+The carrier is the existing bounded real operator algebra on a complete real
+inner-product space. The repository's projectors are `P+ = (1 + eps) / 2` and
+`P- = (1 - eps) / 2`, with corners `uPlus A = P+ A P-` and
+`uMinus A = P- A P+`. The existing conjugation action already gives weights
+`exp (2*t)` and `exp (-2*t)`. Native operator-norm scalar homogeneity now gives
+the exact norm formulas with those same weights.
+
+For a nonzero corner, `uPlus` is contractive exactly when `t <= 0`, while
+`uMinus` is contractive exactly when `0 <= t`. Either nonzero corner preserves
+its norm exactly at `t = 0`. The nonvanishing hypothesis concerns the projected
+corner, not merely the original operator. The existing group law also gives
+`F(-t) (F(t) A) = A` at every finite time, including times of norm growth.
+
+The existing identifier `modularAdjointFlow` denotes hyperbolic channel
+conjugation in this owner. These results do not identify it with the
+Tomita--Takesaki flow of a specified algebra and state, and a contractive
+half-line does not by itself construct irreversible or Hardy-space dynamics.
+
 ## Reused analytic transform result
 
 Pinned Mathlib already contains `mellin_eq_fourier` in
@@ -134,6 +190,16 @@ Mellin/Fourier identity. The repository imports that owner through
 `InfoGeometry.Analysis.LaplaceFourierComparison`, which also proves the genuine
 Mellin/Laplace change of variables and conditional inversion and uniqueness.
 This change deliberately reuses that surface instead of adding another alias.
+
+## Attachment reconciliation
+
+The three follow-up attachments are audited in
+[Hestenes phase, bilinears, and real flow](HESTENES_ATTACHMENT_RECONCILIATION.md).
+That note fixes the Fourier phase-order sign, distinguishes positive and
+indefinite pairings, and separates Lorentz covariance from conservation,
+boundedness, irreversibility, and modular identification. Its additional
+calculations explain the scope; they are not claimed as new kernel-verified
+declarations.
 
 ## Search and acceptance boundary
 

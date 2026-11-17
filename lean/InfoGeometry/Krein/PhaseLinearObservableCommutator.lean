@@ -122,21 +122,32 @@ theorem commutator_linearCombinations
   have hforward :
       (∑ i, r i • A i).comp (∑ j, s j • B j) =
         ∑ i, ∑ j, (r i * s j) • (A i).comp (B j) := by
-    simp only [ContinuousLinearMap.finsetSum_comp,
-      ContinuousLinearMap.comp_finsetSum, ContinuousLinearMap.smul_comp,
-      ContinuousLinearMap.comp_smul, smul_smul]
+    rw [ContinuousLinearMap.finsetSum_comp]
+    apply Finset.sum_congr rfl
+    intro i hi
+    rw [ContinuousLinearMap.comp_finsetSum]
+    apply Finset.sum_congr rfl
+    intro j hj
+    rw [ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_smul, smul_smul]
   have hbackward :
       (∑ j, s j • B j).comp (∑ i, r i • A i) =
         ∑ i, ∑ j, (r i * s j) • (B j).comp (A i) := by
-    simp only [ContinuousLinearMap.finsetSum_comp,
-      ContinuousLinearMap.comp_finsetSum, ContinuousLinearMap.smul_comp,
-      ContinuousLinearMap.comp_smul, smul_smul]
-    rw [Finset.sum_comm]
-    apply Finset.sum_congr rfl
-    intro i hi
-    apply Finset.sum_congr rfl
-    intro j hj
-    rw [mul_comm (s j) (r i)]
+    calc
+      _ = ∑ j, ∑ i, (s j * r i) • (B j).comp (A i) := by
+        rw [ContinuousLinearMap.finsetSum_comp]
+        apply Finset.sum_congr rfl
+        intro j hj
+        rw [ContinuousLinearMap.comp_finsetSum]
+        apply Finset.sum_congr rfl
+        intro i hi
+        rw [ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_smul, smul_smul]
+      _ = ∑ i, ∑ j, (s j * r i) • (B j).comp (A i) := Finset.sum_comm
+      _ = _ := by
+        apply Finset.sum_congr rfl
+        intro i hi
+        apply Finset.sum_congr rfl
+        intro j hj
+        rw [mul_comm (s j) (r i)]
   rw [hforward, hbackward, ← Finset.sum_sub_distrib]
   apply Finset.sum_congr rfl
   intro i hi

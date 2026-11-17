@@ -64,9 +64,9 @@ theorem leftMajorana_mode_flips_ne {i j : Fin 3} (hij : i ≠ j) :
     (fun T : Module.End ℝ (ZornVectorMatrix ℝ) => T (U i)) h
   change
     (L_map (R := ℝ) (U i) * L_map (V i) -
-        L_map (V i) * L_map (U i)) (U i) =
+        L_map (V i) * L_map (U i) : Module.End ℝ (ZornVectorMatrix ℝ)) (U i) =
       (L_map (R := ℝ) (U j) * L_map (V j) -
-        L_map (V j) * L_map (U j)) (U i) at heval
+        L_map (V j) * L_map (U j) : Module.End ℝ (ZornVectorMatrix ℝ)) (U i) at heval
   rw [left_mode_commutator_apply (R := ℝ) i (U i),
     left_mode_commutator_apply (R := ℝ) j (U i)] at heval
   have hcoord := congrArg (fun X : ZornVectorMatrix ℝ => X.v i) heval

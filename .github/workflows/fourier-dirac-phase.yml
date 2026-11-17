@@ -58,7 +58,7 @@ permissions:
 
 concurrency:
   group: fourier-dirac-phase-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 env:
   FOURIER_DIRAC_TARGETS: >-

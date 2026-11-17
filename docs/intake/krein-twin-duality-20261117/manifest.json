@@ -1,0 +1,34 @@
+{
+  "source": "Four user attachments received 2026-11-17",
+  "notes": [
+    {
+      "original_filename": "Pasted text (2)(5).txt",
+      "preserved_path": "docs/intake/krein-twin-duality-20261117/note-1.txt",
+      "sha256": "a491023d36718e9f034c8a5975c01d35c01e14ce0346e398caefc1e8d52cc802",
+      "bytes": 33982
+    },
+    {
+      "original_filename": "Pasted text (3)(1).txt",
+      "preserved_path": "docs/intake/krein-twin-duality-20261117/note-2.txt",
+      "sha256": "a491023d36718e9f034c8a5975c01d35c01e14ce0346e398caefc1e8d52cc802",
+      "bytes": 33982
+    },
+    {
+      "original_filename": "Pasted text (4).txt",
+      "preserved_path": "docs/intake/krein-twin-duality-20261117/note-3.txt",
+      "sha256": "29e63c7500aaca938b4f3944867da88d10732da430e8219a5697981d42fa53ed",
+      "bytes": 16155
+    },
+    {
+      "original_filename": "Pasted text(20261117-082323).txt",
+      "preserved_path": "docs/intake/krein-twin-duality-20261117/note-4.txt",
+      "sha256": "aed795271160bbf0f932ef3c538f682d7d0afdb85cbfa1f3ef4048724ea0a48f",
+      "bytes": 13895
+    }
+  ],
+  "duplicate_notes": [
+    "note-1.txt",
+    "note-2.txt"
+  ],
+  "interpretation": "Source material only. Its claims of verification are not compiler evidence."
+}

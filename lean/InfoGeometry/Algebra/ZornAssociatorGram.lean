@@ -111,7 +111,7 @@ theorem associatorGram_zero_iff_basis (X : Z) :
     apply Finset.sum_eq_zero
     intro j _
     rw [h i j]
-    simp only [map_zero, LinearMap.zero_apply]
+    simp only [map_zero]
 
 /-- The two parameter slots of the actual associator form a native bilinear
 map. This is only an arity adapter used for basis extensionality. -/

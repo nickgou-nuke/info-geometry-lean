@@ -358,6 +358,8 @@ import InfoGeometry.GrandUnification.TypeDZeroOrbitRigidity
 import InfoGeometry.Information.BergmanBregman
 import InfoGeometry.Information.DeRhamScore
 import InfoGeometry.Library
+import InfoGeometry.Lie.SplitOctonionScalarPotentialObstruction
+import InfoGeometry.Lie.SplitOctonionAssociatorDissipation
 import InfoGeometry.MassSpectrometry.GPUExecutionContracts
 import InfoGeometry.NCG.CuntzColimitKMSTiltGNS
 import InfoGeometry.NCG.KMSStripKleinMonodromy
@@ -437,6 +439,7 @@ import InfoGeometry.SuperMetriplectic.MajoranaSouriauMetriplecticLoxodromic
 import InfoGeometry.SuperMetriplectic.WittKleinRepresentation
 import InfoGeometry.Thermo.MetalMirror
 import InfoGeometry.Thermo.SusceptibilityOnsagerStress
+import InfoGeometry.Thermo.ProjectedGramDissipation
 import InfoGeometry.Twistor.SplitSignatureConformalChart
 import InfoGeometry.Twistor.SplitSignatureConformalChartAudit
 import InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis

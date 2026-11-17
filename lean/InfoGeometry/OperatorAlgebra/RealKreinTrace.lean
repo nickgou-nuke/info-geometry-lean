@@ -334,18 +334,21 @@ theorem kreinWeightedTrace_self_split
       rw [transposeWeightedTrace_sub_left, transposeWeightedTrace_add_right,
         transposeWeightedTrace_add_right, hEO, hOE, add_zero, zero_add]
 
+omit [DecidableEq n] in
 /-- The ordinary matrix Gram trace is nonnegative over the reals. -/
 theorem trace_transpose_mul_self_nonneg (A : Matrix n n ℝ) :
     0 ≤ trace (Aᵀ * A) := by
   simpa only [conjTranspose_eq_transpose_of_trivial] using
     (Matrix.posSemidef_conjTranspose_mul_self A).trace_nonneg
 
+omit [DecidableEq n] in
 /-- The actual Gram trace vanishes exactly at the zero matrix. -/
 theorem trace_transpose_mul_self_eq_zero_iff (A : Matrix n n ℝ) :
     trace (Aᵀ * A) = 0 ↔ A = 0 := by
   simpa only [conjTranspose_eq_transpose_of_trivial] using
     (Matrix.trace_conjTranspose_mul_self_eq_zero_iff (A := A))
 
+omit [DecidableEq n] in
 theorem trace_transpose_mul_self_pos (A : Matrix n n ℝ) (hA : A ≠ 0) :
     0 < trace (Aᵀ * A) := by
   have hnonneg := trace_transpose_mul_self_nonneg A

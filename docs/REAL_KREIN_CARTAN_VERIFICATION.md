@@ -36,6 +36,40 @@ The failed artifact was downloaded and matched GitHub's recorded SHA256:
 `4e75a6ee16ee62c4118a3bf9b906b16228523feddf9de6c726f44c656f911e40`.
 Its source snapshots match the exact failed commit.
 
+## Second native run and transport repair
+
+The repaired-head workflow,
+[44088345670](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44088345670),
+compiled eleven of the twelve repository modules at commit
+`a5517c171f23b6144e40bd0c9cfd243bd7fa4708`. Four of the five selected owners
+compiled. `RealMetricAdjoint` passed with zero warnings, confirming the first
+repair. `RealKreinTrace` compiled and reported two unused `DecidableEq` section
+instances. `WeightedAdjointCompatibility` and `RealKreinDensityCounterexample`
+again compiled with zero warnings.
+
+The previously blocked `RealMetricTransport` module then exposed an ambiguous
+`mul_inv_rev`, unit-inverse coercion/cancellation mismatches, and simplification
+of the two ordered inverse witnesses to `True` instead of the required matrix
+equalities. This run failed before the native declaration audit. Its success
+on individual modules is not acceptance of the complete selected scope.
+
+The second source repair explicitly coerces the inverse unit as `↑(g⁻¹)` and
+`↑(w⁻¹)`, qualifies the group theorem `_root_.mul_inv_rev`, and uses the native
+`Units.inv_mul` cancellation. The ordered inverse bridge restricts
+simplification to the weighted-adjoint definition and unit value/star
+coercions, retaining the full noncommutative products. The two reported unused
+instances and the resulting unused instance in their positivity helper are
+omitted. No theorem is replaced by a weaker conclusion, and no checker,
+dependency pin, lock, linter, or acceptance rule is changed. A fresh exact-head
+native run is required for this repair.
+
+The downloaded failed artifact matches GitHub's recorded SHA256:
+`3a76aff28246f433f5e8dc5d156f177e464a06af2ff7370e36eafc3ff600637c`.
+All twelve source snapshots match the failed commit. The artifact manifest's
+`checker.log` digest covers its first 3,760 bytes; the final uploaded log is
+5,288 bytes because the failure traceback was appended after the digest was
+recorded. The remaining manifest entries match their complete files.
+
 ## Selected owners
 
 | Module under `InfoGeometry` | Added explicit theorems | Added definitions |

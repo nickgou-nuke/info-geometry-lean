@@ -179,3 +179,24 @@ Repository links below pin the source-review revision; they do not assert that t
 - **[P3]** Hongwei Yu and Weixing Shu, *Quantum states with negative energy density in the Dirac field and quantum inequalities*, Phys. Lett. B570 (2003), 123–128: <https://arxiv.org/abs/hep-th/0307102>. See also C. J. Fewster and B. Mistry, *Quantum Weak Energy Inequalities for the Dirac field in Flat Spacetime*, Phys. Rev. D68 (2003), 105010: <https://arxiv.org/abs/gr-qc/0307098>.
 - **[P4]** Philip J. Morrison, *A paradigm for joined Hamiltonian and dissipative systems*, Physica D18 (1986), 410–419: <https://web2.ph.utexas.edu/~morrison/86PHD_morrison.pdf>.
 - **[P5]** Charles-Michel Marle, *On Gibbs States of Mechanical Systems with Symmetries*, JGSP57 (2020), Proposition 3.1.3: <https://marle.perso.math.cnrs.fr/pdffiles/2020/GibbsStatesJGSPPart1.pdf>.
+
+## Native CI result and coercion repair (17 November 2026)
+
+[Focused run 44091081724](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44091081724)
+on PR head `9072e4c10f742659e624f4b8e357e13786744881` compiled
+`HestenesNativeDiracCurrent` successfully with zero warnings. It found one
+Lean type mismatch in `BilinearMetriplecticReduction` at the forward direction
+of `reducedSharp_eq_zero_iff_of_injective`; the Cl55 consumer was consequently
+blocked. The recursive owned-declaration axiom pass was not reached.
+
+The mismatch distinguishes the inverse bilinear equivalence applied directly
+from its underlying linear-map coercion. The repair explicitly evaluates the
+composition with `LinearMap.comp_apply` and `LinearEquiv.coe_coe`, then uses
+the original kernel equality and `map_zero`. All statements and hypotheses
+are unchanged. Independent source review checked the exact pinned coercion
+lemma and Mathlib's analogous bilinear-form evaluation proof.
+
+This repair requires a fresh native run. Source review and the previously
+passed Clifford module do not certify the repaired bilinear theorem, the
+dependent Cl55 consumer, or the recursive axiom audit. Existing local checks
+remain serialized by the unchanged shared build lock.

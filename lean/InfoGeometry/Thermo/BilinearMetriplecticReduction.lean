@@ -84,7 +84,11 @@ theorem reducedSharp_eq_zero_iff_of_injective
   · intro h
     have hz : (B.toDual hB).symm (A.dualMap α) = 0 := by
       apply hA
-      simpa only [reducedSharp, LinearMap.comp_apply, map_zero] using h
+      calc
+        A ((B.toDual hB).symm (A.dualMap α)) = reducedSharp B hB A α := by
+          simp only [reducedSharp, LinearMap.comp_apply, LinearEquiv.coe_coe]
+        _ = 0 := h
+        _ = A 0 := (map_zero A).symm
     have hdual := congrArg (B.toDual hB) hz
     simpa using hdual
   · exact reducedSharp_annihilates B hB A α

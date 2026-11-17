@@ -21,55 +21,65 @@ variable {R A : Type*} [Semiring R] [Ring A] [Module R A] [IsScalarTower R A A] 
 
 def leftAction (a : A) : A →ₗ[R] A := LinearMap.mulLeft R a
 
+omit [IsScalarTower R A A] in
 @[simp] theorem leftAction_apply (a x : A) : leftAction (R := R) a x = a * x := rfl
 
 def rightAction (b : A) : A →ₗ[R] A := LinearMap.mulRight R b
 
+omit [SMulCommClass R A A] in
 @[simp] theorem rightAction_apply (b x : A) : rightAction (R := R) b x = x * b := rfl
 
 def leftCommutant : Set (A →ₗ[R] A) :=
   {T | ∀ a : A, T.comp (leftAction a) = (leftAction a).comp T}
 
+omit [IsScalarTower R A A] in
 @[simp] theorem leftAction_one :
     leftAction (R := R) (1 : A) = LinearMap.id := by
   ext x
   simp [leftAction]
 
+omit [SMulCommClass R A A] in
 @[simp] theorem rightAction_one :
     rightAction (R := R) (1 : A) = LinearMap.id := by
   ext x
   simp [rightAction]
 
+omit [IsScalarTower R A A] in
 theorem leftAction_mul (a b : A) :
     leftAction (R := R) (a * b) =
       (leftAction (R := R) a).comp (leftAction (R := R) b) := by
   ext x
-  simp [leftAction, LinearMap.comp_apply, mul_assoc]
+  simp [leftAction, LinearMap.comp_apply]
 
+omit [SMulCommClass R A A] in
 theorem rightAction_mul (a b : A) :
     rightAction (R := R) (a * b) =
       (rightAction (R := R) b).comp (rightAction (R := R) a) := by
   ext x
   simp [rightAction, LinearMap.comp_apply, mul_assoc]
 
+omit [IsScalarTower R A A] in
 theorem leftAction_add (a b : A) :
     leftAction (R := R) (a + b) =
       leftAction (R := R) a + leftAction (R := R) b := by
   ext x
   simp [leftAction, add_mul]
 
+omit [SMulCommClass R A A] in
 theorem rightAction_add (a b : A) :
     rightAction (R := R) (a + b) =
       rightAction (R := R) a + rightAction (R := R) b := by
   ext x
   simp [rightAction, mul_add]
 
+omit [IsScalarTower R A A] in
 theorem leftAction_injective :
     Function.Injective (fun a : A => leftAction (R := R) a) := by
   intro a b h
   have h' := congrArg (fun T : A →ₗ[R] A => T 1) h
   simpa [leftAction] using h'
 
+omit [SMulCommClass R A A] in
 theorem rightAction_injective :
     Function.Injective (fun b : A => rightAction (R := R) b) := by
   intro a b h
@@ -89,6 +99,7 @@ theorem leftAction_comp_rightAction (a b : A) :
   ext x
   simp [leftAction, rightAction, LinearMap.comp_apply, mul_assoc]
 
+omit [IsScalarTower R A A] in
 theorem leftAction_commutator (a b : A) :
     (leftAction (R := R) a).comp (leftAction (R := R) b) -
         (leftAction (R := R) b).comp (leftAction (R := R) a) =
@@ -96,6 +107,7 @@ theorem leftAction_commutator (a b : A) :
   ext x
   simp [leftAction, LinearMap.comp_apply, sub_mul, mul_assoc]
 
+omit [SMulCommClass R A A] in
 theorem rightAction_commutator (a b : A) :
     (rightAction (R := R) a).comp (rightAction (R := R) b) -
         (rightAction (R := R) b).comp (rightAction (R := R) a) =

@@ -1,6 +1,6 @@
 # Finite Hodge, commutants, and Kraus invariance: theorem contract
 
-Status: reconstructed source contract, 2026-11-17. Source review and the scoped static gates have passed at the hashes below. Fresh native closure, declaration-axiom acceptance, and remote CI are pending. This document does not certify compilation.
+Status: source contract updated after hosted compiler feedback, 2026-11-17. Source review and fresh scoped source gates have passed at the current hashes below. Hosted CI reached Lean and exposed Hodge proof errors and regular-commutant warnings; the repairs now require a fresh native closure and declaration-axiom audit. This document does not certify compilation.
 
 ## Intake and recovery provenance
 
@@ -10,18 +10,20 @@ The intake is preserved as [hodge_commutant_intake_20261116.txt](sources/hodge_c
 - Repository baseline: `08c34e03f610b452e03422037949196dc7d92d6d`.
 - Pinned Lean: `v4.34.1`. Pinned Mathlib: `d13f23b723b8a846827a245b89c10fc7d3f11612`.
 - The original transient checkout, candidates, and development logs expired overnight. No lost compiler log has been recreated.
-- Four owner sources were recovered byte-for-byte against retained hashes. The generic Kraus insertion was reconstructed semantically and independently reviewed again.
+- Four owner sources were initially recovered byte-for-byte against retained hashes. The generic Kraus insertion was reconstructed semantically and independently reviewed again. Hodge proof bodies and unused regular-action assumptions were subsequently repaired from actual hosted compiler diagnostics.
 - This contract and [HODGE_COMMUTANT_REVIEW.md](HODGE_COMMUTANT_REVIEW.md) are newly reconstructed documentation, not byte-certified copies of the lost documents.
 
-| Owner below `lean/InfoGeometry/` | Recovered SHA-256 | Recovery |
+| Owner below `lean/InfoGeometry/` | Current SHA-256 | Source history |
 |---|---|---|
 | `OperatorAlgebra/NoncommutativeKrausChannel.lean` | `62091573510385b10a7678bbdca99c4cbf62737e1bf9b8e60728e62abc30ed45` | Reconstructed insertion |
-| `Physics/RegularBimoduleCommutant.lean` | `a85dd111963c5ec1077069a5d2e2aa91d782e29c739690466a09854288bec6f4` | Exact |
+| `Physics/RegularBimoduleCommutant.lean` | `eb7a7932099ac8f07277ee0df93b4d11bcb3357f20d4574e136e1b8350176717` | Recovered, then unused-assumption repair |
 | `Quantum/KrausUniversalFixedEffects.lean` | `19df4a3b98c871e37cfcfddc7ca3fcb30145c4d7d0258a05a5839c463e71c9ca` | Exact, including Hodge bridge |
-| `OperatorAlgebra/MatrixCommutatorHodge.lean` | `c67fbceea6410b341b862b360508b550ecb28cd72b680f5d3f555a7bc6ffc092` | Exact |
+| `OperatorAlgebra/MatrixCommutatorHodge.lean` | `e5246ed30a8b1a90a7b5bc10b8d8ea2bfff8238dbdec43b2336caa0be916e47f` | Recovered, then proof repair; propositions unchanged |
 | `Quantum/BipartiteOperatorSectors.lean` | `ec425286d6b824588705a1e5837bfb638d5b2171870ef5aecdf01fb1dfd71d6b` | Exact |
 
 The former generic candidate hash was `1ed0688394c1b3d073f2b0cc2f51c6c8c4f5c26f6411468e1f837aa257ed08d8`. It is not the current generic source hash. Its historical development pass cannot certify the reconstruction.
+
+The initial Hodge and regular-commutant recovery hashes, the actual hosted failure, and the current repair scope are preserved in the review record. Earlier source identity or compiler results are not transferred to changed proof bytes.
 
 ## Actual carriers and conventions
 

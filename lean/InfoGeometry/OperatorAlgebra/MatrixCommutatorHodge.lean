@@ -85,10 +85,12 @@ theorem differential_adjunction (Q : ι → Matrix n n ℂ)
 /-- The constructed coderivative is exactly Mathlib's native metric adjoint. -/
 theorem codifferential_eq_adjoint (Q : ι → Matrix n n ℂ) :
     codifferential Q = (differential Q).adjoint := by
-  apply (LinearMap.eq_adjoint_iff _ _).2
-  intro W X
-  simpa only [inner_conj_symm] using
-    (congrArg (star : ℂ → ℂ) (differential_adjunction Q X W)).symm
+  apply LinearMap.ext
+  intro W
+  apply ext_inner_left ℂ
+  intro X
+  rw [LinearMap.adjoint_inner_right]
+  exact (differential_adjunction Q X W).symm
 
 omit [Fintype ι] in
 /-- A harmonic degree-zero input commutes with every generator of the frame. -/
@@ -149,7 +151,8 @@ theorem existsUnique_centralizer_coexact (Q : ι → Matrix n n ℂ) (X : Matrix
     have hdK : D - C ∈ K := K.sub_mem hD hC
     have hdO : D - C ∈ Kᗮ := by
       have hsub := Kᗮ.sub_mem hres hDres
-      convert hsub using 1 <;> abel
+      convert hsub using 1
+      abel
     apply sub_eq_zero.mp
     exact inner_self_eq_zero.mp ((K.mem_orthogonal _).mp hdO _ hdK)
 
@@ -238,7 +241,7 @@ theorem matrixUnits_coexact_square_counterexample :
     ext i j
     fin_cases i <;> fin_cases j <;>
       norm_num [W, X, Fintype.sum_prod_type, Fin.sum_univ_two, Matrix.single,
-        Matrix.mul_apply, Matrix.conjTranspose_apply]
+        Matrix.mul_apply, Matrix.vecMul, dotProduct, Matrix.conjTranspose_apply]
   · ext i j
     fin_cases i <;> fin_cases j <;>
       norm_num [X, Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]

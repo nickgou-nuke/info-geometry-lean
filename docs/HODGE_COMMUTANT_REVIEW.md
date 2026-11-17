@@ -2,7 +2,7 @@
 
 Review date: 2026-11-17. Scope: the five owners in [HODGE_COMMUTANT_CONTRACT.md](HODGE_COMMUTANT_CONTRACT.md), the recovered intake, and the proposed dedicated workflow.
 
-**Current disposition:** source review passed; scoped static checks and the installed pre-commit gate passed at the recorded scope. Fresh native closure and declaration-axiom acceptance remain pending. Remote workflow execution has not been certified. Publication is authorized as a draft with these limitations disclosed.
+**Current disposition:** the hosted checkout repair succeeded and the pinned compiler reached the complete 18-module closure. That run reported two Hodge proof errors and 13 regular-commutant warnings. The proof repairs below have passed independent source review and fresh scoped source checks; a new native run is required for their acceptance. Declaration-axiom acceptance remains pending. The PR remains a draft.
 
 ## Baseline and intake provenance
 
@@ -20,9 +20,9 @@ The intake is retained as input provenance. Its proposed axioms, metaphors, name
 | Owner below `lean/InfoGeometry/` | Current SHA-256 | Classification |
 |---|---|---|
 | `OperatorAlgebra/NoncommutativeKrausChannel.lean` | `62091573510385b10a7678bbdca99c4cbf62737e1bf9b8e60728e62abc30ed45` | Semantic reconstruction |
-| `Physics/RegularBimoduleCommutant.lean` | `a85dd111963c5ec1077069a5d2e2aa91d782e29c739690466a09854288bec6f4` | Exact recovery |
+| `Physics/RegularBimoduleCommutant.lean` | `eb7a7932099ac8f07277ee0df93b4d11bcb3357f20d4574e136e1b8350176717` | Recovered source, then compiler-guided removal of unused assumptions |
 | `Quantum/KrausUniversalFixedEffects.lean` | `19df4a3b98c871e37cfcfddc7ca3fcb30145c4d7d0258a05a5839c463e71c9ca` | Exact recovery |
-| `OperatorAlgebra/MatrixCommutatorHodge.lean` | `c67fbceea6410b341b862b360508b550ecb28cd72b680f5d3f555a7bc6ffc092` | Exact recovery |
+| `OperatorAlgebra/MatrixCommutatorHodge.lean` | `e5246ed30a8b1a90a7b5bc10b8d8ea2bfff8238dbdec43b2336caa0be916e47f` | Recovered source, then compiler-guided proof repair |
 | `Quantum/BipartiteOperatorSectors.lean` | `ec425286d6b824588705a1e5837bfb638d5b2171870ef5aecdf01fb1dfd71d6b` | Exact recovery |
 
 The generic baseline was fetched at the exact baseline commit. Its standalone baseline SHA-256 is `d11b4db5ae54468ec5972d5f2806f942646abc6b81400537fd6f0115f7df1699`. Only the five-theorem insertion was reconstructed.
@@ -32,6 +32,8 @@ The prior complete generic source hash was `1ed0688394c1b3d073f2b0cc2f51c6c8c4f5
 Independent source review found no weakening or API-scope change in that reconstruction. The pinned Mathlib center definition was checked: membership supplies `IsMulCentral.comm`, supporting the restored `hE.comm` proof. The existing graded-trace import supplies `Mathlib.Tactic`, including `abel`.
 
 Matching a historical hash establishes source identity. It does not establish that the recovered source compiled previously or now. No historical generic development pass is being transferred to the new hash.
+
+The initially recovered regular-commutant hash was `a85dd111963c5ec1077069a5d2e2aa91d782e29c739690466a09854288bec6f4`; the initially recovered Hodge hash was `c67fbceea6410b341b862b360508b550ecb28cd72b680f5d3f555a7bc6ffc092`. These are historical identities, not the current repaired bytes. The other three owner hashes remain unchanged.
 
 ## Semantic review of the actual propositions
 
@@ -51,15 +53,15 @@ The detailed intake corrections and missing implications are recorded in the con
 ## Fresh scoped source checks
 
 The following results were read from the current receipt and reports under
-`/workspace/scratch/a6c715447467/verification/source/`. That receipt records the five current source hashes above and seven successful command invocations.
+`/workspace/scratch/a6c715447467/verification/source-repair-20261117/`. That fresh receipt records the five current source hashes above and seven successful command invocations.
 
 | Check | Observed current result | Authority |
 |---|---|---|
 | Strict placeholder audit, once for each of five owners | All five commands exited `0`; each scanned one selected file; total hard findings `0`, total soft findings `4` | Lexical/source heuristic |
 | Semantic-vacuity gate with `--fail-on error` | Exit `0`; selected `5`, read `5`, coverage complete, no read failures; errors `0`, warnings `10` | Lexical/source heuristic |
 | Strict OpenGauss screener on all five owners | Exit `0`; `violations: {}`; `quarantined_packets: []` | Scoped source screener |
-| Installed pre-commit hook | Executed with exit `0` and `proof_proxy_staged_gate: ok` | Staged source gate, not a native certificate |
-| Independent source review | Current five hashes, seven source commands, warning dispositions, and workflow scope reviewed; no source blocker reported | Human-readable proposition/implementation review |
+| Installed pre-commit hook | Passed at initial publication; the repair is committed through the same installed hook | Staged source gate, not a native certificate |
+| Independent source review | Both repaired owners reviewed against the actual CI logs; no statement weakening or source blocker reported | Human-readable proposition/implementation review |
 
 The command families recorded in the receipt are:
 
@@ -111,23 +113,57 @@ failure; avoiding that unnecessary traversal is the operative change.
 
 Independent review checked Bash syntax, all five Python blocks, all 18 resolved
 project imports, and all 14 verification inputs. Every subsequent workflow step,
-permission, event, and verification threshold is unchanged. The five Lean source
-hashes and the source-check receipts above remain unchanged. A fresh hosted run
-of the repaired workflow is still required for native acceptance.
+permission, event, and verification threshold is unchanged. That checkout-only
+commit left the five Lean source hashes unchanged. The subsequent native run
+and the resulting proof repairs are recorded below.
+
+### Observed hosted native failure and source repair
+
+[Run 44046352182](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44046352182)
+checked commit `468a834874625bd14d089fabbf652a017478610b`. Exact project checkout,
+dependency pins, pinned Lean installation, and Mathlib cache all passed. Of the
+18 resolved repository modules, 16 compiled; `MatrixCommutatorHodge` failed and
+its consumer `KrausUniversalFixedEffects` was blocked. Among the five targets,
+`NoncommutativeKrausChannel` and `BipartiteOperatorSectors` compiled without
+warnings. `RegularBimoduleCommutant` compiled with 13 warnings. The axiom audit
+and later source/hash acceptance steps did not run.
+
+The uploaded evidence archive was downloaded and checked against the upload
+digest: `4bbce7f6e429dd90b30582c042da833ab4a140bfa940355f008d3cf42677b8da`.
+This is fresh hosted evidence, not a reconstruction of the expired logs.
+
+The current repair makes these narrowly scoped changes:
+
+- Identify the codifferential with the native adjoint using `ext_inner_left`
+  and `LinearMap.adjoint_inner_right`, directly reusing the established
+  adjunction. This avoids a failed simplification between `star` and complex
+  conjugation; the theorem statement and carrier are unchanged.
+- Expand `Matrix.vecMul` and `dotProduct` in the concrete matrix-unit witness,
+  matching the four residual entry goals in the actual compiler log. The
+  matrices and the counterexample proposition are unchanged.
+- Sequence the Hodge `convert` and `abel` tactics without unnecessary focus.
+- Remove twelve unused regular-action section assumptions with explicit
+  `omit ... in`, and remove one unused `mul_assoc` simp argument. These are
+  exactly the diagnostics from CI; no hypothesis or conclusion was weakened.
+
+Independent review inspected the complete candidates, diffs, and CI logs.
+The seven scoped source checks then passed on the current hashes above.
+Neither source review nor the old run certifies these repaired proof bodies;
+the next hosted native run must check them and their complete declaration axioms.
 
 
 ## Native acceptance and publication status
 
 | Gate | Status at this review snapshot |
 |---|---|
-| Fresh five-owner native import-closure check | Pending; the maintained check is queued under the shared build lock |
-| Fresh declaration-axiom audit | Pending with the native check |
+| Fresh five-owner native import-closure check | Earlier source failed in the hosted Hodge owner; current repaired source awaits a fresh run |
+| Fresh declaration-axiom audit | Not reached in the failed hosted run; pending for current source |
 | Allowed axioms restricted to `propext`, `Classical.choice`, `Quot.sound` | Acceptance requirement; no fresh result claimed |
-| Native warnings or errors for the restored five-owner closure | No final current result recorded here |
-| Remote workflow run for the published head | Initial run failed before Lean; repaired checkout awaits a fresh native result |
+| Native warnings or errors for the restored five-owner closure | Earlier run: two Hodge errors, one Hodge warning, 13 regular-commutant warnings; current repairs unverified natively |
+| Remote workflow run | First run failed at checkout; second passed checkout and exposed the proof diagnostics above |
 | Draft publication | Authorized; publishing a draft does not change any verification status above |
 
-A fresh run directory is designated `verification/final-integrated` in the current workspace. A queued process, an empty log, or a prepared output directory is not a successful native check. Update this record using the actual completed receipt and the exact checked source hashes.
+An older local native check under `verification/final-integrated` and a root-package pre-push invocation remain queued against the initial source snapshot under the shared build lock. Their completion, if later observed, cannot certify the changed Hodge or regular-commutant hashes. A queued process, an empty log, or a prepared output directory is not a successful native check. Update this record using an actual completed receipt and the exact checked source hashes.
 
 There is no claim of a successful full-repository build. Historical development messages are context only; the missing original logs cannot establish completed coverage, zero target warnings, or axiom acceptance.
 

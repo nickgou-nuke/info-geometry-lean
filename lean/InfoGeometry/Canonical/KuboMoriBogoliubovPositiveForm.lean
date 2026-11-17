@@ -107,7 +107,19 @@ theorem bkmBilinForm_pos (A : Matrix n n ℝ) (hA : A ≠ 0) :
 /-- Identity insertion is the normalized state expectation. -/
 theorem bkmBilinForm_one_left (A : Matrix n n ℝ) :
     rho.bkmBilinForm 1 A = ∑ i, rho.eigenvalues i * A i i := by
-  simp [bkmBilinForm_apply, bkmInnerProduct, Matrix.one_apply, bkmWeight, mul_comm]
+  rw [bkmBilinForm_apply]
+  unfold bkmInnerProduct
+  apply Finset.sum_congr rfl
+  intro i _
+  have hdiag : rho.bkmWeight i i = rho.eigenvalues i := by
+    simp [bkmWeight]
+  rw [Finset.sum_eq_single i]
+  · rw [Matrix.one_apply_eq, one_mul, hdiag]
+    exact mul_comm _ _
+  · intro j _ hji
+    simp only [Matrix.one_apply_ne hji, zero_mul]
+  · intro hi
+    exact (hi (Finset.mem_univ i)).elim
 
 theorem bkmBilinForm_one_one : rho.bkmBilinForm 1 1 = 1 := by
   rw [bkmBilinForm_one_left]
@@ -123,7 +135,7 @@ theorem bkmWeight_eq_integral (i j : n) :
   have hq : 0 < q := rho.p_pos j
   change (if p = q then p else (p - q) / (Real.log p - Real.log q)) = _
   by_cases hpq : p = q
-  · rw [if_pos hpq]
+  · rw [ite_eq_left hpq]
     have hconst : (fun t : ℝ => p ^ (1 - t) * q ^ t) = fun _ => p := by
       funext t
       rw [← hpq, ← Real.rpow_add hp]
@@ -132,7 +144,7 @@ theorem bkmWeight_eq_integral (i j : n) :
     change p = ∫ t : ℝ in (0 : ℝ)..1, p ^ (1 - t) * q ^ t
     rw [hconst]
     simp
-  · rw [if_neg hpq]
+  · rw [ite_eq_right hpq]
     have hlog : Real.log q - Real.log p ≠ 0 := by
       intro h
       have heq := congrArg Real.exp (sub_eq_zero.mp h)

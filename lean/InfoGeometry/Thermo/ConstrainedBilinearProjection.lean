@@ -5,7 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.LinearAlgebra.BilinearForm.Orthogonal
 import Mathlib.LinearAlgebra.Projection
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic.Module
 import Mathlib.Tactic.Ring
 
@@ -254,7 +254,7 @@ def projectedForm (B : LinearMap.BilinForm ℝ V) (e H : V) :
 
 theorem projectedForm_isSymm (B : LinearMap.BilinForm ℝ V) (e H : V)
     (hB : B.IsSymm) : (projectedForm B e H).IsSymm :=
-  ⟨fun x y => hB.eq _ _⟩
+  ⟨fun _ _ => hB.eq _ _⟩
 
 /-- The projected response equals evaluation on the actual projected vector. -/
 theorem projectedForm_eq_pairing_right

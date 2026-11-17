@@ -5,7 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.LinearAlgebra.BilinearForm.Properties
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 
 /-!
 # A positive Gram form for projected leakage operators

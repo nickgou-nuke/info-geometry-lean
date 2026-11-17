@@ -1,6 +1,45 @@
 # Real BKM and squared-associator validation
 
-## Source checkpoint: 2026-11-17
+## Native CI diagnostics and first repair: 2026-11-17
+
+The [initial focused run](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44091983902)
+checked remote source `5ddf3e6b50c291d1340eee922e15ae8415d8652a` and **failed**.
+Its report covered the 66-owner closure. It found an unsolved nested conditional
+in `bkmBilinForm_one_left`, an observer-pairing elaboration mismatch, and an
+unreduced quaternion norm square. The two downstream BKM owners were blocked.
+The generic projection and Gram modules compiled, but had new-owner warnings.
+No declaration axiom acceptance was reached.
+
+The repair changes proof terms only: select the identity matrix's diagonal
+summand before unfolding the logarithmic weight; use the native current
+conditional rewrites; explicitly expose the observer inner product; reduce the
+concrete quaternion norm square through `Quaternion.normSq`; replace two
+deprecated real imports and remove unused proof binders/simp arguments. The
+statements, carriers, hypotheses, products, and dependency pins are unchanged.
+
+Generation and independent review were separated. Repairs were integrated in
+another independent sparse checkout, preserving the earlier local source and
+output snapshots because old waiter liveness remains unresolved. Read-only
+probes establish genuine contention on the canonical build lock; the available
+PID namespace cannot enumerate the holder. No extra local compiler was launched,
+no process was killed, and the lock was not altered. Remote CI will check the
+new exact source revision. **Repair acceptance remains pending.**
+
+The initial CI artifact ZIP SHA-256 is
+`cfdf9b930661faeabd318fc3b97de90377fa2c0fcde4be286cc9c352a74cc415`.
+Strict placeholder checks on all six repaired owners again returned zero hard
+findings and 14 soft notices. The semantic error gate passed with 18 reviewed
+supporting evaluation/linearity notices. These are source checks, not compiler
+acceptance.
+
+| Repaired owner | Source SHA-256 |
+|---|---|
+| `Canonical.KuboMoriBogoliubovPositiveForm` | `3276a7b34b04c500741a2148ffb635caad1c909e412a063c89278863e7a310e3` |
+| `Thermo.ConstrainedBilinearProjection` | `915255798264d422e5b1eef673b1d72c25574b9809553654ca9f86c7a28d6b4c` |
+| `Thermo.AssociatorGramDissipation` | `5a54814826a2b5550ec4c84b89c74c02b13a76ce9126c36a87fd9b7846dbd59c` |
+| `Canonical.SplitOctonionAssociatorGram` | `32d85e5f0b6130b48c6003ab8c8d5ea6b013b2938741cc46b83e52c4732bdba0` |
+
+## Initial source checkpoint: 2026-11-17
 
 Status: **draft; native compilation and declaration axiom acceptance pending**.
 A proof source with no placeholders is not an executed kernel check.

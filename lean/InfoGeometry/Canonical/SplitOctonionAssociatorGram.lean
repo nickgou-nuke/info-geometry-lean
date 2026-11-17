@@ -57,8 +57,14 @@ theorem observerForm_coordinates (x y : SplitOctonion) :
   change doubledHilbertBilin (to_doubled x.a x.b) (to_doubled y.a y.b) = _
   exact doubledHilbertBilin_to_doubled x.a x.b y.a y.b
 
-theorem observerForm_isSymm : observerForm.IsSymm :=
-  ⟨fun x y => real_inner_comm _ _⟩
+theorem observerForm_isSymm : observerForm.IsSymm := by
+  constructor
+  intro x y
+  change inner ℝ (splitOctonionQuaternionicCarrierEquiv x)
+      (splitOctonionQuaternionicCarrierEquiv y) =
+    inner ℝ (splitOctonionQuaternionicCarrierEquiv y)
+      (splitOctonionQuaternionicCarrierEquiv x)
+  exact real_inner_comm _ _
 
 theorem observerForm_nonneg (x : SplitOctonion) : 0 ≤ observerForm x x := by
   rw [observerForm_apply]
@@ -165,7 +171,7 @@ theorem associator_quaternion_copy (u v w : Quaternion ℝ) :
   apply SplitOctonion.ext <;> simp [SplitOctonion.associator, mul_assoc]
 
 theorem observerForm_one_one : observerForm (1 : SplitOctonion) 1 = 1 := by
-  simp [observerForm_coordinates, Quaternion.inner_def]
+  simp [observerForm_coordinates]
 
 /-- The exact observer-orthogonal projection away from the energy direction `1`. -/
 def energyProjection : Module.End ℝ SplitOctonion :=
@@ -255,9 +261,11 @@ theorem exampleDissipation_energy (x : SplitOctonion) :
   dissipation_energy (fun _ : Unit => iEll) (fun _ : Unit => quaternionJ) 1 x
 
 theorem exampleDissipation_ell_eq_four : exampleDissipation ell ell = 4 := by
+  have hnorm : ‖(⟨0, 0, 0, -2⟩ : Quaternion ℝ)‖ ^ 2 = 4 := by
+    rw [pow_two, ← Quaternion.normSq_eq_norm_mul_self, Quaternion.normSq_def']
+    norm_num
   norm_num [exampleDissipation, dissipation_apply, energyProjection_ell,
-    associator_ell_iEll_j, observerForm_coordinates,
-    Quaternion.inner_self, Quaternion.normSq_def']
+    associator_ell_iEll_j, observerForm_coordinates, hnorm]
 
 theorem exampleDissipation_ell_pos : 0 < exampleDissipation ell ell := by
   rw [exampleDissipation_ell_eq_four]

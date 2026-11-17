@@ -2,13 +2,13 @@
 
 Review date: 2026-11-17. Baseline: `08c34e03f610b452e03422037949196dc7d92d6d`.
 
-**Disposition:** the first hosted native run failed in an existing dependency before `HestenesSpectralCorners` compiled. Compiler-guided import and warning repairs have been independently reviewed; all five current scoped source checks pass. Fresh native compilation, target-warning acceptance, the compiled declaration-axiom audit, root-package pre-push acceptance, and repaired hosted CI acceptance remain outstanding. This is a draft publication, not a kernel-accepted completion claim.
+**Disposition:** the second hosted native run confirms that all ten dependencies compile and both edited dependency targets have zero warnings. The new corner owner reaches compilation with one remaining purely additive tactic error; the compiler-recommended replacement is included below. Scoped source checks pass. Fresh complete native compilation, the compiled declaration-axiom audit, root-package pre-push acceptance, and repaired hosted CI acceptance remain outstanding. This is a draft publication, not a kernel-accepted completion claim.
 
 ## Current source identities
 
 | Owner under `lean/InfoGeometry/Canonical/` | SHA-256 | Change |
 |---|---|---|
-| `HestenesSpectralCorners.lean` | `7d84d26877455cc6bad9f6b22e878b49a628d36307e4142fcca1a2361cf8501b` | New native projectors, involution/corner laws and a nonzero witness |
+| `HestenesSpectralCorners.lean` | `837405b4b770f7356755a2355929ea4699a2b192a7fae0b23258428da2324363` | New native projectors, involution/corner laws and a nonzero witness |
 | `TwoSheetThreeColorWeylFinite.lean` | `f8c8c264e9920925aa01b6604a72a1e08654d4000c9cbf22d04a50d563d61b2b` | Remove one unused import, add the required header, and repair 20 actual target warnings without changing theorem statements |
 | `HestenesEvenPauliEquiv.lean` | `9c5a6ef3a842909f81cbe6cfbfdfb971aae1c010aa3e37d2d09c277b76ed9c08` | Add the required direct Mathlib import and header; repair six actual warnings without changing theorem statements |
 
@@ -34,7 +34,7 @@ The native failure artifact was independently downloaded, SHA-256 checked, and r
 
 ## Actual scoped source results
 
-The fresh receipt is `/workspace/scratch/a6c715447467/verification/hestenes-spectral-repair-final-source/receipt.json`. It records the current hashes and all five commands:
+The fresh receipt is `/workspace/scratch/a6c715447467/verification/hestenes-spectral-abel-source/receipt.json`. It records the current hashes and all five commands:
 
 | Check | Observed result | Coverage |
 |---|---|---|
@@ -69,6 +69,14 @@ All three owners receive strict source checks and complete coverage reconciliati
 The artifact is `14318479669`, SHA-256 `f59faa7bb60ee2b26456fce45d12732fff94b184db65329e431fadf920b10bcd`. Its 11 archived source hashes were independently matched to the corresponding published sources. The run recorded 20 warnings in `TwoSheetThreeColorWeylFinite`, six in `HestenesEvenPauliEquiv`, and 46 in unchanged dependency owners. The two edited owners now have targeted tactic repairs; no linter is disabled. Dependency warnings are not represented as target acceptance.
 
 The old sheet SHA-256 was `0809bcad8e719f75521aeaf450ac7515160d2354a368afd4402d38f2ef6e8274`; the old equivalence SHA-256 was `ea46cc8d2affcba549686b874259d63142a03771f4d885349677c3278b97dc54`. The repaired hashes appear in the current identity table. No successful result from old bytes is transferred to the repaired sources.
+
+## Actual second hosted run
+
+[Run 44088398908](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44088398908), job `134056839695`, checked merge revision `01d41e76360b0f00299b0dbffad7d9b64ae56f2e` for head `cdc3c8bdbc90cc09eb0960bdea4d750651207403`. All ten dependencies compiled. The two edited dependency targets, `TwoSheetThreeColorWeylFinite` and `HestenesEvenPauliEquiv`, each had zero warnings, confirming the prior import and warning repairs.
+
+`HestenesSpectralCorners` compiled far enough to report exactly one error and zero warnings: after the square relation in `projectorPlus_sq`, the remaining identity is purely additive and `noncomm_ring` rejects it. Its diagnostic recommends `abel`. This branch changes that one tactic to `abel`, with no statement, hypothesis, carrier or other proof change.
+
+The artifact is `14333110575`, ZIP SHA-256 `72f3c21d7f3dee3693d2ce592ed2437bb298f17bdadb555d83554c8565b968ae`. All 11 archived source hashes match the report and the corresponding published source tree. The failed corner source had SHA-256 `7d84d26877455cc6bad9f6b22e878b49a628d36307e4142fcca1a2361cf8501b`; the repaired source hash is in the current table. The native axiom audit did not run after that compiler failure. The one-token repair needs a fresh complete native result.
 
 ## Native and publication gates
 

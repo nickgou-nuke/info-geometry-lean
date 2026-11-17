@@ -55,7 +55,7 @@ def projectorMinus : ClPlus14 :=
             noncomm_ring
       _ = (1 + sigmaEven 0) + (1 + sigmaEven 0) := by
         rw [sigmaEven_zero_sq]
-        noncomm_ring
+        abel
   simp only [projectorPlus, smul_mul_assoc, mul_smul_comm, smul_smul]
   rw [h, smul_add, ← add_smul]
   norm_num

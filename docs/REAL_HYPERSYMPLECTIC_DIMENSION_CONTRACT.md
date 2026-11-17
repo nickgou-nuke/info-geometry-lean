@@ -113,9 +113,12 @@ an edge in this dependency order.
 PR386 CI run `44065838743` compiled all 17 inherited dependencies and the
 generic compatibility owner, but found one matrix-to-endomorphism conversion
 error in the oblique owner, six proof errors in the phase-space consumer,
-and four selected-owner warnings. The upstream continuation `1838b7df` repairs
-these source-local proofs and warnings at the unchanged pinned Lean 4.34.1 /
-Mathlib d13f23b7 environment. This extension consumes that exact repair.
+and four selected-owner warnings. The upstream continuation `1838b7df` attempted
+these source-local repairs at the unchanged pinned Lean 4.34.1 / Mathlib
+d13f23b7 environment. Its follow-up run `44089274619` found remaining proof
+script failures in two inherited owners. This extension adds a statement-
+preserving pointwise proof repair; the review document records its exact
+failure provenance and pending native acceptance.
 
 G-A writes the dimension candidate separately; the parent integrates it.
 A-A independently reviews the actual hypotheses, proofs, nonvacuity and

@@ -32,8 +32,8 @@ compiled. The generic compatibility owner compiled with one deprecated-import
 warning; the oblique owner had a matrix-to-endomorphism conversion error and
 three warnings; the phase-space owner had six algebraic proof errors.
 
-The upstream continuation `1838b7dfc27cac18937136f6e4c168a8dc314e29` repairs
-those exact proof bodies, and this PR consumes it. The ordered products,
+The upstream continuation `1838b7dfc27cac18937136f6e4c168a8dc314e29` attempted
+those proof-body repairs, and this PR initially consumed it. The ordered products,
 matrices, forms, theorem statements, and dependency pins are preserved.
 The intended root ring rewrites are qualified to avoid specialized imported
 names; the transported matrix anticommutator exposes the native composition
@@ -116,3 +116,34 @@ No signature classification, manifold integrability, curved connection,
 Fisher/BKM identification, full metriplectic dynamics, or philosophical
 uniqueness theorem is asserted here. The contract preserves the raw intake
 and classifies those stronger statements explicitly.
+
+## Follow-up to the current upstream native failure
+
+The later PR386 focused run
+[44089274619](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44089274619),
+job `134059834107`, failed during compilation of two inherited owners. Its
+artifact is `14332184406`. `ObliqueSymplecticInvolution` attempted `ring`
+after `simp` had already closed three matrix-entry goals.
+`PhaseSpaceSymplecticMetricCompatibility` failed five abstract ring rewrites,
+including double negation, at the actual endomorphism type. These are observed
+Lean errors, not dependency or cache failures.
+
+The follow-up keeps all statements and definitions unchanged. The matrix
+proof now applies `ring` only to remaining goals. The phase-space proofs use
+the existing pointwise phase and polarization readbacks, matching the method
+already used by `ParaKahlerGeneralizedMetric.phase_sq`. Independent A-A
+review checked the ordered products and signs against those owner formulas.
+The dimension owner and three generic compatibility lemmas are unchanged.
+
+This is a proof-script repair, pending a fresh native run. The failed upstream
+run remains evidence of the previous bytes; it is not a successful check of
+the repaired source. No kernel, axiom-audit, warning-free, or root integration
+pass is claimed by this addendum.
+
+Independent QA completed nine maintained source commands on the two repaired
+owners: all exited zero. Semantic-content coverage was 2/2 with no read
+failures or findings. The legacy lexical vacuity linter's parameter-use
+advisory for the entrywise oblique matrix proof was reviewed and retained.
+The source receipt SHA256 is
+`36f5768d42f818907fbb4fdf9d9fd105bfb3fdaa5343d78cb83224d7da0147f6`.
+This receipt does not certify elaboration or native axiom acceptance.

@@ -74,15 +74,12 @@ theorem neg_phase_symplectic (G : MetricDatum E) (X Y : PhaseSpaceCarrier E) :
 /-- The ordered complex-para product is the already constructed polarization. -/
 theorem neg_phase_mul_para (G : MetricDatum E) :
     (-phase G) * neutralParaInvolution = (ofMetric G).polarization := by
-  rw [_root_.neg_mul, phase, para_polarization_anticommute,
-    _root_.neg_mul, _root_.neg_neg]
-  rw [_root_.mul_assoc, neutralParaInvolution_sq, _root_.mul_one]
+  ext X <;> simp [phase_apply, ofMetric]
 
 /-- Reversing the order negates the same polarization. -/
 theorem para_mul_neg_phase (G : MetricDatum E) :
     neutralParaInvolution * (-phase G) = -(ofMetric G).polarization := by
-  rw [_root_.mul_neg, phase, ← _root_.mul_assoc,
-    neutralParaInvolution_sq, _root_.one_mul]
+  ext X <;> simp [phase_apply, ofMetric]
 
 section Nondegenerate
 
@@ -95,7 +92,8 @@ theorem generalizedMetric_para_isometry (G : MetricDatum E)
       (ofMetric G).generalizedMetricForm X Y := by
   have ha : (-phase G) * neutralParaInvolution =
       -(neutralParaInvolution * (-phase G)) := by
-    rw [neg_phase_mul_para, para_mul_neg_phase, _root_.neg_neg]
+    rw [neg_phase_mul_para, para_mul_neg_phase]
+    ext X <;> simp
   have h := (isometry_iff_anticommute (neutralOmega (E := E))
     neutralOmega_nondegenerate.2 (-phase G) neutralParaInvolution
     neutralParaInvolution_sq neutralOmega_para_antisymplectic).mpr ha
@@ -108,11 +106,14 @@ theorem neutral_to_generalized_intertwiner_iff (G : MetricDatum E)
     (canonicalNeutralBilin (E := E)).compLeft T = (ofMetric G).generalizedMetricForm ↔
       T = (ofMetric G).polarization := by
   have hI : (-phase G) * (-phase G) = -1 := by
-    rw [_root_.neg_mul_neg, phase_sq]
+    ext X <;> simp [phase_apply]
   have h := metric_intertwiner_unique (neutralOmega (E := E))
     neutralOmega_nondegenerate hI neutralParaInvolution_sq (neg_phase_symplectic G) T
   rw [neutralOmega_compLeft_para, neutralOmega_compRight_neg_phase,
-    para_mul_neg_phase, _root_.neg_neg] at h
+    para_mul_neg_phase] at h
+  have hdouble : -(-(ofMetric G).polarization) = (ofMetric G).polarization := by
+    ext X <;> simp
+  rw [hdouble] at h
   exact h
 
 end Nondegenerate

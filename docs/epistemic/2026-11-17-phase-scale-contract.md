@@ -16,13 +16,14 @@ section at the end of this document.
 
 ## Mathematical objects and distinctions
 
-The common construction is a representation by operators on a space with a
-positive inner product, together with a chosen state. Operator products retain
-their order. Their action on the state produces vectors; horizontal projection
-produces the projective quantum geometric tensor (QGT); finite families produce
-a positive Gram matrix. Integral transforms require additional measure and
-integrability structure. A choice of circular algebraic basis supplies none of
-those analytic hypotheses by itself.
+The common language is associative composition of operators, with products
+retaining their order. The QGT construction uses a positive Hilbert inner product
+and a normalized state. Acting on that state and projecting horizontally
+produces the projective quantum geometric tensor; finite families produce a
+positive Gram matrix. The internal-phase integral construction works on real
+Banach spaces with bounded real-linear operators and explicit integrability.
+A choice of circular algebraic basis supplies none of those analytic hypotheses
+by itself.
 
 The positive Hilbert pairing used for covariance is distinct from an indefinite
 Minkowski or Krein pairing. Indexing a covariance matrix by `Fin 4` does not make
@@ -31,9 +32,10 @@ that matrix a spacetime metric or construct spacetime coordinate observables.
 Fourier duality, convex Legendre duality, and the Penrose transform are different
 constructions. Fourier resolves additive characters; Mellin uses multiplicative
 scale and becomes Fourier after a logarithmic change of variables with the
-correct weight. A Legendre transform is a convex supremum, not an integral
-transform. The Penrose owner uses cohomology, incidence, and contour integrals.
-No equivalence between these three kinds of duality is claimed.
+correct weight. Convex Legendre-Fenchel duality is defined by a supremum;
+Legendre-polynomial spectral transforms are a separate integral construction.
+The Penrose owner uses cohomology, incidence, and contour integrals. No
+equivalence between these different constructions is claimed.
 
 ## Owner inventory and claim ledger
 
@@ -46,9 +48,10 @@ Paths are relative to `lean/InfoGeometry` unless prefixed by `src/`.
 | Fourier, Laplace, Mellin | `Analysis/LaplaceFourierComparison`: `verticalLineTransform_eq_fourier`, `laplace_inverse_on_vertical_line`, `mellin_logPullback_eq_laplaceTransform`, `mellin_unique_on_positive_axis` | Actual native integrals and inversion under stated integrability/continuity hypotheses; the old introductory comment understates the implemented results. |
 | Convex dual coordinates | `Convex/Legendre` | Fenchel-Young, supporting hyperplanes, gradient-image inverse coordinates under the stated boundedness and convexity assumptions; no Fourier integral identification. |
 | Log partition and classical information | `Analytic/LogSumExp`: `logSumExp_deriv_eq_mean`, `logSumExp_secondDeriv_eq_variance`, `logSumExpWeight_deriv` | Actual one-parameter finite positive-weight exponential family; derivatives are proved. Strict convexity remains an argument to the Legendre adapter. This is not a general noncommutative Hessian/covariance theorem. |
+| Finite log-Laplace and divergence | `Canonical/FiniteScalarLogLaplace`: `hasDerivAt_logPartition`, `hasDerivAt_deriv_logPartition`, `kl_eq_bregman_reverse` | Actual finite classical log-partition derivatives, centered variance, and KL/Bregman identity; no asymptotic Laplace principle is inferred. |
 | Two-operator uncertainty | `QuantumGeometry/Projective/QGT`: `QGT_eq_inner_projOrth`, `QGT_cauchy_schwarz`, `robertson_schrodinger_qgt_bound`, `berryCurvature_skewAdjoint_commutator` | Arbitrary complete complex Hilbert carrier, bounded complex-linear operators, normalized state; the commutator readback explicitly assumes skew-adjointness. |
 | Real internal phase | `Krein/DoubledSpace`: `complex_i`, `complex_i_sq`; `Canonical/OperatorialUncertainty`: `inner_sq_add_complex_i_inner_sq_le` | Actual doubled real Hilbert carrier and Bessel inequality. Channel formulas require phase linearity when moving the phase through a channel. |
-| Cramer-Rao response | `Canonical/OperatorialCramerRao`: `one_le_self_mul_self_of_unit_response`, `inv_self_le_of_unit_response` | Constructed Cauchy-Schwarz consequence with unit response and nonzero reference channel. |
+| Cramer-Rao response | `Canonical/OperatorialCramerRao`: `one_le_comparisonStateGeneratorMetric_self_mul_self_of_unit_response`, `inv_comparisonStateGeneratorMetric_self_le_of_unit_response` | Constructed Cauchy-Schwarz consequence with unit response; the inverse bound also requires a nonzero reference channel. |
 | Quantum statistical bound | `Quantum/QuantumCramerRaoBound` | Full finite real matrices, density factorization, symmetric observable/SLD, trace-zero derivative, supplied SLD equation and trace-pair symmetry; scalar, not general attainable multiparameter estimation. |
 | Hodge-Dirac square | `Canonical/DiscreteDiracHodgeChiral`: `diracHodge_sq_eq_hodgeLaplacian` | Associative operator ring, `d²=δ²=0`, `D=d+δ`. `Topology/DiscreteHodgeDiracBridge` also owns the negative-Laplacian `d−δ` convention. |
 | Concrete graph Dirac | `Streaming/BipartiteGraphDirac`: `graphDirac_sq`, `graphDirac_adjoint`, `graphDirac_krein_skew_adjoint` | Rectangular real incidence operator; square is `(BᵀB, BBᵀ)`. Hilbert and Krein adjoints have different signs. |
@@ -76,10 +79,12 @@ matrix transport with added covariance; `Canonical/StableVacuum` uses a real
 tangent Gram matrix. These do not supply the proposed centered one-state
 finite-family QGT matrix and its complex family-change theorem.
 
-Misleading-name boundaries: `Canonical/CramerRaoUncertainty` assumes its main
-scalar product bound; `Canonical/PontryaginDualFourierInversionBridge` does not
-construct Pontryagin duality or Fourier inversion. Their names are not used as
-evidence of the stronger requested mathematics.
+Misleading-name boundaries: `Canonical/CramerRaoUncertainty` assumes
+`VarX * I_F ≥ 1` and `VarP = I_F / 4`, then derives `VarX * VarP ≥ 1/4`;
+it does not construct the statistical or wavefunction premises.
+`Canonical/PontryaginDualFourierInversionBridge` does not construct Pontryagin
+duality or Fourier inversion. Their names are not used as evidence of the
+stronger requested mathematics.
 
 ## New owner A: finite-family QGT matrix
 
@@ -179,7 +184,7 @@ new theorem in these owners.
 
 ## Dependency order and open work
 
-The proved dependency order for owner A is:
+The source-level dependency order for owner A is:
 normalized state and horizontal projection -> native Gram identification ->
 positivity and coefficient norm -> complex operator-family congruence ->
 real metric/Berry congruence and existing skew-adjoint commutator readback.
@@ -200,6 +205,7 @@ characters.
 Remaining open targets include full internal-phase Fourier inversion, the
 multiplicative Haar-measure adapter, unbounded relativistic generators on a
 common core, state/estimator-based multiparameter Cramer-Rao and attainability,
+stationary-phase and Laplace-principle connections to convex conjugacy,
 geometric spin-connection/Lichnerowicz data, and any proposed emergence or
 classification theorem. Boost-induced reciprocal null-coordinate scaling does
 not by itself establish isotropic Weyl gauge symmetry or set a physical unit
@@ -231,6 +237,17 @@ Reusing complex Fourier inversion in that lane would first require a
 norm-compatible complex scalar action identifying multiplication by `i` with
 the internal phase operator.
 
+A bounded additional search for stationary-phase, Varadhan, Gartner-Ellis,
+and Laplace-principle declarations found finite log-Laplace calculus but no
+derived asymptotic bridge in the closest inspected owners.
+`Canonical/PrimeLeeYangLargeDeviation.PrimeChainLargeDeviationWitness` supplies
+both the Legendre rate-function identification and the large-deviation
+principle as fields. `lean/Omega/POM/FiberIndexLdpThermo.lean`'s
+`gartner_ellis_wrapper` extracts a supplied affine-support predicate; it does
+not establish the analytic Gartner-Ellis theorem. Defining a convex conjugate
+does not establish a probability asymptotic. These are source-scope findings,
+not a denial of the mathematical stationary-phase or Laplace-principle bridges.
+
 The optional DAG-status command failed in this checkout because
 `dag-toolchain.json` is absent. No live graph, current AST index, or external
 memory completeness is claimed. The root Lake route uses `lean/`, while
@@ -240,3 +257,41 @@ Validation status at contract creation: pending. The exact pinned environment
 is Lean `v4.34.1`, Mathlib
 `d13f23b723b8a846827a245b89c10fc7d3f11612`. No pins or dependency source files
 are to be changed. All Lean/Lake work uses the shared build lock.
+
+### Recorded validation and CI scope
+
+The independent source review, staged proof gate, and selected semantic-content
+gate passed. The semantic gate read all three selected owners with complete
+selected coverage and reported zero findings. A lexical scan found no proof
+placeholders, custom axioms, unsafe declarations, or `native_decide` in the new
+owners. These are not substitutes for kernel verification.
+
+Native compilation of the exact ten-module source closure and recursive axiom
+inspection of every declaration owned by the three new modules remain pending
+the shared compiler queue. The maintained checker is unchanged. The focused
+[`phase-scale-qgt.yml`](../../.github/workflows/phase-scale-qgt.yml) workflow
+uses the same checker on a GitHub runner, reads the exact dependency pins,
+requires zero warnings in the new owners, runs the selected semantic gate,
+and preserves the native evidence. It does not certify the root Lake build.
+
+The root path-package preflight found missing `HomotopyHypothesis` and `Atlas`
+configurations with untracked dependency paths, plus an uninitialized `GIFT`
+gitlink. Both root compiler wrappers are still queued; neither has produced a
+successful root build result.
+
+Initial published head `00fcd6afbabdfe747a96df7dbd2b9b6d0ae4d587` has the
+following observed CI failures. The relevant failing scripts/configuration
+files are unchanged from the baseline. No separate baseline CI rerun is claimed.
+
+| Workflow | Observed failure and scope |
+| --- | --- |
+| [Sorry Gate](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44048388469) | Repository inventory reports 878 forensic/fixture findings in 91 files, zero package findings; the new owners are not listed. |
+| [Lean style lint](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44048389861) | Existing `lean/docs` and `lean/Docs` case collision; the style linter is not reached. |
+| [Closure Debt + Superorganism Smoke](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44048388616/job/133919693690) | `python3 -m pytest` fails with `No module named pytest`; tests and subsequent Lean checks do not run. |
+| [Reviewed PR Integration](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44048388299/job/133919692321) | Recursive checkout fails because `external_refs/auto-ontology` has no URL in `.gitmodules`; compilation and axiom inspection are skipped. |
+| [CI](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44048388332/job/133925631034) | Path-package preflight reports the same Homotopy/Atlas/GIFT blockers. Its green smoke-summary step catches and records a failed `compilerBridgeServer` build; it is not a successful smoke test. |
+| [Idempotent chart calculus](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44048388494/job/133919692968) | Existing `check_operator_geometry.py` has an unclosed parenthesis at line 168; its build and negative certificate check do not run. |
+| [Ordered homotopes and twistor invariants](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44048388337/job/133919693030) | Existing pre-push hook differs from that lane's reviewed reference; its control guard stops before project compilation. |
+
+The draft remains unverified by the Lean kernel until the selected native
+compilation and complete declaration axiom audit return successful results.

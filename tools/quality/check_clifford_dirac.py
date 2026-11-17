@@ -20,7 +20,9 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
-from tools.quality.check_reviewed_prs import closure
+from tools.quality.check_reviewed_prs import (
+    SOURCE_FINGERPRINT_VERSION, closure, repository_source_fingerprint, repository_source_path,
+)
 from tools.quality.reviewed_audit_source import audit_source, parse_audit_output, validate_targets
 
 PREFIX = 'InfoGeometry.OperatorAlgebra.CliffordDirac'
@@ -73,26 +75,29 @@ def main():
             raise RuntimeError('Mathlib toolchain differs from the repository pin')
         run(['git', 'diff', '--exit-code', 'HEAD', '--'], mathlib)
         roots = targets + ([PREFIX] if args.target is None else [])
-        ordered, dependencies, _ = closure(ROOT, roots)
+        ordered, dependencies, _ = closure(ROOT, roots, allow_root_proofs=True)
         source, lib = out / 'src', out / 'lib'
         source.mkdir(exist_ok=True)
         lib.mkdir(exist_ok=True)
         (source / 'lean-toolchain').write_text(toolchain + '\n')
-        hashes, fingerprints = {}, {}
+        hashes, fingerprints, source_paths = {}, {}, {}
         for module in ordered:
             rel = Path(module.replace('.', '/') + '.lean')
-            original, copied = ROOT / 'lean' / rel, source / rel
+            original = repository_source_path(ROOT, module, allow_root_proofs=True)
+            copied = source / rel
+            source_paths[module] = original.relative_to(ROOT).as_posix()
             copied.parent.mkdir(parents=True, exist_ok=True)
             data = original.read_bytes()
             copied.write_bytes(data)
             hashes[module] = hashlib.sha256(data).hexdigest()
             if digest(original) != hashes[module]:
                 raise RuntimeError('Source changed while copying: ' + module)
-            payload = [module, hashes[module], pin, toolchain,
-                       [fingerprints[d] for d in dependencies[module]]]
-            fingerprints[module] = hashlib.sha256(json.dumps(payload).encode()).hexdigest()
+            fingerprints[module] = repository_source_fingerprint(
+                module, source_paths[module], hashes[module], toolchain, pin,
+                [fingerprints[d] for d in dependencies[module]])
         report.update(mathlib=pin, toolchain=toolchain, source_sha256=hashes,
-                      fingerprints=fingerprints,
+                      fingerprints=fingerprints, source_paths=source_paths,
+                      fingerprint_version=SOURCE_FINGERPRINT_VERSION,
                       repository_import_dependencies=dependencies,
                       local_revision=run(['git', 'rev-parse', 'HEAD'], ROOT))
         print('Waiting for shared build lock', flush=True)
@@ -165,7 +170,9 @@ def main():
                 report['axioms'] = re.findall(r'^AUDIT_AXIOMS: (.*)$', result.stdout, re.MULTILINE)
                 print('AXIOM AUDIT', report['declaration_counts'], report['axioms'], flush=True)
             for module, expected in hashes.items():
-                if digest(ROOT / 'lean' / (module.replace('.', '/') + '.lean')) != expected:
+                original = repository_source_path(ROOT, module, allow_root_proofs=True)
+                if (original.relative_to(ROOT).as_posix() != source_paths[module] or
+                        digest(original) != expected):
                     raise RuntimeError('Source changed during verification: ' + module)
             for path, expected in helper_hashes.items():
                 if digest(ROOT / path) != expected:

@@ -1,0 +1,30 @@
+{
+  "core_targets": [
+    "InfoGeometry.Canonical.HestenesClPlus14",
+    "InfoGeometry.Canonical.HestenesCliffordDimension",
+    "InfoGeometry.Canonical.HestenesEvenReversion",
+    "InfoGeometry.Canonical.HestenesHermitianAdjoint",
+    "InfoGeometry.Clifford.RealSpacetimeQuaternion",
+    "InfoGeometry.Clifford.RealSpacetimeIdeal",
+    "InfoGeometry.Clifford.RealSpacetimeSpinor",
+    "InfoGeometry.Clifford.RealSpacetimeObserver",
+    "InfoGeometry.Clifford.RightPhaseDynamics",
+    "InfoGeometry.Clifford.RealSpacetimeMassSigns",
+    "InfoGeometry.Clifford.RealSpacetimeBlades"
+  ],
+  "consumer_targets": [
+    "InfoGeometry.Canonical.HestenesEvenPauliEquiv",
+    "InfoGeometry.Canonical.HestenesKreinMatrixBridge",
+    "InfoGeometry.Canonical.HestenesHermitianMatrixBridge",
+    "InfoGeometry.Canonical.HestenesCircularCARTransport",
+    "proofs.HestenesCircularCARBridge",
+    "proofs.HestenesParaComplexFinrank",
+    "proofs.HestenesHodgeParityBridge",
+    "proofs.HestenesNativeKreinAdjoint",
+    "proofs.HestenesOmegaHyperbolic"
+  ],
+  "changed_consumer_targets": [
+    "InfoGeometry.Canonical.HestenesEvenPauliEquiv",
+    "InfoGeometry.Canonical.HestenesKreinMatrixBridge"
+  ]
+}

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.HestenesHermitianMatrixBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteHestenesModularOperator
@@ -138,5 +144,24 @@ theorem hilbertSchmidt_standardForm_packet :
   ⟨matrixTomita_smul, matrixTomita_antiunitary,
     leftCommutant_eq_rightRegular⟩
 
+/-- The finite Hilbert--Schmidt adjoint of left multiplication is left
+multiplication by the matrix adjoint. -/
+theorem hilbertSchmidtInner_left_mul (A X Y : HS2) :
+    hilbertSchmidtInner (A * X) Y =
+      hilbertSchmidtInner X (A.conjTranspose * Y) := by
+  simp only [hilbertSchmidtInner, Matrix.mul_apply,
+    Matrix.conjTranspose_apply, Fin.sum_univ_two, star_add, star_mul]
+  ring
+
+/-- The finite Hilbert--Schmidt adjoint of right multiplication is right
+multiplication by the matrix adjoint. -/
+theorem hilbertSchmidtInner_right_mul (B X Y : HS2) :
+    hilbertSchmidtInner (X * B) Y =
+      hilbertSchmidtInner X (Y * B.conjTranspose) := by
+  simp only [hilbertSchmidtInner, Matrix.mul_apply,
+    Matrix.conjTranspose_apply, Fin.sum_univ_two, star_add, star_mul]
+  ring
+
+
 end FiniteHestenesHilbertSchmidtStandardForm
-end noncomputable section
+end

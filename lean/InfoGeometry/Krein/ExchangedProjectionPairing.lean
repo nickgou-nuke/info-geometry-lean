@@ -47,8 +47,8 @@ theorem range_pairing_eq_zero
     (hp : IsIdempotentElem p)
     (hAdj : ∀ x y, B (p x) y = B x ((1 - p) y))
     (x y : LinearMap.range p) : B x.val y.val = 0 := by
-  have hx : p x.val = x.val := hp.mem_range_iff.mp x.property
-  have hy : p y.val = y.val := hp.mem_range_iff.mp y.property
+  have hx : p x.val = x.val := (LinearMap.IsIdempotentElem.mem_range_iff hp).mp x.property
+  have hy : p y.val = y.val := (LinearMap.IsIdempotentElem.mem_range_iff hp).mp y.property
   calc
     B x.val y.val = B (p x.val) y.val := by rw [hx]
     _ = B x.val ((1 - p) y.val) := hAdj _ _
@@ -61,9 +61,10 @@ theorem complement_range_pairing_eq_zero
     (hAdj : ∀ x y, B (p x) y = B x ((1 - p) y))
     (x y : LinearMap.range (1 - p)) : B x.val y.val = 0 := by
   have hx : p x.val = 0 := by
-    have hfixed := hp.one_sub.mem_range_iff.mp x.property
+    have hfixed := (LinearMap.IsIdempotentElem.mem_range_iff hp.one_sub).mp x.property
     simpa only [LinearMap.sub_apply, Module.End.one_apply, sub_eq_self] using hfixed
-  have hy : (1 - p) y.val = y.val := hp.one_sub.mem_range_iff.mp y.property
+  have hy : (1 - p) y.val = y.val :=
+    (LinearMap.IsIdempotentElem.mem_range_iff hp.one_sub).mp y.property
   calc
     B x.val y.val = B x.val ((1 - p) y.val) := by rw [hy]
     _ = B (p x.val) y.val := (hAdj _ _).symm
@@ -77,8 +78,8 @@ theorem exchangedProjection_isotropic_split
       B.restrict (LinearMap.range p) = 0 ∧
       B.restrict (LinearMap.range (1 - p)) = 0 := by
   refine ⟨?_, ?_, ?_⟩
-  · rw [← hp.ker_eq_range_one_sub]
-    exact hp.isCompl
+  · rw [← LinearMap.IsIdempotentElem.ker_eq_range_one_sub hp]
+    exact LinearMap.IsIdempotentElem.isCompl hp
   · ext x y
     exact range_pairing_eq_zero B p hp hAdj x y
   · ext x y
@@ -172,7 +173,7 @@ theorem ranges_finrank_eq
     (hB : B.Nondegenerate) :
     Module.finrank ℝ (LinearMap.range p) =
       Module.finrank ℝ (LinearMap.range (1 - p)) := by
-  letI := crossPairing_isPerfPair B p hp hAdj hB
+  let := crossPairing_isPerfPair B p hp hAdj hB
   exact Module.finrank_of_isPerfPair (crossPairing B p)
 
 /-- Each range has half the dimension of the ambient real space. -/

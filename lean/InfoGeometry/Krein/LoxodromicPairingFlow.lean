@@ -32,11 +32,11 @@ private theorem reflection_pairing_polynomial (a b : ℝ) :
     a - 2 * (a - b) = -(a - 2 * b) := by ring
 
 private theorem boost_pairing_polynomial (c s a b : ℝ) :
-    c * (c * a + s * b) + s * (c * (-b) + s * (-a)) =
+    c * (c * a + s * (-b)) + s * (c * b + s * (-a)) =
       (c ^ 2 - s ^ 2) * a := by ring
 
 private theorem rotor_pairing_polynomial (c s a b : ℝ) :
-    c * (c * a + s * b) + s * (c * (-b) + s * a) =
+    c * (c * a + s * (-b)) + s * (c * b + s * a) =
       (c ^ 2 + s ^ 2) * a := by ring
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
@@ -54,7 +54,7 @@ theorem projection_reflection_involution (p : Module.End ℝ V)
 /-- The exchanged-adjoint equation produces the skew boost generator `1-2p`. -/
 theorem projection_reflection_skewAdjoint (p : Module.End ℝ V)
     (hAdj : ∀ x y, B (p x) y = B x ((1 - p) y)) :
-    B.IsSkewAdjoint (1 - (2 : ℝ) • p) := by
+    B.IsSkewAdjoint ((1 - (2 : ℝ) • p) : Module.End ℝ V) := by
   intro x y
   change B (x - (2 : ℝ) • p x) y = B x (-(y - (2 : ℝ) • p y))
   have hadj : B (p x) y = B x y - B x (p y) := by
@@ -67,7 +67,7 @@ theorem projection_reflection_skewAdjoint (p : Module.End ℝ V)
 theorem projection_reflection_on_range (p : Module.End ℝ V)
     (hp : IsIdempotentElem p) (x : LinearMap.range p) :
     (1 - (2 : ℝ) • p) x.val = -x.val := by
-  have hx := hp.mem_range_iff.mp x.property
+  have hx := (LinearMap.IsIdempotentElem.mem_range_iff hp).mp x.property
   simp only [LinearMap.sub_apply, Module.End.one_apply, LinearMap.smul_apply, hx]
   module
 
@@ -76,7 +76,8 @@ theorem projection_reflection_on_complement (p : Module.End ℝ V)
     (hp : IsIdempotentElem p) (x : LinearMap.range (1 - p)) :
     (1 - (2 : ℝ) • p) x.val = x.val := by
   have hx : p x.val = 0 := by
-    have hfixed := hp.one_sub.mem_range_iff.mp x.property
+    have hfixed :=
+      (LinearMap.IsIdempotentElem.mem_range_iff (IsIdempotentElem.one_sub hp)).mp x.property
     simpa only [LinearMap.sub_apply, Module.End.one_apply, sub_eq_self] using hfixed
   simp only [LinearMap.sub_apply, Module.End.one_apply, LinearMap.smul_apply,
     hx, smul_zero, sub_zero]
@@ -153,7 +154,7 @@ def loxodromicIsometryEquiv
     module
   map_smul' c x := by
     simp only [realLoxodromicAction, realBoostAction, realRotorAction,
-      map_smul, smul_add, smul_smul]
+      map_smul, smul_add, smul_smul, id_eq]
     module
   map_app' := realLoxodromicAction_pairing B K J hK hJ hKB hJB t θ
 
@@ -202,7 +203,7 @@ theorem mixed_time_cross_pairing (hJ : IsRealComplexStructure J)
   simp only [map_smul, LinearMap.smul_apply, smul_eq_mul]
   rw [realRotorAction_pairing B J hJ hJB]
   rw [← mul_assoc, ← Real.exp_add]
-  simp only [sub_eq_add_neg, add_comm]
+  simp only [sub_eq_add_neg]
 
 /-- A form preserved by the rotor scales by the square of the negative weight.
 Positivity is not assumed; a positive observer form is one specialization. -/

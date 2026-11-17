@@ -13,6 +13,21 @@ Development base: `nickgou-nuke/info-geometry-lean`,
 `yang-mills-group/OpenAI-YM-20261028` repository is the submission snapshot.
 No source or pin in that snapshot is modified by this continuation.
 
+## Structural motifs and their mathematical order
+
+| Motif in the input | Precise mathematical object | Established dependency |
+|---|---|---|
+| Mirror or reversal | An involutive adjoint reversing multiplication | Reversal and `P♯ = 1-P` determine the correct ideal side and Peirce corner. |
+| Division into twins | An idempotent `p` and complementary endomorphism `1-p` | Idempotency gives complementary ranges; the exchanged-adjoint equation makes both ranges totally isotropic. |
+| Mutual recognition | The restricted bilinear cross pairing | Ambient separation gives cross separation; finite dimension upgrades it to a perfect pairing and a dual equivalence. |
+| Expansion and contraction | The reflection `K = 1-2p` and its real boost | The projection supplies an involutive, skew-adjoint generator and fixes the two eigen-sector signs. |
+| Rotation within the flow | A real linear `J` with `J² = -id` | Skew-adjointness proves rotor isometry; commuting axes preserve the boost sectors and give reciprocal weights. |
+| Conserved relation and observed size | An invariant bilinear form and a separately specified observer form | Isometry preserves the former; the quadratic scaling theorem computes the latter when its rotor-invariance premise is supplied. |
+
+These are dependencies between explicit mathematical claims. Narrative
+associations do not supply missing adjoint, nondegeneracy, dimension, or
+dynamical hypotheses.
+
 ## Formal intent
 
 The new implication starts with an actual idempotent linear operator `p` on a

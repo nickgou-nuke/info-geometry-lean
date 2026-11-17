@@ -128,6 +128,53 @@ They describe theorem statements; acceptance evidence is recorded separately.
 | `SphericalMassProfile` | `tendsto_radius_mul_density_zero`, `tendsto_density_zero_atTop`, `not_tendsto_density_zero_finite`, `tendsto_radius_sq_mul_density_atTop` | Inner coefficient `eta/pi`, positive-parameter central divergence, absence of a finite central limit, and outer coefficient `eta*s/(2*pi)` |
 | `SphericalMassProfile` | `circularSpeedSq_eq` | Exact formula `2*G*eta*s*r/(r+s)` on positive radius and saturation scale |
 
+## A separately prescribed cored alternative
+
+The later attachment `Pasted text (2)(20261117-130355).txt`, SHA256
+`e86035703fb4a51469223dc1b5b5b2ff94b9a82a51d1feaf6d32c68cbdb5ad85`,
+proposes a new mass profile. It is not the function printed in the paper's
+equation (8). `Physics.CoredSphericalMassProfile` defines
+
+\[
+M_{\mathrm{core}}(r)=\frac{2\eta s r^3}{(r+s)^2}
+ =M_{\mathrm{original}}(r)\frac{r}{r+s}.
+\]
+
+Its derivative is constructed with native `HasDerivAt`, and its density is
+defined from the actual `deriv` divided by `4 * Real.pi * r^2`. For `s,r > 0`,
+the resulting formula is
+
+\[
+\rho_{\mathrm{core}}(r)
+ =\frac{\eta s(r+3s)}{2\pi(r+s)^3}.
+\]
+
+| Declaration in `CoredSphericalMassProfile` | Exact consequence |
+| --- | --- |
+| `mass_eq_original_mul` | The actual relation to the paper's original profile, under `r+s ≠ 0` |
+| `hasDerivAt_mass`, `deriv_mass` | Native differentiation gives `2*eta*s*r^2*(r+3*s)/(r+s)^3` |
+| `density_eq`, `density_pos` | The derivative-defined density formula; positivity when amplitude, saturation radius, and radius are positive |
+| `density_zero` | The literal totalized quotient definition has value zero at radius zero |
+| `tendsto_density_zero` | The limit from positive radii is `3*eta/(2*pi*s)` for `s > 0` |
+| `radius_sq_mul_density`, `tendsto_radius_sq_mul_density_atTop` | The outer scaled density has limit `eta*s/(2*pi)`, matching the original profile's outer coefficient |
+
+The positive-radius central limit is distinct from the literal totalized
+value at zero. A continuously extended density would be another definition.
+This owner supplies no uniqueness, necessity, field equation, gravitational
+conversion, or fit of the alternative to observations.
+
+The intake also attempts to infer a density asymptotic by differentiating
+`M(r) ~ C*r^alpha`. Such an inference needs additional derivative control.
+For example, `M(r)=r^3+r^4*sin(1/r)` is asymptotic to `r^3` near zero while
+its derived spherical density contains a nonconvergent cosine term. This
+counterexample is source-review reasoning, not an additional Lean declaration
+here. Both owners instead differentiate their exact rational functions.
+
+The same intake's labels "radiation", "dust", and "rank-one stress" remain
+qualified: the trace equalities do not prove perfect-fluid isotropy or zero
+energy flux, and only the gradient dyad is rank one in general. The exact
+residual `-3*H*lambda*Gamma` needs nonvanishing hypotheses to be nonzero.
+
 ## Validation
 
 Independent mathematical and source reviews accepted the three owner contracts,
@@ -150,6 +197,9 @@ source review checked these repairs against the pinned Mathlib APIs without
 adding hypotheses to the stress, density, or limit claims. Observed tactic
 warnings are also repaired. Fresh native compilation and declaration axiom
 auditing are required before acceptance. A queued checker is not compilation
-evidence. The focused workflow requires zero warnings in the three new owners.
+evidence. The focused workflow now selects all four new owners, including the
+cored alternative, and requires zero warnings in each. Independent source
+review accepted the alternative's derivative and filter-limit contracts;
+its native result and complete axiom audit are also required before acceptance.
 The installed publication gate and whole-root dependency integration are
 separate requirements; no whole-repository build result is claimed here.

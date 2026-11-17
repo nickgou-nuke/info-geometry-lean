@@ -6,6 +6,7 @@ on:
       - 'lean/InfoGeometry/Physics/CanonicalScalarStress.lean'
       - 'lean/InfoGeometry/Physics/ScalarKineticBalance.lean'
       - 'lean/InfoGeometry/Physics/SphericalMassProfile.lean'
+      - 'lean/InfoGeometry/Physics/CoredSphericalMassProfile.lean'
       - 'lean/InfoGeometry/Physics/FisherKreinLorentz.lean'
       - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
       - 'lean/InfoGeometry/Canonical/MatrixDetExpTraceJacobi.lean'
@@ -18,6 +19,12 @@ on:
       - 'tools/quality/check_reviewed_prs.py'
       - 'tools/quality/placeholder_audit.py'
       - 'tools/quality/semantic_vacuity_gate.py'
+      - 'tools/quality/semantic_vacuity_patterns.json'
+      - 'tools/quality/audit_constructivity.py'
+      - 'tools/quality/common.py'
+      - 'tools/pathing.py'
+      - 'tools/__init__.py'
+      - 'tools/quality/__init__.py'
       - 'tools/build_lock.py'
       - 'lean-toolchain'
       - 'lake-manifest.json'
@@ -36,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      SCALAR_TARGETS: '["InfoGeometry.Physics.CanonicalScalarStress", "InfoGeometry.Physics.ScalarKineticBalance", "InfoGeometry.Physics.SphericalMassProfile"]'
+      SCALAR_TARGETS: '["InfoGeometry.Physics.CanonicalScalarStress", "InfoGeometry.Physics.ScalarKineticBalance", "InfoGeometry.Physics.SphericalMassProfile", "InfoGeometry.Physics.CoredSphericalMassProfile"]'
       ENTROPY_REFERENCES: '["InfoGeometry.Canonical.MatrixEntropyUnitaryOrbit"]'
     steps:
       - name: Fetch exact source without submodule traversal

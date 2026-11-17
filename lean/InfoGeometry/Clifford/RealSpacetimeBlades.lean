@@ -70,10 +70,12 @@ def bladeMatrix : Fin 16 → QuaternionMatrix
     quaternionRep (blade i) = bladeMatrix i := by
   fin_cases i <;>
     simp only [blade, bladeMatrix, map_one, map_mul, quaternionRep_gamma] <;>
-    apply Matrix.ext <;>
-    intro r c <;> fin_cases r <;> fin_cases c <;> ext <;>
-    norm_num [vectorMatrix, basisVec, timeMatrix, quaternionI, quaternionJ,
-      quaternionK, Matrix.mul_apply, Fin.sum_univ_two]
+    apply Matrix.ext
+  all_goals
+    intro r c
+    fin_cases r <;> fin_cases c <;> ext <;>
+      norm_num [vectorMatrix, basisVec, timeMatrix, quaternionI, quaternionJ,
+        quaternionK, Matrix.mul_apply, Fin.sum_univ_two]
 
 private theorem quaternionRep_time_reverse (a : Cl14) :
     quaternionRep (gamma 0 * CliffordAlgebra.reverse a * gamma 0) =
@@ -161,11 +163,13 @@ def negativeBladeIndices : Finset (Fin 16) := {2, 3, 4, 8, 9, 10, 11, 12, 13, 15
 theorem blade_mul_self (i : Fin 16) :
     blade i * blade i = if i ∈ negativeBladeIndices then -(1 : Cl14) else 1 := by
   fin_cases i <;> apply quaternionRep_injective <;>
-    apply Matrix.ext <;>
-    intro r c <;> fin_cases r <;> fin_cases c <;> ext <;>
-    norm_num [map_mul, negativeBladeIndices, quaternionRep_blade, bladeMatrix,
-      timeMatrix, quaternionI, quaternionJ, quaternionK,
-      Matrix.mul_apply, Fin.sum_univ_two]
+    apply Matrix.ext
+  all_goals
+    intro r c
+    fin_cases r <;> fin_cases c <;> ext <;>
+      norm_num [map_mul, negativeBladeIndices, quaternionRep_blade, bladeMatrix,
+        timeMatrix, quaternionI, quaternionJ, quaternionK,
+        Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- The negative list is an equivalence about the actual Clifford square. -/
 theorem blade_mul_self_eq_neg_one_iff (i : Fin 16) :

@@ -28,7 +28,8 @@ theorem volume_sq : (volume : Cl14) * (volume : Cl14) = -1 := by
   apply quaternionRep_injective
   simp only [map_mul, quaternionRep_volume, map_neg, map_one]
   apply Matrix.ext
-  intro i j <;> fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
+  intro i j
+  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem volume_anticommutes_gamma (i : Fin 4) :
     (volume : Cl14) * gamma i = -(gamma i * (volume : Cl14)) := by
@@ -46,7 +47,8 @@ theorem volume_commutes_even (x : ClPlus14) : volume * x = x * volume := by
     quaternionRep ((x : Cl14) * (volume : Cl14))
   rw [map_mul, map_mul, quaternionRep_volume, quaternionRep_even_shape x]
   apply Matrix.ext
-  intro i j <;> fin_cases i <;> fin_cases j <;>
+  intro i j
+  fin_cases i <;> fin_cases j <;>
     simp [evenMatrix, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem time_phase_sq :
@@ -56,7 +58,8 @@ theorem time_phase_sq :
     (gamma 0 * (gamma 2 * gamma 1))) = _
   simp only [map_mul, map_neg, map_one, quaternionRep_gamma]
   apply Matrix.ext
-  intro i j <;> fin_cases i <;> fin_cases j <;> ext <;>
+  intro i j
+  fin_cases i <;> fin_cases j <;> ext <;>
     norm_num [vectorMatrix, basisVec, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem time_volume_sq :
@@ -64,7 +67,8 @@ theorem time_volume_sq :
   apply quaternionRep_injective
   simp only [map_mul, map_one, quaternionRep_volume, quaternionRep_gamma_zero]
   apply Matrix.ext
-  intro i j <;> fin_cases i <;> fin_cases j <;>
+  intro i j
+  fin_cases i <;> fin_cases j <;>
     norm_num [timeMatrix, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem spatial_volume_sq :
@@ -72,7 +76,8 @@ theorem spatial_volume_sq :
   apply quaternionRep_injective
   simp only [map_mul, map_neg, map_one, quaternionRep_volume, quaternionRep_gamma]
   apply Matrix.ext
-  intro i j <;> fin_cases i <;> fin_cases j <;> ext <;>
+  intro i j
+  fin_cases i <;> fin_cases j <;> ext <;>
     norm_num [vectorMatrix, basisVec, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem phase_mul_sigma_three : (phaseBivector : Cl14) * sigma 2 = (volume : Cl14) := by
@@ -80,7 +85,8 @@ theorem phase_mul_sigma_three : (phaseBivector : Cl14) * sigma 2 = (volume : Cl1
   change quaternionRep ((gamma 2 * gamma 1) * (gamma 3 * gamma 0)) = _
   simp only [map_mul, quaternionRep_gamma, quaternionRep_volume]
   apply Matrix.ext
-  intro i j <;> fin_cases i <;> fin_cases j <;> ext <;>
+  intro i j
+  fin_cases i <;> fin_cases j <;> ext <;>
     norm_num [vectorMatrix, basisVec, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem volume_mul_sigma_three : (volume : Cl14) * sigma 2 = (phaseBivector : Cl14) := by
@@ -89,14 +95,16 @@ theorem volume_mul_sigma_three : (volume : Cl14) * sigma 2 = (phaseBivector : Cl
     quaternionRep (gamma 2 * gamma 1)
   simp only [map_mul, quaternionRep_gamma, quaternionRep_volume]
   apply Matrix.ext
-  intro i j <;> fin_cases i <;> fin_cases j <;> ext <;>
+  intro i j
+  fin_cases i <;> fin_cases j <;> ext <;>
     norm_num [vectorMatrix, basisVec, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem time_mul_sigma_three : gamma 0 * sigma 2 = -gamma 3 := by
   apply quaternionRep_injective
   simp only [sigma, map_mul, map_neg, quaternionRep_gamma]
   apply Matrix.ext
-  intro i j <;> fin_cases i <;> fin_cases j <;> ext <;>
+  intro i j
+  fin_cases i <;> fin_cases j <;> ext <;>
     norm_num [vectorMatrix, basisVec, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem spatial_mul_sigma_three : gamma 3 * sigma 2 = -gamma 0 := by

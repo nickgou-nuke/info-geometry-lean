@@ -64,7 +64,7 @@ Thus the projectors and intertwining identities are:
     D * PHatMinus = PPlus * D
 
 
-The algebra layer proves idempotence, self-adjointness, completeness, and both ordered orthogonality laws for the modified pair. The matrix layer additionally exposes the positive spectral projector directly. The fixed pair has the same standard involution-projector consequences, which remain available from the existing owner rather than new wrapper declarations.
+The existing `ChiralInvolution` and PR #395 Ginsparg-Wilson owners supply the paired-projector and intertwining algebra. This change exposes the actual positive spectral projector directly and proves that it equals the right projector of the constructed negative spectral sign.
 
 The plus sign in PHatMinus = (1 + epsilon)/2 is essential: the paper's modified chirality is minus the sign of the Hermitian Wilson operator. A minus label on the fermion chirality projector does not mean that it selects the negative spectrum of H.
 
@@ -145,19 +145,21 @@ The auxiliary refinement h = 3^(-n) in the paper holds the original physical lat
 
 The native implementation must use the actual spectral functional calculus and actual matrix products, introduce no new axioms or proof placeholders, and be accepted only after checks on its exact integrated source and maintained dependency closure.
 
-## Native owner plan and dependency direction
+## Native owners and dependency direction
 
-The branch starts at main `08c34e03f610b452e03422037949196dc7d92d6d` and preserves Lean `v4.34.1` / Mathlib `d13f23b723b8a846827a245b89c10fc7d3f11612`.
+The immutable main baseline is `08c34e03f610b452e03422037949196dc7d92d6d`. This draft is stacked on PR #395, head `7378582cd5a458a39a99ceb8720d04c5a14e3ac1`, branch `codex/lattice-chiral-projector-20261117`. Lean `v4.34.1` and Mathlib `d13f23b723b8a846827a245b89c10fc7d3f11612` remain unchanged.
 
 | Owner | Carrier and role | Constructed dependency |
 |---|---|---|
-| `Analysis/MatrixSpectralSign.lean` | Full `Matrix n n 𝕜`, any finite index and `RCLike 𝕜` | Native real continuous functional calculus and finite Hermitian spectral theorem |
-| `Algebra/OverlapDirac.lean` | General associative ring; star ring for adjoints; real algebra for half projectors | Ordered algebra from two explicit involution hypotheses, with existing projector owners reused |
-| `Geometry/MatrixOverlapDirac.lean` | Actual finite matrices with `epsilon := spectralSign H` | Discharges the sign assumptions using the first owner, then applies the second |
+| New `Analysis/MatrixSpectralSign.lean` | Full `Matrix n n 𝕜`, finite index and `RCLike 𝕜` | Native continuous functional calculus and the Hermitian spectral theorem |
+| Reused `OperatorAlgebra/GinspargWilson.lean` from #395 | Existing `ChiralInvolution` in an associative real algebra | Ordered GW and half-projector identities from two involutions |
+| New `Geometry/MatrixOverlapDirac.lean` | Actual finite matrices | Constructs the negative spectral-sign involution, then invokes the existing owner |
 
-The distinction between the latter two layers is material: generic ring identities alone would leave the spectral sign supplied as an assumption. The matrix layer constructs it. A concrete noncommuting real two-dimensional example exercises that construction. No eigenbasis, spectrum, or sign-law proof is passed in as data.
+The compatibility map is explicit. `negativeSignInvolution H hH hunit` has field `chi = -spectralSign H`, and its square proof is derived from actual CFC. Upstream's `1 - gamma.chi * epsilon.chi` consequently equals the paper's `1 + Γ * sign H`. Upstream `epsilon.Pright` equals `(1 + sign H)/2`; `overlapDirac_mul_Pright` is the paper's fermion-sector intertwiner. No spectral sign, eigenbasis, or square-one conclusion is supplied as unproved input data.
 
-The companion report already describes a much larger author formalization, including `transgression_identities` and `Companion.measure_exists`. Its source archive uses a newer Lean version, was not accessible through the available retrieval route during this review, and was not compiled here. Its reported verification is external evidence. This branch supplies an independently authored bridge on this repository's existing pins; it is not a port or independent certification of the full author development.
+The initial search snapshot preceded #395's publication. After its appearance in the final remote check, its exact source was inspected and the overlapping new `Algebra/OverlapDirac.lean` was removed. The branch preserves the first draft checkpoint while integrating the parent branch, so the resulting PR diff contains only the two distinct new owners. The source-search record documents this superseding discovery. Parent #395's pending native status remains a dependency boundary.
+
+The author already provides a much larger formalization, described in the primary companion report. Its newer-toolchain archive was neither inspected nor replayed here. This independently authored finite integration does not certify the author's global construction.
 
 ## Publication and acceptance boundary
 

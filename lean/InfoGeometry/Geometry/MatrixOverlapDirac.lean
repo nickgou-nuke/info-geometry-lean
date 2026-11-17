@@ -5,7 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.Analysis.MatrixSpectralSign
-import InfoGeometry.Algebra.OverlapDirac
+import InfoGeometry.OperatorAlgebra.GinspargWilson
 
 /-!
 # Finite overlap Dirac operators from native spectral calculus
@@ -13,6 +13,11 @@ import InfoGeometry.Algebra.OverlapDirac
 For an invertible Hermitian matrix `H`, the sign in `D = 1 + Γ * sign H`
 is constructed by Mathlib, not supplied as an involution assumption. The
 chirality `Γ` is a Hermitian involution; it need not commute with `H`.
+
+The existing Ginsparg--Wilson owner uses `D = 1 - gamma.chi * epsilon.chi`.
+The explicit compatibility map below supplies `epsilon.chi = -sign H`, with
+its involution law derived from the actual functional-calculus construction.
+That owner's chiral projectors and intertwining theorems are reused directly.
 
 These are dimensionless, unit-spacing identities corresponding to equations
 (2.6)--(2.9) of arXiv:2610.09093v1. No Wilson-link construction, uniform family
@@ -26,65 +31,89 @@ noncomputable section
 namespace InfoGeometry.Geometry.MatrixOverlapDirac
 
 open InfoGeometry.Analysis.MatrixSpectralSign
-open InfoGeometry.Algebra.CyclotomicOperatorProjectors
+open InfoGeometry.OperatorAlgebra
 
 variable {n 𝕜 : Type*} [Fintype n] [DecidableEq n] [RCLike 𝕜]
 
 /-- The unit-spacing overlap operator with its actual native spectral sign. -/
 def overlapDirac (Γ H : Matrix n n 𝕜) : Matrix n n 𝕜 :=
-  Algebra.OverlapDirac.overlapDirac Γ (spectralSign H)
+  1 + Γ * spectralSign H
 
 /-- The positive spectral projector, equal to the negative modified-chirality
 projector when the reference chirality squares to one. -/
 def positiveSpectralProjector (H : Matrix n n 𝕜) : Matrix n n 𝕜 :=
   (1 / 2 : ℝ) • (1 + spectralSign H)
 
-/-- The constructed matrix sign discharges the noncommutative overlap
-identity's sign-involution hypothesis. -/
+/-- The actual negative spectral sign as an input to the existing chiral
+involution owner. Its square law follows from Hermiticity and invertibility. -/
+def negativeSignInvolution (H : Matrix n n 𝕜)
+    (hH : H.IsHermitian) (hunit : IsUnit H) : ChiralInvolution (Matrix n n 𝕜) where
+  chi := -spectralSign H
+  chi_sq := by rw [neg_mul_neg, spectralSign_mul_self hH hunit]
+
+/-- Compatibility with the existing overlap convention `1 - gamma * epsilon`. -/
+theorem overlapDirac_eq_ginspargWilson (gamma : ChiralInvolution (Matrix n n 𝕜))
+    {H : Matrix n n 𝕜} (hH : H.IsHermitian) (hunit : IsUnit H) :
+    overlapDirac gamma.chi H =
+      GinspargWilson.overlapDirac gamma (negativeSignInvolution H hH hunit) := by
+  simp only [overlapDirac, GinspargWilson.overlapDirac, negativeSignInvolution,
+    mul_neg, sub_neg_eq_add]
+
+/-- The native positive spectral projector is the existing right projector of
+the negative spectral involution. -/
+theorem positiveSpectralProjector_eq_Pright {H : Matrix n n 𝕜}
+    (hH : H.IsHermitian) (hunit : IsUnit H) :
+    positiveSpectralProjector H = (negativeSignInvolution H hH hunit).Pright := by
+  simp only [positiveSpectralProjector, ChiralInvolution.Pright,
+    negativeSignInvolution, sub_neg_eq_add]
+
+/-- The constructed matrix sign supplies the second involution to the existing
+noncommutative Ginsparg--Wilson theorem. -/
 theorem ginspargWilson {Γ H : Matrix n n 𝕜}
     (hΓ : Γ * Γ = 1) (hH : H.IsHermitian) (hunit : IsUnit H) :
     Γ * overlapDirac Γ H + overlapDirac Γ H * Γ =
-      overlapDirac Γ H * Γ * overlapDirac Γ H :=
-  Algebra.OverlapDirac.ginspargWilson hΓ (spectralSign_mul_self hH hunit)
+      overlapDirac Γ H * Γ * overlapDirac Γ H := by
+  let gamma : ChiralInvolution (Matrix n n 𝕜) := ⟨Γ, hΓ⟩
+  change gamma.chi * overlapDirac gamma.chi H + overlapDirac gamma.chi H * gamma.chi =
+    overlapDirac gamma.chi H * gamma.chi * overlapDirac gamma.chi H
+  rw [overlapDirac_eq_ginspargWilson gamma hH hunit]
+  exact GinspargWilson.overlapDirac_ginspargWilson gamma (negativeSignInvolution H hH hunit)
 
 /-- Adjoint conjugation needs Hermitian chirality, but does not require
-commutation between the two inputs. -/
+commutation between the two inputs or an invertible kernel. -/
 theorem gammaHermitian {Γ H : Matrix n n 𝕜}
     (hΓ : Γ * Γ = 1) (hΓstar : Γ.IsHermitian) :
-    star (overlapDirac Γ H) = Γ * overlapDirac Γ H * Γ :=
-  Algebra.OverlapDirac.gammaHermitian hΓ hΓstar.isSelfAdjoint
-    (spectralSign_isHermitian H).isSelfAdjoint
+    star (overlapDirac Γ H) = Γ * overlapDirac Γ H * Γ := by
+  have hleft : Γ * overlapDirac Γ H = Γ + spectralSign H := by
+    simp only [overlapDirac, mul_add, mul_one, ← mul_assoc, hΓ, one_mul]
+  rw [hleft, add_mul, hΓ]
+  simp only [overlapDirac, star_add, star_one, star_mul,
+    (spectralSign_isHermitian H).isSelfAdjoint.star_eq, hΓstar.isSelfAdjoint.star_eq]
 
-/-- Modified chirality has the paper's minus sign. -/
+/-- Modified chirality has the paper's minus sign, including for kernels
+whose spectral sign is not an involution. -/
 theorem modifiedChirality_eq_neg_sign {Γ H : Matrix n n 𝕜}
     (hΓ : Γ * Γ = 1) :
-    Γ * (1 - overlapDirac Γ H) = -spectralSign H :=
-  Algebra.OverlapDirac.modifiedChirality_eq_neg hΓ
+    Γ * (1 - overlapDirac Γ H) = -spectralSign H := by
+  unfold overlapDirac
+  have hsub : (1 : Matrix n n 𝕜) - (1 + Γ * spectralSign H) = -(Γ * spectralSign H) := by
+    abel
+  rw [hsub, mul_neg, ← mul_assoc, hΓ, one_mul]
 
 /-- The reference chirality's square and the constructed sign make modified
 chirality an involution. -/
 theorem modifiedChirality_mul_self {Γ H : Matrix n n 𝕜}
     (hΓ : Γ * Γ = 1) (hH : H.IsHermitian) (hunit : IsUnit H) :
-    (Γ * (1 - overlapDirac Γ H)) * (Γ * (1 - overlapDirac Γ H)) = 1 :=
-  Algebra.OverlapDirac.modifiedChirality_mul_self hΓ (spectralSign_mul_self hH hunit)
+    (Γ * (1 - overlapDirac Γ H)) * (Γ * (1 - overlapDirac Γ H)) = 1 := by
+  rw [modifiedChirality_eq_neg_sign hΓ, neg_mul_neg, spectralSign_mul_self hH hunit]
 
-/-- The positive spectral projector is an actual idempotent. The existing
-noncommutative involution-projector theorem supplies the algebraic step. -/
+/-- The positive spectral projector is an actual idempotent, by the existing
+chiral-involution projector theorem. -/
 theorem positiveSpectralProjector_isIdempotentElem {H : Matrix n n 𝕜}
     (hH : H.IsHermitian) (hunit : IsUnit H) :
     IsIdempotentElem (positiveSpectralProjector H) := by
-  have hhalf : (2 : Matrix n n 𝕜) * algebraMap ℝ (Matrix n n 𝕜) (1 / 2) = 1 := by
-    calc
-      (2 : Matrix n n 𝕜) * algebraMap ℝ (Matrix n n 𝕜) (1 / 2) =
-          algebraMap ℝ (Matrix n n 𝕜) ((2 : ℝ) * (1 / 2)) := by
-        simp only [map_mul, map_ofNat]
-      _ = 1 := by norm_num
-  have hsquare : spectralSign H ^ 2 = 1 := by
-    rw [pow_two, spectralSign_mul_self hH hunit]
-  simpa only [IsIdempotentElem, IsIdempotent, involutionPlusProjector,
-    positiveSpectralProjector, Algebra.smul_def] using
-    involution_plus_isIdempotent_of_commute hhalf
-      (Algebra.commute_algebraMap_left (1 / 2 : ℝ) (spectralSign H)) hsquare
+  rw [positiveSpectralProjector_eq_Pright hH hunit]
+  exact (negativeSignInvolution H hH hunit).Pright_idem
 
 /-- The same native positive projector is Hermitian. Together with the
 idempotence theorem, this is an orthogonal spectral projection. -/
@@ -98,17 +127,21 @@ of the Hermitian kernel. -/
 theorem positiveSpectralProjector_eq_modifiedMinus {Γ H : Matrix n n 𝕜}
     (hΓ : Γ * Γ = 1) :
     positiveSpectralProjector H =
-      Algebra.OverlapDirac.modifiedMinusProjector Γ (spectralSign H) :=
-  (Algebra.OverlapDirac.modifiedMinusProjector_eq_signPlus hΓ).symm
+      (1 / 2 : ℝ) • (1 - Γ * (1 - overlapDirac Γ H)) := by
+  simp only [positiveSpectralProjector, modifiedChirality_eq_neg_sign hΓ, sub_neg_eq_add]
 
-/-- The fermion and antifermion chirality constraints intertwine with the
-operator constructed from `H`; no scalar or commuting surrogate is used. -/
+/-- The fermion and antifermion chirality constraints intertwine by the
+existing two-involution theorem, with the actual constructed sign as input. -/
 theorem intertwining {Γ H : Matrix n n 𝕜}
     (hΓ : Γ * Γ = 1) (hH : H.IsHermitian) (hunit : IsUnit H) :
     overlapDirac Γ H * positiveSpectralProjector H =
       ((1 / 2 : ℝ) • (1 + Γ)) * overlapDirac Γ H := by
-  rw [positiveSpectralProjector_eq_modifiedMinus hΓ]
-  exact Algebra.OverlapDirac.intertwining hΓ (spectralSign_mul_self hH hunit)
+  let gamma : ChiralInvolution (Matrix n n 𝕜) := ⟨Γ, hΓ⟩
+  rw [positiveSpectralProjector_eq_Pright hH hunit]
+  change overlapDirac gamma.chi H * (negativeSignInvolution H hH hunit).Pright =
+    gamma.Pleft * overlapDirac gamma.chi H
+  rw [overlapDirac_eq_ginspargWilson gamma hH hunit]
+  exact GinspargWilson.overlapDirac_mul_Pright gamma (negativeSignInvolution H hH hunit)
 
 /-- An invertible kernel need not yield an invertible overlap operator:
 the actual spectral-calculus construction gives zero for `H = -Γ`. -/
@@ -117,7 +150,7 @@ theorem overlapDirac_neg_chirality {Γ : Matrix n n 𝕜}
     IsUnit (-Γ) ∧ overlapDirac Γ (-Γ) = 0 := by
   have hsquare : (-Γ) * (-Γ) = 1 := by simpa only [neg_mul_neg] using hΓ
   refine ⟨⟨⟨-Γ, -Γ, hsquare, hsquare⟩, rfl⟩, ?_⟩
-  unfold overlapDirac Algebra.OverlapDirac.overlapDirac
+  unfold overlapDirac
   rw [spectralSign_eq_self_of_mul_self hΓstar.neg hsquare, mul_neg, hΓ]
   exact add_neg_cancel 1
 
@@ -163,7 +196,7 @@ theorem example_not_commute :
 functional calculus used by the general theorem. -/
 theorem example_overlapDirac :
     overlapDirac exampleChirality exampleKernel = !![1, 1; -1, 1] := by
-  unfold overlapDirac Algebra.OverlapDirac.overlapDirac
+  unfold overlapDirac
   rw [spectralSign_eq_self_of_mul_self exampleKernel_isHermitian exampleKernel_mul_self]
   ext i j
   fin_cases i <;> fin_cases j <;>

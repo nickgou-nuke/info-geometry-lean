@@ -1,5 +1,7 @@
 # Craig lattice chiral fermion intake: bounded owner search
 
+**Superseding result:** PR #395 appeared after the snapshot below. The current draft reuses its Ginsparg-Wilson owner and retains only the native matrix spectral-sign construction and its integration. See the final section for exact revisions and maps.
+
 ## Scope and status
 
 This is a source reconnaissance and candidate contract, not a Lean acceptance report.
@@ -248,3 +250,13 @@ construction remain outside this candidate.
 | [#359](https://github.com/nickgou-nuke/info-geometry-lean/pull/359) | `c05a07f9aac67233445478bb233e23bee92b73b6` |
 | [#358](https://github.com/nickgou-nuke/info-geometry-lean/pull/358) | `473d39724c43ee5cef8ba971ff82dfe42ca084f4` |
 | [#357](https://github.com/nickgou-nuke/info-geometry-lean/pull/357) | `681a5c26b82d1c9a547b2b06e760c52ef7ed1908` |
+
+## Superseding concurrent-PR discovery and current reuse
+
+The prior open-PR snapshot was read at 2026-11-17 13:54:55 UTC. PR #395 was created at 13:57:14 UTC, head `7378582cd5a458a39a99ceb8720d04c5a14e3ac1`, on main `08c34e03f610b452e03422037949196dc7d92d6d`. The final publication readback found it and prompted full source inspection.
+
+`InfoGeometry.OperatorAlgebra.GinspargWilson` owns the exact generic two-involution identities; `PeirceTangentTrace` and `RectangularProjectorStabilization` own the adjacent finite trace and stabilization results. No spectral-sign construction is present there. The initial independent generic `Algebra/OverlapDirac.lean` was removed rather than retained as a competing owner.
+
+The new native bridge constructs existing `ChiralInvolution` data with `chi = -spectralSign H`, whose `chi_sq` proof uses `spectralSign_mul_self hH hunit`. It proves compatibility between `1 + Γ * spectralSign H` and upstream `1 - gamma.chi * epsilon.chi`, and between the positive spectral projector and `epsilon.Pright`. It calls the exact upstream declarations `overlapDirac_ginspargWilson`, `ChiralInvolution.Pright_idem`, and `overlapDirac_mul_Pright`. The stronger arbitrary-kernel adjoint and modified-chirality formulas retain their own direct concrete matrix proofs.
+
+PR #394 at `535f52c6554dfc44af5f1e6c4cf1567a8fb6b359` was also inspected at metadata/file-list scope. Its Zorn mobility, entropy-extension, and current work does not supply a competing spectral-sign owner. These new records supersede the earlier absence finding; they are source review, not compiled acceptance.

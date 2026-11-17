@@ -35,7 +35,6 @@ env:
   PYTHONDONTWRITEBYTECODE: '1'
   NATIVE_MATRIX_OVERLAP_TARGETS: >-
     InfoGeometry.Analysis.MatrixSpectralSign
-    InfoGeometry.Algebra.OverlapDirac
     InfoGeometry.Geometry.MatrixOverlapDirac
 
 jobs:
@@ -129,7 +128,7 @@ jobs:
           from tools.quality.check_reviewed_prs import closure
           from tools.quality.reviewed_audit_source import parse_audit_output
           targets = os.environ['NATIVE_MATRIX_OVERLAP_TARGETS'].split()
-          assert len(targets) == len(set(targets)) == 3
+          assert len(targets) == len(set(targets)) == 2
           out = Path('../native-matrix-overlap-dirac-report')
           assert not out.exists(), 'Acceptance output must be fresh'
           inputs = ['tools/quality/check_clifford_dirac.py', 'tools/quality/check_reviewed_prs.py',
@@ -190,7 +189,7 @@ jobs:
           from pathlib import Path
           out = Path('../native-matrix-overlap-dirac-report')
           targets = os.environ['NATIVE_MATRIX_OVERLAP_TARGETS'].split()
-          assert len(targets) == len(set(targets)) == 3
+          assert len(targets) == len(set(targets)) == 2
           paths = ['lean/' + target.replace('.', '/') + '.lean' for target in targets]
           assert all(Path(path).is_file() for path in paths)
           scope = json.loads((out / 'scope-summary.json').read_text())

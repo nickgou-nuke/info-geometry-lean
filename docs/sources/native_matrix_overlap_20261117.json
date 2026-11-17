@@ -32,7 +32,12 @@
   "repository": {
     "baseline": "08c34e03f610b452e03422037949196dc7d92d6d",
     "lean": "v4.34.1",
-    "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612"
+    "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+    "stacked_base": {
+      "pull_request": 395,
+      "head": "7378582cd5a458a39a99ceb8720d04c5a14e3ac1",
+      "branch": "codex/lattice-chiral-projector-20261117"
+    }
   },
   "review_date": "2026-11-17",
   "review_kind": "independent finite native spectral-sign and overlap-algebra bridge",

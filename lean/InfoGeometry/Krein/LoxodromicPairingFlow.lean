@@ -153,8 +153,9 @@ def loxodromicIsometryEquiv
       map_add, smul_add]
     module
   map_smul' c x := by
+    change realLoxodromicAction K J t θ (c • x) = c • realLoxodromicAction K J t θ x
     simp only [realLoxodromicAction, realBoostAction, realRotorAction,
-      map_smul, smul_add, smul_smul, id_eq]
+      map_smul, smul_add, smul_smul]
     module
   map_app' := realLoxodromicAction_pairing B K J hK hJ hKB hJB t θ
 

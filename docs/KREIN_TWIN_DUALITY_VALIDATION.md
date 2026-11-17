@@ -36,7 +36,7 @@ process was stopped and the maintained checker restarted on the committed
 sources. The canonical shared compiler lock was observed occupied throughout;
 its holder was not interrupted and no replacement lock was used.
 
-## Repaired source identity
+## First proof-repair checkpoint
 
 The repaired source checkpoint is remote commit
 `2ebcfd88c96c2e3bb0aeaf024e1e538cad04ece6`, corresponding to local commit
@@ -51,10 +51,38 @@ The repaired-source placeholder and semantic checks were rerun successfully.
 | `Krein.LoxodromicPairingFlow` | `b999ae34d08c8bfa736db6846e724f618aa7a5740da091589f2eac065ded4412` |
 
 The [second native run, 44055290321](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44055290321),
-checks that exact remote commit. At the reporting checkpoint it was queued,
-with no runner assigned and no new compiler or axiom-audit result. A local
-attempt was likewise waiting on the occupied canonical build lock. Neither
-queue is represented as successful verification.
+checked that exact remote commit and completed with native compilation errors.
+The documentation-only head `9e876c7e33d9086df3c9dc88d78bc50236a654f7`
+had byte-identical Lean owners and reproduced those diagnostics in
+[run 44062639425](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44062639425).
+
+The generic `ExchangedProjectionPairing` owner now compiled with zero warnings.
+All 29 pre-existing dependency owners also compiled. The matrix adapter exposed
+five elaboration/simplification failures and four unused-section-variable
+warnings; the flow owner exposed one scalar-linearity failure and one unused
+simp argument. Neither failed run reached the declaration axiom audit.
+
+## Second proof repair
+
+The present repair makes the linearity goals explicit before simplification,
+removes only the typeclass assumptions reported unused by Lean, and calculates
+the real matrix witness through separately established star/idempotence/adjoint
+identities. The flow scalar proof likewise states its actual real-linear goal
+before normalization. No theorem conclusion, noncommutative product order,
+carrier, dependency pin, or acceptance rule is weakened.
+
+The candidates were independently proposed and parent-reviewed against the
+complete native goal states. Native acceptance of this repair remains pending.
+The prior local waiting attempt produced no environment, compiler log, or
+report, and its process session is no longer registered; it is not verification
+evidence. A fresh local attempt must use the current source snapshot and the
+same occupied shared lock.
+
+| Current owner | Source SHA-256 |
+|---|---|
+| `Krein.ExchangedProjectionPairing` | `c234bf77c54e5e85d1ef4df5d9c320f5a286675a7ea0839ad69f7c0eaf4149e9` |
+| `CliffordWeyl.KreinTwinIdealPairing` | `826ea74e4f30788d6c37ccd276dad7c498418aec5e00c204b05cbf2cf221e674` |
+| `Krein.LoxodromicPairingFlow` | `41804fce487d282c6e05deb1a36a721c29770b7bb8622fd887fb76d697f776b5` |
 
 ## Native verification command
 
@@ -64,7 +92,7 @@ From the independent repository checkout:
 python3 tools/quality/check_clifford_dirac.py \
   --mathlib-root /workspace/scratch/44e3088154ac/mathlib4 \
   --lean /workspace/scratch/50ddde16aff2/runtime/lean-4.34.1-linux/bin/lean \
-  --output /workspace/scratch/0878f2086cff/verification-twin-pairing-repair1 \
+  --output /workspace/scratch/0878f2086cff/verification-twin-pairing-repair2 \
   --incremental \
   --target InfoGeometry.Krein.ExchangedProjectionPairing \
   --target InfoGeometry.CliffordWeyl.KreinTwinIdealPairing \

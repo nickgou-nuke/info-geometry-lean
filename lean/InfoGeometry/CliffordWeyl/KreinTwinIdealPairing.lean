@@ -126,15 +126,19 @@ def pairing : LinearMap.BilinForm ℝ A where
         simp only [diracAdjoint_add, mul_add, map_add]
       map_smul' := by
         intro r Y
+        change τ (X * K.diracAdjoint (r • Y)) = r • τ (X * K.diracAdjoint Y)
         simp only [diracAdjoint_smul, mul_smul_comm, map_smul] }
   map_add' := by
     intro X Y
     ext Z
-    simp only [add_mul, map_add, LinearMap.add_apply]
+    change τ ((X + Y) * K.diracAdjoint Z) =
+      τ (X * K.diracAdjoint Z) + τ (Y * K.diracAdjoint Z)
+    simp only [add_mul, map_add]
   map_smul' := by
     intro r X
     ext Y
-    simp only [smul_mul_assoc, map_smul, LinearMap.smul_apply]
+    change τ ((r • X) * K.diracAdjoint Y) = r • τ (X * K.diracAdjoint Y)
+    simp only [smul_mul_assoc, map_smul]
 
 @[simp] theorem pairing_apply (X Y : A) :
     pairing K τ X Y = τ (X * K.diracAdjoint Y) := rfl
@@ -152,6 +156,7 @@ theorem pairing_mul_left
     _ = τ ((X * K.diracAdjoint Y) * P) := hτ _ _
     _ = τ (X * (K.diracAdjoint Y * P)) := by rw [mul_assoc]
 
+omit [StarRing A] [StarModule ℝ A] in
 /-- The algebra idempotent gives a genuine idempotent endomorphism. -/
 theorem mulLeft_isIdempotent (P : A) (hP : P * P = P) :
     IsIdempotentElem (LinearMap.mulLeft ℝ P) := by
@@ -159,6 +164,7 @@ theorem mulLeft_isIdempotent (P : A) (hP : P * P = P) :
   change P * (P * X) = P * X
   rw [← mul_assoc, hP]
 
+omit [StarRing A] [StarModule ℝ A] in
 /-- The range used by the generic theorem is the actual principal right ideal. -/
 theorem range_mulLeft_eq_principalRightIdeal (P : A) (hP : P * P = P) :
     (LinearMap.range (LinearMap.mulLeft ℝ P) : Set A) = principalRightIdeal P := by
@@ -226,10 +232,12 @@ def unitaryLeftEquiv (U : A)
   map_add' := mul_add U
   map_smul' r X := mul_smul_comm r U X
 
+omit [StarModule ℝ A] in
 @[simp] theorem unitaryLeftEquiv_apply (U : A)
     (hLeft : K.diracAdjoint U * U = 1) (hRight : U * K.diracAdjoint U = 1) (X : A) :
     unitaryLeftEquiv K U hLeft hRight X = U * X := rfl
 
+omit [StarModule ℝ A] in
 @[simp] theorem unitaryLeftEquiv_symm_apply (U : A)
     (hLeft : K.diracAdjoint U * U = 1) (hRight : U * K.diracAdjoint U = 1) (X : A) :
     (unitaryLeftEquiv K U hLeft hRight).symm X = K.diracAdjoint U * X := rfl
@@ -302,22 +310,28 @@ theorem exchanged_matrix_example :
     ⟨⟨η, 1⟩, by
       refine ⟨hηsq, hηstar, ?_, ?_⟩ <;> simp⟩
   let P : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, 0]
-  refine ⟨K, P, ?_, ?_, ?_, ?_, ?_⟩
-  · ext i j
+  have hPsq : P * P = P := by
+    ext i j
     fin_cases i <;> fin_cases j <;>
       norm_num [P, Matrix.mul_apply, Fin.sum_univ_two]
-  · ext i j
+  have hPstar : star P = P := by
+    ext i j
+    fin_cases i <;> fin_cases j <;> norm_num [P, Matrix.star_apply]
+  have hPAdj : K.diracAdjoint P = 1 - P := by
+    change η * star P * η = 1 - P
+    rw [hPstar]
+    ext i j
     fin_cases i <;> fin_cases j <;>
-      norm_num [K, P, η, KasparovKreinData.diracAdjoint, KasparovKreinData.eta,
-        Matrix.mul_apply, Fin.sum_univ_two, Matrix.star_apply]
+      norm_num [P, η, Matrix.mul_apply, Fin.sum_univ_two]
+  refine ⟨K, P, hPsq, hPAdj, ?_, ?_, ?_⟩
   · intro h
     have h' := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 0) h
     norm_num [P] at h'
   · intro h
     have h' := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 1 1) h
     norm_num [P] at h'
-  · norm_num [pairing_apply, K, P, η, KasparovKreinData.diracAdjoint,
-      KasparovKreinData.eta, Matrix.traceLinearMap_apply, Matrix.trace,
-      Matrix.mul_apply, Fin.sum_univ_two, Matrix.star_apply]
+  · change Matrix.trace (P * K.diracAdjoint (1 - P)) = 1
+    rw [adjoint_complement_of_exchanged K P hPAdj, hPsq]
+    norm_num [P, Matrix.trace, Fin.sum_univ_two]
 
 end InfoGeometry.CliffordWeyl.KreinTwinIdealPairing

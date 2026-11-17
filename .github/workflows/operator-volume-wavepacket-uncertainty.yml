@@ -27,7 +27,7 @@ permissions:
 
 concurrency:
   group: operator-volume-wavepacket-uncertainty-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   kernel-and-axioms:

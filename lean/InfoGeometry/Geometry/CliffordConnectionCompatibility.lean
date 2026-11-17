@@ -55,6 +55,7 @@ theorem covariantDerivative_mulLeft_commute_iff
   rw [commute_iff_lie_eq, covariantDerivative_mulLeft_commutator D hD a g,
     LinearMap.mulLeft_eq_zero_iff]
 
+omit [IsScalarTower R A A] in
 /-- The fundamental curvature action with the base commutator retained.
 The two base derivatives need not commute. -/
 theorem covariantDerivative_commutator_with_base_defect

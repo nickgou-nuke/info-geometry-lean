@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Physics.DiracEnergyOddPart
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-!
@@ -60,12 +62,13 @@ theorem hasDerivAt_diracPositiveEnergy1D (p m c : ℝ)
   have hpoly :
       HasDerivAt (fun q : ℝ => c ^ 2 * q ^ 2 + m ^ 2 * c ^ 4)
         (2 * c ^ 2 * p) p := by
-    convert (((hasDerivAt_id p).pow 2).const_mul (c ^ 2)).add_const
-      (m ^ 2 * c ^ 4) using 1 <;> ring
+    convert (hasDerivAt_add_const_iff (m ^ 2 * c ^ 4)).mpr
+      (HasDerivAt.const_mul (c ^ 2) (HasDerivAt.pow (hasDerivAt_id p) 2))
+      using 1 <;> ring
   have hroot :
       HasDerivAt (fun q : ℝ => diracPositiveEnergy1D q m c)
         ((2 * c ^ 2 * p) / (2 * diracPositiveEnergy1D p m c)) p :=
-    hpoly.sqrt (ne_of_gt hgap)
+    HasDerivAt.sqrt hpoly (ne_of_gt hgap)
   have hE : diracPositiveEnergy1D p m c ≠ 0 :=
     ne_of_gt (diracPositiveEnergy1D_pos p m c hgap)
   have hcoeff :
@@ -79,7 +82,7 @@ theorem hasDerivAt_diracNegativeEnergy1D (p m c : ℝ)
     (hgap : 0 < c ^ 2 * p ^ 2 + m ^ 2 * c ^ 4) :
     HasDerivAt (fun q : ℝ => -diracPositiveEnergy1D q m c)
       (-(c ^ 2 * p / diracPositiveEnergy1D p m c)) p :=
-  (hasDerivAt_diracPositiveEnergy1D p m c hgap).neg
+  HasDerivAt.neg (hasDerivAt_diracPositiveEnergy1D p m c hgap)
 
 /-- The native velocity compressed to either derived energy sector is its
 scalar branch coefficient times that native projector. No commutativity of

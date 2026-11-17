@@ -25,7 +25,7 @@ namespace InfoGeometry.Krein.InternalPhaseGram
 open scoped InnerProductSpace
 
 variable {E : Type*}
-  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
 local notation "H₂" => DoubledSpace E
 local notation "Iop" => complex_i (E := E)
@@ -34,7 +34,7 @@ local notation "Iop" => complex_i (E := E)
 theorem phase_pair_neg_swap (x y : H₂) :
     ⟪Iop x, y⟫_ℝ = -⟪Iop y, x⟫_ℝ := by
   simp [complex_i, modular_j, spectral_epsilon, WithLp.prod_inner_apply,
-    real_inner_comm, neg_add, add_comm]
+    real_inner_comm, add_comm]
 
 theorem phase_pair_self_zero (x : H₂) :
     ⟪Iop x, x⟫_ℝ = 0 := by
@@ -53,10 +53,13 @@ theorem inner_sq_add_phase_inner_sq_le (x y : H₂) :
   have hKnorm : ‖kx‖ = ‖x‖ := complex_i_norm x
   have hNormNe : ‖x‖ ≠ 0 := norm_ne_zero_iff.mpr hx
   have hkx : kx ≠ 0 := by
-    have hKnormNe : ‖kx‖ ≠ 0 := by simpa [hKnorm] using hNormNe
+    have hKnormNe : ‖kx‖ ≠ 0 := by
+      rw [hKnorm]
+      exact hNormNe
     exact norm_ne_zero_iff.mp hKnormNe
   have hOrth : ⟪x, kx⟫_ℝ = 0 := by
-    simpa [kx, real_inner_comm] using phase_pair_self_zero x
+    rw [real_inner_comm]
+    exact phase_pair_self_zero x
   have hOrthNorm :
       ⟪NormedSpace.normalize x, NormedSpace.normalize kx⟫_ℝ = 0 := by
     rw [NormedSpace.normalize, NormedSpace.normalize,

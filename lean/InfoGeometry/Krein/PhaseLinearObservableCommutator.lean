@@ -43,7 +43,7 @@ def centeredVector (A : EndH) (a : ℝ) (ψ : H₂) : H₂ :=
 phase pairing with the state in its expectation slot. -/
 theorem phase_pair_observable_self_zero
     (A : EndH) (hA : IsSelfAdjoint A)
-    (hAI : A.comp Iop = Iop.comp A) (ψ : H₂) :
+    (hAI : A.comp Iop = (Iop).comp A) (ψ : H₂) :
     ⟪Iop ψ, A ψ⟫_ℝ = 0 := by
   have hcomm : A (Iop ψ) = Iop (A ψ) :=
     congrArg (fun T : EndH => T ψ) hAI
@@ -59,8 +59,8 @@ theorem phase_pair_observable_self_zero
 phase-preserving observables. -/
 theorem phase_pair_centered_eq
     (A B : EndH) (hA : IsSelfAdjoint A) (hB : IsSelfAdjoint B)
-    (hAI : A.comp Iop = Iop.comp A)
-    (hBI : B.comp Iop = Iop.comp B)
+    (hAI : A.comp Iop = (Iop).comp A)
+    (hBI : B.comp Iop = (Iop).comp B)
     (a b : ℝ) (ψ : H₂) :
     ⟪Iop (centeredVector A a ψ), centeredVector B b ψ⟫_ℝ =
       ⟪Iop (A ψ), B ψ⟫_ℝ := by
@@ -75,8 +75,8 @@ theorem phase_pair_centered_eq
 /-- The real phase pairing reads the actual ordered commutator. -/
 theorem twice_phase_pair_eq_commutator
     (A B : EndH) (hA : IsSelfAdjoint A) (hB : IsSelfAdjoint B)
-    (hAI : A.comp Iop = Iop.comp A)
-    (hBI : B.comp Iop = Iop.comp B) (ψ : H₂) :
+    (hAI : A.comp Iop = (Iop).comp A)
+    (hBI : B.comp Iop = (Iop).comp B) (ψ : H₂) :
     2 * ⟪Iop (A ψ), B ψ⟫_ℝ =
       ⟪Iop ψ, (A.comp B - B.comp A) ψ⟫_ℝ := by
   have hcommA : A (Iop ψ) = Iop (A ψ) :=
@@ -102,8 +102,8 @@ theorem twice_phase_pair_eq_commutator
 expectation.  This is the bridge consumed by the uncertainty owner. -/
 theorem twice_centered_phase_pair_eq_commutator
     (A B : EndH) (hA : IsSelfAdjoint A) (hB : IsSelfAdjoint B)
-    (hAI : A.comp Iop = Iop.comp A)
-    (hBI : B.comp Iop = Iop.comp B)
+    (hAI : A.comp Iop = (Iop).comp A)
+    (hBI : B.comp Iop = (Iop).comp B)
     (a b : ℝ) (ψ : H₂) :
     2 * ⟪Iop (centeredVector A a ψ), centeredVector B b ψ⟫_ℝ =
       ⟪Iop ψ, (A.comp B - B.comp A) ψ⟫_ℝ := by
@@ -119,8 +119,30 @@ theorem commutator_linearCombinations
     (∑ i, r i • A i).comp (∑ j, s j • B j) -
         (∑ j, s j • B j).comp (∑ i, r i • A i) =
       ∑ i, ∑ j, (r i * s j) • ((A i).comp (B j) - (B j).comp (A i)) := by
-  change ⁅∑ i, r i • A i, ∑ j, s j • B j⁆ =
-    ∑ i, ∑ j, (r i * s j) • ⁅A i, B j⁆
-  simp only [sum_lie, lie_sum, smul_lie, lie_smul, smul_smul]
+  have hforward :
+      (∑ i, r i • A i).comp (∑ j, s j • B j) =
+        ∑ i, ∑ j, (r i * s j) • (A i).comp (B j) := by
+    simp only [ContinuousLinearMap.finsetSum_comp,
+      ContinuousLinearMap.comp_finsetSum, ContinuousLinearMap.smul_comp,
+      ContinuousLinearMap.comp_smul, smul_smul]
+  have hbackward :
+      (∑ j, s j • B j).comp (∑ i, r i • A i) =
+        ∑ i, ∑ j, (r i * s j) • (B j).comp (A i) := by
+    simp only [ContinuousLinearMap.finsetSum_comp,
+      ContinuousLinearMap.comp_finsetSum, ContinuousLinearMap.smul_comp,
+      ContinuousLinearMap.comp_smul, smul_smul]
+    rw [Finset.sum_comm]
+    apply Finset.sum_congr rfl
+    intro i hi
+    apply Finset.sum_congr rfl
+    intro j hj
+    rw [mul_comm (s j) (r i)]
+  rw [hforward, hbackward, ← Finset.sum_sub_distrib]
+  apply Finset.sum_congr rfl
+  intro i hi
+  rw [← Finset.sum_sub_distrib]
+  apply Finset.sum_congr rfl
+  intro j hj
+  exact (smul_sub (r i * s j) ((A i).comp (B j)) ((B j).comp (A i))).symm
 
 end InfoGeometry.Krein.PhaseLinearObservableCommutator

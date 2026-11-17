@@ -40,8 +40,8 @@ local notation "Iop" => complex_i (E := E)
 self-adjoint real observables preserving the internal phase. -/
 theorem centered_robertson_schrodinger
     (A B : EndH) (hA : IsSelfAdjoint A) (hB : IsSelfAdjoint B)
-    (hAI : A.comp Iop = Iop.comp A)
-    (hBI : B.comp Iop = Iop.comp B)
+    (hAI : A.comp Iop = (Iop).comp A)
+    (hBI : B.comp Iop = (Iop).comp B)
     (a b : ℝ) (ψ : H₂) :
     (⟪centeredVector A a ψ, centeredVector B b ψ⟫_ℝ) ^ 2 +
         (1 / 4 : ℝ) * (⟪Iop ψ, (A.comp B - B.comp A) ψ⟫_ℝ) ^ 2 ≤
@@ -62,8 +62,8 @@ theorem centered_robertson_schrodinger
 commutator lower bound. -/
 theorem centered_robertson
     (A B : EndH) (hA : IsSelfAdjoint A) (hB : IsSelfAdjoint B)
-    (hAI : A.comp Iop = Iop.comp A)
-    (hBI : B.comp Iop = Iop.comp B)
+    (hAI : A.comp Iop = (Iop).comp A)
+    (hBI : B.comp Iop = (Iop).comp B)
     (a b : ℝ) (ψ : H₂) :
     (1 / 4 : ℝ) * (⟪Iop ψ, (A.comp B - B.comp A) ψ⟫_ℝ) ^ 2 ≤
       ‖centeredVector A a ψ‖ ^ 2 * ‖centeredVector B b ψ‖ ^ 2 := by

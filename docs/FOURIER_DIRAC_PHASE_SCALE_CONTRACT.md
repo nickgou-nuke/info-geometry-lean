@@ -60,6 +60,8 @@ reviews at the stated revision, not a fresh whole-repository certificate.
 | `Analysis/MellinWaveletScaleShapeBridge.lean` | Scale/shape reconstruction from admissibility and an encode/decode inverse | Admissibility is the reconstruction left-inverse law itself; the adapter supplies another inverse law. No integral construction or Calderón condition establishes them here. |
 | `Geometry/BinaryLegendreEntropyFlow.lean` | Native Bernoulli Legendre curve, metric pullback twice the scalar Fisher form, vanishing symplectic pullback and entropy relaxation | A statistical potential example, not a Fourier or Penrose transform. |
 | `Dynamics/RapiditySpace.lean`: `rapidity_additive_composition`, `log_coordinate_rapidity_shift` | Rapidity addition and translations on exponential/log coordinates | Does not identify Lorentz boosts with isotropic Weyl gauge transformations. |
+| `Canonical/AmariBinarySimplexBridge.lean`: `logistic_eq_half_add_tanh_half`, `logit_logistic` | Explicit logistic–tanh correspondence and inverse logit; setting the parameter to twice rapidity gives the desired probability polarization | These are real coordinate identities; they do not construct a relativistic statistical model. |
+| `Canonical/RealRindlerProjectiveLogBridge.lean`: `projectiveNullRatio_rindler_boost`, `log_rindlerProjectiveNullRatio_boost`, `realProjectiveDilation_rindler` | Concrete Rindler embedding intertwines the boost with dilation of the positive null ratio and translation of its logarithm | Finite 1+1-dimensional coordinate intertwining, with positive radius; not isotropic Weyl rescaling. |
 | `HodgeCohomology/HodgeDirac.lean` | Adjoint pair, nilpotency, `(d + δ)^2 = dδ + δd`, positive energy and kernel identities | Total real linear maps with explicit hypotheses; geometric differential domains are separate. |
 | `HodgeCohomology/FiniteHarmonicRepresentative.lean` | Unique finite-dimensional closed and coclosed cohomology representative | Finite-dimensional Hodge result, not a global analytic elliptic theorem. |
 | `HodgeCohomology/KreinHodgeDiracBounded.lean` and `HodgeCohomology/KreinHodgeObstruction.lean` | Krein adjoint factorization, signed energy, and an explicit square-zero obstruction | Positive energy/kernel conclusions need additional fundamental-symmetry compatibility. |
@@ -255,9 +257,19 @@ has `s = σ + 2π i ξ` and damping `exp(-σu)`.
 
 A Lorentz boost in null coordinates has opposite weights
 `x⁺ ↦ exp(r)x⁺`, `x⁻ ↦ exp(-r)x⁻` (up to active/passive convention).
-It is not an isotropic Weyl rescaling. Rapidity, log odds, and logarithmic
-scale share elementary exponential coordinates, but identifying their
-geometric actions requires an explicit map. Translation and dilation are
+It is not an isotropic Weyl rescaling. Explicit maps already exist in the
+Rindler and binary-simplex owners:
+
+\[
+\operatorname{logistic}(2r)=\frac{1+\tanh r}{2},\qquad
+q(A(r)x)=e^{2r}q(x),\qquad
+\log q(A(r)x)=\log q(x)+2r.
+\]
+
+Here the second and third statements use the positive Rindler null ratio.
+The source also separates the symmetric log coordinate `log(radius)` from
+the antisymmetric coordinate `time`. These concrete compatibilities relate
+the selected coordinates; they do not identify all their geometric actions. Translation and dilation are
 not generally commuting actions; a complete nonabelian group decomposition
 cannot be supplied just by scalar characters.
 
@@ -291,8 +303,19 @@ explanation, not a freshly certified global declaration DAG.
 
 The new owners have independent source reviews. Source review found correct
 commutator orientations, explicit compatibility conditions, and nonvacuous
-noncommutative models. Kernel elaboration, native axiom collection and source
-gates are pending the serialized verification run at this checkpoint.
+noncommutative models. The first pinned CI kernel run compiled the connection
+bridge and the extracted Gram owner. It reported elaboration errors in the
+Zorn coordinate calculation, phase-operator notation and finite-sum expansion,
+and scalar derivative imports; the uncertainty consumer was consequently
+blocked. Those proof scripts have been repaired without weakening their
+statements. A fresh complete focused kernel run, native axiom collection and
+source gates are pending at this checkpoint.
+
+The CI checkout now fetches the exact public revision without traversing
+unrelated, incompletely configured external submodules. The verification
+helper and existing gates are unchanged. The local root pre-push check is
+also queued behind the repository's shared build lock.
+
 The existing canonical forwarding owner's full import closure still reaches
 `Architect`; success of the small new closure will not certify that larger
 owner or the root Lake package. Final command results must be recorded here

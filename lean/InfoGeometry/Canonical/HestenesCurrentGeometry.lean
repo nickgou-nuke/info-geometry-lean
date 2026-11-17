@@ -106,7 +106,7 @@ theorem currentCoordinates_time_eq (ψ : ClPlus14) :
         Complex.normSq (clPlusToPauli ψ 1 0) +
         Complex.normSq (clPlusToPauli ψ 1 1)) / 2 := by
   simp [currentCoordinates, hermitianCoordinates, Matrix.mul_apply,
-    Matrix.conjTranspose_apply, Fin.sum_univ_two, Complex.star_def,
+    Matrix.conjTranspose_apply, Fin.sum_univ_two,
     Complex.mul_conj, add_assoc]
 
 theorem currentCoordinates_time_nonneg (ψ : ClPlus14) :

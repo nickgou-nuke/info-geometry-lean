@@ -109,6 +109,7 @@ theorem projectedGram_nonnegative (γ : ℝ) (hγ : 0 ≤ γ)
   rw [projectedGram_contraction]
   exact mul_nonneg hγ (Finset.sum_nonneg fun i _ => sq_nonneg _)
 
+omit [DecidableEq m] in
 theorem projectedGram_symmetric (γ : ℝ) (R : Matrix m n ℝ) (h u v : n → ℝ) :
     dotProduct u (projectedGram γ R h *ᵥ v) =
       dotProduct v (projectedGram γ R h *ᵥ u) := by
@@ -164,11 +165,13 @@ def projectedGramMetricData (γ : ℝ) (hγ : 0 ≤ γ)
     (projectedGramMetricData γ hγ R h).onsager h = 0 :=
   projectedGram_energy γ R h
 
+omit [DecidableEq m] in
 /-- The dissipative contribution to the energy rate vanishes identically. -/
 theorem dissipative_energy_rate (γ : ℝ) (R : Matrix m n ℝ) (h s : n → ℝ) :
     dotProduct h (projectedGram γ R h *ᵥ s) = 0 := by
   rw [projectedGram_symmetric, projectedGram_energy, dotProduct_zero]
 
+omit [DecidableEq m] in
 /-- The skew reversible part and projected Gram part both preserve energy. -/
 theorem total_energy_rate (A : Matrix n n ℝ) (γ : ℝ)
     (R : Matrix m n ℝ) (h s : n → ℝ) :

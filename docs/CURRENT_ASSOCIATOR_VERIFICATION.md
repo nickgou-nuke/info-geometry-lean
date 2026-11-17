@@ -11,7 +11,8 @@ errors in `HestenesCurrentAlgebra`, an over-simplified quaternion norm goal in
 `SplitOctonionProjectedDissipation`. `HestenesCurrentGeometry` was blocked by
 its algebra dependency. The selected files also produced 22 warnings.
 
-The repair preserves every theorem statement. It fixes the actual pinned APIs,
+The repair preserves theorem conclusions and the full mathematical carriers.
+It fixes the actual pinned APIs,
 ordered scalar-action rewrites, explicit graded membership and definition
 unfolding, and removes the exact reported unused arguments/section assumptions.
 The failed run's artifact was downloaded, SHA256-verified against GitHub, and
@@ -25,6 +26,45 @@ lock occupied by a `clifford-dirac` process. No competing compiler or cache
 hydration was started, and the lock was not deleted, replaced, or bypassed.
 The upstream workflow provides an independent runner while preserving the same
 lock discipline.
+
+## Second native run and warning repair
+
+The repaired-head run,
+[44087782634](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44087782634),
+compiled all **55 repository modules** successfully at commit
+`ebfd3b1faff4fa2bda62c4ab0b44d51154abdf73`, with no reused repository artifacts.
+The maintained native checker reported `passed`, and its audit checked **144
+declarations**, including generated declarations, with only
+`propext`, `Classical.choice`, and `Quot.sound`.
+
+| Selected owner | Compile exit code | Warnings | Audited declarations |
+|---|---:|---:|---:|
+| `HestenesCurrentAlgebra` | 0 | 0 | 47 |
+| `HestenesCurrentGeometry` | 0 | 1 | 18 |
+| `SplitOctonionScalarPotential` | 0 | 0 | 16 |
+| `ProjectedOnsagerGram` | 0 | 1 | 28 |
+| `SplitOctonionProjectedDissipation` | 0 | 2 | 35 |
+
+The overall workflow still **failed** its separate selected-owner zero-warning
+gate. Geometry reported an unused `Complex.star_def` simp argument. The other
+three warnings concerned unused section instances in `projectedGram_symmetric`,
+`associatorMatrix_mulVec_eq_zero_iff`, and `associatorGram_energy`.
+
+The warning repair removes that unused simp argument and locally omits those
+unneeded instances. It also omits `DecidableEq m` in the two dependent energy-rate
+corollaries that no longer use the instance after the symmetry theorem's repair.
+The mathematical conclusions, noncommutative order, full carriers, dependency
+pins, maintained checker, and zero-warning acceptance rule are preserved. The
+new source head still requires a fresh native run; the preceding head's native
+result is not relabeled as a verification of the changed source.
+
+Artifact `14333161691` was downloaded and matched GitHub's complete ZIP SHA256:
+`82a04eb6172a5125e10cf52731b3eff437ccb6f1c7b68ada422393f38dd97af0`.
+All 55 uploaded repository source snapshots match the reported hashes and exact
+Git blobs at the verified head. The 63 complete evidence-manifest entries match.
+The remaining `checker.log` entry matches its first 4,033 bytes; the uploaded
+4,170-byte log also includes the zero-warning guard's subsequent traceback.
+The archive digest verifies the complete uploaded bytes.
 
 ## Exact source scope
 

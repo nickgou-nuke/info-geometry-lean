@@ -90,6 +90,7 @@ theorem associatorMatrix_mulVec (a b : κ → SplitOctonion) (v : Coordinate →
   rw [associatorMatrix, LinearMap.toMatrix'_mulVec]
   rfl
 
+omit [Fintype κ] [DecidableEq κ] in
 theorem associatorMatrix_mulVec_eq_zero_iff
     (a b : κ → SplitOctonion) (v : Coordinate → ℝ) :
     associatorMatrix a b *ᵥ v = 0 ↔
@@ -124,6 +125,7 @@ theorem associator_production (γ : ℝ) (a b : κ → SplitOctonion)
   rw [projectedGram_contraction, associatorMatrix_mulVec]
   rfl
 
+omit [DecidableEq κ] in
 @[simp] theorem associatorGram_energy (γ : ℝ) (a b : κ → SplitOctonion)
     (h : SplitOctonion) :
     associatorGram γ a b h *ᵥ coordinates h = 0 :=

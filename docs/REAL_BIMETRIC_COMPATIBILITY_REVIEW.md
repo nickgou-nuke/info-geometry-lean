@@ -173,3 +173,25 @@ Independent source review, the installed commit hook, the focused compiler
 and complete axiom audit, and the root integration gate remain separate
 checks. The PR records their latest outcomes and exact checked revisions;
 this repair history does not itself assert a native or whole-package pass.
+
+
+## Second CI elaboration repair (17 November 2026)
+
+The focused check of published head `1838b7dfc27cac18937136f6e4c168a8dc314e29`
+([run 44089274619](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44089274619),
+job `134059834107`) compiled the general metric owner with zero warnings but
+reported proof elaboration errors in the two consumers. The native axiom
+audit was not reached.
+
+The repaired oblique entrywise proof applies `ring` only to goals left by
+`simp`. Five phase-space proof locations now use native `LinearMap.ext` and
+the existing phase/polarization action formulas, or explicitly instantiate
+double negation at the actual endomorphism. Two independent source reviews
+confirmed the ordered signs and exact unchanged theorem statements.
+
+These changes are confined to proof bodies. All 53 theorem statements and
+five definitions across the three owners remain unchanged. The workflow,
+checker, gate rules, dependency pins and general metric owner are unchanged.
+The earlier local verification snapshots do not certify this repaired source;
+the next focused CI run must elaborate and audit the exact new head. The
+root-package/pre-push gate remains separately pending on the shared lock.

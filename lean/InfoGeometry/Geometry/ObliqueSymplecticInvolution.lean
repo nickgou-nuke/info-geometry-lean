@@ -46,7 +46,7 @@ def obliqueMatrix (a : ℝ) : Mat2 :=
 theorem obliqueMatrix_eq (a : ℝ) : obliqueMatrix a = !![1, a; 0, -1] := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    (simp [obliqueMatrix, K_mat, J_mat, I_mat]; ring)
+    (simp [obliqueMatrix, K_mat, J_mat, I_mat] <;> ring)
 
 /-- The existing symplectic form, bundled by the native matrix-to-form equivalence. -/
 def omega : LinearMap.BilinForm ℝ R2 := Matrix.toBilin' I_mat

@@ -1,17 +1,24 @@
-name: Matrix Gibbs entropy (scoped kernel)
+name: Gibbs scale and unitary spectral geometry (scoped kernel)
 
-# This checks one owner and its source closure, not the root Lake package.
+# This checks four owners and their source closure, not the root Lake package.
 on:
   pull_request:
     paths:
       - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Canonical/FiniteMatrixGibbsFunctional.lean'
       - 'lean/InfoGeometry/Canonical/MatrixDetExpTraceJacobi.lean'
       - 'lean/InfoGeometry/Canonical/FiniteBogoliubovFrameDeformationEntropy.lean'
       - 'lean/InfoGeometry/Canonical/PolarFrameTraceDensity.lean'
       - 'lean/InfoGeometry/Canonical/QuantumRelativeSurprisal.lean'
       - 'lean/InfoGeometry/Canonical/MatrixEntropyUnitaryOrbit.lean'
-      - 'lean/InfoGeometry/Canonical/FiniteMatrixGibbsFunctional.lean'
       - 'lean/InfoGeometry/Canonical/MatrixGibbsEntropy.lean'
+      - 'lean/InfoGeometry/Canonical/MatrixGibbsScaleTransport.lean'
+      - 'lean/InfoGeometry/Canonical/FreeEnergyDissipationRate.lean'
+      - 'lean/InfoGeometry/Canonical/FreeEnergyEquilibriumUnitaryBridge.lean'
+      - 'lean/InfoGeometry/Core/JordanAssociatorRing.lean'
+      - 'lean/InfoGeometry/Core/JordanMultiplicationClosure.lean'
+      - 'lean/InfoGeometry/Canonical/MatrixUnitarySpectralOrthogonality.lean'
+      - 'lean/InfoGeometry/Canonical/MatrixGibbsMetriplecticEquilibrium.lean'
       - 'lean/InfoGeometry/All.lean'
       - 'tools/build_lock.py'
       - 'tools/quality/check_clifford_dirac.py'
@@ -20,6 +27,7 @@ on:
       - 'lake-manifest.json'
       - 'lean-toolchain'
       - 'docs/MATRIX_GIBBS_ENTROPY*.md'
+      - 'docs/INFORMATION_CARNOT_SCALE_CONTRACT.md'
       - '.github/workflows/matrix-gibbs-entropy.yml'
   workflow_dispatch:
 
@@ -38,7 +46,7 @@ jobs:
       SOURCE_REV: ${{ github.event.pull_request.head.sha || github.sha }}
       MATRIX_GIBBS_OUTPUT: verification-matrix-gibbs-${{ github.run_id }}-${{ github.run_attempt }}
       MATRIX_GIBBS_TARGETS: >-
-        ["InfoGeometry.Canonical.MatrixGibbsEntropy"]
+        ["InfoGeometry.Canonical.MatrixGibbsEntropy", "InfoGeometry.Canonical.MatrixGibbsScaleTransport", "InfoGeometry.Canonical.MatrixUnitarySpectralOrthogonality", "InfoGeometry.Canonical.MatrixGibbsMetriplecticEquilibrium"]
     steps:
       - name: Fetch exact source head and unchanged Mathlib pin
         shell: bash
@@ -82,7 +90,7 @@ jobs:
               'run_id': os.environ.get('GITHUB_RUN_ID'),
               'run_attempt': os.environ.get('GITHUB_RUN_ATTEMPT'),
               'lean_archive_sha256': '47bf4bbd78f70c2e9670598ab7124d92b6efb7330ff33e5fbb4030f6fd72e4e4',
-              'scope': 'One selected owner, repository source closure, and native axiom audit; not a root Lake build',
+              'scope': 'Four selected owners, repository source closure, and native axiom audit; not a root Lake build',
           }, indent=2) + '\n')
           with open(os.environ['GITHUB_ENV'], 'a') as env:
               env.write('MATHLIB_REV=' + actual + '\n')
@@ -187,7 +195,7 @@ jobs:
           path: pinned-mathlib/.lake
           key: matrix-gibbs-mathlib-4.34.1-${{ env.MATHLIB_REV }}-v1
 
-      - name: Compile the selected owner and run the native declaration audit
+      - name: Compile the selected owners and run the native declaration audit
         shell: bash
         run: |
           set -euo pipefail
@@ -212,11 +220,11 @@ jobs:
               raise RuntimeError('Report source head or exact target list differs')
           selected = [m for m in report.get('modules', []) if m.get('module') in targets]
           if len(selected) != len(targets) or {m['module'] for m in selected} != set(targets):
-              raise RuntimeError('Report does not contain the selected owner exactly once')
-          if len(targets) != 1 or targets != ['InfoGeometry.Canonical.MatrixGibbsEntropy']:
-              raise RuntimeError('This workflow accepts exactly its declared Gibbs entropy owner')
+              raise RuntimeError('Report does not contain every selected owner exactly once')
+          if targets != ['InfoGeometry.Canonical.MatrixGibbsEntropy', 'InfoGeometry.Canonical.MatrixGibbsScaleTransport', 'InfoGeometry.Canonical.MatrixUnitarySpectralOrthogonality', 'InfoGeometry.Canonical.MatrixGibbsMetriplecticEquilibrium']:
+              raise RuntimeError('This workflow accepts exactly its declared four matrix owners')
           if any(m.get('returncode') != 0 or m.get('warnings') != 0 for m in selected):
-              raise RuntimeError('The selected owner has compiler errors or warnings')
+              raise RuntimeError('A selected owner has compiler errors or warnings')
           hydration = json.loads((out / 'cache-hydration.json').read_text())
           modules = report.get('modules', [])
           if hydration.get('status') != 'passed' or [m.get('module') for m in modules] != hydration.get('repository_modules'):
@@ -225,8 +233,8 @@ jobs:
               raise RuntimeError('Every repository module must compile freshly and successfully')
           counts = report.get('declaration_counts', {})
           if set(counts) != set(targets) or any(type(counts[t]) is not int or counts[t] <= 0 for t in targets):
-              raise RuntimeError('Native audit did not cover the selected owner declarations')
-          print('One-owner compiler, warning, and complete native axiom checks passed; root Lake coverage is separate.')
+              raise RuntimeError('Native audit did not cover all selected owner declarations')
+          print('Four-owner compiler, warning, and complete native axiom checks passed; root Lake coverage is separate.')
           PY
 
       - name: Upload this attempt's reports, logs, and source snapshots

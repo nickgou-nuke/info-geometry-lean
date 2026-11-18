@@ -4,10 +4,12 @@ Task date: 2026-11-18, Europe/Sofia.
 
 ## Acceptance state
 
-Status: **draft; native compilation and all-declaration axiom acceptance
-pending**. The initial diagnostic pass failed and its reviewed repairs are
-included. The next local check is queued behind another task's genuinely held
-canonical build lock. A dedicated GitHub runner provides an independent
+Status: **draft; seven selected owners compile with zero warnings, while the
+complete eight-owner native and all-declaration axiom acceptance remains
+pending**. The exact-head replacement CI reached every selected owner and
+isolated five proof-elaboration errors and five warnings in the Carnot owner.
+Its focused repair is recorded below. One local check remains registered under
+the canonical build-lock protocol; GitHub CI provides an independent
 exact-PR-head acceptance route. This checkpoint does not equate mathematical
 review or static source scans with kernel acceptance.
 
@@ -17,9 +19,9 @@ Base: `08c34e03f610b452e03422037949196dc7d92d6d`.
 Lean: `leanprover/lean4:v4.34.1`.
 Mathlib: `d13f23b723b8a846827a245b89c10fc7d3f11612`.
 
-The development checkout has its own real Git directory and read-only object
-alternates to an existing checkout. It is not a linked Git worktree. Native
-verification uses a clean, separately initialized Mathlib at the tracked pin.
+The development and native-repair checkouts each have their own real Git
+directory. They are not linked Git worktrees. Native verification uses a clean,
+separately initialized Mathlib at the tracked pin.
 No Lake root or dependency directory was symlinked, no pinned dependency or
 maintained gate was changed, and no cache directory was cleaned or removed.
 
@@ -226,3 +228,48 @@ The remaining six selected source hashes are unchanged from the initial
 publication table. The full eight-target incremental local check and the
 exact-head CI workflow are the native acceptance routes. Both retain the
 complete declaration audit and selected-target zero-warning requirements.
+
+## Carnot-only native repair checkpoint: 2026-11-18
+
+Replacement CI run `44278175428`, job `134711568740`, checked exact source
+`c92a4c3bd336898dcf1e7bc7ea16d666905d21e1` and tree
+`4bbb2bedca8cfc988575e6e3d67e734fe7d4e88a`. All 44 repository modules were
+processed: 43 compiled, Carnot alone failed, and no module was blocked. The
+other seven selected owners compiled with zero warnings. This includes the
+previously blocked Gibbs orbit and exact radial logarithmic chart. The failed
+run did not reach the combined declaration axiom audit.
+
+Artifact `14415414760` was independently downloaded and reconciled: ZIP
+SHA-256 `e58c8b10d0d11265c8dabae83f2be03d1a2a2744454bd3881ca7a907084484a3`.
+All 49 evidence-manifest entries and all 44 frozen source hashes matched the
+reported snapshot.
+
+The sole Lean source repair addresses the five native errors and five warnings:
+
+- Native `HasDerivAt.const_add` exposes the same affine/scaled Hamiltonian
+  functions directly; the proof explicitly unfolds the affine definition and
+  normalizes the identity function.
+- The nonzero hot-heat fact is derived from the existing nonzero entropy stroke
+  and inverse temperature before the same cancellation theorem is applied.
+- The trace continuous-linear map is explicitly indexed, and its composition
+  and partition definition are exposed in the continuous-differentiability proof.
+- The actual heat-current definition is unfolded to identify the FTC integral.
+- Four pointwise algebraic lemmas omit the finite-index instances confirmed
+  unused by the native linter, and one unused simplifier argument is removed.
+
+Independent non-authoring review and integrating-parent diff/API review passed.
+The full matrix definitions, physical and analytic assumptions, product orders,
+and unrestricted endpoint-Hamiltonian scope are unchanged. Only unnecessary
+instance binders are removed from the four pointwise lemmas. No compiler,
+source-gate or dependency policy is altered.
+
+The repaired `Thermo.RealMatrixCarnot` source has SHA-256
+`d895edf347e68739c1e14ff18ea2f036db607b4a28ef8f87af0ecb5a1d6064b3`.
+The other seven selected source hashes are unchanged from the replacement CI
+snapshot. The repaired source passed the strict placeholder scan (zero hard
+findings, one reviewed soft notice) and semantic error gate (zero errors, two
+supporting-API notices); authored-file whitespace checks also passed. The
+actual installed commit hook remains required before publication. The next
+exact-head workflow must still compile all eight
+targets without warnings and complete the all-owned declaration audit before
+native acceptance can be claimed.

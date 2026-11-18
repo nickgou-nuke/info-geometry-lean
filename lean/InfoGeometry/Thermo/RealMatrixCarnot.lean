@@ -41,6 +41,7 @@ def stateEntropy (β : ℝ) (H : Mat) : ℝ := entropy (exponent β H)
 
 def internalEnergy (β : ℝ) (H : Mat) : ℝ := expectation (exponent β H) H
 
+omit [Fintype n] [DecidableEq n] in
 theorem exponent_selfAdjoint (β : ℝ) (H : Mat) (hH : IsSelfAdjoint H) :
     IsSelfAdjoint (exponent β H) := by
   rw [isSelfAdjoint_iff]
@@ -153,8 +154,8 @@ theorem entropy_scaling_segment (H : Mat) (β a b t : ℝ)
 /-- Actual derivative of the changing Hamiltonian on a scale segment. -/
 theorem hasDerivAt_scaledHamiltonian (H : Mat) (a b t : ℝ) :
     HasDerivAt (fun s => scaleSegment a b s • H) ((b - a) • H) t := by
-  simpa only [scaleSegment, zero_add, one_mul] using
-    ((hasDerivAt_const t a).add ((hasDerivAt_id t).mul_const (b - a))).smul_const H
+  simpa only [scaleSegment, id_eq, one_mul] using
+    (((hasDerivAt_id t).mul_const (b - a)).const_add a).smul_const H
 
 /-- Work done on the system on the constant-density scale segment. -/
 def scalingWorkOn (β a b : ℝ) (H : Mat) : ℝ :=
@@ -163,7 +164,7 @@ def scalingWorkOn (β a b : ℝ) (H : Mat) : ℝ :=
 theorem scalingWorkOn_integral (β a b : ℝ) (H : Mat) :
     (∫ _t in (0 : ℝ)..1,
       Matrix.trace (state β H * ((b - a) • H))) = scalingWorkOn β a b H := by
-  simp [Matrix.mul_smul, Matrix.trace_smul, scalingWorkOn, internalEnergy,
+  simp [Matrix.trace_smul, scalingWorkOn, internalEnergy,
     expectation, state]
 
 /-! ## Four strokes and the Carnot efficiency -/
@@ -242,8 +243,11 @@ theorem efficiency_eq_one_sub_scale (β c : ℝ) (H₀ H₁ : Mat)
     (hβ : β ≠ 0) (hc : c ≠ 0)
     (hS : stateEntropy β H₁ ≠ stateEntropy β H₀) :
     efficiency β c H₀ H₁ = 1 - c := by
-  rw [efficiency, cycleWork_eq_one_sub_scale_mul_hotHeat β c H₀ H₁ hβ hc,
-    mul_div_cancel_right₀ _ (div_ne_zero (sub_ne_zero.mpr hS) hβ)]
+  have hQ : hotHeat β H₀ H₁ ≠ 0 := by
+    unfold hotHeat
+    exact div_ne_zero (sub_ne_zero.mpr hS) hβ
+  rw [efficiency, cycleWork_eq_one_sub_scale_mul_hotHeat β c H₀ H₁ hβ hc]
+  exact mul_div_cancel_right₀ _ hQ
 
 theorem hotHeat_pos (β : ℝ) (H₀ H₁ : Mat) (hβ : 0 < β)
     (hS : stateEntropy β H₀ < stateEntropy β H₁) : 0 < hotHeat β H₀ H₁ :=
@@ -260,14 +264,17 @@ theorem cycleWork_pos (β c : ℝ) (H₀ H₁ : Mat) (hβ : 0 < β)
 /-- The hot Hamiltonian path retains both arbitrary endpoint matrices. -/
 def affineHamiltonian (H₀ H₁ : Mat) (t : ℝ) : Mat := H₀ + t • (H₁ - H₀)
 
+omit [Fintype n] [DecidableEq n] in
 @[simp] theorem affineHamiltonian_zero (H₀ H₁ : Mat) :
     affineHamiltonian H₀ H₁ 0 = H₀ := by simp [affineHamiltonian]
 
+omit [Fintype n] [DecidableEq n] in
 @[simp] theorem affineHamiltonian_one (H₀ H₁ : Mat) :
     affineHamiltonian H₀ H₁ 1 = H₁ := by
   simp only [affineHamiltonian, one_smul]
   abel
 
+omit [Fintype n] [DecidableEq n] in
 theorem affineHamiltonian_selfAdjoint (H₀ H₁ : Mat)
     (h₀ : IsSelfAdjoint H₀) (h₁ : IsSelfAdjoint H₁) (t : ℝ) :
     IsSelfAdjoint (affineHamiltonian H₀ H₁ t) := by
@@ -280,8 +287,8 @@ theorem contDiff_affineHamiltonian (H₀ H₁ : Mat) :
 
 theorem hasDerivAt_affineHamiltonian (H₀ H₁ : Mat) (t : ℝ) :
     HasDerivAt (affineHamiltonian H₀ H₁) (H₁ - H₀) t := by
-  simpa only [zero_add, one_smul] using
-    (hasDerivAt_const t H₀).add ((hasDerivAt_id t).smul_const (H₁ - H₀))
+  simpa only [affineHamiltonian, id_eq, one_smul] using
+    ((hasDerivAt_id t).smul_const (H₁ - H₀)).const_add H₀
 
 /-- The actual Gibbs state along the affine Hamiltonian is continuously
 differentiable. Positivity discharges every inverse-partition domain premise. -/
@@ -296,8 +303,9 @@ theorem contDiff_state_affine [Nonempty n] (β : ℝ) (H₀ H₁ : Mat)
     exact (NormedSpace.exp_analytic (𝕂 := ℝ) K).contDiffAt
   have hweight := hexp.comp hK
   have hZ : ContDiff ℝ 1
-      (fun t => partition (exponent β (affineHamiltonian H₀ H₁ t))) :=
-    traceCLM.contDiff.comp hweight
+      (fun t => partition (exponent β (affineHamiltonian H₀ H₁ t))) := by
+    simpa only [Function.comp_def, partition, traceCLM_apply] using
+      ((traceCLM (n := n)).contDiff.comp hweight)
   have hZne : ∀ t, partition (exponent β (affineHamiltonian H₀ H₁ t)) ≠ 0 := by
     intro t
     exact (partition_pos _ (exponent_selfAdjoint β _
@@ -340,7 +348,8 @@ theorem affineHeat_integral_eq_hotHeat [Nonempty n] (β : ℝ) (H₀ H₁ : Mat)
     ((continuous_affineHeatCurrent β H₀ H₁ h₀ h₁).intervalIntegrable 0 1)
   change _ = (_ - _) / β
   apply (eq_div_iff hβ).mpr
-  simpa only [affineHamiltonian_zero, affineHamiltonian_one, mul_comm] using hFTC
+  simpa only [affineHeatCurrent, affineHamiltonian_zero, affineHamiltonian_one,
+    mul_comm] using hFTC
 
 /-- The isothermal work budget is the integral of the actual work current. -/
 theorem affineWork_integral_eq_hotWorkOn [Nonempty n] (β : ℝ) (H₀ H₁ : Mat)

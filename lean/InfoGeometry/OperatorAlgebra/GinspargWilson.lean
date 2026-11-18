@@ -188,21 +188,21 @@ variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 /-- The constructed operator maps the modified positive sector into the negative sector. -/
 theorem overlapDirac_maps_left_range
     (gamma epsilon : ChiralInvolution (Module.End ℝ V)) :
-    Set.MapsTo (overlapDirac gamma epsilon)
+    Set.MapsTo (overlapDirac gamma epsilon : Module.End ℝ V)
       (LinearMap.range epsilon.Pleft) (LinearMap.range gamma.Pright) := by
   intro x hx
   rcases hx with ⟨y, rfl⟩
-  refine ⟨overlapDirac gamma epsilon y, ?_⟩
+  refine ⟨(overlapDirac gamma epsilon : Module.End ℝ V) y, ?_⟩
   exact (LinearMap.congr_fun (overlapDirac_mul_Pleft gamma epsilon) y).symm
 
 /-- The constructed operator maps the modified negative sector into the positive sector. -/
 theorem overlapDirac_maps_right_range
     (gamma epsilon : ChiralInvolution (Module.End ℝ V)) :
-    Set.MapsTo (overlapDirac gamma epsilon)
+    Set.MapsTo (overlapDirac gamma epsilon : Module.End ℝ V)
       (LinearMap.range epsilon.Pright) (LinearMap.range gamma.Pleft) := by
   intro x hx
   rcases hx with ⟨y, rfl⟩
-  refine ⟨overlapDirac gamma epsilon y, ?_⟩
+  refine ⟨(overlapDirac gamma epsilon : Module.End ℝ V) y, ?_⟩
   exact (LinearMap.congr_fun (overlapDirac_mul_Pright gamma epsilon) y).symm
 
 end LinearMaps

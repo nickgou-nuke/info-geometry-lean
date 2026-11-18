@@ -44,24 +44,29 @@ def liftMatrix (A : Matrix n n R) : Matrix m m R := U * A * V
 def stabilize (P : Matrix n n R) (E : Matrix m m R) : Matrix m m R :=
   liftMatrix U V P + E
 
+omit [Fintype m] [DecidableEq m] [DecidableEq n] in
 theorem liftMatrix_add (A B : Matrix n n R) :
     liftMatrix U V (A + B) = liftMatrix U V A + liftMatrix U V B := by
   simp only [liftMatrix, Matrix.mul_add, Matrix.add_mul]
 
+omit [Fintype m] [DecidableEq m] [DecidableEq n] in
 theorem liftMatrix_sub (A B : Matrix n n R) :
     liftMatrix U V (A - B) = liftMatrix U V A - liftMatrix U V B := by
   simp only [liftMatrix, Matrix.mul_sub, Matrix.sub_mul]
 
+omit [Fintype m] [DecidableEq m] in
 /-- The ambient unit is the range idempotent, not necessarily the full unit. -/
 theorem liftMatrix_one : liftMatrix U V 1 = U * V := by
   simp only [liftMatrix, Matrix.mul_one]
 
+omit [DecidableEq m] in
 /-- A split embedding preserves products in their original order. -/
 theorem liftMatrix_mul (hVU : V * U = 1) (A B : Matrix n n R) :
     liftMatrix U V A * liftMatrix U V B = liftMatrix U V (A * B) := by
   simp only [liftMatrix, Matrix.mul_assoc, ← Matrix.mul_assoc V U,
     hVU, Matrix.one_mul]
 
+omit [DecidableEq m] [DecidableEq n] in
 /-- The fixed sector annihilates every lifted matrix on the left. -/
 theorem complement_mul_lift {E : Matrix m m R} (hEU : E * U = 0)
     (A : Matrix n n R) : E * liftMatrix U V A = 0 := by
@@ -69,24 +74,28 @@ theorem complement_mul_lift {E : Matrix m m R} (hEU : E * U = 0)
   rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, hEU,
     Matrix.zero_mul, Matrix.zero_mul]
 
+omit [DecidableEq m] [DecidableEq n] in
 /-- The fixed sector annihilates every lifted matrix on the right. -/
 theorem lift_mul_complement {E : Matrix m m R} (hVE : V * E = 0)
     (A : Matrix n n R) : liftMatrix U V A * E = 0 := by
   unfold liftMatrix
   rw [Matrix.mul_assoc, hVE, Matrix.mul_zero]
 
+omit [DecidableEq m] in
 theorem stabilize_mul_lift (hVU : V * U = 1) {E : Matrix m m R}
     (hEU : E * U = 0) (P A : Matrix n n R) :
     stabilize U V P E * liftMatrix U V A = liftMatrix U V (P * A) := by
   rw [stabilize, Matrix.add_mul, liftMatrix_mul U V hVU,
     complement_mul_lift U V hEU, add_zero]
 
+omit [DecidableEq m] in
 theorem lift_mul_stabilize (hVU : V * U = 1) {E : Matrix m m R}
     (hVE : V * E = 0) (A P : Matrix n n R) :
     liftMatrix U V A * stabilize U V P E = liftMatrix U V (A * P) := by
   rw [stabilize, Matrix.mul_add, liftMatrix_mul U V hVU,
     lift_mul_complement U V hVE, add_zero]
 
+omit [DecidableEq m] in
 /-- An idempotent on the embedded space and a disjoint fixed idempotent
 give an idempotent on the full space. -/
 theorem stabilize_idempotent (hVU : V * U = 1) {P : Matrix n n R}
@@ -99,6 +108,7 @@ theorem stabilize_idempotent (hVU : V * U = 1) {P : Matrix n n R}
     complement_mul_lift U V hEU, hP, hE]
   simp only [add_zero, zero_add]
 
+omit [DecidableEq m] in
 /-- The first-order idempotent equation survives a fixed complementary sector. -/
 theorem stabilize_tangent (hVU : V * U = 1) {E : Matrix m m R}
     (hEU : E * U = 0) (hVE : V * E = 0) {P A : Matrix n n R}
@@ -125,6 +135,7 @@ theorem projectorCurvature_stabilize (hVU : V * U = 1)
   rw [commutator_lift U V hVU, stabilize_mul_lift U V hVU hEU,
     lift_mul_stabilize U V hVU hVE]
 
+omit [DecidableEq m] in
 /-- Cyclicity for rectangular products gives exact trace preservation. -/
 theorem trace_liftMatrix (hVU : V * U = 1) (A : Matrix n n R) :
     Matrix.trace (liftMatrix U V A) = Matrix.trace A := by

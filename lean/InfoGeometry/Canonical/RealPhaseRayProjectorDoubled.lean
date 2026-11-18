@@ -38,12 +38,14 @@ theorem phaseAxis_isRealComplexStructure :
   simpa only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.neg_apply,
     ContinuousLinearMap.id_apply] using h
 
+omit [CompleteSpace E] in
 theorem observerForm_isSymm : (doubledHilbertBilin (E := E)).IsSymm := by
   constructor
   intro x y
   change inner ℝ x y = inner ℝ y x
   exact real_inner_comm y x
 
+omit [CompleteSpace E] in
 theorem phaseAxis_observer_skew (x y : DoubledSpace E) :
     doubledHilbertBilin (phaseAxis x) y = -doubledHilbertBilin x (phaseAxis y) := by
   change inner ℝ (clockAxis x) y = -inner ℝ x (clockAxis y)
@@ -62,6 +64,7 @@ theorem phaseProjector_idempotent (u : DoubledSpace E)
   rayProjector_idempotent doubledHilbertBilin phaseAxis observerForm_isSymm
     phaseAxis_isRealComplexStructure phaseAxis_observer_skew u hu
 
+omit [CompleteSpace E] in
 theorem phaseProjector_adjoint (u : DoubledSpace E) :
     LinearMap.IsAdjointPair doubledHilbertBilin doubledHilbertBilin
       (phaseProjector u) (phaseProjector u) :=

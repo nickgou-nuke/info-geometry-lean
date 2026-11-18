@@ -87,7 +87,6 @@ theorem rayProjector_idempotent (hB : B.IsSymm) (hJ : IsRealComplexStructure J)
   rw [rayProjector_apply B J u x, map_add, map_smul, map_smul,
     rayProjector_self B J hB hskew u hu,
     rayProjector_phase B J hB hJ hskew u hu]
-  rfl
 
 /-- Self-adjointness uses the specified bilinear form, which may be indefinite. -/
 theorem rayProjector_adjoint (hB : B.IsSymm) (u : V) :

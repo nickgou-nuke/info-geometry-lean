@@ -7,6 +7,7 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.LinearAlgebra.Matrix.PosDef
 import Mathlib.LinearAlgebra.Matrix.SchurComplement
 import Mathlib.Basic.Real.Basic
+import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.Module
 import Mathlib.Tactic.NoncommRing
@@ -46,8 +47,8 @@ theorem blockDiagonal_quadratic (A : Matrix n n ℝ) (B : Matrix m m ℝ)
     star x ⬝ᵥ (fromBlocks A 0 0 B *ᵥ x) =
       star (x ∘ Sum.inl) ⬝ᵥ (A *ᵥ (x ∘ Sum.inl)) +
         star (x ∘ Sum.inr) ⬝ᵥ (B *ᵥ (x ∘ Sum.inr)) := by
-  simpa only [fromBlocks_mulVec, zero_mulVec, add_zero, zero_add] using
-    (Matrix.dotProduct_block (star x) (fromBlocks A 0 0 B *ᵥ x))
+  simp only [fromBlocks_mulVec, zero_mulVec, add_zero, zero_add, dotProduct,
+    Fintype.sum_sum_type, Pi.star_apply, Function.comp_apply, Sum.elim_inl, Sum.elim_inr]
 
 /-- Strict positivity survives a direct sum, including empty index types. -/
 theorem posDef_fromBlocks_diagonal {A : Matrix n n ℝ} {B : Matrix m m ℝ}

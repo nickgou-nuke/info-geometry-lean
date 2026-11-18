@@ -139,3 +139,39 @@ Berry curvature, a local chiral gauge measure, anomaly cancellation, or a
 classification of topological sectors. The source contract lists the missing
 implications explicitly. The supplied-sign, positive-matrix, and real-phase
 branches have no unproved connecting arrows hidden in structures or names.
+
+## Native diagnostic repair checkpoint: 2026-11-18
+
+The first focused run `44105266727`, job `134115770037`, completed with
+native failures at source `3a89f43c1d3bb5a6e7ccc28aa5d3504345342be6`.
+It did not reach a successful all-declaration axiom audit. This supersedes the
+earlier queued checkpoint without erasing that historical source record.
+
+The reviewed repair changes only proof/API details:
+
+- After the native unitary cancellation, the two ordered adjoint-square
+  proofs close their remaining additive identities with `abel`.
+- The block quadratic form uses the actual finite sum over the sum index,
+  including the native star/composition evaluation rules.
+- The transfer owner imports the native real star-order instances explicitly.
+- A redundant `rfl` after a closing rewrite is removed from idempotence.
+- Three real doubled-space lemmas omit an unused completeness instance.
+
+No mathematical conclusion is weakened. The proof/API delta received a
+non-authoring source review and parent inspection; native revalidation is
+pending. The same focused workflow checks the repaired exact PR head,
+requiring all four selected targets to compile with zero warnings and every
+owned declaration to have only the allowed foundational axioms.
+
+Strict placeholder scans passed on all four repaired owners with zero hard
+findings. The semantic error gate passed with zero errors and six reviewed
+supporting-API notices. The actual repair commit uses the installed static
+proof gate. No compiler, dependency pin, checker, or cache is changed by this
+repair. The separate information-Carnot branch is not a dependency.
+
+| Repaired owner | Source SHA-256 |
+| --- | --- |
+| `Algebra/OverlapInvolutionPair` | `bce130b96e206f79c8633e736974275b70f6157fcd9a3cde62c2d9a2dff53b45` |
+| `Canonical/RealDomainWallTransfer` | `763898922652bb72488522a8696fbbab9ba6633879ba0525f7a41e3678689abc` |
+| `Canonical/RealPhaseRayProjector` | `9501022ea4ca3b75ffb19c2602cb1ebed8aee66b1890419460cae046295d75e5` |
+| `Canonical/RealPhaseRayProjectorDoubled` | `c13ad338e11758e9398c4d64ea6f26adb1043b5a43c9a362cdb2f3e9a045f8b1` |

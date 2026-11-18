@@ -160,7 +160,7 @@ theorem dirac_star_mul (gamma epsilon : A)
           star (phase gamma epsilon) * phase gamma epsilon := by noncomm_ring
     _ = (1 + phase gamma epsilon) + (1 + star (phase gamma epsilon)) := by
       rw [Unitary.star_mul_self_of_mem hunit]
-      noncomm_ring
+      abel
 
 /-- The other ordered adjoint square has the same value. -/
 theorem dirac_mul_star (gamma epsilon : A)
@@ -178,7 +178,7 @@ theorem dirac_mul_star (gamma epsilon : A)
           phase gamma epsilon * star (phase gamma epsilon) := by noncomm_ring
     _ = (1 + phase gamma epsilon) + (1 + star (phase gamma epsilon)) := by
       rw [Unitary.mul_star_self_of_mem hunit]
-      noncomm_ring
+      abel
 
 /-- The overlap operator is normal in the native star-algebra sense. -/
 theorem dirac_isStarNormal (gamma epsilon : A)

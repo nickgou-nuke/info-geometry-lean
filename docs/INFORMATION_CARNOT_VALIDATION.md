@@ -6,9 +6,9 @@ Task date: 2026-11-18, Europe/Sofia.
 
 Status: **draft; seven selected owners compile with zero warnings, while the
 complete eight-owner native and all-declaration axiom acceptance remains
-pending**. The exact-head replacement CI reached every selected owner and
-isolated five proof-elaboration errors and five warnings in the Carnot owner.
-Its focused repair is recorded below. One local check remains registered under
+pending**. The latest exact-head CI cleared all selected-source warnings and
+isolated one remaining proof-elaboration error in the Carnot owner.
+Its focused repair is recorded below. One local check remains managed under
 the canonical build-lock protocol; GitHub CI provides an independent
 exact-PR-head acceptance route. This checkpoint does not equate mathematical
 review or static source scans with kernel acceptance.
@@ -273,3 +273,35 @@ actual installed commit hook remains required before publication. The next
 exact-head workflow must still compile all eight
 targets without warnings and complete the all-owned declaration audit before
 native acceptance can be claimed.
+
+## Explicit affine-function repair checkpoint: 2026-11-18
+
+CI run `44280866692`, job `134720878516`, checked exact source
+`634ade4679e79aba310a1dc024d36b52ee0fc8a8` and tree
+`32db7c81e724033571fe15dbfbbcdfba763deb03`. Carnot now reports zero warnings
+and only one error; all other seven selected owners still compile with zero
+warnings. The complete closure has 43 successful modules, one failed module
+and no blocked modules. The combined native declaration audit has not run.
+
+The remaining error is the derivative of the partially applied function
+`affineHamiltonian H₀ H₁`. Its fully applied equation in the simplifier did
+not expose that function at the required elaboration boundary. The repair
+first uses `change` to expose the exact lambda `fun s => H₀ + s • (H₁-H₀)`,
+then applies the already reviewed native derivative proof. This is the only
+Lean source delta. The theorem statement, instances, assumptions and every
+path/current definition remain unchanged.
+
+Both source reviewers independently checked the pinned native matrix norm
+construction: its `replaceTopology` and `replaceUniformity` steps retain the
+existing matrix product structures. The expanded diagnostic's different
+instance routes therefore do not justify introducing a new topology or
+algebraic instance. The independent reviewer confirmed the complete two-line
+delta and exact candidate hash.
+
+The repaired Carnot source SHA-256 is
+`c89dfc5df0f7db509df05f9627af0de8b8a4b402619b397ba7d5391bf33838b6`.
+The other seven selected source hashes are unchanged. The failed run uploaded
+artifact `14417248350`, with workflow-reported ZIP SHA-256
+`a04c8b27886fa205990f207b8fda7524db1f3540133f1385154b5857ae5fe9ab`.
+The focused native and all-owned axiom gates remain required on the repaired
+source; this source/API review does not claim their acceptance.

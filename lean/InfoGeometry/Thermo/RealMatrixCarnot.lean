@@ -287,7 +287,8 @@ theorem contDiff_affineHamiltonian (H₀ H₁ : Mat) :
 
 theorem hasDerivAt_affineHamiltonian (H₀ H₁ : Mat) (t : ℝ) :
     HasDerivAt (affineHamiltonian H₀ H₁) (H₁ - H₀) t := by
-  simpa only [affineHamiltonian, id_eq, one_smul] using
+  change HasDerivAt (fun s : ℝ => H₀ + s • (H₁ - H₀)) (H₁ - H₀) t
+  simpa only [id_eq, one_smul] using
     ((hasDerivAt_id t).smul_const (H₁ - H₀)).const_add H₀
 
 /-- The actual Gibbs state along the affine Hamiltonian is continuously

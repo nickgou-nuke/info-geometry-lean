@@ -235,6 +235,7 @@ theorem weightedCovariance_eq (σ A B : Mat) (hσ : σ.IsHermitian)
     weightedPairing_observableReplacement_left σ A B,
     weightedPairing_observableReplacement_left σ A (observableReplacement σ B),
     weightedTrace_observableReplacement σ B htrace, sub_self, sub_zero]
+  rfl
 
 /-- Positivity of centered covariance follows on the same full matrix carrier. -/
 theorem weightedCovariance_self_nonneg (σ A : Mat) (hσ : σ.PosSemidef) :

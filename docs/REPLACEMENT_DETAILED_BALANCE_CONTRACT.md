@@ -210,7 +210,10 @@ and rejected the new covariance proof's subtraction layout. It also reported
 the deprecated `Matrix.star_mul` alias. The reviewed repair matches Lean's
 actual expansion order and uses `StarMul.star_mul`; all theorem statements,
 hypotheses, and ordered matrix products are unchanged. The failed development
-receipt is retained separately from subsequent acceptance evidence.
+receipt is retained separately from subsequent acceptance evidence. Fresh CI
+then required an explicit final `rfl` to identify `weightedPairing` with its
+weighted-trace definition after the covariance rewrites. That independently
+reviewed definitional closure changes no mathematical statement.
 
 The previously observed root Lake path-dependency blocker remains outside
 this scoped acceptance; no whole-package certificate is implied.

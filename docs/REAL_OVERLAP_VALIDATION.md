@@ -175,3 +175,25 @@ repair. The separate information-Carnot branch is not a dependency.
 | `Canonical/RealDomainWallTransfer` | `763898922652bb72488522a8696fbbab9ba6633879ba0525f7a41e3678689abc` |
 | `Canonical/RealPhaseRayProjector` | `9501022ea4ca3b75ffb19c2602cb1ebed8aee66b1890419460cae046295d75e5` |
 | `Canonical/RealPhaseRayProjectorDoubled` | `c13ad338e11758e9398c4d64ea6f26adb1043b5a43c9a362cdb2f3e9a045f8b1` |
+
+## Second native diagnostic repair: 2026-11-18
+
+Run `44273454037`, job `134695541787`, checked source
+`5154cf3fcc73d7b1839ffe790db33a3a06593832`. The overlap involution,
+positive transfer, and general real phase-projector owners each compiled with
+zero warnings. All repository dependencies compiled. The remaining doubled
+owner failed, so no successful combined declaration audit was obtained.
+
+The next repair preserves every statement and the actual four-dimensional
+probe vectors. It exposes the definitionally equal pointwise clock-axis square
+on both the goal and evaluated native hypothesis; removes the reported
+unused/deprecated simplifier arguments; evaluates the actual Euclidean
+coordinate inner-product sum for the `(3/5, 4/5)` unit vector; and evaluates its
+basis-vector overlap by `EuclideanSpace.inner_single_left`. Two independent
+source inspections confirmed the exact native APIs and unchanged content.
+
+The repaired doubled owner has SHA-256
+`c5eb82873830e36f6f8bcff1375eb0ea0da0264a6e1d6f5f3b2311c2e92f5b7c`.
+The other three selected owners retain the source hashes in the preceding
+checkpoint. Full focused native revalidation remains required; three successful
+module compilations are not the combined four-owner axiom acceptance.

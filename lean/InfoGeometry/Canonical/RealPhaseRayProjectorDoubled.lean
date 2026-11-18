@@ -33,10 +33,11 @@ theorem phaseAxis_isRealComplexStructure :
     IsRealComplexStructure (phaseAxis (E := E)) := by
   apply LinearMap.ext
   intro x
+  change clockAxis (clockAxis x) = -x
   have h := congrArg (fun T : DoubledSpace E →L[ℝ] DoubledSpace E => T x)
     (clockAxis_sq E)
-  simpa only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.neg_apply,
-    ContinuousLinearMap.id_apply] using h
+  change clockAxis (clockAxis x) = -x at h
+  exact h
 
 omit [CompleteSpace E] in
 theorem observerForm_isSymm : (doubledHilbertBilin (E := E)).IsSymm := by
@@ -50,7 +51,7 @@ theorem phaseAxis_observer_skew (x y : DoubledSpace E) :
     doubledHilbertBilin (phaseAxis x) y = -doubledHilbertBilin x (phaseAxis y) := by
   change inner ℝ (clockAxis x) y = -inner ℝ x (clockAxis y)
   rw [clockAxis_apply, clockAxis_apply]
-  simp only [WithLp.prod_inner_apply, WithLp.ofLp_toLp, WithLp.ofLp_fst,
+  simp only [WithLp.prod_inner_apply, WithLp.ofLp_fst,
     WithLp.ofLp_snd, inner_neg_left, inner_neg_right]
   ring
 
@@ -95,12 +96,13 @@ theorem probeU_unit : doubledHilbertBilin probeU probeU = 1 := by
 
 theorem probeV_unit : doubledHilbertBilin probeV probeV = 1 := by
   rw [probeV, doubledHilbertBilin_to_doubled]
-  norm_num [inner_add_left, inner_add_right,
-    real_inner_smul_left, real_inner_smul_right]
+  simp only [PiLp.inner_apply, Fin.sum_univ_two]
+  norm_num
 
 theorem probe_overlap : doubledHilbertBilin probeU probeV = 3 / 5 := by
   rw [probeU, probeV, doubledHilbertBilin_to_doubled]
-  norm_num [inner_add_right, real_inner_smul_right]
+  simp only [EuclideanSpace.basisFun_apply, EuclideanSpace.inner_single_left]
+  norm_num
 
 theorem probe_phase_overlap : doubledHilbertBilin (phaseAxis probeU) probeV = 0 := by
   change doubledHilbertBilin (clockAxis probeU) probeV = 0

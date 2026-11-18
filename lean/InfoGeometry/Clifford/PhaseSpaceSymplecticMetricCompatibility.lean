@@ -75,14 +75,14 @@ theorem neg_phase_symplectic (G : MetricDatum E) (X Y : PhaseSpaceCarrier E) :
 theorem neg_phase_mul_para (G : MetricDatum E) :
     (-phase G) * neutralParaInvolution = (ofMetric G).polarization := by
   apply LinearMap.ext
-  intro X
+  rintro ⟨x, ξ⟩
   simp [phase_apply, ofMetric]
 
 /-- Reversing the order negates the same polarization. -/
 theorem para_mul_neg_phase (G : MetricDatum E) :
     neutralParaInvolution * (-phase G) = -(ofMetric G).polarization := by
   apply LinearMap.ext
-  intro X
+  rintro ⟨x, ξ⟩
   simp [phase_apply, ofMetric]
 
 section Nondegenerate

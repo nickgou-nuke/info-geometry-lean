@@ -53,9 +53,9 @@ theorem ad_commute_replacement_normalizedGibbs
 /-- The actual CFC Gibbs target couples the relaxation family to the physical
 Hamiltonian derivation on the same full matrix carrier. -/
 theorem ad_commute_relaxation_normalizedGibbs
-    (H : Mat) (hH : H.IsHermitian) (β : ℝ) (λ : ℂ) :
-    Commute (ad ℂ ((-Complex.I) • H)) (relaxation (normalizedGibbs H hH β) λ) :=
-  ad_relaxation_commute_of_stationary _ _ λ (ad_normalizedGibbs_zero H hH β)
+    (H : Mat) (hH : H.IsHermitian) (β : ℝ) (weight : ℂ) :
+    Commute (ad ℂ ((-Complex.I) • H)) (relaxation (normalizedGibbs H hH β) weight) :=
+  ad_relaxation_commute_of_stationary _ _ weight (ad_normalizedGibbs_zero H hH β)
 
 /-- The same stationary target gives radial/orbit trace orthogonality. -/
 theorem trace_gibbs_radial_orbit_zero
@@ -85,17 +85,17 @@ theorem normalizedGibbs_energy_rate
   rw [ad_apply]
   exact sub_eq_zero.mpr ((Commute.refl H).smul_left (-Complex.I)).eq
 
-/-- The finite relaxation formula changes system energy by `1 - λ` times
+/-- The finite relaxation formula changes system energy by `1 - weight` times
 its mismatch with the native Gibbs target. This identity is algebraic for
-every real `λ`; the positive-channel regime is `0 ≤ λ ≤ 1`. -/
+every real `weight`; the positive-channel regime is `0 ≤ weight ≤ 1`. -/
 theorem normalizedGibbs_relaxation_energy_difference
-    (H ρ : Mat) (hH : H.IsHermitian) (β λ : ℝ)
+    (H ρ : Mat) (hH : H.IsHermitian) (β weight : ℝ)
     (hρ : Matrix.trace ρ = 1) :
-    (Matrix.trace (H * relaxation (normalizedGibbs H hH β) (λ : ℂ) ρ)).re -
+    (Matrix.trace (H * relaxation (normalizedGibbs H hH β) (weight : ℂ) ρ)).re -
         (Matrix.trace (H * ρ)).re =
-      (1 - λ) * ((Matrix.trace (H * normalizedGibbs H hH β)).re -
+      (1 - weight) * ((Matrix.trace (H * normalizedGibbs H hH β)).re -
         (Matrix.trace (H * ρ)).re) := by
-  have h := trace_relaxation_energy_difference H (normalizedGibbs H hH β) (λ : ℂ) ρ
+  have h := trace_relaxation_energy_difference H (normalizedGibbs H hH β) (weight : ℂ) ρ
   rw [hρ, one_mul] at h
   simpa [smul_eq_mul, Complex.mul_re] using congrArg Complex.re h
 

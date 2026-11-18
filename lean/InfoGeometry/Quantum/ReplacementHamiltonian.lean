@@ -83,29 +83,29 @@ theorem ad_replacement_commute_iff (K σ : Mat)
 
 /-- The relaxation family has the exact scaled covariance defect of its
 replacement part. No input matrix is required to commute with the generator. -/
-theorem ad_relaxation_defect (K σ : Mat) (λ : ℂ) (X : Mat) :
-    ad ℂ K (relaxation σ λ X) - relaxation σ λ (ad ℂ K X) =
-      (1 - λ) • (Matrix.trace X • ad ℂ K σ) := by
+theorem ad_relaxation_defect (K σ : Mat) (weight : ℂ) (X : Mat) :
+    ad ℂ K (relaxation σ weight X) - relaxation σ weight (ad ℂ K X) =
+      (1 - weight) • (Matrix.trace X • ad ℂ K σ) := by
   simp only [relaxation_apply, map_add, map_smul]
   calc
-    λ • ad ℂ K X + (1 - λ) • ad ℂ K (replacement σ X) -
-        (λ • ad ℂ K X + (1 - λ) • replacement σ (ad ℂ K X)) =
-        (1 - λ) • (ad ℂ K (replacement σ X) - replacement σ (ad ℂ K X)) := by
+    weight • ad ℂ K X + (1 - weight) • ad ℂ K (replacement σ X) -
+        (weight • ad ℂ K X + (1 - weight) • replacement σ (ad ℂ K X)) =
+        (1 - weight) • (ad ℂ K (replacement σ X) - replacement σ (ad ℂ K X)) := by
       rw [smul_sub]
       abel
-    _ = (1 - λ) • (Matrix.trace X • ad ℂ K σ) := by
+    _ = (1 - weight) • (Matrix.trace X • ad ℂ K σ) := by
       rw [ad_replacement_defect]
 
 /-- Stationarity of the target makes every relaxation map commute with the
 inner derivation on the full matrix algebra. -/
-theorem ad_relaxation_commute_of_stationary (K σ : Mat) (λ : ℂ)
-    (hKσ : ad ℂ K σ = 0) : Commute (ad ℂ K) (relaxation σ λ) := by
-  change ad ℂ K * relaxation σ λ = relaxation σ λ * ad ℂ K
+theorem ad_relaxation_commute_of_stationary (K σ : Mat) (weight : ℂ)
+    (hKσ : ad ℂ K σ = 0) : Commute (ad ℂ K) (relaxation σ weight) := by
+  change ad ℂ K * relaxation σ weight = relaxation σ weight * ad ℂ K
   apply LinearMap.ext
   intro X
-  change ad ℂ K (relaxation σ λ X) = relaxation σ λ (ad ℂ K X)
+  change ad ℂ K (relaxation σ weight X) = relaxation σ weight (ad ℂ K X)
   apply sub_eq_zero.mp
-  simpa only [hKσ, smul_zero] using ad_relaxation_defect K σ λ X
+  simpa only [hKσ, smul_zero] using ad_relaxation_defect K σ weight X
 
 /-- The radial direction and the conjugation-orbit tangent have this exact
 trace defect before the reference state is assumed stationary. -/
@@ -185,23 +185,23 @@ theorem energy_rate (K H σ ρ : Mat) (γ : ℝ)
 
 /-- The finite relaxation stroke has exactly this energy difference. The
 centered-action theorem controls the full matrix change before taking trace. -/
-theorem trace_relaxation_energy_difference (H σ : Mat) (λ : ℂ) (ρ : Mat) :
-    Matrix.trace (H * relaxation σ λ ρ) - Matrix.trace (H * ρ) =
-      (1 - λ) • (Matrix.trace ρ * Matrix.trace (H * σ) - Matrix.trace (H * ρ)) := by
-  have hchange : relaxation σ λ ρ - ρ = (1 - λ) • (replacement σ ρ - ρ) := by
+theorem trace_relaxation_energy_difference (H σ : Mat) (weight : ℂ) (ρ : Mat) :
+    Matrix.trace (H * relaxation σ weight ρ) - Matrix.trace (H * ρ) =
+      (1 - weight) • (Matrix.trace ρ * Matrix.trace (H * σ) - Matrix.trace (H * ρ)) := by
+  have hchange : relaxation σ weight ρ - ρ = (1 - weight) • (replacement σ ρ - ρ) := by
     calc
-      relaxation σ λ ρ - ρ =
-          (relaxation σ λ ρ - replacement σ ρ) + (replacement σ ρ - ρ) := by abel
-      _ = λ • (ρ - replacement σ ρ) + (replacement σ ρ - ρ) := by
+      relaxation σ weight ρ - ρ =
+          (relaxation σ weight ρ - replacement σ ρ) + (replacement σ ρ - ρ) := by abel
+      _ = weight • (ρ - replacement σ ρ) + (replacement σ ρ - ρ) := by
         rw [relaxation_sub_replacement]
-      _ = (1 - λ) • (replacement σ ρ - ρ) := by
+      _ = (1 - weight) • (replacement σ ρ - ρ) := by
         simp only [sub_smul, one_smul, smul_sub]
         abel
   calc
-    Matrix.trace (H * relaxation σ λ ρ) - Matrix.trace (H * ρ) =
-        Matrix.trace (H * (relaxation σ λ ρ - ρ)) := by
+    Matrix.trace (H * relaxation σ weight ρ) - Matrix.trace (H * ρ) =
+        Matrix.trace (H * (relaxation σ weight ρ - ρ)) := by
       rw [mul_sub, Matrix.trace_sub]
-    _ = (1 - λ) • (Matrix.trace ρ * Matrix.trace (H * σ) - Matrix.trace (H * ρ)) := by
+    _ = (1 - weight) • (Matrix.trace ρ * Matrix.trace (H * σ) - Matrix.trace (H * ρ)) := by
       rw [hchange, Matrix.mul_smul, Matrix.trace_smul, mul_sub, Matrix.trace_sub]
       simp [replacement, Matrix.mul_smul, Matrix.trace_smul]
 

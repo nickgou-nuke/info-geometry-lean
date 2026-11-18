@@ -70,7 +70,7 @@ declaration axiom audit for the selected owners. Acceptance additionally checks
 that all three selected owners have zero compiler warnings; the workflow makes
 that check explicit.
 
-The discovered closure has 56 repository modules and 50 existing direct Mathlib
+The discovered closure has 56 repository modules and 51 existing direct Mathlib
 roots. CI caches only the pinned runtime and dependency artifacts. It checks
 the exact PR source head and uses fresh repository outputs with neither
 `--incremental` nor `--skip-audit`.
@@ -87,7 +87,12 @@ the exact PR source head and uses fresh repository outputs with neither
   parsed successfully; target and path coverage checked against the maintained
   closure helper.
 - Exact-source kernel compilation and declaration axiom audit: pending.
-- Actual pre-commit and root pre-push gate: pending.
+- Actual staged pre-commit proof gate: passed for the initial draft and the parameter/norm repair.
+- Root pre-push gate: queued under the shared build lock, separately from scoped verification.
+- First focused CI attempt: inherited dependencies compiled, then the new relaxation
+  owner exposed a reserved `λ` parameter and a missing matrix norm instance. The
+  repair uses ordinary parameter names and Mathlib's scoped L² operator norm; its
+  exact-source kernel result remains pending.
 - Whole-root/default-target acceptance: not established.
 
 This section must be updated from observed compiler/hook results before

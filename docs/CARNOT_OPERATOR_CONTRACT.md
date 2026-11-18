@@ -5,6 +5,10 @@ Scope: full finite matrix algebra, native linear maps, matrix positivity,
 and explicit trace identities. This contract distinguishes the implemented
 operator bridge from the thermodynamic and geometric interpretations.
 
+The subsequent weighted-adjoint and detailed-balance extension is specified
+in `REPLACEMENT_DETAILED_BALANCE_CONTRACT.md`, grounded in the two primary
+papers attached after the initial publication.
+
 ## Intake and provenance
 
 The user requested native Lean 4 / Mathlib compilation and an upstream draft PR.

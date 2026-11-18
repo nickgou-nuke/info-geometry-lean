@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Quantum.ReplacementHamiltonian
+import InfoGeometry.Quantum.ReplacementDetailedBalance
 import InfoGeometry.Quantum.MatrixBoundaryPurification
 
 /-!
@@ -24,6 +25,7 @@ open Matrix
 open InfoGeometry.Quantum.ReplacementStateChannel
 open InfoGeometry.Quantum.ReplacementRelaxation
 open InfoGeometry.Quantum.ReplacementHamiltonian
+open InfoGeometry.Quantum.ReplacementDetailedBalance
 open InfoGeometry.Quantum.MatrixBoundaryPurification
 open InfoGeometry.OperatorAlgebra.LieJordanDuality
 
@@ -98,6 +100,49 @@ theorem normalizedGibbs_relaxation_energy_difference
   have h := trace_relaxation_energy_difference H (normalizedGibbs H hH β) (weight : ℂ) ρ
   rw [hρ, one_mul] at h
   simpa [smul_eq_mul, Complex.mul_re] using congrArg Complex.re h
+
+/-! ## Detailed balance of the dissipative component
+
+The weighted symmetry below concerns `generator 0`, not the full
+Hamiltonian-plus-relaxation generator. The actual CFC Gibbs density supplies
+the Hermitian, positivity, and normalization hypotheses.
+-/
+
+/-- The actual Gibbs target is stationary under the replacement dissipator. -/
+theorem normalizedGibbs_dissipator_stationary [Nonempty (Fin n)]
+    (H : Mat) (hH : H.IsHermitian) (β γ : ℝ) :
+    generator (0 : Mat) (normalizedGibbs H hH β) γ
+      (normalizedGibbs H hH β) = 0 := by
+  apply generator_stationary _ _ γ (trace_normalizedGibbs H hH β)
+  simp [ad_apply]
+
+/-- The right-weight form of detailed balance for the constructed Gibbs state. -/
+theorem normalizedGibbs_dissipator_right_weight
+    (H A : Mat) (hH : H.IsHermitian) (β γ : ℝ) :
+    generator (0 : Mat) (normalizedGibbs H hH β) γ
+        (A * normalizedGibbs H hH β) =
+      observableGenerator (normalizedGibbs H hH β) γ A * normalizedGibbs H hH β :=
+  generator_right_weight _ A γ
+
+/-- The observable dissipator is symmetric in the actual Gibbs-weighted
+pairing for arbitrary observables, without a commutation hypothesis. -/
+theorem normalizedGibbs_dissipator_weighted_symm
+    (H A B : Mat) (hH : H.IsHermitian) (β γ : ℝ) :
+    weightedPairing (normalizedGibbs H hH β) A
+        (observableGenerator (normalizedGibbs H hH β) γ B) =
+      weightedPairing (normalizedGibbs H hH β)
+        (observableGenerator (normalizedGibbs H hH β) γ A) B :=
+  observableGenerator_weighted_symm _ A B γ
+    (normalizedGibbs_posSemidef H hH β).isHermitian
+
+/-- Every observable has nonnegative Dirichlet form for a nonnegative rate
+and the normalized CFC Gibbs target. -/
+theorem normalizedGibbs_dirichlet_nonneg [Nonempty (Fin n)]
+    (H A : Mat) (hH : H.IsHermitian) (β γ : ℝ) (hγ : 0 ≤ γ) :
+    0 ≤ (-weightedPairing (normalizedGibbs H hH β) A
+      (observableGenerator (normalizedGibbs H hH β) γ A)).re :=
+  dirichlet_self_nonneg _ A γ (normalizedGibbs_posSemidef H hH β)
+    (trace_normalizedGibbs H hH β) hγ
 
 end InfoGeometry.Quantum.ReplacementGibbs
 

@@ -4,6 +4,12 @@ Date: 2026-11-18. Scope: the three selected canonical owners and their repositor
 import closure. This record does not certify all historical files or a complete
 thermodynamic engine.
 
+This is the historical three-owner baseline. The subsequent source-backed
+detailed-balance extension is specified in
+`REPLACEMENT_DETAILED_BALANCE_CONTRACT.md`; its four-owner acceptance is
+reported by the current PR checks. The source identities below remain tied
+to the historical receipts explicitly named here.
+
 ## Owners and roles
 
 | Owner | New construction or result |

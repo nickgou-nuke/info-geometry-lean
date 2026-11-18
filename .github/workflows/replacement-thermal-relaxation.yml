@@ -1,12 +1,13 @@
 name: Replacement thermal relaxation (scoped kernel)
 
-# This checks three owners and their source closure, not the root Lake package.
+# This checks four owners and their source closure, not the root Lake package.
 on:
   pull_request:
     paths:
       - '.github/workflows/replacement-thermal-relaxation.yml'
       - 'docs/CARNOT_OPERATOR_CONTRACT.md'
       - 'docs/CARNOT_OPERATOR_REVIEW.md'
+      - 'docs/REPLACEMENT_DETAILED_BALANCE_CONTRACT.md'
       - 'lake-manifest.json'
       - 'lean-toolchain'
       - 'lean/DAG/Basic.lean'
@@ -55,6 +56,7 @@ on:
       - 'lean/InfoGeometry/Quantum/KrausAmplificationCP.lean'
       - 'lean/InfoGeometry/Quantum/MatrixBoundaryPurification.lean'
       - 'lean/InfoGeometry/Quantum/ReplacementGibbs.lean'
+      - 'lean/InfoGeometry/Quantum/ReplacementDetailedBalance.lean'
       - 'lean/InfoGeometry/Quantum/ReplacementHamiltonian.lean'
       - 'lean/InfoGeometry/Quantum/ReplacementRelaxation.lean'
       - 'lean/InfoGeometry/Quantum/ReplacementStateChannel.lean'
@@ -86,7 +88,7 @@ jobs:
       SOURCE_REV: ${{ github.event.pull_request.head.sha || github.sha }}
       THERMAL_OUTPUT: verification-replacement-thermal-${{ github.run_id }}-${{ github.run_attempt }}
       THERMAL_TARGETS: >-
-        ["InfoGeometry.Quantum.ReplacementRelaxation", "InfoGeometry.Quantum.ReplacementHamiltonian", "InfoGeometry.Quantum.ReplacementGibbs"]
+        ["InfoGeometry.Quantum.ReplacementRelaxation", "InfoGeometry.Quantum.ReplacementHamiltonian", "InfoGeometry.Quantum.ReplacementDetailedBalance", "InfoGeometry.Quantum.ReplacementGibbs"]
     steps:
       - name: Fetch exact source head and unchanged Mathlib pin
         shell: bash
@@ -130,7 +132,7 @@ jobs:
               'run_id': os.environ.get('GITHUB_RUN_ID'),
               'run_attempt': os.environ.get('GITHUB_RUN_ATTEMPT'),
               'lean_archive_sha256': '47bf4bbd78f70c2e9670598ab7124d92b6efb7330ff33e5fbb4030f6fd72e4e4',
-              'scope': 'Three selected owners, repository source closure, and native axiom audit; not a root Lake build',
+              'scope': 'Four selected owners, repository source closure, and native axiom audit; not a root Lake build',
           }, indent=2) + '\n')
           with open(os.environ['GITHUB_ENV'], 'a') as env:
               env.write('MATHLIB_REV=' + actual + '\n')
@@ -231,7 +233,7 @@ jobs:
           path: pinned-mathlib/.lake
           key: replacement-thermal-mathlib-4.34.1-${{ env.MATHLIB_REV }}-v1
 
-      - name: Compile the three owners and run the native declaration audit
+      - name: Compile the four owners and run the native declaration audit
         shell: bash
         run: |
           set -euo pipefail
@@ -256,10 +258,10 @@ jobs:
               raise RuntimeError('Report source head or exact target list differs')
           selected = [m for m in report.get('modules', []) if m.get('module') in targets]
           if len(selected) != len(targets) or {m['module'] for m in selected} != set(targets):
-              raise RuntimeError('Report does not contain all three selected owners exactly once')
+              raise RuntimeError('Report does not contain all four selected owners exactly once')
           if any(m.get('returncode') != 0 or m.get('warnings') != 0 for m in selected):
               raise RuntimeError('A selected owner has compiler errors or warnings')
-          print('Three-owner compiler, warning, and native axiom checks passed; root Lake coverage is separate.')
+          print('Four-owner compiler, warning, and native axiom checks passed; root Lake coverage is separate.')
           PY
 
       - name: Upload this attempt's reports, logs, and source snapshots

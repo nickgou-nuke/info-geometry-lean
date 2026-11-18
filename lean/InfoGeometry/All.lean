@@ -630,3 +630,6 @@ import InfoGeometry.Quantum.KrausFixedEffectCounterexample
 import InfoGeometry.Quantum.InstrumentHistory
 import InfoGeometry.Canonical.InstrumentHistoryGNS
 import InfoGeometry.Canonical.MatrixGibbsEntropy
+import InfoGeometry.Canonical.MatrixGibbsScaleTransport
+import InfoGeometry.Canonical.MatrixUnitarySpectralOrthogonality
+import InfoGeometry.Canonical.MatrixGibbsMetriplecticEquilibrium

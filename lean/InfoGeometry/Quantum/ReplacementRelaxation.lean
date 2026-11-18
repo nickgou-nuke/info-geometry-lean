@@ -64,17 +64,22 @@ theorem relaxation_one (σ : Mat) :
     relaxation σ 1 = (LinearMap.id : Mat →ₗ[ℂ] Mat) := by
   simp [relaxation]
 
+theorem relaxation_real_apply (σ : Mat) (weight : ℝ) (X : Mat) :
+    relaxation σ (weight : ℂ) X = weight • X + (1 - weight) • replacement σ X := by
+  ext i j
+  change Complex.ofReal weight * X i j +
+    (1 - Complex.ofReal weight) * (replacement σ X) i j =
+    weight • X i j + (1 - weight) • (replacement σ X) i j
+  simp only [Complex.real_smul, Complex.ofReal_sub, Complex.ofReal_one]
+
 /-- Real scalar multiplication retains the complex-linear operator carrier. -/
 theorem relaxation_real_eq (σ : Mat) (weight : ℝ) :
     relaxation σ (weight : ℂ) =
       weight • (LinearMap.id : Mat →ₗ[ℂ] Mat) + (1 - weight) • replacement σ := by
-  simp only [relaxation, RCLike.real_smul_eq_coe_smul (K := ℂ),
-    Complex.ofReal_sub, Complex.ofReal_one]
-
-theorem relaxation_real_apply (σ : Mat) (weight : ℝ) (X : Mat) :
-    relaxation σ (weight : ℂ) X = weight • X + (1 - weight) • replacement σ X := by
-  simp only [relaxation_apply, RCLike.real_smul_eq_coe_smul (K := ℂ),
-    Complex.ofReal_sub, Complex.ofReal_one]
+  apply LinearMap.ext
+  intro X
+  change relaxation σ (weight : ℂ) X = weight • X + (1 - weight) • replacement σ X
+  exact relaxation_real_apply σ weight X
 
 /-- Normalizing the target makes every algebraic parameter trace preserving. -/
 theorem relaxation_trace (σ : Mat) (hσ : Matrix.trace σ = 1)
@@ -191,10 +196,10 @@ theorem relaxation_completely_positive {r : Type*} [Fintype r] [DecidableEq r]
     (X : Matrix (r × Fin n) (r × Fin n) ℂ) (hX : X.PosSemidef) :
     (amplification (r := r) (relaxation σ (weight : ℂ)) X).PosSemidef := by
   rw [amplification_relaxation]
-  have hweight' : (0 : ℂ) ≤ (weight : ℂ) := Complex.ofReal_nonneg hweight
+  have hweight' : (0 : ℂ) ≤ (weight : ℂ) := Complex.zero_le_real.mpr hweight
   have hweight1' : (0 : ℂ) ≤ 1 - (weight : ℂ) := by
     simpa only [Complex.ofReal_sub, Complex.ofReal_one] using
-      Complex.ofReal_nonneg (sub_nonneg.mpr hweight1)
+      Complex.zero_le_real.mpr (sub_nonneg.mpr hweight1)
   exact (hX.smul hweight').add
     ((replacement_completely_positive_all σ hσ X hX).smul hweight1')
 

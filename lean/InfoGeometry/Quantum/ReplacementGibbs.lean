@@ -28,6 +28,7 @@ open InfoGeometry.Quantum.ReplacementHamiltonian
 open InfoGeometry.Quantum.ReplacementDetailedBalance
 open InfoGeometry.Quantum.MatrixBoundaryPurification
 open InfoGeometry.OperatorAlgebra.LieJordanDuality
+open scoped ComplexOrder
 
 variable {n : ℕ}
 local notation "Mat" => Matrix (Fin n) (Fin n) ℂ

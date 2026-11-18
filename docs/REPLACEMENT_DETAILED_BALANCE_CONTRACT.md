@@ -213,7 +213,11 @@ hypotheses, and ordered matrix products are unchanged. The failed development
 receipt is retained separately from subsequent acceptance evidence. Fresh CI
 then required an explicit final `rfl` to identify `weightedPairing` with its
 weighted-trace definition after the covariance rewrites. That independently
-reviewed definitional closure changes no mathematical statement.
+reviewed definitional closure changes no mathematical statement. The resulting
+detailed-balance owner compiled with zero warnings. Its Gibbs consumer then
+needed `open scoped ComplexOrder` to elaborate the native PSD-to-Hermitian
+projection; this activates the same existing Mathlib instance as its imports
+and introduces no new order or assumption.
 
 The previously observed root Lake path-dependency blocker remains outside
 this scoped acceptance; no whole-package certificate is implied.

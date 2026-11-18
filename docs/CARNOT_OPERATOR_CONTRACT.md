@@ -63,6 +63,25 @@ field; it does not replace the matrix Gibbs owner.
 of that construction. The existing two-dimensional radial/rotation example
 in `LinShuKMSPetzRadialSynthesis` does not supply the full matrix bridge.
 
+### Other existing scale, volume, and Souriau connections
+
+The following existing owners were also inspected. They are source-audited
+context, not additional imports or modules certified by this PR's focused
+three-owner compiler receipt.
+
+| Existing owner | Established source-level connection and boundary |
+| --- | --- |
+| `Physics/ZornScalingFlow.lean` | Reciprocal scaling on the complex Zorn carrier, composition quadratic-norm preservation, and sector exchange taking the scale parameter to its inverse. `zornScale_mul_iff_pow_six_eq_one` states that uniform scaling preserves Zorn multiplication exactly when the complex unit parameter satisfies $p^6=1$. The separate rank-two determinant-one torus action is multiplicative. |
+| `Physics/YangBaxterZornBridge.lean` and `Physics/ZornBraidScalingCovariance.lean` | Native eight-dimensional left-multiplication matrices and braid operators. Arbitrary-unit similarity preserves trace, determinant, characteristic polynomial, and representation kernel. Identifying that similarity with left multiplication by the scaled Zorn element retains the $p^6=1$ hypothesis. |
+| `Projective/SplitOctonions/ZornFlowRelativeVolume.lean` | Determinant-ratio composition with nonzero denominator hypotheses, scalar-scale factors, and log-barrier shifts under explicit positivity and similitude assumptions. The total relative-density expression takes an external Jacobian as data; it does not construct a smooth change-of-variables theorem. |
+| `Lie/CanonicalZornG2CartanSouriauCharacterBridge.lean` and `Lie/CanonicalZornG2FiniteGibbsTomitaBridge.lean` | A finite nonempty state space with a rank-two moment-map datum, normalized real Gibbs weights, and Massieu/Fisher identities. The Gibbs-mean operator is a scalar multiple of the identity on the real doubled Hilbert space; it is distinct from the CFC matrix Gibbs density used here. |
+| `Lie/CanonicalZornG2NativeWeylMellinBridge.lean` | Finite Weyl-symmetrized character sums transported to the native Cartan, with short- and long-generator reflection invariance. This does not identify a Weyl-group reflection with a Weyl metric-scale gauge. |
+
+These owners establish existing portions of the requested scale, volume, and
+thermodynamic connections. None supplies the full-matrix replacement
+semigroup, its arbitrary-finite-ancilla complete positivity, the Hamiltonian
+commutator defect, and the CFC Gibbs consumer proved together in this PR.
+
 ## Carrier and conventions
 
 Let $\mathrm{Mat}=M_n(\mathbb C)$, represented by native
@@ -175,7 +194,8 @@ $$
 -\operatorname{Re}\operatorname{Tr}(H\rho)\bigr).
 $$
 
-The Gibbs consumer sets $K=-iH$ and $\sigma=\sigma_\beta$.
+The Gibbs consumer uses the convention $\hbar=1$, sets $K=-iH$,
+and takes $\sigma=\sigma_\beta$.
 Native functional-calculus commutation supplies stationarity. Raw
 $\operatorname{ad}_H$ is not called physical Hermitian-state evolution.
 Define $E_H(A)=\operatorname{Re}\operatorname{Tr}(HA)$.
@@ -236,7 +256,7 @@ $$
 these formulas use $k_B=1$ when entropy is the dimensionless matrix entropy;
 otherwise $\Delta S$ denotes physical entropy.
 
-energy balance yields $W_{\mathrm{out}}=Q_h-Q_{c,\mathrm{out}}$ and
+Energy balance yields $W_{\mathrm{out}}=Q_h-Q_{c,\mathrm{out}}$ and
 $\eta=1-T_c/T_h$. The constitutive and reversible relations are not derived
 from the replacement-channel identities. No complete Carnot engine,
 system-entropy monotonicity, relative-entropy contraction, thermodynamic

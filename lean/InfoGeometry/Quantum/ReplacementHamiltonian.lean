@@ -171,7 +171,7 @@ theorem trace_generator_energy (K H σ ρ : Mat) (γ : ℝ)
   rw [generator_apply, mul_add, Matrix.trace_add,
     trace_reversible_energy_zero K H ρ hKH, zero_add,
     Matrix.mul_smul, Matrix.trace_smul, mul_sub, Matrix.trace_sub]
-  simp [replacement, Matrix.mul_smul, Matrix.trace_smul]
+  simp [replacement, Matrix.trace_smul]
 
 /-- On normalized states, the real energy rate is the bath-target mismatch.
 It vanishes only when this mismatch or the rate vanishes; system energy is
@@ -203,7 +203,7 @@ theorem trace_relaxation_energy_difference (H σ : Mat) (weight : ℂ) (ρ : Mat
       rw [mul_sub, Matrix.trace_sub]
     _ = (1 - weight) • (Matrix.trace ρ * Matrix.trace (H * σ) - Matrix.trace (H * ρ)) := by
       rw [hchange, Matrix.mul_smul, Matrix.trace_smul, mul_sub, Matrix.trace_sub]
-      simp [replacement, Matrix.mul_smul, Matrix.trace_smul]
+      simp [replacement, Matrix.trace_smul]
 
 /-- Exact finite energy bookkeeping for two ordered stages: change the
 state at the initial Hamiltonian, then switch the Hamiltonian at the final

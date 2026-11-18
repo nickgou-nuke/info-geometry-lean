@@ -11,6 +11,10 @@ on:
       - 'lean/InfoGeometry/OperatorAlgebra/NoncommutativeDuhamelFrechetBridge.lean'
       - 'lean/InfoGeometry/Thermo/RealMatrixGibbs.lean'
       - 'lean/InfoGeometry/Thermo/RealMatrixCarnot.lean'
+      - 'lean/InfoGeometry/Thermo/RealMatrixCarnotStateLoop.lean'
+      - 'lean/InfoGeometry/Thermo/RealMatrixWorkConnection.lean'
+      - 'lean/InfoGeometry/Thermo/RealMatrixCarnotHolonomy.lean'
+      - 'lean/InfoGeometry/Recovered/SplitQuaternionMatricesRecovered.lean'
       - 'lean/InfoGeometry/Canonical/SouriauHilbertSchmidtOnsager.lean'
       - 'lean/InfoGeometry/Physics/MatrixTraceBimodulePairingNative.lean'
       - 'lean/InfoGeometry/Thermodynamics/FiniteEntropyLeaves.lean'
@@ -128,6 +132,9 @@ jobs:
           targets = [
               'InfoGeometry.Thermo.RealMatrixGibbs',
               'InfoGeometry.Thermo.RealMatrixCarnot',
+              'InfoGeometry.Thermo.RealMatrixCarnotStateLoop',
+              'InfoGeometry.Thermo.RealMatrixWorkConnection',
+              'InfoGeometry.Thermo.RealMatrixCarnotHolonomy',
               'InfoGeometry.Thermo.RealDensityRadialFlow',
               'InfoGeometry.Thermo.RealMatrixGibbsOrbit',
               'InfoGeometry.Thermo.RealMatrixGibbsRadialChart',
@@ -148,6 +155,9 @@ jobs:
             --mathlib-root ../mathlib --output ../information-carnot-report \
             --target InfoGeometry.Thermo.RealMatrixGibbs \
             --target InfoGeometry.Thermo.RealMatrixCarnot \
+            --target InfoGeometry.Thermo.RealMatrixCarnotStateLoop \
+            --target InfoGeometry.Thermo.RealMatrixWorkConnection \
+            --target InfoGeometry.Thermo.RealMatrixCarnotHolonomy \
             --target InfoGeometry.Thermo.RealDensityRadialFlow \
             --target InfoGeometry.Thermo.RealMatrixGibbsOrbit \
             --target InfoGeometry.Thermo.RealMatrixGibbsRadialChart \
@@ -172,6 +182,9 @@ jobs:
           files = [
               'lean/InfoGeometry/Thermo/RealMatrixGibbs.lean',
               'lean/InfoGeometry/Thermo/RealMatrixCarnot.lean',
+              'lean/InfoGeometry/Thermo/RealMatrixCarnotStateLoop.lean',
+              'lean/InfoGeometry/Thermo/RealMatrixWorkConnection.lean',
+              'lean/InfoGeometry/Thermo/RealMatrixCarnotHolonomy.lean',
               'lean/InfoGeometry/Thermo/RealDensityRadialFlow.lean',
               'lean/InfoGeometry/Thermo/RealMatrixGibbsOrbit.lean',
               'lean/InfoGeometry/Thermo/RealMatrixGibbsRadialChart.lean',

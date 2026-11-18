@@ -35,6 +35,7 @@ variable {n : Type*} [Fintype n] [DecidableEq n]
 
 local notation "Mat" => Matrix n n ℂ
 
+omit [DecidableEq n] in
 /-- The existing Hamiltonian commutator flow is tangent to the trace-one
 affine space; this algebraic identity does not require positivity. -/
 theorem trace_unitaryFlow (H ρ : Mat) :
@@ -72,8 +73,8 @@ theorem hilbertSchmidt_cfc_unitaryFlow
     Matrix.trace (star (cfc f ρ) * unitaryFlow H ρ) = 0 := by
   have hsa : IsSelfAdjoint (cfc f ρ) := IsSelfAdjoint.cfc
   apply hilbertSchmidt_unitaryFlow_of_commute H ρ (cfc f ρ) hsa
-  have hcomm := cfc_commute_cfc f (id : ℝ → ℝ) ρ
-  rwa [cfc_id ℝ ρ hρ] at hcomm
+  have hcomm := cfc_commute_cfc (p := IsSelfAdjoint) f (id : ℝ → ℝ) ρ
+  rwa [cfc_id (p := IsSelfAdjoint) ℝ ρ hρ.isSelfAdjoint] at hcomm
 
 /-- The actual CFC logarithm, rather than a supplied logarithm variable,
 has zero Hilbert–Schmidt pairing with the reversible tangent. -/

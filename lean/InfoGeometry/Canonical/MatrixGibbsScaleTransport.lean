@@ -73,7 +73,7 @@ theorem gibbsDensity_unitary_conjugate (U : unitary Mat)
   have hf : ContinuousOn (expWeight β) (spectrum ℝ H) := by
     unfold expWeight
     fun_prop
-  simpa only [φ, Unitary.conjStarAlgAut_apply] using
+  simpa only [φ, Unitary.conjStarAlgAut_apply, Matrix.star_eq_conjTranspose] using
     (StarAlgHomClass.map_cfc φ (expWeight β) H hf hφ
       hH.isSelfAdjoint (hH.isSelfAdjoint.map φ)).symm
 
@@ -89,7 +89,7 @@ theorem gibbsPartition_add_smul_one (H : Mat) (hH : H.IsHermitian) (b β : ℝ) 
       Real.exp (-β * b) * gibbsPartition H hH β := by
   unfold gibbsPartition
   rw [gibbsDensity_add_smul_one H hH b β]
-  simp only [traceMass, Matrix.trace_smul, RCLike.smul_re]
+  simp only [traceMass, Matrix.trace_smul, Complex.smul_re, smul_eq_mul]
 
 theorem gibbsPartition_unitary_conjugate (U : unitary Mat)
     (H : Mat) (hH : H.IsHermitian) (β : ℝ) :
@@ -145,7 +145,8 @@ theorem gibbsPartition_affine_unitary (U : unitary Mat)
       Real.exp (-(β / a) * b) * gibbsPartition H hH β := by
   unfold gibbsPartition
   rw [gibbsDensity_affine_unitary U H hH a b β ha]
-  simp only [traceMass, Matrix.trace_smul, RCLike.smul_re, trace_unitary_conjugate]
+  simp only [traceMass, Matrix.trace_smul, Complex.smul_re, smul_eq_mul,
+    trace_unitary_conjugate]
 
 /-- The actual energy trace transforms affinely under a simultaneous unitary
 frame change. The comparison matrix may fail to commute with the Hamiltonian. -/

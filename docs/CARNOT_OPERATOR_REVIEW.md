@@ -150,11 +150,16 @@ and declaration counts are recorded with the receipt below.
   Lake stage stopped during package loading at the absent
   `external_refs/homotopy-hypothesis-lean4`, before checking the selected
   Lean proofs. The subsequent semantic-content scan completed with exit 2
-  because six tracked symlink targets had not been materialized in the local
-  checkout. This local coverage failure is separate from the missing Lake
-  prerequisite and is not attributed to the upstream source. Restoration
-  uses exact HEAD bytes; no post-restoration scan receipt is claimed here.
-  These observed exits are not replaced by a scoped-build result.
+  and zero findings, but incomplete local sparse-checkout coverage. It read
+  27,272 of 27,278 selected files and recorded six source-phase plus 1,082
+  importer-phase read failures (1,082 distinct paths across both phases).
+  The six source aliases now resolve after their tracked targets were
+  restored from exact HEAD bytes. Another 1,071 historical `proofs/` paths
+  appearing in the original importer failures remain unmaterialized in that
+  checkout; all are tracked at the base commit. This local coverage failure
+  is separate from the missing Lake prerequisite and is not attributed to
+  missing upstream mathematics. No post-restoration scan receipt is claimed
+  here. These observed exits are not replaced by a scoped-build result.
 - Whole-root/default-target acceptance: not established.
 
 The completed native receipt reports:

@@ -615,3 +615,6 @@ import InfoGeometry.Algebra.FreeOperatorSymmetry
 import InfoGeometry.Canonical.OperatorBasisExamples
 import InfoGeometry.Algebra.OperatorBasisAudit
 import InfoGeometry.Canonical.MatrixGibbsEntropy
+import InfoGeometry.Canonical.MatrixGibbsScaleTransport
+import InfoGeometry.Canonical.MatrixUnitarySpectralOrthogonality
+import InfoGeometry.Canonical.MatrixGibbsMetriplecticEquilibrium

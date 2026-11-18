@@ -110,6 +110,7 @@ theorem compression_frameChange (D : Matrix m n 𝕜)
     compression D (L * U) (R * V) = Uᴴ * compression D L R * V := by
   simp only [compression, Matrix.conjTranspose_mul, Matrix.mul_assoc]
 
+omit [DecidableEq m] [DecidableEq n] in
 /-- The scalar determinant carries the target conjugate character and the
 source character.  This is a frame-coordinate law, not an anomaly theorem. -/
 theorem det_compression_frameChange (D : Matrix m n 𝕜)
@@ -124,6 +125,7 @@ theorem overlap_frameChange (L R : Matrix m k 𝕜) (U V : Matrix k k 𝕜) :
     overlap (L * U) (R * V) = Uᴴ * overlap L R * V := by
   simp only [overlap, Matrix.conjTranspose_mul, Matrix.mul_assoc]
 
+omit [DecidableEq m] in
 theorem det_overlap_frameChange (L R : Matrix m k 𝕜) (U V : Matrix k k 𝕜) :
     (overlap (L * U) (R * V)).det =
       star U.det * (overlap L R).det * V.det := by
@@ -139,6 +141,7 @@ theorem compression_gram (D : Matrix m n 𝕜)
   simp only [compression, frameRange, Matrix.conjTranspose_mul,
     Matrix.conjTranspose_conjTranspose, Matrix.mul_assoc]
 
+omit [DecidableEq m] [DecidableEq n] [DecidableEq k] in
 /-- The target range matrix can be removed only after its action on the
 compressed image is identified with the identity. -/
 theorem compression_gram_of_image (D : Matrix m n 𝕜)
@@ -149,6 +152,7 @@ theorem compression_gram_of_image (D : Matrix m n 𝕜)
   simpa only [Matrix.mul_assoc] using
     congrArg (fun X : Matrix m k 𝕜 => Rᴴ * Dᴴ * X) hImage
 
+omit [DecidableEq m] [DecidableEq n] in
 /-- An actual intertwining equation and an isometric source frame supply
 the image condition used by the compressed Gram identity. -/
 theorem compression_gram_of_intertwining (D : Matrix m n 𝕜)
@@ -163,12 +167,14 @@ theorem compression_gram_of_intertwining (D : Matrix m n 𝕜)
     _ = D * R := by
       simp only [frameRange, Matrix.mul_assoc, hR, Matrix.mul_one]
 
+omit [DecidableEq m] [DecidableEq n] in
 theorem det_compression_gram (D : Matrix m n 𝕜)
     (L : Matrix m k 𝕜) (R : Matrix n k 𝕜) :
     (Rᴴ * Dᴴ * frameRange L * D * R).det =
       star (compression D L R).det * (compression D L R).det := by
   rw [← compression_gram D L R, Matrix.det_mul, Matrix.det_conjTranspose]
 
+omit [DecidableEq m] [DecidableEq n] in
 theorem det_compression_gram_of_image (D : Matrix m n 𝕜)
     (L : Matrix m k 𝕜) (R : Matrix n k 𝕜)
     (hImage : frameRange L * (D * R) = D * R) :
@@ -183,6 +189,7 @@ theorem overlap_gram (L R : Matrix m k 𝕜) :
   simp only [overlap, frameRange, Matrix.conjTranspose_mul,
     Matrix.conjTranspose_conjTranspose, Matrix.mul_assoc]
 
+omit [DecidableEq m] in
 theorem det_overlap_gram (L R : Matrix m k 𝕜) :
     (Rᴴ * frameRange L * R).det =
       star (overlap L R).det * (overlap L R).det := by
@@ -246,6 +253,7 @@ theorem norm_det_eq_one_of_isometry (U : Matrix k k 𝕜) (hU : Uᴴ * U = 1) :
   apply CStarRing.norm_of_mem_unitary
   exact ⟨h, by simpa only [mul_comm] using h⟩
 
+omit [DecidableEq m] [DecidableEq n] in
 /-- Isometric changes of the source and target frames preserve the modulus. -/
 theorem norm_det_compression_frameChange (D : Matrix m n 𝕜)
     (L : Matrix m k 𝕜) (R : Matrix n k 𝕜) (U V : Matrix k k 𝕜)
@@ -255,6 +263,7 @@ theorem norm_det_compression_frameChange (D : Matrix m n 𝕜)
     norm_det_eq_one_of_isometry U hU, norm_det_eq_one_of_isometry V hV,
     one_mul, mul_one]
 
+omit [DecidableEq m] in
 theorem norm_det_overlap_frameChange (L R : Matrix m k 𝕜) (U V : Matrix k k 𝕜)
     (hU : Uᴴ * U = 1) (hV : Vᴴ * V = 1) :
     ‖(overlap (L * U) (R * V)).det‖ = ‖(overlap L R).det‖ := by
@@ -262,6 +271,7 @@ theorem norm_det_overlap_frameChange (L R : Matrix m k 𝕜) (U V : Matrix k k �
     norm_det_eq_one_of_isometry U hU, norm_det_eq_one_of_isometry V hV,
     one_mul, mul_one]
 
+omit [DecidableEq m] [DecidableEq n] in
 /-- The Gram determinant is the real squared modulus, including zero. -/
 theorem det_compression_gram_eq_norm_sq (D : Matrix m n 𝕜)
     (L : Matrix m k 𝕜) (R : Matrix n k 𝕜) :
@@ -271,6 +281,7 @@ theorem det_compression_gram_eq_norm_sq (D : Matrix m n 𝕜)
   simpa only [RCLike.star_def, RCLike.ofReal_pow] using
     RCLike.conj_mul (compression D L R).det
 
+omit [DecidableEq m] [DecidableEq n] in
 theorem det_compression_gram_of_image_eq_norm_sq (D : Matrix m n 𝕜)
     (L : Matrix m k 𝕜) (R : Matrix n k 𝕜)
     (hImage : frameRange L * (D * R) = D * R) :

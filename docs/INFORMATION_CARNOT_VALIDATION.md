@@ -143,7 +143,7 @@ reservoir dynamics or finite-time power; and no Gromov--Witten, spacetime,
 Goldstone, NESS or causal-wave identification follows without its own map and
 compatibility proof.
 
-## Publication source snapshot
+## Initial publication source snapshot
 
 The resolver identifies **44 repository source modules** and **54 native import roots**
 for the eight selected targets (seven new owners and the import-refined trace
@@ -181,3 +181,48 @@ report, compiler logs, generated audit source, semantic report and evidence
 hashes. A successful report plus zero warnings in all eight targets is
 required for focused native acceptance. Source publication or a queued job
 does not establish that result.
+
+## Native diagnostic repair checkpoint: 2026-11-18
+
+The first focused CI run `44272862706`, job `134693554733`, checked exact
+source `c123b055fb974dc9825e3b312be6864ae913667c` and tree
+`64a0886b9fcf965bb211e5137efa46ffc5cbeeb2`.
+It processed all 44 repository modules: 40 compiled, Gibbs alone failed, and
+Carnot/orbit/radial-chart were blocked by that dependency. The radial-flow,
+Gram no-return, Weyl obstruction and import-refined trace-action targets each
+compiled with zero warnings. The failed run did not execute a successful
+axiom audit.
+
+Artifact `14414202924` was downloaded and independently checked: ZIP SHA-256
+`7dba8751321d8f76a9940d2fed79d2ceefe4f0311c129d948363b716f2dac41b`.
+All 46 evidence-manifest hashes and all 44 source hashes matched the exact
+snapshot. The subsequently completed local seven-target pass independently
+reproduced the same two Gibbs diagnostics; its complete evidence was preserved
+before another incremental attempt.
+
+The source repair is deliberately narrow:
+
+- `Function.comp_def` and `Pi.mul_apply` expose the same function composition
+  and ordered matrix product in the entropy trace derivative, allowing the
+  existing trace evaluation lemma to apply.
+- The `omit` scope precedes its theorem doc comment, fixing the parser error
+  without changing which assumptions are omitted.
+- The identical composition/product normalization is applied to Carnot's
+  matrix first-law derivative, which uses the same native composition shape.
+
+No theorem statement, mathematical assumption, matrix product order, instance,
+dependency pin or gate is changed. Independent source/API review passed. Strict
+and semantic scans of the two changed owners passed with zero errors, the
+staged proof gate passed, and the installed commit hook remains required.
+
+The changed source hashes are:
+
+| Owner | Repair SHA-256 |
+| --- | --- |
+| `Thermo.RealMatrixGibbs` | `e8d322157c18dad41e8343dcbbb3d99c28ccbd49a9bdce29bb06240748c92b43` |
+| `Thermo.RealMatrixCarnot` | `7cdb063ec4289db5887f78398379fa094ad07eac91a2f54782db6c7ae46bb813` |
+
+The remaining six selected source hashes are unchanged from the initial
+publication table. The full eight-target incremental local check and the
+exact-head CI workflow are the native acceptance routes. Both retain the
+complete declaration audit and selected-target zero-warning requirements.

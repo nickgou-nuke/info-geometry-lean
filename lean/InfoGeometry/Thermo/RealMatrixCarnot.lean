@@ -64,7 +64,7 @@ theorem hasDerivAt_internalEnergy_curve
     HasDerivAt (fun s => internalEnergy β (H s))
       (Matrix.trace (R * H t) + Matrix.trace (state β (H t) * Hdot)) t := by
   have h := traceCLM.hasFDerivAt.comp_hasDerivAt t (hR.mul hH)
-  simpa only [internalEnergy, expectation, state, traceCLM_apply,
+  simpa only [Function.comp_def, Pi.mul_apply, internalEnergy, expectation, state, traceCLM_apply,
     Matrix.trace_add] using h
 
 /-- Reversible isothermal heat equals temperature times the actual entropy

@@ -168,7 +168,7 @@ theorem hasDerivAt_entropy_curve [Nonempty n]
   have hψ := hasDerivAt_massieu_curve K A t hK (partition_pos (K t) (hself t)).ne'
   have hU : HasDerivAt (fun s => Matrix.trace (density (K s) * K s))
       (Matrix.trace (R * K t) + Matrix.trace (density (K t) * A)) t := by
-    simpa only [traceCLM_apply, Matrix.trace_add] using
+    simpa only [Function.comp_def, Pi.mul_apply, traceCLM_apply, Matrix.trace_add] using
       (traceCLM.hasFDerivAt.comp_hasDerivAt t (hR.mul hK))
   have hS := hψ.sub hU
   have hrate : expectation (K t) A -
@@ -184,9 +184,9 @@ theorem hasDerivAt_entropy_curve [Nonempty n]
   rw [heq]
   exact hS
 
+omit [Fintype n] [DecidableEq n] in
 /-- Scaling the Hamiltonian and inverse-scaling beta preserves its entire
 Gibbs exponent, and hence the full density operator. -/
-omit [Fintype n] [DecidableEq n] in
 theorem exponent_reciprocal_scale (H : Mat) (β c : ℝ) (hc : c ≠ 0) :
     (-(β / c)) • (c • H) = (-β) • H := by
   rw [smul_smul]

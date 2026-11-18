@@ -58,6 +58,7 @@ theorem slaterPairing_eq_det_overlap {k : ℕ} (L R : Matrix m (Fin k) 𝕜) :
   change ((overlap L R).transpose).det = (overlap L R).det
   exact Matrix.det_transpose (overlap L R)
 
+omit [StarRing 𝕜] [Fintype m] in
 /-- Acting on a blade is the exterior functor applied to the actual
 rectangular matrix linear map. -/
 theorem slaterBlade_map {n : Type*} [Fintype n] {k : ℕ}

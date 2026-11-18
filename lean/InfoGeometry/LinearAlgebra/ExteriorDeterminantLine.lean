@@ -99,7 +99,7 @@ theorem exteriorCoordinate_surjective (b : Module.Basis (Fin n) K V) :
 
 theorem exteriorCoordinate_injective (b : Module.Basis (Fin n) K V) :
     Function.Injective (exteriorCoordinate b) := by
-  letI : FiniteDimensional K V := Module.Finite.of_basis b
+  let : FiniteDimensional K V := Module.Finite.of_basis b
   have hdim : Module.finrank K (⋀[K]^n V) = Module.finrank K K := by
     rw [exteriorPower.finrank_eq, Module.finrank_eq_card_basis b,
       Fintype.card_fin, Nat.choose_self, Module.finrank_self]
@@ -155,7 +155,7 @@ theorem coefficient_change_basis (b b' : Module.Basis (Fin n) K V)
     (c c' : Module.Basis (Fin n) K W) (f : V →ₗ[K] W) :
     coefficient b' c' f = c'.det c * coefficient b c f * b.det b' := by
   have h := congrArg Matrix.det
-    (Module.Basis.basis_toMatrix_mul_linearMap_toMatrix_mul_basis_toMatrix
+    (_root_.basis_toMatrix_mul_linearMap_toMatrix_mul_basis_toMatrix
       b' b c' c f)
   rw [Matrix.det_mul, Matrix.det_mul] at h
   simpa only [coefficient_eq_det_toMatrix, Module.Basis.det_apply] using h.symm

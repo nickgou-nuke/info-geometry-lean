@@ -83,10 +83,12 @@ def compression (D : Matrix m n 𝕜) (L : Matrix m k 𝕜)
 /-- The finite overlap matrix of two frames in a common ambient carrier. -/
 def overlap (L R : Matrix m k 𝕜) : Matrix k k 𝕜 := Lᴴ * R
 
+omit [Fintype m] [DecidableEq m] [DecidableEq k] in
 theorem frameRange_conjTranspose (F : Matrix m k 𝕜) :
     (frameRange F)ᴴ = frameRange F := by
   simp only [frameRange, Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose]
 
+omit [DecidableEq m] in
 theorem frameRange_idempotent (F : Matrix m k 𝕜) (hF : Fᴴ * F = 1) :
     frameRange F * frameRange F = frameRange F := by
   calc
@@ -95,11 +97,13 @@ theorem frameRange_idempotent (F : Matrix m k 𝕜) (hF : Fᴴ * F = 1) :
     _ = frameRange F := by
       simp only [hF, Matrix.mul_one, frameRange]
 
+omit [Fintype k] [DecidableEq k] in
 @[simp]
 theorem compression_one (L R : Matrix m k 𝕜) :
     compression (1 : Matrix m m 𝕜) L R = overlap L R := by
   simp only [compression, overlap, Matrix.mul_one]
 
+omit [DecidableEq m] [DecidableEq n] [DecidableEq k] in
 /-- Independent frame changes act on the two sides in their actual order. -/
 theorem compression_frameChange (D : Matrix m n 𝕜)
     (L : Matrix m k 𝕜) (R : Matrix n k 𝕜) (U V : Matrix k k 𝕜) :
@@ -115,6 +119,7 @@ theorem det_compression_frameChange (D : Matrix m n 𝕜)
   rw [compression_frameChange, Matrix.det_mul, Matrix.det_mul,
     Matrix.det_conjTranspose]
 
+omit [DecidableEq m] [DecidableEq k] in
 theorem overlap_frameChange (L R : Matrix m k 𝕜) (U V : Matrix k k 𝕜) :
     overlap (L * U) (R * V) = Uᴴ * overlap L R * V := by
   simp only [overlap, Matrix.conjTranspose_mul, Matrix.mul_assoc]
@@ -125,6 +130,7 @@ theorem det_overlap_frameChange (L R : Matrix m k 𝕜) (U V : Matrix k k 𝕜) 
   rw [overlap_frameChange, Matrix.det_mul, Matrix.det_mul,
     Matrix.det_conjTranspose]
 
+omit [DecidableEq m] [DecidableEq n] [DecidableEq k] in
 /-- The target range matrix is present in the Gram operator of a compression. -/
 theorem compression_gram (D : Matrix m n 𝕜)
     (L : Matrix m k 𝕜) (R : Matrix n k 𝕜) :
@@ -171,6 +177,7 @@ theorem det_compression_gram_of_image (D : Matrix m n 𝕜)
   rw [← compression_gram_of_image D L R hImage, Matrix.det_mul,
     Matrix.det_conjTranspose]
 
+omit [DecidableEq m] [DecidableEq k] in
 theorem overlap_gram (L R : Matrix m k 𝕜) :
     (overlap L R)ᴴ * overlap L R = Rᴴ * frameRange L * R := by
   simp only [overlap, frameRange, Matrix.conjTranspose_mul,
@@ -196,6 +203,7 @@ theorem det_projector_overlap (L R : Matrix m k 𝕜) (hR : Rᴴ * R = 1) :
       det_split_complement R Rᴴ hR (Rᴴ * frameRange L * R)
     _ = star (overlap L R).det * (overlap L R).det := det_overlap_gram L R
 
+omit [Fintype k] [DecidableEq k] in
 /-- Simultaneously transporting the operator and its frames preserves the
 compression itself.  Only the displayed two isometry identities are used. -/
 theorem compression_gauge (D : Matrix m n 𝕜)
@@ -211,6 +219,7 @@ theorem compression_gauge (D : Matrix m n 𝕜)
       rw [hG, hH]
       simp only [compression, Matrix.mul_one]
 
+omit [Fintype k] [DecidableEq k] in
 theorem overlap_gauge (L R : Matrix m k 𝕜) (G : Matrix m m 𝕜)
     (hG : Gᴴ * G = 1) :
     overlap (G * L) (G * R) = overlap L R := by

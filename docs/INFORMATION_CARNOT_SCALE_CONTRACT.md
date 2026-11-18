@@ -301,15 +301,15 @@ exponential expression. No substantive theorem conclusion is weakened.
 The three new owners have independent mathematical/API source review. A
 separate QA pass accepted the strict placeholder, refute, OpenGauss, semantic,
 static Gate 4, whitespace, workflow-script, source-closure, link, and theorem-count
-checks. Static Gate 4 reports `kernel_checked = false`; it is not a native
-certificate. The focused closure has 15 repository modules and 26 direct
+checks. Static Gate 4 is lexical only and is not a native certificate.
+The focused closure has 15 repository modules and 26 direct
 Mathlib roots, independently checked against the maintained closure helper.
 
 | Selected owner | SHA256 of the reviewed source |
 |---|---|
 | `MatrixGibbsEntropy` | `12fd66e9609d4b8becbc20fdad9e471ae8932d2981bc985491d3db4e682f5c51` |
-| `MatrixGibbsScaleTransport` | `6923622c2a1cba63301a0c8172f632ff950eda13c6ce3b2ae00bb96f2b19c7ab` |
-| `MatrixUnitarySpectralOrthogonality` | `790e39f2fea3312997127dd8e7ca6ea76d2219d4f1ba182d0e951da415fb34ad` |
+| `MatrixGibbsScaleTransport` | `74fce121f2e92f1618653cc2b5e8c1545fcca68ad286a4cb97d1c6633d1a00a5` |
+| `MatrixUnitarySpectralOrthogonality` | `b133f8fe8f74198f348c6df15a01beb1de700dec15fd1ea885bb922f91b2edbb` |
 | `MatrixGibbsMetriplecticEquilibrium` | `04bade35580eb64d9aa9200866e0acbfb99ecb6d259729aee76a44a3ed9fb354` |
 
 ### Native and publication status at the draft checkpoint
@@ -320,9 +320,11 @@ Mathlib roots, independently checked against the maintained closure helper.
   owner with zero warnings, but found API/elaboration errors in earlier
   transport and orthogonality candidates. Those failures are preserved as
   evidence; they are not acceptance of the repaired sources above.
-- A fresh four-owner native run is queued through the maintained shared build
-  lock. Its source snapshot contains exactly the hashes above. No successful
-  native axiom audit of all four selected owners is claimed yet.
+- The original local four-owner run is queued through the maintained shared
+  build lock with the proof sources published at draft head `fb5b9da0`. Its
+  original checkout is preserved. It cannot certify the subsequent repairs
+  identified by the source hashes above; exact-head CI checks those revisions.
+  No successful native axiom audit of all four owners is claimed yet.
 - The actual installed pre-commit hook passed at local source checkpoint
   `a752a9005b586148fc7dafe3d3eef5fd1324d61b`, tree
   `bb190923bcf8cd8223b1dd07f31373fc538d93e6`. Later documentation updates do not
@@ -347,3 +349,23 @@ Mathlib roots, independently checked against the maintained closure helper.
 Compilation, native axiom inspection, independent acceptance, and complete
 repository build status remain separate gates. This ledger records the draft
 checkpoint and will be updated as the queued checks produce observed results.
+
+### First exact-head CI result and bounded repair
+
+[Focused run 44272453540](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44272453540)
+tested draft head `fb5b9da0c14d41c86f2b7e85d50e7f424389eee4`. Source-head,
+Lean archive checksum, dependency-pin, and scoped cache checks passed. The
+parent Gibbs entropy owner compiled with zero warnings. Transport had three
+elaboration errors and two unused-simp warnings; orthogonality had one CFC
+elaboration error and one unused-section-instance warning. The equilibrium
+owner was blocked by its orthogonality dependency. The native axiom audit was
+not reached. The failed logs and source snapshots were uploaded by that run.
+
+The reviewed repair uses `Matrix.star_eq_conjTranspose` for the CFC argument,
+`Complex.smul_re` and `smul_eq_mul` for the two real-trace readouts, and the
+explicit `IsSelfAdjoint` predicate for both CFC commutation and identity.
+The trace-zero lemma omits its unused `DecidableEq` instance. Its generated
+type becomes more general; mathematical conclusions, remaining hypotheses,
+imports, ordered matrix products, and acceptance gates are unchanged.
+The repaired source hashes are listed above. Their independent source/API
+review passed; native acceptance remains pending the next exact-head run.

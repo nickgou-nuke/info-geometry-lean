@@ -1,0 +1,199 @@
+name: Information Carnot kernel check
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/NoncommutativePowerDerivative.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/NoncommutativeDuhamelDerivative.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/NoncommutativeDuhamelFiniteDifference.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/NoncommutativeDuhamelContinuityReduction.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/NoncommutativeDuhamelFrechetBridge.lean'
+      - 'lean/InfoGeometry/Thermo/RealMatrixGibbs.lean'
+      - 'lean/InfoGeometry/Thermo/RealMatrixCarnot.lean'
+      - 'lean/InfoGeometry/Canonical/SouriauHilbertSchmidtOnsager.lean'
+      - 'lean/InfoGeometry/Physics/MatrixTraceBimodulePairingNative.lean'
+      - 'lean/InfoGeometry/Thermodynamics/FiniteEntropyLeaves.lean'
+      - 'lean/InfoGeometry/Thermo/RealDensityRadialFlow.lean'
+      - 'lean/InfoGeometry/Thermo/RealMatrixGibbsOrbit.lean'
+      - 'lean/InfoGeometry/Thermo/RealMatrixGibbsRadialChart.lean'
+      - 'lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean'
+      - 'lean/InfoGeometry/Thermo/GramMetriplecticNoReturn.lean'
+      - 'lean/InfoGeometry/Arithmetic/PrimitiveSetsAbove.lean'
+      - 'lean/InfoGeometry/Arithmetic/PrimitiveProjectiveRays.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/MobiusClosureFixedPoints.lean'
+      - 'lean/InfoGeometry/Thermodynamics/ProjectiveTemperature.lean'
+      - 'lean/InfoGeometry/Arithmetic/PrimitivePrimeProjectiveTemperature.lean'
+      - 'lean/InfoGeometry/Projective/LogSum.lean'
+      - 'lean/InfoGeometry/Projective/LogSumIneq.lean'
+      - 'lean/InfoGeometry/KL/Measure.lean'
+      - 'lean/InfoGeometry/Basic.lean'
+      - 'lean/InfoGeometry/PositiveMeasure.lean'
+      - 'lean/InfoGeometry/Projective/GaugeReduction.lean'
+      - 'lean/InfoGeometry/Projective/FaithfulKL.lean'
+      - 'lean/InfoGeometry/Stratum/Gauge.lean'
+      - 'lean/InfoGeometry/Projective/Projective.lean'
+      - 'lean/InfoGeometry/Projective/SelfDualCone.lean'
+      - 'lean/InfoGeometry/Projective/Orthant.lean'
+      - 'lean/InfoGeometry/Projective/Bridge.lean'
+      - 'lean/InfoGeometry/Projective/Normalize.lean'
+      - 'lean/InfoGeometry/Projective/ConeKL.lean'
+      - 'lean/InfoGeometry/Arithmetic/ProjectiveEntropy.lean'
+      - 'lean/InfoGeometry/Canonical/SelfDualNormalConeBridge.lean'
+      - 'lean/InfoGeometry/Arithmetic/ProjectiveRelativeEntropy.lean'
+      - 'lean/InfoGeometry/Arithmetic/ProjectiveWeylGauge.lean'
+      - 'lean/DAG/Basic.lean'
+      - 'lean/InfoGeometry/Meta/Architecture.lean'
+      - 'lean/InfoGeometry/Canonical/WeylHomogeneousReadoutBridge.lean'
+      - 'lean/InfoGeometry/Canonical/WeylEntropyShiftBridge.lean'
+      - 'lean/InfoGeometry/Canonical/WeylEntropyScaleObstruction.lean'
+      - 'tools/quality/check_clifford_dirac.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/build_lock.py'
+      - 'tools/quality/placeholder_audit.py'
+      - 'tools/quality/semantic_vacuity_gate.py'
+      - 'tools/quality/semantic_vacuity_patterns.json'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/information-carnot.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: information-carnot-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Fetch exact public source without traversing external submodules
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.event.pull_request.head.sha || github.sha }}
+          SOURCE_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "${GITHUB_SERVER_URL}/${SOURCE_REPOSITORY}.git"
+          git -C project fetch --no-tags --no-recurse-submodules --depth=1 origin "$SOURCE_REV"
+          git -C project -c submodule.recurse=false checkout --detach FETCH_HEAD
+          test "$(git -C project rev-parse HEAD)" = "$SOURCE_REV"
+      - name: Read exact dependency pins
+        id: pins
+        shell: bash
+        run: |
+          python3 - <<'PINS'
+          import json, os
+          from pathlib import Path
+          manifest = json.loads(Path('project/lake-manifest.json').read_text())
+          revision = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'mathlib={revision}\n')
+          PINS
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: ${{ steps.pins.outputs.mathlib }}
+          path: mathlib
+          persist-credentials: false
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            mathlib/.lake
+          key: information-carnot-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Fetch the pinned native import cache
+        shell: bash
+        run: |
+          python3 - <<'CACHE'
+          import subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('project').resolve()))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          targets = [
+              'InfoGeometry.Thermo.RealMatrixGibbs',
+              'InfoGeometry.Thermo.RealMatrixCarnot',
+              'InfoGeometry.Thermo.RealDensityRadialFlow',
+              'InfoGeometry.Thermo.RealMatrixGibbsOrbit',
+              'InfoGeometry.Thermo.RealMatrixGibbsRadialChart',
+              'InfoGeometry.Thermo.GramMetriplecticNoReturn',
+              'InfoGeometry.Canonical.WeylEntropyScaleObstruction',
+              'InfoGeometry.Physics.MatrixTraceBimodulePairingNative',
+          ]
+          _, _, native = closure(Path('project'), targets)
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'information-carnot-native-cache') as lock:
+              subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
+                  cwd='mathlib', check=True, pass_fds=(lock.fileno(),))
+          CACHE
+      - name: Check exact source closure and all target declarations
+        working-directory: project
+        shell: bash
+        run: |
+          python3 tools/quality/check_clifford_dirac.py \
+            --mathlib-root ../mathlib --output ../information-carnot-report \
+            --target InfoGeometry.Thermo.RealMatrixGibbs \
+            --target InfoGeometry.Thermo.RealMatrixCarnot \
+            --target InfoGeometry.Thermo.RealDensityRadialFlow \
+            --target InfoGeometry.Thermo.RealMatrixGibbsOrbit \
+            --target InfoGeometry.Thermo.RealMatrixGibbsRadialChart \
+            --target InfoGeometry.Thermo.GramMetriplecticNoReturn \
+            --target InfoGeometry.Canonical.WeylEntropyScaleObstruction \
+            --target InfoGeometry.Physics.MatrixTraceBimodulePairingNative
+          python3 - <<'REPORT'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('../information-carnot-report/report.json').read_text())
+          assert report['status'] == 'passed', report
+          selected = [m for m in report['modules'] if m['module'] in report['targets']]
+          assert len(selected) == len(report['targets'])
+          assert all(m['returncode'] == 0 and m['warnings'] == 0 for m in selected), selected
+          REPORT
+      - name: Check placeholders and semantic vacuity
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'SOURCE'
+          import subprocess
+          files = [
+              'lean/InfoGeometry/Thermo/RealMatrixGibbs.lean',
+              'lean/InfoGeometry/Thermo/RealMatrixCarnot.lean',
+              'lean/InfoGeometry/Thermo/RealDensityRadialFlow.lean',
+              'lean/InfoGeometry/Thermo/RealMatrixGibbsOrbit.lean',
+              'lean/InfoGeometry/Thermo/RealMatrixGibbsRadialChart.lean',
+              'lean/InfoGeometry/Thermo/GramMetriplecticNoReturn.lean',
+              'lean/InfoGeometry/Canonical/WeylEntropyScaleObstruction.lean',
+              'lean/InfoGeometry/Physics/MatrixTraceBimodulePairingNative.lean',
+          ]
+          for path in files:
+              subprocess.run(['python3', 'tools/quality/placeholder_audit.py',
+                  '--root', path, '--strict'], check=True)
+          subprocess.run(['python3', 'tools/quality/semantic_vacuity_gate.py',
+              *files, '--fail-on', 'error', '--json-out',
+              '../information-carnot-report/semantic.json'], check=True)
+          SOURCE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: information-carnot-evidence
+          path: |
+            information-carnot-report/report.json
+            information-carnot-report/evidence-sha256.json
+            information-carnot-report/src/CliffordDiracAudit.lean
+            information-carnot-report/*.log
+            information-carnot-report/semantic.json
+          if-no-files-found: warn

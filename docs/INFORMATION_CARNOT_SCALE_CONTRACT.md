@@ -312,45 +312,88 @@ Mathlib roots, independently checked against the maintained closure helper.
 | `MatrixUnitarySpectralOrthogonality` | `b133f8fe8f74198f348c6df15a01beb1de700dec15fd1ea885bb922f91b2edbb` |
 | `MatrixGibbsMetriplecticEquilibrium` | `04bade35580eb64d9aa9200866e0acbfb99ecb6d259729aee76a44a3ed9fb354` |
 
-### Native and publication status at the draft checkpoint
+### Accepted native result and its exact scope
 
-- Lean remains `v4.34.1`; Mathlib remains
-  `d13f23b723b8a846827a245b89c10fc7d3f11612`.
-- The first independent native attempt compiled the repaired Gibbs entropy
-  owner with zero warnings, but found API/elaboration errors in earlier
-  transport and orthogonality candidates. Those failures are preserved as
-  evidence; they are not acceptance of the repaired sources above.
-- The original local four-owner run is queued through the maintained shared
-  build lock with the proof sources published at draft head `fb5b9da0`. Its
-  original checkout is preserved. It cannot certify the subsequent repairs
-  identified by the source hashes above; exact-head CI checks those revisions.
-  No successful native axiom audit of all four owners is claimed yet.
-- The actual installed pre-commit hook passed at local source checkpoint
-  `a752a9005b586148fc7dafe3d3eef5fd1324d61b`, tree
-  `bb190923bcf8cd8223b1dd07f31373fc538d93e6`. Later documentation updates do not
-  change the frozen proof or verification-helper sources.
-- The actual installed pre-push hook was invoked on that clean checkpoint as
-  a new branch. It classified the full range from main and requested the
-  maintained locked Lake build including `InfoGeometry.All`; it is queued.
-  Neither root-package acceptance nor full-mode gate coverage is claimed.
-- The maintained `python tools/infra/ci_bootstrap.py paths` command returned
-  exit 1: HomotopyHypothesis and Atlas have missing configurations and are
-  untracked path dependencies; GIFT has a missing configuration and an
-  uninitialized pinned gitlink. InfoGeometryCore passed that availability and
-  provenance check. This preflight is not compilation. No replacement pins,
-  stub dependencies, or gate exceptions were introduced.
-- The upstream publication is a draft with native/QA acceptance pending.
-  The focused workflow is configured to compile the exact source head,
-  freshly compile every repository module in the closure, require zero
-  selected-owner warnings, and audit every owned declaration against the
-  foundational axiom whitelist. Remote workflow results must be observed
-  separately; publication itself is not a compilation certificate.
+[Focused run 44275576197](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44275576197),
+job `134702701235`, completed successfully on 2026-11-18. It checked source
+commit `08ef4c9e321d85de5999e72e058ab18e3aab7b31`, tree
+`fd709358e78f646333dd17c3b56183fa74102467`, with Lean `v4.34.1` and Mathlib
+`d13f23b723b8a846827a245b89c10fc7d3f11612`.
 
-Compilation, native axiom inspection, independent acceptance, and complete
-repository build status remain separate gates. This ledger records the draft
-checkpoint and will be updated as the queued checks produce observed results.
+| Native check | Observed result |
+|---|---|
+| Repository source closure | All 15 modules compiled freshly; no reused repository artifacts |
+| Selected owners | All four compiled with zero errors and zero warnings |
+| Dependency warnings | 12 inherited warnings across five prerequisite owners; the complete closure is not warning-free |
+| Owned declarations audited | 74: Gibbs entropy 22, scale transport 23, spectral orthogonality 18, and equilibrium 11 |
+| Native axiom dependencies | Only `propext`, `Classical.choice`, and `Quot.sound` |
+| Runtime and dependency identity | Pinned Lean archive checksum, Lean version, and Mathlib commit checked |
 
-### First exact-head CI result and bounded repair
+The 74 audit entries include generated and private declarations. They are not
+74 new theorem statements; the new source contributes the 37 theorems and two
+definitions counted above.
+
+The [uploaded evidence artifact](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44275576197/artifacts/14414833690)
+contains the exact source snapshots, per-module logs, native axiom log,
+`report.json`, environment, checker command, source provenance, and evidence
+hashes. The downloaded archive has SHA256
+`34dc8e2808cefaa52fb24c141dcc4fd8f54b74540462819aad96ab6a63788eab`.
+Its report records the source head above. GitHub executed the workflow from
+the pull-request merge revision
+`eb78e7cf37b79368c783bef25ee44fc338d778c1`; the workflow separately checked out
+and verified the exact PR source head before compilation. The workflow source
+hash is `ad053ff8a4e01038e3dfe62f69761ddb89b97c6cade3688be0c3882fa4271821`.
+
+Independent QA accepted this scoped native result after checking the archive
+checksum and integrity, all 23 evidence-manifest entries, all 15 source
+snapshots against the reviewed checkout, four unchanged verification-helper
+hashes, generated audit coverage, and the environment and revision records.
+Every explicit selected-owner theorem and definition is covered by the native
+audit, together with the generated and private declarations it reports.
+
+The reviewed local checkpoint
+`8610a4fc6a960ca59395290bb0a02999d074d7fa` has that same source tree, and its
+actual installed pre-commit hook passed. This ledger update changes only this
+documentation file; all 15 compiled source files, verification helpers,
+workflow, and dependency pins remain byte-identical to the accepted source
+revision. A later documentation commit is not described as having run CI
+merely because its proof sources match an accepted revision.
+
+The contribution is published as draft [PR #407](https://github.com/nickgou-nuke/info-geometry-lean/pull/407),
+stacked on #399 and unmerged. Scoped native acceptance and complete
+repository-package acceptance remain separate results.
+
+### Root package and installed-hook result
+
+The actual installed pre-push hook was invoked on clean source checkpoint
+`a752a9005b586148fc7dafe3d3eef5fd1324d61b`, tree
+`bb190923bcf8cd8223b1dd07f31373fc538d93e6`, as a new branch. Its installed
+pre-commit hook had passed. The pre-push hook classified the range from main
+and invoked the maintained locked Lake build for `InfoGeometry.All` and the
+four selected owners. It returned exit 1: Lake failed during dependency
+resolution because `external_refs/homotopy-hypothesis-lean4` was missing.
+It did not reach repository proof compilation. The other reported checks,
+including the incremental semantic audit, passed. The gate used its default
+incremental mode; this is not full-mode gate coverage or a root build pass.
+That preserved checkout predates the bounded repairs below and is not used
+as their native certificate.
+
+The maintained `python tools/infra/ci_bootstrap.py paths` command also returned
+exit 1: HomotopyHypothesis and Atlas have missing configurations and are
+untracked path dependencies; GIFT has a missing configuration and an
+uninitialized pinned gitlink. InfoGeometryCore passed that availability and
+provenance check. No replacement pins, stub dependencies, or gate exceptions
+were introduced. The focused native result above validates its exact source
+closure without claiming the unavailable root-package build.
+
+### Earlier failures and bounded repair
+
+The first independent native attempt compiled the repaired Gibbs entropy
+owner with zero warnings but found API/elaboration errors in earlier transport
+and orthogonality candidates. The original local four-owner run subsequently
+finished with 12 successful modules, two failed modules, and one blocked
+module. Its sources match the first published draft below; it does not
+certify the later repair. These failed results remain part of the history.
 
 [Focused run 44272453540](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/44272453540)
 tested draft head `fb5b9da0c14d41c86f2b7e85d50e7f424389eee4`. Source-head,
@@ -368,4 +411,5 @@ The trace-zero lemma omits its unused `DecidableEq` instance. Its generated
 type becomes more general; mathematical conclusions, remaining hypotheses,
 imports, ordered matrix products, and acceptance gates are unchanged.
 The repaired source hashes are listed above. Their independent source/API
-review passed; native acceptance remains pending the next exact-head run.
+review passed, and focused run 44275576197 supplied the successful native
+compilation and declaration-axiom result recorded above.

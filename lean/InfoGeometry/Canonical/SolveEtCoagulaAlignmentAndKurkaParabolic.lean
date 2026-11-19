@@ -152,10 +152,8 @@ def solveEtCoagulaToAporiaEquiv : SolveEtCoagulaNode ≃ AporiaCoagulaNode where
 
 theorem solveEtCoagulaEdge_iff_coagulaCovers (a b : SolveEtCoagulaNode) :
     CoagulaCovers (solveEtCoagulaToCoagulaEquiv a) (solveEtCoagulaToCoagulaEquiv b) ↔ solveEtCoagulaEdge a b := by
-  cases a <;> cases b <;> (
-    try { exact ⟨fun h => by cases h, fun h => by contradiction⟩ }
-    try { exact ⟨fun _ => trivial, fun _ => by constructor⟩ }
-  )
+  cases a <;> cases b <;>
+    simp [solveEtCoagulaToCoagulaEquiv, CoagulaCovers, solveEtCoagulaEdge]
 
 /-- Strict relational isomorphism between `solveEtCoagulaEdge` and `CoagulaCovers`. -/
 def solveEtCoagulaNode_relIso_coagulaNode :
@@ -165,10 +163,8 @@ def solveEtCoagulaNode_relIso_coagulaNode :
 
 theorem solveEtCoagulaEdge_iff_aporiaCover (a b : SolveEtCoagulaNode) :
     AporiaCover (solveEtCoagulaToAporiaEquiv a) (solveEtCoagulaToAporiaEquiv b) ↔ solveEtCoagulaEdge a b := by
-  cases a <;> cases b <;> (
-    try { exact ⟨fun h => by cases h, fun h => by contradiction⟩ }
-    try { exact ⟨fun _ => trivial, fun _ => by constructor⟩ }
-  )
+  cases a <;> cases b <;>
+    simp [solveEtCoagulaToAporiaEquiv, AporiaCover, solveEtCoagulaEdge]
 
 /-- Strict relational isomorphism between `solveEtCoagulaEdge` and `AporiaCover`. -/
 def solveEtCoagulaNode_relIso_aporiaCover :
@@ -284,6 +280,56 @@ theorem kurkaParabolicMap_hasDerivAt (a c : ℝ) (ha : a ≠ 0) :
     exact div_self (pow_ne_zero 2 ha)
   rw [hcalc] at hdiv
   exact hdiv
+
+/-- The second derivative of Kůrka's parabolic specialization at its double fixed
+point. The derivative function is computed on the neighborhood where the
+fractional-linear denominator is nonzero; `a ≠ 0` guarantees that this
+neighborhood contains `c`. -/
+theorem kurkaParabolicMap_second_deriv (a c : ℝ) (ha : a ≠ 0) :
+    HasDerivAt (deriv (kurkaParabolicMap a c)) (-2 / a) c := by
+  let q : ℝ → ℝ := fun x => x + (a - c)
+  have hq0 : q c ≠ 0 := by
+    dsimp [q]
+    rw [show c + (a - c) = a by ring]
+    exact ha
+  have hq_cont : ContinuousAt q c := by
+    dsimp [q]
+    exact continuousAt_id.add continuousAt_const
+  have hderiv_formula : ∀ x : ℝ, q x ≠ 0 →
+      deriv (kurkaParabolicMap a c) x = a ^ 2 / (q x) ^ 2 := by
+    intro x hx
+    have hP : HasDerivAt (fun y : ℝ => (a + c) * y - c ^ 2) (a + c) x := by
+      have h1 := (hasDerivAt_id x).const_mul (a + c)
+      simpa using h1.sub_const (c ^ 2)
+    have hQ : HasDerivAt q 1 x := by
+      dsimp [q]
+      simpa using (hasDerivAt_id x).add_const (a - c)
+    have hdiv := hP.div hQ hx
+    have hformula : deriv (kurkaParabolicMap a c) x =
+        ((a + c) * q x - ((a + c) * x - c ^ 2) * 1) / (q x) ^ 2 := by
+      simpa [kurkaParabolicMap, q] using hdiv.deriv
+    rw [hformula]
+    field_simp [hx]
+    ring
+  have hderiv_eventually : deriv (kurkaParabolicMap a c) =ᶠ[nhds c]
+      fun x => a ^ 2 / (q x) ^ 2 := by
+    filter_upwards [hq_cont.eventually_ne hq0] with x hx
+    exact hderiv_formula x hx
+  have hq2 : HasDerivAt (fun x : ℝ => (q x) ^ 2) (2 * a) c := by
+    have hq := (hasDerivAt_id c).add_const (a - c)
+    have hp := hq.pow 2
+    have hval : q c = a := by dsimp [q]; ring
+    simpa [hval] using hp
+  have hquot : HasDerivAt (fun x : ℝ => a ^ 2 / (q x) ^ 2)
+      ( (0 * (q c) ^ 2 - a ^ 2 * (2 * a)) / ((q c) ^ 2) ^ 2) c := by
+    exact (hasDerivAt_const c (a ^ 2)).div hq2 (pow_ne_zero 2 hq0)
+  have hvalue : (0 * (q c) ^ 2 - a ^ 2 * (2 * a)) / ((q c) ^ 2) ^ 2 = -2 / a := by
+    have hval : q c = a := by dsimp [q]; ring
+    rw [hval]
+    field_simp [ha]
+    ring
+  rw [hvalue] at hquot
+  exact hquot.congr_of_eventuallyEq hderiv_eventually.symm
 
 /-! ## Section 5: Rigorous Bug Refutation & Countermodels -/
 

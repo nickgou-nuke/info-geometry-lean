@@ -12,6 +12,7 @@ import InfoGeometry.Algebra.DerivationLieLane
 import InfoGeometry.Algebra.DerivationLieLaneRepresentation
 import InfoGeometry.Algebra.HyperbolicBogoliubovSplitAlgebra
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Basic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.ReciprocalTotalityAporiaPoset
 import InfoGeometry.OperatorAlgebra.PeirceSpine.VietaSusyKatoDissipationAndGaloisGolayPoset
 import InfoGeometry.Clifford.LorentzianBivectorSignatureBridge
 import InfoGeometry.Clifford.HestenesDirac
@@ -96,11 +97,11 @@ def unnormMidpointRev (Γ₁ Γ₂ : E) : E :=
   1 + Γ₁ * Γ₂
 
 /-- Normalized symmetrically split midpoint rotor `R₂₁ := s⁻¹ • (1 + Γ₂ Γ₁)`. -/
-def midpointRotor (s : ℝ) (Γ₁ Γ₂ : E) : E :=
-  s⁻¹ • InfoGeometry.OperatorAlgebra.PeirceSpine.midpointRotor Γ₁ Γ₂
+noncomputable def midpointRotor (s : ℝ) (Γ₁ Γ₂ : E) : E :=
+  s⁻¹ • InfoGeometry.OperatorAlgebra.PeirceSpine.ReciprocalTotalityAporiaPoset.midpointRotor Γ₁ Γ₂
 
 /-- Reverse normalized midpoint rotor `R̃₂₁ := s⁻¹ • (1 + Γ₁ Γ₂)`. -/
-def midpointRotorRev (s : ℝ) (Γ₁ Γ₂ : E) : E :=
+noncomputable def midpointRotorRev (s : ℝ) (Γ₁ Γ₂ : E) : E :=
   s⁻¹ • unnormMidpointRev Γ₁ Γ₂
 
 /-- Master theorem: Normalized midpoint rotor is an isometric intertwiner. -/
@@ -108,7 +109,7 @@ theorem midpointRotor_normalized_sandwich (s : ℝ) (Γ₁ Γ₂ : E)
     (hs : s ≠ 0)
     (hΓ₁ : Γ₁ * Γ₁ = 1)
     (hΓ₂ : Γ₂ * Γ₂ = 1)
-    (hnorm : InfoGeometry.OperatorAlgebra.PeirceSpine.midpointRotor Γ₁ Γ₂ *
+    (hnorm : InfoGeometry.OperatorAlgebra.PeirceSpine.ReciprocalTotalityAporiaPoset.midpointRotor Γ₁ Γ₂ *
       unnormMidpointRev Γ₁ Γ₂ = (s^2) • (1 : E)) :
     midpointRotor s Γ₁ Γ₂ * midpointRotorRev s Γ₁ Γ₂ = 1 ∧
     midpointRotor s Γ₁ Γ₂ * Γ₁ * midpointRotorRev s Γ₁ Γ₂ = Γ₂ := by
@@ -117,27 +118,25 @@ theorem midpointRotor_normalized_sandwich (s : ℝ) (Γ₁ Γ₂ : E)
     dsimp [midpointRotor, midpointRotorRev]
     rw [smul_mul_smul, hnorm, smul_smul]
     have : s⁻¹ * s⁻¹ * s^2 = 1 := by
-      calc s⁻¹ * s⁻¹ * s^2 = (s * s)⁻¹ * (s * s) := by
-        rw [mul_inv, sq, mul_assoc]
-      _ = 1 := inv_mul_cancel₀ (mul_ne_zero hs hs)
+      field_simp [hs]
     rw [this, one_smul]
   have h_sand : midpointRotor s Γ₁ Γ₂ * Γ₁ * midpointRotorRev s Γ₁ Γ₂ = Γ₂ := by
     dsimp [midpointRotor, midpointRotorRev]
-    calc (s⁻¹ • InfoGeometry.OperatorAlgebra.PeirceSpine.midpointRotor Γ₁ Γ₂) * Γ₁ *
+    calc (s⁻¹ • InfoGeometry.OperatorAlgebra.PeirceSpine.ReciprocalTotalityAporiaPoset.midpointRotor Γ₁ Γ₂) * Γ₁ *
         (s⁻¹ • unnormMidpointRev Γ₁ Γ₂)
-      _ = s⁻¹ • (InfoGeometry.OperatorAlgebra.PeirceSpine.midpointRotor Γ₁ Γ₂ * Γ₁) *
+      _ = s⁻¹ • (InfoGeometry.OperatorAlgebra.PeirceSpine.ReciprocalTotalityAporiaPoset.midpointRotor Γ₁ Γ₂ * Γ₁) *
           (s⁻¹ • unnormMidpointRev Γ₁ Γ₂) := by
         rw [smul_mul_assoc]
-      _ = s⁻¹ • (Γ₂ * InfoGeometry.OperatorAlgebra.PeirceSpine.midpointRotor Γ₁ Γ₂) *
+      _ = s⁻¹ • (Γ₂ * InfoGeometry.OperatorAlgebra.PeirceSpine.ReciprocalTotalityAporiaPoset.midpointRotor Γ₁ Γ₂) *
           (s⁻¹ • unnormMidpointRev Γ₁ Γ₂) := by
         have hintertwine :=
-          InfoGeometry.OperatorAlgebra.PeirceSpine.symmetrically_split_midpoint_rotor_intertwining
+          InfoGeometry.OperatorAlgebra.PeirceSpine.ReciprocalTotalityAporiaPoset.symmetrically_split_midpoint_rotor_intertwining
             Γ₁ Γ₂ hΓ₁ hΓ₂
         rw [hintertwine.2.2.1]
-      _ = (s⁻¹ * s⁻¹) • ((Γ₂ * InfoGeometry.OperatorAlgebra.PeirceSpine.midpointRotor Γ₁ Γ₂) *
+      _ = (s⁻¹ * s⁻¹) • ((Γ₂ * InfoGeometry.OperatorAlgebra.PeirceSpine.ReciprocalTotalityAporiaPoset.midpointRotor Γ₁ Γ₂) *
           unnormMidpointRev Γ₁ Γ₂) := by
         rw [smul_mul_smul]
-      _ = (s⁻¹ * s⁻¹) • (Γ₂ * (InfoGeometry.OperatorAlgebra.PeirceSpine.midpointRotor Γ₁ Γ₂ *
+      _ = (s⁻¹ * s⁻¹) • (Γ₂ * (InfoGeometry.OperatorAlgebra.PeirceSpine.ReciprocalTotalityAporiaPoset.midpointRotor Γ₁ Γ₂ *
           unnormMidpointRev Γ₁ Γ₂)) := by
         rw [mul_assoc]
       _ = (s⁻¹ * s⁻¹) • (Γ₂ * ((s^2) • (1 : E))) := by rw [hnorm]
@@ -145,10 +144,9 @@ theorem midpointRotor_normalized_sandwich (s : ℝ) (Γ₁ Γ₂ : E)
       _ = ((s⁻¹ * s⁻¹) * s^2) • (Γ₂ * 1) := by rw [smul_smul]
       _ = 1 • (Γ₂ * 1) := by
         have : (s⁻¹ * s⁻¹) * s^2 = 1 := by
-          calc (s⁻¹ * s⁻¹) * s^2 = (s * s)⁻¹ * (s * s) := by
-            rw [mul_inv, sq, mul_assoc]
-          _ = 1 := inv_mul_cancel₀ (mul_ne_zero hs hs)
+          field_simp [hs]
         rw [this]
+        simp
       _ = Γ₂ := by rw [one_smul, mul_one]
   exact ⟨h_unit, h_sand⟩
 
@@ -195,7 +193,7 @@ end KatoConnection
 
 section GEMAlgebra
 
-variable {A : Type*} [Ring A] [Algebra ℝ A]
+variable {A : Type*} [Ring A]
 
 /-- The combined gravito-electromagnetic connection `Ω := E + I * B`. -/
 def gemConnection (E I B : A) : A :=
@@ -213,7 +211,6 @@ theorem gemConnection_sq_split
     _ = (E + I * B) * (E + I * B) := sq (E + I * B)
     _ = E * E + E * (I * B) + (I * B) * E + (I * B) * (I * B) := by noncomm_ring
     _ = E^2 + I * (E * B) + I * (B * E) + (I * I) * (B * B) := by
-      rw [sq E, sq B]
       have h1 : E * (I * B) = I * (E * B) := by
         calc E * (I * B) = (E * I) * B := by noncomm_ring
           _ = (I * E) * B := by rw [hIE]
@@ -224,6 +221,7 @@ theorem gemConnection_sq_split
           _ = I * (I * B) * B := by rw [hIB]
           _ = (I * I) * (B * B) := by noncomm_ring
       rw [h1, h2, h3]
+      noncomm_ring
     _ = E^2 + I * (E * B + B * E) + (-1) * B^2 := by
       rw [hI_sq]
       noncomm_ring
@@ -267,15 +265,15 @@ section BogoliubovPeirce
 variable {E : Type*} [Ring E] [Algebra ℝ E]
 
 /-- The boosted reference frame `γ_boost := cosh(η) • γ₀ + sinh(η) • (B * γ₀)`. -/
-def boostedFrame (η : ℝ) (γ₀ B : E) : E :=
+noncomputable def boostedFrame (η : ℝ) (γ₀ B : E) : E :=
   Real.cosh η • γ₀ + Real.sinh η • (B * γ₀)
 
 /-- The hyperbolic Bogoliubov spin-rotor `R_Bog(η) := cosh(η/2) • 1 + sinh(η/2) • B`. -/
-def bogoliubovRotor (η : ℝ) (B : E) : E :=
+noncomputable def bogoliubovRotor (η : ℝ) (B : E) : E :=
   Real.cosh (η / 2) • (1 : E) + Real.sinh (η / 2) • B
 
 /-- The inverse Bogoliubov rotor `R_Bog(-η) = cosh(η/2) • 1 - sinh(η/2) • B`. -/
-def bogoliubovRotorInv (η : ℝ) (B : E) : E :=
+noncomputable def bogoliubovRotorInv (η : ℝ) (B : E) : E :=
   Real.cosh (η / 2) • (1 : E) - Real.sinh (η / 2) • B
 
 /-- Bogoliubov rotor is unitary: `R_Bog(η) * R_Bog(-η) = 1`. -/
@@ -291,12 +289,13 @@ theorem bogoliubovRotor_mul_inv (η : ℝ) (B : E) (hB : B * B = 1) :
            (Real.cosh (η / 2) * Real.cosh (η / 2)) • (1 : E) -
            (Real.sinh (η / 2) * Real.sinh (η / 2)) • (B * B) := by
       noncomm_ring
-    rw [this, hB, smul_sub]
+      module
+    rw [this, hB, ← sub_smul]
   rw [h1, Real.cosh_sq_sub_sinh_sq, one_smul]
 
 /-- Bogoliubov rotor sandwich produces the Lorentz-boosted frame. -/
 theorem bogoliubovRotor_sandwich (η : ℝ) (γ₀ B : E)
-    (hγ₀ : γ₀ * γ₀ = 1) (hB : B * B = 1)
+    (hB : B * B = 1)
     (hanti : γ₀ * B + B * γ₀ = 0) :
     bogoliubovRotor η B * γ₀ * bogoliubovRotorInv η B = boostedFrame η γ₀ B := by
   dsimp [bogoliubovRotor, bogoliubovRotorInv, boostedFrame]
@@ -305,13 +304,15 @@ theorem bogoliubovRotor_sandwich (η : ℝ) (γ₀ B : E)
     have h1 := Real.cosh_add (η / 2) (η / 2)
     have : η / 2 + η / 2 = η := add_halves η
     rw [this] at h1
-    rw [← h1, sq, sq]
+    simpa [pow_two] using h1.symm
   have h_prod : 2 * Real.sinh (η / 2) * Real.cosh (η / 2) = Real.sinh η := by
     have h1 := Real.sinh_add (η / 2) (η / 2)
     have : η / 2 + η / 2 = η := add_halves η
     rw [this] at h1
-    rw [← h1]
-    ring
+    calc 2 * Real.sinh (η / 2) * Real.cosh (η / 2)
+        = Real.sinh (η / 2) * Real.cosh (η / 2) +
+            Real.cosh (η / 2) * Real.sinh (η / 2) := by ring
+      _ = Real.sinh η := h1.symm
   calc (Real.cosh (η / 2) • (1 : E) + Real.sinh (η / 2) • B) * γ₀ *
        (Real.cosh (η / 2) • (1 : E) - Real.sinh (η / 2) • B)
     _ = (Real.cosh (η / 2) • γ₀ + Real.sinh (η / 2) • (B * γ₀)) *
@@ -322,6 +323,7 @@ theorem bogoliubovRotor_sandwich (η : ℝ) (γ₀ B : E)
         (Real.sinh (η / 2) * Real.cosh (η / 2)) • ((B * γ₀) * 1) -
         (Real.sinh (η / 2) * Real.sinh (η / 2)) • ((B * γ₀) * B) := by
       noncomm_ring
+      module
     _ = (Real.cosh (η / 2) ^ 2) • γ₀ -
         (Real.cosh (η / 2) * Real.sinh (η / 2)) • (- (B * γ₀)) +
         (Real.sinh (η / 2) * Real.cosh (η / 2)) • (B * γ₀) -
@@ -341,13 +343,7 @@ theorem bogoliubovRotor_sandwich (η : ℝ) (γ₀ B : E)
     _ = (Real.cosh (η / 2) ^ 2 + Real.sinh (η / 2) ^ 2) • γ₀ +
         (2 * Real.sinh (η / 2) * Real.cosh (η / 2)) • (B * γ₀) := by
       rw [smul_neg, sub_neg_eq_add, smul_neg, sub_neg_eq_add]
-      have : (Real.cosh (η / 2) * Real.sinh (η / 2)) • (B * γ₀) +
-             (Real.sinh (η / 2) * Real.cosh (η / 2)) • (B * γ₀) =
-             (2 * Real.sinh (η / 2) * Real.cosh (η / 2)) • (B * γ₀) := by
-        rw [← add_smul]
-        congr 1
-        ring
-      rw [← add_assoc, add_right_comm, this, ← add_smul]
+      module
     _ = Real.cosh η • γ₀ + Real.sinh η • (B * γ₀) := by
       rw [h_sq, h_prod]
 

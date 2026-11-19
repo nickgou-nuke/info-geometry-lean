@@ -99,6 +99,20 @@ theorem lineThrough_isLineScrew (p q : Point4) :
     IsLineScrew (lineThrough p q) := by
   exact lineThrough_isProjectiveLine p q
 
+/-- Top-grade coefficient of the exterior product of two bivectors in
+`Λ² ℝ⁴`. Since both factors have even grade, this pairing is symmetric. -/
+def lineWedgeScalar (L M : Line4) : ℝ :=
+  L.p01 * M.p23 - L.p02 * M.p13 + L.p03 * M.p12
+    + L.p12 * M.p03 - L.p13 * M.p02 + L.p23 * M.p01
+
+/-- Two line blades through a common point have zero exterior product. This
+is the coordinate form of the incidence criterion `A ∧ B = 0` for
+projective lines in `P³` (Hestenes–Ziegler, §3.3). -/
+theorem lineThrough_commonPoint_wedge_eq_zero (p q r : Point4) :
+    lineWedgeScalar (lineThrough p q) (lineThrough p r) = 0 := by
+  unfold lineWedgeScalar lineThrough wedgeVec4
+  ring
+
 /-- Every projective bivector in four dimensions is a sum of two line blades.
 
 This is the real six-coordinate `Λ² ℝ⁴` statement used in classical screw

@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-17",
+  "purpose": "User-supplied source notes; claims in the notes are not verification evidence.",
+  "base_repository": "nickgou-nuke/info-geometry-lean",
+  "base_revision": "08c34e03f610b452e03422037949196dc7d92d6d",
+  "sources": [
+    {
+      "original_name": "Pasted text (2)(20261117-092156).txt",
+      "preserved_file": "souriau-surprisal.txt",
+      "bytes": 35413,
+      "sha256": "129965642575c16b7cacb389f1e3344cf32c14bb9d1561eb0a2c59c3da7db546"
+    },
+    {
+      "original_name": "Pasted text(20261117-091129).txt",
+      "preserved_file": "para-kahler-octonion.txt",
+      "bytes": 36565,
+      "sha256": "1fef0d88c605c9d59f6590503b776362454f6b30b5022bbdec25dc1b12960e48"
+    }
+  ]
+}

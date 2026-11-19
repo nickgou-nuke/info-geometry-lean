@@ -1,9 +1,15 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Grading
 import Mathlib.LinearAlgebra.CliffordAlgebra.Even
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 
 /-!
 # Real Clifford carrier for signature (1,3)
@@ -61,7 +67,7 @@ noncomputable def Q14 : QuadraticForm ℝ V14 :=
 
 theorem Q14_basis (i : Fin 4) : Q14 (basisVec i) = qCoeff i := by
   fin_cases i <;>
-    simp [Q14_apply, basisVec, qCoeff, Fin.sum_univ_succ] <;> ring
+    simp [Q14_apply, basisVec, qCoeff]
 
 abbrev Cl14 := CliffordAlgebra Q14
 abbrev ClPlus14 := CliffordAlgebra.even Q14

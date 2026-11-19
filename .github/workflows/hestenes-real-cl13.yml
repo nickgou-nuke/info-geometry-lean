@@ -1,0 +1,271 @@
+name: Hestenes real spacetime algebra and observer pairing
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Canonical/**'
+      - 'lean/InfoGeometry/Clifford/**'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/External/Auto/TitsBruhatBrillouinKlein.lean'
+      - 'lean/InfoGeometry/Physics/SplitCliffordAlgebras.lean'
+      - 'proofs/**'
+      - 'tools/quality/check_clifford_dirac.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/hestenes_real_cl13_scope.json'
+      - 'tools/quality/placeholder_audit.py'
+      - 'tools/quality/audit_constructivity.py'
+      - 'tools/quality/common.py'
+      - 'tools/quality/semantic_vacuity_gate.py'
+      - 'tools/quality/semantic_vacuity_patterns.json'
+      - 'tools/infra/opengauss_screener.py'
+      - 'tools/infra/opengauss_cli.py'
+      - 'tools/infra/causal_cone_cross_sections.py'
+      - 'tools/infra/opengauss_ground_truth_contract.py'
+      - 'tools/quality/proof_proxy_staged_gate.py'
+      - 'tools/pathing.py'
+      - 'tools/build_lock.py'
+      - 'tests/test_reviewed_source_paths.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'lakefile.lean'
+      - 'pyproject.toml'
+      - 'docs/HESTENES_REAL_CL13*.md'
+      - '.github/workflows/hestenes-real-cl13.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hestenes-real-cl13-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-axioms-and-consumers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out the exact public repository revision
+        shell: bash
+        run: |
+          git init project
+          git -C project remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
+          git -C project -c protocol.version=2 fetch --no-tags --depth=1 origin "$GITHUB_SHA"
+          git -C project checkout --detach FETCH_HEAD
+          test "$(git -C project rev-parse HEAD)" = "$GITHUB_SHA"
+      - name: Read exact dependency pins
+        id: pins
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          manifest = json.loads(Path('project/lake-manifest.json').read_text())
+          revision = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'mathlib={revision}\n')
+          PY
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: ${{ steps.pins.outputs.mathlib }}
+          path: mathlib
+          persist-credentials: false
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            mathlib/.lake
+          key: hestenes-real-cl13-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install the repository's pinned static-review dependency
+        run: python3 -m pip install 'jsonschema==4.23.0'
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Test the scoped source resolver
+        working-directory: project
+        run: python3 -m unittest discover -s tests -p 'test_reviewed_source_paths.py' -v
+      - name: Fetch the pinned native import cache
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('project').resolve()))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          scope = json.loads(Path('project/tools/quality/hestenes_real_cl13_scope.json').read_text())
+          targets = scope['core_targets'] + scope['consumer_targets']
+          _, _, native = closure(Path('project'), targets, allow_root_proofs=True)
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'hestenes-real-cl13-cache') as lock:
+              subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
+                  cwd='mathlib', check=True, pass_fds=(lock.fileno(),))
+          PY
+      - name: Fresh core compilation and complete owned-declaration axiom audit
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, subprocess, sys
+          from pathlib import Path
+          scope = json.loads(Path('tools/quality/hestenes_real_cl13_scope.json').read_text())
+          command = [sys.executable, 'tools/quality/check_clifford_dirac.py',
+                     '--mathlib-root', '../mathlib', '--output', '../hestenes-real-cl13-report/core']
+          for target in scope['core_targets']:
+              command.extend(['--target', target])
+          subprocess.run(command, check=True)
+          PY
+      - name: Fresh compilation of the existing consumers
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, subprocess, sys
+          from pathlib import Path
+          scope = json.loads(Path('tools/quality/hestenes_real_cl13_scope.json').read_text())
+          command = [sys.executable, 'tools/quality/check_clifford_dirac.py',
+                     '--mathlib-root', '../mathlib', '--output', '../hestenes-real-cl13-report/consumers',
+                     '--skip-audit']
+          for target in scope['consumer_targets']:
+              command.extend(['--target', target])
+          subprocess.run(command, check=True)
+          PY
+      - name: Check every changed Lean owner for placeholders and semantic findings
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, subprocess, sys
+          from pathlib import Path
+          from tools.quality.check_reviewed_prs import repository_source_path
+          scope = json.loads(Path('tools/quality/hestenes_real_cl13_scope.json').read_text())
+          root = Path('.').resolve()
+          owners = [repository_source_path(root, t, allow_root_proofs=True).relative_to(root).as_posix()
+                    for t in scope['core_targets'] + scope['changed_consumer_targets']]
+          out = Path('../hestenes-real-cl13-report')
+          for index, owner in enumerate(owners):
+              subprocess.run([sys.executable, 'tools/quality/placeholder_audit.py',
+                  '--strict', '--root', owner, '--json-out',
+                  str(out / f'placeholder-{index}.json')], check=True)
+          result = subprocess.run([sys.executable, 'tools/infra/opengauss_screener.py',
+              '--strict', *owners, '--json'], text=True,
+              stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          (out / 'opengauss.json').write_text(result.stdout)
+          print(result.stdout)
+          result.check_returncode()
+          for name, args in [('refute', ['refute', *owners, '--strict', '--json']),
+                             ('gate4', ['review', *owners, '--gate', 'GATE_4', '--json'])]:
+              result = subprocess.run([sys.executable, 'tools/infra/opengauss_cli.py', *args],
+                  text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+              (out / f'{name}.json').write_text(result.stdout)
+              print(result.stdout)
+              result.check_returncode()
+          subprocess.run([sys.executable, 'tools/quality/semantic_vacuity_gate.py',
+              *owners, '--fail-on', 'error', '--json-out',
+              str(out / 'semantic-vacuity.json')], check=True)
+          PY
+      - name: Reconcile target coverage, warning policy, source identity, and evidence
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          from tools.quality.check_reviewed_prs import closure, repository_source_path
+          digest = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+          root = Path('.').resolve()
+          out = Path('../hestenes-real-cl13-report')
+          scope = json.loads(Path('tools/quality/hestenes_real_cl13_scope.json').read_text())
+          union, records, all_sources = {}, {}, {}
+          for lane, expected_status, audited in [('core', 'passed', True),
+                                                 ('consumers', 'development_passed', False)]:
+              report = json.loads((out / lane / 'report.json').read_text())
+              targets = scope['consumer_targets'] if lane == 'consumers' else scope['core_targets']
+              assert report['status'] == expected_status and report['targets'] == targets
+              assert report['audit_required'] is audited
+              ordered, dependencies, _ = closure(root, targets, allow_root_proofs=True)
+              modules = {m['module']: m for m in report['modules']}
+              assert list(modules) == ordered and len(modules) == len(report['modules'])
+              assert report['repository_import_dependencies'] == dependencies
+              assert all(m['returncode'] == 0 and not m['reused'] for m in modules.values())
+              assert set(report['source_sha256']) == set(ordered)
+              assert set(report['source_paths']) == set(ordered)
+              if audited:
+                  assert set(report['declaration_counts']) == set(targets)
+                  assert all(report['declaration_counts'][t] > 0 for t in targets)
+              for module, expected in report['source_sha256'].items():
+                  source = repository_source_path(root, module, allow_root_proofs=True)
+                  source_path = source.relative_to(root).as_posix()
+                  assert report['source_paths'][module] == source_path, module
+                  assert digest(source) == expected, module
+                  assert union.get(module, expected) == expected, module
+                  union[module] = expected
+                  all_sources[module] = source_path
+              records[lane] = modules
+              for name, expected in json.loads((out / lane / 'evidence-sha256.json').read_text()).items():
+                  path = Path(name.removeprefix('repository/')) if name.startswith('repository/') else out / lane / name
+                  assert digest(path) == expected, name
+          assert all(records['core'][t]['warnings'] == 0 for t in scope['core_targets'])
+          assert all(records['consumers'][t]['warnings'] == 0 for t in scope['changed_consumer_targets'])
+          owners = [repository_source_path(root, t, allow_root_proofs=True).relative_to(root).as_posix()
+                    for t in scope['core_targets'] + scope['changed_consumer_targets']]
+          semantic = json.loads((out / 'semantic-vacuity.json').read_text())
+          assert semantic['coverage_complete'] and not semantic['read_failures']
+          assert semantic['files_selected'] == semantic['files_scanned'] == len(owners)
+          for field in ['source_paths', 'successfully_read_paths', 'scope_roots']:
+              assert sorted(semantic[field]) == sorted(owners), field
+          assert semantic['fail_on'] == 'error' and not semantic['fail_prefixes']
+          assert semantic['severity_counts'].get('error', 0) == 0
+          refute = json.loads((out / 'refute.json').read_text())
+          assert len(refute) == len(owners)
+          assert {r['filename'] for r in refute} == set(owners)
+          assert all(r['clean'] and r['verdict'] == 'PASS' for r in refute)
+          gate4 = json.loads((out / 'gate4.json').read_text())
+          assert len(gate4) == len(owners)
+          assert {r['target_file'] for r in gate4} == set(owners)
+          assert all(r['verdict'] == 'STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED' and
+                     not r['kernel_checked'] for r in gate4)
+          (out / 'coverage.json').write_text(json.dumps({
+              'status': 'passed', 'source_sha256': union, 'source_paths': all_sources,
+              'core_audit': True, 'consumer_audit': False,
+              'changed_owner_warnings': 0,
+              'consumer_warnings': {m: r['warnings'] for m, r in records['consumers'].items()
+                                    if r['warnings']}
+          }, indent=2) + '\n')
+          index = {str(p.relative_to(out)): digest(p) for p in sorted(out.rglob('*'))
+                   if p.is_file() and (p.suffix in {'.json', '.log'} or p.name == 'CliffordDiracAudit.lean')}
+          for name in ['.github/workflows/hestenes-real-cl13.yml',
+                       'docs/HESTENES_REAL_CL13.md', 'docs/HESTENES_REAL_CL13_CONTRACT.md',
+                       'tools/quality/hestenes_real_cl13_scope.json',
+                       'tests/test_reviewed_source_paths.py',
+                       'tools/quality/placeholder_audit.py', 'tools/quality/audit_constructivity.py',
+                       'tools/quality/common.py',
+                       'tools/pathing.py', 'tools/quality/semantic_vacuity_gate.py',
+                       'tools/quality/semantic_vacuity_patterns.json',
+                       'tools/infra/opengauss_screener.py', 'tools/infra/opengauss_cli.py',
+                       'tools/infra/causal_cone_cross_sections.py',
+                       'tools/infra/opengauss_ground_truth_contract.py',
+                       'tools/quality/proof_proxy_staged_gate.py',
+                       'lean-toolchain', 'lake-manifest.json', 'lakefile.lean', 'pyproject.toml']:
+              index['repository/' + name] = digest(Path(name))
+          (out / 'evidence-sha256.json').write_text(json.dumps(index, indent=2) + '\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hestenes-real-cl13-kernel-evidence
+          path: |
+            hestenes-real-cl13-report/**/*.json
+            hestenes-real-cl13-report/**/*.log
+            hestenes-real-cl13-report/**/CliffordDiracAudit.lean
+          if-no-files-found: warn

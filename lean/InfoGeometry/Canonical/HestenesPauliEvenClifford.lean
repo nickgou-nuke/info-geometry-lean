@@ -1,9 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.CliffordAlgebra.Even
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
 import Mathlib.Tactic.FinCases
-import InfoGeometry.Clifford.Spacetime
+import InfoGeometry.Clifford.Spacetime.Basic
 import InfoGeometry.Canonical.ChiralStokesPauliRelations
 
 open scoped Matrix

@@ -660,3 +660,11 @@ import InfoGeometry.Probability.AitchisonContingencyAudit
 import InfoGeometry.Algebra.SkewPolynomialFactorization
 import InfoGeometry.Algebra.QuadraticCrossedProduct
 import InfoGeometry.Algebra.CARTwoSidedIdeal
+import InfoGeometry.Canonical.HestenesCartanPhaseTransport
+import InfoGeometry.Canonical.Cl11LorentzCornerBounds
+import InfoGeometry.Lie.SplitOctonionTriadVolume
+import InfoGeometry.QuantumGeometry.FiniteObservableGramExamples
+import InfoGeometry.QuantumGeometry.RealPhaseObservableGram
+import InfoGeometry.Analysis.SchwartzUncertainty
+import InfoGeometry.Analysis.ProjectedGramDissipation
+import InfoGeometry.Analysis.SplitOctonionProjectedGram

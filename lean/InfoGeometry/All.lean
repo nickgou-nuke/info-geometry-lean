@@ -648,3 +648,7 @@ import InfoGeometry.Clifford.ChevalleyNeutralCompatibility
 import InfoGeometry.Clifford.ParaKreinObstructions
 import InfoGeometry.Clifford.NeutralCotangentHamiltonian
 import InfoGeometry.Geometry.ParaPotentialPullback
+import InfoGeometry.OperatorAlgebra.MaxRelativeEntropy
+import InfoGeometry.Quantum.PositiveEffectOrder
+import InfoGeometry.Quantum.MaxRelativeEntropy
+import InfoGeometry.Quantum.MaxRelativeEntropyQubit

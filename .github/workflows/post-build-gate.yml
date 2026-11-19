@@ -79,4 +79,3 @@ jobs:
           name: axiom-audit-report
           path: artifacts/axiom_audit_report.json
           retention-days: 7
-EOF

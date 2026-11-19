@@ -1,0 +1,152 @@
+name: Zorn GENERIC, cored profile, and singular spinor kernel check
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Physics/FisherKreinLorentz.lean'
+      - 'lean/InfoGeometry/Physics/CanonicalScalarStress.lean'
+      - 'lean/InfoGeometry/Physics/ScalarKineticBalance.lean'
+      - 'lean/InfoGeometry/Physics/SphericalMassProfile.lean'
+      - 'lean/InfoGeometry/Algebra/AlternativeDerivations.lean'
+      - 'lean/InfoGeometry/Algebra/ZornVectorMatrix.lean'
+      - 'lean/InfoGeometry/Algebra/ZornDerivationBridge.lean'
+      - 'lean/InfoGeometry/Algebra/RegularActionAssociator.lean'
+      - 'lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean'
+      - 'lean/InfoGeometry/Algebra/ZornLeftCAR.lean'
+      - 'lean/InfoGeometry/Algebra/ZornCARAdjoint.lean'
+      - 'lean/DAG/Basic.lean'
+      - 'lean/InfoGeometry/Meta/Architecture.lean'
+      - 'lean/InfoGeometry/Canonical/ZornSpinor.lean'
+      - 'lean/InfoGeometry/Algebra/Zorn/Basic.lean'
+      - 'lean/InfoGeometry/Canonical/SplitOctonionClassificationCore.lean'
+      - 'lean/InfoGeometry/Algebra/Zorn/Associator.lean'
+      - 'lean/InfoGeometry/Algebra/Zorn/CanonicalVectorMatrixBridge.lean'
+      - 'lean/InfoGeometry/Canonical/GunaydinGurseyQuarkBasisBridge.lean'
+      - 'lean/InfoGeometry/Canonical/GunaydinGurseyTripleProducts.lean'
+      - 'lean/InfoGeometry/Canonical/CattoGurseySplitBasis.lean'
+      - 'lean/InfoGeometry/Algebra/ZornAssociatorGram.lean'
+      - 'lean/InfoGeometry/Thermo/GenericMetriplecticFlow.lean'
+      - 'lean/InfoGeometry/Thermo/GenericEntropyExtension.lean'
+      - 'lean/InfoGeometry/Algebra/ZornQuaternionProjectedGram.lean'
+      - 'lean/InfoGeometry/Algebra/ZornGramDissipation.lean'
+      - 'lean/InfoGeometry/Physics/CoredSphericalMassProfile.lean'
+      - 'lean/InfoGeometry/Thermo/ZornEntropyExtension.lean'
+      - 'lean/InfoGeometry/Canonical/HestenesClPlus14.lean'
+      - 'lean/InfoGeometry/Canonical/HestenesCliffordKreinFinite.lean'
+      - 'lean/InfoGeometry/Clifford/SingularSpinorCurrent.lean'
+      - 'tools/quality/check_clifford_dirac.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/placeholder_audit.py'
+      - 'tools/quality/semantic_vacuity_gate.py'
+      - 'tools/build_lock.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/zorn-generic-core.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: zorn-generic-core-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      BRIDGE_TARGETS: '["InfoGeometry.Physics.CanonicalScalarStress","InfoGeometry.Physics.ScalarKineticBalance","InfoGeometry.Physics.SphericalMassProfile","InfoGeometry.Algebra.ZornAssociatorGram","InfoGeometry.Thermo.GenericEntropyExtension","InfoGeometry.Algebra.ZornQuaternionProjectedGram","InfoGeometry.Algebra.ZornGramDissipation","InfoGeometry.Physics.CoredSphericalMassProfile","InfoGeometry.Thermo.ZornEntropyExtension","InfoGeometry.Clifford.SingularSpinorCurrent"]'
+    steps:
+      - name: Fetch exact source without submodule traversal
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+          SOURCE_REPOSITORY: ${{ github.repository }}
+        run: |
+          git init project
+          git -C project remote add origin "https://github.com/${SOURCE_REPOSITORY}.git"
+          git -C project fetch --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+      - name: Read exact dependency pins
+        id: pins
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          manifest = json.loads(Path('project/lake-manifest.json').read_text())
+          revision = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'mathlib={revision}\n')
+          PY
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: ${{ steps.pins.outputs.mathlib }}
+          path: mathlib
+          persist-credentials: false
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            mathlib/.lake
+          key: zorn-generic-core-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Fetch the pinned native import cache
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('project').resolve()))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          targets = json.loads(os.environ['BRIDGE_TARGETS'])
+          _, _, native = closure(Path('project'), targets)
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'zorn-generic-core-cache') as lock:
+              subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
+                  cwd='mathlib', check=True, pass_fds=(lock.fileno(),))
+          PY
+      - name: Check source closure, declaration axioms, and warnings
+        working-directory: project
+        run: |
+          python3 - <<'PY'
+          import json, os, pathlib, subprocess
+          targets = json.loads(os.environ['BRIDGE_TARGETS'])
+          cmd = ['python3', 'tools/quality/check_clifford_dirac.py',
+                 '--mathlib-root', '../mathlib', '--output', '../zorn-generic-core-report']
+          for target in targets:
+              cmd += ['--target', target]
+          subprocess.run(cmd, check=True)
+          report = json.loads(pathlib.Path('../zorn-generic-core-report/report.json').read_text())
+          assert report['status'] == 'passed' and report['audit_required']
+          checked = {m['module']: m for m in report['modules']}
+          assert all(t in checked and checked[t]['warnings'] == 0 for t in targets)
+          paths = ['lean/' + t.replace('.', '/') + '.lean' for t in targets]
+          for path in paths:
+              subprocess.run(['python3', 'tools/quality/placeholder_audit.py',
+                              '--root', path, '--strict'], check=True)
+          subprocess.run(['python3', 'tools/quality/semantic_vacuity_gate.py',
+                          *paths, '--fail-on', 'error'], check=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: zorn-generic-core-evidence
+          path: |
+            zorn-generic-core-report/report.json
+            zorn-generic-core-report/evidence-sha256.json
+            zorn-generic-core-report/src
+            zorn-generic-core-report/*.log
+          if-no-files-found: warn

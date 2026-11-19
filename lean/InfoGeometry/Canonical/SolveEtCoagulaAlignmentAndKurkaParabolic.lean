@@ -307,7 +307,8 @@ theorem kurkaParabolicMap_second_deriv (a c : ℝ) (ha : a ≠ 0) :
     have hdiv := hP.div hQ hx
     have hformula : deriv (kurkaParabolicMap a c) x =
         ((a + c) * q x - ((a + c) * x - c ^ 2) * 1) / (q x) ^ 2 := by
-      simpa [kurkaParabolicMap, q] using hdiv.deriv
+      change deriv ((fun y : ℝ => (a + c) * y - c ^ 2) / q) x = _
+      exact hdiv.deriv
     rw [hformula]
     field_simp [hx]
     ring
@@ -319,7 +320,11 @@ theorem kurkaParabolicMap_second_deriv (a c : ℝ) (ha : a ≠ 0) :
     have hq := (hasDerivAt_id c).add_const (a - c)
     have hp := hq.pow 2
     have hval : q c = a := by dsimp [q]; ring
-    simpa [hval] using hp
+    convert hp using 1
+    · rfl
+    · dsimp [q]
+      rw [show c + (a - c) = a by ring]
+      ring
   have hquot : HasDerivAt (fun x : ℝ => a ^ 2 / (q x) ^ 2)
       ( (0 * (q c) ^ 2 - a ^ 2 * (2 * a)) / ((q c) ^ 2) ^ 2) c := by
     exact (hasDerivAt_const c (a ^ 2)).div hq2 (pow_ne_zero 2 hq0)
@@ -329,7 +334,7 @@ theorem kurkaParabolicMap_second_deriv (a c : ℝ) (ha : a ≠ 0) :
     field_simp [ha]
     ring
   rw [hvalue] at hquot
-  exact hquot.congr_of_eventuallyEq hderiv_eventually.symm
+  exact hquot.congr_of_eventuallyEq hderiv_eventually
 
 /-! ## Section 5: Rigorous Bug Refutation & Countermodels -/
 

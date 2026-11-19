@@ -113,6 +113,25 @@ theorem lineThrough_commonPoint_wedge_eq_zero (p q r : Point4) :
   unfold lineWedgeScalar lineThrough wedgeVec4
   ring
 
+/-- A bivector's exterior square is twice its Klein value in this
+normalization. This is the Hestenes–Ziegler screw criterion `S ∧ S = 0` for
+decomposability, expressed in the owner's six Plücker coordinates. -/
+theorem lineWedgeScalar_self_eq_two_kleinForm (S : Screw4) :
+    lineWedgeScalar S S = 2 * kleinForm S := by
+  unfold lineWedgeScalar kleinForm
+  ring
+
+/-- The exterior-square criterion for a screw is exactly the existing
+projective-line predicate. -/
+theorem lineWedgeScalar_self_eq_zero_iff_isProjectiveLine (S : Screw4) :
+    lineWedgeScalar S S = 0 ↔ IsProjectiveLine S := by
+  rw [lineWedgeScalar_self_eq_two_kleinForm, IsProjectiveLine, IsOnKleinQuadric]
+  constructor
+  · intro h
+    nlinarith
+  · intro h
+    simp [h]
+
 /-- Every projective bivector in four dimensions is a sum of two line blades.
 
 This is the real six-coordinate `Λ² ℝ⁴` statement used in classical screw

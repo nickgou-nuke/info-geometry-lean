@@ -860,8 +860,6 @@ require «doc-gen4» from git
   "https://github.com/leanprover/doc-gen4.git"
   @ "v4.34.1"
 
-require «GIFT» from
-  "external_refs/gift-framework-core"
 require Atlas from
   "external_refs/atlas-lean"
 require HomotopyHypothesis from

@@ -617,3 +617,8 @@ import InfoGeometry.LinearAlgebra.OrderedQuotientBasis
 import InfoGeometry.Algebra.FreeOperatorSymmetry
 import InfoGeometry.Canonical.OperatorBasisExamples
 import InfoGeometry.Algebra.OperatorBasisAudit
+import InfoGeometry.Algebra.MatrixAlgebraDivisibility
+import InfoGeometry.Quantum.KrausCommutatorGeometry
+import InfoGeometry.Quantum.KrausFixedEffectCounterexample
+import InfoGeometry.Quantum.InstrumentHistory
+import InfoGeometry.Canonical.InstrumentHistoryGNS

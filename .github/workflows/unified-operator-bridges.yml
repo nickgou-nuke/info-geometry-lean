@@ -66,12 +66,15 @@ jobs:
         "InfoGeometry.Geometry.MixedPairingNondegeneracy",
         "InfoGeometry.InformationGeometry.ContrastMixedHessianBoundary"]
     steps:
-      - uses: actions/checkout@v4
-        with:
-          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
-          ref: ${{ env.UNIFIED_SOURCE_REVISION }}
-          path: project
-          persist-credentials: false
+      - name: Check out the exact public source without submodule traversal
+        env:
+          UNIFIED_SOURCE_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+        shell: bash
+        run: |
+          git init --quiet project
+          git -C project remote add origin "https://github.com/${UNIFIED_SOURCE_REPOSITORY}.git"
+          git -C project -c protocol.version=2 fetch --quiet --no-tags --depth=1 origin "$UNIFIED_SOURCE_REVISION"
+          git -C project -c submodule.recurse=false checkout --quiet --detach FETCH_HEAD
       - name: Verify source revision and read dependency pins
         id: pins
         shell: bash

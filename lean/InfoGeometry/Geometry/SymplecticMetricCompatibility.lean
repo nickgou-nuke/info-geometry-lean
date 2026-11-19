@@ -220,4 +220,56 @@ theorem compLeft_ne_of_opposite_squares [Nontrivial E]
   have htwo : (2 : ℝ) • x = 0 := by simpa only [two_smul] using hsum
   exact hx ((smul_eq_zero.mp htwo).resolve_left (by norm_num))
 
+/-- In the common-form construction, the elliptic operator is self-adjoint
+for the left para contraction. This differs from a metric making both
+elliptic and para operators skew. No positivity or finite dimension is used. -/
+theorem compLeft_complex_self_adjoint (ω : LinearMap.BilinForm ℝ E)
+    {I K : Module.End ℝ E} (hI : I * I = -1)
+    (hωI : ∀ x y, ω (I x) (I y) = ω x y)
+    (hanticomm : I * K = -(K * I)) (x y : E) :
+    (ω.compLeft K) (I x) y = (ω.compLeft K) x (I y) := by
+  have hKI : K (I x) = -(I (K x)) := by
+    have h := congrArg (fun T : Module.End ℝ E => T x) hanticomm
+    change I (K x) = -(K (I x)) at h
+    simpa only [neg_neg] using (congrArg Neg.neg h).symm
+  change ω (K (I x)) y = ω (K x) (I y)
+  rw [hKI, map_neg, LinearMap.neg_apply, complex_skew ω hI hωI, neg_neg]
+
+/-- The same elliptic operator reverses the left-contracted metric, even
+though it preserves the original symplectic form. -/
+theorem compLeft_complex_anti_isometry (ω : LinearMap.BilinForm ℝ E)
+    {I K : Module.End ℝ E} (hI : I * I = -1)
+    (hωI : ∀ x y, ω (I x) (I y) = ω x y)
+    (hanticomm : I * K = -(K * I)) (x y : E) :
+    (ω.compLeft K) (I x) (I y) = -(ω.compLeft K) x y := by
+  have hII : I (I y) = -y := by
+    simpa using congrArg (fun T : Module.End ℝ E => T y) hI
+  rw [compLeft_complex_self_adjoint ω hI hωI hanticomm, hII, map_neg]
+
+/-- On a nonzero carrier with nondegenerate original form, this same
+left-contracted metric cannot also make the elliptic operator skew.
+This does not exclude other metrics or operator triples on the carrier. -/
+theorem compLeft_complex_not_skew [Nontrivial E]
+    (ω : LinearMap.BilinForm ℝ E) (hω : ω.Nondegenerate)
+    {I K : Module.End ℝ E} (hI : I * I = -1) (hK : K * K = 1)
+    (hωI : ∀ x y, ω (I x) (I y) = ω x y)
+    (hanticomm : I * K = -(K * I)) :
+    ¬ (∀ x y, (ω.compLeft K) (I x) y = -(ω.compLeft K) x (I y)) := by
+  intro hskew
+  have hzero (x : E) : I x = 0 := by
+    apply (compLeft_nondegenerate ω hω hK).1 (I x)
+    intro y
+    have hs := compLeft_complex_self_adjoint ω hI hωI hanticomm x y
+    have hk := hskew x y
+    have htwice : (ω.compLeft K) (I x) y + (ω.compLeft K) (I x) y = 0 := by
+      simpa only [← hs] using (eq_neg_iff_add_eq_zero.mp hk)
+    have htwo : (2 : ℝ) * (ω.compLeft K) (I x) y = 0 := by
+      simpa only [two_mul] using htwice
+    exact (mul_eq_zero.mp htwo).resolve_left (by norm_num)
+  obtain ⟨x, hx⟩ := exists_ne (0 : E)
+  have hII : I (I x) = -x := by
+    simpa using congrArg (fun T : Module.End ℝ E => T x) hI
+  have hneg : -x = 0 := hII.symm.trans (hzero (I x))
+  exact hx (neg_eq_zero.mp hneg)
+
 end InfoGeometry.Geometry.SymplecticMetricCompatibility

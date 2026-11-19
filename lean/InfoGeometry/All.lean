@@ -136,6 +136,7 @@ import InfoGeometry.Geometry.QuadraticPotentialCalculus
 import InfoGeometry.Geometry.FlatSplitQuaternionPotential
 import InfoGeometry.Geometry.FlatSplitQuaternionFamily
 import InfoGeometry.Geometry.SymplecticMetricCompatibility
+import InfoGeometry.Geometry.HypersymplecticDimension
 import InfoGeometry.Geometry.ObliqueSymplecticInvolution
 import InfoGeometry.Clifford.PhaseSpaceSymplecticMetricCompatibility
 import InfoGeometry.Analysis.LogHomogeneousPotential

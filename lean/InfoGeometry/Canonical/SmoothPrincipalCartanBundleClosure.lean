@@ -121,13 +121,32 @@ theorem homothetyCartanOmega_total_contMDiff (κ : ℝ) :
       (cartanOmegaTotal (homothetyCartanGeometry κ)) := by
   let E := (Fin 2 → ℝ) × ℝ
   let I := 𝓘(ℝ, E)
-  let hcoord : E × E → HomothetyLieAlg :=
-    fun z => ⟨Real.exp (-z.1.2) • z.2.1,
-      z.2.2 + κ * (z.1.1 0 * z.2.1 1 - z.1.1 1 * z.2.1 0)⟩
+  let : NormedAddCommGroup (ModelProd E E) := inferInstanceAs (NormedAddCommGroup (E × E))
+  let : NormedSpace ℝ (ModelProd E E) := inferInstanceAs (NormedSpace ℝ (E × E))
+  let coordEquiv : HomothetyLieAlg ≃ₗ[ℝ] E :=
+    { toFun := fun x => (x.trans, x.scale)
+      invFun := fun x => ⟨x.1, x.2⟩
+      left_inv := by intro x; cases x; rfl
+      right_inv := by intro x; rfl
+      map_add' := by intro x y; rfl
+      map_smul' := by intro c x; rfl }
+  let coordInv : E ≃L[ℝ] HomothetyLieAlg :=
+    coordEquiv.symm.toContinuousLinearEquivOfContinuous
+      coordEquiv.symm.continuous_of_finiteDimensional
+  let coords : Prod (Prod (Fin 2 → ℝ) ℝ) (Prod (Fin 2 → ℝ) ℝ) →
+      Prod (Fin 2 → ℝ) ℝ := fun z =>
+    (Real.exp (-z.1.2) • z.2.1,
+      z.2.2 + κ * (z.1.1 0 * z.2.1 1 - z.1.1 1 * z.2.1 0))
+  let hcoord : ModelProd E E → HomothetyLieAlg := fun z => coordInv (coords z)
+  have hcoords : ContDiff ℝ (minSmoothness ℝ 2) coords := by
+    dsimp [coords]
+    fun_prop
   have hcoord_smooth : ContMDiff (I.prod 𝓘(ℝ, E)) 𝓘(ℝ, HomothetyLieAlg)
       (minSmoothness ℝ 2) hcoord := by
-    change ContDiff ℝ (minSmoothness ℝ 2) hcoord
-    fun_prop
+    rw [← modelWithCornersSelf_prod]
+    rw [contMDiff_iff_contDiff]
+    change ContDiff ℝ (minSmoothness ℝ 2) (coordInv ∘ coords)
+    exact coordInv.contDiff.comp hcoords
   have hTangent : ContMDiff I.tangent (I.prod 𝓘(ℝ, E)) (minSmoothness ℝ 2)
       (tangentBundleModelSpaceHomeomorph I) := by
     simpa [I, E] using
@@ -135,13 +154,25 @@ theorem homothetyCartanOmega_total_contMDiff (κ : ℝ) :
   have hEq : cartanOmegaTotal (homothetyCartanGeometry κ) =
       hcoord ∘ tangentBundleModelSpaceHomeomorph I := by
     funext v
-    simp [cartanOmegaTotal, hcoord, E, I, homothetyCartanGeometry,
-      homothetyCartanOmega_apply, tangentBundleModelSpaceHomeomorph_coe]
+    change homothetyCartanOmega κ v.proj v.snd =
+      coordInv (coords (v.proj, v.snd))
+    ext i
+    · change Real.exp (-v.proj.2) *
+        (NormedSpace.fromTangentSpace v.proj v.snd).1 i =
+          Real.exp (-v.proj.2) * v.snd.1 i
+      rfl
+    · change (NormedSpace.fromTangentSpace v.proj v.snd).2 +
+        κ * (v.proj.1 0 * (NormedSpace.fromTangentSpace v.proj v.snd).1 1 -
+          v.proj.1 1 * (NormedSpace.fromTangentSpace v.proj v.snd).1 0) =
+        v.snd.2 + κ * (v.proj.1 0 * v.snd.1 1 - v.proj.1 1 * v.snd.1 0)
+      rfl
   rw [hEq]
   exact hcoord_smooth.comp hTangent
 
-def homothetyCartanFormRegularity (κ : ℝ) :
-    SmoothCartanFormRegularity (homothetyCartanGeometry κ) :=
+theorem homothetyCartanFormRegularity (κ : ℝ) :
+    SmoothCartanFormRegularity (E𝔤 := HomothetyLieAlg) (H𝔤 := HomothetyLieAlg)
+      (I𝔤 := 𝓘(ℝ, HomothetyLieAlg)) (homothetyCartanGeometry κ) :=
+  letI : ChartedSpace HomothetyLieAlg HomothetyLieAlg := chartedSpaceSelf _
   ⟨homothetyCartanOmega_total_contMDiff κ⟩
 
 end HomothetyCartanFormRegularity
@@ -616,6 +647,56 @@ theorem pullbackCartanGaugePotential_spec
       B.toCartan.omega (localPrincipalSection B e x)
         (mfderiv IM IP (localPrincipalSection B e) x v) :=
   rfl
+
+/-- Total-space realization of the local pullback Cartan form, using the derivative within the
+trivialization domain. This is the bundled tangent-map composition `s* ω`; unlike a family of
+pointwise continuous-linear maps, its smoothness is a genuine assertion on the tangent bundle. -/
+def pullbackCartanGaugePotentialWithinTotal
+    (B : SmoothPrincipalCartanGeometry EP EM EH HP HM HH IP IM IH P M H 𝔤 𝔥)
+    (e : SmoothPrincipalTrivialization EP EM EH HP HM HH IP IM IH P M H
+      B.toCartan.proj B.toCartan.rightAct)
+    (v : TangentBundle IM M) : 𝔤 :=
+  cartanOmegaTotal B.toCartan
+    (tangentMapWithin IM IP (localPrincipalSection B e) e.toTrivialization.baseSet v)
+
+/-- The local pullback of a regular Cartan form is `C²` on the tangent bundle over the chart
+domain. The one-derivative loss is the tangent-map regularity theorem applied to the `C³` local
+principal section. This result is conditional on `SmoothCartanFormRegularity`: the pointwise
+Cartan structure alone does not assert smooth variation of its form with the base point. -/
+theorem pullbackCartanGaugePotentialWithinTotal_contMDiffOn
+    (B : SmoothPrincipalCartanGeometry EP EM EH HP HM HH IP IM IH P M H 𝔤 𝔥)
+    (e : SmoothPrincipalTrivialization EP EM EH HP HM HH IP IM IH P M H
+      B.toCartan.proj B.toCartan.rightAct)
+    {E𝔤 H𝔤 : Type*} [NormedAddCommGroup E𝔤] [NormedSpace ℝ E𝔤]
+    [TopologicalSpace H𝔤] {I𝔤 : ModelWithCorners ℝ E𝔤 H𝔤}
+    [IsManifold IP (minSmoothness ℝ 3) P]
+    [IsManifold IM (minSmoothness ℝ 3) M]
+    [ChartedSpace H𝔤 𝔤]
+    [IsManifold I𝔤 (minSmoothness ℝ 2) 𝔤]
+    (hω : SmoothCartanFormRegularity (E𝔤 := E𝔤) (H𝔤 := H𝔤) (I𝔤 := I𝔤)
+      B.toCartan) :
+    ContMDiffOn IM.tangent I𝔤 (minSmoothness ℝ 2)
+      (pullbackCartanGaugePotentialWithinTotal B e)
+      (π EM (TangentSpace IM) ⁻¹' e.toTrivialization.baseSet) := by
+  have hsection := localPrincipalSection_contMDiffOn B e
+  have hsectionTangent := hsection.contMDiffOn_tangentMapWithin
+    (m := minSmoothness ℝ 2) (n := minSmoothness ℝ 3) (by
+      simp only [← minSmoothness_add]
+      exact le_rfl)
+    e.toTrivialization.open_baseSet.uniqueMDiffOn
+  have hω_on : ContMDiffOn IP.tangent I𝔤 (minSmoothness ℝ 2)
+      (cartanOmegaTotal B.toCartan) Set.univ :=
+    hω.omega_total_contMDiff.contMDiffOn
+  have hmaps : MapsTo
+      (tangentMapWithin IM IP (localPrincipalSection B e) e.toTrivialization.baseSet)
+      (π EM (TangentSpace IM) ⁻¹' e.toTrivialization.baseSet) Set.univ :=
+    fun _ _ => Set.mem_univ _
+  have hcomp := hω_on.comp hsectionTangent hmaps
+  change ContMDiffOn IM.tangent I𝔤 (minSmoothness ℝ 2)
+    (cartanOmegaTotal B.toCartan ∘
+      tangentMapWithin IM IP (localPrincipalSection B e) e.toTrivialization.baseSet)
+    (TotalSpace.proj ⁻¹' e.toTrivialization.baseSet)
+  exact hcomp
 
 end GenericPrincipalTheorems
 

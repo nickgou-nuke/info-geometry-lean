@@ -1,0 +1,5 @@
+energy_keV,conditional_baseline,baseline_rate_cps,observed_rate_cps,deficit_cps,fractional_deficit,interpretation
+609,assumed_exact_halving_2_times_R2,254.1364373035173,175.07835315296833,79.05808415054898,0.31108519891671116,arithmetic relative to a chosen baseline; not measured desorption or moisture loss
+609,original_fixed_cosh_at_i1,244.45378769381807,175.07835315296833,69.37543454084974,0.28379774842246863,arithmetic relative to a chosen baseline; not measured desorption or moisture loss
+352,assumed_exact_halving_2_times_R2,399.71982446136235,275.27510243979174,124.44472202157061,0.31132987259079437,arithmetic relative to a chosen baseline; not measured desorption or moisture loss
+352,original_fixed_cosh_at_i1,384.3120174475634,275.27510243979174,109.03691500777165,0.2837197642997177,arithmetic relative to a chosen baseline; not measured desorption or moisture loss

@@ -27,10 +27,10 @@ and the covariant Quantum Geometric Tensor (QGT):
    For any two involutions `Γ₁² = Γ₂² = 1` with non-vanishing symmetric chord norm
    `(1 + Γ₂Γ₁)(1 + Γ₁Γ₂) = s² • 1`, constructs the normalized midpoint rotor
    `R₂₁ := s⁻¹ • (1 + Γ₂Γ₁)` and proves `R₂₁ R̃₂₁ = 1` and `R₂₁ Γ₁ R̃₂₁ = Γ₂`.
-2. **Kato Peirce Corner & Covariant Annihilation (`kato_peirce_corner_and_covariant_annihilation`)**:
-   For any moving projector `P² = P` with Leibniz variation `dP`, proves that
-   `Gamma_Kato P dP = dP * P - P * dP` satisfies off-diagonality `P * dP * P = 0` and
-   covariantly annihilates both `P` and `1 - P`: `dP - [Gamma_Kato, P] = 0` and `d(1-P) - [Gamma_Kato, 1-P] = 0`.
+2. **Kato Complement Covariant Derivative (`kato_covariant_derivative_complement`)**:
+   Reuses the Peirce-spine owner theorem for `P * dP * P = 0` and
+   `[Gamma_Kato, P] = dP`, then derives the complementary identity
+   `[Gamma_Kato, 1 - P] = -dP`.
 3. **GEM (1,3) Algebraic Split (`gemConnection_sq_split`, `gemConnection_gamma0_parity`)**:
    Under the explicit commutation hypotheses in those theorem statements, proves
    `(E + I * B)² = (E² - B²) + I * (E * B + B * E)` and
@@ -91,49 +91,25 @@ section MidpointRotor
 
 variable {E : Type*} [Ring E] [Algebra ℝ E]
 
-/-- The unnormalized forward intertwiner `1 + Γ₂ Γ₁`. -/
-def unnormMidpoint (Γ₁ Γ₂ : E) : E :=
-  1 + Γ₂ * Γ₁
-
 /-- The unnormalized reverse intertwiner `1 + Γ₁ Γ₂`. -/
 def unnormMidpointRev (Γ₁ Γ₂ : E) : E :=
   1 + Γ₁ * Γ₂
 
 /-- Normalized symmetrically split midpoint rotor `R₂₁ := s⁻¹ • (1 + Γ₂ Γ₁)`. -/
 def midpointRotor (s : ℝ) (Γ₁ Γ₂ : E) : E :=
-  s⁻¹ • unnormMidpoint Γ₁ Γ₂
+  s⁻¹ • InfoGeometry.OperatorAlgebra.PeirceSpine.midpointRotor Γ₁ Γ₂
 
 /-- Reverse normalized midpoint rotor `R̃₂₁ := s⁻¹ • (1 + Γ₁ Γ₂)`. -/
 def midpointRotorRev (s : ℝ) (Γ₁ Γ₂ : E) : E :=
   s⁻¹ • unnormMidpointRev Γ₁ Γ₂
-
-/-- Unnormalized intertwining relation: `(1 + Γ₂ Γ₁) Γ₁ = Γ₂ (1 + Γ₂ Γ₁)`. -/
-theorem unnormMidpoint_intertwine (Γ₁ Γ₂ : E)
-    (hΓ₁ : Γ₁ * Γ₁ = 1) (hΓ₂ : Γ₂ * Γ₂ = 1) :
-    unnormMidpoint Γ₁ Γ₂ * Γ₁ = Γ₂ * unnormMidpoint Γ₁ Γ₂ := by
-  dsimp [unnormMidpoint]
-  calc (1 + Γ₂ * Γ₁) * Γ₁
-    _ = Γ₁ + Γ₂ * (Γ₁ * Γ₁) := by noncomm_ring
-    _ = Γ₁ + Γ₂ * 1 := by rw [hΓ₁]
-    _ = Γ₁ + Γ₂ := by rw [mul_one]
-    _ = Γ₂ * 1 + Γ₁ := by rw [add_comm, mul_one]
-    _ = Γ₂ * (Γ₂ * Γ₂) + Γ₁ := by rw [hΓ₂]
-    _ = Γ₂ + Γ₂ * (Γ₂ * Γ₁) := by
-      have : Γ₂ * (Γ₂ * Γ₂) = Γ₂ := by rw [hΓ₂, mul_one]
-      calc Γ₂ * (Γ₂ * Γ₂) + Γ₁
-        _ = Γ₂ + Γ₁ := by rw [this]
-        _ = Γ₂ * 1 + Γ₂ * (Γ₂ * Γ₁) := by
-          have : Γ₂ * (Γ₂ * Γ₁) = (Γ₂ * Γ₂) * Γ₁ := by noncomm_ring
-          rw [this, hΓ₂, one_mul]
-          rw [mul_one]
-    _ = Γ₂ * (1 + Γ₂ * Γ₁) := by noncomm_ring
 
 /-- Master theorem: Normalized midpoint rotor is an isometric intertwiner. -/
 theorem midpointRotor_normalized_sandwich (s : ℝ) (Γ₁ Γ₂ : E)
     (hs : s ≠ 0)
     (hΓ₁ : Γ₁ * Γ₁ = 1)
     (hΓ₂ : Γ₂ * Γ₂ = 1)
-    (hnorm : unnormMidpoint Γ₁ Γ₂ * unnormMidpointRev Γ₁ Γ₂ = (s^2) • (1 : E)) :
+    (hnorm : InfoGeometry.OperatorAlgebra.PeirceSpine.midpointRotor Γ₁ Γ₂ *
+      unnormMidpointRev Γ₁ Γ₂ = (s^2) • (1 : E)) :
     midpointRotor s Γ₁ Γ₂ * midpointRotorRev s Γ₁ Γ₂ = 1 ∧
     midpointRotor s Γ₁ Γ₂ * Γ₁ * midpointRotorRev s Γ₁ Γ₂ = Γ₂ := by
   have hs2 : s^2 ≠ 0 := pow_ne_zero 2 hs
@@ -147,14 +123,22 @@ theorem midpointRotor_normalized_sandwich (s : ℝ) (Γ₁ Γ₂ : E)
     rw [this, one_smul]
   have h_sand : midpointRotor s Γ₁ Γ₂ * Γ₁ * midpointRotorRev s Γ₁ Γ₂ = Γ₂ := by
     dsimp [midpointRotor, midpointRotorRev]
-    calc (s⁻¹ • unnormMidpoint Γ₁ Γ₂) * Γ₁ * (s⁻¹ • unnormMidpointRev Γ₁ Γ₂)
-      _ = s⁻¹ • (unnormMidpoint Γ₁ Γ₂ * Γ₁) * (s⁻¹ • unnormMidpointRev Γ₁ Γ₂) := by
+    calc (s⁻¹ • InfoGeometry.OperatorAlgebra.PeirceSpine.midpointRotor Γ₁ Γ₂) * Γ₁ *
+        (s⁻¹ • unnormMidpointRev Γ₁ Γ₂)
+      _ = s⁻¹ • (InfoGeometry.OperatorAlgebra.PeirceSpine.midpointRotor Γ₁ Γ₂ * Γ₁) *
+          (s⁻¹ • unnormMidpointRev Γ₁ Γ₂) := by
         rw [smul_mul_assoc]
-      _ = s⁻¹ • (Γ₂ * unnormMidpoint Γ₁ Γ₂) * (s⁻¹ • unnormMidpointRev Γ₁ Γ₂) := by
-        rw [unnormMidpoint_intertwine Γ₁ Γ₂ hΓ₁ hΓ₂]
-      _ = (s⁻¹ * s⁻¹) • ((Γ₂ * unnormMidpoint Γ₁ Γ₂) * unnormMidpointRev Γ₁ Γ₂) := by
+      _ = s⁻¹ • (Γ₂ * InfoGeometry.OperatorAlgebra.PeirceSpine.midpointRotor Γ₁ Γ₂) *
+          (s⁻¹ • unnormMidpointRev Γ₁ Γ₂) := by
+        have hintertwine :=
+          InfoGeometry.OperatorAlgebra.PeirceSpine.symmetrically_split_midpoint_rotor_intertwining
+            Γ₁ Γ₂ hΓ₁ hΓ₂
+        rw [hintertwine.2.2.1]
+      _ = (s⁻¹ * s⁻¹) • ((Γ₂ * InfoGeometry.OperatorAlgebra.PeirceSpine.midpointRotor Γ₁ Γ₂) *
+          unnormMidpointRev Γ₁ Γ₂) := by
         rw [smul_mul_smul]
-      _ = (s⁻¹ * s⁻¹) • (Γ₂ * (unnormMidpoint Γ₁ Γ₂ * unnormMidpointRev Γ₁ Γ₂)) := by
+      _ = (s⁻¹ * s⁻¹) • (Γ₂ * (InfoGeometry.OperatorAlgebra.PeirceSpine.midpointRotor Γ₁ Γ₂ *
+          unnormMidpointRev Γ₁ Γ₂)) := by
         rw [mul_assoc]
       _ = (s⁻¹ * s⁻¹) • (Γ₂ * ((s^2) • (1 : E))) := by rw [hnorm]
       _ = (s⁻¹ * s⁻¹) • ((s^2) • (Γ₂ * 1)) := by rw [mul_smul_comm]

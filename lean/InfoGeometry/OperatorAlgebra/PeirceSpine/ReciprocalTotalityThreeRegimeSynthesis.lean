@@ -383,10 +383,16 @@ theorem apollonianCayley_neg_eq_inv (w : ℂ) :
         intro h
         apply hden₃
         linear_combination (1 / 2 : ℂ) * h
+      have hden₅ : 1 - w * 2 ≠ 0 := by
+        intro h
+        apply hden₂
+        calc
+          -w + (1 / 2 : ℂ) = (1 - w * 2) / 2 := by ring
+          _ = 0 := by rw [h]; norm_num
       calc
         apollonianCayley (-w) = (w + (1 / 2 : ℂ)) / (w - (1 / 2 : ℂ)) := by
           rw [apollonianCayley]
-          field_simp [hden₂, hden₃]
+          field_simp [hden₂, hden₃, hden₅]
           <;> ring
         _ = (apollonianCayley w)⁻¹ := by
           rw [apollonianCayley]

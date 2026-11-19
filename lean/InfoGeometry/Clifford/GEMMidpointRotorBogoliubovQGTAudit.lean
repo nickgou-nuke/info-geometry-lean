@@ -17,9 +17,10 @@ with zero `sorry`, `admit`, `native_decide`, or custom axioms.
 open InfoGeometry.Clifford.GEMMidpointRotorBogoliubovQGT
 
 #print axioms matrixE01_mul_E10_ne_mul_E10_E01_4
-#print axioms unnormMidpoint_intertwine
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.symmetrically_split_midpoint_rotor_intertwining
 #print axioms midpointRotor_normalized_sandwich
-#print axioms kato_peirce_corner_and_covariant_annihilation
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.kato_berry_spectral_flow_and_covariant_time
+#print axioms kato_covariant_derivative_complement
 #print axioms gemConnection_sq_split
 #print axioms gemConnection_gamma0_parity
 #print axioms bogoliubovRotor_mul_inv

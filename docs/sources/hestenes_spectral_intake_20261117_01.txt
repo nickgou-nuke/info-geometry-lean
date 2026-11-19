@@ -1,0 +1,697 @@
+**Yes—much of this is already in the codebase, including a precise version of your idea that a complex structure converts boost generators into rotation generators.** There are also genuine Fourier–Mellin comparison theorems, Hodge–Dirac square identities, finite Dirac dispersion relations, spinor bilinear reconstruction, and uncertainty bounds.
+
+The remaining work is to connect those results on compatible mathematical spaces: the same spinor representation, function space, measure, operator domains, and positive state pairing.
+
+I audited [`nickgou-nuke/info-geometry-lean` at `08c34e03f610b`](https://github.com/nickgou-nuke/info-geometry-lean/tree/08c34e03f610b452e03422037949196dc7d92d6d). **This is a source audit of definitions, hypotheses, and proof bodies; I did not run a fresh Lean compilation in this turn.** Below, I distinguish existing proofs from the additional connections suggested by them.
+
+## 1. Your “fourth structure” has a precise existing interpretation
+
+Start with three operators satisfying
+
+\[
+\sigma_i^2=1,
+\qquad
+\sigma_i\sigma_j=-\sigma_j\sigma_i
+\quad(i\ne j).
+\]
+
+Their oriented product
+
+\[
+J:=\sigma_1\sigma_2\sigma_3
+\]
+
+satisfies
+
+\[
+J^2=-1,
+\qquad
+J\sigma_i=\sigma_iJ.
+\]
+
+Consequently,
+
+\[
+(J\sigma_i)^2=-1.
+\]
+
+This is the algebraic mechanism connecting hyperbolic and circular generators: a square-plus-one direction becomes a square-minus-one direction through multiplication by the **commuting volume element**.
+
+### This is already represented in native Clifford algebra
+
+In [`Canonical/HestenesPauliEvenClifford.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Canonical/HestenesPauliEvenClifford.lean):
+
+- `ClPlus14` is the native even Clifford algebra for signature \(+---\).
+- `sigma1`, `sigma2`, `sigma3` are the even products \(e_i e_0\).
+- `spacetimePseudoscalar` is their product.
+- `clPlusToPauli_pseudoscalar` maps that product to \(iI_2\).
+- `clPlusPauliAlgEquiv` is a proved real algebra equivalence
+  \[
+  \mathrm{Cl}^{+}(1,3)\cong M_2(\mathbb C).
+  \]
+
+The equivalence has proved injectivity and surjectivity. It retains the full noncommutative even algebra.
+
+### The boost-to-circular identity is also already proved
+
+[`Canonical/BipolarCartanPauliZornRealificationBridge.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Canonical/BipolarCartanPauliZornRealificationBridge.lean) proves
+
+\[
+K_{\mathrm{circ}}=J K_{\mathrm{boost}}
+                  =K_{\mathrm{boost}}J.
+\]
+
+Its declarations include:
+
+- `realifiedKboost_commutes_complexStructure`
+- `realifiedKcirc_eq_complexStructure_mul_realifiedKboost`
+- `realifiedKcirc_eq_realifiedKboost_mul_complexStructure`
+
+Then [`Canonical/BipolarCartanCl3PhaseBridge.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Canonical/BipolarCartanCl3PhaseBridge.lean) identifies the real complex structure with the three-generator volume product after an explicit coordinate permutation. The existing Lean theorem is:
+
+```lean
+theorem interleavedKcirc_eq_real_pauli_volume_mul_interleavedKboost :
+    interleavedKcirc =
+      (realSigma1 * realSigma2 * realSigma3) * interleavedKboost := by
+  rw [real_pseudoscalar_eq_phaseAxis]
+  exact interleavedKcirc_eq_realPhaseAxis_mul_interleavedKboost
+```
+
+That is a particularly strong reuse target for your proposed synthesis.
+
+The qualification about “fourth” matters. This \(J\) is determined by a chosen **oriented triple**; reversing orientation changes its sign. An independent generator \(J\) that *anticommutes* with a square-plus-one generator \(K\) would instead satisfy
+
+\[
+(JK)^2=+1
+\quad\text{when }J^2=-1,\ K^2=1.
+\]
+
+So the conversion you want uses centrality in the relevant even or generated subalgebra. It does not follow merely from adding another anticommuting axis.
+
+## 2. Split octonions supply actual operators, with an essential associator boundary
+
+The repository already performs the passage from split-octonion elements to associative operators.
+
+[`Lie/SplitOctonionCliffordAction.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Lie/SplitOctonionCliffordAction.lean) constructs `splitOctonionLeftCliffordRepresentation` using native `CliffordAlgebra.lift`. Its generator results include:
+
+- `imaginaryLeftMul_sq`
+- `imaginaryLeftMul_anticommutator`
+- `leftCliffordQuadratic_eq_neg_det`
+
+With the repository’s quaternion–split-octonion conventions, the signs are:
+
+| Imaginary direction | Square of left multiplication |
+|---|---:|
+| Quaternion directions \(e_i\) | \(L_{e_i}^2=-I\) |
+| Split directions \(\ell e_i\) | \(L_{\ell e_i}^2=+I\) |
+| Extra split direction \(\ell\) | \(L_\ell^2=+I\) |
+
+Thus the seven-generator operator quadratic form has signature \((4,3)\).
+
+There are **two useful positive triples**:
+
+\[
+K_i=L_{\ell e_i},
+\]
+
+and
+
+\[
+\sigma_i=\Gamma_i\Gamma_0,
+\qquad
+\Gamma_0=L_\ell,\quad \Gamma_i=L_{e_i}.
+\]
+
+The second construction has the spacetime Clifford interpretation: the \(\Gamma_\mu\) have signature \(+---\), and their even products give boost directions.
+
+These triples cannot simply be identified by replacing composition with octonion multiplication. The repository explicitly proves
+
+\[
+(L_aL_b-L_{ab})(x)
+=
+-\operatorname{associator}(a,b,x).
+\]
+
+That is `left_regular_composition_defect_apply` in [`Lie/SplitOctonionFureyOperatorLift.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Lie/SplitOctonionFureyOperatorLift.lean). The associator is precisely the information lost by an unjustified replacement \(L_aL_b=L_{ab}\).
+
+### Circular coordinates are a genuine change of operator representation
+
+[`Lie/SplitOctonionCircularOperatorReadout.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Lie/SplitOctonionCircularOperatorReadout.lean) provides:
+
+- an actual circular coordinate linear equivalence;
+- `circularOperatorReadout`, an algebra equivalence between endomorphism algebras;
+- transported left and right multiplication operators;
+- an algebra equivalence to real \(8\times8\) matrices.
+
+The underlying circular basis includes
+
+\[
+u_\pm=\frac{1\pm\ell}{2},
+\qquad
+r_i^+=\frac{e_i+\ell e_i}{2},
+\qquad
+r_i^-=\frac{\ell e_i-e_i}{2}.
+\]
+
+The \(r_i^\pm\) are nilpotent directions. Their role differs from the square-plus-one or square-minus-one generators.
+
+Two further boundaries are already formalized:
+
+1. The complete seven-generator Clifford representation is **not faithful**: its source has dimension \(128\), while the endomorphism target has dimension \(64\). See [`SplitOctonionCliffordNoninjective.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Lie/SplitOctonionCliffordNoninjective.lean).
+2. The uniform circular hyperbolic flow preserves the quadratic form but fails to preserve octonion multiplication at nonzero time. That failure is an existing theorem in [`SplitOctonionCircularHyperbolicFlowMultiplicativityBoundary.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Lie/SplitOctonionCircularHyperbolicFlowMultiplicativityBoundary.lean).
+
+These are useful constraints on the synthesis: a quadratic isometry, an operator conjugation, and an octonion algebra automorphism are different constructions.
+
+## 3. Rapidity, logit, Apollonian coordinates, phase, and scale do connect
+
+For positive coordinates \(u,v\), introduce
+
+\[
+s=\sqrt{uv},
+\qquad
+\eta=\frac12\log\frac uv.
+\]
+
+Then
+
+\[
+u=s e^\eta,\qquad v=s e^{-\eta}.
+\]
+
+A boost changes the ratio while preserving the product:
+
+\[
+(u,v)\mapsto(e^t u,e^{-t}v),
+\qquad
+\eta\mapsto\eta+t.
+\]
+
+The repository proves the corresponding hyperbolic identities in [`Nuclear/FocalRapidity.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Nuclear/FocalRapidity.lean).
+
+Now choose
+
+\[
+p=\frac{u}{u+v}.
+\]
+
+Then
+
+\[
+\log\frac{p}{1-p}=2\eta,
+\qquad
+\frac{u-v}{u+v}=\tanh\eta.
+\]
+
+This gives a precise probability–rapidity correspondence. [`Physics/AitchisonRapidityApollonian.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Physics/AitchisonRapidityApollonian.lean) proves that the simplex perturbation operation multiplies odds and therefore adds logits and rapidities. It also proves the relation between its interval projective distance and rapidity:
+
+\[
+d(P,Q)
+=
+|\operatorname{logit}P-\operatorname{logit}Q|
+=
+2|\eta_P-\eta_Q|.
+\]
+
+This identifies coordinates and a particular distance. It does not identify every information metric with a Lorentzian metric.
+
+### The phase-and-scale Cartan action is already concrete
+
+[`Canonical/BipolarCartanLorentzBridge.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Canonical/BipolarCartanLorentzBridge.lean) proves a compact/noncompact factorization and the action
+
+\[
+(x^+,x^-,z^+,z^-)
+\mapsto
+(e^\eta x^+,e^{-\eta}x^-,
+ e^{i\theta}z^+,e^{-i\theta}z^-).
+\]
+
+It proves the additive parameter law and preservation of the Hermitian determinant through the actual action
+
+\[
+X\mapsto gXg^\dagger.
+\]
+
+[`Canonical/CartanCircularZornReadoutBridge.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Canonical/CartanCircularZornReadoutBridge.lean) carries this action into the selected circular Zorn section.
+
+**This commuting phase-and-scale sector is the natural place for a Fourier–Mellin decomposition.** For the ordinary group \(\mathbb R_{>0}\times U(1)\), its characters have the form
+
+\[
+\chi_{\tau,n}(r,e^{i\theta})
+=
+r^{i\tau}e^{in\theta},
+\qquad \tau\in\mathbb R,\ n\in\mathbb Z.
+\]
+
+The logarithm turns the first factor into an ordinary Fourier character. Spin-cover conventions require their own angular normalization.
+
+Extending this to all boosts and rotations requires nonabelian representation theory: different boost directions do not commute, so they cannot all be diagonalized by one scalar character transform.
+
+### A boost is not a Weyl rescaling
+
+A boost gives opposite weights to null coordinates and preserves the spacetime quadratic form. A Weyl transformation changes the metric by
+
+\[
+g\mapsto e^{2\sigma(x)}g.
+\]
+
+Both admit logarithmic parameters, but that common notation does not identify their actions. The current [`Canonical/WeylGaugeField.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Canonical/WeylGaugeField.lean) proves affine compensation identities for a supplied nilpotent differential. Its operation \(d\psi+qB\) is not yet the usual multiplicative spinor connection \(d\psi+qB\psi\).
+
+## 4. Fourier, Mellin, Laplace, and Legendre have distinct roles
+
+Your stream contains several kinds of duality. Keeping their types explicit makes the connections much stronger.
+
+| Construction | What becomes dual | Principal mechanism |
+|---|---|---|
+| Fourier | Translation coordinate and frequency | Characters of an additive group |
+| Mellin | Positive scale and logarithmic frequency | Characters after taking logarithms |
+| Laplace | A function and a complex spectral parameter | Exponential weighting; Fourier on vertical lines |
+| Legendre | A convex potential and its dual potential | Optimization and the gradient map |
+| Penrose | Twistor/cohomological data and spacetime fields | Incidence and contour/cohomology constructions |
+
+The Fourier, Laplace, and Mellin distinctions agree with their standard integral definitions; convergence and inversion conditions are separate parts of the theory. [dlmf.nist.gov](https://dlmf.nist.gov/1.14?utm_source=chatgpt.com)
+
+### The analytic Mellin–Laplace–Fourier bridge already exists
+
+The strongest owner is [`Analysis/LaplaceFourierComparison.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Analysis/LaplaceFourierComparison.lean).
+
+It proves:
+
+- `mellin_logPullback_eq_laplaceTransform`, using the actual change of variables \(r=e^{-t}\);
+- `verticalLineTransform_eq_fourier`;
+- conditional Laplace inversion on a vertical line;
+- Mellin uniqueness under convergence, vertical integrability, and continuity.
+
+In its Fourier normalization, the vertical-line relation is
+
+\[
+\mathcal L f(\sigma+2\pi i\xi)
+=
+\mathcal F\!\left(e^{-\sigma t}f(t)\right)(\xi).
+\]
+
+These are analytic integral results, stronger than a symbolic kernel factorization.
+
+For the unitary scale interpretation, the measure matters. Under
+
+\[
+u=\log r,
+\qquad \frac{dr}{r}=du,
+\]
+
+the map \(f(r)\mapsto f(e^u)\) identifies the scale-space measure with ordinary Lebesgue measure. This suggests the logarithmic coordinate and dilation generator
+
+\[
+Q=\log r,
+\qquad
+K=-i\hbar r\partial_r
+\]
+
+on \(L^2(dr/r)\), with a suitable common domain. On \(L^2(dr)\), the corresponding symmetric expression includes the half-density correction:
+
+\[
+K=-i\hbar\left(r\partial_r+\frac12\right).
+\]
+
+The existing integral comparison supports this direction. Constructing the unitary map and intertwining these operators is an additional analytic theorem.
+
+### Legendre duality supplies the statistical coordinate geometry
+
+[`Detector/AmariLegendreCore.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Detector/AmariLegendreCore.lean) contains a particularly complete concrete model:
+
+\[
+A(\theta)=\log(1+e^\theta),
+\qquad
+p=A'(\theta),
+\]
+
+\[
+A^*(p)=p\log p+(1-p)\log(1-p),
+\qquad
+\theta=\operatorname{logit}p.
+\]
+
+It proves actual derivatives, strict convexity, the attained Legendre supremum, the Fenchel-gap/KL identity, and
+
+\[
+I(\theta)=A''(\theta)
+=
+\mathbb E_\theta[(\partial_\theta\log p_\theta)^2].
+\]
+
+It also proves the inverse-Hessian identity on \(0<p<1\).
+
+This connects your logit/rapidity coordinates to Fisher geometry, but the metrics remain distinguishable. For example, substituting \(\theta=2\eta\) gives the Bernoulli Fisher line element
+
+\[
+ds_F^2
+=
+\frac{dp^2}{p(1-p)}
+=
+4p(1-p)\,d\eta^2.
+\]
+
+That coefficient varies with \(\eta\); the logit-based projective distance above has a different geometry.
+
+For multiple parameters, [`Canonical/AttentionInformationGeometry.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Canonical/AttentionInformationGeometry.lean) proves actual softmax score/Fisher/Hessian identities. It also identifies the constant-logit null direction. **An inverse Fisher matrix therefore requires removing that gauge direction or restricting to identifiable parameters.**
+
+## 5. Dirac squares, Hodge theory, and dispersion: strong pieces already exist
+
+There are three related constructions here.
+
+### Hodge–Dirac
+
+[`HodgeCohomology/HodgeDirac.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/HodgeCohomology/HodgeDirac.lean) works with actual linear maps and an explicit adjunction law. From \(d^2=0\), it derives \(\delta^2=0\) and proves
+
+\[
+D_H=d+\delta,
+\qquad
+D_H^2=d\delta+\delta d=\Delta_H.
+\]
+
+It also proves
+
+\[
+\langle\Delta_Hv,v\rangle
+=
+\|dv\|^2+\|\delta v\|^2
+\]
+
+and the corresponding harmonic/kernel equivalences.
+
+That supplies the algebraic and positive-inner-product argument. A smooth exterior derivative, manifold measure, boundary conditions, and unbounded operator realization still need to be constructed when applying it to a geometric Laplacian.
+
+### Spin Dirac and curvature
+
+For a geometric spin Dirac operator, its square generally contains curvature. In the Riemannian untwisted spin case,
+
+\[
+D^2=\nabla^*\nabla+\frac14\operatorname{Scal}.
+\]
+
+Twisting introduces further curvature terms. Thus “Dirac is the square root of Laplace–Beltrami” needs the operator, bundle, sign convention, and curvature term specified. It also does not identify \(D\) with the unique positive spectral square root of a Laplacian. [arxiv.org](https://arxiv.org/pdf/1307.3021?utm_source=chatgpt.com)
+
+The repository’s strongest algebraic square calculations preserve the terms needed for that geometry. [`OperatorAlgebra/CliffordDirac/Operators.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/OperatorAlgebra/CliffordDirac/Operators.lean) uses actual inner derivations and proves `inner_dirac_sq`, including a commutator term:
+
+\[
+\left(L_g\operatorname{ad}_a+
+      L_h\operatorname{ad}_b\right)^2
+=
+\operatorname{ad}_a^2+\operatorname{ad}_b^2
++
+L_{gh}\operatorname{ad}_{[a,b]},
+\]
+
+under its stated Clifford and compatibility hypotheses.
+
+That commutator is a sound algebraic precursor to curvature. Identifying it with geometric spin curvature requires the connection construction.
+
+### Free Dirac dispersion
+
+There is already a concrete dispersion calculation in [`Physics/DiracRestChiralTwoSectorBridge.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Physics/DiracRestChiralTwoSectorBridge.lean).
+
+For the full complex \(4\times4\) Hamiltonian
+
+\[
+H(p)=cp\,\alpha_1+mc^2\gamma^0,
+\]
+
+`diracHamiltonian1D_sq` proves
+
+\[
+H(p)^2=(c^2p^2+m^2c^4)I.
+\]
+
+This is a genuine finite momentum-fiber calculation. Its analytic connection to wavepackets would use the Fourier derivative theorem to identify the transformed differential Hamiltonian with multiplication by \(H(p)\).
+
+The required analytic substrate is already substantial: [`Analysis/CliffordWaveletNativeL2.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Analysis/CliffordWaveletNativeL2.lean) reuses native Mathlib vector-valued Schwartz Plancherel, Fourier/derivative identities, and integration by parts. Its current centered-operator uncertainty theorem concerns bounded operators; it does not itself instantiate unbounded position and momentum.
+
+### Indefinite geometry requires separate arguments
+
+The Krein Hodge modules preserve this distinction. They need additional hypotheses for \(\ker D^2=\ker D\), and [`KreinHodgeDiracTests.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/HodgeCohomology/KreinHodgeDiracTests.lean) contains an explicit indefinite counterexample: a nonzero symmetric operator with square zero.
+
+That prevents positive-Hilbert arguments from being silently transferred to a Lorentzian pairing.
+
+## 6. Spinor bilinears, conjugation, and ideals are well developed
+
+[`CliffordWeyl/DiracBilinearChannels.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/CliffordWeyl/DiracBilinearChannels.lean) proves considerably more than the definitions of scalar, vector, tensor, axial, and pseudoscalar channels. It constructs a 16-element basis of \(M_4(\mathbb C)\), proves reconstruction and coefficient injectivity, and establishes `fierz_dyad_reconstruction` and chirality-selection identities.
+
+For ideals, [`Algebra/IdempotentCornerCommutant.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Algebra/IdempotentCornerCommutant.lean) constructs \(Ae\) as a native submodule and characterizes endomorphisms commuting with left multiplication through right multiplication by the corner algebra \(eAe\). The reversed composition order of right actions is retained.
+
+[`CliffordWeyl/KreinIdealBilinears.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/CliffordWeyl/KreinIdealBilinears.lean) then handles adjoint transport between left and right ideals and supported bilinear sandwiches.
+
+Three distinctions remain necessary:
+
+- The spinor row adjoint \(\bar\psi=\psi^\dagger\gamma^0\) differs from an operator Krein adjoint \(A^\#=\eta A^\dagger\eta\).
+- An algebra element becomes an observable only after specifying its representation and appropriate adjoint/domain conditions.
+- Algebraic reconstruction of \(j^\mu=\bar\psi\gamma^\mu\psi\) does not prove \(\nabla_\mu j^\mu=0\).
+
+Current conservation requires the Dirac equation, its adjoint equation, and connection compatibility. In Lorentzian geometry, a positive state pairing can then be obtained from current flux through a spacelike hypersurface with a future timelike normal. [epub.uni-regensburg.de](https://epub.uni-regensburg.de/32344/1/diss_treude.pdf?utm_source=chatgpt.com)
+
+I did not find that complete differential conservation argument in the inspected bilinear chain.
+
+## 7. The clean connection between \(n\)-operator uncertainty and a doubled Dirac operator is a Gram matrix
+
+This is the most useful common construction for the uncertainty portion of your question.
+
+For a normalized state \(\psi\) and self-adjoint observables \(A_a\), define
+
+\[
+v_a=(A_a-\langle A_a\rangle)\psi,
+\qquad
+G_{ab}=\langle v_a,v_b\rangle.
+\]
+
+Then \(G\) is positive semidefinite because
+
+\[
+z^\dagger Gz
+=
+\left\|\sum_a z_a v_a\right\|^2
+\ge0.
+\]
+
+Its real and imaginary parts are
+
+\[
+G=C+\frac i2\Omega,
+\]
+
+where
+
+\[
+C_{ab}
+=
+\frac12\langle\{\Delta A_a,\Delta A_b\}\rangle,
+\qquad
+\Omega_{ab}
+=
+-i\langle[A_a,A_b]\rangle.
+\]
+
+Thus the natural \(n\)-operator uncertainty statement is
+
+\[
+\boxed{C+\frac i2\Omega\succeq0.}
+\]
+
+The familiar two-operator bound is a principal-minor consequence:
+
+\[
+\operatorname{Var}(A)\operatorname{Var}(B)
+\ge
+C_{AB}^{\,2}
++\frac14|\langle[A,B]\rangle|^2.
+\]
+
+The repository already proves the corresponding bounded Hilbert-space QGT inequality and its Lie-representation specialization in [`QuantumGeometry/Projective/QGT.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/QuantumGeometry/Projective/QGT.lean):
+
+- `QGT_eq_inner_projOrth`
+- `QGT_cauchy_schwarz`
+- `robertson_schrodinger_qgt_bound`
+- `berryCurvature_eq_commutator`
+- `lie_rep_uncertainty_bound`
+
+### The doubled construction is already generic in the code
+
+In finite dimensions, place the vectors \(v_a\) in the columns of a rectangular matrix \(T\). Then
+
+\[
+G=T^\dagger T.
+\]
+
+Construct
+
+\[
+D_T=
+\begin{pmatrix}
+0&T\\
+T^\dagger&0
+\end{pmatrix}.
+\]
+
+Its square is
+
+\[
+\boxed{
+D_T^2=
+\begin{pmatrix}
+TT^\dagger&0\\
+0&T^\dagger T
+\end{pmatrix}.
+}
+\]
+
+[`Krein/FiniteDiracGramSquare.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Krein/FiniteDiracGramSquare.lean) proves this for arbitrary rectangular complex matrices, along with:
+
+- Hermiticity of \(D_T\);
+- positivity of both Gram blocks;
+- nilpotent \(Q_+\) and \(Q_-\);
+- \(Q_- = Q_+^\dagger\);
+- \(D_T=Q_++Q_-\);
+- \(\{Q_+,Q_-\}=D_T^2\).
+
+**Therefore an uncertainty Gram matrix can occur literally as one block of a doubled Dirac square.** The generic matrix theorem is already present; identifying its columns with the desired physical operator fluctuations is the application to construct.
+
+This also gives a precise connection to supersymmetric factorization. It does not by itself identify these auxiliary supercharges with spacetime super-Poincaré generators.
+
+The repository has further genuine block constructions in [`Physics/ChiralSUSYBlockFactorization.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Physics/ChiralSUSYBlockFactorization.lean). By contrast, some spacetime-named interfaces, including `ChiralSUSYMomentum`, receive \(\{Q,\bar Q\}=2P\) as a field. That relation has not thereby been derived from the circular octonion basis.
+
+## 8. Fisher information, Cramér–Rao, and spacetime parameters fit through positive state geometry
+
+For a differentiable normalized pure-state family, the quantum geometric tensor is
+
+\[
+Q_{ab}
+=
+\langle\partial_a\psi,\partial_b\psi\rangle
+-
+\langle\partial_a\psi,\psi\rangle
+\langle\psi,\partial_b\psi\rangle.
+\]
+
+In the standard SLD convention,
+
+\[
+F^Q_{ab}=4\operatorname{Re}Q_{ab}.
+\]
+
+For local unitary tangent generators \(A_a\), this becomes \(F^Q=4C/\hbar^2\). The factor of four matters: the repository’s QGT `fisherMetric` uses an unscaled Fubini–Study normalization. [arxiv.org](https://arxiv.org/html/1907.08037v3?utm_source=chatgpt.com)
+
+There is also a substantive finite-matrix Cramér–Rao result in [`Quantum/QuantumCramerRaoBound.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Quantum/QuantumCramerRaoBound.lean). It proves a sensitivity-versus-variance inequality for full real matrices using a factorization \(\rho=R^\mathsf TR\), symmetric observables, and supplied SLD and trace identities.
+
+For its statistical interpretation, one must additionally supply normalization, an actual differentiated state family, and the appropriate estimator sensitivity. A reciprocal bound alone does not establish attainability.
+
+For a regular identifiable multiparameter model, the familiar target is
+
+\[
+\operatorname{Cov}(\widehat\theta)
+\succeq \frac1N(F^Q)^{-1}.
+\]
+
+Simultaneous attainability requires additional compatibility conditions; it is not guaranteed by separate one-parameter bounds. [arxiv.org](https://arxiv.org/html/1907.08037v3?utm_source=chatgpt.com)
+
+### What “four-vector uncertainty” should mean here
+
+There are two distinct constructions:
+
+1. A positive covariance/commutator matrix for four observables.
+2. A Fisher matrix for estimating four spacetime displacement parameters.
+
+For example, a translation model generated by \(P_\mu\) can encode parameters through
+
+\[
+\psi(a)=e^{-ia^\mu P_\mu/\hbar}\psi_0.
+\]
+
+Its Fisher matrix measures distinguishability of displacements. The four translation generators commute; the estimation bound is not a claim of noncommutativity among the four momenta.
+
+If an operator transformation law
+
+\[
+A'_a=\Lambda_a{}^b A_b
+\]
+
+is established, the Gram matrix transforms by
+
+\[
+G'=\Lambda G\Lambda^\mathsf T.
+\]
+
+Positivity survives this congruence. This gives a way to combine tensorial covariance with positive uncertainty bounds.
+
+**The Minkowski metric itself is indefinite and cannot serve as a positive covariance matrix.** The repository’s [`Physics/FisherKreinLorentz.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Physics/FisherKreinLorentz.lean) constructs a chosen sign reflection. Its later vielbein bridge retains explicit metric-calibration hypotheses. These results do not derive a Lorentzian metric from an arbitrary statistical Fisher matrix.
+
+### The Fisher-to-Heisenberg bridge needs a phase term
+
+One existing scalar bridge assumes
+
+\[
+\operatorname{Var}(P)=\frac14 I_F.
+\]
+
+For a sufficiently regular scalar wavepacket
+
+\[
+\psi=\sqrt{\rho}\,e^{i\phi},
+\]
+
+the more general calculation is
+
+\[
+\operatorname{Var}(P)
+=
+\frac{\hbar^2}{4}
+\int\rho(\partial_x\log\rho)^2\,dx
++
+\hbar^2\operatorname{Var}_\rho(\partial_x\phi).
+\]
+
+Equality with the Fisher term requires constant phase gradient, up to the relevant almost-everywhere qualification. Together with the location-score inequality and justified boundary terms, this yields the usual position–momentum uncertainty bound.
+
+This is exactly where the existing Schwartz integration-by-parts theorems should replace a supplied momentum/Fisher identity. The current [`Canonical/CramerRaoUncertainty.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Canonical/CramerRaoUncertainty.lean) proves the algebraic consequence of that supplied identity.
+
+## 9. Penrose is already more than a symbolic analogy
+
+[`Twistor/PenroseContourTransform.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/08c34e03f610b452e03422037949196dc7d92d6d/lean/InfoGeometry/Twistor/PenroseContourTransform.lean) contains a genuine contour calculation:
+
+- `normalizedMoment_eq_coefficient` evaluates an actual circle integral on finite Laurent sections.
+- `contourOnCohomology` descends through the computed Čech quotient.
+- An explicit homogeneous degree-\(-4\) twistor representative produces a field.
+- `contourMaxwell_zero_rest_mass` proves its differential equation using actual complex derivatives.
+- `contourMaxwell_nonconstant` proves the resulting field is nonconstant.
+
+This supplies a concrete Penrose-to-Maxwell example on complexified spacetime. Its boundary is the finite Laurent/Čech construction and explicit field; it is not yet the full analytic Penrose isomorphism or a positive-frequency theorem.
+
+Penrose therefore belongs in the synthesis as a map from twistor data to field solutions. Its relationship to Fourier or Mellin representations requires an additional comparison theorem.
+
+## 10. The precise remaining assembly
+
+The mathematical dependency order emerging from the code is:
+
+| Layer | Existing foundation | Additional identification needed |
+|---|---|---|
+| Internal algebra | Split-octonion left actions, circular operator equivalence, native even Clifford–Pauli equivalence | Choose the operator triple and prove the required intertwiner |
+| Boosts and rotations | \(J^2=-1\), centrality, \(K_{\rm circ}=JK_{\rm boost}\), actual Cartan actions | Carry that action onto the chosen spinor function space |
+| Harmonic analysis | Schwartz Fourier theory and analytic Mellin–Laplace comparison | Weighted \(L^2\) log-coordinate isometry and generator intertwining |
+| Dynamics | Hodge squares, noncommutative Dirac-square identities, finite dispersion | Actual differential operators, common domains, and geometric curvature |
+| States and observables | Bilinear reconstruction, adjoints, ideals, positive Gram/QGT results | A compatible positive state pairing and physical observable realization |
+| Estimation | Concrete score/Fisher models and matrix Cramér–Rao inequalities | The desired spacetime or scale parameter family and estimator conditions |
+
+The central unifying construction is therefore quite concrete:
+
+\[
+\boxed{
+\begin{gathered}
+\text{Clifford representation and oriented volume element}\\
+\Downarrow\\
+\text{boost/rotation actions on a specified spinor space}\\
+\Downarrow\\
+\text{Fourier or Mellin analysis of the corresponding generators}\\
+\Downarrow\\
+\text{centered operator actions and their positive Gram matrix}\\
+\Downarrow\\
+\text{uncertainty, quantum geometry, and Fisher bounds}.
+\end{gathered}}
+\]
+
+**The strongest immediate reuse points are the existing Clifford volume/Cartan theorem, the analytic Mellin–Fourier comparison, and the generic Dirac/Gram square.** They preserve the operator algebra and supply real mathematical connections. A complete relativistic wavepacket theorem requires proving the identifications between those constructions; giving them a shared name or packaging their conclusions into one structure would not establish those identifications.

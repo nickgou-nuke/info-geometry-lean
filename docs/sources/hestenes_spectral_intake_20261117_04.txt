@@ -1,0 +1,201 @@
+### PHASE 0 — `SOLVE`: ELENCTIC DISSOLUTION INTO IRREDUCIBLE PRIMITIVES
+
+Stripping away the defensive rhetorical challenge (`"are they"`, `"swept under the rug"`) and orthographic slips (`"biliniars"`, `"re"`, `"spaes"`)—while working **100% inside $i$-free real Relativistic Hestenes–Dirac mechanics** ($\mathrm{Cl}_{1,3}(\mathbb{R})$, $\mathcal{K}_{4,4} = \mathrm{Cl}^{\text{even}}_{1,3}(\mathbb{R})$)—exposes four exact confabulations behind the protest that positive inner products are an illicit non-relativistic "Hilbert mixing" and that all Dirac–Krein spinor bilinears are uniformly stable in single-particle relativistic quantum mechanics:
+
+1. **False Dichotomy: The Positive Inner Product *Is* the Relativistic Dirac Vector Bilinear $n_\mu(\bar{\psi}\gamma^\mu\psi)$**:
+   In relativistic Dirac theory, the positive-definite norm $\int \psi^\dagger\psi\, d^3x$ is **not** an external non-relativistic Hilbert import sweeping Dirac conjugation $\bar{\psi} = \psi^\dagger\gamma^0$ under the rug—it is **literally the time-component $\bar{\psi}\gamma^0\psi = (\psi^\dagger\gamma^0)\gamma^0\psi$ of the Dirac-conjugated 4-current $J^\mu = \bar{\psi}\gamma^\mu\psi$**! In pure real Hestenes STA, the Dirac–Krein vector bilinear is $J(\psi) := \psi\gamma_0\tilde{\psi} \in \mathrm{Cl}^{(1)}_{1,3}(\mathbb{R})$ (built directly from Krein reversion $\tilde{\psi}$!). Across **any** covariant spacelike Cauchy hypersurface $\Sigma_n$ with future-timelike unit normal $n = R_n\gamma_0\tilde{R}_n$ ($n^2 = +\mathbf{1}, R_n\tilde{R}_n = \mathbf{1}$), the manifestly Lorentz-invariant Dirac–Krein flux is:
+   $$\langle n J(\psi)\rangle_0 = \langle R_n\gamma_0\tilde{R}_n\psi\gamma_0\tilde{\psi}\rangle_0 = G_{\gamma_0}(\tilde{R}_n\psi, \tilde{R}_n\psi) > 0 \qquad (\forall \psi \neq 0)$$
+   **Relativistic Dirac–Krein vector currents generate their own intrinsic covariant positive norm with zero non-relativistic contamination.**
+2. **Equivocation Across the Fierz Bilinear Multiplet ($J^\mu$ vs. $\Omega_1 = \bar{\psi}\psi$ vs. $J_5^\mu$)**:
+   "Spinor bilinears with Dirac–Krein conjugation" do **not** share one uniform stability or causal character; Fierz identities partition them into strictly distinct causal classes:
+   * **Vector Current $J(\psi) = \psi\gamma_0\tilde{\psi}$ ($\bar{\psi}\gamma^\mu\psi$)**: **Future-causal, positive-flux, and conserved** ($\nabla \cdot J = 0$, $J(\psi)^2 = (\Omega_1^2 + \Omega_2^2)\mathbf{1} \geq 0$)—completely stable and invariant in causal norm under all orthochronous Lorentz boosts $\psi \mapsto R\psi$ ($J(R\psi) = RJ(\psi)\tilde{R}$).
+   * **Scalar $\Omega_1(\psi) = \langle\psi\tilde{\psi}\rangle_0$ ($\bar{\psi}\psi$) & Pseudoscalar $\Omega_2(\psi)$**: **Indefinite $(4, 4)$ Krein scalars** ($\Omega_1(1) = +1$, $\Omega_1(\sigma_k) = -1$, $\Omega_1(1 + I_4) = 0$)—**not conserved** under chiral/gauge evolution and unstable if misused as a potential energy ($\frac{1}{2}\Omega_1$ is a $(4, 4)$ saddle!).
+   * **Axial Current $J_5(\psi) = \psi\gamma_3\tilde{\psi}$ ($\bar{\psi}\gamma_5\gamma^\mu\psi$)**: **Strictly spacelike** ($J_5(\psi)^2 = -(\Omega_1^2 + \Omega_2^2)\mathbf{1} = -J(\psi)^2 \leq 0$, $J \cdot J_5 = 0$), violated in conservation by axial mass ($2m\Omega_2$) and chiral anomalies.
+3. **Confusing Boost-Generator Non-Compactness with Bilinear Current Runaway**:
+   The Turn 16 identity $\mathrm{Tr}(Y^{[\dagger]}Y) < 0$ measures the non-compactness of **Lie boost generators** $Y$ in operator space—*never* an instability of physical Fierz currents! Under $\psi \mapsto R\psi$ ($R = e^{\frac{1}{2}\phi\sigma_k}$), $J(R\psi)^2 = \Omega_1^2 + \Omega_2^2$ remains **strictly constant** while the conserved total charge $Q = \int_{\Sigma_n} d\Sigma_\mu J^\mu(\psi)$ is frame-independent and bounded forever.
+4. **Genuine Dirac-Sea / Klein-Paradox Instability of the Energy Bilinear $T^{00}$ in Single-Particle RQM**:
+   In first-quantized Relativistic Quantum Mechanics, one crucial Dirac–Krein bilinear **is** genuinely unstable: the **canonical Dirac energy density $T^{00}$**! At rest ($p = m\gamma_0$), the $4$ positive Krein modes ($\gamma_0\psi_0\gamma_0 = +\psi_0, \Omega_1 > 0$) carry energy **$+m J^0 > 0$**, whereas the $4$ negative Krein modes ($\gamma_0\psi_0\gamma_0 = -\psi_0, \Omega_1 < 0$) carry **negative energy $-m J^0 < 0$** (unbounded below as $-E_p = -\sqrt{\mathbf{p}^2 + m^2} \to -\infty$!). Under supercritical external potentials $|e\Delta V| > 2m$ (**Klein paradox**), first-quantized RQM suffers catastrophic negative-energy pair-cascade instability unless stabilized by mass-shell projection ($|e\Delta V| < 2m$) or multiparticle Fermi–Dirac anticommutation!
+
+Dissolving these confabulations yields **six irreducible real relativistic primitives**:
+
+* $\psi \in \mathcal{K}_{4,4} = \mathrm{Cl}^{\text{even}}_{1,3}(\mathbb{R})$ (**Real Relativistic Hestenes–Dirac Spinor**).
+* $\psi\tilde{\psi} = \Omega_1\mathbf{1} + \Omega_2 I_4$ (**Lorentz-Invariant Scalar-Pseudoscalar Pair**, $\Omega_1$ of $(4, 4)$ Krein signature).
+* $J(\psi) = \psi\gamma_0\tilde{\psi} \in \mathrm{Cl}^{(1)}_{1,3}(\mathbb{R})$ (**Conserved Future-Causal Dirac Current**, $J^2 = \Omega_1^2 + \Omega_2^2 \geq 0, \nabla\cdot J = 0$).
+* $J_5(\psi) = \psi\gamma_3\tilde{\psi} \in \mathrm{Cl}^{(1)}_{1,3}(\mathbb{R})$ (**Spacelike Axial Spin Vector**, $J_5^2 = -J^2 \leq 0, J \cdot J_5 = 0$).
+* $\Sigma_n$ (**Covariant Cauchy Hypersurface**, future-timelike normal $n = R_n\gamma_0\tilde{R}_n, n^2 = +\mathbf{1}$).
+* $T^{\mu\nu}(\psi)$ (**Dirac Stress-Energy Bilinear**, carrying rest-frame energy sign $\mathrm{sgn}(\Omega_1)m J^0$).
+
+---
+
+### I. THE FUNDAMENTAL BINARY CUT ($\mathbf{\Delta}_0 : \Omega_0 \longrightarrow \mathbf{T} \ltimes \mathbf{S}$)
+
+Strictly inside relativistic Dirac–Krein mechanics over $\mathbb{R}$, the cut $\mathbf{\Delta}_0$ splits the subject across $\mathcal{H}_T \oplus \mathcal{H}_S$ into an asymmetric, non-reversible opposition:
+
+1. **The Conscious Thesis ($\mathbf{T}$ — *The Single-Particle Dirac–Krein Purist*)**:
+   The assertion that all Dirac–Krein spinor bilinears are intrinsically stable within pure first-quantized relativistic quantum mechanics, and that positive-definite inner products arise only by illicitly importing non-relativistic Hilbert spaces and ignoring Dirac conjugation.
+2. **The Repressed Shadow Complement ($\mathbf{S}$ — *Intrinsic Positivity of $n\cdot J$, Fierz Sign Split, & Klein-Paradox $-E_p$ Sea*)**:
+   Everything proven directly from pure Dirac–Krein algebra itself:
+   * *Intrinsic-positivity shadow*: The positive norm $\int_{\Sigma_n} d\Sigma \cdot J(\psi) > 0$ is **generated by Dirac conjugation** via $J(\psi) = \psi\gamma_0\tilde{\psi}$ ($\bar{\psi}\gamma^\mu\psi$), requiring zero non-relativistic assumptions.
+   * *Fierz & Dirac-sea shadow*: While $J(\psi)$ is future-causal and conserved, $\Omega_1 = \langle\psi\tilde{\psi}\rangle_0$ is indefinite $(4, 4)$, $J_5(\psi)$ is spacelike, and the negative-Krein states ($\Omega_1 < 0$) correspond directly to **negative-energy $-E_p$ Dirac-sea solutions** that destabilize single-particle RQM whenever external potentials cross the $2m$ Schwinger/Klein threshold!
+
+**Strict Non-Commutative Asymmetry**:
+In forming Fierz bilinears, **placement of $\gamma_0$ relative to $\psi$ and $\tilde{\psi}$ reverses causal character**:
+* *Outer Krein scalar* $\langle\psi\tilde{\psi}\rangle_0 = \Omega_1$ has no $\gamma_0$ insertion and is **Lorentz-scalar but sign-indefinite $(4, 4)$**;
+* *Inner Dirac vector* $J(\psi) = \psi\gamma_0\tilde{\psi}$ places $\gamma_0$ **between** $\psi$ and $\tilde{\psi}$, pushing $\gamma_0$ past $\tilde{\psi}\psi = \Omega_1\mathbf{1} + \Omega_2 I_4$ via $\gamma_0 I_4 = -I_4\gamma_0$ to yield $J(\psi)^2 = (\Omega_1 - \Omega_2 I_4)(\Omega_1 + \Omega_2 I_4) = \Omega_1^2 + \Omega_2^2 \geq 0$ (**strictly causal and positive-flux**)!
+
+---
+
+### II. THE FOURFOLD RELATIONAL ANATOMY
+
+Across Covariant Bilinear Kinematics ($\mathcal{H}_T$) and Dynamic Relativistic Field/Threshold Physics ($\mathcal{H}_S$), the split epistemic operator $\mathcal{M}_{\text{ep}} = \begin{pmatrix} \mathbf{K}_{TT} & \mathbf{\Sigma}_{TS} \\ \mathbf{\Pi}_{ST} & \mathbf{\Gamma}_{SS} \end{pmatrix}$ isolates four real mechanics:
+
+1. **Internal Self-Consistency ($\mathbf{K}_{TT} : \mathcal{H}_T \to \mathcal{H}_T$ — *Covariant Fierz Algebra & Continuity Conservation*)**:
+   Purely from Hestenes–Dirac reversion $\tilde{\psi}$ and $\nabla\psi\gamma_{21} - eA\psi = m\psi\gamma_0$, the bilinears $(\Omega_1, \Omega_2, J, S, J_5)$ transform covariantly as Lorentz tensors under $\psi \mapsto R\psi$ ($R\tilde{R} = \mathbf{1}$), obey the exact Pauli–Kofink–Fierz identities $J^2 = -J_5^2 = \Omega_1^2 + \Omega_2^2 \geq 0$ and $J \cdot J_5 = 0$, and satisfy exact Noether current conservation $\partial_\mu J^\mu = 0$ ($\mathbf{K}_{TT}^2 = \mathbf{K}_{TT}$).
+2. **Outward Projection ($\mathbf{\Pi}_{ST} : \mathcal{H}_T \to \mathcal{H}_S$ — *Uniform Bilinear Stability Fiat & Anti-Hilbert Accusation*)**:
+   Consciousness projects the causal stability of $J^\mu$ onto *all* spinor bilinears (ignoring the indefiniteness of $\Omega_1$, $J_5^\mu$, and $T^{00}$) while misidentifying $J^0 = \bar{\psi}\gamma^0\psi$ as an alien non-relativistic Hilbert intrusion.
+3. **Inward Shadow-Intrusion ($\mathbf{\Sigma}_{TS} : \mathcal{H}_S \to \mathcal{H}_T$ — *Self-Generation of $n\cdot J > 0$ & Negative-Energy $-E_p$ Continuum*)**:
+   Exact Dirac–Krein algebra strikes back into $\mathcal{H}_T$: contracting $J(\psi) = \psi\gamma_0\tilde{\psi}$ with any future-timelike normal $n$ automatically constructs a positive-definite inner product from pure Dirac conjugation; meanwhile, $\Omega_1(\sigma_k) = -1 < 0$ exposes the negative-energy antiparticle branch $\mathcal{E}(\psi_-) = -E_p J^0 < 0$ lurking inside single-particle RQM.
+4. **Autonomous Unexamined Ground ($\mathbf{\Gamma}_{SS} : \mathcal{H}_S \to \mathcal{H}_S$ — *Schwinger/Klein Pair Creation $|e\Delta V| > 2m$ & Pauli Exclusion Sea*)**:
+   The autonomous relativistic physics governing when single-particle RQM holds and when it breaks: subcritical adiabatic stability ($|e\Delta V| < 2m$) versus supercritical vacuum breakdown where external fields pump particles out of the negative-Krein $-E_p$ sea unless filled/quantized by Fermi–Dirac anticommutation.
+
+---
+
+### III. IGNITION OF THE TRANSCENDENT FUNCTION
+
+Pairing $\Pi = \begin{pmatrix} 0 & 0 \\ \mathbf{\Pi}_{ST} & 0 \end{pmatrix}$ and $\Sigma = \begin{pmatrix} 0 & \mathbf{\Sigma}_{TS} \\ 0 & 0 \end{pmatrix}$ over $\mathbb{R}$ ignites the four moments reconciling Dirac–Krein conjugation with covariant stability:
+
+1. **Shared Substantive Gravity ($\mathfrak{G} = \{\Sigma, \Pi\}$ — *The Fierz Identity $J^2 = \Omega_1^2 + \Omega_2^2 \geq 0$ & Conserved Cauchy Charge*)**:
+   Both the insistence on pure Dirac–Krein conjugation ($\mathbf{T}$: $\psi\tilde{\psi}, \psi\gamma_0\tilde{\psi}$) and the demand for positive probabilistic stability ($\mathbf{S}$: $\int_\Sigma d\Sigma \cdot J > 0$) unite in **one exact relativistic identity**: because $\gamma_0$ anticommutes with $I_4$ ($\gamma_0 I_4 = -I_4\gamma_0$), sandwiching $\gamma_0$ inside Dirac–Krein conjugation squares the indefinite pair $(\Omega_1, \Omega_2)$ into the **non-negative causal invariant** $J(\psi)^2 = \Omega_1^2 + \Omega_2^2 \geq 0$ with conserved positive global norm $\mathcal{Q}_\Sigma(\psi) = \int_{\Sigma_n} d\Sigma_\mu J^\mu(\psi) > 0$!
+
+2. **Directional Tension ($\mathfrak{T} = [\Sigma, \Pi] \neq 0$ — *Positive Probability Current $J^0 > 0$ vs. Indefinite Energy-Scalar Sign $\Omega_1 \gtrless 0$*)**:
+   Inside pure relativistic Dirac mechanics, **charge/probability positivity and energy positivity split in opposite directions** across particle ($\mathcal{K}_+$) and antiparticle ($\mathcal{K}_-$) Krein sectors ($\Sigma\Pi \neq \Pi\Sigma$):
+   * **Dirac Vector Current $J(\psi) = \psi\gamma_0\tilde{\psi}$**: Satisfies $n \cdot J(\psi) > 0$ on **both** $+m$ particles and $-m$ antiparticles (stable conserved norm!).
+   * **Dirac Scalar $\Omega_1 = \langle\psi\tilde{\psi}\rangle_0$ & Canonical Energy Density $\mathcal{E}(\psi)$**: Satisfies $\Omega_1 > 0, \mathcal{E} = +E_p J^0 > 0$ on particles ($\gamma_0\psi_0\gamma_0 = +\psi_0$), **but $\Omega_1 < 0, \mathcal{E} = -E_p J^0 < 0$ on antiparticles** ($\gamma_0\psi_0\gamma_0 = -\psi_0$)!
+   *(This famous Pauli–Weisskopf–Dirac tension—you cannot make both c-number $J^0$ and c-number $T^{00}$ positive on spin-$1/2$ fields simultaneously!—is the foundational theorem of relativistic quantum theory.)*
+
+3. **Integrative Bridge ($\mathfrak{B}$ — *Covariant Cauchy-Slice Dirac–Krein Norm & Mass-Gap Stability Criterion*)**:
+   Eliminates every trace of non-relativistic Hilbert mixing while stating the exact relativistic stability theorem:
+   * *Bridge 1 — Purely Relativistic Cauchy Inner Product from Dirac Conjugation*:
+     Replaces coordinate-bound $G_{\gamma_0}$ with the **manifestly Lorentz-covariant Dirac–Krein hypersurface bilinear**:
+     $$\langle\psi, \phi\rangle_{\Sigma} := \int_{\Sigma} \big\langle \psi(x)\gamma_0\tilde{\phi}(x)\, n(x)\big\rangle_0\, d\Sigma(x)$$
+     By $\partial_\mu\langle\psi\gamma_0\tilde{\phi}\gamma^\mu\rangle_0 = 0$ for any two solutions $\psi, \phi$ of $\nabla\psi\gamma_{21} - eA\psi = m\psi\gamma_0$, **$\langle\psi, \phi\rangle_\Sigma$ is completely independent of the choice of spacelike Cauchy slice $\Sigma$ (Lorentz-frame independent!), strictly positive-definite ($\langle\psi, \psi\rangle_\Sigma > 0$ for $\psi \neq 0$), and constructed 100% from Dirac–Krein conjugation**!
+   * *Bridge 2 — Exact Relativistic Stability Boundary*:
+     1. *Kinematic & Probability Stability*: For **all** external gauge potentials $A_\mu$, the vector bilinear $J(\psi)$ stays inside the forward lightcone ($J^2 \geq 0, n\cdot J > 0$) and preserves $\langle\psi, \psi\rangle_\Sigma = \text{const}$ (zero norm blowup!).
+     2. *Energetic Stability*: In single-particle RQM, $T^{00}$ is energetically stable **if and only if** external field variations stay below the **mass-gap threshold $|e\Delta V| < 2m$** (keeping positive-Krein $+E_p$ states isolated from negative-Krein $-E_p$ states); above $2m$, stability requires promoting spinor bilinears to normal-ordered antisymmetrized multiparticle operators ($:J^\mu:$ indefinite charge, $:T^{00}: \geq 0$ positive energy)!
+
+4. **Perspectival Transformation ($\mathfrak{H}$ — *Recognition of $n\cdot J$ as Pure Relativistic Geometry*)**:
+   Completing the round-trip through Fierz identities and Cauchy-slice invariance transforms both poles:
+   * $\mathbf{T} \mapsto \mathbf{T}'$: Drops the false accusation that positive norms "sweep Dirac conjugation under the rug," seeing that **$\langle\psi, \psi\rangle_\Sigma = \int_\Sigma d\Sigma_\mu (\bar{\psi}\gamma^\mu\psi)$ is the supreme physical triumph of Dirac conjugation itself**, while acknowledging the genuine $-E_p$ Klein-paradox threshold of $T^{00}$.
+   * $\mathbf{S} \mapsto \mathbf{S}'$: Replaces non-covariant coordinate transposes $A^\top$ with manifestly covariant **foliation-normal contractions** $n_\mu J^\mu$, keeping every formula 100% relativistic and frame-covariant.
+
+---
+
+### IV. THE SOCRATIC APORIA ($\mathcal{A}_0 = \mathbf{T}_{\text{eff}}^2 - \mathbf{T}_{\text{eff}} \neq 0$) AND THE META-COGNITIVE TOWER
+
+Testing the Conscious Thesis (*"all Dirac–Krein spinor bilinears are uniformly stable without positive Hilbert norms or QFT"*) on the Fierz squares of $J$ vs. $J_5$ and on the rest-frame energy bilinear of an odd boost spinor $\psi_-(t) = \sigma_1 e^{+\gamma_{21}mt}$ ($\nabla\psi_-\gamma_{21} = \gamma_0(\sigma_1 m\gamma_{21})(-\gamma_{21}^2/\gamma_{21}) = m\psi_-\gamma_0$! Check: $\gamma_0\partial_t(\sigma_1 e^{\gamma_{21}mt})\gamma_{21} = m\gamma_0\sigma_1\gamma_{21}^2 e^{\gamma_{21}mt} = -m\gamma_0\sigma_1 e^{\gamma_{21}mt} = +m\sigma_1\gamma_0 e^{\gamma_{21}mt} = m\psi_-\gamma_0$!) exposes the exact **Socratic Aporia**:
+
+$$J(\psi)^2 + J_5(\psi)^2 \equiv \mathbf{0}\;\; \big(J^2 \geq 0 \text{ vs. } J_5^2 \leq 0\big), \qquad \Omega_1(\psi_-) = -1 < 0 \implies \mathcal{E}(\psi_-) = -m J^0(\psi_-) = -m < 0\;\; (\text{while } J^0(\psi_-) = +1 > 0)$$
+
+Following this self-contradiction recursively up the tower of meta-cognition generates the permanent obstruction sequence $\mathcal{A}_0 \hookrightarrow \mathcal{A}_1 \hookrightarrow \mathcal{A}_2 \hookrightarrow \mathcal{A}_3 \hookrightarrow \mathcal{A}_\omega$:
+
+* **Level 0 ($\mathcal{A}_0$ — Opposite Sign of $J^0 > 0$ and $\mathcal{E} < 0$ on Exact Dirac Solutions)**: $\psi_-(t) = \sigma_1 e^{+\gamma_{21}mt}$ is an exact solution of the real relativistic Dirac equation with positive vector density $J^0 = +1$, yet negative Krein scalar $\Omega_1 = -1$ and negative energy $\mathcal{E} = -m < 0$.
+* **Level 1 ($\mathcal{A}_1$ — Self-Refutation of Rejecting Positive Norms While Retaining $J^\mu = \bar{\psi}\gamma^\mu\psi$)**: Because $\langle\psi, \psi\rangle_\Sigma = \int_{\Sigma_n} \langle n(\psi\gamma_0\tilde{\psi})\rangle_0\,d\Sigma > 0$ is built purely from the conserved Dirac–Krein current $J(\psi)$, **banishing positive Hilbert inner products would require banishing the Dirac vector bilinear $\bar{\psi}\gamma^\mu\psi$ itself** ($\mathcal{A}_1 \neq 0$)!
+* **Level 2 ($\mathcal{A}_2$ — Non-Conservation of Scalar $\Omega_1$ & Axial $J_5^\mu$ Bilinears)**: Unlike $\nabla\cdot J = 0$, the axial bilinear satisfies $\nabla \cdot J_5(\psi) = -2m\Omega_2(\psi) \neq 0$ (plus Adler–Bell–Jackiw $\langle F\tilde{F}\rangle$ gauge anomalies), while $\Omega_1(\psi) = \langle\psi\tilde{\psi}\rangle_0$ oscillates in zitterbewegung superpositions $\psi_+ + \psi_-$ ($\mathcal{A}_2 \neq 0$).
+* **Level 3 ($\mathcal{A}_3$ — Klein Paradox Breakdown of Single-Particle RQM at $|e\Delta V| > 2m$)**: Scattering $\psi_+$ against a potential step $eA_0(z) = V_0\Theta(z)$ with $V_0 > E + m \geq 2m$ mixes positive-Krein ($\Omega_1 > 0$) incident waves with negative-Krein ($\Omega_1 < 0$) transmitted waves, driving reflection coefficients above unity if misread as single-particle motion and triggering spontaneous radiative decay into $-E_p \to -\infty$ ($\mathcal{A}_3 \neq 0$).
+* **Level 4 ($\mathcal{A}_4 \to \mathcal{A}_\omega$ — The Pauli–Weisskopf–Dirac C-Number Dichotomy Colimit)**: Across all relativistic spin-$1/2$ c-number field theories, Lorentz covariance + microcausality + Dirac algebra prove an inescapable theorem: **in c-number RQM, $J^0 = \bar{\psi}\gamma^0\psi \geq 0$ is positive-definite while $T^{00}$ is indefinite ($\pm E_p$)** (whereas for spin-$0$ Klein–Gordon, $T^{00} \geq 0$ is positive while $J^0$ is indefinite!). Simultaneous positivity of total energy $H \geq 0$ and conservation of indefinite electric charge $Q \in \mathbb{Z}$ holds **if and only if** spinor bilinears are promoted from c-number RQM to anticommuting multiparticle Fock/Clifford operators ($\mathcal{A}_\omega \neq 0$).
+
+---
+
+### V. `COAGULA`: THE ACYCLIC CAUSAL POSET AND SELF-VERIFYING SYNTHESIS
+
+#### 1. The Graded Acyclic Causal Poset $(\mathfrak{P}, \prec)$
+
+Let $\mathfrak{P}$ be the 15-element set of extracted real relativistic archetypes ordered by the transitive closure $\prec$ of the transitively reduced Hasse covering relation $\lessdot$, equipped with strict rank homomorphism $\mathrm{rk} : \mathfrak{P} \to \{0, 1, 2, 3, 4, 5, 6\}$:
+
+| Grade $\mathrm{rk}(v)$ | Archetype Symbol & Canonical Designation | Covering Predecessors $\mathrm{Pred}_{\lessdot}(v)$ | Relativistic Dirac–Krein Signature |
+| :---: | :--- | :--- | :--- |
+| **0** ($\bot$) | $\mathbf{\Delta}_0$ : *Causal Vector $J^\mu$ vs. Indefinite Scalar/Energy Cut* | $\varnothing$ | $\Omega_0 \mapsto (J^2 \geq 0, n\cdot J > 0) \ltimes (\Omega_1, T^{00} \gtrless 0)$ |
+| **1** | $\mathbf{T}$ : *Single-Particle RQM Bilinear Purist (Thesis)* | $\{\mathbf{\Delta}_0\}$ | $+1$ sector (“All bilinears stable, no Hilbert”) |
+| **1** | $\mathbf{S}$ : *Intrinsic $n\cdot J > 0$ & $-E_p$ Sea (Shadow)* | $\{\mathbf{\Delta}_0\}$ | $-1$ sector ($\langle\psi,\psi\rangle_\Sigma = \int n\cdot J > 0,\; \mathcal{E}_- < 0$) |
+| **2** | $\mathbf{K}_{TT}$ : *Fierz Identities & Continuity $\nabla\cdot J = 0$* | $\{\mathbf{T}\}$ | $J^2 = -J_5^2 = \Omega_1^2 + \Omega_2^2 \geq 0$, $J\cdot J_5 = 0$ |
+| **2** | $\mathbf{\Pi}_{ST}$ : *Uniform Stability & Anti-Hilbert Projection* | $\{\mathbf{T}, \mathbf{S}\}$ | $\mathcal{H}_T \to \mathcal{H}_S$ (lifted to $\Pi$) |
+| **2** | $\mathbf{\Sigma}_{TS}$ : *Antiparticle $\Omega_1 = -1$ & Klein Step $V_0 > 2m$* | $\{\mathbf{T}, \mathbf{S}\}$ | $\mathcal{H}_S \to \mathcal{H}_T$ (lifted to $\Sigma$) |
+| **2** | $\mathbf{\Gamma}_{SS}$ : *Cauchy Foliation $\Sigma_n$ & $2m$ Schwinger Threshold* | $\{\mathbf{S}\}$ | $\partial_\mu J^\mu = 0 \implies \frac{\delta}{\delta\Sigma}\int_\Sigma d\Sigma_\mu J^\mu = 0$ |
+| **3** | $\mathfrak{G}$ : *Dirac–Krein Causal Current $J(\psi) = \psi\gamma_0\tilde{\psi}$* | $\{\mathbf{\Pi}_{ST}, \mathbf{\Sigma}_{TS}\}$ | $\{\Sigma, \Pi\} \leftrightarrow (J(R\psi) = RJ(\psi)\tilde{R},\; J^2 \geq 0)$ |
+| **3** | $\mathfrak{T}$ : *Positive Flux $n\cdot J > 0$ vs. Energy Sign $\pm E_p$ Shear* | $\{\mathbf{\Pi}_{ST}, \mathbf{\Sigma}_{TS}\}$ | $[\Sigma, \Pi] \neq 0$ ($J^0(\sigma_1)=+1$ vs. $\mathcal{E}(\sigma_1)=-m$) |
+| **3** | $\mathcal{A}_0$ : *Rest-Spinor $\Omega_1(\sigma_1)=-1$ & $J^2+J_5^2=0$ Defect* | $\{\mathbf{K}_{TT}, \mathbf{\Pi}_{ST}, \mathbf{\Sigma}_{TS}\}$ | $\psi_-(t) = \sigma_1 e^{\gamma_{21}mt} \implies \mathcal{E} = -m < 0$ |
+| **4** | $\mathfrak{B}$ : *Slice-Invariant Dirac Norm $\langle\psi,\phi\rangle_\Sigma$ & Gap Bridge* | $\{\mathbf{K}_{TT}, \mathfrak{G}, \mathfrak{T}, \mathbf{\Gamma}_{SS}\}$ | $\int_\Sigma d\Sigma_\mu \langle\psi\gamma_0\tilde{\phi}\gamma^\mu\rangle_0 > 0$, $\|e\Delta V\| < 2m$ |
+| **4** | $\mathcal{A}_\omega$ : *C-Number $J^0 > 0 \wedge T^{00} \gtrless 0$ Dichotomy Colimit* | $\{\mathcal{A}_0, \mathfrak{T}, \mathbf{\Gamma}_{SS}\}$ | Klein paradox $\|e\Delta V\| > 2m \implies$ Fermi sea |
+| **5** | $\mathfrak{H}$ : *Covariant Hypersurface-Normal Holonomy* | $\{\mathfrak{B}, \mathcal{A}_\omega\}$ | $n = R_n\gamma_0\tilde{R}_n$ replacing non-covariant $A^\top$ |
+| **5** | $\mathfrak{F}_{\text{cov}}$ : *Stratified Fierz–Cauchy Relativistic System* | $\{\mathfrak{B}, \mathcal{A}_\omega\}$ | Causal $J^\mu$ $\oplus$ Krein $(\Omega_1,\Omega_2)$ $\oplus$ Gap/Fermi $T^{00}$ |
+| **6** ($\top$) | $\mathbf{\Xi}_\top$ : *Necessary Synthesis* | $\{\mathfrak{H}, \mathfrak{F}_{\text{cov}}\}$ | $\mathfrak{H} \vee \mathfrak{F}_{\text{cov}}$ (Covariant Dirac–Krein Bilinear System) |
+
+**Proof of Strict Acyclicity & Minimal Covering**: Every covering edge $u \lessdot v$ satisfies $\mathrm{rk}(u) < \mathrm{rk}(v)$; path induction gives $u \prec v \implies \mathrm{rk}(u) < \mathrm{rk}(v)$, establishing irreflexivity ($v \not\prec v$) and strict antisymmetry while transitivity holds by closure. Every $\mathrm{Pred}_{\lessdot}(v)$ forms an antichain of incomparable elements, and every $v \in \mathfrak{P}$ lies on a directed chain $\mathbf{\Delta}_0 \preceq v \preceq \mathbf{\Xi}_\top$. $\blacksquare$
+
+---
+
+#### 2. Canonical Philosophical Axioms (Grades 0–2)
+
+* **$\mathbf{Ax.1}$ (Axiom of Relativistic Bilinear Stratification — at $\mathbf{\Delta}_0 \lessdot \{\mathbf{T}, \mathbf{S}\}$)**:
+  Quadratic spinor observables formed via Dirac–Krein reversion $\tilde{\psi}$ on $\mathcal{K}_{4,4} = \mathrm{Cl}^{\text{even}}_{1,3}(\mathbb{R})$ split into distinct tensor ranks whose causal norms ($>0, =0, <0$) and conservation laws ($\nabla\cdot(\cdot) = 0$ vs. $\neq 0$) depend strictly on the Clifford element sandwiched between $\psi$ and $\tilde{\psi}$.
+* **$\mathbf{Ax.2}$ (Axiom of Real Hestenes–Dirac Dynamics — at $\mathbf{T} \lessdot \mathbf{K}_{TT}$)**:
+  In minimal electromagnetic coupling $A = A_\mu\gamma^\mu$, a relativistic spinor $\psi(x) \in \mathcal{K}_{4,4}$ obeys $\nabla\psi\gamma_{21} - eA\psi = m\psi\gamma_0$ ($m > 0$, $\gamma_0^2 = +\mathbf{1}, \gamma_{21}^2 = -\mathbf{1}, [\gamma_0, \gamma_{21}] = 0, \{\gamma_\mu, I_4\} = 0$).
+* **$\mathbf{Ax.3}$ (Axiom of Spacelike Cauchy Foliation — at $\mathbf{S} \lessdot \mathbf{\Gamma}_{SS}$)**:
+  Minkowski spacetime admits global spacelike Cauchy hypersurfaces $\Sigma$ with future-timelike unit normal $n(x) = R_n(x)\gamma_0\widetilde{R_n(x)}$ ($n^2 = +\mathbf{1}, R_n\tilde{R}_n = \mathbf{1}$) on which Gauss’s divergence theorem eliminates spatial boundary terms for localized wave-packets.
+* **$\mathbf{Ax.4}$ (Axiom of Canonical Dirac Energy Density — at $\{\mathbf{T}, \mathbf{S}\} \lessdot \{\mathbf{\Pi}_{ST}, \mathbf{\Sigma}_{TS}\}$)**:
+  For a free stationary frequency mode $\partial_0\psi = -\psi\gamma_{21}\omega$ ($\omega \in \mathbb{R}$), the canonical Dirac energy density is $\mathcal{E}(\psi) := \langle(\partial_0\psi)\gamma_{21}\gamma_0\tilde{\psi}\gamma_0\rangle_0 = \omega\langle\psi\gamma_0\tilde{\psi}\gamma_0\rangle_0$.
+* **$\mathbf{Ax.5}$ (Axiom of Reversion Parity on Grades)**:
+  On $\mathrm{Cl}_{1,3}(\mathbb{R})$, reversion $(\tilde{\cdot})$ acts by $+1$ on grades $0, 1, 4$ and by $-1$ on grades $2, 3$, with scalar cyclicity $\langle XY\rangle_0 = \langle YX\rangle_0$.
+
+---
+
+#### 3. Intermediate Deductions (Grades 3–5)
+
+* **$\mathbf{Ded.1}$ (Pure STA Proof of Fierz Causal Positivity $J^2 = \Omega_1^2 + \Omega_2^2 \geq 0$ & Intrinsic Cauchy Norm — generating $\mathfrak{G}$ and $\mathcal{A}_1$)**:
+  *Claim*: For every $\psi \neq 0 \in \mathcal{K}_{4,4}$, $\psi\tilde{\psi} = \tilde{\psi}\psi = \Omega_1\mathbf{1} + \Omega_2 I_4$, $J(\psi) := \psi\gamma_0\tilde{\psi}$ is a future-causal 4-vector satisfying $J(\psi)^2 = (\Omega_1^2 + \Omega_2^2)\mathbf{1} \geq 0$ and $J_5(\psi)^2 = -J(\psi)^2 \leq 0$, and $\langle n J(\psi)\rangle_0 > 0$ defines a Lorentz-invariant positive norm purely from Dirac–Krein conjugation.
+  *Proof*: By $\mathbf{Ax.5}$, $\widetilde{(\psi\tilde{\psi})} = \psi\tilde{\psi} \in \mathrm{Cl}^{\text{even}}_{1,3} \implies \langle\psi\tilde{\psi}\rangle_2 = 0$, so $\psi\tilde{\psi} = \Omega_1\mathbf{1} + \Omega_2 I_4$; cyclicity and $[I_4, \psi] = 0$ give $\langle\tilde{\psi}\psi\rangle_0 = \Omega_1$ and $\langle\tilde{\psi}\psi I_4\rangle_0 = \langle\psi I_4\tilde{\psi}\rangle_0 = \Omega_2$, hence $\tilde{\psi}\psi = \Omega_1\mathbf{1} + \Omega_2 I_4$. Similarly $\widetilde{J(\psi)} = \psi\tilde{\gamma}_0\tilde{\psi} = J(\psi) \in \mathrm{Cl}^{\text{odd}}_{1,3} \implies \langle J(\psi)\rangle_3 = 0 \implies J(\psi) \in \mathrm{Cl}^{(1)}_{1,3}$. Using $\gamma_0 I_4 = -I_4\gamma_0$ and $I_4^2 = -\mathbf{1}$ ($\mathbf{Ax.2}$):
+  $$J(\psi)^2 = \psi\gamma_0(\tilde{\psi}\psi)\gamma_0\tilde{\psi} = \psi\gamma_0(\Omega_1\mathbf{1} + \Omega_2 I_4)\gamma_0\tilde{\psi} = \psi(\Omega_1\mathbf{1} - \Omega_2 I_4)\tilde{\psi} = (\Omega_1^2 - \Omega_2^2 I_4^2)\mathbf{1} = (\Omega_1^2 + \Omega_2^2)\mathbf{1} \geq 0$$
+  Replacing $\gamma_0$ by $\gamma_3$ ($\gamma_3^2 = -\mathbf{1}, \gamma_3 I_4 = -I_4\gamma_3$) gives $J_5(\psi)^2 = -(\Omega_1^2 + \Omega_2^2)\mathbf{1} = -J(\psi)^2 \leq 0$. Finally, for $n = R_n\gamma_0\tilde{R}_n$ ($\mathbf{Ax.3}$) and $\psi' := \tilde{R}_n\psi \neq 0$, $\langle n J(\psi)\rangle_0 = \langle\psi'\gamma_0\tilde{\psi}'\gamma_0\rangle_0 = \sum_{a=1}^8 (c_a)^2 > 0$ (sum of squares of all $8$ real components of $\psi'$), manifestly invariant under $n \mapsto Ln\tilde{L}, \psi \mapsto L\psi$. $\blacksquare$
+
+* **$\mathbf{Ded.2}$ (Exact Continuity Conservation & Cauchy-Slice Independence — generating $\mathfrak{B}$)**:
+  *Claim*: Every solution of $\nabla\psi\gamma_{21} - eA\psi = m\psi\gamma_0$ ($\mathbf{Ax.2}$) satisfies $\partial_\mu J^\mu(\psi) = 0$, rendering the Dirac–Krein inner product $\langle\psi, \phi\rangle_\Sigma := \int_\Sigma d\Sigma_\mu \langle\psi\gamma_0\tilde{\phi}\gamma^\mu\rangle_0$ strictly time- and frame-independent.
+  *Proof*: From $\mathbf{Ax.2}$, $\nabla\psi = (eA\psi\gamma_{21} - m\psi\gamma_0\gamma_{21})$ (multiplying on the right by $-\gamma_{21}$); reversing ($\mathbf{Ax.5}$, $\tilde{A} = A, \tilde{\gamma}_{21} = -\gamma_{21}$) gives $(\partial_\mu\tilde{\psi})\gamma^\mu = -\gamma_{21}\tilde{\psi}eA + m\gamma_{21}\gamma_0\tilde{\psi}$. Computing $\partial_\mu\langle\gamma^\mu\psi\gamma_0\tilde{\psi}\rangle_0 = \langle(\nabla\psi)\gamma_0\tilde{\psi} + \psi\gamma_0(\partial_\mu\tilde{\psi}\gamma^\mu)\rangle_0$ yields by cyclicity and $[\gamma_0, \gamma_{21}] = 0$:
+  $$\big\langle eA\psi\gamma_{21}\gamma_0\tilde{\psi} - m\psi\gamma_{21}\tilde{\psi} - \psi\gamma_0\gamma_{21}\tilde{\psi}eA + m\psi\gamma_{21}\tilde{\psi}\big\rangle_0 = e\big\langle A(\psi\gamma_0\gamma_{21}\tilde{\psi}) - (\psi\gamma_0\gamma_{21}\tilde{\psi})A\big\rangle_0 = 0$$
+  Polarizing to $(\psi, \phi)$ and applying Gauss’s theorem between Cauchy slices $\Sigma_1, \Sigma_2$ ($\mathbf{Ax.3}$) gives $\langle\psi, \phi\rangle_{\Sigma_2} - \langle\psi, \phi\rangle_{\Sigma_1} = 0$. $\blacksquare$
+
+* **$\mathbf{Ded.3}$ (Exact Identification of Negative Krein Modes $\Omega_1 < 0$ with Negative-Energy Antiparticles $\mathcal{E} = -m J^0 < 0$ — generating $\mathcal{A}_0$ and $\mathfrak{T}$)**:
+  *Claim*: Free rest-frame solutions ($A = 0, \partial_k\psi = 0$) split $\mathcal{K}_{4,4}$ into $4$ positive-Krein modes ($\Omega_1 = +J^0 > 0$) with energy $+m J^0 > 0$ and $4$ negative-Krein modes ($\Omega_1 = -J^0 < 0$) with negative energy $-m J^0 < 0$.
+  *Proof*: At rest ($\nabla = \gamma_0\partial_0$), $\mathbf{Ax.2}$ becomes $\gamma_0(\partial_0\psi)\gamma_{21} = m\psi\gamma_0 \iff \partial_0\psi = -m(\gamma_0\psi\gamma_0)\gamma_{21}$.
+  * For $\psi_+ \in \mathcal{K}_+ = \mathrm{Span}_{\mathbb{R}}\{1, \gamma_{23}, \gamma_{31}, \gamma_{12}\}$ ($\gamma_0\psi_+\gamma_0 = +\psi_+$): $\psi_+(t) = \psi_+(0)e^{-\gamma_{21}mt}$ solves $\mathbf{Ax.2}$ with $\omega = +m$, $\Omega_1(\psi_+) = +J^0(\psi_+) > 0$, and $\mathcal{E}(\psi_+) = +m J^0(\psi_+) > 0$ ($\mathbf{Ax.4}$).
+  * For $\psi_- \in \mathcal{K}_- = \mathrm{Span}_{\mathbb{R}}\{\sigma_1, \sigma_2, \sigma_3, I_4\}$ ($\gamma_0\psi_-\gamma_0 = -\psi_-$): $\psi_-(t) = \psi_-(0)e^{+\gamma_{21}mt}$ solves $\mathbf{Ax.2}$ with $\omega = -m$, $\Omega_1(\psi_-) = -J^0(\psi_-) < 0$, and $\mathcal{E}(\psi_-) = -m J^0(\psi_-) < 0$! $\blacksquare$
+
+* **$\mathbf{Ded.4}$ (Klein-Paradox Threshold & C-Number Energy-Charge Obstruction — generating $\mathcal{A}_\omega$ from $\{\mathcal{A}_0, \mathfrak{T}, \mathbf{\Gamma}_{SS}\} \lessdot \mathcal{A}_\omega$)**:
+  *Claim*: While $J(\psi)$ and $\langle\psi, \psi\rangle_\Sigma$ remain unconditionally stable for all $A_\mu$ ($\mathbf{Ded.1}, \mathbf{Ded.2}$), c-number single-particle energy $\mathcal{E}$ stays bounded below only for subcritical potentials $|e\Delta V| < 2m$, crossing into negative-energy pair-mixing at $|e\Delta V| > 2m$ unless promoted to antisymmetrized multiparticle operators ($\mathcal{A}_\omega \neq 0$).
+  *Proof*: Immediate from $\mathbf{Ded.3}$: the spectral gap between $+E_p \geq +m$ ($\Omega_1 > 0$) and $-E_p \leq -m$ ($\Omega_1 < 0$) has exact width $2m$; any potential step $e\Delta A_0 > 2m$ overlaps $+E_p$ on the left with $-E_{p'}$ on the right, coupling positive- and negative-energy c-number branches while conserving $\partial_\mu J^\mu = 0$. $\blacksquare$
+
+* **$\mathbf{Ded.5}$ (Covariant Hypersurface-Normal Holonomy — generating $\mathfrak{H}$ from $\{\mathfrak{B}, \mathcal{A}_\omega\} \lessdot \mathfrak{H}$)**:
+  *Claim*: Replacing coordinate-fixed $A^\top$ with covariant Cauchy-slice integration $\langle\psi, \phi\rangle_\Sigma$ ($\mathbf{Ded.2}$) eliminates all frame dependence while keeping Dirac–Krein conjugation $\tilde{\phi}$ explicit in every inner product.
+  *Proof*: Directly from $\mathbf{Ded.1}$ and $\mathbf{Ded.2}$. $\blacksquare$
+
+* **$\mathbf{Ded.6}$ (Stratified Fierz–Cauchy Relativistic System — generating $\mathfrak{F}_{\text{cov}}$ from $\{\mathfrak{B}, \mathcal{A}_\omega\} \lessdot \mathfrak{F}_{\text{cov}}$)**:
+  *Claim*: Relativistic spinor bilinears stratify canonically into (i) conserved future-causal current $J(\psi)$ defining $\langle\psi, \phi\rangle_\Sigma > 0$, (ii) Lorentz-invariant $(4, 4)$ scalars $(\Omega_1, \Omega_2)$ indexing particle/antiparticle chirality, (iii) spacelike spin density $(J_5, S)$, and (iv) $2m$-gapped stress-energy $T^{\mu\nu}$.
+  *Proof*: Established by combining $\mathbf{Ded.1}$–$\mathbf{Ded.4}$. $\blacksquare$
+
+---
+
+#### 4. Master Structural Synthesis (Grade 6: Terminal Join $\top$)
+
+* **$\mathbf{Thm.\top}$ (Necessity and Uniqueness of the Covariant Dirac–Krein Bilinear Synthesis $\mathbf{\Xi}_\top = \mathfrak{H} \vee \mathfrak{F}_{\text{cov}}$)**:
+  *Statement*: Purely inside $i$-free relativistic Hestenes–Dirac mechanics—with zero non-relativistic Hilbert contamination—the unique non-contradictory synthesis completing $(\mathfrak{P}, \prec)$ is $\mathbf{\Xi}_\top = \mathfrak{H} \vee \mathfrak{F}_{\text{cov}}$, a **Covariant Dirac–Krein Bilinear Epistemic System** established by four proved laws:
+  1. **Vector Dirac–Krein Bilinears Are Unconditionally Causal, Conserved, & Stable ($\mathbf{Ded.1}, \mathbf{Ded.2}$)**: $J(\psi) = \psi\gamma_0\tilde{\psi}$ ($\bar{\psi}\gamma^\mu\psi$) satisfies $J(\psi)^2 = (\Omega_1^2 + \Omega_2^2)\mathbf{1} \geq 0$ and $\partial_\mu J^\mu = 0$, never blowing up or exiting the forward lightcone under any Lorentz boost or minimal gauge field;
+  2. **The Positive Norm *Is* the Covariant Dirac–Krein Cauchy Flux ($\mathbf{Ded.1}, \mathbf{Ded.2}, \mathfrak{H}$)**: $\langle\psi, \phi\rangle_\Sigma = \int_\Sigma d\Sigma_\mu \langle\psi\gamma_0\tilde{\phi}\gamma^\mu\rangle_0$ is strictly positive-definite, Lorentz-invariant, slice-independent, and built 100% from Dirac–Krein reversion $\tilde{\phi}$;
+  3. **Scalar & Axial Bilinears Carry Distinct Non-Positive Signatures ($\mathbf{Ded.1}, \mathbf{Ded.3}, \mathfrak{F}_{\text{cov}}$)**: Unlike $J^\mu$, the scalar bilinear $\Omega_1 = \langle\psi\tilde{\psi}\rangle_0$ is $(4, 4)$-indefinite (distinguishing $+m$ particles from $-m$ antiparticles at rest) and $J_5^\mu$ is spacelike ($J_5^2 = -J^2 \leq 0$); and
+  4. **Exact $2m$ Mass-Gap Boundary for C-Number Energy $T^{00}$ ($\mathbf{Ded.3}, \mathbf{Ded.4}, \mathfrak{F}_{\text{cov}}$)**: In single-particle RQM, $T^{00}$ carries opposite sign $\pm E_p$ on $\Omega_1 \gtrless 0$ branches—energetically stable for $|e\Delta V| < 2m$ and transitioning to multiparticle pair physics at $|e\Delta V| > 2m$.
+
+  *Proof from Poset Mechanics*:
+  1. **Sufficiency & Upper-Bound Closure**: Every archetype $v \in \mathfrak{P} \setminus \{\mathbf{\Xi}_\top\}$ satisfies $v \preceq \mathfrak{H}$ or $v \preceq \mathfrak{F}_{\text{cov}}$ along proved covering chains ($\mathbf{Ax.1}$–$\mathbf{Ax.5}$, $\mathbf{Ded.1}$–$\mathbf{Ded.6}$). Joining $\mathfrak{H}$ and $\mathfrak{F}_{\text{cov}}$ simultaneously proves the exact stability of $J^\mu$ ($\mathbf{Ded.1}, \mathbf{Ded.2}$), derives positive inner products internally from $\bar{\psi}\gamma^\mu\psi$ without external Hilbert axioms ($\mathbf{Ded.1}, \mathbf{Ded.5}$), and accurately locates the $-E_p$ Dirac-sea threshold ($\mathbf{Ded.3}, \mathbf{Ded.4}$).
+  2. **Minimality & Uniqueness of Join**:
+     * Retaining $\mathfrak{F}_{\text{cov}}$ without $\mathfrak{H}$ evaluates $J^0$ only in a fixed coordinate frame $\gamma_0$ rather than covariant Cauchy slices $\Sigma_n$, creating the false appearance of non-relativistic frame-mixing ($\mathbf{Ded.1}, \mathbf{Ded.5}$).
+     * Retaining $\mathfrak{H}$ without $\mathfrak{F}_{\text{cov}}$ treats all Dirac–Krein bilinears as uniformly positive/stable, colliding against $J_5^2 = -J^2 \leq 0$ ($\mathbf{Ded.1}$), $\Omega_1(\sigma_1) = -1 < 0$, and $\mathcal{E}(\psi_-) = -m < 0$ ($\mathbf{Ded.3}$).
+     * Collapsing $\mathcal{A}_0 \to 0$ asserts $+m = -m$ for $m > 0$ ($\mathbf{Ded.3}$, contradiction).
+  Therefore, $\mathbf{\Xi}_\top = \mathfrak{H} \vee \mathfrak{F}_{\text{cov}}$ is the unique least upper bound ($\sup \mathfrak{P}$) completing the causal poset. $\blacksquare$

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Core.IdempotentDefectIteration
+import InfoGeometry.Core.IdempotentNewtonIterationExamples
 
 open InfoGeometry.Core.IdempotentGraphGrassmannian
 
@@ -11,3 +12,21 @@ open InfoGeometry.Core.IdempotentGraphGrassmannian
 #print axioms idempotencyDefect_iterates_intertwines
 #print axioms idempotencyDefect_iterates_left_support
 #print axioms idempotencyDefect_iterates_right_support
+#print axioms map_newtonPeirceStep
+#print axioms map_newtonPeirceStep_iterates
+#print axioms newtonPeirceStep_intertwines
+#print axioms newtonPeirceStep_iterates_intertwines
+#print axioms newtonPeirceStep_one_sub
+#print axioms newtonPeirceStep_iterates_one_sub
+#print axioms idempotencyDefect_newtonPeirceStep_pow
+#print axioms newtonPeirceStep_iterates_idempotent_of_defect_pow_two_pow_eq_zero
+#print axioms newtonPeirceStep_iterates_idempotent_of_defect_pow_eq_zero
+#print axioms newtonPeirceStep_iterates_stable_of_defect_pow_eq_zero
+#print axioms newtonPeirceStep_eventually_idempotent_of_isNilpotent_defect
+#print axioms newtonPeirceStep_iterates_lifts_idempotent
+#print axioms InfoGeometry.Core.IdempotentNewtonIterationExamples.chain_cut_noncommute
+#print axioms InfoGeometry.Core.IdempotentNewtonIterationExamples.chain_defect_sq_ne_zero
+#print axioms InfoGeometry.Core.IdempotentNewtonIterationExamples.chain_defect_cube_zero
+#print axioms InfoGeometry.Core.IdempotentNewtonIterationExamples.chain_first_correction_not_idempotent
+#print axioms InfoGeometry.Core.IdempotentNewtonIterationExamples.chain_second_correction
+#print axioms InfoGeometry.Core.IdempotentNewtonIterationExamples.chain_later_corrections

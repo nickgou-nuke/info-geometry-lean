@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Core.IdempotentGraphGrassmannian
 import Mathlib.Logic.Function.Iterate
+import Mathlib.Algebra.GroupWithZero.Basic
 
 /-!
 # Finite iteration of the idempotency defect
@@ -12,6 +13,12 @@ import Mathlib.Logic.Function.Iterate
 Orthogonality in each multiplication order persists under the defect map.
 Consequently every finite iterate splits across mutually orthogonal inputs.
 Ring homomorphisms transport the entire finite orbit.
+
+The existing Newton–Peirce correction also terminates after `n` steps whenever
+the initial defect is annihilated by the power `2 ^ n`. This finite algebraic
+result preserves ordered intertwiners and requires no topology or
+commutativity of the ambient ring. Raw defect iteration and corrective Newton
+iteration are distinct functions.
 -/
 
 namespace InfoGeometry.Core.IdempotentGraphGrassmannian
@@ -143,5 +150,153 @@ theorem idempotencyDefect_iterates_right_support {p x : B}
   | succ n ih =>
     simp only [Function.iterate_succ_apply', idempotencyDefect, sub_mul,
       mul_assoc, ih]
+
+/-! ## Transport of Newton correction -/
+
+/-- The existing correction polynomial is natural under unital ring maps. -/
+theorem map_newtonPeirceStep (f : B →+* C) (x : B) :
+    f (newtonPeirceStep x) = newtonPeirceStep (f x) := by
+  simp only [newtonPeirceStep, map_sub, map_mul, map_ofNat]
+
+/-- Ring maps transport every finite corrective iterate. -/
+theorem map_newtonPeirceStep_iterates (f : B →+* C) (x : B) (n : ℕ) :
+    f (newtonPeirceStep^[n] x) = newtonPeirceStep^[n] (f x) := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    simp only [Function.iterate_succ_apply', map_newtonPeirceStep, ih]
+
+/-- The correction respects the order of an arbitrary intertwining equation.
+The two operators and the intertwiner are not assumed to commute. -/
+theorem newtonPeirceStep_intertwines {x y z : B} (h : x * y = y * z) :
+    newtonPeirceStep x * y = y * newtonPeirceStep z := by
+  have h₂ : x * x * y = y * (z * z) := by
+    calc
+      x * x * y = x * (x * y) := mul_assoc _ _ _
+      _ = x * (y * z) := by rw [h]
+      _ = (x * y) * z := (mul_assoc _ _ _).symm
+      _ = y * (z * z) := by rw [h, mul_assoc]
+  have h₃ : x * x * x * y = y * (z * z * z) := by
+    calc
+      x * x * x * y = x * (x * x * y) := by simp only [mul_assoc]
+      _ = x * (y * (z * z)) := by rw [h₂]
+      _ = (x * y) * (z * z) := (mul_assoc _ _ _).symm
+      _ = y * (z * z * z) := by rw [h]; simp only [mul_assoc]
+  calc
+    newtonPeirceStep x * y = 3 * (x * x * y) - 2 * (x * x * x * y) := by
+      unfold newtonPeirceStep
+      noncomm_ring
+    _ = 3 * (y * (z * z)) - 2 * (y * (z * z * z)) := by rw [h₂, h₃]
+    _ = y * newtonPeirceStep z := by
+      unfold newtonPeirceStep
+      noncomm_ring
+
+/-- Every corrective iterate retains the original ordered intertwiner. -/
+theorem newtonPeirceStep_iterates_intertwines {x y z : B}
+    (h : x * y = y * z) (n : ℕ) :
+    newtonPeirceStep^[n] x * y = y * newtonPeirceStep^[n] z := by
+  induction n with
+  | zero => exact h
+  | succ n ih =>
+    simp only [Function.iterate_succ_apply']
+    exact newtonPeirceStep_intertwines ih
+
+/-- The same correction treats the two complementary sectors compatibly. -/
+theorem newtonPeirceStep_one_sub (x : B) :
+    newtonPeirceStep (1 - x) = 1 - newtonPeirceStep x := by
+  unfold newtonPeirceStep
+  noncomm_ring
+
+/-- Complementation commutes with every finite corrective iterate. -/
+theorem newtonPeirceStep_iterates_one_sub (x : B) (n : ℕ) :
+    newtonPeirceStep^[n] (1 - x) = 1 - newtonPeirceStep^[n] x := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    simp only [Function.iterate_succ_apply', ih, newtonPeirceStep_one_sub]
+
+/-! ## Finite termination of Newton correction -/
+
+/-- The exact defect factorization persists under every natural power. The
+two factors commute because both are polynomials in the initial defect. -/
+theorem idempotencyDefect_newtonPeirceStep_pow (x : B) (k : ℕ) :
+    idempotencyDefect (newtonPeirceStep x) ^ k =
+      idempotencyDefect x ^ (2 * k) *
+        (4 * idempotencyDefect x - 3) ^ k := by
+  have hcomm : Commute (idempotencyDefect x * idempotencyDefect x)
+      (4 * idempotencyDefect x - 3) := by
+    change (idempotencyDefect x * idempotencyDefect x) *
+        (4 * idempotencyDefect x - 3) =
+      (4 * idempotencyDefect x - 3) *
+        (idempotencyDefect x * idempotencyDefect x)
+    noncomm_ring
+  rw [idempotencyDefect_newtonPeirceStep, hcomm.mul_pow,
+    ← pow_two, ← pow_mul]
+
+/-- After `n` corrections, a defect killed by the power `2 ^ n` has been
+eliminated exactly. This proves a finite iteration bound in any ring. -/
+theorem newtonPeirceStep_iterates_idempotent_of_defect_pow_two_pow_eq_zero
+    (n : ℕ) {x : B} (hδ : idempotencyDefect x ^ (2 ^ n) = 0) :
+    newtonPeirceStep^[n] x * newtonPeirceStep^[n] x =
+      newtonPeirceStep^[n] x := by
+  induction n generalizing x with
+  | zero =>
+    exact idempotencyDefect_eq_zero_iff.mp (by simpa using hδ)
+  | succ n ih =>
+    simp only [Function.iterate_succ_apply]
+    apply ih
+    rw [idempotencyDefect_newtonPeirceStep_pow]
+    have hpow : idempotencyDefect x ^ (2 * 2 ^ n) = 0 := by
+      simpa only [pow_succ, Nat.mul_comm] using hδ
+    rw [hpow, zero_mul]
+
+/-- Any supplied nilpotence exponent gives the explicit sufficient bound
+`m ≤ 2 ^ n` on the number of Newton–Peirce corrections. -/
+theorem newtonPeirceStep_iterates_idempotent_of_defect_pow_eq_zero
+    {x : B} {m n : ℕ} (hδ : idempotencyDefect x ^ m = 0)
+    (hmn : m ≤ 2 ^ n) :
+    newtonPeirceStep^[n] x * newtonPeirceStep^[n] x =
+      newtonPeirceStep^[n] x := by
+  exact newtonPeirceStep_iterates_idempotent_of_defect_pow_two_pow_eq_zero
+    n (pow_eq_zero_of_le hmn hδ)
+
+/-- Once the nilpotent defect has been eliminated, every later correction
+fixes the resulting idempotent. -/
+theorem newtonPeirceStep_iterates_stable_of_defect_pow_eq_zero
+    {x : B} {m n : ℕ} (hδ : idempotencyDefect x ^ m = 0)
+    (hmn : m ≤ 2 ^ n) (k : ℕ) :
+    newtonPeirceStep^[n + k] x = newtonPeirceStep^[n] x := by
+  rw [Nat.add_comm n k, Function.iterate_add_apply]
+  exact Function.iterate_fixed
+    (newtonPeirceStep_eq_self_of_idempotent
+      (newtonPeirceStep_iterates_idempotent_of_defect_pow_eq_zero hδ hmn)) k
+
+/-- Nilpotence of the initial defect guarantees a finite stationary
+idempotent. The witness is a natural-number iteration depth, with no topology
+or limiting construction. -/
+theorem newtonPeirceStep_eventually_idempotent_of_isNilpotent_defect
+    {x : B} (hδ : IsNilpotent (idempotencyDefect x)) :
+    ∃ n : ℕ,
+      newtonPeirceStep^[n] x * newtonPeirceStep^[n] x =
+          newtonPeirceStep^[n] x ∧
+        ∀ k : ℕ, newtonPeirceStep^[n + k] x = newtonPeirceStep^[n] x := by
+  obtain ⟨m, hm⟩ := hδ
+  have hbound : m ≤ 2 ^ m := Nat.le_of_lt m.lt_two_pow_self
+  exact ⟨m, newtonPeirceStep_iterates_idempotent_of_defect_pow_eq_zero hm hbound,
+    fun k => newtonPeirceStep_iterates_stable_of_defect_pow_eq_zero hm hbound k⟩
+
+/-- An explicit lift of an idempotent image: the corrected element is
+idempotent and has exactly the same image. No section of `f` or existential
+choice of a lift is required; the input `x` is the specified initial lift. -/
+theorem newtonPeirceStep_iterates_lifts_idempotent
+    (f : B →+* C) {x : B} {m n : ℕ}
+    (hδ : idempotencyDefect x ^ m = 0) (hmn : m ≤ 2 ^ n)
+    (himage : f x * f x = f x) :
+    newtonPeirceStep^[n] x * newtonPeirceStep^[n] x =
+        newtonPeirceStep^[n] x ∧
+      f (newtonPeirceStep^[n] x) = f x := by
+  refine ⟨newtonPeirceStep_iterates_idempotent_of_defect_pow_eq_zero hδ hmn, ?_⟩
+  rw [map_newtonPeirceStep_iterates]
+  exact Function.iterate_fixed (newtonPeirceStep_eq_self_of_idempotent himage) n
 
 end InfoGeometry.Core.IdempotentGraphGrassmannian

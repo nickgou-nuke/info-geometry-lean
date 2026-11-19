@@ -614,3 +614,6 @@ import InfoGeometry.LinearAlgebra.OrderedQuotientBasis
 import InfoGeometry.Algebra.FreeOperatorSymmetry
 import InfoGeometry.Canonical.OperatorBasisExamples
 import InfoGeometry.Algebra.OperatorBasisAudit
+import InfoGeometry.Algebra.SkewPolynomialFactorization
+import InfoGeometry.Algebra.QuadraticCrossedProduct
+import InfoGeometry.Algebra.CARTwoSidedIdeal

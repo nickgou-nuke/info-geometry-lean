@@ -1,0 +1,75 @@
+{
+  "algorithm": "sha256",
+  "recorded_utc": "2026-11-16T18:44:40.310827+00:00",
+  "self_excluded": true,
+  "files": {
+    "README.md": {
+      "sha256": "63bda719fe6a4353328662a4081401810fad37f7a38171eaab11c44eb8a11b3e",
+      "bytes": 1336
+    },
+    "aa-doc-delta-review.md": {
+      "sha256": "8d4940a1fb8bd362dba6a73a5c7fdf50aac1a95cb9175ad66337be6185a80a87",
+      "bytes": 2374
+    },
+    "aa-source-delta-final.md": {
+      "sha256": "f46be5933c5587eddb64b47b0d7fb179a24552c3774ae70d112563e22608121a",
+      "bytes": 2962
+    },
+    "aa-source-delta-review.md": {
+      "sha256": "ade9a8d22b075d5b3b7595ba049c45e4e33e3748bb64f14413d2f41ff9b57b9a",
+      "bytes": 7117
+    },
+    "aa-source-review.md": {
+      "sha256": "4bc63e5413fe42394b2fdb545e51695b54bd8cbb1277f94d27ff68f4b770e459",
+      "bytes": 13973
+    },
+    "aa-source-t16-review.md": {
+      "sha256": "a778557a7e79b867d572021a4a9040e577456d5b6aab80b489e1483da52ba555",
+      "bytes": 4828
+    },
+    "capa-history.json": {
+      "sha256": "9ddf1c8e355711857ee6fae951df0bc237309944c8ebb20b19f54aae99dace9a",
+      "bytes": 8207
+    },
+    "command-ledger.json": {
+      "sha256": "f564f791e11e0b26c25beaffd4128c43a876eff98601501eb6eb493203bc9003",
+      "bytes": 16367
+    },
+    "dependency-warnings.log": {
+      "sha256": "bea9801e574f4075818000a8f35f93924494ba2d60e317d8e276c852a5931e49",
+      "bytes": 3605
+    },
+    "native-axioms.log": {
+      "sha256": "b80c5188d818317d891a79290cbb31acf6a4d5c60df7cb0c69d2af8f17a891bc",
+      "bytes": 5106
+    },
+    "native-evidence-sha256.json": {
+      "sha256": "331cbe63927e8c243be0ae8eea2ede69489bfc506d20ea4da08e86eac591413f",
+      "bytes": 1712
+    },
+    "native-report.json": {
+      "sha256": "7024f87cd4592d79fff016c77bb9615a55598f090d83da4ff059ace6dbed9bbf",
+      "bytes": 6607
+    },
+    "qa-acceptance.json": {
+      "sha256": "2cad0d535b6fa9740fe0351d70c71611093a500e9a0ebb2e4f744a9673c137f9",
+      "bytes": 26043
+    },
+    "qa-review.md": {
+      "sha256": "9c1bb095bd67be4fc578cef39eef2b51e2961d73d923444bb70231936bd6933b",
+      "bytes": 14546
+    },
+    "root-path-preflight.json": {
+      "sha256": "6d1f1c6c528dfa847a0dcbb7aeb687f68839a6e5e1c5a4164e576dd167cb467d",
+      "bytes": 1539
+    },
+    "source-gate-receipts.json": {
+      "sha256": "26d035b37b3d2336f2d58df7a7bf9903de8c3b87db93ec2d840950f9b3b3c8d3",
+      "bytes": 6781
+    },
+    "source-index-fingerprint.json": {
+      "sha256": "f55edad47e6493ee92628edeb05e57462502cd91ddb7b6ab1bec973f24e42c78",
+      "bytes": 26349
+    }
+  }
+}

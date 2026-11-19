@@ -1,0 +1,145 @@
+{
+  "status": "passed",
+  "scope": "Exact repository source closure and native axiom audit",
+  "targets": [
+    "InfoGeometry.Analysis.HilbertGramReciprocity",
+    "InfoGeometry.Analysis.HilbertGramMoorePenrose",
+    "InfoGeometry.Analysis.GradedExponentialTrace"
+  ],
+  "modules": [
+    {
+      "module": "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Algebra/FiniteSpinAlgebra.olean": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PartnerEigenspaces",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/OperatorAlgebra/PartnerEigenspaces.olean": "3e91b5ddfe58803003a4ae48b7c9fd49aa525fb59b746a774e4e8b041f756e6e"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Analysis.HilbertGramDuality",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Analysis/HilbertGramDuality.olean": "f9a3774a0711ef4004a104065211fe1e283c49c75b2209f5ebcf51e70ea629cd"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Analysis.HilbertGramReciprocity",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Analysis/HilbertGramReciprocity.olean": "cc568ae5672667d44b2d60dc158f88e6de2b61a2a8e6052c06b6edc567e88071"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Singular.MoorePenrose",
+      "returncode": 0,
+      "warnings": 14,
+      "artifacts": {
+        "lib/InfoGeometry/Singular/MoorePenrose.olean": "1d407fc443c26c03f4dd09e1068c3c788241ad28057dc36218f7ffe2cc76ac00"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Analysis.HilbertGramMoorePenrose",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Analysis/HilbertGramMoorePenrose.olean": "454be1d9e821a963eb0162cd6b008c34f920f605156a899b3bb5c9caa4342d75"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/OperatorAlgebra/NoncommutativeGradedTrace.olean": "622ec0d26a5d290e6b23bc5836fd5cf183e7341ea0f380e1af85dfd26969c2ae"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Analysis.GradedExponentialTrace",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Analysis/GradedExponentialTrace.olean": "151e42e415875061e7d0d73fb72ab9f0e3cc408171214107b90be11e5fe7802b"
+      },
+      "reused": false
+    }
+  ],
+  "audit_required": true,
+  "verification_source_sha256": {
+    "tools/quality/check_clifford_dirac.py": "fcf6fbb9845e0ee2a85bdb3778c5fe74345a9ae7a2e97e871d0a89d3e98e7db0",
+    "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+    "tools/quality/reviewed_audit_source.py": "a976c910f5efb4611b1626d714e3197310d92648ffae56513e94a49ae5f0f206",
+    "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df"
+  },
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "source_sha256": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+    "InfoGeometry.OperatorAlgebra.PartnerEigenspaces": "ed9131818752823e408f081b29394176b9d88cb0484bd3d0a8fb4e6149588cb6",
+    "InfoGeometry.Analysis.HilbertGramDuality": "12db6c5c9d34bec29b668dfa99d44ac42031f491d053bea0881dd6ec9836342b",
+    "InfoGeometry.Analysis.HilbertGramReciprocity": "64975ff850e1e32ac98e07a52c2d315e83dcc98a0c60833a854bcbd7d7ddbae9",
+    "InfoGeometry.Singular.MoorePenrose": "a2b9f006df7fc1bbc9ce107aeab98048464d70724e88c224f5dd828a2d7ebfe6",
+    "InfoGeometry.Analysis.HilbertGramMoorePenrose": "aa016bd2a2711ba481373d23496f3e115e84602c0b4321a3e7731ecc219b1f30",
+    "InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace": "ca56806d3cccde9b983c44a65cfc2e2aa1c95626a56f1149f9e482e6dca306b6",
+    "InfoGeometry.Analysis.GradedExponentialTrace": "cdde658faa0d10ab862a648062b405c3178eeff0a504bfd0a1be223ccdef3451"
+  },
+  "fingerprints": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "6318527c4fbd65bca67b505b6a77a74eb750cf957768c7af3f06c163dce9bc28",
+    "InfoGeometry.OperatorAlgebra.PartnerEigenspaces": "7dc0df3104ef3aaa737d4526f8a1b92aa485c7edf51633ce35128316d1ad8c2f",
+    "InfoGeometry.Analysis.HilbertGramDuality": "1a1a123bdd73067cd47aed3c88a21dcc33f11bf10ba6905ee7ba5231ae1767bc",
+    "InfoGeometry.Analysis.HilbertGramReciprocity": "7c1b0dcdfadeb074055f20904bf65c9f705bfced68c1a16bffb3e2d6a812d81e",
+    "InfoGeometry.Singular.MoorePenrose": "0434de02a5f6fc17260aa8005dda36bd682e4d0253edb89116c191747f440015",
+    "InfoGeometry.Analysis.HilbertGramMoorePenrose": "55b9138c1073bf5114807fe50659ce350da2365e67406be29cb40ab0683b2000",
+    "InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace": "7f688eccde5130993ce40976fbde1fb0307fb3636f8c1266d7450a2c5b30c3b9",
+    "InfoGeometry.Analysis.GradedExponentialTrace": "02e8d284867eb088c21949e3e72e2919fadff49d459edc7fc6d5ffe83d1f15fe"
+  },
+  "repository_import_dependencies": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": [],
+    "InfoGeometry.OperatorAlgebra.PartnerEigenspaces": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Analysis.HilbertGramDuality": [
+      "InfoGeometry.OperatorAlgebra.PartnerEigenspaces"
+    ],
+    "InfoGeometry.Analysis.HilbertGramReciprocity": [
+      "InfoGeometry.Analysis.HilbertGramDuality"
+    ],
+    "InfoGeometry.Singular.MoorePenrose": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Analysis.HilbertGramMoorePenrose": [
+      "InfoGeometry.Analysis.HilbertGramReciprocity",
+      "InfoGeometry.Singular.MoorePenrose"
+    ],
+    "InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace": [],
+    "InfoGeometry.Analysis.GradedExponentialTrace": [
+      "InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace"
+    ]
+  },
+  "local_revision": "08c34e03f610b452e03422037949196dc7d92d6d",
+  "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "declaration_counts": {
+    "InfoGeometry.Analysis.HilbertGramReciprocity": 16,
+    "InfoGeometry.Analysis.HilbertGramMoorePenrose": 7,
+    "InfoGeometry.Analysis.GradedExponentialTrace": 10
+  },
+  "axioms": [
+    "[propext, Classical.choice, Quot.sound]"
+  ]
+}

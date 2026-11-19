@@ -49,17 +49,18 @@ This owner module formalizes the geometric, algebraic, and arithmetic pillars of
    Proves `Cayley` upper half-plane to unit-disc bijection (`0 < Im z → normSq w < 1`), Kůrka's
    rotated disc transform `d(z) = (i z + 1)/(z + i)` and `SU(1,1)` coefficient identity
    `|α|² - |β|² = 4(ad - bc)`, real Möbius derivative `HasDerivAt`, and denominator contraction bound.
-8. **Section 7 (Complete *Evanston* Lectures I–XII Complement)**:
-   Closes Clebsch–Noether genus & `AF + BΦ` tangent vanishing (`Lecture I`), Lie Pfaffian `M₂`
+8. **Section 7 (Selected *Evanston* Lecture I–XI Statements)**:
+   Formalizes selected Clebsch–Noether genus & `AF + BΦ` tangent vanishing (`Lecture I`), Lie Pfaffian `M₂`
    contact distributions & parallel wheel-gearing (`Lectures II–III`), Klein's reality equation
    `n + w' + 2t'' = k + r' + 2d''` & Rohn's 16-node Kummer checkerboard (`Lecture IV`), Schwarzian
    Möbius invariance & 2nd-order ODE quotient `{η, x} = 2q` + circular-arc species (`Lecture V`),
-   Hilbert's 1893 transcendence prime-factorial kernel (`Lecture VII`), Gauss's `SL(2, ℤ)`
+   Hilbert's 1893 prime-factorial nondivisibility lemma (`Lecture VII`), Gauss's `SL(2, ℤ)`
    discriminant invariance & `D = -20` secondary class-group composition (`Lecture VIII`), quintic
    central-character obstruction, squared cyclic equivariance & `kleinRootBivector5` triple-root
-   witness (`Lecture IX`), Weierstrass homogeneous period group & genus-`p` theta/bitangent counts
-   (`Lecture X`), and quaternion Clifford parallels on `S³` (`Lecture XI`).
-9. **Section 8 (Complete Möbius & Kůrka Number System Closure)**:
+   witness (`Lecture IX`), Weierstrass homogeneous period substitution and parity-count formulas
+   (`Lecture X`), and quaternion Clifford parallels on `S³` (`Lecture XI`). Lectures VI and XII
+   are not covered here, and these are selected results rather than complete lectures.
+9. **Section 8 (Selected Möbius & Kůrka Number System Results)**:
    Proves Kůrka's Möbius norm `‖M‖ ≥ 2` (`= 2 ↔ rotation`), exact circle-derivative chain rule &
    rotation isometry, biternary (`q₀=2, q₁=3`) squared to quadrononary (`q₀=4, q₁=9`) Fuchsian
    generators & two-sided inverses, expanding interval polynomial thresholds, parabolic trace
@@ -71,9 +72,9 @@ This owner module formalizes the geometric, algebraic, and arithmetic pillars of
     meta-cognitive tower `D_N² = ∑ B_k²`, undivided reciprocity involution `J_Ω = Σ₀ + 2F`), a `Mat₂(ℚ)`
     witness, and the 16-node strict acyclic causal poset `SolveEtCoagulaNode` across Strata `0–6`.
 11. **Section 10 (Six-Pillar & *Solve et Coagula* Grand Closure)**:
-    Theorems `evanston1893_all_twelve_lectures_and_kurka_moebius_complete_closure` and
+    Theorems `evanston1893_selected_lecture_statements_and_kurka_moebius_results` and
     `plucker_grassmann_klein_clifford_evanston_grand_closure` uniting `Gap 1–4`, the `1862–1878`
-    five-work pentad, `QuinticTschirnhausPluckerVietaSynthesis`, complete *Evanston* Lectures I–XII,
+    five-work pentad, `QuinticTschirnhausPluckerVietaSynthesis`, selected *Evanston* lecture statements,
     Möbius/Kůrka geometry, and the *Solve et Coagula* synthesis.
 
 No `sorry`, `admit`, `native_decide`, or custom axioms are used.
@@ -654,7 +655,7 @@ theorem kurka_moebius_hasDerivAt_and_contraction (a b c d x μ : ℝ)
 
 end MobiusAndKurkaSystems
 
-/-! ## Section 7: Complete *Evanston* Lectures I–XII Complement -/
+/-! ## Section 7: Selected *Evanston* Lecture I–XI Statements -/
 
 section EvanstonLecturesCompleteComplement
 
@@ -888,7 +889,7 @@ theorem evanston_lec5_schwarzian_moebius_invariance_and_ode
     exact hnotI hnone
   exact ⟨hjet, hdiv, ⟨hwr, hode⟩, htri⟩
 
-/-! ### Lecture VII (Hilbert 1893 Transcendence of `e` & `π`: Prime-Factorial Integer Kernel) -/
+/-! ### Lecture VII (Hilbert's Prime-Factorial Integer Nondivisibility Lemma) -/
 
 /-- The falling factorial block `(p + 1) · (p + 2) · ... · (p + 1 + d) = (p + 1 + d)! / p!`
 arising from Hilbert's integral `J = ∫₀^∞ z^p [f(z)]^{p+1} e^{-z} dz` (*Evanston* Lecture VII, p. 55). -/
@@ -918,10 +919,11 @@ theorem hilbertFactorialRatio_dvd (p d : ℕ) :
     rw [Finset.prod_range_succ', add_zero, mul_comm]
   exact ⟨∏ j ∈ Finset.range d, (p + 1 + (j + 1)), hsplit⟩
 
-/-- **Evanston Lecture VII Theorem (Hilbert 1893 Prime-Factorial Transcendence Kernel)**:
+/-- **Evanston Lecture VII arithmetic lemma (prime-factorial nondivisibility)**:
 Whenever `q = p + 1` is prime with `n < q` and `¬ (q ∣ a₀)`, Hilbert's integer term
 `P₁ = a₀ * (-1)^(n * q) * (n!)^q + q * T` avoids divisibility by `q`, hence `P₁ ≠ 0` and `1 ≤ |P₁|`
-(supplying the nonzero integer lower bound defeated only by `|P₂| < 1`). -/
+(the nonzero integer lower bound used in Hilbert's transcendence argument; this lemma alone proves
+no transcendence result). -/
 theorem evanston_lec7_hilbert1893_transcendence_integer_kernel
     (p n : ℕ) (a₀ T : ℤ) (hq : Nat.Prime (p + 1)) (hn : n < p + 1)
     (ha₀ : ¬ (((p + 1 : ℕ) : ℤ) ∣ a₀)) :
@@ -1059,24 +1061,27 @@ def centeredSq5Q (x : Fin 5 → ℚ) (i : Fin 5) : ℚ :=
 def kleinRootBivector5Q (x : Fin 5 → ℚ) (i j : Fin 5) : ℚ :=
   centered5Q x i * centeredSq5Q x j - centered5Q x j * centeredSq5Q x i
 
-/-- Genus-`p` even theta characteristic count `2^{p-1} (2^p + 1)` (*Evanston* Lecture X, p. 81). -/
+/-- The combinatorial even-parity count formula `2^{p-1} (2^p + 1)`; it constructs no geometric characteristics. -/
 def thetaEvenCount (p : ℕ) : ℕ :=
   2 ^ (p - 1) * (2 ^ p + 1)
 
-/-- Genus-`p` odd theta characteristic count `2^{p-1} (2^p - 1)` (*Evanston* Lecture X, p. 81). -/
+/-- The combinatorial odd-parity count formula `2^{p-1} (2^p - 1)`; it constructs no geometric characteristics. -/
 def thetaOddCount (p : ℕ) : ℕ :=
   2 ^ (p - 1) * (2 ^ p - 1)
 
-/-- **Evanston Lectures IX–X Theorem (Quintic Central Character, Tschirnhaus Base-Locus,
-Weierstrass Period Group, & Genus-`p` Bitangents)**:
+/-- **Selected Evanston Lectures IX–X algebraic results (central character, root bivector,
+period substitution, and parity-count formulas)**:
 1. Central-character obstruction: when `g⁵ = -I` and `h⁵ = +I` over a field of characteristic `≠ 2`,
    every intertwining linear map `f : V →ₗ[K] W` is zero, whereas squaring the signed cyclic shift
    restores positive cyclic equivariance `(S v)²(k) = v²(k + 1)`;
-2. Base-locus exactness: `kleinRootBivector5Q` vanishes identically on every 2-value root tuple
-   `![a, a, a, b, b]` yet is nonzero on the triple-root 3-value tuple `![0, 0, 0, 1, 2]`;
-3. Weierstrass homogeneous period substitution invariance `(m₁, m₂, α, β, γ, δ)` on lattice
-   periods `(u, ω₁, ω₂)` and the exact genus-`p` theta characteristic / quartic bitangent / cubic
-   surface group counts (`10 + 6 = 16`, `28` bitangents for `p = 3`, `51840` lines group order). -/
+2. Two rational-coordinate witnesses: `kleinRootBivector5Q` vanishes on the displayed 2-value tuple
+   `![a, a, a, b, b]` and is nonzero on `![0, 0, 0, 1, 2]`. This bundled statement is not an iff
+   classification of its base locus. A separate exact classification exists for the complex-valued
+   six-coordinate `rootKleinOmega` in `KleinQuinticTschirnhausKleinCovariant`; no theorem here
+   identifies that carrier with this rational 5-by-5-indexed map;
+3. Weierstrass homogeneous period substitution invariance and arithmetic identities for the parity
+   formulas (`10 + 6 = 16`, `28` at `p = 3`) and integer product `27 * 40 * 48 = 51840`.
+This theorem constructs no theta characteristics, bitangent lines, or group of order `51840`. -/
 theorem evanston_lec9_10_quintic_bivector_and_theta_bitangents
     {K V W : Type*} [Field K] [AddCommGroup V] [Module K V] [AddCommGroup W] [Module K W]
     (h2 : (2 : K) ≠ 0) (g : V →ₗ[K] V) (h : W →ₗ[K] W) (f : V →ₗ[K] W)
@@ -1178,7 +1183,7 @@ theorem evanston_lec11_cayley_klein_and_clifford_parallels
 
 end EvanstonLecturesCompleteComplement
 
-/-! ## Section 8: Complete Möbius & Kůrka Number System Closure (`2009_59.pdf`, `moebius (2).pdf`, `outline_term2_5.pdf`) -/
+/-! ## Section 8: Möbius & Kůrka Number System Results (`2009_59.pdf`, `moebius (2).pdf`, `outline_term2_5.pdf`) -/
 
 section MobiusAndKurkaCompleteClosure
 
@@ -2163,9 +2168,11 @@ private lemma kurka_rotation_deriv_one (θ x : ℝ) :
       x ^ 2 + 1 := by linear_combination (x ^ 2 + 1) * hc
   rw [hnum, hden, div_self (by positivity)]
 
-/-- **Complete Evanston (Lectures I–XII) & Möbius/Kůrka Closure Theorem**:
-Unifies every remaining algebraic, geometric, analytic, and dynamical pillar across *Evanston*
-Lectures I–XI and the Kůrka/Möbius suite in a single kernel-checked statement. -/
+/-- **Selected Evanston lecture statements and Möbius/Kůrka results**:
+Bundles the examples and identities stated in this type. It does not formalize every result or
+argument from all twelve lectures: Lectures VI and XII are absent, and the Lecture VII component
+is an integer nondivisibility lemma, not a proof of transcendence of `e` or `π`. The parity-count
+numerals do not construct theta characteristics or bitangent lines. -/
 theorem evanston1893_all_twelve_lectures_and_kurka_moebius_complete_closure
     (a b c d w w1 w2 w3 : ℂ) (hdetC : a * d - b * c ≠ 0) (hdenC : c * w + d ≠ 0) (hw1 : w1 ≠ 0)
     (aR bR cR dR x₁ x₂ x₃ x₄ u v r : ℝ) (hdetPos : 0 < aR * dR - bR * cR)
@@ -2189,7 +2196,7 @@ theorem evanston1893_all_twelve_lectures_and_kurka_moebius_complete_closure
     -- Lecture V: Exact Schwarzian Möbius invariance {W, x} = {w, x}
     (schwarzianDiv (moebiusJet1 a b c d w w1) (moebiusJet2 a b c d w w1 w2)
         (moebiusJet3 a b c d w w1 w2 w3) = schwarzianDiv w1 w2 w3) ∧
-    -- Lecture VII: Hilbert 1893 transcendence integer non-divisibility kernel
+    -- Lecture VII: Hilbert prime-factorial integer nondivisibility lemma
     ((p + 1) ∣ hilbertFactorialRatio p n ∧
       ¬ (((p + 1 : ℕ) : ℤ) ∣
         (a₀ * (-1) ^ (n * (p + 1)) * (n.factorial : ℤ) ^ (p + 1) +
@@ -2197,7 +2204,7 @@ theorem evanston1893_all_twelve_lectures_and_kurka_moebius_complete_closure
     -- Lecture VIII: Gauss SL₂(ℤ) discriminant -20 & secondary-class composition (ℤ/2ℤ)
     (gaussDisc 2 2 3 = -20 ∧
       gaussQuadForm 2 2 3 1 0 * gaussQuadForm 2 2 3 0 1 = gaussQuadForm 1 0 5 1 1) ∧
-    -- Lectures IX–X: Triple-root nonzero Klein bivector, 28 quartic bitangents, & 51840
+    -- Lectures IX–X: Triple-root nonzero bivector, parity numeral 28, and integer product 51840
     (kleinRootBivector5Q ![0, 0, 0, 1, 2] 3 4 ≠ 0 ∧ thetaOddCount 3 = 28 ∧ 27 * 40 * 48 = 51840) ∧
     -- Lecture XI: Clifford parallels equidistant constant angle & commutativity on S³
     (qa * (qq * qb) = (qa * qq) * qb ∧ quatDotR qq (qa * qq) = qa.re ∧
@@ -2255,11 +2262,11 @@ Simultaneously certifies all six pillars in one kernel-checked statement:
 5. **1862–1878 Five-Work Pentad & `Gr(2,5)` Quintic Vieta Synthesis**:
    `grassmann1862_plucker1868_klein1872_grassmann1877_clifford1878_pentad_synthesis` and
    `quintic_tschirnhaus_plucker_vieta_master_synthesis`;
-6. **Complete 1893 *Evanston Colloquium* (Lectures I–XII) & Möbius / Kůrka Geometry**:
+6. **Selected 1893 *Evanston Colloquium* statements & Möbius / Kůrka Geometry**:
    Clebsch–Noether genus & `AF + BΦ`, Lie Pfaffian `M₂` contact, 4-nodal Cayley cubic + 16-node Kummer
-   checkerboard + Klein's reality theorem, Schwarzian Möbius invariance, Hilbert's transcendence prime
+   checkerboard + Klein's reality theorem, Schwarzian Möbius invariance, Hilbert's prime-factorial
    kernel, `ℤ[√-5]` non-unique factorization + `D = -20` secondary form composition, Klein's quartic
-   `G₁₆₈`, 28 quartic bitangents & `51840`, flat Clifford torus & Clifford parallels in `S³`, Cayley/Kůrka
+   `G₁₆₈`, parity-count numeral `28` & integer product `51840`, flat Clifford torus & Clifford parallels in `S³`, Cayley/Kůrka
    disc bijection, `‖M‖ ≥ 2`, `R_θ• = 1`, biternary/quadrononary square law, & cross-ratio invariance. -/
 theorem plucker_grassmann_klein_clifford_evanston_grand_closure
     (C24 : FullRankMatrix24)

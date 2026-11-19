@@ -8,6 +8,7 @@ import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.LinearAlgebra.Projectivization.Basic
 import Mathlib.Tactic
 import InfoGeometry.Projective.KleinQuadricPlucker
+import InfoGeometry.Erlangen.KleinQuinticTschirnhausPlucker
 
 /-!
 # The Centered Tschirnhaus Klein Covariant of Five Ordered Roots
@@ -339,7 +340,7 @@ theorem projectiveRootKleinOmega_scale
   apply (Projectivization.mk_eq_mk_iff ℂ _ _ _
     (rootKleinOmegaCoordinates_ne_zero x hΩ)).2
   refine ⟨Units.mk0 (μ ^ 3) hμ3, ?_⟩
-  simpa [hcoord] using hcoord.symm
+  exact hcoord.symm
 
 /-- The six-coordinate Tschirnhaus Klein bivector is covariant under root
 permutations through the induced action on the zero-sum standard module.
@@ -655,6 +656,70 @@ coordinates before identifying the zero-sum carrier with `ℂ⁴`. -/
 def rootKleinOmega5 (x : Fin 5 → ℂ) : RootPair5 → ℂ := fun p =>
   centeredRoots x p.1.1 * centeredRootSquares x p.1.2 -
     centeredRoots x p.1.2 * centeredRootSquares x p.1.1
+
+/-- Restrict the ambient ten-coordinate bivector to the first four root
+coordinates, using the fixed Plücker order `01, 02, 03, 12, 13, 23`.
+This is a coordinate projection on arbitrary ambient bivectors; its exact
+compatibility with the centered Tschirnhaus covariant is stated below. -/
+def rootKleinOmega5ToPlucker6 (Ω : RootPair5 → ℂ) : Plucker6 ℂ where
+  p01 := Ω ⟨(0, 1), by decide⟩
+  p02 := Ω ⟨(0, 2), by decide⟩
+  p03 := Ω ⟨(0, 3), by decide⟩
+  p12 := Ω ⟨(1, 2), by decide⟩
+  p13 := Ω ⟨(1, 3), by decide⟩
+  p23 := Ω ⟨(2, 3), by decide⟩
+
+/-- The ten-coordinate ambient Tschirnhaus bivector projects exactly to the
+six-coordinate `Gr(2,4)` Klein chart on the first four coordinates. This
+theorem identifies the displayed covariants; it does not claim that the
+projection is injective on arbitrary ten-coordinate bivectors. -/
+theorem rootKleinOmega5ToPlucker6_eq_rootKleinOmega (x : Fin 5 → ℂ) :
+    rootKleinOmega5ToPlucker6 (rootKleinOmega5 x) = rootKleinOmega x := by
+  apply Plucker6.ext <;>
+    simp [rootKleinOmega5ToPlucker6, rootKleinOmega5, rootKleinOmega,
+      standardCoordinates, Plucker6.pluckerLine]
+
+/-- The projected ambient covariant lies on the Klein quadric. This transfers
+the existing decomposability theorem across the explicit ten-to-six
+coordinate identification. -/
+theorem rootKleinOmega5ToPlucker6_on_klein (x : Fin 5 → ℂ) :
+    Plucker6.kleinQ (rootKleinOmega5ToPlucker6 (rootKleinOmega5 x)) = 0 := by
+  rw [rootKleinOmega5ToPlucker6_eq_rootKleinOmega]
+  exact rootKleinOmega_on_klein x
+
+/-- The full ten-coordinate covariant agrees with the independent
+`KleinQuinticTschirnhausPlucker` implementation of the same centered wedge.
+This is an equality of root-space covariants, not a descent to coefficient
+space. -/
+theorem rootKleinOmega5_eq_tschirnhausVandermondeBivector
+    (x : Fin 5 → ℂ) :
+    rootKleinOmega5 x =
+      InfoGeometry.Erlangen.KleinQuinticTschirnhausPlucker.tschirnhausVandermondeBivector x := by
+  funext p
+  have hcenter : ∀ y : Fin 5 → ℂ,
+      centeredRoots y =
+        InfoGeometry.Erlangen.KleinQuinticTschirnhausPlucker.centeredRoots y := by
+    intro y
+    funext i
+    fin_cases i <;>
+      simp [centeredRoots, rootMean,
+        InfoGeometry.Erlangen.KleinQuinticTschirnhausPlucker.centeredRoots,
+        InfoGeometry.Erlangen.KleinQuinticTschirnhausPlucker.rootMean,
+        Fin.sum_univ_five]
+  have hsquare : centeredRootSquares x =
+      InfoGeometry.Erlangen.KleinQuinticTschirnhausPlucker.centeredRootSquares x := by
+    funext i
+    simp only [centeredRootSquares,
+      InfoGeometry.Erlangen.KleinQuinticTschirnhausPlucker.centeredRootSquares]
+    rw [hcenter x]
+    have houter := hcenter
+      (fun j => InfoGeometry.Erlangen.KleinQuinticTschirnhausPlucker.centeredRoots x j ^ 2)
+    exact congrFun houter i
+  rcases p with ⟨⟨i, j⟩, hij⟩
+  simp [rootKleinOmega5,
+    InfoGeometry.Erlangen.KleinQuinticTschirnhausPlucker.tschirnhausVandermondeBivector,
+    InfoGeometry.Erlangen.KleinQuinticTschirnhausPlucker.wedgeCoordinate,
+    hcenter, hsquare]
 
 /-- Oriented ambient Plücker coordinate, defined for any ordered pair of
 indices so permutation covariance does not require sorting the pair. -/

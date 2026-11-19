@@ -29,6 +29,7 @@ import InfoGeometry.Quantum.HestenesKahler
 import InfoGeometry.Quantum.Hurwitz
 import InfoGeometry.Quantum.HurwitzRGFlow
 import InfoGeometry.Quantum.InvolutionCore
+import InfoGeometry.Quantum.InvolutionCoreOverlapDirac
 import InfoGeometry.Quantum.CommutingInvolutionCore
 import InfoGeometry.Quantum.AnticommutingInvolutionCore
 import InfoGeometry.Quantum.KitaevChain

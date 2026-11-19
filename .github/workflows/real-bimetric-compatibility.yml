@@ -1,0 +1,241 @@
+name: Real bimetric compatibility (scoped kernel)
+
+# This checks three owners and their source closure, not the root Lake package.
+on:
+  pull_request:
+    paths:
+      - 'lean/DAG/Basic.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Canonical/ParaHyperkahlerPresymplecticBridge.lean'
+      - 'lean/InfoGeometry/Canonical/SplitQuaternionConcrete.lean'
+      - 'lean/InfoGeometry/Cartan/Involution.lean'
+      - 'lean/InfoGeometry/Clifford/Grading.lean'
+      - 'lean/InfoGeometry/Clifford/NeutralPhaseSpaceCore.lean'
+      - 'lean/InfoGeometry/Clifford/NeutralPhaseSpaceDoubledBridge.lean'
+      - 'lean/InfoGeometry/Clifford/ParaKahlerGeneralizedMetric.lean'
+      - 'lean/InfoGeometry/Clifford/PhaseSpaceGeneralizedMetric.lean'
+      - 'lean/InfoGeometry/Clifford/PhaseSpaceSymplecticMetricCompatibility.lean'
+      - 'lean/InfoGeometry/Geometry/ObliqueSymplecticInvolution.lean'
+      - 'lean/InfoGeometry/Geometry/SymplecticMetricCompatibility.lean'
+      - 'lean/InfoGeometry/GrandUnification/ArchetypeDictionary.lean'
+      - 'lean/InfoGeometry/Krein/DoubledSpace.lean'
+      - 'lean/InfoGeometry/Krein/HilbertBridge.lean'
+      - 'lean/InfoGeometry/Krein/InvolutiveSelfDualCarrier.lean'
+      - 'lean/InfoGeometry/Krein/KreinSpace.lean'
+      - 'lean/InfoGeometry/Krein/Metric.lean'
+      - 'lean/InfoGeometry/Meta/Architecture.lean'
+      - 'lean/InfoGeometry/All.lean'
+      - 'tools/build_lock.py'
+      - 'tools/quality/check_clifford_dirac.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'lake-manifest.json'
+      - 'lean-toolchain'
+      - 'docs/REAL_BIMETRIC_COMPATIBILITY_CONTRACT.md'
+      - 'docs/REAL_BIMETRIC_COMPATIBILITY_REVIEW.md'
+      - '.github/workflows/real-bimetric-compatibility.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bimetric-scoped-${{ github.event.pull_request.number || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  source-closure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      SOURCE_REV: ${{ github.event.pull_request.head.sha || github.sha }}
+      BIMETRIC_OUTPUT: verification-bimetric-${{ github.run_id }}-${{ github.run_attempt }}
+      BIMETRIC_TARGETS: >-
+        ["InfoGeometry.Geometry.SymplecticMetricCompatibility",
+        "InfoGeometry.Geometry.ObliqueSymplecticInvolution",
+        "InfoGeometry.Clifford.PhaseSpaceSymplecticMetricCompatibility"]
+    steps:
+      - name: Fetch exact source head and unchanged Mathlib pin
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "https://github.com/${{ github.repository }}.git"
+          git -C project fetch --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, subprocess
+          repo = pathlib.Path('project')
+          out = pathlib.Path(os.environ['BIMETRIC_OUTPUT'])
+          out.mkdir(exist_ok=False)
+          head = subprocess.check_output(['git', '-C', str(repo), 'rev-parse', 'HEAD'], text=True).strip()
+          if head != os.environ['SOURCE_REV']:
+              raise RuntimeError('Checkout differs from the exact requested source head')
+          pin = next(p for p in json.loads((repo / 'lake-manifest.json').read_text())['packages'] if p['name'] == 'mathlib')
+          toolchain = (repo / 'lean-toolchain').read_text().strip()
+          if toolchain != 'leanprover/lean4:v4.34.1' or pin['rev'] != 'd13f23b723b8a846827a245b89c10fc7d3f11612':
+              raise RuntimeError('This scoped workflow requires the reviewed unchanged dependency pins')
+          for command in [
+              ['git', 'init', 'pinned-mathlib'],
+              ['git', '-C', 'pinned-mathlib', 'remote', 'add', 'origin', pin['url']],
+              ['git', '-C', 'pinned-mathlib', 'fetch', '--depth=1', 'origin', pin['rev']],
+              ['git', '-C', 'pinned-mathlib', 'checkout', '--detach', 'FETCH_HEAD'],
+          ]:
+              subprocess.run(command, check=True)
+          actual = subprocess.check_output(['git', '-C', 'pinned-mathlib', 'rev-parse', 'HEAD'], text=True).strip()
+          if actual != pin['rev'] or pathlib.Path('pinned-mathlib/lean-toolchain').read_text().strip() != toolchain:
+              raise RuntimeError('Mathlib checkout or toolchain differs from the recorded pin')
+          workflow = repo / '.github/workflows/real-bimetric-compatibility.yml'
+          (out / 'source-provenance.json').write_text(json.dumps({
+              'source_commit': head, 'mathlib_url': pin['url'], 'mathlib_commit': actual,
+              'toolchain': toolchain, 'targets': json.loads(os.environ['BIMETRIC_TARGETS']),
+              'source_workflow_sha256': hashlib.sha256(workflow.read_bytes()).hexdigest(),
+              'executed_workflow_sha': os.environ.get('GITHUB_WORKFLOW_SHA'),
+              'executed_workflow_ref': os.environ.get('GITHUB_WORKFLOW_REF'),
+              'event_name': os.environ.get('GITHUB_EVENT_NAME'),
+              'event_revision': os.environ.get('GITHUB_SHA'),
+              'run_id': os.environ.get('GITHUB_RUN_ID'),
+              'run_attempt': os.environ.get('GITHUB_RUN_ATTEMPT'),
+              'lean_archive_sha256': '47bf4bbd78f70c2e9670598ab7124d92b6efb7330ff33e5fbb4030f6fd72e4e4',
+              'scope': 'Three selected owners, repository source closure, and native axiom audit; not a root Lake build',
+          }, indent=2) + '\n')
+          with open(os.environ['GITHUB_ENV'], 'a') as env:
+              env.write('MATHLIB_REV=' + actual + '\n')
+          PY
+
+      - name: Restore checksum-pinned Lean distribution
+        id: lean-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: lean-runtime
+          key: bimetric-lean-4.34.1-linux-47bf4bbd78f70c2e-v1
+
+      - name: Install checksum-verified Lean distribution
+        id: lean-install
+        timeout-minutes: 8
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x lean-runtime/bin/lean ]; then
+            curl --fail --location --retry 2 --connect-timeout 20 --max-time 300 \
+              'https://github.com/leanprover/lean4/releases/download/v4.34.1/lean-4.34.1-linux.tar.zst' \
+              -o "$RUNNER_TEMP/lean-4.34.1-linux.tar.zst"
+            echo '47bf4bbd78f70c2e9670598ab7124d92b6efb7330ff33e5fbb4030f6fd72e4e4  '"$RUNNER_TEMP/lean-4.34.1-linux.tar.zst" | sha256sum -c -
+            mkdir -p lean-runtime
+            tar --zstd -xf "$RUNNER_TEMP/lean-4.34.1-linux.tar.zst" --strip-components=1 -C lean-runtime
+          fi
+          echo "$PWD/lean-runtime/bin" >> "$GITHUB_PATH"
+
+      - name: Save pinned Lean distribution only
+        if: github.event_name == 'workflow_dispatch' && steps.lean-cache.outputs.cache-hit != 'true' && steps.lean-install.outcome == 'success'
+        uses: actions/cache/save@v4
+        with:
+          path: lean-runtime
+          key: bimetric-lean-4.34.1-linux-47bf4bbd78f70c2e-v1
+
+      - name: Restore pinned Mathlib dependency artifacts only
+        id: mathlib-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: pinned-mathlib/.lake
+          key: bimetric-mathlib-4.34.1-${{ env.MATHLIB_REV }}-v1
+
+      - name: Hydrate current import roots under the shared lock
+        id: hydrate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, pathlib, subprocess, sys
+          repo = pathlib.Path('project').resolve()
+          mathlib = pathlib.Path('pinned-mathlib').resolve()
+          runtime = pathlib.Path('lean-runtime').resolve()
+          out = pathlib.Path(os.environ['BIMETRIC_OUTPUT']).resolve()
+          sys.path.insert(0, str(repo))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          targets = json.loads(os.environ['BIMETRIC_TARGETS'])
+          modules, _, native = closure(repo, targets)
+          # The helper's lexical scan can see example imports inside comments.
+          # Filter cache arguments only; the native checker still elaborates
+          # the unchanged sources and rejects genuine unresolved imports.
+          requested = sorted(p for p in native if (mathlib / p).is_file())
+          command = [str(runtime / 'bin/lake'), 'exe', 'cache', 'get', *requested]
+          record = {'status': 'pending', 'repository_modules': modules,
+                    'requested_roots': requested, 'ignored_missing_cache_roots': sorted(native - set(requested)),
+                    'command': command, 'cwd': str(mathlib)}
+          env = {**os.environ, 'PATH': str(runtime / 'bin') + os.pathsep + os.environ['PATH']}
+          try:
+              if not requested:
+                  raise RuntimeError('No existing Mathlib roots; refusing an unscoped cache request')
+              with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'bimetric-ci-cache', block=True) as lock:
+                  inherited = (lock.fileno(),)
+                  active = subprocess.check_output(['ps', '-eo', 'comm='], text=True, pass_fds=inherited).splitlines()
+                  if any(p.strip() in {'lean', 'lake', 'leanc'} for p in active):
+                      raise RuntimeError('Concurrent Lean compiler detected')
+                  version = subprocess.check_output([str(runtime / 'bin/lean'), '--version'], env=env, text=True, pass_fds=inherited).strip()
+                  if 'version 4.34.1,' not in version:
+                      raise RuntimeError('Lean executable differs from the pinned version')
+                  record['lean_version'] = version
+                  with (out / 'cache-hydration.log').open('w') as log:
+                      result = subprocess.run(command, cwd=mathlib, env=env, pass_fds=inherited,
+                                              text=True, stdout=log, stderr=subprocess.STDOUT)
+                  record['returncode'] = result.returncode
+                  result.check_returncode()
+                  subprocess.run(['git', 'diff', '--exit-code', 'HEAD', '--'], cwd=mathlib, check=True, pass_fds=inherited)
+              record['status'] = 'passed'
+          except BaseException as error:
+              record.update(status='failed', error=str(error))
+              raise
+          finally:
+              (out / 'cache-hydration.json').write_text(json.dumps(record, indent=2) + '\n')
+          PY
+
+      - name: Save pinned Mathlib dependencies only
+        if: always() && github.event_name == 'workflow_dispatch' && steps.hydrate.outcome == 'success' && steps.mathlib-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: pinned-mathlib/.lake
+          key: bimetric-mathlib-4.34.1-${{ env.MATHLIB_REV }}-v1
+
+      - name: Compile the three owners and run the native declaration audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$BIMETRIC_OUTPUT/driver"
+          python3 - <<'PY' 2>&1 | tee "$BIMETRIC_OUTPUT/driver/checker.log"
+          import json, os, pathlib, subprocess, sys
+          out = pathlib.Path(os.environ['BIMETRIC_OUTPUT']).resolve()
+          targets = json.loads(os.environ['BIMETRIC_TARGETS'])
+          command = [sys.executable, 'project/tools/quality/check_clifford_dirac.py',
+                     '--mathlib-root', str(pathlib.Path('pinned-mathlib').resolve()),
+                     '--lean', str(pathlib.Path('lean-runtime/bin/lean').resolve()), '--output', str(out)]
+          for target in targets:
+              command.extend(['--target', target])
+          (out / 'checker-command.json').write_text(json.dumps(command, indent=2) + '\n')
+          # Fresh outputs and no --incremental: repository artifacts are never restored.
+          # No --skip-audit: the maintained native axiom audit remains mandatory.
+          subprocess.run(command, check=True)
+          report = json.loads((out / 'report.json').read_text())
+          if report.get('status') != 'passed' or report.get('audit_required') is not True:
+              raise RuntimeError('The maintained compiler and native audit did not pass')
+          if report.get('targets') != targets or report.get('local_revision') != os.environ['SOURCE_REV']:
+              raise RuntimeError('Report source head or exact target list differs')
+          selected = [m for m in report.get('modules', []) if m.get('module') in targets]
+          if len(selected) != len(targets) or {m['module'] for m in selected} != set(targets):
+              raise RuntimeError('Report does not contain all three selected owners exactly once')
+          if any(m.get('returncode') != 0 or m.get('warnings') != 0 for m in selected):
+              raise RuntimeError('A selected owner has compiler errors or warnings')
+          print('Three-owner compiler, warning, and native axiom checks passed; root Lake coverage is separate.')
+          PY
+
+      - name: Upload this attempt's reports, logs, and source snapshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bimetric-scoped-kernel-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: warn
+          path: |
+            ${{ env.BIMETRIC_OUTPUT }}/**/*.json
+            ${{ env.BIMETRIC_OUTPUT }}/**/*.log
+            ${{ env.BIMETRIC_OUTPUT }}/src

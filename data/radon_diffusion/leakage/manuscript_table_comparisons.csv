@@ -1,0 +1,82 @@
+cartridge,quantity,parameter_provenance,supplied,recomputed,agrees_at_supplied_precision,supplied_minus_recomputed
+1,observed609,source observed count areas,175.08,175.07835315296833,True,0.0016468470316794992
+1,original_sinh_609,explicit manuscript609sinh plot,234.18,234.04904163247383,False,0.1309583675261763
+1,shift_delta_1_1_draft_609,amplitude0.675 from companion leak draft; manuscript omits this amplitude,243.1,244.54719739232203,False,-1.447197392322039
+1,original_cosh_609,explicit manuscript609cosh plot,243.82,244.45378769381807,False,-0.6337876938180784
+1,normalized_observed609,source observed count areas divided by10-i,19.45,19.453150350329814,True,-0.0031503503298146995
+1,normalized_original_sinh_609,explicit manuscript normalized609sinh plot,26.02,26.00544907027487,False,0.014550929725128725
+1,observed352,source observed count areas,275.28,275.27510243979174,True,0.004897560208235063
+1,original_sinh_352,amplitude1.533 from original CSV; manuscript omits this amplitude,368.18,367.99710853598197,False,0.18289146401804146
+1,original_cosh_352,explicit manuscript352cosh plot despite tablelabel Leaking/cosh,383.31,384.3120174475634,False,-1.0020174475633894
+2,observed609,source observed count areas,127.07,127.06821865175866,True,0.001781348241337355
+2,original_sinh_609,explicit manuscript609sinh plot,117.99,117.86240725724402,False,0.12759274275597932
+2,shift_delta_1_1_draft_609,amplitude0.675 from companion leak draft; manuscript omits this amplitude,122.49,123.14995026855897,False,-0.6599502685589727
+2,original_cosh_609,explicit manuscript609cosh plot,122.86,123.10672218184334,False,-0.24672218184333872
+2,normalized_observed609,source observed count areas divided by10-i,15.88,15.883527331469832,True,-0.0035273314698311964
+2,normalized_original_sinh_609,explicit manuscript normalized609sinh plot,14.75,14.732800907155502,False,0.017199092844498054
+2,observed352,source observed count areas,199.86,199.85991223068118,True,8.776931883858197e-05
+2,original_sinh_352,amplitude1.533 from original CSV; manuscript omits this amplitude,185.5,185.31596956446674,False,0.18403043553325915
+2,original_cosh_352,explicit manuscript352cosh plot despite tablelabel Leaking/cosh,193.14,193.5392092280408,False,-0.39920922804080305
+3,observed609,source observed count areas,63.42,63.416681802222314,True,0.0033181977776877147
+3,original_sinh_609,explicit manuscript609sinh plot,59.43,59.350915763440725,False,0.07908423655927521
+3,shift_delta_1_1_draft_609,amplitude0.675 from companion leak draft; manuscript omits this amplitude,61.71,62.01526813786897,False,-0.3052681378689712
+3,original_cosh_609,explicit manuscript609cosh plot,61.91,62.001068301697565,False,-0.09106830169756819
+3,normalized_observed609,source observed count areas divided by10-i,9.06,9.059525971746044,True,0.0004740282539561491
+3,normalized_original_sinh_609,explicit manuscript normalized609sinh plot,8.49,8.478702251920103,False,0.011297748079897474
+3,observed352,source observed count areas,100.99,100.99431336547582,True,-0.004313365475823616
+3,original_sinh_352,amplitude1.533 from original CSV; manuscript omits this amplitude,93.43,93.31790140036372,False,0.11209859963628332
+3,original_cosh_352,explicit manuscript352cosh plot despite tablelabel Leaking/cosh,97.33,97.47345650775587,False,-0.1434565077558716
+4,observed609,source observed count areas,38.16,38.16337661082122,True,-0.003376610821220538
+4,original_sinh_609,explicit manuscript609sinh plot,29.93,29.882378901718134,False,0.04762109828186567
+4,shift_delta_1_1_draft_609,amplitude0.675 from companion leak draft; manuscript omits this amplitude,31.09,31.227322798962415,False,-0.1373227989624155
+4,original_cosh_609,explicit manuscript609cosh plot,31.22,31.23520262303288,False,-0.01520262303288078
+4,normalized_observed609,source observed count areas divided by10-i,6.36,6.360562768470203,True,-0.0005627684702025348
+4,normalized_original_sinh_609,explicit manuscript normalized609sinh plot,4.99,4.980396483619689,False,0.009603516380311206
+4,observed352,source observed count areas,58.78,58.78057959869074,True,-0.000579598690741534
+4,original_sinh_352,amplitude1.533 from original CSV; manuscript omits this amplitude,47.05,46.98429421162451,False,0.0657057883754888
+4,original_cosh_352,explicit manuscript352cosh plot despite tablelabel Leaking/cosh,49.08,49.10565652791789,False,-0.02565652791788864
+5,observed609,source observed count areas,19.51,19.507501663121168,True,0.002498336878833385
+5,original_sinh_609,explicit manuscript609sinh plot,15.05,15.036574706840769,False,0.0134252931592318
+5,shift_delta_1_1_draft_609,amplitude0.675 from companion leak draft; manuscript omits this amplitude,15.66,15.720248996165537,False,-0.06024899616553725
+5,original_cosh_609,explicit manuscript609cosh plot,15.77,15.75406441715627,False,0.015935582843729534
+5,normalized_observed609,source observed count areas divided by10-i,3.9,3.9015003326242335,True,-0.0015003326242335469
+5,normalized_original_sinh_609,explicit manuscript normalized609sinh plot,3.01,3.0073149413681537,True,0.0026850586318460934
+5,observed352,source observed count areas,30.61,30.608876504141655,True,0.00112349585834437
+5,original_sinh_352,amplitude1.533 from original CSV; manuscript omits this amplitude,23.66,23.642122077525023,False,0.01787792247497677
+5,original_cosh_352,explicit manuscript352cosh plot despite tablelabel Leaking/cosh,24.8,24.767365383348114,False,0.032634616651886716
+6,observed609,source observed count areas,9.71,9.713939376973865,True,-0.0039393769738644835
+6,original_sinh_609,explicit manuscript609sinh plot,7.53,7.548812951835477,False,-0.01881295183547671
+6,shift_delta_1_1_draft_609,amplitude0.675 from companion leak draft; manuscript omits this amplitude,7.89,7.905768854777403,False,-0.015768854777403085
+6,original_cosh_609,explicit manuscript609cosh plot,8.01,7.982067211934394,False,0.027932788065605507
+6,normalized_observed609,source observed count areas divided by10-i,2.43,2.4284848442434663,True,0.0015151557565338258
+6,normalized_original_sinh_609,explicit manuscript normalized609sinh plot,1.88,1.8872032379588692,False,-0.007203237958869346
+6,observed352,source observed count areas,15.03,15.025359100762893,True,0.004640899237106311
+6,original_sinh_352,amplitude1.533 from original CSV; manuscript omits this amplitude,11.84,11.869056671962857,False,-0.02905667196285755
+6,original_cosh_352,explicit manuscript352cosh plot despite tablelabel Leaking/cosh,12.59,12.548810892072469,False,0.041189107927531055
+7,observed609,source observed count areas,4.84,4.837865013010289,True,0.0021349869897111518
+7,original_sinh_609,explicit manuscript609sinh plot,3.71,3.755009904393538,False,-0.045009904393538136
+7,shift_delta_1_1_draft_609,amplitude0.675 from companion leak draft; manuscript omits this amplitude,3.97,3.9599212901160934,False,0.0100787098839068
+7,original_cosh_609,explicit manuscript609cosh plot,4.13,4.116038649730976,False,0.013961350269023676
+7,normalized_observed609,source observed count areas divided by10-i,1.61,1.6126216710034296,True,-0.002621671003429471
+7,normalized_original_sinh_609,explicit manuscript normalized609sinh plot,1.24,1.2516699681311794,False,-0.011669968131179376
+7,observed352,source observed count areas,7.56,7.561395570380703,True,-0.0013955703807031483
+7,original_sinh_352,amplitude1.533 from original CSV; manuscript omits this amplitude,5.83,5.904030957369532,False,-0.07403095736953169
+7,original_cosh_352,explicit manuscript352cosh plot despite tablelabel Leaking/cosh,6.5,6.470929054908071,False,0.02907094509192909
+8,observed609,source observed count areas,2.53,2.5299272700659787,True,7.27299340210763e-05
+8,original_sinh_609,explicit manuscript609sinh plot,1.74,1.7986946344105004,False,-0.05869463441050038
+8,shift_delta_1_1_draft_609,amplitude0.675 from companion leak draft; manuscript omits this amplitude,2.0,1.951833453271747,False,0.048166546728253046
+8,original_cosh_609,explicit manuscript609cosh plot,2.27,2.2641647510292056,False,0.00583524897079446
+8,normalized_observed609,source observed count areas divided by10-i,1.27,1.2649636350329894,False,0.005036364967010654
+8,normalized_original_sinh_609,explicit manuscript normalized609sinh plot,0.87,0.8993473172052502,False,-0.02934731720525019
+8,observed352,source observed count areas,3.92,3.915151532373232,True,0.004848467626767938
+8,original_sinh_352,amplitude1.533 from original CSV; manuscript omits this amplitude,2.73,2.828101409796202,False,-0.09810140979620208
+8,original_cosh_352,explicit manuscript352cosh plot despite tablelabel Leaking/cosh,3.56,3.559550995346263,True,0.0004490046537370951
+9,observed609,source observed count areas,1.55,1.5466666666666666,True,0.0033333333333334103
+9,original_sinh_609,explicit manuscript609sinh plot,0.71,0.7225579765379405,False,-0.012557976537940552
+9,shift_delta_1_1_draft_609,amplitude0.675 from companion leak draft; manuscript omits this amplitude,1.44,0.8988616361816747,False,0.5411383638183253
+9,original_cosh_609,explicit manuscript609cosh plot,1.52,1.5202440034766782,True,-0.00024400347667818956
+9,normalized_observed609,source observed count areas divided by10-i,1.55,1.5466666666666666,True,0.0033333333333334103
+9,normalized_original_sinh_609,explicit manuscript normalized609sinh plot,0.71,0.7225579765379405,False,-0.012557976537940552
+9,observed352,source observed count areas,2.69,2.6855555555555557,True,0.004444444444444251
+9,original_sinh_352,amplitude1.533 from original CSV; manuscript omits this amplitude,1.12,1.1360834646488849,False,-0.01608346464888477
+9,original_cosh_352,explicit manuscript352cosh plot despite tablelabel Leaking/cosh,2.39,2.3900142660929515,True,-1.4266092951409348e-05

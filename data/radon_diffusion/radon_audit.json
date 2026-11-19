@@ -1,0 +1,3115 @@
+{
+  "source": {
+    "name": "intake_20261118.txt",
+    "sha256": "882b6799b2787041c86e07b36c7fe892ee1e7807756e05273227ac73b9411754"
+  },
+  "method": {
+    "rates": "net peak area / 900 s times exp(supplied lambda * supplied elapsed start-time seconds)",
+    "rate_basis": "source start-time point correction of acquisition-averaged rates; the finite-acquisition factor is NOT applied",
+    "lambda_s_inverse": 2.0982e-06,
+    "lambda_from_supplied_half_life": 2.0982180755947176e-06,
+    "fixed_fit_geometry": "source index formulas: cosh(mu*(9.5-i)), sinh(mu*(10-i)), exp(-mu*i)",
+    "r_squared": "1 - sum((observed-predicted)^2)/sum((observed-mean(observed))^2), on untransformed rates",
+    "inference": "descriptive only; no experimental uncertainty, background model, efficiency correction, or daughter equilibrium assumed"
+  },
+  "data": [
+    {
+      "cartridge": 1,
+      "csv_row": 21,
+      "start_time": "12:25:47",
+      "real_time_min": 15.9167,
+      "live_time_min": 15.0,
+      "elapsed_s": 7753,
+      "counts_609": 155028,
+      "counts_352": 243750,
+      "corrected_rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "raw_rate_609_cps": 172.25333333333333,
+      "corrected_rate_609_cps": 175.07835315296833,
+      "fixed_cosh_609_cps": 244.45378769381807,
+      "fixed_sinh_609_cps": 234.04904163247383,
+      "fixed_exp_609_cps": 251.89391293144698,
+      "raw_rate_352_cps": 270.8333333333333,
+      "corrected_rate_352_cps": 275.27510243979174,
+      "fixed_cosh_352_cps": 384.3120174475634,
+      "fixed_sinh_352_cps": 367.99710853598197,
+      "fixed_exp_352_cps": 396.82607634942065,
+      "peak_ratio_352_to_609": 1.5722966173852466,
+      "linear_factor_source": 9,
+      "normalized_data_609": 19.453150350329814,
+      "normalized_fixed_sinh_609": 26.00544907027487,
+      "dead_time_fraction": 0.05759359666262487,
+      "uniform_live_exposure_finite_acquisition_factor": 1.0010022271944372,
+      "adjacent_ratio_609": 1.3778296021665777,
+      "adjacent_ratio_352": 1.3773402548184113
+    },
+    {
+      "cartridge": 2,
+      "csv_row": 22,
+      "start_time": "12:09:13",
+      "real_time_min": 15.6667,
+      "live_time_min": 15.0,
+      "elapsed_s": 6759,
+      "counts_609": 112751,
+      "counts_352": 177341,
+      "corrected_rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "raw_rate_609_cps": 125.27888888888889,
+      "corrected_rate_609_cps": 127.06821865175866,
+      "fixed_cosh_609_cps": 123.10672218184335,
+      "fixed_sinh_609_cps": 117.86240725724402,
+      "fixed_exp_609_cps": 126.8503466051887,
+      "raw_rate_352_cps": 197.04555555555555,
+      "corrected_rate_352_cps": 199.85991223068118,
+      "fixed_cosh_352_cps": 193.53920922804082,
+      "fixed_sinh_352_cps": 185.31596956446674,
+      "fixed_exp_352_cps": 199.83621176507137,
+      "peak_ratio_352_to_609": 1.5728552296653688,
+      "linear_factor_source": 8,
+      "normalized_data_609": 15.883527331469832,
+      "normalized_fixed_sinh_609": 14.732800907155502,
+      "dead_time_fraction": 0.04255522860589667,
+      "uniform_live_exposure_finite_acquisition_factor": 1.000986480266129,
+      "adjacent_ratio_609": 2.0037033638569497,
+      "adjacent_ratio_352": 1.9789224320723175
+    },
+    {
+      "cartridge": 3,
+      "csv_row": 23,
+      "start_time": "11:53:11",
+      "real_time_min": 15.3333,
+      "live_time_min": 15.0,
+      "elapsed_s": 5797,
+      "counts_609": 56385,
+      "counts_352": 89796,
+      "corrected_rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "raw_rate_609_cps": 62.65,
+      "corrected_rate_609_cps": 63.416681802222314,
+      "fixed_cosh_609_cps": 62.001068301697565,
+      "fixed_sinh_609_cps": 59.350915763440725,
+      "fixed_exp_609_cps": 63.8801082828694,
+      "raw_rate_352_cps": 99.77333333333333,
+      "corrected_rate_352_cps": 100.99431336547582,
+      "fixed_cosh_352_cps": 97.47345650775587,
+      "fixed_sinh_352_cps": 93.31790140036372,
+      "fixed_exp_352_cps": 100.63479673510813,
+      "peak_ratio_352_to_609": 1.5925512104283055,
+      "linear_factor_source": 7,
+      "normalized_data_609": 9.059525971746044,
+      "normalized_fixed_sinh_609": 8.478702251920103,
+      "dead_time_fraction": 0.02173700377609511,
+      "uniform_live_exposure_finite_acquisition_factor": 1.0009654804194272,
+      "adjacent_ratio_609": 1.6617156927419396,
+      "adjacent_ratio_352": 1.718157834696229
+    },
+    {
+      "cartridge": 4,
+      "csv_row": 24,
+      "start_time": "11:37:14",
+      "real_time_min": 15.1833,
+      "live_time_min": 15.0,
+      "elapsed_s": 4840,
+      "counts_609": 34000,
+      "counts_352": 52368,
+      "corrected_rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "raw_rate_609_cps": 37.77777777777778,
+      "corrected_rate_609_cps": 38.16337661082122,
+      "fixed_cosh_609_cps": 31.23520262303288,
+      "fixed_sinh_609_cps": 29.88237890171813,
+      "fixed_exp_609_cps": 32.16915320643045,
+      "raw_rate_352_cps": 58.18666666666667,
+      "corrected_rate_352_cps": 58.78057959869074,
+      "fixed_cosh_352_cps": 49.10565652791789,
+      "fixed_sinh_352_cps": 46.9842942116245,
+      "fixed_exp_352_cps": 50.678314127683315,
+      "peak_ratio_352_to_609": 1.5402352941176471,
+      "linear_factor_source": 6,
+      "normalized_data_609": 6.360562768470203,
+      "normalized_fixed_sinh_609": 4.980396483619688,
+      "dead_time_fraction": 0.012072474363280628,
+      "uniform_live_exposure_finite_acquisition_factor": 1.000956032473786,
+      "adjacent_ratio_609": 1.9563436297416232,
+      "adjacent_ratio_352": 1.9203769073568318
+    },
+    {
+      "cartridge": 5,
+      "csv_row": 25,
+      "start_time": "11:21:25",
+      "real_time_min": 15.1,
+      "live_time_min": 15.0,
+      "elapsed_s": 3891,
+      "counts_609": 17414,
+      "counts_352": 27324,
+      "corrected_rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "raw_rate_609_cps": 19.34888888888889,
+      "corrected_rate_609_cps": 19.507501663121168,
+      "fixed_cosh_609_cps": 15.75406441715627,
+      "fixed_sinh_609_cps": 15.036574706840769,
+      "fixed_exp_609_cps": 16.199947774608102,
+      "raw_rate_352_cps": 30.36,
+      "corrected_rate_352_cps": 30.608876504141655,
+      "fixed_cosh_352_cps": 24.767365383348114,
+      "fixed_sinh_352_cps": 23.642122077525023,
+      "fixed_exp_352_cps": 25.52090932905075,
+      "peak_ratio_352_to_609": 1.5690823475364648,
+      "linear_factor_source": 5,
+      "normalized_data_609": 3.9015003326242335,
+      "normalized_fixed_sinh_609": 3.0073149413681537,
+      "dead_time_fraction": 0.0066225165562913135,
+      "uniform_live_exposure_finite_acquisition_factor": 1.0009507857403068,
+      "adjacent_ratio_609": 2.0081967681785393,
+      "adjacent_ratio_352": 2.037147751269887
+    },
+    {
+      "cartridge": 6,
+      "csv_row": 26,
+      "start_time": "11:05:22",
+      "real_time_min": 15.05,
+      "live_time_min": 15.0,
+      "elapsed_s": 2928,
+      "counts_609": 8689,
+      "counts_352": 13440,
+      "corrected_rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "raw_rate_609_cps": 9.654444444444444,
+      "corrected_rate_609_cps": 9.713939376973865,
+      "fixed_cosh_609_cps": 7.982067211934394,
+      "fixed_sinh_609_cps": 7.548812951835477,
+      "fixed_exp_609_cps": 8.158073239166573,
+      "raw_rate_352_cps": 14.933333333333334,
+      "corrected_rate_352_cps": 15.025359100762893,
+      "fixed_cosh_352_cps": 12.548810892072469,
+      "fixed_sinh_352_cps": 11.869056671962857,
+      "fixed_exp_352_cps": 12.851982631873769,
+      "peak_ratio_352_to_609": 1.5467832892162505,
+      "linear_factor_source": 4,
+      "normalized_data_609": 2.4284848442434663,
+      "normalized_fixed_sinh_609": 1.8872032379588692,
+      "dead_time_fraction": 0.0033222591362126463,
+      "uniform_live_exposure_finite_acquisition_factor": 1.000947636449302,
+      "adjacent_ratio_609": 2.007897977899452,
+      "adjacent_ratio_352": 1.9871145426672068
+    },
+    {
+      "cartridge": 7,
+      "csv_row": 27,
+      "start_time": "10:49:37",
+      "real_time_min": 15.0333,
+      "live_time_min": 15.0,
+      "elapsed_s": 1983,
+      "counts_609": 4336,
+      "counts_352": 6777,
+      "corrected_rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "raw_rate_609_cps": 4.817777777777778,
+      "corrected_rate_609_cps": 4.837865013010289,
+      "fixed_cosh_609_cps": 4.116038649730976,
+      "fixed_sinh_609_cps": 3.755009904393538,
+      "fixed_exp_609_cps": 4.108294662524975,
+      "raw_rate_352_cps": 7.53,
+      "corrected_rate_352_cps": 7.561395570380703,
+      "fixed_cosh_352_cps": 6.470929054908071,
+      "fixed_sinh_352_cps": 5.904030957369532,
+      "fixed_exp_352_cps": 6.472083554717473,
+      "peak_ratio_352_to_609": 1.5629612546125462,
+      "linear_factor_source": 3,
+      "normalized_data_609": 1.6126216710034296,
+      "normalized_fixed_sinh_609": 1.2516699681311794,
+      "dead_time_fraction": 0.002215082516812683,
+      "uniform_live_exposure_finite_acquisition_factor": 1.0009465845875778,
+      "adjacent_ratio_609": 1.9122545814860996,
+      "adjacent_ratio_352": 1.931316197561641
+    },
+    {
+      "cartridge": 8,
+      "csv_row": 28,
+      "start_time": "10:33:48",
+      "real_time_min": 15.0167,
+      "live_time_min": 15.0,
+      "elapsed_s": 1034,
+      "counts_609": 2272,
+      "counts_352": 3516,
+      "corrected_rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "raw_rate_609_cps": 2.5244444444444443,
+      "corrected_rate_609_cps": 2.5299272700659787,
+      "fixed_cosh_609_cps": 2.2641647510292056,
+      "fixed_sinh_609_cps": 1.7986946344105001,
+      "fixed_exp_609_cps": 2.0688812835241794,
+      "raw_rate_352_cps": 3.9066666666666667,
+      "corrected_rate_352_cps": 3.915151532373232,
+      "fixed_cosh_352_cps": 3.559550995346263,
+      "fixed_sinh_352_cps": 2.8281014097962016,
+      "fixed_exp_352_cps": 3.2592532015534856,
+      "peak_ratio_352_to_609": 1.5475352112676057,
+      "linear_factor_source": 2,
+      "normalized_data_609": 1.2649636350329894,
+      "normalized_fixed_sinh_609": 0.8993473172052501,
+      "dead_time_fraction": 0.001112095200676566,
+      "uniform_live_exposure_finite_acquisition_factor": 1.0009455390251565,
+      "adjacent_ratio_609": 1.6357288384047277,
+      "adjacent_ratio_352": 1.457855349249445
+    },
+    {
+      "cartridge": 9,
+      "csv_row": 29,
+      "start_time": "10:16:34",
+      "real_time_min": 15.0167,
+      "live_time_min": 15.0,
+      "elapsed_s": 0,
+      "counts_609": 1392,
+      "counts_352": 2417,
+      "corrected_rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "raw_rate_609_cps": 1.5466666666666666,
+      "corrected_rate_609_cps": 1.5466666666666666,
+      "fixed_cosh_609_cps": 1.5202440034766782,
+      "fixed_sinh_609_cps": 0.7225579765379405,
+      "fixed_exp_609_cps": 1.0418604596112355,
+      "raw_rate_352_cps": 2.6855555555555557,
+      "corrected_rate_352_cps": 2.6855555555555557,
+      "fixed_cosh_352_cps": 2.3900142660929515,
+      "fixed_sinh_352_cps": 1.1360834646488849,
+      "fixed_exp_352_cps": 1.6413155581240575,
+      "peak_ratio_352_to_609": 1.7363505747126438,
+      "linear_factor_source": 1,
+      "normalized_data_609": 1.5466666666666666,
+      "normalized_fixed_sinh_609": 0.7225579765379405,
+      "dead_time_fraction": 0.001112095200676566,
+      "uniform_live_exposure_finite_acquisition_factor": 1.0009455390251565,
+      "adjacent_ratio_609": null,
+      "adjacent_ratio_352": null
+    }
+  ],
+  "elapsed_time_checks": [
+    {
+      "cartridge": 1,
+      "supplied_elapsed_s": 7753,
+      "computed_elapsed_s": 7753
+    },
+    {
+      "cartridge": 2,
+      "supplied_elapsed_s": 6759,
+      "computed_elapsed_s": 6759
+    },
+    {
+      "cartridge": 3,
+      "supplied_elapsed_s": 5797,
+      "computed_elapsed_s": 5797
+    },
+    {
+      "cartridge": 4,
+      "supplied_elapsed_s": 4840,
+      "computed_elapsed_s": 4840
+    },
+    {
+      "cartridge": 5,
+      "supplied_elapsed_s": 3891,
+      "computed_elapsed_s": 3891
+    },
+    {
+      "cartridge": 6,
+      "supplied_elapsed_s": 2928,
+      "computed_elapsed_s": 2928
+    },
+    {
+      "cartridge": 7,
+      "supplied_elapsed_s": 1983,
+      "computed_elapsed_s": 1983
+    },
+    {
+      "cartridge": 8,
+      "supplied_elapsed_s": 1034,
+      "computed_elapsed_s": 1034
+    },
+    {
+      "cartridge": 9,
+      "supplied_elapsed_s": 0,
+      "computed_elapsed_s": 0
+    }
+  ],
+  "spreadsheet_audit": {
+    "header_row": 20,
+    "first_data_row": 21,
+    "last_data_row": 29,
+    "incorrect_data_formula_count": 125,
+    "formula_defects": [
+      {
+        "cell": "H21",
+        "original_formula": "=F20/(D20*60)",
+        "correct_formula_for_original_layout": "=F21/(D21*60)",
+        "relative_referenced_rows": [
+          20,
+          20
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "I21",
+        "original_formula": "=G20/(D20*60)",
+        "correct_formula_for_original_layout": "=G21/(D21*60)",
+        "relative_referenced_rows": [
+          20,
+          20
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "J21",
+        "original_formula": "=I20/H20",
+        "correct_formula_for_original_layout": "=I21/H21",
+        "relative_referenced_rows": [
+          20,
+          20
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "K21",
+        "original_formula": "=H20*EXP($B$7*E20)",
+        "correct_formula_for_original_layout": "=H21*EXP($B$7*E21)",
+        "relative_referenced_rows": [
+          20,
+          20
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "L21",
+        "original_formula": "=I20*EXP($B$7*E20)",
+        "correct_formula_for_original_layout": "=I21*EXP($B$7*E21)",
+        "relative_referenced_rows": [
+          20,
+          20
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "M21",
+        "original_formula": "=K20/K21",
+        "correct_formula_for_original_layout": "=K21/K22",
+        "relative_referenced_rows": [
+          20,
+          21
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "N21",
+        "original_formula": "=10-A20",
+        "correct_formula_for_original_layout": "=10-A21",
+        "relative_referenced_rows": [
+          20
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "O21",
+        "original_formula": "=K20/N20",
+        "correct_formula_for_original_layout": "=K21/N21",
+        "relative_referenced_rows": [
+          20,
+          20
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "P21",
+        "original_formula": "=$B$12*COSH($B$9*(9.5-A20))",
+        "correct_formula_for_original_layout": "=$B$12*COSH($B$9*(9.5-A21))",
+        "relative_referenced_rows": [
+          20
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "Q21",
+        "original_formula": "=$B$13*SINH($B$9*(10-A20))",
+        "correct_formula_for_original_layout": "=$B$13*SINH($B$9*(10-A21))",
+        "relative_referenced_rows": [
+          20
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "R21",
+        "original_formula": "=$B$14*EXP(-$B$9*A20)",
+        "correct_formula_for_original_layout": "=$B$14*EXP(-$B$9*A21)",
+        "relative_referenced_rows": [
+          20
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "S21",
+        "original_formula": "=Q20/N20",
+        "correct_formula_for_original_layout": "=Q21/N21",
+        "relative_referenced_rows": [
+          20,
+          20
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "T21",
+        "original_formula": "=$B$15*COSH($B$9*(9.5-A20))",
+        "correct_formula_for_original_layout": "=$B$15*COSH($B$9*(9.5-A21))",
+        "relative_referenced_rows": [
+          20
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "U21",
+        "original_formula": "=$B$16*SINH($B$9*(10-A20))",
+        "correct_formula_for_original_layout": "=$B$16*SINH($B$9*(10-A21))",
+        "relative_referenced_rows": [
+          20
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "H22",
+        "original_formula": "=F21/(D21*60)",
+        "correct_formula_for_original_layout": "=F22/(D22*60)",
+        "relative_referenced_rows": [
+          21,
+          21
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "I22",
+        "original_formula": "=G21/(D21*60)",
+        "correct_formula_for_original_layout": "=G22/(D22*60)",
+        "relative_referenced_rows": [
+          21,
+          21
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "J22",
+        "original_formula": "=I21/H21",
+        "correct_formula_for_original_layout": "=I22/H22",
+        "relative_referenced_rows": [
+          21,
+          21
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "K22",
+        "original_formula": "=H21*EXP($B$7*E21)",
+        "correct_formula_for_original_layout": "=H22*EXP($B$7*E22)",
+        "relative_referenced_rows": [
+          21,
+          21
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "L22",
+        "original_formula": "=I21*EXP($B$7*E21)",
+        "correct_formula_for_original_layout": "=I22*EXP($B$7*E22)",
+        "relative_referenced_rows": [
+          21,
+          21
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "M22",
+        "original_formula": "=K21/K22",
+        "correct_formula_for_original_layout": "=K22/K23",
+        "relative_referenced_rows": [
+          21,
+          22
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "N22",
+        "original_formula": "=10-A21",
+        "correct_formula_for_original_layout": "=10-A22",
+        "relative_referenced_rows": [
+          21
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "O22",
+        "original_formula": "=K21/N21",
+        "correct_formula_for_original_layout": "=K22/N22",
+        "relative_referenced_rows": [
+          21,
+          21
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "P22",
+        "original_formula": "=$B$12*COSH($B$9*(9.5-A21))",
+        "correct_formula_for_original_layout": "=$B$12*COSH($B$9*(9.5-A22))",
+        "relative_referenced_rows": [
+          21
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "Q22",
+        "original_formula": "=$B$13*SINH($B$9*(10-A21))",
+        "correct_formula_for_original_layout": "=$B$13*SINH($B$9*(10-A22))",
+        "relative_referenced_rows": [
+          21
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "R22",
+        "original_formula": "=$B$14*EXP(-$B$9*A21)",
+        "correct_formula_for_original_layout": "=$B$14*EXP(-$B$9*A22)",
+        "relative_referenced_rows": [
+          21
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "S22",
+        "original_formula": "=Q21/N21",
+        "correct_formula_for_original_layout": "=Q22/N22",
+        "relative_referenced_rows": [
+          21,
+          21
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "T22",
+        "original_formula": "=$B$15*COSH($B$9*(9.5-A21))",
+        "correct_formula_for_original_layout": "=$B$15*COSH($B$9*(9.5-A22))",
+        "relative_referenced_rows": [
+          21
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "U22",
+        "original_formula": "=$B$16*SINH($B$9*(10-A21))",
+        "correct_formula_for_original_layout": "=$B$16*SINH($B$9*(10-A22))",
+        "relative_referenced_rows": [
+          21
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "H23",
+        "original_formula": "=F22/(D22*60)",
+        "correct_formula_for_original_layout": "=F23/(D23*60)",
+        "relative_referenced_rows": [
+          22,
+          22
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "I23",
+        "original_formula": "=G22/(D22*60)",
+        "correct_formula_for_original_layout": "=G23/(D23*60)",
+        "relative_referenced_rows": [
+          22,
+          22
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "J23",
+        "original_formula": "=I22/H22",
+        "correct_formula_for_original_layout": "=I23/H23",
+        "relative_referenced_rows": [
+          22,
+          22
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "K23",
+        "original_formula": "=H22*EXP($B$7*E22)",
+        "correct_formula_for_original_layout": "=H23*EXP($B$7*E23)",
+        "relative_referenced_rows": [
+          22,
+          22
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "L23",
+        "original_formula": "=I22*EXP($B$7*E22)",
+        "correct_formula_for_original_layout": "=I23*EXP($B$7*E23)",
+        "relative_referenced_rows": [
+          22,
+          22
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "M23",
+        "original_formula": "=K22/K23",
+        "correct_formula_for_original_layout": "=K23/K24",
+        "relative_referenced_rows": [
+          22,
+          23
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "N23",
+        "original_formula": "=10-A22",
+        "correct_formula_for_original_layout": "=10-A23",
+        "relative_referenced_rows": [
+          22
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "O23",
+        "original_formula": "=K22/N22",
+        "correct_formula_for_original_layout": "=K23/N23",
+        "relative_referenced_rows": [
+          22,
+          22
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "P23",
+        "original_formula": "=$B$12*COSH($B$9*(9.5-A22))",
+        "correct_formula_for_original_layout": "=$B$12*COSH($B$9*(9.5-A23))",
+        "relative_referenced_rows": [
+          22
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "Q23",
+        "original_formula": "=$B$13*SINH($B$9*(10-A22))",
+        "correct_formula_for_original_layout": "=$B$13*SINH($B$9*(10-A23))",
+        "relative_referenced_rows": [
+          22
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "R23",
+        "original_formula": "=$B$14*EXP(-$B$9*A22)",
+        "correct_formula_for_original_layout": "=$B$14*EXP(-$B$9*A23)",
+        "relative_referenced_rows": [
+          22
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "S23",
+        "original_formula": "=Q22/N22",
+        "correct_formula_for_original_layout": "=Q23/N23",
+        "relative_referenced_rows": [
+          22,
+          22
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "T23",
+        "original_formula": "=$B$15*COSH($B$9*(9.5-A22))",
+        "correct_formula_for_original_layout": "=$B$15*COSH($B$9*(9.5-A23))",
+        "relative_referenced_rows": [
+          22
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "U23",
+        "original_formula": "=$B$16*SINH($B$9*(10-A22))",
+        "correct_formula_for_original_layout": "=$B$16*SINH($B$9*(10-A23))",
+        "relative_referenced_rows": [
+          22
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "H24",
+        "original_formula": "=F23/(D23*60)",
+        "correct_formula_for_original_layout": "=F24/(D24*60)",
+        "relative_referenced_rows": [
+          23,
+          23
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "I24",
+        "original_formula": "=G23/(D23*60)",
+        "correct_formula_for_original_layout": "=G24/(D24*60)",
+        "relative_referenced_rows": [
+          23,
+          23
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "J24",
+        "original_formula": "=I23/H23",
+        "correct_formula_for_original_layout": "=I24/H24",
+        "relative_referenced_rows": [
+          23,
+          23
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "K24",
+        "original_formula": "=H23*EXP($B$7*E23)",
+        "correct_formula_for_original_layout": "=H24*EXP($B$7*E24)",
+        "relative_referenced_rows": [
+          23,
+          23
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "L24",
+        "original_formula": "=I23*EXP($B$7*E23)",
+        "correct_formula_for_original_layout": "=I24*EXP($B$7*E24)",
+        "relative_referenced_rows": [
+          23,
+          23
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "M24",
+        "original_formula": "=K23/K24",
+        "correct_formula_for_original_layout": "=K24/K25",
+        "relative_referenced_rows": [
+          23,
+          24
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "N24",
+        "original_formula": "=10-A23",
+        "correct_formula_for_original_layout": "=10-A24",
+        "relative_referenced_rows": [
+          23
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "O24",
+        "original_formula": "=K23/N23",
+        "correct_formula_for_original_layout": "=K24/N24",
+        "relative_referenced_rows": [
+          23,
+          23
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "P24",
+        "original_formula": "=$B$12*COSH($B$9*(9.5-A23))",
+        "correct_formula_for_original_layout": "=$B$12*COSH($B$9*(9.5-A24))",
+        "relative_referenced_rows": [
+          23
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "Q24",
+        "original_formula": "=$B$13*SINH($B$9*(10-A23))",
+        "correct_formula_for_original_layout": "=$B$13*SINH($B$9*(10-A24))",
+        "relative_referenced_rows": [
+          23
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "R24",
+        "original_formula": "=$B$14*EXP(-$B$9*A23)",
+        "correct_formula_for_original_layout": "=$B$14*EXP(-$B$9*A24)",
+        "relative_referenced_rows": [
+          23
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "S24",
+        "original_formula": "=Q23/N23",
+        "correct_formula_for_original_layout": "=Q24/N24",
+        "relative_referenced_rows": [
+          23,
+          23
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "T24",
+        "original_formula": "=$B$15*COSH($B$9*(9.5-A23))",
+        "correct_formula_for_original_layout": "=$B$15*COSH($B$9*(9.5-A24))",
+        "relative_referenced_rows": [
+          23
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "U24",
+        "original_formula": "=$B$16*SINH($B$9*(10-A23))",
+        "correct_formula_for_original_layout": "=$B$16*SINH($B$9*(10-A24))",
+        "relative_referenced_rows": [
+          23
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "H25",
+        "original_formula": "=F24/(D24*60)",
+        "correct_formula_for_original_layout": "=F25/(D25*60)",
+        "relative_referenced_rows": [
+          24,
+          24
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "I25",
+        "original_formula": "=G24/(D24*60)",
+        "correct_formula_for_original_layout": "=G25/(D25*60)",
+        "relative_referenced_rows": [
+          24,
+          24
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "J25",
+        "original_formula": "=I24/H24",
+        "correct_formula_for_original_layout": "=I25/H25",
+        "relative_referenced_rows": [
+          24,
+          24
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "K25",
+        "original_formula": "=H24*EXP($B$7*E24)",
+        "correct_formula_for_original_layout": "=H25*EXP($B$7*E25)",
+        "relative_referenced_rows": [
+          24,
+          24
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "L25",
+        "original_formula": "=I24*EXP($B$7*E24)",
+        "correct_formula_for_original_layout": "=I25*EXP($B$7*E25)",
+        "relative_referenced_rows": [
+          24,
+          24
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "M25",
+        "original_formula": "=K24/K25",
+        "correct_formula_for_original_layout": "=K25/K26",
+        "relative_referenced_rows": [
+          24,
+          25
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "N25",
+        "original_formula": "=10-A24",
+        "correct_formula_for_original_layout": "=10-A25",
+        "relative_referenced_rows": [
+          24
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "O25",
+        "original_formula": "=K24/N24",
+        "correct_formula_for_original_layout": "=K25/N25",
+        "relative_referenced_rows": [
+          24,
+          24
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "P25",
+        "original_formula": "=$B$12*COSH($B$9*(9.5-A24))",
+        "correct_formula_for_original_layout": "=$B$12*COSH($B$9*(9.5-A25))",
+        "relative_referenced_rows": [
+          24
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "Q25",
+        "original_formula": "=$B$13*SINH($B$9*(10-A24))",
+        "correct_formula_for_original_layout": "=$B$13*SINH($B$9*(10-A25))",
+        "relative_referenced_rows": [
+          24
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "R25",
+        "original_formula": "=$B$14*EXP(-$B$9*A24)",
+        "correct_formula_for_original_layout": "=$B$14*EXP(-$B$9*A25)",
+        "relative_referenced_rows": [
+          24
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "S25",
+        "original_formula": "=Q24/N24",
+        "correct_formula_for_original_layout": "=Q25/N25",
+        "relative_referenced_rows": [
+          24,
+          24
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "T25",
+        "original_formula": "=$B$15*COSH($B$9*(9.5-A24))",
+        "correct_formula_for_original_layout": "=$B$15*COSH($B$9*(9.5-A25))",
+        "relative_referenced_rows": [
+          24
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "U25",
+        "original_formula": "=$B$16*SINH($B$9*(10-A24))",
+        "correct_formula_for_original_layout": "=$B$16*SINH($B$9*(10-A25))",
+        "relative_referenced_rows": [
+          24
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "H26",
+        "original_formula": "=F25/(D25*60)",
+        "correct_formula_for_original_layout": "=F26/(D26*60)",
+        "relative_referenced_rows": [
+          25,
+          25
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "I26",
+        "original_formula": "=G25/(D25*60)",
+        "correct_formula_for_original_layout": "=G26/(D26*60)",
+        "relative_referenced_rows": [
+          25,
+          25
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "J26",
+        "original_formula": "=I25/H25",
+        "correct_formula_for_original_layout": "=I26/H26",
+        "relative_referenced_rows": [
+          25,
+          25
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "K26",
+        "original_formula": "=H25*EXP($B$7*E25)",
+        "correct_formula_for_original_layout": "=H26*EXP($B$7*E26)",
+        "relative_referenced_rows": [
+          25,
+          25
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "L26",
+        "original_formula": "=I25*EXP($B$7*E25)",
+        "correct_formula_for_original_layout": "=I26*EXP($B$7*E26)",
+        "relative_referenced_rows": [
+          25,
+          25
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "M26",
+        "original_formula": "=K25/K26",
+        "correct_formula_for_original_layout": "=K26/K27",
+        "relative_referenced_rows": [
+          25,
+          26
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "N26",
+        "original_formula": "=10-A25",
+        "correct_formula_for_original_layout": "=10-A26",
+        "relative_referenced_rows": [
+          25
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "O26",
+        "original_formula": "=K25/N25",
+        "correct_formula_for_original_layout": "=K26/N26",
+        "relative_referenced_rows": [
+          25,
+          25
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "P26",
+        "original_formula": "=$B$12*COSH($B$9*(9.5-A25))",
+        "correct_formula_for_original_layout": "=$B$12*COSH($B$9*(9.5-A26))",
+        "relative_referenced_rows": [
+          25
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "Q26",
+        "original_formula": "=$B$13*SINH($B$9*(10-A25))",
+        "correct_formula_for_original_layout": "=$B$13*SINH($B$9*(10-A26))",
+        "relative_referenced_rows": [
+          25
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "R26",
+        "original_formula": "=$B$14*EXP(-$B$9*A25)",
+        "correct_formula_for_original_layout": "=$B$14*EXP(-$B$9*A26)",
+        "relative_referenced_rows": [
+          25
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "S26",
+        "original_formula": "=Q25/N25",
+        "correct_formula_for_original_layout": "=Q26/N26",
+        "relative_referenced_rows": [
+          25,
+          25
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "T26",
+        "original_formula": "=$B$15*COSH($B$9*(9.5-A25))",
+        "correct_formula_for_original_layout": "=$B$15*COSH($B$9*(9.5-A26))",
+        "relative_referenced_rows": [
+          25
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "U26",
+        "original_formula": "=$B$16*SINH($B$9*(10-A25))",
+        "correct_formula_for_original_layout": "=$B$16*SINH($B$9*(10-A26))",
+        "relative_referenced_rows": [
+          25
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "H27",
+        "original_formula": "=F26/(D26*60)",
+        "correct_formula_for_original_layout": "=F27/(D27*60)",
+        "relative_referenced_rows": [
+          26,
+          26
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "I27",
+        "original_formula": "=G26/(D26*60)",
+        "correct_formula_for_original_layout": "=G27/(D27*60)",
+        "relative_referenced_rows": [
+          26,
+          26
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "J27",
+        "original_formula": "=I26/H26",
+        "correct_formula_for_original_layout": "=I27/H27",
+        "relative_referenced_rows": [
+          26,
+          26
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "K27",
+        "original_formula": "=H26*EXP($B$7*E26)",
+        "correct_formula_for_original_layout": "=H27*EXP($B$7*E27)",
+        "relative_referenced_rows": [
+          26,
+          26
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "L27",
+        "original_formula": "=I26*EXP($B$7*E26)",
+        "correct_formula_for_original_layout": "=I27*EXP($B$7*E27)",
+        "relative_referenced_rows": [
+          26,
+          26
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "M27",
+        "original_formula": "=K26/K27",
+        "correct_formula_for_original_layout": "=K27/K28",
+        "relative_referenced_rows": [
+          26,
+          27
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "N27",
+        "original_formula": "=10-A26",
+        "correct_formula_for_original_layout": "=10-A27",
+        "relative_referenced_rows": [
+          26
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "O27",
+        "original_formula": "=K26/N26",
+        "correct_formula_for_original_layout": "=K27/N27",
+        "relative_referenced_rows": [
+          26,
+          26
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "P27",
+        "original_formula": "=$B$12*COSH($B$9*(9.5-A26))",
+        "correct_formula_for_original_layout": "=$B$12*COSH($B$9*(9.5-A27))",
+        "relative_referenced_rows": [
+          26
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "Q27",
+        "original_formula": "=$B$13*SINH($B$9*(10-A26))",
+        "correct_formula_for_original_layout": "=$B$13*SINH($B$9*(10-A27))",
+        "relative_referenced_rows": [
+          26
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "R27",
+        "original_formula": "=$B$14*EXP(-$B$9*A26)",
+        "correct_formula_for_original_layout": "=$B$14*EXP(-$B$9*A27)",
+        "relative_referenced_rows": [
+          26
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "S27",
+        "original_formula": "=Q26/N26",
+        "correct_formula_for_original_layout": "=Q27/N27",
+        "relative_referenced_rows": [
+          26,
+          26
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "T27",
+        "original_formula": "=$B$15*COSH($B$9*(9.5-A26))",
+        "correct_formula_for_original_layout": "=$B$15*COSH($B$9*(9.5-A27))",
+        "relative_referenced_rows": [
+          26
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "U27",
+        "original_formula": "=$B$16*SINH($B$9*(10-A26))",
+        "correct_formula_for_original_layout": "=$B$16*SINH($B$9*(10-A27))",
+        "relative_referenced_rows": [
+          26
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "H28",
+        "original_formula": "=F27/(D27*60)",
+        "correct_formula_for_original_layout": "=F28/(D28*60)",
+        "relative_referenced_rows": [
+          27,
+          27
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "I28",
+        "original_formula": "=G27/(D27*60)",
+        "correct_formula_for_original_layout": "=G28/(D28*60)",
+        "relative_referenced_rows": [
+          27,
+          27
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "J28",
+        "original_formula": "=I27/H27",
+        "correct_formula_for_original_layout": "=I28/H28",
+        "relative_referenced_rows": [
+          27,
+          27
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "K28",
+        "original_formula": "=H27*EXP($B$7*E27)",
+        "correct_formula_for_original_layout": "=H28*EXP($B$7*E28)",
+        "relative_referenced_rows": [
+          27,
+          27
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "L28",
+        "original_formula": "=I27*EXP($B$7*E27)",
+        "correct_formula_for_original_layout": "=I28*EXP($B$7*E28)",
+        "relative_referenced_rows": [
+          27,
+          27
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "M28",
+        "original_formula": "=K27/K28",
+        "correct_formula_for_original_layout": "=K28/K29",
+        "relative_referenced_rows": [
+          27,
+          28
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "N28",
+        "original_formula": "=10-A27",
+        "correct_formula_for_original_layout": "=10-A28",
+        "relative_referenced_rows": [
+          27
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "O28",
+        "original_formula": "=K27/N27",
+        "correct_formula_for_original_layout": "=K28/N28",
+        "relative_referenced_rows": [
+          27,
+          27
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "P28",
+        "original_formula": "=$B$12*COSH($B$9*(9.5-A27))",
+        "correct_formula_for_original_layout": "=$B$12*COSH($B$9*(9.5-A28))",
+        "relative_referenced_rows": [
+          27
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "Q28",
+        "original_formula": "=$B$13*SINH($B$9*(10-A27))",
+        "correct_formula_for_original_layout": "=$B$13*SINH($B$9*(10-A28))",
+        "relative_referenced_rows": [
+          27
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "R28",
+        "original_formula": "=$B$14*EXP(-$B$9*A27)",
+        "correct_formula_for_original_layout": "=$B$14*EXP(-$B$9*A28)",
+        "relative_referenced_rows": [
+          27
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "S28",
+        "original_formula": "=Q27/N27",
+        "correct_formula_for_original_layout": "=Q28/N28",
+        "relative_referenced_rows": [
+          27,
+          27
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "T28",
+        "original_formula": "=$B$15*COSH($B$9*(9.5-A27))",
+        "correct_formula_for_original_layout": "=$B$15*COSH($B$9*(9.5-A28))",
+        "relative_referenced_rows": [
+          27
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "U28",
+        "original_formula": "=$B$16*SINH($B$9*(10-A27))",
+        "correct_formula_for_original_layout": "=$B$16*SINH($B$9*(10-A28))",
+        "relative_referenced_rows": [
+          27
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "H29",
+        "original_formula": "=F28/(D28*60)",
+        "correct_formula_for_original_layout": "=F29/(D29*60)",
+        "relative_referenced_rows": [
+          28,
+          28
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "I29",
+        "original_formula": "=G28/(D28*60)",
+        "correct_formula_for_original_layout": "=G29/(D29*60)",
+        "relative_referenced_rows": [
+          28,
+          28
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "J29",
+        "original_formula": "=I28/H28",
+        "correct_formula_for_original_layout": "=I29/H29",
+        "relative_referenced_rows": [
+          28,
+          28
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "K29",
+        "original_formula": "=H28*EXP($B$7*E28)",
+        "correct_formula_for_original_layout": "=H29*EXP($B$7*E29)",
+        "relative_referenced_rows": [
+          28,
+          28
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "L29",
+        "original_formula": "=I28*EXP($B$7*E28)",
+        "correct_formula_for_original_layout": "=I29*EXP($B$7*E29)",
+        "relative_referenced_rows": [
+          28,
+          28
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "N29",
+        "original_formula": "=10-A28",
+        "correct_formula_for_original_layout": "=10-A29",
+        "relative_referenced_rows": [
+          28
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "O29",
+        "original_formula": "=K28/N28",
+        "correct_formula_for_original_layout": "=K29/N29",
+        "relative_referenced_rows": [
+          28,
+          28
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "P29",
+        "original_formula": "=$B$12*COSH($B$9*(9.5-A28))",
+        "correct_formula_for_original_layout": "=$B$12*COSH($B$9*(9.5-A29))",
+        "relative_referenced_rows": [
+          28
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "Q29",
+        "original_formula": "=$B$13*SINH($B$9*(10-A28))",
+        "correct_formula_for_original_layout": "=$B$13*SINH($B$9*(10-A29))",
+        "relative_referenced_rows": [
+          28
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "R29",
+        "original_formula": "=$B$14*EXP(-$B$9*A28)",
+        "correct_formula_for_original_layout": "=$B$14*EXP(-$B$9*A29)",
+        "relative_referenced_rows": [
+          28
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "S29",
+        "original_formula": "=Q28/N28",
+        "correct_formula_for_original_layout": "=Q29/N29",
+        "relative_referenced_rows": [
+          28,
+          28
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "T29",
+        "original_formula": "=$B$15*COSH($B$9*(9.5-A28))",
+        "correct_formula_for_original_layout": "=$B$15*COSH($B$9*(9.5-A29))",
+        "relative_referenced_rows": [
+          28
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      },
+      {
+        "cell": "U29",
+        "original_formula": "=$B$16*SINH($B$9*(10-A28))",
+        "correct_formula_for_original_layout": "=$B$16*SINH($B$9*(10-A29))",
+        "relative_referenced_rows": [
+          28
+        ],
+        "issue": "All relative references were written for a data table starting one row too early."
+      }
+    ],
+    "other_issues": [
+      "A19 says data occupy rows 20-28; actual data occupy 21-29.",
+      "D10 (= dx / mu) and D11 (= lambda * Ld^2) are intended descriptions but parse as formulas with undefined names if imported as formulas.",
+      "CSV carries literal strings, without workbook cell types, styles, or guarantee that a chosen Excel import route evaluates formulas.",
+      "B8=1.50 cm is explicitly a placeholder; it is not a confirmed measurement."
+    ]
+  },
+  "fixed_fit_metrics": [
+    {
+      "energy_keV": 609,
+      "model": "cosh",
+      "range": "1-9",
+      "amplitude": 1.435,
+      "mu": 0.686,
+      "sse_cps_squared": 4896.3279619286295,
+      "rmse_cps": 23.32458874694883,
+      "r_squared_raw_rate": 0.8425130418989827,
+      "max_abs_relative_residual": 0.39625363896492377
+    },
+    {
+      "energy_keV": 609,
+      "model": "sinh",
+      "range": "1-9",
+      "amplitude": 0.975,
+      "mu": 0.686,
+      "sse_cps_squared": 3674.4578314906157,
+      "rmse_cps": 20.20576878982451,
+      "r_squared_raw_rate": 0.8818136384957392,
+      "max_abs_relative_residual": 0.5328288944797799
+    },
+    {
+      "energy_keV": 609,
+      "model": "exp",
+      "range": "1-9",
+      "amplitude": 500.2,
+      "mu": 0.686,
+      "sse_cps_squared": 5951.183468403304,
+      "rmse_cps": 25.71463800251458,
+      "r_squared_raw_rate": 0.8085843536569948,
+      "max_abs_relative_residual": 0.43874961350226915
+    },
+    {
+      "energy_keV": 352,
+      "model": "cosh",
+      "range": "1-9",
+      "amplitude": 2.256,
+      "mu": 0.686,
+      "sse_cps_squared": 12076.660147118931,
+      "rmse_cps": 36.631286183502475,
+      "r_squared_raw_rate": 0.8431473615422268,
+      "max_abs_relative_residual": 0.39610162358079676
+    },
+    {
+      "energy_keV": 352,
+      "model": "sinh",
+      "range": "1-9",
+      "amplitude": 1.533,
+      "mu": 0.686,
+      "sse_cps_squared": 9071.803643824083,
+      "rmse_cps": 31.748672139904066,
+      "r_squared_raw_rate": 0.8821746807668417,
+      "max_abs_relative_residual": 0.5769651972759634
+    },
+    {
+      "energy_keV": 352,
+      "model": "exp",
+      "range": "1-9",
+      "amplitude": 788.0,
+      "mu": 0.686,
+      "sse_cps_squared": 14873.733993771946,
+      "rmse_cps": 40.65263964884821,
+      "r_squared_raw_rate": 0.8068187402624913,
+      "max_abs_relative_residual": 0.4415618151889148
+    },
+    {
+      "energy_keV": 609,
+      "model": "cosh",
+      "range": "2-9",
+      "amplitude": 1.435,
+      "mu": 0.686,
+      "sse_cps_squared": 83.37704419690122,
+      "rmse_cps": 3.2283324681037193,
+      "r_squared_raw_rate": 0.9937001788979719,
+      "max_abs_relative_residual": 0.19240994109772405
+    },
+    {
+      "energy_keV": 609,
+      "model": "sinh",
+      "range": "2-9",
+      "amplitude": 0.975,
+      "mu": 0.686,
+      "sse_cps_squared": 196.91573174373391,
+      "rmse_cps": 4.961296853441319,
+      "r_squared_raw_rate": 0.9851213976927407,
+      "max_abs_relative_residual": 0.5328288944797799
+    },
+    {
+      "energy_keV": 609,
+      "model": "exp",
+      "range": "2-9",
+      "amplitude": 500.2,
+      "mu": 0.686,
+      "sse_cps_squared": 50.553244322276086,
+      "rmse_cps": 2.51379305836509,
+      "r_squared_raw_rate": 0.9961802868112553,
+      "max_abs_relative_residual": 0.3263833235272184
+    },
+    {
+      "energy_keV": 352,
+      "model": "cosh",
+      "range": "2-9",
+      "amplitude": 2.256,
+      "mu": 0.686,
+      "sse_cps_squared": 187.61131270691374,
+      "rmse_cps": 4.8426660104083386,
+      "r_squared_raw_rate": 0.9942890335453258,
+      "max_abs_relative_residual": 0.19084369594562323
+    },
+    {
+      "energy_keV": 352,
+      "model": "sinh",
+      "range": "2-9",
+      "amplitude": 1.533,
+      "mu": 0.686,
+      "sse_cps_squared": 474.43322932214784,
+      "rmse_cps": 7.700919014329944,
+      "r_squared_raw_rate": 0.9855580550098584,
+      "max_abs_relative_residual": 0.5769651972759634
+    },
+    {
+      "energy_keV": 352,
+      "model": "exp",
+      "range": "2-9",
+      "amplitude": 788.0,
+      "mu": 0.686,
+      "sse_cps_squared": 99.09473539265991,
+      "rmse_cps": 3.5194945552000063,
+      "r_squared_raw_rate": 0.9969835150050552,
+      "max_abs_relative_residual": 0.3888357458371321
+    },
+    {
+      "energy_keV": 609,
+      "model": "cosh",
+      "range": "2-8",
+      "amplitude": 1.435,
+      "mu": 0.686,
+      "sse_cps_squared": 83.37634603977118,
+      "rmse_cps": 3.4512181294595345,
+      "r_squared_raw_rate": 0.9930974279940341,
+      "max_abs_relative_residual": 0.19240994109772405
+    },
+    {
+      "energy_keV": 609,
+      "model": "sinh",
+      "range": "2-8",
+      "amplitude": 0.975,
+      "mu": 0.686,
+      "sse_cps_squared": 196.23657661058823,
+      "rmse_cps": 5.294695143127266,
+      "r_squared_raw_rate": 0.9837539402408845,
+      "max_abs_relative_residual": 0.2890330660123714
+    },
+    {
+      "energy_keV": 609,
+      "model": "exp",
+      "range": "2-8",
+      "amplitude": 500.2,
+      "mu": 0.686,
+      "sse_cps_squared": 50.298415015594394,
+      "rmse_cps": 2.680576031260935,
+      "r_squared_raw_rate": 0.9958358881394792,
+      "max_abs_relative_residual": 0.1822368539984849
+    },
+    {
+      "energy_keV": 352,
+      "model": "cosh",
+      "range": "2-8",
+      "amplitude": 2.256,
+      "mu": 0.686,
+      "sse_cps_squared": 187.5239680531365,
+      "rmse_cps": 5.1758224750570045,
+      "r_squared_raw_rate": 0.9937540264254717,
+      "max_abs_relative_residual": 0.19084369594562323
+    },
+    {
+      "energy_keV": 352,
+      "model": "sinh",
+      "range": "2-8",
+      "amplitude": 1.533,
+      "mu": 0.686,
+      "sse_cps_squared": 472.03236556164916,
+      "rmse_cps": 8.211771738196063,
+      "r_squared_raw_rate": 0.9842777341359122,
+      "max_abs_relative_residual": 0.27765211987033805
+    },
+    {
+      "energy_keV": 352,
+      "model": "exp",
+      "range": "2-8",
+      "amplitude": 788.0,
+      "mu": 0.686,
+      "sse_cps_squared": 98.00429822042418,
+      "rmse_cps": 3.7417394392834424,
+      "r_squared_raw_rate": 0.9967357119026966,
+      "max_abs_relative_residual": 0.16752821069537582
+    }
+  ],
+  "exploratory_refits": [
+    {
+      "energy_keV": 609,
+      "model": "cosh",
+      "range": "1-9",
+      "objective": "unweighted squared residuals of corrected rates",
+      "amplitude": 4.778155079120591,
+      "mu": 0.5102697638418624,
+      "optimizer_success": true,
+      "sse_cps_squared": 456.39850726139076,
+      "rmse_cps": 7.121161790836214,
+      "r_squared_raw_rate": 0.9853202618065376,
+      "max_abs_relative_residual": 2.1904189549277944
+    },
+    {
+      "energy_keV": 609,
+      "model": "sinh",
+      "range": "1-9",
+      "objective": "unweighted squared residuals of corrected rates",
+      "amplitude": 4.0390798025531005,
+      "mu": 0.5001881705173035,
+      "optimizer_success": true,
+      "sse_cps_squared": 413.2012907666718,
+      "rmse_cps": 6.775784421720498,
+      "r_squared_raw_rate": 0.9867096700073528,
+      "max_abs_relative_residual": 0.8771596284315257
+    },
+    {
+      "energy_keV": 609,
+      "model": "exp",
+      "range": "1-9",
+      "objective": "unweighted squared residuals of corrected rates",
+      "amplitude": 301.78772220467056,
+      "mu": 0.5038553865728692,
+      "optimizer_success": true,
+      "sse_cps_squared": 427.2035404522688,
+      "rmse_cps": 6.889634246478698,
+      "r_squared_raw_rate": 0.9862592974574129,
+      "max_abs_relative_residual": 1.1184617076725762
+    },
+    {
+      "energy_keV": 609,
+      "model": "exp",
+      "range": "1-9",
+      "objective": "unweighted squared residuals of log corrected rates",
+      "amplitude": 397.7493874308595,
+      "mu": 0.6196824672776855,
+      "optimizer_success": true,
+      "sse_cps_squared": 1686.92740465051,
+      "rmse_cps": 13.69074060430995,
+      "r_squared_raw_rate": 0.9457411620378862,
+      "max_abs_relative_residual": 0.22250991630289205
+    },
+    {
+      "energy_keV": 352,
+      "model": "cosh",
+      "range": "1-9",
+      "objective": "unweighted squared residuals of corrected rates",
+      "amplitude": 7.508499567746194,
+      "mu": 0.5104002109363777,
+      "optimizer_success": true,
+      "sse_cps_squared": 1134.3794672295169,
+      "rmse_cps": 11.22685009365948,
+      "r_squared_raw_rate": 0.98526658775856,
+      "max_abs_relative_residual": 1.887422230613657
+    },
+    {
+      "energy_keV": 352,
+      "model": "sinh",
+      "range": "1-9",
+      "objective": "unweighted squared residuals of corrected rates",
+      "amplitude": 6.3434965154007,
+      "mu": 0.5003775126355401,
+      "optimizer_success": true,
+      "sse_cps_squared": 1028.7505186759986,
+      "rmse_cps": 10.691380321839741,
+      "r_squared_raw_rate": 0.9866385050830773,
+      "max_abs_relative_residual": 0.9059996338897519
+    },
+    {
+      "energy_keV": 352,
+      "model": "exp",
+      "range": "1-9",
+      "objective": "unweighted squared residuals of corrected rates",
+      "amplitude": 474.8478161309479,
+      "mu": 0.5040200047280634,
+      "optimizer_success": true,
+      "sse_cps_squared": 1062.91355842179,
+      "rmse_cps": 10.8674517018163,
+      "r_squared_raw_rate": 0.9861947927605819,
+      "max_abs_relative_residual": 1.1511020527787397
+    },
+    {
+      "energy_keV": 352,
+      "model": "exp",
+      "range": "1-9",
+      "objective": "unweighted squared residuals of log corrected rates",
+      "amplitude": 612.6757813127257,
+      "mu": 0.6144318395858523,
+      "optimizer_success": true,
+      "sse_cps_squared": 3638.2897169777098,
+      "rmse_cps": 20.10607900604997,
+      "r_squared_raw_rate": 0.9527455989793766,
+      "max_abs_relative_residual": 0.2039804165396746
+    },
+    {
+      "energy_keV": 609,
+      "model": "cosh",
+      "range": "2-9",
+      "objective": "unweighted squared residuals of corrected rates",
+      "amplitude": 2.090503679925361,
+      "mu": 0.6392048261064772,
+      "optimizer_success": true,
+      "sse_cps_squared": 21.801457964156164,
+      "rmse_cps": 1.6508126015752123,
+      "r_squared_raw_rate": 0.9983527206287954,
+      "max_abs_relative_residual": 0.42123938854927984
+    },
+    {
+      "energy_keV": 609,
+      "model": "sinh",
+      "range": "2-9",
+      "objective": "unweighted squared residuals of corrected rates",
+      "amplitude": 1.5668360625864837,
+      "mu": 0.6351836142031551,
+      "optimizer_success": true,
+      "sse_cps_squared": 21.120899418697544,
+      "rmse_cps": 1.6248422776802653,
+      "r_squared_raw_rate": 0.998404142421534,
+      "max_abs_relative_residual": 0.3123832909395311
+    },
+    {
+      "energy_keV": 609,
+      "model": "exp",
+      "range": "2-9",
+      "objective": "unweighted squared residuals of corrected rates",
+      "amplitude": 450.471787961272,
+      "mu": 0.6363392033854113,
+      "optimizer_success": true,
+      "sse_cps_squared": 20.960422867521416,
+      "rmse_cps": 1.6186577335682109,
+      "r_squared_raw_rate": 0.9984162677441958,
+      "max_abs_relative_residual": 0.09569763375168293
+    },
+    {
+      "energy_keV": 609,
+      "model": "exp",
+      "range": "2-9",
+      "objective": "unweighted squared residuals of log corrected rates",
+      "amplitude": 459.1268122410035,
+      "mu": 0.6412081159022418,
+      "optimizer_success": true,
+      "sse_cps_squared": 22.461181039535635,
+      "rmse_cps": 1.6756036613537086,
+      "r_squared_raw_rate": 0.9983028731271023,
+      "max_abs_relative_residual": 0.07471054805313258
+    },
+    {
+      "energy_keV": 352,
+      "model": "cosh",
+      "range": "2-9",
+      "objective": "unweighted squared residuals of corrected rates",
+      "amplitude": 3.2535777111013053,
+      "mu": 0.6408319523939547,
+      "optimizer_success": true,
+      "sse_cps_squared": 32.35676684693886,
+      "rmse_cps": 2.011118061145928,
+      "r_squared_raw_rate": 0.999015046548215,
+      "max_abs_relative_residual": 0.2742346999604135
+    },
+    {
+      "energy_keV": 352,
+      "model": "sinh",
+      "range": "2-9",
+      "objective": "unweighted squared residuals of corrected rates",
+      "amplitude": 2.4330733073087782,
+      "mu": 0.6369977843380314,
+      "optimizer_success": true,
+      "sse_cps_squared": 31.506596130545926,
+      "rmse_cps": 1.984521231007177,
+      "r_squared_raw_rate": 0.9990409260987178,
+      "max_abs_relative_residual": 0.38306132928954306
+    },
+    {
+      "energy_keV": 352,
+      "model": "exp",
+      "range": "2-9",
+      "objective": "unweighted squared residuals of corrected rates",
+      "amplitude": 712.2164368673282,
+      "mu": 0.6380870816720686,
+      "optimizer_success": true,
+      "sse_cps_squared": 30.840369381750445,
+      "rmse_cps": 1.9634271498374483,
+      "r_squared_raw_rate": 0.9990612063182774,
+      "max_abs_relative_residual": 0.14980496497328394
+    },
+    {
+      "energy_keV": 352,
+      "model": "exp",
+      "range": "2-9",
+      "objective": "unweighted squared residuals of log corrected rates",
+      "amplitude": 699.5455775446796,
+      "mu": 0.6343210983096214,
+      "optimizer_success": true,
+      "sse_cps_squared": 35.60511278977106,
+      "rmse_cps": 2.1096537864591394,
+      "r_squared_raw_rate": 0.9989161655455451,
+      "max_abs_relative_residual": 0.13614172125599172
+    },
+    {
+      "energy_keV": 609,
+      "model": "cosh",
+      "range": "2-8",
+      "objective": "unweighted squared residuals of corrected rates",
+      "amplitude": 2.1030562866623614,
+      "mu": 0.6383719003097181,
+      "optimizer_success": true,
+      "sse_cps_squared": 21.368586808599165,
+      "rmse_cps": 1.7471849525368828,
+      "r_squared_raw_rate": 0.9982309345981445,
+      "max_abs_relative_residual": 0.24239967992937245
+    },
+    {
+      "energy_keV": 609,
+      "model": "sinh",
+      "range": "2-8",
+      "objective": "unweighted squared residuals of corrected rates",
+      "amplitude": 1.5636601383442823,
+      "mu": 0.6354470593890179,
+      "optimizer_success": true,
+      "sse_cps_squared": 20.886661400185517,
+      "rmse_cps": 1.7273704789231157,
+      "r_squared_raw_rate": 0.9982708323028424,
+      "max_abs_relative_residual": 0.07299829409118183
+    },
+    {
+      "energy_keV": 609,
+      "model": "exp",
+      "range": "2-8",
+      "objective": "unweighted squared residuals of corrected rates",
+      "amplitude": 450.541092126143,
+      "mu": 0.636405834455895,
+      "optimizer_success": true,
+      "sse_cps_squared": 20.954029410804253,
+      "rmse_cps": 1.730153973775755,
+      "r_squared_raw_rate": 0.9982652550310347,
+      "max_abs_relative_residual": 0.0952822103515228
+    },
+    {
+      "energy_keV": 609,
+      "model": "exp",
+      "range": "2-8",
+      "objective": "unweighted squared residuals of log corrected rates",
+      "amplitude": 479.9572893973079,
+      "mu": 0.6523007829587628,
+      "optimizer_success": true,
+      "sse_cps_squared": 38.533896456279194,
+      "rmse_cps": 2.3462400454550743,
+      "r_squared_raw_rate": 0.9968098506639638,
+      "max_abs_relative_residual": 0.07446408399823097
+    },
+    {
+      "energy_keV": 352,
+      "model": "cosh",
+      "range": "2-8",
+      "objective": "unweighted squared residuals of corrected rates",
+      "amplitude": 3.2674585042868465,
+      "mu": 0.6402397851069077,
+      "optimizer_success": true,
+      "sse_cps_squared": 31.80387046851439,
+      "rmse_cps": 2.1315276369145737,
+      "r_squared_raw_rate": 0.9989406893605314,
+      "max_abs_relative_residual": 0.24992818057911959
+    },
+    {
+      "energy_keV": 352,
+      "model": "sinh",
+      "range": "2-8",
+      "objective": "unweighted squared residuals of corrected rates",
+      "amplitude": 2.426463374993795,
+      "mu": 0.6373509172131749,
+      "optimizer_success": true,
+      "sse_cps_squared": 30.44473942349389,
+      "rmse_cps": 2.085485192723879,
+      "r_squared_raw_rate": 0.9989859587555834,
+      "max_abs_relative_residual": 0.06205388027939073
+    },
+    {
+      "energy_keV": 352,
+      "model": "exp",
+      "range": "2-8",
+      "objective": "unweighted squared residuals of corrected rates",
+      "amplitude": 712.5642209759717,
+      "mu": 0.6382986976852753,
+      "optimizer_success": true,
+      "sse_cps_squared": 30.67721565824852,
+      "rmse_cps": 2.0934324397385717,
+      "r_squared_raw_rate": 0.9989782155298291,
+      "max_abs_relative_residual": 0.10255082496861243
+    },
+    {
+      "energy_keV": 352,
+      "model": "exp",
+      "range": "2-8",
+      "objective": "unweighted squared residuals of log corrected rates",
+      "amplitude": 760.5619370633284,
+      "mu": 0.6552277487187382,
+      "optimizer_success": true,
+      "sse_cps_squared": 73.82702827367456,
+      "rmse_cps": 3.2475711423786624,
+      "r_squared_raw_rate": 0.9975409987722068,
+      "max_abs_relative_residual": 0.0614050362896575
+    }
+  ],
+  "common_geometry_refit_method": {
+    "geometry": "9 equal cells covering [0,9*dx], with common centers x_i=(i-1/2)*dx",
+    "profiles": "cosh(mu*(9.5-i)), sinh(mu*(9.5-i)), exp(-mu*(i-0.5))",
+    "amplitude": "free positive amplitude absorbs uniform whole-cell factor 2*sinh(mu/2)/mu",
+    "objectives": "separate unweighted squared rate residuals and unweighted squared log-rate residuals",
+    "rate_basis": "same source start-time point-corrected rates as the fixed-claim audit; no finite-acquisition factor applied",
+    "interpretation": "descriptive sensitivity comparison; no test, confidence interval, equilibrium determination, or calibrated concentration estimate",
+    "exclusion": "range 2-9 repeats the draft's exclusion of cartridge1; range1-9 provides a sensitivity comparison without that exclusion"
+  },
+  "common_geometry_exploratory_refits": [
+    {
+      "energy_keV": 609,
+      "model": "cosh",
+      "range": "1-9",
+      "objective": "unweighted_squared_rate_residuals",
+      "rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "cell_average_shape_amplitude_cps": 4.778155079120591,
+      "center_profile_amplitude_if_uniform_cell_response_cps": 4.726708016015046,
+      "mu": 0.5102697638418624,
+      "uniform_cell_average_factor": 1.010884332802287,
+      "optimizer_success": true,
+      "sse_log_rate": 2.8172861484122445,
+      "sse_cps_squared": 456.39850726139076,
+      "rmse_cps": 7.121161790836214,
+      "r_squared_raw_rate": 0.9853202618065376,
+      "max_abs_relative_residual": 2.1904189549277944
+    },
+    {
+      "energy_keV": 609,
+      "model": "cosh",
+      "range": "1-9",
+      "objective": "unweighted_squared_log_rate_residuals",
+      "rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "cell_average_shape_amplitude_cps": 1.7503498670276076,
+      "center_profile_amplitude_if_uniform_cell_response_cps": 1.7193092263158571,
+      "mu": 0.6564842471213764,
+      "uniform_cell_average_factor": 1.0180541349029253,
+      "optimizer_success": true,
+      "sse_log_rate": 0.17593512140055367,
+      "sse_cps_squared": 3329.2501734458415,
+      "rmse_cps": 19.233218293838057,
+      "r_squared_raw_rate": 0.8929170009341559,
+      "max_abs_relative_residual": 0.32520244276755456
+    },
+    {
+      "energy_keV": 609,
+      "model": "sinh",
+      "range": "1-9",
+      "objective": "unweighted_squared_rate_residuals",
+      "rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "cell_average_shape_amplitude_cps": 5.2700917713471425,
+      "center_profile_amplitude_if_uniform_cell_response_cps": 5.215972688679893,
+      "mu": 0.49824094063203395,
+      "uniform_cell_average_factor": 1.0103756453297201,
+      "optimizer_success": true,
+      "sse_log_rate": 0.8601110685510098,
+      "sse_cps_squared": 405.96947207306926,
+      "rmse_cps": 6.716228042527288,
+      "r_squared_raw_rate": 0.9869422763883896,
+      "max_abs_relative_residual": 0.7360087355908579
+    },
+    {
+      "energy_keV": 609,
+      "model": "sinh",
+      "range": "1-9",
+      "objective": "unweighted_squared_log_rate_residuals",
+      "rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "cell_average_shape_amplitude_cps": 3.32560195828689,
+      "center_profile_amplitude_if_uniform_cell_response_cps": 3.2829805462272414,
+      "mu": 0.5571126234569113,
+      "uniform_cell_average_factor": 1.0129825356743671,
+      "optimizer_success": true,
+      "sse_log_rate": 0.4262159052314508,
+      "sse_cps_squared": 565.5539123081653,
+      "rmse_cps": 7.927125808879038,
+      "r_squared_raw_rate": 0.9818093546870051,
+      "max_abs_relative_residual": 0.3932797324567505
+    },
+    {
+      "energy_keV": 609,
+      "model": "exp",
+      "range": "1-9",
+      "objective": "unweighted_squared_rate_residuals",
+      "rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "cell_average_shape_amplitude_cps": 234.57988020918322,
+      "center_profile_amplitude_if_uniform_cell_response_cps": 232.11676258837335,
+      "mu": 0.5038553866519699,
+      "uniform_cell_average_factor": 1.010611545643422,
+      "optimizer_success": true,
+      "sse_log_rate": 1.723048152398646,
+      "sse_cps_squared": 427.2035404522692,
+      "rmse_cps": 6.889634246478701,
+      "r_squared_raw_rate": 0.9862592974574129,
+      "max_abs_relative_residual": 1.1184617066396898
+    },
+    {
+      "energy_keV": 609,
+      "model": "exp",
+      "range": "1-9",
+      "objective": "unweighted_squared_log_rate_residuals",
+      "rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "cell_average_shape_amplitude_cps": 291.7743977867712,
+      "center_profile_amplitude_if_uniform_cell_response_cps": 287.15769366909655,
+      "mu": 0.6196824672425296,
+      "uniform_cell_average_factor": 1.016077243338619,
+      "optimizer_success": true,
+      "sse_log_rate": 0.09160982337813421,
+      "sse_cps_squared": 1686.9274025917941,
+      "rmse_cps": 13.6907405959559,
+      "r_squared_raw_rate": 0.9457411621041033,
+      "max_abs_relative_residual": 0.22250991612853357
+    },
+    {
+      "energy_keV": 352,
+      "model": "cosh",
+      "range": "1-9",
+      "objective": "unweighted_squared_rate_residuals",
+      "rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "cell_average_shape_amplitude_cps": 7.508499567746194,
+      "center_profile_amplitude_if_uniform_cell_response_cps": 7.427613476080549,
+      "mu": 0.5104002109363777,
+      "uniform_cell_average_factor": 1.0108899166503649,
+      "optimizer_success": true,
+      "sse_log_rate": 2.6469499624949098,
+      "sse_cps_squared": 1134.3794672295169,
+      "rmse_cps": 11.22685009365948,
+      "r_squared_raw_rate": 0.98526658775856,
+      "max_abs_relative_residual": 1.887422230613657
+    },
+    {
+      "energy_keV": 352,
+      "model": "cosh",
+      "range": "1-9",
+      "objective": "unweighted_squared_log_rate_residuals",
+      "rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "cell_average_shape_amplitude_cps": 2.8302413309378993,
+      "center_profile_amplitude_if_uniform_cell_response_cps": 2.780813737566866,
+      "mu": 0.6514075205847093,
+      "uniform_cell_average_factor": 1.0177745070456539,
+      "optimizer_success": true,
+      "sse_log_rate": 0.14104812371702133,
+      "sse_cps_squared": 7309.3679595907015,
+      "rmse_cps": 28.498280571116528,
+      "r_squared_raw_rate": 0.9050653379366624,
+      "max_abs_relative_residual": 0.305287430317064
+    },
+    {
+      "energy_keV": 352,
+      "model": "sinh",
+      "range": "1-9",
+      "objective": "unweighted_squared_rate_residuals",
+      "rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "cell_average_shape_amplitude_cps": 8.276859110604315,
+      "center_profile_amplitude_if_uniform_cell_response_cps": 8.191795234559974,
+      "mu": 0.49844167743882944,
+      "uniform_cell_average_factor": 1.0103840334882235,
+      "optimizer_success": true,
+      "sse_log_rate": 0.9392700420599956,
+      "sse_cps_squared": 1011.1586027654907,
+      "rmse_cps": 10.599573381171165,
+      "r_squared_raw_rate": 0.9868669903093299,
+      "max_abs_relative_residual": 0.7454538080387387
+    },
+    {
+      "energy_keV": 352,
+      "model": "sinh",
+      "range": "1-9",
+      "objective": "unweighted_squared_log_rate_residuals",
+      "rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "cell_average_shape_amplitude_cps": 5.377409679921177,
+      "center_profile_amplitude_if_uniform_cell_response_cps": 5.309627801199485,
+      "mu": 0.552461481995538,
+      "uniform_cell_average_factor": 1.01276584372004,
+      "optimizer_success": true,
+      "sse_log_rate": 0.5480544963282695,
+      "sse_cps_squared": 1334.2393954826105,
+      "rmse_cps": 12.175747275641443,
+      "r_squared_raw_rate": 0.9826707908505914,
+      "max_abs_relative_residual": 0.4398297527312201
+    },
+    {
+      "energy_keV": 352,
+      "model": "exp",
+      "range": "1-9",
+      "objective": "unweighted_squared_rate_residuals",
+      "rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "cell_average_shape_amplitude_cps": 369.0692757171302,
+      "center_profile_amplitude_if_uniform_cell_response_cps": 365.1914888600141,
+      "mu": 0.5040200068580654,
+      "uniform_cell_average_factor": 1.0106185028277113,
+      "optimizer_success": true,
+      "sse_log_rate": 1.6311967785995989,
+      "sse_cps_squared": 1062.9135584217913,
+      "rmse_cps": 10.867451701816307,
+      "r_squared_raw_rate": 0.9861947927605819,
+      "max_abs_relative_residual": 1.151102023249687
+    },
+    {
+      "energy_keV": 352,
+      "model": "exp",
+      "range": "1-9",
+      "objective": "unweighted_squared_log_rate_residuals",
+      "rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "cell_average_shape_amplitude_cps": 450.61799952710504,
+      "center_profile_amplitude_if_uniform_cell_response_cps": 443.6069383787569,
+      "mu": 0.6144318403972385,
+      "uniform_cell_average_factor": 1.0158046697239933,
+      "optimizer_success": true,
+      "sse_log_rate": 0.10470547290615531,
+      "sse_cps_squared": 3638.289758173017,
+      "rmse_cps": 20.10607911987764,
+      "r_squared_raw_rate": 0.9527455984443286,
+      "max_abs_relative_residual": 0.20398041790292662
+    },
+    {
+      "energy_keV": 609,
+      "model": "cosh",
+      "range": "2-9",
+      "objective": "unweighted_squared_rate_residuals",
+      "rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "cell_average_shape_amplitude_cps": 2.090503679925361,
+      "center_profile_amplitude_if_uniform_cell_response_cps": 2.055333949442412,
+      "mu": 0.6392048261064772,
+      "uniform_cell_average_factor": 1.017111443370305,
+      "optimizer_success": true,
+      "sse_log_rate": 0.1913821570256657,
+      "sse_cps_squared": 21.801457964156164,
+      "rmse_cps": 1.6508126015752123,
+      "r_squared_raw_rate": 0.9983527206287954,
+      "max_abs_relative_residual": 0.42123938854927984
+    },
+    {
+      "energy_keV": 609,
+      "model": "cosh",
+      "range": "2-9",
+      "objective": "unweighted_squared_log_rate_residuals",
+      "rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "cell_average_shape_amplitude_cps": 1.627609351324766,
+      "center_profile_amplitude_if_uniform_cell_response_cps": 1.5962821930189888,
+      "mu": 0.6842904289714896,
+      "uniform_cell_average_factor": 1.01962507534243,
+      "optimizer_success": true,
+      "sse_log_rate": 0.05058929782785582,
+      "sse_cps_squared": 166.98687793576414,
+      "rmse_cps": 4.568737215245643,
+      "r_squared_raw_rate": 0.9873827686323687,
+      "max_abs_relative_residual": 0.11453170584544478
+    },
+    {
+      "energy_keV": 609,
+      "model": "sinh",
+      "range": "2-9",
+      "objective": "unweighted_squared_rate_residuals",
+      "rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "cell_average_shape_amplitude_cps": 2.165511405679985,
+      "center_profile_amplitude_if_uniform_cell_response_cps": 2.129623154829602,
+      "mu": 0.6343635499078196,
+      "uniform_cell_average_factor": 1.016851925547952,
+      "optimizer_success": true,
+      "sse_log_rate": 0.6477871238687993,
+      "sse_cps_squared": 21.641507218800278,
+      "rmse_cps": 1.6447456953432147,
+      "r_squared_raw_rate": 0.9983648062225051,
+      "max_abs_relative_residual": 0.5484252084613056
+    },
+    {
+      "energy_keV": 609,
+      "model": "sinh",
+      "range": "2-9",
+      "objective": "unweighted_squared_log_rate_residuals",
+      "rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "cell_average_shape_amplitude_cps": 3.2051267869976066,
+      "center_profile_amplitude_if_uniform_cell_response_cps": 3.162453601104003,
+      "mu": 0.5679311095851038,
+      "uniform_cell_average_factor": 1.0134936954897003,
+      "optimizer_success": true,
+      "sse_log_rate": 0.4156941213068385,
+      "sse_cps_squared": 197.6521323905302,
+      "rmse_cps": 4.97056501303587,
+      "r_squared_raw_rate": 0.985065756570188,
+      "max_abs_relative_residual": 0.40360334014292615
+    },
+    {
+      "energy_keV": 609,
+      "model": "exp",
+      "range": "2-9",
+      "objective": "unweighted_squared_rate_residuals",
+      "rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "cell_average_shape_amplitude_cps": 327.7089435035943,
+      "center_profile_amplitude_if_uniform_cell_response_cps": 322.24445487729673,
+      "mu": 0.6363392020743158,
+      "uniform_cell_average_factor": 1.0169575877678898,
+      "optimizer_success": true,
+      "sse_log_rate": 0.028216246944426517,
+      "sse_cps_squared": 20.960422867521423,
+      "rmse_cps": 1.6186577335682109,
+      "r_squared_raw_rate": 0.9984162677441958,
+      "max_abs_relative_residual": 0.09569764180440625
+    },
+    {
+      "energy_keV": 609,
+      "model": "exp",
+      "range": "2-9",
+      "objective": "unweighted_squared_log_rate_residuals",
+      "rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "cell_average_shape_amplitude_cps": 333.19316409519877,
+      "center_profile_amplitude_if_uniform_cell_response_cps": 327.5528935402108,
+      "mu": 0.641208116080798,
+      "uniform_cell_average_factor": 1.0172194191113002,
+      "optimizer_success": true,
+      "sse_log_rate": 0.026740326559029078,
+      "sse_cps_squared": 22.461181219539725,
+      "rmse_cps": 1.6756036680678599,
+      "r_squared_raw_rate": 0.9983028731135015,
+      "max_abs_relative_residual": 0.07471054870058708
+    },
+    {
+      "energy_keV": 352,
+      "model": "cosh",
+      "range": "2-9",
+      "objective": "unweighted_squared_rate_residuals",
+      "rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "cell_average_shape_amplitude_cps": 3.2535777111013053,
+      "center_profile_amplitude_if_uniform_cell_response_cps": 3.198565210943835,
+      "mu": 0.6408319523939547,
+      "uniform_cell_average_factor": 1.0171991178948754,
+      "optimizer_success": true,
+      "sse_log_rate": 0.12648751678018763,
+      "sse_cps_squared": 32.35676684693886,
+      "rmse_cps": 2.011118061145928,
+      "r_squared_raw_rate": 0.999015046548215,
+      "max_abs_relative_residual": 0.2742346999604135
+    },
+    {
+      "energy_keV": 352,
+      "model": "cosh",
+      "range": "2-9",
+      "objective": "unweighted_squared_log_rate_residuals",
+      "rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "cell_average_shape_amplitude_cps": 2.6427062157942394,
+      "center_profile_amplitude_if_uniform_cell_response_cps": 2.5928074209574956,
+      "mu": 0.677671403667746,
+      "uniform_cell_average_factor": 1.019245083315257,
+      "optimizer_success": true,
+      "sse_log_rate": 0.028865175947689278,
+      "sse_cps_squared": 246.11715135032347,
+      "rmse_cps": 5.546588493731118,
+      "r_squared_raw_rate": 0.9925080914631336,
+      "max_abs_relative_residual": 0.08686353357289753
+    },
+    {
+      "energy_keV": 352,
+      "model": "sinh",
+      "range": "2-9",
+      "objective": "unweighted_squared_rate_residuals",
+      "rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "cell_average_shape_amplitude_cps": 3.3647415977440436,
+      "center_profile_amplitude_if_uniform_cell_response_cps": 3.3086558101886117,
+      "mu": 0.6362205135627854,
+      "uniform_cell_average_factor": 1.0169512305821362,
+      "optimizer_success": true,
+      "sse_log_rate": 0.827274326654146,
+      "sse_cps_squared": 33.01708081146783,
+      "rmse_cps": 2.0315351587982615,
+      "r_squared_raw_rate": 0.9989949463162697,
+      "max_abs_relative_residual": 0.5946824818181016
+    },
+    {
+      "energy_keV": 352,
+      "model": "sinh",
+      "range": "2-9",
+      "objective": "unweighted_squared_log_rate_residuals",
+      "rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "cell_average_shape_amplitude_cps": 5.210119909239464,
+      "center_profile_amplitude_if_uniform_cell_response_cps": 5.1422504403860385,
+      "mu": 0.5617070824907217,
+      "uniform_cell_average_factor": 1.0131983981799864,
+      "optimizer_success": true,
+      "sse_log_rate": 0.54039073310183,
+      "sse_cps_squared": 598.270972192402,
+      "rmse_cps": 8.647766851855469,
+      "r_squared_raw_rate": 0.9817883825676671,
+      "max_abs_relative_residual": 0.44793784506981527
+    },
+    {
+      "energy_keV": 352,
+      "model": "exp",
+      "range": "2-9",
+      "objective": "unweighted_squared_rate_residuals",
+      "rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "cell_average_shape_amplitude_cps": 517.6701732153778,
+      "center_profile_amplitude_if_uniform_cell_response_cps": 508.99118752238627,
+      "mu": 0.6380870813971142,
+      "uniform_cell_average_factor": 1.017051347657389,
+      "optimizer_success": true,
+      "sse_log_rate": 0.04998060702430243,
+      "sse_cps_squared": 30.840369381750346,
+      "rmse_cps": 1.9634271498374454,
+      "r_squared_raw_rate": 0.9990612063182774,
+      "max_abs_relative_residual": 0.14980496343745647
+    },
+    {
+      "energy_keV": 352,
+      "model": "exp",
+      "range": "2-9",
+      "objective": "unweighted_squared_log_rate_residuals",
+      "rate_basis": "source_start_time_point_correction_no_finite_acquisition_factor",
+      "cell_average_shape_amplitude_cps": 509.4187662031537,
+      "center_profile_amplitude_if_uniform_cell_response_cps": 500.9774668022331,
+      "mu": 0.634321098611427,
+      "uniform_cell_average_factor": 1.016849658837556,
+      "optimizer_success": true,
+      "sse_log_rate": 0.049323907144809664,
+      "sse_cps_squared": 35.60511178813253,
+      "rmse_cps": 2.109653756784882,
+      "r_squared_raw_rate": 0.9989161655760354,
+      "max_abs_relative_residual": 0.1361417221440049
+    }
+  ],
+  "summary_table_comparisons": [
+    {
+      "cartridge": 1,
+      "quantity": "corrected_rate_609_cps",
+      "supplied": 175.08,
+      "recomputed": 175.07835315296833,
+      "recomputed_at_supplied_precision": 175.08,
+      "difference_supplied_minus_recomputed": 0.0016468470316794992,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 1,
+      "quantity": "fixed_cosh_609_cps",
+      "supplied": 243.82,
+      "recomputed": 244.45378769381807,
+      "recomputed_at_supplied_precision": 244.45,
+      "difference_supplied_minus_recomputed": -0.6337876938180784,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 1,
+      "quantity": "fixed_sinh_609_cps",
+      "supplied": 234.18,
+      "recomputed": 234.04904163247383,
+      "recomputed_at_supplied_precision": 234.05,
+      "difference_supplied_minus_recomputed": 0.1309583675261763,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 1,
+      "quantity": "normalized_data_609",
+      "supplied": 19.45,
+      "recomputed": 19.453150350329814,
+      "recomputed_at_supplied_precision": 19.45,
+      "difference_supplied_minus_recomputed": -0.0031503503298146995,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 1,
+      "quantity": "normalized_fixed_sinh_609",
+      "supplied": 26.02,
+      "recomputed": 26.00544907027487,
+      "recomputed_at_supplied_precision": 26.01,
+      "difference_supplied_minus_recomputed": 0.014550929725128725,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 1,
+      "quantity": "corrected_rate_352_cps",
+      "supplied": 275.28,
+      "recomputed": 275.27510243979174,
+      "recomputed_at_supplied_precision": 275.28,
+      "difference_supplied_minus_recomputed": 0.004897560208235063,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 1,
+      "quantity": "fixed_cosh_352_cps",
+      "supplied": 383.31,
+      "recomputed": 384.3120174475634,
+      "recomputed_at_supplied_precision": 384.31,
+      "difference_supplied_minus_recomputed": -1.0020174475633894,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 2,
+      "quantity": "corrected_rate_609_cps",
+      "supplied": 127.07,
+      "recomputed": 127.06821865175866,
+      "recomputed_at_supplied_precision": 127.07,
+      "difference_supplied_minus_recomputed": 0.001781348241337355,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 2,
+      "quantity": "fixed_cosh_609_cps",
+      "supplied": 122.86,
+      "recomputed": 123.10672218184335,
+      "recomputed_at_supplied_precision": 123.11,
+      "difference_supplied_minus_recomputed": -0.24672218184335293,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 2,
+      "quantity": "fixed_sinh_609_cps",
+      "supplied": 117.99,
+      "recomputed": 117.86240725724402,
+      "recomputed_at_supplied_precision": 117.86,
+      "difference_supplied_minus_recomputed": 0.12759274275597932,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 2,
+      "quantity": "normalized_data_609",
+      "supplied": 15.88,
+      "recomputed": 15.883527331469832,
+      "recomputed_at_supplied_precision": 15.88,
+      "difference_supplied_minus_recomputed": -0.0035273314698311964,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 2,
+      "quantity": "normalized_fixed_sinh_609",
+      "supplied": 14.75,
+      "recomputed": 14.732800907155502,
+      "recomputed_at_supplied_precision": 14.73,
+      "difference_supplied_minus_recomputed": 0.017199092844498054,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 2,
+      "quantity": "corrected_rate_352_cps",
+      "supplied": 199.86,
+      "recomputed": 199.85991223068118,
+      "recomputed_at_supplied_precision": 199.86,
+      "difference_supplied_minus_recomputed": 8.776931883858197e-05,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 2,
+      "quantity": "fixed_cosh_352_cps",
+      "supplied": 193.14,
+      "recomputed": 193.53920922804082,
+      "recomputed_at_supplied_precision": 193.54,
+      "difference_supplied_minus_recomputed": -0.3992092280408315,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 3,
+      "quantity": "corrected_rate_609_cps",
+      "supplied": 63.42,
+      "recomputed": 63.416681802222314,
+      "recomputed_at_supplied_precision": 63.42,
+      "difference_supplied_minus_recomputed": 0.0033181977776877147,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 3,
+      "quantity": "fixed_cosh_609_cps",
+      "supplied": 61.91,
+      "recomputed": 62.001068301697565,
+      "recomputed_at_supplied_precision": 62.0,
+      "difference_supplied_minus_recomputed": -0.09106830169756819,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 3,
+      "quantity": "fixed_sinh_609_cps",
+      "supplied": 59.43,
+      "recomputed": 59.350915763440725,
+      "recomputed_at_supplied_precision": 59.35,
+      "difference_supplied_minus_recomputed": 0.07908423655927521,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 3,
+      "quantity": "normalized_data_609",
+      "supplied": 9.06,
+      "recomputed": 9.059525971746044,
+      "recomputed_at_supplied_precision": 9.06,
+      "difference_supplied_minus_recomputed": 0.0004740282539561491,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 3,
+      "quantity": "normalized_fixed_sinh_609",
+      "supplied": 8.49,
+      "recomputed": 8.478702251920103,
+      "recomputed_at_supplied_precision": 8.48,
+      "difference_supplied_minus_recomputed": 0.011297748079897474,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 3,
+      "quantity": "corrected_rate_352_cps",
+      "supplied": 100.99,
+      "recomputed": 100.99431336547582,
+      "recomputed_at_supplied_precision": 100.99,
+      "difference_supplied_minus_recomputed": -0.004313365475823616,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 3,
+      "quantity": "fixed_cosh_352_cps",
+      "supplied": 97.33,
+      "recomputed": 97.47345650775587,
+      "recomputed_at_supplied_precision": 97.47,
+      "difference_supplied_minus_recomputed": -0.1434565077558716,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 4,
+      "quantity": "corrected_rate_609_cps",
+      "supplied": 38.16,
+      "recomputed": 38.16337661082122,
+      "recomputed_at_supplied_precision": 38.16,
+      "difference_supplied_minus_recomputed": -0.003376610821220538,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 4,
+      "quantity": "fixed_cosh_609_cps",
+      "supplied": 31.22,
+      "recomputed": 31.23520262303288,
+      "recomputed_at_supplied_precision": 31.24,
+      "difference_supplied_minus_recomputed": -0.01520262303288078,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 4,
+      "quantity": "fixed_sinh_609_cps",
+      "supplied": 29.93,
+      "recomputed": 29.88237890171813,
+      "recomputed_at_supplied_precision": 29.88,
+      "difference_supplied_minus_recomputed": 0.04762109828186922,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 4,
+      "quantity": "normalized_data_609",
+      "supplied": 6.36,
+      "recomputed": 6.360562768470203,
+      "recomputed_at_supplied_precision": 6.36,
+      "difference_supplied_minus_recomputed": -0.0005627684702025348,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 4,
+      "quantity": "normalized_fixed_sinh_609",
+      "supplied": 4.99,
+      "recomputed": 4.980396483619688,
+      "recomputed_at_supplied_precision": 4.98,
+      "difference_supplied_minus_recomputed": 0.009603516380312094,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 4,
+      "quantity": "corrected_rate_352_cps",
+      "supplied": 58.78,
+      "recomputed": 58.78057959869074,
+      "recomputed_at_supplied_precision": 58.78,
+      "difference_supplied_minus_recomputed": -0.000579598690741534,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 4,
+      "quantity": "fixed_cosh_352_cps",
+      "supplied": 49.08,
+      "recomputed": 49.10565652791789,
+      "recomputed_at_supplied_precision": 49.11,
+      "difference_supplied_minus_recomputed": -0.02565652791788864,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 5,
+      "quantity": "corrected_rate_609_cps",
+      "supplied": 19.51,
+      "recomputed": 19.507501663121168,
+      "recomputed_at_supplied_precision": 19.51,
+      "difference_supplied_minus_recomputed": 0.002498336878833385,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 5,
+      "quantity": "fixed_cosh_609_cps",
+      "supplied": 15.77,
+      "recomputed": 15.75406441715627,
+      "recomputed_at_supplied_precision": 15.75,
+      "difference_supplied_minus_recomputed": 0.015935582843729534,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 5,
+      "quantity": "fixed_sinh_609_cps",
+      "supplied": 15.05,
+      "recomputed": 15.036574706840769,
+      "recomputed_at_supplied_precision": 15.04,
+      "difference_supplied_minus_recomputed": 0.0134252931592318,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 5,
+      "quantity": "normalized_data_609",
+      "supplied": 3.9,
+      "recomputed": 3.9015003326242335,
+      "recomputed_at_supplied_precision": 3.9,
+      "difference_supplied_minus_recomputed": -0.0015003326242335469,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 5,
+      "quantity": "normalized_fixed_sinh_609",
+      "supplied": 3.01,
+      "recomputed": 3.0073149413681537,
+      "recomputed_at_supplied_precision": 3.01,
+      "difference_supplied_minus_recomputed": 0.0026850586318460934,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 5,
+      "quantity": "corrected_rate_352_cps",
+      "supplied": 30.61,
+      "recomputed": 30.608876504141655,
+      "recomputed_at_supplied_precision": 30.61,
+      "difference_supplied_minus_recomputed": 0.00112349585834437,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 5,
+      "quantity": "fixed_cosh_352_cps",
+      "supplied": 24.8,
+      "recomputed": 24.767365383348114,
+      "recomputed_at_supplied_precision": 24.77,
+      "difference_supplied_minus_recomputed": 0.032634616651886716,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 6,
+      "quantity": "corrected_rate_609_cps",
+      "supplied": 9.71,
+      "recomputed": 9.713939376973865,
+      "recomputed_at_supplied_precision": 9.71,
+      "difference_supplied_minus_recomputed": -0.0039393769738644835,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 6,
+      "quantity": "fixed_cosh_609_cps",
+      "supplied": 8.01,
+      "recomputed": 7.982067211934394,
+      "recomputed_at_supplied_precision": 7.98,
+      "difference_supplied_minus_recomputed": 0.027932788065605507,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 6,
+      "quantity": "fixed_sinh_609_cps",
+      "supplied": 7.53,
+      "recomputed": 7.548812951835477,
+      "recomputed_at_supplied_precision": 7.55,
+      "difference_supplied_minus_recomputed": -0.01881295183547671,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 6,
+      "quantity": "normalized_data_609",
+      "supplied": 2.43,
+      "recomputed": 2.4284848442434663,
+      "recomputed_at_supplied_precision": 2.43,
+      "difference_supplied_minus_recomputed": 0.0015151557565338258,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 6,
+      "quantity": "normalized_fixed_sinh_609",
+      "supplied": 1.88,
+      "recomputed": 1.8872032379588692,
+      "recomputed_at_supplied_precision": 1.89,
+      "difference_supplied_minus_recomputed": -0.007203237958869346,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 6,
+      "quantity": "corrected_rate_352_cps",
+      "supplied": 15.03,
+      "recomputed": 15.025359100762893,
+      "recomputed_at_supplied_precision": 15.03,
+      "difference_supplied_minus_recomputed": 0.004640899237106311,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 6,
+      "quantity": "fixed_cosh_352_cps",
+      "supplied": 12.59,
+      "recomputed": 12.548810892072469,
+      "recomputed_at_supplied_precision": 12.55,
+      "difference_supplied_minus_recomputed": 0.041189107927531055,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 7,
+      "quantity": "corrected_rate_609_cps",
+      "supplied": 4.84,
+      "recomputed": 4.837865013010289,
+      "recomputed_at_supplied_precision": 4.84,
+      "difference_supplied_minus_recomputed": 0.0021349869897111518,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 7,
+      "quantity": "fixed_cosh_609_cps",
+      "supplied": 4.13,
+      "recomputed": 4.116038649730976,
+      "recomputed_at_supplied_precision": 4.12,
+      "difference_supplied_minus_recomputed": 0.013961350269023676,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 7,
+      "quantity": "fixed_sinh_609_cps",
+      "supplied": 3.71,
+      "recomputed": 3.755009904393538,
+      "recomputed_at_supplied_precision": 3.76,
+      "difference_supplied_minus_recomputed": -0.045009904393538136,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 7,
+      "quantity": "normalized_data_609",
+      "supplied": 1.61,
+      "recomputed": 1.6126216710034296,
+      "recomputed_at_supplied_precision": 1.61,
+      "difference_supplied_minus_recomputed": -0.002621671003429471,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 7,
+      "quantity": "normalized_fixed_sinh_609",
+      "supplied": 1.24,
+      "recomputed": 1.2516699681311794,
+      "recomputed_at_supplied_precision": 1.25,
+      "difference_supplied_minus_recomputed": -0.011669968131179376,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 7,
+      "quantity": "corrected_rate_352_cps",
+      "supplied": 7.56,
+      "recomputed": 7.561395570380703,
+      "recomputed_at_supplied_precision": 7.56,
+      "difference_supplied_minus_recomputed": -0.0013955703807031483,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 7,
+      "quantity": "fixed_cosh_352_cps",
+      "supplied": 6.5,
+      "recomputed": 6.470929054908071,
+      "recomputed_at_supplied_precision": 6.47,
+      "difference_supplied_minus_recomputed": 0.02907094509192909,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 8,
+      "quantity": "corrected_rate_609_cps",
+      "supplied": 2.53,
+      "recomputed": 2.5299272700659787,
+      "recomputed_at_supplied_precision": 2.53,
+      "difference_supplied_minus_recomputed": 7.27299340210763e-05,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 8,
+      "quantity": "fixed_cosh_609_cps",
+      "supplied": 2.27,
+      "recomputed": 2.2641647510292056,
+      "recomputed_at_supplied_precision": 2.26,
+      "difference_supplied_minus_recomputed": 0.00583524897079446,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 8,
+      "quantity": "fixed_sinh_609_cps",
+      "supplied": 1.74,
+      "recomputed": 1.7986946344105001,
+      "recomputed_at_supplied_precision": 1.8,
+      "difference_supplied_minus_recomputed": -0.05869463441050016,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 8,
+      "quantity": "normalized_data_609",
+      "supplied": 1.27,
+      "recomputed": 1.2649636350329894,
+      "recomputed_at_supplied_precision": 1.26,
+      "difference_supplied_minus_recomputed": 0.005036364967010654,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 8,
+      "quantity": "normalized_fixed_sinh_609",
+      "supplied": 0.87,
+      "recomputed": 0.8993473172052501,
+      "recomputed_at_supplied_precision": 0.9,
+      "difference_supplied_minus_recomputed": -0.02934731720525008,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 8,
+      "quantity": "corrected_rate_352_cps",
+      "supplied": 3.92,
+      "recomputed": 3.915151532373232,
+      "recomputed_at_supplied_precision": 3.92,
+      "difference_supplied_minus_recomputed": 0.004848467626767938,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 8,
+      "quantity": "fixed_cosh_352_cps",
+      "supplied": 3.56,
+      "recomputed": 3.559550995346263,
+      "recomputed_at_supplied_precision": 3.56,
+      "difference_supplied_minus_recomputed": 0.0004490046537370951,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 9,
+      "quantity": "corrected_rate_609_cps",
+      "supplied": 1.55,
+      "recomputed": 1.5466666666666666,
+      "recomputed_at_supplied_precision": 1.55,
+      "difference_supplied_minus_recomputed": 0.0033333333333334103,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 9,
+      "quantity": "fixed_cosh_609_cps",
+      "supplied": 1.52,
+      "recomputed": 1.5202440034766782,
+      "recomputed_at_supplied_precision": 1.52,
+      "difference_supplied_minus_recomputed": -0.00024400347667818956,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 9,
+      "quantity": "fixed_sinh_609_cps",
+      "supplied": 0.71,
+      "recomputed": 0.7225579765379405,
+      "recomputed_at_supplied_precision": 0.72,
+      "difference_supplied_minus_recomputed": -0.012557976537940552,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 9,
+      "quantity": "normalized_data_609",
+      "supplied": 1.55,
+      "recomputed": 1.5466666666666666,
+      "recomputed_at_supplied_precision": 1.55,
+      "difference_supplied_minus_recomputed": 0.0033333333333334103,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 9,
+      "quantity": "normalized_fixed_sinh_609",
+      "supplied": 0.71,
+      "recomputed": 0.7225579765379405,
+      "recomputed_at_supplied_precision": 0.72,
+      "difference_supplied_minus_recomputed": -0.012557976537940552,
+      "agrees_to_2_decimals": false
+    },
+    {
+      "cartridge": 9,
+      "quantity": "corrected_rate_352_cps",
+      "supplied": 2.69,
+      "recomputed": 2.6855555555555557,
+      "recomputed_at_supplied_precision": 2.69,
+      "difference_supplied_minus_recomputed": 0.004444444444444251,
+      "agrees_to_2_decimals": true
+    },
+    {
+      "cartridge": 9,
+      "quantity": "fixed_cosh_352_cps",
+      "supplied": 2.39,
+      "recomputed": 2.3900142660929515,
+      "recomputed_at_supplied_precision": 2.39,
+      "difference_supplied_minus_recomputed": -1.4266092951409348e-05,
+      "agrees_to_2_decimals": true
+    }
+  ],
+  "summary_table_disagreement_count": 33,
+  "peak_ratio_first8": {
+    "mean": 1.5630375567786796,
+    "sample_sd": 0.01737890793092351,
+    "minimum": 1.5402352941176471,
+    "maximum": 1.5925512104283055
+  },
+  "adjacent_ratio_summaries": [
+    {
+      "energy_keV": 609,
+      "ratio_numerator_cartridges": "2-7",
+      "ratios": [
+        2.0037033638569497,
+        1.6617156927419396,
+        1.9563436297416232,
+        2.0081967681785393,
+        2.007897977899452,
+        1.9122545814860996
+      ],
+      "mean": 1.9250186689841005,
+      "sample_sd": 0.13450017816584217,
+      "geometric_mean": 1.9208265539997362
+    },
+    {
+      "energy_keV": 609,
+      "ratio_numerator_cartridges": "2-8",
+      "ratios": [
+        2.0037033638569497,
+        1.6617156927419396,
+        1.9563436297416232,
+        2.0081967681785393,
+        2.007897977899452,
+        1.9122545814860996,
+        1.6357288384047277
+      ],
+      "mean": 1.8836915503299043,
+      "sample_sd": 0.16441035072649401,
+      "geometric_mean": 1.8772409997947395
+    },
+    {
+      "energy_keV": 352,
+      "ratio_numerator_cartridges": "2-7",
+      "ratios": [
+        1.9789224320723175,
+        1.718157834696229,
+        1.9203769073568318,
+        2.037147751269887,
+        1.9871145426672068,
+        1.931316197561641
+      ],
+      "mean": 1.9288392776040189,
+      "sample_sd": 0.1114445795684075,
+      "geometric_mean": 1.926029136665951
+    },
+    {
+      "energy_keV": 352,
+      "ratio_numerator_cartridges": "2-8",
+      "ratios": [
+        1.9789224320723175,
+        1.718157834696229,
+        1.9203769073568318,
+        2.037147751269887,
+        1.9871145426672068,
+        1.931316197561641,
+        1.457855349249445
+      ],
+      "mean": 1.8615558592676513,
+      "sample_sd": 0.20503492534322668,
+      "geometric_mean": 1.8509066140540054
+    }
+  ],
+  "parameter_arithmetic": {
+    "mu": 0.686,
+    "exp_mu": 1.9857565995893263,
+    "Ld_per_dx": 1.4577259475218658,
+    "Ld_cm_if_dx_1_50_cm": 2.1865889212827985,
+    "De_m2_s_if_dx_1_50_cm": 1.0031853224421796e-09
+  }
+}

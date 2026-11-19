@@ -1,0 +1,2220 @@
+{
+  "source_files": [
+    {
+      "name": "intake_20261118.txt",
+      "size_bytes": 13494,
+      "sha256": "882b6799b2787041c86e07b36c7fe892ee1e7807756e05273227ac73b9411754"
+    },
+    {
+      "name": "leak_draft_081239.txt",
+      "size_bytes": 12384,
+      "sha256": "996f02691f41c456069258389440faacc11f4552a9b01a116aa66ae906b46b0e"
+    },
+    {
+      "name": "leak_draft_duplicate_081452.txt",
+      "size_bytes": 12384,
+      "sha256": "996f02691f41c456069258389440faacc11f4552a9b01a116aa66ae906b46b0e"
+    },
+    {
+      "name": "manuscript_222Rn.tex",
+      "size_bytes": 43245,
+      "sha256": "0ec9986a1fe53a92d1c1f52ccf4cdba584594801665076936690e36555fb1ed0"
+    }
+  ],
+  "duplicate_leak_files": true,
+  "method": {
+    "rate_basis": "source start-time point correction N/live*exp(lambda*elapsed); no finite-acquisition factor applied",
+    "residual_sign": "observed minus model",
+    "r_squared": "1-SSE/SST on unlogged point-corrected rates, independently perenergy/range",
+    "uncertainty": "none inferred; net peak areas have no supplied background/error model",
+    "new_scenarios": "frozen supplied parameters; no amplitude/mu/background refitting except explicitly labeled interior log fit"
+  },
+  "observations": [
+    {
+      "cartridge": 1,
+      "start_time": "12:25:47",
+      "elapsed_s": 7753,
+      "live_seconds": 900.0,
+      "point_corrected_rate_609_cps": 175.07835315296833,
+      "point_corrected_rate_352_cps": 275.27510243979174
+    },
+    {
+      "cartridge": 2,
+      "start_time": "12:09:13",
+      "elapsed_s": 6759,
+      "live_seconds": 900.0,
+      "point_corrected_rate_609_cps": 127.06821865175866,
+      "point_corrected_rate_352_cps": 199.85991223068118
+    },
+    {
+      "cartridge": 3,
+      "start_time": "11:53:11",
+      "elapsed_s": 5797,
+      "live_seconds": 900.0,
+      "point_corrected_rate_609_cps": 63.416681802222314,
+      "point_corrected_rate_352_cps": 100.99431336547582
+    },
+    {
+      "cartridge": 4,
+      "start_time": "11:37:14",
+      "elapsed_s": 4840,
+      "live_seconds": 900.0,
+      "point_corrected_rate_609_cps": 38.16337661082122,
+      "point_corrected_rate_352_cps": 58.78057959869074
+    },
+    {
+      "cartridge": 5,
+      "start_time": "11:21:25",
+      "elapsed_s": 3891,
+      "live_seconds": 900.0,
+      "point_corrected_rate_609_cps": 19.507501663121168,
+      "point_corrected_rate_352_cps": 30.608876504141655
+    },
+    {
+      "cartridge": 6,
+      "start_time": "11:05:22",
+      "elapsed_s": 2928,
+      "live_seconds": 900.0,
+      "point_corrected_rate_609_cps": 9.713939376973865,
+      "point_corrected_rate_352_cps": 15.025359100762893
+    },
+    {
+      "cartridge": 7,
+      "start_time": "10:49:37",
+      "elapsed_s": 1983,
+      "live_seconds": 900.0,
+      "point_corrected_rate_609_cps": 4.837865013010289,
+      "point_corrected_rate_352_cps": 7.561395570380703
+    },
+    {
+      "cartridge": 8,
+      "start_time": "10:33:48",
+      "elapsed_s": 1034,
+      "live_seconds": 900.0,
+      "point_corrected_rate_609_cps": 2.5299272700659787,
+      "point_corrected_rate_352_cps": 3.915151532373232
+    },
+    {
+      "cartridge": 9,
+      "start_time": "10:16:34",
+      "elapsed_s": 0,
+      "live_seconds": 900.0,
+      "point_corrected_rate_609_cps": 1.5466666666666666,
+      "point_corrected_rate_352_cps": 2.6855555555555557
+    }
+  ],
+  "models": [
+    {
+      "id": "original_sinh_609",
+      "energy_keV": 609,
+      "shape": "sinh",
+      "amplitude_cps": 0.975,
+      "mu": 0.686,
+      "index_zero_or_center": 10.0,
+      "constant_floor_cps": 0.0,
+      "parameter_provenance": "original embedded CSV"
+    },
+    {
+      "id": "original_cosh_609",
+      "energy_keV": 609,
+      "shape": "cosh",
+      "amplitude_cps": 1.435,
+      "mu": 0.686,
+      "index_zero_or_center": 9.5,
+      "constant_floor_cps": 0.0,
+      "parameter_provenance": "original embedded CSV and explicit manuscript plot"
+    },
+    {
+      "id": "ln2_floor_draft_609",
+      "energy_keV": 609,
+      "shape": "sinh",
+      "amplitude_cps": 1.41,
+      "mu": 0.6931471805599453,
+      "index_zero_or_center": 9.5,
+      "constant_floor_cps": 1.55,
+      "parameter_provenance": "identical leak drafts, section3; ln(2) evaluated rather than rounded0.693"
+    },
+    {
+      "id": "shift_delta_1_1_draft_609",
+      "energy_keV": 609,
+      "shape": "sinh",
+      "amplitude_cps": 0.675,
+      "mu": 0.686,
+      "index_zero_or_center": 10.6,
+      "constant_floor_cps": 0.0,
+      "parameter_provenance": "identical leak drafts, final Excel formulas, delta1.10"
+    },
+    {
+      "id": "original_sinh_352",
+      "energy_keV": 352,
+      "shape": "sinh",
+      "amplitude_cps": 1.533,
+      "mu": 0.686,
+      "index_zero_or_center": 10.0,
+      "constant_floor_cps": 0.0,
+      "parameter_provenance": "original embedded CSV"
+    },
+    {
+      "id": "original_cosh_352",
+      "energy_keV": 352,
+      "shape": "cosh",
+      "amplitude_cps": 2.256,
+      "mu": 0.686,
+      "index_zero_or_center": 9.5,
+      "constant_floor_cps": 0.0,
+      "parameter_provenance": "original embedded CSV and explicit manuscript plot"
+    },
+    {
+      "id": "ln2_floor_draft_352",
+      "energy_keV": 352,
+      "shape": "sinh",
+      "amplitude_cps": 2.21,
+      "mu": 0.6931471805599453,
+      "index_zero_or_center": 9.5,
+      "constant_floor_cps": 2.55,
+      "parameter_provenance": "identical leak drafts, section3; ln(2) evaluated rather than rounded0.693"
+    },
+    {
+      "id": "shift_delta_1_1_draft_352",
+      "energy_keV": 352,
+      "shape": "sinh",
+      "amplitude_cps": 1.061,
+      "mu": 0.686,
+      "index_zero_or_center": 10.6,
+      "constant_floor_cps": 0.0,
+      "parameter_provenance": "identical leak drafts, final Excel formulas, delta1.10"
+    },
+    {
+      "id": "original_sinh_plus_075_609",
+      "energy_keV": 609,
+      "shape": "sinh",
+      "amplitude_cps": 0.975,
+      "mu": 0.686,
+      "index_zero_or_center": 10.0,
+      "constant_floor_cps": 0.75,
+      "parameter_provenance": "additional requested0.75cps scenario applied to original609sinh"
+    }
+  ],
+  "per_point_predictions": [
+    {
+      "model_id": "original_sinh_609",
+      "energy_keV": 609,
+      "cartridge": 1,
+      "observed_point_corrected_rate_cps": 175.07835315296833,
+      "predicted_rate_cps": 234.04904163247383,
+      "residual_observed_minus_model_cps": -58.9706884795055,
+      "relative_residual_observed_minus_model": -0.3368245555061967
+    },
+    {
+      "model_id": "original_sinh_609",
+      "energy_keV": 609,
+      "cartridge": 2,
+      "observed_point_corrected_rate_cps": 127.06821865175866,
+      "predicted_rate_cps": 117.86240725724402,
+      "residual_observed_minus_model_cps": 9.20581139451464,
+      "relative_residual_observed_minus_model": 0.07244778822109685
+    },
+    {
+      "model_id": "original_sinh_609",
+      "energy_keV": 609,
+      "cartridge": 3,
+      "observed_point_corrected_rate_cps": 63.416681802222314,
+      "predicted_rate_cps": 59.350915763440725,
+      "residual_observed_minus_model_cps": 4.0657660387815895,
+      "relative_residual_observed_minus_model": 0.06411193274762465
+    },
+    {
+      "model_id": "original_sinh_609",
+      "energy_keV": 609,
+      "cartridge": 4,
+      "observed_point_corrected_rate_cps": 38.16337661082122,
+      "predicted_rate_cps": 29.882378901718134,
+      "residual_observed_minus_model_cps": 8.280997709103083,
+      "relative_residual_observed_minus_model": 0.21698807717016863
+    },
+    {
+      "model_id": "original_sinh_609",
+      "energy_keV": 609,
+      "cartridge": 5,
+      "observed_point_corrected_rate_cps": 19.507501663121168,
+      "predicted_rate_cps": 15.036574706840769,
+      "residual_observed_minus_model_cps": 4.470926956280399,
+      "relative_residual_observed_minus_model": 0.22919013585079753
+    },
+    {
+      "model_id": "original_sinh_609",
+      "energy_keV": 609,
+      "cartridge": 6,
+      "observed_point_corrected_rate_cps": 9.713939376973865,
+      "predicted_rate_cps": 7.548812951835477,
+      "residual_observed_minus_model_cps": 2.1651264251383884,
+      "relative_residual_observed_minus_model": 0.22288860791849818
+    },
+    {
+      "model_id": "original_sinh_609",
+      "energy_keV": 609,
+      "cartridge": 7,
+      "observed_point_corrected_rate_cps": 4.837865013010289,
+      "predicted_rate_cps": 3.755009904393538,
+      "residual_observed_minus_model_cps": 1.0828551086167506,
+      "relative_residual_observed_minus_model": 0.22382912828379234
+    },
+    {
+      "model_id": "original_sinh_609",
+      "energy_keV": 609,
+      "cartridge": 8,
+      "observed_point_corrected_rate_cps": 2.5299272700659787,
+      "predicted_rate_cps": 1.7986946344105004,
+      "residual_observed_minus_model_cps": 0.7312326356554784,
+      "relative_residual_observed_minus_model": 0.28903306601237133
+    },
+    {
+      "model_id": "original_sinh_609",
+      "energy_keV": 609,
+      "cartridge": 9,
+      "observed_point_corrected_rate_cps": 1.5466666666666666,
+      "predicted_rate_cps": 0.7225579765379405,
+      "residual_observed_minus_model_cps": 0.8241086901287261,
+      "relative_residual_observed_minus_model": 0.5328288944797799
+    },
+    {
+      "model_id": "original_cosh_609",
+      "energy_keV": 609,
+      "cartridge": 1,
+      "observed_point_corrected_rate_cps": 175.07835315296833,
+      "predicted_rate_cps": 244.45378769381807,
+      "residual_observed_minus_model_cps": -69.37543454084974,
+      "relative_residual_observed_minus_model": -0.39625363896492377
+    },
+    {
+      "model_id": "original_cosh_609",
+      "energy_keV": 609,
+      "cartridge": 2,
+      "observed_point_corrected_rate_cps": 127.06821865175866,
+      "predicted_rate_cps": 123.10672218184334,
+      "residual_observed_minus_model_cps": 3.9614964699153177,
+      "relative_residual_observed_minus_model": 0.031176139179003824
+    },
+    {
+      "model_id": "original_cosh_609",
+      "energy_keV": 609,
+      "cartridge": 3,
+      "observed_point_corrected_rate_cps": 63.416681802222314,
+      "predicted_rate_cps": 62.001068301697565,
+      "residual_observed_minus_model_cps": 1.4156135005247492,
+      "relative_residual_observed_minus_model": 0.02232241517996203
+    },
+    {
+      "model_id": "original_cosh_609",
+      "energy_keV": 609,
+      "cartridge": 4,
+      "observed_point_corrected_rate_cps": 38.16337661082122,
+      "predicted_rate_cps": 31.23520262303288,
+      "residual_observed_minus_model_cps": 6.9281739877883375,
+      "relative_residual_observed_minus_model": 0.18153985844700793
+    },
+    {
+      "model_id": "original_cosh_609",
+      "energy_keV": 609,
+      "cartridge": 5,
+      "observed_point_corrected_rate_cps": 19.507501663121168,
+      "predicted_rate_cps": 15.75406441715627,
+      "residual_observed_minus_model_cps": 3.753437245964898,
+      "relative_residual_observed_minus_model": 0.19240994109772405
+    },
+    {
+      "model_id": "original_cosh_609",
+      "energy_keV": 609,
+      "cartridge": 6,
+      "observed_point_corrected_rate_cps": 9.713939376973865,
+      "predicted_rate_cps": 7.982067211934394,
+      "residual_observed_minus_model_cps": 1.731872165039471,
+      "relative_residual_observed_minus_model": 0.17828731453119204
+    },
+    {
+      "model_id": "original_cosh_609",
+      "energy_keV": 609,
+      "cartridge": 7,
+      "observed_point_corrected_rate_cps": 4.837865013010289,
+      "predicted_rate_cps": 4.116038649730976,
+      "residual_observed_minus_model_cps": 0.7218263632793125,
+      "relative_residual_observed_minus_model": 0.14920349396647736
+    },
+    {
+      "model_id": "original_cosh_609",
+      "energy_keV": 609,
+      "cartridge": 8,
+      "observed_point_corrected_rate_cps": 2.5299272700659787,
+      "predicted_rate_cps": 2.2641647510292056,
+      "residual_observed_minus_model_cps": 0.26576251903677317,
+      "relative_residual_observed_minus_model": 0.10504749372887794
+    },
+    {
+      "model_id": "original_cosh_609",
+      "energy_keV": 609,
+      "cartridge": 9,
+      "observed_point_corrected_rate_cps": 1.5466666666666666,
+      "predicted_rate_cps": 1.5202440034766782,
+      "residual_observed_minus_model_cps": 0.026422663189988427,
+      "relative_residual_observed_minus_model": 0.017083618441802863
+    },
+    {
+      "model_id": "ln2_floor_draft_609",
+      "energy_keV": 609,
+      "cartridge": 1,
+      "observed_point_corrected_rate_cps": 175.07835315296833,
+      "predicted_rate_cps": 256.785316431312,
+      "residual_observed_minus_model_cps": -81.7069632783437,
+      "relative_residual_observed_minus_model": -0.46668798173441356
+    },
+    {
+      "model_id": "ln2_floor_draft_609",
+      "energy_keV": 609,
+      "cartridge": 2,
+      "observed_point_corrected_rate_cps": 127.06821865175866,
+      "predicted_rate_cps": 129.1647372569798,
+      "residual_observed_minus_model_cps": -2.0965186052211493,
+      "relative_residual_observed_minus_model": -0.016499157912702296
+    },
+    {
+      "model_id": "ln2_floor_draft_609",
+      "energy_keV": 609,
+      "cartridge": 3,
+      "observed_point_corrected_rate_cps": 63.416681802222314,
+      "predicted_rate_cps": 65.35152671113751,
+      "residual_observed_minus_model_cps": -1.9348449089151956,
+      "relative_residual_observed_minus_model": -0.03051003070374131
+    },
+    {
+      "model_id": "ln2_floor_draft_609",
+      "energy_keV": 609,
+      "cartridge": 4,
+      "observed_point_corrected_rate_cps": 38.16337661082122,
+      "predicted_rate_cps": 33.43907952086401,
+      "residual_observed_minus_model_cps": 4.724297089957204,
+      "relative_residual_observed_minus_model": 0.12379138088681678
+    },
+    {
+      "model_id": "ln2_floor_draft_609",
+      "energy_keV": 609,
+      "cartridge": 5,
+      "observed_point_corrected_rate_cps": 19.507501663121168,
+      "predicted_rate_cps": 17.471172091022478,
+      "residual_observed_minus_model_cps": 2.0363295720986905,
+      "relative_residual_observed_minus_model": 0.10438699979446169
+    },
+    {
+      "model_id": "ln2_floor_draft_609",
+      "energy_keV": 609,
+      "cartridge": 6,
+      "observed_point_corrected_rate_cps": 9.713939376973865,
+      "predicted_rate_cps": 9.46385070669219,
+      "residual_observed_minus_model_cps": 0.25008867028167536,
+      "relative_residual_observed_minus_model": 0.025745339823150536
+    },
+    {
+      "model_id": "ln2_floor_draft_609",
+      "energy_keV": 609,
+      "cartridge": 7,
+      "observed_point_corrected_rate_cps": 4.837865013010289,
+      "predicted_rate_cps": 5.413454675707999,
+      "residual_observed_minus_model_cps": -0.57558966269771,
+      "relative_residual_observed_minus_model": -0.1189759658754013
+    },
+    {
+      "model_id": "ln2_floor_draft_609",
+      "energy_keV": 609,
+      "cartridge": 8,
+      "observed_point_corrected_rate_cps": 2.5299272700659787,
+      "predicted_rate_cps": 3.294785982577806,
+      "residual_observed_minus_model_cps": -0.7648587125118271,
+      "relative_residual_observed_minus_model": -0.3023243875670308
+    },
+    {
+      "model_id": "ln2_floor_draft_609",
+      "energy_keV": 609,
+      "cartridge": 9,
+      "observed_point_corrected_rate_cps": 1.5466666666666666,
+      "predicted_rate_cps": 2.048510280736516,
+      "residual_observed_minus_model_cps": -0.5018436140698495,
+      "relative_residual_observed_minus_model": -0.32446785392447164
+    },
+    {
+      "model_id": "shift_delta_1_1_draft_609",
+      "energy_keV": 609,
+      "cartridge": 1,
+      "observed_point_corrected_rate_cps": 175.07835315296833,
+      "predicted_rate_cps": 244.54719739232203,
+      "residual_observed_minus_model_cps": -69.4688442393537,
+      "relative_residual_observed_minus_model": -0.3967871697916751
+    },
+    {
+      "model_id": "shift_delta_1_1_draft_609",
+      "energy_keV": 609,
+      "cartridge": 2,
+      "observed_point_corrected_rate_cps": 127.06821865175866,
+      "predicted_rate_cps": 123.14995026855897,
+      "residual_observed_minus_model_cps": 3.9182683831996883,
+      "relative_residual_observed_minus_model": 0.030835943281286082
+    },
+    {
+      "model_id": "shift_delta_1_1_draft_609",
+      "energy_keV": 609,
+      "cartridge": 3,
+      "observed_point_corrected_rate_cps": 63.416681802222314,
+      "predicted_rate_cps": 62.01526813786897,
+      "residual_observed_minus_model_cps": 1.401413664353342,
+      "relative_residual_observed_minus_model": 0.022098501916639732
+    },
+    {
+      "model_id": "shift_delta_1_1_draft_609",
+      "energy_keV": 609,
+      "cartridge": 4,
+      "observed_point_corrected_rate_cps": 38.16337661082122,
+      "predicted_rate_cps": 31.227322798962415,
+      "residual_observed_minus_model_cps": 6.936053811858802,
+      "relative_residual_observed_minus_model": 0.18174633451831632
+    },
+    {
+      "model_id": "shift_delta_1_1_draft_609",
+      "energy_keV": 609,
+      "cartridge": 5,
+      "observed_point_corrected_rate_cps": 19.507501663121168,
+      "predicted_rate_cps": 15.720248996165537,
+      "residual_observed_minus_model_cps": 3.787252666955631,
+      "relative_residual_observed_minus_model": 0.19414339838890865
+    },
+    {
+      "model_id": "shift_delta_1_1_draft_609",
+      "energy_keV": 609,
+      "cartridge": 6,
+      "observed_point_corrected_rate_cps": 9.713939376973865,
+      "predicted_rate_cps": 7.905768854777403,
+      "residual_observed_minus_model_cps": 1.8081705221964626,
+      "relative_residual_observed_minus_model": 0.1861418372120573
+    },
+    {
+      "model_id": "shift_delta_1_1_draft_609",
+      "energy_keV": 609,
+      "cartridge": 7,
+      "observed_point_corrected_rate_cps": 4.837865013010289,
+      "predicted_rate_cps": 3.9599212901160934,
+      "residual_observed_minus_model_cps": 0.8779437228941953,
+      "relative_residual_observed_minus_model": 0.18147338144681058
+    },
+    {
+      "model_id": "shift_delta_1_1_draft_609",
+      "energy_keV": 609,
+      "cartridge": 8,
+      "observed_point_corrected_rate_cps": 2.5299272700659787,
+      "predicted_rate_cps": 1.951833453271747,
+      "residual_observed_minus_model_cps": 0.5780938167942318,
+      "relative_residual_observed_minus_model": 0.22850214851399878
+    },
+    {
+      "model_id": "shift_delta_1_1_draft_609",
+      "energy_keV": 609,
+      "cartridge": 9,
+      "observed_point_corrected_rate_cps": 1.5466666666666666,
+      "predicted_rate_cps": 0.8988616361816747,
+      "residual_observed_minus_model_cps": 0.6478050304849919,
+      "relative_residual_observed_minus_model": 0.41883945936529654
+    },
+    {
+      "model_id": "original_sinh_352",
+      "energy_keV": 352,
+      "cartridge": 1,
+      "observed_point_corrected_rate_cps": 275.27510243979174,
+      "predicted_rate_cps": 367.99710853598197,
+      "residual_observed_minus_model_cps": -92.72200609619023,
+      "relative_residual_observed_minus_model": -0.3368339718135984
+    },
+    {
+      "model_id": "original_sinh_352",
+      "energy_keV": 352,
+      "cartridge": 2,
+      "observed_point_corrected_rate_cps": 199.85991223068118,
+      "predicted_rate_cps": 185.31596956446674,
+      "residual_observed_minus_model_cps": 14.543942666214434,
+      "relative_residual_observed_minus_model": 0.07277068474556121
+    },
+    {
+      "model_id": "original_sinh_352",
+      "energy_keV": 352,
+      "cartridge": 3,
+      "observed_point_corrected_rate_cps": 100.99431336547582,
+      "predicted_rate_cps": 93.31790140036372,
+      "residual_observed_minus_model_cps": 7.676411965112095,
+      "relative_residual_observed_minus_model": 0.07600835838482191
+    },
+    {
+      "model_id": "original_sinh_352",
+      "energy_keV": 352,
+      "cartridge": 4,
+      "observed_point_corrected_rate_cps": 58.78057959869074,
+      "predicted_rate_cps": 46.98429421162451,
+      "residual_observed_minus_model_cps": 11.796285387066234,
+      "relative_residual_observed_minus_model": 0.20068337991224877
+    },
+    {
+      "model_id": "original_sinh_352",
+      "energy_keV": 352,
+      "cartridge": 5,
+      "observed_point_corrected_rate_cps": 30.608876504141655,
+      "predicted_rate_cps": 23.642122077525023,
+      "residual_observed_minus_model_cps": 6.966754426616632,
+      "relative_residual_observed_minus_model": 0.2276056890122696
+    },
+    {
+      "model_id": "original_sinh_352",
+      "energy_keV": 352,
+      "cartridge": 6,
+      "observed_point_corrected_rate_cps": 15.025359100762893,
+      "predicted_rate_cps": 11.869056671962857,
+      "residual_observed_minus_model_cps": 3.1563024288000356,
+      "relative_residual_observed_minus_model": 0.21006502457833293
+    },
+    {
+      "model_id": "original_sinh_352",
+      "energy_keV": 352,
+      "cartridge": 7,
+      "observed_point_corrected_rate_cps": 7.561395570380703,
+      "predicted_rate_cps": 5.904030957369532,
+      "residual_observed_minus_model_cps": 1.657364613011171,
+      "relative_residual_observed_minus_model": 0.21918766153477745
+    },
+    {
+      "model_id": "original_sinh_352",
+      "energy_keV": 352,
+      "cartridge": 8,
+      "observed_point_corrected_rate_cps": 3.915151532373232,
+      "predicted_rate_cps": 2.828101409796202,
+      "residual_observed_minus_model_cps": 1.08705012257703,
+      "relative_residual_observed_minus_model": 0.27765211987033794
+    },
+    {
+      "model_id": "original_sinh_352",
+      "energy_keV": 352,
+      "cartridge": 9,
+      "observed_point_corrected_rate_cps": 2.6855555555555557,
+      "predicted_rate_cps": 1.1360834646488849,
+      "residual_observed_minus_model_cps": 1.5494720909066708,
+      "relative_residual_observed_minus_model": 0.5769651972759634
+    },
+    {
+      "model_id": "original_cosh_352",
+      "energy_keV": 352,
+      "cartridge": 1,
+      "observed_point_corrected_rate_cps": 275.27510243979174,
+      "predicted_rate_cps": 384.3120174475634,
+      "residual_observed_minus_model_cps": -109.03691500777165,
+      "relative_residual_observed_minus_model": -0.39610162358079676
+    },
+    {
+      "model_id": "original_cosh_352",
+      "energy_keV": 352,
+      "cartridge": 2,
+      "observed_point_corrected_rate_cps": 199.85991223068118,
+      "predicted_rate_cps": 193.5392092280408,
+      "residual_observed_minus_model_cps": 6.320703002640386,
+      "relative_residual_observed_minus_model": 0.03162566685881929
+    },
+    {
+      "model_id": "original_cosh_352",
+      "energy_keV": 352,
+      "cartridge": 3,
+      "observed_point_corrected_rate_cps": 100.99431336547582,
+      "predicted_rate_cps": 97.47345650775587,
+      "residual_observed_minus_model_cps": 3.5208568577199486,
+      "relative_residual_observed_minus_model": 0.034861931730539676
+    },
+    {
+      "model_id": "original_cosh_352",
+      "energy_keV": 352,
+      "cartridge": 4,
+      "observed_point_corrected_rate_cps": 58.78057959869074,
+      "predicted_rate_cps": 49.10565652791789,
+      "residual_observed_minus_model_cps": 9.674923070772856,
+      "relative_residual_observed_minus_model": 0.16459386989420485
+    },
+    {
+      "model_id": "original_cosh_352",
+      "energy_keV": 352,
+      "cartridge": 5,
+      "observed_point_corrected_rate_cps": 30.608876504141655,
+      "predicted_rate_cps": 24.767365383348114,
+      "residual_observed_minus_model_cps": 5.841511120793541,
+      "relative_residual_observed_minus_model": 0.19084369594562323
+    },
+    {
+      "model_id": "original_cosh_352",
+      "energy_keV": 352,
+      "cartridge": 6,
+      "observed_point_corrected_rate_cps": 15.025359100762893,
+      "predicted_rate_cps": 12.548810892072469,
+      "residual_observed_minus_model_cps": 2.4765482086904242,
+      "relative_residual_observed_minus_model": 0.16482456040366322
+    },
+    {
+      "model_id": "original_cosh_352",
+      "energy_keV": 352,
+      "cartridge": 7,
+      "observed_point_corrected_rate_cps": 7.561395570380703,
+      "predicted_rate_cps": 6.470929054908071,
+      "residual_observed_minus_model_cps": 1.0904665154726318,
+      "relative_residual_observed_minus_model": 0.14421498059752066
+    },
+    {
+      "model_id": "original_cosh_352",
+      "energy_keV": 352,
+      "cartridge": 8,
+      "observed_point_corrected_rate_cps": 3.915151532373232,
+      "predicted_rate_cps": 3.559550995346263,
+      "residual_observed_minus_model_cps": 0.35560053702696903,
+      "relative_residual_observed_minus_model": 0.09082676215380509
+    },
+    {
+      "model_id": "original_cosh_352",
+      "energy_keV": 352,
+      "cartridge": 9,
+      "observed_point_corrected_rate_cps": 2.6855555555555557,
+      "predicted_rate_cps": 2.3900142660929515,
+      "residual_observed_minus_model_cps": 0.29554128946260416,
+      "relative_residual_observed_minus_model": 0.11004847352765566
+    },
+    {
+      "model_id": "ln2_floor_draft_352",
+      "energy_keV": 352,
+      "cartridge": 1,
+      "observed_point_corrected_rate_cps": 275.27510243979174,
+      "predicted_rate_cps": 402.59968036397134,
+      "residual_observed_minus_model_cps": -127.32457792417961,
+      "relative_residual_observed_minus_model": -0.46253575712328754
+    },
+    {
+      "model_id": "ln2_floor_draft_352",
+      "energy_keV": 352,
+      "cartridge": 2,
+      "observed_point_corrected_rate_cps": 199.85991223068118,
+      "predicted_rate_cps": 202.57026194179107,
+      "residual_observed_minus_model_cps": -2.710349711109899,
+      "relative_residual_observed_minus_model": -0.013561247380022736
+    },
+    {
+      "model_id": "ln2_floor_draft_352",
+      "energy_keV": 352,
+      "cartridge": 3,
+      "observed_point_corrected_rate_cps": 100.99431336547582,
+      "predicted_rate_cps": 102.5509744905063,
+      "residual_observed_minus_model_cps": -1.5566611250304874,
+      "relative_residual_observed_minus_model": -0.015413354209333343
+    },
+    {
+      "model_id": "ln2_floor_draft_352",
+      "energy_keV": 352,
+      "cartridge": 4,
+      "observed_point_corrected_rate_cps": 58.78057959869074,
+      "predicted_rate_cps": 52.5321742844748,
+      "residual_observed_minus_model_cps": 6.248405314215944,
+      "relative_residual_observed_minus_model": 0.10630050531783322
+    },
+    {
+      "model_id": "ln2_floor_draft_352",
+      "energy_keV": 352,
+      "cartridge": 5,
+      "observed_point_corrected_rate_cps": 30.608876504141655,
+      "predicted_rate_cps": 27.50446122068062,
+      "residual_observed_minus_model_cps": 3.1044152834610337,
+      "relative_residual_observed_minus_model": 0.10142205915466967
+    },
+    {
+      "model_id": "ln2_floor_draft_352",
+      "energy_keV": 352,
+      "cartridge": 6,
+      "observed_point_corrected_rate_cps": 15.025359100762893,
+      "predicted_rate_cps": 14.953978767226765,
+      "residual_observed_minus_model_cps": 0.07138033353612805,
+      "relative_residual_observed_minus_model": 0.00475065740908008
+    },
+    {
+      "model_id": "ln2_floor_draft_352",
+      "energy_keV": 352,
+      "cartridge": 7,
+      "observed_point_corrected_rate_cps": 7.561395570380703,
+      "predicted_rate_cps": 8.605485697386296,
+      "residual_observed_minus_model_cps": -1.0440901270055933,
+      "relative_residual_observed_minus_model": -0.13808166988319925
+    },
+    {
+      "model_id": "ln2_floor_draft_352",
+      "energy_keV": 352,
+      "cartridge": 8,
+      "observed_point_corrected_rate_cps": 3.915151532373232,
+      "predicted_rate_cps": 5.284735476238971,
+      "residual_observed_minus_model_cps": -1.3695839438657393,
+      "relative_residual_observed_minus_model": -0.34981633087277825
+    },
+    {
+      "model_id": "ln2_floor_draft_352",
+      "energy_keV": 352,
+      "cartridge": 9,
+      "observed_point_corrected_rate_cps": 2.6855555555555557,
+      "predicted_rate_cps": 3.3313529932111345,
+      "residual_observed_minus_model_cps": -0.6457974376555788,
+      "relative_residual_observed_minus_model": -0.24047070496070375
+    },
+    {
+      "model_id": "shift_delta_1_1_draft_352",
+      "energy_keV": 352,
+      "cartridge": 1,
+      "observed_point_corrected_rate_cps": 275.27510243979174,
+      "predicted_rate_cps": 384.3919650863017,
+      "residual_observed_minus_model_cps": -109.11686264650996,
+      "relative_residual_observed_minus_model": -0.39639205173078096
+    },
+    {
+      "model_id": "shift_delta_1_1_draft_352",
+      "energy_keV": 352,
+      "cartridge": 2,
+      "observed_point_corrected_rate_cps": 199.85991223068118,
+      "predicted_rate_cps": 193.57347738509785,
+      "residual_observed_minus_model_cps": 6.286434845583329,
+      "relative_residual_observed_minus_model": 0.03145420597567078
+    },
+    {
+      "model_id": "shift_delta_1_1_draft_352",
+      "energy_keV": 352,
+      "cartridge": 3,
+      "observed_point_corrected_rate_cps": 100.99431336547582,
+      "predicted_rate_cps": 97.47881406559847,
+      "residual_observed_minus_model_cps": 3.515499299877348,
+      "relative_residual_observed_minus_model": 0.0348088836166007
+    },
+    {
+      "model_id": "shift_delta_1_1_draft_352",
+      "energy_keV": 352,
+      "cartridge": 4,
+      "observed_point_corrected_rate_cps": 58.78057959869074,
+      "predicted_rate_cps": 49.084725169924624,
+      "residual_observed_minus_model_cps": 9.695854428766118,
+      "relative_residual_observed_minus_model": 0.16494996298032558
+    },
+    {
+      "model_id": "shift_delta_1_1_draft_352",
+      "energy_keV": 352,
+      "cartridge": 5,
+      "observed_point_corrected_rate_cps": 30.608876504141655,
+      "predicted_rate_cps": 24.709902496195014,
+      "residual_observed_minus_model_cps": 5.8989740079466415,
+      "relative_residual_observed_minus_model": 0.19272102349618933
+    },
+    {
+      "model_id": "shift_delta_1_1_draft_352",
+      "energy_keV": 352,
+      "cartridge": 6,
+      "observed_point_corrected_rate_cps": 15.025359100762893,
+      "predicted_rate_cps": 12.426697414694553,
+      "residual_observed_minus_model_cps": 2.59866168606834,
+      "relative_residual_observed_minus_model": 0.17295171906649448
+    },
+    {
+      "model_id": "shift_delta_1_1_draft_352",
+      "energy_keV": 352,
+      "cartridge": 7,
+      "observed_point_corrected_rate_cps": 7.561395570380703,
+      "predicted_rate_cps": 6.224409613056555,
+      "residual_observed_minus_model_cps": 1.3369859573241474,
+      "relative_residual_observed_minus_model": 0.17681735400292417
+    },
+    {
+      "model_id": "shift_delta_1_1_draft_352",
+      "energy_keV": 352,
+      "cartridge": 8,
+      "observed_point_corrected_rate_cps": 3.915151532373232,
+      "predicted_rate_cps": 3.06799302803159,
+      "residual_observed_minus_model_cps": 0.8471585043416421,
+      "relative_residual_observed_minus_model": 0.21637949319119287
+    },
+    {
+      "model_id": "shift_delta_1_1_draft_352",
+      "energy_keV": 352,
+      "cartridge": 9,
+      "observed_point_corrected_rate_cps": 2.6855555555555557,
+      "predicted_rate_cps": 1.4128773273907507,
+      "residual_observed_minus_model_cps": 1.272678228164805,
+      "relative_residual_observed_minus_model": 0.4738975611701797
+    },
+    {
+      "model_id": "original_sinh_plus_075_609",
+      "energy_keV": 609,
+      "cartridge": 1,
+      "observed_point_corrected_rate_cps": 175.07835315296833,
+      "predicted_rate_cps": 234.79904163247383,
+      "residual_observed_minus_model_cps": -59.7206884795055,
+      "relative_residual_observed_minus_model": -0.34110835179793314
+    },
+    {
+      "model_id": "original_sinh_plus_075_609",
+      "energy_keV": 609,
+      "cartridge": 2,
+      "observed_point_corrected_rate_cps": 127.06821865175866,
+      "predicted_rate_cps": 118.61240725724402,
+      "residual_observed_minus_model_cps": 8.45581139451464,
+      "relative_residual_observed_minus_model": 0.06654544688069104
+    },
+    {
+      "model_id": "original_sinh_plus_075_609",
+      "energy_keV": 609,
+      "cartridge": 3,
+      "observed_point_corrected_rate_cps": 63.416681802222314,
+      "predicted_rate_cps": 60.100915763440725,
+      "residual_observed_minus_model_cps": 3.3157660387815895,
+      "relative_residual_observed_minus_model": 0.05228539154922159
+    },
+    {
+      "model_id": "original_sinh_plus_075_609",
+      "energy_keV": 609,
+      "cartridge": 4,
+      "observed_point_corrected_rate_cps": 38.16337661082122,
+      "predicted_rate_cps": 30.632378901718134,
+      "residual_observed_minus_model_cps": 7.530997709103083,
+      "relative_residual_observed_minus_model": 0.1973357280699232
+    },
+    {
+      "model_id": "original_sinh_plus_075_609",
+      "energy_keV": 609,
+      "cartridge": 5,
+      "observed_point_corrected_rate_cps": 19.507501663121168,
+      "predicted_rate_cps": 15.786574706840769,
+      "residual_observed_minus_model_cps": 3.7209269562803993,
+      "relative_residual_observed_minus_model": 0.19074338787907386
+    },
+    {
+      "model_id": "original_sinh_plus_075_609",
+      "energy_keV": 609,
+      "cartridge": 6,
+      "observed_point_corrected_rate_cps": 9.713939376973865,
+      "predicted_rate_cps": 8.298812951835476,
+      "residual_observed_minus_model_cps": 1.4151264251383893,
+      "relative_residual_observed_minus_model": 0.145679972894708
+    },
+    {
+      "model_id": "original_sinh_plus_075_609",
+      "energy_keV": 609,
+      "cartridge": 7,
+      "observed_point_corrected_rate_cps": 4.837865013010289,
+      "predicted_rate_cps": 4.505009904393538,
+      "residual_observed_minus_model_cps": 0.3328551086167506,
+      "relative_residual_observed_minus_model": 0.068802066143147
+    },
+    {
+      "model_id": "original_sinh_plus_075_609",
+      "energy_keV": 609,
+      "cartridge": 8,
+      "observed_point_corrected_rate_cps": 2.5299272700659787,
+      "predicted_rate_cps": 2.5486946344105004,
+      "residual_observed_minus_model_cps": -0.018767364344521642,
+      "relative_residual_observed_minus_model": -0.007418143820408008
+    },
+    {
+      "model_id": "original_sinh_plus_075_609",
+      "energy_keV": 609,
+      "cartridge": 9,
+      "observed_point_corrected_rate_cps": 1.5466666666666666,
+      "predicted_rate_cps": 1.4725579765379404,
+      "residual_observed_minus_model_cps": 0.07410869012872623,
+      "relative_residual_observed_minus_model": 0.04791510137633161
+    }
+  ],
+  "fixed_model_metrics": [
+    {
+      "model_id": "original_sinh_609",
+      "energy_keV": 609,
+      "range": "1-9",
+      "sse_cps_squared": 3674.457831490616,
+      "rmse_cps": 20.20576878982451,
+      "r_squared_unlogged_point_corrected_rate": 0.8818136384957391,
+      "maximum_absolute_relative_residual": 0.5328288944797799,
+      "mean_observed_minus_model_cps": -3.1270959468096047
+    },
+    {
+      "model_id": "original_sinh_609",
+      "energy_keV": 609,
+      "range": "2-9",
+      "sse_cps_squared": 196.91573174373383,
+      "rmse_cps": 4.961296853441318,
+      "r_squared_unlogged_point_corrected_rate": 0.9851213976927407,
+      "maximum_absolute_relative_residual": 0.5328288944797799,
+      "mean_observed_minus_model_cps": 3.853353119777382
+    },
+    {
+      "model_id": "original_cosh_609",
+      "energy_keV": 609,
+      "range": "1-9",
+      "sse_cps_squared": 4896.327961928628,
+      "rmse_cps": 23.32458874694883,
+      "r_squared_unlogged_point_corrected_rate": 0.8425130418989828,
+      "maximum_absolute_relative_residual": 0.39625363896492377,
+      "mean_observed_minus_model_cps": -5.618981069567877
+    },
+    {
+      "model_id": "original_cosh_609",
+      "energy_keV": 609,
+      "range": "2-9",
+      "sse_cps_squared": 83.37704419690134,
+      "rmse_cps": 3.2283324681037215,
+      "r_squared_unlogged_point_corrected_rate": 0.9937001788979719,
+      "maximum_absolute_relative_residual": 0.19240994109772405,
+      "mean_observed_minus_model_cps": 2.3505756143423557
+    },
+    {
+      "model_id": "ln2_floor_draft_609",
+      "energy_keV": 609,
+      "range": "1-9",
+      "sse_cps_squared": 6711.8631880384755,
+      "rmse_cps": 27.30865387471011,
+      "r_squared_unlogged_point_corrected_rate": 0.7841176234734859,
+      "maximum_absolute_relative_residual": 0.46668798173441356,
+      "mean_observed_minus_model_cps": -8.952211494380206
+    },
+    {
+      "model_id": "ln2_floor_draft_609",
+      "energy_keV": 609,
+      "range": "2-9",
+      "sse_cps_squared": 35.83533986987089,
+      "rmse_cps": 2.1164634378448075,
+      "r_squared_unlogged_point_corrected_rate": 0.9972923454832793,
+      "maximum_absolute_relative_residual": 0.32446785392447164,
+      "mean_observed_minus_model_cps": 0.14213247861522985
+    },
+    {
+      "model_id": "shift_delta_1_1_draft_609",
+      "energy_keV": 609,
+      "range": "1-9",
+      "sse_cps_squared": 4910.483342213815,
+      "rmse_cps": 23.358280335803393,
+      "r_squared_unlogged_point_corrected_rate": 0.8420577440106037,
+      "maximum_absolute_relative_residual": 0.41883945936529654,
+      "mean_observed_minus_model_cps": -5.501538068957373
+    },
+    {
+      "model_id": "shift_delta_1_1_draft_609",
+      "energy_keV": 609,
+      "range": "2-9",
+      "sse_cps_squared": 84.56302226222904,
+      "rmse_cps": 3.2512117406866365,
+      "r_squared_unlogged_point_corrected_rate": 0.9936105685056336,
+      "maximum_absolute_relative_residual": 0.41883945936529654,
+      "mean_observed_minus_model_cps": 2.494375202342168
+    },
+    {
+      "model_id": "original_sinh_352",
+      "energy_keV": 352,
+      "range": "1-9",
+      "sse_cps_squared": 9071.803643824085,
+      "rmse_cps": 31.748672139904066,
+      "r_squared_unlogged_point_corrected_rate": 0.8821746807668417,
+      "maximum_absolute_relative_residual": 0.5769651972759634,
+      "mean_observed_minus_model_cps": -4.920935821765102
+    },
+    {
+      "model_id": "original_sinh_352",
+      "energy_keV": 352,
+      "range": "2-9",
+      "sse_cps_squared": 474.43322932214767,
+      "rmse_cps": 7.700919014329942,
+      "r_squared_unlogged_point_corrected_rate": 0.9855580550098584,
+      "maximum_absolute_relative_residual": 0.5769651972759634,
+      "mean_observed_minus_model_cps": 6.054197962538038
+    },
+    {
+      "model_id": "original_cosh_352",
+      "energy_keV": 352,
+      "range": "1-9",
+      "sse_cps_squared": 12076.660147118933,
+      "rmse_cps": 36.631286183502475,
+      "r_squared_unlogged_point_corrected_rate": 0.8431473615422268,
+      "maximum_absolute_relative_residual": 0.39610162358079676,
+      "mean_observed_minus_model_cps": -8.828973822799144
+    },
+    {
+      "model_id": "original_cosh_352",
+      "energy_keV": 352,
+      "range": "2-9",
+      "sse_cps_squared": 187.61131270691413,
+      "rmse_cps": 4.842666010408344,
+      "r_squared_unlogged_point_corrected_rate": 0.9942890335453258,
+      "maximum_absolute_relative_residual": 0.19084369594562323,
+      "mean_observed_minus_model_cps": 3.69701882532242
+    },
+    {
+      "model_id": "ln2_floor_draft_352",
+      "energy_keV": 352,
+      "range": "1-9",
+      "sse_cps_squared": 16273.38533006319,
+      "rmse_cps": 42.52239322477718,
+      "r_squared_unlogged_point_corrected_rate": 0.7886399555369309,
+      "maximum_absolute_relative_residual": 0.46253575712328754,
+      "mean_observed_minus_model_cps": -13.914095481959311
+    },
+    {
+      "model_id": "ln2_floor_draft_352",
+      "energy_keV": 352,
+      "range": "2-9",
+      "sse_cps_squared": 61.83718649270683,
+      "rmse_cps": 2.780224507407334,
+      "r_squared_unlogged_point_corrected_rate": 0.9981176503025542,
+      "maximum_absolute_relative_residual": 0.34981633087277825,
+      "mean_observed_minus_model_cps": 0.262214823318226
+    },
+    {
+      "model_id": "shift_delta_1_1_draft_352",
+      "energy_keV": 352,
+      "range": "1-9",
+      "sse_cps_squared": 12098.05316107542,
+      "rmse_cps": 36.66371679205997,
+      "r_squared_unlogged_point_corrected_rate": 0.8428695073472124,
+      "maximum_absolute_relative_residual": 0.4738975611701797,
+      "mean_observed_minus_model_cps": -8.629401743159733
+    },
+    {
+      "model_id": "shift_delta_1_1_draft_352",
+      "energy_keV": 352,
+      "range": "2-9",
+      "sse_cps_squared": 191.5634472581006,
+      "rmse_cps": 4.893406881433688,
+      "r_squared_unlogged_point_corrected_rate": 0.9941687289244555,
+      "maximum_absolute_relative_residual": 0.4738975611701797,
+      "mean_observed_minus_model_cps": 3.9315308697590465
+    },
+    {
+      "model_id": "original_sinh_plus_075_609",
+      "energy_keV": 609,
+      "range": "1-9",
+      "sse_cps_squared": 3721.736126772546,
+      "rmse_cps": 20.335344509205164,
+      "r_squared_unlogged_point_corrected_rate": 0.8802929652552931,
+      "maximum_absolute_relative_residual": 0.34110835179793314,
+      "mean_observed_minus_model_cps": -3.8770959468096047
+    },
+    {
+      "model_id": "original_sinh_plus_075_609",
+      "energy_keV": 609,
+      "range": "2-9",
+      "sse_cps_squared": 155.17549430640523,
+      "rmse_cps": 4.404195362185998,
+      "r_squared_unlogged_point_corrected_rate": 0.9882752157627404,
+      "maximum_absolute_relative_residual": 0.1973357280699232,
+      "mean_observed_minus_model_cps": 3.103353119777382
+    }
+  ],
+  "leak_draft_table_comparisons": [
+    {
+      "cartridge": 1,
+      "energy_keV": 609,
+      "supplied_prediction_cps": 254.7,
+      "supplied_decimal_places": 1,
+      "recomputed_prediction_cps": 256.785316431312,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed_cps": -2.0853164313120374
+    },
+    {
+      "cartridge": 1,
+      "energy_keV": 352,
+      "supplied_prediction_cps": 399.5,
+      "supplied_decimal_places": 1,
+      "recomputed_prediction_cps": 402.59968036397134,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed_cps": -3.099680363971345
+    },
+    {
+      "cartridge": 2,
+      "energy_keV": 609,
+      "supplied_prediction_cps": 128.08,
+      "supplied_decimal_places": 2,
+      "recomputed_prediction_cps": 129.1647372569798,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed_cps": -1.0847372569797926
+    },
+    {
+      "cartridge": 2,
+      "energy_keV": 352,
+      "supplied_prediction_cps": 200.91,
+      "supplied_decimal_places": 2,
+      "recomputed_prediction_cps": 202.57026194179107,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed_cps": -1.6602619417910773
+    },
+    {
+      "cartridge": 3,
+      "energy_keV": 609,
+      "supplied_prediction_cps": 64.81,
+      "supplied_decimal_places": 2,
+      "recomputed_prediction_cps": 65.35152671113751,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed_cps": -0.5415267111375073
+    },
+    {
+      "cartridge": 3,
+      "energy_keV": 352,
+      "supplied_prediction_cps": 101.72,
+      "supplied_decimal_places": 2,
+      "recomputed_prediction_cps": 102.5509744905063,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed_cps": -0.830974490506307
+    },
+    {
+      "cartridge": 4,
+      "energy_keV": 609,
+      "supplied_prediction_cps": 33.17,
+      "supplied_decimal_places": 2,
+      "recomputed_prediction_cps": 33.43907952086401,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed_cps": -0.2690795208640111
+    },
+    {
+      "cartridge": 4,
+      "energy_keV": 352,
+      "supplied_prediction_cps": 52.12,
+      "supplied_decimal_places": 2,
+      "recomputed_prediction_cps": 52.5321742844748,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed_cps": -0.4121742844748013
+    },
+    {
+      "cartridge": 5,
+      "energy_keV": 609,
+      "supplied_prediction_cps": 17.34,
+      "supplied_decimal_places": 2,
+      "recomputed_prediction_cps": 17.471172091022478,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed_cps": -0.13117209102247784
+    },
+    {
+      "cartridge": 5,
+      "energy_keV": 352,
+      "supplied_prediction_cps": 27.3,
+      "supplied_decimal_places": 2,
+      "recomputed_prediction_cps": 27.50446122068062,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed_cps": -0.20446122068062067
+    },
+    {
+      "cartridge": 6,
+      "energy_keV": 609,
+      "supplied_prediction_cps": 9.41,
+      "supplied_decimal_places": 2,
+      "recomputed_prediction_cps": 9.46385070669219,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed_cps": -0.05385070669218983
+    },
+    {
+      "cartridge": 6,
+      "energy_keV": 352,
+      "supplied_prediction_cps": 14.87,
+      "supplied_decimal_places": 2,
+      "recomputed_prediction_cps": 14.953978767226765,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed_cps": -0.08397876722676578
+    },
+    {
+      "cartridge": 7,
+      "energy_keV": 609,
+      "supplied_prediction_cps": 5.43,
+      "supplied_decimal_places": 2,
+      "recomputed_prediction_cps": 5.413454675707999,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed_cps": 0.016545324292001062
+    },
+    {
+      "cartridge": 7,
+      "energy_keV": 352,
+      "supplied_prediction_cps": 8.63,
+      "supplied_decimal_places": 2,
+      "recomputed_prediction_cps": 8.605485697386296,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed_cps": 0.024514302613704686
+    },
+    {
+      "cartridge": 8,
+      "energy_keV": 609,
+      "supplied_prediction_cps": 3.38,
+      "supplied_decimal_places": 2,
+      "recomputed_prediction_cps": 3.294785982577806,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed_cps": 0.08521401742219403
+    },
+    {
+      "cartridge": 8,
+      "energy_keV": 352,
+      "supplied_prediction_cps": 5.42,
+      "supplied_decimal_places": 2,
+      "recomputed_prediction_cps": 5.284735476238971,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed_cps": 0.1352645237610286
+    },
+    {
+      "cartridge": 9,
+      "energy_keV": 609,
+      "supplied_prediction_cps": 1.55,
+      "supplied_decimal_places": 2,
+      "recomputed_prediction_cps": 2.048510280736516,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed_cps": -0.49851028073651604
+    },
+    {
+      "cartridge": 9,
+      "energy_keV": 352,
+      "supplied_prediction_cps": 2.55,
+      "supplied_decimal_places": 2,
+      "recomputed_prediction_cps": 3.3313529932111345,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed_cps": -0.7813529932111347
+    }
+  ],
+  "leak_draft_table_disagreements": 18,
+  "manuscript_table_comparisons": [
+    {
+      "cartridge": 1,
+      "quantity": "observed609",
+      "parameter_provenance": "source observed count areas",
+      "supplied": 175.08,
+      "recomputed": 175.07835315296833,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": 0.0016468470316794992
+    },
+    {
+      "cartridge": 1,
+      "quantity": "original_sinh_609",
+      "parameter_provenance": "explicit manuscript609sinh plot",
+      "supplied": 234.18,
+      "recomputed": 234.04904163247383,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.1309583675261763
+    },
+    {
+      "cartridge": 1,
+      "quantity": "shift_delta_1_1_draft_609",
+      "parameter_provenance": "amplitude0.675 from companion leak draft; manuscript omits this amplitude",
+      "supplied": 243.1,
+      "recomputed": 244.54719739232203,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -1.447197392322039
+    },
+    {
+      "cartridge": 1,
+      "quantity": "original_cosh_609",
+      "parameter_provenance": "explicit manuscript609cosh plot",
+      "supplied": 243.82,
+      "recomputed": 244.45378769381807,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -0.6337876938180784
+    },
+    {
+      "cartridge": 1,
+      "quantity": "normalized_observed609",
+      "parameter_provenance": "source observed count areas divided by10-i",
+      "supplied": 19.45,
+      "recomputed": 19.453150350329814,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": -0.0031503503298146995
+    },
+    {
+      "cartridge": 1,
+      "quantity": "normalized_original_sinh_609",
+      "parameter_provenance": "explicit manuscript normalized609sinh plot",
+      "supplied": 26.02,
+      "recomputed": 26.00544907027487,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.014550929725128725
+    },
+    {
+      "cartridge": 1,
+      "quantity": "observed352",
+      "parameter_provenance": "source observed count areas",
+      "supplied": 275.28,
+      "recomputed": 275.27510243979174,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": 0.004897560208235063
+    },
+    {
+      "cartridge": 1,
+      "quantity": "original_sinh_352",
+      "parameter_provenance": "amplitude1.533 from original CSV; manuscript omits this amplitude",
+      "supplied": 368.18,
+      "recomputed": 367.99710853598197,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.18289146401804146
+    },
+    {
+      "cartridge": 1,
+      "quantity": "original_cosh_352",
+      "parameter_provenance": "explicit manuscript352cosh plot despite tablelabel Leaking/cosh",
+      "supplied": 383.31,
+      "recomputed": 384.3120174475634,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -1.0020174475633894
+    },
+    {
+      "cartridge": 2,
+      "quantity": "observed609",
+      "parameter_provenance": "source observed count areas",
+      "supplied": 127.07,
+      "recomputed": 127.06821865175866,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": 0.001781348241337355
+    },
+    {
+      "cartridge": 2,
+      "quantity": "original_sinh_609",
+      "parameter_provenance": "explicit manuscript609sinh plot",
+      "supplied": 117.99,
+      "recomputed": 117.86240725724402,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.12759274275597932
+    },
+    {
+      "cartridge": 2,
+      "quantity": "shift_delta_1_1_draft_609",
+      "parameter_provenance": "amplitude0.675 from companion leak draft; manuscript omits this amplitude",
+      "supplied": 122.49,
+      "recomputed": 123.14995026855897,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -0.6599502685589727
+    },
+    {
+      "cartridge": 2,
+      "quantity": "original_cosh_609",
+      "parameter_provenance": "explicit manuscript609cosh plot",
+      "supplied": 122.86,
+      "recomputed": 123.10672218184334,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -0.24672218184333872
+    },
+    {
+      "cartridge": 2,
+      "quantity": "normalized_observed609",
+      "parameter_provenance": "source observed count areas divided by10-i",
+      "supplied": 15.88,
+      "recomputed": 15.883527331469832,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": -0.0035273314698311964
+    },
+    {
+      "cartridge": 2,
+      "quantity": "normalized_original_sinh_609",
+      "parameter_provenance": "explicit manuscript normalized609sinh plot",
+      "supplied": 14.75,
+      "recomputed": 14.732800907155502,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.017199092844498054
+    },
+    {
+      "cartridge": 2,
+      "quantity": "observed352",
+      "parameter_provenance": "source observed count areas",
+      "supplied": 199.86,
+      "recomputed": 199.85991223068118,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": 8.776931883858197e-05
+    },
+    {
+      "cartridge": 2,
+      "quantity": "original_sinh_352",
+      "parameter_provenance": "amplitude1.533 from original CSV; manuscript omits this amplitude",
+      "supplied": 185.5,
+      "recomputed": 185.31596956446674,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.18403043553325915
+    },
+    {
+      "cartridge": 2,
+      "quantity": "original_cosh_352",
+      "parameter_provenance": "explicit manuscript352cosh plot despite tablelabel Leaking/cosh",
+      "supplied": 193.14,
+      "recomputed": 193.5392092280408,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -0.39920922804080305
+    },
+    {
+      "cartridge": 3,
+      "quantity": "observed609",
+      "parameter_provenance": "source observed count areas",
+      "supplied": 63.42,
+      "recomputed": 63.416681802222314,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": 0.0033181977776877147
+    },
+    {
+      "cartridge": 3,
+      "quantity": "original_sinh_609",
+      "parameter_provenance": "explicit manuscript609sinh plot",
+      "supplied": 59.43,
+      "recomputed": 59.350915763440725,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.07908423655927521
+    },
+    {
+      "cartridge": 3,
+      "quantity": "shift_delta_1_1_draft_609",
+      "parameter_provenance": "amplitude0.675 from companion leak draft; manuscript omits this amplitude",
+      "supplied": 61.71,
+      "recomputed": 62.01526813786897,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -0.3052681378689712
+    },
+    {
+      "cartridge": 3,
+      "quantity": "original_cosh_609",
+      "parameter_provenance": "explicit manuscript609cosh plot",
+      "supplied": 61.91,
+      "recomputed": 62.001068301697565,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -0.09106830169756819
+    },
+    {
+      "cartridge": 3,
+      "quantity": "normalized_observed609",
+      "parameter_provenance": "source observed count areas divided by10-i",
+      "supplied": 9.06,
+      "recomputed": 9.059525971746044,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": 0.0004740282539561491
+    },
+    {
+      "cartridge": 3,
+      "quantity": "normalized_original_sinh_609",
+      "parameter_provenance": "explicit manuscript normalized609sinh plot",
+      "supplied": 8.49,
+      "recomputed": 8.478702251920103,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.011297748079897474
+    },
+    {
+      "cartridge": 3,
+      "quantity": "observed352",
+      "parameter_provenance": "source observed count areas",
+      "supplied": 100.99,
+      "recomputed": 100.99431336547582,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": -0.004313365475823616
+    },
+    {
+      "cartridge": 3,
+      "quantity": "original_sinh_352",
+      "parameter_provenance": "amplitude1.533 from original CSV; manuscript omits this amplitude",
+      "supplied": 93.43,
+      "recomputed": 93.31790140036372,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.11209859963628332
+    },
+    {
+      "cartridge": 3,
+      "quantity": "original_cosh_352",
+      "parameter_provenance": "explicit manuscript352cosh plot despite tablelabel Leaking/cosh",
+      "supplied": 97.33,
+      "recomputed": 97.47345650775587,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -0.1434565077558716
+    },
+    {
+      "cartridge": 4,
+      "quantity": "observed609",
+      "parameter_provenance": "source observed count areas",
+      "supplied": 38.16,
+      "recomputed": 38.16337661082122,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": -0.003376610821220538
+    },
+    {
+      "cartridge": 4,
+      "quantity": "original_sinh_609",
+      "parameter_provenance": "explicit manuscript609sinh plot",
+      "supplied": 29.93,
+      "recomputed": 29.882378901718134,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.04762109828186567
+    },
+    {
+      "cartridge": 4,
+      "quantity": "shift_delta_1_1_draft_609",
+      "parameter_provenance": "amplitude0.675 from companion leak draft; manuscript omits this amplitude",
+      "supplied": 31.09,
+      "recomputed": 31.227322798962415,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -0.1373227989624155
+    },
+    {
+      "cartridge": 4,
+      "quantity": "original_cosh_609",
+      "parameter_provenance": "explicit manuscript609cosh plot",
+      "supplied": 31.22,
+      "recomputed": 31.23520262303288,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -0.01520262303288078
+    },
+    {
+      "cartridge": 4,
+      "quantity": "normalized_observed609",
+      "parameter_provenance": "source observed count areas divided by10-i",
+      "supplied": 6.36,
+      "recomputed": 6.360562768470203,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": -0.0005627684702025348
+    },
+    {
+      "cartridge": 4,
+      "quantity": "normalized_original_sinh_609",
+      "parameter_provenance": "explicit manuscript normalized609sinh plot",
+      "supplied": 4.99,
+      "recomputed": 4.980396483619689,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.009603516380311206
+    },
+    {
+      "cartridge": 4,
+      "quantity": "observed352",
+      "parameter_provenance": "source observed count areas",
+      "supplied": 58.78,
+      "recomputed": 58.78057959869074,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": -0.000579598690741534
+    },
+    {
+      "cartridge": 4,
+      "quantity": "original_sinh_352",
+      "parameter_provenance": "amplitude1.533 from original CSV; manuscript omits this amplitude",
+      "supplied": 47.05,
+      "recomputed": 46.98429421162451,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.0657057883754888
+    },
+    {
+      "cartridge": 4,
+      "quantity": "original_cosh_352",
+      "parameter_provenance": "explicit manuscript352cosh plot despite tablelabel Leaking/cosh",
+      "supplied": 49.08,
+      "recomputed": 49.10565652791789,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -0.02565652791788864
+    },
+    {
+      "cartridge": 5,
+      "quantity": "observed609",
+      "parameter_provenance": "source observed count areas",
+      "supplied": 19.51,
+      "recomputed": 19.507501663121168,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": 0.002498336878833385
+    },
+    {
+      "cartridge": 5,
+      "quantity": "original_sinh_609",
+      "parameter_provenance": "explicit manuscript609sinh plot",
+      "supplied": 15.05,
+      "recomputed": 15.036574706840769,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.0134252931592318
+    },
+    {
+      "cartridge": 5,
+      "quantity": "shift_delta_1_1_draft_609",
+      "parameter_provenance": "amplitude0.675 from companion leak draft; manuscript omits this amplitude",
+      "supplied": 15.66,
+      "recomputed": 15.720248996165537,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -0.06024899616553725
+    },
+    {
+      "cartridge": 5,
+      "quantity": "original_cosh_609",
+      "parameter_provenance": "explicit manuscript609cosh plot",
+      "supplied": 15.77,
+      "recomputed": 15.75406441715627,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.015935582843729534
+    },
+    {
+      "cartridge": 5,
+      "quantity": "normalized_observed609",
+      "parameter_provenance": "source observed count areas divided by10-i",
+      "supplied": 3.9,
+      "recomputed": 3.9015003326242335,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": -0.0015003326242335469
+    },
+    {
+      "cartridge": 5,
+      "quantity": "normalized_original_sinh_609",
+      "parameter_provenance": "explicit manuscript normalized609sinh plot",
+      "supplied": 3.01,
+      "recomputed": 3.0073149413681537,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": 0.0026850586318460934
+    },
+    {
+      "cartridge": 5,
+      "quantity": "observed352",
+      "parameter_provenance": "source observed count areas",
+      "supplied": 30.61,
+      "recomputed": 30.608876504141655,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": 0.00112349585834437
+    },
+    {
+      "cartridge": 5,
+      "quantity": "original_sinh_352",
+      "parameter_provenance": "amplitude1.533 from original CSV; manuscript omits this amplitude",
+      "supplied": 23.66,
+      "recomputed": 23.642122077525023,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.01787792247497677
+    },
+    {
+      "cartridge": 5,
+      "quantity": "original_cosh_352",
+      "parameter_provenance": "explicit manuscript352cosh plot despite tablelabel Leaking/cosh",
+      "supplied": 24.8,
+      "recomputed": 24.767365383348114,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.032634616651886716
+    },
+    {
+      "cartridge": 6,
+      "quantity": "observed609",
+      "parameter_provenance": "source observed count areas",
+      "supplied": 9.71,
+      "recomputed": 9.713939376973865,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": -0.0039393769738644835
+    },
+    {
+      "cartridge": 6,
+      "quantity": "original_sinh_609",
+      "parameter_provenance": "explicit manuscript609sinh plot",
+      "supplied": 7.53,
+      "recomputed": 7.548812951835477,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -0.01881295183547671
+    },
+    {
+      "cartridge": 6,
+      "quantity": "shift_delta_1_1_draft_609",
+      "parameter_provenance": "amplitude0.675 from companion leak draft; manuscript omits this amplitude",
+      "supplied": 7.89,
+      "recomputed": 7.905768854777403,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -0.015768854777403085
+    },
+    {
+      "cartridge": 6,
+      "quantity": "original_cosh_609",
+      "parameter_provenance": "explicit manuscript609cosh plot",
+      "supplied": 8.01,
+      "recomputed": 7.982067211934394,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.027932788065605507
+    },
+    {
+      "cartridge": 6,
+      "quantity": "normalized_observed609",
+      "parameter_provenance": "source observed count areas divided by10-i",
+      "supplied": 2.43,
+      "recomputed": 2.4284848442434663,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": 0.0015151557565338258
+    },
+    {
+      "cartridge": 6,
+      "quantity": "normalized_original_sinh_609",
+      "parameter_provenance": "explicit manuscript normalized609sinh plot",
+      "supplied": 1.88,
+      "recomputed": 1.8872032379588692,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -0.007203237958869346
+    },
+    {
+      "cartridge": 6,
+      "quantity": "observed352",
+      "parameter_provenance": "source observed count areas",
+      "supplied": 15.03,
+      "recomputed": 15.025359100762893,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": 0.004640899237106311
+    },
+    {
+      "cartridge": 6,
+      "quantity": "original_sinh_352",
+      "parameter_provenance": "amplitude1.533 from original CSV; manuscript omits this amplitude",
+      "supplied": 11.84,
+      "recomputed": 11.869056671962857,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -0.02905667196285755
+    },
+    {
+      "cartridge": 6,
+      "quantity": "original_cosh_352",
+      "parameter_provenance": "explicit manuscript352cosh plot despite tablelabel Leaking/cosh",
+      "supplied": 12.59,
+      "recomputed": 12.548810892072469,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.041189107927531055
+    },
+    {
+      "cartridge": 7,
+      "quantity": "observed609",
+      "parameter_provenance": "source observed count areas",
+      "supplied": 4.84,
+      "recomputed": 4.837865013010289,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": 0.0021349869897111518
+    },
+    {
+      "cartridge": 7,
+      "quantity": "original_sinh_609",
+      "parameter_provenance": "explicit manuscript609sinh plot",
+      "supplied": 3.71,
+      "recomputed": 3.755009904393538,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -0.045009904393538136
+    },
+    {
+      "cartridge": 7,
+      "quantity": "shift_delta_1_1_draft_609",
+      "parameter_provenance": "amplitude0.675 from companion leak draft; manuscript omits this amplitude",
+      "supplied": 3.97,
+      "recomputed": 3.9599212901160934,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.0100787098839068
+    },
+    {
+      "cartridge": 7,
+      "quantity": "original_cosh_609",
+      "parameter_provenance": "explicit manuscript609cosh plot",
+      "supplied": 4.13,
+      "recomputed": 4.116038649730976,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.013961350269023676
+    },
+    {
+      "cartridge": 7,
+      "quantity": "normalized_observed609",
+      "parameter_provenance": "source observed count areas divided by10-i",
+      "supplied": 1.61,
+      "recomputed": 1.6126216710034296,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": -0.002621671003429471
+    },
+    {
+      "cartridge": 7,
+      "quantity": "normalized_original_sinh_609",
+      "parameter_provenance": "explicit manuscript normalized609sinh plot",
+      "supplied": 1.24,
+      "recomputed": 1.2516699681311794,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -0.011669968131179376
+    },
+    {
+      "cartridge": 7,
+      "quantity": "observed352",
+      "parameter_provenance": "source observed count areas",
+      "supplied": 7.56,
+      "recomputed": 7.561395570380703,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": -0.0013955703807031483
+    },
+    {
+      "cartridge": 7,
+      "quantity": "original_sinh_352",
+      "parameter_provenance": "amplitude1.533 from original CSV; manuscript omits this amplitude",
+      "supplied": 5.83,
+      "recomputed": 5.904030957369532,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -0.07403095736953169
+    },
+    {
+      "cartridge": 7,
+      "quantity": "original_cosh_352",
+      "parameter_provenance": "explicit manuscript352cosh plot despite tablelabel Leaking/cosh",
+      "supplied": 6.5,
+      "recomputed": 6.470929054908071,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.02907094509192909
+    },
+    {
+      "cartridge": 8,
+      "quantity": "observed609",
+      "parameter_provenance": "source observed count areas",
+      "supplied": 2.53,
+      "recomputed": 2.5299272700659787,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": 7.27299340210763e-05
+    },
+    {
+      "cartridge": 8,
+      "quantity": "original_sinh_609",
+      "parameter_provenance": "explicit manuscript609sinh plot",
+      "supplied": 1.74,
+      "recomputed": 1.7986946344105004,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -0.05869463441050038
+    },
+    {
+      "cartridge": 8,
+      "quantity": "shift_delta_1_1_draft_609",
+      "parameter_provenance": "amplitude0.675 from companion leak draft; manuscript omits this amplitude",
+      "supplied": 2.0,
+      "recomputed": 1.951833453271747,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.048166546728253046
+    },
+    {
+      "cartridge": 8,
+      "quantity": "original_cosh_609",
+      "parameter_provenance": "explicit manuscript609cosh plot",
+      "supplied": 2.27,
+      "recomputed": 2.2641647510292056,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.00583524897079446
+    },
+    {
+      "cartridge": 8,
+      "quantity": "normalized_observed609",
+      "parameter_provenance": "source observed count areas divided by10-i",
+      "supplied": 1.27,
+      "recomputed": 1.2649636350329894,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.005036364967010654
+    },
+    {
+      "cartridge": 8,
+      "quantity": "normalized_original_sinh_609",
+      "parameter_provenance": "explicit manuscript normalized609sinh plot",
+      "supplied": 0.87,
+      "recomputed": 0.8993473172052502,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -0.02934731720525019
+    },
+    {
+      "cartridge": 8,
+      "quantity": "observed352",
+      "parameter_provenance": "source observed count areas",
+      "supplied": 3.92,
+      "recomputed": 3.915151532373232,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": 0.004848467626767938
+    },
+    {
+      "cartridge": 8,
+      "quantity": "original_sinh_352",
+      "parameter_provenance": "amplitude1.533 from original CSV; manuscript omits this amplitude",
+      "supplied": 2.73,
+      "recomputed": 2.828101409796202,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -0.09810140979620208
+    },
+    {
+      "cartridge": 8,
+      "quantity": "original_cosh_352",
+      "parameter_provenance": "explicit manuscript352cosh plot despite tablelabel Leaking/cosh",
+      "supplied": 3.56,
+      "recomputed": 3.559550995346263,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": 0.0004490046537370951
+    },
+    {
+      "cartridge": 9,
+      "quantity": "observed609",
+      "parameter_provenance": "source observed count areas",
+      "supplied": 1.55,
+      "recomputed": 1.5466666666666666,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": 0.0033333333333334103
+    },
+    {
+      "cartridge": 9,
+      "quantity": "original_sinh_609",
+      "parameter_provenance": "explicit manuscript609sinh plot",
+      "supplied": 0.71,
+      "recomputed": 0.7225579765379405,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -0.012557976537940552
+    },
+    {
+      "cartridge": 9,
+      "quantity": "shift_delta_1_1_draft_609",
+      "parameter_provenance": "amplitude0.675 from companion leak draft; manuscript omits this amplitude",
+      "supplied": 1.44,
+      "recomputed": 0.8988616361816747,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": 0.5411383638183253
+    },
+    {
+      "cartridge": 9,
+      "quantity": "original_cosh_609",
+      "parameter_provenance": "explicit manuscript609cosh plot",
+      "supplied": 1.52,
+      "recomputed": 1.5202440034766782,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": -0.00024400347667818956
+    },
+    {
+      "cartridge": 9,
+      "quantity": "normalized_observed609",
+      "parameter_provenance": "source observed count areas divided by10-i",
+      "supplied": 1.55,
+      "recomputed": 1.5466666666666666,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": 0.0033333333333334103
+    },
+    {
+      "cartridge": 9,
+      "quantity": "normalized_original_sinh_609",
+      "parameter_provenance": "explicit manuscript normalized609sinh plot",
+      "supplied": 0.71,
+      "recomputed": 0.7225579765379405,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -0.012557976537940552
+    },
+    {
+      "cartridge": 9,
+      "quantity": "observed352",
+      "parameter_provenance": "source observed count areas",
+      "supplied": 2.69,
+      "recomputed": 2.6855555555555557,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": 0.004444444444444251
+    },
+    {
+      "cartridge": 9,
+      "quantity": "original_sinh_352",
+      "parameter_provenance": "amplitude1.533 from original CSV; manuscript omits this amplitude",
+      "supplied": 1.12,
+      "recomputed": 1.1360834646488849,
+      "agrees_at_supplied_precision": false,
+      "supplied_minus_recomputed": -0.01608346464888477
+    },
+    {
+      "cartridge": 9,
+      "quantity": "original_cosh_352",
+      "parameter_provenance": "explicit manuscript352cosh plot despite tablelabel Leaking/cosh",
+      "supplied": 2.39,
+      "recomputed": 2.3900142660929515,
+      "agrees_at_supplied_precision": true,
+      "supplied_minus_recomputed": -1.4266092951409348e-05
+    }
+  ],
+  "manuscript_comparison_scope": "81cells; leakage609andopen352checks conditionally inherit coefficients from companiondocuments, separately labeled",
+  "manuscript_table_disagreement_counts": {
+    "original_sinh_609": 9,
+    "shift_delta_1_1_draft_609": 9,
+    "original_cosh_609": 8,
+    "normalized_original_sinh_609": 8,
+    "original_sinh_352": 9,
+    "original_cosh_352": 7,
+    "normalized_observed609": 1
+  },
+  "manuscript_shift_amplitude_rounding_check": {
+    "mu": 0.686,
+    "delta": 1.1,
+    "intervals_are": "printed rounding intervals, not measurement uncertainty",
+    "rows": [
+      {
+        "cartridge": 1,
+        "amplitude_implied_by_printed_value": 0.6710054408709898,
+        "lower_amplitude_from_printed_rounding": 0.6709916398541064,
+        "upper_amplitude_from_printed_rounding": 0.6710192418878732
+      },
+      {
+        "cartridge": 2,
+        "amplitude_implied_by_printed_value": 0.6713827315373992,
+        "lower_amplitude_from_printed_rounding": 0.6713553259234089,
+        "upper_amplitude_from_printed_rounding": 0.6714101371513896
+      },
+      {
+        "cartridge": 3,
+        "amplitude_implied_by_printed_value": 0.6716773344815109,
+        "lower_amplitude_from_printed_rounding": 0.6716229123996375,
+        "upper_amplitude_from_printed_rounding": 0.6717317565633844
+      },
+      {
+        "cartridge": 4,
+        "amplitude_implied_by_printed_value": 0.6720316735156461,
+        "lower_amplitude_from_printed_rounding": 0.6719235950863255,
+        "upper_amplitude_from_printed_rounding": 0.6721397519449667
+      },
+      {
+        "cartridge": 5,
+        "amplitude_implied_by_printed_value": 0.6724130134693378,
+        "lower_amplitude_from_printed_rounding": 0.6721983222134408,
+        "upper_amplitude_from_printed_rounding": 0.6726277047252348
+      },
+      {
+        "cartridge": 6,
+        "amplitude_implied_by_printed_value": 0.6736536442981994,
+        "lower_amplitude_from_printed_rounding": 0.6732267408480739,
+        "upper_amplitude_from_printed_rounding": 0.674080547748325
+      },
+      {
+        "cartridge": 7,
+        "amplitude_implied_by_printed_value": 0.67671799605932,
+        "lower_amplitude_from_printed_rounding": 0.675865706391739,
+        "upper_amplitude_from_printed_rounding": 0.677570285726901
+      },
+      {
+        "cartridge": 8,
+        "amplitude_implied_by_printed_value": 0.6916573736027899,
+        "lower_amplitude_from_printed_rounding": 0.6899282301687829,
+        "upper_amplitude_from_printed_rounding": 0.6933865170367968
+      },
+      {
+        "cartridge": 9,
+        "amplitude_implied_by_printed_value": 1.0813677665997783,
+        "lower_amplitude_from_printed_rounding": 1.0776130174101959,
+        "upper_amplitude_from_printed_rounding": 1.0851225157893607
+      }
+    ],
+    "largest_lower_bound": 1.0776130174101959,
+    "smallest_upper_bound": 0.6710192418878732,
+    "single_amplitude_possible_at_printed_precision": false
+  },
+  "conditional_inlet_deficits": [
+    {
+      "energy_keV": 609,
+      "conditional_baseline": "assumed_exact_halving_2_times_R2",
+      "baseline_rate_cps": 254.1364373035173,
+      "observed_rate_cps": 175.07835315296833,
+      "deficit_cps": 79.05808415054898,
+      "fractional_deficit": 0.31108519891671116,
+      "interpretation": "arithmetic relative to a chosen baseline; not measured desorption or moisture loss"
+    },
+    {
+      "energy_keV": 609,
+      "conditional_baseline": "original_fixed_cosh_at_i1",
+      "baseline_rate_cps": 244.45378769381807,
+      "observed_rate_cps": 175.07835315296833,
+      "deficit_cps": 69.37543454084974,
+      "fractional_deficit": 0.28379774842246863,
+      "interpretation": "arithmetic relative to a chosen baseline; not measured desorption or moisture loss"
+    },
+    {
+      "energy_keV": 352,
+      "conditional_baseline": "assumed_exact_halving_2_times_R2",
+      "baseline_rate_cps": 399.71982446136235,
+      "observed_rate_cps": 275.27510243979174,
+      "deficit_cps": 124.44472202157061,
+      "fractional_deficit": 0.31132987259079437,
+      "interpretation": "arithmetic relative to a chosen baseline; not measured desorption or moisture loss"
+    },
+    {
+      "energy_keV": 352,
+      "conditional_baseline": "original_fixed_cosh_at_i1",
+      "baseline_rate_cps": 384.3120174475634,
+      "observed_rate_cps": 275.27510243979174,
+      "deficit_cps": 109.03691500777165,
+      "fractional_deficit": 0.2837197642997177,
+      "interpretation": "arithmetic relative to a chosen baseline; not measured desorption or moisture loss"
+    }
+  ],
+  "clock_span": {
+    "seconds": 7753,
+    "minutes": 129.21666666666667,
+    "hours": 2.153611111111111,
+    "clock_difference": "12:25:47 minus10:16:34 =2h9m13s",
+    "scope": "start of cartridge1measurement minus start of cartridge9measurement; disassembly time is not established"
+  },
+  "transmission_arithmetic": {
+    "phi_definition": "L/Ld=N*mu with N9, mu0.686",
+    "phi": 6.174,
+    "sinh_phi": 240.0502991102296,
+    "phi_over_sinh_phi": 0.02571960969382062,
+    "percent": 2.5719609693820624,
+    "manuscript_value": 0.0258,
+    "manuscript_percent": 2.58,
+    "scope": "ideal same-inlet Dirichlet-to-linear outlet flux ratio / endpoint profile-ratio limit; not a measured Robin-column transmission"
+  },
+  "interior_log_fits": [
+    {
+      "energy_keV": 609,
+      "range": "2-7",
+      "objective": "unweighted squared residuals of log point-corrected rates, free amplitude",
+      "fitted_mu": 0.646880722851995,
+      "ln2": 0.6931471805599453,
+      "mu_minus_ln2": -0.04626645770795024,
+      "amplitude_at_index_zero_cps": 470.5129891647768,
+      "adjacent_ratios_within_range": [
+        2.0037033638569497,
+        1.6617156927419396,
+        1.9563436297416232,
+        2.0081967681785393,
+        2.007897977899452
+      ],
+      "mean_adjacent_ratio": 1.9275714864837006,
+      "sse_log_rate": 0.015033427442330813,
+      "sse_cps_squared": 29.84798719586098,
+      "rmse_cps": 2.230395600032312,
+      "r_squared_unlogged_point_corrected_rate": 0.9971895115695869,
+      "maximum_absolute_relative_residual": 0.0727904191275486,
+      "mean_observed_minus_model_cps": -0.43292698541680935,
+      "interpretation": "descriptive fit; no intrinsic diffusivity, exact halving law, or confidence interval inferred"
+    },
+    {
+      "energy_keV": 352,
+      "range": "2-7",
+      "objective": "unweighted squared residuals of log point-corrected rates, free amplitude",
+      "fitted_mu": 0.6497514433371879,
+      "ln2": 0.6931471805599453,
+      "mu_minus_ln2": -0.04339573722275736,
+      "amplitude_at_index_zero_cps": 745.4423231456957,
+      "adjacent_ratios_within_range": [
+        1.9789224320723175,
+        1.718157834696229,
+        1.9203769073568318,
+        2.037147751269887,
+        1.9871145426672068
+      ],
+      "mean_adjacent_ratio": 1.9283438936124946,
+      "sse_log_rate": 0.011208982883678434,
+      "sse_cps_squared": 52.16798359624996,
+      "rmse_cps": 2.9486715538880093,
+      "r_squared_unlogged_point_corrected_rate": 0.9980249876417449,
+      "maximum_absolute_relative_residual": 0.057141942762453324,
+      "mean_observed_minus_model_cps": -0.6546366192331972,
+      "interpretation": "descriptive fit; no intrinsic diffusivity, exact halving law, or confidence interval inferred"
+    }
+  ],
+  "manuscript_parameter_definitions": {
+    "gas_and_bulk_concentrations": "lines151\u2013170: C_g is pore-gas activity concentration; q=K_a*C_g; C=(epsilon+rho_b*K_a)*C_g is total activity per bulkvolume",
+    "flux_coefficient": "lines158\u2013177: J=-D_pore*C_g_x, D_pore=(epsilon/tau)*D0; D_e=D_pore/(epsilon+rho_b*K_a)",
+    "consequence": "for constant storage J=-D_e*C_x in total-C coordinates; porosity is already included in definedD_pore",
+    "common_geometry_mismatch": "L=9dx, centers(i\u22120.5)dx imply9.5\u2212i for both finitecolumnshapes, whereas manuscriptDirichletandlinearformulas retain10\u2212i",
+    "leaking_plot": "the manuscript's curve labeled Leaking-End/cosh literally uses originalcosh; it does not plot the advertised shifted-sinh atdelta1.10",
+    "omitted_coefficients": "manuscript does not numerically specify A_leak or A_sinh352; companion coefficients are marked as inherited in comparisons"
+  },
+  "endpoint_examples": [
+    {
+      "model_id": "ln2_floor_draft_609",
+      "cartridge9_center_prediction_cps": 2.048510280736516,
+      "physical_outlet_index9_5_prediction_cps": 1.55,
+      "note": "center of cartridge9 is half a cartridge before physical outlet; these are distinct evaluations"
+    },
+    {
+      "model_id": "shift_delta_1_1_draft_609",
+      "cartridge9_center_prediction_cps": 0.8988616361816747,
+      "physical_outlet_index9_5_prediction_cps": 0.5590896724180886,
+      "note": "center of cartridge9 is half a cartridge before physical outlet; these are distinct evaluations"
+    },
+    {
+      "model_id": "ln2_floor_draft_352",
+      "cartridge9_center_prediction_cps": 3.3313529932111345,
+      "physical_outlet_index9_5_prediction_cps": 2.55,
+      "note": "center of cartridge9 is half a cartridge before physical outlet; these are distinct evaluations"
+    },
+    {
+      "model_id": "shift_delta_1_1_draft_352",
+      "cartridge9_center_prediction_cps": 1.4128773273907507,
+      "physical_outlet_index9_5_prediction_cps": 0.8788061369416177,
+      "note": "center of cartridge9 is half a cartridge before physical outlet; these are distinct evaluations"
+    }
+  ]
+}

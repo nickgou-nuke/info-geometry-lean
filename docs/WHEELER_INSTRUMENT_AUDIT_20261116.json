@@ -1,0 +1,100 @@
+{
+  "status": "passed",
+  "scope": "Exact repository source closure and native axiom audit",
+  "targets": [
+    "InfoGeometry.Quantum.BoundaryInstrument"
+  ],
+  "modules": [
+    {
+      "module": "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Algebra/FiniteSpinAlgebra.olean": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Quantum.ChoiCompletePositivity",
+      "returncode": 0,
+      "warnings": 9,
+      "artifacts": {
+        "lib/InfoGeometry/Quantum/ChoiCompletePositivity.olean": "3fb1bc2587a016bbff0db34c4a6ce81ceaf8e304eed4db54230b8ca7ce924d7f"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Quantum.KrausBoundaryDuality",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Quantum/KrausBoundaryDuality.olean": "7b8b926aae6e268898bdcd86cb5d41df5660ce0d51fc89c752ecc48af64fdcf0"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Quantum.PositiveBoundaryConditioning",
+      "returncode": 0,
+      "warnings": 2,
+      "artifacts": {
+        "lib/InfoGeometry/Quantum/PositiveBoundaryConditioning.olean": "57ad8d769ae133546a79cf4333545858c5224b3e3a530f2ce5e08e29c39c3a9a"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Quantum.BoundaryInstrument",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Quantum/BoundaryInstrument.olean": "ded1b73e1159b346772c4dbb7f43e179cf9626df910c0250b18f898b58562e1b"
+      },
+      "reused": false
+    }
+  ],
+  "audit_required": true,
+  "verification_source_sha256": {
+    "tools/quality/check_clifford_dirac.py": "fcf6fbb9845e0ee2a85bdb3778c5fe74345a9ae7a2e97e871d0a89d3e98e7db0",
+    "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+    "tools/quality/reviewed_audit_source.py": "a976c910f5efb4611b1626d714e3197310d92648ffae56513e94a49ae5f0f206",
+    "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df"
+  },
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "source_sha256": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+    "InfoGeometry.Quantum.ChoiCompletePositivity": "355393f1229736d065380dce0e9fb114da02388042c9e880a392b6534683066e",
+    "InfoGeometry.Quantum.KrausBoundaryDuality": "374742918777bd4f507de8809c3e2fc42eea4200e4f04379cc03ec81ff9e2bf4",
+    "InfoGeometry.Quantum.PositiveBoundaryConditioning": "f0f66a956fafc68ea84f94d768d0e473af97e9ab06f0fa7eddb13a2eae4ec550",
+    "InfoGeometry.Quantum.BoundaryInstrument": "33a1f8604ef1755adab2cee9a16321296c1a8fcb6673e5b40b5b95df5aa5db15"
+  },
+  "fingerprints": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "6318527c4fbd65bca67b505b6a77a74eb750cf957768c7af3f06c163dce9bc28",
+    "InfoGeometry.Quantum.ChoiCompletePositivity": "d96ca0f5ab2a2368366baa5d18348c3c36fbe4000944dd986dcaa69e9dbc88d8",
+    "InfoGeometry.Quantum.KrausBoundaryDuality": "7c349f830d5cbfa492acff580c8ca3309eb0db840798dfca8b682c94b505cb5b",
+    "InfoGeometry.Quantum.PositiveBoundaryConditioning": "2c3716cdf66bd0a1912708901a5779e7f3bf872bdba77a66aa8d6f8cedcfdf56",
+    "InfoGeometry.Quantum.BoundaryInstrument": "76266c8b5f63548210e6920fa00e68b109e84559b410a25fc5e9f2a5926796bd"
+  },
+  "repository_import_dependencies": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": [],
+    "InfoGeometry.Quantum.ChoiCompletePositivity": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Quantum.KrausBoundaryDuality": [
+      "InfoGeometry.Quantum.ChoiCompletePositivity"
+    ],
+    "InfoGeometry.Quantum.PositiveBoundaryConditioning": [
+      "InfoGeometry.Quantum.KrausBoundaryDuality"
+    ],
+    "InfoGeometry.Quantum.BoundaryInstrument": [
+      "InfoGeometry.Quantum.PositiveBoundaryConditioning"
+    ]
+  },
+  "local_revision": "16f13675b9fecccc9db0bf88aa49ca7587a4efbc",
+  "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "declaration_counts": {
+    "InfoGeometry.Quantum.BoundaryInstrument": 42
+  },
+  "axioms": [
+    "[propext, Classical.choice, Quot.sound]"
+  ]
+}

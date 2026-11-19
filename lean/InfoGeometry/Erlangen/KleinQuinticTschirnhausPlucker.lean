@@ -219,7 +219,7 @@ theorem projectiveRootDifferenceBivector_smul
     exact hx (rootDifferenceBivector_eq_zero_of_sum_zero x hsum h)
   apply (Projectivization.mk_eq_mk_iff ℂ _ _ _ hBne).2
   refine ⟨Units.mk0 c hc, ?_⟩
-  simpa [hB] using hB.symm
+  exact hB.symm
 
 /-- Equal projective root-difference bivectors on the zero-sum subspace
 come from proportional root vectors. This proves injectivity of the induced

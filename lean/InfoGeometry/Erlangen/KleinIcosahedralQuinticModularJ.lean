@@ -15,6 +15,7 @@ import Mathlib.NumberTheory.ModularForms.EisensteinSeries.Basic
 import Mathlib.NumberTheory.ModularForms.Identities
 import Mathlib.NumberTheory.ModularForms.LevelOne.Basic
 import Mathlib.NumberTheory.ModularForms.LevelOne.GradedRing
+import Mathlib.RingTheory.LaurentSeries
 import Mathlib.Tactic.FinCases
 import InfoGeometry.Topology.V4RootSystem
 
@@ -3579,6 +3580,68 @@ its constant coefficient is one by `jInvariant_formal_cusp_principal_part`. -/
 theorem jCuspRegularFactor_isUnit : IsUnit jCuspRegularFactor :=
   PowerSeries.isUnit_iff_constantCoeff.mpr
     (by rw [jInvariant_formal_cusp_principal_part.2]; exact isUnit_one)
+
+/-- The quotient of the actual numerator and discriminant q-expansions,
+regarded as a Laurent series. -/
+private noncomputable def jCuspLaurent : LaurentSeries ℂ :=
+  ((qExpansion 1 (ModularForm.E₄ : ModularForm 𝒮ℒ 4) ^ 3 : PowerSeries ℂ) :
+      LaurentSeries ℂ) /
+    ((qExpansion 1 CuspForm.discriminant : PowerSeries ℂ) : LaurentSeries ℂ)
+
+/-- In the Laurent-series field, the q-expansion quotient is exactly
+`q⁻¹` times the regular factor. This makes the principal-part statement an
+identity about the actual quotient, rather than an independently defined
+Laurent model. -/
+theorem jCuspLaurent_eq_principalPart :
+    jCuspLaurent = HahnSeries.single (-1 : ℤ) (1 : ℂ) *
+      (jCuspRegularFactor : LaurentSeries ℂ) := by
+  let U : PowerSeries ℂ := ↑jDiscriminantCuspUnit
+  have hD : qExpansion 1 CuspForm.discriminant = PowerSeries.X * U := by
+    simpa [U] using jInvariant_formal_cusp_principal_part.1
+  have hD' : ((qExpansion 1 CuspForm.discriminant : PowerSeries ℂ) :
+      LaurentSeries ℂ) =
+      ((PowerSeries.X : PowerSeries ℂ) : LaurentSeries ℂ) *
+        (U : LaurentSeries ℂ) := by
+    have h := congrArg (fun f : PowerSeries ℂ => (f : LaurentSeries ℂ)) hD
+    simpa only [map_mul] using h
+  have hR : (jCuspRegularFactor : LaurentSeries ℂ) =
+      ((qExpansion 1 (ModularForm.E₄ : ModularForm 𝒮ℒ 4) ^ 3 : PowerSeries ℂ) :
+        LaurentSeries ℂ) * (U : LaurentSeries ℂ)⁻¹ := by
+    simp [jCuspRegularFactor, U]
+  have hXinv : ((PowerSeries.X : PowerSeries ℂ) : LaurentSeries ℂ)⁻¹ =
+      HahnSeries.single (-1 : ℤ) (1 : ℂ) := by
+    rw [HahnSeries.ofPowerSeries_X, HahnSeries.inv_single]
+    norm_num
+  change ((qExpansion 1 (ModularForm.E₄ : ModularForm 𝒮ℒ 4) ^ 3 : PowerSeries ℂ) :
+      LaurentSeries ℂ) /
+    ((qExpansion 1 CuspForm.discriminant : PowerSeries ℂ) : LaurentSeries ℂ) = _
+  calc
+    _ = ((qExpansion 1 (ModularForm.E₄ : ModularForm 𝒮ℒ 4) ^ 3 : PowerSeries ℂ) :
+          LaurentSeries ℂ) /
+        (((PowerSeries.X : PowerSeries ℂ) : LaurentSeries ℂ) *
+          (U : LaurentSeries ℂ)) := by rw [hD']
+    _ = ((qExpansion 1 (ModularForm.E₄ : ModularForm 𝒮ℒ 4) ^ 3 : PowerSeries ℂ) :
+          LaurentSeries ℂ) * ((U : LaurentSeries ℂ)⁻¹ *
+          ((PowerSeries.X : PowerSeries ℂ) : LaurentSeries ℂ)⁻¹) := by
+          rw [div_eq_mul_inv, _root_.mul_inv_rev]
+    _ = ((PowerSeries.X : PowerSeries ℂ) : LaurentSeries ℂ)⁻¹ *
+        (((qExpansion 1 (ModularForm.E₄ : ModularForm 𝒮ℒ 4) ^ 3 : PowerSeries ℂ) :
+          LaurentSeries ℂ) * (U : LaurentSeries ℂ)⁻¹) := by ac_rfl
+    _ = HahnSeries.single (-1 : ℤ) (1 : ℂ) *
+        (jCuspRegularFactor : LaurentSeries ℂ) := by rw [hXinv, ← hR]
+    _ = _ := rfl
+
+/-- The Laurent coefficient of the actual q-expansion quotient at exponent
+`-1` is one. -/
+theorem jCuspLaurent_coefficient_minus_one : jCuspLaurent.coeff (-1 : ℤ) = 1 := by
+  rw [jCuspLaurent_eq_principalPart, HahnSeries.coeff_single_mul]
+  norm_num
+  change (jCuspRegularFactor : LaurentSeries ℂ).coeff 0 = 1
+  have hcoeff : (jCuspRegularFactor : LaurentSeries ℂ).coeff (0 : ℤ) =
+      PowerSeries.coeff 0 jCuspRegularFactor := by
+    simpa using LaurentSeries.coeff_coe_powerSeries jCuspRegularFactor 0
+  rw [hcoeff, PowerSeries.coeff_zero_eq_constantCoeff]
+  exact jInvariant_formal_cusp_principal_part.2
 
 def modularMatSZ : Matrix (Fin 2) (Fin 2) ℤ := (ModularGroup.S : Matrix (Fin 2) (Fin 2) ℤ)
 def modularMatTZ : Matrix (Fin 2) (Fin 2) ℤ := (ModularGroup.T : Matrix (Fin 2) (Fin 2) ℤ)

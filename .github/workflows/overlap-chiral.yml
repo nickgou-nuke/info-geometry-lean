@@ -1,0 +1,188 @@
+name: Overlap chiral boundaries kernel check
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/overlap-chiral.yml'
+      - 'lake-manifest.json'
+      - 'lean-toolchain'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Geometry/KreinIsotropicCone.lean'
+      - 'lean/InfoGeometry/Meta/OwnerTarget.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/All.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/ChiralPolarization.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/ChiralProjectorFromInvolution.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/DrazinRepresentedSplit.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/KreinIsotropicCone.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/OverlapDiracFromInvolutions.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/TomitaCartanSplit.lean'
+      - 'lean/InfoGeometry/Quantum/All.lean'
+      - 'lean/InfoGeometry/Quantum/InvolutionCore.lean'
+      - 'lean/InfoGeometry/Quantum/InvolutionCoreOverlapDirac.lean'
+      - 'lean/InfoGeometry/QuantumGeometry/Projective.lean'
+      - 'lean/InfoGeometry/QuantumGeometry/Projective/NormalizedOverlapDifferential.lean'
+      - 'lean/InfoGeometry/QuantumGeometry/Projective/QGT.lean'
+      - 'lean/InfoGeometry/Unstable/Quarantine.lean'
+      - 'scripts/quality/quarantine_manifest.txt'
+      - 'tools/build_lock.py'
+      - 'tools/pathing.py'
+      - 'tools/quality/audit_constructivity.py'
+      - 'tools/quality/check_clifford_dirac.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/common.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/semantic_content_audit.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: overlap-chiral-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      # This public source checkout avoids recursive submodule auth cleanup.
+      # github.sha preserves pull-request merge-commit verification.
+      - name: Fetch and verify the exact source commit
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+          SOURCE_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          test ! -e project
+          git init project
+          git -C project remote add origin "https://github.com/${SOURCE_REPO}.git"
+          git -C project fetch --no-tags --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          actual_rev="$(git -C project rev-parse HEAD)"
+          if [ "$actual_rev" != "$SOURCE_REV" ]; then
+            echo 'Source checkout differs from the requested workflow commit' >&2
+            exit 1
+          fi
+      - name: Read exact dependency pins
+        id: pins
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          manifest = json.loads(Path('project/lake-manifest.json').read_text())
+          revision = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'mathlib={revision}\n')
+          PY
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: ${{ steps.pins.outputs.mathlib }}
+          path: mathlib
+          persist-credentials: false
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            mathlib/.lake
+          key: overlap-chiral-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Fetch the pinned native import cache
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('project').resolve()))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          targets = [
+              'InfoGeometry.OperatorAlgebra.OverlapDiracFromInvolutions',
+              'InfoGeometry.Quantum.InvolutionCoreOverlapDirac',
+              'InfoGeometry.QuantumGeometry.Projective.NormalizedOverlapDifferential',
+          ]
+          _, _, native = closure(Path('project'), targets)
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'overlap-chiral-cache') as lock:
+              subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
+                  cwd='mathlib', check=True, pass_fds=(lock.fileno(),))
+          PY
+      - name: Compile selected source closure and audit every owned declaration
+        working-directory: project
+        run: |
+          python3 tools/quality/check_clifford_dirac.py \
+            --mathlib-root ../mathlib --output ../overlap-chiral-report \
+            --target InfoGeometry.OperatorAlgebra.OverlapDiracFromInvolutions \
+            --target InfoGeometry.Quantum.InvolutionCoreOverlapDirac \
+            --target InfoGeometry.QuantumGeometry.Projective.NormalizedOverlapDifferential
+      - name: Require warning-free selected owners
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('overlap-chiral-report/report.json').read_text())
+          assert report['status'] == 'passed', report['status']
+          selected = {
+              'InfoGeometry.OperatorAlgebra.OverlapDiracFromInvolutions',
+              'InfoGeometry.Quantum.InvolutionCoreOverlapDirac',
+              'InfoGeometry.QuantumGeometry.Projective.NormalizedOverlapDifferential',
+          }
+          assert set(report['targets']) == selected, report['targets']
+          assert report['audit_required'] is True
+          counts = report['declaration_counts']
+          assert set(counts) == selected and all(count > 0 for count in counts.values()), counts
+          rows = [row for row in report['modules'] if row['module'] in selected]
+          assert len(rows) == len(selected) and {row['module'] for row in rows} == selected
+          assert all(row['returncode'] == 0 and row['warnings'] == 0 for row in rows), rows
+          PY
+      - name: Check selected semantic content
+        working-directory: project
+        run: |
+          python3 tools/quality/semantic_content_audit.py \
+            --module-prefix InfoGeometry.OperatorAlgebra.OverlapDiracFromInvolutions \
+            --module-prefix InfoGeometry.Quantum.InvolutionCoreOverlapDirac \
+            --module-prefix InfoGeometry.QuantumGeometry.Projective.NormalizedOverlapDifferential \
+            --include-review --gate \
+            --json-out ../overlap-chiral-report/semantic-content.json \
+            --md-out ../overlap-chiral-report/semantic-content.md
+      - name: Require complete selected semantic coverage
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('overlap-chiral-report/semantic-content.json').read_text())
+          selected = {
+              'lean/InfoGeometry/OperatorAlgebra/OverlapDiracFromInvolutions.lean',
+              'lean/InfoGeometry/Quantum/InvolutionCoreOverlapDirac.lean',
+              'lean/InfoGeometry/QuantumGeometry/Projective/NormalizedOverlapDifferential.lean',
+          }
+          coverage = report['coverage']
+          assert coverage['coverage_complete'] is True and not coverage['read_failures'], coverage
+          assert set(coverage['selected_paths']) == selected, coverage
+          assert set(coverage['successfully_read_paths']) == selected, coverage
+          assert coverage['files_selected'] == len(selected) == coverage['files_read'], coverage
+          assert report['summary']['blocking_finding_count'] == 0, report['summary']
+          PY
+      - name: Preserve native verification evidence
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: overlap-chiral-kernel-evidence
+          path: |
+            overlap-chiral-report/report.json
+            overlap-chiral-report/evidence-sha256.json
+            overlap-chiral-report/src/CliffordDiracAudit.lean
+            overlap-chiral-report/*.log
+            overlap-chiral-report/semantic-content.*
+          if-no-files-found: warn

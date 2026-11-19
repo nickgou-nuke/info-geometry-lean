@@ -37,6 +37,7 @@ import InfoGeometry.OperatorAlgebra.ChiralFredholmIndex
 import InfoGeometry.OperatorAlgebra.ChiralPackingEnergy
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
 import InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution
+import InfoGeometry.OperatorAlgebra.OverlapDiracFromInvolutions
 import InfoGeometry.Twistor.FiniteAmbitwistorParaKahlerAll
 import InfoGeometry.OperatorAlgebra.ChiralResidueAudit
 import InfoGeometry.OperatorAlgebra.ChiralTubuleBoundary

@@ -1,0 +1,846 @@
+{
+  "records": {
+    "exit.json": {
+      "ended_at": "2026-11-17T12:02:59.158950+00:00",
+      "checker_returncode": 0,
+      "received_signals": [],
+      "owned_group_observed_exited": true
+    },
+    "frozen-inputs.json": {
+      "frozen_at": "2026-11-17T11:43:35.794059+00:00",
+      "inputs": {
+        "repository_head": "53c1a356af329891440ca67e8a116570c36a72ab",
+        "targets": [
+          "InfoGeometry.Canonical.ParaComplexNeutralForm",
+          "InfoGeometry.LinearAlgebra.RegularDyadCompression",
+          "InfoGeometry.Optics.SheetWittCircularBasis",
+          "InfoGeometry.Twistor.NonincidentLogPairing",
+          "InfoGeometry.Twistor.RealDualTwistor",
+          "InfoGeometry.Twistor.RealProjectiveAmbitwistor",
+          "InfoGeometry.Canonical.ModularZ2CubeGrading",
+          "InfoGeometry.Twistor.TwistorConstituentKinematics",
+          "InfoGeometry.Twistor.TwoTwistorGramMass"
+        ],
+        "modules": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.Canonical.ParaComplexConnectionBridge",
+          "InfoGeometry.Canonical.ParaComplexNeutralForm",
+          "InfoGeometry.Core.IdempotencyDefect",
+          "InfoGeometry.Core.PeirceDecomposition",
+          "InfoGeometry.Core.PeirceCompressionDefect",
+          "InfoGeometry.LinearAlgebra.RegularDyadCompression",
+          "InfoGeometry.OperatorAlgebra.ChiralPolarization",
+          "InfoGeometry.Geometry.KreinIsotropicCone",
+          "InfoGeometry.Meta.OwnerTarget",
+          "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit",
+          "InfoGeometry.OperatorAlgebra.KreinIsotropicCone",
+          "InfoGeometry.OperatorAlgebra.TomitaCartanSplit",
+          "InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution",
+          "InfoGeometry.Optics.SheetWittCircularBasis",
+          "InfoGeometry.Twistor.RealDualTwistor",
+          "InfoGeometry.Twistor.NonincidentLogPairing",
+          "InfoGeometry.Twistor.RealProjectiveAmbitwistor",
+          "InfoGeometry.Canonical.ModularZ2CubeGrading",
+          "InfoGeometry.Twistor.PenroseIncidence",
+          "InfoGeometry.GrandUnification.ArchetypeDictionary",
+          "InfoGeometry.Krein.KreinSpace",
+          "InfoGeometry.Cartan.Involution",
+          "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+          "InfoGeometry.Krein.DoubledSpace",
+          "InfoGeometry.Convex.ProjectiveRays",
+          "InfoGeometry.Twistor.NullProjective",
+          "InfoGeometry.Twistor.PenroseTwistor",
+          "InfoGeometry.Physics.ChiralPoincareSouriauBridge",
+          "InfoGeometry.Twistor.PerjesConventions",
+          "InfoGeometry.Projective.KleinQuadricPlucker",
+          "InfoGeometry.Twistor.TwoTwistorPlucker",
+          "InfoGeometry.Twistor.TwistorFrameCovariance",
+          "InfoGeometry.Twistor.InfinityTwistor",
+          "InfoGeometry.Twistor.SpinorOuterProduct",
+          "InfoGeometry.Twistor.TwistorKinematicTensor",
+          "InfoGeometry.Twistor.TwistorConstituentKinematics",
+          "InfoGeometry.Twistor.PerjesMomentOperator",
+          "InfoGeometry.Twistor.TwoTwistorGramMass"
+        ],
+        "dependencies": {
+          "InfoGeometry.Algebra.FiniteSpinAlgebra": [],
+          "InfoGeometry.Canonical.ParaComplexConnectionBridge": [
+            "InfoGeometry.Algebra.FiniteSpinAlgebra"
+          ],
+          "InfoGeometry.Canonical.ParaComplexNeutralForm": [
+            "InfoGeometry.Canonical.ParaComplexConnectionBridge"
+          ],
+          "InfoGeometry.Core.IdempotencyDefect": [],
+          "InfoGeometry.Core.PeirceDecomposition": [
+            "InfoGeometry.Core.IdempotencyDefect",
+            "InfoGeometry.Algebra.FiniteSpinAlgebra"
+          ],
+          "InfoGeometry.Core.PeirceCompressionDefect": [
+            "InfoGeometry.Core.IdempotencyDefect",
+            "InfoGeometry.Core.PeirceDecomposition"
+          ],
+          "InfoGeometry.LinearAlgebra.RegularDyadCompression": [
+            "InfoGeometry.Algebra.FiniteSpinAlgebra",
+            "InfoGeometry.Core.PeirceCompressionDefect"
+          ],
+          "InfoGeometry.OperatorAlgebra.ChiralPolarization": [
+            "InfoGeometry.Algebra.FiniteSpinAlgebra"
+          ],
+          "InfoGeometry.Geometry.KreinIsotropicCone": [
+            "InfoGeometry.Algebra.FiniteSpinAlgebra"
+          ],
+          "InfoGeometry.Meta.OwnerTarget": [
+            "InfoGeometry.Algebra.FiniteSpinAlgebra"
+          ],
+          "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit": [
+            "InfoGeometry.Algebra.FiniteSpinAlgebra",
+            "InfoGeometry.OperatorAlgebra.ChiralPolarization",
+            "InfoGeometry.Meta.OwnerTarget"
+          ],
+          "InfoGeometry.OperatorAlgebra.KreinIsotropicCone": [
+            "InfoGeometry.Algebra.FiniteSpinAlgebra",
+            "InfoGeometry.OperatorAlgebra.ChiralPolarization",
+            "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit"
+          ],
+          "InfoGeometry.OperatorAlgebra.TomitaCartanSplit": [
+            "InfoGeometry.Algebra.FiniteSpinAlgebra",
+            "InfoGeometry.Geometry.KreinIsotropicCone",
+            "InfoGeometry.OperatorAlgebra.KreinIsotropicCone",
+            "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit"
+          ],
+          "InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution": [
+            "InfoGeometry.Algebra.FiniteSpinAlgebra",
+            "InfoGeometry.OperatorAlgebra.ChiralPolarization",
+            "InfoGeometry.OperatorAlgebra.TomitaCartanSplit",
+            "InfoGeometry.Meta.OwnerTarget"
+          ],
+          "InfoGeometry.Optics.SheetWittCircularBasis": [
+            "InfoGeometry.Algebra.FiniteSpinAlgebra",
+            "InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution"
+          ],
+          "InfoGeometry.Twistor.RealDualTwistor": [],
+          "InfoGeometry.Twistor.NonincidentLogPairing": [
+            "InfoGeometry.Twistor.RealDualTwistor",
+            "InfoGeometry.LinearAlgebra.RegularDyadCompression"
+          ],
+          "InfoGeometry.Twistor.RealProjectiveAmbitwistor": [
+            "InfoGeometry.Twistor.RealDualTwistor"
+          ],
+          "InfoGeometry.Canonical.ModularZ2CubeGrading": [
+            "InfoGeometry.Algebra.FiniteSpinAlgebra"
+          ],
+          "InfoGeometry.Twistor.PenroseIncidence": [
+            "InfoGeometry.Algebra.FiniteSpinAlgebra"
+          ],
+          "InfoGeometry.GrandUnification.ArchetypeDictionary": [],
+          "InfoGeometry.Krein.KreinSpace": [
+            "InfoGeometry.Algebra.FiniteSpinAlgebra",
+            "InfoGeometry.GrandUnification.ArchetypeDictionary"
+          ],
+          "InfoGeometry.Cartan.Involution": [
+            "InfoGeometry.Algebra.FiniteSpinAlgebra"
+          ],
+          "InfoGeometry.Krein.InvolutiveSelfDualCarrier": [
+            "InfoGeometry.Algebra.FiniteSpinAlgebra",
+            "InfoGeometry.Cartan.Involution"
+          ],
+          "InfoGeometry.Krein.DoubledSpace": [
+            "InfoGeometry.Krein.KreinSpace",
+            "InfoGeometry.Algebra.FiniteSpinAlgebra",
+            "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+            "InfoGeometry.Cartan.Involution"
+          ],
+          "InfoGeometry.Convex.ProjectiveRays": [
+            "InfoGeometry.Krein.DoubledSpace",
+            "InfoGeometry.Algebra.FiniteSpinAlgebra"
+          ],
+          "InfoGeometry.Twistor.NullProjective": [
+            "InfoGeometry.Convex.ProjectiveRays",
+            "InfoGeometry.Algebra.FiniteSpinAlgebra",
+            "InfoGeometry.Krein.DoubledSpace"
+          ],
+          "InfoGeometry.Twistor.PenroseTwistor": [
+            "InfoGeometry.Algebra.FiniteSpinAlgebra",
+            "InfoGeometry.Twistor.NullProjective"
+          ],
+          "InfoGeometry.Physics.ChiralPoincareSouriauBridge": [
+            "InfoGeometry.Algebra.FiniteSpinAlgebra"
+          ],
+          "InfoGeometry.Twistor.PerjesConventions": [
+            "InfoGeometry.Twistor.PenroseIncidence",
+            "InfoGeometry.Twistor.PenroseTwistor",
+            "InfoGeometry.Physics.ChiralPoincareSouriauBridge"
+          ],
+          "InfoGeometry.Projective.KleinQuadricPlucker": [
+            "InfoGeometry.Algebra.FiniteSpinAlgebra"
+          ],
+          "InfoGeometry.Twistor.TwoTwistorPlucker": [
+            "InfoGeometry.Twistor.PenroseIncidence",
+            "InfoGeometry.Algebra.FiniteSpinAlgebra",
+            "InfoGeometry.Projective.KleinQuadricPlucker"
+          ],
+          "InfoGeometry.Twistor.TwistorFrameCovariance": [
+            "InfoGeometry.Twistor.PenroseIncidence",
+            "InfoGeometry.Algebra.FiniteSpinAlgebra"
+          ],
+          "InfoGeometry.Twistor.InfinityTwistor": [
+            "InfoGeometry.Twistor.TwoTwistorPlucker",
+            "InfoGeometry.Twistor.TwistorFrameCovariance"
+          ],
+          "InfoGeometry.Twistor.SpinorOuterProduct": [],
+          "InfoGeometry.Twistor.TwistorKinematicTensor": [
+            "InfoGeometry.Twistor.PerjesConventions",
+            "InfoGeometry.Twistor.InfinityTwistor",
+            "InfoGeometry.Twistor.SpinorOuterProduct"
+          ],
+          "InfoGeometry.Twistor.TwistorConstituentKinematics": [
+            "InfoGeometry.Twistor.TwistorKinematicTensor",
+            "InfoGeometry.Twistor.InfinityTwistor"
+          ],
+          "InfoGeometry.Twistor.PerjesMomentOperator": [
+            "InfoGeometry.Twistor.TwistorKinematicTensor"
+          ],
+          "InfoGeometry.Twistor.TwoTwistorGramMass": [
+            "InfoGeometry.Twistor.TwistorConstituentKinematics",
+            "InfoGeometry.Twistor.PerjesMomentOperator"
+          ]
+        },
+        "source_sha256": {
+          "InfoGeometry.Algebra.FiniteSpinAlgebra": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+          "InfoGeometry.Canonical.ParaComplexConnectionBridge": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+          "InfoGeometry.Canonical.ParaComplexNeutralForm": "ac8ea0b4ec1b2c45bc4995388eedcc27e5ef7e0fd61d862a6181f896dc7ab605",
+          "InfoGeometry.Core.IdempotencyDefect": "2d7b8fa580abe148fc70a39f8e1831b5505fb7f6a3920f3a79a0ba35bfee5590",
+          "InfoGeometry.Core.PeirceDecomposition": "b2426391a1841cbdb35bdef72138b5ab1553508c82c22ea930aa23f164de9bd9",
+          "InfoGeometry.Core.PeirceCompressionDefect": "f2e657ca40ff91a996b503c141c2b1f79b2173204a04aadf7afc8c2013bf7c8d",
+          "InfoGeometry.LinearAlgebra.RegularDyadCompression": "a85dafe5d2f3fa1114a085500bd0ebf917088f9bd81ae3f545c90f278e30c780",
+          "InfoGeometry.OperatorAlgebra.ChiralPolarization": "40707ffc7df11e1740574b9100f50430774e2f2e56c5834ab110237f02b65a02",
+          "InfoGeometry.Geometry.KreinIsotropicCone": "2fe3d1cbe956bca59ecd6c4ab9e3407da1c265fb13c55c439a1e22b20d2d125f",
+          "InfoGeometry.Meta.OwnerTarget": "824ac23fa5a0f002b220a4547d7e26bb98fb4ddbe4b82f76f027aee02e3c6dab",
+          "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit": "32bd3e34aa22df3a3c0eefc98b805dd0f773e1f61061a9dae030315eb13f01bf",
+          "InfoGeometry.OperatorAlgebra.KreinIsotropicCone": "375912c2aff80d00e75db6f9ce7b2bfc12c9bc28a4c392ba226e834463cbc512",
+          "InfoGeometry.OperatorAlgebra.TomitaCartanSplit": "942ba5d0ccb4b3c326899033d9b41082f3d28229a02e5f3622839a81f8faa298",
+          "InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution": "220ce4a54c802b829034f0acf4534a7ce255d03a872256f1445cdc7223a6da55",
+          "InfoGeometry.Optics.SheetWittCircularBasis": "dcd4fbde48e869da4d03e6512562c245f7162e373df6146a364f7deccd256d69",
+          "InfoGeometry.Twistor.RealDualTwistor": "ec7900fb51a32e6135ba0b6e4f14995db171a157105f3d69f6e88aa54476fbbf",
+          "InfoGeometry.Twistor.NonincidentLogPairing": "57af40272b06c8ce41522c58659d686d9c70dbcfacd42e37511c3217dbdb2cdb",
+          "InfoGeometry.Twistor.RealProjectiveAmbitwistor": "bd25aabe91c66e3ab83ba6f7647f964007ad0e8441b08bb230e12c0f21f1db27",
+          "InfoGeometry.Canonical.ModularZ2CubeGrading": "079b1f23fbafb9dc9f8c560fbb6abc72a80d92f8a4233baf0e61a0e4f38faa55",
+          "InfoGeometry.Twistor.PenroseIncidence": "31178c457ef77e633d1be52777447001339f98e66b4e10610ea4f089808d8983",
+          "InfoGeometry.GrandUnification.ArchetypeDictionary": "bb89d0138a3842e20e9b05eab752745aa338c8e86bec0d0253fc2c244756a261",
+          "InfoGeometry.Krein.KreinSpace": "38f1482b3537eb5a82f622f702bdb13c43d5ff5b3402e0b872d079eeb180dc97",
+          "InfoGeometry.Cartan.Involution": "d407100337b0684f5dac751bc5372155fb1a86315395a05347419f26d855729c",
+          "InfoGeometry.Krein.InvolutiveSelfDualCarrier": "71a2dcad64a19921e86d5297a7039ad64af7aa1b7cf762f950861a26fa1fecd6",
+          "InfoGeometry.Krein.DoubledSpace": "df94e1e351340e16b21ea8d0a9aef632b5f56e50078c5f26701ce96c9c91d0fc",
+          "InfoGeometry.Convex.ProjectiveRays": "954c88a31177f673221773066efb2224ed68e6bf2a456d7d0d25931d6fef17fd",
+          "InfoGeometry.Twistor.NullProjective": "2f706ac6e568051885eae7da812f6acebcf09b3c0971363f92821cde6583670b",
+          "InfoGeometry.Twistor.PenroseTwistor": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+          "InfoGeometry.Physics.ChiralPoincareSouriauBridge": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+          "InfoGeometry.Twistor.PerjesConventions": "903b0b7a18386048fa13266ff8adcbadd8c14bb0e6a9c32ab5da6a3049a2ee9d",
+          "InfoGeometry.Projective.KleinQuadricPlucker": "bc5b5017340240566c12a7910065b5d9769b9f64b927a963576536146f542e5f",
+          "InfoGeometry.Twistor.TwoTwistorPlucker": "25b6f74b9773ca4f4a4b258983cf7a66c6928700a77e245cef2a31d8f5816241",
+          "InfoGeometry.Twistor.TwistorFrameCovariance": "5f4627f523c9c84648ccfea5ff33e362da97550272ccdee9e3eb4bb553fe01c6",
+          "InfoGeometry.Twistor.InfinityTwistor": "982c6db81156164101c7802bb30f41d9ec8cf5c933401a6b80451d9eb083d7a4",
+          "InfoGeometry.Twistor.SpinorOuterProduct": "249b1ac13661a06ba24930c5e96d8c632246359677ae4f9743da244be29b50b1",
+          "InfoGeometry.Twistor.TwistorKinematicTensor": "f89010846129b1f1ce1db809873ef1548efbe321c9beb53502000fe7eafcb0bc",
+          "InfoGeometry.Twistor.TwistorConstituentKinematics": "2347b498be655c0fa6e6ddeac319519830bca9a13dcb290ef937d8d0ad91203f",
+          "InfoGeometry.Twistor.PerjesMomentOperator": "00e6e5e75c65496c01b3083c9386f7709e36a4769fa4af86ed0b988ce73a035c",
+          "InfoGeometry.Twistor.TwoTwistorGramMass": "d19afc2bed27568def2b5409c93de73f93fe65a592ead34d5e8010424e1333fe"
+        },
+        "helper_sha256": {
+          "tools/quality/check_clifford_dirac.py": "fcf6fbb9845e0ee2a85bdb3778c5fe74345a9ae7a2e97e871d0a89d3e98e7db0",
+          "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+          "tools/quality/reviewed_audit_source.py": "a976c910f5efb4611b1626d714e3197310d92648ffae56513e94a49ae5f0f206",
+          "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df"
+        },
+        "extra_source_sha256": {
+          "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+          "lake-manifest.json": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+          "lean/InfoGeometry/All.lean": "117bfa2beb03e4f2df97b0ad5222c21fdfce29ef2831b6c04818bd5eaf15d05e",
+          "lean/InfoGeometry/Twistor/All.lean": "9954459a3b0227088593a07550313e220d4f91489d114b5b30788c935a004a8f",
+          "docs/NONINCIDENT_PARA_TWISTOR_CONTRACT.md": "f35c1e6dcad1a1f5a25c77d5e619f413e0196f77dc9509df609fae99dbc2c399",
+          "docs/sources/nonincident_para_twistor_20261116.txt": "36f218938a18f175c8961fae548b39dfa0fd1ed8e8ae8e0929d3cf2095134799"
+        },
+        "selection_sha256": "132591c82817d17aa5fbdf51cc2a0563b1293c1087a3ab2a05dc0b6b07ae938a",
+        "plan_sha256": "1709d1776d788da59af2ae3f052c2e35bc78df0db0c85ccd6bbc6a52df2334cb",
+        "supervisor_sha256": "69d0bc61c86718538a039b64a6674e5c64ce94d7492a049004fd5e9cdd638cfb",
+        "lean_executable": "/workspace/scratch/933d64e28eca/runtime/lean/bin/lean",
+        "lean_executable_sha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+        "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+        "toolchain": "leanprover/lean4:v4.34.1"
+      }
+    },
+    "independent-evidence-review.json": {
+      "native_evidence_valid": true,
+      "manual_acceptance_pending": true,
+      "declaration_counts": {
+        "InfoGeometry.Canonical.ParaComplexNeutralForm": 88,
+        "InfoGeometry.LinearAlgebra.RegularDyadCompression": 29,
+        "InfoGeometry.Optics.SheetWittCircularBasis": 48,
+        "InfoGeometry.Twistor.NonincidentLogPairing": 53,
+        "InfoGeometry.Twistor.RealDualTwistor": 55,
+        "InfoGeometry.Twistor.RealProjectiveAmbitwistor": 9,
+        "InfoGeometry.Canonical.ModularZ2CubeGrading": 28,
+        "InfoGeometry.Twistor.TwistorConstituentKinematics": 36,
+        "InfoGeometry.Twistor.TwoTwistorGramMass": 41
+      },
+      "declaration_total": 387,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "warnings_requiring_review": [
+        {
+          "module": "InfoGeometry.Canonical.ParaComplexConnectionBridge",
+          "count": 5,
+          "selected": false,
+          "changed_owner": false,
+          "log": "/workspace/scratch/933d64e28eca/verification-independent-attempt-2/InfoGeometry.Canonical.ParaComplexConnectionBridge.log",
+          "provenance": "pending_fresh_manual_base_comparison"
+        },
+        {
+          "module": "InfoGeometry.Core.PeirceDecomposition",
+          "count": 1,
+          "selected": false,
+          "changed_owner": false,
+          "log": "/workspace/scratch/933d64e28eca/verification-independent-attempt-2/InfoGeometry.Core.PeirceDecomposition.log",
+          "provenance": "pending_fresh_manual_base_comparison"
+        },
+        {
+          "module": "InfoGeometry.LinearAlgebra.RegularDyadCompression",
+          "count": 1,
+          "selected": true,
+          "changed_owner": true,
+          "log": "/workspace/scratch/933d64e28eca/verification-independent-attempt-2/InfoGeometry.LinearAlgebra.RegularDyadCompression.log",
+          "provenance": "pending_fresh_manual_base_comparison"
+        },
+        {
+          "module": "InfoGeometry.Optics.SheetWittCircularBasis",
+          "count": 3,
+          "selected": true,
+          "changed_owner": true,
+          "log": "/workspace/scratch/933d64e28eca/verification-independent-attempt-2/InfoGeometry.Optics.SheetWittCircularBasis.log",
+          "provenance": "pending_fresh_manual_base_comparison"
+        },
+        {
+          "module": "InfoGeometry.Twistor.PenroseIncidence",
+          "count": 1,
+          "selected": false,
+          "changed_owner": false,
+          "log": "/workspace/scratch/933d64e28eca/verification-independent-attempt-2/InfoGeometry.Twistor.PenroseIncidence.log",
+          "provenance": "pending_fresh_manual_base_comparison"
+        },
+        {
+          "module": "InfoGeometry.GrandUnification.ArchetypeDictionary",
+          "count": 3,
+          "selected": false,
+          "changed_owner": false,
+          "log": "/workspace/scratch/933d64e28eca/verification-independent-attempt-2/InfoGeometry.GrandUnification.ArchetypeDictionary.log",
+          "provenance": "pending_fresh_manual_base_comparison"
+        },
+        {
+          "module": "InfoGeometry.Krein.DoubledSpace",
+          "count": 1,
+          "selected": false,
+          "changed_owner": false,
+          "log": "/workspace/scratch/933d64e28eca/verification-independent-attempt-2/InfoGeometry.Krein.DoubledSpace.log",
+          "provenance": "pending_fresh_manual_base_comparison"
+        },
+        {
+          "module": "InfoGeometry.Twistor.PenroseTwistor",
+          "count": 5,
+          "selected": false,
+          "changed_owner": false,
+          "log": "/workspace/scratch/933d64e28eca/verification-independent-attempt-2/InfoGeometry.Twistor.PenroseTwistor.log",
+          "provenance": "pending_fresh_manual_base_comparison"
+        },
+        {
+          "module": "InfoGeometry.Physics.ChiralPoincareSouriauBridge",
+          "count": 5,
+          "selected": false,
+          "changed_owner": false,
+          "log": "/workspace/scratch/933d64e28eca/verification-independent-attempt-2/InfoGeometry.Physics.ChiralPoincareSouriauBridge.log",
+          "provenance": "pending_fresh_manual_base_comparison"
+        },
+        {
+          "module": "InfoGeometry.Twistor.SpinorOuterProduct",
+          "count": 1,
+          "selected": false,
+          "changed_owner": false,
+          "log": "/workspace/scratch/933d64e28eca/verification-independent-attempt-2/InfoGeometry.Twistor.SpinorOuterProduct.log",
+          "provenance": "pending_fresh_manual_base_comparison"
+        },
+        {
+          "module": "InfoGeometry.Twistor.TwistorConstituentKinematics",
+          "count": 1,
+          "selected": true,
+          "changed_owner": false,
+          "log": "/workspace/scratch/933d64e28eca/verification-independent-attempt-2/InfoGeometry.Twistor.TwistorConstituentKinematics.log",
+          "provenance": "pending_fresh_manual_base_comparison"
+        }
+      ],
+      "introduced_warning_policy": "Zero introduced warnings in changed owners; inspect/report every warning in all nine targets and full closure using fresh logs and base provenance. No inherited warning justifies unrelated edits by itself.",
+      "root_gate_separate": true,
+      "acceptance_owner": "independent_qa"
+    },
+    "invocation.json": {
+      "started_at": "2026-11-17T11:43:39.678531+00:00",
+      "supervisor_pid": 2,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-u",
+        "tools/quality/check_clifford_dirac.py",
+        "--mathlib-root",
+        "/workspace/scratch/933d64e28eca/runtime/mathlib",
+        "--lean",
+        "/workspace/scratch/933d64e28eca/runtime/lean/bin/lean",
+        "--output",
+        "/workspace/scratch/933d64e28eca/verification-independent-attempt-2",
+        "--target",
+        "InfoGeometry.Canonical.ParaComplexNeutralForm",
+        "--target",
+        "InfoGeometry.LinearAlgebra.RegularDyadCompression",
+        "--target",
+        "InfoGeometry.Optics.SheetWittCircularBasis",
+        "--target",
+        "InfoGeometry.Twistor.NonincidentLogPairing",
+        "--target",
+        "InfoGeometry.Twistor.RealDualTwistor",
+        "--target",
+        "InfoGeometry.Twistor.RealProjectiveAmbitwistor",
+        "--target",
+        "InfoGeometry.Canonical.ModularZ2CubeGrading",
+        "--target",
+        "InfoGeometry.Twistor.TwistorConstituentKinematics",
+        "--target",
+        "InfoGeometry.Twistor.TwoTwistorGramMass"
+      ],
+      "cwd": "/workspace/scratch/933d64e28eca/repo",
+      "freeze_sha256": "02c6d4c004bc1f4a8010b34251d2c547e893c7b7db08c61ddccfc847702d011b",
+      "status": "starting",
+      "acceptance_owner": "independent_qa",
+      "checker_pid": 26,
+      "checker_process_group": 26
+    },
+    "plan.json": {
+      "status": "restored_dormant_all_evidence_must_be_fresh",
+      "owner": "independent_qa",
+      "repository": "/workspace/scratch/933d64e28eca/repo",
+      "original_base": "08c34e03f610b452e03422037949196dc7d92d6d",
+      "selection_file": "/workspace/scratch/933d64e28eca/verification-targets.json",
+      "selection_sha256": "132591c82817d17aa5fbdf51cc2a0563b1293c1087a3ab2a05dc0b6b07ae938a",
+      "targets": [
+        "InfoGeometry.Canonical.ParaComplexNeutralForm",
+        "InfoGeometry.LinearAlgebra.RegularDyadCompression",
+        "InfoGeometry.Optics.SheetWittCircularBasis",
+        "InfoGeometry.Twistor.NonincidentLogPairing",
+        "InfoGeometry.Twistor.RealDualTwistor",
+        "InfoGeometry.Twistor.RealProjectiveAmbitwistor",
+        "InfoGeometry.Canonical.ModularZ2CubeGrading",
+        "InfoGeometry.Twistor.TwistorConstituentKinematics",
+        "InfoGeometry.Twistor.TwoTwistorGramMass"
+      ],
+      "modules": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Canonical.ParaComplexConnectionBridge",
+        "InfoGeometry.Canonical.ParaComplexNeutralForm",
+        "InfoGeometry.Core.IdempotencyDefect",
+        "InfoGeometry.Core.PeirceDecomposition",
+        "InfoGeometry.Core.PeirceCompressionDefect",
+        "InfoGeometry.LinearAlgebra.RegularDyadCompression",
+        "InfoGeometry.OperatorAlgebra.ChiralPolarization",
+        "InfoGeometry.Geometry.KreinIsotropicCone",
+        "InfoGeometry.Meta.OwnerTarget",
+        "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit",
+        "InfoGeometry.OperatorAlgebra.KreinIsotropicCone",
+        "InfoGeometry.OperatorAlgebra.TomitaCartanSplit",
+        "InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution",
+        "InfoGeometry.Optics.SheetWittCircularBasis",
+        "InfoGeometry.Twistor.RealDualTwistor",
+        "InfoGeometry.Twistor.NonincidentLogPairing",
+        "InfoGeometry.Twistor.RealProjectiveAmbitwistor",
+        "InfoGeometry.Canonical.ModularZ2CubeGrading",
+        "InfoGeometry.Twistor.PenroseIncidence",
+        "InfoGeometry.GrandUnification.ArchetypeDictionary",
+        "InfoGeometry.Krein.KreinSpace",
+        "InfoGeometry.Cartan.Involution",
+        "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+        "InfoGeometry.Krein.DoubledSpace",
+        "InfoGeometry.Convex.ProjectiveRays",
+        "InfoGeometry.Twistor.NullProjective",
+        "InfoGeometry.Twistor.PenroseTwistor",
+        "InfoGeometry.Physics.ChiralPoincareSouriauBridge",
+        "InfoGeometry.Twistor.PerjesConventions",
+        "InfoGeometry.Projective.KleinQuadricPlucker",
+        "InfoGeometry.Twistor.TwoTwistorPlucker",
+        "InfoGeometry.Twistor.TwistorFrameCovariance",
+        "InfoGeometry.Twistor.InfinityTwistor",
+        "InfoGeometry.Twistor.SpinorOuterProduct",
+        "InfoGeometry.Twistor.TwistorKinematicTensor",
+        "InfoGeometry.Twistor.TwistorConstituentKinematics",
+        "InfoGeometry.Twistor.PerjesMomentOperator",
+        "InfoGeometry.Twistor.TwoTwistorGramMass"
+      ],
+      "dependencies": {
+        "InfoGeometry.Algebra.FiniteSpinAlgebra": [],
+        "InfoGeometry.Canonical.ParaComplexConnectionBridge": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra"
+        ],
+        "InfoGeometry.Canonical.ParaComplexNeutralForm": [
+          "InfoGeometry.Canonical.ParaComplexConnectionBridge"
+        ],
+        "InfoGeometry.Core.IdempotencyDefect": [],
+        "InfoGeometry.Core.PeirceDecomposition": [
+          "InfoGeometry.Core.IdempotencyDefect",
+          "InfoGeometry.Algebra.FiniteSpinAlgebra"
+        ],
+        "InfoGeometry.Core.PeirceCompressionDefect": [
+          "InfoGeometry.Core.IdempotencyDefect",
+          "InfoGeometry.Core.PeirceDecomposition"
+        ],
+        "InfoGeometry.LinearAlgebra.RegularDyadCompression": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.Core.PeirceCompressionDefect"
+        ],
+        "InfoGeometry.OperatorAlgebra.ChiralPolarization": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra"
+        ],
+        "InfoGeometry.Geometry.KreinIsotropicCone": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra"
+        ],
+        "InfoGeometry.Meta.OwnerTarget": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra"
+        ],
+        "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.OperatorAlgebra.ChiralPolarization",
+          "InfoGeometry.Meta.OwnerTarget"
+        ],
+        "InfoGeometry.OperatorAlgebra.KreinIsotropicCone": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.OperatorAlgebra.ChiralPolarization",
+          "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit"
+        ],
+        "InfoGeometry.OperatorAlgebra.TomitaCartanSplit": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.Geometry.KreinIsotropicCone",
+          "InfoGeometry.OperatorAlgebra.KreinIsotropicCone",
+          "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit"
+        ],
+        "InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.OperatorAlgebra.ChiralPolarization",
+          "InfoGeometry.OperatorAlgebra.TomitaCartanSplit",
+          "InfoGeometry.Meta.OwnerTarget"
+        ],
+        "InfoGeometry.Optics.SheetWittCircularBasis": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution"
+        ],
+        "InfoGeometry.Twistor.RealDualTwistor": [],
+        "InfoGeometry.Twistor.NonincidentLogPairing": [
+          "InfoGeometry.Twistor.RealDualTwistor",
+          "InfoGeometry.LinearAlgebra.RegularDyadCompression"
+        ],
+        "InfoGeometry.Twistor.RealProjectiveAmbitwistor": [
+          "InfoGeometry.Twistor.RealDualTwistor"
+        ],
+        "InfoGeometry.Canonical.ModularZ2CubeGrading": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra"
+        ],
+        "InfoGeometry.Twistor.PenroseIncidence": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra"
+        ],
+        "InfoGeometry.GrandUnification.ArchetypeDictionary": [],
+        "InfoGeometry.Krein.KreinSpace": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.GrandUnification.ArchetypeDictionary"
+        ],
+        "InfoGeometry.Cartan.Involution": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra"
+        ],
+        "InfoGeometry.Krein.InvolutiveSelfDualCarrier": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.Cartan.Involution"
+        ],
+        "InfoGeometry.Krein.DoubledSpace": [
+          "InfoGeometry.Krein.KreinSpace",
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+          "InfoGeometry.Cartan.Involution"
+        ],
+        "InfoGeometry.Convex.ProjectiveRays": [
+          "InfoGeometry.Krein.DoubledSpace",
+          "InfoGeometry.Algebra.FiniteSpinAlgebra"
+        ],
+        "InfoGeometry.Twistor.NullProjective": [
+          "InfoGeometry.Convex.ProjectiveRays",
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.Krein.DoubledSpace"
+        ],
+        "InfoGeometry.Twistor.PenroseTwistor": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.Twistor.NullProjective"
+        ],
+        "InfoGeometry.Physics.ChiralPoincareSouriauBridge": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra"
+        ],
+        "InfoGeometry.Twistor.PerjesConventions": [
+          "InfoGeometry.Twistor.PenroseIncidence",
+          "InfoGeometry.Twistor.PenroseTwistor",
+          "InfoGeometry.Physics.ChiralPoincareSouriauBridge"
+        ],
+        "InfoGeometry.Projective.KleinQuadricPlucker": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra"
+        ],
+        "InfoGeometry.Twistor.TwoTwistorPlucker": [
+          "InfoGeometry.Twistor.PenroseIncidence",
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.Projective.KleinQuadricPlucker"
+        ],
+        "InfoGeometry.Twistor.TwistorFrameCovariance": [
+          "InfoGeometry.Twistor.PenroseIncidence",
+          "InfoGeometry.Algebra.FiniteSpinAlgebra"
+        ],
+        "InfoGeometry.Twistor.InfinityTwistor": [
+          "InfoGeometry.Twistor.TwoTwistorPlucker",
+          "InfoGeometry.Twistor.TwistorFrameCovariance"
+        ],
+        "InfoGeometry.Twistor.SpinorOuterProduct": [],
+        "InfoGeometry.Twistor.TwistorKinematicTensor": [
+          "InfoGeometry.Twistor.PerjesConventions",
+          "InfoGeometry.Twistor.InfinityTwistor",
+          "InfoGeometry.Twistor.SpinorOuterProduct"
+        ],
+        "InfoGeometry.Twistor.TwistorConstituentKinematics": [
+          "InfoGeometry.Twistor.TwistorKinematicTensor",
+          "InfoGeometry.Twistor.InfinityTwistor"
+        ],
+        "InfoGeometry.Twistor.PerjesMomentOperator": [
+          "InfoGeometry.Twistor.TwistorKinematicTensor"
+        ],
+        "InfoGeometry.Twistor.TwoTwistorGramMass": [
+          "InfoGeometry.Twistor.TwistorConstituentKinematics",
+          "InfoGeometry.Twistor.PerjesMomentOperator"
+        ]
+      },
+      "expected_module_count": 39,
+      "lean": "/workspace/scratch/933d64e28eca/runtime/lean/bin/lean",
+      "mathlib_root": "/workspace/scratch/933d64e28eca/runtime/mathlib",
+      "toolchain": "leanprover/lean4:v4.34.1",
+      "mathlib_revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+      "checker": "tools/quality/check_clifford_dirac.py",
+      "checker_helpers_sha256": {
+        "tools/quality/check_clifford_dirac.py": "fcf6fbb9845e0ee2a85bdb3778c5fe74345a9ae7a2e97e871d0a89d3e98e7db0",
+        "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+        "tools/quality/reviewed_audit_source.py": "a976c910f5efb4611b1626d714e3197310d92648ffae56513e94a49ae5f0f206",
+        "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df"
+      },
+      "output": "/workspace/scratch/933d64e28eca/verification-independent-attempt-2",
+      "control": "/workspace/scratch/933d64e28eca/qa-independent-attempt-2/run",
+      "freeze": "/workspace/scratch/933d64e28eca/qa-independent-attempt-2/frozen-inputs.json",
+      "changed_owners": [
+        "InfoGeometry.Canonical.ParaComplexNeutralForm",
+        "InfoGeometry.LinearAlgebra.RegularDyadCompression",
+        "InfoGeometry.Optics.SheetWittCircularBasis",
+        "InfoGeometry.Twistor.NonincidentLogPairing"
+      ],
+      "prior_warning_expectations_not_fresh_evidence": {
+        "InfoGeometry.Canonical.ParaComplexConnectionBridge": 5
+      },
+      "requires_parent_frozen_source_handoff": true,
+      "automatic_retry": false,
+      "allow_incremental": false,
+      "allow_skip_audit": false,
+      "allowed_axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "warning_policy": "Zero introduced warnings in changed owners; inspect/report every warning in all nine targets and full closure using fresh logs and base provenance. No inherited warning justifies unrelated edits by itself.",
+      "role_separation": {
+        "generation": "root and proof authors",
+        "source_audit": "separate semantic auditor",
+        "execution": "root may own the supervisor process",
+        "acceptance": "independent_qa after separate evidence inspection"
+      },
+      "lost_receipts_are_evidence": false
+    },
+    "status.json": {
+      "started_at": "2026-11-17T11:43:39.678531+00:00",
+      "supervisor_pid": 2,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-u",
+        "tools/quality/check_clifford_dirac.py",
+        "--mathlib-root",
+        "/workspace/scratch/933d64e28eca/runtime/mathlib",
+        "--lean",
+        "/workspace/scratch/933d64e28eca/runtime/lean/bin/lean",
+        "--output",
+        "/workspace/scratch/933d64e28eca/verification-independent-attempt-2",
+        "--target",
+        "InfoGeometry.Canonical.ParaComplexNeutralForm",
+        "--target",
+        "InfoGeometry.LinearAlgebra.RegularDyadCompression",
+        "--target",
+        "InfoGeometry.Optics.SheetWittCircularBasis",
+        "--target",
+        "InfoGeometry.Twistor.NonincidentLogPairing",
+        "--target",
+        "InfoGeometry.Twistor.RealDualTwistor",
+        "--target",
+        "InfoGeometry.Twistor.RealProjectiveAmbitwistor",
+        "--target",
+        "InfoGeometry.Canonical.ModularZ2CubeGrading",
+        "--target",
+        "InfoGeometry.Twistor.TwistorConstituentKinematics",
+        "--target",
+        "InfoGeometry.Twistor.TwoTwistorGramMass"
+      ],
+      "cwd": "/workspace/scratch/933d64e28eca/repo",
+      "freeze_sha256": "02c6d4c004bc1f4a8010b34251d2c547e893c7b7db08c61ddccfc847702d011b",
+      "status": "ready_for_manual_review",
+      "acceptance_owner": "independent_qa",
+      "checker_pid": 26,
+      "checker_process_group": 26,
+      "updated_at": "2026-11-17T12:02:59.158950+00:00",
+      "checker_returncode": 0
+    },
+    "supplemental-sha256.json": {
+      "control/plan.json": "1709d1776d788da59af2ae3f052c2e35bc78df0db0c85ccd6bbc6a52df2334cb",
+      "control/frozen-inputs.json": "02c6d4c004bc1f4a8010b34251d2c547e893c7b7db08c61ddccfc847702d011b",
+      "control/console.log": "9b188790e95db2d15b1589ead0a586548ad77f0d48c6dadfe107b23f8b24c404",
+      "control/invocation.json": "30c84ecd9ec4462434a2c69e7f898e80a555b8fca967ad762de3687e3087f674",
+      "output/InfoGeometry.Algebra.FiniteSpinAlgebra.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.Canonical.ModularZ2CubeGrading.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.Canonical.ParaComplexConnectionBridge.log": "fccbbc10060f255fe8b067cf37554f43c14ff3c45f35e79355a546ddfe0af1e8",
+      "output/InfoGeometry.Canonical.ParaComplexNeutralForm.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.Cartan.Involution.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.Convex.ProjectiveRays.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.Core.IdempotencyDefect.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.Core.PeirceCompressionDefect.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.Core.PeirceDecomposition.log": "38304ce6169d7283f199fd44e99e531c076ae8393f42d618ae6aa2cc2db0514b",
+      "output/InfoGeometry.Geometry.KreinIsotropicCone.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.GrandUnification.ArchetypeDictionary.log": "0b8ed5f01b78c6ca220dfe2c7dea4f2e275aeb2088cdcbd544625b77a8ff77f2",
+      "output/InfoGeometry.Krein.DoubledSpace.log": "a4c91e7bdca7ff1b47dc1913d313654ad4558e26612f795405a253f477d059ff",
+      "output/InfoGeometry.Krein.InvolutiveSelfDualCarrier.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.Krein.KreinSpace.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.LinearAlgebra.RegularDyadCompression.log": "a74d7e687ea13367f3c0a5912c3606a242509b8b1d017ff16f1b81a9f5b28151",
+      "output/InfoGeometry.Meta.OwnerTarget.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.OperatorAlgebra.ChiralPolarization.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.OperatorAlgebra.KreinIsotropicCone.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.OperatorAlgebra.TomitaCartanSplit.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.Optics.SheetWittCircularBasis.log": "ce6528cdf7988fa1a0406649b07be6576eb68ab258777869de7253c119719f14",
+      "output/InfoGeometry.Physics.ChiralPoincareSouriauBridge.log": "51d1bf385af791476428b016e419b5a46c659929ef7c74f58dcda91d0949d49e",
+      "output/InfoGeometry.Projective.KleinQuadricPlucker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.Twistor.InfinityTwistor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.Twistor.NonincidentLogPairing.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.Twistor.NullProjective.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.Twistor.PenroseIncidence.log": "896d9cdd99ca68b2483616d177adece540885fd9e01f9adb3240d217f1eae69b",
+      "output/InfoGeometry.Twistor.PenroseTwistor.log": "b03ef655af83c21071055fc0c98d5192a68e55ce588b96dfbaf595ebf7e519e6",
+      "output/InfoGeometry.Twistor.PerjesConventions.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.Twistor.PerjesMomentOperator.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.Twistor.RealDualTwistor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.Twistor.RealProjectiveAmbitwistor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.Twistor.SpinorOuterProduct.log": "c2ac48daf0f4f35bb85c909fe56b0f1b6b9f630d90506af7ba1dfdf93e5106f5",
+      "output/InfoGeometry.Twistor.TwistorConstituentKinematics.log": "8525416367982a73234f316ddf235930eced1b5131585803334d505e9e22ff9e",
+      "output/InfoGeometry.Twistor.TwistorFrameCovariance.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.Twistor.TwistorKinematicTensor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.Twistor.TwoTwistorGramMass.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/InfoGeometry.Twistor.TwoTwistorPlucker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output/axioms.log": "d509afe7b93468b28ce552297eb8ab0511422dde8f19c378fa84e8d1ddb18347",
+      "output/environment.json": "e5f583848d6625e54688cf8dac5cc8571aefc6a731626902eea207e2614b5958",
+      "output/evidence-sha256.json": "353b17bd0daba34d14ffb33cde59af8076499cdc7375363306be9eb3ad760878",
+      "output/lib/InfoGeometry/Algebra/FiniteSpinAlgebra.olean": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6",
+      "output/lib/InfoGeometry/Canonical/ModularZ2CubeGrading.olean": "be5ec483bae32011b1f5dd2353a89704b7dff6b6c6761e1976d5f878d5b86f82",
+      "output/lib/InfoGeometry/Canonical/ParaComplexConnectionBridge.olean": "e05695bf242ae6b14928606fa23cb9917ff5fbdb971022f086db5b41fc14d4af",
+      "output/lib/InfoGeometry/Canonical/ParaComplexNeutralForm.olean": "57929fc576bfb5958404ba880381df895d125ab968f30f2309bb4cc29d7ebd63",
+      "output/lib/InfoGeometry/Cartan/Involution.olean": "6902e09ed212a3071d54a0f4dcbf8c7ba52f14b0538ae3eb28364d084c1747ce",
+      "output/lib/InfoGeometry/Convex/ProjectiveRays.olean": "4c6e0f54465865a5a9c490189fe08c7e96be79cbd5f0f1d40732392a6c0038a1",
+      "output/lib/InfoGeometry/Core/IdempotencyDefect.olean": "3881365ade9b79cfa9ebda7650d28a3ac9e50f99d63be97c7cc55a770795363c",
+      "output/lib/InfoGeometry/Core/PeirceCompressionDefect.olean": "3ed7b1608620bcfe4a34c644e618cb354406026d5d881b45baca0e90bd88a306",
+      "output/lib/InfoGeometry/Core/PeirceDecomposition.olean": "d04ba4524762a72b4ebf499211db90df12c18c4a11e4ba317cda697e79196fbe",
+      "output/lib/InfoGeometry/Geometry/KreinIsotropicCone.olean": "87eab5ef12fb17bf12868b3de2eaaf01c55ae12e305f56cf9f395665fccc3497",
+      "output/lib/InfoGeometry/GrandUnification/ArchetypeDictionary.olean": "420aad2f3a91aa14311efa4ee0c0e3253582256bab51ef26f530ab2a15965dbb",
+      "output/lib/InfoGeometry/Krein/DoubledSpace.olean": "eff9e02fdb999d8417b7ff450233ab283e71ce8bf7d99da91f3622808e257111",
+      "output/lib/InfoGeometry/Krein/InvolutiveSelfDualCarrier.olean": "32d31fd4daa45776e0dff358ad688d397c5899c573d97bc49b19de0936920642",
+      "output/lib/InfoGeometry/Krein/KreinSpace.olean": "9ccf8c29474dfb5c9e6c3215024fb43018e76f1f76f4e4d405f52089fd0c6395",
+      "output/lib/InfoGeometry/LinearAlgebra/RegularDyadCompression.olean": "1c4040915dca5d111fa6503005d5881475a9dc186379e204e1ca350636aa8715",
+      "output/lib/InfoGeometry/Meta/OwnerTarget.olean": "02713056566d9dd0ccb3c79e0e757c3f407c7eefe5f7f9029507a18eeaa81cc4",
+      "output/lib/InfoGeometry/OperatorAlgebra/ChiralPolarization.olean": "b945f41081cd2e01d5891d4d15b78a8394cea785918ea70b5ff4bbd4d569afcc",
+      "output/lib/InfoGeometry/OperatorAlgebra/ChiralProjectorFromInvolution.olean": "df3350c68c168e815cd6fc2c566dccefeb6cf42f77ab107dff7311a097406f67",
+      "output/lib/InfoGeometry/OperatorAlgebra/DrazinRepresentedSplit.olean": "d2a7931365992f5d4390a1926c0229bb958645928e447e8a374bcf138883c080",
+      "output/lib/InfoGeometry/OperatorAlgebra/KreinIsotropicCone.olean": "3dc672f9759f6d5d9dcfb710a6275da98a4facf8634b3f69cdba19242549cd56",
+      "output/lib/InfoGeometry/OperatorAlgebra/TomitaCartanSplit.olean": "761438a390ee48694c1004d956aca60c6c99a05321efad7b68fc97d6f222c8d1",
+      "output/lib/InfoGeometry/Optics/SheetWittCircularBasis.olean": "50d28b1d953bdbfe84ef17325d3d80e513805db42b5a961b94da23b6bd0193c4",
+      "output/lib/InfoGeometry/Physics/ChiralPoincareSouriauBridge.olean": "34e939f1af666bf8687ce8bdff4d89a812b423a081c30ac8263427569f3b4870",
+      "output/lib/InfoGeometry/Projective/KleinQuadricPlucker.olean": "77fb097f10ed300985e73e62a24d9eff4b34a1c93703fde030d6a54a4080507b",
+      "output/lib/InfoGeometry/Twistor/InfinityTwistor.olean": "6539fe9300597399f0d1362b2515e27720a1d3d240307b66d503d0ae9e48f641",
+      "output/lib/InfoGeometry/Twistor/NonincidentLogPairing.olean": "ff2dead3305155fe1a5f89b79f65dad1b9f777b3b5f5cf347ec864eeb51786a5",
+      "output/lib/InfoGeometry/Twistor/NullProjective.olean": "f90c0c278f34b52002a1719e3f5174a8ef5a1bb5b8d1d7b407ea5136e72b7d44",
+      "output/lib/InfoGeometry/Twistor/PenroseIncidence.olean": "55079b80491946e71d3ff250710e737d062bd3e71c4d79196c44102d74092de5",
+      "output/lib/InfoGeometry/Twistor/PenroseTwistor.olean": "7c526bc23cab0dc56c8b37788b310aaaa99c30a0a0e40fa6808feebcb5344564",
+      "output/lib/InfoGeometry/Twistor/PerjesConventions.olean": "a9ff7332caf9efad02ec3c2eb007ed2dd1822d1acf1176b08d32c722f3574ac5",
+      "output/lib/InfoGeometry/Twistor/PerjesMomentOperator.olean": "483f4683924bd1b7822a8b75a7bff1b3a218c140f50eb069a0c3eee6e6f80a10",
+      "output/lib/InfoGeometry/Twistor/RealDualTwistor.olean": "acc876ae35476a437af245596d59d278e2c279f01e17eec7575ee64aae8ab9a2",
+      "output/lib/InfoGeometry/Twistor/RealProjectiveAmbitwistor.olean": "e662cafb7eef0f5223418f1ea266b557f605f0a89718d57e2ee7afbf93b26f10",
+      "output/lib/InfoGeometry/Twistor/SpinorOuterProduct.olean": "b6a0043b74647cf16d964ce4f78c0296b31f285fcbc563b16629bd91958338fa",
+      "output/lib/InfoGeometry/Twistor/TwistorConstituentKinematics.olean": "bffaf498487861d0575eb45a082f1d49d55c2c9027b005a5210786b8e7294b8a",
+      "output/lib/InfoGeometry/Twistor/TwistorFrameCovariance.olean": "1f05414383a2faa2c6af1497c2a19fae2c8aae66f2fa3c4818f814d81b540588",
+      "output/lib/InfoGeometry/Twistor/TwistorKinematicTensor.olean": "0d0b85470b8bc39677cc507ea60bc4360376fec663cb951cd73b11945e0920f4",
+      "output/lib/InfoGeometry/Twistor/TwoTwistorGramMass.olean": "c1a3e19f2f1610ba80cf2a09c6e014f7241a443c35a42b32464b8d75eb90d61d",
+      "output/lib/InfoGeometry/Twistor/TwoTwistorPlucker.olean": "2f497bf466cd61cedac3b2ebbff7f15cc3c87c0fd83303b2e3925904d66cd15a",
+      "output/report.json": "afed7f85fa01d100829faa620d15563b59e35e304603a83e857f369971022994",
+      "output/src/CliffordDiracAudit.lean": "9875231014bf16bb6a6fe1df762a6b09c75cfac1301376a315e7e9397dbee939",
+      "output/src/InfoGeometry/Algebra/FiniteSpinAlgebra.lean": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+      "output/src/InfoGeometry/Canonical/ModularZ2CubeGrading.lean": "079b1f23fbafb9dc9f8c560fbb6abc72a80d92f8a4233baf0e61a0e4f38faa55",
+      "output/src/InfoGeometry/Canonical/ParaComplexConnectionBridge.lean": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+      "output/src/InfoGeometry/Canonical/ParaComplexNeutralForm.lean": "ac8ea0b4ec1b2c45bc4995388eedcc27e5ef7e0fd61d862a6181f896dc7ab605",
+      "output/src/InfoGeometry/Cartan/Involution.lean": "d407100337b0684f5dac751bc5372155fb1a86315395a05347419f26d855729c",
+      "output/src/InfoGeometry/Convex/ProjectiveRays.lean": "954c88a31177f673221773066efb2224ed68e6bf2a456d7d0d25931d6fef17fd",
+      "output/src/InfoGeometry/Core/IdempotencyDefect.lean": "2d7b8fa580abe148fc70a39f8e1831b5505fb7f6a3920f3a79a0ba35bfee5590",
+      "output/src/InfoGeometry/Core/PeirceCompressionDefect.lean": "f2e657ca40ff91a996b503c141c2b1f79b2173204a04aadf7afc8c2013bf7c8d",
+      "output/src/InfoGeometry/Core/PeirceDecomposition.lean": "b2426391a1841cbdb35bdef72138b5ab1553508c82c22ea930aa23f164de9bd9",
+      "output/src/InfoGeometry/Geometry/KreinIsotropicCone.lean": "2fe3d1cbe956bca59ecd6c4ab9e3407da1c265fb13c55c439a1e22b20d2d125f",
+      "output/src/InfoGeometry/GrandUnification/ArchetypeDictionary.lean": "bb89d0138a3842e20e9b05eab752745aa338c8e86bec0d0253fc2c244756a261",
+      "output/src/InfoGeometry/Krein/DoubledSpace.lean": "df94e1e351340e16b21ea8d0a9aef632b5f56e50078c5f26701ce96c9c91d0fc",
+      "output/src/InfoGeometry/Krein/InvolutiveSelfDualCarrier.lean": "71a2dcad64a19921e86d5297a7039ad64af7aa1b7cf762f950861a26fa1fecd6",
+      "output/src/InfoGeometry/Krein/KreinSpace.lean": "38f1482b3537eb5a82f622f702bdb13c43d5ff5b3402e0b872d079eeb180dc97",
+      "output/src/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean": "a85dafe5d2f3fa1114a085500bd0ebf917088f9bd81ae3f545c90f278e30c780",
+      "output/src/InfoGeometry/Meta/OwnerTarget.lean": "824ac23fa5a0f002b220a4547d7e26bb98fb4ddbe4b82f76f027aee02e3c6dab",
+      "output/src/InfoGeometry/OperatorAlgebra/ChiralPolarization.lean": "40707ffc7df11e1740574b9100f50430774e2f2e56c5834ab110237f02b65a02",
+      "output/src/InfoGeometry/OperatorAlgebra/ChiralProjectorFromInvolution.lean": "220ce4a54c802b829034f0acf4534a7ce255d03a872256f1445cdc7223a6da55",
+      "output/src/InfoGeometry/OperatorAlgebra/DrazinRepresentedSplit.lean": "32bd3e34aa22df3a3c0eefc98b805dd0f773e1f61061a9dae030315eb13f01bf",
+      "output/src/InfoGeometry/OperatorAlgebra/KreinIsotropicCone.lean": "375912c2aff80d00e75db6f9ce7b2bfc12c9bc28a4c392ba226e834463cbc512",
+      "output/src/InfoGeometry/OperatorAlgebra/TomitaCartanSplit.lean": "942ba5d0ccb4b3c326899033d9b41082f3d28229a02e5f3622839a81f8faa298",
+      "output/src/InfoGeometry/Optics/SheetWittCircularBasis.lean": "dcd4fbde48e869da4d03e6512562c245f7162e373df6146a364f7deccd256d69",
+      "output/src/InfoGeometry/Physics/ChiralPoincareSouriauBridge.lean": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+      "output/src/InfoGeometry/Projective/KleinQuadricPlucker.lean": "bc5b5017340240566c12a7910065b5d9769b9f64b927a963576536146f542e5f",
+      "output/src/InfoGeometry/Twistor/InfinityTwistor.lean": "982c6db81156164101c7802bb30f41d9ec8cf5c933401a6b80451d9eb083d7a4",
+      "output/src/InfoGeometry/Twistor/NonincidentLogPairing.lean": "57af40272b06c8ce41522c58659d686d9c70dbcfacd42e37511c3217dbdb2cdb",
+      "output/src/InfoGeometry/Twistor/NullProjective.lean": "2f706ac6e568051885eae7da812f6acebcf09b3c0971363f92821cde6583670b",
+      "output/src/InfoGeometry/Twistor/PenroseIncidence.lean": "31178c457ef77e633d1be52777447001339f98e66b4e10610ea4f089808d8983",
+      "output/src/InfoGeometry/Twistor/PenroseTwistor.lean": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+      "output/src/InfoGeometry/Twistor/PerjesConventions.lean": "903b0b7a18386048fa13266ff8adcbadd8c14bb0e6a9c32ab5da6a3049a2ee9d",
+      "output/src/InfoGeometry/Twistor/PerjesMomentOperator.lean": "00e6e5e75c65496c01b3083c9386f7709e36a4769fa4af86ed0b988ce73a035c",
+      "output/src/InfoGeometry/Twistor/RealDualTwistor.lean": "ec7900fb51a32e6135ba0b6e4f14995db171a157105f3d69f6e88aa54476fbbf",
+      "output/src/InfoGeometry/Twistor/RealProjectiveAmbitwistor.lean": "bd25aabe91c66e3ab83ba6f7647f964007ad0e8441b08bb230e12c0f21f1db27",
+      "output/src/InfoGeometry/Twistor/SpinorOuterProduct.lean": "249b1ac13661a06ba24930c5e96d8c632246359677ae4f9743da244be29b50b1",
+      "output/src/InfoGeometry/Twistor/TwistorConstituentKinematics.lean": "2347b498be655c0fa6e6ddeac319519830bca9a13dcb290ef937d8d0ad91203f",
+      "output/src/InfoGeometry/Twistor/TwistorFrameCovariance.lean": "5f4627f523c9c84648ccfea5ff33e362da97550272ccdee9e3eb4bb553fe01c6",
+      "output/src/InfoGeometry/Twistor/TwistorKinematicTensor.lean": "f89010846129b1f1ce1db809873ef1548efbe321c9beb53502000fe7eafcb0bc",
+      "output/src/InfoGeometry/Twistor/TwoTwistorGramMass.lean": "d19afc2bed27568def2b5409c93de73f93fe65a592ead34d5e8010424e1333fe",
+      "output/src/InfoGeometry/Twistor/TwoTwistorPlucker.lean": "25b6f74b9773ca4f4a4b258983cf7a66c6928700a77e245cef2a31d8f5816241",
+      "output/src/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+      "control/exit.json": "ee640cee301ca665db100301c515593f537c9ee2756a0acf267fe8f71067917f",
+      "control/independent-evidence-review.json": "f536ca39a632d0383be3194cd2886972702c31997dd3a5ddbb870c5f7541b6c2",
+      "control/status.json": "7e27b612f0d8c6a1f8e565525405e9fb1ea0adf4557c7f64bde6d33d57e69685"
+    }
+  },
+  "console": "Waiting for shared build lock\nCHECK InfoGeometry.Algebra.FiniteSpinAlgebra exit 0 warnings 0\nCHECK InfoGeometry.Canonical.ParaComplexConnectionBridge exit 0 warnings 5\nCHECK InfoGeometry.Canonical.ParaComplexNeutralForm exit 0 warnings 0\nCHECK InfoGeometry.Core.IdempotencyDefect exit 0 warnings 0\nCHECK InfoGeometry.Core.PeirceDecomposition exit 0 warnings 1\nCHECK InfoGeometry.Core.PeirceCompressionDefect exit 0 warnings 0\nCHECK InfoGeometry.LinearAlgebra.RegularDyadCompression exit 0 warnings 1\nCHECK InfoGeometry.OperatorAlgebra.ChiralPolarization exit 0 warnings 0\nCHECK InfoGeometry.Geometry.KreinIsotropicCone exit 0 warnings 0\nCHECK InfoGeometry.Meta.OwnerTarget exit 0 warnings 0\nCHECK InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit exit 0 warnings 0\nCHECK InfoGeometry.OperatorAlgebra.KreinIsotropicCone exit 0 warnings 0\nCHECK InfoGeometry.OperatorAlgebra.TomitaCartanSplit exit 0 warnings 0\nCHECK InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution exit 0 warnings 0\nCHECK InfoGeometry.Optics.SheetWittCircularBasis exit 0 warnings 3\nCHECK InfoGeometry.Twistor.RealDualTwistor exit 0 warnings 0\nCHECK InfoGeometry.Twistor.NonincidentLogPairing exit 0 warnings 0\nCHECK InfoGeometry.Twistor.RealProjectiveAmbitwistor exit 0 warnings 0\nCHECK InfoGeometry.Canonical.ModularZ2CubeGrading exit 0 warnings 0\nCHECK InfoGeometry.Twistor.PenroseIncidence exit 0 warnings 1\nCHECK InfoGeometry.GrandUnification.ArchetypeDictionary exit 0 warnings 3\nCHECK InfoGeometry.Krein.KreinSpace exit 0 warnings 0\nCHECK InfoGeometry.Cartan.Involution exit 0 warnings 0\nCHECK InfoGeometry.Krein.InvolutiveSelfDualCarrier exit 0 warnings 0\nCHECK InfoGeometry.Krein.DoubledSpace exit 0 warnings 1\nCHECK InfoGeometry.Convex.ProjectiveRays exit 0 warnings 0\nCHECK InfoGeometry.Twistor.NullProjective exit 0 warnings 0\nCHECK InfoGeometry.Twistor.PenroseTwistor exit 0 warnings 5\nCHECK InfoGeometry.Physics.ChiralPoincareSouriauBridge exit 0 warnings 5\nCHECK InfoGeometry.Twistor.PerjesConventions exit 0 warnings 0\nCHECK InfoGeometry.Projective.KleinQuadricPlucker exit 0 warnings 0\nCHECK InfoGeometry.Twistor.TwoTwistorPlucker exit 0 warnings 0\nCHECK InfoGeometry.Twistor.TwistorFrameCovariance exit 0 warnings 0\nCHECK InfoGeometry.Twistor.InfinityTwistor exit 0 warnings 0\nCHECK InfoGeometry.Twistor.SpinorOuterProduct exit 0 warnings 1\nCHECK InfoGeometry.Twistor.TwistorKinematicTensor exit 0 warnings 0\nCHECK InfoGeometry.Twistor.TwistorConstituentKinematics exit 0 warnings 1\nCHECK InfoGeometry.Twistor.PerjesMomentOperator exit 0 warnings 0\nCHECK InfoGeometry.Twistor.TwoTwistorGramMass exit 0 warnings 0\nAXIOM AUDIT {'InfoGeometry.Canonical.ParaComplexNeutralForm': 88, 'InfoGeometry.LinearAlgebra.RegularDyadCompression': 29, 'InfoGeometry.Optics.SheetWittCircularBasis': 48, 'InfoGeometry.Twistor.NonincidentLogPairing': 53, 'InfoGeometry.Twistor.RealDualTwistor': 55, 'InfoGeometry.Twistor.RealProjectiveAmbitwistor': 9, 'InfoGeometry.Canonical.ModularZ2CubeGrading': 28, 'InfoGeometry.Twistor.TwistorConstituentKinematics': 36, 'InfoGeometry.Twistor.TwoTwistorGramMass': 41} ['[propext, Classical.choice, Quot.sound]']\nPASSED\n",
+  "supplemental_manifest_digest": "b9c1adf25e13e06c13d08ed1fc13bf64890a23005ca61c00dd112b55ae647d6d  supplemental-sha256.json\n",
+  "supervisor_source": "#!/usr/bin/env python3\n\"\"\"Dormant QA supervisor: freeze/run only after explicit final-source handoff.\"\"\"\nfrom __future__ import annotations\nimport argparse\nfrom collections import Counter\nfrom datetime import datetime, timezone\nimport hashlib\nimport json\nimport os\nfrom pathlib import Path\nimport re\nimport signal\nimport subprocess\nimport sys\nimport time\n\nHERE = Path(__file__).resolve().parent\nPLAN = json.loads((HERE / 'plan.json').read_text())\nREPO, OUT, CONTROL, FREEZE = (Path(PLAN[k]) for k in ('repository', 'output', 'control', 'freeze'))\n\ndef now():\n    return datetime.now(timezone.utc).isoformat()\n\ndef sha(path):\n    return hashlib.sha256(Path(path).read_bytes()).hexdigest()\n\ndef require(condition, message):\n    if not condition:\n        raise RuntimeError(message)\n\ndef write_json(path, value):\n    path = Path(path)\n    temporary = path.with_name(path.name + '.tmp')\n    temporary.write_text(json.dumps(value, indent=2, ensure_ascii=False) + '\\n')\n    temporary.replace(path)\n\ndef git(args, cwd=REPO):\n    return subprocess.check_output(['git', *args], cwd=cwd, text=True).strip()\n\ndef current_inputs():\n    \"\"\"Read-only; never invokes Lean or acquires the canonical lock.\"\"\"\n    selection = Path(PLAN['selection_file'])\n    require(sha(selection) == PLAN['selection_sha256'], 'Reviewed selection changed')\n    sys.path.insert(0, str(REPO))\n    from tools.quality.check_reviewed_prs import closure\n    modules, dependencies, _ = closure(REPO, PLAN['targets'])\n    require(modules == PLAN['modules'] and dependencies == PLAN['dependencies'],\n            'Reviewed closure or import edges changed')\n    require(len(modules) == 39 and len(PLAN['targets']) == 9, 'Unexpected scope')\n    helpers = {p: sha(REPO / p) for p in PLAN['checker_helpers_sha256']}\n    require(helpers == PLAN['checker_helpers_sha256'], 'Maintained checker changed')\n    manifest = json.loads((REPO / 'lake-manifest.json').read_text())\n    pin = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')\n    toolchain = (REPO / 'lean-toolchain').read_text().strip()\n    require(pin == PLAN['mathlib_revision'] and toolchain == PLAN['toolchain'], 'Pin mismatch')\n    mathlib = Path(PLAN['mathlib_root'])\n    require(git(['rev-parse', 'HEAD'], mathlib) == pin, 'Installed Mathlib revision differs')\n    require((mathlib / 'lean-toolchain').read_text().strip() == toolchain,\n            'Installed Mathlib toolchain differs')\n    git(['diff', '--exit-code', 'HEAD', '--'], mathlib)\n    extras = ['lean-toolchain', 'lake-manifest.json', 'lean/InfoGeometry/All.lean',\n              'lean/InfoGeometry/Twistor/All.lean',\n              'docs/NONINCIDENT_PARA_TWISTOR_CONTRACT.md',\n              'docs/sources/nonincident_para_twistor_20261116.txt']\n    return {\n        'repository_head': git(['rev-parse', 'HEAD']),\n        'targets': PLAN['targets'], 'modules': modules, 'dependencies': dependencies,\n        'source_sha256': {m: sha(REPO / 'lean' / (m.replace('.', '/') + '.lean')) for m in modules},\n        'helper_sha256': helpers,\n        'extra_source_sha256': {p: sha(REPO / p) for p in extras},\n        'selection_sha256': sha(selection), 'plan_sha256': sha(HERE / 'plan.json'),\n        'supervisor_sha256': sha(__file__),\n        'lean_executable': str(Path(PLAN['lean']).resolve()),\n        'lean_executable_sha256': sha(Path(PLAN['lean']).resolve()),\n        'mathlib': pin, 'toolchain': toolchain,\n    }\n\ndef freeze():\n    require(not FREEZE.exists(), 'Freeze exists; preserve prior evidence')\n    require(not OUT.exists() and not CONTROL.exists(), 'Attempt paths must be fresh')\n    frozen = {'frozen_at': now(), 'inputs': current_inputs()}\n    with FREEZE.open('x') as handle:\n        handle.write(json.dumps(frozen, indent=2) + '\\n')\n        handle.flush()\n        os.fsync(handle.fileno())\n    print('FROZEN', FREEZE, flush=True)\n\ndef checked_path(root, relative):\n    path = (root / relative).resolve()\n    require(path.is_relative_to(root.resolve()), 'Evidence path escapes its root')\n    return path\n\ndef validate_result(frozen):\n    \"\"\"Mechanical evidence checks; independent manual acceptance stays pending.\"\"\"\n    report = json.loads((OUT / 'report.json').read_text())\n    require(report.get('status') == 'passed' and report.get('audit_required') is True,\n            'Complete native audit did not pass')\n    require(report['targets'] == PLAN['targets'], 'Report target mismatch')\n    require(report['source_sha256'] == frozen['source_sha256'], 'Source receipt mismatch')\n    require(report['verification_source_sha256'] == frozen['helper_sha256'], 'Helper receipt mismatch')\n    require(report['repository_import_dependencies'] == PLAN['dependencies'], 'Import-edge mismatch')\n    require(report['local_revision'] == frozen['repository_head'], 'HEAD receipt mismatch')\n    require(report['mathlib'] == PLAN['mathlib_revision'] and report['toolchain'] == PLAN['toolchain'],\n            'Report pin mismatch')\n    require(re.search(r'\\bversion 4\\.34\\.1(?:,|\\s)', report['lean_version']), 'Compiler version mismatch')\n    rows = report['modules']\n    require([r['module'] for r in rows] == PLAN['modules'], 'Incomplete/duplicate closure')\n    warnings = []\n    for row in rows:\n        module = row['module']\n        require(row.get('returncode') == 0 and row.get('reused') is False and 'blocked_by' not in row,\n                'Failed, blocked, or reused module: ' + module)\n        log = (OUT / (module + '.log')).read_text()\n        require(len(re.findall(r'\\bwarning:', log)) == row['warnings'], 'Warning receipt mismatch')\n        if row['warnings']:\n            warnings.append({'module': module, 'count': row['warnings'],\n                             'selected': module in PLAN['targets'],\n                             'changed_owner': module in PLAN['changed_owners'],\n                             'log': str(OUT / (module + '.log')),\n                             'provenance': 'pending_fresh_manual_base_comparison'})\n        require(row.get('artifacts'), 'Missing compiled artifact receipt: ' + module)\n        for path, expected in row['artifacts'].items():\n            require(sha(checked_path(OUT, path)) == expected, 'Artifact hash mismatch: ' + path)\n        require(sha(OUT / 'src' / (module.replace('.', '/') + '.lean')) == frozen['source_sha256'][module],\n                'Copied source mismatch: ' + module)\n    audit = (OUT / 'axioms.log').read_text()\n    require(not re.search(r'\\bwarning:', audit), 'Native audit warning')\n    counts = re.findall(r'^AUDIT_MODULE_COUNT: (\\S+): (\\d+)$', audit, re.MULTILINE)\n    count_map = {m: int(n) for m, n in counts}\n    require(len(counts) == 9 and set(count_map) == set(PLAN['targets']) and\n            all(n > 0 for n in count_map.values()), 'Owner-count marker mismatch')\n    require(count_map == report['declaration_counts'], 'Audit/report count mismatch')\n    owners = re.findall(r'^AUDIT_MODULE: (\\S+)$', audit, re.MULTILINE)\n    require(len(owners) == 9 and set(owners) == set(PLAN['targets']), 'Owner marker mismatch')\n    require(not re.search(r'^AUDIT_COMMAND_MODULE:', audit, re.MULTILINE), 'Unexpected command-only owner')\n    declarations = re.findall(r'^AUDIT_DECL: (\\S+): (\\S+)$', audit, re.MULTILINE)\n    require(len({name for _, name in declarations}) == len(declarations), 'Duplicate declaration marker')\n    require(dict(Counter(owner for owner, _ in declarations)) == count_map, 'Declaration/count mismatch')\n    totals = re.findall(r'^AUDIT_COUNT: (\\d+)$', audit, re.MULTILINE)\n    require(totals == [str(sum(count_map.values()))], 'Audit total mismatch')\n    axiom_lines = re.findall(r'^AUDIT_AXIOMS: (.*)$', audit, re.MULTILINE)\n    require(len(axiom_lines) == 1 and report['axioms'] == axiom_lines, 'Axiom-summary marker mismatch')\n    match = re.fullmatch(r'#?\\[(.*)\\]', axiom_lines[0])\n    require(match is not None, 'Unrecognized native axiom summary')\n    axioms = [a.strip() for a in match.group(1).split(',') if a.strip()]\n    require(len(axioms) == len(set(axioms)) and set(axioms) <= set(PLAN['allowed_axioms']),\n            'Unexpected axiom aggregate')\n    evidence = json.loads((OUT / 'evidence-sha256.json').read_text())\n    expected_evidence = {'report.json', 'axioms.log', 'src/CliffordDiracAudit.lean'}\n    expected_evidence.update(m + '.log' for m in PLAN['modules'])\n    expected_evidence.update('repository/' + p for p in frozen['helper_sha256'])\n    require(set(evidence) == expected_evidence, 'Maintained evidence coverage mismatch')\n    for path, expected in evidence.items():\n        actual = (checked_path(REPO, path[len('repository/'):]) if path.startswith('repository/')\n                  else checked_path(OUT, path))\n        require(sha(actual) == expected, 'Evidence hash mismatch: ' + path)\n    search = json.loads((OUT / 'environment.json').read_text())['LEAN_PATH'].split(os.pathsep)\n    mathlib = Path(PLAN['mathlib_root'])\n    packages = sorted(mathlib.glob('.lake/packages/*/.lake/build/lib/lean'))\n    expected_search = [OUT / 'lib', *packages, mathlib / '.lake/build/lib/lean',\n                       Path(frozen['lean_executable']).parent.parent / 'lib/lean']\n    require(search == list(map(str, expected_search)), 'Unexpected import search path')\n    require(current_inputs() == frozen, 'Frozen inputs changed during verification')\n    return {'native_evidence_valid': True, 'manual_acceptance_pending': True,\n            'declaration_counts': count_map, 'declaration_total': len(declarations), 'axioms': axioms,\n            'warnings_requiring_review': warnings, 'introduced_warning_policy': PLAN['warning_policy'],\n            'root_gate_separate': True, 'acceptance_owner': 'independent_qa'}\n\ndef inspect():\n    \"\"\"Independently re-read completed evidence; no compiler or output writes.\"\"\"\n    frozen = json.loads(FREEZE.read_text())['inputs']\n    exit_receipt = json.loads((CONTROL / 'exit.json').read_text())\n    require(exit_receipt['checker_returncode'] == 0 and not exit_receipt['received_signals'],\n            'Supervisor did not record an uninterrupted zero checker exit')\n    require(exit_receipt.get('owned_group_observed_exited') is True,\n            'Owned compiler group completion is not recorded')\n    status = json.loads((CONTROL / 'status.json').read_text())\n    require(status['status'] == 'ready_for_manual_review' and status['checker_returncode'] == 0,\n            'Supervisor terminal state is incomplete')\n    original_review = json.loads((CONTROL / 'independent-evidence-review.json').read_text())\n    require(original_review.get('native_evidence_valid') is True and\n            original_review.get('manual_acceptance_pending') is True,\n            'Supervisor evidence review did not complete')\n    invocation = json.loads((CONTROL / 'invocation.json').read_text())\n    expected_arguments = ['-u', PLAN['checker'], '--mathlib-root', PLAN['mathlib_root'],\n                          '--lean', PLAN['lean'], '--output', str(OUT)]\n    for target in PLAN['targets']:\n        expected_arguments.extend(['--target', target])\n    require(invocation['command'][1:] == expected_arguments and invocation['cwd'] == str(REPO)\n            and invocation['freeze_sha256'] == sha(FREEZE), 'Invocation receipt differs')\n    require((CONTROL / 'frozen-inputs.json').read_bytes() == FREEZE.read_bytes(), 'Freeze copy differs')\n    require((CONTROL / 'plan.json').read_bytes() == (HERE / 'plan.json').read_bytes(), 'Plan copy differs')\n    manifest_path = CONTROL / 'supplemental-sha256.json'\n    digest_receipt = (CONTROL / 'supplemental-sha256.sha256').read_text()\n    require(digest_receipt == sha(manifest_path) + '  supplemental-sha256.json\\n',\n            'Supplemental manifest digest differs')\n    supplementary = json.loads(manifest_path.read_text())\n    excluded = {'supplemental-sha256.json', 'supplemental-sha256.sha256'}\n    expected_paths = {'control/' + p.name for p in CONTROL.iterdir()\n                      if p.is_file() and p.name not in excluded}\n    expected_paths.update('output/' + str(p.relative_to(OUT)) for p in OUT.rglob('*') if p.is_file())\n    require(set(supplementary) == expected_paths, 'Supplemental evidence coverage differs')\n    for path, expected in supplementary.items():\n        if path.startswith('control/'):\n            actual = checked_path(CONTROL, path[len('control/'):])\n        elif path.startswith('output/'):\n            actual = checked_path(OUT, path[len('output/'):])\n        else:\n            raise RuntimeError('Unexpected supplemental evidence root')\n        require(sha(actual) == expected, 'Supplemental evidence hash differs: ' + path)\n    result = validate_result(frozen)\n    require(result == original_review, 'Independent inspection differs from the supervisor review')\n    return result\n\ndef lock_metadata():\n    try:\n        return json.loads(Path('/tmp/info-geometry-build.lock').read_text())\n    except (OSError, ValueError):\n        return None\n\ndef group_alive(group):\n    try:\n        os.killpg(group, 0)\n        return True\n    except ProcessLookupError:\n        return False\n\ndef stop_owned_group(child):\n    \"\"\"Only this supervisor's newly created process group may be stopped.\"\"\"\n    quiescent = not group_alive(child.pid)\n    for number in (signal.SIGTERM, signal.SIGKILL):\n        if quiescent:\n            break\n        try:\n            os.killpg(child.pid, number)\n        except ProcessLookupError:\n            quiescent = True\n            break\n        deadline = time.monotonic() + 15\n        while time.monotonic() < deadline:\n            child.poll()\n            if not group_alive(child.pid):\n                quiescent = True\n                break\n            time.sleep(0.25)\n    child.wait(timeout=15)\n    require(quiescent, 'Owned process group has not fully exited')\n\ndef run():\n    require(FREEZE.exists(), 'Explicit handoff and final source freeze required')\n    frozen = json.loads(FREEZE.read_text())['inputs']\n    require(current_inputs() == frozen, 'Final source freeze no longer matches')\n    require(not OUT.exists() and not CONTROL.exists(), 'Attempt paths must be fresh')\n    CONTROL.mkdir()\n    (CONTROL / 'frozen-inputs.json').write_bytes(FREEZE.read_bytes())\n    (CONTROL / 'plan.json').write_bytes((HERE / 'plan.json').read_bytes())\n    command = [sys.executable, '-u', PLAN['checker'], '--mathlib-root', PLAN['mathlib_root'],\n               '--lean', PLAN['lean'], '--output', str(OUT)]\n    for target in PLAN['targets']:\n        command.extend(['--target', target])\n    require('--incremental' not in command and '--skip-audit' not in command, 'Forbidden flags')\n    receipt = {'started_at': now(), 'supervisor_pid': os.getpid(), 'command': command,\n               'cwd': str(REPO), 'freeze_sha256': sha(FREEZE), 'status': 'starting',\n               'acceptance_owner': 'independent_qa'}\n    write_json(CONTROL / 'invocation.json', receipt)\n    requested = []\n    def interrupted(number, _frame):\n        requested.append(number)\n    for number in (signal.SIGINT, signal.SIGTERM, signal.SIGHUP):\n        signal.signal(number, interrupted)\n    child, group_retired, returncode = None, False, None\n    result = {'native_evidence_valid': False, 'manual_acceptance_pending': True}\n    try:\n        with (CONTROL / 'console.log').open('w') as log:\n            require(not requested, 'Cancellation before launch')\n            child = subprocess.Popen(command, cwd=REPO, stdout=log, stderr=subprocess.STDOUT,\n                                     start_new_session=True, env={**os.environ, 'PYTHONUNBUFFERED': '1'})\n            receipt.update(checker_pid=child.pid, checker_process_group=child.pid)\n            write_json(CONTROL / 'invocation.json', receipt)\n            last_heartbeat = 0.0\n            while child.poll() is None:\n                if requested:\n                    raise InterruptedError('Supervisor received signal ' + str(requested[0]))\n                if time.monotonic() - last_heartbeat >= 15:\n                    write_json(CONTROL / 'status.json', {**receipt, 'status': 'running',\n                               'updated_at': now(), 'console_bytes': (CONTROL / 'console.log').stat().st_size,\n                               'shared_lock_metadata_descriptive_only': lock_metadata()})\n                    last_heartbeat = time.monotonic()\n                time.sleep(1)\n            returncode = child.returncode\n        group_retired = not group_alive(child.pid)\n        require(returncode == 0, 'Maintained checker exited ' + str(returncode))\n        require(group_retired, 'Checker exited with live owned descendants')\n        require(not requested, 'Cancellation before evidence validation')\n        result = validate_result(frozen)\n        require(not requested, 'Cancellation during evidence validation')\n    except BaseException as error:\n        result['native_evidence_valid'] = False\n        result['error'] = type(error).__name__ + ': ' + str(error)\n        if child is not None and not group_retired:\n            try:\n                stop_owned_group(child)\n                group_retired = True\n            except Exception as cleanup_error:\n                result['owned_group_cleanup_error'] = str(cleanup_error)\n            returncode = child.returncode\n    finally:\n        terminal = {'status.json', 'exit.json', 'independent-evidence-review.json',\n                    'supplemental-sha256.json', 'supplemental-sha256.sha256'}\n        supplementary = {}\n        try:\n            for p in CONTROL.iterdir():\n                if p.is_file() and p.name not in terminal:\n                    supplementary['control/' + p.name] = sha(p)\n            if OUT.exists():\n                for p in sorted(OUT.rglob('*')):\n                    if p.is_file():\n                        supplementary['output/' + str(p.relative_to(OUT))] = sha(p)\n        except Exception as evidence_error:\n            result['native_evidence_valid'] = False\n            result['evidence_finalization_error'] = str(evidence_error)\n        while True:\n            observed_signals = list(requested)\n            if observed_signals:\n                result['native_evidence_valid'] = False\n                result['error'] = 'Cancellation requested: ' + str(observed_signals)\n            ended = now()\n            write_json(CONTROL / 'exit.json', {'ended_at': ended, 'checker_returncode': returncode,\n                                              'received_signals': observed_signals,\n                                              'owned_group_observed_exited': group_retired})\n            write_json(CONTROL / 'independent-evidence-review.json', result)\n            write_json(CONTROL / 'status.json', {**receipt, 'updated_at': ended,\n                       'status': 'ready_for_manual_review' if result['native_evidence_valid'] else 'incomplete',\n                       'checker_returncode': returncode})\n            for name in ('exit.json', 'independent-evidence-review.json', 'status.json'):\n                supplementary['control/' + name] = sha(CONTROL / name)\n            write_json(CONTROL / 'supplemental-sha256.json', supplementary)\n            (CONTROL / 'supplemental-sha256.sha256').write_text(\n                sha(CONTROL / 'supplemental-sha256.json') + '  supplemental-sha256.json\\n')\n            if requested == observed_signals:\n                break  # Completion is this stable terminal-publication boundary.\n    print(json.dumps(result, indent=2), flush=True)\n    return 0 if result['native_evidence_valid'] else 2\n\ndef main():\n    parser = argparse.ArgumentParser(description=__doc__)\n    parser.add_argument('mode', choices=['freeze', 'run', 'inspect'])\n    mode = parser.parse_args().mode\n    if mode == 'freeze':\n        freeze()\n        return 0\n    if mode == 'inspect':\n        print(json.dumps(inspect(), indent=2), flush=True)\n        return 0\n    return run()\n\nif __name__ == '__main__':\n    raise SystemExit(main())\n"
+}

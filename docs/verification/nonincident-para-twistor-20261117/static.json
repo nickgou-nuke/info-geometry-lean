@@ -1,0 +1,1876 @@
+{
+  "results": {
+    "source_sha256_before": {
+      "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean": "ac8ea0b4ec1b2c45bc4995388eedcc27e5ef7e0fd61d862a6181f896dc7ab605",
+      "lean/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean": "a85dafe5d2f3fa1114a085500bd0ebf917088f9bd81ae3f545c90f278e30c780",
+      "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean": "dcd4fbde48e869da4d03e6512562c245f7162e373df6146a364f7deccd256d69",
+      "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean": "57af40272b06c8ce41522c58659d686d9c70dbcfacd42e37511c3217dbdb2cdb"
+    },
+    "source_sha256_after": {
+      "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean": "ac8ea0b4ec1b2c45bc4995388eedcc27e5ef7e0fd61d862a6181f896dc7ab605",
+      "lean/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean": "a85dafe5d2f3fa1114a085500bd0ebf917088f9bd81ae3f545c90f278e30c780",
+      "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean": "dcd4fbde48e869da4d03e6512562c245f7162e373df6146a364f7deccd256d69",
+      "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean": "57af40272b06c8ce41522c58659d686d9c70dbcfacd42e37511c3217dbdb2cdb"
+    },
+    "source_unchanged": true,
+    "commands": [
+      {
+        "name": "screener",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/infra/opengauss_screener.py",
+          "--strict",
+          "--json",
+          "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+          "lean/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean",
+          "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+          "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean"
+        ],
+        "cwd": "/workspace/scratch/933d64e28eca/repo",
+        "started_at": "2026-11-17T11:41:18.889863+00:00",
+        "finished_at": "2026-11-17T11:41:19.661803+00:00",
+        "exit_code": 1,
+        "log": "screener.log",
+        "log_sha256": "b0cd88348e7cafa6bb5466443b6e284c64339f3e953151a8af88bb14dc957651",
+        "receipt_present": true
+      },
+      {
+        "name": "refute",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/infra/opengauss_cli.py",
+          "refute",
+          "--strict",
+          "--json",
+          "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+          "lean/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean",
+          "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+          "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean"
+        ],
+        "cwd": "/workspace/scratch/933d64e28eca/repo",
+        "started_at": "2026-11-17T11:41:18.890735+00:00",
+        "finished_at": "2026-11-17T11:41:19.794712+00:00",
+        "exit_code": 1,
+        "log": "refute.log",
+        "log_sha256": "74d29ef1804e9ec87129e9c39e13b7671e7b291c0a03f1d9ff7a6740460c9acb",
+        "receipt_present": true
+      },
+      {
+        "name": "semantic",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/quality/semantic_vacuity_gate.py",
+          "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+          "lean/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean",
+          "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+          "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean",
+          "--fail-on",
+          "error",
+          "--json-out",
+          "/workspace/scratch/933d64e28eca/static-20261117-4/semantic.json"
+        ],
+        "cwd": "/workspace/scratch/933d64e28eca/repo",
+        "started_at": "2026-11-17T11:41:18.892732+00:00",
+        "finished_at": "2026-11-17T11:41:19.034063+00:00",
+        "exit_code": 0,
+        "log": "semantic.log",
+        "log_sha256": "17a370e88e4a56bbbc2ad458c2b2682dba378adc39067fc4d13594c7a76dcf0e",
+        "receipt_present": true
+      },
+      {
+        "name": "placeholder-ParaComplexNeutralForm",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/quality/placeholder_audit.py",
+          "--root",
+          "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+          "--strict",
+          "--json-out",
+          "/workspace/scratch/933d64e28eca/static-20261117-4/placeholder-ParaComplexNeutralForm.json"
+        ],
+        "cwd": "/workspace/scratch/933d64e28eca/repo",
+        "started_at": "2026-11-17T11:41:19.034195+00:00",
+        "finished_at": "2026-11-17T11:41:19.149513+00:00",
+        "exit_code": 0,
+        "log": "placeholder-ParaComplexNeutralForm.log",
+        "log_sha256": "eff4e511559d80ac16eb6fbb313943b4ae0c9784a4c9046fa32db1e036958d19",
+        "receipt_present": true
+      },
+      {
+        "name": "placeholder-RegularDyadCompression",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/quality/placeholder_audit.py",
+          "--root",
+          "lean/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean",
+          "--strict",
+          "--json-out",
+          "/workspace/scratch/933d64e28eca/static-20261117-4/placeholder-RegularDyadCompression.json"
+        ],
+        "cwd": "/workspace/scratch/933d64e28eca/repo",
+        "started_at": "2026-11-17T11:41:19.149618+00:00",
+        "finished_at": "2026-11-17T11:41:19.254478+00:00",
+        "exit_code": 0,
+        "log": "placeholder-RegularDyadCompression.log",
+        "log_sha256": "0aa9d3df839f858d8d4637f81eb8590c32bf5f7066ae7a702a6a5fd375738052",
+        "receipt_present": true
+      },
+      {
+        "name": "placeholder-SheetWittCircularBasis",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/quality/placeholder_audit.py",
+          "--root",
+          "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+          "--strict",
+          "--json-out",
+          "/workspace/scratch/933d64e28eca/static-20261117-4/placeholder-SheetWittCircularBasis.json"
+        ],
+        "cwd": "/workspace/scratch/933d64e28eca/repo",
+        "started_at": "2026-11-17T11:41:19.254583+00:00",
+        "finished_at": "2026-11-17T11:41:19.384725+00:00",
+        "exit_code": 0,
+        "log": "placeholder-SheetWittCircularBasis.log",
+        "log_sha256": "24086af677550d19db302c8593ec4828f486f159c57dcdf6f11d0fbf5f4d6579",
+        "receipt_present": true
+      },
+      {
+        "name": "placeholder-NonincidentLogPairing",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/quality/placeholder_audit.py",
+          "--root",
+          "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean",
+          "--strict",
+          "--json-out",
+          "/workspace/scratch/933d64e28eca/static-20261117-4/placeholder-NonincidentLogPairing.json"
+        ],
+        "cwd": "/workspace/scratch/933d64e28eca/repo",
+        "started_at": "2026-11-17T11:41:19.384958+00:00",
+        "finished_at": "2026-11-17T11:41:19.505140+00:00",
+        "exit_code": 0,
+        "log": "placeholder-NonincidentLogPairing.log",
+        "log_sha256": "668f8daf9587d81561530157cae9d1f2a69de7c0405e94b30c9638e87d8b4f02",
+        "receipt_present": true
+      }
+    ]
+  },
+  "receipts": {
+    "placeholder-NonincidentLogPairing": {
+      "schema": "info_geometry.placeholder_audit.v2",
+      "generated_at": "2026-11-17T11:41:19.491161+00:00",
+      "root": "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean",
+      "authority_tier": "heuristic-proxy",
+      "summary": {
+        "module_count": 1,
+        "scanned_count": 1,
+        "finding_count": 1,
+        "hard_count": 0,
+        "soft_count": 1,
+        "advisory_count": 0,
+        "provenance": {
+          "hard_failures": 0,
+          "soft_findings": 1,
+          "advisory_findings": 0
+        }
+      },
+      "modules": [
+        {
+          "path": "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean",
+          "module": "InfoGeometry.Twistor.NonincidentLogPairing",
+          "finding_count": 1,
+          "hard_count": 0,
+          "soft_count": 1,
+          "advisory_count": 0,
+          "findings": [
+            {
+              "file": "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean",
+              "module": "InfoGeometry.Twistor.NonincidentLogPairing",
+              "line": 169,
+              "declaration_kind": "theorem",
+              "declaration_name": "mixedLogKernel_frameAction",
+              "finding": "skeletal-proof",
+              "severity": "soft",
+              "detail": "proof appears to be tactic-automation-only or skeletal",
+              "snippet": "167:   simp only [mixedLogKernel_apply, LinearMap.smul_apply, map_smul, smul_eq_mul]\n168:   field_simp [ha, hb, h]\n169: \n170: theorem mixedLogKernel_frameAction (e : V ≃ₗ[ℝ] W) (p : Carrier V)\n171:     (u : V) (ψ : Module.Dual ℝ V) :",
+              "graph_grounded_signal": "none",
+              "heuristic_signal": "skeletal-proof",
+              "hard_verdict_allowed": false
+            }
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "file": "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean",
+          "module": "InfoGeometry.Twistor.NonincidentLogPairing",
+          "line": 169,
+          "declaration_kind": "theorem",
+          "declaration_name": "mixedLogKernel_frameAction",
+          "finding": "skeletal-proof",
+          "severity": "soft",
+          "detail": "proof appears to be tactic-automation-only or skeletal",
+          "snippet": "167:   simp only [mixedLogKernel_apply, LinearMap.smul_apply, map_smul, smul_eq_mul]\n168:   field_simp [ha, hb, h]\n169: \n170: theorem mixedLogKernel_frameAction (e : V ≃ₗ[ℝ] W) (p : Carrier V)\n171:     (u : V) (ψ : Module.Dual ℝ V) :",
+          "graph_grounded_signal": "none",
+          "heuristic_signal": "skeletal-proof",
+          "hard_verdict_allowed": false
+        }
+      ]
+    },
+    "placeholder-ParaComplexNeutralForm": {
+      "schema": "info_geometry.placeholder_audit.v2",
+      "generated_at": "2026-11-17T11:41:19.135716+00:00",
+      "root": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+      "authority_tier": "heuristic-proxy",
+      "summary": {
+        "module_count": 1,
+        "scanned_count": 1,
+        "finding_count": 5,
+        "hard_count": 0,
+        "soft_count": 5,
+        "advisory_count": 0,
+        "provenance": {
+          "hard_failures": 0,
+          "soft_findings": 5,
+          "advisory_findings": 0
+        }
+      },
+      "modules": [
+        {
+          "path": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+          "module": "InfoGeometry.Canonical.ParaComplexNeutralForm",
+          "finding_count": 5,
+          "hard_count": 0,
+          "soft_count": 5,
+          "advisory_count": 0,
+          "findings": [
+            {
+              "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+              "module": "InfoGeometry.Canonical.ParaComplexNeutralForm",
+              "line": 22,
+              "declaration_kind": "variable",
+              "declaration_name": "<file-level>",
+              "finding": "injected-hypothesis-surface",
+              "severity": "soft",
+              "detail": "section variable assumptions detected",
+              "snippet": "20:   symmetric : ∀ x y, form x y = form y x\n21:   anti_isometry : ∀ x y, form (PCS.tau x) (PCS.tau y) = - form x y\n22: \n23: variable (PCS : ParaComplexStructure V) (B : LinearMap.BilinForm ℝ V)\n24: ",
+              "graph_grounded_signal": "none",
+              "heuristic_signal": "injected-hypothesis-surface",
+              "hard_verdict_allowed": false
+            },
+            {
+              "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+              "module": "InfoGeometry.Canonical.ParaComplexNeutralForm",
+              "line": 119,
+              "declaration_kind": "variable",
+              "declaration_name": "<file-level>",
+              "finding": "injected-hypothesis-surface",
+              "severity": "soft",
+              "detail": "section variable assumptions detected",
+              "snippet": "117: open ParaComplexConnection\n118: variable {V : Type*} [AddCommGroup V] [Module ℝ V]\n119: variable (PCS : ParaComplexStructure V)\n120: \n121: ",
+              "graph_grounded_signal": "none",
+              "heuristic_signal": "injected-hypothesis-surface",
+              "hard_verdict_allowed": false
+            },
+            {
+              "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+              "module": "InfoGeometry.Canonical.ParaComplexNeutralForm",
+              "line": 195,
+              "declaration_kind": "variable",
+              "declaration_name": "<file-level>",
+              "finding": "injected-hypothesis-surface",
+              "severity": "soft",
+              "detail": "section variable assumptions detected",
+              "snippet": "193: open ParaComplexConnection\n194: variable {V : Type*} [AddCommGroup V] [Module ℝ V]\n195: variable (PCS : ParaComplexStructure V)\n196: \n197: ",
+              "graph_grounded_signal": "none",
+              "heuristic_signal": "injected-hypothesis-surface",
+              "hard_verdict_allowed": false
+            },
+            {
+              "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+              "module": "InfoGeometry.Canonical.ParaComplexNeutralForm",
+              "line": 248,
+              "declaration_kind": "variable",
+              "declaration_name": "<file-level>",
+              "finding": "injected-hypothesis-surface",
+              "severity": "soft",
+              "detail": "section variable assumptions detected",
+              "snippet": "246: open ParaComplexConnection\n247: variable {V : Type*} [AddCommGroup V] [Module ℝ V]\n248: variable (PCS : ParaComplexStructure V)\n249: \n250: ",
+              "graph_grounded_signal": "none",
+              "heuristic_signal": "injected-hypothesis-surface",
+              "hard_verdict_allowed": false
+            },
+            {
+              "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+              "module": "InfoGeometry.Canonical.ParaComplexNeutralForm",
+              "line": 269,
+              "declaration_kind": "variable",
+              "declaration_name": "<file-level>",
+              "finding": "injected-hypothesis-surface",
+              "severity": "soft",
+              "detail": "section variable assumptions detected",
+              "snippet": "267: \n268: variable {V : Type*} [AddCommGroup V] [Module ℝ V]\n269: variable (PCS : ParaComplexStructure V) (B : LinearMap.BilinForm ℝ V)\n270: \n271: ",
+              "graph_grounded_signal": "none",
+              "heuristic_signal": "injected-hypothesis-surface",
+              "hard_verdict_allowed": false
+            }
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+          "module": "InfoGeometry.Canonical.ParaComplexNeutralForm",
+          "line": 22,
+          "declaration_kind": "variable",
+          "declaration_name": "<file-level>",
+          "finding": "injected-hypothesis-surface",
+          "severity": "soft",
+          "detail": "section variable assumptions detected",
+          "snippet": "20:   symmetric : ∀ x y, form x y = form y x\n21:   anti_isometry : ∀ x y, form (PCS.tau x) (PCS.tau y) = - form x y\n22: \n23: variable (PCS : ParaComplexStructure V) (B : LinearMap.BilinForm ℝ V)\n24: ",
+          "graph_grounded_signal": "none",
+          "heuristic_signal": "injected-hypothesis-surface",
+          "hard_verdict_allowed": false
+        },
+        {
+          "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+          "module": "InfoGeometry.Canonical.ParaComplexNeutralForm",
+          "line": 119,
+          "declaration_kind": "variable",
+          "declaration_name": "<file-level>",
+          "finding": "injected-hypothesis-surface",
+          "severity": "soft",
+          "detail": "section variable assumptions detected",
+          "snippet": "117: open ParaComplexConnection\n118: variable {V : Type*} [AddCommGroup V] [Module ℝ V]\n119: variable (PCS : ParaComplexStructure V)\n120: \n121: ",
+          "graph_grounded_signal": "none",
+          "heuristic_signal": "injected-hypothesis-surface",
+          "hard_verdict_allowed": false
+        },
+        {
+          "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+          "module": "InfoGeometry.Canonical.ParaComplexNeutralForm",
+          "line": 195,
+          "declaration_kind": "variable",
+          "declaration_name": "<file-level>",
+          "finding": "injected-hypothesis-surface",
+          "severity": "soft",
+          "detail": "section variable assumptions detected",
+          "snippet": "193: open ParaComplexConnection\n194: variable {V : Type*} [AddCommGroup V] [Module ℝ V]\n195: variable (PCS : ParaComplexStructure V)\n196: \n197: ",
+          "graph_grounded_signal": "none",
+          "heuristic_signal": "injected-hypothesis-surface",
+          "hard_verdict_allowed": false
+        },
+        {
+          "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+          "module": "InfoGeometry.Canonical.ParaComplexNeutralForm",
+          "line": 248,
+          "declaration_kind": "variable",
+          "declaration_name": "<file-level>",
+          "finding": "injected-hypothesis-surface",
+          "severity": "soft",
+          "detail": "section variable assumptions detected",
+          "snippet": "246: open ParaComplexConnection\n247: variable {V : Type*} [AddCommGroup V] [Module ℝ V]\n248: variable (PCS : ParaComplexStructure V)\n249: \n250: ",
+          "graph_grounded_signal": "none",
+          "heuristic_signal": "injected-hypothesis-surface",
+          "hard_verdict_allowed": false
+        },
+        {
+          "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+          "module": "InfoGeometry.Canonical.ParaComplexNeutralForm",
+          "line": 269,
+          "declaration_kind": "variable",
+          "declaration_name": "<file-level>",
+          "finding": "injected-hypothesis-surface",
+          "severity": "soft",
+          "detail": "section variable assumptions detected",
+          "snippet": "267: \n268: variable {V : Type*} [AddCommGroup V] [Module ℝ V]\n269: variable (PCS : ParaComplexStructure V) (B : LinearMap.BilinForm ℝ V)\n270: \n271: ",
+          "graph_grounded_signal": "none",
+          "heuristic_signal": "injected-hypothesis-surface",
+          "hard_verdict_allowed": false
+        }
+      ]
+    },
+    "placeholder-RegularDyadCompression": {
+      "schema": "info_geometry.placeholder_audit.v2",
+      "generated_at": "2026-11-17T11:41:19.241322+00:00",
+      "root": "lean/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean",
+      "authority_tier": "heuristic-proxy",
+      "summary": {
+        "module_count": 0,
+        "scanned_count": 1,
+        "finding_count": 0,
+        "hard_count": 0,
+        "soft_count": 0,
+        "advisory_count": 0,
+        "provenance": {
+          "hard_failures": 0,
+          "soft_findings": 0,
+          "advisory_findings": 0
+        }
+      },
+      "modules": [],
+      "findings": []
+    },
+    "placeholder-SheetWittCircularBasis": {
+      "schema": "info_geometry.placeholder_audit.v2",
+      "generated_at": "2026-11-17T11:41:19.372091+00:00",
+      "root": "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+      "authority_tier": "heuristic-proxy",
+      "summary": {
+        "module_count": 1,
+        "scanned_count": 1,
+        "finding_count": 3,
+        "hard_count": 0,
+        "soft_count": 3,
+        "advisory_count": 0,
+        "provenance": {
+          "hard_failures": 0,
+          "soft_findings": 3,
+          "advisory_findings": 0
+        }
+      },
+      "modules": [
+        {
+          "path": "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+          "module": "InfoGeometry.Optics.SheetWittCircularBasis",
+          "finding_count": 3,
+          "hard_count": 0,
+          "soft_count": 3,
+          "advisory_count": 0,
+          "findings": [
+            {
+              "file": "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+              "module": "InfoGeometry.Optics.SheetWittCircularBasis",
+              "line": 51,
+              "declaration_kind": "theorem",
+              "declaration_name": "choose_left_right_orthogonal",
+              "finding": "skeletal-proof",
+              "severity": "soft",
+              "detail": "proof appears to be tactic-automation-only or skeletal",
+              "snippet": "49: \n50: variable (S : CommutingInvolutions Op)\n51: \n52: theorem choose_left_right_orthogonal (C : ChiralInvolution Op) :\n53:     choose true C.Pleft C.Pright * choose false C.Pleft C.Pright = 0 := by",
+              "graph_grounded_signal": "none",
+              "heuristic_signal": "skeletal-proof",
+              "hard_verdict_allowed": false
+            },
+            {
+              "file": "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+              "module": "InfoGeometry.Optics.SheetWittCircularBasis",
+              "line": 55,
+              "declaration_kind": "theorem",
+              "declaration_name": "choose_right_left_orthogonal",
+              "finding": "skeletal-proof",
+              "severity": "soft",
+              "detail": "proof appears to be tactic-automation-only or skeletal",
+              "snippet": "53:     choose true C.Pleft C.Pright * choose false C.Pleft C.Pright = 0 := by\n54:   simp [choose, C.Pleft_mul_Pright]\n55: \n56: theorem choose_right_left_orthogonal (C : ChiralInvolution Op) :\n57:     choose false C.Pleft C.Pright * choose true C.Pleft C.Pright = 0 := by",
+              "graph_grounded_signal": "none",
+              "heuristic_signal": "skeletal-proof",
+              "hard_verdict_allowed": false
+            },
+            {
+              "file": "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+              "module": "InfoGeometry.Optics.SheetWittCircularBasis",
+              "line": 49,
+              "declaration_kind": "variable",
+              "declaration_name": "<file-level>",
+              "finding": "injected-hypothesis-surface",
+              "severity": "soft",
+              "detail": "section variable assumptions detected",
+              "snippet": "47: \n48: namespace CommutingInvolutions\n49: \n50: variable (S : CommutingInvolutions Op)\n51: ",
+              "graph_grounded_signal": "none",
+              "heuristic_signal": "injected-hypothesis-surface",
+              "hard_verdict_allowed": false
+            }
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "file": "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+          "module": "InfoGeometry.Optics.SheetWittCircularBasis",
+          "line": 51,
+          "declaration_kind": "theorem",
+          "declaration_name": "choose_left_right_orthogonal",
+          "finding": "skeletal-proof",
+          "severity": "soft",
+          "detail": "proof appears to be tactic-automation-only or skeletal",
+          "snippet": "49: \n50: variable (S : CommutingInvolutions Op)\n51: \n52: theorem choose_left_right_orthogonal (C : ChiralInvolution Op) :\n53:     choose true C.Pleft C.Pright * choose false C.Pleft C.Pright = 0 := by",
+          "graph_grounded_signal": "none",
+          "heuristic_signal": "skeletal-proof",
+          "hard_verdict_allowed": false
+        },
+        {
+          "file": "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+          "module": "InfoGeometry.Optics.SheetWittCircularBasis",
+          "line": 55,
+          "declaration_kind": "theorem",
+          "declaration_name": "choose_right_left_orthogonal",
+          "finding": "skeletal-proof",
+          "severity": "soft",
+          "detail": "proof appears to be tactic-automation-only or skeletal",
+          "snippet": "53:     choose true C.Pleft C.Pright * choose false C.Pleft C.Pright = 0 := by\n54:   simp [choose, C.Pleft_mul_Pright]\n55: \n56: theorem choose_right_left_orthogonal (C : ChiralInvolution Op) :\n57:     choose false C.Pleft C.Pright * choose true C.Pleft C.Pright = 0 := by",
+          "graph_grounded_signal": "none",
+          "heuristic_signal": "skeletal-proof",
+          "hard_verdict_allowed": false
+        },
+        {
+          "file": "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+          "module": "InfoGeometry.Optics.SheetWittCircularBasis",
+          "line": 49,
+          "declaration_kind": "variable",
+          "declaration_name": "<file-level>",
+          "finding": "injected-hypothesis-surface",
+          "severity": "soft",
+          "detail": "section variable assumptions detected",
+          "snippet": "47: \n48: namespace CommutingInvolutions\n49: \n50: variable (S : CommutingInvolutions Op)\n51: ",
+          "graph_grounded_signal": "none",
+          "heuristic_signal": "injected-hypothesis-surface",
+          "hard_verdict_allowed": false
+        }
+      ]
+    },
+    "refute": [
+      {
+        "filename": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+        "clean": true,
+        "total_traps": 2,
+        "errors": [],
+        "warnings": [
+          {
+            "trap_id": "T17",
+            "trap_name": "Unwitnessed Structure / Model Non-Degeneracy Risk (Gate 2.5)",
+            "line_number": 18,
+            "matched_text": "structure/class Datum",
+            "message": "Structure/class 'Datum' lacks a recognizable constructive inhabitant or `Inhabited` instance in this source. This text screen does not certify semantic non-degeneracy.",
+            "severity": "WARNING"
+          },
+          {
+            "trap_id": "T17",
+            "trap_name": "Unwitnessed Structure / Model Non-Degeneracy Risk (Gate 2.5)",
+            "line_number": 123,
+            "matched_text": "structure/class NondegenerateDatum",
+            "message": "Structure/class 'NondegenerateDatum' lacks a recognizable constructive inhabitant or `Inhabited` instance in this source. This text screen does not certify semantic non-degeneracy.",
+            "severity": "WARNING"
+          }
+        ],
+        "verdict": "WARN"
+      },
+      {
+        "filename": "lean/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean",
+        "clean": true,
+        "total_traps": 0,
+        "errors": [],
+        "warnings": [],
+        "verdict": "PASS"
+      },
+      {
+        "filename": "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+        "clean": true,
+        "total_traps": 1,
+        "errors": [],
+        "warnings": [
+          {
+            "trap_id": "T17",
+            "trap_name": "Unwitnessed Structure / Model Non-Degeneracy Risk (Gate 2.5)",
+            "line_number": 32,
+            "matched_text": "structure/class CommutingInvolutions",
+            "message": "Structure/class 'CommutingInvolutions' lacks a recognizable constructive inhabitant or `Inhabited` instance in this source. This text screen does not certify semantic non-degeneracy.",
+            "severity": "WARNING"
+          }
+        ],
+        "verdict": "WARN"
+      },
+      {
+        "filename": "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean",
+        "clean": true,
+        "total_traps": 0,
+        "errors": [],
+        "warnings": [],
+        "verdict": "PASS"
+      }
+    ],
+    "screener": {
+      "violations": {
+        "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean": [
+          {
+            "trap_id": "T17",
+            "trap_name": "Unwitnessed Structure / Model Non-Degeneracy Risk (Gate 2.5)",
+            "line_number": 18,
+            "matched_text": "structure/class Datum",
+            "message": "Structure/class 'Datum' lacks a recognizable constructive inhabitant or `Inhabited` instance in this source. This text screen does not certify semantic non-degeneracy.",
+            "severity": "WARNING"
+          },
+          {
+            "trap_id": "T17",
+            "trap_name": "Unwitnessed Structure / Model Non-Degeneracy Risk (Gate 2.5)",
+            "line_number": 123,
+            "matched_text": "structure/class NondegenerateDatum",
+            "message": "Structure/class 'NondegenerateDatum' lacks a recognizable constructive inhabitant or `Inhabited` instance in this source. This text screen does not certify semantic non-degeneracy.",
+            "severity": "WARNING"
+          }
+        ],
+        "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean": [
+          {
+            "trap_id": "T17",
+            "trap_name": "Unwitnessed Structure / Model Non-Degeneracy Risk (Gate 2.5)",
+            "line_number": 32,
+            "matched_text": "structure/class CommutingInvolutions",
+            "message": "Structure/class 'CommutingInvolutions' lacks a recognizable constructive inhabitant or `Inhabited` instance in this source. This text screen does not certify semantic non-degeneracy.",
+            "severity": "WARNING"
+          }
+        ]
+      },
+      "quarantined_packets": []
+    },
+    "semantic": {
+      "authority": "lexical heuristics; not a semantic or kernel proof",
+      "blocking_severity_counts": {
+        "warning": 17
+      },
+      "counts": {
+        "proof_like_field_type": 9,
+        "trivial_surface": 8
+      },
+      "coverage_complete": true,
+      "fail_on": "error",
+      "fail_prefixes": [],
+      "files_scanned": 4,
+      "files_selected": 4,
+      "findings": [
+        {
+          "category": "proof_like_field_type",
+          "detail": "symmetric : ∀ x y, form x y = form y x",
+          "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+          "line": 20,
+          "severity": "warning",
+          "subject": "Datum.symmetric"
+        },
+        {
+          "category": "proof_like_field_type",
+          "detail": "anti_isometry : ∀ x y, form (PCS.tau x) (PCS.tau y) = - form x y",
+          "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+          "line": 21,
+          "severity": "warning",
+          "subject": "Datum.anti_isometry"
+        },
+        {
+          "category": "proof_like_field_type",
+          "detail": "symmetric : ∀ x y, form x y = form y x",
+          "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+          "line": 125,
+          "severity": "warning",
+          "subject": "NondegenerateDatum.symmetric"
+        },
+        {
+          "category": "proof_like_field_type",
+          "detail": "nondegenerate : ∀ x, (∀ y, form x y = 0) → x = 0",
+          "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+          "line": 127,
+          "severity": "warning",
+          "subject": "NondegenerateDatum.nondegenerate"
+        },
+        {
+          "category": "proof_like_field_type",
+          "detail": "plus_cross_nondegenerate : ∀ u ∈ minusEigenspace PCS,",
+          "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+          "line": 128,
+          "severity": "warning",
+          "subject": "NondegenerateDatum.plus_cross_nondegenerate"
+        },
+        {
+          "category": "proof_like_field_type",
+          "detail": "minus_cross_nondegenerate : ∀ u ∈ plusEigenspace PCS,",
+          "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+          "line": 130,
+          "severity": "warning",
+          "subject": "NondegenerateDatum.minus_cross_nondegenerate"
+        },
+        {
+          "category": "trivial_surface",
+          "detail": "rfl",
+          "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+          "line": 332,
+          "severity": "warning",
+          "subject": "plusToMinusDual_apply"
+        },
+        {
+          "category": "trivial_surface",
+          "detail": "rfl",
+          "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+          "line": 335,
+          "severity": "warning",
+          "subject": "minusToPlusDual_apply"
+        },
+        {
+          "category": "trivial_surface",
+          "detail": "rfl",
+          "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+          "line": 380,
+          "severity": "warning",
+          "subject": "plusToMinusDualEquiv_apply"
+        },
+        {
+          "category": "trivial_surface",
+          "detail": "rfl",
+          "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+          "line": 384,
+          "severity": "warning",
+          "subject": "minusToPlusDualEquiv_apply"
+        },
+        {
+          "category": "proof_like_field_type",
+          "detail": "hyperbolic_sq : hyperbolic * hyperbolic = 1",
+          "file": "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+          "line": 35,
+          "severity": "warning",
+          "subject": "CommutingInvolutions.hyperbolic_sq"
+        },
+        {
+          "category": "proof_like_field_type",
+          "detail": "circular_sq : circular * circular = 1",
+          "file": "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+          "line": 36,
+          "severity": "warning",
+          "subject": "CommutingInvolutions.circular_sq"
+        },
+        {
+          "category": "proof_like_field_type",
+          "detail": "commute : hyperbolic * circular = circular * hyperbolic",
+          "file": "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+          "line": 37,
+          "severity": "warning",
+          "subject": "CommutingInvolutions.commute"
+        },
+        {
+          "category": "trivial_surface",
+          "detail": "by",
+          "file": "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+          "line": 52,
+          "severity": "warning",
+          "subject": "choose_left_right_orthogonal"
+        },
+        {
+          "category": "trivial_surface",
+          "detail": "by",
+          "file": "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+          "line": 56,
+          "severity": "warning",
+          "subject": "choose_right_left_orthogonal"
+        },
+        {
+          "category": "trivial_surface",
+          "detail": "rfl",
+          "file": "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean",
+          "line": 62,
+          "severity": "warning",
+          "subject": "mixedLogKernel_apply"
+        },
+        {
+          "category": "trivial_surface",
+          "detail": "by",
+          "file": "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean",
+          "line": 170,
+          "severity": "warning",
+          "subject": "mixedLogKernel_frameAction"
+        }
+      ],
+      "pattern_version": 1,
+      "read_failures": [],
+      "scope_roots": [
+        "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+        "lean/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean",
+        "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+        "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean"
+      ],
+      "severity_counts": {
+        "warning": 17
+      },
+      "source_paths": [
+        "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+        "lean/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean",
+        "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+        "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean"
+      ],
+      "successfully_read_paths": [
+        "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+        "lean/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean",
+        "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+        "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean"
+      ],
+      "tracked": false
+    }
+  },
+  "logs": {
+    "placeholder-NonincidentLogPairing.log": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-17T11:41:19.491419+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **1**\n- Total findings: **1** (hard=0, soft=1, advisory=0)\n\n## `InfoGeometry.Twistor.NonincidentLogPairing`\n- path: `lean/InfoGeometry/Twistor/NonincidentLogPairing.lean`\n- findings: 1 (hard=0, soft=1, advisory=0)\n\n- L169: **SOFT** `skeletal-proof` in `theorem mixedLogKernel_frameAction`\n  - proof appears to be tactic-automation-only or skeletal\n  - `167:   simp only [mixedLogKernel_apply, LinearMap.smul_apply, map_smul, smul_eq_mul]`\n\n\n",
+    "placeholder-ParaComplexNeutralForm.log": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-17T11:41:19.136003+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **1**\n- Total findings: **5** (hard=0, soft=5, advisory=0)\n\n## `InfoGeometry.Canonical.ParaComplexNeutralForm`\n- path: `lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean`\n- findings: 5 (hard=0, soft=5, advisory=0)\n\n- L22: **SOFT** `injected-hypothesis-surface` in `variable <file-level>`\n  - section variable assumptions detected\n  - `20:   symmetric : ∀ x y, form x y = form y x`\n- L119: **SOFT** `injected-hypothesis-surface` in `variable <file-level>`\n  - section variable assumptions detected\n  - `117: open ParaComplexConnection`\n- L195: **SOFT** `injected-hypothesis-surface` in `variable <file-level>`\n  - section variable assumptions detected\n  - `193: open ParaComplexConnection`\n- L248: **SOFT** `injected-hypothesis-surface` in `variable <file-level>`\n  - section variable assumptions detected\n  - `246: open ParaComplexConnection`\n- L269: **SOFT** `injected-hypothesis-surface` in `variable <file-level>`\n  - section variable assumptions detected\n  - `267: `\n\n\n",
+    "placeholder-RegularDyadCompression.log": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-17T11:41:19.241578+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **0**\n- Total findings: **0** (hard=0, soft=0, advisory=0)\n\nNo placeholder-trust findings detected.\n\n",
+    "placeholder-SheetWittCircularBasis.log": "# Lean Placeholder Trust Audit\n\nGenerated: `2026-11-17T11:41:19.372351+00:00`\n\n- Modules scanned: **1**\n- Modules with findings: **1**\n- Total findings: **3** (hard=0, soft=3, advisory=0)\n\n## `InfoGeometry.Optics.SheetWittCircularBasis`\n- path: `lean/InfoGeometry/Optics/SheetWittCircularBasis.lean`\n- findings: 3 (hard=0, soft=3, advisory=0)\n\n- L51: **SOFT** `skeletal-proof` in `theorem choose_left_right_orthogonal`\n  - proof appears to be tactic-automation-only or skeletal\n  - `49: `\n- L55: **SOFT** `skeletal-proof` in `theorem choose_right_left_orthogonal`\n  - proof appears to be tactic-automation-only or skeletal\n  - `53:     choose true C.Pleft C.Pright * choose false C.Pleft C.Pright = 0 := by`\n- L49: **SOFT** `injected-hypothesis-surface` in `variable <file-level>`\n  - section variable assumptions detected\n  - `47: `\n\n\n",
+    "refute.log": "[\n  {\n    \"filename\": \"lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean\",\n    \"clean\": true,\n    \"total_traps\": 2,\n    \"errors\": [],\n    \"warnings\": [\n      {\n        \"trap_id\": \"T17\",\n        \"trap_name\": \"Unwitnessed Structure / Model Non-Degeneracy Risk (Gate 2.5)\",\n        \"line_number\": 18,\n        \"matched_text\": \"structure/class Datum\",\n        \"message\": \"Structure/class 'Datum' lacks a recognizable constructive inhabitant or `Inhabited` instance in this source. This text screen does not certify semantic non-degeneracy.\",\n        \"severity\": \"WARNING\"\n      },\n      {\n        \"trap_id\": \"T17\",\n        \"trap_name\": \"Unwitnessed Structure / Model Non-Degeneracy Risk (Gate 2.5)\",\n        \"line_number\": 123,\n        \"matched_text\": \"structure/class NondegenerateDatum\",\n        \"message\": \"Structure/class 'NondegenerateDatum' lacks a recognizable constructive inhabitant or `Inhabited` instance in this source. This text screen does not certify semantic non-degeneracy.\",\n        \"severity\": \"WARNING\"\n      }\n    ],\n    \"verdict\": \"WARN\"\n  },\n  {\n    \"filename\": \"lean/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean\",\n    \"clean\": true,\n    \"total_traps\": 0,\n    \"errors\": [],\n    \"warnings\": [],\n    \"verdict\": \"PASS\"\n  },\n  {\n    \"filename\": \"lean/InfoGeometry/Optics/SheetWittCircularBasis.lean\",\n    \"clean\": true,\n    \"total_traps\": 1,\n    \"errors\": [],\n    \"warnings\": [\n      {\n        \"trap_id\": \"T17\",\n        \"trap_name\": \"Unwitnessed Structure / Model Non-Degeneracy Risk (Gate 2.5)\",\n        \"line_number\": 32,\n        \"matched_text\": \"structure/class CommutingInvolutions\",\n        \"message\": \"Structure/class 'CommutingInvolutions' lacks a recognizable constructive inhabitant or `Inhabited` instance in this source. This text screen does not certify semantic non-degeneracy.\",\n        \"severity\": \"WARNING\"\n      }\n    ],\n    \"verdict\": \"WARN\"\n  },\n  {\n    \"filename\": \"lean/InfoGeometry/Twistor/NonincidentLogPairing.lean\",\n    \"clean\": true,\n    \"total_traps\": 0,\n    \"errors\": [],\n    \"warnings\": [],\n    \"verdict\": \"PASS\"\n  }\n]\n",
+    "screener.log": "{\n  \"violations\": {\n    \"lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean\": [\n      {\n        \"trap_id\": \"T17\",\n        \"trap_name\": \"Unwitnessed Structure / Model Non-Degeneracy Risk (Gate 2.5)\",\n        \"line_number\": 18,\n        \"matched_text\": \"structure/class Datum\",\n        \"message\": \"Structure/class 'Datum' lacks a recognizable constructive inhabitant or `Inhabited` instance in this source. This text screen does not certify semantic non-degeneracy.\",\n        \"severity\": \"WARNING\"\n      },\n      {\n        \"trap_id\": \"T17\",\n        \"trap_name\": \"Unwitnessed Structure / Model Non-Degeneracy Risk (Gate 2.5)\",\n        \"line_number\": 123,\n        \"matched_text\": \"structure/class NondegenerateDatum\",\n        \"message\": \"Structure/class 'NondegenerateDatum' lacks a recognizable constructive inhabitant or `Inhabited` instance in this source. This text screen does not certify semantic non-degeneracy.\",\n        \"severity\": \"WARNING\"\n      }\n    ],\n    \"lean/InfoGeometry/Optics/SheetWittCircularBasis.lean\": [\n      {\n        \"trap_id\": \"T17\",\n        \"trap_name\": \"Unwitnessed Structure / Model Non-Degeneracy Risk (Gate 2.5)\",\n        \"line_number\": 32,\n        \"matched_text\": \"structure/class CommutingInvolutions\",\n        \"message\": \"Structure/class 'CommutingInvolutions' lacks a recognizable constructive inhabitant or `Inhabited` instance in this source. This text screen does not certify semantic non-degeneracy.\",\n        \"severity\": \"WARNING\"\n      }\n    ]\n  },\n  \"quarantined_packets\": []\n}\n",
+    "semantic.log": "Semantic vacuity audit\n======================\nroots: lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean, lean/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean, lean/InfoGeometry/Optics/SheetWittCircularBasis.lean, lean/InfoGeometry/Twistor/NonincidentLogPairing.lean\npatterns: /workspace/scratch/933d64e28eca/repo/tools/quality/semantic_vacuity_patterns.json\nsemantic_vacuity: 17\nwarning: 17\nproof_like_field_type: 9\ntrivial_surface: 8\n  - lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean:20 [warning/proof_like_field_type] Datum.symmetric: symmetric : ∀ x y, form x y = form y x\n  - lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean:21 [warning/proof_like_field_type] Datum.anti_isometry: anti_isometry : ∀ x y, form (PCS.tau x) (PCS.tau y) = - form x y\n  - lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean:125 [warning/proof_like_field_type] NondegenerateDatum.symmetric: symmetric : ∀ x y, form x y = form y x\n  - lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean:127 [warning/proof_like_field_type] NondegenerateDatum.nondegenerate: nondegenerate : ∀ x, (∀ y, form x y = 0) → x = 0\n  - lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean:128 [warning/proof_like_field_type] NondegenerateDatum.plus_cross_nondegenerate: plus_cross_nondegenerate : ∀ u ∈ minusEigenspace PCS,\n  - lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean:130 [warning/proof_like_field_type] NondegenerateDatum.minus_cross_nondegenerate: minus_cross_nondegenerate : ∀ u ∈ plusEigenspace PCS,\n  - lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean:332 [warning/trivial_surface] plusToMinusDual_apply: rfl\n  - lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean:335 [warning/trivial_surface] minusToPlusDual_apply: rfl\n  - lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean:380 [warning/trivial_surface] plusToMinusDualEquiv_apply: rfl\n  - lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean:384 [warning/trivial_surface] minusToPlusDualEquiv_apply: rfl\n  - lean/InfoGeometry/Optics/SheetWittCircularBasis.lean:35 [warning/proof_like_field_type] CommutingInvolutions.hyperbolic_sq: hyperbolic_sq : hyperbolic * hyperbolic = 1\n  - lean/InfoGeometry/Optics/SheetWittCircularBasis.lean:36 [warning/proof_like_field_type] CommutingInvolutions.circular_sq: circular_sq : circular * circular = 1\n  - lean/InfoGeometry/Optics/SheetWittCircularBasis.lean:37 [warning/proof_like_field_type] CommutingInvolutions.commute: commute : hyperbolic * circular = circular * hyperbolic\n  - lean/InfoGeometry/Optics/SheetWittCircularBasis.lean:52 [warning/trivial_surface] choose_left_right_orthogonal: by\n  - lean/InfoGeometry/Optics/SheetWittCircularBasis.lean:56 [warning/trivial_surface] choose_right_left_orthogonal: by\n  - lean/InfoGeometry/Twistor/NonincidentLogPairing.lean:62 [warning/trivial_surface] mixedLogKernel_apply: rfl\n  - lean/InfoGeometry/Twistor/NonincidentLogPairing.lean:170 [warning/trivial_surface] mixedLogKernel_frameAction: by\n"
+  },
+  "source_review": {
+    "schema": "independent_source_semantic_review.v2",
+    "generated_at_utc": "2026-11-17T11:42:41.267769+00:00",
+    "reviewer": "/root/audit_claims",
+    "authority": "Independent source-level mathematical review; not a Lean compiler, kernel, axiom, or publication-gate certificate.",
+    "disposition": "PASS_SOURCE_SEMANTICS_WITH_RETAINED_ADVISORIES",
+    "base_commit": "08c34e03f610b452e03422037949196dc7d92d6d",
+    "head_commit_at_review": "1b1ecdd405b25a81f0c8177ac405c6cee4de7de1",
+    "reviewed_revision_description": "Current four-owner working-tree bytes identified by source_sha256. Relative to frozen proof-source commit 1b1ecdd405b25a81f0c8177ac405c6cee4de7de1, the sole Lean code change removes an unreachable trailing ring tactic in hasDerivAt_logPairing_readout. Current source bytes await a new commit and second fresh native acceptance run.",
+    "repository_path": "/workspace/scratch/933d64e28eca/repo",
+    "source_sha256": {
+      "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean": "ac8ea0b4ec1b2c45bc4995388eedcc27e5ef7e0fd61d862a6181f896dc7ab605",
+      "lean/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean": "a85dafe5d2f3fa1114a085500bd0ebf917088f9bd81ae3f545c90f278e30c780",
+      "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean": "dcd4fbde48e869da4d03e6512562c245f7162e373df6146a364f7deccd256d69",
+      "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean": "57af40272b06c8ce41522c58659d686d9c70dbcfacd42e37511c3217dbdb2cdb"
+    },
+    "source_hashes_match_fresh_receipts_before_and_after": true,
+    "fresh_receipts_directory": "/workspace/scratch/933d64e28eca/static-20261117-4",
+    "receipt_sha256": {
+      "static-20261117-4/placeholder-NonincidentLogPairing.json": "8b3cb7ea4fa5bdba86380fe120b16a9816be1683d9b37c27a80157b1e0f00204",
+      "static-20261117-4/placeholder-NonincidentLogPairing.log": "668f8daf9587d81561530157cae9d1f2a69de7c0405e94b30c9638e87d8b4f02",
+      "static-20261117-4/placeholder-ParaComplexNeutralForm.json": "0c58fa075e63a4f0758e8017a0aad8a0a07997230a5eb17d64cac889e46c8210",
+      "static-20261117-4/placeholder-ParaComplexNeutralForm.log": "eff4e511559d80ac16eb6fbb313943b4ae0c9784a4c9046fa32db1e036958d19",
+      "static-20261117-4/placeholder-RegularDyadCompression.json": "9be13cb42a32e1fa01686a945ea8ff43123b7b8678425f2d10cb84daefc84b09",
+      "static-20261117-4/placeholder-RegularDyadCompression.log": "0aa9d3df839f858d8d4637f81eb8590c32bf5f7066ae7a702a6a5fd375738052",
+      "static-20261117-4/placeholder-SheetWittCircularBasis.json": "0d94259475ec28110bcc02721e670533559cd284dd3cb7e4f870e88b698e57a2",
+      "static-20261117-4/placeholder-SheetWittCircularBasis.log": "24086af677550d19db302c8593ec4828f486f159c57dcdf6f11d0fbf5f4d6579",
+      "static-20261117-4/refute.json": "74d29ef1804e9ec87129e9c39e13b7671e7b291c0a03f1d9ff7a6740460c9acb",
+      "static-20261117-4/refute.log": "74d29ef1804e9ec87129e9c39e13b7671e7b291c0a03f1d9ff7a6740460c9acb",
+      "static-20261117-4/results.json": "ad2d30c4427639e0cbd84b6b58849038de99db49800bf66c4d61f1fda3e53dbf",
+      "static-20261117-4/screener.json": "b0cd88348e7cafa6bb5466443b6e284c64339f3e953151a8af88bb14dc957651",
+      "static-20261117-4/screener.log": "b0cd88348e7cafa6bb5466443b6e284c64339f3e953151a8af88bb14dc957651",
+      "static-20261117-4/semantic.json": "58b2c42aa5e7a57b0c1f3905c623cdf4e9f80940594087b27fe076e086979460",
+      "static-20261117-4/semantic.log": "17a370e88e4a56bbbc2ad458c2b2682dba378adc39067fc4d13594c7a76dcf0e"
+    },
+    "receipt_integrity": {
+      "all_15_receipt_and_log_files_read": true,
+      "recorded_log_hashes_match_raw_logs": true,
+      "screener_json_equals_raw_log": true,
+      "refute_json_equals_raw_log": true,
+      "semantic_coverage_complete": true,
+      "semantic_read_failures": [],
+      "scope_is_four_source_owners": true
+    },
+    "mathematical_conclusion": {
+      "actual_vacuity_found": false,
+      "assumed_conclusion_recycling_found": false,
+      "substantive_omission_relative_to_contract_found": false,
+      "new_structures_introduced": false,
+      "proof_scope": "Derived neutral cross duality and finite rank equality; ordered normalized dyads; exact radial kernels and actual iterated real-line derivative; derived joint-projector commutation in a noncommutative ambient algebra.",
+      "open_boundaries": [
+        "Global projective manifold descent",
+        "Closed differential two-form or full para-Kahler manifold construction",
+        "Signature-classification API",
+        "Scattering amplitudes or residue construction",
+        "Identification of momentum mass-zero locus with spacetime conformal infinity",
+        "Universal physical uniqueness or nonplanar impossibility"
+      ]
+    },
+    "finding_counts": {
+      "screener": {
+        "errors": 0,
+        "warnings": 3,
+        "T17": 3,
+        "strict_exit_code": 1
+      },
+      "refute": {
+        "errors": 0,
+        "warnings": 3,
+        "T17": 3,
+        "strict_exit_code": 1
+      },
+      "semantic": {
+        "errors": 0,
+        "warnings": 17,
+        "proof_like_field_type": 9,
+        "trivial_surface": 8,
+        "exit_code": 0,
+        "failure_threshold": "error"
+      },
+      "placeholder": {
+        "hard": 0,
+        "soft": 9,
+        "advisory": 0,
+        "per_owner": {
+          "NonincidentLogPairing": 1,
+          "ParaComplexNeutralForm": 5,
+          "RegularDyadCompression": 0,
+          "SheetWittCircularBasis": 3
+        },
+        "exit_codes": {
+          "ParaComplexNeutralForm": 0,
+          "RegularDyadCompression": 0,
+          "SheetWittCircularBasis": 0,
+          "NonincidentLogPairing": 0
+        }
+      },
+      "cross_tool_count_note": "The same subjects recur in multiple scanners. Counts are per tool and must not be summed as unique mathematical defects."
+    },
+    "screener_findings": [
+      {
+        "trap_id": "T17",
+        "trap_name": "Unwitnessed Structure / Model Non-Degeneracy Risk (Gate 2.5)",
+        "line_number": 18,
+        "matched_text": "structure/class Datum",
+        "message": "Structure/class 'Datum' lacks a recognizable constructive inhabitant or `Inhabited` instance in this source. This text screen does not certify semantic non-degeneracy.",
+        "severity": "WARNING",
+        "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+        "subject": "Datum",
+        "classification": "inherited_parameterized_structure_model_warning",
+        "inherited": true,
+        "semantic_disposition": "no_material_vacuity_found",
+        "reason": "Existing symmetric anti-isometric bilinear-form interface. The real dual-twistor owner constructs a nontrivial symmetric neutral form and a compatible involution on U x U*. Absence of a recognizable same-file inhabitant is not evidence that the assumptions are inconsistent."
+      },
+      {
+        "trap_id": "T17",
+        "trap_name": "Unwitnessed Structure / Model Non-Degeneracy Risk (Gate 2.5)",
+        "line_number": 123,
+        "matched_text": "structure/class NondegenerateDatum",
+        "message": "Structure/class 'NondegenerateDatum' lacks a recognizable constructive inhabitant or `Inhabited` instance in this source. This text screen does not certify semantic non-degeneracy.",
+        "severity": "WARNING",
+        "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+        "subject": "NondegenerateDatum",
+        "classification": "inherited_parameterized_structure_model_warning",
+        "inherited": true,
+        "semantic_disposition": "no_material_vacuity_found",
+        "reason": "Existing parameterized interface. The new Datum.toNondegenerateDatum constructor derives both cross-nondegeneracy fields from ambient left nondegeneracy and Peirce decomposition. RealDualTwistor supplies a nontrivial compatible nondegenerate model. An Inhabited instance for every PCS would be mathematically inappropriate: some involutions admit no such nondegenerate form."
+      },
+      {
+        "trap_id": "T17",
+        "trap_name": "Unwitnessed Structure / Model Non-Degeneracy Risk (Gate 2.5)",
+        "line_number": 32,
+        "matched_text": "structure/class CommutingInvolutions",
+        "message": "Structure/class 'CommutingInvolutions' lacks a recognizable constructive inhabitant or `Inhabited` instance in this source. This text screen does not certify semantic non-degeneracy.",
+        "severity": "WARNING",
+        "file": "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+        "subject": "CommutingInvolutions",
+        "classification": "inherited_parameterized_structure_model_warning",
+        "inherited": true,
+        "semantic_disposition": "no_material_vacuity_found",
+        "reason": "Existing operator interface with an actual nontrivial consumer model AttentionOccupationRefinement.occupationAxes. The new ofCommute constructor derives projector_commute from the two operators commuting. No commutative ambient ring is assumed."
+      }
+    ],
+    "refute_findings": [
+      {
+        "trap_id": "T17",
+        "trap_name": "Unwitnessed Structure / Model Non-Degeneracy Risk (Gate 2.5)",
+        "line_number": 18,
+        "matched_text": "structure/class Datum",
+        "message": "Structure/class 'Datum' lacks a recognizable constructive inhabitant or `Inhabited` instance in this source. This text screen does not certify semantic non-degeneracy.",
+        "severity": "WARNING",
+        "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+        "subject": "Datum",
+        "classification": "inherited_parameterized_structure_model_warning",
+        "inherited": true,
+        "semantic_disposition": "no_material_vacuity_found",
+        "reason": "Existing symmetric anti-isometric bilinear-form interface. The real dual-twistor owner constructs a nontrivial symmetric neutral form and a compatible involution on U x U*. Absence of a recognizable same-file inhabitant is not evidence that the assumptions are inconsistent."
+      },
+      {
+        "trap_id": "T17",
+        "trap_name": "Unwitnessed Structure / Model Non-Degeneracy Risk (Gate 2.5)",
+        "line_number": 123,
+        "matched_text": "structure/class NondegenerateDatum",
+        "message": "Structure/class 'NondegenerateDatum' lacks a recognizable constructive inhabitant or `Inhabited` instance in this source. This text screen does not certify semantic non-degeneracy.",
+        "severity": "WARNING",
+        "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+        "subject": "NondegenerateDatum",
+        "classification": "inherited_parameterized_structure_model_warning",
+        "inherited": true,
+        "semantic_disposition": "no_material_vacuity_found",
+        "reason": "Existing parameterized interface. The new Datum.toNondegenerateDatum constructor derives both cross-nondegeneracy fields from ambient left nondegeneracy and Peirce decomposition. RealDualTwistor supplies a nontrivial compatible nondegenerate model. An Inhabited instance for every PCS would be mathematically inappropriate: some involutions admit no such nondegenerate form."
+      },
+      {
+        "trap_id": "T17",
+        "trap_name": "Unwitnessed Structure / Model Non-Degeneracy Risk (Gate 2.5)",
+        "line_number": 32,
+        "matched_text": "structure/class CommutingInvolutions",
+        "message": "Structure/class 'CommutingInvolutions' lacks a recognizable constructive inhabitant or `Inhabited` instance in this source. This text screen does not certify semantic non-degeneracy.",
+        "severity": "WARNING",
+        "file": "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+        "subject": "CommutingInvolutions",
+        "classification": "inherited_parameterized_structure_model_warning",
+        "inherited": true,
+        "semantic_disposition": "no_material_vacuity_found",
+        "reason": "Existing operator interface with an actual nontrivial consumer model AttentionOccupationRefinement.occupationAxes. The new ofCommute constructor derives projector_commute from the two operators commuting. No commutative ambient ring is assumed."
+      }
+    ],
+    "semantic_findings": [
+      {
+        "category": "proof_like_field_type",
+        "detail": "symmetric : ∀ x y, form x y = form y x",
+        "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+        "line": 20,
+        "severity": "warning",
+        "subject": "Datum.symmetric",
+        "classification": "inherited_defining_hypothesis",
+        "inherited": true,
+        "semantic_disposition": "no_material_issue_found",
+        "reason": "Symmetry is an explicit defining hypothesis of the input form. No new theorem claims to derive symmetry for an arbitrary bilinear form."
+      },
+      {
+        "category": "proof_like_field_type",
+        "detail": "anti_isometry : ∀ x y, form (PCS.tau x) (PCS.tau y) = - form x y",
+        "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+        "line": 21,
+        "severity": "warning",
+        "subject": "Datum.anti_isometry",
+        "classification": "inherited_defining_hypothesis",
+        "inherited": true,
+        "semantic_disposition": "no_material_issue_found",
+        "reason": "Anti-isometry is the explicit compatibility assumption for the involution. Cross duality and dimension equality are derived from it together with nondegeneracy, rather than assumed as fields."
+      },
+      {
+        "category": "proof_like_field_type",
+        "detail": "symmetric : ∀ x y, form x y = form y x",
+        "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+        "line": 125,
+        "severity": "warning",
+        "subject": "NondegenerateDatum.symmetric",
+        "classification": "inherited_defining_hypothesis",
+        "inherited": true,
+        "semantic_disposition": "no_material_issue_found",
+        "reason": "Inherited symmetry assumption; accurately exposed by the theorem carrier."
+      },
+      {
+        "category": "proof_like_field_type",
+        "detail": "nondegenerate : ∀ x, (∀ y, form x y = 0) → x = 0",
+        "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+        "line": 127,
+        "severity": "warning",
+        "subject": "NondegenerateDatum.nondegenerate",
+        "classification": "inherited_defining_hypothesis",
+        "inherited": true,
+        "semantic_disposition": "no_material_issue_found",
+        "reason": "Inherited ambient left-nondegeneracy hypothesis. The new theorem does not assert that every form is nondegenerate; it derives cross separation and duality from this hypothesis."
+      },
+      {
+        "category": "proof_like_field_type",
+        "detail": "plus_cross_nondegenerate : ∀ u ∈ minusEigenspace PCS,",
+        "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+        "line": 128,
+        "severity": "warning",
+        "subject": "NondegenerateDatum.plus_cross_nondegenerate",
+        "classification": "inherited_defining_hypothesis",
+        "inherited": true,
+        "semantic_disposition": "no_material_issue_found",
+        "reason": "Inherited redundant field. The new plus_cross_nondegenerate_of_nondegenerate lemma and Datum.toNondegenerateDatum constructor derive it from ambient nondegeneracy and complementary eigenspace isotropy."
+      },
+      {
+        "category": "proof_like_field_type",
+        "detail": "minus_cross_nondegenerate : ∀ u ∈ plusEigenspace PCS,",
+        "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+        "line": 130,
+        "severity": "warning",
+        "subject": "NondegenerateDatum.minus_cross_nondegenerate",
+        "classification": "inherited_defining_hypothesis",
+        "inherited": true,
+        "semantic_disposition": "no_material_issue_found",
+        "reason": "Inherited redundant field. The new minus_cross_nondegenerate_of_nondegenerate lemma and Datum.toNondegenerateDatum constructor derive it from ambient nondegeneracy and complementary eigenspace isotropy."
+      },
+      {
+        "category": "trivial_surface",
+        "detail": "rfl",
+        "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+        "line": 332,
+        "severity": "warning",
+        "subject": "plusToMinusDual_apply",
+        "classification": "new_definitional_evaluation_api",
+        "inherited": false,
+        "semantic_disposition": "no_material_issue_found",
+        "reason": "Exact definitional evaluation of the constructed restriction B(u,-) to the opposite eigenspace. Injectivity is separately proved."
+      },
+      {
+        "category": "trivial_surface",
+        "detail": "rfl",
+        "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+        "line": 335,
+        "severity": "warning",
+        "subject": "minusToPlusDual_apply",
+        "classification": "new_definitional_evaluation_api",
+        "inherited": false,
+        "semantic_disposition": "no_material_issue_found",
+        "reason": "Exact definitional evaluation of the constructed restriction B(u,-) to the opposite eigenspace. Injectivity is separately proved."
+      },
+      {
+        "category": "trivial_surface",
+        "detail": "rfl",
+        "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+        "line": 380,
+        "severity": "warning",
+        "subject": "plusToMinusDualEquiv_apply",
+        "classification": "new_definitional_evaluation_api",
+        "inherited": false,
+        "semantic_disposition": "no_material_issue_found",
+        "reason": "Confirms that the finite-dimensional equivalence is the actual original cross-pairing map, not an arbitrary chosen equivalence. Bijectivity and dimension equality are supplied by separate derivations."
+      },
+      {
+        "category": "trivial_surface",
+        "detail": "rfl",
+        "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+        "line": 384,
+        "severity": "warning",
+        "subject": "minusToPlusDualEquiv_apply",
+        "classification": "new_definitional_evaluation_api",
+        "inherited": false,
+        "semantic_disposition": "no_material_issue_found",
+        "reason": "Confirms that the finite-dimensional equivalence evaluates as the actual original cross pairing. The equality is appropriate as a definitional API lemma."
+      },
+      {
+        "category": "proof_like_field_type",
+        "detail": "hyperbolic_sq : hyperbolic * hyperbolic = 1",
+        "file": "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+        "line": 35,
+        "severity": "warning",
+        "subject": "CommutingInvolutions.hyperbolic_sq",
+        "classification": "inherited_defining_hypothesis",
+        "inherited": true,
+        "semantic_disposition": "no_material_issue_found",
+        "reason": "Explicit square-one hypothesis on one grading operator. It is not a statement that arbitrary operators are involutions."
+      },
+      {
+        "category": "proof_like_field_type",
+        "detail": "circular_sq : circular * circular = 1",
+        "file": "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+        "line": 36,
+        "severity": "warning",
+        "subject": "CommutingInvolutions.circular_sq",
+        "classification": "inherited_defining_hypothesis",
+        "inherited": true,
+        "semantic_disposition": "no_material_issue_found",
+        "reason": "Explicit square-one hypothesis on the second grading operator. Existing projector idempotence follows from these equations."
+      },
+      {
+        "category": "proof_like_field_type",
+        "detail": "commute : hyperbolic * circular = circular * hyperbolic",
+        "file": "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+        "line": 37,
+        "severity": "warning",
+        "subject": "CommutingInvolutions.commute",
+        "classification": "inherited_defining_hypothesis",
+        "inherited": true,
+        "semantic_disposition": "no_material_issue_found",
+        "reason": "Commutation is required only between the two grading operators. The ambient assumptions remain Ring Op and Algebra Real Op; half-projector commutation is derived."
+      },
+      {
+        "category": "trivial_surface",
+        "detail": "by",
+        "file": "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+        "line": 52,
+        "severity": "warning",
+        "subject": "choose_left_right_orthogonal",
+        "classification": "inherited_specialization_of_existing_product_law",
+        "inherited": true,
+        "semantic_disposition": "no_material_issue_found",
+        "reason": "Inherited Boolean selection specialization of ChiralInvolution.Pleft_mul_Pright. The product-zero result is reused, not assumed as the theorem conclusion."
+      },
+      {
+        "category": "trivial_surface",
+        "detail": "by",
+        "file": "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+        "line": 56,
+        "severity": "warning",
+        "subject": "choose_right_left_orthogonal",
+        "classification": "inherited_specialization_of_existing_product_law",
+        "inherited": true,
+        "semantic_disposition": "no_material_issue_found",
+        "reason": "Inherited Boolean selection specialization of ChiralInvolution.Pright_mul_Pleft. Ordered multiplication is retained."
+      },
+      {
+        "category": "trivial_surface",
+        "detail": "rfl",
+        "file": "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean",
+        "line": 62,
+        "severity": "warning",
+        "subject": "mixedLogKernel_apply",
+        "classification": "new_definitional_evaluation_api",
+        "inherited": false,
+        "semantic_disposition": "no_material_issue_found",
+        "reason": "Unfolds the native bilinear-map definition. The derivative identity, complement factorization, and exact radical results are separate theorem statements and proofs."
+      },
+      {
+        "category": "trivial_surface",
+        "detail": "by",
+        "file": "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean",
+        "line": 170,
+        "severity": "warning",
+        "subject": "mixedLogKernel_frameAction",
+        "classification": "new_derived_frame_covariance",
+        "inherited": false,
+        "semantic_disposition": "no_material_issue_found",
+        "reason": "Derived contragredient covariance: frameAction sends v to e(v) and phi to phi composed with e.symm. Each transformed evaluation reduces through e.symm(e(x)) = x, giving precisely the original numerator and denominator. The simplifier uses real evaluation/frame lemmas; covariance is not an assumed structure field."
+      }
+    ],
+    "placeholder_findings": [
+      {
+        "receipt": "static-20261117-4/placeholder-NonincidentLogPairing.json",
+        "sha256": "8b3cb7ea4fa5bdba86380fe120b16a9816be1683d9b37c27a80157b1e0f00204",
+        "summary": {
+          "module_count": 1,
+          "scanned_count": 1,
+          "finding_count": 1,
+          "hard_count": 0,
+          "soft_count": 1,
+          "advisory_count": 0,
+          "provenance": {
+            "hard_failures": 0,
+            "soft_findings": 1,
+            "advisory_findings": 0
+          }
+        },
+        "findings": [
+          {
+            "file": "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean",
+            "module": "InfoGeometry.Twistor.NonincidentLogPairing",
+            "line": 169,
+            "declaration_kind": "theorem",
+            "declaration_name": "mixedLogKernel_frameAction",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "167:   simp only [mixedLogKernel_apply, LinearMap.smul_apply, map_smul, smul_eq_mul]\n168:   field_simp [ha, hb, h]\n169: \n170: theorem mixedLogKernel_frameAction (e : V ≃ₗ[ℝ] W) (p : Carrier V)\n171:     (u : V) (ψ : Module.Dual ℝ V) :",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false,
+            "classification": "new_derived_frame_covariance",
+            "inherited": false,
+            "semantic_disposition": "no_material_issue_found",
+            "reason": "Derived contragredient covariance: frameAction sends v to e(v) and phi to phi composed with e.symm. Each transformed evaluation reduces through e.symm(e(x)) = x, giving precisely the original numerator and denominator. The simplifier uses real evaluation/frame lemmas; covariance is not an assumed structure field."
+          }
+        ]
+      },
+      {
+        "receipt": "static-20261117-4/placeholder-ParaComplexNeutralForm.json",
+        "sha256": "0c58fa075e63a4f0758e8017a0aad8a0a07997230a5eb17d64cac889e46c8210",
+        "summary": {
+          "module_count": 1,
+          "scanned_count": 1,
+          "finding_count": 5,
+          "hard_count": 0,
+          "soft_count": 5,
+          "advisory_count": 0,
+          "provenance": {
+            "hard_failures": 0,
+            "soft_findings": 5,
+            "advisory_findings": 0
+          }
+        },
+        "findings": [
+          {
+            "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+            "module": "InfoGeometry.Canonical.ParaComplexNeutralForm",
+            "line": 22,
+            "declaration_kind": "variable",
+            "declaration_name": "<file-level>",
+            "finding": "injected-hypothesis-surface",
+            "severity": "soft",
+            "detail": "section variable assumptions detected",
+            "snippet": "20:   symmetric : ∀ x y, form x y = form y x\n21:   anti_isometry : ∀ x y, form (PCS.tau x) (PCS.tau y) = - form x y\n22: \n23: variable (PCS : ParaComplexStructure V) (B : LinearMap.BilinForm ℝ V)\n24: ",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "injected-hypothesis-surface",
+            "hard_verdict_allowed": false,
+            "classification": "explicit_section_parameters",
+            "inherited": true,
+            "semantic_disposition": "no_material_issue_found",
+            "reason": "Section variables expose the carrier, para-complex structure and bilinear form, or the existing commuting-involutions datum. They do not assume the new target duality, rank equality, covariance, or derived projector commutation."
+          },
+          {
+            "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+            "module": "InfoGeometry.Canonical.ParaComplexNeutralForm",
+            "line": 119,
+            "declaration_kind": "variable",
+            "declaration_name": "<file-level>",
+            "finding": "injected-hypothesis-surface",
+            "severity": "soft",
+            "detail": "section variable assumptions detected",
+            "snippet": "117: open ParaComplexConnection\n118: variable {V : Type*} [AddCommGroup V] [Module ℝ V]\n119: variable (PCS : ParaComplexStructure V)\n120: \n121: ",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "injected-hypothesis-surface",
+            "hard_verdict_allowed": false,
+            "classification": "explicit_section_parameters",
+            "inherited": true,
+            "semantic_disposition": "no_material_issue_found",
+            "reason": "Section variables expose the carrier, para-complex structure and bilinear form, or the existing commuting-involutions datum. They do not assume the new target duality, rank equality, covariance, or derived projector commutation."
+          },
+          {
+            "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+            "module": "InfoGeometry.Canonical.ParaComplexNeutralForm",
+            "line": 195,
+            "declaration_kind": "variable",
+            "declaration_name": "<file-level>",
+            "finding": "injected-hypothesis-surface",
+            "severity": "soft",
+            "detail": "section variable assumptions detected",
+            "snippet": "193: open ParaComplexConnection\n194: variable {V : Type*} [AddCommGroup V] [Module ℝ V]\n195: variable (PCS : ParaComplexStructure V)\n196: \n197: ",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "injected-hypothesis-surface",
+            "hard_verdict_allowed": false,
+            "classification": "explicit_section_parameters",
+            "inherited": true,
+            "semantic_disposition": "no_material_issue_found",
+            "reason": "Section variables expose the carrier, para-complex structure and bilinear form, or the existing commuting-involutions datum. They do not assume the new target duality, rank equality, covariance, or derived projector commutation."
+          },
+          {
+            "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+            "module": "InfoGeometry.Canonical.ParaComplexNeutralForm",
+            "line": 248,
+            "declaration_kind": "variable",
+            "declaration_name": "<file-level>",
+            "finding": "injected-hypothesis-surface",
+            "severity": "soft",
+            "detail": "section variable assumptions detected",
+            "snippet": "246: open ParaComplexConnection\n247: variable {V : Type*} [AddCommGroup V] [Module ℝ V]\n248: variable (PCS : ParaComplexStructure V)\n249: \n250: ",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "injected-hypothesis-surface",
+            "hard_verdict_allowed": false,
+            "classification": "explicit_section_parameters",
+            "inherited": true,
+            "semantic_disposition": "no_material_issue_found",
+            "reason": "Section variables expose the carrier, para-complex structure and bilinear form, or the existing commuting-involutions datum. They do not assume the new target duality, rank equality, covariance, or derived projector commutation."
+          },
+          {
+            "file": "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+            "module": "InfoGeometry.Canonical.ParaComplexNeutralForm",
+            "line": 269,
+            "declaration_kind": "variable",
+            "declaration_name": "<file-level>",
+            "finding": "injected-hypothesis-surface",
+            "severity": "soft",
+            "detail": "section variable assumptions detected",
+            "snippet": "267: \n268: variable {V : Type*} [AddCommGroup V] [Module ℝ V]\n269: variable (PCS : ParaComplexStructure V) (B : LinearMap.BilinForm ℝ V)\n270: \n271: ",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "injected-hypothesis-surface",
+            "hard_verdict_allowed": false,
+            "classification": "explicit_section_parameters",
+            "inherited": false,
+            "semantic_disposition": "no_material_issue_found",
+            "reason": "Section variables expose the carrier, para-complex structure and bilinear form, or the existing commuting-involutions datum. They do not assume the new target duality, rank equality, covariance, or derived projector commutation."
+          }
+        ]
+      },
+      {
+        "receipt": "static-20261117-4/placeholder-RegularDyadCompression.json",
+        "sha256": "9be13cb42a32e1fa01686a945ea8ff43123b7b8678425f2d10cb84daefc84b09",
+        "summary": {
+          "module_count": 0,
+          "scanned_count": 1,
+          "finding_count": 0,
+          "hard_count": 0,
+          "soft_count": 0,
+          "advisory_count": 0,
+          "provenance": {
+            "hard_failures": 0,
+            "soft_findings": 0,
+            "advisory_findings": 0
+          }
+        },
+        "findings": []
+      },
+      {
+        "receipt": "static-20261117-4/placeholder-SheetWittCircularBasis.json",
+        "sha256": "0d94259475ec28110bcc02721e670533559cd284dd3cb7e4f870e88b698e57a2",
+        "summary": {
+          "module_count": 1,
+          "scanned_count": 1,
+          "finding_count": 3,
+          "hard_count": 0,
+          "soft_count": 3,
+          "advisory_count": 0,
+          "provenance": {
+            "hard_failures": 0,
+            "soft_findings": 3,
+            "advisory_findings": 0
+          }
+        },
+        "findings": [
+          {
+            "file": "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+            "module": "InfoGeometry.Optics.SheetWittCircularBasis",
+            "line": 51,
+            "declaration_kind": "theorem",
+            "declaration_name": "choose_left_right_orthogonal",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "49: \n50: variable (S : CommutingInvolutions Op)\n51: \n52: theorem choose_left_right_orthogonal (C : ChiralInvolution Op) :\n53:     choose true C.Pleft C.Pright * choose false C.Pleft C.Pright = 0 := by",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false,
+            "classification": "inherited_specialization_of_existing_product_law",
+            "inherited": true,
+            "semantic_disposition": "no_material_issue_found",
+            "reason": "Inherited Boolean selection specialization of ChiralInvolution.Pleft_mul_Pright. The product-zero result is reused, not assumed as the theorem conclusion."
+          },
+          {
+            "file": "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+            "module": "InfoGeometry.Optics.SheetWittCircularBasis",
+            "line": 55,
+            "declaration_kind": "theorem",
+            "declaration_name": "choose_right_left_orthogonal",
+            "finding": "skeletal-proof",
+            "severity": "soft",
+            "detail": "proof appears to be tactic-automation-only or skeletal",
+            "snippet": "53:     choose true C.Pleft C.Pright * choose false C.Pleft C.Pright = 0 := by\n54:   simp [choose, C.Pleft_mul_Pright]\n55: \n56: theorem choose_right_left_orthogonal (C : ChiralInvolution Op) :\n57:     choose false C.Pleft C.Pright * choose true C.Pleft C.Pright = 0 := by",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "skeletal-proof",
+            "hard_verdict_allowed": false,
+            "classification": "inherited_specialization_of_existing_product_law",
+            "inherited": true,
+            "semantic_disposition": "no_material_issue_found",
+            "reason": "Inherited Boolean selection specialization of ChiralInvolution.Pright_mul_Pleft. Ordered multiplication is retained."
+          },
+          {
+            "file": "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+            "module": "InfoGeometry.Optics.SheetWittCircularBasis",
+            "line": 49,
+            "declaration_kind": "variable",
+            "declaration_name": "<file-level>",
+            "finding": "injected-hypothesis-surface",
+            "severity": "soft",
+            "detail": "section variable assumptions detected",
+            "snippet": "47: \n48: namespace CommutingInvolutions\n49: \n50: variable (S : CommutingInvolutions Op)\n51: ",
+            "graph_grounded_signal": "none",
+            "heuristic_signal": "injected-hypothesis-surface",
+            "hard_verdict_allowed": false,
+            "classification": "explicit_section_parameters",
+            "inherited": true,
+            "semantic_disposition": "no_material_issue_found",
+            "reason": "Section variables expose the carrier, para-complex structure and bilinear form, or the existing commuting-involutions datum. They do not assume the new target duality, rank equality, covariance, or derived projector commutation."
+          }
+        ]
+      }
+    ],
+    "model_evidence": {
+      "source_sha256": {
+        "lean/InfoGeometry/Twistor/RealDualTwistor.lean": "ec7900fb51a32e6135ba0b6e4f14995db171a157105f3d69f6e88aa54476fbbf",
+        "lean/InfoGeometry/LLM/AttentionOccupationRefinement.lean": "13667238980e09a73d3471e6db4a3f25c555d96853180a14b5c61deb57302f20",
+        "lean/InfoGeometry/OperatorAlgebra/ChiralProjectorFromInvolution.lean": "220ce4a54c802b829034f0acf4534a7ce255d03a872256f1445cdc7223a6da55"
+      },
+      "neutral_model": [
+        "RealDualTwistor.neutralForm",
+        "RealDualTwistor.neutralForm_nondegenerate",
+        "RealDualTwistor.para",
+        "RealDualTwistor.para_sq",
+        "RealDualTwistor.neutralForm_para_anti"
+      ],
+      "neutral_model_explanation": "The evaluation form on U x U* and involution (u,phi) -> (u,-phi) give a nontrivial split model, for example U = Real. No unconditional inhabitant for arbitrary PCS is inferred.",
+      "commuting_model": [
+        "AttentionOccupationRefinement.occupationAxes",
+        "AttentionOccupationRefinement.bitParity_square",
+        "AttentionOccupationRefinement.bitParity_commute"
+      ],
+      "covariance_simp_evidence": [
+        "RealDualTwistor.frameAction_fst",
+        "RealDualTwistor.frameAction_snd_apply",
+        "LinearEquiv.symm_apply_apply",
+        "NonincidentLogPairing.mixedLogKernel_apply"
+      ],
+      "fresh_source_recheck": "Current model-owner hashes were recomputed and match the previously reviewed neutral evaluation model, occupation-axes model, ordered orthogonality lemmas, and frame-action evaluation APIs. This confirms source-review continuity without asserting new native acceptance."
+    },
+    "declaration_inventory": {
+      "authority": "Lexical names newly added relative to the recorded baseline; not native elaboration.",
+      "new_theorems": 32,
+      "new_definitions": 7,
+      "per_owner": {
+        "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean": {
+          "theorem": [
+            "finrank_eq_two_mul_plus",
+            "finrank_peirce_eq",
+            "minusToPlusDualEquiv_apply",
+            "minusToPlusDual_apply",
+            "minusToPlusDual_injective",
+            "minus_cross_nondegenerate_of_nondegenerate",
+            "plusToMinusDualEquiv_apply",
+            "plusToMinusDual_apply",
+            "plusToMinusDual_injective",
+            "plus_cross_nondegenerate_of_nondegenerate"
+          ],
+          "def": [
+            "Datum.toNondegenerateDatum",
+            "minusToPlusDual",
+            "minusToPlusDualEquiv",
+            "plusToMinusDual",
+            "plusToMinusDualEquiv"
+          ]
+        },
+        "lean/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean": {
+          "theorem": [
+            "normalizedDyad_mul",
+            "normalizedDyad_range",
+            "normalizedDyad_rescale"
+          ],
+          "def": []
+        },
+        "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean": {
+          "theorem": [
+            "halfProjectors_commute_of_commute"
+          ],
+          "def": [
+            "CommutingInvolutions.ofCommute"
+          ]
+        },
+        "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean": {
+          "theorem": [
+            "hasDerivAt_logPairing",
+            "hasDerivAt_logPairing_readout",
+            "hasDerivAt_mixed_logPairing",
+            "logPairing_rescale",
+            "mixedLogKernel_apply",
+            "mixedLogKernel_eq_complement",
+            "mixedLogKernel_eq_dual_complement",
+            "mixedLogKernel_frameAction",
+            "mixedLogKernel_horizontal_left",
+            "mixedLogKernel_horizontal_right",
+            "mixedLogKernel_left_radical",
+            "mixedLogKernel_radial_left",
+            "mixedLogKernel_radial_right",
+            "mixedLogKernel_rescale",
+            "mixedLogKernel_right_radical",
+            "nonincident_projectors_noncommute",
+            "normalizedDyad_eq_scaled_dyad",
+            "normalizedDyad_frameAction"
+          ],
+          "def": [
+            "mixedLogKernel"
+          ]
+        }
+      }
+    },
+    "repair_semantic_preservation": {
+      "comparison_commit": "1b1ecdd405b25a81f0c8177ac405c6cee4de7de1",
+      "comparison_source_sha256": {
+        "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean": "ac8ea0b4ec1b2c45bc4995388eedcc27e5ef7e0fd61d862a6181f896dc7ab605",
+        "lean/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean": "a85dafe5d2f3fa1114a085500bd0ebf917088f9bd81ae3f545c90f278e30c780",
+        "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean": "dcd4fbde48e869da4d03e6512562c245f7162e373df6146a364f7deccd256d69",
+        "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean": "c048d36a529e89a3718262508b457aba29cbe86c2486154263ffe0dab3d6709c"
+      },
+      "reviewed_diff_sha256": "129af08ae58c901a1a0163892057c6ae1cc4d4edb24fe96635ab79cfc263a13a",
+      "disposition": "PASS_SOURCE_SEMANTICS",
+      "scope": "Four current owners; a repository-wide Lean path diff confirms that only NonincidentLogPairing.lean changed relative to the frozen source commit.",
+      "per_owner_declaration_header_comparison": {
+        "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean": {
+          "added_names": [],
+          "removed_names": [],
+          "changed_normalized_headers": []
+        },
+        "lean/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean": {
+          "added_names": [],
+          "removed_names": [],
+          "changed_normalized_headers": []
+        },
+        "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean": {
+          "added_names": [],
+          "removed_names": [],
+          "changed_normalized_headers": []
+        },
+        "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean": {
+          "added_names": [],
+          "removed_names": [],
+          "changed_normalized_headers": []
+        }
+      },
+      "per_owner_imports_unchanged": {
+        "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean": true,
+        "lean/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean": true,
+        "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean": true,
+        "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean": true
+      },
+      "new_assumptions_found": false,
+      "weakened_conclusions_found": false,
+      "changed_lean_paths": [
+        "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean"
+      ],
+      "sole_code_change": {
+        "file": "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean",
+        "theorem": "hasDerivAt_logPairing_readout",
+        "line": 210,
+        "before": "field_simp [h] <;> ring",
+        "after": "field_simp [h]"
+      },
+      "reason": "The original nonzero-denominator cancellation with h remains. Only a trailing tactic diagnosed as unreachable and unused in the prior frozen-source run is removed. No mathematical expression, declared hypothesis, conclusion, import, carrier, or public declaration changes.",
+      "integrated_candidate_matches_reviewed_bytes": true,
+      "candidate_sha256": "57af40272b06c8ce41522c58659d686d9c70dbcfacd42e37511c3217dbdb2cdb",
+      "candidate_review_path": "/workspace/scratch/933d64e28eca/candidates/NonincidentLogPairingWarningCleanup.review.json",
+      "candidate_review_sha256": "82edc6c2441e4e86c2a10e9ce13a61b6ea3f68e713551a5077a62b7108c7ce1e",
+      "unchanged_mathematical_scope": "Actual neutral cross maps and dual equivalences; derived nondegeneracy and finite rank equality; ordered normalized dyad identities; both exact mixed-kernel radicals and complementary-slice nondegeneracy; genuine iterated scalar-line derivative; frame/rescaling covariance; explicit noncommutation witness; and derived half-projector commutation in an arbitrary real algebra over a Ring."
+    },
+    "checker_commands_read_from_fresh_receipts": [
+      {
+        "name": "screener",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/infra/opengauss_screener.py",
+          "--strict",
+          "--json",
+          "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+          "lean/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean",
+          "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+          "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean"
+        ],
+        "cwd": "/workspace/scratch/933d64e28eca/repo",
+        "started_at": "2026-11-17T11:41:18.889863+00:00",
+        "finished_at": "2026-11-17T11:41:19.661803+00:00",
+        "exit_code": 1,
+        "log": "screener.log",
+        "log_sha256": "b0cd88348e7cafa6bb5466443b6e284c64339f3e953151a8af88bb14dc957651",
+        "receipt_present": true
+      },
+      {
+        "name": "refute",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/infra/opengauss_cli.py",
+          "refute",
+          "--strict",
+          "--json",
+          "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+          "lean/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean",
+          "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+          "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean"
+        ],
+        "cwd": "/workspace/scratch/933d64e28eca/repo",
+        "started_at": "2026-11-17T11:41:18.890735+00:00",
+        "finished_at": "2026-11-17T11:41:19.794712+00:00",
+        "exit_code": 1,
+        "log": "refute.log",
+        "log_sha256": "74d29ef1804e9ec87129e9c39e13b7671e7b291c0a03f1d9ff7a6740460c9acb",
+        "receipt_present": true
+      },
+      {
+        "name": "semantic",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/quality/semantic_vacuity_gate.py",
+          "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+          "lean/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean",
+          "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+          "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean",
+          "--fail-on",
+          "error",
+          "--json-out",
+          "/workspace/scratch/933d64e28eca/static-20261117-4/semantic.json"
+        ],
+        "cwd": "/workspace/scratch/933d64e28eca/repo",
+        "started_at": "2026-11-17T11:41:18.892732+00:00",
+        "finished_at": "2026-11-17T11:41:19.034063+00:00",
+        "exit_code": 0,
+        "log": "semantic.log",
+        "log_sha256": "17a370e88e4a56bbbc2ad458c2b2682dba378adc39067fc4d13594c7a76dcf0e",
+        "receipt_present": true
+      },
+      {
+        "name": "placeholder-ParaComplexNeutralForm",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/quality/placeholder_audit.py",
+          "--root",
+          "lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean",
+          "--strict",
+          "--json-out",
+          "/workspace/scratch/933d64e28eca/static-20261117-4/placeholder-ParaComplexNeutralForm.json"
+        ],
+        "cwd": "/workspace/scratch/933d64e28eca/repo",
+        "started_at": "2026-11-17T11:41:19.034195+00:00",
+        "finished_at": "2026-11-17T11:41:19.149513+00:00",
+        "exit_code": 0,
+        "log": "placeholder-ParaComplexNeutralForm.log",
+        "log_sha256": "eff4e511559d80ac16eb6fbb313943b4ae0c9784a4c9046fa32db1e036958d19",
+        "receipt_present": true
+      },
+      {
+        "name": "placeholder-RegularDyadCompression",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/quality/placeholder_audit.py",
+          "--root",
+          "lean/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean",
+          "--strict",
+          "--json-out",
+          "/workspace/scratch/933d64e28eca/static-20261117-4/placeholder-RegularDyadCompression.json"
+        ],
+        "cwd": "/workspace/scratch/933d64e28eca/repo",
+        "started_at": "2026-11-17T11:41:19.149618+00:00",
+        "finished_at": "2026-11-17T11:41:19.254478+00:00",
+        "exit_code": 0,
+        "log": "placeholder-RegularDyadCompression.log",
+        "log_sha256": "0aa9d3df839f858d8d4637f81eb8590c32bf5f7066ae7a702a6a5fd375738052",
+        "receipt_present": true
+      },
+      {
+        "name": "placeholder-SheetWittCircularBasis",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/quality/placeholder_audit.py",
+          "--root",
+          "lean/InfoGeometry/Optics/SheetWittCircularBasis.lean",
+          "--strict",
+          "--json-out",
+          "/workspace/scratch/933d64e28eca/static-20261117-4/placeholder-SheetWittCircularBasis.json"
+        ],
+        "cwd": "/workspace/scratch/933d64e28eca/repo",
+        "started_at": "2026-11-17T11:41:19.254583+00:00",
+        "finished_at": "2026-11-17T11:41:19.384725+00:00",
+        "exit_code": 0,
+        "log": "placeholder-SheetWittCircularBasis.log",
+        "log_sha256": "24086af677550d19db302c8593ec4828f486f159c57dcdf6f11d0fbf5f4d6579",
+        "receipt_present": true
+      },
+      {
+        "name": "placeholder-NonincidentLogPairing",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/quality/placeholder_audit.py",
+          "--root",
+          "lean/InfoGeometry/Twistor/NonincidentLogPairing.lean",
+          "--strict",
+          "--json-out",
+          "/workspace/scratch/933d64e28eca/static-20261117-4/placeholder-NonincidentLogPairing.json"
+        ],
+        "cwd": "/workspace/scratch/933d64e28eca/repo",
+        "started_at": "2026-11-17T11:41:19.384958+00:00",
+        "finished_at": "2026-11-17T11:41:19.505140+00:00",
+        "exit_code": 0,
+        "log": "placeholder-NonincidentLogPairing.log",
+        "log_sha256": "668f8daf9587d81561530157cae9d1f2a69de7c0405e94b30c9638e87d8b4f02",
+        "receipt_present": true
+      }
+    ],
+    "checker_execution_note": "The reviewer read all fourth-run commands, timestamps, exit codes, raw logs, JSON receipts and findings. No checker, compiler, axiom auditor or publication gate was run by this reviewer.",
+    "reviewer_commands_run": [
+      {
+        "command": "python heredoc: read previous source review; enumerate static-20261117-4; hash four current owners; compare integrated module with reviewed candidate; git rev-parse HEAD and git diff 1b1ecdd405b25a81f0c8177ac405c6cee4de7de1 -- four owners",
+        "cwd": "/workspace/scratch/933d64e28eca",
+        "purpose": "Verify exact current bytes and sole proof cleanup."
+      },
+      {
+        "command": "python heredocs: read all 15 fourth-run JSON/raw-log files and print contents with SHA-256; omit only the duplicate placeholder modules mirror from display",
+        "cwd": "/workspace/scratch/933d64e28eca",
+        "purpose": "Independently inspect every current receipt and finding."
+      },
+      {
+        "command": "python heredoc: git show frozen and baseline source; compare all declaration headers and imports, count new declarations, verify the exact one-line delta and unchanged model-owner hashes",
+        "cwd": "/workspace/scratch/933d64e28eca",
+        "purpose": "Confirm mathematical preservation and the 32-theorem/7-definition inventory."
+      },
+      {
+        "command": "git diff 1b1ecdd405b25a81f0c8177ac405c6cee4de7de1 --name-only -- *.lean (literal git pathspec, via subprocess)",
+        "cwd": "/workspace/scratch/933d64e28eca/repo",
+        "purpose": "Confirm no other Lean source changed in this checkout."
+      },
+      {
+        "command": "python heredoc: rehash all current sources/receipts, classify each fresh finding, and write semantic-review-final-20261117-v3.json",
+        "cwd": "/workspace/scratch/933d64e28eca",
+        "purpose": "Create only the requested new review report, preserving all previous reports and repository inputs."
+      }
+    ],
+    "actions_not_performed": [
+      "No Lean or Lake process started",
+      "No native compiler run",
+      "No axiom audit run",
+      "No live repository edit",
+      "No checker suppression",
+      "No dummy Inhabited instance",
+      "No change to static receipts",
+      "No termination or bypass of the shared build lock"
+    ],
+    "native_validation": {
+      "status": "PENDING_SECOND_FRESH_RUN",
+      "compiled_by_this_reviewer": false,
+      "successful_native_receipt_inspected_for_current_sources": false,
+      "axiom_acceptance": "PENDING_SECOND_FRESH_RUN",
+      "earlier_attempt_status_reported_by_parent": "REJECTED_FOR_TWO_INTRODUCED_REDUNDANT_TACTIC_WARNINGS",
+      "reason": "The first fresh attempt belongs to the preceding frozen source. The reviewed cleanup changes its source hash and must receive the second fresh native/axiom acceptance run. This source/static review neither re-audits nor transfers acceptance from the previous attempt."
+    },
+    "publication_gate": {
+      "status": "PENDING_FINAL_REVISION_EVIDENCE",
+      "run_by_this_reviewer": false
+    },
+    "reporting_requirement": "Retain both strict screen exit-1 WARN results and all advisory findings. This report establishes source-semantic PASS for the current hashes and classifies the fresh static4 receipts. Native/axiom acceptance remains PENDING_SECOND_FRESH_RUN, and root/publication gate coverage remains separate.",
+    "prior_reports": [
+      {
+        "path": "/workspace/scratch/933d64e28eca/semantic-review-20261117.json",
+        "sha256": "f8eea6ec2bd6d2fb6c1a951ca9da050c96d53dd411231923d1838680df209986",
+        "status": "Preserved unchanged; applies to its own source bytes and receipts."
+      },
+      {
+        "path": "/workspace/scratch/933d64e28eca/semantic-review-final-20261117.json",
+        "sha256": "62f6780a62982e9946631c89515ddf2567badb59394e84cfaaa442d3c4c8fb4d",
+        "status": "Preserved unchanged; applies to its own source bytes and receipts."
+      },
+      {
+        "path": "/workspace/scratch/933d64e28eca/semantic-review-final-20261117-v2.json",
+        "sha256": "f742c34a9bcd0acce5ff9803bf348f96896788cb29944d54384a09db67a03f25",
+        "status": "Preserved unchanged; applies to its own source bytes and receipts."
+      }
+    ]
+  },
+  "runtime_bootstrap": {
+    "lean_release_sha256": "47bf4bbd78f70c2e9670598ab7124d92b6efb7330ff33e5fbb4030f6fd72e4e4",
+    "versions": {
+      "lean": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+      "lake": "Lake version 5.0.0-src+5045d00 (Lean version 4.34.1)"
+    },
+    "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+    "lean_root": "/workspace/scratch/933d64e28eca/runtime/lean",
+    "mathlib_root": "/workspace/scratch/933d64e28eca/runtime/mathlib",
+    "mathlib_olean_count": 8529
+  },
+  "path_preflight": {
+    "schema": "info_geometry.ci_path_preflight.v1",
+    "revision": "08c34e03f610b452e03422037949196dc7d92d6d",
+    "ok": false,
+    "packages": [
+      {
+        "name": "HomotopyHypothesis",
+        "dir": "external_refs/homotopy-hypothesis-lean4",
+        "config": "lakefile.lean",
+        "directory_exists": false,
+        "config_exists": false,
+        "source_kind": "untracked",
+        "errors": [
+          "missing_config",
+          "untracked_path_dependency"
+        ],
+        "ok": false
+      },
+      {
+        "name": "Atlas",
+        "dir": "external_refs/atlas-lean",
+        "config": "lakefile.toml",
+        "directory_exists": false,
+        "config_exists": false,
+        "source_kind": "untracked",
+        "errors": [
+          "missing_config",
+          "untracked_path_dependency"
+        ],
+        "ok": false
+      },
+      {
+        "name": "GIFT",
+        "dir": "external_refs/gift-framework-core",
+        "config": "lakefile.lean",
+        "directory_exists": true,
+        "config_exists": false,
+        "source_kind": "gitlink",
+        "pinned_commit": "e6f3c3ac2140c2324fb2ae029c32233e73aa5e92",
+        "errors": [
+          "missing_config",
+          "uninitialized_gitlink"
+        ],
+        "ok": false
+      },
+      {
+        "name": "InfoGeometryCore",
+        "dir": "lib/InfoGeometryCore",
+        "config": "lakefile.lean",
+        "directory_exists": true,
+        "config_exists": true,
+        "source_kind": "tracked",
+        "errors": [],
+        "ok": true
+      }
+    ],
+    "scope": "Direct path-package availability/provenance; not compilation or a transitive dependency audit"
+  }
+}

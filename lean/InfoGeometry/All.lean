@@ -668,3 +668,4 @@ import InfoGeometry.QuantumGeometry.RealPhaseObservableGram
 import InfoGeometry.Analysis.SchwartzUncertainty
 import InfoGeometry.Analysis.ProjectedGramDissipation
 import InfoGeometry.Analysis.SplitOctonionProjectedGram
+import InfoGeometry.Twistor.NonincidentLogPairing

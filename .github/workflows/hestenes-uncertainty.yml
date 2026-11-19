@@ -1,0 +1,169 @@
+name: Real Hestenes uncertainty (scoped)
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Krein/InternalPhaseGram.lean'
+      - 'lean/InfoGeometry/Krein/PhaseLinearObservableCommutator.lean'
+      - 'lean/InfoGeometry/Canonical/PhaseObservableUncertainty.lean'
+      - 'lean/InfoGeometry/Canonical/CenteredOperatorialUncertainty.lean'
+      - 'lean/InfoGeometry/Canonical/FiniteHestenesHilbertSchmidtStandardForm.lean'
+      - 'lean/InfoGeometry/Canonical/Cl11GNSRealDoubledKreinBridge.lean'
+      - 'lean/InfoGeometry/Canonical/HestenesRightPhaseUncertainty.lean'
+      # The exact closure also traverses these source roots. Changes to an
+      # inherited dependency must recheck this consumer, even if the seven
+      # selected owner files themselves are unchanged.
+      - 'lean/**/*.lean'
+      - 'proofs/**/*.lean'
+      - 'lib/InfoGeometryCore/**/*.lean'
+      - 'InfoGeometry/**/*.lean'
+      - '*.lean'
+      - 'tools/quality/check_hestenes_uncertainty.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/placeholder_audit.py'
+      - 'tools/quality/semantic_vacuity_gate.py'
+      - 'tools/build_lock.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/hestenes-uncertainty.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hestenes-uncertainty-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-and-owner-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Fetch the exact public source without traversing external submodules
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+          SOURCE_REPOSITORY: ${{ github.repository }}
+        run: |
+          git init project
+          git -C project remote add origin "https://github.com/${SOURCE_REPOSITORY}.git"
+          git -C project fetch --no-recurse-submodules --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          test "$(git -C project rev-parse HEAD)" = "$SOURCE_REV"
+      - name: Read exact Mathlib and LeanArchitect manifest pins
+        id: pins
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          manifest = json.loads(Path('project/lake-manifest.json').read_text())
+          packages = {p['name']: p for p in manifest['packages']}
+          expected = {
+              'mathlib': 'https://github.com/leanprover-community/mathlib4.git',
+              'LeanArchitect': 'https://github.com/hanwenzhu/LeanArchitect.git',
+          }
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              for name, url in expected.items():
+                  package = packages[name]
+                  if package['url'] != url or re.fullmatch(r'[0-9a-f]{40}', package['rev']) is None:
+                      raise RuntimeError(f'Unexpected source or noncommit pin for {name}')
+                  output.write(f'{name}={package["rev"]}\n')
+          PY
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: ${{ steps.pins.outputs.mathlib }}
+          path: mathlib
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: hanwenzhu/LeanArchitect
+          ref: ${{ steps.pins.outputs.LeanArchitect }}
+          path: architect
+          persist-credentials: false
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            mathlib/.lake
+          key: hestenes-uncertainty-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - name: Install the root-pinned Lean toolchain
+        shell: bash
+        run: |
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Discover actual imports and fetch their pinned cache under the shared lock
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import subprocess, sys
+          from pathlib import Path
+          project = Path('project').resolve()
+          evidence = Path('hestenes-uncertainty-report').resolve()
+          evidence.mkdir(exist_ok=True)
+          command = [sys.executable, str(project / 'tools/quality/check_hestenes_uncertainty.py'),
+              '--mathlib-root', str(Path('mathlib').resolve()),
+              '--architect-root', str(Path('architect').resolve()), '--list-native']
+          result = subprocess.run(command, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+          (evidence / 'native-imports.txt').write_text(result.stdout)
+          (evidence / 'import-discovery.log').write_text(result.stderr)
+          result.check_returncode()
+          native = result.stdout.splitlines()
+          if not native:
+              raise RuntimeError('No native cache imports discovered')
+          sys.path.insert(0, str(project))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'hestenes-uncertainty-cache') as lock:
+              active = subprocess.check_output(['ps', '-eo', 'comm='], text=True).splitlines()
+              if any(p.strip() in {'lean', 'lake', 'leanc'} for p in active):
+                  raise RuntimeError('Concurrent Lean compiler detected before cache fetch')
+              with (evidence / 'cache.log').open('w') as log:
+                  result = subprocess.run(['lake', 'exe', 'cache', 'get', *native],
+                      cwd='mathlib', stdout=log, stderr=subprocess.STDOUT, pass_fds=(lock.fileno(),))
+              result.check_returncode()
+          PY
+      - name: Check all seven owners, their complete actual closure, and every owned declaration
+        working-directory: project
+        shell: bash
+        run: |
+          python3 tools/quality/check_hestenes_uncertainty.py \
+            --mathlib-root ../mathlib \
+            --architect-root ../architect \
+            --lean lean \
+            --output ../hestenes-uncertainty-report \
+            --recheck-targets
+      - name: Check selected proof sources for placeholders and vacuity
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import subprocess
+          from tools.quality.check_hestenes_uncertainty import TARGETS
+          files = ['lean/' + name.replace('.', '/') + '.lean' for name in TARGETS]
+          files.append('lean/InfoGeometry/All.lean')
+          for path in files:
+              subprocess.run(['python3', 'tools/quality/placeholder_audit.py',
+                  '--root', path, '--strict'], check=True)
+          subprocess.run(['python3', 'tools/quality/semantic_vacuity_gate.py',
+              *files, '--fail-on', 'error', '--json-out',
+              '../hestenes-uncertainty-report/vacuity.json'], check=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: real-hestenes-uncertainty-kernel-evidence
+          path: |
+            hestenes-uncertainty-report/report.json
+            hestenes-uncertainty-report/evidence-sha256.json
+            hestenes-uncertainty-report/environment.json
+            hestenes-uncertainty-report/native-imports.txt
+            hestenes-uncertainty-report/vacuity.json
+            hestenes-uncertainty-report/src/HestenesUncertaintyOwnerAudit.lean
+            hestenes-uncertainty-report/*.log
+          if-no-files-found: warn

@@ -18,6 +18,7 @@ import InfoGeometry.Holographic.MonoidCounterexample
 import InfoGeometry.Holographic.PathAmplitudes
 import InfoGeometry.Holographic.RateBudget
 import InfoGeometry.Canonical.CliffordPeirceWalshAudit
+import InfoGeometry.Canonical.HestenesRightPhaseUncertainty
 import InfoGeometry.OperatorAlgebra.IsometryCornerLocalization
 import InfoGeometry.Clifford.WeylFrameMasks
 import InfoGeometry.Analysis.MetricPorosity

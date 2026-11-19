@@ -1,0 +1,454 @@
+{
+  "schema": "info_geometry.centralizer_integral_weyl_validation.v1",
+  "recorded_at_utc": "2026-11-16T08:48:50.596238+00:00",
+  "status": "accepted_limited_scope",
+  "verification_source_commit": "9646e48664d2c65c8e3a8e59c09f322cb3c5f955",
+  "integration_base": "08c34e03f610b452e03422037949196dc7d92d6d",
+  "recovery_baseline": "a392af178af1fe2bcba2ba39eb405700c6ee103c",
+  "raw_intake_sha256": "34314e4cd6c4486916673121d341bffe31f0892a6cf22bbb4354e4ee103b01a0",
+  "scope": "Nine selected owners and their complete twenty-module repository import closure; not the root Lake package or all tracked Lean files.",
+  "freshness": "All twenty project modules were compiled from recovered/restored source in this session. After one unused simp argument was removed, the final run freshly compiled four affected modules and reused sixteen source/pin/artifact-hash verified outputs from that same session. The native nine-owner audit ran again.",
+  "scoped_check": {
+    "status": "passed",
+    "scope": "Exact repository source closure and native axiom audit",
+    "targets": [
+      "InfoGeometry.OperatorAlgebra.StarGramRegularity",
+      "InfoGeometry.OperatorAlgebra.CentralPowerLocalization",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.IntegralWeyl",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceCentralizer",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.GramCentralLocalization",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.BalancedEightWitness",
+      "InfoGeometry.Physics.Algebra.TripotentPeirceProjectors",
+      "InfoGeometry.Physics.Algebra.TripotentLeftRightPeirceProjectors",
+      "InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition"
+    ],
+    "modules": [
+      {
+        "module": "InfoGeometry.OperatorAlgebra.StarGramRegularity",
+        "returncode": 0,
+        "warnings": 0,
+        "artifacts": {
+          "lib/InfoGeometry/OperatorAlgebra/StarGramRegularity.olean": "47fa3b19827d3e9341644398fb7f96703b2ee970ab66f62aaaa719fe5030af6e"
+        },
+        "reused": true
+      },
+      {
+        "module": "InfoGeometry.OperatorAlgebra.CentralPowerLocalization",
+        "returncode": 0,
+        "warnings": 0,
+        "artifacts": {
+          "lib/InfoGeometry/OperatorAlgebra/CentralPowerLocalization.olean": "a923eb5480db7a36e16986f940ca252a79cda1a97afb9c78700ad9963ceee574"
+        },
+        "reused": true
+      },
+      {
+        "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.RealBdGKreinChiralIdealBridge",
+        "returncode": 0,
+        "warnings": 0,
+        "artifacts": {
+          "lib/InfoGeometry/OperatorAlgebra/PeirceSpine/RealBdGKreinChiralIdealBridge.olean": "24fdb5b79e2f9f8f5180e6c188584623ad23f9ce711437ae0924a9dba1d92aa9"
+        },
+        "reused": true
+      },
+      {
+        "module": "InfoGeometry.Core.IdempotencyDefect",
+        "returncode": 0,
+        "warnings": 0,
+        "artifacts": {
+          "lib/InfoGeometry/Core/IdempotencyDefect.olean": "3881365ade9b79cfa9ebda7650d28a3ac9e50f99d63be97c7cc55a770795363c"
+        },
+        "reused": true
+      },
+      {
+        "module": "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "returncode": 0,
+        "warnings": 0,
+        "artifacts": {
+          "lib/InfoGeometry/Algebra/FiniteSpinAlgebra.olean": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6"
+        },
+        "reused": true
+      },
+      {
+        "module": "InfoGeometry.Core.PeirceDecomposition",
+        "returncode": 0,
+        "warnings": 1,
+        "artifacts": {
+          "lib/InfoGeometry/Core/PeirceDecomposition.olean": "7df884185505cc98c1c1e5bf503697e211eb71976ed679fec9b75f7e9718ca00"
+        },
+        "reused": true
+      },
+      {
+        "module": "InfoGeometry.Core.PeirceGrading",
+        "returncode": 0,
+        "warnings": 0,
+        "artifacts": {
+          "lib/InfoGeometry/Core/PeirceGrading.olean": "6e1403961f2f8ca29b8de88a4f6f19d449426fc814b6ba02ad2717d2a05cb5dc"
+        },
+        "reused": true
+      },
+      {
+        "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.IntegralWeyl",
+        "returncode": 0,
+        "warnings": 0,
+        "artifacts": {
+          "lib/InfoGeometry/OperatorAlgebra/PeirceSpine/IntegralWeyl.olean": "5d6aa93fbe1ec0c9ae524e51bab6fb9d2382ee2a862d775283e4b78834a61653"
+        },
+        "reused": false
+      },
+      {
+        "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic",
+        "returncode": 0,
+        "warnings": 0,
+        "artifacts": {
+          "lib/InfoGeometry/OperatorAlgebra/PeirceSpine/Basic.olean": "429e5b0edf7f9c31f9e1d7df6f57cc4d5387124c7fa8f4f7ebeb73d089d73f6d"
+        },
+        "reused": true
+      },
+      {
+        "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.StarGrading",
+        "returncode": 0,
+        "warnings": 0,
+        "artifacts": {
+          "lib/InfoGeometry/OperatorAlgebra/PeirceSpine/StarGrading.olean": "90077faea2b2b3896f8f5fe380835f1f38f7fe952a2fa2f9813efabc726b7c94"
+        },
+        "reused": true
+      },
+      {
+        "module": "InfoGeometry.Physics.TripotentAdjointDerivation",
+        "returncode": 0,
+        "warnings": 4,
+        "artifacts": {
+          "lib/InfoGeometry/Physics/TripotentAdjointDerivation.olean": "c2282f17f45d63ffaa8750715c1589b70f29d004d516bb895fc0ab8c9774e204"
+        },
+        "reused": true
+      },
+      {
+        "module": "InfoGeometry.Physics.Algebra.TripotentPeirceProjectors",
+        "returncode": 0,
+        "warnings": 7,
+        "artifacts": {
+          "lib/InfoGeometry/Physics/Algebra/TripotentPeirceProjectors.olean": "89b3d1261facd5dd4de2d4af049de0d6f4b461018e4b27d479c2c0e573c2920e"
+        },
+        "reused": true
+      },
+      {
+        "module": "InfoGeometry.Physics.Algebra.TripotentLeftRightPeirceProjectors",
+        "returncode": 0,
+        "warnings": 0,
+        "artifacts": {
+          "lib/InfoGeometry/Physics/Algebra/TripotentLeftRightPeirceProjectors.olean": "c20e0c50be73e57cc6774374e3fe75ff8341cb4ccbff8d42ec9999154d02418d"
+        },
+        "reused": true
+      },
+      {
+        "module": "InfoGeometry.OperatorAlgebra.TKKConformalClosure",
+        "returncode": 0,
+        "warnings": 26,
+        "artifacts": {
+          "lib/InfoGeometry/OperatorAlgebra/TKKConformalClosure.olean": "8ed5ffc7180f11a0125bb8eac7b39b41b652abc2f5bbc4335ae38d2b7ca07cec"
+        },
+        "reused": true
+      },
+      {
+        "module": "InfoGeometry.Meta.OwnerTarget",
+        "returncode": 0,
+        "warnings": 0,
+        "artifacts": {
+          "lib/InfoGeometry/Meta/OwnerTarget.olean": "02713056566d9dd0ccb3c79e0e757c3f407c7eefe5f7f9029507a18eeaa81cc4"
+        },
+        "reused": true
+      },
+      {
+        "module": "InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure",
+        "returncode": 0,
+        "warnings": 34,
+        "artifacts": {
+          "lib/InfoGeometry/OperatorAlgebra/SuperTKKConformalClosure.olean": "bee055009a39304e4a570dd12d3db2eee079d62930f68f97aee4dca1469abcef"
+        },
+        "reused": true
+      },
+      {
+        "module": "InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition",
+        "returncode": 0,
+        "warnings": 0,
+        "artifacts": {
+          "lib/InfoGeometry/Physics/Algebra/TripotentFiveGradingDecomposition.olean": "eb3835c0aa89efe9295bfb87bd37260df9ea40c9315894c4cb81c3b38a0946e2"
+        },
+        "reused": true
+      },
+      {
+        "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceCentralizer",
+        "returncode": 0,
+        "warnings": 0,
+        "artifacts": {
+          "lib/InfoGeometry/OperatorAlgebra/PeirceSpine/PeirceCentralizer.olean": "0afb9876fce921de514fd7d5033ffbb14a6a9aba5c15e94bf9dcba17710c32aa"
+        },
+        "reused": false
+      },
+      {
+        "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.GramCentralLocalization",
+        "returncode": 0,
+        "warnings": 0,
+        "artifacts": {
+          "lib/InfoGeometry/OperatorAlgebra/PeirceSpine/GramCentralLocalization.olean": "ba753675cb4e3360622fe7452c326fd02e21d5e387718497fd19c7c995dbc9a2"
+        },
+        "reused": false
+      },
+      {
+        "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.BalancedEightWitness",
+        "returncode": 0,
+        "warnings": 0,
+        "artifacts": {
+          "lib/InfoGeometry/OperatorAlgebra/PeirceSpine/BalancedEightWitness.olean": "bbd752713f6b5e1ae8a342ae4f94e0b93df5bba5bbfd9b9590763f65c8e26955"
+        },
+        "reused": false
+      }
+    ],
+    "audit_required": true,
+    "verification_source_sha256": {
+      "tools/quality/check_clifford_dirac.py": "fcf6fbb9845e0ee2a85bdb3778c5fe74345a9ae7a2e97e871d0a89d3e98e7db0",
+      "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+      "tools/quality/reviewed_audit_source.py": "a976c910f5efb4611b1626d714e3197310d92648ffae56513e94a49ae5f0f206",
+      "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df"
+    },
+    "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+    "toolchain": "leanprover/lean4:v4.34.1",
+    "source_sha256": {
+      "InfoGeometry.OperatorAlgebra.StarGramRegularity": "05778165c498d5d6b07c929c3be8232221ff0e93d4121d33e7e50c668e42558c",
+      "InfoGeometry.OperatorAlgebra.CentralPowerLocalization": "f078908ebba66dae57d0dce3993e79dd62c74f8869376183faa46ecbb12d085e",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.RealBdGKreinChiralIdealBridge": "fcc4b99c8555e09b120f20fa8e7db7a835a6ad565bd0cc1ef554e362457bbf25",
+      "InfoGeometry.Core.IdempotencyDefect": "2d7b8fa580abe148fc70a39f8e1831b5505fb7f6a3920f3a79a0ba35bfee5590",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+      "InfoGeometry.Core.PeirceDecomposition": "b2426391a1841cbdb35bdef72138b5ab1553508c82c22ea930aa23f164de9bd9",
+      "InfoGeometry.Core.PeirceGrading": "f6fe99208f8d0947ff9f99b62625ad7a21a99b9a4f62908824ddb5c4c3a1b11c",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.IntegralWeyl": "8dc4320dbdb6e773c2b8b640e8f7cfb165004e2084e412f7b9926df856847e5a",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic": "6657ac06e9dfde8930808192b874c3c7d7738ad89a22d18c06c207d47a949327",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.StarGrading": "c3f6221dea4a4638ae86ee9e3e6f7bc7829ccc724eb56746b40c4498167c5fae",
+      "InfoGeometry.Physics.TripotentAdjointDerivation": "a80c69a0f750b35172be7a54e8721f68966dc56eba90a16dece936acde54cb33",
+      "InfoGeometry.Physics.Algebra.TripotentPeirceProjectors": "b5ae52742533ba8148448dad19c8fff95700f0d39584de54a4feda3a4bc8fddc",
+      "InfoGeometry.Physics.Algebra.TripotentLeftRightPeirceProjectors": "880ec08852a3c600e6c81368324727bca743da05384b388a7088e8bf7c84861c",
+      "InfoGeometry.OperatorAlgebra.TKKConformalClosure": "c0a386a36337ff4ceae87f7d400f05f72c641f68a64bff51f7a6dd97ea18ba7b",
+      "InfoGeometry.Meta.OwnerTarget": "824ac23fa5a0f002b220a4547d7e26bb98fb4ddbe4b82f76f027aee02e3c6dab",
+      "InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure": "d26baa60bf0f7d71c47d66b8dd2c9a978989f860ceaef8ab931ccf55162ff7fe",
+      "InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition": "78e7c9770d6340ce982727cccfc421eefe322969fa9bfe0951489589cd0d415b",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceCentralizer": "83b8e6fc07ed0c2a24a494bc2284758e0a3322030eafd73d220a868588ff570f",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.GramCentralLocalization": "d272f8c2d05359037999249cf1470f6cd98c8d6c081ce042fc084cfaee1cd054",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.BalancedEightWitness": "e8d834870e5be1bd99a8abbb408acb03ae94dc21162ccdddd422cb1d0b3b74c2"
+    },
+    "fingerprints": {
+      "InfoGeometry.OperatorAlgebra.StarGramRegularity": "ac1aa9136ec35f3caf26ff9c9ef13be894cef64701d557104d88878ba8a958dc",
+      "InfoGeometry.OperatorAlgebra.CentralPowerLocalization": "adaf17e98461aa618b6306490b5459ea7996dae8bc5e6fb1090b86b7fd4570c3",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.RealBdGKreinChiralIdealBridge": "f7249f16f3d74fe8518a1577823f20d17d827eba252137ea9214416bcb2467ad",
+      "InfoGeometry.Core.IdempotencyDefect": "47f59232a971b8dca23c1d7cd07ac553c31468d143ed1a390f229eaf0c7697d5",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra": "6318527c4fbd65bca67b505b6a77a74eb750cf957768c7af3f06c163dce9bc28",
+      "InfoGeometry.Core.PeirceDecomposition": "44fd72a7671b9164fb71c5803315e679f0862ce4315700f536980697c2b4da3b",
+      "InfoGeometry.Core.PeirceGrading": "830474a33794bbd246a88a252cb7f5c869634a4ba9b6b5df50682910535a2a71",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.IntegralWeyl": "48a6e5b6ed103ca6fecd1f6416bbc7ebf498ca175ea3e0cd6706489f4eb190b3",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic": "371a57bd773e984157376f429c529671f2d42b2860f852a66a6067319a797c0d",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.StarGrading": "e0bb512c96b36d335fef572abb5cbde0f7a96bd3a0028aca8be30d78a582f46c",
+      "InfoGeometry.Physics.TripotentAdjointDerivation": "70fe6e23429fd4033f5e7bb31d5d33f7a8b76927132ea9a05881d64a70ef4a44",
+      "InfoGeometry.Physics.Algebra.TripotentPeirceProjectors": "769c1b0729eb2c29610321ad95cfdbac0366e71eb28c3d32b626faf3cbdcb12a",
+      "InfoGeometry.Physics.Algebra.TripotentLeftRightPeirceProjectors": "6141d2aa122ab9f90a0dea26add93591616a711b5261974cbd8b06d8362b581e",
+      "InfoGeometry.OperatorAlgebra.TKKConformalClosure": "3213d77f6edeac8124ea5d35eb7acd62803ddb97d78a3618bcd3614f82676fb5",
+      "InfoGeometry.Meta.OwnerTarget": "825689d3869ebc6f71d9f4e329aa58c9d74ac8e92786695a63e12ae1e3e20acf",
+      "InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure": "46dee7326adecbe261206513c753471d340ab2d8f58307f7f50eb790b884115c",
+      "InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition": "e8878036503193a23a03ed9f84c903c6ed128b536223f38000ee65a1427d4e8a",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceCentralizer": "0b2543a09ae3bd4386c973fb43d8716bf66404f70d2f60b895acb724d8016e13",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.GramCentralLocalization": "c592524dc7163e6e9cd2442962089bc49a563ea6a3ac8e616be4c4092e38a6bc",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.BalancedEightWitness": "f5377266a2b35d13605f6b5f7191d5f7f88fe614de1ace4fa2e981085d434205"
+    },
+    "repository_import_dependencies": {
+      "InfoGeometry.OperatorAlgebra.StarGramRegularity": [],
+      "InfoGeometry.OperatorAlgebra.CentralPowerLocalization": [],
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.RealBdGKreinChiralIdealBridge": [],
+      "InfoGeometry.Core.IdempotencyDefect": [],
+      "InfoGeometry.Algebra.FiniteSpinAlgebra": [],
+      "InfoGeometry.Core.PeirceDecomposition": [
+        "InfoGeometry.Core.IdempotencyDefect",
+        "InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "InfoGeometry.Core.PeirceGrading": [
+        "InfoGeometry.Core.PeirceDecomposition"
+      ],
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.IntegralWeyl": [
+        "InfoGeometry.OperatorAlgebra.StarGramRegularity",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.RealBdGKreinChiralIdealBridge",
+        "InfoGeometry.Core.PeirceGrading"
+      ],
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic": [],
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.StarGrading": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic"
+      ],
+      "InfoGeometry.Physics.TripotentAdjointDerivation": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "InfoGeometry.Physics.Algebra.TripotentPeirceProjectors": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "InfoGeometry.Physics.Algebra.TripotentLeftRightPeirceProjectors": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Physics.TripotentAdjointDerivation",
+        "InfoGeometry.Physics.Algebra.TripotentPeirceProjectors"
+      ],
+      "InfoGeometry.OperatorAlgebra.TKKConformalClosure": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "InfoGeometry.Meta.OwnerTarget": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.OperatorAlgebra.TKKConformalClosure",
+        "InfoGeometry.Meta.OwnerTarget"
+      ],
+      "InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Physics.Algebra.TripotentLeftRightPeirceProjectors",
+        "InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure"
+      ],
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceCentralizer": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.IntegralWeyl",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.StarGrading",
+        "InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition"
+      ],
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.GramCentralLocalization": [
+        "InfoGeometry.OperatorAlgebra.CentralPowerLocalization",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceCentralizer"
+      ],
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.BalancedEightWitness": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.RealBdGKreinChiralIdealBridge",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.IntegralWeyl",
+        "InfoGeometry.OperatorAlgebra.CentralPowerLocalization"
+      ]
+    },
+    "local_revision": "9646e48664d2c65c8e3a8e59c09f322cb3c5f955",
+    "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+    "declaration_counts": {
+      "InfoGeometry.OperatorAlgebra.StarGramRegularity": 8,
+      "InfoGeometry.OperatorAlgebra.CentralPowerLocalization": 66,
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.IntegralWeyl": 34,
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceCentralizer": 32,
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.GramCentralLocalization": 27,
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.BalancedEightWitness": 81,
+      "InfoGeometry.Physics.Algebra.TripotentPeirceProjectors": 53,
+      "InfoGeometry.Physics.Algebra.TripotentLeftRightPeirceProjectors": 89,
+      "InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition": 98
+    },
+    "axioms": [
+      "[propext, Classical.choice, Quot.sound]"
+    ]
+  },
+  "source_gates": {
+    "selected_files": 9,
+    "strict_placeholder": "passed; hard_count zero for each selected file",
+    "strict_opengauss": {
+      "violations": {},
+      "quarantined_packets": []
+    },
+    "semantic_error_gate": "passed",
+    "semantic_advisories": 26,
+    "semantic_scope": "Lexical screening, not a semantic proof; advisory trivial-surface findings retained."
+  },
+  "warnings": {
+    "new_owners": {
+      "InfoGeometry.OperatorAlgebra.StarGramRegularity": 0,
+      "InfoGeometry.OperatorAlgebra.CentralPowerLocalization": 0,
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.IntegralWeyl": 0,
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceCentralizer": 0,
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.GramCentralLocalization": 0,
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.BalancedEightWitness": 0
+    },
+    "existing_selected_owners": {
+      "InfoGeometry.Physics.Algebra.TripotentPeirceProjectors": 7,
+      "InfoGeometry.Physics.Algebra.TripotentLeftRightPeirceProjectors": 0,
+      "InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition": 0
+    },
+    "other_imported_modules": {
+      "InfoGeometry.Core.PeirceDecomposition": 1,
+      "InfoGeometry.Physics.TripotentAdjointDerivation": 4,
+      "InfoGeometry.OperatorAlgebra.TKKConformalClosure": 26,
+      "InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure": 34
+    }
+  },
+  "root_preflight": {
+    "command": [
+      "python3",
+      "tools/infra/ci_bootstrap.py",
+      "paths",
+      "--root",
+      "."
+    ],
+    "returncode": 1,
+    "result": {
+      "schema": "info_geometry.ci_path_preflight.v1",
+      "revision": "9646e48664d2c65c8e3a8e59c09f322cb3c5f955",
+      "ok": false,
+      "packages": [
+        {
+          "name": "HomotopyHypothesis",
+          "dir": "external_refs/homotopy-hypothesis-lean4",
+          "config": "lakefile.lean",
+          "directory_exists": false,
+          "config_exists": false,
+          "source_kind": "untracked",
+          "errors": [
+            "missing_config",
+            "untracked_path_dependency"
+          ],
+          "ok": false
+        },
+        {
+          "name": "Atlas",
+          "dir": "external_refs/atlas-lean",
+          "config": "lakefile.toml",
+          "directory_exists": false,
+          "config_exists": false,
+          "source_kind": "untracked",
+          "errors": [
+            "missing_config",
+            "untracked_path_dependency"
+          ],
+          "ok": false
+        },
+        {
+          "name": "GIFT",
+          "dir": "external_refs/gift-framework-core",
+          "config": "lakefile.lean",
+          "directory_exists": true,
+          "config_exists": false,
+          "source_kind": "gitlink",
+          "pinned_commit": "e6f3c3ac2140c2324fb2ae029c32233e73aa5e92",
+          "errors": [
+            "missing_config",
+            "uninitialized_gitlink"
+          ],
+          "ok": false
+        },
+        {
+          "name": "InfoGeometryCore",
+          "dir": "lib/InfoGeometryCore",
+          "config": "lakefile.lean",
+          "directory_exists": true,
+          "config_exists": true,
+          "source_kind": "tracked",
+          "errors": [],
+          "ok": true
+        }
+      ],
+      "scope": "Direct path-package availability/provenance; not compilation or a transitive dependency audit"
+    }
+  },
+  "root_publication_boundary": "Root Lake and the complete pre-push gate have not passed. The user authorized draft publication with the disclosed path-dependency blocker; no dependency pin, stub package, proof gate, or hook was altered.",
+  "evidence_sha256": {
+    "report.json": "7f35f87e37da806b2ba8dcc48743583dc561082349ea38f61e6f22939ac0f229",
+    "axioms.log": "b76cd1ae1879a2184f6ef8c82e699be9cd5f0128192bfccec0d5f15f5cc368e9",
+    "selection.json": "6525027f37d77ac34602453ffc9cc4e9ad8039ade1e50cf90185756d20cc8eac",
+    "opengauss.json": "747443d22b8ccffb07c44835fa4a015e33c702c22548bbc3cecde756a8b81eb7",
+    "semantic-vacuity.json": "b6145092e011167e67c567c43c45f92852adfc26e89ec36f14a019ac145b4250",
+    "root-path-preflight.json": "1f86c57b6f9b24a6123140e366d142d474447131b34a3139118e0b686668634b",
+    "root-path-preflight-status.json": "d98dc027d7214c062b4142f45026a699091f87c2bfcf7c1050b663b2b508af1a",
+    "evidence-sha256.json": "cde4655e99f10fe30e9780fcdaa8837235317315314cf63c40dfa4529be0fa68"
+  },
+  "publication_reconciliation": "The published tree must retain every source_sha256 and verification_source_sha256 recorded here. Later contract/workflow/evidence-only commits do not extend the Lean validation scope.",
+  "historical_evidence": "The former unpublished a3d52fa2/16601ece worktree and evidence files were lost. Historical hashes established exact recovery of four new owners and three existing projector edits before main integration. StarGramRegularity and IntegralWeyl are restorations verified by the current run, not certified by the old report."
+}

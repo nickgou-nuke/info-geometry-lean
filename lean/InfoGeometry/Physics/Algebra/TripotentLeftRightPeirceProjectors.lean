@@ -1,4 +1,8 @@
-import Mathlib
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.TripotentAdjointDerivation
 import InfoGeometry.Physics.Algebra.TripotentPeirceProjectors
@@ -159,7 +163,7 @@ theorem peirceProjector_mul_eq_zero_of_ne
     {e : R} (he : e * e * e = e)
     {s₁ s₂ : PeirceSign} (hne : s₁ ≠ s₂) :
     peirceProjector e s₁ * peirceProjector e s₂ = 0 := by
-  cases s₁ <;> cases s₂ <;> try contradiction
+  cases s₁ <;> cases s₂ <;> try exact (hne rfl).elim
   · exact projPos_mul_projZero_eq_zero he
   · exact projPos_mul_projNeg_eq_zero he
   · exact projZero_mul_projPos_eq_zero he

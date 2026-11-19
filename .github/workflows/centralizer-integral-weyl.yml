@@ -1,0 +1,367 @@
+name: Centralizer and integral Weyl (scoped)
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Core/**'
+      - 'lean/InfoGeometry/Meta/OwnerTarget.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/StarGramRegularity.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/CentralPowerLocalization.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceSpine/**'
+      - 'lean/InfoGeometry/OperatorAlgebra/TKKConformalClosure.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/SuperTKKConformalClosure.lean'
+      - 'lean/InfoGeometry/Physics/TripotentAdjointDerivation.lean'
+      - 'lean/InfoGeometry/Physics/Algebra/Tripotent*.lean'
+      - 'tools/quality/check_clifford_dirac.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/placeholder_audit.py'
+      - 'tools/quality/audit_constructivity.py'
+      - 'tools/quality/common.py'
+      - 'tools/quality/semantic_vacuity_gate.py'
+      - 'tools/quality/semantic_vacuity_patterns.json'
+      - 'tools/infra/opengauss_screener.py'
+      - 'tools/pathing.py'
+      - 'tools/build_lock.py'
+      - 'docs/CENTRALIZER_INTEGRAL_WEYL_CONTRACT.md'
+      - 'docs/CENTRALIZER_INTEGRAL_WEYL_VALIDATION.json'
+      - 'docs/intake/centralizer-integral-weyl-20261113.txt'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/centralizer-integral-weyl.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: centralizer-integral-weyl-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      CENTRALIZER_WEYL_TARGETS: >-
+        ["InfoGeometry.OperatorAlgebra.StarGramRegularity",
+        "InfoGeometry.OperatorAlgebra.CentralPowerLocalization",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.IntegralWeyl",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceCentralizer",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.GramCentralLocalization",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.BalancedEightWitness",
+        "InfoGeometry.Physics.Algebra.TripotentPeirceProjectors",
+        "InfoGeometry.Physics.Algebra.TripotentLeftRightPeirceProjectors",
+        "InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition"]
+      CENTRALIZER_WEYL_NEW_TARGETS: >-
+        ["InfoGeometry.OperatorAlgebra.StarGramRegularity",
+        "InfoGeometry.OperatorAlgebra.CentralPowerLocalization",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.IntegralWeyl",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceCentralizer",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.GramCentralLocalization",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.BalancedEightWitness"]
+    steps:
+      - name: Fetch exact public source and pinned Mathlib
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Fetch only the two public source trees; do not initialize external gitlinks.
+          git init project
+          git -C project remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
+          git -C project -c protocol.version=2 fetch --no-tags --depth=1 origin "$GITHUB_SHA"
+          git -C project checkout --detach FETCH_HEAD
+          test "$(git -C project rev-parse HEAD)" = "$GITHUB_SHA"
+          python3 - <<'PY'
+          import json, re, subprocess
+          from pathlib import Path
+          manifest = json.loads(Path('project/lake-manifest.json').read_text())
+          pins = [p for p in manifest['packages'] if p['name'] == 'mathlib']
+          assert len(pins) == 1, 'Expected one Mathlib pin'
+          pin = pins[0]
+          assert pin['type'] == 'git' and pin.get('subDir') is None
+          assert pin['url'] == 'https://github.com/leanprover-community/mathlib4.git'
+          assert re.fullmatch(r'[0-9a-f]{40}', pin['rev']), 'Expected exact Mathlib commit'
+          subprocess.run(['git', 'init', 'pinned-mathlib'], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'remote', 'add', 'origin', pin['url']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', '-c', 'protocol.version=2',
+              'fetch', '--no-tags', '--depth=1', 'origin', pin['rev']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'checkout', '--detach', 'FETCH_HEAD'], check=True)
+          PY
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            pinned-mathlib/.lake
+          key: centralizer-integral-weyl-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - name: Install exact Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Bind complete source selection and hydrate pinned native imports
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, subprocess, sys
+          from pathlib import Path
+          root, mathlib, out = map(Path, ('project', 'pinned-mathlib', 'centralizer-integral-weyl-report'))
+          sys.path.insert(0, str(root.resolve()))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          from tools.quality.reviewed_audit_source import validate_targets
+          targets = validate_targets(json.loads(os.environ['CENTRALIZER_WEYL_TARGETS']))
+          new_targets = validate_targets(json.loads(os.environ['CENTRALIZER_WEYL_NEW_TARGETS']))
+          assert len(targets) == 9 and len(new_targets) == 6
+          assert set(new_targets) < set(targets)
+          existing_targets = [t for t in targets if t not in new_targets]
+          assert len(existing_targets) == 3
+          def git(repo, *args):
+              return subprocess.check_output(['git', '-C', str(repo), *args])
+          revision = git(root, 'rev-parse', 'HEAD').decode().strip()
+          assert revision == os.environ['GITHUB_SHA'], 'Unexpected source checkout'
+          git(root, 'diff', '--exit-code', 'HEAD', '--')
+          ordered, dependencies, native = closure(root, targets)
+          domain = [
+              '.github/workflows/centralizer-integral-weyl.yml',
+              'docs/CENTRALIZER_INTEGRAL_WEYL_CONTRACT.md',
+              'docs/CENTRALIZER_INTEGRAL_WEYL_VALIDATION.json',
+              'docs/intake/centralizer-integral-weyl-20261113.txt',
+              'tools/quality/check_clifford_dirac.py', 'tools/quality/check_reviewed_prs.py',
+              'tools/quality/reviewed_audit_source.py', 'tools/build_lock.py',
+              'tools/quality/placeholder_audit.py', 'tools/quality/audit_constructivity.py',
+              'tools/quality/common.py', 'tools/pathing.py',
+              'tools/quality/semantic_vacuity_gate.py', 'tools/quality/semantic_vacuity_patterns.json',
+              'tools/infra/opengauss_screener.py', 'lean-toolchain', 'lake-manifest.json',
+          ]
+          paths = domain + ['lean/' + m.replace('.', '/') + '.lean' for m in ordered]
+          out.mkdir(exist_ok=False)
+          hashes = {}
+          for path in paths:
+              data = (root / path).read_bytes()
+              assert data == git(root, 'show', revision + ':' + path), path
+              hashes[path] = hashlib.sha256(data).hexdigest()
+              copied = out / 'repository' / path
+              copied.parent.mkdir(parents=True, exist_ok=True)
+              copied.write_bytes(data)
+          manifest = json.loads((root / 'lake-manifest.json').read_text())
+          pin = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          assert git(mathlib, 'rev-parse', 'HEAD').decode().strip() == pin
+          assert (mathlib / 'lean-toolchain').read_bytes() == (root / 'lean-toolchain').read_bytes()
+          git(mathlib, 'diff', '--exit-code', 'HEAD', '--')
+          missing = [p for p in sorted(native) if not (mathlib / p).is_file()]
+          assert not missing, 'Missing native import roots: ' + ', '.join(missing)
+          native_hashes = {}
+          for path in sorted(native):
+              data = (mathlib / path).read_bytes()
+              assert data == git(mathlib, 'show', pin + ':' + path), path
+              native_hashes[path] = hashlib.sha256(data).hexdigest()
+          event = json.loads(Path(os.environ['GITHUB_EVENT_PATH']).read_text())
+          pr = event.get('pull_request', {})
+          selection = dict(source_revision=revision,
+              source_tree=git(root, 'rev-parse', 'HEAD^{tree}').decode().strip(),
+              event_name=os.environ['GITHUB_EVENT_NAME'],
+              pr_head=pr.get('head', {}).get('sha'), pr_base=pr.get('base', {}).get('sha'),
+              targets=targets, new_targets=new_targets, existing_targets=existing_targets,
+              modules=ordered, repository_import_dependencies=dependencies,
+              native_import_roots=sorted(native), native_source_sha256=native_hashes,
+              repository_sha256=hashes, mathlib=pin,
+              toolchain=(root / 'lean-toolchain').read_text().strip())
+          (out / 'selection.json').write_text(json.dumps(selection, indent=2) + '\n')
+          print(f'Selected {len(ordered)} project modules and {len(native)} native import roots', flush=True)
+          # Keep every native root, including any existing umbrella Mathlib import.
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'centralizer-integral-weyl-cache', block=True) as lock:
+              with (out / 'cache.log').open('w') as log:
+                  subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
+                      cwd=mathlib, check=True, stdout=log, stderr=subprocess.STDOUT,
+                      pass_fds=(lock.fileno(),))
+          assert git(mathlib, 'rev-parse', 'HEAD').decode().strip() == pin
+          git(mathlib, 'diff', '--exit-code', 'HEAD', '--')
+          PY
+      - name: Run unchanged source gates for all nine owners
+        working-directory: project
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess, sys
+          from pathlib import Path
+          out = Path('../centralizer-integral-weyl-report')
+          targets = json.loads(os.environ['CENTRALIZER_WEYL_TARGETS'])
+          paths = ['lean/' + m.replace('.', '/') + '.lean' for m in targets]
+          for target, path in zip(targets, paths):
+              assert Path(path).is_file(), path
+              with (out / ('placeholder-' + target + '.log')).open('w') as log:
+                  subprocess.run([sys.executable, 'tools/quality/placeholder_audit.py',
+                      '--strict', '--root', path, '--json-out',
+                      str(out / ('placeholder-' + target + '.json'))],
+                      check=True, stdout=log, stderr=subprocess.STDOUT)
+          with (out / 'opengauss.json').open('w') as output, (out / 'opengauss.log').open('w') as log:
+              subprocess.run([sys.executable, 'tools/infra/opengauss_screener.py',
+                  '--strict', '--json', *paths], check=True, stdout=output, stderr=log)
+          with (out / 'semantic-vacuity.log').open('w') as log:
+              subprocess.run([sys.executable, 'tools/quality/semantic_vacuity_gate.py',
+                  *paths, '--fail-on', 'error', '--json-out', str(out / 'semantic-vacuity.json')],
+                  check=True, stdout=log, stderr=subprocess.STDOUT)
+          PY
+      - name: Compile full source closure and audit every selected-owner declaration
+        working-directory: project
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess, sys
+          lean = subprocess.check_output(['elan', 'which', 'lean'], text=True).strip()
+          command = [sys.executable, 'tools/quality/check_clifford_dirac.py',
+              '--mathlib-root', '../pinned-mathlib', '--lean', lean,
+              '--output', '../centralizer-integral-weyl-report']
+          for target in json.loads(os.environ['CENTRALIZER_WEYL_TARGETS']):
+              command.extend(['--target', target])
+          subprocess.run(command, check=True)
+          PY
+      - name: Reconcile nine-owner audit and zero warnings for six new owners
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, re, subprocess, sys
+          from pathlib import Path
+          root, mathlib, out = map(Path, ('project', 'pinned-mathlib', 'centralizer-integral-weyl-report'))
+          sys.path.insert(0, str(root.resolve()))
+          from tools.quality.check_reviewed_prs import closure
+          from tools.quality.reviewed_audit_source import parse_audit_output
+          def sha(path):
+              return hashlib.sha256(path.read_bytes()).hexdigest()
+          def git(repo, *args):
+              return subprocess.check_output(['git', '-C', str(repo), *args])
+          targets = json.loads(os.environ['CENTRALIZER_WEYL_TARGETS'])
+          new_targets = json.loads(os.environ['CENTRALIZER_WEYL_NEW_TARGETS'])
+          existing_targets = [t for t in targets if t not in new_targets]
+          assert len(targets) == len(set(targets)) == 9
+          assert len(new_targets) == len(set(new_targets)) == 6
+          assert set(new_targets) < set(targets) and len(existing_targets) == 3
+          selection = json.loads((out / 'selection.json').read_text())
+          report = json.loads((out / 'report.json').read_text())
+          assert report['status'] == 'passed' and report['audit_required'] is True
+          assert report['targets'] == selection['targets'] == targets
+          assert selection['new_targets'] == new_targets
+          assert selection['existing_targets'] == existing_targets
+          assert report['local_revision'] == selection['source_revision'] == os.environ['GITHUB_SHA']
+          assert report['mathlib'] == selection['mathlib']
+          assert report['toolchain'] == selection['toolchain']
+          ordered, dependencies, native = closure(root, targets)
+          assert ordered == selection['modules'] == [m['module'] for m in report['modules']]
+          assert len(ordered) == len(set(ordered))
+          assert dependencies == selection['repository_import_dependencies'] == report['repository_import_dependencies']
+          assert sorted(native) == selection['native_import_roots']
+          assert set(report['source_sha256']) == set(ordered)
+          for module in report['modules']:
+              name = module['module']
+              assert module['returncode'] == 0 and module['reused'] is False, name
+              log = (out / (name + '.log')).read_text()
+              assert module['warnings'] == len(re.findall(r'\bwarning:', log)), name
+              # The maintained checker only applies its automatic warning rule to CliffordDirac.
+              if name in new_targets:
+                  assert module['warnings'] == 0, 'New-owner warning: ' + name
+              assert module['artifacts'], name
+              for path, expected in module['artifacts'].items():
+                  assert sha(out / path) == expected, path
+              rel = name.replace('.', '/') + '.lean'
+              expected = selection['repository_sha256']['lean/' + rel]
+              assert report['source_sha256'][name] == sha(out / 'src' / rel) == expected, name
+          for path, expected in selection['repository_sha256'].items():
+              data = git(root, 'show', selection['source_revision'] + ':' + path)
+              assert sha(root / path) == hashlib.sha256(data).hexdigest() == expected, path
+              assert sha(out / 'repository' / path) == expected, path
+          for path, expected in report['verification_source_sha256'].items():
+              assert selection['repository_sha256'][path] == expected, path
+          assert git(root, 'rev-parse', 'HEAD').decode().strip() == selection['source_revision']
+          assert git(root, 'rev-parse', 'HEAD^{tree}').decode().strip() == selection['source_tree']
+          git(root, 'diff', '--exit-code', 'HEAD', '--')
+          assert git(mathlib, 'rev-parse', 'HEAD').decode().strip() == selection['mathlib']
+          git(mathlib, 'diff', '--exit-code', 'HEAD', '--')
+          assert (mathlib / 'lean-toolchain').read_bytes() == (root / 'lean-toolchain').read_bytes()
+          for path, expected in selection['native_source_sha256'].items():
+              assert sha(mathlib / path) == expected, path
+          audit = (out / 'axioms.log').read_text()
+          assert not re.search(r'\bwarning:', audit)
+          counts = parse_audit_output(audit, targets)
+          assert counts == report['declaration_counts'] and all(counts[t] > 0 for t in targets)
+          assert report['axioms'] == re.findall(r'^AUDIT_AXIOMS: (.*)$', audit, re.MULTILINE)
+          paths = ['lean/' + m.replace('.', '/') + '.lean' for m in targets]
+          for target, path in zip(targets, paths):
+              placeholder = json.loads((out / ('placeholder-' + target + '.json')).read_text())
+              assert placeholder['root'] == path and placeholder['summary']['scanned_count'] == 1
+              assert placeholder['summary']['hard_count'] == 0
+          screening = json.loads((out / 'opengauss.json').read_text())
+          assert not screening['quarantined_packets']
+          assert not any(v['severity'] in {'ERROR', 'WARNING'}
+              for findings in screening['violations'].values() for v in findings)
+          semantic = json.loads((out / 'semantic-vacuity.json').read_text())
+          assert semantic['coverage_complete'] and not semantic['read_failures']
+          assert semantic['files_selected'] == semantic['files_scanned'] == len(targets)
+          for field in ['source_paths', 'successfully_read_paths', 'scope_roots']:
+              assert len(semantic[field]) == len(paths) and set(semantic[field]) == set(paths), field
+          assert semantic['fail_on'] == 'error' and not semantic['fail_prefixes']
+          assert semantic['severity_counts'].get('error', 0) == 0
+          index = json.loads((out / 'evidence-sha256.json').read_text())
+          for path, expected in index.items():
+              actual = root / path[len('repository/'):] if path.startswith('repository/') else out / path
+              assert sha(actual) == expected, path
+          modules = {m['module']: m for m in report['modules']}
+          existing_warnings = {t: modules[t]['warnings'] for t in existing_targets}
+          warning_summary = dict(
+              new_owner_warnings={t: modules[t]['warnings'] for t in new_targets},
+              existing_owner_warnings=existing_warnings,
+              existing_owner_warning_count=sum(existing_warnings.values()),
+              dependency_warnings={m: row['warnings'] for m, row in modules.items()
+                  if m not in targets and row['warnings']})
+          (out / 'warning-summary.json').write_text(json.dumps(warning_summary, indent=2) + '\n')
+          result = dict(status='passed', source_revision=selection['source_revision'],
+              source_tree=selection['source_tree'], targets=targets,
+              new_targets=new_targets, existing_targets=existing_targets,
+              compiled_modules=len(ordered), audited_declarations=sum(counts.values()),
+              new_owner_warnings=0, existing_owner_warnings=existing_warnings,
+              existing_owner_warning_count=sum(existing_warnings.values()),
+              incremental=False, audit_required=True,
+              warning_summary_sha256=sha(out / 'warning-summary.json'),
+              selection_sha256=sha(out / 'selection.json'), report_sha256=sha(out / 'report.json'))
+          (out / 'domain-validation.json').write_text(json.dumps(result, indent=2) + '\n')
+          print(json.dumps(result, indent=2))
+          PY
+      - name: Seal complete evidence, including partial failure evidence
+        if: always()
+        shell: bash
+        env:
+          VERIFICATION_JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          out = Path('centralizer-integral-weyl-report')
+          out.mkdir(exist_ok=True)
+          state = dict(status_before_sealing=os.environ['VERIFICATION_JOB_STATUS'],
+              source_revision=os.environ['GITHUB_SHA'], run_id=os.environ['GITHUB_RUN_ID'],
+              run_attempt=os.environ['GITHUB_RUN_ATTEMPT'])
+          (out / 'workflow-state.json').write_text(json.dumps(state, indent=2) + '\n')
+          index_path = out / 'domain-evidence-sha256.json'
+          evidence = {str(p.relative_to(out)): hashlib.sha256(p.read_bytes()).hexdigest()
+              for p in sorted(out.rglob('*')) if p.is_file() and p != index_path}
+          index_path.write_text(json.dumps(evidence, indent=2) + '\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: centralizer-integral-weyl-verification
+          # Includes src/, lib/, repository/ snapshots, all logs, and all manifests.
+          path: centralizer-integral-weyl-report
+          include-hidden-files: true
+          if-no-files-found: error

@@ -1,0 +1,64 @@
+{
+  "commands": [
+    {
+      "name": "opengauss_strict",
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "--strict",
+        "--json",
+        "lean/InfoGeometry/Probability/BipartiteLogCoupling.lean",
+        "lean/InfoGeometry/Spectrometry/TableBalancing.lean",
+        "lean/InfoGeometry/Spectrometry/LogLeastSquares.lean",
+        "lean/InfoGeometry/Spectrometry/MatrixLogCentering.lean",
+        "lean/InfoGeometry/Spectrometry/ColumnFirstSinkhornCovariance.lean",
+        "lean/InfoGeometry/Spectrometry/GlobalHyperbolicBounds.lean",
+        "lean/InfoGeometry/Spectrometry/ExactTwoLineRoot.lean",
+        "lean/InfoGeometry/Spectrometry/InteriorLogSlope.lean",
+        "lean/InfoGeometry/Spectrometry/InteriorStepAndRatioSignatures.lean",
+        "lean/InfoGeometry/Spectrometry/LogInteractionAndGauge.lean",
+        "lean/InfoGeometry/Spectrometry/ProjectionEnergy.lean",
+        "lean/InfoGeometry/Spectrometry/SpectralOrientation.lean",
+        "lean/InfoGeometry/Spectrometry/SpectralRestriction.lean",
+        "lean/InfoGeometry/Spectrometry/TwoLineBalancedConstruction.lean",
+        "lean/InfoGeometry/Spectrometry/TwoLineNonasymptoticBounds.lean",
+        "lean/InfoGeometry/Spectrometry/SpectralTableFactorization.lean"
+      ],
+      "exit_code": 0,
+      "seconds": 0.3994753360748291,
+      "stdout": "opengauss_strict.json",
+      "stderr": "opengauss_strict.stderr.log"
+    },
+    {
+      "name": "opengauss_refute",
+      "command": [
+        "python3",
+        "tools/infra/opengauss_cli.py",
+        "refute",
+        "--strict",
+        "--json",
+        "lean/InfoGeometry/Probability/BipartiteLogCoupling.lean",
+        "lean/InfoGeometry/Spectrometry/TableBalancing.lean",
+        "lean/InfoGeometry/Spectrometry/LogLeastSquares.lean",
+        "lean/InfoGeometry/Spectrometry/MatrixLogCentering.lean",
+        "lean/InfoGeometry/Spectrometry/ColumnFirstSinkhornCovariance.lean",
+        "lean/InfoGeometry/Spectrometry/GlobalHyperbolicBounds.lean",
+        "lean/InfoGeometry/Spectrometry/ExactTwoLineRoot.lean",
+        "lean/InfoGeometry/Spectrometry/InteriorLogSlope.lean",
+        "lean/InfoGeometry/Spectrometry/InteriorStepAndRatioSignatures.lean",
+        "lean/InfoGeometry/Spectrometry/LogInteractionAndGauge.lean",
+        "lean/InfoGeometry/Spectrometry/ProjectionEnergy.lean",
+        "lean/InfoGeometry/Spectrometry/SpectralOrientation.lean",
+        "lean/InfoGeometry/Spectrometry/SpectralRestriction.lean",
+        "lean/InfoGeometry/Spectrometry/TwoLineBalancedConstruction.lean",
+        "lean/InfoGeometry/Spectrometry/TwoLineNonasymptoticBounds.lean",
+        "lean/InfoGeometry/Spectrometry/SpectralTableFactorization.lean"
+      ],
+      "exit_code": 0,
+      "seconds": 0.41377854347229004,
+      "stdout": "opengauss_refute.json",
+      "stderr": "opengauss_refute.stderr.log"
+    }
+  ],
+  "all_sources_match_reviewed_snapshot": true
+}

@@ -153,6 +153,49 @@ theorem krausChannel_preserves_cyclicFunctional {R ι : Type*}
       rw [Finset.sum_mul, ← map_sum]
     _ = τ x := by rw [hV, one_mul]
 
+/-- Under right completeness, the backward defect is the ordered sum of
+commutators with the Kraus operators. -/
+theorem krausDual_sub_self_eq_sum_commutator {ι : Type*} [Fintype ι]
+    (V : ι → A) (E : A) (hV : ∑ i, star (V i) * V i = 1) :
+    krausDual V E - E =
+      ∑ i, star (V i) * operatorCommutator E (V i) := by
+  simp only [operatorCommutator, mul_sub, ← mul_assoc,
+    Finset.sum_sub_distrib, ← Finset.sum_mul, hV, one_mul, krausDual]
+
+/-- An observable commuting with every member of a complete family is fixed
+by the backward Kraus action. -/
+theorem krausDual_eq_self_of_commute {ι : Type*} [Fintype ι]
+    (V : ι → A) (E : A) (hV : ∑ i, star (V i) * V i = 1)
+    (hE : ∀ i, Commute E (V i)) :
+    krausDual V E = E := by
+  apply sub_eq_zero.mp
+  rw [krausDual_sub_self_eq_sum_commutator V E hV]
+  apply Finset.sum_eq_zero
+  intro i _
+  rw [operatorCommutator, (hE i).eq, sub_self, mul_zero]
+
+/-- The backward Kraus action is additive in its observable. -/
+theorem krausDual_add {ι : Type*} [Fintype ι]
+    (V : ι → A) (E F : A) :
+    krausDual V (E + F) = krausDual V E + krausDual V F := by
+  simp only [krausDual, mul_add, add_mul, Finset.sum_add_distrib]
+
+/-- A summand commuting with the complete Kraus family drops out of the
+backward defect. -/
+theorem krausDual_add_commuting_sub_self {ι : Type*} [Fintype ι]
+    (V : ι → A) (Z E : A) (hV : ∑ i, star (V i) * V i = 1)
+    (hZ : ∀ i, Commute Z (V i)) :
+    krausDual V (Z + E) - (Z + E) = krausDual V E - E := by
+  rw [krausDual_add, krausDual_eq_self_of_commute V Z hV hZ]
+  abel
+
+/-- Every central observable is fixed by every complete finite Kraus family. -/
+theorem krausDual_eq_self_of_mem_center {ι : Type*} [Fintype ι]
+    (V : ι → A) (E : A) (hV : ∑ i, star (V i) * V i = 1)
+    (hE : E ∈ Set.center A) :
+    krausDual V E = E := by
+  exact krausDual_eq_self_of_commute V E hV (fun i => hE.comm (V i))
+
 section WeightedUnitaryMixtures
 
 variable {R A ι : Type*} [Semiring R] [Ring A] [Module R A]

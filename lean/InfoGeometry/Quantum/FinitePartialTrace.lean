@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Tactic
+import Mathlib.LinearAlgebra.Matrix.Kronecker
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
@@ -22,11 +23,15 @@ bridges.
 - `partialTraceSecondOp_trace`: the partial trace preserves total matrix trace.
 - `partialTraceSecondOp_diagonal`: a diagonal bipartite operator has the
   expected diagonal marginal.
+- `trace_mul_partialTraceSecondOp`: full-matrix trace adjointness for tensoring
+  an observable with the second-factor identity. Its established
+  `QuantumContext.MatrixStagePartialTrace` namespace is preserved.
 
 ## iii. Table of contents
 
 1. Bipartite operators and partial trace over the second factor.
 2. Trace preservation and diagonal marginal calculation.
+3. Trace adjointness for arbitrary full matrix observables.
 
 ## iv. References
 
@@ -61,3 +66,25 @@ theorem partialTraceSecondOp_diagonal {m n : ℕ}
   · simp [partialTraceSecondOp, hik]
 
 end InfoGeometry.Quantum.FiniteAttentionCanonicalBridges
+
+namespace InfoGeometry.QuantumContext.MatrixStagePartialTrace
+
+open scoped Kronecker
+open InfoGeometry.Quantum.FiniteAttentionCanonicalBridges
+
+/-- The unnormalized full-matrix partial trace over a finite second index. -/
+theorem trace_mul_partialTraceSecondOp
+    {m r : ℕ} (A : Matrix (Fin m) (Fin m) ℂ)
+    (D : Matrix (Fin m × Fin r) (Fin m × Fin r) ℂ) :
+    Matrix.trace (A * partialTraceSecondOp D) =
+      Matrix.trace ((A ⊗ₖ (1 : Matrix (Fin r) (Fin r) ℂ)) * D) := by
+  classical
+  simp only [Matrix.trace, Matrix.diag_apply, Matrix.mul_apply,
+    partialTraceSecondOp, Matrix.kronecker_apply, Fintype.sum_prod_type]
+  simp [Matrix.one_apply]
+  apply Finset.sum_congr rfl
+  intro i hi
+  rw [Finset.sum_comm]
+  simp_rw [Finset.mul_sum]
+
+end InfoGeometry.QuantumContext.MatrixStagePartialTrace

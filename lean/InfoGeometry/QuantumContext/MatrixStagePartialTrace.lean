@@ -30,21 +30,6 @@ open InfoGeometry.Canonical.CuntzMatrixCompatibleStateNet
 open InfoGeometry.Quantum.FiniteAttentionCanonicalBridges
 open InfoGeometry.QuantumContext.MatrixStageWeightedFunctionalColimit
 
-/-- The unnormalized full-matrix partial trace over a finite second index. -/
-theorem trace_mul_partialTraceSecondOp
-    {m r : ℕ} (A : Matrix (Fin m) (Fin m) ℂ)
-    (D : Matrix (Fin m × Fin r) (Fin m × Fin r) ℂ) :
-    Matrix.trace (A * partialTraceSecondOp D) =
-      Matrix.trace ((A ⊗ₖ (1 : Matrix (Fin r) (Fin r) ℂ)) * D) := by
-  classical
-  simp only [Matrix.trace, Matrix.diag_apply, Matrix.mul_apply,
-    partialTraceSecondOp, Matrix.kronecker_apply, Fintype.sum_prod_type]
-  simp [Matrix.one_apply]
-  apply Finset.sum_congr rfl
-  intro i hi
-  rw [Finset.sum_comm]
-  simp_rw [Finset.mul_sum]
-
 /-- The normalized partial trace between neighboring dyadic stages. -/
 def normalizedPartialTraceStep (n : ℕ)
     (D : MatrixStage (n + 1)) : MatrixStage n :=

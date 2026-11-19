@@ -1,0 +1,21 @@
+{
+  "command": [
+    "python3",
+    "tools/infra/run_locked_lean.py",
+    "--lake",
+    "$SPECTRAL_QA_OUTPUT/lake-isolated",
+    "lean/InfoGeometry/Spectrometry/SpectralTableFactorization.lean",
+    "--root=./lean",
+    "-o",
+    "$SPECTRAL_QA_OUTPUT/final/lib/InfoGeometry/Spectrometry/SpectralTableFactorization.olean"
+  ],
+  "exit_code": 0,
+  "seconds": 3.7382874488830566,
+  "source": "lean/InfoGeometry/Spectrometry/SpectralTableFactorization.lean",
+  "source_sha256": "de239fe6d7415003db00d258812b13ad7003e0743a1611b2988250cf592db729",
+  "source_matches_reviewed_snapshot": true,
+  "dependency_closure_report_sha256": "93bf4575339a87414e422129da19a453a62b92099bbc27bd1ac71f411c0806df",
+  "log": "umbrella.log",
+  "warning_count": 0,
+  "olean_sha256": "ac82114abf454e1da9c2fc8d08f5c9629f283ba7eb9cf6381ae5ef0e180c3358"
+}

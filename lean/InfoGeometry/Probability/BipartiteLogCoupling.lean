@@ -3,7 +3,15 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-import Mathlib
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Data.Fin.VecNotation
+import Mathlib.LinearAlgebra.Matrix.Trace
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.NoncommRing
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Ring
 
 /-!
 # Bipartite marginal pushforward and log-interaction

@@ -1,0 +1,264 @@
+{
+  "status": "passed",
+  "scope": "Exact repository source closure and native axiom audit",
+  "targets": [
+    "InfoGeometry.Probability.BipartiteLogCoupling",
+    "InfoGeometry.Spectrometry.MatrixLogCentering",
+    "InfoGeometry.Spectrometry.ColumnFirstSinkhornCovariance",
+    "InfoGeometry.Spectrometry.ExactTwoLineRoot",
+    "InfoGeometry.Spectrometry.GlobalHyperbolicBounds",
+    "InfoGeometry.Spectrometry.InteriorLogSlope",
+    "InfoGeometry.Spectrometry.InteriorStepAndRatioSignatures",
+    "InfoGeometry.Spectrometry.LogInteractionAndGauge",
+    "InfoGeometry.Spectrometry.LogLeastSquares",
+    "InfoGeometry.Spectrometry.ProjectionEnergy",
+    "InfoGeometry.Spectrometry.SpectralOrientation",
+    "InfoGeometry.Spectrometry.SpectralRestriction",
+    "InfoGeometry.Spectrometry.TableBalancing",
+    "InfoGeometry.Spectrometry.TwoLineBalancedConstruction",
+    "InfoGeometry.Spectrometry.TwoLineNonasymptoticBounds"
+  ],
+  "modules": [
+    {
+      "module": "InfoGeometry.Probability.BipartiteLogCoupling",
+      "returncode": 0,
+      "warnings": 11,
+      "artifacts": {
+        "lib/InfoGeometry/Probability/BipartiteLogCoupling.olean": "56fb73d54ceb10836cd844ebfbb231b1a6f7a7b4d762c73f9b01a10346756baf"
+      },
+      "reused": true
+    },
+    {
+      "module": "InfoGeometry.Spectrometry.TableBalancing",
+      "returncode": 0,
+      "warnings": 2,
+      "artifacts": {
+        "lib/InfoGeometry/Spectrometry/TableBalancing.olean": "78451bb393973a04f3372adcea54656b542f3c19e0a6eb7dc5aebac452d879f3"
+      },
+      "reused": true
+    },
+    {
+      "module": "InfoGeometry.Spectrometry.LogLeastSquares",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Spectrometry/LogLeastSquares.olean": "99eea1cac5eedd50ce3a430cb79d024f9146329cfdb4373a6ce26b969c1dfaea"
+      },
+      "reused": true
+    },
+    {
+      "module": "InfoGeometry.Spectrometry.MatrixLogCentering",
+      "returncode": 0,
+      "warnings": 2,
+      "artifacts": {
+        "lib/InfoGeometry/Spectrometry/MatrixLogCentering.olean": "b88d4198206c744edb79a6dfe4a3210cc4074451f94d6e39a0096ce4aad01f7a"
+      },
+      "reused": true
+    },
+    {
+      "module": "InfoGeometry.Spectrometry.ColumnFirstSinkhornCovariance",
+      "returncode": 0,
+      "warnings": 4,
+      "artifacts": {
+        "lib/InfoGeometry/Spectrometry/ColumnFirstSinkhornCovariance.olean": "b2dd9170006bbbcead4408438e8feb356843f9ecb8b0dfd5888cc88113ba30ac"
+      },
+      "reused": true
+    },
+    {
+      "module": "InfoGeometry.Spectrometry.GlobalHyperbolicBounds",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Spectrometry/GlobalHyperbolicBounds.olean": "b61e1aa0b6f70ccd2316b864b32730efaf96c03d97099762351910cb6ae4d963"
+      },
+      "reused": true
+    },
+    {
+      "module": "InfoGeometry.Spectrometry.ExactTwoLineRoot",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Spectrometry/ExactTwoLineRoot.olean": "454739e8d0b2a1ef54aaba7e7094d47016329ffc4b6627f7d574578e101d55ac"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Spectrometry.InteriorLogSlope",
+      "returncode": 0,
+      "warnings": 1,
+      "artifacts": {
+        "lib/InfoGeometry/Spectrometry/InteriorLogSlope.olean": "2c481de36f3a41be75656e297cd52b0dc02d34a1b1c569ee4b5098665bfbdb03"
+      },
+      "reused": true
+    },
+    {
+      "module": "InfoGeometry.Spectrometry.InteriorStepAndRatioSignatures",
+      "returncode": 0,
+      "warnings": 10,
+      "artifacts": {
+        "lib/InfoGeometry/Spectrometry/InteriorStepAndRatioSignatures.olean": "4f4a9864084258baaf8a7353e176721892214c9a4cd57975cf1949163622887c"
+      },
+      "reused": true
+    },
+    {
+      "module": "InfoGeometry.Spectrometry.LogInteractionAndGauge",
+      "returncode": 0,
+      "warnings": 10,
+      "artifacts": {
+        "lib/InfoGeometry/Spectrometry/LogInteractionAndGauge.olean": "b8dec1a3be66981c63180bc219400f51f434c1257b06dc8d3384ff6dff687a7c"
+      },
+      "reused": true
+    },
+    {
+      "module": "InfoGeometry.Spectrometry.ProjectionEnergy",
+      "returncode": 0,
+      "warnings": 4,
+      "artifacts": {
+        "lib/InfoGeometry/Spectrometry/ProjectionEnergy.olean": "633917bca99dc849cc29190a1cfbd6f4b483c668a7ae1a1b6b828a7bff6fea5c"
+      },
+      "reused": true
+    },
+    {
+      "module": "InfoGeometry.Spectrometry.SpectralOrientation",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Spectrometry/SpectralOrientation.olean": "e7a33c2f184b14d4c7c6a0dadf35c1ac9575bd47e9b238538752259cd28d4b70"
+      },
+      "reused": true
+    },
+    {
+      "module": "InfoGeometry.Spectrometry.SpectralRestriction",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Spectrometry/SpectralRestriction.olean": "fa003fb66c3adfc7e73d8b6173bd4bb850d4d5403705e39be5c45d7997d04199"
+      },
+      "reused": true
+    },
+    {
+      "module": "InfoGeometry.Spectrometry.TwoLineBalancedConstruction",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Spectrometry/TwoLineBalancedConstruction.olean": "a33fa17f9e58de9e64d174318c2f2d6c439fa53415988dfa83399a9a71c46a97"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Spectrometry.TwoLineNonasymptoticBounds",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Spectrometry/TwoLineNonasymptoticBounds.olean": "a35fc102165128614d46c30af4c284d3d1ba4ad4312279a3f9fe97e209d9ae1f"
+      },
+      "reused": false
+    }
+  ],
+  "audit_required": true,
+  "verification_source_sha256": {
+    "tools/quality/check_clifford_dirac.py": "fcf6fbb9845e0ee2a85bdb3778c5fe74345a9ae7a2e97e871d0a89d3e98e7db0",
+    "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+    "tools/quality/reviewed_audit_source.py": "a976c910f5efb4611b1626d714e3197310d92648ffae56513e94a49ae5f0f206",
+    "tools/build_lock.py": "276bd21076a0300aaff235c6e01731b2a7318ada9094e754ec81f9dc7de04c45"
+  },
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "source_sha256": {
+    "InfoGeometry.Probability.BipartiteLogCoupling": "3a87398d7962227583a6645246a3d2d61edbb0781f5454b7d0d04679872316c3",
+    "InfoGeometry.Spectrometry.TableBalancing": "ef3c08b3e08c6463f920e929de97da616ad8690c4b32b8efa372411975b0c431",
+    "InfoGeometry.Spectrometry.LogLeastSquares": "28b6966738ee83b6d3f8c8b8d0c7faff869498d6d3cf61d97adb179fbdfce5c2",
+    "InfoGeometry.Spectrometry.MatrixLogCentering": "194cb4ee64d77dcf6588b5752ba3c9bef639a2445b2cfb27a9aa3926629a9597",
+    "InfoGeometry.Spectrometry.ColumnFirstSinkhornCovariance": "533283e4abf49a382e81cdee22855836dc632cd2fa3f39522e43c266f260768b",
+    "InfoGeometry.Spectrometry.GlobalHyperbolicBounds": "7755294286bdb1b10355b67ae52ad5e67f877d28265a8a3752d4f9df07660780",
+    "InfoGeometry.Spectrometry.ExactTwoLineRoot": "77e4bfd637e60d1b6f0575413fefe0976129059ce2337c0cdbda158b6f58f9f0",
+    "InfoGeometry.Spectrometry.InteriorLogSlope": "764cc193bfc6e5480a818d4d9a177b9544c9cb92b4e3267b705d47e2ee8c9799",
+    "InfoGeometry.Spectrometry.InteriorStepAndRatioSignatures": "78e2a1b82efa8d4b9be7a67c96d8f9c5e2f4bd4f08d84c827833a2314c5e70f0",
+    "InfoGeometry.Spectrometry.LogInteractionAndGauge": "129596877a9992cec97ad6872c8fde819cb16bfa19bc38b0ec00f55d929ec932",
+    "InfoGeometry.Spectrometry.ProjectionEnergy": "48fe3174717de80a6bdc0be532e19e11c082a24acad16f8aad83a6872f1463c2",
+    "InfoGeometry.Spectrometry.SpectralOrientation": "651cce34a460ebd40db66a3d7316cdfc3833d69af0176439b40fb24598b50e46",
+    "InfoGeometry.Spectrometry.SpectralRestriction": "9ed1a42c0d4268868eb3b57922259911e27540a492913434a6a36f0141c30454",
+    "InfoGeometry.Spectrometry.TwoLineBalancedConstruction": "d1f342e56bc669d8633a5a9c032b1b0e087f226e47df8a0b1ae6a05feb911d5a",
+    "InfoGeometry.Spectrometry.TwoLineNonasymptoticBounds": "116da59fef026f998194c2a4242aa0202e7cf0534e2aefe67ad4bcd4e4d4bda1"
+  },
+  "fingerprints": {
+    "InfoGeometry.Probability.BipartiteLogCoupling": "d7bd0281d29ea6e6a05c5700075cca2b0bd3c214412a8302b0bfb9b50c89abf1",
+    "InfoGeometry.Spectrometry.TableBalancing": "afffd9bb14f72d50f1e2e6e70142128b0188c71e6b06794e1a4c33b673873f46",
+    "InfoGeometry.Spectrometry.LogLeastSquares": "f5b3f626f958e9086fcc34599b9b5e160cd4d384ee3bdc66e67246432e74374c",
+    "InfoGeometry.Spectrometry.MatrixLogCentering": "afe9c251455aa49656b2b7b921a8ad2e478b3f15d0dfceba485dd39b1a521aff",
+    "InfoGeometry.Spectrometry.ColumnFirstSinkhornCovariance": "69af725cc952f06097a692fb53d0a5df5239f2b9f1f010aa0a069333974e8e01",
+    "InfoGeometry.Spectrometry.GlobalHyperbolicBounds": "4c04770ef1c3c765f382d6ed13336cde4150e113708373f3da0c3e530c5d5b21",
+    "InfoGeometry.Spectrometry.ExactTwoLineRoot": "b8d918b5ff85edba2ab4f1a8ca24c0093b49ae3f817a610aeb78591bbf2b2af4",
+    "InfoGeometry.Spectrometry.InteriorLogSlope": "1b9a126a6c01e4648058bd4e0ca4cd1e9d3494c512abbe86629d56dbf0985361",
+    "InfoGeometry.Spectrometry.InteriorStepAndRatioSignatures": "703ef84f7316b801d3c36bc3cec50b48f419a916d6776773e8fd7f15a70684fd",
+    "InfoGeometry.Spectrometry.LogInteractionAndGauge": "9fe5c84e78ca53410548094f6ef4f4db29bfe8e6844f8f02155bc8fd54ce2e67",
+    "InfoGeometry.Spectrometry.ProjectionEnergy": "8ce6f5c980ee3fe17e03f3555d10bed5bf0725ff3d41676021b3186694faf704",
+    "InfoGeometry.Spectrometry.SpectralOrientation": "a9783a6fd14766ce0bf9fc7a7a6f8fcd5c115c4b44066b3f3301c5708c3fa8cc",
+    "InfoGeometry.Spectrometry.SpectralRestriction": "8ba7ef859d39adf8c37f915f4f5d46c2867fb2f9ffb578c1b7b567bab21fccf8",
+    "InfoGeometry.Spectrometry.TwoLineBalancedConstruction": "f71d2686e8cc2aa9581442829304f242de5d47ded0f6cf693a0f0139b919cee6",
+    "InfoGeometry.Spectrometry.TwoLineNonasymptoticBounds": "f483724e8876f83a3c2a84b5b20a898d88f4f8a79ac6c8162222d667f7662ff7"
+  },
+  "repository_import_dependencies": {
+    "InfoGeometry.Probability.BipartiteLogCoupling": [],
+    "InfoGeometry.Spectrometry.TableBalancing": [],
+    "InfoGeometry.Spectrometry.LogLeastSquares": [
+      "InfoGeometry.Spectrometry.TableBalancing"
+    ],
+    "InfoGeometry.Spectrometry.MatrixLogCentering": [
+      "InfoGeometry.Spectrometry.TableBalancing",
+      "InfoGeometry.Spectrometry.LogLeastSquares",
+      "InfoGeometry.Probability.BipartiteLogCoupling"
+    ],
+    "InfoGeometry.Spectrometry.ColumnFirstSinkhornCovariance": [],
+    "InfoGeometry.Spectrometry.GlobalHyperbolicBounds": [],
+    "InfoGeometry.Spectrometry.ExactTwoLineRoot": [
+      "InfoGeometry.Spectrometry.GlobalHyperbolicBounds"
+    ],
+    "InfoGeometry.Spectrometry.InteriorLogSlope": [],
+    "InfoGeometry.Spectrometry.InteriorStepAndRatioSignatures": [
+      "InfoGeometry.Spectrometry.InteriorLogSlope"
+    ],
+    "InfoGeometry.Spectrometry.LogInteractionAndGauge": [],
+    "InfoGeometry.Spectrometry.ProjectionEnergy": [
+      "InfoGeometry.Spectrometry.InteriorStepAndRatioSignatures",
+      "InfoGeometry.Spectrometry.LogInteractionAndGauge"
+    ],
+    "InfoGeometry.Spectrometry.SpectralOrientation": [
+      "InfoGeometry.Spectrometry.TableBalancing",
+      "InfoGeometry.Spectrometry.LogInteractionAndGauge",
+      "InfoGeometry.Spectrometry.ColumnFirstSinkhornCovariance"
+    ],
+    "InfoGeometry.Spectrometry.SpectralRestriction": [
+      "InfoGeometry.Spectrometry.TableBalancing",
+      "InfoGeometry.Spectrometry.InteriorLogSlope"
+    ],
+    "InfoGeometry.Spectrometry.TwoLineBalancedConstruction": [
+      "InfoGeometry.Spectrometry.ExactTwoLineRoot"
+    ],
+    "InfoGeometry.Spectrometry.TwoLineNonasymptoticBounds": [
+      "InfoGeometry.Spectrometry.ExactTwoLineRoot"
+    ]
+  },
+  "local_revision": "fea96b564201654cd4693008585039a56f66adf3",
+  "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "declaration_counts": {
+    "InfoGeometry.Probability.BipartiteLogCoupling": 39,
+    "InfoGeometry.Spectrometry.MatrixLogCentering": 7,
+    "InfoGeometry.Spectrometry.ColumnFirstSinkhornCovariance": 27,
+    "InfoGeometry.Spectrometry.ExactTwoLineRoot": 19,
+    "InfoGeometry.Spectrometry.GlobalHyperbolicBounds": 24,
+    "InfoGeometry.Spectrometry.InteriorLogSlope": 21,
+    "InfoGeometry.Spectrometry.InteriorStepAndRatioSignatures": 58,
+    "InfoGeometry.Spectrometry.LogInteractionAndGauge": 47,
+    "InfoGeometry.Spectrometry.LogLeastSquares": 23,
+    "InfoGeometry.Spectrometry.ProjectionEnergy": 45,
+    "InfoGeometry.Spectrometry.SpectralOrientation": 33,
+    "InfoGeometry.Spectrometry.SpectralRestriction": 41,
+    "InfoGeometry.Spectrometry.TableBalancing": 101,
+    "InfoGeometry.Spectrometry.TwoLineBalancedConstruction": 45,
+    "InfoGeometry.Spectrometry.TwoLineNonasymptoticBounds": 25
+  },
+  "axioms": [
+    "[propext, Classical.choice, Quot.sound]"
+  ]
+}

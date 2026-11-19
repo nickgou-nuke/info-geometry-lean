@@ -1,0 +1,130 @@
+[
+  {
+    "filename": "lean/InfoGeometry/Probability/BipartiteLogCoupling.lean",
+    "clean": true,
+    "total_traps": 0,
+    "errors": [],
+    "warnings": [],
+    "verdict": "PASS"
+  },
+  {
+    "filename": "lean/InfoGeometry/Spectrometry/TableBalancing.lean",
+    "clean": true,
+    "total_traps": 0,
+    "errors": [],
+    "warnings": [],
+    "verdict": "PASS"
+  },
+  {
+    "filename": "lean/InfoGeometry/Spectrometry/LogLeastSquares.lean",
+    "clean": true,
+    "total_traps": 0,
+    "errors": [],
+    "warnings": [],
+    "verdict": "PASS"
+  },
+  {
+    "filename": "lean/InfoGeometry/Spectrometry/MatrixLogCentering.lean",
+    "clean": true,
+    "total_traps": 0,
+    "errors": [],
+    "warnings": [],
+    "verdict": "PASS"
+  },
+  {
+    "filename": "lean/InfoGeometry/Spectrometry/ColumnFirstSinkhornCovariance.lean",
+    "clean": true,
+    "total_traps": 0,
+    "errors": [],
+    "warnings": [],
+    "verdict": "PASS"
+  },
+  {
+    "filename": "lean/InfoGeometry/Spectrometry/GlobalHyperbolicBounds.lean",
+    "clean": true,
+    "total_traps": 0,
+    "errors": [],
+    "warnings": [],
+    "verdict": "PASS"
+  },
+  {
+    "filename": "lean/InfoGeometry/Spectrometry/ExactTwoLineRoot.lean",
+    "clean": true,
+    "total_traps": 0,
+    "errors": [],
+    "warnings": [],
+    "verdict": "PASS"
+  },
+  {
+    "filename": "lean/InfoGeometry/Spectrometry/InteriorLogSlope.lean",
+    "clean": true,
+    "total_traps": 0,
+    "errors": [],
+    "warnings": [],
+    "verdict": "PASS"
+  },
+  {
+    "filename": "lean/InfoGeometry/Spectrometry/InteriorStepAndRatioSignatures.lean",
+    "clean": true,
+    "total_traps": 0,
+    "errors": [],
+    "warnings": [],
+    "verdict": "PASS"
+  },
+  {
+    "filename": "lean/InfoGeometry/Spectrometry/LogInteractionAndGauge.lean",
+    "clean": true,
+    "total_traps": 0,
+    "errors": [],
+    "warnings": [],
+    "verdict": "PASS"
+  },
+  {
+    "filename": "lean/InfoGeometry/Spectrometry/ProjectionEnergy.lean",
+    "clean": true,
+    "total_traps": 0,
+    "errors": [],
+    "warnings": [],
+    "verdict": "PASS"
+  },
+  {
+    "filename": "lean/InfoGeometry/Spectrometry/SpectralOrientation.lean",
+    "clean": true,
+    "total_traps": 0,
+    "errors": [],
+    "warnings": [],
+    "verdict": "PASS"
+  },
+  {
+    "filename": "lean/InfoGeometry/Spectrometry/SpectralRestriction.lean",
+    "clean": true,
+    "total_traps": 0,
+    "errors": [],
+    "warnings": [],
+    "verdict": "PASS"
+  },
+  {
+    "filename": "lean/InfoGeometry/Spectrometry/TwoLineBalancedConstruction.lean",
+    "clean": true,
+    "total_traps": 0,
+    "errors": [],
+    "warnings": [],
+    "verdict": "PASS"
+  },
+  {
+    "filename": "lean/InfoGeometry/Spectrometry/TwoLineNonasymptoticBounds.lean",
+    "clean": true,
+    "total_traps": 0,
+    "errors": [],
+    "warnings": [],
+    "verdict": "PASS"
+  },
+  {
+    "filename": "lean/InfoGeometry/Spectrometry/SpectralTableFactorization.lean",
+    "clean": true,
+    "total_traps": 0,
+    "errors": [],
+    "warnings": [],
+    "verdict": "PASS"
+  }
+]

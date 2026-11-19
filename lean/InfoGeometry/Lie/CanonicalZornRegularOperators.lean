@@ -46,4 +46,32 @@ noncomputable def rightMultiplication (A : CanonicalZorn) : Module.End ℝ Canon
 @[simp] theorem rightMultiplication_apply (A X : CanonicalZorn) :
     rightMultiplication A X = X * A := rfl
 
+/-- The left regular action is linear in its defining carrier element. -/
+noncomputable def leftRegularRepresentation :
+    CanonicalZorn →ₗ[ℝ] Module.End ℝ CanonicalZorn where
+  toFun := leftMultiplication
+  map_add' A B := by
+    apply LinearMap.ext
+    intro X
+    exact InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.add_mul A B X
+  map_smul' r A := by
+    apply LinearMap.ext
+    intro X
+    exact InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.smul_mul r A X
+
+/-- Evaluation of the left regular action at the unit recovers the element. -/
+theorem leftRegularRepresentation_apply_one (A : CanonicalZorn) :
+    leftRegularRepresentation A 1 = A := by
+  change A * (1 : CanonicalZorn) = A
+  exact InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.mul_one A
+
+/-- The native split-octonion carrier embeds faithfully as a linear subspace of
+its left-regular endomorphism algebra. This is not asserted to preserve
+multiplication; the associator controls that separate composition defect. -/
+theorem leftRegularRepresentation_injective :
+    Function.Injective leftRegularRepresentation := by
+  intro A B h
+  have h₁ := congrArg (fun T : Module.End ℝ CanonicalZorn => T 1) h
+  simpa only [leftRegularRepresentation_apply_one] using h₁
+
 end InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis

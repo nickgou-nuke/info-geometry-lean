@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.FieldSimp
@@ -28,12 +33,12 @@ open InfoGeometry.Canonical.LeeYangAsanoDigest
 open InfoGeometry.Canonical.PrimeCl11ModularAtomCore
 
 /-- The Asano forbidden set, with the standard sign convention. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 def negProductSet (K1 K2 : Set ℂ) : Set ℂ :=
   {z : ℂ | ∃ u ∈ K1, ∃ v ∈ K2, z = -(u * v)}
 
 /-- Two-variable affine polynomial shape used in the Asano contraction. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 def asanoPhi (A B C D z1 z2 : ℂ) : ℂ :=
   A + B * z1 + C * z2 + D * z1 * z2
 
@@ -41,7 +46,7 @@ def asanoPhi (A B C D z1 z2 : ℂ) : ℂ :=
 The Möbius root map of the affine equation
 `asanoPhi A B C D z1 z2 = 0`, solved for `z2`.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 def asanoRootMap (A B C D z1 : ℂ) : ℂ :=
   -((A + B * z1) / (C + D * z1))
 
@@ -49,7 +54,7 @@ def asanoRootMap (A B C D z1 : ℂ) : ℂ :=
 Substituting the root map makes the affine Asano polynomial vanish,
 provided the denominator is nonzero.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem asanoPhi_rootMap_zero
     {A B C D z1 : ℂ}
     (hden : C + D * z1 ≠ 0) :
@@ -70,7 +75,7 @@ theorem asanoPhi_rootMap_zero
 If the affine Asano polynomial vanishes, then the second variable is the
 Möbius root map, provided the coefficient of `z2` is nonzero.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem z₂_eq_asanoRootMap_of_asanoPhi_eq_zero
     {A B C D z1 z2 : ℂ}
     (hden : C + D * z1 ≠ 0)
@@ -92,7 +97,7 @@ theorem z₂_eq_asanoRootMap_of_asanoPhi_eq_zero
     _ = (-(A + B * z1)) / (C + D * z1) := by rw [hlin]
     _ = -((A + B * z1) / (C + D * z1)) := by ring
 
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem asano_contraction_D_eq_zero_no_root
     {K1 K2 : Set ℂ}
     {A B C z : ℂ}
@@ -111,7 +116,7 @@ theorem asano_contraction_D_eq_zero_no_root
     simp [asanoPhi, hA]
   exact (hPhi 0 0 h0K1 h0K2) hbad
 
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem asano_contraction_D_eq_zero_nonzero
     {K1 K2 : Set ℂ}
     {A B C z : ℂ}
@@ -126,7 +131,7 @@ theorem asano_contraction_D_eq_zero_nonzero
   intro hroot
   exact asano_contraction_D_eq_zero_no_root h0K1 h0K2 hPhi hroot
 
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem asano_det_zero_root_mem_negProductSet
     {K1 K2 : Set ℂ}
     {A B C D z : ℂ}
@@ -195,7 +200,7 @@ theorem asano_det_zero_root_mem_negProductSet
     subst u v
     simp [hz, hprod, neg_div]
 
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem asano_det_zero_contraction_nonzero_off_negProductSet
     {K1 K2 : Set ℂ}
     {A B C D z : ℂ}
@@ -217,7 +222,7 @@ theorem asano_det_zero_contraction_nonzero_off_negProductSet
       h0K1 h0K2 hD hDet hPhi hroot)
 
 /-- The Möbius transform induced by a nondegenerate Asano polynomial. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 structure MoebiusTransform (K : Type*) [Ring K] where
   a : K
   b : K
@@ -226,7 +231,7 @@ structure MoebiusTransform (K : Type*) [Ring K] where
   det_neq_zero : a * d - b * c ≠ 0
 
 /-- Extract the Möbius coefficients from a nondegenerate Asano polynomial. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 def extractMoebius (A B C D : ℂ) (hDet : A * D - B * C ≠ 0) :
     MoebiusTransform ℂ :=
   { a := - C

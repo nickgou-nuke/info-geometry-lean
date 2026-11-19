@@ -95,7 +95,15 @@ class CliffordPeirceWalshRouteTests(unittest.TestCase):
             calls,
         )
         self.assertIn(
-            "tools/quality/semantic_content_audit.py --file-prefix lean --gate", calls,
+            "tools/quality/semantic_content_audit.py --file-prefix lean/InfoGeometry/Quantum/Test.lean --gate", calls,
+        )
+        self.assertIn(
+            "tools/quality/repo_lean_scope_audit.py --fail-on authoritative lean/InfoGeometry/Quantum/Test.lean verification/clifford-peirce-walsh/lakefile.lean",
+            calls,
+        )
+        self.assertNotIn(
+            "tools/quality/repo_lean_quarantine_audit.py",
+            calls,
         )
 
     def test_root_configuration_still_builds_umbrella(self):

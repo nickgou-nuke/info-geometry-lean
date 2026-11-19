@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Quantum.RealSplitClifford
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.Superalgebra
@@ -28,6 +33,16 @@ This is a primitive bounded real split-Krein Fredholm-like carrier. It is not
 yet a final Kasparov-product-ready `B`-module object; the current `ρ` field is
 still a second even algebra representation rather than a genuine right module
 structure.
+
+### Evidence Boundaries
+- `BUCKET 2`: Concrete bounded real split-Krein cycle data (`cl11`, `π`, `ρ`,
+  bounded odd Krein-skew-adjoint `F`, compact `F² - 1` and `[F, π(a)]`), plus
+  finite-dimensional matrix/Clifford cycle instances and bounded `CFC.sqrt`
+  transforms.
+- `BUCKET 3`: `ρ : B →ₐ[ℝ] EndH H` is a second even algebra representation rather
+  than a genuine right Hilbert/Krein `B`-module (`C*`-correspondence); the
+  general internal Kasparov product and infinite-dimensional unbounded
+  functional-calculus phase remain open (`BUCKET 3`).
 -/
 
 /--

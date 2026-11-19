@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.Zorn.G2NativeCandidateSymmetry
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2NativeOnePointStabilizer
@@ -32,6 +37,21 @@ theorem nativeLineSetAt_mem_isotropicPoint
     exact ⟨⟨y, nativeCandidateAt_isotropic y hy, hy.1⟩, rfl⟩
   · exact ⟨⟨nativeBasePoint + y,
       nativeCandidateAt_sum_isotropic y hy,
-      by native_decide +revert⟩, h.symm⟩
+      by
+        intro hsum
+        apply hy.2.1
+        funext i
+        have hi : nativeBasePoint i + y i = 0 := congrFun hsum i
+        have hi' : y i + nativeBasePoint i = 0 := by
+          rw [add_comm]
+          exact hi
+        have hyi : y i = -nativeBasePoint i := eq_neg_of_add_eq_zero_left hi'
+        rw [nativeBasePoint_eq_canonicalBasePoint] at hyi
+        have hneg : -(G2ParabolicLineCarrier.canonicalBasePoint i) =
+            G2ParabolicLineCarrier.canonicalBasePoint i := by
+          fin_cases i <;> norm_num [G2ParabolicLineCarrier.canonicalBasePoint]
+        rw [hneg] at hyi
+        rw [nativeBasePoint_eq_canonicalBasePoint]
+        exact hyi⟩, h.symm⟩
 
 end InfoGeometry.Algebra.Zorn.G2NativeLineSetIsotropicBridge

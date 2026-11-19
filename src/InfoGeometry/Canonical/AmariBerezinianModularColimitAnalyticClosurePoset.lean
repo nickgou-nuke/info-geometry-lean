@@ -709,8 +709,7 @@ theorem x6_projective_dual_state_colimit_trace_blindness_and_supertrace_recovery
         ((colimit.ι (moduleDiagram sys) i).hom
           (invS P_i * (genSig P_i A_i C_i * (genV P_i A_i C_i ^ k)))) =
       phi i (genV P_i A_i C_i ^ (k + 1)) ∧
-    ((dualInverseFamilyToProjectiveLimit (sys := sys) phi hphi ≫
-        limit.π (dualModuleDiagram sys) (Opposite.op i)).hom (1 : R))
+    dualInverseFamilyToProjectiveLimitStageFunctional (sys := sys) phi hphi i
         (invS P_i * (genSig P_i A_i C_i * (genV P_i A_i C_i ^ k))) =
       phi i (genV P_i A_i C_i ^ (k + 1)) ∧
     phi i (genV P_i A_i C_i ^ (k + 1)) =

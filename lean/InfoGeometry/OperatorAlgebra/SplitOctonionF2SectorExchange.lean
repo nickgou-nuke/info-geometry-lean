@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -25,17 +30,19 @@ def sectorExchangeF2 : SplitOctF2 ≃ SplitOctF2 where
 
 theorem sectorExchangeF2_add (X Y : SplitOctF2) :
     sectorExchangeF2 (add X Y) = add (sectorExchangeF2 X) (sectorExchangeF2 Y) := by
-  revert X Y
-  native_decide
+  cases X
+  cases Y
+  rfl
 
 theorem sectorExchangeF2_mul (X Y : SplitOctF2) :
     sectorExchangeF2 (mul X Y) = mul (sectorExchangeF2 X) (sectorExchangeF2 Y) := by
-  revert X Y
-  native_decide
+  cases X
+  cases Y
+  rfl
 
 def sectorExchangeF2Aut : SplitOctF2Aut :=
   ⟨sectorExchangeF2,
-    ⟨by native_decide, sectorExchangeF2_add, sectorExchangeF2_mul⟩⟩
+    ⟨by rfl, sectorExchangeF2_add, sectorExchangeF2_mul⟩⟩
 
 theorem sectorExchangeF2Aut_apply (X : SplitOctF2) :
     sectorExchangeF2Aut.1 X = sectorExchangeF2 X := rfl

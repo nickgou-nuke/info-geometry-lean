@@ -34,7 +34,7 @@ variable {A : Type*} [Ring A] [Algebra ℝ A]
 
 /-- Each owned five-grade projector is the Lagrange polynomial of the native
 adjoint operator at its five distinct possible weights. -/
-theorem fiveGradeProjector_eq_aeval_lagrange {S : A} (hS : S * S * S = S)
+theorem fiveGradeProjector_eq_aeval_lagrange_invariant {S : A} (hS : S * S * S = S)
     (k : FiveGrade) :
     fiveGradeProjector S k =
       Polynomial.aeval (LieAlgebra.ad ℝ A S)
@@ -93,12 +93,12 @@ theorem fiveGradeProjector_preserves_adInvariant {S : A} (hS : S * S * S = S)
     q ≤ q.comap (fiveGradeProjector S k) := by
   intro x hx
   change fiveGradeProjector S k x ∈ q
-  rw [fiveGradeProjector_eq_aeval_lagrange hS k]
+  rw [fiveGradeProjector_eq_aeval_lagrange_invariant hS k]
   exact Polynomial.aeval_apply_smul_mem_of_le_comap hx _ _ hq
 
 /-- The grade intersection inside an invariant submodule is precisely the
 native eigenspace of the restricted adjoint endomorphism. -/
-theorem fiveGradeRange_comap_eq_restrict_eigenspace {S : A}
+theorem fiveGradeRange_comap_eq_restrict_eigenspace_invariant {S : A}
     (hS : S * S * S = S) (q : Submodule ℝ A)
     (hq : q ≤ q.comap (LieAlgebra.ad ℝ A S)) (k : FiveGrade) :
     (fiveGradeRange S k).comap q.subtype =
@@ -121,7 +121,7 @@ theorem fiveGradeRange_comap_isInternal {S : A} (hS : S * S * S = S)
       (fun k : FiveGrade => (fiveGradeRange S k).comap q.subtype) =
         (fun k : FiveGrade => Dq.eigenspace (fiveGradeValue k : ℝ)) := by
     funext k
-    exact fiveGradeRange_comap_eq_restrict_eigenspace hS q hq k
+    exact fiveGradeRange_comap_eq_restrict_eigenspace_invariant hS q hq k
   apply DirectSum.isInternal_submodule_of_iSupIndep_of_iSup_eq_top
   · rw [hgrades]
     exact Dq.eigenspaces_iSupIndep.comp fiveGradeValue_real_injective

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
@@ -215,7 +220,7 @@ structure StochasticSemigroup (ι : Type*) [Fintype ι] where
 theorem entropy_monotonicity_flow
     (S : StochasticSemigroup ι)
     (p q : ι → ℝ) [Nonempty ι]
-    (t₁ s : ℝ) (_hs : 0 ≤ s)
+    (t₁ s : ℝ)
     (hp : ∀ i, 0 < applyChannel (S.channel t₁) p i)
     (hq : ∀ i, 0 < applyChannel (S.channel t₁) q i)
     (hS_pos : ∀ k i, 0 < (S.channel s).prob k i) :

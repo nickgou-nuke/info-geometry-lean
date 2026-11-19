@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornVectorMatrix
@@ -57,7 +62,9 @@ theorem akivis_identity (X Y Z : ZornVectorMatrix ℝ) :
   change InfoGeometry.Algebra.rightNestedJacobiator X Y Z =
     -(6 : ℝ) • _root_.associator X Y Z
   rw [InfoGeometry.Algebra.rightNestedJacobiator_eq_neg,
-    InfoGeometry.Algebra.zornVectorMatrix_akivisJacobiator_eq_six_smul_associator]
+    InfoGeometry.Algebra.alternative_akivisJacobiator_eq_six_smul_associator
+      (fun p q => InfoGeometry.Algebra.zorn_left_alternative p q)
+      (fun p q => InfoGeometry.Algebra.zorn_right_alternative p q)]
   module
 
 /-! ## 3. Consequence: Jacobi identity fails -/

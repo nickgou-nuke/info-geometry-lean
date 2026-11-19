@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.ConformalAnomalyOperator
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -13,7 +18,7 @@ variable (CI : ConformalInference E)
 section
 
 /-- Canonical scalar readout map from the obstruction operator layer. -/
-@[rep_depth thermo] theorem obstructionScalarReadout :
+@[rep_depth thermo, capstone] theorem obstructionScalarReadout :
     ‖CI.projectorObstruction‖₊ = CI.obstructionScale ∧
       CI.obstructionScale = ‖CI.projectorObstruction‖₊ ∧
       CI.chiralScale = CI.obstructionScale ∧

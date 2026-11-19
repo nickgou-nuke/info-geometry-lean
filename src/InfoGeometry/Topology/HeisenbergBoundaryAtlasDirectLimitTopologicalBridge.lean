@@ -51,7 +51,7 @@ theorem boundaryAtlas_finiteModeMap_eq_colimitMap
     (topologicalHeisenbergBoundaryAtlas (𝕜 := 𝕜) α).2.finiteModeMap.hom =
       (InfoGeometry.Canonical.heisenbergFiniteModeColimitMap (𝕜 := 𝕜)).hom := by
   unfold topologicalHeisenbergBoundaryAtlas
-  rw [InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas_finiteModeMap]
+  rfl
 
 /-- Every element `X` of `HeisenbergAlgebra 𝕜` lies in the image of a finite stage `s`
 under `topologicalHeisenbergFiniteModeDirectLimitMap`. -/

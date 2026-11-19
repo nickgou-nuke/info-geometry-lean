@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CentralChargeAnomaly
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DrazinSupercharge
@@ -208,7 +213,7 @@ background-collapse surface on the owner lane. This removes the intermediate
 `observerDefectResidual = 0` packet for callers that already own the smaller
 compressed commutator witness.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem sourcedGenerator_boundary_excitation_eq_background_iff_compressedDeviation_eq_zero
     (CIK : CertifiedInverseKernel H₂)
     (C : CasimirWeylDrazinData (E := E) CIK) :
@@ -398,7 +403,7 @@ surface on the owner lane. This removes the intermediate
 `observerDefectResidual = 0` packet for callers that already own the smaller
 compressed commutator witness.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem sourcedGenerator_eq_background_iff_compressedDeviation_eq_zero
     (CIK : CertifiedInverseKernel H₂)
     (C : CasimirWeylDrazinData (E := E) CIK) :

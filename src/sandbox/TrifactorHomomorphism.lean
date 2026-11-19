@@ -1,6 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Real.Sign
-import Mathlib.Algebra.Group.Units
+import Mathlib.Algebra.Group.Units.Basic
 import Mathlib.Algebra.Group.Equiv.Basic
 import Mathlib.Tactic
 
@@ -80,6 +85,6 @@ def realUnitsEquiv : ℝˣ ≃* (ScaleGroup × ParityGroup) where
         rw [Real.sign_apply_eq, if_neg (not_lt_of_lt h_neg), if_pos h_neg]))
   map_mul' x y := Prod.ext 
     (Subtype.ext (abs_mul x.val y.val))
-    (Subtype.ext (Real.sign_mul x.val y.val))
+    (Subtype.ext (sign_mul x.val y.val))
 
 end InfoGeometry.Modular.DeterminantTrifactor

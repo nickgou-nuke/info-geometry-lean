@@ -164,6 +164,17 @@ def main() -> int:
         help="Scan ignored Lean fixtures too (forensic mode).",
     )
     parser.add_argument(
+        "--output",
+        type=Path,
+        default=None,
+        help="Optional path to write JSON audit report.",
+    )
+    parser.add_argument(
+        "--write-report",
+        action="store_true",
+        help="Write default artifacts/axiom_audit_report.json even when explicit files are given.",
+    )
+    parser.add_argument(
         "files",
         nargs="*",
         type=Path,
@@ -192,12 +203,11 @@ def main() -> int:
             debt_count += 1
             total_sorries += info["total_gaps"]
 
-    OUTPUT_REPORT.parent.mkdir(parents=True, exist_ok=True)
     report = {
         "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "include_ignored": args.include_ignored,
-        "selection_scope": "forensic_repository" if args.include_ignored else "maintained_lean_proof_sources",
-        "source_roots": ["repository Lean files except excluded external/cache directories"] if args.include_ignored else ["lean/", "proofs/", "lib/", "<repo-root>/*.lean"],
+        "selection_scope": "forensic_repository" if args.include_ignored else ("scoped_files" if args.files else "maintained_lean_proof_sources"),
+        "source_roots": [str(p) for p in args.files] if args.files else (["repository Lean files except excluded external/cache directories"] if args.include_ignored else ["lean/", "proofs/", "lib/", "<repo-root>/*.lean"]),
         "total_files": len(lean_files),
         "files_read": len(results),
         "read_failures": read_failures,
@@ -208,11 +218,18 @@ def main() -> int:
         "files": results,
     }
 
-    try:
-        OUTPUT_REPORT.write_text(json.dumps(report, indent=2), encoding="utf-8")
-    except OSError as exc:
-        print(f"Unable to write audit report {OUTPUT_REPORT}: {exc}", file=sys.stderr)
-        return 2
+    target_report: Path | None = (
+        args.output
+        if args.output is not None
+        else (OUTPUT_REPORT if (not args.files or args.write_report) else None)
+    )
+    if target_report is not None:
+        target_report.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            target_report.write_text(json.dumps(report, indent=2), encoding="utf-8")
+        except OSError as exc:
+            print(f"Unable to write audit report {target_report}: {exc}", file=sys.stderr)
+            return 2
     if args.format == "json":
         print(json.dumps(report, indent=2))
     else:
@@ -222,7 +239,10 @@ def main() -> int:
         print(f"   Clean Files (0 sorries): {clean_count}")
         print(f"   Files with Debt: {debt_count}")
         print(f"   Total Open Gaps (sorry/axiom/admit): {total_sorries}")
-        print(f"   Report saved to: {OUTPUT_REPORT}")
+        if target_report is not None:
+            print(f"   Report saved to: {target_report}")
+        else:
+            print("   Report saved to: (skipped for scoped scan; pass --output or --write-report)")
 
     if not lean_files or read_failures:
         print("❌ Axiom & Debt Audit failed: source selection or read coverage is incomplete.", file=sys.stderr)

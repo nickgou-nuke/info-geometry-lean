@@ -33,7 +33,7 @@ DEFAULT_GOAL_STATE_DIR = Path("artifacts/goal-loop")
 DEFAULT_HEARTBEAT_LOG = Path("artifacts/hermes_loop/heartbeat/native_closure_mission.log")
 DEFAULT_LEDGER = Path("reports/closure/deferred_interface-owner-ledger.json")
 DEFAULT_GATE_POLICY = Path("tools/quality/closure_debt_gate.json")
-DEFAULT_BUILD_TARGET = "InfoGeometry.Canonical.All"
+DEFAULT_BUILD_TARGET = ""
 DEFAULT_MISSION = "Pay the Native Closure Debts of the repository"
 DEFAULT_MODE = "eternal"
 
@@ -254,6 +254,7 @@ def evaluate_tick(
     baseline_debt: int | None,
     gate_policy: Path | None,
     build_target: str | None,
+    run_build: bool = False,
 ) -> dict[str, Any]:
     verdict: dict[str, Any] = {
         "build": {"ran": False, "returncode": None, "stdout": "", "stderr": ""},
@@ -263,14 +264,23 @@ def evaluate_tick(
         "reason": "",
     }
 
-    if build_target:
+    if run_build or build_target:
         verdict["build"]["ran"] = True
-        cmd = ["lake", "build", build_target]
+        effective_target = (build_target or "").strip()
+        if not effective_target and lean_file is not None:
+            effective_target = str(lean_file)
+        cmd = [
+            sys.executable,
+            "tools/infra/run_locked_lake_build.py",
+            "--wait-for-build-lock",
+            effective_target if effective_target else "--changed",
+        ]
         rc, out, err = run_cmd(cmd)
         verdict["build"].update({"returncode": rc, "stdout": out, "stderr": err})
         if rc != 0:
             verdict["status"] = "blocked"
-            verdict["reason"] = f"build failed for {build_target}: {err[:300].strip()}"
+            label = effective_target or "changed"
+            verdict["reason"] = f"build failed for {label}: {err[:300].strip()}"
             return verdict
 
     if gate_policy is not None:
@@ -349,8 +359,20 @@ def build_packet(
         "goal_prompt": goal_prompt,
         "verdict": verdict or {},
         "recommended_commands": {
-            "lean": f"lake env lean {deferred_interface_row.get('lean_file', '')}" if deferred_interface_row else "",
-            "build": f"lake build {mission.build_target}" if mission.build_target else "",
+            "lean": (
+                f"python3 tools/infra/run_locked_lean.py --wait-for-build-lock {deferred_interface_row.get('lean_file', '')}"
+                if deferred_interface_row
+                else ""
+            ),
+            "build": (
+                f"python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock {mission.build_target}"
+                if mission.build_target
+                else (
+                    f"python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock {deferred_interface_row.get('lean_file') or deferred_interface_row.get('owner_target', '')}"
+                    if deferred_interface_row and (deferred_interface_row.get("lean_file") or deferred_interface_row.get("owner_target"))
+                    else "python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock --changed"
+                )
+            ),
             "gate": f"python3 tools/quality/check_closure_debt_gate.py --policy {mission.gate_policy}",
             "judge": (
                 "python3 tools/quality/mission_judge.py "
@@ -496,6 +518,7 @@ def mission_heartbeat(args: argparse.Namespace) -> int:
         baseline_debt=args.baseline_debt,
         gate_policy=args.gate_policy if args.run_gate else None,
         build_target=args.build_target if args.run_build else None,
+        run_build=args.run_build,
     )
 
     if verdict["status"] == "done" and deferred_interface_id:

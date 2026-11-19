@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Real.Basic
+import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Data.Complex.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 
@@ -51,22 +57,22 @@ theorem parity_mul (A B : RealMat) (hA : Matrix.det A ≠ 0) (hB : Matrix.det B 
     · have h_mul_pos : Matrix.det A * Matrix.det B > 0 := mul_pos_of_neg_of_neg hA_neg hB_neg
       rw [if_pos h_mul_pos, if_neg (not_lt_of_gt hA_neg), if_pos hA_neg]
       rw [if_neg (not_lt_of_gt hB_neg), if_pos hB_neg]
-      ring
+      norm_num
     · exfalso; exact hB hB_zero
     · have h_mul_neg : Matrix.det A * Matrix.det B < 0 := mul_neg_of_neg_of_pos hA_neg hB_pos
       rw [if_neg (not_lt_of_gt h_mul_neg), if_pos h_mul_neg]
       rw [if_neg (not_lt_of_gt hA_neg), if_pos hA_neg, if_pos hB_pos]
-      ring
+      norm_num
   · exfalso; exact hA hA_zero
   · rcases lt_trichotomy (Matrix.det B) 0 with hB_neg | hB_zero | hB_pos
     · have h_mul_neg : Matrix.det A * Matrix.det B < 0 := mul_neg_of_pos_of_neg hA_pos hB_neg
       rw [if_neg (not_lt_of_gt h_mul_neg), if_pos h_mul_neg]
       rw [if_pos hA_pos, if_neg (not_lt_of_gt hB_neg), if_pos hB_neg]
-      ring
+      norm_num
     · exfalso; exact hB hB_zero
     · have h_mul_pos : Matrix.det A * Matrix.det B > 0 := mul_pos hA_pos hB_pos
       rw [if_pos h_mul_pos, if_pos hA_pos, if_pos hB_pos]
-      ring
+      norm_num
 
 /-- 
   The full reconstruction: The real determinant is exactly the product of Scale and Parity.

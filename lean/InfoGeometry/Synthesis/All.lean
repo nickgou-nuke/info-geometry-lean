@@ -63,6 +63,7 @@ import InfoGeometry.Synthesis.SedenionG2EndomorphismLieRepresentation
 import InfoGeometry.Synthesis.SedenionG2EndomorphismLieRepresentationAudit
 import InfoGeometry.Synthesis.EpistemicOperatorPoset
 import InfoGeometry.Synthesis.EpistemicOperatorPosetAudit
+import InfoGeometry.Synthesis.NoncommutativeKitaevProofDependencyPoset
 
 
 

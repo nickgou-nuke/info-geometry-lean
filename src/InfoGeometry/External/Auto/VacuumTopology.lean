@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Topology.Basic
+import Mathlib.Topology.Instances.Discrete
+import Mathlib.Topology.Instances.Real.Lemmas
 import Mathlib.Data.Fintype.Basic
 import Mathlib.Data.Real.Basic
 
@@ -20,6 +22,12 @@ namespace VacuumTopology
 
 /-- The topological space consisting of one point. -/
 abbrev VacuumSpace := Unit
+
+-- Give the singleton its canonical discrete topology explicitly.  `Unit` is
+-- used here as a carrier alias, so typeclass search does not otherwise choose a
+-- topology for the product in the contraction map.
+local instance : TopologicalSpace VacuumSpace := ⊥
+local instance : DiscreteTopology VacuumSpace := discreteTopology_bot VacuumSpace
 
 /-- Every two points of the chosen space agree. -/
 theorem vacuum_points_equal (x y : VacuumSpace) : x = y := by

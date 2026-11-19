@@ -421,11 +421,23 @@ def update_omega_imports(new_file: Path) -> None:
 
 
 def run_build(filepath: Path | None = None) -> tuple[bool, str]:
-    """Run lake build. Returns (success, error_output)."""
-    cmd = ["timeout", str(BUILD_TIMEOUT), "lake", "build"]
+    """Run incremental locked Lake build for `filepath` (or changed owner modules)."""
+    locked_build = REPO_ROOT / "tools" / "infra" / "run_locked_lake_build.py"
+    target_arg: str
+    if filepath is not None:
+        resolved = filepath.resolve()
+        try:
+            rel = resolved.relative_to(REPO_ROOT.resolve())
+            target_arg = str(rel)
+        except ValueError:
+            target_arg = str(filepath)
+    else:
+        target_arg = "--changed"
+
+    cmd = ["timeout", str(BUILD_TIMEOUT), sys.executable, str(locked_build), "--wait-for-build-lock", target_arg]
     try:
         result = subprocess.run(
-            cmd, cwd=str(LEAN_ROOT),
+            cmd, cwd=str(REPO_ROOT),
             capture_output=True, text=True,
             timeout=BUILD_TIMEOUT + 30,
         )

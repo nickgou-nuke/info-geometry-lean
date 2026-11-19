@@ -150,25 +150,17 @@ theorem oriented_chainIndexZ2_replicate_negativeGenerator (n : ℕ) :
       singleton_negativeGenerator_index, ih, Nat.cast_add, Nat.cast_one, add_comm]
 
 /-- **Two-Site Parameterized Oriented Kitaev Cell Phase Dichotomy**:
-For `kitaevFourModeCell mu t delta`:
-1. In the topological regime `μ² + (t² - Δ²) < 0`, `chainIndexZ2 [kitaevFourModeCell mu t delta] = 1`.
-2. In the trivial/critical regime `0 ≤ μ² + (t² - Δ²)`, `chainIndexZ2 [kitaevFourModeCell mu t delta] = 0`. -/
+For the actual 4 × 4 Majorana matrix `kitaevMajoranaMatrix4 mu t delta`, the existing
+signed Pfaffian formula determines its `ZMod 2` sign parity on the negative and
+nonnegative loci. -/
 theorem kitaevFourModeCell_index_dichotomy (mu t delta : ℝ) :
     (mu ^ 2 + (t ^ 2 - delta ^ 2) < 0 →
-      chainIndexZ2 [kitaevFourModeCell mu t delta] = 1) ∧
+      pfaffianSignParity (pfaffian4 (kitaevMajoranaMatrix4 mu t delta)) = 1) ∧
     (0 ≤ mu ^ 2 + (t ^ 2 - delta ^ 2) →
-      chainIndexZ2 [kitaevFourModeCell mu t delta] = 0) := by
-  have hvol : chainVolume [kitaevFourModeCell mu t delta] = mu ^ 2 + (t ^ 2 - delta ^ 2) := by
-    dsimp [chainVolume]
-    rw [List.map_singleton, List.prod_singleton, kitaevFourModeCell_pfaffian,
-      kitaev_pfaffian4_formula]
-  refine ⟨fun hneg => ?_, fun hnonneg => ?_⟩
-  · dsimp [chainIndexZ2]
-    rw [hvol]
-    simp [hneg]
-  · dsimp [chainIndexZ2]
-    rw [hvol]
-    simp [not_lt.mpr hnonneg]
+      pfaffianSignParity (pfaffian4 (kitaevMajoranaMatrix4 mu t delta)) = 0) := by
+  rw [kitaev_pfaffian4_formula]
+  exact ⟨fun h => by simp [pfaffianSignParity, h],
+    fun h => by simp [pfaffianSignParity, not_lt.mpr h]⟩
 
 -- ============================================================================
 -- SECTION 2: Exact Matrix Carrier Identification & ℤ → ZMod 8 → ZMod 2 Stack

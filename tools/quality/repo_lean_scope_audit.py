@@ -99,9 +99,23 @@ def main() -> int:
         help="Debt threshold for the exit status (default: authoritative Lake package).",
     )
     parser.add_argument("--format", choices=("text", "json"), default="text")
+    parser.add_argument(
+        "files",
+        nargs="*",
+        help="Optional explicit repo-relative or absolute .lean files to scan incrementally.",
+    )
     args = parser.parse_args()
 
-    tracked_files = tracked_lean_files()
+    if args.files:
+        candidates = []
+        for raw in args.files:
+            p = Path(raw)
+            resolved = p.resolve() if p.is_absolute() else (ROOT / p).resolve()
+            if resolved.suffix == ".lean" and resolved.is_file():
+                candidates.append(resolved)
+        tracked_files = sorted(set(candidates))
+    else:
+        tracked_files = tracked_lean_files()
     records = []
     for path in tracked_files:
         findings = scan(path)

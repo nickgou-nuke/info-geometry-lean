@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.ErgodicOmegaVolumeBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.WeylGWVolumeBridge
@@ -49,7 +54,6 @@ standard-form face Weyl/GW physical-volume readout.
 supplies it.  Its modular-flow and renormalization invariance are witness
 fields, not derived Type-III determinant claims.
 -/
-@[rep_depth projective]
 structure Bridge where
   /-- Ergodic fixed-point to `Ω`-volume adapter. -/
   ergodicOmega :
@@ -98,7 +102,7 @@ Main adapter readback:
 the calibrated physical Weyl/GW volume of a word-state is the volume of the
 corresponding self-similar ergodic fixed operator.
 -/
-@[rep_depth projective]
+@[rep_depth thermo, capstone]
 theorem physicalVolume_eq_fixedOperatorVolume
     (w : Word) :
     B.faceGW.projectiveFace.base.physicalVolume (B.faceGW.wordToState w) =
@@ -124,7 +128,7 @@ theorem physicalVolume_eq_fixedOperatorVolume
 /--
 The word fixed-point phase-volume is invariant under modular/KMS time.
 -/
-@[rep_depth projective]
+@[rep_depth thermo, capstone]
 theorem fixedOperator_phaseVolume_flow_invariant
     (w : Word) (t : ℝ) :
     B.phaseVolume
@@ -137,7 +141,7 @@ theorem fixedOperator_phaseVolume_flow_invariant
 The word fixed-point phase-volume is invariant under the dyadic
 renormalization map.
 -/
-@[rep_depth projective]
+@[rep_depth thermo, capstone]
 theorem fixedOperator_phaseVolume_renorm_invariant
     (w : Word) :
     B.phaseVolume
@@ -151,7 +155,7 @@ theorem fixedOperator_phaseVolume_renorm_invariant
 /--
 The word fixed-point observable is in the supplied centralizer-like sector.
 -/
-@[rep_depth projective]
+@[rep_depth thermo, capstone]
 theorem fixedOperator_mem_centralizerLike
     (w : Word) :
     B.ergodicOmega.ergodic.centralizerLike
@@ -160,7 +164,7 @@ theorem fixedOperator_mem_centralizerLike
     B.ergodicOmega w
 
 /-- The existing projective Weyl/GW physical-volume scale invariance is retained. -/
-@[rep_depth projective]
+@[rep_depth thermo, capstone]
 theorem physicalVolume_scale_invariant
     (c : ℝ) (hc : c ≠ 0) (s : State) :
     B.faceGW.projectiveFace.base.physicalVolume

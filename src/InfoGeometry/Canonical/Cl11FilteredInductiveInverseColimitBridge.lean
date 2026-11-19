@@ -149,16 +149,15 @@ theorem traceReadout_stage_apply (n : ℕ) (x : Stage n) :
   have h := congrArg (fun f => f x) (traceReadout_stage n)
   exact h
 
-/-- Contravariant dual transition map `(Stage n →ₗ[ℝ] ℝ) →ₗ[ℝ] (Stage m →ₗ[ℝ] ℝ)` for `m ≤ n`. -/
+/-- Contravariant additive dual transition by precomposition for `m ≤ n`. -/
 def dualTraceTransition {m n : ℕ} (h : m ≤ n) :
-    (Stage n →ₗ[ℝ] ℝ) →ₗ[ℝ] (Stage m →ₗ[ℝ] ℝ) :=
+    (Stage n →ₗ[ℝ] ℝ) →+ (Stage m →ₗ[ℝ] ℝ) :=
   FilteredColimit.InductiveCocone.dualInverseTransition directSystem h
 
 /-- Pointwise evaluation of `dualTraceTransition` by precomposition with `directSystem.f h`. -/
 theorem dualTraceTransition_apply
     {m n : ℕ} (h : m ≤ n) (φ : Stage n →ₗ[ℝ] ℝ) (x : Stage m) :
     dualTraceTransition h φ x = φ (directSystem.f h x) := by
-  change (φ.comp (directSystem.f h)) x = φ (directSystem.f h x)
   rfl
 
 /-- Compatibility of `normalizedTraceLinear` with `dualTraceTransition`. -/

@@ -35,7 +35,7 @@ attribute [local instance 100] LieRing.ofAssociativeRing
 variable {A : Type*} [Ring A] [Algebra ℝ A] [StarRing A] [StarModule ℝ A]
 
 /-- For a self-adjoint grading element, ordinary star reverses the integer grade. -/
-theorem star_mem_adGrade_neg_of_selfAdjoint {S x : A} {k : ℤ}
+theorem star_mem_adGrade_neg_of_selfAdjoint_inv {S x : A} {k : ℤ}
     (hS : star S = S) (hx : x ∈ adGrade S k) :
     star x ∈ adGrade S (-k) := by
   rw [mem_adGrade_iff] at hx ⊢
@@ -54,11 +54,11 @@ theorem star_mem_adGrade_neg_iff_of_selfAdjoint {S x : A} {k : ℤ}
   constructor
   · intro hx
     simpa only [star_star, neg_neg] using
-      star_mem_adGrade_neg_of_selfAdjoint hS hx
-  · exact star_mem_adGrade_neg_of_selfAdjoint hS
+      star_mem_adGrade_neg_of_selfAdjoint_inv hS hx
+  · exact star_mem_adGrade_neg_of_selfAdjoint_inv hS
 
 /-- For a skew-adjoint grading element, ordinary star preserves the integer grade. -/
-theorem star_mem_adGrade_of_skewAdjoint {S x : A} {k : ℤ}
+theorem star_mem_adGrade_of_skewAdjoint_inv {S x : A} {k : ℤ}
     (hS : star S = -S) (hx : x ∈ adGrade S k) :
     star x ∈ adGrade S k := by
   rw [mem_adGrade_iff]
@@ -71,8 +71,8 @@ theorem star_mem_adGrade_iff_of_skewAdjoint {S x : A} {k : ℤ}
     (hS : star S = -S) : star x ∈ adGrade S k ↔ x ∈ adGrade S k := by
   constructor
   · intro hx
-    simpa only [star_star] using star_mem_adGrade_of_skewAdjoint hS hx
-  · exact star_mem_adGrade_of_skewAdjoint hS
+    simpa only [star_star] using star_mem_adGrade_of_skewAdjoint_inv hS hx
+  · exact star_mem_adGrade_of_skewAdjoint_inv hS
 
 /-- A nonzero grade contains no nonzero ordinary skew element when `S` is self-adjoint. -/
 theorem adGrade_inf_skewAdjoint_eq_bot {S : A} {k : ℤ}
@@ -82,7 +82,7 @@ theorem adGrade_inf_skewAdjoint_eq_bot {S : A} {k : ℤ}
   intro x hx
   rcases hx with ⟨hx, hskew⟩
   change star x = -x at hskew
-  have hminus := star_mem_adGrade_neg_of_selfAdjoint hS hx
+  have hminus := star_mem_adGrade_neg_of_selfAdjoint_inv hS hx
   rw [hskew] at hminus
   have hn := (adGrade S (-k)).neg_mem hminus
   simp only [neg_neg] at hn

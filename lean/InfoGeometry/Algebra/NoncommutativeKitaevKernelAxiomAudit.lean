@@ -1,0 +1,28 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Algebra.NoncommutativeKitaevZornABSBridge
+
+/-!
+# Kernel axiom audit for the noncommutative Kitaev synthesis
+
+`#print axioms` records the transitive axiom dependencies of the selected KM
+claims and bridge theorems. This is distinct from source scanning and from
+checking their physical interpretation.
+-/
+
+#print axioms InfoGeometry.Algebra.NoncommutativeKitaevMajoranaThermalHallSynthesis.kitaev_majorana_clifford_relations
+#print axioms InfoGeometry.Algebra.NoncommutativeKitaevMajoranaThermalHallSynthesis.kitaev_majorana_fractionalization_and_three_spin_identity
+#print axioms InfoGeometry.Algebra.NoncommutativeKitaevMajoranaThermalHallSynthesis.kitaev_majorana_noncommuting
+#print axioms InfoGeometry.Algebra.NoncommutativeKitaevMajoranaThermalHallSynthesis.mat2_basis_noncommuting
+#print axioms InfoGeometry.Algebra.NoncommutativeKitaevMajoranaThermalHallSynthesis.hexagonal_vison_plaquette_gauge_covariance_and_invariance
+#print axioms InfoGeometry.Algebra.NoncommutativeKitaevMajoranaThermalHallSynthesis.kitaev_dirac_cone_mass_square_and_sublattice_trace_sign_flip
+#print axioms InfoGeometry.Algebra.NoncommutativeKitaevMajoranaThermalHallSynthesis.kitaev_covariant_honeycomb_quartic_trace_decomposition
+#print axioms InfoGeometry.Algebra.NoncommutativeKitaevMajoranaThermalHallSynthesis.all_scales_chiral_projection_trace_split
+#print axioms InfoGeometry.Algebra.NoncommutativeKitaevZornABSBridge.nestedToMat4
+#print axioms InfoGeometry.Algebra.NoncommutativeKitaevZornABSBridge.nestedToMat4_kitaev_fractionalization
+#print axioms InfoGeometry.Algebra.NoncommutativeKitaevZornABSBridge.nestedToMat4_honeycomb_chiral_anticomm
+#print axioms InfoGeometry.Algebra.NoncommutativeKitaevZornABSBridge.kitaev_dirac_cone_collar_decoupling

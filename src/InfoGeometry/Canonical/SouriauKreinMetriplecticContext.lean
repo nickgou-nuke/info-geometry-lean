@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.OnsagerReciprocity
 import InfoGeometry.Canonical.Operators
 import InfoGeometry.Canonical.OperatorialCramerRao
@@ -315,7 +320,7 @@ namespace RegularConeXResponseContext
 variable {C}
 
 /-- The `X` diagonal response is nonnegative by regular-cone positivity. -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem diagonalMetricResponse_nonneg
     (R : RegularConeXResponseContext C) :
     0 ≤ C.diagonalMetricResponse := by
@@ -356,7 +361,7 @@ namespace RegularConeOperatorialResponseContext
 variable {C}
 
 /-- The `X` diagonal response is nonnegative by regular-cone positivity. -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem diagonalMetricResponse_nonneg
     (R : RegularConeOperatorialResponseContext C) :
     0 ≤ C.diagonalMetricResponse := by
@@ -366,7 +371,7 @@ theorem diagonalMetricResponse_nonneg
     (RegularConeOperatorialResponseContext.Hxx_mem R)
 
 /-- The `Y` diagonal response is nonnegative by regular-cone positivity. -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem yDiagonalMetricResponse_nonneg
     (R : RegularConeOperatorialResponseContext C) :
     0 ≤ C.yDiagonalMetricResponse := by

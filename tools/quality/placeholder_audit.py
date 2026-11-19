@@ -11,7 +11,7 @@ from collections import Counter
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
@@ -656,6 +656,7 @@ def iter_lean_files(root: Path) -> list[Path]:
 def run_audit(
     root: Path,
     *,
+    paths: Iterable[Path] | None = None,
     scan_unstable: bool = True,
     scan_archive: bool = True,
     llm_endpoint: str | None = None,
@@ -666,7 +667,11 @@ def run_audit(
     llm_retries: int = 2,
 ) -> tuple[list[ModuleAudit], list[TrustFinding], list[str]]:
     root = root.resolve()
-    files = iter_lean_files(root)
+    explicit = [p.resolve() for p in paths] if paths else []
+    if explicit:
+        files = sorted({f for target in explicit for f in iter_lean_files(target)})
+    else:
+        files = iter_lean_files(root)
     findings_by_file: dict[Path, list[TrustFinding]] = {}
     scanned: list[str] = []
 
@@ -674,7 +679,10 @@ def run_audit(
         try:
             rel_path = path.relative_to(root)
         except ValueError:
-            rel_path = path.relative_to(ROOT)
+            try:
+                rel_path = path.relative_to(ROOT)
+            except ValueError:
+                rel_path = path
         return segment in rel_path.parts
 
     for path in files:
@@ -826,6 +834,7 @@ def parse_args() -> argparse.Namespace:
             "Audit Lean modules for temporary-trust placeholders (axiom/postulate/sorry) and report them."
         )
     )
+    parser.add_argument("paths", nargs="*", default=[], help="Optional explicit files or directories to scan in a single pass")
     parser.add_argument("--root", default="lean/InfoGeometry", help="Directory or file to scan")
     parser.add_argument("--json-out", default=None, help="Write JSON report to this path")
     parser.add_argument("--signals-out", default=None, help="Write placeholder trust signal JSON report to this path")
@@ -845,9 +854,17 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    root = ROOT / args.root if not Path(args.root).is_absolute() else Path(args.root)
+    explicit_paths = [
+        ROOT / p if not Path(p).is_absolute() else Path(p)
+        for p in args.paths
+    ]
+    if len(explicit_paths) == 1:
+        root = explicit_paths[0]
+    else:
+        root = ROOT / args.root if not Path(args.root).is_absolute() else Path(args.root)
     modules, findings, scanned = run_audit(
         root,
+        paths=explicit_paths or None,
         scan_unstable=args.include_unstable,
         scan_archive=args.include_archive,
         llm_endpoint=args.llm_endpoint,

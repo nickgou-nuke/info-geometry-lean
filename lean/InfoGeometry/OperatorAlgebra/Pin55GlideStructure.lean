@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -48,15 +53,16 @@ def gamma_time : InfoGeometry.Algebra.FiniteSpin.Mat32Z := upperRightId32 - lowe
 
 /-- The concrete positive-norm spinor generator squares to `+1`. -/
 theorem gamma_space_sq : gamma_space * gamma_space = 1 :=
-  by native_decide
+  by decide
 
 /-- The concrete negative-norm spinor generator squares to `-1`. -/
 theorem gamma_time_sq : gamma_time * gamma_time = -1 :=
-  by native_decide
+  by decide
 
+set_option maxRecDepth 100000 in
 /-- The two concrete spinor generators anticommute. -/
 theorem gamma_space_time_anticomm : gamma_space * gamma_time = - (gamma_time * gamma_space) :=
-  by native_decide
+  by decide
 
 /-- Even product of the displayed positive- and negative-norm generators. -/
 def glideCore : InfoGeometry.Algebra.FiniteSpin.Mat32Z := gamma_space * gamma_time
@@ -70,10 +76,30 @@ theorem glide_left_product_reduces :
 /-- Right multiplication by `γ_space` produces the sign-flipped readout. -/
 theorem glide_right_product_sign :
     glideCore * gamma_space = -gamma_time := by
-  native_decide
+  have hrev : gamma_time * gamma_space = -(gamma_space * gamma_time) := by
+    have h := congrArg (fun x : InfoGeometry.Algebra.FiniteSpin.Mat32Z => -x)
+      gamma_space_time_anticomm
+    simpa using h.symm
+  unfold glideCore
+  calc
+    (gamma_space * gamma_time) * gamma_space =
+        gamma_space * (gamma_time * gamma_space) := by rw [Matrix.mul_assoc]
+    _ = gamma_space * (-(gamma_space * gamma_time)) := by rw [hrev]
+    _ = -(gamma_space * gamma_space) * gamma_time := by noncomm_ring
+    _ = -gamma_time := by simp [gamma_space_sq]
 
 /-- The two-reflection glide core squares to `+1` in the finite spinor core. -/
 theorem glide_core_sq : glideCore * glideCore = 1 := by
-  native_decide
+  have hrev : gamma_time * gamma_space = -(gamma_space * gamma_time) := by
+    have h := congrArg (fun x : InfoGeometry.Algebra.FiniteSpin.Mat32Z => -x)
+      gamma_space_time_anticomm
+    simpa using h.symm
+  unfold glideCore
+  calc
+    (gamma_space * gamma_time) * (gamma_space * gamma_time) =
+        gamma_space * (gamma_time * gamma_space) * gamma_time := by noncomm_ring
+    _ = gamma_space * (-(gamma_space * gamma_time)) * gamma_time := by rw [hrev]
+    _ = -(gamma_space * gamma_space) * (gamma_time * gamma_time) := by noncomm_ring
+    _ = 1 := by rw [gamma_space_sq, gamma_time_sq]; norm_num
 
 end InfoGeometry.OperatorAlgebra.Pin55

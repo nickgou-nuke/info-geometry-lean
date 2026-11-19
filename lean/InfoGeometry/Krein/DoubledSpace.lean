@@ -398,6 +398,13 @@ local instance : LieRing (H₂ →L[ℝ] H₂) := LieRing.ofAssociativeRing
 noncomputable def hessian_indefinite_form (u v : H₂) : ℝ :=
   KreinSpace.kreinInner (H := H₂) u v
 
+/-- The fundamental symmetry on `DoubledSpace E` is `spectral_epsilon`. -/
+@[simp] lemma jCLM_eq_spectral_epsilon :
+    KreinSpace.jCLM (H := DoubledSpace E) = spectral_epsilon (E := E) := by
+  apply ContinuousLinearMap.ext
+  intro w
+  apply DoubledSpace.ext <;> rfl
+
 /-- The signed doubled pairing is the Hilbert pairing after the sheet grading.
 
 This is the canonical relation between the positive auxiliary pairing carried by
@@ -408,13 +415,9 @@ lemma hessian_indefinite_form_eq_doubledHilbertBilin_spectral_epsilon
     (u v : H₂) :
     hessian_indefinite_form u v =
       doubledHilbertBilin u (spectral_epsilon (E := E) v) := by
-  have hε : KreinSpace.jCLM (H := H₂) = spectral_epsilon (E := E) := by
-    apply ContinuousLinearMap.ext
-    intro w
-    apply DoubledSpace.ext <;> rfl
   change inner ℝ ((KreinSpace.jCLM (H := H₂)) u) v =
     doubledHilbertBilin u (spectral_epsilon (E := E) v)
-  rw [hε]
+  rw [jCLM_eq_spectral_epsilon]
   simp [doubledHilbertBilin, spectral_epsilon,
     WithLp.prod_inner_apply]
 
@@ -445,6 +448,207 @@ noncomputable def information_lie_algebra :
   lie_mem' hA hB := by
     simpa [is_krein_skew_adjoint] using
       (KreinSpace.isKreinSkewAdjoint_lie (H := H₂) (hA := hA) (hB := hB))
+
+/-! ### Krein Inner Product, Adjoint, and Operator Distinctness -/
+
+lemma kreinInner_to_doubled (x ξ y η : E) :
+    KreinSpace.kreinInner (H := DoubledSpace E) (to_doubled x ξ) (to_doubled y η) =
+      inner ℝ x y - inner ℝ ξ η := by
+  simpa [to_doubled] using
+    (krein_inner_prod_l2 (E := E) (to_doubled x ξ) (to_doubled y η))
+
+@[simp] lemma adjoint_spectral_epsilon :
+    ContinuousLinearMap.adjoint (spectral_epsilon (E := E)) = spectral_epsilon (E := E) := by
+  rw [← jCLM_eq_spectral_epsilon (E := E)]
+  exact KreinSpace.adjoint_jCLM (H := DoubledSpace E)
+
+@[simp] lemma adjoint_modular_j :
+    ContinuousLinearMap.adjoint (modular_j (E := E)) = modular_j (E := E) := by
+  symm
+  refine (ContinuousLinearMap.eq_adjoint_iff (A := modular_j (E := E)) (B := modular_j (E := E))).2 ?_
+  intro u v
+  simp [modular_j_apply, WithLp.prod_inner_apply, add_comm]
+
+@[simp] lemma adjoint_complex_i :
+    ContinuousLinearMap.adjoint (complex_i (E := E)) = -(complex_i (E := E)) := by
+  rw [complex_i, ContinuousLinearMap.adjoint_comp, adjoint_modular_j, adjoint_spectral_epsilon]
+  exact spectral_epsilon_comp_modular_j E
+
+@[simp] lemma kreinAdjoint_spectral_epsilon :
+    KreinSpace.kreinAdjoint (H := DoubledSpace E) (spectral_epsilon (E := E)) =
+      spectral_epsilon (E := E) := by
+  rw [← jCLM_eq_spectral_epsilon (E := E)]
+  simp only [KreinSpace.kreinAdjoint, KreinSpace.adjoint_jCLM, KreinSpace.jCLM_comp_jCLM_comp]
+
+@[simp] lemma kreinAdjoint_modular_j :
+    KreinSpace.kreinAdjoint (H := DoubledSpace E) (modular_j (E := E)) =
+      -(modular_j (E := E)) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  rw [KreinSpace.kreinAdjoint_apply]
+  change (KreinSpace.jCLM (H := DoubledSpace E))
+      (ContinuousLinearMap.adjoint (modular_j (E := E))
+        ((KreinSpace.jCLM (H := DoubledSpace E)) u)) = -(modular_j (E := E) u)
+  rw [jCLM_eq_spectral_epsilon, adjoint_modular_j]
+  apply DoubledSpace.ext <;> simp
+
+@[simp] lemma kreinAdjoint_complex_i :
+    KreinSpace.kreinAdjoint (H := DoubledSpace E) (complex_i (E := E)) =
+      complex_i (E := E) := by
+  rw [complex_i, KreinSpace.kreinAdjoint_comp, kreinAdjoint_modular_j, kreinAdjoint_spectral_epsilon]
+  apply ContinuousLinearMap.ext
+  intro u
+  apply DoubledSpace.ext <;> simp
+
+lemma isKreinSelfAdjoint_spectral_epsilon :
+    KreinSpace.IsKreinSelfAdjoint (H := DoubledSpace E) (spectral_epsilon (E := E)) :=
+  kreinAdjoint_spectral_epsilon (E := E)
+
+lemma isKreinSkewAdjoint_modular_j :
+    KreinSpace.IsKreinSkewAdjoint (H := DoubledSpace E) (modular_j (E := E)) :=
+  kreinAdjoint_modular_j (E := E)
+
+lemma isKreinSelfAdjoint_complex_i :
+    KreinSpace.IsKreinSelfAdjoint (H := DoubledSpace E) (complex_i (E := E)) :=
+  kreinAdjoint_complex_i (E := E)
+
+lemma isKreinIsometry_spectral_epsilon :
+    KreinSpace.IsKreinIsometry (H := DoubledSpace E) (spectral_epsilon (E := E)) := by
+  rw [← jCLM_eq_spectral_epsilon (E := E)]
+  exact KreinSpace.IsKreinIsometry.J
+
+lemma kreinInner_modular_j (u v : DoubledSpace E) :
+    KreinSpace.kreinInner (H := DoubledSpace E) (modular_j u) (modular_j v) =
+      -KreinSpace.kreinInner (H := DoubledSpace E) u v := by
+  rw [KreinSpace.kreinInner_kreinAdjoint, kreinAdjoint_modular_j]
+  have hminv : modular_j (modular_j v) = v := by
+    have h := congrArg (fun T : DoubledSpace E →L[ℝ] DoubledSpace E => T v)
+      (modular_j_involution E)
+    simpa using h
+  change KreinSpace.kreinInner (H := DoubledSpace E) u (-(modular_j (modular_j v))) =
+    -KreinSpace.kreinInner (H := DoubledSpace E) u v
+  rw [hminv]
+  simp [KreinSpace.kreinInner_def, inner_neg_right]
+
+lemma kreinInner_complex_i (u v : DoubledSpace E) :
+    KreinSpace.kreinInner (H := DoubledSpace E) (complex_i u) (complex_i v) =
+      -KreinSpace.kreinInner (H := DoubledSpace E) u v := by
+  rw [KreinSpace.kreinInner_kreinAdjoint, kreinAdjoint_complex_i]
+  have hcsq : complex_i (complex_i v) = -v := by
+    have h := congrArg (fun T : DoubledSpace E →L[ℝ] DoubledSpace E => T v) (complex_i_sq E)
+    simpa using h
+  change KreinSpace.kreinInner (H := DoubledSpace E) u (complex_i (complex_i v)) =
+    -KreinSpace.kreinInner (H := DoubledSpace E) u v
+  rw [hcsq]
+  simp [KreinSpace.kreinInner_def, inner_neg_right]
+
+section OperatorDistinctness
+
+variable [Nontrivial E]
+
+omit [InnerProductSpace ℝ E] [CompleteSpace E] in
+private lemma exists_nonzero_carrier : ∃ x : E, x ≠ 0 := exists_ne 0
+
+/-- On any nontrivial `E`, the modular swap `modular_j` is distinct from `KreinSpace.jCLM`
+(`spectral_epsilon`). -/
+theorem modular_j_ne_jCLM :
+    modular_j ≠ KreinSpace.jCLM (H := DoubledSpace E) := by
+  rw [jCLM_eq_spectral_epsilon (E := E)]
+  intro h
+  rcases exists_nonzero_carrier (E := E) with ⟨x, hx⟩
+  have hpt := congrArg (fun T : DoubledSpace E →L[ℝ] DoubledSpace E =>
+    WithLp.fst (T (to_doubled x (0 : E)))) h
+  simp only [modular_j_to_doubled, spectral_epsilon_to_doubled, fst_to_doubled] at hpt
+  exact hx hpt.symm
+
+/-- Symmetric alias: `KreinSpace.jCLM` is distinct from `modular_j`. -/
+theorem jCLM_ne_modular_j :
+    KreinSpace.jCLM (H := DoubledSpace E) ≠ modular_j (E := E) :=
+  (modular_j_ne_jCLM (E := E)).symm
+
+theorem spectral_epsilon_ne_modular_j :
+    spectral_epsilon (E := E) ≠ modular_j (E := E) := by
+  rw [← jCLM_eq_spectral_epsilon (E := E)]
+  exact jCLM_ne_modular_j (E := E)
+
+omit [CompleteSpace E] in
+theorem modular_j_ne_complex_i :
+    modular_j (E := E) ≠ complex_i (E := E) := by
+  intro h
+  rcases exists_nonzero_carrier (E := E) with ⟨x, hx⟩
+  have hpt := congrArg (fun T : DoubledSpace E →L[ℝ] DoubledSpace E =>
+    WithLp.fst (T (to_doubled (0 : E) x))) h
+  simp only [modular_j_to_doubled, complex_i_to_doubled, fst_to_doubled] at hpt
+  have h2 : (2 : ℝ) • x = 0 := by
+    have hadd : x + x = 0 := eq_neg_iff_add_eq_zero.mp hpt
+    simpa [two_smul] using hadd
+  exact hx ((smul_eq_zero.mp h2).resolve_left (by norm_num))
+
+theorem jCLM_ne_complex_i :
+    KreinSpace.jCLM (H := DoubledSpace E) ≠ complex_i (E := E) := by
+  rw [jCLM_eq_spectral_epsilon (E := E)]
+  intro h
+  rcases exists_nonzero_carrier (E := E) with ⟨x, hx⟩
+  have hpt := congrArg (fun T : DoubledSpace E →L[ℝ] DoubledSpace E =>
+    WithLp.fst (T (to_doubled x (0 : E)))) h
+  simp only [spectral_epsilon_to_doubled, complex_i_to_doubled, fst_to_doubled, neg_zero] at hpt
+  exact hx hpt
+
+theorem spectral_epsilon_ne_complex_i :
+    spectral_epsilon (E := E) ≠ complex_i (E := E) := by
+  rw [← jCLM_eq_spectral_epsilon (E := E)]
+  exact jCLM_ne_complex_i (E := E)
+
+theorem jCLM_ne_id :
+    KreinSpace.jCLM (H := DoubledSpace E) ≠ ContinuousLinearMap.id ℝ (DoubledSpace E) := by
+  rw [jCLM_eq_spectral_epsilon (E := E)]
+  intro h
+  rcases exists_nonzero_carrier (E := E) with ⟨x, hx⟩
+  have hpt := congrArg (fun T : DoubledSpace E →L[ℝ] DoubledSpace E =>
+    WithLp.snd (T (to_doubled (0 : E) x))) h
+  simp only [spectral_epsilon_to_doubled, snd_to_doubled, ContinuousLinearMap.id_apply] at hpt
+  have h2 : (2 : ℝ) • x = 0 := by
+    have hadd : x + x = 0 := eq_neg_iff_add_eq_zero.mp hpt.symm
+    simpa [two_smul] using hadd
+  exact hx ((smul_eq_zero.mp h2).resolve_left (by norm_num))
+
+omit [CompleteSpace E] in
+theorem modular_j_ne_id :
+    modular_j (E := E) ≠ ContinuousLinearMap.id ℝ (DoubledSpace E) := by
+  intro h
+  rcases exists_nonzero_carrier (E := E) with ⟨x, hx⟩
+  have hpt := congrArg (fun T : DoubledSpace E →L[ℝ] DoubledSpace E =>
+    WithLp.fst (T (to_doubled x (0 : E)))) h
+  simp only [modular_j_to_doubled, fst_to_doubled, ContinuousLinearMap.id_apply] at hpt
+  exact hx hpt.symm
+
+omit [CompleteSpace E] in
+theorem complex_i_ne_id :
+    complex_i (E := E) ≠ ContinuousLinearMap.id ℝ (DoubledSpace E) := by
+  intro h
+  rcases exists_nonzero_carrier (E := E) with ⟨x, hx⟩
+  have hpt := congrArg (fun T : DoubledSpace E →L[ℝ] DoubledSpace E =>
+    WithLp.fst (T (to_doubled x (0 : E)))) h
+  simp only [complex_i_to_doubled, fst_to_doubled, neg_zero, ContinuousLinearMap.id_apply] at hpt
+  exact hx hpt.symm
+
+/-- Pairwise distinctness of `{id, jCLM (= spectral_epsilon), modular_j, complex_i}` on
+`DoubledSpace E` for nontrivial `E`. -/
+theorem doubledSpace_operators_pairwise_distinct :
+    ContinuousLinearMap.id ℝ (DoubledSpace E) ≠ KreinSpace.jCLM (H := DoubledSpace E) ∧
+    ContinuousLinearMap.id ℝ (DoubledSpace E) ≠ modular_j (E := E) ∧
+    ContinuousLinearMap.id ℝ (DoubledSpace E) ≠ complex_i (E := E) ∧
+    KreinSpace.jCLM (H := DoubledSpace E) ≠ modular_j (E := E) ∧
+    KreinSpace.jCLM (H := DoubledSpace E) ≠ complex_i (E := E) ∧
+    modular_j (E := E) ≠ complex_i (E := E) :=
+  ⟨(jCLM_ne_id (E := E)).symm,
+   (modular_j_ne_id (E := E)).symm,
+   (complex_i_ne_id (E := E)).symm,
+   jCLM_ne_modular_j (E := E),
+   jCLM_ne_complex_i (E := E),
+   modular_j_ne_complex_i (E := E)⟩
+
+end OperatorDistinctness
 
 end KreinAnalytic
 

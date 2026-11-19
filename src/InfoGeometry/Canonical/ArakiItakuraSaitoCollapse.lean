@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.SouriauModularBregmanOperator
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauOperatorBregmanModular
@@ -166,7 +171,7 @@ The scalar extraction from the noncommutative operator is deliberately an
 explicit map: KMS state, vector state, trace weight, or continuous-core weight
 must be supplied by the owner lane.
 -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem restrictedAraki_eq_entropyProductionScalar_of_operator_readouts
     {State Op Alg : Type*} [AddGroup Op] [Ring Alg]
     (arakiRelativeEntropy : State → State → ℝ)

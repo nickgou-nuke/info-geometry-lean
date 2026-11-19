@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/SpectralTriple.lean
 
 Real, phase-compatible, integration-aware spectral triple sockets.
@@ -24,6 +29,8 @@ import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ModularWeightTrace
 import InfoGeometry.Geometry.PhaseErlanger
+import InfoGeometry.Krein.KreinSpace
+import InfoGeometry.Krein.DoubledSpace
 
 noncomputable section
 
@@ -130,6 +137,57 @@ def RealStructureMetricCompatible
   ∀ x y : H,
     inner (𝕜 := ℝ) (J.J.val x) (J.J.val y) =
       inner (𝕜 := ℝ) x y
+
+/--
+Krein-form compatibility of the real structure.
+
+This pairs with `InfoGeometry.Krein.KreinSpace.kreinInner` rather than the
+ambient Hilbert inner product, allowing indefinite Krein real structures that
+are not Hilbert isometries and distinguishing Hilbert metric compatibility from
+Krein compatibility when `KreinSpace.J ≠ Id`.
+-/
+def RealStructureKreinCompatible
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    [InfoGeometry.Krein.KreinSpace H]
+    {K : PhaseAxis H}
+    {signs : KOSigns}
+    (J : RealStructure H K signs) : Prop :=
+  ∀ x y : H,
+    InfoGeometry.Krein.KreinSpace.kreinInner (J.J.val x) (J.J.val y) =
+      InfoGeometry.Krein.KreinSpace.kreinInner x y
+
+theorem realStructureKreinCompatible_iff_isKreinIsometry
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    [InfoGeometry.Krein.KreinSpace H]
+    {K : PhaseAxis H}
+    {signs : KOSigns}
+    (J : RealStructure H K signs) :
+    RealStructureKreinCompatible J ↔
+      InfoGeometry.Krein.KreinSpace.IsKreinIsometry J.J.val :=
+  Iff.rfl
+
+theorem realStructureKreinCompatible_iff_kreinAdjoint_comp_self
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    [InfoGeometry.Krein.KreinSpace H]
+    {K : PhaseAxis H}
+    {signs : KOSigns}
+    (J : RealStructure H K signs) :
+    RealStructureKreinCompatible J ↔
+      (InfoGeometry.Krein.KreinSpace.kreinAdjoint J.J.val).comp J.J.val =
+        ContinuousLinearMap.id ℝ H :=
+  (realStructureKreinCompatible_iff_isKreinIsometry J).trans
+    (InfoGeometry.Krein.KreinSpace.isKreinIsometry_iff_star_comp_self J.J.val)
+
+theorem realStructureKreinCompatible_iff_metricCompatible_of_hilbert
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    [InfoGeometry.Krein.KreinSpace H]
+    (hJ : InfoGeometry.Krein.KreinSpace.J (H := H) = LinearIsometryEquiv.refl ℝ H)
+    {K : PhaseAxis H}
+    {signs : KOSigns}
+    (J : RealStructure H K signs) :
+    RealStructureKreinCompatible J ↔ RealStructureMetricCompatible J := by
+  simp [RealStructureKreinCompatible, RealStructureMetricCompatible,
+    InfoGeometry.Krein.KreinSpace.kreinInner_def, hJ]
 
 /-! ## 4. Chiral grading -/
 
@@ -590,5 +648,328 @@ theorem orderOne_apply
   T.orderOne a b
 
 end PhaseRealSpectralTriple
+
+/-! ## 10. Krein-compatible spectral triples and Hilbert-vs-Krein separation -/
+
+/--
+Compatibility predicate upgrading a `PhaseRealSpectralTriple` to an indefinite
+`KreinSpace` by requiring Krein-isometry of `J` (`RealStructureKreinCompatible`)
+and Krein-skew-adjointness of `D`.
+-/
+def PhaseRealSpectralTriple.IsKreinCompatible
+    {A H : Type*}
+    [Ring A] [Star A]
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    [InfoGeometry.Krein.KreinSpace H]
+    (T : PhaseRealSpectralTriple A H) : Prop :=
+  RealStructureKreinCompatible T.realStructure ∧
+    InfoGeometry.Krein.KreinSpace.IsKreinSkewAdjoint T.spectralGenerator.D
+
+/--
+Krein-native real, phase-compatible spectral triple socket.
+
+Unlike `PhaseRealSpectralTriple`, this structure uses `RealStructureKreinCompatible`
+(`KreinSpace.kreinInner`) and `KreinSpace.IsKreinSkewAdjoint` directly instead of
+Hilbert metric compatibility and an ambient `operatorStar`, so genuinely indefinite
+Krein real structures (which fail `RealStructureMetricCompatible`) can be
+instantiated natively.
+-/
+structure KreinPhaseRealSpectralTriple
+    (A H : Type*)
+    [Ring A] [Star A]
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    [InfoGeometry.Krein.KreinSpace H] where
+  signs : KOSigns
+  phaseAxis : PhaseAxis H
+  realStructure : RealStructure H phaseAxis signs
+  realStructureKreinCompatible : RealStructureKreinCompatible realStructure
+  grading : ChiralGrading H phaseAxis signs
+  J_chi_compatible : RealStructureChiralCompatible realStructure grading
+  spectralGenerator : SpectralGenerator H
+  D_kreinSkewAdjoint : InfoGeometry.Krein.KreinSpace.IsKreinSkewAdjoint spectralGenerator.D
+  D_compactResolvent : CompactResolventData spectralGenerator.D
+  D_phase_linear : PhaseLinear phaseAxis.K spectralGenerator.D
+  representedAlgebra : RepresentedAlgebra A H
+  rep_phase_linear : ∀ a : A, PhaseLinear phaseAxis.K (representedAlgebra.rep a)
+  orderZero : OrderZeroCondition representedAlgebra realStructure
+  orderOne : OrderOneCondition representedAlgebra realStructure spectralGenerator
+  D_odd : DiracOdd spectralGenerator grading
+  J_D_compatible : RealStructureDiracCompatible realStructure spectralGenerator
+  traceBackend : Option (InfoGeometry.OperatorAlgebra.TraceDatum (EndR H))
+  modularWeightBackend : Option (InfoGeometry.OperatorAlgebra.ModularWeightDatum (EndR H))
+  renormalizedBackend : Option (RenormalizedIntegrationBackend (EndR H))
+
+namespace KreinPhaseRealSpectralTriple
+
+variable
+    {A H : Type*}
+    [Ring A] [Star A]
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    [InfoGeometry.Krein.KreinSpace H]
+
+/-- The Krein spectral triple's Lipschitz seminorm. -/
+def lipschitz
+    (T : KreinPhaseRealSpectralTriple A H)
+    (a : A) : ℝ :=
+  lipschitzSeminorm T.representedAlgebra T.spectralGenerator a
+
+theorem lipschitz_nonneg
+    (T : KreinPhaseRealSpectralTriple A H)
+    (a : A) :
+    0 ≤ T.lipschitz a :=
+  lipschitzSeminorm_nonneg T.representedAlgebra T.spectralGenerator a
+
+/-- Order-one condition re-exported for `KreinPhaseRealSpectralTriple`. -/
+theorem orderOne_apply
+    (T : KreinPhaseRealSpectralTriple A H)
+    (a b : A) :
+    (commutator T.spectralGenerator.D (T.representedAlgebra.rep a)).comp
+        (oppositeRep T.representedAlgebra T.realStructure b)
+      =
+    (oppositeRep T.representedAlgebra T.realStructure b).comp
+        (commutator T.spectralGenerator.D (T.representedAlgebra.rep a)) :=
+  T.orderOne a b
+
+/-- Convert a `KreinPhaseRealSpectralTriple` back to `PhaseRealSpectralTriple`
+when Hilbert metric compatibility and an operator star witness are also supplied. -/
+def toPhaseRealSpectralTriple
+    (T : KreinPhaseRealSpectralTriple A H)
+    (operatorStar : Star (EndR H))
+    (hMetric : RealStructureMetricCompatible T.realStructure)
+    (hD_self : @IsSelfAdjoint (EndR H) operatorStar T.spectralGenerator.D) :
+    PhaseRealSpectralTriple A H where
+  operatorStar := operatorStar
+  signs := T.signs
+  phaseAxis := T.phaseAxis
+  realStructure := T.realStructure
+  realStructureMetricCompatible := hMetric
+  grading := T.grading
+  J_chi_compatible := T.J_chi_compatible
+  spectralGenerator := T.spectralGenerator
+  D_selfAdjoint := hD_self
+  D_compactResolvent := T.D_compactResolvent
+  D_phase_linear := T.D_phase_linear
+  representedAlgebra := T.representedAlgebra
+  rep_phase_linear := T.rep_phase_linear
+  orderZero := T.orderZero
+  orderOne := T.orderOne
+  D_odd := T.D_odd
+  J_D_compatible := T.J_D_compatible
+  traceBackend := T.traceBackend
+  modularWeightBackend := T.modularWeightBackend
+  renormalizedBackend := T.renormalizedBackend
+
+end KreinPhaseRealSpectralTriple
+
+/-- Package a Krein-compatible `PhaseRealSpectralTriple` as a `KreinPhaseRealSpectralTriple`. -/
+def PhaseRealSpectralTriple.toKreinPhaseRealSpectralTriple
+    {A H : Type*}
+    [Ring A] [Star A]
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    [InfoGeometry.Krein.KreinSpace H]
+    (T : PhaseRealSpectralTriple A H)
+    (hKrein : T.IsKreinCompatible) :
+    KreinPhaseRealSpectralTriple A H where
+  signs := T.signs
+  phaseAxis := T.phaseAxis
+  realStructure := T.realStructure
+  realStructureKreinCompatible := hKrein.1
+  grading := T.grading
+  J_chi_compatible := T.J_chi_compatible
+  spectralGenerator := T.spectralGenerator
+  D_kreinSkewAdjoint := hKrein.2
+  D_compactResolvent := T.D_compactResolvent
+  D_phase_linear := T.D_phase_linear
+  representedAlgebra := T.representedAlgebra
+  rep_phase_linear := T.rep_phase_linear
+  orderZero := T.orderZero
+  orderOne := T.orderOne
+  D_odd := T.D_odd
+  J_D_compatible := T.J_D_compatible
+  traceBackend := T.traceBackend
+  modularWeightBackend := T.modularWeightBackend
+  renormalizedBackend := T.renormalizedBackend
+
+section KreinMetricSeparation
+
+open InfoGeometry.Krein
+
+private def doubledMat2CLM (a b c d : ℝ) : EndR (DoubledSpace ℝ) where
+  toFun u :=
+    to_doubled
+      (a * WithLp.fst u + b * WithLp.snd u)
+      (c * WithLp.fst u + d * WithLp.snd u)
+  map_add' u v := by
+    apply DoubledSpace.ext <;>
+      simp [WithLp.add_fst, WithLp.add_snd, mul_add] <;> ring
+  map_smul' r u := by
+    apply DoubledSpace.ext <;>
+      simp [WithLp.smul_fst, WithLp.smul_snd] <;> ring
+  cont := by
+    refine (WithLp.prod_continuous_toLp (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)).comp ?_
+    have hfst : Continuous (fun u : DoubledSpace ℝ => WithLp.fst u) :=
+      WithLp.continuous_fst (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)
+    have hsnd : Continuous (fun u : DoubledSpace ℝ => WithLp.snd u) :=
+      WithLp.continuous_snd (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)
+    exact ((continuous_const.mul hfst).add (continuous_const.mul hsnd)).prodMk
+      ((continuous_const.mul hfst).add (continuous_const.mul hsnd))
+
+@[simp] private lemma doubledMat2CLM_apply (a b c d : ℝ) (u : DoubledSpace ℝ) :
+    doubledMat2CLM a b c d u =
+      to_doubled
+        (a * WithLp.fst u + b * WithLp.snd u)
+        (c * WithLp.fst u + d * WithLp.snd u) := rfl
+
+private lemma doubledMat2CLM_comp (a₁ b₁ c₁ d₁ a₂ b₂ c₂ d₂ : ℝ) :
+    (doubledMat2CLM a₁ b₁ c₁ d₁).comp (doubledMat2CLM a₂ b₂ c₂ d₂) =
+      doubledMat2CLM
+        (a₁ * a₂ + b₁ * c₂) (a₁ * b₂ + b₁ * d₂)
+        (c₁ * a₂ + d₁ * c₂) (c₁ * b₂ + d₁ * d₂) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  apply DoubledSpace.ext <;> simp <;> ring
+
+private def doubledUnitKOSigns : KOSigns where
+  epsJ := 1
+  epsD := 1
+  epsChi := 1
+  epsJ_sq := by norm_num
+  epsD_sq := by norm_num
+  epsChi_sq := by norm_num
+
+/-- Standard elliptic phase axis `complex_i` on `DoubledSpace ℝ`. -/
+def doubledModularPhaseAxis : PhaseAxis (DoubledSpace ℝ) where
+  K := complex_i (E := ℝ)
+  K_square_neg := complex_i_sq ℝ
+
+/-- Standard modular swap `modular_j` as a `RealStructure` on `DoubledSpace ℝ`. -/
+def doubledModularRealStructure :
+    RealStructure (DoubledSpace ℝ) doubledModularPhaseAxis doubledUnitKOSigns where
+  J :=
+    { val := modular_j (E := ℝ)
+      inv := modular_j (E := ℝ)
+      val_inv := modular_j_involution ℝ
+      inv_val := modular_j_involution ℝ }
+  J_square := by
+    simp [doubledUnitKOSigns, modular_j_involution]
+  J_phase_reversing := by
+    apply ContinuousLinearMap.ext
+    intro u
+    apply DoubledSpace.ext <;> simp [doubledModularPhaseAxis, complex_i, modular_j, spectral_epsilon]
+
+theorem doubledModularRealStructure_metricCompatible :
+    RealStructureMetricCompatible doubledModularRealStructure := by
+  intro x y
+  change inner (𝕜 := ℝ) (modular_j (E := ℝ) x) (modular_j (E := ℝ) y) = inner (𝕜 := ℝ) x y
+  simp [modular_j_apply, WithLp.prod_inner_apply, add_comm]
+
+theorem doubledModularRealStructure_not_kreinCompatible :
+    ¬ RealStructureKreinCompatible doubledModularRealStructure := by
+  intro h
+  have h1 := h (to_doubled (1 : ℝ) (0 : ℝ)) (to_doubled (1 : ℝ) (0 : ℝ))
+  have hm : doubledModularRealStructure.J.val (to_doubled (1 : ℝ) (0 : ℝ)) =
+      to_doubled (0 : ℝ) (1 : ℝ) := by
+    apply DoubledSpace.ext <;> simp [doubledModularRealStructure, modular_j_apply]
+  rw [hm, kreinInner_to_doubled, kreinInner_to_doubled] at h1
+  norm_num at h1
+
+/-- Hyperbolic-boosted phase axis on `DoubledSpace ℝ`. -/
+def doubledBoostPhaseAxis : PhaseAxis (DoubledSpace ℝ) where
+  K := doubledMat2CLM (15 / 8) (-17 / 8) (17 / 8) (-15 / 8)
+  K_square_neg := by
+    rw [doubledMat2CLM_comp]
+    apply ContinuousLinearMap.ext
+    intro u
+    apply DoubledSpace.ext <;> simp <;> ring
+
+/-- Hyperbolic-boosted real structure on `DoubledSpace ℝ` (`SO(1,1)` boost of `spectral_epsilon`). -/
+def doubledBoostRealStructure :
+    RealStructure (DoubledSpace ℝ) doubledBoostPhaseAxis doubledUnitKOSigns where
+  J :=
+    { val := doubledMat2CLM (17 / 8) (-15 / 8) (15 / 8) (-17 / 8)
+      inv := doubledMat2CLM (17 / 8) (-15 / 8) (15 / 8) (-17 / 8)
+      val_inv := by
+        change (doubledMat2CLM (17 / 8) (-15 / 8) (15 / 8) (-17 / 8)).comp
+            (doubledMat2CLM (17 / 8) (-15 / 8) (15 / 8) (-17 / 8)) =
+          ContinuousLinearMap.id ℝ (DoubledSpace ℝ)
+        rw [doubledMat2CLM_comp]
+        apply ContinuousLinearMap.ext
+        intro u
+        apply DoubledSpace.ext <;> simp <;> ring
+      inv_val := by
+        change (doubledMat2CLM (17 / 8) (-15 / 8) (15 / 8) (-17 / 8)).comp
+            (doubledMat2CLM (17 / 8) (-15 / 8) (15 / 8) (-17 / 8)) =
+          ContinuousLinearMap.id ℝ (DoubledSpace ℝ)
+        rw [doubledMat2CLM_comp]
+        apply ContinuousLinearMap.ext
+        intro u
+        apply DoubledSpace.ext <;> simp <;> ring }
+  J_square := by
+    change (doubledMat2CLM (17 / 8) (-15 / 8) (15 / 8) (-17 / 8)).comp
+        (doubledMat2CLM (17 / 8) (-15 / 8) (15 / 8) (-17 / 8)) =
+      doubledUnitKOSigns.epsJ • ContinuousLinearMap.id ℝ (DoubledSpace ℝ)
+    rw [doubledMat2CLM_comp]
+    apply ContinuousLinearMap.ext
+    intro u
+    apply DoubledSpace.ext <;> simp [doubledUnitKOSigns] <;> ring
+  J_phase_reversing := by
+    change (doubledMat2CLM (17 / 8) (-15 / 8) (15 / 8) (-17 / 8)).comp
+        (doubledMat2CLM (15 / 8) (-17 / 8) (17 / 8) (-15 / 8)) =
+      -((doubledMat2CLM (15 / 8) (-17 / 8) (17 / 8) (-15 / 8)).comp
+        (doubledMat2CLM (17 / 8) (-15 / 8) (15 / 8) (-17 / 8)))
+    rw [doubledMat2CLM_comp, doubledMat2CLM_comp]
+    apply ContinuousLinearMap.ext
+    intro u
+    apply DoubledSpace.ext <;> simp <;> ring
+
+theorem doubledBoostRealStructure_kreinCompatible :
+    RealStructureKreinCompatible doubledBoostRealStructure := by
+  intro x y
+  change KreinSpace.kreinInner
+      (doubledMat2CLM (17 / 8) (-15 / 8) (15 / 8) (-17 / 8) x)
+      (doubledMat2CLM (17 / 8) (-15 / 8) (15 / 8) (-17 / 8) y) =
+    KreinSpace.kreinInner x y
+  have hx : x = to_doubled (WithLp.fst x) (WithLp.snd x) := by
+    apply DoubledSpace.ext <;> rfl
+  have hy : y = to_doubled (WithLp.fst y) (WithLp.snd y) := by
+    apply DoubledSpace.ext <;> rfl
+  nth_rw 2 [hx]
+  nth_rw 2 [hy]
+  rw [doubledMat2CLM_apply, doubledMat2CLM_apply, kreinInner_to_doubled, kreinInner_to_doubled]
+  simp only [RCLike.inner_apply, conj_trivial]
+  ring
+
+theorem doubledBoostRealStructure_not_metricCompatible :
+    ¬ RealStructureMetricCompatible doubledBoostRealStructure := by
+  intro h
+  have h1 := h (to_doubled (1 : ℝ) (0 : ℝ)) (to_doubled (1 : ℝ) (0 : ℝ))
+  have hb : doubledBoostRealStructure.J.val (to_doubled (1 : ℝ) (0 : ℝ)) =
+      to_doubled (17 / 8 : ℝ) (15 / 8 : ℝ) := by
+    apply DoubledSpace.ext <;> simp [doubledBoostRealStructure]
+  rw [hb] at h1
+  simp only [WithLp.prod_inner_apply, RCLike.inner_apply, conj_trivial] at h1
+  norm_num at h1
+
+/-- Two-way separation theorem showing `RealStructureKreinCompatible` and
+`RealStructureMetricCompatible` are genuinely distinct conditions whenever
+`KreinSpace.J ≠ Id`, witnessed explicitly on `DoubledSpace ℝ`. -/
+theorem realStructure_krein_metric_separation :
+    KreinSpace.J (H := DoubledSpace ℝ) ≠ LinearIsometryEquiv.refl ℝ (DoubledSpace ℝ) ∧
+      (RealStructureMetricCompatible doubledModularRealStructure ∧
+        ¬ RealStructureKreinCompatible doubledModularRealStructure) ∧
+      (RealStructureKreinCompatible doubledBoostRealStructure ∧
+        ¬ RealStructureMetricCompatible doubledBoostRealStructure) := by
+  refine ⟨?_, ?_, ?_⟩
+  · intro hJ
+    have h0 := congrArg (fun e : DoubledSpace ℝ ≃ₗᵢ[ℝ] DoubledSpace ℝ =>
+      WithLp.snd (e (to_doubled (0 : ℝ) (1 : ℝ)))) hJ
+    change -(1 : ℝ) = (1 : ℝ) at h0
+    norm_num at h0
+  · exact ⟨doubledModularRealStructure_metricCompatible,
+      doubledModularRealStructure_not_kreinCompatible⟩
+  · exact ⟨doubledBoostRealStructure_kreinCompatible,
+      doubledBoostRealStructure_not_metricCompatible⟩
+
+end KreinMetricSeparation
 
 end InfoGeometry.OperatorAlgebra.SpectralTriple

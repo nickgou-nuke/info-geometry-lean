@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Arithmetic.ProjectiveWeylGauge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
@@ -78,7 +83,7 @@ def weylScalar : ℝ :=
   B.weyl.weylScaleReadout B.projectiveState B.u
 
 /-- The Weyl scalar is the Souriau partition function under the supplied calibration. -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem weylScalar_eq_partitionFunction :
     B.weylScalar = B.souriau.partitionFunction :=
   B.weylScale_eq_partitionFunction
@@ -89,14 +94,14 @@ Massieu/partition potential as logarithm of the Weyl scalar.
 This is the formal version of "the Weyl gauge scalar is the thermodynamic
 partition normalization".
 -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem partitionPotential_eq_log_weylScalar :
     B.souriau.partitionPotential = Real.log B.weylScalar := by
   rw [B.souriau.partitionPotential_eq_log_trace]
   rw [B.weylScalar_eq_partitionFunction]
 
 /-- The Weyl scalar is positive because it is calibrated to a Souriau partition function. -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem weylScalar_pos : 0 < B.weylScalar := by
   rw [B.weylScalar_eq_partitionFunction]
   exact B.souriau.partitionFunction_pos
@@ -147,7 +152,7 @@ theorem KL_eq_souriau_Bregman :
   B.bregman.KL_eq_souriau_Bregman
 
 /-- Same KL/Bregman readback, rewritten through the calibrated Weyl/Massieu scalar. -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem KL_eq_weylMassieu_Bregman :
     B.bregman.klValue =
       B.bregman.alphaPartitionPotential
@@ -157,7 +162,7 @@ theorem KL_eq_weylMassieu_Bregman :
   rw [B.bregman_partitionPotential_eq]
 
 /-- Same KL/Bregman readback, with the Massieu term shown as `log WeylScalar`. -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem KL_eq_log_weylScalar_Bregman :
     B.bregman.klValue =
       B.bregman.alphaPartitionPotential

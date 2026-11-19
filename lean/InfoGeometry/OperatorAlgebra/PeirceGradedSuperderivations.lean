@@ -23,6 +23,83 @@ open PureNonCommutativeOperatorSpine
 
 variable {B : Type*} [Ring B]
 
+/-- A square-zero Leibniz differential on an associative ring. -/
+def IsSquareZeroRingDifferential (d : B →+ B) : Prop :=
+  (∀ x y : B, d (x * y) = d x * y + x * d y) ∧ ∀ x : B, d (d x) = 0
+
+theorem squareZero_differential_not_Peirce_commutator_on_nonzero_odd
+    {d : B →+ B} (hd : IsSquareZeroRingDifferential d)
+    {P X : B} (hP : P * P = P) (hdP : d P = 0)
+    (hodd₁ : P * X * P = 0)
+    (hodd₀ : (1 - P) * X * (1 - P) = 0)
+    (hcompat : d X = P * X - X * P) : X = 0 := by
+  have hodd₀_expand : X - P * X - X * P + P * X * P = 0 := by
+    calc
+      X - P * X - X * P + P * X * P = (1 - P) * X * (1 - P) := by
+        noncomm_ring
+      _ = 0 := hodd₀
+  rw [hodd₁] at hodd₀_expand
+  have hodd₀_linear : X - P * X - X * P = 0 := by simpa using hodd₀_expand
+  have hdecomp : X = P * X + X * P := by
+    calc
+      X = (X - P * X - X * P) + P * X + X * P := by abel
+      _ = P * X + X * P := by rw [hodd₀_linear]; abel
+  have hsecond : d (P * X - X * P) = 0 := by
+    calc
+      d (P * X - X * P) = d (d X) := by rw [hcompat]
+      _ = 0 := hd.2 X
+  rw [map_sub, hd.1 P X, hd.1 X P, hdP, zero_mul, mul_zero, hcompat] at hsecond
+  simp only [zero_add, add_zero] at hsecond
+  have hcomm_sq : P * (P * X - X * P) - (P * X - X * P) * P = X := by
+    calc
+      P * (P * X - X * P) - (P * X - X * P) * P =
+          P * P * X - P * X * P - P * X * P + X * P * P := by noncomm_ring
+      _ = P * X - P * X * P - P * X * P + X * P := by
+        rw [hP, mul_assoc X P P, hP]
+      _ = P * X + X * P := by rw [hodd₁]; module
+      _ = X := hdecomp.symm
+  rw [hcomm_sq] at hsecond
+  exact hsecond
+
+/-- The closed-cut obstruction needs only the two Leibniz rules involving the
+cut and the tested odd element. This form applies to a graded differential:
+when `P` is even and `d P = 0`, both local rules reduce to the displayed
+identities even though `d` is not an ordinary derivation on the whole ring. -/
+theorem squareZero_local_differential_not_Peirce_commutator_on_nonzero_odd
+    {d : B →+ B} {P X : B}
+    (hSq : ∀ Y : B, d (d Y) = 0)
+    (hP : P * P = P) (hdP : d P = 0)
+    (hodd₁ : P * X * P = 0)
+    (hodd₀ : (1 - P) * X * (1 - P) = 0)
+    (hPX : d (P * X) = d P * X + P * d X)
+    (hXP : d (X * P) = d X * P + X * d P)
+    (hcompat : d X = P * X - X * P) : X = 0 := by
+  have hodd₀_expand : X - P * X - X * P + P * X * P = 0 := by
+    calc
+      X - P * X - X * P + P * X * P = (1 - P) * X * (1 - P) := by
+        noncomm_ring
+      _ = 0 := hodd₀
+  rw [hodd₁] at hodd₀_expand
+  have hodd₀_linear : X - P * X - X * P = 0 := by simpa using hodd₀_expand
+  have hdecomp : X = P * X + X * P := by
+    calc
+      X = (X - P * X - X * P) + P * X + X * P := by abel
+      _ = P * X + X * P := by rw [hodd₀_linear]; abel
+  have hsecond : d (P * X - X * P) = 0 := by
+    calc d (P * X - X * P) = d (d X) := by rw [← hcompat]
+      _ = 0 := hSq X
+  rw [map_sub, hPX, hXP, hdP, zero_mul, mul_zero] at hsecond
+  rw [hcompat] at hsecond
+  have hcomm_sq : P * (P * X - X * P) - (P * X - X * P) * P = X := by
+    calc
+      P * (P * X - X * P) - (P * X - X * P) * P =
+          P * P * X - P * X * P - P * X * P + X * P * P := by noncomm_ring
+      _ = P * X - P * X * P - P * X * P + X * P := by
+        rw [hP, mul_assoc X P P, hP]
+      _ = P * X + X * P := by rw [hodd₁]; module
+      _ = X := hdecomp.symm
+  simpa [hcomm_sq] using hsecond
+
 section AbstractGrading
 
 /-- Conjugation by a grading element. -/
@@ -80,6 +157,14 @@ theorem oddDiff_graded_leibniz {S N : B} (hS : S * S = 1) (X Y : B) :
     oddDiff S N (X * Y) = oddDiff S N X * Y + twist S X * oddDiff S N Y := by
   unfold oddDiff
   rw [twist_mul hS]
+  noncomm_ring
+
+/-- An odd differential anticommutes with its grading involution. -/
+theorem oddDiff_twist_anticommute {S N : B} (hS : S * S = 1)
+    (hSN : S * N = -(N * S)) (X : B) :
+    twist S (oddDiff S N X) = -oddDiff S N (twist S X) := by
+  unfold oddDiff
+  simp only [twist_sub, twist_mul hS, twist_odd hS hSN, twist_twist hS]
   noncomm_ring
 
 theorem oddDiff_pair {S N M : B} (hS : S * S = 1)
@@ -165,6 +250,42 @@ theorem differentialMinus_graded_leibniz (hP : P * P = P) :
       differentialMinus P C X * Y + parity P X * differentialMinus P C Y := by
   unfold differentialMinus parity
   exact oddDiff_graded_leibniz (invS_sq hP) X Y
+
+/-- The upper-corner Peirce differential is odd for the involution `parity`. -/
+theorem differentialPlus_parity_odd (hP : P * P = P) :
+    parity P (differentialPlus P A X) =
+      -differentialPlus P A (parity P X) := by
+  unfold differentialPlus parity
+  apply oddDiff_twist_anticommute (invS_sq hP)
+  rw [invS_mul_conePlus hP A, conePlus_mul_invS hP A]
+  simp
+
+/-- The lower-corner Peirce differential is odd for the involution `parity`. -/
+theorem differentialMinus_parity_odd (hP : P * P = P) :
+    parity P (differentialMinus P C X) =
+      -differentialMinus P C (parity P X) := by
+  unfold differentialMinus parity
+  apply oddDiff_twist_anticommute (invS_sq hP)
+  rw [invS_mul_coneMinus hP C, coneMinus_mul_invS hP C]
+
+/-- The total Peirce differential is odd for the grading involution. -/
+theorem differentialPhi_parity_odd (hP : P * P = P) :
+    parity P (differentialPhi P A C X) =
+      -differentialPhi P A C (parity P X) := by
+  unfold differentialPhi
+  calc parity P (differentialPlus P A X + differentialMinus P C X)
+      = parity P (differentialPlus P A X) +
+          parity P (differentialMinus P C X) := by
+            unfold parity
+            exact twist_add (invS P) _ _
+    _ = -differentialPlus P A (parity P X) -
+          differentialMinus P C (parity P X) := by
+            rw [differentialPlus_parity_odd (P := P) (A := A) (X := X) hP,
+              differentialMinus_parity_odd (P := P) (C := C) (X := X) hP]
+            abel
+    _ = -differentialPhi P A C (parity P X) := by
+          unfold differentialPhi
+          abel
 
 /-- The anticommutator of the two Peirce differentials is the inner
 commutator by the anticommutator of the ordered corners, namely `V`. -/

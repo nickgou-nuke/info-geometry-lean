@@ -94,8 +94,7 @@ theorem heisenbergBoundaryAtlasReadout_root_independent
     heisenbergBoundaryAtlasReadout (𝕜 := 𝕜) α q =
       heisenbergBoundaryAtlasReadout (𝕜 := 𝕜) α q' := by
   unfold heisenbergBoundaryAtlasReadout
-  rw [InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.canonicalAtlas_heisenberg,
-    InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.canonicalAtlas_heisenberg]
+  rfl
 
 /-- The effective cube root in `heisenbergSixthRootCubicChargeReadout α q` satisfies `ω^3 = 1`. -/
 theorem heisenbergSixthRootCubicChargeReadout_root_cube
@@ -124,7 +123,7 @@ theorem continuous_heisenbergSixthRootCubicChargeReadout (α : 𝕜) :
 theorem isLocallyConstant_heisenbergSixthRootCubicChargeReadout (α : 𝕜) :
     IsLocallyConstant (heisenbergSixthRootCubicChargeReadout (𝕜 := 𝕜) α) := by
   unfold heisenbergSixthRootCubicChargeReadout
-  exact IsLocallyConstant.of_discrete
+  exact IsLocallyConstant.of_discrete _
 
 end
 end InfoGeometry.Topology.HeisenbergSixthRootCubicChargeBridge

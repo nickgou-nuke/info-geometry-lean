@@ -54,12 +54,28 @@ def test_default_sources_preserve_missing_explicit_roots(tmp_path):
 def test_repository_test_library_owns_only_existing_tests():
     root = Path(__file__).resolve().parents[1]
     config = (root / "lakefile.lean").read_text(encoding="utf-8")
-    body = re.search(r"lean_lib InfoGeometryTestSuite where\n(.*?)(?=^\S)",
-                     config, re.M | re.S).group(1)
+    suite_match = re.search(
+        r"lean_lib InfoGeometryTestSuite where\n(.*?)(?=^\S|\Z)", config, re.M | re.S
+    )
+    assert suite_match is not None
+    body = suite_match.group(1)
     assert "roots := #[]" in body
     assert ".anonymous" not in body
-    declared = set(re.findall(r"`([\w.]+)", body))
+    suite_declared = set(re.findall(r"`([\w.]+)", body))
+
+    opt_in_declared: set[str] = set()
+    for lib_name, lib_body in re.findall(
+        r"^lean_lib (\w+) where\n(.*?)(?=^\S|\Z)", config, re.M | re.S
+    ):
+        if lib_name == "InfoGeometryTestSuite":
+            continue
+        if 'srcDir := "../tests"' in lib_body:
+            assert ".anonymous" not in lib_body
+            opt_in_declared.update(re.findall(r"`([\w.]+)", lib_body))
+
     existing = {".".join(path.relative_to(root / "tests").with_suffix("").parts)
                 for path in (root / "tests").rglob("*.lean")}
+    declared = suite_declared | opt_in_declared
+    assert suite_declared.isdisjoint(opt_in_declared)
     assert declared == existing
     assert declared.isdisjoint({"Init", "Lean", "Std", "Mathlib", "InfoGeometry"})

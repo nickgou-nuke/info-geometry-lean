@@ -8,6 +8,8 @@ import InfoGeometry.MassSpectrometry.ValidatorIO
 /-! Executable adversarial checks of the JSON boundary. -/
 open Lean InfoGeometry.MassSpectrometry.ValidatorIO
 
+namespace InfoGeometry.MassSpectrometry.JsonChecks
+
 private def expect (name input : String) (expected : String) : IO Unit := do
   let actual := match checkJson input with
     | .ok true => "accepted"
@@ -44,3 +46,5 @@ def main (args : List String) : IO UInt32 := do
   expect "broken JSON" "{" "malformed"
   expect "missing fields" "{}" "malformed"
   return 0
+
+end InfoGeometry.MassSpectrometry.JsonChecks

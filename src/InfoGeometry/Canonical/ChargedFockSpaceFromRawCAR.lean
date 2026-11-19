@@ -66,6 +66,7 @@ theorem chargedFockSpaceWitnessFromRawCAR_sugawaraStressMode
     (chargedFockSpaceWitnessFromRawCAR α C).toCurrentHeisenbergRep.sugawaraStressMode n =
       (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).sugawaraStressMode n := by
   rw [chargedFockSpaceWitnessFromRawCAR_toCurrentHeisenbergRep]
+  rfl
 
 /-- Any raw CAR mode completion `C` paired with `ChargedFockSpace 𝕜 α` yields a
 Heisenberg current representation satisfying both the Heisenberg mode commutator

@@ -96,6 +96,16 @@ $F_{ij}(\mathbf{d}, \mathbf{A}) = \⁅d_i, A_j⁆ - \⁅d_j, A_i⁆ + \⁅A_i, A
 def ymFieldStrength (dᵢ dⱼ Aᵢ Aⱼ : B) : B :=
   ⁅dᵢ, Aⱼ⁆ - ⁅dⱼ, Aᵢ⁆ + ⁅Aᵢ, Aⱼ⁆
 
+/-- Expanding the commutator of two covariant shifts separates background
+curvature from the Yang--Mills field-strength term. The coefficient order is
+retained, so no commutativity assumption is needed. -/
+theorem covariant_commutator_eq_background_add_ymFieldStrength
+    (dᵢ dⱼ Aᵢ Aⱼ : B) :
+    ⁅dᵢ + Aᵢ, dⱼ + Aⱼ⁆ =
+      ⁅dᵢ, dⱼ⁆ + ymFieldStrength dᵢ dⱼ Aᵢ Aⱼ := by
+  simp only [ymFieldStrength, Ring.lie_def]
+  noncomm_ring
+
 /-- **Zorn Cross Product as Yang–Mills Field Strength & Non-Abelian Bianchi Theorem ($\mathcal{G}\mathcal{Z}_2$)**:
 1. $\⁅d_1 + A_1, d_2 + A_2⁆ = \⁅d_1, d_2⁆ + F_{12}(\mathbf{d}, \mathbf{A})$.
 2. When $\⁅d_i, d_j⁆ = 0$, $\mathrm{vecOp}(\mathrm{zornCross}(\mathbf{d} + \mathbf{A}, \mathbf{d} + \mathbf{A}))$
@@ -120,9 +130,7 @@ theorem zorn_cross_product_is_yang_mills_curvature_and_bianchi
   have h_decomp : ∀ (x₁ x₂ y₁ y₂ : B),
       ⁅x₁ + y₁, x₂ + y₂⁆ = ⁅x₁, x₂⁆ + ymFieldStrength x₁ x₂ y₁ y₂ := by
     intro x₁ x₂ y₁ y₂
-    dsimp [ymFieldStrength]
-    simp only [Ring.lie_def]
-    noncomm_ring
+    exact covariant_commutator_eq_background_add_ymFieldStrength x₁ x₂ y₁ y₂
   have hF23 : F₂₃ = ⁅D₂, D₃⁆ := by
     have h := h_decomp d₂ d₃ A₂ A₃; rw [h23, zero_add] at h; exact h.symm
   have hF31 : F₃₁ = ⁅D₃, D₁⁆ := by

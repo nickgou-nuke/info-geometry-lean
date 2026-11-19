@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.Calculus.DifferentialForm.Basic
 import Mathlib.Analysis.Matrix.Normed
 import Mathlib.Analysis.Normed.Module.Alternating.Basic
@@ -11,6 +16,7 @@ import InfoGeometry.Canonical.AmplituhedronGrassmannianBCFWCapstone
 import InfoGeometry.Canonical.ArnoldCohenPluckerBridge
 import InfoGeometry.Projective.KleinQuadricPlucker
 import InfoGeometry.Twistor.TwoTwistorPlucker
+import InfoGeometry.Projective.ExteriorKleinTwoPlaneEquiv
 
 /-!
 # Grassmannian / Cartan / differential-form interoperability
@@ -41,6 +47,19 @@ open InfoGeometry.Projective.KleinQuadricPlucker
 open InfoGeometry.Projective.KleinQuadricPlucker.Plucker6
 open InfoGeometry.Twistor.PenroseIncidence
 open InfoGeometry.Twistor.TwoTwistorPlucker
+open InfoGeometry.Canonical.FierzKleinFoundation
+
+/-- Closed T16 noncommutativity witness on `2 × 2` real matrices. -/
+theorem grassmannCartanInterop_mat2_noncommutative :
+    ∃ A B : Matrix (Fin 2) (Fin 2) ℝ, A * B ≠ B * A := by
+  refine ⟨!![0, 1; 0, 0], !![0, 0; 1, 0], ?_⟩
+  intro h
+  have h00 : (!![(0 : ℝ), 1; 0, 0] * !![(0 : ℝ), 0; 1, 0]) 0 0 =
+      (!![(0 : ℝ), 0; 1, 0] * !![(0 : ℝ), 1; 0, 0]) 0 0 := congrFun (congrFun h 0) 0
+  norm_num [Matrix.mul_apply, Fin.sum_univ_two] at h00
+open InfoGeometry.Projective.ExteriorKleinFrameSurjection
+open InfoGeometry.Projective.ExteriorKleinTwoPlaneQuotient
+open InfoGeometry.Projective.ExteriorKleinTwoPlaneEquiv
 
 /-! ## 1. Exact conversion between the two Plucker coordinate conventions -/
 
@@ -96,6 +115,68 @@ def plucker6OfMatrix
   p13 := pluckerMinor C 1 3
   p23 := pluckerMinor C 2 3
 
+/-- The `i`th row of a `2 × 4` Grassmannian matrix, in the vector carrier
+used by the projective Plücker-line owner. -/
+def grassmannianRowVec4
+    (C : Matrix (Fin 2) (Fin 4) ℝ) (i : Fin 2) : Vec4 ℝ :=
+  ⟨C i 0, C i 1, C i 2, C i 3⟩
+
+/-- The Grassmannian chart's six maximal minors are exactly the six
+coordinates of the wedge of its two rows. This identifies the matrix-chart
+Plücker map with the projective line construction, rather than only proving
+that both independently satisfy the Klein equation. -/
+theorem plucker6OfMatrix_eq_pluckerLine_rows
+    (C : Matrix (Fin 2) (Fin 4) ℝ) :
+    plucker6OfMatrix C =
+      pluckerLine (grassmannianRowVec4 C 0) (grassmannianRowVec4 C 1) := by
+  apply Plucker6.ext <;>
+    simp [plucker6OfMatrix, grassmannianRowVec4, pluckerMinor, pluckerLine]
+
+/-- The row map into the exterior carrier used by the real two-plane and
+projective Klein owners. -/
+def grassmannianRowExteriorVec4
+    (C : Matrix (Fin 2) (Fin 4) ℝ) (i : Fin 2) :
+    InfoGeometry.Canonical.FierzKleinFoundation.Vec4 :=
+  fun k => match k with
+    | I4.t => C i 0
+    | I4.x => C i 1
+    | I4.y => C i 2
+    | I4.z => C i 3
+
+/-- A full-rank `2 × 4` chart matrix determines the nondegenerate exterior
+frame given by its ordered rows. -/
+def grassmannianRowsExteriorFrame
+    (C : Matrix (Fin 2) (Fin 4) ℝ)
+    (hrows : LinearIndependent ℝ (grassmannianRowExteriorVec4 C)) :
+    NondegenerateExteriorFrame :=
+  ⟨grassmannianRowExteriorVec4 C,
+    InfoGeometry.Canonical.exteriorPower_ιMulti_ne_zero_of_linearIndependent
+      _ hrows⟩
+
+/-- The real two-plane represented by a full-rank Grassmannian matrix is the
+span of its two rows, transported through the existing frame-plane carrier. -/
+noncomputable def grassmannianMatrixToRealTwoPlane
+    (C : Matrix (Fin 2) (Fin 4) ℝ)
+    (hrows : LinearIndependent ℝ (grassmannianRowExteriorVec4 C)) :
+    RealTwoPlane :=
+  frameSpan (grassmannianRowsExteriorFrame C hrows)
+
+/-- Under the repository's existing plane-to-Klein equivalence, the matrix
+chart lands at the projective Plücker ray of the same two row vectors. -/
+theorem grassmannianMatrixToKleinLocus_eq_rowFrame
+    (C : Matrix (Fin 2) (Fin 4) ℝ)
+    (hrows : LinearIndependent ℝ (grassmannianRowExteriorVec4 C)) :
+    realTwoPlaneEquivKleinLocus (grassmannianMatrixToRealTwoPlane C hrows) =
+      frameToKleinLocus (grassmannianRowsExteriorFrame C hrows) := by
+  let uv := grassmannianRowsExteriorFrame C hrows
+  have hq : framePlaneQuotientEquivTwoPlane.symm (frameSpan uv) =
+      Quotient.mk framePlaneSetoid uv := by
+    apply framePlaneQuotientEquivTwoPlane.injective
+    simp [framePlaneQuotientEquivTwoPlane_apply_mk]
+  change realTwoPlaneEquivKleinLocus (frameSpan uv) = frameToKleinLocus uv
+  rw [realTwoPlaneEquivKleinLocus_apply, hq,
+    framePlaneQuotientEquivKleinLocus_apply_mk]
+
 /--
 Left multiplication by a `2 x 2` matrix scales every Plucker minor by its determinant.
 
@@ -124,8 +205,9 @@ theorem plucker6OfMatrix_left_mul
 theorem kleinQ_plucker6OfMatrix
     (C : Matrix (Fin 2) (Fin 4) ℝ) :
     kleinQ (plucker6OfMatrix C) = 0 := by
-  simpa [plucker6OfMatrix, kleinQ] using
-    (plucker_syzygy C (0 : Fin 4) (1 : Fin 4) (2 : Fin 4) (3 : Fin 4))
+  rw [plucker6OfMatrix_eq_pluckerLine_rows]
+  exact kleinQ_pluckerLine (grassmannianRowVec4 C 0)
+    (grassmannianRowVec4 C 1)
 
 /-- Matrix-chart Plücker coordinates lie on the Klein quadric. -/
 theorem matrixChart_isKleinNull

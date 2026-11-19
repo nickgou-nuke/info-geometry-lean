@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.ProjectiveCountsModularBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CauchyResidueReadback
@@ -95,7 +100,7 @@ namespace RealHestenesKreinPipeline
 variable (P : RealHestenesKreinPipeline (E := E))
 
 /-- The supplied boundary-vanishing witness descends to source homology classes. -/
-@[rep_depth krein]
+@[rep_depth transport]
 theorem witness_descends
     {x y : H₂}
     (hxy : HomologyEquivalent (E := E) P.frame.Dsrc x y) :

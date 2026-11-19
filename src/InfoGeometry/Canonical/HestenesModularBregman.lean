@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.ModularHamiltonianDoubledBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularSuperchargeClosure
@@ -198,7 +203,7 @@ Canonical Tomita modular Hamiltonian readback.
 This is only a name for the bounded owner expression already carried by
 `ModularSuperchargeClosure.canonicalTomitaLogData`: `Kmod = -deltaLog`.
 -/
-@[rep_depth operator]
+@[rep_depth transport]
 noncomputable def canonicalTomitaKmod
     (CIK : CertifiedInverseKernel H₂) : EndH :=
   -((ModularSuperchargeClosure.canonicalTomitaLogData (E := E) CIK).deltaLog)
@@ -209,7 +214,7 @@ recovers the owned modular operator `Delta`.
 
 This is the rooted `K = -log Delta` readback already proved in the doubled lane.
 -/
-@[rep_depth operator]
+@[rep_depth transport, capstone]
 theorem canonicalTomita_betaFlow_one_eq_Delta
     (CIK : CertifiedInverseKernel H₂) :
     modularBetaFlow (E := E) (canonicalTomitaKmod (E := E) CIK) 1
@@ -221,7 +226,7 @@ theorem canonicalTomita_betaFlow_one_eq_Delta
 The canonical modular deviation is the beta-one deviation of the canonical
 Tomita modular Hamiltonian.
 -/
-@[rep_depth operator]
+@[rep_depth transport, capstone]
 theorem canonicalTomita_deviation_eq_beta_one_deviation
     (CIK : CertifiedInverseKernel H₂) :
     modularDeviation (E := E) ((ModularSuperchargeClosure.canonicalTomitaLogData (E := E) CIK).Delta)

@@ -20,7 +20,7 @@ square-move boundary-measurement theorem.
 
 ## ii. Key results
 - `boundaryMeasurementMatrix_eq_postnikovTop24`
-- `boundary_measurement_postnikov_channels_and_dag_readout`
+- `boundary_measurement_postnikov_channel_split`
 - `boundary_chart_plucker_coordinates_match_zorn_ray`
 - `boundary_chart_zorn_ray_is_klein_null`
 - `positive_boundary_chart_ray_surprise_without_self_foam`
@@ -38,7 +38,7 @@ square-move boundary-measurement theorem.
 
 #### BUCKET 1 — Proved Kernel Content
 - `boundaryMeasurementMatrix_eq_postnikovTop24`
-- `boundary_measurement_postnikov_channels_and_dag_readout`
+- `boundary_measurement_postnikov_channel_split`
 - `boundary_chart_plucker_coordinates_match_zorn_ray`
 - `boundary_chart_zorn_ray_is_klein_null`
 - `positive_boundary_chart_ray_surprise_without_self_foam`
@@ -79,20 +79,16 @@ private theorem minor2_eq_postnikovMinor
 
 /-- The Postnikov two-channel boundary decomposition, transported to the
 boundary-measurement chart: `Δ₁₃` is the sum of the `w₁w₃` and `w₂w₄`
-boundary contributions. The final conjunct spells out those two terms through
-the chart-to-DAG route readout, tying this decomposition to the finite
-terminating path model proved in the chart owner. -/
-theorem boundary_measurement_postnikov_channels_and_dag_readout
+contributions. This theorem is confined to the explicit matrix chart; it does
+not identify the minor with a graph path or route readout. -/
+theorem boundary_measurement_postnikov_channel_split
     (t₁ t₂ t₃ t₄ : ℝ) :
     minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 1 3 =
       minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ 0) 1 3 +
         minor2 (boundaryMeasurementMatrix 0 t₂ t₃ t₄) 1 3 ∧
     minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ 0) 1 3 = t₁ * t₃ ∧
     minor2 (boundaryMeasurementMatrix 0 t₂ t₃ t₄) 1 3 = t₂ * t₄ ∧
-    minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 1 3 =
-      chartTwoRouteGreen t₁ t₂ t₃ t₄ 0 2 ∧
-    minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 1 3 =
-      chartDiamondGreen t₁ t₂ t₃ t₄ 0 3 := by
+    minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 1 3 = t₁ * t₃ + t₂ * t₄ := by
   have hPost :=
     postnikov_urbanRenewal_mutation_and_bcfw_st_channels
       1 1 1 t₁ t₂ t₃ t₄
@@ -102,7 +98,7 @@ theorem boundary_measurement_postnikov_channels_and_dag_readout
         pluckerMinor24 (plabicPositroidTop24 a b c d) 1 3 := by
     rw [boundaryMeasurementMatrix_eq_postnikovTop24]
     exact minor2_eq_postnikovMinor _ _ _
-  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  refine ⟨?_, ?_, ?_, ?_⟩
   · rw [hMinor t₁ t₂ t₃ t₄, hMinor t₁ t₂ t₃ 0,
       hMinor 0 t₂ t₃ t₄]
     exact hSplit
@@ -110,10 +106,7 @@ theorem boundary_measurement_postnikov_channels_and_dag_readout
     ring
   · rw [PlabicBoundaryMeasurement.plucker_13]
     ring
-  · exact boundaryMeasurement_plucker_13_eq_two_route_readout
-      t₁ t₂ t₃ t₄
-  · exact boundaryMeasurement_plucker_13_eq_diamond_readout
-      t₁ t₂ t₃ t₄
+  · rw [PlabicBoundaryMeasurement.plucker_13]
 
 /-- First row of the positive `Gr(2,4)` chart regarded as a twistor in `ℝ⁴`. -/
 def chartTwistor0 (t₁ t₄ : ℝ) : Twistor4 ℝ :=

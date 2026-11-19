@@ -16,6 +16,7 @@ import asyncio
 import json
 import os
 import subprocess
+import sys
 import time
 import uuid
 from dataclasses import dataclass, field
@@ -333,8 +334,8 @@ class FormalizerAgent(OmegaAgent):
                 if codex_result.get("compiles"):
                     proof_result = codex_result
             
-            # Verify full lake build clean
-            build_ok = await self._verify_build()
+            # Verify incremental owner build clean
+            build_ok = await self._verify_build(target_file=spec.get("target_file"))
             
             if build_ok:
                 # Create proof commit
@@ -410,15 +411,52 @@ class FormalizerAgent(OmegaAgent):
         return content.replace(f"{theorem_name} := by sorry", f"{theorem_name} := by {tactic}")
     
     async def _check_file(self, file_path: Path) -> Dict[str, Any]:
+        repo_root = Path(__file__).resolve().parents[3]
+        try:
+            file_path.resolve().relative_to(repo_root)
+            cmd = [
+                sys.executable,
+                str(repo_root / "tools" / "infra" / "run_locked_lean.py"),
+                "--wait-for-build-lock",
+                str(file_path),
+            ]
+            cwd = repo_root
+        except ValueError:
+            cmd = ["lake", "env", "lean", str(file_path)]
+            cwd = self.lean4_root
         result = subprocess.run(
-            ["lake", "env", "lean", str(file_path)],
-            cwd=self.lean4_root, capture_output=True, text=True, timeout=120
+            cmd, cwd=cwd, capture_output=True, text=True, timeout=120
         )
         return {"success": result.returncode == 0, "output": result.stdout, "errors": result.stderr}
-    
-    async def _verify_build(self) -> bool:
+
+    async def _verify_build(self, target_file: Optional[str] = None) -> bool:
+        repo_root = Path(__file__).resolve().parents[3]
+        file_path = (self.lean4_root / target_file) if target_file else None
+        if self.lean4_root.resolve() == repo_root or (
+            file_path is not None and not (self.lean4_root / "lakefile.lean").exists()
+        ):
+            target = str(file_path) if file_path is not None else "--changed"
+            cmd = [
+                sys.executable,
+                str(repo_root / "tools" / "infra" / "run_locked_lake_build.py"),
+                "--wait-for-build-lock",
+                "--wfail",
+                target,
+            ]
+            cwd = repo_root
+        else:
+            target_args: List[str] = []
+            if file_path is not None:
+                try:
+                    rel = file_path.resolve().relative_to(self.lean4_root.resolve())
+                    if rel.suffix == ".lean":
+                        target_args = [rel.with_suffix("").as_posix().replace("/", ".")]
+                except ValueError:
+                    target_args = []
+            cmd = ["lake", "build", "--wfail", *target_args] if target_args else ["lake", "build", "--wfail"]
+            cwd = self.lean4_root
         result = subprocess.run(
-            ["lake", "build"], cwd=self.lean4_root, capture_output=True, text=True, timeout=300
+            cmd, cwd=cwd, capture_output=True, text=True, timeout=300
         )
         return result.returncode == 0 and "warning:" not in result.stderr.lower()
     

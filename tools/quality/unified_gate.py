@@ -75,8 +75,7 @@ def main() -> int:
         return 0
     scope = files or [ns.root]
     checks = [
-        ("placeholder audit", [sys.executable, "tools/quality/placeholder_audit.py", "--strict", "--root", path])
-        for path in scope
+        ("placeholder audit", [sys.executable, "tools/quality/placeholder_audit.py", "--strict", *scope]),
     ]
     checks.append(
         ("semantic vacuity audit", [sys.executable, "tools/quality/semantic_vacuity_gate.py", "--fail-on", "error", *scope])

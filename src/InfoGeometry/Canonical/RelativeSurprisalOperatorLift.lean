@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.InformationPartitionCore
@@ -448,7 +453,7 @@ theorem relativeModularPotentialOperator_countRay_eq_raw_add_massShift
 
 omit [Nonempty (Fin n)] in
 /-- Raw count modular-potential operators compose additively along the count cocycle. -/
-@[rep_depth operator]
+@[rep_depth operator, capstone]
 theorem relativeCountModularPotentialOperator_cocycle
     (counts ref base : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts n)
     (hcounts : ∀ i : Fin n, 0 < counts i)

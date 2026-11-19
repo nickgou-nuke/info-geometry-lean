@@ -1,4 +1,8 @@
-/- SPDX-License-Identifier: Apache-2.0 -/
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
@@ -47,9 +51,7 @@ theorem bcfw_arnold_cohen_quotient_zero (i j k : ι) :
       (w R ι i j * w R ι j k +
        w R ι j k * w R ι k i +
        w R ι k i * w R ι i j) = 0 := by
-  have h := arnold_mixed_relation_quotient_zero R ι i j k
-  rw [map_zero] at h
-  exact h
+  exact arnold_mixed_relation_quotient_zero R ι i j k
 
 /-- 2. Amplituhedron Volume Evaluation:
     The unnormalized Bost-Connes KMS partition sum evaluates to the Riemann zeta function on β > 1. -/

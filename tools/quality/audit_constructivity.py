@@ -114,21 +114,25 @@ def quarantined_paths() -> set[str]:
     return mods
 
 
-def maintained_lean_files() -> list[Path]:
+def maintained_lean_files(*, include_src: bool = False) -> list[Path]:
     """Git-selected maintained sources; absent tracked sources remain selected."""
+    roots = ["lean", "proofs", "lib", "tests", "scripts"]
+    if include_src:
+        roots.append("src")
     result = subprocess.run(
         ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard", "--",
-         "lean", "proofs", "lib", "tests", "scripts", "*.lean"],
+         *roots, "*.lean"],
         cwd=ROOT, check=True, capture_output=True, text=True,
     )
     excluded = {".lake", ".git", ".runtime", ".worktrees", "node_modules",
                 "external_refs", "artifacts", "reports", "quarantine", "scratch", "tmp"}
+    allowed_roots = set(roots)
     out = set()
     for raw in result.stdout.split("\0"):
         path = Path(raw)
         if not raw or path.suffix != ".lean" or any(part in excluded or part.startswith(".") for part in path.parts):
             continue
-        if len(path.parts) == 1 or path.parts[0] in {"lean", "proofs", "lib", "tests", "scripts"}:
+        if len(path.parts) == 1 or path.parts[0] in allowed_roots:
             out.add(ROOT / path)
     return sorted(out)
 

@@ -340,6 +340,36 @@ theorem zornNorm_mul {R : Type*} [CommRing R] (x y : ZornSplitOctonion R) :
   dsimp
   ring
 
+/-- Left alternativity of the Zorn split-octonion product on its native
+`ZornSplitOctonion` carrier: `x * (x * y) = (x * x) * y`. -/
+theorem zornMul_left_alternative {R : Type*} [CommRing R]
+    (x y : ZornSplitOctonion R) :
+    zornMul x (zornMul x y) = zornMul (zornMul x x) y := by
+  apply ZornSplitOctonion.ext
+  · simp [zornMul, vec3Dot, vec3Cross]
+    ring
+  · funext i
+    fin_cases i <;> simp [zornMul, vec3Dot, vec3Cross] <;> ring
+  · funext i
+    fin_cases i <;> simp [zornMul, vec3Dot, vec3Cross] <;> ring
+  · simp [zornMul, vec3Dot, vec3Cross]
+    ring
+
+/-- Right alternativity of the Zorn split-octonion product on its native
+`ZornSplitOctonion` carrier: `(y * x) * x = y * (x * x)`. -/
+theorem zornMul_right_alternative {R : Type*} [CommRing R]
+    (x y : ZornSplitOctonion R) :
+    zornMul (zornMul y x) x = zornMul y (zornMul x x) := by
+  apply ZornSplitOctonion.ext
+  · simp [zornMul, vec3Dot, vec3Cross]
+    ring
+  · funext i
+    fin_cases i <;> simp [zornMul, vec3Dot, vec3Cross] <;> ring
+  · funext i
+    fin_cases i <;> simp [zornMul, vec3Dot, vec3Cross] <;> ring
+  · simp [zornMul, vec3Dot, vec3Cross]
+    ring
+
 /-- First basis test element in `ZornSplitOctonion ℤ` for non-commutativity certification. -/
 def zornBasisE1 : ZornSplitOctonion ℤ :=
   ⟨1, ![1, 0, 0], ![0, 0, 0], 0⟩

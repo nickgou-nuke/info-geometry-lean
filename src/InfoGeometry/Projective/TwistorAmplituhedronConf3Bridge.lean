@@ -101,7 +101,7 @@ theorem arnold_three_point_relation_in_quotient (i j k : ι) :
        w R ι j k * w R ι k i +
        w R ι k i * w R ι i j) =
       (RingQuot.mkRingHom (ArnoldRel R ι)) 0 :=
-  arnold_mixed_relation_quotient_zero R ι i j k
+  by simpa using arnold_mixed_relation_quotient_zero (R := R) (ι := ι) i j k
 
 /--
 **Target Model Kernel Annihilation**:

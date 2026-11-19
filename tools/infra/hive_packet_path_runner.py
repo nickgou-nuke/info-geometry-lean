@@ -460,7 +460,7 @@ def emit_packet_chain(*, packet: dict[str, Any], packet_path: str, planner_text:
             tag=base_tags,
             lean_verification_ref=[f"{lean_verification['id']}|LeanVerificationPacket|verification|0.95"],
             build_key=f"build_{packet_id}",
-            build_command="lake build",
+            build_command="python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock --changed",
             build_success=True,
             build_exit_code=0,
             build_output_excerpt="bounded synthetic build packet",

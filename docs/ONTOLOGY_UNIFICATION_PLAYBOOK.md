@@ -571,3 +571,74 @@ the scalar-gauge centering defect, not a disposable remainder. The owner was
 checked with `run_locked_lean.py`, a targeted locked Lake build, and OpenGauss
 kernel/axiom certification on 2026-11-05. The declaration graph and
 Auto-Ontology projection were not refreshed as part of that owner check.
+
+## Felix Klein / Erlangen lane unification (bounded source review, 2026-11-17)
+
+`Canonical.FelixKleinGeometryUnification` (wired into `Canonical.All` and
+`tests/InfoGeometryTests.lean`) unifies the five Felix Klein and Erlangen
+geometry corridors across existing owners without duplicating carriers or
+packaging hypotheses into assumption records:
+
+```mermaid
+flowchart LR
+  HOM["Core homogeneous spaces (G/H)"]
+  ERL["Erlangen invariant predicates and readouts"]
+  DET["Detector KleinGeometry"]
+  SYM["SymmetryAction and invariantSubring"]
+  GAL["Operator Erlangen Galois connection"]
+  CYL["Double cylinder colimit invariants"]
+  DECK["Klein deck group on Cl(5,5)"]
+  QUAD["Plucker6 and Bivector4 Klein quadrics"]
+  EXT["Exterior square and RealTwoPlane locus"]
+  DAHM["GL(4) and SL(4) compound collineation"]
+  PGL["PGL(2, C) and HomPoint2 cross-ratio"]
+  V4["Klein four-group V4 double transpositions"]
+  NC["Noncommutative Quaternion cross-ratio"]
+  KIN["Kinematic Clifford tri-regime"]
+  OCT["Split-octonion vs matrix separation"]
+  FKU["Canonical.FelixKleinGeometryUnification"]
+
+  HOM -->|equivariant reconstruction| ERL
+  DET -->|MulAction equivalence| ERL
+  CYL -->|erlangenDoubleCylinderSymmetryAction| SYM
+  DECK -->|ringAutHomToSymmetryAction| SYM
+  SYM -->|symmetryActionToMulSemiringAction| GAL
+  QUAD -->|quadratic coordinate equivs| EXT
+  DAHM -->|Cauchy-Binet compound MulAction| ERL
+  PGL -->|harmonic complement over C| NC
+  V4 -->|double-transposition invariance| PGL
+  ERL --> FKU
+  GAL --> FKU
+  DAHM --> FKU
+  EXT --> FKU
+  PGL --> FKU
+  NC --> FKU
+  KIN --> FKU
+  OCT --> FKU
+```
+
+| Lane | Owner and carrier | Established bridge / relation | Proved boundary / disposition |
+|---|---|---|---|
+| Classical `G/H` & Erlangen invariants | `Core.HomogeneousSpaces`, `Erlangen.InvariantGeometry`, `Detector.ErlangenProgramInvariants`, `OperatorErlangenFixedPoints` | `mulActionKleinGeometry` aligns `IsKleinInvariant` with `IsInvariantReadout`; `invariantReadout_const_of_homogeneousSpace` and `geometricInvariant_dichotomy_of_homogeneousSpace` prove single-orbit constancy; `homogeneousSpaceEquivQuotient_equivariant` constructs `X ≃ G ⧸ stabilizer G x₀` and extends to Cartan `G ⧸ θ.fixedSubgroup`. | Pure algebraic `Group`/`MulAction` coset spaces, not smooth Lie principal bundles or Cartan connections. |
+| Operator Erlangen 2.0 & Galois connection | `OperatorAlgebra.SymmetryInvariants`, `OperatorErlangenGaloisConnection`, `ErlangenDoubleCylinderSymmetryInvariants`, `Canonical.KleinDeckFiveGradeAction` | `symmetryActionEquivRingAutHom` equates `SymmetryAction G Op` with `G →* RingAut Op`; `invariantSubring_toSubsemiring_eq_fixedPointSubsemiring_top` and `symmetryAction_galois_connection` ground `erlangenDoubleCylinderSymmetryAction` in `fixingSubgroup`/`fixedPointSet` with strict noncommutativity of `erlangenDoubleCylinderInvariantSubring Mat2C`. Separately, `kleinDeck_unified_invariant_and_nontrivial` links `deckInvariantSubring` to `SymmetryInvariants.invariantSubring` via `ringAutHomToSymmetryAction` and records `(u5 + v5) ∈ deckInvariantSubring`, `u5 ∉ deckInvariantSubring`, and the ambient `Alg 5` relation `u5 * v5 + v5 * u5 = 1`. | Galois connection only; no general Galois anti-equivalence without descent hypotheses. `kleinDeck_unified_invariant_and_nontrivial` bridges to `SymmetryInvariants` without claiming noncommutativity of `deckInvariantSubring` itself. `ErlangenLanglandsOwners` remains a separate conditional witness lane. |
+| Klein quadric & `GL(4)`/`SL(4)` action | `Projective.KleinQuadric`, `Projective.KleinQuadricPlucker`, `Canonical.FierzKleinFoundation`, `Projective.ExteriorPowerPluckerBridge`, `Projective.ExteriorKleinTwoPlaneEquiv`, `Projective.DahmPluckerKleinCollineation` | `pluckerQuadricEquivPluckerLine` and `exteriorSquareEquivPlucker6` identify the quadratic form across all four Klein quadric carriers, while `polar_eq_kleinPolar` identifies polar bilinear forms across the two `Plucker6` owners; `compound_mul` proves Cauchy–Binet functoriality for `GL(4, R)` invariance of `IsKlein`, `GL(4, R)` equivariance of `wedge`, and `SL(4, R)` invariance of `kleinQ`; `splitKlein_spin_commutator_defect` separates noncommutative `Mat2C` `senaryDefect` from the commutative `SO(3,3)` reading. | `ExteriorKleinTwoPlaneEquiv` proves a set-level correspondence with `RealTwoPlane`, not scheme identification with `Module.Grassmannian`; `GL(4)`/`SL(4)` collineations act on `Plucker6 R`, not transported through `exteriorSquareEquivPlucker6`. Deprecated `Mathlib.Data.Complex.Basic` import and `trivial_surface` proof shape in `DahmPluckerKleinCollineation` were repaired cleanly. |
+| Cross-ratio, `V₄` stabilizer, & noncommutative defect | `Projective.CrossRatioPGL2`, `Projective.KleinCrossRatioInvariant`, `Projective.NoncommutativeCrossRatio`, `Canonical.KleinFourRealizations` | `homPoint2_ratio_eq_pgl2_crossRatio` and `ncCrossRatio_complex_eq_pgl2_affine` align argument orderings; `pgl2_affine_add_ncCrossRatio_eq_one` proves the Plücker harmonic complement; `crossRatio_invariantReadout_v4` and `crossRatio_invariantReadout_gl2` prove anharmonic `V₄` invariance and `GL(2,ℂ)` invariance on the nondegenerate quadruple subtype; `ncCrossRatio_quaternion_right_vs_left_separation` proves `rightAffine j b` invariance vs `leftAffine j b` shift (`innerDerivation j (-2i) = 4k ≠ 0`) over `Quaternion ℝ`. | Left fractional-linear invariance in arbitrary division rings remains obstruction-controlled by inner derivations. Repaired `CrossRatioPGL2` header, `Mathlib.Basic.Complex.Basic` import, T16 helper extraction, and `hs` usage without altering public signatures. |
+| Kinematic tri-regime & spin-frame hygiene | `Algebra.KinematicCliffordAlgebra`, `Canonical.BipolarCayleyKleinPristineChain`, `ErlangenCoordinateless` | `kinematicGenerator_tri_regime_sq` proves `(e₀)² = κ` for elliptic (`-1`), parabolic (`0`), and hyperbolic (`+1`) signatures in 1D `KinematicCliffordAlgebra`, paired in the five-lane capstone alongside `pristine_eight_dimensional_separation`. | `ErlangenCoordinateless` module and capstone docstrings were aligned with the five identities in `erlangen_coordinateless_capstone` (`jacobi_identity`, `bracket_antisymm`, `bianchi_is_jacobi`, `trace_of_commutator`, `pauli_squares`) and the separately proved `pauli_s1_s2_not_commute`, leaving Lie-group exponential claims omitted. |
+
+Scoped declaration-graph artifacts were exported via `dagIndexer` v3 for import
+root `InfoGeometry.Canonical.FelixKleinGeometryUnification` (`nsFilter: "InfoGeometry"`)
+under `artifacts/dag/felix-klein-unification/`, yielding `9,386` declarations,
+`63,483` retained dependency edges, `897` morphisms, and `537` types (with `47`
+declarations and `478` edges directly rooted in
+`InfoGeometry.Canonical.FelixKleinGeometryUnification`; captured prior to removing four unreferenced imports and expanding `felix_klein_five_lane_unification` during post-audit remediation). `refresh_decl_graph.py`'s
+post-export repo-wide `sourceHash`/`timestamp` stamping in `meta.json` exited
+`1` (`RuntimeError: source files changed while hashing sources`) because a
+concurrent writer was actively editing unrelated `.lean` files in the shared
+working tree (`GeneralHilbertConeMetric.lean`, `KleinIcosahedralQuinticModularJ.lean`,
+`KreinCl44SplitG2DerivationPosetSynthesis.lean`); those concurrent in-flight
+files remain completely outside our verified closure. Read-only Auto-Ontology
+REST (`:3001`) sentinel probes returned `InfoGeometry` total `336,783`,
+`quotient_isHomogeneousSpace` (`2`), `subgroup_le_fixingSubgroup_iff` (`1`),
+`cross_ratio_pgl2_invariant` (`1`), `deckGradeAction` (`8`), and `0` for both
+`kleinQ_splitKleinMap` and `felix_klein_five_lane_unification`, confirming the
+PostgreSQL projection lags these current owners and was left unmodified.

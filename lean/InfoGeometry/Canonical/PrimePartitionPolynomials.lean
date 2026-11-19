@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.BridgeTarget
@@ -172,7 +177,6 @@ store exactly the consequence needed:
 * no zeros when all local fugacities are inside the unit disk;
 * no zeros when all local fugacities are outside the unit disk.
 -/
-@[rep_depth thermo]
 def LeeYangPolydiscWitness : Prop :=
   (∀ {N : ℕ}
     (D : FinitePrimeChainData N)
@@ -235,7 +239,7 @@ Lee--Yang zero-free theorem after Riemann pullback.
 If the pulled partition function vanishes, the shifted field must lie on the
 imaginary axis.
 -/
-@[bridge_target_tag, rep_depth thermo]
+@[bridge_target_tag, rep_depth thermo, capstone]
 theorem zero_implies_field_re_zero
     (D : FinitePrimeChainData N)
     (LY : LeeYangPolydiscWitness)
@@ -258,7 +262,7 @@ theorem zero_implies_field_re_zero
 /-- Under the supplied pullback chart, a zero of the finite pulled partition has
 real coordinate `1/2`.  This is a chart-local Lee--Yang readout, not a theorem
 about Riemann zeta zeros. -/
-@[bridge_target_tag, rep_depth thermo]
+@[bridge_target_tag, rep_depth thermo, capstone]
 theorem zero_implies_critical_line
     (D : FinitePrimeChainData N)
     (LY : LeeYangPolydiscWitness)
@@ -311,7 +315,6 @@ polynomial.
 The ordinary polynomial Lee--Yang theorem is not proved here. A later
 Asano/Grace-style formalization can replace this witness.
 -/
-@[rep_depth thermo]
 def LeeYangPolynomialWitness : Prop :=
   ∀ {N : ℕ} (D : FinitePrimeChainData N) {lam : ℝ},
     0 ≤ lam →
@@ -321,7 +324,7 @@ def LeeYangPolynomialWitness : Prop :=
 namespace LeeYangPolynomialWitness
 
 /-- Re-export of the supplied Lee--Yang circle law for a finite prime chain. -/
-@[bridge_target_tag, rep_depth thermo]
+@[bridge_target_tag, rep_depth thermo, capstone]
 theorem roots_on_circle
     (LY : LeeYangPolynomialWitness)
     (D : FinitePrimeChainData N)
@@ -384,7 +387,6 @@ theorem isRoot_of_Z_eq_zero
 Construct the Hurwitz approximant family from finite prime partition
 polynomials and a Lee--Yang witness.
 -/
-@[rep_depth thermo]
 def toLeeYangApproximants
     (F : PrimePartitionPolynomialFamily)
     (LY : LeeYangPolynomialWitness) :
@@ -399,14 +401,14 @@ def toLeeYangApproximants
     F.R_nonzero
 
 /-- The constructed approximants preserve the family renormalization. -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem toLeeYangApproximants_R
     (F : PrimePartitionPolynomialFamily)
     (LY : LeeYangPolynomialWitness) :
     (F.toLeeYangApproximants LY).R = F.R := rfl
 
 /-- The constructed approximants use the partition-polynomial evaluation. -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem toLeeYangApproximants_Z
     (F : PrimePartitionPolynomialFamily)
     (LY : LeeYangPolynomialWitness)
@@ -415,7 +417,7 @@ theorem toLeeYangApproximants_Z
     (F.toLeeYangApproximants LY).Z N z = (F.Zpoly N).eval z := rfl
 
 /-- The constructed Hurwitz approximants satisfy the finite Lee--Yang law. -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem toLeeYangApproximants_leeYang
     (F : PrimePartitionPolynomialFamily)
     (LY : LeeYangPolynomialWitness)
@@ -462,7 +464,7 @@ theorem projection_eq_product_holds
   W.projection_eq_product z
 
 /-- Re-export of the supplied unit-circle preservation law. -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem global_preserves_unit_circle
     {N : ℕ}
     {D : FinitePrimeChainData N}
@@ -473,7 +475,7 @@ theorem global_preserves_unit_circle
   (W.preserves_unit_circle z hz).1
 
 /-- The supplied unit-circle preservation law holds. -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem local_preserves_unit_circle
     {N : ℕ}
     {D : FinitePrimeChainData N}

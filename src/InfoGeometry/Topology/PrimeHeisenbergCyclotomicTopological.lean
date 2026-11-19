@@ -77,7 +77,7 @@ theorem continuous_primeModeCyclotomicDegree :
 theorem isLocallyConstant_primeModeCyclotomicDegree :
     IsLocallyConstant primeModeCyclotomicDegree := by
   unfold primeModeCyclotomicDegree
-  exact IsLocallyConstant.of_discrete
+  exact IsLocallyConstant.of_discrete _
 
 /-- Paired annihilation/creation cyclotomic degree readout `ℕ → ZMod 3 × ZMod 3`. -/
 def primeModeCyclotomicPair (p : ℕ) : ZMod 3 × ZMod 3 :=
@@ -93,7 +93,7 @@ theorem continuous_primeModeCyclotomicPair :
 theorem isLocallyConstant_primeModeCyclotomicPair :
     IsLocallyConstant primeModeCyclotomicPair := by
   unfold primeModeCyclotomicPair
-  exact IsLocallyConstant.of_discrete
+  exact IsLocallyConstant.of_discrete _
 
 end
 end InfoGeometry.Topology.PrimeHeisenbergCyclotomicTopological

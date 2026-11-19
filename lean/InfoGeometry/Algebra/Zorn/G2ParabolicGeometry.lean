@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Algebra.Zorn.G2ParabolicIncidenceCertificate
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -40,12 +46,15 @@ def flags : Finset (Point × Line) :=
 theorem point_degree (p : Point) : (incidence p).card = 3 :=
   incidence_card p
 
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
 theorem line_degree (ℓ : Line) : (pointsOn ℓ).card = 3 := by
   revert ℓ
-  native_decide
+  decide
 
-theorem flag_card : flags.card = 189 := by
-  native_decide
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+theorem flag_card : flags.card = 189 := by decide
 
 theorem flags_nonempty : flags.Nonempty := by
   exact Finset.card_pos.mp (by rw [flag_card]; decide)

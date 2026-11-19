@@ -1,12 +1,23 @@
 /-
-InfoGeometry/Geometry/ConstructiveKasparov.lean
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Geometry.BilingualAnalyticity
+import InfoGeometry.Geometry.SpectralDivisors
+import InfoGeometry.OperatorAlgebra.MaurerCartanTower
+import InfoGeometry.OperatorAlgebra.ConstructiveKasparovBoundary
+import InfoGeometry.Erlangen.SmoothCartanGeometry
+import InfoGeometry.Canonical.ConnesNCGFormAlgebra
+import InfoGeometry.KK.RealSplitKreinBoundedTransform
+import InfoGeometry.OperatorAlgebra.PeirceSpine.UniversalNoncommutativeOneForms
 
-Constructive Kasparov residue/index bridge.
+/-!
+# Constructive Kasparov Residue / Index Bridge & Gauge Fluctuation (`D_A`)
 
-This module removes rhetorical/global assumptions and replaces them with
-computable finite readouts and derived theorems.
-
-Core chain:
+Constructive Kasparov residue/index bridge:
 
   projected finite kernel
     -> graded finite index
@@ -14,12 +25,13 @@ Core chain:
     -> Stokes boundary = volume defect
     -> residue winding = index
     -> nonzero residue obstructs flow to Flat
--/
 
-import Mathlib.Tactic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import InfoGeometry.Geometry.BilingualAnalyticity
-import InfoGeometry.Geometry.SpectralDivisors
+Together with the R1/R2 cross-pillar gauge-fluctuation bridge (`F2.4` / `M3.5`)
+connecting `MaurerCartanTower` (`thetaL`, `actionCurvature`), `SmoothCartanGeometry`
+(`gl2R_maurerCartan_flat` vs `homothetyCartanGeometry κ`), `OneForms`, and
+`D_A = D + A + J A J⁻¹` to `ConstructiveKasparovDatum.defect` (`1 - F^2`) and
+`finiteDimPhase`.
+-/
 
 noncomputable section
 
@@ -719,5 +731,276 @@ theorem nonzero_constructive_index_cannot_flow_to_flat
   F.nonzero_index_cannot_flow_to_flat hx t
 
 end ConstructiveResidueReadout
+
+/-! ## 8. Gauge Fluctuation `D_A`, Maurer–Cartan Tower, & `1 - F²` Defect Bridge (F2.4 / M3.5) -/
+
+section GaugeFluctuationAndMaurerCartanBridge
+
+open scoped Manifold
+open InfoGeometry.OperatorAlgebra.MaurerCartanTower
+open InfoGeometry.OperatorAlgebra.DerivationDifferentialForms
+open InfoGeometry.OperatorAlgebra.ConstructiveKasparovBoundary
+open InfoGeometry.OperatorAlgebra.PeirceSpine.UniversalNoncommutativeOneForms
+open InfoGeometry.Erlangen.SmoothCartanGeometry
+open InfoGeometry.Canonical.ConnesNCGFormAlgebra
+open InfoGeometry.KK
+open InfoGeometry.Krein
+
+/-- Inner gauge fluctuation of a Dirac operator `D` by a Connes 1-form `A` with real
+structure `J : Opˣ` (`D_A = D + A + J A J⁻¹`) over an arbitrary noncommutative `[Ring Op]`. -/
+def fluctuatedDirac {Op : Type*} [Ring Op] (D : Op) (J : Opˣ) (A : Op) : Op :=
+  D + A + (J : Op) * A * (↑J⁻¹ : Op)
+
+/-- Signed KO-dimension variant `D_A(ε_D) = D + A + ε_D • (J A J⁻¹)` (`ε_D ∈ {1, -1}`). -/
+def fluctuatedDiracSigned {Op : Type*} [Ring Op] (epsD : ℤ) (D : Op) (J : Opˣ) (A : Op) : Op :=
+  D + A + epsD • ((J : Op) * A * (↑J⁻¹ : Op))
+
+/-- Canonical alias `D_A` for the gauge-fluctuated Dirac operator `fluctuatedDirac`. -/
+abbrev D_A {Op : Type*} [Ring Op] (D : Op) (J : Opˣ) (A : Op) : Op :=
+  fluctuatedDirac D J A
+
+/-- Pure-gauge Connes 1-form `A_u = u * [D, u⁻¹] = u * D * u⁻¹ - D` for `u : Opˣ`. -/
+def pureGaugeOneForm {Op : Type*} [Ring Op] (D : Op) (u : Opˣ) : Op :=
+  (u : Op) * ncDeriv D (↑u⁻¹ : Op)
+
+theorem pureGaugeOneForm_eq_conj_sub {Op : Type*} [Ring Op] (D : Op) (u : Opˣ) :
+    pureGaugeOneForm D u = (u : Op) * D * (↑u⁻¹ : Op) - D := by
+  dsimp [pureGaugeOneForm, ncDeriv]
+  rw [mul_sub, ← mul_assoc, ← mul_assoc, Units.mul_inv, one_mul]
+
+/-- `pureGaugeOneForm D u` agrees with R1 `MaurerCartanTower.actionThetaL` (`u⁻¹`),
+`-(actionThetaR u)`, and `connesUniversalOneFormMap D (leftDifferentialForm Op u u⁻¹)`. -/
+theorem pureGaugeOneForm_eq_maurerCartan_and_universalOneForm
+    {Op : Type*} [Ring Op] (D : Op) (u : Opˣ) :
+    pureGaugeOneForm D u = actionThetaL (innerLieActionLane Op) u⁻¹ ![D] ∧
+      pureGaugeOneForm D u = -(actionThetaR (innerLieActionLane Op) u ![D]) ∧
+      pureGaugeOneForm D u =
+        connesUniversalOneFormMap D (leftDifferentialForm Op (u : Op) (↑u⁻¹ : Op)) := by
+  refine ⟨?_, ?_, ?_⟩
+  · simp [pureGaugeOneForm, actionThetaL_apply, ncDeriv_eq_innerLieActionLane]
+  · change pureGaugeOneForm D u = -((innerLieActionLane Op).operatorAction D (u : Op) * (↑u⁻¹ : Op))
+    rw [pureGaugeOneForm_eq_conj_sub, ← ncDeriv_eq_innerLieActionLane]
+    dsimp [ncDeriv]
+    rw [sub_mul]
+    simp only [mul_assoc, Units.mul_inv, mul_one, neg_sub]
+  · rw [connesUniversalOneFormMap_leftDifferentialForm]
+    rfl
+
+/-- Pure-gauge equivalence (`T2-F2.4-4`, `T4-07`): under `J * D * J⁻¹ = epsD • D` (`epsD = ±1`),
+order-zero `Commute u (J u J⁻¹)`, and order-one `Commute u (ncDeriv D (J u⁻¹ J⁻¹))`,
+`fluctuatedDiracSigned epsD D J (pureGaugeOneForm D u)` equals the unitary/invertible gauge
+conjugate `(u * (J u J⁻¹)) * D * (u * (J u J⁻¹))⁻¹`. -/
+theorem fluctuatedDiracSigned_pureGauge_eq_conj
+    {Op : Type*} [Ring Op] (epsD : ℤ) (hepsD : epsD * epsD = 1)
+    (D : Op) (J u : Opˣ)
+    (hJD : (J : Op) * D * (↑J⁻¹ : Op) = epsD • D)
+    (hOrderZero : Commute (u : Op) ((J : Op) * (u : Op) * (↑J⁻¹ : Op)))
+    (hOrderOne : Commute (u : Op) (ncDeriv D ((J : Op) * (↑u⁻¹ : Op) * (↑J⁻¹ : Op)))) :
+    let v : Opˣ := J * u * J⁻¹
+    let U : Opˣ := u * v
+    fluctuatedDiracSigned epsD D J (pureGaugeOneForm D u) = (U : Op) * D * (↑U⁻¹ : Op) := by
+  intro v U
+  have hv_val : (v : Op) = (J : Op) * (u : Op) * (↑J⁻¹ : Op) := by
+    simp [v, Units.val_mul, mul_assoc]
+  have hv_inv : (↑v⁻¹ : Op) = (J : Op) * (↑u⁻¹ : Op) * (↑J⁻¹ : Op) := by
+    have hv' : v⁻¹ = J * u⁻¹ * J⁻¹ := by
+      simp [v, _root_.mul_inv_rev, mul_assoc]
+    rw [hv']
+    simp [Units.val_mul, mul_assoc]
+  have hJ_pure :
+      epsD • ((J : Op) * pureGaugeOneForm D u * (↑J⁻¹ : Op)) =
+        (v : Op) * ncDeriv D (↑v⁻¹ : Op) := by
+    rw [pureGaugeOneForm_eq_conj_sub, mul_sub, sub_mul]
+    have h1 : (J : Op) * ((u : Op) * D * (↑u⁻¹ : Op)) * (↑J⁻¹ : Op) =
+        (v : Op) * ((J : Op) * D * (↑J⁻¹ : Op)) * (↑v⁻¹ : Op) := by
+      rw [hv_val, hv_inv]
+      simp only [mul_assoc]
+      rw [← mul_assoc (↑J⁻¹ : Op) (J : Op) (D * _), Units.inv_mul, one_mul,
+        ← mul_assoc (↑J⁻¹ : Op) (J : Op) ((↑u⁻¹ : Op) * _), Units.inv_mul, one_mul]
+    rw [h1, hJD]
+    have hsm :
+        epsD • ((v : Op) * (epsD • D) * (↑v⁻¹ : Op) - epsD • D) =
+          (epsD * epsD) • ((v : Op) * D * (↑v⁻¹ : Op) - D) := by
+      simp only [smul_sub, mul_smul_comm, smul_mul_assoc, ← mul_smul]
+    rw [hsm, hepsD, one_smul]
+    dsimp [ncDeriv]
+    rw [mul_sub, ← mul_assoc, ← mul_assoc, Units.mul_inv, one_mul]
+  have hu_comm_v : (u : Op) * ((v : Op) * ncDeriv D (↑v⁻¹ : Op)) * (↑u⁻¹ : Op) =
+      (v : Op) * ncDeriv D (↑v⁻¹ : Op) := by
+    have h0 : (u : Op) * (v : Op) = (v : Op) * (u : Op) := by
+      rw [hv_val]; exact hOrderZero.eq
+    have h1 : (u : Op) * ncDeriv D (↑v⁻¹ : Op) = ncDeriv D (↑v⁻¹ : Op) * (u : Op) := by
+      rw [hv_inv]; exact hOrderOne.eq
+    calc
+      (u : Op) * ((v : Op) * ncDeriv D (↑v⁻¹ : Op)) * (↑u⁻¹ : Op)
+          = ((u : Op) * (v : Op)) * ncDeriv D (↑v⁻¹ : Op) * (↑u⁻¹ : Op) := by
+              simp only [mul_assoc]
+      _ = (v : Op) * ((u : Op) * ncDeriv D (↑v⁻¹ : Op)) * (↑u⁻¹ : Op) := by
+              rw [h0]; simp only [mul_assoc]
+      _ = (v : Op) * (ncDeriv D (↑v⁻¹ : Op) * ((u : Op) * (↑u⁻¹ : Op))) := by
+              rw [h1]; simp only [mul_assoc]
+      _ = (v : Op) * ncDeriv D (↑v⁻¹ : Op) := by
+              rw [Units.mul_inv, mul_one]
+  have hU_conj : (U : Op) * D * (↑U⁻¹ : Op) =
+      (u : Op) * D * (↑u⁻¹ : Op) + (v : Op) * ncDeriv D (↑v⁻¹ : Op) := by
+    have hUval : (U : Op) = (u : Op) * (v : Op) := rfl
+    have hUinv : (↑U⁻¹ : Op) = (↑v⁻¹ : Op) * (↑u⁻¹ : Op) := by
+      simp [U, _root_.mul_inv_rev, Units.val_mul]
+    rw [hUval, hUinv]
+    have hstep : (v : Op) * D * (↑v⁻¹ : Op) = D + (v : Op) * ncDeriv D (↑v⁻¹ : Op) := by
+      dsimp [ncDeriv]
+      rw [mul_sub, ← mul_assoc, ← mul_assoc, Units.mul_inv, one_mul]
+      abel
+    calc
+      (u : Op) * (v : Op) * D * ((↑v⁻¹ : Op) * (↑u⁻¹ : Op))
+          = (u : Op) * ((v : Op) * D * (↑v⁻¹ : Op)) * (↑u⁻¹ : Op) := by
+              simp only [mul_assoc]
+      _ = (u : Op) * (D + (v : Op) * ncDeriv D (↑v⁻¹ : Op)) * (↑u⁻¹ : Op) := by
+              rw [hstep]
+      _ = (u : Op) * D * (↑u⁻¹ : Op) +
+            (u : Op) * ((v : Op) * ncDeriv D (↑v⁻¹ : Op)) * (↑u⁻¹ : Op) := by
+              rw [mul_add, add_mul]
+      _ = (u : Op) * D * (↑u⁻¹ : Op) + (v : Op) * ncDeriv D (↑v⁻¹ : Op) := by
+              rw [hu_comm_v]
+  dsimp [fluctuatedDiracSigned]
+  rw [hJ_pure, hU_conj, pureGaugeOneForm_eq_conj_sub]
+  abel
+
+/-- Unitary/invertible gauge conjugation preserves the Kasparov defect `1 - F²` up to
+conjugation (`defect(U F U⁻¹) = U (defect F) U⁻¹`), matching flat Maurer–Cartan
+`actionThetaL_flat` and `gl2R_maurerCartan_flat` / `homothetyCartanGeometry_flat_of_zero`. -/
+theorem constructiveKasparovDatum_defect_conjugate
+    {State Op Projection Mode : Type*} [Ring Op]
+    (K : ConstructiveKasparovDatum State Op Projection Mode)
+    (U : State → Opˣ) :
+    let K_conj : ConstructiveKasparovDatum State Op Projection Mode :=
+      { K with F := fun x => (U x : Op) * K.F x * (↑(U x)⁻¹ : Op) }
+    (∀ x : State, K_conj.defect x = (U x : Op) * K.defect x * (↑(U x)⁻¹ : Op)) ∧
+      (∀ x : State, K.defect x = 0 → K_conj.defect x = 0) := by
+  intro K_conj
+  have hconj : ∀ x : State, K_conj.defect x = (U x : Op) * K.defect x * (↑(U x)⁻¹ : Op) := by
+    intro x
+    change 1 - ((U x : Op) * K.F x * (↑(U x)⁻¹ : Op)) * ((U x : Op) * K.F x * (↑(U x)⁻¹ : Op)) =
+      (U x : Op) * (1 - K.F x * K.F x) * (↑(U x)⁻¹ : Op)
+    calc
+      1 - ((U x : Op) * K.F x * (↑(U x)⁻¹ : Op)) * ((U x : Op) * K.F x * (↑(U x)⁻¹ : Op))
+          = (U x : Op) * (↑(U x)⁻¹ : Op) -
+              (U x : Op) * (K.F x * (((↑(U x)⁻¹ : Op) * (U x : Op)) * K.F x)) *
+                (↑(U x)⁻¹ : Op) := by
+              rw [Units.mul_inv]
+              simp only [mul_assoc]
+      _ = (U x : Op) * (↑(U x)⁻¹ : Op) -
+            (U x : Op) * (K.F x * K.F x) * (↑(U x)⁻¹ : Op) := by
+              rw [Units.inv_mul, one_mul]
+      _ = (U x : Op) * (1 - K.F x * K.F x) * (↑(U x)⁻¹ : Op) := by
+              rw [mul_sub, sub_mul, mul_one]
+  refine ⟨hconj, fun x hx => ?_⟩
+  rw [hconj x, hx, mul_zero, zero_mul]
+
+/-- Exact non-flat defect shift identity under a general bounded fluctuation `F_A := F + δF`:
+`1 - (F + δF)² = (1 - F²) - (F * δF + δF * F + δF * δF)`, matching
+`ConstructiveKasparovBoundary.involutiveKasparovDefect`. -/
+theorem defect_add_fluctuation
+    {State Op Projection Mode : Type*} [Ring Op]
+    (K : ConstructiveKasparovDatum State Op Projection Mode)
+    (δF : State → Op) (x : State) :
+    let K_fluct : ConstructiveKasparovDatum State Op Projection Mode :=
+      { K with F := fun s => K.F s + δF s }
+    K_fluct.defect x =
+        K.defect x - (K.F x * δF x + δF x * K.F x + δF x * δF x) ∧
+      K_fluct.defect x = involutiveKasparovDefect (K.F x + δF x) := by
+  refine ⟨?_, rfl⟩
+  change 1 - (K.F x + δF x) * (K.F x + δF x) =
+    (1 - K.F x * K.F x) - (K.F x * δF x + δF x * K.F x + δF x * δF x)
+  noncomm_ring
+
+/-- Unified R1/R2 flatness vs curvature witness (`T3-08`, `T2-F2.4-4`):
+1. Pure-gauge R1 Maurer–Cartan (`actionThetaL_flat`) and flat Cartan geometry
+   (`gl2R_maurerCartan_flat`, `homothetyCartanGeometry_flat_of_zero`) match `defect = 0`
+   on `ConstructiveKasparovDatum` with noncommuting `M₂(ℝ)` flat phase `F = diag(1, -1)`;
+2. Curved non-flat fluctuation `δF = !![0, 1; 0, 0]` (`F_A = F + δF` or off-diagonal shift
+   `δF = !![0, 1; 1, 0]`) yields nonzero Kasparov defect `1 - F_A² ≠ 0`, parallel to
+   `homothetyCartanGeometry_curved_of_ne_zero` (`κ ≠ 0`). -/
+theorem maurerCartan_smoothCartan_vs_kasparov_defect_witness
+    {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+    (K : InfoGeometry.Algebra.LieActionLane R A)
+    (hK : IsLeibnizAction K) (g : Aˣ)
+    (v w : _root_.GroupLieAlgebra
+      𝓘(ℝ, InfoGeometry.Erlangen.SmoothCartanGeometry.EndR2)
+      InfoGeometry.Erlangen.SmoothCartanGeometry.GL2R)
+    (gGL : InfoGeometry.Erlangen.SmoothCartanGeometry.GL2R)
+    (p : (Fin 2 → ℝ) × ℝ)
+    (κ : ℝ) (hκ : κ ≠ 0) :
+    let F₀ : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, -1]
+    let δF : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 1, 0]
+    let KDatum : ConstructiveKasparovDatum Unit (Matrix (Fin 2) (Fin 2) ℝ)
+        (Matrix (Fin 2) (Fin 2) ℝ) Empty :=
+      { F := fun _ => F₀
+        defectToKernelProjection := id
+        kernelBasisOfProjection := fun _ => []
+        grade := fun e => Empty.elim e }
+    let KCurved : ConstructiveKasparovDatum Unit (Matrix (Fin 2) (Fin 2) ℝ)
+        (Matrix (Fin 2) (Fin 2) ℝ) Empty :=
+      { KDatum with F := fun _ => F₀ + δF }
+    actionCurvature K (actionThetaL K g) = 0 ∧
+      cartanCurvatureFormWith 𝓘(ℝ, InfoGeometry.Erlangen.SmoothCartanGeometry.EndR2)
+          (tangentSpaceCastModel 𝓘(ℝ, InfoGeometry.Erlangen.SmoothCartanGeometry.EndR2)
+            (1 : InfoGeometry.Erlangen.SmoothCartanGeometry.GL2R))
+          (fun q => (leftMaurerCartanEquiv
+            𝓘(ℝ, InfoGeometry.Erlangen.SmoothCartanGeometry.EndR2) q).toContinuousLinearMap)
+          (mulInvariantVectorField v) (mulInvariantVectorField w) gGL = 0 ∧
+      cartanCurvatureForm 𝓘(ℝ, (Fin 2 → ℝ) × ℝ)
+          (fun q => ((homothetyCartanGeometry 0).omega q).toContinuousLinearMap)
+          homothetyCoordX0 homothetyCoordX1 p = 0 ∧
+      cartanCurvatureForm 𝓘(ℝ, (Fin 2 → ℝ) × ℝ)
+          (fun q => ((homothetyCartanGeometry κ).omega q).toContinuousLinearMap)
+          homothetyCoordX0 homothetyCoordX1 p ≠ 0 ∧
+      KDatum.defect () = 0 ∧
+      KCurved.defect () ≠ 0 := by
+  refine ⟨actionThetaL_flat K hK g, gl2R_maurerCartan_flat v w gGL,
+    homothetyCartanGeometry_flat_of_zero p, homothetyCartanGeometry_curved_of_ne_zero hκ p, ?_, ?_⟩
+  · change (1 : Matrix (Fin 2) (Fin 2) ℝ) -
+        !![1, 0; 0, -1] * !![1, 0; 0, -1] = 0
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp
+  · intro h0
+    have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 0) h0
+    change ((1 : Matrix (Fin 2) (Fin 2) ℝ) -
+        ((!![1, 0; 0, -1] : Matrix (Fin 2) (Fin 2) ℝ) +
+          (!![0, 1; 1, 0] : Matrix (Fin 2) (Fin 2) ℝ)) *
+        ((!![1, 0; 0, -1] : Matrix (Fin 2) (Fin 2) ℝ) +
+          (!![0, 1; 1, 0] : Matrix (Fin 2) (Fin 2) ℝ))) 0 0 = 0 at h00
+    simp at h00
+
+/-- `BUCKET 2` finite-dimensional realization of `ConstructiveKasparovDatum.defect` on
+`D_A = fluctuatedDirac D J A` via `RealSplitKreinBoundedTransform.finiteDimPhase`:
+`(1 + D_A²) * (1 - finiteDimPhase D_A * finiteDimPhase D_A) = 1`. -/
+theorem fluctuatedDirac_finiteDimPhase_defect_inv
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    [KreinSpace H] [KreinGradedModule H] [FiniteDimensional ℝ H]
+    (D : EndH H) (J : (EndH H)ˣ) (A : EndH H)
+    (hDA_self : IsSelfAdjoint (D_A D J A)) :
+    let KDatum : ConstructiveKasparovDatum Unit (EndH H) (EndH H) Empty :=
+      { F := fun _ => finiteDimPhase (D_A D J A)
+        defectToKernelProjection := id
+        kernelBasisOfProjection := fun _ => []
+        grade := fun e => Empty.elim e }
+    (1 + D_A D J A * D_A D J A) * KDatum.defect () = 1 ∧
+      KDatum.defect () * (1 + D_A D J A * D_A D J A) = 1 :=
+  finiteDimPhase_sq_add_inv_one_add_sq hDA_self
+
+/-- Exact involutive defect shift for a bounded fluctuation `F + δF` (`T2-F2.4-4`):
+`involutiveKasparovDefect F = 1 - F * F` and
+`involutiveKasparovDefect (F + δF) = (1 - F * F) - (F * δF + δF * F + δF * δF)`. -/
+theorem fluctuated_involutiveKasparovDefect_shift
+    {Op : Type*} [Ring Op] (F δF : Op) :
+    involutiveKasparovDefect F = 1 - F * F ∧
+      involutiveKasparovDefect (F + δF) =
+        (1 - F * F) - (F * δF + δF * F + δF * δF) := by
+  refine ⟨rfl, ?_⟩
+  dsimp [involutiveKasparovDefect]
+  noncomm_ring
+
+end GaugeFluctuationAndMaurerCartanBridge
 
 end InfoGeometry.Geometry.ConstructiveKasparov

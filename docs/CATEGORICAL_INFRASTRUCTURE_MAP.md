@@ -122,8 +122,8 @@ theorem artin_relation (q : Units ℂ) (τ s : ℂ)
 Matrix-level files like `FibonacciParafermion.lean` and `FiniteFibonacci*.lean`
 are the concrete realizations; `FibonacciBraiding.lean` is the surface.
 
-**Formalized:** The pentagon equation (via Rohozhkin matrix chart) and the hexagon equation (via Artin relation) as finite categorical coherence.
-**Not formalized:** The full mathlib `BraidedCategory` instance.
+**Formalized:** The pentagon equation (via Rohozhkin matrix chart) and the hexagon equation (via Artin relation) as finite categorical coherence; and the full Mathlib `Category`, `MonoidalCategory`, and non-symmetric `BraidedCategory` instance on `FibObject → ℕ` in `Categorical/FibonacciMonoidalBraidedInstance.lean`.
+**Status:** The full mathlib `BraidedCategory` instance on Fibonacci multiplicity vectors is fully formalized and closed in `FibonacciMonoidalBraidedInstance.lean`.
 
 ---
 
@@ -243,9 +243,11 @@ The Georgiev–Hadjiivanov–Todorov work describes:
 
 **What is missing (the real open debt):**
 
-1. **Full Braided Category Instance** — the Fibonacci fusion category as a
-   `BraidedCategory` typeclass instance (the finite matrix pentagon and hexagon
-   coherences are formalized, but not the abstract functorial mathlib instance).
+1. **Full Braided Category Instance — CLOSED** — the Fibonacci fusion category as a
+   full Mathlib `Category`, `MonoidalCategory`, and non-symmetric `BraidedCategory`
+   typeclass instance on `FibObject → ℕ` is formalized in
+   `Categorical/FibonacciMonoidalBraidedInstance.lean` via faithful transport
+   (`induced` / `ofFaithful`), establishing Hom equivalences and non-trivial squared braiding.
 
 2. **Colimit identification** — the theorem that the colimit of finite
    Fibonacci braid matrices (via `TensorTowerColimit`) acts as the
@@ -347,10 +349,14 @@ When adding new content:
 | `Algebra.FibonacciParafermion` | ✅ Builds (clean) |
 | `Algebra.All` | ✅ Builds (8108 jobs) |
 | `Categorical.FibonacciBraiding` | ✅ Builds |
+| `Categorical.FibonacciMonoidalBraidedInstance` | ✅ Builds (clean) |
 | `Canonical.TensorTowerColimit` | ✅ Builds |
 | `Canonical.ErlangenColimitResolution` | ✅ Builds |
 | `Clifford.LogCftMonodromy` | ✅ Builds |
 | `Quantum.RealKCategory` | ✅ Builds |
+| `InfoGeometry.Modular.GKSLGibbsAndDuallyFlatSpinCumulants` | ✅ Builds (clean, 4 archetypes) |
+| `InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn` | ✅ Builds (clean, 4 archetypes) |
+| `InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance` | ✅ Builds (clean, 4 archetypes) |
 | `InfoGeometry.All` | ❌ Fails (pre-existing in `Arithmetic/`, `Canonical/`) |
 
 ---
@@ -363,7 +369,7 @@ When adding new content:
 - Colimit identification with Hadjiivanov monodromy — undocumented but implicit
 - Analytic Todorov–Hadjiivanov exchange algebra — documented in
   `ExchangeSMatrixBridge.lean`
-- Full `BraidedCategory` instance — (pentagon/hexagon coherences are verified in `Categorical/`)
+- Full `BraidedCategory` instance — **CLOSED** (fully formalized in `Categorical.FibonacciMonoidalBraidedInstance`, 0 sorry, 0 axiom)
 
 ---
 
@@ -608,3 +614,157 @@ Status: **CLOSED** (0 sorry, 0 axiom).
 - `lean/InfoGeometry/Algebra/NoncommutativeColimitCStarCompletionAndOperatorSemigroup.lean` — **CLOSED** (`0 sorry`, `0 axiom`): equips `ClInfOp A` with the submultiplicative $\ell_1$-block norm `opSumNorm` (`NonUnitalNormedRing (ClInfOp A)`), proves `ClInfOpCompletion A := UniformSpace.Completion (ClInfOp A)` is a complete `NonUnitalNormedRing` with continuous bilinear multiplication, involutive isometry `completionOpStar`, and globally 1-Lipschitz `completionSuperTrace`; proves the Banach-algebra Trotter/Euler limit `(1 + k⁻¹ • x)^k → NormedSpace.exp x` (`tendsto_one_add_inv_smul_pow_exp`), non-scalar operator Lindblad semigroup convergence (`operator_lindblad_semigroup_convergence`), and coercive exponential decay (`operator_lindblad_coercive_decay`) for genuinely noncommutative `m₀ : A`.
 - `lean/InfoGeometry/Algebra/NoncommutativeColimitBanachStarSemigroup.lean` — **CLOSED** (`0 sorry`, `0 axiom`): equips `ClInfOpCompletion A` with `StarRing` and `NormedStarGroup` (`instNormedStarGroupClInfOpCompletion`), proves `completionSuperTrace_star`, defines the global strongly continuous contraction semigroup `cohSemigroupCompletion : ℝ → ClInfOpCompletion A → ClInfOpCompletion A` across all completed elements (`cohSemigroupCompletion_zero`, `cohSemigroupCompletion_add`), and proves global coercive exponential decay (`cohSemigroupCompletion_coercive_decay`) and supertrace annihilation (`completionSuperTrace_cohSemigroupCompletion`).
 - `lean/InfoGeometry/Algebra/NoncommutativeWeilCohomologyAndPicardLefschetzSynthesis.lean` — **CLOSED** (`0 sorry`, `0 axiom`): formalizes noncommutative Weil cohomology across `ClTower A n`: ($\mathcal{W}_1$) Grothendieck–Lefschetz supertrace formula and tracial coboundary cancellation (`grothendieck_lefschetz_formula_and_coboundary_cancellation`, `tracial_lefschetzSuperTrace_odd_anticommutator`), ($\mathcal{W}_2$) supersingular quaternion splitting and 2-scale Brauer–Weyl realization in `ClTower A 2` (`weil_supersingular_quaternion_splitting`, `brauer_weyl_quaternion_realization`), ($\mathcal{W}_3$) Poincaré symplectic similitude, noncommutative Hasse–Weil quadratic with commutator defect, all-scales Kronecker–Cayley–Walsh purity, and Deligne even-power square (`poincare_symplectic_similitude`, `hasse_weil_poincare_and_kunneth_purity`, `cayleyTowerOp_even_power_square`), and ($\mathcal{W}_4$) all-scales Picard–Lefschetz symplectic transvection on `cupForm` and `activeSymplecticForm` (`all_scales_picard_lefschetz_symplectic_monodromy`).
+
+---
+
+## 16. Noncommutative Iwasawa KAN Triad, Weyl–Cartan Decomposition & Polar Equivariance
+
+**Owner Files:**
+- `lean/InfoGeometry/Canonical/IwasawaKANTriad.lean`
+- `lean/InfoGeometry/Algebra/NoncommutativeWeylCartanKANPolarEquivariance.lean`
+- `lean/InfoGeometry/Canonical/WeylTraceKANPolarEquivariance.lean`
+- `lean/InfoGeometry/Optimization/PolarDecomposition.lean`
+
+**Mathematical Role:**
+Formalizes the bounded acyclic causal diamond poset $(\mathcal{K}\mathcal{P}, \preceq)$ connecting the Weyl diagonal trace scaling, the Cartan decomposition, the noncommutative Plemelj–Newton trace-to-determinant formula, exact centralizer criteria, the Iwasawa $K A N$ subgroups, and unitary/symmetry equivariance of the Polar decomposition over arbitrary noncommutative rings `[Ring B]` and $\star$-rings `[Ring B] [StarRing B]`:
+- **Diamond Poset $(\mathcal{K}\mathcal{P}, \preceq)$**: `WeylCartanKANPolarArchetype` (`KP1`, `KP2`, `KP3`, `KP4`) with `kpPoset_diamond_bounds` ($\mathcal{K}\mathcal{P}_1 \le \{\mathcal{K}\mathcal{P}_2, \mathcal{K}\mathcal{P}_3\} \le \mathcal{K}\mathcal{P}_4$).
+- $\mathcal{K}\mathcal{P}_1$: Weyl gauge scale $M_{\mathrm{Weyl}}$, traceless symmetric/antisymmetric Cartan split $2 \bullet M = M_{\mathrm{Weyl}} + M_{\mathrm{sym}}^0 + M_{\mathrm{antisym}}^0$, $\mathfrak{gl}_2$ Lie brackets, noncommutative trace-to-determinant formula $(\mathrm{Tr}_2 M)^2 - \mathrm{Tr}_2(M^2) = \{M_{00}, M_{11}\} - \{M_{01}, M_{10}\} = \mathrm{symDet}(M)$, and centralizer criterion: $M_{\mathrm{diag\text{-}tr}}(M)$ is central in $M_2(B)$ iff $\mathrm{Tr}_2(M) \in Z(B)$ (with explicit non-central witness `weylScalePart_noncentral_witness` on $B = M_2(\mathbb{Z})$).
+- $\mathcal{K}\mathcal{P}_2$: Iwasawa $K, A, N$ subgroup laws, elimination of unitary $K$ in $M^\dagger M = (AN)^\dagger (AN)$, and noncommutative Schur complement recovery $(M^\dagger M)_{11} - n^\star (M^\dagger M)_{00} n = a_-^\star a_-$.
+- $\mathcal{K}\mathcal{P}_3$: Unitary symmetry equivariance of Polar decomposition over any $\star$-ring `R` ($G M G^{-1} = U_G P_G$ with $U_G^\star U_G = 1$, $P_G^\star = P_G$, and $(G M G^{-1})^\star (G M G^{-1}) = G(M^\star M)G^{-1} = P_G^2$).
+- $\mathcal{K}\mathcal{P}_4$: Equivariance of Iwasawa $K A N$ under diagonal scaling $A(g_+, g_-)$, non-abelian fiber gauge $\iota(g)$, chirality parity $\Gamma_1$, Weyl reflection $\Sigma$, and master diamond synthesis `kan_polar_gram_fiber_unitary_equivariance`.
+
+**Kernel-Verified Archetypes:**
+- `weylCartanTraceToDetMat2CArchetype` (`TypedArchetype Unit .proved`)
+- `iwasawaKANPolarGramMat2CArchetype` (`TypedArchetype Unit .proved`)
+- `polarUnitaryEquivarianceMat2CArchetype` (`TypedArchetype Unit .proved`)
+- `iwasawaKANSymmetryEquivarianceMat2CArchetype` (`TypedArchetype Unit .proved`)
+
+**Boundary Guardrails:**
+- The poset is a finite causal diamond; it does not claim infinite-dimensional Harish-Chandra Plancherel transform or general semisimple Lie group Iwasawa decomposition beyond $M_2(B)$ with arbitrary ring $B$ and $\star$-ring $B$.
+- The centralizer criterion must be respected: the diagonal trace part is central in $M_2(B)$ if and only if $\mathrm{Tr}_2(M) \in Z(B)$.
+
+---
+
+## 17. Dissipative Quantum Information Geometry: GKSL Semigroups, Bloch-Ball Umegaki Relative Entropy & Quantum Spohn Relaxation
+
+**Owner Files:**
+- `lean/InfoGeometry/Modular/GKSLGibbsAndDuallyFlatSpinCumulants.lean` ($\mathcal{G}_1$–$\mathcal{G}_7$)
+- `lean/InfoGeometry/Modular/BlochBallUmegakiAndQuantumSpohn.lean` ($\mathcal{G}_8$–$\mathcal{G}_{10}$, Welded Poset $Y_0$–$Y_9$)
+- `lean/InfoGeometry/OperatorAlgebra/NoncommutativeRenyi.lean` (`umegakiKernel`)
+- `lean/InfoGeometry/OperatorAlgebra/PeirceSpine/TwoSheetFunctionalCalculus.lean` (`twoSheet`, `cfc_twoSheet`, `twoSheet_isStrictlyPositive`)
+
+**Mathematical Role:**
+Closes the noncommutative off-diagonal $M_2(\mathbb{C})$ coherence gap left explicitly open by `GKSLGibbsAndDuallyFlatSpinCumulants.lean` (which covered only the diagonal binary KL / longitudinal spin divergence on $\eta \in (-1, 1)$):
+- $\mathcal{G}_8$: Exact two-sheet spectral decomposition of self-adjoint unit-trace states $\rho \in M_2(\mathbb{C})$ inside the open Bloch ball ($r(\rho)^2 = z(\rho)^2 + 4|\rho_{01}|^2 < 1$), yielding projection `spectralProjector ρ` of trace 1, proof `IsStrictlyPositive ρ`, and evaluation of the genuine Mathlib continuous functional calculus `CFC.log ρ` and `CFC.log (gibbsDensityC θ)`.
+- $\mathcal{G}_9$: Full noncommutative Umegaki relative entropy via `Matrix.trace (umegakiKernel ρ (gibbsDensityC θ))`. Proves exact Coherence Pinching Pythagoras:
+  $$D_{\mathrm{Umegaki}}(\rho \| \rho_\theta) = (\phi(r) - \phi(z)) + D_\phi(z \| \eta_\theta)$$
+  with strictly non-negative coherence divergence `coherenceRelEntropy ρ ≥ 0` ($= 0 \iff \rho_{01} = 0$) and faithfulness $D_{\mathrm{Umegaki}}(\rho \| \rho_\theta) = 0 \iff \rho = \rho_\theta$.
+- $\mathcal{G}_{10}$: Full Kolmogorov forward generator ODE $\frac{d}{dt} T_t(\rho)_{ij} = (\mathcal{L}(T_t(\rho)))_{ij}$ with operator-algebraic Witt CAR generator `thermalLindbladianOp`. Open Bloch-ball invariance for $t \ge 0$. Three-channel KMS Spohn entropy production rate $\sigma_{\mathrm{KMS}}(\rho) \ge 0$, strictly positive whenever off-diagonal coherence $\rho_{01} \ne 0$. Time derivative $\frac{d}{dt} D_{\mathrm{Umegaki}}(T_t(\rho) \| \rho_\theta) = -\sigma_{\mathrm{KMS}}(T_t(\rho))$, and global exponential relaxation $T_t(\rho) \to \rho_\theta$, $D_{\mathrm{Umegaki}} \to 0$.
+- **Welded Poset $(Y_0 \dots Y_9, \prec)$**: 10-node acyclic causal poset connecting the $\star$-ring GKSL dissipative core cleanly to the full 3D quantum Spohn relaxation. Master synthesis theorem `master_welded_3d_quantum_semigroup_cumulant_spohn_synthesis`.
+
+**Kernel-Verified Archetypes:**
+- `blochTwoSheetCFCLogArchetype` (`TypedArchetype Unit .proved`, phase 5)
+- `umegakiCoherencePythagorasArchetype` (`TypedArchetype Unit .proved`, phase 6)
+- `quantumSpohnBlochRelaxationArchetype` (`TypedArchetype Unit .proved`, phase 7)
+- `welded3DQuantumSpohnSynthesisArchetype` (`TypedArchetype Unit .proved`, phase 8)
+
+**Boundary Guardrails:**
+- Validated on the open Bloch ball $r(\rho) < 1$. Pure boundary states ($r = 1$) have divergent logarithm and zero eigenvalues.
+- Grounded strictly in finite-dimensional operator algebras ($M_2(\mathbb{C})$) and Mathlib continuous functional calculus; avoids ungrounded infinite-dimensional von Neumann factor overclaims.
+
+## 18. Graded Clifford Grace Contraction, Coherence Pullback Metric, and Noncommutative Peirce–Bruhat–Banach Spine
+
+* **Chevalley $\mathbb{N}$-graded Clifford Grace Contraction**: [GradedGraceContraction.lean](lean/InfoGeometry/Clifford/GradedGraceContraction.lean) recovers linear $\mathbb{N}$-grading on `CliffordAlgebra Q` via `CliffordAlgebra.equivExterior Q` (`cliffordGradeProj`), proves `CliffordAlgebra.ι` injectivity (`clifford_ι_injective`), constructs golden-ratio contraction `graceOperator Q` ($\varphi^{-k}$ grade weights grounded in `rat_linear_independent_one_goldenRatio`), proves the Minkowski `Cl(3,1)` indefiniteness refutation (`not_nonneg_cliffordKreinPairing_Q31`), and resolves it via `kreinFlip31` and `graceBladeInner`.
+* **Coherence Pullback Metric & Palatini UV Confinement**: [CoherencePullbackMetricAndPalatiniConfinement.lean](lean/InfoGeometry/InformationGeometry/CoherencePullbackMetricAndPalatiniConfinement.lean) defines `coherenceMetricMatrix` from Fréchet differentials `fderiv ℝ Ψ x` with `C^\infty` immersion witness `canonicalLinearCoherence31` and proves the $G_{\mathrm{eff}}(x) \le \varphi^2 G_0$ Palatini UV bound.
+* **Noncommutative Peirce–Bruhat–Aporia Poset**: [PeirceBruhatAporiaTowerAndMatrixGeometry.lean](lean/InfoGeometry/OperatorAlgebra/PeirceBruhatAporiaTowerAndMatrixGeometry.lean) formalizes the six-stage `CoagulationArchetype` diamond poset (`binaryCut_commutant_characterization`, `fourfold_peirce_noncomm_mul_blocks`, `chartBruhatRingEquiv`, `idempotencyDefect_newtonPeirceStep_iterate_factor`, `all_depth_meta_tower_covariant_constancy_and_bruhat_invariance`, concrete `M₂(Mat2C)` / `M₂(Mat2Z)` noncommutative witnesses, and `peirce_bruhat_aporia_executable_certified_compilation`).
+* **Banach Newton–Peirce Super-Convergence**: [BanachNewtonPeirceConvergence.lean](lean/InfoGeometry/OperatorAlgebra/BanachNewtonPeirceConvergence.lean) closes analytic convergence over norm-one-free `[NormedRing B] [CompleteSpace B]` whenever `‖idempotencyDefect x‖ < 1 / 6`, constructing an idempotent limit preserving commutators, supports, annihilators, and intertwiners (`banach_newtonPeirce_limit_idempotent_and_intertwiner`) with a non-nilpotent `(Fin 2 → ℝ) →L[ℝ] (Fin 2 → ℝ)` witness (`non_nilpotent_oblique_clm_banach_convergence_witness`).
+* **Clifford–Krein–Peirce–Grace Bridge**: [CliffordKreinPeirceBruhatBridge.lean](lean/InfoGeometry/Clifford/CliffordKreinPeirceBruhatBridge.lean) unifies `ChiralInvolution` with Peirce–Bruhat–Maurer–Cartan towers, identifies `endToMatrix kreinPlus = peirceCut2 (B := ℝ)`, contrasts spacelike `Eplus` vs timelike `Eminus` defects in `Cl(1,1)`, derives the exact `-(φ⁻¹ / 4)` defect tower of `graceOperator Q31 cl31Chiral0.Pleft`, and heals `graceContractedClmCut` via Banach Newton–Peirce convergence (`graceContractedClmCut_non_nilpotent_and_banach_healed`).
+* **Porous Berezin–Toeplitz & Multiscale Diamond Poset**: [PorousBerezinToeplitzAndMultiscalePoset.lean](lean/InfoGeometry/OperatorAlgebra/PorousBerezinToeplitzAndMultiscalePoset.lean) upgrades linear chains into the diamond causal poset `PorousGaborArchetype` (`two_distinct_valid_topological_schedules`), couples porous variance `P - P * Q * P` and `porousSymCompress` with Lie commutator leakage and `idempotencyDefect` (`porousSymCompress_variance_and_idempotencyDefect`), establishes Berezin–Toeplitz intertwining (`berezinOp_pow_eq_pullback`), multiscale pore-escape telescoping (`multiscale_projection_isometry_telescoping`), finite Morita synthesis/frame/Gram duality (`morita_toeplitz_multiplier_intertwining`), discrete Cayley–Fourier / Weyl noncommutativity (`cayley_fourier_noncommutativity_and_coherent_gabor`), and the `4 → 3 → 2 → 1` Clifford–Cantor rank contraction ladder (`two_scale_clifford_cantor_contraction_ladder`).
+* **C* Fractal Uncertainty & Banach Porosity Healing**: [CStarFractalUncertaintyAndBanachPorosity.lean](lean/InfoGeometry/OperatorAlgebra/CStarFractalUncertaintyAndBanachPorosity.lean) proves the C*-projection norm dichotomy (`norm_sa_idempotent_eq_zero_or_one`), Berezin–Toeplitz isometric conjugation (`norm_toeplitzOp_pow_eq_berezinOp_pow`), polynomial Fractal Uncertainty decay (`multiscaleLoc_fup_polynomial_decay`), Banach Newton–Peirce healing of `porousSymCompress` (`cstar_porousSymCompress_banach_healing`), and concrete rational Pythagorean `M₂(ℂ)` witnesses (`concrete_mat2c_pythagorean_fup_example`).
+* **Koszul–Maurer–Cartan, Twisted Cocycles & Artin Braid Poset**: [KoszulMaurerCartanCocycleBraidPoset.lean](lean/InfoGeometry/OperatorAlgebra/KoszulMaurerCartanCocycleBraidPoset.lean) formalizes the seven-node `KoszulCocycleBraidArchetype` diamond poset, Koszul curvature/dressing/Bianchi identities (`koszul_curvature_multiplication`, `differential_bianchi_identity`), twisted group 1-cocycles (`braided_pow_cocycle`), infinite-order `M₂(M₂(ℤ))` parabolic monodromy (`blkQ_unit_cocycle_and_infinite_order`), non-abelian `BraidGroup 3 →* (M₂(M₂(ℂ)))ˣ` (`quaternionicBraidGroup3Hom`), and `koszul_cocycle_braid_executable_certified_compilation`.
+* **Coherence JKO Flow, Wootters–Eguchi Bridge & Noncommutative Skew Torsion**: [CoherenceJKOFlowAndEguchiBridge.lean](lean/InfoGeometry/InformationGeometry/CoherenceJKOFlowAndEguchiBridge.lean) establishes unique proximal JKO minimization (`jkoGraceResolvent_is_unique_minimizer`), Otto–Villani Euler–Lagrange stationarity (`jkoGraceResolvent_otto_villani_stationarity`), the grade-1 Wootters–Eguchi pullback divergence identity (`wootters_eguchi_kl_grace_bridge`), algebraic Milnor–Riemann pair symmetry (`milnor_riemann_pair_symmetry`), and non-vanishing dual curvature sum on `Module.End ℝ (Fin 2 → ℝ)` (`noncommSkewConn_dual_curvature_sum_nonzero`).
+* **Freed–Wick Reflection Positivity, Projective Anomaly & McKean–Singer Index Poset**: [FreedWickReflectionAndTopologicalIndexPoset.lean](lean/InfoGeometry/OperatorAlgebra/FreedWickReflectionAndTopologicalIndexPoset.lean) formalizes the six-node `FreedQFTArchetype` diamond poset: Osterwalder–Schrader trace reflection positivity vs indefinite failure (`osTraceForm_nonneg_of_reflect_invariant`, `osTraceForm_pauliZ2_pauliX2_negative`), Euclidean vs Cayley unitary step (`cayleyStep2_solves_cayley_and_unitary`), irremovable `M₂(ℂ)ˣ` Pauli projective anomaly killed in `M₂(M₂(ℂ))ˣ` (`pauliProjUnit_anomaly_irremovable`, `doubledPauliHom`), Krein BRST cohomology (`hilbert_selfAdj_nilpotent_zero`, `krein_brst_witness`), McKean–Singer supertrace invariance (`superTrace_heatKernelPoly_invariant`, `diracJump3_invariant_index`), and `freed_wick_topological_executable_certified_compilation`.
+
+---
+
+## 19. Cantor Double-Cylinder Fractal Colimit, Felix Klein Erlangen 2.0 Invariants & Concrete Hilbert $H_{lp} \mathbb{R}$ Operator Representation
+
+**Owner Files:**
+- `lean/InfoGeometry/OperatorAlgebra/CantorDoubleCylinderFractalColimit.lean`
+- `lean/InfoGeometry/OperatorAlgebra/ErlangenDoubleCylinderSymmetryInvariants.lean`
+- `lean/InfoGeometry/Categorical/CantorDoubleCylinderColimitAlgebra.lean`
+
+**Mathematical Role:**
+Integrates the Cantor double-cylinder fractal colimit operator algebra with Felix Klein Erlangen 2.0 symmetry invariants, Krein doubled spaces, and the Bernoulli fractal measure into a canonical `Erlangen20Datum` and certified epistemic `TypedArchetype Unit .proved`:
+- **Double-Cylinder Stage & Inductive Colimit**:
+  Stage algebra `DoubleCylinderStage B n := Matrix (BitWord n) (BitWord n) B` (the $2^n \times 2^n$ matrix ring indexed by `BitWord n := Fin n → Bool`, with `DoubleCylinderWord n := BitWord n × BitWord n` indexing the matrix units `doubleCylinderUnit B n u v := Matrix.single u v (1 : B)` / `doubleCylinderOp B n u v`), injective bonding homomorphisms `doubleCylinderBond B n : DoubleCylinderStage B n →+* DoubleCylinderStage B (n + 1)` (`doubleCylinderBond_injective`, dyadic subdivision `doubleCylinderBond_unit` sending $E_{u,v} \mapsto E_{u0,v0} + E_{u1,v1}$), and inductive colimit ring `DoubleCylinderColimit B := DirectLimitSuperClosure (doubleCylinderBond B)` (via `_root_.DirectLimit`) with injective stage inclusions `doubleCylinderInclusion B n` (`doubleCylinderInclusion_injective`) and categorical `RingCat` colimit witness `doubleCylinderColimitWitness B : IsColimit (SequentialRingColimit.cocone (doubleCylinderBond B))`.
+- **Erlangen 2.0 Symmetry & Invariant Subring**:
+  Two-element symmetry group `G_swap := Multiplicative (ZMod 2)` acting by word bit-flip involution `notWord n : BitWord n → BitWord n` ($w \mapsto \neg w$, flipping `false ↔ true` on every bit; `stageSwapFun B n M u v := M (notWord n u) (notWord n v)`, on units `stageSwap_doubleCylinderUnit`: $\alpha_n(E_{u,v}) = E_{\neg u, \neg v}$) induces the stage ring automorphism `stageSwapEquiv B n : DoubleCylinderStage B n ≃+* DoubleCylinderStage B n`. By `stageSwap_commutes_bond`, `stageSwapEquiv` intertwines `doubleCylinderBond B n`, descending to the colimit automorphism `colimitSwapEquiv B : DoubleCylinderColimit B ≃+* DoubleCylinderColimit B` (built from `colimitSwapHom B`), symmetry action `erlangenDoubleCylinderSymmetryAction B : SymmetryAction G_swap (DoubleCylinderColimit B)`, and invariant subring `erlangenDoubleCylinderInvariantSubring B := invariantSubring (erlangenDoubleCylinderSymmetryAction B)`.
+- **Swap-Invariant Intrinsic Noncommutativity (R1)**:
+  For any nontrivial seed ring `[Ring B] [Nontrivial B]`, the swap-invariant symmetrized off-diagonal cylinder transitions `symmetrizedTransitionOp B n u v := doubleCylinderUnit B n u v + doubleCylinderUnit B n (notWord n u) (notWord n v)` (`stageSwap_symmetrizedTransitionOp`, `colimit_symmetrizedTransitionOp_isInvariant`) fail to commute at depth $n = 2$ on `depth2Word00` and `depth2Word01` (`depth2_symmetrizedTransitionOp_mul_ne`, `depth2_symmetrizedTransitionOp_lie_ne_zero`). Embedding via `doubleCylinderInclusion B 2` proves `erlangenDoubleCylinderInvariantSubring_noncommutative B` and non-vanishing Lie bracket `erlangenDoubleCylinderInvariantSubring_lie_ne_zero B` without scalar or diagonal surrogates.
+- **Concrete Hilbert Space Representation on $H_{lp} \mathbb{R}$ (R2)**:
+  Realized via Cuntz $O_2$ branch isometries `S_left_lp_clm`, `S_right_lp_clm` (`cuntzBranchCLM`, `cuntzPullbackCLM b := (cuntzBranchCLM b).adjoint`) on the completed $\ell^2$ carrier `H_lp ℝ` (`InfoGeometry.Canonical.ConcreteHilbertCommutation.H_lp ℝ`):
+  - Cylinder basis operator `bitWordUnitCLM n u v := (wordCLM n u).comp (wordPullbackCLM n v)` with exact matrix-unit multiplication law $(S_u S_v^*)(S_w S_z^*) = \delta_{v,w} S_u S_z^*$ (`cuntzPullbackCLM_comp_cuntzBranchCLM`, `wordPullbackCLM_comp_wordCLM`, `bitWordUnitCLM_comp`, `bitWordUnitCLM_mul`).
+  - Cuntz $O_2$ partition of unity (`cuntz_o2_partition_of_unity`) yields exact dyadic subdivision compatibility `bitWordUnitCLM_decomp` ($S_{u0} S_{v0}^* + S_{u1} S_{v1}^* = S_u S_v^*$) and bonding compatibility `stageRepresentationCLM_bond` (`stageRepresentationCLM (n + 1) (doubleCylinderBond ℝ n M) = stageRepresentationCLM n M`).
+  - Stage map `stageRepresentationCLM n : DoubleCylinderStage ℝ n → (H_lp ℝ →L[ℝ] H_lp ℝ)` (`∑ u, ∑ v, M u v • bitWordUnitCLM n u v`, packaged as `stageRepresentationRingHom` / `stageRepresentationAlgHom`) lifts via `_root_.DirectLimit.lift` (`stageRepresentationCLM_bondMap`, `directLimitLift`) to `colimitRepresentationCLM : DoubleCylinderColimit ℝ → (H_lp ℝ →L[ℝ] H_lp ℝ)` (`colimitRepresentationCLM_inclusion`, packaged with `instAlgebraRealDoubleCylinderColimit` as `colimitRepresentationRingHom`, `colimitRepresentationAlgHom`, `colimitRepresentationEndAlgHom`, and `colimitRepresentationLieHom`).
+  - Kernel-verified multiplicativity (`stageRepresentationCLM_mul`, `colimitRepresentationCLM_mul`, `colimitRepresentationCLM_lie`) and faithfulness/injectivity (`stageRepresentationCLM_injective`, `colimitRepresentationCLM_injective`, `colimitRepresentationEndAlgHom_injective`).
+- **Krein $J_{lp}$ Invariance & Sewn Chiral Anomaly Cancellation**:
+  Every cylinder word operator, stage operator, and colimit operator commutes with and is invariant under the Krein sewing involution `J_lp_clm` (`bitWordUnitCLM_commutes_J_lp_clm`, `bitWordUnitCLM_sewn_invariant`, `stageRepresentationCLM_sewn_invariant`, `colimitRepresentation_sewn_invariant`), yielding exact chiral anomaly cancellation against the canonical Cantor sewn vacuum `canonicalCantorSewnState` ($\Omega_{\mathrm{sewn}}$):
+  $$\langle \Omega_{\mathrm{sewn}}, \varepsilon_{lp} (\mathrm{colimitRepresentationCLM}(X)\, \Omega_{\mathrm{sewn}}) \rangle = 0$$
+  (`stageRepresentationCLM_chiral_zero`, `doubleCylinderColimit_canonicalVacuum_chiral_zero`).
+- **Bernoulli Measure, Erlangen 2.0 Datum & Certified Epistemic Archetype**:
+  Bundles Krein $\mathrm{Cl}(1,1)$ generators and `G_swap` action (`cantorDoubleCylinderSymmetryData`), invariant subring, noncommutativity, and complex Bernoulli trace evaluation `bitWordMatrixTraceFunctional_diagonal_bernoulli` (`cantorDoubleCylinderInvariantData`), concrete `Erlangen20Datum` `cantorDoubleCylinderErlangen20Datum : Erlangen20Datum ℝ (H_lp ℝ) (DoubleCylinderColimit ℝ) CantorDoubleCylinderSymmetryData CantorDoubleCylinderInvariantData` (with `operatorAlgebra := doubleCylinderOperatorSubalgebra`, `representation := colimitRepresentationLieHom`, and `cantorDoubleCylinderErlangen20Datum_representation_injective`), closed witness packet `cantorDoubleCylinderWitnessPacketModel`, and kernel-verified `cantorDoubleCylinderErlangenArchetype : TypedArchetype Unit .proved`.
+
+**Kernel-Verified Archetypes:**
+- `cantorDoubleCylinderErlangenArchetype` (`TypedArchetype Unit .proved`, phase 3)
+
+**Boundary Guardrails:**
+- Grounded strictly in Cuntz $O_2$ bounded operators on `H_lp ℝ` and genuine associative/Lie matrix algebras.
+- Preserves full noncommutative operator content; no scalar, diagonal, or abelian simplifications.
+- Does not claim solutions to open millennium problems (continuum 4D Yang-Mills mass gap or Riemann Hypothesis remain out of scope).
+
+---
+
+## 20. Constructive Unification of Penrose & 4D Colimit–Continuum Lanes
+
+**Owner Files:**
+- `lean/InfoGeometry/Twistor/PenroseMinkowskiTetradDyadBridge.lean`
+- `lean/InfoGeometry/OperatorAlgebra/PenroseConformalAndInflationColimitBridge.lean`
+- `lean/InfoGeometry/Categorical/FourDimColimitContinuumSynthesis.lean`
+- Wired into `lean/InfoGeometry/Foundations/InfoGeometryCoreLibrary.lean` (`penrose_spinor_dyad_and_oblique_defect_witness`, `penrose_ccc_so55_and_fibonacciK0_kite_witness`, `fourDim_dyadic_colimit_hom_duality_witness`).
+
+**Mathematical Role:**
+Connects the separate Penrose lanes and 4D colimit–continuum corridors via explicit morphisms and kernel-checked theorems without custom `structure` wish-lists or `sorry`:
+- **Minkowski `(1,3)` ↔ Newman–Penrose Tetrad ↔ Pauli Soldering ↔ Penrose–Onsager–Yang Dyads ↔ Oblique/Moore–Penrose Defect**:
+  Establishes `minkowski13ToNPCarrier : Minkowski13 →ₗ[ℝ] NewmanPenrose.Carrier`, the complex-linear isomorphism `npCarrierToSpacetimeMatrix : NewmanPenrose.Carrier ≃ₗ[ℂ] Matrix (Fin 2) (Fin 2) ℂ` (`lorentzBilinear x x = -2 * det(npCarrierToSpacetimeMatrix x)`), exact dyad-soldering equality `paravectorToSolderingMatrix (spinorToMinkowski13 χ) = rankOneKernel χ` (`Q55`-null, future-causal, $U(1)$-invariant, symplectic-mate incident), and the closed-form Euclidean Moore–Penrose inverse `wittIncidenceBlockMPInverse` for `wittIncidenceBlockIdempotent X` with square-zero nonzero defect `incidenceProjectorMismatch_eq_zero_iff` and T16 non-normality witness.
+- **`SO(5,5)` Dirac Conformal Null-Cone Crossover & `FibonacciK0` Kite/Dart Bott Colimit**:
+  Instantiates `AeonConformalCrossover Minkowski13 Minkowski13 (Fin 10 → ℝ)` (`minkowskiSO55AeonCrossover`) and non-constant `CrossoverLightlikeGrammar` (`spatialRatioConformalGrammar`) via the projective Dirac embedding `diracNullConeEmbed`, proving preservation of `NullQuadric` under `so55Boost`; constructs the ring-homomorphic evaluation `evalFibonacciK0OnPenroseKite` (`k0Mul` ↦ noncommutative ring product under `penroseDartOp P A C = 1`) with an explicit $M_2(\mathbb{R})$ noncommutativity witness and `cl55ToBottStage k` transport into `Cl11TensorTowerLimit.Limit`.
+- **4D Dyadic Spacetime Colimit–Continuum Synthesis & Hom Duality**:
+  Promotes `ConcreteProjectiveLimit` (with `equivOppositeSections`), universal colimit–inverse-limit Hom duality `addCommGroupDirectLimitHomEquivProjectiveLimit`, and `BidirectionalRetractionSectionTower` cleanly into `lean/`, constructs the $16^n$-site 4D dyadic refinement tower (`SpacetimeLattice4D`, `Field4DContinuum`), proves injective stage embeddings and faithful `DirectLimitSuperClosure` injection, and synthesizes 4D Amplituhedron retracts, Balaban two-stage coarse-graining (`twoStage_coarsePrecision_inv` + T16 witness), Zorn UHF monoidal colimit naturality, and dense GNS Hilbert colimit isometries.
+
+**Boundary Guardrails:**
+- Separates projective $O(5,5)$ conformal null-cone crossover and finite-stage/algebraic colimit–inverse-limit duality from unresolved continuum 4D Yang–Mills QFT and global curved-manifold CFT representation frontiers recorded in [`OPEN_DEBT_PROBLEMS.md`](OPEN_DEBT_PROBLEMS.md).
+
+---
+
+## 21. Classical & Differential Felix Klein Erlangen Pillars (Icosahedral $A_5$ / Modular $j$, Birkhoff–Hilbert Cone Metric, Smooth Cartan Geometries)
+
+**Owner Files:**
+- `lean/InfoGeometry/Erlangen/KleinIcosahedralQuinticModularJ.lean`
+- `lean/InfoGeometry/Erlangen/BirkhoffHilbertConeMetric.lean`
+- `lean/InfoGeometry/Erlangen/SmoothCartanGeometry.lean`
+- Wired into `lean/InfoGeometry/AllExhaustive.lean` and `tests/InfoGeometryTests.lean`; boundary separation for smooth Cartan vs. split-quadratic tangent bundles recorded in [`docs/ERLANGEN_2_THEOREM_HONEST_MANIFEST.md`](ERLANGEN_2_THEOREM_HONEST_MANIFEST.md).
+
+**Mathematical Role:**
+Completes three previously absent Felix Klein Erlangen pillars via native Mathlib formalizations with zero `sorry`, `admit`, `native_decide`, or custom axioms:
+- **Classical Felix Klein Icosahedral Group $A_5 \subset \mathrm{PSU}(2)$, Quintic Resolution, & Modular $j$-Invariant Hauptmodul**:
+  Constructs unit-quaternion realizations inside `SU2` (`icosianGenA_pow_five`, `icosianGenB_sq`, `icosianGenAB_cube`) and proves `kleinIcosahedralMulEquiv : alternatingGroup (Fin 5) ≃* icosahedralPSU2Subgroup` (`kleinIcosahedralPSU2Embedding_injective`) via permutation action on Klein's five inscribed octahedral frames (`cubeFrame_injective`); establishes non-solvability (`not_isSolvable_icosahedralPSU2Subgroup`, `quintic_galois_A5_not_solvableByRad`), Klein's binary icosahedral syzygy `T^2 + H^3 = 1728 F^5` (`klein_icosahedral_syzygy_1728`), Tschirnhaus-reduced quintic resolvent normalization (`klein_icosahedral_single_parameter_resolvent`), and the Mathlib modular `j`-invariant `E₄³ / Δ` (`jInvariant_smul`, `jInvariant_sub_1728`, `jInvariant_apply_I`, `jInvariant_apply_rho`, `mdifferentiable_jInvariant`, `jInvariant_not_modularForm_weight_zero`), together with explicit T16 matrix non-commutativity witnesses over `ℂ`, `ℤ`, and `ℝ` (`matQuatI_mul_matQuatJ_ne`, `modularMatSZ_mul_modularMatTZ_ne`, `modularMatSR_mul_modularMatTR_ne`).
+- **General Birkhoff–Hilbert Projective Cone Metric & Contraction Theorem**:
+  Formalizes `birkhoffHilbertMetric` on arbitrary proper convex cones (`ProperCone ℝ E`), proves ray-uniqueness iff zero distance under cone salience (`birkhoffHilbertMetric_eq_zero_iff_same_ray`), exact equality with `(1 / 2) * Real.log (scalarCrossRatio τ_a τ_x τ_y τ_b)` on 2-dimensional orthant chords (`orthant2_chord_identity`), Birkhoff's projective contraction bound (`birkhoff_contraction_theorem`) instantiated at `1/3` (`posMatA_contraction_one_third`), and `posMatA_mul_posMatB_ne`.
+- **Smooth Manifold Cartan Geometries (`(P → M, ω ∈ Ω¹(P, 𝔤))`)**:
+  Formalizes `SmoothCartanGeometry` over Mathlib `IsManifold`, proves linear equivalence between the horizontal quotient `T_p P / V_p P` and `𝔤 / 𝔥` (`cartanTangentQuotientEquiv`), flatness of the Maurer–Cartan form on any Lie group and `GL(2, ℝ)` (`maurerCartan_cartanCurvature_eq_zero`, `gl2R_maurerCartan_flat`), an explicit non-flat/torsionful family on the 3-dimensional homothety algebra `HomothetyLieAlg` (`homothetyCartanGeometry`, `homothetyCartanGeometry_curvature_formula`, `homothetyCartanGeometry_curved_of_ne_zero`, `homothetyCartanGeometry_torsion_free_at_origin`, `homothetyCartanGeometry_torsion_nonzero_away_from_origin`), and scale-invariant curvature readout on the Erlangen 2.0 fiber bundle (`cartanFiberErlangen20Datum`, `homothety_fiberEnd_noncommutative`, `homothety_curvature_scale_invariantReadout`).
+
+**Boundary Guardrails:**
+- Keeps the meromorphic modular `j`-invariant Hauptmodul (`E₄³ / Δ`, holomorphic on `ℍ` with a cusp pole) distinct from everywhere-holomorphic weight-0 modular forms (`jInvariant_not_modularForm_weight_zero`).
+- Keeps `birkhoffHilbertMetric` as a projective pseudometric / ray-metric on open interior cone rays distinct from affine Riemannian SPD Fisher–BKM metrics.
+- Preserves the manifest firewall in [`docs/ERLANGEN_2_THEOREM_HONEST_MANIFEST.md`](ERLANGEN_2_THEOREM_HONEST_MANIFEST.md) separating smooth Cartan soldering `T_p P / V_p P ≃ₗ[ℝ] 𝔤 / 𝔥` from any unproved global `W_{4,4} ≅ TM ⊕ T*M` identification.

@@ -37,10 +37,14 @@ theorem blahut_ellipsoid_iff_core (x y r : ℝ) :
 
 theorem cartan_ellipsoid_iff_core (x y r : ℝ) :
     InfoGeometry.Canonical.CartanDicksonColimitRH.InDikinEllipsoid x y r ↔
-      InfoGeometry.Geometry.DikinOrbitCore.ellipsoid x y r := Iff.rfl
+      InfoGeometry.Geometry.DikinOrbitCore.ellipsoid x y r := by
+  change ((y - x) ^ 2 * (1 / x ^ 2) ≤ r ^ 2) ↔
+    (1 / x ^ 2) * (y - x) ^ 2 ≤ r ^ 2
+  constructor <;> intro h <;> nlinarith [mul_comm ((y - x) ^ 2) (1 / x ^ 2)]
 
 theorem blahut_ellipsoid_iff_cartan (x y r : ℝ) :
     InfoGeometry.Quantum.DikinBlahutOrbits.InDikinEllipsoid x y r ↔
-      InfoGeometry.Canonical.CartanDicksonColimitRH.InDikinEllipsoid x y r := Iff.rfl
+      InfoGeometry.Canonical.CartanDicksonColimitRH.InDikinEllipsoid x y r :=
+  (blahut_ellipsoid_iff_core x y r).trans (cartan_ellipsoid_iff_core x y r).symm
 
 end InfoGeometry.Canonical.DikinOrbitUnification

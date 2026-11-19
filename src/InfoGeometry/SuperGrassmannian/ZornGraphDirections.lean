@@ -65,7 +65,19 @@ theorem mem_nativeIdempotentDirections (T : Module.End R (ZornVectorMatrix R)) :
   have hm (A B : Module.End R (ZornVectorMatrix R)) :
       splitEquiv.conj (A * B) = splitEquiv.conj A * splitEquiv.conj B :=
     splitEquiv.conj_comp B A
-  rw [← hm, ← hm, ← map_add, splitEquiv.conj.injective.eq_iff]
+  constructor
+  · intro h
+    apply splitEquiv.conj.injective
+    simpa only [map_add, hm] using h
+  · intro h
+    calc
+      splitEquiv.conj (L_map (R := R) ZornVectorMatrix.E11) * splitEquiv.conj T +
+          splitEquiv.conj T * splitEquiv.conj (L_map (R := R) ZornVectorMatrix.E11) =
+          splitEquiv.conj
+            (L_map (R := R) ZornVectorMatrix.E11 * T +
+              T * L_map (R := R) ZornVectorMatrix.E11) := by
+                rw [← hm, ← hm, ← map_add]
+      _ = splitEquiv.conj T := congrArg splitEquiv.conj h
 
 /-- Both independently varying corners, transported back to the actual octonion module. -/
 def nativeDirectionsEquiv :

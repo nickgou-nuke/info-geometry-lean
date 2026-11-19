@@ -89,7 +89,7 @@ theorem injective_topologicalHeisenbergFiniteModeColimitMap :
 theorem isLocallyConstant_topologicalHeisenbergFiniteModeColimitMap :
     IsLocallyConstant (topologicalHeisenbergFiniteModeColimitMap (𝕜 := 𝕜)) := by
   unfold topologicalHeisenbergFiniteModeColimitMap
-  exact IsLocallyConstant.of_discrete
+  exact IsLocallyConstant.of_discrete _
 
 end
 end InfoGeometry.Topology.HeisenbergFiniteModeColimitTopological

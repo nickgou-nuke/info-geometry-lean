@@ -2468,6 +2468,7 @@ import InfoGeometry.Categorical.FibonacciBraidedCategoryLogCFTExchangeSynthesis
 import InfoGeometry.Canonical.SouriauBostConnesKMSBoundarySynthesis
 import InfoGeometry.Algebra.Pin55SplitJordanSpinorEquivarianceSynthesis
 import InfoGeometry.Topology.RohozhkinDelaunayPureBraidUnitsSynthesis
+import InfoGeometry.Canonical.DoubledMinkowskiCircularPeirceYangMills
 
 namespace InfoGeometry
 

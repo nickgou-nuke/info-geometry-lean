@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.BoundedModularFlowCalibration
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
@@ -287,7 +292,7 @@ theorem toMinimal_of_flow_invariant
 The bounded KMS carrier inherits the Drazin regular-sector commutant stability
 from the bounded modular-flow calibration when that flow fixes `P_D`.
 -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem flow_preserves_commuting_with_spectralProjector
     (hFix : B.boundedFlow.FlowFixesSpectralProjector)
     (A : EndH)
@@ -306,7 +311,7 @@ The Massieu/partition-potential shift is compatible with the bounded KMS flow
 when the bounded modular-flow owner is supplied with Souriau `opScale`
 compatibility.
 -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem partition_potential_flow_central
     (hScale : B.boundedFlow.FlowCommutesWithOpScale)
     (t : ℝ) (A : EndH) :

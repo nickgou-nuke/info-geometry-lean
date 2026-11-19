@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.WeylAnomalySource
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConformalAlgebra
@@ -229,7 +234,7 @@ unit-relative-volume bit route.
 This removes the explicit `hScaleZero : CI.chiralScale = 0` gate when the
 caller already owns the RN/Kähler witness packet forcing zero chiral scale.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_unitRelativeVolumeBit_of_structuredProjectorHypotheses
     {n : Nat}
     (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
@@ -254,7 +259,7 @@ This removes the raw `hProj`/`hLeft` projector pair together with the explicit
 `hScaleZero : CI.chiralScale = 0` gate when the caller already owns both
 constructive witness packets.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_unitRelativeVolumeBit_of_structuredProjectorWitness
     {n : Nat}
     (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
@@ -276,7 +281,7 @@ This removes the explicit `(hScaleFromKahler, bit)` pair from the theorem
 surface when the caller already owns the proof-carrying
 `UnitRelativeVolumeScaleWitness`.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_unitRelativeVolumeScaleWitness_of_structuredProjectorWitness
     {n : Nat}
     {M : InfoGeometry.Canonical.MoE.SinkhornMatrix n}
@@ -400,7 +405,7 @@ This removes the explicit bridge hypothesis
 when the caller already owns the RN/Kähler witness packet forcing
 `CI.chiralScale = 0`.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem semanticCollapsePacket_of_unitRelativeVolumeBit_of_structuredProjectorHypotheses
     {n : Nat}
     (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
@@ -427,7 +432,7 @@ This removes the raw `hProj`/`hLeft` projector pair together with the explicit
 bridge-to-zero-scale hypothesis when the caller already owns both constructive
 witness packets.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem semanticCollapsePacket_of_unitRelativeVolumeBit_of_structuredProjectorWitness
     {n : Nat}
     (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
@@ -451,7 +456,7 @@ This removes the explicit `(hScaleFromKahler, bit)` pair from the theorem
 surface when the caller already owns the proof-carrying
 `UnitRelativeVolumeScaleWitness`.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem semanticCollapsePacket_of_unitRelativeVolumeScaleWitness_of_structuredProjectorWitness
     {n : Nat}
     {M : InfoGeometry.Canonical.MoE.SinkhornMatrix n}

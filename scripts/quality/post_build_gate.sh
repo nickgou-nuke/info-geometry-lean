@@ -11,11 +11,16 @@ MODE="incremental"
 BASE_REF=""
 HEAD_REF="HEAD"
 EXPLICIT_HEAD=false
+CHANGED_ONLY="${POST_BUILD_GATE_CHANGED_ONLY:-0}"
 
 for arg in "$@"; do
     case "$arg" in
         --incremental|-i|incremental)
             MODE="incremental"
+            ;;
+        --changed-only)
+            MODE="incremental"
+            CHANGED_ONLY="1"
             ;;
         --full|full)
             MODE="full"
@@ -71,6 +76,45 @@ run_gate() {
     fi
 }
 
+ADDED_LAKEFILE_LEAN_TARGETS=""
+ADDED_LAKEFILE_TEST_TARGETS=""
+ADDED_SRC_LAKEFILE_TARGETS=""
+
+classify_additive_lakefile_targets() {
+    local cfg_file="$1"
+    local src_prefix="$2"
+    local diff_lines mod rel_path out_lean="" out_test=""
+    diff_lines="$(git diff -U0 "$BASE_REF" "$HEAD_REF" -- "$cfg_file" 2>/dev/null | sed -n '/^@@/,$p' | grep -E '^[+-]' || true)"
+    [ -n "$diff_lines" ] || return 1
+    if grep -Eq '^-' <<<"$diff_lines"; then
+        return 1
+    fi
+    if grep -Evq '^\+[[:space:]]*(\.(one|submodules|andSubmodules)[[:space:]]+`[A-Za-z0-9_.]+|`[A-Za-z0-9_.]+),?[[:space:]]*$' <<<"$diff_lines"; then
+        return 1
+    fi
+    while IFS= read -r mod; do
+        [ -n "$mod" ] || continue
+        if [ "$mod" = "AuditNativeRun" ]; then
+            continue
+        fi
+        rel_path="${mod//./\/}"
+        if [ "$src_prefix" = "lean" ] && { [ -f "tests/${rel_path}.lean" ] || [ -d "tests/${rel_path}" ]; }; then
+            out_test="${out_test:+$out_test }$mod"
+        elif [ -f "${src_prefix}/${rel_path}.lean" ] || [ -d "${src_prefix}/${rel_path}" ]; then
+            out_lean="${out_lean:+$out_lean }$mod"
+        else
+            return 1
+        fi
+    done < <(sed -E 's/^\+[[:space:]]*(\.(one|submodules|andSubmodules)[[:space:]]+)?`([A-Za-z0-9_.]+),?[[:space:]]*$/\3/' <<<"$diff_lines")
+    if [ "$src_prefix" = "lean" ]; then
+        ADDED_LAKEFILE_LEAN_TARGETS="$out_lean"
+        ADDED_LAKEFILE_TEST_TARGETS="$out_test"
+    else
+        ADDED_SRC_LAKEFILE_TARGETS="$out_lean"
+    fi
+    return 0
+}
+
 if [ "$MODE" = "incremental" ]; then
     # Determine base ref for git diff
     if [ -z "$BASE_REF" ]; then
@@ -118,8 +162,14 @@ if [ "$MODE" = "incremental" ]; then
         if [ -f "$path" ]; then printf '%s\n' "$path"; fi
     done || true)
     ALL_CHANGED_LEAN_FILES=$(git diff --diff-filter=d --name-only "$BASE_REF" "$HEAD_REF" 2>/dev/null | grep -E '(^|/)[^/]+\.lean$' || true)
-    TEST_LEAN_FILES=$(grep '^tests/.*\.lean$' <<<"$CHANGED_FILES" || true)
-    AUDIT_TOOL_LEAN_FILES=$(grep -E '^tools/quality/(OperatorGeometryDeclarationAudit|TwoBoundaryDeclarationAudit)\.lean$' <<<"$CHANGED_FILES" || true)
+    CHANGED_DISABLED_LEAN_FILES=$(git diff --diff-filter=d --name-only "$BASE_REF" "$HEAD_REF" 2>/dev/null | grep '\.lean\.disabled$' | while IFS= read -r path; do
+        if [ -f "$path" ]; then printf '%s\n' "$path"; fi
+    done || true)
+    DELETED_TEST_LEAN_FILES=$(git diff --diff-filter=D --name-only "$BASE_REF" "$HEAD_REF" -- 'tests/*.lean' 'tests/**/*.lean' || true)
+    TEST_LEAN_FILES=$(grep '^tests/.*\.lean$' <<<"$CHANGED_FILES" | while IFS= read -r path; do
+        if [ -f "$path" ]; then printf '%s\n' "$path"; fi
+    done || true)
+    AUDIT_TOOL_LEAN_FILES=$(grep -E '^(tools/quality/(OperatorGeometryDeclarationAudit|TwoBoundaryDeclarationAudit)|tools/infra/axiom_index)\.lean$' <<<"$CHANGED_FILES" || true)
     # This selected package reuses canonical owners and has its own shared-lock
     # audit entry point. Route only its exact configuration and wrapper paths.
     CLIFFORD_PEIRCE_WALSH_FILES=$(grep -E '^verification/clifford-peirce-walsh/(lakefile\.lean|lake-manifest\.json|lean-toolchain|check\.py)$' <<<"$CHANGED_FILES" || true)
@@ -127,8 +177,19 @@ if [ "$MODE" = "incremental" ]; then
     # an incremental diff must build that changed module target, not promote
     # the whole root package to `InfoGeometry.All`.
     BUILD_CONFIG_FILES=$(grep -E '^(lakefile\.lean|lake-manifest\.json|lean-toolchain|lib/InfoGeometryCore/lakefile\.lean|lib/InfoGeometryCore/lake-manifest\.json)$|^lib/InfoGeometryCore/.*\.lean$' <<<"$CHANGED_FILES" || true)
+    if [ "$CHANGED_ONLY" = "1" ]; then
+        BUILD_CONFIG_FILES=""
+        SRC_BUILD_CONFIG_FILES=""
+    else
+        if grep -Fxq 'lakefile.lean' <<<"$BUILD_CONFIG_FILES" && classify_additive_lakefile_targets "lakefile.lean" "lean"; then
+            BUILD_CONFIG_FILES="$(grep -Fxv 'lakefile.lean' <<<"$BUILD_CONFIG_FILES" || true)"
+        fi
+        if grep -Fxq 'lakefile.src.lean' <<<"$SRC_BUILD_CONFIG_FILES" && classify_additive_lakefile_targets "lakefile.src.lean" "src"; then
+            SRC_BUILD_CONFIG_FILES=""
+        fi
+    fi
     UNSUPPORTED_PACKAGE_CONFIGS=$(grep -E '^(lean/lakefile\.lean|lean/lake-manifest\.json|lean/lean-toolchain|lean_sandbox/lakefile\.lean|lean_sandbox/lake-manifest\.json|lean_sandbox/lean-toolchain|proofs/lakefile\.(toml|lean)|proofs/lake-manifest\.json|proofs/lean-toolchain|verification/spinorial-core/lakefile\.lean|verification/spinorial-core/lake-manifest\.json|verification/spinorial-core/lean-toolchain)$' <<<"$CHANGED_FILES" || true)
-    UNROUTED_LEAN_FILES=$(grep -Ev '^(lakefile\.(src\.)?lean|lean-toolchain|lean/InfoGeometry\.lean|lean/DAG\.lean|lean/GrandUnifiedNoncommutativeOperatorSynthesis\.lean|src/InfoGeometry\.lean|verification/clifford-peirce-walsh/lakefile\.lean|tools/quality/(OperatorGeometryDeclarationAudit|TwoBoundaryDeclarationAudit)\.lean)$|^lean/(InfoGeometry|DAG|Agent|Docs|Socratic|Omega|VirasoroProject|PrimitiveSetsAboveX|SelfReference|scripts|Experimental|sandbox)/.*\.lean$|^src/InfoGeometry/.*\.lean$|^proofs/.*\.lean$|^lib/InfoGeometryCore/.*\.lean$|^scratch/.*\.lean$|^tests/.*\.lean$' <<<"$ALL_CHANGED_LEAN_FILES" || true)
+    UNROUTED_LEAN_FILES=$(grep -Ev '^(lakefile\.(src\.)?lean|lean-toolchain|lean/(Agent|AuditNative|AuditNativeRun|AuditStrict|B3PresentedGroup|CheckBasis|CheckTemp|DAG|Docs|Experimental|GrandPartitionAll|GrandPartitionEuler|GrandPartitionOnline|GrandPartitionPolynomial|GrandPartitionProbability|GrandPartitionRational|GrandPartitionRobustPoisson|GrandPartitionTransform|GrandUnifiedNoncommutativeOperatorSynthesis|InfoGeometry|KaplanskyCliffordBridge|NonIsoConf3OrlikSolomon|Omega|PrimitiveSetsAboveX|SelfReference|Socratic|SplitOctonionBraidSU3|Test|TestFin|VirasoroProject|YangBaxterQSwap|YangBaxterZornBridge|ZornScalingFlow|ast_export_test|temp_test|test_fixes2|test_reflection|test_rpow|test_selfconcordance)\.lean|src/(Agent|AuditNative|AuditNativeRun|AuditStrict|B3PresentedGroup|CheckBasis|CheckTemp|DAG|Docs|Experimental|GrandPartitionAll|GrandPartitionEuler|GrandPartitionOnline|GrandPartitionPolynomial|GrandPartitionProbability|GrandPartitionRational|GrandPartitionRobustPoisson|GrandPartitionTransform|InfoGeometry|KaplanskyCliffordBridge|NonIsoConf3OrlikSolomon|Omega|PrimitiveSetsAboveX|SelfReference|Socratic|SplitOctonionBraidSU3|Test|TestFin|VirasoroProject|YangBaxterQSwap|YangBaxterZornBridge|ZornScalingFlow|ast_export_test|temp_test|test_fixes2|test_reflection|test_rpow|test_selfconcordance)\.lean|verification/clifford-peirce-walsh/lakefile\.lean|tools/quality/(OperatorGeometryDeclarationAudit|TwoBoundaryDeclarationAudit)\.lean|tools/infra/axiom_index\.lean)$|^lean/(InfoGeometry|DAG|Agent|Docs|Socratic|Omega|VirasoroProject|PrimitiveSetsAboveX|SelfReference|scripts|Experimental|sandbox|lean)/.*\.lean$|^src/(InfoGeometry|DAG|Agent|Docs|Socratic|Omega|VirasoroProject|SelfReference|scripts|Experimental|sandbox)/.*\.lean$|^proofs/.*\.lean$|^lib/InfoGeometryCore/.*\.lean$|^scratch/.*\.lean$|^tests/.*\.lean$' <<<"$ALL_CHANGED_LEAN_FILES" || true)
 
     if [ -n "$UNSUPPORTED_PACKAGE_CONFIGS" ]; then
         echo "  ❌ Nested Lake project configuration changed, but this root gate has no package-specific locked build route:" >&2
@@ -147,13 +208,20 @@ if [ "$MODE" = "incremental" ]; then
         && [ -z "$SRC_CHANGED_LEAN_FILES" ] && [ -z "$DELETED_SRC_LEAN_FILES" ] \
         && [ -z "$SRC_BUILD_CONFIG_FILES" ] \
         && [ -z "$PROOFS_CHANGED_LEAN_FILES" ] && [ -z "$DELETED_PROOFS_LEAN_FILES" ] \
-        && [ -z "$BUILD_CONFIG_FILES" ]; then
+        && [ -z "$BUILD_CONFIG_FILES" ] \
+        && [ -z "$ADDED_LAKEFILE_LEAN_TARGETS" ] && [ -z "$ADDED_SRC_LAKEFILE_TARGETS" ]; then
         echo "  ℹ No Lean source or build-configuration files modified in range ($BASE_REF..$HEAD_REF)."
         echo "  ⏩ Skipping Lake build and Lean semantic audits."
     else
         if [ -n "$CHANGED_LEAN_FILES" ]; then
             echo "  Modified Lean files:"
             sed 's/^/    - /' <<<"$CHANGED_LEAN_FILES"
+        fi
+        if [ -n "$ADDED_LAKEFILE_LEAN_TARGETS" ]; then
+            echo "  Added lakefile.lean targets: $ADDED_LAKEFILE_LEAN_TARGETS"
+        fi
+        if [ -n "$ADDED_SRC_LAKEFILE_TARGETS" ]; then
+            echo "  Added lakefile.src.lean targets: $ADDED_SRC_LAKEFILE_TARGETS"
         fi
         if [ -n "$DELETED_LEAN_FILES" ]; then
             echo "  Deleted Lean files (umbrella build required to detect dangling imports):"
@@ -173,10 +241,27 @@ if [ "$MODE" = "incremental" ]; then
         fi
 
         # 1. Locked Lake builds (incremental targets or umbrella if configuration/all changed)
+        TARGETS=$(grep -E '^lean/(InfoGeometry|DAG|Agent|Docs|Socratic|Omega|VirasoroProject|PrimitiveSetsAboveX|SelfReference|scripts|Experimental|sandbox|lean)/.*\.lean$' <<<"$CHANGED_LEAN_FILES" | sed -e 's|^lean/||' -e 's|\.lean$||' -e 's|/|.|g' || true)
+        TOP_LEVEL_TARGETS=$(grep -E '^lean/[^/]+\.lean$' <<<"$CHANGED_LEAN_FILES" | grep -Ev '^lean/(lakefile|AuditNativeRun)\.lean$' | sed -e 's|^lean/||' -e 's|\.lean$||' || true)
+        if [ -n "$TOP_LEVEL_TARGETS" ]; then
+            TARGETS="${TARGETS:+$TARGETS }$TOP_LEVEL_TARGETS"
+        fi
+        if [ -n "$ADDED_LAKEFILE_LEAN_TARGETS" ]; then
+            TARGETS="${TARGETS:+$TARGETS }$ADDED_LAKEFILE_LEAN_TARGETS"
+        fi
+        if [ -n "$TARGETS" ]; then
+            TARGETS="$(tr ' ' '\n' <<<"$TARGETS" | grep -Ev '^AuditNativeRun$' | awk 'NF && !seen[$0]++' | paste -sd' ' - || true)"
+        fi
         if [ -n "$BUILD_CONFIG_FILES" ] || [ -n "$DELETED_LEAN_FILES" ]; then
             run_check "Locked Lake build (umbrella)" \
                 python3 tools/infra/run_locked_lake_build.py \
                   --wait-for-build-lock InfoGeometry.All
+            EXTRA_NON_IG_TARGETS=$(tr ' ' '\n' <<<"$TARGETS" | grep -Ev '^($|InfoGeometry(\.|$)|AuditNative$|AuditNativeRun$)' || true)
+            if [ -n "$EXTRA_NON_IG_TARGETS" ]; then
+                run_check "Locked Lake build (changed non-umbrella targets)" \
+                    python3 tools/infra/run_locked_lake_build.py \
+                      --wait-for-build-lock $EXTRA_NON_IG_TARGETS
+            fi
         fi
         if [ -n "$DELETED_PROOFS_LEAN_FILES" ]; then
             run_check "Locked Lake build (proofs umbrella)" \
@@ -184,13 +269,6 @@ if [ "$MODE" = "incremental" ]; then
                   --wait-for-build-lock proofs
         fi
         if [ -z "$BUILD_CONFIG_FILES" ] && [ -z "$DELETED_LEAN_FILES" ]; then
-            TARGETS=$(grep -E '^lean/(InfoGeometry|DAG|Agent|Docs|Socratic|Omega|VirasoroProject|PrimitiveSetsAboveX|SelfReference|scripts|Experimental)/.*\.lean$' <<<"$CHANGED_LEAN_FILES" | sed -e 's|^lean/||' -e 's|\.lean$||' -e 's|/|.|g' || true)
-            if grep -Fxq 'lean/InfoGeometry.lean' <<<"$CHANGED_LEAN_FILES"; then
-                TARGETS="${TARGETS:+$TARGETS }InfoGeometry"
-            fi
-            if grep -Fxq 'lean/GrandUnifiedNoncommutativeOperatorSynthesis.lean' <<<"$CHANGED_LEAN_FILES"; then
-                TARGETS="${TARGETS:+$TARGETS }GrandUnifiedNoncommutativeOperatorSynthesis"
-            fi
             if [ -n "$TARGETS" ]; then
                 run_check "Locked Lake build (incremental targets)" \
                     python3 tools/infra/run_locked_lake_build.py \
@@ -212,11 +290,20 @@ if [ "$MODE" = "incremental" ]; then
             run_check "Locked Lake build (src umbrella)" \
                 python3 tools/infra/run_locked_lake_build.py \
                   --wait-for-build-lock --source-lane InfoGeometry.All
-        elif [ -n "$SRC_CHANGED_LEAN_FILES" ]; then
-            SRC_TARGETS=$(sed -e 's|^src/||' -e 's|\.lean$||' -e 's|/|.|g' <<<"$SRC_CHANGED_LEAN_FILES")
-            run_check "Locked Lake build (src incremental targets)" \
-                python3 tools/infra/run_locked_lake_build.py \
-                  --wait-for-build-lock --source-lane $SRC_TARGETS
+        elif [ -n "$SRC_CHANGED_LEAN_FILES" ] || [ -n "$ADDED_SRC_LAKEFILE_TARGETS" ]; then
+            SRC_TARGETS=""
+            if [ -n "$SRC_CHANGED_LEAN_FILES" ]; then
+                SRC_TARGETS=$(sed -e 's|^src/||' -e 's|\.lean$||' -e 's|/|.|g' <<<"$SRC_CHANGED_LEAN_FILES" | grep -Ev '^AuditNativeRun$' || true)
+            fi
+            if [ -n "$ADDED_SRC_LAKEFILE_TARGETS" ]; then
+                SRC_TARGETS="${SRC_TARGETS:+$SRC_TARGETS }$ADDED_SRC_LAKEFILE_TARGETS"
+            fi
+            SRC_TARGETS="$(tr ' ' '\n' <<<"$SRC_TARGETS" | grep -Ev '^AuditNativeRun$' | awk 'NF && !seen[$0]++' | paste -sd' ' - || true)"
+            if [ -n "$SRC_TARGETS" ]; then
+                run_check "Locked Lake build (src incremental targets)" \
+                    python3 tools/infra/run_locked_lake_build.py \
+                      --wait-for-build-lock --source-lane $SRC_TARGETS
+            fi
         fi
 
         # 2. Incremental Axiom & Debt Audit
@@ -229,24 +316,65 @@ if [ "$MODE" = "incremental" ]; then
         fi
 
         # 3. Incremental Semantic Content Audit
-        run_gate "Semantic Content Audit (incremental)" \
-            python3 tools/quality/semantic_content_audit.py --file-prefix lean --gate
-        if [ -n "$PROOFS_CHANGED_LEAN_FILES" ]; then
+        if [ -n "$BUILD_CONFIG_FILES" ] || [ -n "$DELETED_LEAN_FILES" ]; then
+            run_gate "Semantic Content Audit (incremental)" \
+                python3 tools/quality/semantic_content_audit.py --file-prefix lean --gate
+        elif [ -n "$CHANGED_LEAN_FILES" ]; then
+            LEAN_SEMANTIC_ARGS=()
+            while IFS= read -r path; do
+                [ -n "$path" ] || continue
+                LEAN_SEMANTIC_ARGS+=(--file-prefix "$path")
+            done <<<"$CHANGED_LEAN_FILES"
+            run_gate "Semantic Content Audit (incremental)" \
+                python3 tools/quality/semantic_content_audit.py "${LEAN_SEMANTIC_ARGS[@]}" --gate
+        fi
+        if [ -n "$DELETED_PROOFS_LEAN_FILES" ]; then
             run_gate "Semantic Content Audit (proofs incremental)" \
                 python3 tools/quality/semantic_content_audit.py --file-prefix proofs --gate
+        elif [ -n "$PROOFS_CHANGED_LEAN_FILES" ]; then
+            PROOFS_SEMANTIC_ARGS=()
+            while IFS= read -r path; do
+                [ -n "$path" ] || continue
+                PROOFS_SEMANTIC_ARGS+=(--file-prefix "$path")
+            done <<<"$PROOFS_CHANGED_LEAN_FILES"
+            run_gate "Semantic Content Audit (proofs incremental)" \
+                python3 tools/quality/semantic_content_audit.py "${PROOFS_SEMANTIC_ARGS[@]}" --gate
         fi
-        if [ -n "$SRC_CHANGED_LEAN_FILES" ]; then
+        if [ -n "$SRC_BUILD_CONFIG_FILES" ] || [ -n "$DELETED_SRC_LEAN_FILES" ]; then
             run_gate "Semantic Content Audit (src incremental)" \
                 python3 tools/quality/semantic_content_audit.py --file-prefix src --gate
+        elif [ -n "$SRC_CHANGED_LEAN_FILES" ]; then
+            SRC_SEMANTIC_ARGS=()
+            while IFS= read -r path; do
+                [ -n "$path" ] || continue
+                SRC_SEMANTIC_ARGS+=(--file-prefix "$path")
+            done <<<"$SRC_CHANGED_LEAN_FILES"
+            run_gate "Semantic Content Audit (src incremental)" \
+                python3 tools/quality/semantic_content_audit.py "${SRC_SEMANTIC_ARGS[@]}" --gate
         fi
     fi
 
     # Test files are compiled as the InfoGeometryTestSuite Lake library. Build
-    # that owner package so test-to-test imports resolve in dependency order.
-    if [ -n "$TEST_LEAN_FILES" ]; then
+    # changed test module targets incrementally unless test deletions or root
+    # build-config changes require the full test suite umbrella.
+    if [ -n "$DELETED_TEST_LEAN_FILES" ] || { [ -n "$BUILD_CONFIG_FILES" ] && [ -n "$TEST_LEAN_FILES" ]; }; then
         run_check "Locked Lake build (InfoGeometryTestSuite)" \
             python3 tools/infra/run_locked_lake_build.py \
               --wait-for-build-lock InfoGeometryTestSuite
+    elif [ -n "$TEST_LEAN_FILES" ] || [ -n "$ADDED_LAKEFILE_TEST_TARGETS" ]; then
+        TEST_TARGETS=""
+        if [ -n "$TEST_LEAN_FILES" ]; then
+            TEST_TARGETS=$(sed -e 's|^tests/||' -e 's|\.lean$||' -e 's|/|.|g' <<<"$TEST_LEAN_FILES")
+        fi
+        if [ -n "$ADDED_LAKEFILE_TEST_TARGETS" ]; then
+            TEST_TARGETS="${TEST_TARGETS:+$TEST_TARGETS }$ADDED_LAKEFILE_TEST_TARGETS"
+        fi
+        TEST_TARGETS="$(tr ' ' '\n' <<<"$TEST_TARGETS" | awk 'NF && !seen[$0]++' | paste -sd' ' - || true)"
+        if [ -n "$TEST_TARGETS" ]; then
+            run_check "Locked Lake build (test incremental targets)" \
+                python3 tools/infra/run_locked_lake_build.py \
+                  --wait-for-build-lock $TEST_TARGETS
+        fi
     fi
 
     # This repository-wide declaration audit is a standalone Lean command
@@ -267,12 +395,37 @@ if [ "$MODE" = "incremental" ]; then
             python3 verification/clifford-peirce-walsh/check.py
     fi
 
-    # Fast scope and quarantine audits
-    run_check "Tracked Lean Scope Audit" \
-        python3 tools/quality/repo_lean_scope_audit.py --fail-on authoritative
+    # Incremental scope and quarantine audits
+    if [ -n "$BUILD_CONFIG_FILES" ]; then
+        run_check "Tracked Lean Scope Audit" \
+            python3 tools/quality/repo_lean_scope_audit.py --fail-on authoritative
+    else
+        SCOPE_AUDIT_FILES=()
+        while IFS= read -r path; do
+            [ -n "$path" ] || continue
+            if [ -f "$path" ]; then
+                SCOPE_AUDIT_FILES+=("$path")
+            fi
+        done <<<"$ALL_CHANGED_LEAN_FILES"
+        if [ ${#SCOPE_AUDIT_FILES[@]} -gt 0 ]; then
+            run_check "Tracked Lean Scope Audit (incremental)" \
+                python3 tools/quality/repo_lean_scope_audit.py --fail-on authoritative "${SCOPE_AUDIT_FILES[@]}"
+        else
+            echo "  ℹ No changed .lean files for incremental scope audit."
+        fi
+    fi
 
-    run_check "Quarantined Lean Artifact Audit" \
-        python3 tools/quality/repo_lean_quarantine_audit.py
+    if [ -n "$CHANGED_DISABLED_LEAN_FILES" ]; then
+        QUARANTINE_AUDIT_FILES=()
+        while IFS= read -r path; do
+            [ -n "$path" ] || continue
+            QUARANTINE_AUDIT_FILES+=("$path")
+        done <<<"$CHANGED_DISABLED_LEAN_FILES"
+        run_check "Quarantined Lean Artifact Audit (incremental)" \
+            python3 tools/quality/repo_lean_quarantine_audit.py "${QUARANTINE_AUDIT_FILES[@]}"
+    else
+        echo "  ℹ No changed .lean.disabled files for incremental quarantine audit."
+    fi
 
 else
     # FULL REGRESSION GATE

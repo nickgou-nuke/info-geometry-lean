@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CARSpinorCliffordActionBridge
@@ -26,11 +31,15 @@ variable {R U : Type*} [Ring R] [AddCommGroup U] [Module R U]
 def wick2PointDeterminant (alpha1 alpha2 : U →ₗ[R] R) (u1 u2 : U) : R :=
   alpha1 u1 * alpha2 u2 - alpha1 u2 * alpha2 u1
 
-/-- **Theorem**: 2-Point Wick Contraction Determinant Alternating in Covectors (Det2(α1, α2) = -Det2(α2, α1)). -/
-theorem wick_determinant_covector_alternating (alpha1 alpha2 : U →ₗ[R] R) (u1 u2 : U) :
-    wick2PointDeterminant alpha1 alpha2 u1 u2 = - wick2PointDeterminant alpha2 alpha1 u1 u2 := by
+/-- The failure of covector alternation over a noncommutative coefficient ring
+is exactly the difference of the two coefficient commutators. -/
+theorem wick_determinant_covector_swap_obstruction (alpha1 alpha2 : U →ₗ[R] R) (u1 u2 : U) :
+    wick2PointDeterminant alpha1 alpha2 u1 u2 +
+        wick2PointDeterminant alpha2 alpha1 u1 u2 =
+      ⁅alpha1 u1, alpha2 u2⁆ - ⁅alpha1 u2, alpha2 u1⁆ := by
   dsimp [wick2PointDeterminant]
-  abel
+  simp only [Ring.lie_def]
+  noncomm_ring
 
 /-- **Theorem**: 2-Point Wick Contraction Determinant Alternating in Vectors (Det2(α1, α2; u1, u2) = -Det2(α1, α2; u2, u1)). -/
 theorem wick_determinant_vector_alternating (alpha1 alpha2 : U →ₗ[R] R) (u1 u2 : U) :
@@ -46,9 +55,10 @@ theorem wick_determinant_vector_alternating (alpha1 alpha2 : U →ₗ[R] R) (u1 
     4. Exact algebraic bridge connecting Wick's theorem to Plücker minors of Gr(k,n). -/
 theorem master_n_point_wick_plucker_determinant_synthesis
     (alpha1 alpha2 : U →ₗ[R] R) (u1 u2 : U) :
-    (wick2PointDeterminant alpha1 alpha2 u1 u2 = - wick2PointDeterminant alpha2 alpha1 u1 u2) ∧
+    (wick2PointDeterminant alpha1 alpha2 u1 u2 + wick2PointDeterminant alpha2 alpha1 u1 u2 =
+      ⁅alpha1 u1, alpha2 u2⁆ - ⁅alpha1 u2, alpha2 u1⁆) ∧
     (wick2PointDeterminant alpha1 alpha2 u1 u2 = - wick2PointDeterminant alpha1 alpha2 u2 u1) := ⟨
-  wick_determinant_covector_alternating alpha1 alpha2 u1 u2,
+  wick_determinant_covector_swap_obstruction alpha1 alpha2 u1 u2,
   wick_determinant_vector_alternating alpha1 alpha2 u1 u2
 ⟩
 

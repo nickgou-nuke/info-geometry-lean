@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Trace
@@ -12,20 +17,14 @@ import InfoGeometry.Modular.QuantumRelativeEntropyMonotonicity
 import InfoGeometry.Modular.EntropyMonotonicity
 
 /-!
-# Complete Positivity via Matrix Amplification and the Data Processing Inequality
+# Matrix CP Amplification and Classical Data Processing
 
-This module formalizes:
-1. Complete Positivity (CP) via k-Amplification:
-     A superoperator Φ is k-positive if (Φ ⊗ id_k) maps positive matrices to positive matrices.
-     Φ is Completely Positive (CP) if it is k-positive for all k ∈ ℕ.
-2. The Umegaki Quantum Relative Entropy for state operators in spectral decomposition:
-     S(ρ ∥ σ) = Tr(ρ (log ρ - log σ)) = ∑_i p_i (log p_i - log q_i)
-3. Proven Klein / Gibbs Inequality:
-     S(ρ ∥ σ) ≥ 0  with S(ρ ∥ ρ) = 0.
-4. The CPTP Data Processing Inequality (Contractivity under Quantum Operations):
-     For any CPTP quantum channel Φ, S(Φ(ρ) ∥ Φ(σ)) ≤ S(ρ ∥ σ).
-
-All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+This module defines matrix positivity and complete positivity through finite
+amplifications. Its entropy carrier, however, is `QuantumDensityState n`, a
+strictly positive probability vector, and `strict_channel_data_processing` is
+the classical stochastic-channel inequality. `ContractiveStateMap` stores
+contractivity as an assumption. This file does not prove Umegaki monotonicity
+for noncommutative matrix states under CPTP maps.
 -/
 
 noncomputable section
@@ -77,7 +76,8 @@ PART 2: Spectral Umegaki Quantum Relative Entropy
 =============================================================================
 -/
 
-/-- Quantum density state given by its positive eigenvalue spectrum. -/
+/-- Strictly positive finite probability distribution, stored as a normalized
+vector. This is not a matrix density-operator carrier. -/
 structure QuantumDensityState (n : Type*) [Fintype n] where
   spec : n → ℝ
   pos : ∀ i, 0 < spec i
@@ -96,7 +96,8 @@ def toStateDist (ρ : QuantumDensityState n) : StateDist n where
 def quantumRelEntropy (ρ σ : QuantumDensityState n) : ℝ :=
   relEntropy (toStateDist ρ) (toStateDist σ)
 
-/-- THEOREM 1 (Quantum Klein's Inequality): S(ρ ∥ σ) ≥ 0 with S(ρ ∥ ρ) = 0. -/
+/-- Classical relative-entropy nonnegativity for the probability-vector
+carrier above. The historical theorem name is retained for compatibility. -/
 theorem quantum_klein_inequality (ρ σ : QuantumDensityState n) :
     0 ≤ quantumRelEntropy ρ σ :=
   relEntropy_nonneg (toStateDist ρ) (toStateDist σ)
@@ -134,8 +135,8 @@ theorem contractive_state_map_data_processing
     quantumRelEntropy (Φ.transform ρ) (Φ.transform σ) ≤ quantumRelEntropy ρ σ :=
   Φ.contractive ρ σ
 
-/-! The following channel is the non-circular finite result: its contractivity
-    is derived from the log-sum inequality, rather than stored as a field. -/
+/-! The following classical stochastic channel result is derived from the
+log-sum inequality, rather than stored as a contractivity field. -/
 
 structure StrictColumnChannel (n : Type*) [Fintype n] where
   prob : n → n → ℝ

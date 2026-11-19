@@ -8,6 +8,7 @@ import Mathlib.Algebra.Star.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic.Abel
+import Mathlib.Tactic
 
 /-!
 # Background-Free Real BdG / Krein Chiral Ideal Two-Sheet Bridge (`BDG₁ ≺ BDG₂ ≺ ⋯ ≺ BDG₁₀`)
@@ -1265,6 +1266,28 @@ theorem comm_P_poincare_N_plus (N_plus : B)
         ← mul_assoc N_plus (star N_plus) N_plus, h_reg, zero_add]
   rw [hL, hR, sub_self]
 
+/-- The Poincaré support also commutes with the adjoint chiral generator.
+This is the dual half of the translation invariance statement in this carrier. -/
+theorem comm_P_poincare_star_N_plus (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (P_poincare N_plus) (star N_plus) = 0 := by
+  dsimp [comm, P_poincare, anticomm]
+  have hL :
+      (N_plus * star N_plus + star N_plus * N_plus) * star N_plus =
+        star N_plus := by
+    rw [add_mul, mul_assoc N_plus (star N_plus) (star N_plus),
+      star_N_plus_sq N_plus h_nil, mul_zero,
+      star_N_plus_reg N_plus h_reg, zero_add]
+  have hR :
+      star N_plus * (N_plus * star N_plus + star N_plus * N_plus) =
+        star N_plus := by
+    rw [mul_add, ← mul_assoc (star N_plus) N_plus (star N_plus),
+      star_N_plus_reg N_plus h_reg,
+      ← mul_assoc (star N_plus) (star N_plus) N_plus,
+      star_N_plus_sq N_plus h_nil, zero_mul, add_zero]
+  rw [hL, hR, sub_self]
+
 /-- **`HFD₁₀` Multi-Channel Supercolor Translation Closure (`[P_poincare(N_a), P_poincare(N_b)] = 0`):**
     For any two supercolor nilpotent channels `N_a, N_b` with commuting bandgap supports,
     their emergent Poincaré translation generators commute identically. -/
@@ -1699,6 +1722,164 @@ theorem emergent_cartan_curvature_torsion_split (N_plus W₁ X₁ W₂ X₂ : B)
       riemannCurvV N_plus W₁ X₁ W₂ X₂ + cartanTorsionV N_plus W₁ X₁ W₂ X₂ := by
   dsimp [cartanConnV, riemannCurvV, cartanTorsionV, comm]
   rw [mul_add, add_mul, add_mul, mul_add, add_mul, add_mul]
+  abel
+
+omit [StarRing B] in
+private theorem commute_product_of_even (a x y : B)
+    (hx : a * x = x * a) (hy : a * y = y * a) :
+    a * (x * y) = (x * y) * a := by
+  calc
+    a * (x * y) = (a * x) * y := by rw [← mul_assoc]
+    _ = (x * a) * y := by rw [hx]
+    _ = x * (a * y) := by rw [mul_assoc]
+    _ = x * (y * a) := by rw [hy]
+    _ = (x * y) * a := by rw [← mul_assoc]
+
+omit [StarRing B] in
+private theorem commute_product_of_odd (a x y : B)
+    (hx : a * x = -(x * a)) (hy : a * y = -(y * a)) :
+    a * (x * y) = (x * y) * a := by
+  calc
+    a * (x * y) = (a * x) * y := by rw [← mul_assoc]
+    _ = (-(x * a)) * y := by rw [hx]
+    _ = -(x * (a * y)) := by rw [neg_mul, mul_assoc]
+    _ = -(x * (-(y * a))) := by rw [hy]
+    _ = x * (y * a) := by simp
+    _ = (x * y) * a := by rw [← mul_assoc]
+
+omit [StarRing B] in
+private theorem anticomm_comm_of_even_odd (a x y : B)
+    (hx : a * x = x * a) (hy : a * y = -(y * a)) :
+    anticomm a (comm x y) = 0 := by
+  have hxy : a * (x * y) = -((x * y) * a) := by
+    calc
+      a * (x * y) = (a * x) * y := by rw [← mul_assoc]
+      _ = (x * a) * y := by rw [hx]
+      _ = x * (a * y) := by rw [mul_assoc]
+      _ = x * (-(y * a)) := by rw [hy]
+      _ = -((x * y) * a) := by rw [mul_neg, ← mul_assoc]
+  have hyx : a * (y * x) = -((y * x) * a) := by
+    calc
+      a * (y * x) = (a * y) * x := by rw [← mul_assoc]
+      _ = (-(y * a)) * x := by rw [hy]
+      _ = -(y * (a * x)) := by rw [neg_mul, mul_assoc]
+      _ = -(y * (x * a)) := by rw [hx]
+      _ = -((y * x) * a) := by rw [← mul_assoc]
+  dsimp [anticomm, comm]
+  rw [mul_sub, sub_mul, hxy, hyx]
+  abel
+
+/-- The intrinsic grading commutes with the curvature assembled from two
+intra-sheet connections and two inter-sheet frame fields. -/
+theorem comm_Sigma_riemannCurvV (N_plus W₁ X₁ W₂ X₂ : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (Sigma N_plus) (riemannCurvV N_plus W₁ X₁ W₂ X₂) = 0 := by
+  have hW₁ := comm_Sigma_spinConnV N_plus W₁ h_nil h_reg
+  have hW₂ := comm_Sigma_spinConnV N_plus W₂ h_nil h_reg
+  have hX₁ := anticomm_Sigma_framePhiV N_plus X₁ h_nil h_reg
+  have hX₂ := anticomm_Sigma_framePhiV N_plus X₂ h_nil h_reg
+  have hW₁' : Sigma N_plus * spinConnV N_plus W₁ =
+      spinConnV N_plus W₁ * Sigma N_plus := sub_eq_zero.mp hW₁
+  have hW₂' : Sigma N_plus * spinConnV N_plus W₂ =
+      spinConnV N_plus W₂ * Sigma N_plus := sub_eq_zero.mp hW₂
+  have hX₁' : Sigma N_plus * framePhiV N_plus X₁ =
+      -(framePhiV N_plus X₁ * Sigma N_plus) := by
+    have h := add_eq_zero_iff_eq_neg.mp hX₁
+    exact h
+  have hX₂' : Sigma N_plus * framePhiV N_plus X₂ =
+      -(framePhiV N_plus X₂ * Sigma N_plus) := by
+    have h := add_eq_zero_iff_eq_neg.mp hX₂
+    exact h
+  have hS₁₂ := commute_product_of_even (Sigma N_plus)
+    (spinConnV N_plus W₁) (spinConnV N_plus W₂) hW₁' hW₂'
+  have hS₂₁ := commute_product_of_even (Sigma N_plus)
+    (spinConnV N_plus W₂) (spinConnV N_plus W₁) hW₂' hW₁'
+  have hF₁₂ := commute_product_of_odd (Sigma N_plus)
+    (framePhiV N_plus X₁) (framePhiV N_plus X₂) hX₁' hX₂'
+  have hF₂₁ := commute_product_of_odd (Sigma N_plus)
+    (framePhiV N_plus X₂) (framePhiV N_plus X₁) hX₂' hX₁'
+  change Sigma N_plus *
+      ((spinConnV N_plus W₁ * spinConnV N_plus W₂ -
+        spinConnV N_plus W₂ * spinConnV N_plus W₁) +
+       (framePhiV N_plus X₁ * framePhiV N_plus X₂ -
+        framePhiV N_plus X₂ * framePhiV N_plus X₁)) -
+    ((spinConnV N_plus W₁ * spinConnV N_plus W₂ -
+      spinConnV N_plus W₂ * spinConnV N_plus W₁) +
+     (framePhiV N_plus X₁ * framePhiV N_plus X₂ -
+      framePhiV N_plus X₂ * framePhiV N_plus X₁)) * Sigma N_plus = 0
+  rw [mul_add, add_mul, mul_sub, sub_mul, mul_sub, sub_mul,
+    hS₁₂, hS₂₁, hF₁₂, hF₂₁]
+  abel
+
+/-- Mixed connection/frame commutators are odd for the intrinsic two-sheet
+grading. -/
+theorem anticomm_Sigma_cartanTorsionV (N_plus W₁ X₁ W₂ X₂ : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    anticomm (Sigma N_plus) (cartanTorsionV N_plus W₁ X₁ W₂ X₂) = 0 := by
+  have hW₁ := comm_Sigma_spinConnV N_plus W₁ h_nil h_reg
+  have hW₂ := comm_Sigma_spinConnV N_plus W₂ h_nil h_reg
+  have hX₁ := anticomm_Sigma_framePhiV N_plus X₁ h_nil h_reg
+  have hX₂ := anticomm_Sigma_framePhiV N_plus X₂ h_nil h_reg
+  have hW₁' : Sigma N_plus * spinConnV N_plus W₁ =
+      spinConnV N_plus W₁ * Sigma N_plus := sub_eq_zero.mp hW₁
+  have hW₂' : Sigma N_plus * spinConnV N_plus W₂ =
+      spinConnV N_plus W₂ * Sigma N_plus := sub_eq_zero.mp hW₂
+  have hX₁' : Sigma N_plus * framePhiV N_plus X₁ =
+      -(framePhiV N_plus X₁ * Sigma N_plus) := add_eq_zero_iff_eq_neg.mp hX₁
+  have hX₂' : Sigma N_plus * framePhiV N_plus X₂ =
+      -(framePhiV N_plus X₂ * Sigma N_plus) := add_eq_zero_iff_eq_neg.mp hX₂
+  have hT₁ := anticomm_comm_of_even_odd (Sigma N_plus)
+    (spinConnV N_plus W₁) (framePhiV N_plus X₂) hW₁' hX₂'
+  have hT₂ := anticomm_comm_of_even_odd (Sigma N_plus)
+    (spinConnV N_plus W₂) (framePhiV N_plus X₁) hW₂' hX₁'
+  have hT₁' :
+      Sigma N_plus *
+        (spinConnV N_plus W₁ * framePhiV N_plus X₂ -
+         framePhiV N_plus X₂ * spinConnV N_plus W₁) +
+      (spinConnV N_plus W₁ * framePhiV N_plus X₂ -
+       framePhiV N_plus X₂ * spinConnV N_plus W₁) * Sigma N_plus = 0 := by
+    simpa [anticomm, comm] using hT₁
+  have hT₂' :
+      Sigma N_plus *
+        (spinConnV N_plus W₂ * framePhiV N_plus X₁ -
+         framePhiV N_plus X₁ * spinConnV N_plus W₂) +
+      (spinConnV N_plus W₂ * framePhiV N_plus X₁ -
+       framePhiV N_plus X₁ * spinConnV N_plus W₂) * Sigma N_plus = 0 := by
+    simpa [anticomm, comm] using hT₂
+  change Sigma N_plus *
+      ((spinConnV N_plus W₁ * framePhiV N_plus X₂ -
+        framePhiV N_plus X₂ * spinConnV N_plus W₁) -
+       (spinConnV N_plus W₂ * framePhiV N_plus X₁ -
+        framePhiV N_plus X₁ * spinConnV N_plus W₂)) +
+    ((spinConnV N_plus W₁ * framePhiV N_plus X₂ -
+      framePhiV N_plus X₂ * spinConnV N_plus W₁) -
+     (spinConnV N_plus W₂ * framePhiV N_plus X₁ -
+      framePhiV N_plus X₁ * spinConnV N_plus W₂)) * Sigma N_plus = 0
+  have hsplit :
+      Sigma N_plus *
+          ((spinConnV N_plus W₁ * framePhiV N_plus X₂ -
+            framePhiV N_plus X₂ * spinConnV N_plus W₁) -
+           (spinConnV N_plus W₂ * framePhiV N_plus X₁ -
+            framePhiV N_plus X₁ * spinConnV N_plus W₂)) +
+        ((spinConnV N_plus W₁ * framePhiV N_plus X₂ -
+          framePhiV N_plus X₂ * spinConnV N_plus W₁) -
+         (spinConnV N_plus W₂ * framePhiV N_plus X₁ -
+          framePhiV N_plus X₁ * spinConnV N_plus W₂)) * Sigma N_plus =
+      (Sigma N_plus *
+          (spinConnV N_plus W₁ * framePhiV N_plus X₂ -
+           framePhiV N_plus X₂ * spinConnV N_plus W₁) +
+        (spinConnV N_plus W₁ * framePhiV N_plus X₂ -
+         framePhiV N_plus X₂ * spinConnV N_plus W₁) * Sigma N_plus) -
+      (Sigma N_plus *
+          (spinConnV N_plus W₂ * framePhiV N_plus X₁ -
+           framePhiV N_plus X₁ * spinConnV N_plus W₂) +
+        (spinConnV N_plus W₂ * framePhiV N_plus X₁ -
+         framePhiV N_plus X₁ * spinConnV N_plus W₂) * Sigma N_plus) := by
+    rw [mul_sub, sub_mul]
+    abel
+  rw [hsplit, hT₁', hT₂']
   abel
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine.EmergentTwoSheetBridge

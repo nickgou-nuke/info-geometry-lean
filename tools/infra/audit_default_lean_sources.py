@@ -46,10 +46,21 @@ def closure(roots: set[str], graph: dict[str, set[str]]) -> set[str]:
     return seen
 
 
+def _git_ignored_files(root: Path) -> set[str]:
+    if not (root / ".git").exists():
+        return set()
+    output = subprocess.check_output(
+        ["git", "ls-files", "--others", "--ignored", "--exclude-standard", "-z"],
+        cwd=root,
+    ).decode()
+    return {path for path in output.split("\0") if path}
+
+
 def default_sources(root: Path) -> dict[str, Path]:
     config = (root / "lakefile.lean").read_text(encoding="utf-8")
     config = re.sub(r"/-.*?-/", "", config, flags=re.S)
     config = re.sub(r"--[^\n]*", "", config)
+    ignored = _git_ignored_files(root)
     result = {}
     blocks = re.finditer(
         r"@\[([^]]*default_target[^]]*)\]\s*lean_lib\s+(\w+)\s+where"
@@ -74,6 +85,8 @@ def default_sources(root: Path) -> dict[str, Path]:
         if re.search(r"\.submodules\s+\.anonymous", globs.group(1)):
             candidates = directory.rglob("*.lean")
             for path in candidates:
+                if str(path.relative_to(root)) in ignored:
+                    continue
                 module = ".".join(path.relative_to(directory).with_suffix("").parts)
                 result[module] = path
         else:
@@ -85,6 +98,8 @@ def default_sources(root: Path) -> dict[str, Path]:
                 if glob.group(1):
                     if base.is_dir():
                         for path in base.rglob("*.lean"):
+                            if str(path.relative_to(root)) in ignored:
+                                continue
                             name = ".".join(path.relative_to(directory).with_suffix("").parts)
                             result[name] = path
     return result
@@ -105,20 +120,39 @@ def audit(root: Path, workspace_roots: tuple[str, ...] | None = None) -> dict:
     umbrella = {"InfoGeometry.All", "InfoGeometry.AllExhaustive"}
     downstream = closure(umbrella, reverse)
     reachable = closure({"InfoGeometry.All"}, graph)
-    tracked = set(subprocess.check_output(
-        ["git", "ls-files", "-z"], cwd=root).decode().split("\0"))
+    tracked = {
+        path for path in subprocess.check_output(
+            ["git", "ls-files", "-z"], cwd=root).decode().split("\0")
+        if path
+    }
+    untracked_non_ignored = {
+        path for path in subprocess.check_output(
+            ["git", "ls-files", "--others", "--exclude-standard", "-z"], cwd=root
+        ).decode().split("\0")
+        if path
+    }
+    visible_files = tracked | untracked_non_ignored
     relative = lambda path: str(path.relative_to(root))
+    excluded_non_module_files = {"lean/lakefile.lean"}
 
-    # Filter tracked lean files strictly by configured workspace roots
+    # Filter repository lean files (tracked and non-ignored untracked) strictly
+    # by configured workspace roots, excluding non-module Lake manifests.
     repository_sources = sorted(
-        path for path in tracked
-        if path.endswith(".lean") and any(path.startswith(f"{wr}/") for wr in workspace_roots)
+        path for path in visible_files
+        if path.endswith(".lean")
+        and path not in excluded_non_module_files
+        and any(path.startswith(f"{wr}/") for wr in workspace_roots)
     )
     default_source_paths = {
         relative(path) for path in sources.values() if path.is_file()
     }
+    default_realpaths = {
+        os.path.realpath(path) for path in sources.values() if path.is_file()
+    }
     non_default_sources = sorted(
-        path for path in repository_sources if path not in default_source_paths
+        path for path in repository_sources
+        if path not in default_source_paths
+        and os.path.realpath(root / path) not in default_realpaths
     )
     # Only InfoGeometry sources are governed by the InfoGeometry umbrella.
     # DAG, Omega, proofs, tests, and independent Lake libraries are default

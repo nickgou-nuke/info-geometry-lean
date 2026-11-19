@@ -219,7 +219,7 @@ theorem anomalyReadoutPacket_eq_metricVolumePotential
 /--
 The incompressible negative-log Cramer-Rao readout forces zero unit of action.
 -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem unitOfAction_eq_zero_of_incompressible
     (R : CramerRaoNegLogVolumeAnomalyReadout CI H)
     (hIncomp : IncompressibleMongeAmpere H) (x : E) :

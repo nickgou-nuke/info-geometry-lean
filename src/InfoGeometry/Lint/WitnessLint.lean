@@ -1,10 +1,10 @@
 /-
-Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.
-Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
-Bulgarian Academy of Sciences.
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
 -/
 import Lean
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Std
 
 /-!
 # Witness-Pack Lint — Detection Logic
@@ -59,11 +59,23 @@ private partial def stripForalls : Expr → Expr
   | .mdata _ body       => stripForalls body
   | e                   => e
 
+/-- Strip at most `n` leading `∀` binders (consuming metadata) from an expression. -/
+private def stripLeadingBinders : Nat → Expr → Expr
+  | 0, e => e.consumeMData
+  | n + 1, e =>
+      match e.consumeMData with
+      | .forallE _ _ body _ => stripLeadingBinders n body
+      | e' => e'
+
 /-- True if the expression is syntactically `Sort 0` (i.e. `Prop`). -/
 private def isBarePropSort (e : Expr) : Bool :=
   match e.consumeMData with
   | .sort .zero => true
   | _           => false
+
+/-- True if the expression is syntactically `Sort 0` (`Prop`) or `True`. -/
+private def isBarePropOrTrue (e : Expr) : Bool :=
+  isBarePropSort e || e.consumeMData.isConstOf ``True
 
 /-- True if a string ends with `_statement`. -/
 private def endsWithStatement (s : String) : Bool :=
@@ -105,23 +117,40 @@ Returns an array of detected pairs (with or without companion).
 -/
 def detectWitnessPackPairs (env : Environment) (structName : Name) :
     Array VacuityPair := Id.run do
-  let fields := getStructureFields env structName
+  let queryEnv := env.setExporting false
+  unless Lean.isStructure queryEnv structName do return #[]
+  let fields := getStructureFieldsFlattened queryEnv structName (includeSubobjectFields := false)
   if fields.isEmpty then return #[]
+  let mut fieldSet : Std.HashSet String := {}
+  for f in fields do
+    fieldSet := fieldSet.insert f.toString
+  let mut pairedCompanions : Std.HashSet Name := {}
   let mut pairs : Array VacuityPair := #[]
   for fieldName in fields do
-    -- Check that the projected type is bare Prop.
-    -- The projection function `structName.fieldName` has type
-    --   ∀ (self : StructType ...), FieldType
-    -- We strip the leading binder and inspect the body.
-    let projName := structName ++ fieldName
-    match env.find? projName with
-    | some cinfo =>
-        let projType := cinfo.type
-        let body := stripForalls projType
-        unless isBarePropSort body do continue
-        -- Every bare Prop field is a witness violation: report it directly as a cheat.
-        pairs := pairs.push { statementField := fieldName, companionField? := some fieldName }
-    | none => continue
+    if pairedCompanions.contains fieldName then continue
+    -- Check that the projected field type (after stripping only structure params and `self`) is bare `Prop`/`True`.
+    -- Explicit `_statement`/`_sorry` markers whose codomain reduces to bare `Prop`/`True` are also flagged.
+    let some ownerStruct := findField? queryEnv structName fieldName | continue
+    let some (.inductInfo ownerIndVal) := queryEnv.find? ownerStruct | continue
+    let some projName := getProjFnForField? queryEnv ownerStruct fieldName | continue
+    let some cinfo := queryEnv.find? projName | continue
+    let projType := cinfo.type
+    let directFieldType := stripLeadingBinders (ownerIndVal.numParams + 1) projType
+    let fieldStr := fieldName.toString
+    let isExplicitMarker := endsWithStatement fieldStr || endsWithWitness fieldStr
+    let isVacuous :=
+      isBarePropOrTrue directFieldType || (isExplicitMarker && isBarePropOrTrue (stripForalls projType))
+    unless isVacuous do continue
+    if endsWithStatement fieldStr then
+      let compStr := witnessNameOf fieldStr
+      if fieldSet.contains compStr then
+        let compName := Name.mkSimple compStr
+        pairedCompanions := pairedCompanions.insert compName
+        pairs := pairs.push { statementField := fieldName, companionField? := some compName }
+      else
+        pairs := pairs.push { statementField := fieldName, companionField? := none }
+    else
+      pairs := pairs.push { statementField := fieldName, companionField? := some fieldName }
   return pairs
 
 /-- True if a structure has at least one witness-pack pair. -/

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Basic.Real.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
@@ -18,7 +23,7 @@ namespace InfoGeometry.QuantumContext
 open Matrix
 
 /-!
-# Section 90: Petz Recovery Data Processing Monotonicity & Causal Stiefel Saturation
+# Algebraic Pinching, Petz Reconstruction, and Stiefel Saturation
 
 Module: `InfoGeometry.QuantumContext.PetzDataProcessingMonotonicity`
 
@@ -44,7 +49,12 @@ This module formalizes:
    - Exact Petz Saturation Theorem: for `s ≠ 0` under `K^2 + L^2 = 1`,
      `reconstructState K L s = compressedState s ↔ L = 0`.
 
-4. **Master Certification Conjunction**:
+4. **Scope boundary**:
+   This file proves algebraic pinching identities, a polynomial Petz reconstruction
+   identity, and a concrete real 2×2 Stiefel saturation result. It does not define
+   an entropy functional or prove a data-processing inequality for quantum channels.
+
+5. **Master Certification Conjunction**:
    - `compile_petz_data_processing_monotonicity`.
 
 All proofs are native Mathlib with 0 sorry, 0 admit, and 0 custom axioms.
@@ -235,7 +245,7 @@ theorem petz_stiefel_saturation_iff_zero_future (K L s : ℝ)
 
 /-! ### 4. Master Certification Conjunction -/
 
-/-- Master compiler theorem ratifying Section 90 under OpenGauss QMS protocol. -/
+/-- Master conjunction of the trace-preservation and Stiefel-saturation results. -/
 theorem compile_petz_data_processing_monotonicity :
     (∀ (K L s : ℝ), K ^ 2 + L ^ 2 = 1 → trace (reconstructState K L s) = s) ∧
     (∀ (K L s : ℝ), K ^ 2 + L ^ 2 = 1 → s ≠ 0 →
@@ -250,5 +260,27 @@ theorem compile_petz_data_processing_monotonicity :
       (reconstructState K L s = compressedState s ↔ L = 0)) :=
   InfoGeometry.QuantumContext.compile_petz_data_processing_monotonicity
 end PetzMonotonicity
+
+theorem mat2_real_noncomm :
+    ∃ A B : Matrix (Fin 2) (Fin 2) ℝ, A * B ≠ B * A := by
+  let A : Matrix (Fin 2) (Fin 2) ℝ :=
+    Matrix.of fun i j => if i = 0 ∧ j = 1 then 1 else 0
+  let B : Matrix (Fin 2) (Fin 2) ℝ :=
+    Matrix.of fun i j => if i = 1 ∧ j = 0 then 1 else 0
+  refine ⟨A, B, ?_⟩
+  intro h
+  have h00 := congrFun (congrFun h (0 : Fin 2)) (0 : Fin 2)
+  have hAB : (A * B) 0 0 = 1 := by
+    rw [Matrix.mul_apply, Finset.sum_eq_single (1 : Fin 2)]
+    · simp [A, B]
+    · intro k _ hk
+      simp [A, hk]
+    · intro h1
+      exact (h1 (Finset.mem_univ _)).elim
+  have hBA : (B * A) 0 0 = 0 := by
+    rw [Matrix.mul_apply]
+    exact Finset.sum_eq_zero (fun k _ => by simp [B])
+  rw [hAB, hBA] at h00
+  exact one_ne_zero h00
 
 end InfoGeometry.QuantumContext

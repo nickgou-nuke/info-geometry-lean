@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.LatticeHoppingDiffusionFlow
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.YangMillsContinuum
@@ -51,7 +56,7 @@ continuum modular Hamiltonian.
 MOTIVATION: To prove that "It from Bit" results in a physical continuum,
 the hopping generator must be identified with the generator of thermal time.
 -/
-@[rep_depth transport, capstone]
+@[rep_depth transport]
 structure PropagatorSquareRootLimitBridge where
   /-- Microscopic Dirac square root propagator. -/
   generator : DiracSquareRootPropagator E
@@ -68,7 +73,7 @@ Infinitesimal Hopping to Modular Flow Bridge.
 Formalizes that the time-evolution operator of the informational bits
 converges to the Tomita-Takesaki modular flow in the continuum.
 -/
-@[rep_depth transport, capstone]
+@[rep_depth transport]
 structure ContinuumFlowLimitBridge where
   /-- The propagator limit bridge. -/
   propagator : PropagatorSquareRootLimitBridge (E := E)
@@ -80,17 +85,6 @@ structure ContinuumFlowLimitBridge where
   hFlowConsistency : 
     continuumFlow = propagator.modularData.toAdditiveModularFlow
   
-  /-- 
-  The Grand Limit Theorem:
-  The exponential hopping propagator converges to the modular flow.
-  -/
-  hFlowConvergence :
-    ∀ t A, 
-      Filter.Tendsto (fun scale => 
-        (NormedSpace.exp (t • propagator.generator.sqrtDirac scale)) * A * 
-        (NormedSpace.exp (-(t • propagator.generator.sqrtDirac scale))))
-      Filter.atTop (nhds (continuumFlow t A))
-
 /--
 CAPSTONE THEOREM: PROPAGATOR CONTINUUM FUSION.
 The informational hopping on the Cantor quasilattice converges to the
@@ -102,10 +96,43 @@ If the generator converges, the resulting physical evolution is the modular flow
 @[rep_depth transport, capstone]
 theorem propagator_continuum_fusion
     (B : ContinuumFlowLimitBridge (E := E)) :
-    Filter.Tendsto (fun scale => 
-        (NormedSpace.exp (1 • B.propagator.generator.sqrtDirac scale)))
-      Filter.atTop (nhds (NormedSpace.exp (1 • B.propagator.modularData.modularHamiltonian))) :=
-  by
-    simpa [one_smul] using B.propagator.hLimitGenerator.exp
+    ∀ t A,
+      Filter.Tendsto (fun scale =>
+        (NormedSpace.exp (t • B.propagator.generator.sqrtDirac scale)) * A *
+          (NormedSpace.exp (-(t • B.propagator.generator.sqrtDirac scale))))
+        Filter.atTop (nhds (B.continuumFlow t A)) := by
+  intro t A
+  let K := EndH₂
+  have hleft : Continuous (fun X : K => NormedSpace.exp (t • X)) :=
+    NormedSpace.exp_continuous.comp (continuous_const_smul t)
+  have hright : Continuous (fun X : K => NormedSpace.exp (-(t • X))) := by
+    have hscale : Continuous (fun X : K => (-t) • X) := continuous_const_smul (-t)
+    have hright' : Continuous (fun X : K => NormedSpace.exp ((-t) • X)) :=
+      NormedSpace.exp_continuous.comp hscale
+    have heq : (fun X : K => NormedSpace.exp (-(t • X))) =
+        fun X => NormedSpace.exp ((-t) • X) := by
+      funext X
+      congr 1
+      simp only [neg_smul]
+    rw [heq]
+    exact hright'
+  have hconj : Continuous (fun X : K =>
+      NormedSpace.exp (t • X) * A * NormedSpace.exp (-(t • X))) := by
+    exact (hleft.mul continuous_const).mul hright
+  have hlimit :=
+    (hconj.continuousAt
+      (x := B.propagator.modularData.modularHamiltonian)).tendsto.comp
+      B.propagator.hLimitGenerator
+  change Filter.Tendsto (fun scale =>
+      NormedSpace.exp (t • B.propagator.generator.sqrtDirac scale) * A *
+        NormedSpace.exp (-(t • B.propagator.generator.sqrtDirac scale)))
+    Filter.atTop (nhds
+      (NormedSpace.exp (t • B.propagator.modularData.modularHamiltonian) * A *
+        NormedSpace.exp (-(t • B.propagator.modularData.modularHamiltonian)))) at hlimit
+  rw [B.hFlowConsistency]
+  rw [InfoGeometry.Canonical.YangMillsContinuum.ModularRadonNikodymData.toAdditiveModularFlow_apply]
+  simpa [InfoGeometry.Canonical.YangMillsContinuum.ModularRadonNikodymData.modularAutomorphismGroup,
+    InfoGeometry.Krein.modular_shift, InfoGeometry.Krein.krein_modular_shift,
+    Function.comp_apply] using hlimit
 
 end InfoGeometry.Canonical.ContinuumPropagatorLimitBridge

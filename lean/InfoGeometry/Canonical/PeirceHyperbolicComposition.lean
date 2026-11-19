@@ -61,11 +61,11 @@ theorem hyperbolic_orbit_composition (u v e f : R)
       PeirceHyperbolicOrbit.hyperbolicPlus e f d B *
       (↑(hyperbolicUnit hd hB hr hs u v hu)⁻¹ : A) =
       PeirceHyperbolicOrbit.hyperbolicPlus (u*e+v*f) (u*f+v*e) d B := by
-  rw [← hyperbolicUnit_conjugates_plus hd hB hr hs e f he,
-    ← hyperbolicUnit_conjugates_plus hd hB hr hs (u*e+v*f) (u*f+v*e)
-      (hyperbolic_norm_comp u v e f hu he)]
-  simp only [← hyperbolicUnit_mul hd hB hr hs u v e f hu he,
-    mul_inv_rev, Units.val_mul]
+  rw [← hyperbolicUnit_conjugates_plus hd hB hr hs hd hB hr hs e f he,
+    ← hyperbolicUnit_conjugates_plus hd hB hr hs hd hB hr hs
+      (u*e+v*f) (u*f+v*e) (hyperbolic_norm_comp u v e f hu he)]
+  rw [← hyperbolicUnit_mul hd hB hr hs hd hB hr hs u v e f hu he]
+  simp only [mul_inv_rev, Units.val_mul]
   noncomm_ring
 
 end CommScalars

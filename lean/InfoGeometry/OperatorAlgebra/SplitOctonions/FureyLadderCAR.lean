@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.Zorn.Basic
+import InfoGeometry.Canonical.SplitOctonionClassificationCore
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Field.Basic
 import Mathlib.Data.Rat.Lemmas
@@ -167,51 +173,43 @@ theorem alpha_sq_eq_half_negJ : alpha * alpha = half (-J) := by
   apply InfoGeometry.Canonical.ZornMatrix.ext
   · simp [alpha, half, J, InfoGeometry.Canonical.ZornMatrix.mul,
       InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
-    native_decide
+    norm_num
   · simp [alpha, half, J, InfoGeometry.Canonical.ZornMatrix.mul,
       InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
-    native_decide
-  · ext i <;> fin_cases i <;>
-      simp [alpha, half, J, InfoGeometry.Canonical.ZornMatrix.mul,
-        InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
-    · native_decide
-    · native_decide
-    · native_decide
-  · ext i <;> fin_cases i <;>
-      simp [alpha, half, J, InfoGeometry.Canonical.ZornMatrix.mul,
-        InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
-    · native_decide
-    · native_decide
-    · native_decide
+    norm_num
+  · ext i
+    fin_cases i <;> simp [alpha, half, J, InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
+    all_goals norm_num
+  · ext i
+    fin_cases i <;> simp [alpha, half, J, InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
+    all_goals norm_num
 
 /-- (α†)² = ½J. -/
 theorem alpha_dag_sq_eq_half_J : alpha_dag * alpha_dag = half J := by
   apply InfoGeometry.Canonical.ZornMatrix.ext
   · simp [alpha_dag, half, J, InfoGeometry.Canonical.ZornMatrix.mul,
       InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
-    native_decide
+    norm_num
   · simp [alpha_dag, half, J, InfoGeometry.Canonical.ZornMatrix.mul,
       InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
-    native_decide
-  · ext i <;> fin_cases i <;>
-      simp [alpha_dag, half, J, InfoGeometry.Canonical.ZornMatrix.mul,
-        InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
-    · native_decide
-    · native_decide
-    · native_decide
-  · ext i <;> fin_cases i <;>
-      simp [alpha_dag, half, J, InfoGeometry.Canonical.ZornMatrix.mul,
-        InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
-    · native_decide
-    · native_decide
-    · native_decide
+    norm_num
+  · ext i
+    fin_cases i <;> simp [alpha_dag, half, J, InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
+    all_goals norm_num
+  · ext i
+    fin_cases i <;> simp [alpha_dag, half, J, InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
+    all_goals norm_num
 
 /-- Signed identity for this Furey-inspired pair: {α, α†} = -1. This is not the standard positive CAR equation {c, c†} = 1. -/
 theorem CAR_anticommutator : alpha * alpha_dag + alpha_dag * alpha = -oneZ := by
   rw [alpha_explicit, alpha_dag_explicit]
   apply InfoGeometry.Canonical.ZornMatrix.ext
-  · simp [mul, dot, cross, oneZ] <;> norm_num
-  · simp [mul, dot, cross, oneZ] <;> norm_num
+  · simp [mul, dot, cross, oneZ]; norm_num
+  · simp [mul, dot, cross, oneZ]; norm_num
   · ext i; fin_cases i <;> (simp [mul, dot, cross, oneZ] <;> norm_num)
   · ext i; fin_cases i <;> (simp [mul, dot, cross, oneZ] <;> norm_num)
 
@@ -220,8 +218,8 @@ theorem alpha_alpha_dag :
     alpha * alpha_dag = { a := -1/2, b := -1/2, x := ![0, 0, 0], y := ![0, 0, 0] } := by
   rw [alpha_explicit, alpha_dag_explicit]
   apply InfoGeometry.Canonical.ZornMatrix.ext
-  · simp [mul, dot, cross] <;> norm_num
-  · simp [mul, dot, cross] <;> norm_num
+  · simp [mul, dot, cross]; norm_num
+  · simp [mul, dot, cross]; norm_num
   · ext i; fin_cases i <;> (simp [mul, dot, cross] <;> norm_num)
   · ext i; fin_cases i <;> (simp [mul, dot, cross] <;> norm_num)
 
@@ -229,8 +227,8 @@ theorem alpha_dag_alpha :
     alpha_dag * alpha = { a := -1/2, b := -1/2, x := ![0, 0, 0], y := ![0, 0, 0] } := by
   rw [alpha_explicit, alpha_dag_explicit]
   apply InfoGeometry.Canonical.ZornMatrix.ext
-  · simp [mul, dot, cross] <;> norm_num
-  · simp [mul, dot, cross] <;> norm_num
+  · simp [mul, dot, cross]; norm_num
+  · simp [mul, dot, cross]; norm_num
   · ext i; fin_cases i <;> (simp [mul, dot, cross] <;> norm_num)
   · ext i; fin_cases i <;> (simp [mul, dot, cross] <;> norm_num)
 

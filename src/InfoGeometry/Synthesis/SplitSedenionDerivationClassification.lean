@@ -34,7 +34,7 @@ namespace InfoGeometry.Synthesis.SplitSedenionDerivationClassification
 open InfoGeometry.Algebra
 open InfoGeometry.Algebra.ZornVectorMatrix
 open InfoGeometry.Lie.CanonicalZornDerivationDimension
-open InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge hiding zornConj
+open InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge
 open InfoGeometry.Canonical.SplitOctonionParaKahlerNullCone
 open InfoGeometry.Canonical.SplitOctonionClifford33Soldering
 open InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis

@@ -44,6 +44,7 @@ set_option linter.unusedSectionVars false
 set_option maxRecDepth 10000
 
 open scoped InnerProductSpace
+open Filter Topology
 
 namespace InfoGeometry.Krein
 /-- A **real Krein space**: a complete real inner product space with a fundamental symmetry `J`.
@@ -132,6 +133,32 @@ noncomputable def kreinInner (u v : H) : ℝ :=
 /-- Simp lemma: `kreinInner u v = ⟪J u, v⟫_ℝ`. -/
 @[simp] lemma kreinInner_def (u v : H) :
     kreinInner u v = ⟪(J : H ≃ₗᵢ[ℝ] H) u, v⟫_ℝ := rfl
+
+/-- The fundamental-symmetry Krein pairing is jointly continuous in both
+arguments. -/
+lemma continuous_kreinInner :
+    Continuous (fun p : H × H => kreinInner p.1 p.2) := by
+  change Continuous (fun p : H × H => ⟪(J : H ≃ₗᵢ[ℝ] H) p.1, p.2⟫_ℝ)
+  exact continuous_inner.comp
+    (((J : H ≃ₗᵢ[ℝ] H).continuous.comp continuous_fst).prodMk continuous_snd)
+
+/-- Joint convergence in a real Krein space implies convergence of the
+fundamental-symmetry-conjugated pairing. -/
+lemma tendsto_kreinInner_of_tendsto
+    {f g : ℝ → H} {x y : H}
+    (hf : Tendsto f atTop (𝓝 x)) (hg : Tendsto g atTop (𝓝 y)) :
+    Tendsto (fun t => kreinInner (f t) (g t)) atTop (𝓝 (kreinInner x y)) := by
+  exact (continuous_kreinInner.tendsto (x, y)).comp (hf.prodMk_nhds hg)
+
+/-- The indefinite Krein pairing is bounded by the Hilbert norms because its
+fundamental symmetry is an isometry. -/
+lemma abs_kreinInner_le_norm (u v : H) :
+    |kreinInner u v| ≤ ‖u‖ * ‖v‖ := by
+  rw [kreinInner_def]
+  calc
+    |⟪(J : H ≃ₗᵢ[ℝ] H) u, v⟫_ℝ| ≤
+        ‖(J : H ≃ₗᵢ[ℝ] H) u‖ * ‖v‖ := abs_real_inner_le_norm _ _
+    _ = ‖u‖ * ‖v‖ := by rw [(J : H ≃ₗᵢ[ℝ] H).norm_map]
 
 /-- `[u, v]_J = [v, u]_J`. -/
 lemma kreinInner_symm (u v : H) : kreinInner u v = kreinInner v u := by

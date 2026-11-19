@@ -41,7 +41,7 @@ variable (B : CantorCoadjointHamiltonianFlowBridge Orbit E Op H Finite Alg)
 The Hamiltonian of the system is the Souriau temperature vector 
 pointing along the L₀ direction.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem hamiltonian_eq_L0 :
     B.dynamics.geometricTemperature = B.crystal.virasoro.Lmode 0 :=
   B.hamiltonian_is_L0
@@ -50,7 +50,7 @@ theorem hamiltonian_eq_L0 :
 The actual dynamic owner surface identifies the Hamiltonian with the Tomita
 thermal generator.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem flow_hamiltonian_is_souriau_generator :
     B.flow.selfAdjointHamiltonian =
       B.flow.modularContext.logContext.modularHamiltonian :=

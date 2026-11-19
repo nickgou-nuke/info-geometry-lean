@@ -1,0 +1,1546 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.Algebra.Ring.Basic
+import Mathlib.Algebra.Star.Basic
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Data.Finset.Basic
+import Mathlib.Data.Fintype.Basic
+import Mathlib.Data.Matrix.Basic
+import Mathlib.LinearAlgebra.Matrix.Notation
+import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+import Mathlib.LinearAlgebra.Matrix.Trace
+import Mathlib.Logic.Relation
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.NoncommRing
+import Mathlib.Tactic.Ring
+import InfoGeometry.Core.PeirceDecomposition
+import InfoGeometry.Core.IdempotentCartan
+import InfoGeometry.Core.PeirceCompressionDefect
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Basic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.DefectParity
+
+/-!
+# Indefinite Reciprocal Totality, Socratic Aporia, and Causal Poset (`Solve et Coagula`)
+
+Formalizes the algebraic skeleton of Phases I–V (`Ax.1`–`Ax.4`, `Prop.1`–`Prop.6`,
+`Thm. Ω`, and the 7-stratum acyclic causal poset `(𝒫, ≺)`) over an arbitrary
+associative unital ring `[Ring E]` without commutativity assumptions, reusing
+`Core.PeirceDecomposition`, `Core.IdempotentCartan`, `Core.PeirceCompressionDefect`,
+and `OperatorAlgebra.PeirceSpine.{Basic, DefectParity}`.
+
+## Scope
+- `BUCKET 1`: The 7-stratum causal poset acyclicity and `Prop.1`–`Prop.6`, `Thm. Ω`
+  are unconditional algebraic identities over `[Ring E]` (with the two-torsion-free
+  hypothesis `∀ z : E, 2 • z = 0 → z = 0` stated explicitly where needed in `Thm. Ω`).
+- All narrative/psychological interpretations remain documentation-only and are not
+  encoded in Lean types.
+-/
+
+namespace InfoGeometry.OperatorAlgebra.PeirceSpine.ReciprocalTotalityAporiaPoset
+
+open scoped BigOperators
+open InfoGeometry.Core
+open InfoGeometry.OperatorAlgebra
+
+/-! ## Phase V.1 — Acyclic Causal Poset `(𝒫, ≺)` -/
+
+/-- Nodes of the 7-stratum extracted archetype poset `(𝒫, ≺)`. -/
+inductive ArchetypePosetNode : Type
+  | N0_Omega
+  | N1a_P
+  | N1b_Q
+  | N1c_Gamma
+  | N2a_T
+  | N2b_X
+  | N2c_Y
+  | N2d_G
+  | N3a_Holonomy
+  | N3b_F
+  | N3c_M
+  | N3d_K
+  | N4a_Aporia
+  | N4b_Sigma0
+  | N5_MetaTower
+  | N6_JOmega
+  deriving DecidableEq, Repr
+
+instance : Fintype ArchetypePosetNode where
+  elems :=
+    { .N0_Omega, .N1a_P, .N1b_Q, .N1c_Gamma,
+      .N2a_T, .N2b_X, .N2c_Y, .N2d_G,
+      .N3a_Holonomy, .N3b_F, .N3c_M, .N3d_K,
+      .N4a_Aporia, .N4b_Sigma0, .N5_MetaTower, .N6_JOmega }
+  complete := by
+    intro x
+    cases x <;> simp
+
+/-- Primary stratum `0..6` of each node in `(𝒫, ≺)`. -/
+def stratum : ArchetypePosetNode → ℕ
+  | .N0_Omega => 0
+  | .N1a_P => 1
+  | .N1b_Q => 1
+  | .N1c_Gamma => 1
+  | .N2a_T => 2
+  | .N2b_X => 2
+  | .N2c_Y => 2
+  | .N2d_G => 2
+  | .N3a_Holonomy => 3
+  | .N3b_F => 3
+  | .N3c_M => 3
+  | .N3d_K => 3
+  | .N4a_Aporia => 4
+  | .N4b_Sigma0 => 4
+  | .N5_MetaTower => 5
+  | .N6_JOmega => 6
+
+/-- Lexicographic `(stratum, sub-stratum)` rank encoded as `10 * s + σ`. -/
+def lexRank : ArchetypePosetNode → ℕ
+  | .N0_Omega => 0
+  | .N1a_P => 10
+  | .N1b_Q => 11
+  | .N1c_Gamma => 12
+  | .N2a_T => 20
+  | .N2b_X => 20
+  | .N2c_Y => 20
+  | .N2d_G => 20
+  | .N3a_Holonomy => 30
+  | .N3b_F => 30
+  | .N3c_M => 31
+  | .N3d_K => 32
+  | .N4a_Aporia => 40
+  | .N4b_Sigma0 => 40
+  | .N5_MetaTower => 50
+  | .N6_JOmega => 60
+
+/-- Immediate cover edges `u ≺_cov v` in `(𝒫, ≺)`. -/
+def coverRel : ArchetypePosetNode → ArchetypePosetNode → Bool
+  -- Stratum 0 → Stratum 1 & Stratum 2
+  | .N0_Omega, .N1a_P => true
+  | .N0_Omega, .N2a_T => true
+  | .N0_Omega, .N2b_X => true
+  | .N0_Omega, .N2c_Y => true
+  | .N0_Omega, .N2d_G => true
+  -- Stratum 1 internal & → Stratum 2/3/4/5
+  | .N1a_P, .N1b_Q => true
+  | .N1a_P, .N1c_Gamma => true
+  | .N1b_Q, .N1c_Gamma => true
+  | .N1a_P, .N2a_T => true
+  | .N1a_P, .N2b_X => true
+  | .N1a_P, .N2c_Y => true
+  | .N1b_Q, .N2b_X => true
+  | .N1b_Q, .N2c_Y => true
+  | .N1b_Q, .N2d_G => true
+  | .N1c_Gamma, .N3d_K => true
+  | .N1a_P, .N4b_Sigma0 => true
+  | .N1b_Q, .N4b_Sigma0 => true
+  | .N1c_Gamma, .N5_MetaTower => true
+  -- Stratum 2 → Stratum 3 & Stratum 4
+  | .N2b_X, .N3a_Holonomy => true
+  | .N2c_Y, .N3a_Holonomy => true
+  | .N2b_X, .N3b_F => true
+  | .N2c_Y, .N3b_F => true
+  | .N2a_T, .N4a_Aporia => true
+  | .N2a_T, .N4b_Sigma0 => true
+  | .N2d_G, .N4b_Sigma0 => true
+  -- Stratum 3 internal & → Stratum 4/5/6
+  | .N3a_Holonomy, .N3c_M => true
+  | .N3b_F, .N3c_M => true
+  | .N3a_Holonomy, .N3d_K => true
+  | .N3c_M, .N3d_K => true
+  | .N3a_Holonomy, .N4a_Aporia => true
+  | .N3c_M, .N4b_Sigma0 => true
+  | .N3b_F, .N5_MetaTower => true
+  | .N3b_F, .N6_JOmega => true
+  -- Stratum 4 → Stratum 5 & Stratum 6
+  | .N4a_Aporia, .N5_MetaTower => true
+  | .N4b_Sigma0, .N6_JOmega => true
+  -- Stratum 5 → Stratum 6
+  | .N5_MetaTower, .N6_JOmega => true
+  | _, _ => false
+
+/-- Strict causal precedence relation generated by `coverRel`. -/
+def causalPrec (u v : ArchetypePosetNode) : Prop :=
+  Relation.TransGen (fun a b => coverRel a b = true) u v
+
+theorem coverRel_lexRank_strict_mono :
+    ∀ u v : ArchetypePosetNode, coverRel u v = true → lexRank u < lexRank v := by
+  decide
+
+theorem causalPrec_lexRank_lt {u v : ArchetypePosetNode} (h : causalPrec u v) :
+    lexRank u < lexRank v := by
+  induction h with
+  | single huv => exact coverRel_lexRank_strict_mono _ _ huv
+  | tail _ hbc ih => exact lt_trans ih (coverRel_lexRank_strict_mono _ _ hbc)
+
+theorem causalPrec_irrefl (u : ArchetypePosetNode) : ¬ causalPrec u u := by
+  intro h
+  exact Nat.lt_irrefl (lexRank u) (causalPrec_lexRank_lt h)
+
+theorem causalPrec_asymm {u v : ArchetypePosetNode} (huv : causalPrec u v) :
+    ¬ causalPrec v u := by
+  intro hvu
+  exact Nat.lt_irrefl (lexRank u) (lt_trans (causalPrec_lexRank_lt huv) (causalPrec_lexRank_lt hvu))
+
+theorem causalPrec_trans {u v w : ArchetypePosetNode}
+    (huv : causalPrec u v) (hvw : causalPrec v w) : causalPrec u w :=
+  Relation.TransGen.trans huv hvw
+
+/-! ## Phases I–IV — Relational Primitives in `[Ring E]` -/
+
+section RelationalPrimitives
+
+variable {E : Type*} [Ring E]
+
+/-- Repressed shadow complement `Q := 1 - P`. -/
+def Q (P : E) : E := 1 - P
+
+theorem Q_eq_complementIdempotent (P : E) :
+    Q P = PeirceDecomposition.complementIdempotent P := rfl
+
+/-- Partitioning polarity `Γ := P - Q`. -/
+def Gamma (P : E) : E := P - Q P
+
+theorem Gamma_eq_invS (P : E) :
+    Gamma P = PeirceSpine.invS P := rfl
+
+theorem Gamma_eq_reflection (P : E) :
+    Gamma P = IdempotentCartan.reflection P := by
+  simp only [Gamma, Q, IdempotentCartan.reflection, two_nsmul]
+  abel
+
+/-- Internal self-consistency `T := P * Ω * P`. -/
+def T (P Ω : E) : E := P * Ω * P
+
+theorem T_eq_peirce11 (P Ω : E) :
+    T P Ω = PeirceSpine.peirce11 P Ω := rfl
+
+/-- Outward projection `X := Q P * Ω * P`. -/
+def X (P Ω : E) : E := Q P * Ω * P
+
+theorem X_eq_coneMinus (P Ω : E) :
+    X P Ω = PeirceSpine.coneMinus P Ω := rfl
+
+/-- Inward shadow-intrusion `Y := P * Ω * Q P`. -/
+def Y (P Ω : E) : E := P * Ω * Q P
+
+theorem Y_eq_conePlus (P Ω : E) :
+    Y P Ω = PeirceSpine.conePlus P Ω := rfl
+
+/-- Autonomous unexamined ground `G := Q P * Ω * Q P`. -/
+def G (P Ω : E) : E := Q P * Ω * Q P
+
+theorem G_eq_peirce00 (P Ω : E) :
+    G P Ω = PeirceSpine.peirce00 P Ω := rfl
+
+/-- Integrative bridge `F := X + Y`. -/
+def F (P Ω : E) : E := X P Ω + Y P Ω
+
+/-- Shared substantive gravity `M := X * Y + Y * X`. -/
+def M (P Ω : E) : E := X P Ω * Y P Ω + Y P Ω * X P Ω
+
+/-- Directional tension `K := Y * X - X * Y`. -/
+def K (P Ω : E) : E := Y P Ω * X P Ω - X P Ω * Y P Ω
+
+/-- Conscious elenctic aporia `𝒜₀ := T - T * T`. -/
+def aporia (P Ω : E) : E := T P Ω - T P Ω * T P Ω
+
+/-- Ground elenctic defect `G - G * G`. -/
+def groundAporia (P Ω : E) : E := G P Ω - G P Ω * G P Ω
+
+/-- Severed block-diagonal dogma `Σ₀ := (2 • T - P) + (2 • G - Q)`. -/
+def Sigma0 (P Ω : E) : E := (2 • T P Ω - P) + (2 • G P Ω - Q P)
+
+/-- Scaled integrative bridge `B := 2 • F`. -/
+def B (P Ω : E) : E := 2 • F P Ω
+
+/-- Undivided reciprocity involution `J_Ω := 2 • Ω - 1`. -/
+def JOmega (Ω : E) : E := 2 • Ω - 1
+
+end RelationalPrimitives
+
+/-! ## Phase V.2.II — Intermediate Deductions (`Prop.1`–`Prop.6`) -/
+
+section Deductions
+
+variable {E : Type*} [Ring E]
+
+private lemma four_nsmul_eq (x : E) : (4 : ℕ) • x = x + x + x + x := by
+  rw [show (4 : ℕ) = 2 + 2 by rfl, add_nsmul, two_nsmul]
+  abel
+
+private lemma mul_left_idem {p : E} (hp : p * p = p) (z : E) : p * (p * z) = p * z := by
+  rw [← mul_assoc, hp]
+
+/-- **Prop. 1 (Orthogonality & Polarity Involution — Stratum 1).** -/
+theorem prop1_orthogonality_and_polarity_involution (P : E) (hP : P * P = P) :
+    Q P * Q P = Q P ∧
+    P * Q P = 0 ∧
+    Q P * P = 0 ∧
+    P + Q P = 1 ∧
+    Gamma P * Gamma P = 1 ∧
+    Gamma P * P = P ∧
+    P * Gamma P = P ∧
+    Gamma P * Q P = -Q P ∧
+    Q P * Gamma P = -Q P ∧
+    PeirceSpine.comm P (Gamma P) = 0 := by
+  have hQsq : Q P * Q P = Q P := PeirceDecomposition.complementIdempotent_sq P hP
+  have hPQ : P * Q P = 0 := PeirceDecomposition.idempotent_mul_complement P hP
+  have hQP : Q P * P = 0 := PeirceDecomposition.complement_mul_idempotent P hP
+  have hPQ1 : P + Q P = 1 := PeirceDecomposition.add_complementIdempotent P
+  have hΓsq : Gamma P * Gamma P = 1 := by
+    rw [Gamma_eq_reflection]
+    exact IdempotentCartan.reflection_sq hP
+  have hΓP : Gamma P * P = P := by
+    simp only [Gamma, sub_mul, hP, hQP, sub_zero]
+  have hPΓ : P * Gamma P = P := by
+    simp only [Gamma, mul_sub, hP, hPQ, sub_zero]
+  have hΓQ : Gamma P * Q P = -Q P := by
+    simp only [Gamma, sub_mul, hPQ, hQsq, zero_sub]
+  have hQΓ : Q P * Gamma P = -Q P := by
+    simp only [Gamma, mul_sub, hQP, hQsq, zero_sub]
+  have hcomm : PeirceSpine.comm P (Gamma P) = 0 := by
+    simp only [PeirceSpine.comm, hPΓ, hΓP, sub_self]
+  exact ⟨hQsq, hPQ, hQP, hPQ1, hΓsq, hΓP, hPΓ, hΓQ, hQΓ, hcomm⟩
+
+/-- **Prop. 2 (Fourfold Exhaustive Decomposition & Unilateral Nilpotency — Stratum 2).** -/
+theorem prop2_fourfold_decomposition_and_nilpotency (P Ω : E) (hP : P * P = P) :
+    T P Ω + X P Ω + Y P Ω + G P Ω = Ω ∧
+    PeirceSpine.comm P Ω = Y P Ω - X P Ω ∧
+    (PeirceSpine.comm P Ω ≠ 0 → X P Ω ≠ 0 ∨ Y P Ω ≠ 0) ∧
+    X P Ω * X P Ω = 0 ∧
+    Y P Ω * Y P Ω = 0 := by
+  have hdecomp : T P Ω + X P Ω + Y P Ω + G P Ω = Ω := by
+    simp only [T, X, Y, G, Q]
+    noncomm_ring
+  have hcomm : PeirceSpine.comm P Ω = Y P Ω - X P Ω := by
+    simp only [PeirceSpine.comm, Y, X, Q]
+    noncomm_ring
+  have hne : PeirceSpine.comm P Ω ≠ 0 → X P Ω ≠ 0 ∨ Y P Ω ≠ 0 := by
+    intro hc
+    by_contra hzero
+    push Not at hzero
+    apply hc
+    rw [hcomm, hzero.1, hzero.2, sub_zero]
+  have hXsq : X P Ω * X P Ω = 0 := by
+    rw [X_eq_coneMinus]
+    exact PeirceSpine.coneMinus_mul_coneMinus hP Ω Ω
+  have hYsq : Y P Ω * Y P Ω = 0 := by
+    rw [Y_eq_conePlus]
+    exact PeirceSpine.conePlus_mul_conePlus hP Ω Ω
+  exact ⟨hdecomp, hcomm, hne, hXsq, hYsq⟩
+
+/-- **Prop. 3 (Oddness of the Integrative Bridge & Duality of Gravity and Tension — Stratum 3).** -/
+theorem prop3_integrative_bridge_gravity_and_tension (P Ω : E) (hP : P * P = P) :
+    Gamma P * F P Ω = PeirceSpine.comm P Ω ∧
+    F P Ω * Gamma P = -PeirceSpine.comm P Ω ∧
+    (PeirceSpine.comm P Ω ≠ 0 → F P Ω ≠ 0) ∧
+    Gamma P * F P Ω + F P Ω * Gamma P = 0 ∧
+    F P Ω * F P Ω = M P Ω ∧
+    Gamma P * M P Ω = M P Ω * Gamma P ∧
+    K P Ω = Gamma P * M P Ω ∧
+    K P Ω = M P Ω * Gamma P ∧
+    (Y P Ω * X P Ω = X P Ω * Y P Ω ↔ M P Ω = 0) ∧
+    (M P Ω = 0 ↔ Y P Ω * X P Ω = 0 ∧ X P Ω * Y P Ω = 0) := by
+  have h1 := prop1_orthogonality_and_polarity_involution P hP
+  have h2 := prop2_fourfold_decomposition_and_nilpotency P Ω hP
+  have hPX_left : P * X P Ω = 0 := by
+    rw [X_eq_coneMinus]
+    exact PeirceSpine.P_mul_coneMinus hP Ω
+  have hXP_right : X P Ω * P = X P Ω := by
+    rw [X_eq_coneMinus]
+    exact PeirceSpine.coneMinus_mul_P hP Ω
+  have hPY_left : P * Y P Ω = Y P Ω := by
+    rw [Y_eq_conePlus]
+    exact PeirceSpine.P_mul_conePlus hP Ω
+  have hYP_right : Y P Ω * P = 0 := by
+    rw [Y_eq_conePlus]
+    exact PeirceSpine.conePlus_mul_P hP Ω
+  have hQX_left : Q P * X P Ω = X P Ω := by
+    simp only [X, ← mul_assoc, h1.1]
+  have hXQ_right : X P Ω * Q P = 0 := by
+    simp only [X, mul_assoc, h1.2.1, mul_zero]
+  have hQY_left : Q P * Y P Ω = 0 := by
+    simp only [Y, ← mul_assoc, h1.2.2.1, zero_mul]
+  have hYQ_right : Y P Ω * Q P = Y P Ω := by
+    simp only [Y, mul_assoc, h1.1]
+  have hΓX : Gamma P * X P Ω = -X P Ω := by
+    simp only [Gamma, sub_mul, hPX_left, hQX_left, zero_sub]
+  have hXΓ : X P Ω * Gamma P = X P Ω := by
+    simp only [Gamma, mul_sub, hXP_right, hXQ_right, sub_zero]
+  have hΓY : Gamma P * Y P Ω = Y P Ω := by
+    simp only [Gamma, sub_mul, hPY_left, hQY_left, sub_zero]
+  have hYΓ : Y P Ω * Gamma P = -Y P Ω := by
+    simp only [Gamma, mul_sub, hYP_right, hYQ_right, zero_sub]
+  have hΓF : Gamma P * F P Ω = PeirceSpine.comm P Ω := by
+    rw [F, mul_add, hΓX, hΓY, h2.2.1]
+    abel
+  have hFΓ : F P Ω * Gamma P = -PeirceSpine.comm P Ω := by
+    rw [F, add_mul, hXΓ, hYΓ, h2.2.1]
+    abel
+  have hF_ne : PeirceSpine.comm P Ω ≠ 0 → F P Ω ≠ 0 := by
+    intro hc hF0
+    apply hc
+    rw [← hΓF, hF0, mul_zero]
+  have hΓF_anti : Gamma P * F P Ω + F P Ω * Gamma P = 0 := by
+    rw [hΓF, hFΓ, add_neg_cancel]
+  have hFsq : F P Ω * F P Ω = M P Ω := by
+    calc
+      F P Ω * F P Ω = (X P Ω + Y P Ω) * (X P Ω + Y P Ω) := rfl
+      _ = X P Ω * X P Ω + X P Ω * Y P Ω + Y P Ω * X P Ω + Y P Ω * Y P Ω := by noncomm_ring
+      _ = X P Ω * Y P Ω + Y P Ω * X P Ω := by
+        rw [h2.2.2.2.1, h2.2.2.2.2, zero_add, add_zero]
+      _ = M P Ω := rfl
+  have hΓM : Gamma P * M P Ω = M P Ω * Gamma P := by
+    have hΓF_flip : Gamma P * F P Ω = -(F P Ω * Gamma P) :=
+      eq_neg_of_add_eq_zero_left hΓF_anti
+    have hFΓ_flip : F P Ω * Gamma P = -(Gamma P * F P Ω) :=
+      eq_neg_of_add_eq_zero_right hΓF_anti
+    calc
+      Gamma P * M P Ω = Gamma P * (F P Ω * F P Ω) := by rw [hFsq]
+      _ = (Gamma P * F P Ω) * F P Ω := by rw [mul_assoc]
+      _ = -(F P Ω * Gamma P) * F P Ω := by rw [hΓF_flip]
+      _ = -(F P Ω * (Gamma P * F P Ω)) := by rw [neg_mul, mul_assoc]
+      _ = -(F P Ω * (-(F P Ω * Gamma P))) := by rw [hΓF_flip]
+      _ = (F P Ω * F P Ω) * Gamma P := by rw [mul_neg, neg_neg, mul_assoc]
+      _ = M P Ω * Gamma P := by rw [hFsq]
+  have hKΓM : K P Ω = Gamma P * M P Ω := by
+    calc
+      K P Ω = Y P Ω * X P Ω - X P Ω * Y P Ω := rfl
+      _ = (Gamma P * Y P Ω) * X P Ω + (Gamma P * X P Ω) * Y P Ω := by
+        rw [hΓY, hΓX, neg_mul]
+        abel
+      _ = Gamma P * (Y P Ω * X P Ω + X P Ω * Y P Ω) := by
+        rw [mul_assoc, mul_assoc, ← mul_add]
+      _ = Gamma P * M P Ω := by rw [M, add_comm]
+  have hKMΓ : K P Ω = M P Ω * Gamma P := hKΓM.trans hΓM
+  have hP_YX : P * (Y P Ω * X P Ω) = Y P Ω * X P Ω := by
+    rw [← mul_assoc, hPY_left]
+  have hP_XY : P * (X P Ω * Y P Ω) = 0 := by
+    rw [← mul_assoc, hPX_left, zero_mul]
+  have hM_iff_both : M P Ω = 0 ↔ Y P Ω * X P Ω = 0 ∧ X P Ω * Y P Ω = 0 := by
+    constructor
+    · intro hM0
+      have hPM := congrArg (fun z : E => P * z) hM0
+      rw [M, mul_add, hP_XY, hP_YX, zero_add, mul_zero] at hPM
+      have hXY0 : X P Ω * Y P Ω = 0 := by
+        have hM' : X P Ω * Y P Ω + Y P Ω * X P Ω = 0 := hM0
+        rw [hPM, add_zero] at hM'
+        exact hM'
+      exact ⟨hPM, hXY0⟩
+    · rintro ⟨hYX0, hXY0⟩
+      simp [M, hXY0, hYX0]
+  have hcomm_iff_M : Y P Ω * X P Ω = X P Ω * Y P Ω ↔ M P Ω = 0 := by
+    constructor
+    · intro heq
+      have hP_eq := congrArg (fun z : E => P * z) heq
+      rw [hP_YX, hP_XY] at hP_eq
+      have hXY0 : X P Ω * Y P Ω = 0 := heq.symm.trans hP_eq
+      exact hM_iff_both.mpr ⟨hP_eq, hXY0⟩
+    · intro hM0
+      rcases hM_iff_both.mp hM0 with ⟨hYX0, hXY0⟩
+      rw [hYX0, hXY0]
+  exact ⟨hΓF, hFΓ, hF_ne, hΓF_anti, hFsq, hΓM, hKΓM, hKMΓ, hcomm_iff_M, hM_iff_both⟩
+
+/-- **Prop. 4 (The Exact Socratic Aporia Theorem — Stratum 4).** -/
+theorem prop4_exact_socratic_aporia (P Ω : E) (hP : P * P = P) (hΩ : Ω * Ω = Ω) :
+    aporia P Ω = Y P Ω * X P Ω ∧
+    groundAporia P Ω = X P Ω * Y P Ω ∧
+    aporia P Ω + groundAporia P Ω = M P Ω ∧
+    aporia P Ω - groundAporia P Ω = K P Ω ∧
+    T P Ω * Y P Ω + Y P Ω * G P Ω = Y P Ω ∧
+    X P Ω * T P Ω + G P Ω * X P Ω = X P Ω := by
+  have h1 := prop1_orthogonality_and_polarity_involution P hP
+  have hP_left : ∀ z : E, P * (P * z) = P * z := mul_left_idem hP
+  have hQ_left : ∀ z : E, Q P * (Q P * z) = Q P * z := mul_left_idem h1.1
+  have hΩ_left : ∀ z : E, Ω * (Ω * z) = Ω * z := mul_left_idem hΩ
+  have hPQ_right : ∀ z : E, P * (Q P * z) = 0 := fun z => by
+    rw [← mul_assoc, h1.2.1, zero_mul]
+  have hQP_right : ∀ z : E, Q P * (P * z) = 0 := fun z => by
+    rw [← mul_assoc, h1.2.2.1, zero_mul]
+  have hT_sq_add_YX : T P Ω * T P Ω + Y P Ω * X P Ω = T P Ω := by
+    calc
+      T P Ω * T P Ω + Y P Ω * X P Ω =
+          P * Ω * (P * (P * (Ω * P))) + P * Ω * (Q P * (Q P * (Ω * P))) := by
+        simp only [T, Y, X, mul_assoc]
+      _ = P * Ω * (P * (Ω * P)) + P * Ω * (Q P * (Ω * P)) := by
+        rw [hP_left (Ω * P), hQ_left (Ω * P)]
+      _ = P * Ω * ((P + Q P) * (Ω * P)) := by
+        simp only [add_mul, mul_add, mul_assoc]
+      _ = P * Ω * (1 * (Ω * P)) := by rw [h1.2.2.2.1]
+      _ = P * (Ω * (Ω * P)) := by simp only [one_mul, mul_assoc]
+      _ = P * Ω * P := by rw [hΩ_left P, mul_assoc]
+      _ = T P Ω := rfl
+  have hAp : aporia P Ω = Y P Ω * X P Ω := by
+    calc
+      aporia P Ω = T P Ω - T P Ω * T P Ω := rfl
+      _ = (T P Ω * T P Ω + Y P Ω * X P Ω) - T P Ω * T P Ω := by rw [hT_sq_add_YX]
+      _ = Y P Ω * X P Ω := by abel
+  have hG_sq_add_XY : X P Ω * Y P Ω + G P Ω * G P Ω = G P Ω := by
+    calc
+      X P Ω * Y P Ω + G P Ω * G P Ω =
+          Q P * Ω * (P * (P * (Ω * Q P))) + Q P * Ω * (Q P * (Q P * (Ω * Q P))) := by
+        simp only [X, Y, G, mul_assoc]
+      _ = Q P * Ω * (P * (Ω * Q P)) + Q P * Ω * (Q P * (Ω * Q P)) := by
+        rw [hP_left (Ω * Q P), hQ_left (Ω * Q P)]
+      _ = Q P * Ω * ((P + Q P) * (Ω * Q P)) := by
+        simp only [add_mul, mul_add, mul_assoc]
+      _ = Q P * Ω * (1 * (Ω * Q P)) := by rw [h1.2.2.2.1]
+      _ = Q P * (Ω * (Ω * Q P)) := by simp only [one_mul, mul_assoc]
+      _ = Q P * Ω * Q P := by rw [hΩ_left (Q P), mul_assoc]
+      _ = G P Ω := rfl
+  have hGAp : groundAporia P Ω = X P Ω * Y P Ω := by
+    calc
+      groundAporia P Ω = G P Ω - G P Ω * G P Ω := rfl
+      _ = (X P Ω * Y P Ω + G P Ω * G P Ω) - G P Ω * G P Ω := by rw [hG_sq_add_XY]
+      _ = X P Ω * Y P Ω := by abel
+  have hAdd : aporia P Ω + groundAporia P Ω = M P Ω := by
+    rw [hAp, hGAp, M, add_comm]
+  have hSub : aporia P Ω - groundAporia P Ω = K P Ω := by
+    rw [hAp, hGAp, K]
+  have hTYG : T P Ω * Y P Ω + Y P Ω * G P Ω = Y P Ω := by
+    calc
+      T P Ω * Y P Ω + Y P Ω * G P Ω =
+          P * Ω * (P * (P * (Ω * Q P))) + P * Ω * (Q P * (Q P * (Ω * Q P))) := by
+        simp only [T, Y, G, mul_assoc]
+      _ = P * Ω * (P * (Ω * Q P)) + P * Ω * (Q P * (Ω * Q P)) := by
+        rw [hP_left (Ω * Q P), hQ_left (Ω * Q P)]
+      _ = P * Ω * ((P + Q P) * (Ω * Q P)) := by
+        simp only [add_mul, mul_add, mul_assoc]
+      _ = P * Ω * (1 * (Ω * Q P)) := by rw [h1.2.2.2.1]
+      _ = P * (Ω * (Ω * Q P)) := by simp only [one_mul, mul_assoc]
+      _ = P * Ω * Q P := by rw [hΩ_left (Q P), mul_assoc]
+      _ = Y P Ω := rfl
+  have hXTG : X P Ω * T P Ω + G P Ω * X P Ω = X P Ω := by
+    calc
+      X P Ω * T P Ω + G P Ω * X P Ω =
+          Q P * Ω * (P * (P * (Ω * P))) + Q P * Ω * (Q P * (Q P * (Ω * P))) := by
+        simp only [X, T, G, mul_assoc]
+      _ = Q P * Ω * (P * (Ω * P)) + Q P * Ω * (Q P * (Ω * P)) := by
+        rw [hP_left (Ω * P), hQ_left (Ω * P)]
+      _ = Q P * Ω * ((P + Q P) * (Ω * P)) := by
+        simp only [add_mul, mul_add, mul_assoc]
+      _ = Q P * Ω * (1 * (Ω * P)) := by rw [h1.2.2.2.1]
+      _ = Q P * (Ω * (Ω * P)) := by simp only [one_mul, mul_assoc]
+      _ = Q P * Ω * P := by rw [hΩ_left P, mul_assoc]
+      _ = X P Ω := rfl
+  exact ⟨hAp, hGAp, hAdd, hSub, hTYG, hXTG⟩
+
+/-- **Prop. 5 (Incompleteness of Dogmatic Truncation — Stratum 4).** -/
+theorem prop5_incompleteness_of_dogmatic_truncation (P Ω : E)
+    (hP : P * P = P) (hΩ : Ω * Ω = Ω) :
+    Sigma0 P Ω * B P Ω + B P Ω * Sigma0 P Ω = 0 ∧
+    1 - Sigma0 P Ω * Sigma0 P Ω = B P Ω * B P Ω ∧
+    B P Ω * B P Ω = 4 • M P Ω ∧
+    1 - Sigma0 P Ω * Sigma0 P Ω = 4 • M P Ω := by
+  have h1 := prop1_orthogonality_and_polarity_involution P hP
+  have h3 := prop3_integrative_bridge_gravity_and_tension P Ω hP
+  have h4 := prop4_exact_socratic_aporia P Ω hP hΩ
+  have hTP : T P Ω * P = T P Ω := by simp only [T, mul_assoc, hP]
+  have hPT : P * T P Ω = T P Ω := by simp only [T, ← mul_assoc, hP]
+  have hTQ : T P Ω * Q P = 0 := by simp only [T, mul_assoc, h1.2.1, mul_zero]
+  have hQT : Q P * T P Ω = 0 := by simp only [T, ← mul_assoc, h1.2.2.1, zero_mul]
+  have hGP : G P Ω * P = 0 := by simp only [G, mul_assoc, h1.2.2.1, mul_zero]
+  have hPG : P * G P Ω = 0 := by simp only [G, ← mul_assoc, h1.2.1, zero_mul]
+  have hGQ : G P Ω * Q P = G P Ω := by simp only [G, mul_assoc, h1.1]
+  have hQG : Q P * G P Ω = G P Ω := by simp only [G, ← mul_assoc, h1.1]
+  have hPY : P * Y P Ω = Y P Ω := by simp only [Y, ← mul_assoc, hP]
+  have hYQ : Y P Ω * Q P = Y P Ω := by simp only [Y, mul_assoc, h1.1]
+  have hPX : P * X P Ω = 0 := by simp only [X, ← mul_assoc, h1.2.1, zero_mul]
+  have hXP : X P Ω * P = X P Ω := by simp only [X, mul_assoc, hP]
+  have hQX : Q P * X P Ω = X P Ω := by simp only [X, ← mul_assoc, h1.1]
+  have hXQ : X P Ω * Q P = 0 := by simp only [X, mul_assoc, h1.2.1, mul_zero]
+  have hQY : Q P * Y P Ω = 0 := by
+    simp only [Y, ← mul_assoc, h1.2.2.1, zero_mul]
+  have hYP : Y P Ω * P = 0 := by
+    rw [Y_eq_conePlus]
+    exact PeirceSpine.conePlus_mul_P hP Ω
+  have hTG : T P Ω * G P Ω = 0 := by
+    calc
+      T P Ω * G P Ω = T P Ω * (Q P * G P Ω) := by rw [hQG]
+      _ = (T P Ω * Q P) * G P Ω := by rw [mul_assoc]
+      _ = 0 := by rw [hTQ, zero_mul]
+  have hGT : G P Ω * T P Ω = 0 := by
+    calc
+      G P Ω * T P Ω = G P Ω * (P * T P Ω) := by rw [hPT]
+      _ = (G P Ω * P) * T P Ω := by rw [mul_assoc]
+      _ = 0 := by rw [hGP, zero_mul]
+  have hTX : T P Ω * X P Ω = 0 := by
+    simp only [T, mul_assoc, hPX, mul_zero]
+  have hGY : G P Ω * Y P Ω = 0 := by
+    simp only [G, mul_assoc, hQY, mul_zero]
+  have hYT : Y P Ω * T P Ω = 0 := by
+    simp only [T, ← mul_assoc, hYP, zero_mul]
+  have hXG : X P Ω * G P Ω = 0 := by
+    simp only [G, ← mul_assoc, hXQ, zero_mul]
+  have hA1A2_zero : (2 • T P Ω - P) * (2 • G P Ω - Q P) = 0 := by
+    simp only [two_nsmul, add_mul, mul_add, sub_mul, mul_sub, hTG, hTQ, hPG, h1.2.1]
+    abel
+  have hA2A1_zero : (2 • G P Ω - Q P) * (2 • T P Ω - P) = 0 := by
+    simp only [two_nsmul, add_mul, mul_add, sub_mul, mul_sub, hGT, hGP, hQT, h1.2.2.1]
+    abel
+  have hA1_sq : (2 • T P Ω - P) * (2 • T P Ω - P) = P - 4 • (Y P Ω * X P Ω) := by
+    have hTT : T P Ω * T P Ω = T P Ω - Y P Ω * X P Ω := by
+      rw [← h4.1, aporia]
+      abel
+    simp only [two_nsmul, four_nsmul_eq, add_mul, mul_add, sub_mul, mul_sub,
+      hP, hTP, hPT, hTT]
+    abel
+  have hA2_sq : (2 • G P Ω - Q P) * (2 • G P Ω - Q P) = Q P - 4 • (X P Ω * Y P Ω) := by
+    have hGG : G P Ω * G P Ω = G P Ω - X P Ω * Y P Ω := by
+      rw [← h4.2.1, groundAporia]
+      abel
+    simp only [two_nsmul, four_nsmul_eq, add_mul, mul_add, sub_mul, mul_sub,
+      h1.1, hGQ, hQG, hGG]
+    abel
+  have hSigma0_sq : Sigma0 P Ω * Sigma0 P Ω = 1 - 4 • M P Ω := by
+    calc
+      Sigma0 P Ω * Sigma0 P Ω =
+          (2 • T P Ω - P) * (2 • T P Ω - P) +
+            (2 • T P Ω - P) * (2 • G P Ω - Q P) +
+            (2 • G P Ω - Q P) * (2 • T P Ω - P) +
+            (2 • G P Ω - Q P) * (2 • G P Ω - Q P) := by
+        simp only [Sigma0]
+        noncomm_ring
+      _ = (P - 4 • (Y P Ω * X P Ω)) + 0 + 0 + (Q P - 4 • (X P Ω * Y P Ω)) := by
+        rw [hA1_sq, hA1A2_zero, hA2A1_zero, hA2_sq]
+      _ = 1 - 4 • M P Ω := by
+        rw [← h1.2.2.2.1]
+        simp only [M, four_nsmul_eq]
+        abel
+  have hBsq : B P Ω * B P Ω = 4 • M P Ω := by
+    have hFsq : F P Ω * F P Ω = M P Ω := h3.2.2.2.2.1
+    simp only [B, two_nsmul, four_nsmul_eq, add_mul, mul_add, hFsq]
+    abel
+  have h1sub : 1 - Sigma0 P Ω * Sigma0 P Ω = 4 • M P Ω := by
+    rw [hSigma0_sq]
+    abel
+  have h1subB : 1 - Sigma0 P Ω * Sigma0 P Ω = B P Ω * B P Ω := by
+    rw [h1sub, hBsq]
+  have hSigma0_F_anti : Sigma0 P Ω * F P Ω + F P Ω * Sigma0 P Ω = 0 := by
+    have hTY_YG : T P Ω * Y P Ω + Y P Ω * G P Ω = Y P Ω := h4.2.2.2.2.1
+    have hXTGX : G P Ω * X P Ω + X P Ω * T P Ω = X P Ω := by
+      rw [add_comm]
+      exact h4.2.2.2.2.2
+    have hSigmaX : Sigma0 P Ω * X P Ω + X P Ω * Sigma0 P Ω = 0 := by
+      calc
+        Sigma0 P Ω * X P Ω + X P Ω * Sigma0 P Ω =
+            (G P Ω * X P Ω + X P Ω * T P Ω) + (G P Ω * X P Ω + X P Ω * T P Ω) -
+              (X P Ω + X P Ω) := by
+          simp only [Sigma0, two_nsmul, add_mul, mul_add, sub_mul, mul_sub,
+            hTX, hPX, hQX, hXP, hXG, hXQ]
+          abel
+        _ = 0 := by rw [hXTGX]; abel
+    have hSigmaY : Sigma0 P Ω * Y P Ω + Y P Ω * Sigma0 P Ω = 0 := by
+      calc
+        Sigma0 P Ω * Y P Ω + Y P Ω * Sigma0 P Ω =
+            (T P Ω * Y P Ω + Y P Ω * G P Ω) + (T P Ω * Y P Ω + Y P Ω * G P Ω) -
+              (Y P Ω + Y P Ω) := by
+          simp only [Sigma0, two_nsmul, add_mul, mul_add, sub_mul, mul_sub,
+            hPY, hGY, hQY, hYT, hYP, hYQ]
+          abel
+        _ = 0 := by rw [hTY_YG]; abel
+    calc
+      Sigma0 P Ω * F P Ω + F P Ω * Sigma0 P Ω =
+          (Sigma0 P Ω * X P Ω + X P Ω * Sigma0 P Ω) +
+            (Sigma0 P Ω * Y P Ω + Y P Ω * Sigma0 P Ω) := by
+        simp only [F]
+        noncomm_ring
+      _ = 0 := by rw [hSigmaX, hSigmaY, add_zero]
+  have hSigma0_B_anti : Sigma0 P Ω * B P Ω + B P Ω * Sigma0 P Ω = 0 := by
+    calc
+      Sigma0 P Ω * B P Ω + B P Ω * Sigma0 P Ω =
+          (Sigma0 P Ω * F P Ω + F P Ω * Sigma0 P Ω) +
+            (Sigma0 P Ω * F P Ω + F P Ω * Sigma0 P Ω) := by
+        simp only [B, two_nsmul]
+        noncomm_ring
+      _ = 0 := by rw [hSigma0_F_anti, add_zero]
+  exact ⟨hSigma0_B_anti, h1subB, hBsq, h1sub⟩
+
+/-! ### Stage-Indexed Parity-Soldered Meta-Cognitive Tower (`Prop. 6`) -/
+
+/-- Ordered product `Γ₀ * Γ₁ * ... * Γ_{k-1}` over a potentially noncommutative ring `E`. -/
+def parityPrefix (P_seq : ℕ → E) : ℕ → E
+  | 0 => 1
+  | k + 1 => parityPrefix P_seq k * Gamma (P_seq k)
+
+/-- Parity-soldered meta-bridge `B̂_k := (∏_{j < k} Γ_j) * B_k`. -/
+def solderedB (P_seq Ω_seq : ℕ → E) (k : ℕ) : E :=
+  parityPrefix P_seq k * B (P_seq k) (Ω_seq k)
+
+/-- Cumulative parity-soldered meta-operator `D_N := ∑_{k=0}^N B̂_k`. -/
+def metaD (P_seq Ω_seq : ℕ → E) (N : ℕ) : E :=
+  ∑ k ∈ Finset.range (N + 1), solderedB P_seq Ω_seq k
+
+private lemma parityPrefix_comm_Gamma (P_seq : ℕ → E)
+    (hΓΓ : ∀ j k, j ≠ k → Gamma (P_seq j) * Gamma (P_seq k) = Gamma (P_seq k) * Gamma (P_seq j))
+    (m k : ℕ) :
+    parityPrefix P_seq m * Gamma (P_seq k) = Gamma (P_seq k) * parityPrefix P_seq m := by
+  induction m with
+  | zero => simp [parityPrefix]
+  | succ m ih =>
+    have hm : Gamma (P_seq m) * Gamma (P_seq k) = Gamma (P_seq k) * Gamma (P_seq m) := by
+      by_cases hmk : m = k
+      · subst hmk; rfl
+      · exact hΓΓ m k hmk
+    calc
+      parityPrefix P_seq (m + 1) * Gamma (P_seq k) =
+          parityPrefix P_seq m * (Gamma (P_seq m) * Gamma (P_seq k)) := by
+        simp only [parityPrefix, mul_assoc]
+      _ = parityPrefix P_seq m * (Gamma (P_seq k) * Gamma (P_seq m)) := by rw [hm]
+      _ = (parityPrefix P_seq m * Gamma (P_seq k)) * Gamma (P_seq m) := by rw [← mul_assoc]
+      _ = (Gamma (P_seq k) * parityPrefix P_seq m) * Gamma (P_seq m) := by rw [ih]
+      _ = Gamma (P_seq k) * parityPrefix P_seq (m + 1) := by simp only [parityPrefix, mul_assoc]
+
+private lemma parityPrefix_sq (P_seq : ℕ → E)
+    (hP : ∀ k, P_seq k * P_seq k = P_seq k)
+    (hΓΓ : ∀ j k, j ≠ k → Gamma (P_seq j) * Gamma (P_seq k) = Gamma (P_seq k) * Gamma (P_seq j))
+    (k : ℕ) :
+    parityPrefix P_seq k * parityPrefix P_seq k = 1 := by
+  induction k with
+  | zero => simp [parityPrefix]
+  | succ k ih =>
+    have hΓk_sq : Gamma (P_seq k) * Gamma (P_seq k) = 1 :=
+      (prop1_orthogonality_and_polarity_involution (P_seq k) (hP k)).2.2.2.2.1
+    have hcomm := parityPrefix_comm_Gamma P_seq hΓΓ k k
+    calc
+      parityPrefix P_seq (k + 1) * parityPrefix P_seq (k + 1) =
+          parityPrefix P_seq k * (Gamma (P_seq k) * parityPrefix P_seq k) * Gamma (P_seq k) := by
+        simp only [parityPrefix, mul_assoc]
+      _ = parityPrefix P_seq k * (parityPrefix P_seq k * Gamma (P_seq k)) * Gamma (P_seq k) := by
+        rw [← hcomm]
+      _ = (parityPrefix P_seq k * parityPrefix P_seq k) * (Gamma (P_seq k) * Gamma (P_seq k)) := by
+        simp only [mul_assoc]
+      _ = 1 := by rw [ih, hΓk_sq, mul_one]
+
+private lemma parityPrefix_comm_parityPrefix (P_seq : ℕ → E)
+    (hΓΓ : ∀ j k, j ≠ k → Gamma (P_seq j) * Gamma (P_seq k) = Gamma (P_seq k) * Gamma (P_seq j))
+    (m n : ℕ) :
+    parityPrefix P_seq m * parityPrefix P_seq n = parityPrefix P_seq n * parityPrefix P_seq m := by
+  induction n with
+  | zero => simp [parityPrefix]
+  | succ n ih =>
+    calc
+      parityPrefix P_seq m * parityPrefix P_seq (n + 1) =
+          (parityPrefix P_seq m * parityPrefix P_seq n) * Gamma (P_seq n) := by
+        simp only [parityPrefix, mul_assoc]
+      _ = (parityPrefix P_seq n * parityPrefix P_seq m) * Gamma (P_seq n) := by rw [ih]
+      _ = parityPrefix P_seq n * (parityPrefix P_seq m * Gamma (P_seq n)) := by rw [mul_assoc]
+      _ = parityPrefix P_seq n * (Gamma (P_seq n) * parityPrefix P_seq m) := by
+        rw [parityPrefix_comm_Gamma P_seq hΓΓ m n]
+      _ = parityPrefix P_seq (n + 1) * parityPrefix P_seq m := by
+        simp only [parityPrefix, mul_assoc]
+
+private lemma parityPrefix_comm_B (P_seq Ω_seq : ℕ → E)
+    (hΓB : ∀ j k, j ≠ k →
+      Gamma (P_seq j) * B (P_seq k) (Ω_seq k) = B (P_seq k) (Ω_seq k) * Gamma (P_seq j))
+    (m k : ℕ) (hmk : m ≤ k) :
+    parityPrefix P_seq m * B (P_seq k) (Ω_seq k) = B (P_seq k) (Ω_seq k) * parityPrefix P_seq m := by
+  induction m with
+  | zero => simp [parityPrefix]
+  | succ m ih =>
+    have hlt : m < k := Nat.lt_of_succ_le hmk
+    have hm_ne : m ≠ k := Nat.ne_of_lt hlt
+    have ih' := ih (Nat.le_of_lt hlt)
+    calc
+      parityPrefix P_seq (m + 1) * B (P_seq k) (Ω_seq k) =
+          parityPrefix P_seq m * (Gamma (P_seq m) * B (P_seq k) (Ω_seq k)) := by
+        simp only [parityPrefix, mul_assoc]
+      _ = parityPrefix P_seq m * (B (P_seq k) (Ω_seq k) * Gamma (P_seq m)) := by
+        rw [hΓB m k hm_ne]
+      _ = (parityPrefix P_seq m * B (P_seq k) (Ω_seq k)) * Gamma (P_seq m) := by rw [← mul_assoc]
+      _ = (B (P_seq k) (Ω_seq k) * parityPrefix P_seq m) * Gamma (P_seq m) := by rw [ih']
+      _ = B (P_seq k) (Ω_seq k) * parityPrefix P_seq (m + 1) := by
+        simp only [parityPrefix, mul_assoc]
+
+private lemma B_mul_parityPrefix_of_lt (P_seq Ω_seq : ℕ → E)
+    (hP : ∀ k, P_seq k * P_seq k = P_seq k)
+    (hΓB : ∀ j k, j ≠ k →
+      Gamma (P_seq j) * B (P_seq k) (Ω_seq k) = B (P_seq k) (Ω_seq k) * Gamma (P_seq j))
+    (r s : ℕ) (hrs : r < s) :
+    B (P_seq r) (Ω_seq r) * parityPrefix P_seq s = -(parityPrefix P_seq s * B (P_seq r) (Ω_seq r)) := by
+  induction s with
+  | zero => exact False.elim (Nat.not_lt_zero r hrs)
+  | succ s ih =>
+    rcases Nat.lt_or_eq_of_le (Nat.lt_succ_iff.mp hrs) with hlt | heq
+    · have ih' := ih hlt
+      have hsr : s ≠ r := Nat.ne_of_gt hlt
+      have hBs : B (P_seq r) (Ω_seq r) * Gamma (P_seq s) = Gamma (P_seq s) * B (P_seq r) (Ω_seq r) :=
+        (hΓB s r hsr).symm
+      calc
+        B (P_seq r) (Ω_seq r) * parityPrefix P_seq (s + 1) =
+            (B (P_seq r) (Ω_seq r) * parityPrefix P_seq s) * Gamma (P_seq s) := by
+          simp only [parityPrefix, mul_assoc]
+        _ = (-(parityPrefix P_seq s * B (P_seq r) (Ω_seq r))) * Gamma (P_seq s) := by rw [ih']
+        _ = -(parityPrefix P_seq s * (B (P_seq r) (Ω_seq r) * Gamma (P_seq s))) := by
+          rw [neg_mul, mul_assoc]
+        _ = -(parityPrefix P_seq s * (Gamma (P_seq s) * B (P_seq r) (Ω_seq r))) := by rw [hBs]
+        _ = -(parityPrefix P_seq (s + 1) * B (P_seq r) (Ω_seq r)) := by
+          simp only [parityPrefix, mul_assoc]
+    · subst heq
+      have hΓF_anti := (prop3_integrative_bridge_gravity_and_tension (P_seq r) (Ω_seq r) (hP r)).2.2.2.1
+      have hΓB_anti : Gamma (P_seq r) * B (P_seq r) (Ω_seq r) +
+          B (P_seq r) (Ω_seq r) * Gamma (P_seq r) = 0 := by
+        calc
+          Gamma (P_seq r) * B (P_seq r) (Ω_seq r) +
+              B (P_seq r) (Ω_seq r) * Gamma (P_seq r) =
+              (Gamma (P_seq r) * F (P_seq r) (Ω_seq r) +
+                F (P_seq r) (Ω_seq r) * Gamma (P_seq r)) +
+              (Gamma (P_seq r) * F (P_seq r) (Ω_seq r) +
+                F (P_seq r) (Ω_seq r) * Gamma (P_seq r)) := by
+            simp only [B, two_nsmul]
+            noncomm_ring
+          _ = 0 := by rw [hΓF_anti, add_zero]
+      have hBΓ : B (P_seq r) (Ω_seq r) * Gamma (P_seq r) =
+          -(Gamma (P_seq r) * B (P_seq r) (Ω_seq r)) :=
+        eq_neg_of_add_eq_zero_right hΓB_anti
+      have hcomm := parityPrefix_comm_B P_seq Ω_seq hΓB r r le_rfl
+      calc
+        B (P_seq r) (Ω_seq r) * parityPrefix P_seq (r + 1) =
+            (B (P_seq r) (Ω_seq r) * parityPrefix P_seq r) * Gamma (P_seq r) := by
+          simp only [parityPrefix, mul_assoc]
+        _ = (parityPrefix P_seq r * B (P_seq r) (Ω_seq r)) * Gamma (P_seq r) := by
+          rw [← hcomm]
+        _ = parityPrefix P_seq r * (B (P_seq r) (Ω_seq r) * Gamma (P_seq r)) := by
+          rw [mul_assoc]
+        _ = parityPrefix P_seq r * (-(Gamma (P_seq r) * B (P_seq r) (Ω_seq r))) := by
+          rw [hBΓ]
+        _ = -(parityPrefix P_seq (r + 1) * B (P_seq r) (Ω_seq r)) := by
+          simp only [parityPrefix, mul_neg, mul_assoc]
+
+private lemma sum_mul_sum_eq_sum_sq_of_anticomm {ι : Type*} [DecidableEq ι]
+    (s : Finset ι) (g : ι → E)
+    (hanti : ∀ r ∈ s, ∀ t ∈ s, r ≠ t → g r * g t + g t * g r = 0) :
+    (∑ r ∈ s, g r) * (∑ t ∈ s, g t) = ∑ r ∈ s, g r * g r := by
+  induction s using Finset.induction_on with
+  | empty => simp
+  | insert a s ha ih =>
+    have hanti_s : ∀ r ∈ s, ∀ t ∈ s, r ≠ t → g r * g t + g t * g r = 0 := by
+      intro r hr t ht hrt
+      exact hanti r (Finset.mem_insert_of_mem hr) t (Finset.mem_insert_of_mem ht) hrt
+    have hcross : g a * (∑ t ∈ s, g t) + (∑ r ∈ s, g r) * g a = 0 := by
+      rw [Finset.mul_sum, Finset.sum_mul, ← Finset.sum_add_distrib]
+      apply Finset.sum_eq_zero
+      intro r hr
+      have har : a ≠ r := fun heq => ha (heq ▸ hr)
+      exact hanti a (Finset.mem_insert_self a s) r (Finset.mem_insert_of_mem hr) har
+    rw [Finset.sum_insert ha, Finset.sum_insert ha]
+    calc
+      (g a + ∑ x ∈ s, g x) * (g a + ∑ x ∈ s, g x) =
+          g a * g a + (g a * (∑ x ∈ s, g x) + (∑ x ∈ s, g x) * g a) +
+            (∑ x ∈ s, g x) * (∑ x ∈ s, g x) := by noncomm_ring
+      _ = g a * g a + 0 + ∑ x ∈ s, g x * g x := by rw [hcross, ih hanti_s]
+      _ = g a * g a + ∑ x ∈ s, g x * g x := by rw [add_zero]
+
+/-- **Prop. 6 (Parity-Soldered Meta-Cognitive Coherence — Stratum 5).** -/
+theorem prop6_parity_soldered_metacognitive_coherence
+    (P_seq Ω_seq : ℕ → E)
+    (hP : ∀ k, P_seq k * P_seq k = P_seq k)
+    (hΩ : ∀ k, Ω_seq k * Ω_seq k = Ω_seq k)
+    (hΓΓ : ∀ j k, j ≠ k → Gamma (P_seq j) * Gamma (P_seq k) = Gamma (P_seq k) * Gamma (P_seq j))
+    (hΓB : ∀ j k, j ≠ k →
+      Gamma (P_seq j) * B (P_seq k) (Ω_seq k) = B (P_seq k) (Ω_seq k) * Gamma (P_seq j))
+    (hBB : ∀ j k, j ≠ k →
+      B (P_seq j) (Ω_seq j) * B (P_seq k) (Ω_seq k) = B (P_seq k) (Ω_seq k) * B (P_seq j) (Ω_seq j)) :
+    (∀ k, aporia (P_seq k) (Ω_seq k) = Y (P_seq k) (Ω_seq k) * X (P_seq k) (Ω_seq k)) ∧
+    (∀ r s, r ≠ s →
+      solderedB P_seq Ω_seq r * solderedB P_seq Ω_seq s +
+        solderedB P_seq Ω_seq s * solderedB P_seq Ω_seq r = 0) ∧
+    (∀ N, metaD P_seq Ω_seq N * metaD P_seq Ω_seq N =
+      ∑ k ∈ Finset.range (N + 1), B (P_seq k) (Ω_seq k) * B (P_seq k) (Ω_seq k)) ∧
+    (∀ N, metaD P_seq Ω_seq N * metaD P_seq Ω_seq N =
+      4 • ∑ k ∈ Finset.range (N + 1), M (P_seq k) (Ω_seq k)) := by
+  have hAp_all : ∀ k, aporia (P_seq k) (Ω_seq k) = Y (P_seq k) (Ω_seq k) * X (P_seq k) (Ω_seq k) :=
+    fun k => (prop4_exact_socratic_aporia (P_seq k) (Ω_seq k) (hP k) (hΩ k)).1
+  have hAnti_lt : ∀ r s, r < s →
+      solderedB P_seq Ω_seq r * solderedB P_seq Ω_seq s +
+        solderedB P_seq Ω_seq s * solderedB P_seq Ω_seq r = 0 := by
+    intro r s hrs
+    have hB_Pi_s := B_mul_parityPrefix_of_lt P_seq Ω_seq hP hΓB r s hrs
+    have hPi_comm := parityPrefix_comm_parityPrefix P_seq hΓΓ r s
+    have hPi_B := parityPrefix_comm_B P_seq Ω_seq hΓB r s (Nat.le_of_lt hrs)
+    have hBB_rs := hBB r s (Nat.ne_of_lt hrs)
+    have hprod : solderedB P_seq Ω_seq r * solderedB P_seq Ω_seq s =
+        -(solderedB P_seq Ω_seq s * solderedB P_seq Ω_seq r) := by
+      calc
+        solderedB P_seq Ω_seq r * solderedB P_seq Ω_seq s =
+            parityPrefix P_seq r * (B (P_seq r) (Ω_seq r) * parityPrefix P_seq s) *
+              B (P_seq s) (Ω_seq s) := by
+          simp only [solderedB, mul_assoc]
+        _ = parityPrefix P_seq r * (-(parityPrefix P_seq s * B (P_seq r) (Ω_seq r))) *
+              B (P_seq s) (Ω_seq s) := by rw [hB_Pi_s]
+        _ = -((parityPrefix P_seq r * parityPrefix P_seq s) *
+              (B (P_seq r) (Ω_seq r) * B (P_seq s) (Ω_seq s))) := by
+          simp only [mul_neg, neg_mul, mul_assoc]
+        _ = -((parityPrefix P_seq s * parityPrefix P_seq r) *
+              (B (P_seq s) (Ω_seq s) * B (P_seq r) (Ω_seq r))) := by
+          rw [hPi_comm, hBB_rs]
+        _ = -(parityPrefix P_seq s * (parityPrefix P_seq r * B (P_seq s) (Ω_seq s)) *
+              B (P_seq r) (Ω_seq r)) := by
+          simp only [mul_assoc]
+        _ = -(parityPrefix P_seq s * (B (P_seq s) (Ω_seq s) * parityPrefix P_seq r) *
+              B (P_seq r) (Ω_seq r)) := by rw [hPi_B]
+        _ = -(solderedB P_seq Ω_seq s * solderedB P_seq Ω_seq r) := by
+          simp only [solderedB, mul_assoc]
+    rw [hprod, neg_add_cancel]
+  have hAnti : ∀ r s, r ≠ s →
+      solderedB P_seq Ω_seq r * solderedB P_seq Ω_seq s +
+        solderedB P_seq Ω_seq s * solderedB P_seq Ω_seq r = 0 := by
+    intro r s hrs
+    rcases lt_or_gt_of_ne hrs with hlt | hgt
+    · exact hAnti_lt r s hlt
+    · rw [add_comm]
+      exact hAnti_lt s r hgt
+  have hSq_single : ∀ k,
+      solderedB P_seq Ω_seq k * solderedB P_seq Ω_seq k =
+        B (P_seq k) (Ω_seq k) * B (P_seq k) (Ω_seq k) := by
+    intro k
+    have hcomm := parityPrefix_comm_B P_seq Ω_seq hΓB k k le_rfl
+    have hPi_sq := parityPrefix_sq P_seq hP hΓΓ k
+    calc
+      solderedB P_seq Ω_seq k * solderedB P_seq Ω_seq k =
+          parityPrefix P_seq k * (B (P_seq k) (Ω_seq k) * parityPrefix P_seq k) *
+            B (P_seq k) (Ω_seq k) := by
+        simp only [solderedB, mul_assoc]
+      _ = parityPrefix P_seq k * (parityPrefix P_seq k * B (P_seq k) (Ω_seq k)) *
+            B (P_seq k) (Ω_seq k) := by rw [← hcomm]
+      _ = (parityPrefix P_seq k * parityPrefix P_seq k) *
+            (B (P_seq k) (Ω_seq k) * B (P_seq k) (Ω_seq k)) := by
+        simp only [mul_assoc]
+      _ = B (P_seq k) (Ω_seq k) * B (P_seq k) (Ω_seq k) := by rw [hPi_sq, one_mul]
+  have hMetaB : ∀ N, metaD P_seq Ω_seq N * metaD P_seq Ω_seq N =
+      ∑ k ∈ Finset.range (N + 1), B (P_seq k) (Ω_seq k) * B (P_seq k) (Ω_seq k) := by
+    intro N
+    unfold metaD
+    rw [sum_mul_sum_eq_sum_sq_of_anticomm (Finset.range (N + 1)) (solderedB P_seq Ω_seq)
+      (fun r _ t _ hrt => hAnti r t hrt)]
+    apply Finset.sum_congr rfl
+    intro k _
+    exact hSq_single k
+  have hMetaM : ∀ N, metaD P_seq Ω_seq N * metaD P_seq Ω_seq N =
+      4 • ∑ k ∈ Finset.range (N + 1), M (P_seq k) (Ω_seq k) := by
+    intro N
+    rw [hMetaB N, Finset.smul_sum]
+    apply Finset.sum_congr rfl
+    intro k _
+    exact (prop5_incompleteness_of_dogmatic_truncation (P_seq k) (Ω_seq k) (hP k) (hΩ k)).2.2.1
+  exact ⟨hAp_all, hAnti, hMetaB, hMetaM⟩
+
+end Deductions
+
+/-! ## Phase V.2.III — Master Structural Synthesis (`Thm. Ω` — Stratum 6) -/
+
+section MasterSynthesis
+
+variable {E : Type*} [Ring E]
+
+/-- **Thm. Ω (Indefinite Reciprocal Totality — Stratum 6).** -/
+theorem thm_omega_indefinite_reciprocal_totality (P Ω : E)
+    (hP : P * P = P) (hΩ : Ω * Ω = Ω) :
+    Sigma0 P Ω + B P Ω = JOmega Ω ∧
+    JOmega Ω * JOmega Ω = 1 ∧
+    PeirceSpine.comm P (JOmega Ω) = 2 • PeirceSpine.comm P Ω ∧
+    ((∀ z : E, 2 • z = 0 → z = 0) →
+      PeirceSpine.comm P Ω ≠ 0 →
+      PeirceSpine.comm P (JOmega Ω) ≠ 0 ∧ JOmega Ω ≠ Gamma P) ∧
+    (P * JOmega Ω * P = 2 • T P Ω - P ∧
+      Q P * JOmega Ω * Q P = 2 • G P Ω - Q P ∧
+      Q P * JOmega Ω * P = 2 • X P Ω ∧
+      P * JOmega Ω * Q P = 2 • Y P Ω) := by
+  have h1 := prop1_orthogonality_and_polarity_involution P hP
+  have h2 := prop2_fourfold_decomposition_and_nilpotency P Ω hP
+  have h5 := prop5_incompleteness_of_dogmatic_truncation P Ω hP hΩ
+  have hSum : Sigma0 P Ω + B P Ω = JOmega Ω := by
+    calc
+      Sigma0 P Ω + B P Ω =
+          2 • (T P Ω + X P Ω + Y P Ω + G P Ω) - (P + Q P) := by
+        simp only [Sigma0, B, F, two_nsmul]
+        abel
+      _ = 2 • Ω - 1 := by rw [h2.1, h1.2.2.2.1]
+      _ = JOmega Ω := rfl
+  have hJsq : JOmega Ω * JOmega Ω = 1 := by
+    calc
+      JOmega Ω * JOmega Ω = (Sigma0 P Ω + B P Ω) * (Sigma0 P Ω + B P Ω) := by rw [hSum]
+      _ = Sigma0 P Ω * Sigma0 P Ω + (Sigma0 P Ω * B P Ω + B P Ω * Sigma0 P Ω) +
+            B P Ω * B P Ω := by noncomm_ring
+      _ = Sigma0 P Ω * Sigma0 P Ω + 0 + (1 - Sigma0 P Ω * Sigma0 P Ω) := by
+        rw [h5.1, ← h5.2.1]
+      _ = 1 := by abel
+  have hComm : PeirceSpine.comm P (JOmega Ω) = 2 • PeirceSpine.comm P Ω := by
+    simp only [JOmega, PeirceSpine.comm, two_nsmul]
+    noncomm_ring
+  have hIrred :
+      (∀ z : E, 2 • z = 0 → z = 0) →
+      PeirceSpine.comm P Ω ≠ 0 →
+      PeirceSpine.comm P (JOmega Ω) ≠ 0 ∧ JOmega Ω ≠ Gamma P := by
+    intro h2tors hPΩ
+    have hPJ_ne : PeirceSpine.comm P (JOmega Ω) ≠ 0 := by
+      intro h0
+      apply hPΩ
+      apply h2tors
+      rw [← hComm]
+      exact h0
+    have hJ_ne_Γ : JOmega Ω ≠ Gamma P := by
+      intro heq
+      apply hPJ_ne
+      rw [heq]
+      exact h1.2.2.2.2.2.2.2.2.2
+    exact ⟨hPJ_ne, hJ_ne_Γ⟩
+  have hSec1 : P * JOmega Ω * P = 2 • T P Ω - P := by
+    simp only [JOmega, T, two_nsmul, mul_add, add_mul, mul_sub, sub_mul, mul_one, hP]
+  have hSec2 : Q P * JOmega Ω * Q P = 2 • G P Ω - Q P := by
+    simp only [JOmega, G, two_nsmul, mul_add, add_mul, mul_sub, sub_mul, mul_one, h1.1]
+  have hSec3 : Q P * JOmega Ω * P = 2 • X P Ω := by
+    simp only [JOmega, X, two_nsmul, mul_add, add_mul, mul_sub, sub_mul, mul_one,
+      h1.2.2.1, sub_zero]
+  have hSec4 : P * JOmega Ω * Q P = 2 • Y P Ω := by
+    simp only [JOmega, Y, two_nsmul, mul_add, add_mul, mul_sub, sub_mul, mul_one,
+      h1.2.1, sub_zero]
+  exact ⟨hSum, hJsq, hComm, hIrred, hSec1, hSec2, hSec3, hSec4⟩
+
+end MasterSynthesis
+
+/-! ## Mannheim–Krein `V`-Metric Weld & Concrete `M₂(ℤ)` Witness -/
+
+section MannheimKreinVMetric
+
+section AbstractStarRing
+
+variable {E : Type*} [Ring E] [StarRing E]
+
+/-- Mannheim `V`-metric `V := η * J_Ω = η * (2 • Ω - 1)` constructed from an indefinite
+Krein metric `η` and the undivided reciprocity involution `J_Ω`. -/
+def mannheimV (η Ω : E) : E :=
+  η * JOmega Ω
+
+omit [StarRing E] in
+private lemma jOmega_sq_of_idem {Ω : E} (hΩ : Ω * Ω = Ω) :
+    JOmega Ω * JOmega Ω = 1 := by
+  simp only [JOmega, two_nsmul]
+  noncomm_ring [hΩ]
+
+omit [StarRing E] in
+private lemma jOmega_mul_omega_of_idem {Ω : E} (hΩ : Ω * Ω = Ω) :
+    JOmega Ω * Ω = Ω := by
+  simp only [JOmega, two_nsmul]
+  noncomm_ring [hΩ]
+
+/-- Abstract Mannheim–Krein `V`-metric theorem over `[Ring E] [StarRing E]`:
+whenever `η` is symmetric (`star η = η`) and `Ω` is `η`-self-adjoint (`η * Ω = star Ω * η`),
+`V = η * J_Ω` is symmetric, intertwines both `J_Ω` and `Ω` (`V * J_Ω = star (J_Ω) * V = η`,
+`V * Ω = star Ω * V = η * Ω`), and makes `J_Ω` `V`-unitary (`star (J_Ω) * V * J_Ω = V`). -/
+theorem krein_reciprocalTotality_mannheim_V_metric (Ω η : E)
+    (hΩ : Ω * Ω = Ω) (hη : star η = η) (hηΩ : η * Ω = star Ω * η) :
+    star (mannheimV η Ω) = mannheimV η Ω ∧
+    mannheimV η Ω * JOmega Ω = η ∧
+    mannheimV η Ω * JOmega Ω = star (JOmega Ω) * mannheimV η Ω ∧
+    mannheimV η Ω * Ω = η * Ω ∧
+    mannheimV η Ω * Ω = star Ω * mannheimV η Ω ∧
+    star (JOmega Ω) * mannheimV η Ω * JOmega Ω = mannheimV η Ω := by
+  have hJsq : JOmega Ω * JOmega Ω = 1 := jOmega_sq_of_idem hΩ
+  have hJΩ : JOmega Ω * Ω = Ω := jOmega_mul_omega_of_idem hΩ
+  have hstarJ : star (JOmega Ω) * η = η * JOmega Ω := by
+    calc
+      star (JOmega Ω) * η = (star (2 • Ω) - star (1 : E)) * η := by
+        simp only [JOmega, star_sub]
+      _ = ((star Ω + star Ω) - 1) * η := by
+        simp only [two_nsmul, star_add, star_one]
+      _ = (star Ω * η + star Ω * η) - η := by
+        simp only [sub_mul, add_mul, one_mul]
+      _ = (η * Ω + η * Ω) - η := by rw [hηΩ]
+      _ = η * (2 • Ω - 1) := by
+        simp only [two_nsmul]
+        noncomm_ring
+      _ = η * JOmega Ω := rfl
+  have hV_star : star (mannheimV η Ω) = mannheimV η Ω := by
+    calc
+      star (mannheimV η Ω) = star (JOmega Ω) * star η := by
+        simp only [mannheimV, star_mul]
+      _ = star (JOmega Ω) * η := by rw [hη]
+      _ = mannheimV η Ω := hstarJ
+  have hV_mul_J : mannheimV η Ω * JOmega Ω = η := by
+    calc
+      mannheimV η Ω * JOmega Ω = η * (JOmega Ω * JOmega Ω) := by
+        simp only [mannheimV, mul_assoc]
+      _ = η := by rw [hJsq, mul_one]
+  have hJ_intertwine : mannheimV η Ω * JOmega Ω = star (JOmega Ω) * mannheimV η Ω := by
+    calc
+      mannheimV η Ω * JOmega Ω = η := hV_mul_J
+      _ = (η * JOmega Ω) * JOmega Ω := by rw [mul_assoc, hJsq, mul_one]
+      _ = (star (JOmega Ω) * η) * JOmega Ω := by rw [← hstarJ]
+      _ = star (JOmega Ω) * mannheimV η Ω := by simp only [mannheimV, mul_assoc]
+  have hV_mul_Ω : mannheimV η Ω * Ω = η * Ω := by
+    calc
+      mannheimV η Ω * Ω = η * (JOmega Ω * Ω) := by
+        simp only [mannheimV, mul_assoc]
+      _ = η * Ω := by rw [hJΩ]
+  have hΩ_intertwine : mannheimV η Ω * Ω = star Ω * mannheimV η Ω := by
+    have hΩJ : Ω * JOmega Ω = Ω := by
+      simp only [JOmega, two_nsmul]
+      noncomm_ring [hΩ]
+    calc
+      mannheimV η Ω * Ω = η * Ω := hV_mul_Ω
+      _ = (η * (Ω * JOmega Ω)) := by rw [hΩJ]
+      _ = ((η * Ω) * JOmega Ω) := by rw [← mul_assoc]
+      _ = (star Ω * η) * JOmega Ω := by rw [hηΩ]
+      _ = star Ω * mannheimV η Ω := by simp only [mannheimV, mul_assoc]
+  have hV_unitary : star (JOmega Ω) * mannheimV η Ω * JOmega Ω = mannheimV η Ω := by
+    calc
+      star (JOmega Ω) * mannheimV η Ω * JOmega Ω =
+          (mannheimV η Ω * JOmega Ω) * JOmega Ω := by rw [← hJ_intertwine]
+      _ = η * JOmega Ω := by rw [hV_mul_J]
+      _ = mannheimV η Ω := rfl
+  exact ⟨hV_star, hV_mul_J, hJ_intertwine, hV_mul_Ω, hΩ_intertwine, hV_unitary⟩
+
+end AbstractStarRing
+
+section ConcreteMat2ZWitness
+
+open scoped Matrix
+
+/-- Concrete conscious cut `P₀ ∈ M₂(ℤ)` (`![![1, 0], ![0, 0]]`). -/
+def cutP0 : Matrix (Fin 2) (Fin 2) ℤ := !![1, 0; 0, 0]
+
+/-- Concrete non-diagonal idempotent totality `Ω₀ ∈ M₂(ℤ)` (`![![2, 1], ![-2, -1]]`). -/
+def totalityOmega0 : Matrix (Fin 2) (Fin 2) ℤ := !![2, 1; -2, -1]
+
+/-- Indefinite `(1, 1)` Krein metric `η₀ ∈ M₂(ℤ)` commuting with `cutP0`. -/
+def kreinEta0 : Matrix (Fin 2) (Fin 2) ℤ := !![2, 0; 0, -1]
+
+/-- Positive-definite Mannheim `V`-metric `V₀ := η₀ * J_{Ω₀} = !![6, 4; 4, 3]` in `M₂(ℤ)`. -/
+def mannheimV0 : Matrix (Fin 2) (Fin 2) ℤ :=
+  kreinEta0 * JOmega totalityOmega0
+
+private lemma mat2Z_ext {A B : Matrix (Fin 2) (Fin 2) ℤ}
+    (h00 : A 0 0 = B 0 0) (h01 : A 0 1 = B 0 1)
+    (h10 : A 1 0 = B 1 0) (h11 : A 1 1 = B 1 1) : A = B := by
+  ext i j
+  fin_cases i <;> fin_cases j
+  · exact h00
+  · exact h01
+  · exact h10
+  · exact h11
+
+/-- Concrete `M₂(ℤ)` realization certifying the negative aporia defect of truncating to the
+diagonal Krein metric `η₀` (`det = -2`) vs. the strictly positive-definite Mannheim `V`-metric
+`V₀ = η₀ J_{Ω₀} = !![6, 4; 4, 3]` (`det = 2`, `(2x + y)² + 2(x + y)² > 0`). -/
+theorem concrete_mat2Z_krein_mannheim_V_metric_witness :
+    cutP0 * cutP0 = cutP0 ∧
+    totalityOmega0 * totalityOmega0 = totalityOmega0 ∧
+    PeirceSpine.comm cutP0 kreinEta0 = 0 ∧
+    kreinEta0.transpose = kreinEta0 ∧
+    kreinEta0.det = -2 ∧
+    kreinEta0 * totalityOmega0 = !![4, 2; 2, 1] ∧
+    kreinEta0 * totalityOmega0 = totalityOmega0.transpose * kreinEta0 ∧
+    (JOmega totalityOmega0).transpose * kreinEta0 * JOmega totalityOmega0 = kreinEta0 ∧
+    aporia cutP0 totalityOmega0 = !![-2, 0; 0, 0] ∧
+    1 - Sigma0 cutP0 totalityOmega0 * Sigma0 cutP0 totalityOmega0 = !![-8, 0; 0, -8] ∧
+    JOmega totalityOmega0 = !![3, 2; -4, -3] ∧
+    mannheimV0 = !![6, 4; 4, 3] ∧
+    mannheimV0.transpose = mannheimV0 ∧
+    mannheimV0.det = 2 ∧
+    (∀ x y : ℤ, 6 * x ^ 2 + 8 * x * y + 3 * y ^ 2 = (2 * x + y) ^ 2 + 2 * (x + y) ^ 2) ∧
+    (∀ x y : ℤ, (x ≠ 0 ∨ y ≠ 0) → 0 < (2 * x + y) ^ 2 + 2 * (x + y) ^ 2) := by
+  have hP0 : cutP0 * cutP0 = cutP0 := by
+    apply mat2Z_ext <;> simp [cutP0, Matrix.mul_apply, Fin.sum_univ_two]
+  have hΩ0 : totalityOmega0 * totalityOmega0 = totalityOmega0 := by
+    apply mat2Z_ext <;> simp [totalityOmega0, Matrix.mul_apply, Fin.sum_univ_two]
+  have hcomm_eta : PeirceSpine.comm cutP0 kreinEta0 = 0 := by
+    apply mat2Z_ext <;> simp [PeirceSpine.comm, cutP0, kreinEta0]
+  have hetaT : kreinEta0.transpose = kreinEta0 := by
+    apply mat2Z_ext <;> simp [kreinEta0]
+  have hetaDet : kreinEta0.det = -2 := by
+    simp [kreinEta0, Matrix.det_fin_two]
+  have hetaΩ : kreinEta0 * totalityOmega0 = !![4, 2; 2, 1] := by
+    apply mat2Z_ext <;> simp [kreinEta0, totalityOmega0, Matrix.mul_apply, Fin.sum_univ_two]
+  have hetaΩ_symm : kreinEta0 * totalityOmega0 = totalityOmega0.transpose * kreinEta0 := by
+    apply mat2Z_ext <;> simp [kreinEta0, totalityOmega0, Matrix.mul_apply, Fin.sum_univ_two]
+  have hJ0 : JOmega totalityOmega0 = !![3, 2; -4, -3] := by
+    apply mat2Z_ext <;> simp [JOmega, totalityOmega0]
+  have hJηJ : (JOmega totalityOmega0).transpose * kreinEta0 * JOmega totalityOmega0 = kreinEta0 := by
+    rw [hJ0]
+    apply mat2Z_ext <;> simp [kreinEta0, Matrix.mul_apply, Fin.sum_univ_two]
+  have hAp0 : aporia cutP0 totalityOmega0 = !![-2, 0; 0, 0] := by
+    apply mat2Z_ext <;> simp [aporia, T, cutP0, totalityOmega0]
+  have hT0 : T cutP0 totalityOmega0 = !![2, 0; 0, 0] := by
+    apply mat2Z_ext <;> simp [T, cutP0, totalityOmega0, Matrix.mul_apply, Fin.sum_univ_two]
+  have hG0 : G cutP0 totalityOmega0 = !![0, 0; 0, -1] := by
+    apply mat2Z_ext <;> simp [G, Q, cutP0, totalityOmega0, Matrix.mul_apply, Fin.sum_univ_two]
+  have hSigMat : Sigma0 cutP0 totalityOmega0 = !![3, 0; 0, -3] := by
+    rw [Sigma0, hT0, hG0]
+    apply mat2Z_ext <;> simp [Q, cutP0]
+  have hSig0 : 1 - Sigma0 cutP0 totalityOmega0 * Sigma0 cutP0 totalityOmega0 = !![-8, 0; 0, -8] := by
+    rw [hSigMat]
+    apply mat2Z_ext <;> simp
+  have hV0 : mannheimV0 = !![6, 4; 4, 3] := by
+    rw [mannheimV0, hJ0]
+    apply mat2Z_ext <;> simp [kreinEta0, Matrix.mul_apply, Fin.sum_univ_two]
+  have hV0T : mannheimV0.transpose = mannheimV0 := by
+    rw [hV0]
+    apply mat2Z_ext <;> simp
+  have hV0Det : mannheimV0.det = 2 := by
+    rw [hV0]
+    simp [Matrix.det_fin_two]
+  have hSoS : ∀ x y : ℤ,
+      6 * x ^ 2 + 8 * x * y + 3 * y ^ 2 = (2 * x + y) ^ 2 + 2 * (x + y) ^ 2 := by
+    intro x y
+    ring
+  have hPos : ∀ x y : ℤ, (x ≠ 0 ∨ y ≠ 0) → 0 < (2 * x + y) ^ 2 + 2 * (x + y) ^ 2 := by
+    intro x y hxy
+    have h1 : 0 ≤ (2 * x + y) ^ 2 := sq_nonneg _
+    have h2 : 0 ≤ (x + y) ^ 2 := sq_nonneg _
+    have hsum : 0 ≤ (2 * x + y) ^ 2 + 2 * (x + y) ^ 2 := add_nonneg h1 (mul_nonneg (by decide) h2)
+    rcases lt_or_eq_of_le hsum with hpos | hzero
+    · exact hpos
+    · exfalso
+      have hz1 : (2 * x + y) ^ 2 = 0 := by omega
+      have hz2 : (x + y) ^ 2 = 0 := by omega
+      have he1 : 2 * x + y = 0 := sq_eq_zero_iff.mp hz1
+      have he2 : x + y = 0 := sq_eq_zero_iff.mp hz2
+      rcases hxy with hx | hy <;> omega
+  exact ⟨hP0, hΩ0, hcomm_eta, hetaT, hetaDet, hetaΩ, hetaΩ_symm, hJηJ,
+    hAp0, hSig0, hJ0, hV0, hV0T, hV0Det, hSoS, hPos⟩
+
+end ConcreteMat2ZWitness
+
+end MannheimKreinVMetric
+
+/-! ## Parabolic Jordan Horizon, Midpoint Rotor, & Covariant QGT Extensions -/
+
+section ParabolicJordanMidpointAndCovariantQGT
+
+section ParabolicMat2ZWitness
+
+open scoped Matrix
+
+private lemma mat2_ext {α : Type*} {A B : Matrix (Fin 2) (Fin 2) α}
+    (h00 : A 0 0 = B 0 0) (h01 : A 0 1 = B 0 1)
+    (h10 : A 1 0 = B 1 0) (h11 : A 1 1 = B 1 1) : A = B := by
+  ext i j
+  fin_cases i <;> fin_cases j
+  · exact h00
+  · exact h01
+  · exact h10
+  · exact h11
+
+/-- Parabolic one-way null-horizon idempotent `Ω_par = !![1, 1; 0, 0] ∈ M₂(ℤ)` sitting
+between the elliptic `M₂(ℚ)` and hyperbolic Krein `M₂(ℤ)` witnesses: `X = 0` gives stealth-zero
+aporia (`𝒜₀ = 0`, `M = 0`, `B² = 0`), while `Thm. Ω` detects `[P₀, J_{Ω_par}] = !![0, 2; 0, 0] ≠ 0`. -/
+def totalityOmegaPar : Matrix (Fin 2) (Fin 2) ℤ := !![1, 1; 0, 0]
+
+/-- Concrete `M₂(ℤ)` verification of the parabolic one-way null-horizon Jordan regime. -/
+theorem concrete_mat2Z_parabolic_jordan_horizon_witness :
+    totalityOmegaPar * totalityOmegaPar = totalityOmegaPar ∧
+    T cutP0 totalityOmegaPar = cutP0 ∧
+    G cutP0 totalityOmegaPar = 0 ∧
+    X cutP0 totalityOmegaPar = 0 ∧
+    Y cutP0 totalityOmegaPar = !![0, 1; 0, 0] ∧
+    Y cutP0 totalityOmegaPar ≠ 0 ∧
+    aporia cutP0 totalityOmegaPar = 0 ∧
+    groundAporia cutP0 totalityOmegaPar = 0 ∧
+    M cutP0 totalityOmegaPar = 0 ∧
+    K cutP0 totalityOmegaPar = 0 ∧
+    B cutP0 totalityOmegaPar * B cutP0 totalityOmegaPar = 0 ∧
+    1 - Sigma0 cutP0 totalityOmegaPar * Sigma0 cutP0 totalityOmegaPar = 0 ∧
+    B cutP0 totalityOmegaPar = !![0, 2; 0, 0] ∧
+    B cutP0 totalityOmegaPar ≠ 0 ∧
+    JOmega totalityOmegaPar = !![1, 2; 0, -1] ∧
+    JOmega totalityOmegaPar * JOmega totalityOmegaPar = 1 ∧
+    PeirceSpine.comm cutP0 (JOmega totalityOmegaPar) = !![0, 2; 0, 0] ∧
+    PeirceSpine.comm cutP0 (JOmega totalityOmegaPar) ≠ 0 ∧
+    JOmega totalityOmegaPar ≠ Gamma cutP0 := by
+  have hΩ : totalityOmegaPar * totalityOmegaPar = totalityOmegaPar := by
+    apply mat2_ext <;> simp [totalityOmegaPar, Matrix.mul_apply, Fin.sum_univ_two]
+  have hT : T cutP0 totalityOmegaPar = cutP0 := by
+    apply mat2_ext <;> simp [T, cutP0, totalityOmegaPar, Matrix.mul_apply, Fin.sum_univ_two]
+  have hG : G cutP0 totalityOmegaPar = 0 := by
+    apply mat2_ext <;> simp [G, Q, cutP0, totalityOmegaPar, Matrix.mul_apply, Fin.sum_univ_two]
+  have hX : X cutP0 totalityOmegaPar = 0 := by
+    apply mat2_ext <;> simp [X, Q, cutP0, totalityOmegaPar, Matrix.mul_apply, Fin.sum_univ_two]
+  have hY : Y cutP0 totalityOmegaPar = !![0, 1; 0, 0] := by
+    apply mat2_ext <;> simp [Y, Q, cutP0, totalityOmegaPar, Matrix.mul_apply, Fin.sum_univ_two]
+  have hYne : Y cutP0 totalityOmegaPar ≠ 0 := by
+    intro h0
+    have h01 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℤ => M 0 1) h0
+    simp [hY] at h01
+  have hAp : aporia cutP0 totalityOmegaPar = 0 := by
+    rw [aporia, hT]
+    apply mat2_ext <;> simp [cutP0]
+  have hGAp : groundAporia cutP0 totalityOmegaPar = 0 := by
+    rw [groundAporia, hG]
+    simp
+  have hM : M cutP0 totalityOmegaPar = 0 := by
+    rw [M, hX, Matrix.zero_mul, Matrix.mul_zero, zero_add]
+  have hK : K cutP0 totalityOmegaPar = 0 := by
+    rw [K, hX, Matrix.zero_mul, Matrix.mul_zero, sub_zero]
+  have hB : B cutP0 totalityOmegaPar = !![0, 2; 0, 0] := by
+    rw [B, F, hX, hY, zero_add]
+    apply mat2_ext <;> simp
+  have hBsq : B cutP0 totalityOmegaPar * B cutP0 totalityOmegaPar = 0 := by
+    rw [hB]
+    apply mat2_ext <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
+  have hBne : B cutP0 totalityOmegaPar ≠ 0 := by
+    intro h0
+    have h01 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℤ => M 0 1) h0
+    simp [hB] at h01
+  have hSigMat : Sigma0 cutP0 totalityOmegaPar = !![1, 0; 0, -1] := by
+    rw [Sigma0, hT, hG]
+    apply mat2_ext <;> simp [Q, cutP0]
+  have hSig : 1 - Sigma0 cutP0 totalityOmegaPar * Sigma0 cutP0 totalityOmegaPar = 0 := by
+    rw [hSigMat]
+    apply mat2_ext <;> simp
+  have hJ : JOmega totalityOmegaPar = !![1, 2; 0, -1] := by
+    apply mat2_ext <;> simp [JOmega, totalityOmegaPar]
+  have hJsq : JOmega totalityOmegaPar * JOmega totalityOmegaPar = 1 := by
+    rw [hJ]
+    apply mat2_ext <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
+  have hComm : PeirceSpine.comm cutP0 (JOmega totalityOmegaPar) = !![0, 2; 0, 0] := by
+    rw [hJ]
+    apply mat2_ext <;> simp [PeirceSpine.comm, cutP0]
+  have hCommNe : PeirceSpine.comm cutP0 (JOmega totalityOmegaPar) ≠ 0 := by
+    intro h0
+    have h01 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℤ => M 0 1) h0
+    simp [hComm] at h01
+  have hJne : JOmega totalityOmegaPar ≠ Gamma cutP0 := by
+    intro h0
+    have h01 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℤ => M 0 1) h0
+    simp [hJ, Gamma, Q, cutP0] at h01
+  exact ⟨hΩ, hT, hG, hX, hY, hYne, hAp, hGAp, hM, hK, hBsq, hSig, hB, hBne, hJ, hJsq,
+    hComm, hCommNe, hJne⟩
+
+/-- Off-diagonal null-cone `(1, 1)` Krein metric `η_null = !![0, 1; 1, 0]` over a commutative ring. -/
+def kreinNullEta {R : Type*} [CommRing R] : Matrix (Fin 2) (Fin 2) R := !![0, 1; 1, 0]
+
+/-- Non-diagonalizable `2 × 2` parabolic Jordan block `!![μ, 1; 0, μ]`. -/
+def jordanBlock2 {R : Type*} [CommRing R] (μ : R) : Matrix (Fin 2) (Fin 2) R := !![μ, 1; 0, μ]
+
+/-- A `2 × 2` parabolic Jordan block is Krein-self-adjoint with respect to `kreinNullEta` (`det = -1`),
+has coalesced parabolic trace/determinant discriminant `tr² - 4 det = 0`, admits a null-cone
+eigenvector `v₀ = ![1, 0]`, has nonzero square-zero nilpotent part `N ≠ 0`, and cannot be conjugated
+to a scalar multiple of the identity by any invertible matrix `S`. -/
+theorem krein_exceptional_point_jordan_non_diagonalizable
+    {R : Type*} [CommRing R] [Nontrivial R] (μ : R) :
+    let η : Matrix (Fin 2) (Fin 2) R := kreinNullEta
+    let H : Matrix (Fin 2) (Fin 2) R := jordanBlock2 μ
+    let v₀ : Fin 2 → R := ![1, 0]
+    let N : Matrix (Fin 2) (Fin 2) R := H - μ • (1 : Matrix (Fin 2) (Fin 2) R)
+    η.transpose = η ∧
+    η * η = 1 ∧
+    η.det = -1 ∧
+    η * H = H.transpose * η ∧
+    Matrix.trace H ^ 2 - 4 * H.det = 0 ∧
+    H.mulVec v₀ = μ • v₀ ∧
+    v₀ ⬝ᵥ η.mulVec v₀ = 0 ∧
+    N * N = 0 ∧
+    N ≠ 0 ∧
+    ∀ (S Sinv : Matrix (Fin 2) (Fin 2) R), S * Sinv = 1 →
+      ∀ c : R, S * H * Sinv ≠ c • (1 : Matrix (Fin 2) (Fin 2) R) := by
+  let η : Matrix (Fin 2) (Fin 2) R := kreinNullEta
+  let H : Matrix (Fin 2) (Fin 2) R := jordanBlock2 μ
+  let v₀ : Fin 2 → R := ![1, 0]
+  let N : Matrix (Fin 2) (Fin 2) R := H - μ • (1 : Matrix (Fin 2) (Fin 2) R)
+  have hηT : η.transpose = η := by
+    apply mat2_ext <;> simp [η, kreinNullEta]
+  have hηSq : η * η = 1 := by
+    apply mat2_ext <;> simp [η, kreinNullEta, Matrix.mul_apply, Fin.sum_univ_two]
+  have hηDet : η.det = -1 := by
+    simp [η, kreinNullEta, Matrix.det_fin_two]
+  have hηH : η * H = H.transpose * η := by
+    apply mat2_ext <;> simp [η, H, kreinNullEta, jordanBlock2, Matrix.mul_apply, Fin.sum_univ_two]
+  have hDisc : Matrix.trace H ^ 2 - 4 * H.det = 0 := by
+    simp only [Matrix.trace, Fin.sum_univ_two, H, jordanBlock2, Matrix.det_fin_two,
+      Matrix.diag_apply, Matrix.of_apply, Matrix.cons_val_zero, Matrix.cons_val_one]
+    ring
+  have hEig : H.mulVec v₀ = μ • v₀ := by
+    ext i
+    fin_cases i <;> simp [H, jordanBlock2, v₀, Matrix.mulVec, dotProduct, Fin.sum_univ_two]
+  have hNull : v₀ ⬝ᵥ η.mulVec v₀ = 0 := by
+    simp [η, kreinNullEta, v₀, Matrix.mulVec, dotProduct, Fin.sum_univ_two]
+  have hN : N = !![0, 1; 0, 0] := by
+    apply mat2_ext <;> simp [N, H, jordanBlock2]
+  have hNsq : N * N = 0 := by
+    rw [hN]
+    apply mat2_ext <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
+  have hNne : N ≠ 0 := by
+    intro h0
+    have h01 := congrArg (fun M : Matrix (Fin 2) (Fin 2) R => M 0 1) h0
+    simp [hN] at h01
+  have hNonScal : ∀ (S Sinv : Matrix (Fin 2) (Fin 2) R), S * Sinv = 1 →
+      ∀ c : R, S * H * Sinv ≠ c • (1 : Matrix (Fin 2) (Fin 2) R) := by
+    intro S Sinv hSS c hdiag
+    have hdet : S.det * Sinv.det = 1 := by
+      calc S.det * Sinv.det = (S * Sinv).det := (Matrix.det_mul S Sinv).symm
+      _ = (1 : Matrix (Fin 2) (Fin 2) R).det := by rw [hSS]
+      _ = 1 := Matrix.det_one
+    have hSinvAdj : Sinv = Sinv.det • S.adjugate := by
+      calc Sinv = (Sinv.det * S.det) • Sinv := by rw [mul_comm, hdet, one_smul]
+      _ = Sinv.det • (S.det • Sinv) := (smul_smul _ _ _).symm
+      _ = Sinv.det • ((S.adjugate * S) * Sinv) := by
+            rw [Matrix.adjugate_mul, Matrix.smul_mul, Matrix.one_mul]
+      _ = Sinv.det • (S.adjugate * (S * Sinv)) := by rw [Matrix.mul_assoc]
+      _ = Sinv.det • S.adjugate := by rw [hSS, Matrix.mul_one]
+    have hSS' : Sinv * S = 1 := by
+      calc Sinv * S = (Sinv.det • S.adjugate) * S := by rw [← hSinvAdj]
+      _ = Sinv.det • (S.adjugate * S) := Matrix.smul_mul _ _ _
+      _ = (Sinv.det * S.det) • 1 := by rw [Matrix.adjugate_mul, smul_smul]
+      _ = 1 := by rw [mul_comm, hdet, one_smul]
+    have h1 : Sinv * (S * H * Sinv) * S = c • (1 : Matrix (Fin 2) (Fin 2) R) := by
+      rw [hdiag, Matrix.mul_smul, Matrix.smul_mul, Matrix.mul_one, hSS']
+    have h2 : Sinv * (S * H * Sinv) * S = H := by
+      calc Sinv * (S * H * Sinv) * S
+          = (Sinv * S) * H * (Sinv * S) := by simp only [Matrix.mul_assoc]
+      _ = 1 * H * 1 := by rw [hSS']
+      _ = H := by simp
+    have h01 := congrArg (fun M : Matrix (Fin 2) (Fin 2) R => M 0 1) (h2.symm.trans h1)
+    simp [H, jordanBlock2] at h01
+  exact ⟨hηT, hηSq, hηDet, hηH, hDisc, hEig, hNull, hNsq, hNne, hNonScal⟩
+
+end ParabolicMat2ZWitness
+
+section MidpointRotorAndCovariantQGT
+
+variable {E : Type*} [Ring E]
+
+/-- Unnormalized symmetrically split midpoint rotor `R₂₁ := 1 + Γ₂ * Γ₁` intertwining two unit
+involutions `Γ₁² = 1` and `Γ₂² = 1` across arbitrary associative unital rings `[Ring E]`. -/
+def midpointRotor (Γ₁ Γ₂ : E) : E := 1 + Γ₂ * Γ₁
+
+/-- Exact relational intertwining, perspective reversal (`R₁₂` vs `R₂₁`), and two-sided sandwich
+identities for `midpointRotor` between any two involutions `Γ₁² = 1` and `Γ₂² = 1`. -/
+theorem symmetrically_split_midpoint_rotor_intertwining (Γ₁ Γ₂ : E)
+    (h₁ : Γ₁ * Γ₁ = 1) (h₂ : Γ₂ * Γ₂ = 1) :
+    midpointRotor Γ₁ Γ₂ * Γ₁ = Γ₁ + Γ₂ ∧
+    Γ₂ * midpointRotor Γ₁ Γ₂ = Γ₁ + Γ₂ ∧
+    midpointRotor Γ₁ Γ₂ * Γ₁ = Γ₂ * midpointRotor Γ₁ Γ₂ ∧
+    Γ₁ * midpointRotor Γ₂ Γ₁ = midpointRotor Γ₂ Γ₁ * Γ₂ ∧
+    midpointRotor Γ₁ Γ₂ * midpointRotor Γ₂ Γ₁ = 2 + Γ₂ * Γ₁ + Γ₁ * Γ₂ ∧
+    midpointRotor Γ₂ Γ₁ * midpointRotor Γ₁ Γ₂ = 2 + Γ₂ * Γ₁ + Γ₁ * Γ₂ ∧
+    midpointRotor Γ₁ Γ₂ * Γ₁ * midpointRotor Γ₂ Γ₁ =
+      Γ₂ * (midpointRotor Γ₁ Γ₂ * midpointRotor Γ₂ Γ₁) := by
+  have hr1 : midpointRotor Γ₁ Γ₂ * Γ₁ = Γ₁ + Γ₂ := by
+    calc (1 + Γ₂ * Γ₁) * Γ₁ = Γ₁ + Γ₂ * (Γ₁ * Γ₁) := by noncomm_ring
+    _ = Γ₁ + Γ₂ := by rw [h₁]; noncomm_ring
+  have hr2 : Γ₂ * midpointRotor Γ₁ Γ₂ = Γ₁ + Γ₂ := by
+    calc Γ₂ * (1 + Γ₂ * Γ₁) = Γ₂ + (Γ₂ * Γ₂) * Γ₁ := by noncomm_ring
+    _ = Γ₁ + Γ₂ := by rw [h₂]; noncomm_ring
+  have hr3 : midpointRotor Γ₁ Γ₂ * Γ₁ = Γ₂ * midpointRotor Γ₁ Γ₂ := hr1.trans hr2.symm
+  have hr4 : Γ₁ * midpointRotor Γ₂ Γ₁ = midpointRotor Γ₂ Γ₁ * Γ₂ := by
+    have hL : Γ₁ * midpointRotor Γ₂ Γ₁ = Γ₂ + Γ₁ := by
+      calc Γ₁ * (1 + Γ₁ * Γ₂) = Γ₁ + (Γ₁ * Γ₁) * Γ₂ := by noncomm_ring
+      _ = Γ₂ + Γ₁ := by rw [h₁]; noncomm_ring
+    have hR : midpointRotor Γ₂ Γ₁ * Γ₂ = Γ₂ + Γ₁ := by
+      calc (1 + Γ₁ * Γ₂) * Γ₂ = Γ₂ + Γ₁ * (Γ₂ * Γ₂) := by noncomm_ring
+      _ = Γ₂ + Γ₁ := by rw [h₂]; noncomm_ring
+    exact hL.trans hR.symm
+  have hr5 : midpointRotor Γ₁ Γ₂ * midpointRotor Γ₂ Γ₁ = 2 + Γ₂ * Γ₁ + Γ₁ * Γ₂ := by
+    calc (1 + Γ₂ * Γ₁) * (1 + Γ₁ * Γ₂)
+        = 1 + Γ₁ * Γ₂ + Γ₂ * Γ₁ + Γ₂ * (Γ₁ * Γ₁) * Γ₂ := by noncomm_ring
+    _ = 1 + Γ₁ * Γ₂ + Γ₂ * Γ₁ + (Γ₂ * Γ₂) := by rw [h₁]; noncomm_ring
+    _ = 2 + Γ₂ * Γ₁ + Γ₁ * Γ₂ := by rw [h₂, ← one_add_one_eq_two]; abel
+  have hr6 : midpointRotor Γ₂ Γ₁ * midpointRotor Γ₁ Γ₂ = 2 + Γ₂ * Γ₁ + Γ₁ * Γ₂ := by
+    calc (1 + Γ₁ * Γ₂) * (1 + Γ₂ * Γ₁)
+        = 1 + Γ₂ * Γ₁ + Γ₁ * Γ₂ + Γ₁ * (Γ₂ * Γ₂) * Γ₁ := by noncomm_ring
+    _ = 1 + Γ₂ * Γ₁ + Γ₁ * Γ₂ + (Γ₁ * Γ₁) := by rw [h₂]; noncomm_ring
+    _ = 2 + Γ₂ * Γ₁ + Γ₁ * Γ₂ := by rw [h₁, ← one_add_one_eq_two]; abel
+  have hr7 : midpointRotor Γ₁ Γ₂ * Γ₁ * midpointRotor Γ₂ Γ₁ =
+      Γ₂ * (midpointRotor Γ₁ Γ₂ * midpointRotor Γ₂ Γ₁) := by
+    calc midpointRotor Γ₁ Γ₂ * Γ₁ * midpointRotor Γ₂ Γ₁
+        = (Γ₂ * midpointRotor Γ₁ Γ₂) * midpointRotor Γ₂ Γ₁ := by rw [hr3]
+    _ = Γ₂ * (midpointRotor Γ₁ Γ₂ * midpointRotor Γ₂ Γ₁) := mul_assoc _ _ _
+  exact ⟨hr1, hr2, hr3, hr4, hr5, hr6, hr7⟩
+
+/-- Operator-valued noncommutative Quantum Geometric Tensor (`QGT`) pairing
+`Q_μν := P * dP₁ * Q P * dP₂ * P`. -/
+def covariantQGT (P dP₁ dP₂ : E) : E := P * dP₁ * Q P * dP₂ * P
+
+/-- For any idempotent `P² = P` and Leibniz idempotent differentials `dPᵢ = dPᵢ P + P dPᵢ`,
+every diagonal Peirce sector `P dP₁ P` and `Q dP₁ Q` vanishes identically, `dP₁` is purely
+off-diagonal, and `covariantQGT P dP₁ dP₂` splits into symmetric metric and skew commutator
+sectors over any associative unital ring `[Ring E]`. -/
+theorem covariant_leibniz_idempotent_offDiagonal_and_qgt_decomposition
+    (P dP₁ dP₂ : E) (hP : P * P = P)
+    (hd₁ : dP₁ = dP₁ * P + P * dP₁) (_hd₂ : dP₂ = dP₂ * P + P * dP₂) :
+    P * dP₁ * P = 0 ∧
+    Q P * dP₁ * Q P = 0 ∧
+    P * dP₁ * Q P = P * dP₁ ∧
+    Q P * dP₁ * P = dP₁ * P ∧
+    P * dP₁ * Q P + Q P * dP₁ * P = dP₁ ∧
+    (P * dP₁ * Q P) * (P * dP₁ * Q P) = 0 ∧
+    (Q P * dP₁ * P) * (Q P * dP₁ * P) = 0 ∧
+    covariantQGT P dP₁ dP₂ = P * dP₁ * dP₂ * P ∧
+    covariantQGT P dP₁ dP₂ = (P * dP₁ * Q P) * (Q P * dP₂ * P) ∧
+    2 • covariantQGT P dP₁ dP₂ =
+      (covariantQGT P dP₁ dP₂ + covariantQGT P dP₂ dP₁) + P * PeirceSpine.comm dP₁ dP₂ * P := by
+  have h1 := prop1_orthogonality_and_polarity_involution P hP
+  rcases h1 with ⟨hQsq, hPmulQ, hQmulP, _⟩
+  have hPdP₁P : P * dP₁ * P = 0 := by
+    have hdup : P * dP₁ * P = P * dP₁ * P + P * dP₁ * P := by
+      calc P * dP₁ * P
+          = P * (dP₁ * P + P * dP₁) * P := by conv_lhs => rw [hd₁]
+      _ = P * dP₁ * (P * P) + (P * P) * dP₁ * P := by noncomm_ring
+      _ = P * dP₁ * P + P * dP₁ * P := by rw [hP]
+    calc P * dP₁ * P = (P * dP₁ * P + P * dP₁ * P) - P * dP₁ * P := by abel
+    _ = P * dP₁ * P - P * dP₁ * P := by rw [← hdup]
+    _ = 0 := sub_self _
+  have hQdP₁Q : Q P * dP₁ * Q P = 0 := by
+    calc Q P * dP₁ * Q P
+        = Q P * (dP₁ * P + P * dP₁) * Q P := by conv_lhs => rw [hd₁]
+    _ = Q P * dP₁ * (P * Q P) + (Q P * P) * dP₁ * Q P := by noncomm_ring
+    _ = 0 := by rw [hPmulQ, hQmulP]; noncomm_ring
+  have hPdP₁Q : P * dP₁ * Q P = P * dP₁ := by
+    calc P * dP₁ * Q P = P * dP₁ * (1 - P) := rfl
+    _ = P * dP₁ - P * dP₁ * P := by noncomm_ring
+    _ = P * dP₁ := by rw [hPdP₁P, sub_zero]
+  have hQdP₁P : Q P * dP₁ * P = dP₁ * P := by
+    calc Q P * dP₁ * P = (1 - P) * dP₁ * P := rfl
+    _ = dP₁ * P - P * dP₁ * P := by noncomm_ring
+    _ = dP₁ * P := by rw [hPdP₁P, sub_zero]
+  have hsum : P * dP₁ * Q P + Q P * dP₁ * P = dP₁ := by
+    rw [hPdP₁Q, hQdP₁P, add_comm, ← hd₁]
+  have hsq1 : (P * dP₁ * Q P) * (P * dP₁ * Q P) = 0 := by
+    calc (P * dP₁ * Q P) * (P * dP₁ * Q P)
+        = P * dP₁ * (Q P * P) * dP₁ * Q P := by noncomm_ring
+    _ = 0 := by rw [hQmulP]; noncomm_ring
+  have hsq2 : (Q P * dP₁ * P) * (Q P * dP₁ * P) = 0 := by
+    calc (Q P * dP₁ * P) * (Q P * dP₁ * P)
+        = Q P * dP₁ * (P * Q P) * dP₁ * P := by noncomm_ring
+    _ = 0 := by rw [hPmulQ]; noncomm_ring
+  have hqgt1 : covariantQGT P dP₁ dP₂ = P * dP₁ * dP₂ * P := by
+    calc covariantQGT P dP₁ dP₂
+        = (P * dP₁ * Q P) * dP₂ * P := by rfl
+    _ = P * dP₁ * dP₂ * P := by rw [hPdP₁Q]
+  have hqgt2 : covariantQGT P dP₁ dP₂ = (P * dP₁ * Q P) * (Q P * dP₂ * P) := by
+    calc covariantQGT P dP₁ dP₂
+        = P * dP₁ * (Q P * Q P) * dP₂ * P := by rw [hQsq]; rfl
+    _ = (P * dP₁ * Q P) * (Q P * dP₂ * P) := by noncomm_ring
+  have hPdP₂Q : P * dP₂ * Q P = P * dP₂ := by
+    have hPdP₂P : P * dP₂ * P = 0 := by
+      have hdup : P * dP₂ * P = P * dP₂ * P + P * dP₂ * P := by
+        calc P * dP₂ * P
+            = P * (dP₂ * P + P * dP₂) * P := by conv_lhs => rw [_hd₂]
+        _ = P * dP₂ * (P * P) + (P * P) * dP₂ * P := by noncomm_ring
+        _ = P * dP₂ * P + P * dP₂ * P := by rw [hP]
+      calc P * dP₂ * P = (P * dP₂ * P + P * dP₂ * P) - P * dP₂ * P := by abel
+      _ = P * dP₂ * P - P * dP₂ * P := by rw [← hdup]
+      _ = 0 := sub_self _
+    calc P * dP₂ * Q P = P * dP₂ * (1 - P) := rfl
+    _ = P * dP₂ - P * dP₂ * P := by noncomm_ring
+    _ = P * dP₂ := by rw [hPdP₂P, sub_zero]
+  have hqgt21 : covariantQGT P dP₂ dP₁ = P * dP₂ * dP₁ * P := by
+    calc covariantQGT P dP₂ dP₁
+        = (P * dP₂ * Q P) * dP₁ * P := by rfl
+    _ = P * dP₂ * dP₁ * P := by rw [hPdP₂Q]
+  have hsplit : 2 • covariantQGT P dP₁ dP₂ =
+      (covariantQGT P dP₁ dP₂ + covariantQGT P dP₂ dP₁) + P * PeirceSpine.comm dP₁ dP₂ * P := by
+    rw [two_nsmul, hqgt1, hqgt21, PeirceSpine.comm]
+    noncomm_ring
+  exact ⟨hPdP₁P, hQdP₁Q, hPdP₁Q, hQdP₁P, hsum, hsq1, hsq2, hqgt1, hqgt2, hsplit⟩
+
+end MidpointRotorAndCovariantQGT
+
+end ParabolicJordanMidpointAndCovariantQGT
+
+end InfoGeometry.OperatorAlgebra.PeirceSpine.ReciprocalTotalityAporiaPoset

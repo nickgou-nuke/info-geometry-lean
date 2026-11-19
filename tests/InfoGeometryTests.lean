@@ -6,7 +6,13 @@ Authors: InfoGeometry Engine Contributors
 
 /- SPDX-License-Identifier: Apache-2.0 -/
 
-import InfoGeometry
+import InfoGeometry.Canonical.ZeroHolonomyAnalyticity
+import InfoGeometry.Canonical.DrazinNilpotentShell
+import InfoGeometry.Canonical.DrazinInterShellJordan
+import InfoGeometry.Streaming.TwoBoundaryDyadCompression
+import InfoGeometry.Core.PeirceReflectionContracts
+import InfoGeometry.Core.PeirceParityWeights
+import InfoGeometry.Canonical.PeirceReflectionAudit
 import InfoGeometry.Core.SuperGrassmannianSusy
 import InfoGeometry.Core.DiracPeirceSuperalgebra
 import InfoGeometry.Core.PeirceTangent
@@ -129,6 +135,54 @@ import InfoGeometry.QuantumContext.PetzMatrixStageLimit
 import InfoGeometry.Canonical.FiniteDimensionalSeparation
 import InfoGeometry.Canonical.CyclicTraceIsometryObstruction
 import InfoGeometry.Canonical.GenericObliqueIdempotentAnomaly
+import InfoGeometry.Canonical.E10Grading
+import InfoGeometry.Algebra.ConnesLottYangBaxterPoset
+import InfoGeometry.OperatorAlgebra.PeirceBiSandwich.Core
+import InfoGeometry.OperatorAlgebra.PeirceBiSandwich.PinchedSuperExtension
+import InfoGeometry.OperatorAlgebra.PeirceBiSandwich.OffShellCoercivityAndColimitGap
+import InfoGeometry.OperatorAlgebra.PeirceBiSandwich.Clifford8BdGHorizon
+import InfoGeometry.OperatorAlgebra.PeirceBiSandwich.Supertwistor16AndRealBloch
+import InfoGeometry.OperatorAlgebra.PeirceBiSandwich.CustodialTwinLoopAndJosephsonLattice
+import InfoGeometry.OperatorAlgebra.PeirceBiSandwich.KMSBathAndAnisotropicKuboMori
+import InfoGeometry.OperatorAlgebra.PeirceBiSandwich.KMSBathOperatorConsequences
+import InfoGeometry.OperatorAlgebra.PeirceBiSandwich.KMSBathOperatorConsequencesAudit
+import InfoGeometry.Foundations.PeirceConnesCoreIntertwine
+import InfoGeometry.Canonical.SouriauBostConnesTransition
+import InfoGeometry.Canonical.ConcreteHilbertCuntzO2
+import InfoGeometry.Canonical.ConcreteHilbertSewnAnomaly
+import InfoGeometry.Canonical.AnomalyOntology
+import InfoGeometry.Canonical.GrandAnomalyOntology
+import InfoGeometry.Canonical.FelixKleinGeometryUnification
+import InfoGeometry.ErlangenCoordinateless
+import InfoGeometry.Categorical.FibonacciMonoidalBraidedInstance
+import InfoGeometry.Meta.ArchetypePipeline
+import InfoGeometry.Meta.Architecture
+import InfoGeometry.Epistemology.JungianEpistemicCompiler
+import InfoGeometry.Epistemology.CoagulatedArchetypeSynthesis
+import InfoGeometry.Meta.EpistemicCompilerIntegration
+import InfoGeometry.Neurosymbolic.LLMAttentionKreinMellinBridge
+import InfoGeometry.Modular.GKSLGibbsAndDuallyFlatSpinCumulants
+import InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn
+import InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance
+import InfoGeometry.Clifford.GradedGraceContraction
+import InfoGeometry.InformationGeometry.CoherencePullbackMetricAndPalatiniConfinement
+import InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry
+import InfoGeometry.OperatorAlgebra.BanachNewtonPeirceConvergence
+import InfoGeometry.Clifford.CliffordKreinPeirceBruhatBridge
+import InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset
+import InfoGeometry.OperatorAlgebra.CStarFractalUncertaintyAndBanachPorosity
+import InfoGeometry.OperatorAlgebra.KoszulMaurerCartanCocycleBraidPoset
+import InfoGeometry.InformationGeometry.CoherenceJKOFlowAndEguchiBridge
+import InfoGeometry.OperatorAlgebra.FreedWickReflectionAndTopologicalIndexPoset
+import InfoGeometry.OperatorAlgebra.CantorDoubleCylinderFractalColimit
+import InfoGeometry.OperatorAlgebra.ErlangenDoubleCylinderSymmetryInvariants
+import InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra
+import InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset
+import InfoGeometry.Erlangen.KleinIcosahedralQuinticModularJ
+import InfoGeometry.Erlangen.BirkhoffHilbertConeMetric
+import InfoGeometry.Erlangen.SmoothCartanGeometry
+import DAG.TermDigest
+import DAG.ExprFingerprint
 
 -- Simple sanity check that key theorems and definitions compile
 #check InfoGeometry.Canonical.FiniteDimensionalSeparation.no_linearEquiv_to_infinite_dimensional
@@ -193,7 +247,7 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 
 -- Split Clifford/Sato declaration availability checks (these #checks are not an independent QMS audit)
 #check InfoGeometry.SuperGrassmannian.SplitCliffordColimit.compile_split_clifford_dimension_arithmetic
-#check InfoGeometry.SuperGrassmannian.MajoranaCAR.compile_majorana_car_superalgebra
+#check InfoGeometry.SuperGrassmannian.MajoranaCAR.SplitCliffordCell.car_anticommutator
 #check InfoGeometry.SuperGrassmannian.RealSuperGrassmannianModule.compile_scalar_one_one_graded_algebra
 #check InfoGeometry.SuperGrassmannian.RealSuperGrassmannianOperatorBlocks.operator_block_mul_assoc
 #check InfoGeometry.SuperGrassmannian.RealSuperGrassmannianOperatorBlocks.operator_block_superbracket_supertrace_zero
@@ -230,10 +284,10 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Algebra.RealAlbertMatrix.mul_adjointQuad_eq_norm_smul_unit
 #check InfoGeometry.Projective.SplitComposition.compile_split_composition_projective_space
 #check InfoGeometry.Projective.SplitQuaternionMotivicHopf.compile_split_quaternion_motivic_hopf
-#check InfoGeometry.OperatorAlgebra.QCCRCuntzToeplitz.compile_qccr_cuntz_toeplitz
+#check InfoGeometry.OperatorAlgebra.QCCRCuntzToeplitz.q_zero_is_cuntz_toeplitz
 #check InfoGeometry.Epistemology.DistributedProofStateNetwork.compile_distributed_proof_state_network
-#check InfoGeometry.Exceptional.AlbertAlgebra.compile_albert_algebra_certificate
-#check InfoGeometry.Exceptional.F4DerivationsAlbert.compile_f4_derivations_albert
+#check InfoGeometry.Exceptional.AlbertAlgebra.albert_algebra_dimension
+#check InfoGeometry.Exceptional.F4DerivationsAlbert.f4_derivation_leibniz
 #check InfoGeometry.Exceptional.AlbertDerivations.compile_albert_derivation_certificate
 #check InfoGeometry.SuperGrassmannian.WeylBerezinian.compile_weyl_berezinian_deformation
 #check InfoGeometry.Exceptional.AlbertBPSNilpotentOrbits.compile_albert_bps_nilpotent_orbits
@@ -261,7 +315,7 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.SuperGrassmannian.RealMajoranaChiralIdeal.compile_real_majorana_chiral_ideal
 #check InfoGeometry.QuantumContext.CausalPetzDeconfabulationPoset.compile_causal_petz_deconfabulation
 #check InfoGeometry.QuantumContext.CausalPetz.compile_causal_petz_recovery
-#check InfoGeometry.SuperGrassmannian.FiveGradedLieSuperalgebra.compile_five_graded_lie_superalgebra
+#check InfoGeometry.SuperGrassmannian.FiveGradedLieSuperalgebra.adH_quintic_identity
 #check InfoGeometry.SuperGrassmannian.KantorTanakaSuperGrassmannian.compile_kantor_tanaka_super_grassmannian
 #check InfoGeometry.SuperGrassmannian.SuperconformalOSpJordanPair.contact_jordan_pair_matrix_realization
 #check InfoGeometry.SuperGrassmannian.SuperconformalOSpJordanPair.MatrixSpans.even_even_span_closed
@@ -490,3 +544,613 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Core.PeirceParityWeights.combination_fixed_iff
 #check InfoGeometry.Core.PeirceParityWeights.invariant_weight_trace_zero
 #check InfoGeometry.Canonical.PeirceReflectionAudit.equivariance_not_pointwise_mixing
+
+-- ============================================================================
+-- Candidate Lane Integration & Four-Pillar Intertwining Verification (M4)
+-- ============================================================================
+
+open InfoGeometry.MetaCompiler
+
+namespace InfoGeometry.OperatorAlgebra.PeirceBiSandwich
+
+/-- DiagPinch2 preserves and scales the Casimir defect $V$ by 2. -/
+theorem diagPinch2_casimirV
+    {B : Type*} [Ring B] {P : B} (hP : delta P = 0) (A C : B) :
+    diagPinch2 P (casimirV P A C) = 2 * casimirV P A C := by
+  have hPP := P_mul_P hP
+  dsimp [diagPinch2]
+  calc casimirV P A C + (2 * P - 1) * casimirV P A C * (2 * P - 1)
+      = casimirV P A C + (2 * (P * casimirV P A C) - casimirV P A C) * (2 * P - 1) := by noncomm_ring
+    _ = casimirV P A C + (2 * (casimirV P A C * P) - casimirV P A C) * (2 * P - 1) := by
+        rw [comm_V_P hP A C]
+    _ = 2 * casimirV P A C + 4 * (casimirV P A C * (P * P - P)) := by noncomm_ring
+    _ = 2 * casimirV P A C := by rw [hPP]; noncomm_ring
+
+end InfoGeometry.OperatorAlgebra.PeirceBiSandwich
+
+namespace InfoGeometry.Canonical.SouriauBostConnesTransition
+
+abbrev verified_dirichlet_series_convergence := dirichletSeriesBC_hasSum
+abbrev verified_bost_connes_modular_flow_commutation := bostConnes_liouville_commutes_modular_flow
+abbrev verified_bost_connes_witten_index := bostConnes_witten_index_eq_reciprocal_zeta
+abbrev verified_thermal_cayley_boundary := thermal_cayley_tendsto_boundary_one
+abbrev verified_transition_matrix := verifiedTransitionMatrix
+
+end InfoGeometry.Canonical.SouriauBostConnesTransition
+
+namespace InfoGeometry.Foundations.PeirceConnesCoreIntertwine
+
+abbrev connesLottMassGapArchetype := connesLottHiggsMassGapArchetype
+abbrev yangBaxterMarkovArchetype := yangBaxterTransferMarkovArchetype
+abbrev classicalCollapseArchetype := petzClassicalCollapseArchetype
+
+end InfoGeometry.Foundations.PeirceConnesCoreIntertwine
+
+namespace InfoGeometry.Algebra.ConnesLottYangBaxterPoset
+
+abbrev connes_lott_yang_baxter_noncommuting := Mat2.connes_lott_yang_baxter_noncommuting
+
+end InfoGeometry.Algebra.ConnesLottYangBaxterPoset
+
+namespace InfoGeometry.Neurosymbolic
+
+abbrev LLMLatentSpaceUnification := LLMAttentionKreinMellinBridge.LLMLatentSpaceUnification
+abbrev llm_latent_space_unification_exists := @LLMAttentionKreinMellinBridge.llm_latent_space_unification_exists
+
+end InfoGeometry.Neurosymbolic
+
+namespace InfoGeometry.Meta.EpistemicCompilerIntegration
+
+abbrev statusEvidenceStage := InfoGeometry.MetaCompiler.Integration.statusEvidenceStage
+abbrev compilationPrerequisiteGraph := InfoGeometry.MetaCompiler.Integration.compilationPrerequisiteGraph
+
+end InfoGeometry.Meta.EpistemicCompilerIntegration
+
+abbrev DAG.TermDigest := DAG.TermDigest.TermDigest
+
+-- 1. Primary declarations #check
+#check InfoGeometry.OperatorAlgebra.PeirceBiSandwich.peirceBiSandwich_spine_dictionary
+#check InfoGeometry.OperatorAlgebra.PeirceBiSandwich.peirce_biSandwich_noncommuting
+#check InfoGeometry.OperatorAlgebra.PeirceBiSandwich.integral_unitary_defect_law
+#check InfoGeometry.OperatorAlgebra.PeirceBiSandwich.on_shell_integral_weyl_reflection
+#check InfoGeometry.OperatorAlgebra.PeirceBiSandwich.kleinReynolds4_on_generators
+#check InfoGeometry.OperatorAlgebra.PeirceBiSandwich.diagPinch2_casimirV
+#check InfoGeometry.OperatorAlgebra.PeirceBiSandwich.global_biCayley_unitary_inversion
+#check InfoGeometry.OperatorAlgebra.PeirceBiSandwich.endogenous_supercolor_bridge_theorem
+#check InfoGeometry.OperatorAlgebra.PeirceBiSandwich.dual_chiral_supercharge_closure
+#check InfoGeometry.OperatorAlgebra.PeirceBiSandwich.polarized_fermi_sea_unit_trace_state
+#check InfoGeometry.OperatorAlgebra.PeirceBiSandwich.clifford8_unpolarized_tfd_collapse_and_hyperbolic_obstruction
+#check InfoGeometry.OperatorAlgebra.PeirceBiSandwich.custodial_twin_involution_Z
+#check InfoGeometry.OperatorAlgebra.PeirceBiSandwich.custodial_all_loop_odd_power_vanishing
+#check InfoGeometry.OperatorAlgebra.PeirceBiSandwich.one_loop_parity_odd_birefringence
+#check InfoGeometry.OperatorAlgebra.PeirceBiSandwich.josephson_cosine_coupling
+#check InfoGeometry.OperatorAlgebra.PeirceBiSandwich.kkt_kraus_isometric_and_completeness
+#check InfoGeometry.OperatorAlgebra.PeirceBiSandwich.kms_detailed_balance_gksl_stationary
+#check InfoGeometry.OperatorAlgebra.PeirceBiSandwich.gksl_propagator_relaxation
+#check InfoGeometry.OperatorAlgebra.PeirceBiSandwich.twoSheetDiagonalOperator_stationary
+#check InfoGeometry.OperatorAlgebra.PeirceBiSandwich.twoRateTransitionDefect2_unique_stationary
+#check InfoGeometry.Algebra.ConnesLottYangBaxterPoset.Mat2.toMatrixEquiv
+#check InfoGeometry.Algebra.ConnesLottYangBaxterPoset.connes_lott_yang_baxter_noncommuting
+#check InfoGeometry.Algebra.ConnesLottYangBaxterPoset.Mat4.stage_A10_closed_form_higgs_transfer_and_unconditional_commutativity
+#check InfoGeometry.Algebra.ConnesLottYangBaxterPoset.AuxMat4.stage_A11_parametric_kahler_bergman_quantum_determinant_and_2site_commutativity
+#check InfoGeometry.Canonical.E10Grading.heightCutoff_lie_le
+#check InfoGeometry.Canonical.E10Grading.heightCutoffColimitMap_stage
+#check InfoGeometry.Foundations.PeirceConnesCoreIntertwine.qubitGibbsState_peirce_fisher_defect
+#check InfoGeometry.Foundations.PeirceConnesCoreIntertwine.connes_lott_higgs_peirce_mass_gap
+#check InfoGeometry.Foundations.PeirceConnesCoreIntertwine.yang_baxter_transfer_markov_commutativity
+#check InfoGeometry.Foundations.PeirceConnesCoreIntertwine.classical_collapse_iff_peirce_corner_zero
+#check InfoGeometry.Foundations.PeirceConnesCoreIntertwine.peirce_casimir_spin_coagulated_poset_bridge
+#check InfoGeometry.Foundations.PeirceConnesCoreIntertwine.krein_attention_fisher_intertwine
+#check InfoGeometry.Canonical.SouriauBostConnesTransition.dirichletSeriesBC
+#check InfoGeometry.Canonical.SouriauBostConnesTransition.finite_weylDenominator_eq_alternatingSum
+#check InfoGeometry.Canonical.SouriauBostConnesTransition.verified_dirichlet_series_convergence
+#check InfoGeometry.Canonical.SouriauBostConnesTransition.verified_bost_connes_modular_flow_commutation
+#check InfoGeometry.Canonical.SouriauBostConnesTransition.verified_bost_connes_witten_index
+#check InfoGeometry.Canonical.SouriauBostConnesTransition.verified_thermal_cayley_boundary
+#check InfoGeometry.Canonical.SouriauBostConnesTransition.verified_transition_matrix
+#check InfoGeometry.Canonical.SouriauBostConnesTransition.dirichletSummandRealHom
+#check InfoGeometry.Canonical.SouriauBostConnesTransition.dirichletSeriesBC_sum_multiplicative
+#check InfoGeometry.Canonical.SouriauBostConnesTransition.dirichletSeriesBC_euler_product
+#check InfoGeometry.Canonical.SouriauBostConnesTransition.dirichletSeriesBC_finset_euler_product
+#check InfoGeometry.Canonical.SouriauBostConnesTransition.dirichletSeriesBC_pos
+#check InfoGeometry.Canonical.SouriauBostConnesTransition.completedHilbertCuntzClockCommutationArchetype
+#check @InfoGeometry.Canonical.ConcreteHilbertCuntzO2.S_right_lp_clm_isometry
+#check @InfoGeometry.Canonical.ConcreteHilbertCuntzO2.S_right_lp_clm_commutes_K_lp_clm
+#check @InfoGeometry.Canonical.ConcreteHilbertCuntzO2.S_left_right_lp_clm_disjoint
+#check @InfoGeometry.Canonical.ConcreteHilbertCuntzO2.cuntz_o2_lp_decomposition
+#check InfoGeometry.Categorical.FibonacciMonoidalBraidedInstance.homOneOneEquiv
+#check InfoGeometry.Categorical.FibonacciMonoidalBraidedInstance.homTauTauEquiv
+#check InfoGeometry.Categorical.FibonacciMonoidalBraidedInstance.uniqueHomOneTau
+#check InfoGeometry.Categorical.FibonacciMonoidalBraidedInstance.homOneTauTauEquiv
+#check InfoGeometry.Categorical.FibonacciMonoidalBraidedInstance.homTauTauTauEquiv
+#check InfoGeometry.Categorical.FibonacciMonoidalBraidedInstance.fibonacci_braiding_squared_ne_id
+#check InfoGeometry.Categorical.FibonacciMonoidalBraidedInstance.fibonacci_braided_category_package
+#check InfoGeometry.Canonical.SouriauBostConnesTransition.tendsto_zero_temperature_full_partition
+#check InfoGeometry.Canonical.SouriauBostConnesTransition.tendsto_zero_temperature_excited_tail
+#check InfoGeometry.Canonical.SouriauBostConnesTransition.tendsto_souriau_fisher_blowup
+#check InfoGeometry.Canonical.SouriauBostConnesTransition.tendsto_souriau_fisher_collapse
+#check @InfoGeometry.Canonical.ConcreteHilbertSewnAnomaly.J_lp_clm_anticomm_epsilon_lp_clm
+#check @InfoGeometry.Canonical.ConcreteHilbertSewnAnomaly.S_left_lp_clm_sewn_invariant
+#check @InfoGeometry.Canonical.ConcreteHilbertSewnAnomaly.S_right_lp_clm_sewn_invariant
+#check InfoGeometry.Canonical.ConcreteHilbertSewnAnomaly.S_left_right_lp_clm_noncomm
+#check InfoGeometry.Canonical.ConcreteHilbertSewnAnomaly.canonicalCantorSewnState_ne_zero
+#check InfoGeometry.Canonical.ConcreteHilbertSewnAnomaly.canonicalCantorSewnState_fixed
+#check @InfoGeometry.Canonical.ConcreteHilbertSewnAnomaly.infinite_hilbert_sewn_chiral_expectation_zero
+#check @InfoGeometry.Canonical.ConcreteHilbertSewnAnomaly.infinite_hilbert_tsum_chiral_index_zero
+#check InfoGeometry.Canonical.ConcreteHilbertSewnAnomaly.canonicalCantorSewnState_chiral_zero
+
+-- Epistemic compiler integration, solve et coagula synthesis, and LLM latent space geometry
+#check InfoGeometry.Neurosymbolic.LLMLatentSpaceUnification
+#check InfoGeometry.Neurosymbolic.llm_latent_space_unification_exists
+#check InfoGeometry.Neurosymbolic.LLMAttentionKreinMellinBridge.LLMLatentSpaceUnification
+#check InfoGeometry.Neurosymbolic.LLMAttentionKreinMellinBridge.llm_latent_space_unification_exists
+#check InfoGeometry.Meta.EpistemicCompilerIntegration.statusEvidenceStage
+#check InfoGeometry.Meta.EpistemicCompilerIntegration.compilationPrerequisiteGraph
+#check InfoGeometry.MetaCompiler.Integration.statusEvidenceStage
+#check InfoGeometry.MetaCompiler.Integration.compilationPrerequisiteGraph
+#check InfoGeometry.Epistemology.CoagulatedArchetypeSynthesis.partI_cut_decomposition
+#check InfoGeometry.Epistemology.CoagulatedArchetypeSynthesis.partII_fourfold_partition
+#check InfoGeometry.Epistemology.CoagulatedArchetypeSynthesis.partV_master_synthesis
+#check DAG.TermDigest
+#check DAG.computeFingerprint
+
+-- GKSL Lindblad semigroup, spin cumulants, and dually flat Spohn synthesis
+#check InfoGeometry.Modular.GKSLGibbsAndDuallyFlatSpinCumulants.gkslCarreDuChampMat2CArchetype
+#check InfoGeometry.Modular.GKSLGibbsAndDuallyFlatSpinCumulants.wittCarThermalSemigroupArchetype
+#check InfoGeometry.Modular.GKSLGibbsAndDuallyFlatSpinCumulants.duallyFlatSpinCumulantArchetype
+#check InfoGeometry.Modular.GKSLGibbsAndDuallyFlatSpinCumulants.masterSpohnGibbsSynthesisArchetype
+
+-- Off-diagonal Bloch-ball CFC.log, Umegaki coherence Pythagoras, and 3-channel quantum Spohn dissipation
+#check InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.blochBall_matrix_noncommutative
+#check InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.coherent_not_commute_gibbs
+#check InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.spectralProjector_twoSheet_and_cfc_log
+#check InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.gibbsDensityC_strictlyPositive_and_cfc_log
+#check InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.umegakiKernel_trace_and_coherence_pythagoras
+#check InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.hasDerivAt_thermalSemigroupC_eq_lindbladian
+#check InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.thermalSemigroupC_preserves_blochBall
+#check InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.operator_spohn_rate_and_strict_coherent_dissipation
+#check InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.master_bloch_umegaki_spohn_and_gibbs_relaxation
+#check InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.blochTwoSheetCFCLogArchetype
+#check InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.umegakiCoherencePythagorasArchetype
+#check InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.quantumSpohnBlochRelaxationArchetype
+#check InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.weldedPoset_acyclic_and_bounds
+#check InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.wittCAR_gkslGen2_and_carre_du_champ_damping_ratio
+#check InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.forward_monoid_positivity_iff_and_backward_aporia
+#check InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.bloch3D_cumulant_legendre_and_diagonal_specialization
+#check InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.pinching_idempotence_orthogonality_and_operator_pythagoras
+#check InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.larmor_equipotential_orthogonality_and_affine_m_geodesic_iff
+#check InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.symmetrized_umegaki_jeffreys_factor_two_and_diagonal_iff
+#check InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.master_welded_3d_quantum_semigroup_cumulant_spohn_synthesis
+#check InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.welded3DQuantumSpohnSynthesisArchetype
+
+-- Noncommutative Weyl-Cartan split, trace-to-det, Iwasawa KAN, and G(·)G⁻¹ Polar/KAN equivariance (KP1-KP4)
+#check InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.kpPoset_actual_dependencies
+#check InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.matrix_fin2_noncommutative_witness
+#check InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.fiberEmbed_central_iff
+#check InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.weylScalePart_noncentral_witness
+#check InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.weyl_cartan_matrix_noncommutative
+#check InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.cartan_generators_eq_iwasawaKANTriad
+#check InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.weyl_cartan_split_and_noncommutative_trace_to_det
+#check InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.symDet_eq_two_smul_det_of_commRing
+#check InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.iwasawa_subgroups_eq_iwasawaKANTriad
+#check InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.iwasawa_kan_subgroups_and_polar_gram_reduction
+#check InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.polar_decomposition_unitary_equivariance
+#check InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.polar_matrix_unitary_equivariance
+#check InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.polar_right_transpose_unitary_equivariance
+#check InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.iwasawa_kan_symmetry_equivariance
+#check InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.kan_polar_gram_fiber_unitary_equivariance
+#check InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.weylCartanTraceToDetMat2CArchetype
+#check InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.iwasawaKANPolarGramMat2CArchetype
+#check InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.polarUnitaryEquivarianceMat2CArchetype
+#check InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.iwasawaKANSymmetryEquivarianceMat2CArchetype
+
+-- 2. #audit_archetype commands
+#audit_archetype InfoGeometry.Foundations.PeirceConnesCoreIntertwine.qubitFisherDefectArchetype
+#audit_archetype InfoGeometry.Foundations.PeirceConnesCoreIntertwine.connesLottMassGapArchetype
+#audit_archetype InfoGeometry.Foundations.PeirceConnesCoreIntertwine.yangBaxterMarkovArchetype
+#audit_archetype InfoGeometry.Foundations.PeirceConnesCoreIntertwine.classicalCollapseArchetype
+#audit_archetype InfoGeometry.Foundations.PeirceConnesCoreIntertwine.peirceCasimirSpinCoagulatedPosetArchetype
+#audit_archetype InfoGeometry.Foundations.PeirceConnesCoreIntertwine.kreinAttentionFisherIntertwineArchetype
+#audit_archetype InfoGeometry.Canonical.SouriauBostConnesTransition.dirichletSeriesConvergenceArchetype
+#audit_archetype InfoGeometry.Canonical.SouriauBostConnesTransition.bostConnesModularCommutationArchetype
+#audit_archetype InfoGeometry.Canonical.SouriauBostConnesTransition.bostConnesWittenIndexArchetype
+#audit_archetype InfoGeometry.Canonical.SouriauBostConnesTransition.thermalCayleyBoundaryArchetype
+#audit_archetype InfoGeometry.Canonical.SouriauBostConnesTransition.finiteWeylDenominatorArchetype
+#audit_archetype InfoGeometry.Canonical.SouriauBostConnesTransition.verifiedTransitionMatrixArchetype
+#audit_archetype InfoGeometry.Canonical.SouriauBostConnesTransition.completedHilbertCuntzClockCommutationArchetype
+#audit_archetype InfoGeometry.Canonical.SouriauBostConnesTransition.d1AnalyticZetaCompletionCandidate
+#audit_archetype InfoGeometry.Canonical.SouriauBostConnesTransition.d2EulerProductConvergenceCandidate
+#audit_archetype InfoGeometry.Canonical.SouriauBostConnesTransition.d3ZeroTempCantorCrystallizationCandidate
+#audit_archetype InfoGeometry.Canonical.SouriauBostConnesTransition.d4SouriauFisherMetricCollapseCandidate
+#audit_archetype InfoGeometry.Canonical.SouriauBostConnesTransition.d5CompletedCuntzBoundaryFunctorCandidate
+#audit_archetype InfoGeometry.Canonical.SouriauBostConnesTransition.d6BraidedAnyonCategoryCoherenceCandidate
+#audit_archetype InfoGeometry.Canonical.SouriauBostConnesTransition.d7InfiniteHilbertSewnAnomalyCancellationArchetype
+
+-- Audit GKSL and dually flat spin cumulant archetypes
+#audit_archetype InfoGeometry.Modular.GKSLGibbsAndDuallyFlatSpinCumulants.gkslCarreDuChampMat2CArchetype
+#audit_archetype InfoGeometry.Modular.GKSLGibbsAndDuallyFlatSpinCumulants.wittCarThermalSemigroupArchetype
+#audit_archetype InfoGeometry.Modular.GKSLGibbsAndDuallyFlatSpinCumulants.duallyFlatSpinCumulantArchetype
+#audit_archetype InfoGeometry.Modular.GKSLGibbsAndDuallyFlatSpinCumulants.masterSpohnGibbsSynthesisArchetype
+
+-- Audit off-diagonal Bloch-ball CFC.log, Umegaki coherence Pythagoras, and quantum Spohn archetypes
+#audit_archetype InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.blochTwoSheetCFCLogArchetype
+#audit_archetype InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.umegakiCoherencePythagorasArchetype
+#audit_archetype InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.quantumSpohnBlochRelaxationArchetype
+#audit_archetype InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.welded3DQuantumSpohnSynthesisArchetype
+
+-- Audit Weyl-Cartan, Iwasawa KAN, and Polar equivariance archetypes (KP1-KP4)
+#audit_archetype InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.weylCartanTraceToDetMat2CArchetype
+#audit_archetype InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.iwasawaKANPolarGramMat2CArchetype
+#audit_archetype InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.polarUnitaryEquivarianceMat2CArchetype
+#audit_archetype InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.iwasawaKANSymmetryEquivarianceMat2CArchetype
+
+-- Also audit original canonical archetype names from PeirceConnesCoreIntertwine
+#audit_archetype InfoGeometry.Foundations.PeirceConnesCoreIntertwine.connesLottHiggsMassGapArchetype
+#audit_archetype InfoGeometry.Foundations.PeirceConnesCoreIntertwine.yangBaxterTransferMarkovArchetype
+#audit_archetype InfoGeometry.Foundations.PeirceConnesCoreIntertwine.petzClassicalCollapseArchetype
+
+-- 3. Compile-time discharge verification on proved archetypes
+#check (InfoGeometry.Foundations.PeirceConnesCoreIntertwine.qubitFisherDefectArchetype.discharge : _)
+#check (InfoGeometry.Canonical.SouriauBostConnesTransition.dirichletSeriesConvergenceArchetype.discharge : _)
+#check (InfoGeometry.Canonical.SouriauBostConnesTransition.bostConnesModularCommutationArchetype.discharge : _)
+#check (InfoGeometry.Canonical.SouriauBostConnesTransition.bostConnesWittenIndexArchetype.discharge : _)
+#check (InfoGeometry.Canonical.SouriauBostConnesTransition.thermalCayleyBoundaryArchetype.discharge : _)
+#check (InfoGeometry.Canonical.SouriauBostConnesTransition.finiteWeylDenominatorArchetype.discharge : _)
+#check (InfoGeometry.Canonical.SouriauBostConnesTransition.verifiedTransitionMatrixArchetype.discharge : _)
+#check (InfoGeometry.Canonical.SouriauBostConnesTransition.completedHilbertCuntzClockCommutationArchetype.discharge : _)
+#check (InfoGeometry.Canonical.SouriauBostConnesTransition.d1AnalyticZetaCompletionCandidate.discharge : _)
+#check (InfoGeometry.Canonical.SouriauBostConnesTransition.d2EulerProductConvergenceCandidate.discharge : _)
+#check (InfoGeometry.Canonical.SouriauBostConnesTransition.d3ZeroTempCantorCrystallizationCandidate.discharge : _)
+#check (InfoGeometry.Canonical.SouriauBostConnesTransition.d4SouriauFisherMetricCollapseCandidate.discharge : _)
+#check (InfoGeometry.Canonical.SouriauBostConnesTransition.d5CompletedCuntzBoundaryFunctorCandidate.discharge : _)
+#check (InfoGeometry.Canonical.SouriauBostConnesTransition.d6BraidedAnyonCategoryCoherenceCandidate.discharge : _)
+#check (InfoGeometry.Canonical.SouriauBostConnesTransition.d7InfiniteHilbertSewnAnomalyCancellationArchetype.discharge : _)
+#check (InfoGeometry.Canonical.SouriauBostConnesTransition.thermalCayleyBoundaryArchetype.discharge () : _)
+#check (InfoGeometry.Canonical.SouriauBostConnesTransition.completedHilbertCuntzClockCommutationArchetype.discharge () : _)
+#check (InfoGeometry.Canonical.SouriauBostConnesTransition.d3ZeroTempCantorCrystallizationCandidate.discharge () : _)
+#check (InfoGeometry.Canonical.SouriauBostConnesTransition.d4SouriauFisherMetricCollapseCandidate.discharge () : _)
+#check (InfoGeometry.Canonical.SouriauBostConnesTransition.d5CompletedCuntzBoundaryFunctorCandidate.discharge () : _)
+#check (InfoGeometry.Canonical.SouriauBostConnesTransition.d6BraidedAnyonCategoryCoherenceCandidate.discharge () : _)
+#check (InfoGeometry.Canonical.SouriauBostConnesTransition.d7InfiniteHilbertSewnAnomalyCancellationArchetype.discharge () : _)
+#check (InfoGeometry.Modular.GKSLGibbsAndDuallyFlatSpinCumulants.gkslCarreDuChampMat2CArchetype.discharge : _)
+#check (InfoGeometry.Modular.GKSLGibbsAndDuallyFlatSpinCumulants.wittCarThermalSemigroupArchetype.discharge : _)
+#check (InfoGeometry.Modular.GKSLGibbsAndDuallyFlatSpinCumulants.duallyFlatSpinCumulantArchetype.discharge : _)
+#check (InfoGeometry.Modular.GKSLGibbsAndDuallyFlatSpinCumulants.masterSpohnGibbsSynthesisArchetype.discharge : _)
+#check (InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.blochTwoSheetCFCLogArchetype.discharge : _)
+#check (InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.umegakiCoherencePythagorasArchetype.discharge : _)
+#check (InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.quantumSpohnBlochRelaxationArchetype.discharge : _)
+#check (InfoGeometry.Modular.BlochBallUmegakiAndQuantumSpohn.welded3DQuantumSpohnSynthesisArchetype.discharge : _)
+#check (InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.weylCartanTraceToDetMat2CArchetype.discharge : _)
+#check (InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.iwasawaKANPolarGramMat2CArchetype.discharge : _)
+#check (InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.polarUnitaryEquivarianceMat2CArchetype.discharge : _)
+#check (InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance.iwasawaKANSymmetryEquivarianceMat2CArchetype.discharge : _)
+
+-- 4. True Name structural digest verification
+#check (DAG.TermDigest : Type)
+#check (DAG.computeFingerprint : Lean.Expr → DAG.ExprFingerprint)
+
+-- Graded Grace contraction, coherence metric, Peirce-Bruhat poset, Banach Newton-Peirce convergence, and Krein-Grace bridge
+#check @InfoGeometry.Clifford.GradedGraceContraction.graceOperator
+#check @InfoGeometry.Clifford.GradedGraceContraction.not_nonneg_cliffordKreinPairing_Q31
+#check @InfoGeometry.Clifford.GradedGraceContraction.cliffordKreinPairing_Q31_kreinFlip_self_nonneg
+#check @InfoGeometry.InformationGeometry.CoherencePullbackMetricAndPalatiniConfinement.coherenceMetricMatrix
+#check @InfoGeometry.InformationGeometry.CoherencePullbackMetricAndPalatiniConfinement.canonicalLinearCoherence31
+#check @InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.epistemic_peirce_bruhat_aporia_master_synthesis
+#check @InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.peirce_bruhat_aporia_executable_certified_compilation
+#check @InfoGeometry.OperatorAlgebra.BanachNewtonPeirceConvergence.banach_newtonPeirce_limit_idempotent_and_intertwiner
+#check @InfoGeometry.OperatorAlgebra.BanachNewtonPeirceConvergence.non_nilpotent_oblique_clm_banach_convergence_witness
+#check @InfoGeometry.Clifford.CliffordKreinPeirceBruhatBridge.cl11_krein_peirce_signature_split
+#check @InfoGeometry.Clifford.CliffordKreinPeirceBruhatBridge.graceContractedClmCut_non_nilpotent_and_banach_healed
+
+#audit_archetype InfoGeometry.OperatorAlgebra.BanachNewtonPeirceConvergence.banachNewtonPeirceSuperConvergenceArchetype
+#audit_archetype InfoGeometry.Clifford.CliffordKreinPeirceBruhatBridge.cliffordKreinPeirceGraceBridgeArchetype
+
+#check (InfoGeometry.OperatorAlgebra.BanachNewtonPeirceConvergence.banachNewtonPeirceSuperConvergenceArchetype.discharge : _)
+#check (InfoGeometry.Clifford.CliffordKreinPeirceBruhatBridge.cliffordKreinPeirceGraceBridgeArchetype.discharge : _)
+
+-- Move 4 regression surface (Porous Berezin-Toeplitz & Multiscale Poset)
+#check @InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.PorousGaborArchetype.porousGaborPoset_diamond_structure
+#check @InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.PorousGaborArchetype.two_distinct_valid_topological_schedules
+#check @InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.pore_uncertainty_conservation
+#check @InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.porousSymCompress_variance_and_idempotencyDefect
+#check @InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.rangeProj_idem_sa_and_zero_defect
+#check @InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.toeplitzOp_pow_succ
+#check @InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.berezinOp_pow_eq_pullback
+#check @InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.multiscale_telescoping_defect
+#check @InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.multiscale_projection_isometry_telescoping
+#check @InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.morita_toeplitz_multiplier_intertwining
+#check @InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.cayley_fourier_noncommutativity_and_coherent_gabor
+#check @InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.cantor_masks_idempotent_and_nested
+#check @InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.two_scale_clifford_cantor_contraction_ladder
+#check @InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.concrete_mat2c_porous_idempotencyDefect_nonzero
+#check @InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.porous_gabor_executable_certified_compilation
+
+#audit_archetype InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.archK1PorousVariance
+#audit_archetype InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.archK2BerezinToeplitz
+#audit_archetype InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.archK3MultiscaleTelescope
+#audit_archetype InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.archK4MoritaMultiplier
+#audit_archetype InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.archK5CayleyWeylGabor
+#audit_archetype InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.archK6CantorLadder
+
+#check (InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.archK1PorousVariance.discharge : _)
+#check (InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.archK2BerezinToeplitz.discharge : _)
+#check (InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.archK3MultiscaleTelescope.discharge : _)
+#check (InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.archK4MoritaMultiplier.discharge : _)
+#check (InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.archK5CayleyWeylGabor.discharge : _)
+#check (InfoGeometry.OperatorAlgebra.PorousBerezinToeplitzAndMultiscalePoset.archK6CantorLadder.discharge : _)
+
+-- Moves 1-4 wave regression surface (C* FUP/Porosity, Koszul-Cocycle-Braid, Coherence JKO-Eguchi, Freed-Wick-Index)
+#check @InfoGeometry.OperatorAlgebra.CStarFractalUncertaintyAndBanachPorosity.norm_sa_idempotent_eq_zero_or_one
+#check @InfoGeometry.OperatorAlgebra.CStarFractalUncertaintyAndBanachPorosity.multiscaleLoc_fup_polynomial_decay
+#check @InfoGeometry.OperatorAlgebra.CStarFractalUncertaintyAndBanachPorosity.cstar_porousSymCompress_banach_healing
+#check @InfoGeometry.OperatorAlgebra.CStarFractalUncertaintyAndBanachPorosity.concrete_mat2c_pythagorean_fup_example
+#audit_archetype InfoGeometry.OperatorAlgebra.CStarFractalUncertaintyAndBanachPorosity.cstarFractalUncertaintyAndBanachPorosityArchetype
+#check (InfoGeometry.OperatorAlgebra.CStarFractalUncertaintyAndBanachPorosity.cstarFractalUncertaintyAndBanachPorosityArchetype.discharge : _)
+
+#check @InfoGeometry.OperatorAlgebra.KoszulMaurerCartanCocycleBraidPoset.quaternionicBraidGroup3Hom
+#check @InfoGeometry.OperatorAlgebra.KoszulMaurerCartanCocycleBraidPoset.master_braid_curvature_synthesis
+#check @InfoGeometry.OperatorAlgebra.KoszulMaurerCartanCocycleBraidPoset.koszul_cocycle_braid_executable_certified_compilation
+#audit_archetype InfoGeometry.OperatorAlgebra.KoszulMaurerCartanCocycleBraidPoset.koszulCocycleBraidPosetArchetype
+#check (InfoGeometry.OperatorAlgebra.KoszulMaurerCartanCocycleBraidPoset.koszulCocycleBraidPosetArchetype.discharge : _)
+
+#check @InfoGeometry.InformationGeometry.CoherenceJKOFlowAndEguchiBridge.jkoGraceResolvent_is_unique_minimizer
+#check @InfoGeometry.InformationGeometry.CoherenceJKOFlowAndEguchiBridge.jkoGraceResolvent_otto_villani_stationarity
+#check @InfoGeometry.InformationGeometry.CoherenceJKOFlowAndEguchiBridge.wootters_eguchi_kl_grace_bridge
+#check @InfoGeometry.InformationGeometry.CoherenceJKOFlowAndEguchiBridge.milnor_riemann_pair_symmetry
+#check @InfoGeometry.InformationGeometry.CoherenceJKOFlowAndEguchiBridge.noncommSkewConn_dual_curvature_sum_nonzero
+#audit_archetype InfoGeometry.InformationGeometry.CoherenceJKOFlowAndEguchiBridge.coherenceJKOEguchiMilnorArchetype
+#check (InfoGeometry.InformationGeometry.CoherenceJKOFlowAndEguchiBridge.coherenceJKOEguchiMilnorArchetype.discharge : _)
+
+#check @InfoGeometry.OperatorAlgebra.FreedWickReflectionAndTopologicalIndexPoset.osTraceForm_nonneg_of_reflect_invariant
+#check @InfoGeometry.OperatorAlgebra.FreedWickReflectionAndTopologicalIndexPoset.osTraceForm_pauliZ2_pauliX2_negative
+#check @InfoGeometry.OperatorAlgebra.FreedWickReflectionAndTopologicalIndexPoset.cayleyStep2_solves_cayley_and_unitary
+#check @InfoGeometry.OperatorAlgebra.FreedWickReflectionAndTopologicalIndexPoset.pauliProjUnit_anomaly_irremovable
+#check @InfoGeometry.OperatorAlgebra.FreedWickReflectionAndTopologicalIndexPoset.doubledPauliHom
+#check @InfoGeometry.OperatorAlgebra.FreedWickReflectionAndTopologicalIndexPoset.hilbert_selfAdj_nilpotent_zero
+#check @InfoGeometry.OperatorAlgebra.FreedWickReflectionAndTopologicalIndexPoset.krein_brst_witness
+#check @InfoGeometry.OperatorAlgebra.FreedWickReflectionAndTopologicalIndexPoset.superTrace_heatKernelPoly_invariant
+#check @InfoGeometry.OperatorAlgebra.FreedWickReflectionAndTopologicalIndexPoset.diracJump3_invariant_index
+#check @InfoGeometry.OperatorAlgebra.FreedWickReflectionAndTopologicalIndexPoset.freed_wick_topological_executable_certified_compilation
+#audit_archetype InfoGeometry.OperatorAlgebra.FreedWickReflectionAndTopologicalIndexPoset.freedWickTopologicalPosetArchetype
+#check (InfoGeometry.OperatorAlgebra.FreedWickReflectionAndTopologicalIndexPoset.freedWickTopologicalPosetArchetype.discharge : _)
+
+#check @InfoGeometry.Canonical.AnomalyOntology.AnomalySemanticSense.code_injective
+#check InfoGeometry.Canonical.AnomalyOntology.AnomalySemanticSense.pairwise_distinct
+#check @InfoGeometry.Canonical.AnomalyOntology.AnomalyTaxonomicClade.index_injective
+#check @InfoGeometry.Canonical.AnomalyOntology.AnomalyTaxonomicClade.active_clade_not_bucketC
+#check InfoGeometry.Canonical.AnomalyOntology.AnomalyTaxonomicClade.clades_pairwise_distinct
+#check @InfoGeometry.Canonical.AnomalyOntology.AnomalyPhylogeneticEpoch.causalRank_injective
+#check @InfoGeometry.Canonical.AnomalyOntology.AnomalyPhylogeneticEpoch.causalEdge_acyclic
+#check InfoGeometry.Canonical.AnomalyOntology.bridge_oblique_defect_eq_brst
+#check InfoGeometry.Canonical.AnomalyOntology.bridge_oblique_commutator_eq_neg_brst
+#check InfoGeometry.Canonical.AnomalyOntology.bridge_doubled_pauli_to_hilbert_sewing
+#check @InfoGeometry.Canonical.AnomalyOntology.bridge_mckean_singer_to_witten_zeta
+#check InfoGeometry.Canonical.AnomalyOntology.bridge_thermal_protection_to_boundary_sewing
+#check InfoGeometry.Canonical.AnomalyOntology.double_socratic_aporia_anomaly
+#check InfoGeometry.Canonical.AnomalyOntology.witness_oblique_commutator_ne_zero
+#check @InfoGeometry.Canonical.AnomalyOntology.witness_pauli_projective_obstruction
+#check InfoGeometry.Canonical.AnomalyOntology.witness_cantor_sewn_vacuum_ne_zero
+#check @InfoGeometry.Canonical.AnomalyOntology.witness_liouville_modular_flow_comm
+#audit_archetype InfoGeometry.Canonical.AnomalyOntology.anomalyOntologyArchetype
+#check (InfoGeometry.Canonical.AnomalyOntology.anomalyOntologyArchetype.discharge : _)
+
+-- Grand Anomaly Ontology (Milestone M3)
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.GrandAnomalySemanticSense.code_injective
+#check InfoGeometry.Canonical.GrandAnomalyOntology.GrandAnomalySemanticSense.pairwise_distinct
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.GrandAnomalyTaxonomicClade.index_injective
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.GrandAnomalyTaxonomicClade.active_clade_not_bucketC
+#check InfoGeometry.Canonical.GrandAnomalyOntology.GrandAnomalyTaxonomicClade.clades_pairwise_distinct
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.GrandAnomalyPhylogeneticEpoch.grandCausalRank_injective
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.GrandAnomalyPhylogeneticEpoch.grandCausalEdge_acyclic
+#check InfoGeometry.Canonical.GrandAnomalyOntology.grand_bridge_1
+#check InfoGeometry.Canonical.GrandAnomalyOntology.grand_bridge_2_commutator
+#check InfoGeometry.Canonical.GrandAnomalyOntology.grand_bridge_3
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.grand_bridge_4
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.grand_bridge_5
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.grand_bridge_6
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.grand_bridge_7
+#check InfoGeometry.Canonical.GrandAnomalyOntology.grand_bridge_8
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.grand_bridge_9
+#check InfoGeometry.Canonical.GrandAnomalyOntology.grand_bridge_10
+#check InfoGeometry.Canonical.GrandAnomalyOntology.grand_bridge_11
+#check InfoGeometry.Canonical.GrandAnomalyOntology.grand_bridge_12
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.grand_bridge_13
+#check InfoGeometry.Canonical.GrandAnomalyOntology.grand_bridge_14
+#check InfoGeometry.Canonical.GrandAnomalyOntology.grand_bridge_15
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.grand_bridge_16
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.multi_level_double_socratic_aporia
+#check InfoGeometry.Canonical.GrandAnomalyOntology.witness_cladeI_oblique_commutator_ne_zero
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.witness_cladeII_pauli_projective_obstruction
+#check InfoGeometry.Canonical.GrandAnomalyOntology.witness_cladeIII_cuntz_O2_noncommuting
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.witness_cladeIV_bost_connes_zeta_singular
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.witness_cladeV_green_schwarz_inflow_cancellation
+#check InfoGeometry.Canonical.GrandAnomalyOntology.witness_cladeVI_heisenberg_sl2_commutator
+#check InfoGeometry.Canonical.GrandAnomalyOntology.witness_cladeVII_peirce_einstein_cartan_dragging
+#check InfoGeometry.Canonical.GrandAnomalyOntology.witness_cladeVII_multi_channel_additive_gap
+#check InfoGeometry.Canonical.GrandAnomalyOntology.witness_cladeVIII_virasoro_level_two_anomaly
+#check InfoGeometry.Canonical.GrandAnomalyOntology.witness_cladeIX_omega_jordan_nilpotent_cell
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.GrandAnomalyTaxonomicClade.semanticSense_complete_coverage
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.GrandAnomalyTaxonomicClade.clade_ne_of_index_ne
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.obliquePerturbation_idem_and_commutator
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.general_superTrace_odd_commutator_and_even_pow
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.green_schwarz_bianchi_defect
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.cuntz_supercharge_and_exact_inflow_bridge
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.witten_eta_phase_trivial_iff_mod16
+#check InfoGeometry.Canonical.GrandAnomalyOntology.torsion_bivector_vs_associator_disambiguation
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.so55_lie_closed
+#check InfoGeometry.Canonical.GrandAnomalyOntology.grand_bridge_8_so55_five_grading
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.peirce_deformed_cl11_and_jordan_associator
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.robertson_qgt_uncertainty_bound
+#check InfoGeometry.Canonical.GrandAnomalyOntology.spinor_bloch_qgt_robertson_defect
+#check InfoGeometry.Canonical.GrandAnomalyOntology.virasoro_cocycle_cohomology
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.jordan_chain_brst_intertwiner
+#check InfoGeometry.Canonical.GrandAnomalyOntology.omega_parry_brst_intertwiner
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.radical_quotient_nondegenerate
+#check InfoGeometry.Canonical.GrandAnomalyOntology.window6ThreeFamilyZeroAnom_pure
+#check InfoGeometry.Canonical.GrandAnomalyOntology.grand_bridge_17
+#check InfoGeometry.Canonical.GrandAnomalyOntology.krein_robertson_qgt_counterexample_and_null_cone_survival
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.finite_matrix_no_central_identity_commutator
+#check InfoGeometry.Canonical.GrandAnomalyOntology.chiral_hypercharge_color_reciprocity
+#check InfoGeometry.Canonical.GrandAnomalyOntology.bost_connes_regular_vs_critical_pole_dichotomy
+#check InfoGeometry.Canonical.GrandAnomalyOntology.cl44_krein_clifford_and_bivector_skewness
+#check InfoGeometry.Canonical.GrandAnomalyOntology.witt_free_lie_exceeds_cl44_matrix_ceiling
+#check InfoGeometry.Canonical.GrandAnomalyOntology.functorial_composition_noncomm_vs_prop_symm
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.five_stage_functorial_anomaly_spine
+#check @InfoGeometry.Canonical.GrandAnomalyOntology.AnomalyCoagulaNode.covers_pred_antichain
+#check InfoGeometry.Canonical.GrandAnomalyOntology.AnomalyCoagulaNode.xiTop_isLUB_holonomy_and_functorialComplex
+#audit_archetype InfoGeometry.Canonical.GrandAnomalyOntology.functorialSpineArchetype
+#check (InfoGeometry.Canonical.GrandAnomalyOntology.functorialSpineArchetype.discharge : _)
+#audit_archetype InfoGeometry.Canonical.GrandAnomalyOntology.grandAnomalyOntologyArchetype
+#check (InfoGeometry.Canonical.GrandAnomalyOntology.grandAnomalyOntologyArchetype.discharge : _)
+
+#check InfoGeometry.OperatorAlgebra.ErlangenDoubleCylinderSymmetryInvariants.erlangenDoubleCylinderInvariantSubring_noncommutative
+#check InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.bitWordUnitCLM_decomp
+#check InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.colimitRepresentation_sewn_invariant
+#audit_archetype InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.cantorDoubleCylinderErlangenArchetype
+#check (InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.cantorDoubleCylinderErlangenArchetype.discharge : _)
+#check InfoGeometry.OperatorAlgebra.ErlangenDoubleCylinderSymmetryInvariants.depth2_symmetrizedTransitionOp_mul_ne
+#check InfoGeometry.OperatorAlgebra.ErlangenDoubleCylinderSymmetryInvariants.erlangenDoubleCylinderInvariantSubring_lie_ne_zero
+#check InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.bitWordUnitCLM_mul
+#check InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.stageRepresentationCLM_mul
+#check InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.stageRepresentationCLM_injective
+#check InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.colimitRepresentationCLM
+#check InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.colimitRepresentationCLM_mul
+#check InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.colimitRepresentationCLM_lie
+#check InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.colimitRepresentationCLM_injective
+#check InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.doubleCylinderColimit_canonicalVacuum_chiral_zero
+#check InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.cantorDoubleCylinderSymmetryData
+#check InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.cantorDoubleCylinderInvariantData
+#check InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.doubleCylinderOperatorSubalgebra
+#check InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.colimitRepresentationLieHom
+#check InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.cantorDoubleCylinderErlangen20Datum
+#check InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.cantorDoubleCylinderErlangen20Datum.operatorAlgebra
+#check InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.cantorDoubleCylinderErlangen20Datum.representation
+#check InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.cantorDoubleCylinderErlangen20Datum.representation_mem
+#check InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.cantorDoubleCylinderErlangen20Datum_representation_injective
+#check InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.cantorDoubleCylinderWitnessPacketModel
+#check InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.cantorDoubleCylinderWitnessPacketModel.datum
+
+#check (InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.cantorDoubleCylinderErlangen20Datum :
+  InfoGeometry.Canonical.Erlangen20OperatorGeometryDatum.Erlangen20Datum
+    ℝ
+    (InfoGeometry.Canonical.ConcreteHilbertCommutation.H_lp ℝ)
+    (InfoGeometry.OperatorAlgebra.CantorDoubleCylinderFractalColimit.DoubleCylinderColimit ℝ)
+    InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.CantorDoubleCylinderSymmetryData
+    InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.CantorDoubleCylinderInvariantData)
+
+example (X : InfoGeometry.OperatorAlgebra.CantorDoubleCylinderFractalColimit.DoubleCylinderColimit ℝ) :
+    InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.cantorDoubleCylinderErlangen20Datum.representation X =
+      (InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.colimitRepresentationCLM X).toLinearMap :=
+  rfl
+
+example (X : InfoGeometry.OperatorAlgebra.CantorDoubleCylinderFractalColimit.DoubleCylinderColimit ℝ) :
+    (InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.colimitRepresentationCLM X).toLinearMap ∈
+      InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.cantorDoubleCylinderErlangen20Datum.operatorAlgebra :=
+  InfoGeometry.Categorical.CantorDoubleCylinderColimitAlgebra.cantorDoubleCylinderErlangen20Datum.representation_mem X
+
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.cl11Pos_cl11Neg_noncomm
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.ax4_associative_jacobi_ceiling
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.innerDerivationWitness_sq_not_derivation
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.gamma44_sq
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.gamma44_trace_zero
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.kreinInner16_nondegenerate
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.trialityCycle_cube
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.trialityHadamard_trialitySpinSwap_noncomm
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.trialityFixedCartan_finrank
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.psiPlus_krein_norm
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.finrank_g2Submodule
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.g2Submodule_eq_stabilizer
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.g2LieSubalgebra
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.heisenberg_X1_X2
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.heisenberg_X4_X3
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.ad_E0_four_X2_zero
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.jordan_X1_X2_not_mem_g2
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.g2_centerless
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.witt_sum_1_to_5
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.witt_sum_1_to_6
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.witt_pigeonhole_fin23_no_injective_linearMap
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.card_causalArchetype
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.card_causal_covers
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.antichain_K_TT_G_Tau_Gamma_SS
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.antichain_A0_Tau_Gamma_SS
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.xi_top_isLUB_H_E
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.every_archetype_coagulated
+#check InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.split_g2_cl44_solve_et_coagula_synthesis
+#audit_archetype InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.splitG2Cl44SolveEtCoagulaArchetype
+#check (InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.splitG2Cl44SolveEtCoagulaArchetype.discharge () :
+  InfoGeometry.Exceptional.SplitG2Cl44SolveEtCoagulaPoset.SplitG2Cl44SolveEtCoagulaSynthesis)
+
+#check InfoGeometry.Canonical.FelixKleinGeometryUnification.felixKleinUnification_exists_noncomm_pair
+#check @InfoGeometry.Canonical.FelixKleinGeometryUnification.felixKleinUnification_mat4_exists_noncomm_pair
+#check @InfoGeometry.Canonical.FelixKleinGeometryUnification.isKleinInvariant_iff_isInvariantReadout
+#check @InfoGeometry.Canonical.FelixKleinGeometryUnification.invariantReadout_const_of_homogeneousSpace
+#check @InfoGeometry.Canonical.FelixKleinGeometryUnification.geometricInvariant_dichotomy_of_homogeneousSpace
+#check @InfoGeometry.Canonical.FelixKleinGeometryUnification.cartan_fixedQuotient_invariantReadout_const
+#check @InfoGeometry.Canonical.FelixKleinGeometryUnification.homogeneousSpaceEquivQuotient_equivariant
+#check @InfoGeometry.Canonical.FelixKleinGeometryUnification.invariantSubring_toSubsemiring_eq_fixedPointSubsemiring_top
+#check @InfoGeometry.Canonical.FelixKleinGeometryUnification.symmetryAction_galois_connection
+#check InfoGeometry.Canonical.FelixKleinGeometryUnification.erlangenDoubleCylinder_unified_noncomm_and_fixedPoint
+#check InfoGeometry.Canonical.FelixKleinGeometryUnification.kleinDeck_unified_invariant_and_nontrivial
+#check @InfoGeometry.Canonical.FelixKleinGeometryUnification.kleinQ_pluckerQuadricEquivPluckerLine
+#check @InfoGeometry.Canonical.FelixKleinGeometryUnification.polar_eq_kleinPolar
+#check InfoGeometry.Canonical.FelixKleinGeometryUnification.kleinQ_exteriorSquareEquivPlucker6
+#check InfoGeometry.Canonical.FelixKleinGeometryUnification.isKlein_exteriorSquareEquivPlucker6_iff_decomposable
+#check InfoGeometry.Canonical.FelixKleinGeometryUnification.realTwoPlane_corresponds_to_projectiveKleinLocus
+#check @InfoGeometry.Canonical.FelixKleinGeometryUnification.compound_mul
+#check @InfoGeometry.Canonical.FelixKleinGeometryUnification.isKlein_geometricInvariant_gl4
+#check @InfoGeometry.Canonical.FelixKleinGeometryUnification.wedge_equivariantMap_gl4
+#check @InfoGeometry.Canonical.FelixKleinGeometryUnification.kleinQ_invariantReadout_sl4
+#check InfoGeometry.Canonical.FelixKleinGeometryUnification.splitKlein_spin_commutator_defect
+#check InfoGeometry.Canonical.FelixKleinGeometryUnification.homPoint2_ratio_eq_pgl2_crossRatio
+#check InfoGeometry.Canonical.FelixKleinGeometryUnification.ncCrossRatio_complex_eq_pgl2_affine
+#check InfoGeometry.Canonical.FelixKleinGeometryUnification.pgl2_affine_add_ncCrossRatio_eq_one
+#check InfoGeometry.Canonical.FelixKleinGeometryUnification.crossRatio_invariantReadout_v4
+#check InfoGeometry.Canonical.FelixKleinGeometryUnification.crossRatio_invariantReadout_gl2
+#check InfoGeometry.Canonical.FelixKleinGeometryUnification.ncCrossRatio_quaternion_right_vs_left_separation
+#check InfoGeometry.Canonical.FelixKleinGeometryUnification.kinematicGenerator_tri_regime_sq
+#check @InfoGeometry.Canonical.FelixKleinGeometryUnification.felix_klein_five_lane_unification
+#check InfoGeometry.Projective.CrossRatioPGL2.crossRatioPGL2_exists_noncomm_pair
+#check ErlangenCoordinateless.pauli_s1_s2_not_commute
+
+-- Classical Felix Klein Icosahedral A₅ ⊂ PSU(2), Quintic Syzygy, & Modular j-Invariant Hauptmodul
+#check InfoGeometry.Erlangen.KleinIcosahedralQuinticModularJ.matQuatI_mul_matQuatJ_ne
+#check InfoGeometry.Erlangen.KleinIcosahedralQuinticModularJ.modularMatSZ_mul_modularMatTZ_ne
+#check InfoGeometry.Erlangen.KleinIcosahedralQuinticModularJ.modularMatSR_mul_modularMatTR_ne
+#check InfoGeometry.Erlangen.KleinIcosahedralQuinticModularJ.kleinIcosahedralPSU2Embedding_injective
+#check InfoGeometry.Erlangen.KleinIcosahedralQuinticModularJ.not_isSolvable_icosahedralPSU2Subgroup
+#check InfoGeometry.Erlangen.KleinIcosahedralQuinticModularJ.klein_icosahedral_syzygy_1728
+#check InfoGeometry.Erlangen.KleinIcosahedralQuinticModularJ.jInvariant_smul
+#check InfoGeometry.Erlangen.KleinIcosahedralQuinticModularJ.jInvariant_apply_I
+#check InfoGeometry.Erlangen.KleinIcosahedralQuinticModularJ.jInvariant_apply_rho
+#check InfoGeometry.Erlangen.KleinIcosahedralQuinticModularJ.mdifferentiable_jInvariant
+#check InfoGeometry.Erlangen.KleinIcosahedralQuinticModularJ.jInvariant_not_modularForm_weight_zero
+#check InfoGeometry.Erlangen.KleinIcosahedralQuinticModularJ.klein_icosahedral_quintic_modular_j_synthesis
+#audit_archetype InfoGeometry.Erlangen.KleinIcosahedralQuinticModularJ.kleinIcosahedralQuinticModularJArchetype
+#check (InfoGeometry.Erlangen.KleinIcosahedralQuinticModularJ.kleinIcosahedralQuinticModularJArchetype.discharge () :
+  InfoGeometry.Erlangen.KleinIcosahedralQuinticModularJ.KleinIcosahedralQuinticModularJSynthesis)
+
+-- General Birkhoff–Hilbert Projective Cone Metric & Contraction Theorem
+#check InfoGeometry.Erlangen.BirkhoffHilbertConeMetric.posMatA_mul_posMatB_ne
+#check @InfoGeometry.Erlangen.BirkhoffHilbertConeMetric.birkhoffHilbertMetric_eq_zero_iff_same_ray
+#check @InfoGeometry.Erlangen.BirkhoffHilbertConeMetric.orthant2_chord_identity
+#check @InfoGeometry.Erlangen.BirkhoffHilbertConeMetric.birkhoff_contraction_theorem
+#check @InfoGeometry.Erlangen.BirkhoffHilbertConeMetric.posMatA_contraction_one_third
+#check InfoGeometry.Erlangen.BirkhoffHilbertConeMetric.birkhoff_hilbert_cone_metric_synthesis
+#audit_archetype InfoGeometry.Erlangen.BirkhoffHilbertConeMetric.birkhoffHilbertConeMetricArchetype
+#check (InfoGeometry.Erlangen.BirkhoffHilbertConeMetric.birkhoffHilbertConeMetricArchetype.discharge () :
+  InfoGeometry.Erlangen.BirkhoffHilbertConeMetric.BirkhoffHilbertConeMetricSynthesis)
+
+-- Smooth Manifold Cartan Geometries (P → M, ω ∈ Ω¹(P, 𝔤))
+#check InfoGeometry.Erlangen.SmoothCartanGeometry.shearUpperCLM_mul_shearLowerCLM_ne
+#check InfoGeometry.Erlangen.SmoothCartanGeometry.shearUpperGL2_mul_shearLowerGL2_ne
+#check @InfoGeometry.Erlangen.SmoothCartanGeometry.cartanTangentQuotientEquiv
+#check @InfoGeometry.Erlangen.SmoothCartanGeometry.maurerCartan_cartanCurvature_eq_zero
+#check InfoGeometry.Erlangen.SmoothCartanGeometry.gl2R_maurerCartan_flat
+#check InfoGeometry.Erlangen.SmoothCartanGeometry.homothetyCartanGeometry_curvature_formula
+#check InfoGeometry.Erlangen.SmoothCartanGeometry.homothetyCartanGeometry_curved_of_ne_zero
+#check InfoGeometry.Erlangen.SmoothCartanGeometry.smooth_cartan_geometry_synthesis
+#audit_archetype InfoGeometry.Erlangen.SmoothCartanGeometry.smoothCartanGeometryArchetype
+#check (InfoGeometry.Erlangen.SmoothCartanGeometry.smoothCartanGeometryArchetype.discharge () :
+  InfoGeometry.Erlangen.SmoothCartanGeometry.SmoothCartanGeometrySynthesis)
+
+

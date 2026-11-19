@@ -7,7 +7,7 @@ Authors: InfoGeometry Engine Contributors
 import Lean
 import DAG.Basic
 import DAG.TermDigest
-import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.ArchitectureAudit
 import Std
 
 open Lean

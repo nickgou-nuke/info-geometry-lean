@@ -209,4 +209,12 @@ theorem peirce01_mul_peirce10 {p : R} (h : IsIdempotent p) (x y : R) :
   rw [id, h]
   noncomm_ring
 
+/-! ### Idempotent totality involution -/
+
+/-- An idempotent element gives an involution under the affine normalization
+`ω ↦ 2ω - 1`. -/
+theorem two_mul_idempotent_sub_one_sq {ω : R} (hω : ω * ω = ω) :
+    (2 * ω - 1) * (2 * ω - 1) = 1 := by
+  noncomm_ring [hω]
+
 end IdempotentProjectorAlgebra

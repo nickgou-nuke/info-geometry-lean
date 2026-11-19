@@ -479,9 +479,13 @@ theorem spatialState_boundaryRep_offDiagonal_ne_gaugeGNSColimit :
           gaugeGNSColimitVacuum⟫_ℂ := by
   rw [matrixUnit_generator_transport]
   change cantorVacuumState (vLeft * star vRight) ≠ _
-  rw [spatialState_offDiagonal_generator,
-    gaugeGNSColimitVacuum_bitWordMatrixUnit_eq_phi0,
-    phi0_monomial]
-  simp [canonicalGaugeState_word]
+  conv_lhs => rw [spatialState_offDiagonal_generator]
+  rw [gaugeGNSColimitVacuum_bitWordMatrixUnit_eq_phi0]
+  rw [phi0_monomial, canonicalGaugeState_word]
+  have hne : (fun _ : Fin 1 => false) ≠ (fun _ : Fin 1 => true) := by
+    intro h
+    have h0 := congrFun h ⟨0, by omega⟩
+    cases h0
+  simp [hne]
 
 end InfoGeometry.Canonical.CantorBernoulliBoundaryRangeGNSBridge

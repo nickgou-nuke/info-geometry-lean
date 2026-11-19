@@ -267,7 +267,7 @@ theorem forward_backward_orthogonal
           rw [ContinuousLinearMap.comp_assoc]
     _ = (kp.P_plus.comp (ContinuousLinearMap.adjoint T)).comp
         ((kp.P_plus.comp kp.P_minus).comp (T.comp kp.P_plus)) := by
-          dsimp; simp only [ContinuousLinearMap.comp_assoc]
+          simp only [ContinuousLinearMap.comp_assoc]
     _ = 0 := by rw [kp.orthog_symm]; simp
 
 /-- The backward-forward cross term `adjoint (currentBackward kp T) ∘L currentForward kp T`
@@ -288,7 +288,7 @@ theorem backward_forward_orthogonal
           rw [ContinuousLinearMap.comp_assoc]
     _ = (kp.P_plus.comp (ContinuousLinearMap.adjoint T)).comp
         ((kp.P_minus.comp kp.P_plus).comp (T.comp kp.P_plus)) := by
-          dsimp; simp only [ContinuousLinearMap.comp_assoc]
+          simp only [ContinuousLinearMap.comp_assoc]
     _ = 0 := by rw [kp.orthog]; simp
 
 /-- Bogoliubov subspace split: when `T` is a Krein isometry on the positive cone,

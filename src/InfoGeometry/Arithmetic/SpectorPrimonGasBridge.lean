@@ -148,7 +148,7 @@ Finite second-order exterior factorization:
 `(1+x_p)(1-x_p)=1-x_p^2` primewise, multiplied over a finite register.
 -/
 theorem spector_finite_fermion_signed_secondOrder
-    {ι R : Type*} [CommRing R]
+    {ι R : Type*} [Field R]
     (S : Finset ι) (x : ι → R) :
     SupersymmetricPrimonGas.fermionPartition S x *
         signedFermionPartition S x =

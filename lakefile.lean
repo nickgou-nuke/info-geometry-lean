@@ -954,34 +954,47 @@ lean_lib InfoGeometryTestSuite where
   srcDir := "../tests"
   roots := #[]
   globs := #[
-    `BalabanOperatorTests,
-    `MatrixPeirceZornAxiomAudit,
-    `OperatorGaugeConnectionsAxiomAudit,
-    `OperatorContentNetworkAxiomAudit,
-    `PeirceStarColimitAudit,
-    `SeligmanCubicOperatorTests,
-    `SeligmanCubicOperatorAxiomAudit,
-    `YangMillsMatrixGeometryTests,
-    `YangMillsNativeGaugeAxiomAudit,
-    `BekensteinHawkingDyadicEntropyTests,
-    `ComplexAnalyticBridgeTests,
-    `DvorakSystemTest,
-    `ExprFingerprintHashTests,
-    `InfoGeometryTests,
-    `OperatorZornTwinCyclotomicAxiomAudit,
-    `PO55ConformalClosureTests,
-    `PR78Audit,
-    `PrimitiveCuntzIsometryTests,
-    `PrimitiveExactnessTests,
-    `ProjectiveGraphZornBilayerAxiomAudit,
-    `QutritMobiusFiniteFlowTests,
-    `QutritProjectiveColorBridgeTests,
-    `QutritProjectiveGeometryOwnerBridgeTests,
-    `benchmarks.TrialityNonVacuity,
-    `lean.InfoGeometry.Lint.PauliTest,
-    `TermDigestTests,
-    `sandbox_hestenes
+    .one `BalabanOperatorTests,
+    .one `MatrixPeirceZornAxiomAudit,
+    .one `OperatorGaugeConnectionsAxiomAudit,
+    .one `OperatorContentNetworkAxiomAudit,
+    .one `PeirceStarColimitAudit,
+    .one `SeligmanCubicOperatorTests,
+    .one `SeligmanCubicOperatorAxiomAudit,
+    .one `YangMillsMatrixGeometryTests,
+    .one `YangMillsNativeGaugeAxiomAudit,
+    .one `BekensteinHawkingDyadicEntropyTests,
+    .one `ComplexAnalyticBridgeTests,
+    .one `DvorakSystemTest,
+    .one `ExprFingerprintHashTests,
+    .one `InfoGeometryTests,
+    .one `OperatorZornTwinCyclotomicAxiomAudit,
+    .one `PO55ConformalClosureTests,
+    .one `PR78Audit,
+    .one `PrimitiveCuntzIsometryTests,
+    .one `PrimitiveExactnessTests,
+    .one `ProjectiveGraphZornBilayerAxiomAudit,
+    .one `QutritMobiusFiniteFlowTests,
+    .one `QutritProjectiveColorBridgeTests,
+    .one `QutritProjectiveGeometryOwnerBridgeTests,
+    .one `benchmarks.TrialityNonVacuity,
+    .one `lean.InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridgeTest,
+    .one `lean.InfoGeometry.Lie.DoubledMinkowskiExtensionsE2ETest,
+    .one `lean.InfoGeometry.Meta.AuditRemediationTest,
+    .one `lean.InfoGeometry.Lint.PauliTest,
+    .one `TermDigestTests,
+    .one `NuclearOperatorSynthesis,
+    .one `OperatorAlgebraGraceWaveTests,
+    .one `PeirceDefectParityAxioms,
+    .one `PeirceGradingTransportAxioms,
+    .one `RawInfoTreeProjectionTests,
+    .one `WheelerEpilogueAudit,
+    .one `sandbox_hestenes
   ]
+
+lean_lib AuditNativeScoped where
+  srcDir := "../tests"
+  roots := #[`AuditNativeScoped]
 
 @[default_target]
 lean_lib VirasoroProject where
@@ -989,8 +1002,8 @@ lean_lib VirasoroProject where
 
 @[default_target]
 lean_lib StandaloneMathematics where
-  roots := #[]
-  globs := #[
+  roots := #[
+    `AuditStrict,
     `B3PresentedGroup,
     `CheckBasis,
     `CheckTemp,
@@ -1003,8 +1016,16 @@ lean_lib StandaloneMathematics where
     `GrandPartitionRobustPoisson,
     `GrandPartitionTransform,
     `GrandUnifiedNoncommutativeOperatorSynthesis,
+    `KaplanskyCliffordBridge,
     `lean.InfoGeometry.Spectral.Spectrum.Basic,
     `NonIsoConf3OrlikSolomon,
+    `sandbox.PeirceProjectors,
+    `sandbox.PinGroupStructures,
+    `sandbox.SplitArchetypeDictionary,
+    `sandbox.TrifactorHomomorphism,
+    `sandbox.TrifactorHomomorphismClean,
+    `sandbox.TrifactorHomomorphismComplex,
+    `sandbox.TrifactorHomomorphismSuper,
     `SplitOctonionBraidSU3,
     `Test,
     `TestFin,
@@ -1019,6 +1040,12 @@ lean_lib StandaloneMathematics where
     `test_rpow,
     `test_selfconcordance
   ]
+
+lean_lib AuditNative where
+  roots := #[`AuditNative]
+
+lean_lib AuditNativeRun where
+  roots := #[`AuditNativeRun]
 
 /--
 Pinned local clone of the formal Lean proof of Erdos Problem #1196.

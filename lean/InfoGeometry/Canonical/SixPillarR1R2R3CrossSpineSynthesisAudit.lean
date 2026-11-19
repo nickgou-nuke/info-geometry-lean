@@ -1,0 +1,28 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Canonical.SixPillarR1R2R3CrossSpineSynthesis
+
+/-!
+# Axiom Audit for SixPillarR1R2R3CrossSpineSynthesis
+
+Verifies via `#print axioms` that all exported cross-spine theorems in
+`InfoGeometry.Canonical.SixPillarR1R2R3CrossSpineSynthesis` depend solely on
+Lean's permitted foundational axioms (`propext`, `Classical.choice`, `Quot.sound`).
+-/
+
+#print axioms InfoGeometry.Canonical.SixPillarR1R2R3CrossSpineSynthesis.crossSpine_mat2R_noncomm_exists
+#print axioms InfoGeometry.Canonical.SixPillarR1R2R3CrossSpineSynthesis.crossSpine_mat2C_noncomm_exists
+#print axioms InfoGeometry.Canonical.SixPillarR1R2R3CrossSpineSynthesis.gaugeTransformL_cocycle
+#print axioms InfoGeometry.Canonical.SixPillarR1R2R3CrossSpineSynthesis.principalTransition_gaugeTransformL_cocycle
+#print axioms InfoGeometry.Canonical.SixPillarR1R2R3CrossSpineSynthesis.walshPluckerSplitDoubledEquiv_hilbert_and_krein
+#print axioms InfoGeometry.Canonical.SixPillarR1R2R3CrossSpineSynthesis.biquatBivector_peirce_grace_krein_polarization
+#print axioms InfoGeometry.Canonical.SixPillarR1R2R3CrossSpineSynthesis.casimir_skewSymm_violates_cone_salience
+#print axioms InfoGeometry.Canonical.SixPillarR1R2R3CrossSpineSynthesis.onsagerBKMProperCone_salient
+#print axioms InfoGeometry.Canonical.SixPillarR1R2R3CrossSpineSynthesis.gibbsBKM_onsager_birkhoffHilbert_chord_metric
+#print axioms InfoGeometry.Canonical.SixPillarR1R2R3CrossSpineSynthesis.su2ToSpin30Hom_injective
+#print axioms InfoGeometry.Canonical.SixPillarR1R2R3CrossSpineSynthesis.su2ToSpin30Hom_ker_isometryHom
+#print axioms InfoGeometry.Canonical.SixPillarR1R2R3CrossSpineSynthesis.binaryIcosahedral_spinGroup_cliffordOneForms_erlangen20
+#print axioms InfoGeometry.Canonical.SixPillarR1R2R3CrossSpineSynthesis.sixPillar_R1R2R3_crossSpine_master_synthesis

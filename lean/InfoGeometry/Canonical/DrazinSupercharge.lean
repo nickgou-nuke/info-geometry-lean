@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CertifiedInverseKernel
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ChiralKMSOwner
@@ -688,7 +693,7 @@ The regular Drazin super-Hamiltonian preserves the spectral chiral grading.
 
 This is the KMS-owner formulation of `regularRestrictedSuperHamiltonian_commutes_GammaS`.
 -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem regularRestrictedSuperHamiltonian_kmsPreservesChirality :
     ChiralKMSOwner.KMSPreservesChirality
       (regularRestrictedSuperHamiltonian CIK)
@@ -702,7 +707,7 @@ then the regular Drazin thermal shift preserves chirality.
 The Wick commutation is an explicit hypothesis.  This theorem does not infer it
 from an informal Clifford grade calculation.
 -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem regularRestrictedSuperHamiltonian_thermalShift_preserves_chirality
     (W : EndH)
     (hW :

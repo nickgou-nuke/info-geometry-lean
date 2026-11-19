@@ -322,12 +322,43 @@ class ReviewReport:
     independent_semantic_audit_performed: bool = False
 
 
+def _active_index_digest(repo_root: Path) -> Optional[str]:
+    """Return SHA-256 digest of the active Git index file, or None if unavailable."""
+    configured = os.environ.get("GIT_INDEX_FILE")
+    if configured:
+        raw = Path(configured)
+        index_path = raw if raw.is_absolute() else repo_root / raw
+    else:
+        direct = repo_root / ".git" / "index"
+        if direct.is_file():
+            index_path = direct
+        else:
+            res = subprocess.run(
+                ["git", "rev-parse", "--git-path", "index"],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            if res.returncode != 0 or not res.stdout.strip():
+                return None
+            raw = Path(res.stdout.strip())
+            index_path = raw if raw.is_absolute() else repo_root / raw
+    if not index_path.is_file():
+        return None
+    try:
+        return hashlib.sha256(index_path.read_bytes()).hexdigest()
+    except OSError:
+        return None
+
+
 def review_file(
     path: Path,
     gate: str = "GATE_2",
     *,
     verify_kernel: bool = False,
     repo_root: Optional[Path] = None,
+    staged_hook_cache: Optional[Dict[str, Tuple[int, str]]] = None,
 ) -> ReviewReport:
     """Run static preflight, optionally followed by locked Gate 4 verification."""
     if gate == "GATE_4" and verify_kernel:
@@ -402,20 +433,29 @@ def review_file(
     _CHURN_MARKER = "active Git index changed"
     hook_detail = ""
     hook_churned = True
-    for _attempt in range(3):
-        hook_check = subprocess.run(
-            [sys.executable, "tools/quality/proof_proxy_staged_gate.py"],
-            cwd=hook_root, capture_output=True, text=True, check=False,
-        )
-        hook_detail = (hook_check.stderr or hook_check.stdout).strip()
-        if not hook_check.returncode:
-            hook_churned = False
-            break
-        if _CHURN_MARKER not in hook_detail:
-            hook_churned = False
-            break
-        time.sleep(3.0)
-    if hook_check.returncode:
+    hook_rc = 0
+    digest = _active_index_digest(hook_root) if staged_hook_cache is not None else None
+    if staged_hook_cache is not None and digest is not None and digest in staged_hook_cache:
+        hook_rc, hook_detail = staged_hook_cache[digest]
+        hook_churned = False
+    else:
+        for _attempt in range(3):
+            hook_check = subprocess.run(
+                [sys.executable, "tools/quality/proof_proxy_staged_gate.py"],
+                cwd=hook_root, capture_output=True, text=True, check=False,
+            )
+            hook_rc = hook_check.returncode
+            hook_detail = (hook_check.stderr or hook_check.stdout).strip()
+            if not hook_rc:
+                hook_churned = False
+                break
+            if _CHURN_MARKER not in hook_detail:
+                hook_churned = False
+                break
+            time.sleep(3.0)
+        if staged_hook_cache is not None and not hook_churned and digest is not None:
+            staged_hook_cache[digest] = (hook_rc, hook_detail)
+    if hook_rc:
         if hook_churned:
             # Still churning after every retry. This is an infrastructure state,
             # not a verdict on the file: report it as a warning and let the
@@ -2221,9 +2261,15 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     elif cmd == "review":
         reports = []
         has_reject = False
+        shared_hook_cache: Dict[str, Tuple[int, str]] = {}
         for p_str in args.paths:
             p = Path(p_str)
-            rep = review_file(p, gate=args.gate, verify_kernel=args.verify_kernel)
+            rep = review_file(
+                p,
+                gate=args.gate,
+                verify_kernel=args.verify_kernel,
+                staged_hook_cache=shared_hook_cache,
+            )
             reports.append(rep)
             if rep.verdict in ("REJECT", "REJECTED"):
                 has_reject = True

@@ -22,7 +22,7 @@ namespace InfoGeometry.Algebra
 open InfoGeometry.Algebra.FiniteSpin
 
 /-- Non-commutativity witness for the finite spin algebra carrier. -/
-theorem exists_noncomm_pair :
+theorem zornStandardTernary_exists_noncomm_pair :
     ∃ x y : Mat2C, x * y ≠ y * x :=
   ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
 

@@ -87,7 +87,7 @@ def topologicalSplitCliffordToCurrentHeisenbergRep
 theorem continuous_topologicalSplitCliffordToCurrentHeisenbergRep :
     Continuous (topologicalSplitCliffordToCurrentHeisenbergRep
       (𝕜 := 𝕜) (V := V)) := by
-  dsimp; simpa [topologicalSplitCliffordToCurrentHeisenbergRep] using
+  simpa [topologicalSplitCliffordToCurrentHeisenbergRep] using
     (continuous_of_discreteTopology :
       Continuous (topologicalSplitCliffordToCurrentHeisenbergRep
         (𝕜 := 𝕜) (V := V)))
@@ -96,7 +96,7 @@ theorem continuous_topologicalSplitCliffordToCurrentHeisenbergRep :
 theorem isLocallyConstant_topologicalSplitCliffordToCurrentHeisenbergRep :
     IsLocallyConstant (topologicalSplitCliffordToCurrentHeisenbergRep
       (𝕜 := 𝕜) (V := V)) := by
-  dsimp; simpa [topologicalSplitCliffordToCurrentHeisenbergRep] using
+  simpa [topologicalSplitCliffordToCurrentHeisenbergRep] using
     (IsLocallyConstant.of_discrete
       (f := topologicalSplitCliffordToCurrentHeisenbergRep (𝕜 := 𝕜) (V := V)))
 
@@ -120,7 +120,7 @@ def topologicalSplitCliffordToCurrentSugawaraMorphism
 theorem continuous_topologicalSplitCliffordToCurrentSugawaraMorphism :
     Continuous (topologicalSplitCliffordToCurrentSugawaraMorphism
       (𝕜 := 𝕜) (V := V)) := by
-  dsimp; simpa [topologicalSplitCliffordToCurrentSugawaraMorphism] using
+  simpa [topologicalSplitCliffordToCurrentSugawaraMorphism] using
     (continuous_of_discreteTopology :
       Continuous (topologicalSplitCliffordToCurrentSugawaraMorphism
         (𝕜 := 𝕜) (V := V)))
@@ -129,7 +129,7 @@ theorem continuous_topologicalSplitCliffordToCurrentSugawaraMorphism :
 theorem isLocallyConstant_topologicalSplitCliffordToCurrentSugawaraMorphism :
     IsLocallyConstant (topologicalSplitCliffordToCurrentSugawaraMorphism
       (𝕜 := 𝕜) (V := V)) := by
-  dsimp; simpa [topologicalSplitCliffordToCurrentSugawaraMorphism] using
+  simpa [topologicalSplitCliffordToCurrentSugawaraMorphism] using
     (IsLocallyConstant.of_discrete
       (f := topologicalSplitCliffordToCurrentSugawaraMorphism
         (𝕜 := 𝕜) (V := V)))

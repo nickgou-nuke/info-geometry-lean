@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.BulkBoundaryZeroModeOwner
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovTransport
@@ -195,7 +200,7 @@ Wedge/boost reparameterization of the transported operator:
 evaluating at the modular time extracted from a wedge boost parameter is the
 same operator conjugation, expressed in the wedge-normalized clock.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem transportedOperator_eq_wedgeBoost_conjugate (τwedge : ℝ) :
     B.transportedOperator (modularTimeOfWedgeBoost τwedge)
       =
@@ -206,7 +211,7 @@ theorem transportedOperator_eq_wedgeBoost_conjugate (τwedge : ℝ) :
 /--
 The wedge/boost normalization is exact on the transported operator surface.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem transportedOperator_wedge_roundtrip (τmod : ℝ) :
     B.transportedOperator (modularTimeOfWedgeBoost (wedgeBoostParameter τmod))
       = B.transportedOperator τmod := by
@@ -216,7 +221,7 @@ theorem transportedOperator_wedge_roundtrip (τmod : ℝ) :
 Round-tripping through the wedge/boost clock leaves the conjugation formula
 unchanged.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem transportedOperator_eq_wedge_roundtrip_conjugate (τmod : ℝ) :
     B.transportedOperator (modularTimeOfWedgeBoost (wedgeBoostParameter τmod))
       =

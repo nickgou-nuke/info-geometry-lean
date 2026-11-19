@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GrandCanonicalThermodynamicEngine
@@ -104,7 +109,7 @@ theorem jko_penalty_le_energy_drop :
     B.hopping
 
 /-- The hopping/Dirac transport has no defect leakage. -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem no_defect_leakage_of_hopping
     (hPzeroMulPreg : B.hopping.reduction.Pzero * B.hopping.reduction.Preg = 0)
     (v : DoubledSpace V)
@@ -136,7 +141,7 @@ theorem propagator_flow_consistency :
   simpa using B.propagator.hFlowConsistency
 
 /-- Bridge-level payload bundling the stationarity, decay, and defect-control witnesses. -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem continuum_emergence_payload
     (hInv : FlowInvariantAtScale B.hopping.rg B.hopping.scale)
     (hPzeroMulPreg : B.hopping.reduction.Pzero * B.hopping.reduction.Preg = 0)

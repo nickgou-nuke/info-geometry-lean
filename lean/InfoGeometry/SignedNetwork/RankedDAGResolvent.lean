@@ -40,42 +40,39 @@ theorem twoNodeDAG_ne_zero : twoNodeDAG ≠ 0 := by
   have h10 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 1 0) h
   norm_num [twoNodeDAG] at h10
 
-/-- A nilpotent commit-transfer operator need not have nilpotence index six:
-this nonzero two-node DAG operator already has square zero, hence also fifth
-and sixth powers zero. -/
-theorem twoNodeDAG_fifth_and_sixth_powers_zero :
-    twoNodeDAG ^ 5 = 0 ∧ twoNodeDAG ^ 6 = 0 := by
-  constructor
-  · calc
-      twoNodeDAG ^ 5 = twoNodeDAG ^ 2 * twoNodeDAG ^ 3 := by
-        rw [← pow_add]
-      _ = 0 := by rw [twoNodeDAG_sq, zero_mul]
-  · calc
-      twoNodeDAG ^ 6 = twoNodeDAG ^ 2 * twoNodeDAG ^ 4 := by
-        rw [← pow_add]
-      _ = 0 := by rw [twoNodeDAG_sq, zero_mul]
-
 /-- Concrete counterexample to the claim that sixth-power nilpotence forces
 the fifth power to be nonzero. -/
 theorem sixth_nilpotence_does_not_force_nonzero_fifth_power :
     ∃ T : Matrix (Fin 2) (Fin 2) ℝ,
       T ≠ 0 ∧ T ^ 5 = 0 ∧ T ^ 6 = 0 := by
-  exact ⟨twoNodeDAG, twoNodeDAG_ne_zero,
-    twoNodeDAG_fifth_and_sixth_powers_zero.1,
-    twoNodeDAG_fifth_and_sixth_powers_zero.2⟩
-
-theorem twoNodeDAG_green_left :
-    (1 - twoNodeDAG) * finiteGreen twoNodeDAG 2 = 1 := by
-  exact finiteGreen_left_inverse twoNodeDAG 2 twoNodeDAG_sq
-
-theorem twoNodeDAG_green_right :
-    finiteGreen twoNodeDAG 2 * (1 - twoNodeDAG) = 1 := by
-  exact finiteGreen_right_inverse twoNodeDAG 2 twoNodeDAG_sq
+  refine ⟨twoNodeDAG, twoNodeDAG_ne_zero, ?_, ?_⟩
+  · calc
+      twoNodeDAG ^ 5 = twoNodeDAG ^ 2 * twoNodeDAG ^ 3 := by rw [← pow_add]
+      _ = 0 := by rw [twoNodeDAG_sq, zero_mul]
+  · calc
+      twoNodeDAG ^ 6 = twoNodeDAG ^ 2 * twoNodeDAG ^ 4 := by rw [← pow_add]
+      _ = 0 := by rw [twoNodeDAG_sq, zero_mul]
 
 theorem twoNodeDAG_green_explicit :
     finiteGreen twoNodeDAG 2 = !![1, 0; 1, 1] := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [finiteGreen, twoNodeDAG]
+
+/-- The concrete finite Green sum is the two-sided inverse of the edge
+operator's complement; the displayed matrix records the actual inverse. -/
+theorem twoNodeDAG_green_inverse :
+    finiteGreen twoNodeDAG 2 = !![1, 0; 1, 1] ∧
+      (1 - twoNodeDAG) * finiteGreen twoNodeDAG 2 = 1 ∧
+      finiteGreen twoNodeDAG 2 * (1 - twoNodeDAG) = 1 := by
+  refine ⟨twoNodeDAG_green_explicit, ?_, ?_⟩
+  · rw [twoNodeDAG_green_explicit]
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [twoNodeDAG, Matrix.mul_apply, Fin.sum_univ_two]
+  · rw [twoNodeDAG_green_explicit]
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [twoNodeDAG, Matrix.mul_apply, Fin.sum_univ_two]
 end
 end InfoGeometry.SignedNetwork.RankedDAGResolvent

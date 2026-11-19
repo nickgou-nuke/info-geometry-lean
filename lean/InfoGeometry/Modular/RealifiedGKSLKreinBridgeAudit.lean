@@ -1,0 +1,17 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Modular.RealifiedGKSLKreinBridge
+
+#print axioms InfoGeometry.Krein.KreinSpace.continuous_kreinInner
+#print axioms InfoGeometry.Krein.KreinSpace.tendsto_kreinInner_of_tendsto
+#print axioms InfoGeometry.Krein.KreinSpace.abs_kreinInner_le_norm
+#print axioms InfoGeometry.Modular.RealifiedGKSLKreinBridge.twoSheetProjectionJumpOrbit_eq_limit_add_initial_displacement
+#print axioms InfoGeometry.Modular.RealifiedGKSLKreinBridge.twoSheetProjectionJump_kreinPairing_tendsto_peircePinching
+#print axioms InfoGeometry.Modular.RealifiedGKSLKreinBridge.twoSheetProjectionJump_kreinPairing_eq_affine_expansion
+#print axioms InfoGeometry.Modular.RealifiedGKSLKreinBridge.abs_twoSheetProjectionJump_kreinPairing_sub_limit_le
+#print axioms InfoGeometry.Modular.RealifiedGKSLKreinBridge.norm_doubledProjectionJumpOperatorFlow_sub_peircePinching
+#print axioms InfoGeometry.Modular.RealifiedGKSLKreinBridge.twoSheetProjectionJumpOrbit_eq_operatorFlow_apply

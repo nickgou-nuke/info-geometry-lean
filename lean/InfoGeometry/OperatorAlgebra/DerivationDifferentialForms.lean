@@ -11,6 +11,7 @@ import Mathlib.Tactic.Abel
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.DerivationLieLaneRepresentation
+import InfoGeometry.OperatorAlgebra.DerivationExteriorCalculus
 
 /-!
 # Derivation-based operator differential forms
@@ -58,14 +59,6 @@ variable [CommRing R] [NonUnitalNonAssocRing A] [Module R A]
   [IsScalarTower R A A] [SMulCommClass R A A]
 
 variable (K : DerivationLieLane R A)
-
-/-- Native derivation-based operator `n`-forms.
-
-The arguments are alternating in the derivation directions, so this is the
-finite-dimensional coefficient-valued form carrier used by the
-Chevalley--Eilenberg differential. -/
-abbrev DerivationOperatorForm (n : ℕ) :=
-  K.L [⋀^(Fin n)]→ₗ[R] A
 
 /-- Derivation-valued zero-forms are coefficient-algebra elements. -/
 abbrev ZeroForm (_K : DerivationLieLane R A) := A
@@ -445,5 +438,259 @@ theorem connectionCurvature_bianchi
   noncomm_ring
 
 end AssociativeConnection
+
+section ArbitraryDegreeBridges
+
+variable {R A : Type*}
+variable [CommRing R] [NonUnitalNonAssocRing A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
+variable (K : DerivationLieLane R A)
+
+private theorem ceLieDeriv_apply (x : K.L) {n : ℕ}
+    (ω : DerivationOperatorForm K n) (v : Fin n → K.L) :
+    ceLieDeriv K x ω v =
+      K.operatorAction x (ω v) - ∑ i : Fin n, ω (Function.update v i ⁅x, v i⁆) :=
+  rfl
+
+/-- Degree-0 compatibility between `ceExteriorDerivative K 0` and `exteriorDerivativeZero K`. -/
+theorem ceExteriorDerivative_zero_eq (a : ZeroForm K) :
+    ceExteriorDerivative K 0 (zeroFormAlternatingEquiv K a) =
+      oneFormAlternatingLinearEquiv K (exteriorDerivativeZero K a) := by
+  ext v
+  have hv : v = Matrix.vecCons (v 0) Fin.elim0 := funext fun i => by fin_cases i; rfl
+  rw [hv, ← AlternatingMap.curryLeft_apply_apply, ceExteriorDerivative_zero_curryLeft,
+    ceLieDeriv_apply]
+  simp [oneFormAlternatingLinearEquiv_apply, exteriorDerivativeZero_apply]
+
+/-- Degree-1 compatibility between `ceExteriorDerivative K 1` and `exteriorDerivativeOne K`. -/
+theorem ceExteriorDerivative_one_eq (ω : OneForm K) :
+    ceExteriorDerivative K 1 (oneFormAlternatingLinearEquiv K ω) =
+      twoCochainEquivDerivationOperatorForm K (exteriorDerivativeOne K ω) := by
+  ext v
+  have hv : v = Matrix.vecCons (v 0) ![v 1] := funext fun i => by fin_cases i <;> rfl
+  have h1 : ![v 1] = Matrix.vecCons (v 1) Fin.elim0 := funext fun i => by fin_cases i; rfl
+  rw [hv, ← AlternatingMap.curryLeft_apply_apply, ceExteriorDerivative_succ_curryLeft,
+    AlternatingMap.sub_apply, ceLieDeriv_apply]
+  simp only [Fin.sum_univ_succ, Fin.isValue, Finset.univ_eq_empty, Finset.sum_empty, add_zero,
+    Matrix.cons_val_zero]
+  have h1' : (ceExteriorDerivative K 0 ((oneFormAlternatingLinearEquiv K ω).curryLeft (v 0)))
+      ![v 1] = K.operatorAction (v 1) (ω (v 0)) := by
+    rw [h1, ← AlternatingMap.curryLeft_apply_apply, ceExteriorDerivative_zero_curryLeft,
+      ceLieDeriv_apply]
+    simp
+  rw [h1']
+  change K.operatorAction (v 0) (ω (v 1)) -
+      ω (Function.update ![v 1] (0 : Fin 1) ⁅v 0, ![v 1] 0⁆ 0) -
+      K.operatorAction (v 1) (ω (v 0)) =
+    K.operatorAction (v 0) (ω (v 1)) - K.operatorAction (v 1) (ω (v 0)) - ω ⁅v 0, v 1⁆
+  simp only [Matrix.cons_val_zero, Function.update_self]
+  abel
+
+/-- Degree-2 compatibility between `ceExteriorDerivative K 2` and `exteriorDerivativeTwo K`. -/
+theorem ceExteriorDerivative_two_eq (ω : TwoForm K) :
+    threeFormToThreeCochain K
+        (ceExteriorDerivative K 2 (twoCochainEquivDerivationOperatorForm K ω)) =
+      exteriorDerivativeTwo K ω := by
+  ext x y z
+  simp only [threeFormToThreeCochain_apply, exteriorDerivativeTwo_apply]
+  have hxyz : ![x, y, z] = Matrix.vecCons x ![y, z] := by
+    ext i; fin_cases i <;> rfl
+  have hyz : ![y, z] = Matrix.vecCons y ![z] := by
+    ext i; fin_cases i <;> rfl
+  have hz : ![z] = Matrix.vecCons z Fin.elim0 := by
+    ext i; fin_cases i; rfl
+  rw [hxyz, ← AlternatingMap.curryLeft_apply_apply, ceExteriorDerivative_succ_curryLeft,
+    AlternatingMap.sub_apply, ceLieDeriv_apply]
+  have h1 : (ceExteriorDerivative K 1 ((twoCochainEquivDerivationOperatorForm K ω).curryLeft x))
+      ![y, z] = K.operatorAction y (ω.1 x z) - ω.1 x ⁅y, z⁆ - K.operatorAction z (ω.1 x y) := by
+    rw [hyz, ← AlternatingMap.curryLeft_apply_apply, ceExteriorDerivative_succ_curryLeft,
+      AlternatingMap.sub_apply, ceLieDeriv_apply]
+    have h0 : (ceExteriorDerivative K 0
+        (((twoCochainEquivDerivationOperatorForm K ω).curryLeft x).curryLeft y)) ![z] =
+        K.operatorAction z (ω.1 x y) := by
+      rw [hz, ← AlternatingMap.curryLeft_apply_apply, ceExteriorDerivative_zero_curryLeft,
+        ceLieDeriv_apply]
+      simp
+    rw [h0]
+    simp only [Fin.sum_univ_succ, Fin.isValue, Finset.univ_eq_empty, Finset.sum_empty, add_zero]
+    have hz0 : Function.update ![z] (0 : Fin 1) ⁅y, ![z] 0⁆ 0 = ⁅y, z⁆ := by simp
+    change K.operatorAction y (ω.1 x z) -
+        ω.1 x (Function.update ![z] (0 : Fin 1) ⁅y, ![z] 0⁆ 0) -
+        K.operatorAction z (ω.1 x y) =
+      K.operatorAction y (ω.1 x z) - ω.1 x ⁅y, z⁆ - K.operatorAction z (ω.1 x y)
+    rw [hz0]
+  rw [h1]
+  simp only [Fin.sum_univ_succ, Fin.isValue, Finset.univ_eq_empty, Finset.sum_empty, add_zero]
+  have h00 : Function.update ![y, z] (0 : Fin 2) ⁅x, ![y, z] 0⁆ 0 = ⁅x, y⁆ := by simp
+  have h01 : Function.update ![y, z] (0 : Fin 2) ⁅x, ![y, z] 0⁆ 1 = z := by simp
+  have h10 : Function.update ![y, z] (1 : Fin 2) ⁅x, ![y, z] 1⁆ 0 = y := by simp
+  have h11 : Function.update ![y, z] (1 : Fin 2) ⁅x, ![y, z] 1⁆ 1 = ⁅x, z⁆ := by simp
+  change K.operatorAction x (ω.1 y z) -
+      (ω.1 (Function.update ![y, z] 0 ⁅x, ![y, z] 0⁆ 0)
+          (Function.update ![y, z] 0 ⁅x, ![y, z] 0⁆ 1) +
+        ω.1 (Function.update ![y, z] 1 ⁅x, ![y, z] 1⁆ 0)
+          (Function.update ![y, z] 1 ⁅x, ![y, z] 1⁆ 1)) -
+      (K.operatorAction y (ω.1 x z) - ω.1 x ⁅y, z⁆ - K.operatorAction z (ω.1 x y)) =
+    K.operatorAction x (ω.1 y z) - K.operatorAction y (ω.1 x z) +
+      K.operatorAction z (ω.1 x y) - ω.1 ⁅x, y⁆ z + ω.1 ⁅x, z⁆ y - ω.1 ⁅y, z⁆ x
+  rw [h00, h01, h10, h11]
+  have hskew1 : ω.1 y ⁅x, z⁆ = -ω.1 ⁅x, z⁆ y := by
+    simpa [neg_neg] using congrArg Neg.neg (LieModule.Cohomology.twoCochain_skew ω y ⁅x, z⁆)
+  have hskew2 : ω.1 x ⁅y, z⁆ = -ω.1 ⁅y, z⁆ x := by
+    simpa [neg_neg] using congrArg Neg.neg (LieModule.Cohomology.twoCochain_skew ω x ⁅y, z⁆)
+  rw [hskew1, hskew2]
+  abel
+
+end ArbitraryDegreeBridges
+
+section AssociativeArbitraryDegreeBridges
+
+variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable (K : DerivationLieLane R A)
+
+/-- Compatibility between `ceWedge` in degree `(1, 1)` and `connectionWedgeSquare`. -/
+theorem ceWedge_one_one_eq_connectionWedgeSquare (Γ : OneForm K) :
+    ceWedge K (oneFormAlternatingLinearEquiv K Γ) (oneFormAlternatingLinearEquiv K Γ) =
+      twoCochainEquivDerivationOperatorForm K (connectionWedgeSquare K Γ) := by
+  ext v
+  have hv : v = ![v 0, v 1] := funext fun i => by fin_cases i <;> rfl
+  rw [hv, ceWedge_one_one_apply]
+  rfl
+
+/-- Compatibility between arbitrary-degree `ceCurvature` and low-degree `connectionCurvature`. -/
+theorem ceCurvature_eq (Γ : OneForm K) :
+    ceCurvature K (oneFormAlternatingLinearEquiv K Γ) =
+      twoCochainEquivDerivationOperatorForm K (connectionCurvature K Γ) := by
+  rw [ceCurvature, ceExteriorDerivative_one_eq, ceWedge_one_one_eq_connectionWedgeSquare,
+    ← map_add]
+  rfl
+
+/-- Degree-0 compatibility between `covariantExteriorDerivativeN` and `covariantDerivative`. -/
+theorem covariantExteriorDerivativeN_zero_eq (Γ : OneForm K) (a : ZeroForm K) (x : K.L) :
+    covariantExteriorDerivativeN K (oneFormAlternatingLinearEquiv K Γ) 0
+        (zeroFormAlternatingEquiv K a) ![x] =
+      covariantDerivative K Γ x a := by
+  dsimp [covariantExteriorDerivativeN, covariantDerivative]
+  simp only [reindexForm_apply, pow_zero, one_smul, ceWedge_zero_left, ceWedge_zero_right,
+    LinearMap.compAlternatingMap_apply, LinearMap.mul_apply', LinearMap.flip_apply,
+    zeroFormAlternatingEquiv_apply, oneFormAlternatingLinearEquiv_apply]
+  have hdx : ceExteriorDerivative K 0 (zeroFormAlternatingEquiv K a) ![x] = K.operatorAction x a := by
+    rw [ceExteriorDerivative_zero_eq]
+    rfl
+  rw [hdx]
+  rfl
+
+/-- Degree-2 compatibility between `covariantExteriorDerivativeN` and `covariantExteriorDerivativeTwo`. -/
+theorem covariantExteriorDerivativeN_two_eq (Γ : OneForm K) (F : TwoForm K) (x y z : K.L) :
+    threeFormToThreeCochain K
+        (covariantExteriorDerivativeN K (oneFormAlternatingLinearEquiv K Γ) 2
+          (twoCochainEquivDerivationOperatorForm K F)) x y z =
+      covariantExteriorDerivativeTwo K Γ F x y z := by
+  simp only [threeFormToThreeCochain_apply]
+  dsimp [covariantExteriorDerivativeN, covariantExteriorDerivativeTwo]
+  simp only [pow_two, neg_one_mul, neg_neg, one_smul]
+  have hd : ceExteriorDerivative K 2 (twoCochainEquivDerivationOperatorForm K F) ![x, y, z] =
+      exteriorDerivativeTwo K F x y z := by
+    simpa [threeFormToThreeCochain_apply] using
+      congrArg (fun T : ThreeCochain K => T x y z) (ceExteriorDerivative_two_eq K F)
+  rw [exteriorDerivativeTwo_apply] at hd
+  have hxyz : ![x, y, z] = Matrix.vecCons x ![y, z] := by
+    ext i; fin_cases i <;> rfl
+  have hxyz' : ![x, y, z] ∘ finCongr (Nat.add_comm 1 2) = Matrix.vecCons x ![y, z] := by
+    ext i; fin_cases i <;> rfl
+  have hyz : ![y, z] = Matrix.vecCons y ![z] := by
+    ext i; fin_cases i <;> rfl
+  have hGF : ceWedge K (oneFormAlternatingLinearEquiv K Γ)
+      (twoCochainEquivDerivationOperatorForm K F)
+      (![x, y, z] ∘ finCongr (Nat.add_comm 1 2)) =
+      Γ x * F y z - (Γ y * F x z - Γ z * F x y) := by
+    rw [hxyz', ← AlternatingMap.curryLeft_apply_apply, ceWedge_succ_succ_curryLeft]
+    simp only [AlternatingMap.add_apply, reindexForm_apply,
+      ceWedge_zero_left, LinearMap.compAlternatingMap_apply, LinearMap.mul_apply',
+      oneFormAlternatingLinearEquiv_apply, AlternatingMap.curryLeft_apply_apply,
+      Matrix.cons_val_zero, Nat.zero_add, pow_one, neg_one_smul, AlternatingMap.neg_apply]
+    have hcurF : (ceWedge K (oneFormAlternatingLinearEquiv K Γ)
+        ((twoCochainEquivDerivationOperatorForm K F).curryLeft x)) ![y, z] =
+        Γ y * F x z - Γ z * F x y := by
+      rw [hyz, ← AlternatingMap.curryLeft_apply_apply, ceWedge_succ_succ_curryLeft]
+      simp only [AlternatingMap.add_apply, reindexForm_apply,
+        ceWedge_zero_left, ceWedge_zero_right, LinearMap.compAlternatingMap_apply,
+        LinearMap.mul_apply', oneFormAlternatingLinearEquiv_apply,
+        AlternatingMap.curryLeft_apply_apply, Matrix.cons_val_zero,
+        Nat.zero_add, pow_one, neg_one_smul, AlternatingMap.neg_apply]
+      have hz' : Matrix.vecCons x ((![z] ∘ finCongr (by omega : 0 + 1 = 0 + 1)) ∘
+          finCongr (by omega : 1 = 0 + 1)) 1 = z := by
+        simp
+      have hy' : Matrix.vecCons x (Matrix.vecCons y (Fin.elim0 : Fin 0 → K.L)) 1 = y := rfl
+      dsimp only [twoCochainEquivDerivationOperatorForm_apply]
+      rw [hz', hy']
+      change Γ y * F.1 x z + -(Γ z * F.1 x y) = Γ y * F.1 x z - Γ z * F.1 x y
+      rw [sub_eq_add_neg]
+    rw [hcurF]
+    have hyz0 : ((![y, z] ∘ finCongr (by omega : 0 + 2 = 0 + 2)) ∘
+        finCongr (by omega : 2 = 0 + 2)) 0 = y := rfl
+    have hyz1 : ((![y, z] ∘ finCongr (by omega : 0 + 2 = 0 + 2)) ∘
+        finCongr (by omega : 2 = 0 + 2)) 1 = z := rfl
+    rw [twoCochainEquivDerivationOperatorForm_apply, hyz0, hyz1]
+    exact (sub_eq_add_neg _ _).symm
+  have hFG : ceWedge K (twoCochainEquivDerivationOperatorForm K F)
+      (oneFormAlternatingLinearEquiv K Γ) ![x, y, z] =
+      F y z * Γ x - (F x z * Γ y - F x y * Γ z) := by
+    rw [hxyz, ← AlternatingMap.curryLeft_apply_apply, ceWedge_succ_succ_curryLeft]
+    simp only [AlternatingMap.add_apply, reindexForm_apply, AlternatingMap.smul_apply,
+      ceWedge_zero_right, LinearMap.compAlternatingMap_apply, LinearMap.flip_apply,
+      LinearMap.mul_apply', oneFormAlternatingLinearEquiv_apply,
+      AlternatingMap.curryLeft_apply_apply, Matrix.cons_val_zero]
+    have hcurF : (ceWedge K ((twoCochainEquivDerivationOperatorForm K F).curryLeft x)
+        (oneFormAlternatingLinearEquiv K Γ)) (![y, z] ∘ finCongr (by omega : 1 + 1 = 1 + 1 + 0)) =
+        F x y * Γ z - F x z * Γ y := by
+      have hyz' : ![y, z] ∘ finCongr (by omega : 1 + 1 = 1 + 1 + 0) = ![y, z] := by
+        ext i; fin_cases i <;> rfl
+      rw [hyz', hyz, ← AlternatingMap.curryLeft_apply_apply, ceWedge_succ_succ_curryLeft]
+      simp only [AlternatingMap.add_apply, reindexForm_apply,
+        ceWedge_zero_left, ceWedge_zero_right, LinearMap.compAlternatingMap_apply,
+        LinearMap.mul_apply', oneFormAlternatingLinearEquiv_apply,
+        AlternatingMap.curryLeft_apply_apply, Matrix.cons_val_zero,
+        Nat.zero_add, pow_one, neg_one_smul, AlternatingMap.neg_apply]
+      change F.1 x y * Γ z + -(F.1 x z * Γ y) = F.1 x y * Γ z - F.1 x z * Γ y
+      rw [sub_eq_add_neg]
+    rw [hcurF]
+    have h11 : ((-1 : R) ^ (1 + 1)) = 1 := by norm_num
+    rw [h11, one_smul]
+    change F.1 x y * Γ z - F.1 x z * Γ y + F.1 y z * Γ x =
+      F.1 y z * Γ x - (F.1 x z * Γ y - F.1 x y * Γ z)
+    abel
+  rw [hd, hGF, hFG]
+  abel
+
+end AssociativeArbitraryDegreeBridges
+
+section CommutativeLowDegreeSpecialization
+
+variable {R A : Type*} [CommRing R] [CommRing A] [Algebra R A]
+variable (K : DerivationLieLane R A)
+
+theorem covariantDerivative_eq_operatorAction_of_commRing
+    (Γ : OneForm K) (x : K.L) (a : A) :
+    covariantDerivative K Γ x a = K.operatorAction x a := by
+  unfold covariantDerivative
+  rw [mul_comm (Γ x) a]
+  ring
+
+theorem connectionWedgeSquare_eq_zero_of_commRing (Γ : OneForm K) :
+    connectionWedgeSquare K Γ = 0 := by
+  ext x y
+  simp [connectionWedgeSquare_apply, mul_comm]
+
+theorem connectionCurvature_eq_exteriorDerivativeOne_of_commRing (Γ : OneForm K) :
+    connectionCurvature K Γ = exteriorDerivativeOne K Γ := by
+  rw [connectionCurvature, connectionWedgeSquare_eq_zero_of_commRing, add_zero]
+
+theorem satisfiesMaurerCartan_iff_isClosed_of_commRing (Γ : OneForm K) :
+    SatisfiesMaurerCartan K Γ ↔ IsClosedOneForm K Γ := by
+  rw [SatisfiesMaurerCartan, connectionCurvature_eq_exteriorDerivativeOne_of_commRing,
+    IsClosedOneForm]
+
+end CommutativeLowDegreeSpecialization
 
 end InfoGeometry.OperatorAlgebra.DerivationDifferentialForms

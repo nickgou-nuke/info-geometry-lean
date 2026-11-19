@@ -82,6 +82,14 @@ theorem oddDiff_graded_leibniz {S N : B} (hS : S * S = 1) (X Y : B) :
   rw [twist_mul hS]
   noncomm_ring
 
+/-- An odd differential anticommutes with its grading involution. -/
+theorem oddDiff_twist_anticommute {S N : B} (hS : S * S = 1)
+    (hSN : S * N = -(N * S)) (X : B) :
+    twist S (oddDiff S N X) = -oddDiff S N (twist S X) := by
+  unfold oddDiff
+  simp only [twist_sub, twist_mul hS, twist_odd hS hSN, twist_twist hS]
+  noncomm_ring
+
 theorem oddDiff_pair {S N M : B} (hS : S * S = 1)
     (hSN : S * N = -(N * S)) (hSM : S * M = -(M * S)) (X : B) :
     oddDiff S N (oddDiff S M X) + oddDiff S M (oddDiff S N X) =
@@ -165,6 +173,42 @@ theorem differentialMinus_graded_leibniz (hP : P * P = P) :
       differentialMinus P C X * Y + parity P X * differentialMinus P C Y := by
   unfold differentialMinus parity
   exact oddDiff_graded_leibniz (invS_sq hP) X Y
+
+/-- The upper-corner Peirce differential is odd for the involution `parity`. -/
+theorem differentialPlus_parity_odd (hP : P * P = P) :
+    parity P (differentialPlus P A X) =
+      -differentialPlus P A (parity P X) := by
+  unfold differentialPlus parity
+  apply oddDiff_twist_anticommute (invS_sq hP)
+  rw [invS_mul_conePlus hP A, conePlus_mul_invS hP A]
+  simp
+
+/-- The lower-corner Peirce differential is odd for the involution `parity`. -/
+theorem differentialMinus_parity_odd (hP : P * P = P) :
+    parity P (differentialMinus P C X) =
+      -differentialMinus P C (parity P X) := by
+  unfold differentialMinus parity
+  apply oddDiff_twist_anticommute (invS_sq hP)
+  rw [invS_mul_coneMinus hP C, coneMinus_mul_invS hP C]
+
+/-- The total Peirce differential is odd for the grading involution. -/
+theorem differentialPhi_parity_odd (hP : P * P = P) :
+    parity P (differentialPhi P A C X) =
+      -differentialPhi P A C (parity P X) := by
+  unfold differentialPhi
+  calc parity P (differentialPlus P A X + differentialMinus P C X)
+      = parity P (differentialPlus P A X) +
+          parity P (differentialMinus P C X) := by
+            unfold parity
+            exact twist_add (invS P) _ _
+    _ = -differentialPlus P A (parity P X) -
+          differentialMinus P C (parity P X) := by
+            rw [differentialPlus_parity_odd (P := P) (A := A) (X := X) hP,
+              differentialMinus_parity_odd (P := P) (C := C) (X := X) hP]
+            abel
+    _ = -differentialPhi P A C (parity P X) := by
+          unfold differentialPhi
+          abel
 
 /-- The anticommutator of the two Peirce differentials is the inner
 commutator by the anticommutator of the ordered corners, namely `V`. -/

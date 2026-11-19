@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.SolderingIsomorphism
 import InfoGeometry.Canonical.CantorBernoulliGaugeFilteredGNSColimitBridge
 import InfoGeometry.Canonical.FilteredGNSGlobalStageRepresentation
@@ -329,10 +334,8 @@ theorem rootPlus_globalStage_action
       rootPlusGaugeStage := by
     exact congrArg (fun f => f rootPlusGaugeStage)
       (gaugeSystem.map_id 1)
-  dsimp [CStarStateColimit.Native.FilteredGNSTailRepresentation.tailGNSOperator,
-    CStarStateColimit.Native.FilteredGNSTailRepresentation.tailObservable]
-  rw [hmap]
-  rfl
+  simp only [CStarStateColimit.Native.FilteredGNSTailRepresentation.tailGNSOperator,
+    CStarStateColimit.Native.FilteredGNSTailRepresentation.tailObservable, hmap]
 
 /-- The global lowering-root representation acts on the canonical inclusion
 by the native first-stage GNS action. -/
@@ -355,9 +358,7 @@ theorem rootMinus_globalStage_action
       rootMinusGaugeStage := by
     exact congrArg (fun f => f rootMinusGaugeStage)
       (gaugeSystem.map_id 1)
-  dsimp [CStarStateColimit.Native.FilteredGNSTailRepresentation.tailGNSOperator,
-    CStarStateColimit.Native.FilteredGNSTailRepresentation.tailObservable]
-  rw [hmap]
-  rfl
+  simp only [CStarStateColimit.Native.FilteredGNSTailRepresentation.tailGNSOperator,
+    CStarStateColimit.Native.FilteredGNSTailRepresentation.tailObservable, hmap]
 
 end InfoGeometry.Clifford.SolderingGNSCARBridge

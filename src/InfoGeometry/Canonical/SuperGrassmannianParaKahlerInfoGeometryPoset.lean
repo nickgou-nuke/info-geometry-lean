@@ -537,7 +537,13 @@ theorem g4_projective_krein_berezinian_and_weyl_deformation_triad
     Real.log (superBerezinian23 A₁ D₁) = 0 := by
   have hBer := super_berezinian_gauge_invariance A₁ A₂ A_bos D₁ D₂ D_fer U_C M_color
     lam invLam h_weyl h_color_det h_match_det hD₁_ne
-  exact ⟨scale_chiral_commutator p q σ k₁ k₂,
+  have hScale : scaleOperator p q σ * chiralOperator k₁ k₂ -
+      chiralOperator k₁ k₂ * scaleOperator p q σ =
+      !![0, (p - q) * σ * k₁; -(p - q) * σ * k₂, 0] := by
+    rw [scale_chiral_commutator]
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp <;> ring
+  exact ⟨hScale,
     scale_chiral_commutator_balanced p σ k₁ k₂,
     superTrace_chiral_square k₁ k₂,
     total_deformation_superTrace p q σ k₁ k₂ a,

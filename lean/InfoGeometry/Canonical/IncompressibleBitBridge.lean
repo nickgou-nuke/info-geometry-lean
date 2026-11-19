@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.ConformalUnification
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MongeAmpereCramerRao
@@ -46,7 +51,7 @@ def UnitRelativeVolumeBit (n : Nat) (M : SinkhornMatrix n) : Prop :=
   relativeVolumeChangeRN n M = 1
 
 /-- Constructor from the existing RN unit-relative-volume equality. -/
-@[rep_depth projective]
+@[rep_depth operator]
 theorem unitRelativeVolumeBit_of_eq_one
     {n : Nat} {M : SinkhornMatrix n}
     (hUnit : relativeVolumeChangeRN n M = 1) :
@@ -58,7 +63,7 @@ The proof-carrying unit-relative-volume bit is exactly the constructive form of
 `relativeVolumeChangeRN n M = 1`.  Downstream theorem routes can consume the
 bit packet and recover the old equality only at compatibility boundaries.
 -/
-@[rep_depth projective]
+@[rep_depth operator]
 theorem unitRelativeVolumeBit_iff_eq_one
     {n : Nat} {M : SinkhornMatrix n} :
     UnitRelativeVolumeBit n M ↔ relativeVolumeChangeRN n M = 1 :=
@@ -67,7 +72,7 @@ theorem unitRelativeVolumeBit_iff_eq_one
 /--
 Recover the raw unit-volume equality from the constructive bit packet.
 -/
-@[rep_depth projective]
+@[rep_depth operator]
 theorem relativeVolumeChangeRN_eq_one_of_unitRelativeVolumeBit
     {n : Nat} {M : SinkhornMatrix n}
     (bit : UnitRelativeVolumeBit n M) :
@@ -77,7 +82,7 @@ theorem relativeVolumeChangeRN_eq_one_of_unitRelativeVolumeBit
 /--
 The unit relative-volume bit kills the RN Kähler potential.
 -/
-@[rep_depth projective]
+@[rep_depth operator]
 theorem kahlerPotentialRN_eq_zero_of_unitRelativeVolumeBit
     {n : Nat}
     (M : SinkhornMatrix n)
@@ -97,7 +102,7 @@ theorem kahlerPotentialRN_eq_zero_of_unitRelativeVolumeBit
 If the conformal chiral scale is identified with the RN Kähler potential, then
 unit relative volume kills the conformal anomaly scale.
 -/
-@[rep_depth thermo]
+@[rep_depth transport, capstone]
 theorem chiralScale_eq_zero_of_unitRelativeVolumeBit
     (CI : ConformalInference E)
     {n : Nat}
@@ -113,7 +118,7 @@ theorem chiralScale_eq_zero_of_unitRelativeVolumeBit
 The unit relative-volume bit is exactly the input needed by the existing
 conformal owner theorem to enter the normal phase.
 -/
-@[rep_depth thermo]
+@[rep_depth transport, capstone]
 theorem isNormalInference_of_unitRelativeVolumeBit
     (CI : ConformalInference E)
     {n : Nat}
@@ -354,7 +359,7 @@ theorem isNormalInference_of_incompressibleBit_of_chiralScale_eq_cramerRaoVolume
 If the anomaly scale is the negative Cramer-Rao log-volume mode, the
 incompressible bit collapses the conformal unit of action.
 -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem unitOfAction_eq_zero_of_incompressibleBit_of_chiralScale_eq_neg_cramerRaoLogVolume
     (CI : ConformalInference E)
     (H : HessianGeometry E)
@@ -373,7 +378,7 @@ theorem unitOfAction_eq_zero_of_incompressibleBit_of_chiralScale_eq_neg_cramerRa
 Operator-owner version: if the anomaly scale is read from the Cramer-Rao
 negative-log-volume potential, incompressibility forces zero unit of action.
 -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem unitOfAction_eq_zero_of_incompressibleBit_of_chiralScale_eq_cramerRaoVolumePotential
     (CI : ConformalInference E)
     (H : HessianGeometry E)

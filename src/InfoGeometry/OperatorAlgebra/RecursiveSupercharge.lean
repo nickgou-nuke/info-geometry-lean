@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
@@ -13,7 +18,7 @@ The square of a recursively extended odd supercharge.
 For `Qnext = Q + R`, the new square is the old square plus the
 odd--odd cross bracket plus the new square.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem recursive_supercharge_square
     {A : Type*} [Ring A]
     (Q R : A) :
@@ -25,7 +30,7 @@ theorem recursive_supercharge_square
 If both odd layers are nilpotent, the recursive supercharge square is exactly
 the odd--odd anticommutator.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem recursive_nilpotent_supercharge_square_eq_anticommutator
     {A : Type*} [Ring A]
     {Q R : A}
@@ -44,7 +49,7 @@ theorem recursive_nilpotent_supercharge_square_eq_anticommutator
 /--
 Central-charge extraction from two nilpotent recursive supercharges.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem recursive_nilpotent_supercharge_square_eq_centralCharge
     {A : Type*} [Ring A]
     {Q R Z : A}
@@ -59,7 +64,7 @@ theorem recursive_nilpotent_supercharge_square_eq_centralCharge
 If the odd--odd cross bracket is a central element `Z`, then the recursive
 supercharge square is central.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem recursive_supercharge_square_is_central
     {A : Type*} [Ring A]
     {Q R Z : A}
@@ -75,7 +80,7 @@ theorem recursive_supercharge_square_is_central
 /--
 Finite three-layer expansion: next step toward recursive supercharge towers.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem three_supercharge_square
     {A : Type*} [Ring A]
     (Q₁ Q₂ Q₃ : A) :
@@ -89,7 +94,7 @@ theorem three_supercharge_square
 /--
 Odd-odd anticommutator.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 def oddAnticomm {A : Type*} [Ring A] (X Y : A) : A := X * Y + Y * X
 
 /--
@@ -98,7 +103,7 @@ Finite four-layer supercharge square expansion.
 This is the explicit cutoff-4 recursive tower identity:
 diagonal squares plus all pairwise odd-odd anticommutators.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem four_supercharge_square
     {A : Type*} [Ring A]
     (Q₁ Q₂ Q₃ Q₄ : A) :
@@ -117,7 +122,7 @@ Finite four-layer nilpotent reduction:
 if `Qᵢ^2=0` for all four odd generators, the square is exactly the sum of
 pairwise odd-odd anticommutators.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem four_nilpotent_supercharge_square_eq_pairwise_oddAnticomm
     {A : Type*} [Ring A]
     {Q₁ Q₂ Q₃ Q₄ : A}
@@ -166,7 +171,7 @@ Finite `N=2` graded-SUSY closure:
 for odd charges `Q₁,Q₂` with `Qᵢ²=0`, the extended square is exactly the
 odd-odd anticommutator.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem n2_supercharge_square_eq_oddAnticomm
     {A : Type*} [Ring A]
     {Q₁ Q₂ : A}
@@ -180,7 +185,7 @@ theorem n2_supercharge_square_eq_oddAnticomm
 Finite `N=2` closure with explicit even/central split in the odd-odd bracket:
 if `{Q₁,Q₂} = H + Z`, then `(Q₁+Q₂)^2 = H + Z`.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem n2_supercharge_square_eq_hamiltonian_plus_central
     {A : Type*} [Ring A]
     {Q₁ Q₂ H Z : A}
@@ -196,7 +201,7 @@ theorem n2_supercharge_square_eq_hamiltonian_plus_central
 /--
 Duality transport of odd-odd anticommutators across a ring equivalence.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem duality_transport_oddAnticomm
     {A B : Type*} [Ring A] [Ring B]
     (Dual : A ≃+* B) (X Y : A) :
@@ -208,7 +213,7 @@ Duality transport of finite `N=2` square closure:
 if `(Q₁+Q₂)^2 = H + Z` in `A`, then the transported charges satisfy
 the same closure in `B`.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem duality_transport_n2_square_closure
     {A B : Type*} [Ring A] [Ring B]
     (Dual : A ≃+* B)
@@ -220,7 +225,7 @@ theorem duality_transport_n2_square_closure
 /--
 Duality transport preserves centrality of the transported central term.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem duality_transport_centrality
     {A B : Type*} [Ring A] [Ring B]
     (Dual : A ≃+* B)
@@ -235,7 +240,7 @@ theorem duality_transport_centrality
 Dimension doubling identity for the finite Bott ladder:
 `2^(n+1) = 2 * 2^n`.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem two_pow_succ (n : ℕ) :
     2 ^ (n + 1) = 2 * 2 ^ n := by
   simpa [pow_succ, Nat.mul_comm] using (pow_succ 2 n).symm
@@ -243,7 +248,7 @@ theorem two_pow_succ (n : ℕ) :
 /--
 Two Bott steps: `2^(n+2) = 4 * 2^n`.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem two_pow_add_two (n : ℕ) :
     2 ^ (n + 2) = 4 * 2 ^ n := by
   calc
@@ -257,7 +262,7 @@ Factorwise odd-odd anticommutator on product rings.
 This is the finite tensor surrogate:
 `{(x₁,x₂),(y₁,y₂)} = ({x₁,y₁},{x₂,y₂})`.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem oddAnticomm_prod_factorwise
     {A B : Type*} [Ring A] [Ring B]
     (x₁ y₁ : A) (x₂ y₂ : B) :
@@ -269,7 +274,7 @@ theorem oddAnticomm_prod_factorwise
 Finite Bott/tensor step for `N=2` closure:
 if closure holds in `A` and in `B`, it holds in `A × B`.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem supergradedClosureAt_prod
     {A B : Type*} [Ring A] [Ring B]
     {QA QAsharp : A} {QB QBsharp : B}
@@ -286,7 +291,7 @@ Central-charge transport under finite tensor/product step:
 if each side has an odd-odd split `{Q,Q♯}=H+Z`, the product side has
 componentwise split.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem n2_hamiltonian_central_split_prod
     {A B : Type*} [Ring A] [Ring B]
     {QA QAsharp HA ZA : A}
@@ -302,7 +307,7 @@ theorem n2_hamiltonian_central_split_prod
 /--
 Indexed formal inductive chain (`A₀ → A₁ → A₂ → …`) via bonding maps.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 structure IndexedInductiveChain where
   Stage : ℕ → Type*
   step : ∀ n, Stage n → Stage (n + 1)
@@ -314,7 +319,7 @@ variable (C : IndexedInductiveChain)
 /--
 Iterated embedding from stage `0` to stage `n`.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 def iterEmbed : ∀ n, C.Stage 0 → C.Stage n
   | 0, x => x
   | n + 1, x => C.step n (iterEmbed n x)
@@ -322,7 +327,7 @@ def iterEmbed : ∀ n, C.Stage 0 → C.Stage n
 /--
 Stepwise preservation of a symmetry-adapted local invariant.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 def Preserves (Inv : ∀ n, C.Stage n → Prop) : Prop :=
   ∀ n x, Inv n x → Inv (n + 1) (C.step n x)
 
@@ -330,7 +335,7 @@ def Preserves (Inv : ∀ n, C.Stage n → Prop) : Prop :=
 If an invariant is true at stage `0` and preserved by each bonding map,
 it is true along the full finite inductive chain.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem invariant_along_chain
     (Inv : ∀ n, C.Stage n → Prop)
     (hPres : C.Preserves Inv)
@@ -347,7 +352,7 @@ theorem invariant_along_chain
 /--
 Two invariants preserved stepwise are preserved jointly along the chain.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem invariant_pair_along_chain
     (Inv₁ Inv₂ : ∀ n, C.Stage n → Prop)
     (hPres₁ : C.Preserves Inv₁)
@@ -380,7 +385,7 @@ abbrev BondingIntertwiner
 /--
 Core transport lemma: odd nilpotency is stable under a valid bonding intertwiner.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem invariant_transport_stable
     {A B : Type*} [Ring A] [Ring B]
     (invA : SupergradedInvariantAt A)
@@ -394,7 +399,7 @@ theorem invariant_transport_stable
 /--
 Transport of odd-odd closure through a bonding intertwiner.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem oddOdd_closure_transport
     {A B : Type*} [Ring A] [Ring B]
     (invA : SupergradedInvariantAt A)
@@ -409,7 +414,7 @@ theorem oddOdd_closure_transport
 /--
 Transport of central-lane commutation through a bonding intertwiner.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem central_lane_transport
     {A B : Type*} [Ring A] [Ring B]
     (invA : SupergradedInvariantAt A)
@@ -447,7 +452,7 @@ def iterMap : ∀ n, C.Stage 0 → C.Stage n
   | n + 1, x => (C.Bonding n).map (iterMap n x)
 
 /-- Stagewise odd invariance along the inductive chain. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem odd_preserved_along_chain
     {x0 : C.Stage 0}
     (hx0 : (C.Invariant 0).is_odd x0) :
@@ -460,7 +465,7 @@ theorem odd_preserved_along_chain
       exact (C.Bonding n).preserves_odd _ ih
 
 /-- Stagewise odd nilpotency along the inductive chain. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem odd_nilpotent_along_chain
     {x0 : C.Stage 0}
     (hx0 : (C.Invariant 0).is_odd x0) :

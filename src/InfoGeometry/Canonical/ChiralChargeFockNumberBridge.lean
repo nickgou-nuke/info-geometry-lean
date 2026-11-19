@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.ClosureDrazinBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GlobalChiralDecomposition
@@ -201,7 +206,6 @@ def ChiralChargeFockNumberReconciliation.ofOwners
     fock_occupation_eq_creation_after_annihilation (E := E) B
 
 /-- Canonical constructor for the chiral light-cone/KKT closure package. -/
-@[rep_depth transport]
 def ChiralLightconeKKTClosure.ofOwners
     (C : ConstructiveClosureDrazinData (E := H₂))
     (B : BogoliubovMixingParams)

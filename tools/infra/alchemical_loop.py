@@ -40,7 +40,14 @@ def main():
     print(f"[{datetime.now().isoformat()}] Processing Locked Task: {task['name']}")
 
     # 1. Propose & Build
-    success, err = run_command(["lake", "build"], "Build Verification")
+    target = task.get("module") or task.get("target") or task.get("lean_file")
+    build_cmd = [
+        sys.executable,
+        "tools/infra/run_locked_lake_build.py",
+        "--wait-for-build-lock",
+        str(target) if target else "--changed",
+    ]
+    success, err = run_command(build_cmd, "Build Verification")
     if not success:
         print(f"FAILURE: Build failed. {err}")
         return

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.SuperGrassmannian.FiveGradedLieSuperalgebra
 
 /-!
@@ -43,7 +48,7 @@ open InfoGeometry.SuperGrassmannian.FiveGradedLieSuperalgebra
 #print axioms identity_hamiltonian_central
 #print axioms identity_hamiltonian_supertrace_zero
 
--- Section 8: Master Certificate
-#print axioms compile_five_graded_lie_superalgebra
+-- Section 8: Concrete carrier witness
+#print axioms matrix_fin3_noncommutativity_witness
 
 end InfoGeometry.SuperGrassmannian.FiveGradedLieSuperalgebra.Audit

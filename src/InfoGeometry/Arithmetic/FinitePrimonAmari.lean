@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Thermodynamics.FiniteGibbsRelative
@@ -124,7 +129,7 @@ theorem deriv2_massieu_direction_at
   rw [hslice]
   rw [logSumExp_secondDeriv_eq_variance w X hw t]
   rw [logSumExpVariance_eq_centered w X hw t]
-  unfold fisherMetric fisherCov expect prob Z w
+  unfold cartanFisherMetric fisherCov expect prob Z w
   have hpart : logSumExpPartition (fun i => Real.exp (θ i)) X t = ∑ i : ι, Real.exp (θ i + t * X i) := by
     unfold logSumExpPartition
     apply Finset.sum_congr rfl

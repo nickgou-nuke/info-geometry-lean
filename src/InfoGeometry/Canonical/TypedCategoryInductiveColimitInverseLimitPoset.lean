@@ -712,9 +712,16 @@ theorem tc6b_module_dual_projective_limit_to_typed_inverse_sections_bridge
         (dualModuleProjectiveLimitEquivTypedInverseLimit sys z) =
         (CategoryTheory.Limits.limit.π
           (FilteredColimit.InductiveCocone.dualModuleDiagram sys) (Opposite.op i)).hom z := by
-    dsimp [dualModuleProjectiveLimitEquivTypedInverseLimit]
-    rw [limitEquivSections_symm_apply]
-    rfl
+    rw [← Types.limitEquivSections_apply]
+    simp only [dualModuleProjectiveLimitEquivTypedInverseLimit,
+      Equiv.trans_apply, Equiv.apply_symm_apply]
+    have hsec_proj :
+        (dualInverseFamilyEquivTypedInverseSections sys
+          (FilteredColimit.InductiveCocone.projectiveLimitEquivDualInverseFamily sys z)).val
+          (Opposite.op i) =
+        (FilteredColimit.InductiveCocone.projectiveLimitEquivDualInverseFamily sys z).val i := rfl
+    rw [hsec_proj,
+      FilteredColimit.InductiveCocone.projectiveLimitEquivDualInverseFamily_apply]
   exact ⟨hsec,
          (dualInverseFamilyEquivTypedInverseSections sys).symm_apply_apply s,
          hproj⟩

@@ -296,9 +296,8 @@ theorem stage_S2_massieu_potential_and_bost_connes_euler_product
     massieuPotential (Z1 * Z2) = massieuPotential Z1 + massieuPotential Z2 ∧
     (prefixBoundaryLimitIso.hom ≫ limit.π prefixDiagram (Opposite.op n)).hom
         cantorVacuumBoundary = finiteVacuumWord n ∧
-    ((dualInverseFamilyToProjectiveLimit (sys := uhfDiagDirectSystem)
-        finiteZeroTempState finiteZeroTempState_isDualInverseFamily ≫
-          limit.π (dualModuleDiagram uhfDiagDirectSystem) (Opposite.op n)).hom (1 : ℂ)) f =
+    dualInverseFamilyToProjectiveLimitStageFunctional (sys := uhfDiagDirectSystem)
+        finiteZeroTempState finiteZeroTempState_isDualInverseFamily n f =
       colimitZeroTempState n f ∧
     (dualInverseFamilyColimitMap (sys := uhfDiagDirectSystem)
         finiteZeroTempState finiteZeroTempState_isDualInverseFamily).hom

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.BoundedKMSErgodicFixedPointBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.StandardFormOmegaVolumeBridge
@@ -43,7 +48,6 @@ local notation "VolEnd" => AlgebraEnd H
 Calibration bridge from state-functional bounded-KMS ergodic fixed points to
 natural-cone `Ω`-localized face volumes.
 -/
-@[rep_depth transport]
 structure Bridge where
   /-- State-functional bounded-KMS modular/renormalization fixed-point owner. -/
   ergodic :
@@ -83,7 +87,7 @@ variable (B : Bridge
   (E := E) (H := H) (LieAlgebra := LieAlgebra) (Word := Word))
 
 /-- The word fixed-point observable is modular-time fixed. -/
-@[rep_depth transport]
+@[rep_depth thermo, capstone]
 theorem fixedOperator_isModularFixed
     (w : Word) :
     BoundedKMSErgodicFixedPointBridge.Bridge.IsModularFixed
@@ -91,7 +95,7 @@ theorem fixedOperator_isModularFixed
   (B.fixedOperator_selfSimilar w).1
 
 /-- The word fixed-point observable is renormalization-scale fixed. -/
-@[rep_depth transport]
+@[rep_depth thermo, capstone]
 theorem fixedOperator_isScaleFixed
     (w : Word) :
     BoundedKMSErgodicFixedPointBridge.Bridge.IsScaleFixed
@@ -99,7 +103,7 @@ theorem fixedOperator_isScaleFixed
   (B.fixedOperator_selfSimilar w).2
 
 /-- The modular fixed-point observable lies in the supplied centralizer-like sector. -/
-@[rep_depth transport]
+@[rep_depth thermo, capstone]
 theorem fixedOperator_mem_centralizerLike
     (w : Word) :
     B.ergodic.centralizerLike (B.fixedOperatorOfWord w) :=
@@ -110,7 +114,7 @@ theorem fixedOperator_mem_centralizerLike
 The calibrated volume of a self-similar fixed observable is the standard-form
 localized `Ω`-face expectation.
 -/
-@[rep_depth transport]
+@[rep_depth thermo, capstone]
 theorem fixedOperator_volume_eq_localizedExpectation
     (w : Word) :
     B.omegaVolume.volumeState
@@ -122,7 +126,7 @@ theorem fixedOperator_volume_eq_localizedExpectation
 Readback through the concrete Hestenes--Krein `Ω` expectation:
 the calibrated fixed-point volume is `[L_w Ω, Ω]_J`.
 -/
-@[rep_depth transport]
+@[rep_depth thermo, capstone]
 theorem fixedOperator_volume_eq_omega_kreinExpectation
     (w : Word) :
     B.omegaVolume.volumeState

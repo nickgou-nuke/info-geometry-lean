@@ -129,7 +129,7 @@ theorem mass_channel_discrepancy :
     hProjV (frameUnit 0 0) (frameUnit 0 1) (star (frameUnit 0 1)) (frameUnit 0 2) -
         fourierV (frameUnit 0 0) (frameUnit 0 1) (star (frameUnit 0 1)) (frameUnit 0 2) =
       (3 : ℤ) • frameUnit 0 2 := by
-  rw [hProjV_sub_fourierV one_channel_cut.1]
+  rw [hProjV_sub_fourierV_defect one_channel_cut.1]
   simp [adjoint_pair_metric, InfoGeometry.OperatorAlgebra.PeirceSpine.comm,
     mul_add, add_mul, frameUnit_mul]
 

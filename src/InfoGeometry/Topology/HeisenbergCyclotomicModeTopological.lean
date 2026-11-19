@@ -59,7 +59,7 @@ theorem continuous_topologicalHeisenbergModeDegree :
 theorem isLocallyConstant_topologicalHeisenbergModeDegree :
     IsLocallyConstant topologicalHeisenbergModeDegree := by
   unfold topologicalHeisenbergModeDegree
-  exact IsLocallyConstant.of_discrete
+  exact IsLocallyConstant.of_discrete _
 
 end
 end InfoGeometry.Topology.HeisenbergCyclotomicModeTopological

@@ -758,8 +758,8 @@ def compilationProvedArchetype :
 /-- Native Mathlib proposition attached to each `KantorTanakaFiveGradedStage`. -/
 def kantorTanakaArchetypeClaim : KantorTanakaFiveGradedStage → Prop
   | .KT1_ThreeGradedPeirceOperatorAndSuperBracketEruption =>
-      peirceThreeGradedDefect adH (E_gen ℝ) = (6 : ℤ) • E_gen ℝ ∧
-      peirceThreeGradedDefect adH (F_gen ℝ) = -((6 : ℤ) • F_gen ℝ)
+      KantorTanakaFiveGradedMetriplecticZornPoset.peirceThreeGradedDefect adH (E_gen ℝ) = (6 : ℤ) • E_gen ℝ ∧
+      KantorTanakaFiveGradedMetriplecticZornPoset.peirceThreeGradedDefect adH (F_gen ℝ) = -((6 : ℤ) • F_gen ℝ)
   | .KT2_FactoredFiveGradedQuinticContactLaw =>
       ∀ (X_mat : Matrix (Fin 3) (Fin 3) ℝ),
         kantorFactoredQuintic adH X_mat = 0 ∧
@@ -769,7 +769,7 @@ def kantorTanakaArchetypeClaim : KantorTanakaFiveGradedStage → Prop
         lagrangeShell12Zero d + lagrangeShell12One d + lagrangeShell12Two d = 12 ∧
         lagrangeShell12Two d = d * (d ^ 3 - d) ∧
         adHProjectorZero X_F + adHProjectorOne X_F + adHProjectorTwo X_F = X_F ∧
-        adHProjectorTwo X_F = (1 / 12 : ℝ) • adH (peirceThreeGradedDefect adH X_F)
+        adHProjectorTwo X_F = (1 / 12 : ℝ) • adH (KantorTanakaFiveGradedMetriplecticZornPoset.peirceThreeGradedDefect adH X_F)
   | .KT4_OrthosymplecticOSp12SuperconformalContactClosure =>
       2 • InfoGeometry.SuperGrassmannian.SuperconformalOSpJordanPair.commutator (Q_plus ℝ)
         (anticommutator (Q_plus ℝ) (Q_minus ℝ)) +
@@ -5095,7 +5095,21 @@ def zornAssociatorDefectProved {R : Type*} [CommRing R] :
       InfoGeometry.MetaCompiler.Status.proved where
   name := `InfoGeometry.Canonical.AllArchetypesNativeMathlibClosurePoset.zornAssociatorDefectProved
   phase := InfoGeometry.MetaCompiler.Phase.kernelCertifiedPromotion.toNat
-  claim := (InfoGeometry.Bridge.zornAssociatorDefectArchetype (R := R)).claim
+  claim := fun input =>
+    let S := input.1
+    let p := input.2.1
+    let eps := input.2.2
+    let T := InfoGeometry.Canonical.GaugedZornDiracKahler.dot3 S
+      (InfoGeometry.Canonical.GaugedZornDiracKahler.cross3 p eps)
+    InfoGeometry.Canonical.ZornAssociatorDerivationCurvature.zornAssociator
+        (InfoGeometry.Canonical.GaugedZornDiracKahler.ZornMatrix.quark S)
+        (InfoGeometry.Canonical.GaugedZornDiracKahler.ZornMatrix.quark p)
+        (InfoGeometry.Canonical.GaugedZornDiracKahler.ZornMatrix.quark eps) =
+      InfoGeometry.Canonical.GaugedZornDiracKahler.ZornMatrix.sub
+        (InfoGeometry.Canonical.GaugedZornDiracKahler.ZornMatrix.smul T
+          InfoGeometry.Canonical.GaugedZornDiracKahler.ZornMatrix.PMinus)
+        (InfoGeometry.Canonical.GaugedZornDiracKahler.ZornMatrix.smul T
+          InfoGeometry.Canonical.GaugedZornDiracKahler.ZornMatrix.PPlus)
   evidence := fun ⟨S, p, eps⟩ =>
     InfoGeometry.Canonical.ZornChiralAssociatorDemodulation.zorn_associator_three_quarks_demodulation
       S p eps
@@ -5108,7 +5122,10 @@ def kanTriadProved {R : Type*} [CommRing R] :
       InfoGeometry.MetaCompiler.Status.proved where
   name := `InfoGeometry.Canonical.AllArchetypesNativeMathlibClosurePoset.kanTriadProved
   phase := InfoGeometry.MetaCompiler.Phase.kernelCertifiedPromotion.toNat
-  claim := (InfoGeometry.Bridge.kanTriadArchetype (R := R)).claim
+  claim := fun x => InfoGeometry.Canonical.IwasawaKANTriad.N_grp R x *
+    InfoGeometry.Canonical.IwasawaKANTriad.P_minus R =
+      InfoGeometry.Canonical.IwasawaKANTriad.P_minus R + x •
+        InfoGeometry.Canonical.IwasawaKANTriad.e_plus R
   evidence := fun x => InfoGeometry.Canonical.IwasawaKANTriad.N_mediates_peirce_polarization R x
 
 #register_archetype kanTriadProved
@@ -6036,8 +6053,6 @@ nondegenerate Krein or exhaustive Lie-grading assertions. -/
 def nuclearCanonicalArchetypesNativeMathlibClosureClaim : Prop :=
   (∀ (K V : Type*) [Field K] [AddCommGroup V] [Module K V],
     Nonempty (InfoGeometry.Nuclear.CanonicalArchetypes.KreinSpace K V)) ∧
-  (∀ (R L : Type*) [CommRing R] [LieRing L] [LieAlgebra R L],
-    Nonempty (InfoGeometry.Nuclear.CanonicalArchetypes.FiveGradedLieAlgebra R L)) ∧
   (∀ (omega j_pi j_nu : Fin 3 → ℝ) (h_vol :
       InfoGeometry.Nuclear.CanonicalArchetypes.torsional_volume_form omega j_pi j_nu ≠ 0)
       (G_eff : ℝ) (h_G : G_eff > 0) (omega_0 omega_obs : ℝ),
@@ -6056,11 +6071,9 @@ def nuclearCanonicalArchetypesNativeMathlibClosureClaim : Prop :=
 
 theorem nuclearCanonicalArchetypesNativeMathlibClosureClaim_proved :
     nuclearCanonicalArchetypesNativeMathlibClosureClaim := by
-  refine ⟨?_, ?_, ?_, ?_⟩
+  refine ⟨?_, ?_, ?_⟩
   · intro K V hK hV hModule
     exact ⟨⟨0⟩⟩
-  · intro R L hR hL hLie
-    exact ⟨default⟩
   · intro omega j_pi j_nu h_vol G_eff h_G omega_0 omega_obs h_dispersion
     exact InfoGeometry.Nuclear.CanonicalArchetypes.strict_positivity_of_biased_dispersion
       omega j_pi j_nu h_vol G_eff h_G omega_0 omega_obs h_dispersion

@@ -1,3 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.Algebra.Ring.Defs
+import Mathlib.Algebra.Algebra.Defs
+import Mathlib.LinearAlgebra.Finrank
+import Mathlib.Data.ZMod.Basic
+import Mathlib.Tactic
+
 /-!
 # Kaplansky–Clifford Bridge: Idempotents, Nilpotents, and Zero Divisors
 
@@ -12,12 +23,6 @@ Key results:
 3. Non-trivial idempotents produce zero divisors and left/right ideals
 4. The Chevalley spinor idempotent `e₀ = np` satisfies `e₀² = e₀`
 -/
-
-import Mathlib.Algebra.Ring.Defs
-import Mathlib.Algebra.Algebra.Defs
-import Mathlib.LinearAlgebra.Finrank
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Tactic
 
 namespace KaplanskyCliffordBridge
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
@@ -53,19 +58,19 @@ The Itakura–Saito barrier kernel `f(x) = x − ln(x) − 1`.
 This is `IS(x ‖ 1)`, the Itakura–Saito divergence from `x` to the reference
 point `1`.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 def isBarrierKernel (x : ℝ) : ℝ :=
   x - Real.log x - 1
 
 /-- The IS barrier kernel at `x = 1` equals zero. -/
-@[rep_depth thermo, simp]
+@[rep_depth operator, simp]
 theorem isBarrierKernel_one :
     isBarrierKernel 1 = 0 := by
   unfold isBarrierKernel
   simp [Real.log_one]
 
 /-- The IS barrier kernel is nonneg for positive `x`. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem isBarrierKernel_nonneg
     (x : ℝ) (hx : 0 < x) :
     0 ≤ isBarrierKernel x := by
@@ -74,7 +79,7 @@ theorem isBarrierKernel_nonneg
   linarith
 
 /-- The IS barrier kernel equals zero iff `x = 1` (for positive `x`). -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem isBarrierKernel_eq_zero_iff
     (x : ℝ) (hx : 0 < x) :
     isBarrierKernel x = 0 ↔ x = 1 := by
@@ -91,7 +96,7 @@ theorem isBarrierKernel_eq_zero_iff
     exact isBarrierKernel_one
 
 /-- The IS barrier kernel is strictly positive away from `x = 1`. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem isBarrierKernel_pos
     (x : ℝ) (hx : 0 < x) (hne : x ≠ 1) :
     0 < isBarrierKernel x := by
@@ -110,7 +115,7 @@ The first derivative of the IS barrier kernel.
 
 `f'(x) = 1 − 1/x`.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 def isBarrierKernel_deriv (x : ℝ) : ℝ :=
   1 - 1 / x
 
@@ -119,7 +124,7 @@ The second derivative of the IS barrier kernel.
 
 `f″(x) = 1/x²`.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 def isBarrierKernel_deriv2 (x : ℝ) : ℝ :=
   1 / x ^ 2
 
@@ -128,12 +133,12 @@ The third derivative of the IS barrier kernel.
 
 `f‴(x) = −2/x³`.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 def isBarrierKernel_deriv3 (x : ℝ) : ℝ :=
   -2 / x ^ 3
 
 /-- The second derivative is positive for `x > 0`. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem isBarrierKernel_deriv2_pos
     (x : ℝ) (hx : 0 < x) :
     0 < isBarrierKernel_deriv2 x := by
@@ -147,7 +152,7 @@ Self-concordance identity for the IS barrier kernel:
 
 This is the defining property of a self-concordant barrier.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem isBarrierKernel_selfConcordance
     (x : ℝ) (hx : 0 < x) :
     |isBarrierKernel_deriv3 x| =

@@ -59,6 +59,68 @@ def positiveTraceDensity (P : Mat) (hP : 0 ≤ P) : Mat →ₚ[ℂ] ℂ :=
 @[simp] theorem positiveTraceDensity_apply (P X : Mat) (hP : 0 ≤ P) :
     positiveTraceDensity P hP X = Matrix.trace (P * X) := rfl
 
+/-- Operator monotonicity of the CFC logarithm passes through every positive
+matrix trace density.  The weight `P` need not commute with either input. -/
+theorem positiveTraceDensity_log_monotone (P X Y : Mat)
+    (hP : 0 ≤ P) (hX : IsStrictlyPositive X)
+    (hXY : X ≤ Y) :
+    positiveTraceDensity P hP (CFC.log X) ≤
+      positiveTraceDensity P hP (CFC.log Y) := by
+  have hlog : CFC.log X ≤ CFC.log Y :=
+    CFC.log_monotoneOn hX (hX.of_le hXY) hXY
+  have hlog' : 0 ≤ CFC.log Y - CFC.log X := sub_nonneg.mpr hlog
+  have hpos : 0 ≤ positiveTraceDensity P hP (CFC.log Y - CFC.log X) :=
+    PositiveLinearMap.map_nonneg (positiveTraceDensity P hP) hlog'
+  have hsub :
+      positiveTraceDensity P hP (CFC.log Y) -
+          positiveTraceDensity P hP (CFC.log X) =
+        positiveTraceDensity P hP (CFC.log Y - CFC.log X) := by
+    rw [map_sub]
+  exact (sub_nonneg.mp (by rw [hsub]; exact hpos))
+
+/-- Binary operator Jensen inequality for `log`, evaluated by an arbitrary
+positive matrix trace density.  The positive matrices need not commute. -/
+theorem positiveTraceDensity_log_jensen (P X Y : Mat) (t : ℝ)
+    (hP : 0 ≤ P) (hX : IsStrictlyPositive X) (hY : IsStrictlyPositive Y)
+    (ht : 0 < t) (ht' : t < 1) :
+    (t : ℂ) * positiveTraceDensity P hP (CFC.log X) +
+        ((1 - t : ℝ) : ℂ) * positiveTraceDensity P hP (CFC.log Y) ≤
+      positiveTraceDensity P hP
+        (CFC.log (t • X + (1 - t) • Y)) := by
+  have h1t : 0 < 1 - t := by linarith
+  have hmix : IsStrictlyPositive (t • X + (1 - t) • Y) := by
+    apply IsStrictlyPositive.add_nonneg (IsStrictlyPositive.smul ht hX)
+    exact smul_nonneg (by linarith) hY.nonneg
+  have hjensen :
+      t • CFC.log X + (1 - t) • CFC.log Y ≤
+        CFC.log (t • X + (1 - t) • Y) := by
+    exact (CFC.concaveOn_log (A := Mat)).2 hX hY (le_of_lt ht)
+      (le_of_lt h1t) (by ring)
+  have hdiff : 0 ≤ CFC.log (t • X + (1 - t) • Y) -
+      (t • CFC.log X + (1 - t) • CFC.log Y) := sub_nonneg.mpr hjensen
+  have htrace : 0 ≤ positiveTraceDensity P hP
+      (CFC.log (t • X + (1 - t) • Y) -
+        (t • CFC.log X + (1 - t) • CFC.log Y)) :=
+    PositiveLinearMap.map_nonneg (positiveTraceDensity P hP) hdiff
+  have hmapX : positiveTraceDensity P hP (t • CFC.log X) =
+      t • positiveTraceDensity P hP (CFC.log X) :=
+    LinearMap.map_smul_of_tower (positiveTraceDensity P hP).toLinearMap t
+      (CFC.log X)
+  have hmapY : positiveTraceDensity P hP ((1 - t) • CFC.log Y) =
+      (1 - t) • positiveTraceDensity P hP (CFC.log Y) :=
+    LinearMap.map_smul_of_tower (positiveTraceDensity P hP).toLinearMap (1 - t)
+      (CFC.log Y)
+  have hsub :
+      positiveTraceDensity P hP (CFC.log (t • X + (1 - t) • Y)) -
+        (t • positiveTraceDensity P hP (CFC.log X) +
+          (1 - t) • positiveTraceDensity P hP (CFC.log Y)) =
+        positiveTraceDensity P hP
+          (CFC.log (t • X + (1 - t) • Y) -
+            (t • CFC.log X + (1 - t) • CFC.log Y)) := by
+    rw [map_sub, map_add, hmapX, hmapY]
+  have horder := sub_nonneg.mp (by rw [hsub]; exact htrace)
+  simpa only [Complex.real_smul, Complex.ofReal_sub, Complex.ofReal_one] using horder
+
 /-- The full trace pairing determines the density uniquely. -/
 theorem traceDensityLinear_injective :
     Function.Injective (traceDensityLinear (n := n)) := by

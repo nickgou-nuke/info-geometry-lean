@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.AkivisIdentity
@@ -26,6 +31,15 @@ omit [IsScalarTower ℝ A A] in
 @[simp] theorem associatorOperator_apply (x y z : A) :
     associatorOperator x y z = _root_.associator x y z := by
   rfl
+
+/-- The commutator of left multiplication differs from left multiplication by
+the carrier commutator by the two associator terms. This identity needs no
+alternativity assumption. -/
+theorem leftRegular_action_commutator_formula (x y z : A) :
+    x * (y * z) - y * (x * z) =
+      (x * y - y * x) * z - _root_.associator x y z + _root_.associator y x z := by
+  simp only [_root_.associator_apply, sub_mul]
+  abel
 
 noncomputable def jordanRegularChannel (x y : A) : A →ₗ[ℝ] A :=
   (2 : ℝ)⁻¹ •
@@ -155,19 +169,6 @@ theorem zero_associator_triple_regular_recovery
   · rw [lieRegularChannel_apply, associatorOperator_apply,
       associatorOperator_apply, hxy, hyx, sub_zero, smul_zero, sub_zero]
 
-/-! ## Native Zorn specialization
-
-The concrete Zorn carrier supplies the alternative law upstream.  This
-specialization only packages its first-two-slot associator antisymmetry for
-the generic regular-channel theorems above.
--/
-
-theorem zornVectorMatrix_alternative_associator_swap12
-    (x y z : ZornVectorMatrix ℝ) :
-    _root_.associator y x z = -_root_.associator x y z := by
-  exact alternative_associator_swap12
-    (fun p q => zorn_left_alternative p q) y x z
-
 omit [IsScalarTower ℝ A A] [SMulCommClass ℝ A A] in
 theorem alternative_akivisJacobiator_eq_six_smul_associator
     (hleft : ∀ x y : A, (x * x) * y = x * (x * y))
@@ -237,20 +238,14 @@ theorem alternative_normalizedAkivisJacobiator_eq_three_halves_associator
   rw [alternative_akivisJacobiator_eq_six_smul_associator hleft hright]
   module
 
-theorem zornVectorMatrix_akivisJacobiator_eq_six_smul_associator
-    (x y z : ZornVectorMatrix ℝ) :
-    akivisJacobiator x y z =
-      (6 : ℝ) • _root_.associator x y z := by
-  exact alternative_akivisJacobiator_eq_six_smul_associator
-    (fun p q => zorn_left_alternative p q)
-    (fun p q => zorn_right_alternative p q) x y z
-
 theorem zornVectorMatrix_normalizedAkivisJacobiator_eq_three_halves_associator
     (x y z : ZornVectorMatrix ℝ) :
     normalizedAkivisJacobiator x y z =
       (3 / 2 : ℝ) • _root_.associator x y z := by
   rw [normalizedAkivisJacobiator_eq_quarter_akivisJacobiator]
-  rw [zornVectorMatrix_akivisJacobiator_eq_six_smul_associator]
+  rw [alternative_akivisJacobiator_eq_six_smul_associator
+    (fun p q => zorn_left_alternative p q)
+    (fun p q => zorn_right_alternative p q)]
   module
 
 end InfoGeometry.Algebra

@@ -320,7 +320,9 @@ theorem canonical_tetractys_sp4_positive_grassmannian_amplituhedron_bridge
      0 < gaussianTP2 a b 0 0 ∧
      0 < (gaussianTP2 a b).det ∧
      (∀ i j : Fin 4, i < j →
-       0 < gr24Minor (gr24PositiveChart r1 r2 r3 r4) i j)) ∧
+       0 < InfoGeometry.Parafermion.TetractysSp4PositiveGrassmannianPoset.gr24Minor
+         (InfoGeometry.Parafermion.TetractysSp4PositiveGrassmannianPoset.gr24PositiveChart
+           r1 r2 r3 r4) i j)) ∧
     (plucker2 Z W4 0 1 * plucker2 Z W4 2 3 -
        plucker2 Z W4 0 2 * plucker2 Z W4 1 3 +
        plucker2 Z W4 0 3 * plucker2 Z W4 1 2 = 0 ∧
@@ -372,15 +374,15 @@ Unifies the 10D Poincaré Group $\mathrm{ISO}(3, 1)$ & Majorana-Twistor Supersym
    `P * anticomm (superQ P Z1 Zbar1) (superQ P Z2 Zbar2) * P = P * Z1 * (1 - P) * Zbar2 * P + P * Z2 * (1 - P) * Zbar1 * P`
    and `twistorSusyTransMat4 Zvec1 Zvec2 * gamma0 + gamma0 * (twistorSusyTransMat4 Zvec1 Zvec2).transpose = 0`.
 4. **Penrose–Witten Twistor Null Cone, Positive Energy, & 2-Twistor Massive Casimir**:
-   `twistorMomMat2 λ1 λ2 = (λ1 ^ 2 + λ2 ^ 2) • 1 + (λ1 ^ 2 - λ2 ^ 2) • twistorS2 + (2 * λ1 * λ2) • twistorPhi2`,
-   `(λ1 ^ 2 + λ2 ^ 2) ^ 2 - (λ1 ^ 2 - λ2 ^ 2) ^ 2 - (2 * λ1 * λ2) ^ 2 = 0`,
-   `(λ1 ^ 2 + μ1 ^ 2) * (λ2 ^ 2 + μ2 ^ 2) - (λ1 * λ2 + μ1 * μ2) ^ 2 = (λ1 * μ2 - λ2 * μ1) ^ 2`,
+   `twistorMomMat2 lam1 lam2 = (lam1 ^ 2 + lam2 ^ 2) • 1 + (lam1 ^ 2 - lam2 ^ 2) • twistorS2 + (2 * lam1 * lam2) • twistorPhi2`,
+   `(lam1 ^ 2 + lam2 ^ 2) ^ 2 - (lam1 ^ 2 - lam2 ^ 2) ^ 2 - (2 * lam1 * lam2) ^ 2 = 0`,
+   `(lam1 ^ 2 + mu1 ^ 2) * (lam2 ^ 2 + mu2 ^ 2) - (lam1 * lam2 + mu1 * mu2) ^ 2 = (lam1 * mu2 - lam2 * mu1) ^ 2`,
    and `0 ≤ r1 ^ 2 + r2 ^ 2 ∧ 0 ≤ (r1 ^ 2 + s1 ^ 2) * (r2 ^ 2 + s2 ^ 2) - (r1 * r2 + s1 * s2) ^ 2`. -/
 theorem canonical_tetractys_poincare_supersymmetry_twistor_bridge
     {B : Type u} [Ring B] {K : Type u} [CommRing K]
     (P M p q Q Z1 Zbar1 Z2 Zbar2 : B)
     (hP : P * P = P)
-    (p0 p1 p2 p3 λ1 λ2 μ1 μ2 : K)
+    (p0 p1 p2 p3 lam1 lam2 mu1 mu2 : K)
     (Zvec1 Zvec2 : Fin 4 → K)
     (r1 r2 s1 s2 : ℝ) :
     (diracSlash4 p0 p1 p2 p3 * diracSlash4 p0 p1 p2 p3 =
@@ -399,13 +401,13 @@ theorem canonical_tetractys_poincare_supersymmetry_twistor_bridge
        P * Z1 * (1 - P) * Zbar2 * P + P * Z2 * (1 - P) * Zbar1 * P ∧
      twistorSusyTransMat4 Zvec1 Zvec2 * gamma0 +
        gamma0 * (twistorSusyTransMat4 Zvec1 Zvec2).transpose = 0) ∧
-    (twistorMomMat2 λ1 λ2 =
-       (λ1 ^ 2 + λ2 ^ 2) • (1 : Matrix (Fin 2) (Fin 2) K) +
-       (λ1 ^ 2 - λ2 ^ 2) • twistorS2 (K := K) +
-       (2 * λ1 * λ2) • twistorPhi2 (K := K) ∧
-     (λ1 ^ 2 + λ2 ^ 2) ^ 2 - (λ1 ^ 2 - λ2 ^ 2) ^ 2 - (2 * λ1 * λ2) ^ 2 = 0 ∧
-     (λ1 ^ 2 + μ1 ^ 2) * (λ2 ^ 2 + μ2 ^ 2) - (λ1 * λ2 + μ1 * μ2) ^ 2 =
-       (λ1 * μ2 - λ2 * μ1) ^ 2 ∧
+    (twistorMomMat2 lam1 lam2 =
+       (lam1 ^ 2 + lam2 ^ 2) • (1 : Matrix (Fin 2) (Fin 2) K) +
+       (lam1 ^ 2 - lam2 ^ 2) • twistorS2 (K := K) +
+       (2 * lam1 * lam2) • twistorPhi2 (K := K) ∧
+     (lam1 ^ 2 + lam2 ^ 2) ^ 2 - (lam1 ^ 2 - lam2 ^ 2) ^ 2 - (2 * lam1 * lam2) ^ 2 = 0 ∧
+     (lam1 ^ 2 + mu1 ^ 2) * (lam2 ^ 2 + mu2 ^ 2) - (lam1 * lam2 + mu1 * mu2) ^ 2 =
+       (lam1 * mu2 - lam2 * mu1) ^ 2 ∧
      0 ≤ r1 ^ 2 + r2 ^ 2 ∧
      0 ≤ (r1 ^ 2 + s1 ^ 2) * (r2 ^ 2 + s2 ^ 2) - (r1 * r2 + s1 * s2) ^ 2) := by
   have hDirac := real_majorana_dirac_and_lorentz_generators_mat4 p0 p1 p2 p3
@@ -415,7 +417,7 @@ theorem canonical_tetractys_poincare_supersymmetry_twistor_bridge
     super_peirce_odd_supercharge_anticommutator P Z1 Zbar1 Z2 Zbar2 hP
   have hSymp := twistor_bilinear_symplectic_generator_mat4 Zvec1 Zvec2
   have hTwistor :=
-    real_twistor_susy_null_and_massive_momentum_factorization λ1 λ2 μ1 μ2 r1 r2 s1 s2
+    real_twistor_susy_null_and_massive_momentum_factorization lam1 lam2 mu1 mu2 r1 r2 s1 s2
   exact ⟨hDirac.2.1,
     ⟨hPoinc.1, hPoinc.2.2.1, hPoinc.2.2.2.1, hPoinc.2.2.2.2.2.1, hPoinc.2.2.2.2.2.2.1⟩,
     ⟨hSuperQ.1, hSymp.2⟩,

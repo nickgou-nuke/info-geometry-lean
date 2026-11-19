@@ -144,7 +144,7 @@ CAPSTONE: The Riemann-Weil Explicit Formula Correspondence.
 Identifies the Explicit Formula from Number Theory as the dynamical 
 Wasserstein vector field of the Information Crystal.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem hamiltonian_flow_is_souriau_generator
     {Orbit E Op H Finite Alg Symmetry : Type}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [Module ℝ E]

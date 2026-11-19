@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.ZornMaxwellFormsBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ExteriorHomogeneousDegreeBridge
@@ -245,6 +250,19 @@ def typedMaxwellExteriorDifferentialData
     exact O.d_gradedLeibniz n x y hx
   sq_zero := D.differential_sq
 
+/-- The degree-one part of the differential raises exterior degree because
+the selected Maxwell operator is genuinely typed from homogeneous one-forms
+to homogeneous two-forms and its value is the underlying differential. -/
+theorem typed_differential_raises_degree_one
+    (D : FormDifferentialLaplacianData (R := R) (V := V))
+    (O : TypedMaxwellOperators D) {x : ExteriorAlgebra R V}
+    (hx : IsHomogeneousExteriorDegree 1 x) :
+    IsHomogeneousExteriorDegree 2 (D.differential x) := by
+  let A : HomogeneousForm (R := R) (V := V) 1 := ⟨x, hx⟩
+  have h := (O.d₁ A).homogeneous
+  rw [O.d₁_value] at h
+  simpa [fieldStrength, A] using h
+
 /-- The Cartan first Bianchi identity for a degree-one connection follows
 from the already-packaged typed Maxwell differential and its graded rule. -/
 theorem typedMaxwell_first_bianchi_identity_torsion
@@ -462,3 +480,29 @@ theorem degreeTaggedSourcedMaxwell_equation
   rfl
 
 end InfoGeometry.Canonical.ZornMaxwellFormsDegreeBridge
+
+namespace InfoGeometry.Canonical.ZornMaxwellFormsDegreeBridgeWitnesses
+
+theorem cliffordFormRep_mat2_noncomm :
+    ∃ A B : Matrix (Fin 2) (Fin 2) ℝ, A * B ≠ B * A := by
+  let A : Matrix (Fin 2) (Fin 2) ℝ :=
+    Matrix.of fun i j => if i = 0 ∧ j = 1 then 1 else 0
+  let B : Matrix (Fin 2) (Fin 2) ℝ :=
+    Matrix.of fun i j => if i = 1 ∧ j = 0 then 1 else 0
+  refine ⟨A, B, ?_⟩
+  intro h
+  have h00 := congrFun (congrFun h (0 : Fin 2)) (0 : Fin 2)
+  have hAB : (A * B) 0 0 = 1 := by
+    rw [Matrix.mul_apply, Finset.sum_eq_single (1 : Fin 2)]
+    · simp [A, B]
+    · intro k _ hk
+      simp [A, hk]
+    · intro h1
+      exact (h1 (Finset.mem_univ _)).elim
+  have hBA : (B * A) 0 0 = 0 := by
+    rw [Matrix.mul_apply]
+    exact Finset.sum_eq_zero (fun k _ => by simp [B])
+  rw [hAB, hBA] at h00
+  exact one_ne_zero h00
+
+end InfoGeometry.Canonical.ZornMaxwellFormsDegreeBridgeWitnesses

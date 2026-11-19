@@ -118,7 +118,7 @@ namespace LFunctionHamiltonianFlowBridge
 variable (B : LFunctionHamiltonianFlowBridge Orbit G E Op H Finite Alg)
 
 /-- The dynamic owner surface still identifies the Hamiltonian with the Souriau generator. -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem flow_hamiltonian_is_souriau_generator :
     B.coadjointFlow.flow.selfAdjointHamiltonian =
       B.coadjointFlow.flow.modularContext.logContext.modularHamiltonian :=
@@ -152,7 +152,7 @@ theorem twistedPartitionFunction_eq_twistedEulerProduct :
   rfl
 
 /-- The partition packet still exposes the Souriau character identity. -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem packet_partitionFunction_is_souriau_character :
     B.packet.representation.partitionFunction B.packet.beta =
       B.packet.representation.character
@@ -160,7 +160,7 @@ theorem packet_partitionFunction_is_souriau_character :
   B.packet.partitionFunction_is_souriau_character
 
 /-- The partition packet still exposes the Euler-product denominator readout. -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem packet_denominator_is_prime_euler_product :
     B.packet.denominatorBridge.weylDenominator =
       B.packet.denominatorBridge.primeEulerProduct :=

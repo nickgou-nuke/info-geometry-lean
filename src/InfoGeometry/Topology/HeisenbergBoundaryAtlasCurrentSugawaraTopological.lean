@@ -117,7 +117,7 @@ theorem continuous_boundaryAtlasSugawaraBundle :
 theorem isLocallyConstant_boundaryAtlasSugawaraBundle :
     IsLocallyConstant (boundaryAtlasSugawaraBundle (𝕜 := 𝕜)) := by
   unfold boundaryAtlasSugawaraBundle
-  exact IsLocallyConstant.of_discrete
+  exact IsLocallyConstant.of_discrete _
 
 /-- The Sugawara central generator readout is preserved in `boundaryAtlasSugawaraBundle`. -/
 theorem boundaryAtlasSugawaraBundle_currentSugawara_central

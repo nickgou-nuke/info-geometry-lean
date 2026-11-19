@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.StandardFormNaturalConeBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularCartanCantorSystem
@@ -173,25 +178,25 @@ theorem total_localizedExpectation_is_unity
     _ = 1 := B.volumeState_one
 
 /-- Type-III log-volume potential of an atom: `-log ωΩ(p_w)`. -/
-@[rep_depth projective]
+@[rep_depth operator]
 noncomputable def modularVolumePotential (w : Word) : ℝ :=
   cylinderLogPotential (fun v : Word => NaturalConeVolumeBridge.atomExpectation B v) w
 
 /-- Type-III log-volume increment between two atoms/cylinders. -/
-@[rep_depth projective]
+@[rep_depth operator]
 noncomputable def modularVolumeIncrement (parent child : Word) : ℝ :=
   cylinderLogIncrement
     (fun v : Word => NaturalConeVolumeBridge.atomExpectation B v) parent child
 
 /-- Definitional readback of the log-volume potential. -/
-@[rep_depth projective]
+@[rep_depth operator]
 theorem modularVolumePotential_eq_neg_log_atomExpectation (w : Word) :
     NaturalConeVolumeBridge.modularVolumePotential B w =
       -Real.log (NaturalConeVolumeBridge.atomExpectation B w) := by
   rfl
 
 /-- Definitional readback of the log-volume increment. -/
-@[rep_depth projective]
+@[rep_depth operator]
 theorem modularVolumeIncrement_eq_neg_log_ratio (parent child : Word) :
     NaturalConeVolumeBridge.modularVolumeIncrement B parent child =
       -Real.log
@@ -204,7 +209,7 @@ The logarithmic increment is projective: common positive rescaling of all atom
 weights cancels.  This is the finite atom shadow of the Connes/Weyl cocycle
 being a projective logarithmic gauge.
 -/
-@[rep_depth projective]
+@[rep_depth operator]
 theorem modularVolumeIncrement_common_pos_smul
     (parent child : Word) {c : ℝ} (hc : 0 < c) :
     cylinderLogIncrement

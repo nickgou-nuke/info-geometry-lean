@@ -82,14 +82,15 @@ theorem surjective_topologicalHeisenbergFiniteModeDirectLimitMap :
 theorem injective_topologicalHeisenbergFiniteModeDirectLimitMap :
     Function.Injective
       (topologicalHeisenbergFiniteModeDirectLimitMap (𝕜 := 𝕜)) := by
-  rw [topologicalHeisenbergFiniteModeDirectLimitMap_eq]
-  exact heisenbergFiniteModeDirectLimitMap_injective (𝕜 := 𝕜)
+  rw [topologicalHeisenbergFiniteModeDirectLimitMap_eq,
+    heisenbergFiniteModeDirectLimitMap_eq]
+  exact InfoGeometry.Canonical.heisenbergFiniteModeColimitMap_injective (𝕜 := 𝕜)
 
 /-- The direct-limit readout is locally constant for the discrete topology. -/
 theorem isLocallyConstant_topologicalHeisenbergFiniteModeDirectLimitMap :
     IsLocallyConstant (topologicalHeisenbergFiniteModeDirectLimitMap (𝕜 := 𝕜)) := by
   unfold topologicalHeisenbergFiniteModeDirectLimitMap
-  exact IsLocallyConstant.of_discrete
+  exact IsLocallyConstant.of_discrete _
 
 end
 end InfoGeometry.Topology.HeisenbergFiniteModeDirectLimitTopological

@@ -7429,7 +7429,6 @@ import InfoGeometry.MirrorPhase.WardIdentitiesAttention
 import InfoGeometry.MirrorPhase.ZornsFurnace
 import InfoGeometry.Modular
 import InfoGeometry.Modular.AmariChentsovDualConnectionsAudit
-import InfoGeometry.Modular.ArakiHessianKuboMori
 import InfoGeometry.Modular.CARChiralDerivation
 import InfoGeometry.Modular.CARColimitFlow
 import InfoGeometry.Modular.CARModularFlow

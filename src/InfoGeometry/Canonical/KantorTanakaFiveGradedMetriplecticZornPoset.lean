@@ -509,14 +509,10 @@ theorem stage_KT3_orthogonal_quartic_lagrange_projectors
     adHProjectorZero_one_zero X_F,
     adHProjectorOne_two_zero X_F,
     adHProjectorTwo_zero_zero X_F,
-    ?_,
+    adHProjectorTwo_peirceDefect X_F,
     charge_extract_zero hP A C X,
     charge_extract_plus_one hP A C X,
     charge_extract_plus_two hP A C X⟩
-  change (1 / 12 : F) • (adH (adH (adH (adH X_F))) - adH (adH X_F)) =
-    (1 / 12 : F) • adH (peirceThreeGradedDefect adH X_F)
-  dsimp [peirceThreeGradedDefect]
-  rw [adH_sub]
 
 /-- **Stage `𝔎𝔗₄` & Rung 3 (`stage_KT4_osp12_superconformal_contact_jacobi_closure`)**:
 1. **$\mathfrak{osp}(1|2)$ Supercharge Anticommutators & Contact Boson Closure (`SuperconformalOSpJordanPair.lean`)**:
@@ -699,7 +695,7 @@ theorem stage_KT6_five_graded_maurer_cartan_and_cross_charge_extremal_bracket
       -sandwichOp ℤ (genV P A C) (genSig P A C) :=
   ⟨canonicalMaurerCartanJet_ne_default,
    canonicalMaurerCartanJet_flat,
-   opposite_lie_comm A C,
+   opposite_lie_comm P A C,
    plus_lie_minus_sandwich_comm P A C,
    minus_lie_plus_sandwich_comm P A C,
    extreme_sandwich_comm P A C,

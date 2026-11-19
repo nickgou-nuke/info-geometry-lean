@@ -1,8 +1,15 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.BilinearForm.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Algebra.Basic
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra
+import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebraGeneral
+import InfoGeometry.Thermo.OnsagerOperatorClosure
 
 /-!
 # Unified Onsager Formalism on Operator Differential Forms
@@ -16,8 +23,15 @@ This synthesis module formalizes the unified framework connecting:
 5. Exact Dissipation Isolation: `W(u, u) = L(u, u)`.
 6. Onsager–Casimir Reciprocity under Time-Reversal Involutions.
 
+Compatibility status: `TransportTensor` and `TimeReversal` here are retained as
+deprecated compatibility wrappers for downstream callers and bridged losslessly to
+the canonical owners `InfoGeometry.OperatorAlgebra.General.TransportTensor` and
+`InfoGeometry.Thermo.OnsagerClosure.TimeReversal` / `OnsagerCasimirSystem`.
+
 All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
 -/
+
+set_option autoImplicit false
 
 noncomputable section
 
@@ -38,7 +52,10 @@ PART 1: Onsager–Metriplectic Operator Decomposition on Forms
 =============================================================================
 -/
 
-/-- An R-bilinear transport tensor on V with values in A: W(u, v). -/
+/-- Deprecated compatibility wrapper for `InfoGeometry.OperatorAlgebra.General.TransportTensor`:
+an `R`-bilinear transport tensor on `V` with values in `A`: `W(u, v)`.
+Prefer `InfoGeometry.OperatorAlgebra.General.TransportTensor` for new code;
+convert losslessly via `TransportTensor.equivGeneral`. -/
 structure TransportTensor (R V A : Type*) [CommRing R] [AddCommGroup V] [Module R V] [Ring A] [Algebra R A] where
   toBilin : V →ₗ[R] V →ₗ[R] A
 
@@ -162,6 +179,77 @@ theorem dissipation_eq_symmetric
   rw [(W.altPart half).alt u, add_zero] at h_decomp
   exact h_decomp
 
+section TransportTensorBridge
+
+/-- Lossless conversion from the compatibility wrapper `OnsagerNCG.TransportTensor`
+to the canonical `InfoGeometry.OperatorAlgebra.General.TransportTensor`. -/
+def toGeneral (W : TransportTensor R V A) :
+    InfoGeometry.OperatorAlgebra.General.TransportTensor R V A where
+  toFun u v := W.toBilin u v
+  map_add_left' u₁ u₂ v := W.map_add_left u₁ u₂ v
+  map_add_right' u v₁ v₂ := W.map_add_right u v₁ v₂
+  map_smul_left' c u v := W.map_smul_left c u v
+  map_smul_right' c u v := W.map_smul_right c u v
+
+/-- Lossless conversion from the canonical `InfoGeometry.OperatorAlgebra.General.TransportTensor`
+to the compatibility wrapper `OnsagerNCG.TransportTensor`. -/
+def ofGeneral (W : InfoGeometry.OperatorAlgebra.General.TransportTensor R V A) :
+    TransportTensor R V A where
+  toBilin :=
+    { toFun := fun u =>
+        { toFun := fun v => W.toFun u v
+          map_add' := W.map_add_right' u
+          map_smul' := fun c v => W.map_smul_right' c u v }
+      map_add' := fun u₁ u₂ => by
+        ext v
+        exact W.map_add_left' u₁ u₂ v
+      map_smul' := fun c u => by
+        ext v
+        exact W.map_smul_left' c u v }
+
+@[simp]
+theorem toGeneral_apply (W : TransportTensor R V A) (u v : V) :
+    W.toGeneral u v = W u v :=
+  rfl
+
+@[simp]
+theorem ofGeneral_apply (W : InfoGeometry.OperatorAlgebra.General.TransportTensor R V A) (u v : V) :
+    (ofGeneral W) u v = W u v :=
+  rfl
+
+/-- Canonical equivalence between `OnsagerNCG.TransportTensor` and
+`InfoGeometry.OperatorAlgebra.General.TransportTensor`. -/
+def equivGeneral :
+    TransportTensor R V A ≃ InfoGeometry.OperatorAlgebra.General.TransportTensor R V A where
+  toFun := toGeneral
+  invFun := ofGeneral
+  left_inv W := by
+    cases W
+    rfl
+  right_inv W := by
+    cases W
+    rfl
+
+theorem toGeneral_symmPart (half : R) (W : TransportTensor R V A) (u v : V) :
+    W.toGeneral.symmPart half u v = W.symmPart half u v :=
+  rfl
+
+theorem toGeneral_altPart (half : R) (W : TransportTensor R V A) (u v : V) :
+    W.toGeneral.altPart half u v = (W.altPart half) u v :=
+  rfl
+
+theorem ofGeneral_symmPart (half : R)
+    (W : InfoGeometry.OperatorAlgebra.General.TransportTensor R V A) (u v : V) :
+    (ofGeneral W).symmPart half u v = W.symmPart half u v :=
+  rfl
+
+theorem ofGeneral_altPart (half : R)
+    (W : InfoGeometry.OperatorAlgebra.General.TransportTensor R V A) (u v : V) :
+    ((ofGeneral W).altPart half) u v = W.altPart half u v :=
+  rfl
+
+end TransportTensorBridge
+
 end TransportTensor
 
 end Part1
@@ -172,7 +260,10 @@ PART 2: Onsager–Casimir Reciprocity under Time-Reversal Involutions
 =============================================================================
 -/
 
-/-- A Time-Reversal linear involution on the tangent module: T² = id. -/
+/-- Deprecated compatibility wrapper for `InfoGeometry.Thermo.OnsagerClosure.TimeReversal`
+(generalized to an arbitrary ring `R` with `CoeFun`): a linear involution `T² = id`.
+When `R = ℝ`, prefer `InfoGeometry.Thermo.OnsagerClosure.TimeReversal`;
+convert losslessly via `TimeReversal.equivClosure`. -/
 structure TimeReversal (R V : Type*) [Ring R] [AddCommGroup V] [Module R V] where
   toLinearMap : V →ₗ[R] V
   involutive' : toLinearMap.comp toLinearMap = LinearMap.id
@@ -211,6 +302,87 @@ theorem onsager_casimir_reciprocity
   have h_decomp := W.onsager_metriplectic_decomposition half h_half (T u) (T v)
   rw [hL, hOmega] at h_decomp
   exact h_decomp
+
+section TimeReversalAndClosureBridge
+
+theorem onsager_casimir_reciprocity_via_general
+    {R V A : Type*} [CommRing R] [AddCommGroup V] [Module R V] [Ring A] [Algebra R A]
+    (half : R) (h_half : (2 : R) * half = 1)
+    (W : TransportTensor R V A) (T : TimeReversal R V) (u v : V)
+    (hL : W.symmPart half (T u) (T v) = W.symmPart half u v)
+    (hOmega : (W.altPart half) (T u) (T v) = - (W.altPart half) u v) :
+    W (T u) (T v) = W v u :=
+  W.toGeneral.onsager_casimir_reciprocity_exact half h_half T.toLinearMap u v hL hOmega
+
+variable {V : Type*} [AddCommGroup V] [Module ℝ V]
+
+/-- Lossless conversion from `OnsagerNCG.TimeReversal ℝ V` to canonical
+`InfoGeometry.Thermo.OnsagerClosure.OnsagerCasimirSystem.TimeReversal V`. -/
+def TimeReversal.toClosure (T : TimeReversal ℝ V) :
+    InfoGeometry.Thermo.OnsagerClosure.OnsagerCasimirSystem.TimeReversal V where
+  op := T.toLinearMap
+  involutive := T.involutive
+
+/-- Lossless conversion from canonical
+`InfoGeometry.Thermo.OnsagerClosure.OnsagerCasimirSystem.TimeReversal V`
+to `OnsagerNCG.TimeReversal ℝ V`. -/
+def TimeReversal.ofClosure
+    (T : InfoGeometry.Thermo.OnsagerClosure.OnsagerCasimirSystem.TimeReversal V) :
+    TimeReversal ℝ V where
+  toLinearMap := T.op
+  involutive' := LinearMap.ext T.involutive
+
+@[simp]
+theorem TimeReversal.toClosure_op (T : TimeReversal ℝ V) (v : V) :
+    T.toClosure.op v = T v :=
+  rfl
+
+@[simp]
+theorem TimeReversal.ofClosure_apply
+    (T : InfoGeometry.Thermo.OnsagerClosure.OnsagerCasimirSystem.TimeReversal V) (v : V) :
+    (TimeReversal.ofClosure T) v = T.op v :=
+  rfl
+
+/-- Canonical equivalence between `OnsagerNCG.TimeReversal ℝ V` and
+`InfoGeometry.Thermo.OnsagerClosure.OnsagerCasimirSystem.TimeReversal V`. -/
+def TimeReversal.equivClosure :
+    TimeReversal ℝ V ≃ InfoGeometry.Thermo.OnsagerClosure.OnsagerCasimirSystem.TimeReversal V where
+  toFun := TimeReversal.toClosure
+  invFun := TimeReversal.ofClosure
+  left_inv T := by cases T; rfl
+  right_inv T := by cases T; rfl
+
+/-- Embed any canonical `OnsagerClosure.OnsagerCasimirSystem V` into the
+compatibility wrapper `OnsagerNCG.TransportTensor ℝ V ℝ`. -/
+def ofOnsagerCasimirSystem (S : InfoGeometry.Thermo.OnsagerClosure.OnsagerCasimirSystem V) :
+    TransportTensor ℝ V ℝ where
+  toBilin := S.totalGenerator
+
+@[simp]
+theorem ofOnsagerCasimirSystem_apply
+    (S : InfoGeometry.Thermo.OnsagerClosure.OnsagerCasimirSystem V) (u v : V) :
+    ofOnsagerCasimirSystem S u v = S.totalGenerator u v :=
+  rfl
+
+theorem ofOnsagerCasimirSystem_symmPart
+    (S : InfoGeometry.Thermo.OnsagerClosure.OnsagerCasimirSystem V) (u v : V) :
+    (ofOnsagerCasimirSystem S).symmPart (1 / 2 : ℝ) u v = S.dissipative u v :=
+  S.totalGenerator_symm_part u v
+
+theorem ofOnsagerCasimirSystem_altPart
+    (S : InfoGeometry.Thermo.OnsagerClosure.OnsagerCasimirSystem V) (u v : V) :
+    ((ofOnsagerCasimirSystem S).altPart (1 / 2 : ℝ)) u v = S.reversible u v :=
+  S.totalGenerator_skew_part u v
+
+theorem ofParityOnsagerSystem_reciprocity
+    (PS : InfoGeometry.Thermo.OnsagerClosure.OnsagerCasimirSystem.ParityOnsagerSystem V)
+    (u v : V) :
+    ofOnsagerCasimirSystem PS.toOnsagerCasimirSystem
+        (TimeReversal.ofClosure PS.T u) (TimeReversal.ofClosure PS.T v) =
+      ofOnsagerCasimirSystem PS.toOnsagerCasimirSystem v u :=
+  PS.onsager_casimir_master_reciprocity u v
+
+end TimeReversalAndClosureBridge
 
 end InfoGeometry.Synthesis.OnsagerNCG
 

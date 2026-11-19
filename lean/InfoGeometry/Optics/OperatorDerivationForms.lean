@@ -24,6 +24,8 @@ import InfoGeometry.Optics.OperatorValuedConnection
 import InfoGeometry.NCG.DerivationDifferential
 import InfoGeometry.OperatorAlgebra.NoncommutativeMaurerCartanAdjointBridge
 import InfoGeometry.Lie.ContinuousDerivationExponential
+import InfoGeometry.OperatorAlgebra.DerivationExteriorCalculus
+import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebraGeneral
 
 noncomputable section
 
@@ -38,6 +40,13 @@ variable [Ring Value] [Algebra ℝ Value]
 
 /-- A finite family of operator-valued one-forms. -/
 abbrev NOperatorForm (n : ℕ) : Type _ :=
+  Fin n → OperatorOneForm Point Tangent Value
+
+/-- Ordered `n`-tuple of pointwise operator-valued one-forms (`Point → Tangent → Value`).
+Canonical disambiguating alias for `NOperatorForm`: for `n ≥ 2`, `OneFormTuple`
+is a `Fin n`-indexed tuple of 1-forms, **not** an alternating `n`-form (`OpForm`,
+`ActionOperatorForm`, `DerivationOperatorForm`, `OperatorFrechetForm`). -/
+abbrev OneFormTuple (Point Tangent Value : Type*) (n : ℕ) : Type _ :=
   Fin n → OperatorOneForm Point Tangent Value
 
 /-- A pointwise family of product-rule operator derivations. -/
@@ -855,5 +864,685 @@ theorem frechetOperatorDerivationOfThermodynamic_hasFDerivAt
   exact ContinuousLinearMap.hasFDerivAt (LinearMap.toContinuousLinearMap D.toLinearMap)
 
 end FiniteDimensional
+
+end InfoGeometry.Optics.OperatorDerivationForms
+
+namespace InfoGeometry.Optics.OperatorDerivationForms
+
+open InfoGeometry.Geometry.BilingualAnalyticity
+open InfoGeometry.Thermo.SusceptibilityOnsagerStress
+
+/-! ## Typed Disambiguation of `NOperatorForm` / `OneFormTuple` vs Alternating Forms -/
+
+section OneFormTupleDisambiguation
+
+open InfoGeometry.OperatorAlgebra.General
+open InfoGeometry.OperatorAlgebra.DerivationDifferentialForms
+
+/-- Definitional identity between `OneFormTuple` and `NOperatorForm`. -/
+theorem oneFormTuple_eq_nOperatorForm
+    (Point Tangent Value : Type*) [Ring Value] [Algebra ℝ Value] (n : ℕ) :
+    OneFormTuple Point Tangent Value n =
+      NOperatorForm (Point := Point) (Tangent := Tangent) (Value := Value) n :=
+  rfl
+
+/-- At degree `n = 1`, `OneFormTuple` is equivalent to a single `OperatorOneForm`. -/
+def oneFormTupleOneEquiv (Point Tangent Value : Type*) :
+    OneFormTuple Point Tangent Value 1 ≃ OperatorOneForm Point Tangent Value where
+  toFun ω := ω 0
+  invFun α := fun _ => α
+  left_inv ω := funext fun i => by rw [Fin.eq_zero i]
+  right_inv _ := rfl
+
+/-- At degree `n = 1`, `NOperatorForm 1` is equivalent to a single `OperatorOneForm`. -/
+def nOperatorFormOneEquiv
+    {Point Tangent Value : Type*} [Ring Value] [Algebra ℝ Value] :
+    NOperatorForm (Point := Point) (Tangent := Tangent) (Value := Value) 1 ≃
+      OperatorOneForm Point Tangent Value :=
+  oneFormTupleOneEquiv Point Tangent Value
+
+/-- Embed an `R`-linear 1-form `OpForm R V A 1` into `OneFormTuple P V A 1` (constant in `P`). -/
+def opFormOneToOneFormTuple (P : Type*) {R V A : Type*} [Ring R]
+    [AddCommGroup V] [Module R V] [Ring A] [Module R A]
+    (η : OpForm R V A 1) : OneFormTuple P V A 1 :=
+  fun _ _ v => η (fun _ => v)
+
+@[simp] theorem opFormOneToOneFormTuple_apply (P : Type*) {R V A : Type*} [Ring R]
+    [AddCommGroup V] [Module R V] [Ring A] [Module R A]
+    (η : OpForm R V A 1) (i : Fin 1) (p : P) (v : V) :
+    opFormOneToOneFormTuple P η i p v = η (fun _ => v) :=
+  rfl
+
+/-- `R`-linear isomorphism `(V →ₗ[R] A) ≃ₗ[R] OpForm R V A 1`. -/
+def oneFormLinearToOpFormOne {R V A : Type*} [CommRing R]
+    [AddCommGroup V] [Module R V] [Ring A] [Module R A] :
+    (V →ₗ[R] A) ≃ₗ[R] OpForm R V A 1 where
+  toLinearMap :=
+    { toFun := AlternatingMap.ofSubsingleton R V A (0 : Fin 1)
+      map_add' := fun _ _ => by ext v; rfl
+      map_smul' := fun _ _ => by ext v; rfl }
+  invFun η :=
+    { toFun := fun x => η (fun _ => x)
+      map_add' := fun x y => by
+        have h : (fun _ : Fin 1 => x + y) = Function.update (fun _ => x) 0 (x + y) :=
+          funext fun i => by fin_cases i; rfl
+        have h0 : (fun _ : Fin 1 => x) = Function.update (fun _ => x) 0 x :=
+          funext fun i => by fin_cases i; rfl
+        have h1 : (fun _ : Fin 1 => y) = Function.update (fun _ => x) 0 y :=
+          funext fun i => by fin_cases i; rfl
+        rw [h, η.map_update_add, ← h0, ← h1]
+      map_smul' := fun c x => by
+        have h : (fun _ : Fin 1 => c • x) = Function.update (fun _ => x) 0 (c • x) :=
+          funext fun i => by fin_cases i; rfl
+        have h0 : (fun _ : Fin 1 => x) = Function.update (fun _ => x) 0 x :=
+          funext fun i => by fin_cases i; rfl
+        change η (fun _ => c • x) = c • η (fun _ => x)
+        rw [h, η.map_update_smul, ← h0] }
+  left_inv _ := by ext x; rfl
+  right_inv η := by
+    ext v
+    change η (fun _ => v 0) = η v
+    congr 1
+    ext i
+    rw [Fin.eq_zero i]
+
+/-- Embed an `ActionOperatorForm K 1` into `OneFormTuple P K.L A 1`. -/
+def actionOneFormToOneFormTuple (P : Type*) {R A : Type*} [CommRing R]
+    [Ring A] [Module R A] (K : InfoGeometry.Algebra.LieActionLane R A)
+    (η : ActionOperatorForm K 1) : OneFormTuple P K.L A 1 :=
+  opFormOneToOneFormTuple P η
+
+/-- Embed a `DerivationOperatorForm K 1` into `OneFormTuple P K.L A 1`. -/
+def derivationOneFormToOneFormTuple (P : Type*) {R A : Type*} [CommRing R]
+    [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
+    (K : InfoGeometry.Algebra.DerivationLieLane R A)
+    (η : DerivationOperatorForm K 1) : OneFormTuple P K.L A 1 :=
+  opFormOneToOneFormTuple P η
+
+/-- Slot evaluation of an alternating `n`-form at a base tuple `v : Fin n → V`
+along coordinate `i : Fin n`, producing an `R`-linear 1-form `V →ₗ[R] A`. -/
+def opFormSlotOneForm {R V A : Type*} [Ring R]
+    [AddCommGroup V] [Module R V] [Ring A] [Module R A]
+    {n : ℕ} (ω : OpForm R V A n) (v : Fin n → V) (i : Fin n) : V →ₗ[R] A where
+  toFun x := ω (Function.update v i x)
+  map_add' x y := ω.map_update_add v i x y
+  map_smul' c x := ω.map_update_smul v i c x
+
+/-- Project an alternating `n`-form `OpForm R V A n` at `v : Fin n → V`
+to a `Fin n`-indexed `OneFormTuple P V A n`. -/
+def opFormToOneFormTuple (P : Type*) {R V A : Type*} [Ring R]
+    [AddCommGroup V] [Module R V] [Ring A] [Module R A]
+    {n : ℕ} (ω : OpForm R V A n) (v : Fin n → V) : OneFormTuple P V A n :=
+  fun i _ x => opFormSlotOneForm ω v i x
+
+/-- Project a `DerivationOperatorForm K n` at `v` to `OneFormTuple P K.L A n`. -/
+def derivationFormToOneFormTuple (P : Type*) {R A : Type*} [CommRing R]
+    [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
+    (K : InfoGeometry.Algebra.DerivationLieLane R A)
+    {n : ℕ} (ω : DerivationOperatorForm K n) (v : Fin n → K.L) :
+    OneFormTuple P K.L A n :=
+  fun i _ x => ω (Function.update v i x)
+
+/-- Currying the remaining `n` slots of an alternating `(n + 1)`-form at `w : Fin n → V`
+produces an `R`-linear 1-form `V →ₗ[R] A`. -/
+def opFormCurryFirstLinear {R V A : Type*} [Ring R]
+    [AddCommGroup V] [Module R V] [Ring A] [Module R A]
+    {n : ℕ} (ω : OpForm R V A (n + 1)) (w : Fin n → V) : V →ₗ[R] A where
+  toFun x := ω (Matrix.vecCons x w)
+  map_add' x y := by
+    have h1 : Matrix.vecCons (x + y) w =
+        Function.update (Matrix.vecCons x w) 0 (x + y) := by
+      ext i; cases i using Fin.cases <;> rfl
+    have h0 : Matrix.vecCons x w =
+        Function.update (Matrix.vecCons x w) 0 x := by
+      ext i; cases i using Fin.cases <;> rfl
+    have h2 : Matrix.vecCons y w =
+        Function.update (Matrix.vecCons x w) 0 y := by
+      ext i; cases i using Fin.cases <;> rfl
+    rw [h1, ω.map_update_add, ← h0, ← h2]
+  map_smul' c x := by
+    have h1 : Matrix.vecCons (c • x) w =
+        Function.update (Matrix.vecCons x w) 0 (c • x) := by
+      ext i; cases i using Fin.cases <;> rfl
+    have h0 : Matrix.vecCons x w =
+        Function.update (Matrix.vecCons x w) 0 x := by
+      ext i; cases i using Fin.cases <;> rfl
+    change ω (Matrix.vecCons (c • x) w) = c • ω (Matrix.vecCons x w)
+    rw [h1, ω.map_update_smul, ← h0]
+
+@[simp] theorem opFormCurryFirstLinear_mem {R V A : Type*} [Ring R]
+    [AddCommGroup V] [Module R V] [Ring A] [Module R A]
+    {n : ℕ} (ω : OpForm R V A (n + 1)) (w : Fin n → V) (j : Fin n) :
+    opFormCurryFirstLinear ω w (w j) = 0 := by
+  exact ω.map_eq_zero_of_eq (Matrix.vecCons (w j) w) (i := 0) (j := j.succ)
+    rfl (Fin.succ_ne_zero j).symm
+
+/-- Iterated noncommutative wedge of a `Fin (n + 1)`-tuple of `ActionOperatorForm K 1`
+into `ActionOperatorForm K (n + 1)`. -/
+def actionWedgeTupleSucc {R A : Type*} [CommRing R] [NonUnitalNonAssocRing A]
+    [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
+    (K : InfoGeometry.Algebra.LieActionLane R A) :
+    ∀ {n : ℕ}, (Fin (n + 1) → ActionOperatorForm K 1) → ActionOperatorForm K (n + 1)
+  | 0, α => α 0
+  | m + 1, α =>
+    reindexForm (Nat.add_comm 1 (m + 1))
+      (actionWedge K (α 0) (actionWedgeTupleSucc K (fun i => α i.succ)))
+
+/-- Iterated noncommutative wedge of a `Fin (n + 1)`-tuple of `DerivationOperatorForm K 1`
+into `DerivationOperatorForm K (n + 1)`. -/
+def ceWedgeTupleSucc {R A : Type*} [CommRing R] [NonUnitalNonAssocRing A]
+    [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
+    (K : InfoGeometry.Algebra.DerivationLieLane R A) {n : ℕ}
+    (α : Fin (n + 1) → DerivationOperatorForm K 1) :
+    DerivationOperatorForm K (n + 1) :=
+  actionWedgeTupleSucc K.toLieActionLane α
+
+@[simp] theorem ceWedgeTupleSucc_one {R A : Type*} [CommRing R] [NonUnitalNonAssocRing A]
+    [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
+    (K : InfoGeometry.Algebra.DerivationLieLane R A)
+    (α : Fin 1 → DerivationOperatorForm K 1) :
+    ceWedgeTupleSucc K α = α 0 :=
+  rfl
+
+theorem ceWedgeTupleSucc_two_apply {R A : Type*} [CommRing R] [NonUnitalNonAssocRing A]
+    [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
+    (K : InfoGeometry.Algebra.DerivationLieLane R A)
+    (α : Fin 2 → DerivationOperatorForm K 1) (x y : K.L) :
+    ceWedgeTupleSucc K α ![x, y] = α 0 ![x] * α 1 ![y] - α 0 ![y] * α 1 ![x] := by
+  change (reindexForm (Nat.add_comm 1 1) (ceWedge K (α 0) (α 1))) ![x, y] = _
+  simp [ceWedge_one_one_apply]
+
+/-- Iterated noncommutative wedge of `Fin (n + 1)`-tuples of `OpForm R V A 1`. -/
+def opFormWedgeTupleSucc {R V A : Type*} [CommRing R]
+    [AddCommGroup V] [Module R V] [Ring A] [Module R A]
+    [IsScalarTower R A A] [SMulCommClass R A A] :
+    ∀ {n : ℕ}, (Fin (n + 1) → OpForm R V A 1) → OpForm R V A (n + 1)
+  | 0, α => α 0
+  | m + 1, α =>
+    reindexForm (Nat.add_comm 1 (m + 1))
+      (opWedge (α 0) (opFormWedgeTupleSucc (fun i => α i.succ)))
+
+/-- Iterated noncommutative wedge of `Fin n`-tuples of `OpForm R V A 1` for all `n : ℕ`. -/
+def opFormWedgeTuple {R V A : Type*} [CommRing R]
+    [AddCommGroup V] [Module R V] [Ring A] [Module R A]
+    [IsScalarTower R A A] [SMulCommClass R A A] :
+    ∀ n : ℕ, (Fin n → OpForm R V A 1) → OpForm R V A n
+  | 0, _ => AlternatingMap.constLinearEquivOfIsEmpty (1 : A)
+  | _ + 1, α => opFormWedgeTupleSucc α
+
+/-- Contrast witness 1 (`n = 2`): `NOperatorForm 2` admits constant nonzero maps that do not
+even vanish at `0`, whereas every `OpForm ℝ ℝ ℝ 1` is linear (`η 0 = 0`). -/
+theorem nOperatorForm_two_not_linear_witness :
+    ∃ ω : NOperatorForm (Point := Unit) (Tangent := ℝ) (Value := ℝ) 2,
+      ω 0 () (0 : ℝ) ≠ 0 :=
+  ⟨fun _ _ _ => (1 : ℝ), one_ne_zero⟩
+
+theorem opForm_one_map_zero (η : OpForm ℝ ℝ ℝ 1) :
+    η (fun _ => (0 : ℝ)) = 0 := by
+  have h : (fun _ : Fin 1 => (0 : ℝ)) = Function.update (fun _ => (0 : ℝ)) 0 (0 : ℝ) :=
+    funext fun i => by fin_cases i; rfl
+  rw [h, η.map_update_zero]
+
+/-- Contrast witness 2 (`n = 2`): even a linear `NOperatorForm 2` has nonzero diagonal values
+at `(1, 1)`, whereas every alternating `OpForm ℝ ℝ ℝ 2` vanishes on `![x, x]`. -/
+theorem nOperatorForm_two_linear_diag_nonzero_witness :
+    ∃ ω : NOperatorForm (Point := Unit) (Tangent := ℝ) (Value := ℝ) 2,
+      (∀ i p, IsLinearMap ℝ (ω i p)) ∧ ω 0 () (1 : ℝ) ≠ 0 ∧ ω 1 () (1 : ℝ) ≠ 0 :=
+  ⟨fun _ _ x => x,
+    fun _ _ => ⟨fun _ _ => rfl, fun _ _ => rfl⟩,
+    one_ne_zero, one_ne_zero⟩
+
+theorem opForm_two_diag_zero (η : OpForm ℝ ℝ ℝ 2) (x : ℝ) :
+    η ![x, x] = 0 :=
+  η.map_eq_zero_of_eq ![x, x] (i := 0) (j := 1) rfl (by decide)
+
+end OneFormTupleDisambiguation
+
+/-! ## `FrechetOperatorDerivation` Lie Algebra & Unified M1A Spine Adapters -/
+
+namespace FrechetOperatorDerivation
+
+section SpineAdapters
+
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
+
+open InfoGeometry.Algebra
+open InfoGeometry.Algebra.DerivationLieLane
+open InfoGeometry.OperatorAlgebra.DerivationDifferentialForms
+open InfoGeometry.NCG.Calculus
+
+section AlgebraicInstances
+
+variable {𝕜 A : Type*} [NontriviallyNormedField 𝕜]
+variable [NormedRing A] [NormedAlgebra 𝕜 A]
+
+@[ext] theorem ext {D E : FrechetOperatorDerivation 𝕜 A}
+    (h : ∀ a : A, D a = E a) : D = E := by
+  cases D with
+  | mk f hf =>
+    cases E with
+    | mk g hg =>
+      congr
+      exact ContinuousLinearMap.ext h
+
+instance : Zero (FrechetOperatorDerivation 𝕜 A) where
+  zero :=
+    { toContinuousLinearMap := 0
+      leibniz := fun _ _ => by simp }
+
+instance : Add (FrechetOperatorDerivation 𝕜 A) where
+  add D E :=
+    { toContinuousLinearMap := D.toContinuousLinearMap + E.toContinuousLinearMap
+      leibniz := fun a b => by
+        change D (a * b) + E (a * b) = (D a + E a) * b + a * (D b + E b)
+        rw [D.leibniz, E.leibniz, add_mul, mul_add]
+        abel }
+
+instance : Neg (FrechetOperatorDerivation 𝕜 A) where
+  neg D :=
+    { toContinuousLinearMap := -D.toContinuousLinearMap
+      leibniz := fun a b => by
+        change -D (a * b) = (-D a) * b + a * (-D b)
+        rw [D.leibniz, neg_add, neg_mul, mul_neg] }
+
+instance : Sub (FrechetOperatorDerivation 𝕜 A) where
+  sub D E :=
+    { toContinuousLinearMap := D.toContinuousLinearMap - E.toContinuousLinearMap
+      leibniz := fun a b => by
+        change D (a * b) - E (a * b) = (D a - E a) * b + a * (D b - E b)
+        rw [D.leibniz, E.leibniz, sub_mul, mul_sub]
+        abel }
+
+instance : SMul 𝕜 (FrechetOperatorDerivation 𝕜 A) where
+  smul c D :=
+    { toContinuousLinearMap := c • D.toContinuousLinearMap
+      leibniz := fun a b => by
+        change c • D (a * b) = (c • D a) * b + a * (c • D b)
+        rw [D.leibniz, smul_add, Algebra.smul_mul_assoc, Algebra.mul_smul_comm] }
+
+@[simp] theorem zero_apply (a : A) : (0 : FrechetOperatorDerivation 𝕜 A) a = 0 := rfl
+@[simp] theorem add_apply (D E : FrechetOperatorDerivation 𝕜 A) (a : A) :
+    (D + E) a = D a + E a := rfl
+@[simp] theorem neg_apply (D : FrechetOperatorDerivation 𝕜 A) (a : A) :
+    (-D) a = -D a := rfl
+@[simp] theorem sub_apply (D E : FrechetOperatorDerivation 𝕜 A) (a : A) :
+    (D - E) a = D a - E a := rfl
+@[simp] theorem smul_apply (c : 𝕜) (D : FrechetOperatorDerivation 𝕜 A) (a : A) :
+    (c • D) a = c • D a := rfl
+
+instance : AddCommGroup (FrechetOperatorDerivation 𝕜 A) where
+  add_assoc D E F := by ext a; exact add_assoc (D a) (E a) (F a)
+  zero_add D := by ext a; exact zero_add (D a)
+  add_zero D := by ext a; exact add_zero (D a)
+  neg_add_cancel D := by ext a; exact neg_add_cancel (D a)
+  add_comm D E := by ext a; exact add_comm (D a) (E a)
+  sub_eq_add_neg D E := by ext a; exact sub_eq_add_neg (D a) (E a)
+  nsmul := nsmulRec
+  zsmul := zsmulRec
+
+instance : Module 𝕜 (FrechetOperatorDerivation 𝕜 A) where
+  one_smul D := by ext a; exact one_smul 𝕜 (D a)
+  mul_smul c₁ c₂ D := by ext a; exact mul_smul c₁ c₂ (D a)
+  smul_zero c := by ext a; exact smul_zero c
+  smul_add c D E := by ext a; exact smul_add c (D a) (E a)
+  add_smul c₁ c₂ D := by ext a; exact add_smul c₁ c₂ (D a)
+  zero_smul D := by ext a; exact zero_smul 𝕜 (D a)
+
+instance : Bracket (FrechetOperatorDerivation 𝕜 A) (FrechetOperatorDerivation 𝕜 A) where
+  bracket := commutator
+
+@[simp] theorem lie_eq_commutator (D E : FrechetOperatorDerivation 𝕜 A) :
+    ⁅D, E⁆ = commutator D E := rfl
+
+@[simp] theorem lie_apply (D E : FrechetOperatorDerivation 𝕜 A) (a : A) :
+    ⁅D, E⁆ a = D (E a) - E (D a) := rfl
+
+instance : LieRing (FrechetOperatorDerivation 𝕜 A) where
+  add_lie D E F := by
+    ext a
+    simp only [lie_apply, add_apply, F.map_add]
+    abel
+  lie_add D E F := by
+    ext a
+    simp only [lie_apply, add_apply, D.map_add]
+    abel
+  lie_self D := by
+    ext a
+    simp only [lie_apply, zero_apply, sub_self]
+  leibniz_lie D E F := by
+    ext a
+    simp only [lie_apply, add_apply, D.toContinuousLinearMap.map_sub,
+      E.toContinuousLinearMap.map_sub, F.toContinuousLinearMap.map_sub]
+    abel
+
+instance : LieAlgebra 𝕜 (FrechetOperatorDerivation 𝕜 A) where
+  lie_smul c D E := by
+    ext a
+    simp only [lie_apply, smul_apply, D.map_smul, smul_sub]
+
+/-- Forget continuity to obtain an element of `NonAssocDerivation.derivations 𝕜 A`. -/
+def toDerivations (D : FrechetOperatorDerivation 𝕜 A) : NonAssocDerivation.derivations 𝕜 A :=
+  ⟨D.toContinuousLinearMap.toLinearMap, D.leibniz⟩
+
+@[simp] theorem toDerivations_apply (D : FrechetOperatorDerivation 𝕜 A) (a : A) :
+    (D.toDerivations : Module.End 𝕜 A) a = D a :=
+  rfl
+
+/-- Canonical faithful Lie algebra homomorphism from continuous Fréchet derivations
+into `NonAssocDerivation.derivations 𝕜 A`. -/
+def toDerivationsLieHom (𝕜 A : Type*) [NontriviallyNormedField 𝕜]
+    [NormedRing A] [NormedAlgebra 𝕜 A] :
+    FrechetOperatorDerivation 𝕜 A →ₗ⁅𝕜⁆ NonAssocDerivation.derivations 𝕜 A where
+  toFun := toDerivations
+  map_add' _ _ := Subtype.ext (LinearMap.ext fun _ => rfl)
+  map_smul' _ _ := Subtype.ext (LinearMap.ext fun _ => rfl)
+  map_lie' := Subtype.ext (LinearMap.ext fun _ => rfl)
+
+theorem toDerivationsLieHom_injective (𝕜 A : Type*) [NontriviallyNormedField 𝕜]
+    [NormedRing A] [NormedAlgebra 𝕜 A] :
+    Function.Injective (toDerivationsLieHom 𝕜 A) := by
+  intro D E h
+  ext a
+  exact congrArg (fun T : NonAssocDerivation.derivations 𝕜 A => (T : Module.End 𝕜 A) a) h
+
+/-- Canonical faithful `DerivationLieLane 𝕜 A` on `FrechetOperatorDerivation 𝕜 A`. -/
+def derivationLieLane (𝕜 A : Type*) [NontriviallyNormedField 𝕜]
+    [NormedRing A] [NormedAlgebra 𝕜 A] : DerivationLieLane 𝕜 A where
+  L := FrechetOperatorDerivation 𝕜 A
+  lieRing := inferInstance
+  lieAlgebra := inferInstance
+  act := toDerivationsLieHom 𝕜 A
+  faithful := toDerivationsLieHom_injective 𝕜 A
+
+/-- Underlying `LieActionLane 𝕜 A` of `FrechetOperatorDerivation.derivationLieLane 𝕜 A`. -/
+def lieActionLane (𝕜 A : Type*) [NontriviallyNormedField 𝕜]
+    [NormedRing A] [NormedAlgebra 𝕜 A] : LieActionLane 𝕜 A :=
+  (derivationLieLane 𝕜 A).toLieActionLane
+
+theorem lieActionLane_isLeibniz (𝕜 A : Type*) [NontriviallyNormedField 𝕜]
+    [NormedRing A] [NormedAlgebra 𝕜 A] :
+    IsLeibnizAction (lieActionLane 𝕜 A) :=
+  (derivationLieLane 𝕜 A).isLeibnizAction
+
+/-- Lie subalgebra of `NonAssocDerivation.derivations 𝕜 A` consisting of continuous
+Fréchet operator derivations. -/
+def continuousLieSubalgebra (𝕜 A : Type*) [NontriviallyNormedField 𝕜]
+    [NormedRing A] [NormedAlgebra 𝕜 A] :
+    LieSubalgebra 𝕜 (NonAssocDerivation.derivations 𝕜 A) :=
+  (toDerivationsLieHom 𝕜 A).range
+
+/-- Faithful `DerivationLieLane 𝕜 A` on `continuousLieSubalgebra 𝕜 A`. -/
+def continuousSubalgebraLane (𝕜 A : Type*) [NontriviallyNormedField 𝕜]
+    [NormedRing A] [NormedAlgebra 𝕜 A] : DerivationLieLane 𝕜 A :=
+  lieSubalgebraLane (continuousLieSubalgebra 𝕜 A)
+
+/-- Equivariant identification between `derivationLieLane 𝕜 A` and
+`continuousSubalgebraLane 𝕜 A`. -/
+def derivationLieLaneEquivContinuousSubalgebra (𝕜 A : Type*) [NontriviallyNormedField 𝕜]
+    [NormedRing A] [NormedAlgebra 𝕜 A] :
+    DerivationLaneEquiv (derivationLieLane 𝕜 A) (continuousSubalgebraLane 𝕜 A) where
+  map := LieEquiv.ofInjective (toDerivationsLieHom 𝕜 A) (toDerivationsLieHom_injective 𝕜 A)
+  equivariant _ := rfl
+
+/-- Faithfulness-free `LieActionLane 𝕜 A` induced by any Lie algebra homomorphism
+`L →ₗ⁅𝕜⁆ FrechetOperatorDerivation 𝕜 A`. -/
+def toLieActionLaneOfHom {L : Type*} [LieRing L] [LieAlgebra 𝕜 L]
+    (act : L →ₗ⁅𝕜⁆ FrechetOperatorDerivation 𝕜 A) : LieActionLane 𝕜 A :=
+  toLieActionLaneFromHom ((toDerivationsLieHom 𝕜 A).comp act)
+
+theorem toLieActionLaneOfHom_isLeibniz {L : Type*} [LieRing L] [LieAlgebra 𝕜 L]
+    (act : L →ₗ⁅𝕜⁆ FrechetOperatorDerivation 𝕜 A) :
+    IsLeibnizAction (toLieActionLaneOfHom act) :=
+  toLieActionLaneFromHom_isLeibniz ((toDerivationsLieHom 𝕜 A).comp act)
+
+/-- Faithful range `DerivationLieLane 𝕜 A` of `act : L →ₗ⁅𝕜⁆ FrechetOperatorDerivation 𝕜 A`. -/
+def rangeDerivationLieLaneOfHom {L : Type*} [LieRing L] [LieAlgebra 𝕜 L]
+    (act : L →ₗ⁅𝕜⁆ FrechetOperatorDerivation 𝕜 A) : DerivationLieLane 𝕜 A :=
+  rangeDerivationLieLane ((toDerivationsLieHom 𝕜 A).comp act)
+
+/-- Faithful quotient `DerivationLieLane 𝕜 A` of `act : L →ₗ⁅𝕜⁆ FrechetOperatorDerivation 𝕜 A`. -/
+def quotientDerivationLieLaneOfHom {L : Type*} [LieRing L] [LieAlgebra 𝕜 L]
+    (act : L →ₗ⁅𝕜⁆ FrechetOperatorDerivation 𝕜 A) : DerivationLieLane 𝕜 A :=
+  quotientDerivationLieLane ((toDerivationsLieHom 𝕜 A).comp act)
+
+/-- Single-derivation Lie homomorphism `𝕜 →ₗ⁅𝕜⁆ FrechetOperatorDerivation 𝕜 A`
+given by `c ↦ c • D`. -/
+def singleLieHom (D : FrechetOperatorDerivation 𝕜 A) :
+    𝕜 →ₗ⁅𝕜⁆ FrechetOperatorDerivation 𝕜 A where
+  toFun c := c • D
+  map_add' c₁ c₂ := add_smul c₁ c₂ D
+  map_smul' c₁ c₂ := smul_eq_mul c₁ c₂ ▸ mul_smul c₁ c₂ D
+  map_lie' {c₁ c₂} := by
+    ext a
+    change (c₁ * c₂ - c₂ * c₁) • D a = c₁ • D (c₂ • D a) - c₂ • D (c₁ • D a)
+    rw [mul_comm c₁ c₂, sub_self, zero_smul, D.map_smul, D.map_smul,
+      smul_smul, smul_smul, mul_comm c₁ c₂, sub_self]
+
+/-- One-generator `LieActionLane 𝕜 A` attached to a single `FrechetOperatorDerivation D`. -/
+def singleLieActionLane (D : FrechetOperatorDerivation 𝕜 A) : LieActionLane 𝕜 A :=
+  toLieActionLaneOfHom (singleLieHom D)
+
+theorem singleLieActionLane_isLeibniz (D : FrechetOperatorDerivation 𝕜 A) :
+    IsLeibnizAction (singleLieActionLane D) :=
+  toLieActionLaneOfHom_isLeibniz (singleLieHom D)
+
+/-- Faithful `DerivationLieLane 𝕜 A` on the Lie subalgebra spanned by a single
+`FrechetOperatorDerivation D`. -/
+def singleDerivationLieLane (D : FrechetOperatorDerivation 𝕜 A) : DerivationLieLane 𝕜 A :=
+  lieSubalgebraLane (LieSubalgebra.lieSpan 𝕜 (NonAssocDerivation.derivations 𝕜 A) {D.toDerivations})
+
+end AlgebraicInstances
+
+section RealBridges
+
+variable {A : Type*} [NormedRing A] [NormedAlgebra ℝ A]
+
+/-- Inner derivation Lie homomorphism `A →ₗ⁅ℝ⁆ FrechetOperatorDerivation ℝ A`
+on a complete normed algebra `A`. -/
+def ofInnerLieHom (A : Type*) [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A] :
+    A →ₗ⁅ℝ⁆ FrechetOperatorDerivation ℝ A where
+  toFun a := ofInner a
+  map_add' a b := by
+    ext x
+    change (a + b) * x - x * (a + b) = (a * x - x * a) + (b * x - x * b)
+    noncomm_ring
+  map_smul' r a := by
+    ext x
+    change (r • a) * x - x * (r • a) = r • (a * x - x * a)
+    simp only [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_sub]
+  map_lie' {a b} := by
+    ext x
+    change ofInner (a * b - b * a) x = ⁅ofInner a, ofInner b⁆ x
+    simp only [lie_apply, ofInner_apply]
+    noncomm_ring
+
+theorem ofInnerLieActionLane_apply [CompleteSpace A] (x a : A) :
+    (toLieActionLaneOfHom (ofInnerLieHom A)).operatorAction x a =
+      (innerLieActionLane A).operatorAction x a :=
+  rfl
+
+theorem toNCDerivation_apply_eq_toDerivations
+    (D : FrechetOperatorDerivation ℝ A) (a : A) :
+    toNCDerivation D a = (D.toDerivations : Module.End ℝ A) a :=
+  rfl
+
+theorem toNCDerivation_eq_ncDerivationEquivDerivations_symm
+    (D : FrechetOperatorDerivation ℝ A) :
+    ncDerivationEquivDerivations (toNCDerivation D) =
+      ⟨(D.toDerivations : Module.End ℝ A).restrictScalars ℤ, D.leibniz⟩ :=
+  rfl
+
+theorem toDerivationDifferentialSystem_derivation_eq_toDerivations
+    {𝔤 : Type*} [AddGroup 𝔤]
+    (derivation : 𝔤 → FrechetOperatorDerivation ℝ A)
+    (bracket : 𝔤 → 𝔤 → 𝔤)
+    (hbracket : ∀ D E a,
+      derivation D (derivation E a) - derivation E (derivation D a) =
+        derivation (bracket D E) a)
+    (D : 𝔤) (a : A) :
+    (toDerivationDifferentialSystem derivation bracket hbracket).derivation D a =
+      ((derivation D).toDerivations : Module.End ℝ A) a :=
+  rfl
+
+/-- Lift a continuous derivation family into M1A/NCG's `LieSystem A 𝔤`. -/
+def toDerivationDifferentialLieSystem
+    {𝔤 : Type*} [AddCommGroup 𝔤]
+    (derivation : 𝔤 → FrechetOperatorDerivation ℝ A)
+    (derivation_zero : derivation 0 = 0)
+    (derivation_add : ∀ D E, derivation (D + E) = derivation D + derivation E)
+    (bracket : 𝔤 → 𝔤 → 𝔤)
+    (hbracket : ∀ D E a,
+      derivation D (derivation E a) - derivation E (derivation D a) =
+        derivation (bracket D E) a)
+    (bracket_zero : ∀ D, bracket 0 D = 0)
+    (bracket_add_left : ∀ D E F, bracket (D + E) F = bracket D F + bracket E F)
+    (bracket_add_right : ∀ D E F, bracket D (E + F) = bracket D E + bracket D F)
+    (bracket_neg_left : ∀ D E, bracket (-D) E = -bracket D E)
+    (bracket_neg_right : ∀ D E, bracket D (-E) = -bracket D E)
+    (bracket_skew : ∀ D E, bracket E D = -bracket D E)
+    (bracket_jacobi : ∀ D E F,
+      bracket D (bracket E F) + bracket E (bracket F D) + bracket F (bracket D E) = 0) :
+    InfoGeometry.NCG.DerivationDifferential.LieSystem A 𝔤 where
+  toSystem := toDerivationDifferentialSystem derivation bracket hbracket
+  derivation_zero := by
+    apply NCDerivation.ext
+    intro a
+    change toNCDerivation (derivation 0) a = 0
+    rw [derivation_zero]
+    rfl
+  derivation_add := fun D E => by
+    apply NCDerivation.ext
+    intro a
+    change toNCDerivation (derivation (D + E)) a =
+      toNCDerivation (derivation D) a + toNCDerivation (derivation E) a
+    rw [derivation_add]
+    rfl
+  bracket_zero := bracket_zero
+  bracket_add_left := bracket_add_left
+  bracket_add_right := bracket_add_right
+  bracket_neg_left := bracket_neg_left
+  bracket_neg_right := bracket_neg_right
+  bracket_skew := bracket_skew
+  bracket_jacobi := bracket_jacobi
+
+theorem toDerivationDifferentialLieSystem_toSystem
+    {𝔤 : Type*} [AddCommGroup 𝔤]
+    (derivation : 𝔤 → FrechetOperatorDerivation ℝ A)
+    (derivation_zero : derivation 0 = 0)
+    (derivation_add : ∀ D E, derivation (D + E) = derivation D + derivation E)
+    (bracket : 𝔤 → 𝔤 → 𝔤)
+    (hbracket : ∀ D E a,
+      derivation D (derivation E a) - derivation E (derivation D a) =
+        derivation (bracket D E) a)
+    (bracket_zero : ∀ D, bracket 0 D = 0)
+    (bracket_add_left : ∀ D E F, bracket (D + E) F = bracket D F + bracket E F)
+    (bracket_add_right : ∀ D E F, bracket D (E + F) = bracket D E + bracket D F)
+    (bracket_neg_left : ∀ D E, bracket (-D) E = -bracket D E)
+    (bracket_neg_right : ∀ D E, bracket D (-E) = -bracket D E)
+    (bracket_skew : ∀ D E, bracket E D = -bracket D E)
+    (bracket_jacobi : ∀ D E F,
+      bracket D (bracket E F) + bracket E (bracket F D) + bracket F (bracket D E) = 0) :
+    (toDerivationDifferentialLieSystem derivation derivation_zero derivation_add bracket hbracket
+      bracket_zero bracket_add_left bracket_add_right bracket_neg_left bracket_neg_right
+      bracket_skew bracket_jacobi).toSystem =
+      toDerivationDifferentialSystem derivation bracket hbracket :=
+  rfl
+
+/-- Unconditional faithful `DerivationLieLane ℤ A` on the image of
+`toDerivationDifferentialLieSystem`. -/
+def toDerivationDifferentialLieSystem_derivationLieLane
+    {𝔤 : Type*} [AddCommGroup 𝔤]
+    (derivation : 𝔤 → FrechetOperatorDerivation ℝ A)
+    (derivation_zero : derivation 0 = 0)
+    (derivation_add : ∀ D E, derivation (D + E) = derivation D + derivation E)
+    (bracket : 𝔤 → 𝔤 → 𝔤)
+    (hbracket : ∀ D E a,
+      derivation D (derivation E a) - derivation E (derivation D a) =
+        derivation (bracket D E) a)
+    (bracket_zero : ∀ D, bracket 0 D = 0)
+    (bracket_add_left : ∀ D E F, bracket (D + E) F = bracket D F + bracket E F)
+    (bracket_add_right : ∀ D E F, bracket D (E + F) = bracket D E + bracket D F)
+    (bracket_neg_left : ∀ D E, bracket (-D) E = -bracket D E)
+    (bracket_neg_right : ∀ D E, bracket D (-E) = -bracket D E)
+    (bracket_skew : ∀ D E, bracket E D = -bracket D E)
+    (bracket_jacobi : ∀ D E F,
+      bracket D (bracket E F) + bracket E (bracket F D) + bracket F (bracket D E) = 0) :
+    DerivationLieLane ℤ A :=
+  lieSystemToDerivationLieLane
+    (toDerivationDifferentialLieSystem derivation derivation_zero derivation_add bracket hbracket
+      bracket_zero bracket_add_left bracket_add_right bracket_neg_left bracket_neg_right
+      bracket_skew bracket_jacobi)
+
+/-- Non-faithful `LieActionLane ℤ A` on `toDerivationDifferentialLieSystem` when
+`bracket g g = 0`. -/
+def toDerivationDifferentialLieSystem_lieActionLane
+    {𝔤 : Type*} [AddCommGroup 𝔤]
+    (derivation : 𝔤 → FrechetOperatorDerivation ℝ A)
+    (derivation_zero : derivation 0 = 0)
+    (derivation_add : ∀ D E, derivation (D + E) = derivation D + derivation E)
+    (bracket : 𝔤 → 𝔤 → 𝔤)
+    (hbracket : ∀ D E a,
+      derivation D (derivation E a) - derivation E (derivation D a) =
+        derivation (bracket D E) a)
+    (bracket_zero : ∀ D, bracket 0 D = 0)
+    (bracket_add_left : ∀ D E F, bracket (D + E) F = bracket D F + bracket E F)
+    (bracket_add_right : ∀ D E F, bracket D (E + F) = bracket D E + bracket D F)
+    (bracket_neg_left : ∀ D E, bracket (-D) E = -bracket D E)
+    (bracket_neg_right : ∀ D E, bracket D (-E) = -bracket D E)
+    (bracket_skew : ∀ D E, bracket E D = -bracket D E)
+    (bracket_jacobi : ∀ D E F,
+      bracket D (bracket E F) + bracket E (bracket F D) + bracket F (bracket D E) = 0)
+    (hself : ∀ g : 𝔤, bracket g g = 0) :
+    LieActionLane ℤ A :=
+  lieSystemToLieActionLane
+    (toDerivationDifferentialLieSystem derivation derivation_zero derivation_add bracket hbracket
+      bracket_zero bracket_add_left bracket_add_right bracket_neg_left bracket_neg_right
+      bracket_skew bracket_jacobi)
+    hself
+
+/-- Canonical `LieSystem A A` realizing `innerFrechetSystem A`. -/
+def innerFrechetLieSystem (A : Type*) [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A] :
+    InfoGeometry.NCG.DerivationDifferential.LieSystem A A :=
+  toDerivationDifferentialLieSystem
+    (fun a : A => ofInner a)
+    (by ext x; simp [ofInner_apply])
+    (fun a b => by ext x; simp only [ofInner_apply, add_apply]; noncomm_ring)
+    (fun a b : A => a * b - b * a)
+    (by intro a b x; simp only [ofInner_apply]; noncomm_ring)
+    (fun D => by simp)
+    (fun D E F => by noncomm_ring)
+    (fun D E F => by noncomm_ring)
+    (fun D E => by noncomm_ring)
+    (fun D E => by noncomm_ring)
+    (fun D E => by noncomm_ring)
+    (fun D E F => by noncomm_ring)
+
+theorem innerFrechetLieSystem_toSystem (A : Type*)
+    [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A] :
+    (innerFrechetLieSystem A).toSystem = innerFrechetSystem A :=
+  rfl
+
+/-- Unconditional faithful `DerivationLieLane ℤ A` on the image of `innerFrechetLieSystem A`. -/
+def innerFrechetDerivationLieLane (A : Type*)
+    [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A] : DerivationLieLane ℤ A :=
+  lieSystemToDerivationLieLane (innerFrechetLieSystem A)
+
+/-- Non-faithful `LieActionLane ℤ A` on `innerFrechetLieSystem A` (`sub_self`). -/
+def innerFrechetLieActionLane (A : Type*)
+    [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A] : LieActionLane ℤ A :=
+  lieSystemToLieActionLane (innerFrechetLieSystem A) (fun g => sub_self (g * g))
+
+theorem frechetOperatorDerivationOfThermodynamic_toDerivations
+    [FiniteDimensional ℝ A] (D : ThermodynamicOperatorDerivation A) :
+    ((frechetOperatorDerivationOfThermodynamic D).toDerivations : Module.End ℝ A) =
+      D.toLinearMap := by
+  ext a
+  rfl
+
+end RealBridges
+
+end SpineAdapters
+
+end FrechetOperatorDerivation
 
 end InfoGeometry.Optics.OperatorDerivationForms

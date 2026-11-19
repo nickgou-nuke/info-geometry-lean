@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.MetricTransport
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MetriplecticCore
@@ -737,7 +742,7 @@ The unnormalized partition function is Z(s) = Π_p (1 - p^{-s})^{-1} (Euler prod
 The Free Energy potential Φ(s) = log Z(s).
 The Thermodynamic Force driving optimal transport is F = ∇Φ = ∇ log Z(s).
 -/
-@[rep_depth transport, capstone]
+@[rep_depth transport]
 structure GrandCanonicalPartitionFunction where
   /-- The logarithm of the partition function (free energy potential). -/
   logPartition : ℝ → ℝ
@@ -928,7 +933,7 @@ is precisely the logarithmic derivative of the Euler product: d/ds log Π(1 - p^
 This means the explicit formula IS the Wasserstein gradient vector field that drives
 optimal transport through the Cantor crystal.
 -/
-@[rep_depth transport, capstone]
+@[rep_depth transport]
 structure ExplicitFormulaVectorField (State : Type*) where
   /-- The supplied Riemann-Weil explicit formula sum. -/
   explicitFormula : ℝ → ℝ

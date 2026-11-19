@@ -1,5 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Canonical.KuboMoriBogoliubovMetric
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
@@ -30,7 +36,7 @@ open Finset
 
 namespace InfoGeometry.InformationGeometry.BKM
 
-variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+variable {ι : Type*} [Fintype ι]
 
 local notation "Mat" => Matrix ι ι ℂ
 
@@ -40,7 +46,7 @@ PART 1: The BKM Logarithmic Mean Weight Matrix
 =============================================================================
 -/
 
-/-- 
+/--
   The BKM weight function between two energy levels K_i and K_j:
   W(K_i, K_j) = (exp(-K_i) - exp(-K_j)) / (K_j - K_i) if K_i ≠ K_j, and exp(-K_i) if K_i = K_j.
 -/
@@ -62,7 +68,7 @@ theorem bkmWeightScalar_symm (Ki Kj : ℝ) :
     have h_den : Kj - Ki = - (Ki - Kj) := by ring
     rw [h_num, h_den, neg_div_neg_eq]
 
-/-- 
+/--
   THEOREM 1: Strict Positivity of the BKM Weights:
   W(Ki, Kj) > 0 for all real energy levels Ki, Kj.
 -/
@@ -88,6 +94,34 @@ theorem bkmWeightScalar_pos (Ki Kj : ℝ) :
         linarith
       have h_num_neg : Real.exp (-Ki) - Real.exp (-Kj) < 0 := sub_neg.mpr h_exp_gt
       exact div_pos_of_neg_of_neg h_num_neg h_den_neg
+
+/-- The density-eigenvalue and energy-level formulas define the same BKM
+logarithmic-mean coefficient under the Gibbs-coordinate change
+`K i = -log (rho.eigenvalues i)`. -/
+theorem bkmWeightScalar_log_density_eq {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (rho : KuboMoriBogoliubov.FaithfulDensityState ι) (i j : ι) :
+    rho.bkmWeight i j =
+      bkmWeightScalar (-Real.log (rho.eigenvalues i))
+        (-Real.log (rho.eigenvalues j)) := by
+  by_cases h : rho.eigenvalues i = rho.eigenvalues j
+  · have hK : -Real.log (rho.eigenvalues i) =
+        -Real.log (rho.eigenvalues j) := by rw [h]
+    simp only [KuboMoriBogoliubov.FaithfulDensityState.bkmWeight,
+      bkmWeightScalar, if_pos h, if_pos hK, neg_neg,
+      Real.exp_log (rho.p_pos j)]
+    exact (Real.exp_log (rho.p_pos i)).symm
+  · have hK : -Real.log (rho.eigenvalues i) ≠
+        -Real.log (rho.eigenvalues j) := by
+      intro hEq
+      apply h
+      apply Real.log_injOn_pos
+        (Set.mem_Ioi.mpr (rho.p_pos i))
+        (Set.mem_Ioi.mpr (rho.p_pos j))
+      linarith
+    simp only [KuboMoriBogoliubov.FaithfulDensityState.bkmWeight,
+      bkmWeightScalar, if_neg h, if_neg hK, neg_neg,
+      Real.exp_log (rho.p_pos i), Real.exp_log (rho.p_pos j)]
+    ring
 
 /-!
 =============================================================================
@@ -119,38 +153,97 @@ theorem bkmInnerProduct_conj_symm (K : ι → ℝ) (X Y : Mat) :
   rw [h_w_real]
   ring
 
-/-- 
+/-- The real part of the BKM quadratic form is its weighted sum of entrywise
+complex norm squares. -/
+theorem bkmInnerProduct_self_re_eq_weighted_normSq (K : ι → ℝ) (X : Mat) :
+    (bkmInnerProduct K X X).re =
+      ∑ i, ∑ j, bkmWeightScalar (K i) (K j) * Complex.normSq (X i j) := by
+  dsimp [bkmInnerProduct]
+  have h_re :
+      (∑ i, ∑ j, (bkmWeightScalar (K i) (K j) : ℂ) *
+          starRingEnd ℂ (X i j) * X i j).re =
+        ∑ i, ∑ j, bkmWeightScalar (K i) (K j) * Complex.normSq (X i j) := by
+    change Complex.reCLM
+      (∑ i, ∑ j, (bkmWeightScalar (K i) (K j) : ℂ) *
+        starRingEnd ℂ (X i j) * X i j) = _
+    rw [map_sum]
+    apply Finset.sum_congr rfl
+    intro i _
+    rw [map_sum]
+    apply Finset.sum_congr rfl
+    intro j _
+    change ((bkmWeightScalar (K i) (K j) : ℂ) *
+      starRingEnd ℂ (X i j) * X i j).re = _
+    have h_conj_mul : starRingEnd ℂ (X i j) * X i j =
+        (Complex.normSq (X i j) : ℂ) := by
+      apply Complex.ext
+      · simp [Complex.normSq]
+      · simp [Complex.normSq]
+        ring
+    rw [mul_assoc, h_conj_mul, ← Complex.ofReal_mul, Complex.ofReal_re]
+  exact h_re
+
+/--
   THEOREM 3 (Non-Negativity / Positive Semi-Definiteness):
   ⟨X, X⟩_BKM ≥ 0 for all matrix observables X.
 -/
 theorem bkmInnerProduct_self_nonneg (K : ι → ℝ) (X : Mat) :
     0 ≤ (bkmInnerProduct K X X).re := by
-  dsimp [bkmInnerProduct]
-  have h_re : (∑ i, ∑ j, (bkmWeightScalar (K i) (K j) : ℂ) * starRingEnd ℂ (X i j) * X i j).re =
-      ∑ i, ∑ j, bkmWeightScalar (K i) (K j) * Complex.normSq (X i j) := by
-    change Complex.reCLM (∑ i, ∑ j, (bkmWeightScalar (K i) (K j) : ℂ) * starRingEnd ℂ (X i j) * X i j) = _
-    rw [map_sum]
-    apply Finset.sum_congr rfl; intro i _
-    rw [map_sum]
-    apply Finset.sum_congr rfl; intro j _
-    change ( (bkmWeightScalar (K i) (K j) : ℂ) * starRingEnd ℂ (X i j) * X i j ).re = _
-    have h_conj_mul : starRingEnd ℂ (X i j) * X i j = (Complex.normSq (X i j) : ℂ) := by
-      apply Complex.ext
-      · simp [Complex.normSq]
-      · simp [Complex.normSq]; ring
-    rw [mul_assoc, h_conj_mul, ← Complex.ofReal_mul, Complex.ofReal_re]
-  rw [h_re]
+  rw [bkmInnerProduct_self_re_eq_weighted_normSq]
   apply Finset.sum_nonneg; intro i _
   apply Finset.sum_nonneg; intro j _
   have h_w_nonneg : 0 ≤ bkmWeightScalar (K i) (K j) := le_of_lt (bkmWeightScalar_pos (K i) (K j))
   have h_sq_nonneg : 0 ≤ Complex.normSq (X i j) := Complex.normSq_nonneg (X i j)
   exact mul_nonneg h_w_nonneg h_sq_nonneg
 
+/-- Strict positive definiteness of the finite BKM quadratic form: its real
+part vanishes exactly for the zero matrix. This applies to arbitrary matrix
+observables, including non-diagonal ones. -/
+theorem bkmInnerProduct_self_re_eq_zero_iff (K : ι → ℝ) (X : Mat) :
+    (bkmInnerProduct K X X).re = 0 ↔ X = 0 := by
+  classical
+  constructor
+  · intro hzero
+    by_contra hX
+    have h_entry : ∃ i j, X i j ≠ 0 := by
+      by_contra h
+      push Not at h
+      apply hX
+      ext i j
+      exact h i j
+    obtain ⟨i₀, j₀, h_entry⟩ := h_entry
+    have h_inner_nonneg (i : ι) :
+        0 ≤ ∑ j, bkmWeightScalar (K i) (K j) * Complex.normSq (X i j) := by
+      apply Finset.sum_nonneg
+      intro j _
+      exact mul_nonneg (le_of_lt (bkmWeightScalar_pos (K i) (K j)))
+        (Complex.normSq_nonneg (X i j))
+    have h_inner_pos :
+        0 < ∑ j, bkmWeightScalar (K i₀) (K j) * Complex.normSq (X i₀ j) := by
+      apply Finset.sum_pos'
+      · intro j _
+        exact mul_nonneg (le_of_lt (bkmWeightScalar_pos (K i₀) (K j)))
+          (Complex.normSq_nonneg (X i₀ j))
+      · exact ⟨j₀, Finset.mem_univ _, mul_pos
+          (bkmWeightScalar_pos (K i₀) (K j₀)) (Complex.normSq_pos.mpr h_entry)⟩
+    have h_total_pos :
+        0 < ∑ i, ∑ j, bkmWeightScalar (K i) (K j) * Complex.normSq (X i j) := by
+      apply Finset.sum_pos'
+      · intro i _
+        exact h_inner_nonneg i
+      · exact ⟨i₀, Finset.mem_univ _, h_inner_pos⟩
+    rw [bkmInnerProduct_self_re_eq_weighted_normSq] at hzero
+    exact (ne_of_gt h_total_pos) hzero
+  · rintro rfl
+    simp [bkmInnerProduct]
+
 /-!
 =============================================================================
 PART 3: Classical Reduction on the Center (Commuting Observables)
 =============================================================================
 -/
+
+variable [DecidableEq ι]
 
 /-- A diagonal observable representing a classical function on the spectrum. -/
 def diagObservable (u : ι → ℂ) : Mat :=

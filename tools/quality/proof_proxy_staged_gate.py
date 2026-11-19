@@ -11,6 +11,7 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
+from typing import Sequence
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
@@ -56,23 +57,57 @@ EXECUTED_GATE_SOURCES = (
 class ActiveIndexCache:
     """Memoize imported-file reads for one stable staged-entry snapshot.
 
-    Git may refresh stat-cache data in `.git/index` without changing any staged
-    path, mode, stage, or blob.  Those physical index updates do not alter the
-    source snapshot being certified, so stability is measured from Git's
-    canonical stage-entry listing rather than index-file metadata.
+    In unscoped runs (e.g. git pre-commit with no path arguments), stability is
+    measured over the full Git index via canonical stage-entry listing so stat
+    refreshes are ignored while any staged change aborts mixed snapshots.
+
+    In scoped runs (`scope_paths` non-empty), index inspection and stability
+    checks stay proportional to the target files and their imported closure so
+    concurrent staging of unrelated files in a multi-agent worktree does not
+    cause O(whole-repo) scans or false-positive aborts.
     """
 
-    def __init__(self, repo_root: Path):
+    def __init__(self, repo_root: Path, scope_paths: Sequence[str] | None = None):
         self.repo_root = repo_root
         self._tracked: dict[str, bool] = {}
         self._matches: dict[str, bool] = {}
         self._blobs: dict[str, tuple[int, bytes, str]] = {}
         self._imports: dict[str, list[str]] = {}
+        self.checked_clean_imports: set[str] = set()
+        self.materialized_imports: set[str] = set()
+        self.t17_taint_memo: dict[str, tuple[set[str], set[str], set[str]]] = {}
         self._tracked_all: set[str] | None = None
         self._dirty_worktree_all: set[str] | None = None
-        self._index_signature = self._read_index_signature(populate_sets=True)
+        self._observed_stage_entries: dict[str, bytes] = {}
+        if scope_paths:
+            self._scoped = True
+            self._index_signature = None
+            self._scoped_valid = self._resolve_index_path() is not None
+            if self._scoped_valid:
+                resolved_root = self.repo_root.resolve()
+                normalized: list[str] = []
+                for raw in scope_paths:
+                    p = Path(raw)
+                    if p.is_absolute():
+                        try:
+                            rel = p.resolve().relative_to(resolved_root).as_posix()
+                        except ValueError:
+                            rel = p.as_posix()
+                    else:
+                        rel = p.as_posix()
+                        while rel.startswith("./"):
+                            rel = rel[2:]
+                    candidate_disk = self.repo_root / rel
+                    if rel and not candidate_disk.is_dir():
+                        normalized.append(rel)
+                if normalized:
+                    self.observe_paths(normalized)
+        else:
+            self._scoped = False
+            self._scoped_valid = True
+            self._index_signature = self._read_index_signature(populate_sets=True)
 
-    def _read_index_signature(self, populate_sets: bool = False) -> str | None:
+    def _resolve_index_path(self) -> Path | None:
         configured = os.environ.get("GIT_INDEX_FILE")
         if configured:
             index_path = Path(configured)
@@ -91,7 +126,10 @@ class ActiveIndexCache:
             index_path = Path(path_result.stdout.strip())
             if not index_path.is_absolute():
                 index_path = self.repo_root / index_path
-        if not index_path.is_file():
+        return index_path if index_path.is_file() else None
+
+    def _read_index_signature(self, populate_sets: bool = False) -> str | None:
+        if self._resolve_index_path() is None:
             return None
         result = subprocess.run(
             ["git", "ls-files", "--stage", "-z"],
@@ -123,14 +161,82 @@ class ActiveIndexCache:
                 }
         return hashlib.sha256(result.stdout).hexdigest()
 
+    def _query_stage_map(self, paths: Sequence[str]) -> dict[str, bytes] | None:
+        if not paths:
+            return {}
+        result = subprocess.run(
+            ["git", "ls-files", "--stage", "-z", "--", *paths],
+            cwd=self.repo_root,
+            capture_output=True,
+            check=False,
+        )
+        if result.returncode != 0:
+            return None
+        stage_map: dict[str, bytes] = {p: b"" for p in paths}
+        for entry in result.stdout.split(b"\0"):
+            if not entry or b"\t" not in entry:
+                continue
+            _meta, raw_path = entry.split(b"\t", 1)
+            rel = raw_path.decode("utf-8", errors="replace")
+            if rel in stage_map:
+                stage_map[rel] = stage_map[rel] + entry + b"\0"
+        return stage_map
+
+    def observe_paths(self, rel_paths: Sequence[str]) -> None:
+        """Batch-populate tracked, worktree-clean, and stage-entry state in scoped mode."""
+        if not self._scoped:
+            return
+        unseen = sorted({p for p in rel_paths if p and p not in self._observed_stage_entries})
+        if not unseen:
+            return
+        stage_map = self._query_stage_map(unseen)
+        if stage_map is None:
+            self._scoped_valid = False
+            for p in unseen:
+                self._observed_stage_entries[p] = b""
+                self._tracked.setdefault(p, False)
+            return
+        tracked_now: list[str] = []
+        for p, stage_bytes in stage_map.items():
+            self._observed_stage_entries[p] = stage_bytes
+            is_tracked = bool(stage_bytes)
+            self._tracked[p] = is_tracked
+            if is_tracked and p not in self._matches:
+                tracked_now.append(p)
+        if tracked_now:
+            diff_res = subprocess.run(
+                ["git", "diff", "--name-only", "-z", "--", *tracked_now],
+                cwd=self.repo_root,
+                capture_output=True,
+                check=False,
+            )
+            if diff_res.returncode == 0:
+                dirty = {
+                    item.decode("utf-8", errors="replace")
+                    for item in diff_res.stdout.split(b"\0")
+                    if item
+                }
+                for p in tracked_now:
+                    disk = self.repo_root / p
+                    self._matches[p] = (p not in dirty) and disk.exists() and not disk.is_symlink()
+
     def still_current(self) -> bool:
         """Fail closed if index-backed reads crossed an active-index update."""
+        if self._scoped:
+            if not self._scoped_valid or self._resolve_index_path() is None:
+                return False
+            if not self._observed_stage_entries:
+                return True
+            current = self._query_stage_map(sorted(self._observed_stage_entries))
+            return current is not None and current == self._observed_stage_entries
         return self._index_signature is not None and self._index_signature == self._read_index_signature()
 
     def tracked(self, relative_path: str) -> bool:
         if relative_path not in self._tracked:
             if self._tracked_all is not None:
                 self._tracked[relative_path] = relative_path in self._tracked_all
+            elif self._scoped:
+                self.observe_paths([relative_path])
             else:
                 result = subprocess.run(
                     ["git", "ls-files", "--error-unmatch", "--", relative_path],
@@ -152,26 +258,32 @@ class ActiveIndexCache:
             ):
                 self._matches[relative_path] = relative_path not in self._dirty_worktree_all
             else:
-                result = subprocess.run(
-                    ["git", "diff", "--quiet", "--", relative_path],
-                    cwd=self.repo_root,
-                    capture_output=True,
-                    check=False,
-                )
-                self._matches[relative_path] = result.returncode == 0
+                if self._scoped:
+                    self.observe_paths([relative_path])
+                if relative_path not in self._matches:
+                    result = subprocess.run(
+                        ["git", "diff", "--quiet", "--", relative_path],
+                        cwd=self.repo_root,
+                        capture_output=True,
+                        check=False,
+                    )
+                    self._matches[relative_path] = result.returncode == 0
         return self._matches[relative_path]
 
     def blob(self, relative_path: str) -> tuple[int, bytes, str]:
         if relative_path not in self._blobs:
             disk_path = self.repo_root / relative_path
+            is_clean_disk = False
             if (
                 self._dirty_worktree_all is not None
                 and self._tracked_all is not None
                 and relative_path in self._tracked_all
                 and relative_path not in self._dirty_worktree_all
-                and disk_path.is_file()
-                and not disk_path.is_symlink()
             ):
+                is_clean_disk = True
+            elif self._scoped and self.tracked(relative_path) and self.matches_worktree(relative_path):
+                is_clean_disk = True
+            if is_clean_disk and disk_path.is_file() and not disk_path.is_symlink():
                 try:
                     self._blobs[relative_path] = (0, disk_path.read_bytes(), "")
                     return self._blobs[relative_path]
@@ -254,6 +366,15 @@ def checker_index_mismatches(repo_root: Path | None = None) -> list[str]:
     return [f"gate-source-index-comparison-failed: {detail}"]
 
 
+def _candidate_import_paths(module: str, repo_root: Path) -> list[Path]:
+    relative = Path(*module.split("."))
+    roots = (repo_root / "lean", repo_root / "proofs")
+    if module.startswith("proofs."):
+        relative = Path(*module.removeprefix("proofs.").split("."))
+        roots = (repo_root / "proofs",)
+    return [root / relative.with_suffix(".lean") for root in roots]
+
+
 def imported_source_index_mismatches(
     source: str, repo_root: Path = _REPO_ROOT,
     index_cache: ActiveIndexCache | None = None,
@@ -276,63 +397,84 @@ def imported_source_index_mismatches(
         import_pattern = re.compile(r"^\s*import\s+([A-Za-z0-9_. ]+)\s*$", re.MULTILINE)
         return [module for line in import_pattern.findall(clean) for module in line.split()]
 
-    pending = imports_of(source)
+    wave = imports_of(source)
     seen: set[Path] = set()
+    clean_visited: set[str] = set()
     mismatches: set[str] = set()
-    while pending:
-        module = pending.pop()
-        relative = Path(*module.split("."))
-        roots = (repo_root / "lean", repo_root / "proofs")
-        if module.startswith("proofs."):
-            relative = Path(*module.removeprefix("proofs.").split("."))
-            roots = (repo_root / "proofs",)
-        candidates = [root / relative.with_suffix(".lean") for root in roots]
-        candidate = None
-        for path in candidates:
-            if path.is_file():
-                candidate = path
-                break
-            relative_path = path.relative_to(repo_root).as_posix()
-            if (index_cache.tracked(relative_path) if index_cache else subprocess.run(
-                ["git", "ls-files", "--error-unmatch", "--", relative_path],
-                cwd=repo_root, capture_output=True, text=True, check=False,
-            ).returncode == 0):
-                mismatches.add(
-                    f"{relative_path} (present in active index but missing from worktree)"
-                )
-        if candidate is None:
-            continue
-        if candidate in seen:
-            continue
-        seen.add(candidate)
-        relative_path = candidate.relative_to(repo_root).as_posix()
-        if candidate.is_symlink():
-            mismatches.add(f"{relative_path} (repo-local Lean imports may not be symlinks)")
-            continue
-        is_tracked = index_cache.tracked(relative_path) if index_cache else subprocess.run(
-            ["git", "ls-files", "--error-unmatch", "--", relative_path],
-            cwd=repo_root, capture_output=True, text=True, check=False,
-        ).returncode == 0
-        if not is_tracked:
-            mismatches.add(f"{relative_path} (not present in active index)")
-            continue
-        matches_worktree = index_cache.matches_worktree(relative_path) if index_cache else subprocess.run(
-            ["git", "diff", "--quiet", "--", relative_path],
-            cwd=repo_root, capture_output=True, check=False,
-        ).returncode == 0
-        if not matches_worktree:
-            mismatches.add(f"{relative_path} (worktree differs from active index)")
-            continue
-        try:
-            pending.extend(imports_of(candidate.read_text(encoding="utf-8")))
-        except OSError as exc:
-            mismatches.add(f"{relative_path} (cannot read imported source: {exc})")
+    while wave:
+        modules_wave = wave
+        wave = []
+        if index_cache is not None and getattr(index_cache, "_scoped", False):
+            batch_candidates = [
+                cand.relative_to(repo_root).as_posix()
+                for mod in modules_wave
+                for cand in _candidate_import_paths(mod, repo_root)
+            ]
+            index_cache.observe_paths(batch_candidates)
+        for module in modules_wave:
+            candidates = _candidate_import_paths(module, repo_root)
+            candidate = None
+            for path in candidates:
+                if path.is_file():
+                    candidate = path
+                    break
+                relative_path = path.relative_to(repo_root).as_posix()
+                if (
+                    index_cache.tracked(relative_path)
+                    if index_cache
+                    else subprocess.run(
+                        ["git", "ls-files", "--error-unmatch", "--", relative_path],
+                        cwd=repo_root, capture_output=True, text=True, check=False,
+                    ).returncode == 0
+                ):
+                    mismatches.add(
+                        f"{relative_path} (present in active index but missing from worktree)"
+                    )
+            if candidate is None or candidate in seen:
+                continue
+            seen.add(candidate)
+            relative_path = candidate.relative_to(repo_root).as_posix()
+            if index_cache is not None and relative_path in index_cache.checked_clean_imports:
+                continue
+            if candidate.is_symlink():
+                mismatches.add(f"{relative_path} (repo-local Lean imports may not be symlinks)")
+                continue
+            is_tracked = (
+                index_cache.tracked(relative_path)
+                if index_cache
+                else subprocess.run(
+                    ["git", "ls-files", "--error-unmatch", "--", relative_path],
+                    cwd=repo_root, capture_output=True, text=True, check=False,
+                ).returncode == 0
+            )
+            if not is_tracked:
+                mismatches.add(f"{relative_path} (not present in active index)")
+                continue
+            matches_worktree = (
+                index_cache.matches_worktree(relative_path)
+                if index_cache
+                else subprocess.run(
+                    ["git", "diff", "--quiet", "--", relative_path],
+                    cwd=repo_root, capture_output=True, check=False,
+                ).returncode == 0
+            )
+            if not matches_worktree:
+                mismatches.add(f"{relative_path} (worktree differs from active index)")
+                continue
+            clean_visited.add(relative_path)
+            try:
+                wave.extend(imports_of(candidate.read_text(encoding="utf-8")))
+            except OSError as exc:
+                mismatches.add(f"{relative_path} (cannot read imported source: {exc})")
+    if not mismatches and index_cache is not None:
+        index_cache.checked_clean_imports.update(clean_visited)
     return sorted(mismatches)
 
 
 def materialize_indexed_imports(
     source: str, repo_root: Path, snapshot_root: Path,
     index_cache: ActiveIndexCache | None = None,
+    materialized: set[str] | None = None,
 ) -> list[str]:
     """Materialize the transitive repo-local import closure from the active index."""
     try:
@@ -348,7 +490,11 @@ def materialize_indexed_imports(
         return [module for line in import_pattern.findall(clean) for module in line.split()]
 
     pending = imports_of(source)
-    seen: set[str] = set()
+    seen: set[str] = (
+        materialized
+        if materialized is not None
+        else (index_cache.materialized_imports if index_cache is not None else set())
+    )
     errors: list[str] = []
     while pending:
         module = pending.pop()
@@ -464,6 +610,8 @@ def check_text(
     lean_path: str, source: str, repo_root: Path = _REPO_ROOT,
     index_cache: ActiveIndexCache | None = None,
     snapshot_root: Path | None = None,
+    materialized: set[str] | None = None,
+    strict: bool = False,
 ) -> list[str]:
     """Check staged Lean source with the canonical OpenGauss source screener."""
     failures: list[str] = []
@@ -477,22 +625,60 @@ def check_text(
         )
     try:
         from tools.infra.opengauss_screener import screen_lean_content
-        def screen_with_snapshot(root: Path) -> None:
-            for mismatch in materialize_indexed_imports(source, repo_root, root, index_cache):
-                failures.append(
-                    f"{lean_path}: cannot build active-index import snapshot: {mismatch}"
-                )
-            for violation in screen_lean_content(
-                source, filename=lean_path, import_root=root
-            ):
-                # The pre-commit gate enforces the screener's blocking findings.
-                # Warnings remain advisory, matching the screener's severity model.
-                if violation.severity == "ERROR":
+
+        def record_violations(violations) -> None:
+            for violation in violations:
+                if violation.severity == "ERROR" or (strict and violation.severity == "WARNING"):
                     failures.append(
                         f"{lean_path}:{violation.line_number}: OpenGauss {violation.trap_id} "
                         f"{violation.trap_name}: {violation.message} ({violation.matched_text})"
                     )
-        if snapshot_root is not None:
+
+        def screen_with_snapshot(root: Path) -> None:
+            for mismatch in materialize_indexed_imports(
+                source, repo_root, root, index_cache, materialized=materialized,
+            ):
+                failures.append(
+                    f"{lean_path}: cannot build active-index import snapshot: {mismatch}"
+                )
+            record_violations(
+                screen_lean_content(
+                    source,
+                    filename=lean_path,
+                    import_root=root,
+                    taint_memo=(index_cache.t17_taint_memo if index_cache is not None else None),
+                )
+            )
+
+        if snapshot_root is None and index_cache is not None:
+            blob_errors_seen: set[str] = set()
+
+            def import_source_reader(module: str) -> tuple[str, str] | None:
+                for cand in _candidate_import_paths(module, repo_root):
+                    rel = cand.relative_to(repo_root).as_posix()
+                    if index_cache.tracked(rel):
+                        rc, raw_bytes, detail = index_cache.blob(rel)
+                        if rc != 0:
+                            if rel not in blob_errors_seen:
+                                blob_errors_seen.add(rel)
+                                failures.append(
+                                    f"{lean_path}: cannot build active-index import snapshot: {rel} "
+                                    f"(cannot read active-index blob: {detail})"
+                                )
+                            return None
+                        return rel, raw_bytes.decode("utf-8", errors="replace")
+                return None
+
+            record_violations(
+                screen_lean_content(
+                    source,
+                    filename=lean_path,
+                    import_root=repo_root,
+                    import_source_reader=import_source_reader,
+                    taint_memo=index_cache.t17_taint_memo,
+                )
+            )
+        elif snapshot_root is not None:
             screen_with_snapshot(snapshot_root)
         else:
             with tempfile.TemporaryDirectory(prefix="opengauss-index-imports-") as temp_dir:
@@ -511,6 +697,11 @@ def check_text(
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="Pre-commit gate for staged Lean files.")
     ap.add_argument(
+        "--strict",
+        action="store_true",
+        help="Fail on WARNING-level OpenGauss findings as well as ERRORs.",
+    )
+    ap.add_argument(
         "paths",
         nargs="*",
         help="Optional Lean file paths to scope the staged check (defaults to all staged *.lean files).",
@@ -519,7 +710,7 @@ def main(argv: list[str] | None = None) -> int:
     pathspecs = args.paths if args.paths else ["*.lean"]
 
     repo_root = Path(git(["rev-parse", "--show-toplevel"]).strip())
-    index_cache = ActiveIndexCache(repo_root)
+    index_cache = ActiveIndexCache(repo_root, scope_paths=(args.paths if args.paths else None))
     out = git(["diff", "--cached", "--unified=0", "--", *pathspecs])
     failures: list[str] = []
     path = ""
@@ -584,6 +775,8 @@ def main(argv: list[str] | None = None) -> int:
         ).split(b"\0")
         if path and path.endswith(b".lean") and (args.paths or not path.startswith(b"scratch/"))
     )
+    if index_cache._scoped and staged_lean_paths:
+        index_cache.observe_paths([p.decode("utf-8", errors="replace") for p in staged_lean_paths])
     if staged_lean_paths:
         mismatches = checker_index_mismatches(repo_root)
         if mismatches:
@@ -591,15 +784,16 @@ def main(argv: list[str] | None = None) -> int:
                 "executed QMS gate source differs from staged index; stage or discard checker edits before committing: "
                 + ", ".join(mismatches)
             )
-    staged_entries = subprocess.check_output(["git", "ls-files", "-s", "-z", "--", "*.lean"])
     blob_by_path: dict[bytes, str] = {}
-    for entry in staged_entries.split(b"\0"):
-        if not entry:
-            continue
-        metadata, raw_path = entry.split(b"\t", 1)
-        fields = metadata.decode("ascii").split()
-        if len(fields) == 3 and fields[2] == "0":
-            blob_by_path[raw_path] = fields[1]
+    if staged_lean_paths:
+        staged_entries = subprocess.check_output(["git", "ls-files", "-s", "-z", "--", *pathspecs])
+        for entry in staged_entries.split(b"\0"):
+            if not entry:
+                continue
+            metadata, raw_path = entry.split(b"\t", 1)
+            fields = metadata.decode("ascii").split()
+            if len(fields) == 3 and fields[2] == "0":
+                blob_by_path[raw_path] = fields[1]
     missing_stage_blobs = staged_lean_paths - blob_by_path.keys()
     for raw_path in sorted(missing_stage_blobs):
         failures.append(
@@ -627,13 +821,14 @@ def main(argv: list[str] | None = None) -> int:
         lean_path = raw_path.decode("utf-8", errors="replace")
         index_cache._blobs[lean_path] = (0, raw_bytes, "")
         staged_sources.append((lean_path, source))
-    with tempfile.TemporaryDirectory(prefix="opengauss-index-imports-") as temp_dir:
-        snapshot_root = Path(temp_dir)
-        for lean_path, source in staged_sources:
-            failures.extend(check_text(
-                lean_path, source, repo_root,
-                index_cache=index_cache, snapshot_root=snapshot_root,
-            ))
+    for lean_path, source in staged_sources:
+        failures.extend(check_text(
+            lean_path,
+            source,
+            repo_root,
+            index_cache=index_cache,
+            strict=args.strict,
+        ))
     for buried in sorted(removed_decl_files & debt_comment_files):
         failures.append(
             f"{buried}: staged deletion of Lean declarations with natural-language debt comments; keep open debt compiler-visible instead of burying it in prose"

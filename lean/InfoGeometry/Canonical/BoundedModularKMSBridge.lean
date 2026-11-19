@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.BoundedModularFlowCalibration
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
@@ -127,7 +132,7 @@ theorem bounded_flow_eq_exp_Ksur
   B.bounded.flow_eq_exp_Ksur t
 
 /-- The bounded flow is equivalently calibrated to the Souriau bare source. -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem bounded_flow_eq_exp_Khat_beta
     (t : ℝ) :
     B.bounded.flow t =
@@ -154,7 +159,7 @@ The KMS observable flow preserves the Drazin regular-sector commutant whenever
 the underlying bounded modular-flow calibration fixes the Drazin regular
 projector.
 -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem operatorFlow_preserves_commuting_with_spectralProjector
     (hFix : B.bounded.FlowFixesSpectralProjector)
     (A : EndH)

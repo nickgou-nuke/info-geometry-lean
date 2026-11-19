@@ -8,9 +8,9 @@ import unittest
 from pathlib import Path
 from unittest.mock import Mock, patch
 
-from tools.infra import build
+from tools.infra import build, changed_verify, run_full_dag_toolchain
 from tools.build_lock import BuildLock, BuildLockBusyError
-from tools.infra.run_locked_lake_build import parse_args
+from tools.infra.run_locked_lake_build import normalize_lake_target, parse_args
 
 
 class LockedLakeBuildTests(unittest.TestCase):
@@ -107,6 +107,21 @@ class LockedLakeBuildTests(unittest.TestCase):
                 self.assertEqual(error.exception.metadata["owner"], "recorded-owner")
             finally:
                 first.release()
+
+    def test_full_dag_preflight_uses_flock_not_stale_metadata(self):
+        with tempfile.TemporaryDirectory() as directory:
+            lock_path = Path(directory) / "build.lock"
+            with patch.object(run_full_dag_toolchain, "DEFAULT_BUILD_LOCK_PATH", lock_path):
+                lock_path.write_text("stale metadata", encoding="utf-8")
+                run_full_dag_toolchain.preflight_build_lock_health()
+                self.assertEqual(lock_path.read_text(encoding="utf-8"), "")
+
+                holder = BuildLock(lock_path, "test-holder").acquire()
+                try:
+                    with self.assertRaisesRegex(RuntimeError, "do not remove the lock file"):
+                        run_full_dag_toolchain.preflight_build_lock_health()
+                finally:
+                    holder.release()
 
     def test_cli_separates_wrapper_options_from_lake_options(self):
         args = parse_args([
@@ -302,6 +317,105 @@ class LockedLakeBuildTests(unittest.TestCase):
                 self.assertIsNotNone(lock._handle)
             self.assertEqual(lock._ref_count, 0)
             self.assertIsNone(lock._handle)
+
+    def test_normalize_lake_target_maps_lean_paths(self):
+        self.assertEqual(
+            normalize_lake_target("lean/InfoGeometry/Algebra/Foo.lean"),
+            "InfoGeometry.Algebra.Foo",
+        )
+        self.assertEqual(normalize_lake_target("lean/InfoGeometry.lean"), "InfoGeometry")
+        self.assertEqual(normalize_lake_target("tests/InfoGeometryTests.lean"), "InfoGeometryTests")
+        self.assertEqual(
+            normalize_lake_target("proofs/BogoliubovFrameTransport.lean"),
+            "proofs.BogoliubovFrameTransport",
+        )
+        self.assertEqual(
+            normalize_lake_target("src/InfoGeometry/Quantum/Test.lean", source_lane=True),
+            "InfoGeometry.Quantum.Test",
+        )
+        args = parse_args(["--staged", "--wait-for-build-lock"])
+        self.assertTrue(args.staged)
+        self.assertTrue(args.wait_for_build_lock)
+
+    def test_changed_and_staged_forward_explicit_paths_and_reject_module_names(self):
+        import sys
+        from tools.infra import run_locked_lake_build as wrapper
+
+        recorded = []
+        with patch.object(subprocess, "run", side_effect=lambda cmd, **kw: recorded.append(list(cmd)) or subprocess.CompletedProcess(cmd, 0)):
+            with patch.object(sys, "argv", ["run_locked_lake_build.py", "--changed", "lean/InfoGeometry/Foo.lean"]):
+                self.assertEqual(wrapper.main(), 0)
+            with patch.object(sys, "argv", ["run_locked_lake_build.py", "--staged", "lean/InfoGeometry"]):
+                self.assertEqual(wrapper.main(), 0)
+
+        self.assertEqual(recorded[0][-2:], ["--wait-for-build-lock", "lean/InfoGeometry/Foo.lean"] if "--wait-for-build-lock" in recorded[0] else [recorded[0][-2], "lean/InfoGeometry/Foo.lean"])
+        self.assertEqual(recorded[0][-1], "lean/InfoGeometry/Foo.lean")
+        self.assertIn("--staged-only", recorded[1])
+        self.assertEqual(recorded[1][-1], "lean/InfoGeometry")
+
+        with patch("sys.stderr", new=io.StringIO()), patch.object(sys, "argv", ["run_locked_lake_build.py", "--changed", "InfoGeometry.All"]):
+            self.assertEqual(wrapper.main(), 2)
+
+    def test_full_dag_run_audit_uses_primary_build_lane(self):
+        import sys
+
+        steps: list[tuple[str, str, list[str]]] = []
+
+        def fake_run_step(stage: str, step_name: str, cmd: list[str]) -> None:
+            steps.append((stage, step_name, list(cmd)))
+
+        with (
+            patch.object(run_full_dag_toolchain, "preflight_build_lock_health"),
+            patch.object(run_full_dag_toolchain, "run_step", side_effect=fake_run_step),
+            patch.object(run_full_dag_toolchain, "log_spectral_stage"),
+            patch.object(sys, "argv", ["run_full_dag_toolchain.py", "--run-audit"]),
+        ):
+            self.assertEqual(run_full_dag_toolchain.main(), 0)
+
+        audit_steps = [cmd for _, name, cmd in steps if name == "audit-native"]
+        self.assertEqual(len(audit_steps), 1)
+        cmd = audit_steps[0]
+        self.assertIn("AuditNativeRun", cmd)
+        self.assertNotIn("--source-lane", cmd)
+        self.assertIn("--wait-for-build-lock", cmd)
+
+    def test_changed_verify_skips_redundant_file_gates_by_default(self):
+        import sys
+
+        owner = Path("/repo/lean/InfoGeometry/Canonical/Owner.lean")
+        with (
+            patch.object(changed_verify, "repo_root", return_value=Path("/repo")),
+            patch.object(changed_verify, "changed_lean_files", return_value=[owner]),
+            patch.object(
+                changed_verify,
+                "collect_modules",
+                return_value=["InfoGeometry.Canonical.Owner"],
+            ),
+            patch.object(changed_verify, "run_file_gate") as file_gate,
+            patch.object(changed_verify, "run_locked_lake_build", return_value=0) as lake_build,
+            patch("builtins.print"),
+            patch.object(sys, "argv", ["changed_verify.py"]),
+        ):
+            self.assertEqual(changed_verify.main(), 0)
+        file_gate.assert_not_called()
+        lake_build.assert_called_once_with(["InfoGeometry.Canonical.Owner"], wait_for_lock=True)
+
+        with (
+            patch.object(changed_verify, "repo_root", return_value=Path("/repo")),
+            patch.object(changed_verify, "changed_lean_files", return_value=[owner]),
+            patch.object(
+                changed_verify,
+                "collect_modules",
+                return_value=["InfoGeometry.Canonical.Owner"],
+            ),
+            patch.object(changed_verify, "run_file_gate", return_value=0) as file_gate,
+            patch.object(changed_verify, "run_locked_lake_build", return_value=0) as lake_build,
+            patch("builtins.print"),
+            patch.object(sys, "argv", ["changed_verify.py", "--with-file-gates"]),
+        ):
+            self.assertEqual(changed_verify.main(), 0)
+        file_gate.assert_called_once_with(Path("/repo"), owner)
+        lake_build.assert_called_once_with(["InfoGeometry.Canonical.Owner"], wait_for_lock=True)
 
 
 if __name__ == "__main__":

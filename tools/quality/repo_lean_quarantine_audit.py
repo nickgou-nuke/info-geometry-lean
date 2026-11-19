@@ -33,8 +33,22 @@ def tracked_disabled_files() -> list[Path]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--fail-on-findings", action="store_true")
+    parser.add_argument(
+        "files",
+        nargs="*",
+        help="Optional explicit .lean.disabled files to scan incrementally.",
+    )
     args = parser.parse_args()
-    files = tracked_disabled_files()
+    if args.files:
+        candidates = []
+        for raw in args.files:
+            p = Path(raw)
+            resolved = p.resolve() if p.is_absolute() else (ROOT / p).resolve()
+            if resolved.name.endswith(".lean.disabled") and resolved.is_file():
+                candidates.append(resolved)
+        files = sorted(set(candidates))
+    else:
+        files = tracked_disabled_files()
     records = []
     for path in files:
         findings = scan(path)

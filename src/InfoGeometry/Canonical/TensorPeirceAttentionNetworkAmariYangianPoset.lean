@@ -4172,11 +4172,11 @@ def adComm (H X : B) : B := H * X - X * H
 
 /-- Dot product on `ZornVec3 R` (`Vec3.dot`). -/
 abbrev zornVec3Dot {R : Type*} [CommRing R] :=
-  InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.Vec3.dot (R := R)
+  InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.Vec3.dot (B := R)
 
 /-- Cross product on `ZornVec3 R` (`Vec3.cross`). -/
 abbrev zornVec3Cross {R : Type*} [CommRing R] :=
-  InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.Vec3.cross (R := R)
+  InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.Vec3.cross (B := R)
 
 -- theorem-class: constructive
 /-- **Stage `𝔄𝔇₁` Theorem

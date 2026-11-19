@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Module.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.LinearMap.Basic
@@ -72,6 +77,12 @@ theorem dual_inverse_comp (sys : DirectInductiveSystem R I A) {i j k : I} (hij :
     where φ_i = φ_inf ∘ ψ_i. -/
 theorem colimit_duality_pairing (phi_inf : A_inf →ₗ[R] R) (i : I) (x : A i) :
     phi_inf (cocone.psi i x) = (phi_inf.comp (cocone.psi i)) x := rfl
+
+/-- A family of stage functionals is compatible with the inverse system dual
+to `sys` when every later functional restricts to the earlier one. -/
+def IsDualInverseFamily (sys : DirectInductiveSystem R I A)
+    (phi : ∀ i : I, A i →ₗ[R] R) : Prop :=
+  ∀ {i j : I} (hij : i ≤ j), dualInverseTransition sys hij (phi j) = phi i
 
 end InductiveCocone
 
@@ -177,5 +188,198 @@ noncomputable def filteredColimitFiniteLimitIso
   exact InfoGeometry.Categorical.Holonomy.colimit_limit_iso R F
 
 end Native
+
+/-! The dual family, its genuine `ModuleCat` inverse diagram, and the induced
+map out of the forward colimit. -/
+
+namespace InductiveCocone
+
+open CategoryTheory
+open CategoryTheory.Limits
+
+variable {R : Type u} [CommRing R]
+variable {I : Type u} [Preorder I]
+variable {A : I → Type u} [∀ i, AddCommGroup (A i)] [∀ i, Module R (A i)]
+
+/-- The projective `ModuleCat` diagram obtained by dualizing a direct system. -/
+def dualModuleDiagram (sys : DirectInductiveSystem R I A) : Iᵒᵖ ⥤ ModuleCat.{u} R where
+  obj i := ModuleCat.of R (A (Opposite.unop i) →ₗ[R] R)
+  map f := ModuleCat.ofHom {
+    toFun := dualInverseTransition sys (leOfHom f.unop)
+    map_add' := by intro phi psi; ext x; rfl
+    map_smul' := by intro r phi; ext x; rfl }
+  map_id i := by
+    ext phi x
+    change phi (sys.f (le_refl (Opposite.unop i)) x) = phi x
+    rw [sys.f_id]
+    rfl
+  map_comp f g := by
+    apply ModuleCat.hom_ext
+    ext phi x
+    change phi (sys.f (leOfHom (f ≫ g).unop) x) =
+      phi (sys.f (leOfHom f.unop) (sys.f (leOfHom g.unop) x))
+    have hcomp : sys.f (leOfHom (f ≫ g).unop) =
+        sys.f (le_trans (leOfHom g.unop) (leOfHom f.unop)) := by
+      congr 1
+    rw [hcomp]
+    exact congrArg phi
+      (congrArg (fun F => F x)
+        (sys.f_comp (leOfHom g.unop) (leOfHom f.unop)).symm)
+
+/-- Compatible stage functionals are exactly the sections of the underlying
+`Type` diagram of `dualModuleDiagram`. -/
+noncomputable def dualInverseFamilyEquivSections
+    (sys : DirectInductiveSystem R I A) :
+    { phi : ∀ i : I, A i →ₗ[R] R // IsDualInverseFamily sys phi } ≃
+      (dualModuleDiagram sys ⋙ forget (ModuleCat.{u} R)).sections where
+  toFun s :=
+    ⟨fun i => s.val (Opposite.unop i), by
+      intro i j f
+      change dualInverseTransition sys (leOfHom f.unop) (s.val (Opposite.unop i)) =
+        s.val (Opposite.unop j)
+      exact s.property (leOfHom f.unop)⟩
+  invFun s :=
+    ⟨fun i => s.val (Opposite.op i), by
+      intro i j hij
+      apply LinearMap.ext
+      intro x
+      let f : Opposite.op j ⟶ Opposite.op i := (homOfLE hij).op
+      have h := s.property f
+      change dualInverseTransition sys (leOfHom f.unop) (s.val (Opposite.op j)) =
+        s.val (Opposite.op i) at h
+      have hle : leOfHom f.unop = hij := Subsingleton.elim _ _
+      rw [hle] at h
+      exact congrArg (fun phi => phi x) h⟩
+  left_inv s := by
+    apply Subtype.ext
+    rfl
+  right_inv s := by
+    apply Subtype.ext
+    rfl
+
+/-- The carrier of the actual `ModuleCat` projective limit is equivalent to
+the compatible inverse family of stage functionals. This is obtained by
+forgetting the `ModuleCat` limit, applying the `Type` limit/sections
+equivalence, and identifying sections with compatible families. -/
+noncomputable def projectiveLimitEquivDualInverseFamily
+    (sys : DirectInductiveSystem R I A) :
+    ((limit (dualModuleDiagram sys) : ModuleCat R) : Type u) ≃
+      { phi : ∀ i : I, A i →ₗ[R] R // IsDualInverseFamily sys phi } := by
+  let F := dualModuleDiagram sys
+  let H := F ⋙ forget (ModuleCat.{u} R)
+  let e := preservesLimitIso (forget (ModuleCat.{u} R)) F
+  let e₁ : ((limit F : ModuleCat R) : Type u) ≃ limit H :=
+    { toFun := fun x => e.hom x
+      invFun := fun x => e.inv x
+      left_inv := by
+        intro x
+        simpa using congrArg (fun f => f x) (Iso.hom_inv_id e)
+      right_inv := by
+        intro x
+        simpa using congrArg (fun f => f x) (Iso.inv_hom_id e) }
+  exact e₁.trans ((Types.limitEquivSections H).trans
+    (dualInverseFamilyEquivSections sys).symm)
+
+/-- Evaluation of a compatible family obtained from the actual projective
+`ModuleCat` limit is the corresponding categorical projection. -/
+@[simp] theorem projectiveLimitEquivDualInverseFamily_apply
+    (sys : DirectInductiveSystem R I A)
+    (z : ((limit (dualModuleDiagram sys) : ModuleCat R) : Type u)) (i : I) :
+    (projectiveLimitEquivDualInverseFamily sys z).val i =
+      (limit.π (dualModuleDiagram sys) (Opposite.op i)).hom z := by
+  let F := dualModuleDiagram sys
+  let H := F ⋙ forget (ModuleCat.{u} R)
+  let e := preservesLimitIso (forget (ModuleCat.{u} R)) F
+  let e₁ : ((limit F : ModuleCat R) : Type u) ≃ limit H :=
+    { toFun := fun x => e.hom x
+      invFun := fun x => e.inv x
+      left_inv := by intro x; simpa using congrArg (fun f => f x) (Iso.hom_inv_id e)
+      right_inv := by intro x; simpa using congrArg (fun f => f x) (Iso.inv_hom_id e) }
+  change (((e₁.trans ((Types.limitEquivSections H).trans
+    (dualInverseFamilyEquivSections sys).symm)) z).val i) = _
+  rw [Equiv.trans_apply, Equiv.trans_apply]
+  change ((Types.limitEquivSections H) (e₁ z)).val (Opposite.op i) = _
+  rw [Types.limitEquivSections_apply]
+  exact congrArg (fun f => f z) (preservesLimitIso_hom_π
+    (G := forget (ModuleCat.{u} R)) (F := F) (Opposite.op i))
+
+/-- The scalar-linear map into the actual projective limit determined by a
+compatible family of stage functionals. Its cone legs send `r` to the scalar
+multiple `r • phi i`. -/
+noncomputable def dualInverseFamilyToProjectiveLimit
+    {sys : DirectInductiveSystem R I A}
+    (phi : ∀ i : I, A i →ₗ[R] R)
+    (hphi : IsDualInverseFamily sys phi) :
+    ModuleCat.of R R ⟶ limit (dualModuleDiagram sys) := by
+  let legs : (Functor.const (Iᵒᵖ)).obj (ModuleCat.of R R) ⟶
+      dualModuleDiagram sys :=
+      { app := fun i => ModuleCat.ofHom {
+          toFun := fun r => r • phi (Opposite.unop i)
+          map_add' := by intro r s; ext x; simp [add_mul]
+          map_smul' := by intro r s; ext x; simp [mul_assoc] }
+        naturality := by
+          intro i j f
+          apply ModuleCat.hom_ext
+          apply LinearMap.ext
+          intro r
+          let r' : R := r
+          have h := congrArg (fun q : A (Opposite.unop j) →ₗ[R] R => r' • q)
+            (hphi (leOfHom f.unop))
+          change r' • phi (Opposite.unop j) =
+            dualInverseTransition sys (leOfHom f.unop) (r' • phi (Opposite.unop i))
+          exact h.symm }
+  exact limit.lift (dualModuleDiagram sys) ⟨ModuleCat.of R R, legs⟩
+
+/-- The stage functional obtained by evaluating the scalar-to-limit morphism
+at `1` and then projecting to stage `i`. -/
+noncomputable def dualInverseFamilyToProjectiveLimitStageFunctional
+    {sys : DirectInductiveSystem R I A}
+    (phi : ∀ i : I, A i →ₗ[R] R)
+    (hphi : IsDualInverseFamily sys phi) (i : I) : A i →ₗ[R] R :=
+  (dualInverseFamilyToProjectiveLimit (sys := sys) phi hphi ≫
+    limit.π (dualModuleDiagram sys) (Opposite.op i)).hom (1 : R)
+
+/-- The scalar-to-limit morphism followed by a stage projection recovers the
+compatible functional at scalar `1`. -/
+@[simp] theorem dualInverseFamilyToProjectiveLimit_stage
+    {sys : DirectInductiveSystem R I A}
+    (phi : ∀ i : I, A i →ₗ[R] R)
+    (hphi : IsDualInverseFamily sys phi) (i : I) (x : A i) :
+    dualInverseFamilyToProjectiveLimitStageFunctional (sys := sys) phi hphi i x = phi i x := by
+  simp only [dualInverseFamilyToProjectiveLimitStageFunctional,
+    dualInverseFamilyToProjectiveLimit, limit.lift_π]
+  change ((1 : R) • phi i) x = phi i x
+  simp
+
+variable {A_inf : Type u} [AddCommGroup A_inf] [Module R A_inf]
+
+/-- Descend a compatible family of stage functionals to the native filtered
+colimit. This is the universal map of the actual `ModuleCat` colimit. -/
+noncomputable def dualInverseFamilyColimitMap
+    (sys : DirectInductiveSystem R I A)
+    (phi : ∀ i : I, A i →ₗ[R] R)
+    (hphi : IsDualInverseFamily sys phi) :
+    colimit (Native.moduleDiagram sys) ⟶ ModuleCat.of R R := by
+  let c : InductiveCocone R sys (A_inf := R) :=
+    InductiveCocone.mk phi (by
+      intro i j hij
+      exact LinearMap.ext fun x => congrArg (fun f => f x) (hphi hij))
+  exact Native.descendModuleCocone sys c
+
+/-- The descended functional agrees with `phi` on each colimit stage. -/
+@[simp] theorem dualInverseFamilyColimitMap_stage
+    (sys : DirectInductiveSystem R I A)
+    (phi : ∀ i : I, A i →ₗ[R] R)
+    (hphi : IsDualInverseFamily sys phi) (i : I) (x : A i) :
+    (dualInverseFamilyColimitMap sys phi hphi).hom
+      ((colimit.ι (Native.moduleDiagram sys) i).hom x) = phi i x := by
+  let c : InductiveCocone R sys (A_inf := R) :=
+    InductiveCocone.mk phi (by
+      intro i j hij
+      exact LinearMap.ext fun x => congrArg (fun f => f x) (hphi hij))
+  have h := Native.moduleColimit_desc_stage sys c i
+  exact congrArg (fun f => f x) h
+
+end InductiveCocone
 
 end FilteredColimit

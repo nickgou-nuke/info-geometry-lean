@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.Basic
@@ -157,6 +162,105 @@ theorem exp_of_sq_eq_one (K : A) (hK : K ^ 2 = 1) (t : ℝ) :
         rw [smul_pow_odd_of_sq_eq_one K hSq t n] <;>
         simp [div_eq_mul_inv, smul_smul, mul_comm, mul_left_comm]
   exact hsum.tsum_eq
+
+/-- Exponential closed form when the generator square is a positive scalar.
+The hypothesis is stated at the actual algebra carrier, so this applies to
+matrix algebras and other complete real normed algebras alike. -/
+theorem exp_of_positive_scalar_square
+    (G : A) (r t : ℝ) (hr : r ≠ 0)
+    (hG : G ^ 2 = (r ^ 2) • (1 : A)) :
+    NormedSpace.exp (t • G) =
+      Real.cosh (r * t) • (1 : A) + (Real.sinh (r * t) / r) • G := by
+  let H : A := r⁻¹ • G
+  have hH : H ^ 2 = (1 : A) := by
+    dsimp [H]
+    rw [pow_two, smul_mul_assoc, mul_smul_comm, smul_smul]
+    have hG' : G * G = (r ^ 2) • (1 : A) := by
+      simpa only [pow_two] using hG
+    rw [hG', smul_smul]
+    have hinv : r⁻¹ * r⁻¹ * r ^ 2 = (1 : ℝ) := by
+      calc
+        r⁻¹ * r⁻¹ * r ^ 2 = (r⁻¹ * r) * (r⁻¹ * r) := by
+          rw [pow_two]
+          ring
+        _ = 1 := by simp [inv_mul_cancel₀ hr]
+    rw [hinv]
+    simp
+  have hexp := exp_of_sq_eq_one H hH (r * t)
+  have hscale : (r * t) • H = t • G := by
+    dsimp [H]
+    rw [smul_smul]
+    have hscalar : (r * t) * r⁻¹ = t := by
+      field_simp [hr]
+    rw [hscalar]
+  rw [hscale] at hexp
+  have hcoeff : Real.sinh (r * t) • H =
+      (Real.sinh (r * t) / r) • G := by
+    dsimp [H]
+    rw [smul_smul]
+    congr 1
+  rw [hcoeff] at hexp
+  exact hexp
+
+/-- Exponential closed form when the generator square is a negative scalar. -/
+theorem exp_of_negative_scalar_square
+    (G : A) (r t : ℝ) (hr : r ≠ 0)
+    (hG : G ^ 2 = -(r ^ 2) • (1 : A)) :
+    NormedSpace.exp (t • G) =
+      Real.cos (r * t) • (1 : A) + (Real.sin (r * t) / r) • G := by
+  let H : A := r⁻¹ • G
+  have hH : H ^ 2 = -(1 : A) := by
+    dsimp [H]
+    rw [pow_two, smul_mul_assoc, mul_smul_comm, smul_smul]
+    have hG' : G * G = -(r ^ 2) • (1 : A) := by
+      simpa only [pow_two] using hG
+    rw [hG', smul_smul]
+    have hinv : r⁻¹ * r⁻¹ * -(r ^ 2) = (-1 : ℝ) := by
+      calc
+        r⁻¹ * r⁻¹ * -(r ^ 2) = -(r⁻¹ * r⁻¹ * r ^ 2) := by ring
+        _ = -1 := by
+          rw [show r⁻¹ * r⁻¹ * r ^ 2 = (1 : ℝ) by
+            calc
+              r⁻¹ * r⁻¹ * r ^ 2 = (r⁻¹ * r) * (r⁻¹ * r) := by
+                rw [pow_two]
+                ring
+              _ = 1 := by simp [inv_mul_cancel₀ hr]]
+    rw [hinv]
+    exact neg_one_smul ℝ (1 : A)
+  have hexp := exp_of_sq_eq_neg_one H (by simpa [pow_two] using hH) (r * t)
+  have hscale : (r * t) • H = t • G := by
+    dsimp [H]
+    rw [smul_smul]
+    have hscalar : (r * t) * r⁻¹ = t := by
+      field_simp [hr]
+    rw [hscalar]
+  rw [hscale] at hexp
+  have hcoeff : Real.sin (r * t) • H =
+      (Real.sin (r * t) / r) • G := by
+    dsimp [H]
+    rw [smul_smul]
+    congr 1
+  rw [hcoeff] at hexp
+  exact hexp
+
+/-- A square-zero generator has an exponential that truncates after degree one. -/
+theorem exp_of_square_eq_zero
+    (G : A) (t : ℝ) (hG : G ^ 2 = (0 : A)) :
+    NormedSpace.exp (t • G) = (1 : A) + t • G := by
+  rw [NormedSpace.exp_eq_tsum ℝ]
+  change (∑' n : ℕ, ((Nat.factorial n : ℕ) : ℝ)⁻¹ •
+      (t • G) ^ n) = _
+  rw [tsum_eq_sum (s := Finset.range 2)]
+  · simp [Finset.range, pow_zero, pow_one, add_comm]
+  · intro n hn
+    have hn' : 1 < n := by simpa using hn
+    have h2n : 2 ≤ n := Nat.succ_le_iff.mpr hn'
+    have hpow2 : (t • G) ^ 2 = 0 := by
+      rw [pow_two, smul_mul_assoc, mul_smul_comm]
+      have hG' : G * G = (0 : A) := by simpa only [pow_two] using hG
+      rw [hG']
+      simp
+    rw [pow_eq_zero_of_le h2n hpow2, smul_zero]
 
 /-- The mixed loxodromic generator theorem for commuting operators. -/
 theorem exp_add_of_commute (I K : A) (h_comm : I * K = K * I) (θ t : ℝ) :

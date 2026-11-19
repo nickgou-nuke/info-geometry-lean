@@ -178,7 +178,10 @@ def in_scope(
         is_manifested = bool(manifest_modules and mod in manifest_modules)
         if not (is_unstable or is_manifested):
             return False
-    if file_prefixes and not any(rpath.startswith(prefix) for prefix in file_prefixes):
+    if file_prefixes and not any(
+        (rpath == prefix if prefix.endswith(".lean") else rpath.startswith(prefix))
+        for prefix in file_prefixes
+    ):
         return False
     if module_prefixes and not any(mod.startswith(prefix) for prefix in module_prefixes):
         return False
@@ -195,7 +198,13 @@ def all_lean_files(
     exclude_prefixes: list[str] | None = None,
     manifest_modules: set[str] | None = None,
 ) -> list[Path]:
-    files = audit_constructivity.maintained_lean_files()
+    wants_src = bool(
+        file_prefixes and any(prefix == "src" or prefix.startswith("src/") for prefix in file_prefixes)
+    )
+    if wants_src:
+        files = audit_constructivity.maintained_lean_files(include_src=True)
+    else:
+        files = audit_constructivity.maintained_lean_files()
     if scope == "quarantine" and manifest_modules:
         for module in sorted(manifest_modules):
             path = module_to_path(module)
@@ -226,11 +235,23 @@ def all_lean_files(
 all_infogeometry_files = all_lean_files
 
 
-def importers_by_module(files: list[Path] | None = None, *, failures: list[dict[str, str]] | None = None) -> dict[str, list[str]]:
+def importers_by_module(
+    files: list[Path] | None = None,
+    *,
+    failures: list[dict[str, str]] | None = None,
+    target_modules: set[str] | None = None,
+) -> dict[str, list[str]]:
+    if target_modules is not None and not target_modules:
+        return {}
     importers: dict[str, list[str]] = defaultdict(list)
     for path in files if files is not None else all_infogeometry_files():
         try:
-            text = audit_constructivity.strip_comments(path.read_text(encoding="utf-8"), strip_strings=True)
+            raw_text = path.read_text(encoding="utf-8")
+            if target_modules is not None and (
+                "import" not in raw_text or not any(mod in raw_text for mod in target_modules)
+            ):
+                continue
+            text = audit_constructivity.strip_comments(raw_text, strip_strings=True)
         except (OSError, UnicodeError) as exc:
             if failures is None:
                 raise
@@ -436,6 +457,33 @@ def semantic_status(categories: set[str]) -> tuple[str, str]:
     return ("content_clean_by_this_audit", "no constructivity findings in this audit")
 
 
+def _manifest_relevant_to_prefixes(
+    file_prefixes: list[str] | None,
+    module_prefixes: list[str] | None,
+) -> bool:
+    """Return True if any quarantine manifest item could match the active prefix filters."""
+    if not file_prefixes and not module_prefixes:
+        return True
+    if file_prefixes and any(
+        "lean/InfoGeometry/Unstable/Quarantine.lean".startswith(p)
+        or p.startswith("lean/InfoGeometry/Unstable/")
+        for p in file_prefixes
+    ):
+        return True
+    try:
+        manifest = audit_constructivity.read_quarantine_manifest()
+    except Exception:
+        return True
+    for mod in manifest:
+        if module_prefixes and any(mod.startswith(p) for p in module_prefixes):
+            return True
+        if file_prefixes:
+            mod_path = "lean/" + mod.replace(".", "/") + ".lean"
+            if any(mod_path.startswith(p) for p in file_prefixes):
+                return True
+    return False
+
+
 def collect_findings(
     files: list[Path],
     *,
@@ -443,9 +491,11 @@ def collect_findings(
     include_manifest_consistency: bool,
     failures: list[dict[str, str]] | None = None,
     successful: list[str] | None = None,
+    file_prefixes: list[str] | None = None,
+    module_prefixes: list[str] | None = None,
 ) -> list[audit_constructivity.Finding]:
     findings: list[audit_constructivity.Finding] = []
-    if include_manifest_consistency:
+    if include_manifest_consistency and _manifest_relevant_to_prefixes(file_prefixes, module_prefixes):
         try:
             findings.extend(audit_constructivity.scan_manifest_consistency())
         except Exception as exc:
@@ -503,7 +553,10 @@ def build_report(
         files,
         include_review=include_review,
         include_manifest_consistency=include_manifest_consistency,
-        failures=failures, successful=successful,
+        failures=failures,
+        successful=successful,
+        file_prefixes=file_prefixes,
+        module_prefixes=module_prefixes,
     )
     findings = [
         finding
@@ -521,11 +574,40 @@ def build_report(
     for finding in findings:
         by_path[finding.path].append(finding)
 
-    try:
-        importers = importers_by_module(all_infogeometry_files(scope="all"), failures=failures)
-    except (OSError, subprocess.CalledProcessError) as exc:
+    manifest_only_entries: list[tuple[str, str, str]] = []
+    for mod, reason in sorted(manifest.items()):
+        path = module_to_path(mod)
+        if path is None:
+            continue
+        rpath = rel(path)
+        if rpath in by_path or rpath not in successful:
+            continue
+        if not in_scope(
+            path,
+            scope=scope,
+            file_prefixes=file_prefixes,
+            module_prefixes=module_prefixes,
+            exclude_prefixes=exclude_prefixes,
+            manifest_modules=set(manifest),
+        ):
+            continue
+        manifest_only_entries.append((mod, reason, rpath))
+
+    if by_path or manifest_only_entries:
+        needed_modules = {resolve_finding_location(rpath)[0] for rpath in by_path} | {
+            mod for mod, _, _ in manifest_only_entries
+        }
+        try:
+            importers = importers_by_module(
+                all_infogeometry_files(scope="all"),
+                failures=failures,
+                target_modules=needed_modules,
+            )
+        except (OSError, subprocess.CalledProcessError) as exc:
+            importers = {}
+            failures.append({"file": "", "phase": "importer_selection", "error": str(exc)})
+    else:
         importers = {}
-        failures.append({"file": "", "phase": "importer_selection", "error": str(exc)})
     modules: list[ModuleAudit] = []
     category_counts: Counter[str] = Counter()
     status_counts: Counter[str] = Counter()
@@ -566,22 +648,7 @@ def build_report(
             )
         )
 
-    for mod, reason in sorted(manifest.items()):
-        path = module_to_path(mod)
-        if path is None:
-            continue
-        rpath = rel(path)
-        if rpath in by_path or rpath not in successful:
-            continue
-        if not in_scope(
-            path,
-            scope=scope,
-            file_prefixes=file_prefixes,
-            module_prefixes=module_prefixes,
-            exclude_prefixes=exclude_prefixes,
-            manifest_modules=set(manifest),
-        ):
-            continue
+    for mod, reason, rpath in manifest_only_entries:
         direct_importers = importers.get(mod, [])
         status = "manifested_quarantine_no_current_findings"
         forbidden_importers = forbidden_importers_for_status(status, direct_importers)
@@ -731,8 +798,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description="Semantic content audit over current Lean source; does not classify by folder name."
     )
-    parser.add_argument("--json-out", type=Path, default=ROOT / "reports/dag/semantic-content-audit.json")
-    parser.add_argument("--md-out", type=Path, default=ROOT / "reports/dag/semantic-content-audit.md")
+    parser.add_argument("--json-out", type=Path, default=None)
+    parser.add_argument("--md-out", type=Path, default=None)
     parser.add_argument("--scope", choices=("all", "canonical", "stable", "quarantine"), default="all")
     parser.add_argument("--include-review", action="store_true")
     parser.add_argument("--no-manifest-consistency", action="store_true")
@@ -751,6 +818,14 @@ def main() -> int:
     )
     args = parser.parse_args()
 
+    is_scoped = bool(args.file_prefix or args.module_prefix or args.exclude_prefix or args.scope != "all")
+    json_out = args.json_out or (
+        ROOT / ("artifacts/semantic-content-audit-scoped.json" if is_scoped else "reports/dag/semantic-content-audit.json")
+    )
+    md_out = args.md_out or (
+        ROOT / ("artifacts/semantic-content-audit-scoped.md" if is_scoped else "reports/dag/semantic-content-audit.md")
+    )
+
     include_review = args.include_review or args.gate_review
     report = build_report(
         scope=args.scope,
@@ -761,9 +836,9 @@ def main() -> int:
         exclude_prefixes=args.exclude_prefix,
         include_manifest_consistency=not args.no_manifest_consistency,
     )
-    args.json_out.parent.mkdir(parents=True, exist_ok=True)
-    args.json_out.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    write_md(report, args.md_out)
+    json_out.parent.mkdir(parents=True, exist_ok=True)
+    json_out.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    write_md(report, md_out)
     print(json.dumps(report["summary"], indent=2, sort_keys=True))
     if not report["coverage"]["coverage_complete"]:
         return 2

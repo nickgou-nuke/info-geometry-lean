@@ -64,6 +64,12 @@ class SourceRouteTests(unittest.TestCase):
         calls = self.run_route("src/InfoGeometry/Quantum/Test.lean")
         self.assertIn("tools/infra/run_locked_lake_build.py --wait-for-build-lock --source-lane InfoGeometry.Quantum.Test", calls)
         self.assertIn("tools/infra/axiom_audit.py --fail-on-gaps src/InfoGeometry/Quantum/Test.lean", calls)
+        self.assertIn("tools/quality/semantic_content_audit.py --file-prefix src/InfoGeometry/Quantum/Test.lean --gate", calls)
+
+    def test_changed_test_file_routes_to_incremental_test_target(self):
+        calls = self.run_route("tests/InfoGeometryTests.lean")
+        self.assertIn("tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometryTests", calls)
+        self.assertNotIn("tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometryTestSuite", calls)
 
     def test_deleted_source_owner_routes_to_source_umbrella(self):
         calls = self.run_route("src/InfoGeometry/Quantum/Test.lean", delete=True)

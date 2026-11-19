@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.GromovWittenErlangen.GWCanonicalCountRayBridge
@@ -76,14 +81,14 @@ variable (C : SouriauGWCountOTCalibration.{uCountAtom}
   (LG := LG) (T := T) (Target := Target) (Coeff := Coeff))
 
 /-- The Souriau thermal Hamiltonian is the calibrated GW count Hamiltonian. -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem thermalHamiltonian_eq_gwCountHamiltonian
     (x : State) :
     C.souriau.K_beta x = C.gw.projectiveHamiltonianProfile (C.stateIndex x) :=
   C.K_beta_eq_projectiveHamiltonian x
 
 /-- The expectation term of the OT free energy is the calibrated GW count Hamiltonian. -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem expectationTerm_eq_gwCountHamiltonian
     (ρ : Density State) :
     C.freeEnergy.expectationTerm ρ =
@@ -101,7 +106,7 @@ theorem metriplecticFlow_total_eq_reversible_add_dissipative
 Free energy splits into entropy plus the calibrated GW projective count
 Hamiltonian expectation.
 -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem freeEnergy_eq_entropy_add_gwCountHamiltonian
     (ρ : Density State) :
     C.freeEnergy.freeEnergy ρ =
@@ -118,7 +123,7 @@ theorem freeEnergy_eq_entropy_add_gwCountHamiltonian
 Combined packet: the calibrated GW count Hamiltonian gives the expectation part,
 and the installed flow gives the metriplectic OT split.
 -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem gwCount_freeEnergy_and_flow_packet
     (ρ : Density State) :
     C.freeEnergy.freeEnergy ρ =

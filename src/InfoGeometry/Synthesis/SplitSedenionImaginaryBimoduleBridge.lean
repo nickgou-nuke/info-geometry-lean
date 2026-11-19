@@ -48,7 +48,7 @@ namespace InfoGeometry.Synthesis.SplitSedenionImaginaryBimoduleBridge
 open InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge
 open InfoGeometry.Canonical.SplitOctonionParaKahlerNullCone
 open InfoGeometry.Canonical.SplitOctonionClifford33Soldering
-open InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis hiding zornConj
+open InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis
 open InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly
 
 /-!

@@ -9,7 +9,11 @@ set -euo pipefail
 # 3) rooted causal-order / coverage refresh
 # 4) missing-All classification refresh
 
-python3 tools/infra/run_locked_lake_build.py InfoGeometry.All
+if [[ "$#" -gt 0 ]]; then
+  python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock "$@"
+else
+  python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock --changed --all-changed
+fi
 bash scripts/refresh_mathlib_infogeometry_graphs.sh
 python3 tools/infra/generate_causal_report.py \
   --out reports/dag/true-root-order.md \

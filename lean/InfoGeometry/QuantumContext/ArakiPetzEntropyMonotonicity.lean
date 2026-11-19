@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Basic.Real.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
@@ -20,7 +25,7 @@ namespace InfoGeometry.QuantumContext
 open Matrix
 
 /-!
-# Section 91: Araki Relative Modular Entropy Monotonicity & Petz Saturation
+# Algebraic Stiefel Defects, Petz Saturation, and Modular Intertwining
 
 Module: `InfoGeometry.QuantumContext.ArakiPetzEntropyMonotonicity`
 
@@ -49,7 +54,12 @@ This module formalizes:
      $$\Delta_{\rho, \sigma^{-1}}(\mathcal{E}_P(X)) = \mathcal{E}_P(\Delta_{\rho, \sigma^{-1}}(X))$$
      whenever $[\rho, P] = 0$ and $[\sigma^{-1}, P] = 0$.
 
-5. **Master Certification Conjunction**:
+5. **Scope boundary**:
+   The scalar functional `algebraicEntropyGap` is defined as `s^2 * L^2` and
+   shown equal to half the squared Frobenius defect. This file does not define
+   Araki relative entropy or prove its monotonicity under a quantum channel.
+
+6. **Master Certification Conjunction**:
    - `compile_araki_petz_entropy_monotonicity`.
 
 All proofs are native Mathlib with 0 sorry, 0 admit, and 0 custom axioms.
@@ -228,7 +238,7 @@ theorem relative_modular_intertwining (P rho sigma_inv X : Matrix (Fin 2) (Fin 2
 
 /-! ### 6. Master Compilation Target -/
 
-/-- Master compiler theorem ratifying Section 91 under OpenGauss QMS protocol. -/
+/-- Master conjunction of the algebraic Stiefel defect identities. -/
 theorem compile_araki_petz_entropy_monotonicity :
     (∀ K L s, K ^ 2 + L ^ 2 = 1 → trace (defectMatrix K L s) = 0) ∧
     (∀ K L s, K ^ 2 + L ^ 2 = 1 → frobeniusNormSq (defectMatrix K L s) = 2 * s ^ 2 * L ^ 2) ∧
@@ -261,5 +271,9 @@ theorem compile_araki_petz_entropy_monotonicity :
     (∀ K L s, K ^ 2 + L ^ 2 = 1 → s ≠ 0 → (algebraicEntropyGap K L s = 0 ↔ L = 0)) :=
   InfoGeometry.QuantumContext.compile_araki_petz_entropy_monotonicity
 end ArakiPetzEntropy
+
+theorem araki_petz_mat2_real_noncomm :
+    ∃ A B : Matrix (Fin 2) (Fin 2) ℝ, A * B ≠ B * A :=
+  InfoGeometry.QuantumContext.mat2_real_noncomm
 
 end InfoGeometry.QuantumContext

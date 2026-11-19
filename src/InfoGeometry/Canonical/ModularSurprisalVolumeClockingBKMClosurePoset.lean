@@ -227,8 +227,7 @@ include hP
    `((1 - P) + genPhi P A C) * ((1 - P) + genPhi P A C) - ((1 - P) + genPhi P A C) = genV P A C`,
 4. **Zorn Split-Octonion Supercolor Vacuum Strain**:
    For any color/anticolor vectors `u, v : Vec3 B` in `ZornMatrix B`,
-   `ZornMatrix.zornV u v = ZornMatrix.bilinearCondensate u v` and
-   `ZornMatrix.idempotentDeficit (ZornMatrix.eL + ZornMatrix.psiOffDiag u v) = ZornMatrix.bilinearCondensate u v + ⟨0, -Vec3.cross v v, Vec3.cross u u, 0⟩`. -/
+   the quadratic defect of `eL + psiOffDiag u v` is `zornV u v` plus the two self-cross terms. -/
 theorem archetype_S1_supercolor_vacuum_deformation_and_frozen_clock
     (p s₀ A C : B) (hs₀ : ∀ X : B, s₀ * X = X * s₀) (u v : Vec3 B) :
     sheetThermalState P p p = p ∧
@@ -236,10 +235,11 @@ theorem archetype_S1_supercolor_vacuum_deformation_and_frozen_clock
     (P + genPhi P A C) * (P + genPhi P A C) - (P + genPhi P A C) = genV P A C ∧
     ((1 - P) + genPhi P A C) * ((1 - P) + genPhi P A C) -
       ((1 - P) + genPhi P A C) = genV P A C ∧
-    ZornMatrix.zornV u v = ZornMatrix.bilinearCondensate u v ∧
-    ZornMatrix.idempotentDeficit (ZornMatrix.eL + ZornMatrix.psiOffDiag u v) =
-      ZornMatrix.bilinearCondensate u v + ⟨0, -Vec3.cross v v, Vec3.cross u u, 0⟩ := by
-  refine ⟨?_, ?_, by peirce_nf hP, by peirce_nf hP, ?_, ?_⟩
+    (ZornMatrix.eL + ZornMatrix.psiOffDiag u v) *
+        (ZornMatrix.eL + ZornMatrix.psiOffDiag u v) -
+        (ZornMatrix.eL + ZornMatrix.psiOffDiag u v) =
+      ZornMatrix.zornV u v + ⟨0, -Vec3.cross v v, Vec3.cross u u, 0⟩ := by
+  refine ⟨?_, ?_, by peirce_nf hP, by peirce_nf hP, ?_⟩
   · unfold sheetThermalState
     noncomm_ring
   · intro X
@@ -251,10 +251,8 @@ theorem archetype_S1_supercolor_vacuum_deformation_and_frozen_clock
     rw [hs₀ X, sub_self]
   · ext <;>
       simp [ZornMatrix.zornV, ZornMatrix.psiPlus, ZornMatrix.psiMinus,
-            ZornMatrix.bilinearCondensate]
-  · ext <;>
-      simp [ZornMatrix.idempotentDeficit, ZornMatrix.eL, ZornMatrix.psiOffDiag,
-            ZornMatrix.bilinearCondensate]
+            ZornMatrix.psiOffDiag, ZornMatrix.eL, ZornMatrix.mul_def,
+            Vec3.dot, Vec3.cross] <;> ring
 
 end StageS1
 
@@ -916,7 +914,10 @@ theorem modular_surprisal_volume_clocking_bkm_master_synthesis
     -- (1) Stage 𝔖₁ & 𝔖₂: Supercolor vacuum strain & Sheet surprisal idempotent normal form
     (sheetThermalState P s_p s_p = s_p ∧
      (P + genPhi P A C) * (P + genPhi P A C) - (P + genPhi P A C) = genV P A C ∧
-     ZornMatrix.zornV u v = ZornMatrix.bilinearCondensate u v ∧
+     (ZornMatrix.eL + ZornMatrix.psiOffDiag u v) *
+        (ZornMatrix.eL + ZornMatrix.psiOffDiag u v) -
+        (ZornMatrix.eL + ZornMatrix.psiOffDiag u v) =
+       ZornMatrix.zornV u v + ⟨0, -Vec3.cross v v, Vec3.cross u u, 0⟩ ∧
      (2 : ℤ) • sheetSurprisalOp P s_p s_q = (s_p + s_q) - (s_q - s_p) * invS P ∧
      realSheetSurprisalOp P p q =
        ((-(Real.log p + Real.log q) / 2) : ℝ) • (1 : B) -
@@ -975,7 +976,7 @@ theorem modular_surprisal_volume_clocking_bkm_master_synthesis
   exact ⟨⟨ModularSurprisalClockingStage.causalEdge_acyclic,
           ModularSurprisalClockingStage.causalEdge_chain_and_diamond.1,
           ModularSurprisalClockingStage.causalEdge_chain_and_diamond.2.2.2.2.2.2.2⟩,
-         ⟨hS1.1, hS1.2.2.1, hS1.2.2.2.2.1, hS2.2.1, hS2.2.2.2.1⟩,
+         ⟨hS1.1, hS1.2.2.1, hS1.2.2.2.2, hS2.2.1, hS2.2.2.2.1⟩,
          ⟨hS3.2.2.2.1, hS3.2.2.2.2.1, hS3.2.2.2.2.2⟩,
          ⟨hS4.2.1, hS4.2.2.2.1, hS5.1, hS5.2.2.2.2.1⟩,
          ⟨hS6.1, hS6.2.1, hS6.2.2.2.2⟩,

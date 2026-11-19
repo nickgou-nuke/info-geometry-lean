@@ -42,8 +42,28 @@ theorem horizon_color_charge_cohomology_class_eq_zero
         horizonQ horizonQ_nilpotent) := by
   have h_action : colorGradingEnd S.psi = horizonQ (-horizonK S.psi) := by
     rw [horizon_color_grading_brst_exact S, map_neg]
-  exact brst_exact_action_class_eq_zero horizonQ colorGradingEnd
-    horizonQ_nilpotent S.psi (-horizonK S.psi) h_action
+  have hrep :
+      (⟨colorGradingEnd S.psi, by
+        apply LinearMap.mem_ker.mpr
+        rw [h_action]
+        exact LinearMap.congr_fun horizonQ_nilpotent (-horizonK S.psi)⟩ :
+        LinearMap.ker horizonQ) =
+      ⟨horizonQ (-horizonK S.psi), LinearMap.congr_fun horizonQ_nilpotent
+        (-horizonK S.psi)⟩ := by
+    apply Subtype.ext
+    exact h_action
+  calc
+    Submodule.Quotient.mk
+        (⟨colorGradingEnd S.psi, by
+          apply LinearMap.mem_ker.mpr
+          rw [h_action]
+          exact LinearMap.congr_fun horizonQ_nilpotent (-horizonK S.psi)⟩ :
+          LinearMap.ker horizonQ) =
+        Submodule.Quotient.mk
+          ⟨horizonQ (-horizonK S.psi), LinearMap.congr_fun horizonQ_nilpotent
+            (-horizonK S.psi)⟩ := congrArg Submodule.Quotient.mk hrep
+    _ = Submodule.Quotient.mk 0 :=
+      exact_state_class_eq_zero horizonQ horizonQ_nilpotent (-horizonK S.psi)
 
 /-- Every closed vector in the concrete 32-component horizon complex is exact.
     This follows from `Q K + K Q = 1`; it is a finite-carrier algebraic result. -/
@@ -111,17 +131,38 @@ theorem octonionic_color_is_brst_exact
       (Submodule.Quotient.mk
         (p := LinearMap.range (brstExactToClosed q_ext h_q_nilpotent))
         ⟨spinEq.equiv.conj colorGradingEnd psi, by
-          change q_ext (spinEq.equiv.conj colorGradingEnd psi) = 0
-          rw [kugo_ojima_color_confinement_exactness
+          have h_action := kugo_ojima_color_confinement_exactness
             q_ext (spinEq.equiv.conj colorGradingEnd) k_op_ext
-            h_exactness psi h_phys]
-          exact LinearMap.congr_fun h_q_nilpotent (k_op_ext psi)⟩ =
+            h_exactness psi h_phys
+          calc
+            q_ext ((spinEq.equiv.conj colorGradingEnd) psi) =
+                q_ext (q_ext (k_op_ext psi)) := congrArg q_ext h_action
+            _ = 0 := LinearMap.congr_fun h_q_nilpotent (k_op_ext psi)⟩ =
        (Submodule.Quotient.mk 0 : brstCohomologyModule q_ext h_q_nilpotent)) := by
   constructor
   · exact kugo_ojima_color_confinement_exactness
       q_ext (spinEq.equiv.conj colorGradingEnd) k_op_ext h_exactness psi h_phys
-  · exact kugo_ojima_color_charge_class_eq_zero
-      q_ext (spinEq.equiv.conj colorGradingEnd) k_op_ext
-      h_q_nilpotent h_exactness psi h_phys
+  · have h_action := kugo_ojima_color_confinement_exactness
+      q_ext (spinEq.equiv.conj colorGradingEnd) k_op_ext h_exactness psi h_phys
+    have h_closed : q_ext ((spinEq.equiv.conj colorGradingEnd) psi) = 0 := by
+      calc
+        q_ext ((spinEq.equiv.conj colorGradingEnd) psi) =
+            q_ext (q_ext (k_op_ext psi)) := congrArg q_ext h_action
+        _ = 0 := LinearMap.congr_fun h_q_nilpotent (k_op_ext psi)
+    have hrep :
+        (⟨(spinEq.equiv.conj colorGradingEnd) psi,
+          LinearMap.mem_ker.mpr h_closed⟩ : LinearMap.ker q_ext) =
+        ⟨q_ext (k_op_ext psi), LinearMap.congr_fun h_q_nilpotent (k_op_ext psi)⟩ := by
+      apply Subtype.ext
+      exact h_action
+    calc
+      Submodule.Quotient.mk
+          (⟨(spinEq.equiv.conj colorGradingEnd) psi,
+            LinearMap.mem_ker.mpr h_closed⟩ : LinearMap.ker q_ext) =
+          Submodule.Quotient.mk
+            ⟨q_ext (k_op_ext psi), LinearMap.congr_fun h_q_nilpotent (k_op_ext psi)⟩ :=
+        congrArg Submodule.Quotient.mk hrep
+      _ = Submodule.Quotient.mk 0 :=
+        exact_state_class_eq_zero q_ext h_q_nilpotent (k_op_ext psi)
 
 end InfoGeometry.OperatorAlgebra.ColorBRST

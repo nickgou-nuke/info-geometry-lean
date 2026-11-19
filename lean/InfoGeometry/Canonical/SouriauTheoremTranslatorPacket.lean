@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.SouriauLieThermoKKTBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem
@@ -663,7 +668,7 @@ Constructive translator packet using an `IdentityBalancedStressSeed` instead of 
 `WeylSupertraceFreeStressContext`. This removes the explicit `W` hypothesis by building the
 required context via `IdentityBalancedStressSeed.toContext`.
 -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem translatorPacket_of_seed
  {G Gdual Orbit Stress : Type*}
  (moment : Orbit → Gdual)

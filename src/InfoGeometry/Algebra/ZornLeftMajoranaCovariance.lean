@@ -117,7 +117,7 @@ theorem leftMajoranaMinus_odd (u : ZornVec3 R) :
       leftMajoranaMinus u * L_map (R := R) (diagonal (R := R) 1 (-1)) = 0 :=
   left_diagonal_difference_anticommutes_offDiagonal u (-u)
 
-theorem leftMajorana_mode_product_square (i : Fin 3) :
+theorem leftMajorana_mode_product_square_cov (i : Fin 3) :
     (leftMajoranaMinus (ZornVec3.basis (R := R) i) * leftMajoranaPlus (ZornVec3.basis i)) *
       (leftMajoranaMinus (ZornVec3.basis i) * leftMajoranaPlus (ZornVec3.basis i)) = 1 := by
   rw [← mul_assoc, leftMajorana_mode_flip_minus, leftMajoranaPlus_basis_square]

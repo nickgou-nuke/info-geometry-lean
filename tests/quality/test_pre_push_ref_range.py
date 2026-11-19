@@ -645,6 +645,145 @@ class PrePushRefRangeTests(unittest.TestCase):
             self.assertIn("outside the package targets routed", result.stderr)
             self.assertIn("lean_sandbox/Sandbox/Source.lean", result.stderr)
 
+    def test_lakefile_additive_target_registration_runs_incremental_targets(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            subprocess.run(["git", "init", "-q", "-b", "main", str(root)], check=True)
+            self.git_in(root, "config", "user.name", "OpenGauss Hook Test")
+            self.git_in(root, "config", "user.email", "hook-test@example.invalid")
+
+            gate = root / "scripts" / "quality" / "post_build_gate.sh"
+            lean_mod = root / "lean" / "StandaloneNew.lean"
+            test_mod = root / "tests" / "AuditNativeScoped.lean"
+            gate.parent.mkdir(parents=True)
+            lean_mod.parent.mkdir(parents=True)
+            test_mod.parent.mkdir(parents=True)
+            gate.write_text(
+                (REPO_ROOT / "scripts" / "quality" / "post_build_gate.sh").read_text(
+                    encoding="utf-8"
+                ),
+                encoding="utf-8",
+            )
+            lean_mod.write_text("-- standalone module\n", encoding="utf-8")
+            test_mod.write_text("-- scoped test module\n", encoding="utf-8")
+            lakefile = root / "lakefile.lean"
+            lakefile.write_text(
+                "lean_lib StandaloneMathematics where\n  roots := #[\n    `Test,\n  ]\n",
+                encoding="utf-8",
+            )
+            self.git_in(root, "add", "-A")
+            self.git_in(root, "commit", "-qm", "base config and modules")
+            base = self.git_in(root, "rev-parse", "HEAD")
+
+            lakefile.write_text(
+                "lean_lib StandaloneMathematics where\n  roots := #[\n    `Test,\n    .one `AuditNativeScoped,\n    `StandaloneNew,\n  ]\n",
+                encoding="utf-8",
+            )
+            self.git_in(root, "commit", "-qam", "register additive targets")
+
+            bin_dir = root / "stub-bin"
+            bin_dir.mkdir()
+            python_stub = bin_dir / "python3"
+            python_stub.write_text(
+                "#!/usr/bin/env bash\n"
+                "set -euo pipefail\n"
+                "printf '%s\\n' \"$*\" >> \"$CAPTURE_FILE\"\n",
+                encoding="utf-8",
+            )
+            python_stub.chmod(0o755)
+            capture = root / "commands.txt"
+            env = os.environ.copy()
+            env["PATH"] = f"{bin_dir}{os.pathsep}{env['PATH']}"
+            env["CAPTURE_FILE"] = str(capture)
+            result = subprocess.run(
+                ["bash", str(gate), "--incremental", f"--base={base}"],
+                cwd=root,
+                env=env,
+                text=True,
+                capture_output=True,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            commands = capture.read_text(encoding="utf-8")
+            self.assertNotIn("InfoGeometry.All", commands)
+            self.assertIn(
+                "tools/infra/run_locked_lake_build.py --wait-for-build-lock StandaloneNew",
+                commands,
+            )
+            self.assertIn(
+                "tools/infra/run_locked_lake_build.py --wait-for-build-lock AuditNativeScoped",
+                commands,
+            )
+
+    def test_incremental_gate_filters_audit_native_run_targets(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            subprocess.run(["git", "init", "-q", "-b", "main", str(root)], check=True)
+            self.git_in(root, "config", "user.name", "OpenGauss Hook Test")
+            self.git_in(root, "config", "user.email", "hook-test@example.invalid")
+
+            gate = root / "scripts" / "quality" / "post_build_gate.sh"
+            lean_audit = root / "lean" / "AuditNativeRun.lean"
+            src_audit = root / "src" / "AuditNativeRun.lean"
+            lean_ok = root / "lean" / "AuditStrict.lean"
+            src_ok = root / "src" / "AuditStrict.lean"
+            for path in (gate, lean_audit, src_audit, lean_ok, src_ok):
+                path.parent.mkdir(parents=True, exist_ok=True)
+            gate.write_text(
+                (REPO_ROOT / "scripts" / "quality" / "post_build_gate.sh").read_text(
+                    encoding="utf-8"
+                ),
+                encoding="utf-8",
+            )
+            lean_ok.write_text("-- base strict\n", encoding="utf-8")
+            src_ok.write_text("-- base src strict\n", encoding="utf-8")
+            self.git_in(root, "add", "-A")
+            self.git_in(root, "commit", "-qm", "base audit entrypoints")
+            base = self.git_in(root, "rev-parse", "HEAD")
+
+            lean_audit.write_text("-- opt-in diagnostic runner\n", encoding="utf-8")
+            src_audit.write_text("-- opt-in src diagnostic runner\n", encoding="utf-8")
+            lean_ok.write_text("-- updated strict\n", encoding="utf-8")
+            src_ok.write_text("-- updated src strict\n", encoding="utf-8")
+            self.git_in(root, "add", "-A")
+            self.git_in(root, "commit", "-qm", "touch AuditNativeRun and AuditStrict")
+
+            bin_dir = root / "stub-bin"
+            bin_dir.mkdir()
+            python_stub = bin_dir / "python3"
+            python_stub.write_text(
+                "#!/usr/bin/env bash\n"
+                "set -euo pipefail\n"
+                "printf '%s\\n' \"$*\" >> \"$CAPTURE_FILE\"\n",
+                encoding="utf-8",
+            )
+            python_stub.chmod(0o755)
+            capture = root / "commands.txt"
+            env = os.environ.copy()
+            env["PATH"] = f"{bin_dir}{os.pathsep}{env['PATH']}"
+            env["CAPTURE_FILE"] = str(capture)
+            result = subprocess.run(
+                ["bash", str(gate), "--incremental", f"--base={base}"],
+                cwd=root,
+                env=env,
+                text=True,
+                capture_output=True,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            commands = capture.read_text(encoding="utf-8")
+            self.assertIn(
+                "tools/infra/run_locked_lake_build.py --wait-for-build-lock AuditStrict",
+                commands,
+            )
+            self.assertIn(
+                "tools/infra/run_locked_lake_build.py --wait-for-build-lock --source-lane AuditStrict",
+                commands,
+            )
+            for line in commands.splitlines():
+                if "run_locked_lake_build.py" in line:
+                    self.assertNotIn("AuditNativeRun", line)
+
     @staticmethod
     def git_in(cwd: Path, *args: str) -> str:
         result = subprocess.run(

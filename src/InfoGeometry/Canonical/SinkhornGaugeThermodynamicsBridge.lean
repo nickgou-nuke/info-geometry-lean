@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.SinkhornFoundation
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SinkhornKMSCore
@@ -122,7 +127,7 @@ variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSp
 KMS residual control is the operator-side consumer of the Sinkhorn RN gauge
 budget.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem sinkhornGaugeBudget_controls_approxKMS
     (T : SinkhornTrajectory n)
     (K : AlgebraEnd F)

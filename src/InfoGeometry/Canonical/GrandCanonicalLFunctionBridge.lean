@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GrandCanonicalHamiltonianFlowBridge
@@ -24,7 +29,6 @@ open InfoGeometry.Canonical.LFunctionHamiltonianFlowBridge
 open InfoGeometry.Canonical.GrandCanonicalThermodynamicEngine
 open InfoGeometry.Arithmetic.LFunctionRepresentationBridge
 open InfoGeometry.Arithmetic.LFunctionRepresentationBridge.TwistedSouriauWeylBridge
-open InfoGeometry.Thermodynamics.SouriauWeylPartitionBridge
 
 variable
     {Orbit G E Op H Finite Alg Symmetry : Type}
@@ -98,7 +102,7 @@ theorem packet_beta_eq_engine_temperature :
       Bridge.partition_temperature_alignment (B := B)
 
 /-- The engine still identifies the Hamiltonian with the Souriau generator. -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem engine_flow_hamiltonian_is_souriau_generator :
     B.engine.flow.selfAdjointHamiltonian =
       B.engine.flow.modularContext.logContext.modularHamiltonian :=
@@ -131,7 +135,7 @@ theorem twistedPartitionFunction_eq_twistedEulerProduct :
   exact B.lfunction.twistedPartitionFunction_eq_twistedEulerProduct
 
 /-- The L-function bridge still exposes the character identity for the partition packet. -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem packet_partitionFunction_is_souriau_character :
     B.lfunction.packet.representation.partitionFunction B.lfunction.packet.beta =
       B.lfunction.packet.representation.character
@@ -139,7 +143,7 @@ theorem packet_partitionFunction_is_souriau_character :
   B.lfunction.packet_partitionFunction_is_souriau_character
 
 /-- The L-function bridge still exposes the prime Euler-product denominator readout. -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem packet_denominator_is_prime_euler_product :
     B.lfunction.packet.denominatorBridge.weylDenominator =
       B.lfunction.packet.denominatorBridge.primeEulerProduct :=

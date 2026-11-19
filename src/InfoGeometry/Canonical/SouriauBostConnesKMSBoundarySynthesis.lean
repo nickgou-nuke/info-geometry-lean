@@ -176,9 +176,8 @@ theorem souriau_bost_connes_tenfold_kms_fisher_euler_and_cantor_synthesis
     -- (6) & (7) TopCat Cantor Boundary Iso, Projective Dual Limit & Inductive Colimit Descent
     ((prefixBoundaryLimitIso.hom ≫ limit.π prefixDiagram (Opposite.op n)).hom
        cantorVacuumBoundary = finiteVacuumWord n ∧
-     ((dualInverseFamilyToProjectiveLimit (sys := uhfDiagDirectSystem)
-         finiteZeroTempState finiteZeroTempState_isDualInverseFamily ≫
-           limit.π (dualModuleDiagram uhfDiagDirectSystem) (Opposite.op n)).hom (1 : ℂ)) f =
+     dualInverseFamilyToProjectiveLimitStageFunctional (sys := uhfDiagDirectSystem)
+         finiteZeroTempState finiteZeroTempState_isDualInverseFamily n f =
        colimitZeroTempState n f ∧
      (dualInverseFamilyColimitMap (sys := uhfDiagDirectSystem)
          finiteZeroTempState finiteZeroTempState_isDualInverseFamily).hom

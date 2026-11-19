@@ -571,7 +571,45 @@ theorem commuting_coordinates_can_have_nonzero_insertion :
       (lowerWithScalar e₁₂ p)).x = ⟨e₁₂, 0, 0⟩ ∧
     (associator (lowerWithScalar e₁₂ p) (lowerWithScalar e₁₂ p)
       (lowerWithScalar e₁₂ p)).x ≠ ⟨0, 0, 0⟩ := by
-  native_decide
+  have h11_22 : e₁₁ * e₂₂ = 0 := by
+    ext i j
+    fin_cases i <;> fin_cases j <;> norm_num [e₁₁, e₂₂, Matrix.mul_apply]
+  have h22_11 : e₂₂ * e₁₁ = 0 := by
+    ext i j
+    fin_cases i <;> fin_cases j <;> norm_num [e₁₁, e₂₂, Matrix.mul_apply]
+  have h11_12 : e₁₁ * e₁₂ = e₁₂ := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [e₁₁, e₁₂, Matrix.mul_apply]
+  have h22_12 : e₂₂ * e₁₂ = 0 := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [e₂₂, e₁₂, Matrix.mul_apply]
+  have h12_22 : e₁₂ * e₂₂ = e₁₂ := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [e₁₂, e₂₂, Matrix.mul_apply]
+  have h12_11 : e₁₂ * e₁₁ = 0 := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [e₁₂, e₁₁, Matrix.mul_apply]
+  have h12_21 : e₁₂ * e₂₁ ≠ e₂₁ * e₁₂ := by
+    intro h
+    have h00 := congrArg (fun M : Mat₂ => M 0 0) h
+    norm_num [e₁₂, e₂₁, Matrix.mul_apply] at h00
+  have hvec :
+      (associator (lowerWithScalar e₁₂ p) (lowerWithScalar e₁₂ p)
+        (lowerWithScalar e₁₂ p)).x = ⟨e₁₂, 0, 0⟩ := by
+    rw [lower_with_scalar_self_associator_x]
+    simp [p, vecSub, vecLeftMul, vecRightMul, cross,
+      h11_22, h22_11, h11_12, h22_12, h12_22]
+  refine ⟨h12_21, h11_22, h22_11, ?_, hvec, ?_⟩
+  · simp [p, cross, h11_22, h22_11]
+  · rw [hvec]
+    intro h
+    have h0 := congrArg Vec3.x0 h
+    have h01 := congrArg (fun M : Mat₂ => M 0 1) h0
+    norm_num [e₁₂] at h01
 
 end InsertionMatrixWitness
 

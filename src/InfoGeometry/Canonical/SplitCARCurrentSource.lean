@@ -86,7 +86,7 @@ def toCurrentHeisenbergRep
 theorem toCurrentHeisenbergRep_nonempty
     (W : SplitCARCurrentWitness 𝕜 A V) :
     Nonempty (CurrentHeisenbergRep 𝕜 V) := by
-  exact ⟨by unfold toCurrentHeisenbergRep; exact W.2⟩
+  exact ⟨W.2⟩
 
 end SplitCARCurrentWitness
 
@@ -117,8 +117,7 @@ theorem chargedFockSpaceSplitCARCurrentWitness_trunc
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (v : VirasoroProject.ChargedFockSpace 𝕜 α) :
     ∀ᶠ l : Int in atTop,
       (chargedFockSpaceSplitCARCurrentWitness 𝕜 α).J l v = 0 := by
-  dsimp; simpa only [chargedFockSpaceSplitCARCurrentWitness_J] using
-    (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc v
+  convert (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc v using 1 <;> rfl
 
 /-- Heisenberg commutator identity of `chargedFockSpaceSplitCARCurrentWitness`. -/
 theorem chargedFockSpaceSplitCARCurrentWitness_comm
@@ -130,8 +129,7 @@ theorem chargedFockSpaceSplitCARCurrentWitness_comm
           (1 : VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
             VirasoroProject.ChargedFockSpace 𝕜 α)
       else 0 := by
-  dsimp; simpa only [chargedFockSpaceSplitCARCurrentWitness_J] using
-    (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm m n
+  convert (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm m n using 1 <;> rfl
 
 /-- Nonemptiness of `SplitCARCurrentWitness` on `ChargedFockSpace 𝕜 α`. -/
 theorem chargedFockSpaceSplitCARCurrentWitness_nonempty
@@ -156,7 +154,7 @@ noncomputable def chargedFockSpaceSplitCARCurrentSugawaraMorphism
     (chargedFockSpaceSplitCARCurrentSugawaraMorphism 𝕜 α).heisenberg =
       (chargedFockSpaceSplitCARCurrentWitness 𝕜 α).toCurrentHeisenbergRep := by
   unfold chargedFockSpaceSplitCARCurrentSugawaraMorphism
-  exact CurrentSugawaraMorphism.ofHeisenberg_heisenberg _
+  exact (CurrentSugawaraMorphism.ofHeisenberg_readout _).1
 
 /-- The Virasoro component of `chargedFockSpaceSplitCARCurrentSugawaraMorphism`. -/
 @[simp] theorem chargedFockSpaceSplitCARCurrentSugawaraMorphism_virasoro
@@ -164,7 +162,7 @@ noncomputable def chargedFockSpaceSplitCARCurrentSugawaraMorphism
     (chargedFockSpaceSplitCARCurrentSugawaraMorphism 𝕜 α).virasoro =
       (chargedFockSpaceSplitCARCurrentWitness 𝕜 α).toCurrentHeisenbergRep.currentSugawaraRepresentation := by
   unfold chargedFockSpaceSplitCARCurrentSugawaraMorphism
-  exact CurrentSugawaraMorphism.ofHeisenberg_virasoro _
+  exact (CurrentSugawaraMorphism.ofHeisenberg_readout _).2.1
 
 /-- Nonemptiness of `CurrentSugawaraMorphism` on `ChargedFockSpace 𝕜 α`. -/
 theorem chargedFockSpaceSplitCARCurrentSugawaraMorphism_nonempty
@@ -227,7 +225,7 @@ theorem chargedFockSpace_current_commutator_one_negOne
         ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J (-1))
       =
     (1 : 𝕜) • 1 := by
-  dsimp; simpa using (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm 1 (-1)
+  simpa using (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm 1 (-1)
 
 /-- Off-diagonal current modes commute when $m + n \neq 0$. -/
 theorem chargedFockSpace_current_commutator_zero_of_add_ne_zero
@@ -238,7 +236,7 @@ theorem chargedFockSpace_current_commutator_zero_of_add_ne_zero
         ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J n)
       =
       0 := by
-  dsimp; simpa [h] using (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm m n
+  simpa [h] using (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm m n
 
 /-- Opposite current modes satisfy $[J_m, J_n] = m \cdot \mathrm{id}$ when $m + n = 0$. -/
 theorem chargedFockSpace_current_commutator_central_of_add_eq_zero
@@ -249,6 +247,6 @@ theorem chargedFockSpace_current_commutator_central_of_add_eq_zero
         ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J n)
       =
       (m : 𝕜) • 1 := by
-  dsimp; simpa [h] using (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm m n
+  simpa [h] using (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm m n
 
 end InfoGeometry.Canonical.SplitCARCurrentSource

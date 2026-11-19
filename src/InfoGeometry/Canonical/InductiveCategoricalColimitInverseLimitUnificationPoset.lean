@@ -26,8 +26,8 @@ import InfoGeometry.Canonical.JaynesianNilpotentInductiveColimitContinuumPoset
   - `ColimitInverseLimitParadigm`, `ColimitTaxonomicClade`, `ColimitDevelopmentStratum`, and
     `ColimitInverseLimitUnificationStage` (`ℭ₁ ≺ … ≺ ℭ₈`).
   - `stage_C1_quotient_direct_limit_to_categorical_module_colimit_bridge` (`quotientToCategoricalColimit`).
-  - `stage_C2_C3_inductive_colimit_state_to_projective_dual_limit_bridge` and
-    `projectiveLimitDualColimitLinearEquiv`.
+  - `stage_C2_C3_inductive_colimit_state_to_projective_dual_limit_bridge` and the
+    owner equivalence `projectiveLimitEquivDualInverseFamily`.
   - `stage_C4_C5_projective_space_to_inductive_cylinder_and_cantor_uhf_bridge` (`pullbackInductiveSystem`,
     `pullbackCylinderCocone`).
   - `stage_C6_filtered_colimit_finite_limit_interchange` (`colimit_limit_iso`).
@@ -56,9 +56,9 @@ eight stages `ColimitInverseLimitUnificationStage` (`ℭ₁ ≺ … ≺ ℭ₈`)
 3. **Stage `ℭ₃` (Universal Duality Between Inductive Colimit States & Projective Dual Cones)**:
    Patches `IsDualInverseFamily` (`FilteredDirectInverseColimitReadback`) directly to
    `Cone (dualModuleDiagram sys)` and `limit (dualModuleDiagram sys)`, proving that every
-   inverse-compatible family of stage functionals `phi : ∀ i, A i →ₗ[R] R` simultaneously lifts to
-   a morphism `dualInverseFamilyToProjectiveLimit : ModuleCat.of R R ⟶ limit (dualModuleDiagram sys)`
-   on the projective limit side and descends to `dualInverseFamilyColimitMap : colimit (moduleDiagram sys) ⟶ ModuleCat.of R R`
+   inverse-compatible family of stage functionals `phi : ∀ i, A i →ₗ[R] R` identifies with an
+   element `dualInverseFamilyToProjectiveLimit` of the categorical projective limit and descends to
+   `dualInverseFamilyColimitMap : colimit (moduleDiagram sys) ⟶ ModuleCat.of R R`
    on the directed colimit side, with identical stage evaluations `phi i x`, and that every colimit
    state `g : colimit (moduleDiagram sys) ⟶ ModuleCat.of R R` is uniquely reconstructed from its
    stage restriction family.
@@ -444,92 +444,73 @@ theorem stage_C1_quotient_direct_limit_to_categorical_module_colimit_bridge
 ## Part III: Stages `ℭ₂` & `ℭ₃` — Contravariant Dual `ModuleCat` Diagram (`Iᵒᵖ ⥤ ModuleCat.{u} R`) & Inductive-Colimit / Projective-Limit State Duality
 -/
 
+def colimitFunctionalStageFamily
+    {R : Type u} [CommRing R] {I : Type u} [Preorder I]
+    {A : I → Type u} [∀ i, AddCommGroup (A i)] [∀ i, Module R (A i)]
+    (sys : DirectInductiveSystem R I A)
+    (g : colimit (FilteredColimit.Native.moduleDiagram sys) ⟶ ModuleCat.of R R) :
+    ∀ i : I, A i →ₗ[R] R :=
+  fun i => g.hom.comp ((colimit.ι (FilteredColimit.Native.moduleDiagram sys) i).hom)
+
+theorem colimitFunctionalStageFamily_isDualInverseFamily
+    {R : Type u} [CommRing R] {I : Type u} [Preorder I]
+    {A : I → Type u} [∀ i, AddCommGroup (A i)] [∀ i, Module R (A i)]
+    (sys : DirectInductiveSystem R I A)
+    (g : colimit (FilteredColimit.Native.moduleDiagram sys) ⟶ ModuleCat.of R R) :
+    IsDualInverseFamily sys (colimitFunctionalStageFamily sys g) := by
+  intro i j hij
+  apply LinearMap.ext
+  intro x
+  have hι := colimit.w (FilteredColimit.Native.moduleDiagram sys) (homOfLE hij)
+  have hcomp := congrArg (fun q => q ≫ g) hι
+  exact congrArg (fun q => q.hom x) hcomp
+
 /-- **Stages `ℭ₂` & `ℭ₃` (`stage_C2_C3_inductive_colimit_state_to_projective_dual_limit_bridge`)**:
 Connects the existing declarations in `FilteredDirectInverseColimitReadback` for
 `IsDualInverseFamily`, `dualModuleDiagram`, `limit (dualModuleDiagram sys)`, and
 `colimit (moduleDiagram sys)`:
-1. Projecting `dualInverseFamilyToProjectiveLimit (sys := sys) phi hphi` to stage `Opposite.op i` and
-   evaluating at `(1 : R)` and `x : A i` yields `phi i x`,
+1. Composing the scalar-to-limit map `dualInverseFamilyToProjectiveLimit sys phi hphi` with
+   the stage projection and evaluating at `1 : R` and `x : A i` yields `phi i x`,
 2. Evaluating the inductive colimit map `dualInverseFamilyColimitMap phi hphi` on the canonical
    stage injection `(colimit.ι (moduleDiagram sys) i).hom x` also yields `phi i x`, so the
    **projective limit projection** and the **inductive colimit evaluation** coincide identically,
 3. Restricting any colimit functional `g : colimit (moduleDiagram sys) ⟶ ModuleCat.of R R` to its
-   dual inverse family `colimitFunctionalStageFamily sys g.hom` and descending back through the
+   dual inverse family `colimitFunctionalStageFamily sys g` and descending back through the
    colimit recovers `g` uniquely (`g = dualInverseFamilyColimitMap ...`). -/
 theorem stage_C2_C3_inductive_colimit_state_to_projective_dual_limit_bridge
     {R : Type u} [CommRing R] {I : Type u} [Preorder I]
     {A : I → Type u} [∀ i, AddCommGroup (A i)] [∀ i, Module R (A i)]
     (sys : DirectInductiveSystem R I A)
     (phi : ∀ i : I, A i →ₗ[R] R)
-    (hphi : IsDualInverseFamily (sys := sys) phi)
+    (hphi : IsDualInverseFamily sys phi)
     (g : colimit (FilteredColimit.Native.moduleDiagram sys) ⟶ ModuleCat.of R R)
     (i : I) (x : A i) :
-    ((dualInverseFamilyToProjectiveLimit (sys := sys) phi hphi ≫
-        limit.π (dualModuleDiagram sys) (Opposite.op i)).hom (1 : R)) x = phi i x ∧
-    ((dualInverseFamilyToProjectiveLimit (sys := sys) phi hphi ≫
-        limit.π (dualModuleDiagram sys) (Opposite.op i)).hom (1 : R)) x =
+    dualInverseFamilyToProjectiveLimitStageFunctional (sys := sys) phi hphi i x = phi i x ∧
+    dualInverseFamilyToProjectiveLimitStageFunctional (sys := sys) phi hphi i x =
       (dualInverseFamilyColimitMap (sys := sys) phi hphi).hom
         ((colimit.ι (FilteredColimit.Native.moduleDiagram sys) i).hom x) ∧
     g = dualInverseFamilyColimitMap (sys := sys)
-          (colimitFunctionalStageFamily (sys := sys) g.hom)
-          (colimitFunctionalStageFamily_isDualInverseFamily (sys := sys) g.hom) := by
+          (colimitFunctionalStageFamily sys g)
+          (colimitFunctionalStageFamily_isDualInverseFamily sys g) := by
   refine ⟨dualInverseFamilyToProjectiveLimit_stage (sys := sys) phi hphi i x, ?_, ?_⟩
-  · rw [dualInverseFamilyToProjectiveLimit_stage (sys := sys) phi hphi i x,
-      dualInverseFamilyColimitMap_stage (sys := sys) phi hphi i x]
-  · exact dualInverseFamilyColimitMap_unique (sys := sys)
-      (colimitFunctionalStageFamily (sys := sys) g.hom)
-      (colimitFunctionalStageFamily_isDualInverseFamily (sys := sys) g.hom)
-      g (by intro j y; rfl)
-
-/-- The projective limit of the stagewise algebraic duals is linearly equivalent
-to the algebraic dual of the native categorical colimit. The underlying
-equivalence is built from limit projections and the colimit universal
-property; this declaration also proves that the correspondence preserves the
-`R`-module structure, rather than only giving a bijection of carriers. -/
-noncomputable def projectiveLimitDualColimitLinearEquiv
-    {R : Type u} [CommRing R] {I : Type u} [Preorder I]
-    {A : I → Type u} [∀ i, AddCommGroup (A i)] [∀ i, Module R (A i)]
-    (sys : DirectInductiveSystem R I A) :
-    ((limit (dualModuleDiagram sys) : ModuleCat R) : Type u) ≃ₗ[R]
-      (InfoGeometry.Categorical.Holonomy.ModuleInductiveLimit R
-        (FilteredColimit.Native.moduleDiagram sys) →ₗ[R] R) :=
-  { projectiveLimitDualColimitFunctionalEquiv (sys := sys) with
-    map_add' := fun z w => by
-      have h :
-          ModuleCat.ofHom (projectiveLimitDualColimitFunctionalEquiv (sys := sys) (z + w)) =
-          ModuleCat.ofHom (projectiveLimitDualColimitFunctionalEquiv (sys := sys) z +
-            projectiveLimitDualColimitFunctionalEquiv (sys := sys) w) := by
-        apply colimit.hom_ext
-        intro i
-        ext x
-        change (projectiveLimitDualColimitFunctionalEquiv (sys := sys) (z + w))
-            ((colimit.ι (FilteredColimit.Native.moduleDiagram sys) i).hom x) =
-          (projectiveLimitDualColimitFunctionalEquiv (sys := sys) z)
-            ((colimit.ι (FilteredColimit.Native.moduleDiagram sys) i).hom x) +
-          (projectiveLimitDualColimitFunctionalEquiv (sys := sys) w)
-            ((colimit.ι (FilteredColimit.Native.moduleDiagram sys) i).hom x)
-        rw [projectiveLimitDualColimitFunctionalEquiv_stage (sys := sys) (z + w) i x,
-          projectiveLimitDualColimitFunctionalEquiv_stage (sys := sys) z i x,
-          projectiveLimitDualColimitFunctionalEquiv_stage (sys := sys) w i x]
-        rw [map_add]
-        rfl
-      exact congrArg ModuleCat.Hom.hom h
-    map_smul' := fun c z => by
-      have h :
-          ModuleCat.ofHom (projectiveLimitDualColimitFunctionalEquiv (sys := sys) (c • z)) =
-          ModuleCat.ofHom (c • projectiveLimitDualColimitFunctionalEquiv (sys := sys) z) := by
-        apply colimit.hom_ext
-        intro i
-        ext x
-        change (projectiveLimitDualColimitFunctionalEquiv (sys := sys) (c • z))
-            ((colimit.ι (FilteredColimit.Native.moduleDiagram sys) i).hom x) =
-          c * (projectiveLimitDualColimitFunctionalEquiv (sys := sys) z)
-            ((colimit.ι (FilteredColimit.Native.moduleDiagram sys) i).hom x)
-        rw [projectiveLimitDualColimitFunctionalEquiv_stage (sys := sys) (c • z) i x,
-          projectiveLimitDualColimitFunctionalEquiv_stage (sys := sys) z i x]
-        rw [map_smul]
-        rfl
-      exact congrArg ModuleCat.Hom.hom h }
+  · calc
+      dualInverseFamilyToProjectiveLimitStageFunctional (sys := sys) phi hphi i x
+          = phi i x := dualInverseFamilyToProjectiveLimit_stage (sys := sys) phi hphi i x
+      _ = (dualInverseFamilyColimitMap (sys := sys) phi hphi).hom
+          ((colimit.ι (FilteredColimit.Native.moduleDiagram sys) i).hom x) :=
+        (dualInverseFamilyColimitMap_stage sys phi hphi i x).symm
+  · apply colimit.hom_ext
+    intro j
+    apply ModuleCat.hom_ext
+    ext y
+    change g.hom ((colimit.ι (FilteredColimit.Native.moduleDiagram sys) j).hom y) =
+      (dualInverseFamilyColimitMap sys (colimitFunctionalStageFamily sys g)
+        (colimitFunctionalStageFamily_isDualInverseFamily sys g)).hom
+        ((colimit.ι (FilteredColimit.Native.moduleDiagram sys) j).hom y)
+    rw [dualInverseFamilyColimitMap_stage sys
+      (colimitFunctionalStageFamily sys g)
+      (colimitFunctionalStageFamily_isDualInverseFamily sys g) j y]
+    rfl
 
 /-!
 ## Part IV: Stages `ℭ₄` & `ℭ₅` — Projective Limit of Spaces ↔ Inductive Colimit of Pullback Cylinder Observables (Cantor Boundary ↔ UHF Diagonal Algebra)
@@ -717,10 +698,9 @@ theorem stage_C7_peirce_cartan_gauss_bonnet_tower_to_dual_inverse_trace_system
     (hRes_i : (genV P_i A_i C_i + η_i) * R_i = 1)
     (hRJ_i : R_i * genJ P_i A_i C_i = genJ P_i A_i C_i * R_i) (k : ℕ) :
     let sys := algTowerToDirectSystem R Stage f f_id f_comp
-    ∃ hτ_dual : IsDualInverseFamily (sys := sys) τ,
-      (((dualInverseFamilyToProjectiveLimit (sys := sys) τ hτ_dual ≫
-          limit.π (dualModuleDiagram sys) (Opposite.op i)).hom (1 : R))
-            (invS P_i * genV P_i A_i C_i ^ (k + 1)) = 0 ∧
+    ∃ hτ_dual : IsDualInverseFamily sys τ,
+      dualInverseFamilyToProjectiveLimitStageFunctional (sys := sys) τ hτ_dual i
+        (invS P_i * genV P_i A_i C_i ^ (k + 1)) = 0 ∧
        (dualInverseFamilyColimitMap (sys := sys) τ hτ_dual).hom
           ((colimit.ι (FilteredColimit.Native.moduleDiagram sys) i).hom
             (invS P_i * genV P_i A_i C_i ^ (k + 1))) = 0 ∧
@@ -733,9 +713,9 @@ theorem stage_C7_peirce_cartan_gauss_bonnet_tower_to_dual_inverse_trace_system
         (dualInverseFamilyColimitMap (sys := sys) τ hτ_dual).hom
           ((colimit.ι (FilteredColimit.Native.moduleDiagram sys) i).hom
             ((2 : ℤ) • (invS P_i * η_i * R_i))) ∧
-       cl11TraceColimitMap = cl11TraceFromInverseFamily) := by
+       cl11TraceColimitMap = cl11TraceFromInverseFamily := by
   intro sys
-  have hτ_dual : IsDualInverseFamily (sys := sys) τ := by
+  have hτ_dual : IsDualInverseFamily sys τ := by
     intro m l hml
     exact hτ_compat hml
   refine ⟨hτ_dual, ?_⟩
@@ -765,10 +745,10 @@ strata, the direct dependency poset, and all 5 fragment-patching bridges:
    `ColimitInverseLimitUnificationStage.causalEdge_acyclic`,
 2. **Bridge 1 (`ℭ₁`)**: Exact agreement between `AddCommGroup.DirectLimit` (`quotientToCategoricalColimit`)
    and `colimit (moduleDiagram sys)` on every stage representative,
-3. **Bridge 2 (`ℭ₂` & `ℭ₃`)**: Exact equality between the projective dual limit projection
-   `dualInverseFamilyToProjectiveLimit (sys := sys) τ hτ_dual ≫ limit.π (dualModuleDiagram sys) (Opposite.op i)`
+3. **Bridge 2 (`ℭ₂` & `ℭ₃`)**: Exact equality between the stage readout
+   `dualInverseFamilyToProjectiveLimitStageFunctional (sys := sys) τ hτ_dual i`
    and the inductive colimit functional `dualInverseFamilyColimitMap`, plus unique reconstruction
-   of any colimit state `g` from `colimitFunctionalStageFamily sys g.hom`,
+   of any colimit state `g` from `colimitFunctionalStageFamily sys g`,
 4. **Bridge 3 (`ℭ₄` & `ℭ₅`)**: Projective-limit to inductive-cylinder pullback connecting
    `prefixBoundaryLimitIso : TopCat.of CantorBoundary ≅ limit prefixDiagram` to `diagEmbedSucc`
    and `cylinder_compatible_succ`,
@@ -809,10 +789,9 @@ theorem inductive_categorical_colimit_inverse_limit_unification_master_synthesis
      cylinder (n + 1) (diagEmbedSucc n f_diag) = cylinder n f_diag) ∧
     ((colimit_limit_iso R F_diag).hom ≫ (colimit_limit_iso R F_diag).inv = 𝟙 _ ∧
      (lim_composition_naturality R F_diag).hom ≫ (lim_composition_naturality R F_diag).inv = 𝟙 _) ∧
-    (∃ hτ_dual : IsDualInverseFamily (sys := sys) τ,
-      ((dualInverseFamilyToProjectiveLimit (sys := sys) τ hτ_dual ≫
-          limit.π (dualModuleDiagram sys) (Opposite.op i)).hom (1 : R))
-            (invS P_i * genV P_i A_i C_i ^ (k + 1)) = 0 ∧
+    (∃ hτ_dual : IsDualInverseFamily sys τ,
+      dualInverseFamilyToProjectiveLimitStageFunctional (sys := sys) τ hτ_dual i
+        (invS P_i * genV P_i A_i C_i ^ (k + 1)) = 0 ∧
       (dualInverseFamilyColimitMap (sys := sys) τ hτ_dual).hom
           ((colimit.ι (FilteredColimit.Native.moduleDiagram sys) i).hom
             (invS P_i * genV P_i A_i C_i ^ (k + 1))) = 0 ∧
@@ -825,9 +804,13 @@ theorem inductive_categorical_colimit_inverse_limit_unification_master_synthesis
       cl11TraceColimitMap = cl11TraceFromInverseFamily) ∧
     (hkWitnessP * hkWitnessA ≠ hkWitnessA * hkWitnessP) := by
   intro sys
+  let cocone : InductiveCocone R sys (A_inf := R) :=
+    InductiveCocone.mk τ (by
+      intro m l hml
+      exact LinearMap.ext fun x => congrArg (fun f => f x) (hτ_compat hml))
   have hC1 :=
     stage_C1_quotient_direct_limit_to_categorical_module_colimit_bridge
-      sys (dualInverseFamilyCocone (sys := sys) τ (fun {m l} hml => hτ_compat hml)) i x_i
+      sys cocone i x_i
   have hC6 :=
     stage_C6_filtered_colimit_finite_limit_interchange
       R F_diag

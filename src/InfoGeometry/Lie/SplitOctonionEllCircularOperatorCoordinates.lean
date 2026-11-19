@@ -1,9 +1,15 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Lie.SplitOctonionEllCircularAxialGrading
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionEllCrossChannel
 import InfoGeometry.Lie.SplitOctonionCircularMultiplicationTable
 import InfoGeometry.Algebra.Zorn.ParityTwistedLeviCivita
 import InfoGeometry.Algebra.Zorn.CanonicalDerivationBridge
+import InfoGeometry.Lie.SplitOctonionTetraktysAutomorphismCovariance
 
 /-!
 # Operatorial coordinates in the circular Peirce basis
@@ -30,6 +36,9 @@ open InfoGeometry.Lie.SplitOctonionCircularMultiplicationTable
 open InfoGeometry.Algebra.Zorn.ParityTwistedLeviCivita
 open InfoGeometry.Algebra.Zorn.SplitQuaternionCore
 open InfoGeometry.Algebra.Zorn.CanonicalDerivationBridge
+open InfoGeometry.Lie.SplitOctonionTetraktysAutomorphismCovariance
+open InfoGeometry.Lie.SplitOctonionEllCrossChannel
+open InfoGeometry.Lie.SplitOctonionChiralOperatorSupergrading
 
 abbrev CanonicalZorn :=
   InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis.CanonicalZorn
@@ -144,6 +153,15 @@ theorem leftCoordinateOperator_uPlus_apply (x : Coordinate) :
     fin_cases i <;> fin_cases j <;> simp [T]
   exact congrArg (fun f : Coordinate →ₗ[ℝ] Coordinate => f x) hT
 
+/-- Coordinate transport of the native left-regular operator. -/
+theorem coordinateEquiv_leftRegular_apply (A X : CanonicalZorn) :
+    coordinateEquiv (leftRegular A X) =
+      leftCoordinateOperator A (coordinateEquiv X) := by
+  change coordinateEquiv (A * X) =
+    leftCoordinateOperator A (coordinateEquiv X)
+  rw [← coordinateEquiv.symm_apply_apply X, ← leftCoordinateOperator_apply]
+  simp
+
 theorem rightCoordinateOperator_uMinus_apply (x : Coordinate) :
     rightCoordinateOperator uMinus x =
       fun i => if 0 < i.val ∧ i.val < 5 then x i else 0 := by
@@ -221,6 +239,195 @@ theorem leftCoordinateOperator_uMinus_apply (x : Coordinate) :
     funext j
     fin_cases i <;> fin_cases j <;> simp [T]
   exact congrArg (fun f : Coordinate →ₗ[ℝ] Coordinate => f x) hT
+
+/-- The regular Tetraktys element `J = L_{u₊} - L_{u₋}` is diagonal in the
+actual Ell-circular basis: its positive sector is spanned by frame indices
+`0..3` and its negative sector by `4..7`. This transports the endomorphism
+algebra generator to the coordinate carrier explicitly. -/
+theorem regularJ_uPlus_uMinus_coordinate_apply (x : Coordinate) :
+    coordinateEquiv
+        (regularJ uPlus uMinus (coordinateEquiv.symm x)) =
+      fun i => if i.val < 4 then x i else -x i := by
+  change coordinateEquiv
+      ((leftRegular uPlus - leftRegular uMinus) (coordinateEquiv.symm x)) = _
+  rw [LinearMap.sub_apply, map_sub,
+    coordinateEquiv_leftRegular_apply, coordinateEquiv_leftRegular_apply]
+  rw [leftCoordinateOperator_uPlus_apply, leftCoordinateOperator_uMinus_apply]
+  funext i
+  by_cases hi : i.val < 4
+  · simp [hi, Nat.not_le.mpr hi]
+  · have hi' : i.val ≥ 4 := Nat.le_of_not_gt hi
+    simp [hi, hi']
+
+/-- The regular `J` generator squares to the identity on the full carrier. -/
+theorem regularJ_uPlus_uMinus_sq :
+    regularJ uPlus uMinus * regularJ uPlus uMinus = 1 := by
+  apply LinearMap.ext
+  intro X
+  simp only [Module.End.mul_apply, Module.End.one_apply]
+  apply coordinateEquiv.injective
+  let x := coordinateEquiv X
+  have h₁ := regularJ_uPlus_uMinus_coordinate_apply x
+  have h₂ := regularJ_uPlus_uMinus_coordinate_apply
+    (coordinateEquiv (regularJ uPlus uMinus (coordinateEquiv.symm x)))
+  rw [coordinateEquiv.symm_apply_apply, h₁] at h₂
+  funext i
+  by_cases hi : i.val < 4
+  · have h₂i := congrFun h₂ i
+    simp [hi] at h₂i
+    simpa [x, hi] using h₂i
+  · have hi' : i.val ≥ 4 := Nat.le_of_not_gt hi
+    have h₂i := congrFun h₂ i
+    simp [hi, hi'] at h₂i
+    simpa [x, hi, hi'] using h₂i
+
+/-- In this distinguished Peirce pair, the `Φ` regular generator is the
+identity on the carrier. -/
+theorem regularPhi_uPlus_uMinus_eq_one :
+    regularPhi uPlus uMinus = 1 := by
+  apply LinearMap.ext
+  intro X
+  change uPlus * X + uMinus * X = X
+  rw [← InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.add_mul,
+    uPlus_add_uMinus]
+  exact InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.one_mul X
+
+/-- The two disjoint coordinate Peirce projections have zero compositions;
+this proves the corresponding `V` and `Σ` regular generators vanish. -/
+theorem regularLeftProjection_compositions_zero :
+    leftRegular uPlus * leftRegular uMinus = 0 ∧
+      leftRegular uMinus * leftRegular uPlus = 0 := by
+  constructor
+  · apply LinearMap.ext
+    intro X
+    apply coordinateEquiv.injective
+    change coordinateEquiv
+      (leftRegular uPlus (leftRegular uMinus X)) = coordinateEquiv 0
+    rw [coordinateEquiv_leftRegular_apply, coordinateEquiv_leftRegular_apply,
+      leftCoordinateOperator_uMinus_apply, leftCoordinateOperator_uPlus_apply]
+    rw [map_zero]
+    funext i
+    by_cases hi : i.val < 4
+    · simp [hi, Nat.not_le.mpr hi]
+    · have hi' : i.val ≥ 4 := Nat.le_of_not_gt hi
+      simp [hi, hi']
+  · apply LinearMap.ext
+    intro X
+    apply coordinateEquiv.injective
+    change coordinateEquiv
+      (leftRegular uMinus (leftRegular uPlus X)) = coordinateEquiv 0
+    rw [coordinateEquiv_leftRegular_apply, coordinateEquiv_leftRegular_apply,
+      leftCoordinateOperator_uPlus_apply, leftCoordinateOperator_uMinus_apply]
+    rw [map_zero]
+    funext i
+    by_cases hi : i.val < 4
+    · simp [hi, Nat.not_le.mpr hi]
+    · have hi' : i.val ≥ 4 := Nat.le_of_not_gt hi
+      simp [hi, hi']
+
+/-- The anticommutator channel `V` and commutator channel `Σ` both vanish
+for the complementary `u₊/u₋` idempotents in the Ell-circular convention. -/
+theorem regularV_regularSig_uPlus_uMinus_eq_zero :
+    regularV uPlus uMinus = 0 ∧ regularSig uPlus uMinus = 0 := by
+  rcases regularLeftProjection_compositions_zero with ⟨hpm, hmp⟩
+  exact ⟨by simp [regularV, hpm, hmp], by simp [regularSig, hpm, hmp]⟩
+
+/-- Conjugate a regular endomorphism onto the actual Ell-circular
+coordinate carrier. -/
+def ellCoordinateConjugate
+    (T : InfoGeometry.Lie.SplitOctonionTetraktysAutomorphismCovariance.EndCZ) :
+    Module.End ℝ Coordinate :=
+  coordinateEquiv.conjAlgEquiv ℝ T
+
+/-- Commutator superoperators on Ell-coordinate endomorphisms. -/
+def ellCoordinateComm (A B : Module.End ℝ Coordinate) :
+    Module.End ℝ Coordinate := A * B - B * A
+
+/-- Double-commutator superoperators on Ell-coordinate endomorphisms. -/
+def ellCoordinateDoubleComm (A B : Module.End ℝ Coordinate) :
+    Module.End ℝ Coordinate := ellCoordinateComm A (ellCoordinateComm A B)
+
+/-- Conjugation by the circular-coordinate equivalence preserves the
+regular Tetraktys double commutator. -/
+theorem ellCoordinateConjugate_doubleComm
+    (H T : InfoGeometry.Lie.SplitOctonionTetraktysAutomorphismCovariance.EndCZ) :
+    ellCoordinateConjugate (doubleComm H T) =
+      ellCoordinateDoubleComm (ellCoordinateConjugate H) (ellCoordinateConjugate T) := by
+  change (coordinateEquiv.conjAlgEquiv ℝ) (doubleComm H T) = _
+  simp only [doubleComm, operatorComm, map_sub, map_mul]
+  rfl
+
+/-- For the complementary Ell-circular projectors, the `Φ`, `V`, and `Σ`
+regular channels have zero induced double commutator. -/
+theorem ellCircular_regularTetraktys_doubleComm_reduction (T :
+    InfoGeometry.Lie.SplitOctonionTetraktysAutomorphismCovariance.EndCZ) :
+    ellCoordinateDoubleComm (ellCoordinateConjugate (regularPhi uPlus uMinus))
+      (ellCoordinateConjugate T) = 0 ∧
+    ellCoordinateDoubleComm (ellCoordinateConjugate (regularV uPlus uMinus))
+      (ellCoordinateConjugate T) = 0 ∧
+    ellCoordinateDoubleComm (ellCoordinateConjugate (regularSig uPlus uMinus))
+      (ellCoordinateConjugate T) = 0 := by
+  have hΦ : regularPhi uPlus uMinus = 1 := regularPhi_uPlus_uMinus_eq_one
+  have hVS := regularV_regularSig_uPlus_uMinus_eq_zero
+  constructor
+  · rw [← ellCoordinateConjugate_doubleComm, hΦ]
+    simp [doubleComm, operatorComm, ellCoordinateConjugate]
+  · constructor
+    · rw [← ellCoordinateConjugate_doubleComm, hVS.1]
+      simp [doubleComm, operatorComm, ellCoordinateConjugate]
+    · rw [← ellCoordinateConjugate_doubleComm, hVS.2]
+      simp [doubleComm, operatorComm, ellCoordinateConjugate]
+
+/-- On the Ell coordinate carrier, regular `J` acts by `+1` on indices
+`0..3` and `-1` on indices `4..7`. -/
+theorem ellCircular_regularJ_apply (x : Coordinate) :
+    ellCoordinateConjugate (regularJ uPlus uMinus) x =
+      fun i => if i.val < 4 then x i else -x i := by
+  simpa [ellCoordinateConjugate, LinearEquiv.conjAlgEquiv_apply] using
+    regularJ_uPlus_uMinus_coordinate_apply x
+
+/-- The double commutator by regular `J` annihilates same-sector matrix
+units and multiplies cross-sector matrix units by four. -/
+theorem ellCircular_regularJ_doubleComm_matrixUnit (T : Module.End ℝ Coordinate)
+    (i j : Fin 8) :
+    ellCoordinateDoubleComm (ellCoordinateConjugate (regularJ uPlus uMinus)) T
+        (Pi.single j (1 : ℝ)) i =
+      if (i.val < 4) = (j.val < 4) then 0 else
+        4 * T (Pi.single j (1 : ℝ)) i := by
+  let H := ellCoordinateConjugate (regularJ uPlus uMinus)
+  have hHapply (x : Coordinate) (k : Fin 8) :
+      H x k = (if k.val < 4 then (1 : ℝ) else -1) * x k := by
+    have h := congrFun (ellCircular_regularJ_apply x) k
+    simpa [H, smul_eq_mul] using h
+  have hHe : H (Pi.single j (1 : ℝ)) =
+      (if j.val < 4 then (1 : ℝ) else -1) • Pi.single j 1 := by
+    ext k
+    simp only [Pi.smul_apply]
+    rw [hHapply]
+    by_cases hj : j.val < 4 <;> by_cases hk : k = j <;>
+      simp [hj, hk, smul_eq_mul]
+  have hHsq : H * H = 1 := by
+    simpa [H, ellCoordinateConjugate] using
+      congrArg (coordinateEquiv.conjAlgEquiv ℝ)
+        regularJ_uPlus_uMinus_sq
+  have hdouble : ellCoordinateDoubleComm H T =
+      2 • (T - H * T * H) := by
+    have hHsq_apply : ∀ x : Coordinate, H (H x) = x := by
+      intro x
+      have h := congrArg (fun F : Module.End ℝ Coordinate => F x) hHsq
+      simpa only [Module.End.mul_apply, Module.End.one_apply] using h
+    unfold ellCoordinateDoubleComm ellCoordinateComm
+    apply LinearMap.ext
+    intro x
+    change H (H (T x) - T (H x)) -
+        (H (T (H x)) - T (H (H x))) =
+      2 • (T x - H (T (H x)))
+    rw [map_sub, hHsq_apply (T x), hHsq_apply x, two_smul]
+    ring
+  rw [show ellCoordinateConjugate (regularJ uPlus uMinus) = H from rfl,
+    hdouble]
+  by_cases hi : i.val < 4 <;> by_cases hj : j.val < 4 <;>
+    simp [Module.End.mul_apply, hHe, hHapply, hi, hj] <;> ring
 
 theorem rightCoordinateOperator_uPlus_apply (x : Coordinate) :
     rightCoordinateOperator uPlus x =
@@ -522,3 +729,29 @@ theorem axialFlow_mem_axialEigenspace (t w : ℝ) (X : CanonicalZorn)
   rw [hX, map_smul]
 
 end InfoGeometry.Lie.SplitOctonionEllCircularOperatorCoordinates
+
+namespace InfoGeometry.Lie.SplitOctonionEllCircularOperatorCoordinatesWitnesses
+
+theorem leftCoordinate_mat8_noncomm :
+    ∃ A B : Matrix (Fin 8) (Fin 8) ℝ, A * B ≠ B * A := by
+  let A : Matrix (Fin 8) (Fin 8) ℝ :=
+    Matrix.of fun i j => if i = 0 ∧ j = 1 then 1 else 0
+  let B : Matrix (Fin 8) (Fin 8) ℝ :=
+    Matrix.of fun i j => if i = 1 ∧ j = 0 then 1 else 0
+  refine ⟨A, B, ?_⟩
+  intro h
+  have h00 := congrFun (congrFun h (0 : Fin 8)) (0 : Fin 8)
+  have hAB : (A * B) 0 0 = 1 := by
+    rw [Matrix.mul_apply, Finset.sum_eq_single (1 : Fin 8)]
+    · simp [A, B]
+    · intro k _ hk
+      simp [A, hk]
+    · intro h1
+      exact (h1 (Finset.mem_univ _)).elim
+  have hBA : (B * A) 0 0 = 0 := by
+    rw [Matrix.mul_apply]
+    exact Finset.sum_eq_zero (fun k _ => by simp [B])
+  rw [hAB, hBA] at h00
+  exact one_ne_zero h00
+
+end InfoGeometry.Lie.SplitOctonionEllCircularOperatorCoordinatesWitnesses

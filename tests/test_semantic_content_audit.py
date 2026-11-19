@@ -165,3 +165,109 @@ def test_enclosing_decl_finds_nearest_preceding_declaration(tmp_path: Path) -> N
     assert owner is not None
     assert owner["name"] == "M.t"
     assert owner["kind"] == "theorem"
+
+
+def test_clean_incremental_build_report_skips_full_repo_importer_scan(monkeypatch, tmp_path: Path) -> None:
+    from tools.quality import semantic_content_audit as audit
+
+    clean = tmp_path / "lean" / "InfoGeometry" / "Clean.lean"
+    clean.parent.mkdir(parents=True)
+    clean.write_text("namespace Clean\ndef ok : Nat := 1\n", encoding="utf-8")
+
+    monkeypatch.setattr(audit, "ROOT", tmp_path)
+    monkeypatch.setattr(audit, "read_manifest", lambda: ({}, True, None))
+    monkeypatch.setattr(audit.audit_constructivity, "maintained_lean_files", lambda **kw: [clean])
+    monkeypatch.setattr(
+        audit,
+        "importers_by_module",
+        lambda *a, **kw: (_ for _ in ()).throw(AssertionError("unexpected full importer scan")),
+    )
+
+    report = audit.build_report(
+        include_review=False,
+        excerpt_radius=1,
+        file_prefixes=["lean/InfoGeometry/Clean.lean"],
+        include_manifest_consistency=False,
+    )
+
+    assert report["summary"]["selected_file_count"] == 1
+    assert report["summary"]["modules_reported"] == 0
+
+
+def test_all_lean_files_passes_include_src_only_for_src_prefix(monkeypatch, tmp_path: Path) -> None:
+    from tools.quality import semantic_content_audit as audit
+
+    recorded: list[dict[str, object]] = []
+
+    def fake_maintained(**kwargs):
+        recorded.append(dict(kwargs))
+        return [
+            tmp_path / "lean" / "InfoGeometry" / "A.lean",
+            tmp_path / "src" / "InfoGeometry" / "B.lean",
+        ]
+
+    monkeypatch.setattr(audit, "ROOT", tmp_path)
+    monkeypatch.setattr(audit.audit_constructivity, "maintained_lean_files", fake_maintained)
+
+    src_selected = audit.all_lean_files(file_prefixes=["src/InfoGeometry/B.lean"])
+    lean_selected = audit.all_lean_files(file_prefixes=["lean/InfoGeometry/A.lean"])
+
+    assert [p.relative_to(tmp_path).as_posix() for p in src_selected] == ["src/InfoGeometry/B.lean"]
+    assert [p.relative_to(tmp_path).as_posix() for p in lean_selected] == ["lean/InfoGeometry/A.lean"]
+    assert recorded == [{"include_src": True}, {}]
+
+
+def test_importers_by_module_target_modules_prefilters_unrelated_files(monkeypatch, tmp_path: Path) -> None:
+    from tools.quality import semantic_content_audit as audit
+
+    unrelated = tmp_path / "lean" / "InfoGeometry" / "Unrelated.lean"
+    user = tmp_path / "lean" / "InfoGeometry" / "User.lean"
+    unrelated.parent.mkdir(parents=True)
+    unrelated.write_text("import Mathlib\ndef x : Nat := 1\n", encoding="utf-8")
+    user.write_text("import InfoGeometry.Target\ndef y : Nat := 2\n", encoding="utf-8")
+
+    monkeypatch.setattr(audit, "ROOT", tmp_path)
+    stripped_calls: list[str] = []
+    orig_strip = audit.audit_constructivity.strip_comments
+
+    def spy_strip(text: str, **kwargs):
+        stripped_calls.append(text)
+        return orig_strip(text, **kwargs)
+
+    monkeypatch.setattr(audit.audit_constructivity, "strip_comments", spy_strip)
+    imports = audit.importers_by_module([unrelated, user], target_modules={"InfoGeometry.Target"})
+
+    assert imports == {"InfoGeometry.Target": ["InfoGeometry.User"]}
+    assert len(stripped_calls) == 1
+    assert "InfoGeometry.Target" in stripped_calls[0]
+
+
+def test_main_scoped_defaults_write_under_artifacts_not_global_reports(monkeypatch, tmp_path: Path) -> None:
+    import sys
+    from tools.quality import semantic_content_audit as audit
+
+    clean = tmp_path / "lean" / "InfoGeometry" / "Clean.lean"
+    clean.parent.mkdir(parents=True)
+    clean.write_text("def ok : Nat := 1\n", encoding="utf-8")
+
+    monkeypatch.setattr(audit, "ROOT", tmp_path)
+    monkeypatch.setattr(audit, "read_manifest", lambda: ({}, True, None))
+    monkeypatch.setattr(audit.audit_constructivity, "maintained_lean_files", lambda **kw: [clean])
+    monkeypatch.setattr(sys, "argv", ["semantic_content_audit.py", "--file-prefix", "lean/InfoGeometry/Clean.lean", "--gate"])
+
+    rc = audit.main()
+
+    assert rc == 0
+    assert (tmp_path / "artifacts" / "semantic-content-audit-scoped.json").is_file()
+    assert (tmp_path / "artifacts" / "semantic-content-audit-scoped.md").is_file()
+    assert not (tmp_path / "reports" / "dag" / "semantic-content-audit.json").exists()
+
+
+def test_in_scope_exact_lean_file_prefix_avoids_sibling_collision(monkeypatch, tmp_path: Path) -> None:
+    from tools.quality import semantic_content_audit as audit
+
+    monkeypatch.setattr(audit, "ROOT", tmp_path)
+    exact = tmp_path / "lean" / "InfoGeometry" / "Test.lean"
+    sibling = tmp_path / "lean" / "InfoGeometry" / "TestExtra.lean"
+    assert in_scope(exact, file_prefixes=["lean/InfoGeometry/Test.lean"])
+    assert not in_scope(sibling, file_prefixes=["lean/InfoGeometry/Test.lean"])

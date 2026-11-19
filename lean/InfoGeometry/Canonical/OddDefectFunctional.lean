@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.RelativePotentialCountBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativePotentialScalarBridge
@@ -112,7 +117,7 @@ noncomputable def operatorLiftedCountDefectFunctional
 /--
 The operator-lifted defect is exactly the same owned cocycle `countMassShift`.
 -/
-@[rep_depth operator]
+@[rep_depth operator, capstone]
 theorem operatorLiftedCountDefectFunctional_eq_countMassShift
     (counts ref : RelativeCounts n)
     (hcounts : ∀ i : Fin n, 0 < counts i)

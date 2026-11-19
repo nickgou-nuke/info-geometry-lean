@@ -94,8 +94,7 @@ theorem heisenbergBoundaryAtlasReadout_root_independent
     heisenbergBoundaryAtlasReadout (𝕜 := 𝕜) α q =
       heisenbergBoundaryAtlasReadout (𝕜 := 𝕜) α q' := by
   unfold heisenbergBoundaryAtlasReadout
-  rw [InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.canonicalAtlas_heisenberg,
-    InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.canonicalAtlas_heisenberg]
+  rfl
 
 /-- The effective cubic-root parameter satisfies `ω^3 = 1`. -/
 theorem heisenbergSixthRootCubicMonodromyReadout_root_cube
@@ -137,7 +136,7 @@ theorem continuous_heisenbergSixthRootCubicMonodromyReadout (α : 𝕜) :
 theorem isLocallyConstant_heisenbergSixthRootCubicMonodromyReadout (α : 𝕜) :
     IsLocallyConstant (heisenbergSixthRootCubicMonodromyReadout (𝕜 := 𝕜) α) := by
   unfold heisenbergSixthRootCubicMonodromyReadout
-  exact IsLocallyConstant.of_discrete
+  exact IsLocallyConstant.of_discrete _
 
 end
 

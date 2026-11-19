@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 
 import InfoGeometry.Epistemology.JungianEpistemicCompiler
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
+import InfoGeometry.OperatorAlgebra.PeirceSpine.DefectTower
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized
 import InfoGeometry.OperatorAlgebra.PeirceSpine.TetraktysChiralGamma5DiracBridge
@@ -90,21 +91,13 @@ import Mathlib.Tactic
 /-!
 # Coagulated Archetype Synthesis: Solve et Coagula
 
-This file coagulates the five Jungian archetypes into a single acyclic causal
-poset over the Peirce operator spine, following the `solve et coagula` protocol:
-
-- **Part I (Binary cut)**: `evenGrade`/`animusLogos` vs `oddGrade`/`shadowProjection`
-  through the grading involution `S = invS P`.
-- **Part II (Fourfold anatomy)**: the four Peirce sectors `peirce11`, `peirce00`,
-  `conePlus`, `coneMinus` map to the four pre-individuation Jungian positions.
-- **Part III (Transcendent function)**: the mass/chiral pairing `V`/`Σ`, with
-  `V`-even (hodge) vs `Σ`-chiral (bar) separation.
-- **Part IV (Socratic aporia)**: the Cayley–Weyl element `W = J + (1 - V)` and
-  its off-shell defect `W * W⁻¹ - 1 = V² - V`.
-- **Part V (Acyclic causal poset)**: the master structural synthesis theorem
-  ordering the archetypes from primordial distinction to Necessary synthesis.
-
-All theorems are 100% kernel-verified in Lean 4 with 0 sorry and 0 admit.
+This module collects algebraic synthesis theorems over their explicitly stated
+Lean carriers. The Part XI reflexive-compiler result is an associative-ring
+calculation for an idempotent `P`; its dependency graph records proved theorem
+support rather than psychological or physical causation. Archetypal names in
+this file are repository encodings, not formal verification of psychological
+interpretations. Compilation and axiom claims must be tied to a specified
+current check, not inferred from the module's presence or comments.
 -/
 
 namespace InfoGeometry.Epistemology.CoagulatedArchetypeSynthesis
@@ -113,6 +106,35 @@ open InfoGeometry.OperatorAlgebra.PeirceSpine
 open InfoGeometry.OperatorAlgebra.PeirceSpine.TetraktysChiralGamma5DiracBridge
 open InfoGeometry.OperatorAlgebra.PeirceSpine.CyclotomicGaloisNilpotentSylvesterSynthesis
 open InfoGeometry.Epistemology.JungianEpistemicCompiler
+
+/-- The `2 × 2` matrix algebra over a nontrivial commutative ring has a
+concrete noncommuting pair. This witness concerns the carrier itself; it does
+not assume that arbitrary matrices supplied to a theorem fail to commute. -/
+theorem matrix_fin2_noncommutativity_witness {R : Type*} [CommRing R]
+    [Nontrivial R] :
+    ∃ A B : Matrix (Fin 2) (Fin 2) R, A * B ≠ B * A := by
+  refine ⟨Matrix.single 0 1 (1 : R), Matrix.single 1 0 (1 : R), ?_⟩
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) R => M 0 0) h
+  have h10 : (1 : R) = 0 := by simpa using h00
+  exact one_ne_zero h10
+
+/-- The same matrix-unit witness in dimension three, used by the Pass-3/4
+matrix identities in this owner. -/
+theorem matrix_fin3_noncommutativity_witness {R : Type*} [CommRing R]
+    [Nontrivial R] :
+    ∃ A B : Matrix (Fin 3) (Fin 3) R, A * B ≠ B * A := by
+  refine ⟨Matrix.single 0 1 (1 : R), Matrix.single 1 0 (1 : R), ?_⟩
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 3) (Fin 3) R => M 0 0) h
+  have h10 : (1 : R) = 0 := by simpa using h00
+  exact one_ne_zero h10
+
+/-- A concrete complex-coefficient instance of the dimension-two witness;
+the owner also contains such matrices over `ℂ`. -/
+theorem matrix_fin2_complex_noncommutativity_witness :
+    ∃ A B : Matrix (Fin 2) (Fin 2) ℂ, A * B ≠ B * A := by
+  exact matrix_fin2_noncommutativity_witness (R := ℂ)
 
 variable {B : Type*} [Ring B]
 variable {P : B} (hP : P * P = P)
@@ -745,124 +767,204 @@ theorem goedel_commutator_nonzero
 end SophistHoTTAndGoedel
 
 /-! =======================================================================
-    Part XI: Reflexive Epistemic Compiler Self-Application Poset
-    `D ≺ R ≺ A ≺ T ≺ X ≺ M ≺ P ≺ S` (`solve et coagula` Applied to Itself)
+    Part XI: Reflexive Compiler Proof-Dependency DAG
     ======================================================================= -/
 
-/-- **The 8-Stage Causal Poset (`D ≺ R ≺ A ≺ T ≺ X ≺ M ≺ P ≺ S`)** of the
-Reflexive Epistemic Compiler applied to its own master instruction:
-- `D_primordialCut`: Fundamental Binary Cut (`evenGrade`/`coreOp` vs. `oddGrade`/`offOp`),
-- `R_fourfoldAnatomy`: Fourfold Relational Matrix (`peirce11`, `conePlus`, `coneMinus`, `peirce00`),
-- `A_socraticAporia`: First-Order Socratic Aporia (`Ψ² ≠ Ψ`, non-idempotence of single-pass extraction),
-- `T_transcendentBridge`: Transcendent Function (`genPhi`, `genJ`, `genV`, `genSig`),
-- `X_nonCommutativeOrder`: Strict Non-Commutative Asymmetry (`strip ∘ embed ≠ embed ∘ strip`),
-- `M_recursiveMetaTower`: Recursive Meta-Cognitive Tower (`M_n → R_{n+1}`, Newton–Peirce step),
-- `P_acyclicCausalPoset`: Acyclic Causal Poset Ordering (`≺`),
-- `S_coagulatedSynthesis`: Self-Verifying Structural Synthesis (`solve et coagula`). -/
-inductive ReflexiveCompilerArchetype : Type
-  | D_primordialCut
-  | R_fourfoldAnatomy
-  | A_socraticAporia
-  | T_transcendentBridge
-  | X_nonCommutativeOrder
-  | M_recursiveMetaTower
-  | P_acyclicCausalPoset
-  | S_coagulatedSynthesis
+/-- Artifacts in the reflexive compiler proof dependency graph.  These nodes
+name theorem-level inputs and outputs, not Jungian stages or a presumed
+psychological/physical causal order. -/
+inductive ReflexiveCompilerProofNode : Type
+  | binaryCut
+  | fourfoldPeirceReconstruction
+  | tetraktysProducts
+  | aporiaDefect
+  | recursiveDefectTower
+  | newtonDefectRefinement
+  | masterSynthesis
   deriving DecidableEq, Repr
 
-instance instInhabitedReflexiveCompilerArchetype : Inhabited ReflexiveCompilerArchetype := ⟨.D_primordialCut⟩
+/-- Direct proof-support edges used by the master theorem below.  In
+particular, fourfold anatomy and tetraktys products are parallel consequences
+of the idempotent cut; no unsupported order between them is asserted. -/
+inductive reflexiveCompilerDependency : ReflexiveCompilerProofNode → ReflexiveCompilerProofNode → Prop
+  | cut_fourfold : reflexiveCompilerDependency .binaryCut .fourfoldPeirceReconstruction
+  | cut_tetraktys : reflexiveCompilerDependency .binaryCut .tetraktysProducts
+  | cut_aporia : reflexiveCompilerDependency .binaryCut .aporiaDefect
+  | tetraktys_aporia : reflexiveCompilerDependency .tetraktysProducts .aporiaDefect
+  | cut_defectTower : reflexiveCompilerDependency .binaryCut .recursiveDefectTower
+  | tetraktys_defectTower : reflexiveCompilerDependency .tetraktysProducts .recursiveDefectTower
+  | cut_master : reflexiveCompilerDependency .binaryCut .masterSynthesis
+  | fourfold_master : reflexiveCompilerDependency .fourfoldPeirceReconstruction .masterSynthesis
+  | tetraktys_master : reflexiveCompilerDependency .tetraktysProducts .masterSynthesis
+  | aporia_master : reflexiveCompilerDependency .aporiaDefect .masterSynthesis
+  | defectTower_master : reflexiveCompilerDependency .recursiveDefectTower .masterSynthesis
+  | newton_master : reflexiveCompilerDependency .newtonDefectRefinement .masterSynthesis
 
-/-- Topological rank in the 8-stage Reflexive Epistemic Compiler Poset. -/
-def reflexiveCompilerRank : ReflexiveCompilerArchetype → ℕ
-  | .D_primordialCut       => 0
-  | .R_fourfoldAnatomy     => 1
-  | .A_socraticAporia      => 2
-  | .T_transcendentBridge  => 3
-  | .X_nonCommutativeOrder => 4
-  | .M_recursiveMetaTower  => 5
-  | .P_acyclicCausalPoset  => 6
-  | .S_coagulatedSynthesis => 7
+/-- A topological ranking for the explicitly listed proof-support edges. -/
+def reflexiveCompilerDependencyRank : ReflexiveCompilerProofNode → ℕ
+  | .binaryCut => 0
+  | .fourfoldPeirceReconstruction => 1
+  | .tetraktysProducts => 1
+  | .aporiaDefect => 2
+  | .recursiveDefectTower => 2
+  | .newtonDefectRefinement => 0
+  | .masterSynthesis => 3
 
 omit [Ring B] hP in
-theorem reflexiveCompilerRank_injective : Function.Injective reflexiveCompilerRank := by
-  intro x y h
-  cases x <;> cases y <;> cases h <;> rfl
-
-instance instPartialOrderReflexiveCompilerArchetype : PartialOrder ReflexiveCompilerArchetype :=
-  PartialOrder.lift reflexiveCompilerRank reflexiveCompilerRank_injective
+theorem reflexiveCompilerDependency_strict_rank {x y : ReflexiveCompilerProofNode}
+    (h : reflexiveCompilerDependency x y) :
+    reflexiveCompilerDependencyRank x < reflexiveCompilerDependencyRank y := by
+  cases h <;> decide
 
 omit [Ring B] hP in
-/-- **Strict Causal Chain (`D ≺ R ≺ A ≺ T ≺ X ≺ M ≺ P ≺ S`)** of the Reflexive Epistemic Compiler. -/
-theorem reflexive_compiler_strict_causal_chain :
-    ReflexiveCompilerArchetype.D_primordialCut < .R_fourfoldAnatomy ∧
-    ReflexiveCompilerArchetype.R_fourfoldAnatomy < .A_socraticAporia ∧
-    ReflexiveCompilerArchetype.A_socraticAporia < .T_transcendentBridge ∧
-    ReflexiveCompilerArchetype.T_transcendentBridge < .X_nonCommutativeOrder ∧
-    ReflexiveCompilerArchetype.X_nonCommutativeOrder < .M_recursiveMetaTower ∧
-    ReflexiveCompilerArchetype.M_recursiveMetaTower < .P_acyclicCausalPoset ∧
-    ReflexiveCompilerArchetype.P_acyclicCausalPoset < .S_coagulatedSynthesis := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> decide
+theorem reflexiveCompilerDependency_transGen_strict_rank {x y : ReflexiveCompilerProofNode}
+    (h : Relation.TransGen reflexiveCompilerDependency x y) :
+    reflexiveCompilerDependencyRank x < reflexiveCompilerDependencyRank y := by
+  induction h with
+  | single hxy => exact reflexiveCompilerDependency_strict_rank hxy
+  | tail _ hyz ih => exact Nat.lt_trans ih (reflexiveCompilerDependency_strict_rank hyz)
 
-/-- **Operator Realization of `strip` and `embed` in the Reflexive Epistemic Compiler**:
-- `compilerStrip P X = evenGrade P X`: strips off-diagonal rhetorical/perspectival tension (`oddGrade P X`),
-  retaining the block-diagonal invariant core `P X P + (1 - P) X (1 - P)`.
-- `compilerEmbed P A X = X + conePlus P A * X + X * coneMinus P C`: embeds `X` into a new
-  perspectival context with forward projection `conePlus P A` and shadow intrusion `coneMinus P C`. -/
+omit [Ring B] hP in
+theorem reflexiveCompilerDependency_acyclic (x : ReflexiveCompilerProofNode) :
+    ¬ Relation.TransGen reflexiveCompilerDependency x x := by
+  intro h
+  exact Nat.lt_irrefl _ (reflexiveCompilerDependency_transGen_strict_rank h)
+
+omit [Ring B] hP in
+theorem reflexiveCompilerDependency_master_edges :
+    reflexiveCompilerDependency .binaryCut .masterSynthesis ∧
+    reflexiveCompilerDependency .fourfoldPeirceReconstruction .masterSynthesis ∧
+    reflexiveCompilerDependency .tetraktysProducts .masterSynthesis ∧
+    reflexiveCompilerDependency .aporiaDefect .masterSynthesis ∧
+    reflexiveCompilerDependency .recursiveDefectTower .masterSynthesis ∧
+    reflexiveCompilerDependency .newtonDefectRefinement .masterSynthesis := by
+  exact ⟨.cut_master, .fourfold_master, .tetraktys_master, .aporia_master,
+    .defectTower_master, .newton_master⟩
+
+/-- **Operator realization of `strip` and `embed`**:
+`compilerStrip` is the even Peirce projection. `compilerEmbed` adds the two
+ordered context terms `N₊ X` and `X N₋`; no commutation between them is assumed. -/
 def compilerStrip (P X : B) : B := evenGrade P X
 
 def compilerEmbed (P A C X : B) : B :=
   X + conePlus P A * X + X * coneMinus P C
 
-/-- **Single-Pass Naive Compiler Operator (`naivePass P A C X = evenGrade P X + genPhi P A C`)**
-whose square `naivePass² - naivePass` exhibits the Socratic Aporia (`T² ≠ T`)! -/
+/-- The single-pass state formed from the upper diagonal compression of `X`
+and the off-diagonal Tetraktys generator. Its idempotency is not asserted. -/
 def naiveCompilerState (P A C X : B) : B :=
   InfoGeometry.OperatorAlgebra.PeirceSpine.peirce11 P X + genPhi P A C
 
-/-- **Part XI Master Theorem (`partXI_reflexive_epistemic_compiler_self_application_synthesis`)**:
-Formalizes the exact mathematical laws of the Reflexive Epistemic Compiler (`solve et coagula`)
-applied to itself over any non-commutative operator ring `[Ring B]`:
-1. **Strict Acyclic Causal Poset (`D < R < A < T < X < M < P < S`)**:
-   `reflexive_compiler_strict_causal_chain`,
-2. **Idempotence of Pure Stripping vs. Non-Commutativity of `strip` and `embed` (`strip ∘ embed ≠ embed ∘ strip`)**:
-   - `compilerStrip P (compilerStrip P X) = compilerStrip P X`,
-   - `compilerStrip P (compilerEmbed P A C X) - compilerEmbed P A C (compilerStrip P X) =
-      conePlus P A * coneMinus P X + conePlus P X * coneMinus P C -
-      (conePlus P A * peirce00 P X + peirce11 P X * coneMinus P C)`,
-   which on `X = genPhi P A C` equals `genV P A C` (the exact transcendent metric tensor `V`!),
-3. **Socratic Aporia of Single-Pass Extraction (`Ψ² ≠ Ψ`)**:
-   For `Ψ = P + genPhi P A C` (the conscious cut `P` plus the first-order bridge `Φ`),
-   `Ψ * Ψ - Ψ = genV P A C + genJ P A C` (`Ψ² = Ψ` iff `V = 0` and `J = 0`),
-4. **Autopoietic Tower Step (`M_n → R_{n+1}` via Newton–Peirce Purification)**:
-   Applying `newtonStep` (`3 Ψ² - 2 Ψ³`) to any approximate cut `Q : B` squares its idempotent
-   defect: `(newtonStep Q)² - newtonStep Q = (Q² - Q)² * (4 (Q² - Q) - 3)`. -/
-theorem partXI_reflexive_epistemic_compiler_self_application_synthesis (X Q : B) :
-    -- 1. Acyclic Causal Poset `D < R < A < T < X < M < P < S`:
-    (ReflexiveCompilerArchetype.D_primordialCut < .R_fourfoldAnatomy ∧
-     ReflexiveCompilerArchetype.R_fourfoldAnatomy < .A_socraticAporia ∧
-     ReflexiveCompilerArchetype.A_socraticAporia < .T_transcendentBridge ∧
-     ReflexiveCompilerArchetype.T_transcendentBridge < .X_nonCommutativeOrder ∧
-     ReflexiveCompilerArchetype.X_nonCommutativeOrder < .M_recursiveMetaTower ∧
-     ReflexiveCompilerArchetype.M_recursiveMetaTower < .P_acyclicCausalPoset ∧
-     ReflexiveCompilerArchetype.P_acyclicCausalPoset < .S_coagulatedSynthesis) ∧
-    -- 2. Non-Commutative Asymmetry `strip (embed Φ) - embed (strip Φ) = V`:
-    compilerStrip P (compilerStrip P X) = compilerStrip P X ∧
-    compilerStrip P (compilerEmbed P A C (genPhi P A C)) -
-      compilerEmbed P A C (compilerStrip P (genPhi P A C)) =
-      conePlus P A * coneMinus P C + conePlus P A * coneMinus P C ∧
-    -- 3. Socratic Aporia of First-Order State `Ψ = P + Φ` (`Ψ² - Ψ = V`):
-    (P + genPhi P A C) * (P + genPhi P A C) - (P + genPhi P A C) =
-      genV P A C ∧
-    -- 4. Autopoietic Recursive Tower Law (`M_n → R_{n+1}` quadratic defect compression):
+/-- Binary-cut projection laws and reconstruction of all four Peirce sectors.
+The only hypothesis is idempotency of the cut. -/
+theorem reflexiveCompiler_cut_fourfold (X : B) :
+    evenGrade P X + oddGrade P X = X ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.peirce11 P X + conePlus P X + coneMinus P X +
+      InfoGeometry.OperatorAlgebra.PeirceSpine.peirce00 P X = X := by
+  have hgrade := grade_projection_laws hP X
+  refine ⟨hgrade.2.2.2.2, ?_⟩
+  calc
+    InfoGeometry.OperatorAlgebra.PeirceSpine.peirce11 P X + conePlus P X + coneMinus P X +
+        InfoGeometry.OperatorAlgebra.PeirceSpine.peirce00 P X = evenGrade P X + oddGrade P X := by
+      simp only [InfoGeometry.OperatorAlgebra.PeirceSpine.peirce11,
+        InfoGeometry.OperatorAlgebra.PeirceSpine.peirce00,
+        conePlus, coneMinus, evenGrade, oddGrade]
+      abel
+    _ = X := hgrade.2.2.2.2
+
+/-- Ordered Tetraktys readout: the two opposing cross-corner products are
+retained in their original order. Their sum is the Jordan channel and their
+difference is the commutator channel. -/
+theorem reflexiveCompiler_tetraktys_products (A C : B) :
+    genPhi P A C * genPhi P A C = genV P A C ∧
+    genJ P A C * genJ P A C = -genV P A C ∧
+    genV P A C + genSig P A C = (2 : ℤ) • (conePlus P A * coneMinus P C) ∧
+    genV P A C - genSig P A C = (2 : ℤ) • (coneMinus P C * conePlus P A) := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+/-- The first-order state has exact aporia defect `V`. Non-idempotence is
+conditional, not automatic: it holds exactly when this defect is nonzero. -/
+theorem reflexiveCompiler_aporia_defect (A C : B) :
+    (P + genPhi P A C) * (P + genPhi P A C) - (P + genPhi P A C) = genV P A C ∧
+    ((P + genPhi P A C) * (P + genPhi P A C) - (P + genPhi P A C) = 0 ↔
+      genV P A C = 0) := by
+  have hPhiSq := (reflexiveCompiler_tetraktys_products hP A C).1
+  have hDef :
+      (P + genPhi P A C) * (P + genPhi P A C) - (P + genPhi P A C) =
+        genV P A C := by
+    calc
+      (P + genPhi P A C) * (P + genPhi P A C) - (P + genPhi P A C) =
+          genPhi P A C * genPhi P A C := by peirce_nf hP
+      _ = genV P A C := hPhiSq
+  exact ⟨hDef, by rw [hDef]⟩
+
+omit hP in
+/-- The Newton–Peirce correction sends a defect `D = Q²-Q` to
+`D²(4D-3)`. This polynomial identity is valid in every associative ring;
+it makes no convergence or idempotent-iteration claim. -/
+theorem reflexiveCompiler_newton_defect_refinement (Q : B) :
     (3 * (Q * Q) - 2 * (Q * Q * Q)) * (3 * (Q * Q) - 2 * (Q * Q * Q)) -
       (3 * (Q * Q) - 2 * (Q * Q * Q)) =
       (Q * Q - Q) * (Q * Q - Q) * (4 * (Q * Q - Q) - 3) := by
-  refine ⟨reflexive_compiler_strict_causal_chain, ?_, ?_, ?_, ?_⟩
-  · dsimp [compilerStrip]
+  noncomm_ring
+
+/-- **Part XI master synthesis.** This theorem combines the binary cut and
+four-sector reconstruction, the ordered pair of cross-corner products and
+their sum/difference readouts, the exact aporia defect with its necessary-and-
+sufficient vanishing condition, the arbitrary finite Peirce defect tower, and
+one Newton–Peirce polynomial defect step.
+The accompanying DAG records only the actual support relations used here; it
+does not assert a total conceptual or physical order. -/
+theorem partXI_reflexive_epistemic_compiler_self_application_synthesis (X Q : B) :
+    (∀ node : ReflexiveCompilerProofNode,
+      ¬ Relation.TransGen reflexiveCompilerDependency node node) ∧
+    (reflexiveCompilerDependency .binaryCut .masterSynthesis ∧
+      reflexiveCompilerDependency .fourfoldPeirceReconstruction .masterSynthesis ∧
+      reflexiveCompilerDependency .tetraktysProducts .masterSynthesis ∧
+      reflexiveCompilerDependency .aporiaDefect .masterSynthesis ∧
+      reflexiveCompilerDependency .recursiveDefectTower .masterSynthesis ∧
+      reflexiveCompilerDependency .newtonDefectRefinement .masterSynthesis) ∧
+    (evenGrade P X + oddGrade P X = X ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.peirce11 P X + conePlus P X + coneMinus P X +
+        InfoGeometry.OperatorAlgebra.PeirceSpine.peirce00 P X = X) ∧
+    (genPhi P A C * genPhi P A C = genV P A C ∧
+      genJ P A C * genJ P A C = -genV P A C ∧
+      genV P A C + genSig P A C = (2 : ℤ) • (conePlus P A * coneMinus P C) ∧
+      genV P A C - genSig P A C = (2 : ℤ) • (coneMinus P C * conePlus P A)) ∧
+    (compilerStrip P (compilerStrip P X) = compilerStrip P X ∧
+      compilerStrip P (compilerEmbed P A C (genPhi P A C)) -
+        compilerEmbed P A C (compilerStrip P (genPhi P A C)) =
+          conePlus P A * coneMinus P C + conePlus P A * coneMinus P C ∧
+      (compilerStrip P (compilerEmbed P A C (genPhi P A C)) -
+        compilerEmbed P A C (compilerStrip P (genPhi P A C)) ≠ 0 ↔
+        conePlus P A * coneMinus P C + conePlus P A * coneMinus P C ≠ 0)) ∧
+    ((P + genPhi P A C) * (P + genPhi P A C) - (P + genPhi P A C) = genV P A C ∧
+      ((P + genPhi P A C) * (P + genPhi P A C) - (P + genPhi P A C) = 0 ↔
+        genV P A C = 0)) ∧
+    (∀ n : ℕ,
+      InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[n] (genV P A C) =
+        InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[n] (qgtPlus P A C) +
+          InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[n] (qgtMinus P A C)) ∧
+    ((3 * (Q * Q) - 2 * (Q * Q * Q)) * (3 * (Q * Q) - 2 * (Q * Q * Q)) -
+      (3 * (Q * Q) - 2 * (Q * Q * Q)) =
+      (Q * Q - Q) * (Q * Q - Q) * (4 * (Q * Q - Q) - 3)) := by
+  have hStripIdem : compilerStrip P (compilerStrip P X) = compilerStrip P X := by
+    dsimp [compilerStrip]
     peirce_nf hP
-  · dsimp [compilerStrip, compilerEmbed]
+  have hStripEmbed :
+      compilerStrip P (compilerEmbed P A C (genPhi P A C)) -
+        compilerEmbed P A C (compilerStrip P (genPhi P A C)) =
+          conePlus P A * coneMinus P C + conePlus P A * coneMinus P C := by
+    dsimp [compilerStrip, compilerEmbed]
     peirce_nf hP
-  · peirce_nf hP
-  · noncomm_ring
+  refine ⟨reflexiveCompilerDependency_acyclic,
+          reflexiveCompilerDependency_master_edges,
+          reflexiveCompiler_cut_fourfold hP X,
+          reflexiveCompiler_tetraktys_products hP A C,
+          ⟨hStripIdem, hStripEmbed, ?_⟩,
+          reflexiveCompiler_aporia_defect hP A C,
+          fun n => genV_defect_iterates_cycle_split hP A C n,
+          reflexiveCompiler_newton_defect_refinement Q⟩
+  rw [hStripEmbed]
 
 /-!
 ## Part XII: The Nilpotent → Casimir Invariants → QGT Metriplectic Split → Cramér–Rao Synthesis
@@ -888,7 +990,7 @@ inductive NilpotentMetriplecticPoset : Type
   | p3_emergentBoundaryCasimir  -- (𝔭₃) P := N N⋆, Q := N⋆ N, C₂ := H² + 2{N, N⋆}
   | p4_metriplecticSplitting    -- (𝔭₄) |QGT|² = g² + (1/4) Ω²
   | p5_cramerRaoUncertainty     -- (𝔭₅) g(X,X) g(Y,Y) ≥ g(X,Y)² + (1/4) Ω(X,Y)² ≥ (1/4) Ω(X,Y)²
-  | p6_machineCheckedClosure    -- (𝔭₆) 0 sorry / 0 admit
+  | p6_machineCheckedClosure    -- (𝔭₆) packaged synthesis theorem stage
   deriving DecidableEq, Repr
 
 namespace NilpotentMetriplecticPoset
@@ -1033,7 +1135,7 @@ theorem partXIII_chiral_lorentz_clifford_krein_twistor_cartan_uncertainty_synthe
   have hCK :=
     clifford_krein_geometric_product_and_jordan_associator_law
       hP A₁ C₁ X Z A₁ X Z A₁
-  rcases hCL10 with ⟨hAcyclic, _, _, _, _, _, hMetricCreator, hCartan, hKantor, _, _, hBound⟩
+  rcases hCL10 with ⟨hAcyclic, _, _, _, _, hMetricCreator, hCartan, hKantor, hBound⟩
   exact ⟨hAcyclic,
     ⟨hHK.2.2.2.1, hHK.2.2.2.2.2.2.2.1, hHK.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
      hHK.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2⟩,
@@ -2208,6 +2310,13 @@ theorem coagulated_metriplectic_causal_plabic_krein_yangian_pass5_synthesis
    canonical_cl11_markovJones_gns_colimit_curvature_and_stageFactorization_synthesis
      hP hPstar A C Z W X_xi m n hmn A_st P_st frame_st z_ten X_lim Y_lim⟩
 
+/-! The former XV.n, XV.p, and XV.q master conjunctions are retired. Their
+statements copied declarations across distinct `Vec3`, `Mat4`, operator, and
+ontology carriers without owner-compatible maps, and several referenced
+declarations that do not exist in the named namespaces. Their source-owner
+theorems remain available in their own modules; no repository code consumer
+uses these packaging theorems. They are not promoted as cross-lane results. -/
+/-
 /-!
 ### Part XV.n: Master Coagulation of Archetype XVIII (`1CaBH05LizVILxiiJgBBULCbS-tkN0HdX`), Archetype XVII & Nilpotent-First Flag Geometry (`1iLTmbxfiVRM8rOhwchpAcmLD3r1zL4JA`), and the Lean 4 Repository Ontology (`solve et coagula`)
 -/
@@ -2703,6 +2812,7 @@ theorem coagulated_batch3_twelve_artifacts_and_eleven_pillar_ontology_synthesis
           hErl2.2.2.2.2.2.2.2.2.2.2.1, hErl2.2.2.2.2.2.2.2.2.2.2.2.2.2.2,
           hAut.1.2.1, hAut.1.2.2.1, hAut.2.1.1, hAut.2.2.2.1,
           hA56.1, hA56.2.2.2⟩⟩
+-/
 
 /-!
 ### Part XV.r: Master Unification of Multi-Level Ontology (`OntologyRing`), Cladistic Phylogenesis (`D₅₀`), Epistemic Compiler Peirce Bridge (`D₄₆`), Concrete Noncommutative Matrix Realizations (`M₂(B)`, `M₃(B)`, `OpZornMatrix B`), and Erlangen 2.0 Galois Loci
@@ -2733,12 +2843,13 @@ and Erlangen-Galois branches into the single connected apex of the repository DA
    - `MatrixUnitAnomalyRealization.matrix_unit_anomaly_gap_spine` on `Matrix (Fin 2) (Fin 2) R`,
    - `MatrixThreeSheetKKTRealization.five_grade_matrix_reconstruction`, `eulerFiveGrading3_eq_ad_sigma`, and `eulerFiveGrading3_kkt_polynomial` on `Matrix (Fin 3) (Fin 3) R`,
    - `MatrixThreeSheetZornGradingBridge.matrix3ToOpZorn_euler_intertwining` and `eulerFiveGrading3_factors_through_Zorn` connecting `M₃(R)` to `OpZornMatrix R`.
-4. **Erlangen 2.0 Galois Connection, Integer-Polynomial Loci (`OperatorErlangenFixedPoints`), & Epistemic Poset DAG**:
-   - `subgroup_le_fixingSubgroup_iff` (`H ≤ fixingSubgroup S ↔ S ⊆ fixedPointSet H`), `integerPolynomial_root_smul_iff`, and `epistemic_causal_poset_dag_acyclic`. -/
+4. **Erlangen 2.0 Galois Connection & Epistemic Poset DAG**:
+   - `subgroup_le_fixingSubgroup_iff` (`H ≤ fixingSubgroup S ↔ S ⊆ fixedPointSet H`) and `epistemic_causal_poset_dag_acyclic`.
+   - The proposed integer-polynomial root equivariance was omitted: no owner theorem supports it for an arbitrary `MulSemiringAction`. -/
 theorem coagulated_unified_multilevel_ontology_taxonomy_phylogenesis_and_all_lanes_dag_synthesis
     {R : Type*} [Ring R] [StarRing R]
     {G : Type*} [Group G] [MulSemiringAction G R]
-    (σ_aut : R ≃+* R) (g_sym : G) (H_sub : Subgroup G) (S_obs : Set R)
+    (σ_aut : R ≃+* R) (H_sub : Subgroup G) (S_obs : Set R)
     {P Psub Pmid Panc Pl Pr P1 P2 P3 : R}
     (hP : P * P = P) (hSub : Psub * Psub = Psub) (hMid : Pmid * Pmid = Pmid)
     (hIncl1 : cladeSubsumes Psub Pmid) (hIncl2 : cladeSubsumes Pmid Panc)
@@ -2750,8 +2861,7 @@ theorem coagulated_unified_multilevel_ontology_taxonomy_phylogenesis_and_all_lan
     (A C X T : R) (n_lin : ℕ)
     {z u v : R} (hz : z ∈ centerB) (huv : u * v = 1)
     (X_m2 : Matrix (Fin 2) (Fin 2) R)
-    (X_m3 : Matrix (Fin 3) (Fin 3) R)
-    (p_int : Polynomial ℤ) :
+    (X_m3 : Matrix (Fin 3) (Fin 3) R) :
     -- 1. Multi-Level Operator Ontology (`OntologyRing`):
     (((∀ L : OntologyMetaLevel, ¬ Relation.TransGen OntologyMetaLevel.instantiatesEdge L L) ∧
       OntologyMetaLevel.instantiatesEdge .M0_StateIndividual .M1_ProjectorClabject ∧
@@ -2800,10 +2910,9 @@ theorem coagulated_unified_multilevel_ontology_taxonomy_phylogenesis_and_all_lan
         opEulerFiveGrading (matrix3ToOpZorn X_m3) ∧
       eulerFiveGrading3 X_m3 =
         opZornToMatrix3 (opEulerFiveGrading (matrix3ToOpZorn X_m3)))) ∧
-    -- 4. Erlangen 2.0 Galois Connection, Integer-Polynomial Loci & Epistemic Poset DAG Acyclicity:
+    -- 4. Erlangen Galois Connection & Epistemic Poset DAG Acyclicity:
     ((H_sub ≤ fixingSubgroup (G := G) (A := R) S_obs ↔
         S_obs ⊆ fixedPointSet (G := G) (A := R) H_sub) ∧
-     (Polynomial.aeval (g_sym • X) p_int = 0 ↔ Polynomial.aeval X p_int = 0) ∧
      (EpistemicPosetStage.primordialBrackets < EpistemicPosetStage.binaryCut ∧
       EpistemicPosetStage.unipotentShears < EpistemicPosetStage.matrixRepresentation)) := by
   have hClade : cladeSubsumes Psub Panc := cladeSubsumes_trans hIncl1 hIncl2
@@ -2822,7 +2931,6 @@ theorem coagulated_unified_multilevel_ontology_taxonomy_phylogenesis_and_all_lan
            matrix3ToOpZorn_euler_intertwining X_m3,
            eulerFiveGrading3_factors_through_Zorn X_m3⟩⟩,
          ⟨subgroup_le_fixingSubgroup_iff,
-          integerPolynomial_root_smul_iff g_sym p_int X,
           ⟨epistemic_causal_poset_dag_acyclic.1,
            epistemic_causal_poset_dag_acyclic.2.2.2.2.2.2⟩⟩⟩
 
@@ -3061,6 +3169,11 @@ open InfoGeometry.OperatorAlgebra.PeirceDefectBridge
 open InfoGeometry.Canonical.TwoSheetedNilpotentCondensateVortexMass
 open InfoGeometry.Canonical.YangMillsLaneIsomorphisms
 
+/- The original Part XXVIII claim referred to a Clifford–Krein poset and
+rotor theorem absent from its imported owner. The actual owner proves a
+conditional associative-ring modulus identity. The unrelated Yang–Mills and
+PGL₂ theorems remain in their own owners; no combined result is inferred. -/
+/-
 omit [Ring B] hP in
 /-- **Part XXVIII Master Coagulation (`coagulated_yang_mills_clifford_krein_native_mathlib_solve_et_coagula_synthesis`)**:
 Coagulates the 6-stage `CliffordKreinUncertaintyStage` acyclic causal poset
@@ -3070,7 +3183,7 @@ Clifford–Krein rotor modulus dichotomy, and native Mathlib `CliffordAlgebra Q`
 the cross-lane Yang–Mills and native Mathlib `Matrix (Fin 4) (Fin 4)` / `Matrix (Fin 3) (Fin 3)` /
 `Matrix (Fin 2) (Fin 2)` synthesis from `YangMillsLaneIsomorphisms`
 (`1iLTmbxfiVRM8rOhwchpAcmLD3r1zL4JA`) into `CoagulatedArchetypeSynthesis`. -/
-theorem coagulated_yang_mills_clifford_krein_native_mathlib_solve_et_coagula_synthesis
+def coagulated_yang_mills_clifford_krein_native_mathlib_solve_et_coagula_synthesis
     {B₀ : Type*} [Ring B₀] [StarRing B₀]
     {P₀ : B₀} (hP₀ : P₀ * P₀ = P₀) (hP₀star : star P₀ = P₀) (A₀ C₀ X₀ g₀ K_op : B₀)
     {K₀ M₀ : Type*} [CommRing K₀] [AddCommGroup M₀] [Module K₀ M₀]
@@ -3131,6 +3244,7 @@ theorem coagulated_yang_mills_clifford_krein_native_mathlib_solve_et_coagula_syn
     hDich.2.2.2,
     hCliff.1,
     hCliff.2.2⟩, hYM, hCR⟩
+-/
 
 end CliffordKreinAndYangMillsNativeCoagulation
 
@@ -3597,7 +3711,10 @@ theorem partXXXIV_modular_surprisal_volume_clocking_bkm_closure_synthesis
        .S8_MetriplecticCramerRaoClosureAndMasterSynthesis) ∧
     (sheetThermalState P₀ s_p s_p = s_p ∧
      (P₀ + genPhi P₀ A₀ C₀) * (P₀ + genPhi P₀ A₀ C₀) - (P₀ + genPhi P₀ A₀ C₀) = genV P₀ A₀ C₀ ∧
-     ZornMatrix.zornV u v = ZornMatrix.bilinearCondensate u v ∧
+     (ZornMatrix.eL + ZornMatrix.psiOffDiag u v) *
+        (ZornMatrix.eL + ZornMatrix.psiOffDiag u v) -
+        (ZornMatrix.eL + ZornMatrix.psiOffDiag u v) =
+       ZornMatrix.zornV u v + ⟨0, -Vec3.cross v v, Vec3.cross u u, 0⟩ ∧
      (2 : ℤ) • sheetSurprisalOp P₀ s_p s_q = (s_p + s_q) - (s_q - s_p) * invS P₀ ∧
      realSheetSurprisalOp P₀ p q =
        ((-(Real.log p + Real.log q) / 2) : ℝ) • (1 : B₀) -
@@ -4121,8 +4238,7 @@ theorem partXLI_inductive_categorical_colimit_inverse_limit_unification_synthesi
     ((colimit_limit_iso R F_diag).hom ≫ (colimit_limit_iso R F_diag).inv = 𝟙 _ ∧
      (lim_composition_naturality R F_diag).hom ≫ (lim_composition_naturality R F_diag).inv = 𝟙 _) ∧
     (∃ hτ_dual : IsDualInverseFamily (sys := sys) τ,
-      ((dualInverseFamilyToProjectiveLimit (sys := sys) τ hτ_dual ≫
-          limit.π (dualModuleDiagram sys) (Opposite.op i)).hom (1 : R))
+      dualInverseFamilyToProjectiveLimitStageFunctional (sys := sys) τ hτ_dual i
             (invS P_i * genV P_i A_i C_i ^ (k + 1)) = 0 ∧
       (dualInverseFamilyColimitMap (sys := sys) τ hτ_dual).hom
           ((colimit.ι (FilteredColimit.Native.moduleDiagram sys) i).hom

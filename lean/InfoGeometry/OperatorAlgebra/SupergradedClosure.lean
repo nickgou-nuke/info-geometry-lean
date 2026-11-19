@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
@@ -10,7 +15,7 @@ super-Laplacian.
 
 `D = Q + Q♯`, `Δ = Q Q♯ + Q♯ Q`, and `D² = Δ`.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem superDirac_sq_eq_superLaplacian
     {R : Type*} [Ring R]
     {Q Qsharp : R}
@@ -30,7 +35,7 @@ theorem superDirac_sq_eq_superLaplacian
 /--
 The left supercharge commutes with the super-Laplacian: `[Q, Δ] = 0`.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem supercharge_commutes_superLaplacian
     {R : Type*} [Ring R]
     {Q Qsharp : R}
@@ -54,7 +59,7 @@ theorem supercharge_commutes_superLaplacian
 /--
 The dual supercharge commutes with the super-Laplacian: `[Q♯, Δ] = 0`.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem dualSupercharge_commutes_superLaplacian
     {R : Type*} [Ring R]
     {Q Qsharp : R}
@@ -78,7 +83,7 @@ theorem dualSupercharge_commutes_superLaplacian
 /--
 The Dirac operator commutes with its super-Laplacian: `[D, Δ] = 0`.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem superDirac_commutes_superLaplacian
     {R : Type*} [Ring R]
     {Q Qsharp : R}
@@ -111,7 +116,7 @@ Supergraded Dirac/Laplacian closure package at one degree:
 * `D² = Δ`
 * `[Q,Δ]=0`, `[Q♯,Δ]=0`, `[D,Δ]=0`.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 def SupergradedClosureAt {R : Type*} [Ring R] (Q Qsharp : R) : Prop :=
   (Q + Qsharp) * (Q + Qsharp) = (Q * Qsharp + Qsharp * Q) ∧
   Q * (Q * Qsharp + Qsharp * Q) = (Q * Qsharp + Qsharp * Q) * Q ∧
@@ -122,7 +127,7 @@ def SupergradedClosureAt {R : Type*} [Ring R] (Q Qsharp : R) : Prop :=
 /--
 Nilpotent supercharges imply full supergraded Dirac/Laplacian closure.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem supergradedClosureAt_of_nilpotent
     {R : Type*} [Ring R]
     {Q Qsharp : R}

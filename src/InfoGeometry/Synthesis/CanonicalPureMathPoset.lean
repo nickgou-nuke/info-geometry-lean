@@ -697,7 +697,7 @@ theorem zSiteParity_involutive (w : ZornOct R) :
     zSiteParity2 (zSiteParity2 w) = w := by
   refine ⟨?_, ?_, ?_⟩ <;>
     (refine ZornOct.ext ?_ (funext fun k => ?_) (funext fun k => ?_) ?_ <;>
-      (try fin_cases k) <;> dsimp [zSiteParity0, zSiteParity1, zSiteParity2] <;> noncomm_ring)
+      (try fin_cases k) <;> dsimp [zSiteParity0, zSiteParity1, zSiteParity2] <;> abel)
 
 /-- Parity operators commute pairwise: $[Z_j, Z_k] = 0$. -/
 theorem zSiteParity_commute (w : ZornOct R) :
@@ -803,7 +803,7 @@ theorem jw_nilpotent (w : ZornOct R) :
       dsimp [jwCreate0, jwAnnihilate0, jwCreate1, jwAnnihilate1, jwCreate2, jwAnnihilate2,
              jwString0, jwString1, jwString2, zSiteParity0, zSiteParity1,
              localRaise0, localLower0, localRaise1, localLower1, localRaise2, localLower2, zZero] <;>
-      noncomm_ring)
+      abel)
 
 /-- **Theorem 4.4 (Same-Site CAR Resolution of Identity on `ZornOct R`):**
 $c_k c_k^\dagger + c_k^\dagger c_k = \mathrm{id}$ for all sites $k \in \{0, 1, 2\}$. -/
@@ -817,7 +817,7 @@ theorem jw_same_site_car (w : ZornOct R) :
       dsimp [zAdd, jwCreate0, jwAnnihilate0, jwCreate1, jwAnnihilate1, jwCreate2, jwAnnihilate2,
              jwString0, jwString1, jwString2, zSiteParity0, zSiteParity1,
              localRaise0, localLower0, localRaise1, localLower1, localRaise2, localLower2] <;>
-      noncomm_ring)
+      abel)
 
 /-- **Theorem 4.5 (Cross-Site CAR Anticommutation via Jordan–Wigner Strings on `ZornOct R`):**
 For all $j \neq k$, $\{c_j^\dagger, c_k^\dagger\} = 0$, $\{c_j, c_k\} = 0$, and $\{c_j, c_k^\dagger\} = 0$. -/
@@ -837,7 +837,7 @@ theorem jw_cross_anticommute (w : ZornOct R) :
       dsimp [zAdd, jwCreate0, jwAnnihilate0, jwCreate1, jwAnnihilate1, jwCreate2, jwAnnihilate2,
              jwString0, jwString1, jwString2, zSiteParity0, zSiteParity1,
              localRaise0, localLower0, localRaise1, localLower1, localRaise2, localLower2, zZero] <;>
-      noncomm_ring)
+      abel)
 
 /-- Fermionic number operator on site 0: $N_0 = c_0^\dagger c_0$. -/
 def jwNumber0 (w : ZornOct R) : ZornOct R := jwCreate0 (jwAnnihilate0 w)
@@ -874,7 +874,7 @@ theorem zGlobalChirality_eq (w : ZornOct R) :
   refine ZornOct.ext ?_ (funext fun k => ?_) (funext fun k => ?_) ?_ <;>
      (try fin_cases k) <;>
     dsimp [zGlobalChirality, zSiteParity0, zSiteParity1, zSiteParity2] <;>
-    noncomm_ring
+    abel
 
 /-- **Theorem 4.8 (Chirality Involution & Odd Grading Anticommutation on `ZornOct R`):**
 $\Gamma^2 = \mathrm{id}$ and $\Gamma c_k^\dagger \Gamma = -c_k^\dagger$ for all sites $k$. -/
@@ -889,7 +889,7 @@ theorem zGlobalChirality_properties (w : ZornOct R) :
       dsimp [zNeg, zGlobalChirality, jwCreate0, jwCreate1, jwCreate2,
              jwString0, jwString1, jwString2, zSiteParity0, zSiteParity1, zSiteParity2,
              localRaise0, localLower0, localRaise1, localLower1, localRaise2, localLower2] <;>
-      noncomm_ring)
+      abel)
 
 /-- **Theorem 4.9 (Archetype IV Jordan–Wigner CAR Master Extension on `ZornOct R`):**
 Unifies the cross-site commutation of unstringed local operators, the exact CAR anticommutation

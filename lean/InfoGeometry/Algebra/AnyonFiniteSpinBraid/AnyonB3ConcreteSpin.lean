@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.AnyonFiniteSpinBraid.AnyonArtinBraidOperators
@@ -28,14 +33,6 @@ def b3SpinSwap1 : SpinOperator 3 :=
 def b3SpinSigma : ArtinGenerator 3 → SpinOperator 3
   | ⟨0, _⟩ => b3SpinSwap0
   | ⟨1, _⟩ => b3SpinSwap1
-
-/-- The first concrete spin braid generator is the first adjacent swap. -/
-theorem b3SpinSigma_zero : b3SpinSigma ⟨0, by decide⟩ = b3SpinSwap0 := by
-  rfl
-
-/-- The second concrete spin braid generator is the second adjacent swap. -/
-theorem b3SpinSigma_one : b3SpinSigma ⟨1, by decide⟩ = b3SpinSwap1 := by
-  rfl
 
 /-- The concrete three-site adjacent swaps satisfy the `B₃` braid relation. -/
 theorem b3SpinSwap_braid_relation :
@@ -78,6 +75,9 @@ theorem b3SpinArtinBraidOperators_packet :
       b3SpinArtinBraidOperators.generatorOperator ⟨1, by decide⟩ ∘
         b3SpinArtinBraidOperators.generatorOperator ⟨0, by decide⟩ ∘
         b3SpinArtinBraidOperators.generatorOperator ⟨1, by decide⟩ := by
+  change b3SpinSwap0 = b3SpinSwap0 ∧ b3SpinSwap1 = b3SpinSwap1 ∧
+    b3SpinSwap0 ∘ b3SpinSwap1 ∘ b3SpinSwap0 =
+      b3SpinSwap1 ∘ b3SpinSwap0 ∘ b3SpinSwap1
   exact ⟨rfl, rfl, b3SpinSwap_braid_relation⟩
 
 end InfoGeometry.Algebra.AnyonFiniteSpinBraid

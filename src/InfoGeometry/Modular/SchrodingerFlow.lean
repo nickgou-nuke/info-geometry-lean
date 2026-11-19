@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.SpecialFunctions.Exponential
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Basic
@@ -63,7 +68,7 @@ theorem trace_flow_preservation
     have h := τ.hasFDerivAt.comp s
       (hasDerivAt_orbit L x s).hasFDerivAt
     have hd := h.hasDerivAt
-    convert hd using 1 <;> simp [f, hL] <;> (try (funext u; rfl))
+    convert hd using 1 <;> simp [f, hL]; try (funext u; rfl)
   have hdiff : Differentiable ℝ f := fun s => (hderiv s).differentiableAt
   have hz : ∀ s : ℝ, deriv f s = 0 := fun s => (hderiv s).deriv
   have hc := is_const_of_deriv_eq_zero hdiff hz t 0

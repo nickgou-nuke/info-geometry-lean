@@ -16,6 +16,7 @@ import InfoGeometry.Projective.OctonionicKuzminBoundaryBridge
 import InfoGeometry.Projective.SplitOctonions.ZornMatrix
 import InfoGeometry.Projective.Bridge
 import InfoGeometry.Projective.ConeKL
+import InfoGeometry.Projective.GeneralHilbertConeMetric
 import InfoGeometry.Projective.CrossRatio
 import InfoGeometry.Projective.MobiusGauge
 import InfoGeometry.Projective.Dynamics
@@ -99,6 +100,14 @@ import InfoGeometry.Projective.BuresMetricStabilization
 import InfoGeometry.Projective.Twistor.SplitCl44NullBridge
 import InfoGeometry.Projective.MacaulayTrackBIngestion
 import InfoGeometry.Projective.ProjectiveLogarithmicBoundaryGeometry
+import InfoGeometry.Projective.GrassmannAusdehnungslehreRegressiveShadow
+import InfoGeometry.Projective.GrassmannPluckerMeetAndCircleSpace
+import InfoGeometry.Projective.GrassmannSubspaceShadowsResultantAndHadamard
+import InfoGeometry.Projective.PluckerRayAxisAndDyname
+import InfoGeometry.Projective.PluckerCongruenceCylindroidAndRegulus
+import InfoGeometry.Projective.PluckerQuadraticComplexAndSurfaces
+import InfoGeometry.Projective.PluckerKummerQuarticAndMasterAtlas
+import InfoGeometry.Projective.KleinErlangenProgramGroupsAndProjectiveTransfer
 
 namespace InfoGeometry
 

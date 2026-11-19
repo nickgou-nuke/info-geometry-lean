@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
@@ -50,7 +55,7 @@ theorem scaleInvariant_of_weight_zero
   simpa [hW] using (W.readout_scale_of_weight_zero hW c A)
 
 /-- The logarithmic Mellin sample advances by the expected exponential scale factor. -/
-@[rep_depth operator]
+@[rep_depth transport]
 theorem logarithmicSample_scale_step
     (η0 Δη : ℝ) (k : ℤ) :
     logarithmicSample η0 Δη (k + 1)

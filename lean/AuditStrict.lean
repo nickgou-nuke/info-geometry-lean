@@ -1,9 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Lean
-import InfoGeometry.Canonical.All
 import InfoGeometry.Lint.Vacuity
-import InfoGeometry.Lint.Pauli
+import InfoGeometry.Lint.WitnessLint
 import InfoGeometry.Meta.Admission
-import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.ArchitectureAudit
 import InfoGeometry.Meta.RegionPolicy
 import InfoGeometry.Meta.Trust
 
@@ -11,23 +15,40 @@ open Lean Elab Command
 
 namespace InfoGeometry
 
-/-- Collect soft admission evidence from the Lean-side vacuity linter. -/
+/-- Collect soft admission evidence from the Lean-side vacuity and witness-pack linters. -/
 def collectSoftEvidence
     (env : Environment)
     (declName : Name) : CoreM InfoGeometry.Meta.SoftEvidence := do
-  let vacuityHints ← (InfoGeometry.Lint.lintDecl env declName).toList.mapM fun msg => msg.toString
+  let queryEnv := env.setExporting false
+  let runVacuity :=
+    match queryEnv.find? declName with
+    | some (.inductInfo _) => Lean.isStructure queryEnv declName
+    | some _ => true
+    | none => false
+  let mut vacuityHints ←
+    if runVacuity then
+      (InfoGeometry.Lint.lintDecl queryEnv declName).toList.mapM fun msg => msg.toString
+    else
+      pure []
+  if Lean.isStructure queryEnv declName then
+    let pairs := InfoGeometry.Lint.detectWitnessPackPairs queryEnv declName
+    let witnessHints ←
+      (InfoGeometry.Lint.renderAllWitnessPackDiags declName pairs).toList.mapM fun msg => msg.toString
+    for h in witnessHints do
+      if !vacuityHints.contains h then
+        vacuityHints := vacuityHints ++ [h]
   return {
     vacuityHints := vacuityHints
     graphRoleHints := []
     plannerHints := []
   }
 
-private def auditReportForDecl
+private def auditReportFromHard
     (policy : InfoGeometry.Meta.PolicySnapshot)
-    (declName : Name) : CoreM InfoGeometry.Meta.AdmissionReport := do
-  let env ← getEnv
+    (env : Environment)
+    (declName : Name)
+    (hard : InfoGeometry.Meta.HardEvidence) : CoreM InfoGeometry.Meta.AdmissionReport := do
   let region := InfoGeometry.Meta.regionOfDecl policy declName
-  let hard ← InfoGeometry.Meta.collectHardEvidence policy declName
   let soft ← collectSoftEvidence env declName
   let (baseDecision, rawReasons) := InfoGeometry.Meta.evaluateAdmission policy hard soft
   let decision := InfoGeometry.Meta.adjustDecisionForRegion region baseDecision
@@ -46,7 +67,29 @@ private def auditReportForDecl
     hard := hard
     soft := soft
     reasons := reasons
+    policyVersion := InfoGeometry.Meta.admissionPolicyVersion
   }
+
+private def auditReportForDecl
+    (policy : InfoGeometry.Meta.PolicySnapshot)
+    (declName : Name) : CoreM InfoGeometry.Meta.AdmissionReport := do
+  let env ← getEnv
+  let hard ← InfoGeometry.Meta.collectHardEvidence policy declName
+  auditReportFromHard policy env declName hard
+
+private def auditReportsForDecls
+    (policy : InfoGeometry.Meta.PolicySnapshot)
+    (decls : Array Name) : CoreM (Array InfoGeometry.Meta.AdmissionReport) := do
+  if decls.isEmpty then
+    return #[]
+  let env ← getEnv
+  let hardMap ← InfoGeometry.Meta.collectHardEvidenceBatch policy decls
+  let mut reports : Array InfoGeometry.Meta.AdmissionReport := #[]
+  for declName in decls do
+    let some hard := hardMap[declName]?
+      | throwError "trust audit missing batch hard evidence for `{declName}`"
+    reports := reports.push (← auditReportFromHard policy env declName hard)
+  return reports
 
 private def logAdmissionReport (report : InfoGeometry.Meta.AdmissionReport) : CommandElabM Unit := do
   let summary :=
@@ -74,41 +117,45 @@ private def auditAndLogReports
   if reports.isEmpty then
     logInfo "[admission] no auditable declarations matched the current selector."
 
+private def isFilteredDeclName (env : Environment) (declName : Name) : Bool :=
+  declName.isInternal ||
+    declName.isInternalDetail ||
+    Lean.isPrivateName declName ||
+    declName.hasMacroScopes ||
+    Lean.isAuxRecursor env declName ||
+    Lean.isNoConfusion env declName ||
+    Lean.isSparseCasesOn env declName
+
 private def currentModuleDecls : CoreM (Array Name) := do
   let env ← getEnv
-  let currentModule := env.mainModule
+  let queryEnv := env.setExporting false
   let decls :=
-    env.constants.fold (init := #[]) fun acc declName _ =>
-      if declName.isInternal || declName.hasMacroScopes then
+    InfoGeometry.Meta.foldCurrentModuleConsts queryEnv #[] fun acc declName info =>
+      if isFilteredDeclName queryEnv declName then
         acc
+      else if InfoGeometry.Meta.isAuditableDecl info then
+        acc.push declName
       else
-        match env.find? declName with
-        | some info =>
-            if !InfoGeometry.Meta.isAuditableDecl info then
-              acc
-            else if InfoGeometry.Meta.moduleNameOf env declName == currentModule then
-              acc.push declName
-            else
-              acc
-        | none => acc
+        acc
   pure <| decls.qsort (fun a b => toString a < toString b)
 
 private def namespaceDecls (ns : Name) : CoreM (Array Name) := do
   let env ← getEnv
+  let queryEnv := env.setExporting false
+  let nsRoot := ns.getRoot
   let decls :=
-    env.constants.fold (init := #[]) fun acc declName _ =>
-      if declName.isInternal || declName.hasMacroScopes then
-        acc
-      else if !Name.isPrefixOf ns declName then
-        acc
-      else
-        match env.find? declName with
-        | some info =>
-            if InfoGeometry.Meta.isAuditableDecl info then
-              acc.push declName
-            else
-              acc
-        | none => acc
+    InfoGeometry.Meta.foldScopedModuleConsts queryEnv
+      (fun _ modName =>
+        !InfoGeometry.Meta.isExternalUpstreamModule modName || modName.getRoot == nsRoot)
+      #[] fun acc declName info =>
+        if isFilteredDeclName queryEnv declName then
+          acc
+        else if !Name.isPrefixOf ns declName then
+          acc
+        else if InfoGeometry.Meta.isAuditableDecl info then
+          acc.push declName
+        else
+          acc
   pure <| decls.qsort (fun a b => toString a < toString b)
 
 syntax (name := auditAdmissionDecl) "#audit_admission " ident : command
@@ -126,9 +173,7 @@ elab_rules : command
   | `(#audit_admission_file) => do
       let policy := InfoGeometry.Meta.defaultPolicySnapshot
       let decls ← liftCoreM currentModuleDecls
-      let mut reports := #[]
-      for declName in decls do
-        reports := reports.push (← liftCoreM <| auditReportForDecl policy declName)
+      let reports ← liftCoreM <| auditReportsForDecls policy decls
       auditAndLogReports reports
 
 elab_rules : command
@@ -136,9 +181,7 @@ elab_rules : command
       let policy := InfoGeometry.Meta.defaultPolicySnapshot
       let ns := nsIdent.getId
       let decls ← liftCoreM <| namespaceDecls ns
-      let mut reports := #[]
-      for declName in decls do
-        reports := reports.push (← liftCoreM <| auditReportForDecl policy declName)
+      let reports ← liftCoreM <| auditReportsForDecls policy decls
       auditAndLogReports reports
 
 end InfoGeometry
@@ -146,14 +189,12 @@ end InfoGeometry
 /-!
 # InfoGeometry.AuditStrict
 
-Strict repository-admission umbrella.
+Strict repository-admission command surface.
 
-This file keeps the existing representation-depth audit active and exposes the
-post-hoc admission commands:
+This lightweight module exposes post-hoc admission commands for declarations
+already present in the importing environment:
 
 - `#audit_admission <decl>`
 - `#audit_admission_file`
 - `#audit_admission_namespace <ns>`
 -/
-
-#audit_architecture

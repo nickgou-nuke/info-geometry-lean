@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Krein.KreinSpace
 import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.Analysis.Calculus.MeanValue
@@ -34,6 +39,39 @@ theorem hasDerivAt_krein_square {x : ℝ → H} {A : H →L[ℝ] H} {t : ℝ}
     rw [h1, h2, add_comm, hz]
   rw [h_deriv_eq] at h
   exact h
+
+/-- The derivative of the Krein pairing of two differentiable orbits under
+the same bounded operator. The fundamental symmetry is applied to the first
+slot, so the formula uses the actual Krein metric rather than the ambient
+positive Hilbert product. -/
+theorem hasDerivAt_krein_pairing {x y : ℝ → H} {A : H →L[ℝ] H} {t : ℝ}
+    (hx : HasDerivAt x (A (x t)) t)
+    (hy : HasDerivAt y (A (y t)) t) :
+    HasDerivAt (fun r => kreinInner (x r) (y r))
+      (kreinInner (A (x t)) (y t) + kreinInner (x t) (A (y t))) t := by
+  have hJ := (jCLM (H := H)).hasFDerivAt.comp_hasDerivAt t hx
+  have h := hJ.inner ℝ hy
+  simpa [kreinInner_def, add_comm] using h
+
+/-- A real-linear generator is Krein-skew-adjoint exactly when the
+infinitesimal derivative of the Krein quadratic form vanishes on every
+vector. The reverse implication is polarization for the symmetric
+fundamental-symmetry pairing. -/
+theorem isKreinSkewAdjoint_iff_quadratic_derivative_zero
+    (A : H →L[ℝ] H) :
+    IsKreinSkewAdjoint A ↔
+      ∀ x : H, kreinInner (A x) x + kreinInner x (A x) = 0 := by
+  rw [isKreinSkewAdjoint_iff]
+  constructor
+  · intro h x
+    exact h x x
+  · intro h u v
+    have huv := h (u + v)
+    have hu := h u
+    have hv := h v
+    simp only [map_add, kreinInner_add_left, kreinInner_add_right] at huv
+    rw [kreinInner_symm (A v) u, kreinInner_symm v (A u)] at huv
+    linarith
 
 /-- Time dependence of the generator is allowed; the Krein metric is fixed. -/
 theorem krein_square_conserved {x : ℝ → H} {A : ℝ → H →L[ℝ] H}

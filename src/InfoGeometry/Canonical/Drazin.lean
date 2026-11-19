@@ -161,11 +161,116 @@ theorem complementaryProjection_comm_self (h : IsDrazinInverse a b k) :
     _ = a - a * projection a b := by rw [hP]
     _ = a * (1 - projection a b) := by rw [mul_sub, mul_one]
 
+/-! ### Cline transfer for Drazin inverses -/
+
+end IsDrazinInverse
+
+variable {R : Type*} [Ring R]
+
+/-- The standard Cline transfer candidate: if `d` is a Drazin inverse of `u*v`,
+then `v*d^2*u` is the candidate Drazin inverse of `v*u`. -/
+def clineDrazinShift (u v d : R) : R := v * d ^ 2 * u
+
+theorem isDrazinInverse_clineDrazinShift {u v d : R} {k : ℕ}
+    (h : IsDrazinInverse (u * v) d k) :
+    IsDrazinInverse (v * u) (clineDrazinShift u v d) (k + 1) := by
+  have hcomm : (u * v) * d = d * (u * v) := h.comm
+  have hid : d * (u * v) * d = d := h.idempotent
+  have hp : (u * v) ^ (k + 1) * d = (u * v) ^ k := h.power
+  have had2 : (u * v) * d ^ 2 = d := by
+    calc
+      (u * v) * d ^ 2 = ((u * v) * d) * d := by rw [pow_two]; noncomm_ring
+      _ = (d * (u * v)) * d := by rw [hcomm]
+      _ = d * (u * v) * d := by rfl
+      _ = d := hid
+  have hd2a : d ^ 2 * (u * v) = d := by
+    calc
+      d ^ 2 * (u * v) = d * d * (u * v) := by rw [pow_two]
+      _ = d * (d * (u * v)) := by noncomm_ring
+      _ = d * ((u * v) * d) := by rw [← hcomm]
+      _ = d := by simpa only [mul_assoc] using hid
+  have hcomm_b_c : (v * u) * (v * d ^ 2 * u) = (v * d ^ 2 * u) * (v * u) := by
+    calc
+      v * u * (v * d ^ 2 * u) = v * ((u * v) * d ^ 2) * u := by noncomm_ring
+      _ = v * d * u := by rw [had2]
+      _ = v * d ^ 2 * u * (v * u) := by
+        calc
+          v * d * u = v * (d ^ 2 * (u * v)) * u := by rw [hd2a]
+          _ = v * d ^ 2 * u * (v * u) := by noncomm_ring
+  have hid_c : (v * d ^ 2 * u) * (v * u) * (v * d ^ 2 * u) = v * d ^ 2 * u := by
+    have hd2a_left : d ^ 2 * (u * v) = d := hd2a
+    have hmiddle : d ^ 2 * (u * v) * (u * v) * d ^ 2 = d ^ 2 := by
+      calc
+        d ^ 2 * (u * v) * (u * v) * d ^ 2 = d * ((u * v) * d ^ 2) := by
+          rw [hd2a_left]; noncomm_ring
+        _ = d * d := by rw [had2]
+        _ = d ^ 2 := by rw [pow_two]
+    calc
+      (v * d ^ 2 * u) * (v * u) * (v * d ^ 2 * u) =
+          v * (d ^ 2 * (u * v) * (u * v) * d ^ 2) * u := by noncomm_ring
+      _ = v * d ^ 2 * u := by rw [hmiddle]
+  have hpow_c : (v * u) ^ (k + 1 + 1) * (v * d ^ 2 * u) = (v * u) ^ (k + 1) := by
+    have hpow_alt : ∀ n : ℕ, (v * u) ^ (n + 1) = v * (u * v) ^ n * u := by
+      intro n
+      induction n with
+      | zero => simp
+      | succ n ih =>
+          rw [pow_succ, ih]
+          simp only [pow_succ]
+          noncomm_ring
+    have hp2 : (u * v) ^ (k + 2) * d ^ 2 = (u * v) ^ k := by
+      calc
+        (u * v) ^ (k + 2) * d ^ 2 = (u * v) ^ (k + 1) * ((u * v) * d ^ 2) := by
+          rw [pow_succ]; noncomm_ring
+        _ = (u * v) ^ (k + 1) * d := by rw [had2]
+        _ = (u * v) ^ k := hp
+    rw [show k + 1 + 1 = (k + 1) + 1 by omega, hpow_alt (k + 1), hpow_alt k]
+    calc
+      v * (u * v) ^ (k + 1) * u * (v * d ^ 2 * u) =
+          v * ((u * v) ^ (k + 1) * (u * v) * d ^ 2) * u := by noncomm_ring
+      _ = v * ((u * v) ^ (k + 2) * d ^ 2) * u := by
+        rw [pow_succ]; noncomm_ring
+      _ = v * (u * v) ^ k * u := by rw [hp2]
+  exact IsDrazinInverse.mk hcomm_b_c hid_c hpow_c
+
+theorem clineDrazinShift_projection_eq {u v d : R} {k : ℕ}
+    (h : IsDrazinInverse (u * v) d k) :
+    IsDrazinInverse.projection (v * u) (clineDrazinShift u v d) = v * d * u := by
+  have had2 : (u * v) * d ^ 2 = d := by
+    calc
+      (u * v) * d ^ 2 = ((u * v) * d) * d := by rw [pow_two]; noncomm_ring
+      _ = (d * (u * v)) * d := by rw [h.comm]
+      _ = d * (u * v) * d := by rfl
+      _ = d := h.idempotent
+  unfold IsDrazinInverse.projection clineDrazinShift
+  calc
+    v * u * (v * d ^ 2 * u) = v * ((u * v) * d ^ 2) * u := by noncomm_ring
+    _ = v * d * u := by rw [had2]
+
+theorem clineDrazinShift_complementaryProjection_eq {u v d : R} {k : ℕ}
+    (h : IsDrazinInverse (u * v) d k) :
+    IsDrazinInverse.complementaryProjection (v * u) (clineDrazinShift u v d) =
+      1 - v * d * u := by
+  rw [IsDrazinInverse.complementaryProjection, clineDrazinShift_projection_eq h]
+
+namespace IsDrazinInverse
+
+variable {R : Type*} [Ring R] {a b c : R} {k : ℕ}
+
 /-! ### Algebraic Fitting-Drazin boundary -/
 
 /-- The regular summand `aP` associated to the Drazin spectral projector `P = a*b`. -/
 @[rep_depth krein]
 def fittingRegularPart (a b : R) : R := a * projection a b
+
+/-- Cline's transferred regular part is the image of the original regular part. -/
+theorem clineDrazinShift_fittingRegularPart_eq {u v d : R} {k : ℕ}
+    (h : IsDrazinInverse (u * v) d k) :
+    fittingRegularPart (v * u) (clineDrazinShift u v d) =
+      v * projection (u * v) d * u := by
+  rw [fittingRegularPart, clineDrazinShift_projection_eq h]
+  change (v * u) * (v * d * u) = v * ((u * v) * d) * u
+  noncomm_ring
 
 /-- The nilpotent summand `aQ` associated to the complementary Drazin projector `Q = 1 - a*b`. -/
 @[rep_depth krein]

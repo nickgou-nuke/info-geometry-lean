@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import Lean
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Lean.Meta.Basic
 import Lean.Meta.Sorry
 import Lean.Util.CollectAxioms
@@ -117,13 +116,30 @@ def hitUnfoldLimit : AuditResult → Bool
 def containsSorry : AuditResult → Bool
   | (_, _, _, _, _, _, b) => b
 
+private def dedupAppendNames (xs ys : List Name) : List Name :=
+  if ys.isEmpty then xs
+  else if xs.isEmpty then ys
+  else
+    Id.run do
+      let mut seen : Std.HashSet Name := {}
+      let mut out : Array Name := #[]
+      for x in xs do
+        if !seen.contains x then
+          seen := seen.insert x
+          out := out.push x
+      for y in ys do
+        if !seen.contains y then
+          seen := seen.insert y
+          out := out.push y
+      return out.toList
+
 def merge (a b : AuditResult) : AuditResult :=
   mk
     (termNodeCount := termNodeCount a + termNodeCount b)
     (hasNontrivialConst := hasNontrivialConst a || hasNontrivialConst b)
     (containsVacuousSockets := containsVacuousSockets a || containsVacuousSockets b)
-    (unfoldedLocalConsts := unfoldedLocalConsts a ++ unfoldedLocalConsts b)
-    (suspiciousConsts := suspiciousConsts a ++ suspiciousConsts b)
+    (unfoldedLocalConsts := dedupAppendNames (unfoldedLocalConsts a) (unfoldedLocalConsts b))
+    (suspiciousConsts := dedupAppendNames (suspiciousConsts a) (suspiciousConsts b))
     (hitUnfoldLimit := hitUnfoldLimit a || hitUnfoldLimit b)
     (containsSorry := containsSorry a || containsSorry b)
 
@@ -222,110 +238,213 @@ private def isNontrivialExternalConst
     | some info => isProofConst info
     | none => false
 
+private partial def auditDeclBodyMemo
+    (cfg : AuditConfig)
+    (env : Environment)
+    (declMemoRef : IO.Ref (Std.HashMap Name (AuditResult × Nat)))
+    (seenSet : NameSet)
+    (depth : Nat)
+    (rootExpr : Expr) : MetaM (AuditResult × Nat × NameSet) := do
+  let mut visitedExprs : Std.HashSet Lean.ExprStructEq := {}
+  let mut stack : Array Expr := #[rootExpr]
+  let mut termCount : Nat := 0
+  let mut hasNontrivial : Bool := false
+  let mut hasVacuous : Bool := false
+  let mut hitLimit : Bool := false
+  let mut hasSorry : Bool := false
+  let mut unfoldedArr : Array Name := #[]
+  let mut unfoldedSet : Std.HashSet Name := {}
+  let mut suspiciousArr : Array Name := #[]
+  let mut suspiciousSet : Std.HashSet Name := {}
+  let mut maxSubLevels : Nat := 0
+  let mut ancestorsHit : NameSet := {}
+
+  while !stack.isEmpty do
+    let curr := stack.back!
+    stack := stack.pop
+    let isCompound :=
+      match curr with
+      | .app .. | .lam .. | .forallE .. | .letE .. | .proj .. | .mdata .. => true
+      | _ => false
+    if isCompound then
+      let key : Lean.ExprStructEq := ⟨curr⟩
+      if visitedExprs.contains key then
+        continue
+      visitedExprs := visitedExprs.insert key
+
+    if (curr.getSorry?).isSome then
+      termCount := termCount + 1
+      hasSorry := true
+      if !suspiciousSet.contains ``sorryAx then
+        suspiciousSet := suspiciousSet.insert ``sorryAx
+        suspiciousArr := suspiciousArr.push ``sorryAx
+      continue
+
+    match curr with
+    | Expr.app fn arg =>
+        termCount := termCount + 1
+        stack := stack.push arg
+        stack := stack.push fn
+    | Expr.lam _ _ body _ =>
+        termCount := termCount + 1
+        stack := stack.push body
+    | Expr.forallE _ _ body _ =>
+        termCount := termCount + 1
+        stack := stack.push body
+    | Expr.letE _ _ value body _ =>
+        termCount := termCount + 1
+        stack := stack.push body
+        stack := stack.push value
+    | Expr.proj s idx struct =>
+        termCount := termCount + 1
+        if isProjectLocal cfg env s then
+          if isTrivialProjectionOrAccessor s then
+            hasVacuous := true
+            if !suspiciousSet.contains s then
+              suspiciousSet := suspiciousSet.insert s
+              suspiciousArr := suspiciousArr.push s
+          if let some sinfo := Lean.getStructureInfo? env s then
+            if let some projFn := sinfo.getProjFn? idx then
+              if isTrivialProjectionOrAccessor projFn then
+                hasVacuous := true
+                if !suspiciousSet.contains projFn then
+                  suspiciousSet := suspiciousSet.insert projFn
+                  suspiciousArr := suspiciousArr.push projFn
+        stack := stack.push struct
+    | Expr.mdata _ body =>
+        stack := stack.push body
+    | Expr.const declName _ =>
+        if isBuiltinTrivialConst declName then
+          termCount := termCount + 1
+        else if isTrivialProjectionOrAccessor declName then
+          termCount := termCount + 1
+          hasVacuous := true
+          if !suspiciousSet.contains declName then
+            suspiciousSet := suspiciousSet.insert declName
+            suspiciousArr := suspiciousArr.push declName
+        else
+          match env.find? declName with
+          | none =>
+              termCount := termCount + 1
+          | some info =>
+              if isProjectLocal cfg env declName then
+                if seenSet.contains declName then
+                  termCount := termCount + 1
+                  hasVacuous := true
+                  ancestorsHit := ancestorsHit.insert declName
+                  if !suspiciousSet.contains declName then
+                    suspiciousSet := suspiciousSet.insert declName
+                    suspiciousArr := suspiciousArr.push declName
+                else if depth == 0 then
+                  termCount := termCount + 1
+                  hasVacuous := true
+                  hitLimit := true
+                  if !suspiciousSet.contains declName then
+                    suspiciousSet := suspiciousSet.insert declName
+                    suspiciousArr := suspiciousArr.push declName
+                else
+                  let cached? := (← declMemoRef.get)[declName]?
+                  let usedCache ←
+                    match cached? with
+                    | some (cachedRes, reqLevels) => do
+                        if reqLevels ≤ depth - 1 then
+                          termCount := termCount + 1 + AuditResult.termNodeCount cachedRes
+                          if AuditResult.hasNontrivialConst cachedRes then
+                            hasNontrivial := true
+                          if AuditResult.containsVacuousSockets cachedRes then
+                            hasVacuous := true
+                          if AuditResult.containsSorry cachedRes then
+                            hasSorry := true
+                          if !unfoldedSet.contains declName then
+                            unfoldedSet := unfoldedSet.insert declName
+                            unfoldedArr := unfoldedArr.push declName
+                          for uc in AuditResult.unfoldedLocalConsts cachedRes do
+                            if !unfoldedSet.contains uc then
+                              unfoldedSet := unfoldedSet.insert uc
+                              unfoldedArr := unfoldedArr.push uc
+                          for sc in AuditResult.suspiciousConsts cachedRes do
+                            if !suspiciousSet.contains sc then
+                              suspiciousSet := suspiciousSet.insert sc
+                              suspiciousArr := suspiciousArr.push sc
+                          maxSubLevels := Nat.max maxSubLevels (1 + reqLevels)
+                          pure true
+                        else
+                          pure false
+                    | none => pure false
+                  if !usedCache then
+                    match info.value? (allowOpaque := true) with
+                    | some val =>
+                        let (subRes, subLevels, subAnc) ←
+                          auditDeclBodyMemo cfg env declMemoRef (seenSet.insert declName) (depth - 1) val
+                        termCount := termCount + 1 + AuditResult.termNodeCount subRes
+                        if AuditResult.hasNontrivialConst subRes then
+                          hasNontrivial := true
+                        if AuditResult.containsVacuousSockets subRes then
+                          hasVacuous := true
+                        if AuditResult.hitUnfoldLimit subRes then
+                          hitLimit := true
+                        if AuditResult.containsSorry subRes then
+                          hasSorry := true
+                        if !unfoldedSet.contains declName then
+                          unfoldedSet := unfoldedSet.insert declName
+                          unfoldedArr := unfoldedArr.push declName
+                        for uc in AuditResult.unfoldedLocalConsts subRes do
+                          if !unfoldedSet.contains uc then
+                            unfoldedSet := unfoldedSet.insert uc
+                            unfoldedArr := unfoldedArr.push uc
+                        for sc in AuditResult.suspiciousConsts subRes do
+                          if !suspiciousSet.contains sc then
+                            suspiciousSet := suspiciousSet.insert sc
+                            suspiciousArr := suspiciousArr.push sc
+                        let cleanedAnc := subAnc.erase declName
+                        ancestorsHit := ancestorsHit.union cleanedAnc
+                        maxSubLevels := Nat.max maxSubLevels (1 + subLevels)
+                        if cleanedAnc.isEmpty && !AuditResult.hitUnfoldLimit subRes then
+                          declMemoRef.modify fun m => m.insert declName (subRes, subLevels)
+                    | none =>
+                        termCount := termCount + 1
+                        if isProofConst info && AuditConfig.rejectLocalAxioms cfg then
+                          hasVacuous := true
+                          if !suspiciousSet.contains declName then
+                            suspiciousSet := suspiciousSet.insert declName
+                            suspiciousArr := suspiciousArr.push declName
+                        else if isProofConst info then
+                          hasNontrivial := true
+              else
+                termCount := termCount + 1
+                if isNontrivialExternalConst cfg env declName then
+                  hasNontrivial := true
+    | Expr.bvar _ => termCount := termCount + 1
+    | Expr.fvar _ => termCount := termCount + 1
+    | Expr.mvar _ =>
+        termCount := termCount + 1
+        hasVacuous := true
+    | Expr.sort _ => termCount := termCount + 1
+    | Expr.lit _ => termCount := termCount + 1
+
+  let res := AuditResult.mk
+    (termNodeCount := termCount)
+    (hasNontrivialConst := hasNontrivial)
+    (containsVacuousSockets := hasVacuous)
+    (unfoldedLocalConsts := unfoldedArr.toList)
+    (suspiciousConsts := suspiciousArr.toList)
+    (hitUnfoldLimit := hitLimit)
+    (containsSorry := hasSorry)
+  return (res, maxSubLevels, ancestorsHit)
+
 def auditExprTrivialityDetailed
     (cfg : AuditConfig)
     (env : Environment)
     (seen : List Name)
     (depth : Nat)
     (e : Expr) : MetaM AuditResult := do
-
-  if (e.getSorry?).isSome then
-    return AuditResult.mk
-      (termNodeCount := 1)
-      (containsSorry := true)
-      (suspiciousConsts := [``sorryAx])
-
-  match e with
-  | Expr.app fn arg =>
-      let fnAudit ← auditExprTrivialityDetailed cfg env seen depth fn
-      let argAudit ← auditExprTrivialityDetailed cfg env seen depth arg
-      return AuditResult.addNode (AuditResult.merge fnAudit argAudit)
-
-  | Expr.lam _ _ body _ =>
-      let bodyAudit ← auditExprTrivialityDetailed cfg env seen depth body
-      return AuditResult.addNode bodyAudit
-
-  | Expr.forallE _ _ body _ =>
-      let bodyAudit ← auditExprTrivialityDetailed cfg env seen depth body
-      return AuditResult.addNode bodyAudit
-
-  | Expr.letE _ _ value body _ =>
-      let valAudit ← auditExprTrivialityDetailed cfg env seen depth value
-      let bodyAudit ← auditExprTrivialityDetailed cfg env seen depth body
-      return AuditResult.addNode (AuditResult.merge valAudit bodyAudit)
-
-  | Expr.proj _ _ struct =>
-      let structAudit ← auditExprTrivialityDetailed cfg env seen depth struct
-      return AuditResult.addNode structAudit
-
-  | Expr.mdata _ body =>
-      auditExprTrivialityDetailed cfg env seen depth body
-
-  | Expr.const declName _ =>
-      if isBuiltinTrivialConst declName then
-        return AuditResult.mk (termNodeCount := 1)
-      else if isTrivialProjectionOrAccessor declName then
-        return AuditResult.markSuspicious (AuditResult.addNode AuditResult.mk) declName
-      else
-        match env.find? declName with
-        | none => return AuditResult.mk (termNodeCount := 1)
-        | some info =>
-            if isProjectLocal cfg env declName then
-              if seen.contains declName then
-                return AuditResult.mk
-                  (termNodeCount := 1)
-                  (containsVacuousSockets := true)
-                  (suspiciousConsts := [declName])
-              else if depth == 0 then
-                return AuditResult.mk
-                  (termNodeCount := 1)
-                  (containsVacuousSockets := true)
-                  (suspiciousConsts := [declName])
-                  (hitUnfoldLimit := true)
-              else
-                match info.value? (allowOpaque := true) with
-                | some val =>
-                    let audit ← auditExprTrivialityDetailed cfg env (declName :: seen) (depth - 1) val
-                    let auditNode := AuditResult.addNode audit
-                    return AuditResult.mk
-                      (termNodeCount := AuditResult.termNodeCount auditNode)
-                      (hasNontrivialConst := AuditResult.hasNontrivialConst auditNode)
-                      (containsVacuousSockets := AuditResult.containsVacuousSockets auditNode)
-                      (unfoldedLocalConsts := declName :: AuditResult.unfoldedLocalConsts auditNode)
-                      (suspiciousConsts := AuditResult.suspiciousConsts auditNode)
-                      (hitUnfoldLimit := AuditResult.hitUnfoldLimit auditNode)
-                      (containsSorry := AuditResult.containsSorry auditNode)
-                | none =>
-                    if isProofConst info && AuditConfig.rejectLocalAxioms cfg then
-                      return AuditResult.mk
-                        (termNodeCount := 1)
-                        (containsVacuousSockets := true)
-                        (suspiciousConsts := [declName])
-                    else
-                      return AuditResult.mk
-                        (termNodeCount := 1)
-                        (hasNontrivialConst := isProofConst info)
-            else
-              return AuditResult.mk
-                (termNodeCount := 1)
-                (hasNontrivialConst := isNontrivialExternalConst cfg env declName)
-
-  | Expr.bvar _ => return AuditResult.mk (termNodeCount := 1)
-  | Expr.fvar _ => return AuditResult.mk (termNodeCount := 1)
-  | Expr.mvar _ =>
-      return AuditResult.mk (termNodeCount := 1) (containsVacuousSockets := true)
-  | Expr.sort _ => return AuditResult.mk (termNodeCount := 1)
-  | Expr.lit _ => return AuditResult.mk (termNodeCount := 1)
-
-termination_by (depth, sizeOf e)
-decreasing_by
-  all_goals
-    simp_all [beq_iff_eq]
-    first
-    | exact Prod.Lex.left _ _ (by omega)
-    | apply Prod.Lex.right
-      all_goals simp_wf
-      all_goals omega
+  let queryEnv := env.setExporting false
+  let declMemoRef ← IO.mkRef ({} : Std.HashMap Name (AuditResult × Nat))
+  let mut seenSet : NameSet := {}
+  for n in seen do
+    seenSet := seenSet.insert n
+  let (res, _, _) ← auditDeclBodyMemo cfg queryEnv declMemoRef seenSet depth e
+  return res
 
 /-- Legacy compatibility wrapper used by `InfoGeometry.Lint.Pauli`. -/
 def auditExprTriviality (e : Expr) : MetaM Bool := do
@@ -343,16 +462,75 @@ private def arrNamesJson (xs : Array Name) : Json :=
 private def nameSetOfList (xs : List Name) : Std.HashSet Name :=
   xs.foldl (fun acc n => acc.insert n) ({} : Std.HashSet Name)
 
-private def constsInExpr (e : Expr) : Std.HashSet Name :=
-  e.foldConsts (init := ({} : Std.HashSet Name)) fun n acc => acc.insert n
+private def collectProjFnsFromExpr (queryEnv : Environment) (e : Expr)
+    (seen : Std.HashSet Name) (out : Array Name) : Std.HashSet Name × Array Name := Id.run do
+  let base := e.getUsedConstants
+  if !base.any (fun c => (Lean.getStructureInfo? queryEnv c).isSome) then
+    return (seen, out)
+  let mut visited : Std.HashSet Lean.ExprStructEq := {}
+  let mut stack : Array Expr := #[e]
+  let mut seenNames := seen
+  let mut outNames := out
+  while !stack.isEmpty do
+    let curr := stack.back!
+    stack := stack.pop
+    match curr with
+    | .const .. | .bvar .. | .fvar .. | .mvar .. | .sort .. | .lit .. =>
+        continue
+    | _ => pure ()
+    let key : Lean.ExprStructEq := ⟨curr⟩
+    if visited.contains key then continue
+    visited := visited.insert key
+    match curr with
+    | .proj s idx struct =>
+        if let some sinfo := Lean.getStructureInfo? queryEnv s then
+          if let some projFn := sinfo.getProjFn? idx then
+            if !seenNames.contains projFn then
+              seenNames := seenNames.insert projFn
+              outNames := outNames.push projFn
+        stack := stack.push struct
+    | .app fn arg =>
+        stack := stack.push arg
+        stack := stack.push fn
+    | .lam _ ty body _ =>
+        stack := stack.push body
+        stack := stack.push ty
+    | .forallE _ ty body _ =>
+        stack := stack.push body
+        stack := stack.push ty
+    | .letE _ ty val body _ =>
+        stack := stack.push body
+        stack := stack.push val
+        stack := stack.push ty
+    | .mdata _ body =>
+        stack := stack.push body
+    | _ => pure ()
+  return (seenNames, outNames)
 
-private def directDepsOfConstantInfo (ci : ConstantInfo) : Std.HashSet Name :=
-  let typeDeps := constsInExpr ci.type
-  match ci.value? (allowOpaque := true) with
-  | none => typeDeps
-  | some v =>
-      let valDeps := constsInExpr v
-      valDeps.fold (init := typeDeps) fun acc n => acc.insert n
+private def directDepsArrayOfConstantInfo
+    (queryEnv : Environment) (declName : Name) (ci : ConstantInfo) : Array Name := Id.run do
+  let mut seen : Std.HashSet Name := {}
+  let mut out : Array Name := #[]
+  for c in ci.type.getUsedConstants do
+    if !seen.contains c then
+      seen := seen.insert c
+      out := out.push c
+  let (seen', out') := collectProjFnsFromExpr queryEnv ci.type seen out
+  seen := seen'
+  out := out'
+  if let some v := ci.value? (allowOpaque := true) then
+    for c in v.getUsedConstants do
+      if !seen.contains c then
+        seen := seen.insert c
+        out := out.push c
+    let (seen'', out'') := collectProjFnsFromExpr queryEnv v seen out
+    seen := seen''
+    out := out''
+  if let some implName := Lean.Compiler.getImplementedBy? queryEnv declName then
+    if !seen.contains implName then
+      seen := seen.insert implName
+      out := out.push implName
+  return out
 
 /-- Product-backed bounded dependency scan result. -/
 abbrev DependencyScanResult :=
@@ -371,23 +549,28 @@ end DependencyScanResult
 def collectTransitiveDeps
     (env : Environment) (fuel : Nat) (frontier : List Name) (seen : Std.HashSet Name)
     : CoreM DependencyScanResult := do
-  match fuel, frontier with
-  | 0, [] => pure (seen, false)
-  | 0, _ => pure (seen, true)
-  | _, [] => pure (seen, false)
-  | fuel + 1, n :: rest =>
-      if seen.contains n then
-        collectTransitiveDeps env fuel rest seen
-      else
-        let seen := seen.insert n
-        match env.find? n with
-        | none => collectTransitiveDeps env fuel rest seen
-        | some ci =>
-            let deps := directDepsOfConstantInfo ci |>.toList
-            collectTransitiveDeps env fuel (deps ++ rest) seen
-
-termination_by fuel
-decreasing_by all_goals omega
+  let queryEnv := env.setExporting false
+  let mut visited := seen
+  let mut enqueued : Std.HashSet Name := {}
+  let mut queue : Array Name := #[]
+  for n in frontier do
+    if !visited.contains n && !enqueued.contains n then
+      enqueued := enqueued.insert n
+      queue := queue.push n
+  let mut cursor := 0
+  let mut remaining := fuel
+  while cursor < queue.size && remaining > 0 do
+    let n := queue[cursor]!
+    cursor := cursor + 1
+    if !visited.contains n then
+      visited := visited.insert n
+      remaining := remaining - 1
+      if let some ci := queryEnv.find? n then
+        for dep in directDepsArrayOfConstantInfo queryEnv n ci do
+          if !visited.contains dep && !enqueued.contains dep then
+            enqueued := enqueued.insert dep
+            queue := queue.push dep
+  return (visited, cursor < queue.size)
 
 /-- Product-backed dependency contamination result, avoiding a proof-carrier structure. -/
 abbrev ContaminationResult :=
@@ -456,9 +639,10 @@ def auditTransitiveDependencies
   let hitDependencyFuelLimit := DependencyScanResult.hitFuelLimit depScan
   if hitDependencyFuelLimit && (state == "clean" || state == "honest_sorry") then
     state := "dependency_fuel_limit"
+  let queryEnv := env.setExporting false
   let mut opaqueBoundaries : Array Name := #[]
   for dep in deps.toList do
-    match env.find? dep with
+    match queryEnv.find? dep with
     | some ci =>
         if isOpaqueConst ci then
           opaqueBoundaries := opaqueBoundaries.push dep

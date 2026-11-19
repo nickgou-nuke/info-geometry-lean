@@ -1,7 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Lean
 import Lean.Data.Json
 import DAG.JsonInstances
-import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.ArchitectureAudit
 
 open Lean
 open InfoGeometry.Meta
@@ -39,7 +44,7 @@ structure RepDepthDeclRow where
   reachesAboveClosure : Bool
   judgment : String
   capstone : Bool
-  deriving Repr, ToJson
+  deriving Repr, ToJson, Inhabited
 
 private def dottedName (s : String) : Name :=
   (s.splitOn ".").foldl (init := Name.anonymous) fun acc part =>

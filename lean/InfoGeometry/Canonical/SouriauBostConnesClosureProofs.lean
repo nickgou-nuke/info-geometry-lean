@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FormalPrimeRootSystem
@@ -82,12 +87,12 @@ theorem thermal_cayley_tendsto_boundary_one :
 /-! ## 4. Concrete V4 sewing anomaly cancellation -/
 
 /-- Concrete chirality operator, Pauli Z. -/
-@[rep_depth thermo, capstone]
+@[rep_depth thermo]
 def concreteChirality : Matrix (Fin 2) (Fin 2) ℂ :=
   !![1, 0; 0, -1]
 
 /-- Concrete V4 sewing involution, Pauli X. -/
-@[rep_depth thermo, capstone]
+@[rep_depth thermo]
 def concreteSwitch : Matrix (Fin 2) (Fin 2) ℂ :=
   !![0, 1; 1, 0]
 
@@ -122,7 +127,7 @@ theorem concreteChirality_mul_switch_trace_zero :
   simp [concreteChirality, concreteSwitch, Matrix.trace, Fin.sum_univ_two]
 
 /-- A concrete 2x2 boundary state invariant under the V4 sewing involution. -/
-@[rep_depth thermo, capstone]
+@[rep_depth thermo]
 structure SewnBoundaryState where
   rho : Matrix (Fin 2) (Fin 2) ℂ
   is_hermitian : rhoᴴ = rho
@@ -130,7 +135,7 @@ structure SewnBoundaryState where
   sewing_invariant : concreteSwitch * rho * concreteSwitch = rho
 
 /-- Canonical V4-sewn boundary state: the maximally mixed 2x2 density matrix. -/
-@[rep_depth thermo, capstone]
+@[rep_depth thermo]
 def canonicalSewnBoundaryState : SewnBoundaryState where
   rho := (2⁻¹ : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)
   is_hermitian := by
@@ -144,7 +149,7 @@ def canonicalSewnBoundaryState : SewnBoundaryState where
       <;> simp [concreteSwitch, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- Chiral index of a concrete sewn boundary state: `χ = Tr(Γρ)`. -/
-@[rep_depth thermo, capstone]
+@[rep_depth thermo]
 noncomputable def sewnChiralIndex (s : SewnBoundaryState) : ℂ :=
   Matrix.trace (concreteChirality * s.rho)
 
@@ -213,7 +218,7 @@ theorem sewn_boundary_chiral_index_vanishes (s : SewnBoundaryState) :
       (2 : ℂ) * Matrix.trace (concreteChirality * s.rho)
           = Matrix.trace (concreteChirality * s.rho) +
               Matrix.trace (concreteChirality * s.rho) := by
-                ring
+                exact two_mul _
       _ = 0 := h_sum_zero
   rcases mul_eq_zero.mp h_two_mul with (h2z | htr)
   · have h2_nz : (2 : ℂ) ≠ 0 := by

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -151,6 +156,33 @@ theorem umegakiRelativeEntropy_self
     (τ : A →ₚ[ℂ] ℂ) (ρ : A) :
     umegakiRelativeEntropy τ ρ ρ = 0 := by
   simp [umegakiRelativeEntropy]
+
+/-- The Umegaki readout is covariant under a star-algebra homomorphism when
+the source and target positive functionals agree on mapped elements.  This
+uses the noncommutative CFC logarithm and does not assume commutation of the
+two operators.  It is an equality/covariance result, not a monotonicity theorem
+for arbitrary quantum channels. -/
+theorem umegakiRelativeEntropy_starAlgHom_eq
+    {B : Type*} [CStarAlgebra B] [PartialOrder B] [StarOrderedRing B]
+    (φ : A →⋆ₐ[ℂ] B)
+    (τA : A →ₚ[ℂ] ℂ) (τB : B →ₚ[ℂ] ℂ)
+    (hτ : ∀ x : A, τB (φ x) = τA x) (ρ σ : A)
+    (hρ : IsSelfAdjoint ρ) (hσ : IsSelfAdjoint σ)
+    (hρc : ContinuousOn Real.log (spectrum ℝ ρ))
+    (hσc : ContinuousOn Real.log (spectrum ℝ σ)) :
+    umegakiRelativeEntropy τA ρ σ =
+      umegakiRelativeEntropy τB (φ ρ) (φ σ) := by
+  have hlogρ : φ (cfc Real.log ρ) = cfc Real.log (φ ρ) :=
+    φ.map_cfc Real.log ρ (hf := hρc) (ha := hρ) (hφa := hρ.map φ)
+  have hlogσ : φ (cfc Real.log σ) = cfc Real.log (φ σ) :=
+    φ.map_cfc Real.log σ (hf := hσc) (ha := hσ) (hφa := hσ.map φ)
+  calc
+    umegakiRelativeEntropy τA ρ σ = τB (φ (umegakiKernel ρ σ)) := by
+      dsimp [umegakiRelativeEntropy]
+      exact (hτ (umegakiKernel ρ σ)).symm
+    _ = umegakiRelativeEntropy τB (φ ρ) (φ σ) := by
+      simp [umegakiRelativeEntropy, umegakiKernel, relativeLogDensity,
+        map_mul, map_sub, hlogρ, hlogσ]
 
 @[simp]
 theorem petzMoment_apply

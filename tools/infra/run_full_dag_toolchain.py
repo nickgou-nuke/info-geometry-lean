@@ -2,17 +2,26 @@
 from __future__ import annotations
 
 import argparse
-import os
 import subprocess
 import sys
 from pathlib import Path
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-    from tools.build_lock import DEFAULT_BUILD_LOCK_PATH, read_lock_metadata
+    from tools.build_lock import (
+        DEFAULT_BUILD_LOCK_PATH,
+        BuildLockBusyError,
+        acquire_build_lock,
+        read_lock_metadata,
+    )
     from tools.infra.build import log_spectral_stage
 else:
-    from tools.build_lock import DEFAULT_BUILD_LOCK_PATH, read_lock_metadata
+    from tools.build_lock import (
+        DEFAULT_BUILD_LOCK_PATH,
+        BuildLockBusyError,
+        acquire_build_lock,
+        read_lock_metadata,
+    )
     from tools.infra.build import log_spectral_stage
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -23,40 +32,31 @@ def run_step(stage: str, step_name: str, cmd: list[str]) -> None:
     subprocess.run(cmd, cwd=ROOT, check=True)
 
 
-def process_exists(pid: int) -> bool:
-    try:
-        os.kill(pid, 0)
-    except ProcessLookupError:
-        return False
-    except PermissionError:
-        return True
-    return True
-
-
 def preflight_build_lock_health() -> None:
-    lock_meta = read_lock_metadata(DEFAULT_BUILD_LOCK_PATH)
-    if lock_meta is None:
-        return
-    if "raw" in lock_meta:
+    """Check the kernel lock, since its JSON file is only advisory metadata.
+
+    A dead recorded PID or malformed/stale metadata cannot hold `flock` and
+    must never lead callers to delete the stable lock inode. Conversely, a
+    live lock is authoritative regardless of the metadata contents.
+    """
+    prior_metadata = read_lock_metadata(DEFAULT_BUILD_LOCK_PATH)
+    try:
+        lock = acquire_build_lock(DEFAULT_BUILD_LOCK_PATH, "full-dag-preflight", block=False)
+    except BuildLockBusyError as exc:
+        metadata = read_lock_metadata(DEFAULT_BUILD_LOCK_PATH) or {}
         raise RuntimeError(
-            "[full-dag] stale/invalid build lock metadata: "
-            f"{DEFAULT_BUILD_LOCK_PATH} contains non-JSON content. "
-            "Fix: remove the stale lock file and rerun."
-        )
-    owner = lock_meta.get("owner")
-    pid = lock_meta.get("pid")
-    if not isinstance(owner, str) or not owner or not isinstance(pid, int):
-        raise RuntimeError(
-            "[full-dag] stale/invalid build lock metadata: "
-            f"{DEFAULT_BUILD_LOCK_PATH} missing required owner/pid fields. "
-            "Fix: remove the stale lock file and rerun."
-        )
-    if not process_exists(pid):
-        raise RuntimeError(
-            "[full-dag] stale build lock metadata: "
-            f"{DEFAULT_BUILD_LOCK_PATH} refers to dead pid={pid} (owner={owner}). "
-            "Fix: remove the stale lock file and rerun."
-        )
+            f"[full-dag] another process holds {exc.lock_path}; "
+            f"recorded metadata={metadata!r}. Wait for it to finish; do not remove the lock file."
+        ) from exc
+    try:
+        if prior_metadata:
+            print(
+                "[full-dag] acquired the kernel build lock; replacing stale advisory metadata "
+                f"from {prior_metadata!r}",
+                flush=True,
+            )
+    finally:
+        lock.release()
 
 
 def main() -> int:
@@ -96,13 +96,13 @@ def main() -> int:
     if args.run_audit:
         run_step(
             "PREP",
-            "audit",
-            ["python3", "tools/infra/run_locked_lake_build.py", "InfoGeometry.All"],
-        )
-        run_step(
-            "PAULI",
-            "audit-strict",
-            ["python3", "tools/infra/run_locked_lake_build.py", "InfoGeometry.AuditStrict"],
+            "audit-native",
+            [
+                "python3",
+                "tools/infra/run_locked_lake_build.py",
+                "--wait-for-build-lock",
+                "AuditNativeRun",
+            ],
         )
 
     run_step("DECOMP", "refresh-decl-graph", ["python3", "tools/infra/refresh_decl_graph.py"])

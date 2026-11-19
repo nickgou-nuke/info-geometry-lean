@@ -36,6 +36,89 @@ section Ring
 
 variable {A : Type*} [Ring A] [StarRing A]
 
+/-- Division-free, twice-scaled Heisenberg dissipator for a single jump.
+This normalization is defined over every star ring, including rings where
+`2` is not invertible. -/
+def dissipatorTerm2 (L X : A) : A :=
+  2 * (star L * X * L) - (star L * L * X + X * (star L * L))
+
+/-- The twice-scaled dissipator annihilates the identity without requiring an
+inverse for two. -/
+theorem dissipatorTerm2_one (L : A) : dissipatorTerm2 L 1 = 0 := by
+  dsimp [dissipatorTerm2]
+  noncomm_ring
+
+/-- The division-free dissipator preserves the star involution. -/
+theorem dissipatorTerm2_star (L X : A) :
+    star (dissipatorTerm2 L X) = dissipatorTerm2 L (star X) := by
+  dsimp [dissipatorTerm2]
+  simp only [star_sub, star_mul, star_add, star_star, star_ofNat]
+  noncomm_ring
+
+/-- The polarized star-product defect of the division-free dissipator is
+exactly twice the ordered commutator Gram product. This is valid over an
+arbitrary associative star ring and retains the multiplication order. -/
+theorem dissipatorTerm2_star_mul_defect (L X Y : A) :
+    dissipatorTerm2 L (star X * Y) -
+        star (dissipatorTerm2 L X) * Y -
+        star X * dissipatorTerm2 L Y =
+      2 * (star ⁅L, X⁆ * ⁅L, Y⁆) := by
+  dsimp [dissipatorTerm2]
+  simp only [Ring.lie_def, star_sub, star_mul, star_add, star_star, star_ofNat]
+  noncomm_ring
+
+/-- Finite-family version of the division-free, twice-scaled dissipator. -/
+def gkslDissipator2 {ι : Type*} [Fintype ι] (L : ι → A) (X : A) : A :=
+  ∑ a, dissipatorTerm2 (L a) X
+
+/-- The polarized star-product defect of a finite family of jump operators is
+the sum of the ordered commutator Gram products. No division by two or
+commutation assumptions are used. -/
+theorem gkslDissipator2_star_mul_defect
+    {ι : Type*} [Fintype ι] (L : ι → A) (X Y : A) :
+    gkslDissipator2 L (star X * Y) -
+        star (gkslDissipator2 L X) * Y -
+        star X * gkslDissipator2 L Y =
+      ∑ a, 2 * (star ⁅L a, X⁆ * ⁅L a, Y⁆) := by
+  simp only [gkslDissipator2, star_sum, Finset.sum_mul, Finset.mul_sum,
+    ← Finset.sum_sub_distrib]
+  calc
+    ∑ a, (dissipatorTerm2 (L a) (star X * Y) -
+        star (dissipatorTerm2 (L a) X) * Y -
+        star X * dissipatorTerm2 (L a) Y) =
+        ∑ a, 2 * (star ⁅L a, X⁆ * ⁅L a, Y⁆) :=
+          Finset.sum_congr rfl (fun a _ => dissipatorTerm2_star_mul_defect (L a) X Y)
+
+/-- An observable in the joint commutant of the Hamiltonian and every jump
+operator and its adjoint is in the kernel of the twice-scaled Lindbladian.
+This is the algebraic obstruction to inferring a unique equilibrium from
+stationarity of one state alone. -/
+theorem gkslDissipator2_eq_zero_of_commute
+    {ι : Type*} [Fintype ι] (H : A) (L : ι → A) (X : A)
+    (hHX : Commute H X)
+    (hLX : ∀ a, Commute (L a) X)
+    (hsLX : ∀ a, Commute (star (L a)) X) :
+    ⁅H, X⁆ + gkslDissipator2 L X = 0 := by
+  have hcomm : ⁅H, X⁆ = 0 := by
+    rw [Ring.lie_def, hHX.eq]
+    exact sub_self _
+  rw [hcomm, zero_add]
+  unfold gkslDissipator2
+  apply Finset.sum_eq_zero
+  intro a _
+  unfold dissipatorTerm2
+  have hleft : star (L a) * X * L a = star (L a) * L a * X := by
+    rw [mul_assoc, ← (hLX a).eq, ← mul_assoc]
+  have hright : X * star (L a) * L a = star (L a) * L a * X := by
+    rw [← (hsLX a).eq, hleft]
+  have hright' : X * (star (L a) * L a) = star (L a) * L a * X := by
+    calc X * (star (L a) * L a)
+        = (X * star (L a)) * L a := by noncomm_ring
+      _ = (star (L a) * X) * L a := by rw [← (hsLX a).eq]
+      _ = star (L a) * L a * X := hleft
+  rw [hleft, hright']
+  noncomm_ring
+
 /-- The polarized star-product defect of one jump channel is its ordered
 commutator Gram product. The dissipator is the existing owner definition. -/
 theorem dissipatorTerm_star_mul_defect

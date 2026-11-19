@@ -1337,9 +1337,9 @@ theorem stage_MZ1_MZ2_MZ3_metriplectic_three_channel_decomposition_and_jordan_ma
   · dsimp [zornIPara]; zorn_ring
   · dsimp [zornMatrixTrace, zornFisherMetric, ZornMatrix.mul, Vec3.dot]; abel
   · dsimp [zornMatrixTrace, zornSymplecticForm, zornIPara, ZornMatrix.gamma5, ZornMatrix.mul]
-    vec3_ring
+    simp [Vec3.dot] <;> noncomm_ring
   · dsimp [zornFisherMetric, zornSymplecticForm, zornIPara, ZornMatrix.gamma5, ZornMatrix.mul]
-    vec3_ring
+    simp [Vec3.dot] <;> noncomm_ring
   · dsimp [scalarZorn, zornFisherMetric, zornSymplecticForm, zornIPara, zornHodgeCross]
     zorn_ring
   · dsimp [t₁, t₂, zornTangent, zornFisherMetric, Vec3.dot]; ring

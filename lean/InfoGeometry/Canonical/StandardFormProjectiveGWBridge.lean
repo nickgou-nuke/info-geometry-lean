@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Arithmetic.ProjectiveWeylGauge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularCartanCantorSystem
@@ -49,7 +54,7 @@ All identifications are calibration fields.  In particular, this structure does
 not claim that a bare Type III factor determines a GW volume, nor that a Weyl
 gauge is canonical.
 -/
-@[rep_depth projective]
+@[rep_depth operator]
 structure Bridge where
   /-- Standard-form/natural-cone carrier for normal positive state geometry. -/
   standardCone :
@@ -130,14 +135,14 @@ variable (B : Bridge (H := H) (Functional := Functional)
   (State := State) (G := G) (T := T) (Target := Target) (Coeff := Coeff))
 
 /-- The selected normal functional has a standard-form natural-cone vector. -/
-@[rep_depth projective]
+@[rep_depth operator]
 theorem coneVector_mem_naturalCone :
     B.standardCone.coneVector B.normalFunctional ∈ B.standardCone.cone :=
   NaturalConeStandardFormInterface.coneVector_mem_of_normal
     B.standardCone B.normalFunctional B.normalFunctional_isNormalPositive
 
 /-- The standard-form reflection fixes the selected cone vector. -/
-@[rep_depth projective]
+@[rep_depth operator]
 theorem J_fixes_coneVector :
     B.standardCone.J (B.standardCone.coneVector B.normalFunctional) =
       B.standardCone.coneVector B.normalFunctional :=
@@ -145,7 +150,7 @@ theorem J_fixes_coneVector :
     B.standardCone B.normalFunctional B.normalFunctional_isNormalPositive
 
 /-- The projective count shape is invariant under nonzero rescaling. -/
-@[rep_depth projective]
+@[rep_depth operator]
 theorem normalizedShape_scale_counts
     (β c : ℝ) (hc : c ≠ 0) :
     finiteArithmeticNormalizedRay
@@ -155,7 +160,7 @@ theorem normalizedShape_scale_counts
   B.projectiveGW.normalizedShape_scale_counts β c hc
 
 /-- Weyl calibration readback: total equals scale times shape. -/
-@[rep_depth projective]
+@[rep_depth operator]
 theorem weyl_total_eq_scale_mul_shape
     (u : ℝ) :
     B.weylGauge.totalReadout B.state u =
@@ -172,7 +177,7 @@ theorem weyl_total_eq_scale_mul_shape
 Core projective-shadow cancellation:
 weight `+2` GW intensity times weight `-2` inverse Weyl gauge is weight `0`.
 -/
-@[rep_depth projective]
+@[rep_depth operator]
 theorem physicalVolume_scale_invariant
     (c : ℝ) (hc : c ≠ 0) (s : State) :
     B.physicalVolume (B.scaleState c s) = B.physicalVolume s := by
@@ -203,7 +208,7 @@ standard-form natural-cone face layer.  The face bridge is supplied as an
 external witness; this file only transports its localization readback alongside
 the projective volume cancellation theorem.
 -/
-@[rep_depth projective]
+@[rep_depth operator]
 structure FaceBridge where
   /-- Existing standard-form projective GW/Weyl bridge. -/
   base :
@@ -231,7 +236,7 @@ variable (B : FaceBridge (H := H) (Functional := Functional)
   (State := State) (G := G) (T := T) (Target := Target) (Coeff := Coeff))
 
 /-- The calibrated projective state has a concrete localized face readout. -/
-@[rep_depth projective]
+@[rep_depth operator]
 theorem face_state_mem_modularConeFace :
     B.faceStateOf B.base.state ∈
       BinaryWordModularFaceBridge.modularConeFace B.faceBridge B.faceWord :=
@@ -253,7 +258,7 @@ theorem localizationOp_fixes_face_state :
     B.faceBridge B.faceWord B.face_state_calibration
 
 /-- Binary-word localization operator inherited from the standard-form face bridge. -/
-@[rep_depth projective]
+@[rep_depth operator]
 noncomputable def localizationOp
     (w : TypeIIIModularCantorSystem.BinaryWord) :
     InfoGeometry.Krein.DoubledSpace H →L[ℝ] InfoGeometry.Krein.DoubledSpace H :=
@@ -265,7 +270,7 @@ Localized binary-word cone faces preserve the supplied natural cone.
 This is a readback from `StandardFormNaturalConeBridge`, not a new analytic
 Tomita--Takesaki theorem.
 -/
-@[rep_depth projective]
+@[rep_depth operator]
 theorem cone_face_localization
     (w : TypeIIIModularCantorSystem.BinaryWord)
     {ξ : InfoGeometry.Krein.DoubledSpace H}
@@ -275,7 +280,7 @@ theorem cone_face_localization
   BinaryWordModularFaceBridge.cone_face_localization B.faceBridge w hξ
 
 /-- The base projective GW/Weyl volume readout remains scale invariant. -/
-@[rep_depth projective]
+@[rep_depth operator]
 theorem physicalVolume_scale_invariant
     (c : ℝ) (hc : c ≠ 0) (s : State) :
     B.base.physicalVolume (B.base.scaleState c s) = B.base.physicalVolume s :=

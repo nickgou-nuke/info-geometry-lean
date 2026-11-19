@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.BoundedModularFlowCalibration
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.HorizonKMS
@@ -126,14 +131,14 @@ theorem beta_ne_zero :
   ne_of_gt K.beta_pos
 
 /-- The bounded generator is still the calibrated Souriau bare source. -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem bounded_flow_eq_exp_Khat_beta (t : ℝ) :
     K.bounded.flow t =
       NormedSpace.exp (t • K.bounded.souriau.family.Khat_beta) :=
   K.bounded.flow_eq_exp_Khat_beta t
 
 /-- Regular-support commutation stability for the supplied observable KMS flow. -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem flow_stability_under_regular_support
     (t : ℝ) (A : EndH)
     (hA :
@@ -144,7 +149,7 @@ theorem flow_stability_under_regular_support
   K.regularSupportStable t A hA
 
 /-- The Massieu/free-energy scalar shift commutes through the supplied KMS flow. -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem partition_potential_flow_central (t : ℝ) (A : EndH) :
     K.bounded.souriau.family.opScale K.bounded.souriau.family.partitionPotential
         (K.kmsFlow t A) =

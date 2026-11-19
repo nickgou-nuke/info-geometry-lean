@@ -45,10 +45,13 @@ def read_lock_metadata(lock_path: Path) -> dict[str, Any] | None:
 
 
 class BuildLock:
-    def __init__(self, lock_path: Path, owner: str, *, block: bool = True) -> None:
+    def __init__(
+        self, lock_path: Path, owner: str, *, block: bool = True, shared: bool = False
+    ) -> None:
         self.lock_path = lock_path
         self.owner = owner
         self.block = block
+        self.shared = shared
         self._handle: Any = None
         self._ref_count: int = 0
 
@@ -58,7 +61,7 @@ class BuildLock:
             return self
         self.lock_path.parent.mkdir(parents=True, exist_ok=True)
         handle = self.lock_path.open("a+", encoding="utf-8")
-        flags = fcntl.LOCK_EX
+        flags = fcntl.LOCK_SH if self.shared else fcntl.LOCK_EX
         if not self.block:
             flags |= fcntl.LOCK_NB
         try:
@@ -71,27 +74,28 @@ class BuildLock:
             handle.close()
             raise
 
-        try:
-            handle.seek(0)
-            handle.truncate(0)
-            handle.write(
-                json.dumps(
-                    {
-                        "owner": self.owner,
-                        "pid": os.getpid(),
-                        "acquiredAt": time.time(),
-                    },
-                    ensure_ascii=False,
-                )
-                + "\n"
-            )
-            handle.flush()
-        except BaseException:
+        if not self.shared:
             try:
-                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
-            finally:
-                handle.close()
-            raise
+                handle.seek(0)
+                handle.truncate(0)
+                handle.write(
+                    json.dumps(
+                        {
+                            "owner": self.owner,
+                            "pid": os.getpid(),
+                            "acquiredAt": time.time(),
+                        },
+                        ensure_ascii=False,
+                    )
+                    + "\n"
+                )
+                handle.flush()
+            except BaseException:
+                try:
+                    fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+                finally:
+                    handle.close()
+                raise
         self._handle = handle
         self._ref_count = 1
         return self
@@ -106,9 +110,10 @@ class BuildLock:
         handle = self._handle
         self._handle = None
         try:
-            handle.seek(0)
-            handle.truncate(0)
-            handle.flush()
+            if not self.shared:
+                handle.seek(0)
+                handle.truncate(0)
+                handle.flush()
             fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
         finally:
             handle.close()
@@ -126,5 +131,9 @@ class BuildLock:
         self.release()
 
 
-def acquire_build_lock(lock_path: Path | None, owner: str, *, block: bool = True) -> BuildLock:
-    return BuildLock(lock_path or DEFAULT_BUILD_LOCK_PATH, owner, block=block).acquire()
+def acquire_build_lock(
+    lock_path: Path | None, owner: str, *, block: bool = True, shared: bool = False
+) -> BuildLock:
+    return BuildLock(
+        lock_path or DEFAULT_BUILD_LOCK_PATH, owner, block=block, shared=shared
+    ).acquire()

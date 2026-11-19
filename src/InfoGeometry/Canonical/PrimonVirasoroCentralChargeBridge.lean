@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.BridgeTarget
@@ -184,7 +189,7 @@ theorem massieuWeylScalar_eq_arithmeticPartition :
   P.massieuWeylScalar_eq_arithmeticPartition
 
 /-- The Massieu potential is the logarithm of the finite arithmetic partition. -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem partitionPotential_eq_log_arithmeticPartition :
     P.massieu.souriau.partitionPotential = Real.log P.arithmeticPartition := by
   calc
@@ -262,7 +267,7 @@ theorem virasoroCentralCharge_eq_card_of_level_one_dualCoxeter_zero
     (P := P) S hlevel hdim hdual hcc
 
 /-- The stored bridge data give the four concrete prime-to-Virasoro readouts. -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem primonVirasoroCentralChargeOwnerTarget :
     P.massieu.souriau.partitionPotential = Real.log P.arithmeticPartition
       ∧ let V : PrimeVielbeinCarrier := P.primeVielbein

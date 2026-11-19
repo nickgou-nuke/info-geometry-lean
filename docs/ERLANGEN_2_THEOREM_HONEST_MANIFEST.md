@@ -45,8 +45,98 @@ unmentioned identification of unrelated carriers.
   quadratic form of signature `(1,3)` in the fixed-section owners.
 - **INTERPRETATION:** this fixed sector may be read as an emergent Minkowski
   sector.
-- **OPEN IDENTIFICATION:** a claim `W₄,₄ ≅ TM ⊕ T*M` would require an actual
-  manifold, bundles, and a soldering theorem.
+- **LIMITED THEOREMS (`lean/InfoGeometry/Erlangen/SmoothCartanGeometry.lean`):**
+  smooth Cartan-form packages over Mathlib `IsManifold` (`SmoothCartanGeometry`),
+  universal Lie-group
+  Maurer–Cartan flatness (`maurerCartan_cartanCurvature_eq_zero`, specialized
+  to `GL2R` in `gl2R_maurerCartan_flat`), flat vs. curved smooth homothety
+  connections (`homothetyCartanGeometry_curvature_formula`), and canonical
+  tangent-quotient soldering `TₚP / ker(dπₚ) ≃ₗ[ℝ] 𝔤 / 𝔥`
+  (`cartanTangentQuotientEquiv`) are kernel-proved.
+- **OPEN PRINCIPAL-BUNDLE EXTENSION:** `SmoothCartanGeometry` does not encode
+  generic principal-bundle axioms. The concrete homothety model proves unique
+  free/transitive action on each fiber (`homothety_fiber_action_is_free_and_transitive`)
+  and an explicit action-compatible equivalence of its total space with
+  `ℝ² × Multiplicative ℝ` (`homothetyBundleTrivialization`). The chart is now
+  proved to be a smooth diffeomorphism using the genuine `Multiplicative ℝ`
+  group carrier modelled on its additive coordinate
+  (`multiplicativeRealModel`, `homothetyBundleDiffeomorph`); its right-action
+  compatibility is proved by `homothetyBundleDiffeomorph_action_compat`. This
+  closes the smoothness gap for that concrete trivial bundle only. The
+  conditional theorem `principal_atlas_action_transitive_unique` further proves
+  fiberwise existence and uniqueness of the right-action element from an
+  explicitly supplied covering family of action-compatible
+  `Bundle.Pretrivialization`s. It does not construct such an atlas for a generic
+  `SmoothCartanGeometry`, nor assert smoothness of arbitrary supplied charts. A
+  generic smooth principal-bundle interface remains open, so the owner does not
+  yet establish general smooth principal Cartan geometry.
+- **OPEN IDENTIFICATION:** a claim `W₄,₄ ≅ TM ⊕ T*M` additionally requires
+  a cotangent / split-quadratic bundle pairing beyond the tangent quotient
+  soldering formalized above.
+
+### Classical Klein, Hilbert metric, and Cartan geometry
+
+- **LIMITED THEOREMS** (`lean/InfoGeometry/Erlangen/KleinIcosahedralQuinticModularJ.lean`):
+  an explicit `A₅` subgroup of `PSU(2)` with an injective embedding, non-solvability
+  of `A₅`, a conditional radical-unsolvability implication for quintics whose
+  Galois group is identified with `A₅`, the degree `12/20/30` binary-form
+  homogeneity and syzygy, and modular invariance/elliptic values of `j`.
+- **OPEN KLEIN IDENTIFICATION:** the binary-form ratio is proved invariant
+  under common nonzero scaling, but not under the embedded `A₅` action. More
+  specifically, `kleinVertexF_not_invariant_under_icosianGenA` proves that the
+  displayed degree-12 form fails invariance under the owner's actual defining
+  two-dimensional action of `icosianGenA`, while
+  `kleinBinaryForms_invariant_under_icosianGenB` proves invariance under
+  `icosianGenB`. The basis intertwiners and conjugacies are proved, and the
+  displayed forms are invariant under the diagonal standard representative of
+  `icosianGenA`; however, `kleinVertexF_not_invariant_under_standardGenB` now
+  proves that the same degree-12 form fails invariance under the standard
+  order-four representative, with a concrete first-column witness. Thus basis
+  conjugacy alone does not transport the invariant polynomial formulas. The
+  owner now defines `kleinIcosahedralSourceFaceH` and
+  `kleinIcosahedralSourceEdgeT` by the same explicit argument swap already used
+  for `kleinIcosahedralSourceVertexF`. Their common-scaling laws and the
+  degree-60 syzygy are proved in that common source convention, and
+  `kleinSourceBinaryForms_invariant_under_icosianGenB` proves the entire
+  source-ordered triple fixed by the actual order-four generator. The owner
+  now also proves `kleinSourceVertexF_not_invariant_under_icosianGenA`: at the
+  image of `(1, 0)`, the source vertex form has an exact nonzero value, so the
+  source-ordered triple is not invariant under the actual order-ten generator
+  as currently represented. The diagonal order-ten eigenvalue law does not
+  repair this coordinate mismatch. The owner separately proves
+  `kleinBinaryStandardGenA_central_power_action` and
+  `kleinBinaryStandardGenA_fifth_power_negates_homogeneousQuintic`: on the
+  standard binary carrier, the fifth power acts as `-I`, the tenth as `I`,
+  and any explicitly degree-five homogeneous function acquires the central
+  minus sign. This does not define or identify a five-component quintic
+  resolvent. Matching the owner forms and both generator
+  matrices to one common literature representation remains open; consequently
+  invariance under the embedded `A₅` is not established. The literature gives specific
+  forms together with specific generator matrices (Galitski–Timashev, §3.4,
+  [Journal of Lie Theory PDF](https://www.heldermann-verlag.de/jlt/jlt09/TIMALAT2E.PDF));
+  matching the owner representation to that pair is still required.
+  The identity named `kleinBinaryFormRatio_relation`
+  is an algebraic ratio identity, not a quintic resolvent. The owner does not
+  prove the meromorphic cusp extension, simple cusp pole, or function-field
+  generator property needed to call `j/1728` a Hauptmodul of the compactified
+  modular curve.
+- **LIMITED THEOREMS** (`lean/InfoGeometry/Erlangen/BirkhoffHilbertConeMetric.lean`):
+  the half Hilbert order distance and its projective metric laws on Mathlib
+  `ProperCone ℝ E`, with salience hypotheses stated where needed, a chord
+  cross-ratio formula under the explicit boundary-ray hypotheses, and a
+  Birkhoff contraction theorem under its positivity and finite-diameter
+  assumptions. This extends the order-gauge owner in
+  `lean/InfoGeometry/Projective/GeneralHilbertConeMetric.lean`; it is not a
+  claim that every arbitrary convex cone satisfies those hypotheses.
+- **THEOREM:** `birkhoffHilbertMetric_linearEquiv_isometry` proves exact metric
+  preservation for a continuous linear equivalence carrying one proper cone
+  onto another. Its proof derives interior transport from the equivalence and
+  the two cone-inclusion hypotheses, then applies the existing positive-map
+  non-expansiveness theorem in both directions. It applies in arbitrary normed
+  real spaces and makes no finite-dimensional or coordinate assumption.
+- **OPEN CARTAN SCOPE:** see the principal-bundle limitation above. In
+  particular, the generic structure records Cartan-form data but does not yet
+  establish the full smooth principal Cartan geometry package.
 
 ### Peirce/tripotent operator calculus
 

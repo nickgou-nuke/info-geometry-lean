@@ -484,13 +484,13 @@ Evaluated on the canonical spinor basis $\pi_{(1)} = (1, 0)$, $\pi_{(2)} = (0, 1
 minors of `incidentTwistorPairMatrix x 1 0 0 1` are precisely the six para-Kähler null-cone
 coordinates of `conformalEmbedParaKahler x` from Section 1:
 $$\mathbf{u}(x) = (P_{14}, P_{13}, P_{34}), \qquad \mathbf{v}(x) = (-P_{23}, P_{24}, -P_{12}).$$ -/
-theorem conformalEmbedParaKahler_eq_unitSpinor_plucker {R : Type*} [Ring R] (x : SplitSpacetime22 R) :
+theorem conformalEmbedParaKahler_eq_unitSpinor_plucker {R : Type*} [CommRing R] (x : SplitSpacetime22 R) :
     let P := extractTwistorPluckerCoordinates (incidentTwistorPairMatrix x 1 0 0 1)
     conformalEmbedParaKahler x =
       ⟨![P.p14, P.p13, P.p34], ![-P.p23, P.p24, -P.p12]⟩ := by
   ext i <;> fin_cases i <;>
     (dsimp [conformalEmbedParaKahler, extractTwistorPluckerCoordinates,
-      incidentTwistorPairMatrix, incidentOmega0, incidentOmega1, spacetimeNorm]; noncomm_ring)
+      incidentTwistorPairMatrix, incidentOmega0, incidentOmega1, spacetimeNorm]; ring)
 
 /-- Non-vacuity witness for `incidentTwistorPairMatrix`: on `canonicalSpacetime22` with the
 canonical spinor frame `(1, 0), (0, 1)`, the Plücker minors $P_{34} = 1$ and $P_{12} = 1$ are

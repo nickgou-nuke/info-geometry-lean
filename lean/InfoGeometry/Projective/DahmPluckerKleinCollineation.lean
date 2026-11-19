@@ -6,7 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.Tactic
 import Mathlib.Tactic.NoncommRing
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KleinQuadric
 
@@ -138,7 +138,8 @@ variable {R : Type*} [CommRing R]
 /-- In a commutative ring the defect vanishes. -/
 theorem senaryDefect_eq_zero (x₁ x₂ x₃ x₄ x₅ x₆ : R) :
     senaryDefect x₁ x₂ x₃ x₄ x₅ x₆ = 0 := by
-  simp only [senaryDefect]; ring
+  unfold senaryDefect
+  ring
 
 /-- Classical `SO(3,3)` reading of the split Klein substitution. -/
 theorem kleinQ_splitKleinMap_comm (x₁ x₂ x₃ x₄ x₅ x₆ : R) :

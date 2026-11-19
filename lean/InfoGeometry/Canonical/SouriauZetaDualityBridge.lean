@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
@@ -56,7 +61,7 @@ variable (D : SouriauZetaDualityHypotheses)
 /--
 Debt lemma: under the explicit duality hypotheses, zeros of `ξ` minimize the finite prime barrier.
 -/
-@[bridge_target_tag, rep_depth thermo]
+@[bridge_target_tag, rep_depth thermo, capstone]
 theorem zeros_are_barrier_critical
     (s₀ : ℂ) (hz : D.xi s₀ = 0)
     (S : Finset ℕ) (_hS : ∀ p ∈ S, 1 < p) (σ : ℝ) :
@@ -66,7 +71,7 @@ theorem zeros_are_barrier_critical
   exact D.duality_singularity_to_minimum s₀ hSingularity S _hS σ
 
 /-- Construct the variational RH target from the supplied conditional hypotheses. -/
-@[bridge_target_tag, rep_depth operator]
+@[bridge_target_tag]
 def toVariationalRHTarget : VariationalRHTarget where
   xi := D.xi
   xi_reflection := D.xi_reflection
@@ -78,7 +83,7 @@ def toVariationalRHTarget : VariationalRHTarget where
 /--
 Debt lemma: if the supplied duality hypotheses hold for `D`, then any zero of the supplied `xi` lies on the critical line.
 -/
-@[bridge_target_tag, rep_depth thermo]
+@[bridge_target_tag, rep_depth thermo, capstone]
 theorem RH_of_SouriauDuality
     (s₀ : ℂ) (hz : D.xi s₀ = 0) :
     OnCriticalLine s₀ := by

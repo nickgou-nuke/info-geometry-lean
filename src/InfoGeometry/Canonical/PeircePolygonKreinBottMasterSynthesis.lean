@@ -1758,7 +1758,7 @@ theorem dag_resolvent_peirce_plabic_and_twoNodeDAG_soldering_bridge
       unfold plabicBlackShear
       rw [← hTwoNode]
     rw [hShearEq]
-    exact twoNodeDAG_green_right
+    exact twoNodeDAG_green_inverse.2.2
   have hTwoNodeInvL :
       plabicBlackShear twoNodeSheetProj twoNodeDAG *
         finiteGreen twoNodeDAG 2 = 1 := by
@@ -1766,7 +1766,7 @@ theorem dag_resolvent_peirce_plabic_and_twoNodeDAG_soldering_bridge
       unfold plabicBlackShear
       rw [← hTwoNode]
     rw [hShearEq]
-    exact twoNodeDAG_green_left
+    exact twoNodeDAG_green_inverse.2.1
   exact ⟨hWhite, hWhiteInv, hW_mul_inv, hInv_mul_W, hBlack, hBlackInv,
     hB_mul_inv, hInv_mul_B, hTripWB, hTripBW, hConjP, hConjM, hBraid,
     hBoundaryDAG, hBoundaryIdem, hP0, hTwoNode, hTwoNodeShear, hTwoNodeInvR, hTwoNodeInvL⟩
@@ -2320,7 +2320,7 @@ theorem deconfabulated_causal_poset_master_synthesis
       InfoGeometry.Canonical.sigmaMinus_mul_sigmaPlus U V_vec,
       hChar6, hChar3, hCharT, hPolyPow, hEis.2.2.1, hPolyBianchi,
       hEis.2.2.2.2.2.2.2.2.2.1⟩,
-    ⟨twoNodeDAG_green_left, hFockIdem,
+    ⟨twoNodeDAG_green_inverse.2.1, hFockIdem,
       hTwistor.1, hTwistor.2.2.2.2.2.2.2.1⟩⟩
 
 end FockPenroseSplitCl44AndDAGResolventSolderingBridge

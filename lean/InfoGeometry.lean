@@ -42,6 +42,7 @@ import InfoGeometry.Singular
 import InfoGeometry.Algebra.GellMannBasis
 import InfoGeometry.Algebra.StructureConstants
 import InfoGeometry.Algebra.CuntzFibonacciFiveHypotheses
+import InfoGeometry.Algebra.ConnesLottYangBaxterPoset
 import InfoGeometry.Dynamics.OperatorialRicciFlow
 import InfoGeometry.Quantum.BulkBoundaryIndexBridge
 import InfoGeometry.Exceptional.Freudenthal
@@ -116,6 +117,9 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.BimetricSheetGeometry
 import InfoGeometry.OperatorAlgebra.PeirceSpine.TwoStateModularShiftGeometry
 import InfoGeometry.OperatorAlgebra.PeirceSpine.NavierMadelungChiralVortexAnomalyPoset
 import InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset
+import InfoGeometry.OperatorAlgebra.PeirceBiSandwich.Core
+import InfoGeometry.OperatorAlgebra.PeirceBiSandwich.PinchedSuperExtension
+import InfoGeometry.OperatorAlgebra.PeirceBiSandwich.Clifford8BdGHorizon
 import InfoGeometry.Clifford.XamboWesselRieszRotorGeometry
 import InfoGeometry.Automorphic.SiegelResonance
 import InfoGeometry.Automorphic.SiegelArithmeticResonanceOperator
@@ -752,6 +756,16 @@ import InfoGeometry.Algebra.NonAssocIteratedLeibniz
 import InfoGeometry.Algebra.NonAssocIteratedLeibnizTransport
 import InfoGeometry.Algebra.NonAssocPeirceFrame
 import InfoGeometry.Algebra.NoncommutativePlaneWaveKernel
+import InfoGeometry.Algebra.NoncommutativePeierlsBerryKitaevSynthesis
+import InfoGeometry.Algebra.NoncommutativeYangMillsKreinCantorSynthesis
+import InfoGeometry.Algebra.NoncommutativeKreinMathlibBridge
+import InfoGeometry.Algebra.KreinPeirceTowerIntertwine
+import InfoGeometry.Algebra.NoncommutativeKitaevMajoranaThermalHallSynthesis
+import InfoGeometry.Algebra.PeirceTetraktysKreinBridge
+import InfoGeometry.Algebra.NoncommutativeKramersCompassHallSynthesis
+import InfoGeometry.Algebra.NoncommutativeKramersCompassBridge
+import InfoGeometry.Algebra.NoncommutativeKitaevZornABSBridge
+import InfoGeometry.Algebra.NoncommutativeKitaevKernelAxiomAudit
 import InfoGeometry.Algebra.FiniteGroupFourier
 import InfoGeometry.Algebra.OSp12BulkBoundaryBridge
 import InfoGeometry.Algebra.OSp12ColimitReadback
@@ -1905,6 +1919,10 @@ import InfoGeometry.Canonical.AnalyticalIndex
 import InfoGeometry.Canonical.AndreevKleinChiralBridge
 import InfoGeometry.Canonical.AndreevKleinChiralBridgeAudit
 import InfoGeometry.Canonical.AnomalyDilationBridge
+import InfoGeometry.Canonical.AnomalyOntology
+import InfoGeometry.Canonical.GrandAnomalyOntology
+import InfoGeometry.Canonical.ConcreteHilbertSewnAnomaly
+import InfoGeometry.OperatorAlgebra.FreedWickReflectionAndTopologicalIndexPoset
 import InfoGeometry.Canonical.AnyonBraidOperatorMasterBridge
 import InfoGeometry.Canonical.ApollonianDeRhamFreudenthalBridgeAudit
 import InfoGeometry.Canonical.ApolloniusBraidingCapstone
@@ -7433,7 +7451,6 @@ import InfoGeometry.MirrorPhase.WardIdentitiesAttention
 import InfoGeometry.MirrorPhase.ZornsFurnace
 import InfoGeometry.Modular
 import InfoGeometry.Modular.AmariChentsovDualConnectionsAudit
-import InfoGeometry.Modular.ArakiHessianKuboMori
 import InfoGeometry.Modular.CARChiralDerivation
 import InfoGeometry.Modular.CARColimitFlow
 import InfoGeometry.Modular.CARModularFlow

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.DrazinDilationGap
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DrazinPenroseDilationAlgebra
@@ -218,7 +223,7 @@ variable (U : UnifiedSuperchargeAlgebra.UnifiedSuperchargePackage (E := E))
 Repo-owned odd-odd split for the projected Drazin supercharge:
 `{Q_D,Q_D} = 2 • T_D + Z_D`.
 -/
-@[rep_depth krein]
+@[rep_depth transport]
 theorem projectedOddOddBlackBook_eq_two_smul_translation_plus_central :
     DrazinSupercharge.anticommutatorK
         (UnifiedSuperchargeAlgebra.UnifiedSuperchargePackage.QD U)

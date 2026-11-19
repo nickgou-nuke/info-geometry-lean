@@ -210,3 +210,41 @@ def test_build_json_includes_provenance_and_verdict_fields(tmp_path: Path) -> No
     assert "graph_grounded_signal" in first
     assert "heuristic_signal" in first
     assert "hard_verdict_allowed" in first
+
+
+def test_run_audit_supports_explicit_multi_paths(tmp_path: Path) -> None:
+    root = tmp_path / "lean" / "InfoGeometry"
+    a_file = root / "A.lean"
+    b_file = root / "B.lean"
+    ignored = root / "Ignored.lean"
+    root.mkdir(parents=True)
+    a_file.write_text("axiom extA : True\n", encoding="utf-8")
+    b_file.write_text("theorem holeB : True := by sorry\n", encoding="utf-8")
+    ignored.write_text("axiom ignoredC : True\n", encoding="utf-8")
+
+    modules, findings, scanned = run_audit(root, paths=[a_file, b_file])
+
+    assert len(scanned) == 2
+    assert len(modules) == 2
+    assert {Path(p).name for p in scanned} == {"A.lean", "B.lean"}
+    decl_names = {item.declaration_name for item in findings}
+    assert {"extA", "holeB"}.issubset(decl_names)
+    assert "ignoredC" not in decl_names
+
+
+def test_unified_gate_invokes_placeholder_audit_once(monkeypatch: object, tmp_path: Path) -> None:
+    import sys
+    from types import SimpleNamespace
+    from tools.quality import unified_gate
+
+    recorded: list[list[str]] = []
+    monkeypatch.setattr(unified_gate.subprocess, "run", lambda cmd, **kw: recorded.append(list(cmd)) or SimpleNamespace(returncode=0))
+    monkeypatch.setattr(unified_gate, "extract_live_decls", lambda paths, out: out.write_text("", encoding="utf-8"))
+    monkeypatch.setattr(sys, "argv", ["unified_gate.py", "lean/InfoGeometry/A.lean", "lean/InfoGeometry/B.lean"])
+
+    rc = unified_gate.main()
+
+    assert rc == 0
+    placeholder_calls = [cmd for cmd in recorded if "tools/quality/placeholder_audit.py" in cmd]
+    assert len(placeholder_calls) == 1
+    assert placeholder_calls[0][2:] == ["--strict", "lean/InfoGeometry/A.lean", "lean/InfoGeometry/B.lean"]

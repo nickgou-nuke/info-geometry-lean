@@ -66,8 +66,9 @@ theorem heisenbergBoundaryAtlasReadout_root_independent
     heisenbergBoundaryAtlasReadout (𝕜 := 𝕜) α q =
       heisenbergBoundaryAtlasReadout (𝕜 := 𝕜) α q' := by
   unfold heisenbergBoundaryAtlasReadout
-  rw [InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.canonicalAtlas_heisenberg,
-    InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.canonicalAtlas_heisenberg]
+  unfold InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.canonicalAtlas
+    InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.Atlas.heisenberg
+  rfl
 
 /-- The combined boundary/cyclotomic readout is continuous via `Continuous.prodMk`. -/
 theorem continuous_boundaryCyclotomicReadout (α : 𝕜) :
@@ -85,7 +86,7 @@ theorem continuous_boundaryCyclotomicReadout (α : 𝕜) :
 theorem isLocallyConstant_boundaryCyclotomicReadout (α : 𝕜) :
     IsLocallyConstant (boundaryCyclotomicReadout (𝕜 := 𝕜) α) := by
   unfold boundaryCyclotomicReadout
-  exact IsLocallyConstant.of_discrete
+  exact IsLocallyConstant.of_discrete _
 
 end
 end InfoGeometry.Topology.HeisenbergCyclotomicBoundaryBridge

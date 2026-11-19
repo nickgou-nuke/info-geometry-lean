@@ -224,9 +224,8 @@ theorem souriau_bost_connes_analytic_categorical_and_euler_product_synthesis
     (n : ℕ) (f : DiagAlg n) (P : PrimeRegister) {β : ℝ} (hβ : 1 < β) :
     (prefixBoundaryLimitIso.hom ≫ limit.π prefixDiagram (Opposite.op n)).hom
         cantorVacuumBoundary = finiteVacuumWord n ∧
-    ((dualInverseFamilyToProjectiveLimit (sys := uhfDiagDirectSystem)
-        finiteZeroTempState finiteZeroTempState_isDualInverseFamily ≫
-          limit.π (dualModuleDiagram uhfDiagDirectSystem) (Opposite.op n)).hom (1 : ℂ)) f =
+    dualInverseFamilyToProjectiveLimitStageFunctional (sys := uhfDiagDirectSystem)
+        finiteZeroTempState finiteZeroTempState_isDualInverseFamily n f =
       colimitZeroTempState n f ∧
     (dualInverseFamilyColimitMap (sys := uhfDiagDirectSystem)
         finiteZeroTempState finiteZeroTempState_isDualInverseFamily).hom
@@ -242,9 +241,8 @@ theorem souriau_bost_connes_analytic_categorical_and_euler_product_synthesis
     funext i
     rfl
   have hproj :
-      ((dualInverseFamilyToProjectiveLimit (sys := uhfDiagDirectSystem)
-          finiteZeroTempState finiteZeroTempState_isDualInverseFamily ≫
-            limit.π (dualModuleDiagram uhfDiagDirectSystem) (Opposite.op n)).hom (1 : ℂ)) f =
+      dualInverseFamilyToProjectiveLimitStageFunctional (sys := uhfDiagDirectSystem)
+          finiteZeroTempState finiteZeroTempState_isDualInverseFamily n f =
         colimitZeroTempState n f := by
     rw [dualInverseFamilyToProjectiveLimit_stage
       (sys := uhfDiagDirectSystem) finiteZeroTempState finiteZeroTempState_isDualInverseFamily n f]
@@ -371,9 +369,8 @@ theorem souriau_bost_connes_complete_eightfold_closure_synthesis
     -- (5) & (6) TopCat Cantor Boundary Iso, Projective Dual Limit & Inductive Colimit Descent
     ((prefixBoundaryLimitIso.hom ≫ limit.π prefixDiagram (Opposite.op n)).hom
        cantorVacuumBoundary = finiteVacuumWord n ∧
-     ((dualInverseFamilyToProjectiveLimit (sys := uhfDiagDirectSystem)
-         finiteZeroTempState finiteZeroTempState_isDualInverseFamily ≫
-           limit.π (dualModuleDiagram uhfDiagDirectSystem) (Opposite.op n)).hom (1 : ℂ)) f =
+     dualInverseFamilyToProjectiveLimitStageFunctional (sys := uhfDiagDirectSystem)
+         finiteZeroTempState finiteZeroTempState_isDualInverseFamily n f =
        colimitZeroTempState n f ∧
      (dualInverseFamilyColimitMap (sys := uhfDiagDirectSystem)
          finiteZeroTempState finiteZeroTempState_isDualInverseFamily).hom

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TypeIIIModularCantorSystem
@@ -99,7 +104,7 @@ def canonicalPrimeSupergradedReadout : PrimeSupergradedReadout where
   grade_prime_ne_two := fun p hp h2 => primeSectorGrade_prime_ne_two (p := p) hp h2
 
 /-- Möbius parity readback on represented squarefree prime-bit states. -/
-@[rep_depth operator]
+@[rep_depth thermo, capstone]
 theorem mobiusParity_readback
     (P : FermionicPrimeRegister) (ψ : FermionicPrimeState P) :
     ArithmeticFunction.moebius (representedSquarefreeNat P ψ) =
@@ -107,7 +112,7 @@ theorem mobiusParity_readback
   simpa using (mobius_eq_fermionParity P ψ)
 
 /-- Finite supertrace readback equals the finite inverse Euler product. -/
-@[rep_depth operator]
+@[rep_depth thermo, capstone]
 theorem finiteSupertrace_readback
     (P : FermionicPrimeRegister) (x : ℕ → ℂ) :
     finiteSupertraceDirichlet P x = finiteInverseEulerProduct P x := by

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.SouriauTomitaModularFlowBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
@@ -313,7 +318,6 @@ def instMomentGeneratingReadout : MomentGeneratingReadout Unit Unit where
   bkmCovariance_self_nonneg _ _ := by norm_num
   nResponseForm_one_two_eq _ _ _ := by constructor <;> rfl
 
-@[rep_depth thermo]
 abbrev PositivePartitionFunction :=
   {Z : ℝ // 0 < Z}
 
@@ -417,7 +421,7 @@ namespace SouriauLieThermoData
   The global scalar `partitionPotential` is the only nonstatewise readout.
   For the operator family this is lifted as `modularHamiltonian = -operatorLog rho_beta`.
   -/
-  @[rep_depth operator]
+  @[rep_depth thermo]
   theorem modularHamiltonian_statewise_neg_log_gibbs_sub_PartitionPotential (D : SouriauLieThermoData State LieAlgebra LieDual) (x : State) :
       D.K_beta x = -Real.log (D.gibbsDensity x) - D.partitionPotential := by
     linarith [negativeLogGibbsDensity_eq_K_beta_add_Phi D x]
@@ -588,7 +592,7 @@ def beta (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : LieAlgebra := Q.
 def untracedExponential (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : Obs :=
   Q.2.2.1
 
-@[rep_depth thermo]
+@[rep_depth operator]
 def positivePartitionFunction
     (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : PositivePartitionFunction :=
   Q.2.2.2
@@ -611,11 +615,11 @@ def opScale [SMul ℝ Obs] (_Q : QuantumOperatorialSouriauFamily LieAlgebra Obs)
 def opIdentity [One Obs] (_Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : Obs :=
   1
 
-@[rep_depth thermo]
+@[rep_depth operator]
 def partitionFunction (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : ℝ :=
   Q.positivePartitionFunction
 
-@[rep_depth thermo]
+@[rep_depth operator]
   noncomputable def partitionPotential (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : ℝ :=
   Real.log Q.partitionFunction
 
@@ -628,7 +632,7 @@ def partitionFunction (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : ℝ
     (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : Obs :=
   Q.Khat_beta + Q.partitionPotential • (1 : Obs)
 
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem partitionFunction_pos (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) :
     0 < Q.partitionFunction :=
   Q.positivePartitionFunction.property
@@ -638,7 +642,7 @@ theorem Khat_beta_eq (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) :
     Q.Khat_beta = Q.Jhat Q.beta :=
   rfl
 
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem partitionPotential_eq_log_trace
     (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) :
     Q.partitionPotential = Real.log Q.partitionFunction :=

@@ -60,14 +60,14 @@ theorem same_base_chart_commutator_eq_zero_iff (A C : B) :
 
 /-- Dressing the lower chart by the inverse upper shear gives the corrected
 normal form, whose cubic term ends in the upper corner. -/
-theorem conjPlusInv_lower_chart_eq (A C : B) :
+theorem resolvent_conjPlusInv_lower_chart_eq (A C : B) :
     conjPlusInv P A (P + coneMinus P C) =
       P + genPhi P A C - genSig P A C - genV P A C * conePlus P A := by
   unfold conjPlusInv
   peirce_nf hP
 
 /-- The dressed chart is an actual idempotent. -/
-theorem conjPlusInv_lower_chart_idempotent (A C : B) :
+theorem resolvent_conjPlusInv_lower_chart_idempotent (A C : B) :
     conjPlusInv P A (P + coneMinus P C) *
         conjPlusInv P A (P + coneMinus P C) =
       conjPlusInv P A (P + coneMinus P C) := by

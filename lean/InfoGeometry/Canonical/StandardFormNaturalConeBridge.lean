@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.StandardFormCore
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TypeIIIModularCantorSystem
@@ -513,7 +518,7 @@ This carrier records only the finite cylinder system and distinguished state.
 The partition/readout law is proved below from explicit finite-partition and
 finite-additivity premises.
 -/
-@[rep_depth projective]
+@[rep_depth operator]
 structure FiniteCylinderExpectationPartition
     (Alg Hilb NormalPositive : Type*) where
   /-- Cantor/cylinder natural-cone face system. -/
@@ -541,13 +546,13 @@ variable {Alg Hilb NormalPositive : Type*}
 variable (P : FiniteCylinderExpectationPartition Alg Hilb NormalPositive)
 
 /-- Readback: the distinguished functional is normal positive. -/
-@[rep_depth projective]
+@[rep_depth operator]
 theorem omega_isNormalPositive :
     P.faces.standard.isNormalPositive P.omega :=
   P.omega_mem
 
 /-- Readback: finite level expectation recovers total expectation. -/
-@[rep_depth projective]
+@[rep_depth operator]
 theorem level_expectation_sum_eq_total
     [AddCommMonoid Alg]
     (hEval : EvalPreservesFiniteIndexedSums P.faces.standard.eval)
@@ -572,7 +577,7 @@ theorem level_expectation_sum_eq_total
     _ = P.faces.standard.eval P.omega P.one := by rw [hPartition]
 
 /-- If the distinguished functional is normalized, every finite level sums to one. -/
-@[rep_depth projective]
+@[rep_depth operator]
 theorem level_expectation_sum_eq_one
     [AddCommMonoid Alg]
     (hEval : EvalPreservesFiniteIndexedSums P.faces.standard.eval)
@@ -585,7 +590,7 @@ theorem level_expectation_sum_eq_one
   rw [P.level_expectation_sum_eq_total hEval n hPartition, hΩ]
 
 /-- Readback of the standard-form vector law on a cylinder projection. -/
-@[rep_depth projective]
+@[rep_depth operator]
 theorem cylinderExpectation_eq_vector_readout
     (w : TypeIIIModularCantorSystem.BinaryWord) :
     P.faces.standard.eval P.omega (P.faces.cylinderProjection w) =
@@ -597,7 +602,7 @@ theorem cylinderExpectation_eq_vector_readout
     P.omega (P.faces.cylinderProjection w) P.omega_mem
 
 /-- Readback of the standard-form vector law on the total observable. -/
-@[rep_depth projective]
+@[rep_depth operator]
 theorem totalExpectation_eq_vector_readout :
     P.faces.standard.eval P.omega P.one =
       P.faces.standard.innerReadout

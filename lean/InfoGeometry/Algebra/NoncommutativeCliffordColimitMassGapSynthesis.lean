@@ -74,6 +74,13 @@ universe u
       let _ : Ring (ClTower A n) := instRingClTower n
       inferInstanceAs (Ring (Matrix (Fin 2) (Fin 2) (ClTower A n)))
 
+@[reducible] def instAlgebraClTower {A : Type u} [Ring A] [Algebra ℝ A] :
+    ∀ n : ℕ, Algebra ℝ (ClTower A n)
+  | 0     => inferInstanceAs (Algebra ℝ A)
+  | n + 1 =>
+      let _ : Algebra ℝ (ClTower A n) := instAlgebraClTower n
+      inferInstanceAs (Algebra ℝ (Matrix (Fin 2) (Fin 2) (ClTower A n)))
+
 private theorem cltower_noncomm_witness {A : Type u} [Ring A] [Nontrivial A] (n : ℕ) :
     ∃ X Y : Matrix (Fin 2) (Fin 2) (ClTower A n), X * Y ≠ Y * X := by
   let _ : Ring (ClTower A n) := instRingClTower n
@@ -161,6 +168,43 @@ theorem bottEmbed_add {n : ℕ} (X Y : ClTower A n) :
 theorem bottEmbed_mul {n : ℕ} (X Y : ClTower A n) :
     bottEmbed (X * Y) = bottEmbed X * bottEmbed Y := by
   apply ext_fin2 <;> simp [bottEmbed]
+
+/-- The `(0,0)` corner projector `e₁₁` inside `ClTower A (n + 1)`. -/
+def cornerProj (n : ℕ) : ClTower A (n + 1) := mat2 1 0 0 0
+
+theorem cornerProj_sq (n : ℕ) : cornerProj (A := A) n * cornerProj n = cornerProj n := by
+  apply ext_fin2 <;> simp [cornerProj]
+
+/-- `bottEmbed X` is the corner compression `e₁₁ * diagEmbed X * e₁₁` of the unital
+bulk embedding `diagEmbed X`. -/
+theorem bottEmbed_eq_cornerProj_mul_diagEmbed {n : ℕ} (X : ClTower A n) :
+    bottEmbed X = cornerProj n * diagEmbed X * cornerProj n := by
+  apply ext_fin2 <;> simp [bottEmbed, cornerProj, diagEmbed]
+
+section
+attribute [local instance] instAlgebraClTower
+
+/-- Unital `ℝ`-algebra homomorphism packaging `diagEmbed`. -/
+def diagEmbedAlgHom {A : Type u} [Ring A] [Algebra ℝ A] (n : ℕ) :
+    ClTower A n →ₐ[ℝ] ClTower A (n + 1) where
+  toFun := diagEmbed
+  map_one' := by apply ext_fin2 <;> simp [diagEmbed]
+  map_mul' X Y := by apply ext_fin2 <;> simp [diagEmbed]
+  map_zero' := by apply ext_fin2 <;> simp [diagEmbed]
+  map_add' X Y := by apply ext_fin2 <;> simp [diagEmbed]
+  commutes' r := by
+    apply ext_fin2 <;> simp [diagEmbed, Algebra.algebraMap_eq_smul_one]
+
+/-- Non-unital `ℝ`-algebra homomorphism packaging `bottEmbed`. -/
+def bottEmbedNonUnitalAlgHom {A : Type u} [Ring A] [Algebra ℝ A] (n : ℕ) :
+    ClTower A n →ₙₐ[ℝ] ClTower A (n + 1) where
+  toFun := bottEmbed
+  map_mul' X Y := bottEmbed_mul X Y
+  map_zero' := by apply ext_fin2 <;> simp [bottEmbed]
+  map_add' X Y := bottEmbed_add X Y
+  map_smul' r X := by apply ext_fin2 <;> simp [bottEmbed]
+
+end
 
 theorem towerTrace_bottEmbed {n : ℕ} (X : ClTower A n) :
     towerTrace (bottEmbed X) = towerTrace X := by

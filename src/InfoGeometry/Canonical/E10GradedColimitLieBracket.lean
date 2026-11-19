@@ -93,14 +93,13 @@ theorem heightCutoffUnion_eq_iSup_all (A : ℤ → Submodule R L) :
   · unfold heightCutoffUnion heightCutoff
     apply iSup_le
     intro N
-    apply iSup_le
-    intro i
-    apply iSup_le
-    intro _
-    exact le_iSup A i
+    rw [Submodule.span_le]
+    intro x hx
+    rcases hx with ⟨i, hi, hxi⟩
+    exact (le_iSup A i) hxi
   · apply iSup_le
     intro i
-    exact le_trans (component_le_heightCutoff A i.natAbs i (le_of_eq (Int.natCast_natAbs i).symm))
+    exact le_trans (component_le_heightCutoff A i.natAbs i le_rfl)
       (heightCutoff_le_union A i.natAbs)
 
 /-- **Lie Span Closure of the Cutoff Union (`heightCutoffUnion_lieSpan_le`):**
@@ -111,15 +110,17 @@ theorem heightCutoffUnion_lieSpan_le
     (A : ℤ → Submodule R L)
     (hGrad : ∀ {i j : ℤ} {x y : L}, x ∈ A i → y ∈ A j → ⁅x, y⁆ ∈ A (i + j)) :
     lieSpan (heightCutoffUnion A) (heightCutoffUnion A) ≤ heightCutoffUnion A := by
-  unfold heightCutoffUnion
-  rw [lieSpan_le_iff_left]
-  apply iSup_le
-  intro N
-  rw [← lieSpan_le_iff_left, lieSpan_le_iff_right]
-  apply iSup_le
-  intro M
-  rw [← lieSpan_le_iff_right]
-  exact le_trans (heightCutoff_lie_le A hGrad N M) (heightCutoff_le_union A (N + M))
+  rw [lieSpan_le_iff]
+  intro x hx y hy
+  have hdir : Directed (· ≤ ·) (heightCutoff A) := by
+    intro n m
+    exact ⟨max n m, heightCutoff_mono A (Nat.le_max_left n m),
+      heightCutoff_mono A (Nat.le_max_right n m)⟩
+  rcases (Submodule.mem_iSup_of_directed (heightCutoff A) hdir).1 hx with ⟨N, hxN⟩
+  rcases (Submodule.mem_iSup_of_directed (heightCutoff A) hdir).1 hy with ⟨M, hyM⟩
+  apply heightCutoff_le_union A (N + M)
+  exact heightCutoff_lie_le A hGrad N M
+    (Submodule.subset_span ⟨x, hxN, y, hyM, rfl⟩)
 
 /-- **Elementwise Lie Bracket Closure (`heightCutoffUnion_lie_mem`):**
 If $x, y \in \mathrm{heightCutoffUnion}\;A$, then their Lie bracket $\⁅x, y\⁆$ belongs to

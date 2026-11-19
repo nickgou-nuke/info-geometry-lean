@@ -136,3 +136,42 @@ def test_missing_source_block_is_audit_missing_and_gate_failure(tmp_path: Path) 
     row = report["rows"][0]
     assert row["classification"] == "audit_missing"
     assert "audit_missing:source_block_unavailable" in row["reasons"]
+
+
+def test_scoped_audit_skips_large_aux_json_and_caches_source_block(tmp_path: Path, monkeypatch) -> None:
+    from tools.quality import mathfulness_audit as ma
+
+    source = tmp_path / "lean" / "Owner.lean"
+    source.parent.mkdir(parents=True)
+    source.write_text(
+        "theorem targetThm : 1 + 1 = 2 := by norm_num\n"
+        "theorem secondThm : 2 + 2 = 4 := by norm_num\n",
+        encoding="utf-8",
+    )
+    decls = tmp_path / "decls.jsonl"
+    decls.write_text(
+        json.dumps({"name": "targetThm", "kind": "theorem", "file": "lean/Owner.lean", "line": 1}) + "\n"
+        + json.dumps({"name": "unrelatedThm", "kind": "theorem", "file": "lean/Other.lean", "line": 1}) + "\n",
+        encoding="utf-8",
+    )
+    # Large >64KB auxiliary files that do NOT mention `targetThm`
+    sig = tmp_path / "significance.json"
+    sig.write_text("{" + '"x":' + ("0" * 70_000) + "}", encoding="utf-8")
+    pol = tmp_path / "policy.json"
+    pol.write_text("{" + '"y":' + ("0" * 70_000) + "}", encoding="utf-8")
+
+    monkeypatch.setattr(ma, "ROOT", tmp_path)
+    monkeypatch.setattr(ma.json, "loads", lambda s, *a, **kw: (
+        (_ for _ in ()).throw(AssertionError("should not parse large unrelated JSON"))
+        if len(s) > 65536 else json._default_decoder.decode(s)
+    ))
+    selected = ma.load_selected_decls(decls, prefixes=[], file_prefixes=["lean/Owner.lean"])
+    assert [row["name"] for row in selected] == ["targetThm"]
+    assert ma.significance_by_name(sig, only_names={"targetThm"}) == {}
+    assert ma.policy_lint_flags(pol, only_names={"targetThm"}) == {}
+
+    ma._FILE_INDEX_CACHE.clear()
+    block1 = ma.source_block(source, 1)
+    assert "targetThm" in block1
+    assert "secondThm" not in block1
+    assert source.resolve() in ma._FILE_INDEX_CACHE

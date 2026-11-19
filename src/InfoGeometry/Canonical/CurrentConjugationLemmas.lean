@@ -45,28 +45,30 @@ open InfoGeometry.Canonical.CurrentSugawaraBridge
 /-- Conjugating the zero endomorphism by `U` yields zero. -/
 @[simp]
 theorem conjugateEnd_zero
-    {𝕜 V : Type*} [Ring 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (U : V ≃ₗ[𝕜] V) :
-    conjugateEnd U (0 : V →ₗ[𝕜] V) = 0 := by
+    conjugateEnd (𝕜 := 𝕜) U (0 : V →ₗ[𝕜] V) = 0 := by
   ext v
   simp [conjugateEnd]
 
 /-- Conjugating a difference of endomorphisms distributes over subtraction. -/
 @[simp]
 theorem conjugateEnd_sub
-    {𝕜 V : Type*} [Ring 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (U : V ≃ₗ[𝕜] V) (A B : V →ₗ[𝕜] V) :
-    conjugateEnd U (A - B) = conjugateEnd U A - conjugateEnd U B := by
+    conjugateEnd (𝕜 := 𝕜) U (A - B) =
+      conjugateEnd (𝕜 := 𝕜) U A - conjugateEnd (𝕜 := 𝕜) U B := by
   ext v
   simp [sub_eq_add_neg, conjugateEnd]
 
 /-- Conjugation by `U` intertwines the associative commutator `LinearMap.commutator`. -/
 theorem conjugateEnd_commutator
-    {𝕜 V : Type*} [Ring 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (U : V ≃ₗ[𝕜] V)
     (A B : V →ₗ[𝕜] V) :
-    (conjugateEnd U A).commutator (conjugateEnd U B) =
-      conjugateEnd U (A.commutator B) := by
+    (conjugateEnd (𝕜 := 𝕜) U A).commutator
+        (conjugateEnd (𝕜 := 𝕜) U B) =
+      conjugateEnd (𝕜 := 𝕜) U (A.commutator B) := by
   unfold LinearMap.commutator
   rw [conjugateEnd_sub, conjugateEnd_mul, conjugateEnd_mul]
 

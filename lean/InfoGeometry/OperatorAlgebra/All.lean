@@ -16,6 +16,7 @@ import InfoGeometry.OperatorAlgebra.TracialCARDensity
 import InfoGeometry.OperatorAlgebra.QuadraticRotorUnit
 import InfoGeometry.OperatorAlgebra.SignedBogoliubovCAR
 import InfoGeometry.OperatorAlgebra.AnomalyTubuleStability
+import InfoGeometry.OperatorAlgebra.FreedWickReflectionAndTopologicalIndexPoset
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.PartnerEigenspaces
 import InfoGeometry.OperatorAlgebra.KreinCouplingControl

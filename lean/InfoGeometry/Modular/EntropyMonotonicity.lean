@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
@@ -5,17 +10,20 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
 
 /-!
-# Monotonicity of Relative Entropy and the Data Processing Inequality
+# Classical Relative-Entropy Monotonicity and Stochastic Data Processing
 
 This module formalizes:
 1. The Fundamental Log-Sum Inequality for positive finite vectors:
      ∑_i a_i * log(a_i / b_i) ≥ (∑_i a_i) * log((∑_i a_i) / (∑_i b_i))
-2. The Data Processing Inequality under stochastic / CPTP quantum channels:
+2. The data-processing inequality for finite column-stochastic probability
+   channels with strictly positive transition entries:
      D_KL(T p ∥ T q) ≤ D_KL(p ∥ q)
-3. Monotonic decrease of relative entropy along the 1-parameter dynamical flow:
-     t₁ ≤ t₂ ⟹ S(ℰ_{t₂}(ρ) ∥ ℰ_{t₂}(σ)) ≤ S(ℰ_{t₁}(ρ) ∥ ℰ_{t₁}(σ))
+3. Monotonic decrease of classical relative entropy along a 1-parameter family
+   of finite stochastic channels, under the positivity hypotheses in the theorem.
 
-All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+The channel theorem here is classical: it acts on finite real probability
+vectors. It does not prove data processing for noncommutative density operators
+or CPTP maps. All proofs in this file are native Mathlib proofs.
 -/
 
 noncomputable section
@@ -215,7 +223,7 @@ structure StochasticSemigroup (ι : Type*) [Fintype ι] where
 theorem entropy_monotonicity_flow
     (S : StochasticSemigroup ι)
     (p q : ι → ℝ) [Nonempty ι]
-    (t₁ s : ℝ) (_hs : 0 ≤ s)
+    (t₁ s : ℝ)
     (hp : ∀ i, 0 < applyChannel (S.channel t₁) p i)
     (hq : ∀ i, 0 < applyChannel (S.channel t₁) q i)
     (hS_pos : ∀ k i, 0 < (S.channel s).prob k i) :

@@ -14,7 +14,8 @@ import re
 from pathlib import Path
 import pytest
 
-from tools.infra.audit_default_lean_sources import imports
+from tools.infra.audit_default_lean_sources import default_sources, imports
+from tools.infra.build_changed_lean import _strip_lean_comments
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -78,3 +79,31 @@ class TestAuditPipelineArchitecture:
         canonical_body = match.group(1)
         assert "AuditNative" not in canonical_body
         assert "AuditStrict" not in canonical_body
+
+    def test_architecture_attr_module_is_zero_dag_dependency(self):
+        """Architecture.lean must stay attribute-only so DAG/audit edits never rebuild 1,800+ math modules."""
+        for lane in ("lean", "src"):
+            arch_path = REPO_ROOT / lane / "InfoGeometry" / "Meta" / "Architecture.lean"
+            assert arch_path.is_file(), f"{arch_path} missing"
+            assert imports(arch_path) == {"Lean"}, (
+                f"{arch_path} must import only Lean so DAG/audit changes never invalidate math .oleans"
+            )
+
+    def test_audit_native_is_lightweight_command_provider(self):
+        """AuditNative must not import canonical umbrellas or execute #audit_architecture globally."""
+        for lane in ("lean", "src"):
+            audit_native_path = REPO_ROOT / lane / "AuditNative.lean"
+            assert audit_native_path.is_file(), f"{audit_native_path} missing"
+            imported = imports(audit_native_path)
+            assert "InfoGeometry.Canonical.All" not in imported
+            assert "InfoGeometry.AllExhaustive" not in imported
+            stripped = _strip_lean_comments(audit_native_path.read_text(encoding="utf-8"))
+            assert not re.search(r"^\s*#audit_architecture\b", stripped, re.M), (
+                f"{audit_native_path} must not invoke top-level #audit_architecture"
+            )
+
+    def test_audit_entrypoints_are_not_default_targets(self):
+        """AuditNative and AuditNativeRun must remain opt-in, not @[default_target] builds."""
+        sources = default_sources(REPO_ROOT)
+        assert "AuditNative" not in sources
+        assert "AuditNativeRun" not in sources

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.SuperMetriplectic.Axioms
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.SuperMetriplectic.ChiralBridge
@@ -32,6 +37,10 @@ import InfoGeometry.SuperMetriplectic.MicroscopicEntropyCalibration
 import InfoGeometry.SuperMetriplectic.DiscreteMellinHamiltonian
 import InfoGeometry.SuperMetriplectic.OperatorLorentzCurvature
 import InfoGeometry.Algebraic.SplitSuperGeometry
+import InfoGeometry.SuperMetriplectic.CartanOnsagerParityBridge
+import InfoGeometry.SuperMetriplectic.CartanOnsagerParityBridgeAudit
+import InfoGeometry.SuperMetriplectic.PeirceCutCartanDerivationBridge
+import InfoGeometry.SuperMetriplectic.PeirceCutCartanDerivationBridgeAudit
 
 /-!
 # Supergraded Metriplectic Umbrella

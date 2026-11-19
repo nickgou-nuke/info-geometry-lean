@@ -16,7 +16,7 @@ import re
 import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Sequence
+from typing import Any, Callable, Sequence
 
 
 @dataclass
@@ -445,6 +445,7 @@ def check_noncommutative_witness_requirement(
     lines: list[str],
     filename: str = "<unknown>",
     import_root: Path | None = None,
+    import_source_reader: Callable[[str], tuple[str, str] | None] | None = None,
 ) -> list[TrapViolation]:
     """Detect Trap T16 Non-Commutativity Witness Requirement:
 
@@ -497,6 +498,7 @@ def check_noncommutative_witness_requirement(
                 filename,
                 required_carriers={carrier},
                 import_root=import_root,
+                import_source_reader=import_source_reader,
             )
             for carrier in matrix_carriers
         )
@@ -504,7 +506,10 @@ def check_noncommutative_witness_requirement(
         carrier_coverage = (
             _has_closed_noncommutativity_witness(content)
             or _has_resolved_import_witness(
-                content, filename, import_root=import_root
+                content,
+                filename,
+                import_root=import_root,
+                import_source_reader=import_source_reader,
             )
         )
 
@@ -1844,10 +1849,18 @@ def _unsafe_qualified_declaration_names(source: str) -> set[str]:
     return unsafe
 
 
-def _unsafe_inhabited_instance_targets(source: str) -> set[str]:
+def _unsafe_inhabited_instance_targets(
+    source: str,
+    *,
+    extra_unsafe_names: set[str] | None = None,
+    extra_qualified_unsafe: set[str] | None = None,
+) -> set[str]:
     """Find target types whose local Inhabited instance forwards to holes/axioms."""
     clean = _strip_lean_comments_and_strings(source)
     unsafe_names = _unsafe_local_declaration_names(clean)
+    if extra_unsafe_names:
+        unsafe_names = unsafe_names | extra_unsafe_names
+    qual_unsafe = extra_qualified_unsafe or set()
     starts = list(re.finditer(
         r"^\s*(?:(?:private|protected|local|scoped|noncomputable|unsafe)\s+)*instance(?:\s+[A-Za-z_][A-Za-z0-9_']*)?\b",
         clean,
@@ -1872,7 +1885,8 @@ def _unsafe_inhabited_instance_targets(source: str) -> set[str]:
             continue
         body = declaration[assignment + 2:]
         identifiers = set(re.findall(r"(?:«[^»\n]+»|[^\W\d][\w']*)", body))
-        if re.search(r"\b(?:sorry|admit)\b", body) or identifiers & unsafe_names:
+        qual_hit = any(re.search(rf"\b{re.escape(q)}\b", body) for q in qual_unsafe)
+        if re.search(r"\b(?:sorry|admit)\b", body) or (identifiers & unsafe_names) or qual_hit:
             normalized_target = _expand_local_type_alias(clean, inhabited.group(1))
             targets.add(normalized_target.split(".")[-1])
     return targets
@@ -1969,12 +1983,30 @@ def _has_closed_noncommutativity_witness(
     return False
 
 
+def _resolve_repo_lean_import(module: str, repo_root: Path) -> Path | None:
+    """Resolve a dotted Lean module name to a repo-local .lean path if present."""
+    relative = Path(*module.split("."))
+    roots = (repo_root / "lean", repo_root / "proofs")
+    if module.startswith("proofs."):
+        relative = Path(*module.removeprefix("proofs.").split("."))
+        roots = (repo_root / "proofs",)
+    return next(
+        (
+            root / relative.with_suffix(".lean")
+            for root in roots
+            if (root / relative.with_suffix(".lean")).is_file()
+        ),
+        None,
+    )
+
+
 def _has_resolved_import_witness(
     source: str,
     filename: str,
     *,
     required_carriers: set[tuple[str, str, str]] | None = None,
     import_root: Path | None = None,
+    import_source_reader: Callable[[str], tuple[str, str] | None] | None = None,
 ) -> bool:
     """Inspect direct repo-local imports for a carrier-matched witness.
 
@@ -1984,7 +2016,7 @@ def _has_resolved_import_witness(
     imports only; imported modules are independently screened in their own
     review/build lane.
     """
-    if filename == "<unknown>":
+    if filename == "<unknown>" and import_source_reader is None:
         return False
     repo_root = import_root or Path(__file__).resolve().parents[2]
     subject_carriers = required_carriers or _required_matrix_carriers(source)
@@ -1997,22 +2029,19 @@ def _has_resolved_import_witness(
         for module in imported_line.split()
     ]
     for module in imported_modules:
-        relative = Path(*module.split("."))
-        roots = (repo_root / "lean", repo_root / "proofs")
-        if module.startswith("proofs."):
-            relative = Path(*module.removeprefix("proofs.").split("."))
-            roots = (repo_root / "proofs",)
-        candidate = next(
-            (root / relative.with_suffix(".lean") for root in roots
-             if (root / relative.with_suffix(".lean")).is_file()),
-            None,
-        )
-        if candidate is None:
-            continue
-        try:
-            imported_source = candidate.read_text(encoding="utf-8")
-        except OSError:
-            continue
+        imported_source: str | None = None
+        if import_source_reader is not None:
+            loaded = import_source_reader(module)
+            if loaded is not None:
+                imported_source = loaded[1]
+        if imported_source is None:
+            candidate = _resolve_repo_lean_import(module, repo_root)
+            if candidate is None:
+                continue
+            try:
+                imported_source = candidate.read_text(encoding="utf-8")
+            except OSError:
+                continue
         if any(
             _has_closed_noncommutativity_witness(
                 imported_source,
@@ -2025,47 +2054,306 @@ def _has_resolved_import_witness(
     return False
 
 
+_IMPORT_STRIP_CACHE: dict[bytes, tuple[str, tuple[str, ...]]] = {}
+_IMPORT_LINE_RE = re.compile(r"^\s*import\s+([A-Za-z0-9_. ]+)\s*$", re.MULTILINE)
+
+
+def _cached_stripped_import_text(candidate: Path) -> tuple[str, tuple[str, ...]] | None:
+    """Read, strip comments/strings, and extract imports for `candidate`, cached by digest."""
+    try:
+        raw_bytes = candidate.read_bytes()
+        text = raw_bytes.decode("utf-8")
+    except (OSError, UnicodeError):
+        return None
+    digest = hashlib.blake2b(raw_bytes, digest_size=16).digest()
+    cached = _IMPORT_STRIP_CACHE.get(digest)
+    if cached is not None:
+        return cached
+    stripped = _strip_lean_comments_and_strings(text)
+    imports = tuple(
+        module
+        for imported_line in _IMPORT_LINE_RE.findall(stripped)
+        for module in imported_line.split()
+    )
+    if len(_IMPORT_STRIP_CACHE) >= 4096:
+        _IMPORT_STRIP_CACHE.clear()
+    _IMPORT_STRIP_CACHE[digest] = (stripped, imports)
+    return stripped, imports
+
+
 def _repo_import_source_closure(source: str, repo_root: Path) -> str:
     """Read repo-local imports transitively for lexical axiom/hole tainting."""
     pending = [
         module
-        for imported_line in re.findall(
-            r"^\s*import\s+([A-Za-z0-9_. ]+)\s*$",
-            _strip_lean_comments_and_strings(source),
-            re.MULTILINE,
-        )
+        for imported_line in _IMPORT_LINE_RE.findall(_strip_lean_comments_and_strings(source))
         for module in imported_line.split()
     ]
     seen: set[Path] = set()
     fragments: list[str] = []
     while pending:
         module = pending.pop()
-        relative = Path(*module.split("."))
-        roots = (repo_root / "lean", repo_root / "proofs")
-        if module.startswith("proofs."):
-            relative = Path(*module.removeprefix("proofs.").split("."))
-            roots = (repo_root / "proofs",)
-        candidate = next(
-            (root / relative.with_suffix(".lean") for root in roots
-             if (root / relative.with_suffix(".lean")).is_file()),
-            None,
-        )
+        candidate = _resolve_repo_lean_import(module, repo_root)
         if candidate is None or candidate in seen:
             continue
         seen.add(candidate)
-        try:
-            imported = _strip_lean_comments_and_strings(candidate.read_text(encoding="utf-8"))
-        except OSError:
+        entry = _cached_stripped_import_text(candidate)
+        if entry is None:
             continue
+        imported, next_modules = entry
         fragments.append(imported)
-        pending.extend(
-            module
-            for imported_line in re.findall(
-                r"^\s*import\s+([A-Za-z0-9_. ]+)\s*$", imported, re.MULTILINE
-            )
-            for module in imported_line.split()
-        )
+        pending.extend(next_modules)
     return "\n".join(fragments)
+
+
+_T17_IDENT_RE = re.compile(r"(?:«[^»\n]+»|[^\W\d][\w']*)")
+_T17_QUAL_RE = re.compile(r"[A-Za-z_«][A-Za-z0-9_'»]*(?:\.[A-Za-z_«][A-Za-z0-9_'»]*)+")
+_T17_DECL_NAME_RE = re.compile(
+    r"^\s*(?:(?:private|protected|noncomputable|unsafe|partial)\s+)*"
+    r"(?:def|abbrev|theorem|lemma|instance|axiom|opaque)\s+([A-Za-z_][A-Za-z0-9_']*)\b",
+    re.MULTILINE,
+)
+_T17_HOLE_RE = re.compile(r"\b(?:sorry|admit)\b")
+
+
+def _extract_module_t17_node_from_clean(clean: str) -> dict[str, Any]:
+    """Extract compact structural taint/import summary for one comment-stripped module."""
+    imports = tuple(
+        module for line in _IMPORT_LINE_RE.findall(clean) for module in line.split()
+    )
+    declared_names = frozenset(_T17_DECL_NAME_RE.findall(clean))
+    namespaces: list[str] = []
+    namespace_at_line: dict[int, str] = {}
+    for line_number, line in enumerate(clean.splitlines(), start=1):
+        stripped = line.strip()
+        ns_match = re.match(r"namespace\s+([A-Za-z_][A-Za-z0-9_'.]*)", stripped)
+        if ns_match:
+            namespaces.append(ns_match.group(1))
+        namespace_at_line[line_number] = ".".join(namespaces)
+        if re.match(r"end(?:\s|$)", stripped) and namespaces:
+            namespaces.pop()
+
+    lean_name = r"(?:«[^»\n]+»|[^\W\d][\w']*)"
+    decl_re = re.compile(
+        rf"^\s*(?:(?:private|protected|noncomputable|unsafe|partial)\s+)*(axiom|opaque|def|abbrev|theorem|lemma|instance)\s+({lean_name})(?![\w'])",
+        re.MULTILINE,
+    )
+    matches = list(decl_re.finditer(clean))
+    decls: list[tuple[str, str, str, bool, frozenset[str], frozenset[str], frozenset[str]]] = []
+    direct_unsafe_local: set[str] = set()
+    direct_unsafe_qual: set[str] = set()
+
+    for idx, m in enumerate(matches):
+        line_number = clean.count("\n", 0, m.start()) + 1
+        end = matches[idx + 1].start() if idx + 1 < len(matches) else len(clean)
+        fragment = clean[m.start() : end]
+        kind, name = m.groups()
+        ns = namespace_at_line.get(line_number, "")
+        qualified = f"{ns}.{name}" if ns else name
+        has_hole = kind in {"axiom", "opaque"} or bool(_T17_HOLE_RE.search(fragment))
+        if has_hole:
+            direct_unsafe_local.add(name)
+            direct_unsafe_qual.add(qualified)
+        assign = _top_level_assignment_index(fragment)
+        body = fragment[assign + 2 :] if assign is not None else fragment
+        assign_ids = frozenset(_T17_IDENT_RE.findall(body)) if assign is not None else frozenset()
+        frag_ids = frozenset(_T17_IDENT_RE.findall(fragment))
+        frag_quals = frozenset(_T17_QUAL_RE.findall(fragment))
+        decls.append((name, qualified, ns, has_hole, assign_ids, frag_ids, frag_quals))
+
+    inst_starts = list(re.finditer(
+        r"^\s*(?:(?:private|protected|local|scoped|noncomputable|unsafe)\s+)*instance(?:\s+[A-Za-z_][A-Za-z0-9_']*)?\b",
+        clean,
+        re.MULTILINE,
+    ))
+    inhabited: list[tuple[str, bool, frozenset[str], frozenset[str]]] = []
+    for idx, m in enumerate(inst_starts):
+        end = inst_starts[idx + 1].start() if idx + 1 < len(inst_starts) else len(clean)
+        following = re.search(
+            r"^\s*(?:(?:private|protected|local|scoped|noncomputable|unsafe|partial)\s+)*(?:def|abbrev|theorem|lemma|instance|structure|class|inductive|axiom|opaque|namespace|section|end)\b",
+            clean[m.end() : end],
+            re.MULTILINE,
+        )
+        decl_text = (
+            clean[m.start() : m.end() + following.start()] if following else clean[m.start() : end]
+        )
+        parsed = _top_level_result_type(decl_text)
+        assign = _top_level_assignment_index(decl_text)
+        if parsed is None or assign is None:
+            continue
+        _binders, result = parsed
+        inh = re.match(r"Inhabited\s+([A-Za-z_][A-Za-z0-9_'.]*)\b", result)
+        if inh is None:
+            continue
+        body = decl_text[assign + 2 :]
+        expanded = _expand_local_type_alias(clean, inh.group(1)).split(".")[-1]
+        has_hole = bool(_T17_HOLE_RE.search(body))
+        inhabited.append((
+            expanded,
+            has_hole,
+            frozenset(_T17_IDENT_RE.findall(body)),
+            frozenset(_T17_QUAL_RE.findall(body)),
+        ))
+
+    return {
+        "imports": imports,
+        "declared_names": declared_names,
+        "decls": tuple(decls),
+        "direct_unsafe_local": frozenset(direct_unsafe_local),
+        "direct_unsafe_qual": frozenset(direct_unsafe_qual),
+        "inhabited": tuple(inhabited),
+        "has_direct_inhabited_hole": any(item[1] for item in inhabited),
+    }
+
+
+@functools.lru_cache(maxsize=4096)
+def _cached_disk_t17_node(resolved_path: str, mtime_ns: int, size: int) -> dict[str, Any]:
+    del mtime_ns, size
+    text = Path(resolved_path).read_text(encoding="utf-8")
+    return _extract_module_t17_node_from_clean(_strip_lean_comments_and_strings(text))
+
+
+@functools.lru_cache(maxsize=4096)
+def _cached_text_t17_node(text_hash: str, text: str) -> dict[str, Any]:
+    del text_hash
+    return _extract_module_t17_node_from_clean(_strip_lean_comments_and_strings(text))
+
+
+def _resolve_t17_import_node(
+    module: str,
+    repo_root: Path,
+    import_source_reader: Callable[[str], tuple[str, str] | None] | None,
+) -> tuple[str, Callable[[], dict[str, Any]]] | None:
+    if import_source_reader is not None:
+        loaded = import_source_reader(module)
+        if loaded is not None:
+            cache_key, text = loaded
+            digest = hashlib.sha256(text.encode("utf-8", errors="replace")).hexdigest()
+            return (
+                f"mem:{cache_key}:{digest}",
+                lambda d=digest, t=text: _cached_text_t17_node(d, t),
+            )
+    candidate = _resolve_repo_lean_import(module, repo_root)
+    if candidate is None:
+        return None
+    try:
+        resolved = candidate.resolve()
+        st = resolved.stat()
+    except OSError:
+        return None
+    key = f"disk:{resolved}:{st.st_mtime_ns}:{st.st_size}"
+    return (
+        key,
+        lambda rp=str(resolved), mt=st.st_mtime_ns, sz=st.st_size: _cached_disk_t17_node(rp, mt, sz),
+    )
+
+
+def _compute_module_t17_transitive_taint(
+    cache_key: str,
+    load_node: Callable[[], dict[str, Any]],
+    repo_root: Path,
+    import_source_reader: Callable[[str], tuple[str, str] | None] | None,
+    taint_memo: dict[str, tuple[set[str], set[str], set[str]]],
+    active: set[str],
+) -> tuple[set[str], set[str], set[str]]:
+    if cache_key in taint_memo:
+        return taint_memo[cache_key]
+    if cache_key in active:
+        return set(), set(), set()
+    active.add(cache_key)
+    try:
+        node = load_node()
+        child_local: set[str] = set()
+        child_qual: set[str] = set()
+        child_inhab: set[str] = set()
+        for imp_mod in node["imports"]:
+            resolved = _resolve_t17_import_node(imp_mod, repo_root, import_source_reader)
+            if resolved is None:
+                continue
+            c_key, c_loader = resolved
+            c_l, c_q, c_i = _compute_module_t17_transitive_taint(
+                c_key, c_loader, repo_root, import_source_reader, taint_memo, active
+            )
+            child_local |= c_l
+            child_qual |= c_q
+            child_inhab |= c_i
+
+        if not (
+            child_local
+            or child_qual
+            or child_inhab
+            or node["direct_unsafe_local"]
+            or node["has_direct_inhabited_hole"]
+        ):
+            empty: tuple[set[str], set[str], set[str]] = (set(), set(), set())
+            taint_memo[cache_key] = empty
+            return empty
+
+        own_prop_local: set[str] = set(node["direct_unsafe_local"])
+        working_local_for_self: set[str] = set(node["direct_unsafe_local"]) | (
+            child_local - node["declared_names"]
+        )
+        working_qual: set[str] = set(node["direct_unsafe_qual"]) | child_qual
+        qual_by_ns: dict[str, set[str]] = {}
+        for dep in working_qual:
+            ns, leaf = (dep.rsplit(".", 1) if "." in dep else ("", dep))
+            qual_by_ns.setdefault(ns, set()).add(leaf)
+
+        changed = True
+        while changed:
+            changed = False
+            for name, qualified, ns, _has_hole, assign_ids, frag_ids, frag_quals in node["decls"]:
+                ns_hit = bool(frag_ids & qual_by_ns.get(ns, frozenset()))
+                local_hit = bool(assign_ids & working_local_for_self)
+                qual_hit = bool(frag_quals & working_qual) or ns_hit
+                if local_hit or qual_hit:
+                    if name not in own_prop_local:
+                        own_prop_local.add(name)
+                        working_local_for_self.add(name)
+                        changed = True
+                    if qualified not in working_qual:
+                        working_qual.add(qualified)
+                        qual_by_ns.setdefault(ns, set()).add(qualified.rsplit(".", 1)[-1])
+                        changed = True
+
+        out_local = child_local | own_prop_local
+        out_inhab = set(child_inhab)
+        for target_short, has_hole, body_ids, body_quals in node["inhabited"]:
+            if has_hole or (body_ids & out_local) or (body_quals & working_qual):
+                out_inhab.add(target_short)
+
+        result = (out_local, working_qual, out_inhab)
+        taint_memo[cache_key] = result
+        return result
+    finally:
+        active.discard(cache_key)
+
+
+def _repo_import_taint_closure(
+    source_text: str,
+    repo_root: Path,
+    *,
+    import_source_reader: Callable[[str], tuple[str, str] | None] | None = None,
+    taint_memo: dict[str, tuple[set[str], set[str], set[str]]] | None = None,
+) -> tuple[set[str], set[str], set[str]]:
+    """Collect transitive unsafe local names, qualified names, and Inhabited targets."""
+    memo = taint_memo if taint_memo is not None else {}
+    active: set[str] = set()
+    imported_local: set[str] = set()
+    imported_qual: set[str] = set()
+    imported_inhab: set[str] = set()
+    for line in _IMPORT_LINE_RE.findall(source_text):
+        for imp_mod in line.split():
+            resolved = _resolve_t17_import_node(imp_mod, repo_root, import_source_reader)
+            if resolved is None:
+                continue
+            c_key, c_loader = resolved
+            c_l, c_q, c_i = _compute_module_t17_transitive_taint(
+                c_key, c_loader, repo_root, import_source_reader, memo, active
+            )
+            imported_local |= c_l
+            imported_qual |= c_q
+            imported_inhab |= c_i
+    return imported_local, imported_qual, imported_inhab
 
 
 def check_tactic_misuse_on_operators(lines: list[str]) -> list[TrapViolation]:
@@ -2310,7 +2598,11 @@ def check_tactic_misuse_on_operators(lines: list[str]) -> list[TrapViolation]:
 
 
 def check_model_witnessing(
-    lines: list[str], filename: str = "<unknown>", import_root: Path | None = None
+    lines: list[str],
+    filename: str = "<unknown>",
+    import_root: Path | None = None,
+    import_source_reader: Callable[[str], tuple[str, str] | None] | None = None,
+    taint_memo: dict[str, tuple[set[str], set[str], set[str]]] | None = None,
 ) -> list[TrapViolation]:
     """Gate 2.5: Mandatory Model Witnessing & Non-Triviality Check (Trap T17).
 
@@ -2499,24 +2791,24 @@ def check_model_witnessing(
         assignment = _top_level_assignment_index(text)
         return text[assignment + 2:] if assignment is not None else ""
 
-    # A syntactically closed model may still forward to a local axiom or a
-    # hole-bearing helper. Propagate this taint through local declaration
-    # bodies before treating any declaration as a T17 witness.
-    imported_source = _repo_import_source_closure(
-        source_text, import_root or Path(__file__).resolve().parents[2]
+    # Local and repo-resolved imported declarations share a memoized DAG taint
+    # closure so shared upstream imports are parsed and propagated once.
+    imported_unsafe_names, imported_qualified_unsafe_names, imported_unsafe_inhabited = (
+        _repo_import_taint_closure(
+            source_text,
+            import_root or Path(__file__).resolve().parents[2],
+            import_source_reader=import_source_reader,
+            taint_memo=taint_memo,
+        )
     )
-    # Local and repo-resolved imported declarations share one taint closure so
-    # a model that forwards through an imported axiom/sorry cannot satisfy T17.
     local_unsafe_names = _unsafe_local_declaration_names(source_text)
-    imported_unsafe_names = _unsafe_local_declaration_names(imported_source)
-    imported_qualified_unsafe_names = _unsafe_qualified_declaration_names(imported_source)
     local_declared_names = set(re.findall(
         r"^\s*(?:(?:private|protected|noncomputable|unsafe|partial)\s+)*(?:def|abbrev|theorem|lemma|instance|axiom|opaque)\s+([A-Za-z_][A-Za-z0-9_']*)\b",
         source_text,
         re.MULTILINE,
     ))
     # A same-spelled declaration in another namespace is not a dependency.
-    imported_unsafe_names.difference_update(local_declared_names)
+    imported_unsafe_names = set(imported_unsafe_names) - local_declared_names
     unsafe_names = local_unsafe_names | imported_unsafe_names
     def references_unsafe(body: str, names: set[str] = unsafe_names) -> bool:
         identifiers = set(re.findall(r"(?:«[^»\n]+»|[^\W\d][\w']*)", body))
@@ -2527,8 +2819,10 @@ def check_model_witnessing(
             for qualified in imported_qualified_unsafe_names
         )
 
-    unsafe_default_targets = _unsafe_inhabited_instance_targets(
-        source_text + "\n" + imported_source
+    unsafe_default_targets = imported_unsafe_inhabited | _unsafe_inhabited_instance_targets(
+        source_text,
+        extra_unsafe_names=unsafe_names,
+        extra_qualified_unsafe=imported_qualified_unsafe_names,
     )
     local_bodies: dict[str, str] = {}
     for start_line, header in declaration_headers:
@@ -2623,7 +2917,12 @@ def check_model_witnessing(
 
 
 def screen_lean_content(
-    content: str, filename: str = "<unknown>", *, import_root: Path | None = None
+    content: str,
+    filename: str = "<unknown>",
+    *,
+    import_root: Path | None = None,
+    import_source_reader: Callable[[str], tuple[str, str] | None] | None = None,
+    taint_memo: dict[str, tuple[set[str], set[str], set[str]]] | None = None,
 ) -> list[TrapViolation]:
     """Run the 17-trap screener on a Lean source string."""
     raw_content = content
@@ -2638,11 +2937,23 @@ def screen_lean_content(
     violations.extend(check_homomorphism_rejection(lines))
     violations.extend(
         check_noncommutative_witness_requirement(
-            raw_content, lines, filename, import_root=import_root
+            raw_content,
+            lines,
+            filename,
+            import_root=import_root,
+            import_source_reader=import_source_reader,
         )
     )
     violations.extend(check_tactic_misuse_on_operators(lines))
-    violations.extend(check_model_witnessing(lines, filename=filename, import_root=import_root))
+    violations.extend(
+        check_model_witnessing(
+            lines,
+            filename=filename,
+            import_root=import_root,
+            import_source_reader=import_source_reader,
+            taint_memo=taint_memo,
+        )
+    )
 
     # 2. Regex-based pattern scans for other traps
     for idx, line in enumerate(lines, start=1):
@@ -2670,11 +2981,15 @@ def screen_lean_content(
     return violations
 
 
-def screen_lean_file(path: Path) -> list[TrapViolation]:
+def screen_lean_file(
+    path: Path,
+    *,
+    taint_memo: dict[str, tuple[set[str], set[str], set[str]]] | None = None,
+) -> list[TrapViolation]:
     """Screen an on-disk Lean file."""
     try:
         content = path.read_text(encoding="utf-8")
-        return screen_lean_content(content, filename=str(path))
+        return screen_lean_content(content, filename=str(path), taint_memo=taint_memo)
     except Exception as exc:
         return [
             TrapViolation(
@@ -2744,6 +3059,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     all_violations: dict[str, list[dict]] = {}
     quarantined_packets: list[str] = []
     has_errors = False
+    taint_memo: dict[str, tuple[set[str], set[str], set[str]]] = {}
 
     for target in args.paths:
         p = Path(target)
@@ -2757,7 +3073,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             continue
 
         for lean_file in targets:
-            violations = screen_lean_file(lean_file)
+            violations = screen_lean_file(lean_file, taint_memo=taint_memo)
             if violations:
                 rel = str(lean_file)
                 all_violations[rel] = [asdict(v) for v in violations]

@@ -21,6 +21,16 @@ def test_script_mode_places_run_flag_before_source_file():
     ]
 
 
+def test_source_lane_selects_isolated_lake_workspace():
+    assert run_locked_lean.build_lean_command(
+        "lake", Path("src/InfoGeometry/Epistemology/Owner.lean"), [],
+        lakefile="lakefile.src.lean",
+    ) == [
+        "lake", "--file", "lakefile.src.lean", "env", "lean",
+        "src/InfoGeometry/Epistemology/Owner.lean",
+    ]
+
+
 def test_timeout_releases_shared_build_lock():
     with tempfile.TemporaryDirectory() as directory:
         root = Path(directory)

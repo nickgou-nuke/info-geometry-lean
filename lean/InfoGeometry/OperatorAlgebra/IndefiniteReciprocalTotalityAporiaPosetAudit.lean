@@ -1,0 +1,34 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityAporiaPoset
+
+/-!
+# Axiom Audit for IndefiniteReciprocalTotalityAporiaPoset
+
+Verifies via `#print axioms` that all theorems, models, poset acyclicity proofs,
+and `{Leibniz, Derivation, Onsager}` bridges in
+`InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityAporiaPoset` depend
+solely on Lean's permitted foundational axioms (`propext`, `Classical.choice`,
+`Quot.sound`) or no axioms at all.
+-/
+
+#print axioms InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityAporiaPoset.prop1_orthogonality_and_polarity_involution
+#print axioms InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityAporiaPoset.prop2_fourfold_decomposition_and_unilateral_nilpotency
+#print axioms InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityAporiaPoset.prop3_integrative_bridge_gravity_and_tension
+#print axioms InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityAporiaPoset.prop4_exact_socratic_aporia_and_intertwining
+#print axioms InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityAporiaPoset.prop5_dogmatic_truncation_defect
+#print axioms InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityAporiaPoset.prop6_parity_soldered_meta_cognitive_coherence
+#print axioms InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityAporiaPoset.thm_omega_indefinite_reciprocal_totality
+#print axioms InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityAporiaPoset.intCut0_mul_intOmega0_ne
+#print axioms InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityAporiaPoset.intMat2_thm_omega_witness
+#print axioms InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityAporiaPoset.intStageTower
+#print axioms InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityAporiaPoset.intStageTower_nonvanishing
+#print axioms InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityAporiaPoset.two_site_ungraded_confabulation_witness
+#print axioms InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityAporiaPoset.aporiaCover_acyclic
+#print axioms InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityAporiaPoset.peirceGradingDeriv_omega_laws
+#print axioms InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityAporiaPoset.parityConj_reciprocity_onsager_split
+#print axioms InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityAporiaPoset.peirceMatrixTimeReversal
+#print axioms InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityAporiaPoset.twoSite_noncomm_exists

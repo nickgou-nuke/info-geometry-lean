@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.PeirceSpine.CentralizerDifferential
 import Mathlib.GroupTheory.QuotientGroup.Basic
 
@@ -13,7 +18,8 @@ namespace InfoGeometry.OperatorAlgebra.PeirceSpine
 
 variable {B : Type*} [Ring B] {P : B} (hP : P * P = P)
 
-def centralizerCycles (A C : B) : AddSubgroup (metricCentralizer P A C) :=
+def centralizerCycles (A C : B) :
+    AddSubgroup ((metricCentralizer P A C).toAddSubgroup) :=
   (centralizerDifferentialHom hP A C).ker
 
 theorem centralizer_boundaries_are_cycles (A C : B) :

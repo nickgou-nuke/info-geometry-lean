@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
@@ -6,19 +11,13 @@ import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
 
 /-!
-# Monotonicity of Quantum Relative Entropy and the Data Processing Inequality
+# Finite Probability Relative Entropy and Assumed Entropy Decay
 
-This module formalizes:
-1. The relative entropy / Kullback–Leibler divergence for quantum states in their eigenbasis:
-     S(p ∥ q) = ∑_i p_i (log p_i - log q_i)
-2. Proven Non-Negativity (Gibbs / Klein Inequality):
-     S(p ∥ q) ≥ 0  for all normalized distributions p, q with S(p ∥ p) = 0.
-3. Entropy Production Rate along the Open Quantum Dynamical Semigroup:
-     d/dt S(p_t ∥ σ) = - σ_prod(p_t) ≤ 0
-4. Complete Monotonicity of Relative Entropy:
-     S(ℰ_t(ρ) ∥ ℰ_t(σ)) ≤ S(ρ ∥ σ) for all t ≥ 0.
-
-All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+This module defines classical relative entropy on strictly positive finite
+probability distributions and proves its nonnegativity. Its `SemigroupTrajectory`
+structure assumes an entropy-decay equation; the monotonicity lemma derives the
+corresponding scalar inequality from that field. It does not construct a
+quantum channel or prove monotonicity for noncommutative density operators.
 -/
 
 noncomputable section
@@ -30,7 +29,7 @@ namespace InfoGeometry.Modular.RelativeEntropy
 
 variable {n : Type*} [Fintype n]
 
-/-- Probability simplex / normalized positive state distribution. -/
+/-- Strictly positive finite probability distribution. -/
 structure StateDist (n : Type*) [Fintype n] where
   prob : n → ℝ
   pos : ∀ i, 0 < prob i
@@ -77,10 +76,8 @@ lemma log_ratio_ge_sub (p q : ℝ) (hp : 0 < p) (hq : 0 < q) :
   rw [h_simpl] at h_mult
   exact h_mult
 
-/-- 
-  THEOREM 2 (Klein / Gibbs Non-Negativity of Relative Entropy):
-  S(p ∥ q) ≥ 0  for all normalized quantum probability distributions.
--/
+/-- Nonnegativity of classical relative entropy for strictly positive finite
+probability distributions. -/
 theorem relEntropy_nonneg (p q : StateDist n) :
     0 ≤ relEntropy p q := by
   dsimp [relEntropy]
@@ -99,10 +96,9 @@ PART 2: Entropy Production and Monotonic Decay along the Dynamical Flow
 =============================================================================
 -/
 
-/-- 
-  An Open Quantum Dynamical Semigroup Trajectory p(t) converging towards an
-  invariant stationary state σ with entropy production rate σ_prod(t) ≥ 0.
--/
+/-- A finite probability trajectory together with an assumed scalar entropy
+decay law and nonnegative production rate. No operator semigroup is constructed
+by this data structure. -/
 structure SemigroupTrajectory (n : Type*) [Fintype n] where
   state : ℝ → StateDist n
   inv_state : StateDist n
@@ -111,12 +107,8 @@ structure SemigroupTrajectory (n : Type*) [Fintype n] where
   relEntropy_decay : ∀ t ≥ 0, ∀ s ≥ 0,
     relEntropy (state (t + s)) inv_state = relEntropy (state t) inv_state - s * entropy_prod t
 
-/-- 
-  THEOREM 3 (Monotonicity of Relative Entropy along the Quantum Semigroup Flow):
-  For any time step s ≥ 0:
-    S(p(t + s) ∥ σ) ≤ S(p(t) ∥ σ)
-  Proves that relative entropy is monotonically non-increasing under open quantum evolution.
--/
+/-- The assumed decay law implies monotonicity of the finite-distribution
+relative entropy along the supplied trajectory. -/
 theorem relEntropy_monotonic (traj : SemigroupTrajectory n) (t : ℝ) (ht : 0 ≤ t) (s : ℝ) (hs : 0 ≤ s) :
     relEntropy (traj.state (t + s)) traj.inv_state ≤ relEntropy (traj.state t) traj.inv_state := by
   have h_decay := traj.relEntropy_decay t ht s hs
@@ -124,10 +116,8 @@ theorem relEntropy_monotonic (traj : SemigroupTrajectory n) (t : ℝ) (ht : 0 �
   have h_nonneg_term : 0 ≤ s * traj.entropy_prod t := mul_nonneg hs h_prod
   linarith
 
-/-- 
-  COROLLARY 4 (Finite-Time Contraction from Initial State):
-  S(p(t) ∥ σ) ≤ S(p(0) ∥ σ) for all t ≥ 0.
--/
+/-- Finite-time contraction from the initial distribution, under the trajectory's
+assumed decay law. -/
 theorem relEntropy_finite_time_contraction (traj : SemigroupTrajectory n) (t : ℝ) (ht : 0 ≤ t) :
     relEntropy (traj.state t) traj.inv_state ≤ relEntropy (traj.state 0) traj.inv_state := by
   have h := relEntropy_monotonic traj 0 (le_refl 0) t ht

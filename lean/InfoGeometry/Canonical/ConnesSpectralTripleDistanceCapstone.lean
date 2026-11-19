@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Tactic
@@ -5,6 +10,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Topology.MetricSpace.Basic
 import InfoGeometry.Canonical.YangBaxterProof
 
 /-!
@@ -24,13 +30,9 @@ and its spectral triple distance formula on the primon quantum space:
    - Proved: `connes_diff_symm`: $|a(x) - a(y)| = |a(y) - a(x)|$.
    - Proved: `connes_diff_triangle`: $|a(x) - a(z)| \le |a(x) - a(y)| + |a(y) - a(z)|$.
 
-3. **Primon Dirac Operator and Logarithmic Metric Space**:
-   - Primon spectral distance: $d_C(p, q) = |\ln p - \ln q|$.
-   - Proved: `primonConnesDistance_nonneg`: $0 \le d_C(p, q)$.
-   - Proved: `primonConnesDistance_symm`: $d_C(p, q) = d_C(q, p)$.
-   - Proved: `primonConnesDistance_self`: $d_C(p, p) = 0$.
-   - Proved: `primonConnesDistance_triangle`: $d_C(p, r) \le d_C(p, q) + d_C(q, r)$.
-   - Proved: `primonConnesDistance_eq_zero_iff`: For $p, q \ge 2$, $d_C(p, q) = 0 \iff p = q$.
+3. **Logarithmic Metric on Naturals at Least Two**:
+   - Carrier: the subtype $\{p : \mathbb{N} \mid 2 \le p\}$.
+   - Metric coordinate: $p \mapsto \ln p$; injectivity makes its pullback from $\mathbb{R}$ a genuine metric.
 
 4. **Dirac Resolvent Regularization**:
    - Resolvent factor: $(1 + \lambda^2)^{-1/2}$.
@@ -79,12 +81,56 @@ theorem comm_mul {A : Type*} [Ring A] (D a b : A) :
 def isOneLipschitz {X : Type*} (dist : X → X → ℝ) (a : X → ℝ) : Prop :=
   ∀ x y, |a x - a y| ≤ dist x y
 
-/-- 🏆 THEOREM 2 (Connes Distance Bounded by Underlying Metric):
-    If `a` is 1-Lipschitz with respect to `dist`, then $|a(x) - a(y)| \le dist(x, y)$. -/
-theorem connes_eval_le {X : Type*} (dist : X → X → ℝ) (a : X → ℝ)
-    (ha : isOneLipschitz dist a) (x y : X) :
-    |a x - a y| ≤ dist x y :=
-  ha x y
+/-- Set of evaluation differences detected by all 1-Lipschitz real-valued
+test functions. -/
+def evalDualTestValues {X : Type*} (dist : X → X → ℝ) (x y : X) : Set ℝ :=
+  {r | ∃ a : X → ℝ, isOneLipschitz dist a ∧ r = |a x - a y|}
+
+/-- Dual evaluation distance obtained by taking the supremum over all
+1-Lipschitz test functions.  This is the metric-dual construction; it does
+not assert a spectral-triple representation or that the supremum reaches the
+underlying distance. -/
+noncomputable def evalDualDistance {X : Type*} (dist : X → X → ℝ) (x y : X) : ℝ :=
+  sSup (evalDualTestValues dist x y)
+
+/-- Every admissible evaluation difference is bounded by `dist`; hence their
+dual supremum is bounded by `dist` as well.  Nonnegativity of `dist` ensures
+the admissible set contains the constant-zero test function. -/
+theorem evalDualDistance_le {X : Type*} (dist : X → X → ℝ)
+    (h_dist_nonneg : ∀ u v, 0 ≤ dist u v) (x y : X) :
+    evalDualDistance dist x y ≤ dist x y := by
+  have h_nonempty : (evalDualTestValues dist x y).Nonempty := by
+    refine ⟨0, ?_⟩
+    change ∃ a : X → ℝ, isOneLipschitz dist a ∧ 0 = |a x - a y|
+    refine ⟨fun _ => 0, ?_, by simp⟩
+    intro u v
+    simpa [isOneLipschitz] using h_dist_nonneg u v
+  unfold evalDualDistance
+  apply csSup_le h_nonempty
+  rintro r ⟨a, ha, rfl⟩
+  exact ha x y
+
+/-- On the real line with its usual distance, the dual evaluation supremum
+recovers the distance exactly.  The upper bound is `evalDualDistance_le`;
+the identity function attains it. -/
+theorem evalDualDistance_abs_sub (x y : ℝ) :
+    evalDualDistance (fun u v : ℝ => |u - v|) x y = |x - y| := by
+  have h_bdd : BddAbove (evalDualTestValues (fun u v : ℝ => |u - v|) x y) := by
+    refine ⟨|x - y|, ?_⟩
+    rintro r ⟨a, ha, hval⟩
+    rw [hval]
+    exact ha x y
+  have h_mem : |x - y| ∈ evalDualTestValues (fun u v : ℝ => |u - v|) x y := by
+    change ∃ a : ℝ → ℝ, isOneLipschitz (fun u v : ℝ => |u - v|) a ∧
+      |x - y| = |a x - a y|
+    refine ⟨id, ?_, rfl⟩
+    intro u v
+    rfl
+  apply le_antisymm
+  · exact evalDualDistance_le (fun u v : ℝ => |u - v|)
+      (fun _ _ => abs_nonneg _) x y
+  · unfold evalDualDistance
+    exact le_csSup h_bdd h_mem
 
 /-- 🏆 THEOREM 3 (Connes Functional Distance Metric Axioms):
     For any test function `a` and points x, y, z:
@@ -105,53 +151,50 @@ theorem connes_diff_triangle {X : Type*} (a : X → ℝ) (x y z : X) :
   rw [this]
   exact abs_add_le (a x - a y) (a y - a z)
 
-/-! ### 3. Primon Dirac Operator and Logarithmic Distance -/
+/-! ### 3. Logarithmic Metric on Naturals at Least Two -/
 
-/-- Primon Dirac distance: $d_C(p, q) = |\ln p - \ln q|$. -/
-def primonConnesDistance (p q : ℕ) : ℝ :=
-  |Real.log (p : ℝ) - Real.log (q : ℝ)|
+/-- Natural indices on which the logarithm is injective.  The lower bound
+also makes the logarithm coordinate strictly positive in its real argument. -/
+abbrev PrimonPoint := {p : ℕ // 2 ≤ p}
 
-/-- 🏆 THEOREM 4 (Primon Connes Distance Symmetry and Non-negativity):
-    $d_C(p, q) \ge 0$ and $d_C(p, q) = d_C(q, p)$. -/
-theorem primonConnesDistance_nonneg (p q : ℕ) :
-    0 ≤ primonConnesDistance p q :=
-  abs_nonneg (Real.log (p : ℝ) - Real.log (q : ℝ))
+/-- Logarithmic coordinate of a primon point. -/
+def primonLogCoordinate (p : PrimonPoint) : ℝ := Real.log (p.val : ℝ)
 
-theorem primonConnesDistance_symm (p q : ℕ) :
-    primonConnesDistance p q = primonConnesDistance q p :=
-  abs_sub_comm (Real.log (p : ℝ)) (Real.log (q : ℝ))
+/-- The logarithmic coordinate separates points on `PrimonPoint`. -/
+theorem primonLogCoordinate_injective : Function.Injective primonLogCoordinate := by
+  intro p q hpq
+  apply Subtype.ext
+  have hp_pos : 0 < (p.val : ℝ) := by
+    have h : (2 : ℝ) ≤ (p.val : ℝ) := by exact_mod_cast p.property
+    linarith
+  have hq_pos : 0 < (q.val : ℝ) := by
+    have h : (2 : ℝ) ≤ (q.val : ℝ) := by exact_mod_cast q.property
+    linarith
+  exact_mod_cast (Real.log_injOn_pos hp_pos hq_pos hpq)
 
-theorem primonConnesDistance_self (p : ℕ) :
-    primonConnesDistance p p = 0 := by
-  dsimp [primonConnesDistance]
-  rw [sub_self, abs_zero]
+/-- Pull back the real metric along the injective logarithm coordinate. -/
+@[instance_reducible] noncomputable def primonPointMetricSpace : MetricSpace PrimonPoint :=
+  MetricSpace.induced primonLogCoordinate primonLogCoordinate_injective inferInstance
 
-/-- 🏆 THEOREM 5 (Primon Connes Distance Triangle Inequality):
-    $d_C(p, r) \le d_C(p, q) + d_C(q, r)$. -/
-theorem primonConnesDistance_triangle (p q r : ℕ) :
-    primonConnesDistance p r ≤ primonConnesDistance p q + primonConnesDistance q r := by
-  dsimp [primonConnesDistance]
-  have : Real.log (p : ℝ) - Real.log (r : ℝ) =
-         (Real.log (p : ℝ) - Real.log (q : ℝ)) + (Real.log (q : ℝ) - Real.log (r : ℝ)) := by ring
-  rw [this]
-  exact abs_add_le (Real.log (p : ℝ) - Real.log (q : ℝ)) (Real.log (q : ℝ) - Real.log (r : ℝ))
+/-- The genuine metric on the restricted natural-number carrier. -/
+def primonConnesDistance (p q : PrimonPoint) : ℝ :=
+  @dist PrimonPoint primonPointMetricSpace.toPseudoMetricSpace.toDist p q
 
-/-- 🏆 THEOREM 6 (Primon Connes Distance Separation):
-    For primes $p, q \ge 2$, $d_C(p, q) = 0 \iff p = q$. -/
-theorem primonConnesDistance_eq_zero_iff (p q : ℕ) (hp : 2 ≤ p) (hq : 2 ≤ q) :
+/-- The induced metric is the absolute difference of logarithmic coordinates. -/
+theorem primonConnesDistance_eq_abs_log (p q : PrimonPoint) :
+    primonConnesDistance p q =
+      |Real.log (p.val : ℝ) - Real.log (q.val : ℝ)| := by
+  change @dist ℝ _ (primonLogCoordinate p) (primonLogCoordinate q) = _
+  rw [Real.dist_eq]
+  rfl
+
+/-- Definiteness of the pullback metric, proved from logarithmic separation. -/
+theorem primonConnesDistance_eq_zero_iff (p q : PrimonPoint) :
     primonConnesDistance p q = 0 ↔ p = q := by
-  dsimp [primonConnesDistance]
-  rw [abs_eq_zero, sub_eq_zero]
-  have hp_pos : 0 < (p : ℝ) := by
-    have : (2 : ℝ) ≤ (p : ℝ) := by exact_mod_cast hp
-    linarith
-  have hq_pos : 0 < (q : ℝ) := by
-    have : (2 : ℝ) ≤ (q : ℝ) := by exact_mod_cast hq
-    linarith
+  rw [primonConnesDistance_eq_abs_log, abs_eq_zero, sub_eq_zero]
   constructor
   · intro h
-    have h_inj := Real.log_injOn_pos hp_pos hq_pos h
-    exact_mod_cast h_inj
+    exact primonLogCoordinate_injective h
   · rintro rfl
     rfl
 
@@ -195,25 +238,20 @@ Unifies:
 -/
 theorem grand_connes_spectral_triple_distance_synthesis
     {A : Type*} [Ring A] (D a b : A)
-    (p q r : ℕ) (hp : 2 ≤ p) (hq : 2 ≤ q)
+    (p q r : PrimonPoint)
     (eig_val : ℝ) :
     (comm D (a + b) = comm D a + comm D b) ∧
     (comm D (a * b) = comm D a * b + a * comm D b) ∧
-    (0 ≤ primonConnesDistance p q) ∧
-    (primonConnesDistance p q = primonConnesDistance q p) ∧
-    (primonConnesDistance p p = 0) ∧
-    (primonConnesDistance p r ≤ primonConnesDistance p q + primonConnesDistance q r) ∧
+    (primonConnesDistance p q =
+      |Real.log (p.val : ℝ) - Real.log (q.val : ℝ)|) ∧
     (primonConnesDistance p q = 0 ↔ p = q) ∧
     (0 < resolventFactor eig_val ∧ resolventFactor eig_val ≤ 1) ∧
     (F * F = 1) ∧
     (F * B * F = R) :=
   ⟨comm_add D a b,
    comm_mul D a b,
-   primonConnesDistance_nonneg p q,
-   primonConnesDistance_symm p q,
-   primonConnesDistance_self p,
-   primonConnesDistance_triangle p q r,
-   primonConnesDistance_eq_zero_iff p q hp hq,
+   primonConnesDistance_eq_abs_log p q,
+   primonConnesDistance_eq_zero_iff p q,
    ⟨resolventFactor_pos eig_val, resolventFactor_le_one eig_val⟩,
    F_sq,
    F_B_F_eq_R⟩

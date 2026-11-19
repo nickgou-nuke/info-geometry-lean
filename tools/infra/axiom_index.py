@@ -10,17 +10,27 @@ Usage:
 """
 
 import argparse
+import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
+import tempfile
 from collections import Counter, defaultdict
 from pathlib import Path
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from tools.build_lock import BuildLock
+from tools.infra.run_locked_lean import resolve_cached_lean_env
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 OLEAN_DIR = REPO_ROOT / ".lake" / "build" / "lib" / "lean"
 INDEX_SCRIPT = REPO_ROOT / "tools" / "infra" / "axiom_index.lean"
 BUILD_LOCK = Path("/tmp/info-geometry-build.lock")
+CACHED_TOOLS_DIR = REPO_ROOT / ".lake" / "cached_tools"
 
 CANONICAL = {"propext", "Quot.sound", "Classical.choice"}
 
@@ -76,25 +86,169 @@ def parse_decl_line(line: str) -> dict | None:
     }
 
 
-def scan_olean(olean_path: Path) -> tuple[list[dict], str | None]:
-    if not olean_path.exists():
-        return [], "not found"
-    module = str(olean_path.relative_to(OLEAN_DIR).with_suffix("")).replace("/", ".")
-    result = subprocess.run(
-        ["flock", "-x", str(BUILD_LOCK), "lake", "env", "lean", "--run", str(INDEX_SCRIPT), str(olean_path.resolve())],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        timeout=120,
-    )
-    if result.returncode != 0:
-        return [], f"lean error: {result.stderr[:300]}"
-    decls = []
-    for line in result.stdout.split("\n"):
+def _merged_tool_env(cached_env: dict[str, str] | None) -> dict[str, str] | None:
+    if not cached_env:
+        return None
+    env = dict(os.environ)
+    for key in ("LEAN_PATH", "LEAN_SRC_PATH", "LD_LIBRARY_PATH", "PATH"):
+        val = cached_env.get(key)
+        if val:
+            env[key] = val
+    return env
+
+
+def ensure_compiled_axiom_index(
+    cached_env: dict[str, str] | None = None,
+) -> tuple[list[str], dict[str, str] | None]:
+    """Build or reuse a native axiom_index executable from tools/infra/axiom_index.lean."""
+    if cached_env is None:
+        cached_env = resolve_cached_lean_env(REPO_ROOT)
+    merged_env = _merged_tool_env(cached_env)
+    if not cached_env or not INDEX_SCRIPT.is_file():
+        return ["lake", "env", "lean", "--run", str(INDEX_SCRIPT)], merged_env
+
+    lean_bin = cached_env.get("lean", "")
+    leanc_bin = cached_env.get("leanc", "")
+    if lean_bin and leanc_bin and Path(lean_bin).is_file() and Path(leanc_bin).is_file():
+        try:
+            ver = subprocess.run(
+                [lean_bin, "--version"],
+                cwd=REPO_ROOT,
+                env=merged_env,
+                capture_output=True,
+                text=True,
+                timeout=30,
+                check=False,
+            )
+            script_bytes = INDEX_SCRIPT.read_bytes()
+            h = hashlib.sha256()
+            h.update(script_bytes)
+            h.update(b"\0")
+            h.update((ver.stdout if ver.returncode == 0 else lean_bin).encode("utf-8"))
+            digest = h.hexdigest()[:16]
+            CACHED_TOOLS_DIR.mkdir(parents=True, exist_ok=True)
+            target_bin = CACHED_TOOLS_DIR / f"axiom_index_{digest}"
+            if target_bin.is_file() and os.access(target_bin, os.X_OK):
+                return [str(target_bin)], merged_env
+            with tempfile.TemporaryDirectory(prefix="axiom_index_build_", dir=str(CACHED_TOOLS_DIR)) as tmp:
+                tmp_dir = Path(tmp)
+                c_file = tmp_dir / "axiom_index.c"
+                bin_file = tmp_dir / "axiom_index"
+                r1 = subprocess.run(
+                    [lean_bin, "-c", str(c_file), str(INDEX_SCRIPT)],
+                    cwd=REPO_ROOT,
+                    env=merged_env,
+                    capture_output=True,
+                    text=True,
+                    timeout=120,
+                    check=False,
+                )
+                if r1.returncode == 0 and c_file.is_file():
+                    r2 = subprocess.run(
+                        [leanc_bin, str(c_file), "-lleanshared", "-o", str(bin_file)],
+                        cwd=REPO_ROOT,
+                        env=merged_env,
+                        capture_output=True,
+                        text=True,
+                        timeout=120,
+                        check=False,
+                    )
+                    if r2.returncode == 0 and bin_file.is_file():
+                        os.chmod(bin_file, 0o755)
+                        os.replace(bin_file, target_bin)
+                        return [str(target_bin)], merged_env
+        except (OSError, subprocess.SubprocessError):
+            pass
+
+    if lean_bin and Path(lean_bin).is_file():
+        return [lean_bin, "--run", str(INDEX_SCRIPT)], merged_env
+    return ["lake", "env", "lean", "--run", str(INDEX_SCRIPT)], merged_env
+
+
+def _resolve_module_name(olean_path: Path, olean_dir: Path) -> str | None:
+    try:
+        rel = olean_path.resolve().relative_to(olean_dir.resolve())
+    except ValueError:
+        return None
+    if rel.suffix != ".olean":
+        return None
+    return ".".join(rel.with_suffix("").parts)
+
+
+def scan_olean_batch(
+    olean_paths: list[Path],
+    *,
+    replay: bool = False,
+    timeout: int = 300,
+    olean_dir: Path | None = None,
+    lock_path: Path | None = None,
+) -> dict[Path, tuple[list[dict], str | None]]:
+    """Scan a batch of `.olean` files in one Lean process under shared LOCK_SH."""
+    effective_olean_dir = (olean_dir or OLEAN_DIR).resolve()
+    results: dict[Path, tuple[list[dict], str | None]] = {}
+    existing: list[tuple[Path, Path, str | None]] = []
+    for path in olean_paths:
+        if not path.exists():
+            results[path] = ([], "not found")
+        else:
+            resolved = path.resolve()
+            existing.append((path, resolved, _resolve_module_name(resolved, effective_olean_dir)))
+
+    if not existing:
+        return results
+
+    use_fast = (not replay) and all(mod is not None for _p, _r, mod in existing)
+    runner_cmd, merged_env = ensure_compiled_axiom_index()
+    if use_fast:
+        cli_args = ["--fast-modules", *(f"{mod}={resolved}" for _p, resolved, mod in existing)]
+    else:
+        cli_args = ["--replay", *(str(resolved) for _p, resolved, _mod in existing)]
+
+    with BuildLock(lock_path or BUILD_LOCK, f"axiom-index:{os.getpid()}", block=True, shared=True):
+        try:
+            proc = subprocess.run(
+                [*runner_cmd, *cli_args],
+                cwd=REPO_ROOT,
+                env=merged_env,
+                capture_output=True,
+                text=True,
+                timeout=timeout,
+                check=False,
+            )
+        except subprocess.TimeoutExpired:
+            for orig, _resolved, _mod in existing:
+                results[orig] = ([], f"timeout after {timeout}s")
+            return results
+
+    if proc.returncode != 0:
+        err = f"lean error: {(proc.stderr or proc.stdout)[:300]}"
+        for orig, _resolved, _mod in existing:
+            results[orig] = ([], err)
+        return results
+
+    by_label: dict[str, Path] = {}
+    decls_by_orig: dict[Path, list[dict]] = {orig: [] for orig, _r, _m in existing}
+    for orig, resolved, _mod in existing:
+        by_label[str(resolved)] = orig
+        by_label[str(orig)] = orig
+
+    current_orig: Path | None = existing[0][0] if len(existing) == 1 else None
+    for line in proc.stdout.splitlines():
+        if line.startswith("MODULE:"):
+            label = line[len("MODULE:") :].strip()
+            current_orig = by_label.get(label)
+            continue
         d = parse_decl_line(line)
-        if d:
-            decls.append(d)
-    return decls, None
+        if d and current_orig is not None:
+            decls_by_orig[current_orig].append(d)
+
+    for orig, _resolved, _mod in existing:
+        results[orig] = (decls_by_orig[orig], None)
+    return results
+
+
+def scan_olean(olean_path: Path, *, replay: bool = False, timeout: int = 300) -> tuple[list[dict], str | None]:
+    return scan_olean_batch([olean_path], replay=replay, timeout=timeout)[olean_path]
 
 
 def main():
@@ -102,7 +256,23 @@ def main():
     parser.add_argument("modules", nargs="*")
     parser.add_argument("--all", action="store_true")
     parser.add_argument("--json", action="store_true")
-    parser.add_argument("--batch", type=int, default=1, help="Process N modules at a time")
+    parser.add_argument(
+        "--batch",
+        type=int,
+        default=0,
+        help="Modules per batch process (default: 0 = scan all modules in one batch).",
+    )
+    parser.add_argument(
+        "--replay",
+        action="store_true",
+        help="Replay each .olean independently through kernel instead of shared importModules.",
+    )
+    parser.add_argument(
+        "--timeout",
+        type=int,
+        default=300,
+        help="Subprocess timeout per batch in seconds (default: 300).",
+    )
     args = parser.parse_args()
 
     if args.modules:
@@ -129,8 +299,19 @@ def main():
     total_nonstd = 0
     any_error = False
 
+    chunks = (
+        [paths]
+        if args.batch <= 0
+        else [paths[i : i + args.batch] for i in range(0, len(paths), args.batch)]
+    )
+    batch_results: dict[Path, tuple[list[dict], str | None]] = {}
+    for chunk in chunks:
+        batch_results.update(
+            scan_olean_batch(chunk, replay=args.replay, timeout=args.timeout)
+        )
+
     for i, p in enumerate(paths):
-        decls, err = scan_olean(p)
+        decls, err = batch_results[p]
         module = str(p.relative_to(OLEAN_DIR).with_suffix("")).replace("/", ".")
         if err:
             print(f"  [{i+1}/{len(paths)}] {module}: ERROR {err}")

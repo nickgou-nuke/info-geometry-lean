@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.FormalPrimeRootSystem
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConcreteHilbertCommutation
@@ -48,7 +53,7 @@ open FibonacciFusion
 /-! ## Transition data carriers -/
 
 /-- Finite prime-cutoff bulk state. -/
-@[rep_depth thermo, capstone]
+@[rep_depth thermo]
 structure BulkState where
   /-- Finite prime cutoff. -/
   primes : Finset ℕ
@@ -60,7 +65,7 @@ structure BulkState where
   beta_pos : 0 < beta
 
 /-- Boundary state carrier used by the finite/local capstone matrix. -/
-@[rep_depth thermo, capstone]
+@[rep_depth thermo]
 structure CrystallisedState where
   /-- Cantor boundary label as an infinite binary word. -/
   boundaryWord : ℕ → Fin 2
@@ -79,30 +84,30 @@ def diracSeaVacuumState (_γ : CrystallisedState) : DiracSeaBoundary :=
 end CrystallisedState
 
 /-- Pack a finite bulk state together with a chosen finite/local boundary readout. -/
-@[rep_depth thermo, capstone]
+@[rep_depth thermo]
 structure BCTransitionData where
   bulk : BulkState
   irReadout : CrystallisedState
 
 /-- Formal root lattice associated to a finite bulk state. -/
-@[rep_depth thermo, capstone]
+@[rep_depth thermo]
 def BulkState.rootLattice (bulk : BulkState) : FormalPrimeRootLattice where
   primes := bulk.primes
   prime_mem := bulk.prime_mem
 
 /-- Thermal formal root variable used by the finite denominator readout. -/
-@[rep_depth thermo, capstone]
+@[rep_depth thermo]
 def BulkState.thermalRootVariable (bulk : BulkState) (p : ℕ) : ℝ :=
   -bulk.beta * Real.log (p : ℝ)
 
 /-- The canonical all-zero boundary readout with unit Fibonacci label. -/
-@[rep_depth thermo, capstone]
+@[rep_depth thermo]
 def canonicalCrystallisedReadout : CrystallisedState where
   boundaryWord := fun _ : ℕ => 0
   label := FibObject.unit
 
 /-- Construct the finite/local transition data packet from a finite bulk state. -/
-@[rep_depth thermo, capstone]
+@[rep_depth thermo]
 def transitionDataOfBulk (bulk : BulkState) : BCTransitionData where
   bulk := bulk
   irReadout := canonicalCrystallisedReadout
@@ -265,7 +270,7 @@ Verified finite/local matrix of the transition lane.
 This is a record of the owner-backed facts that are actually proved.  Analytic
 convergence and categorical coherence claims are intentionally excluded.
 -/
-@[rep_depth thermo, capstone]
+@[rep_depth thermo]
 def VerifiedTransitionMatrix (bulk : BulkState) : Prop :=
   weylDenominatorProduct bulk.rootLattice bulk.thermalRootVariable =
       weylAlternatingSum bulk.rootLattice bulk.thermalRootVariable ∧
@@ -301,7 +306,7 @@ theorem verifiedTransitionMatrix (bulk : BulkState) : VerifiedTransitionMatrix b
   exact diracSea_half_filled
 
 /-- Public package constructor for the finite/local transition readout. -/
-@[rep_depth thermo, capstone]
+@[rep_depth thermo]
 def souriau_bost_connes_transition_Package
     (P : Finset ℕ) (primesP : ∀ p ∈ P, Nat.Prime p) (β : ℝ) (hβpos : 0 < β) :
     BCTransitionData :=

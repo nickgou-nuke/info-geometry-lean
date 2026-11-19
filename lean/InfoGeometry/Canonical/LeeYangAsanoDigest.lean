@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.AsanoContractionNative
@@ -33,7 +38,7 @@ open InfoGeometry.Canonical.PrimePartitionPolynomials
 open InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 
 /-- Separately affine two-variable polynomial written in coefficient form. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 structure TwoVarAffinePolynomial where
   A : ℂ
   B : ℂ
@@ -43,38 +48,38 @@ structure TwoVarAffinePolynomial where
 namespace TwoVarAffinePolynomial
 
 /-- Evaluation of a separately affine two-variable polynomial. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 def eval (P : TwoVarAffinePolynomial) (z1 z2 : ℂ) : ℂ :=
   P.A + P.B * z1 + P.C * z2 + P.D * z1 * z2
 
 /-- Evaluation at `z1 = 0` eliminates the `B` and `D` terms. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem eval_zero_left (P : TwoVarAffinePolynomial) (z2 : ℂ) :
     P.eval 0 z2 = P.A + P.C * z2 := by
   simp [eval]
 
 /-- Evaluation at `z2 = 0` eliminates the `C` and `D` terms. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem eval_zero_right (P : TwoVarAffinePolynomial) (z1 : ℂ) :
     P.eval z1 0 = P.A + P.B * z1 := by
   simp [eval]
 
 /-- Evaluation on the diagonal is a univariate quadratic in `z`. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem eval_diag (P : TwoVarAffinePolynomial) (z : ℂ) :
     P.eval z z = P.A + (P.B + P.C) * z + P.D * z ^ 2 := by
   unfold eval
   ring_nf
 
 /-- Separately affine form in the first variable. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem eval_affine_left (P : TwoVarAffinePolynomial) (z1 z2 : ℂ) :
     P.eval z1 z2 = (P.A + P.C * z2) + (P.B + P.D * z2) * z1 := by
   unfold eval
   ring
 
 /-- Separately affine form in the second variable. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem eval_affine_right (P : TwoVarAffinePolynomial) (z1 z2 : ℂ) :
     P.eval z1 z2 = (P.A + P.B * z1) + (P.C + P.D * z1) * z2 := by
   unfold eval
@@ -93,7 +98,7 @@ in the second variable is
 
 `z2 = -(A + B*z1)/(C + D*z1)`.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem root_iff_z2_eq_of_right_coeff_ne
     (P : TwoVarAffinePolynomial)
     (z1 z2 : ℂ)
@@ -136,7 +141,7 @@ If `B + D*z2 ≠ 0`, then the zero in the first variable is
 
 `z1 = -(A + C*z2)/(B + D*z2)`.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem root_iff_z1_eq_of_left_coeff_ne
     (P : TwoVarAffinePolynomial)
     (z1 z2 : ℂ)
@@ -178,7 +183,7 @@ Nondegenerate left-pole exclusion.
 If `A*D - B*C ≠ 0`, then no zero of `P.eval` can occur at a point satisfying
 `C + D*z1 = 0`.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem no_root_at_left_pole_of_det_ne_zero
     (P : TwoVarAffinePolynomial)
     (hdet : P.A * P.D - P.B * P.C ≠ 0)
@@ -212,7 +217,7 @@ Nondegenerate right-pole exclusion.
 If `A*D - B*C ≠ 0`, then no zero of `P.eval` can occur at a point satisfying
 `B + D*z2 = 0`.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem no_root_at_right_pole_of_det_ne_zero
     (P : TwoVarAffinePolynomial)
     (hdet : P.A * P.D - P.B * P.C ≠ 0)
@@ -246,7 +251,7 @@ Graph constraint from the zero-free hypothesis.
 If `z1 ∉ K1`, and the second-variable root is defined, then that root must
 lie in `K2`; otherwise one obtains a forbidden zero off `K1 × K2`.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem rootMap_z2_mem_K2_of_zero_free
     (P : TwoVarAffinePolynomial)
     (K1 K2 : Set ℂ)
@@ -275,7 +280,7 @@ Dual graph constraint from the zero-free hypothesis.
 If `z2 ∉ K2`, and the first-variable root is defined, then that root must
 lie in `K1`.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem rootMap_z1_mem_K1_of_zero_free
     (P : TwoVarAffinePolynomial)
     (K1 K2 : Set ℂ)
@@ -307,7 +312,7 @@ if `A*D = B*C` and `D ≠ 0`, then
 
 `A + B z1 + C z2 + D z1 z2 = D * (z1 + C/D) * (z2 + B/D)`.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem factor_det_zero
     (P : TwoVarAffinePolynomial) (hD : P.D ≠ 0)
     (h : P.A * P.D - P.B * P.C = 0)
@@ -331,7 +336,7 @@ Zero locus of the determinant-zero factorization.
 Under the determinant-zero hypothesis, the vanishing of `P.eval z1 z2`
 is equivalent to one of the linear factors vanishing.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem factor_det_zero_iff
     (P : TwoVarAffinePolynomial) (hD : P.D ≠ 0)
     (h : P.A * P.D - P.B * P.C = 0)
@@ -352,17 +357,17 @@ theorem factor_det_zero_iff
     · simp [hz]
 
 /-- Asano contraction `A + D z`. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 def contract (P : TwoVarAffinePolynomial) (z : ℂ) : ℂ :=
   P.A + P.D * z
 
 /-- The contracted polynomial is the explicit `A + D z` expression. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem contract_eq (P : TwoVarAffinePolynomial) (z : ℂ) :
     P.contract z = P.A + P.D * z := rfl
 
 /-- Zero locus of the contracted one-variable polynomial. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem contract_zero_iff
     (P : TwoVarAffinePolynomial) (hD : P.D ≠ 0) (z : ℂ) :
     P.contract z = 0 ↔ z = - P.A / P.D := by
@@ -384,12 +389,12 @@ theorem contract_zero_iff
     ring
 
 /-- The Asano quadratic obtained after substituting `u = z / v`. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 def asanoQuadratic (P : TwoVarAffinePolynomial) (z v : ℂ) : ℂ :=
   P.C * v ^ 2 + (P.A + P.D * z) * v + P.B * z
 
 /-- Multiplying the specialized bivariate evaluation by `v` gives the Asano quadratic. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem mul_eval_eq_asanoQuadratic
     (P : TwoVarAffinePolynomial) (z v : ℂ) (hv : v ≠ 0) :
     v * P.eval (z / v) v = P.asanoQuadratic z v := by
@@ -402,7 +407,7 @@ Case 3 algebraic reduction:
 `P.eval (z/v) v = 0` if and only if the Asano quadratic vanishes.
 This is the purely algebraic reduction before the Riemann-sphere topology.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem asano_quadratic_equivalence
     (P : TwoVarAffinePolynomial) (z v : ℂ) (hv : v ≠ 0) :
     P.eval (z / v) v = 0 ↔ P.asanoQuadratic z v = 0 := by
@@ -418,7 +423,7 @@ theorem asano_quadratic_equivalence
     exact (mul_eq_zero.mp hmul).resolve_left hv
 
 /-- If the contracted root vanishes, the Asano quadratic drops its middle term. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem asano_quadratic_at_contracted_root
     (P : TwoVarAffinePolynomial) (z v : ℂ)
     (hz_root : P.contract z = 0) :
@@ -430,18 +435,18 @@ theorem asano_quadratic_at_contracted_root
   ring
 
 /-- Minkowski-style product of two subsets of `ℂ`. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 def setMul (K1 K2 : Set ℂ) : Set ℂ :=
   {z : ℂ | ∃ u ∈ K1, ∃ v ∈ K2, u * v = z}
 
 /-- Reordered presentation of the product set `K1 ⋆ K2`. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem mem_setMul_iff
     {K1 K2 : Set ℂ} {z : ℂ} :
     z ∈ setMul K1 K2 ↔ ∃ u ∈ K1, ∃ v ∈ K2, u * v = z := Iff.rfl
 
 /-- Swapping the factors of the product set does not change the set. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem setMul_comm
     (K1 K2 : Set ℂ) :
     setMul K1 K2 = setMul K2 K1 := by
@@ -457,7 +462,7 @@ theorem setMul_comm
     simpa [mul_comm] using h
 
 /-- The Minkowski product of sets is associative. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem setMul_assoc
     (K1 K2 K3 : Set ℂ) :
     setMul (setMul K1 K2) K3 = setMul K1 (setMul K2 K3) := by
@@ -481,18 +486,18 @@ theorem setMul_assoc
         _ = z := h
 
 /-- Recursive Minkowski product of a list of subsets of `ℂ`. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 def iteratedSetMul : List (Set ℂ) → Set ℂ
   | [] => {1}
   | K :: Ks => setMul K (iteratedSetMul Ks)
 
 /-- The empty iterated product is `{1}`. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem iteratedSetMul_nil :
     iteratedSetMul [] = ({1} : Set ℂ) := rfl
 
 /-- Multiplication by the unit set `{1}` is neutral on the left. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem setMul_one_left
     (K : Set ℂ) :
     setMul ({1} : Set ℂ) K = K := by
@@ -509,7 +514,7 @@ theorem setMul_one_left
     simp
 
 /-- Multiplication by the unit set `{1}` is neutral on the right. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem setMul_one_right
     (K : Set ℂ) :
     setMul K ({1} : Set ℂ) = K := by
@@ -526,13 +531,13 @@ theorem setMul_one_right
     simp
 
 /-- Appending a set to the iterated product multiplies on the left. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem iteratedSetMul_cons
     (K : Set ℂ) (Ks : List (Set ℂ)) :
     iteratedSetMul (K :: Ks) = setMul K (iteratedSetMul Ks) := rfl
 
 /-- Appending a list of factors corresponds to set multiplication on the right. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem iteratedSetMul_append
     (Ks₁ Ks₂ : List (Set ℂ)) :
     iteratedSetMul (Ks₁ ++ Ks₂) =
@@ -544,7 +549,7 @@ theorem iteratedSetMul_append
       simp [iteratedSetMul, ih, setMul_assoc]
 
 /-- If a product vanishes, the negated root lies in the product set. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem neg_mem_setMul_of_eq
     {K1 K2 : Set ℂ} {u v z : ℂ}
     (hu : u ∈ K1) (hv : v ∈ K2)
@@ -560,7 +565,7 @@ If `P.eval z₁ z₂ = 0` only when `z₁ ∈ K₁` and `z₂ ∈ K₂`, and the
 determinant vanishes with `D ≠ 0`, then every contracted root transfers to
 the Minkowski product of the microscopic root sets.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem asano_case2_zero_transfer
     (P : TwoVarAffinePolynomial) (K1 K2 : Set ℂ)
     (hD : P.D ≠ 0) (hDet : P.A * P.D - P.B * P.C = 0)
@@ -591,12 +596,12 @@ theorem asano_case2_zero_transfer
   simpa [hzneg, hprod]
 
 /-- The Asano contraction of a separately affine two-variable polynomial $P(z_1, z_2) = A + B z_1 + C z_2 + D z_1 z_2$ is $\mathcal{A}(P)(z) = A + D z$. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 def asanoContract (P : TwoVarAffinePolynomial) (z : ℂ) : ℂ :=
   P.A + P.D * z
 
 /-- The Asano determinant $\Delta(P) = A D - B C$. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 def asanoDeterminant (P : TwoVarAffinePolynomial) : ℂ :=
   P.A * P.D - P.B * P.C
 
@@ -604,7 +609,7 @@ def asanoDeterminant (P : TwoVarAffinePolynomial) : ℂ :=
 **Main Native Theorem: Asano Contraction Root Localization**
 Proves natively that if $D \neq 0$ and $\mathcal{A}(P)(z) = A + D z = 0$, then $z = -A / D$.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem asanoContract_root_eq (P : TwoVarAffinePolynomial) (z : ℂ)
     (h_root : P.asanoContract z = 0) (hD : P.D ≠ 0) :
     z = - P.A / P.D := by
@@ -619,7 +624,7 @@ theorem asanoContract_root_eq (P : TwoVarAffinePolynomial) (z : ℂ)
 Proves natively that for a symmetric two-variable affine polynomial ($B = C$), the diagonal evaluation $P(z, z)$ differs from the contracted evaluation $\mathcal{A}(P)(z^2)$ by exactly $2 B z$:
 $$P(z, z) - \mathcal{A}(P)(z^2) = 2 B z.$$
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem eval_diag_sub_asanoContract_sq (P : TwoVarAffinePolynomial) (z : ℂ) (h_symm : P.B = P.C) :
     P.eval z z - P.asanoContract (z ^ 2) = 2 * P.B * z := by
   unfold eval asanoContract
@@ -629,14 +634,14 @@ theorem eval_diag_sub_asanoContract_sq (P : TwoVarAffinePolynomial) (z : ℂ) (h
 end TwoVarAffinePolynomial
 
 /-- The forbidden contracted set `-K1·K2`. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 def asanoForbiddenSet (K1 K2 : Set ℂ) : Set ℂ :=
   {z : ℂ | ∃ u ∈ K1, ∃ v ∈ K2, z = -u * v}
 
 /--
 Monotonicity of the Asano forbidden set under factor-set inclusion.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem asanoForbiddenSet_mono
     {K1 K1' K2 K2' : Set ℂ}
     (h1 : K1 ⊆ K1')
@@ -647,7 +652,7 @@ theorem asanoForbiddenSet_mono
   exact ⟨u, h1 hu, v, h2 hv, hzuv⟩
 
 /-- Introduction rule for the Asano forbidden set. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem mem_asanoForbiddenSet
     {K1 K2 : Set ℂ} {z u v : ℂ}
     (hu : u ∈ K1) (hv : v ∈ K2) (hz : z = -u * v) :
@@ -655,14 +660,14 @@ theorem mem_asanoForbiddenSet
   exact ⟨u, hu, v, hv, hz⟩
 
 /-- Elimination rule for the Asano forbidden set. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem asanoForbiddenSet_elim
     {K1 K2 : Set ℂ} {z : ℂ}
     (hz : z ∈ asanoForbiddenSet K1 K2) :
     ∃ u ∈ K1, ∃ v ∈ K2, z = -u * v := hz
 
 /-- A point is outside the Asano forbidden set if it avoids every product. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem not_mem_asanoForbiddenSet_of_forall
     {K1 K2 : Set ℂ} {z : ℂ}
     (h : ∀ u ∈ K1, ∀ v ∈ K2, z ≠ -u * v) :
@@ -672,7 +677,7 @@ theorem not_mem_asanoForbiddenSet_of_forall
   exact h u hu v hv rfl
 
 /-- The Asano forbidden set is empty if one factor set is empty. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem asanoForbiddenSet_empty_left
     (K2 : Set ℂ) :
     asanoForbiddenSet (∅ : Set ℂ) K2 = ∅ := by
@@ -685,7 +690,7 @@ theorem asanoForbiddenSet_empty_left
     simp at hz
 
 /-- The Asano forbidden set is empty if the second factor set is empty. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem asanoForbiddenSet_empty_right
     (K1 : Set ℂ) :
     asanoForbiddenSet K1 (∅ : Set ℂ) = ∅ := by
@@ -698,7 +703,7 @@ theorem asanoForbiddenSet_empty_right
     simp at hz
 
 /-- The Asano forbidden set is symmetric in its two factor sets. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem asanoForbiddenSet_comm
     (K1 K2 : Set ℂ) :
     asanoForbiddenSet K1 K2 = asanoForbiddenSet K2 K1 := by
@@ -718,7 +723,7 @@ In the determinant-zero branch of the Asano factorization, the contracted root
 `-A/D` is exhibited explicitly as a forbidden-set element built from
 `-C/D` and `-B/D`.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem det_zero_contracted_root_mem_forbidden
     (P : TwoVarAffinePolynomial) (hD : P.D ≠ 0)
     (h : P.A * P.D - P.B * P.C = 0) :
@@ -746,7 +751,7 @@ if `Φ(z1,z2) = A + B z1 + C z2 + D z1 z2` is nonvanishing whenever
 `z1 ∉ K1` and `z2 ∉ K2`, with `0 ∉ K1` and `0 ∉ K2`, then the contracted
 polynomial `A + D z` is nonvanishing whenever `z ∉ -K1·K2`.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 def AsanoRuelleLemmaSourceClaim : Prop :=
   ∀ (K1 K2 : Set ℂ) (P : TwoVarAffinePolynomial),
     0 ∉ K1 → 0 ∉ K2 →
@@ -760,7 +765,7 @@ Truly unrestricted Asano-Ruelle source claim (no `0 ∉ K₁`, `0 ∉ K₂` guar
 This shape is known to be false; see
 `asanoRuelleLemmaSourceClaimUnrestricted_false`.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 def AsanoRuelleLemmaSourceClaimUnrestricted : Prop :=
   ∀ (K1 K2 : Set ℂ) (P : TwoVarAffinePolynomial),
     (∀ z1 z2 : ℂ, z1 ∉ K1 → z2 ∉ K2 → P.eval z1 z2 ≠ 0) →
@@ -772,7 +777,7 @@ The truly unrestricted Asano-Ruelle source claim is false.
 This is the vacuity counterexample (`K₁ = univ`, `K₂ = {0}`) proved in
 `Analysis.AsanoRuelleObstruction`.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem asanoRuelleLemmaSourceClaimUnrestricted_false :
     ¬ AsanoRuelleLemmaSourceClaimUnrestricted := by
   intro hU
@@ -806,7 +811,7 @@ This strengthens the unrestricted shape by adding `P.D ≠ 0` and
 `P.A * P.D - P.B * P.C ≠ 0`, but still without any closed/circular-region
 hypothesis on `K₁`, `K₂`.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 def AsanoRuelleLemmaSourceClaimUnrestrictedNondegenerate : Prop :=
   ∀ (K1 K2 : Set ℂ) (P : TwoVarAffinePolynomial),
     P.D ≠ 0 →
@@ -820,7 +825,7 @@ Even the unrestricted nondegenerate source claim is false.
 This imports the concrete canonical counterexample (`Phi = z₁ z₂ - 1`,
 `Q = -1 + z`, `K₁ = {z | z ≠ 0}`, `K₂ = ∅`).
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem asanoRuelleLemmaSourceClaimUnrestrictedNondegenerate_false :
     ¬ AsanoRuelleLemmaSourceClaimUnrestrictedNondegenerate := by
   intro hN
@@ -866,7 +871,7 @@ Closed-set variant of the Asano-Ruelle source claim.
 
 This is the exact shape consumed by the native topological reduction corridor.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 def AsanoRuelleLemmaSourceClaimClosed : Prop :=
   AsanoRuelleLemmaSourceClaim
 
@@ -877,7 +882,7 @@ This is the practical theorem surface for the Lee--Yang lane:
 in addition to zero-exclusion and zero-freeness off `K₁ × K₂`,
 we require `K₁`, `K₂` to be closed and bounded.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 def AsanoRuelleLemmaSourceClaimClosedBounded : Prop :=
   ∀ (K1 K2 : Set ℂ) (P : TwoVarAffinePolynomial),
     0 ∉ K1 → 0 ∉ K2 →
@@ -895,7 +900,7 @@ hypothesis.
 This theorem is fully constructive in Lean and routes through
 `Analysis.AsanoContractionNative` (no `sorry`).
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem asanoRuelleLemmaSourceClaim_of_endpointNonDeg
     (hEndpointNonDeg :
       ∀ {K₁ K₂ : Set ℂ} {A B C D : ℂ},
@@ -967,7 +972,7 @@ each coordinate avoids that circular region.
 
 This packet records the shape only; it does not attempt the proof.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 structure GraceSourceData (n : ℕ) where
   Q : Polynomial ℂ
   Φ : (Fin n → ℂ) → ℂ
@@ -977,7 +982,7 @@ structure GraceSourceData (n : ℕ) where
   multiaffine : IsSeparatelyAffine Φ
 
 /-- The diagonal slice of a Grace source datum is exactly the univariate slice. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem GraceSourceData.diagonal_const
     {n : ℕ} (D : GraceSourceData n) (z : ℂ) :
     D.Φ (fun _ : Fin n => z) = D.Q.eval z :=
@@ -1005,7 +1010,7 @@ Grace theorem source claim for a multiaffine symmetric diagonal slice.
 The exact proof is literature-owned; the Lean file stores the theorem shape
 so that later formalization can target it directly.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 def GraceTheoremSourceClaim (n : ℕ) : Prop :=
   ∀ (K : Set ℂ) (D : GraceSourceData n),
     (∀ z : ℂ, D.Q.IsRoot z → z ∈ K) →
@@ -1015,7 +1020,6 @@ def GraceTheoremSourceClaim (n : ℕ) : Prop :=
 The exact finite Lee--Yang source claim is the theorem shape already used by
 the repository.
 -/
-@[rep_depth thermo]
 def LeeYangPolydiscSourceClaim (N : ℕ) : Prop :=
   ∀ (D : FinitePrimeChainData N) (lam : ℝ), 0 < lam →
     (∀ y : Fin N → ℂ,
@@ -1026,7 +1030,7 @@ def LeeYangPolydiscSourceClaim (N : ℕ) : Prop :=
         multiPartition D lam y ≠ 0)
 
 /-- Package the standard Lee--Yang witness back into the source-claim shape. -/
-@[bridge_target_tag, rep_depth thermo]
+@[bridge_target_tag, rep_depth thermo, capstone]
 theorem leeYangPolydiscSourceClaim_of_witness
     (LY : LeeYangPolydiscWitness) :
     ∀ N : ℕ, LeeYangPolydiscSourceClaim N := by
@@ -1034,7 +1038,7 @@ theorem leeYangPolydiscSourceClaim_of_witness
   exact ⟨LY.1 D lam hLam, LY.2 D lam hLam⟩
 
 /-- Package the source claim into the standard Lee--Yang witness surface. -/
-@[bridge_target_tag, rep_depth thermo]
+@[bridge_target_tag]
 def leeYangPolydiscWitness_of_sourceClaim
     (H : ∀ N : ℕ, LeeYangPolydiscSourceClaim N) :
     LeeYangPolydiscWitness := by

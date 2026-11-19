@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.OperatorDictionary
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorModularTemperatureDuality
@@ -283,7 +288,7 @@ theorem modularDeviationReadout_identity (ψ : H₂) :
 Bounded Souriau/modular family: a Lie/Souriau generator is read as a modular
 Hamiltonian `Kmod`, while the associated modular operator is `exp(-Kmod)`.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 structure BoundedSouriauModularFamily (LieAlgebra : Type*) where
   /-- Operator-valued moment/Hamiltonian observable. -/
   lieObservable : LieAlgebra → EndH
@@ -320,7 +325,7 @@ theorem deltaDeviation_eq_betaOneDeviation :
     F.deltaDeviation = modularBetaDeviation (E := E) F.modularHamiltonianK 1 := by
   simp [deltaDeviation, modularDelta, modularBetaDeviation, modularDeviation, modularIdentity]
 
-@[rep_depth thermo]
+@[rep_depth operator]
 theorem modularHamiltonianK_eq_lieObservable_beta_theorem :
     F.modularHamiltonianK = F.lieObservable F.beta :=
   F.modularHamiltonianK_eq_lieObservable_beta
@@ -333,7 +338,7 @@ Souriau/Bregman packet on the bounded modular operator lane.
 The Bregman divergence is operatorial, but scalar-valued only after the chosen
 product/readout socket is supplied.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 structure SouriauOperatorialBregmanPacket (LieAlgebra : Type*) where
   family : BoundedSouriauModularFamily (E := E) LieAlgebra
   socket : OperatorPrimalDualSocket EndH
@@ -346,27 +351,27 @@ variable {LieAlgebra : Type*}
 variable (P : SouriauOperatorialBregmanPacket (E := E) LieAlgebra)
 
 /-- Operatorial Bregman divergence for the packet potential. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 def divergence (X Y : EndH) : ℝ :=
   operatorBregman P.socket P.potential P.gradient X Y
 
-@[simp, rep_depth thermo, bridge_target_tag]
+@[simp, rep_depth operator, bridge_target_tag]
 theorem divergence_self (X : EndH) :
     P.divergence X X = 0 := by
   simp [divergence]
 
 /-- Bregman divergence after passing to the modular deviations `Δ - I`. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 noncomputable def modularDeviationDivergence (Δ₁ Δ₀ : EndH) : ℝ :=
   P.divergence (modularDeviation (E := E) Δ₁) (modularDeviation (E := E) Δ₀)
 
-@[simp, rep_depth thermo, bridge_target_tag]
+@[simp, rep_depth operator, bridge_target_tag]
 theorem modularDeviationDivergence_self (Δ : EndH) :
     P.modularDeviationDivergence Δ Δ = 0 := by
   simp [modularDeviationDivergence]
 
 /-- Family-level modular deviation divergence at the same Souriau beta point is zero. -/
-@[simp, rep_depth thermo, bridge_target_tag]
+@[simp, rep_depth operator, bridge_target_tag]
 theorem family_deltaDeviation_divergence_self :
     P.divergence P.family.deltaDeviation P.family.deltaDeviation = 0 := by
   simp [divergence]

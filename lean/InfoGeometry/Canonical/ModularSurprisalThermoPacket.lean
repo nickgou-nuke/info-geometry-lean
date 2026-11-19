@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Core.Entropy
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativePotentialCore
@@ -73,7 +78,7 @@ variable {Tok V : Type*}
 variable [NormedAddCommGroup V]
 
 /-- Finite KMS/router log-partition is the Massieu potential on the router slice. -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem kmsLogPartition_eq_routerMassieu
     (n : Nat) [Nonempty (Fin n)]
     (β : ℝ) (x : Tok → V) (i : Tok) :
@@ -82,7 +87,7 @@ theorem kmsLogPartition_eq_routerMassieu
   rfl
 
 /-- Finite KMS/free-energy relation `βF = -ψ` for nonzero inverse temperature. -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem finiteKMS_beta_mul_freeEnergy_eq_neg_massieu
     (n : Nat) [Nonempty (Fin n)]
     (β : ℝ) (x : Tok → V) (i : Tok) (hβ : β ≠ 0) :
@@ -92,7 +97,7 @@ theorem finiteKMS_beta_mul_freeEnergy_eq_neg_massieu
     (n := n) (β := β) (x := x) (i := i) hβ
 
 /-- Finite KMS/free-energy relation using the KMS log-partition name. -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem finiteKMS_beta_mul_freeEnergy_eq_neg_logPartition
     (n : Nat) [Nonempty (Fin n)]
     (β : ℝ) (x : Tok → V) (i : Tok) (hβ : β ≠ 0) :

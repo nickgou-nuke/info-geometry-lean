@@ -40,6 +40,41 @@ require LeanCopilot from git "https://github.com/lean-dojo/LeanCopilot.git"
 require mathlib from git "https://github.com/leanprover-community/mathlib4.git"
   @ "v4.34.1"
 
+-- Keep external OAI modules available to the source tree as they are in the
+-- root Lean workspace.  The source lane has a separate build directory, so
+-- it must compile these imported owners against the same pinned Mathlib
+-- instead of accidentally searching an unrelated path dependency's cache.
+lean_lib OAI where
+  srcDir := "external_refs/openai-math/lean"
+  roots := #[
+    `OAI.GroupTheory.BooneHigman.Main,
+    `OAI.GroupTheory.BooneHigman.TwistedSimplicity,
+    `OAI.GroupTheory.FiniteType.TwistedBrinSeparated,
+    `OAI.GroupTheory.SimpleAmenable.PolygonGeometry.ShiftedSlots,
+    `OAI.GroupTheory.SimpleAmenable.Main
+  ]
+  globs := #[
+    .submodules `OAI.Analysis.Cuntz,
+    .submodules `OAI.Analysis.Quasitrace,
+    .submodules `OAI.Algebra.OrderedStates,
+    .submodules `OAI.GroupTheory.FiniteType,
+    .submodules `OAI.GroupTheory.FiniteLattice,
+    .submodules `OAI.GroupTheory.BooneHigman,
+    .submodules `OAI.GroupTheory.SimpleOvergroups,
+    .submodules `OAI.Computability,
+    .submodules `OAI.Combinatorics.PerfectMatching,
+    .submodules `OAI.GroupTheory.SimpleAmenable,
+    .submodules `OAI.GroupTheory.SimpleAmenable.Arithmetic.PolygonArithmetic,
+    .submodules `OAI.GroupTheory.SimpleAmenable.Configurations.TrackPoint,
+    .submodules `OAI.GroupTheory.SimpleAmenable.PolygonGeometry.PolygonAction,
+    .submodules `OAI.GroupTheory.SimpleAmenable.PolygonGeometry.TupleChartDomain,
+    .submodules `OAI.GroupTheory.SimpleAmenable.PolygonGeometry.Supported,
+    .submodules `OAI.GroupTheory.SimpleAmenable.PolygonGeometry.ShiftedSlots,
+    -- `HomotopyHypothesis` already owns OAI.CategoryTheory.Globular in this
+    -- Lake workspace. Including it here gives Lake two distinct providers for
+    -- OAI.CategoryTheory.Globular.Model.
+  ]
+
 @[default_target]
 lean_lib SrcLane where
   srcDir := "src"
@@ -58,6 +93,7 @@ lean_lib SrcLane where
     .one `B3PresentedGroup,
     .one `Agent,
     .one `AuditNative,
+    .one `AuditNativeRun,
     .one `AuditStrict,
     .one `CheckBasis,
     .one `CheckTemp,

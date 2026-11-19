@@ -137,7 +137,7 @@ theorem continuous_topologicalHeisenbergFiniteModeBoundaryBundle :
 theorem isLocallyConstant_topologicalHeisenbergFiniteModeBoundaryBundle :
     IsLocallyConstant (topologicalHeisenbergFiniteModeBoundaryBundle (𝕜 := 𝕜)) := by
   unfold topologicalHeisenbergFiniteModeBoundaryBundle
-  exact IsLocallyConstant.of_discrete
+  exact IsLocallyConstant.of_discrete _
 
 /-- The boundary bundle viewed as a `TopCat` object. -/
 abbrev topCat : TopCat :=

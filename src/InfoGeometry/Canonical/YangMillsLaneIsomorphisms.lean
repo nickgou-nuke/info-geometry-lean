@@ -542,17 +542,64 @@ theorem genPhi_genSig_isDrazinInverse_of_vonNeumannRegular
     projection (genSig P A C) (genSig P A C) = genV P A C := by
   have hNp2 : conePlus P A * conePlus P A = 0 := by peirce_nf hP
   have hNm2 : coneMinus P C * coneMinus P C = 0 := by peirce_nf hP
-  have hStage := stage_P1_nilpotent_first_genesis_of_projectors hNp2 hNm2 hRegPlus hRegMinus
-  have hPhi3 : genPhi P A C * genPhi P A C * genPhi P A C = genPhi P A C :=
-    hStage.2.2.2.2.2.2.2.1
   have hP1 : (conePlus P A * coneMinus P C) * (conePlus P A * coneMinus P C) =
-      conePlus P A * coneMinus P C := hStage.1
+      conePlus P A * coneMinus P C := by
+    calc
+      (conePlus P A * coneMinus P C) * (conePlus P A * coneMinus P C) =
+          (conePlus P A * coneMinus P C * conePlus P A) * coneMinus P C := by noncomm_ring
+      _ = conePlus P A * coneMinus P C := by rw [hRegPlus]
   have hQ1 : (coneMinus P C * conePlus P A) * (coneMinus P C * conePlus P A) =
-      coneMinus P C * conePlus P A := hStage.2.1
+      coneMinus P C * conePlus P A := by
+    calc
+      (coneMinus P C * conePlus P A) * (coneMinus P C * conePlus P A) =
+          (coneMinus P C * conePlus P A * coneMinus P C) * conePlus P A := by noncomm_ring
+      _ = coneMinus P C * conePlus P A := by rw [hRegMinus]
   have hPQ : (conePlus P A * coneMinus P C) * (coneMinus P C * conePlus P A) = 0 :=
-    hStage.2.2.1
+    by calc
+      (conePlus P A * coneMinus P C) * (coneMinus P C * conePlus P A) =
+          conePlus P A * (coneMinus P C * coneMinus P C) * conePlus P A := by noncomm_ring
+      _ = 0 := by rw [hNm2]; noncomm_ring
   have hQP : (coneMinus P C * conePlus P A) * (conePlus P A * coneMinus P C) = 0 :=
-    hStage.2.2.2.1
+    by calc
+      (coneMinus P C * conePlus P A) * (conePlus P A * coneMinus P C) =
+          coneMinus P C * (conePlus P A * conePlus P A) * coneMinus P C := by noncomm_ring
+      _ = 0 := by rw [hNp2]; noncomm_ring
+  have hNp3 : conePlus P A * conePlus P A * conePlus P A = 0 := by
+    rw [hNp2]; simp
+  have hNp2Nm : conePlus P A * conePlus P A * coneMinus P C = 0 := by
+    rw [hNp2]; simp
+  have hNpNm2 : conePlus P A * coneMinus P C * coneMinus P C = 0 := by
+    calc
+      conePlus P A * coneMinus P C * coneMinus P C =
+          conePlus P A * (coneMinus P C * coneMinus P C) := by noncomm_ring
+      _ = 0 := by rw [hNm2]; simp
+  have hNmNp2 : coneMinus P C * conePlus P A * conePlus P A = 0 := by
+    calc
+      coneMinus P C * conePlus P A * conePlus P A =
+          coneMinus P C * (conePlus P A * conePlus P A) := by noncomm_ring
+      _ = 0 := by rw [hNp2]; simp
+  have hNm2Np : coneMinus P C * coneMinus P C * conePlus P A = 0 := by
+    rw [hNm2]; simp
+  have hNm3 : coneMinus P C * coneMinus P C * coneMinus P C = 0 := by
+    rw [hNm2]; simp
+  have hPhi3 : genPhi P A C * genPhi P A C * genPhi P A C = genPhi P A C := by
+    dsimp [genPhi]
+    calc
+      (conePlus P A + coneMinus P C) * (conePlus P A + coneMinus P C) *
+          (conePlus P A + coneMinus P C) =
+        conePlus P A * conePlus P A * conePlus P A +
+        conePlus P A * conePlus P A * coneMinus P C +
+        conePlus P A * coneMinus P C * conePlus P A +
+        conePlus P A * coneMinus P C * coneMinus P C +
+        coneMinus P C * conePlus P A * conePlus P A +
+        coneMinus P C * conePlus P A * coneMinus P C +
+        coneMinus P C * coneMinus P C * conePlus P A +
+        coneMinus P C * coneMinus P C * coneMinus P C := by noncomm_ring
+      _ = conePlus P A * coneMinus P C * conePlus P A +
+          coneMinus P C * conePlus P A * coneMinus P C := by
+        rw [hNp3, hNp2Nm, hNpNm2, hNmNp2, hNm2Np, hNm3]
+        simp only [zero_add, add_zero]
+      _ = conePlus P A + coneMinus P C := by rw [hRegPlus, hRegMinus]
   have hSigSq : genSig P A C * genSig P A C = genV P A C := by
     dsimp [genSig, genV, anticomm, InfoGeometry.OperatorAlgebra.PeirceSpine.comm]
     calc
@@ -723,15 +770,18 @@ section ZornAmplituhedronNativeMatrix
 
 open InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset
 
+abbrev NativeMat4 (R : Type*) :=
+  InfoGeometry.Archetypes.TwistorAmplituhedronZornBaryon.Mat4 R
+
 /-- Native Mathlib `4 × 4` matrix representation of `Mat4 R`. -/
-def mat4ToMatrix {R : Type*} (M : Mat4 R) : Matrix (Fin 4) (Fin 4) R :=
-  ![![M.m11, M.m12, M.m13, M.m14],
-    ![M.m21, M.m22, M.m23, M.m24],
-    ![M.m31, M.m32, M.m33, M.m34],
-    ![M.m41, M.m42, M.m43, M.m44]]
+def mat4ToMatrix {R : Type*} (M : NativeMat4 R) : Matrix (Fin 4) (Fin 4) R :=
+  ![![M.m00, M.m01, M.m02, M.m03],
+    ![M.m10, M.m11, M.m12, M.m13],
+    ![M.m20, M.m21, M.m22, M.m23],
+    ![M.m30, M.m31, M.m32, M.m33]]
 
 /-- Inverse map from native Mathlib `Matrix (Fin 4) (Fin 4) R` to `Mat4 R`. -/
-def matrixToMat4 {R : Type*} (A : Matrix (Fin 4) (Fin 4) R) : Mat4 R :=
+def matrixToMat4 {R : Type*} (A : Matrix (Fin 4) (Fin 4) R) : NativeMat4 R :=
   ⟨A 0 0, A 0 1, A 0 2, A 0 3,
    A 1 0, A 1 1, A 1 2, A 1 3,
    A 2 0, A 2 1, A 2 2, A 2 3,
@@ -763,18 +813,20 @@ def nativeBaryonMatrix3 {R : Type*} (u1 u2 u3 : Vec3 R) : Matrix (Fin 3) (Fin 3)
 
 /-- Multiplicative equivalence (`MulEquiv`) between `Mat4 R` and native Mathlib
 `Matrix (Fin 4) (Fin 4) R` over any `[Ring R]` (Gap G1 / Target 4). -/
-def mat4MulEquivMatrix4 {R : Type*} [Ring R] : Mat4 R ≃* Matrix (Fin 4) (Fin 4) R where
+def mat4MulEquivMatrix4 {R : Type*} [Ring R] : NativeMat4 R ≃* Matrix (Fin 4) (Fin 4) R where
   toFun := mat4ToMatrix
   invFun := matrixToMat4
-  left_inv M := rfl
+  left_inv M := by cases M <;> rfl
   right_inv A := by
     ext i j
-    fin_cases i <;> fin_cases j <;> rfl
+    fin_cases i <;> fin_cases j <;> simp [mat4ToMatrix, matrixToMat4]
   map_mul' M N := by
     ext i j
     rw [Matrix.mul_apply, Fin.sum_univ_four]
     fin_cases i <;> fin_cases j <;>
-      simp [mat4ToMatrix, Mat4.mul_def, Mat4.mul]
+      simp [mat4ToMatrix,
+        InfoGeometry.Archetypes.TwistorAmplituhedronZornBaryon.Mat4.mul_def,
+        InfoGeometry.Archetypes.TwistorAmplituhedronZornBaryon.Mat4.mul]
 
 /-- **Native Mathlib `Matrix (Fin 4) (Fin 4) R` Plücker–Hodge Chromomagnetic Anomaly Theorem**:
 Over any non-commutative ring `[Ring R]`, in the native Mathlib matrix product
@@ -831,8 +883,9 @@ Over any commutative ring `[CommRing K]`:
    `Matrix.det (nativeTwistorMatrix4 affineOrigin (spatialTwistor u1) (spatialTwistor u2) (spatialTwistor u3)) =
     Matrix.det (nativeBaryonMatrix3 u1 u2 u3)`. -/
 theorem native_matrix_det_twistor4_eq_baryon_and_zorn_anticommutator
-    {K : Type*} [CommRing K] (M : Mat4 K) (Z0 Z1 Z2 Z3 : Twistor4 K) (u1 u2 u3 : Vec3 K) :
-    Mat4.det4 M = Matrix.det (mat4ToMatrix M) ∧
+    {K : Type*} [CommRing K] (M : NativeMat4 K) (Z0 Z1 Z2 Z3 : Twistor4 K) (u1 u2 u3 : Vec3 K) :
+    InfoGeometry.Archetypes.TwistorAmplituhedronZornBaryon.det4 M =
+      Matrix.det (mat4ToMatrix M) ∧
     Matrix.det (nativeBaryonMatrix3 u1 u2 u3) = baryonDet3 u1 u2 u3 ∧
     Matrix.det (nativeTwistorMatrix4 Z0 Z1 Z2 Z3) = twistorBracket4 Z0 Z1 Z2 Z3 ∧
     zornPluckerLine Z0 Z1 * zornPluckerLine Z2 Z3 +
@@ -842,9 +895,11 @@ theorem native_matrix_det_twistor4_eq_baryon_and_zorn_anticommutator
     Matrix.det (nativeTwistorMatrix4 affineOrigin
       (spatialTwistor u1) (spatialTwistor u2) (spatialTwistor u3)) =
       Matrix.det (nativeBaryonMatrix3 u1 u2 u3) := by
-  have hDetM : Mat4.det4 M = Matrix.det (mat4ToMatrix M) := by
+  have hDetM : InfoGeometry.Archetypes.TwistorAmplituhedronZornBaryon.det4 M =
+      Matrix.det (mat4ToMatrix M) := by
     rw [Matrix.det_succ_row_zero, Fin.sum_univ_four]
-    simp [mat4ToMatrix, Mat4.det4, Matrix.submatrix, Fin.succAbove, Matrix.det_fin_three]
+    simp [mat4ToMatrix, InfoGeometry.Archetypes.TwistorAmplituhedronZornBaryon.det4,
+      Matrix.submatrix, Fin.succAbove, Matrix.det_fin_three]
     ring
   have hDet3 : Matrix.det (nativeBaryonMatrix3 u1 u2 u3) = baryonDet3 u1 u2 u3 := by
     rw [Matrix.det_fin_three]
@@ -855,8 +910,16 @@ theorem native_matrix_det_twistor4_eq_baryon_and_zorn_anticommutator
     simp [nativeTwistorMatrix4, Matrix.submatrix, Fin.succAbove,
       Matrix.det_fin_three, twistorBracket4, baryonDet3, Vec3.dot, Vec3.cross]
     ring
-  have hZorn := (amplituhedron_4bracket_eq_zorn_plucker_anticommutator_and_baryon
-    Z0 Z1 Z2 Z3 0 0 0 u1 u1 u2 u3).2.1
+  have hZorn :
+      zornPluckerLine Z0 Z1 * zornPluckerLine Z2 Z3 +
+        zornPluckerLine Z2 Z3 * zornPluckerLine Z0 Z1 =
+        ⟨twistorBracket4 Z0 Z1 Z2 Z3, 0, 0, twistorBracket4 Z0 Z1 Z2 Z3⟩ := by
+    ext <;>
+      simp [zornPluckerLine, zornPluckerPhi, pluckerElectricVec, pluckerMagneticVec,
+        twistorBracket4, baryonDet3, ZornMatrix.mul_def, ZornMatrix.mul,
+        Vec3.dot, Vec3.cross, Vec3.smulLeft, Vec3.smulRight,
+        Vec3.add_x, Vec3.add_y, Vec3.add_z, Vec3.sub_x, Vec3.sub_y, Vec3.sub_z,
+        Vec3.neg_x, Vec3.neg_y, Vec3.neg_z] <;> ring
   have hSpatial :
       Matrix.det (nativeTwistorMatrix4 affineOrigin
         (spatialTwistor u1) (spatialTwistor u2) (spatialTwistor u3)) =
@@ -891,7 +954,7 @@ theorem native_matrix_det_eq_canonical_twistor_bracket
         (peirceTwistorToCanonicalTwistor Z0) (peirceTwistorToCanonicalTwistor Z1)
         (peirceTwistorToCanonicalTwistor Z2) (peirceTwistorToCanonicalTwistor Z3) := by
   have hDet := native_matrix_det_twistor4_eq_baryon_and_zorn_anticommutator
-    (0 : InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.Mat4 K)
+    (0 : NativeMat4 K)
     Z0 Z1 Z2 Z3 0 0 0
   calc
     Matrix.det (nativeTwistorMatrix4 Z0 Z1 Z2 Z3) =
@@ -919,6 +982,18 @@ def shiftNilpotent3Down {R : Type*} [Ring R] : Matrix (Fin 3) (Fin 3) R :=
   ![![0, 0, 0],
     ![1, 0, 0],
     ![0, 1, 0]]
+
+/-- Raising operator in the three-dimensional integral `sl₂` representation. -/
+def nilRaise3 : Matrix (Fin 3) (Fin 3) ℤ :=
+  ![![0, 2, 0], ![0, 0, 1], ![0, 0, 0]]
+
+/-- Lowering operator paired with `nilRaise3` in the three-dimensional integral representation. -/
+def nilLower3 : Matrix (Fin 3) (Fin 3) ℤ :=
+  ![![0, 0, 0], ![1, 0, 0], ![0, 2, 0]]
+
+/-- Cartan operator in the three-dimensional integral `sl₂` representation. -/
+def cartanDiag3 : Matrix (Fin 3) (Fin 3) ℤ :=
+  ![![2, 0, 0], ![0, 0, 0], ![0, 0, -2]]
 
 /-- First reconstructed flag projector `P₀ = N² M² = E₀₀` in `Matrix (Fin 3) (Fin 3) R`. -/
 def flagProj3_0 {R : Type*} [Ring R] : Matrix (Fin 3) (Fin 3) R :=
@@ -1523,7 +1598,7 @@ theorem yang_mills_all_lanes_master_isomorphism_synthesis
       nilRaise3 nilLower3 cartanDiag3 =
       (8 : ℤ) • (1 : Matrix (Fin 3) (Fin 3) ℤ) := by
   have hDet := native_matrix_det_twistor4_eq_baryon_and_zorn_anticommutator
-    (0 : InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.Mat4 K)
+    (0 : NativeMat4 K)
     Z0 Z1 Z2 Z3 u1 u2 u3
   have hFlag := @order3_nilpotent_flag_and_sl2_casimir_constant_eight K _
   have hGram := orbitMassMode_genPhi_eq_osPeirceMassPairing_eq_genV hP hPstar A

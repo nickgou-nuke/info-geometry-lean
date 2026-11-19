@@ -26,7 +26,7 @@ namespace InfoGeometry.NCG.GunaydinGurseySU3Stabilizer
 
 open InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge
 open InfoGeometry.Synthesis.G2SplitSedenionDerivationBridge
-open InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis hiding zornConj
+open InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis
 open InfoGeometry.Lie.CanonicalZornDerivationDimension
 open InfoGeometry.Canonical.SplitOctonionParaKahlerNullCone
 open InfoGeometry.Canonical.SplitOctonionClifford33Soldering

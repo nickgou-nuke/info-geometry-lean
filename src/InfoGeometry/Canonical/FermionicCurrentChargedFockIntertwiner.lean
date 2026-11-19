@@ -112,7 +112,7 @@ theorem intModeDual_eq_zero_of_support_subset_of_not_mem
         (CanonicalNormalOrdering.intModeBasis (R := 𝕜)) a v = 0 := by
   have hav : a ∉ v.support := fun hav => ha (hv hav)
   have hcoef : v a = 0 := by
-    dsimp; simpa [Finsupp.mem_support_iff] using hav
+    simpa [Finsupp.mem_support_iff] using hav
   simpa [CanonicalNormalOrdering.modeDual,
     CanonicalNormalOrdering.intModeBasis, Module.Basis.coord_apply] using hcoef
 
@@ -299,7 +299,7 @@ theorem normalMatrixUnit_apply_eq_zero_of_not_mem_support_of_nonneg
         (CanonicalNormalOrdering.intModeBasis (R := 𝕜)) a
         (CanonicalNormalOrdering.modeVec
           (CanonicalNormalOrdering.intModeBasis (R := 𝕜)) b) = 0 := by
-      dsimp; simp [CanonicalNormalOrdering.modeDual_modeVec, hab]
+      simp [CanonicalNormalOrdering.modeDual_modeVec, hab]
     simp [CanonicalNormalOrdering.contractionCoeff, ha, hcoeff]
   · simp [CanonicalNormalOrdering.contractionCoeff, ha]
 
@@ -374,7 +374,7 @@ theorem normalMatrixUnit_apply_eq_zero_of_negative_distinct_outside_support
     a b S hx ha hb hab haS
   have hcoeff : CanonicalNormalOrdering.contractionCoeff
       (CanonicalNormalOrdering.intModeBasis (R := 𝕜)) a b = 0 := by
-    dsimp; simp [CanonicalNormalOrdering.contractionCoeff_eq_delta_occ, hab]
+    simp [CanonicalNormalOrdering.contractionCoeff_eq_delta_occ, hab]
   rw [hraw, hcoeff]
   simp
 
@@ -420,7 +420,7 @@ theorem normalMatrixUnit_apply_eq_zero_of_negative_outside_support
         (CanonicalNormalOrdering.annih
           (CanonicalNormalOrdering.modeDual
             (CanonicalNormalOrdering.intModeBasis (R := 𝕜)) a) x) = x := by
-    dsimp; simpa [LinearMap.add_apply, LinearMap.comp_apply, Algebra.smul_def] using hCAR
+    simpa [LinearMap.add_apply, LinearMap.comp_apply, Algebra.smul_def] using hCAR
   rw [hzero'] at hCAR'
   simpa [ha, CanonicalNormalOrdering.occMinus] using sub_eq_zero.mpr hCAR'
 
@@ -463,7 +463,7 @@ theorem rawMatrixUnit_apply_eq_zero_of_negative_nonnegative_outside_support
         (CanonicalNormalOrdering.annih
           (CanonicalNormalOrdering.modeDual
             (CanonicalNormalOrdering.intModeBasis (R := 𝕜)) a) x) = 0 := by
-    dsimp; simpa [LinearMap.add_apply, LinearMap.comp_apply] using hCAR
+    simpa [LinearMap.add_apply, LinearMap.comp_apply] using hCAR
   rw [hzero'] at hCAR'
   simpa using hCAR'
 
@@ -490,7 +490,7 @@ theorem normalMatrixUnit_apply_eq_zero_of_negative_nonnegative_outside_support
   have hab : a ≠ b := by omega
   have hcoeff : CanonicalNormalOrdering.contractionCoeff
       (CanonicalNormalOrdering.intModeBasis (R := 𝕜)) a b = 0 := by
-    dsimp; simp [CanonicalNormalOrdering.contractionCoeff, ha,
+    simp [CanonicalNormalOrdering.contractionCoeff, ha,
       CanonicalNormalOrdering.modeDual_modeVec, hab]
   rw [hraw, hcoeff]
   simp
@@ -853,22 +853,22 @@ theorem fermionicBulkBoundaryDiagonalTerm_eq_zero_of_endpoint_vanish
     convert hendpoint using 1 <;> simp [add_assoc, add_comm, add_left_comm]
   by_cases hm : a + m ∈ integerWindow N
   · have hm' : m + a ∈ cutoffWindow N := by
-      dsimp; simpa [SplitCliffordFiniteCAR.integerWindow, cutoffWindow, add_comm] using hm
+      simpa [SplitCliffordFiniteCAR.integerWindow, cutoffWindow, add_comm] using hm
     by_cases hn : a + n ∈ integerWindow N
     · have hn' : n + a ∈ cutoffWindow N := by
-        dsimp; simpa [SplitCliffordFiniteCAR.integerWindow, cutoffWindow, add_comm] using hn
+        simpa [SplitCliffordFiniteCAR.integerWindow, cutoffWindow, add_comm] using hn
       simp [hm', hn', hend]
     · have hn' : n + a ∉ cutoffWindow N := by
-        dsimp; simpa [SplitCliffordFiniteCAR.integerWindow, cutoffWindow, add_comm] using hn
+        simpa [SplitCliffordFiniteCAR.integerWindow, cutoffWindow, add_comm] using hn
       simp [hm', hn', hend]
   · have hm' : m + a ∉ cutoffWindow N := by
-      dsimp; simpa [SplitCliffordFiniteCAR.integerWindow, cutoffWindow, add_comm] using hm
+      simpa [SplitCliffordFiniteCAR.integerWindow, cutoffWindow, add_comm] using hm
     by_cases hn : a + n ∈ integerWindow N
     · have hn' : n + a ∈ cutoffWindow N := by
-        dsimp; simpa [SplitCliffordFiniteCAR.integerWindow, cutoffWindow, add_comm] using hn
+        simpa [SplitCliffordFiniteCAR.integerWindow, cutoffWindow, add_comm] using hn
       simp [hm', hn', hend]
     · have hn' : n + a ∉ cutoffWindow N := by
-        dsimp; simpa [SplitCliffordFiniteCAR.integerWindow, cutoffWindow, add_comm] using hn
+        simpa [SplitCliffordFiniteCAR.integerWindow, cutoffWindow, add_comm] using hn
       simp [hm', hn', hend]
 
 /-- Vanishing of `fermionicRawCAR.matrixUnit a (a + k) x` outside the exceptional
@@ -966,7 +966,7 @@ theorem fermionicBulkBoundaryTerm_apply_eventually_zero
       (∑ a ∈ integerWindow N,
         RawCARModeCompletion.cutoffBulkBoundaryDiagonalTerm
           (fermionicRawCAR (𝕜 := 𝕜)) N m n a) x := by
-    dsimp; simp only [LinearMap.sum_apply]
+    simp only [LinearMap.sum_apply]
     apply Finset.sum_subset hsub
     intro a haN haE
     have haS : a ∉ S := by
@@ -992,7 +992,7 @@ theorem fermionicBulkBoundaryTerm_apply_eventually_zero
             (fermionicRawCAR (𝕜 := 𝕜)) N m n a) x := by
       exact hsum.symm
     _ = 0 := by
-      dsimp; simpa using congrArg (fun T : FermionicEnd (𝕜 := 𝕜) => T x)
+      simpa using congrArg (fun T : FermionicEnd (𝕜 := 𝕜) => T x)
         (hN1 N (Nat.le_trans (Nat.le_max_right _ _) hN))
 
 /-- Pointwise eventual vanishing of the cutoff boundary term when `m + n ≠ 0`. -/
@@ -1526,7 +1526,7 @@ theorem fermionicCurrentSugawara_stressMode_commutator (m n : ℤ) :
           ((m ^ 3 - m : 𝕜) / (12 : 𝕜)) •
             (1 : Module.End 𝕜 (FermionicFock (𝕜 := 𝕜)))
         else 0) := by
-  dsimp; simpa using (fermionicCurrentHeisenbergRep (𝕜 := 𝕜)).sugawaraStressMode_virasoroBracket m n
+  simpa using (fermionicCurrentHeisenbergRep (𝕜 := 𝕜)).sugawaraStressMode_virasoroBracket m n
 
 /-- Joint summary of coefficientwise completion, charged-Fock current mode
 identification, and Virasoro mode-shift action. -/

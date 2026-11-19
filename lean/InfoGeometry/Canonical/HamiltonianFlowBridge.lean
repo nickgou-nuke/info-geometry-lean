@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovOptimalTransport
@@ -51,7 +56,6 @@ MOTIVATION: To bridge Souriau transport with Bogoliubov evolution, we must
 identify the scalar "mass" of the information flow (log partition derivative) 
 with the operator norm of the modular Hamiltonian.
 -/
-@[rep_depth transport, capstone]
 structure GrandCanonicalHamiltonianFlowBridge where
   /-- The Bogoliubov modular reduction (Regular lane). -/
   modular : CertifiedModularReduction (E := H₂)
@@ -74,7 +78,6 @@ MOTIVATION: Spacetime is the fixed-point geometry of the information flow.
 The field `hEmergence` is the explicit equality identifying the emergent
 Hessian manifold with the flow value at the stationary scale.
 -/
-@[rep_depth transport, capstone]
 structure ContinuumEmergenceBridge where
   /-- The RG flow of information geometries on the carrier H₂. -/
   rgFlow : InformationFlow H₂

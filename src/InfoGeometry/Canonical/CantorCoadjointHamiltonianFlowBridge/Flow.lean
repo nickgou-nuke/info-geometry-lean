@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorCoadjointHamiltonianFlowBridge.Basic
@@ -16,7 +21,6 @@ namespace InfoGeometry.Canonical.CantorCoadjointHamiltonianFlowBridge
 
 open InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic
 open InfoGeometry.Canonical.FractalCantorCuntzKacMoodyVirasoroBridge
-open InfoGeometry.Thermodynamics.SouriauWeylPartitionBridge
 open VirasoroProject
 
 namespace CantorCoadjointHamiltonianFlowBridge
@@ -36,7 +40,7 @@ variable (B : CantorCoadjointHamiltonianFlowBridge Orbit E Op H Finite Alg)
 The Hamiltonian of the system is the Souriau temperature vector 
 pointing along the L₀ direction.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem hamiltonian_eq_L0 :
     B.dynamics.geometricTemperature = B.crystal.virasoro.Lmode 0 :=
   B.hamiltonian_is_L0
@@ -45,7 +49,7 @@ theorem hamiltonian_eq_L0 :
 The actual dynamic owner surface identifies the Hamiltonian with the Tomita
 thermal generator.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem flow_hamiltonian_is_souriau_generator :
     B.flow.selfAdjointHamiltonian =
       B.flow.modularContext.logContext.modularHamiltonian :=

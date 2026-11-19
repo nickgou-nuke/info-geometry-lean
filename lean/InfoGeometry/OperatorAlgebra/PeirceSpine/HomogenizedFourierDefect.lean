@@ -101,7 +101,7 @@ include hP
 
 /-- The mass-channel discrepancy retains the ordered commutator with the
 test operator. No centralizer assumption is made. -/
-theorem hProjV_sub_fourierV (A C X : B) :
+theorem hProjV_sub_fourierV_defect (A C X : B) :
     hProjV P A C X - fourierV P A C X =
       (3 : ℤ) • (genV P A C * comm (genV P A C) X) +
         comm (genV P A C) X * genV P A C := by
@@ -172,12 +172,12 @@ theorem hProjJ_eq_fourierJ_iff_commute_mass_sq (A C X : B) :
       (conePlus_mul_conePlus hP A A) (coneMinus_mul_coneMinus hP C C) X
 
 /-- The mass channels agree on every input commuting with `V`. -/
-theorem hProjV_eq_fourierV_of_commute (A C X : B)
+theorem hProjV_eq_fourierV_of_commute_defect (A C X : B)
     (hVX : Commute (genV P A C) X) :
     hProjV P A C X = fourierV P A C X := by
   have hcomm : comm (genV P A C) X = 0 := sub_eq_zero.mpr hVX.eq
   apply sub_eq_zero.mp
-  rw [hProjV_sub_fourierV hP]
+  rw [hProjV_sub_fourierV_defect hP]
   simp only [hcomm, mul_zero, zero_mul, smul_zero, add_zero]
 
 /-- Commutation with `V` suffices for equality of the `Phi` channels. -/

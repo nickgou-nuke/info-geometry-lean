@@ -104,7 +104,7 @@ theorem apply_operatorialGibbsWeight_eq_informationPartitionFunction
 Massieu derivative determined by the unnormalized readout at the identity.
 The nonzero condition is the domain condition for differentiating `log`; no
 normalization `ω 1 = 1` is imposed. -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem hasDerivAt_log_apply_operatorialGibbsWeight_zero
     (ω : EndH →L[ℝ] ℝ)
     (P : PotentialDatum (E := E)) (ψ : H₂)

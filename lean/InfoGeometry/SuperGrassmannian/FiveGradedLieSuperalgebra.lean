@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
@@ -338,40 +343,14 @@ theorem identity_hamiltonian_supertrace_zero :
   dsimp [superTrace2]
   simp
 
-/-! ### Section 8: Master Verification Certificate -/
+/-! ### Section 8: Concrete noncommutativity of the matrix carrier -/
 
-/-- Master certificate bundling the verified components of the 5-Graded Lie Superalgebra. -/
-structure FiveGradedLieSuperalgebraCertificate : Prop where
-  quintic_factorization : ∀ (x : R), x * (x ^ 2 - 1) * (x ^ 2 - 4) = x ^ 5 - 5 * x ^ 3 + 4 * x
-  five_grade_roots : ∀ (x : R), x * (x - 1) * (x + 1) * (x - 2) * (x + 2) = x ^ 5 - 5 * x ^ 3 + 4 * x
-  bosonic_roots : ∀ (x : R), x * (x - 2) * (x + 2) = x ^ 3 - 4 * x
-  fermionic_roots : ∀ (x : R), (x - 1) * (x + 1) = x ^ 2 - 1
-  adH_quintic : ∀ (X : Matrix (Fin 3) (Fin 3) R),
-    adH (adH (adH (adH (adH X)))) - 5 • adH (adH (adH X)) + 4 • adH X = 0
-  adH_bosonic : ∀ (X : Matrix (Fin 3) (Fin 3) R),
-    isBosonicSubspace X → adH (adH (adH X)) = 4 • adH X
-  adH_fermionic : ∀ (X : Matrix (Fin 3) (Fin 3) R),
-    isFermionicSubspace X → adH (adH (adH X)) = adH X
-  inner_automorphism_order : ∀ {A : Type*} [Ring A] (J a b : A),
-    J * J = 1 → J * (a * b) * J = (J * a * J) * (J * b * J)
-  anti_automorphism_flip : ∀ {A : Type*} [Ring A] (tau : A → A),
-    (∀ x y, tau (x * y) = tau y * tau x) → ∀ (PL PR : A), tau PL = PR → ∀ a, tau (a * PL) = PR * tau a
-  hamiltonian_central : ∀ (X : Matrix (Fin 2) (Fin 2) R),
-    (1 : Matrix (Fin 2) (Fin 2) R) * X - X * 1 = 0
-  hamiltonian_supertrace_zero : superTrace2 (1 : Matrix (Fin 2) (Fin 2) R) = 0
-
-/-- Instant compilation of the master certificate with zero open assumptions. -/
-theorem compile_five_graded_lie_superalgebra : FiveGradedLieSuperalgebraCertificate (R := R) where
-  quintic_factorization := quintic_polynomial_factorization
-  five_grade_roots := five_grade_roots_expansion
-  bosonic_roots := three_grade_bosonic_roots
-  fermionic_roots := odd_fermionic_roots
-  adH_quintic := adH_quintic_identity
-  adH_bosonic := adH_bosonic_cubic
-  adH_fermionic := adH_fermionic_cubic
-  inner_automorphism_order := inner_automorphism_mul
-  anti_automorphism_flip := anti_automorphism_ideal_flip
-  hamiltonian_central := identity_hamiltonian_central
-  hamiltonian_supertrace_zero := identity_hamiltonian_supertrace_zero
+/-- Matrix units in `M₃(R)` witness noncommutativity whenever `R` is nontrivial. -/
+theorem matrix_fin3_noncommutativity_witness [Nontrivial R] :
+    ∃ A B : Matrix (Fin 3) (Fin 3) R, A * B ≠ B * A := by
+  refine ⟨Matrix.single 0 1 (1 : R), Matrix.single 1 0 (1 : R), ?_⟩
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 3) (Fin 3) R => M 0 0) h
+  simp at h00
 
 end InfoGeometry.SuperGrassmannian.FiveGradedLieSuperalgebra

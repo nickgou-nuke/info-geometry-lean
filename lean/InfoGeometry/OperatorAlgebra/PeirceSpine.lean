@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.PeirceSpine.SupportedProjectors
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Basic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.CustodialTwinExchangeProtection
 import InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentDefect
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 import InfoGeometry.OperatorAlgebra.PeirceSpine.DiracPolynomialAction

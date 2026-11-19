@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Finset.Basic
@@ -35,7 +40,8 @@ def isotropicPoints : Finset SplitOctF2 :=
   Finset.univ.filter (fun X => Isotropic X ∧ X ≠ zeroPoint)
 
 theorem isotropicPoints_card : isotropicPoints.card = 135 := by
-  native_decide
+  set_option maxRecDepth 100000 in
+    decide
 
 theorem mem_isotropicPoints (X : SplitOctF2) :
     X ∈ isotropicPoints ↔ Isotropic X ∧ X ≠ zeroPoint := by

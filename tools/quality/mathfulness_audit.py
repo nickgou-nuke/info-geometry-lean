@@ -21,6 +21,7 @@ reports are failures rather than silent absences.
 from __future__ import annotations
 
 import argparse
+import bisect
 import json
 import re
 from collections import Counter
@@ -91,21 +92,60 @@ def repo_path(path_value: str | Path) -> Path:
     return p if p.is_absolute() else ROOT / p
 
 
+_FILE_INDEX_CACHE: dict[Path, tuple[int, int, list[str], list[int]]] = {}
+
+
 def source_block(file_path: Path, line: int) -> str:
     if not file_path.exists() or line <= 0:
         return ""
-    lines = file_path.read_text(encoding="utf-8", errors="ignore").splitlines()
+    resolved = file_path.resolve()
+    stat = resolved.stat()
+    cached = _FILE_INDEX_CACHE.get(resolved)
+    if cached is not None and cached[0] == stat.st_mtime_ns and cached[1] == stat.st_size:
+        lines, decl_indices = cached[2], cached[3]
+    else:
+        lines = resolved.read_text(encoding="utf-8", errors="ignore").splitlines()
+        decl_indices = [idx for idx, text in enumerate(lines) if DECL_RE.match(text)]
+        _FILE_INDEX_CACHE[resolved] = (stat.st_mtime_ns, stat.st_size, lines, decl_indices)
     start = max(0, line - 1)
-    end = len(lines)
-    for i in range(start + 1, len(lines)):
-        if DECL_RE.match(lines[i]):
-            end = i
-            break
+    if start >= len(lines):
+        return ""
+    pos = bisect.bisect_right(decl_indices, start)
+    end = decl_indices[pos] if pos < len(decl_indices) else len(lines)
     return "\n".join(lines[start:end])
 
 
-def significance_by_name(path: Path) -> dict[str, dict[str, Any]]:
-    payload = load_json(path, [])
+def _is_safe_ascii_probe(value: str) -> bool:
+    return bool(value) and value.isascii() and "\\" not in value and '"' not in value
+
+
+def _candidate_raw_bytes(path: Path, only_names: set[str] | None) -> tuple[bytes | None, set[str] | None]:
+    """Return raw bytes and matching name filter when safe prefiltering is possible."""
+    if only_names is None or not path.exists():
+        return None, None
+    try:
+        size = path.stat().st_size
+    except OSError:
+        return None, None
+    if size <= 65536:
+        return None, only_names
+    if not only_names:
+        return b"", set()
+    raw_bytes = path.read_bytes()
+    ascii_probes = [name for name in only_names if _is_safe_ascii_probe(name)]
+    fallback = {name for name in only_names if not _is_safe_ascii_probe(name)}
+    present = {name for name in ascii_probes if name.encode("utf-8") in raw_bytes} | fallback
+    return raw_bytes, present
+
+
+def significance_by_name(path: Path, *, only_names: set[str] | None = None) -> dict[str, dict[str, Any]]:
+    raw_bytes, allowed = _candidate_raw_bytes(path, only_names)
+    if allowed is not None and not allowed:
+        return {}
+    if raw_bytes is not None:
+        payload = json.loads(raw_bytes.decode("utf-8"))
+    else:
+        payload = load_json(path, [])
     if isinstance(payload, dict):
         rows = (
             payload.get("rows")
@@ -118,11 +158,19 @@ def significance_by_name(path: Path) -> dict[str, dict[str, Any]]:
         rows = payload
     else:
         rows = []
+    if allowed is not None:
+        return {str(row.get("name")): row for row in rows if row.get("name") in allowed}
     return {str(row.get("name")): row for row in rows if row.get("name")}
 
 
-def policy_lint_flags(path: Path) -> dict[str, set[str]]:
-    data = load_json(path, {})
+def policy_lint_flags(path: Path, *, only_names: set[str] | None = None) -> dict[str, set[str]]:
+    raw_bytes, allowed = _candidate_raw_bytes(path, only_names)
+    if allowed is not None and not allowed:
+        return {}
+    if raw_bytes is not None:
+        data = json.loads(raw_bytes.decode("utf-8"))
+    else:
+        data = load_json(path, {})
     flags: dict[str, set[str]] = {}
     if not isinstance(data, dict):
         return flags
@@ -143,9 +191,48 @@ def policy_lint_flags(path: Path) -> dict[str, set[str]]:
             if not isinstance(row, dict):
                 continue
             name = row.get("name") or row.get("decl") or row.get("theorem")
-            if name:
+            if name and (allowed is None or str(name) in allowed):
                 flags.setdefault(str(name), set()).add(key)
     return flags
+
+
+def load_selected_decls(
+    path: Path,
+    *,
+    prefixes: list[str],
+    file_prefixes: list[str],
+) -> list[dict[str, Any]]:
+    """Stream `decls.jsonl` and retain only declarations matching active filters."""
+    if not path.exists():
+        return []
+    safe_prefixes = prefixes if (prefixes and all(_is_safe_ascii_probe(p) for p in prefixes)) else None
+    safe_file_prefixes = (
+        file_prefixes
+        if (
+            file_prefixes
+            and all(_is_safe_ascii_probe(p) and not p.startswith((".", "/")) for p in file_prefixes)
+        )
+        else None
+    )
+    selected: list[dict[str, Any]] = []
+    with path.open(encoding="utf-8") as handle:
+        for raw in handle:
+            raw_stripped = raw.strip()
+            if not raw_stripped:
+                continue
+            if safe_prefixes and not any(p in raw_stripped for p in safe_prefixes):
+                continue
+            if safe_file_prefixes and not any(p in raw_stripped for p in safe_file_prefixes):
+                continue
+            decl = json.loads(raw_stripped)
+            name = str(decl.get("name", ""))
+            file_rel = rel(str(decl.get("file", "")))
+            if prefixes and not any(name.startswith(p) for p in prefixes):
+                continue
+            if file_prefixes and not any(file_rel.startswith(p) for p in file_prefixes):
+                continue
+            selected.append(decl)
+    return selected
 
 
 def paranoia_flags(path: Path) -> dict[str, dict[str, Any]]:
@@ -259,9 +346,16 @@ def main() -> int:
     parser.add_argument("--md-out", type=Path, default=ROOT / "reports/dag/mathfulness-audit.md")
     args = parser.parse_args()
 
-    decls = load_jsonl(args.decls)
-    sig = significance_by_name(args.significance)
-    policy = policy_lint_flags(args.policy_lint)
+    selected = load_selected_decls(
+        args.decls,
+        prefixes=args.prefix,
+        file_prefixes=args.file_prefix,
+    )
+    scoped_names: set[str] | None = None
+    if args.prefix or args.file_prefix or args.decls != ROOT / "artifacts/dag/index/decls.jsonl":
+        scoped_names = {str(d.get("name", "")) for d in selected if d.get("name")}
+    sig = significance_by_name(args.significance, only_names=scoped_names)
+    policy = policy_lint_flags(args.policy_lint, only_names=scoped_names)
     paranoia = paranoia_flags(args.leanparanoia) if args.leanparanoia else {}
     frontier_present = args.frontier_gate.exists()
     pauli_present = args.pauli_seal.exists()
@@ -276,16 +370,6 @@ def main() -> int:
         for label, path in required_inputs.items():
             if not path.exists():
                 global_failures.append(f"missing_required_audit_input:{label}")
-
-    selected: list[dict[str, Any]] = []
-    for decl in decls:
-        name = str(decl.get("name", ""))
-        file_rel = rel(str(decl.get("file", "")))
-        if args.prefix and not any(name.startswith(p) for p in args.prefix):
-            continue
-        if args.file_prefix and not any(file_rel.startswith(p) for p in args.file_prefix):
-            continue
-        selected.append(decl)
 
     if args.gate and not selected:
         global_failures.append("no_selected_declarations")

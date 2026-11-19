@@ -1,5 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.KK.RealSplitKreinResolvent
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.OperatorAlgebra.SpectralTriple
 
 open scoped InnerProductSpace
 
@@ -16,6 +22,16 @@ Krein setting.
 Policy note: any surviving `complex_i` terminology elsewhere in the repository
 is legacy compatibility language only. The canonical internal square-minus-one
 axis is `K := J.comp eps`, derived from the split `Cl(1,1)` atom.
+
+### Evidence Boundaries
+- `BUCKET 2`: Domain-level unbounded cycle scaffold (`domain`, `D`,
+  `dense_domain`, `closed_graph`, `D_odd`, `D_krein_skewAdj`, `resolventData`,
+  `commutator`), bounded `PhaseRealSpectralTriple` →
+  `RealSplitKreinUnboundedCycle` conversion (`toUnboundedCycle`), and
+  finite-dimensional `CFC.sqrt` bounded transforms.
+- `BUCKET 3`: Infinite-dimensional unbounded functional calculus for
+  `D (1 + D²)^(-1/2)` and the general unbounded Kasparov product remain open
+  (`BUCKET 3`).
 -/
 
 /--
@@ -179,6 +195,155 @@ lemma resolvent_comp_rho_compact
     (X : RealSplitKreinUnboundedCycle A B H) (x : H) :
     X.resolvent x ∈ X.domain :=
   X.resolvent_preserves_domain x
+
+section SpectralTripleBridge
+
+/-- Extract a canonical `RealSplitCl11Action H` from a `PhaseAxis` and `RealStructure`
+when `signs.epsJ = 1`, setting `J := J.J.val` and `eps := J.J.val.comp K.K`. -/
+noncomputable def realSplitCl11ActionOfPhaseReal
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    {signs : InfoGeometry.OperatorAlgebra.SpectralTriple.KOSigns}
+    (K : InfoGeometry.OperatorAlgebra.SpectralTriple.PhaseAxis H)
+    (J : InfoGeometry.OperatorAlgebra.SpectralTriple.RealStructure H K signs)
+    (hepsJ : signs.epsJ = 1) :
+    InfoGeometry.Quantum.RealSplitCl11Action H where
+  eps := J.J.val.comp K.K
+  J := J.J.val
+  eps_sq := by
+    have hJ2 : J.J.val.comp J.J.val = ContinuousLinearMap.id ℝ H := by
+      simpa [hepsJ] using J.J_square
+    have hanti : J.J.val.comp K.K = -(K.K.comp J.J.val) := J.J_phase_reversing
+    have hK2 : K.K.comp K.K = -(ContinuousLinearMap.id ℝ H) := K.K_square_neg
+    ext x
+    have h1 : J.J.val (K.K x) = -(K.K (J.J.val x)) :=
+      congrArg (fun T : H →L[ℝ] H => T x) hanti
+    have h2 : K.K (K.K x) = -x :=
+      congrArg (fun T : H →L[ℝ] H => T x) hK2
+    have h3 : J.J.val (J.J.val (K.K (K.K x))) = K.K (K.K x) :=
+      congrArg (fun T : H →L[ℝ] H => T (K.K (K.K x))) hJ2
+    calc
+      (J.J.val.comp K.K) ((J.J.val.comp K.K) x)
+          = J.J.val (K.K (J.J.val (K.K x))) := rfl
+      _ = J.J.val (K.K (-(K.K (J.J.val x)))) := by rw [h1]
+      _ = -(J.J.val (K.K (K.K (J.J.val x)))) := by simp [map_neg]
+      _ = -(J.J.val (-(J.J.val x))) := by
+        have h2' : K.K (K.K (J.J.val x)) = -(J.J.val x) :=
+          congrArg (fun T : H →L[ℝ] H => T (J.J.val x)) hK2
+        rw [h2']
+      _ = J.J.val (J.J.val x) := by simp [map_neg]
+      _ = x := by
+        simpa using congrArg (fun T : H →L[ℝ] H => T x) hJ2
+  J_sq := by
+    simpa [hepsJ] using J.J_square
+  J_eps_anti := by
+    have hJ2 : J.J.val.comp J.J.val = ContinuousLinearMap.id ℝ H := by
+      simpa [hepsJ] using J.J_square
+    have hanti : J.J.val.comp K.K = -(K.K.comp J.J.val) := J.J_phase_reversing
+    ext x
+    have h1 : J.J.val (K.K (J.J.val x)) = -(K.K (J.J.val (J.J.val x))) :=
+      congrArg (fun T : H →L[ℝ] H => T (J.J.val x)) hanti
+    have hJx : J.J.val (J.J.val x) = x := by
+      simpa using congrArg (fun T : H →L[ℝ] H => T x) hJ2
+    calc
+      J.J.val ((J.J.val.comp K.K) x)
+          = J.J.val (J.J.val (K.K x)) := rfl
+      _ = K.K x := by
+        simpa using congrArg (fun T : H →L[ℝ] H => T (K.K x)) hJ2
+      _ = K.K (J.J.val (J.J.val x)) := by rw [hJx]
+      _ = -(-(K.K (J.J.val (J.J.val x)))) := by simp
+      _ = -(J.J.val (K.K (J.J.val x))) := by rw [← h1]
+      _ = -((J.J.val.comp K.K) (J.J.val x)) := rfl
+
+@[simp] theorem realSplitCl11ActionOfPhaseReal_K
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    {signs : InfoGeometry.OperatorAlgebra.SpectralTriple.KOSigns}
+    (K : InfoGeometry.OperatorAlgebra.SpectralTriple.PhaseAxis H)
+    (J : InfoGeometry.OperatorAlgebra.SpectralTriple.RealStructure H K signs)
+    (hepsJ : signs.epsJ = 1) :
+    (realSplitCl11ActionOfPhaseReal K J hepsJ).K = K.K := by
+  have hJ2 : J.J.val.comp J.J.val = ContinuousLinearMap.id ℝ H := by
+    simpa [hepsJ] using J.J_square
+  ext x
+  change J.J.val (J.J.val (K.K x)) = K.K x
+  simpa using congrArg (fun T : H →L[ℝ] H => T (K.K x)) hJ2
+
+/--
+Construct a `RealSplitKreinUnboundedCycle A ℝ H` from a Krein-compatible
+`PhaseRealSpectralTriple A H` (with `domain := Set.univ`, `ρ := Algebra.ofId ℝ (EndH H)`).
+-/
+noncomputable def toUnboundedCycle
+    {A H : Type*}
+    [NormedRing A] [NormedAlgebra ℝ A] [Star A]
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    [KreinSpace H] [KreinGradedModule H]
+    (T : InfoGeometry.OperatorAlgebra.SpectralTriple.PhaseRealSpectralTriple A H)
+    (hKrein : T.IsKreinCompatible)
+    (cl11 : InfoGeometry.Quantum.RealSplitCl11Action H)
+    (hpi_smul : ∀ (r : ℝ) (a : A),
+      T.representedAlgebra.rep (r • a) = r • T.representedAlgebra.rep a)
+    (hpi_even : ∀ a : A, KreinGradedModule.IsEven (H := H) (T.representedAlgebra.rep a))
+    (hchi : T.grading.chi = KreinGradedModule.gradeCLM (H := H)) :
+    RealSplitKreinUnboundedCycle A ℝ H where
+  cl11 := cl11
+  π :=
+    { toFun := T.representedAlgebra.rep
+      map_one' := T.representedAlgebra.rep.map_one
+      map_mul' := T.representedAlgebra.rep.map_mul
+      map_zero' := T.representedAlgebra.rep.map_zero
+      map_add' := T.representedAlgebra.rep.map_add
+      commutes' := fun r => by
+        rw [Algebra.algebraMap_eq_smul_one, hpi_smul r 1, T.representedAlgebra.rep.map_one,
+          Algebra.algebraMap_eq_smul_one] }
+  ρ := Algebra.ofId ℝ (EndH H)
+  π_even := hpi_even
+  ρ_even := fun b => by
+    unfold KreinGradedModule.IsEven KreinGradedModule.gradeConj
+    apply ContinuousLinearMap.ext
+    intro x
+    change KreinGradedModule.gradeCLM (H := H)
+        (b • KreinGradedModule.gradeCLM (H := H) x) = b • x
+    rw [map_smul, KreinGradedModule.gradeCLM_apply, KreinGradedModule.gradeCLM_apply,
+      KreinGradedModule.grade_invol]
+  domain := Set.univ
+  D := fun x => T.spectralGenerator.D x.1
+  dense_domain := dense_univ
+  closed_graph := by
+    have hset :
+        (Set.range fun x : {x // x ∈ (Set.univ : Set H)} =>
+          ((x.1, T.spectralGenerator.D x.1) : H × H)) =
+          {p : H × H | p.2 = T.spectralGenerator.D p.1} := by
+      ext ⟨u, v⟩
+      simp [eq_comm]
+    rw [hset]
+    exact isClosed_eq continuous_snd (T.spectralGenerator.D.continuous.comp continuous_fst)
+  grade_preserves_domain := fun _ _ => Set.mem_univ _
+  π_preserves_domain := fun _ _ _ => Set.mem_univ _
+  ρ_preserves_domain := fun _ _ _ => Set.mem_univ _
+  D_odd := fun x => by
+    have hDodd := congrArg (fun S : H →L[ℝ] H => S x.1) T.D_odd
+    simp only [add_apply, ContinuousLinearMap.comp_apply,
+      zero_apply, hchi] at hDodd
+    exact eq_neg_of_add_eq_zero_left hDodd
+  D_krein_skewAdj := fun x y => by
+    exact (KreinSpace.isKreinSkewAdjoint_iff (H := H) T.spectralGenerator.D).mp
+      hKrein.2 x.1 y.1
+  resolventData :=
+    { shift := T.D_compactResolvent.spectralParameter
+      resolvent := T.D_compactResolvent.resolvent
+      resolvent_preserves_domain := fun _ => Set.mem_univ _
+      left_resolvent := fun x => by
+        have h := congrArg (fun S : H →L[ℝ] H => S x)
+          T.D_compactResolvent.shift_comp_resolvent
+        simpa [ContinuousLinearMap.comp_apply, sub_apply,
+          smul_apply, ContinuousLinearMap.id_apply] using h
+      compact := T.D_compactResolvent.resolvent_compact }
+  commutator := fun a =>
+    InfoGeometry.OperatorAlgebra.SpectralTriple.commutator
+      T.spectralGenerator.D (T.representedAlgebra.rep a)
+  commutator_formula := fun a x => by
+    simp [InfoGeometry.OperatorAlgebra.SpectralTriple.commutator]
+
+end SpectralTripleBridge
 
 end RealSplitKreinUnboundedCycle
 

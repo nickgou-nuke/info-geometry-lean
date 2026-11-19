@@ -9,6 +9,15 @@ STRICT_CHECK_STDERR_LOG="${STRICT_CHECK_STDERR_LOG:-$STRICT_CHECK_ARTIFACT_DIR/s
 STRICT_CHECK_FAILURE_OUT="${STRICT_CHECK_FAILURE_OUT:-$STRICT_CHECK_ARTIFACT_DIR/failed_transitions.jsonl}"
 STRICT_CHECK_FAILURE_REPORT="${STRICT_CHECK_FAILURE_REPORT:-$STRICT_CHECK_ARTIFACT_DIR/failure_harvest_strict_report.json}"
 STRICT_CHECK_HARVEST_WARNINGS="${STRICT_CHECK_HARVEST_WARNINGS:-0}"
+STRICT_CHECK_FULL="${STRICT_CHECK_FULL:-0}"
+
+for arg in "$@"; do
+  case "$arg" in
+    --full)
+      STRICT_CHECK_FULL=1
+      ;;
+  esac
+done
 
 : >"$STRICT_CHECK_STDOUT_LOG"
 : >"$STRICT_CHECK_STDERR_LOG"
@@ -45,18 +54,16 @@ python3 tools/infra/audit_default_lean_sources.py
 python3 tools/infra/audit_dual_lean_sources.py
 
 echo "[strict-check] building modular libraries"
-python3 tools/run_locked_lake_build.py --wait-for-build-lock InfoGeometryMeta
-# The aggregate packages contain legacy linter warnings.  Keep their build
-# kernel-validating, and reserve warnings-as-errors for the explicit frontier
-# trunks below where the strict policy is actionable.
-python3 tools/run_locked_lake_build.py --wait-for-build-lock InfoGeometryCanonical
-python3 tools/run_locked_lake_build.py --wait-for-build-lock InfoGeometryLLM
-
-echo "[strict-check] elaborating InfoGeometry/Library.lean"
-python3 tools/infra/run_locked_lean.py --wait-for-build-lock lean/InfoGeometry/Library.lean
-
-echo "[strict-check] elaborating canonical root InfoGeometry.lean"
-python3 tools/infra/run_locked_lean.py --wait-for-build-lock lean/InfoGeometry.lean
+if [[ "$STRICT_CHECK_FULL" == "1" || "${STRICT_CHECK_FULL_UMBRELLA:-0}" == "1" ]]; then
+  # The aggregate packages contain legacy linter warnings.  Keep their build
+  # kernel-validating when explicitly requested.
+  echo "[strict-check] full mode: batched build of core libraries and canonical roots"
+  python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock \
+    InfoGeometryMeta InfoGeometryCanonical InfoGeometryLLM InfoGeometry.Library InfoGeometry
+else
+  echo "[strict-check] incremental mode: building changed owner modules (use --full or STRICT_CHECK_FULL_UMBRELLA=1 for full library build)"
+  python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock --changed --all-changed
+fi
 
 INFOGEOMETRY_PATHS=(lean/InfoGeometry.lean lean/InfoGeometry/Library.lean lean/InfoGeometry)
 CANONICAL_PATHS=(lean/InfoGeometry.lean lean/InfoGeometry/Library.lean lean/InfoGeometry/Canonical)
@@ -214,11 +221,8 @@ CLOSURE_DEBT_BUILD_TARGETS=(
   InfoGeometry.LLM.SinkhornDefectFlow
 )
 
-echo "[strict-check] strict-building closure-debt target trunks"
-for target in "${CLOSURE_DEBT_BUILD_TARGETS[@]}"; do
-  echo "  - locked incremental build ${target}"
-  python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock "${target}"
-done
+echo "[strict-check] building closure-debt target trunks (batched incremental build)"
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock "${CLOSURE_DEBT_BUILD_TARGETS[@]}"
 
 echo "[strict-check] enforcing Pauli seal directives (I-XI) on all InfoGeometry modules"
 python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry --json-out reports/pauli-seal-audit.json

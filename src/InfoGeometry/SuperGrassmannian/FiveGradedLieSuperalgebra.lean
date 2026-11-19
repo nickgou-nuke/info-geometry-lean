@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
@@ -79,6 +84,12 @@ def H_grading : Matrix (Fin 3) (Fin 3) R :=
 /-- The adjoint commutator derivation $\operatorname{ad}_H(X) = H X - X H$. -/
 def adH (X : Matrix (Fin 3) (Fin 3) R) : Matrix (Fin 3) (Fin 3) R :=
   H_grading * X - X * H_grading
+
+theorem adH_sub (X Y : Matrix (Fin 3) (Fin 3) R) :
+    adH (X - Y) = adH X - adH Y := by
+  ext i j
+  simp [adH, Matrix.mul_apply, Fin.sum_univ_three, sub_mul, mul_sub]
+  abel
 
 /-- Explicit action on the 9 matrix components: -/
 theorem adH_00 (X : Matrix (Fin 3) (Fin 3) R) : adH X 0 0 = 0 := by
@@ -188,6 +199,108 @@ theorem adH_quintic_identity (X : Matrix (Fin 3) (Fin 3) R) :
   · exact quintic_20 X
   · exact quintic_21 X
   · exact quintic_22 X
+
+/-! ### Quartic spectral projectors for the concrete `adH` action -/
+
+/-- The three-graded Peirce defect of an endomorphism `D`, evaluated at `X`. -/
+def peirceThreeGradedDefect {M : Type*} [AddGroup M] (D : M → M) (X : M) : M :=
+  D (D (D X)) - D X
+
+/-- The normalized grade-zero projector for the adjoint action on `M₃(F)`. -/
+def adHProjectorZero {F : Type*} [Field F] (X : Matrix (Fin 3) (Fin 3) F) :
+    Matrix (Fin 3) (Fin 3) F :=
+  (1 / 12 : F) • ((12 : F) • X - (15 : F) • adH (adH X) + (3 : F) • adH (adH (adH (adH X))))
+
+/-- The normalized joint projector onto grades `±1` for the adjoint action. -/
+def adHProjectorOne {F : Type*} [Field F] (X : Matrix (Fin 3) (Fin 3) F) :
+    Matrix (Fin 3) (Fin 3) F :=
+  (1 / 12 : F) • ((16 : F) • adH (adH X) - (4 : F) • adH (adH (adH (adH X))))
+
+/-- The normalized joint projector onto grades `±2` for the adjoint action. -/
+def adHProjectorTwo {F : Type*} [Field F] (X : Matrix (Fin 3) (Fin 3) F) :
+    Matrix (Fin 3) (Fin 3) F :=
+  (1 / 12 : F) • ((1 : F) • adH (adH (adH (adH X))) - (1 : F) • adH (adH X))
+
+/-- The three normalized spectral projectors resolve every `3 × 3` matrix. -/
+theorem adHProjectors_resolve {F : Type*} [Field F] [CharZero F]
+    (X : Matrix (Fin 3) (Fin 3) F) :
+    adHProjectorZero X + adHProjectorOne X + adHProjectorTwo X = X := by
+  simp only [adHProjectorZero, adHProjectorOne, adHProjectorTwo,
+    smul_add, smul_sub, smul_smul]
+  have h12 : (1 / 12 : F) * 12 = 1 := by field_simp
+  -- The expression is a linear combination of three repeated vectors.
+  simp only [h12, one_smul]
+  module
+
+theorem adHProjectorZero_idempotent {F : Type*} [Field F] [CharZero F]
+    (X : Matrix (Fin 3) (Fin 3) F) :
+    adHProjectorZero (adHProjectorZero X) = adHProjectorZero X := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [adHProjectorZero, Matrix.smul_apply, adH_00, adH_01, adH_02,
+      adH_10, adH_11, adH_12, adH_20, adH_21, adH_22] <;>
+    field_simp <;> ring
+
+theorem adHProjectorOne_idempotent {F : Type*} [Field F] [CharZero F]
+    (X : Matrix (Fin 3) (Fin 3) F) :
+    adHProjectorOne (adHProjectorOne X) = adHProjectorOne X := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [adHProjectorOne, Matrix.smul_apply, adH_00, adH_01, adH_02,
+      adH_10, adH_11, adH_12, adH_20, adH_21, adH_22] <;>
+    field_simp <;> ring
+
+theorem adHProjectorTwo_idempotent {F : Type*} [Field F] [CharZero F]
+    (X : Matrix (Fin 3) (Fin 3) F) :
+    adHProjectorTwo (adHProjectorTwo X) = adHProjectorTwo X := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [adHProjectorTwo, Matrix.smul_apply, adH_00, adH_01, adH_02,
+      adH_10, adH_11, adH_12, adH_20, adH_21, adH_22] <;>
+    field_simp <;> ring
+
+theorem adHProjectorZero_one_zero {F : Type*} [Field F] [CharZero F]
+    (X : Matrix (Fin 3) (Fin 3) F) :
+    adHProjectorZero (adHProjectorOne X) = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [adHProjectorZero, adHProjectorOne, Matrix.smul_apply, adH_00,
+      adH_01, adH_02, adH_10, adH_11, adH_12, adH_20, adH_21, adH_22] <;>
+    field_simp <;> ring
+
+theorem adHProjectorOne_two_zero {F : Type*} [Field F] [CharZero F]
+    (X : Matrix (Fin 3) (Fin 3) F) :
+    adHProjectorOne (adHProjectorTwo X) = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [adHProjectorOne, adHProjectorTwo, Matrix.smul_apply, adH_00,
+      adH_01, adH_02, adH_10, adH_11, adH_12, adH_20, adH_21, adH_22] <;>
+    field_simp <;> ring
+
+theorem adHProjectorTwo_zero_zero {F : Type*} [Field F] [CharZero F]
+    (X : Matrix (Fin 3) (Fin 3) F) :
+    adHProjectorTwo (adHProjectorZero X) = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [adHProjectorZero, adHProjectorTwo, Matrix.smul_apply, adH_00,
+      adH_01, adH_02, adH_10, adH_11, adH_12, adH_20, adH_21, adH_22] <;>
+    field_simp <;> ring
+
+theorem adHProjectorZero_two_zero {F : Type*} [Field F] [CharZero F]
+    (X : Matrix (Fin 3) (Fin 3) F) :
+    adHProjectorZero (adHProjectorTwo X) = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [adHProjectorZero, adHProjectorTwo, Matrix.smul_apply, adH_00,
+      adH_01, adH_02, adH_10, adH_11, adH_12, adH_20, adH_21, adH_22] <;>
+    field_simp <;> ring
+
+theorem adHProjectorTwo_peirceDefect {F : Type*} [Field F]
+    (X : Matrix (Fin 3) (Fin 3) F) :
+    adHProjectorTwo X = (1 / 12 : F) • adH (peirceThreeGradedDefect adH X) := by
+  simp only [adHProjectorTwo, peirceThreeGradedDefect]
+  simp only [one_smul]
+  rw [adH_sub]
 
 /-! ### Section 4: Bosonic Subspace and 3-Graded Reduction -/
 
@@ -338,40 +451,14 @@ theorem identity_hamiltonian_supertrace_zero :
   dsimp [superTrace2]
   simp
 
-/-! ### Section 8: Master Verification Certificate -/
+/-! ### Section 8: Concrete noncommutativity of the matrix carrier -/
 
-/-- Master certificate bundling the verified components of the 5-Graded Lie Superalgebra. -/
-structure FiveGradedLieSuperalgebraCertificate : Prop where
-  quintic_factorization : ∀ (x : R), x * (x ^ 2 - 1) * (x ^ 2 - 4) = x ^ 5 - 5 * x ^ 3 + 4 * x
-  five_grade_roots : ∀ (x : R), x * (x - 1) * (x + 1) * (x - 2) * (x + 2) = x ^ 5 - 5 * x ^ 3 + 4 * x
-  bosonic_roots : ∀ (x : R), x * (x - 2) * (x + 2) = x ^ 3 - 4 * x
-  fermionic_roots : ∀ (x : R), (x - 1) * (x + 1) = x ^ 2 - 1
-  adH_quintic : ∀ (X : Matrix (Fin 3) (Fin 3) R),
-    adH (adH (adH (adH (adH X)))) - 5 • adH (adH (adH X)) + 4 • adH X = 0
-  adH_bosonic : ∀ (X : Matrix (Fin 3) (Fin 3) R),
-    isBosonicSubspace X → adH (adH (adH X)) = 4 • adH X
-  adH_fermionic : ∀ (X : Matrix (Fin 3) (Fin 3) R),
-    isFermionicSubspace X → adH (adH (adH X)) = adH X
-  inner_automorphism_order : ∀ {A : Type*} [Ring A] (J a b : A),
-    J * J = 1 → J * (a * b) * J = (J * a * J) * (J * b * J)
-  anti_automorphism_flip : ∀ {A : Type*} [Ring A] (tau : A → A),
-    (∀ x y, tau (x * y) = tau y * tau x) → ∀ (PL PR : A), tau PL = PR → ∀ a, tau (a * PL) = PR * tau a
-  hamiltonian_central : ∀ (X : Matrix (Fin 2) (Fin 2) R),
-    (1 : Matrix (Fin 2) (Fin 2) R) * X - X * 1 = 0
-  hamiltonian_supertrace_zero : superTrace2 (1 : Matrix (Fin 2) (Fin 2) R) = 0
-
-/-- Instant compilation of the master certificate with zero open assumptions. -/
-theorem compile_five_graded_lie_superalgebra : FiveGradedLieSuperalgebraCertificate (R := R) where
-  quintic_factorization := quintic_polynomial_factorization
-  five_grade_roots := five_grade_roots_expansion
-  bosonic_roots := three_grade_bosonic_roots
-  fermionic_roots := odd_fermionic_roots
-  adH_quintic := adH_quintic_identity
-  adH_bosonic := adH_bosonic_cubic
-  adH_fermionic := adH_fermionic_cubic
-  inner_automorphism_order := inner_automorphism_mul
-  anti_automorphism_flip := anti_automorphism_ideal_flip
-  hamiltonian_central := identity_hamiltonian_central
-  hamiltonian_supertrace_zero := identity_hamiltonian_supertrace_zero
+/-- Matrix units in `M₃(R)` witness noncommutativity whenever `R` is nontrivial. -/
+theorem matrix_fin3_noncommutativity_witness [Nontrivial R] :
+    ∃ A B : Matrix (Fin 3) (Fin 3) R, A * B ≠ B * A := by
+  refine ⟨Matrix.single 0 1 (1 : R), Matrix.single 1 0 (1 : R), ?_⟩
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 3) (Fin 3) R => M 0 0) h
+  simp at h00
 
 end InfoGeometry.SuperGrassmannian.FiveGradedLieSuperalgebra

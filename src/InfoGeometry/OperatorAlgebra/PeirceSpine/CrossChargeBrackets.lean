@@ -24,6 +24,24 @@ theorem lie_sandwich_comm (U W : B) :
     lieOp_apply, sandwichOp_apply, crossTransport_apply]
   noncomm_ring
 
+/-- The two opposite corner inner derivations bracket to the inner derivation
+of their commutator. -/
+theorem opposite_lie_comm (P A C : B) :
+    comm (lieOp ℤ (conePlus P A)) (lieOp ℤ (coneMinus P C)) =
+      lieOp ℤ (genSig P A C) := by
+  simpa [comm, genSig] using
+    (InfoGeometry.OperatorAlgebra.LieJordan.lie_lie ℤ
+      (conePlus P A) (coneMinus P C))
+
+/-- The positive corner derivation acts on the negative double-sandwich by
+cross-transport of the corner commutator. -/
+theorem plus_lie_minus_sandwich_comm (P A C : B) :
+    comm (lieOp ℤ (conePlus P A))
+        (sandwichOp ℤ (coneMinus P C) (coneMinus P C)) =
+      crossTransport ℤ (genSig P A C) (coneMinus P C) := by
+  rw [lie_sandwich_comm]
+  rfl
+
 variable (P A C : B)
 
 theorem minus_lie_plus_sandwich_comm :

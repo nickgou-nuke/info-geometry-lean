@@ -60,6 +60,12 @@ def parse_args() -> argparse.Namespace:
         help="Fail fast if the build lock is currently held.",
     )
     parser.add_argument(
+        "--with-file-gates",
+        action="store_true",
+        default=False,
+        help="Run standalone per-file lean elaboration before the incremental Lake owner build.",
+    )
+    parser.add_argument(
         "--skip-file-gates",
         action="store_true",
         help="Skip `lake env lean <file>` gates and run only the owner and optional umbrella builds.",
@@ -130,6 +136,7 @@ def main() -> int:
         prefix=prefix,
     )
     umbrella = umbrella_target(args.umbrella)
+    run_file_gates = args.with_file_gates and not args.skip_file_gates
 
     print("[changed-verify] compressed Lean verification lane", flush=True)
     print(f"[changed-verify] changed Lean files: {len(files)}", flush=True)
@@ -144,7 +151,7 @@ def main() -> int:
         print("[changed-verify] strict check enabled", flush=True)
 
     if args.dry_run:
-        if not args.skip_file_gates:
+        if run_file_gates:
             for path in files:
                 rel = path.relative_to(root)
                 print(f"[changed-verify] would run locked Lean elaboration: {rel}", flush=True)
@@ -157,7 +164,7 @@ def main() -> int:
         print("[changed-verify] dry-run only; no commands executed", flush=True)
         return 0
 
-    if not args.skip_file_gates:
+    if run_file_gates:
         for path in files:
             rel = path.relative_to(root)
             print(f"[changed-verify] file gate (locked): {rel}", flush=True)

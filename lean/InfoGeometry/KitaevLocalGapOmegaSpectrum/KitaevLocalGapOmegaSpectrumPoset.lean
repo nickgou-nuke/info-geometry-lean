@@ -1621,6 +1621,58 @@ theorem z4_parafermion_binary_carry_clock_shift_weyl_algebra (i_K : K) :
        z4ClockSigma i_K * z4ShiftTauAdj = i_K • (z4ShiftTauAdj * z4ClockSigma i_K))) :=
   ⟨z4_binary_carry_synthesis_and_tau_powers, z4_clock_powers_and_weyl_braiding i_K⟩
 
+/-- Peirce idempotent used in the division-free real eighth-root carry. -/
+def peirceP2 : Mat4 K :=
+  !![1, 0, 0, 0;
+     0, 0, 0, 0;
+     0, 0, 1, 0;
+     0, 0, 0, 0]
+
+/-- Division-free integer eighth root of unity in the four-dimensional matrix algebra. -/
+def zetaRealMat4 : Mat4 K :=
+  !![ 0, 1, 0, 0;
+      0, 0, 1, 0;
+      0, 0, 0, 1;
+     -1, 0, 0, 0]
+
+/-- Matrix identities for the Peirce carry, cyclotomic powers and symplectic/orthogonal invariance. -/
+theorem dewitt_tetractys_mat4_zeta8_and_sp4_invariance :
+    ((peirceP2 : Mat4 K) * peirceP2 = peirceP2 ∧
+     (pauliX1 : Mat4 K) * peirceP2 = (I4 - peirceP2) * pauliX1 ∧
+     (peirceP2 : Mat4 K) * pauliX1 + (I4 - peirceP2) * diracMass2 * pauliX1 = zetaRealMat4) ∧
+    ((zetaRealMat4 : Mat4 K) * zetaRealMat4 = diracMass2 ∧
+     ((zetaRealMat4 : Mat4 K) * zetaRealMat4) * (zetaRealMat4 * zetaRealMat4) = -I4 ∧
+     (((zetaRealMat4 : Mat4 K) * zetaRealMat4) * (zetaRealMat4 * zetaRealMat4)) *
+       (((zetaRealMat4 : Mat4 K) * zetaRealMat4) * (zetaRealMat4 * zetaRealMat4)) = I4) ∧
+    ((zetaRealMat4 : Mat4 K).transpose * zetaRealMat4 = I4 ∧
+     (zetaRealMat4 : Mat4 K).transpose * diracMass2 * zetaRealMat4 = diracMass2) := by
+  have hP2 : (peirceP2 : Mat4 K) * peirceP2 = peirceP2 := by
+    ext i j; fin_cases i <;> fin_cases j <;> simp [peirceP2]
+  have hSwap : (pauliX1 : Mat4 K) * peirceP2 = (I4 - peirceP2) * pauliX1 := by
+    ext i j; fin_cases i <;> fin_cases j <;> simp [pauliX1, peirceP2, I4]
+  have hSyn :
+      (peirceP2 : Mat4 K) * pauliX1 + (I4 - peirceP2) * diracMass2 * pauliX1 = zetaRealMat4 := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [peirceP2, pauliX1, I4, diracMass2, zetaRealMat4]
+  have hSq : (zetaRealMat4 : Mat4 K) * zetaRealMat4 = diracMass2 := by
+    ext i j; fin_cases i <;> fin_cases j <;> simp [zetaRealMat4, diracMass2]
+  have hPow4 :
+      ((zetaRealMat4 : Mat4 K) * zetaRealMat4) * (zetaRealMat4 * zetaRealMat4) = -I4 := by
+    ext i j; fin_cases i <;> fin_cases j <;> simp [zetaRealMat4, I4]
+  have hPow8 :
+      (((zetaRealMat4 : Mat4 K) * zetaRealMat4) * (zetaRealMat4 * zetaRealMat4)) *
+        (((zetaRealMat4 : Mat4 K) * zetaRealMat4) * (zetaRealMat4 * zetaRealMat4)) = I4 := by
+    rw [hPow4]
+    ext i j; fin_cases i <;> fin_cases j <;> simp [I4]
+  have hOrth : (zetaRealMat4 : Mat4 K).transpose * zetaRealMat4 = I4 := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [zetaRealMat4, I4, Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_four]
+  have hSymp :
+      (zetaRealMat4 : Mat4 K).transpose * diracMass2 * zetaRealMat4 = diracMass2 := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [zetaRealMat4, diracMass2, Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_four]
+  exact ⟨⟨hP2, hSwap, hSyn⟩, ⟨hSq, hPow4, hPow8⟩, ⟨hOrth, hSymp⟩⟩
+
 end Mat4
 
 -- ============================================================================

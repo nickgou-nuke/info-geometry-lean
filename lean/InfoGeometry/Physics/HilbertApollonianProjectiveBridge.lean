@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Data.Real.Basic
@@ -63,6 +68,22 @@ def minRatio (x y : ℝ × ℝ) : ℝ :=
     $$d_H(\mathbf{x}, \mathbf{y}) = \ln \left( \frac{\max(x_1/y_1, x_2/y_2)}{\min(x_1/y_1, x_2/y_2)} \right)$$ -/
 def hilbertDist (x y : ℝ × ℝ) : ℝ :=
   Real.log (maxRatio x y / minRatio x y)
+
+/-- The raw formula is nonnegative on its intended carrier: pairs with
+strictly positive coordinates.  This domain hypothesis is essential to the
+Hilbert-projective interpretation of `hilbertDist`; the formula by itself is
+defined on all real pairs. -/
+theorem hilbertDist_nonneg_of_pos {x y : ℝ × ℝ}
+    (hx₁ : 0 < x.1) (hx₂ : 0 < x.2)
+    (hy₁ : 0 < y.1) (hy₂ : 0 < y.2) :
+    0 ≤ hilbertDist x y := by
+  have h₁ : 0 < x.1 / y.1 := div_pos hx₁ hy₁
+  have h₂ : 0 < x.2 / y.2 := div_pos hx₂ hy₂
+  have hmin : 0 < minRatio x y := lt_min h₁ h₂
+  have hquot : 1 ≤ maxRatio x y / minRatio x y := by
+    apply (le_div_iff₀ hmin).2
+    simp [maxRatio, minRatio]
+  exact Real.log_nonneg hquot
 
 /-- Coordinate-wise scaling preserves ratio quotients:
     $\frac{c_1 x_i}{c_2 y_i} = \frac{c_1}{c_2} \frac{x_i}{y_i}$. -/
@@ -183,10 +204,6 @@ theorem hilbert_dist_eq_apollonian_of_ge {p q : ℝ} (hp0 : 0 < p) (hp1 : p < 1)
 
 /-! ### 3. Metric Axioms on the Simplex -/
 
-/-- 🏆 THEOREM 5: Non-negativity of the Apollonian metric. -/
-theorem apollonian_nonneg (p q : ℝ) : 0 ≤ apollonianMetric p q :=
-  abs_nonneg _
-
 /-- 🏆 THEOREM 6: Reflexivity / Self-distance is zero. -/
 theorem apollonian_self (p : ℝ) : apollonianMetric p p = 0 := by
   dsimp [apollonianMetric]
@@ -216,6 +233,43 @@ theorem logit_injective {p q : ℝ} (hp0 : 0 < p) (hp1 : p < 1)
   have h_cross : p * (1 - q) = q * (1 - p) := by
     exact (div_eq_div_iff hp_den hq_den).mp h_exp
   linarith
+
+/-- The actual carrier for the Apollonian metric: probabilities strictly
+inside the binary simplex. -/
+abbrev BinaryProbability := {p : ℝ // 0 < p ∧ p < 1}
+
+/-- Logit coordinate on the open binary simplex. -/
+def apollonianLogitCoordinate (p : BinaryProbability) : ℝ := logit p.val
+
+/-- The logit coordinate separates points on the open binary simplex. -/
+theorem apollonianLogitCoordinate_injective :
+    Function.Injective apollonianLogitCoordinate := by
+  intro p q hpq
+  apply Subtype.ext
+  exact logit_injective p.property.1 p.property.2 q.property.1 q.property.2 hpq
+
+/-- Pullback metric on probabilities in the open binary simplex.  This stays
+as a named structure so it cannot silently replace an existing subtype metric. -/
+@[instance_reducible] noncomputable def apollonianPointMetricSpace :
+    MetricSpace BinaryProbability :=
+  MetricSpace.induced apollonianLogitCoordinate apollonianLogitCoordinate_injective inferInstance
+
+/-- Apollonian distance on the probability carrier, defined using its named
+logit pullback metric. -/
+def apollonianDistance (p q : BinaryProbability) : ℝ :=
+  @dist BinaryProbability apollonianPointMetricSpace.toPseudoMetricSpace.toDist p q
+
+/-- The pullback metric agrees with the explicit logit-difference formula. -/
+theorem apollonianDistance_eq_apollonianMetric (p q : BinaryProbability) :
+    apollonianDistance p q = apollonianMetric p.val q.val := by
+  change @dist ℝ _ (apollonianLogitCoordinate p) (apollonianLogitCoordinate q) = _
+  rw [Real.dist_eq]
+  rfl
+
+/-- Nonnegativity comes from the named pullback metric structure. -/
+theorem apollonianDistance_nonneg (p q : BinaryProbability) :
+    0 ≤ apollonianDistance p q := by
+  exact @dist_nonneg BinaryProbability apollonianPointMetricSpace.toPseudoMetricSpace p q
 
 /-- 🏆 THEOREM 9: Definiteness / Identity of Indiscernibles:
     $d_{\mathrm{Apol}}(p, q) = 0 \iff p = q$. -/
@@ -344,11 +398,16 @@ def certified_hilbert_apollonian_projective_synthesis : Prop :=
   (∀ (x y : ℝ × ℝ) (c1 c2 : ℝ),
     0 < c1 → 0 < c2 →
     hilbertDist (c1 * x.1, c1 * x.2) (c2 * y.1, c2 * y.2) = hilbertDist x y) ∧
+  (∀ (x y : ℝ × ℝ), 0 < x.1 → 0 < x.2 → 0 < y.1 → 0 < y.2 →
+    0 ≤ hilbertDist x y) ∧
   -- 2. Log-Cross-Ratio Identification
   (∀ (p q : ℝ), 0 < p → p < 1 → 0 < q → q < 1 →
     Real.log ((p * (1 - q)) / (q * (1 - p))) = logit p - logit q) ∧
-  -- 3. Metric Axioms: nonneg, self, symm, triangle, separation
-  (∀ (p q : ℝ), 0 ≤ apollonianMetric p q) ∧
+  -- 3. The genuine metric lives on the open binary probability carrier;
+  -- the raw formula on all reals is only a pseudometric.
+  (∀ (p q : BinaryProbability),
+    apollonianDistance p q = apollonianMetric p.val q.val) ∧
+  (∀ (p q : BinaryProbability), 0 ≤ apollonianDistance p q) ∧
   (∀ (p : ℝ), apollonianMetric p p = 0) ∧
   (∀ (p q : ℝ), apollonianMetric p q = apollonianMetric q p) ∧
   (∀ (p q r : ℝ), apollonianMetric p r ≤ apollonianMetric p q + apollonianMetric q r) ∧
@@ -366,8 +425,11 @@ def certified_hilbert_apollonian_projective_synthesis : Prop :=
 theorem hilbert_apollonian_projective_synthesis :
     certified_hilbert_apollonian_projective_synthesis := by
   refine ⟨hilbert_scale_invariant,
+          fun x y hx₁ hx₂ hy₁ hy₂ =>
+            hilbertDist_nonneg_of_pos hx₁ hx₂ hy₁ hy₂,
           fun p q hp0 hp1 hq0 hq1 => log_cross_ratio hp0 hp1 hq0 hq1,
-          apollonian_nonneg,
+          apollonianDistance_eq_apollonianMetric,
+          apollonianDistance_nonneg,
           apollonian_self,
           apollonian_symm,
           apollonian_triangle,

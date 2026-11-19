@@ -108,4 +108,8 @@ Do not promote any of the following to theorem-level Hilbert--Polya evidence wit
 - theorem names from historical socket/overlay material without source-hypothesis audit;
 - GUE terminology without a proved statistical limit theorem.
 
+<<<<<<< HEAD
 The next implementation should therefore start at the earliest missing operator-theoretic edge, not downstream at random matrices.
+=======
+The next implementation should therefore start at the earliest missing operator-theoretic edge, not downstream at random matrices.
+>>>>>>> upstream/pr/96

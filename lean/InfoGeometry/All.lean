@@ -657,3 +657,6 @@ import InfoGeometry.Quantum.PositiveEffectOrder
 import InfoGeometry.Quantum.MaxRelativeEntropy
 import InfoGeometry.Quantum.MaxRelativeEntropyQubit
 import InfoGeometry.Probability.AitchisonContingencyAudit
+import InfoGeometry.Algebra.SkewPolynomialFactorization
+import InfoGeometry.Algebra.QuadraticCrossedProduct
+import InfoGeometry.Algebra.CARTwoSidedIdeal

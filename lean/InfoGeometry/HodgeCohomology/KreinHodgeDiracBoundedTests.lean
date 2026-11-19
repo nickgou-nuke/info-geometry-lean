@@ -30,7 +30,8 @@ example :
       LinearMap.ker (jCLM (H := Plane)).toLinearMap := by
   apply krein_square_kernel_eq_of_commutes_symmetry
   · change kreinAdjoint (jCLM (H := Plane)) = jCLM
-    simp [kreinAdjoint]
+    rw [kreinAdjoint, adjoint_jCLM]
+    exact jCLM_comp_jCLM_comp (jCLM (H := Plane))
   · rfl
 
 #print axioms kreinBilin_nondegenerate

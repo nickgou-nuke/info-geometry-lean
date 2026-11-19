@@ -1350,8 +1350,9 @@ theorem ellCircular_regularJ_doubleComm_eq_zero_iff
     have hentry := congrFun
       (congrArg (fun F : Module.End ℝ Coordinate => F (Pi.single j (1 : ℝ))) h) i
     rw [ellCircular_regularJ_doubleComm_matrixUnit] at hentry
-    simp [hsector] at hentry
-    exact (mul_eq_zero.mp hentry).resolve_left (by norm_num)
+    have hscaled : (4 : ℝ) * T (Pi.single j (1 : ℝ)) i = 0 := by
+      simpa [hsector] using hentry
+    exact (mul_eq_zero.mp hscaled).resolve_left (by norm_num)
   · intro h
     apply LinearMap.ext
     intro x

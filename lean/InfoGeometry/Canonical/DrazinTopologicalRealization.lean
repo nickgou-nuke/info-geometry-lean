@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.DrazinSupercharge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.EPAndGroupInverse
@@ -96,7 +101,10 @@ private theorem scalarAction_isEven (x : ℝ) :
           = x • KreinGradedModule.gradeConj (H := H₂) (1 : EndH₂) := by
               simpa using (KreinGradedModule.gradeConj_smul (H := H₂) x (1 : EndH₂))
       _ = x • (1 : EndH₂) := by rw [h1]
-  simpa [KreinGradedModule.IsEven] using hEq
+  change KreinGradedModule.gradeConj (H := H₂)
+      (((Algebra.ofId ℝ EndH₂).comp (Algebra.ofId ℝ ℝ)) x) =
+    (((Algebra.ofId ℝ EndH₂).comp (Algebra.ofId ℝ ℝ)) x)
+  exact hEq
 
 def DrazinFredholmProofBundle
     (CIK : CertifiedInverseKernel H₂)

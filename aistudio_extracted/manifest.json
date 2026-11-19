@@ -1,0 +1,157 @@
+{
+  "source": "/home/goutev/repos/info-geometry-lean/aistudio_full.json",
+  "source_bytes": 1393195,
+  "source_sha256": "8ac03ba57fcd4cb65fd6df0b5d47a2c460ce967e40be20989b8efee78a90c555",
+  "turns": 45,
+  "roles": {
+    "user": 15,
+    "model": 30
+  },
+  "documents": 45,
+  "attachments": [],
+  "counts": {
+    "tex": 1825,
+    "inline_code": 407,
+    "code": 2
+  },
+  "code_languages": {
+    "text": 1,
+    "lean": 1
+  },
+  "declaration_occurrences": 0,
+  "unclosed_spans": [
+    {
+      "turn": 17,
+      "line": 38,
+      "kind": "tex"
+    },
+    {
+      "turn": 43,
+      "line": 52,
+      "kind": "tex"
+    }
+  ],
+  "streaming_parts_checks": [
+    {
+      "turn": 2,
+      "matches_text": true
+    },
+    {
+      "turn": 3,
+      "matches_text": true
+    },
+    {
+      "turn": 5,
+      "matches_text": true
+    },
+    {
+      "turn": 6,
+      "matches_text": true
+    },
+    {
+      "turn": 8,
+      "matches_text": true
+    },
+    {
+      "turn": 9,
+      "matches_text": true
+    },
+    {
+      "turn": 11,
+      "matches_text": true
+    },
+    {
+      "turn": 12,
+      "matches_text": true
+    },
+    {
+      "turn": 14,
+      "matches_text": true
+    },
+    {
+      "turn": 15,
+      "matches_text": true
+    },
+    {
+      "turn": 17,
+      "matches_text": true
+    },
+    {
+      "turn": 18,
+      "matches_text": true
+    },
+    {
+      "turn": 20,
+      "matches_text": true
+    },
+    {
+      "turn": 21,
+      "matches_text": true
+    },
+    {
+      "turn": 23,
+      "matches_text": true
+    },
+    {
+      "turn": 24,
+      "matches_text": true
+    },
+    {
+      "turn": 26,
+      "matches_text": true
+    },
+    {
+      "turn": 27,
+      "matches_text": true
+    },
+    {
+      "turn": 29,
+      "matches_text": true
+    },
+    {
+      "turn": 30,
+      "matches_text": true
+    },
+    {
+      "turn": 32,
+      "matches_text": true
+    },
+    {
+      "turn": 33,
+      "matches_text": true
+    },
+    {
+      "turn": 35,
+      "matches_text": true
+    },
+    {
+      "turn": 36,
+      "matches_text": true
+    },
+    {
+      "turn": 38,
+      "matches_text": true
+    },
+    {
+      "turn": 39,
+      "matches_text": true
+    },
+    {
+      "turn": 41,
+      "matches_text": true
+    },
+    {
+      "turn": 42,
+      "matches_text": true
+    },
+    {
+      "turn": 44,
+      "matches_text": true
+    },
+    {
+      "turn": 45,
+      "matches_text": true
+    }
+  ],
+  "scope": "Complete exported text and embedded text attachments. Explicit TeX and code indexed; prose mathematics preserved in full_chat.txt. No claim of mathematical or Lean verification."
+}

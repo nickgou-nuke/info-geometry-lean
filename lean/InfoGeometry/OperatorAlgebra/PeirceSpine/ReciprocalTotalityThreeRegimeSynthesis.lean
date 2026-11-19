@@ -164,6 +164,21 @@ section ThreeRegime
 
 open InfoGeometry.OperatorAlgebra.PeirceSpine.ReciprocalTotalityAporiaPoset
 
+/-! ### Noncommutativity Ground Witness on `Matrix (Fin 2) (Fin 2) ℚ` (T16) -/
+
+/-- Elementary nilpotent matrix `E₀₁` over `ℚ`. -/
+def matE01_Q : Matrix (Fin 2) (Fin 2) ℚ := !![0, 1; 0, 0]
+
+/-- Elementary nilpotent matrix `E₁₀` over `ℚ`. -/
+def matE10_Q : Matrix (Fin 2) (Fin 2) ℚ := !![0, 0; 1, 0]
+
+/-- OpenGauss Trap T16: Explicit non-commutativity witness on `Matrix (Fin 2) (Fin 2) ℚ`. -/
+theorem matE01_mul_E10_ne_mul_E10_E01_Q :
+    matE01_Q * matE10_Q ≠ matE10_Q * matE01_Q := by
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℚ => M 0 0) h
+  norm_num [matE01_Q, matE10_Q, Matrix.mul_apply, Fin.sum_univ_two] at h00
+
 /-- Rational projection cut `P₀ ∈ M₂(ℚ)`. -/
 def cutP0Q : Matrix (Fin 2) (Fin 2) ℚ := !![1, 0; 0, 0]
 
@@ -338,6 +353,59 @@ def stripPT (p : ℝ × ℝ) : ℝ × ℝ := (-p.1, -p.2)
 
 /-- Apollonian Cayley–Möbius map `w ↦ (w - 1/2) / (w + 1/2)` anchoring poles `P_± = ±1/2`. -/
 def apollonianCayley (w : ℂ) : ℂ := (w - (1 / 2 : ℂ)) / (w + (1 / 2 : ℂ))
+
+/-- Negation in the centered coordinate corresponds to reciprocal in the
+totalized complex coordinate, including the two exceptional inputs. At either
+pole `±1/2`, Lean's total field division sends the Cayley value to zero, and
+the reciprocal of that value is again zero. Away from the poles this is the
+usual Möbius reciprocal identity. -/
+theorem apollonianCayley_neg_eq_inv (w : ℂ) :
+    apollonianCayley (-w) = (apollonianCayley w)⁻¹ := by
+  by_cases hplus : w = (1 / 2 : ℂ)
+  · subst w
+    norm_num [apollonianCayley]
+  · by_cases hminus : w = -(1 / 2 : ℂ)
+    · subst w
+      norm_num [apollonianCayley]
+    · have hden₁ : w + (1 / 2 : ℂ) ≠ 0 := by
+        intro h
+        apply hminus
+        linear_combination h
+      have hden₂ : -w + (1 / 2 : ℂ) ≠ 0 := by
+        intro h
+        apply hplus
+        linear_combination -2 * h
+      have hden₃ : w - (1 / 2 : ℂ) ≠ 0 := by
+        intro h
+        apply hplus
+        linear_combination 2 * h
+      have hden₄ : -1 + w * 2 ≠ 0 := by
+        intro h
+        apply hden₃
+        linear_combination (1 / 2 : ℂ) * h
+      calc
+        apollonianCayley (-w) = (w + (1 / 2 : ℂ)) / (w - (1 / 2 : ℂ)) := by
+          rw [apollonianCayley]
+          field_simp [hden₂, hden₃]
+          <;> ring
+        _ = (apollonianCayley w)⁻¹ := by
+          rw [apollonianCayley]
+          field_simp [hden₁, hden₃, hden₄]
+          <;> ring
+
+/-- The two poles form the exceptional stratum for the product normalization:
+both totalized Cayley values vanish there, so their product is zero rather
+than one. The reciprocal law above still holds at these points because
+`0⁻¹ = 0` in Lean's totalized field structure. -/
+theorem apollonianCayley_pole_stratum :
+    apollonianCayley (1 / 2 : ℂ) = 0 ∧
+    apollonianCayley (-(1 / 2 : ℂ)) = 0 ∧
+    apollonianCayley (-(1 / 2 : ℂ)) * apollonianCayley (1 / 2 : ℂ) = 0 ∧
+    apollonianCayley (-(1 / 2 : ℂ)) =
+      (apollonianCayley (1 / 2 : ℂ))⁻¹ ∧
+    apollonianCayley (1 / 2 : ℂ) =
+      (apollonianCayley (-(1 / 2 : ℂ)))⁻¹ := by
+  norm_num [apollonianCayley]
 
 /-- Formalizes the Klein-bottle KMS half-period glide reflection (fixed-point-free, orientation-
 reversing, squaring to full `β`-translation), the centered strip Klein four-group `V₄ = {1, P, T, PT}`

@@ -363,8 +363,8 @@ def movingSheetRepHom : (ℝ × ℝ) →+* MovingSheetMat where
     apply movingSheet_ext
     · rw [Matrix.add_apply]; simp [movingSheetRep]
     · rw [Matrix.add_apply]
-      simp only [movingSheetRep, Prod.fst_add, Prod.snd_add]
-      exact movingSheetRep_offdiag_add p.1 p.2 q.1 q.2
+      simp [movingSheetRep]
+      <;> simp [movingSheetRep]
     · rw [Matrix.add_apply]; simp [movingSheetRep]
     · rw [Matrix.add_apply]; simp [movingSheetRep]
 
@@ -1432,11 +1432,7 @@ theorem affineExteriorCoeff_mat2_noncomm :
   intro h
   have h00 := congrFun (congrFun h (0 : Fin 2)) (0 : Fin 2)
   simp [Matrix.mul_apply, Fin.sum_univ_two] at h00
-  let aug : (Polynomial ℝ ⊗[ℝ] ExteriorAlgebra ℝ ℝ) →ₐ[ℝ] ℝ :=
-    Algebra.TensorProduct.lift (Polynomial.aeval (0 : ℝ))
-      (ExteriorAlgebra.lift ℝ ⟨0, fun _ => by simp⟩) (fun _ _ => mul_comm _ _)
-  have haug := congrArg aug h00
-  simp at haug
+  exact absurd h00 (by norm_num)
 
 end InfoGeometry.Canonical.PeirceToMatrixConnectionCarrierMapWitnesses
 

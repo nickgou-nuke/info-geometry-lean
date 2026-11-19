@@ -1,0 +1,2 @@
+{"turn": 15, "role": "model", "origin": "text", "kind": "code", "language": "text", "start": 8198, "end": 8278, "line": 67, "closed": true, "text": "lean/InfoGeometry/Canonical/SixPillarR1R2R3CrossSpineSynthesis.lean\n"}
+{"turn": 24, "role": "model", "origin": "text", "kind": "code", "language": "lean", "start": 9178, "end": 9317, "line": 83, "closed": true, "text": "  principalCartanBaseTangentEquiv :\n    TangentSpace IM (B.toCartan.proj p) ≃ₗ[ℝ] (𝔤 ⧸ B.toCartan.iotaH.range.toSubmodule)\n"}

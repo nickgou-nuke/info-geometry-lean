@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.FierzKleinFoundation
+import InfoGeometry.Canonical.KleinBivectorLinear
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
@@ -92,5 +98,59 @@ theorem lineThrough_isProjectiveLine (p q : Point4) :
 theorem lineThrough_isLineScrew (p q : Point4) :
     IsLineScrew (lineThrough p q) := by
   exact lineThrough_isProjectiveLine p q
+
+/-- Every projective bivector in four dimensions is a sum of two line blades.
+
+This is the real six-coordinate `Λ² ℝ⁴` statement used in classical screw
+geometry: the mixed coordinates are one blade through the chosen `t`-axis,
+and the remaining three spatial coordinates form a blade in the three-space.
+The sum need not itself be a line; its Klein value can be nonzero. -/
+theorem everyBivector4_is_sum_of_two_lines (S : Screw4) :
+    ∃ a b c d : Point4, S = lineThrough a b + lineThrough c d := by
+  let e₀ : Point4 := fun i => if i = I4.t then 1 else 0
+  let m : Point4 := fun i =>
+    if i = I4.t then 0 else if i = I4.x then S.p01
+      else if i = I4.y then S.p02 else S.p03
+  by_cases h12 : S.p12 ≠ 0
+  · let u : Point4 := fun i =>
+      if i = I4.t then 0 else if i = I4.x then 1
+        else if i = I4.y then 0 else -S.p23 / S.p12
+    let v : Point4 := fun i =>
+      if i = I4.t then 0 else if i = I4.x then 0
+        else if i = I4.y then S.p12 else S.p13
+    refine ⟨e₀, m, u, v, ?_⟩
+    ext <;> simp [lineThrough, e₀, m, u, v, wedgeVec4]
+      <;> field_simp [h12] <;> ring
+  · by_cases h13 : S.p13 ≠ 0
+    · let u : Point4 := fun i =>
+        if i = I4.t then 0 else if i = I4.x then 1
+          else if i = I4.y then S.p23 / S.p13 else 0
+      let v : Point4 := fun i =>
+        if i = I4.t then 0 else if i = I4.x then 0
+          else if i = I4.y then 0 else S.p13
+      refine ⟨e₀, m, u, v, ?_⟩
+      ext <;> simp [lineThrough, e₀, m, u, v, wedgeVec4, h12]
+        <;> field_simp [h13] <;> ring
+    · let u : Point4 := fun i =>
+        if i = I4.t then 0 else if i = I4.x then 0
+          else if i = I4.y then 1 else 0
+      let v : Point4 := fun i =>
+        if i = I4.t then 0 else if i = I4.x then 0
+          else if i = I4.y then 0 else S.p23
+      refine ⟨e₀, m, u, v, ?_⟩
+      ext <;> simp [lineThrough, e₀, m, u, v, wedgeVec4, h12, h13]
+        <;> ring
+
+/-- A sum of two lines can be a genuine screw rather than another line. The
+coordinates `p01 = p23 = 1` give Klein value `1`, so the distinction between
+the linear bivector carrier and its decomposable Klein locus is strict. -/
+theorem sum_of_two_lines_can_be_nondecomposable :
+    ∃ a b c d : Point4,
+      ¬ IsProjectiveLine (lineThrough a b + lineThrough c d) := by
+  let S : Screw4 := ⟨1, 0, 0, 0, 0, 1⟩
+  obtain ⟨a, b, c, d, h⟩ := everyBivector4_is_sum_of_two_lines S
+  refine ⟨a, b, c, d, ?_⟩
+  rw [← h]
+  norm_num [IsProjectiveLine, IsOnKleinQuadric, kleinForm, S]
 
 end InfoGeometry.Erlangen.ProjectiveLineGeometry

@@ -1,0 +1,618 @@
+{
+  "status": "passed",
+  "scope": "Exact repository source closure and native axiom audit",
+  "targets": [
+    "InfoGeometry.Canonical.ParaComplexNeutralForm",
+    "InfoGeometry.LinearAlgebra.RegularDyadCompression",
+    "InfoGeometry.Optics.SheetWittCircularBasis",
+    "InfoGeometry.Twistor.NonincidentLogPairing",
+    "InfoGeometry.Twistor.RealDualTwistor",
+    "InfoGeometry.Twistor.RealProjectiveAmbitwistor",
+    "InfoGeometry.Canonical.ModularZ2CubeGrading",
+    "InfoGeometry.Twistor.TwistorConstituentKinematics",
+    "InfoGeometry.Twistor.TwoTwistorGramMass"
+  ],
+  "modules": [
+    {
+      "module": "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Algebra/FiniteSpinAlgebra.olean": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Canonical.ParaComplexConnectionBridge",
+      "returncode": 0,
+      "warnings": 5,
+      "artifacts": {
+        "lib/InfoGeometry/Canonical/ParaComplexConnectionBridge.olean": "e05695bf242ae6b14928606fa23cb9917ff5fbdb971022f086db5b41fc14d4af"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Canonical.ParaComplexNeutralForm",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Canonical/ParaComplexNeutralForm.olean": "57929fc576bfb5958404ba880381df895d125ab968f30f2309bb4cc29d7ebd63"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Core.IdempotencyDefect",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Core/IdempotencyDefect.olean": "3881365ade9b79cfa9ebda7650d28a3ac9e50f99d63be97c7cc55a770795363c"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceDecomposition",
+      "returncode": 0,
+      "warnings": 1,
+      "artifacts": {
+        "lib/InfoGeometry/Core/PeirceDecomposition.olean": "d04ba4524762a72b4ebf499211db90df12c18c4a11e4ba317cda697e79196fbe"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceCompressionDefect",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Core/PeirceCompressionDefect.olean": "3ed7b1608620bcfe4a34c644e618cb354406026d5d881b45baca0e90bd88a306"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.LinearAlgebra.RegularDyadCompression",
+      "returncode": 0,
+      "warnings": 1,
+      "artifacts": {
+        "lib/InfoGeometry/LinearAlgebra/RegularDyadCompression.olean": "1c4040915dca5d111fa6503005d5881475a9dc186379e204e1ca350636aa8715"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.ChiralPolarization",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/OperatorAlgebra/ChiralPolarization.olean": "b945f41081cd2e01d5891d4d15b78a8394cea785918ea70b5ff4bbd4d569afcc"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Geometry.KreinIsotropicCone",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Geometry/KreinIsotropicCone.olean": "87eab5ef12fb17bf12868b3de2eaaf01c55ae12e305f56cf9f395665fccc3497"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Meta.OwnerTarget",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Meta/OwnerTarget.olean": "02713056566d9dd0ccb3c79e0e757c3f407c7eefe5f7f9029507a18eeaa81cc4"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/OperatorAlgebra/DrazinRepresentedSplit.olean": "d2a7931365992f5d4390a1926c0229bb958645928e447e8a374bcf138883c080"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.KreinIsotropicCone",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/OperatorAlgebra/KreinIsotropicCone.olean": "3dc672f9759f6d5d9dcfb710a6275da98a4facf8634b3f69cdba19242549cd56"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.TomitaCartanSplit",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/OperatorAlgebra/TomitaCartanSplit.olean": "761438a390ee48694c1004d956aca60c6c99a05321efad7b68fc97d6f222c8d1"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/OperatorAlgebra/ChiralProjectorFromInvolution.olean": "df3350c68c168e815cd6fc2c566dccefeb6cf42f77ab107dff7311a097406f67"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Optics.SheetWittCircularBasis",
+      "returncode": 0,
+      "warnings": 3,
+      "artifacts": {
+        "lib/InfoGeometry/Optics/SheetWittCircularBasis.olean": "50d28b1d953bdbfe84ef17325d3d80e513805db42b5a961b94da23b6bd0193c4"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Twistor.RealDualTwistor",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Twistor/RealDualTwistor.olean": "acc876ae35476a437af245596d59d278e2c279f01e17eec7575ee64aae8ab9a2"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Twistor.NonincidentLogPairing",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Twistor/NonincidentLogPairing.olean": "ff2dead3305155fe1a5f89b79f65dad1b9f777b3b5f5cf347ec864eeb51786a5"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Twistor.RealProjectiveAmbitwistor",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Twistor/RealProjectiveAmbitwistor.olean": "e662cafb7eef0f5223418f1ea266b557f605f0a89718d57e2ee7afbf93b26f10"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Canonical.ModularZ2CubeGrading",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Canonical/ModularZ2CubeGrading.olean": "be5ec483bae32011b1f5dd2353a89704b7dff6b6c6761e1976d5f878d5b86f82"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Twistor.PenroseIncidence",
+      "returncode": 0,
+      "warnings": 1,
+      "artifacts": {
+        "lib/InfoGeometry/Twistor/PenroseIncidence.olean": "55079b80491946e71d3ff250710e737d062bd3e71c4d79196c44102d74092de5"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.GrandUnification.ArchetypeDictionary",
+      "returncode": 0,
+      "warnings": 3,
+      "artifacts": {
+        "lib/InfoGeometry/GrandUnification/ArchetypeDictionary.olean": "420aad2f3a91aa14311efa4ee0c0e3253582256bab51ef26f530ab2a15965dbb"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Krein.KreinSpace",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Krein/KreinSpace.olean": "9ccf8c29474dfb5c9e6c3215024fb43018e76f1f76f4e4d405f52089fd0c6395"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Cartan.Involution",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Cartan/Involution.olean": "6902e09ed212a3071d54a0f4dcbf8c7ba52f14b0538ae3eb28364d084c1747ce"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Krein/InvolutiveSelfDualCarrier.olean": "32d31fd4daa45776e0dff358ad688d397c5899c573d97bc49b19de0936920642"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Krein.DoubledSpace",
+      "returncode": 0,
+      "warnings": 1,
+      "artifacts": {
+        "lib/InfoGeometry/Krein/DoubledSpace.olean": "eff9e02fdb999d8417b7ff450233ab283e71ce8bf7d99da91f3622808e257111"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Convex.ProjectiveRays",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Convex/ProjectiveRays.olean": "4c6e0f54465865a5a9c490189fe08c7e96be79cbd5f0f1d40732392a6c0038a1"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Twistor.NullProjective",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Twistor/NullProjective.olean": "f90c0c278f34b52002a1719e3f5174a8ef5a1bb5b8d1d7b407ea5136e72b7d44"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Twistor.PenroseTwistor",
+      "returncode": 0,
+      "warnings": 5,
+      "artifacts": {
+        "lib/InfoGeometry/Twistor/PenroseTwistor.olean": "7c526bc23cab0dc56c8b37788b310aaaa99c30a0a0e40fa6808feebcb5344564"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Physics.ChiralPoincareSouriauBridge",
+      "returncode": 0,
+      "warnings": 5,
+      "artifacts": {
+        "lib/InfoGeometry/Physics/ChiralPoincareSouriauBridge.olean": "34e939f1af666bf8687ce8bdff4d89a812b423a081c30ac8263427569f3b4870"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Twistor.PerjesConventions",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Twistor/PerjesConventions.olean": "a9ff7332caf9efad02ec3c2eb007ed2dd1822d1acf1176b08d32c722f3574ac5"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Projective.KleinQuadricPlucker",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Projective/KleinQuadricPlucker.olean": "77fb097f10ed300985e73e62a24d9eff4b34a1c93703fde030d6a54a4080507b"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Twistor.TwoTwistorPlucker",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Twistor/TwoTwistorPlucker.olean": "2f497bf466cd61cedac3b2ebbff7f15cc3c87c0fd83303b2e3925904d66cd15a"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Twistor.TwistorFrameCovariance",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Twistor/TwistorFrameCovariance.olean": "1f05414383a2faa2c6af1497c2a19fae2c8aae66f2fa3c4818f814d81b540588"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Twistor.InfinityTwistor",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Twistor/InfinityTwistor.olean": "6539fe9300597399f0d1362b2515e27720a1d3d240307b66d503d0ae9e48f641"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Twistor.SpinorOuterProduct",
+      "returncode": 0,
+      "warnings": 1,
+      "artifacts": {
+        "lib/InfoGeometry/Twistor/SpinorOuterProduct.olean": "b6a0043b74647cf16d964ce4f78c0296b31f285fcbc563b16629bd91958338fa"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Twistor.TwistorKinematicTensor",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Twistor/TwistorKinematicTensor.olean": "0d0b85470b8bc39677cc507ea60bc4360376fec663cb951cd73b11945e0920f4"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Twistor.TwistorConstituentKinematics",
+      "returncode": 0,
+      "warnings": 1,
+      "artifacts": {
+        "lib/InfoGeometry/Twistor/TwistorConstituentKinematics.olean": "bffaf498487861d0575eb45a082f1d49d55c2c9027b005a5210786b8e7294b8a"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Twistor.PerjesMomentOperator",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Twistor/PerjesMomentOperator.olean": "483f4683924bd1b7822a8b75a7bff1b3a218c140f50eb069a0c3eee6e6f80a10"
+      },
+      "reused": false
+    },
+    {
+      "module": "InfoGeometry.Twistor.TwoTwistorGramMass",
+      "returncode": 0,
+      "warnings": 0,
+      "artifacts": {
+        "lib/InfoGeometry/Twistor/TwoTwistorGramMass.olean": "c1a3e19f2f1610ba80cf2a09c6e014f7241a443c35a42b32464b8d75eb90d61d"
+      },
+      "reused": false
+    }
+  ],
+  "audit_required": true,
+  "verification_source_sha256": {
+    "tools/quality/check_clifford_dirac.py": "fcf6fbb9845e0ee2a85bdb3778c5fe74345a9ae7a2e97e871d0a89d3e98e7db0",
+    "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+    "tools/quality/reviewed_audit_source.py": "a976c910f5efb4611b1626d714e3197310d92648ffae56513e94a49ae5f0f206",
+    "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df"
+  },
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "source_sha256": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+    "InfoGeometry.Canonical.ParaComplexConnectionBridge": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+    "InfoGeometry.Canonical.ParaComplexNeutralForm": "ac8ea0b4ec1b2c45bc4995388eedcc27e5ef7e0fd61d862a6181f896dc7ab605",
+    "InfoGeometry.Core.IdempotencyDefect": "2d7b8fa580abe148fc70a39f8e1831b5505fb7f6a3920f3a79a0ba35bfee5590",
+    "InfoGeometry.Core.PeirceDecomposition": "b2426391a1841cbdb35bdef72138b5ab1553508c82c22ea930aa23f164de9bd9",
+    "InfoGeometry.Core.PeirceCompressionDefect": "f2e657ca40ff91a996b503c141c2b1f79b2173204a04aadf7afc8c2013bf7c8d",
+    "InfoGeometry.LinearAlgebra.RegularDyadCompression": "a85dafe5d2f3fa1114a085500bd0ebf917088f9bd81ae3f545c90f278e30c780",
+    "InfoGeometry.OperatorAlgebra.ChiralPolarization": "40707ffc7df11e1740574b9100f50430774e2f2e56c5834ab110237f02b65a02",
+    "InfoGeometry.Geometry.KreinIsotropicCone": "2fe3d1cbe956bca59ecd6c4ab9e3407da1c265fb13c55c439a1e22b20d2d125f",
+    "InfoGeometry.Meta.OwnerTarget": "824ac23fa5a0f002b220a4547d7e26bb98fb4ddbe4b82f76f027aee02e3c6dab",
+    "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit": "32bd3e34aa22df3a3c0eefc98b805dd0f773e1f61061a9dae030315eb13f01bf",
+    "InfoGeometry.OperatorAlgebra.KreinIsotropicCone": "375912c2aff80d00e75db6f9ce7b2bfc12c9bc28a4c392ba226e834463cbc512",
+    "InfoGeometry.OperatorAlgebra.TomitaCartanSplit": "942ba5d0ccb4b3c326899033d9b41082f3d28229a02e5f3622839a81f8faa298",
+    "InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution": "220ce4a54c802b829034f0acf4534a7ce255d03a872256f1445cdc7223a6da55",
+    "InfoGeometry.Optics.SheetWittCircularBasis": "dcd4fbde48e869da4d03e6512562c245f7162e373df6146a364f7deccd256d69",
+    "InfoGeometry.Twistor.RealDualTwistor": "ec7900fb51a32e6135ba0b6e4f14995db171a157105f3d69f6e88aa54476fbbf",
+    "InfoGeometry.Twistor.NonincidentLogPairing": "57af40272b06c8ce41522c58659d686d9c70dbcfacd42e37511c3217dbdb2cdb",
+    "InfoGeometry.Twistor.RealProjectiveAmbitwistor": "bd25aabe91c66e3ab83ba6f7647f964007ad0e8441b08bb230e12c0f21f1db27",
+    "InfoGeometry.Canonical.ModularZ2CubeGrading": "079b1f23fbafb9dc9f8c560fbb6abc72a80d92f8a4233baf0e61a0e4f38faa55",
+    "InfoGeometry.Twistor.PenroseIncidence": "31178c457ef77e633d1be52777447001339f98e66b4e10610ea4f089808d8983",
+    "InfoGeometry.GrandUnification.ArchetypeDictionary": "bb89d0138a3842e20e9b05eab752745aa338c8e86bec0d0253fc2c244756a261",
+    "InfoGeometry.Krein.KreinSpace": "38f1482b3537eb5a82f622f702bdb13c43d5ff5b3402e0b872d079eeb180dc97",
+    "InfoGeometry.Cartan.Involution": "d407100337b0684f5dac751bc5372155fb1a86315395a05347419f26d855729c",
+    "InfoGeometry.Krein.InvolutiveSelfDualCarrier": "71a2dcad64a19921e86d5297a7039ad64af7aa1b7cf762f950861a26fa1fecd6",
+    "InfoGeometry.Krein.DoubledSpace": "df94e1e351340e16b21ea8d0a9aef632b5f56e50078c5f26701ce96c9c91d0fc",
+    "InfoGeometry.Convex.ProjectiveRays": "954c88a31177f673221773066efb2224ed68e6bf2a456d7d0d25931d6fef17fd",
+    "InfoGeometry.Twistor.NullProjective": "2f706ac6e568051885eae7da812f6acebcf09b3c0971363f92821cde6583670b",
+    "InfoGeometry.Twistor.PenroseTwistor": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+    "InfoGeometry.Physics.ChiralPoincareSouriauBridge": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+    "InfoGeometry.Twistor.PerjesConventions": "903b0b7a18386048fa13266ff8adcbadd8c14bb0e6a9c32ab5da6a3049a2ee9d",
+    "InfoGeometry.Projective.KleinQuadricPlucker": "bc5b5017340240566c12a7910065b5d9769b9f64b927a963576536146f542e5f",
+    "InfoGeometry.Twistor.TwoTwistorPlucker": "25b6f74b9773ca4f4a4b258983cf7a66c6928700a77e245cef2a31d8f5816241",
+    "InfoGeometry.Twistor.TwistorFrameCovariance": "5f4627f523c9c84648ccfea5ff33e362da97550272ccdee9e3eb4bb553fe01c6",
+    "InfoGeometry.Twistor.InfinityTwistor": "982c6db81156164101c7802bb30f41d9ec8cf5c933401a6b80451d9eb083d7a4",
+    "InfoGeometry.Twistor.SpinorOuterProduct": "249b1ac13661a06ba24930c5e96d8c632246359677ae4f9743da244be29b50b1",
+    "InfoGeometry.Twistor.TwistorKinematicTensor": "f89010846129b1f1ce1db809873ef1548efbe321c9beb53502000fe7eafcb0bc",
+    "InfoGeometry.Twistor.TwistorConstituentKinematics": "2347b498be655c0fa6e6ddeac319519830bca9a13dcb290ef937d8d0ad91203f",
+    "InfoGeometry.Twistor.PerjesMomentOperator": "00e6e5e75c65496c01b3083c9386f7709e36a4769fa4af86ed0b988ce73a035c",
+    "InfoGeometry.Twistor.TwoTwistorGramMass": "d19afc2bed27568def2b5409c93de73f93fe65a592ead34d5e8010424e1333fe"
+  },
+  "fingerprints": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "6318527c4fbd65bca67b505b6a77a74eb750cf957768c7af3f06c163dce9bc28",
+    "InfoGeometry.Canonical.ParaComplexConnectionBridge": "0ca04548dc1a03c7431de5f65a27016396ae7078ecc8cef34ddd23e611c65044",
+    "InfoGeometry.Canonical.ParaComplexNeutralForm": "c43bd66c92b4249c9bc461cae7c6ec0e825501cca89d6754c5ca2b41e8283d6d",
+    "InfoGeometry.Core.IdempotencyDefect": "47f59232a971b8dca23c1d7cd07ac553c31468d143ed1a390f229eaf0c7697d5",
+    "InfoGeometry.Core.PeirceDecomposition": "44fd72a7671b9164fb71c5803315e679f0862ce4315700f536980697c2b4da3b",
+    "InfoGeometry.Core.PeirceCompressionDefect": "cf38e2c51eb1badd0562cf4ba1453877adbd39b3db5734fe3ceb15071342441b",
+    "InfoGeometry.LinearAlgebra.RegularDyadCompression": "05cdf76073b34587eb00907caad165d5ffae158a194bbfa85defb842e408bd90",
+    "InfoGeometry.OperatorAlgebra.ChiralPolarization": "dfac5f803c5cfb3b55043158ca067df6791a3dc257b39f1aa063b30eeb8645b2",
+    "InfoGeometry.Geometry.KreinIsotropicCone": "62b266ebcd65245cb20552845420cd477f8431f085838447c887b1c107a4280c",
+    "InfoGeometry.Meta.OwnerTarget": "825689d3869ebc6f71d9f4e329aa58c9d74ac8e92786695a63e12ae1e3e20acf",
+    "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit": "98bbc118f17ba7f913c7bacfa570a10f4002e54761614f596be0b165b28b0c44",
+    "InfoGeometry.OperatorAlgebra.KreinIsotropicCone": "c8c70ca0e109184560ef46a4bece70f539f41a9f6fef2f86018fa8bc3c377cf5",
+    "InfoGeometry.OperatorAlgebra.TomitaCartanSplit": "69bc01f9f3e5dd6f1edd761ca240dab2c9ebffbc5fcc2076424feaead5f37dbc",
+    "InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution": "8d43a5014ef0225d2f48381f61e52e7765674bd2ddcff2780c6ca65cfa67154d",
+    "InfoGeometry.Optics.SheetWittCircularBasis": "defe11cffa0f7464a6b7bd199531d0a3468ffc93be33046c4e04aed5323507c5",
+    "InfoGeometry.Twistor.RealDualTwistor": "1e184489826ecab47b7e5aafd8f805aa849a3af1a28068f58fe60a79c55cb3c1",
+    "InfoGeometry.Twistor.NonincidentLogPairing": "8496dd06bf7773f6c96567b5dacbd984ed744270edc93a3dc2ca40e0cf5c52a8",
+    "InfoGeometry.Twistor.RealProjectiveAmbitwistor": "1059bca92196267a01b975d7b003e57583eceb61506291bb5faaa2a1ba2a0c9a",
+    "InfoGeometry.Canonical.ModularZ2CubeGrading": "cb056894124ef381a3258f36d6787a3232fd46811b0e8fd6759bebf94ff5100b",
+    "InfoGeometry.Twistor.PenroseIncidence": "e2e1dc38d319a4cba069b0b465c8f7fc47baa86ef39c50b54cb6a627014d20b6",
+    "InfoGeometry.GrandUnification.ArchetypeDictionary": "c481d8950a697df48c97408e78cb7813ea29a989ff73af5300d86cf997a208e5",
+    "InfoGeometry.Krein.KreinSpace": "fd1de143cbaad1bf3b57f70f857bebd6a535fc524c22d32d9d0a53ed5e341e6e",
+    "InfoGeometry.Cartan.Involution": "65dcf27800ed9475d5863a83ebf8cbad171933acd6ec810ecbd310654d098136",
+    "InfoGeometry.Krein.InvolutiveSelfDualCarrier": "d018d942cb4e5ca6000962dcd19b7f05a5d903e6d17409976f512bd6c2c96cd2",
+    "InfoGeometry.Krein.DoubledSpace": "066d74885b5c764e6a6846be606faac9ad6d80fc1c821823d2ed315ed7164f4d",
+    "InfoGeometry.Convex.ProjectiveRays": "1df51993d344b3bbceb52e4835bb71e536df6a3c48352c64e0544fb20f0ec00e",
+    "InfoGeometry.Twistor.NullProjective": "a16e3b7bee4e3882d7e7f8d52799f2dd3728888f69fbcdc91d26dd1a0d0237cb",
+    "InfoGeometry.Twistor.PenroseTwistor": "eca00d041d3eac10586db4bce9cb4a6d1d1fd138d7a61d9a3669fdb1d5721549",
+    "InfoGeometry.Physics.ChiralPoincareSouriauBridge": "88b73e16cfb9fd24eb379d74ec47546af17c95527468dc74ba06f2b2ef1d6217",
+    "InfoGeometry.Twistor.PerjesConventions": "7500d6dc6b84522275fc1711d5b5ba7fb07b4653ec02b013700c8dffb2e26569",
+    "InfoGeometry.Projective.KleinQuadricPlucker": "04e9244796852ed75a2f47dbec0fd49a5849c1aeb94efc01fa35c987427ec232",
+    "InfoGeometry.Twistor.TwoTwistorPlucker": "4b5ae26c28de5b05cebd240b12e80479052119580418e2c11eae0034b5b2bf95",
+    "InfoGeometry.Twistor.TwistorFrameCovariance": "1f6eace19f2062624c5683cdfb66add0a63320577122829f2446955eefaaff30",
+    "InfoGeometry.Twistor.InfinityTwistor": "4ec184866ed9c024648b9b99340ac154b6faed904c3c98c94fa4f2dd6ecb8343",
+    "InfoGeometry.Twistor.SpinorOuterProduct": "4360938a3c0c464ab3d0bf2af7843bd3204374d9302d2f9b83147e0ecea0220c",
+    "InfoGeometry.Twistor.TwistorKinematicTensor": "209294474ec2ecc779946213ae001dfc691b78f0e108e0b73f11d1a56695c218",
+    "InfoGeometry.Twistor.TwistorConstituentKinematics": "8bdff4903b5da864d8285b969269140546491341da0e0dd6d332d24d025afa58",
+    "InfoGeometry.Twistor.PerjesMomentOperator": "2cde25015af62583c09db3a39dd8e8947cb23db2045ceb1a1970219327e9d69d",
+    "InfoGeometry.Twistor.TwoTwistorGramMass": "6c5bac7e346fa181c277593714012f0da0b9cfca84f78878028592576582c8d5"
+  },
+  "repository_import_dependencies": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": [],
+    "InfoGeometry.Canonical.ParaComplexConnectionBridge": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Canonical.ParaComplexNeutralForm": [
+      "InfoGeometry.Canonical.ParaComplexConnectionBridge"
+    ],
+    "InfoGeometry.Core.IdempotencyDefect": [],
+    "InfoGeometry.Core.PeirceDecomposition": [
+      "InfoGeometry.Core.IdempotencyDefect",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Core.PeirceCompressionDefect": [
+      "InfoGeometry.Core.IdempotencyDefect",
+      "InfoGeometry.Core.PeirceDecomposition"
+    ],
+    "InfoGeometry.LinearAlgebra.RegularDyadCompression": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Core.PeirceCompressionDefect"
+    ],
+    "InfoGeometry.OperatorAlgebra.ChiralPolarization": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Geometry.KreinIsotropicCone": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Meta.OwnerTarget": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.OperatorAlgebra.ChiralPolarization",
+      "InfoGeometry.Meta.OwnerTarget"
+    ],
+    "InfoGeometry.OperatorAlgebra.KreinIsotropicCone": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.OperatorAlgebra.ChiralPolarization",
+      "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit"
+    ],
+    "InfoGeometry.OperatorAlgebra.TomitaCartanSplit": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Geometry.KreinIsotropicCone",
+      "InfoGeometry.OperatorAlgebra.KreinIsotropicCone",
+      "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit"
+    ],
+    "InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.OperatorAlgebra.ChiralPolarization",
+      "InfoGeometry.OperatorAlgebra.TomitaCartanSplit",
+      "InfoGeometry.Meta.OwnerTarget"
+    ],
+    "InfoGeometry.Optics.SheetWittCircularBasis": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution"
+    ],
+    "InfoGeometry.Twistor.RealDualTwistor": [],
+    "InfoGeometry.Twistor.NonincidentLogPairing": [
+      "InfoGeometry.Twistor.RealDualTwistor",
+      "InfoGeometry.LinearAlgebra.RegularDyadCompression"
+    ],
+    "InfoGeometry.Twistor.RealProjectiveAmbitwistor": [
+      "InfoGeometry.Twistor.RealDualTwistor"
+    ],
+    "InfoGeometry.Canonical.ModularZ2CubeGrading": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Twistor.PenroseIncidence": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.GrandUnification.ArchetypeDictionary": [],
+    "InfoGeometry.Krein.KreinSpace": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.GrandUnification.ArchetypeDictionary"
+    ],
+    "InfoGeometry.Cartan.Involution": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Krein.InvolutiveSelfDualCarrier": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Cartan.Involution"
+    ],
+    "InfoGeometry.Krein.DoubledSpace": [
+      "InfoGeometry.Krein.KreinSpace",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+      "InfoGeometry.Cartan.Involution"
+    ],
+    "InfoGeometry.Convex.ProjectiveRays": [
+      "InfoGeometry.Krein.DoubledSpace",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Twistor.NullProjective": [
+      "InfoGeometry.Convex.ProjectiveRays",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Krein.DoubledSpace"
+    ],
+    "InfoGeometry.Twistor.PenroseTwistor": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Twistor.NullProjective"
+    ],
+    "InfoGeometry.Physics.ChiralPoincareSouriauBridge": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Twistor.PerjesConventions": [
+      "InfoGeometry.Twistor.PenroseIncidence",
+      "InfoGeometry.Twistor.PenroseTwistor",
+      "InfoGeometry.Physics.ChiralPoincareSouriauBridge"
+    ],
+    "InfoGeometry.Projective.KleinQuadricPlucker": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Twistor.TwoTwistorPlucker": [
+      "InfoGeometry.Twistor.PenroseIncidence",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Projective.KleinQuadricPlucker"
+    ],
+    "InfoGeometry.Twistor.TwistorFrameCovariance": [
+      "InfoGeometry.Twistor.PenroseIncidence",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Twistor.InfinityTwistor": [
+      "InfoGeometry.Twistor.TwoTwistorPlucker",
+      "InfoGeometry.Twistor.TwistorFrameCovariance"
+    ],
+    "InfoGeometry.Twistor.SpinorOuterProduct": [],
+    "InfoGeometry.Twistor.TwistorKinematicTensor": [
+      "InfoGeometry.Twistor.PerjesConventions",
+      "InfoGeometry.Twistor.InfinityTwistor",
+      "InfoGeometry.Twistor.SpinorOuterProduct"
+    ],
+    "InfoGeometry.Twistor.TwistorConstituentKinematics": [
+      "InfoGeometry.Twistor.TwistorKinematicTensor",
+      "InfoGeometry.Twistor.InfinityTwistor"
+    ],
+    "InfoGeometry.Twistor.PerjesMomentOperator": [
+      "InfoGeometry.Twistor.TwistorKinematicTensor"
+    ],
+    "InfoGeometry.Twistor.TwoTwistorGramMass": [
+      "InfoGeometry.Twistor.TwistorConstituentKinematics",
+      "InfoGeometry.Twistor.PerjesMomentOperator"
+    ]
+  },
+  "local_revision": "53c1a356af329891440ca67e8a116570c36a72ab",
+  "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "declaration_counts": {
+    "InfoGeometry.Canonical.ParaComplexNeutralForm": 88,
+    "InfoGeometry.LinearAlgebra.RegularDyadCompression": 29,
+    "InfoGeometry.Optics.SheetWittCircularBasis": 48,
+    "InfoGeometry.Twistor.NonincidentLogPairing": 53,
+    "InfoGeometry.Twistor.RealDualTwistor": 55,
+    "InfoGeometry.Twistor.RealProjectiveAmbitwistor": 9,
+    "InfoGeometry.Canonical.ModularZ2CubeGrading": 28,
+    "InfoGeometry.Twistor.TwistorConstituentKinematics": 36,
+    "InfoGeometry.Twistor.TwoTwistorGramMass": 41
+  },
+  "axioms": [
+    "[propext, Classical.choice, Quot.sound]"
+  ]
+}

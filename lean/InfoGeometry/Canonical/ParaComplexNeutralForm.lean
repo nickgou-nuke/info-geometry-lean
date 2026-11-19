@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Canonical.ParaComplexConnectionBridge
+import Mathlib.LinearAlgebra.Dual.Lemmas
 
 namespace InfoGeometry.Canonical.ParaComplexNeutralForm
 
@@ -254,6 +255,142 @@ theorem finrank_v_eq_two_mul_plus_of_cross_equiv [FiniteDimensional ℝ V]
   rw [finrank_peirce_sum PCS]
   rw [finrank_peirce_eq_of_cross_equiv PCS e]
   ring
+
+end
+end InfoGeometry.Canonical.ParaComplexNeutralForm
+
+namespace InfoGeometry.Canonical.ParaComplexNeutralForm
+
+noncomputable section
+
+open ParaComplexConnection
+
+variable {V : Type*} [AddCommGroup V] [Module ℝ V]
+variable (PCS : ParaComplexStructure V) (B : LinearMap.BilinForm ℝ V)
+
+/-- Ambient left nondegeneracy detects a negative vector through the positive
+eigenspace, because its pairing with the negative eigenspace already vanishes. -/
+theorem plus_cross_nondegenerate_of_nondegenerate
+    (h : AntiCompatible PCS B)
+    (hnd : ∀ x, (∀ y, B x y = 0) → x = 0)
+    (u : V) (hu : u ∈ minusEigenspace PCS)
+    (hcross : ∀ v ∈ plusEigenspace PCS, B u v = 0) : u = 0 := by
+  apply hnd u
+  intro y
+  calc
+    B u y = B u (peircePlus PCS y + peirceMinus PCS y) := by
+      rw [peirce_sum_id PCS y]
+    _ = B u (peircePlus PCS y) + B u (peirceMinus PCS y) := map_add _ _ _
+    _ = 0 := by
+      rw [hcross _ (peircePlus_mem_plusEigenspace PCS y),
+        minus_isotropic PCS B h hu (peirceMinus_mem_minusEigenspace PCS y), add_zero]
+
+/-- Ambient left nondegeneracy detects a positive vector through the negative
+eigenspace, because its pairing with the positive eigenspace already vanishes. -/
+theorem minus_cross_nondegenerate_of_nondegenerate
+    (h : AntiCompatible PCS B)
+    (hnd : ∀ x, (∀ y, B x y = 0) → x = 0)
+    (u : V) (hu : u ∈ plusEigenspace PCS)
+    (hcross : ∀ v ∈ minusEigenspace PCS, B u v = 0) : u = 0 := by
+  apply hnd u
+  intro y
+  calc
+    B u y = B u (peircePlus PCS y + peirceMinus PCS y) := by
+      rw [peirce_sum_id PCS y]
+    _ = B u (peircePlus PCS y) + B u (peirceMinus PCS y) := map_add _ _ _
+    _ = 0 := by
+      rw [plus_isotropic PCS B h hu (peircePlus_mem_plusEigenspace PCS y),
+        hcross _ (peirceMinus_mem_minusEigenspace PCS y), add_zero]
+
+/-- Construct the existing nondegenerate datum from ambient nondegeneracy.
+The two cross-nondegeneracy fields are consequences, not extra hypotheses. -/
+def Datum.toNondegenerateDatum (D : Datum PCS)
+    (hnd : ∀ x, (∀ y, D.form x y = 0) → x = 0) : NondegenerateDatum PCS where
+  form := D.form
+  symmetric := D.symmetric
+  anti_compatible := antiCompatible_of_anti_isometry PCS D
+  nondegenerate := hnd
+  plus_cross_nondegenerate := plus_cross_nondegenerate_of_nondegenerate PCS D.form
+    (antiCompatible_of_anti_isometry PCS D) hnd
+  minus_cross_nondegenerate := minus_cross_nondegenerate_of_nondegenerate PCS D.form
+    (antiCompatible_of_anti_isometry PCS D) hnd
+
+/-- Restrict the form to the positive eigenspace and the dual of the negative
+eigenspace. The map is the actual cross pairing of the supplied form. -/
+def plusToMinusDual : plusEigenspace PCS →ₗ[ℝ] Module.Dual ℝ (minusEigenspace PCS) where
+  toFun u := (B (u : V)).comp (minusEigenspace PCS).subtype
+  map_add' u v := by ext w; simp
+  map_smul' c u := by ext w; simp
+
+/-- Restrict the form to the negative eigenspace and the dual of the positive
+eigenspace. No choice of basis enters this map. -/
+def minusToPlusDual : minusEigenspace PCS →ₗ[ℝ] Module.Dual ℝ (plusEigenspace PCS) where
+  toFun u := (B (u : V)).comp (plusEigenspace PCS).subtype
+  map_add' u v := by ext w; simp
+  map_smul' c u := by ext w; simp
+
+@[simp] theorem plusToMinusDual_apply (u : plusEigenspace PCS) (v : minusEigenspace PCS) :
+    plusToMinusDual PCS B u v = B (u : V) (v : V) := rfl
+
+@[simp] theorem minusToPlusDual_apply (u : minusEigenspace PCS) (v : plusEigenspace PCS) :
+    minusToPlusDual PCS B u v = B (u : V) (v : V) := rfl
+
+theorem plusToMinusDual_injective (D : NondegenerateDatum PCS) :
+    Function.Injective (plusToMinusDual PCS D.form) := by
+  intro u v huv
+  apply Subtype.ext
+  apply sub_eq_zero.mp
+  apply D.minus_cross_nondegenerate _ ((plusEigenspace PCS).sub_mem u.property v.property)
+  intro w hw
+  have h := congrArg (fun f : Module.Dual ℝ (minusEigenspace PCS) => f ⟨w, hw⟩) huv
+  change D.form (u : V) w = D.form (v : V) w at h
+  simpa only [map_sub, LinearMap.sub_apply] using sub_eq_zero.mpr h
+
+theorem minusToPlusDual_injective (D : NondegenerateDatum PCS) :
+    Function.Injective (minusToPlusDual PCS D.form) := by
+  intro u v huv
+  apply Subtype.ext
+  apply sub_eq_zero.mp
+  apply D.plus_cross_nondegenerate _ ((minusEigenspace PCS).sub_mem u.property v.property)
+  intro w hw
+  have h := congrArg (fun f : Module.Dual ℝ (plusEigenspace PCS) => f ⟨w, hw⟩) huv
+  change D.form (u : V) w = D.form (v : V) w at h
+  simpa only [map_sub, LinearMap.sub_apply] using sub_eq_zero.mpr h
+
+/-- Nondegeneracy forces equal dimensions; no cross-space equivalence is
+assumed. The two inequalities come from the two actual cross-pairing maps. -/
+theorem finrank_peirce_eq [FiniteDimensional ℝ V] (D : NondegenerateDatum PCS) :
+    Module.finrank ℝ (plusEigenspace PCS) = Module.finrank ℝ (minusEigenspace PCS) := by
+  apply Nat.le_antisymm
+  · simpa using LinearMap.finrank_le_finrank_of_injective (plusToMinusDual_injective PCS D)
+  · simpa using LinearMap.finrank_le_finrank_of_injective (minusToPlusDual_injective PCS D)
+
+/-- In finite dimension, the positive cross-pairing map is a dual equivalence. -/
+def plusToMinusDualEquiv [FiniteDimensional ℝ V] (D : NondegenerateDatum PCS) :
+    plusEigenspace PCS ≃ₗ[ℝ] Module.Dual ℝ (minusEigenspace PCS) :=
+  LinearEquiv.ofInjectiveOfFinrankEq (plusToMinusDual PCS D.form)
+    (plusToMinusDual_injective PCS D) (by simpa using finrank_peirce_eq PCS D)
+
+/-- In finite dimension, the negative cross-pairing map is a dual equivalence. -/
+def minusToPlusDualEquiv [FiniteDimensional ℝ V] (D : NondegenerateDatum PCS) :
+    minusEigenspace PCS ≃ₗ[ℝ] Module.Dual ℝ (plusEigenspace PCS) :=
+  LinearEquiv.ofInjectiveOfFinrankEq (minusToPlusDual PCS D.form)
+    (minusToPlusDual_injective PCS D) (by simpa using (finrank_peirce_eq PCS D).symm)
+
+@[simp] theorem plusToMinusDualEquiv_apply [FiniteDimensional ℝ V]
+    (D : NondegenerateDatum PCS) (u : plusEigenspace PCS) (v : minusEigenspace PCS) :
+    plusToMinusDualEquiv PCS D u v = D.form (u : V) (v : V) := rfl
+
+@[simp] theorem minusToPlusDualEquiv_apply [FiniteDimensional ℝ V]
+    (D : NondegenerateDatum PCS) (u : minusEigenspace PCS) (v : plusEigenspace PCS) :
+    minusToPlusDualEquiv PCS D u v = D.form (u : V) (v : V) := rfl
+
+/-- The ambient dimension is twice either leaf dimension for a nondegenerate
+neutral form. This supplies the dimension conclusion without a chosen basis. -/
+theorem finrank_eq_two_mul_plus [FiniteDimensional ℝ V] (D : NondegenerateDatum PCS) :
+    Module.finrank ℝ V = 2 * Module.finrank ℝ (plusEigenspace PCS) := by
+  rw [finrank_peirce_sum PCS, ← finrank_peirce_eq PCS D]
+  omega
 
 end
 end InfoGeometry.Canonical.ParaComplexNeutralForm

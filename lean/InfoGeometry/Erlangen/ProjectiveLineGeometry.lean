@@ -119,8 +119,12 @@ theorem everyBivector4_is_sum_of_two_lines (S : Screw4) :
       if i = I4.t then 0 else if i = I4.x then 0
         else if i = I4.y then S.p12 else S.p13
     refine ⟨e₀, m, u, v, ?_⟩
-    ext <;> simp [lineThrough, e₀, m, u, v, wedgeVec4]
-      <;> field_simp [h12] <;> ring
+    apply bivector4CoordinatesAddEquiv.injective
+    rw [bivector4CoordinatesAddEquiv.map_add]
+    ext i
+    fin_cases i <;> simp [bivector4CoordinatesAddEquiv, bivector4Coordinates,
+      lineThrough, e₀, m, u, v, wedgeVec4]
+      <;> field_simp [h12] <;> ring_nf
   · by_cases h13 : S.p13 ≠ 0
     · let u : Point4 := fun i =>
         if i = I4.t then 0 else if i = I4.x then 1
@@ -128,18 +132,29 @@ theorem everyBivector4_is_sum_of_two_lines (S : Screw4) :
       let v : Point4 := fun i =>
         if i = I4.t then 0 else if i = I4.x then 0
           else if i = I4.y then 0 else S.p13
+      have hp12 : S.p12 = 0 := by simpa using h12
       refine ⟨e₀, m, u, v, ?_⟩
-      ext <;> simp [lineThrough, e₀, m, u, v, wedgeVec4, h12]
-        <;> field_simp [h13] <;> ring
+      apply bivector4CoordinatesAddEquiv.injective
+      rw [bivector4CoordinatesAddEquiv.map_add]
+      ext i
+      fin_cases i <;> simp [bivector4CoordinatesAddEquiv, bivector4Coordinates,
+        lineThrough, e₀, m, u, v, wedgeVec4, hp12]
+        <;> field_simp [h13] <;> ring_nf
     · let u : Point4 := fun i =>
         if i = I4.t then 0 else if i = I4.x then 0
           else if i = I4.y then 1 else 0
       let v : Point4 := fun i =>
         if i = I4.t then 0 else if i = I4.x then 0
           else if i = I4.y then 0 else S.p23
+      have hp12 : S.p12 = 0 := by simpa using h12
+      have hp13 : S.p13 = 0 := by simpa using h13
       refine ⟨e₀, m, u, v, ?_⟩
-      ext <;> simp [lineThrough, e₀, m, u, v, wedgeVec4, h12, h13]
-        <;> ring
+      apply bivector4CoordinatesAddEquiv.injective
+      rw [bivector4CoordinatesAddEquiv.map_add]
+      ext i
+      fin_cases i <;> simp [bivector4CoordinatesAddEquiv, bivector4Coordinates,
+        lineThrough, e₀, m, u, v, wedgeVec4, hp12, hp13]
+        <;> ring_nf
 
 /-- A sum of two lines can be a genuine screw rather than another line. The
 coordinates `p01 = p23 = 1` give Klein value `1`, so the distinction between

@@ -373,12 +373,12 @@ theorem apollonianCayley_neg_eq_inv (w : ℂ) :
         linear_combination h
       have hden₂ : -w + (1 / 2 : ℂ) ≠ 0 := by
         intro h
-        apply hplus
-        linear_combination -2 * h
+        have hh : (1 / 2 : ℂ) - w = 0 := by
+          simpa [sub_eq_add_neg, add_comm] using h
+        exact hplus ((sub_eq_zero.mp hh).symm)
       have hden₃ : w - (1 / 2 : ℂ) ≠ 0 := by
         intro h
-        apply hplus
-        linear_combination 2 * h
+        exact hplus (sub_eq_zero.mp h)
       have hden₄ : -1 + w * 2 ≠ 0 := by
         intro h
         apply hden₃
@@ -392,12 +392,13 @@ theorem apollonianCayley_neg_eq_inv (w : ℂ) :
       calc
         apollonianCayley (-w) = (w + (1 / 2 : ℂ)) / (w - (1 / 2 : ℂ)) := by
           rw [apollonianCayley]
-          field_simp [hden₂, hden₃, hden₅]
-          <;> ring
+          rw [show -w - (1 / 2 : ℂ) = -(w + (1 / 2 : ℂ)) by ring,
+              show -w + (1 / 2 : ℂ) = -(w - (1 / 2 : ℂ)) by ring]
+          rw [div_eq_mul_inv, div_eq_mul_inv, inv_neg]
+          ring_nf
         _ = (apollonianCayley w)⁻¹ := by
           rw [apollonianCayley]
-          field_simp [hden₁, hden₃, hden₄]
-          <;> ring
+          field_simp [hden₁, hden₃]
 
 /-- The two poles form the exceptional stratum for the product normalization:
 both totalized Cayley values vanish there, so their product is zero rather

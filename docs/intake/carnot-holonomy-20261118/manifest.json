@@ -1,0 +1,13 @@
+{
+  "source": "User follow-up in the current conversation",
+  "date": "2026-11-18",
+  "timezone": "Europe/Sofia",
+  "encoding": "UTF-8",
+  "terminal_newline_added": true,
+  "bytes": 101,
+  "sha256": "a7dfb5afca74d28198d027ef0cd4fd65b8afe86d9360769a6d73cd20fecd2c6e",
+  "base_remote_commit": "c4d12dcea71455c2ad0885f90a36e4362d80cacb",
+  "base_local_commit": "7ddc3a1bc22f967feb48375a5a2d61c43c3a2258",
+  "base_tree": "40ff0f6dc60c5d4c9097859bd8d782c16552f063",
+  "parent_intake": "docs/intake/information-carnot-20261118/prompt.txt"
+}

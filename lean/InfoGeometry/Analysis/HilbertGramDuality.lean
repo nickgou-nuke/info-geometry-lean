@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.PartnerEigenspaces
 import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Analysis.Real.Sqrt
 
 /-!
 # Eigenspace duality for the two Hilbert Gram operators
@@ -15,6 +16,9 @@ inner-product spaces, `A` identifies the native nonzero eigenspaces of
 The algebraic equivalence is reused from `PartnerEigenspaces`; this file
 upgrades it to a continuous linear equivalence on the native eigenspaces
 and proves the inner-product and norm laws for the transported vectors.
+For a positive real eigenvalue, square-root normalization upgrades this
+equivalence to a native linear isometric equivalence, with the normalized
+adjoint as its inverse.
 
 Neither ambient space is assumed finite-dimensional. The equality of native
 `finrank` readouts describes geometric multiplicities when either eigenspace
@@ -138,6 +142,62 @@ theorem norm_sq_gramEigenspaceEquiv (A : E →L[𝕜] F) (μ : 𝕜) (hμ : μ �
     (x : Module.End.eigenspace (A† ∘L A).toLinearMap μ) :
     ‖gramEigenspaceEquiv A μ hμ x‖ ^ 2 = RCLike.re μ * ‖x‖ ^ 2 :=
   norm_sq_apply_of_mem_eigenspace A x.property
+
+/-- Square-root normalization turns the existing positive Gram eigenspace
+correspondence into a linear isometric equivalence. The ambient Hilbert
+spaces need not be finite-dimensional, and no spectral basis is used. -/
+def gramEigenspaceIsometryEquiv (A : E →L[𝕜] F) (r : ℝ) (hr : 0 < r) :
+    Module.End.eigenspace (A† ∘L A).toLinearMap (r : 𝕜) ≃ₗᵢ[𝕜]
+      Module.End.eigenspace (A ∘L A†).toLinearMap (r : 𝕜) := by
+  have hr' : (r : 𝕜) ≠ 0 := RCLike.ofReal_ne_zero.mpr hr.ne'
+  have hsqrt : (Real.sqrt r : 𝕜) ≠ 0 :=
+    RCLike.ofReal_ne_zero.mpr (Real.sqrt_ne_zero'.mpr hr)
+  let e := gramEigenspaceEquiv A (r : 𝕜) hr'
+  refine
+    { toLinearEquiv := e.toLinearEquiv.trans
+        (LinearEquiv.smulOfNeZero 𝕜 _ (Real.sqrt r : 𝕜)⁻¹ (inv_ne_zero hsqrt))
+      norm_map' := ?_ }
+  intro x
+  change ‖(Real.sqrt r : 𝕜)⁻¹ • e x‖ = ‖x‖
+  have he : ‖e x‖ = Real.sqrt r * ‖x‖ := by
+    apply (sq_eq_sq₀ (norm_nonneg _)
+      (mul_nonneg (Real.sqrt_nonneg r) (norm_nonneg x))).mp
+    simpa only [mul_pow, Real.sq_sqrt hr.le, RCLike.ofReal_re] using
+      norm_sq_gramEigenspaceEquiv A (r : 𝕜) hr' x
+  rw [norm_smul, norm_inv, RCLike.norm_of_nonneg (Real.sqrt_nonneg r), he,
+    ← mul_assoc, inv_mul_cancel₀ (Real.sqrt_ne_zero'.mpr hr), one_mul]
+
+/-- The normalized correspondence is the original bounded operator divided
+by the positive square root of the eigenvalue. -/
+@[simp]
+theorem gramEigenspaceIsometryEquiv_apply
+    (A : E →L[𝕜] F) (r : ℝ) (hr : 0 < r)
+    (x : Module.End.eigenspace (A† ∘L A).toLinearMap (r : 𝕜)) :
+    (gramEigenspaceIsometryEquiv A r hr x : F) =
+      (Real.sqrt r : 𝕜)⁻¹ • A x := rfl
+
+/-- The inverse has the same normalization and uses the actual Hilbert
+adjoint of the original bounded operator. -/
+@[simp]
+theorem gramEigenspaceIsometryEquiv_symm_apply
+    (A : E →L[𝕜] F) (r : ℝ) (hr : 0 < r)
+    (y : Module.End.eigenspace (A ∘L A†).toLinearMap (r : 𝕜)) :
+    ((gramEigenspaceIsometryEquiv A r hr).symm y : E) =
+      (Real.sqrt r : 𝕜)⁻¹ • (A†) y := by
+  have hsqrt : (Real.sqrt r : 𝕜) ≠ 0 :=
+    RCLike.ofReal_ne_zero.mpr (Real.sqrt_ne_zero'.mpr hr)
+  have hsquare : (Real.sqrt r : 𝕜) * (Real.sqrt r : 𝕜) = (r : 𝕜) := by
+    rw [← RCLike.ofReal_mul, Real.mul_self_sqrt hr.le]
+  have hscale : (r : 𝕜)⁻¹ * (Real.sqrt r : 𝕜) = (Real.sqrt r : 𝕜)⁻¹ := by
+    calc
+      (r : 𝕜)⁻¹ * (Real.sqrt r : 𝕜) =
+          ((Real.sqrt r : 𝕜) * (Real.sqrt r : 𝕜))⁻¹ * (Real.sqrt r : 𝕜) := by
+            rw [hsquare]
+      _ = (Real.sqrt r : 𝕜)⁻¹ := by
+        rw [mul_inv_rev, mul_assoc, inv_mul_cancel₀ hsqrt, mul_one]
+  change (r : 𝕜)⁻¹ • (A†) (((Real.sqrt r : 𝕜)⁻¹)⁻¹ • (y : F)) =
+    (Real.sqrt r : 𝕜)⁻¹ • (A†) (y : F)
+  rw [inv_inv, map_smul, smul_smul, hscale]
 
 /-- The source and target Gram operators have equal operator norms, even
 when their ambient Hilbert spaces have different dimensions. This uses the

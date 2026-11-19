@@ -234,6 +234,90 @@ theorem steinLoss_rescale_ray_eq_iff (X Y : SPD n) (hn : 0 < n)
   simp only [hn0, false_or]
   rw [burgKernel_eq_zero_iff (div_pos hr hm), div_eq_one_iff_eq hm.ne']
 
+/-- Geometric-mean relative covariance scale. Its determinant-root property
+requires positive dimension; the definition itself is total. -/
+noncomputable def relativeScale (X Y : SPD n) : ℝ :=
+  Real.exp (Real.log (Matrix.det (normalizedDistortion X Y)) / (n : ℝ))
+
+/-- The determinant-one part of the full relative endomorphism `Y⁻¹ X`.
+The product is not assumed symmetric or commuting. -/
+noncomputable def relativeShape (X Y : SPD n) : Matrix (Fin n) (Fin n) ℝ :=
+  (relativeScale X Y)⁻¹ • normalizedDistortion X Y
+
+theorem relativeScale_pos (X Y : SPD n) : 0 < relativeScale X Y :=
+  Real.exp_pos _
+
+theorem log_relativeScale (X Y : SPD n) :
+    Real.log (relativeScale X Y) =
+      Real.log (Matrix.det (normalizedDistortion X Y)) / (n : ℝ) := by
+  exact Real.log_exp _
+
+theorem log_det_eq_dim_mul_log_relativeScale (X Y : SPD n) (hn : n ≠ 0) :
+    Real.log (Matrix.det (normalizedDistortion X Y)) =
+      (n : ℝ) * Real.log (relativeScale X Y) := by
+  rw [log_relativeScale]
+  have hn' : (n : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr hn
+  field_simp
+
+theorem relativeScale_pow_dim (X Y : SPD n) (hn : n ≠ 0) :
+    relativeScale X Y ^ n = Matrix.det (normalizedDistortion X Y) := by
+  unfold relativeScale
+  rw [← Real.exp_nat_mul]
+  have hn' : (n : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr hn
+  have hcancel : (n : ℝ) *
+      (Real.log (Matrix.det (normalizedDistortion X Y)) / (n : ℝ)) =
+      Real.log (Matrix.det (normalizedDistortion X Y)) := by
+    field_simp
+  rw [hcancel, Real.exp_log (normalizedDistortion_det_pos X Y)]
+
+/-- The scale and normalized shape reconstruct the actual relative matrix. -/
+theorem relativeScale_smul_relativeShape (X Y : SPD n) :
+    relativeScale X Y • relativeShape X Y = normalizedDistortion X Y := by
+  unfold relativeShape
+  rw [smul_smul, mul_inv_cancel₀ (relativeScale_pos X Y).ne', one_smul]
+
+theorem det_relativeShape (X Y : SPD n) (hn : n ≠ 0) :
+    Matrix.det (relativeShape X Y) = 1 := by
+  unfold relativeShape
+  rw [Matrix.det_smul, Fintype.card_fin, inv_pow, relativeScale_pow_dim X Y hn]
+  exact inv_mul_cancel₀ (normalizedDistortion_det_pos X Y).ne'
+
+theorem trace_relativeShape (X Y : SPD n) :
+    Matrix.trace (relativeShape X Y) =
+      (relativeScale X Y)⁻¹ * Matrix.trace (normalizedDistortion X Y) := by
+  simp [relativeShape, Matrix.trace_smul]
+
+/-- Exact global scale/shape split. The shape cost retains its scale weight. -/
+theorem steinLoss_scale_shape_split (X Y : SPD n) (hn : n ≠ 0) :
+    steinLoss X Y =
+      (n : ℝ) * burgKernel (relativeScale X Y) +
+        relativeScale X Y * (Matrix.trace (relativeShape X Y) - (n : ℝ)) := by
+  have htrace := congrArg Matrix.trace (relativeScale_smul_relativeShape X Y)
+  simp only [Matrix.trace_smul, smul_eq_mul] at htrace
+  unfold steinLoss burgKernel
+  rw [log_det_eq_dim_mul_log_relativeScale X Y hn, ← htrace]
+  ring
+
+theorem steinLoss_scale_term_nonneg (X Y : SPD n) :
+    0 ≤ (n : ℝ) * burgKernel (relativeScale X Y) :=
+  mul_nonneg (Nat.cast_nonneg n) (burgKernel_nonneg (relativeScale_pos X Y))
+
+/-- Equal relative determinant removes precisely the radial contribution. -/
+theorem relativeScale_eq_one_of_det_eq_one (X Y : SPD n)
+    (h : Matrix.det (normalizedDistortion X Y) = 1) :
+    relativeScale X Y = 1 := by
+  simp [relativeScale, h]
+
+theorem relativeShape_eq_distortion_of_det_eq_one (X Y : SPD n)
+    (h : Matrix.det (normalizedDistortion X Y) = 1) :
+    relativeShape X Y = normalizedDistortion X Y := by
+  simp [relativeShape, relativeScale_eq_one_of_det_eq_one X Y h]
+
+theorem steinLoss_eq_trace_sub_dim_of_det_eq_one (X Y : SPD n)
+    (h : Matrix.det (normalizedDistortion X Y) = 1) :
+    steinLoss X Y = Matrix.trace (normalizedDistortion X Y) - (n : ℝ) := by
+  simp [steinLoss, h]
+
 end SPD
 
 end InfoGeometry.Jordan

@@ -636,3 +636,7 @@ import InfoGeometry.Canonical.MatrixGibbsMetriplecticEquilibrium
 import InfoGeometry.Canonical.MatrixGeneralizedGibbs
 import InfoGeometry.Canonical.MatrixRelativeEntropy
 import InfoGeometry.Canonical.MatrixGeneralizedGibbsInequalities
+import InfoGeometry.InformationGeometry.PositiveMeasureDifferential
+import InfoGeometry.ExponentialFamily.FiniteAnalyticKL
+import InfoGeometry.Canonical.GaussianBurgStein
+import InfoGeometry.Canonical.MatrixRelativeModularPhysicsBridge

@@ -52,7 +52,11 @@ theorem twoTermMass_eq_mass (η s r : ℝ) (hs : 0 < s) (hr : 0 < r) :
   have h₂ : 1 + s / r ≠ 0 := ne_of_gt (by positivity)
   unfold twoTermMass mass
   field_simp [hs0, hr0, hrs, h₁, h₂]
+<<<<<<< HEAD
   ring
+=======
+  <;> ring
+>>>>>>> upstream/pr/394
 
 /-- The derivative of the reduced mass profile is proved by the quotient rule. -/
 theorem hasDerivAt_mass (η s r : ℝ) (hrs : r + s ≠ 0) :
@@ -60,10 +64,17 @@ theorem hasDerivAt_mass (η s r : ℝ) (hrs : r + s ≠ 0) :
       (2 * η * s * r * (r + 2 * s) / (r + s) ^ 2) r := by
   have hnum : HasDerivAt (fun x : ℝ => 2 * η * s * x ^ 2)
       (2 * η * s * (2 * r)) r := by
+<<<<<<< HEAD
     simpa using ((hasDerivAt_id r).pow 2).const_mul (2 * η * s)
   have hquot := hnum.div ((hasDerivAt_id r).add_const s) hrs
   change HasDerivAt (fun x : ℝ => (2 * η * s * x ^ 2) / (x + s)) _ r
   exact hquot.congr_deriv (by ring)
+=======
+    convert ((hasDerivAt_id r).pow 2).const_mul (2 * η * s) using 1 <;>
+      simp only [id_eq, Nat.cast_ofNat, pow_one, mul_one]
+  have hquot := hnum.div ((hasDerivAt_id r).add_const s) hrs
+  convert hquot using 1 <;> dsimp [mass, id] <;> ring
+>>>>>>> upstream/pr/394
 
 theorem deriv_mass (η s r : ℝ) (hrs : r + s ≠ 0) :
     deriv (mass η s) r =
@@ -82,7 +93,11 @@ theorem density_eq (η s r : ℝ) (hs : 0 < s) (hr : 0 < r) :
   have hπ : Real.pi ≠ 0 := ne_of_gt Real.pi_pos
   rw [density, deriv_mass η s r hrs]
   field_simp [hr0, hrs, hπ]
+<<<<<<< HEAD
   ring
+=======
+  <;> ring
+>>>>>>> upstream/pr/394
 
 theorem density_pos (η s r : ℝ) (hη : 0 < η) (hs : 0 < s) (hr : 0 < r) :
     0 < density η s r := by
@@ -98,6 +113,10 @@ theorem radius_mul_density (η s r : ℝ) (hs : 0 < s) (hr : 0 < r) :
   have hπ : Real.pi ≠ 0 := ne_of_gt Real.pi_pos
   rw [density_eq η s r hs hr]
   field_simp [hr0, hrs, hπ]
+<<<<<<< HEAD
+=======
+  <;> ring
+>>>>>>> upstream/pr/394
 
 /-- Exact coefficient of the inner `1 / r` cusp. -/
 theorem tendsto_radius_mul_density_zero (η s : ℝ) (hs : 0 < s) :
@@ -119,7 +138,11 @@ theorem tendsto_radius_mul_density_zero (η s : ℝ) (hs : 0 < s) :
     have hs0 : s ≠ 0 := ne_of_gt hs
     have hπ : Real.pi ≠ 0 := ne_of_gt Real.pi_pos
     field_simp [hs0, hπ]
+<<<<<<< HEAD
     ring
+=======
+    <;> ring
+>>>>>>> upstream/pr/394
   rw [hc] at h
   refine h.congr' ?_
   filter_upwards [self_mem_nhdsWithin] with r hr
@@ -151,6 +174,10 @@ theorem radius_sq_mul_density (η s r : ℝ) (hs : 0 < s) (hr : 0 < r) :
   have hden : 1 + s * r⁻¹ ≠ 0 := ne_of_gt (by positivity)
   rw [density_eq η s r hs hr]
   field_simp [hr0, hrs, hπ, hden]
+<<<<<<< HEAD
+=======
+  <;> ring
+>>>>>>> upstream/pr/394
 
 /-- Exact coefficient of the outer `1 / r²` envelope. -/
 theorem tendsto_radius_sq_mul_density_atTop (η s : ℝ) (hs : 0 < s) :
@@ -164,7 +191,11 @@ theorem tendsto_radius_sq_mul_density_atTop (η s : ℝ) (hs : 0 < s) :
       (𝓝 (2 * Real.pi * (1 + s * 0) ^ 2)) :=
     tendsto_const_nhds.mul ((tendsto_const_nhds.add (tendsto_const_nhds.mul hi)).pow 2)
   have hden0 : 2 * Real.pi * (1 + s * 0) ^ 2 ≠ 0 := by
+<<<<<<< HEAD
     positivity
+=======
+    simpa using ne_of_gt (mul_pos (by norm_num : (0 : ℝ) < 2) Real.pi_pos)
+>>>>>>> upstream/pr/394
   have h := hnum.div hden hden0
   simp only [mul_zero, add_zero, one_pow, mul_one] at h
   refine h.congr' ?_
@@ -180,5 +211,9 @@ theorem circularSpeedSq_eq (G η s r : ℝ) (hs : 0 < s) (hr : 0 < r) :
   have hrs : r + s ≠ 0 := ne_of_gt (add_pos hr hs)
   unfold circularSpeedSq mass
   field_simp [hr0, hrs]
+<<<<<<< HEAD
+=======
+  <;> ring
+>>>>>>> upstream/pr/394
 
 end InfoGeometry.Physics.SphericalMassProfile

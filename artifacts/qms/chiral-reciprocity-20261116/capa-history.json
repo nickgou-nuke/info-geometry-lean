@@ -1,0 +1,168 @@
+{
+  "status": "CLOSED",
+  "recorded_utc": "2026-11-16T17:54:48.679204+00:00",
+  "attempt": 1,
+  "initial_fingerprint": "initial-frozen-snapshot.json",
+  "command_ledger": "command-ledger.jsonl",
+  "completed_gates": {
+    "placeholder": {
+      "exit_codes": [
+        0,
+        0,
+        0
+      ],
+      "findings": 0
+    },
+    "semantic_vacuity": {
+      "exit_code": 0,
+      "errors": 0,
+      "warnings": 1
+    },
+    "opengauss_screener": {
+      "exit_code": 1,
+      "errors": 5,
+      "warnings": 0
+    }
+  },
+  "not_run": [
+    "strict_refutation",
+    "fresh_kernel_and_axiom_audit",
+    "static_Gate4",
+    "root_path_preflight"
+  ],
+  "semantic_warning_adjudication": {
+    "declaration": "InfoGeometry.Analysis.HilbertGramReciprocity.normalizedGramEigenspaceEquiv_apply",
+    "rule": "trivial_surface",
+    "severity": "warning",
+    "reason": "The rfl theorem exposes the forward action of the genuinely constructed native LinearIsometryEquiv. It does not replace isometry construction, eigenvalue hypotheses, or inverse/norm proofs."
+  },
+  "strict_findings": {
+    "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean": [
+      {
+        "trap_id": "T16",
+        "trap_name": "Tactic Misuse on Operators",
+        "line_number": 104,
+        "matched_text": "(c * c * (r : \ud835\udd5c)) * \u27ea(x : E), (y : E)\u27eb_\ud835\udd5c := by ring",
+        "message": "Direct application of scalar tactic 'ring' on unprojected operator carrier.",
+        "severity": "ERROR"
+      }
+    ],
+    "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean": [
+      {
+        "trap_id": "T16",
+        "trap_name": "Tactic Misuse on Operators",
+        "line_number": 120,
+        "matched_text": "nlinarith only [hnorm]",
+        "message": "Direct application of scalar tactic 'nlinarith' on unprojected operator carrier.",
+        "severity": "ERROR"
+      },
+      {
+        "trap_id": "T16",
+        "trap_name": "Tactic Misuse on Operators",
+        "line_number": 141,
+        "matched_text": "1 = (1 : \u211d) * 1 := by ring",
+        "message": "Direct application of scalar tactic 'ring' on unprojected operator carrier.",
+        "severity": "ERROR"
+      },
+      {
+        "trap_id": "T16",
+        "trap_name": "Tactic Misuse on Operators",
+        "line_number": 145,
+        "matched_text": "_ = (Real.sqrt r) ^ 2 * \u2016B\u2016 ^ 2 := by ring",
+        "message": "Direct application of scalar tactic 'ring' on unprojected operator carrier.",
+        "severity": "ERROR"
+      },
+      {
+        "trap_id": "T16",
+        "trap_name": "Tactic Misuse on Operators",
+        "line_number": 165,
+        "matched_text": "nlinarith only [hr, hlower, hupper]",
+        "message": "Direct application of scalar tactic 'nlinarith' on unprojected operator carrier.",
+        "severity": "ERROR"
+      }
+    ]
+  },
+  "source_inspection": "Each flagged tactic occurs on a scalar field or real goal after explicit inner-product/norm projection. This does not constitute an operator-to-scalar substitution in the mathematics; strict lexical rejection is nonetheless preserved and must be resolved without changing filters or suppressing findings.",
+  "capa": "Parent notified with exact locations and evidence. Await explicit scalar-proof repairs, hash-specific A-A delta closure, frozen staging, and renewed lane transfer.",
+  "lane_released": true,
+  "processes_remaining": false,
+  "closure": "The author replaced scalar automation with explicit scalar algebra/order lemmas without changing theorem statements or hypotheses. Independent A-A T16 review passed; all attempt2 strict source gates and fresh kernel/axiom audit passed. No gate, pattern, pin, or filter changed.",
+  "initial_source_hashes": {
+    "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean": {
+      "sha256": "bc50cac4df8325569b5b4573c71623b5ec2c6445046fe3598a09eca2c427880b",
+      "index_sha256": "bc50cac4df8325569b5b4573c71623b5ec2c6445046fe3598a09eca2c427880b",
+      "expected": "bc50cac4df8325569b5b4573c71623b5ec2c6445046fe3598a09eca2c427880b",
+      "matches": true
+    },
+    "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean": {
+      "sha256": "c9084d9c8ef24dbb9dd243ddc1d16f25c95ab32cff1e257bff40fdd65d4f4c33",
+      "index_sha256": "c9084d9c8ef24dbb9dd243ddc1d16f25c95ab32cff1e257bff40fdd65d4f4c33",
+      "expected": "c9084d9c8ef24dbb9dd243ddc1d16f25c95ab32cff1e257bff40fdd65d4f4c33",
+      "matches": true
+    },
+    "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean": {
+      "sha256": "cdde658faa0d10ab862a648062b405c3178eeff0a504bfd0a1be223ccdef3451",
+      "index_sha256": "cdde658faa0d10ab862a648062b405c3178eeff0a504bfd0a1be223ccdef3451",
+      "expected": "cdde658faa0d10ab862a648062b405c3178eeff0a504bfd0a1be223ccdef3451",
+      "matches": true
+    },
+    "docs/CHIRAL_RECIPROCITY_CONTRACT.md": {
+      "sha256": "0594dfd47f6ba9a253a4d4f0cf1ce1a5f8ad6c27d49ed146a963274f4d565328",
+      "index_sha256": "0594dfd47f6ba9a253a4d4f0cf1ce1a5f8ad6c27d49ed146a963274f4d565328",
+      "expected": "0594dfd47f6ba9a253a4d4f0cf1ce1a5f8ad6c27d49ed146a963274f4d565328",
+      "matches": true
+    },
+    "docs/CHIRAL_RECIPROCITY_FORMALIZATION.md": {
+      "sha256": "d4ce080275e295eb34152f00f23759d2ced56abae5648d3e664383fedfb6effa",
+      "index_sha256": "d4ce080275e295eb34152f00f23759d2ced56abae5648d3e664383fedfb6effa",
+      "expected": "d4ce080275e295eb34152f00f23759d2ced56abae5648d3e664383fedfb6effa",
+      "matches": true
+    },
+    "lean/InfoGeometry/All.lean": {
+      "sha256": "5bd6c78068eab621d0ba45fc64a5f1da9ba7172295a2ab3fddf69a469537d09f",
+      "index_sha256": "5bd6c78068eab621d0ba45fc64a5f1da9ba7172295a2ab3fddf69a469537d09f",
+      "expected": "5bd6c78068eab621d0ba45fc64a5f1da9ba7172295a2ab3fddf69a469537d09f",
+      "matches": true
+    }
+  },
+  "initial_screener_log_sha256": "9292bf57cc256ed240353b9e5cf1bc3a24296b0516bcfab0001af092b3c721ed",
+  "aa_t16_review_sha256": "a778557a7e79b867d572021a4a9040e577456d5b6aab80b489e1483da52ba555",
+  "final_source_hashes": {
+    "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean": {
+      "sha256": "64975ff850e1e32ac98e07a52c2d315e83dcc98a0c60833a854bcbd7d7ddbae9",
+      "index_sha256": "64975ff850e1e32ac98e07a52c2d315e83dcc98a0c60833a854bcbd7d7ddbae9",
+      "frozen_sha256": "64975ff850e1e32ac98e07a52c2d315e83dcc98a0c60833a854bcbd7d7ddbae9",
+      "matches_frozen_and_index": true
+    },
+    "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean": {
+      "sha256": "aa016bd2a2711ba481373d23496f3e115e84602c0b4321a3e7731ecc219b1f30",
+      "index_sha256": "aa016bd2a2711ba481373d23496f3e115e84602c0b4321a3e7731ecc219b1f30",
+      "frozen_sha256": "aa016bd2a2711ba481373d23496f3e115e84602c0b4321a3e7731ecc219b1f30",
+      "matches_frozen_and_index": true
+    },
+    "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean": {
+      "sha256": "cdde658faa0d10ab862a648062b405c3178eeff0a504bfd0a1be223ccdef3451",
+      "index_sha256": "cdde658faa0d10ab862a648062b405c3178eeff0a504bfd0a1be223ccdef3451",
+      "frozen_sha256": "cdde658faa0d10ab862a648062b405c3178eeff0a504bfd0a1be223ccdef3451",
+      "matches_frozen_and_index": true
+    },
+    "docs/CHIRAL_RECIPROCITY_CONTRACT.md": {
+      "sha256": "0594dfd47f6ba9a253a4d4f0cf1ce1a5f8ad6c27d49ed146a963274f4d565328",
+      "index_sha256": "0594dfd47f6ba9a253a4d4f0cf1ce1a5f8ad6c27d49ed146a963274f4d565328",
+      "frozen_sha256": "0594dfd47f6ba9a253a4d4f0cf1ce1a5f8ad6c27d49ed146a963274f4d565328",
+      "matches_frozen_and_index": true
+    },
+    "docs/CHIRAL_RECIPROCITY_FORMALIZATION.md": {
+      "sha256": "d4ce080275e295eb34152f00f23759d2ced56abae5648d3e664383fedfb6effa",
+      "index_sha256": "d4ce080275e295eb34152f00f23759d2ced56abae5648d3e664383fedfb6effa",
+      "frozen_sha256": "d4ce080275e295eb34152f00f23759d2ced56abae5648d3e664383fedfb6effa",
+      "matches_frozen_and_index": true
+    },
+    "lean/InfoGeometry/All.lean": {
+      "sha256": "5bd6c78068eab621d0ba45fc64a5f1da9ba7172295a2ab3fddf69a469537d09f",
+      "index_sha256": "5bd6c78068eab621d0ba45fc64a5f1da9ba7172295a2ab3fddf69a469537d09f",
+      "frozen_sha256": "5bd6c78068eab621d0ba45fc64a5f1da9ba7172295a2ab3fddf69a469537d09f",
+      "matches_frozen_and_index": true
+    }
+  }
+}

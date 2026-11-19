@@ -1,0 +1,203 @@
+{
+  "scope": "Explicit three selected owner files; static Gate4 additionally invokes the unscoped staged proof gate once per owner.",
+  "placeholder_strict": {
+    "HilbertGramReciprocity": {
+      "schema": "info_geometry.placeholder_audit.v2",
+      "generated_at": "2026-11-16T17:59:39.201935+00:00",
+      "root": "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean",
+      "authority_tier": "heuristic-proxy",
+      "summary": {
+        "module_count": 0,
+        "scanned_count": 1,
+        "finding_count": 0,
+        "hard_count": 0,
+        "soft_count": 0,
+        "advisory_count": 0,
+        "provenance": {
+          "hard_failures": 0,
+          "soft_findings": 0,
+          "advisory_findings": 0
+        }
+      },
+      "modules": [],
+      "findings": []
+    },
+    "HilbertGramMoorePenrose": {
+      "schema": "info_geometry.placeholder_audit.v2",
+      "generated_at": "2026-11-16T17:59:39.554810+00:00",
+      "root": "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean",
+      "authority_tier": "heuristic-proxy",
+      "summary": {
+        "module_count": 0,
+        "scanned_count": 1,
+        "finding_count": 0,
+        "hard_count": 0,
+        "soft_count": 0,
+        "advisory_count": 0,
+        "provenance": {
+          "hard_failures": 0,
+          "soft_findings": 0,
+          "advisory_findings": 0
+        }
+      },
+      "modules": [],
+      "findings": []
+    },
+    "GradedExponentialTrace": {
+      "schema": "info_geometry.placeholder_audit.v2",
+      "generated_at": "2026-11-16T17:59:40.115956+00:00",
+      "root": "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean",
+      "authority_tier": "heuristic-proxy",
+      "summary": {
+        "module_count": 0,
+        "scanned_count": 1,
+        "finding_count": 0,
+        "hard_count": 0,
+        "soft_count": 0,
+        "advisory_count": 0,
+        "provenance": {
+          "hard_failures": 0,
+          "soft_findings": 0,
+          "advisory_findings": 0
+        }
+      },
+      "modules": [],
+      "findings": []
+    }
+  },
+  "semantic_vacuity_fail_on_error": {
+    "authority": "lexical heuristics; not a semantic or kernel proof",
+    "blocking_severity_counts": {
+      "warning": 1
+    },
+    "counts": {
+      "trivial_surface": 1
+    },
+    "coverage_complete": true,
+    "fail_on": "error",
+    "fail_prefixes": [],
+    "files_scanned": 3,
+    "files_selected": 3,
+    "findings": [
+      {
+        "category": "trivial_surface",
+        "detail": "rfl",
+        "file": "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean",
+        "line": 110,
+        "severity": "warning",
+        "subject": "normalizedGramEigenspaceEquiv_apply"
+      }
+    ],
+    "pattern_version": 1,
+    "read_failures": [],
+    "scope_roots": [
+      "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean",
+      "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean",
+      "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean"
+    ],
+    "severity_counts": {
+      "warning": 1
+    },
+    "source_paths": [
+      "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean",
+      "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean",
+      "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean"
+    ],
+    "successfully_read_paths": [
+      "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean",
+      "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean",
+      "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean"
+    ],
+    "tracked": false
+  },
+  "semantic_warning_adjudication": {
+    "declaration": "normalizedGramEigenspaceEquiv_apply",
+    "classification": "legitimate_definitional_readout",
+    "reason": "rfl describes the forward action of an independently constructed native isometric equivalence; it does not replace the construction or its proof obligations."
+  },
+  "opengauss_screener_strict": {
+    "violations": {},
+    "quarantined_packets": []
+  },
+  "opengauss_refute_strict": [
+    {
+      "filename": "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean",
+      "clean": true,
+      "total_traps": 0,
+      "errors": [],
+      "warnings": [],
+      "verdict": "PASS"
+    },
+    {
+      "filename": "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean",
+      "clean": true,
+      "total_traps": 0,
+      "errors": [],
+      "warnings": [],
+      "verdict": "PASS"
+    },
+    {
+      "filename": "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean",
+      "clean": true,
+      "total_traps": 0,
+      "errors": [],
+      "warnings": [],
+      "verdict": "PASS"
+    }
+  ],
+  "gate4_static": [
+    {
+      "target_file": "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean",
+      "gate": "GATE_4",
+      "verdict": "STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED",
+      "sorry_count": 0,
+      "admit_count": 0,
+      "custom_axioms": null,
+      "kernel_checked": false,
+      "trap_violations": [],
+      "scope_inflation_warnings": [],
+      "summary": "Static checks passed; Lean compilation and theorem axiom audit were not run.",
+      "verification_status": "not_requested",
+      "review_authority": "automated_source_preflight",
+      "independent_semantic_audit_performed": false
+    },
+    {
+      "target_file": "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean",
+      "gate": "GATE_4",
+      "verdict": "STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED",
+      "sorry_count": 0,
+      "admit_count": 0,
+      "custom_axioms": null,
+      "kernel_checked": false,
+      "trap_violations": [],
+      "scope_inflation_warnings": [],
+      "summary": "Static checks passed; Lean compilation and theorem axiom audit were not run.",
+      "verification_status": "not_requested",
+      "review_authority": "automated_source_preflight",
+      "independent_semantic_audit_performed": false
+    },
+    {
+      "target_file": "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean",
+      "gate": "GATE_4",
+      "verdict": "STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED",
+      "sorry_count": 0,
+      "admit_count": 0,
+      "custom_axioms": null,
+      "kernel_checked": false,
+      "trap_violations": [],
+      "scope_inflation_warnings": [],
+      "summary": "Static checks passed; Lean compilation and theorem axiom audit were not run.",
+      "verification_status": "not_requested",
+      "review_authority": "automated_source_preflight",
+      "independent_semantic_audit_performed": false
+    }
+  ],
+  "staged_gate_execution": {
+    "invocations_through_gate4": 3,
+    "outcome": "success for each invocation, as enforced by the maintained review implementation",
+    "qms_staged_hook_errors": 0,
+    "index_churn_caveats": 0,
+    "raw_child_output": "Captured internally by Gate4; not exported on success. The actual Git pre-commit hook has not been executed by QA."
+  },
+  "no_suppression_or_filter_changes": true
+}

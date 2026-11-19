@@ -1,0 +1,271 @@
+name: Klein inversion and central quadratic boundaries
+
+on:
+  pull_request:
+    paths:
+      - 'lean/**/*.lean'
+      - 'docs/KLEIN_GLIDE_QUADRATIC_CONTRACT.md'
+      - 'docs/KLEIN_GLIDE_QUADRATIC_REVIEW.md'
+      - 'docs/sources/klein-glide-intake-2026-11-16.txt'
+      - 'tools/quality/check_clifford_dirac.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/placeholder_audit.py'
+      - 'tools/quality/semantic_vacuity_gate.py'
+      - 'tools/quality/semantic_vacuity_patterns.json'
+      - 'tools/infra/opengauss_screener.py'
+      - 'tools/build_lock.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/klein-glide.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: klein-glide-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      KLEIN_GLIDE_TARGETS: >-
+        ["InfoGeometry.Algebra.KleinInversionPolynomial",
+        "InfoGeometry.Algebra.KleinCentralQuaternion",
+        "InfoGeometry.Algebra.KleinQuaternionMatrix",
+        "InfoGeometry.Algebra.NilpotentQuotientBoundaries",
+        "InfoGeometry.Canonical.ProjectiveUnitary6",
+        "InfoGeometry.Canonical.KleinPresentedGroup"]
+      KLEIN_GLIDE_CONSUMERS: >-
+        ["InfoGeometry.Canonical.KleinBottleMatrixRepresentationBridge",
+        "InfoGeometry.Canonical.KleinBottleTwistedRepresentationBridge",
+        "InfoGeometry.Canonical.KleinNativeSemidirectProductBridge",
+        "InfoGeometry.Canonical.KleinOrientationCharacter",
+        "InfoGeometry.Canonical.KleinOrientationCharacterBridge",
+        "InfoGeometry.Canonical.KleinOrientationCharacterCoherence",
+        "InfoGeometry.Canonical.KleinPresentedCenterBridge",
+        "InfoGeometry.Canonical.KleinPresentedGroup",
+        "InfoGeometry.Canonical.KleinProjectiveMonodromy",
+        "InfoGeometry.Canonical.KleinSixStateProjectiveMonodromy",
+        "InfoGeometry.Canonical.KleinUnitaryLiftProjection",
+        "InfoGeometry.Canonical.KleinUnitaryLiftProjectionAudit",
+        "InfoGeometry.Canonical.KleinVectorLiftObstruction",
+        "InfoGeometry.Canonical.MasterSplitCayleyDicksonKleinDiracBridge",
+        "InfoGeometry.Canonical.ProjectiveUnitary6",
+        "InfoGeometry.Projective.ProjectiveUnitary6",
+        "InfoGeometry.Topology.KleinBottleCWChain",
+        "InfoGeometry.Topology.KleinBottleCellularEuler",
+        "InfoGeometry.Topology.KleinBottleCellularHomologyClosure",
+        "InfoGeometry.Topology.KleinBottleIntegralHomology",
+        "InfoGeometry.Topology.KleinPinStructures",
+        "InfoGeometry.Topology.KleinProjectiveMonodromy",
+        "InfoGeometry.Topology.PinKleinTotalOrbitQuotient"]
+    steps:
+      - name: Check out the exact repository revision
+        shell: bash
+        run: |
+          git init project
+          git -C project remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
+          git -C project -c protocol.version=2 fetch --no-tags --depth=1 origin "$GITHUB_SHA"
+          git -C project checkout --detach FETCH_HEAD
+          test "$(git -C project rev-parse HEAD)" = "$GITHUB_SHA"
+      - name: Read exact dependency pins
+        id: pins
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          manifest = json.loads(Path('project/lake-manifest.json').read_text())
+          revision = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'mathlib={revision}\n')
+          PY
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: ${{ steps.pins.outputs.mathlib }}
+          path: mathlib
+          persist-credentials: false
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            mathlib/.lake
+          key: klein-glide-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Fetch pinned native imports
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('project').resolve()))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          targets = (json.loads(os.environ['KLEIN_GLIDE_TARGETS']) +
+                     json.loads(os.environ['KLEIN_GLIDE_CONSUMERS']))
+          _, _, native = closure(Path('project'), targets)
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'klein-glide-cache') as lock:
+              subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
+                  cwd='mathlib', check=True, pass_fds=(lock.fileno(),))
+          PY
+      - name: Compile source closure and audit every owned declaration
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess, sys
+          command = [sys.executable, 'tools/quality/check_clifford_dirac.py',
+                     '--mathlib-root', '../mathlib', '--output', '../klein-glide-report']
+          for target in json.loads(os.environ['KLEIN_GLIDE_TARGETS']):
+              command.extend(['--target', target])
+          subprocess.run(command, check=True)
+          PY
+      - name: Check source proof hygiene and semantic findings
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess, sys
+          from pathlib import Path
+          targets = json.loads(os.environ['KLEIN_GLIDE_TARGETS'])
+          paths = ['lean/' + t.replace('.', '/') + '.lean' for t in targets]
+          out = Path('../klein-glide-report')
+          for path in paths:
+              subprocess.run([sys.executable, 'tools/quality/placeholder_audit.py',
+                  '--strict', '--root', path, '--json-out',
+                  str(out / ('placeholder-' + Path(path).stem + '.json'))], check=True)
+          screened = subprocess.run([sys.executable, 'tools/infra/opengauss_screener.py',
+              '--strict', '--json', *paths], text=True, stdout=subprocess.PIPE,
+              stderr=subprocess.STDOUT)
+          (out / 'opengauss.json').write_text(screened.stdout)
+          print(screened.stdout)
+          screened.check_returncode()
+          subprocess.run([sys.executable, 'tools/quality/semantic_vacuity_gate.py',
+              *paths, '--fail-on', 'error', '--json-out',
+              '../klein-glide-report/semantic-vacuity.json'], check=True)
+          PY
+      - name: Reconcile coverage and bind verification evidence
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          out = Path('../klein-glide-report')
+          targets = json.loads(os.environ['KLEIN_GLIDE_TARGETS'])
+          owners = ['lean/' + t.replace('.', '/') + '.lean' for t in targets]
+          report = json.loads((out / 'report.json').read_text())
+          assert report['status'] == 'passed' and report['targets'] == targets
+          assert report['audit_required']
+          modules = {m['module']: m for m in report['modules']}
+          assert len(modules) == len(report['modules'])
+          assert all(m['returncode'] == 0 and not m['reused'] for m in modules.values())
+          assert all(modules[t]['warnings'] == 0 for t in targets)
+          assert set(report['declaration_counts']) == set(targets)
+          assert all(report['declaration_counts'][t] > 0 for t in targets)
+          for module, expected in report['source_sha256'].items():
+              path = Path('lean') / (module.replace('.', '/') + '.lean')
+              assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, module
+          semantic = json.loads((out / 'semantic-vacuity.json').read_text())
+          assert semantic['coverage_complete'] and not semantic['read_failures']
+          assert semantic['files_selected'] == semantic['files_scanned'] == len(owners)
+          for field in ['source_paths', 'successfully_read_paths', 'scope_roots']:
+              assert sorted(semantic[field]) == sorted(owners), field
+          assert semantic['fail_on'] == 'error' and not semantic['fail_prefixes']
+          assert semantic['severity_counts'].get('error', 0) == 0
+          index_path = out / 'evidence-sha256.json'
+          index = json.loads(index_path.read_text())
+          for name, expected in index.items():
+              path = Path(name.removeprefix('repository/')) if name.startswith('repository/') else out / name
+              assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, name
+          for name in ['.github/workflows/klein-glide.yml',
+                       'docs/KLEIN_GLIDE_QUADRATIC_CONTRACT.md',
+                       'docs/KLEIN_GLIDE_QUADRATIC_REVIEW.md',
+                       'docs/sources/klein-glide-intake-2026-11-16.txt',
+                       'tools/quality/placeholder_audit.py',
+                       'tools/quality/semantic_vacuity_gate.py',
+                       'tools/quality/semantic_vacuity_patterns.json',
+                       'tools/infra/opengauss_screener.py',
+                       'lean-toolchain', 'lake-manifest.json']:
+              index['repository/' + name] = hashlib.sha256(Path(name).read_bytes()).hexdigest()
+          for name in ['semantic-vacuity.json', 'environment.json', 'opengauss.json',
+                       *['placeholder-' + t.rsplit('.', 1)[-1] + '.json' for t in targets]]:
+              index[name] = hashlib.sha256((out / name).read_bytes()).hexdigest()
+          index_path.write_text(json.dumps(index, indent=2) + '\n')
+          PY
+      - name: Compile downstream import consumers and reconcile compatibility evidence
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, subprocess, sys
+          from pathlib import Path
+          from tools.quality.check_reviewed_prs import closure
+          targets = json.loads(os.environ['KLEIN_GLIDE_CONSUMERS'])
+          assert len(targets) == len(set(targets))
+          out = Path('../klein-glide-consumer-report')
+          command = [sys.executable, 'tools/quality/check_clifford_dirac.py',
+                     '--mathlib-root', '../mathlib', '--output', str(out), '--skip-audit']
+          for target in targets:
+              command.extend(['--target', target])
+          subprocess.run(command, check=True)
+          report = json.loads((out / 'report.json').read_text())
+          assert report['status'] == 'development_passed' and report['targets'] == targets
+          assert not report['audit_required']
+          ordered, _, _ = closure(Path.cwd(), targets)
+          modules = {m['module']: m for m in report['modules']}
+          assert len(modules) == len(report['modules']) and set(modules) == set(ordered)
+          assert all(m['returncode'] == 0 and not m['reused'] for m in modules.values())
+          for target in set(targets) & set(json.loads(os.environ['KLEIN_GLIDE_TARGETS'])):
+              assert modules[target]['warnings'] == 0, target
+          for module, expected in report['source_sha256'].items():
+              path = Path('lean') / (module.replace('.', '/') + '.lean')
+              assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, module
+          index_path = out / 'evidence-sha256.json'
+          index = json.loads(index_path.read_text())
+          for name, expected in index.items():
+              path = Path(name.removeprefix('repository/')) if name.startswith('repository/') else out / name
+              assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, name
+          for name in ['.github/workflows/klein-glide.yml', 'lean-toolchain', 'lake-manifest.json']:
+              index['repository/' + name] = hashlib.sha256(Path(name).read_bytes()).hexdigest()
+          index['environment.json'] = hashlib.sha256((out / 'environment.json').read_bytes()).hexdigest()
+          index_path.write_text(json.dumps(index, indent=2) + '\n')
+          print(f'COMPATIBILITY PASSED: {len(targets)} targets, {len(modules)} modules; compile-only')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: klein-glide-kernel-evidence
+          path: |
+            klein-glide-report/report.json
+            klein-glide-report/evidence-sha256.json
+            klein-glide-report/environment.json
+            klein-glide-report/semantic-vacuity.json
+            klein-glide-report/opengauss.json
+            klein-glide-report/placeholder-*.json
+            klein-glide-report/src/CliffordDiracAudit.lean
+            klein-glide-report/*.log
+          if-no-files-found: warn
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: klein-glide-consumer-compatibility-evidence
+          path: |
+            klein-glide-consumer-report/report.json
+            klein-glide-consumer-report/evidence-sha256.json
+            klein-glide-consumer-report/environment.json
+            klein-glide-consumer-report/*.log
+          if-no-files-found: warn

@@ -1,0 +1,267 @@
+name: Unified operator bridges kernel check
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/OperatorAlgebra/CyclotomicGradedAdjoint.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/InternalCyclotomicGradedAdjoint.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/RealCubicAdjointWitness.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/IntrinsicGradedAdjoint.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/InnerConjugation.lean'
+      - 'lean/InfoGeometry/Geometry/MixedPairingNondegeneracy.lean'
+      - 'lean/InfoGeometry/InformationGeometry/ContrastMixedHessianBoundary.lean'
+      - 'lean/InfoGeometry/Clifford/NeutralPhaseSpaceCore.lean'
+      - 'lean/InfoGeometry/Algebra/Quantum/QBinomial.lean'
+      - 'lean/InfoGeometry/Algebra/IsotropicCyclotomicGalois.lean'
+      - 'lean/InfoGeometry/Algebra/LieCyclotomicBridge.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Quantum/SylvesterWeylBraidBridge.lean'
+      - 'lean/InfoGeometry/Algebra/IsotropicCyclotomicGenesis.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/ThreeZ2OperatorGradings.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.lean'
+      - 'lean/InfoGeometry/Weyl/WeylDisplacement.lean'
+      - 'lean/InfoGeometry/Clifford/SplitQ11.lean'
+      - 'lean/InfoGeometry/Clifford/Cl11Matrix.lean'
+      - 'lean/InfoGeometry/External/Auto/Matrix2KANPauliChain.lean'
+      - 'lean/InfoGeometry/Geometry/MoebiusChiralGeneratorClassification.lean'
+      - 'lean/InfoGeometry/Algebra/MatrixCyclotomics.lean'
+      - 'lean/InfoGeometry/Physics/HestenesKreinOperatorCalculus.lean'
+      - 'lean/InfoGeometry/Meta/Architecture.lean'
+      - 'tools/quality/check_clifford_dirac.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/placeholder_audit.py'
+      - 'tools/quality/semantic_vacuity_gate.py'
+      - 'tools/quality/semantic_vacuity_patterns.json'
+      - 'tools/quality/proof_proxy_staged_gate.py'
+      - 'tools/infra/opengauss_screener.py'
+      - 'tools/infra/opengauss_cli.py'
+      - 'tools/build_lock.py'
+      - '.githooks/pre-commit'
+      - 'docs/UNIFIED_OPERATOR_BRIDGES_*.md'
+      - 'docs/intake/2026-11-19-unified-architecture-*'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/unified-operator-bridges.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: unified-operator-bridges-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      UNIFIED_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
+      UNIFIED_TARGETS: >-
+        ["InfoGeometry.OperatorAlgebra.CyclotomicGradedAdjoint",
+        "InfoGeometry.OperatorAlgebra.InternalCyclotomicGradedAdjoint",
+        "InfoGeometry.OperatorAlgebra.RealCubicAdjointWitness",
+        "InfoGeometry.Geometry.MixedPairingNondegeneracy",
+        "InfoGeometry.InformationGeometry.ContrastMixedHessianBoundary"]
+    steps:
+      - name: Check out the exact public source without submodule traversal
+        env:
+          UNIFIED_SOURCE_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+        shell: bash
+        run: |
+          git init --quiet project
+          git -C project remote add origin "https://github.com/${UNIFIED_SOURCE_REPOSITORY}.git"
+          git -C project -c protocol.version=2 fetch --quiet --no-tags --depth=1 origin "$UNIFIED_SOURCE_REVISION"
+          git -C project -c submodule.recurse=false checkout --quiet --detach FETCH_HEAD
+      - name: Verify source revision and read dependency pins
+        id: pins
+        shell: bash
+        run: |
+          python3 - <<'PYTHON'
+          import json, os, subprocess
+          from pathlib import Path
+          head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd='project', text=True).strip()
+          assert head == os.environ['UNIFIED_SOURCE_REVISION']
+          manifest = json.loads(Path('project/lake-manifest.json').read_text())
+          revision = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'mathlib={revision}\n')
+          PYTHON
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: ${{ steps.pins.outputs.mathlib }}
+          path: mathlib
+          persist-credentials: false
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            mathlib/.lake
+          key: unified-operator-bridges-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Fetch only the pinned native import closure
+        shell: bash
+        run: |
+          python3 - <<'PYTHON'
+          import json, os, subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('project').resolve()))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          targets = json.loads(os.environ['UNIFIED_TARGETS'])
+          ordered, _, native = closure(Path('project'), targets)
+          workflow = Path('project/.github/workflows/unified-operator-bridges.yml').read_text()
+          for module in ordered:
+              dependency_path = 'lean/' + module.replace('.', '/') + '.lean'
+              assert f"      - '{dependency_path}'" in workflow, dependency_path
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'unified-operator-bridges-cache') as lock:
+              subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
+                             cwd='mathlib', check=True, pass_fds=(lock.fileno(),))
+          PYTHON
+      - name: Compile exact source closure and audit every owned declaration
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PYTHON'
+          import json, os, subprocess, sys
+          targets = json.loads(os.environ['UNIFIED_TARGETS'])
+          command = [sys.executable, 'tools/quality/check_clifford_dirac.py',
+                     '--mathlib-root', '../mathlib', '--output', '../unified-operator-bridges-report']
+          for target in targets:
+              command.extend(['--target', target])
+          subprocess.run(command, check=True)
+          PYTHON
+      - name: Run maintained source gates
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PYTHON'
+          import json, os, subprocess, sys
+          from pathlib import Path
+          targets = json.loads(os.environ['UNIFIED_TARGETS'])
+          paths = ['lean/' + t.replace('.', '/') + '.lean' for t in targets]
+          out = Path('../unified-operator-bridges-report')
+          for path in paths:
+              subprocess.run([sys.executable, 'tools/quality/placeholder_audit.py',
+                              '--root', path, '--strict'], check=True)
+          subprocess.run([sys.executable, 'tools/quality/semantic_vacuity_gate.py', *paths,
+                          '--fail-on', 'error', '--json-out', str(out / 'semantic-vacuity.json')], check=True)
+          for verb, options in [('refute', ['--strict']), ('review', ['--gate', 'GATE_4'])]:
+              with (out / f'opengauss-{verb}.json').open('w') as report:
+                  subprocess.run([sys.executable, 'tools/infra/opengauss_cli.py', verb,
+                                  *paths, *options, '--json'], stdout=report, check=True)
+          from tools.quality.proof_proxy_staged_gate import ActiveIndexCache, check_text
+          root = Path.cwd()
+          before = subprocess.check_output(['git', 'write-tree'], text=True).strip()
+          cache = ActiveIndexCache(root, scope_paths=paths)
+          violations, covered = [], []
+          for path in paths:
+              code, data, detail = cache.blob(path)
+              assert code == 0, (path, detail)
+              assert (root / path).read_bytes() == data, path
+              violations.extend(check_text(path, data.decode('utf-8'),
+                                          repo_root=root, index_cache=cache, strict=True))
+              covered.append(path)
+          assert subprocess.check_output(['git', 'write-tree'], text=True).strip() == before
+          assert covered == paths and len(set(covered)) == len(targets)
+          (out / 'proof-source-gate.json').write_text(json.dumps({
+              'paths': covered, 'strict': True, 'index_tree': before,
+              'violations': violations}, indent=2) + '\n')
+          assert not violations, violations
+          PYTHON
+      - name: Reconcile full scope and bind verification inputs
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PYTHON'
+          import hashlib, json, os, subprocess
+          from pathlib import Path
+          from tools.quality.check_reviewed_prs import closure
+          out = Path('../unified-operator-bridges-report')
+          targets = json.loads(os.environ['UNIFIED_TARGETS'])
+          report = json.loads((out / 'report.json').read_text())
+          assert report['status'] == 'passed' and report['audit_required']
+          assert report['targets'] == targets
+          assert report['local_revision'] == os.environ['UNIFIED_SOURCE_REVISION']
+          manifest = json.loads(Path('lake-manifest.json').read_text())
+          mathlib_pin = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          assert report['mathlib'] == mathlib_pin
+          assert subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd='../mathlib', text=True).strip() == mathlib_pin
+          assert report['toolchain'] == Path('lean-toolchain').read_text().strip()
+          modules = {m['module']: m for m in report['modules']}
+          assert len(modules) == len(report['modules'])
+          ordered, dependencies, _ = closure(Path('.'), targets)
+          expected_modules = set(ordered)
+          assert set(modules) == expected_modules
+          for key in ['source_sha256', 'fingerprints', 'repository_import_dependencies']:
+              assert set(report[key]) == expected_modules, key
+          assert report['repository_import_dependencies'] == dependencies
+          assert all(m['returncode'] == 0 and not m['reused'] for m in modules.values())
+          assert all(modules[t]['warnings'] == 0 for t in targets)
+          assert set(report['declaration_counts']) == set(targets)
+          assert all(n > 0 for n in report['declaration_counts'].values())
+          allowed = {'propext', 'Classical.choice', 'Quot.sound'}
+          assert len(report['axioms']) == 1
+          for axiom_list in report['axioms']:
+              assert {a.strip() for a in axiom_list.strip('[]').split(',') if a.strip()} <= allowed
+          for module, digest in report['source_sha256'].items():
+              source = Path('lean') / (module.replace('.', '/') + '.lean')
+              assert hashlib.sha256(source.read_bytes()).hexdigest() == digest, module
+          semantic = json.loads((out / 'semantic-vacuity.json').read_text())
+          expected = {'lean/' + t.replace('.', '/') + '.lean' for t in targets}
+          assert semantic['coverage_complete'] and not semantic['read_failures']
+          assert semantic['files_selected'] == semantic['files_scanned'] == len(expected)
+          for key in ['source_paths', 'successfully_read_paths', 'scope_roots']:
+              assert len(semantic[key]) == len(expected) and set(semantic[key]) == expected
+          assert semantic['severity_counts'].get('error', 0) == 0
+          proof_gate = json.loads((out / 'proof-source-gate.json').read_text())
+          assert len(proof_gate['paths']) == len(expected) and set(proof_gate['paths']) == expected
+          assert proof_gate['strict'] and not proof_gate['violations']
+          intake = json.loads(Path('docs/intake/2026-11-19-unified-architecture-manifest.json').read_text())
+          intake_bytes = Path(intake['preserved_path']).read_bytes()
+          assert len(intake_bytes) == intake['byte_length']
+          assert hashlib.sha256(intake_bytes).hexdigest() == intake['sha256']
+          index_path = out / 'evidence-sha256.json'
+          index = json.loads(index_path.read_text())
+          for name, digest in index.items():
+              source = Path(name.removeprefix('repository/')) if name.startswith('repository/') else out / name
+              assert hashlib.sha256(source.read_bytes()).hexdigest() == digest, name
+          for name in ['.github/workflows/unified-operator-bridges.yml',
+                       'docs/UNIFIED_OPERATOR_BRIDGES_CONTRACT.md',
+                       'docs/UNIFIED_OPERATOR_BRIDGES_LITERATURE.md',
+                       'docs/UNIFIED_OPERATOR_BRIDGES_VALIDATION.md',
+                       'docs/intake/2026-11-19-unified-architecture-original.txt',
+                       'docs/intake/2026-11-19-unified-architecture-manifest.json',
+                       'tools/quality/placeholder_audit.py',
+                       'tools/quality/semantic_vacuity_gate.py',
+                       'tools/quality/semantic_vacuity_patterns.json',
+                       'tools/quality/proof_proxy_staged_gate.py',
+                       'tools/infra/opengauss_screener.py',
+                       'tools/infra/opengauss_cli.py', '.githooks/pre-commit',
+                       'lean-toolchain', 'lake-manifest.json']:
+              index['repository/' + name] = hashlib.sha256(Path(name).read_bytes()).hexdigest()
+          for name in ['semantic-vacuity.json', 'opengauss-refute.json', 'opengauss-review.json',
+                       'proof-source-gate.json']:
+              index[name] = hashlib.sha256((out / name).read_bytes()).hexdigest()
+          index_path.write_text(json.dumps(index, indent=2) + '\n')
+          PYTHON
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unified-operator-bridges-kernel-evidence
+          path: |
+            unified-operator-bridges-report/*.json
+            unified-operator-bridges-report/src/CliffordDiracAudit.lean
+            unified-operator-bridges-report/*.log
+          if-no-files-found: warn

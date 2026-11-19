@@ -670,3 +670,6 @@ import InfoGeometry.Analysis.ProjectedGramDissipation
 import InfoGeometry.Analysis.SplitOctonionProjectedGram
 import InfoGeometry.Twistor.NonincidentLogPairing
 import InfoGeometry.Canonical.MatrixGibbsEntropy
+import InfoGeometry.Canonical.MatrixGibbsScaleTransport
+import InfoGeometry.Canonical.MatrixUnitarySpectralOrthogonality
+import InfoGeometry.Canonical.MatrixGibbsMetriplecticEquilibrium

@@ -1,0 +1,143 @@
+{
+  "schema": "spectral-rounded-two-line-v1",
+  "original_source": {
+    "sha256": "882b6799b2787041c86e07b36c7fe892ee1e7807756e05273227ac73b9411754",
+    "format": "UTF-8 text containing one fenced CSV block",
+    "extraction_scope": "Decay constant and the first seven columns of cartridge rows 1 through 9 only.",
+    "fenced_csv_parameter_label": "Rn-222 Decay Constant (lambda)",
+    "fenced_csv_row_header": "Cartridge No. (i)"
+  },
+  "lambda_per_second": "0.0000020982",
+  "channel_order": [
+    "352",
+    "609"
+  ],
+  "units": {
+    "start_time": "HH:MM:SS",
+    "real_minutes_source": "minutes",
+    "live_minutes_source": "minutes",
+    "real_seconds": "seconds",
+    "live_seconds": "seconds",
+    "elapsed_seconds": "seconds",
+    "areas": "reported rounded net peak areas"
+  },
+  "records": [
+    {
+      "cartridge": 1,
+      "start_time": "12:25:47",
+      "real_minutes_source": "15.9167",
+      "live_minutes_source": "15",
+      "real_seconds": "955.0020",
+      "live_seconds": "900",
+      "elapsed_seconds": "7753",
+      "areas": {
+        "352": "243750",
+        "609": "155028"
+      }
+    },
+    {
+      "cartridge": 2,
+      "start_time": "12:09:13",
+      "real_minutes_source": "15.6667",
+      "live_minutes_source": "15",
+      "real_seconds": "940.0020",
+      "live_seconds": "900",
+      "elapsed_seconds": "6759",
+      "areas": {
+        "352": "177341",
+        "609": "112751"
+      }
+    },
+    {
+      "cartridge": 3,
+      "start_time": "11:53:11",
+      "real_minutes_source": "15.3333",
+      "live_minutes_source": "15",
+      "real_seconds": "919.9980",
+      "live_seconds": "900",
+      "elapsed_seconds": "5797",
+      "areas": {
+        "352": "89796",
+        "609": "56385"
+      }
+    },
+    {
+      "cartridge": 4,
+      "start_time": "11:37:14",
+      "real_minutes_source": "15.1833",
+      "live_minutes_source": "15",
+      "real_seconds": "910.9980",
+      "live_seconds": "900",
+      "elapsed_seconds": "4840",
+      "areas": {
+        "352": "52368",
+        "609": "34000"
+      }
+    },
+    {
+      "cartridge": 5,
+      "start_time": "11:21:25",
+      "real_minutes_source": "15.1000",
+      "live_minutes_source": "15",
+      "real_seconds": "906.0000",
+      "live_seconds": "900",
+      "elapsed_seconds": "3891",
+      "areas": {
+        "352": "27324",
+        "609": "17414"
+      }
+    },
+    {
+      "cartridge": 6,
+      "start_time": "11:05:22",
+      "real_minutes_source": "15.0500",
+      "live_minutes_source": "15",
+      "real_seconds": "903.0000",
+      "live_seconds": "900",
+      "elapsed_seconds": "2928",
+      "areas": {
+        "352": "13440",
+        "609": "8689"
+      }
+    },
+    {
+      "cartridge": 7,
+      "start_time": "10:49:37",
+      "real_minutes_source": "15.0333",
+      "live_minutes_source": "15",
+      "real_seconds": "901.9980",
+      "live_seconds": "900",
+      "elapsed_seconds": "1983",
+      "areas": {
+        "352": "6777",
+        "609": "4336"
+      }
+    },
+    {
+      "cartridge": 8,
+      "start_time": "10:33:48",
+      "real_minutes_source": "15.0167",
+      "live_minutes_source": "15",
+      "real_seconds": "901.0020",
+      "live_seconds": "900",
+      "elapsed_seconds": "1034",
+      "areas": {
+        "352": "3516",
+        "609": "2272"
+      }
+    },
+    {
+      "cartridge": 9,
+      "start_time": "10:16:34",
+      "real_minutes_source": "15.0167",
+      "live_minutes_source": "15",
+      "real_seconds": "901.0020",
+      "live_seconds": "900",
+      "elapsed_seconds": "0",
+      "areas": {
+        "352": "2417",
+        "609": "1392"
+      }
+    }
+  ]
+}

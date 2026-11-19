@@ -3,6 +3,14 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.Canonical.HestenesCartanPhaseTransport
+import InfoGeometry.Canonical.Cl11LorentzCornerBounds
+import InfoGeometry.Lie.SplitOctonionTriadVolume
+import InfoGeometry.QuantumGeometry.FiniteObservableGramExamples
+import InfoGeometry.QuantumGeometry.RealPhaseObservableGram
+import InfoGeometry.Analysis.SchwartzUncertainty
+import InfoGeometry.Analysis.ProjectedGramDissipation
+import InfoGeometry.Analysis.SplitOctonionProjectedGram
 import InfoGeometry.Canonical.CliffordPeirceWalshAudit
 import InfoGeometry.OperatorAlgebra.IsometryCornerLocalization
 import InfoGeometry.Clifford.WeylFrameMasks

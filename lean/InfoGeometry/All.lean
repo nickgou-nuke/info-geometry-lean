@@ -636,3 +636,7 @@ import InfoGeometry.Quantum.KrausCommutatorGeometry
 import InfoGeometry.Quantum.KrausFixedEffectCounterexample
 import InfoGeometry.Quantum.InstrumentHistory
 import InfoGeometry.Canonical.InstrumentHistoryGNS
+import InfoGeometry.Clifford.ChevalleyNeutralCompatibility
+import InfoGeometry.Clifford.ParaKreinObstructions
+import InfoGeometry.Clifford.NeutralCotangentHamiltonian
+import InfoGeometry.Geometry.ParaPotentialPullback

@@ -106,6 +106,27 @@ theorem twoModeSystem_entropy_rate : twoModeSystem.dS twoModeSystem.flow = 2 := 
   rw [positiveMetric_e_pos]
   norm_num [e_pos]
 
+/-- The existing entropy-producing example has an actual reversible kernel. -/
+theorem twoModeSystem_reversible_not_injective :
+    ¬Function.Injective twoModeSystem.L := by
+  intro hL
+  have hz := twoModeSystem.entropy_rate_zero_of_injective hL
+  rw [twoModeSystem_entropy_rate] at hz
+  norm_num at hz
+
+/-- The reduced reversible map in the existing example cannot be the full
+inverse of the native symplectic form. The reduction is mathematically essential. -/
+theorem twoModeSystem_reversible_ne_fullSharp :
+    twoModeSystem.L ≠
+      BilinearMetriplecticReduction.reducedSharp diagonalOmega
+        diagonalOmega_nondegenerate (LinearMap.id : Module.End ℝ V55) := by
+  intro h
+  apply twoModeSystem_reversible_not_injective
+  rw [h]
+  exact BilinearMetriplecticReduction.reducedSharp_injective_of_equiv
+    diagonalOmega diagonalOmega_nondegenerate (LinearEquiv.refl ℝ V55)
+
+
 theorem twoModeSystem_both_nonzero :
     twoModeSystem.L twoModeSystem.dH ≠ 0 ∧ twoModeSystem.M twoModeSystem.dS ≠ 0 := by
   rw [twoModeSystem_reversible, twoModeSystem_dissipative]

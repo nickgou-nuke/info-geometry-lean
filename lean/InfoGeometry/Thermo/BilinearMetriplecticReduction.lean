@@ -74,6 +74,50 @@ theorem reducedSharp_eq_zero_iff (B : LinearMap.BilinForm ℝ W)
     simpa using this
   · exact reducedSharp_annihilates B hB A α
 
+/-- An injective state map gives the exact Casimir kernel for every
+nondegenerate bilinear form, including a skew form. Positivity is unnecessary. -/
+theorem reducedSharp_eq_zero_iff_of_injective
+    (B : LinearMap.BilinForm ℝ W) (hB : B.Nondegenerate)
+    (A : W →ₗ[ℝ] V) (hA : Function.Injective A) (α : Covector V) :
+    reducedSharp B hB A α = 0 ↔ A.dualMap α = 0 := by
+  constructor
+  · intro h
+    have hz : (B.toDual hB).symm (A.dualMap α) = 0 := by
+      apply hA
+      calc
+        A ((B.toDual hB).symm (A.dualMap α)) = reducedSharp B hB A α := by
+          simp only [reducedSharp, LinearMap.comp_apply, LinearEquiv.coe_coe]
+        _ = 0 := h
+        _ = A 0 := (map_zero A).symm
+    have hdual := congrArg (B.toDual hB) hz
+    simpa using hdual
+  · exact reducedSharp_annihilates B hB A α
+
+/-- Changing state coordinates by an equivalence preserves the full inverse
+bilinear duality. Its inverse is supplied by native `LinearEquiv` composition. -/
+def reducedSharpEquiv (B : LinearMap.BilinForm ℝ W) (hB : B.Nondegenerate)
+    (e : W ≃ₗ[ℝ] V) : Covector V ≃ₗ[ℝ] V :=
+  e.dualMap.trans ((B.toDual hB).symm.trans e)
+
+/-- The equivalence realizes the existing sharp-map construction exactly. -/
+@[simp] theorem reducedSharpEquiv_toLinearMap
+    (B : LinearMap.BilinForm ℝ W) (hB : B.Nondegenerate)
+    (e : W ≃ₗ[ℝ] V) :
+    (reducedSharpEquiv B hB e).toLinearMap =
+      reducedSharp B hB e.toLinearMap := by
+  ext α
+  rfl
+
+/-- In particular, an invertible coordinate change cannot create Casimirs. -/
+theorem reducedSharp_injective_of_equiv
+    (B : LinearMap.BilinForm ℝ W) (hB : B.Nondegenerate)
+    (e : W ≃ₗ[ℝ] V) :
+    Function.Injective (reducedSharp B hB e.toLinearMap) := by
+  intro α β h
+  apply (reducedSharpEquiv B hB e).injective
+  exact h
+
+
 /-- Concrete construction from forms and image-annihilation conditions.
 No GENERIC law is supplied as an unproved structure field. -/
 def system (ω H : LinearMap.BilinForm ℝ W)

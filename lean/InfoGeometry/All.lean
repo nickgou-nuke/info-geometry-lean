@@ -618,3 +618,6 @@ import InfoGeometry.Canonical.MatrixGibbsEntropy
 import InfoGeometry.Canonical.MatrixGibbsScaleTransport
 import InfoGeometry.Canonical.MatrixUnitarySpectralOrthogonality
 import InfoGeometry.Canonical.MatrixGibbsMetriplecticEquilibrium
+import InfoGeometry.Canonical.MatrixGeneralizedGibbs
+import InfoGeometry.Canonical.MatrixRelativeEntropy
+import InfoGeometry.Canonical.MatrixGeneralizedGibbsInequalities

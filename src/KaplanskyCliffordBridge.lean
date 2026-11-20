@@ -5,7 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Algebra.Ring.Defs
 import Mathlib.Algebra.Algebra.Defs
-import Mathlib.LinearAlgebra.Finrank
+import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
 
@@ -170,6 +170,10 @@ theorem chevalleyIdempotentSquare {R : Type*} [Ring R] (d : ChevalleySpinorData 
       rw [h]
       <;> simp [d.h_n_sq_zero, d.h_p_sq]
 
+/-- The current data imposes `n * p = 0`, so the named element is always zero. -/
+theorem chevalleyIdempotent_eq_zero {R : Type*} [Ring R] (d : ChevalleySpinorData R) :
+    chevalleyIdempotent d = 0 := d.h_n_p_zero
+
 /- The Cheballey idempotent yields a non-trivial idempotent when n, p ≠ 0 and the ring is non-degenerate. -/
 theorem chevalleyIdempotentNonTrivial {R : Type*} [Ring R] (d : ChevalleySpinorData R)
     (h_n_ne_zero : d.n ≠ 0) (h_p_ne_zero : d.p ≠ 0) (h_np_ne_zero : d.n * d.p ≠ 0) :
@@ -237,6 +241,25 @@ theorem zeroDivisorYieldsIdeals {R : Type*} [Ring R] {α β : R} (h : α * β = 
     rw [hy]
     exact h
 
+/-- Zero divisors yield nonempty left and right annihilating subsets, with no
+nonzero hypothesis required. -/
+theorem zeroDivisorYieldsAnnihilatingSubsets {R : Type*} [Ring R] {α β : R}
+    (h : α * β = 0) :
+    (∃ (I : Set R), I.Nonempty ∧ ∀ x ∈ I, x * β = 0) ∧
+    (∃ (J : Set R), J.Nonempty ∧ ∀ y ∈ J, α * y = 0) := by
+  refine ⟨⟨{α}, ⟨α, Set.mem_singleton α⟩, ?_⟩,
+    ⟨{β}, ⟨β, Set.mem_singleton β⟩, ?_⟩⟩
+  · -- Right annihilating subset: α * β = 0
+    intro x hx
+    simp only [Set.mem_singleton_iff] at hx
+    rw [hx]
+    exact h
+  · -- Left annihilating subset: α * β = 0
+    intro y hy
+    simp only [Set.mem_singleton_iff] at hy
+    rw [hy]
+    exact h
+
 /-- The defect space as kernel of a differential. -/
 def defectSpace {R : Type*} [AddCommGroup R] (d : R → R) (δ : R → R) : Set R :=
   {x : R | d x = 0 ∧ δ x = 0}
@@ -274,5 +297,28 @@ theorem defectSpaceProperties {R : Type*} [AddCommGroup R] (d δ : R → R)
         <;>
         abel
       })
+
+/-- The defect space of a pair of linear differentials is a submodule of `R`. -/
+def defectSpaceSubmodule {R : Type*} [Ring R] (d δ : R →ₗ[R] R) :
+    Submodule R R := by
+  refine
+    { carrier := defectSpace d δ
+      zero_mem' := ?_
+      add_mem' := ?_
+      smul_mem' := ?_ }
+  · -- Contains 0
+    simp [defectSpace]
+  · -- Closed under addition
+    intro x y hx hy
+    simp only [defectSpace, Set.mem_setOf_eq] at hx hy ⊢
+    constructor
+    · rw [map_add, hx.1, hy.1, add_zero]
+    · rw [map_add, hx.2, hy.2, add_zero]
+  · -- Closed under scalar multiplication
+    intro c x hx
+    simp only [defectSpace, Set.mem_setOf_eq] at hx ⊢
+    constructor
+    · rw [map_smul, hx.1, smul_zero]
+    · rw [map_smul, hx.2, smul_zero]
 
 end KaplanskyCliffordBridge

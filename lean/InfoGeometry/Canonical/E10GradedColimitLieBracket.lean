@@ -84,6 +84,14 @@ lemma heightCutoff_le_union (A : ℤ → Submodule R L) (N : ℕ) :
   unfold heightCutoffUnion
   exact le_iSup (heightCutoff A) N
 
+/-- The finite root-height cutoffs form a directed family under inclusion. -/
+lemma heightCutoff_directed (A : ℤ → Submodule R L) :
+    Directed (· ≤ ·) (heightCutoff A) := by
+  intro N M
+  refine ⟨max N M, ?_, ?_⟩
+  · exact heightCutoff_mono A (le_max_left N M)
+  · exact heightCutoff_mono A (le_max_right N M)
+
 /-- **Exhaustiveness of the Root-Height Cutoff Union (`heightCutoffUnion_eq_iSup_all`):**
 The supremum of all finite root-height cutoffs $\bigsqcup_{N \in \mathbb{N}} \mathfrak{g}_{\le N}$
 equals the full supremum $\bigsqcup_{i \in \mathbb{Z}} A_i$ of all graded components. -/

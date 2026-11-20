@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 
 import InfoGeometry.Algebra.NoncommutativeCliffordPrimitives
 import InfoGeometry.Algebra.NoncommutativeCovariantDiracZornSynthesis
+import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Tactic
 
@@ -32,6 +33,7 @@ Reuses `mat2`, `ext_fin2`, `fiberEmbed`, `ClTower`, and `instRingClTower` from
 `InfoGeometry.Algebra.NoncommutativeCovariantDiracZornSynthesis`.
 -/
 
+open Matrix
 open InfoGeometry.Algebra.NoncommutativeCliffordPrimitives
 open InfoGeometry.Algebra.NoncommutativeCovariantDiracZornSynthesis
 
@@ -40,6 +42,153 @@ namespace InfoGeometry.Algebra.NoncommutativeUnifiedDiracHiggsZornTower
 universe u
 
 variable {B : Type u} [Ring B]
+
+/-- Recursive chirality grading $\Gamma^{(n)} \in \mathcal{C}\ell_n(B)$. -/
+def kroneckerGamma (γ₀ : B) : ∀ (n : ℕ), ClTower B n
+  | 0     => γ₀
+  | n + 1 => mat2 (kroneckerGamma γ₀ n) 0 0 (-kroneckerGamma γ₀ n)
+
+/-- Unnormalized tower trace on $\mathcal{C}\ell_n(B)$. -/
+def towerTrace : ∀ {n : ℕ}, ClTower B n → B
+  | 0,     x => x
+  | _ + 1, M => towerTrace (M 0 0) + towerTrace (M 1 1)
+
+/-- $\mathbb{Z}_2$-graded supertrace $\mathrm{Str}(M) = \mathrm{Tr}(\Gamma^{(n)} M)$ on $\mathcal{C}\ell_n(B)$. -/
+def superTrace (γ₀ : B) {n : ℕ} (M : ClTower B n) : B :=
+  towerTrace (kroneckerGamma γ₀ n * M)
+
+lemma towerTrace_add : ∀ {n : ℕ} (X Y : ClTower B n),
+    towerTrace (X + Y) = towerTrace X + towerTrace Y
+  | 0,     _, _ => rfl
+  | _ + 1, X, Y => by
+      change towerTrace (X 0 0 + Y 0 0) + towerTrace (X 1 1 + Y 1 1) =
+        (towerTrace (X 0 0) + towerTrace (X 1 1)) +
+        (towerTrace (Y 0 0) + towerTrace (Y 1 1))
+      rw [towerTrace_add, towerTrace_add]
+      abel
+
+lemma kroneckerGamma_sq {γ₀ : B} (hγ₀ : γ₀ * γ₀ = 1) :
+    ∀ (n : ℕ), kroneckerGamma γ₀ n * kroneckerGamma γ₀ n = 1
+  | 0     => hγ₀
+  | n + 1 => by apply ext_fin2 <;> simp [kroneckerGamma, kroneckerGamma_sq hγ₀ n]
+
+/-!
+## Archetype $\mathcal{U}\mathcal{Z}_1$: Non-Central All-Scales Dirac–Higgs Tower & Chiral Higgs Commutator Anomaly
+-/
+
+section ArchetypeUZ1_NonCentralDiracHiggsTower
+
+/-- Non-central all-scales Dirac–Higgs tower $\mathcal{D}_n^{\mathrm{NC}} \in \mathcal{C}\ell_n(B)$
+built from arbitrary non-commuting scale Higgs fields $H_n^+, H_n^- \in \mathcal{C}\ell_n(B)$. -/
+def noncentralDiracTower (D₀ γ₀ : B)
+    (H_plus H_minus : ∀ n : ℕ, ClTower B n) : ∀ (n : ℕ), ClTower B n
+  | 0     => D₀
+  | n + 1 =>
+      let D_n := noncentralDiracTower D₀ γ₀ H_plus H_minus n
+      let Γ_n := kroneckerGamma γ₀ n
+      mat2 D_n (Γ_n * H_plus n) (Γ_n * H_minus n) D_n
+
+/-- **Non-Central All-Scales Dirac–Higgs Tower & Chiral Higgs Commutator Anomaly Theorem ($\mathcal{U}\mathcal{Z}_1$)**:
+Given $\{D_0, \gamma_0\} = 0$, $\gamma_0^2 = 1$, and arbitrary non-commuting scale Higgs operators
+$H_n^+, H_n^- \in \mathcal{C}\ell_n(B)$ satisfying only $\Gamma^{(n)} H_n^\pm = H_n^\pm \Gamma^{(n)}$,
+for *every* tower depth $N \in \mathbb{N}$:
+1. $(\Gamma^{(N)})^2 = 1$ and $\{\mathcal{D}_N^{\mathrm{NC}}, \Gamma^{(N)}\} = 0$,
+2. $(\mathcal{D}_{N+1}^{\mathrm{NC}})^2 = \bigl(\begin{smallmatrix} (\mathcal{D}_N^{\mathrm{NC}})^2 + H_N^+ H_N^- & -\Gamma^{(N)}\⁅\mathcal{D}_N^{\mathrm{NC}}, H_N^+⁆ \\ -\Gamma^{(N)}\⁅\mathcal{D}_N^{\mathrm{NC}}, H_N^-⁆ & (\mathcal{D}_N^{\mathrm{NC}})^2 + H_N^- H_N^+ \end{smallmatrix}\bigr)$,
+3. *Chiral Higgs Commutator Anomaly*:
+   $\mathrm{Str}_{2^{N+1}}\big((\mathcal{D}_{N+1}^{\mathrm{NC}})^2\big) = \mathrm{Str}_{2^N}\big(\⁅H_N^+, H_N^-⁆\big)$. -/
+theorem noncentral_all_scales_dirac_higgs_tower_and_anomaly
+    (D₀ γ₀ : B) (H_plus H_minus : ∀ n : ℕ, ClTower B n)
+    (h_anti₀ : D₀ * γ₀ + γ₀ * D₀ = 0)
+    (h_γ₀_sq : γ₀ * γ₀ = 1)
+    (hH_plus_even : ∀ n : ℕ, kroneckerGamma γ₀ n * H_plus n = H_plus n * kroneckerGamma γ₀ n)
+    (hH_minus_even : ∀ n : ℕ, kroneckerGamma γ₀ n * H_minus n = H_minus n * kroneckerGamma γ₀ n)
+    (N : ℕ) :
+    let D_N  := noncentralDiracTower D₀ γ₀ H_plus H_minus N
+    let D_N1 : ClTower B (N + 1) := noncentralDiracTower D₀ γ₀ H_plus H_minus (N + 1)
+    let Γ_N  := kroneckerGamma γ₀ N
+    Γ_N * Γ_N = 1 ∧
+    D_N * Γ_N + Γ_N * D_N = 0 ∧
+    (D_N1 * D_N1 : ClTower B (N + 1)) =
+      mat2 (D_N * D_N + H_plus N * H_minus N) (-Γ_N * ⁅D_N, H_plus N⁆)
+           (-Γ_N * ⁅D_N, H_minus N⁆) (D_N * D_N + H_minus N * H_plus N) ∧
+    superTrace γ₀ (n := N + 1) (D_N1 * D_N1) =
+      superTrace γ₀ (n := N) ⁅H_plus N, H_minus N⁆ := by
+  intro D_N D_N1 Γ_N
+  have h_anti_all : ∀ (n : ℕ),
+      noncentralDiracTower D₀ γ₀ H_plus H_minus n * kroneckerGamma γ₀ n +
+      kroneckerGamma γ₀ n * noncentralDiracTower D₀ γ₀ H_plus H_minus n = 0 := by
+    intro n; induction' n with k ih
+    · exact h_anti₀
+    · have h_off1 : -(kroneckerGamma γ₀ k * H_plus k * kroneckerGamma γ₀ k) +
+          kroneckerGamma γ₀ k * (kroneckerGamma γ₀ k * H_plus k) = 0 := by
+        calc -(kroneckerGamma γ₀ k * H_plus k * kroneckerGamma γ₀ k) +
+             kroneckerGamma γ₀ k * (kroneckerGamma γ₀ k * H_plus k)
+          _ = -(kroneckerGamma γ₀ k * (H_plus k * kroneckerGamma γ₀ k)) +
+              kroneckerGamma γ₀ k * (kroneckerGamma γ₀ k * H_plus k) := by noncomm_ring
+          _ = 0 := by rw [← hH_plus_even k]; abel
+      have h_off2 : kroneckerGamma γ₀ k * H_minus k * kroneckerGamma γ₀ k -
+          kroneckerGamma γ₀ k * (kroneckerGamma γ₀ k * H_minus k) = 0 := by
+        calc kroneckerGamma γ₀ k * H_minus k * kroneckerGamma γ₀ k -
+             kroneckerGamma γ₀ k * (kroneckerGamma γ₀ k * H_minus k)
+          _ = kroneckerGamma γ₀ k * (H_minus k * kroneckerGamma γ₀ k) -
+              kroneckerGamma γ₀ k * (kroneckerGamma γ₀ k * H_minus k) := by noncomm_ring
+          _ = 0 := by rw [← hH_minus_even k]; abel
+      apply ext_fin2
+      · simp [noncentralDiracTower, kroneckerGamma, ih]
+      · simp [noncentralDiracTower, kroneckerGamma, h_off1]
+      · simp [noncentralDiracTower, kroneckerGamma]
+        rw [← sub_eq_add_neg]
+        exact h_off2
+      · simp [noncentralDiracTower, kroneckerGamma]
+        rw [← sub_eq_add_neg]
+        calc -(noncentralDiracTower D₀ γ₀ H_plus H_minus k * kroneckerGamma γ₀ k) -
+             kroneckerGamma γ₀ k * noncentralDiracTower D₀ γ₀ H_plus H_minus k
+          _ = -(noncentralDiracTower D₀ γ₀ H_plus H_minus k * kroneckerGamma γ₀ k +
+                kroneckerGamma γ₀ k * noncentralDiracTower D₀ γ₀ H_plus H_minus k) := by abel
+          _ = 0 := by rw [ih, neg_zero]
+  have hΓ_sq := kroneckerGamma_sq h_γ₀_sq N
+  have hD_anti := h_anti_all N
+  have hDΓ : D_N * Γ_N = -(Γ_N * D_N) := eq_neg_of_add_eq_zero_left hD_anti
+  have h_prod : ∀ (X Y : ClTower B N), Γ_N * X = X * Γ_N →
+      (Γ_N * X) * (Γ_N * Y) = X * Y := by
+    intro X Y hX
+    calc (Γ_N * X) * (Γ_N * Y) = Γ_N * (X * Γ_N) * Y := by noncomm_ring
+      _ = Γ_N * (Γ_N * X) * Y := by rw [hX]
+      _ = (Γ_N * Γ_N) * (X * Y) := by noncomm_ring
+      _ = X * Y := by rw [hΓ_sq, one_mul]
+  have h_cross : ∀ (X : ClTower B N),
+      D_N * (Γ_N * X) + (Γ_N * X) * D_N = -Γ_N * ⁅D_N, X⁆ := by
+    intro X; rw [Ring.lie_def]
+    calc D_N * (Γ_N * X) + (Γ_N * X) * D_N
+      _ = (D_N * Γ_N) * X + Γ_N * (X * D_N) := by noncomm_ring
+      _ = -(Γ_N * D_N) * X + Γ_N * (X * D_N) := by rw [hDΓ]
+      _ = -Γ_N * (D_N * X - X * D_N) := by noncomm_ring
+  have h_sq : (D_N1 * D_N1 : ClTower B (N + 1)) =
+      mat2 (D_N * D_N + H_plus N * H_minus N) (-Γ_N * ⁅D_N, H_plus N⁆)
+           (-Γ_N * ⁅D_N, H_minus N⁆) (D_N * D_N + H_minus N * H_plus N) := by
+    apply ext_fin2
+    · simp only [D_N1, noncentralDiracTower, mul2_00, mat2_00, mat2_01, mat2_10]
+      change D_N * D_N + (Γ_N * H_plus N) * (Γ_N * H_minus N) = _
+      rw [h_prod (H_plus N) (H_minus N) (hH_plus_even N)]
+    · simp only [D_N1, noncentralDiracTower, mul2_01, mat2_00, mat2_01, mat2_11]
+      change D_N * (Γ_N * H_plus N) + (Γ_N * H_plus N) * D_N = _
+      rw [h_cross (H_plus N)]
+    · simp only [D_N1, noncentralDiracTower, mul2_10, mat2_10, mat2_00, mat2_11]
+      change (Γ_N * H_minus N) * D_N + D_N * (Γ_N * H_minus N) = _
+      rw [add_comm, h_cross (H_minus N)]
+    · simp only [D_N1, noncentralDiracTower, mul2_11, mat2_10, mat2_01, mat2_11]
+      change (Γ_N * H_minus N) * (Γ_N * H_plus N) + D_N * D_N = _
+      rw [h_prod (H_minus N) (H_plus N) (hH_minus_even N), add_comm]
+  refine ⟨hΓ_sq, hD_anti, h_sq, ?_⟩
+  rw [h_sq]
+  dsimp [superTrace, kroneckerGamma, towerTrace]
+  simp only [mul2_00, mul2_11, mat2_00, mat2_01, mat2_10, mat2_11,
+    zero_mul, add_zero, zero_add, neg_mul, ← towerTrace_add]
+  congr 1
+  rw [Ring.lie_def]
+  noncomm_ring
+
+end ArchetypeUZ1_NonCentralDiracHiggsTower
 
 /-!
 ## Archetype $\mathcal{U}\mathcal{Z}_2$, $\mathcal{U}\mathcal{Z}_3$ & $\mathcal{U}\mathcal{Z}_4$: All-Scales Inherent Zorn Gauge Emergence, Pauli–Yang–Mills Wave Square, Bianchi Identity & Maurer–Cartan Flatness on $\mathcal{C}\ell_{n+2}(B)$

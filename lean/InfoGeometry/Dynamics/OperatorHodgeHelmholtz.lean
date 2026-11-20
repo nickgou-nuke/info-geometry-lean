@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HilbertSchmidtMatrixPairing
@@ -21,6 +27,11 @@ noncomputable section
 def gamma : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, -1]
 
 def kPhase : Matrix (Fin 2) (Fin 2) ℝ := !![0, -1; 1, 0]
+
+lemma gamma_mul_kPhase_ne : gamma * kPhase ≠ kPhase * gamma := by
+  intro h
+  have h01 := congr_arg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 1) h
+  norm_num [gamma, kPhase, Matrix.mul_apply, Fin.sum_univ_two] at h01
 
 def trace2 (A : Matrix (Fin 2) (Fin 2) ℝ) : ℝ := A 0 0 + A 1 1
 
@@ -91,6 +102,78 @@ theorem joint_flow_zero_iff_undeformed (κ a : ℝ) :
     · rw [flowRot_val]
       ext i j
       fin_cases i <;> fin_cases j <;> simp
+
+lemma kPhase_sq : kPhase * kPhase = -1 := by
+  unfold kPhase
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp
+
+lemma flowRot_eq_kPhase_flowIrr (κ a : ℝ) :
+    flowRot κ a = kPhase * flowIrr κ a := by
+  unfold flowRot flowIrr
+  rw [mul_neg]
+
+lemma kPhase_flowRot_eq_neg_flowIrr (κ a : ℝ) :
+    kPhase * flowRot κ a = -flowIrr κ a := by
+  rw [flowRot_eq_kPhase_flowIrr, ← mul_assoc, kPhase_sq, neg_one_mul]
+
+/-- The harmonic (scalar) channel `κ • 1` is Hilbert--Schmidt orthogonal to the
+chiral traceless channel `a • gamma`. -/
+theorem scalar_chiral_orthogonality (κ a : ℝ) :
+    hilbertSchmidt (κ • (1 : Matrix (Fin 2) (Fin 2) ℝ)) (a • gamma) = 0 := by
+  change HilbertSchmidtMatrix.hilbertSchmidtPairing (κ • 1) (a • gamma) = 0
+  rw [HilbertSchmidtMatrix.hilbertSchmidtPairing_eq_sum]
+  unfold gamma
+  simp
+
+/-- The complex phase operator `kPhase` commutes with `surprisal κ a` if and
+only if the chiral deformation vanishes (`a = 0`, the harmonic/scalar sector). -/
+theorem kPhase_comm_surprisal_iff (κ a : ℝ) :
+    kPhase * surprisal κ a = surprisal κ a * kPhase ↔ a = 0 := by
+  constructor
+  · intro h
+    have h01 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 1) h
+    unfold kPhase at h01
+    rw [surprisal_val] at h01
+    simp at h01
+    linarith
+  · intro ha
+    subst ha
+    unfold surprisal
+    simp [kPhase]
+
+/-- Pythagorean norm identity for the orthogonal Hodge--Helmholtz flow sum
+`flowIrr κ a + flowRot κ a`. -/
+theorem hilbertSchmidt_helmholtz_pythagoras (κ a : ℝ) :
+    hilbertSchmidt (flowIrr κ a + flowRot κ a) (flowIrr κ a + flowRot κ a) =
+      hilbertSchmidt (flowIrr κ a) (flowIrr κ a) +
+        hilbertSchmidt (flowRot κ a) (flowRot κ a) := by
+  change HilbertSchmidtMatrix.hilbertSchmidtPairing
+      (flowIrr κ a + flowRot κ a) (flowIrr κ a + flowRot κ a) =
+    HilbertSchmidtMatrix.hilbertSchmidtPairing (flowIrr κ a) (flowIrr κ a) +
+      HilbertSchmidtMatrix.hilbertSchmidtPairing (flowRot κ a) (flowRot κ a)
+  rw [flowIrr_val, flowRot_val,
+    HilbertSchmidtMatrix.hilbertSchmidtPairing_eq_sum,
+    HilbertSchmidtMatrix.hilbertSchmidtPairing_eq_sum,
+    HilbertSchmidtMatrix.hilbertSchmidtPairing_eq_sum]
+  simp [Fin.sum_univ_two]
+  ring
+
+/-- The total Hodge--Helmholtz flow `flowIrr κ a + flowRot κ a` vanishes if and
+only if both the radial and rotational channels vanish (`κ = 0 ∧ a = 0`). -/
+theorem helmholtz_sum_zero_iff (κ a : ℝ) :
+    flowIrr κ a + flowRot κ a = 0 ↔ κ = 0 ∧ a = 0 := by
+  constructor
+  · intro h
+    have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 0) h
+    have h11 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 1 1) h
+    rw [flowIrr_val, flowRot_val] at h00 h11
+    simp at h00 h11
+    constructor <;> linarith
+  · rintro ⟨rfl, rfl⟩
+    rw [flowIrr_val, flowRot_val]
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp
 
 end
 end InfoGeometry.Dynamics.OperatorHodgeHelmholtz

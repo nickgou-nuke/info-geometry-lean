@@ -1,4 +1,10 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+/-
 InfoGeometry/Geometry/WindingSnap.lean
 
 Bridge from residue winding to TopologicalSnap obstruction flows.
@@ -185,13 +191,6 @@ def mk
     StateResidueReadout I N ω W F :=
   ⟨stateRegion, winding_eq_regionWinding⟩
 
-/-- Recover the nonzero residue hypothesis from the witness packet. -/
-theorem boundaryIntegral_ne_zero_of_witness
-    {x : State}
-    (Wz : I.boundaryIntegral (R.stateRegion x) ω ≠ 0) :
-    I.boundaryIntegral (R.stateRegion x) ω ≠ 0 :=
-  Wz
-
 /-- Nonzero analytic residue obstructs relaxation into the flat sector. -/
 theorem nonzero_boundaryIntegral_cannot_flow_to_flat
     {x : State}
@@ -214,8 +213,7 @@ theorem nonzero_boundaryIntegral_cannot_flow_to_flat_of_witness
     (Wz : I.boundaryIntegral (R.stateRegion x) ω ≠ 0)
     (t : ℝ) :
   F.flow t x ∉ F.Flat :=
-  R.nonzero_boundaryIntegral_cannot_flow_to_flat
-    (R.boundaryIntegral_ne_zero_of_witness Wz) t
+  R.nonzero_boundaryIntegral_cannot_flow_to_flat Wz t
 
 /-- Equivalent version using nonzero region winding. -/
 theorem nonzero_region_winding_cannot_flow_to_flat
@@ -323,5 +321,84 @@ theorem nonzero_spectralFlow_cannot_flow_to_flat
       exact hIndex)
 
 end StateIndexReadout
+
+/-! ## 4. Geometric Stokes vanishing and Gauss--Bonnet quantization -/
+
+section StokesGaussBonnet
+
+/-- **Geometric Stokes analyticity (closedness ⇒ vanishing boundary integral).**
+If the geometric derivative `d_geo ω` vanishes pointwise, then the boundary
+integral of `ω` vanishes on every region `Ω`. -/
+theorem boundaryIntegral_eq_zero_of_geometricDerivative_zero
+    {Region Point Tangent Value : Type*}
+    [AddCommGroup Value] [Module ℝ Value]
+    (I : GeometricIntegralBackend Region Point Tangent Value)
+    (ω : OperatorOneForm Point Tangent Value)
+    (hClosed : ∀ p : Point, I.geometricDerivative ω p = 0)
+    (Ω : Region) :
+    I.boundaryIntegral Ω ω = 0 := by
+  rw [I.stokes_eq Ω ω]
+  exact I.volumeIntegral_zero_of_pointwise_zero Ω (I.geometricDerivative ω) hClosed
+
+/-- **Closed-form winding vanishing.**
+If `d_geo ω = 0` everywhere, then any certified winding datum assigns `0` to
+every region `Ω`. -/
+theorem winding_eq_zero_of_geometricDerivative_zero
+    {Region Point Tangent Value : Type*}
+    [AddCommGroup Value] [Module ℝ Value]
+    {I : GeometricIntegralBackend Region Point Tangent Value}
+    {N : PhaseResidueNormalizer Value}
+    {ω : OperatorOneForm Point Tangent Value}
+    (W : WindingNumberDatum I N ω)
+    (hClosed : ∀ p : Point, I.geometricDerivative ω p = 0)
+    (Ω : Region) :
+    W.winding Ω = 0 := by
+  have h0 : I.boundaryIntegral Ω ω = 0 :=
+    boundaryIntegral_eq_zero_of_geometricDerivative_zero I ω hClosed Ω
+  have hPeriod : ((W.winding Ω : ℤ) : ℝ) • N.phasePeriod = ((0 : ℤ) : ℝ) • N.phasePeriod := by
+    calc
+      ((W.winding Ω : ℤ) : ℝ) • N.phasePeriod = I.boundaryIntegral Ω ω :=
+        (W.boundaryIntegral_eq_winding_smul Ω).symm
+      _ = 0 := h0
+      _ = ((0 : ℤ) : ℝ) • N.phasePeriod := by simp
+  exact N.integer_period_injective hPeriod
+
+/-- **Gauss--Bonnet defect quantization.**
+The volume integral of the geometric curvature `d_geo ω` over `Ω` equals the
+integer winding charge times the phase period. -/
+theorem volumeIntegral_geometricDerivative_eq_winding_smul
+    {Region Point Tangent Value : Type*}
+    [AddCommGroup Value] [Module ℝ Value]
+    {I : GeometricIntegralBackend Region Point Tangent Value}
+    {N : PhaseResidueNormalizer Value}
+    {ω : OperatorOneForm Point Tangent Value}
+    (W : WindingNumberDatum I N ω)
+    (Ω : Region) :
+    I.volumeIntegral Ω (I.geometricDerivative ω) =
+      ((W.winding Ω : ℤ) : ℝ) • N.phasePeriod := by
+  rw [← I.stokes_eq Ω ω]
+  exact W.boundaryIntegral_eq_winding_smul Ω
+
+/-- **Gauss--Bonnet cobordism difference.**
+Two regions with equal winding have equal curvature volume integrals; in
+general, the difference of their curvature integrals is quantized by the
+difference of their winding numbers. -/
+theorem volumeIntegral_sub_eq_winding_sub_smul
+    {Region Point Tangent Value : Type*}
+    [AddCommGroup Value] [Module ℝ Value]
+    {I : GeometricIntegralBackend Region Point Tangent Value}
+    {N : PhaseResidueNormalizer Value}
+    {ω : OperatorOneForm Point Tangent Value}
+    (W : WindingNumberDatum I N ω)
+    (Ω₁ Ω₂ : Region) :
+    I.volumeIntegral Ω₁ (I.geometricDerivative ω) -
+        I.volumeIntegral Ω₂ (I.geometricDerivative ω) =
+      (((W.winding Ω₁ - W.winding Ω₂ : ℤ) : ℝ)) • N.phasePeriod := by
+  rw [volumeIntegral_geometricDerivative_eq_winding_smul W Ω₁,
+    volumeIntegral_geometricDerivative_eq_winding_smul W Ω₂]
+  push_cast
+  rw [sub_smul]
+
+end StokesGaussBonnet
 
 end InfoGeometry.Geometry.WindingSnap

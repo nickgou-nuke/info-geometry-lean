@@ -670,6 +670,7 @@ import InfoGeometry.Algebra.HessianThermodynamicManifold
 import InfoGeometry.Algebra.HodgeDiracDelta
 import InfoGeometry.Algebra.HodgeGeometricCalculusAudit
 import InfoGeometry.Algebra.HodgeKreinTriFacet
+import InfoGeometry.Algebra.HodgeParabolicTower
 import InfoGeometry.Algebra.HuaBergmanZornExtensions
 import InfoGeometry.Algebra.HypercomplexTriadMatrix
 import InfoGeometry.Algebra.HyperrotorKMSBridge

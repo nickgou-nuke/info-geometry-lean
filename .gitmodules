@@ -118,3 +118,6 @@
 [submodule "external_refs/grothendieck-riemann-roch"]
 	path = external_refs/grothendieck-riemann-roch
 	url = https://github.com/grothendiecklabs/grothendieck-riemann-roch.git
+[submodule "external_refs/Stacks"]
+	path = external_refs/Stacks
+	url = https://github.com/nickgou-nuke/Stacks.git

@@ -19,6 +19,40 @@ namespace InfoGeometry.OperatorAlgebra.KnutsenGaborOperatorAlgebra
 
 variable {R : Type*} [Ring R] [StarRing R]
 
+/-- A transform restricted by a range projection before and after the
+operator-valued transform. -/
+def separateLocalization (P U T : R) : R := P * U * T
+
+/-- The two complementary range masks partition the input projection under
+an isometric transform. This is an algebraic conservation law in an arbitrary
+noncommutative star ring; no analytic frame or positivity claim is made. -/
+theorem separateLocalization_pore_conservation
+    {P U T : R} (hU : star U * U = 1)
+    (hT_idem : T * T = T) (hT_sa : star T = T)
+    (hP_idem : P * P = P) (hP_sa : star P = P) :
+    star (separateLocalization P U T) * separateLocalization P U T +
+      star (separateLocalization (1 - P) U T) * separateLocalization (1 - P) U T = T := by
+  have hcomp : P * P + (1 - P) * (1 - P) = 1 := by
+    calc
+      P * P + (1 - P) * (1 - P) = P + (1 - P) := by
+        calc
+          P * P + (1 - P) * (1 - P) = P + (1 - P) * (1 - P) := by rw [hP_idem]
+          _ = P + (1 - P) := by
+            congr 1
+            calc
+              (1 - P) * (1 - P) = 1 - P - P + P * P := by noncomm_ring
+              _ = 1 - P := by rw [hP_idem]; noncomm_ring
+      _ = 1 := by noncomm_ring
+  simp only [separateLocalization, star_mul, star_sub, star_one, hT_sa, hP_sa]
+  calc
+    T * (star U * P) * (P * U * T) +
+        T * (star U * (1 - P)) * ((1 - P) * U * T) =
+          T * star U * (P * P + (1 - P) * (1 - P)) * U * T := by noncomm_ring
+    _ = T * star U * 1 * U * T := by rw [hcomp]
+    _ = T * (star U * U) * T := by noncomm_ring
+    _ = T * T := by rw [hU]; simp
+    _ = T := hT_idem
+
 /-- Compression of `Q` to the idempotent corner determined by `P`. -/
 def compressedLocalization (P Q : R) : R := P * Q * P
 

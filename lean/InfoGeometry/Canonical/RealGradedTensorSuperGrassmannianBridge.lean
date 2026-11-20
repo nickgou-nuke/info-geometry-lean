@@ -147,4 +147,109 @@ theorem supercolor_product_action_in_fock_matrix_coordinates
   rw [supercolorRightRegularAsGradedTensor_spec]
   exact InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolor_rightRegular_action X Y
 
+/-! ### Circular root channels as real Majorana pairs
+
+The circular Peirce creation/annihilation roots are transported to the same
+three-factor real Koszul tensor by the right-regular action. Their real sum
+and difference give a concrete split-Clifford pair in each channel. -/
+
+/-- The positive circular root represented in the real graded tensor algebra. -/
+def circularRootPlusInTensor (i : Fin 3) : TensorCarrier :=
+  supercolorRightRegularAsGradedTensor
+    (InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.canonicalZornToSupercolor
+      (InfoGeometry.Lie.SplitOctonionEllPolarization.rootPlus i))
+
+/-- The negative circular root represented in the real graded tensor algebra. -/
+def circularRootMinusInTensor (i : Fin 3) : TensorCarrier :=
+  supercolorRightRegularAsGradedTensor
+    (InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.canonicalZornToSupercolor
+      (InfoGeometry.Lie.SplitOctonionEllPolarization.rootMinus i))
+
+private theorem circularRootPlusInTensor_square (i : Fin 3) :
+    circularRootPlusInTensor i * circularRootPlusInTensor i = 0 := by
+  unfold circularRootPlusInTensor
+  apply realThreeMatrixTensorOnH4.injective
+  rw [map_mul, supercolorRightRegularAsGradedTensor_spec,
+    InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolorToCanonicalZorn_canonical,
+    InfoGeometry.Krein.SplitOctonionZornRegularH4Bridge.rightRegularOnDoubleKrein_rootPlus_sq,
+    map_zero]
+
+private theorem circularRootMinusInTensor_square (i : Fin 3) :
+    circularRootMinusInTensor i * circularRootMinusInTensor i = 0 := by
+  unfold circularRootMinusInTensor
+  apply realThreeMatrixTensorOnH4.injective
+  rw [map_mul, supercolorRightRegularAsGradedTensor_spec,
+    InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolorToCanonicalZorn_canonical,
+    InfoGeometry.Krein.SplitOctonionZornRegularH4Bridge.rightRegularOnDoubleKrein_rootMinus_sq,
+    map_zero]
+
+/-- The circular root pair in the graded tensor satisfies the real CAR
+anticommutator in the source owner's displayed order. -/
+theorem circularRootInTensor_CAR (i : Fin 3) :
+    circularRootMinusInTensor i * circularRootPlusInTensor i +
+      circularRootPlusInTensor i * circularRootMinusInTensor i = 1 := by
+  apply realThreeMatrixTensorOnH4.injective
+  rw [map_add, map_mul, map_mul,
+    circularRootMinusInTensor, circularRootPlusInTensor,
+    supercolorRightRegularAsGradedTensor_spec,
+    supercolorRightRegularAsGradedTensor_spec,
+    InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolorToCanonicalZorn_canonical,
+    InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolorToCanonicalZorn_canonical]
+  rw [map_one]
+  exact InfoGeometry.Krein.SplitOctonionZornRegularH4Bridge.rightRegularOnDoubleKrein_root_CAR i
+
+/-- Real positive-square Majorana generator obtained as the sum of the
+negative and positive circular root channels. -/
+def circularMajoranaTime (i : Fin 3) : TensorCarrier :=
+  circularRootMinusInTensor i + circularRootPlusInTensor i
+
+/-- Real negative-square Majorana generator obtained as the difference of
+the negative and positive circular root channels. -/
+def circularMajoranaSpace (i : Fin 3) : TensorCarrier :=
+  circularRootMinusInTensor i - circularRootPlusInTensor i
+
+/-- Every circular root pair yields a real `Cl(1,1)` pair in the native
+Koszul-graded tensor of real `2 × 2` matrix factors. -/
+theorem circularMajorana_splitClifford_relations (i : Fin 3) :
+    circularMajoranaTime i * circularMajoranaTime i = 1 ∧
+    circularMajoranaSpace i * circularMajoranaSpace i = -1 ∧
+    circularMajoranaTime i * circularMajoranaSpace i +
+      circularMajoranaSpace i * circularMajoranaTime i = 0 := by
+  have hm := circularRootMinusInTensor_square i
+  have hp := circularRootPlusInTensor_square i
+  have hCAR := circularRootInTensor_CAR i
+  constructor
+  · change (circularRootMinusInTensor i + circularRootPlusInTensor i) *
+      (circularRootMinusInTensor i + circularRootPlusInTensor i) = 1
+    calc
+      (circularRootMinusInTensor i + circularRootPlusInTensor i) *
+          (circularRootMinusInTensor i + circularRootPlusInTensor i) =
+          circularRootMinusInTensor i * circularRootMinusInTensor i +
+            (circularRootMinusInTensor i * circularRootPlusInTensor i +
+              circularRootPlusInTensor i * circularRootMinusInTensor i) +
+            circularRootPlusInTensor i * circularRootPlusInTensor i := by noncomm_ring
+        _ = 1 := by rw [hm, hCAR, hp]; norm_num
+  · constructor
+    · change (circularRootMinusInTensor i - circularRootPlusInTensor i) *
+        (circularRootMinusInTensor i - circularRootPlusInTensor i) = -1
+      calc
+        (circularRootMinusInTensor i - circularRootPlusInTensor i) *
+            (circularRootMinusInTensor i - circularRootPlusInTensor i) =
+            circularRootMinusInTensor i * circularRootMinusInTensor i -
+              (circularRootMinusInTensor i * circularRootPlusInTensor i +
+                circularRootPlusInTensor i * circularRootMinusInTensor i) +
+              circularRootPlusInTensor i * circularRootPlusInTensor i := by noncomm_ring
+        _ = -1 := by rw [hm, hCAR, hp]; norm_num
+    · change
+        (circularRootMinusInTensor i + circularRootPlusInTensor i) *
+            (circularRootMinusInTensor i - circularRootPlusInTensor i) +
+          (circularRootMinusInTensor i - circularRootPlusInTensor i) *
+            (circularRootMinusInTensor i + circularRootPlusInTensor i) = 0
+      calc
+        _ = circularRootMinusInTensor i * circularRootMinusInTensor i +
+              circularRootMinusInTensor i * circularRootMinusInTensor i -
+            (circularRootPlusInTensor i * circularRootPlusInTensor i +
+              circularRootPlusInTensor i * circularRootPlusInTensor i) := by noncomm_ring
+        _ = 0 := by rw [hm, hp]; norm_num
+
 end InfoGeometry.Canonical.RealGradedTensorSuperGrassmannianBridge

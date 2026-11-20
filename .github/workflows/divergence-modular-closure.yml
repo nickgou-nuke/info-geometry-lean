@@ -1,6 +1,6 @@
-name: Distribution, Gaussian, and modular divergence (scoped kernel)
+name: Divergence, coupled exponentials, and contrast (scoped kernel)
 
-# This checks nine owners and their source closure, not the root Lake package.
+# This checks twelve owners and their source closure, not the root Lake package.
 on:
   pull_request:
     paths:
@@ -46,6 +46,15 @@ on:
       - 'lean/InfoGeometry/Physics/FiniteRelativeModularOperator.lean'
       - 'lean/InfoGeometry/Canonical/MatrixRelativeModularPhysicsBridge.lean'
       - 'lean/InfoGeometry/Canonical/GaussianBurgStein.lean'
+      - 'lean/InfoGeometry/Analysis/EvenOddExponential.lean'
+      - 'lean/InfoGeometry/NCG/BerezinianSuperdeterminant.lean'
+      - 'lean/InfoGeometry/NCG/BerezinianGaussianFactorization.lean'
+      - 'lean/InfoGeometry/NCG/GradedCoupledExponential.lean'
+      - 'lean/InfoGeometry/Probability/FiniteMarkovWeightedAdjoint.lean'
+      - 'lean/InfoGeometry/Probability/FiniteWeightedSplitKreinAdjoint.lean'
+      - 'lean/InfoGeometry/Canonical/ParaComplexConnectionBridge.lean'
+      - 'lean/InfoGeometry/Canonical/ParaComplexNeutralForm.lean'
+      - 'lean/InfoGeometry/InformationGeometry/PositiveMeasureContrast.lean'
       - 'lean/InfoGeometry/All.lean'
       - 'tools/build_lock.py'
       - 'tools/quality/check_clifford_dirac.py'
@@ -54,6 +63,7 @@ on:
       - 'lake-manifest.json'
       - 'lean-toolchain'
       - 'docs/DIVERGENCE_MODULAR_CLOSURE*.md'
+      - 'docs/DIVERGENCE_EXPONENTIAL_CONTRAST*.md'
       - '.github/workflows/divergence-modular-closure.yml'
   workflow_dispatch:
 
@@ -72,7 +82,7 @@ jobs:
       SOURCE_REV: ${{ github.event.pull_request.head.sha || github.sha }}
       DIVERGENCE_CLOSURE_OUTPUT: verification-divergence-closure-${{ github.run_id }}-${{ github.run_attempt }}
       DIVERGENCE_CLOSURE_TARGETS: >-
-        ["InfoGeometry.Jordan.BurgStein", "InfoGeometry.Probability.KullbackLeiblerProduct", "InfoGeometry.Probability.GaussianKullbackLeibler", "InfoGeometry.Probability.GaussianTraceLogdet", "InfoGeometry.InformationGeometry.PositiveMeasureDifferential", "InfoGeometry.ExponentialFamily.FiniteAnalyticKL", "InfoGeometry.Canonical.MatrixRelativeModular", "InfoGeometry.Canonical.MatrixRelativeModularPhysicsBridge", "InfoGeometry.Canonical.GaussianBurgStein"]
+        ["InfoGeometry.Jordan.BurgStein", "InfoGeometry.Probability.KullbackLeiblerProduct", "InfoGeometry.Probability.GaussianKullbackLeibler", "InfoGeometry.Probability.GaussianTraceLogdet", "InfoGeometry.InformationGeometry.PositiveMeasureDifferential", "InfoGeometry.ExponentialFamily.FiniteAnalyticKL", "InfoGeometry.Canonical.MatrixRelativeModular", "InfoGeometry.Canonical.MatrixRelativeModularPhysicsBridge", "InfoGeometry.Canonical.GaussianBurgStein", "InfoGeometry.Analysis.EvenOddExponential", "InfoGeometry.NCG.GradedCoupledExponential", "InfoGeometry.InformationGeometry.PositiveMeasureContrast"]
     steps:
       - name: Fetch exact source head and unchanged Mathlib pin
         shell: bash
@@ -116,7 +126,7 @@ jobs:
               'run_id': os.environ.get('GITHUB_RUN_ID'),
               'run_attempt': os.environ.get('GITHUB_RUN_ATTEMPT'),
               'lean_archive_sha256': '47bf4bbd78f70c2e9670598ab7124d92b6efb7330ff33e5fbb4030f6fd72e4e4',
-              'scope': 'Nine selected owners, repository source closure, and native axiom audit; not a root Lake build',
+              'scope': 'Twelve selected owners, repository source closure, and native axiom audit; not a root Lake build',
           }, indent=2) + '\n')
           with open(os.environ['GITHUB_ENV'], 'a') as env:
               env.write('MATHLIB_REV=' + actual + '\n')
@@ -247,8 +257,8 @@ jobs:
           selected = [m for m in report.get('modules', []) if m.get('module') in targets]
           if len(selected) != len(targets) or {m['module'] for m in selected} != set(targets):
               raise RuntimeError('Report does not contain every selected owner exactly once')
-          if targets != ['InfoGeometry.Jordan.BurgStein', 'InfoGeometry.Probability.KullbackLeiblerProduct', 'InfoGeometry.Probability.GaussianKullbackLeibler', 'InfoGeometry.Probability.GaussianTraceLogdet', 'InfoGeometry.InformationGeometry.PositiveMeasureDifferential', 'InfoGeometry.ExponentialFamily.FiniteAnalyticKL', 'InfoGeometry.Canonical.MatrixRelativeModular', 'InfoGeometry.Canonical.MatrixRelativeModularPhysicsBridge', 'InfoGeometry.Canonical.GaussianBurgStein']:
-              raise RuntimeError('This workflow accepts exactly its declared nine divergence owners')
+          if targets != ['InfoGeometry.Jordan.BurgStein', 'InfoGeometry.Probability.KullbackLeiblerProduct', 'InfoGeometry.Probability.GaussianKullbackLeibler', 'InfoGeometry.Probability.GaussianTraceLogdet', 'InfoGeometry.InformationGeometry.PositiveMeasureDifferential', 'InfoGeometry.ExponentialFamily.FiniteAnalyticKL', 'InfoGeometry.Canonical.MatrixRelativeModular', 'InfoGeometry.Canonical.MatrixRelativeModularPhysicsBridge', 'InfoGeometry.Canonical.GaussianBurgStein', 'InfoGeometry.Analysis.EvenOddExponential', 'InfoGeometry.NCG.GradedCoupledExponential', 'InfoGeometry.InformationGeometry.PositiveMeasureContrast']:
+              raise RuntimeError('This workflow accepts exactly its declared twelve divergence and exponential owners')
           if any(m.get('returncode') != 0 or m.get('warnings') != 0 for m in selected):
               raise RuntimeError('A selected owner has compiler errors or warnings')
           hydration = json.loads((out / 'cache-hydration.json').read_text())
@@ -260,7 +270,7 @@ jobs:
           counts = report.get('declaration_counts', {})
           if set(counts) != set(targets) or any(type(counts[t]) is not int or counts[t] <= 0 for t in targets):
               raise RuntimeError('Native audit did not cover all selected owner declarations')
-          print('Nine-owner compiler, warning, and complete native axiom checks passed; root Lake coverage is separate.')
+          print('Twelve-owner compiler, warning, and complete native axiom checks passed; root Lake coverage is separate.')
           PY
 
       - name: Upload this attempt's reports, logs, and source snapshots

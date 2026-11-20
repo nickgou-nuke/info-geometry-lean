@@ -36,6 +36,8 @@ import InfoGeometry.Arithmetic.FiniteSmoothedMangoldt
 import InfoGeometry.Arithmetic.CenteredSmoothedMangoldt
 import InfoGeometry.Arithmetic.FiniteSmoothedMangoldtMellin
 import InfoGeometry.Arithmetic.MertensMellinRiemannHypothesis
+import InfoGeometry.Arithmetic.MertensDikinBounds
+import InfoGeometry.Arithmetic.ScaledEulerUniformBound
 
 namespace InfoGeometry.Arithmetic.All
 

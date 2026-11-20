@@ -27,6 +27,10 @@ OWNERS = (
     "InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction",
     "InfoGeometry.OperatorAlgebra.RealSkewDomainResidual",
     "InfoGeometry.OperatorAlgebra.UnboundedHilbertResidual",
+    "InfoGeometry.Analysis.RealMatrixDikinScaling",
+    "InfoGeometry.Analysis.DikinWeylBoundedness",
+    "InfoGeometry.Arithmetic.MertensDikinBounds",
+    "InfoGeometry.Arithmetic.ScaledEulerUniformBound",
 )
 
 

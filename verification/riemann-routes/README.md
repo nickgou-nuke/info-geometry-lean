@@ -37,3 +37,28 @@ hypotheses, dependencies, and remaining work. The independent validation record
 records compilation, foundational-axiom checks, source gates, and their actual
 scope. The missing root path dependency is reported separately from the focused
 build. No unconditional RH or root integration certificate is claimed.
+
+## Dikin and Weyl boundedness extension
+
+The selected inventory also covers real inverse-based matrix quadratic
+scaling, a constructed positive square-root normalization, Frobenius norm
+recovery with the base trace and scale retained, positive-ray normalization,
+the actual Mertens prescribed-scale boundedness equivalence, and the
+Euler-mode multiplier obstruction.
+
+`validation.json` preserves the initial PR #424 checks on the earlier source
+inventory. The separate `validation-dikin-weyl.json` records checks of this
+extension and the expanded audit. The unchanged old record is historical
+evidence, not a certificate for newly added declarations.
+
+The new theorem contract is
+[`DIKIN_WEYL_BOUND_CONTRACT.md`](../../docs/DIKIN_WEYL_BOUND_CONTRACT.md).
+The extended arithmetic criterion remains conditional: boundedness at freely
+chosen scales is unconditional, whereas boundedness at each prescribed
+near-square-root scale is proved equivalent to the existing cancellation
+premise. The real matrix theorem uses the actual-inverse trace quadratic; it
+does not add a separate real Fréchet derivative identification.
+
+The reused `BurgSteinSelfConcordance` and `AnalyticExcision` owners emit existing
+deprecated-import warnings in the focused build. Fresh strict checks concern
+the selected owners; those dependency warnings remain visible and recorded.

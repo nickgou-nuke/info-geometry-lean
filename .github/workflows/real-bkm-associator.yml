@@ -1,0 +1,215 @@
+name: Real BKM and associator kernel check
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Canonical/KuboMoriBogoliubovMetric.lean'
+      - 'lean/InfoGeometry/Algebra/MatrixNoncommutativity.lean'
+      - 'lean/InfoGeometry/Canonical/KuboMoriBogoliubovPositiveForm.lean'
+      - 'lean/InfoGeometry/Thermo/ConstrainedBilinearProjection.lean'
+      - 'lean/InfoGeometry/Thermo/RealBKMConstrainedForce.lean'
+      - 'lean/InfoGeometry/Thermo/RealBKMGibbsStationarity.lean'
+      - 'lean/InfoGeometry/Thermo/AssociatorGramDissipation.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/GradeActionInterface.lean'
+      - 'lean/InfoGeometry/Canonical/RealDoubledKreinMirror.lean'
+      - 'lean/InfoGeometry/Canonical/RealMirrorComplexStructure.lean'
+      - 'lean/InfoGeometry/Canonical/HestenesPhaseBoostRotors.lean'
+      - 'lean/InfoGeometry/Canonical/RealComplexRotor.lean'
+      - 'lean/InfoGeometry/Canonical/HestenesLoxodromicRotor.lean'
+      - 'lean/InfoGeometry/Canonical/SplitOctonionQuaternionChart.lean'
+      - 'lean/InfoGeometry/Canonical/SplitOctonionExpLog.lean'
+      - 'lean/InfoGeometry/Canonical/SplitOctonionQuaternionPolar.lean'
+      - 'lean/InfoGeometry/Canonical/SplitOctonionRegularOperators.lean'
+      - 'lean/InfoGeometry/Canonical/SplitOctonionRegularProjectors.lean'
+      - 'lean/InfoGeometry/Canonical/SplitOctonionDoubledLoxodromic.lean'
+      - 'lean/InfoGeometry/GrandUnification/ArchetypeDictionary.lean'
+      - 'lean/InfoGeometry/Krein/KreinSpace.lean'
+      - 'lean/InfoGeometry/Cartan/Involution.lean'
+      - 'lean/InfoGeometry/Krein/InvolutiveSelfDualCarrier.lean'
+      - 'lean/InfoGeometry/Krein/DoubledSpace.lean'
+      - 'lean/InfoGeometry/Clifford/Grading.lean'
+      - 'lean/InfoGeometry/Krein/HilbertBridge.lean'
+      - 'lean/InfoGeometry/Clifford/SplitQ11.lean'
+      - 'lean/InfoGeometry/Krein/Clifford.lean'
+      - 'lean/InfoGeometry/Krein/Representation.lean'
+      - 'lean/InfoGeometry/Clifford/Lift.lean'
+      - 'lean/InfoGeometry/Clifford/Relations.lean'
+      - 'lean/DAG/Basic.lean'
+      - 'lean/InfoGeometry/Meta/Architecture.lean'
+      - 'lean/InfoGeometry/Clifford/SplitQ11PhaseFlip.lean'
+      - 'lean/InfoGeometry/Clifford/SplitQ11Projectors.lean'
+      - 'lean/InfoGeometry/Clifford/SplitQ11Equivariance.lean'
+      - 'lean/InfoGeometry/Krein/Superphysics.lean'
+      - 'lean/InfoGeometry/Clifford/Tower.lean'
+      - 'lean/InfoGeometry/Canonical/MultiplicativeToAdditiveBridge.lean'
+      - 'lean/InfoGeometry/Canonical/SpineAttributes.lean'
+      - 'lean/InfoGeometry/Canonical/LogGenerator.lean'
+      - 'lean/InfoGeometry/Canonical/ProjectiveFoundation.lean'
+      - 'lean/InfoGeometry/Volume/Base.lean'
+      - 'lean/InfoGeometry/Volume/LogPotential.lean'
+      - 'lean/InfoGeometry/Volume/RadonNikodym.lean'
+      - 'lean/InfoGeometry/Krein/Thermal.lean'
+      - 'lean/InfoGeometry/Canonical/Algebraic/ModularRotorCocycle.lean'
+      - 'lean/InfoGeometry/Algebraic/ExactPhaseCocycle.lean'
+      - 'lean/InfoGeometry/Topological/StabilizerAnomalies.lean'
+      - 'lean/InfoGeometry/Volume/ConnesCocycle.lean'
+      - 'lean/InfoGeometry/Canonical/TomitaTakesaki.lean'
+      - 'lean/InfoGeometry/Krein/Automorphisms.lean'
+      - 'lean/InfoGeometry/Krein/Metric.lean'
+      - 'lean/InfoGeometry/Krein/OrthogonalGroup.lean'
+      - 'lean/InfoGeometry/Canonical/SpinConnection.lean'
+      - 'lean/InfoGeometry/Canonical/TransportLieDerivative.lean'
+      - 'lean/InfoGeometry/Canonical/BogoliubovTransport.lean'
+      - 'lean/InfoGeometry/Canonical/MaurerCartanCurvature.lean'
+      - 'lean/InfoGeometry/Canonical/BogoliubovVielbein.lean'
+      - 'lean/InfoGeometry/Projective/Cl44QuaternionSplit.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/RealDoubledChiralKrein.lean'
+      - 'lean/InfoGeometry/Projective/QuaternionicDoubledKrein.lean'
+      - 'lean/InfoGeometry/Canonical/SplitOctonionBogoliubovCarrierBridge.lean'
+      - 'lean/InfoGeometry/Canonical/SplitOctonionAlternativeLaws.lean'
+      - 'lean/InfoGeometry/Canonical/SplitOctonionAssociatorGram.lean'
+      - 'tools/quality/check_clifford_dirac.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/build_lock.py'
+      - 'tools/quality/placeholder_audit.py'
+      - 'tools/quality/semantic_vacuity_gate.py'
+      - 'tools/quality/semantic_vacuity_patterns.json'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/real-bkm-associator.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: real-bkm-associator-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Fetch exact public source without traversing external submodules
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.event.pull_request.head.sha || github.sha }}
+          SOURCE_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "${GITHUB_SERVER_URL}/${SOURCE_REPOSITORY}.git"
+          git -C project fetch --no-tags --no-recurse-submodules --depth=1 origin "$SOURCE_REV"
+          git -C project -c submodule.recurse=false checkout --detach FETCH_HEAD
+          test "$(git -C project rev-parse HEAD)" = "$SOURCE_REV"
+      - name: Read exact dependency pins
+        id: pins
+        shell: bash
+        run: |
+          python3 - <<'PINS'
+          import json, os
+          from pathlib import Path
+          manifest = json.loads(Path('project/lake-manifest.json').read_text())
+          revision = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'mathlib={revision}\n')
+          PINS
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: ${{ steps.pins.outputs.mathlib }}
+          path: mathlib
+          persist-credentials: false
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            mathlib/.lake
+          key: real-bkm-associator-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Fetch the pinned native import cache
+        shell: bash
+        run: |
+          python3 - <<'CACHE'
+          import subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('project').resolve()))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          targets = [
+              'InfoGeometry.Canonical.KuboMoriBogoliubovPositiveForm',
+              'InfoGeometry.Thermo.ConstrainedBilinearProjection',
+              'InfoGeometry.Thermo.RealBKMConstrainedForce',
+              'InfoGeometry.Thermo.RealBKMGibbsStationarity',
+              'InfoGeometry.Thermo.AssociatorGramDissipation',
+              'InfoGeometry.Canonical.SplitOctonionAssociatorGram',
+          ]
+          _, _, native = closure(Path('project'), targets)
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'real-bkm-native-cache') as lock:
+              subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
+                  cwd='mathlib', check=True, pass_fds=(lock.fileno(),))
+          CACHE
+      - name: Check exact source closure and all target declarations
+        working-directory: project
+        shell: bash
+        run: |
+          python3 tools/quality/check_clifford_dirac.py \
+            --mathlib-root ../mathlib --output ../real-bkm-report \
+            --target InfoGeometry.Canonical.KuboMoriBogoliubovPositiveForm \
+            --target InfoGeometry.Thermo.ConstrainedBilinearProjection \
+            --target InfoGeometry.Thermo.RealBKMConstrainedForce \
+            --target InfoGeometry.Thermo.RealBKMGibbsStationarity \
+            --target InfoGeometry.Thermo.AssociatorGramDissipation \
+            --target InfoGeometry.Canonical.SplitOctonionAssociatorGram
+          python3 - <<'REPORT'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('../real-bkm-report/report.json').read_text())
+          assert report['status'] == 'passed', report
+          selected = [m for m in report['modules'] if m['module'] in report['targets']]
+          assert len(selected) == len(report['targets'])
+          assert all(m['returncode'] == 0 and m['warnings'] == 0 for m in selected), selected
+          REPORT
+      - name: Check placeholders and semantic vacuity
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'SOURCE'
+          import subprocess
+          files = [
+              'lean/InfoGeometry/Canonical/KuboMoriBogoliubovPositiveForm.lean',
+              'lean/InfoGeometry/Thermo/ConstrainedBilinearProjection.lean',
+              'lean/InfoGeometry/Thermo/RealBKMConstrainedForce.lean',
+              'lean/InfoGeometry/Thermo/RealBKMGibbsStationarity.lean',
+              'lean/InfoGeometry/Thermo/AssociatorGramDissipation.lean',
+              'lean/InfoGeometry/Canonical/SplitOctonionAssociatorGram.lean',
+          ]
+          for path in files:
+              subprocess.run(['python3', 'tools/quality/placeholder_audit.py',
+                  '--root', path, '--strict'], check=True)
+          subprocess.run(['python3', 'tools/quality/semantic_vacuity_gate.py',
+              *files, '--fail-on', 'error', '--json-out',
+              '../real-bkm-report/semantic.json'], check=True)
+          SOURCE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: real-bkm-associator-evidence
+          path: |
+            real-bkm-report/report.json
+            real-bkm-report/evidence-sha256.json
+            real-bkm-report/src/CliffordDiracAudit.lean
+            real-bkm-report/*.log
+            real-bkm-report/semantic.json
+          if-no-files-found: warn

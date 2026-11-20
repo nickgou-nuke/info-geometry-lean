@@ -35,6 +35,9 @@ import InfoGeometry.Arithmetic.KreinCenteredXiGlideBridge
 import InfoGeometry.Arithmetic.FiniteSmoothedMangoldt
 import InfoGeometry.Arithmetic.SmoothedMangoldtGrowth
 import InfoGeometry.Arithmetic.SmoothedMangoldtMellin
+import InfoGeometry.Arithmetic.CenteredSmoothedMangoldt
+import InfoGeometry.Arithmetic.FiniteSmoothedMangoldtMellin
+import InfoGeometry.Arithmetic.MertensMellinRiemannHypothesis
 
 namespace InfoGeometry.Arithmetic.All
 

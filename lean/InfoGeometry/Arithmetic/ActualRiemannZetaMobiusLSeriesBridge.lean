@@ -74,7 +74,8 @@ theorem mobius_LSeries_eq_partial_sum_integral_of_one_lt_re
   change LSeries (fun n : ℕ => (moebius n : ℂ)) s = _
   exact LSeries_eq_mul_integral' _ (r := 1) (s := s) (by norm_num) (by exact hs) hO
 
-private theorem mobius_partial_sum_eq_mertens_complex (N : ℕ) :
+/-- Identify the native complex coefficient sum with the existing integer Mertens owner. -/
+theorem mobius_partial_sum_eq_mertens_complex (N : ℕ) :
     (∑ k ∈ Finset.Icc 1 N, (moebius k : ℂ)) =
       (MobiusMertensRHEquivalence.mertensFunction N : ℂ) := by
   calc

@@ -647,3 +647,6 @@ import InfoGeometry.Canonical.MatrixRealificationThermodynamics
 import InfoGeometry.LinearAlgebra.RealMatrixSquareNegOne
 import InfoGeometry.Algebra.QuaternionMatrixSquareNegOne
 import InfoGeometry.Quantum.OperatorRingSquareNegOne
+import InfoGeometry.Analysis.EvenOddExponential
+import InfoGeometry.NCG.GradedCoupledExponential
+import InfoGeometry.InformationGeometry.PositiveMeasureContrast

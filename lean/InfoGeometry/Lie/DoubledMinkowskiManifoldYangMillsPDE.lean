@@ -238,6 +238,26 @@ theorem chiralFiberToKreinFrame_intertwines_proj (u : ChiralFiber) :
       InfoGeometry.Krein.spectral_epsilon, dotProduct, Fin.sum_univ_four] <;>
     ring
 
+/-- The scalar complex structure of the complex chiral fiber is not the
+sheet-swapping Hestenes complex structure on `KreinFrame4`.  Under
+`chiralFiberToKreinFrame`, multiplication by `Complex.I` rotates real and
+imaginary coordinates within the positive sheet; `doubledComplexStructure`
+instead transfers a positive-sheet vector to the negative sheet.  This
+distinction is essential when translating the complex Yang--Mills matrices
+into the real Koszul-graded matrix factors. -/
+theorem chiralFiber_phase_not_doubledHestenesJ :
+    chiralFiberToKreinFrame
+        (Complex.I • ![(1 : ℂ), 0, 0, 0] : ChiralFiber) ≠
+      doubledComplexStructure
+        (chiralFiberToKreinFrame (![(1 : ℂ), 0, 0, 0] : ChiralFiber)) := by
+  intro h
+  have h' := congrArg (fun u : KreinFrame4 => WithLp.fst u) h
+  have h'' := congrArg (fun u : FourSpace => u 1) h'
+  norm_num [chiralFiberToKreinFrame, doubledComplexStructure,
+    InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein.chiralComplexStructure,
+    InfoGeometry.Krein.complex_i, InfoGeometry.Krein.modular_j,
+    InfoGeometry.Krein.spectral_epsilon, Complex.I_re, Complex.I_im] at h''
+
 theorem fiberKreinPairing_chiralProj_isotropic (u v : ChiralFiber) :
     fiberKreinPairing (chiralProjCLM u) (chiralProjCLM v) = 0 := by
   simp only [fiberKreinPairing, chiralFiberToKreinFrame_intertwines_proj]

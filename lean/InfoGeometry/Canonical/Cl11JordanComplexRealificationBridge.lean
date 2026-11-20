@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.Cl3ComplexMatrixProduct
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.RealKCategory
@@ -209,6 +214,21 @@ theorem jordanProduct4_add_half_commutator (A B : Mat4R) :
 
 noncomputable def complexStructure : Mat4R :=
   realify ((Complex.I : ℂ) • (1 : Mat2C))
+
+/-- Multiplication by the complex phase on the source matrix is represented
+on the real carrier by left composition with its internal complex-structure
+operator. -/
+theorem realify_I_smul_eq_complexStructure_mul (A : Mat2C) :
+    realify ((Complex.I : ℂ) • A) = complexStructure * realify A := by
+  have h : ((Complex.I : ℂ) • (1 : Mat2C)) * A =
+      (Complex.I : ℂ) • A := by
+    rw [smul_mul_assoc, one_mul]
+  calc
+    realify ((Complex.I : ℂ) • A) =
+        realify (((Complex.I : ℂ) • (1 : Mat2C)) * A) := by rw [h]
+    _ = realify ((Complex.I : ℂ) • (1 : Mat2C)) * realify A :=
+      realify_mul _ _
+    _ = complexStructure * realify A := rfl
 
 theorem complexStructure_sq :
     complexStructure * complexStructure = -(1 : Mat4R) := by

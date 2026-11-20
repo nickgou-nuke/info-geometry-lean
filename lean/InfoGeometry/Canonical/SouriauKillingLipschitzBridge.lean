@@ -8,6 +8,7 @@ import Mathlib
 import InfoGeometry.Clifford.Cl11Matrix
 import InfoGeometry.Clifford.LipschitzWittRieszPrimary
 import InfoGeometry.Geometry.RindlerLapseCalculus
+import InfoGeometry.Canonical.RealSpacetime4x4Closure
 import InfoGeometry.Synthesis.CartanHestenesRotorSpinConnectionMaurerCartanSynthesis
 
 /-!
@@ -248,6 +249,94 @@ theorem conformalBoostFlow_derivative_at_zero (sigma : ℝ) (v : Vec11) :
     · ext s
       simp [conformalBoostFlow]
     · simp [boostFlow, conformalBoostGenerator]
+
+/-! ## The Rindler Killing plane inside real `(1,3)` Minkowski space
+
+The `Cl(1,1)` rotor acts on the time/longitudinal plane of the existing
+four-dimensional real Minkowski carrier. The transverse coordinates remain
+fixed; no complex scalar carrier is introduced. -/
+
+abbrev Minkowski4 := InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4
+
+/-- The real `(1,3)` Minkowski bilinear pairing in `(t,x,y,z)` coordinates. -/
+def minkowski4Form (u v : Minkowski4) : ℝ :=
+  u.t * v.t - u.x * v.x - u.y * v.y - u.z * v.z
+
+/-- The boost Killing field in the longitudinal `(t,z)` plane. -/
+def rindlerKillingGenerator (X : Minkowski4) : Minkowski4 :=
+  ⟨X.z, 0, 0, X.t⟩
+
+/-- A constant-shifted inverse-temperature vector field with the Rindler
+boost as its linear part. -/
+def rindlerInverseTemperatureField (b X : Minkowski4) : Minkowski4 :=
+  ⟨b.t + X.z, b.x, b.y, b.z + X.t⟩
+
+/-- The longitudinal projection used by the native real `Cl(1,1)` rotor. -/
+def rindlerPlaneProjection (X : Minkowski4) : Vec11 := (X.t, X.z)
+
+/-- The Rindler generator is Killing for the full real `(1,3)` Minkowski
+pairing, not only for its `(1,1)` longitudinal restriction. -/
+theorem rindlerKillingGenerator_minkowski4_skew (u v : Minkowski4) :
+    minkowski4Form (rindlerKillingGenerator u) v +
+      minkowski4Form u (rindlerKillingGenerator v) = 0 := by
+  cases u with
+  | mk ut ux uy uz =>
+    cases v with
+    | mk vt vx vy vz =>
+      simp [minkowski4Form, rindlerKillingGenerator]
+
+/-- The affine inverse-temperature field has the Rindler Killing generator
+as its exact directional increment. This records the derivative without
+assuming an additive-group structure on the spacetime record. -/
+theorem rindlerInverseTemperatureField_directional_increment
+    (b X h : Minkowski4) :
+    rindlerInverseTemperatureField b
+        ⟨X.t + h.t, X.x + h.x, X.y + h.y, X.z + h.z⟩ =
+      ⟨(rindlerInverseTemperatureField b X).t +
+          (rindlerKillingGenerator h).t,
+        (rindlerInverseTemperatureField b X).x +
+          (rindlerKillingGenerator h).x,
+        (rindlerInverseTemperatureField b X).y +
+          (rindlerKillingGenerator h).y,
+        (rindlerInverseTemperatureField b X).z +
+          (rindlerKillingGenerator h).z⟩ := by
+  cases b with
+  | mk bt bx by_ bz =>
+    cases X with
+    | mk xt xx xy xz =>
+      cases h with
+      | mk ht hx hy hz =>
+        simp [rindlerInverseTemperatureField, rindlerKillingGenerator]
+        constructor <;> ring
+
+/-- Projection of the full four-dimensional Rindler boost agrees exactly
+with the existing real `Cl(1,1)` boost flow. -/
+theorem rindler_boost_projects_to_lipschitz_flow
+    (X : Minkowski4) (s : ℝ) :
+    rindlerPlaneProjection
+        (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X s) =
+      boostFlow s (rindlerPlaneProjection X) := by
+  cases X with
+  | mk t x y z =>
+    change (t * Real.cosh s + z * Real.sinh s,
+        z * Real.cosh s + t * Real.sinh s) =
+      (Real.cosh s * t + Real.sinh s * z,
+        Real.sinh s * t + Real.cosh s * z)
+    congr 1 <;> ring
+
+/-- The full Rindler flow preserves the real `(1,3)` Minkowski form; its
+longitudinal part is the already-owned spin/Lipschitz rotor flow. -/
+theorem rindler_boost_preserves_minkowski4 (X : Minkowski4) (s : ℝ) :
+    minkowski4Form
+        (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X s)
+        (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X s) =
+      minkowski4Form X X := by
+  cases X with
+  | mk t x y z =>
+    simp [minkowski4Form,
+      InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost]
+    have h := Real.cosh_sq_sub_sinh_sq s
+    nlinarith [h]
 
 /-! ## The finite `Cl(1,1)` rotor -/
 

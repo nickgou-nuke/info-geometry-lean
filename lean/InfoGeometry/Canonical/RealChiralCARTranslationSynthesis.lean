@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Superalgebra.RealGradedZornCARBridge
 import InfoGeometry.Canonical.RealTetractysTranslationSolderingBridge
 import InfoGeometry.Canonical.RealGradedTensorSuperGrassmannianBridge
+import InfoGeometry.Canonical.SouriauKillingLipschitzBridge
 import InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge
 import InfoGeometry.Canonical.Cl11JordanComplexRealificationBridge
 import InfoGeometry.Quantum.Realification
@@ -29,6 +30,7 @@ open InfoGeometry.Canonical.RealSolderingWeylKreinBridge
 open InfoGeometry.Canonical.SplitCliffordTowerUnification
 open InfoGeometry.Canonical.RealTetractysTranslationSolderingBridge
 open InfoGeometry.Canonical.RealGradedTensorSuperGrassmannianBridge
+open InfoGeometry.Canonical.SouriauKillingLipschitzBridge
 open InfoGeometry.Superalgebra.RealGradedZornCARBridge
 open InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge
 open InfoGeometry.Lie.SplitOctonionEllPolarization
@@ -41,6 +43,67 @@ open scoped TensorProduct GradedTensorProduct
 
 local notation "FourSpace" => InfoGeometry.Canonical.RealDoubledChiralKreinFrame.FourSpace
 local notation "KreinFrame4" => InfoGeometry.Canonical.RealDoubledChiralKreinFrame.KreinFrame4
+
+/-! ### Rindler flow transported to the real Majorana Clifford contraction
+
+The Rindler boost is already an isometry of physical real `(1,3)` spacetime,
+and the Majorana contraction already represents the corresponding quadratic
+form in the genuine three-factor real Koszul tensor. The following bridge
+states the resulting operator-level invariant. It asserts equality of
+quadratic contractions, not equality of the underlying Clifford vectors. -/
+
+/-- The real Majorana contraction of a Rindler-boosted Minkowski vector has
+the same square as the contraction before the boost. This joins the physical
+Rindler flow to the actual three-mode real graded-matrix carrier. -/
+theorem realMinkowskiMajorana_rindlerBoost_square
+    (X : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4)
+    (s : ℝ) :
+    realMinkowskiMajorana
+        (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X s) ^ 2 =
+      realMinkowskiMajorana X ^ 2 := by
+  calc
+    realMinkowskiMajorana
+        (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X s) ^ 2 =
+        InfoGeometry.Canonical.RealSpacetime4x4Closure.interval
+          (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X s) •
+            (1 : realThreeMatrixGradedTensor) := by
+          simpa [pow_two] using realMinkowskiMajorana_square
+            (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X s)
+    _ = InfoGeometry.Canonical.RealSpacetime4x4Closure.interval X •
+          (1 : realThreeMatrixGradedTensor) := by
+          exact congrArg
+            (fun r : ℝ => r • (1 : realThreeMatrixGradedTensor))
+            (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_flow_isometry X s)
+    _ = realMinkowskiMajorana X ^ 2 := by
+          simpa [pow_two] using (realMinkowskiMajorana_square X).symm
+
+/-! ### Weyl soldering and the real three-mode Majorana contraction
+
+The circular Yang--Mills owner uses two Weyl blocks over `ℂ`, while the
+Hestenes/CAR owner uses the real Koszul tensor of three `M₂(ℝ)` factors.  We
+identify the shared real Minkowski vector by duplicating its four coordinates
+on the two circular sheets, then compare the squares after realification on
+`KreinFrame4`.  This is a quadratic Clifford comparison; it does not assert
+an equality of the two unsquared matrix representations or use `ℂ` as scalar
+field on the doubled carrier.
+-/
+
+/-- Put a physical real `(1,3)` vector into both circular chiral sheets. -/
+def realMinkowskiCircularCoordinate
+    (X : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+    Coordinate := ![X.t, X.x, X.y, X.z, X.t, X.x, X.y, X.z]
+
+/-- The duplicated circular Witt norm is the physical real Minkowski interval. -/
+theorem realMinkowskiCircularCoordinate_wittNorm
+    (X : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+    InfoGeometry.Lie.SplitOctonionChiralMinkowskiFixedSectionBridge.wittNorm
+        (realMinkowskiCircularCoordinate X) =
+      InfoGeometry.Canonical.RealSpacetime4x4Closure.interval X := by
+  cases X with
+  | mk t x y z =>
+      simp [realMinkowskiCircularCoordinate,
+        InfoGeometry.Lie.SplitOctonionChiralMinkowskiFixedSectionBridge.wittNorm,
+        InfoGeometry.Canonical.RealSpacetime4x4Closure.interval]; ring
 
 /-! ### Realification of the Yang--Mills operator on the doubled carrier
 
@@ -185,6 +248,72 @@ theorem realifiedCircularCurvature_eq_connection_square (x : Coordinate) :
     realifiedCircularMatrixEnd (A - B) =
       realifiedCircularMatrixEnd A - realifiedCircularMatrixEnd B := by
   simp [sub_eq_add_neg, realifiedCircularMatrixEnd]
+
+/-- The realified circular chiral connection and the real graded-tensor
+Majorana slash have identical squares on the doubled Krein carrier. Both
+sides equal the Minkowski interval times the identity endomorphism. -/
+theorem realifiedCircularWeyl_majorana_square
+    (X : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+    realifiedCircularMatrixEnd
+        (circularConnectionMat4 (realMinkowskiCircularCoordinate X)) *
+        realifiedCircularMatrixEnd
+          (circularConnectionMat4 (realMinkowskiCircularCoordinate X)) =
+      realThreeMatrixTensorOnH4 (realMinkowskiMajorana X) *
+        realThreeMatrixTensorOnH4 (realMinkowskiMajorana X) := by
+  have hWeyl :
+      circularConnectionMat4 (realMinkowskiCircularCoordinate X) *
+          circularConnectionMat4 (realMinkowskiCircularCoordinate X) =
+        ((InfoGeometry.Canonical.RealSpacetime4x4Closure.interval X : ℝ) : ℂ) •
+          (1 : Matrix (Fin 4) (Fin 4) ℂ) := by
+    rw [circularConnectionMat4, chiralOffBlock4_mul]
+    have hUL' : weylUpperMat (realMinkowskiCircularCoordinate X) *
+          weylLowerMat (realMinkowskiCircularCoordinate X) =
+        ((InfoGeometry.Canonical.RealSpacetime4x4Closure.interval X : ℝ) : ℂ) •
+          (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+      rw [weylUpperMat_mul_weylLowerMat]
+      cases X with
+      | mk t x y z =>
+          ext i j
+          fin_cases i <;> fin_cases j <;>
+            simp [realMinkowskiCircularCoordinate, chiralBoostVec,
+              chiralVorticityVec,
+              InfoGeometry.Lie.SplitOctonionChiralMinkowskiFixedSectionBridge.wittNorm,
+              InfoGeometry.Canonical.RealSpacetime4x4Closure.interval,
+              solder, σ0, σ1, σ2, σ3] <;> ring
+    have hLU' : weylLowerMat (realMinkowskiCircularCoordinate X) *
+          weylUpperMat (realMinkowskiCircularCoordinate X) =
+        ((InfoGeometry.Canonical.RealSpacetime4x4Closure.interval X : ℝ) : ℂ) •
+          (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+      rw [weylLowerMat_mul_weylUpperMat]
+      cases X with
+      | mk t x y z =>
+          ext i j
+          fin_cases i <;> fin_cases j <;>
+            simp [realMinkowskiCircularCoordinate, chiralBoostVec,
+              chiralVorticityVec,
+              InfoGeometry.Lie.SplitOctonionChiralMinkowskiFixedSectionBridge.wittNorm,
+              InfoGeometry.Canonical.RealSpacetime4x4Closure.interval,
+              solder, σ0, σ1, σ2, σ3] <;> ring
+    rw [hUL', hLU']
+    cases X with
+    | mk t x y z =>
+        ext i j
+        fin_cases i <;> fin_cases j <;>
+          simp [chiralDiagBlock4, Matrix.smul_apply,
+            InfoGeometry.Canonical.RealSpacetime4x4Closure.interval]
+  calc
+    _ = realifiedCircularMatrixEnd
+        (circularConnectionMat4 (realMinkowskiCircularCoordinate X) *
+          circularConnectionMat4 (realMinkowskiCircularCoordinate X)) := by
+            rw [realifiedCircularMatrixEnd_mul]
+    _ = InfoGeometry.Canonical.RealSpacetime4x4Closure.interval X •
+          (1 : Module.End ℝ KreinFrame4) := by
+            rw [hWeyl]
+            simp [realifiedCircularMatrixEnd]
+    _ = realThreeMatrixTensorOnH4 (realMinkowskiMajorana X) *
+          realThreeMatrixTensorOnH4 (realMinkowskiMajorana X) := by
+            symm
+            exact realMinkowskiMajorana_onKrein_square X
 
 /-- Realification preserves the chiral Peirce splitting of the circular
 connection. This uses the source owner's off-block connection and transports

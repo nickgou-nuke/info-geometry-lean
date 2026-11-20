@@ -59,6 +59,17 @@ def hestenesEvenToRealGradedTensor : HestenesEven →ₐ[ℝ] Tensor2 :=
     ((commutantToMatrix.comp realifyCommutantHom).comp
       HestenesEvenPauliEquiv.clPlusPauliAlgEquiv)
 
+/-- The real graded-tensor representation of a Hestenes-even element has
+exactly the realified Pauli matrix as its nested-matrix readout. -/
+theorem hestenesEvenToRealGradedTensor_readout (a : HestenesEven) :
+    realNestedMatrixToFin4
+        (twoMatrixGradedTensorMoritaEquiv (hestenesEvenToRealGradedTensor a)) =
+      Cl11JordanComplexRealificationBridge.realify
+        (HestenesEvenPauliEquiv.clPlusPauliAlgEquiv a) := by
+  simp [hestenesEvenToRealGradedTensor, commutantToMatrix,
+    Cl11JordanComplexCommutantEquiv.realifyCommutantHom,
+    Cl11JordanComplexRealificationBridge.realifyRingHom]
+
 /-! ### Circular Weyl channels inside the real Hestenes even algebra
 
 The circular upper Weyl channel and the real Hestenes even algebra are two
@@ -230,12 +241,100 @@ theorem hestenesEven_lowerWeyl_block_realification
   rw [realWeylUpperTensor_represents_weylUpperMat,
     weylUpperMat_circularWeylLowerCoordinates]
 
+/-- The commutator of the real Hestenes representatives of the two circular
+Weyl channels is the vorticity operator. On the real four-dimensional
+readout, its phase factor is the existing internal complex-structure
+operator; the Hestenes algebra and its graded-tensor carrier remain real. -/
+theorem hestenesEven_circularWeyl_commutator_vorticity
+    (x : InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.Coordinate) :
+    realNestedMatrixToFin4
+        (twoMatrixGradedTensorMoritaEquiv
+          (hestenesEvenToRealGradedTensor
+            (circularWeylUpperEven x *
+                circularWeylUpperEven (circularWeylLowerCoordinates x) -
+              circularWeylUpperEven (circularWeylLowerCoordinates x) *
+                circularWeylUpperEven x))) =
+      (-2 : ℝ) • (complexStructure *
+        Cl11JordanComplexRealificationBridge.realify
+          (solder (0,
+            (InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.chiralVorticityVec x 0 : ℂ),
+            (InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.chiralVorticityVec x 1 : ℂ),
+            (InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.chiralVorticityVec x 2 : ℂ)))) := by
+  have hUpper : HestenesEvenPauliEquiv.clPlusPauliAlgEquiv
+      (circularWeylUpperEven x) =
+        InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylUpperMat x := by
+    change HestenesPauliSheetBridge.clPlusToPauli (circularWeylUpperEven x) = _
+    exact clPlusPauli_circularWeylUpperEven x
+  have hLower : HestenesEvenPauliEquiv.clPlusPauliAlgEquiv
+      (circularWeylUpperEven (circularWeylLowerCoordinates x)) =
+        InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylLowerMat x := by
+    calc
+      _ = InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylUpperMat
+          (circularWeylLowerCoordinates x) :=
+            clPlusPauli_circularWeylUpperEven (circularWeylLowerCoordinates x)
+      _ = InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylLowerMat x :=
+        weylUpperMat_circularWeylLowerCoordinates x
+  rw [hestenesEvenToRealGradedTensor_readout]
+  rw [map_sub, map_mul, map_mul, hUpper, hLower]
+  rw [InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylChannel_commutator_eq_vorticity]
+  let V : Matrix (Fin 2) (Fin 2) ℂ :=
+    solder (0,
+      (InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.chiralVorticityVec x 0 : ℂ),
+      (InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.chiralVorticityVec x 1 : ℂ),
+      (InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.chiralVorticityVec x 2 : ℂ))
+  have hsmul : ((-2 * Complex.I : ℂ) • V) =
+      (-2 : ℝ) • ((Complex.I : ℂ) • V) := by
+    ext i j
+    simp [Matrix.smul_apply, smul_eq_mul]
+    ring
+  calc
+    Cl11JordanComplexRealificationBridge.realify ((-2 * Complex.I : ℂ) • V) =
+        Cl11JordanComplexRealificationBridge.realify
+          ((-2 : ℝ) • ((Complex.I : ℂ) • V)) := by rw [hsmul]
+    _ = (-2 : ℝ) • Cl11JordanComplexRealificationBridge.realify
+          ((Complex.I : ℂ) • V) :=
+        Cl11JordanComplexRealificationBridge.realify_real_smul _ _
+    _ = (-2 : ℝ) • (complexStructure *
+          Cl11JordanComplexRealificationBridge.realify V) := by
+        rw [Cl11JordanComplexRealificationBridge.realify_I_smul_eq_complexStructure_mul]
+    _ = _ := rfl
+
 /-- The real tensor representation, diagonally lifted to the doubled
 Krein/Hestenes carrier. -/
 def hestenesEvenOnDoubledKrein : HestenesEven →ₐ[ℝ]
     Module.End ℝ KreinFrame4 :=
   (doubleEndAlgHom.comp realTwoMatrixGradedTensorOnFourSpace.toAlgHom).comp
     hestenesEvenToRealGradedTensor
+
+/-- The same circular Weyl commutator acts on the doubled real Krein carrier
+as the doubled real operator `J · vorticity`. This is the operator-level
+Yang--Mills/Hestenes bridge; `J` is the existing real complex-structure
+endomorphism encoded by `complexStructure`, not a complex scalar field. -/
+theorem hestenesEven_circularWeyl_commutator_vorticity_onKrein
+    (x : InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.Coordinate) :
+    hestenesEvenOnDoubledKrein
+        (circularWeylUpperEven x *
+            circularWeylUpperEven (circularWeylLowerCoordinates x) -
+          circularWeylUpperEven (circularWeylLowerCoordinates x) *
+            circularWeylUpperEven x) =
+      doubleEnd ((LinearMap.toMatrixAlgEquiv
+        (EuclideanSpace.basisFun (Fin 4) ℝ).toBasis).symm
+          ((-2 : ℝ) • (complexStructure *
+            Cl11JordanComplexRealificationBridge.realify
+              (solder (0,
+                (InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.chiralVorticityVec x 0 : ℂ),
+                (InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.chiralVorticityVec x 1 : ℂ),
+                (InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.chiralVorticityVec x 2 : ℂ)))))) := by
+  change doubleEnd ((LinearMap.toMatrixAlgEquiv
+      (EuclideanSpace.basisFun (Fin 4) ℝ).toBasis).symm
+        (realNestedMatrixToFin4
+          (twoMatrixGradedTensorMoritaEquiv
+            (hestenesEvenToRealGradedTensor
+              (circularWeylUpperEven x *
+                  circularWeylUpperEven (circularWeylLowerCoordinates x) -
+                circularWeylUpperEven (circularWeylLowerCoordinates x) *
+                  circularWeylUpperEven x))))) = _
+  rw [hestenesEven_circularWeyl_commutator_vorticity]
 
 /-- Include the native real Hestenes algebra into the three-factor Koszul
 graded tensor used by the three-mode Fock and circular-CAR owners. -/

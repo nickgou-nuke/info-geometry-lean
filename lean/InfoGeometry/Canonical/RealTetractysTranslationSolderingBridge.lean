@@ -385,6 +385,112 @@ theorem realHermitianPauli_commutes_with_J4
         InfoGeometry.Canonical.RealSpacetime4x4Closure.toMatrix X :=
   InfoGeometry.Canonical.RealSpacetime4x4Closure.toMatrix_commutes_J X
 
+/-! ### Signature-correct real graded tensor factors
+
+The checkerboard grading on both matrix factors gives a split `(2,2)` model.
+For the real Minkowski `(3,1)` Clifford signs, use the native
+`Cl(1,1)`-graded tensor with a real `M₂(ℝ)` coefficient algebra graded by
+conjugation with the Hestenes complex-structure matrix `epsilon`. The two
+odd tail generators below square to `+1` and anticommute. -/
+
+/-- The involutive real matrix automorphism `A ↦ epsilon * A * (-epsilon)`. -/
+def hestenesSpatialParity : M2R ≃ₐ[ℝ] M2R where
+  toFun A := !![A 1 1, -A 1 0; -A 0 1, A 0 0]
+  invFun A := !![A 1 1, -A 1 0; -A 0 1, A 0 0]
+  left_inv A := by
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp
+  right_inv A := by
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp
+  map_mul' A B := by
+    ext i j
+    fin_cases i <;> fin_cases j
+    · simp [Matrix.mul_apply, Fin.sum_univ_two]
+      exact add_comm _ _
+    · simp [Matrix.mul_apply, Fin.sum_univ_two]
+    · simp [Matrix.mul_apply, Fin.sum_univ_two]
+    · simp [Matrix.mul_apply, Fin.sum_univ_two]
+      exact add_comm _ _
+  map_add' A B := by
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp <;> ring
+  commutes' r := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [Algebra.algebraMap_eq_smul_one]
+
+theorem hestenesSpatialParity_involutive :
+    Function.Involutive hestenesSpatialParity := by
+  intro A
+  exact hestenesSpatialParity.left_inv A
+
+/-- The real spatial coefficient algebra with its Hestenes-induced grading. -/
+abbrev hestenesSpatialGrading : ZMod 2 → Submodule ℝ M2R :=
+  InfoGeometry.Clifford.Cl11GradedTensorMorita.involutionGrading
+    hestenesSpatialParity hestenesSpatialParity_involutive
+
+instance hestenesSpatialGradedAlgebra : GradedAlgebra hestenesSpatialGrading :=
+  InfoGeometry.Clifford.Cl11GradedTensorMorita.instGradedAlgebraInvolutionGrading
+    hestenesSpatialParity hestenesSpatialParity_involutive
+
+/-- A first odd spatial generator in the real coefficient factor. -/
+def hestenesSpatialX : M2R := !![0, 1; 1, 0]
+
+/-- A second odd spatial generator in the real coefficient factor. -/
+def hestenesSpatialZ : M2R := !![1, 0; 0, -1]
+
+theorem hestenesSpatialX_odd : hestenesSpatialX ∈ hestenesSpatialGrading 1 := by
+  change hestenesSpatialParity hestenesSpatialX = -hestenesSpatialX
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [hestenesSpatialParity, hestenesSpatialX]
+
+theorem hestenesSpatialZ_odd : hestenesSpatialZ ∈ hestenesSpatialGrading 1 := by
+  change hestenesSpatialParity hestenesSpatialZ = -hestenesSpatialZ
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [hestenesSpatialParity, hestenesSpatialZ]
+
+theorem hestenesSpatialX_sq : hestenesSpatialX * hestenesSpatialX = 1 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [hestenesSpatialX, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem hestenesSpatialZ_sq : hestenesSpatialZ * hestenesSpatialZ = 1 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [hestenesSpatialZ, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem hestenesSpatial_generators_anticommute :
+    hestenesSpatialX * hestenesSpatialZ +
+      hestenesSpatialZ * hestenesSpatialX = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [hestenesSpatialX, hestenesSpatialZ,
+      Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- The signature-correct native real Koszul tensor
+`Cl(1,1) ᵍ⊗ Cl(2,0)` using its two real `M₂` matrix factors. -/
+abbrev realMinkowskiGradedTensor :=
+  CliffordAlgebra.evenOdd InfoGeometry.Clifford.Cl11Matrix.q11 ᵍ⊗[ℝ]
+    hestenesSpatialGrading
+
+/-- The existing coefficient Morita construction represents this genuine
+graded tensor on nested real `M₂` blocks, retaining the Koszul parity twist. -/
+noncomputable def realMinkowskiGradedTensorMorita :
+    realMinkowskiGradedTensor ≃ₐ[ℝ] Matrix (Fin 2) (Fin 2) M2R :=
+  InfoGeometry.Clifford.Cl11GradedTensorMorita.tensorMatrixEquiv
+    hestenesSpatialGrading hestenesSpatialParity
+    (by
+      intro a ha
+      exact InfoGeometry.Clifford.Cl11GradedTensorMorita.involutionGrading_even
+        hestenesSpatialParity hestenesSpatialParity_involutive ha)
+    (by
+      intro a ha
+      exact InfoGeometry.Clifford.Cl11GradedTensorMorita.involutionGrading_odd
+        hestenesSpatialParity hestenesSpatialParity_involutive ha)
+
 /-! ### The Hestenes operator in the real Koszul tensor
 
 The real complex structure remains the endomorphism `J4` on the spinor

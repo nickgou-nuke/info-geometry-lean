@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Canonical.RealDoubledChiralKreinFrame
 import InfoGeometry.Canonical.RealSolderingWeylKreinBridge
 import InfoGeometry.Canonical.SplitOctonionCARBdGRegularLift
+import InfoGeometry.Canonical.RealGradedTensorSuperGrassmannianBridge
 import InfoGeometry.Projective.ExteriorPowerPluckerBridge
 
 /-!
@@ -251,5 +252,67 @@ theorem fockModePair_plucker_on_klein (i j : Fin 3) :
         (fourSpaceToKleinVec4
           (threeModeToSpatialFourSpace (modeVector j))) 3 = 0 :=
   threeModePair_plucker_on_klein (modeVector i) (modeVector j)
+
+/-! ### The grade-two Fock sector and its Plücker readout
+
+The five-graded Fock owner represents a two-mode creation by an ordered
+product in the real Koszul tensor of real `2 × 2` factors.  Its action on the
+vacuum selects the corresponding two-particle state.  The map below reads
+those three states as the three spatial Plücker coordinates.  This is a
+linear readout of the grade-two sector, not an identification of an operator
+with a bivector. -/
+
+open InfoGeometry.Canonical.RealGradedTensorSuperGrassmannianBridge
+open InfoGeometry.Canonical.SuperGrassmannianFiveGradedEightByEight
+
+/-- Vacuum vector for the explicit eight-state, three-mode Fock matrix model. -/
+def threeModeFockVacuum : Fin 8 → ℝ := Pi.single 0 1
+
+/-- The two-particle state created from the vacuum by a grade-two Fock
+matrix. The existing real graded-tensor algebra equivalence transports this
+operator; this state is its action in the matrix-model Fock carrier. -/
+def gradedTensorBivectorState (p : Fin 3) : Fin 8 → ℝ :=
+  (gPlus2R p).mulVec threeModeFockVacuum
+
+/-- Read the three two-particle occupation states as the three spatial
+Plücker coordinates `(p₂₃, p₃₁, p₁₂)` in the existing six-coordinate chart. -/
+def gradedTensorBivectorPluckerReadout (p : Fin 3) : InfoGeometry.Algebra.FiniteSpin.Vec6R :=
+  ![0, 0, 0,
+    gradedTensorBivectorState p 6,
+    gradedTensorBivectorState p 5,
+    gradedTensorBivectorState p 3]
+
+/-- The grade-two creator transported to the real Koszul tensor is the ordered
+product of its two real mode creators. Its corresponding Fock-matrix action
+on the vacuum, read in Plücker coordinates, gives exactly the decomposable bivector of its
+ordered mode pair.  Thus the five-graded superalgebra and the exterior/Plücker
+geometry share the same oriented mode-pair convention. -/
+theorem gradedTensorBivectorState_eq_modePairPlucker (p : Fin 3) :
+    gradedTensorBivectorPluckerReadout p =
+      InfoGeometry.Projective.ExteriorPowerPluckerBridge.pluckerCoords
+        (fourSpaceToKleinVec4
+          (threeModeToSpatialFourSpace (modeVector (bivectorPair p).1)))
+        (fourSpaceToKleinVec4
+          (threeModeToSpatialFourSpace (modeVector (bivectorPair p).2))) := by
+  fin_cases p <;>
+    norm_num [gradedTensorBivectorPluckerReadout, gradedTensorBivectorState,
+      threeModeFockVacuum, gPlus2R, gPlus2Z, gPlus1R, gPlus1Z,
+      bivectorPair, fockCreate0Z, fockCreate1Z, fockCreate2Z,
+      InfoGeometry.Projective.ExteriorPowerPluckerBridge.pluckerCoords,
+      modeVector, threeModeToSpatialFourSpace, fourSpaceToKleinVec4, i4ToFin,
+      Matrix.mulVec, Fin.sum_univ_eight, Pi.single_apply]
+
+/-- The grade-two creation operator is the ordered product of the same real
+Koszul-tensor mode creators used to label the Plücker bivector. -/
+theorem gradedTensorBivectorCreator_eq_modeProduct (p : Fin 3) :
+    fockMatrixToRealGradedTensor (gPlus2R p) =
+      fockMatrixToRealGradedTensor (gPlus1R (bivectorPair p).1) *
+        fockMatrixToRealGradedTensor (gPlus1R (bivectorPair p).2) := by
+  have hR : gPlus2R p =
+      gPlus1R (bivectorPair p).1 * gPlus1R (bivectorPair p).2 := by
+    change (Int.castRingHom ℝ).mapMatrix (gPlus2Z p) = _
+    rw [gPlus2Z, (RingHom.mapMatrix (Int.castRingHom ℝ)).map_mul]
+    rfl
+  rw [hR, map_mul]
 
 end InfoGeometry.Canonical.RealDoubledPluckerBridge

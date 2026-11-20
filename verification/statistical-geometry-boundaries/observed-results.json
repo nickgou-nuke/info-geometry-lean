@@ -1,0 +1,140 @@
+{
+  "format_version": 1,
+  "scope": "canonical statistical-geometry boundary closure only",
+  "status": "pass",
+  "started_utc": "2026-11-20T13:38:00.659585+00:00",
+  "finished_utc": "2026-11-20T13:38:34.832748+00:00",
+  "base_commit": "586c14bc9fb94eb09b56f7dc850d9d5297269f91",
+  "lean_toolchain": "leanprover/lean4:v4.34.1",
+  "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "lake_version": "Lake version 5.0.0-src+5045d00 (Lean version 4.34.1)",
+  "root_package_verified": false,
+  "dependencies": [
+    {
+      "path": ".lake/packages/mathlib",
+      "revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+      "clean": true
+    },
+    {
+      "path": ".lake/packages/mathlib/.lake/packages/plausible",
+      "revision": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+      "clean": true
+    },
+    {
+      "path": ".lake/packages/mathlib/.lake/packages/LeanSearchClient",
+      "revision": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+      "clean": true
+    },
+    {
+      "path": ".lake/packages/mathlib/.lake/packages/importGraph",
+      "revision": "e928b72544873815af278d38681b31c0293588e3",
+      "clean": true
+    },
+    {
+      "path": ".lake/packages/mathlib/.lake/packages/proofwidgets",
+      "revision": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5",
+      "clean": true
+    },
+    {
+      "path": ".lake/packages/mathlib/.lake/packages/aesop",
+      "revision": "355695d523e41d0554926416cba2a2b3544fbbc9",
+      "clean": true
+    },
+    {
+      "path": ".lake/packages/mathlib/.lake/packages/Qq",
+      "revision": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+      "clean": true
+    },
+    {
+      "path": ".lake/packages/mathlib/.lake/packages/batteries",
+      "revision": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+      "clean": true
+    },
+    {
+      "path": ".lake/packages/mathlib/.lake/packages/Cli",
+      "revision": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204",
+      "clean": true
+    }
+  ],
+  "source_and_pin_sha256": {
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lake-manifest.json": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+    ".lake/packages/mathlib/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    ".lake/packages/mathlib/lake-manifest.json": "8f67b2cf24143ac091cdb425e886c2164b2fc2d6fbccd6db9454b697f9541a67",
+    "lean/InfoGeometry/Geometry/Statistical/StatisticalWeylRigidity.lean": "deccc7d41bd3931428a3f86a12770e8cb2c420130bfce46c9827fc17bfc1bf75",
+    "lean/InfoGeometry/Modular/AmariChentsovDualConnections.lean": "77f5df79767d1f362f17cddb54b6af7609c4bf206f8b07d46df65a62f0c8c2e9",
+    "lean/InfoGeometry/Geometry/Statistical/StatisticalWeylDualConnections.lean": "d99dee44da15b7f8dbe4da6ce818d3d2c9bed0387595a8d330c8283f2c2c2ce8",
+    "lean/InfoGeometry/Geometry/DivergenceMixedHessianCounterexample.lean": "e25e1b9e18e35368a9627794bce83c9f9bf640010459e075f0dcb279a3ff4e93",
+    "lean/InfoGeometry/Geometry/StatisticalGeometryBoundariesAudit.lean": "0d8dc70602fe2d80de5620582fcfb2f299eb25a297abdadba09c8469532ba817",
+    "verification/statistical-geometry-boundaries/check.py": "8024803e462053af625a8cc4813b5626659a463b581fbf7b7a1016dd2c405a1d",
+    "tools/build_lock.py": "276bd21076a0300aaff235c6e01731b2a7318ada9094e754ec81f9dc7de04c45",
+    "tools/infra/build.py": "76575073b6fbf1054511ede20792e549ac216238f2519b2a2c2215d0aa646dc0",
+    "tools/infra/build_changed_lean.py": "416e53c9bf915f12c7da71dba7d29ef9cc0488c94f25417cc07d826d40fe8963"
+  },
+  "native_compilation": [
+    {
+      "module": "InfoGeometry.Geometry.Statistical.StatisticalWeylRigidity",
+      "exit_code": 0,
+      "seconds": 10.201141602999996,
+      "olean_sha256": "9964b61d0d7c1eff4c267b73dc311024d63c7d2f7c7f4eb2bd4e0d5339834544"
+    },
+    {
+      "module": "InfoGeometry.Modular.AmariChentsovDualConnections",
+      "exit_code": 0,
+      "seconds": 7.737233801999537,
+      "olean_sha256": "4ac32c72cc00245947ab11b53ca7520af219b4f55e6eb9a8869a8a36c1d55e98"
+    },
+    {
+      "module": "InfoGeometry.Geometry.Statistical.StatisticalWeylDualConnections",
+      "exit_code": 0,
+      "seconds": 3.0752227599987236,
+      "olean_sha256": "9d9cfbf6ae2ce852d96571297106942dd894bb2a7b6ab3c1a72728bc674ce1e2"
+    },
+    {
+      "module": "InfoGeometry.Geometry.DivergenceMixedHessianCounterexample",
+      "exit_code": 0,
+      "seconds": 2.8473836419998406,
+      "olean_sha256": "2913864c1758148a9cf09dd3e934d33b4645b36899649be82674959eb025e474"
+    },
+    {
+      "module": "InfoGeometry.Geometry.StatisticalGeometryBoundariesAudit",
+      "exit_code": 0,
+      "seconds": 5.431856875000449,
+      "olean_sha256": "fe4cb3f64555c90413cb36ac073161c9c3dbfcb2f6f9003a1f790f886f13eb4e"
+    }
+  ],
+  "owner_declaration_counts": {
+    "InfoGeometry.Geometry.Statistical.StatisticalWeylRigidity": 8,
+    "InfoGeometry.Geometry.Statistical.StatisticalWeylDualConnections": 12,
+    "InfoGeometry.Geometry.DivergenceMixedHessianCounterexample": 23,
+    "InfoGeometry.Modular.AmariChentsovDualConnections": 56
+  },
+  "declaration_audit": "AUDIT_REQUIRED_DECLARATIONS: 14\nAUDIT_OWNER: InfoGeometry.Geometry.Statistical.StatisticalWeylRigidity: 8\nAUDIT_OWNER: InfoGeometry.Geometry.Statistical.StatisticalWeylDualConnections: 12\nAUDIT_OWNER: InfoGeometry.Geometry.DivergenceMixedHessianCounterexample: 23\nAUDIT_OWNER: InfoGeometry.Modular.AmariChentsovDualConnections: 56\nAUDIT_AXIOMS: [propext, Classical.choice, Quot.sound]\nAUDIT_DECLARATIONS: 99\nAUDIT_THEOREMS_INCLUDING_GENERATED: 74\nAUDIT_SUCCESS: 4 owners",
+  "pins_and_sources_unchanged": true,
+  "root_baseline": {
+    "command": "python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Modular.AmariChentsovDualConnections",
+    "exit_code": 1,
+    "stage": "before owner compilation",
+    "blocker": "HomotopyHypothesis package directory not found: external_refs/homotopy-hypothesis-lean4"
+  },
+  "coverage_note": "Complete local import closure of the stated audit, rebuilt into fresh artifacts. Source hashes identify the checked contents; this is not a root package or pre-push success receipt.",
+  "publication_gate": {
+    "command": ".githooks/pre-push (locally invoked with the proposed new-ref update)",
+    "checked_local_commit": "ab9f669b25a88e66f1466eaddb54326624b2adf6",
+    "exit_code": 1,
+    "blocker": "Root Lake package resolution: external_refs/homotopy-hypothesis-lean4 is missing",
+    "passed_static_checks": [
+      "Axiom and Debt Audit: 5 files, 0 open gaps",
+      "Semantic Content Audit: 5 selected files, 0 findings",
+      "Tracked Lean Scope Audit: 5 files, 0 debt findings"
+    ],
+    "full_root_stage_reached": false,
+    "remote_write_attempted": false,
+    "source_scope_note": "The subsequent documentation update only records this gate outcome; checked Lean source and verifier hashes are unchanged."
+  },
+  "pre_commit_hook": {
+    "status": "pass",
+    "message": "proof_proxy_staged_gate: ok",
+    "invoked_during_local_commit": true
+  }
+}

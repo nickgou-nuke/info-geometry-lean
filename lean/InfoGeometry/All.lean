@@ -640,3 +640,6 @@ import InfoGeometry.InformationGeometry.PositiveMeasureDifferential
 import InfoGeometry.ExponentialFamily.FiniteAnalyticKL
 import InfoGeometry.Canonical.GaussianBurgStein
 import InfoGeometry.Canonical.MatrixRelativeModularPhysicsBridge
+import InfoGeometry.Quantum.RealificationKrein
+import InfoGeometry.Quantum.CliffordPhaseRealification
+import InfoGeometry.Canonical.MatrixRealificationThermodynamics

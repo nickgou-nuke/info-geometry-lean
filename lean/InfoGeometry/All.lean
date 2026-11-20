@@ -48,6 +48,10 @@ import InfoGeometry.Twistor.RealConstructs
 import InfoGeometry.Twistor.RealConstructsAudit
 import InfoGeometry.Physics.NuclearTwistorSectorAudit
 import InfoGeometry.Quantum.RealificationAudit
+import InfoGeometry.OperatorAlgebra.OverlapChirality
+import InfoGeometry.OperatorAlgebra.PeirceCurvatureTrace
+import InfoGeometry.Quantum.RealChiralCurvature
+import InfoGeometry.Clifford.RealChiralCurvatureExample
 import InfoGeometry.AllExhaustive
 import Experimental.Sandbox.Topology.KleinBieberbachWeyl
 import InfoGeometry.Exceptional.CFSGPort.All

@@ -686,3 +686,4 @@ import InfoGeometry.InformationGeometry.PositiveMeasureContrast
 import InfoGeometry.Algebra.SkewPolynomialFactorization
 import InfoGeometry.Algebra.QuadraticCrossedProduct
 import InfoGeometry.Algebra.CARTwoSidedIdeal
+import InfoGeometry.Twistor.NonincidentLogPairing

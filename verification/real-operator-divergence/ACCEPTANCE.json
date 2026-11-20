@@ -1,0 +1,217 @@
+{
+  "schema_version": 1,
+  "record_kind": "recovered-publication-provenance",
+  "status": "eight_lean_source_hashes_match_the_prior_locally_checked_snapshot",
+  "repository": "nickgou-nuke/info-geometry-lean",
+  "base_commit": "fea96b564201654cd4693008585039a56f66adf3",
+  "intended_branch": "codex/real-operator-divergence-closure-20261119",
+  "publication": {
+    "target": "main",
+    "draft": true,
+    "authorization_date": "2026-11-20",
+    "authorization_scope": "Publish a draft PR with the previously observed root pre-push dependency failure documented."
+  },
+  "recovery": {
+    "date": "2026-11-20",
+    "original_local_commit": "8856fdc4f19421621508dfe611408fc2015f726e",
+    "original_commit_available_locally_or_remotely": false,
+    "reason": "The previous checkout and raw verification logs did not survive the workspace reset. GitHub had neither the original commit nor its proposed branch.",
+    "method": "Recover canonical source from the exact base commit and retained task transcript, then compare every changed Lean file against its recorded final SHA-256.",
+    "matched_lean_files": 8,
+    "new_commit_required": true,
+    "proof_sources_changed_during_recovery": false,
+    "metadata": "This acceptance record and the publication contract are newly reconstructed. Verification driver and CI workflow recovery are identified separately; no claim is made that the complete original commit was reproduced.",
+    "local_lean_reverification": "Not run after recovery: the previous Lean runtime and dependency cache were absent. Current verification consists of exact source hash recovery and the separately recorded static checks of reconstructed tooling.",
+    "remote_ci": "Pending publication; consult the PR checks and new workflow artifacts for current results."
+  },
+  "source_snapshots": [
+    {
+      "path": "lean/InfoGeometry/Architecture/MatrixSymmetricConeFisherRao.lean",
+      "bytes": 13658,
+      "sha256": "c70bd269973531e00a406cbb2ebaaf527c7246e3eb683803d96bc66678d33e04",
+      "git_blob_sha": "2948ee403ec50610d24aa53a2a90c07a77d5990a"
+    },
+    {
+      "path": "lean/InfoGeometry/Jordan/SPD.lean",
+      "bytes": 1734,
+      "sha256": "e150acc594ed49be73a954732b377af0e3e910c26035bcaa86950d4239645f66",
+      "git_blob_sha": "230b119a5aa80354618da1337aad2cfa8527d2d6"
+    },
+    {
+      "path": "lean/InfoGeometry/Jordan/BurgStein.lean",
+      "bytes": 9539,
+      "sha256": "796da6fe418686cc478a2039e08ae69f0a865e8909da1bee0890b1e9f669782d",
+      "git_blob_sha": "8405c1132c9eeff028dd6d7f2e5923eb6838e29f"
+    },
+    {
+      "path": "lean/InfoGeometry/Geometry/DualFlatKreinLegendreGraph.lean",
+      "bytes": 5638,
+      "sha256": "582afd0336f08468f3885e4ddbab471bafe50d0b0da110d0913a49f352078ad0",
+      "git_blob_sha": "27fdcf6ece6875c81735a15057eb98ed3e48865f"
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean",
+      "bytes": 5704,
+      "sha256": "b5402f5b4f485e19a1375caf4a546d904745a57302fb2dd8748f4d8d791e6ee8",
+      "git_blob_sha": "773c8810ee53a405231c3414b3498314b06f92d8"
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/RealMatrixSplitAudit.lean",
+      "bytes": 7992,
+      "sha256": "e2b5d341be8ffca1f0265a48875d16b1f424c650a4d6cd1e9bc3ae5a2bcfc861",
+      "git_blob_sha": "9e7978d3f55cd032c9bf2c33da190d67699e4345"
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/CyclotomicGaloisNilpotentSylvesterSynthesis.lean",
+      "bytes": 131092,
+      "sha256": "f4d9e556c768ac994ddadb4269cd0c2adbbfacc1e528d7bdf225d4b438ce21ee",
+      "git_blob_sha": "2216a0331bb129d556fc8ab9a7ae1fa85bdad99c"
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/CyclotomicRealCounterexamples.lean",
+      "bytes": 5381,
+      "sha256": "86ef974e386063d9ffcbf716d9dc542fc2df7fbea094272b8497dc9ca0598634",
+      "git_blob_sha": "a7ef3733025d63433a20e77a5c95d8401607efba"
+    }
+  ],
+  "historical_local_validation": {
+    "date": "2026-11-19",
+    "evidence_status": "Previously observed in this task; raw log bytes were lost with the checkout. These results are historical and do not certify the newly reconstructed workflow or current main.",
+    "lean_version": "4.34.1",
+    "lean_commit": "5045d0056413266e57c625dcd7c365b10e377c52",
+    "lake_version": "5.0.0-src+5045d00",
+    "mathlib_commit": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+    "focused_package": "verification/real-matrix-split",
+    "canonical_owner_builds": {
+      "status": "passed",
+      "targets": [
+        "InfoGeometry.Architecture.MatrixSymmetricConeFisherRao",
+        "InfoGeometry.Jordan.SPD",
+        "InfoGeometry.Jordan.BurgStein",
+        "InfoGeometry.Geometry.DualFlatKreinLegendreGraph",
+        "InfoGeometry.OperatorAlgebra.RealMatrixSplit",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.CyclotomicGaloisNilpotentSylvesterSynthesis",
+        "InfoGeometry.Algebra.CyclotomicRealCounterexamples"
+      ]
+    },
+    "native_all_owned_declaration_audit": {
+      "status": "passed",
+      "fresh_process": true,
+      "lean_warning_as_error": true,
+      "declarations": 466,
+      "coverage": "All declarations owned by the seven selected modules, including private and generated declarations.",
+      "counts_by_module": {
+        "InfoGeometry.Architecture.MatrixSymmetricConeFisherRao": 34,
+        "InfoGeometry.Jordan.SPD": 30,
+        "InfoGeometry.Jordan.BurgStein": 25,
+        "InfoGeometry.Geometry.DualFlatKreinLegendreGraph": 25,
+        "InfoGeometry.OperatorAlgebra.RealMatrixSplit": 14,
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.CyclotomicGaloisNilpotentSylvesterSynthesis": 317,
+        "InfoGeometry.Algebra.CyclotomicRealCounterexamples": 21
+      },
+      "axiom_union": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unsafe_or_partial_selected_declarations": 0
+    },
+    "legacy_real_matrix_split_audit": {
+      "status": "passed",
+      "public_heads": 83,
+      "fresh_lean_and_reconciler": true
+    },
+    "strict_opengauss": {
+      "status": "passed",
+      "traps": 0
+    },
+    "source_debt": {
+      "status": "passed",
+      "sorry_admit_or_custom_axiom_findings": 0
+    },
+    "semantic_content": {
+      "status": "passed",
+      "findings": 0
+    },
+    "semantic_vacuity": {
+      "errors": 0,
+      "heuristic_warnings": 6,
+      "inherited_warnings": 4,
+      "new_warnings": [
+        "SPD.identity_mat is a legitimate definitional readout.",
+        "SPD.rescale_mat is a legitimate definitional readout."
+      ]
+    },
+    "owner_warning_scope": "Five inherited Fisher-owner warnings: deprecated Real import and four unused DecidableEq section binders. Imported dependencies also had inherited warnings. No new owner warnings were observed.",
+    "staged_proof_gate": "passed for original local commit preparation",
+    "root_pre_push": {
+      "status": "failed_before_target_elaboration",
+      "exit_code": 1,
+      "error": "HomotopyHypothesis: package directory not found: external_refs/homotopy-hypothesis-lean4",
+      "preceding_checks": "Source debt for eight files, semantic content, and tracked Lean scope passed inside the hook.",
+      "other_preflight_findings": [
+        "HomotopyHypothesis and Atlas dependencies absent/untracked.",
+        "GIFT submodule uninitialized; pinned e6f3c3ac2140c2324fb2ae029c32233e73aa5e92."
+      ],
+      "whole_repository_build_certified": false
+    },
+    "lost_log_digests": {
+      "original_acceptance_payload_sha256": "bfc4c0e41ef83a2e1bfbc5a37b0408cb73cf7bf1a5142143c9424d92f4a0fa79",
+      "original_acceptance_file_sha256": "a7f53afd66d6b0975f66f521ccdb11a7a02cbe123a03a8a17f1aace1440f77bf",
+      "original_pre_push_log_sha256": "6efbd32009ddd8f0fbac032470cdde3a583be111b1c03ef551733774ecd381a2",
+      "warning": "These are retained provenance digests, not links to currently available log files and not hashes of this reconstructed record."
+    }
+  },
+  "unchanged_environment_contract": [
+    "Root Lean toolchain",
+    "Root dependency pins",
+    "Root Lake configuration",
+    "Root hooks and proof gates"
+  ],
+  "nonclaims": [
+    "No fresh local compilation after workspace recovery.",
+    "No successful root pre-push or whole-repository build.",
+    "No Gaussian-measure KL or Taylor theorem.",
+    "No global nonnegativity theorem for the full SPD Burg loss.",
+    "No Type III trace, super-Berezinian integration, analytic limit, continuum, gauge, curvature, or Kahler closure."
+  ],
+  "reconstructed_artifact_sha256": {
+    "docs/REAL_OPERATOR_DIVERGENCE_CONTRACT.md": "7a156f1cdacb7a4459c30e5e4e043324582dc0307da27eeffe572d1657ae36d2",
+    "verification/real-operator-divergence/audit.py": "eac501ceac0439bf0b7d991a02d929a8ca0edb506a56e75c8263bda1e2290f9f",
+    ".github/workflows/real-operator-divergence.yml": "2583cd1376c54fc329a445c5abc4a55cc72d0b5c10061b808ac32a7a88ba323e"
+  },
+  "recovery_static_validation": {
+    "date": "2026-11-20",
+    "root_independent_source_hash_check": {
+      "status": "passed",
+      "matched_files": 8
+    },
+    "contract_review": {
+      "status": "passed",
+      "scope": "Source statements, hypotheses, dependency order and recovery provenance; parent and independent agent review."
+    },
+    "runner": {
+      "status": "passed",
+      "checks": [
+        "Python compilation/import and parent AST parse",
+        "Four intended maintained-wrapper command invocations, with a single consolidated seven-target build",
+        "Valid native-audit and pinned-manifest fixtures",
+        "Rejection of 12 malformed native-audit fixtures",
+        "Rejection of 12 dependency, toolchain, source-routing or checkout-tampering fixtures"
+      ],
+      "lean_or_lake_executed": false,
+      "fixture_outputs_are_proof_evidence": false
+    },
+    "workflow": {
+      "status": "passed",
+      "checks": [
+        "Unique-key YAML parsing",
+        "bash -n for all six run blocks",
+        "Seven-owner screen and runner interface",
+        "Read-only permissions, fixed-pin caches, success-only cache saves and unconditional evidence upload",
+        "Root Lake configuration and native audit generator included in triggers and source cache inputs"
+      ],
+      "github_actions_executed_before_publication": false
+    }
+  }
+}

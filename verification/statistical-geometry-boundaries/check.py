@@ -172,9 +172,18 @@ def main() -> int:
             if not path.is_relative_to(MATHLIB.resolve()) and path != sysroot / "lib/lean":
                 raise RuntimeError(f"Unexpected imported artifact path: {path}")
             paths.append(str(path))
+        # The root checkout may already own the same pinned package revisions
+        # and their compiled artifacts.  Mathlib's standalone environment does
+        # not list those root paths, but using them is safe after the revision
+        # checks above and avoids requiring a second package build tree.
+        root_package_paths = []
+        for package in mathlib_packages:
+            root_path = REPO / ".lake/packages" / package["name"] / ".lake/build/lib/lean"
+            if root_path.is_dir():
+                root_package_paths.append(str(root_path.resolve()))
         oleans = run / "oleans"
         oleans.mkdir()
-        env["LEAN_PATH"] = os.pathsep.join([str(oleans), *paths])
+        env["LEAN_PATH"] = os.pathsep.join([str(oleans), *root_package_paths, *paths])
         receipt["lean_path"] = env["LEAN_PATH"]
         for module, source in closure:
             target = oleans.joinpath(*module.split(".")).with_suffix(".olean")

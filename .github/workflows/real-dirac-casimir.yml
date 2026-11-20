@@ -1,0 +1,295 @@
+name: Real Dirac currents and Casimir kernel check
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/real-dirac-casimir.yml'
+      - 'lake-manifest.json'
+      - 'lean-toolchain'
+      - 'lean/DAG/Basic.lean'
+      - 'lean/InfoGeometry/Algebra/CPTComplexStructure.lean'
+      - 'lean/InfoGeometry/Algebra/Cl11Fermions.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteTensorDeterminantStabilization.lean'
+      - 'lean/InfoGeometry/Algebra/GrassmannianCartanTower.lean'
+      - 'lean/InfoGeometry/Algebra/HypercomplexTriad.lean'
+      - 'lean/InfoGeometry/Algebra/InvariantTransport.lean'
+      - 'lean/InfoGeometry/Algebra/JordanCayleyInversionOsQ.lean'
+      - 'lean/InfoGeometry/Algebra/MatrixNoncommutativity.lean'
+      - 'lean/InfoGeometry/Algebra/SplitOctonionQ.lean'
+      - 'lean/InfoGeometry/Algebra/SupergradedBracket.lean'
+      - 'lean/InfoGeometry/Algebra/SupermatrixKoszul.lean'
+      - 'lean/InfoGeometry/Algebra/TensorAlgebraCanonical.lean'
+      - 'lean/InfoGeometry/Algebraic/ExactPhaseCocycle.lean'
+      - 'lean/InfoGeometry/Algebraic/SplitQuadraticForm.lean'
+      - 'lean/InfoGeometry/Arithmetic/SplitCliffordRealization.lean'
+      - 'lean/InfoGeometry/Canonical/Algebraic/ModularRotorCocycle.lean'
+      - 'lean/InfoGeometry/Canonical/All.lean'
+      - 'lean/InfoGeometry/Canonical/BottPeriodicity.lean'
+      - 'lean/InfoGeometry/Canonical/ClNNBottBridge.lean'
+      - 'lean/InfoGeometry/Canonical/DecomposableBivector.lean'
+      - 'lean/InfoGeometry/Canonical/Drazin.lean'
+      - 'lean/InfoGeometry/Canonical/DrazinModularPersistence.lean'
+      - 'lean/InfoGeometry/Canonical/FierzKleinFoundation.lean'
+      - 'lean/InfoGeometry/Canonical/Herm2x2OsO55RationalBridge.lean'
+      - 'lean/InfoGeometry/Canonical/HestenesClPlus14.lean'
+      - 'lean/InfoGeometry/Canonical/HestenesNativeDiracCurrent.lean'
+      - 'lean/InfoGeometry/Canonical/KleinBivectorLinear.lean'
+      - 'lean/InfoGeometry/Canonical/KleinExteriorAlternating.lean'
+      - 'lean/InfoGeometry/Canonical/KreinDoubledAtom.lean'
+      - 'lean/InfoGeometry/Canonical/LogGenerator.lean'
+      - 'lean/InfoGeometry/Canonical/MultiplicativeToAdditiveBridge.lean'
+      - 'lean/InfoGeometry/Canonical/ProjectiveFoundation.lean'
+      - 'lean/InfoGeometry/Canonical/SpineAttributes.lean'
+      - 'lean/InfoGeometry/Canonical/SplitCliffordDirectLimit.lean'
+      - 'lean/InfoGeometry/Canonical/SplitCliffordTensorBridge.lean'
+      - 'lean/InfoGeometry/Canonical/SuperGrassmannianManifold.lean'
+      - 'lean/InfoGeometry/Canonical/TomitaTakesaki.lean'
+      - 'lean/InfoGeometry/Cartan/Involution.lean'
+      - 'lean/InfoGeometry/Clifford/BottPeriodicity.lean'
+      - 'lean/InfoGeometry/Clifford/BudinichSpinorsNullVectors.lean'
+      - 'lean/InfoGeometry/Clifford/Cl11Matrix.lean'
+      - 'lean/InfoGeometry/Clifford/Cl11TensorTower.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55MetriplecticReduction.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55NeutralHyperbolicIsometry.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55ParaKahlerMetric.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55PureSpinorParaGrassmannianBridge.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55Q55NativeSplitBridge.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55RealSplitPin.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55RealSplitPinAction.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55RealSplitPinImage.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55RealSplitPinKernelBridge.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55RealSplitPinReflectionBridge.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55RealSplitPinVectorReflection.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55RealSplitPinVolume.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55SpinorAlgebraEquiv.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55SpinorChirality.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55SpinorRepresentationGeneration.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55WittOrthogonalBasis.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55WittOrthogonalNative.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55WittOrthogonalReflections.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55WittPinAction.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55WittPinAlgebraLemmas.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55WittPinCoverBridge.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55WittPinOrthogonalAction.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55WittPinParity.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55WittPinReflections.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55WittPinSignatureBoundary.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55WittQuadraticReflection.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55WittReflectionAlignment.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55WittReflectionGeneratedSubgroup.lean'
+      - 'lean/InfoGeometry/Clifford/Cl55WittReflectionSubgroup.lean'
+      - 'lean/InfoGeometry/Clifford/ClNN.lean'
+      - 'lean/InfoGeometry/Clifford/ClNNBilinear.lean'
+      - 'lean/InfoGeometry/Clifford/Clifford55.lean'
+      - 'lean/InfoGeometry/Clifford/CliffordInclusionInjective.lean'
+      - 'lean/InfoGeometry/Clifford/ConformalGeneratorLemmas55.lean'
+      - 'lean/InfoGeometry/Clifford/ConformalLift55.lean'
+      - 'lean/InfoGeometry/Clifford/GammaMatrices.lean'
+      - 'lean/InfoGeometry/Clifford/Grading.lean'
+      - 'lean/InfoGeometry/Clifford/KoszulFoundation.lean'
+      - 'lean/InfoGeometry/Clifford/Lift.lean'
+      - 'lean/InfoGeometry/Clifford/LogCftMonodromy.lean'
+      - 'lean/InfoGeometry/Clifford/NeutralPhaseSpaceCore.lean'
+      - 'lean/InfoGeometry/Clifford/NeutralPhaseSpaceDoubledBridge.lean'
+      - 'lean/InfoGeometry/Clifford/OpSignatureBridge.lean'
+      - 'lean/InfoGeometry/Clifford/ParaKahler55SUSYClosure.lean'
+      - 'lean/InfoGeometry/Clifford/ParaKahlerGeneralizedMetric.lean'
+      - 'lean/InfoGeometry/Clifford/PhaseSpaceGeneralizedMetric.lean'
+      - 'lean/InfoGeometry/Clifford/RealQuadraticReflection.lean'
+      - 'lean/InfoGeometry/Clifford/Relations.lean'
+      - 'lean/InfoGeometry/Clifford/SpinorRep.lean'
+      - 'lean/InfoGeometry/Clifford/SplitClifford55ExteriorSpinor.lean'
+      - 'lean/InfoGeometry/Clifford/SplitClifford55ProjectivePureSpinor.lean'
+      - 'lean/InfoGeometry/Clifford/SplitClifford55PureSpinorGrassmannianBridge.lean'
+      - 'lean/InfoGeometry/Clifford/SplitCliffordNativeTensorFinrank.lean'
+      - 'lean/InfoGeometry/Clifford/SplitQ11.lean'
+      - 'lean/InfoGeometry/Clifford/SplitQ11Equivariance.lean'
+      - 'lean/InfoGeometry/Clifford/SplitQ11PhaseFlip.lean'
+      - 'lean/InfoGeometry/Clifford/SplitQ11Projectors.lean'
+      - 'lean/InfoGeometry/Clifford/Tower.lean'
+      - 'lean/InfoGeometry/Clifford/TowerMatrix.lean'
+      - 'lean/InfoGeometry/Geometry/KreinIsotropicCone.lean'
+      - 'lean/InfoGeometry/GrandUnification/ArchetypeDictionary.lean'
+      - 'lean/InfoGeometry/Krein/Clifford.lean'
+      - 'lean/InfoGeometry/Krein/DoubledSpace.lean'
+      - 'lean/InfoGeometry/Krein/HilbertBridge.lean'
+      - 'lean/InfoGeometry/Krein/InvolutiveSelfDualCarrier.lean'
+      - 'lean/InfoGeometry/Krein/KreinSpace.lean'
+      - 'lean/InfoGeometry/Krein/Metric.lean'
+      - 'lean/InfoGeometry/Krein/Representation.lean'
+      - 'lean/InfoGeometry/Krein/Superphysics.lean'
+      - 'lean/InfoGeometry/Krein/Thermal.lean'
+      - 'lean/InfoGeometry/Meta/Architecture.lean'
+      - 'lean/InfoGeometry/Meta/OwnerTarget.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/ChiralPolarization.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/CliffordCAR.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/DrazinRepresentedSplit.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/ErlangenConformalInvariant.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/FiniteMatrixNoncommutativeWitness.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/FiveGradedInformationLedger.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/KreinIsotropicCone.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/ModularWeightTrace.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/OperatorThermodynamics.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/SymmetryInvariants.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/TomitaCartanSplit.lean'
+      - 'lean/InfoGeometry/Physics/Pin55Formal.lean'
+      - 'lean/InfoGeometry/Projective/ExteriorKleinFrameSurjection.lean'
+      - 'lean/InfoGeometry/Projective/ExteriorKleinProjective.lean'
+      - 'lean/InfoGeometry/Projective/ExteriorKleinTwoPlaneQuotient.lean'
+      - 'lean/InfoGeometry/Projective/ExteriorPowerPluckerBridge.lean'
+      - 'lean/InfoGeometry/Projective/KleinQuadricPlucker.lean'
+      - 'lean/InfoGeometry/Quantum/AnticommutingInvolutionCore.lean'
+      - 'lean/InfoGeometry/Quantum/InvolutionCore.lean'
+      - 'lean/InfoGeometry/Quantum/Monodromy.lean'
+      - 'lean/InfoGeometry/Quantum/RealKCategory.lean'
+      - 'lean/InfoGeometry/Quantum/RealMajoranaCategory.lean'
+      - 'lean/InfoGeometry/Quantum/RealSplitClifford.lean'
+      - 'lean/InfoGeometry/Quantum/SplitCliffordAtom.lean'
+      - 'lean/InfoGeometry/Singular/Drazin.lean'
+      - 'lean/InfoGeometry/Singular/MoorePenrose.lean'
+      - 'lean/InfoGeometry/Thermo/BilinearMetriplecticReduction.lean'
+      - 'lean/InfoGeometry/Thermo/GenericMetriplecticFlow.lean'
+      - 'lean/InfoGeometry/Topological/StabilizerAnomalies.lean'
+      - 'lean/InfoGeometry/Volume/Base.lean'
+      - 'lean/InfoGeometry/Volume/ConnesCocycle.lean'
+      - 'lean/InfoGeometry/Volume/LogPotential.lean'
+      - 'lean/InfoGeometry/Volume/RadonNikodym.lean'
+      - 'tools/build_lock.py'
+      - 'tools/pathing.py'
+      - 'tools/quality/audit_constructivity.py'
+      - 'tools/quality/common.py'
+      - 'scripts/quality/quarantine_manifest.txt'
+      - 'lean/InfoGeometry/Unstable/Quarantine.lean'
+      - 'tools/quality/check_clifford_dirac.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/semantic_content_audit.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: real-dirac-casimir-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      # This public source checkout avoids recursive submodule auth cleanup.
+      # github.sha preserves pull-request merge-commit verification.
+      - name: Fetch and verify the exact source commit
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+          SOURCE_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          test ! -e project
+          git init project
+          git -C project remote add origin "https://github.com/${SOURCE_REPO}.git"
+          git -C project fetch --no-tags --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          actual_rev="$(git -C project rev-parse HEAD)"
+          if [ "$actual_rev" != "$SOURCE_REV" ]; then
+            echo 'Source checkout differs from the requested workflow commit' >&2
+            exit 1
+          fi
+      - name: Read exact dependency pins
+        id: pins
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          manifest = json.loads(Path('project/lake-manifest.json').read_text())
+          revision = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'mathlib={revision}\n')
+          PY
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: ${{ steps.pins.outputs.mathlib }}
+          path: mathlib
+          persist-credentials: false
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            mathlib/.lake
+          key: real-dirac-casimir-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Fetch the pinned native import cache
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('project').resolve()))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          targets = [
+              'InfoGeometry.Canonical.HestenesNativeDiracCurrent',
+              'InfoGeometry.Thermo.BilinearMetriplecticReduction',
+              'InfoGeometry.Clifford.Cl55MetriplecticReduction',
+          ]
+          _, _, native = closure(Path('project'), targets)
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'real-dirac-casimir-cache') as lock:
+              subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
+                  cwd='mathlib', check=True, pass_fds=(lock.fileno(),))
+          PY
+      - name: Compile selected source closure and audit every owned declaration
+        working-directory: project
+        run: |
+          python3 tools/quality/check_clifford_dirac.py \
+            --mathlib-root ../mathlib --output ../real-dirac-casimir-report \
+            --target InfoGeometry.Canonical.HestenesNativeDiracCurrent \
+            --target InfoGeometry.Thermo.BilinearMetriplecticReduction \
+            --target InfoGeometry.Clifford.Cl55MetriplecticReduction
+      - name: Require warning-free selected owners
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('real-dirac-casimir-report/report.json').read_text())
+          assert report['status'] == 'passed', report['status']
+          selected = set(report['targets'])
+          rows = [row for row in report['modules'] if row['module'] in selected]
+          assert {row['module'] for row in rows} == selected
+          assert all(row['returncode'] == 0 and row['warnings'] == 0 for row in rows), rows
+          PY
+      - name: Check selected semantic content
+        working-directory: project
+        run: |
+          python3 tools/quality/semantic_content_audit.py \
+            --module-prefix InfoGeometry.Canonical.HestenesNativeDiracCurrent \
+            --module-prefix InfoGeometry.Thermo.BilinearMetriplecticReduction \
+            --module-prefix InfoGeometry.Clifford.Cl55MetriplecticReduction \
+            --include-review --gate \
+            --json-out ../real-dirac-casimir-report/semantic-content.json \
+            --md-out ../real-dirac-casimir-report/semantic-content.md
+      - name: Preserve native verification evidence
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: real-dirac-casimir-kernel-evidence
+          path: |
+            real-dirac-casimir-report/report.json
+            real-dirac-casimir-report/evidence-sha256.json
+            real-dirac-casimir-report/src/CliffordDiracAudit.lean
+            real-dirac-casimir-report/*.log
+            real-dirac-casimir-report/semantic-content.*
+          if-no-files-found: warn

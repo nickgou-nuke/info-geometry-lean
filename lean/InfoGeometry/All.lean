@@ -30,6 +30,10 @@ import InfoGeometry.Analysis.SchwartzUncertainty
 import InfoGeometry.Analysis.ProjectedGramDissipation
 import InfoGeometry.Analysis.SplitOctonionProjectedGram
 import InfoGeometry.Canonical.CliffordPeirceWalshAudit
+import InfoGeometry.OperatorAlgebra.MaxRelativeEntropy
+import InfoGeometry.Quantum.PositiveEffectOrder
+import InfoGeometry.Quantum.MaxRelativeEntropy
+import InfoGeometry.Quantum.MaxRelativeEntropyQubit
 import InfoGeometry.OperatorAlgebra.IsometryCornerLocalization
 import InfoGeometry.Clifford.WeylFrameMasks
 import InfoGeometry.Analysis.MetricPorosity

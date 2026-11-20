@@ -446,6 +446,134 @@ graded-tensored with the native product of the other two matrix factors. -/
 abbrev realThreeMatrixGradedTensor :=
   CliffordAlgebra.evenOdd q11 ᵍ⊗[ℝ] twoMatrixProductGrading
 
+/-! ### The Minkowski two-factor algebra inside the three-mode CAR algebra
+
+The two-factor soldering algebra is `Cl(1,1) ᵍ⊗ M₂(ℝ)`.  In the
+three-mode algebra, its second matrix factor is the first factor of the
+two-mode tail.  This inclusion is made with the graded tensor universal
+property, so the factor maps must preserve the owner gradings; it is not the
+diagonal action on the two Krein sheets. -/
+
+private theorem twoMatrixIncludeLeft_preservesGrading {i : ZMod 2}
+    {A : M2R} (hA : A ∈ matrixGrading i) :
+    GradedTensorProduct.includeLeft matrixGrading matrixGrading A ∈
+      twoMatrixProductGrading i := by
+  have hcases : i = 0 ∨ i = 1 := by
+    clear hA
+    revert i
+    decide
+  rcases hcases with hi | hi
+  · subst i
+    change twoMatrixParity (GradedTensorProduct.includeLeft matrixGrading matrixGrading A) = _
+    have hA' : matrixGrade (RingEquiv.refl ℝ) A = A := by
+      change matrixParity A = A at hA
+      simpa [matrixParity, InfoGeometry.Clifford.Cl11GradedTensorMorita.matrixAlgGrade] using hA
+    have hmorita : twoMatrixGradedTensorMoritaEquiv
+        (GradedTensorProduct.includeLeft matrixGrading matrixGrading A) =
+        head (A := M2R) (cl11StandardEquiv.symm A) := by
+      rw [GradedTensorProduct.includeLeft_apply,
+        twoMatrixGradedTensorMoritaEquiv_tmul, tensorMatrixEquiv_head]
+    have hhead (x : CliffordAlgebra q11) :
+        matrixGrade matrixParity.toRingEquiv (head (A := M2R) x) =
+          head (A := M2R) (CliffordAlgebra.involute x) := by
+      ext a b c d
+      have hg := cl11StandardEquiv_grade x
+      change cl11StandardEquiv (CliffordAlgebra.involute x) = _ at hg
+      fin_cases a <;> fin_cases b <;> fin_cases c <;> fin_cases d <;>
+        simp [InfoGeometry.OperatorAlgebra.GradedMatrixMorita.matrixGrade_apply,
+          head_apply, hg]
+    have hx : CliffordAlgebra.involute (cl11StandardEquiv.symm A) =
+        cl11StandardEquiv.symm A := by
+      apply cl11StandardEquiv.injective
+      have hg := cl11StandardEquiv_grade (cl11StandardEquiv.symm A)
+      rw [AlgEquiv.apply_symm_apply] at hg
+      calc
+        cl11StandardEquiv (CliffordAlgebra.involute (cl11StandardEquiv.symm A)) =
+            matrixGrade (RingEquiv.refl ℝ) A := hg
+        _ = A := hA'
+        _ = cl11StandardEquiv (cl11StandardEquiv.symm A) := by simp
+    apply twoMatrixGradedTensorMoritaEquiv.injective
+    rw [twoMatrixParity_apply, hmorita, hhead, hx]
+  · subst i
+    change twoMatrixParity (GradedTensorProduct.includeLeft matrixGrading matrixGrading A) = _
+    have hA' : matrixGrade (RingEquiv.refl ℝ) A = -A := by
+      change matrixParity A = -A at hA
+      simpa [matrixParity, InfoGeometry.Clifford.Cl11GradedTensorMorita.matrixAlgGrade] using hA
+    have hmorita : twoMatrixGradedTensorMoritaEquiv
+        (GradedTensorProduct.includeLeft matrixGrading matrixGrading A) =
+        head (A := M2R) (cl11StandardEquiv.symm A) := by
+      rw [GradedTensorProduct.includeLeft_apply,
+        twoMatrixGradedTensorMoritaEquiv_tmul, tensorMatrixEquiv_head]
+    have hhead (x : CliffordAlgebra q11) :
+        matrixGrade matrixParity.toRingEquiv (head (A := M2R) x) =
+          head (A := M2R) (CliffordAlgebra.involute x) := by
+      ext a b c d
+      have hg := cl11StandardEquiv_grade x
+      change cl11StandardEquiv (CliffordAlgebra.involute x) = _ at hg
+      fin_cases a <;> fin_cases b <;> fin_cases c <;> fin_cases d <;>
+        simp [InfoGeometry.OperatorAlgebra.GradedMatrixMorita.matrixGrade_apply,
+          head_apply, hg]
+    have hx : CliffordAlgebra.involute (cl11StandardEquiv.symm A) =
+        -cl11StandardEquiv.symm A := by
+      apply cl11StandardEquiv.injective
+      have hg := cl11StandardEquiv_grade (cl11StandardEquiv.symm A)
+      rw [AlgEquiv.apply_symm_apply] at hg
+      calc
+        cl11StandardEquiv (CliffordAlgebra.involute (cl11StandardEquiv.symm A)) =
+            matrixGrade (RingEquiv.refl ℝ) A := hg
+        _ = -A := hA'
+        _ = cl11StandardEquiv (-cl11StandardEquiv.symm A) := by simp
+    apply twoMatrixGradedTensorMoritaEquiv.injective
+    rw [twoMatrixParity_apply, hmorita, hhead, hx]
+    simp only [map_neg, hmorita]
+
+/-- The genuine graded algebra map from the real two-factor Hestenes
+`Cl(1,1) ᵍ⊗ M₂(ℝ)` carrier into the first two modes of the three-factor CAR
+algebra.  The second factor is included as the first factor of the graded
+two-matrix tail. -/
+noncomputable def realHestenesTwoFactorIntoThreeMode :
+    (CliffordAlgebra.evenOdd q11 ᵍ⊗[ℝ] matrixGrading) →ₐ[ℝ]
+      realThreeMatrixGradedTensor :=
+  gradedTensorMapAlgHom (CliffordAlgebra.evenOdd q11) matrixGrading
+    (CliffordAlgebra.evenOdd q11) twoMatrixProductGrading
+    (AlgHom.id ℝ (CliffordAlgebra q11))
+    (GradedTensorProduct.includeLeft matrixGrading matrixGrading)
+    (fun _ a ha => by simpa using ha)
+    (fun j b hb => twoMatrixIncludeLeft_preservesGrading hb)
+
+@[simp] theorem realHestenesTwoFactorIntoThreeMode_tmul
+    (x : CliffordAlgebra q11) (A : M2R) :
+    realHestenesTwoFactorIntoThreeMode (x ᵍ⊗ₜ[ℝ] A) =
+      x ᵍ⊗ₜ[ℝ] (GradedTensorProduct.includeLeft matrixGrading matrixGrading A) := by
+  change gradedTensorMapAlgHom
+    (CliffordAlgebra.evenOdd q11) matrixGrading
+    (CliffordAlgebra.evenOdd q11) twoMatrixProductGrading
+    (AlgHom.id ℝ (CliffordAlgebra q11))
+    (GradedTensorProduct.includeLeft matrixGrading matrixGrading)
+    (fun _ a ha => by simpa using ha)
+    (fun _ b hb => twoMatrixIncludeLeft_preservesGrading hb)
+    (x ᵍ⊗ₜ[ℝ] A) = _
+  rw [gradedTensorMapAlgHom_tmul]
+  rfl
+
+/-- The actual Koszul-graded product of the two real checkerboard-graded
+`2 × 2` matrix factors embeds into the three-mode CAR algebra.  Its first
+factor is identified with the real `Cl(1,1)` Pauli factor by the existing
+grading-preserving equivalence; its second factor is included into the first
+factor of the existing two-matrix tail. -/
+noncomputable def realTwoMatrixPairIntoThreeMode : twoMatrixGradedTensor →ₐ[ℝ]
+    realThreeMatrixGradedTensor :=
+  realHestenesTwoFactorIntoThreeMode.comp
+    twoMatrixGradedTensorToCl11Tensor.toAlgHom
+
+@[simp] theorem realTwoMatrixPairIntoThreeMode_tmul
+    (A B : M2R) :
+    realTwoMatrixPairIntoThreeMode (A ᵍ⊗ₜ[ℝ] B) =
+      (cl11StandardEquiv.symm A) ᵍ⊗ₜ[ℝ]
+        GradedTensorProduct.includeLeft matrixGrading matrixGrading B := by
+  simp [realTwoMatrixPairIntoThreeMode,
+    twoMatrixGradedTensorToCl11Tensor_tmul]
+
 /-- The three-factor graded Morita representation on `M₂(M₂(M₂(ℝ)))`.
 The coefficient parity is the product parity above, so the final mode carries
 the two preceding Jordan--Wigner signs. -/
@@ -534,6 +662,75 @@ def realThreeAnnihilationTail : realThreeMatrixGradedTensor :=
 algebra. -/
 def realThreeCreationTail : realThreeMatrixGradedTensor :=
   (1 : CliffordAlgebra q11) ᵍ⊗ₜ[ℝ] creation₁
+
+/-- The second real M₂ factor of the Hestenes carrier is the middle CAR
+mode of the three-factor Koszul product. -/
+theorem realHestenesTwoFactorIntoThreeMode_annihilationMiddle :
+    realHestenesTwoFactorIntoThreeMode
+        ((1 : CliffordAlgebra q11) ᵍ⊗ₜ[ℝ] matrixE01) =
+      realThreeAnnihilationMiddle := by
+  rw [realHestenesTwoFactorIntoThreeMode_tmul,
+    GradedTensorProduct.includeLeft_apply]
+  rfl
+
+/-- The creator in the second real M₂ factor maps to the owned middle CAR
+creator, with the graded tensor product retaining its Koszul sign. -/
+theorem realHestenesTwoFactorIntoThreeMode_creationMiddle :
+    realHestenesTwoFactorIntoThreeMode
+        ((1 : CliffordAlgebra q11) ᵍ⊗ₜ[ℝ] matrixE10) =
+      realThreeCreationMiddle := by
+  rw [realHestenesTwoFactorIntoThreeMode_tmul,
+    GradedTensorProduct.includeLeft_apply]
+  rfl
+
+/-- The Hestenes `Cl(1,1)` head generator is the first CAR mode after the
+graded factor inclusion. -/
+theorem realHestenesTwoFactorIntoThreeMode_annihilationHead :
+    realHestenesTwoFactorIntoThreeMode
+        (headUnit 0 1 ᵍ⊗ₜ[ℝ] (1 : M2R)) =
+      realThreeAnnihilationHead := by
+  rw [realHestenesTwoFactorIntoThreeMode_tmul]
+  change headUnit 0 1 ᵍ⊗ₜ[ℝ]
+    GradedTensorProduct.includeLeft matrixGrading matrixGrading (1 : M2R) = _
+  rw [map_one]
+  unfold realThreeAnnihilationHead
+  rfl
+
+/-- The Hestenes head creator is the first CAR creator under the same
+graded factor inclusion. -/
+theorem realHestenesTwoFactorIntoThreeMode_creationHead :
+    realHestenesTwoFactorIntoThreeMode
+        (headUnit 1 0 ᵍ⊗ₜ[ℝ] (1 : M2R)) =
+      realThreeCreationHead := by
+  rw [realHestenesTwoFactorIntoThreeMode_tmul]
+  change headUnit 1 0 ᵍ⊗ₜ[ℝ]
+    GradedTensorProduct.includeLeft matrixGrading matrixGrading (1 : M2R) = _
+  rw [map_one]
+  unfold realThreeCreationHead
+  rfl
+
+/-- The first matrix factor's annihilation unit is the first CAR mode under
+the genuine two-real-matrix graded inclusion. -/
+theorem realTwoMatrixPairIntoThreeMode_annihilation₀ :
+    realTwoMatrixPairIntoThreeMode annihilation₀ =
+      realThreeAnnihilationHead := by
+  rw [annihilation₀, realTwoMatrixPairIntoThreeMode_tmul]
+  have hleft : cl11StandardEquiv.symm matrixE01 = headUnit 0 1 := rfl
+  have hright : GradedTensorProduct.includeLeft matrixGrading matrixGrading
+      (1 : M2R) = (1 : twoMatrixGradedTensor) := map_one _
+  rw [hleft, hright]
+  unfold realThreeAnnihilationHead
+  rfl
+
+/-- The second matrix factor's annihilation unit is the middle CAR mode;
+the Koszul grading is the one used by the existing three-mode CAR owner. -/
+theorem realTwoMatrixPairIntoThreeMode_annihilation₁ :
+    realTwoMatrixPairIntoThreeMode annihilation₁ =
+      realThreeAnnihilationMiddle := by
+  rw [annihilation₁, realTwoMatrixPairIntoThreeMode_tmul,
+    map_one, GradedTensorProduct.includeLeft_apply]
+  unfold realThreeAnnihilationMiddle
+  rfl
 
 /-- The second-site CAR is retained in the represented three-factor algebra.
 The proof inspects both diagonal blocks of the graded Morita image. -/

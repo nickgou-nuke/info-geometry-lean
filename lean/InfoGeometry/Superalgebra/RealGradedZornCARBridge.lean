@@ -26,6 +26,9 @@ open InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge
 open InfoGeometry.Canonical.RealSolderingWeylKreinBridge
 open InfoGeometry.Krein.SplitOctonionZornRegularH4Bridge
 open InfoGeometry.Superalgebra.PeirceDeWittZornQuantization
+open InfoGeometry.Canonical.SplitOctonionCARBdGRegularLift
+open InfoGeometry.Canonical.SplitOctonionExteriorRightRegularBdGIntertwiner
+open InfoGeometry.Lie.SplitOctonionEllPolarization
 
 local notation "SZ" => ZornAlgebra ℝ
 
@@ -73,5 +76,101 @@ theorem threeMode_supercolor_root_CAR (i : Fin 3) :
   simp_rw [supercolorRightRegularInThreeMode_canonical]
   simp only [realThreeMatrixTensorOnH4.apply_symm_apply]
   exact InfoGeometry.Krein.SplitOctonionZornRegularH4Bridge.rightRegularOnDoubleKrein_root_CAR i
+
+set_option maxRecDepth 4096
+/-- The real three-factor Koszul tensor, the exterior-Fock action, and the
+Peirce-supercolor right-regular action agree on each positive circular root.
+This composes the matrix representation and the Fock/Zorn equivalence; it
+does not identify either associative operator product with the nonassociative
+Zorn product. -/
+theorem threeMode_supercolor_rootPlus_intertwines_exterior
+    (i : Fin 3)
+    (ψ : InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge.Exterior3) :
+    realThreeMatrixTensorOnH4
+        (supercolorRightRegularInThreeMode
+          (canonicalZornToSupercolor (rootPlus i)))
+        (realThreeExteriorToH4 ψ) =
+      realThreeExteriorToH4
+        (InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge.exteriorWedge3
+          (modeVector i) ψ) := by
+  have h := threeMode_supercolor_rightRegular_action
+    (canonicalZornToSupercolor (rootPlus i))
+    (canonicalZornToSupercolor (fockBdGEquiv ψ))
+  have hx : supercolorToCanonicalZorn (canonicalZornToSupercolor (rootPlus i)) =
+      rootPlus i := supercolorToCanonicalZorn_canonical _
+  have hy : supercolorToDoubleKrein (canonicalZornToSupercolor (fockBdGEquiv ψ)) =
+      realThreeExteriorToH4 ψ := by
+    rw [supercolorToDoubleKrein_apply, supercolorToCanonicalZorn_canonical]
+    rfl
+  have hFock := rightRegularOnDoubleKrein_intertwines_fock i ψ
+  calc
+    realThreeMatrixTensorOnH4
+        (supercolorRightRegularInThreeMode
+          (canonicalZornToSupercolor (rootPlus i)))
+        (realThreeExteriorToH4 ψ) =
+      realThreeMatrixTensorOnH4
+        (supercolorRightRegularInThreeMode
+          (canonicalZornToSupercolor (rootPlus i)))
+        (supercolorToDoubleKrein (canonicalZornToSupercolor (fockBdGEquiv ψ))) := by
+          rw [hy]
+    _ = supercolorToDoubleKrein
+          (ZornAlgebra.mul (canonicalZornToSupercolor (fockBdGEquiv ψ))
+            (canonicalZornToSupercolor (rootPlus i))) := h
+    _ = rightRegularOnDoubleKrein (rootPlus i) (realThreeExteriorToH4 ψ) := by
+          rw [supercolor_rightRegular_action, hx, hy]
+    _ = zornToDoubleKrein
+          (fockBdGEquiv
+            (InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge.exteriorWedge3
+              (modeVector i) ψ)) := hFock
+    _ = realThreeExteriorToH4
+          (InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge.exteriorWedge3
+            (modeVector i) ψ) := rfl
+
+/-- The negative circular root acts as exterior contraction through the same
+real Koszul-graded three-factor representation. Thus the Zorn root pair and
+the real exterior creation/annihilation pair are identified as operators on
+the shared doubled-Krein carrier. -/
+theorem threeMode_supercolor_rootMinus_intertwines_exterior
+    (i : Fin 3)
+    (ψ : InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge.Exterior3) :
+    realThreeMatrixTensorOnH4
+        (supercolorRightRegularInThreeMode
+          (canonicalZornToSupercolor (rootMinus i)))
+        (realThreeExteriorToH4 ψ) =
+      realThreeExteriorToH4
+        (InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge.exteriorContract3
+          (modeCovector i) ψ) := by
+  have h := threeMode_supercolor_rightRegular_action
+    (canonicalZornToSupercolor (rootMinus i))
+    (canonicalZornToSupercolor (fockBdGEquiv ψ))
+  have hx : supercolorToCanonicalZorn (canonicalZornToSupercolor (rootMinus i)) =
+      rootMinus i := supercolorToCanonicalZorn_canonical _
+  have hy : supercolorToDoubleKrein (canonicalZornToSupercolor (fockBdGEquiv ψ)) =
+      realThreeExteriorToH4 ψ := by
+    rw [supercolorToDoubleKrein_apply, supercolorToCanonicalZorn_canonical]
+    rfl
+  have hFock := rightRegularOnDoubleKrein_intertwines_fock_annihilation i ψ
+  calc
+    realThreeMatrixTensorOnH4
+        (supercolorRightRegularInThreeMode
+          (canonicalZornToSupercolor (rootMinus i)))
+        (realThreeExteriorToH4 ψ) =
+      realThreeMatrixTensorOnH4
+        (supercolorRightRegularInThreeMode
+          (canonicalZornToSupercolor (rootMinus i)))
+        (supercolorToDoubleKrein (canonicalZornToSupercolor (fockBdGEquiv ψ))) := by
+          rw [hy]
+    _ = supercolorToDoubleKrein
+          (ZornAlgebra.mul (canonicalZornToSupercolor (fockBdGEquiv ψ))
+            (canonicalZornToSupercolor (rootMinus i))) := h
+    _ = rightRegularOnDoubleKrein (rootMinus i) (realThreeExteriorToH4 ψ) := by
+          rw [supercolor_rightRegular_action, hx, hy]
+    _ = zornToDoubleKrein
+          (fockBdGEquiv
+            (InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge.exteriorContract3
+              (modeCovector i) ψ)) := hFock
+    _ = realThreeExteriorToH4
+          (InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge.exteriorContract3
+            (modeCovector i) ψ) := rfl
 
 end InfoGeometry.Superalgebra.RealGradedZornCARBridge

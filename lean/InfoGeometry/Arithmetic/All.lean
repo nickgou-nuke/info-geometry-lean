@@ -32,6 +32,10 @@ import InfoGeometry.Arithmetic.RiemannApolloniusVectorFields
 import InfoGeometry.Arithmetic.LongPrimeGapsPrimonEnergyBridge
 import InfoGeometry.Arithmetic.LongPrimeGapsPrimonEnergyAudit
 import InfoGeometry.Arithmetic.KreinCenteredXiGlideBridge
+import InfoGeometry.Arithmetic.FiniteSmoothedMangoldt
+import InfoGeometry.Arithmetic.CenteredSmoothedMangoldt
+import InfoGeometry.Arithmetic.FiniteSmoothedMangoldtMellin
+import InfoGeometry.Arithmetic.MertensMellinRiemannHypothesis
 
 namespace InfoGeometry.Arithmetic.All
 

@@ -1,0 +1,96 @@
+name: Native Riemann arithmetic and operator routes
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Arithmetic/**'
+      - 'lean/InfoGeometry/Analysis/MulLogInterpolation.lean'
+      - 'lean/InfoGeometry/Analysis/SmoothedMellinKernel.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/RealSkewDomainResidual.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/UnboundedHilbertResidual.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/UnboundedHilbertResolventAndC0GroupWitness.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'verification/riemann-routes/**'
+      - 'verification/real-matrix-split/audit.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/pathing.py'
+      - '.github/workflows/riemann-routes.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: riemann-routes-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Record checked revision
+        run: |
+          git rev-parse HEAD > riemann-routes-revision.log
+          git rev-parse 'HEAD^{tree}' >> riemann-routes-revision.log
+      - name: Restore pinned dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: riemann-routes-deps-lean4341-d13f23b7-${{ runner.os }}-v1
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.34.1
+      - name: Retrieve pinned Mathlib artifacts
+        run: python3 verification/riemann-routes/check.py exe cache get
+      - name: Check source inventory and dependency pins
+        run: python3 verification/riemann-routes/audit.py
+      - name: Compile the focused dependency closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/riemann-routes/check.py build 2>&1 | tee riemann-routes-build.log
+      - name: Check selected owners with warnings as errors
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' 2>&1 | tee riemann-routes-fresh.log
+          import importlib.util
+          import subprocess
+          from pathlib import Path
+          spec = importlib.util.spec_from_file_location("routes_audit", "verification/riemann-routes/audit.py")
+          audit = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(audit)
+          for owner in audit.OWNERS:
+              source = Path("lean") / (owner.replace(".", "/") + ".lean")
+              subprocess.run(["python3", "verification/riemann-routes/check.py", "env", "lean",
+                              "-DwarningAsError=true", str(source)], check=True)
+          PY
+      - name: Check fresh axiom reports
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/riemann-routes/check.py env lean -DwarningAsError=true lean/InfoGeometry/Arithmetic/RiemannRoutesAudit.lean 2>&1 | tee riemann-routes-axioms.log
+          python3 verification/riemann-routes/audit.py --log riemann-routes-axioms.log
+      - name: Preserve validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: riemann-routes-validation
+          path: |
+            riemann-routes-revision.log
+            riemann-routes-build.log
+            riemann-routes-fresh.log
+            riemann-routes-axioms.log

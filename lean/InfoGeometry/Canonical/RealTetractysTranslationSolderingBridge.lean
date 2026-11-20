@@ -1379,4 +1379,138 @@ theorem realMajoranaSpaceMiddle_timeTail_anticommute :
   · simp
   · simp
   · simpa [Matrix.mul_apply, Fin.sum_univ_two] using hparMap
+
+/-! ### Real Minkowski-vector Clifford contraction
+
+The CAR construction above supplies a genuine four-generator real
+`Cl(1,3)` frame inside the three-factor Koszul-graded matrix algebra.  The
+following contraction puts every vector of the already-owned real spacetime
+carrier into that algebra.  Its square is the Minkowski interval; this is a
+representation-level Clifford statement, not a claim that the complex
+`ChiralOperatorPresentation` contains these generators. -/
+
+private lemma realSmul_mul_realSmul {A : Type*} [Ring A] [Algebra ℝ A]
+    (r s : ℝ) (a b : A) :
+    (r • a) * (s • b) = (r * s) • (a * b) := by
+  simp only [smul_mul_assoc, mul_smul_comm, smul_smul]
+  rw [mul_comm s r]
+
+private lemma realSmul_anticommute {A : Type*} [Ring A] [Algebra ℝ A]
+    {a b : A} (hab : a * b + b * a = 0) (r s : ℝ) :
+    (r • a) * (s • b) + (s • b) * (r • a) = 0 := by
+  rw [realSmul_mul_realSmul, realSmul_mul_realSmul, mul_comm s r,
+    ← smul_add, hab, smul_zero]
+
+private lemma square_add_of_anticommute {A : Type*} [Ring A]
+    {a b : A} (hab : a * b + b * a = 0) :
+    (a + b) * (a + b) = a * a + b * b := by
+  calc
+    (a + b) * (a + b) = a * a + (a * b + b * a) + b * b := by noncomm_ring
+    _ = a * a + b * b := by rw [hab]; simp
+
+/-- Real Minkowski momentum contracted with the four Majorana generators
+inside the native three-mode Koszul-graded tensor.  Coordinates use the
+owner's `(t,x,y,z)` and `(+---)` conventions. -/
+def realMinkowskiMajorana
+    (X : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+    InfoGeometry.Canonical.RealSolderingWeylKreinBridge.realThreeMatrixGradedTensor :=
+  X.t • realMajoranaTimeHead + X.x • realMajoranaSpaceHead +
+    X.y • realMajoranaSpaceMiddle + X.z • realMajoranaSpaceTail
+
+/-- The real Majorana contraction obeys the Clifford quadratic relation
+`c(X)^2 = (t²-x²-y²-z²)·1` on the actual three-factor graded matrix algebra. -/
+theorem realMinkowskiMajorana_square
+    (X : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+    realMinkowskiMajorana X * realMinkowskiMajorana X =
+      InfoGeometry.Canonical.RealSpacetime4x4Closure.interval X •
+        (1 : InfoGeometry.Canonical.RealSolderingWeylKreinBridge.realThreeMatrixGradedTensor) := by
+  let γ₀ := realMajoranaTimeHead
+  let γ₁ := realMajoranaSpaceHead
+  let γ₂ := realMajoranaSpaceMiddle
+  let γ₃ := realMajoranaSpaceTail
+  let d₀ := X.t • γ₀
+  let d₁ := X.x • γ₁
+  let d₂ := X.y • γ₂
+  let d₃ := X.z • γ₃
+  have h01 : d₀ * d₁ + d₁ * d₀ = 0 :=
+    by simpa [d₀, d₁, γ₀, γ₁] using
+      realSmul_anticommute realMajoranaHead_splitClifford_relations.2.2 X.t X.x
+  have h02 : d₀ * d₂ + d₂ * d₀ = 0 :=
+    by simpa [d₀, d₂, γ₀, γ₂] using
+      realSmul_anticommute realMajoranaHead_middle_cross_anticommutators.1 X.t X.y
+  have h03 : d₀ * d₃ + d₃ * d₀ = 0 :=
+    by simpa [d₀, d₃, γ₀, γ₃] using
+      realSmul_anticommute realMajoranaHead_tail_cross_anticommutators.2.1 X.t X.z
+  have h12 : d₁ * d₂ + d₂ * d₁ = 0 :=
+    by simpa [d₁, d₂, γ₁, γ₂] using
+      realSmul_anticommute realMajoranaHead_middle_cross_anticommutators.2.2 X.x X.y
+  have h13 : d₁ * d₃ + d₃ * d₁ = 0 :=
+    by simpa [d₁, d₃, γ₁, γ₃] using
+      realSmul_anticommute realMajoranaHead_tail_cross_anticommutators.2.2.2 X.x X.z
+  have h23 : d₂ * d₃ + d₃ * d₂ = 0 :=
+    by simpa [d₂, d₃, γ₂, γ₃] using
+      realSmul_anticommute realMajoranaSpaceMiddle_spaceTail_anticommute X.y X.z
+  have h0123 : (d₀ + d₁ + d₂) * d₃ + d₃ * (d₀ + d₁ + d₂) = 0 := by
+    calc
+      _ = (d₀ * d₃ + d₃ * d₀) + (d₁ * d₃ + d₃ * d₁) +
+          (d₂ * d₃ + d₃ * d₂) := by noncomm_ring
+      _ = 0 := by rw [h03, h13, h23]; simp
+  have h012 : (d₀ + d₁) * d₂ + d₂ * (d₀ + d₁) = 0 := by
+    calc
+      _ = (d₀ * d₂ + d₂ * d₀) + (d₁ * d₂ + d₂ * d₁) := by noncomm_ring
+      _ = 0 := by rw [h02, h12]; simp
+  have h00 : d₀ * d₀ = (X.t ^ 2) • (1 : _ ) := by
+    dsimp [d₀, γ₀]
+    rw [realSmul_mul_realSmul, realMajorana_minkowski_diagonal_squares.1]
+    simp [pow_two]
+  have h11 : d₁ * d₁ = (-(X.x ^ 2)) • (1 : _ ) := by
+    dsimp [d₁, γ₁]
+    rw [realSmul_mul_realSmul, realMajorana_minkowski_diagonal_squares.2.1]
+    simp [pow_two]
+  have h22 : d₂ * d₂ = (-(X.y ^ 2)) • (1 : _ ) := by
+    dsimp [d₂, γ₂]
+    rw [realSmul_mul_realSmul, realMajorana_minkowski_diagonal_squares.2.2.1]
+    simp [pow_two]
+  have h33 : d₃ * d₃ = (-(X.z ^ 2)) • (1 : _ ) := by
+    dsimp [d₃, γ₃]
+    rw [realSmul_mul_realSmul, realMajorana_minkowski_diagonal_squares.2.2.2]
+    simp [pow_two]
+  have h01sq : (d₀ + d₁) * (d₀ + d₁) = d₀ * d₀ + d₁ * d₁ :=
+    square_add_of_anticommute h01
+  have h012sq : (d₀ + d₁ + d₂) * (d₀ + d₁ + d₂) =
+      d₀ * d₀ + d₁ * d₁ + d₂ * d₂ := by
+    rw [square_add_of_anticommute h012, h01sq]
+  calc
+    realMinkowskiMajorana X * realMinkowskiMajorana X =
+        (d₀ + d₁ + d₂ + d₃) * (d₀ + d₁ + d₂ + d₃) := by
+      simp [realMinkowskiMajorana, d₀, d₁, d₂, d₃, γ₀, γ₁, γ₂, γ₃]
+    _ = (d₀ + d₁ + d₂) * (d₀ + d₁ + d₂) + d₃ * d₃ :=
+      square_add_of_anticommute h0123
+    _ = d₀ * d₀ + d₁ * d₁ + d₂ * d₂ + d₃ * d₃ := by rw [h012sq]
+    _ = InfoGeometry.Canonical.RealSpacetime4x4Closure.interval X •
+          (1 : InfoGeometry.Canonical.RealSolderingWeylKreinBridge.realThreeMatrixGradedTensor) := by
+      rw [h00, h11, h22, h33]
+      simp [InfoGeometry.Canonical.RealSpacetime4x4Closure.interval,
+        sub_eq_add_neg, add_smul]
+
+/-- On the actual three-mode doubled-Krein carrier, the represented real
+Majorana contraction has square equal to the Minkowski interval times the
+identity endomorphism. This is the carrier-level form of the preceding
+graded-tensor Clifford relation. -/
+theorem realMinkowskiMajorana_onKrein_square
+    (X : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+    realThreeMatrixTensorOnH4 (realMinkowskiMajorana X) *
+        realThreeMatrixTensorOnH4 (realMinkowskiMajorana X) =
+      InfoGeometry.Canonical.RealSpacetime4x4Closure.interval X •
+        (1 : Module.End ℝ
+          InfoGeometry.Canonical.RealDoubledChiralKreinFrame.KreinFrame4) := by
+  calc
+    _ = realThreeMatrixTensorOnH4
+        (realMinkowskiMajorana X * realMinkowskiMajorana X) := by
+      rw [map_mul]
+    _ = realThreeMatrixTensorOnH4
+        (InfoGeometry.Canonical.RealSpacetime4x4Closure.interval X • (1 : _)) :=
+      congrArg realThreeMatrixTensorOnH4 (realMinkowskiMajorana_square X)
+    _ = _ := by simp
+
 end InfoGeometry.Canonical.RealTetractysTranslationSolderingBridge

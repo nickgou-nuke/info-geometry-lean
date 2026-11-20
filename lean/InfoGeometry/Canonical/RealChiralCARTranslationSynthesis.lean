@@ -59,7 +59,7 @@ theorem diagonalMomentumOperator_unitTime :
 /-- The three-mode doubled-Krein representation of unit-time diagonal
 momentum is the identity operator. -/
 theorem realThreeKrein_unitTimeMomentum_is_one :
-    realThreeMatrixTensorOnH4 (twoModeIntoThreeMode
+    realThreeMatrixTensorOnH4 (realTwoMatrixPairIntoThreeMode
       (twoMatrixGradedTensorMoritaEquiv.symm
         (diagonalMomentumOperator unitTimeMomentum))) = 1 := by
   rw [diagonalMomentumOperator_unitTime]
@@ -86,15 +86,15 @@ theorem circularRootCAR_matches_unitTime_translation (i : Fin 3) :
           (supercolorRightRegularInThreeMode
             (canonicalZornToSupercolor (rootMinus i))) =
       realThreeMatrixTensorOnH4
-          (twoModeIntoThreeMode (translationInGradedTensor unitTimeMomentum)) *
+          (realTwoMatrixPairIntoThreeMode (translationInGradedTensor unitTimeMomentum)) *
         realThreeMatrixTensorOnH4
-          (twoModeIntoThreeMode conjugatePeirceCharge) +
+          (realTwoMatrixPairIntoThreeMode conjugatePeirceCharge) +
       realThreeMatrixTensorOnH4
-          (twoModeIntoThreeMode conjugatePeirceCharge) *
+          (realTwoMatrixPairIntoThreeMode conjugatePeirceCharge) *
         realThreeMatrixTensorOnH4
-          (twoModeIntoThreeMode (translationInGradedTensor unitTimeMomentum)) := by
+          (realTwoMatrixPairIntoThreeMode (translationInGradedTensor unitTimeMomentum)) := by
   rw [threeMode_supercolor_root_CAR i,
-    realThreeKrein_translationCharge_anticommutator_eq_diagonalMomentum,
+    realKrein_gradedPair_translationCharge_anticommutator_eq_diagonalMomentum,
     realThreeKrein_unitTimeMomentum_is_one]
 
 end InfoGeometry.Canonical.RealChiralCARTranslationSynthesis

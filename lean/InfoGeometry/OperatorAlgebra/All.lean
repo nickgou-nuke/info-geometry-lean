@@ -321,6 +321,8 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentCornerEndEquivalence
 import InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentMoritaD39Synthesis
 
 import InfoGeometry.OperatorAlgebra.PeirceDefectBoundaryAll
+import InfoGeometry.OperatorAlgebra.RealSkewDomainResidual
+import InfoGeometry.OperatorAlgebra.UnboundedHilbertResidual
 
 namespace InfoGeometry.OperatorAlgebra
 

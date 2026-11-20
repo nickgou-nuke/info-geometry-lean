@@ -1,0 +1,278 @@
+{
+  "schema_version": 1,
+  "task_id": "riemann-half-plane-reduction-20261120",
+  "status": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "base_commit": "586c14bc9fb94eb09b56f7dc850d9d5297269f91",
+  "checked_at_utc": "2026-11-20T17:20:56.476999+00:00",
+  "scope": "Nine explicit public declarations: reflection, RH/right-half-plane equivalence, conditional Dirichlet specialization, and elementary real exponent selection. External RH/GRH proof and nonvanishing premises remain unverified.",
+  "risk_labels": [
+    "R4: native analytic equivalence and conditional reduction",
+    "R5: external proof provenance and publication reporting"
+  ],
+  "counterexample_status": {
+    "status": "not_applicable",
+    "reason": "The native analytic equivalence is checked by proof elaboration and semantic review; finite sampling is not a verification method for these universal statements."
+  },
+  "environment": {
+    "lean": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+    "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+    "root_pins_changed": false,
+    "independent_checkout": true,
+    "shared_build_lock": true
+  },
+  "roles": {
+    "generation": [
+      "root",
+      "statement_audit"
+    ],
+    "independent_semantic_audit": {
+      "agent": "mathematical_audit",
+      "disposition": "PASS",
+      "status_tag": "audit_pass",
+      "source_sha256": "9615191aa9a52bd554c2a201fab76bb7b6439f113ac31edcfc0301ca7ceef99d",
+      "scope": "Read-only review of exact native RH target, nontrivial reflection, explicit premises, owner reuse, nine-head audit, focused package, workflow, and theorem contract. No compilation or source edits."
+    },
+    "independent_qa": {
+      "agent": "build_audit",
+      "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+      "inputs_unchanged_during_checks": true,
+      "started_utc": "2026-11-20T17:20:29.473711+00:00",
+      "finished_utc": "2026-11-20T17:20:56.476999+00:00",
+      "scope": "Reran every command recorded below against the final A-A-reviewed source, including the failing root integration command; no theorem or gate edits."
+    }
+  },
+  "source_sha256": {
+    "lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReduction.lean": "9615191aa9a52bd554c2a201fab76bb7b6439f113ac31edcfc0301ca7ceef99d",
+    "lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReductionAudit.lean": "966e45dc8ebd3ee2052af21aae4415f8880b6d8b6f9529cb29d717aaca617184",
+    "lean/InfoGeometry/Arithmetic/All.lean": "41edc31a3f5bb2af7c68307561b2377053ecebce3f6d339e452cc01cbcd02eae",
+    "docs/RIEMANN_HALF_PLANE_REDUCTION_CONTRACT.md": "5dab1121811f81ec0565c5764dc1ec57a7e108e2cd0399eb40be515c8557eb43",
+    "verification/riemann-half-plane/check.py": "c0271a0784e744442592500e0db9cd1f3864e17f8d930b263b6d0ba39584eb9c",
+    "verification/riemann-half-plane/audit.py": "483f456dfe1687f5d15ce1f27c25a26e97ecc3db8d4f87acd2aa3fd60f0dd2dd",
+    "verification/riemann-half-plane/lakefile.toml": "055e38a2363de7d3b5a6edbefd0a7b64ff3896ed93ed8df866a9ebcf986d7423",
+    "verification/riemann-half-plane/lake-manifest.json": "5048e08f02ddf45ac6f9cf9562a0f1f68862a2633e572299ea7ae9d541ce1ee6",
+    "verification/riemann-half-plane/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "verification/riemann-half-plane/README.md": "5f285dec2507a2cb7cebf6eb4637b8d2b436585732e704f54d3693120ff16219",
+    ".github/workflows/riemann-half-plane.yml": "929298150160547ca29aadb5ee60389889f003215c91f073f8134d6d45c93ce1",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lake-manifest.json": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+    "verification/real-matrix-split/audit.py": "e759bf7479a4771e1f6bd3ed6b0bd30e045af8b6f56884314c7f662553e2822f"
+  },
+  "imported_repo_sources_sha256": {
+    "lean/InfoGeometry/Arithmetic/RiemannZetaFiniteFacts.lean": "d1443b5c1e1da51976ed99eba790ddb3fe632e3f3e349bb397f53af344778572",
+    "lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567"
+  },
+  "public_inventory": {
+    "definitions": 2,
+    "theorems": 7,
+    "fresh_axiom_records": 9,
+    "permitted_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "observed_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "no_unapproved_axioms": true
+  },
+  "corrective_actions": [
+    {
+      "id": "CAPA-01",
+      "finding": "The preliminary strict text screener did not recognize that linarith consumed hσ and hε₀ in exists_small_exponent. It reported two T4 warnings.",
+      "correction": "Replaced implicit positivity arithmetic with half_pos hε₀, sub_pos.mpr hσ, and half_lt_self hε₀. The theorem statement and epsilon witness are unchanged.",
+      "closed": true,
+      "verification": "Independent semantic rereview PASS; final strict screener and refute exit0 with no findings."
+    }
+  ],
+  "checks": [
+    {
+      "label": "01_inventory",
+      "argv": [
+        "python3",
+        "verification/riemann-half-plane/audit.py"
+      ],
+      "cwd": "/workspace/scratch/2c3a1b80ae00/upstream-pr",
+      "started_utc": "2026-11-20T17:20:29.576326+00:00",
+      "duration_seconds": 0.061,
+      "exit_code": 0,
+      "output_sha256": "1457608a46a1860804f7c17942f85cf8bc4cffc16fe55aacaf5c384c34ede02e",
+      "output": "Source coverage: 9 explicit public declarations; root pins match\n"
+    },
+    {
+      "label": "02_build",
+      "argv": [
+        "python3",
+        "verification/riemann-half-plane/check.py",
+        "--wfail",
+        "build"
+      ],
+      "cwd": "/workspace/scratch/2c3a1b80ae00/upstream-pr",
+      "started_utc": "2026-11-20T17:20:29.637860+00:00",
+      "duration_seconds": 12.382,
+      "exit_code": 0,
+      "output_sha256": "06e23117dc4bdb7082b907f526ab60c7f61c0f33949df486cae331013525c64a",
+      "output": "[riemann-half-plane] waiting for the shared build lock\n[riemann-half-plane] lake -d /workspace/scratch/2c3a1b80ae00/upstream-pr/verification/riemann-half-plane --wfail build\n✔ [3810/3811] Built InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction (6.1s)\nℹ [3811/3811] Built InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReductionAudit (2.7s)\ninfo: ../../lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReductionAudit.lean:16:0: 'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.ZetaRightHalfPlaneNonvanishing' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReductionAudit.lean:17:0: 'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.DirichletRightHalfPlaneNonvanishing' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReductionAudit.lean:18:0: 'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.nontrivial_zero_reflect' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReductionAudit.lean:19:0: 'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.riemannHypothesis_of_rightHalfPlane' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReductionAudit.lean:20:0: 'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.rightHalfPlane_of_riemannHypothesis' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReductionAudit.lean:21:0: 'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.riemannHypothesis_iff_rightHalfPlane' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReductionAudit.lean:22:0: 'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.zetaRightHalfPlane_of_dirichletRightHalfPlane' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReductionAudit.lean:23:0: 'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.riemannHypothesis_of_dirichletRightHalfPlane' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReductionAudit.lean:24:0: 'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.exists_small_exponent' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\nBuild completed successfully (3811 jobs).\n"
+    },
+    {
+      "label": "03_owner",
+      "argv": [
+        "python3",
+        "verification/riemann-half-plane/check.py",
+        "env",
+        "lean",
+        "lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReduction.lean"
+      ],
+      "cwd": "/workspace/scratch/2c3a1b80ae00/upstream-pr",
+      "started_utc": "2026-11-20T17:20:42.020632+00:00",
+      "duration_seconds": 5.356,
+      "exit_code": 0,
+      "output_sha256": "3d7fc46e9e3d448e7dc7afbcf8c786ffabc8ac2831a199dc4ea5bcc457257da3",
+      "output": "[riemann-half-plane] waiting for the shared build lock\n[riemann-half-plane] lake -d /workspace/scratch/2c3a1b80ae00/upstream-pr/verification/riemann-half-plane env lean lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReduction.lean\n"
+    },
+    {
+      "label": "04_axioms",
+      "argv": [
+        "python3",
+        "verification/riemann-half-plane/check.py",
+        "env",
+        "lean",
+        "lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReductionAudit.lean"
+      ],
+      "cwd": "/workspace/scratch/2c3a1b80ae00/upstream-pr",
+      "started_utc": "2026-11-20T17:20:47.377208+00:00",
+      "duration_seconds": 4.27,
+      "exit_code": 0,
+      "output_sha256": "37da961297f9044fa148e175537248fe8666645e69daacf93124ae52b260d439",
+      "output": "[riemann-half-plane] waiting for the shared build lock\n[riemann-half-plane] lake -d /workspace/scratch/2c3a1b80ae00/upstream-pr/verification/riemann-half-plane env lean lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReductionAudit.lean\n'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.ZetaRightHalfPlaneNonvanishing' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.DirichletRightHalfPlaneNonvanishing' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.nontrivial_zero_reflect' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.riemannHypothesis_of_rightHalfPlane' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.rightHalfPlane_of_riemannHypothesis' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.riemannHypothesis_iff_rightHalfPlane' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.zetaRightHalfPlane_of_dirichletRightHalfPlane' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.riemannHypothesis_of_dirichletRightHalfPlane' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.exists_small_exponent' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n"
+    },
+    {
+      "label": "05_validate_axioms",
+      "argv": [
+        "python3",
+        "verification/riemann-half-plane/audit.py",
+        "--log",
+        "/workspace/scratch/2c3a1b80ae00/pr-validation/qa/04_axioms.log"
+      ],
+      "cwd": "/workspace/scratch/2c3a1b80ae00/upstream-pr",
+      "started_utc": "2026-11-20T17:20:51.647951+00:00",
+      "duration_seconds": 0.055,
+      "exit_code": 0,
+      "output_sha256": "4cad6ddbc7019977f4490080ed88b2d22037f5240adfc91abbc5fb8b14643e28",
+      "output": "Source coverage: 9 explicit public declarations; root pins match\nLean axiom audit passed: 9 distinct records; foundational axioms: ['Classical.choice', 'Quot.sound', 'propext']\n"
+    },
+    {
+      "label": "06_screener",
+      "argv": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "--strict",
+        "lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReduction.lean",
+        "lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReductionAudit.lean"
+      ],
+      "cwd": "/workspace/scratch/2c3a1b80ae00/upstream-pr",
+      "started_utc": "2026-11-20T17:20:51.704174+00:00",
+      "duration_seconds": 0.116,
+      "exit_code": 0,
+      "output_sha256": "ed719d5cdf9396793ecdd81a3c7c14ce0a3814c9a08538ff6267c1a01a37f8aa",
+      "output": "✓ OpenGauss Screener: All screened files passed cleanly (0 traps detected).\n"
+    },
+    {
+      "label": "07_refute",
+      "argv": [
+        "python3",
+        "tools/infra/opengauss_cli.py",
+        "refute",
+        "lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReduction.lean",
+        "lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReductionAudit.lean",
+        "--strict",
+        "--json"
+      ],
+      "cwd": "/workspace/scratch/2c3a1b80ae00/upstream-pr",
+      "started_utc": "2026-11-20T17:20:51.821247+00:00",
+      "duration_seconds": 0.128,
+      "exit_code": 0,
+      "output_sha256": "203bfacfd47447a1baf0972f507eec5cdfe5360579a8d7a6c3775d0f00fba8b3",
+      "output": "[\n  {\n    \"filename\": \"lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReduction.lean\",\n    \"clean\": true,\n    \"total_traps\": 0,\n    \"errors\": [],\n    \"warnings\": [],\n    \"verdict\": \"PASS\"\n  },\n  {\n    \"filename\": \"lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReductionAudit.lean\",\n    \"clean\": true,\n    \"total_traps\": 0,\n    \"errors\": [],\n    \"warnings\": [],\n    \"verdict\": \"PASS\"\n  }\n]\n"
+    },
+    {
+      "label": "08_gate4",
+      "argv": [
+        "python3",
+        "tools/infra/opengauss_cli.py",
+        "review",
+        "lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReduction.lean",
+        "lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReductionAudit.lean",
+        "--gate",
+        "GATE_4",
+        "--json"
+      ],
+      "cwd": "/workspace/scratch/2c3a1b80ae00/upstream-pr",
+      "started_utc": "2026-11-20T17:20:51.949644+00:00",
+      "duration_seconds": 3.63,
+      "exit_code": 0,
+      "output_sha256": "b30c2bed25c96dd0e277a57cbdddbbeae1ff1b7eefa4a55a526a835db02269ea",
+      "output": "[\n  {\n    \"target_file\": \"lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReduction.lean\",\n    \"gate\": \"GATE_4\",\n    \"verdict\": \"STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED\",\n    \"sorry_count\": 0,\n    \"admit_count\": 0,\n    \"custom_axioms\": null,\n    \"kernel_checked\": false,\n    \"trap_violations\": [],\n    \"scope_inflation_warnings\": [],\n    \"summary\": \"Static checks passed; Lean compilation and theorem axiom audit were not run.\",\n    \"verification_status\": \"not_requested\",\n    \"review_authority\": \"automated_source_preflight\",\n    \"independent_semantic_audit_performed\": false\n  },\n  {\n    \"target_file\": \"lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReductionAudit.lean\",\n    \"gate\": \"GATE_4\",\n    \"verdict\": \"STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED\",\n    \"sorry_count\": 0,\n    \"admit_count\": 0,\n    \"custom_axioms\": null,\n    \"kernel_checked\": false,\n    \"trap_violations\": [],\n    \"scope_inflation_warnings\": [],\n    \"summary\": \"Static checks passed; Lean compilation and theorem axiom audit were not run.\",\n    \"verification_status\": \"not_requested\",\n    \"review_authority\": \"automated_source_preflight\",\n    \"independent_semantic_audit_performed\": false\n  }\n]\n"
+    },
+    {
+      "label": "09_vacuity",
+      "argv": [
+        "python3",
+        "tools/quality/semantic_vacuity_gate.py",
+        "lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReduction.lean",
+        "lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReductionAudit.lean",
+        "--fail-on",
+        "warning",
+        "--json-out",
+        "/workspace/scratch/2c3a1b80ae00/pr-validation/qa/09_vacuity.json"
+      ],
+      "cwd": "/workspace/scratch/2c3a1b80ae00/upstream-pr",
+      "started_utc": "2026-11-20T17:20:55.581566+00:00",
+      "duration_seconds": 0.075,
+      "exit_code": 0,
+      "output_sha256": "3eb9e297a070aaf73a2a86fc8695b2f5001884e8413c52c065ee8105fe0e869c",
+      "output": "Semantic vacuity audit\n======================\nroots: lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReduction.lean, lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReductionAudit.lean\npatterns: /workspace/scratch/2c3a1b80ae00/upstream-pr/tools/quality/semantic_vacuity_patterns.json\nsemantic_vacuity: 0\n"
+    },
+    {
+      "label": "10_root_integration",
+      "argv": [
+        "python3",
+        "tools/infra/run_locked_lake_build.py",
+        "--wait-for-build-lock",
+        "InfoGeometry.All"
+      ],
+      "cwd": "/workspace/scratch/2c3a1b80ae00/upstream-pr",
+      "started_utc": "2026-11-20T17:20:55.656739+00:00",
+      "duration_seconds": 0.819,
+      "exit_code": 1,
+      "output_sha256": "70a727cf581dd518c057e2fcbb406779a76b439f4d75e2334af78288ba7687d1",
+      "output": "[locked-lake-build] requesting lock for InfoGeometry.All\n[locked-lake-build] acquired /tmp/info-geometry-build.lock\n[locked-lake-build] executing: lake build InfoGeometry.All\ninfo: [root]: lakefile.lean and lakefile.toml are both present; using lakefile.lean\nerror: HomotopyHypothesis: package directory not found: /workspace/scratch/2c3a1b80ae00/upstream-pr/external_refs/homotopy-hypothesis-lean4\n[locked-lake-build] lake build exited with code 1\n[locked-lake-build] released /tmp/info-geometry-build.lock\n"
+    }
+  ],
+  "root_integration": {
+    "status": "BLOCKED",
+    "exit_code": 1,
+    "command": [
+      "python3",
+      "tools/infra/run_locked_lake_build.py",
+      "--wait-for-build-lock",
+      "InfoGeometry.All"
+    ],
+    "reason": "Configured path dependency external_refs/homotopy-hypothesis-lean4 is absent. Package resolution stops before root targets compile.",
+    "focused_success_is_not_root_certification": true
+  },
+  "open_debt": [
+    "Prove ZetaRightHalfPlaneNonvanishing or DirichletRightHalfPlaneNonvanishing.",
+    "Unconditional RH and Dirichlet GRH are not established.",
+    "Windowed Mangoldt estimates, a windowed Landau theorem, and the external arithmetic/theta-lift argument are not supplied.",
+    "The external submitted RH proof was not built or certified.",
+    "Full root-package and umbrella integration remain unverified due to the recorded path-dependency blocker."
+  ],
+  "publication_scope": {
+    "repository": "nickgou-nuke/info-geometry-lean",
+    "base": "main",
+    "requested_state": "draft",
+    "separate_from_pr": 421
+  }
+}

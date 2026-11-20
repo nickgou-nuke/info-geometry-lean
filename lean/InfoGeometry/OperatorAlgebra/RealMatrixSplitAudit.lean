@@ -58,6 +58,8 @@ review are separate checks. This target is not an umbrella import.
 #print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplit.isStarNormal_iff_parts_commute
 #print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplit.selfAdjointPart_congruence
 #print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplit.skewAdjointPart_congruence
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplit.trace_mul_eq_zero_of_symmetric_skew
+#print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplit.trace_mul_commutator_eq_zero_of_symmetric
 
 #print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.toBilin'_adjoint_split
 #print axioms InfoGeometry.OperatorAlgebra.RealMatrixSplitGeometry.selfAdjointPart_toBilin'_isSymm

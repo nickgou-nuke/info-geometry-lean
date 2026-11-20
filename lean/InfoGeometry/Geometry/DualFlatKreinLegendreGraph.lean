@@ -1,3 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import Mathlib.LinearAlgebra.SesquilinearForm.Orthogonal
+import Mathlib.LinearAlgebra.Prod
 import InfoGeometry.Clifford.NeutralPhaseSpaceCore
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -94,5 +102,58 @@ theorem graph_is_lagrangian_in_finite_pairing_sense
     (u v : V) :
     canonicalSymplectic (graphLift L u) (graphLift L v) = 0 :=
   graph_symplectic_isotropic L hL u v
+
+
+/-- The symplectic orthogonal of a linear graph is the graph of its
+transposed bilinear form.  No symmetry or invertibility is assumed. -/
+theorem graph_orthogonal_eq_flip_graph (L : V →ₗ[ℝ] Covector V) :
+    L.graph.orthogonalBilin (neutralOmega (E := V)) = L.flip.graph := by
+  ext X
+  rw [Submodule.mem_orthogonalBilin, LinearMap.mem_graph_iff]
+  constructor
+  · intro h
+    apply LinearMap.ext
+    intro v
+    have hv := h (v, L v) (by rfl)
+    simpa only [neutralOmega_apply, sub_eq_zero, LinearMap.flip_apply] using hv
+  · intro h Y hY
+    change Y.2 = L Y.1 at hY
+    simp only [neutralOmega_apply, hY, h, LinearMap.flip_apply, sub_self]
+
+/-- A graph equals its own symplectic orthogonal exactly when its defining
+bilinear form is symmetric. -/
+theorem graph_self_orthogonal_iff_symmetric (L : V →ₗ[ℝ] Covector V) :
+    L.graph.orthogonalBilin (neutralOmega (E := V)) = L.graph ↔
+      IsSymmetricDuality L := by
+  rw [graph_orthogonal_eq_flip_graph]
+  constructor
+  · intro h u v
+    have hu : (u, L u) ∈ L.flip.graph := by
+      rw [h]
+      rfl
+    change L u = L.flip u at hu
+    exact LinearMap.congr_fun hu v
+  · intro h
+    ext X
+    simp only [LinearMap.mem_graph_iff]
+    have hflip : L.flip X.1 = L X.1 := by
+      apply LinearMap.ext
+      intro v
+      exact h v X.1
+    rw [hflip]
+
+/-- Every isotropic submodule containing a symmetric graph is that graph.
+This is maximal isotropy, beyond the existing pairwise-vanishing theorem. -/
+theorem graph_maximal_isotropic_of_symmetric
+    (L : V →ₗ[ℝ] Covector V) (hL : IsSymmetricDuality L)
+    (S : Submodule ℝ (DualCarrier V)) (hgraph : L.graph ≤ S)
+    (hS : S ≤ S.orthogonalBilin (neutralOmega (E := V))) :
+    S = L.graph := by
+  apply le_antisymm _ hgraph
+  calc
+    S ≤ S.orthogonalBilin (neutralOmega (E := V)) := hS
+    _ ≤ L.graph.orthogonalBilin (neutralOmega (E := V)) :=
+      Submodule.orthogonalBilin_le hgraph
+    _ = L.graph := (graph_self_orthogonal_iff_symmetric L).mpr hL
 
 end InfoGeometry.Geometry.DualFlatKreinLegendreGraph

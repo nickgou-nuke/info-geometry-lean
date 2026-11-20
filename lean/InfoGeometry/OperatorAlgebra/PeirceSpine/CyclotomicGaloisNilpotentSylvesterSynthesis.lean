@@ -2627,4 +2627,101 @@ theorem cnsWitness_noncomm_and_cyclotomic_galois_nonvacuity :
     have h00 := congrArg (fun M : Matrix (Fin 4) (Fin 4) ℤ => M 0 0) h
     revert h00; decide
 
+
+/-- Multiplication in the existing upper-triangular operator carrier. -/
+theorem sylvesterBlockMat_mul (A C Y A' C' Y' : B) :
+    sylvesterBlockMat A C Y * sylvesterBlockMat A' C' Y' =
+      sylvesterBlockMat (A * A') (C * C') (A * Y' + Y * C') := by
+  mat2_op_ext
+
+/-- Every power retains the full noncommutative insertion sum in its
+off-diagonal entry. No solution of a Sylvester equation is assumed. -/
+theorem sylvesterBlockMat_pow (A C Y : B) (n : ℕ) :
+    sylvesterBlockMat A C Y ^ n =
+      sylvesterBlockMat (A ^ n) (C ^ n)
+        (∑ k ∈ Finset.range n, A ^ k * Y * C ^ (n - 1 - k)) := by
+  induction n with
+  | zero =>
+      simp only [pow_zero, Finset.range_zero, Finset.sum_empty]
+      mat2_op_ext
+  | succ n ih =>
+      rw [pow_succ, ih, sylvesterBlockMat_mul, pow_succ, pow_succ]
+      congr 1
+      have hshift :
+          (∑ k ∈ Finset.range n, A ^ k * Y * C ^ (n - 1 - k)) * C =
+            ∑ k ∈ Finset.range n, A ^ k * Y * C ^ (n - k) := by
+        rw [Finset.sum_mul]
+        apply Finset.sum_congr rfl
+        intro k hk
+        have hk' : k < n := Finset.mem_range.mp hk
+        have he : n - 1 - k + 1 = n - k := by omega
+        calc
+          (A ^ k * Y * C ^ (n - 1 - k)) * C =
+              A ^ k * Y * (C ^ (n - 1 - k) * C) := by rw [mul_assoc]
+          _ = A ^ k * Y * C ^ (n - k) := by rw [← pow_succ, he]
+      rw [hshift]
+      simp only [Nat.add_sub_cancel, Finset.sum_range_succ, Nat.sub_self,
+        pow_zero, mul_one]
+      abel
+
+/-- A polynomial applied to a Sylvester block constructed from an
+intertwining direction is the corresponding block of the polynomial values.
+This extends the owner's two specific cyclotomic formulas to every integer
+polynomial, while preserving arbitrary noncommutative diagonal operators. -/
+theorem sylvesterBlockMat_polynomial_eval (A C X : B) (p : Polynomial ℤ) :
+    Polynomial.eval₂ (Int.castRingHom (Matrix (Fin 2) (Fin 2) B))
+        (sylvesterBlockMat A C (X * C - A * X)) p =
+      sylvesterBlockMat
+        (Polynomial.eval₂ (Int.castRingHom B) A p)
+        (Polynomial.eval₂ (Int.castRingHom B) C p)
+        (X * Polynomial.eval₂ (Int.castRingHom B) C p -
+          Polynomial.eval₂ (Int.castRingHom B) A p * X) := by
+  have hPow : ∀ n : ℕ,
+      sylvesterBlockMat A C (X * C - A * X) ^ n =
+        sylvesterBlockMat (A ^ n) (C ^ n) (X * C ^ n - A ^ n * X) := by
+    rcases sylvester_operator_matrix_unipotent_diagonalization_and_powers
+      A C X (0 : B) with ⟨_, _, _, _, _, _, _, h, _, _⟩
+    exact h
+  induction p using Polynomial.induction_on' with
+  | add p q hp hq =>
+      simp only [Polynomial.eval₂_add]
+      rw [hp, hq]
+      mat2_op_ext
+  | monomial n a =>
+      simp only [Polynomial.eval₂_monomial]
+      rw [hPow n]
+      change (a : Matrix (Fin 2) (Fin 2) B) *
+          sylvesterBlockMat (A ^ n) (C ^ n) (X * C ^ n - A ^ n * X) =
+        sylvesterBlockMat ((a : B) * A ^ n) ((a : B) * C ^ n)
+          (X * ((a : B) * C ^ n) - ((a : B) * A ^ n) * X)
+      ext i j
+      fin_cases i <;> fin_cases j <;>
+        simp only [sylvesterBlockMat, Matrix.mul_apply, Fin.sum_univ_two,
+          Matrix.intCast_apply, Fin.isValue, Fin.zero_eta, Fin.mk_one,
+          ite_true, ite_false, zero_ne_one, one_ne_zero, Int.cast_zero,
+          zero_mul, mul_zero, add_zero, zero_add]
+      calc
+        (a : B) * (X * C ^ n - A ^ n * X) =
+            ((a : B) * X) * C ^ n - ((a : B) * A ^ n) * X := by noncomm_ring
+        _ = (X * (a : B)) * C ^ n - ((a : B) * A ^ n) * X := by
+          rw [(Int.cast_commute a X).eq]
+        _ = X * ((a : B) * C ^ n) - ((a : B) * A ^ n) * X := by noncomm_ring
+
+/-- The Sylvester block satisfies an integer polynomial exactly when both
+diagonal operators satisfy it. The off-diagonal block is constructed from
+the same intertwining direction, so no vanishing condition is hidden. -/
+theorem sylvesterBlockMat_polynomial_root_iff (A C X : B) (p : Polynomial ℤ) :
+    Polynomial.eval₂ (Int.castRingHom (Matrix (Fin 2) (Fin 2) B))
+        (sylvesterBlockMat A C (X * C - A * X)) p = 0 ↔
+      Polynomial.eval₂ (Int.castRingHom B) A p = 0 ∧
+        Polynomial.eval₂ (Int.castRingHom B) C p = 0 := by
+  rw [sylvesterBlockMat_polynomial_eval]
+  constructor
+  · intro h
+    exact ⟨congrArg (fun M : Matrix (Fin 2) (Fin 2) B => M 0 0) h,
+      congrArg (fun M : Matrix (Fin 2) (Fin 2) B => M 1 1) h⟩
+  · rintro ⟨hA, hC⟩
+    rw [hA, hC]
+    mat2_op_ext
+
 end InfoGeometry.OperatorAlgebra.PeirceSpine.CyclotomicGaloisNilpotentSylvesterSynthesis

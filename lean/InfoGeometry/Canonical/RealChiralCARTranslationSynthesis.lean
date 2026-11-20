@@ -315,6 +315,139 @@ theorem realifiedCircularWeyl_majorana_square
             symm
             exact realMinkowskiMajorana_onKrein_square X
 
+/-- The two real Clifford realizations have the same polarized bilinear
+operator relation, not only the same vector squares.  Thus their symmetric
+operator product on any pair of real Minkowski vectors is identical on the
+existing doubled Krein carrier.  This is a genuine compatibility of the
+circular Weyl and three-mode Majorana representations; it does not assert
+equality of the individual slash operators or identify the Peirce translation
+generator with a Majorana generator. -/
+private def realSpacetimeAdd
+    (X Y : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+    InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4 :=
+  ⟨X.t + Y.t, X.x + Y.x, X.y + Y.y, X.z + Y.z⟩
+
+private lemma anticommutator_eq_square_sub {A : Type*} [Ring A] (a b : A) :
+    a * b + b * a = (a + b) * (a + b) - a * a - b * b := by
+  noncomm_ring
+
+private theorem weylUpperMat_add (x y : Coordinate) :
+    weylUpperMat (x + y) = weylUpperMat x + weylUpperMat y := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [weylUpperMat,
+      InfoGeometry.Lie.SplitOctonionDoubleChiralSolderingBridge.pauliSolder2x2,
+      InfoGeometry.Quantum.PauliSoldering.solder,
+      InfoGeometry.Quantum.PauliSoldering.σ0,
+      InfoGeometry.Quantum.PauliSoldering.σ1,
+      InfoGeometry.Quantum.PauliSoldering.σ2,
+      InfoGeometry.Quantum.PauliSoldering.σ3] <;> ring
+
+private theorem weylLowerMat_add (x y : Coordinate) :
+    weylLowerMat (x + y) = weylLowerMat x + weylLowerMat y := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [weylLowerMat,
+      InfoGeometry.Lie.SplitOctonionDoubleChiralSolderingBridge.pauliSolder2x2,
+      InfoGeometry.Quantum.PauliSoldering.solder,
+      InfoGeometry.Quantum.PauliSoldering.σ0,
+      InfoGeometry.Quantum.PauliSoldering.σ1,
+      InfoGeometry.Quantum.PauliSoldering.σ2,
+      InfoGeometry.Quantum.PauliSoldering.σ3] <;> ring
+
+private theorem chiralOffBlock4_add {R : Type*} [Ring R]
+    (u₁ u₂ l₁ l₂ : Matrix (Fin 2) (Fin 2) R) :
+    chiralOffBlock4 (u₁ + u₂) (l₁ + l₂) =
+      chiralOffBlock4 u₁ l₁ + chiralOffBlock4 u₂ l₂ := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [chiralOffBlock4]
+
+private theorem circularConnectionMat4_add (x y : Coordinate) :
+    circularConnectionMat4 (x + y) =
+      circularConnectionMat4 x + circularConnectionMat4 y := by
+  change chiralOffBlock4 (weylUpperMat (x + y)) (weylLowerMat (x + y)) =
+    chiralOffBlock4 (weylUpperMat x) (weylLowerMat x) +
+      chiralOffBlock4 (weylUpperMat y) (weylLowerMat y)
+  rw [weylUpperMat_add, weylLowerMat_add, chiralOffBlock4_add]
+
+set_option maxRecDepth 2048 in
+set_option maxHeartbeats 1000000 in
+theorem realifiedCircularWeyl_majorana_polarization
+    (X Y : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+    let circularSlash (Z : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :=
+      realifiedCircularMatrixEnd
+        (circularConnectionMat4 (realMinkowskiCircularCoordinate Z))
+    let majoranaSlash (Z : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :=
+      realThreeMatrixTensorOnH4 (realMinkowskiMajorana Z)
+    circularSlash X * circularSlash Y + circularSlash Y * circularSlash X =
+      majoranaSlash X * majoranaSlash Y + majoranaSlash Y * majoranaSlash X := by
+  dsimp
+  let circularSlash (Z : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :=
+    realifiedCircularMatrixEnd
+      (circularConnectionMat4 (realMinkowskiCircularCoordinate Z))
+  let majoranaSlash (Z : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :=
+    realThreeMatrixTensorOnH4 (realMinkowskiMajorana Z)
+  have hCircularAdd (U V :
+      InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+      circularSlash (realSpacetimeAdd U V) = circularSlash U + circularSlash V := by
+    dsimp [circularSlash]
+    have hConn : circularConnectionMat4
+        (realMinkowskiCircularCoordinate (realSpacetimeAdd U V)) =
+        circularConnectionMat4 (realMinkowskiCircularCoordinate U) +
+          circularConnectionMat4 (realMinkowskiCircularCoordinate V) := by
+      cases U with
+      | mk ut ux uy uz =>
+        cases V with
+        | mk vt vx vy vz =>
+          have hcoord :
+              realMinkowskiCircularCoordinate
+                  (realSpacetimeAdd ⟨ut, ux, uy, uz⟩ ⟨vt, vx, vy, vz⟩) =
+                realMinkowskiCircularCoordinate ⟨ut, ux, uy, uz⟩ +
+                  realMinkowskiCircularCoordinate ⟨vt, vx, vy, vz⟩ := by
+            funext i
+            fin_cases i <;> rfl
+          rw [hcoord, circularConnectionMat4_add]
+    rw [hConn, realifiedCircularMatrixEnd_add]
+  have hMajoranaAdd (U V :
+      InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+      majoranaSlash (realSpacetimeAdd U V) = majoranaSlash U + majoranaSlash V := by
+    dsimp [majoranaSlash]
+    cases U with
+    | mk ut ux uy uz =>
+      cases V with
+      | mk vt vx vy vz =>
+        have hMajorana :
+            realMinkowskiMajorana (realSpacetimeAdd ⟨ut, ux, uy, uz⟩
+                ⟨vt, vx, vy, vz⟩) =
+              realMinkowskiMajorana ⟨ut, ux, uy, uz⟩ +
+                realMinkowskiMajorana ⟨vt, vx, vy, vz⟩ := by
+          simp only [realMinkowskiMajorana, realSpacetimeAdd, add_smul]
+          abel
+        calc
+          _ = realThreeMatrixTensorOnH4
+              (realMinkowskiMajorana ⟨ut, ux, uy, uz⟩ +
+                realMinkowskiMajorana ⟨vt, vx, vy, vz⟩) :=
+                congrArg realThreeMatrixTensorOnH4 hMajorana
+          _ = _ := map_add _ _ _
+  calc
+    circularSlash X * circularSlash Y + circularSlash Y * circularSlash X =
+        (circularSlash X + circularSlash Y) * (circularSlash X + circularSlash Y) -
+          circularSlash X * circularSlash X - circularSlash Y * circularSlash Y :=
+      anticommutator_eq_square_sub _ _
+    _ = circularSlash (realSpacetimeAdd X Y) * circularSlash (realSpacetimeAdd X Y) -
+          circularSlash X * circularSlash X - circularSlash Y * circularSlash Y := by
+      rw [← hCircularAdd]
+    _ = majoranaSlash (realSpacetimeAdd X Y) * majoranaSlash (realSpacetimeAdd X Y) -
+          majoranaSlash X * majoranaSlash X - majoranaSlash Y * majoranaSlash Y := by
+      rw [realifiedCircularWeyl_majorana_square]
+      rw [realifiedCircularWeyl_majorana_square X,
+        realifiedCircularWeyl_majorana_square Y]
+    _ = (majoranaSlash X + majoranaSlash Y) * (majoranaSlash X + majoranaSlash Y) -
+          majoranaSlash X * majoranaSlash X - majoranaSlash Y * majoranaSlash Y := by
+      rw [← hMajoranaAdd]
+    _ = majoranaSlash X * majoranaSlash Y + majoranaSlash Y * majoranaSlash X :=
+      (anticommutator_eq_square_sub _ _).symm
+
 /-- Realification preserves the chiral Peirce splitting of the circular
 connection. This uses the source owner's off-block connection and transports
 its projector identity to the actual doubled real carrier. -/

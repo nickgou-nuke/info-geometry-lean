@@ -8,6 +8,7 @@ import InfoGeometry.Canonical.Cl11JordanComplexRealificationBridge
 import InfoGeometry.Canonical.RealSolderingWeylKreinBridge
 import InfoGeometry.Canonical.HestenesRealGradedTensorRepresentation
 import InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge
+import InfoGeometry.Canonical.RealSpacetime4x4Closure
 
 /-!
 # Real graded-tensor realization of the operator super-Poincaré relation
@@ -37,6 +38,8 @@ open scoped TensorProduct GradedTensorProduct
 abbrev Tensor2 := InfoGeometry.Canonical.GradedTensorWeylBridge.twoMatrixGradedTensor
 abbrev FourSpace := InfoGeometry.Canonical.RealDoubledChiralKreinFrame.FourSpace
 abbrev KreinFrame4 := InfoGeometry.Canonical.RealDoubledChiralKreinFrame.KreinFrame4
+abbrev RealSpacetime4x4 :=
+  InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4
 
 /-- Real matrix on the Koszul-graded tensor carrier corresponding to a
 spinor operator matrix. -/
@@ -201,5 +204,95 @@ theorem realCoordinatePresentation_superPoincare_eq_two_hestenesEven
         (circularWeylUpperEven (upperWeylCoordinate x)) := by
   apply doubledKrein_superPoincare_eq_two_hestenesEven
   exact realCoordinatePresentation_solders_to_upperWeyl x
+
+/-! ### Physical real spacetime momentum and the realification basis change
+
+The complex Pauli source encodes real physical coordinates, while its real
+matrix realification and the spacetime owner order the four real coordinates
+differently. We record that change as an explicit index equivalence and prove
+the matrix readout only after reindexing. -/
+
+/-- The physical real spacetime vector encoded in the Pauli-source momentum
+type. The resulting representation theorem below has real matrices as both
+source and target. -/
+def realSpacetimeFourMomentum (X : RealSpacetime4x4) :
+    InfoGeometry.Physics.ChiralPoincareSouriauBridge.FourMomentum where
+  E := (X.t : ℝ)
+  px := (X.x : ℝ)
+  py := (X.y : ℝ)
+  pz := (X.z : ℝ)
+
+/-- Realification orders coordinates as `(Re z₀, Re z₁, Im z₀, Im z₁)`,
+whereas the Hestenes spacetime matrix uses `(Re z₀, Im z₀, Re z₁, Im z₁)`.
+The swap of middle indices is the exact basis change. -/
+def realPauliIndexEquiv : Fin 4 ≃ Fin 4 := Equiv.swap 1 2
+
+/-- The Pauli soldering of a physical real spacetime vector, realified and
+reindexed into the Hestenes basis, is exactly the owner's real spacetime
+matrix. -/
+theorem realify_physicalPauliMomentum (X : RealSpacetime4x4) :
+    Matrix.reindex realPauliIndexEquiv realPauliIndexEquiv
+        (realifyRingHom
+          (InfoGeometry.Physics.ChiralPoincareSouriauBridge.pauliMomentum
+            (realSpacetimeFourMomentum X))) =
+      InfoGeometry.Canonical.RealSpacetime4x4Closure.toMatrix X := by
+  cases X with
+  | mk t x y z =>
+      ext i j
+      fin_cases i <;> fin_cases j <;>
+        simp [Matrix.reindex_apply, realPauliIndexEquiv,
+          Equiv.swap_apply_def, realifyRingHom_apply, realify_apply,
+          blockRealify, realSpacetimeFourMomentum,
+          InfoGeometry.Physics.ChiralPoincareSouriauBridge.pauliMomentum,
+          InfoGeometry.Canonical.RealSpacetime4x4Closure.toMatrix,
+          finProdFinEquiv, Fin.divNat, Fin.modNat,
+          Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im]
+
+/-- The canonical real-coordinate super-Poincaré presentation has precisely
+the physical Hestenes matrix as its reindexed real momentum readout. -/
+theorem realSpacetimePresentation_momentum_readout
+    (X : RealSpacetime4x4) :
+    Matrix.reindex realPauliIndexEquiv realPauliIndexEquiv
+        (realifyRingHom
+          ((realCoordinateSuperPoincarePresentation
+            (realMinkowskiCircularCoordinate X)).Pspinor)) =
+      InfoGeometry.Canonical.RealSpacetime4x4Closure.toMatrix X := by
+  have hWeyl :
+      weylUpperMat
+          (upperWeylCoordinate (realMinkowskiCircularCoordinate X)) =
+        InfoGeometry.Physics.ChiralPoincareSouriauBridge.pauliMomentum
+          (realSpacetimeFourMomentum X) := by
+    cases X with
+    | mk t x y z =>
+        ext i j
+        fin_cases i <;> fin_cases j <;>
+          simp [weylUpperMat, upperWeylCoordinate,
+            realMinkowskiCircularCoordinate, realSpacetimeFourMomentum,
+            InfoGeometry.Physics.ChiralPoincareSouriauBridge.pauliMomentum,
+            InfoGeometry.Lie.SplitOctonionDoubleChiralSolderingBridge.pauliSolder2x2,
+            InfoGeometry.Quantum.PauliSoldering.solder,
+            InfoGeometry.Quantum.PauliSoldering.σ0,
+            InfoGeometry.Quantum.PauliSoldering.σ1,
+            InfoGeometry.Quantum.PauliSoldering.σ2,
+            InfoGeometry.Quantum.PauliSoldering.σ3] <;> ring
+  rw [realCoordinatePresentation_solders_to_upperWeyl, hWeyl]
+  exact realify_physicalPauliMomentum X
+
+/-- In this canonical real-coordinate presentation, the realified odd-odd
+supercharge relation reads as twice the physical Hestenes momentum matrix. -/
+theorem realSpacetimePresentation_anticommutator_readout
+    (X : RealSpacetime4x4) :
+    Matrix.reindex realPauliIndexEquiv realPauliIndexEquiv
+        (realifyRingHom
+          ((realCoordinateSuperPoincarePresentation
+            (realMinkowskiCircularCoordinate X)).antiQQbar)) =
+      (2 : ℝ) • InfoGeometry.Canonical.RealSpacetime4x4Closure.toMatrix X := by
+  rw [realify_superPoincare_relation]
+  have hMomentum := realSpacetimePresentation_momentum_readout X
+  ext i j
+  have hij := congrArg
+    (fun M : Matrix (Fin 4) (Fin 4) ℝ => M i j) hMomentum
+  simpa [Matrix.reindex_apply, Matrix.submatrix_apply, Matrix.smul_apply] using
+    congrArg (fun r : ℝ => (2 : ℝ) * r) hij
 
 end InfoGeometry.Canonical.RealSuperPoincareGradedTensorBridge

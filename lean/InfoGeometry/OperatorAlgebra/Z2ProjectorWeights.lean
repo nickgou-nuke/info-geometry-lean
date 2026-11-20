@@ -1,13 +1,18 @@
-import Mathlib
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Polynomial weights of an involutive operator
 
-For an involution `Γ` in a real operator algebra, the two idempotents
+For an involution `Γ` in an associative rational algebra, the two idempotents
 `(1 ± Γ)/2` give the exact sheet decomposition.  The statements below are
 polynomial identities in the noncommutative operator ring; no exponential,
-limit, or diagonal representation is used.
+limit, or diagonal representation is used. Before the involution hypothesis,
+both half-sums have the exact defect `(Γ * Γ - 1) / 4`.
 -/
 
 namespace InfoGeometry.OperatorAlgebra
@@ -26,6 +31,38 @@ theorem projectorPlus_add_projectorMinus (Γ : A) :
     projectorPlus Γ + projectorMinus Γ = 1 := by
   dsimp [projectorPlus, projectorMinus]
   module
+
+/-- The half-sum ansatz has a precise defect before assuming an involution. -/
+theorem projectorPlus_defect (Γ : A) :
+    projectorPlus Γ * projectorPlus Γ - projectorPlus Γ =
+      (1 / 4 : ℚ) • (Γ * Γ - 1) := by
+  dsimp [projectorPlus]
+  simp only [smul_mul_assoc, mul_smul_comm, smul_smul]
+  rw [show (1 / 2 : ℚ) * (1 / 2 : ℚ) = 1 / 4 by norm_num]
+  simp only [add_mul, mul_add, one_mul, mul_one, smul_add, smul_sub]
+  module
+
+/-- The complementary half-sum has the same defect. -/
+theorem projectorMinus_defect (Γ : A) :
+    projectorMinus Γ * projectorMinus Γ - projectorMinus Γ =
+      (1 / 4 : ℚ) • (Γ * Γ - 1) := by
+  dsimp [projectorMinus]
+  simp only [smul_mul_assoc, mul_smul_comm, smul_smul]
+  rw [show (1 / 2 : ℚ) * (1 / 2 : ℚ) = 1 / 4 by norm_num]
+  simp only [sub_mul, mul_sub, one_mul, mul_one, smul_sub]
+  module
+
+/-- The half-sum is idempotent exactly when the operator is an involution. -/
+theorem projectorPlus_idempotent_iff (Γ : A) :
+    projectorPlus Γ * projectorPlus Γ = projectorPlus Γ ↔ Γ * Γ = 1 := by
+  rw [← sub_eq_zero, projectorPlus_defect, smul_eq_zero]
+  norm_num [sub_eq_zero]
+
+/-- The same equivalence holds for the complementary half-sum. -/
+theorem projectorMinus_idempotent_iff (Γ : A) :
+    projectorMinus Γ * projectorMinus Γ = projectorMinus Γ ↔ Γ * Γ = 1 := by
+  rw [← sub_eq_zero, projectorMinus_defect, smul_eq_zero]
+  norm_num [sub_eq_zero]
 
 theorem projectorPlus_mul_projectorPlus (Γ : A) (hΓ : Γ * Γ = 1) :
     projectorPlus Γ * projectorPlus Γ = projectorPlus Γ := by

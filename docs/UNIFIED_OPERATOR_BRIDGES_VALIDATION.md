@@ -1,5 +1,9 @@
 # Unified operator bridges: validation
 
+This is the original five-owner acceptance record. The
+2026-11-20 [Schwinger follow-up validation](SCHWINGER_OPERATOR_BASES_VALIDATION.md)
+records the expanded eight-owner scope separately and preserves this history.
+
 Date: 2026-11-19. Repository source base:
 `fea96b564201654cd4693008585039a56f66adf3`.
 

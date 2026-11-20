@@ -6,6 +6,14 @@ on:
       - 'lean/InfoGeometry/OperatorAlgebra/CyclotomicGradedAdjoint.lean'
       - 'lean/InfoGeometry/OperatorAlgebra/InternalCyclotomicGradedAdjoint.lean'
       - 'lean/InfoGeometry/OperatorAlgebra/RealCubicAdjointWitness.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/InternalCubicWeylBasis.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/RealCubicWeylBasis.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/SchwingerIntertwiner.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/NoncommutativeGradedTrace.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/NoncommutativeKrausChannel.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/FiniteOperatorFrame.lean'
+      - 'lean/InfoGeometry/Clifford/OperatorValuedJones.lean'
+      - 'lean/InfoGeometry/Clifford/WeylFrameMasks.lean'
       - 'lean/InfoGeometry/OperatorAlgebra/IntrinsicGradedAdjoint.lean'
       - 'lean/InfoGeometry/OperatorAlgebra/InnerConjugation.lean'
       - 'lean/InfoGeometry/Geometry/MixedPairingNondegeneracy.lean'
@@ -40,7 +48,9 @@ on:
       - 'tools/build_lock.py'
       - '.githooks/pre-commit'
       - 'docs/UNIFIED_OPERATOR_BRIDGES_*.md'
+      - 'docs/SCHWINGER_OPERATOR_BASES_*.md'
       - 'docs/intake/2026-11-19-unified-architecture-*'
+      - 'docs/intake/2026-11-20-schwinger-source.json'
       - 'lean-toolchain'
       - 'lake-manifest.json'
       - '.github/workflows/unified-operator-bridges.yml'
@@ -64,7 +74,10 @@ jobs:
         "InfoGeometry.OperatorAlgebra.InternalCyclotomicGradedAdjoint",
         "InfoGeometry.OperatorAlgebra.RealCubicAdjointWitness",
         "InfoGeometry.Geometry.MixedPairingNondegeneracy",
-        "InfoGeometry.InformationGeometry.ContrastMixedHessianBoundary"]
+        "InfoGeometry.InformationGeometry.ContrastMixedHessianBoundary",
+        "InfoGeometry.OperatorAlgebra.InternalCubicWeylBasis",
+        "InfoGeometry.OperatorAlgebra.RealCubicWeylBasis",
+        "InfoGeometry.OperatorAlgebra.SchwingerIntertwiner"]
     steps:
       - name: Check out the exact public source without submodule traversal
         env:
@@ -241,6 +254,9 @@ jobs:
                        'docs/UNIFIED_OPERATOR_BRIDGES_CONTRACT.md',
                        'docs/UNIFIED_OPERATOR_BRIDGES_LITERATURE.md',
                        'docs/UNIFIED_OPERATOR_BRIDGES_VALIDATION.md',
+                       'docs/SCHWINGER_OPERATOR_BASES_CONTRACT.md',
+                       'docs/SCHWINGER_OPERATOR_BASES_VALIDATION.md',
+                       'docs/intake/2026-11-20-schwinger-source.json',
                        'docs/intake/2026-11-19-unified-architecture-original.txt',
                        'docs/intake/2026-11-19-unified-architecture-manifest.json',
                        'tools/quality/placeholder_audit.py',

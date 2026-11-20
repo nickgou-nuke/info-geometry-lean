@@ -1,5 +1,9 @@
 # Unified operator bridges: formal intent
 
+The 2026-11-20 [Schwinger follow-up contract](SCHWINGER_OPERATOR_BASES_CONTRACT.md)
+adds ordered internal-phase bases on the same full real carrier and seeded
+operator averaging. It supplements the original scope below.
+
 Date: 2026-11-19. Base: `fea96b564201654cd4693008585039a56f66adf3`.
 
 The original attachment is preserved byte for byte in

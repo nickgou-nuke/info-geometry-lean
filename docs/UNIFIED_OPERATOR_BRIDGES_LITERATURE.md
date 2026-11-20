@@ -183,6 +183,43 @@ The bounded source review of `Canonical/SylvesterGrading.lean` found the
 ordered displacement and braid formulas, without a basis/direct-sum
 construction in that owner.
 
+The Schwinger follow-up expanded that search and located genuine existing
+complex bases in `Canonical/QutritWeylOperatorBasis.lean` and
+`Canonical/StokesQutritChannelBasis.lean`, including native basis objects,
+linear independence, spanning, and trace reconstruction. The second is a
+36-channel basis **over the complex numbers**. It is not the 36-dimensional
+real block algebra in the cubic adjoint witness.
+
+The supplied full Schwinger paper now supports a more precise comparison.
+On pp. 575–576, the words `U^m V^n` are unitary; multiplying them by
+`N^(-1/2)` gives Hilbert–Schmidt orthonormal basis vectors. Those normalized
+vectors are not themselves unitary when `N > 1`. The new
+`OperatorAlgebra/InternalCubicWeylBasis.lean` constructs an ordered Fourier
+coordinate equivalence over a possibly noncommutative real coefficient
+algebra. `RealCubicWeylBasis.lean` instantiates it on the exact existing
+`M₃(M₂(ℝ))` carrier, then uses Mathlib's scalar-tower basis to construct all
+36 real coordinates. This operator-valued extension is a construction in
+this follow-up, not a claim that Schwinger states that particular real model.
+It preserves the existing differential's exact cubic nilpotency through a
+native endomorphism-to-matrix algebra equivalence.
+
+The paper's p. 571 normalization formula also needs a nonvanishing condition.
+For the native real matrix-unit basis `X`, `T = diag(1,-1)`, and
+`Y = Tᵀ X T`, both bases have the same multiplication table and normalized
+trace Gram matrix, but `∑ Xα Yαᵀ = 0`. The seeded sum
+`∑ Xα E₀₀ Yαᵀ` equals `T`. The new `SchwingerIntertwiner.lean` proves these
+facts and the general ordered cross-family identity, then specializes that
+identity using the existing full ring-valued Weyl twirl. An exhibited conjugator and a successful seed
+do not by themselves prove existence of an unknown conjugator for arbitrary
+equivalent bases. [R10] The [follow-up contract](SCHWINGER_OPERATOR_BASES_CONTRACT.md)
+records this distinction, the coprimality requirement on p. 577, the separate
+product-coordinate construction, and the unproved analytic limit on p. 579.
+
+The real companion is not orthogonal for the standard transpose; the existing
+`Algebra/CubicCompanionFlow.thirdRoot_not_orthogonal` proves that boundary.
+Accordingly, the new cubic basis is an algebraic basis, with no unproved
+Hilbert–Schmidt orthonormality or weighted-unitarity claim.
+
 Jaffe–Liu genuinely connect planar para algebras, parafermion Pauli matrices,
 Jordan–Wigner transformations, reflection positivity, and a family of
 subfactor planar para algebras. Their definitions include planar and Hilbert
@@ -237,7 +274,7 @@ was checked.
 | R7 | S. Caracciolo, A. D. Sokal and A. Sportiello, *Algebraic/combinatorial proofs of Cayley-type identities for derivatives of determinants and pfaffians*, [arXiv:1105.6270v2](https://arxiv.org/abs/1105.6270v2) | Appendix A, Theorem A.3 and Proposition A.13, including the Berezin integration order. |
 | R8 | D. Cervantes, R. Fioresi and M. A. Lledó, *The quantum chiral Minkowski and conformal superspaces*, ATMP **15** (2011), 565–620, [arXiv:1007.4469](https://arxiv.org/abs/1007.4469) | The `N=1` construction, §5.3 and concluding §7, including the real-form superflag boundary. |
 | R9 | J. J. Sylvester, *A Word on Nonions* (1882; note 1883), [original collected-paper scan](https://rcin.org.pl/Content/162581/PDF/WA35_189974_11371-3_art-76.pdf) | Four-page original, especially the third-order nonion basis. |
-| R10 | J. Schwinger, *Unitary Operator Bases*, PNAS **46** (1960), 570–579, [primary archive](https://pmc.ncbi.nlm.nih.gov/articles/PMC222876/), DOI [10.1073/pnas.46.4.570](https://doi.org/10.1073/pnas.46.4.570) | Primary archive metadata; no historical-priority inference beyond the identified paper. |
+| R10 | J. Schwinger, *Unitary Operator Bases*, PNAS **46** (1960), 570–579, [primary archive](https://pmc.ncbi.nlm.nih.gov/articles/PMC222876/), DOI [10.1073/pnas.46.4.570](https://doi.org/10.1073/pnas.46.4.570) | Full ten-page user-supplied primary paper inspected, including rendered mathematical pages. Source SHA-256 and page-level claim boundaries are recorded in the Schwinger intake manifest and contract. No historical-priority inference beyond the identified paper. |
 | R11 | J. Patera and H. Zassenhaus, *The Pauli matrices in n dimensions and finest gradings of simple Lie algebras of type A(n−1)*, J. Math. Phys. **29** (1988), 665–673, DOI [10.1063/1.528006](https://doi.org/10.1063/1.528006) | Indexed primary-paper abstract and opening definitions. Direct publisher/PDF access was incomplete. |
 | R12 | A. Jaffe and Z. Liu, *Planar Para Algebras, Reflection Positivity*, Commun. Math. Phys. **352** (2017), 95–133, [arXiv:1602.02662](https://arxiv.org/abs/1602.02662), DOI [10.1007/s00220-016-2779-4](https://doi.org/10.1007/s00220-016-2779-4) | Definitions, Pauli models and §5 Jordan–Wigner formulas. |
 | R13 | M. M. Kapranov, *On the q-analog of homological algebra*, [arXiv:q-alg/9611005](https://arxiv.org/abs/q-alg/9611005) | Author abstract and submission history: 1996 submission, text written 1991. |

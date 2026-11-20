@@ -1,0 +1,19 @@
+{
+  "source_kind": "user_supplied_primary_paper",
+  "original_filename": "pnas00203-0180.pdf",
+  "title": "Unitary Operator Bases",
+  "author": "Julian Schwinger",
+  "journal": "Proceedings of the National Academy of Sciences",
+  "volume": 46,
+  "year": 1960,
+  "printed_pages": "570-579",
+  "pdf_page_count": 10,
+  "byte_length": 741708,
+  "sha256": "3791ddb6870db51eeb18fa16e9caefe22892168dee0b1e8b7581455e731cf945",
+  "doi": "10.1073/pnas.46.4.570",
+  "primary_archive_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC222876/",
+  "intake_date": "2026-11-20",
+  "repository_baseline": "8ac42b1efaa7fe8ad92df3c5acadf0c3a3534ebe",
+  "inspection": "Full text extraction plus visual inspection of mathematical pages; no modification of the supplied PDF.",
+  "repository_preservation": "Source identity, primary citation, page-level claim ledger and formal contract; the PDF itself is not copied into this repository."
+}

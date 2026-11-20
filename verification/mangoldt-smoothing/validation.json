@@ -1,0 +1,471 @@
+{
+  "qa_role": "QA-A",
+  "agent": "/root/source_audit",
+  "started_at_utc": "2026-11-20T16:59:38.525469+00:00",
+  "artifact_sha256": {
+    "lean/InfoGeometry/Arithmetic/FiniteSmoothedMangoldt.lean": "62a63f4e5acbeca18b62c408b5701cc7e01d35f8cb3512126ba714793a079c42",
+    "lean/InfoGeometry/Arithmetic/FiniteSmoothedMangoldtAudit.lean": "319f7eb168a52614290e159dce26ecce79ed89d17da23fa2cca7d15c4f30d350",
+    "lean/InfoGeometry/Arithmetic/All.lean": "f1b8807f3a7606362d4c947dec7219f059d4c571ae345783cebb2e905cb2eb72",
+    "lean/InfoGeometry/Arithmetic/PrimeDistributionLaw.lean": "e8029411db60a7425b81268a8ac56ea78a63e50aaec9871d9e723a03f8bd7997",
+    "lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lake-manifest.json": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+    "verification/mangoldt-smoothing/check.py": "e0a6fd12e926378b8967cf1654fa753a873239f4a9485c560fe622ffc300531f",
+    "verification/mangoldt-smoothing/lakefile.toml": "ee937c4720d9557f609a85d2797241c71da00b447cd9fe26c3f57658f2f6d1f6",
+    "verification/mangoldt-smoothing/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "verification/mangoldt-smoothing/lake-manifest.json": "c752642b149d824b0fe486904f2c34ec78fcf6e6efdfc6e23ec923fe2ba7e897"
+  },
+  "commands": [
+    {
+      "label": "git-head",
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "exit_code": 0,
+      "elapsed_seconds": 0.007,
+      "log": "/workspace/scratch/21d08298b44b/qa/independent-mangoldt-20261120T165938Z/git-head.log",
+      "log_sha256": "952463ad8bc4222fbd46675542716beeda973a1ec7e9d082406c881fbcb7b100"
+    },
+    {
+      "label": "origin-main",
+      "argv": [
+        "git",
+        "rev-parse",
+        "origin/main"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "exit_code": 0,
+      "elapsed_seconds": 0.006,
+      "log": "/workspace/scratch/21d08298b44b/qa/independent-mangoldt-20261120T165938Z/origin-main.log",
+      "log_sha256": "952463ad8bc4222fbd46675542716beeda973a1ec7e9d082406c881fbcb7b100"
+    },
+    {
+      "label": "branch",
+      "argv": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "exit_code": 0,
+      "elapsed_seconds": 0.003,
+      "log": "/workspace/scratch/21d08298b44b/qa/independent-mangoldt-20261120T165938Z/branch.log",
+      "log_sha256": "9aac9ffeb42a570f18b8ef96f09ef56e5c1858f48016cbbd7cc29f3496777f82"
+    },
+    {
+      "label": "status",
+      "argv": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "exit_code": 0,
+      "elapsed_seconds": 0.641,
+      "log": "/workspace/scratch/21d08298b44b/qa/independent-mangoldt-20261120T165938Z/status.log",
+      "log_sha256": "2a7c0d05ac652038469bcadac6a398e0255d9dcbd8f4466a883281196ad8fce0"
+    },
+    {
+      "label": "diff-origin-main",
+      "argv": [
+        "git",
+        "diff",
+        "origin/main",
+        "--"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "exit_code": 0,
+      "elapsed_seconds": 0.097,
+      "log": "/workspace/scratch/21d08298b44b/qa/independent-mangoldt-20261120T165938Z/diff-origin-main.log",
+      "log_sha256": "6356fca9ca47ba61d3aa9cf28173530bb7afa69342753454dccec6dacbdf4698"
+    },
+    {
+      "label": "lean-version",
+      "argv": [
+        "lean",
+        "--version"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "exit_code": 0,
+      "elapsed_seconds": 0.065,
+      "log": "/workspace/scratch/21d08298b44b/qa/independent-mangoldt-20261120T165938Z/lean-version.log",
+      "log_sha256": "355a9a028f81641782d75d6e6b58dec70f29d2f61238a9e271690259d9bf5680"
+    },
+    {
+      "label": "lake-version",
+      "argv": [
+        "lake",
+        "--version"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "exit_code": 0,
+      "elapsed_seconds": 0.054,
+      "log": "/workspace/scratch/21d08298b44b/qa/independent-mangoldt-20261120T165938Z/lake-version.log",
+      "log_sha256": "36526a338068c343bedff5daa38fec328b4f722df1e8f0b5d026d4f0f908f3a3"
+    },
+    {
+      "label": "build-wfail",
+      "argv": [
+        "python3",
+        "verification/mangoldt-smoothing/check.py",
+        "--wfail",
+        "build",
+        "InfoGeometry.Arithmetic.FiniteSmoothedMangoldtAudit"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "exit_code": 0,
+      "elapsed_seconds": 27.577,
+      "log": "/workspace/scratch/21d08298b44b/qa/independent-mangoldt-20261120T165938Z/build-wfail.log",
+      "log_sha256": "0e5fa5e6e2df6b4538d4285e9225e3718267ac57fa787402e79131c5fb27ec3c"
+    },
+    {
+      "label": "owner-fresh-typecheck",
+      "argv": [
+        "python3",
+        "verification/mangoldt-smoothing/check.py",
+        "env",
+        "lean",
+        "../../lean/InfoGeometry/Arithmetic/FiniteSmoothedMangoldt.lean"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "exit_code": 1,
+      "elapsed_seconds": 1.44,
+      "log": "/workspace/scratch/21d08298b44b/qa/independent-mangoldt-20261120T165938Z/owner-fresh-typecheck.log",
+      "log_sha256": "0447c137e76a4cd15130e6b918082391ac9324253687fd37f4ce4c0c8dbb29b1"
+    },
+    {
+      "label": "owner-fresh-typecheck-corrected",
+      "argv": [
+        "python3",
+        "verification/mangoldt-smoothing/check.py",
+        "env",
+        "lean",
+        "lean/InfoGeometry/Arithmetic/FiniteSmoothedMangoldt.lean"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "exit_code": 0,
+      "elapsed_seconds": 21.919,
+      "log": "/workspace/scratch/21d08298b44b/qa/independent-mangoldt-20261120T165938Z/owner-fresh-typecheck-corrected.log",
+      "log_sha256": "f70bc43a42b2f3fe3d54b0c062fcea0bfd1cac6b44cccc737a3cbc9bb984b0d3"
+    },
+    {
+      "label": "audit-fresh-typecheck-corrected",
+      "argv": [
+        "python3",
+        "verification/mangoldt-smoothing/check.py",
+        "env",
+        "lean",
+        "lean/InfoGeometry/Arithmetic/FiniteSmoothedMangoldtAudit.lean"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "exit_code": 0,
+      "elapsed_seconds": 4.724,
+      "log": "/workspace/scratch/21d08298b44b/qa/independent-mangoldt-20261120T165938Z/audit-fresh-typecheck-corrected.log",
+      "log_sha256": "54c451a2c5429ab8c8d9ab9b1989d77d1e0c2c83254f0edd65bbc99b04d791b4"
+    },
+    {
+      "label": "semantic-vacuity",
+      "argv": [
+        "python3",
+        "tools/quality/semantic_vacuity_gate.py",
+        "lean/InfoGeometry/Arithmetic/FiniteSmoothedMangoldt.lean",
+        "lean/InfoGeometry/Arithmetic/FiniteSmoothedMangoldtAudit.lean",
+        "--fail-on",
+        "warning",
+        "--json-out",
+        "/workspace/scratch/21d08298b44b/qa/independent-mangoldt-20261120T165938Z/semantic-vacuity.json"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "exit_code": 1,
+      "elapsed_seconds": 0.071,
+      "log": "/workspace/scratch/21d08298b44b/qa/independent-mangoldt-20261120T165938Z/semantic-vacuity.log",
+      "log_sha256": "94555e23b466092f0ddaca95d5e8b5cf21c5d9e535754da585c7b30c655b20bc"
+    },
+    {
+      "label": "legacy-vacuity-owner",
+      "argv": [
+        "python3",
+        "tools/scripts/vacuity-linter.py",
+        "lean/InfoGeometry/Arithmetic/FiniteSmoothedMangoldt.lean",
+        "--json"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "exit_code": 0,
+      "elapsed_seconds": 0.052,
+      "log": "/workspace/scratch/21d08298b44b/qa/independent-mangoldt-20261120T165938Z/legacy-vacuity-owner.log",
+      "log_sha256": "59a95f200d5ac18ebb9ee9605c122a850f4518c85a9f8c57f248e7318746cfdf"
+    },
+    {
+      "label": "legacy-vacuity-audit",
+      "argv": [
+        "python3",
+        "tools/scripts/vacuity-linter.py",
+        "lean/InfoGeometry/Arithmetic/FiniteSmoothedMangoldtAudit.lean",
+        "--json"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "exit_code": 0,
+      "elapsed_seconds": 0.042,
+      "log": "/workspace/scratch/21d08298b44b/qa/independent-mangoldt-20261120T165938Z/legacy-vacuity-audit.log",
+      "log_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e"
+    }
+  ],
+  "scope": "Finite real integer-cutoff Mangoldt smoothing; no RH/GRH or repository-wide build claim.",
+  "git_head": "586c14bc9fb94eb09b56f7dc850d9d5297269f91",
+  "origin_main": "586c14bc9fb94eb09b56f7dc850d9d5297269f91",
+  "branch": "formalize/alpoge-mangoldt-smoothing-20261120",
+  "working_tree_status": "AM docs/ALPOGE_REMARK_AUDIT.md\nM  lean/InfoGeometry/Arithmetic/All.lean\nA  lean/InfoGeometry/Arithmetic/FiniteSmoothedMangoldt.lean\nA  lean/InfoGeometry/Arithmetic/FiniteSmoothedMangoldtAudit.lean\nA  verification/mangoldt-smoothing/README.md\nA  verification/mangoldt-smoothing/check.py\nA  verification/mangoldt-smoothing/lake-manifest.json\nA  verification/mangoldt-smoothing/lakefile.toml\nA  verification/mangoldt-smoothing/lean-toolchain\n",
+  "working_tree_scope": "dirty",
+  "lean_toolchain": "leanprover/lean4:v4.34.1",
+  "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "lake_version": "Lake version 5.0.0-src+5045d00 (Lean version 4.34.1)",
+  "qa_setup_notes": "Initial pin inventory assumed all root packages were git entries; corrected the QA inventory to compare the nine focused git dependencies with the matching root entries before any compiler was launched. Root has extra optional git/path packages omitted from the focused build.",
+  "pins": {
+    "focused_pins_match_root": true,
+    "root_pins_unchanged_from_origin_main": true,
+    "focused_dependencies": {
+      "mathlib": {
+        "url": "https://github.com/leanprover-community/mathlib4.git",
+        "rev": "d13f23b723b8a846827a245b89c10fc7d3f11612"
+      },
+      "plausible": {
+        "url": "https://github.com/leanprover-community/plausible",
+        "rev": "118aa17ee84656b8bd727fef7c458ee8c833385c"
+      },
+      "LeanSearchClient": {
+        "url": "https://github.com/leanprover-community/LeanSearchClient",
+        "rev": "ddf04cf3949fa556442341e87d47f9f6e6074707"
+      },
+      "importGraph": {
+        "url": "https://github.com/leanprover-community/import-graph",
+        "rev": "e928b72544873815af278d38681b31c0293588e3"
+      },
+      "proofwidgets": {
+        "url": "https://github.com/leanprover-community/ProofWidgets4",
+        "rev": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5"
+      },
+      "aesop": {
+        "url": "https://github.com/leanprover-community/aesop",
+        "rev": "355695d523e41d0554926416cba2a2b3544fbbc9"
+      },
+      "Qq": {
+        "url": "https://github.com/leanprover-community/quote4",
+        "rev": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259"
+      },
+      "batteries": {
+        "url": "https://github.com/leanprover-community/batteries",
+        "rev": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2"
+      },
+      "Cli": {
+        "url": "https://github.com/leanprover/lean4-cli",
+        "rev": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204"
+      }
+    },
+    "omitted_root_packages": [
+      "LeanCopilot",
+      "HomotopyHypothesis",
+      "Atlas",
+      "GIFT",
+      "\u00abdoc-gen4\u00bb",
+      "LeanArchitect",
+      "paranoia",
+      "Paperproof",
+      "InfoGeometryCore",
+      "checkdecls",
+      "leansqlite",
+      "UnicodeBasic",
+      "BibtexQuery",
+      "MD4Lean",
+      "lean4checker"
+    ]
+  },
+  "declarations": [
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum",
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum",
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum_zero",
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_zero",
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_one",
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum_succ",
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.chebyshevPsiFinite_succ",
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_eq_harmonic_sub_psi",
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_eq_positivePart",
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum_nonneg",
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_nonneg",
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_succ_sub",
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_second_difference",
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_second_difference_nonneg",
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_second_difference_pos_iff",
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.vonMangoldtWeight_eq_mul_second_difference",
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum_monotone",
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_monotone"
+  ],
+  "source_scan": {
+    "forbidden_code_tokens": [],
+    "definition_count": 2,
+    "theorem_count": 16,
+    "audit_covers_all_declarations": true,
+    "boundary_examples": 3
+  },
+  "corrective_command_note": "The suggested ../../lean path failed before elaboration because check.py executes lake env with repository-root cwd; corrected direct-check commands use lean/InfoGeometry/... relative to root. No mathematical source or wrapper changed by QA.",
+  "compiler_warnings": [],
+  "axioms": {
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum_zero": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_zero": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_one": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum_succ": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.chebyshevPsiFinite_succ": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_eq_harmonic_sub_psi": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_eq_positivePart": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum_nonneg": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_nonneg": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_succ_sub": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_second_difference": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_second_difference_nonneg": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_second_difference_pos_iff": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.vonMangoldtWeight_eq_mul_second_difference": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum_monotone": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_monotone": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  },
+  "axiom_classification": "Only propext, Classical.choice, Quot.sound inherited through native Mathlib real arithmetic, finite sums and von Mangoldt infrastructure; no new custom axiom or proof-hole axiom.",
+  "hashes_unchanged_after_checks": true,
+  "completed_at_utc": "2026-11-20T17:01:36.638814+00:00",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "static_warning_classification": [
+    {
+      "scanner": "semantic_vacuity_gate.py --fail-on warning",
+      "exit_code": 1,
+      "findings": [
+        "harmonicMangoldtSum_zero",
+        "smoothedMangoldtSum_zero"
+      ],
+      "classification": "Nonblocking useful zero-boundary simplification lemmas. Their statements are finite arithmetic equalities, not True, and their kernel-checked proofs use the native zero von Mangoldt weight. Preserve warnings rather than claim a clean static scan."
+    },
+    {
+      "scanner": "vacuity-linter.py",
+      "finding": "auto_prover: omega",
+      "classification": "Nonblocking. The sole omega use proves N + 1 + 1 = N + 2, an exact natural-number index identity. No analytic claim is delegated to a heuristic."
+    },
+    {
+      "scanner": "vacuity-linter.py",
+      "finding": "no_hyp_use: N",
+      "classification": "Nonblocking lexical heuristic. N is a cutoff parameter appearing in the target, not a mathematical hypothesis that is being discarded; unfold/rw infer it from the target."
+    }
+  ],
+  "closed_operational_finding": {
+    "problem": "README/doc originally used ../../lean in a lake env command despite repository-root working directory.",
+    "resolution": "Root-relative lean/InfoGeometry/... command was independently executed successfully for both owner and audit; root corrected both documents. Failed initial command is retained in owner-fresh-typecheck.log.",
+    "corrected_doc_hashes": {
+      "docs/ALPOGE_REMARK_AUDIT.md": "9dd2048a414bd4d88c6e1df65daced5478776a076521edfa37114badc57bf11b",
+      "verification/mangoldt-smoothing/README.md": "c3a7161910ee469d3095ccce73044de4d9915554934fab0cddb65d5f70d7f229"
+    }
+  },
+  "semantic_scope": {
+    "carrier": "N : Nat with all arithmetic sums valued in Real",
+    "native_functions": "PrimeDistributionLaw.vonMangoldtWeight = ArithmeticFunction.vonMangoldt; existing chebyshevPsiFinite",
+    "definitions": "A(N)=sum_{n=0..N} Lambda(n)/n; S(N)=sum_{n=0..N} Lambda(n)*(N/n-1), with zero-index product zero",
+    "verified_results": [
+      "positive-part equality at integer cutoff",
+      "S(N)=N*A(N)-psi(N)",
+      "S(N+1)-S(N)=A(N)",
+      "second difference = Lambda(N+1)/(N+1)",
+      "nonnegativity and monotonicity",
+      "strict second difference iff IsPrimePow(N+1)",
+      "recovery of Lambda(N+1)",
+      "zero-boundary and log(2)/2 audit examples"
+    ],
+    "not_established": [
+      "sign of the centered announcement statistic",
+      "real-cutoff analytic extension",
+      "theta-lift or divisibility estimates",
+      "Weil distribution or explicit formula",
+      "RH/GRH",
+      "whole-repository/default-target build",
+      "external independent kernel replay"
+    ]
+  },
+  "status_tags": [
+    "definition_backed",
+    "theorem_backed"
+  ],
+  "acceptance_scope": "Two new real-valued finite definitions, sixteen finite arithmetic theorems and three audit examples in the focused package. Source pins and all eighteen declaration axiom outputs independently checked.",
+  "reviewer_independence": "QA-A /root/source_audit did not author mathematical owner/audit content and is distinct from semantic A-A /root/repo_audit.",
+  "source_hashes_are_evidence_not_proofs": true,
+  "accepted_at_utc": "2026-11-20T17:02:26.038876+00:00"
+}

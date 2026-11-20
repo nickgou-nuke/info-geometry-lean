@@ -184,6 +184,9 @@ def main() -> int:
         oleans = run / "oleans"
         oleans.mkdir()
         env["LEAN_PATH"] = os.pathsep.join([str(oleans), *root_package_paths, *paths])
+        oleans = run / "oleans"
+        oleans.mkdir()
+        env["LEAN_PATH"] = os.pathsep.join([str(oleans), *paths])
         receipt["lean_path"] = env["LEAN_PATH"]
         for module, source in closure:
             target = oleans.joinpath(*module.split(".")).with_suffix(".olean")

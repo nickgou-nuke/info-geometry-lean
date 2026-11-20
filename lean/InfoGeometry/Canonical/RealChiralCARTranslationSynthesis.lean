@@ -62,7 +62,7 @@ noncomputable def realificationKreinFrameEquiv :
     cases i <;> simp
   right_inv u := by
     apply InfoGeometry.Krein.DoubledSpace.ext <;>
-      simp [WithLp.toLp, WithLp.ofLp_toLp]
+      simp
   map_add' x y := by
     apply InfoGeometry.Krein.DoubledSpace.ext <;>
       simp only [InfoGeometry.Krein.to_doubled, WithLp.add_fst, WithLp.add_snd]
@@ -168,6 +168,105 @@ theorem realifiedCircularCurvature_eq_connection_square (x : Coordinate) :
         realifiedCircularMatrixEnd (circularConnectionMat4 x) := by
   rw [circularCurvatureMat4, realifiedCircularMatrixEnd_mul]
 
+@[simp] theorem realifiedCircularMatrixEnd_add
+    (A B : Matrix (Fin 4) (Fin 4) ℂ) :
+    realifiedCircularMatrixEnd (A + B) =
+      realifiedCircularMatrixEnd A + realifiedCircularMatrixEnd B := by
+  simp [realifiedCircularMatrixEnd, InfoGeometry.Quantum.Realification.realify_add]
+
+@[simp] theorem realifiedCircularMatrixEnd_one :
+    realifiedCircularMatrixEnd (1 : Matrix (Fin 4) (Fin 4) ℂ) = 1 := by
+  simp [realifiedCircularMatrixEnd, InfoGeometry.Quantum.Realification.realify_one]
+
+@[simp] theorem realifiedCircularMatrixEnd_sub
+    (A B : Matrix (Fin 4) (Fin 4) ℂ) :
+    realifiedCircularMatrixEnd (A - B) =
+      realifiedCircularMatrixEnd A - realifiedCircularMatrixEnd B := by
+  simp [sub_eq_add_neg, realifiedCircularMatrixEnd]
+
+/-- Realification preserves the chiral Peirce splitting of the circular
+connection. This uses the source owner's off-block connection and transports
+its projector identity to the actual doubled real carrier. -/
+theorem realifiedCircularConnection_peirceDecomposition (x : Coordinate) :
+    let P := realifiedCircularMatrixEnd chiralProjMat4
+    let A := realifiedCircularMatrixEnd (circularConnectionMat4 x)
+    P * A * (1 - P) + (1 - P) * A * P = A := by
+  have hSource :
+      InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi chiralProjMat4
+        (circularConnectionMat4 x) (circularConnectionMat4 x) =
+          circularConnectionMat4 x := by
+    simpa [chiralProjMat4, circularConnectionMat4] using
+      genPhi_chiralOffBlock4 (weylUpperMat x) (weylLowerMat x)
+  have hComplement :
+      1 - realifiedCircularMatrixEnd chiralProjMat4 =
+        realifiedCircularMatrixEnd (1 - chiralProjMat4) := by
+    calc
+      _ = realifiedCircularMatrixEnd 1 - realifiedCircularMatrixEnd chiralProjMat4 := by
+        rw [realifiedCircularMatrixEnd_one]
+      _ = realifiedCircularMatrixEnd (1 - chiralProjMat4) :=
+        (realifiedCircularMatrixEnd_sub _ _).symm
+  have hCornerPlus :
+      realifiedCircularMatrixEnd chiralProjMat4 *
+          realifiedCircularMatrixEnd (circularConnectionMat4 x) *
+          (1 - realifiedCircularMatrixEnd chiralProjMat4) =
+        realifiedCircularMatrixEnd
+          (chiralProjMat4 * circularConnectionMat4 x * (1 - chiralProjMat4)) := by
+    rw [hComplement, ← realifiedCircularMatrixEnd_mul, ← realifiedCircularMatrixEnd_mul]
+  have hCornerMinus :
+      (1 - realifiedCircularMatrixEnd chiralProjMat4) *
+          realifiedCircularMatrixEnd (circularConnectionMat4 x) *
+          realifiedCircularMatrixEnd chiralProjMat4 =
+        realifiedCircularMatrixEnd
+          ((1 - chiralProjMat4) * circularConnectionMat4 x * chiralProjMat4) := by
+    rw [hComplement, ← realifiedCircularMatrixEnd_mul, ← realifiedCircularMatrixEnd_mul]
+  change realifiedCircularMatrixEnd chiralProjMat4 *
+      realifiedCircularMatrixEnd (circularConnectionMat4 x) *
+        (1 - realifiedCircularMatrixEnd chiralProjMat4) +
+    (1 - realifiedCircularMatrixEnd chiralProjMat4) *
+      realifiedCircularMatrixEnd (circularConnectionMat4 x) *
+        realifiedCircularMatrixEnd chiralProjMat4 =
+      realifiedCircularMatrixEnd (circularConnectionMat4 x)
+  rw [hCornerPlus, hCornerMinus]
+  have h := congrArg realifiedCircularMatrixEnd hSource
+  simpa [InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi,
+    InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus,
+    InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus] using h
+
+/-- The existing three-mode real CAR equivalence transports the circular
+connection square identity to its inverse image in the genuine Koszul tensor
+algebra. No replacement multiplication or carrier is introduced. -/
+theorem circularConnection_square_eq_curvatureInRealCAR (x : Coordinate) :
+    realThreeMatrixTensorOnH4.symm (realifiedCircularMatrixEnd
+      (circularConnectionMat4 x)) *
+        realThreeMatrixTensorOnH4.symm (realifiedCircularMatrixEnd
+          (circularConnectionMat4 x)) =
+      realThreeMatrixTensorOnH4.symm (realifiedCircularMatrixEnd
+        (circularCurvatureMat4 x)) := by
+  apply realThreeMatrixTensorOnH4.injective
+  simp only [realThreeMatrixTensorOnH4.apply_symm_apply]
+  rw [map_mul, realThreeMatrixTensorOnH4.apply_symm_apply]
+  exact (realifiedCircularCurvature_eq_connection_square x).symm
+
+/-- In the existing real three-mode CAR algebra, the inverse images under its
+owner equivalence preserve the source chiral Peirce decomposition. The source
+projection remains distinct from CAR parity and Krein-frame chirality. -/
+theorem realCAR_circularConnection_peirceDecomposition (x : Coordinate) :
+    realThreeMatrixTensorOnH4.symm (realifiedCircularMatrixEnd chiralProjMat4) *
+        realThreeMatrixTensorOnH4.symm
+          (realifiedCircularMatrixEnd (circularConnectionMat4 x)) *
+        (1 - realThreeMatrixTensorOnH4.symm
+          (realifiedCircularMatrixEnd chiralProjMat4)) +
+      (1 - realThreeMatrixTensorOnH4.symm
+        (realifiedCircularMatrixEnd chiralProjMat4)) *
+        realThreeMatrixTensorOnH4.symm
+          (realifiedCircularMatrixEnd (circularConnectionMat4 x)) *
+        realThreeMatrixTensorOnH4.symm (realifiedCircularMatrixEnd chiralProjMat4) =
+      realThreeMatrixTensorOnH4.symm
+        (realifiedCircularMatrixEnd (circularConnectionMat4 x)) := by
+  apply realThreeMatrixTensorOnH4.injective
+  simpa [map_mul, map_add, map_sub, map_one] using
+      realifiedCircularConnection_peirceDecomposition x
+
 /-! ### Real Weyl channel in the two-factor Koszul tensor
 
 The circular Weyl matrix is realified and represented in the existing native
@@ -213,21 +312,12 @@ theorem realWeylUpperTensor_represents_weylUpperMat (x : Coordinate) :
   simp only [InfoGeometry.Canonical.Cl11JordanComplexRealificationBridge.realify_apply]
   fin_cases i <;> fin_cases j <;>
     dsimp [e, finProdFinEquiv] <;>
-    simp [realNestedMatrixToFin4, realNestedMatrixFlatten,
-      InfoGeometry.Clifford.Cl11GradedTensorMorita.head,
-      matrixE01, matrixE10, Matrix.algebraMap_matrix_apply,
+    simp [InfoGeometry.Clifford.Cl11GradedTensorMorita.head,
+      matrixE01, matrixE10,
       realPauliX, realPauliEpsilon, realPauliZ,
-      twoMatrixGradedTensorToCl11Tensor_tmul,
-      InfoGeometry.Clifford.Cl11GradedTensorMorita.tensorMatrixEquiv_apply,
-      InfoGeometry.Clifford.Cl11GradedTensorMorita.tensorToMatrix_tmul,
-      InfoGeometry.Clifford.Cl11GradedTensorMorita.head_apply,
-      InfoGeometry.Clifford.Cl11GradedTensorMorita.tail_apply,
-      AlgEquiv.coe_toAlgHom, Matrix.coe_reindexAlgEquiv,
-      Matrix.reindex_apply,
-      InfoGeometry.Canonical.Cl11JordanComplexRealificationBridge.realify,
-      InfoGeometry.Canonical.Cl11JordanComplexRealificationBridge.reindexBlock,
+      AlgEquiv.coe_toAlgHom,
       InfoGeometry.Canonical.Cl11JordanComplexRealificationBridge.blockRealify,
-      matrixParity_apply, Matrix.single, finProdFinEquiv,
+      Matrix.single,
       Fin.divNat, Fin.modNat,
       Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im,
       Complex.mul_re, Complex.mul_im] <;> ring

@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Physics.CuntzDeformedSuperPoincare
 import InfoGeometry.Canonical.Cl11JordanComplexRealificationBridge
 import InfoGeometry.Canonical.RealSolderingWeylKreinBridge
+import InfoGeometry.Canonical.HestenesRealGradedTensorRepresentation
 
 /-!
 # Real graded-tensor realization of the operator super-Poincaré relation
@@ -27,6 +28,9 @@ open InfoGeometry.Canonical.GradedTensorWeylBridge
 open InfoGeometry.Canonical.RealSolderingWeylKreinBridge
 open InfoGeometry.Canonical.SplitCliffordTowerUnification
 open InfoGeometry.Physics.CuntzDeformedSuperPoincare
+open InfoGeometry.Canonical.HestenesRealGradedTensorRepresentation
+open InfoGeometry.Canonical.RealChiralCARTranslationSynthesis
+open InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge
 open scoped TensorProduct GradedTensorProduct
 
 abbrev Tensor2 := InfoGeometry.Canonical.GradedTensorWeylBridge.twoMatrixGradedTensor
@@ -68,6 +72,46 @@ theorem realGradedTensor_superPoincare_relation
     (realify_superPoincare_relation S)
   simpa [chiralOperatorToRealGradedTensor, map_smul] using h
 
+/-- If the spinor momentum in a `ChiralOperatorPresentation` is the circular
+upper Weyl channel, its real graded-tensor realization is the image of the
+corresponding real Hestenes-even element. This identifies the channel
+operator on the actual two-factor Koszul tensor; it does not assert that an
+arbitrary complex spinor presentation has real coefficients. -/
+theorem chiralOperatorToRealGradedTensor_eq_hestenesEven
+    (x : InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.Coordinate)
+    (S : ChiralOperatorPresentation)
+    (hP : S.Pspinor = weylUpperMat x) :
+    chiralOperatorToRealGradedTensor S.Pspinor =
+      hestenesEvenToRealGradedTensor (circularWeylUpperEven x) := by
+  rw [hP]
+  change
+    twoMatrixGradedTensorMoritaEquiv.symm
+        (realNestedMatrixToFin4.symm
+          (InfoGeometry.Canonical.Cl11JordanComplexRealificationBridge.realifyRingHom
+            (weylUpperMat x))) =
+      hestenesEvenToRealGradedTensor (circularWeylUpperEven x)
+  rw [← circularWeylUpperTensor_eq_hestenesEven_image]
+  apply twoMatrixGradedTensorMoritaEquiv.injective
+  apply realNestedMatrixToFin4.injective
+  simp only [AlgEquiv.apply_symm_apply]
+  rw [realWeylUpperTensor_represents_weylUpperMat]
+  rfl
+
+/-- The same conditional Weyl/Hestenes identification after the existing
+real graded-tensor action on the doubled Krein carrier. -/
+theorem chiralOperatorOnDoubledKrein_eq_hestenesEvenOnDoubledKrein
+    (x : InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.Coordinate)
+    (S : ChiralOperatorPresentation)
+    (hP : S.Pspinor = weylUpperMat x) :
+    chiralOperatorOnDoubledKrein S.Pspinor =
+      hestenesEvenOnDoubledKrein (circularWeylUpperEven x) := by
+  have h := congrArg
+    (fun A : Tensor2 =>
+      doubleEnd (realTwoMatrixGradedTensorOnFourSpace A))
+    (chiralOperatorToRealGradedTensor_eq_hestenesEven x S hP)
+  simpa [chiralOperatorOnDoubledKrein, chiralOperatorOnFourSpace,
+    hestenesEvenOnDoubledKrein, doubleEndAlgHom] using h
+
 /-- The same operator equation acts on the real `FourSpace` carrier. -/
 theorem fourSpace_superPoincare_relation
     (S : ChiralOperatorPresentation) :
@@ -85,5 +129,17 @@ theorem doubledKrein_superPoincare_relation
       (2 : ℝ) • chiralOperatorOnDoubledKrein S.Pspinor := by
   have h := congrArg doubleEndAlgHom (fourSpace_superPoincare_relation S)
   simpa [chiralOperatorOnDoubledKrein, doubleEndAlgHom] using h
+
+/-- Under the explicit circular-Weyl identification of the spinor momentum,
+the transported super-Poincaré anticommutator is twice the corresponding
+real Hestenes-even operator on the doubled Krein carrier. -/
+theorem doubledKrein_superPoincare_eq_two_hestenesEven
+    (x : InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.Coordinate)
+    (S : ChiralOperatorPresentation)
+    (hP : S.Pspinor = weylUpperMat x) :
+    chiralOperatorOnDoubledKrein S.antiQQbar =
+      (2 : ℝ) • hestenesEvenOnDoubledKrein (circularWeylUpperEven x) := by
+  rw [doubledKrein_superPoincare_relation,
+    chiralOperatorOnDoubledKrein_eq_hestenesEvenOnDoubledKrein x S hP]
 
 end InfoGeometry.Canonical.RealSuperPoincareGradedTensorBridge

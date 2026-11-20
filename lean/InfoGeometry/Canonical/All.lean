@@ -1638,6 +1638,8 @@ import InfoGeometry.Canonical.MajoranaLiftPacketBridge
 import InfoGeometry.Canonical.MassieuNewtonKantorovichBridge
 import InfoGeometry.Canonical.MassieuOptimalTransport
 import InfoGeometry.Canonical.EmergentKillingField
+import InfoGeometry.Canonical.SouriauKillingLipschitzBridge
+import InfoGeometry.Canonical.SouriauHestenesRealTensorBridge
 import InfoGeometry.Canonical.MassieuPlanckWeylScalarBridge
 import InfoGeometry.Canonical.ManifoldDegreeCore
 import InfoGeometry.Canonical.ManifoldDegreeIntegration

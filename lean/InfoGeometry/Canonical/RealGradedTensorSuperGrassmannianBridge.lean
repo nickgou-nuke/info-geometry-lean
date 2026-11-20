@@ -8,6 +8,7 @@ import InfoGeometry.Canonical.SuperGrassmannianFiveGradedEightByEight
 import InfoGeometry.Krein.SplitOctonionZornRegularH4Bridge
 import InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge
 import InfoGeometry.Superalgebra.RealGradedZornCARBridge
+import InfoGeometry.Twistor.WeylZornMajoranaZeroMode
 
 /-!
 # Real graded-tensor bridge for the five-graded Fock superalgebra
@@ -27,6 +28,12 @@ namespace InfoGeometry.Canonical.RealGradedTensorSuperGrassmannianBridge
 
 open InfoGeometry.Canonical.RealSolderingWeylKreinBridge
 open InfoGeometry.Canonical.SuperGrassmannianFiveGradedEightByEight
+open InfoGeometry.Canonical.SplitOctonionRightRegularBraid
+open InfoGeometry.Krein.SplitOctonionZornRegularH4Bridge
+open InfoGeometry.Superalgebra.RealGradedZornCARBridge
+open InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge
+open InfoGeometry.Lie.SplitOctonionEllPolarization
+open InfoGeometry.Twistor.WeylZornMajoranaZeroMode
 
 abbrev TensorCarrier := realThreeMatrixGradedTensor
 abbrev FockCarrier := Matrix (Fin 8) (Fin 8) ℝ
@@ -397,5 +404,54 @@ theorem circularMajorana_threeMode_Clifford_relations (i j : Fin 3) :
     constructor
     · simp [hij, circularMajoranaSpace_cross_anticommute i j hij]
     · exact circularMajoranaTimeSpace_cross_anticommute i j hij
+
+/-! ### Boundary Majorana zero mode transported to the real supertensor -/
+
+private theorem circularMajoranaTime_realAction (i : Fin 3) :
+    realThreeMatrixTensorOnH4 (circularMajoranaTime i) =
+      transportZornOperator (majorana i) := by
+  simp only [circularMajoranaTime, circularRootMinusInTensor,
+    circularRootPlusInTensor, supercolorRightRegularInThreeMode,
+    supercolorToCanonicalZorn_canonical]
+  rw [map_add, realThreeMatrixTensorOnH4.apply_symm_apply,
+    realThreeMatrixTensorOnH4.apply_symm_apply]
+  rw [show majorana i =
+      InfoGeometry.Canonical.SplitOctonionCARRightRegularBridge.rightRegular
+          (rootPlus i) +
+        InfoGeometry.Canonical.SplitOctonionCARRightRegularBridge.rightRegular
+          (rootMinus i) from rfl,
+    transportZornOperator_add]
+  simp [rightRegularOnDoubleKrein, add_comm]
+
+private theorem transportZornOperator_sub (S T :
+    Module.End ℝ InfoGeometry.Canonical.SplitOctonionCARRightRegularBridge.CZ) :
+    transportZornOperator (S - T) =
+      transportZornOperator S - transportZornOperator T := by
+  have hneg : transportZornOperator (-T) = -transportZornOperator T := by
+    apply LinearMap.ext
+    intro z
+    simp [transportZornOperator, LinearMap.comp_apply]
+  rw [sub_eq_add_neg, transportZornOperator_add, hneg]
+  simp [sub_eq_add_neg]
+
+set_option maxRecDepth 4096
+/-- The Kitaev boundary Majorana zero-mode commutator survives the explicit
+right-regular representation into the three-factor Koszul tensor of real
+`2 × 2` matrix algebras, acting on the doubled real Krein carrier. This is
+the same circular Majorana family used by the real `Cl(3,3)` channel; it does
+not replace the nonassociative Zorn product by operator composition. -/
+theorem circularMajorana_boundary_zeroMode_realTensor :
+    realThreeMatrixTensorOnH4 (circularMajoranaTime 0) *
+        (realThreeMatrixTensorOnH4 (circularMajoranaTime 1) *
+          realThreeMatrixTensorOnH4 (circularMajoranaTime 2)) -
+      (realThreeMatrixTensorOnH4 (circularMajoranaTime 1) *
+        realThreeMatrixTensorOnH4 (circularMajoranaTime 2)) *
+        realThreeMatrixTensorOnH4 (circularMajoranaTime 0) = 0 := by
+  rw [circularMajoranaTime_realAction 0,
+    circularMajoranaTime_realAction 1,
+    circularMajoranaTime_realAction 2]
+  have h := congrArg transportZornOperator zornMajorana_zeroMode
+  simpa only [transportZornOperator_sub, transportZornOperator_mul,
+    transportZornOperator_add, transportZornOperator_zero] using h
 
 end InfoGeometry.Canonical.RealGradedTensorSuperGrassmannianBridge

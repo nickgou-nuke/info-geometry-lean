@@ -7,6 +7,7 @@ import InfoGeometry.Canonical.HestenesEvenPauliEquiv
 import InfoGeometry.Canonical.Cl11JordanComplexCommutantEquiv
 import InfoGeometry.Canonical.RealSolderingWeylKreinBridge
 import InfoGeometry.Canonical.RealGradedTensorSuperGrassmannianBridge
+import InfoGeometry.Canonical.RealChiralCARTranslationSynthesis
 
 /-!
 # Real Hestenes algebra inside the Koszul graded matrix tensor
@@ -30,6 +31,10 @@ open InfoGeometry.Canonical.RealSolderingWeylKreinBridge
 open InfoGeometry.Canonical.GradedTensorWeylBridge
 open InfoGeometry.Canonical.SplitCliffordTowerUnification
 open InfoGeometry.Canonical.RealGradedTensorSuperGrassmannianBridge
+open InfoGeometry.Canonical.RealChiralCARTranslationSynthesis
+open InfoGeometry.Lie.SplitOctonionDoubleChiralSolderingBridge
+open InfoGeometry.Quantum.PauliSoldering
+open HestenesPauliSheetBridge
 open HestenesCl14
 open Matrix
 open scoped TensorProduct GradedTensorProduct
@@ -53,6 +58,177 @@ def hestenesEvenToRealGradedTensor : HestenesEven →ₐ[ℝ] Tensor2 :=
       realNestedMatrixToFin4.symm.toAlgHom).comp
     ((commutantToMatrix.comp realifyCommutantHom).comp
       HestenesEvenPauliEquiv.clPlusPauliAlgEquiv)
+
+/-! ### Circular Weyl channels inside the real Hestenes even algebra
+
+The circular upper Weyl channel and the real Hestenes even algebra are two
+constructions of the same Pauli operator. The coefficient field of the
+Clifford element remains `ℝ`; the real Pauli equivalence records the complex
+structure internally and the graded-tensor image is the already-owned real
+operator tensor.
+-/
+
+/-- The real `Cl⁺(1,3)` element whose Pauli image is the upper circular Weyl
+channel. Its coefficients are real and its three spatial generators are the
+owner's even Clifford bivectors `sigmaEven 0`, `sigmaEven 1`, `sigmaEven 2`. -/
+def circularWeylUpperEven
+    (x : InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.Coordinate) :
+    HestenesEven :=
+  x 0 • (1 : HestenesEven) + x 1 • sigmaEven 0 +
+    x 2 • sigmaEven 1 + x 3 • sigmaEven 2
+
+/-- Under the genuine real Pauli equivalence, the real Hestenes element above
+is exactly the circular upper Weyl matrix. -/
+theorem clPlusPauli_circularWeylUpperEven
+    (x : InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.Coordinate) :
+    HestenesPauliSheetBridge.clPlusToPauli (circularWeylUpperEven x) =
+      InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylUpperMat x := by
+  simp only [circularWeylUpperEven, map_add, map_smul, map_one,
+    HestenesEvenPauliEquiv.clPlusToPauli_sigma0,
+    HestenesEvenPauliEquiv.clPlusToPauli_sigma1,
+    HestenesEvenPauliEquiv.clPlusToPauli_sigma2]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylUpperMat,
+      pauliSolder2x2, solder, σ0, σ1, σ2, σ3,
+      HestenesEvenPauliEquiv.pauli1, HestenesEvenPauliEquiv.pauli2,
+      HestenesEvenPauliEquiv.pauli3]
+
+/-- Exact coefficient-level identification of the circular upper Weyl
+channel with its real Hestenes-even element in the native two-factor
+Koszul-graded tensor. The existing three-mode inclusion and doubled-Krein
+action therefore apply to this same operator. -/
+theorem circularWeylUpperTensor_eq_hestenesEven_image
+    (x : InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.Coordinate) :
+    realWeylUpperTensor x =
+      hestenesEvenToRealGradedTensor (circularWeylUpperEven x) := by
+  have hPauli :
+      HestenesEvenPauliEquiv.clPlusPauliAlgEquiv (circularWeylUpperEven x) =
+        InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylUpperMat x := by
+    change HestenesPauliSheetBridge.clPlusToPauli (circularWeylUpperEven x) = _
+    exact clPlusPauli_circularWeylUpperEven x
+  apply twoMatrixGradedTensorMoritaEquiv.injective
+  apply realNestedMatrixToFin4.injective
+  calc
+    realNestedMatrixToFin4
+        (twoMatrixGradedTensorMoritaEquiv (realWeylUpperTensor x)) =
+        Cl11JordanComplexRealificationBridge.realify
+          (InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylUpperMat x) :=
+      realWeylUpperTensor_represents_weylUpperMat x
+    _ = Cl11JordanComplexRealificationBridge.realify
+        (HestenesEvenPauliEquiv.clPlusPauliAlgEquiv (circularWeylUpperEven x)) :=
+      congrArg Cl11JordanComplexRealificationBridge.realify
+        hPauli.symm
+    _ = realNestedMatrixToFin4
+        (twoMatrixGradedTensorMoritaEquiv
+          (hestenesEvenToRealGradedTensor (circularWeylUpperEven x))) := by
+      simp [hestenesEvenToRealGradedTensor, commutantToMatrix,
+        Cl11JordanComplexCommutantEquiv.realifyCommutantHom,
+        Cl11JordanComplexRealificationBridge.realifyRingHom]
+
+/-- The represented real Weyl generators retain noncommutative content in
+the real `2 × 2` graded tensor. This explicit witness is also the reason the
+real carrier cannot be replaced by a scalar or diagonal surrogate. -/
+def realWeylRootPlus0 : Tensor2 :=
+  realWeylUpperTensor
+    (InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis.coordinateEquiv
+      (InfoGeometry.Lie.SplitOctonionEllPolarization.rootPlus 0))
+
+def realWeylRootPlus1 : Tensor2 :=
+  realWeylUpperTensor
+    (InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis.coordinateEquiv
+      (InfoGeometry.Lie.SplitOctonionEllPolarization.rootPlus 1))
+
+theorem realWeylUpperTensor_rootPlus_noncommute :
+    realWeylRootPlus0 * realWeylRootPlus1 ≠
+      realWeylRootPlus1 * realWeylRootPlus0 := by
+  intro h
+  dsimp [realWeylRootPlus0, realWeylRootPlus1] at h
+  let E := twoMatrixGradedTensorMoritaEquiv.trans realNestedMatrixToFin4
+  let x₀ := InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis.coordinateEquiv
+    (InfoGeometry.Lie.SplitOctonionEllPolarization.rootPlus 0)
+  let x₁ := InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis.coordinateEquiv
+    (InfoGeometry.Lie.SplitOctonionEllPolarization.rootPlus 1)
+  have hReal := congrArg E h
+  rw [map_mul, map_mul] at hReal
+  change realNestedMatrixToFin4 (twoMatrixGradedTensorMoritaEquiv
+      (realWeylUpperTensor x₀)) *
+      realNestedMatrixToFin4 (twoMatrixGradedTensorMoritaEquiv
+        (realWeylUpperTensor x₁)) =
+    realNestedMatrixToFin4 (twoMatrixGradedTensorMoritaEquiv
+      (realWeylUpperTensor x₁)) *
+      realNestedMatrixToFin4 (twoMatrixGradedTensorMoritaEquiv
+        (realWeylUpperTensor x₀)) at hReal
+  rw [realWeylUpperTensor_represents_weylUpperMat x₀,
+    realWeylUpperTensor_represents_weylUpperMat x₁] at hReal
+  have hComplex :
+      InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylUpperMat x₀ *
+        InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylUpperMat x₁ =
+      InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylUpperMat x₁ *
+        InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylUpperMat x₀ := by
+    apply Cl11JordanComplexRealificationBridge.realify_injective
+    calc
+      _ = Cl11JordanComplexRealificationBridge.realify
+          (InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylUpperMat x₀) *
+          Cl11JordanComplexRealificationBridge.realify
+            (InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylUpperMat x₁) :=
+        Cl11JordanComplexRealificationBridge.realify_mul _ _
+      _ = Cl11JordanComplexRealificationBridge.realify
+          (InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylUpperMat x₁) *
+          Cl11JordanComplexRealificationBridge.realify
+            (InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylUpperMat x₀) := hReal
+      _ = Cl11JordanComplexRealificationBridge.realify
+          (InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylUpperMat x₁ *
+            InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylUpperMat x₀) :=
+        (Cl11JordanComplexRealificationBridge.realify_mul _ _).symm
+  exact InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylUpperMat_rootPlus_comm.2 hComplex
+
+/-- The lower circular sheet is presented in the upper Weyl coordinates by
+the source owner's signed lower-coordinate map; unused upper-sheet entries
+are zero. -/
+def circularWeylLowerCoordinates
+    (x : InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.Coordinate) :
+    InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.Coordinate :=
+  ![InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.circularSignedMinusCoord x 0,
+    InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.circularSignedMinusCoord x 1,
+    InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.circularSignedMinusCoord x 2,
+    InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.circularSignedMinusCoord x 3,
+    0, 0, 0, 0]
+
+/-- The signed lower Peirce sheet has exactly the lower Weyl soldering matrix
+when read through the existing upper-channel coordinates. -/
+theorem weylUpperMat_circularWeylLowerCoordinates
+    (x : InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.Coordinate) :
+    InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylUpperMat
+        (circularWeylLowerCoordinates x) =
+      InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylLowerMat x := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [circularWeylLowerCoordinates,
+      InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.circularSignedMinusCoord,
+      InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylUpperMat,
+      InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylLowerMat,
+      pauliSolder2x2,
+      solder,
+      σ0,
+      σ1,
+      σ2,
+      σ3]
+
+/-- The real Hestenes-even operator obtained from the signed lower sheet
+realifies to the existing lower Weyl block. This is the lower-channel
+counterpart to the upper tensor identity above. -/
+theorem hestenesEven_lowerWeyl_block_realification
+    (x : InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.Coordinate) :
+    realNestedMatrixToFin4
+        (twoMatrixGradedTensorMoritaEquiv
+          (hestenesEvenToRealGradedTensor
+            (circularWeylUpperEven (circularWeylLowerCoordinates x)))) =
+      Cl11JordanComplexRealificationBridge.realify
+        (InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylLowerMat x) := by
+  rw [← circularWeylUpperTensor_eq_hestenesEven_image]
+  rw [realWeylUpperTensor_represents_weylUpperMat,
+    weylUpperMat_circularWeylLowerCoordinates]
 
 /-- The real tensor representation, diagonally lifted to the doubled
 Krein/Hestenes carrier. -/
@@ -82,6 +258,103 @@ theorem hestenesEven_threeMode_action (x : HestenesEven) :
     doubleEndAlgHom] using
       realThreeMatrixTensorOnH4_twoModeIntoThreeMode
         (hestenesEvenToRealGradedTensor x)
+
+/-- The existing three-mode CAR action of the circular upper Weyl channel is
+the same doubled-Krein operator as its real Hestenes-even representative. -/
+theorem circularWeylUpper_threeMode_action
+    (x : InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.Coordinate) :
+    realThreeMatrixTensorOnH4
+        (InfoGeometry.Canonical.RealSolderingWeylKreinBridge.twoModeIntoThreeMode
+          (realWeylUpperTensor x)) =
+      hestenesEvenOnDoubledKrein (circularWeylUpperEven x) := by
+  rw [circularWeylUpperTensor_eq_hestenesEven_image,
+    realThreeMatrixTensorOnH4_twoModeIntoThreeMode]
+  rfl
+
+/- The CAR creation operator attached to a circular `rootPlus` channel is
+not the Pauli/Clifford vector obtained by soldering the same coordinate
+vector. Both operators act on the same doubled real Krein carrier, but their
+products distinguish their roles: right-regular multiplication by the Zorn
+root is square-zero, whereas the soldered Weyl vector squares to the
+identity. The shared coordinate label therefore does not identify the
+operator-algebra CAR generator with the spacetime Clifford generator. -/
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 1000000 in
+theorem circularRootPlus_creation_ne_solderedWeyl_vector (i : Fin 3) :
+    realThreeMatrixTensorOnH4 (circularRootPlusInTensor i) ≠
+      doubleEnd (realTwoMatrixGradedTensorOnFourSpace
+        (realWeylUpperTensor
+          (InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis.coordinateEquiv
+            (InfoGeometry.Lie.SplitOctonionEllPolarization.rootPlus i)))) := by
+  intro hEq
+  have hSq := congrArg (fun A : Module.End ℝ KreinFrame4 => A * A) hEq
+  have hCreationSq :
+      realThreeMatrixTensorOnH4 (circularRootPlusInTensor i) *
+        realThreeMatrixTensorOnH4 (circularRootPlusInTensor i) = 0 := by
+    have hTensorSq : circularRootPlusInTensor i * circularRootPlusInTensor i = 0 := by
+      apply realThreeMatrixTensorOnH4.injective
+      unfold circularRootPlusInTensor
+      rw [map_mul,
+      InfoGeometry.Superalgebra.RealGradedZornCARBridge.supercolorRightRegularInThreeMode,
+      realThreeMatrixTensorOnH4.apply_symm_apply,
+      InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolorToCanonicalZorn_canonical,
+      InfoGeometry.Krein.SplitOctonionZornRegularH4Bridge.rightRegularOnDoubleKrein_rootPlus_sq,
+      map_zero]
+    rw [← map_mul, hTensorSq, map_zero]
+  have hWeylSq :
+      doubleEnd (realTwoMatrixGradedTensorOnFourSpace
+        (realWeylUpperTensor
+          (InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis.coordinateEquiv
+            (InfoGeometry.Lie.SplitOctonionEllPolarization.rootPlus i)))) *
+      doubleEnd (realTwoMatrixGradedTensorOnFourSpace
+        (realWeylUpperTensor
+          (InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis.coordinateEquiv
+            (InfoGeometry.Lie.SplitOctonionEllPolarization.rootPlus i)))) = 1 := by
+    let x := InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis.coordinateEquiv
+      (InfoGeometry.Lie.SplitOctonionEllPolarization.rootPlus i)
+    have hTensorSq : realWeylUpperTensor x ^ 2 = 1 := by
+      let E := twoMatrixGradedTensorMoritaEquiv.trans realNestedMatrixToFin4
+      have hRep : E (realWeylUpperTensor x) =
+          InfoGeometry.Canonical.Cl11JordanComplexRealificationBridge.realify
+            (InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylUpperMat x) :=
+        realWeylUpperTensor_represents_weylUpperMat x
+      have hPauliSq :
+          (InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylUpperMat x) ^ 2 = 1 := by
+        rw [show x = InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis.coordinateEquiv
+            (InfoGeometry.Lie.SplitOctonionEllPolarization.rootPlus i) by rfl,
+          InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylUpperMat_rootPlus]
+        rw [pow_two]
+        fin_cases i <;>
+          ext a b <;> fin_cases a <;> fin_cases b <;>
+            simp [Matrix.mul_apply, Fin.sum_univ_two,
+            InfoGeometry.Quantum.PauliSoldering.σ1,
+            InfoGeometry.Quantum.PauliSoldering.σ2,
+            InfoGeometry.Quantum.PauliSoldering.σ3, Complex.I_mul_I]
+      apply E.injective
+      calc
+        E (realWeylUpperTensor x ^ 2) = E (realWeylUpperTensor x) ^ 2 := by rw [map_pow]
+        _ = InfoGeometry.Canonical.Cl11JordanComplexRealificationBridge.realify
+            (InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylUpperMat x) ^ 2 := by rw [hRep]
+        _ = InfoGeometry.Canonical.Cl11JordanComplexRealificationBridge.realify
+            ((InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge.weylUpperMat x) ^ 2) := by
+              rw [pow_two,
+                ← InfoGeometry.Canonical.Cl11JordanComplexRealificationBridge.realify_mul,
+                pow_two]
+        _ = E 1 := by
+          rw [hPauliSq,
+            InfoGeometry.Canonical.Cl11JordanComplexRealificationBridge.realify_one,
+            map_one]
+    let f : Tensor2 →ₐ[ℝ] Module.End ℝ KreinFrame4 :=
+      doubleEndAlgHom.comp realTwoMatrixGradedTensorOnFourSpace.toAlgHom
+    change f (realWeylUpperTensor x) * f (realWeylUpperTensor x) = 1
+    calc
+      _ = f (realWeylUpperTensor x * realWeylUpperTensor x) := by
+        exact (f.map_mul _ _).symm
+      _ = f (realWeylUpperTensor x ^ 2) := by rw [pow_two]
+      _ = f 1 := by rw [hTensorSq]
+      _ = 1 := f.map_one
+  rw [hCreationSq, hWeylSq] at hSq
+  exact zero_ne_one hSq
 
 /-- The real Fock-matrix action agrees with the same operator on the doubled
 Krein carrier. This transports the Hestenes representation to the owner used

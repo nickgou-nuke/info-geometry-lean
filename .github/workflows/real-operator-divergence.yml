@@ -1,0 +1,147 @@
+name: Real operator divergence
+
+# Reconstructed from the maintained real-matrix-split workflow at
+# fea96b564201654cd4693008585039a56f66adf3; original workflow bytes were unavailable.
+on:
+  pull_request:
+    paths:
+      # Cover the seven owners and all reused Lean imports, including LogDet.
+      # The audit runner still builds only its seven explicit owner targets.
+      - 'lean/**/*.lean'
+      - 'verification/real-operator-divergence/**'
+      - 'verification/real-matrix-split/**'
+      - 'lean-toolchain'
+      - 'lakefile.lean'
+      - 'lake-manifest.json'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/infra/opengauss_screener.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/pathing.py'
+      - 'docs/REAL_OPERATOR_DIVERGENCE_CONTRACT.md'
+      - '.github/workflows/real-operator-divergence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: real-operator-divergence-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Record checked commit and tree
+        run: |
+          set -euo pipefail
+          {
+            git rev-parse HEAD
+            git rev-parse 'HEAD^{tree}'
+            git status --short
+          } | tee real-operator-divergence-revision.log
+
+      - name: Check root pins and maintained source inventory before cache use
+        run: |
+          set -euo pipefail
+          python3 verification/real-matrix-split/audit.py 2>&1 | tee real-operator-divergence-pins.log
+
+      - name: Screen the seven mathematical owners
+        run: |
+          set -euo pipefail
+          owners=(
+            lean/InfoGeometry/Architecture/MatrixSymmetricConeFisherRao.lean
+            lean/InfoGeometry/Jordan/SPD.lean
+            lean/InfoGeometry/Jordan/BurgStein.lean
+            lean/InfoGeometry/Geometry/DualFlatKreinLegendreGraph.lean
+            lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean
+            lean/InfoGeometry/OperatorAlgebra/PeirceSpine/CyclotomicGaloisNilpotentSylvesterSynthesis.lean
+            lean/InfoGeometry/Algebra/CyclotomicRealCounterexamples.lean
+          )
+          python3 tools/infra/opengauss_screener.py --strict "${owners[@]}" 2>&1 | tee real-operator-divergence-screen.log
+
+      - name: Restore pinned dependencies
+        id: dependencies
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: real-operator-divergence-deps-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'verification/real-matrix-split/lean-toolchain', 'verification/real-matrix-split/lakefile.toml', 'verification/real-matrix-split/lake-manifest.json') }}-v1
+
+      - name: Restore checked source artifacts
+        id: source
+        uses: actions/cache/restore@v4
+        with:
+          path: verification/real-matrix-split/.lake/build
+          key: real-operator-divergence-source-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'verification/real-matrix-split/lean-toolchain', 'verification/real-matrix-split/lakefile.toml', 'verification/real-matrix-split/lake-manifest.json') }}-${{ hashFiles('lean/**/*.lean', 'lakefile.lean', 'verification/real-matrix-split/*.py', 'verification/real-operator-divergence/*.py', 'tools/build_lock.py', 'tools/infra/build.py', 'tools/infra/opengauss_screener.py', 'tools/quality/reviewed_audit_source.py', 'tools/pathing.py', '.github/workflows/real-operator-divergence.yml') }}-v1
+          restore-keys: |
+            real-operator-divergence-source-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'verification/real-matrix-split/lean-toolchain', 'verification/real-matrix-split/lakefile.toml', 'verification/real-matrix-split/lake-manifest.json') }}-
+
+      - name: Install the root-pinned Lean toolchain
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean_toolchain="$(cat lean-toolchain)"
+          test -n "$lean_toolchain"
+          {
+            elan toolchain install "$lean_toolchain"
+            lean --version
+            lake --version
+          } 2>&1 | tee real-operator-divergence-toolchain.log
+
+      - name: Hydrate the pinned Mathlib artifacts
+        run: |
+          set -euo pipefail
+          python3 verification/real-matrix-split/check.py exe cache get 2>&1 | tee real-operator-divergence-cache.log
+
+      - name: Build the seven owners and audit native declarations
+        run: |
+          set -euo pipefail
+          test ! -e "$GITHUB_WORKSPACE/real-operator-divergence-evidence"
+          python3 verification/real-operator-divergence/audit.py \
+            --repo "$GITHUB_WORKSPACE" \
+            --output "$GITHUB_WORKSPACE/real-operator-divergence-evidence" \
+            2>&1 | tee real-operator-divergence-driver.log
+
+      - name: Save pinned dependency artifacts after successful checks
+        if: success() && steps.dependencies.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: ${{ steps.dependencies.outputs.cache-primary-key }}
+
+      - name: Save checked source artifacts after successful checks
+        if: success() && steps.source.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: verification/real-matrix-split/.lake/build
+          key: ${{ steps.source.outputs.cache-primary-key }}
+
+      - name: Preserve validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: real-operator-divergence-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: warn
+          path: |
+            real-operator-divergence-evidence/**
+            real-operator-divergence-driver.log
+            real-operator-divergence-screen.log
+            real-operator-divergence-pins.log
+            real-operator-divergence-toolchain.log
+            real-operator-divergence-cache.log
+            real-operator-divergence-revision.log

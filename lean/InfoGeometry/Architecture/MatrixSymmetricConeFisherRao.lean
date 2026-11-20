@@ -1,4 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.OperatorAlgebra.RealMatrixSplit
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
@@ -78,7 +85,7 @@ theorem fisherRaoMetric_symm (S_inv : Mat) (X Y : Mat) :
 -/
 theorem fisherRaoMetric_congruence_invariant
     (A S_inv : Mat) (A_inv : Mat)
-    (hA_left : A_inv * A = 1) (_hA_right : A * A_inv = 1)
+    (hA_left : A_inv * A = 1)
     (X Y : Mat) :
     fisherRaoMetric (A_invᵀ * S_inv * A_inv) (congruenceAction A X) (congruenceAction A Y) =
       fisherRaoMetric S_inv X Y := by
@@ -130,7 +137,7 @@ theorem fisherRaoMetric_nonneg_at_identity (X : Mat) (hX : Xᵀ = X) :
     apply Finset.sum_nonneg; intro i _
     apply Finset.sum_nonneg; intro j _
     exact sq_nonneg (X i j)
-  exact mul_nonneg (by linarith) h_sum_nonneg
+  exact mul_nonneg (by norm_num : (0 : ℝ) ≤ 1 / 2) h_sum_nonneg
 
 /-- THEOREM 5: Non-degeneracy of the Fisher–Rao metric on symmetric matrices. -/
 theorem fisherRaoMetric_zero_iff_at_identity (X : Mat) (hX : Xᵀ = X) :
@@ -155,6 +162,154 @@ theorem fisherRaoMetric_zero_iff_at_identity (X : Mat) (hX : Xᵀ = X) :
     exact h_sq_zero i j
   · intro h
     subst h
+    simp
+
+open InfoGeometry.OperatorAlgebra.RealMatrixSplit
+
+/-- The linear term of the covariance congruence action in generator `A`. -/
+def congruenceTangent (S A : Mat) : Mat := A * S + S * Aᵀ
+
+/-- An exact polynomial expansion identifies the congruence tangent. -/
+theorem congruenceAction_affine_generator (S A : Mat) (t : ℝ) :
+    congruenceAction (1 + t • A) S =
+      S + t • congruenceTangent S A + t ^ 2 • congruenceAction A S := by
+  simp only [congruenceAction, congruenceTangent, Matrix.transpose_add,
+    Matrix.transpose_one, Matrix.transpose_smul, add_mul, mul_add,
+    one_mul, mul_one, smul_mul_assoc, mul_smul_comm, smul_add, smul_smul,
+    pow_two]
+  abel
+
+omit [DecidableEq n] in
+/-- A symmetric covariance has a symmetric congruence tangent. -/
+theorem congruenceTangent_transpose (S A : Mat) (hS : Sᵀ = S) :
+    (congruenceTangent S A)ᵀ = congruenceTangent S A := by
+  simp only [congruenceTangent, Matrix.transpose_add, Matrix.transpose_mul,
+    Matrix.transpose_transpose, hS]
+  abel
+
+/-- The skew generator contributes a commutator, including at anisotropic
+covariances. No commutation hypothesis discards that contribution. -/
+theorem congruenceTangent_of_split (S G Ω A : Mat)
+    (hG : Gᵀ = G) (hΩ : Ωᵀ = -Ω) (hA : G + Ω = A) :
+    congruenceTangent S A =
+      (G * S + S * G) + (Ω * S - S * Ω) := by
+  rw [congruenceTangent, ← hA, Matrix.transpose_add, hG, hΩ]
+  noncomm_ring
+
+/-- Polarization retains the two ordered mixed contributions, combined using
+the already established symmetry of the Fisher bilinear form. -/
+theorem fisherRaoMetric_add_self (S_inv X Y : Mat) :
+    fisherRaoMetric S_inv (X + Y) (X + Y) =
+      fisherRaoMetric S_inv X X + 2 * fisherRaoMetric S_inv X Y +
+        fisherRaoMetric S_inv Y Y := by
+  have hsym := fisherRaoMetric_symm S_inv X Y
+  simp only [fisherRaoMetric, mul_add, add_mul, Matrix.trace_add] at hsym ⊢
+  simp only [← hsym, two_mul, add_assoc]
+
+/-- The full matrix pullback contains a symmetric/skew mixed term. This is
+the exact correction to an unconditional orthogonal three-sector split. -/
+theorem fisherRaoMetric_congruenceTangent_split
+    (S_inv S G Ω A : Mat)
+    (hG : Gᵀ = G) (hΩ : Ωᵀ = -Ω) (hA : G + Ω = A) :
+    fisherRaoMetric S_inv (congruenceTangent S A) (congruenceTangent S A) =
+      fisherRaoMetric S_inv (G * S + S * G) (G * S + S * G) +
+        2 * fisherRaoMetric S_inv (G * S + S * G) (Ω * S - S * Ω) +
+        fisherRaoMetric S_inv (Ω * S - S * Ω) (Ω * S - S * Ω) := by
+  rw [congruenceTangent_of_split S G Ω A hG hΩ hA]
+  exact fisherRaoMetric_add_self S_inv _ _
+
+/-- At the identity covariance, the skew generator is invisible to the
+congruence tangent. -/
+theorem congruenceTangent_identity (A : Mat) :
+    congruenceTangent 1 A = (2 : ℝ) • (selfAdjointPart ℝ A : Mat) := by
+  rw [congruenceTangent, selfAdjointPart_eq_half]
+  simp only [mul_one, one_mul, smul_smul]
+  norm_num
+
+/-- A Gram covariance transports its tangent from the whitened generator.
+The inverse is supplied explicitly; all matrix products retain their order. -/
+theorem congruenceTangent_gram (G H A : Mat) (hGH : G * H = 1) :
+    congruenceTangent (G * Gᵀ) A =
+      congruenceAction G (H * A * G + (H * A * G)ᵀ) := by
+  have hT : Hᵀ * Gᵀ = (1 : Mat) := by
+    rw [← Matrix.transpose_mul, hGH, Matrix.transpose_one]
+  symm
+  simp only [congruenceAction, Matrix.transpose_mul]
+  calc
+    G * (H * A * G + Gᵀ * (Aᵀ * Hᵀ)) * Gᵀ =
+        (G * H) * A * (G * Gᵀ) + (G * Gᵀ) * Aᵀ * (Hᵀ * Gᵀ) := by
+      noncomm_ring
+    _ = congruenceTangent (G * Gᵀ) A := by
+      rw [hGH, hT]
+      simp [congruenceTangent]
+
+/-- The existing Fisher congruence invariance gives the full, noncommuting
+generator pullback at every invertible real Gram frame. -/
+theorem fisherRaoMetric_congruenceTangent_gram
+    (G H A : Mat) (hHG : H * G = 1) (hGH : G * H = 1) :
+    fisherRaoMetric (Hᵀ * H)
+        (congruenceTangent (G * Gᵀ) A) (congruenceTangent (G * Gᵀ) A) =
+      fisherRaoMetric 1 (H * A * G + (H * A * G)ᵀ)
+        (H * A * G + (H * A * G)ᵀ) := by
+  rw [congruenceTangent_gram G H A hGH]
+  simpa only [mul_one] using
+    fisherRaoMetric_congruence_invariant G (1 : Mat) H hHG
+      (H * A * G + (H * A * G)ᵀ) (H * A * G + (H * A * G)ᵀ)
+
+/-- The pullback is twice the squared Frobenius norm of the native
+self-adjoint part of the whitened generator. -/
+theorem fisherRaoMetric_congruenceTangent_eq_sum_sq
+    (G H A : Mat) (hHG : H * G = 1) (hGH : G * H = 1) :
+    fisherRaoMetric (Hᵀ * H)
+        (congruenceTangent (G * Gᵀ) A) (congruenceTangent (G * Gᵀ) A) =
+      2 * ∑ i, ∑ j, ((selfAdjointPart ℝ (H * A * G) : Mat) i j) ^ 2 := by
+  rw [fisherRaoMetric_congruenceTangent_gram G H A hHG hGH,
+    fisherRaoMetric_at_identity]
+  have hsym : (H * A * G + (H * A * G)ᵀ)ᵀ =
+      H * A * G + (H * A * G)ᵀ := by
+    rw [Matrix.transpose_add, Matrix.transpose_transpose, add_comm]
+  rw [trace_mul_self_eq_sum_sq _ hsym]
+  simp only [Finset.mul_sum, selfAdjointPart_eq_half]
+  apply Finset.sum_congr rfl
+  intro i _
+  apply Finset.sum_congr rfl
+  intro j _
+  simp only [Matrix.smul_apply, smul_eq_mul]
+  let x : ℝ := (H * A * G + (H * A * G)ᵀ) i j
+  have hreal : (1 / 2 : ℝ) * x ^ 2 = 2 * ((1 / 2 : ℝ) * x) ^ 2 := by
+    ring
+  exact hreal
+
+/-- Positivity is obtained for the entire matrix generator, with no diagonal
+or commutation reduction. -/
+theorem fisherRaoMetric_congruenceTangent_nonneg
+    (G H A : Mat) (hHG : H * G = 1) (hGH : G * H = 1) :
+    0 ≤ fisherRaoMetric (Hᵀ * H)
+      (congruenceTangent (G * Gᵀ) A) (congruenceTangent (G * Gᵀ) A) := by
+  rw [fisherRaoMetric_congruenceTangent_eq_sum_sq G H A hHG hGH]
+  exact mul_nonneg (by norm_num)
+    (Finset.sum_nonneg fun i _ => Finset.sum_nonneg fun j _ => sq_nonneg _)
+
+/-- The nullspace is exactly the skew-adjoint whitened generator, the
+infinitesimal stabilizer of the covariance congruence action. -/
+theorem fisherRaoMetric_congruenceTangent_zero_iff
+    (G H A : Mat) (hHG : H * G = 1) (hGH : G * H = 1) :
+    fisherRaoMetric (Hᵀ * H)
+        (congruenceTangent (G * Gᵀ) A) (congruenceTangent (G * Gᵀ) A) = 0 ↔
+      (H * A * G)ᵀ = -(H * A * G) := by
+  rw [fisherRaoMetric_congruenceTangent_gram G H A hHG hGH]
+  have hsym : (H * A * G + (H * A * G)ᵀ)ᵀ =
+      H * A * G + (H * A * G)ᵀ := by
+    rw [Matrix.transpose_add, Matrix.transpose_transpose, add_comm]
+  rw [fisherRaoMetric_zero_iff_at_identity _ hsym]
+  constructor
+  · intro hzero
+    calc
+      (H * A * G)ᵀ =
+          (H * A * G + (H * A * G)ᵀ) - H * A * G := by abel
+      _ = -(H * A * G) := by rw [hzero]; simp
+  · intro hskew
+    rw [hskew]
     simp
 
 end InfoGeometry.Architecture.MatrixSymmetricCone

@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 
+import Mathlib.Tactic.Linarith
+import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Algebra.CharP.Invertible
 import Mathlib.Algebra.Star.Module
 import Mathlib.Basic.Real.Star
@@ -94,5 +96,37 @@ theorem skewAdjointPart_congruence (M P : Matrix n n ℝ) :
     Matrix.mul_assoc, mul_sub, sub_mul, smul_sub, smul_mul_assoc, mul_smul_comm]
 
 end Multiplication
+
+
+section TracePairing
+
+variable [Fintype n]
+
+/-- Symmetric and skew-symmetric real matrices are orthogonal under the
+ordinary trace pairing. -/
+theorem trace_mul_eq_zero_of_symmetric_skew
+    {G Ω : Matrix n n ℝ}
+    (hG : G.transpose = G) (hΩ : Ω.transpose = -Ω) :
+    trace (G * Ω) = 0 := by
+  have hneg : trace (G * Ω) = -trace (G * Ω) := by
+    calc
+      trace (G * Ω) = trace ((G * Ω).transpose) :=
+        (trace_transpose _).symm
+      _ = trace (-Ω * G) := by rw [transpose_mul, hΩ, hG]
+      _ = -trace (G * Ω) := by rw [neg_mul, trace_neg, trace_mul_comm Ω G]
+  linarith
+
+/-- The commutator expectation vanishes for a real symmetric weight and
+real symmetric observables, without any commutation assumption. -/
+theorem trace_mul_commutator_eq_zero_of_symmetric
+    {ρ A B : Matrix n n ℝ}
+    (hρ : ρ.transpose = ρ) (hA : A.transpose = A)
+    (hB : B.transpose = B) :
+    trace (ρ * (A * B - B * A)) = 0 := by
+  apply trace_mul_eq_zero_of_symmetric_skew hρ
+  rw [transpose_sub, transpose_mul, transpose_mul, hA, hB]
+  noncomm_ring
+
+end TracePairing
 
 end InfoGeometry.OperatorAlgebra.RealMatrixSplit

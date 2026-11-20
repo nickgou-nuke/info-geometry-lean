@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.PeirceCompressionDefect
@@ -108,5 +113,46 @@ theorem normalizedDyad_ker (v : E) (f : Module.Dual 𝕜 E)
     rw [← covector_normalizedDyad v x f h, hx, map_zero]
   · intro hx
     simp [normalizedDyad_apply, hx]
+
+end InfoGeometry.LinearAlgebra.RegularDyadCompression
+
+namespace InfoGeometry.LinearAlgebra.RegularDyadCompression
+
+variable {𝕜 E : Type*} [Field 𝕜] [AddCommGroup E] [Module 𝕜 E]
+
+/-- The ordered product retains the first vector and second covector. -/
+theorem normalizedDyad_mul (v w : E) (f g : Module.Dual 𝕜 E) :
+    normalizedDyad v f * normalizedDyad w g =
+      (f w / (f v * g w)) • g.smulRight v := by
+  ext x
+  simp only [Module.End.mul_apply, normalizedDyad_apply, map_smul,
+    LinearMap.smul_apply, LinearMap.smulRight_apply, smul_smul]
+  congr 1
+  simp only [div_eq_mul_inv, mul_inv_rev]
+  ring
+
+/-- Independent nonzero representative rescalings preserve the actual
+endomorphism on the nonincident locus. -/
+theorem normalizedDyad_rescale (v : E) (f : Module.Dual 𝕜 E)
+    (a b : 𝕜) (ha : a ≠ 0) (hb : b ≠ 0) (h : f v ≠ 0) :
+    normalizedDyad (a • v) (b • f) = normalizedDyad v f := by
+  ext x
+  simp only [normalizedDyad_apply, LinearMap.smul_apply, map_smul,
+    smul_eq_mul, smul_smul]
+  congr 1
+  field_simp [ha, hb, h]
+
+/-- The image is the primal line, with no finite-dimensional assumption. -/
+theorem normalizedDyad_range (v : E) (f : Module.Dual 𝕜 E)
+    (h : f v ≠ 0) : (normalizedDyad v f).range = 𝕜 ∙ v := by
+  ext x
+  constructor
+  · rintro ⟨y, rfl⟩
+    rw [normalizedDyad_apply]
+    exact Submodule.smul_mem _ _ (Submodule.mem_span_singleton_self v)
+  · intro hx
+    obtain ⟨a, ha⟩ := Submodule.mem_span_singleton.mp hx
+    refine ⟨a • v, ?_⟩
+    rw [map_smul, normalizedDyad_self v f h, ha]
 
 end InfoGeometry.LinearAlgebra.RegularDyadCompression

@@ -1,4 +1,10 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+/-
 The primitive three-direction axial channel.
 
 This file deliberately defines the parity-twisted Levi--Civita cross channel
@@ -6,7 +12,11 @@ before any quaternionic representation theorem.  The free index is explicit;
 the quaternionic commutator is a later readout, not the definition.
 -/
 
-import Mathlib
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Algebra.Module.Pi
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.NoncommRing
+import Mathlib.Tactic.Ring
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section

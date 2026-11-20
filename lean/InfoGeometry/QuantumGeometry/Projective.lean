@@ -1,6 +1,17 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.QuantumGeometry.Projective.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.QuantumGeometry.Projective.QGT
+import InfoGeometry.QuantumGeometry.Projective.QGTMatrix
+
+import InfoGeometry.QuantumGeometry.Projective.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.QuantumGeometry.Projective.QGT
+import InfoGeometry.QuantumGeometry.Projective.NormalizedOverlapDifferential
 import InfoGeometry.QuantumGeometry.Projective.Quotient
 import InfoGeometry.QuantumGeometry.Projective.KreinSolderingBridge
 import InfoGeometry.QuantumGeometry.KreinToHilbertCartanBridge
@@ -18,6 +29,8 @@ bridge, and skew-adjoint Lie representations under the canonical namespace:
 by re-exporting:
 - `InfoGeometry.QuantumGeometry.Projective.Basic`
 - `InfoGeometry.QuantumGeometry.Projective.QGT`
+- `InfoGeometry.QuantumGeometry.Projective.QGTMatrix`
+- `InfoGeometry.QuantumGeometry.Projective.NormalizedOverlapDifferential`
 - `InfoGeometry.QuantumGeometry.Projective.Quotient`
 - `InfoGeometry.QuantumGeometry.Projective.KreinSolderingBridge`
 - `InfoGeometry.QuantumGeometry.KreinToHilbertCartanBridge`

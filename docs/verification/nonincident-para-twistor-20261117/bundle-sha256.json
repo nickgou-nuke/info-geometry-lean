@@ -1,0 +1,13 @@
+{
+  "axioms.log": "d509afe7b93468b28ce552297eb8ab0511422dde8f19c378fa84e8d1ddb18347",
+  "independent-acceptance.json": "96e6d1693ce117b75be9f7da2e9d41062d8a79453aabcf0ce7e72477db214af2",
+  "module-logs.json": "6d2792d4a42160a85ff5274e195343c530f1b1a10c9871a54608b38ed4615f09",
+  "native-audit-source.txt": "9875231014bf16bb6a6fe1df762a6b09c75cfac1301376a315e7e9397dbee939",
+  "native-environment.json": "e5f583848d6625e54688cf8dac5cc8571aefc6a731626902eea207e2614b5958",
+  "native-evidence-sha256.json": "353b17bd0daba34d14ffb33cde59af8076499cdc7375363306be9eb3ad760878",
+  "native-report.json": "afed7f85fa01d100829faa620d15563b59e35e304603a83e857f369971022994",
+  "source-commit-hooks.json": "52c2c096c4c0e76e0dbbf52ef2b5afde8e91fcd1ee6e39ef3e9a7b12c1ff555e",
+  "static.json": "4291330b9c2e9e986eb62721debe9a4faa37775ba4122973cdb19fe933d55766",
+  "supervision.json": "e926268604ee2dceaefa36653ad44a3d49b34725fd2eeb6f2807f23e617d83a1",
+  "warning-source-baseline.json": "405a32b72729204927514186954ddf2ee24e6e2fc1bfdbe424b1c2d2647e15c1"
+}

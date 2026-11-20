@@ -1,0 +1,199 @@
+### PHASE 0 — `SOLVE`: ELENCTIC DISSOLUTION INTO IRREDUCIBLE PRIMITIVES
+
+Stripping away the compressed noun-stacking and orthographic slip (`"suprisal"`)—while maintaining strict **$i$-free real Lie-group and operator algebra**—exposes four exact mathematical contradictions hidden inside the claim that Souriau metriplectic dynamics is driven directly by a single `"suprisal log generating operator"`:
+
+1. **The Single-Generator Metriplectic Paralysis Paradox ($\mathcal{G}_1 = \mathcal{G}_2 \implies \dot{F} \equiv 0$)**:
+   Any valid Morrison metriplectic flow $\dot{F} = \{F, \mathcal{G}_1\}_{\text{LP}} + (F, \mathcal{G}_2)$ obeys two foundational degeneracy laws: the dissipative bracket must annihilate the conservative generator ($(F, \mathcal{G}_1) \equiv 0$, First Law), and the Lie–Poisson bracket must annihilate the dissipative generator ($\{F, \mathcal{G}_2\}_{\text{LP}} \equiv 0$, adiabatic Casimir invariance). **If a single surprisal operator $K$ drives both brackets ($\mathcal{G}_1 = \mathcal{G}_2 = K$), then $\dot{F} = \{F, K\}_{\text{LP}} + (F, K) = 0 + 0 \equiv 0$ identically!** Likewise, at Souriau–Gibbs equilibrium $\rho_\beta = Z(\beta)^{-1}e^{-\widehat{K}_\beta}$, the surprisal operator $\widehat{K}_\beta = -\ln\rho_\beta$ commutes with $\rho_\beta$ ($[\rho_\beta, \widehat{K}_\beta] = 0$) and has zero thermodynamic gradient. Non-trivial metriplectic motion exists **exclusively through the misalignment between two distinct generators**: an orbit-tangent Hamiltonian $H$ ($\{F, H\}_{\text{LP}} \neq 0$) and an orbit-transverse Entropy Casimir $S$ ($(F, S) \neq 0$).
+2. **Conflation of Three Distinct Logarithmic Objects Across Dual Spaces**:
+   `"the suprisal log generating operator"` fuses three non-interchangeable objects with distinct domains, signs, and commutativity laws:
+   * **Microscopic State Surprisal Operator** $\widehat{I}(\rho) := -\ln\rho \in \mathrm{End}_{\mathbb{R}}(\mathcal{K})$: An operator on state space (diverging to $+\infty$ if $\ker\rho \neq \{0\}$), violating additive logarithm laws ($\ln(AB) \neq \ln A + \ln B$) whenever moment generators $[\widehat{U}_a, \widehat{U}_b] \neq 0$ fail to commute!
+   * **Macroscopic Log-Partition (Cumulant Generating) Potential** $\Psi(\beta) := +\ln\int_{\mathcal{O}} e^{-\langle\xi, \beta\rangle}d\lambda_\omega(\xi)$: A **scalar convex functional** defined strictly on Souriau’s open convex **Gibbs temperature cone** $\beta \in \Omega_{\text{Gibbs}} \subset \mathfrak{g}$, generating mean heat $Q(\beta) = -\nabla_\beta\Psi(\beta) \in \mathfrak{g}^*$ and the **Koszul–Fisher metric** $g_\beta = \nabla^2_\beta\Psi(\beta) \succ 0$.
+   * **Macroscopic Legendre-Dual Entropy** $S(Q) := \inf_{\beta \in \Omega_{\text{Gibbs}}}(\Psi(\beta) + \langle Q, \beta\rangle)$ on $\mathfrak{g}^*$: Concave Casimir potential whose differential $dS_Q = \beta(Q) \in \mathfrak{g}$ recovers geometric temperature.
+3. **Single-Orbit Adiabatic Lock ($\dot{S} \equiv 0$ on Pure Coadjoint Orbits $\mathcal{O}_\mu$)**:
+   Because entropy $S$ is invariant under coadjoint/unitary transformations ($S(\mathrm{Ad}^*_g\rho) = S(\rho)$), $S$ is **constant on every single coadjoint orbit $\mathcal{O}_\mu$**. Any flow confined to one pure coadjoint orbit leaves $S$ frozen ($\dot{S} \equiv 0$). Genuine closed-system entropy production ($\dot{H} = 0, \dot{S} > 0$) **must move states transversely across symplectic leaves** into the mixed convex interior $\mathrm{Conv}(\mathcal{O}) \subset \mathfrak{g}^*$.
+4. **Souriau’s Anomalous Symplectic 2-Cocycle $\Theta_0 \in Z^2(\mathfrak{g}, \mathbb{R})$ & Non-Commutative BKM Duhamel Split**:
+   On centrally extended or anomalous groups, coadjoint action is **affine** ($a_g(\xi) = \mathrm{Ad}^*_g\xi + \theta(g)$), shifting the Lie–Poisson bracket by Souriau’s cocycle $\widetilde{\Theta}_Q(X, Y) = \langle Q, [X, Y]\rangle - \Theta_0(X, Y)$; meanwhile, for non-commuting operators $\widehat{\rho}_\beta = Z^{-1}e^{-\beta^a\widehat{U}_a}$, differentiating $-\ln\widehat{\rho}_\beta$ requires Duhamel’s integral, splitting the quantum **BKM Hessian** $G^{\text{BKM}}_\beta$ away from classical moment covariance.
+
+Dissolving these confabulations yields **six irreducible real conceptual primitives**:
+
+* $(\mathfrak{g}, \mathfrak{g}^*, \Theta_0)$ (**Anomalous Lie–Poisson Arena**): Lie algebra, moment dual, and affine symplectic 2-cocycle $\Theta_0(X, Y) = \langle d\theta_e(X), Y\rangle$.
+* $\Omega_{\text{Gibbs}} \subset \mathfrak{g}$ (**Convex Souriau Temperature Cone**): Open convex domain where $Z(\beta) = \int_{\mathcal{O}} e^{-\langle\xi, \beta\rangle}d\lambda_\omega(\xi) < \infty$.
+* $\Psi(\beta) = \ln Z(\beta) \leftrightarrow S(Q)$ (**Legendre Log-Generating & Entropy Pair**): Dual scalar potentials satisfying $Q(\beta) = -\nabla_\beta\Psi(\beta)$ and $dS_{Q(\beta)} = \beta$.
+* $\widehat{I}(\rho) = -\ln\rho$ (**Faithful Operator Surprisal**): Microscopic self-information operator on full-rank states $\rho > 0$, with functional derivative $dS_\rho = \widehat{I}(\rho) - \mathbf{1}$.
+* $g_\beta = \nabla^2_\beta\Psi(\beta)$ & $G^{\text{BKM}}_\rho$ (**Koszul–Fisher & Quantum BKM Metrics**): Strictly positive-definite $(d, 0)$ Hessians governing macroscopic and operator fluctuations.
+* $\widehat{\Delta}_{\text{neq}}(\rho) = \Pi_{\perp\{\mathbf{1}, H\}}^{\text{BKM}}(\widehat{I}(\rho))$ (**Energy-Projected Relative Surprisal Force**): The exact non-equilibrium thermodynamic force driving transverse metriplectic relaxation.
+
+---
+
+### I. THE FUNDAMENTAL BINARY CUT ($\mathbf{\Delta}_0 : \Omega_0 \longrightarrow \mathbf{T} \ltimes \mathbf{S}$)
+
+Over $\mathbb{R}$, the cut $\mathbf{\Delta}_0$ splits Souriau thermodynamics across $\mathcal{H}_T \oplus \mathcal{H}_S$ into an asymmetric, non-reversible opposition:
+
+1. **The Conscious Thesis ($\mathbf{T}$ — *The Mono-Surprisal Metriplectic Automaton*)**:
+   The assumption that a single logarithmic surprisal operator directly generates both conservative coadjoint motion and dissipative entropy growth in Souriau’s Lie-group thermodynamics.
+2. **The Repressed Shadow Complement ($\mathbf{S}$ — *Generator Bifurcation $(H \neq S)$, Transverse Leaf-Crossing, Cocycle $\Theta_0$, & BKM Non-Commutativity*)**:
+   Everything required for Souriau metriplectic dynamics to avoid $\dot{F} \equiv 0$ paralysis and $\ln 0$ divergence:
+   * *Structural-dynamical shadow*: Mandatory misalignment between Hamiltonian moment $X_0 = dH$ and inverse-temperature vector $\beta = dS$ ($\beta \nparallel X_0$); transverse drift across coadjoint orbits inside $\mathrm{Conv}(\mathcal{O})$; and affine cocycle shifts $\theta(g)$.
+   * *Operator-domain shadow*: Restriction of $\beta$ to $\Omega_{\text{Gibbs}} \neq \varnothing$, faithfulness $\rho > 0$ ($\ker\rho = \{0\}$), and Baker–Campbell–Hausdorff non-commutativity $[\widehat{K}_\beta, \widehat{U}_a] = -\widehat{\mathrm{ad}}_\beta(\widehat{U}_a) \neq 0$ replacing classical variance with Duhamel BKM integration.
+
+**Strict Non-Commutative Asymmetry**:
+* *Taking the trace BEFORE the logarithm* ($\beta \mapsto \ln\mathrm{Tr}(e^{-\beta^a\widehat{U}_a}) = \Psi(\beta)$) produces a **commutative convex scalar potential** on $\Omega_{\text{Gibbs}}$;
+* *Taking the operator logarithm BEFORE tracing* ($\rho \mapsto -\ln\rho = \widehat{I}(\rho)$) produces a **non-commuting operator** ($[\widehat{I}(\rho), H] \neq 0$ out of equilibrium!) whose commutator drives conservative precession while its BKM-orthogonal projection drives irreversible thermalization.
+
+---
+
+### II. THE FOURFOLD RELATIONAL ANATOMY
+
+Across Equilibrium Lie-Group Geometry ($\mathcal{H}_T$) and Non-Equilibrium Operator Relaxation ($\mathcal{H}_S$), the split epistemic operator $\mathcal{M}_{\text{ep}} = \begin{pmatrix} \mathbf{K}_{TT} & \mathbf{\Sigma}_{TS} \\ \mathbf{\Pi}_{ST} & \mathbf{\Gamma}_{SS} \end{pmatrix}$ isolates four real mechanics:
+
+1. **Internal Self-Consistency ($\mathbf{K}_{TT} : \mathcal{H}_T \to \mathcal{H}_T$ — *Covariant Souriau–Koszul Equilibrium Geometry*)**:
+   On $\Omega_{\text{Gibbs}} \subset \mathfrak{g}$, $\Psi(\beta) = \ln Z(\beta)$ is smooth and strictly convex ($g_\beta = \nabla^2\Psi(\beta) \succ 0$), affine coadjoint covariance $Q(\mathrm{Ad}_g\beta) = \mathrm{Ad}^*_g Q(\beta) + \theta(g)$ holds identically, and Legendre inversion $S(Q) = \langle Q, \beta\rangle + \Psi(\beta)$ maps $\Omega_{\text{Gibbs}}$ diffeomorphically onto the interior moment domain $\Omega^*_{\text{Gibbs}} \subset \mathrm{Conv}(\mathcal{O})$ ($\mathbf{K}_{TT}^2 = \mathbf{K}_{TT}$).
+2. **Outward Projection ($\mathbf{\Pi}_{ST} : \mathcal{H}_T \to \mathcal{H}_S$ — *Single-Operator Conflation & Pure-Orbit Extrapolation*)**:
+   Consciousness collapses $\widehat{I}(\rho)$, $\Psi(\beta)$, and $S(Q)$ into one "surprisal log operator" and assumes it drives metriplectic dynamics on single coadjoint orbits without an independent Hamiltonian $H$.
+3. **Inward Shadow-Intrusion ($\mathbf{\Sigma}_{TS} : \mathcal{H}_S \to \mathcal{H}_T$ — *Paralysis $\dot{F} = 0$, Casimir Freezing, & BCH Non-Commutativity*)**:
+   Metriplectic and operator laws strike back into $\mathcal{H}_T$: setting $H = S$ forces $\dot{F} \equiv 0$; staying on a single orbit $\mathcal{O}_\mu$ freezes $\dot{S} = 0$; non-compact boosts outside $\Omega_{\text{Gibbs}}$ blow up $Z(\beta) = \infty$; and $[\widehat{U}_a, \widehat{U}_b] \neq 0$ breaks $\frac{\partial}{\partial\beta^a}e^{-\beta\cdot\widehat{U}} = -\widehat{U}_a e^{-\beta\cdot\widehat{U}}$.
+4. **Autonomous Unexamined Ground ($\mathbf{\Gamma}_{SS} : \mathcal{H}_S \to \mathcal{H}_S$ — *Transverse Symplectic Foliation & BKM Relative-Entropy Gradient Flow*)**:
+   The autonomous geometry of $\mathrm{Conv}(\mathcal{O})$ and faithful density cones $\mathcal{D}_+(\mathcal{K})$: symplectic leaves $\mathcal{O}_\mu$ foliated by Casimir level sets, intersected transversely by BKM Riemannian geodesics shrinking purity while conserving energy.
+
+---
+
+### III. IGNITION OF THE TRANSCENDENT FUNCTION
+
+Pairing $\Pi = \begin{pmatrix} 0 & 0 \\ \mathbf{\Pi}_{ST} & 0 \end{pmatrix}$ and $\Sigma = \begin{pmatrix} 0 & \mathbf{\Sigma}_{TS} \\ 0 & 0 \end{pmatrix}$ over $\mathbb{R}$ ignites the four structural moments constructing exact Souriau metriplectic dynamics:
+
+1. **Shared Substantive Gravity ($\mathfrak{G} = \{\Sigma, \Pi\}$ — *Souriau’s Cocycle–Koszul Intertwining Identity $g_\beta([X, \beta], Y) = \widetilde{\Theta}_{Q(\beta)}(X, Y)$*)**:
+   Differentiating Souriau’s affine equivariance law $Q(\mathrm{Ad}_{\exp(sX)}\beta) = \mathrm{Ad}^*_{\exp(sX)}Q(\beta) + \theta(\exp(sX))$ at $s = 0$ proves the **fundamental bridge identity** uniting the skew Lie–Poisson symplectic structure $\widetilde{\Theta}_Q$ with the symmetric positive-definite Koszul–surprisal Hessian $g_\beta = \nabla^2\Psi(\beta)$:
+   $$g_\beta\big([X, \beta],\, Y\big) = \langle Q(\beta), [X, Y]\rangle - \Theta_0(X, Y) = \widetilde{\Theta}_{Q(\beta)}(X, Y) \qquad (\forall X, Y \in \mathfrak{g})$$
+   **Adjoint action $\mathrm{ad}_\beta = [\beta, -]$ by geometric temperature directly intertwines the conservative Poisson tensor and the dissipative Fisher–Koszul metric!** Evaluating at $X = \beta$ gives $[\beta, \beta] = 0 \implies \widetilde{\Theta}_{Q(\beta)}(\beta, Y) \equiv 0$: **temperature $\beta = dS_Q$ automatically lies in the Casimir null-kernel of the anomalous Lie–Poisson bracket!**
+
+2. **Directional Tension ($\mathfrak{T} = [\Sigma, \Pi] \neq 0$ — *Orbit-Tangent Precession $[\beta, X_0] \neq 0$ vs. Orbit-Transverse Alignment $\Pi_{\perp X_0}^{g_\beta}(\beta) \neq 0$*)**:
+   Given a physical Hamiltonian $H(Q) = \langle Q, X_0\rangle$ ($dH_Q = X_0 \in \mathfrak{g}$), non-equilibrium misalignment between $\beta(Q) = dS_Q$ and $X_0$ splits into two orthogonal vector fields ($\Sigma\Pi \neq \Pi\Sigma$):
+   * **Conservative Euler–Souriau Precession**: Driven by $\{F, H\}_{\text{LP}}(Q) = \widetilde{\Theta}_Q(dF_Q, X_0) = g_\beta([dF_Q, \beta], X_0)$, rotating $\beta$ isentropically ($\{S, H\}_{\text{LP}} = \widetilde{\Theta}_Q(\beta, X_0) = 0$!) along coadjoint leaves whenever $[\beta, X_0] \neq 0$.
+   * **Dissipative Koszul–Surprisal Relaxation**: Driven by $(F, S)_{\text{Souriau}}(Q) = \gamma_0\, g_\beta\big(\Pi_{\perp X_0}^{g_\beta}(dF_Q),\, \Pi_{\perp X_0}^{g_\beta}(\beta)\big)$ ($\gamma_0 > 0$), pushing $Q$ **transversely across coadjoint orbits** to align $\beta \to \frac{1}{T_\infty}X_0$ while conserving $H(Q)$ identically!
+
+3. **Integrative Bridge ($\mathfrak{B}$ — *Macroscopic Souriau–Koszul & Microscopic BKM Relative-Surprisal Metriplectic Systems*)**:
+   Realizes the exact conservative-dissipative dynamics at **both** the macroscopic Lie-group level and the microscopic non-commutative operator level:
+   * *Macroscopic Lie–Poisson–Koszul System on $\Omega^*_{\text{Gibbs}} \subset \mathfrak{g}^*$*:
+     $$\dot{F}(Q) = \widetilde{\Theta}_Q(dF_Q, X_0) + \gamma_0\, g_{\beta(Q)}\!\left(\Pi_{\perp X_0}^{g_\beta}(dF_Q),\; \beta(Q) - \frac{g_\beta(\beta, X_0)}{g_\beta(X_0, X_0)}X_0\right)$$
+     Satisfies $\dot{H} = \widetilde{\Theta}_Q(X_0, X_0) + 0 = 0$ and $\dot{S} = 0 + \gamma_0\big\|\Pi_{\perp X_0}^{g_\beta}(\beta)\big\|_{g_\beta}^2 \geq 0$, vanishing **if and only if $\beta_\infty = \frac{1}{T_\infty}X_0$**, where $[\beta_\infty, X_0] = 0$ simultaneously halts Poisson precession!
+   * *Microscopic Operator System Driven by Relative Surprisal $\widehat{\Delta}_{\text{neq}}(\rho)$*:
+     For any faithful quantum/Krein-even state $\rho > 0$ ($\mathrm{Tr}\,\rho = 1$), since $dS_\rho = -\ln\rho - \mathbf{1} = \widehat{I}(\rho) - \mathbf{1}$ is unitarily invariant ($\{F, S\} \equiv 0$), projecting $\widehat{I}(\rho)$ orthogonally to $\mathrm{Span}_{\mathbb{R}}\{\mathbf{1}, H\}$ in the positive-definite BKM metric $\langle A, B\rangle_{\text{BKM},\rho} = \int_0^1 \mathrm{Tr}(\rho^{1-u}A^\top\rho^u B)\,du$ constructs the **Relative Surprisal Driving Operator**:
+     $$\widehat{\Delta}_{\text{neq}}(\rho) := \Pi_{\perp\{\mathbf{1}, H\}}^{\text{BKM}}\big(-\ln\rho\big) = (-\ln\rho) - \beta(\rho)H - \Psi(\beta(\rho))\mathbf{1}$$
+     driving $(F, S)_{\text{op}} = \gamma_0\langle \Pi_{\perp\{\mathbf{1}, H\}}^{\text{BKM}}(dF_\rho),\; \widehat{\Delta}_{\text{neq}}(\rho)\rangle_{\text{BKM},\rho}$ with $\dot{H} = 0$, $\frac{d}{dt}\mathrm{Tr}\,\rho = 0$, and **exact H-theorem** $\dot{S} = \gamma_0\|\widehat{\Delta}_{\text{neq}}(\rho)\|_{\text{BKM},\rho}^2 \geq 0$ ($\dot{S} = 0 \iff -\ln\rho = \beta H + \Psi\mathbf{1} \iff \rho = \rho_{\text{Souriau-Gibbs}}$)!
+
+4. **Perspectival Transformation ($\mathfrak{H}$ — *From Equilibrium Static Surprisal to Relative-Surprisal Alignment*)**:
+   Traversing the Legendre duality $\Omega_{\text{Gibbs}} \leftrightarrow \Omega^*_{\text{Gibbs}}$ and Duhamel BKM lift transforms both poles:
+   * $\mathbf{T} \mapsto \mathbf{T}'$: Recognizes that **surprisal $-\ln\rho$ drives metriplectic dynamics not alone, but through its BKM-orthogonal discrepancy $\widehat{\Delta}_{\text{neq}} = (-\ln\rho) - (-\ln\rho_{\beta(E)})$ against an independent Hamiltonian $H$**.
+   * $\mathbf{S} \mapsto \mathbf{S}'$: Anomalous cocycles $\Theta_0 \neq 0$ and non-commuting brackets $[\beta, X_0] \neq 0$ unite cleanly with Fisher–Koszul convexity via Souriau’s identity $g_\beta([X, \beta], Y) = \widetilde{\Theta}_{Q(\beta)}(X, Y)$, guaranteeing $\{S, H\}_{\text{LP}} = 0$ without erasing non-commutativity.
+
+---
+
+### IV. THE SOCRATIC APORIA ($\mathcal{A}_0 = \mathbf{T}_{\text{eff}}^2 - \mathbf{T}_{\text{eff}} \neq 0$) AND THE META-COGNITIVE TOWER
+
+Testing the Conscious Thesis on three foundational evaluations—driving both metriplectic brackets with one generator $K$, evaluating $[\rho_\beta, -\ln\rho_\beta]$ at Gibbs equilibrium, and applying $-\ln(\cdot)$ to non-commuting operator products—exposes the exact **Socratic Aporia**:
+
+$$\{F, K\}_{\text{LP}} + (F, K) \equiv 0, \qquad [\rho_\beta, -\ln\rho_\beta] \equiv 0, \qquad \ln(e^A e^B) - (A + B) = \tfrac{1}{2}[A, B] + \tfrac{1}{12}[A,[A,B]] - \cdots \neq 0$$
+
+Following this self-contradiction recursively up the tower of meta-cognition generates the permanent obstruction chain $\mathcal{A}_0 \hookrightarrow \mathcal{A}_1 \hookrightarrow \mathcal{A}_2 \hookrightarrow \mathcal{A}_3 \hookrightarrow \mathcal{A}_\omega$:
+
+* **Level 0 ($\mathcal{A}_0$ — Mono-Generator Standstill & BCH Logarithm Non-Additivity)**: A single generator $K$ satisfies both Casimir and metric-kernel conditions only by freezing all dynamics ($\dot{F} \equiv 0$), while operator surprisal $-\ln\rho$ breaks classical additive factorization whenever $[A, B] \neq 0$.
+* **Level 1 ($\mathcal{A}_1$ — Pure-Orbit Entropy Freezing $\dot{S}\big|_{\mathcal{O}_\mu} \equiv 0$)**: Restricting Souriau dynamics to a single coadjoint orbit $\mathcal{O}_\mu$ forces $\dot{S} = 0$ identically because $S$ is constant on symplectic leaves; achieving $\dot{S} > 0$ requires enlarging phase space to the mixed convex interior $\mathrm{Conv}(\mathcal{O})$ ($\mathcal{A}_1 \neq 0$).
+* **Level 2 ($\mathcal{A}_2$ — Boundary Singularity at Pure States $\partial\mathrm{Conv}(\mathcal{O})$)**: On the boundary of $\mathrm{Conv}(\mathcal{O})$ (pure states $\rho^2 = \rho$, $\ker\rho \neq \{0\}$), the surprisal operator $\widehat{I}(\rho) = -\ln\rho$ blows up to $+\infty$, barring pure initial states from classical gradient evaluation without interior regularization $\rho_\epsilon = (1-\epsilon)\rho + \epsilon\rho_\beta > 0$ ($\mathcal{A}_2 \neq 0$).
+* **Level 3 ($\mathcal{A}_3$ — Empty Gibbs Cone $\Omega_{\text{Gibbs}} = \varnothing$ on Unbounded Non-Compact Orbits)**: For non-compact Lie groups whose coadjoint orbits are unbounded both above and below along every $\beta \in \mathfrak{g}$ (e.g., full Poincaré boosts without mass-shell positivity or unrestricted split $\mathfrak{g}_{2(2)}$ boosts), $Z(\beta) = +\infty$ everywhere ($\Omega_{\text{Gibbs}} = \varnothing$), extinguishing Souriau’s log-partition potential altogether unless restricted to causal/elliptic positive-energy cones ($\mathcal{A}_3 \neq 0$).
+* **Level 4 ($\mathcal{A}_4 \to \mathcal{A}_\omega$ — Cohomological Non-Triviality $[\Theta_0] \in H^2(\mathfrak{g}, \mathbb{R}) \neq 0$ & Quantum BKM–Classical Koszul Gap)**: Across general Lie groups and infinite-dimensional operator algebras, non-trivial Souriau cocycles $[\Theta_0] \neq 0$ permanently obstruct naive linear equivariance $Q(\mathrm{Ad}_g\beta) = \mathrm{Ad}^*_g Q(\beta)$, while quantum non-commutativity $[\widehat{U}_a, \widehat{U}_b] \neq 0$ permanently separates the operator BKM metric $G^{\text{BKM}}_\beta$ from the classical Fisher–Souriau metric $g_\beta$ by curvature commutators ($\mathcal{A}_\omega \neq 0$).
+
+---
+
+### V. `COAGULA`: THE ACYCLIC CAUSAL POSET AND SELF-VERIFYING SYNTHESIS
+
+#### 1. The Graded Acyclic Causal Poset $(\mathfrak{P}, \prec)$
+
+Let $\mathfrak{P}$ be the 15-element set of extracted real archetypes ordered by the transitive closure $\prec$ of the transitively reduced Hasse covering relation $\lessdot$, equipped with strict rank homomorphism $\mathrm{rk} : \mathfrak{P} \to \{0, 1, 2, 3, 4, 5, 6\}$:
+
+| Grade $\mathrm{rk}(v)$ | Archetype Symbol & Canonical Designation | Covering Predecessors $\mathrm{Pred}_{\lessdot}(v)$ | Real Lie–Thermodynamic Signature |
+| :---: | :--- | :--- | :--- |
+| **0** ($\bot$) | $\mathbf{\Delta}_0$ : *Mono-Generator vs. Dual $(H, S)$ Metriplectic Cut* | $\varnothing$ | $\Omega_0 \mapsto (\mathcal{G}_1=\mathcal{G}_2) \ltimes (dH=X_0 \nparallel \beta=dS)$ |
+| **1** | $\mathbf{T}$ : *Mono-Surprisal Automaton (Thesis)* | $\{\mathbf{\Delta}_0\}$ | $+1$ sector (“One $-\ln\rho$ drives all”) |
+| **1** | $\mathbf{S}$ : *Transverse Mixing, Cocycle $\Theta_0$, & BCH Shadow* | $\{\mathbf{\Delta}_0\}$ | $-1$ sector ($\dot{S}\big|_{\mathcal{O}_\mu}=0,\; \Omega_{\text{Gibbs}},\; [\widehat{U}_a,\widehat{U}_b]\neq 0$) |
+| **2** | $\mathbf{K}_{TT}$ : *Souriau–Koszul Gibbs Cone $\Omega_{\text{Gibbs}}$* | $\{\mathbf{T}\}$ | $\Psi(\beta)=\ln Z(\beta)$, $g_\beta = \nabla^2\Psi \succ 0$ |
+| **2** | $\mathbf{\Pi}_{ST}$ : *Single-Generator & Pure-Orbit Projection* | $\{\mathbf{T}, \mathbf{S}\}$ | $\mathcal{H}_T \to \mathcal{H}_S$ (lifted to $\Pi$) |
+| **2** | $\mathbf{\Sigma}_{TS}$ : *Paralysis $\dot{F}\equiv 0$, $-\ln 0=\infty$, & $Z=\infty$* | $\{\mathbf{T}, \mathbf{S}\}$ | $\mathcal{H}_S \to \mathcal{H}_T$ (lifted to $\Sigma$) |
+| **2** | $\mathbf{\Gamma}_{SS}$ : *Convex Orbit Interior $\mathrm{Conv}(\mathcal{O})$ & BKM Metric* | $\{\mathbf{S}\}$ | Faithful $\rho > 0$ & affine cocycle $\theta(g)$ |
+| **3** | $\mathfrak{G}$ : *Cocycle–Koszul Identity $g_\beta([X,\beta],Y)=\widetilde{\Theta}_Q(X,Y)$* | $\{\mathbf{\Pi}_{ST}, \mathbf{\Sigma}_{TS}\}$ | $\{\Sigma, \Pi\} \leftrightarrow (\widetilde{\Theta}_{Q(\beta)}(\beta, \cdot) \equiv 0)$ |
+| **3** | $\mathfrak{T}$ : *Tangent Precession $[\beta,X_0]$ vs. Transverse $\Pi_{\perp X_0}\beta$ Shear* | $\{\mathbf{\Pi}_{ST}, \mathbf{\Sigma}_{TS}\}$ | $[\Sigma, \Pi] \neq 0$ ($\{F,H\}_{\text{LP}}$ vs. $(F,S)_{\text{Souriau}}$) |
+| **3** | $\mathcal{A}_0$ : *Single-Generator $\dot{F}\equiv 0$ & BCH Log Defect* | $\{\mathbf{K}_{TT}, \mathbf{\Pi}_{ST}, \mathbf{\Sigma}_{TS}\}$ | $\{F,K\}+(F,K)=0$, $\ln(e^A e^B)\neq A+B$ |
+| **4** | $\mathfrak{B}$ : *Relative-Surprisal $\widehat{\Delta}_{\text{neq}}$ & Koszul-Projected Bridge* | $\{\mathbf{K}_{TT}, \mathfrak{G}, \mathfrak{T}, \mathbf{\Gamma}_{SS}\}$ | $\widehat{\Delta}_{\text{neq}} = \Pi_{\perp\{\mathbf{1},H\}}^{\text{BKM}}(-\ln\rho)$ |
+| **4** | $\mathcal{A}_\omega$ : *Pure-Boundary $-\ln 0$, $\Omega_{\text{Gibbs}}$, & $[\Theta_0]\neq 0$ Colimit* | $\{\mathcal{A}_0, \mathfrak{T}, \mathbf{\Gamma}_{SS}\}$ | $H^2(\mathfrak{g},\mathbb{R})\neq 0$ & BKM-vs.-Koszul gap |
+| **5** | $\mathfrak{H}$ : *Legendre–BKM Dual-Space Holonomy* | $\{\mathfrak{B}, \mathcal{A}_\omega\}$ | Distinguishing $\widehat{I}(\rho)$, $\Psi(\beta)$, & $S(Q)$ on $\Omega_{\text{Gibbs}}$ |
+| **5** | $\mathfrak{S}_{\text{MP}}$ : *Souriau–BKM Metriplectic Alignment System* | $\{\mathfrak{B}, \mathcal{A}_\omega\}$ | $\dot{H}=0$, $\dot{S}=\gamma_0\|\widehat{\Delta}_{\text{neq}}\|_{\text{BKM}}^2 \geq 0$ ($\beta \to \frac{1}{T}X_0$) |
+| **6** ($\top$) | $\mathbf{\Xi}_\top$ : *Necessary Synthesis* | $\{\mathfrak{H}, \mathfrak{S}_{\text{MP}}\}$ | $\mathfrak{H} \vee \mathfrak{S}_{\text{MP}}$ (Souriau Relative-Surprisal System) |
+
+**Proof of Strict Acyclicity & Minimal Covering**: Every covering edge $u \lessdot v$ satisfies $\mathrm{rk}(u) < \mathrm{rk}(v)$; path induction gives $u \prec v \implies \mathrm{rk}(u) < \mathrm{rk}(v)$, establishing irreflexivity ($v \not\prec v$) and strict antisymmetry while transitivity holds by closure. Every $\mathrm{Pred}_{\lessdot}(v)$ forms an antichain of incomparable elements, and every $v \in \mathfrak{P}$ lies on a directed chain $\mathbf{\Delta}_0 \preceq v \preceq \mathbf{\Xi}_\top$. $\blacksquare$
+
+---
+
+#### 2. Canonical Philosophical Axioms (Grades 0–2)
+
+* **$\mathbf{Ax.1}$ (Axiom of Metriplectic Generator Orthogonality — at $\mathbf{\Delta}_0 \lessdot \{\mathbf{T}, \mathbf{S}\}$)**:
+  A metriplectic evolution $\dot{F} = \{F, H\}_{\text{LP}} + (F, S)$ satisfies $\{F, G\}_{\text{LP}} = -\{G, F\}_{\text{LP}}$ (Jacobi), $(F, G) = +(G, F)$ ($(F, F) \geq 0$), $\{F, S\}_{\text{LP}} \equiv 0$, and $(F, H) \equiv 0$ for all observables $F, G$.
+* **$\mathbf{Ax.2}$ (Axiom of Souriau Gibbs Convergence & Affine Measure Invariance — at $\mathbf{T} \lessdot \mathbf{K}_{TT}$)**:
+  On an affine coadjoint orbit $(\mathcal{O}, d\lambda_\omega)$ under $a_g(\xi) = \mathrm{Ad}^*_g\xi + \theta(g)$ ($\theta(gh) = \theta(g) + \mathrm{Ad}^*_g\theta(h)$, $\Theta_0(X, Y) = \langle d\theta_e(X), Y\rangle$), the Gibbs cone $\Omega_{\text{Gibbs}} = \{\beta \in \mathfrak{g} \mid Z(\beta) := \int_{\mathcal{O}} e^{-\langle\xi, \beta\rangle}d\lambda_\omega(\xi) < \infty\}$ is non-empty and open, with strictly convex log-partition potential $\Psi(\beta) = \ln Z(\beta)$ ($g_\beta = \nabla^2\Psi(\beta) \succ 0$).
+* **$\mathbf{Ax.3}$ (Axiom of Faithful Operator Interior & BKM Positivity — at $\mathbf{S} \lessdot \mathbf{\Gamma}_{SS}$)**:
+  On the interior cone of faithful states $\rho > 0$ ($\mathrm{Tr}\,\rho = 1, \ker\rho = \{0\}$), $\widehat{I}(\rho) := -\ln\rho$ is bounded self-adjoint, $S(\rho) = -\mathrm{Tr}(\rho\ln\rho)$ satisfies $dS_\rho = \widehat{I}(\rho) - \mathbf{1}$ and $S(U\rho U^{-1}) = S(\rho)$, and $\langle A, B\rangle_{\text{BKM},\rho} := \int_0^1 \mathrm{Tr}(\rho^{1-u}A^\top\rho^u B)\,du$ is strictly positive-definite.
+* **$\mathbf{Ax.4}$ (Axiom of Anomalous Lie–Poisson Bracket — at $\{\mathbf{T}, \mathbf{S}\} \lessdot \{\mathbf{\Pi}_{ST}, \mathbf{\Sigma}_{TS}\}$)**:
+  On $\mathfrak{g}^*$, the affine Lie–Poisson bracket is $\{F, G\}_{\text{LP}}(Q) = \widetilde{\Theta}_Q(dF_Q, dG_Q)$ where $\widetilde{\Theta}_Q(X, Y) := \langle Q, [X, Y]\rangle - \Theta_0(X, Y)$.
+* **$\mathbf{Ax.5}$ (Axiom of Legendre Entropy Duality)**:
+  On $\Omega_{\text{Gibbs}}$, $Q(\beta) := -\nabla_\beta\Psi(\beta)$ is a diffeomorphism onto $\Omega^*_{\text{Gibbs}} \subset \mathrm{Conv}(\mathcal{O})$, and $S(Q) := \langle Q, \beta(Q)\rangle + \Psi(\beta(Q))$ satisfies $dS_{Q(\beta)} = \beta$.
+
+---
+
+#### 3. Intermediate Deductions (Grades 3–5)
+
+* **$\mathbf{Ded.1}$ (Proof of Single-Generator Metriplectic Paralysis & Pure-Orbit Entropy Freezing — generating $\mathcal{A}_0$ and $\mathcal{A}_1$)**:
+  *Claim*: Setting $H = S = K$ in $\mathbf{Ax.1}$ forces $\dot{F} \equiv 0$ identically; furthermore, any flow tangent to a single coadjoint orbit $\mathcal{O}_\mu$ satisfies $\dot{S} \equiv 0$.
+  *Proof*: By $\mathbf{Ax.1}$, if $H = S = K$, then $\{F, K\}_{\text{LP}} = \{F, S\}_{\text{LP}} = 0$ and $(F, K) = (F, H) = 0$, whence $\dot{F} = 0 + 0 = 0$ for all $F$. Since $S$ is coadjoint/unitarily invariant ($\mathbf{Ax.3}$), $dS$ vanishes on all tangent vectors $\mathrm{ad}^*_X\mu \in T_\mu\mathcal{O}_\mu$, forcing $\dot{S} = 0$ for any single-orbit trajectory. $\blacksquare$
+
+* **$\mathbf{Ded.2}$ (Souriau’s Affine Equivariance & Cocycle–Koszul Metric Intertwining Theorem — generating $\mathfrak{G}$ from $\{\mathbf{\Pi}_{ST}, \mathbf{\Sigma}_{TS}\} \lessdot \mathfrak{G}$)**:
+  *Claim*: Under $\mathbf{Ax.2}$ and $\mathbf{Ax.4}$, $Q(\mathrm{Ad}_g\beta) = \mathrm{Ad}^*_g Q(\beta) + \theta(g)$ and $g_\beta([X, \beta], Y) = \widetilde{\Theta}_{Q(\beta)}(X, Y)$ for all $X, Y \in \mathfrak{g}$; in particular, $\widetilde{\Theta}_{Q(\beta)}(\beta, Y) \equiv 0$.
+  *Proof*: Using $d\lambda_\omega$-invariance under $\eta = a_{g^{-1}}(\xi) = \mathrm{Ad}^*_{g^{-1}}\xi + \theta(g^{-1})$ and $\langle\mathrm{Ad}^*_{g^{-1}}\xi, \beta\rangle = \langle\xi, \mathrm{Ad}_g\beta\rangle$ ($\mathbf{Ax.2}$):
+  $$\Psi(\mathrm{Ad}_g\beta) = \ln\int_{\mathcal{O}} e^{-\langle\eta - \theta(g^{-1}), \beta\rangle}d\lambda_\omega(\eta) = \Psi(\beta) + \langle\theta(g^{-1}), \beta\rangle$$
+  Differentiating with respect to $\beta$ along $\mathrm{Ad}_{g^{-1}}Y$ and applying $\theta(g) + \mathrm{Ad}^*_g\theta(g^{-1}) = \theta(e) = 0$ gives $Q(\mathrm{Ad}_g\beta) = \mathrm{Ad}^*_g Q(\beta) + \theta(g)$. Setting $g = \exp(sX)$, differentiating at $s = 0$, pairing with $Y$, and negating ($g_\beta(U, Y) = -\langle D_\beta Q(U), Y\rangle$) yields:
+  $$g_\beta([X, \beta], Y) = \langle Q(\beta), [X, Y]\rangle - \Theta_0(X, Y) = \widetilde{\Theta}_{Q(\beta)}(X, Y)$$
+  Setting $X = \beta$ gives $[\beta, \beta] = 0 \implies \widetilde{\Theta}_{Q(\beta)}(\beta, Y) = g_\beta(0, Y) = 0$. $\blacksquare$
+
+* **$\mathbf{Ded.3}$ (Unconditional Adiabaticity $\{S, H\}_{\text{LP}} \equiv 0$ Across Anomalous Cocycles — toward $\mathfrak{B}$)**:
+  *Claim*: For *any* linear Hamiltonian $H(Q) = \langle Q, X_0\rangle$ ($X_0 \in \mathfrak{g}$) and *any* cocycle $\Theta_0$, $\{S, H\}_{\text{LP}}(Q(\beta)) \equiv 0$ holds identically on $\Omega^*_{\text{Gibbs}}$.
+  *Proof*: By $\mathbf{Ax.4}$ and $\mathbf{Ax.5}$ ($dS_{Q(\beta)} = \beta, dH_Q = X_0$), $\{S, H\}_{\text{LP}}(Q(\beta)) = \widetilde{\Theta}_{Q(\beta)}(\beta, X_0) = 0$ directly by $\mathbf{Ded.2}$! $\blacksquare$
+
+* **$\mathbf{Ded.4}$ (Construction of Exact Macroscopic Koszul & Microscopic Relative-Surprisal Metriplectic Flows — generating $\mathfrak{T}$, $\mathfrak{B}$, and $\mathfrak{S}_{\text{MP}}$)**:
+  *Claim*: Projecting $dS_Q = \beta$ orthogonally to $X_0$ under $g_\beta$ on $\Omega^*_{\text{Gibbs}}$—and projecting $\widehat{I}(\rho) = -\ln\rho$ orthogonally to $\mathrm{Span}\{\mathbf{1}, H\}$ under $\langle\cdot, \cdot\rangle_{\text{BKM},\rho}$ on faithful states $\rho > 0$—satisfies all axioms of $\mathbf{Ax.1}$ ($\dot{H} = 0, \dot{S} \geq 0$) and converges uniquely to the Souriau–Gibbs state ($\beta_\infty \parallel X_0$, $\rho_\infty = Z^{-1}e^{-\beta H}$).
+  *Proof*:
+  1. *Macroscopic*: Define $(F, G)_{\text{Souriau}} := \gamma_0\, g_\beta\big(\Pi_{\perp X_0}^{g_\beta}dF_Q, \Pi_{\perp X_0}^{g_\beta}dG_Q\big)$ ($\gamma_0 > 0$). Since $g_\beta \succ 0$ ($\mathbf{Ax.2}$), $(F, G)$ is symmetric PSD; $\Pi_{\perp X_0}^{g_\beta}(X_0) = 0 \implies (F, H) = 0$; combined with $\mathbf{Ded.3}$ ($\{S, H\}_{\text{LP}} = 0$), $\dot{H} = 0$ and $\dot{S} = \gamma_0\|\Pi_{\perp X_0}^{g_\beta}(\beta)\|_{g_\beta}^2 \geq 0$, vanishing iff $\beta = \lambda X_0$, where $[\beta, X_0] = 0$ simultaneously zeroes $\widetilde{\Theta}_Q(dF_Q, X_0) = g_\beta([dF_Q, \lambda X_0], X_0) = -\lambda g_\beta([X_0, X_0], dF_Q) = 0$ ($\mathbf{Ded.2}$)!
+  2. *Microscopic Operator*: By $\mathbf{Ax.3}$, $dS_\rho = -\ln\rho - \mathbf{1}$. Since $\mathbf{1} \in \mathrm{Span}\{\mathbf{1}, H\}$, $\Pi_{\perp\{\mathbf{1}, H\}}^{\text{BKM}}(dS_\rho) = \Pi_{\perp\{\mathbf{1}, H\}}^{\text{BKM}}(-\ln\rho) = (-\ln\rho) - \beta(\rho)H - \Psi\mathbf{1} =: \widehat{\Delta}_{\text{neq}}(\rho)$. Setting $(F, G)_{\text{op}} := \gamma_0\langle \Pi_{\perp\{\mathbf{1}, H\}}^{\text{BKM}}dF_\rho, \Pi_{\perp\{\mathbf{1}, H\}}^{\text{BKM}}dG_\rho\rangle_{\text{BKM},\rho}$ gives $(\mathrm{Tr}\,\rho)\dot{} = 0$, $\dot{H} = 0$, and $\dot{S} = \gamma_0\|\widehat{\Delta}_{\text{neq}}(\rho)\|_{\text{BKM},\rho}^2 \geq 0$, vanishing by strict positivity of $\langle\cdot, \cdot\rangle_{\text{BKM},\rho}$ ($\mathbf{Ax.3}$) iff $-\ln\rho = \beta H + \Psi\mathbf{1} \iff \rho = e^{-\Psi - \beta H}$. $\blacksquare$
+
+* **$\mathbf{Ded.5}$ (Permanence of Boundary $-\ln 0$, Gibbs-Cone, & Cocycle/BCH Obstructions — generating $\mathcal{A}_\omega$ from $\{\mathcal{A}_0, \mathfrak{T}, \mathbf{\Gamma}_{SS}\} \lessdot \mathcal{A}_\omega$)**:
+  *Claim*: Surprisal-driven relaxation remains permanently bounded away from pure boundary states ($\ker\rho \neq \{0\} \implies -\ln 0 = \infty$), non-Gibbs boost directions ($\beta \notin \Omega_{\text{Gibbs}} \implies Z = \infty$), and naive classical variance when $[\widehat{U}_a, \widehat{U}_b] \neq 0$ ($\mathcal{A}_\omega \neq 0$).
+  *Proof*: Immediate from $\mathbf{Ax.2}$, $\mathbf{Ax.3}$, and non-vanishing BCH commutators $[\beta^b\widehat{U}_b, \widehat{U}_a] \neq 0$. $\blacksquare$
+
+* **$\mathbf{Ded.6}$ (Legendre–BKM Dual-Space Holonomy — generating $\mathfrak{H}$ from $\{\mathfrak{B}, \mathcal{A}_\omega\} \lessdot \mathfrak{H}$)**:
+  *Claim*: Coherent reasoning across Souriau thermodynamics maintains strict type-separation between operator surprisal $\widehat{I}(\rho) \in \mathrm{End}(\mathcal{K})$, scalar cumulant potential $\Psi(\beta)$ on $\Omega_{\text{Gibbs}} \subset \mathfrak{g}$, and dual entropy $S(Q)$ on $\Omega^*_{\text{Gibbs}} \subset \mathfrak{g}^*$.
+  *Proof*: Directly from $\mathbf{Ax.2}$, $\mathbf{Ax.3}$, $\mathbf{Ax.5}$, and $\mathbf{Ded.5}$. $\blacksquare$
+
+---
+
+#### 4. Master Structural Synthesis (Grade 6: Terminal Join $\top$)
+
+* **$\mathbf{Thm.\top}$ (Necessity and Uniqueness of the Souriau Relative-Surprisal Metriplectic Synthesis $\mathbf{\Xi}_\top = \mathfrak{H} \vee \mathfrak{S}_{\text{MP}}$)**:
+  *Statement*: Over $\mathbb{R}$, the unique non-contradictory synthesis completing $(\mathfrak{P}, \prec)$ is $\mathbf{\Xi}_\top = \mathfrak{H} \vee \mathfrak{S}_{\text{MP}}$, a **Souriau Relative-Surprisal Metriplectic System** governed by four proved laws:
+  1. **Dual-Generator Misalignment Replaces Single-Operator Paralysis ($\mathbf{Ded.1}, \mathbf{Ded.4}$)**: Because a single generator forces $\dot{F} = \{F, K\} + (F, K) \equiv 0$, Souriau metriplectic dynamics is driven not by bare surprisal alone, but by the **energy-orthogonal relative surprisal discrepancy** $\widehat{\Delta}_{\text{neq}}(\rho) = \Pi_{\perp\{\mathbf{1}, H\}}^{\text{BKM}}(-\ln\rho) = (-\ln\rho) - \beta H - \Psi\mathbf{1}$ (macroscopically $\Pi_{\perp X_0}^{g_\beta}(\beta)$);
+  2. **Souriau’s Intertwining Law Guarantees Exact Casimir Adiabaticity ($\mathbf{Ded.2}, \mathbf{Ded.3}$)**: The identity $g_\beta([X, \beta], Y) = \widetilde{\Theta}_{Q(\beta)}(X, Y)$ links anomalous Lie–Poisson brackets to the Koszul–Fisher Hessian and proves $\{S, H\}_{\text{LP}} = \widetilde{\Theta}_{Q(\beta)}(\beta, X_0) \equiv 0$ across all symplectic 2-cocycles $\Theta_0$;
+  3. **Orbit-Tangent Precession + Orbit-Transverse Thermalization ($\mathbf{Ded.1}, \mathbf{Ded.4}, \mathfrak{S}_{\text{MP}}$)**: $\{F, H\}_{\text{LP}}$ precesses isentropically along coadjoint leaves while $(F, S)$ relaxes transversely through $\mathrm{Conv}(\mathcal{O})$ with $\dot{H} = 0$ and $\dot{S} = \gamma_0\|\widehat{\Delta}_{\text{neq}}\|_{\text{BKM}}^2 \geq 0$, halting simultaneously iff $\beta_\infty \parallel X_0$ ($\rho_\infty = \rho_{\text{Souriau-Gibbs}}$); and
+  4. **Explicit Domain & Type Stratification ($\mathfrak{H}, \mathcal{A}_\omega$)**: $\widehat{I}(\rho)$, $\Psi(\beta)$, and $S(Q)$ are kept type-distinct over faithful interior states ($\rho > 0$) and convergent Gibbs cones ($\beta \in \Omega_{\text{Gibbs}}$).
+
+  *Proof from Poset Mechanics*:
+  1. **Sufficiency & Upper-Bound Closure**: Every archetype $v \in \mathfrak{P} \setminus \{\mathbf{\Xi}_\top\}$ satisfies $v \preceq \mathfrak{H}$ or $v \preceq \mathfrak{S}_{\text{MP}}$ along proved covering chains ($\mathbf{Ax.1}$–$\mathbf{Ax.5}$, $\mathbf{Ded.1}$–$\mathbf{Ded.6}$). Joining $\mathfrak{H}$ and $\mathfrak{S}_{\text{MP}}$ overcomes single-generator paralysis ($\mathbf{Ded.1}, \mathbf{Ded.4}$), handles anomalous cocycles $\Theta_0$ via Souriau’s intertwining theorem ($\mathbf{Ded.2}, \mathbf{Ded.3}$), and respects faithful/Gibbs domain boundaries ($\mathbf{Ded.5}, \mathbf{Ded.6}$).
+  2. **Minimality & Uniqueness of Join**:
+     * Retaining $\mathfrak{S}_{\text{MP}}$ without $\mathfrak{H}$ runs the metriplectic equations without tracking $\beta \in \Omega_{\text{Gibbs}}$, $\ker\rho = \{0\}$, or the operator-vs.-scalar distinction between $\widehat{I}(\rho)$ and $\Psi(\beta)$, crashing at $-\ln 0 = +\infty$ and $Z(\beta) = \infty$ ($\mathbf{Ded.5}, \mathbf{Ded.6}$).
+     * Retaining $\mathfrak{H}$ without $\mathfrak{S}_{\text{MP}}$ maintains equilibrium Legendre dictionaries while lacking the $\Pi_{\perp\{\mathbf{1}, H\}}^{\text{BKM}}$ projection, relapsing into single-generator paralysis $\dot{F} \equiv 0$ or single-orbit freezing $\dot{S} \equiv 0$ ($\mathbf{Ded.1}$).
+     * Collapsing $\mathcal{A}_0 \to 0$ asserts $[A, B] = 0$ universally in BCH ($\mathbf{Ax.3}$) or non-zero motion under $\dot{F} = 0 + 0$ ($\mathbf{Ded.1}$, contradiction).
+  Therefore, $\mathbf{\Xi}_\top = \mathfrak{H} \vee \mathfrak{S}_{\text{MP}}$ is the unique least upper bound ($\sup \mathfrak{P}$) completing the causal poset. $\blacksquare$

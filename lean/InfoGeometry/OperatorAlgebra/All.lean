@@ -37,6 +37,7 @@ import InfoGeometry.OperatorAlgebra.ChiralFredholmIndex
 import InfoGeometry.OperatorAlgebra.ChiralPackingEnergy
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
 import InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution
+import InfoGeometry.OperatorAlgebra.OverlapDiracFromInvolutions
 import InfoGeometry.Twistor.FiniteAmbitwistorParaKahlerAll
 import InfoGeometry.OperatorAlgebra.ChiralResidueAudit
 import InfoGeometry.OperatorAlgebra.ChiralTubuleBoundary
@@ -321,6 +322,8 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentCornerEndEquivalence
 import InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentMoritaD39Synthesis
 
 import InfoGeometry.OperatorAlgebra.PeirceDefectBoundaryAll
+import InfoGeometry.OperatorAlgebra.RealSkewDomainResidual
+import InfoGeometry.OperatorAlgebra.UnboundedHilbertResidual
 
 namespace InfoGeometry.OperatorAlgebra
 

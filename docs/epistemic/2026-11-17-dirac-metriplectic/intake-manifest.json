@@ -1,0 +1,35 @@
+{
+  "received_date": "2026-11-17",
+  "base_revision": "08c34e03f610b452e03422037949196dc7d92d6d",
+  "distinct_texts": 2,
+  "uploads": [
+    {
+      "uploaded_name": "Pasted text (2)(9).txt",
+      "preserved_as": "dirac-hestenes-intake.txt",
+      "bytes": 36090,
+      "lines": 201,
+      "sha256": "b9de16352e57d99545684be35d91d935df030bc68a57849584caaff133edede0"
+    },
+    {
+      "uploaded_name": "Pasted text (3)(4).txt",
+      "preserved_as": "dirac-hestenes-intake.txt",
+      "bytes": 36090,
+      "lines": 201,
+      "sha256": "b9de16352e57d99545684be35d91d935df030bc68a57849584caaff133edede0"
+    },
+    {
+      "uploaded_name": "Pasted text (4)(2).txt",
+      "preserved_as": "para-kahler-metriplectic-intake.txt",
+      "bytes": 36565,
+      "lines": 201,
+      "sha256": "1fef0d88c605c9d59f6590503b776362454f6b30b5022bbdec25dc1b12960e48"
+    },
+    {
+      "uploaded_name": "Pasted text(20261117-085441).txt",
+      "preserved_as": "dirac-hestenes-intake.txt",
+      "bytes": 36090,
+      "lines": 201,
+      "sha256": "b9de16352e57d99545684be35d91d935df030bc68a57849584caaff133edede0"
+    }
+  ]
+}

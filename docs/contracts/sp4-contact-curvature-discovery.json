@@ -1,0 +1,166 @@
+{
+  "authority": "navigation_only",
+  "carriers_found": [
+    {
+      "file": "lean/InfoGeometry/OperatorAlgebra/DerivationMatrixGeometry.lean",
+      "kind": "def",
+      "lean_statement": "def matrixInnerLieHom : Matrix n n R →ₗ⁅R⁆ NonAssocDerivation.derivations R (Matrix n n R) where toFun X",
+      "line": 51,
+      "location": "lean/InfoGeometry/OperatorAlgebra/DerivationMatrixGeometry.lean:51",
+      "name": "matrixInnerLieHom",
+      "qualified_name": "InfoGeometry.OperatorAlgebra.DerivationMatrixGeometry.matrixInnerLieHom",
+      "source_end_line": 53,
+      "source_sha256": "c0e66444610e9bf32ef2365c5673caf6f19d5dcd8972f2619f5399b5564a34cd"
+    }
+  ],
+  "dag_context": null,
+  "deduplication_warnings": [
+    "Query 'covariantDerivative_commutator matrixInnerLieHom' matches existing fundamental type 'matrixInnerLieHom' in lean/InfoGeometry/OperatorAlgebra/DerivationMatrixGeometry.lean; reuse canonical carrier instead of introducing redundant type wrapper."
+  ],
+  "graph_is_proof_authority": false,
+  "lemmas_found": [
+    {
+      "file": "lean/InfoGeometry/OperatorAlgebra/CanonicalZornDerivationDifferentialForms.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem covariantDerivative_commutator (Γ : OperatorOneForm) (D E : Lane.L) (T : EndCZ) : DerivationDifferentialForms.covariantDerivative Lane Γ D (DerivationDifferentialForms.covariantDerivative Lane Γ E T) - DerivationDifferentialForms.covariantDerivative Lane Γ E (DerivationDifferentialForms.covariantDerivative Lane Γ D T) - DerivationDifferentialForms.covariantDerivative Lane Γ ⁅(D : Lane.L), (E : Lane.L)⁆ T = DerivationDifferentialForms.connectionCurvature Lane Γ D E * T - T * DerivationDifferentialForms.connectionCurvature Lane Γ D E",
+      "line": 85,
+      "location": "lean/InfoGeometry/OperatorAlgebra/CanonicalZornDerivationDifferentialForms.lean:85",
+      "name": "covariantDerivative_commutator",
+      "qualified_name": "InfoGeometry.OperatorAlgebra.CanonicalZornDerivationDifferentialForms.covariantDerivative_commutator",
+      "source_end_line": 94,
+      "source_sha256": "b04d63beb5b656b1afadf8ba82ec209c6550b38cecbe3b78eec09a71e0f5a4b4"
+    },
+    {
+      "file": "lean/InfoGeometry/OperatorAlgebra/CanonicalZornDerivationDifferentialForms.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem covariantDerivative_commutator_of_maurerCartan (Γ : OperatorOneForm) (hΓ : DerivationDifferentialForms.SatisfiesMaurerCartan Lane Γ) (D E : Lane.L) (T : EndCZ) : DerivationDifferentialForms.covariantDerivative Lane Γ D (DerivationDifferentialForms.covariantDerivative Lane Γ E T) - DerivationDifferentialForms.covariantDerivative Lane Γ E (DerivationDifferentialForms.covariantDerivative Lane Γ D T) - DerivationDifferentialForms.covariantDerivative Lane Γ ⁅(D : Lane.L), (E : Lane.L)⁆ T = 0",
+      "line": 106,
+      "location": "lean/InfoGeometry/OperatorAlgebra/CanonicalZornDerivationDifferentialForms.lean:106",
+      "name": "covariantDerivative_commutator_of_maurerCartan",
+      "qualified_name": "InfoGeometry.OperatorAlgebra.CanonicalZornDerivationDifferentialForms.covariantDerivative_commutator_of_maurerCartan",
+      "source_end_line": 115,
+      "source_sha256": "b04d63beb5b656b1afadf8ba82ec209c6550b38cecbe3b78eec09a71e0f5a4b4"
+    },
+    {
+      "file": "lean/InfoGeometry/OperatorAlgebra/DerivationDifferentialForms.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem covariantDerivative_commutator (Γ : OneForm K) (x y : K.L) (a : A) : covariantDerivative K Γ x (covariantDerivative K Γ y a) - covariantDerivative K Γ y (covariantDerivative K Γ x a) - covariantDerivative K Γ ⁅x, y⁆ a = connectionCurvature K Γ x y * a - a * connectionCurvature K Γ x y",
+      "line": 367,
+      "location": "lean/InfoGeometry/OperatorAlgebra/DerivationDifferentialForms.lean:367",
+      "name": "covariantDerivative_commutator",
+      "qualified_name": "InfoGeometry.OperatorAlgebra.DerivationDifferentialForms.covariantDerivative_commutator",
+      "source_end_line": 373,
+      "source_sha256": "064f933a187f6ab522fdd054d6e0efc0dced1839423c61c6ef173d47a172fd7f"
+    },
+    {
+      "file": "lean/InfoGeometry/OperatorAlgebra/DerivationDifferentialForms.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem covariantDerivative_commutator_of_maurerCartan (Γ : OneForm K) (hΓ : SatisfiesMaurerCartan K Γ) (x y : K.L) (a : A) : covariantDerivative K Γ x (covariantDerivative K Γ y a) - covariantDerivative K Γ y (covariantDerivative K Γ x a) - covariantDerivative K Γ ⁅x, y⁆ a = 0",
+      "line": 401,
+      "location": "lean/InfoGeometry/OperatorAlgebra/DerivationDifferentialForms.lean:401",
+      "name": "covariantDerivative_commutator_of_maurerCartan",
+      "qualified_name": "InfoGeometry.OperatorAlgebra.DerivationDifferentialForms.covariantDerivative_commutator_of_maurerCartan",
+      "source_end_line": 406,
+      "source_sha256": "064f933a187f6ab522fdd054d6e0efc0dced1839423c61c6ef173d47a172fd7f"
+    },
+    {
+      "file": "lean/InfoGeometry/OperatorAlgebra/DerivationMatrixGeometry.lean",
+      "kind": "theorem",
+      "lean_statement": "@[simp] theorem matrixInnerLieHom_apply (X Y : Matrix n n R) : (matrixInnerLieHom R n X : Module.End R (Matrix n n R)) Y = X * Y - Y * X",
+      "line": 66,
+      "location": "lean/InfoGeometry/OperatorAlgebra/DerivationMatrixGeometry.lean:66",
+      "name": "matrixInnerLieHom_apply",
+      "qualified_name": "InfoGeometry.OperatorAlgebra.DerivationMatrixGeometry.matrixInnerLieHom_apply",
+      "source_end_line": 68,
+      "source_sha256": "c0e66444610e9bf32ef2365c5673caf6f19d5dcd8972f2619f5399b5564a34cd"
+    },
+    {
+      "file": "lean/InfoGeometry/OperatorAlgebra/DerivationMatrixGeometry.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem matrixInnerLieHom_toEnd_eq_innerDerivative (X : Matrix n n R) : (matrixInnerLieHom R n X : Module.End R (Matrix n n R)) = InfoGeometry.Geometry.AssociativeGaugeConnection.innerDerivative (R := R) X",
+      "line": 73,
+      "location": "lean/InfoGeometry/OperatorAlgebra/DerivationMatrixGeometry.lean:73",
+      "name": "matrixInnerLieHom_toEnd_eq_innerDerivative",
+      "qualified_name": "InfoGeometry.OperatorAlgebra.DerivationMatrixGeometry.matrixInnerLieHom_toEnd_eq_innerDerivative",
+      "source_end_line": 75,
+      "source_sha256": "c0e66444610e9bf32ef2365c5673caf6f19d5dcd8972f2619f5399b5564a34cd"
+    },
+    {
+      "file": "lean/InfoGeometry/OperatorAlgebra/DerivationMatrixGeometry.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem matrixInnerLieHom_commutator (X Y : Matrix n n R) : matrixInnerLieHom R n (X * Y - Y * X) = ⁅matrixInnerLieHom R n X, matrixInnerLieHom R n Y⁆",
+      "line": 81,
+      "location": "lean/InfoGeometry/OperatorAlgebra/DerivationMatrixGeometry.lean:81",
+      "name": "matrixInnerLieHom_commutator",
+      "qualified_name": "InfoGeometry.OperatorAlgebra.DerivationMatrixGeometry.matrixInnerLieHom_commutator",
+      "source_end_line": 83,
+      "source_sha256": "c0e66444610e9bf32ef2365c5673caf6f19d5dcd8972f2619f5399b5564a34cd"
+    },
+    {
+      "file": "lean/InfoGeometry/OperatorAlgebra/DerivationGaugeTransport.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem fundamentalCovariantDerivative_commutator (Γ : OneForm K) (x y : K.L) (a : A) : fundamentalCovariantDerivative K Γ x (fundamentalCovariantDerivative K Γ y a) - fundamentalCovariantDerivative K Γ y (fundamentalCovariantDerivative K Γ x a) - fundamentalCovariantDerivative K Γ ⁅x, y⁆ a = connectionCurvature K Γ x y * a",
+      "line": 54,
+      "location": "lean/InfoGeometry/OperatorAlgebra/DerivationGaugeTransport.lean:54",
+      "name": "fundamentalCovariantDerivative_commutator",
+      "qualified_name": "InfoGeometry.OperatorAlgebra.DerivationDifferentialForms.fundamentalCovariantDerivative_commutator",
+      "source_end_line": 61,
+      "source_sha256": "636bc44edbdc0213bba5774958a101534b8ce2a8ba6b1e6fd7de82b86e5e678d"
+    },
+    {
+      "file": "lean/InfoGeometry/OperatorAlgebra/DerivationGaugeTransport.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem fundamentalCovariantDerivative_commutator_eq (Γ : OneForm K) (x y : K.L) : ⁅fundamentalCovariantDerivative K Γ x, fundamentalCovariantDerivative K Γ y⁆ - fundamentalCovariantDerivative K Γ ⁅x, y⁆ = LinearMap.mulLeft R (connectionCurvature K Γ x y)",
+      "line": 69,
+      "location": "lean/InfoGeometry/OperatorAlgebra/DerivationGaugeTransport.lean:69",
+      "name": "fundamentalCovariantDerivative_commutator_eq",
+      "qualified_name": "InfoGeometry.OperatorAlgebra.DerivationDifferentialForms.fundamentalCovariantDerivative_commutator_eq",
+      "source_end_line": 74,
+      "source_sha256": "636bc44edbdc0213bba5774958a101534b8ce2a8ba6b1e6fd7de82b86e5e678d"
+    },
+    {
+      "file": "lean/InfoGeometry/NCG/NoncommutativeConnectionCurvature.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem covariantDerivative_commutator (A_conn X Y : A) : covariantDerivative D A_conn (X * Y - Y * X) = covariantDerivative D A_conn X * Y + X * covariantDerivative D A_conn Y - (covariantDerivative D A_conn Y * X + Y * covariantDerivative D A_conn X)",
+      "line": 143,
+      "location": "lean/InfoGeometry/NCG/NoncommutativeConnectionCurvature.lean:143",
+      "name": "covariantDerivative_commutator",
+      "qualified_name": "InfoGeometry.NCG.AlgebraDerivation.covariantDerivative_commutator",
+      "source_end_line": 147,
+      "source_sha256": "2ab89e721cbcef16eba0a097e4fb10adaa6b027ea4c1d488d09b9038897ee5c2"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/TensorLimitExactConnection.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem limit_exactConnection_bianchi (P : Limit) (D E F : limitDerivationsLane.L) : covariantExteriorDerivativeTwo limitDerivationsLane (exteriorDerivativeZero limitDerivationsLane P) (connectionCurvature limitDerivationsLane (exteriorDerivativeZero limitDerivationsLane P)) D E F = 0",
+      "line": 129,
+      "location": "lean/InfoGeometry/Canonical/TensorLimitExactConnection.lean:129",
+      "name": "limit_exactConnection_bianchi",
+      "qualified_name": "InfoGeometry.Canonical.TensorLimitExactConnection.limit_exactConnection_bianchi",
+      "source_end_line": 133,
+      "source_sha256": "08b923fa506446d803a9d60b8fc09eab1fad96f58b722c3b637a458244b53083"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/TensorLimitExactConnection.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem ofStage_exactCurvature (n : ℕ) (P X Y : Stage n) : ofStage n (exactCutCurvature n P X Y) = limitExactCurvature (ofStage n P) (ofStage n X) (ofStage n Y)",
+      "line": 138,
+      "location": "lean/InfoGeometry/Canonical/TensorLimitExactConnection.lean:138",
+      "name": "ofStage_exactCurvature",
+      "qualified_name": "InfoGeometry.Canonical.TensorLimitExactConnection.ofStage_exactCurvature",
+      "source_end_line": 140,
+      "source_sha256": "08b923fa506446d803a9d60b8fc09eab1fad96f58b722c3b637a458244b53083"
+    }
+  ],
+  "local_dag_context": null,
+  "query": "covariantDerivative_commutator matrixInnerLieHom",
+  "recommended_imports": [
+    "InfoGeometry.Canonical.TensorLimitExactConnection",
+    "InfoGeometry.NCG.NoncommutativeConnectionCurvature",
+    "InfoGeometry.OperatorAlgebra.CanonicalZornDerivationDifferentialForms",
+    "InfoGeometry.OperatorAlgebra.DerivationDifferentialForms",
+    "InfoGeometry.OperatorAlgebra.DerivationGaugeTransport",
+    "InfoGeometry.OperatorAlgebra.DerivationMatrixGeometry"
+  ],
+  "schema": "info_geometry.opengauss.discovery_report.v1"
+}

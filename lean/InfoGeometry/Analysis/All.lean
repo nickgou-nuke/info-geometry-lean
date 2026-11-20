@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Analysis.CliffordWaveletTransform
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.BipolarCrossRatioLog
@@ -44,6 +50,8 @@ import InfoGeometry.Analysis.MellinZetaScaling
 import InfoGeometry.Analysis.FiniteSpectralMellinTaylor
 import InfoGeometry.Analysis.FiniteSpectralHeatMellin
 import InfoGeometry.Analysis.LaplaceFourierComparison
+import InfoGeometry.Analysis.InternalPhaseFourier
+import InfoGeometry.Analysis.DoubledInternalPhaseFourier
 import InfoGeometry.Analysis.LaplaceUniqueness
 import InfoGeometry.Analysis.LaplaceContour
 import InfoGeometry.Analysis.QuaternionNonSeparableWaveletOptimization
@@ -57,3 +65,5 @@ import InfoGeometry.Analysis.FractalMeasure.Basic
 import InfoGeometry.Analysis.Graph
 import InfoGeometry.Analysis.RankOneTrace
 import InfoGeometry.Analysis.MobiusRadialTime
+import InfoGeometry.Analysis.MulLogInterpolation
+import InfoGeometry.Analysis.SmoothedMellinKernel

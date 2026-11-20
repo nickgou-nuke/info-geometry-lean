@@ -66,4 +66,32 @@ theorem adjoint_involutive (w : Aˣ) (hw : star (↑w : A) = ↑w) (x : A) :
       _ = (↑w⁻¹ : A) := by rw [h, mul_one]
   simp [adjoint, star_mul, hw, hinv, mul_assoc]
 
+/-- Equality at an observable is equivalent to commutation with the relative
+weight. The order `w * z⁻¹` is fixed by the chosen adjoint convention. -/
+theorem adjoint_eq_adjoint_iff (w z : Aˣ) (x : A) :
+    adjoint w x = adjoint z x ↔
+      Commute (star x) ((↑w : A) * (↑z⁻¹ : A)) := by
+  constructor
+  · intro h
+    have h' := congrArg (fun y : A => (↑w : A) * y * (↑z⁻¹ : A)) h
+    change star x * ((↑w : A) * (↑z⁻¹ : A)) =
+      ((↑w : A) * (↑z⁻¹ : A)) * star x
+    simpa [adjoint, mul_assoc] using h'
+  · intro h
+    have h' := congrArg (fun y : A => (↑w⁻¹ : A) * y * (↑z : A)) h.eq
+    simpa [adjoint, mul_assoc] using h'
+
+/-- Two weighted adjoint maps agree exactly when their relative weight
+commutes with every element. No commutativity of the ambient ring is assumed. -/
+theorem adjoint_eq_iff_relative_central (w z : Aˣ) :
+    adjoint w = adjoint z ↔
+      ∀ x : A, Commute x ((↑w : A) * (↑z⁻¹ : A)) := by
+  constructor
+  · intro h x
+    have hx := (adjoint_eq_adjoint_iff w z (star x)).mp (congrFun h (star x))
+    simpa only [star_star] using hx
+  · intro h
+    funext x
+    exact (adjoint_eq_adjoint_iff w z x).mpr (h (star x))
+
 end InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility

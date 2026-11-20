@@ -3,11 +3,45 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.Physics.InformationEnergy.TraceErasure
+import InfoGeometry.Physics.InformationEnergy.ThermalSpectrum
+import InfoGeometry.Physics.InformationEnergy.EnergyAccounting
+import InfoGeometry.Physics.InformationEnergy.MomentumBalance
+import InfoGeometry.Physics.InformationEnergy.BinaryErasure
+import InfoGeometry.Physics.InformationEnergy.EffectiveStateCount
+import InfoGeometry.Physics.InformationEnergy.Jarzynski
+import InfoGeometry.Physics.InformationEnergy.ObservableErasure
+import InfoGeometry.Holographic.ArithmeticGeometry
+import InfoGeometry.Holographic.BoundaryReconstruction
+import InfoGeometry.Holographic.CurvatureObstruction
+import InfoGeometry.Holographic.MonoidCounterexample
+import InfoGeometry.Holographic.PathAmplitudes
+import InfoGeometry.Holographic.RateBudget
+import InfoGeometry.Clifford.ChevalleyNeutralCompatibility
+import InfoGeometry.Clifford.ParaKreinObstructions
+import InfoGeometry.Clifford.NeutralCotangentHamiltonian
+import InfoGeometry.Geometry.ParaPotentialPullback
+import InfoGeometry.Canonical.HestenesCartanPhaseTransport
+import InfoGeometry.Canonical.Cl11LorentzCornerBounds
+import InfoGeometry.Lie.SplitOctonionTriadVolume
+import InfoGeometry.QuantumGeometry.FiniteObservableGramExamples
+import InfoGeometry.QuantumGeometry.RealPhaseObservableGram
+import InfoGeometry.Analysis.SchwartzUncertainty
+import InfoGeometry.Analysis.ProjectedGramDissipation
+import InfoGeometry.Analysis.SplitOctonionProjectedGram
 import InfoGeometry.Canonical.CliffordPeirceWalshAudit
+import InfoGeometry.OperatorAlgebra.MaxRelativeEntropy
+import InfoGeometry.Quantum.PositiveEffectOrder
+import InfoGeometry.Quantum.MaxRelativeEntropy
+import InfoGeometry.Quantum.MaxRelativeEntropyQubit
+import InfoGeometry.Probability.AitchisonContingencyAudit
 import InfoGeometry.OperatorAlgebra.IsometryCornerLocalization
 import InfoGeometry.Clifford.WeylFrameMasks
 import InfoGeometry.Analysis.MetricPorosity
 import InfoGeometry.Analysis.MultiscaleLocalization
+import InfoGeometry.Analysis.HilbertGramReciprocity
+import InfoGeometry.Analysis.HilbertGramMoorePenrose
+import InfoGeometry.Analysis.GradedExponentialTrace
 import InfoGeometry.Canonical.PeirceStarColimit
 import InfoGeometry.OperatorAlgebra.HorizonCompressionPairingAudit
 import InfoGeometry.Examples.RealMatrixModeWitness
@@ -15,6 +49,10 @@ import InfoGeometry.Twistor.RealConstructs
 import InfoGeometry.Twistor.RealConstructsAudit
 import InfoGeometry.Physics.NuclearTwistorSectorAudit
 import InfoGeometry.Quantum.RealificationAudit
+import InfoGeometry.OperatorAlgebra.OverlapChirality
+import InfoGeometry.OperatorAlgebra.PeirceCurvatureTrace
+import InfoGeometry.Quantum.RealChiralCurvature
+import InfoGeometry.Clifford.RealChiralCurvatureExample
 import InfoGeometry.AllExhaustive
 import Experimental.Sandbox.Topology.KleinBieberbachWeyl
 import InfoGeometry.Exceptional.CFSGPort.All
@@ -117,6 +155,9 @@ import InfoGeometry.Canonical.QuantumSpinNavierStokes
 import InfoGeometry.Geometry.QuadraticPotentialCalculus
 import InfoGeometry.Geometry.FlatSplitQuaternionPotential
 import InfoGeometry.Geometry.FlatSplitQuaternionFamily
+import InfoGeometry.Geometry.SymplecticMetricCompatibility
+import InfoGeometry.Geometry.ObliqueSymplecticInvolution
+import InfoGeometry.Clifford.PhaseSpaceSymplecticMetricCompatibility
 import InfoGeometry.Analysis.LogHomogeneousPotential
 import InfoGeometry.Analysis.IntervalBarrierPotential
 import InfoGeometry.Modular.KreinPotentialTrace
@@ -651,3 +692,7 @@ import InfoGeometry.Quantum.OperatorRingSquareNegOne
 import InfoGeometry.Analysis.EvenOddExponential
 import InfoGeometry.NCG.GradedCoupledExponential
 import InfoGeometry.InformationGeometry.PositiveMeasureContrast
+import InfoGeometry.Algebra.SkewPolynomialFactorization
+import InfoGeometry.Algebra.QuadraticCrossedProduct
+import InfoGeometry.Algebra.CARTwoSidedIdeal
+import InfoGeometry.Twistor.NonincidentLogPairing

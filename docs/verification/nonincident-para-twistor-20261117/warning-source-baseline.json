@@ -1,0 +1,3188 @@
+{
+  "schema": "independent_qa_frozen_source_baseline_v2",
+  "status": "SOURCE_HANDOFF_CONFIRMED_NATIVE_ATTEMPT_2_PENDING",
+  "reviewer": "/root/independent_qa",
+  "prepared_at_utc": "2026-11-17T11:48:19.638765+00:00",
+  "attempt": 2,
+  "base_commit": "08c34e03f610b452e03422037949196dc7d92d6d",
+  "frozen_commit": "53c1a356af329891440ca67e8a116570c36a72ab",
+  "previous_frozen_commit": "1b1ecdd405b25a81f0c8177ac405c6cee4de7de1",
+  "frozen_inputs_sha256": "02c6d4c004bc1f4a8010b34251d2c547e893c7b7db08c61ddccfc847702d011b",
+  "compared_source_root": "/workspace/scratch/933d64e28eca/repo/lean",
+  "all_39_live_source_hashes_match_freeze": true,
+  "all_39_committed_source_hashes_match_freeze": true,
+  "attempt_2_native_sources_logs_report_inspected": false,
+  "source_sha256": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+    "InfoGeometry.Canonical.ParaComplexConnectionBridge": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+    "InfoGeometry.Canonical.ParaComplexNeutralForm": "ac8ea0b4ec1b2c45bc4995388eedcc27e5ef7e0fd61d862a6181f896dc7ab605",
+    "InfoGeometry.Core.IdempotencyDefect": "2d7b8fa580abe148fc70a39f8e1831b5505fb7f6a3920f3a79a0ba35bfee5590",
+    "InfoGeometry.Core.PeirceDecomposition": "b2426391a1841cbdb35bdef72138b5ab1553508c82c22ea930aa23f164de9bd9",
+    "InfoGeometry.Core.PeirceCompressionDefect": "f2e657ca40ff91a996b503c141c2b1f79b2173204a04aadf7afc8c2013bf7c8d",
+    "InfoGeometry.LinearAlgebra.RegularDyadCompression": "a85dafe5d2f3fa1114a085500bd0ebf917088f9bd81ae3f545c90f278e30c780",
+    "InfoGeometry.OperatorAlgebra.ChiralPolarization": "40707ffc7df11e1740574b9100f50430774e2f2e56c5834ab110237f02b65a02",
+    "InfoGeometry.Geometry.KreinIsotropicCone": "2fe3d1cbe956bca59ecd6c4ab9e3407da1c265fb13c55c439a1e22b20d2d125f",
+    "InfoGeometry.Meta.OwnerTarget": "824ac23fa5a0f002b220a4547d7e26bb98fb4ddbe4b82f76f027aee02e3c6dab",
+    "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit": "32bd3e34aa22df3a3c0eefc98b805dd0f773e1f61061a9dae030315eb13f01bf",
+    "InfoGeometry.OperatorAlgebra.KreinIsotropicCone": "375912c2aff80d00e75db6f9ce7b2bfc12c9bc28a4c392ba226e834463cbc512",
+    "InfoGeometry.OperatorAlgebra.TomitaCartanSplit": "942ba5d0ccb4b3c326899033d9b41082f3d28229a02e5f3622839a81f8faa298",
+    "InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution": "220ce4a54c802b829034f0acf4534a7ce255d03a872256f1445cdc7223a6da55",
+    "InfoGeometry.Optics.SheetWittCircularBasis": "dcd4fbde48e869da4d03e6512562c245f7162e373df6146a364f7deccd256d69",
+    "InfoGeometry.Twistor.RealDualTwistor": "ec7900fb51a32e6135ba0b6e4f14995db171a157105f3d69f6e88aa54476fbbf",
+    "InfoGeometry.Twistor.NonincidentLogPairing": "57af40272b06c8ce41522c58659d686d9c70dbcfacd42e37511c3217dbdb2cdb",
+    "InfoGeometry.Twistor.RealProjectiveAmbitwistor": "bd25aabe91c66e3ab83ba6f7647f964007ad0e8441b08bb230e12c0f21f1db27",
+    "InfoGeometry.Canonical.ModularZ2CubeGrading": "079b1f23fbafb9dc9f8c560fbb6abc72a80d92f8a4233baf0e61a0e4f38faa55",
+    "InfoGeometry.Twistor.PenroseIncidence": "31178c457ef77e633d1be52777447001339f98e66b4e10610ea4f089808d8983",
+    "InfoGeometry.GrandUnification.ArchetypeDictionary": "bb89d0138a3842e20e9b05eab752745aa338c8e86bec0d0253fc2c244756a261",
+    "InfoGeometry.Krein.KreinSpace": "38f1482b3537eb5a82f622f702bdb13c43d5ff5b3402e0b872d079eeb180dc97",
+    "InfoGeometry.Cartan.Involution": "d407100337b0684f5dac751bc5372155fb1a86315395a05347419f26d855729c",
+    "InfoGeometry.Krein.InvolutiveSelfDualCarrier": "71a2dcad64a19921e86d5297a7039ad64af7aa1b7cf762f950861a26fa1fecd6",
+    "InfoGeometry.Krein.DoubledSpace": "df94e1e351340e16b21ea8d0a9aef632b5f56e50078c5f26701ce96c9c91d0fc",
+    "InfoGeometry.Convex.ProjectiveRays": "954c88a31177f673221773066efb2224ed68e6bf2a456d7d0d25931d6fef17fd",
+    "InfoGeometry.Twistor.NullProjective": "2f706ac6e568051885eae7da812f6acebcf09b3c0971363f92821cde6583670b",
+    "InfoGeometry.Twistor.PenroseTwistor": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+    "InfoGeometry.Physics.ChiralPoincareSouriauBridge": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+    "InfoGeometry.Twistor.PerjesConventions": "903b0b7a18386048fa13266ff8adcbadd8c14bb0e6a9c32ab5da6a3049a2ee9d",
+    "InfoGeometry.Projective.KleinQuadricPlucker": "bc5b5017340240566c12a7910065b5d9769b9f64b927a963576536146f542e5f",
+    "InfoGeometry.Twistor.TwoTwistorPlucker": "25b6f74b9773ca4f4a4b258983cf7a66c6928700a77e245cef2a31d8f5816241",
+    "InfoGeometry.Twistor.TwistorFrameCovariance": "5f4627f523c9c84648ccfea5ff33e362da97550272ccdee9e3eb4bb553fe01c6",
+    "InfoGeometry.Twistor.InfinityTwistor": "982c6db81156164101c7802bb30f41d9ec8cf5c933401a6b80451d9eb083d7a4",
+    "InfoGeometry.Twistor.SpinorOuterProduct": "249b1ac13661a06ba24930c5e96d8c632246359677ae4f9743da244be29b50b1",
+    "InfoGeometry.Twistor.TwistorKinematicTensor": "f89010846129b1f1ce1db809873ef1548efbe321c9beb53502000fe7eafcb0bc",
+    "InfoGeometry.Twistor.TwistorConstituentKinematics": "2347b498be655c0fa6e6ddeac319519830bca9a13dcb290ef937d8d0ad91203f",
+    "InfoGeometry.Twistor.PerjesMomentOperator": "00e6e5e75c65496c01b3083c9386f7709e36a4769fa4af86ed0b988ce73a035c",
+    "InfoGeometry.Twistor.TwoTwistorGramMass": "d19afc2bed27568def2b5409c93de73f93fe65a592ead34d5e8010424e1333fe"
+  },
+  "target_count": 9,
+  "module_count": 39,
+  "unchanged_modules": [
+    "InfoGeometry.Algebra.FiniteSpinAlgebra",
+    "InfoGeometry.Canonical.ParaComplexConnectionBridge",
+    "InfoGeometry.Core.IdempotencyDefect",
+    "InfoGeometry.Core.PeirceDecomposition",
+    "InfoGeometry.Core.PeirceCompressionDefect",
+    "InfoGeometry.OperatorAlgebra.ChiralPolarization",
+    "InfoGeometry.Geometry.KreinIsotropicCone",
+    "InfoGeometry.Meta.OwnerTarget",
+    "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit",
+    "InfoGeometry.OperatorAlgebra.KreinIsotropicCone",
+    "InfoGeometry.OperatorAlgebra.TomitaCartanSplit",
+    "InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution",
+    "InfoGeometry.Twistor.RealDualTwistor",
+    "InfoGeometry.Twistor.RealProjectiveAmbitwistor",
+    "InfoGeometry.Canonical.ModularZ2CubeGrading",
+    "InfoGeometry.Twistor.PenroseIncidence",
+    "InfoGeometry.GrandUnification.ArchetypeDictionary",
+    "InfoGeometry.Krein.KreinSpace",
+    "InfoGeometry.Cartan.Involution",
+    "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+    "InfoGeometry.Krein.DoubledSpace",
+    "InfoGeometry.Convex.ProjectiveRays",
+    "InfoGeometry.Twistor.NullProjective",
+    "InfoGeometry.Twistor.PenroseTwistor",
+    "InfoGeometry.Physics.ChiralPoincareSouriauBridge",
+    "InfoGeometry.Twistor.PerjesConventions",
+    "InfoGeometry.Projective.KleinQuadricPlucker",
+    "InfoGeometry.Twistor.TwoTwistorPlucker",
+    "InfoGeometry.Twistor.TwistorFrameCovariance",
+    "InfoGeometry.Twistor.InfinityTwistor",
+    "InfoGeometry.Twistor.SpinorOuterProduct",
+    "InfoGeometry.Twistor.TwistorKinematicTensor",
+    "InfoGeometry.Twistor.TwistorConstituentKinematics",
+    "InfoGeometry.Twistor.PerjesMomentOperator",
+    "InfoGeometry.Twistor.TwoTwistorGramMass"
+  ],
+  "changed_existing_modules": [
+    "InfoGeometry.Canonical.ParaComplexNeutralForm",
+    "InfoGeometry.LinearAlgebra.RegularDyadCompression",
+    "InfoGeometry.Optics.SheetWittCircularBasis"
+  ],
+  "new_modules": [
+    "InfoGeometry.Twistor.NonincidentLogPairing"
+  ],
+  "module_comparison": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+      "committed_source_sha256": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+      "base_source_sha256": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+      "base_line_count": 195,
+      "frozen_line_count": 195,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Mathlib.Tactic"
+      ],
+      "frozen_imports": [
+        "import Mathlib.Tactic"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 195,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 195
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Canonical.ParaComplexConnectionBridge": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+      "committed_source_sha256": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+      "base_source_sha256": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+      "base_line_count": 467,
+      "frozen_line_count": 467,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Mathlib.Data.Real.Basic",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import Mathlib.LinearAlgebra.Matrix.Notation",
+        "import Mathlib.Tactic"
+      ],
+      "frozen_imports": [
+        "import Mathlib.Data.Real.Basic",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import Mathlib.LinearAlgebra.Matrix.Notation",
+        "import Mathlib.Tactic"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 467,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 467
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Canonical.ParaComplexNeutralForm": {
+      "classification": "changed_existing_module",
+      "frozen_source_sha256": "ac8ea0b4ec1b2c45bc4995388eedcc27e5ef7e0fd61d862a6181f896dc7ab605",
+      "committed_source_sha256": "ac8ea0b4ec1b2c45bc4995388eedcc27e5ef7e0fd61d862a6181f896dc7ab605",
+      "base_source_sha256": "361dbd904b479570fac5b8d8e447698b65ac8873102bbfb977b01b68586d15a1",
+      "base_line_count": 259,
+      "frozen_line_count": 396,
+      "base_file_preserved_at_line_offset": null,
+      "imports_unchanged": false,
+      "base_imports": [
+        "import InfoGeometry.Canonical.ParaComplexConnectionBridge"
+      ],
+      "frozen_imports": [
+        "import InfoGeometry.Canonical.ParaComplexConnectionBridge",
+        "import Mathlib.LinearAlgebra.Dual.Lemmas"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 6,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 6
+        },
+        {
+          "base_start": 7,
+          "base_end_inclusive": 259,
+          "frozen_start": 8,
+          "frozen_end_inclusive": 260
+        }
+      ],
+      "changes": [
+        {
+          "operation": "insert",
+          "base_start": 7,
+          "base_end_inclusive": 6,
+          "frozen_start": 7,
+          "frozen_end_inclusive": 7
+        },
+        {
+          "operation": "insert",
+          "base_start": 260,
+          "base_end_inclusive": 259,
+          "frozen_start": 261,
+          "frozen_end_inclusive": 396
+        }
+      ],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Canonical.ParaComplexConnectionBridge"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Core.IdempotencyDefect": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "2d7b8fa580abe148fc70a39f8e1831b5505fb7f6a3920f3a79a0ba35bfee5590",
+      "committed_source_sha256": "2d7b8fa580abe148fc70a39f8e1831b5505fb7f6a3920f3a79a0ba35bfee5590",
+      "base_source_sha256": "2d7b8fa580abe148fc70a39f8e1831b5505fb7f6a3920f3a79a0ba35bfee5590",
+      "base_line_count": 85,
+      "frozen_line_count": 85,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Mathlib.Algebra.Ring.Idempotent",
+        "import Mathlib.Algebra.Ring.Hom.Defs",
+        "import Mathlib.Tactic.NoncommRing"
+      ],
+      "frozen_imports": [
+        "import Mathlib.Algebra.Ring.Idempotent",
+        "import Mathlib.Algebra.Ring.Hom.Defs",
+        "import Mathlib.Tactic.NoncommRing"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 85,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 85
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Core.PeirceDecomposition": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "b2426391a1841cbdb35bdef72138b5ab1553508c82c22ea930aa23f164de9bd9",
+      "committed_source_sha256": "b2426391a1841cbdb35bdef72138b5ab1553508c82c22ea930aa23f164de9bd9",
+      "base_source_sha256": "b2426391a1841cbdb35bdef72138b5ab1553508c82c22ea930aa23f164de9bd9",
+      "base_line_count": 475,
+      "frozen_line_count": 475,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Mathlib.Algebra.Ring.Basic",
+        "import InfoGeometry.Core.IdempotencyDefect",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import Mathlib.Data.Set.Basic",
+        "import Mathlib.Tactic"
+      ],
+      "frozen_imports": [
+        "import Mathlib.Algebra.Ring.Basic",
+        "import InfoGeometry.Core.IdempotencyDefect",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import Mathlib.Data.Set.Basic",
+        "import Mathlib.Tactic"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 475,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 475
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Core.IdempotencyDefect"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Core.PeirceCompressionDefect": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "f2e657ca40ff91a996b503c141c2b1f79b2173204a04aadf7afc8c2013bf7c8d",
+      "committed_source_sha256": "f2e657ca40ff91a996b503c141c2b1f79b2173204a04aadf7afc8c2013bf7c8d",
+      "base_source_sha256": "f2e657ca40ff91a996b503c141c2b1f79b2173204a04aadf7afc8c2013bf7c8d",
+      "base_line_count": 560,
+      "frozen_line_count": 560,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Mathlib.Algebra.Star.Basic",
+        "import Mathlib.Algebra.BigOperators.Ring.Finset",
+        "import Mathlib.Tactic.NoncommRing",
+        "import InfoGeometry.Core.IdempotencyDefect",
+        "import InfoGeometry.Core.PeirceDecomposition"
+      ],
+      "frozen_imports": [
+        "import Mathlib.Algebra.Star.Basic",
+        "import Mathlib.Algebra.BigOperators.Ring.Finset",
+        "import Mathlib.Tactic.NoncommRing",
+        "import InfoGeometry.Core.IdempotencyDefect",
+        "import InfoGeometry.Core.PeirceDecomposition"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 560,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 560
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Core.IdempotencyDefect",
+        "InfoGeometry.Core.PeirceDecomposition"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.LinearAlgebra.RegularDyadCompression": {
+      "classification": "changed_existing_module",
+      "frozen_source_sha256": "a85dafe5d2f3fa1114a085500bd0ebf917088f9bd81ae3f545c90f278e30c780",
+      "committed_source_sha256": "a85dafe5d2f3fa1114a085500bd0ebf917088f9bd81ae3f545c90f278e30c780",
+      "base_source_sha256": "efc50830e2578edec02c53d470c3cacc343e0da8ff2e2e67f2787a89af498304",
+      "base_line_count": 112,
+      "frozen_line_count": 158,
+      "base_file_preserved_at_line_offset": 5,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Mathlib",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import InfoGeometry.Core.PeirceCompressionDefect"
+      ],
+      "frozen_imports": [
+        "import Mathlib",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import InfoGeometry.Core.PeirceCompressionDefect"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 112,
+          "frozen_start": 6,
+          "frozen_end_inclusive": 117
+        }
+      ],
+      "changes": [
+        {
+          "operation": "insert",
+          "base_start": 1,
+          "base_end_inclusive": 0,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 5
+        },
+        {
+          "operation": "insert",
+          "base_start": 113,
+          "base_end_inclusive": 112,
+          "frozen_start": 118,
+          "frozen_end_inclusive": 158
+        }
+      ],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Core.IdempotencyDefect",
+        "InfoGeometry.Core.PeirceCompressionDefect",
+        "InfoGeometry.Core.PeirceDecomposition"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.OperatorAlgebra.ChiralPolarization": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "40707ffc7df11e1740574b9100f50430774e2f2e56c5834ab110237f02b65a02",
+      "committed_source_sha256": "40707ffc7df11e1740574b9100f50430774e2f2e56c5834ab110237f02b65a02",
+      "base_source_sha256": "40707ffc7df11e1740574b9100f50430774e2f2e56c5834ab110237f02b65a02",
+      "base_line_count": 481,
+      "frozen_line_count": 481,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Mathlib.Analysis.InnerProductSpace.Adjoint",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import Mathlib.Tactic"
+      ],
+      "frozen_imports": [
+        "import Mathlib.Analysis.InnerProductSpace.Adjoint",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import Mathlib.Tactic"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 481,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 481
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Geometry.KreinIsotropicCone": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "2fe3d1cbe956bca59ecd6c4ab9e3407da1c265fb13c55c439a1e22b20d2d125f",
+      "committed_source_sha256": "2fe3d1cbe956bca59ecd6c4ab9e3407da1c265fb13c55c439a1e22b20d2d125f",
+      "base_source_sha256": "2fe3d1cbe956bca59ecd6c4ab9e3407da1c265fb13c55c439a1e22b20d2d125f",
+      "base_line_count": 250,
+      "frozen_line_count": 250,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Mathlib.Tactic",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "frozen_imports": [
+        "import Mathlib.Tactic",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 250,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 250
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Meta.OwnerTarget": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "824ac23fa5a0f002b220a4547d7e26bb98fb4ddbe4b82f76f027aee02e3c6dab",
+      "committed_source_sha256": "824ac23fa5a0f002b220a4547d7e26bb98fb4ddbe4b82f76f027aee02e3c6dab",
+      "base_source_sha256": "824ac23fa5a0f002b220a4547d7e26bb98fb4ddbe4b82f76f027aee02e3c6dab",
+      "base_line_count": 106,
+      "frozen_line_count": 106,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Lean",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "frozen_imports": [
+        "import Lean",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 106,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 106
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "32bd3e34aa22df3a3c0eefc98b805dd0f773e1f61061a9dae030315eb13f01bf",
+      "committed_source_sha256": "32bd3e34aa22df3a3c0eefc98b805dd0f773e1f61061a9dae030315eb13f01bf",
+      "base_source_sha256": "32bd3e34aa22df3a3c0eefc98b805dd0f773e1f61061a9dae030315eb13f01bf",
+      "base_line_count": 414,
+      "frozen_line_count": 414,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Mathlib.Tactic",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import InfoGeometry.OperatorAlgebra.ChiralPolarization",
+        "import InfoGeometry.Meta.OwnerTarget"
+      ],
+      "frozen_imports": [
+        "import Mathlib.Tactic",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import InfoGeometry.OperatorAlgebra.ChiralPolarization",
+        "import InfoGeometry.Meta.OwnerTarget"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 414,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 414
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Meta.OwnerTarget",
+        "InfoGeometry.OperatorAlgebra.ChiralPolarization"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.OperatorAlgebra.KreinIsotropicCone": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "375912c2aff80d00e75db6f9ce7b2bfc12c9bc28a4c392ba226e834463cbc512",
+      "committed_source_sha256": "375912c2aff80d00e75db6f9ce7b2bfc12c9bc28a4c392ba226e834463cbc512",
+      "base_source_sha256": "375912c2aff80d00e75db6f9ce7b2bfc12c9bc28a4c392ba226e834463cbc512",
+      "base_line_count": 632,
+      "frozen_line_count": 632,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Mathlib.Tactic",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import InfoGeometry.OperatorAlgebra.ChiralPolarization",
+        "import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit"
+      ],
+      "frozen_imports": [
+        "import Mathlib.Tactic",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import InfoGeometry.OperatorAlgebra.ChiralPolarization",
+        "import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 632,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 632
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Meta.OwnerTarget",
+        "InfoGeometry.OperatorAlgebra.ChiralPolarization",
+        "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.OperatorAlgebra.TomitaCartanSplit": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "942ba5d0ccb4b3c326899033d9b41082f3d28229a02e5f3622839a81f8faa298",
+      "committed_source_sha256": "942ba5d0ccb4b3c326899033d9b41082f3d28229a02e5f3622839a81f8faa298",
+      "base_source_sha256": "942ba5d0ccb4b3c326899033d9b41082f3d28229a02e5f3622839a81f8faa298",
+      "base_line_count": 1584,
+      "frozen_line_count": 1584,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Mathlib.Tactic",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import InfoGeometry.Geometry.KreinIsotropicCone",
+        "import InfoGeometry.OperatorAlgebra.KreinIsotropicCone",
+        "import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit"
+      ],
+      "frozen_imports": [
+        "import Mathlib.Tactic",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import InfoGeometry.Geometry.KreinIsotropicCone",
+        "import InfoGeometry.OperatorAlgebra.KreinIsotropicCone",
+        "import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 1584,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 1584
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Geometry.KreinIsotropicCone",
+        "InfoGeometry.Meta.OwnerTarget",
+        "InfoGeometry.OperatorAlgebra.ChiralPolarization",
+        "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit",
+        "InfoGeometry.OperatorAlgebra.KreinIsotropicCone"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "220ce4a54c802b829034f0acf4534a7ce255d03a872256f1445cdc7223a6da55",
+      "committed_source_sha256": "220ce4a54c802b829034f0acf4534a7ce255d03a872256f1445cdc7223a6da55",
+      "base_source_sha256": "220ce4a54c802b829034f0acf4534a7ce255d03a872256f1445cdc7223a6da55",
+      "base_line_count": 362,
+      "frozen_line_count": 362,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Mathlib.Tactic",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import InfoGeometry.OperatorAlgebra.ChiralPolarization",
+        "import InfoGeometry.OperatorAlgebra.TomitaCartanSplit",
+        "import InfoGeometry.Meta.OwnerTarget"
+      ],
+      "frozen_imports": [
+        "import Mathlib.Tactic",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import InfoGeometry.OperatorAlgebra.ChiralPolarization",
+        "import InfoGeometry.OperatorAlgebra.TomitaCartanSplit",
+        "import InfoGeometry.Meta.OwnerTarget"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 362,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 362
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Geometry.KreinIsotropicCone",
+        "InfoGeometry.Meta.OwnerTarget",
+        "InfoGeometry.OperatorAlgebra.ChiralPolarization",
+        "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit",
+        "InfoGeometry.OperatorAlgebra.KreinIsotropicCone",
+        "InfoGeometry.OperatorAlgebra.TomitaCartanSplit"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Optics.SheetWittCircularBasis": {
+      "classification": "changed_existing_module",
+      "frozen_source_sha256": "dcd4fbde48e869da4d03e6512562c245f7162e373df6146a364f7deccd256d69",
+      "committed_source_sha256": "dcd4fbde48e869da4d03e6512562c245f7162e373df6146a364f7deccd256d69",
+      "base_source_sha256": "600f1c91ab55df8e5180ce103bd535a031d6253d58aad18a3a4d5fb3ed2b3d81",
+      "base_line_count": 198,
+      "frozen_line_count": 235,
+      "base_file_preserved_at_line_offset": 5,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Mathlib.Tactic",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution"
+      ],
+      "frozen_imports": [
+        "import Mathlib.Tactic",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 198,
+          "frozen_start": 6,
+          "frozen_end_inclusive": 203
+        }
+      ],
+      "changes": [
+        {
+          "operation": "insert",
+          "base_start": 1,
+          "base_end_inclusive": 0,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 5
+        },
+        {
+          "operation": "insert",
+          "base_start": 199,
+          "base_end_inclusive": 198,
+          "frozen_start": 204,
+          "frozen_end_inclusive": 235
+        }
+      ],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Geometry.KreinIsotropicCone",
+        "InfoGeometry.Meta.OwnerTarget",
+        "InfoGeometry.OperatorAlgebra.ChiralPolarization",
+        "InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution",
+        "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit",
+        "InfoGeometry.OperatorAlgebra.KreinIsotropicCone",
+        "InfoGeometry.OperatorAlgebra.TomitaCartanSplit"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Twistor.RealDualTwistor": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "ec7900fb51a32e6135ba0b6e4f14995db171a157105f3d69f6e88aa54476fbbf",
+      "committed_source_sha256": "ec7900fb51a32e6135ba0b6e4f14995db171a157105f3d69f6e88aa54476fbbf",
+      "base_source_sha256": "ec7900fb51a32e6135ba0b6e4f14995db171a157105f3d69f6e88aa54476fbbf",
+      "base_line_count": 225,
+      "frozen_line_count": 225,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Mathlib.LinearAlgebra.Basis.VectorSpace",
+        "import Mathlib.LinearAlgebra.BilinearForm.Properties",
+        "import Mathlib.LinearAlgebra.Dual.Defs",
+        "import Mathlib.Tactic"
+      ],
+      "frozen_imports": [
+        "import Mathlib.LinearAlgebra.Basis.VectorSpace",
+        "import Mathlib.LinearAlgebra.BilinearForm.Properties",
+        "import Mathlib.LinearAlgebra.Dual.Defs",
+        "import Mathlib.Tactic"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 225,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 225
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Twistor.NonincidentLogPairing": {
+      "classification": "new_module",
+      "frozen_source_sha256": "57af40272b06c8ce41522c58659d686d9c70dbcfacd42e37511c3217dbdb2cdb",
+      "committed_source_sha256": "57af40272b06c8ce41522c58659d686d9c70dbcfacd42e37511c3217dbdb2cdb",
+      "base_source_sha256": null,
+      "base_line_count": null,
+      "frozen_line_count": 242,
+      "base_file_preserved_at_line_offset": null,
+      "imports_unchanged": false,
+      "base_imports": [],
+      "frozen_imports": [
+        "import InfoGeometry.Twistor.RealDualTwistor",
+        "import InfoGeometry.LinearAlgebra.RegularDyadCompression",
+        "import Mathlib.Analysis.SpecialFunctions.Log.Deriv"
+      ],
+      "unchanged_line_spans": [],
+      "changes": [
+        {
+          "operation": "insert",
+          "base_start": 1,
+          "base_end_inclusive": 0,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 242
+        }
+      ],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Core.IdempotencyDefect",
+        "InfoGeometry.Core.PeirceCompressionDefect",
+        "InfoGeometry.Core.PeirceDecomposition",
+        "InfoGeometry.LinearAlgebra.RegularDyadCompression",
+        "InfoGeometry.Twistor.RealDualTwistor"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": false
+    },
+    "InfoGeometry.Twistor.RealProjectiveAmbitwistor": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "bd25aabe91c66e3ab83ba6f7647f964007ad0e8441b08bb230e12c0f21f1db27",
+      "committed_source_sha256": "bd25aabe91c66e3ab83ba6f7647f964007ad0e8441b08bb230e12c0f21f1db27",
+      "base_source_sha256": "bd25aabe91c66e3ab83ba6f7647f964007ad0e8441b08bb230e12c0f21f1db27",
+      "base_line_count": 81,
+      "frozen_line_count": 81,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import InfoGeometry.Twistor.RealDualTwistor",
+        "import Mathlib.LinearAlgebra.Projectivization.Basic"
+      ],
+      "frozen_imports": [
+        "import InfoGeometry.Twistor.RealDualTwistor",
+        "import Mathlib.LinearAlgebra.Projectivization.Basic"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 81,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 81
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Twistor.RealDualTwistor"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Canonical.ModularZ2CubeGrading": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "079b1f23fbafb9dc9f8c560fbb6abc72a80d92f8a4233baf0e61a0e4f38faa55",
+      "committed_source_sha256": "079b1f23fbafb9dc9f8c560fbb6abc72a80d92f8a4233baf0e61a0e4f38faa55",
+      "base_source_sha256": "079b1f23fbafb9dc9f8c560fbb6abc72a80d92f8a4233baf0e61a0e4f38faa55",
+      "base_line_count": 313,
+      "frozen_line_count": 313,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Mathlib.Tactic",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "frozen_imports": [
+        "import Mathlib.Tactic",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 313,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 313
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Twistor.PenroseIncidence": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "31178c457ef77e633d1be52777447001339f98e66b4e10610ea4f089808d8983",
+      "committed_source_sha256": "31178c457ef77e633d1be52777447001339f98e66b4e10610ea4f089808d8983",
+      "base_source_sha256": "31178c457ef77e633d1be52777447001339f98e66b4e10610ea4f089808d8983",
+      "base_line_count": 103,
+      "frozen_line_count": 103,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Mathlib.Data.Complex.Basic",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import Mathlib.LinearAlgebra.Matrix.ToLin",
+        "import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv",
+        "import Mathlib.LinearAlgebra.Projectivization.Basic",
+        "import Mathlib.Tactic"
+      ],
+      "frozen_imports": [
+        "import Mathlib.Data.Complex.Basic",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import Mathlib.LinearAlgebra.Matrix.ToLin",
+        "import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv",
+        "import Mathlib.LinearAlgebra.Projectivization.Basic",
+        "import Mathlib.Tactic"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 103,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 103
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.GrandUnification.ArchetypeDictionary": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "bb89d0138a3842e20e9b05eab752745aa338c8e86bec0d0253fc2c244756a261",
+      "committed_source_sha256": "bb89d0138a3842e20e9b05eab752745aa338c8e86bec0d0253fc2c244756a261",
+      "base_source_sha256": "bb89d0138a3842e20e9b05eab752745aa338c8e86bec0d0253fc2c244756a261",
+      "base_line_count": 244,
+      "frozen_line_count": 244,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Mathlib.Tactic.NoncommRing",
+        "import Mathlib.Tactic.Ring",
+        "import Mathlib.Algebra.Algebra.Basic"
+      ],
+      "frozen_imports": [
+        "import Mathlib.Tactic.NoncommRing",
+        "import Mathlib.Tactic.Ring",
+        "import Mathlib.Algebra.Algebra.Basic"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 244,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 244
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Krein.KreinSpace": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "38f1482b3537eb5a82f622f702bdb13c43d5ff5b3402e0b872d079eeb180dc97",
+      "committed_source_sha256": "38f1482b3537eb5a82f622f702bdb13c43d5ff5b3402e0b872d079eeb180dc97",
+      "base_source_sha256": "38f1482b3537eb5a82f622f702bdb13c43d5ff5b3402e0b872d079eeb180dc97",
+      "base_line_count": 540,
+      "frozen_line_count": 540,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Mathlib.Analysis.InnerProductSpace.Adjoint",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import Mathlib.Analysis.InnerProductSpace.ProdL2",
+        "import Mathlib.Tactic.Linarith",
+        "import Mathlib.Algebra.Star.Basic",
+        "import Mathlib.LinearAlgebra.BilinearForm.Basic",
+        "import Mathlib.LinearAlgebra.QuadraticForm.Basic",
+        "import Mathlib.Algebra.Lie.OfAssociative",
+        "import Mathlib.Algebra.Lie.Basic",
+        "import Mathlib.Topology.Algebra.Module.Spaces.ContinuousLinearMap",
+        "import Mathlib.Topology.Algebra.Module.Spaces.CompactConvergenceCLM",
+        "import Mathlib.Tactic.Abel",
+        "import InfoGeometry.GrandUnification.ArchetypeDictionary"
+      ],
+      "frozen_imports": [
+        "import Mathlib.Analysis.InnerProductSpace.Adjoint",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import Mathlib.Analysis.InnerProductSpace.ProdL2",
+        "import Mathlib.Tactic.Linarith",
+        "import Mathlib.Algebra.Star.Basic",
+        "import Mathlib.LinearAlgebra.BilinearForm.Basic",
+        "import Mathlib.LinearAlgebra.QuadraticForm.Basic",
+        "import Mathlib.Algebra.Lie.OfAssociative",
+        "import Mathlib.Algebra.Lie.Basic",
+        "import Mathlib.Topology.Algebra.Module.Spaces.ContinuousLinearMap",
+        "import Mathlib.Topology.Algebra.Module.Spaces.CompactConvergenceCLM",
+        "import Mathlib.Tactic.Abel",
+        "import InfoGeometry.GrandUnification.ArchetypeDictionary"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 540,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 540
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.GrandUnification.ArchetypeDictionary"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Cartan.Involution": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "d407100337b0684f5dac751bc5372155fb1a86315395a05347419f26d855729c",
+      "committed_source_sha256": "d407100337b0684f5dac751bc5372155fb1a86315395a05347419f26d855729c",
+      "base_source_sha256": "d407100337b0684f5dac751bc5372155fb1a86315395a05347419f26d855729c",
+      "base_line_count": 265,
+      "frozen_line_count": 265,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Mathlib.Algebra.Module.LinearMap.End",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import Mathlib.Algebra.Field.Basic",
+        "import Mathlib.Algebra.GroupWithZero.Invertible",
+        "import Mathlib.Tactic.Abel"
+      ],
+      "frozen_imports": [
+        "import Mathlib.Algebra.Module.LinearMap.End",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import Mathlib.Algebra.Field.Basic",
+        "import Mathlib.Algebra.GroupWithZero.Invertible",
+        "import Mathlib.Tactic.Abel"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 265,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 265
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Krein.InvolutiveSelfDualCarrier": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "71a2dcad64a19921e86d5297a7039ad64af7aa1b7cf762f950861a26fa1fecd6",
+      "committed_source_sha256": "71a2dcad64a19921e86d5297a7039ad64af7aa1b7cf762f950861a26fa1fecd6",
+      "base_source_sha256": "71a2dcad64a19921e86d5297a7039ad64af7aa1b7cf762f950861a26fa1fecd6",
+      "base_line_count": 390,
+      "frozen_line_count": 390,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Mathlib.Analysis.InnerProductSpace.Basic",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import Mathlib.LinearAlgebra.Dual.Defs",
+        "import InfoGeometry.Cartan.Involution"
+      ],
+      "frozen_imports": [
+        "import Mathlib.Analysis.InnerProductSpace.Basic",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import Mathlib.LinearAlgebra.Dual.Defs",
+        "import InfoGeometry.Cartan.Involution"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 390,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 390
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Cartan.Involution"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Krein.DoubledSpace": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "df94e1e351340e16b21ea8d0a9aef632b5f56e50078c5f26701ce96c9c91d0fc",
+      "committed_source_sha256": "df94e1e351340e16b21ea8d0a9aef632b5f56e50078c5f26701ce96c9c91d0fc",
+      "base_source_sha256": "df94e1e351340e16b21ea8d0a9aef632b5f56e50078c5f26701ce96c9c91d0fc",
+      "base_line_count": 451,
+      "frozen_line_count": 451,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import InfoGeometry.Krein.KreinSpace",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+        "import InfoGeometry.Cartan.Involution",
+        "import Mathlib.Analysis.InnerProductSpace.Adjoint",
+        "import Mathlib.Analysis.InnerProductSpace.ProdL2",
+        "import Mathlib.Analysis.Normed.Lp.ProdLp",
+        "import Mathlib.Algebra.Lie.OfAssociative"
+      ],
+      "frozen_imports": [
+        "import InfoGeometry.Krein.KreinSpace",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+        "import InfoGeometry.Cartan.Involution",
+        "import Mathlib.Analysis.InnerProductSpace.Adjoint",
+        "import Mathlib.Analysis.InnerProductSpace.ProdL2",
+        "import Mathlib.Analysis.Normed.Lp.ProdLp",
+        "import Mathlib.Algebra.Lie.OfAssociative"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 451,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 451
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Cartan.Involution",
+        "InfoGeometry.GrandUnification.ArchetypeDictionary",
+        "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+        "InfoGeometry.Krein.KreinSpace"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Convex.ProjectiveRays": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "954c88a31177f673221773066efb2224ed68e6bf2a456d7d0d25931d6fef17fd",
+      "committed_source_sha256": "954c88a31177f673221773066efb2224ed68e6bf2a456d7d0d25931d6fef17fd",
+      "base_source_sha256": "954c88a31177f673221773066efb2224ed68e6bf2a456d7d0d25931d6fef17fd",
+      "base_line_count": 58,
+      "frozen_line_count": 58,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import InfoGeometry.Krein.DoubledSpace",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import Mathlib.LinearAlgebra.Projectivization.Basic"
+      ],
+      "frozen_imports": [
+        "import InfoGeometry.Krein.DoubledSpace",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import Mathlib.LinearAlgebra.Projectivization.Basic"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 58,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 58
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Cartan.Involution",
+        "InfoGeometry.GrandUnification.ArchetypeDictionary",
+        "InfoGeometry.Krein.DoubledSpace",
+        "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+        "InfoGeometry.Krein.KreinSpace"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Twistor.NullProjective": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "2f706ac6e568051885eae7da812f6acebcf09b3c0971363f92821cde6583670b",
+      "committed_source_sha256": "2f706ac6e568051885eae7da812f6acebcf09b3c0971363f92821cde6583670b",
+      "base_source_sha256": "2f706ac6e568051885eae7da812f6acebcf09b3c0971363f92821cde6583670b",
+      "base_line_count": 100,
+      "frozen_line_count": 100,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import InfoGeometry.Convex.ProjectiveRays",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import InfoGeometry.Krein.DoubledSpace",
+        "import Mathlib.LinearAlgebra.Projectivization.Basic",
+        "import Mathlib.LinearAlgebra.QuadraticForm.Basic"
+      ],
+      "frozen_imports": [
+        "import InfoGeometry.Convex.ProjectiveRays",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import InfoGeometry.Krein.DoubledSpace",
+        "import Mathlib.LinearAlgebra.Projectivization.Basic",
+        "import Mathlib.LinearAlgebra.QuadraticForm.Basic"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 100,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 100
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Cartan.Involution",
+        "InfoGeometry.Convex.ProjectiveRays",
+        "InfoGeometry.GrandUnification.ArchetypeDictionary",
+        "InfoGeometry.Krein.DoubledSpace",
+        "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+        "InfoGeometry.Krein.KreinSpace"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Twistor.PenroseTwistor": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+      "committed_source_sha256": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+      "base_source_sha256": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+      "base_line_count": 344,
+      "frozen_line_count": 344,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Mathlib.Algebra.Module.LinearMap.Star",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import Mathlib.Data.Complex.Basic",
+        "import Mathlib.LinearAlgebra.FiniteDimensional.Basic",
+        "import Mathlib.LinearAlgebra.Projectivization.Basic",
+        "import Mathlib.LinearAlgebra.QuadraticForm.Basic",
+        "import Mathlib.LinearAlgebra.SesquilinearForm.Basic",
+        "import Mathlib.Tactic",
+        "import InfoGeometry.Twistor.NullProjective"
+      ],
+      "frozen_imports": [
+        "import Mathlib.Algebra.Module.LinearMap.Star",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import Mathlib.Data.Complex.Basic",
+        "import Mathlib.LinearAlgebra.FiniteDimensional.Basic",
+        "import Mathlib.LinearAlgebra.Projectivization.Basic",
+        "import Mathlib.LinearAlgebra.QuadraticForm.Basic",
+        "import Mathlib.LinearAlgebra.SesquilinearForm.Basic",
+        "import Mathlib.Tactic",
+        "import InfoGeometry.Twistor.NullProjective"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 344,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 344
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Cartan.Involution",
+        "InfoGeometry.Convex.ProjectiveRays",
+        "InfoGeometry.GrandUnification.ArchetypeDictionary",
+        "InfoGeometry.Krein.DoubledSpace",
+        "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+        "InfoGeometry.Krein.KreinSpace",
+        "InfoGeometry.Twistor.NullProjective"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Physics.ChiralPoincareSouriauBridge": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+      "committed_source_sha256": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+      "base_source_sha256": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+      "base_line_count": 241,
+      "frozen_line_count": 241,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Mathlib.Tactic",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "frozen_imports": [
+        "import Mathlib.Tactic",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 241,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 241
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Twistor.PerjesConventions": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "903b0b7a18386048fa13266ff8adcbadd8c14bb0e6a9c32ab5da6a3049a2ee9d",
+      "committed_source_sha256": "903b0b7a18386048fa13266ff8adcbadd8c14bb0e6a9c32ab5da6a3049a2ee9d",
+      "base_source_sha256": "903b0b7a18386048fa13266ff8adcbadd8c14bb0e6a9c32ab5da6a3049a2ee9d",
+      "base_line_count": 156,
+      "frozen_line_count": 156,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import InfoGeometry.Twistor.PenroseIncidence",
+        "import InfoGeometry.Twistor.PenroseTwistor",
+        "import InfoGeometry.Physics.ChiralPoincareSouriauBridge",
+        "import Mathlib.Analysis.SpecialFunctions.Sqrt"
+      ],
+      "frozen_imports": [
+        "import InfoGeometry.Twistor.PenroseIncidence",
+        "import InfoGeometry.Twistor.PenroseTwistor",
+        "import InfoGeometry.Physics.ChiralPoincareSouriauBridge",
+        "import Mathlib.Analysis.SpecialFunctions.Sqrt"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 156,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 156
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Cartan.Involution",
+        "InfoGeometry.Convex.ProjectiveRays",
+        "InfoGeometry.GrandUnification.ArchetypeDictionary",
+        "InfoGeometry.Krein.DoubledSpace",
+        "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+        "InfoGeometry.Krein.KreinSpace",
+        "InfoGeometry.Physics.ChiralPoincareSouriauBridge",
+        "InfoGeometry.Twistor.NullProjective",
+        "InfoGeometry.Twistor.PenroseIncidence",
+        "InfoGeometry.Twistor.PenroseTwistor"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Projective.KleinQuadricPlucker": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "bc5b5017340240566c12a7910065b5d9769b9f64b927a963576536146f542e5f",
+      "committed_source_sha256": "bc5b5017340240566c12a7910065b5d9769b9f64b927a963576536146f542e5f",
+      "base_source_sha256": "bc5b5017340240566c12a7910065b5d9769b9f64b927a963576536146f542e5f",
+      "base_line_count": 462,
+      "frozen_line_count": 462,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Mathlib.Tactic",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "frozen_imports": [
+        "import Mathlib.Tactic",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 462,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 462
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Twistor.TwoTwistorPlucker": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "25b6f74b9773ca4f4a4b258983cf7a66c6928700a77e245cef2a31d8f5816241",
+      "committed_source_sha256": "25b6f74b9773ca4f4a4b258983cf7a66c6928700a77e245cef2a31d8f5816241",
+      "base_source_sha256": "25b6f74b9773ca4f4a4b258983cf7a66c6928700a77e245cef2a31d8f5816241",
+      "base_line_count": 66,
+      "frozen_line_count": 66,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import InfoGeometry.Twistor.PenroseIncidence",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import InfoGeometry.Projective.KleinQuadricPlucker"
+      ],
+      "frozen_imports": [
+        "import InfoGeometry.Twistor.PenroseIncidence",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "import InfoGeometry.Projective.KleinQuadricPlucker"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 66,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 66
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Projective.KleinQuadricPlucker",
+        "InfoGeometry.Twistor.PenroseIncidence"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Twistor.TwistorFrameCovariance": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "5f4627f523c9c84648ccfea5ff33e362da97550272ccdee9e3eb4bb553fe01c6",
+      "committed_source_sha256": "5f4627f523c9c84648ccfea5ff33e362da97550272ccdee9e3eb4bb553fe01c6",
+      "base_source_sha256": "5f4627f523c9c84648ccfea5ff33e362da97550272ccdee9e3eb4bb553fe01c6",
+      "base_line_count": 66,
+      "frozen_line_count": 66,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import InfoGeometry.Twistor.PenroseIncidence",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "frozen_imports": [
+        "import InfoGeometry.Twistor.PenroseIncidence",
+        "import InfoGeometry.Algebra.FiniteSpinAlgebra"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 66,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 66
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Twistor.PenroseIncidence"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Twistor.InfinityTwistor": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "982c6db81156164101c7802bb30f41d9ec8cf5c933401a6b80451d9eb083d7a4",
+      "committed_source_sha256": "982c6db81156164101c7802bb30f41d9ec8cf5c933401a6b80451d9eb083d7a4",
+      "base_source_sha256": "982c6db81156164101c7802bb30f41d9ec8cf5c933401a6b80451d9eb083d7a4",
+      "base_line_count": 136,
+      "frozen_line_count": 136,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import InfoGeometry.Twistor.TwoTwistorPlucker",
+        "import InfoGeometry.Twistor.TwistorFrameCovariance"
+      ],
+      "frozen_imports": [
+        "import InfoGeometry.Twistor.TwoTwistorPlucker",
+        "import InfoGeometry.Twistor.TwistorFrameCovariance"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 136,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 136
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Projective.KleinQuadricPlucker",
+        "InfoGeometry.Twistor.PenroseIncidence",
+        "InfoGeometry.Twistor.TwistorFrameCovariance",
+        "InfoGeometry.Twistor.TwoTwistorPlucker"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Twistor.SpinorOuterProduct": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "249b1ac13661a06ba24930c5e96d8c632246359677ae4f9743da244be29b50b1",
+      "committed_source_sha256": "249b1ac13661a06ba24930c5e96d8c632246359677ae4f9743da244be29b50b1",
+      "base_source_sha256": "249b1ac13661a06ba24930c5e96d8c632246359677ae4f9743da244be29b50b1",
+      "base_line_count": 67,
+      "frozen_line_count": 67,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import Mathlib.Data.Complex.Basic",
+        "import Mathlib.LinearAlgebra.Matrix.Determinant.Basic",
+        "import Mathlib.LinearAlgebra.Matrix.PosDef",
+        "import Mathlib.Tactic"
+      ],
+      "frozen_imports": [
+        "import Mathlib.Data.Complex.Basic",
+        "import Mathlib.LinearAlgebra.Matrix.Determinant.Basic",
+        "import Mathlib.LinearAlgebra.Matrix.PosDef",
+        "import Mathlib.Tactic"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 67,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 67
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Twistor.TwistorKinematicTensor": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "f89010846129b1f1ce1db809873ef1548efbe321c9beb53502000fe7eafcb0bc",
+      "committed_source_sha256": "f89010846129b1f1ce1db809873ef1548efbe321c9beb53502000fe7eafcb0bc",
+      "base_source_sha256": "f89010846129b1f1ce1db809873ef1548efbe321c9beb53502000fe7eafcb0bc",
+      "base_line_count": 206,
+      "frozen_line_count": 206,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import InfoGeometry.Twistor.PerjesConventions",
+        "import InfoGeometry.Twistor.InfinityTwistor",
+        "import InfoGeometry.Twistor.SpinorOuterProduct"
+      ],
+      "frozen_imports": [
+        "import InfoGeometry.Twistor.PerjesConventions",
+        "import InfoGeometry.Twistor.InfinityTwistor",
+        "import InfoGeometry.Twistor.SpinorOuterProduct"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 206,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 206
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Cartan.Involution",
+        "InfoGeometry.Convex.ProjectiveRays",
+        "InfoGeometry.GrandUnification.ArchetypeDictionary",
+        "InfoGeometry.Krein.DoubledSpace",
+        "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+        "InfoGeometry.Krein.KreinSpace",
+        "InfoGeometry.Physics.ChiralPoincareSouriauBridge",
+        "InfoGeometry.Projective.KleinQuadricPlucker",
+        "InfoGeometry.Twistor.InfinityTwistor",
+        "InfoGeometry.Twistor.NullProjective",
+        "InfoGeometry.Twistor.PenroseIncidence",
+        "InfoGeometry.Twistor.PenroseTwistor",
+        "InfoGeometry.Twistor.PerjesConventions",
+        "InfoGeometry.Twistor.SpinorOuterProduct",
+        "InfoGeometry.Twistor.TwistorFrameCovariance",
+        "InfoGeometry.Twistor.TwoTwistorPlucker"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Twistor.TwistorConstituentKinematics": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "2347b498be655c0fa6e6ddeac319519830bca9a13dcb290ef937d8d0ad91203f",
+      "committed_source_sha256": "2347b498be655c0fa6e6ddeac319519830bca9a13dcb290ef937d8d0ad91203f",
+      "base_source_sha256": "2347b498be655c0fa6e6ddeac319519830bca9a13dcb290ef937d8d0ad91203f",
+      "base_line_count": 214,
+      "frozen_line_count": 214,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import InfoGeometry.Twistor.TwistorKinematicTensor",
+        "import InfoGeometry.Twistor.InfinityTwistor"
+      ],
+      "frozen_imports": [
+        "import InfoGeometry.Twistor.TwistorKinematicTensor",
+        "import InfoGeometry.Twistor.InfinityTwistor"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 214,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 214
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Cartan.Involution",
+        "InfoGeometry.Convex.ProjectiveRays",
+        "InfoGeometry.GrandUnification.ArchetypeDictionary",
+        "InfoGeometry.Krein.DoubledSpace",
+        "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+        "InfoGeometry.Krein.KreinSpace",
+        "InfoGeometry.Physics.ChiralPoincareSouriauBridge",
+        "InfoGeometry.Projective.KleinQuadricPlucker",
+        "InfoGeometry.Twistor.InfinityTwistor",
+        "InfoGeometry.Twistor.NullProjective",
+        "InfoGeometry.Twistor.PenroseIncidence",
+        "InfoGeometry.Twistor.PenroseTwistor",
+        "InfoGeometry.Twistor.PerjesConventions",
+        "InfoGeometry.Twistor.SpinorOuterProduct",
+        "InfoGeometry.Twistor.TwistorFrameCovariance",
+        "InfoGeometry.Twistor.TwistorKinematicTensor",
+        "InfoGeometry.Twistor.TwoTwistorPlucker"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Twistor.PerjesMomentOperator": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "00e6e5e75c65496c01b3083c9386f7709e36a4769fa4af86ed0b988ce73a035c",
+      "committed_source_sha256": "00e6e5e75c65496c01b3083c9386f7709e36a4769fa4af86ed0b988ce73a035c",
+      "base_source_sha256": "00e6e5e75c65496c01b3083c9386f7709e36a4769fa4af86ed0b988ce73a035c",
+      "base_line_count": 50,
+      "frozen_line_count": 50,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import InfoGeometry.Twistor.TwistorKinematicTensor"
+      ],
+      "frozen_imports": [
+        "import InfoGeometry.Twistor.TwistorKinematicTensor"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 50,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 50
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Cartan.Involution",
+        "InfoGeometry.Convex.ProjectiveRays",
+        "InfoGeometry.GrandUnification.ArchetypeDictionary",
+        "InfoGeometry.Krein.DoubledSpace",
+        "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+        "InfoGeometry.Krein.KreinSpace",
+        "InfoGeometry.Physics.ChiralPoincareSouriauBridge",
+        "InfoGeometry.Projective.KleinQuadricPlucker",
+        "InfoGeometry.Twistor.InfinityTwistor",
+        "InfoGeometry.Twistor.NullProjective",
+        "InfoGeometry.Twistor.PenroseIncidence",
+        "InfoGeometry.Twistor.PenroseTwistor",
+        "InfoGeometry.Twistor.PerjesConventions",
+        "InfoGeometry.Twistor.SpinorOuterProduct",
+        "InfoGeometry.Twistor.TwistorFrameCovariance",
+        "InfoGeometry.Twistor.TwistorKinematicTensor",
+        "InfoGeometry.Twistor.TwoTwistorPlucker"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    },
+    "InfoGeometry.Twistor.TwoTwistorGramMass": {
+      "classification": "byte_identical_to_upstream",
+      "frozen_source_sha256": "d19afc2bed27568def2b5409c93de73f93fe65a592ead34d5e8010424e1333fe",
+      "committed_source_sha256": "d19afc2bed27568def2b5409c93de73f93fe65a592ead34d5e8010424e1333fe",
+      "base_source_sha256": "d19afc2bed27568def2b5409c93de73f93fe65a592ead34d5e8010424e1333fe",
+      "base_line_count": 234,
+      "frozen_line_count": 234,
+      "base_file_preserved_at_line_offset": 0,
+      "imports_unchanged": true,
+      "base_imports": [
+        "import InfoGeometry.Twistor.TwistorConstituentKinematics",
+        "import InfoGeometry.Twistor.PerjesMomentOperator",
+        "import Mathlib.LinearAlgebra.Matrix.Trace"
+      ],
+      "frozen_imports": [
+        "import InfoGeometry.Twistor.TwistorConstituentKinematics",
+        "import InfoGeometry.Twistor.PerjesMomentOperator",
+        "import Mathlib.LinearAlgebra.Matrix.Trace"
+      ],
+      "unchanged_line_spans": [
+        {
+          "base_start": 1,
+          "base_end_inclusive": 234,
+          "frozen_start": 1,
+          "frozen_end_inclusive": 234
+        }
+      ],
+      "changes": [],
+      "repository_prerequisites": [
+        "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "InfoGeometry.Cartan.Involution",
+        "InfoGeometry.Convex.ProjectiveRays",
+        "InfoGeometry.GrandUnification.ArchetypeDictionary",
+        "InfoGeometry.Krein.DoubledSpace",
+        "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+        "InfoGeometry.Krein.KreinSpace",
+        "InfoGeometry.Physics.ChiralPoincareSouriauBridge",
+        "InfoGeometry.Projective.KleinQuadricPlucker",
+        "InfoGeometry.Twistor.InfinityTwistor",
+        "InfoGeometry.Twistor.NullProjective",
+        "InfoGeometry.Twistor.PenroseIncidence",
+        "InfoGeometry.Twistor.PenroseTwistor",
+        "InfoGeometry.Twistor.PerjesConventions",
+        "InfoGeometry.Twistor.PerjesMomentOperator",
+        "InfoGeometry.Twistor.SpinorOuterProduct",
+        "InfoGeometry.Twistor.TwistorConstituentKinematics",
+        "InfoGeometry.Twistor.TwistorFrameCovariance",
+        "InfoGeometry.Twistor.TwistorKinematicTensor",
+        "InfoGeometry.Twistor.TwoTwistorPlucker"
+      ],
+      "all_repository_prerequisites_byte_identical_to_upstream": true
+    }
+  },
+  "dependency_pin_file_comparison": {
+    "lean-toolchain": {
+      "base_sha256": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+      "frozen_sha256": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+      "byte_identical": true
+    },
+    "lake-manifest.json": {
+      "base_sha256": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+      "frozen_sha256": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+      "byte_identical": true
+    }
+  },
+  "changed_since_first_freeze": {
+    "modules": [
+      "InfoGeometry.Twistor.NonincidentLogPairing"
+    ],
+    "exact_single_line_delta": true,
+    "line": 210,
+    "before": "  field_simp [h] <;> ring",
+    "after": "  field_simp [h]",
+    "previous_sha256": "c048d36a529e89a3718262508b457aba29cbe86c2486154263ffe0dab3d6709c",
+    "current_sha256": "57af40272b06c8ce41522c58659d686d9c70dbcfacd42e37511c3217dbdb2cdb",
+    "declarations_statements_imports_unchanged": true
+  },
+  "selection_guard_review": {
+    "same_targets_modules_order_dependencies": true,
+    "selection_sha256": "132591c82817d17aa5fbdf51cc2a0563b1293c1087a3ab2a05dc0b6b07ae938a",
+    "same_four_helpers": {
+      "tools/quality/check_clifford_dirac.py": {
+        "sha256": "fcf6fbb9845e0ee2a85bdb3778c5fe74345a9ae7a2e97e871d0a89d3e98e7db0",
+        "matches_live_and_commit": true,
+        "identical_to_first_freeze": true
+      },
+      "tools/quality/check_reviewed_prs.py": {
+        "sha256": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+        "matches_live_and_commit": true,
+        "identical_to_first_freeze": true
+      },
+      "tools/quality/reviewed_audit_source.py": {
+        "sha256": "a976c910f5efb4611b1626d714e3197310d92648ffae56513e94a49ae5f0f206",
+        "matches_live_and_commit": true,
+        "identical_to_first_freeze": true
+      },
+      "tools/build_lock.py": {
+        "sha256": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df",
+        "matches_live_and_commit": true,
+        "identical_to_first_freeze": true
+      }
+    },
+    "same_six_extra_files": {
+      "lean-toolchain": {
+        "sha256": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+        "matches_live_and_commit": true,
+        "identical_to_first_freeze": true
+      },
+      "lake-manifest.json": {
+        "sha256": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+        "matches_live_and_commit": true,
+        "identical_to_first_freeze": true
+      },
+      "lean/InfoGeometry/All.lean": {
+        "sha256": "117bfa2beb03e4f2df97b0ad5222c21fdfce29ef2831b6c04818bd5eaf15d05e",
+        "matches_live_and_commit": true,
+        "identical_to_first_freeze": true
+      },
+      "lean/InfoGeometry/Twistor/All.lean": {
+        "sha256": "9954459a3b0227088593a07550313e220d4f91489d114b5b30788c935a004a8f",
+        "matches_live_and_commit": true,
+        "identical_to_first_freeze": true
+      },
+      "docs/NONINCIDENT_PARA_TWISTOR_CONTRACT.md": {
+        "sha256": "f35c1e6dcad1a1f5a25c77d5e619f413e0196f77dc9509df609fae99dbc2c399",
+        "matches_live_and_commit": true,
+        "identical_to_first_freeze": true
+      },
+      "docs/sources/nonincident_para_twistor_20261116.txt": {
+        "sha256": "36f218938a18f175c8961fae548b39dfa0fd1ed8e8ae8e0929d3cf2095134799",
+        "matches_live_and_commit": true,
+        "identical_to_first_freeze": true
+      }
+    },
+    "supervisor_byte_identical": true,
+    "supervisor_sha256": "69d0bc61c86718538a039b64a6674e5c64ce94d7492a049004fd5e9cdd638cfb",
+    "plan_sha256": "1709d1776d788da59af2ae3f052c2e35bc78df0db0c85ccd6bbc6a52df2334cb",
+    "only_plan_adaptations": [
+      "output",
+      "control",
+      "freeze"
+    ],
+    "same_runtime_and_pins": true,
+    "lean_executable": "/workspace/scratch/933d64e28eca/runtime/lean/bin/lean",
+    "lean_executable_sha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "mathlib_revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+    "toolchain": "leanprover/lean4:v4.34.1",
+    "allow_incremental": false,
+    "allow_skip_audit": false,
+    "allowed_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  },
+  "source_semantic_review": {
+    "path": "/workspace/scratch/933d64e28eca/semantic-review-final-20261117-v3.json",
+    "sha256": "5f98d758cb325dcf1671c6053042bac7558e33f9bdce7a608ed0ce8f179b1d76",
+    "reviewer": "/root/audit_claims",
+    "disposition": "PASS_SOURCE_SEMANTICS_WITH_RETAINED_ADVISORIES",
+    "four_owner_hashes_match_freeze_live_commit": true,
+    "receipt_count": 15,
+    "all_cited_receipt_hashes_match": true,
+    "finding_counts": {
+      "screener": {
+        "errors": 0,
+        "warnings": 3,
+        "T17": 3,
+        "strict_exit_code": 1
+      },
+      "refute": {
+        "errors": 0,
+        "warnings": 3,
+        "T17": 3,
+        "strict_exit_code": 1
+      },
+      "semantic": {
+        "errors": 0,
+        "warnings": 17,
+        "proof_like_field_type": 9,
+        "trivial_surface": 8,
+        "exit_code": 0,
+        "failure_threshold": "error"
+      },
+      "placeholder": {
+        "hard": 0,
+        "soft": 9,
+        "advisory": 0,
+        "per_owner": {
+          "NonincidentLogPairing": 1,
+          "ParaComplexNeutralForm": 5,
+          "RegularDyadCompression": 0,
+          "SheetWittCircularBasis": 3
+        },
+        "exit_codes": {
+          "ParaComplexNeutralForm": 0,
+          "RegularDyadCompression": 0,
+          "SheetWittCircularBasis": 0,
+          "NonincidentLogPairing": 0
+        }
+      },
+      "cross_tool_count_note": "The same subjects recur in multiple scanners. Counts are per tool and must not be summed as unique mathematical defects."
+    },
+    "native_validation": {
+      "status": "PENDING_SECOND_FRESH_RUN",
+      "compiled_by_this_reviewer": false,
+      "successful_native_receipt_inspected_for_current_sources": false,
+      "axiom_acceptance": "PENDING_SECOND_FRESH_RUN",
+      "earlier_attempt_status_reported_by_parent": "REJECTED_FOR_TWO_INTRODUCED_REDUNDANT_TACTIC_WARNINGS",
+      "reason": "The first fresh attempt belongs to the preceding frozen source. The reviewed cleanup changes its source hash and must receive the second fresh native/axiom acceptance run. This source/static review neither re-audits nor transfers acceptance from the previous attempt."
+    }
+  },
+  "previous_completed_attempt": {
+    "attempt": 1,
+    "decision": "REJECTED",
+    "acceptance_path": "/workspace/scratch/933d64e28eca/qa-independent/acceptance.json",
+    "acceptance_sha256": "28427992294877dd2723d6e038987eb000b1a56245abcf41fb8664367b173d74",
+    "native_report_path": "/workspace/scratch/933d64e28eca/verification-independent/report.json",
+    "native_report_sha256": "bd634847214c3a58ca84a2f4dabcd6f4cbb7eff7dc97c8ff2f39d0ac9ebfbc4d",
+    "native_evidence_valid": true,
+    "total_module_warning_count": 29,
+    "inherited_warning_count": 27,
+    "introduced_warning_count": 2,
+    "counts_are_prior_attempt_only": true
+  },
+  "known_inherited_warning_location_count": 27,
+  "known_inherited_warning_locations": [
+    {
+      "module": "InfoGeometry.Canonical.ParaComplexConnectionBridge",
+      "base_line": 1,
+      "frozen_line": 1,
+      "column": 0,
+      "source_line": "import Mathlib.Data.Real.Basic",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Canonical/ParaComplexConnectionBridge.lean:1:0: warning: \n'Mathlib.Data.Real.Basic' has been deprecated: please replace this import by\n\nimport Mathlib.Basic.Real.Basic",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W001",
+      "current_frozen_source_sha256": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+      "base_source_sha256": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W001",
+        "module": "InfoGeometry.Canonical.ParaComplexConnectionBridge",
+        "selected_owner": false,
+        "classification": "inherited",
+        "category": "deprecated_import",
+        "checked_line": 1,
+        "column": 0,
+        "base_line": 1,
+        "source_line": "import Mathlib.Data.Real.Basic",
+        "nearest_declaration": null,
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Canonical/ParaComplexConnectionBridge.lean:1:0: warning: \n'Mathlib.Data.Real.Basic' has been deprecated: please replace this import by\n\nimport Mathlib.Basic.Real.Basic",
+        "provenance_basis": "whole_module_and_prerequisites_byte_identical",
+        "checked_source_sha256": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+        "base_source_sha256": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+        "whole_source_identical_to_base": true,
+        "preserved_original_source_line_offset": 0,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Canonical.ParaComplexConnectionBridge.log",
+        "log_sha256": "4d4f09148095c4361e1d5a00c11eab4b9ece5fbc1b5e3697938fe2d70ab2d996"
+      }
+    },
+    {
+      "module": "InfoGeometry.Canonical.ParaComplexConnectionBridge",
+      "base_line": 87,
+      "frozen_line": 87,
+      "column": 23,
+      "source_line": "    simp [peirceMinus, LinearMap.sub_apply, PCS.tau_sq, sub_eq_add_neg,",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Canonical/ParaComplexConnectionBridge.lean:87:23: warning: This simp argument is unused:\n  LinearMap.sub_apply\n\nHint: Omit it from the simp argument list.\n  [apply] simp [peirceMinus, PCS.tau_sq, sub_eq_add_neg, add_comm, add_left_comm, add_assoc]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W002",
+      "current_frozen_source_sha256": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+      "base_source_sha256": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W002",
+        "module": "InfoGeometry.Canonical.ParaComplexConnectionBridge",
+        "selected_owner": false,
+        "classification": "inherited",
+        "category": "linter.unusedSimpArgs",
+        "checked_line": 87,
+        "column": 23,
+        "base_line": 87,
+        "source_line": "    simp [peirceMinus, LinearMap.sub_apply, PCS.tau_sq, sub_eq_add_neg,",
+        "nearest_declaration": {
+          "line": 81,
+          "source": "theorem range_peirceMinus_eq_minusEigenspace (PCS : ParaComplexStructure V) :"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Canonical/ParaComplexConnectionBridge.lean:87:23: warning: This simp argument is unused:\n  LinearMap.sub_apply\n\nHint: Omit it from the simp argument list.\n  [apply] simp [peirceMinus, PCS.tau_sq, sub_eq_add_neg, add_comm, add_left_comm, add_assoc]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "provenance_basis": "whole_module_and_prerequisites_byte_identical",
+        "checked_source_sha256": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+        "base_source_sha256": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+        "whole_source_identical_to_base": true,
+        "preserved_original_source_line_offset": 0,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Canonical.ParaComplexConnectionBridge.log",
+        "log_sha256": "4d4f09148095c4361e1d5a00c11eab4b9ece5fbc1b5e3697938fe2d70ab2d996"
+      }
+    },
+    {
+      "module": "InfoGeometry.Canonical.ParaComplexConnectionBridge",
+      "base_line": 88,
+      "frozen_line": 88,
+      "column": 16,
+      "source_line": "      add_comm, add_left_comm, add_assoc]",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Canonical/ParaComplexConnectionBridge.lean:88:16: warning: This simp argument is unused:\n  add_left_comm\n\nHint: Omit it from the simp argument list.\n  [apply] simp [peirceMinus, LinearMap.sub_apply, PCS.tau_sq, sub_eq_add_neg, add_comm, add_assoc]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W003",
+      "current_frozen_source_sha256": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+      "base_source_sha256": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W003",
+        "module": "InfoGeometry.Canonical.ParaComplexConnectionBridge",
+        "selected_owner": false,
+        "classification": "inherited",
+        "category": "linter.unusedSimpArgs",
+        "checked_line": 88,
+        "column": 16,
+        "base_line": 88,
+        "source_line": "      add_comm, add_left_comm, add_assoc]",
+        "nearest_declaration": {
+          "line": 81,
+          "source": "theorem range_peirceMinus_eq_minusEigenspace (PCS : ParaComplexStructure V) :"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Canonical/ParaComplexConnectionBridge.lean:88:16: warning: This simp argument is unused:\n  add_left_comm\n\nHint: Omit it from the simp argument list.\n  [apply] simp [peirceMinus, LinearMap.sub_apply, PCS.tau_sq, sub_eq_add_neg, add_comm, add_assoc]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "provenance_basis": "whole_module_and_prerequisites_byte_identical",
+        "checked_source_sha256": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+        "base_source_sha256": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+        "whole_source_identical_to_base": true,
+        "preserved_original_source_line_offset": 0,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Canonical.ParaComplexConnectionBridge.log",
+        "log_sha256": "4d4f09148095c4361e1d5a00c11eab4b9ece5fbc1b5e3697938fe2d70ab2d996"
+      }
+    },
+    {
+      "module": "InfoGeometry.Canonical.ParaComplexConnectionBridge",
+      "base_line": 88,
+      "frozen_line": 88,
+      "column": 31,
+      "source_line": "      add_comm, add_left_comm, add_assoc]",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Canonical/ParaComplexConnectionBridge.lean:88:31: warning: This simp argument is unused:\n  add_assoc\n\nHint: Omit it from the simp argument list.\n  [apply] simp [peirceMinus, LinearMap.sub_apply, PCS.tau_sq, sub_eq_add_neg, add_comm, add_left_comm]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W004",
+      "current_frozen_source_sha256": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+      "base_source_sha256": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W004",
+        "module": "InfoGeometry.Canonical.ParaComplexConnectionBridge",
+        "selected_owner": false,
+        "classification": "inherited",
+        "category": "linter.unusedSimpArgs",
+        "checked_line": 88,
+        "column": 31,
+        "base_line": 88,
+        "source_line": "      add_comm, add_left_comm, add_assoc]",
+        "nearest_declaration": {
+          "line": 81,
+          "source": "theorem range_peirceMinus_eq_minusEigenspace (PCS : ParaComplexStructure V) :"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Canonical/ParaComplexConnectionBridge.lean:88:31: warning: This simp argument is unused:\n  add_assoc\n\nHint: Omit it from the simp argument list.\n  [apply] simp [peirceMinus, LinearMap.sub_apply, PCS.tau_sq, sub_eq_add_neg, add_comm, add_left_comm]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "provenance_basis": "whole_module_and_prerequisites_byte_identical",
+        "checked_source_sha256": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+        "base_source_sha256": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+        "whole_source_identical_to_base": true,
+        "preserved_original_source_line_offset": 0,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Canonical.ParaComplexConnectionBridge.log",
+        "log_sha256": "4d4f09148095c4361e1d5a00c11eab4b9ece5fbc1b5e3697938fe2d70ab2d996"
+      }
+    },
+    {
+      "module": "InfoGeometry.Canonical.ParaComplexConnectionBridge",
+      "base_line": 269,
+      "frozen_line": 269,
+      "column": 4,
+      "source_line": "    simpa [this]",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Canonical/ParaComplexConnectionBridge.lean:269:4: warning: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W005",
+      "current_frozen_source_sha256": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+      "base_source_sha256": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W005",
+        "module": "InfoGeometry.Canonical.ParaComplexConnectionBridge",
+        "selected_owner": false,
+        "classification": "inherited",
+        "category": "linter.unnecessarySimpa",
+        "checked_line": 269,
+        "column": 4,
+        "base_line": 269,
+        "source_line": "    simpa [this]",
+        "nearest_declaration": {
+          "line": 258,
+          "source": "theorem plusEigenspace_inf_minusEigenspace_bot (PCS : ParaComplexStructure V) :"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Canonical/ParaComplexConnectionBridge.lean:269:4: warning: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+        "provenance_basis": "whole_module_and_prerequisites_byte_identical",
+        "checked_source_sha256": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+        "base_source_sha256": "bbb096fd74efe8f0c340967affbfdeab4c8ba265fe127ee6d7e75a29b73ac2a6",
+        "whole_source_identical_to_base": true,
+        "preserved_original_source_line_offset": 0,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Canonical.ParaComplexConnectionBridge.log",
+        "log_sha256": "4d4f09148095c4361e1d5a00c11eab4b9ece5fbc1b5e3697938fe2d70ab2d996"
+      }
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceDecomposition",
+      "base_line": 192,
+      "frozen_line": 192,
+      "column": 55,
+      "source_line": "    simp only [idempotent_mul_nested f hf] <;> abel_nf <;> simp",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Core/PeirceDecomposition.lean:192:55: warning: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\n\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W006",
+      "current_frozen_source_sha256": "b2426391a1841cbdb35bdef72138b5ab1553508c82c22ea930aa23f164de9bd9",
+      "base_source_sha256": "b2426391a1841cbdb35bdef72138b5ab1553508c82c22ea930aa23f164de9bd9",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W006",
+        "module": "InfoGeometry.Core.PeirceDecomposition",
+        "selected_owner": false,
+        "classification": "inherited",
+        "category": "linter.unnecessarySeqFocus",
+        "checked_line": 192,
+        "column": 55,
+        "base_line": 192,
+        "source_line": "    simp only [idempotent_mul_nested f hf] <;> abel_nf <;> simp",
+        "nearest_declaration": {
+          "line": 173,
+          "source": "theorem idempotencyDefect_peirce_components"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Core/PeirceDecomposition.lean:192:55: warning: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\n\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+        "provenance_basis": "whole_module_and_prerequisites_byte_identical",
+        "checked_source_sha256": "b2426391a1841cbdb35bdef72138b5ab1553508c82c22ea930aa23f164de9bd9",
+        "base_source_sha256": "b2426391a1841cbdb35bdef72138b5ab1553508c82c22ea930aa23f164de9bd9",
+        "whole_source_identical_to_base": true,
+        "preserved_original_source_line_offset": 0,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.Core.IdempotencyDefect"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Core.PeirceDecomposition.log",
+        "log_sha256": "3accc6f0fca6b96b19fb60829d38f1226b2b34a64d9b84408215111dda153085"
+      }
+    },
+    {
+      "module": "InfoGeometry.LinearAlgebra.RegularDyadCompression",
+      "base_line": 53,
+      "frozen_line": 58,
+      "column": 4,
+      "source_line": "    smul_eq_mul, smul_smul]",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean:58:4: warning: This simp argument is unused:\n  smul_eq_mul\n\nHint: Omit it from the simp argument list.\n  [apply] simp only [normalizedDyad, LinearMap.smulRight_apply, LinearMap.smul_apply, smul_smul]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W007",
+      "current_frozen_source_sha256": "a85dafe5d2f3fa1114a085500bd0ebf917088f9bd81ae3f545c90f278e30c780",
+      "base_source_sha256": "efc50830e2578edec02c53d470c3cacc343e0da8ff2e2e67f2787a89af498304",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W007",
+        "module": "InfoGeometry.LinearAlgebra.RegularDyadCompression",
+        "selected_owner": true,
+        "classification": "inherited",
+        "category": "linter.unusedSimpArgs",
+        "checked_line": 58,
+        "column": 4,
+        "base_line": 53,
+        "source_line": "    smul_eq_mul, smul_smul]",
+        "nearest_declaration": {
+          "line": 49,
+          "source": "theorem normalizedDyad_compression (v : E) (f : Module.Dual \ud835\udd5c E)"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/LinearAlgebra/RegularDyadCompression.lean:58:4: warning: This simp argument is unused:\n  smul_eq_mul\n\nHint: Omit it from the simp argument list.\n  [apply] simp only [normalizedDyad, LinearMap.smulRight_apply, LinearMap.smul_apply, smul_smul]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "provenance_basis": "entire_original_module_preserved_after_five_line_header_with_unchanged_prerequisites",
+        "checked_source_sha256": "a85dafe5d2f3fa1114a085500bd0ebf917088f9bd81ae3f545c90f278e30c780",
+        "base_source_sha256": "efc50830e2578edec02c53d470c3cacc343e0da8ff2e2e67f2787a89af498304",
+        "whole_source_identical_to_base": false,
+        "preserved_original_source_line_offset": 5,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.Core.IdempotencyDefect",
+          "InfoGeometry.Core.PeirceCompressionDefect",
+          "InfoGeometry.Core.PeirceDecomposition"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.LinearAlgebra.RegularDyadCompression.log",
+        "log_sha256": "87b42eb82cc20aef39a09595cbccce95148f88be5e39b4159804091a997596e2"
+      }
+    },
+    {
+      "module": "InfoGeometry.Optics.SheetWittCircularBasis",
+      "base_line": 76,
+      "frozen_line": 81,
+      "column": 8,
+      "source_line": "private theorem product_idem_of_commute",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Optics/SheetWittCircularBasis.lean:81:8: warning: automatically included section variable(s) unused in theorem `_private.InfoGeometry.Optics.SheetWittCircularBasis.0.InfoGeometry.Optics.SheetWittCircularBasis.CommutingInvolutions.product_idem_of_commute`:\n  [Algebra \u211d Op]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [Algebra \u211d Op] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W008",
+      "current_frozen_source_sha256": "dcd4fbde48e869da4d03e6512562c245f7162e373df6146a364f7deccd256d69",
+      "base_source_sha256": "600f1c91ab55df8e5180ce103bd535a031d6253d58aad18a3a4d5fb3ed2b3d81",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W008",
+        "module": "InfoGeometry.Optics.SheetWittCircularBasis",
+        "selected_owner": true,
+        "classification": "inherited",
+        "category": "linter.unusedSectionVars",
+        "checked_line": 81,
+        "column": 8,
+        "base_line": 76,
+        "source_line": "private theorem product_idem_of_commute",
+        "nearest_declaration": {
+          "line": 81,
+          "source": "private theorem product_idem_of_commute"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Optics/SheetWittCircularBasis.lean:81:8: warning: automatically included section variable(s) unused in theorem `_private.InfoGeometry.Optics.SheetWittCircularBasis.0.InfoGeometry.Optics.SheetWittCircularBasis.CommutingInvolutions.product_idem_of_commute`:\n  [Algebra \u211d Op]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [Algebra \u211d Op] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+        "provenance_basis": "entire_original_module_preserved_after_five_line_header_with_unchanged_prerequisites",
+        "checked_source_sha256": "dcd4fbde48e869da4d03e6512562c245f7162e373df6146a364f7deccd256d69",
+        "base_source_sha256": "600f1c91ab55df8e5180ce103bd535a031d6253d58aad18a3a4d5fb3ed2b3d81",
+        "whole_source_identical_to_base": false,
+        "preserved_original_source_line_offset": 5,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.Geometry.KreinIsotropicCone",
+          "InfoGeometry.Meta.OwnerTarget",
+          "InfoGeometry.OperatorAlgebra.ChiralPolarization",
+          "InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution",
+          "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit",
+          "InfoGeometry.OperatorAlgebra.KreinIsotropicCone",
+          "InfoGeometry.OperatorAlgebra.TomitaCartanSplit"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Optics.SheetWittCircularBasis.log",
+        "log_sha256": "27bde4346c1051bb824687357795a8ed1cdca936a180523b9af464b4bc4a804d"
+      }
+    },
+    {
+      "module": "InfoGeometry.Optics.SheetWittCircularBasis",
+      "base_line": 85,
+      "frozen_line": 90,
+      "column": 8,
+      "source_line": "private theorem product_zero_of_left_orthogonal",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Optics/SheetWittCircularBasis.lean:90:8: warning: automatically included section variable(s) unused in theorem `_private.InfoGeometry.Optics.SheetWittCircularBasis.0.InfoGeometry.Optics.SheetWittCircularBasis.CommutingInvolutions.product_zero_of_left_orthogonal`:\n  [Algebra \u211d Op]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [Algebra \u211d Op] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W009",
+      "current_frozen_source_sha256": "dcd4fbde48e869da4d03e6512562c245f7162e373df6146a364f7deccd256d69",
+      "base_source_sha256": "600f1c91ab55df8e5180ce103bd535a031d6253d58aad18a3a4d5fb3ed2b3d81",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W009",
+        "module": "InfoGeometry.Optics.SheetWittCircularBasis",
+        "selected_owner": true,
+        "classification": "inherited",
+        "category": "linter.unusedSectionVars",
+        "checked_line": 90,
+        "column": 8,
+        "base_line": 85,
+        "source_line": "private theorem product_zero_of_left_orthogonal",
+        "nearest_declaration": {
+          "line": 90,
+          "source": "private theorem product_zero_of_left_orthogonal"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Optics/SheetWittCircularBasis.lean:90:8: warning: automatically included section variable(s) unused in theorem `_private.InfoGeometry.Optics.SheetWittCircularBasis.0.InfoGeometry.Optics.SheetWittCircularBasis.CommutingInvolutions.product_zero_of_left_orthogonal`:\n  [Algebra \u211d Op]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [Algebra \u211d Op] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+        "provenance_basis": "entire_original_module_preserved_after_five_line_header_with_unchanged_prerequisites",
+        "checked_source_sha256": "dcd4fbde48e869da4d03e6512562c245f7162e373df6146a364f7deccd256d69",
+        "base_source_sha256": "600f1c91ab55df8e5180ce103bd535a031d6253d58aad18a3a4d5fb3ed2b3d81",
+        "whole_source_identical_to_base": false,
+        "preserved_original_source_line_offset": 5,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.Geometry.KreinIsotropicCone",
+          "InfoGeometry.Meta.OwnerTarget",
+          "InfoGeometry.OperatorAlgebra.ChiralPolarization",
+          "InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution",
+          "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit",
+          "InfoGeometry.OperatorAlgebra.KreinIsotropicCone",
+          "InfoGeometry.OperatorAlgebra.TomitaCartanSplit"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Optics.SheetWittCircularBasis.log",
+        "log_sha256": "27bde4346c1051bb824687357795a8ed1cdca936a180523b9af464b4bc4a804d"
+      }
+    },
+    {
+      "module": "InfoGeometry.Optics.SheetWittCircularBasis",
+      "base_line": 94,
+      "frozen_line": 99,
+      "column": 8,
+      "source_line": "private theorem product_zero_of_right_orthogonal",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Optics/SheetWittCircularBasis.lean:99:8: warning: automatically included section variable(s) unused in theorem `_private.InfoGeometry.Optics.SheetWittCircularBasis.0.InfoGeometry.Optics.SheetWittCircularBasis.CommutingInvolutions.product_zero_of_right_orthogonal`:\n  [Algebra \u211d Op]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [Algebra \u211d Op] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W010",
+      "current_frozen_source_sha256": "dcd4fbde48e869da4d03e6512562c245f7162e373df6146a364f7deccd256d69",
+      "base_source_sha256": "600f1c91ab55df8e5180ce103bd535a031d6253d58aad18a3a4d5fb3ed2b3d81",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W010",
+        "module": "InfoGeometry.Optics.SheetWittCircularBasis",
+        "selected_owner": true,
+        "classification": "inherited",
+        "category": "linter.unusedSectionVars",
+        "checked_line": 99,
+        "column": 8,
+        "base_line": 94,
+        "source_line": "private theorem product_zero_of_right_orthogonal",
+        "nearest_declaration": {
+          "line": 99,
+          "source": "private theorem product_zero_of_right_orthogonal"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Optics/SheetWittCircularBasis.lean:99:8: warning: automatically included section variable(s) unused in theorem `_private.InfoGeometry.Optics.SheetWittCircularBasis.0.InfoGeometry.Optics.SheetWittCircularBasis.CommutingInvolutions.product_zero_of_right_orthogonal`:\n  [Algebra \u211d Op]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [Algebra \u211d Op] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+        "provenance_basis": "entire_original_module_preserved_after_five_line_header_with_unchanged_prerequisites",
+        "checked_source_sha256": "dcd4fbde48e869da4d03e6512562c245f7162e373df6146a364f7deccd256d69",
+        "base_source_sha256": "600f1c91ab55df8e5180ce103bd535a031d6253d58aad18a3a4d5fb3ed2b3d81",
+        "whole_source_identical_to_base": false,
+        "preserved_original_source_line_offset": 5,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.Geometry.KreinIsotropicCone",
+          "InfoGeometry.Meta.OwnerTarget",
+          "InfoGeometry.OperatorAlgebra.ChiralPolarization",
+          "InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution",
+          "InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit",
+          "InfoGeometry.OperatorAlgebra.KreinIsotropicCone",
+          "InfoGeometry.OperatorAlgebra.TomitaCartanSplit"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Optics.SheetWittCircularBasis.log",
+        "log_sha256": "27bde4346c1051bb824687357795a8ed1cdca936a180523b9af464b4bc4a804d"
+      }
+    },
+    {
+      "module": "InfoGeometry.Twistor.PenroseIncidence",
+      "base_line": 1,
+      "frozen_line": 1,
+      "column": 0,
+      "source_line": "import Mathlib.Data.Complex.Basic",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Twistor/PenroseIncidence.lean:1:0: warning: \n'Mathlib.Data.Complex.Basic' has been deprecated: please replace this import by\n\nimport Mathlib.Basic.Complex.Basic",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W013",
+      "current_frozen_source_sha256": "31178c457ef77e633d1be52777447001339f98e66b4e10610ea4f089808d8983",
+      "base_source_sha256": "31178c457ef77e633d1be52777447001339f98e66b4e10610ea4f089808d8983",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W013",
+        "module": "InfoGeometry.Twistor.PenroseIncidence",
+        "selected_owner": false,
+        "classification": "inherited",
+        "category": "deprecated_import",
+        "checked_line": 1,
+        "column": 0,
+        "base_line": 1,
+        "source_line": "import Mathlib.Data.Complex.Basic",
+        "nearest_declaration": null,
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Twistor/PenroseIncidence.lean:1:0: warning: \n'Mathlib.Data.Complex.Basic' has been deprecated: please replace this import by\n\nimport Mathlib.Basic.Complex.Basic",
+        "provenance_basis": "whole_module_and_prerequisites_byte_identical",
+        "checked_source_sha256": "31178c457ef77e633d1be52777447001339f98e66b4e10610ea4f089808d8983",
+        "base_source_sha256": "31178c457ef77e633d1be52777447001339f98e66b4e10610ea4f089808d8983",
+        "whole_source_identical_to_base": true,
+        "preserved_original_source_line_offset": 0,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Twistor.PenroseIncidence.log",
+        "log_sha256": "208b80f0ee724ba03b58c68c52284f2dd747c350f352e9bcc05374d82d35a4c6"
+      }
+    },
+    {
+      "module": "InfoGeometry.GrandUnification.ArchetypeDictionary",
+      "base_line": 175,
+      "frozen_line": 175,
+      "column": 0,
+      "source_line": "theorem chiral_plus_add_chiral_minus (x : M) : inv.chiral_plus x + inv.chiral_minus x = x := by",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/GrandUnification/ArchetypeDictionary.lean:175:0: warning: automatically included section variable(s) unused in theorem `InfoGeometry.GrandUnification.ArchetypeDictionary.SplitInvolution.chiral_plus_add_chiral_minus`:\n  [IsScalarTower R A A]\n  [SMulCommClass R A A]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsScalarTower R A A] [SMulCommClass R A A] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W014",
+      "current_frozen_source_sha256": "bb89d0138a3842e20e9b05eab752745aa338c8e86bec0d0253fc2c244756a261",
+      "base_source_sha256": "bb89d0138a3842e20e9b05eab752745aa338c8e86bec0d0253fc2c244756a261",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W014",
+        "module": "InfoGeometry.GrandUnification.ArchetypeDictionary",
+        "selected_owner": false,
+        "classification": "inherited",
+        "category": "linter.unusedSectionVars",
+        "checked_line": 175,
+        "column": 0,
+        "base_line": 175,
+        "source_line": "theorem chiral_plus_add_chiral_minus (x : M) : inv.chiral_plus x + inv.chiral_minus x = x := by",
+        "nearest_declaration": {
+          "line": 175,
+          "source": "theorem chiral_plus_add_chiral_minus (x : M) : inv.chiral_plus x + inv.chiral_minus x = x := by"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/GrandUnification/ArchetypeDictionary.lean:175:0: warning: automatically included section variable(s) unused in theorem `InfoGeometry.GrandUnification.ArchetypeDictionary.SplitInvolution.chiral_plus_add_chiral_minus`:\n  [IsScalarTower R A A]\n  [SMulCommClass R A A]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsScalarTower R A A] [SMulCommClass R A A] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+        "provenance_basis": "whole_module_and_prerequisites_byte_identical",
+        "checked_source_sha256": "bb89d0138a3842e20e9b05eab752745aa338c8e86bec0d0253fc2c244756a261",
+        "base_source_sha256": "bb89d0138a3842e20e9b05eab752745aa338c8e86bec0d0253fc2c244756a261",
+        "whole_source_identical_to_base": true,
+        "preserved_original_source_line_offset": 0,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.GrandUnification.ArchetypeDictionary.log",
+        "log_sha256": "14e1e180915c10a1d2d3413f108cd718c0bc1ea0a89b90811d157da902eea77f"
+      }
+    },
+    {
+      "module": "InfoGeometry.GrandUnification.ArchetypeDictionary",
+      "base_line": 195,
+      "frozen_line": 195,
+      "column": 0,
+      "source_line": "theorem chiral_plus_add (x y : M) : inv.chiral_plus (x + y) = inv.chiral_plus x + inv.chiral_plus y := by",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/GrandUnification/ArchetypeDictionary.lean:195:0: warning: automatically included section variable(s) unused in theorem `InfoGeometry.GrandUnification.ArchetypeDictionary.SplitInvolution.chiral_plus_add`:\n  [IsScalarTower R A A]\n  [SMulCommClass R A A]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsScalarTower R A A] [SMulCommClass R A A] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W015",
+      "current_frozen_source_sha256": "bb89d0138a3842e20e9b05eab752745aa338c8e86bec0d0253fc2c244756a261",
+      "base_source_sha256": "bb89d0138a3842e20e9b05eab752745aa338c8e86bec0d0253fc2c244756a261",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W015",
+        "module": "InfoGeometry.GrandUnification.ArchetypeDictionary",
+        "selected_owner": false,
+        "classification": "inherited",
+        "category": "linter.unusedSectionVars",
+        "checked_line": 195,
+        "column": 0,
+        "base_line": 195,
+        "source_line": "theorem chiral_plus_add (x y : M) : inv.chiral_plus (x + y) = inv.chiral_plus x + inv.chiral_plus y := by",
+        "nearest_declaration": {
+          "line": 195,
+          "source": "theorem chiral_plus_add (x y : M) : inv.chiral_plus (x + y) = inv.chiral_plus x + inv.chiral_plus y := by"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/GrandUnification/ArchetypeDictionary.lean:195:0: warning: automatically included section variable(s) unused in theorem `InfoGeometry.GrandUnification.ArchetypeDictionary.SplitInvolution.chiral_plus_add`:\n  [IsScalarTower R A A]\n  [SMulCommClass R A A]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsScalarTower R A A] [SMulCommClass R A A] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+        "provenance_basis": "whole_module_and_prerequisites_byte_identical",
+        "checked_source_sha256": "bb89d0138a3842e20e9b05eab752745aa338c8e86bec0d0253fc2c244756a261",
+        "base_source_sha256": "bb89d0138a3842e20e9b05eab752745aa338c8e86bec0d0253fc2c244756a261",
+        "whole_source_identical_to_base": true,
+        "preserved_original_source_line_offset": 0,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.GrandUnification.ArchetypeDictionary.log",
+        "log_sha256": "14e1e180915c10a1d2d3413f108cd718c0bc1ea0a89b90811d157da902eea77f"
+      }
+    },
+    {
+      "module": "InfoGeometry.GrandUnification.ArchetypeDictionary",
+      "base_line": 199,
+      "frozen_line": 199,
+      "column": 0,
+      "source_line": "theorem chiral_minus_add (x y : M) : inv.chiral_minus (x + y) = inv.chiral_minus x + inv.chiral_minus y := by",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/GrandUnification/ArchetypeDictionary.lean:199:0: warning: automatically included section variable(s) unused in theorem `InfoGeometry.GrandUnification.ArchetypeDictionary.SplitInvolution.chiral_minus_add`:\n  [IsScalarTower R A A]\n  [SMulCommClass R A A]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsScalarTower R A A] [SMulCommClass R A A] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W016",
+      "current_frozen_source_sha256": "bb89d0138a3842e20e9b05eab752745aa338c8e86bec0d0253fc2c244756a261",
+      "base_source_sha256": "bb89d0138a3842e20e9b05eab752745aa338c8e86bec0d0253fc2c244756a261",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W016",
+        "module": "InfoGeometry.GrandUnification.ArchetypeDictionary",
+        "selected_owner": false,
+        "classification": "inherited",
+        "category": "linter.unusedSectionVars",
+        "checked_line": 199,
+        "column": 0,
+        "base_line": 199,
+        "source_line": "theorem chiral_minus_add (x y : M) : inv.chiral_minus (x + y) = inv.chiral_minus x + inv.chiral_minus y := by",
+        "nearest_declaration": {
+          "line": 199,
+          "source": "theorem chiral_minus_add (x y : M) : inv.chiral_minus (x + y) = inv.chiral_minus x + inv.chiral_minus y := by"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/GrandUnification/ArchetypeDictionary.lean:199:0: warning: automatically included section variable(s) unused in theorem `InfoGeometry.GrandUnification.ArchetypeDictionary.SplitInvolution.chiral_minus_add`:\n  [IsScalarTower R A A]\n  [SMulCommClass R A A]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsScalarTower R A A] [SMulCommClass R A A] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+        "provenance_basis": "whole_module_and_prerequisites_byte_identical",
+        "checked_source_sha256": "bb89d0138a3842e20e9b05eab752745aa338c8e86bec0d0253fc2c244756a261",
+        "base_source_sha256": "bb89d0138a3842e20e9b05eab752745aa338c8e86bec0d0253fc2c244756a261",
+        "whole_source_identical_to_base": true,
+        "preserved_original_source_line_offset": 0,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.GrandUnification.ArchetypeDictionary.log",
+        "log_sha256": "14e1e180915c10a1d2d3413f108cd718c0bc1ea0a89b90811d157da902eea77f"
+      }
+    },
+    {
+      "module": "InfoGeometry.Krein.DoubledSpace",
+      "base_line": 136,
+      "frozen_line": 136,
+      "column": 0,
+      "source_line": "lemma doubledHilbertBilin_to_doubled (x \u03be y \u03b7 : E) :",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Krein/DoubledSpace.lean:136:0: warning: automatically included section variable(s) unused in theorem `InfoGeometry.Krein.doubledHilbertBilin_to_doubled`:\n  [CompleteSpace E]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [CompleteSpace E] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W017",
+      "current_frozen_source_sha256": "df94e1e351340e16b21ea8d0a9aef632b5f56e50078c5f26701ce96c9c91d0fc",
+      "base_source_sha256": "df94e1e351340e16b21ea8d0a9aef632b5f56e50078c5f26701ce96c9c91d0fc",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W017",
+        "module": "InfoGeometry.Krein.DoubledSpace",
+        "selected_owner": false,
+        "classification": "inherited",
+        "category": "linter.unusedSectionVars",
+        "checked_line": 136,
+        "column": 0,
+        "base_line": 136,
+        "source_line": "lemma doubledHilbertBilin_to_doubled (x \u03be y \u03b7 : E) :",
+        "nearest_declaration": {
+          "line": 136,
+          "source": "lemma doubledHilbertBilin_to_doubled (x \u03be y \u03b7 : E) :"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Krein/DoubledSpace.lean:136:0: warning: automatically included section variable(s) unused in theorem `InfoGeometry.Krein.doubledHilbertBilin_to_doubled`:\n  [CompleteSpace E]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [CompleteSpace E] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+        "provenance_basis": "whole_module_and_prerequisites_byte_identical",
+        "checked_source_sha256": "df94e1e351340e16b21ea8d0a9aef632b5f56e50078c5f26701ce96c9c91d0fc",
+        "base_source_sha256": "df94e1e351340e16b21ea8d0a9aef632b5f56e50078c5f26701ce96c9c91d0fc",
+        "whole_source_identical_to_base": true,
+        "preserved_original_source_line_offset": 0,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.Cartan.Involution",
+          "InfoGeometry.GrandUnification.ArchetypeDictionary",
+          "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+          "InfoGeometry.Krein.KreinSpace"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Krein.DoubledSpace.log",
+        "log_sha256": "1bd01de17440381014cf7708fa9c12ca3cb57db94682a9517566a23449eaff34"
+      }
+    },
+    {
+      "module": "InfoGeometry.Twistor.PenroseTwistor",
+      "base_line": 3,
+      "frozen_line": 3,
+      "column": 0,
+      "source_line": "import Mathlib.Data.Complex.Basic",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Twistor/PenroseTwistor.lean:3:0: warning: \n'Mathlib.Data.Complex.Basic' has been deprecated: please replace this import by\n\nimport Mathlib.Basic.Complex.Basic",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W018",
+      "current_frozen_source_sha256": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+      "base_source_sha256": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W018",
+        "module": "InfoGeometry.Twistor.PenroseTwistor",
+        "selected_owner": false,
+        "classification": "inherited",
+        "category": "deprecated_import",
+        "checked_line": 3,
+        "column": 0,
+        "base_line": 3,
+        "source_line": "import Mathlib.Data.Complex.Basic",
+        "nearest_declaration": null,
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Twistor/PenroseTwistor.lean:3:0: warning: \n'Mathlib.Data.Complex.Basic' has been deprecated: please replace this import by\n\nimport Mathlib.Basic.Complex.Basic",
+        "provenance_basis": "whole_module_and_prerequisites_byte_identical",
+        "checked_source_sha256": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+        "base_source_sha256": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+        "whole_source_identical_to_base": true,
+        "preserved_original_source_line_offset": 0,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.Cartan.Involution",
+          "InfoGeometry.Convex.ProjectiveRays",
+          "InfoGeometry.GrandUnification.ArchetypeDictionary",
+          "InfoGeometry.Krein.DoubledSpace",
+          "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+          "InfoGeometry.Krein.KreinSpace",
+          "InfoGeometry.Twistor.NullProjective"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Twistor.PenroseTwistor.log",
+        "log_sha256": "32014766450d7a04e89b926ba5080ac6f38e42ee56610271b65ec6bb82ddb0e3"
+      }
+    },
+    {
+      "module": "InfoGeometry.Twistor.PenroseTwistor",
+      "base_line": 42,
+      "frozen_line": 42,
+      "column": 2,
+      "source_line": "  simpa [TwistorCarrier] using (Module.finrank_pi (R := \u2102) (\u03b9 := Fin 4))",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Twistor/PenroseTwistor.lean:42:2: warning: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W019",
+      "current_frozen_source_sha256": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+      "base_source_sha256": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W019",
+        "module": "InfoGeometry.Twistor.PenroseTwistor",
+        "selected_owner": false,
+        "classification": "inherited",
+        "category": "linter.unnecessarySimpa",
+        "checked_line": 42,
+        "column": 2,
+        "base_line": 42,
+        "source_line": "  simpa [TwistorCarrier] using (Module.finrank_pi (R := \u2102) (\u03b9 := Fin 4))",
+        "nearest_declaration": {
+          "line": 41,
+          "source": "theorem twistor_space_dim : finrank \u2102 TwistorCarrier = 4 := by"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Twistor/PenroseTwistor.lean:42:2: warning: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+        "provenance_basis": "whole_module_and_prerequisites_byte_identical",
+        "checked_source_sha256": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+        "base_source_sha256": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+        "whole_source_identical_to_base": true,
+        "preserved_original_source_line_offset": 0,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.Cartan.Involution",
+          "InfoGeometry.Convex.ProjectiveRays",
+          "InfoGeometry.GrandUnification.ArchetypeDictionary",
+          "InfoGeometry.Krein.DoubledSpace",
+          "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+          "InfoGeometry.Krein.KreinSpace",
+          "InfoGeometry.Twistor.NullProjective"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Twistor.PenroseTwistor.log",
+        "log_sha256": "32014766450d7a04e89b926ba5080ac6f38e42ee56610271b65ec6bb82ddb0e3"
+      }
+    },
+    {
+      "module": "InfoGeometry.Twistor.PenroseTwistor",
+      "base_line": 67,
+      "frozen_line": 67,
+      "column": 2,
+      "source_line": "  simpa using (twistorHermitian z).map_smul c w",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Twistor/PenroseTwistor.lean:67:2: warning: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W020",
+      "current_frozen_source_sha256": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+      "base_source_sha256": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W020",
+        "module": "InfoGeometry.Twistor.PenroseTwistor",
+        "selected_owner": false,
+        "classification": "inherited",
+        "category": "linter.unnecessarySimpa",
+        "checked_line": 67,
+        "column": 2,
+        "base_line": 67,
+        "source_line": "  simpa using (twistorHermitian z).map_smul c w",
+        "nearest_declaration": {
+          "line": 65,
+          "source": "theorem twistorHermitian_smul_right (c : \u2102) (z w : TwistorCarrier) :"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Twistor/PenroseTwistor.lean:67:2: warning: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+        "provenance_basis": "whole_module_and_prerequisites_byte_identical",
+        "checked_source_sha256": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+        "base_source_sha256": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+        "whole_source_identical_to_base": true,
+        "preserved_original_source_line_offset": 0,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.Cartan.Involution",
+          "InfoGeometry.Convex.ProjectiveRays",
+          "InfoGeometry.GrandUnification.ArchetypeDictionary",
+          "InfoGeometry.Krein.DoubledSpace",
+          "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+          "InfoGeometry.Krein.KreinSpace",
+          "InfoGeometry.Twistor.NullProjective"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Twistor.PenroseTwistor.log",
+        "log_sha256": "32014766450d7a04e89b926ba5080ac6f38e42ee56610271b65ec6bb82ddb0e3"
+      }
+    },
+    {
+      "module": "InfoGeometry.Twistor.PenroseTwistor",
+      "base_line": 102,
+      "frozen_line": 102,
+      "column": 4,
+      "source_line": "    simpa using congrArg Complex.re h",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Twistor/PenroseTwistor.lean:102:4: warning: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W021",
+      "current_frozen_source_sha256": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+      "base_source_sha256": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W021",
+        "module": "InfoGeometry.Twistor.PenroseTwistor",
+        "selected_owner": false,
+        "classification": "inherited",
+        "category": "linter.unnecessarySimpa",
+        "checked_line": 102,
+        "column": 4,
+        "base_line": 102,
+        "source_line": "    simpa using congrArg Complex.re h",
+        "nearest_declaration": {
+          "line": 69,
+          "source": "theorem twistorHermitian_smul_self (c : \u2102) (z : TwistorCarrier) :"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Twistor/PenroseTwistor.lean:102:4: warning: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+        "provenance_basis": "whole_module_and_prerequisites_byte_identical",
+        "checked_source_sha256": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+        "base_source_sha256": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+        "whole_source_identical_to_base": true,
+        "preserved_original_source_line_offset": 0,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.Cartan.Involution",
+          "InfoGeometry.Convex.ProjectiveRays",
+          "InfoGeometry.GrandUnification.ArchetypeDictionary",
+          "InfoGeometry.Krein.DoubledSpace",
+          "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+          "InfoGeometry.Krein.KreinSpace",
+          "InfoGeometry.Twistor.NullProjective"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Twistor.PenroseTwistor.log",
+        "log_sha256": "32014766450d7a04e89b926ba5080ac6f38e42ee56610271b65ec6bb82ddb0e3"
+      }
+    },
+    {
+      "module": "InfoGeometry.Twistor.PenroseTwistor",
+      "base_line": 120,
+      "frozen_line": 120,
+      "column": 18,
+      "source_line": "  simp [helicity, Complex.re_ofReal_mul]",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Twistor/PenroseTwistor.lean:120:18: warning: This simp argument is unused:\n  Complex.re_ofReal_mul\n\nHint: Omit it from the simp argument list.\n  [apply] simp [helicity]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W022",
+      "current_frozen_source_sha256": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+      "base_source_sha256": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W022",
+        "module": "InfoGeometry.Twistor.PenroseTwistor",
+        "selected_owner": false,
+        "classification": "inherited",
+        "category": "linter.unusedSimpArgs",
+        "checked_line": 120,
+        "column": 18,
+        "base_line": 120,
+        "source_line": "  simp [helicity, Complex.re_ofReal_mul]",
+        "nearest_declaration": {
+          "line": 117,
+          "source": "theorem helicity_smul (c : \u2102) (z : TwistorCarrier) :"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Twistor/PenroseTwistor.lean:120:18: warning: This simp argument is unused:\n  Complex.re_ofReal_mul\n\nHint: Omit it from the simp argument list.\n  [apply] simp [helicity]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "provenance_basis": "whole_module_and_prerequisites_byte_identical",
+        "checked_source_sha256": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+        "base_source_sha256": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+        "whole_source_identical_to_base": true,
+        "preserved_original_source_line_offset": 0,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.Cartan.Involution",
+          "InfoGeometry.Convex.ProjectiveRays",
+          "InfoGeometry.GrandUnification.ArchetypeDictionary",
+          "InfoGeometry.Krein.DoubledSpace",
+          "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+          "InfoGeometry.Krein.KreinSpace",
+          "InfoGeometry.Twistor.NullProjective"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Twistor.PenroseTwistor.log",
+        "log_sha256": "32014766450d7a04e89b926ba5080ac6f38e42ee56610271b65ec6bb82ddb0e3"
+      }
+    },
+    {
+      "module": "InfoGeometry.Physics.ChiralPoincareSouriauBridge",
+      "base_line": 64,
+      "frozen_line": 64,
+      "column": 10,
+      "source_line": "    simp [Complex.I_mul_I]",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Physics/ChiralPoincareSouriauBridge.lean:64:10: warning: This simp argument is unused:\n  Complex.I_mul_I\n\nHint: Omit it from the simp argument list.\n  [apply] simp\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W023",
+      "current_frozen_source_sha256": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+      "base_source_sha256": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W023",
+        "module": "InfoGeometry.Physics.ChiralPoincareSouriauBridge",
+        "selected_owner": false,
+        "classification": "inherited",
+        "category": "linter.unusedSimpArgs",
+        "checked_line": 64,
+        "column": 10,
+        "base_line": 64,
+        "source_line": "    simp [Complex.I_mul_I]",
+        "nearest_declaration": {
+          "line": 58,
+          "source": "theorem det_pauliMomentum (P : FourMomentum) :"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Physics/ChiralPoincareSouriauBridge.lean:64:10: warning: This simp argument is unused:\n  Complex.I_mul_I\n\nHint: Omit it from the simp argument list.\n  [apply] simp\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "provenance_basis": "whole_module_and_prerequisites_byte_identical",
+        "checked_source_sha256": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+        "base_source_sha256": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+        "whole_source_identical_to_base": true,
+        "preserved_original_source_line_offset": 0,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Physics.ChiralPoincareSouriauBridge.log",
+        "log_sha256": "57303a79f28abb7eb81e39a3bb9fbb0f4ccc5b3a0489484f26aa61478b4d2373"
+      }
+    },
+    {
+      "module": "InfoGeometry.Physics.ChiralPoincareSouriauBridge",
+      "base_line": 107,
+      "frozen_line": 107,
+      "column": 54,
+      "source_line": "    simp [recoverPx, pauliMomentum, \u03c31, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_two]",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Physics/ChiralPoincareSouriauBridge.lean:107:54: warning: This simp argument is unused:\n  Matrix.mul_apply\n\nHint: Omit it from the simp argument list.\n  [apply] simp [recoverPx, pauliMomentum, \u03c31, Matrix.trace, Fin.sum_univ_two]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W024",
+      "current_frozen_source_sha256": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+      "base_source_sha256": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W024",
+        "module": "InfoGeometry.Physics.ChiralPoincareSouriauBridge",
+        "selected_owner": false,
+        "classification": "inherited",
+        "category": "linter.unusedSimpArgs",
+        "checked_line": 107,
+        "column": 54,
+        "base_line": 107,
+        "source_line": "    simp [recoverPx, pauliMomentum, \u03c31, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_two]",
+        "nearest_declaration": {
+          "line": 103,
+          "source": "@[simp] theorem recoverPx_pauliMomentum (P : FourMomentum) :"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Physics/ChiralPoincareSouriauBridge.lean:107:54: warning: This simp argument is unused:\n  Matrix.mul_apply\n\nHint: Omit it from the simp argument list.\n  [apply] simp [recoverPx, pauliMomentum, \u03c31, Matrix.trace, Fin.sum_univ_two]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "provenance_basis": "whole_module_and_prerequisites_byte_identical",
+        "checked_source_sha256": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+        "base_source_sha256": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+        "whole_source_identical_to_base": true,
+        "preserved_original_source_line_offset": 0,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Physics.ChiralPoincareSouriauBridge.log",
+        "log_sha256": "57303a79f28abb7eb81e39a3bb9fbb0f4ccc5b3a0489484f26aa61478b4d2373"
+      }
+    },
+    {
+      "module": "InfoGeometry.Physics.ChiralPoincareSouriauBridge",
+      "base_line": 114,
+      "frozen_line": 114,
+      "column": 54,
+      "source_line": "    simp [recoverPy, pauliMomentum, \u03c32, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_two]",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Physics/ChiralPoincareSouriauBridge.lean:114:54: warning: This simp argument is unused:\n  Matrix.mul_apply\n\nHint: Omit it from the simp argument list.\n  [apply] simp [recoverPy, pauliMomentum, \u03c32, Matrix.trace, Fin.sum_univ_two]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W025",
+      "current_frozen_source_sha256": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+      "base_source_sha256": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W025",
+        "module": "InfoGeometry.Physics.ChiralPoincareSouriauBridge",
+        "selected_owner": false,
+        "classification": "inherited",
+        "category": "linter.unusedSimpArgs",
+        "checked_line": 114,
+        "column": 54,
+        "base_line": 114,
+        "source_line": "    simp [recoverPy, pauliMomentum, \u03c32, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_two]",
+        "nearest_declaration": {
+          "line": 110,
+          "source": "@[simp] theorem recoverPy_pauliMomentum (P : FourMomentum) :"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Physics/ChiralPoincareSouriauBridge.lean:114:54: warning: This simp argument is unused:\n  Matrix.mul_apply\n\nHint: Omit it from the simp argument list.\n  [apply] simp [recoverPy, pauliMomentum, \u03c32, Matrix.trace, Fin.sum_univ_two]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "provenance_basis": "whole_module_and_prerequisites_byte_identical",
+        "checked_source_sha256": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+        "base_source_sha256": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+        "whole_source_identical_to_base": true,
+        "preserved_original_source_line_offset": 0,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Physics.ChiralPoincareSouriauBridge.log",
+        "log_sha256": "57303a79f28abb7eb81e39a3bb9fbb0f4ccc5b3a0489484f26aa61478b4d2373"
+      }
+    },
+    {
+      "module": "InfoGeometry.Physics.ChiralPoincareSouriauBridge",
+      "base_line": 116,
+      "frozen_line": 116,
+      "column": 10,
+      "source_line": "    simp [Complex.I_mul_I]",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Physics/ChiralPoincareSouriauBridge.lean:116:10: warning: This simp argument is unused:\n  Complex.I_mul_I\n\nHint: Omit it from the simp argument list.\n  [apply] simp\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W026",
+      "current_frozen_source_sha256": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+      "base_source_sha256": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W026",
+        "module": "InfoGeometry.Physics.ChiralPoincareSouriauBridge",
+        "selected_owner": false,
+        "classification": "inherited",
+        "category": "linter.unusedSimpArgs",
+        "checked_line": 116,
+        "column": 10,
+        "base_line": 116,
+        "source_line": "    simp [Complex.I_mul_I]",
+        "nearest_declaration": {
+          "line": 110,
+          "source": "@[simp] theorem recoverPy_pauliMomentum (P : FourMomentum) :"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Physics/ChiralPoincareSouriauBridge.lean:116:10: warning: This simp argument is unused:\n  Complex.I_mul_I\n\nHint: Omit it from the simp argument list.\n  [apply] simp\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "provenance_basis": "whole_module_and_prerequisites_byte_identical",
+        "checked_source_sha256": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+        "base_source_sha256": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+        "whole_source_identical_to_base": true,
+        "preserved_original_source_line_offset": 0,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Physics.ChiralPoincareSouriauBridge.log",
+        "log_sha256": "57303a79f28abb7eb81e39a3bb9fbb0f4ccc5b3a0489484f26aa61478b4d2373"
+      }
+    },
+    {
+      "module": "InfoGeometry.Physics.ChiralPoincareSouriauBridge",
+      "base_line": 122,
+      "frozen_line": 122,
+      "column": 54,
+      "source_line": "    simp [recoverPz, pauliMomentum, \u03c33, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_two]",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Physics/ChiralPoincareSouriauBridge.lean:122:54: warning: This simp argument is unused:\n  Matrix.mul_apply\n\nHint: Omit it from the simp argument list.\n  [apply] simp [recoverPz, pauliMomentum, \u03c33, Matrix.trace, Fin.sum_univ_two]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W027",
+      "current_frozen_source_sha256": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+      "base_source_sha256": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W027",
+        "module": "InfoGeometry.Physics.ChiralPoincareSouriauBridge",
+        "selected_owner": false,
+        "classification": "inherited",
+        "category": "linter.unusedSimpArgs",
+        "checked_line": 122,
+        "column": 54,
+        "base_line": 122,
+        "source_line": "    simp [recoverPz, pauliMomentum, \u03c33, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_two]",
+        "nearest_declaration": {
+          "line": 118,
+          "source": "@[simp] theorem recoverPz_pauliMomentum (P : FourMomentum) :"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Physics/ChiralPoincareSouriauBridge.lean:122:54: warning: This simp argument is unused:\n  Matrix.mul_apply\n\nHint: Omit it from the simp argument list.\n  [apply] simp [recoverPz, pauliMomentum, \u03c33, Matrix.trace, Fin.sum_univ_two]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "provenance_basis": "whole_module_and_prerequisites_byte_identical",
+        "checked_source_sha256": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+        "base_source_sha256": "60f3963fb1a8d2e30179946eb684c1736156789db9efb99ba312c9b5c9897af1",
+        "whole_source_identical_to_base": true,
+        "preserved_original_source_line_offset": 0,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Physics.ChiralPoincareSouriauBridge.log",
+        "log_sha256": "57303a79f28abb7eb81e39a3bb9fbb0f4ccc5b3a0489484f26aa61478b4d2373"
+      }
+    },
+    {
+      "module": "InfoGeometry.Twistor.SpinorOuterProduct",
+      "base_line": 1,
+      "frozen_line": 1,
+      "column": 0,
+      "source_line": "import Mathlib.Data.Complex.Basic",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Twistor/SpinorOuterProduct.lean:1:0: warning: \n'Mathlib.Data.Complex.Basic' has been deprecated: please replace this import by\n\nimport Mathlib.Basic.Complex.Basic",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W028",
+      "current_frozen_source_sha256": "249b1ac13661a06ba24930c5e96d8c632246359677ae4f9743da244be29b50b1",
+      "base_source_sha256": "249b1ac13661a06ba24930c5e96d8c632246359677ae4f9743da244be29b50b1",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W028",
+        "module": "InfoGeometry.Twistor.SpinorOuterProduct",
+        "selected_owner": false,
+        "classification": "inherited",
+        "category": "deprecated_import",
+        "checked_line": 1,
+        "column": 0,
+        "base_line": 1,
+        "source_line": "import Mathlib.Data.Complex.Basic",
+        "nearest_declaration": null,
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Twistor/SpinorOuterProduct.lean:1:0: warning: \n'Mathlib.Data.Complex.Basic' has been deprecated: please replace this import by\n\nimport Mathlib.Basic.Complex.Basic",
+        "provenance_basis": "whole_module_and_prerequisites_byte_identical",
+        "checked_source_sha256": "249b1ac13661a06ba24930c5e96d8c632246359677ae4f9743da244be29b50b1",
+        "base_source_sha256": "249b1ac13661a06ba24930c5e96d8c632246359677ae4f9743da244be29b50b1",
+        "whole_source_identical_to_base": true,
+        "preserved_original_source_line_offset": 0,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Twistor.SpinorOuterProduct.log",
+        "log_sha256": "f418715c3292bb8b5e359d8d00da118cad126d17d9d3588a5404274528ca83b6"
+      }
+    },
+    {
+      "module": "InfoGeometry.Twistor.TwistorConstituentKinematics",
+      "base_line": 37,
+      "frozen_line": 37,
+      "column": 0,
+      "source_line": "theorem packetMatrix_injective : Function.Injective (packetMatrix (\u03b9 := \u03b9)) := by",
+      "known_diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Twistor/TwistorConstituentKinematics.lean:37:0: warning: automatically included section variable(s) unused in theorem `InfoGeometry.Twistor.TwistorConstituentKinematics.packetMatrix_injective`:\n  [Fintype \u03b9]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [Fintype \u03b9] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+      "classification": "inherited_source_confirmed_location_mapping_only",
+      "previous_completed_attempt": 1,
+      "previous_warning_id": "W029",
+      "current_frozen_source_sha256": "2347b498be655c0fa6e6ddeac319519830bca9a13dcb290ef937d8d0ad91203f",
+      "base_source_sha256": "2347b498be655c0fa6e6ddeac319519830bca9a13dcb290ef937d8d0ad91203f",
+      "source_location_matches_prior_completed_attempt": true,
+      "source_location_matches_upstream_base": true,
+      "all_repository_prerequisites_byte_identical_to_upstream": true,
+      "final_native_warning_observed": false,
+      "attempt_2_native_observation": "PENDING",
+      "prior_completed_warning_record": {
+        "id": "W029",
+        "module": "InfoGeometry.Twistor.TwistorConstituentKinematics",
+        "selected_owner": true,
+        "classification": "inherited",
+        "category": "linter.unusedSectionVars",
+        "checked_line": 37,
+        "column": 0,
+        "base_line": 37,
+        "source_line": "theorem packetMatrix_injective : Function.Injective (packetMatrix (\u03b9 := \u03b9)) := by",
+        "nearest_declaration": {
+          "line": 37,
+          "source": "theorem packetMatrix_injective : Function.Injective (packetMatrix (\u03b9 := \u03b9)) := by"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Twistor/TwistorConstituentKinematics.lean:37:0: warning: automatically included section variable(s) unused in theorem `InfoGeometry.Twistor.TwistorConstituentKinematics.packetMatrix_injective`:\n  [Fintype \u03b9]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [Fintype \u03b9] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+        "provenance_basis": "whole_module_and_prerequisites_byte_identical",
+        "checked_source_sha256": "2347b498be655c0fa6e6ddeac319519830bca9a13dcb290ef937d8d0ad91203f",
+        "base_source_sha256": "2347b498be655c0fa6e6ddeac319519830bca9a13dcb290ef937d8d0ad91203f",
+        "whole_source_identical_to_base": true,
+        "preserved_original_source_line_offset": 0,
+        "all_repository_prerequisites_identical_to_base": true,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.Cartan.Involution",
+          "InfoGeometry.Convex.ProjectiveRays",
+          "InfoGeometry.GrandUnification.ArchetypeDictionary",
+          "InfoGeometry.Krein.DoubledSpace",
+          "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+          "InfoGeometry.Krein.KreinSpace",
+          "InfoGeometry.Physics.ChiralPoincareSouriauBridge",
+          "InfoGeometry.Projective.KleinQuadricPlucker",
+          "InfoGeometry.Twistor.InfinityTwistor",
+          "InfoGeometry.Twistor.NullProjective",
+          "InfoGeometry.Twistor.PenroseIncidence",
+          "InfoGeometry.Twistor.PenroseTwistor",
+          "InfoGeometry.Twistor.PerjesConventions",
+          "InfoGeometry.Twistor.SpinorOuterProduct",
+          "InfoGeometry.Twistor.TwistorFrameCovariance",
+          "InfoGeometry.Twistor.TwistorKinematicTensor",
+          "InfoGeometry.Twistor.TwoTwistorPlucker"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Twistor.TwistorConstituentKinematics.log",
+        "log_sha256": "6b5cd73afc7234e1e33f6fa154b1d898660555bf9a2817d6fb9ecce6620b82ca"
+      }
+    }
+  ],
+  "previous_attempt_introduced_warnings": [
+    {
+      "previous_completed_warning_record": {
+        "id": "W011",
+        "module": "InfoGeometry.Twistor.NonincidentLogPairing",
+        "selected_owner": true,
+        "classification": "introduced",
+        "category": "linter.unreachableTactic",
+        "checked_line": 210,
+        "column": 21,
+        "base_line": null,
+        "source_line": "  field_simp [h] <;> ring",
+        "nearest_declaration": {
+          "line": 198,
+          "source": "theorem hasDerivAt_logPairing_readout (p : Carrier V) (h : p.2 p.1 \u2260 0)"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Twistor/NonincidentLogPairing.lean:210:21: warning: this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "provenance_basis": "new_module_absent_from_exact_upstream_base",
+        "checked_source_sha256": "c048d36a529e89a3718262508b457aba29cbe86c2486154263ffe0dab3d6709c",
+        "base_source_sha256": null,
+        "whole_source_identical_to_base": false,
+        "preserved_original_source_line_offset": null,
+        "all_repository_prerequisites_identical_to_base": false,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.Core.IdempotencyDefect",
+          "InfoGeometry.Core.PeirceCompressionDefect",
+          "InfoGeometry.Core.PeirceDecomposition",
+          "InfoGeometry.LinearAlgebra.RegularDyadCompression",
+          "InfoGeometry.Twistor.RealDualTwistor"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Twistor.NonincidentLogPairing.log",
+        "log_sha256": "4922a737c9a6e809cf4f4e7a71ca518502f9b66aa839c214800bd51b4fa99c81"
+      },
+      "current_frozen_line": 210,
+      "current_source_line": "  field_simp [h]",
+      "change": "Removed the sole trailing <;> ring tactic.",
+      "upstream_classification": "new_module_any_warning_is_introduced",
+      "attempt_2_native_resolution": "PENDING_NOT_INFERRED_FROM_SOURCE_CLEANUP"
+    },
+    {
+      "previous_completed_warning_record": {
+        "id": "W012",
+        "module": "InfoGeometry.Twistor.NonincidentLogPairing",
+        "selected_owner": true,
+        "classification": "introduced",
+        "category": "linter.unusedTactic",
+        "checked_line": 210,
+        "column": 21,
+        "base_line": null,
+        "source_line": "  field_simp [h] <;> ring",
+        "nearest_declaration": {
+          "line": 198,
+          "source": "theorem hasDerivAt_logPairing_readout (p : Carrier V) (h : p.2 p.1 \u2260 0)"
+        },
+        "diagnostic": "/workspace/scratch/933d64e28eca/verification-independent/src/InfoGeometry/Twistor/NonincidentLogPairing.lean:210:21: warning: Unused tactic linter: `ring` does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "provenance_basis": "new_module_absent_from_exact_upstream_base",
+        "checked_source_sha256": "c048d36a529e89a3718262508b457aba29cbe86c2486154263ffe0dab3d6709c",
+        "base_source_sha256": null,
+        "whole_source_identical_to_base": false,
+        "preserved_original_source_line_offset": null,
+        "all_repository_prerequisites_identical_to_base": false,
+        "repository_prerequisites": [
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.Core.IdempotencyDefect",
+          "InfoGeometry.Core.PeirceCompressionDefect",
+          "InfoGeometry.Core.PeirceDecomposition",
+          "InfoGeometry.LinearAlgebra.RegularDyadCompression",
+          "InfoGeometry.Twistor.RealDualTwistor"
+        ],
+        "log_path": "/workspace/scratch/933d64e28eca/verification-independent/InfoGeometry.Twistor.NonincidentLogPairing.log",
+        "log_sha256": "4922a737c9a6e809cf4f4e7a71ca518502f9b66aa839c214800bd51b4fa99c81"
+      },
+      "current_frozen_line": 210,
+      "current_source_line": "  field_simp [h]",
+      "change": "Removed the sole trailing <;> ring tactic.",
+      "upstream_classification": "new_module_any_warning_is_introduced",
+      "attempt_2_native_resolution": "PENDING_NOT_INFERRED_FROM_SOURCE_CLEANUP"
+    }
+  ],
+  "warning_policy": "Zero introduced warnings in changed owners; inspect and report every warning in all nine targets and the 39-module closure; preserve inherited warnings with exact source and prerequisite provenance.",
+  "attempt_2_observed_warning_count": null,
+  "attempt_2_observed_declaration_count": null,
+  "attempt_2_acceptance": "PENDING_ACTUAL_NATIVE_COMPLETION_AND_INDEPENDENT_MANUAL_REVIEW",
+  "interpretation_limits": [
+    "No attempt-2 native report, log, compiler, supervisor inspect, acceptance record, or root execution session was used or changed in this preparation.",
+    "The 27 mapped inherited diagnostics and two introduced diagnostics were observed only in the completed rejected first attempt. These counts are not second-attempt results.",
+    "Inherited warning locations match both the current frozen source and upstream source, with unchanged repository prerequisites and dependency pins. No separate baseline compilation is claimed.",
+    "ParaComplexNeutralForm adds a Mathlib import and extends existing source; any unexpected warning requires individual review.",
+    "NonincidentLogPairing has no upstream counterpart. Removal of the two prior warning causes is source evidence only until a complete fresh native run confirms the diagnostics.",
+    "Final audit must reconcile every owned declaration, including private and generated declarations, for all nine targets. Compilation covers all 39 repository modules; this does not assert a successful whole-repository build.",
+    "Actual exit, source and evidence integrity, current warning counts, native axioms and scope require a separate post-completion inspection and manual decision."
+  ],
+  "eventual_acceptance_required_fields": [
+    "decision",
+    "native_evidence_valid",
+    "introduced_warning_count",
+    "native_report_sha256",
+    "source_sha256"
+  ],
+  "cross_review": {
+    "reviewer": "/root/independent_qa/checker_contract_review",
+    "scope": "Independent read-only second-freeze/static4/v3 semantic/source/selection/helper/extra/supervisor binding review.",
+    "result": "PASS_SOURCE_HANDOFF_NO_NATIVE_ACCEPTANCE"
+  }
+}

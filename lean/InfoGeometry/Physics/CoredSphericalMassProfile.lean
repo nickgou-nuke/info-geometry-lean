@@ -132,4 +132,64 @@ theorem tendsto_radius_sq_mul_density_atTop (η s : ℝ) (hs : 0 < s) :
   filter_upwards [eventually_gt_atTop (0 : ℝ)] with r hr
   exact (radius_sq_mul_density η s r hs hr).symm
 
+
+
+/-- The cored mass has an exact cubic-normalized expression away from the origin. -/
+theorem mass_div_radius_cube (η s r : ℝ) (hs : 0 < s) (hr : 0 < r) :
+    mass η s r / r ^ 3 = 2 * η * s / (r + s) ^ 2 := by
+  have hr0 : r ≠ 0 := ne_of_gt hr
+  have hrs : r + s ≠ 0 := ne_of_gt (add_pos hr hs)
+  unfold mass
+  field_simp [hr0, hrs]
+  <;> ring
+
+/-- The cubic-normalized core mass has the finite central value `2η/s`. -/
+theorem tendsto_mass_div_radius_cube_zero (η s : ℝ) (hs : 0 < s) :
+    Tendsto (fun r : ℝ => mass η s r / r ^ 3) (𝓝[>] 0) (𝓝 (2 * η / s)) := by
+  have hden : Tendsto (fun r : ℝ => (r + s) ^ 2) (𝓝 0) (𝓝 ((0 + s) ^ 2)) :=
+    (tendsto_id.add tendsto_const_nhds).pow 2
+  have hden0 : (0 + s) ^ 2 ≠ 0 := ne_of_gt (by positivity)
+  have h : Tendsto (fun r : ℝ => 2 * η * s / (r + s) ^ 2) (𝓝[>] 0)
+      (𝓝 (2 * η * s / (0 + s) ^ 2)) :=
+    (tendsto_const_nhds.div hden hden0).mono_left nhdsWithin_le_nhds
+  have hc : 2 * η * s / (0 + s) ^ 2 = 2 * η / s := by
+    field_simp [ne_of_gt hs]
+    <;> ring
+  rw [hc] at h
+  refine h.congr' ?_
+  filter_upwards [self_mem_nhdsWithin] with r hr
+  exact (mass_div_radius_cube η s r hs hr).symm
+
+/-- Squared circular speed for the prescribed cored mass profile. -/
+def circularSpeedSq (G η s r : ℝ) : ℝ := G * mass η s r / r
+
+/-- Exact positive-radius formula for the cored circular speed. -/
+theorem circularSpeedSq_eq (G η s r : ℝ) (hs : 0 < s) (hr : 0 < r) :
+    circularSpeedSq G η s r = 2 * G * η * s * r ^ 2 / (r + s) ^ 2 := by
+  have hr0 : r ≠ 0 := ne_of_gt hr
+  have hrs : r + s ≠ 0 := ne_of_gt (add_pos hr hs)
+  unfold circularSpeedSq mass
+  field_simp [hr0, hrs]
+  <;> ring
+
+/-- The cored circular speed approaches a finite outer value. -/
+theorem tendsto_circularSpeedSq_atTop (G η s : ℝ) (hs : 0 < s) :
+    Tendsto (circularSpeedSq G η s) atTop (𝓝 (2 * G * η * s)) := by
+  have hi : Tendsto (fun r : ℝ => r⁻¹) atTop (𝓝 0) := tendsto_inv_atTop_zero
+  have hden : Tendsto (fun r : ℝ => (1 + s * r⁻¹) ^ 2) atTop (𝓝 ((1 + s * 0) ^ 2)) :=
+    (tendsto_const_nhds.add (tendsto_const_nhds.mul hi)).pow 2
+  have hden0 : (1 + s * 0) ^ 2 ≠ 0 := by norm_num
+  have h : Tendsto (fun r : ℝ => 2 * G * η * s / (1 + s * r⁻¹) ^ 2) atTop
+      (𝓝 (2 * G * η * s / (1 + s * 0) ^ 2)) :=
+    tendsto_const_nhds.div hden hden0
+  simp only [mul_zero, add_zero, one_pow, div_one] at h
+  refine h.congr' ?_
+  filter_upwards [eventually_gt_atTop (0 : ℝ)] with r hr
+  have hr0 : r ≠ 0 := ne_of_gt hr
+  have hrs : r + s ≠ 0 := ne_of_gt (add_pos hr hs)
+  have hdenr : 1 + s * r⁻¹ ≠ 0 := ne_of_gt (by positivity)
+  rw [circularSpeedSq_eq G η s r hs hr]
+  field_simp [hr0, hrs, hdenr]
+  <;> ring
+
 end InfoGeometry.Physics.CoredSphericalMassProfile

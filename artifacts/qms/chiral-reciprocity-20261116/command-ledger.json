@@ -1,0 +1,356 @@
+[
+  {
+    "label": "placeholder-HilbertGramReciprocity",
+    "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+    "argv": [
+      "python3",
+      "-B",
+      "tools/quality/placeholder_audit.py",
+      "--root",
+      "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean",
+      "--strict",
+      "--json-out",
+      "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/placeholder-HilbertGramReciprocity.json"
+    ],
+    "started_utc": "2026-11-16T17:54:13.040902+00:00",
+    "finished_utc": "2026-11-16T17:54:13.237078+00:00",
+    "exit_code": 0,
+    "stdout": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/placeholder-HilbertGramReciprocity.stdout.log",
+    "stderr": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/placeholder-HilbertGramReciprocity.stderr.log",
+    "stdout_sha256": "5e5379fef6d82406ed4171e54a43af7c5e8a7469450c8a2b42730926af4fbef5",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "placeholder-HilbertGramMoorePenrose",
+    "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+    "argv": [
+      "python3",
+      "-B",
+      "tools/quality/placeholder_audit.py",
+      "--root",
+      "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean",
+      "--strict",
+      "--json-out",
+      "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/placeholder-HilbertGramMoorePenrose.json"
+    ],
+    "started_utc": "2026-11-16T17:54:13.304089+00:00",
+    "finished_utc": "2026-11-16T17:54:13.489474+00:00",
+    "exit_code": 0,
+    "stdout": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/placeholder-HilbertGramMoorePenrose.stdout.log",
+    "stderr": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/placeholder-HilbertGramMoorePenrose.stderr.log",
+    "stdout_sha256": "58783bfe7153375e0c6ea359481a4dd90d63e4b4caf08253057bca06c1cbf4e2",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "placeholder-GradedExponentialTrace",
+    "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+    "argv": [
+      "python3",
+      "-B",
+      "tools/quality/placeholder_audit.py",
+      "--root",
+      "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean",
+      "--strict",
+      "--json-out",
+      "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/placeholder-GradedExponentialTrace.json"
+    ],
+    "started_utc": "2026-11-16T17:54:13.561911+00:00",
+    "finished_utc": "2026-11-16T17:54:13.711236+00:00",
+    "exit_code": 0,
+    "stdout": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/placeholder-GradedExponentialTrace.stdout.log",
+    "stderr": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/placeholder-GradedExponentialTrace.stderr.log",
+    "stdout_sha256": "42d3b03ac04f476d113cf526a6d383d31aee47aa482fb766b7eb08b81b95316a",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "semantic-vacuity",
+    "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+    "argv": [
+      "python3",
+      "-B",
+      "tools/quality/semantic_vacuity_gate.py",
+      "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean",
+      "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean",
+      "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean",
+      "--fail-on",
+      "error",
+      "--json-out",
+      "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/semantic-vacuity.json"
+    ],
+    "started_utc": "2026-11-16T17:54:13.825725+00:00",
+    "finished_utc": "2026-11-16T17:54:13.964439+00:00",
+    "exit_code": 0,
+    "stdout": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/semantic-vacuity.stdout.log",
+    "stderr": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/semantic-vacuity.stderr.log",
+    "stdout_sha256": "4e5e81ac37a1174b184124a1a72b851b8f2ef1a58aae338e58310b8496a1c886",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "opengauss-screener",
+    "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+    "argv": [
+      "python3",
+      "-B",
+      "tools/infra/opengauss_screener.py",
+      "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean",
+      "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean",
+      "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean",
+      "--strict",
+      "--json"
+    ],
+    "started_utc": "2026-11-16T17:54:14.023164+00:00",
+    "finished_utc": "2026-11-16T17:54:14.492927+00:00",
+    "exit_code": 1,
+    "stdout": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/opengauss-screener.stdout.log",
+    "stderr": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/opengauss-screener.stderr.log",
+    "stdout_sha256": "9292bf57cc256ed240353b9e5cf1bc3a24296b0516bcfab0001af092b3c721ed",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "attempt2-placeholder-HilbertGramReciprocity",
+    "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+    "argv": [
+      "python3",
+      "-B",
+      "tools/quality/placeholder_audit.py",
+      "--root",
+      "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean",
+      "--strict",
+      "--json-out",
+      "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-placeholder-HilbertGramReciprocity.json"
+    ],
+    "started_utc": "2026-11-16T17:59:38.994921+00:00",
+    "finished_utc": "2026-11-16T17:59:39.240133+00:00",
+    "exit_code": 0,
+    "stdout": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-placeholder-HilbertGramReciprocity.stdout.log",
+    "stderr": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-placeholder-HilbertGramReciprocity.stderr.log",
+    "stdout_sha256": "69f59140f28bd9591b1b86e59d0b11d2c925b87797c9e0a60b7f60e87a5c1389",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "attempt2-placeholder-HilbertGramMoorePenrose",
+    "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+    "argv": [
+      "python3",
+      "-B",
+      "tools/quality/placeholder_audit.py",
+      "--root",
+      "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean",
+      "--strict",
+      "--json-out",
+      "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-placeholder-HilbertGramMoorePenrose.json"
+    ],
+    "started_utc": "2026-11-16T17:59:39.334055+00:00",
+    "finished_utc": "2026-11-16T17:59:39.619689+00:00",
+    "exit_code": 0,
+    "stdout": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-placeholder-HilbertGramMoorePenrose.stdout.log",
+    "stderr": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-placeholder-HilbertGramMoorePenrose.stderr.log",
+    "stdout_sha256": "1633f96f35ba94e8e0a28f05fee108276c7e221b84fe69d1795e3b3c76b272c5",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "attempt2-placeholder-GradedExponentialTrace",
+    "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+    "argv": [
+      "python3",
+      "-B",
+      "tools/quality/placeholder_audit.py",
+      "--root",
+      "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean",
+      "--strict",
+      "--json-out",
+      "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-placeholder-GradedExponentialTrace.json"
+    ],
+    "started_utc": "2026-11-16T17:59:39.738046+00:00",
+    "finished_utc": "2026-11-16T17:59:40.213017+00:00",
+    "exit_code": 0,
+    "stdout": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-placeholder-GradedExponentialTrace.stdout.log",
+    "stderr": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-placeholder-GradedExponentialTrace.stderr.log",
+    "stdout_sha256": "b8172109db34649b31f8b4014eed656fccfb5453fdef2f6439fa1317731d02bd",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "attempt2-semantic-vacuity",
+    "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+    "argv": [
+      "python3",
+      "-B",
+      "tools/quality/semantic_vacuity_gate.py",
+      "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean",
+      "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean",
+      "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean",
+      "--fail-on",
+      "error",
+      "--json-out",
+      "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-semantic-vacuity.json"
+    ],
+    "started_utc": "2026-11-16T17:59:40.498508+00:00",
+    "finished_utc": "2026-11-16T17:59:40.749531+00:00",
+    "exit_code": 0,
+    "stdout": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-semantic-vacuity.stdout.log",
+    "stderr": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-semantic-vacuity.stderr.log",
+    "stdout_sha256": "4e5e81ac37a1174b184124a1a72b851b8f2ef1a58aae338e58310b8496a1c886",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "attempt2-opengauss-screener",
+    "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+    "argv": [
+      "python3",
+      "-B",
+      "tools/infra/opengauss_screener.py",
+      "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean",
+      "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean",
+      "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean",
+      "--strict",
+      "--json"
+    ],
+    "started_utc": "2026-11-16T17:59:40.864724+00:00",
+    "finished_utc": "2026-11-16T17:59:41.599034+00:00",
+    "exit_code": 0,
+    "stdout": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-opengauss-screener.stdout.log",
+    "stderr": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-opengauss-screener.stderr.log",
+    "stdout_sha256": "747443d22b8ccffb07c44835fa4a015e33c702c22548bbc3cecde756a8b81eb7",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "attempt2-opengauss-refute",
+    "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+    "argv": [
+      "python3",
+      "-B",
+      "tools/infra/opengauss_cli.py",
+      "refute",
+      "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean",
+      "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean",
+      "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean",
+      "--strict",
+      "--json"
+    ],
+    "started_utc": "2026-11-16T17:59:41.853341+00:00",
+    "finished_utc": "2026-11-16T17:59:43.136244+00:00",
+    "exit_code": 0,
+    "stdout": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-opengauss-refute.stdout.log",
+    "stderr": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-opengauss-refute.stderr.log",
+    "stdout_sha256": "e3c70f9d2e32151e6dad038c9d42a8948e552c196de0ff62be7412bd0589ab4a",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "attempt2-fresh-kernel",
+    "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+    "argv": [
+      "python3",
+      "-B",
+      "tools/quality/check_clifford_dirac.py",
+      "--mathlib-root",
+      "/workspace/scratch/64554963d837/mathlib-4.34.1",
+      "--lean",
+      "/workspace/scratch/64554963d837/lean-runtime/bin/lean",
+      "--output",
+      "/workspace/scratch/9eb3301f34a1/reciprocity/final-validation",
+      "--target",
+      "InfoGeometry.Analysis.HilbertGramReciprocity",
+      "--target",
+      "InfoGeometry.Analysis.HilbertGramMoorePenrose",
+      "--target",
+      "InfoGeometry.Analysis.GradedExponentialTrace"
+    ],
+    "started_utc": "2026-11-16T17:59:50.277513+00:00",
+    "finished_utc": "2026-11-16T18:14:52.333057+00:00",
+    "exit_code": 0,
+    "stdout": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-fresh-kernel.stdout.log",
+    "stderr": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-fresh-kernel.stderr.log",
+    "stdout_sha256": "d5992fe9348c0e20e5de55b4901fdbe8767dc5ce0cdfc32c79f69bd01ee741ed",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "attempt2-gate4-static",
+    "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+    "argv": [
+      "python3",
+      "-B",
+      "tools/infra/opengauss_cli.py",
+      "review",
+      "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean",
+      "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean",
+      "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean",
+      "--gate",
+      "GATE_4",
+      "--json"
+    ],
+    "started_utc": "2026-11-16T18:15:01.456757+00:00",
+    "finished_utc": "2026-11-16T18:39:26.274513+00:00",
+    "exit_code": 0,
+    "stdout": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-gate4-static.stdout.log",
+    "stderr": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-gate4-static.stderr.log",
+    "stdout_sha256": "59a96ba5354fd2f0367dca2ea3ba641ca3fc9a280e47e6a7e0c0354464f0aaaf",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "attempt2-root-path-preflight",
+    "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+    "argv": [
+      "python3",
+      "-B",
+      "tools/infra/ci_bootstrap.py",
+      "paths",
+      "--root",
+      ".",
+      "--report",
+      "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/root-path-preflight.json"
+    ],
+    "started_utc": "2026-11-16T18:39:41.642688+00:00",
+    "finished_utc": "2026-11-16T18:39:42.269973+00:00",
+    "exit_code": 1,
+    "stdout": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-root-path-preflight.stdout.log",
+    "stderr": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-root-path-preflight.stderr.log",
+    "stdout_sha256": "6d1f1c6c528dfa847a0dcbb7aeb687f68839a6e5e1c5a4164e576dd167cb467d",
+    "stderr_sha256": "af055e8422c2eb8d2eb545bc670163ba2ea025fb8df9ead5affdc85b9520e4af"
+  },
+  {
+    "label": "attempt2-lean-version",
+    "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+    "argv": [
+      "/workspace/scratch/64554963d837/lean-runtime/bin/lean",
+      "--version"
+    ],
+    "started_utc": "2026-11-16T18:39:55.169371+00:00",
+    "finished_utc": "2026-11-16T18:39:55.801420+00:00",
+    "exit_code": 0,
+    "stdout": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-lean-version.stdout.log",
+    "stderr": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-lean-version.stderr.log",
+    "stdout_sha256": "355a9a028f81641782d75d6e6b58dec70f29d2f61238a9e271690259d9bf5680",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "attempt2-lake-version",
+    "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+    "argv": [
+      "/workspace/scratch/64554963d837/lean-runtime/bin/lake",
+      "--version"
+    ],
+    "started_utc": "2026-11-16T18:39:56.035319+00:00",
+    "finished_utc": "2026-11-16T18:39:56.349002+00:00",
+    "exit_code": 0,
+    "stdout": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-lake-version.stdout.log",
+    "stderr": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-lake-version.stderr.log",
+    "stdout_sha256": "36526a338068c343bedff5daa38fec328b4f722df1e8f0b5d026d4f0f908f3a3",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "attempt2-final-reconciliation",
+    "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+    "argv": [
+      "python3",
+      "-B",
+      "/workspace/scratch/9eb3301f34a1/reciprocity/qa-final-fingerprint.py"
+    ],
+    "started_utc": "2026-11-16T18:39:57.506624+00:00",
+    "finished_utc": "2026-11-16T18:40:11.085151+00:00",
+    "exit_code": 0,
+    "stdout": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-final-reconciliation.stdout.log",
+    "stderr": "/workspace/scratch/9eb3301f34a1/reciprocity/qa-evidence/attempt2-final-reconciliation.stderr.log",
+    "stdout_sha256": "5ea92c24fc219d7a2499db0eecbdbf003f6744473c17f271b938b32fc857b90a",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]

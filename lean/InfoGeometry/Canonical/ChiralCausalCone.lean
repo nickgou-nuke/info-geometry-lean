@@ -1,8 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import proofs.CPTAtom
-import proofs.SolderingSpinConnectionBogoliubov
-import proofs.SplitCliffordAlgebras
+import InfoGeometry.Physics.CPTAtom
+import InfoGeometry.Physics.SolderingSpinConnectionBogoliubov
+import InfoGeometry.Physics.SplitCliffordAlgebras
 
 /-!
 # Chiral Causal Cone Algebra
@@ -71,56 +76,56 @@ theorem σMinus_eq_carCre : σMinus = SplitClifford.carCre := by
 /-! ## `Cl(1,1)` atom to chiral CAR basis bridge -/
 
 /-- Entrywise complexification of the real `Cl(1,1)` CPT atom matrices. -/
-def complexifyCl11 (A : CPTAtom.M2R) : M2C :=
+def complexifyCl11 (A : InfoGeometry.Physics.CPTAtom.M2R) : M2C :=
   fun i j => (A i j : ℂ)
 
 @[simp] theorem complexifyCl11_eps :
-    complexifyCl11 CPTAtom.eps = σPlus + σMinus := by
+    complexifyCl11 InfoGeometry.Physics.CPTAtom.eps = σPlus + σMinus := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [complexifyCl11, CPTAtom.eps, σPlus, σMinus, Matrix.add_apply]
+    simp [complexifyCl11, InfoGeometry.Physics.CPTAtom.eps, σPlus, σMinus, Matrix.add_apply]
 
 @[simp] theorem complexifyCl11_J :
-    complexifyCl11 CPTAtom.J = σMinus - σPlus := by
+    complexifyCl11 InfoGeometry.Physics.CPTAtom.J = σMinus - σPlus := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [complexifyCl11, CPTAtom.J, σPlus, σMinus, Matrix.sub_apply]
+    simp [complexifyCl11, InfoGeometry.Physics.CPTAtom.J, σPlus, σMinus, Matrix.sub_apply]
 
 @[simp] theorem complexifyCl11_CPT :
-    complexifyCl11 CPTAtom.CPT = σ3c := by
+    complexifyCl11 InfoGeometry.Physics.CPTAtom.CPT = σ3c := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [complexifyCl11, CPTAtom.CPT, CPTAtom.eps, CPTAtom.J, σ3c,
+    simp [complexifyCl11, InfoGeometry.Physics.CPTAtom.CPT, InfoGeometry.Physics.CPTAtom.eps, InfoGeometry.Physics.CPTAtom.J, σ3c,
       Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- Recover the CAR annihilation/raising operator from the complexified
 `Cl(1,1)` generators. -/
 theorem σPlus_from_cl11 :
     σPlus =
-      (1/2 : ℂ) • (complexifyCl11 CPTAtom.eps - complexifyCl11 CPTAtom.J) := by
+      (1/2 : ℂ) • (complexifyCl11 InfoGeometry.Physics.CPTAtom.eps - complexifyCl11 InfoGeometry.Physics.CPTAtom.J) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [complexifyCl11, CPTAtom.eps, CPTAtom.J, σPlus, Matrix.smul_apply,
+    simp [complexifyCl11, InfoGeometry.Physics.CPTAtom.eps, InfoGeometry.Physics.CPTAtom.J, σPlus, Matrix.smul_apply,
       Matrix.sub_apply] <;> norm_num
 
 /-- Recover the CAR creation/lowering operator from the complexified `Cl(1,1)`
 generators. -/
 theorem σMinus_from_cl11 :
     σMinus =
-      (1/2 : ℂ) • (complexifyCl11 CPTAtom.eps + complexifyCl11 CPTAtom.J) := by
+      (1/2 : ℂ) • (complexifyCl11 InfoGeometry.Physics.CPTAtom.eps + complexifyCl11 InfoGeometry.Physics.CPTAtom.J) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [complexifyCl11, CPTAtom.eps, CPTAtom.J, σMinus, Matrix.smul_apply,
+    simp [complexifyCl11, InfoGeometry.Physics.CPTAtom.eps, InfoGeometry.Physics.CPTAtom.J, σMinus, Matrix.smul_apply,
       Matrix.add_apply] <;> norm_num
 
 /-- The complexified `Cl(1,1)` atom is exactly the chiral CAR basis:
 `ε = σ⁺+σ⁻`, `J = σ⁻-σ⁺`, and `εJ = σ³`. -/
 theorem cl11_atom_to_chiral_CAR_basis :
-    complexifyCl11 CPTAtom.eps = σPlus + σMinus ∧
-    complexifyCl11 CPTAtom.J = σMinus - σPlus ∧
-    complexifyCl11 CPTAtom.CPT = σ3c ∧
-    σPlus = (1/2 : ℂ) • (complexifyCl11 CPTAtom.eps - complexifyCl11 CPTAtom.J) ∧
-    σMinus = (1/2 : ℂ) • (complexifyCl11 CPTAtom.eps + complexifyCl11 CPTAtom.J) ∧
+    complexifyCl11 InfoGeometry.Physics.CPTAtom.eps = σPlus + σMinus ∧
+    complexifyCl11 InfoGeometry.Physics.CPTAtom.J = σMinus - σPlus ∧
+    complexifyCl11 InfoGeometry.Physics.CPTAtom.CPT = σ3c ∧
+    σPlus = (1/2 : ℂ) • (complexifyCl11 InfoGeometry.Physics.CPTAtom.eps - complexifyCl11 InfoGeometry.Physics.CPTAtom.J) ∧
+    σMinus = (1/2 : ℂ) • (complexifyCl11 InfoGeometry.Physics.CPTAtom.eps + complexifyCl11 InfoGeometry.Physics.CPTAtom.J) ∧
     σPlus = SplitClifford.carAnn ∧
     σMinus = SplitClifford.carCre := by
   exact ⟨complexifyCl11_eps, complexifyCl11_J, complexifyCl11_CPT,
@@ -128,39 +133,39 @@ theorem cl11_atom_to_chiral_CAR_basis :
 
 /-- σ⁺ as a linear combination of Pauli matrices: σ⁺ = ½(σ¹ + iσ²). -/
 theorem σPlus_from_pauli :
-    σPlus = (1/2 : ℂ) • (SolderingSpinConnectionBogoliubov.σ1 +
-      Complex.I • SolderingSpinConnectionBogoliubov.σ2) := by
+    σPlus = (1/2 : ℂ) • (InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.σ1 +
+      Complex.I • InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.σ2) := by
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [σPlus, SolderingSpinConnectionBogoliubov.σ1,
-      SolderingSpinConnectionBogoliubov.σ2, Matrix.smul_apply, Matrix.add_apply];
+    simp [σPlus, InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.σ1,
+      InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.σ2, Matrix.smul_apply, Matrix.add_apply];
     norm_num
 
 /-- σ⁻ as a linear combination of Pauli matrices: σ⁻ = ½(σ¹ - iσ²). -/
 theorem σMinus_from_pauli :
-    σMinus = (1/2 : ℂ) • (SolderingSpinConnectionBogoliubov.σ1 -
-      Complex.I • SolderingSpinConnectionBogoliubov.σ2) := by
+    σMinus = (1/2 : ℂ) • (InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.σ1 -
+      Complex.I • InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.σ2) := by
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [σMinus, SolderingSpinConnectionBogoliubov.σ1,
-      SolderingSpinConnectionBogoliubov.σ2, Matrix.smul_apply, Matrix.sub_apply,
+    simp [σMinus, InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.σ1,
+      InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.σ2, Matrix.smul_apply, Matrix.sub_apply,
       Matrix.add_apply];
     norm_num
 
 /-- Recover σ¹ from the chiral basis: σ¹ = σ⁺ + σ⁻. -/
-theorem σ1_from_chiral : SolderingSpinConnectionBogoliubov.σ1 = σPlus + σMinus := by
+theorem σ1_from_chiral : InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.σ1 = σPlus + σMinus := by
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [σPlus, σMinus, SolderingSpinConnectionBogoliubov.σ1, Matrix.add_apply]
+    simp [σPlus, σMinus, InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.σ1, Matrix.add_apply]
 
 /-- Recover σ² from the chiral basis: σ² = -i(σ⁺ - σ⁻). -/
 theorem σ2_from_chiral :
-    SolderingSpinConnectionBogoliubov.σ2 = -Complex.I • (σPlus - σMinus) := by
+    InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.σ2 = -Complex.I • (σPlus - σMinus) := by
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [σPlus, σMinus, SolderingSpinConnectionBogoliubov.σ2,
+    simp [σPlus, σMinus, InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.σ2,
       Matrix.smul_apply, Matrix.sub_apply]
 
 /-- σ³c equals the Pauli σ³ from `SolderingSpinConnectionBogoliubov`. -/
-theorem σ3c_eq_sigma3 : σ3c = SolderingSpinConnectionBogoliubov.σ3 := by
+theorem σ3c_eq_sigma3 : σ3c = InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.σ3 := by
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [σ3c, SolderingSpinConnectionBogoliubov.σ3]
+    simp [σ3c, InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.σ3]
 
 /-! ## Nilpotency and the causal cone
 
@@ -470,52 +475,52 @@ ensuring the soldered matrix is Hermitian.
 
 /-- Rewrite the soldering form in the chiral basis. -/
 theorem solder_in_chiral_basis (t x y z : ℂ) :
-    SolderingSpinConnectionBogoliubov.solder t x y z =
+    InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.solder t x y z =
       t • (1 : M2C) + (x - Complex.I * y) • σPlus +
       (x + Complex.I * y) • σMinus + z • σ3c := by
-  have hσ1 : SolderingSpinConnectionBogoliubov.σ1 = σPlus + σMinus := by
+  have hσ1 : InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.σ1 = σPlus + σMinus := by
     ext i j; fin_cases i <;> fin_cases j <;>
-      simp [σPlus, σMinus, SolderingSpinConnectionBogoliubov.σ1, Matrix.add_apply]
-  have hσ2 : SolderingSpinConnectionBogoliubov.σ2 = -Complex.I • (σPlus - σMinus) := by
+      simp [σPlus, σMinus, InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.σ1, Matrix.add_apply]
+  have hσ2 : InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.σ2 = -Complex.I • (σPlus - σMinus) := by
     ext i j; fin_cases i <;> fin_cases j <;>
-      simp [σPlus, σMinus, SolderingSpinConnectionBogoliubov.σ2,
+      simp [σPlus, σMinus, InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.σ2,
         Matrix.smul_apply, Matrix.sub_apply]
-  rw [SolderingSpinConnectionBogoliubov.solder, hσ1, hσ2, σ3c_eq_sigma3]
+  rw [InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.solder, hσ1, hσ2, σ3c_eq_sigma3]
   ext i j; fin_cases i <;> fin_cases j
-  · simp [σPlus, σMinus, SolderingSpinConnectionBogoliubov.σ3,
+  · simp [σPlus, σMinus, InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.σ3,
       Matrix.smul_apply, Matrix.add_apply, Matrix.sub_apply]
-  · simp [σPlus, σMinus, SolderingSpinConnectionBogoliubov.σ3,
+  · simp [σPlus, σMinus, InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.σ3,
       Matrix.smul_apply, Matrix.add_apply, Matrix.sub_apply]; ring
-  · simp [σPlus, σMinus, SolderingSpinConnectionBogoliubov.σ3,
+  · simp [σPlus, σMinus, InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.σ3,
       Matrix.smul_apply, Matrix.add_apply, Matrix.sub_apply]; ring
-  · simp [σPlus, σMinus, SolderingSpinConnectionBogoliubov.σ3,
+  · simp [σPlus, σMinus, InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.σ3,
       Matrix.smul_apply, Matrix.add_apply, Matrix.sub_apply]
 
 /-- For a real 4-vector, the chiral coefficients are complex conjugates. This is
 the Hermiticity condition: the soldered matrix is Hermitian iff the 4-vector is real. -/
 theorem solder_chiral_hermiticity (t x y z : ℝ) :
-    SolderingSpinConnectionBogoliubov.solder (t : ℂ) (x : ℂ) (y : ℂ) (z : ℂ) =
+    InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.solder (t : ℂ) (x : ℂ) (y : ℂ) (z : ℂ) =
       (t : ℂ) • (1 : M2C) + ((x : ℂ) - Complex.I * (y : ℂ)) • σPlus +
       ((x : ℂ) + Complex.I * (y : ℂ)) • σMinus + (z : ℂ) • σ3c := by
   exact solder_in_chiral_basis (t : ℂ) (x : ℂ) (y : ℂ) (z : ℂ)
 
 /-- The causal cone condition: a vector is null iff its soldered matrix has zero
 determinant. This is the bridge between the chiral algebra and the spacetime causal
-structure, proved in `SolderingSpinConnectionBogoliubov.solder_det`. -/
+structure, proved in `InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.solder_det`. -/
 theorem causal_cone_iff_solder_det_zero (t x y z : ℂ) :
-    (SolderingSpinConnectionBogoliubov.solder t x y z).det = 0 ↔
+    (InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.solder t x y z).det = 0 ↔
     t^2 - x^2 - y^2 - z^2 = 0 := by
-  rw [SolderingSpinConnectionBogoliubov.solder_det t x y z]
+  rw [InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.solder_det t x y z]
 
 /-- The chiral decomposition coefficients of a soldered real 4-vector: the
 coefficient functions extract the Minkowski coordinates from the chiral components. -/
 theorem solder_chiral_coeffs (t x y z : ℝ) :
-    coeffI (SolderingSpinConnectionBogoliubov.solder (t : ℂ) (x : ℂ) (y : ℂ) (z : ℂ)) = (t : ℂ) ∧
-    coeffPlus (SolderingSpinConnectionBogoliubov.solder (t : ℂ) (x : ℂ) (y : ℂ) (z : ℂ)) =
+    coeffI (InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.solder (t : ℂ) (x : ℂ) (y : ℂ) (z : ℂ)) = (t : ℂ) ∧
+    coeffPlus (InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.solder (t : ℂ) (x : ℂ) (y : ℂ) (z : ℂ)) =
       (x : ℂ) - Complex.I * (y : ℂ) ∧
-    coeffMinus (SolderingSpinConnectionBogoliubov.solder (t : ℂ) (x : ℂ) (y : ℂ) (z : ℂ)) =
+    coeffMinus (InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.solder (t : ℂ) (x : ℂ) (y : ℂ) (z : ℂ)) =
       (x : ℂ) + Complex.I * (y : ℂ) ∧
-    coeff3 (SolderingSpinConnectionBogoliubov.solder (t : ℂ) (x : ℂ) (y : ℂ) (z : ℂ)) = (z : ℂ) := by
+    coeff3 (InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.solder (t : ℂ) (x : ℂ) (y : ℂ) (z : ℂ)) = (z : ℂ) := by
   have h2 : (2 : ℂ) ≠ 0 := by norm_num
   rw [solder_in_chiral_basis]
   refine ⟨?_, ?_, ?_, ?_⟩
@@ -620,14 +625,14 @@ theorem chiral_causal_cone_synthesis :
     (PPlus * PPlus = PPlus) ∧ (PMinus * PMinus = PMinus) ∧
     (PPlus * PMinus = 0) ∧ (PPlus + PMinus = (1 : M2C)) ∧ (PPlus - PMinus = σ3c) ∧
     (∀ t x y z : ℂ,
-      (SolderingSpinConnectionBogoliubov.solder t x y z).det = t^2 - x^2 - y^2 - z^2) :=
+      (InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.solder t x y z).det = t^2 - x^2 - y^2 - z^2) :=
   ⟨chiral_decomposition,
    comm_σPlus_σMinus,
    anti_σPlus_σMinus,
    σPlus_sq, σMinus_sq,
    PPlus_idempotent, PMinus_idempotent,
    PPlus_PMinus_orthogonal, PPlus_add_PMinus, PPlus_sub_PMinus,
-   SolderingSpinConnectionBogoliubov.solder_det⟩
+   InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.solder_det⟩
 
 #check σPlus_sq
 #check σMinus_sq

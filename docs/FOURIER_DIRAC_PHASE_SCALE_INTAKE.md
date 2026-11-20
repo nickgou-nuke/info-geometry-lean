@@ -1,0 +1,15 @@
+# Fourier, Dirac, phase, scale, and uncertainty: raw intake
+
+Date: 2026-11-17. Source: the user's follow-up to the upstream Krein/octonion
+formalization request. This is provenance, not an accepted theorem statement.
+
+> fourier transform primal and dual coordinates wave-packets laplace beltrami dispersion relation wavepacket uncertainty principle cramer rao bound primal dual legender integral transform or integral transform      Dirac vs laplace beltrami equation sqrt of the laplace dirac hodge operator       dirac clifford lagebra dirac equation covriant dirac equation spinor bilinears dirac conjugation relativistic covariant dirac equation spinor currents operators and observable left right ideals    bivectors rotors and boosts  boosts hyperbolic thermodynamic apolonian coordinates poles logit    boosts relativistic coordinates shrinking at high speeds scale determined by boost scla invariance sclae as weyl gauge scale in log codrdinates boost an algebra of boost operators the three hyper9PARA0complex structures of the split-octonions promoted to operators and then turned into circular representation sum diff    the unique 4fourth hypercokmplex structure turns the bosots frame of operators algebra into a bivector rotors frame algebra the complex structures of the split octonions promoted to operators and turned circular basis operaros     he algebra of the circular basis split octonion operaors provides a syetem for fourier mellin phase and scale trnform like the foruier tranform more generally perhasp a lie grouop chracter decompostion primal dual uncertainty principle for the relativiastic covariant dirac doubled split algebras and the split octonions theore must be a way to reconcile and connect these dots  cramer rao for the specetime 4-vector operaoras   like the primal dual integral tranform legender or penrose tranform uncetainty principle for n-operator forms and the noncommutativity of those poincare superalgebra susy emergent spacetime relativistic minkowski uncertainty rprinciple what do we have in codenbas eepistemic compile
+
+## Interpretation used for implementation
+
+Audit the current owners, distinguish constructed objects from assumed
+interfaces, and formalize the smallest missing implications on their native
+carriers. The prior draft PR369 is separate; this task starts from main at
+`08c34e03f610b452e03422037949196dc7d92d6d` and imports none of its new owners.
+The accepted theorem contracts and observed validation belong in
+[the source-backed contract](FOURIER_DIRAC_PHASE_SCALE_CONTRACT.md).

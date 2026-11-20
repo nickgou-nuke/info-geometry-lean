@@ -1,0 +1,68 @@
+{
+  "scope": "Installed pre-commit hook receipts for the three local proof-source commits; publication pre-push is separate.",
+  "records": [
+    {
+      "label": "initial-commit",
+      "receipt": {
+        "state": "completed",
+        "returncode": 0,
+        "command": [
+          "git",
+          "commit",
+          "-m",
+          "Construct nonincident twistor log pairing and neutral cross duality"
+        ],
+        "cwd": "/workspace/scratch/933d64e28eca/repo",
+        "started_at": "2026-11-17T07:32:11.977723+00:00",
+        "updated_at": "2026-11-17T07:33:44.092019+00:00",
+        "pid_in_own_namespace": 3,
+        "log": "/workspace/scratch/933d64e28eca/run_logs/initial-commit.log"
+      },
+      "receipt_sha256": "1d5e617cdf832b758df3f3295096415efa8c447c1c32cda804138f3125865e6e",
+      "log": "proof_proxy_staged_gate: ok\n[codex/nonincident-para-twistor-20261116 06f9bc1e] Construct nonincident twistor log pairing and neutral cross duality\n 8 files changed, 1012 insertions(+)\n create mode 100644 docs/NONINCIDENT_PARA_TWISTOR_CONTRACT.md\n create mode 100644 docs/sources/nonincident_para_twistor_20261116.txt\n create mode 100644 lean/InfoGeometry/Twistor/NonincidentLogPairing.lean\n",
+      "log_sha256": "d316d73b55fcd27fe466b84f9d480a61fcfa29989a9f64a54f31bda8dfce1338"
+    },
+    {
+      "label": "proof-repair-commit",
+      "receipt": {
+        "state": "completed",
+        "returncode": 0,
+        "command": [
+          "git",
+          "commit",
+          "-m",
+          "Resolve native proof diagnostics and fix validation scope"
+        ],
+        "cwd": "/workspace/scratch/933d64e28eca/repo",
+        "started_at": "2026-11-17T09:57:14.915948+00:00",
+        "updated_at": "2026-11-17T09:57:17.362060+00:00",
+        "pid_in_own_namespace": 5,
+        "log": "/workspace/scratch/933d64e28eca/run_logs/proof-repair-commit.log"
+      },
+      "receipt_sha256": "df0778cfa56b6820617dfc99c50f2ab74251c6e75f550470864ae1627d6945f9",
+      "log": "proof_proxy_staged_gate: ok\n[codex/nonincident-para-twistor-20261116 1b1ecdd4] Resolve native proof diagnostics and fix validation scope\n 4 files changed, 29 insertions(+), 38 deletions(-)\n",
+      "log_sha256": "a0dbf61dacc0696ea0a62cbdaeb330067d08306585bda02461b053a9d2c5f40a"
+    },
+    {
+      "label": "warning-cleanup-commit",
+      "receipt": {
+        "state": "completed",
+        "returncode": 0,
+        "command": [
+          "git",
+          "commit",
+          "-m",
+          "Remove unreachable logarithmic derivative tactic"
+        ],
+        "cwd": "/workspace/scratch/933d64e28eca/repo",
+        "started_at": "2026-11-17T11:43:18.981424+00:00",
+        "updated_at": "2026-11-17T11:43:20.308607+00:00",
+        "pid_in_own_namespace": 5,
+        "log": "/workspace/scratch/933d64e28eca/run_logs/warning-cleanup-commit.log"
+      },
+      "receipt_sha256": "4377cd15536345cd3c3d46ec2a3996ceff0861da5991a30445fc7e5b49a9e5f8",
+      "log": "proof_proxy_staged_gate: ok\n[codex/nonincident-para-twistor-20261116 53c1a356] Remove unreachable logarithmic derivative tactic\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+      "log_sha256": "3cc8de33f504c2a6a5c88752c1c9a85066516bb8f24c28c0d27ec5fb5fbf69e9"
+    }
+  ]
+}

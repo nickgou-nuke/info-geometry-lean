@@ -1,0 +1,174 @@
+name: Fourier Dirac phase bridges (scoped)
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Geometry/AssociativeGaugeConnection.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Clifford/LorentzianBivectorSignatureBridge.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/CliffordDirac/Defect.lean'
+      - 'lean/InfoGeometry/Geometry/CliffordConnectionCompatibility.lean'
+      - 'lean/InfoGeometry/Algebra/AlternativeDerivations.lean'
+      - 'lean/InfoGeometry/Algebra/ZornVectorMatrix.lean'
+      - 'lean/InfoGeometry/Algebra/ZornDerivationBridge.lean'
+      - 'lean/InfoGeometry/Algebra/ZornLeftGrading.lean'
+      - 'lean/InfoGeometry/Algebra/ZornLeftParity.lean'
+      - 'lean/InfoGeometry/Algebra/ZornLeftMajorana.lean'
+      - 'lean/InfoGeometry/Algebra/ZornCommonFlipBoundary.lean'
+      - 'lean/InfoGeometry/GrandUnification/ArchetypeDictionary.lean'
+      - 'lean/InfoGeometry/Krein/KreinSpace.lean'
+      - 'lean/InfoGeometry/Cartan/Involution.lean'
+      - 'lean/InfoGeometry/Krein/InvolutiveSelfDualCarrier.lean'
+      - 'lean/InfoGeometry/Krein/DoubledSpace.lean'
+      - 'lean/InfoGeometry/Krein/InternalPhaseGram.lean'
+      - 'lean/InfoGeometry/Krein/HilbertBridge.lean'
+      - 'lean/InfoGeometry/Krein/DoubledAdjoint.lean'
+      - 'lean/InfoGeometry/Krein/PhaseLinearObservableCommutator.lean'
+      - 'lean/InfoGeometry/Canonical/PhaseObservableUncertainty.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/ChiralPolarization.lean'
+      - 'lean/InfoGeometry/Geometry/KreinIsotropicCone.lean'
+      - 'lean/InfoGeometry/Meta/OwnerTarget.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/DrazinRepresentedSplit.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/KreinIsotropicCone.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/TomitaCartanSplit.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/ChiralProjectorFromInvolution.lean'
+      - 'lean/InfoGeometry/Core/IdempotencyDefect.lean'
+      - 'lean/InfoGeometry/Core/PeirceDecomposition.lean'
+      - 'lean/InfoGeometry/QuantumContext/MassAsCommutantCoupling.lean'
+      - 'lean/InfoGeometry/Algebra/IdempotentCornerCommutant.lean'
+      - 'lean/InfoGeometry/CliffordWeyl/ChiralIdeals.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/EnergySignInvolution.lean'
+      - 'lean/InfoGeometry/Physics/TwoSectorSpectralOscillation.lean'
+      - 'lean/InfoGeometry/Clifford/DiracPauliGamma.lean'
+      - 'lean/InfoGeometry/Physics/DiracRestChiralTwoSectorBridge.lean'
+      - 'lean/InfoGeometry/Physics/DiracEnergyOddPart.lean'
+      - 'lean/InfoGeometry/Physics/DiracGroupVelocityBridge.lean'
+      - 'lean/InfoGeometry/Canonical/OperatorialUncertainty.lean'
+      - 'tools/quality/check_clifford_dirac.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/build_lock.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/fourier-dirac-phase.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fourier-dirac-phase-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  FOURIER_DIRAC_TARGETS: >-
+    InfoGeometry.Geometry.CliffordConnectionCompatibility
+    InfoGeometry.Algebra.ZornCommonFlipBoundary
+    InfoGeometry.Krein.InternalPhaseGram
+    InfoGeometry.Krein.PhaseLinearObservableCommutator
+    InfoGeometry.Canonical.PhaseObservableUncertainty
+    InfoGeometry.Physics.DiracGroupVelocityBridge
+
+jobs:
+  kernel-new-owners:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Fetch the exact public source without traversing external submodules
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+          SOURCE_REPOSITORY: ${{ github.repository }}
+        run: |
+          git init project
+          git -C project remote add origin "https://github.com/${SOURCE_REPOSITORY}.git"
+          git -C project fetch --no-recurse-submodules --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          test "$(git -C project rev-parse HEAD)" = "$SOURCE_REV"
+      - name: Read exact Mathlib pin
+        id: pins
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          manifest = json.loads(Path('project/lake-manifest.json').read_text())
+          revision = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'mathlib={revision}\n')
+          PY
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: ${{ steps.pins.outputs.mathlib }}
+          path: mathlib
+          persist-credentials: false
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            mathlib/.lake
+          key: fourier-dirac-phase-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Fetch exact native import cache under the shared lock
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os, subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('project').resolve()))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          targets = os.environ['FOURIER_DIRAC_TARGETS'].split()
+          _, _, native = closure(Path('project'), targets)
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'fourier-dirac-phase-cache') as lock:
+              subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
+                  cwd='mathlib', check=True, pass_fds=(lock.fileno(),))
+          PY
+      - name: Check the six new owners, complete source closure and every owned declaration
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os, subprocess
+          targets = os.environ['FOURIER_DIRAC_TARGETS'].split()
+          command = ['python3', 'tools/quality/check_clifford_dirac.py',
+              '--mathlib-root', '../mathlib', '--output', '../fourier-dirac-report']
+          for target in targets:
+              command.extend(['--target', target])
+          subprocess.run(command, check=True)
+          PY
+      - name: Check changed proof sources for placeholders and vacuity
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os, subprocess
+          targets = os.environ['FOURIER_DIRAC_TARGETS'].split()
+          targets.append('InfoGeometry.Canonical.OperatorialUncertainty')
+          files = ['lean/' + name.replace('.', '/') + '.lean' for name in targets]
+          for path in files:
+              subprocess.run(['python3', 'tools/quality/placeholder_audit.py',
+                  '--root', path, '--strict'], check=True)
+          subprocess.run(['python3', 'tools/quality/semantic_vacuity_gate.py',
+              *files, '--fail-on', 'warning'], check=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fourier-dirac-phase-kernel-evidence
+          path: |
+            fourier-dirac-report/report.json
+            fourier-dirac-report/evidence-sha256.json
+            fourier-dirac-report/environment.json
+            fourier-dirac-report/src/CliffordDiracAudit.lean
+            fourier-dirac-report/*.log
+          if-no-files-found: warn

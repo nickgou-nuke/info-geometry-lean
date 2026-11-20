@@ -1,0 +1,213 @@
+{
+  "schema": "info_geometry.peirce_roundtrip_verification.v1",
+  "source_base": "08c34e03f610b452e03422037949196dc7d92d6d",
+  "reviewed_at_utc": "2026-11-16T14:33:58.992337+00:00",
+  "disposition": "accepted_limited_scope",
+  "scope": "Four owner modules and their exact project-source import closure; no whole-repository certificate",
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "mathlib_revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "targets": [
+    "InfoGeometry.Algebra.NonCommutativeIsometry",
+    "InfoGeometry.Categorical.PartialIsometryGroupoid",
+    "InfoGeometry.OperatorAlgebra.PeirceRoundTripCounterexamples",
+    "InfoGeometry.OperatorAlgebra.PartialIsometryCounterexamples"
+  ],
+  "compilation": {
+    "status": "passed",
+    "module_count": 10,
+    "initial_run_fresh_module_count": 10,
+    "initial_run_no_incremental_reuse": true,
+    "final_recompiled": [
+      "InfoGeometry.Categorical.PartialIsometryGroupoid"
+    ],
+    "final_reused_count": 9,
+    "all_returncodes_zero": true,
+    "reuse_reconciled_with_initial_artifacts": {
+      "InfoGeometry.Algebra.FiniteSpinAlgebra": true,
+      "InfoGeometry.Algebra.NonCommutativeIsometry": true,
+      "InfoGeometry.Core.IdempotencyDefect": true,
+      "InfoGeometry.Core.PeirceDecomposition": true,
+      "InfoGeometry.Core.PeirceGrading": true,
+      "InfoGeometry.Core.PeirceStarCharges": true,
+      "InfoGeometry.Core.PeirceCoupledCorners": true,
+      "InfoGeometry.OperatorAlgebra.PeirceRoundTripCounterexamples": true,
+      "InfoGeometry.OperatorAlgebra.PartialIsometryCounterexamples": true
+    },
+    "owner_warnings": {
+      "InfoGeometry.Algebra.NonCommutativeIsometry": 0,
+      "InfoGeometry.Categorical.PartialIsometryGroupoid": 0,
+      "InfoGeometry.OperatorAlgebra.PeirceRoundTripCounterexamples": 0,
+      "InfoGeometry.OperatorAlgebra.PartialIsometryCounterexamples": 0
+    },
+    "inherited_warnings": {
+      "InfoGeometry.Core.PeirceDecomposition": 1
+    },
+    "inherited_warning_explanation": "Core.PeirceDecomposition:192 unnecessarySeqFocus; unchanged source."
+  },
+  "axiom_audit": {
+    "required": true,
+    "declaration_counts": {
+      "InfoGeometry.Algebra.NonCommutativeIsometry": 20,
+      "InfoGeometry.Categorical.PartialIsometryGroupoid": 56,
+      "InfoGeometry.OperatorAlgebra.PeirceRoundTripCounterexamples": 28,
+      "InfoGeometry.OperatorAlgebra.PartialIsometryCounterexamples": 20
+    },
+    "total_owned_declarations": 124,
+    "initial_total": 120,
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "forbidden_axioms": [],
+    "generated_audit_exact": true,
+    "generated_audit_sha256": "23b7a30482ba16b9351220996448ed0182fc690f70f892d96c92d024eb232c55",
+    "axioms_log_sha256": "128e9123efe84533b457e60778bd4542d75bfe3f4457825fe114c05677efaa23"
+  },
+  "source_gates": {
+    "all_passed": true,
+    "placeholder_summaries": {
+      "placeholder-1": {
+        "module_count": 1,
+        "scanned_count": 1,
+        "finding_count": 2,
+        "hard_count": 0,
+        "soft_count": 2,
+        "advisory_count": 0,
+        "provenance": {
+          "hard_failures": 0,
+          "soft_findings": 2,
+          "advisory_findings": 0
+        }
+      },
+      "placeholder-2": {
+        "module_count": 0,
+        "scanned_count": 1,
+        "finding_count": 0,
+        "hard_count": 0,
+        "soft_count": 0,
+        "advisory_count": 0,
+        "provenance": {
+          "hard_failures": 0,
+          "soft_findings": 0,
+          "advisory_findings": 0
+        }
+      },
+      "placeholder-3": {
+        "module_count": 0,
+        "scanned_count": 1,
+        "finding_count": 0,
+        "hard_count": 0,
+        "soft_count": 0,
+        "advisory_count": 0,
+        "provenance": {
+          "hard_failures": 0,
+          "soft_findings": 0,
+          "advisory_findings": 0
+        }
+      },
+      "placeholder-4": {
+        "module_count": 0,
+        "scanned_count": 1,
+        "finding_count": 0,
+        "hard_count": 0,
+        "soft_count": 0,
+        "advisory_count": 0,
+        "provenance": {
+          "hard_failures": 0,
+          "soft_findings": 0,
+          "advisory_findings": 0
+        }
+      }
+    },
+    "opengauss": {
+      "violations": {},
+      "quarantined_packets": []
+    },
+    "semantic": {
+      "exit_code": 0,
+      "scope_exact": true,
+      "coverage_complete": true,
+      "files_scanned": 4,
+      "severity_counts": {
+        "warning": 8
+      },
+      "fail_on": "error"
+    }
+  },
+  "source_sha256": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+    "InfoGeometry.Algebra.NonCommutativeIsometry": "8e17b334e46feb2758a3ef0aaf73c35de16bdc1d536c011053c922bfda4396ba",
+    "InfoGeometry.Categorical.PartialIsometryGroupoid": "34a5845f9907cb74c8d206bcd362a2750083cada9f416d0faf9645a066cb98c8",
+    "InfoGeometry.Core.IdempotencyDefect": "2d7b8fa580abe148fc70a39f8e1831b5505fb7f6a3920f3a79a0ba35bfee5590",
+    "InfoGeometry.Core.PeirceDecomposition": "b2426391a1841cbdb35bdef72138b5ab1553508c82c22ea930aa23f164de9bd9",
+    "InfoGeometry.Core.PeirceGrading": "f6fe99208f8d0947ff9f99b62625ad7a21a99b9a4f62908824ddb5c4c3a1b11c",
+    "InfoGeometry.Core.PeirceStarCharges": "dd628e051dc312c70fb503e534e0681c8669ad2ad447313fb40bccb84f2a53ea",
+    "InfoGeometry.Core.PeirceCoupledCorners": "e6b39c4cfbb3f875337acdd89fd6e5c2294f344db8bf9decfbfdfc2f40a4052f",
+    "InfoGeometry.OperatorAlgebra.PeirceRoundTripCounterexamples": "8ab41280314c28874bf77f5ea146301f32ca0a80e4f4e46341fedd70bc209d2a",
+    "InfoGeometry.OperatorAlgebra.PartialIsometryCounterexamples": "3a5454d82df1da090a1380a0833833a85847256769ed5b77c0f140e5eb430ee2"
+  },
+  "validation_helper_sha256": {
+    "tools/quality/check_clifford_dirac.py": "fcf6fbb9845e0ee2a85bdb3778c5fe74345a9ae7a2e97e871d0a89d3e98e7db0",
+    "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+    "tools/quality/reviewed_audit_source.py": "a976c910f5efb4611b1626d714e3197310d92648ffae56513e94a49ae5f0f206",
+    "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df"
+  },
+  "independent_reconciliation": {
+    "all_exact": true,
+    "artifact_count": 10,
+    "artifact_hashes_exact": true,
+    "finalized_evidence_manifest_exact": true,
+    "pins_exact": true,
+    "mathlib_tracked_sources_clean": true,
+    "intake_exact": true
+  },
+  "semantic_review": {
+    "operator_mathematics": "passed",
+    "carrier_order_and_hypotheses": "passed",
+    "groupoid_actual_construction": "passed",
+    "matrix_countermodels": "passed",
+    "contract_workflow_consistency": "passed",
+    "canonical_model": "unitProjection is native IsStarProjection 1; unitArrowInhabited uses Arrow.identity; unitProjection_id_ne_zero requires Nontrivial A. Arbitrary hom-spaces remain potentially empty.",
+    "initial_open_gauss_finding": "Resolved with the canonical full-support model; checker unmodified.",
+    "placeholder_soft_findings": [
+      "Existing definitional commutator/source-range equality.",
+      "New adjoint transport proved by congrArg star plus normalization."
+    ],
+    "semantic_warnings": "Three necessary Arrow law fields and five transparent definitional/projection lemmas; no assumed output theorem or proof hole."
+  },
+  "reproduce": {
+    "focused_helper": "tools/quality/check_clifford_dirac.py",
+    "required_arguments": [
+      "--mathlib-root <checkout-at-pinned-revision>",
+      "--lean <Lean-4.34.1-executable>",
+      "--output <evidence-directory>",
+      "--target InfoGeometry.Algebra.NonCommutativeIsometry",
+      "--target InfoGeometry.Categorical.PartialIsometryGroupoid",
+      "--target InfoGeometry.OperatorAlgebra.PeirceRoundTripCounterexamples",
+      "--target InfoGeometry.OperatorAlgebra.PartialIsometryCounterexamples"
+    ],
+    "strict_source_checks": [
+      "tools/quality/placeholder_audit.py --strict --root <owner>",
+      "tools/infra/opengauss_screener.py --strict <all-four-owners>",
+      "tools/quality/semantic_vacuity_gate.py <all-four-owners> --fail-on error"
+    ],
+    "ci_workflow": ".github/workflows/peirce-roundtrip.yml"
+  },
+  "root_validation": {
+    "locked_lake_command": "python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Algebra.NonCommutativeIsometry",
+    "locked_lake_exit_code": 1,
+    "locked_lake_failure": "HomotopyHypothesis package directory not found",
+    "path_preflight_exit_code": 1,
+    "missing_packages": [
+      "HomotopyHypothesis",
+      "Atlas",
+      "GIFT"
+    ],
+    "gift_pinned_commit": "e6f3c3ac2140c2324fb2ae029c32233e73aa5e92",
+    "pins_and_root_gates_unchanged": true,
+    "root_build_passed": false,
+    "scope_check_is_publication_exception": false
+  },
+  "count_note": "124 counts all owned declarations, including existing and generated declarations; it is not a count of new theorems."
+}

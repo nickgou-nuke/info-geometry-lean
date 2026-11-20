@@ -5,6 +5,8 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import Mathlib.Basic.Real.Star
+import Mathlib.Data.Matrix.Basis
+import Mathlib.Algebra.Ring.Commute
 import Mathlib.LinearAlgebra.Matrix.BilinearForm
 import Mathlib.LinearAlgebra.Matrix.ConjTranspose
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
@@ -179,5 +181,83 @@ theorem weightedAdjoint_skew_part_unique (w : (Matrix n n ℝ)ˣ)
   have heq : S + A - (S + -A) = A + A := by abel
   rw [heq, ← two_smul ℝ A, smul_smul]
   norm_num
+
+/-- On a full real matrix algebra, equality of weighted adjoints determines
+the metric weight up to a scalar multiple. The statement also covers the
+zero-dimensional matrix algebra. -/
+theorem weightedAdjoint_eq_iff_scalar_multiple
+    (w z : (Matrix n n ℝ)ˣ) :
+    adjoint w = adjoint z ↔
+      ∃ c : ℝ, (↑w : Matrix n n ℝ) = c • (↑z : Matrix n n ℝ) := by
+  constructor
+  · intro h
+    have hcomm := (adjoint_eq_iff_relative_central w z).mp h
+    obtain ⟨c, hc⟩ := Matrix.mem_range_scalar_of_commute_single
+      (fun i j _ => hcomm (Matrix.single i j 1))
+    refine ⟨c, ?_⟩
+    calc
+      (↑w : Matrix n n ℝ) =
+          ((↑w : Matrix n n ℝ) * (↑z⁻¹ : Matrix n n ℝ)) * ↑z := by
+        simp [mul_assoc]
+      _ = Matrix.scalar n c * ↑z := by rw [← hc]
+      _ = c • (↑z : Matrix n n ℝ) := by
+        rw [Matrix.scalar_apply, ← Matrix.smul_eq_diagonal_mul]
+  · rintro ⟨c, hc⟩
+    apply (adjoint_eq_iff_relative_central w z).mpr
+    intro x
+    change x * ((↑w : Matrix n n ℝ) * (↑z⁻¹ : Matrix n n ℝ)) =
+      ((↑w : Matrix n n ℝ) * (↑z⁻¹ : Matrix n n ℝ)) * x
+    simp [hc]
+
+/-- In positive dimension, an invertible weight cannot be the zero multiple
+of another weight. No positivity or symmetry assumption is needed. -/
+theorem weightedAdjoint_eq_iff_nonzero_scalar_multiple [Nonempty n]
+    (w z : (Matrix n n ℝ)ˣ) :
+    adjoint w = adjoint z ↔
+      ∃ c : ℝ, c ≠ 0 ∧ (↑w : Matrix n n ℝ) = c • (↑z : Matrix n n ℝ) := by
+  constructor
+  · intro h
+    obtain ⟨c, hc⟩ := (weightedAdjoint_eq_iff_scalar_multiple w z).mp h
+    refine ⟨c, ?_, hc⟩
+    intro hzero
+    rw [hzero, zero_smul] at hc
+    exact w.ne_zero hc
+  · rintro ⟨c, _, hc⟩
+    exact (weightedAdjoint_eq_iff_scalar_multiple w z).mpr ⟨c, hc⟩
+
+/-- Normalizing both real metric weights to square to one leaves exactly a
+global sign ambiguity. Symmetry is not needed for this recovery statement;
+the existing involutivity theorem uses it as a sufficient hypothesis. -/
+theorem weightedAdjoint_eq_iff_eq_or_neg [Nonempty n]
+    (w z : (Matrix n n ℝ)ˣ)
+    (hw : (↑w : Matrix n n ℝ) * (↑w : Matrix n n ℝ) = 1)
+    (hz : (↑z : Matrix n n ℝ) * (↑z : Matrix n n ℝ) = 1) :
+    adjoint w = adjoint z ↔
+      (↑w : Matrix n n ℝ) = ↑z ∨ (↑w : Matrix n n ℝ) = -(↑z : Matrix n n ℝ) := by
+  constructor
+  · intro h
+    obtain ⟨c, hc⟩ := (weightedAdjoint_eq_iff_scalar_multiple w z).mp h
+    have hs : (c * c) • (1 : Matrix n n ℝ) = 1 := by
+      calc
+        (c * c) • (1 : Matrix n n ℝ) =
+            (c • (↑z : Matrix n n ℝ)) * (c • (↑z : Matrix n n ℝ)) := by
+          simp [smul_smul, hz]
+        _ = (↑w : Matrix n n ℝ) * (↑w : Matrix n n ℝ) := by rw [← hc]
+        _ = 1 := hw
+    obtain ⟨i⟩ := ‹Nonempty n›
+    have hcc : c * c = 1 := by
+      have hentry := congrArg (fun M : Matrix n n ℝ => M i i) hs
+      simpa only [Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul, mul_one]
+        using hentry
+    rcases mul_self_eq_one_iff.mp hcc with hpos | hneg
+    · left
+      simpa [hpos] using hc
+    · right
+      simpa [hneg] using hc
+  · intro h
+    apply (weightedAdjoint_eq_iff_scalar_multiple w z).mpr
+    rcases h with hpos | hneg
+    · exact ⟨1, by simpa using hpos⟩
+    · exact ⟨-1, by simpa using hneg⟩
 
 end InfoGeometry.OperatorAlgebra.RealMetricAdjoint

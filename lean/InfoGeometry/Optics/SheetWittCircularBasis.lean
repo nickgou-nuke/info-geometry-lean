@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution
@@ -194,5 +199,37 @@ theorem jointProjectors_pairwise_disjoint
       (circularInvolution S).Pleft_add_Pright]; simp
 
 end CommutingInvolutions
+
+end InfoGeometry.Optics.SheetWittCircularBasis
+
+namespace InfoGeometry.Optics.SheetWittCircularBasis
+
+variable {Op : Type*} [Ring Op] [Algebra ℝ Op]
+
+/-- Commuting operators have commuting affine half-projectors; the ambient
+algebra need not be commutative, and no involution equations are needed here. -/
+theorem halfProjectors_commute_of_commute (h k : Op) (hc : h * k = k * h)
+    (ε σ : Bool) :
+    choose ε ((1 / 2 : ℝ) • (1 + h)) ((1 / 2 : ℝ) • (1 - h)) *
+        choose σ ((1 / 2 : ℝ) • (1 + k)) ((1 / 2 : ℝ) • (1 - k)) =
+      choose σ ((1 / 2 : ℝ) • (1 + k)) ((1 / 2 : ℝ) • (1 - k)) *
+        choose ε ((1 / 2 : ℝ) • (1 + h)) ((1 / 2 : ℝ) • (1 - h)) := by
+  have choose_true (p q : Op) : choose true p q = p := ite_eq_left rfl
+  have choose_false (p q : Op) : choose false p q = q := ite_eq_right Bool.false_ne_true
+  cases ε <;> cases σ <;> simp only [choose_true, choose_false] <;>
+    rw [smul_mul_smul_comm, smul_mul_smul_comm] <;> congr 1 <;>
+    simp only [add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one, hc] <;> abel
+
+/-- Construct the existing joint-projector interface from two commuting
+involutions, deriving its half-projector commutation field. -/
+def CommutingInvolutions.ofCommute (h k : Op)
+    (hh : h * h = 1) (hk : k * k = 1) (hc : h * k = k * h) :
+    CommutingInvolutions Op where
+  hyperbolic := h
+  circular := k
+  hyperbolic_sq := hh
+  circular_sq := hk
+  commute := hc
+  projector_commute := halfProjectors_commute_of_commute h k hc
 
 end InfoGeometry.Optics.SheetWittCircularBasis

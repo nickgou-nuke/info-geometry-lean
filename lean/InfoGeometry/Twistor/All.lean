@@ -131,3 +131,4 @@ import InfoGeometry.Twistor.PerjesNullLineCorrespondence
 import InfoGeometry.Twistor.HomogeneousTwistorCech
 import InfoGeometry.Twistor.PenroseContourTransform
 import InfoGeometry.Twistor.KleinTwistorPinTransport
+import InfoGeometry.Twistor.NonincidentLogPairing

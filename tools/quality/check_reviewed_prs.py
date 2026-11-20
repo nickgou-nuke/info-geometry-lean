@@ -38,7 +38,41 @@ def run_logged(cmd, cwd, log, env=None, pass_fds=()):
     return result.stdout
 
 
-def closure(repo, targets):
+SOURCE_FINGERPRINT_VERSION = 2
+
+
+def repository_source_path(repo: Path, module: str, *,
+                           allow_root_proofs: bool = False) -> Path:
+    """Resolve one validated module within its explicitly permitted source root.
+
+    Default lookup remains ``lean/<module>.lean``. Opting in maps ``proofs.*``
+    to the root proofs library instead; no other repository-root fallback is
+    allowed. Resolved symlinks must also remain inside the selected directory.
+    The returned path need not exist, so callers can classify native imports.
+    """
+    validate_targets([module])
+    repo = Path(repo).resolve()
+    if allow_root_proofs and module.startswith('proofs.'):
+        source_root = repo / 'proofs'
+        relative = module[len('proofs.'):]
+    else:
+        source_root = repo / 'lean'
+        relative = module
+    path = (source_root / (relative.replace('.', '/') + '.lean')).resolve()
+    if not path.is_relative_to(source_root):
+        raise ValueError(f'Repository source escapes permitted root: {module}')
+    return path
+
+
+def repository_source_fingerprint(module, source_path, source_sha256, toolchain,
+                                  mathlib_revision, dependency_fingerprints):
+    """Bind cache identity to source origin as well as exact bytes and imports."""
+    payload = [SOURCE_FINGERPRINT_VERSION, module, source_path, source_sha256,
+               toolchain, mathlib_revision, dependency_fingerprints]
+    return hashlib.sha256(json.dumps(payload).encode()).hexdigest()
+
+
+def closure(repo, targets, *, allow_root_proofs: bool = False):
     ordered, dependencies, native, active = [], {}, set(), set()
 
     def visit(module):
@@ -47,13 +81,13 @@ def closure(repo, targets):
         if module in dependencies:
             return
         active.add(module)
-        path = repo / 'lean' / (module.replace('.', '/') + '.lean')
+        path = repository_source_path(repo, module, allow_root_proofs=allow_root_proofs)
         deps = []
         for line in path.read_text().splitlines():
             if not line.startswith('import '):
                 continue
             for dep in line[7:].split('--', 1)[0].split():
-                source = repo / 'lean' / (dep.replace('.', '/') + '.lean')
+                source = repository_source_path(repo, dep, allow_root_proofs=allow_root_proofs)
                 if source.is_file():
                     visit(dep)
                     deps.append(dep)
@@ -112,15 +146,17 @@ def main():
         if (mathlib / 'lean-toolchain').read_text() != toolchain:
             raise RuntimeError('Mathlib and repository Lean versions differ')
         report.update(mathlib=pinned, toolchain=toolchain.strip())
-        ordered, dependencies, native = closure(repo, targets)
-        fingerprints, source_hashes = {}, {}
+        ordered, dependencies, native = closure(repo, targets, allow_root_proofs=True)
+        fingerprints, source_hashes, source_paths = {}, {}, {}
         for module in ordered:
-            path = repo / 'lean' / (module.replace('.', '/') + '.lean')
+            path = repository_source_path(repo, module, allow_root_proofs=True)
+            source_paths[module] = path.relative_to(repo).as_posix()
             source_hashes[module] = hashlib.sha256(path.read_bytes()).hexdigest()
-            payload = [1, module, toolchain, pinned, source_hashes[module],
-                       [fingerprints[d] for d in dependencies[module]]]
-            fingerprints[module] = hashlib.sha256(json.dumps(payload).encode()).hexdigest()
-        report['source_sha256'] = source_hashes
+            fingerprints[module] = repository_source_fingerprint(
+                module, source_paths[module], source_hashes[module], toolchain, pinned,
+                [fingerprints[d] for d in dependencies[module]])
+        report.update(source_sha256=source_hashes, source_paths=source_paths,
+                      fingerprints=fingerprints, fingerprint_version=SOURCE_FINGERPRINT_VERSION)
         source, lib = output / 'src', output / 'lib'
         source.mkdir(exist_ok=True)
         lib.mkdir(exist_ok=True)
@@ -128,7 +164,10 @@ def main():
         for module in ordered:
             rel = Path(module.replace('.', '/') + '.lean')
             (source / rel).parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(repo / 'lean' / rel, source / rel)
+            original = repository_source_path(repo, module, allow_root_proofs=True)
+            shutil.copy2(original, source / rel)
+            if hashlib.sha256((source / rel).read_bytes()).hexdigest() != source_hashes[module]:
+                raise RuntimeError('Source changed while copying: ' + module)
         with open('/tmp/info-geometry-build.lock', 'a') as lock:
             fcntl.flock(lock, fcntl.LOCK_EX)
             pass_fds = (lock.fileno(),)
@@ -212,10 +251,18 @@ def main():
                     raise RuntimeError(f'Missing fresh command execution: {module}')
             # The existing explicit proof probe is also checked from its exact source.
             probe = source / 'PolarizedShearSpinAudit.lean'
-            shutil.copy2(repo / 'proofs/PolarizedShearSpinAudit.lean', probe)
+            probe_source = repository_source_path(
+                repo, 'proofs.PolarizedShearSpinAudit', allow_root_proofs=True)
+            report['explicit_probe_source_path'] = probe_source.relative_to(repo).as_posix()
+            shutil.copy2(probe_source, probe)
             run_logged(['lean', str(probe)], source, output / 'polarized-probe.log', env, pass_fds=pass_fds)
             check_command_sources(repo / 'lean', targets, command_only)
             check_command_sources(source, targets, command_only)
+            for module, expected in source_hashes.items():
+                original = repository_source_path(repo, module, allow_root_proofs=True)
+                if (original.relative_to(repo).as_posix() != source_paths[module] or
+                        hashlib.sha256(original.read_bytes()).hexdigest() != expected):
+                    raise RuntimeError('Source changed during verification: ' + module)
             report.update(status='passed', audited_declarations=sum(counts.values()), module_counts=counts,
                           command_only_modules=list(command_only))
             print(f'Passed {len(ordered)} modules; audited {sum(counts.values())} declarations', flush=True)

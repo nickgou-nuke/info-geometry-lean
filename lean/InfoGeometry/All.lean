@@ -34,6 +34,7 @@ import InfoGeometry.OperatorAlgebra.MaxRelativeEntropy
 import InfoGeometry.Quantum.PositiveEffectOrder
 import InfoGeometry.Quantum.MaxRelativeEntropy
 import InfoGeometry.Quantum.MaxRelativeEntropyQubit
+import InfoGeometry.Probability.AitchisonContingencyAudit
 import InfoGeometry.OperatorAlgebra.IsometryCornerLocalization
 import InfoGeometry.Clifford.WeylFrameMasks
 import InfoGeometry.Analysis.MetricPorosity

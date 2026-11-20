@@ -1,0 +1,50 @@
+{
+  "schema": "spectral-qa-acceptance-v1",
+  "status": "accepted_limited_scope",
+  "reviewer_role": "Independent acceptance reviewer (QA-A), separate from authors and A-A",
+  "native_source_owners": 15,
+  "native_declarations_audited": 555,
+  "native_axiom_union": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "native_status": "PASS",
+  "umbrella_status": "PASS",
+  "strict_source_screens_status": "PASS",
+  "strict_source_files": 16,
+  "strict_source_findings": 0,
+  "numerical_status": "PASS",
+  "numerical_jobs": 3,
+  "lean_linter_warnings": 44,
+  "root_package_status": "BLOCKED",
+  "root_target_exit_code": 1,
+  "root_blocker": "Missing path dependency external_refs/homotopy-hypothesis-lean4 before target elaboration.",
+  "source_sha256": {
+    "InfoGeometry.Probability.BipartiteLogCoupling": "3a87398d7962227583a6645246a3d2d61edbb0781f5454b7d0d04679872316c3",
+    "InfoGeometry.Spectrometry.TableBalancing": "ef3c08b3e08c6463f920e929de97da616ad8690c4b32b8efa372411975b0c431",
+    "InfoGeometry.Spectrometry.LogLeastSquares": "28b6966738ee83b6d3f8c8b8d0c7faff869498d6d3cf61d97adb179fbdfce5c2",
+    "InfoGeometry.Spectrometry.MatrixLogCentering": "194cb4ee64d77dcf6588b5752ba3c9bef639a2445b2cfb27a9aa3926629a9597",
+    "InfoGeometry.Spectrometry.ColumnFirstSinkhornCovariance": "533283e4abf49a382e81cdee22855836dc632cd2fa3f39522e43c266f260768b",
+    "InfoGeometry.Spectrometry.GlobalHyperbolicBounds": "7755294286bdb1b10355b67ae52ad5e67f877d28265a8a3752d4f9df07660780",
+    "InfoGeometry.Spectrometry.ExactTwoLineRoot": "77e4bfd637e60d1b6f0575413fefe0976129059ce2337c0cdbda158b6f58f9f0",
+    "InfoGeometry.Spectrometry.InteriorLogSlope": "764cc193bfc6e5480a818d4d9a177b9544c9cb92b4e3267b705d47e2ee8c9799",
+    "InfoGeometry.Spectrometry.InteriorStepAndRatioSignatures": "78e2a1b82efa8d4b9be7a67c96d8f9c5e2f4bd4f08d84c827833a2314c5e70f0",
+    "InfoGeometry.Spectrometry.LogInteractionAndGauge": "129596877a9992cec97ad6872c8fde819cb16bfa19bc38b0ec00f55d929ec932",
+    "InfoGeometry.Spectrometry.ProjectionEnergy": "48fe3174717de80a6bdc0be532e19e11c082a24acad16f8aad83a6872f1463c2",
+    "InfoGeometry.Spectrometry.SpectralOrientation": "651cce34a460ebd40db66a3d7316cdfc3833d69af0176439b40fb24598b50e46",
+    "InfoGeometry.Spectrometry.SpectralRestriction": "9ed1a42c0d4268868eb3b57922259911e27540a492913434a6a36f0141c30454",
+    "InfoGeometry.Spectrometry.TwoLineBalancedConstruction": "d1f342e56bc669d8633a5a9c032b1b0e087f226e47df8a0b1ae6a05feb911d5a",
+    "InfoGeometry.Spectrometry.TwoLineNonasymptoticBounds": "116da59fef026f998194c2a4242aa0202e7cf0534e2aefe67ad4bcd4e4d4bda1"
+  },
+  "pins_unchanged": true,
+  "scope": "Focused native source closure, all-declaration audit and numerical reproduction; not whole-repository or root-package acceptance.",
+  "verification_receipts_sha256": {
+    "lean_verification.json": "93bf4575339a87414e422129da19a453a62b92099bbc27bd1ac71f411c0806df",
+    "lean_axioms.log": "44f510d3711eac0996c4a01f59a476c2b32fcaaa7aa0f7bd9938e1ab3246812c",
+    "umbrella_execution.json": "609b0bd69dc7727ee5dc773e49792476f3ab64141c58bdc005c8d23c8ba33bf6",
+    "source_screen_executions.json": "4e7562dae8e334c168ddcb5908efb996d391146ceb178b5f14b16734d0d7a48d",
+    "numerical_verification.json": "fe6687670cd655bf0c30c08eed911a8706c172f7cb965a126973d157efec8355",
+    "root_lake_build_execution.json": "49ba3d1c09d1fffbc9c51c1c4495fe4df7faeb8f585301a5dc1345368dbd8c29"
+  }
+}

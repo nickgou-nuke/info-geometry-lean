@@ -1,0 +1,801 @@
+{
+  "source": {
+    "name": "source_intake_20261118.txt",
+    "sha256": "882b6799b2787041c86e07b36c7fe892ee1e7807756e05273227ac73b9411754"
+  },
+  "attachment": {
+    "name": "review_intake_20261119.txt",
+    "sha256": "67bb6ab5897af1a40fa6b5eff5936a82cc7d17d4020f55c7c77012d607d20b51"
+  },
+  "method": {
+    "certification": "exact Fraction arithmetic with outward rational lattice rounding; explicit analytic series tails; exact rational root signs",
+    "certification_scope": "Python interval certificate conditional on the documented series inequalities; not a Lean-checked proof or measurement uncertainty interval",
+    "lattice_decimal_places": 60,
+    "log_series_terms": 72,
+    "cosh_series_terms": 16,
+    "root_bisections": 160,
+    "log_series_tail": "2*t^(2K+1)/((2K+1)*(1-t^2)), t=(r-1)/(r+1), 1<=r<=2",
+    "cosh_series_tail": "first omitted positive term divided by 1 minus an upper bound on later term ratios",
+    "two_line_z": "z_j = (log(N352_j/N609_j) - mean log(N352/N609))/2; common exposure/decay column factors cancel exactly",
+    "centered_remainder_argument": "q(s)=logcosh(s)-s^2/2 is in [-a^4/12,0] for |s|<=a; center(q) has absolute value at most a^4/12. Centered linear term is -delta*z/2 because mean z=0.",
+    "energy_convention": "Frobenius squared norm of the two-row matrices: E_v=2||v||^2, E_h=2||h||^2, E_Z=2||z||^2"
+  },
+  "two_line_bounds": {
+    "n": 7,
+    "M": {
+      "decimal_lower": "0.009805831292052167684553344732595390182046594",
+      "decimal_upper": "0.009805831292052167684553344732595390182046595",
+      "display_midpoint_float": 0.009805831292052168,
+      "decimal_strings_are_outward_rounded": true
+    },
+    "mean_absolute_cubic_z": {
+      "decimal_lower": "0.000000218879157675391014923183561543758299194",
+      "decimal_upper": "0.000000218879157675391014923183561543758299195",
+      "display_midpoint_float": 2.18879157675391e-07,
+      "decimal_strings_are_outward_rounded": true
+    },
+    "k": {
+      "decimal_lower": "1.561622832180699378068682076438999160532839204",
+      "decimal_upper": "1.561622832180699378068682076438999160532839205",
+      "display_midpoint_float": 1.5616228321806993,
+      "decimal_strings_are_outward_rounded": true
+    },
+    "delta": {
+      "decimal_lower": "-0.000000045030707893471052067036278785778877287",
+      "decimal_upper": "-0.000000045030707893471052067036278785778877286",
+      "display_midpoint_float": -4.503070789347105e-08,
+      "decimal_strings_are_outward_rounded": true
+    },
+    "absolute_delta": {
+      "decimal_lower": "0.000000045030707893471052067036278785778877286",
+      "decimal_upper": "0.000000045030707893471052067036278785778877287",
+      "display_midpoint_float": 4.503070789347105e-08,
+      "decimal_strings_are_outward_rounded": true
+    },
+    "C3": {
+      "decimal_lower": "0.000000145975568787733442296171796538205903696",
+      "decimal_upper": "0.000000145975568787733442296171796538205903697",
+      "display_midpoint_float": 1.4597556878773345e-07,
+      "decimal_strings_are_outward_rounded": true
+    },
+    "Cmax": {
+      "decimal_lower": "0.000000628823869063913703268137635061022049352",
+      "decimal_upper": "0.000000628823869063913703268137635061022049353",
+      "display_midpoint_float": 6.288238690639137e-07,
+      "decimal_strings_are_outward_rounded": true
+    },
+    "root_certificate": {
+      "bisections": 160,
+      "lower_endpoint_equation_nonnegative": true,
+      "upper_endpoint_equation_nonpositive": true,
+      "equation": "sum_j rho_j/(rho_j+k) = n/2",
+      "arithmetic": "exact fractions"
+    },
+    "quadratic_remainder_upper_expressions": {
+      "using_certified_observed_root": {
+        "decimal_lower": "0.000000000991260060675565287242132767857323644",
+        "decimal_upper": "0.000000000991260060675565287242132767857323645",
+        "display_midpoint_float": 9.912600606755652e-10,
+        "decimal_strings_are_outward_rounded": true
+      },
+      "using_mean_absolute_cubic_bound_C3": {
+        "decimal_lower": "0.000000001486200061804235628511937582038268830",
+        "decimal_upper": "0.000000001486200061804235628511937582038268831",
+        "display_midpoint_float": 1.4862000618042356e-09,
+        "decimal_strings_are_outward_rounded": true
+      },
+      "using_maximum_only_cubic_bound_Cmax": {
+        "decimal_lower": "0.000000003853640429828631441371093695286209976",
+        "decimal_upper": "0.000000003853640429828631441371093695286209977",
+        "display_midpoint_float": 3.853640429828631e-09,
+        "decimal_strings_are_outward_rounded": true
+      }
+    },
+    "actual_max_absolute_quadratic_remainder": {
+      "decimal_lower": "0.000000000399153313983955109469306585308821734",
+      "decimal_upper": "0.000000000399153313983955109469306585308821735",
+      "display_midpoint_float": 3.991533139839551e-10,
+      "decimal_strings_are_outward_rounded": true
+    },
+    "old_binary64_max_remainder": 3.99153823674983e-10,
+    "9_9e_10_is_below_root_based_bound_expression": true,
+    "certified_short_decimal_upper_bounds": {
+      "delta_abs_le_4_503071e_8": {
+        "exact_upper_rational": "4503071/100000000000000",
+        "verified": true
+      },
+      "C3_le_1_459756e_7": {
+        "exact_upper_rational": "364939/2500000000000",
+        "verified": true
+      },
+      "Cmax_le_6_288239e_7": {
+        "exact_upper_rational": "6288239/10000000000000",
+        "verified": true
+      },
+      "root_remainder_bound_le_9_913e_10": {
+        "exact_upper_rational": "9913/10000000000000",
+        "verified": true
+      },
+      "C3_remainder_bound_le_1_486201e_9": {
+        "exact_upper_rational": "1486201/1000000000000000",
+        "verified": true
+      },
+      "Cmax_remainder_bound_le_3_853641e_9": {
+        "exact_upper_rational": "3853641/1000000000000000",
+        "verified": true
+      },
+      "actual_remainder_le_3_992e_10": {
+        "exact_upper_rational": "499/1250000000000",
+        "verified": true
+      }
+    },
+    "per_cartridge": [
+      {
+        "cartridge": 2,
+        "z": {
+          "decimal_lower": "0.003583491340397276076880475905833224187514579",
+          "decimal_upper": "0.003583491340397276076880475905833224187514580",
+          "display_midpoint_float": 0.003583491340397276,
+          "decimal_strings_are_outward_rounded": true
+        },
+        "exact_sample_log_correction": {
+          "decimal_lower": "-0.000008273534397763065653351353378899673225205",
+          "decimal_upper": "-0.000008273534397763065653351353378899673225204",
+          "display_midpoint_float": -8.273534397763066e-06,
+          "decimal_strings_are_outward_rounded": true
+        },
+        "quadratic_prediction": {
+          "decimal_lower": "-0.000008273751862689346172210678905151990675430",
+          "decimal_upper": "-0.000008273751862689346172210678905151990675429",
+          "display_midpoint_float": -8.273751862689346e-06,
+          "decimal_strings_are_outward_rounded": true
+        },
+        "quadratic_remainder": {
+          "decimal_lower": "0.000000000217464926280518859325526252317450225",
+          "decimal_upper": "0.000000000217464926280518859325526252317450226",
+          "display_midpoint_float": 2.1746492628051887e-10,
+          "decimal_strings_are_outward_rounded": true
+        }
+      },
+      {
+        "cartridge": 3,
+        "z": {
+          "decimal_lower": "0.009805831292052167684553344732595390182046594",
+          "decimal_upper": "0.009805831292052167684553344732595390182046595",
+          "display_midpoint_float": 0.009805831292052168,
+          "decimal_strings_are_outward_rounded": true
+        },
+        "exact_sample_log_correction": {
+          "decimal_lower": "0.000033382307554740278837136311579802993304697",
+          "decimal_upper": "0.000033382307554740278837136311579802993304698",
+          "display_midpoint_float": 3.338230755474028e-05,
+          "decimal_strings_are_outward_rounded": true
+        },
+        "quadratic_prediction": {
+          "decimal_lower": "0.000033382706708054262792245780886388302126431",
+          "decimal_upper": "0.000033382706708054262792245780886388302126432",
+          "display_midpoint_float": 3.3382706708054266e-05,
+          "decimal_strings_are_outward_rounded": true
+        },
+        "quadratic_remainder": {
+          "decimal_lower": "-0.000000000399153313983955109469306585308821735",
+          "decimal_upper": "-0.000000000399153313983955109469306585308821734",
+          "display_midpoint_float": -3.991533139839551e-10,
+          "decimal_strings_are_outward_rounded": true
+        }
+      },
+      {
+        "cartridge": 4,
+        "z": {
+          "decimal_lower": "-0.006895204737601570447925319235489464307797037",
+          "decimal_upper": "-0.006895204737601570447925319235489464307797036",
+          "display_midpoint_float": -0.00689520473760157,
+          "decimal_strings_are_outward_rounded": true
+        },
+        "exact_sample_log_correction": {
+          "decimal_lower": "0.000009077274142894503659760568563778085845038",
+          "decimal_upper": "0.000009077274142894503659760568563778085845039",
+          "display_midpoint_float": 9.077274142894503e-06,
+          "decimal_strings_are_outward_rounded": true
+        },
+        "quadratic_prediction": {
+          "decimal_lower": "0.000009077467230681091633474863847277931482817",
+          "decimal_upper": "0.000009077467230681091633474863847277931482818",
+          "display_midpoint_float": 9.077467230681092e-06,
+          "decimal_strings_are_outward_rounded": true
+        },
+        "quadratic_remainder": {
+          "decimal_lower": "-0.000000000193087786587973714295283499845637779",
+          "decimal_upper": "-0.000000000193087786587973714295283499845637778",
+          "display_midpoint_float": -1.930877865879737e-10,
+          "decimal_strings_are_outward_rounded": true
+        }
+      },
+      {
+        "cartridge": 5,
+        "z": {
+          "decimal_lower": "0.002382676922656287701612005192348489074133438",
+          "decimal_upper": "0.002382676922656287701612005192348489074133439",
+          "display_midpoint_float": 0.0023826769226562875,
+          "decimal_strings_are_outward_rounded": true
+        },
+        "exact_sample_log_correction": {
+          "decimal_lower": "-0.000011855680812812966722396271092621233726884",
+          "decimal_upper": "-0.000011855680812812966722396271092621233726883",
+          "display_midpoint_float": -1.1855680812812966e-05,
+          "decimal_strings_are_outward_rounded": true
+        },
+        "quadratic_prediction": {
+          "decimal_lower": "-0.000011855882297161060750341248925818275857056",
+          "decimal_upper": "-0.000011855882297161060750341248925818275857055",
+          "display_midpoint_float": -1.185588229716106e-05,
+          "decimal_strings_are_outward_rounded": true
+        },
+        "quadratic_remainder": {
+          "decimal_lower": "0.000000000201484348094027944977833197042130172",
+          "decimal_upper": "0.000000000201484348094027944977833197042130173",
+          "display_midpoint_float": 2.0148434809402793e-10,
+          "decimal_strings_are_outward_rounded": true
+        }
+      },
+      {
+        "cartridge": 6,
+        "z": {
+          "decimal_lower": "-0.004774062689965949460169928435449448292348256",
+          "decimal_upper": "-0.004774062689965949460169928435449448292348255",
+          "display_midpoint_float": -0.00477406268996595,
+          "decimal_strings_are_outward_rounded": true
+        },
+        "exact_sample_log_correction": {
+          "decimal_lower": "-0.000003298619925712017165672912549761408414522",
+          "decimal_upper": "-0.000003298619925712017165672912549761408414521",
+          "display_midpoint_float": -3.298619925712017e-06,
+          "decimal_strings_are_outward_rounded": true
+        },
+        "quadratic_prediction": {
+          "decimal_lower": "-0.000003298619672178020715156476546134131818327",
+          "decimal_upper": "-0.000003298619672178020715156476546134131818326",
+          "display_midpoint_float": -3.2986196721780208e-06,
+          "decimal_strings_are_outward_rounded": true
+        },
+        "quadratic_remainder": {
+          "decimal_lower": "-0.000000000000253533996450516436003627276596195",
+          "decimal_upper": "-0.000000000000253533996450516436003627276596194",
+          "display_midpoint_float": -2.535339964505164e-13,
+          "decimal_strings_are_outward_rounded": true
+        }
+      },
+      {
+        "cartridge": 7,
+        "z": {
+          "decimal_lower": "0.000428329699382187943671657892531392108999473",
+          "decimal_upper": "0.000428329699382187943671657892531392108999474",
+          "display_midpoint_float": 0.00042832969938218793,
+          "decimal_strings_are_outward_rounded": true
+        },
+        "exact_sample_log_correction": {
+          "decimal_lower": "-0.000014602563625698195220728267247454172451596",
+          "decimal_upper": "-0.000014602563625698195220728267247454172451595",
+          "display_midpoint_float": -1.4602563625698195e-05,
+          "decimal_strings_are_outward_rounded": true
+        },
+        "quadratic_prediction": {
+          "decimal_lower": "-0.000014602723790354061605932608677331845233767",
+          "decimal_upper": "-0.000014602723790354061605932608677331845233766",
+          "display_midpoint_float": -1.4602723790354062e-05,
+          "decimal_strings_are_outward_rounded": true
+        },
+        "quadratic_remainder": {
+          "decimal_lower": "0.000000000160164655866385204341429877672782170",
+          "decimal_upper": "0.000000000160164655866385204341429877672782171",
+          "display_midpoint_float": 1.601646558663852e-10,
+          "decimal_strings_are_outward_rounded": true
+        }
+      },
+      {
+        "cartridge": 8,
+        "z": {
+          "decimal_lower": "-0.004531061826920399498622236052369582952548795",
+          "decimal_upper": "-0.004531061826920399498622236052369582952548794",
+          "display_midpoint_float": -0.0045310618269204,
+          "decimal_strings_are_outward_rounded": true
+        },
+        "exact_sample_log_correction": {
+          "decimal_lower": "-0.000004429182935648537734748075874844591331532",
+          "decimal_upper": "-0.000004429182935648537734748075874844591331531",
+          "display_midpoint_float": -4.429182935648538e-06,
+          "decimal_strings_are_outward_rounded": true
+        },
+        "quadratic_prediction": {
+          "decimal_lower": "-0.000004429196316352865182079631679229990024671",
+          "decimal_upper": "-0.000004429196316352865182079631679229990024670",
+          "display_midpoint_float": -4.429196316352865e-06,
+          "decimal_strings_are_outward_rounded": true
+        },
+        "quadratic_remainder": {
+          "decimal_lower": "0.000000000013380704327447331555804385398693138",
+          "decimal_upper": "0.000000000013380704327447331555804385398693139",
+          "display_midpoint_float": 1.3380704327447332e-11,
+          "decimal_strings_are_outward_rounded": true
+        }
+      }
+    ]
+  },
+  "observed_spatial_energy": {
+    "common_column_squared_norm": {
+      "decimal_lower": "23.963553420143539190863612065940154615215725282",
+      "decimal_upper": "23.963553420143539190863612065940154615215725283",
+      "display_midpoint_float": 23.96355342014354,
+      "decimal_strings_are_outward_rounded": true
+    },
+    "common_spatial_residual_squared_norm": {
+      "decimal_lower": "0.028721364033419363601219694000359064377678220",
+      "decimal_upper": "0.028721364033419363601219694000359064377678221",
+      "display_midpoint_float": 0.028721364033419364,
+      "decimal_strings_are_outward_rounded": true
+    },
+    "interaction_squared_norm": {
+      "decimal_lower": "0.000411444794769133421894638674743613726234224",
+      "decimal_upper": "0.000411444794769133421894638674743613726234225",
+      "display_midpoint_float": 0.00041144479476913344,
+      "decimal_strings_are_outward_rounded": true
+    },
+    "h_fraction_among_h_and_Z": {
+      "decimal_lower": "0.985876926691290226297203181795527182058438177",
+      "decimal_upper": "0.985876926691290226297203181795527182058438178",
+      "display_midpoint_float": 0.9858769266912902,
+      "decimal_strings_are_outward_rounded": true
+    },
+    "h_fraction_of_original_centered_column_and_Z_energy": {
+      "decimal_lower": "0.001198523040544163412416741290760448634177648",
+      "decimal_upper": "0.001198523040544163412416741290760448634177649",
+      "display_midpoint_float": 0.0011985230405441635,
+      "decimal_strings_are_outward_rounded": true
+    },
+    "common_column_fraction_before_spatial_projection": {
+      "decimal_lower": "0.999982830687781089240654072015364308490011836",
+      "decimal_upper": "0.999982830687781089240654072015364308490011837",
+      "display_midpoint_float": 0.999982830687781,
+      "decimal_strings_are_outward_rounded": true
+    }
+  },
+  "synthetic_energy_examples": {
+    "status": "exact algebraic perturbation examples, not additional observations",
+    "construction": "rows (a+b)*s and (a-b)*s, a=1/10, b=1/125; center s, then remove its affine spatial projection",
+    "formula": "Let S=||center(s)||^2, H=||(I-Pi_affine)s||^2. E_v=2a^2S, E_Z=2b^2S, E_h=2a^2H. Residual fraction is a^2H/(a^2H+b^2S), not generally a^2/(a^2+b^2).",
+    "examples": [
+      {
+        "name": "group step beginning at cartridge 4",
+        "shape_in_cartridge_order_2_to_8": [
+          "0",
+          "0",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        "centered_shape_squared_norm": {
+          "exact_rational": "10/7",
+          "display_float": 1.4285714285714286
+        },
+        "spatial_residual_shape_squared_norm": {
+          "exact_rational": "15/28",
+          "display_float": 0.5357142857142857
+        },
+        "common_column_energy_fraction_before_spatial_projection": {
+          "exact_rational": "625/629",
+          "display_float": 0.9936406995230525
+        },
+        "fraction_of_common_column_energy_retained_in_h": {
+          "exact_rational": "3/8",
+          "display_float": 0.375
+        },
+        "h_fraction_among_h_and_Z_after_projection": {
+          "exact_rational": "1875/1907",
+          "display_float": 0.9832197168327216
+        },
+        "h_fraction_of_original_centered_column_and_Z_energy": {
+          "exact_rational": "1875/5032",
+          "display_float": 0.37261526232114467
+        },
+        "common_column_matrix_squared_norm": {
+          "exact_rational": "1/35",
+          "display_float": 0.02857142857142857
+        },
+        "interaction_matrix_squared_norm": {
+          "exact_rational": "4/21875",
+          "display_float": 0.00018285714285714286
+        },
+        "common_spatial_residual_matrix_squared_norm": {
+          "exact_rational": "3/280",
+          "display_float": 0.010714285714285714
+        }
+      },
+      {
+        "name": "localized at cartridge 2",
+        "shape_in_cartridge_order_2_to_8": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "centered_shape_squared_norm": {
+          "exact_rational": "6/7",
+          "display_float": 0.8571428571428571
+        },
+        "spatial_residual_shape_squared_norm": {
+          "exact_rational": "15/28",
+          "display_float": 0.5357142857142857
+        },
+        "common_column_energy_fraction_before_spatial_projection": {
+          "exact_rational": "625/629",
+          "display_float": 0.9936406995230525
+        },
+        "fraction_of_common_column_energy_retained_in_h": {
+          "exact_rational": "5/8",
+          "display_float": 0.625
+        },
+        "h_fraction_among_h_and_Z_after_projection": {
+          "exact_rational": "3125/3157",
+          "display_float": 0.9898637947418435
+        },
+        "h_fraction_of_original_centered_column_and_Z_energy": {
+          "exact_rational": "3125/5032",
+          "display_float": 0.6210254372019078
+        },
+        "common_column_matrix_squared_norm": {
+          "exact_rational": "3/175",
+          "display_float": 0.017142857142857144
+        },
+        "interaction_matrix_squared_norm": {
+          "exact_rational": "12/109375",
+          "display_float": 0.00010971428571428571
+        },
+        "common_spatial_residual_matrix_squared_norm": {
+          "exact_rational": "3/280",
+          "display_float": 0.010714285714285714
+        }
+      },
+      {
+        "name": "localized at cartridge 3",
+        "shape_in_cartridge_order_2_to_8": [
+          "0",
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "centered_shape_squared_norm": {
+          "exact_rational": "6/7",
+          "display_float": 0.8571428571428571
+        },
+        "spatial_residual_shape_squared_norm": {
+          "exact_rational": "5/7",
+          "display_float": 0.7142857142857143
+        },
+        "common_column_energy_fraction_before_spatial_projection": {
+          "exact_rational": "625/629",
+          "display_float": 0.9936406995230525
+        },
+        "fraction_of_common_column_energy_retained_in_h": {
+          "exact_rational": "5/6",
+          "display_float": 0.8333333333333334
+        },
+        "h_fraction_among_h_and_Z_after_projection": {
+          "exact_rational": "3125/3149",
+          "display_float": 0.992378532867577
+        },
+        "h_fraction_of_original_centered_column_and_Z_energy": {
+          "exact_rational": "3125/3774",
+          "display_float": 0.8280339162692104
+        },
+        "common_column_matrix_squared_norm": {
+          "exact_rational": "3/175",
+          "display_float": 0.017142857142857144
+        },
+        "interaction_matrix_squared_norm": {
+          "exact_rational": "12/109375",
+          "display_float": 0.00010971428571428571
+        },
+        "common_spatial_residual_matrix_squared_norm": {
+          "exact_rational": "1/70",
+          "display_float": 0.014285714285714285
+        }
+      },
+      {
+        "name": "localized at cartridge 4",
+        "shape_in_cartridge_order_2_to_8": [
+          "0",
+          "0",
+          "1",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "centered_shape_squared_norm": {
+          "exact_rational": "6/7",
+          "display_float": 0.8571428571428571
+        },
+        "spatial_residual_shape_squared_norm": {
+          "exact_rational": "23/28",
+          "display_float": 0.8214285714285714
+        },
+        "common_column_energy_fraction_before_spatial_projection": {
+          "exact_rational": "625/629",
+          "display_float": 0.9936406995230525
+        },
+        "fraction_of_common_column_energy_retained_in_h": {
+          "exact_rational": "23/24",
+          "display_float": 0.9583333333333334
+        },
+        "h_fraction_among_h_and_Z_after_projection": {
+          "exact_rational": "14375/14471",
+          "display_float": 0.993366042429687
+        },
+        "h_fraction_of_original_centered_column_and_Z_energy": {
+          "exact_rational": "14375/15096",
+          "display_float": 0.9522390037095919
+        },
+        "common_column_matrix_squared_norm": {
+          "exact_rational": "3/175",
+          "display_float": 0.017142857142857144
+        },
+        "interaction_matrix_squared_norm": {
+          "exact_rational": "12/109375",
+          "display_float": 0.00010971428571428571
+        },
+        "common_spatial_residual_matrix_squared_norm": {
+          "exact_rational": "23/1400",
+          "display_float": 0.016428571428571428
+        }
+      },
+      {
+        "name": "localized at cartridge 5",
+        "shape_in_cartridge_order_2_to_8": [
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0",
+          "0"
+        ],
+        "centered_shape_squared_norm": {
+          "exact_rational": "6/7",
+          "display_float": 0.8571428571428571
+        },
+        "spatial_residual_shape_squared_norm": {
+          "exact_rational": "6/7",
+          "display_float": 0.8571428571428571
+        },
+        "common_column_energy_fraction_before_spatial_projection": {
+          "exact_rational": "625/629",
+          "display_float": 0.9936406995230525
+        },
+        "fraction_of_common_column_energy_retained_in_h": {
+          "exact_rational": "1",
+          "display_float": 1.0
+        },
+        "h_fraction_among_h_and_Z_after_projection": {
+          "exact_rational": "625/629",
+          "display_float": 0.9936406995230525
+        },
+        "h_fraction_of_original_centered_column_and_Z_energy": {
+          "exact_rational": "625/629",
+          "display_float": 0.9936406995230525
+        },
+        "common_column_matrix_squared_norm": {
+          "exact_rational": "3/175",
+          "display_float": 0.017142857142857144
+        },
+        "interaction_matrix_squared_norm": {
+          "exact_rational": "12/109375",
+          "display_float": 0.00010971428571428571
+        },
+        "common_spatial_residual_matrix_squared_norm": {
+          "exact_rational": "3/175",
+          "display_float": 0.017142857142857144
+        }
+      },
+      {
+        "name": "localized at cartridge 6",
+        "shape_in_cartridge_order_2_to_8": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "centered_shape_squared_norm": {
+          "exact_rational": "6/7",
+          "display_float": 0.8571428571428571
+        },
+        "spatial_residual_shape_squared_norm": {
+          "exact_rational": "23/28",
+          "display_float": 0.8214285714285714
+        },
+        "common_column_energy_fraction_before_spatial_projection": {
+          "exact_rational": "625/629",
+          "display_float": 0.9936406995230525
+        },
+        "fraction_of_common_column_energy_retained_in_h": {
+          "exact_rational": "23/24",
+          "display_float": 0.9583333333333334
+        },
+        "h_fraction_among_h_and_Z_after_projection": {
+          "exact_rational": "14375/14471",
+          "display_float": 0.993366042429687
+        },
+        "h_fraction_of_original_centered_column_and_Z_energy": {
+          "exact_rational": "14375/15096",
+          "display_float": 0.9522390037095919
+        },
+        "common_column_matrix_squared_norm": {
+          "exact_rational": "3/175",
+          "display_float": 0.017142857142857144
+        },
+        "interaction_matrix_squared_norm": {
+          "exact_rational": "12/109375",
+          "display_float": 0.00010971428571428571
+        },
+        "common_spatial_residual_matrix_squared_norm": {
+          "exact_rational": "23/1400",
+          "display_float": 0.016428571428571428
+        }
+      },
+      {
+        "name": "localized at cartridge 7",
+        "shape_in_cartridge_order_2_to_8": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0"
+        ],
+        "centered_shape_squared_norm": {
+          "exact_rational": "6/7",
+          "display_float": 0.8571428571428571
+        },
+        "spatial_residual_shape_squared_norm": {
+          "exact_rational": "5/7",
+          "display_float": 0.7142857142857143
+        },
+        "common_column_energy_fraction_before_spatial_projection": {
+          "exact_rational": "625/629",
+          "display_float": 0.9936406995230525
+        },
+        "fraction_of_common_column_energy_retained_in_h": {
+          "exact_rational": "5/6",
+          "display_float": 0.8333333333333334
+        },
+        "h_fraction_among_h_and_Z_after_projection": {
+          "exact_rational": "3125/3149",
+          "display_float": 0.992378532867577
+        },
+        "h_fraction_of_original_centered_column_and_Z_energy": {
+          "exact_rational": "3125/3774",
+          "display_float": 0.8280339162692104
+        },
+        "common_column_matrix_squared_norm": {
+          "exact_rational": "3/175",
+          "display_float": 0.017142857142857144
+        },
+        "interaction_matrix_squared_norm": {
+          "exact_rational": "12/109375",
+          "display_float": 0.00010971428571428571
+        },
+        "common_spatial_residual_matrix_squared_norm": {
+          "exact_rational": "1/70",
+          "display_float": 0.014285714285714285
+        }
+      },
+      {
+        "name": "localized at cartridge 8",
+        "shape_in_cartridge_order_2_to_8": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "1"
+        ],
+        "centered_shape_squared_norm": {
+          "exact_rational": "6/7",
+          "display_float": 0.8571428571428571
+        },
+        "spatial_residual_shape_squared_norm": {
+          "exact_rational": "15/28",
+          "display_float": 0.5357142857142857
+        },
+        "common_column_energy_fraction_before_spatial_projection": {
+          "exact_rational": "625/629",
+          "display_float": 0.9936406995230525
+        },
+        "fraction_of_common_column_energy_retained_in_h": {
+          "exact_rational": "5/8",
+          "display_float": 0.625
+        },
+        "h_fraction_among_h_and_Z_after_projection": {
+          "exact_rational": "3125/3157",
+          "display_float": 0.9898637947418435
+        },
+        "h_fraction_of_original_centered_column_and_Z_energy": {
+          "exact_rational": "3125/5032",
+          "display_float": 0.6210254372019078
+        },
+        "common_column_matrix_squared_norm": {
+          "exact_rational": "3/175",
+          "display_float": 0.017142857142857144
+        },
+        "interaction_matrix_squared_norm": {
+          "exact_rational": "12/109375",
+          "display_float": 0.00010971428571428571
+        },
+        "common_spatial_residual_matrix_squared_norm": {
+          "exact_rational": "3/280",
+          "display_float": 0.010714285714285714
+        }
+      },
+      {
+        "name": "affine column perturbation, max absolute shape one",
+        "shape_in_cartridge_order_2_to_8": [
+          "-1",
+          "-2/3",
+          "-1/3",
+          "0",
+          "1/3",
+          "2/3",
+          "1"
+        ],
+        "centered_shape_squared_norm": {
+          "exact_rational": "28/9",
+          "display_float": 3.111111111111111
+        },
+        "spatial_residual_shape_squared_norm": {
+          "exact_rational": "0",
+          "display_float": 0.0
+        },
+        "common_column_energy_fraction_before_spatial_projection": {
+          "exact_rational": "625/629",
+          "display_float": 0.9936406995230525
+        },
+        "fraction_of_common_column_energy_retained_in_h": {
+          "exact_rational": "0",
+          "display_float": 0.0
+        },
+        "h_fraction_among_h_and_Z_after_projection": {
+          "exact_rational": "0",
+          "display_float": 0.0
+        },
+        "h_fraction_of_original_centered_column_and_Z_energy": {
+          "exact_rational": "0",
+          "display_float": 0.0
+        },
+        "common_column_matrix_squared_norm": {
+          "exact_rational": "14/225",
+          "display_float": 0.06222222222222222
+        },
+        "interaction_matrix_squared_norm": {
+          "exact_rational": "56/140625",
+          "display_float": 0.00039822222222222223
+        },
+        "common_spatial_residual_matrix_squared_norm": {
+          "exact_rational": "0",
+          "display_float": 0.0
+        }
+      }
+    ]
+  }
+}

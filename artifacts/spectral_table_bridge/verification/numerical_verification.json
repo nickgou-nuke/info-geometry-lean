@@ -1,0 +1,89 @@
+{
+  "status": "passed",
+  "no_dependency_fetching": true,
+  "output_directory": "artifacts/spectral_table_bridge",
+  "jobs": [
+    {
+      "script": "tools/spectral_table_bridge/audit_spectral_domains.py",
+      "exit_code": 0,
+      "seconds": 0.15474197400180856,
+      "script_sha256": "c765058a8b80d087dcc9039d6b74517c9213b358a908a5c3c4b1f270b203767e",
+      "source_stable": true,
+      "log": "verification/numerical_audit_spectral_domains.log"
+    },
+    {
+      "script": "tools/spectral_table_bridge/certify_decimal_two_line.py",
+      "exit_code": 0,
+      "seconds": 1.2729094390015234,
+      "script_sha256": "f26cad674c6c30dcfb0d771d074e5eb0a404cfca9a0b21dcce784f897f946dc5",
+      "source_stable": true,
+      "log": "verification/numerical_certify_decimal_two_line.log"
+    },
+    {
+      "script": "tools/spectral_table_bridge/plot_spectral_bridge.py",
+      "exit_code": 0,
+      "seconds": 1.2602847890011617,
+      "script_sha256": "61adcff95f1b4b6fde074475c7ce7f6f68155c8a64c751ea18440c91dae828b7",
+      "source_stable": true,
+      "log": "verification/numerical_plot_spectral_bridge.log"
+    }
+  ],
+  "dependencies": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "matplotlib": "3.10.8"
+  },
+  "rounded_fixture_provenance": {
+    "filename": "rounded_two_line.json",
+    "sha256": "eb8443cf5f2fd3f0e802f261465667c9725278529de72e9242b99291cf84445d",
+    "original_source_sha256": "882b6799b2787041c86e07b36c7fe892ee1e7807756e05273227ac73b9411754",
+    "schema": "spectral-rounded-two-line-v1",
+    "mapping": "See data/spectral_table_bridge/PROVENANCE.json."
+  },
+  "interval_kernel_sha256": "b22d93a4a44ec5e2d2b43c1b7c3d96585f2c76f5aea22b79218602efbacb5784",
+  "interval_kernel_unchanged": true,
+  "rounded_interval_endpoints_reproduced_exactly": true,
+  "runner_sha256": "0ee65e5cb7ba7b4c318ab53c85a726d1e725152d11fd7edcc9943dacf4c8b4fb",
+  "outputs": [
+    {
+      "path": "figures/figure_metadata.json",
+      "bytes": 1715,
+      "sha256": "efa4026b2c1f337e6e37c52d25a91f659be8aeec1086231ba801a1ec2b9196d1"
+    },
+    {
+      "path": "figures/spectral_bridge_caption.txt",
+      "bytes": 808,
+      "sha256": "4083d8944f4fba153250b21612bfccd802b4f5d886ee6bfd974dc1b5f628e6aa"
+    },
+    {
+      "path": "figures/spectral_bridge_diagnostics.pdf",
+      "bytes": 31439,
+      "sha256": "3b957ecef661352e47f20502160629f2bfb83a2f7dac5925e73d5e4c336cde8c"
+    },
+    {
+      "path": "figures/spectral_bridge_diagnostics.png",
+      "bytes": 260188,
+      "sha256": "fe2ddfb1ba058a450f82d370b9c89de6ab59c301164930d2dd15159c145ff5ef"
+    },
+    {
+      "path": "results/decimal_two_line_certificate.json",
+      "bytes": 13790,
+      "sha256": "2be8f196302e2324a595e697e6b8d9c84e3349a866f1eaef3410ad5144f50301"
+    },
+    {
+      "path": "results/spectral_domains_audit.json",
+      "bytes": 101723,
+      "sha256": "6923c66d53efe57b7cec5de9b9428a0b261a901a6fb2cb49375a7c23c8df615e"
+    },
+    {
+      "path": "results/spectral_domains_summary.csv",
+      "bytes": 1655,
+      "sha256": "d82ff84f42012f2484fbec9e30a7e0014fa468c1ee7c49f2ba71e278d727a4d5"
+    },
+    {
+      "path": "results/spectral_domains_summary.json",
+      "bytes": 3857,
+      "sha256": "d94ac2e784ddd9cf6d340e96c49df5209e4d02a9494fdc316652167bd0a0bc87"
+    }
+  ]
+}

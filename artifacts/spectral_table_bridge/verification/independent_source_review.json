@@ -1,0 +1,33 @@
+{
+  "schema": "spectral-source-review-v1",
+  "verdict": "PASS",
+  "reviewer_role": "Independent source reviewer (A-A), separate from source authors and execution QA",
+  "scope": "Mathematical statements and proof bodies, reuse of existing owners, numerical source and fixture mapping, generated publication content",
+  "compiler_or_numerical_execution_by_reviewer": false,
+  "mathematical_source_sha256": {
+    "InfoGeometry.Probability.BipartiteLogCoupling": "3a87398d7962227583a6645246a3d2d61edbb0781f5454b7d0d04679872316c3",
+    "InfoGeometry.Spectrometry.TableBalancing": "ef3c08b3e08c6463f920e929de97da616ad8690c4b32b8efa372411975b0c431",
+    "InfoGeometry.Spectrometry.LogLeastSquares": "28b6966738ee83b6d3f8c8b8d0c7faff869498d6d3cf61d97adb179fbdfce5c2",
+    "InfoGeometry.Spectrometry.MatrixLogCentering": "194cb4ee64d77dcf6588b5752ba3c9bef639a2445b2cfb27a9aa3926629a9597",
+    "InfoGeometry.Spectrometry.ColumnFirstSinkhornCovariance": "533283e4abf49a382e81cdee22855836dc632cd2fa3f39522e43c266f260768b",
+    "InfoGeometry.Spectrometry.GlobalHyperbolicBounds": "7755294286bdb1b10355b67ae52ad5e67f877d28265a8a3752d4f9df07660780",
+    "InfoGeometry.Spectrometry.ExactTwoLineRoot": "77e4bfd637e60d1b6f0575413fefe0976129059ce2337c0cdbda158b6f58f9f0",
+    "InfoGeometry.Spectrometry.InteriorLogSlope": "764cc193bfc6e5480a818d4d9a177b9544c9cb92b4e3267b705d47e2ee8c9799",
+    "InfoGeometry.Spectrometry.InteriorStepAndRatioSignatures": "78e2a1b82efa8d4b9be7a67c96d8f9c5e2f4bd4f08d84c827833a2314c5e70f0",
+    "InfoGeometry.Spectrometry.LogInteractionAndGauge": "129596877a9992cec97ad6872c8fde819cb16bfa19bc38b0ec00f55d929ec932",
+    "InfoGeometry.Spectrometry.ProjectionEnergy": "48fe3174717de80a6bdc0be532e19e11c082a24acad16f8aad83a6872f1463c2",
+    "InfoGeometry.Spectrometry.SpectralOrientation": "651cce34a460ebd40db66a3d7316cdfc3833d69af0176439b40fb24598b50e46",
+    "InfoGeometry.Spectrometry.SpectralRestriction": "9ed1a42c0d4268868eb3b57922259911e27540a492913434a6a36f0141c30454",
+    "InfoGeometry.Spectrometry.TwoLineBalancedConstruction": "d1f342e56bc669d8633a5a9c032b1b0e087f226e47df8a0b1ae6a05feb911d5a",
+    "InfoGeometry.Spectrometry.TwoLineNonasymptoticBounds": "116da59fef026f998194c2a4242aa0202e7cf0534e2aefe67ad4bcd4e4d4bda1"
+  },
+  "umbrella_source_sha256": "de239fe6d7415003db00d258812b13ad7003e0743a1611b2988250cf592db729",
+  "reviewed_repairs": [
+    "Native Matrix.vecMulVec statements preserved; explicit pointwise conversion added in four proof bodies.",
+    "Actual finite recursion expressed by native Nat.rec with unchanged zero/successor equations.",
+    "Dependent normalization proof unfolds columnPotential before rowPotential.",
+    "Two real inequalities explicitly use the existing nonnegative-bound hypothesis."
+  ],
+  "publication_content_review": "Compact fixtures match their source; unchanged interval kernel; numerical output fingerprints match; no private paths or conversation prose in published content.",
+  "proof_scope": "Finite table identities, unweighted log projection, actual finite Sinkhorn updates, exact two-line construction and analytic bounds; no general convergence or identified experimental cause."
+}

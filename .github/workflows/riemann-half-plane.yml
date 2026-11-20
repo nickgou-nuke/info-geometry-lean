@@ -1,0 +1,75 @@
+name: Riemann half-plane reduction
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReduction*.lean'
+      - 'lean/InfoGeometry/Arithmetic/RiemannZetaFiniteFacts.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'verification/riemann-half-plane/**'
+      - 'verification/real-matrix-split/audit.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/pathing.py'
+      - '.github/workflows/riemann-half-plane.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: riemann-half-plane-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Record checked revision
+        run: |
+          git rev-parse HEAD > riemann-half-plane-revision.log
+          git rev-parse 'HEAD^{tree}' >> riemann-half-plane-revision.log
+      - name: Restore pinned dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: riemann-half-plane-deps-lean4341-d13f23b7-${{ runner.os }}-v1
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.34.1
+      - name: Retrieve pinned Mathlib artifacts
+        run: python3 verification/riemann-half-plane/check.py exe cache get
+      - name: Check source inventory and dependency pins
+        run: python3 verification/riemann-half-plane/audit.py
+      - name: Compile the owner and audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/riemann-half-plane/check.py --wfail build 2>&1 | tee riemann-half-plane-build.log
+      - name: Check fresh axiom reports
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/riemann-half-plane/check.py env lean lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReductionAudit.lean 2>&1 | tee riemann-half-plane-axioms.log
+          python3 verification/riemann-half-plane/audit.py --log riemann-half-plane-axioms.log
+      - name: Preserve validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: riemann-half-plane-validation
+          path: |
+            riemann-half-plane-revision.log
+            riemann-half-plane-build.log
+            riemann-half-plane-axioms.log

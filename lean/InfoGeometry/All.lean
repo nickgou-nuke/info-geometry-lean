@@ -17,6 +17,10 @@ import InfoGeometry.Holographic.CurvatureObstruction
 import InfoGeometry.Holographic.MonoidCounterexample
 import InfoGeometry.Holographic.PathAmplitudes
 import InfoGeometry.Holographic.RateBudget
+import InfoGeometry.Clifford.ChevalleyNeutralCompatibility
+import InfoGeometry.Clifford.ParaKreinObstructions
+import InfoGeometry.Clifford.NeutralCotangentHamiltonian
+import InfoGeometry.Geometry.ParaPotentialPullback
 import InfoGeometry.Canonical.CliffordPeirceWalshAudit
 import InfoGeometry.OperatorAlgebra.IsometryCornerLocalization
 import InfoGeometry.Clifford.WeylFrameMasks

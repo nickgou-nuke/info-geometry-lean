@@ -628,3 +628,6 @@ import InfoGeometry.Canonical.MatrixRelativeModularPhysicsBridge
 import InfoGeometry.Quantum.RealificationKrein
 import InfoGeometry.Quantum.CliffordPhaseRealification
 import InfoGeometry.Canonical.MatrixRealificationThermodynamics
+import InfoGeometry.LinearAlgebra.RealMatrixSquareNegOne
+import InfoGeometry.Algebra.QuaternionMatrixSquareNegOne
+import InfoGeometry.Quantum.OperatorRingSquareNegOne

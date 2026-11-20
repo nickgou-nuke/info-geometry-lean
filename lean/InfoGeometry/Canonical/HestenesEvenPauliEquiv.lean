@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 
 import InfoGeometry.Canonical.HestenesPauliSheetBridgeFinite
 import InfoGeometry.Canonical.HestenesCliffordDimension
+import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 
 /-! # The real algebra equivalence `Cl⁺(1,3) ≃ M₂(ℂ)` -/
 

@@ -90,6 +90,35 @@ def rightRegularOnDoubleKrein (x : CZ) : EndH4 :=
     rightRegularOnDoubleKrein x z = zornToDoubleKrein
       (rightRegular x (zornToDoubleKrein.symm z)) := rfl
 
+/-- Right multiplication on the split-octonion carrier represents its Jordan
+anticommutator as the operator anticommutator. The statement retains the
+nonassociative Zorn product inside the represented right multiplication. -/
+theorem rightRegularOnDoubleKrein_anticommutator (x y : CZ) :
+    rightRegularOnDoubleKrein x * rightRegularOnDoubleKrein y +
+      rightRegularOnDoubleKrein y * rightRegularOnDoubleKrein x =
+        rightRegularOnDoubleKrein (x * y + y * x) := by
+  change transportZornOperator (rightRegular x) *
+      transportZornOperator (rightRegular y) +
+    transportZornOperator (rightRegular y) *
+      transportZornOperator (rightRegular x) =
+    transportZornOperator (rightRegular (x * y + y * x))
+  rw [← transportZornOperator_mul, ← transportZornOperator_mul,
+    ← transportZornOperator_add, rightRegular_anticommutator]
+
+/-- The failure of the right-regular representation to preserve ordered
+products is exactly the Zorn associator, transported to the doubled real
+Krein carrier. This records the nonassociative defect explicitly instead
+of treating `rightRegular` as an algebra homomorphism. -/
+theorem rightRegularOnDoubleKrein_associator_defect (x y : CZ) (z : H4) :
+    (rightRegularOnDoubleKrein x * rightRegularOnDoubleKrein y -
+        rightRegularOnDoubleKrein (y * x)) z =
+      zornToDoubleKrein
+        ((zornToDoubleKrein.symm z * y) * x - zornToDoubleKrein.symm z * (y * x)) := by
+  simp only [LinearMap.sub_apply, Module.End.mul_apply,
+    rightRegularOnDoubleKrein_apply, rightRegular_apply]
+  rw [zornToDoubleKrein.symm_apply_apply]
+  rw [map_sub]
+
 /-- The root creation/annihilation pair on the doubled real Krein carrier
 retains the CAR anticommutator relation. -/
 theorem rightRegularOnDoubleKrein_root_CAR (i : Fin 3) :

@@ -5,7 +5,9 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Canonical.RealSolderingWeylKreinBridge
 import InfoGeometry.Canonical.SuperGrassmannianFiveGradedEightByEight
+import InfoGeometry.Krein.SplitOctonionZornRegularH4Bridge
 import InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge
+import InfoGeometry.Superalgebra.RealGradedZornCARBridge
 
 /-!
 # Real graded-tensor bridge for the five-graded Fock superalgebra
@@ -115,38 +117,6 @@ theorem fockBivectorCreationOnKrein_eq (p : Fin 3) :
   simp [fockBivectorCreationOnKrein, fockCreationOnKrein, gPlus2R,
     gPlus2Z, gPlus1R, gPlus1Z, map_mul, fockMatrixToKreinOperator]
 
-/-- A Peirce supercolor right-regular operator expressed in the graded tensor
-algebra. The representative is obtained by the inverse of the faithful
-Krein-operator equivalence. -/
-def supercolorRightRegularAsGradedTensor
-    (X : InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra ℝ) :
-    TensorCarrier :=
-  realThreeMatrixTensorOnH4.symm
-    (InfoGeometry.Krein.SplitOctonionZornRegularH4Bridge.rightRegularOnDoubleKrein
-      (InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolorToCanonicalZorn X))
-
-/-- The tensor representative acts by exactly the owner's nonassociative
-Zorn right-regular action on the doubled Krein carrier. -/
-theorem supercolorRightRegularAsGradedTensor_spec
-    (X : InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra ℝ) :
-    realThreeMatrixTensorOnH4 (supercolorRightRegularAsGradedTensor X) =
-      InfoGeometry.Krein.SplitOctonionZornRegularH4Bridge.rightRegularOnDoubleKrein
-        (InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolorToCanonicalZorn X) := by
-  simp [supercolorRightRegularAsGradedTensor]
-
-/-- Zorn multiplication followed by the doubled-Krein carrier equivalence
-agrees with the represented right-regular action. This retains the Zorn
-owner's order and makes no associativity claim. -/
-theorem supercolor_product_action_in_fock_matrix_coordinates
-    (X Y : InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra ℝ) :
-    InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolorToDoubleKrein
-        (InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.mul Y X) =
-      realThreeMatrixTensorOnH4
-        (supercolorRightRegularAsGradedTensor X)
-        (InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolorToDoubleKrein Y) := by
-  rw [supercolorRightRegularAsGradedTensor_spec]
-  exact InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolor_rightRegular_action X Y
-
 /-! ### Circular root channels as real Majorana pairs
 
 The circular Peirce creation/annihilation roots are transported to the same
@@ -155,21 +125,49 @@ and difference give a concrete split-Clifford pair in each channel. -/
 
 /-- The positive circular root represented in the real graded tensor algebra. -/
 def circularRootPlusInTensor (i : Fin 3) : TensorCarrier :=
-  supercolorRightRegularAsGradedTensor
+  InfoGeometry.Superalgebra.RealGradedZornCARBridge.supercolorRightRegularInThreeMode
     (InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.canonicalZornToSupercolor
       (InfoGeometry.Lie.SplitOctonionEllPolarization.rootPlus i))
 
 /-- The negative circular root represented in the real graded tensor algebra. -/
 def circularRootMinusInTensor (i : Fin 3) : TensorCarrier :=
-  supercolorRightRegularAsGradedTensor
+  InfoGeometry.Superalgebra.RealGradedZornCARBridge.supercolorRightRegularInThreeMode
     (InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.canonicalZornToSupercolor
       (InfoGeometry.Lie.SplitOctonionEllPolarization.rootMinus i))
+
+/-- The native graded-tensor representation carries the Peirce-supercolor
+Jordan anticommutator to the associative operator anticommutator. The source
+product remains the nonassociative split-octonion product; the theorem makes
+no multiplicativity claim for the right-regular map. -/
+theorem supercolorJordanAnticommutator_in_tensor
+    (X Y : InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra ℝ) :
+    InfoGeometry.Superalgebra.RealGradedZornCARBridge.supercolorRightRegularInThreeMode
+        (InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.anticommutator X Y) =
+      InfoGeometry.Superalgebra.RealGradedZornCARBridge.supercolorRightRegularInThreeMode X *
+          InfoGeometry.Superalgebra.RealGradedZornCARBridge.supercolorRightRegularInThreeMode Y +
+        InfoGeometry.Superalgebra.RealGradedZornCARBridge.supercolorRightRegularInThreeMode Y *
+          InfoGeometry.Superalgebra.RealGradedZornCARBridge.supercolorRightRegularInThreeMode X := by
+  simp only [InfoGeometry.Superalgebra.RealGradedZornCARBridge.supercolorRightRegularInThreeMode]
+  rw [← map_mul, ← map_mul, ← map_add]
+  apply congrArg realThreeMatrixTensorOnH4.symm
+  rw [InfoGeometry.Krein.SplitOctonionZornRegularH4Bridge.rightRegularOnDoubleKrein_anticommutator]
+  apply congrArg
+    (InfoGeometry.Krein.SplitOctonionZornRegularH4Bridge.rightRegularOnDoubleKrein)
+  change InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolorToCanonicalZorn
+      (InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.mul X Y +
+        InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.mul Y X) = _
+  rw [map_add,
+    InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolorToCanonicalZorn_mul,
+    InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolorToCanonicalZorn_mul]
+  rfl
 
 private theorem circularRootPlusInTensor_square (i : Fin 3) :
     circularRootPlusInTensor i * circularRootPlusInTensor i = 0 := by
   unfold circularRootPlusInTensor
   apply realThreeMatrixTensorOnH4.injective
-  rw [map_mul, supercolorRightRegularAsGradedTensor_spec,
+  rw [map_mul,
+    InfoGeometry.Superalgebra.RealGradedZornCARBridge.supercolorRightRegularInThreeMode,
+    realThreeMatrixTensorOnH4.apply_symm_apply,
     InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolorToCanonicalZorn_canonical,
     InfoGeometry.Krein.SplitOctonionZornRegularH4Bridge.rightRegularOnDoubleKrein_rootPlus_sq,
     map_zero]
@@ -178,25 +176,69 @@ private theorem circularRootMinusInTensor_square (i : Fin 3) :
     circularRootMinusInTensor i * circularRootMinusInTensor i = 0 := by
   unfold circularRootMinusInTensor
   apply realThreeMatrixTensorOnH4.injective
-  rw [map_mul, supercolorRightRegularAsGradedTensor_spec,
+  rw [map_mul,
+    InfoGeometry.Superalgebra.RealGradedZornCARBridge.supercolorRightRegularInThreeMode,
+    realThreeMatrixTensorOnH4.apply_symm_apply,
     InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolorToCanonicalZorn_canonical,
     InfoGeometry.Krein.SplitOctonionZornRegularH4Bridge.rightRegularOnDoubleKrein_rootMinus_sq,
     map_zero]
 
-/-- The circular root pair in the graded tensor satisfies the real CAR
-anticommutator in the source owner's displayed order. -/
-theorem circularRootInTensor_CAR (i : Fin 3) :
-    circularRootMinusInTensor i * circularRootPlusInTensor i +
-      circularRootPlusInTensor i * circularRootMinusInTensor i = 1 := by
+/-- The positive circular roots are mutually odd in the actual three-factor
+Koszul tensor of real `2 × 2` matrix algebras. -/
+theorem circularRootPlusInTensor_anticommutator (i j : Fin 3) :
+    circularRootPlusInTensor i * circularRootPlusInTensor j +
+      circularRootPlusInTensor j * circularRootPlusInTensor i = 0 := by
+  apply realThreeMatrixTensorOnH4.injective
+  rw [map_add, map_mul, map_mul,
+    circularRootPlusInTensor, circularRootPlusInTensor,
+    InfoGeometry.Superalgebra.RealGradedZornCARBridge.supercolorRightRegularInThreeMode,
+    InfoGeometry.Superalgebra.RealGradedZornCARBridge.supercolorRightRegularInThreeMode,
+    realThreeMatrixTensorOnH4.apply_symm_apply,
+    realThreeMatrixTensorOnH4.apply_symm_apply,
+    InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolorToCanonicalZorn_canonical,
+    InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolorToCanonicalZorn_canonical]
+  rw [map_zero]
+  exact InfoGeometry.Krein.SplitOctonionZornRegularH4Bridge.rightRegularOnDoubleKrein_creation_anticommutator i j
+
+/-- The negative circular roots are mutually odd in the actual three-factor
+Koszul tensor of real `2 × 2` matrix algebras. -/
+theorem circularRootMinusInTensor_anticommutator (i j : Fin 3) :
+    circularRootMinusInTensor i * circularRootMinusInTensor j +
+      circularRootMinusInTensor j * circularRootMinusInTensor i = 0 := by
+  apply realThreeMatrixTensorOnH4.injective
+  rw [map_add, map_mul, map_mul,
+    circularRootMinusInTensor, circularRootMinusInTensor,
+    InfoGeometry.Superalgebra.RealGradedZornCARBridge.supercolorRightRegularInThreeMode,
+    InfoGeometry.Superalgebra.RealGradedZornCARBridge.supercolorRightRegularInThreeMode,
+    realThreeMatrixTensorOnH4.apply_symm_apply,
+    realThreeMatrixTensorOnH4.apply_symm_apply,
+    InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolorToCanonicalZorn_canonical,
+    InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolorToCanonicalZorn_canonical]
+  rw [map_zero]
+  exact InfoGeometry.Krein.SplitOctonionZornRegularH4Bridge.rightRegularOnDoubleKrein_annihilation_anticommutator i j
+
+/-- The complete three-channel creation/annihilation CAR relation is realized
+inside the native graded tensor algebra, before representing it on the Krein
+space. -/
+theorem circularRootInTensor_mixed_CAR (i j : Fin 3) :
+    circularRootMinusInTensor j * circularRootPlusInTensor i +
+      circularRootPlusInTensor i * circularRootMinusInTensor j =
+        if i = j then (1 : TensorCarrier) else 0 := by
   apply realThreeMatrixTensorOnH4.injective
   rw [map_add, map_mul, map_mul,
     circularRootMinusInTensor, circularRootPlusInTensor,
-    supercolorRightRegularAsGradedTensor_spec,
-    supercolorRightRegularAsGradedTensor_spec,
+    InfoGeometry.Superalgebra.RealGradedZornCARBridge.supercolorRightRegularInThreeMode,
+    InfoGeometry.Superalgebra.RealGradedZornCARBridge.supercolorRightRegularInThreeMode,
+    realThreeMatrixTensorOnH4.apply_symm_apply,
+    realThreeMatrixTensorOnH4.apply_symm_apply,
     InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolorToCanonicalZorn_canonical,
     InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolorToCanonicalZorn_canonical]
-  rw [map_one]
-  exact InfoGeometry.Krein.SplitOctonionZornRegularH4Bridge.rightRegularOnDoubleKrein_root_CAR i
+  have h := InfoGeometry.Krein.SplitOctonionZornRegularH4Bridge.rightRegularOnDoubleKrein_mixed_anticommutator i j
+  by_cases hij : i = j
+  · simp [hij] at h ⊢
+    exact h
+  · simp [hij] at h ⊢
+    exact h
 
 /-- Real positive-square Majorana generator obtained as the sum of the
 negative and positive circular root channels. -/
@@ -217,7 +259,7 @@ theorem circularMajorana_splitClifford_relations (i : Fin 3) :
       circularMajoranaSpace i * circularMajoranaTime i = 0 := by
   have hm := circularRootMinusInTensor_square i
   have hp := circularRootPlusInTensor_square i
-  have hCAR := circularRootInTensor_CAR i
+  have hCAR := circularRootInTensor_mixed_CAR i i
   constructor
   · change (circularRootMinusInTensor i + circularRootPlusInTensor i) *
       (circularRootMinusInTensor i + circularRootPlusInTensor i) = 1
@@ -251,5 +293,109 @@ theorem circularMajorana_splitClifford_relations (i : Fin 3) :
             (circularRootPlusInTensor i * circularRootPlusInTensor i +
               circularRootPlusInTensor i * circularRootPlusInTensor i) := by noncomm_ring
         _ = 0 := by rw [hm, hp]; norm_num
+
+/-- Distinct circular time Majoranas anticommute in the real graded tensor. -/
+theorem circularMajoranaTime_cross_anticommute (i j : Fin 3) (hij : i ≠ j) :
+    circularMajoranaTime i * circularMajoranaTime j +
+      circularMajoranaTime j * circularMajoranaTime i = 0 := by
+  have haa := circularRootMinusInTensor_anticommutator i j
+  have hcc := circularRootPlusInTensor_anticommutator i j
+  have ham := circularRootInTensor_mixed_CAR j i
+  have hma := circularRootInTensor_mixed_CAR i j
+  have hji : j ≠ i := Ne.symm hij
+  simp [hij, hji] at ham hma
+  change (circularRootMinusInTensor i + circularRootPlusInTensor i) *
+      (circularRootMinusInTensor j + circularRootPlusInTensor j) +
+    (circularRootMinusInTensor j + circularRootPlusInTensor j) *
+      (circularRootMinusInTensor i + circularRootPlusInTensor i) = 0
+  calc
+    _ = (circularRootMinusInTensor i * circularRootMinusInTensor j +
+          circularRootMinusInTensor j * circularRootMinusInTensor i) +
+        (circularRootMinusInTensor i * circularRootPlusInTensor j +
+          circularRootPlusInTensor j * circularRootMinusInTensor i) +
+        (circularRootMinusInTensor j * circularRootPlusInTensor i +
+          circularRootPlusInTensor i * circularRootMinusInTensor j) +
+        (circularRootPlusInTensor i * circularRootPlusInTensor j +
+          circularRootPlusInTensor j * circularRootPlusInTensor i) := by noncomm_ring
+    _ = 0 := by rw [haa, ham, hma, hcc]; simp
+
+/-- Distinct circular space Majoranas anticommute in the real graded tensor. -/
+theorem circularMajoranaSpace_cross_anticommute (i j : Fin 3) (hij : i ≠ j) :
+    circularMajoranaSpace i * circularMajoranaSpace j +
+      circularMajoranaSpace j * circularMajoranaSpace i = 0 := by
+  have haa := circularRootMinusInTensor_anticommutator i j
+  have hcc := circularRootPlusInTensor_anticommutator i j
+  have ham := circularRootInTensor_mixed_CAR j i
+  have hma := circularRootInTensor_mixed_CAR i j
+  have hji : j ≠ i := Ne.symm hij
+  simp [hij, hji] at ham hma
+  change (circularRootMinusInTensor i - circularRootPlusInTensor i) *
+      (circularRootMinusInTensor j - circularRootPlusInTensor j) +
+    (circularRootMinusInTensor j - circularRootPlusInTensor j) *
+      (circularRootMinusInTensor i - circularRootPlusInTensor i) = 0
+  calc
+    _ = (circularRootMinusInTensor i * circularRootMinusInTensor j +
+          circularRootMinusInTensor j * circularRootMinusInTensor i) -
+        (circularRootMinusInTensor i * circularRootPlusInTensor j +
+          circularRootPlusInTensor j * circularRootMinusInTensor i) -
+        (circularRootMinusInTensor j * circularRootPlusInTensor i +
+          circularRootPlusInTensor i * circularRootMinusInTensor j) +
+        (circularRootPlusInTensor i * circularRootPlusInTensor j +
+          circularRootPlusInTensor j * circularRootPlusInTensor i) := by noncomm_ring
+    _ = 0 := by rw [haa, ham, hma, hcc]; simp
+
+/-- A time Majorana anticommutes with every space Majorana from a distinct
+circular mode in the genuine Koszul-graded matrix tensor. -/
+theorem circularMajoranaTimeSpace_cross_anticommute
+    (i j : Fin 3) (hij : i ≠ j) :
+    circularMajoranaTime i * circularMajoranaSpace j +
+      circularMajoranaSpace j * circularMajoranaTime i = 0 := by
+  have haa := circularRootMinusInTensor_anticommutator i j
+  have hcc := circularRootPlusInTensor_anticommutator i j
+  have ham := circularRootInTensor_mixed_CAR j i
+  have hma := circularRootInTensor_mixed_CAR i j
+  have hji : j ≠ i := Ne.symm hij
+  simp [hij, hji] at ham hma
+  change (circularRootMinusInTensor i + circularRootPlusInTensor i) *
+      (circularRootMinusInTensor j - circularRootPlusInTensor j) +
+    (circularRootMinusInTensor j - circularRootPlusInTensor j) *
+      (circularRootMinusInTensor i + circularRootPlusInTensor i) = 0
+  calc
+    _ = (circularRootMinusInTensor i * circularRootMinusInTensor j +
+          circularRootMinusInTensor j * circularRootMinusInTensor i) -
+        (circularRootMinusInTensor i * circularRootPlusInTensor j +
+          circularRootPlusInTensor j * circularRootMinusInTensor i) +
+        (circularRootMinusInTensor j * circularRootPlusInTensor i +
+          circularRootPlusInTensor i * circularRootMinusInTensor j) -
+        (circularRootPlusInTensor i * circularRootPlusInTensor j +
+          circularRootPlusInTensor j * circularRootPlusInTensor i) := by noncomm_ring
+    _ = 0 := by rw [haa, ham, hma, hcc]; simp
+
+/-- The circular real Majoranas in the three-factor graded tensor satisfy the
+`Cl(3,3)` anticommutation law on their six signed generators. -/
+theorem circularMajorana_threeMode_Clifford_relations (i j : Fin 3) :
+    circularMajoranaTime i * circularMajoranaTime j +
+        circularMajoranaTime j * circularMajoranaTime i =
+      (if i = j then (2 : ℝ) else 0) • (1 : TensorCarrier) ∧
+    circularMajoranaSpace i * circularMajoranaSpace j +
+        circularMajoranaSpace j * circularMajoranaSpace i =
+      (if i = j then (-2 : ℝ) else 0) • (1 : TensorCarrier) ∧
+    circularMajoranaTime i * circularMajoranaSpace j +
+        circularMajoranaSpace j * circularMajoranaTime i = 0 := by
+  by_cases hij : i = j
+  · subst j
+    obtain ⟨ht, hs, hts⟩ := circularMajorana_splitClifford_relations i
+    constructor
+    · rw [ht]
+      norm_num [two_smul]
+    constructor
+    · rw [hs]
+      norm_num [two_smul]
+    · exact hts
+  · constructor
+    · simp [hij, circularMajoranaTime_cross_anticommute i j hij]
+    constructor
+    · simp [hij, circularMajoranaSpace_cross_anticommute i j hij]
+    · exact circularMajoranaTimeSpace_cross_anticommute i j hij
 
 end InfoGeometry.Canonical.RealGradedTensorSuperGrassmannianBridge

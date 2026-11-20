@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.ExteriorPower.Basis
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Grading
@@ -386,6 +391,11 @@ theorem fockToZorn_annihilation (i : Fin 3) (ψ : Exterior3) :
 
 private def ιMode (i : Fin 3) : Exterior3 :=
   ExteriorAlgebra.ι ℝ (modeVector i)
+
+/-- The private exterior generator used in the explicit Fock preimage basis
+is the canonical exterior-algebra image of the corresponding real mode. -/
+@[simp] theorem ιMode_eq_exteriorGenerator (i : Fin 3) :
+    ιMode i = ExteriorAlgebra.ι ℝ (modeVector i) := rfl
 
 theorem fockToZorn_ιMode (i : Fin 3) :
     fockToZorn (ιMode i) =

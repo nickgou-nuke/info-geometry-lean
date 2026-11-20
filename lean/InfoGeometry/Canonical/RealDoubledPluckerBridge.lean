@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Canonical.RealDoubledChiralKreinFrame
 import InfoGeometry.Canonical.RealSolderingWeylKreinBridge
+import InfoGeometry.Canonical.SplitOctonionCARBdGRegularLift
 import InfoGeometry.Projective.ExteriorPowerPluckerBridge
 
 /-!
@@ -24,6 +25,7 @@ namespace InfoGeometry.Canonical.RealDoubledPluckerBridge
 open InfoGeometry.Canonical.RealDoubledChiralKreinFrame
 open InfoGeometry.Canonical.FierzKleinFoundation
 open InfoGeometry.Projective.KleinQuadricPlucker
+open InfoGeometry.Canonical.SplitOctonionCARBdGRegularLift
 
 private def i4ToFin : I4 ≃ Fin 4 where
   toFun
@@ -99,5 +101,155 @@ theorem fourSpaceExteriorPluckerMap_ιMulti (p q : FourSpace) :
     fin_cases i <;> rfl
   rw [hvec,
     InfoGeometry.Projective.ExteriorPowerPluckerBridge.pluckerExteriorMap_ιMulti]
+
+/-! ### The three-mode real exterior carrier inside spatial Minkowski bivectors
+
+The CAR/Fock carrier has three real modes, whereas the Klein chart is
+`Λ² ℝ⁴`. The map below inserts those three coordinates into the spatial
+`x,y,z` hyperplane of `FourSpace`. The proved coordinate identities below
+cover simple mode pairs; a theorem for every element of the exterior square
+is intentionally not claimed here. -/
+
+abbrev ThreeModeSpace := InfoGeometry.Algebra.FiniteSpin.Vec3R
+
+/-- Insert the three CAR modes into the spatial coordinates of the doubled
+Minkowski four-space, with zero time coordinate. -/
+def threeModeToSpatialFourSpace : ThreeModeSpace →ₗ[ℝ] FourSpace where
+  toFun v := WithLp.toLp 2 (fun j : Fin 4 =>
+    if j.val = 0 then 0 else v ⟨j.val - 1, by omega⟩)
+  map_add' v w := by
+    ext j
+    fin_cases j <;> simp
+  map_smul' r v := by
+    ext j
+    fin_cases j <;> simp
+
+/-- The spatial insertion is injective, so it realizes the three-mode space
+as an actual three-dimensional subspace of `FourSpace`. -/
+theorem threeModeToSpatialFourSpace_injective :
+    Function.Injective threeModeToSpatialFourSpace := by
+  intro u v huv
+  funext i
+  have h := congrArg
+    (fun p : FourSpace => (WithLp.ofLp p) i.succ) huv
+  simpa [threeModeToSpatialFourSpace] using h
+
+/-- The inserted three-mode vectors have zero time component. -/
+theorem threeModeToSpatialFourSpace_time (v : ThreeModeSpace) :
+    (WithLp.ofLp (threeModeToSpatialFourSpace v)) 0 = 0 := by
+  simp [threeModeToSpatialFourSpace]
+
+/-- The induced exterior-square map from the three real Fock modes into
+`Λ² FourSpace`, followed by the repository's existing six-coordinate
+Plücker readout. -/
+def threeModeExteriorPluckerMap :
+    (⋀[ℝ]^2 ThreeModeSpace) →ₗ[ℝ] InfoGeometry.Algebra.FiniteSpin.Vec6R :=
+  fourSpaceExteriorPluckerMap.comp
+    (exteriorPower.map 2 threeModeToSpatialFourSpace)
+
+/-- On simple mode bivectors, the new map is exactly the six Plücker minors
+of the corresponding spatially embedded four-vectors. -/
+theorem threeModeExteriorPluckerMap_ιMulti (u v : ThreeModeSpace) :
+    threeModeExteriorPluckerMap (exteriorPower.ιMulti ℝ 2 ![u, v]) =
+      InfoGeometry.Projective.ExteriorPowerPluckerBridge.pluckerCoords
+        (fourSpaceToKleinVec4 (threeModeToSpatialFourSpace u))
+        (fourSpaceToKleinVec4 (threeModeToSpatialFourSpace v)) := by
+  change fourSpaceExteriorPluckerMap
+      (exteriorPower.map 2 threeModeToSpatialFourSpace
+        (exteriorPower.ιMulti ℝ 2 ![u, v])) = _
+  rw [exteriorPower.map_apply_ιMulti]
+  exact fourSpaceExteriorPluckerMap_ιMulti
+    (threeModeToSpatialFourSpace u) (threeModeToSpatialFourSpace v)
+
+/-- Every embedded pair of CAR mode vectors satisfies the Klein equation.
+The theorem is stated on coordinates, so it also covers the zero bivector. -/
+theorem threeModePair_plucker_on_klein (u v : ThreeModeSpace) :
+    InfoGeometry.Projective.ExteriorPowerPluckerBridge.pluckerCoords
+        (fourSpaceToKleinVec4 (threeModeToSpatialFourSpace u))
+        (fourSpaceToKleinVec4 (threeModeToSpatialFourSpace v)) 0 *
+      InfoGeometry.Projective.ExteriorPowerPluckerBridge.pluckerCoords
+        (fourSpaceToKleinVec4 (threeModeToSpatialFourSpace u))
+        (fourSpaceToKleinVec4 (threeModeToSpatialFourSpace v)) 5 -
+    InfoGeometry.Projective.ExteriorPowerPluckerBridge.pluckerCoords
+        (fourSpaceToKleinVec4 (threeModeToSpatialFourSpace u))
+        (fourSpaceToKleinVec4 (threeModeToSpatialFourSpace v)) 1 *
+      InfoGeometry.Projective.ExteriorPowerPluckerBridge.pluckerCoords
+        (fourSpaceToKleinVec4 (threeModeToSpatialFourSpace u))
+        (fourSpaceToKleinVec4 (threeModeToSpatialFourSpace v)) 4 +
+    InfoGeometry.Projective.ExteriorPowerPluckerBridge.pluckerCoords
+        (fourSpaceToKleinVec4 (threeModeToSpatialFourSpace u))
+        (fourSpaceToKleinVec4 (threeModeToSpatialFourSpace v)) 2 *
+      InfoGeometry.Projective.ExteriorPowerPluckerBridge.pluckerCoords
+        (fourSpaceToKleinVec4 (threeModeToSpatialFourSpace u))
+        (fourSpaceToKleinVec4 (threeModeToSpatialFourSpace v)) 3 = 0 := by
+  exact InfoGeometry.Projective.ExteriorPowerPluckerBridge.pluckerCoords_on_klein _ _
+
+/-- The simple Plücker bivectors generated by two three-mode vectors have no
+time-space components. -/
+theorem threeModePair_temporalPlucker_zero (u v : ThreeModeSpace) :
+    (InfoGeometry.Projective.ExteriorPowerPluckerBridge.pluckerCoords
+      (fourSpaceToKleinVec4 (threeModeToSpatialFourSpace u))
+      (fourSpaceToKleinVec4 (threeModeToSpatialFourSpace v))) 0 = 0 ∧
+    (InfoGeometry.Projective.ExteriorPowerPluckerBridge.pluckerCoords
+      (fourSpaceToKleinVec4 (threeModeToSpatialFourSpace u))
+      (fourSpaceToKleinVec4 (threeModeToSpatialFourSpace v))) 1 = 0 ∧
+    (InfoGeometry.Projective.ExteriorPowerPluckerBridge.pluckerCoords
+      (fourSpaceToKleinVec4 (threeModeToSpatialFourSpace u))
+      (fourSpaceToKleinVec4 (threeModeToSpatialFourSpace v))) 2 = 0 := by
+  simp [InfoGeometry.Projective.ExteriorPowerPluckerBridge.pluckerCoords,
+    threeModeToSpatialFourSpace, fourSpaceToKleinVec4, i4ToFin]
+
+/-- Concrete Plücker/Klein connection for the circular CAR basis modes. -/
+theorem fockModePair_plucker_coordinates (i j : Fin 3) :
+    InfoGeometry.Projective.ExteriorPowerPluckerBridge.pluckerCoords
+        (fourSpaceToKleinVec4
+          (threeModeToSpatialFourSpace (modeVector i)))
+        (fourSpaceToKleinVec4
+          (threeModeToSpatialFourSpace (modeVector j))) =
+      ![0, 0, 0,
+        (if i.val = 0 ∧ j.val = 1 then (1 : ℝ) else 0) -
+          (if i.val = 1 ∧ j.val = 0 then (1 : ℝ) else 0),
+        (if i.val = 0 ∧ j.val = 2 then (1 : ℝ) else 0) -
+          (if i.val = 2 ∧ j.val = 0 then (1 : ℝ) else 0),
+        (if i.val = 1 ∧ j.val = 2 then (1 : ℝ) else 0) -
+          (if i.val = 2 ∧ j.val = 1 then (1 : ℝ) else 0)] := by
+  funext k
+  fin_cases k <;> fin_cases i <;> fin_cases j <;>
+    norm_num [InfoGeometry.Projective.ExteriorPowerPluckerBridge.pluckerCoords,
+      modeVector, threeModeToSpatialFourSpace, fourSpaceToKleinVec4, i4ToFin]
+
+/-- Concrete Plücker/Klein connection for the circular CAR basis modes. -/
+theorem fockModePair_plucker_on_klein (i j : Fin 3) :
+    InfoGeometry.Projective.ExteriorPowerPluckerBridge.pluckerCoords
+        (fourSpaceToKleinVec4
+          (threeModeToSpatialFourSpace (modeVector i)))
+        (fourSpaceToKleinVec4
+          (threeModeToSpatialFourSpace (modeVector j))) 0 *
+      InfoGeometry.Projective.ExteriorPowerPluckerBridge.pluckerCoords
+        (fourSpaceToKleinVec4
+          (threeModeToSpatialFourSpace (modeVector i)))
+        (fourSpaceToKleinVec4
+          (threeModeToSpatialFourSpace (modeVector j))) 5 -
+    InfoGeometry.Projective.ExteriorPowerPluckerBridge.pluckerCoords
+        (fourSpaceToKleinVec4
+          (threeModeToSpatialFourSpace (modeVector i)))
+        (fourSpaceToKleinVec4
+          (threeModeToSpatialFourSpace (modeVector j))) 1 *
+      InfoGeometry.Projective.ExteriorPowerPluckerBridge.pluckerCoords
+        (fourSpaceToKleinVec4
+          (threeModeToSpatialFourSpace (modeVector i)))
+        (fourSpaceToKleinVec4
+          (threeModeToSpatialFourSpace (modeVector j))) 4 +
+    InfoGeometry.Projective.ExteriorPowerPluckerBridge.pluckerCoords
+        (fourSpaceToKleinVec4
+          (threeModeToSpatialFourSpace (modeVector i)))
+        (fourSpaceToKleinVec4
+          (threeModeToSpatialFourSpace (modeVector j))) 2 *
+      InfoGeometry.Projective.ExteriorPowerPluckerBridge.pluckerCoords
+        (fourSpaceToKleinVec4
+          (threeModeToSpatialFourSpace (modeVector i)))
+        (fourSpaceToKleinVec4
+          (threeModeToSpatialFourSpace (modeVector j))) 3 = 0 :=
+  threeModePair_plucker_on_klein (modeVector i) (modeVector j)
 
 end InfoGeometry.Canonical.RealDoubledPluckerBridge

@@ -46,6 +46,9 @@ outside this change.
 
 The bounded owner search covered actual definitions, theorem statements,
 proofs, imports, and consumers in `lean/` and `src/`.
+The subsequent [electric/magnetic flux codebase map](THOOFT_FLUX_CODEBASE_MAP.md)
+records the broader source inventory, its exact revision, source-lane
+differences, and the remaining gauge/partition/analytic connections.
 
 - `LLM/WalshCharacterGeometry.lean` owns native real `AddChar`s on
   `ι → ZMod 2`, character symmetry and orthogonality, and the actual Walsh

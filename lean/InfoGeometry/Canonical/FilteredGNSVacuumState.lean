@@ -21,6 +21,7 @@ namespace CStarStateColimit.Native.FilteredGNSVacuumState
 open CStarStateColimit.Native
 open FilteredGNSHilbertColimit FilteredGNSHilbertNontrivial
 open FilteredGNSGlobalStageRepresentation FilteredGNSRepresentedCStarClosure
+open FilteredStarAlgebraDirectLimit FilteredGNSAlgebraicColimitRepresentation
 open FilteredGNSVacuumReadback
 open scoped InnerProductSpace ComplexOrder
 
@@ -70,6 +71,51 @@ theorem representedVacuumState_stage (i j : I) (a : Stage j) :
         globalStageRepresentation_mem_representedCStarClosure Stage sys ω j a⟩ =
       (ω.state j).functional a := by
   exact representedVacuumFunctional_stage Stage sys ω i j a
+
+set_option maxHeartbeats 1200000
+/-- Any state agreeing with the compatible family on every represented finite stage
+agrees with the vacuum state on the whole represented C⋆ closure. The proof uses the
+dense range of the algebraic colimit representation, so uniqueness is stated at the
+generic compatible-family level rather than re-proved for individual applications. -/
+theorem representedVacuumState_unique_of_stageAgreement
+    (ν : State (representedCStarClosure Stage sys ω))
+    (hν : ∀ (j : I) (a : Stage j),
+      ν.functional
+        ⟨globalStageRepresentationStarAlgHom Stage sys ω j a,
+          globalStageRepresentation_mem_representedCStarClosure Stage sys ω j a⟩ =
+        (ω.state j).functional a) :
+    ν = representedVacuumState Stage sys ω (Classical.choice ‹Nonempty I›) := by
+  let i : I := Classical.choice ‹Nonempty I›
+  let μ := representedVacuumState Stage sys ω i
+  have heq : (ν.toContinuousLinearMap : _ → ℂ) =
+      (μ.toContinuousLinearMap : _ → ℂ) := by
+    apply (algebraicColimitToRepresentedClosure_denseRange Stage sys ω).equalizer
+      ν.toContinuousLinearMap.continuous μ.toContinuousLinearMap.continuous
+    funext z
+    induction z using DirectLimit.induction with
+    | _ j a =>
+        have hz :
+            algebraicColimitToRepresentedClosure Stage sys ω
+                (algebraicStarDirectLimitOf Stage sys j a) =
+              ⟨globalStageRepresentationStarAlgHom Stage sys ω j a,
+                globalStageRepresentation_mem_representedCStarClosure Stage sys ω j a⟩ := by
+          apply Subtype.ext
+          exact algebraicColimitGNSRepresentation_of Stage sys ω j a
+        change ν.functional
+            (algebraicColimitToRepresentedClosure Stage sys ω
+              (algebraicStarDirectLimitOf Stage sys j a)) =
+          μ.functional
+            (algebraicColimitToRepresentedClosure Stage sys ω
+              (algebraicStarDirectLimitOf Stage sys j a))
+        rw [hz]
+        exact (hν j a).trans
+          (representedVacuumState_stage Stage sys ω i j a).symm
+  apply State.ext
+  apply PositiveLinearMap.ext
+  intro a
+  exact congrFun heq a
+
+set_option maxHeartbeats 200000
 
 /-- Choice of vacuum stage does not change the state on any element of the closure. -/
 theorem representedVacuumState_eq (i j : I) :

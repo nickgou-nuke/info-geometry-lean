@@ -69,6 +69,10 @@ structure RealSplitKreinUnboundedCycle
       KreinSpace.kreinInner (H := H) (D x) y.1 + KreinSpace.kreinInner (H := H) x.1 (D y) = 0
   resolventData : RealSplitKreinResolventData H domain D
   commutator : A → EndH H
+  /-- The bounded commutator representative is additive in the represented algebra.
+  This compatibility is needed to evaluate the universal tensor-kernel one-forms
+  on the original Dirac commutator. -/
+  commutator_add : ∀ a b : A, commutator (a + b) = commutator a + commutator b
   commutator_formula :
     ∀ a : A, ∀ x : {x // x ∈ domain},
       commutator a x.1 =
@@ -99,6 +103,7 @@ def Regular
       KreinGradedModule.gradeCLM (H := H) x ∈ X.domain) ∧
     (∀ a : A, ∀ ⦃x : H⦄, x ∈ X.domain → (X.π a) x ∈ X.domain) ∧
     (∀ b : B, ∀ ⦃x : H⦄, x ∈ X.domain → (X.ρ b) x ∈ X.domain) ∧
+    (∀ a b : A, X.commutator (a + b) = X.commutator a + X.commutator b) ∧
     (∀ a : A, ∀ x : {x // x ∈ X.domain},
       X.commutator a x.1 =
         X.D ⟨(X.π a) x.1, X.π_preserves_domain a x.2⟩ -
@@ -110,7 +115,7 @@ theorem regular
     (X : RealSplitKreinUnboundedCycle A B H) :
     X.Regular :=
   ⟨X.dense_domain, X.closed_graph, X.grade_preserves_domain,
-    X.π_preserves_domain, X.ρ_preserves_domain, X.commutator_formula,
+    X.π_preserves_domain, X.ρ_preserves_domain, X.commutator_add, X.commutator_formula,
     X.resolventData.compact⟩
 
 /-- The internal square-minus-one axis carried by the primitive split atom. -/
@@ -340,6 +345,12 @@ noncomputable def toUnboundedCycle
   commutator := fun a =>
     InfoGeometry.OperatorAlgebra.SpectralTriple.commutator
       T.spectralGenerator.D (T.representedAlgebra.rep a)
+  commutator_add := by
+    intro a b
+    apply ContinuousLinearMap.ext
+    intro v
+    simp [InfoGeometry.OperatorAlgebra.SpectralTriple.commutator, map_add]
+    abel
   commutator_formula := fun a x => by
     simp [InfoGeometry.OperatorAlgebra.SpectralTriple.commutator]
 

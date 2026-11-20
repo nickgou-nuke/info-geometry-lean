@@ -7,6 +7,7 @@ import InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge
 import InfoGeometry.Canonical.ExteriorGradedDerivationBridge
 import InfoGeometry.Canonical.ExteriorContractionOperatorBridge
 import InfoGeometry.Canonical.DoubledMinkowskiCircularPeirceYangMills
+import InfoGeometry.Canonical.GradedConnectionBianchiBridge
 import InfoGeometry.Clifford.CliffordExteriorLift
 
 /-!
@@ -15,26 +16,30 @@ import InfoGeometry.Clifford.CliffordExteriorLift
 This module resolves the nonzero differential compatibility problem left open by
 `InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge`:
 
-1. **Structural Equivalence and Square-Zero No-Go**:
+1. **Peirce-Preserving Differential and the Strong Eigencondition No-Go**:
    For `P = chiralExteriorProj4 V` and `A = circularGaugeConnection4 ω`, the
-   Peirce compatibility equation
+   strong eigencondition
    `matrixExteriorDerivative d A = peirceGradingDeriv P A` holds if and only
    if `d (ω i) = ω i` for `i < 4` and `d (ω i) = -ω i` for `i ≥ 4`.
    Consequently, any square-zero differential (`d.comp d = 0`) satisfying this
-   compatibility forces `A = 0`.
+   eigencondition forces `A = 0`. The compatibility contract used below is
+   instead that `d` commute with the Peirce grading map; it does not prescribe
+   eigenvalues for the connection coefficients.
 2. **Nonzero Odd Graded Derivation (`d ≠ 0`, `A ≠ 0`, `F ≠ 0`)**:
    Constructs `circularGradedDiff : Module.End ℂ (ExteriorAlgebra ℂ (Fin 4 → ℂ))`
    via an upper-triangular `2 × 2` matrix lift in `ExteriorAlgebra.lift`, proves
    `circularGradedDiff ≠ 0` and `IsGradedDerivation circularGradedDiff`, exhibits
-   eigenforms `uPlusForm` (`+1`) and `uMinusForm` (`-1`), proves compatibility on
-   `circularGradedOmega x`, instantiates `circularGaugeConnection4_yang_mills_bridge`,
+   eigenforms `uPlusForm` (`+1`) and `uMinusForm` (`-1`), proves the strong
+   eigencondition on `circularGradedOmega x`, and separately obtains
+   Peirce-preservation from `matrixExteriorDerivative_peirceCompatible`.
+   It instantiates `circularGaugeConnection4_yang_mills_bridge`,
    and constructs an explicit nondegenerate witness with `A ≠ 0` and
    `curvatureFromConnection circularGradedDiff A ≠ 0`.
 3. **Complementary Homogeneous 1-Form Even Derivation**:
    Constructs `circularEvenDiff := exteriorLift circularEvenMap` on
    `ExteriorAlgebra ℂ (Fin 4 → ℂ)`, proves `circularEvenDiff ≠ 0`,
    `MatrixIsHomogeneous 1 (circularGaugeConnection4 (circularEvenOmega x))`,
-   compatibility with `peirceGradingDeriv P`, covariant vanishing
+   its strong eigencondition with `peirceGradingDeriv P`, covariant vanishing
    `covariantDerivative A circularEvenDiff (genV P A A) = 0`, and a nondegenerate
    witness (`A ≠ 0`, `genV P A A ≠ 0`, `P * A ≠ A * P`).
 -/
@@ -58,6 +63,7 @@ open InfoGeometry.Canonical.NonAbelianCovariantBianchiChernWeilBridge
 open InfoGeometry.Canonical.YangMillsSelfDualInstantonBridge
 open InfoGeometry.Canonical.ChernSimonsTransgressionInstantonBridge (curvatureFromConnection)
 open InfoGeometry.Canonical.ExteriorGradedDerivationBridge
+open InfoGeometry.Canonical.GradedConnectionBianchiBridge
 open InfoGeometry.Canonical.ExteriorHomogeneousDegreeBridge
 open InfoGeometry.Canonical.ExteriorContractionOperatorBridge
 open InfoGeometry.Canonical.DoubledMinkowskiCircularPeirceYangMills
@@ -135,8 +141,58 @@ theorem chiralExteriorProj4_peirceGradingDeriv_offBlock
   fin_cases i <;> fin_cases j <;>
     simp [chiralExteriorProj4, chiralProj4, chiralDiagBlock4, chiralOffBlock4]
 
-/-- Block characterization of Peirce compatibility on `chiralOffBlock4 U L`. -/
-theorem chiralOffBlock4_compat_iff
+/-- A differential is Peirce-compatible on the chiral off-diagonal sector when
+it commutes with the inner grading `X ↦ [P, X]` there. This is a preservation
+condition, not the strong coefficient eigencondition `d A = [P, A]`. -/
+def PeirceCompatibleDifferential
+    {V : Type*} [AddCommGroup V] [Module ℂ V]
+    (d : Module.End ℂ (ExteriorAlgebra ℂ V)) : Prop :=
+  ∀ U L : Matrix (Fin 2) (Fin 2) (ExteriorAlgebra ℂ V),
+    matrixExteriorDerivative d
+        (peirceGradingDeriv (chiralExteriorProj4 V) (chiralOffBlock4 U L)) =
+      peirceGradingDeriv (chiralExteriorProj4 V)
+        (matrixExteriorDerivative d (chiralOffBlock4 U L))
+
+/-- Any componentwise linear differential commutes with the chiral Peirce
+grading on the entire off-diagonal sector. The proof uses the block formula
+`δ_P(U,L) = (U,-L)` and the fact that `Matrix.map` preserves negation. -/
+theorem matrixExteriorDerivative_peirceCompatible
+    {V : Type*} [AddCommGroup V] [Module ℂ V]
+    (d : Module.End ℂ (ExteriorAlgebra ℂ V)) :
+    PeirceCompatibleDifferential d := by
+  intro U L
+  calc
+    matrixExteriorDerivative d
+        (peirceGradingDeriv (chiralExteriorProj4 V) (chiralOffBlock4 U L)) =
+        chiralOffBlock4 (U.map d) ((-L).map d) := by
+          rw [chiralExteriorProj4_peirceGradingDeriv_offBlock,
+            matrixExteriorDerivative_chiralOffBlock4]
+    _ = chiralOffBlock4 (U.map d) (-(L.map d)) := by
+          congr 1
+          ext i j
+          simp
+    _ = peirceGradingDeriv (chiralExteriorProj4 V)
+          (matrixExteriorDerivative d (chiralOffBlock4 U L)) := by
+          rw [matrixExteriorDerivative_chiralOffBlock4,
+            chiralExteriorProj4_peirceGradingDeriv_offBlock]
+
+/-- On the same circular connection, Peirce preservation and the ordinary
+graded-connection Bianchi identity coexist for a genuine square-zero
+`ExteriorDifferentialData`. The only connection-specific input is its
+homogeneous one-form proof; the curvature is `dA + A²`. -/
+theorem circularGaugeConnection4_peirce_preservation_and_bianchi
+    (D : ExteriorDifferentialData ℂ (Fin 4 → ℂ))
+    (ω : Fin 8 → ExteriorAlgebra ℂ (Fin 4 → ℂ))
+    (hA : MatrixIsHomogeneous 1 (circularGaugeConnection4 ω)) :
+    PeirceCompatibleDifferential D.d ∧
+      covariantDerivative (circularGaugeConnection4 ω) D.d
+        (curvatureFromConnection D.d (circularGaugeConnection4 ω)) = 0 := by
+  exact ⟨matrixExteriorDerivative_peirceCompatible D.d,
+    graded_connection_curvature_bianchi D (circularGaugeConnection4 ω) hA⟩
+
+/-- Block characterization of the strong derivative eigencondition on
+`chiralOffBlock4 U L`. -/
+theorem chiralOffBlock4_eigencondition_iff
     {V : Type*} [AddCommGroup V] [Module ℂ V]
     (d : Module.End ℂ (ExteriorAlgebra ℂ V))
     (U L : Matrix (Fin 2) (Fin 2) (ExteriorAlgebra ℂ V)) :
@@ -172,9 +228,10 @@ private lemma complex_I_smul_cancel {V : Type*} [AddCommGroup V] [Module ℂ V]
   have h' := congrArg (fun z => (-Complex.I) • z) h
   simpa [smul_smul] using h'
 
-/-- Exact component characterization of `matrixExteriorDerivative d A = peirceGradingDeriv P A`
-for `A = circularGaugeConnection4 ω` and `P = chiralExteriorProj4 V`. -/
-theorem circularGaugeConnection4_compat_iff
+/-- Exact component characterization of the strong derivative eigencondition
+`matrixExteriorDerivative d A = peirceGradingDeriv P A` for
+`A = circularGaugeConnection4 ω` and `P = chiralExteriorProj4 V`. -/
+theorem circularGaugeConnection4_eigencondition_iff
     {V : Type*} [AddCommGroup V] [Module ℂ V]
     (d : Module.End ℂ (ExteriorAlgebra ℂ V))
     (ω : Fin 8 → ExteriorAlgebra ℂ V) :
@@ -182,7 +239,7 @@ theorem circularGaugeConnection4_compat_iff
         peirceGradingDeriv (chiralExteriorProj4 V) (circularGaugeConnection4 ω) ↔
       (∀ i : Fin 8, d (ω i) = if i.val < 4 then ω i else -ω i) := by
   unfold circularGaugeConnection4
-  rw [chiralOffBlock4_compat_iff]
+  rw [chiralOffBlock4_eigencondition_iff]
   constructor
   · rintro ⟨hU, hL⟩
     have hU00 : d (ω 0) + d (ω 3) = ω 0 + ω 3 := by
@@ -250,9 +307,11 @@ theorem circularGaugeConnection4_compat_iff
         simp [weylLowerExt, map_add, map_sub, map_neg, map_smul, h4, h5, h6, h7] <;>
         abel
 
-/-- Square-zero no-go theorem: if `d² = 0` and `d` satisfies Peirce compatibility with
-`P = chiralExteriorProj4 V` on `A = circularGaugeConnection4 ω`, then `A = 0`. -/
-theorem circularGaugeConnection4_sq_zero_compat_forces_zero
+/-- Square-zero no-go theorem for the strong derivative eigencondition: if `d² = 0`
+and `d A = [P,A]` for `P = chiralExteriorProj4 V` and
+`A = circularGaugeConnection4 ω`, then `A = 0`. This is not the
+Peirce-preservation compatibility condition `PeirceCompatibleDifferential`. -/
+theorem circularGaugeConnection4_sq_zero_eigencondition_forces_zero
     {V : Type*} [AddCommGroup V] [Module ℂ V]
     (d : Module.End ℂ (ExteriorAlgebra ℂ V))
     (ω : Fin 8 → ExteriorAlgebra ℂ V)
@@ -264,7 +323,7 @@ theorem circularGaugeConnection4_sq_zero_compat_forces_zero
     intro z
     have h := congrArg (fun f : Module.End ℂ (ExteriorAlgebra ℂ V) => f z) hd2
     simpa [LinearMap.comp_apply, LinearMap.zero_apply] using h
-  have hblocks := (chiralOffBlock4_compat_iff d
+  have hblocks := (chiralOffBlock4_eigencondition_iff d
     (weylUpperExt (ω 0) (ω 1) (ω 2) (ω 3))
     (weylLowerExt (ω 4) (ω 5) (ω 6) (ω 7))).mp hcompat
   rcases hblocks with ⟨hU, hL⟩
@@ -486,20 +545,20 @@ theorem circularGradedDiff_uMinusForm :
   rw [map_sub, hd23, hd3]
   abel
 
-/-- Circular 8-component mixed-degree form assignment driving `circularGradedDiff`
-compatibility on `circularGaugeConnection4`. -/
+/-- Circular 8-component mixed-degree form assignment driving the strong derivative
+eigencondition for `circularGradedDiff` on `circularGaugeConnection4`. -/
 noncomputable def circularGradedOmega (x : Coordinate) :
     Fin 8 → ExteriorAlgebra ℂ (Fin 4 → ℂ) :=
   fun i => if i.val < 4 then (x i : ℂ) • uPlusForm else (x i : ℂ) • uMinusForm
 
-/-- For every `x : Coordinate`, `circularGradedDiff` satisfies exact Peirce compatibility
-`matrixExteriorDerivative circularGradedDiff A = peirceGradingDeriv P A`. -/
-theorem circularGradedDiff_compat (x : Coordinate) :
+/-- For every `x : Coordinate`, `circularGradedDiff` satisfies the strong derivative
+eigencondition `matrixExteriorDerivative circularGradedDiff A = peirceGradingDeriv P A`. -/
+theorem circularGradedDiff_eigencondition (x : Coordinate) :
     matrixExteriorDerivative circularGradedDiff
         (circularGaugeConnection4 (circularGradedOmega x)) =
       peirceGradingDeriv (chiralExteriorProj4 (Fin 4 → ℂ))
         (circularGaugeConnection4 (circularGradedOmega x)) := by
-  rw [circularGaugeConnection4_compat_iff]
+  rw [circularGaugeConnection4_eigencondition_iff]
   intro i
   by_cases hi : i.val < 4
   · simp only [circularGradedOmega, hi, ↓reduceIte, LinearMap.map_smul,
@@ -508,7 +567,7 @@ theorem circularGradedDiff_compat (x : Coordinate) :
       circularGradedDiff_uMinusForm, smul_neg]
 
 /-- General instantiation of `circularGaugeConnection4_yang_mills_bridge` for `circularGradedDiff`
-with compatibility unconditionally discharged. -/
+with its strong derivative eigencondition discharged. -/
 theorem circularGradedDiff_yang_mills_bridge_general
     (star : Module.End ℂ (ExteriorAlgebra ℂ (Fin 4 → ℂ)))
     (x : Coordinate)
@@ -527,8 +586,8 @@ theorem circularGradedDiff_yang_mills_bridge_general
   have hBridge := circularGaugeConnection4_yang_mills_bridge
     star circularGradedDiff (circularGradedOmega x) X
   dsimp only at hBridge
-  have hCompat := circularGradedDiff_compat x
-  have hCurv := hBridge.2.2.1 hCompat
+  have hEigencondition := circularGradedDiff_eigencondition x
+  have hCurv := hBridge.2.2.1 hEigencondition
   exact ⟨hBridge.1, hBridge.2.1, hCurv.1, hCurv.2,
     hBridge.2.2.2.1, hBridge.2.2.2.2.1, hBridge.2.2.2.2.2⟩
 
@@ -597,7 +656,7 @@ private lemma uPlusForm_mul_uMinusForm_ne_zero :
 
 /-- Nondegenerate witness at `x₀ = coordinateEquiv (uPlus + uMinus)` showing `A ≠ 0`,
 `curvatureFromConnection circularGradedDiff A ≠ 0`, `genJ P A A ≠ 0`, `genV P A A ≠ 0`,
-and Peirce compatibility simultaneously. -/
+and the strong derivative eigencondition simultaneously. -/
 theorem circularGradedDiff_nondegenerate_witness :
     ∃ x : Coordinate,
       let P := chiralExteriorProj4 (Fin 4 → ℂ)
@@ -632,7 +691,7 @@ theorem circularGradedDiff_nondegenerate_witness :
     have h02 := congrFun (congrFun hz 0) 2
     rw [hA02, Matrix.zero_apply] at h02
     exact uPlusForm_ne_zero h02
-  have hCompat := circularGradedDiff_compat x₀
+  have hEigencondition := circularGradedDiff_eigencondition x₀
   have hBridge := circularGradedDiff_yang_mills_bridge x₀
   dsimp only at hBridge
   have hGenJ02 : genJ (chiralExteriorProj4 (Fin 4 → ℂ))
@@ -697,7 +756,7 @@ theorem circularGradedDiff_nondegenerate_witness :
       simp [chiralOffBlock4]
     rw [Matrix.add_apply, hJ00, zero_add, hGenV_eq, hAA00] at h00'
     exact uPlusForm_mul_uMinusForm_ne_zero h00'
-  exact ⟨hA_ne, hCurv_ne, hCompat, hGenJ_ne, hGenV_ne⟩
+  exact ⟨hA_ne, hCurv_ne, hEigencondition, hGenJ_ne, hGenV_ne⟩
 
 /-! ## 3. Complementary Homogeneous 1-Form Even Derivation -/
 
@@ -820,14 +879,15 @@ theorem circularEvenOmega_homogeneous (x : Coordinate) :
   · exact isHomogeneous_zero_mem 1
   · exact isHomogeneous_zero_mem 1
 
-/-- For every `x : Coordinate`, `circularEvenDiff` satisfies exact Peirce compatibility on
+/-- For every `x : Coordinate`, `circularEvenDiff` satisfies the strong derivative
+eigencondition on
 `circularGaugeConnection4 (circularEvenOmega x)`. -/
-theorem circularEvenDiff_compat (x : Coordinate) :
+theorem circularEvenDiff_eigencondition (x : Coordinate) :
     matrixExteriorDerivative circularEvenDiff
         (circularGaugeConnection4 (circularEvenOmega x)) =
       peirceGradingDeriv (chiralExteriorProj4 (Fin 4 → ℂ))
         (circularGaugeConnection4 (circularEvenOmega x)) := by
-  rw [circularGaugeConnection4_compat_iff]
+  rw [circularGaugeConnection4_eigencondition_iff]
   intro i
   by_cases hi : i.val < 4
   · simp only [circularEvenOmega, hi, ↓reduceIte, LinearMap.map_smul]
@@ -864,10 +924,11 @@ theorem circularEvenDiff_covariant_vanishing (x : Coordinate) :
       chiralOffBlock4_mul, chiralOffBlock4_mul, chiralOffBlock4_mul]
     ext i j
     fin_cases i <;> fin_cases j <;> simp [chiralDiagBlock4]
-  have hCompat : matrixExteriorDerivative circularEvenDiff A = peirceGradingDeriv P A :=
-    circularEvenDiff_compat x
+  have hEigencondition : matrixExteriorDerivative circularEvenDiff A =
+      peirceGradingDeriv P A :=
+    circularEvenDiff_eigencondition x
   have hDerivV : matrixExteriorDerivative circularEvenDiff (genV P A A) = 0 := by
-    rw [hGenV, matrixExteriorDerivative_even_mul A A, hCompat]
+    rw [hGenV, matrixExteriorDerivative_even_mul A A, hEigencondition]
     have hPeirce :=
       (peirce_maurer_cartan_curvature_bianchi_and_self_dual_yang_mills hP A A A A).2.2.2.2.2.2.2.1
     calc

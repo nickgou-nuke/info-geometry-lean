@@ -715,9 +715,9 @@ private lemma matrixIsHomogeneous_one_conj_map
 Independent chiral Weyl scale–phase transformations `(β₁, α₁)` on the upper sheet and
 `(β₂, α₂)` on the lower sheet lift to invertible matrices `U, Uinv` over
 `ExteriorAlgebra ℂ (Fin 4 → ℂ)` commuting with `chiralExteriorProj4`, preserving:
-1. `circularGradedDiff` Peirce compatibility, curvature decomposition `F = J + V`, and
+1. `circularGradedDiff` strong derivative eigencondition, curvature decomposition `F = J + V`, and
    `evenGrade P F = V` on `circularGradedOmega x`;
-2. `MatrixIsHomogeneous 1`, `circularEvenDiff` Peirce compatibility, and covariant vanishing
+2. `MatrixIsHomogeneous 1`, `circularEvenDiff` strong derivative eigencondition, and covariant vanishing
    `covariantDerivative A_ev' circularEvenDiff (genV P A_ev' A_ev') = 0` on
    `circularEvenOmega x`. -/
 theorem mannheim_graded_even_compat_preserved
@@ -828,7 +828,7 @@ theorem mannheim_graded_even_compat_preserved
     change matrixExteriorDerivative circularGradedDiff (U₀.map alg * A_gr * Uinv₀.map alg) =
       peirceGradingDeriv P (U * A_gr * Uinv)
     rw [matrixExteriorDerivative_conj_map, peirceGradingDeriv_conj_comm hUP hUinvP,
-      circularGradedDiff_compat x]
+      circularGradedDiff_eigencondition x]
   have hCurvGr :
       curvatureFromConnection circularGradedDiff A_gr' =
         U * curvatureFromConnection circularGradedDiff A_gr * Uinv := by
@@ -946,7 +946,7 @@ theorem mannheim_graded_even_compat_preserved
     change matrixExteriorDerivative circularEvenDiff (U₀.map alg * A_ev * Uinv₀.map alg) =
       peirceGradingDeriv P (U * A_ev * Uinv)
     rw [matrixExteriorDerivative_conj_map, peirceGradingDeriv_conj_comm hUP hUinvP,
-      circularEvenDiff_compat x]
+      circularEvenDiff_eigencondition x]
   have hCovEv : covariantDerivative A_ev' circularEvenDiff (genV P A_ev' A_ev') = 0 := by
     dsimp only [covariantDerivative,
       InfoGeometry.Canonical.NonAbelianCovariantBianchiChernWeilBridge.matrixCommutator]

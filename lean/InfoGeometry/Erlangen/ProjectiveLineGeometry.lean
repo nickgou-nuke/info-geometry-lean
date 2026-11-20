@@ -61,9 +61,63 @@ def wedgePointLine (p : Point4) (L : Line4) : Trivector4 where
 def PointOnLine (p : Point4) (L : Line4) : Prop :=
   wedgePointLine p L = zeroTrivector4
 
+/-- Point-line incidence is unchanged by nonzero rescaling of either
+projective representative. -/
+theorem pointOnLine_smul_iff (a b : ℝ) (ha : a ≠ 0) (hb : b ≠ 0)
+    (p : Point4) (L : Line4) :
+    PointOnLine (a • p) (b • L) ↔ PointOnLine p L := by
+  have hab : a * b ≠ 0 := mul_ne_zero ha hb
+  have hb01 : (b • L).p01 = b * L.p01 := by
+    rw [bivector4CoordinatesAddEquiv.smul_def]
+    simp [bivector4CoordinatesAddEquiv, bivector4Coordinates]
+  have hb02 : (b • L).p02 = b * L.p02 := by
+    rw [bivector4CoordinatesAddEquiv.smul_def]
+    simp [bivector4CoordinatesAddEquiv, bivector4Coordinates]
+  have hb03 : (b • L).p03 = b * L.p03 := by
+    rw [bivector4CoordinatesAddEquiv.smul_def]
+    simp [bivector4CoordinatesAddEquiv, bivector4Coordinates]
+  have hb12 : (b • L).p12 = b * L.p12 := by
+    rw [bivector4CoordinatesAddEquiv.smul_def]
+    simp [bivector4CoordinatesAddEquiv, bivector4Coordinates]
+  have hb13 : (b • L).p13 = b * L.p13 := by
+    rw [bivector4CoordinatesAddEquiv.smul_def]
+    simp [bivector4CoordinatesAddEquiv, bivector4Coordinates]
+  have hb23 : (b • L).p23 = b * L.p23 := by
+    rw [bivector4CoordinatesAddEquiv.smul_def]
+    simp [bivector4CoordinatesAddEquiv, bivector4Coordinates]
+  have hscale (u v w z s t : ℝ) :
+      a * u * (b * v) - a * w * (b * z) + a * s * (b * t) = 0 ↔
+        u * v - w * z + s * t = 0 := by
+    rw [show a * u * (b * v) - a * w * (b * z) + a * s * (b * t) =
+      a * b * (u * v - w * z + s * t) by ring]
+    exact (mul_eq_zero).trans (or_iff_right hab)
+  unfold PointOnLine wedgePointLine zeroTrivector4
+  simp only [Trivector4.mk.injEq, Pi.smul_apply, smul_eq_mul,
+    hb01, hb02, hb03, hb12, hb13, hb23]
+  constructor
+  · rintro ⟨h₀, h₁, h₂, h₃⟩
+    exact ⟨(hscale (p I4.t) L.p12 (p I4.x) L.p02 (p I4.y) L.p01).mp h₀,
+      (hscale (p I4.t) L.p13 (p I4.x) L.p03 (p I4.z) L.p01).mp h₁,
+      (hscale (p I4.t) L.p23 (p I4.y) L.p03 (p I4.z) L.p02).mp h₂,
+      (hscale (p I4.x) L.p23 (p I4.y) L.p13 (p I4.z) L.p12).mp h₃⟩
+  · rintro ⟨h₀, h₁, h₂, h₃⟩
+    exact ⟨(hscale (p I4.t) L.p12 (p I4.x) L.p02 (p I4.y) L.p01).mpr h₀,
+      (hscale (p I4.t) L.p13 (p I4.x) L.p03 (p I4.z) L.p01).mpr h₁,
+      (hscale (p I4.t) L.p23 (p I4.y) L.p03 (p I4.z) L.p02).mpr h₂,
+      (hscale (p I4.x) L.p23 (p I4.y) L.p13 (p I4.z) L.p12).mpr h₃⟩
+
 /-- The line through two representative points. -/
 def lineThrough (p q : Point4) : Line4 :=
   wedgeVec4 p q
+
+/-- Scaling the point representatives scales their bivector by the product
+of the two representative factors. -/
+theorem lineThrough_smul (a b : ℝ) (p q : Point4) :
+    lineThrough (a • p) (b • q) = (a * b) • lineThrough p q := by
+  unfold lineThrough wedgeVec4
+  rw [bivector4CoordinatesAddEquiv.smul_def]
+  ext <;> simp [bivector4CoordinatesAddEquiv,
+    bivector4Coordinates, Pi.smul_apply, smul_eq_mul] <;> ring
 
 /-- A bivector is a projective line when it lies on the Klein quadric. -/
 def IsProjectiveLine (L : Line4) : Prop :=

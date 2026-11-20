@@ -3,7 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-import Mathlib.Data.Real.Sqrt
+import Mathlib.Analysis.Real.Sqrt
 import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KleinPresentedGroup
@@ -40,6 +40,8 @@ spacetime foliation with the thermal Kubo–Martin–Schwinger (KMS) condition a
 
 No `sorry`, `admit`, `native_decide`, or custom axioms are used.
 -/
+
+noncomputable section
 
 set_option autoImplicit false
 
@@ -80,11 +82,11 @@ def kmsGlide (β : ℝ) : Equiv.Perm (ℝ × ℝ) where
   left_inv p := by
     ext
     · simp
-    · simp; ring
+    · simp
   right_inv p := by
     ext
     · simp
-    · simp; ring
+    · simp
 
 /-- Time translation `(t, τ) ↦ (t + Δt, τ)` on `ℝ × ℝ`. -/
 def timeShift (Δt : ℝ) : Equiv.Perm (ℝ × ℝ) where
@@ -92,11 +94,11 @@ def timeShift (Δt : ℝ) : Equiv.Perm (ℝ × ℝ) where
   invFun p := (p.1 - Δt, p.2)
   left_inv p := by
     ext
-    · simp; ring
+    · simp
     · rfl
   right_inv p := by
     ext
-    · simp; ring
+    · simp
     · rfl
 
 /-- Squaring `kmsGlide β` shifts Euclidean imaginary time by the full thermal period `β`. -/
@@ -137,12 +139,8 @@ section KleinHom
 /-- The Klein-bottle relation: glide reflection reverses the direction of time shift. -/
 theorem kmsGlide_timeShift_relation (β Δt : ℝ) :
     kmsGlide β * timeShift Δt * (kmsGlide β)⁻¹ = (timeShift Δt)⁻¹ := by
-  ext p
-  simp only [Equiv.Perm.mul_apply]
-  dsimp [kmsGlide, timeShift]
-  ext
-  · simp; ring
-  · simp; ring
+  ext p <;> simp [Equiv.Perm.mul_apply, kmsGlide, timeShift]
+  all_goals ring
 
 /-- Exact representation of the presented Klein group on spacetime coordinates. -/
 def kmsKleinHom (β Δt : ℝ) : KleinGroup →* Equiv.Perm (ℝ × ℝ) :=
@@ -172,11 +170,10 @@ theorem involution_conjugation_neg_iff_anticomm (Γ F : E)
   · intro h
     calc Γ * F + F * Γ
       _ = (Γ * F * Γ) * Γ + F * Γ := by
-        have : Γ * F = (Γ * F * Γ) * Γ := by
-          calc Γ * F = Γ * F * 1 := by rw [mul_one]
-            _ = Γ * F * (Γ * Γ) := by rw [hΓ]
-            _ = (Γ * F * Γ) * Γ := by noncomm_ring
-        rw [this]
+        congr 1
+        calc Γ * F = Γ * F * 1 := by simp
+          _ = Γ * F * (Γ * Γ) := by rw [hΓ]
+          _ = (Γ * F * Γ) * Γ := by noncomm_ring
       _ = (-F) * Γ + F * Γ := by rw [h]
       _ = 0 := by noncomm_ring
   · intro h
@@ -208,25 +205,12 @@ def keldysh45Mat : Matrix (Fin 2) (Fin 2) ℝ :=
 
 theorem keldysh45Mat_sq :
     keldysh45Mat * keldysh45Mat = 1 := by
-  dsimp [keldysh45Mat]
-  have hsqrt2_pos : (0 : ℝ) < 2 := by norm_num
   have hsqrt2_sq : Real.sqrt 2 * Real.sqrt 2 = 2 := Real.mul_self_sqrt (by norm_num)
-  have hsqrt2_ne : Real.sqrt 2 ≠ 0 := Real.sqrt_ne_zero'.mpr hsqrt2_pos
-  rw [Matrix.smul_mul_smul, smul_smul]
-  have hmat_sq : (!![(1 : ℝ), 1; 1, -1] * !![1, 1; 1, -1]) = (2 : ℝ) • 1 := by
-    ext i j
-    fin_cases i <;> fin_cases j <;> (
-      dsimp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]
-      norm_num
-    )
-  rw [hmat_sq, smul_smul]
-  have hscalar : (Real.sqrt 2)⁻¹ * (Real.sqrt 2)⁻¹ * 2 = 1 := by
-    calc (Real.sqrt 2)⁻¹ * (Real.sqrt 2)⁻¹ * 2
-      _ = (Real.sqrt 2 * Real.sqrt 2)⁻¹ * 2 := by
-        rw [← mul_inv, mul_assoc]
-      _ = (2 : ℝ)⁻¹ * 2 := by rw [hsqrt2_sq]
-      _ = 1 := inv_mul_cancel₀ (by norm_num)
-  rw [hscalar, one_smul]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [keldysh45Mat, Matrix.mul_apply, Fin.sum_univ_two] <;>
+    field_simp [Real.sqrt_ne_zero'.mpr (by norm_num : (0 : ℝ) < 2)] <;>
+    nlinarith [hsqrt2_sq]
 
 /-- 45° Keldysh similarity swaps the Krein metric `J1` and Keldysh swap `Eplus`. -/
 theorem keldysh45Mat_intertwines_J1_Eplus :
@@ -239,20 +223,18 @@ theorem keldysh45Mat_intertwines_J1_Eplus :
       _ = (Real.sqrt 2 * Real.sqrt 2)⁻¹ := by rw [mul_inv]
       _ = (2 : ℝ)⁻¹ := by rw [hsqrt2_sq]
   have h1 : keldysh45Mat * J1 * keldysh45Mat = Eplus := by
-    dsimp [keldysh45Mat]
-    rw [Matrix.smul_mul, Matrix.mul_smul, Matrix.smul_mul, smul_smul, h_scalar]
     ext i j
     fin_cases i <;> fin_cases j <;> (
-      dsimp [J1, Eplus, Matrix.mul_apply, Fin.sum_univ_two]
-      norm_num
+      simp [keldysh45Mat, J1, Eplus, Matrix.mul_apply, Fin.sum_univ_two]
+      <;> (try rw [h_scalar])
+      <;> norm_num
     )
   have h2 : keldysh45Mat * Eplus * keldysh45Mat = J1 := by
-    dsimp [keldysh45Mat]
-    rw [Matrix.smul_mul, Matrix.mul_smul, Matrix.smul_mul, smul_smul, h_scalar]
     ext i j
     fin_cases i <;> fin_cases j <;> (
-      dsimp [J1, Eplus, Matrix.mul_apply, Fin.sum_univ_two]
-      norm_num
+      simp [keldysh45Mat, J1, Eplus, Matrix.mul_apply, Fin.sum_univ_two]
+      <;> (try rw [h_scalar])
+      <;> norm_num
     )
   exact ⟨h1, h2⟩
 
@@ -273,3 +255,5 @@ theorem klein_circle_inversion_countermodel_link :
 end KeldyshWalsh
 
 end InfoGeometry.Topology.KleinBottleKMSKeldyshWalsh
+
+end

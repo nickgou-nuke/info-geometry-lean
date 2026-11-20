@@ -506,6 +506,102 @@ theorem unboundedCycle_commutator_one
   intro v
   exact hall (Set.mem_univ v)
 
+private def unboundedCycleCommutatorAddHom
+    {A₀ B₀ H₀ : Type*} [NormedRing A₀] [NormedRing B₀]
+    [NormedAlgebra ℝ A₀] [NormedAlgebra ℝ B₀]
+    [NormedAddCommGroup H₀] [InnerProductSpace ℝ H₀] [CompleteSpace H₀]
+    [KreinSpace H₀] [KreinGradedModule H₀]
+    (X : RealSplitKreinUnboundedCycle A₀ B₀ H₀) : A₀ →+ EndH H₀ where
+  toFun := X.commutator
+  map_zero' := by
+    have h := X.commutator_add 0 0
+    have h' : X.commutator 0 + 0 = X.commutator 0 + X.commutator 0 := by
+      simpa using h
+    exact (add_left_cancel h').symm
+  map_add' := X.commutator_add
+
+private def unboundedCycleDiracPairing
+    {A₀ B₀ H₀ : Type*} [NormedRing A₀] [NormedRing B₀]
+    [NormedAlgebra ℝ A₀] [NormedAlgebra ℝ B₀]
+    [NormedAddCommGroup H₀] [InnerProductSpace ℝ H₀] [CompleteSpace H₀]
+    [KreinSpace H₀] [KreinGradedModule H₀]
+    (X : RealSplitKreinUnboundedCycle A₀ B₀ H₀) : A₀ →+ A₀ →+ EndH H₀ where
+  toFun a :=
+    { toFun := fun b => X.π a * unboundedCycleCommutatorAddHom X b
+      map_zero' := by simp
+      map_add' := by intro b c; simp [mul_add] }
+  map_zero' := by
+    ext b
+    simp
+  map_add' a c := by
+    ext b
+    simp [add_mul]
+
+private theorem unboundedCycleDiracPairing_balanced
+    {A₀ B₀ H₀ : Type*} [NormedRing A₀] [NormedRing B₀]
+    [NormedAlgebra ℝ A₀] [NormedAlgebra ℝ B₀]
+    [NormedAddCommGroup H₀] [InnerProductSpace ℝ H₀] [CompleteSpace H₀]
+    [KreinSpace H₀] [KreinGradedModule H₀]
+    (X : RealSplitKreinUnboundedCycle A₀ B₀ H₀) (n : ℤ) (a b : A₀) :
+    unboundedCycleDiracPairing X (n • a) b = unboundedCycleDiracPairing X a (n • b) := by
+  change X.π (n • a) * unboundedCycleCommutatorAddHom X b =
+    X.π a * unboundedCycleCommutatorAddHom X (n • b)
+  rw [map_zsmul, map_zsmul, smul_mul_assoc, mul_smul_comm]
+
+/-- Evaluate universal one-forms on the original bounded commutator representative
+of an unbounded cycle. This is distinct from the resolvent and Kasparov maps below:
+it sends `a · dᵤ b` to `X.π a * X.commutator b`. -/
+def unboundedCycleDiracOneForm
+    {A₀ B₀ H₀ : Type*} [NormedRing A₀] [NormedRing B₀]
+    [NormedAlgebra ℝ A₀] [NormedAlgebra ℝ B₀]
+    [NormedAddCommGroup H₀] [InnerProductSpace ℝ H₀] [CompleteSpace H₀]
+    [KreinSpace H₀] [KreinGradedModule H₀]
+    (X : RealSplitKreinUnboundedCycle A₀ B₀ H₀) : OneForms A₀ →+ EndH H₀ where
+  toFun ω := tensorAddHom A₀ (unboundedCycleDiracPairing X)
+    (unboundedCycleDiracPairing_balanced X) ω.val
+  map_zero' := by
+    change tensorAddHom A₀ (unboundedCycleDiracPairing X)
+      (unboundedCycleDiracPairing_balanced X) 0 = 0
+    exact map_zero _
+  map_add' ω₁ ω₂ := by
+    change tensorAddHom A₀ (unboundedCycleDiracPairing X)
+      (unboundedCycleDiracPairing_balanced X) (ω₁.val + ω₂.val) = _
+    exact map_add _ ω₁.val ω₂.val
+
+@[simp] theorem unboundedCycleDiracOneForm_leftDifferentialForm
+    {A₀ B₀ H₀ : Type*} [NormedRing A₀] [NormedRing B₀]
+    [NormedAlgebra ℝ A₀] [NormedAlgebra ℝ B₀]
+    [NormedAddCommGroup H₀] [InnerProductSpace ℝ H₀] [CompleteSpace H₀]
+    [KreinSpace H₀] [KreinGradedModule H₀]
+    (X : RealSplitKreinUnboundedCycle A₀ B₀ H₀) (a b : A₀) :
+    unboundedCycleDiracOneForm X (leftDifferentialForm A₀ a b) =
+      X.π a * X.commutator b := by
+  unfold unboundedCycleDiracOneForm
+  change tensorAddHom A₀ (unboundedCycleDiracPairing X)
+      (unboundedCycleDiracPairing_balanced X) (leftDifferentialForm A₀ a b).val = _
+  rw [leftDifferentialForm_val]
+  change tensorAddHom A₀ (unboundedCycleDiracPairing X)
+      (unboundedCycleDiracPairing_balanced X) (leftDifferentialTensor A₀ a b) = _
+  rw [tensorAddHom_leftDifferentialTensor]
+  change X.π a * unboundedCycleCommutatorAddHom X b -
+      X.π (a * b) * unboundedCycleCommutatorAddHom X 1 = _
+  simp [unboundedCycleCommutatorAddHom, unboundedCycle_commutator_one]
+
+@[simp] theorem unboundedCycleDiracOneForm_differential
+    {A₀ B₀ H₀ : Type*} [NormedRing A₀] [NormedRing B₀]
+    [NormedAlgebra ℝ A₀] [NormedAlgebra ℝ B₀]
+    [NormedAddCommGroup H₀] [InnerProductSpace ℝ H₀] [CompleteSpace H₀]
+    [KreinSpace H₀] [KreinGradedModule H₀]
+    (X : RealSplitKreinUnboundedCycle A₀ B₀ H₀) (a : A₀) :
+    unboundedCycleDiracOneForm X (differential A₀ a) = X.commutator a := by
+  unfold unboundedCycleDiracOneForm
+  change tensorAddHom A₀ (unboundedCycleDiracPairing X)
+      (unboundedCycleDiracPairing_balanced X) (differential A₀ a).val = _
+  rw [tensorAddHom_differential]
+  change unboundedCycleDiracPairing X 1 a - unboundedCycleDiracPairing X a 1 = _
+  simp [unboundedCycleDiracPairing, unboundedCycleCommutatorAddHom,
+    unboundedCycle_commutator_one]
+
 /-- Bounded-transform Connes 1-form map `Ω¹(A₀) →+ EndH H₀` on `RealSplitKreinUnboundedCycle`
 via `T : RealSplitKreinBoundedTransform X` (`T.phase = X.resolvent`, `BUCKET 3` resolvent
 representative). -/

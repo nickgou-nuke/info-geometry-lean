@@ -1170,6 +1170,7 @@ def diracJTensorJ : Mat4 K :=
 def diracMassRotor (c s : K) : Mat4 K :=
   c • diracMass1 + s • diracMass2
 
+set_option maxHeartbeats 1200000
 /-- The three 3D real Dirac kinetic generators `diracGamma1`, `diracGamma2`, `diracGamma3` are
 symmetric, square to `+I₄`, and pairwise anticommute. -/
 lemma d3_dirac_kinetic_clifford_triplet :
@@ -1674,6 +1675,8 @@ theorem dewitt_tetractys_mat4_zeta8_and_sp4_invariance :
   exact ⟨⟨hP2, hSwap, hSyn⟩, ⟨hSq, hPow4, hPow8⟩, ⟨hOrth, hSymp⟩⟩
 
 end Mat4
+
+set_option maxHeartbeats 200000
 
 -- ============================================================================
 -- SECTION 4g: Fateev–Zamolodchikov / Jones–Fendley ℤ₄ Braid Operator via Orthogonal

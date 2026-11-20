@@ -19,6 +19,7 @@ import InfoGeometry.Clifford.CliffordBitWordEquivalence
 import InfoGeometry.Recovered.CantorCliffordLimitBridgeRecovered
 import InfoGeometry.Canonical.CantorLocalCl11OrthogonalAction
 import InfoGeometry.Clifford.Cl11ChiralityAlgebra
+import InfoGeometry.Canonical.GradedTensorWeylBridge
 
 /-!
 # Split Clifford Tower Unification
@@ -49,6 +50,8 @@ open scoped TensorProduct GradedTensorProduct Matrix Kronecker
 attribute [local instance] InfoGeometry.Algebra.NoncommutativeCliffordColimitMassGapSynthesis.instAlgebraClTower
 
 namespace InfoGeometry.Canonical.SplitCliffordTowerUnification
+
+open InfoGeometry.Canonical.GradedTensorWeylBridge
 
 private theorem add_gtmul {A B : Type*} [Ring A] [Ring B] [Algebra ℝ A] [Algebra ℝ B]
     {𝒜 : ZMod 2 → Submodule ℝ A} {ℬ : ZMod 2 → Submodule ℝ B} [GradedAlgebra 𝒜] [GradedAlgebra ℬ]
@@ -506,6 +509,142 @@ private def gradedTensorMapAlgEquiv_comp_left {A B C D : Type*}
         dsimp only [fwd, bwd]
         rw [gradedTensorMapAlgHom_tmul, gradedTensorMapAlgHom_tmul]
         simp)
+
+private theorem cl11StandardEquiv_preserves_matrixGrading {i : ZMod 2}
+    {x : CliffordAlgebra q11} (hx : x ∈ CliffordAlgebra.evenOdd q11 i) :
+    cl11StandardEquiv x ∈ matrixGrading i := by
+  rcases zmod2_cases i with hi | hi
+  · subst i
+    change GradedTensorWeylBridge.matrixParity (cl11StandardEquiv x) = cl11StandardEquiv x
+    have h := cl11StandardEquiv_grade x
+    change cl11StandardEquiv (CliffordAlgebra.involute x) = _ at h
+    rw [CliffordAlgebra.involute_eq_of_mem_even hx] at h
+    simpa [GradedTensorWeylBridge.matrixParity,
+      InfoGeometry.Clifford.Cl11GradedTensorMorita.matrixAlgGrade] using h.symm
+  · subst i
+    change GradedTensorWeylBridge.matrixParity (cl11StandardEquiv x) = -cl11StandardEquiv x
+    have h := cl11StandardEquiv_grade x
+    change cl11StandardEquiv (CliffordAlgebra.involute x) = _ at h
+    rw [CliffordAlgebra.involute_eq_of_mem_odd hx, map_neg] at h
+    simpa [GradedTensorWeylBridge.matrixParity,
+      InfoGeometry.Clifford.Cl11GradedTensorMorita.matrixAlgGrade] using h.symm
+
+private theorem cl11StandardEquiv_symm_preserves_matrixGrading {i : ZMod 2}
+    {A : Matrix (Fin 2) (Fin 2) ℝ} (hA : A ∈ matrixGrading i) :
+    cl11StandardEquiv.symm A ∈ CliffordAlgebra.evenOdd q11 i := by
+  rcases zmod2_cases i with hi | hi
+  · subst i
+    change GradedTensorWeylBridge.matrixParity A = A at hA
+    apply (mem_evenOdd_zero_iff_involute q11 _).2
+    apply cl11StandardEquiv.injective
+    have h := cl11StandardEquiv_grade (cl11StandardEquiv.symm A)
+    rw [AlgEquiv.apply_symm_apply] at h
+    have hA' : InfoGeometry.OperatorAlgebra.GradedMatrixMorita.matrixGrade
+        (RingEquiv.refl ℝ) A = A := by
+      simpa [GradedTensorWeylBridge.matrixParity,
+        InfoGeometry.Clifford.Cl11GradedTensorMorita.matrixAlgGrade] using hA
+    calc
+      cl11StandardEquiv (CliffordAlgebra.involute (cl11StandardEquiv.symm A)) =
+          InfoGeometry.OperatorAlgebra.GradedMatrixMorita.matrixGrade
+            (RingEquiv.refl ℝ) A := h
+      _ = A := hA'
+      _ = cl11StandardEquiv (cl11StandardEquiv.symm A) := by simp
+  · subst i
+    change GradedTensorWeylBridge.matrixParity A = -A at hA
+    apply (mem_evenOdd_one_iff_involute q11 _).2
+    apply cl11StandardEquiv.injective
+    have h := cl11StandardEquiv_grade (cl11StandardEquiv.symm A)
+    rw [AlgEquiv.apply_symm_apply] at h
+    have hA' : InfoGeometry.OperatorAlgebra.GradedMatrixMorita.matrixGrade
+        (RingEquiv.refl ℝ) A = -A := by
+      simpa [GradedTensorWeylBridge.matrixParity,
+        InfoGeometry.Clifford.Cl11GradedTensorMorita.matrixAlgGrade] using hA
+    calc
+      cl11StandardEquiv (CliffordAlgebra.involute (cl11StandardEquiv.symm A)) =
+          InfoGeometry.OperatorAlgebra.GradedMatrixMorita.matrixGrade
+            (RingEquiv.refl ℝ) A := h
+      _ = -A := hA'
+      _ = cl11StandardEquiv (-cl11StandardEquiv.symm A) := by simp
+
+/-- The native Koszul product of the repository's two checkerboard-graded
+real matrix factors is identified with the existing `Cl(1,1)` graded head
+tensor the second real matrix factor. This is the grading-preserving change
+of first factor needed before applying the owned Clifford-head Morita map. -/
+noncomputable def twoMatrixGradedTensorToCl11Tensor :
+    twoMatrixGradedTensor ≃ₐ[ℝ]
+      (CliffordAlgebra.evenOdd q11 ᵍ⊗[ℝ] matrixGrading) :=
+  gradedTensorMapAlgEquiv_comp_left matrixGrading matrixGrading
+    (CliffordAlgebra.evenOdd q11) matrixGrading
+    cl11StandardEquiv.symm
+    (AlgEquiv.refl : Matrix (Fin 2) (Fin 2) ℝ ≃ₐ[ℝ] Matrix (Fin 2) (Fin 2) ℝ)
+    (fun _ _ h => cl11StandardEquiv_symm_preserves_matrixGrading h)
+    (fun _ _ h => cl11StandardEquiv_preserves_matrixGrading h)
+    (fun _ _ h => h) (fun _ _ h => h)
+
+@[simp] theorem twoMatrixGradedTensorToCl11Tensor_tmul
+    (A B : Matrix (Fin 2) (Fin 2) ℝ) :
+    twoMatrixGradedTensorToCl11Tensor (A ᵍ⊗ₜ[ℝ] B) =
+      (cl11StandardEquiv.symm A) ᵍ⊗ₜ[ℝ] B := by
+  simp [twoMatrixGradedTensorToCl11Tensor, gradedTensorMapAlgEquiv_comp_left,
+    gradedTensorMapAlgHom_tmul]
+
+/-- The actual two-factor real matrix superalgebra acts on the nested `2 × 2`
+block matrix carrier through its graded Morita representation. The Koszul sign
+is retained by the preceding graded-factor equivalence. -/
+noncomputable def twoMatrixGradedTensorMoritaEquiv :
+    twoMatrixGradedTensor ≃ₐ[ℝ] Matrix (Fin 2) (Fin 2) (Matrix (Fin 2) (Fin 2) ℝ) :=
+  twoMatrixGradedTensorToCl11Tensor.trans
+    (tensorMatrixEquiv matrixGrading GradedTensorWeylBridge.matrixParity
+      (fun {_} h => involutionGrading_even GradedTensorWeylBridge.matrixParity
+        GradedTensorWeylBridge.matrixParity_involutive h)
+      (fun {_} h => involutionGrading_odd GradedTensorWeylBridge.matrixParity
+        GradedTensorWeylBridge.matrixParity_involutive h))
+
+/-- On pure tensors this equivalence first sends the left matrix factor through
+the proved graded `Cl(1,1)` representation, then uses the owned graded Morita
+matrix action. -/
+theorem twoMatrixGradedTensorMoritaEquiv_tmul
+    (A B : Matrix (Fin 2) (Fin 2) ℝ) :
+    twoMatrixGradedTensorMoritaEquiv (A ᵍ⊗ₜ[ℝ] B) =
+      tensorMatrixEquiv matrixGrading GradedTensorWeylBridge.matrixParity
+        (fun {_} h => involutionGrading_even GradedTensorWeylBridge.matrixParity
+          GradedTensorWeylBridge.matrixParity_involutive h)
+        (fun {_} h => involutionGrading_odd GradedTensorWeylBridge.matrixParity
+          GradedTensorWeylBridge.matrixParity_involutive h)
+        ((cl11StandardEquiv.symm A) ᵍ⊗ₜ[ℝ] B) := by
+  rw [twoMatrixGradedTensorMoritaEquiv, AlgEquiv.trans_apply,
+    twoMatrixGradedTensorToCl11Tensor_tmul, tensorMatrixEquiv_apply,
+    tensorToMatrix_tmul, tail_apply]
+
+/-- The second odd matrix factor acquires the first factor's parity matrix in
+the nested block representation. This is the explicit Koszul/Jordan–Wigner
+sign that distinguishes the supertensor action from an ordinary tensor map. -/
+theorem twoMatrixGradedTensorMoritaEquiv_annihilation₁ :
+    twoMatrixGradedTensorMoritaEquiv annihilation₁ =
+      !![matrixE01, 0; 0, GradedTensorWeylBridge.matrixParity matrixE01] := by
+  rw [annihilation₁, twoMatrixGradedTensorMoritaEquiv_tmul]
+  have hOne : cl11StandardEquiv.symm (1 : Matrix (Fin 2) (Fin 2) ℝ) = 1 := map_one _
+  rw [hOne]
+  exact tensorMatrixEquiv_tail matrixGrading GradedTensorWeylBridge.matrixParity
+    (fun {_} h => involutionGrading_even GradedTensorWeylBridge.matrixParity
+      GradedTensorWeylBridge.matrixParity_involutive h)
+    (fun {_} h => involutionGrading_odd GradedTensorWeylBridge.matrixParity
+      GradedTensorWeylBridge.matrixParity_involutive h) matrixE01
+
+/-- The second mode creator has the corresponding nested block form. This
+explicit owner formula is useful for checking parity on the actual second
+factor, rather than inferring it from a similarly named first-mode theorem. -/
+theorem twoMatrixGradedTensorMoritaEquiv_creation₁ :
+    twoMatrixGradedTensorMoritaEquiv creation₁ =
+      !![matrixE10, 0; 0, GradedTensorWeylBridge.matrixParity matrixE10] := by
+  rw [creation₁, twoMatrixGradedTensorMoritaEquiv_tmul]
+  have hOne : cl11StandardEquiv.symm (1 : Matrix (Fin 2) (Fin 2) ℝ) = 1 := map_one _
+  rw [hOne]
+  exact tensorMatrixEquiv_tail matrixGrading GradedTensorWeylBridge.matrixParity
+    (fun {_} h => involutionGrading_even GradedTensorWeylBridge.matrixParity
+      GradedTensorWeylBridge.matrixParity_involutive h)
+    (fun {_} h => involutionGrading_odd GradedTensorWeylBridge.matrixParity
+      GradedTensorWeylBridge.matrixParity_involutive h) matrixE10
 
 private theorem clifford_evenOdd_supercommute {V R : Type*}
     [AddCommGroup V] [Module ℝ V] {Q : QuadraticForm ℝ V} [Ring R] [Algebra ℝ R]

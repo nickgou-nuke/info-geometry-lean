@@ -2037,6 +2037,7 @@ theorem twistorCoordinate_mul_twistorDerivative_ne :
     simpa using congrArg (fun M : Matrix (Fin 4) (Fin 4) ℂ => M 0 0) hCommZero
   exact one_ne_zero h00
 
+set_option maxHeartbeats 1200000 in
 /-- **Theorem 9.3 (`penrose_twistor_splitCl44_and_firstQuantized_peirce_soldering_bridge`)**:
 Complete carrier soldering and operator-ring isomorphism connecting:
 - the Penrose twistor space `TwistorCarrier = Fin 4 → ℂ` and the split `Cl(4, 4)`
@@ -2145,7 +2146,7 @@ theorem penrose_twistor_splitCl44_and_firstQuantized_peirce_soldering_bridge
   have hMatDeriv4 : twistorDerivative ^ 4 = 0 := by
     ext i j
     fin_cases i <;> fin_cases j <;>
-      simp [twistorDerivative, pow_succ, pow_zero]
+      norm_num [twistorDerivative, pow_succ, Matrix.mul_apply, Fin.sum_univ_four]
   have hCoord4 : firstQuantizedCoordinate ^ 4 = 0 := by
     change (transportTwistorRingEquiv twistorCoordinate) ^ 4 = 0
     rw [← map_pow, hMatCoord4, map_zero]

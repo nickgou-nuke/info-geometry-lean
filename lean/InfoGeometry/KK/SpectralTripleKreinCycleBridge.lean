@@ -223,6 +223,7 @@ structure DomainKreinSpectralTripleData
       KreinSpace.kreinInner (H := H) (D x) y.1 + KreinSpace.kreinInner (H := H) x.1 (D y) = 0
   resolventData : RealSplitKreinResolventData H domain D
   commutator : A → EndH H
+  commutator_add : ∀ a b : A, commutator (a + b) = commutator a + commutator b
   commutator_formula :
     ∀ a : A, ∀ x : {x // x ∈ domain},
       commutator a x.1 = D ⟨(π a) x.1, π_preserves_domain a x.2⟩ - (π a) (D x)
@@ -255,6 +256,7 @@ def DomainKreinSpectralTripleData.toUnboundedCycle
   D_krein_skewAdj := X.D_krein_skewAdj
   resolventData := X.resolventData
   commutator := X.commutator
+  commutator_add := X.commutator_add
   commutator_formula := X.commutator_formula
 
 end DomainLevelBridge
@@ -320,6 +322,12 @@ def phaseRealSpectralTriple_toDomainData
       compact := T.D_compactResolvent.resolvent_compact }
   commutator := fun a =>
     SpectralTriple.commutator T.spectralGenerator.D (T.representedAlgebra.rep a)
+  commutator_add := by
+    intro a b
+    apply ContinuousLinearMap.ext
+    intro v
+    simp [SpectralTriple.commutator, map_add]
+    abel
   commutator_formula := fun a x => by
     simp [SpectralTriple.commutator, repToAlgHom]
   commutatorBound := fun a => T.lipschitz a
@@ -414,6 +422,12 @@ def kreinPhaseRealSpectralTriple_toUnboundedCycle
       compact := T.D_compactResolvent.resolvent_compact }
   commutator := fun a =>
     SpectralTriple.commutator T.spectralGenerator.D (T.representedAlgebra.rep a)
+  commutator_add := by
+    intro a b
+    apply ContinuousLinearMap.ext
+    intro v
+    simp [SpectralTriple.commutator, map_add]
+    abel
   commutator_formula := fun a x => by
     simp [SpectralTriple.commutator, repToAlgHom]
 
@@ -703,6 +717,12 @@ def realPhaseSpectralTriple_toUnboundedCycle
       compact := T.D_compactResolvent.resolvent_compact }
   commutator := fun a =>
     RealPhaseSpectralTriple.commutator T.spectralGenerator.D (T.representedAlgebra.rep a)
+  commutator_add := by
+    intro a b
+    apply ContinuousLinearMap.ext
+    intro v
+    simp [RealPhaseSpectralTriple.commutator, map_add]
+    abel
   commutator_formula := fun a x => by
     simp [RealPhaseSpectralTriple.commutator]
 

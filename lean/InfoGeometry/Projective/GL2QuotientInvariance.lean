@@ -3,11 +3,11 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-// GL2QuotientInvariance.lean
+-- GL2QuotientInvariance.lean
 -- Placeholder for Left‑GL₂(K) Quotient Invariance lemmas.
 
-import Mathlib.Data.Matrix.Notation
-import Mathlib.LinearAlgebra.Matrix
+import Mathlib.LinearAlgebra.Matrix.Notation
+import Mathlib.Data.Matrix.Basic
 
 namespace InfoGeometry.Projective
 

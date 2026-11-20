@@ -153,24 +153,55 @@ def solveEtCoagulaToAporiaEquiv : SolveEtCoagulaNode ≃ AporiaCoagulaNode where
 theorem solveEtCoagulaEdge_iff_coagulaCovers (a b : SolveEtCoagulaNode) :
     CoagulaCovers (solveEtCoagulaToCoagulaEquiv a) (solveEtCoagulaToCoagulaEquiv b) ↔ solveEtCoagulaEdge a b := by
   cases a <;> cases b <;>
-    simp [solveEtCoagulaToCoagulaEquiv, CoagulaCovers, solveEtCoagulaEdge]
+    simp [solveEtCoagulaToCoagulaEquiv, solveEtCoagulaEdge] <;>
+    (try apply_rules [CoagulaCovers.omega_to_P, CoagulaCovers.P_to_Q,
+      CoagulaCovers.P_to_Gamma, CoagulaCovers.Q_to_Gamma,
+      CoagulaCovers.omega_to_T, CoagulaCovers.P_to_T,
+      CoagulaCovers.omega_to_X, CoagulaCovers.P_to_X, CoagulaCovers.Q_to_X,
+      CoagulaCovers.omega_to_Y, CoagulaCovers.P_to_Y, CoagulaCovers.Q_to_Y,
+      CoagulaCovers.omega_to_G, CoagulaCovers.Q_to_G,
+      CoagulaCovers.X_to_hol, CoagulaCovers.Y_to_hol,
+      CoagulaCovers.X_to_F, CoagulaCovers.Y_to_F,
+      CoagulaCovers.hol_to_M, CoagulaCovers.F_to_M,
+      CoagulaCovers.hol_to_K, CoagulaCovers.Gamma_to_K, CoagulaCovers.M_to_K,
+      CoagulaCovers.T_to_A0, CoagulaCovers.hol_to_A0,
+      CoagulaCovers.T_to_Sigma0, CoagulaCovers.G_to_Sigma0,
+      CoagulaCovers.P_to_Sigma0, CoagulaCovers.Q_to_Sigma0,
+      CoagulaCovers.M_to_Sigma0, CoagulaCovers.A0_to_tower,
+      CoagulaCovers.Gamma_to_tower, CoagulaCovers.F_to_tower,
+      CoagulaCovers.Sigma0_to_J, CoagulaCovers.F_to_J, CoagulaCovers.tower_to_J]) <;>
+    (intro h; cases h)
 
 /-- Strict relational isomorphism between `solveEtCoagulaEdge` and `CoagulaCovers`. -/
 def solveEtCoagulaNode_relIso_coagulaNode :
     RelIso solveEtCoagulaEdge CoagulaCovers where
   toEquiv := solveEtCoagulaToCoagulaEquiv
-  map_rel_iff' {a b} := (solveEtCoagulaEdge_iff_coagulaCovers a b).symm
+  map_rel_iff' {a b} := solveEtCoagulaEdge_iff_coagulaCovers a b
 
 theorem solveEtCoagulaEdge_iff_aporiaCover (a b : SolveEtCoagulaNode) :
     AporiaCover (solveEtCoagulaToAporiaEquiv a) (solveEtCoagulaToAporiaEquiv b) ↔ solveEtCoagulaEdge a b := by
   cases a <;> cases b <;>
-    simp [solveEtCoagulaToAporiaEquiv, AporiaCover, solveEtCoagulaEdge]
+    simp [solveEtCoagulaToAporiaEquiv, solveEtCoagulaEdge] <;>
+    (try apply_rules [AporiaCover.c0_1a, AporiaCover.c1a_1b,
+      AporiaCover.c1a_1c, AporiaCover.c1b_1c, AporiaCover.c0_2a,
+      AporiaCover.c1a_2a, AporiaCover.c0_2b, AporiaCover.c1a_2b,
+      AporiaCover.c1b_2b, AporiaCover.c0_2c, AporiaCover.c1a_2c,
+      AporiaCover.c1b_2c, AporiaCover.c0_2d, AporiaCover.c1b_2d,
+      AporiaCover.c2b_3a, AporiaCover.c2c_3a, AporiaCover.c2b_3b,
+      AporiaCover.c2c_3b, AporiaCover.c3a_3c, AporiaCover.c3b_3c,
+      AporiaCover.c3a_3d, AporiaCover.c1c_3d, AporiaCover.c3c_3d,
+      AporiaCover.c2a_4a, AporiaCover.c3a_4a, AporiaCover.c2a_4b,
+      AporiaCover.c2d_4b, AporiaCover.c1a_4b, AporiaCover.c1b_4b,
+      AporiaCover.c3c_4b, AporiaCover.c4a_5, AporiaCover.c1c_5,
+      AporiaCover.c3b_5, AporiaCover.c4b_6, AporiaCover.c3b_6,
+      AporiaCover.c5_6]) <;>
+    (intro h; cases h)
 
 /-- Strict relational isomorphism between `solveEtCoagulaEdge` and `AporiaCover`. -/
 def solveEtCoagulaNode_relIso_aporiaCover :
     RelIso solveEtCoagulaEdge AporiaCover where
   toEquiv := solveEtCoagulaToAporiaEquiv
-  map_rel_iff' {a b} := (solveEtCoagulaEdge_iff_aporiaCover a b).symm
+  map_rel_iff' {a b} := solveEtCoagulaEdge_iff_aporiaCover a b
 
 /-- Transitive reachability isomorphism. -/
 theorem solveEtCoagulaReach_iff_coagulaTransGen (a b : SolveEtCoagulaNode) :
@@ -178,20 +209,31 @@ theorem solveEtCoagulaReach_iff_coagulaTransGen (a b : SolveEtCoagulaNode) :
     solveEtCoagulaReach a b := by
   constructor
   · intro h
-    induction h with
-    | single hcov =>
-      exact Relation.TransGen.single ((solveEtCoagulaEdge_iff_coagulaCovers a _).mp hcov)
-    | tail hstep hlast ih =>
-      obtain ⟨c, rfl⟩ := solveEtCoagulaToCoagulaEquiv.surjective _
-      have h1 := ih rfl
-      have h2 := (solveEtCoagulaEdge_iff_coagulaCovers c b).mp hlast
-      exact h1.tail h2
+    have h' := h.lift solveEtCoagulaToCoagulaEquiv.symm
+      (fun x y hxy => (solveEtCoagulaEdge_iff_coagulaCovers _ _).mp (by simpa using hxy))
+    simpa only [Function.onFun, Equiv.symm_apply_apply] using h'
   · intro h
-    induction h with
-    | single hedge =>
-      exact Relation.TransGen.single ((solveEtCoagulaEdge_iff_coagulaCovers a b).mpr hedge)
-    | tail hstep hlast ih =>
-      exact ih.tail ((solveEtCoagulaEdge_iff_coagulaCovers _ b).mpr hlast)
+    have h' := h.lift solveEtCoagulaToCoagulaEquiv
+      (fun x y hxy => (solveEtCoagulaEdge_iff_coagulaCovers x y).mpr hxy)
+    simpa only [Function.onFun] using h'
+
+/-- Path-level transport of the causal reachability relation to the Aporia
+poset. Together with `solveEtCoagulaToAporiaEquiv`, this upgrades the existing
+edge correspondence to the generated strict order, without installing a global
+`PartialOrder` instance on `SolveEtCoagulaNode`. -/
+theorem solveEtCoagulaReach_iff_aporiaTransGen (a b : SolveEtCoagulaNode) :
+    Relation.TransGen AporiaCover
+        (solveEtCoagulaToAporiaEquiv a) (solveEtCoagulaToAporiaEquiv b) ↔
+      solveEtCoagulaReach a b := by
+  constructor
+  · intro h
+    have h' := h.lift solveEtCoagulaToAporiaEquiv.symm
+      (fun x y hxy => (solveEtCoagulaEdge_iff_aporiaCover _ _).mp (by simpa using hxy))
+    simpa only [Function.onFun, Equiv.symm_apply_apply] using h'
+  · intro h
+    have h' := h.lift solveEtCoagulaToAporiaEquiv
+      (fun x y hxy => (solveEtCoagulaEdge_iff_aporiaCover x y).mpr hxy)
+    simpa only [Function.onFun] using h'
 
 /-! ## Section 3: Fourteen-Operator Alignment Suite -/
 
@@ -202,18 +244,18 @@ theorem epistemic_eq_indefiniteReciprocalTotality_suite
     {E : Type*} [Ring E] (P Ω : E) :
     epistemicQ P = shadowQ P ∧
     epistemicGamma P = polarityGamma P ∧
-    epistemicT Ω P = consciousThesis P Ω ∧
+    epistemicT Ω P = InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityPoset.consciousThesis P Ω ∧
     epistemicX Ω P = outwardProj P Ω ∧
-    epistemicY Ω P = inwardIntrusion P Ω ∧
-    epistemicG Ω P = autonomousGround P Ω ∧
-    epistemicF Ω P = integrativeBridge P Ω ∧
-    epistemicM Ω P = substantiveGravity P Ω ∧
-    epistemicK Ω P = directionalTension P Ω ∧
-    epistemicAporia Ω P = socraticAporia P Ω ∧
-    epistemicShadowAporia Ω P = shadowAporia P Ω ∧
-    epistemicSigma0 Ω P = dogmaticTruncation P Ω ∧
-    epistemicB Ω P = doubledBridge P Ω ∧
-    epistemicJ Ω = reciprocalTotality Ω :=
+    epistemicY Ω P = InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityPoset.inwardIntrusion P Ω ∧
+    epistemicG Ω P = InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityPoset.autonomousGround P Ω ∧
+    epistemicF Ω P = InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityPoset.integrativeBridge P Ω ∧
+    epistemicM Ω P = InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityPoset.substantiveGravity P Ω ∧
+    epistemicK Ω P = InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityPoset.directionalTension P Ω ∧
+    epistemicAporia Ω P = InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityPoset.socraticAporia P Ω ∧
+    epistemicShadowAporia Ω P = InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityPoset.shadowAporia P Ω ∧
+    epistemicSigma0 Ω P = InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityPoset.dogmaticTruncation P Ω ∧
+    epistemicB Ω P = InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityPoset.doubledBridge P Ω ∧
+    epistemicJ Ω = InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityPoset.reciprocalTotality Ω :=
   ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
 
 /-! ## Section 4: Kůrka Parabolic Dynamics in PGL₂(K) -/
@@ -226,23 +268,57 @@ def kurkaParabolicMat {K : Type*} [Field K] (a c : K) : Matrix (Fin 2) (Fin 2) K
 def kurkaParabolicMap {K : Type*} [Field K] (a c : K) (x : K) : K :=
   ((a + c) * x - c^2) / (x + (a - c))
 
+/-- The parabolic specialization agrees with the original `d = 1` rational formula
+on its natural domain. The denominator hypothesis is essential for the unreduced
+expression, even though Lean's field division is total. -/
+theorem kurkaParabolicMap_eq_sub_square {K : Type*} [Field K] (a c x : K)
+    (hden : a + (x - c) ≠ 0) :
+    kurkaParabolicMap a c x = x - (x - c)^2 / (a + (x - c)) := by
+  change ((a + c) * x - c^2) / (x + (a - c)) = _
+  have hden' : x + (a - c) = a + (x - c) := by ring
+  rw [hden']
+  field_simp [hden]
+  ring
+
 theorem kurkaParabolicMat_trace {K : Type*} [Field K] (a c : K) :
     Matrix.trace (kurkaParabolicMat a c) = 2 * a := by
-  dsimp [kurkaParabolicMat, Matrix.trace]
+  simp [kurkaParabolicMat, Matrix.trace]
   ring
 
 theorem kurkaParabolicMat_det {K : Type*} [Field K] (a c : K) :
     Matrix.det (kurkaParabolicMat a c) = a^2 := by
-  dsimp [kurkaParabolicMat, Matrix.det]
+  simp [kurkaParabolicMat, Matrix.det_fin_two]
   ring
+
+/-- The displayed matrix gives the rational map by its usual projective action wherever
+the denominator is nonzero. This is the carrier bridge from the rational formula to `PGL₂`. -/
+theorem kurkaParabolicMap_eq_matrixAction {K : Type*} [Field K] (a c x : K)
+    (hden : x + (a - c) ≠ 0) :
+    kurkaParabolicMap a c x =
+      ((kurkaParabolicMat a c) 0 0 * x + (kurkaParabolicMat a c) 0 1) /
+        ((kurkaParabolicMat a c) 1 0 * x + (kurkaParabolicMat a c) 1 1) := by
+  have hmatrixDen :
+      (kurkaParabolicMat a c) 1 0 * x + (kurkaParabolicMat a c) 1 1 ≠ 0 := by
+    simpa [kurkaParabolicMat] using hden
+  change ((a + c) * x - c^2) / (x + (a - c)) =
+    ((a + c) * x + (-c^2)) / (1 * x + (a - c))
+  rw [show 1 * x = x by simp]
+  congr 1
+  ring
+
+/-- For `a ≠ 0`, the representative matrix is nonsingular, so its projective action
+really defines an element of `PGL₂(K)`. -/
+theorem kurkaParabolicMat_det_ne_zero {K : Type*} [Field K] (a c : K) (ha : a ≠ 0) :
+    Matrix.det (kurkaParabolicMat a c) ≠ 0 := by
+  rw [kurkaParabolicMat_det]
+  exact pow_ne_zero 2 ha
 
 theorem kurkaParabolicMat_sub_scalar_sq {K : Type*} [Field K] (a c : K) :
     (kurkaParabolicMat a c - a • 1)^2 = 0 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> (
-    dsimp [kurkaParabolicMat, Matrix.mul_apply]
-    ring
-  )
+  fin_cases i <;> fin_cases j <;>
+    simp [pow_two, kurkaParabolicMat, Matrix.mul_apply, Fin.sum_univ_two,
+      Matrix.one_apply, Matrix.smul_apply, Matrix.sub_apply]; ring
 
 theorem kurkaParabolicMat_sub_scalar_ne_zero {K : Type*} [Field K] (a c : K) :
     kurkaParabolicMat a c - a • 1 ≠ 0 := by
@@ -369,14 +445,14 @@ theorem jordanBlock2_not_diagonalizable {K : Type*} [Field K] (μ : K) :
     ∀ (P R : Matrix (Fin 2) (Fin 2) K) (d : Fin 2 → K),
     P * R = 1 → P * jordanBlock2 μ * R ≠ Matrix.diagonal d := by
   intro P R d hPR hdiag
-  have hPR_inv : R * P = 1 := Matrix.mul_eq_one_comm.mp hPR
+  have hPR_inv : R * P = 1 := mul_eq_one_comm.mp hPR
   let N : Matrix (Fin 2) (Fin 2) K := jordanBlock2 μ - μ • 1
   have hN_nil : N^2 = 0 := by
+    rw [pow_two]
     ext i j
-    fin_cases i <;> fin_cases j <;> (
-      dsimp [N, jordanBlock2, Matrix.mul_apply]
-      ring
-    )
+    fin_cases i <;> fin_cases j <;>
+      simp [N, jordanBlock2, Matrix.mul_apply, Fin.sum_univ_two,
+        Matrix.one_apply, Matrix.smul_apply]
   have hN_ne : N ≠ 0 := by
     intro h
     have h01 : N 0 1 = 0 := by rw [h]; rfl
@@ -392,35 +468,30 @@ theorem jordanBlock2_not_diagonalizable {K : Type*} [Field K] (μ : K) :
       _ = Matrix.diagonal d - μ • (P * R) := by rw [hdiag, Matrix.smul_mul]
       _ = Matrix.diagonal d - μ • 1 := by rw [hPR]
   have hD_nil : D_sub^2 = 0 := by
-    calc D_sub^2 = (P * N * R) * (P * N * R) := by rw [← hsim]
-      _ = P * N * (R * P) * N * R := by simp [Matrix.mul_assoc]
+    calc D_sub^2 = (P * N * R) * (P * N * R) := by rw [← hsim, sq]
+      _ = P * N * (R * P) * N * R := by noncomm_ring
       _ = P * N * 1 * N * R := by rw [hPR_inv]
       _ = P * (N^2) * R := by simp [Matrix.mul_assoc, sq]
       _ = P * 0 * R := by rw [hN_nil]
       _ = 0 := by simp
-  have hD_zero : D_sub = 0 := by
+  have hDdiag : D_sub = Matrix.diagonal (fun i => d i - μ) := by
     ext i j
-    fin_cases i <;> fin_cases j
-    · have h00 : (D_sub^2) 0 0 = 0 := by rw [hD_nil]; rfl
-      dsimp [D_sub, Matrix.mul_apply] at h00
-      have : (d 0 - μ)^2 = 0 := by
-        calc (d 0 - μ)^2 = (Matrix.diagonal d - μ • 1) 0 0 * (Matrix.diagonal d - μ • 1) 0 0 +
-                            (Matrix.diagonal d - μ • 1) 0 1 * (Matrix.diagonal d - μ • 1) 1 0 := by
-          dsimp [Matrix.diagonal]; ring
-        _ = 0 := h00
-      have : d 0 - μ = 0 := sq_eq_zero_iff.mp this
-      dsimp [D_sub, Matrix.diagonal]; exact this
-    · dsimp [D_sub, Matrix.diagonal]
-    · dsimp [D_sub, Matrix.diagonal]
-    · have h11 : (D_sub^2) 1 1 = 0 := by rw [hD_nil]; rfl
-      dsimp [D_sub, Matrix.mul_apply] at h11
-      have : (d 1 - μ)^2 = 0 := by
-        calc (d 1 - μ)^2 = (Matrix.diagonal d - μ • 1) 1 0 * (Matrix.diagonal d - μ • 1) 0 1 +
-                            (Matrix.diagonal d - μ • 1) 1 1 * (Matrix.diagonal d - μ • 1) 1 1 := by
-          dsimp [Matrix.diagonal]; ring
-        _ = 0 := h11
-      have : d 1 - μ = 0 := sq_eq_zero_iff.mp this
-      dsimp [D_sub, Matrix.diagonal]; exact this
+    fin_cases i <;> fin_cases j <;>
+      simp [D_sub, Matrix.diagonal, Matrix.smul_apply]
+  have hDsqDiag : Matrix.diagonal (fun i => (d i - μ)^2) = 0 := by
+    rw [hDdiag, pow_two, Matrix.diagonal_mul_diagonal] at hD_nil
+    simpa [hDdiag, pow_two] using hD_nil
+  have hD_zero : D_sub = 0 := by
+    rw [hDdiag]
+    ext i j
+    by_cases hij : i = j
+    · subst j
+      have hentry : (d i - μ)^2 = 0 := by
+        have := congrArg (fun M : Matrix (Fin 2) (Fin 2) K => M i i) hDsqDiag
+        simpa using this
+      have hentry' : d i - μ = 0 := sq_eq_zero_iff.mp hentry
+      simp [Matrix.diagonal, hentry']
+    · simp [Matrix.diagonal, hij]
   have hN_is_zero : N = 0 := by
     calc N = 1 * N * 1 := by simp
       _ = (R * P) * N * (R * P) := by rw [hPR_inv]
@@ -440,75 +511,70 @@ def jungianToAporiaNode : UnconsciousArchetype → AporiaCoagulaNode
   | .chiralSyzygy => .N5_ParitySolderedTower
   | .selfIndividuation => .N6_ReciprocalTotality_JOmega
 
+private theorem aporiaTransGen_lt {a b : AporiaCoagulaNode}
+    (h : Relation.TransGen AporiaCover a b) : a < b := by
+  constructor
+  · exact h.to_reflTransGen
+  · intro hba
+    rcases (Relation.reflTransGen_iff_eq_or_transGen).mp hba with heq | hba
+    · subst b
+      exact aporiaCover_irreflexive a h
+    · exact aporiaCover_acyclic h hba
+
 theorem jungianArchetype_to_aporiaCoagulaNode_strictMono :
     StrictMono jungianToAporiaNode := by
   intro a b hab
-  fin_cases a <;> fin_cases b
-  all_goals (
-    try {
-      -- Cases where a ≥ b contradict hab : a < b
-      have : ¬ (a < b) := by decide
-      exact (this hab).elim
-    }
-  )
-  -- The genuine strictly increasing pairs:
-  · -- primaMateria < shadowProjection
-    show Relation.TransGen AporiaCover .N0_Omega .N1b_ShadowComplement_Q
-    exact Relation.TransGen.trans
-      (Relation.TransGen.single AporiaCover.c0_1a)
-      (Relation.TransGen.single AporiaCover.c1a_1b)
-  · -- primaMateria < animusLogos
-    show Relation.TransGen AporiaCover .N0_Omega .N1c_PartitioningPolarity_Gamma
-    exact Relation.TransGen.trans
-      (Relation.TransGen.trans
+  cases a <;> cases b <;>
+    (try simp_all [jungianToAporiaNode]) <;>
+    first
+    | apply aporiaTransGen_lt
+      exact Relation.TransGen.trans
         (Relation.TransGen.single AporiaCover.c0_1a)
-        (Relation.TransGen.single AporiaCover.c1a_1b))
-      (Relation.TransGen.single AporiaCover.c1b_1c)
-  · -- primaMateria < chiralSyzygy
-    show Relation.TransGen AporiaCover .N0_Omega .N5_ParitySolderedTower
-    exact Relation.TransGen.trans
-      (Relation.TransGen.trans
+        (Relation.TransGen.single AporiaCover.c1a_1b)
+    | apply aporiaTransGen_lt
+      exact Relation.TransGen.trans
         (Relation.TransGen.trans
           (Relation.TransGen.single AporiaCover.c0_1a)
           (Relation.TransGen.single AporiaCover.c1a_1b))
-        (Relation.TransGen.single AporiaCover.c1b_1c))
-      (Relation.TransGen.single AporiaCover.c1c_5)
-  · -- primaMateria < selfIndividuation
-    show Relation.TransGen AporiaCover .N0_Omega .N6_ReciprocalTotality_JOmega
-    exact Relation.TransGen.trans
-      (Relation.TransGen.trans
+        (Relation.TransGen.single AporiaCover.c1b_1c)
+    | apply aporiaTransGen_lt
+      exact Relation.TransGen.trans
         (Relation.TransGen.trans
           (Relation.TransGen.trans
             (Relation.TransGen.single AporiaCover.c0_1a)
             (Relation.TransGen.single AporiaCover.c1a_1b))
           (Relation.TransGen.single AporiaCover.c1b_1c))
-        (Relation.TransGen.single AporiaCover.c1c_5))
-      (Relation.TransGen.single AporiaCover.c5_6)
-  · -- shadowProjection < animusLogos
-    show Relation.TransGen AporiaCover .N1b_ShadowComplement_Q .N1c_PartitioningPolarity_Gamma
-    exact Relation.TransGen.single AporiaCover.c1b_1c
-  · -- shadowProjection < chiralSyzygy
-    show Relation.TransGen AporiaCover .N1b_ShadowComplement_Q .N5_ParitySolderedTower
-    exact Relation.TransGen.trans
-      (Relation.TransGen.single AporiaCover.c1b_1c)
-      (Relation.TransGen.single AporiaCover.c1c_5)
-  · -- shadowProjection < selfIndividuation
-    show Relation.TransGen AporiaCover .N1b_ShadowComplement_Q .N6_ReciprocalTotality_JOmega
-    exact Relation.TransGen.trans
-      (Relation.TransGen.trans
+        (Relation.TransGen.single AporiaCover.c1c_5)
+    | apply aporiaTransGen_lt
+      exact Relation.TransGen.trans
+        (Relation.TransGen.trans
+          (Relation.TransGen.trans
+            (Relation.TransGen.trans
+              (Relation.TransGen.single AporiaCover.c0_1a)
+              (Relation.TransGen.single AporiaCover.c1a_1b))
+            (Relation.TransGen.single AporiaCover.c1b_1c))
+          (Relation.TransGen.single AporiaCover.c1c_5))
+        (Relation.TransGen.single AporiaCover.c5_6)
+    | apply aporiaTransGen_lt
+      exact Relation.TransGen.single AporiaCover.c1b_1c
+    | apply aporiaTransGen_lt
+      exact Relation.TransGen.trans
         (Relation.TransGen.single AporiaCover.c1b_1c)
-        (Relation.TransGen.single AporiaCover.c1c_5))
-      (Relation.TransGen.single AporiaCover.c5_6)
-  · -- animusLogos < chiralSyzygy
-    show Relation.TransGen AporiaCover .N1c_PartitioningPolarity_Gamma .N5_ParitySolderedTower
-    exact Relation.TransGen.single AporiaCover.c1c_5
-  · -- animusLogos < selfIndividuation
-    show Relation.TransGen AporiaCover .N1c_PartitioningPolarity_Gamma .N6_ReciprocalTotality_JOmega
-    exact Relation.TransGen.trans
-      (Relation.TransGen.single AporiaCover.c1c_5)
-      (Relation.TransGen.single AporiaCover.c5_6)
-  · -- chiralSyzygy < selfIndividuation
-    show Relation.TransGen AporiaCover .N5_ParitySolderedTower .N6_ReciprocalTotality_JOmega
-    exact Relation.TransGen.single AporiaCover.c5_6
+        (Relation.TransGen.single AporiaCover.c1c_5)
+    | apply aporiaTransGen_lt
+      exact Relation.TransGen.trans
+        (Relation.TransGen.trans
+          (Relation.TransGen.single AporiaCover.c1b_1c)
+          (Relation.TransGen.single AporiaCover.c1c_5))
+        (Relation.TransGen.single AporiaCover.c5_6)
+    | apply aporiaTransGen_lt
+      exact Relation.TransGen.single AporiaCover.c1c_5
+    | apply aporiaTransGen_lt
+      exact Relation.TransGen.trans
+        (Relation.TransGen.single AporiaCover.c1c_5)
+        (Relation.TransGen.single AporiaCover.c5_6)
+    | apply aporiaTransGen_lt
+      exact Relation.TransGen.single AporiaCover.c5_6
+    | contradiction
 
 end InfoGeometry.Canonical.SolveEtCoagulaAlignmentAndKurkaParabolic

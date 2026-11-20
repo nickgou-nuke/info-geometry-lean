@@ -150,6 +150,54 @@ theorem midpointRotor_normalized_sandwich (s : ℝ) (Γ₁ Γ₂ : E)
       _ = Γ₂ := by rw [one_smul, mul_one]
   exact ⟨h_unit, h_sand⟩
 
+/-- The reverse product of the normalized midpoint rotor and its reverse is also the identity.
+The reverse norm is not an extra assumption: conjugating the given norm by the involution `Γ₁`
+exchanges the two unnormalized factors. -/
+theorem midpointRotorRev_mul_midpointRotor (s : ℝ) (Γ₁ Γ₂ : E)
+    (hs : s ≠ 0)
+    (hΓ₁ : Γ₁ * Γ₁ = 1)
+    (hnorm : InfoGeometry.OperatorAlgebra.PeirceSpine.ReciprocalTotalityAporiaPoset.midpointRotor Γ₁ Γ₂ *
+      unnormMidpointRev Γ₁ Γ₂ = (s^2) • (1 : E)) :
+    midpointRotorRev s Γ₁ Γ₂ * midpointRotor s Γ₁ Γ₂ = 1 := by
+  have hreverse :
+      unnormMidpointRev Γ₁ Γ₂ *
+        InfoGeometry.OperatorAlgebra.PeirceSpine.ReciprocalTotalityAporiaPoset.midpointRotor Γ₁ Γ₂ =
+          (s^2) • (1 : E) := by
+    have hconj :
+        Γ₁ * (InfoGeometry.OperatorAlgebra.PeirceSpine.ReciprocalTotalityAporiaPoset.midpointRotor Γ₁ Γ₂ *
+          unnormMidpointRev Γ₁ Γ₂) * Γ₁ =
+            unnormMidpointRev Γ₁ Γ₂ *
+              InfoGeometry.OperatorAlgebra.PeirceSpine.ReciprocalTotalityAporiaPoset.midpointRotor Γ₁ Γ₂ := by
+      have hleft : Γ₁ * (1 + Γ₂ * Γ₁) * Γ₁ = 1 + Γ₁ * Γ₂ := by
+        calc
+          Γ₁ * (1 + Γ₂ * Γ₁) * Γ₁ = Γ₁ * Γ₁ + Γ₁ * Γ₂ * (Γ₁ * Γ₁) := by noncomm_ring
+          _ = 1 + Γ₁ * Γ₂ := by simp [mul_assoc, hΓ₁]
+      have hright : Γ₁ * (1 + Γ₁ * Γ₂) * Γ₁ = 1 + Γ₂ * Γ₁ := by
+        calc
+          Γ₁ * (1 + Γ₁ * Γ₂) * Γ₁ = Γ₁ * Γ₁ + (Γ₁ * Γ₁) * Γ₂ * Γ₁ := by noncomm_ring
+          _ = 1 + Γ₂ * Γ₁ := by simp [mul_assoc, hΓ₁]
+      dsimp [unnormMidpointRev,
+        InfoGeometry.OperatorAlgebra.PeirceSpine.ReciprocalTotalityAporiaPoset.midpointRotor]
+      calc
+        Γ₁ * ((1 + Γ₂ * Γ₁) * (1 + Γ₁ * Γ₂)) * Γ₁ =
+            (Γ₁ * (1 + Γ₂ * Γ₁) * Γ₁) * (Γ₁ * (1 + Γ₁ * Γ₂) * Γ₁) := by
+              calc
+                _ = Γ₁ * (1 + Γ₂ * Γ₁) * (1 + Γ₁ * Γ₂) * Γ₁ := by noncomm_ring
+                _ = Γ₁ * (1 + Γ₂ * Γ₁) * (Γ₁ * Γ₁) * (1 + Γ₁ * Γ₂) * Γ₁ := by
+                  rw [hΓ₁]
+                  noncomm_ring
+                _ = (Γ₁ * (1 + Γ₂ * Γ₁) * Γ₁) * (Γ₁ * (1 + Γ₁ * Γ₂) * Γ₁) := by noncomm_ring
+        _ = (1 + Γ₁ * Γ₂) * (1 + Γ₂ * Γ₁) := by rw [hleft, hright]
+    calc
+      _ = Γ₁ * ((s^2) • (1 : E)) * Γ₁ := by rw [← hnorm, hconj]
+      _ = (s^2 • Γ₁) * Γ₁ := by simp [mul_smul_comm]
+      _ = (s^2) • (Γ₁ * Γ₁) := by rw [smul_mul_assoc]
+      _ = (s^2) • (1 : E) := by rw [hΓ₁]
+  dsimp [midpointRotorRev, midpointRotor]
+  rw [smul_mul_smul, hreverse, smul_smul]
+  have hscalar : s⁻¹ * s⁻¹ * s^2 = 1 := by field_simp [hs]
+  rw [hscalar, one_smul]
+
 end MidpointRotor
 
 /-! ## Section 2: Kato Adiabatic Connection & Covariant Annihilation -/

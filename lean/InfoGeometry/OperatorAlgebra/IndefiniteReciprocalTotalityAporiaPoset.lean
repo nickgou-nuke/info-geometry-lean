@@ -280,6 +280,11 @@ def socraticAporia (P Ω : E) : E :=
 def groundAporia (P Ω : E) : E :=
   autonomousGround P Ω - autonomousGround P Ω * autonomousGround P Ω
 
+/-- The idempotency defect of a totality operator. It vanishes exactly when
+the operator is idempotent, but is retained explicitly in the generalized
+four-corner identities below. -/
+def totalityDefect (Ω : E) : E := Ω * Ω - Ω
+
 /-- Severed block-diagonal dogma `Σ₀ := (2T - P) + (2G - Q)`. -/
 def severedDogma (P Ω : E) : E :=
   (2 * consciousThesis P Ω - P) + (2 * autonomousGround P Ω - shadowComp P)
@@ -359,6 +364,42 @@ theorem prop4_exact_socratic_aporia_and_intertwining
   refine ⟨hA0, hG0, ?_, ?_, hY, hX⟩
   · rw [hA0, hG0, substantiveGravity, add_comm]
   · rw [hA0, hG0, directionalTension]
+
+/-- Defect-corrected form of the aporia identities for an arbitrary operator
+`Ω`. The familiar idempotent-totality theorem is the special case
+`totalityDefect Ω = 0`. -/
+theorem prop4_aporia_with_totality_defect
+    {P Ω : E} (hP : P * P = P) :
+    socraticAporia P Ω = inwardIntrusion P Ω * outwardProjection P Ω -
+        P * totalityDefect Ω * P ∧
+    groundAporia P Ω = outwardProjection P Ω * inwardIntrusion P Ω -
+        (1 - P) * totalityDefect Ω * (1 - P) ∧
+    consciousThesis P Ω * inwardIntrusion P Ω +
+        inwardIntrusion P Ω * autonomousGround P Ω =
+          inwardIntrusion P Ω + P * totalityDefect Ω * (1 - P) ∧
+    outwardProjection P Ω * consciousThesis P Ω +
+        autonomousGround P Ω * outwardProjection P Ω =
+          outwardProjection P Ω + (1 - P) * totalityDefect Ω * P := by
+  have hQ : (1 - P) * (1 - P) = 1 - P := by noncomm_ring [hP]
+  have hPQ : P * (1 - P) = 0 := by noncomm_ring [hP]
+  have hQP : (1 - P) * P = 0 := by noncomm_ring [hP]
+  have hPL (x : E) : P * (P * x) = P * x := by rw [← mul_assoc, hP]
+  have hPR (x : E) : (x * P) * P = x * P := by rw [mul_assoc, hP]
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · simp only [socraticAporia, consciousThesis, peirce11,
+      inwardIntrusion, conePlus, outwardProjection, coneMinus,
+      totalityDefect]
+    noncomm_ring [hP, hPL, hPR, hQ, hPQ, hQP]
+  · simp only [groundAporia, autonomousGround, peirce00,
+      inwardIntrusion, conePlus, outwardProjection, coneMinus,
+      totalityDefect]
+    noncomm_ring [hP, hPL, hPR, hQ, hPQ, hQP]
+  · simp only [consciousThesis, peirce11, inwardIntrusion,
+      conePlus, autonomousGround, peirce00, totalityDefect]
+    noncomm_ring [hP, hPL, hPR, hQ, hPQ, hQP]
+  · simp only [outwardProjection, coneMinus, consciousThesis,
+      peirce11, autonomousGround, peirce00, totalityDefect]
+    noncomm_ring [hP, hPL, hPR, hQ, hPQ, hQP]
 
 /-- **`Prop.5` (Incompleteness of Dogmatic Truncation — Stratum 4)**:
 Under `P² = P` and `Ω² = Ω`, the severed diagonal `Σ₀ = (2T - P) + (2G - Q)`

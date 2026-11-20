@@ -83,11 +83,14 @@ def associatorLinear (a b : CZ) : Module.End ℝ CZ :=
 
 /-- Transport the actual associator and use native finite-dimensional continuity. -/
 def associatorOperator (a b : CZ) : E →L[ℝ] E :=
-  (coordinateEquiv.conj (associatorLinear a b)).toContinuousLinearMap
+  LinearMap.toContinuousLinearMap
+    (coordinateEquiv.toLinearMap.comp
+      ((associatorLinear a b).comp coordinateEquiv.symm.toLinearMap))
 
 @[simp] theorem associatorOperator_apply (a b : CZ) (x : E) :
     associatorOperator a b x = coordinateEquiv
-      ((coordinateEquiv.symm x * a) * b - coordinateEquiv.symm x * (a * b)) := rfl
+      ((coordinateEquiv.symm x * a) * b - coordinateEquiv.symm x * (a * b)) := by
+  simp [associatorOperator, associatorLinear_apply]
 
 @[simp] theorem associatorOperator_apply_coordinate (a b v : CZ) :
     associatorOperator a b (coordinateEquiv v) =

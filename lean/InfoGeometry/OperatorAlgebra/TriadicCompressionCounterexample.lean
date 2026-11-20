@@ -129,7 +129,15 @@ theorem x_selfadjoint : xᴴ = x := by
   fin_cases i <;> fin_cases j <;> norm_num [x, conjTranspose_apply]
 
 theorem x_posSemidef : x.PosSemidef := by
-  simpa only [x_selfadjoint, x_idempotent] using posSemidef_self_mul_conjTranspose x
+  rw [posSemidef_iff_dotProduct_mulVec]
+  constructor
+  · exact x_selfadjoint
+  · intro v
+    have hquad : star v ⬝ᵥ (x *ᵥ v) = (v 0 + v 2 + v 3) ^ 2 / 3 := by
+      simp [dotProduct, Matrix.mulVec, x, Fin.sum_univ_succ]
+      ring
+    rw [hquad]
+    positivity
 
 theorem x_trace : trace x = 1 := by
   norm_num [trace, diag, x, Fin.sum_univ_succ]
@@ -183,8 +191,21 @@ theorem compressionDefect_eq_two_thirds_rho :
   fin_cases i <;> fin_cases j <;> norm_num
 
 theorem compressionDefect_posSemidef : compressionDefect.PosSemidef := by
-  rw [compressionDefect_eq_two_thirds_rho]
-  exact rho_posSemidef.smul (by norm_num : (0 : ℝ) ≤ 2 / 3)
+  rw [posSemidef_iff_dotProduct_mulVec]
+  constructor
+  · rw [compressionDefect_eq]
+    ext i j
+    fin_cases i <;> fin_cases j <;> norm_num [IsHermitian, conjTranspose_apply]
+  · intro v
+    rw [compressionDefect_eq]
+    have hquad : star v ⬝ᵥ
+        ((!![(2 / 9 : ℝ), 0, 0, 0; 0, 0, 0, 0;
+          0, 0, 0, 0; 0, 0, 0, 0] : Matrix (Fin 4) (Fin 4) ℝ) *ᵥ v) =
+        (2 / 9 : ℝ) * (v 0) ^ 2 := by
+      simp [dotProduct, Matrix.mulVec, Fin.sum_univ_succ]
+      ring
+    rw [hquad]
+    positivity
 
 theorem rho_not_idempotent : rho * rho ≠ rho := by
   intro h

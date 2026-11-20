@@ -9,6 +9,7 @@ import InfoGeometry.OperatorAlgebra.TetraktysZornYangMillsBridge
 import InfoGeometry.Canonical.RealDoubledChiralKreinFrame
 import InfoGeometry.Canonical.SelfDualConnectionCurvatureYangMillsBridge
 import InfoGeometry.Canonical.TwoSheetedYangMillsInductiveColimit
+import InfoGeometry.Clifford.HestenesDirac
 
 /-!
 # Doubled Minkowski / Chiral Krein Bridge for Circular Split-Octonion Yang–Mills
@@ -91,6 +92,105 @@ abbrev CanonicalZorn := InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.Canonic
 abbrev Coordinate := InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis.Coordinate
 abbrev FourSpace := InfoGeometry.Canonical.RealDoubledChiralKreinFrame.FourSpace
 abbrev KreinFrame4 := InfoGeometry.Canonical.RealDoubledChiralKreinFrame.KreinFrame4
+
+/-! ## Real Hestenes carrier on both circular Peirce sheets
+
+The Hestenes realification is used here as a real matrix carrier with its
+complex structure represented by an endomorphism.  Each of the two four-entry
+circular Peirce sheets is sent to its own realified Minkowski slice.  This
+keeps all eight basis coordinates and does not change scalars to `ℂ`.
+-/
+
+open InfoGeometry.Clifford.HestenesDirac
+
+/-- Real circular Pauli soldering on a single four-coordinate sheet.  The
+ordered basis is `(1, σ₁, ε, σ₃)`, with `ε` the real elliptic generator; no
+complex scalar field is used. -/
+def realPauliSoldering (v : Fin 4 → ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
+  !![v 0 + v 3, v 1 - v 2;
+     v 1 + v 2, v 0 - v 3]
+
+/-- Inverse coordinate readout for the real circular Pauli soldering. -/
+def realPauliUnsoldering (A : Matrix (Fin 2) (Fin 2) ℝ) : Fin 4 → ℝ :=
+  ![(A 0 0 + A 1 1) / 2,
+    (A 0 1 + A 1 0) / 2,
+    (A 1 0 - A 0 1) / 2,
+    (A 0 0 - A 1 1) / 2]
+
+/-- The four real coordinates on one Peirce sheet are linearly equivalent to
+real `2 × 2` matrices, with the real elliptic generator represented by
+`[[0,-1],[1,0]]`. -/
+def realPauliSolderingEquiv : (Fin 4 → ℝ) ≃ₗ[ℝ] Matrix (Fin 2) (Fin 2) ℝ where
+  toFun := realPauliSoldering
+  invFun := realPauliUnsoldering
+  left_inv v := by
+    funext i
+    fin_cases i <;> simp [realPauliSoldering, realPauliUnsoldering]
+  right_inv A := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [realPauliSoldering, realPauliUnsoldering] <;> ring
+  map_add' v w := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [realPauliSoldering] <;> ring
+  map_smul' r v := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [realPauliSoldering] <;> ring
+
+/-- The real soldering's ordered basis is the scalar, hyperbolic, elliptic,
+and longitudinal Pauli frame `(σ₀, σ₁, ε, σ₃)`. -/
+theorem realPauliSoldering_basis_table :
+    realPauliSoldering (Pi.single 0 (1 : ℝ)) = !![1, 0; 0, 1] ∧
+    realPauliSoldering (Pi.single 1 (1 : ℝ)) = !![0, 1; 1, 0] ∧
+    realPauliSoldering (Pi.single 2 (1 : ℝ)) = !![0, -1; 1, 0] ∧
+    realPauliSoldering (Pi.single 3 (1 : ℝ)) = !![1, 0; 0, -1] := by
+  simp [realPauliSoldering]
+
+/-- Determinant of the real Pauli soldering.  Its signature is `(2,2)`; the
+physical `(1,3)` interval is supplied by the real `4 × 4` Hestenes slice and
+its complex-structure operator, not by this single-sheet `2 × 2` determinant. -/
+theorem realPauliSoldering_det (v : Fin 4 → ℝ) :
+    (realPauliSoldering v).det =
+      v 0 ^ 2 - v 1 ^ 2 + v 2 ^ 2 - v 3 ^ 2 := by
+  simp [realPauliSoldering, Matrix.det_fin_two]
+  ring
+
+/-- First four entries of the ordered circular Peirce coordinates, in the
+Hestenes real spacetime coordinate order `(t,x,y,z)`. -/
+def circularPlusHestenesCoordinates (x : Coordinate) : MinkowskiCoordinates :=
+  ⟨x 0, x 1, x 2, x 3⟩
+
+/-- Last four entries of the ordered circular Peirce coordinates, in the
+Hestenes real spacetime coordinate order `(t,x,y,z)`. -/
+def circularMinusHestenesCoordinates (x : Coordinate) : MinkowskiCoordinates :=
+  ⟨x 4, x 5, x 6, x 7⟩
+
+/-- Realified Hestenes spacetime matrices for both four-coordinate sheets of
+the full eight-dimensional circular Peirce carrier. -/
+def circularHestenesRealification (x : Coordinate) : RealMatrix4 × RealMatrix4 :=
+  (concreteSpacetimeMatrix (circularPlusHestenesCoordinates x),
+   concreteSpacetimeMatrix (circularMinusHestenesCoordinates x))
+
+/-- Each sheet of the eight-coordinate carrier lands in the real symmetric
+slice commuting with the real complex-structure operator `J`; the Pfaffian
+readout recovers the signed Minkowski interval on each sheet. -/
+theorem circularHestenesRealification_laws (x : Coordinate) :
+    (let cPlus := circularPlusHestenesCoordinates x
+     let cMinus := circularMinusHestenesCoordinates x
+     let (SPlus, SMinus) := circularHestenesRealification x
+     SPlus * concreteComplexStructureJ = concreteComplexStructureJ * SPlus ∧
+     SMinus * concreteComplexStructureJ = concreteComplexStructureJ * SMinus ∧
+     RealMatrix4.transpose SPlus = SPlus ∧
+     RealMatrix4.transpose SMinus = SMinus ∧
+     RealMatrix4.pfaffianSkew4 (SPlus * concreteComplexStructureJ) = -cPlus.interval ∧
+     RealMatrix4.pfaffianSkew4 (SMinus * concreteComplexStructureJ) = -cMinus.interval) := by
+  dsimp [circularHestenesRealification]
+  exact ⟨concreteSpacetimeMatrix_commutes_with_J _,
+    concreteSpacetimeMatrix_commutes_with_J _,
+    concreteSpacetimeMatrix_symmetric _, concreteSpacetimeMatrix_symmetric _,
+    concrete_pfaffianSJ_eq_neg_interval _, concrete_pfaffianSJ_eq_neg_interval _⟩
 
 /-! ## 1. Doubled Minkowski / Chiral Krein Carrier & Metric Soldering -/
 
@@ -1312,5 +1412,6 @@ theorem circularConnection_starColimit_transport
       CanonicalTwoSheetedInductiveColimit.opQuadraticCoupling]
     peirce_nf hP'
   exact ⟨hPψ, hStarP, hElec, hQuad, hCocycle, hSpin⟩
+
 
 end InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge

@@ -1,0 +1,17 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Algebra.HestenesZieglerFoundations
+import InfoGeometry.Projective.HestenesZieglerIncidenceSyzygy
+import InfoGeometry.Projective.HestenesZieglerPappus
+
+#print axioms InfoGeometry.Algebra.HestenesZieglerFoundations.antiPart_antisymm
+#print axioms InfoGeometry.Algebra.HestenesZieglerFoundations.antiPart_mul_derivation
+#print axioms InfoGeometry.Algebra.HestenesZieglerFoundations.antiPart_jacobi
+#print axioms InfoGeometry.Algebra.HestenesZieglerFoundations.unnormalized_commutator_mul_derivation
+#print axioms InfoGeometry.Projective.HestenesZieglerIncidenceSyzygy.det_syzygy
+#print axioms InfoGeometry.Projective.HestenesZieglerIncidenceSyzygy.hz_5_4_incidence_syzygy
+#print axioms InfoGeometry.Projective.HestenesZieglerIncidenceSyzygy.hz_5_4_printed_sign_counterexample
+#print axioms InfoGeometry.Projective.HestenesZieglerPappus.pappus_bracket_identity

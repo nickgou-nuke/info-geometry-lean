@@ -118,3 +118,12 @@
 [submodule "external_refs/grothendieck-riemann-roch"]
 	path = external_refs/grothendieck-riemann-roch
 	url = https://github.com/grothendiecklabs/grothendieck-riemann-roch.git
+[submodule "external_refs/auto-ontology"]
+	path = external_refs/auto-ontology
+	url = https://github.com/NVIDIA/auto-ontology.git
+[submodule "external_ref/open-math-harness"]
+	path = external_ref/open-math-harness
+	url = https://github.com/openmathmodel/open-math-harness.git
+[submodule "external_refs/homotopy-hypothesis-lean4"]
+	path = external_refs/homotopy-hypothesis-lean4
+	url = https://github.com/cadamcat/homotopy-hypothesis-lean4.git

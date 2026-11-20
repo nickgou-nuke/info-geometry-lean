@@ -6,9 +6,9 @@ Authors: InfoGeometry Engine Contributors
 -- FullRankMatrix24.lean
 -- Definition and basic lemmas for a 2×4 matrix of full rank used in Plücker coordinates.
 
-import Mathlib.Data.Matrix.Notation
-import Mathlib.LinearAlgebra.Matrix
-import Mathlib.LinearAlgebra.Rank
+import Mathlib.LinearAlgebra.Matrix.Notation
+import Mathlib.Data.Matrix.Basic
+import Mathlib.LinearAlgebra.Matrix.Rank
 
 open Matrix
 

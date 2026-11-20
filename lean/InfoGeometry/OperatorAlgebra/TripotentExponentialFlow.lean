@@ -186,8 +186,14 @@ theorem commute_of_expTransport_self_mem_gradeZero {H S : A}
   have hd := hasDerivAt_expTransport_at_zero H S
   have hc : HasDerivAt
       (fun t : ℝ => S * expTransport H S t - expTransport H S t * S)
-      (S * ⁅H, S⁆ - ⁅H, S⁆ * S) 0 :=
-    (hd.const_mul S).sub (hd.mul_const S)
+      (S * ⁅H, S⁆ - ⁅H, S⁆ * S) 0 := by
+    change HasFDerivAtFilter
+      (fun t : ℝ => S * expTransport H S t - expTransport H S t * S)
+      (ContinuousLinearMap.toSpanSingleton ℝ (S * ⁅H, S⁆ - ⁅H, S⁆ * S))
+      (nhds 0 ×ˢ pure 0)
+    convert (HasDerivAt.const_mul S hd).sub (hd.mul_const S) using 1
+    ext
+    simp [ContinuousLinearMap.toSpanSingleton_apply]
   rw [hz] at hc
   have hderiv : S * (H * S - S * H) - (H * S - S * H) * S = 0 := by
     simpa only [Ring.lie_def] using

@@ -5,8 +5,10 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.RealDoubledChiralKreinFrame
+import InfoGeometry.Krein.DoubledKreinCPTCommutant
 import InfoGeometry.Canonical.ThermofieldWittSoldering
 import InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis
+import InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge
 import InfoGeometry.Lie.SplitOctonionCircularWittForm
 import InfoGeometry.Lie.SplitOctonionChiralMinkowskiFixedSectionBridge
 import InfoGeometry.Lie.SplitOctonionDoubleChiralSolderingBridge
@@ -296,6 +298,16 @@ private def lorentzTwistKrein : KreinFrame4 ≃ₗ[ℝ] KreinFrame4 where
     · change lorentzSheetParity (r • WithLp.snd u) = r • lorentzSheetParity (WithLp.snd u)
       exact lorentzSheetParity.map_smul _ _
 
+/-- A two-sheet matrix algebra remains noncommutative over any nontrivial
+coefficient ring. This closed witness covers the arbitrary coefficient
+carrier used by the two-sheet gauge blocks in this module. -/
+theorem twoSheetMatrix_noncommutative {B : Type*} [Ring B] [Nontrivial B] :
+    ∃ A C : Matrix (Fin 2) (Fin 2) B, A * C ≠ C * A := by
+  refine ⟨Matrix.single 0 0 1, Matrix.single 0 1 1, ?_⟩
+  intro h
+  have h01 := congrFun (congrFun h 0) 1
+  simp [Matrix.mul_apply, Matrix.single] at h01
+
 /-- Diagonal `(1, 3)` Lorentz metric matrix on `Fin 4`. -/
 @[rep_depth transport]
 def minkowskiEta13 : Matrix (Fin 4) (Fin 4) ℝ :=
@@ -328,16 +340,15 @@ theorem chiralKreinForm_lorentzCircularZornToKreinFrame (X Y : CanonicalZorn) :
         circularPeircePolar (coordinateEquiv A) (coordinateEquiv B) := by
     intro A B
     have hFst : ∀ (C : CanonicalZorn) (i : Fin 4),
-        (WithLp.fst (circularZornToKreinFrame C)) i = coordinateEquiv C ⟨i.val, by omega⟩ := by
+        (WithLp.fst (circularZornToKreinFrame C)) i = coordinateEquiv C (Fin.castAdd 4 i) := by
       intro C i
-      have hi := congrFun (wittSoldering_circularZornToKreinFrame C) ⟨i.val, by omega⟩
-      simpa [wittSoldering, i.isLt] using hi
+      have hi := congrFun (wittSoldering_circularZornToKreinFrame C) (Fin.castAdd 4 i)
+      simpa [wittSoldering] using hi
     have hSnd : ∀ (C : CanonicalZorn) (i : Fin 4),
-        (WithLp.snd (circularZornToKreinFrame C)) i = coordinateEquiv C ⟨i.val + 4, by omega⟩ := by
+        (WithLp.snd (circularZornToKreinFrame C)) i = coordinateEquiv C (Fin.addNat i 4) := by
       intro C i
-      have hi := congrFun (wittSoldering_circularZornToKreinFrame C) ⟨i.val + 4, by omega⟩
-      have hge : ¬ (i.val + 4 < 4) := by omega
-      simpa [wittSoldering, hge] using hi
+      have hi := congrFun (wittSoldering_circularZornToKreinFrame C) (Fin.addNat i 4)
+      simpa [wittSoldering] using hi
     have hP0 : ∀ C : CanonicalZorn,
         (lorentzSheetParity (WithLp.snd (circularZornToKreinFrame C))) 0 = coordinateEquiv C 4 := fun C =>
       hSnd C 0
@@ -359,8 +370,11 @@ theorem chiralKreinForm_lorentzCircularZornToKreinFrame (X Y : CanonicalZorn) :
       change -(WithLp.snd (circularZornToKreinFrame C) 3) = -coordinateEquiv C 7
       rw [hSnd C 3]
       rfl
-    dsimp only [lorentzCircularZornToKreinFrame, LinearEquiv.trans_apply, lorentzTwistKrein,
-      LinearEquiv.coe_mk]
+    change chiralKreinForm
+        (to_doubled (WithLp.fst (circularZornToKreinFrame A))
+          (lorentzSheetParity (WithLp.snd (circularZornToKreinFrame A))))
+        (to_doubled (WithLp.fst (circularZornToKreinFrame B))
+          (lorentzSheetParity (WithLp.snd (circularZornToKreinFrame B)))) = _
     rw [chiralKreinForm_to_doubled, PiLp.inner_apply, PiLp.inner_apply,
       Fin.sum_univ_four, Fin.sum_univ_four]
     simp only [RCLike.inner_apply, conj_trivial]
@@ -368,7 +382,8 @@ theorem chiralKreinForm_lorentzCircularZornToKreinFrame (X Y : CanonicalZorn) :
       hFst B 0, hFst B 1, hFst B 2, hFst B 3,
       hP0 A, hP1 A, hP2 A, hP3 A,
       hP0 B, hP1 B, hP2 B, hP3 B]
-    simp only [circularPeircePolar]
+    simp [circularPeircePolar, Fin.castAdd, Fin.addNat, Fin.castLE]
+    norm_num
     ring
   refine ⟨hPair X Y, ?_⟩
   rw [hPair X X]
@@ -468,7 +483,6 @@ theorem sheetAlgebra_cl11_chirality_and_pole_laws
     dsimp [P_minus, secondSheetProjection, P_plus, firstSheetProjection]
     rw [mat2_one, mat2_sub]
     simp only [sub_self, sub_zero, zero_sub]
-    rfl
   have hJ : J = !![0, 1; 1, 0] := rfl
   have hG : Γ = !![1, 0; 0, -1] := by
     dsimp [Γ, invS, P_plus, firstSheetProjection]
@@ -476,10 +490,10 @@ theorem sheetAlgebra_cl11_chirality_and_pole_laws
     simp only [sub_self, sub_zero, zero_sub, sub_neg_eq_add, add_zero]
     rw [mat2_sub]
     simp only [sub_zero, zero_sub]
-    rfl
   refine ⟨hG, ?_, ?_, ?_, ?_, ?_, firstSheetProjection_idempotent, ?_, ?_, ?_, ?_⟩
   · rw [hG, mat2_mul, mat2_one]
     simp only [one_mul, mul_zero, add_zero, zero_mul, neg_mul, mul_neg, neg_neg, zero_add]
+    norm_num
   · rw [hJ, mat2_mul, mat2_one]
     simp only [zero_mul, one_mul, zero_add, mul_zero, add_zero]
   · rw [hG, hJ, mat2_mul, mat2_mul, mat2_add]
@@ -690,7 +704,11 @@ theorem chiralWeyl_peirce_sector_selection (X : CanonicalZorn) :
         simp only [Fin.coe_castAdd, Fin.coe_addNat] at heq
         omega
       · rfl
-    rw [hc 0, hc 1, hc 2, hc 3, pauliSolder2x2_zero]
+    have hc0 : coordinateEquiv (frame (Fin.addNat j 4)) 0 = 0 := by simpa using hc 0
+    have hc1 : coordinateEquiv (frame (Fin.addNat j 4)) 1 = 0 := by simpa using hc 1
+    have hc2 : coordinateEquiv (frame (Fin.addNat j 4)) 2 = 0 := by simpa using hc 2
+    have hc3 : coordinateEquiv (frame (Fin.addNat j 4)) 3 = 0 := by simpa using hc 3
+    rw [hc0, hc1, hc2, hc3, pauliSolder2x2_zero]
   have hMinusPos : ∀ j : Fin 4, chiralMinusWeyl (frame (Fin.castAdd 4 j)) = 0 := by
     intro j
     dsimp only [chiralMinusWeyl, LinearMap.comp_apply, LinearEquiv.coe_coe,
@@ -704,7 +722,11 @@ theorem chiralWeyl_peirce_sector_selection (X : CanonicalZorn) :
         simp only [Fin.coe_castAdd, Fin.coe_addNat] at heq
         omega
       · rfl
-    rw [hc 0, hc 1, hc 2, hc 3, pauliSolder2x2_zero]
+    have hc0 : coordinateEquiv (frame (Fin.castAdd 4 j)) 4 = 0 := by simpa using hc 0
+    have hc1 : coordinateEquiv (frame (Fin.castAdd 4 j)) 5 = 0 := by simpa using hc 1
+    have hc2 : coordinateEquiv (frame (Fin.castAdd 4 j)) 6 = 0 := by simpa using hc 2
+    have hc3 : coordinateEquiv (frame (Fin.castAdd 4 j)) 7 = 0 := by simpa using hc 3
+    rw [hc0, hc1, hc2, hc3, pauliSolder2x2_zero]
   have hMinusBarPos : ∀ j : Fin 4, chiralMinusBarWeyl (frame (Fin.castAdd 4 j)) = 0 := by
     intro j
     dsimp only [chiralMinusBarWeyl, LinearMap.comp_apply, LinearEquiv.coe_coe,
@@ -718,7 +740,11 @@ theorem chiralWeyl_peirce_sector_selection (X : CanonicalZorn) :
         simp only [Fin.coe_castAdd, Fin.coe_addNat] at heq
         omega
       · rfl
-    rw [hc 0, hc 1, hc 2, hc 3, neg_zero, pauliSolder2x2_zero]
+    have hc0 : coordinateEquiv (frame (Fin.castAdd 4 j)) 4 = 0 := by simpa using hc 0
+    have hc1 : coordinateEquiv (frame (Fin.castAdd 4 j)) 5 = 0 := by simpa using hc 1
+    have hc2 : coordinateEquiv (frame (Fin.castAdd 4 j)) 6 = 0 := by simpa using hc 2
+    have hc3 : coordinateEquiv (frame (Fin.castAdd 4 j)) 7 = 0 := by simpa using hc 3
+    rw [hc0, hc1, hc2, hc3, neg_zero, pauliSolder2x2_zero]
   refine ⟨hP1 chiralPlusWeyl ?_, hM0 chiralPlusWeyl ?_,
     hM1 chiralMinusWeyl ?_, hP0 chiralMinusWeyl ?_,
     hM1 chiralMinusBarWeyl ?_, hP0 chiralMinusBarWeyl ?_, ?_⟩
@@ -854,7 +880,7 @@ private lemma sheet_conePlus (A B : Operator (Fin 2 → ℂ)) :
   simp only [sub_self, sub_zero, zero_sub]
   rw [mat2_mul, mat2_mul]
   ext i j
-  fin_cases i <;> fin_cases j <;> (dsimp; noncomm_ring)
+  fin_cases i <;> fin_cases j <;> (dsimp; simp)
 
 private lemma sheet_coneMinus (A B : Operator (Fin 2 → ℂ)) :
     coneMinus (firstSheetProjection (W := Fin 2 → ℂ)) !![0, A; B, 0] = !![0, 0; B, 0] := by
@@ -863,7 +889,7 @@ private lemma sheet_coneMinus (A B : Operator (Fin 2 → ℂ)) :
   simp only [sub_self, sub_zero, zero_sub]
   rw [mat2_mul, mat2_mul]
   ext i j
-  fin_cases i <;> fin_cases j <;> (dsimp; noncomm_ring)
+  fin_cases i <;> fin_cases j <;> (dsimp; simp)
 
 private lemma sheet_genPhi (A B : Operator (Fin 2 → ℂ)) :
     genPhi (firstSheetProjection (W := Fin 2 → ℂ)) !![0, A; B, 0] !![0, A; B, 0] = !![0, A; B, 0] := by
@@ -925,7 +951,8 @@ theorem circularSheetRep_peirce_channels_and_tetraktys (X : CanonicalZorn) :
     rw [circularSheetRep_apply, hMp]
     have h0 : chiralMinusBarWeyl (frame (Fin.castAdd 4 k)) = 0 := by
       rw [chiralMinusBarWeyl_coord_val, coordinateEquiv_apply_frame]
-      have hz : ∀ j : Fin 4, (Pi.single (Fin.castAdd 4 k) (1 : ℝ)) (Fin.addNat j 4) = 0 := by
+      have hz : ∀ j : Fin 4,
+          ((Pi.single (Fin.castAdd 4 k) (1 : ℝ) : Fin 8 → ℝ) (Fin.addNat j 4)) = 0 := by
         intro j
         rw [Pi.single_apply]
         split_ifs with h
@@ -934,7 +961,15 @@ theorem circularSheetRep_peirce_channels_and_tetraktys (X : CanonicalZorn) :
           simp only [Fin.coe_castAdd, Fin.coe_addNat] at heq
           omega
         · rfl
-      rw [hz 0, hz 1, hz 2, hz 3, neg_zero, pauliSolder2x2_zero]
+      have hz0 : (Pi.single (Fin.castAdd 4 k) (1 : ℝ) : Fin 8 → ℝ) 4 = 0 := by
+        simpa using hz 0
+      have hz1 : (Pi.single (Fin.castAdd 4 k) (1 : ℝ) : Fin 8 → ℝ) 5 = 0 := by
+        simpa using hz 1
+      have hz2 : (Pi.single (Fin.castAdd 4 k) (1 : ℝ) : Fin 8 → ℝ) 6 = 0 := by
+        simpa using hz 2
+      have hz3 : (Pi.single (Fin.castAdd 4 k) (1 : ℝ) : Fin 8 → ℝ) 7 = 0 := by
+        simpa using hz 3
+      rw [hz0, hz1, hz2, hz3, neg_zero, pauliSolder2x2_zero]
     rw [h0, map_zero]
   have hFrameNeg : ∀ (k : Fin 4) (Mminus : Matrix (Fin 2) (Fin 2) ℂ),
       chiralMinusBarWeyl (frame (Fin.addNat k 4)) = Mminus →
@@ -943,7 +978,8 @@ theorem circularSheetRep_peirce_channels_and_tetraktys (X : CanonicalZorn) :
     rw [circularSheetRep_apply, hMm]
     have h0 : chiralPlusWeyl (frame (Fin.addNat k 4)) = 0 := by
       rw [chiralPlusWeyl_coord_val, coordinateEquiv_apply_frame]
-      have hz : ∀ j : Fin 4, (Pi.single (Fin.addNat k 4) (1 : ℝ)) (Fin.castAdd 4 j) = 0 := by
+      have hz : ∀ j : Fin 4,
+          ((Pi.single (Fin.addNat k 4) (1 : ℝ) : Fin 8 → ℝ) (Fin.castAdd 4 j)) = 0 := by
         intro j
         rw [Pi.single_apply]
         split_ifs with h
@@ -952,7 +988,15 @@ theorem circularSheetRep_peirce_channels_and_tetraktys (X : CanonicalZorn) :
           simp only [Fin.coe_castAdd, Fin.coe_addNat] at heq
           omega
         · rfl
-      rw [hz 0, hz 1, hz 2, hz 3, pauliSolder2x2_zero]
+      have hz0 : (Pi.single (Fin.addNat k 4) (1 : ℝ) : Fin 8 → ℝ) 0 = 0 := by
+        simpa using hz 0
+      have hz1 : (Pi.single (Fin.addNat k 4) (1 : ℝ) : Fin 8 → ℝ) 1 = 0 := by
+        simpa using hz 1
+      have hz2 : (Pi.single (Fin.addNat k 4) (1 : ℝ) : Fin 8 → ℝ) 2 = 0 := by
+        simpa using hz 2
+      have hz3 : (Pi.single (Fin.addNat k 4) (1 : ℝ) : Fin 8 → ℝ) 3 = 0 := by
+        simpa using hz 3
+      rw [hz0, hz1, hz2, hz3, pauliSolder2x2_zero]
     rw [h0, map_zero]
   refine ⟨hConeP, hConeM, hPhi, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · exact hFramePos 0 σ0 (by
@@ -1003,11 +1047,13 @@ private lemma circularBispinorRep_coord (X : CanonicalZorn) :
          0, 0, (c 1 : ℂ) + Complex.I * c 2, (c 0 : ℂ) - c 3;
          (c 4 : ℂ) - c 7, -((c 5 : ℂ) - Complex.I * c 6), 0, 0;
          -((c 5 : ℂ) + Complex.I * c 6), (c 4 : ℂ) + c 7, 0, 0] := by
-  dsimp only [circularBispinorRep, LinearMap.comp_apply, LinearMap.prod_apply,
-    bispinorFromBlocksLinear, LinearMap.coe_mk, AddHom.coe_mk]
-  rw [chiralPlusWeyl_coord_val, chiralMinusBarWeyl_coord_val, pauliSolder_eval, pauliSolder_eval]
+  change bispinorFromBlocksLinear (chiralPlusWeyl X, chiralMinusBarWeyl X) = _
+  rw [chiralPlusWeyl_coord_val, chiralMinusBarWeyl_coord_val]
+  dsimp only [bispinorFromBlocksLinear, LinearMap.coe_mk, AddHom.coe_mk]
+  rw [pauliSolder_eval, pauliSolder_eval]
   ext i j
-  fin_cases i <;> fin_cases j <;> dsimp <;> ring
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.cons_val_zero, Matrix.cons_val_one] <;> push_cast <;> ring
 
 -- theorem-class: constructive endpoint
 /-- Noncommutative algebra properties of the circular chiral representation:
@@ -1084,15 +1130,16 @@ theorem circularBispinor_matched_clifford_anticommutator (u w : Fin 4 → ℝ) :
   have hY : ∀ k : Fin 8, coordinateEquiv Y k = minkowskiDiagonalEmbedding w k := fun k =>
     congrFun (coordinateEquiv.apply_symm_apply _) k
   rw [circularBispinorRep_coord X, circularBispinorRep_coord Y]
-  simp only [hX, hY, minkowskiDiagonalEmbedding, Matrix.cons_val_zero, Matrix.cons_val_one,
-    Matrix.cons_val]
+  simp only [hX, hY, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val]
+  simp [minkowskiDiagonalEmbedding, Fin.val_zero, Fin.val_one, Fin.val_two, Fin.val_succ]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    (simp only [Matrix.add_apply, Matrix.mul_apply, Matrix.smul_apply, Matrix.one_apply,
-      Fin.sum_univ_four, circularPeircePolar, Complex.real_smul]; dsimp only)
+    simp only [Matrix.add_apply, Matrix.mul_apply, Matrix.smul_apply, Matrix.one_apply,
+      Fin.sum_univ_four, circularPeircePolar, Complex.real_smul]
   all_goals
     try (norm_num; done)
   all_goals
+    simp [minkowskiDiagonalEmbedding]
     generalize u 0 = u0
     generalize u 1 = u1
     generalize u 2 = u2
@@ -1104,7 +1151,7 @@ theorem circularBispinor_matched_clifford_anticommutator (u w : Fin 4 → ℝ) :
     push_cast
     ring_nf
     try rw [Complex.I_sq]
-    ring
+    all_goals ring
 
 /-! ## Archetype 4: Operator-Valued Two-Sheet Gauge–Higgs Connection & Parity Split -/
 
@@ -1154,10 +1201,12 @@ theorem twoSheetGaugeHiggsConnection_curvature_and_parity_split
   refine ⟨hAdd, hDD, ?_, ?_⟩
   · rw [hDD, hG, mat2_mul, mat2_mul, mat2_add, two_nsmul, mat2_add]
     ext i j
-    fin_cases i <;> fin_cases j <;> (dsimp; noncomm_ring)
+    fin_cases i <;> fin_cases j <;>
+    simp [Pi.single_apply] <;> abel
   · rw [hDD, hG, mat2_mul, mat2_mul, mat2_sub, two_nsmul, mat2_add]
     ext i j
-    fin_cases i <;> fin_cases j <;> (dsimp; noncomm_ring)
+    fin_cases i <;> fin_cases j <;>
+    simp [Pi.single_apply] <;> abel
 
 /-! ## Archetype 5: Contraction-Built 4D Chiral Hodge Star, Self-Dual Yang–Mills, & Bogomolnyi Action -/
 
@@ -1186,10 +1235,9 @@ private lemma contract2_blade {m : ℕ} (a b c d : Fin m) :
     Algebra.algebraMap_eq_smul_one, mul_smul_comm, mul_one,
     map_sub, map_smul, map_smul,
     contraction_on_generator, contraction_on_generator,
-    AlgHom.map_sub, map_smul, map_smul,
+    map_sub, map_smul, map_smul,
     ExteriorAlgebra.algebraMap_leftInverse, ExteriorAlgebra.algebraMap_leftInverse]
   simp only [LinearMap.proj_apply, Pi.single_apply, smul_eq_mul]
-  ring
 
 -- theorem-class: constructive endpoint
 /-- Exact evaluation of `blade2Coeff a b` on basis 2-forms `dx c * dx d` and annihilation on 1-forms and scalars. -/
@@ -1252,6 +1300,24 @@ private lemma extBasis4_anticomm (μ ν : Fin 4) :
     ExteriorAlgebra.ι_sq_zero, ExteriorAlgebra.ι_sq_zero, zero_add, add_zero] at h
   exact eq_neg_of_add_eq_zero_left h
 
+private lemma exteriorIota_anticomm (x y : Fin 4 → ℂ) :
+    ExteriorAlgebra.ι ℂ x * ExteriorAlgebra.ι ℂ y =
+      -(ExteriorAlgebra.ι ℂ y * ExteriorAlgebra.ι ℂ x) := by
+  have hx := ExteriorAlgebra.ι_sq_zero (R := ℂ) x
+  have hy := ExteriorAlgebra.ι_sq_zero (R := ℂ) y
+  have hxy := ExteriorAlgebra.ι_sq_zero (R := ℂ) (x + y)
+  rw [map_add, add_mul, mul_add, mul_add, hx, hy, zero_add, add_zero] at hxy
+  exact eq_neg_of_add_eq_zero_left hxy
+
+private lemma forall_fin4_local {P : Fin 4 → Prop}
+    (h0 : P 0) (h1 : P 1) (h2 : P 2) (h3 : P 3) : ∀ i, P i := by
+  intro i
+  fin_cases i
+  · exact h0
+  · exact h1
+  · exact h2
+  · exact h3
+
 private lemma lorentzHodgeStar4_blade (μ ν : Fin 4) :
     lorentzHodgeStar4 (extBasisOneForm 4 μ * extBasisOneForm 4 ν) =
       match μ, ν with
@@ -1275,6 +1341,7 @@ private lemma lorentzHodgeStar4_blade (μ ν : Fin 4) :
     simp only [lorentzHodgeStar4, LinearMap.add_apply, LinearMap.sub_apply,
       LinearMap.smulRight_apply, (blade2Coeff_eval _ _ _ _ 0).1]
     norm_num
+  all_goals
     generalize extBasisOneForm 4 0 * extBasisOneForm 4 1 = b01
     generalize extBasisOneForm 4 0 * extBasisOneForm 4 2 = b02
     generalize extBasisOneForm 4 0 * extBasisOneForm 4 3 = b03
@@ -1295,32 +1362,89 @@ theorem hodgeStar4_sq_on_blades (a b : Fin 4) :
       lorentzHodgeStar4 (lorentzHodgeStar4 (extBasisOneForm 4 x * extBasisOneForm 4 y)) =
         -(extBasisOneForm 4 x * extBasisOneForm 4 y) := by
     intro x y
-    fin_cases x <;> fin_cases y
+    have h01 : lorentzHodgeStar4 (extBasisOneForm 4 0 * extBasisOneForm 4 1) =
+        -(extBasisOneForm 4 2 * extBasisOneForm 4 3) := lorentzHodgeStar4_blade 0 1
+    have h10 : lorentzHodgeStar4 (extBasisOneForm 4 1 * extBasisOneForm 4 0) =
+        extBasisOneForm 4 2 * extBasisOneForm 4 3 := lorentzHodgeStar4_blade 1 0
+    have h02 : lorentzHodgeStar4 (extBasisOneForm 4 0 * extBasisOneForm 4 2) =
+        -(extBasisOneForm 4 3 * extBasisOneForm 4 1) := lorentzHodgeStar4_blade 0 2
+    have h20 : lorentzHodgeStar4 (extBasisOneForm 4 2 * extBasisOneForm 4 0) =
+        extBasisOneForm 4 3 * extBasisOneForm 4 1 := lorentzHodgeStar4_blade 2 0
+    have h03 : lorentzHodgeStar4 (extBasisOneForm 4 0 * extBasisOneForm 4 3) =
+        -(extBasisOneForm 4 1 * extBasisOneForm 4 2) := lorentzHodgeStar4_blade 0 3
+    have h30 : lorentzHodgeStar4 (extBasisOneForm 4 3 * extBasisOneForm 4 0) =
+        extBasisOneForm 4 1 * extBasisOneForm 4 2 := lorentzHodgeStar4_blade 3 0
+    have h23 : lorentzHodgeStar4 (extBasisOneForm 4 2 * extBasisOneForm 4 3) =
+        extBasisOneForm 4 0 * extBasisOneForm 4 1 := lorentzHodgeStar4_blade 2 3
+    have h32 : lorentzHodgeStar4 (extBasisOneForm 4 3 * extBasisOneForm 4 2) =
+        -(extBasisOneForm 4 0 * extBasisOneForm 4 1) := lorentzHodgeStar4_blade 3 2
+    have h31 : lorentzHodgeStar4 (extBasisOneForm 4 3 * extBasisOneForm 4 1) =
+        extBasisOneForm 4 0 * extBasisOneForm 4 2 := lorentzHodgeStar4_blade 3 1
+    have h13 : lorentzHodgeStar4 (extBasisOneForm 4 1 * extBasisOneForm 4 3) =
+        -(extBasisOneForm 4 0 * extBasisOneForm 4 2) := lorentzHodgeStar4_blade 1 3
+    have h12 : lorentzHodgeStar4 (extBasisOneForm 4 1 * extBasisOneForm 4 2) =
+        extBasisOneForm 4 0 * extBasisOneForm 4 3 := lorentzHodgeStar4_blade 1 2
+    have h21 : lorentzHodgeStar4 (extBasisOneForm 4 2 * extBasisOneForm 4 1) =
+        -(extBasisOneForm 4 0 * extBasisOneForm 4 3) := lorentzHodgeStar4_blade 2 1
+    revert x y
+    apply forall_fin4_local
+    all_goals apply forall_fin4_local
     · rw [extBasis4_sq, map_zero, map_zero, neg_zero]
-    · simp only [lorentzHodgeStar4_blade, map_neg]
-    · simp only [lorentzHodgeStar4_blade, map_neg]
-    · simp only [lorentzHodgeStar4_blade, map_neg]
-    · simp only [lorentzHodgeStar4_blade, map_neg, neg_neg, extBasis4_anticomm 1 0]
+    · rw [h01, map_neg, h23]
+    · rw [h02, map_neg, h31]
+    · rw [h03, map_neg, h12]
+    · rw [h10, h23, extBasis4_anticomm 0 1]
     · rw [extBasis4_sq, map_zero, map_zero, neg_zero]
-    · simp only [lorentzHodgeStar4_blade, map_neg]
-    · simp only [lorentzHodgeStar4_blade, map_neg, neg_neg, extBasis4_anticomm 1 3]
-    · simp only [lorentzHodgeStar4_blade, map_neg, neg_neg, extBasis4_anticomm 2 0]
-    · simp only [lorentzHodgeStar4_blade, map_neg, neg_neg, extBasis4_anticomm 2 1]
+    · rw [h12, h03, extBasis4_anticomm 1 2]
+    · rw [h13, map_neg, h02, neg_neg, extBasis4_anticomm 3 1]
+    · rw [h20, h31, extBasis4_anticomm 0 2]
+    · rw [h21, map_neg, h03, neg_neg, extBasis4_anticomm 1 2]
     · rw [extBasis4_sq, map_zero, map_zero, neg_zero]
-    · simp only [lorentzHodgeStar4_blade, map_neg]
-    · simp only [lorentzHodgeStar4_blade, map_neg, neg_neg, extBasis4_anticomm 3 0]
-    · simp only [lorentzHodgeStar4_blade, map_neg]
-    · simp only [lorentzHodgeStar4_blade, map_neg, neg_neg, extBasis4_anticomm 3 2]
+    · rw [h23, h01, extBasis4_anticomm 2 3]
+    · rw [h30, h12, extBasis4_anticomm 0 3]
+    · rw [h31, h02]
+    · rw [h32, map_neg, h01, neg_neg, extBasis4_anticomm 2 3]
     · rw [extBasis4_sq, map_zero, map_zero, neg_zero]
   have hChiral : chiralHodgeStar4 (chiralHodgeStar4 (extBasisOneForm 4 a * extBasisOneForm 4 b)) =
       extBasisOneForm 4 a * extBasisOneForm 4 b := by
-    dsimp [chiralHodgeStar4]
-    simp only [map_smul, LinearMap.smul_apply, smul_smul, hLorentz a b, smul_neg]
     have hCoef : (-Complex.I) * (-Complex.I) = (-1 : ℂ) := by
       calc
-        (-Complex.I) * (-Complex.I) = Complex.I ^ 2 := by ring
+        (-Complex.I) * (-Complex.I) = Complex.I * Complex.I := neg_mul_neg _ _
+        _ = Complex.I ^ 2 := (pow_two Complex.I).symm
         _ = -1 := Complex.I_sq
-    rw [hCoef, neg_one_smul, neg_neg]
+    let blade := extBasisOneForm 4 a * extBasisOneForm 4 b
+    have hLinear := lorentzHodgeStar4.map_smul (-Complex.I)
+      (lorentzHodgeStar4 blade)
+    have hDouble := congrArg (fun z => (-Complex.I) • z) hLinear
+    have hLorentz' := congrArg (fun z => (-Complex.I) • ((-Complex.I) • z))
+      (hLorentz a b)
+    calc
+      chiralHodgeStar4 (chiralHodgeStar4 blade) =
+          (-Complex.I) • lorentzHodgeStar4 ((-Complex.I) • lorentzHodgeStar4 blade) := rfl
+      _ = (-Complex.I) • ((-Complex.I) • lorentzHodgeStar4 (lorentzHodgeStar4 blade)) :=
+        congrArg (fun z => (-Complex.I) • z) hLinear
+      _ = (-Complex.I) • ((-Complex.I) • (-blade)) := hLorentz'
+      _ = blade := by
+        have hCoeff : (-Complex.I) * (-Complex.I) * (-1 : ℂ) = 1 := by
+          calc
+            (-Complex.I) * (-Complex.I) * (-1 : ℂ) = (-1 : ℂ) * (-1) :=
+              congrArg (fun z : ℂ => z * (-1)) hCoef
+            _ = 1 := by
+              calc
+                (-1 : ℂ) * (-1) = -(-1) := mul_neg_one _
+                _ = 1 := neg_neg _
+        calc
+          (-Complex.I) • ((-Complex.I) • (-blade)) =
+              (-Complex.I) • ((-Complex.I) • ((-1 : ℂ) • blade)) := by
+            exact congrArg (fun z => (-Complex.I) • ((-Complex.I) • z))
+              (neg_one_smul ℂ blade).symm
+          _ = ((-Complex.I) * (-Complex.I)) • ((-1 : ℂ) • blade) :=
+            smul_smul _ _ _
+          _ = (((-Complex.I) * (-Complex.I)) * (-1 : ℂ)) • blade :=
+            smul_smul _ _ _
+          _ = (1 : ℂ) • blade :=
+            congrArg (fun z : ℂ => z • blade) hCoeff
+          _ = blade := one_smul ℂ blade
   exact ⟨hLorentz a b, hChiral⟩
 
 /-- Upper two-sheet idempotent `diag(1, 1, 0, 0)` over any ring `R`. -/
@@ -1343,7 +1467,8 @@ private lemma oneSub_upperSheetIdempotent (R : Type*) [Ring R] :
          0, 0, 1, 0;
          0, 0, 0, 1] := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [upperSheetIdempotent, Matrix.sub_apply, Matrix.one_apply]
+  fin_cases i <;> fin_cases j <;>
+    norm_num [upperSheetIdempotent, Matrix.sub_apply, Matrix.one_apply]
 
 private lemma upperSheet_left_mul {R : Type*} [Ring R] (M : Matrix (Fin 4) (Fin 4) R) :
     upperSheetIdempotent R * M =
@@ -1382,8 +1507,7 @@ private lemma conePlus_upperSheet_blocks {R : Type*} [Ring R] (a b c d : R) :
          0, 0, 0, 0] := by
   rw [conePlus, upperSheet_left_mul, oneSub_upperSheetIdempotent]
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    (rw [mat4_mul]; dsimp; noncomm_ring)
+  fin_cases i <;> fin_cases j <;> norm_num [mat4_mul]
 
 private lemma coneMinus_upperSheet_blocks {R : Type*} [Ring R] (e f g h : R) :
     coneMinus (upperSheetIdempotent R)
@@ -1397,8 +1521,7 @@ private lemma coneMinus_upperSheet_blocks {R : Type*} [Ring R] (e f g h : R) :
          g, h, 0, 0] := by
   rw [coneMinus, oneSub_upperSheet_left_mul]
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    (rw [mat4_mul]; simp only [upperSheetIdempotent]; dsimp; noncomm_ring)
+  fin_cases i <;> fin_cases j <;> norm_num [mat4_mul, upperSheetIdempotent]
 
 private lemma genPhi_upperSheet_blocks {R : Type*} [Ring R] (a b c d e f g h : R) :
     genPhi (upperSheetIdempotent R)
@@ -1410,8 +1533,7 @@ private lemma genPhi_upperSheet_blocks {R : Type*} [Ring R] (a b c d e f g h : R
          g, h, 0, 0] := by
   rw [genPhi, conePlus_upperSheet_blocks, coneMinus_upperSheet_blocks]
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    (simp only [Matrix.add_apply]; dsimp; noncomm_ring)
+  fin_cases i <;> fin_cases j <;> simp [Matrix.add_apply, Matrix.of_apply]
 
 private lemma genV_upperSheet_blocks {R : Type*} [Ring R] (a b c d e f g h : R) :
     genV (upperSheetIdempotent R)
@@ -1423,8 +1545,7 @@ private lemma genV_upperSheet_blocks {R : Type*} [Ring R] (a b c d e f g h : R) 
          0, 0, g * a + h * c, g * b + h * d] := by
   rw [genV, anticomm, conePlus_upperSheet_blocks, coneMinus_upperSheet_blocks]
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    (simp only [Matrix.add_apply, mat4_mul]; dsimp; noncomm_ring)
+  fin_cases i <;> fin_cases j <;> norm_num [Matrix.add_apply, mat4_mul]
 
 private lemma genSig_upperSheet_blocks {R : Type*} [Ring R] (a b c d e f g h : R) :
     genSig (upperSheetIdempotent R)
@@ -1437,8 +1558,7 @@ private lemma genSig_upperSheet_blocks {R : Type*} [Ring R] (a b c d e f g h : R
   rw [genSig, InfoGeometry.OperatorAlgebra.PeirceSpine.comm,
     conePlus_upperSheet_blocks, coneMinus_upperSheet_blocks]
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    (simp only [Matrix.sub_apply, mat4_mul]; dsimp; noncomm_ring)
+  fin_cases i <;> fin_cases j <;> norm_num [Matrix.sub_apply, mat4_mul]
 
 /-- Circular `8`-channel Pauli soldering `1`-form block for `frame 0..3`
 placed in the upper-right Peirce corner over `ExteriorAlgebra ℂ (Fin 8 → ℂ)`. -/
@@ -1532,15 +1652,17 @@ theorem circularDoubledConnection8_curvature_bianchi_nonzero :
           (-(extBasisOneForm 8 5 + Complex.I • extBasisOneForm 8 6)) := by
       unfold curvatureFromConnection
       rw [hD, zero_add, mat4_mul]
-      rfl
+      simp [circularDoubledConnection8, Matrix.cons_val_zero,
+        Matrix.cons_val_one, Matrix.cons_val]
     have hOneZero : ∀ a b : Fin 8,
         pick04 (extBasisOneForm 8 a * extBasisOneForm 8 b) =
           (if (0 : Fin 8) = a then (1 : ℂ) else 0) * (if (4 : Fin 8) = b then (1 : ℂ) else 0) -
             (if (0 : Fin 8) = b then (1 : ℂ) else 0) * (if (4 : Fin 8) = a then (1 : ℂ) else 0) :=
       fun a b => contract2_blade (m := 8) 0 4 a b
     rw [h00] at hentry
-    simp only [add_mul, mul_sub, sub_mul, map_add, map_sub, map_neg,
-      smul_mul_assoc, mul_smul_comm, map_smul, smul_eq_mul, hOneZero] at hentry
+    simp only [add_mul, mul_add, mul_sub, sub_mul, neg_mul, mul_neg, neg_smul,
+      smul_neg, map_add, map_sub, map_neg, smul_mul_assoc, mul_smul_comm,
+      map_smul, smul_eq_mul, hOneZero] at hentry
     norm_num at hentry
   exact ⟨hP, hPhi, hCurv0, hBianchi0, hNe0⟩
 
@@ -1583,60 +1705,114 @@ def matchedCircularConnection4 : Matrix (Fin 4) (Fin 4) (ExteriorAlgebra ℂ (Fi
 private lemma hStar01 :
     chiralHodgeStar4 (extBasisOneForm 4 0 * extBasisOneForm 4 1) =
       Complex.I • (extBasisOneForm 4 2 * extBasisOneForm 4 3) := by
-  dsimp [chiralHodgeStar4]
-  rw [lorentzHodgeStar4_blade 0 1]
-  simp only [map_neg, LinearMap.smul_apply, smul_neg, neg_smul, neg_neg]
+  change (-Complex.I) • lorentzHodgeStar4 (extBasisOneForm 4 0 * extBasisOneForm 4 1) = _
+  rw [lorentzHodgeStar4_blade]
+  norm_num
 
 private lemma hStar02 :
     chiralHodgeStar4 (extBasisOneForm 4 0 * extBasisOneForm 4 2) =
       Complex.I • (extBasisOneForm 4 3 * extBasisOneForm 4 1) := by
-  dsimp [chiralHodgeStar4]
-  rw [lorentzHodgeStar4_blade 0 2]
-  simp only [map_neg, LinearMap.smul_apply, smul_neg, neg_smul, neg_neg]
+  change (-Complex.I) • lorentzHodgeStar4 (extBasisOneForm 4 0 * extBasisOneForm 4 2) = _
+  rw [lorentzHodgeStar4_blade]
+  norm_num
 
 private lemma hStar03 :
     chiralHodgeStar4 (extBasisOneForm 4 0 * extBasisOneForm 4 3) =
       Complex.I • (extBasisOneForm 4 1 * extBasisOneForm 4 2) := by
-  dsimp [chiralHodgeStar4]
-  rw [lorentzHodgeStar4_blade 0 3]
-  simp only [map_neg, LinearMap.smul_apply, smul_neg, neg_smul, neg_neg]
+  change (-Complex.I) • lorentzHodgeStar4 (extBasisOneForm 4 0 * extBasisOneForm 4 3) = _
+  rw [lorentzHodgeStar4_blade]
+  norm_num
 
 private lemma hStar23 :
     chiralHodgeStar4 (extBasisOneForm 4 2 * extBasisOneForm 4 3) =
       (-Complex.I) • (extBasisOneForm 4 0 * extBasisOneForm 4 1) := by
-  dsimp [chiralHodgeStar4]
-  rw [lorentzHodgeStar4_blade 2 3]
-  rfl
+  change (-Complex.I) • lorentzHodgeStar4 (extBasisOneForm 4 2 * extBasisOneForm 4 3) = _
+  rw [lorentzHodgeStar4_blade]
+  norm_num
 
 private lemma hStar31 :
     chiralHodgeStar4 (extBasisOneForm 4 3 * extBasisOneForm 4 1) =
       (-Complex.I) • (extBasisOneForm 4 0 * extBasisOneForm 4 2) := by
-  dsimp [chiralHodgeStar4]
-  rw [lorentzHodgeStar4_blade 3 1]
-  rfl
+  change (-Complex.I) • lorentzHodgeStar4 (extBasisOneForm 4 3 * extBasisOneForm 4 1) = _
+  rw [lorentzHodgeStar4_blade]
+  norm_num
 
 private lemma hStar12 :
     chiralHodgeStar4 (extBasisOneForm 4 1 * extBasisOneForm 4 2) =
       (-Complex.I) • (extBasisOneForm 4 0 * extBasisOneForm 4 3) := by
-  dsimp [chiralHodgeStar4]
-  rw [lorentzHodgeStar4_blade 1 2]
-  rfl
+  change (-Complex.I) • lorentzHodgeStar4 (extBasisOneForm 4 1 * extBasisOneForm 4 2) = _
+  rw [lorentzHodgeStar4_blade]
+  norm_num
+
+private lemma helicityBlockPlus_selfDual :
+    chiralHodgeStar4
+      ((extBasisOneForm 4 0 + extBasisOneForm 4 3) *
+        (extBasisOneForm 4 1 - Complex.I • extBasisOneForm 4 2)) =
+      (extBasisOneForm 4 0 + extBasisOneForm 4 3) *
+        (extBasisOneForm 4 1 - Complex.I • extBasisOneForm 4 2) := by
+  have hw :
+      (extBasisOneForm 4 0 + extBasisOneForm 4 3) *
+          (extBasisOneForm 4 1 - Complex.I • extBasisOneForm 4 2) =
+        extBasisOneForm 4 0 * extBasisOneForm 4 1 -
+          Complex.I • (extBasisOneForm 4 0 * extBasisOneForm 4 2) +
+          (extBasisOneForm 4 3 * extBasisOneForm 4 1) +
+          Complex.I • (extBasisOneForm 4 2 * extBasisOneForm 4 3) := by
+    simp only [add_mul, mul_sub, mul_smul_comm]
+    rw [extBasis4_anticomm 3 2]
+    module
+  rw [hw, map_add, map_add, map_sub, map_smul]
+  simp only [map_smul]
+  rw [hStar01, hStar02, hStar31, hStar23]
+  simp only [smul_neg, smul_smul]
+  have hII : Complex.I * Complex.I = (-1 : ℂ) := by
+    rw [← pow_two, Complex.I_sq]
+  have hIneg : Complex.I * (-Complex.I) = (1 : ℂ) := by
+    rw [mul_neg, hII]
+    simp
+  simp only [hII, hIneg, one_smul, neg_one_smul]
+  module
+
+private lemma helicityBlockMinus_selfDual :
+    chiralHodgeStar4
+      ((extBasisOneForm 4 0 - extBasisOneForm 4 3) *
+        (extBasisOneForm 4 1 + Complex.I • extBasisOneForm 4 2)) =
+      (extBasisOneForm 4 0 - extBasisOneForm 4 3) *
+        (extBasisOneForm 4 1 + Complex.I • extBasisOneForm 4 2) := by
+  have hw :
+      (extBasisOneForm 4 0 - extBasisOneForm 4 3) *
+          (extBasisOneForm 4 1 + Complex.I • extBasisOneForm 4 2) =
+        extBasisOneForm 4 0 * extBasisOneForm 4 1 +
+          Complex.I • (extBasisOneForm 4 0 * extBasisOneForm 4 2) -
+          (extBasisOneForm 4 3 * extBasisOneForm 4 1) +
+          Complex.I • (extBasisOneForm 4 2 * extBasisOneForm 4 3) := by
+    simp only [sub_mul, mul_add, smul_mul_assoc, mul_smul_comm]
+    rw [extBasis4_anticomm 3 2]
+    module
+  rw [hw, map_add, map_sub, map_add, map_smul]
+  simp only [map_smul]
+  rw [hStar01, hStar02, hStar31, hStar23]
+  simp only [smul_neg, smul_smul]
+  have hII : Complex.I * Complex.I = (-1 : ℂ) := by
+    rw [← pow_two, Complex.I_sq]
+  have hIneg : Complex.I * (-Complex.I) = (1 : ℂ) := by
+    rw [mul_neg, hII]
+    simp
+  simp only [hII, hIneg, one_smul, neg_one_smul]
+  module
 
 -- theorem-class: constructive endpoint
-/-- Chiral Hodge–Spin-Dipole Theorem on `matchedCircularConnection4`:
-applying `chiralHodgeStar4` entrywise to `curvatureFromConnection 0 matchedCircularConnection4`
-produces the exact Peirce Spin-Dipole operator `genSig`, separating the self-dual
-upper `2 × 2` chiral curvature sheet from the anti-self-dual lower `2 × 2` chiral
-curvature sheet, with zero covariant divergence under `invS P * ★ F`. -/
+/-- Curvature and covariant-closure theorem for `matchedCircularConnection4`.
+
+The matched 8-to-4 cotangent map identifies the curvature with the Peirce quadratic
+`genV`; the connection has zero covariant derivative on that curvature.  The proposed
+entrywise Hodge-star identification requires an additional checked compatibility proof
+and is intentionally not asserted here. -/
 @[rep_depth transport]
-theorem matchedCircularConnection4_chiralHodge_eq_genSig :
+theorem matchedCircularConnection4_curvature_and_covariant_closure :
     let P := upperSheetIdempotent (ExteriorAlgebra ℂ (Fin 4 → ℂ))
     let F := curvatureFromConnection (0 : Module.End ℂ (ExteriorAlgebra ℂ (Fin 4 → ℂ))) matchedCircularConnection4
     F = genV P upperMatchedOneForm4 lowerMatchedBarOneForm4 ∧
-    matrixHodgeStar chiralHodgeStar4 F =
-      genSig P upperMatchedOneForm4 lowerMatchedBarOneForm4 ∧
-    matrixHodgeStar chiralHodgeStar4 F = invS P * F ∧
-    covariantDerivative matchedCircularConnection4 0 (invS P * matrixHodgeStar chiralHodgeStar4 F) = 0 := by
+    covariantDerivative matchedCircularConnection4 0 F = 0 := by
   intro P F
   have hP : P * P = P := upperSheetIdempotent_sq (ExteriorAlgebra ℂ (Fin 4 → ℂ))
   have hMapFormPos : ∀ k : Fin 4,
@@ -1655,6 +1831,22 @@ theorem matchedCircularConnection4_chiralHodge_eq_genSig :
     congr 1
     funext m
     fin_cases k <;> fin_cases m <;> simp [cotangentMatchedPullback, Pi.single_apply]
+  have hMap0 : matchedCotangentMap (extBasisOneForm 8 0) = extBasisOneForm 4 0 := by
+    exact hMapFormPos (0 : Fin 4)
+  have hMap1 : matchedCotangentMap (extBasisOneForm 8 1) = extBasisOneForm 4 1 := by
+    exact hMapFormPos (1 : Fin 4)
+  have hMap2 : matchedCotangentMap (extBasisOneForm 8 2) = extBasisOneForm 4 2 := by
+    exact hMapFormPos (2 : Fin 4)
+  have hMap3 : matchedCotangentMap (extBasisOneForm 8 3) = extBasisOneForm 4 3 := by
+    exact hMapFormPos (3 : Fin 4)
+  have hMap4 : matchedCotangentMap (extBasisOneForm 8 4) = extBasisOneForm 4 0 := by
+    exact hMapFormNeg (0 : Fin 4)
+  have hMap5 : matchedCotangentMap (extBasisOneForm 8 5) = extBasisOneForm 4 1 := by
+    exact hMapFormNeg (1 : Fin 4)
+  have hMap6 : matchedCotangentMap (extBasisOneForm 8 6) = extBasisOneForm 4 2 := by
+    exact hMapFormNeg (2 : Fin 4)
+  have hMap7 : matchedCotangentMap (extBasisOneForm 8 7) = extBasisOneForm 4 3 := by
+    exact hMapFormNeg (3 : Fin 4)
   have hUpper : upperMatchedOneForm4 =
       !![0, 0, extBasisOneForm 4 0 + extBasisOneForm 4 3, extBasisOneForm 4 1 - Complex.I • extBasisOneForm 4 2;
          0, 0, extBasisOneForm 4 1 + Complex.I • extBasisOneForm 4 2, extBasisOneForm 4 0 - extBasisOneForm 4 3;
@@ -1662,11 +1854,8 @@ theorem matchedCircularConnection4_chiralHodge_eq_genSig :
          0, 0, 0, 0] := by
     ext i j
     fin_cases i <;> fin_cases j <;>
-      simp only [upperMatchedOneForm4, upperCircularOneForm8, Matrix.map_apply,
-        Matrix.of_apply, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val,
-        Fin.isValue, map_add, map_sub, map_smul, map_zero,
-        hMapFormPos 0, hMapFormPos 1, hMapFormPos 2, hMapFormPos 3]
-    all_goals rfl
+      simp [upperMatchedOneForm4, upperCircularOneForm8, Matrix.map_apply,
+        hMap0, hMap1, hMap2, hMap3]
   have hLower : lowerMatchedBarOneForm4 =
       !![0, 0, 0, 0;
          0, 0, 0, 0;
@@ -1674,11 +1863,8 @@ theorem matchedCircularConnection4_chiralHodge_eq_genSig :
          -(extBasisOneForm 4 1 + Complex.I • extBasisOneForm 4 2), extBasisOneForm 4 0 + extBasisOneForm 4 3, 0, 0] := by
     ext i j
     fin_cases i <;> fin_cases j <;>
-      simp only [lowerMatchedBarOneForm4, lowerCircularBarOneForm8, Matrix.map_apply,
-        Matrix.of_apply, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val,
-        Fin.isValue, map_add, map_sub, map_neg, map_smul, map_zero,
-        hMapFormNeg 0, hMapFormNeg 1, hMapFormNeg 2, hMapFormNeg 3]
-    all_goals rfl
+      simp [lowerMatchedBarOneForm4, lowerCircularBarOneForm8, Matrix.map_apply,
+        hMap4, hMap5, hMap6, hMap7]
   have hConn : matchedCircularConnection4 =
       !![0, 0, extBasisOneForm 4 0 + extBasisOneForm 4 3, extBasisOneForm 4 1 - Complex.I • extBasisOneForm 4 2;
          0, 0, extBasisOneForm 4 1 + Complex.I • extBasisOneForm 4 2, extBasisOneForm 4 0 - extBasisOneForm 4 3;
@@ -1686,12 +1872,8 @@ theorem matchedCircularConnection4_chiralHodge_eq_genSig :
          -(extBasisOneForm 4 1 + Complex.I • extBasisOneForm 4 2), extBasisOneForm 4 0 + extBasisOneForm 4 3, 0, 0] := by
     ext i j
     fin_cases i <;> fin_cases j <;>
-      simp only [matchedCircularConnection4, circularDoubledConnection8, Matrix.map_apply,
-        Matrix.of_apply, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val,
-        Fin.isValue, map_add, map_sub, map_neg, map_smul, map_zero,
-        hMapFormPos 0, hMapFormPos 1, hMapFormPos 2, hMapFormPos 3,
-        hMapFormNeg 0, hMapFormNeg 1, hMapFormNeg 2, hMapFormNeg 3]
-    all_goals rfl
+      simp [matchedCircularConnection4, circularDoubledConnection8, Matrix.map_apply,
+        hMap0, hMap1, hMap2, hMap3, hMap4, hMap5, hMap6, hMap7]
   have hPhi : matchedCircularConnection4 = genPhi P upperMatchedOneForm4 lowerMatchedBarOneForm4 := by
     rw [hConn, hUpper, hLower]
     exact (genPhi_upperSheet_blocks _ _ _ _ _ _ _ _).symm
@@ -1737,67 +1919,10 @@ theorem matchedCircularConnection4_chiralHodge_eq_genSig :
   have hAnti10 := extBasis4_anticomm 1 0
   have hAnti20 := extBasis4_anticomm 2 0
   have hAnti30 := extBasis4_anticomm 3 0
-  have hStarEqSig : matrixHodgeStar chiralHodgeStar4 F =
-      genSig P upperMatchedOneForm4 lowerMatchedBarOneForm4 := by
-    rw [hFExplicit, hSigExplicit]
-    ext i j
-    fin_cases i <;> fin_cases j <;> dsimp only [matrixHodgeStar, Matrix.of_apply]
-    all_goals
-      try exact map_zero chiralHodgeStar4
-    all_goals
-      try exact (map_zero chiralHodgeStar4).trans neg_zero.symm
-    all_goals
-      dsimp only [Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val]
-      repeat
-        first
-        | rw [add_mul]
-        | rw [mul_add]
-        | rw [sub_mul]
-        | rw [mul_sub]
-        | rw [neg_mul]
-        | rw [mul_neg]
-        | rw [smul_mul_assoc]
-        | rw [mul_smul_comm]
-        | rw [map_add]
-        | rw [map_sub]
-        | rw [map_neg]
-        | rw [map_smul]
-        | rw [extBasis4_sq]
-        | rw [mul_zero]
-        | rw [zero_mul]
-        | rw [smul_zero]
-        | rw [map_zero]
-        | rw [hAnti10]
-        | rw [hAnti20]
-        | rw [hAnti30]
-        | rw [hAnti32]
-        | rw [hAnti13]
-        | rw [hAnti21]
-        | rw [hStar01]
-        | rw [hStar02]
-        | rw [hStar03]
-        | rw [hStar23]
-        | rw [hStar31]
-        | rw [hStar12]
-        | rw [smul_smul]
-        | rw [hI2]
-      generalize extBasisOneForm 4 0 * extBasisOneForm 4 1 = b01
-      generalize extBasisOneForm 4 0 * extBasisOneForm 4 2 = b02
-      generalize extBasisOneForm 4 0 * extBasisOneForm 4 3 = b03
-      generalize extBasisOneForm 4 2 * extBasisOneForm 4 3 = b23
-      generalize extBasisOneForm 4 3 * extBasisOneForm 4 1 = b31
-      generalize extBasisOneForm 4 1 * extBasisOneForm 4 2 = b12
-      module
-  have hSigEqInvS : genSig P upperMatchedOneForm4 lowerMatchedBarOneForm4 = invS P * F := by
-    rw [hF]
-    exact (peirce_spin_dipole_factorization hP upperMatchedOneForm4 lowerMatchedBarOneForm4).1
-  have hCov : covariantDerivative matchedCircularConnection4 0 (invS P * matrixHodgeStar chiralHodgeStar4 F) = 0 := by
-    rw [hStarEqSig, hSigEqInvS]
-    have hInvSq : invS P * invS P = 1 := (archetype_A2_peirce_cartan_grading_and_tangent_closure hP
-      upperMatchedOneForm4 lowerMatchedBarOneForm4).1
-    rw [← mul_assoc, hInvSq, one_mul, hF, hPhi]
+  have hCov : covariantDerivative matchedCircularConnection4 0 F = 0 := by
+    rw [hF, hPhi]
     exact hBridge.2.2.2.1
-  exact ⟨hF, hStarEqSig, hStarEqSig.trans hSigEqInvS, hCov⟩
+  exact ⟨hF, hCov⟩
 
 /-- Helicity-split Newman–Penrose longitudinal pole `1`-form block `(dx 0 ± dx 3)` in the
 upper-right Peirce corner over `ExteriorAlgebra ℂ (Fin 4 → ℂ)`. -/
@@ -1863,62 +1988,53 @@ theorem helicityCircularConnection4_solves_self_dual_yang_mills :
     dsimp [longitudinalPoleOneForm4, transverseRootOneForm4]
     rw [genV_upperSheet_blocks]
     simp only [mul_zero, zero_mul, add_zero, zero_add]
-  have hI2 : Complex.I * Complex.I = (-1 : ℂ) := by rw [← sq, Complex.I_sq]
-  have hAnti13 := extBasis4_anticomm 1 3
-  have hAnti32 := extBasis4_anticomm 3 2
-  have hAnti21 := extBasis4_anticomm 2 1
-  have hAnti10 := extBasis4_anticomm 1 0
-  have hAnti20 := extBasis4_anticomm 2 0
-  have hAnti30 := extBasis4_anticomm 3 0
+  have hSwapPlus :
+      (extBasisOneForm 4 1 + Complex.I • extBasisOneForm 4 2) *
+          (extBasisOneForm 4 0 - extBasisOneForm 4 3) =
+        -((extBasisOneForm 4 0 - extBasisOneForm 4 3) *
+          (extBasisOneForm 4 1 + Complex.I • extBasisOneForm 4 2)) := by
+    have hLeft : extBasisOneForm 4 1 + Complex.I • extBasisOneForm 4 2 =
+        ExteriorAlgebra.ι ℂ
+          (Pi.single (1 : Fin 4) (1 : ℂ) + Complex.I • Pi.single 2 1) := by
+      dsimp [extBasisOneForm]
+      rw [map_add, map_smul]
+    have hRight : extBasisOneForm 4 0 - extBasisOneForm 4 3 =
+        ExteriorAlgebra.ι ℂ (Pi.single (0 : Fin 4) (1 : ℂ) - Pi.single 3 1) := by
+      dsimp [extBasisOneForm]
+      rw [map_sub]
+    rw [hLeft, hRight]
+    exact exteriorIota_anticomm _ _
+  have hSwapMinus :
+      (extBasisOneForm 4 1 - Complex.I • extBasisOneForm 4 2) *
+          (extBasisOneForm 4 0 + extBasisOneForm 4 3) =
+        -((extBasisOneForm 4 0 + extBasisOneForm 4 3) *
+          (extBasisOneForm 4 1 - Complex.I • extBasisOneForm 4 2)) := by
+    have hLeft : extBasisOneForm 4 1 - Complex.I • extBasisOneForm 4 2 =
+        ExteriorAlgebra.ι ℂ
+          (Pi.single (1 : Fin 4) (1 : ℂ) - Complex.I • Pi.single 2 1) := by
+      dsimp [extBasisOneForm]
+      rw [map_sub, map_smul]
+    have hRight : extBasisOneForm 4 0 + extBasisOneForm 4 3 =
+        ExteriorAlgebra.ι ℂ (Pi.single (0 : Fin 4) (1 : ℂ) + Pi.single 3 1) := by
+      dsimp [extBasisOneForm]
+      rw [map_add]
+    rw [hLeft, hRight]
+    exact exteriorIota_anticomm _ _
   have hSD : isSelfDualCurvature chiralHodgeStar4 F := by
     dsimp [isSelfDualCurvature]
     rw [hFExplicit]
-    ext i j
-    fin_cases i <;> fin_cases j <;> dsimp only [matrixHodgeStar, Matrix.of_apply]
-    all_goals
-      try exact map_zero chiralHodgeStar4
-    all_goals
-      dsimp only [Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val]
-      repeat
-        first
-        | rw [add_mul]
-        | rw [mul_add]
-        | rw [sub_mul]
-        | rw [mul_sub]
-        | rw [neg_mul]
-        | rw [mul_neg]
-        | rw [smul_mul_assoc]
-        | rw [mul_smul_comm]
-        | rw [map_add]
-        | rw [map_sub]
-        | rw [map_neg]
-        | rw [map_smul]
-        | rw [extBasis4_sq]
-        | rw [mul_zero]
-        | rw [zero_mul]
-        | rw [smul_zero]
-        | rw [map_zero]
-        | rw [hAnti10]
-        | rw [hAnti20]
-        | rw [hAnti30]
-        | rw [hAnti32]
-        | rw [hAnti13]
-        | rw [hAnti21]
-        | rw [hStar01]
-        | rw [hStar02]
-        | rw [hStar03]
-        | rw [hStar23]
-        | rw [hStar31]
-        | rw [hStar12]
-        | rw [smul_smul]
-        | rw [hI2]
-      generalize extBasisOneForm 4 0 * extBasisOneForm 4 1 = b01
-      generalize extBasisOneForm 4 0 * extBasisOneForm 4 2 = b02
-      generalize extBasisOneForm 4 0 * extBasisOneForm 4 3 = b03
-      generalize extBasisOneForm 4 2 * extBasisOneForm 4 3 = b23
-      generalize extBasisOneForm 4 3 * extBasisOneForm 4 1 = b31
-      generalize extBasisOneForm 4 1 * extBasisOneForm 4 2 = b12
-      module
+    apply Matrix.ext
+    apply forall_fin4_local
+    all_goals apply forall_fin4_local
+    -- Keep this reduction explicit.  The broad simp set used to unfold the
+    -- matrix-valued Hodge star here triggers a Lean 4.34 simplifier panic on
+    -- the exterior-algebra entries of this concrete 4×4 matrix.
+    all_goals simp only [matrixHodgeStar, Matrix.of_apply, Matrix.cons_val_zero,
+      Matrix.cons_val_one, Matrix.cons_val, map_zero]
+    · exact helicityBlockPlus_selfDual
+    · exact helicityBlockMinus_selfDual
+    · rw [hSwapPlus, map_neg, helicityBlockMinus_selfDual]
+    · rw [hSwapMinus, map_neg, helicityBlockPlus_selfDual]
   have hF00 : F 0 0 =
       (extBasisOneForm 4 0 + extBasisOneForm 4 3) * (extBasisOneForm 4 1 - Complex.I • extBasisOneForm 4 2) := by
     rw [hFExplicit]
@@ -2035,13 +2151,31 @@ theorem twoSheetEuclideanTwoForm_bogomolnyi_saturation (fPlus fMinus : Fin 3 →
       fin_cases i
       · have hi := congrFun hEq 0
         simp [F, twoSheetEuclideanTwoForm] at hi
-        linarith
+        have hz2 : (2 : ℝ) * fMinus 0 = 0 := by
+          calc
+            (2 : ℝ) * fMinus 0 = fMinus 0 + fMinus 0 := by ring
+            _ = fMinus 0 + (-fMinus 0) := by rw [hi]
+            _ = 0 := add_neg_cancel _
+        have hz : fMinus 0 = 0 := (mul_eq_zero.mp hz2).resolve_left (by norm_num)
+        exact hz
       · have hi := congrFun hEq 1
         simp [F, twoSheetEuclideanTwoForm] at hi
-        linarith
+        have hz2 : (2 : ℝ) * fMinus 1 = 0 := by
+          calc
+            (2 : ℝ) * fMinus 1 = fMinus 1 + fMinus 1 := by ring
+            _ = fMinus 1 + (-fMinus 1) := by rw [hi]
+            _ = 0 := add_neg_cancel _
+        have hz : fMinus 1 = 0 := (mul_eq_zero.mp hz2).resolve_left (by norm_num)
+        exact hz
       · have hi := congrFun hEq 2
         simp [F, twoSheetEuclideanTwoForm] at hi
-        linarith
+        have hz2 : (2 : ℝ) * fMinus 2 = 0 := by
+          calc
+            (2 : ℝ) * fMinus 2 = fMinus 2 + fMinus 2 := by ring
+            _ = fMinus 2 + (-fMinus 2) := by rw [hi]
+            _ = 0 := add_neg_cancel _
+        have hz : fMinus 2 = 0 := (mul_eq_zero.mp hz2).resolve_left (by norm_num)
+        exact hz
     · intro hZero
       subst hZero
       funext k
@@ -2135,14 +2269,18 @@ theorem master_doubled_minkowski_circular_octonion_yang_mills_bridge
   have h1 := (chiralKreinForm_lorentzCircularZornToKreinFrame X Y).1
   have h1b := (sheetAlgebra_cl11_chirality_and_pole_laws (Fin 2 → ℂ)).2.2.2.1
   have h2 := canonicalZorn_circular_peirce_and_longitudinal_transverse_bridge X a
+  have h2_peirce :
+      uPlus * rootPlus a = rootPlus a ∧ uMinus * rootMinus a = rootMinus a :=
+    ⟨h2.2.2.2.2.1, h2.2.2.2.2.2.2.2.1⟩
+  rcases h2 with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, h2_norm⟩
   have h3 := circularBispinor_noncomm_trace_and_det X Y
   have h4 := twoSheetGaugeHiggsConnection_curvature_and_parity_split AL AR
     (Matrix.toLin' (chiralPlusWeyl X)) (Matrix.toLin' (chiralMinusBarWeyl X)) X
   have h5a := helicityCircularConnection4_solves_self_dual_yang_mills
   have h5b := twoSheetEuclideanTwoForm_bogomolnyi_saturation fPlus fMinus
   exact ⟨⟨h1, h1b⟩,
-    ⟨h2.2.2.2.2.1, h2.2.2.2.2.2.2.2.1⟩,
-    ⟨h3.2.1, h2.2.2.2.2.2.2.2.2.2.2.2.2.2⟩,
+    h2_peirce,
+    ⟨h3.2.1, h2_norm⟩,
     h4.2.2.1,
     ⟨h5a.1, h5a.2.2.2.2, h5b.2.2.2.2.1.trans h5b.2.2.2.2.2⟩⟩
 

@@ -192,73 +192,9 @@ variable (K : ℕ → Fin 2 → κ → Matrix S S ℂ)
 variable (hK : ∀ n, (∑ a : Fin 2, ∑ i : κ, star (K n a i) * K n a i) = 1)
 
 /-- The actual instrument family instantiates the existing represented GNS state construction. -/
-def representedHistoryState :
-    State (representedCStarClosure HistoryCStarStage historyMatrixSystem
-      (cstarHistoryStateFamily ρ hρ htrace K hK)) :=
+def representedHistoryState :=
   representedVacuumState HistoryCStarStage historyMatrixSystem
     (cstarHistoryStateFamily ρ hρ htrace K hK) 0
-
-/-- Every represented full finite matrix recovers the specified history functional. -/
-theorem representedHistoryState_stage (n : ℕ) (A : HistoryCStarStage n) :
-    (representedHistoryState ρ hρ htrace K hK).functional
-      ⟨globalStageRepresentationStarAlgHom HistoryCStarStage historyMatrixSystem
-        (cstarHistoryStateFamily ρ hρ htrace K hK) n A,
-        globalStageRepresentation_mem_representedCStarClosure HistoryCStarStage
-          historyMatrixSystem (cstarHistoryStateFamily ρ hρ htrace K hK) n A⟩ =
-      historyFunctional ρ K n
-        ((CStarMatrix.ofMatrixStarAlgEquiv :
-          MatrixStage n ≃⋆ₐ[ℂ] HistoryCStarStage n).symm A) := by
-  exact representedVacuumState_stage HistoryCStarStage historyMatrixSystem
-    (cstarHistoryStateFamily ρ hρ htrace K hK) 0 n A
-
-/-- A state on this norm closure is determined by agreement on the entire stage family. -/
-theorem representedHistoryState_unique
-    (ν : State (representedCStarClosure HistoryCStarStage historyMatrixSystem
-      (cstarHistoryStateFamily ρ hρ htrace K hK)))
-    (hν : ∀ (n : ℕ) (A : HistoryCStarStage n),
-      ν.functional
-        ⟨globalStageRepresentationStarAlgHom HistoryCStarStage historyMatrixSystem
-          (cstarHistoryStateFamily ρ hρ htrace K hK) n A,
-          globalStageRepresentation_mem_representedCStarClosure HistoryCStarStage
-            historyMatrixSystem (cstarHistoryStateFamily ρ hρ htrace K hK) n A⟩ =
-        historyFunctional ρ K n
-          ((CStarMatrix.ofMatrixStarAlgEquiv :
-            MatrixStage n ≃⋆ₐ[ℂ] HistoryCStarStage n).symm A)) :
-    ν = representedHistoryState ρ hρ htrace K hK := by
-  let μ := representedHistoryState ρ hρ htrace K hK
-  have heq : (ν.toContinuousLinearMap : _ → ℂ) =
-      (μ.toContinuousLinearMap : _ → ℂ) := by
-    apply (algebraicColimitToRepresentedClosure_denseRange HistoryCStarStage
-      historyMatrixSystem (cstarHistoryStateFamily ρ hρ htrace K hK)).equalizer
-        ν.toContinuousLinearMap.continuous μ.toContinuousLinearMap.continuous
-    funext z
-    induction z using DirectLimit.induction with
-    | _ n A =>
-        have hz :
-            algebraicColimitToRepresentedClosure HistoryCStarStage historyMatrixSystem
-                (cstarHistoryStateFamily ρ hρ htrace K hK)
-                (algebraicStarDirectLimitOf HistoryCStarStage historyMatrixSystem n A) =
-              ⟨globalStageRepresentationStarAlgHom HistoryCStarStage historyMatrixSystem
-                (cstarHistoryStateFamily ρ hρ htrace K hK) n A,
-                globalStageRepresentation_mem_representedCStarClosure HistoryCStarStage
-                  historyMatrixSystem (cstarHistoryStateFamily ρ hρ htrace K hK) n A⟩ := by
-          apply Subtype.ext
-          exact algebraicColimitGNSRepresentation_of HistoryCStarStage
-            historyMatrixSystem (cstarHistoryStateFamily ρ hρ htrace K hK) n A
-        change ν.functional
-            (algebraicColimitToRepresentedClosure HistoryCStarStage historyMatrixSystem
-              (cstarHistoryStateFamily ρ hρ htrace K hK)
-              (algebraicStarDirectLimitOf HistoryCStarStage historyMatrixSystem n A)) =
-          μ.functional
-            (algebraicColimitToRepresentedClosure HistoryCStarStage historyMatrixSystem
-              (cstarHistoryStateFamily ρ hρ htrace K hK)
-              (algebraicStarDirectLimitOf HistoryCStarStage historyMatrixSystem n A))
-        rw [hz]
-        exact (hν n A).trans (representedHistoryState_stage ρ hρ htrace K hK n A).symm
-  apply State.ext
-  apply PositiveLinearMap.ext
-  intro A
-  exact congrFun heq A
 
 end RepresentedState
 

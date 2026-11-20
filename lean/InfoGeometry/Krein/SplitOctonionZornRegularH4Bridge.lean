@@ -55,6 +55,12 @@ def transportZornOperator (T : Module.End ℝ CZ) : EndH4 :=
   intro z
   simp [transportZornOperator, LinearMap.comp_apply]
 
+@[simp] theorem transportZornOperator_zero :
+    transportZornOperator (0 : Module.End ℝ CZ) = 0 := by
+  apply LinearMap.ext
+  intro z
+  simp [transportZornOperator, LinearMap.comp_apply]
+
 theorem transportZornOperator_mul (S T : Module.End ℝ CZ) :
     transportZornOperator (S * T) =
       transportZornOperator S * transportZornOperator T := by
@@ -98,6 +104,71 @@ theorem rightRegularOnDoubleKrein_root_CAR (i : Fin 3) :
     ← transportZornOperator_add]
   rw [← transportZornOperator_one]
   exact congrArg transportZornOperator (rightRegular_root_CAR i)
+
+/-- The transported negative circular root remains nilpotent on the doubled
+Krein carrier. -/
+theorem rightRegularOnDoubleKrein_rootMinus_sq (i : Fin 3) :
+    rightRegularOnDoubleKrein (rootMinus i) *
+      rightRegularOnDoubleKrein (rootMinus i) = 0 := by
+  change transportZornOperator (rightRegular (rootMinus i)) *
+      transportZornOperator (rightRegular (rootMinus i)) = 0
+  rw [← transportZornOperator_mul, rightRegular_rootMinus_sq]
+  simp [transportZornOperator]
+
+/-- The transported positive circular root remains nilpotent on the doubled
+Krein carrier. -/
+theorem rightRegularOnDoubleKrein_rootPlus_sq (i : Fin 3) :
+    rightRegularOnDoubleKrein (rootPlus i) *
+      rightRegularOnDoubleKrein (rootPlus i) = 0 := by
+  change transportZornOperator (rightRegular (rootPlus i)) *
+      transportZornOperator (rightRegular (rootPlus i)) = 0
+  rw [← transportZornOperator_mul, rightRegular_rootPlus_sq]
+  simp [transportZornOperator]
+
+/-- Distinct circular creation roots anticommute after transport to the
+doubled real Krein carrier. -/
+theorem rightRegularOnDoubleKrein_creation_anticommutator (i j : Fin 3) :
+    rightRegularOnDoubleKrein (rootPlus i) * rightRegularOnDoubleKrein (rootPlus j) +
+      rightRegularOnDoubleKrein (rootPlus j) * rightRegularOnDoubleKrein (rootPlus i) = 0 := by
+  change transportZornOperator (rightRegular (rootPlus i)) *
+      transportZornOperator (rightRegular (rootPlus j)) +
+    transportZornOperator (rightRegular (rootPlus j)) *
+      transportZornOperator (rightRegular (rootPlus i)) = 0
+  rw [← transportZornOperator_mul, ← transportZornOperator_mul,
+    ← transportZornOperator_add, rightRegular_rootPlus_anticommutator]
+  simp [transportZornOperator]
+
+/-- Distinct circular annihilation roots anticommute after transport to the
+doubled real Krein carrier. -/
+theorem rightRegularOnDoubleKrein_annihilation_anticommutator (i j : Fin 3) :
+    rightRegularOnDoubleKrein (rootMinus i) * rightRegularOnDoubleKrein (rootMinus j) +
+      rightRegularOnDoubleKrein (rootMinus j) * rightRegularOnDoubleKrein (rootMinus i) = 0 := by
+  change transportZornOperator (rightRegular (rootMinus i)) *
+      transportZornOperator (rightRegular (rootMinus j)) +
+    transportZornOperator (rightRegular (rootMinus j)) *
+      transportZornOperator (rightRegular (rootMinus i)) = 0
+  rw [← transportZornOperator_mul, ← transportZornOperator_mul,
+    ← transportZornOperator_add, rightRegular_rootMinus_anticommutator]
+  simp [transportZornOperator]
+
+/-- The full three-channel creation/annihilation relation on the doubled
+real Krein carrier. -/
+theorem rightRegularOnDoubleKrein_mixed_anticommutator (i j : Fin 3) :
+    rightRegularOnDoubleKrein (rootMinus j) * rightRegularOnDoubleKrein (rootPlus i) +
+      rightRegularOnDoubleKrein (rootPlus i) * rightRegularOnDoubleKrein (rootMinus j) =
+        if i = j then (1 : EndH4) else 0 := by
+  change transportZornOperator (rightRegular (rootMinus j)) *
+      transportZornOperator (rightRegular (rootPlus i)) +
+    transportZornOperator (rightRegular (rootPlus i)) *
+      transportZornOperator (rightRegular (rootMinus j)) = _
+  rw [← transportZornOperator_mul, ← transportZornOperator_mul,
+    ← transportZornOperator_add]
+  have h := congrArg transportZornOperator (rightRegular_root_anticommutator i j)
+  by_cases hij : i = j
+  · simp [hij] at h ⊢
+    exact h
+  · simp [hij] at h ⊢
+    exact h
 
 /-- The exterior-Fock realization intertwines with the resulting operators on
 the doubled real Krein carrier through the composed carrier equivalence. -/

@@ -3,10 +3,10 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-// PolarForm.lean
+-- PolarForm.lean
 -- Bilinear polar form linking point‑ray and plane‑axis coordinates.
 
-import Mathlib.Data.Matrix.Notation
+import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Algebra.Algebra.Basic
 
 open Matrix
@@ -22,7 +22,12 @@ namespace InfoGeometry.Canonical
 def polar (p q : Fin 4 → ℤ) : ℤ :=
   p 0 * q 3 - p 1 * q 2 + p 2 * q 1 + p 3 * q 0 - p 0 * q 2 + p 1 * q 3
 
-@[simp] lemma polar_swap (p q : Fin 4 → ℤ) : polar p q = - polar q p := by
+/-- The source expression is not alternating: this identity records its exact
+symmetric part rather than asserting a false skew-symmetry law. -/
+lemma polar_reverse_sum (p q : Fin 4 → ℤ) :
+    polar p q + polar q p =
+      2 * p 0 * q 3 + 2 * p 3 * q 0 - p 0 * q 2 - p 2 * q 0 +
+        p 1 * q 3 + p 3 * q 1 := by
   unfold polar
   ring
 

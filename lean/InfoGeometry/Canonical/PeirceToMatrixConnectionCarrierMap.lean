@@ -363,8 +363,8 @@ def movingSheetRepHom : (ℝ × ℝ) →+* MovingSheetMat where
     apply movingSheet_ext
     · rw [Matrix.add_apply]; simp [movingSheetRep]
     · rw [Matrix.add_apply]
-      simp [movingSheetRep]
-      <;> simp [movingSheetRep]
+      simpa [movingSheetRep] using
+        (movingSheetRep_offdiag_add p.1 p.2 q.1 q.2).symm
     · rw [Matrix.add_apply]; simp [movingSheetRep]
     · rw [Matrix.add_apply]; simp [movingSheetRep]
 
@@ -1432,7 +1432,6 @@ theorem affineExteriorCoeff_mat2_noncomm :
   intro h
   have h00 := congrFun (congrFun h (0 : Fin 2)) (0 : Fin 2)
   simp [Matrix.mul_apply, Fin.sum_univ_two] at h00
-  exact absurd h00 (by norm_num)
 
 end InfoGeometry.Canonical.PeirceToMatrixConnectionCarrierMapWitnesses
 

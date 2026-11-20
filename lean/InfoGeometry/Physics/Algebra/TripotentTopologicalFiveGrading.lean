@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.Normed.Operator.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition
@@ -19,7 +24,10 @@ variable {A : Type*} [NormedRing A] [NormedAlgebra ℝ A]
 
 /-- Continuous left multiplication. -/
 def continuousLeftMul (a : A) : A →L[ℝ] A :=
-  (ContinuousLinearMap.mul ℝ A) a
+  ContinuousLinearMap.mk (leftMulLinear a) (by
+    change Continuous (fun x : A => a * x)
+    exact (continuous_const : Continuous (fun _ : A => a)).mul
+      (continuous_id : Continuous (fun x : A => x)))
 
 /-- Continuous right multiplication, obtained from the native linear owner. -/
 def continuousRightMul (b : A) : A →L[ℝ] A :=

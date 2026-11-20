@@ -1,0 +1,17 @@
+{
+  "report.json": "7024f87cd4592d79fff016c77bb9615a55598f090d83da4ff059ace6dbed9bbf",
+  "InfoGeometry.Algebra.FiniteSpinAlgebra.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "InfoGeometry.Analysis.GradedExponentialTrace.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "InfoGeometry.Analysis.HilbertGramDuality.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "InfoGeometry.Analysis.HilbertGramMoorePenrose.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "InfoGeometry.Analysis.HilbertGramReciprocity.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "InfoGeometry.OperatorAlgebra.PartnerEigenspaces.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "InfoGeometry.Singular.MoorePenrose.log": "bea9801e574f4075818000a8f35f93924494ba2d60e317d8e276c852a5931e49",
+  "axioms.log": "b80c5188d818317d891a79290cbb31acf6a4d5c60df7cb0c69d2af8f17a891bc",
+  "src/CliffordDiracAudit.lean": "dafbee93aa1105735e89b8e050780af063d290c1c96d40163bde29f322b5f90a",
+  "repository/tools/quality/check_clifford_dirac.py": "fcf6fbb9845e0ee2a85bdb3778c5fe74345a9ae7a2e97e871d0a89d3e98e7db0",
+  "repository/tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+  "repository/tools/quality/reviewed_audit_source.py": "a976c910f5efb4611b1626d714e3197310d92648ffae56513e94a49ae5f0f206",
+  "repository/tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df"
+}

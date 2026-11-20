@@ -1,0 +1,652 @@
+{
+  "status": "passed",
+  "recorded_utc": "2026-11-16T18:40:11.029481+00:00",
+  "git_head": "08c34e03f610b452e03422037949196dc7d92d6d",
+  "branch": "codex/chiral-reciprocity-20261116",
+  "status_short": "A  docs/CHIRAL_RECIPROCITY_CONTRACT.md\nA  docs/CHIRAL_RECIPROCITY_FORMALIZATION.md\nM  lean/InfoGeometry/All.lean\nA  lean/InfoGeometry/Analysis/GradedExponentialTrace.lean\nA  lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean\nA  lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean",
+  "working_tree_scope": "staged task changes; no source/index mismatch",
+  "changed_paths": [
+    "docs/CHIRAL_RECIPROCITY_CONTRACT.md",
+    "docs/CHIRAL_RECIPROCITY_FORMALIZATION.md",
+    "lean/InfoGeometry/All.lean",
+    "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean",
+    "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean",
+    "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean"
+  ],
+  "task_source_hashes": {
+    "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean": {
+      "sha256": "64975ff850e1e32ac98e07a52c2d315e83dcc98a0c60833a854bcbd7d7ddbae9",
+      "index_sha256": "64975ff850e1e32ac98e07a52c2d315e83dcc98a0c60833a854bcbd7d7ddbae9",
+      "frozen_sha256": "64975ff850e1e32ac98e07a52c2d315e83dcc98a0c60833a854bcbd7d7ddbae9",
+      "matches_frozen_and_index": true
+    },
+    "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean": {
+      "sha256": "aa016bd2a2711ba481373d23496f3e115e84602c0b4321a3e7731ecc219b1f30",
+      "index_sha256": "aa016bd2a2711ba481373d23496f3e115e84602c0b4321a3e7731ecc219b1f30",
+      "frozen_sha256": "aa016bd2a2711ba481373d23496f3e115e84602c0b4321a3e7731ecc219b1f30",
+      "matches_frozen_and_index": true
+    },
+    "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean": {
+      "sha256": "cdde658faa0d10ab862a648062b405c3178eeff0a504bfd0a1be223ccdef3451",
+      "index_sha256": "cdde658faa0d10ab862a648062b405c3178eeff0a504bfd0a1be223ccdef3451",
+      "frozen_sha256": "cdde658faa0d10ab862a648062b405c3178eeff0a504bfd0a1be223ccdef3451",
+      "matches_frozen_and_index": true
+    },
+    "docs/CHIRAL_RECIPROCITY_CONTRACT.md": {
+      "sha256": "0594dfd47f6ba9a253a4d4f0cf1ce1a5f8ad6c27d49ed146a963274f4d565328",
+      "index_sha256": "0594dfd47f6ba9a253a4d4f0cf1ce1a5f8ad6c27d49ed146a963274f4d565328",
+      "frozen_sha256": "0594dfd47f6ba9a253a4d4f0cf1ce1a5f8ad6c27d49ed146a963274f4d565328",
+      "matches_frozen_and_index": true
+    },
+    "docs/CHIRAL_RECIPROCITY_FORMALIZATION.md": {
+      "sha256": "d4ce080275e295eb34152f00f23759d2ced56abae5648d3e664383fedfb6effa",
+      "index_sha256": "d4ce080275e295eb34152f00f23759d2ced56abae5648d3e664383fedfb6effa",
+      "frozen_sha256": "d4ce080275e295eb34152f00f23759d2ced56abae5648d3e664383fedfb6effa",
+      "matches_frozen_and_index": true
+    },
+    "lean/InfoGeometry/All.lean": {
+      "sha256": "5bd6c78068eab621d0ba45fc64a5f1da9ba7172295a2ab3fddf69a469537d09f",
+      "index_sha256": "5bd6c78068eab621d0ba45fc64a5f1da9ba7172295a2ab3fddf69a469537d09f",
+      "frozen_sha256": "5bd6c78068eab621d0ba45fc64a5f1da9ba7172295a2ab3fddf69a469537d09f",
+      "matches_frozen_and_index": true
+    }
+  },
+  "helper_and_pin_hashes": {
+    "lean-toolchain": {
+      "sha256": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+      "frozen_sha256": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+      "head_sha256": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+      "unchanged_from_frozen_and_head": true
+    },
+    "lake-manifest.json": {
+      "sha256": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+      "frozen_sha256": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+      "head_sha256": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+      "unchanged_from_frozen_and_head": true
+    },
+    "lakefile.lean": {
+      "sha256": "76baf3f062ca0ddee23db99facdc961e8acd437bba0a5070790a72ff862d1580",
+      "frozen_sha256": "76baf3f062ca0ddee23db99facdc961e8acd437bba0a5070790a72ff862d1580",
+      "head_sha256": "76baf3f062ca0ddee23db99facdc961e8acd437bba0a5070790a72ff862d1580",
+      "unchanged_from_frozen_and_head": true
+    },
+    ".githooks/pre-commit": {
+      "sha256": "1d686a385aaa998a9777ed77ca8214a2b418e076d30e9abd089c383d69f993be",
+      "frozen_sha256": "1d686a385aaa998a9777ed77ca8214a2b418e076d30e9abd089c383d69f993be",
+      "head_sha256": "1d686a385aaa998a9777ed77ca8214a2b418e076d30e9abd089c383d69f993be",
+      "unchanged_from_frozen_and_head": true
+    },
+    ".githooks/pre-push": {
+      "sha256": "6e0a8824299d493b1e39350413164ae45c5663c261658635e2d4962b6ae1d8c2",
+      "frozen_sha256": "6e0a8824299d493b1e39350413164ae45c5663c261658635e2d4962b6ae1d8c2",
+      "head_sha256": "6e0a8824299d493b1e39350413164ae45c5663c261658635e2d4962b6ae1d8c2",
+      "unchanged_from_frozen_and_head": true
+    },
+    "scripts/quality/post_build_gate.sh": {
+      "sha256": "40d7c9d45b2a47e9566dc634575c78eca0e81a07908e76cd42e2dad1933b1220",
+      "frozen_sha256": "40d7c9d45b2a47e9566dc634575c78eca0e81a07908e76cd42e2dad1933b1220",
+      "head_sha256": "40d7c9d45b2a47e9566dc634575c78eca0e81a07908e76cd42e2dad1933b1220",
+      "unchanged_from_frozen_and_head": true
+    },
+    "tools/quality/check_clifford_dirac.py": {
+      "sha256": "fcf6fbb9845e0ee2a85bdb3778c5fe74345a9ae7a2e97e871d0a89d3e98e7db0",
+      "frozen_sha256": "fcf6fbb9845e0ee2a85bdb3778c5fe74345a9ae7a2e97e871d0a89d3e98e7db0",
+      "head_sha256": "fcf6fbb9845e0ee2a85bdb3778c5fe74345a9ae7a2e97e871d0a89d3e98e7db0",
+      "unchanged_from_frozen_and_head": true
+    },
+    "tools/quality/check_reviewed_prs.py": {
+      "sha256": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+      "frozen_sha256": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+      "head_sha256": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+      "unchanged_from_frozen_and_head": true
+    },
+    "tools/quality/reviewed_audit_source.py": {
+      "sha256": "a976c910f5efb4611b1626d714e3197310d92648ffae56513e94a49ae5f0f206",
+      "frozen_sha256": "a976c910f5efb4611b1626d714e3197310d92648ffae56513e94a49ae5f0f206",
+      "head_sha256": "a976c910f5efb4611b1626d714e3197310d92648ffae56513e94a49ae5f0f206",
+      "unchanged_from_frozen_and_head": true
+    },
+    "tools/quality/placeholder_audit.py": {
+      "sha256": "ffc09051c8dc13d6e46b931c01b66d7d82eff31090216006acd83919c32e8602",
+      "frozen_sha256": "ffc09051c8dc13d6e46b931c01b66d7d82eff31090216006acd83919c32e8602",
+      "head_sha256": "ffc09051c8dc13d6e46b931c01b66d7d82eff31090216006acd83919c32e8602",
+      "unchanged_from_frozen_and_head": true
+    },
+    "tools/quality/semantic_vacuity_gate.py": {
+      "sha256": "cfd9a8e4108610a8221a74a28330849b02c064536f245fb411bc989eba2ac27f",
+      "frozen_sha256": "cfd9a8e4108610a8221a74a28330849b02c064536f245fb411bc989eba2ac27f",
+      "head_sha256": "cfd9a8e4108610a8221a74a28330849b02c064536f245fb411bc989eba2ac27f",
+      "unchanged_from_frozen_and_head": true
+    },
+    "tools/quality/semantic_vacuity_patterns.json": {
+      "sha256": "01cd14be0fdb966fbe93e93d2729d6822dc375c85f6338a7d67b70758fd87082",
+      "frozen_sha256": "01cd14be0fdb966fbe93e93d2729d6822dc375c85f6338a7d67b70758fd87082",
+      "head_sha256": "01cd14be0fdb966fbe93e93d2729d6822dc375c85f6338a7d67b70758fd87082",
+      "unchanged_from_frozen_and_head": true
+    },
+    "tools/infra/opengauss_screener.py": {
+      "sha256": "78e5499067bb5f67ba7fa48c92616cf92fd80eb3eabf8c2ca4ed38ea717fdc56",
+      "frozen_sha256": "78e5499067bb5f67ba7fa48c92616cf92fd80eb3eabf8c2ca4ed38ea717fdc56",
+      "head_sha256": "78e5499067bb5f67ba7fa48c92616cf92fd80eb3eabf8c2ca4ed38ea717fdc56",
+      "unchanged_from_frozen_and_head": true
+    },
+    "tools/infra/opengauss_cli.py": {
+      "sha256": "fa210dde57fc129ada5645926285c8a6e1b6ab7cdd3354747279aa5702f1f18c",
+      "frozen_sha256": "fa210dde57fc129ada5645926285c8a6e1b6ab7cdd3354747279aa5702f1f18c",
+      "head_sha256": "fa210dde57fc129ada5645926285c8a6e1b6ab7cdd3354747279aa5702f1f18c",
+      "unchanged_from_frozen_and_head": true
+    },
+    "tools/quality/proof_proxy_staged_gate.py": {
+      "sha256": "eaa861d929ad9465586504f30f65ddc64eb96f8198bee65b3039c8d4fb813db9",
+      "frozen_sha256": "eaa861d929ad9465586504f30f65ddc64eb96f8198bee65b3039c8d4fb813db9",
+      "head_sha256": "eaa861d929ad9465586504f30f65ddc64eb96f8198bee65b3039c8d4fb813db9",
+      "unchanged_from_frozen_and_head": true
+    },
+    "tools/infra/ci_bootstrap.py": {
+      "sha256": "91aef1473e016397248bfd422e81dc61b8ec676cd559a456362dcc6ca8174514",
+      "frozen_sha256": "91aef1473e016397248bfd422e81dc61b8ec676cd559a456362dcc6ca8174514",
+      "head_sha256": "91aef1473e016397248bfd422e81dc61b8ec676cd559a456362dcc6ca8174514",
+      "unchanged_from_frozen_and_head": true
+    },
+    "tools/build_lock.py": {
+      "sha256": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df",
+      "frozen_sha256": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df",
+      "head_sha256": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df",
+      "unchanged_from_frozen_and_head": true
+    }
+  },
+  "kernel_closure_reconciliation": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": {
+      "path": "lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean",
+      "sha256": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+      "kernel_sha256": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+      "matches_kernel": true,
+      "head_sha256": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+      "dependency_unchanged": true
+    },
+    "InfoGeometry.OperatorAlgebra.PartnerEigenspaces": {
+      "path": "lean/InfoGeometry/OperatorAlgebra/PartnerEigenspaces.lean",
+      "sha256": "ed9131818752823e408f081b29394176b9d88cb0484bd3d0a8fb4e6149588cb6",
+      "kernel_sha256": "ed9131818752823e408f081b29394176b9d88cb0484bd3d0a8fb4e6149588cb6",
+      "matches_kernel": true,
+      "head_sha256": "ed9131818752823e408f081b29394176b9d88cb0484bd3d0a8fb4e6149588cb6",
+      "dependency_unchanged": true
+    },
+    "InfoGeometry.Analysis.HilbertGramDuality": {
+      "path": "lean/InfoGeometry/Analysis/HilbertGramDuality.lean",
+      "sha256": "12db6c5c9d34bec29b668dfa99d44ac42031f491d053bea0881dd6ec9836342b",
+      "kernel_sha256": "12db6c5c9d34bec29b668dfa99d44ac42031f491d053bea0881dd6ec9836342b",
+      "matches_kernel": true,
+      "head_sha256": "12db6c5c9d34bec29b668dfa99d44ac42031f491d053bea0881dd6ec9836342b",
+      "dependency_unchanged": true
+    },
+    "InfoGeometry.Analysis.HilbertGramReciprocity": {
+      "path": "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean",
+      "sha256": "64975ff850e1e32ac98e07a52c2d315e83dcc98a0c60833a854bcbd7d7ddbae9",
+      "kernel_sha256": "64975ff850e1e32ac98e07a52c2d315e83dcc98a0c60833a854bcbd7d7ddbae9",
+      "matches_kernel": true
+    },
+    "InfoGeometry.Singular.MoorePenrose": {
+      "path": "lean/InfoGeometry/Singular/MoorePenrose.lean",
+      "sha256": "a2b9f006df7fc1bbc9ce107aeab98048464d70724e88c224f5dd828a2d7ebfe6",
+      "kernel_sha256": "a2b9f006df7fc1bbc9ce107aeab98048464d70724e88c224f5dd828a2d7ebfe6",
+      "matches_kernel": true,
+      "head_sha256": "a2b9f006df7fc1bbc9ce107aeab98048464d70724e88c224f5dd828a2d7ebfe6",
+      "dependency_unchanged": true
+    },
+    "InfoGeometry.Analysis.HilbertGramMoorePenrose": {
+      "path": "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean",
+      "sha256": "aa016bd2a2711ba481373d23496f3e115e84602c0b4321a3e7731ecc219b1f30",
+      "kernel_sha256": "aa016bd2a2711ba481373d23496f3e115e84602c0b4321a3e7731ecc219b1f30",
+      "matches_kernel": true
+    },
+    "InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace": {
+      "path": "lean/InfoGeometry/OperatorAlgebra/NoncommutativeGradedTrace.lean",
+      "sha256": "ca56806d3cccde9b983c44a65cfc2e2aa1c95626a56f1149f9e482e6dca306b6",
+      "kernel_sha256": "ca56806d3cccde9b983c44a65cfc2e2aa1c95626a56f1149f9e482e6dca306b6",
+      "matches_kernel": true,
+      "head_sha256": "ca56806d3cccde9b983c44a65cfc2e2aa1c95626a56f1149f9e482e6dca306b6",
+      "dependency_unchanged": true
+    },
+    "InfoGeometry.Analysis.GradedExponentialTrace": {
+      "path": "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean",
+      "sha256": "cdde658faa0d10ab862a648062b405c3178eeff0a504bfd0a1be223ccdef3451",
+      "kernel_sha256": "cdde658faa0d10ab862a648062b405c3178eeff0a504bfd0a1be223ccdef3451",
+      "matches_kernel": true
+    }
+  },
+  "all_integration": {
+    "exact_three_import_additions": true,
+    "additions": [
+      "import InfoGeometry.Analysis.HilbertGramReciprocity",
+      "import InfoGeometry.Analysis.HilbertGramMoorePenrose",
+      "import InfoGeometry.Analysis.GradedExponentialTrace"
+    ],
+    "deletions": [],
+    "diff": "diff --git a/lean/InfoGeometry/All.lean b/lean/InfoGeometry/All.lean\nindex 0e1599b1..105ddf2b 100644\n--- a/lean/InfoGeometry/All.lean\n+++ b/lean/InfoGeometry/All.lean\n@@ -8,6 +8,9 @@ import InfoGeometry.OperatorAlgebra.IsometryCornerLocalization\n import InfoGeometry.Clifford.WeylFrameMasks\n import InfoGeometry.Analysis.MetricPorosity\n import InfoGeometry.Analysis.MultiscaleLocalization\n+import InfoGeometry.Analysis.HilbertGramReciprocity\n+import InfoGeometry.Analysis.HilbertGramMoorePenrose\n+import InfoGeometry.Analysis.GradedExponentialTrace\n import InfoGeometry.Canonical.PeirceStarColimit\n import InfoGeometry.OperatorAlgebra.HorizonCompressionPairingAudit\n import InfoGeometry.Examples.RealMatrixModeWitness\n"
+  },
+  "hooks_path": ".githooks",
+  "independent_checkout": true,
+  "lake_root_is_symlink": false,
+  "lake_packages_is_symlink": false,
+  "mathlib_head": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "mathlib_diff_exit_code": 0,
+  "git_diff_check_exit_code": 0,
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "show",
+        ":lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "64975ff850e1e32ac98e07a52c2d315e83dcc98a0c60833a854bcbd7d7ddbae9"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        ":lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "aa016bd2a2711ba481373d23496f3e115e84602c0b4321a3e7731ecc219b1f30"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        ":lean/InfoGeometry/Analysis/GradedExponentialTrace.lean"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "cdde658faa0d10ab862a648062b405c3178eeff0a504bfd0a1be223ccdef3451"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        ":docs/CHIRAL_RECIPROCITY_CONTRACT.md"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "0594dfd47f6ba9a253a4d4f0cf1ce1a5f8ad6c27d49ed146a963274f4d565328"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        ":docs/CHIRAL_RECIPROCITY_FORMALIZATION.md"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "d4ce080275e295eb34152f00f23759d2ced56abae5648d3e664383fedfb6effa"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        ":lean/InfoGeometry/All.lean"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "5bd6c78068eab621d0ba45fc64a5f1da9ba7172295a2ab3fddf69a469537d09f"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:lean-toolchain"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:lake-manifest.json"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:lakefile.lean"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "76baf3f062ca0ddee23db99facdc961e8acd437bba0a5070790a72ff862d1580"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:.githooks/pre-commit"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "1d686a385aaa998a9777ed77ca8214a2b418e076d30e9abd089c383d69f993be"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:.githooks/pre-push"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "6e0a8824299d493b1e39350413164ae45c5663c261658635e2d4962b6ae1d8c2"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:scripts/quality/post_build_gate.sh"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "40d7c9d45b2a47e9566dc634575c78eca0e81a07908e76cd42e2dad1933b1220"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:tools/quality/check_clifford_dirac.py"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "fcf6fbb9845e0ee2a85bdb3778c5fe74345a9ae7a2e97e871d0a89d3e98e7db0"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:tools/quality/check_reviewed_prs.py"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:tools/quality/reviewed_audit_source.py"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "a976c910f5efb4611b1626d714e3197310d92648ffae56513e94a49ae5f0f206"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:tools/quality/placeholder_audit.py"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "ffc09051c8dc13d6e46b931c01b66d7d82eff31090216006acd83919c32e8602"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:tools/quality/semantic_vacuity_gate.py"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "cfd9a8e4108610a8221a74a28330849b02c064536f245fb411bc989eba2ac27f"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:tools/quality/semantic_vacuity_patterns.json"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "01cd14be0fdb966fbe93e93d2729d6822dc375c85f6338a7d67b70758fd87082"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:tools/infra/opengauss_screener.py"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "78e5499067bb5f67ba7fa48c92616cf92fd80eb3eabf8c2ca4ed38ea717fdc56"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:tools/infra/opengauss_cli.py"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "fa210dde57fc129ada5645926285c8a6e1b6ab7cdd3354747279aa5702f1f18c"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:tools/quality/proof_proxy_staged_gate.py"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "eaa861d929ad9465586504f30f65ddc64eb96f8198bee65b3039c8d4fb813db9"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:tools/infra/ci_bootstrap.py"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "91aef1473e016397248bfd422e81dc61b8ec676cd559a456362dcc6ca8174514"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:tools/build_lock.py"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:lean/InfoGeometry/OperatorAlgebra/PartnerEigenspaces.lean"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "ed9131818752823e408f081b29394176b9d88cb0484bd3d0a8fb4e6149588cb6"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:lean/InfoGeometry/Analysis/HilbertGramDuality.lean"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "12db6c5c9d34bec29b668dfa99d44ac42031f491d053bea0881dd6ec9836342b"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:lean/InfoGeometry/Singular/MoorePenrose.lean"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "a2b9f006df7fc1bbc9ce107aeab98048464d70724e88c224f5dd828a2d7ebfe6"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:lean/InfoGeometry/OperatorAlgebra/NoncommutativeGradedTrace.lean"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_sha256": "ca56806d3cccde9b983c44a65cfc2e2aa1c95626a56f1149f9e482e6dca306b6"
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stdout": "08c34e03f610b452e03422037949196dc7d92d6d\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stdout": "codex/chiral-reciprocity-20261116\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stdout": "A  docs/CHIRAL_RECIPROCITY_CONTRACT.md\nA  docs/CHIRAL_RECIPROCITY_FORMALIZATION.md\nM  lean/InfoGeometry/All.lean\nA  lean/InfoGeometry/Analysis/GradedExponentialTrace.lean\nA  lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean\nA  lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--name-only",
+        "HEAD"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stdout": "docs/CHIRAL_RECIPROCITY_CONTRACT.md\ndocs/CHIRAL_RECIPROCITY_FORMALIZATION.md\nlean/InfoGeometry/All.lean\nlean/InfoGeometry/Analysis/GradedExponentialTrace.lean\nlean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean\nlean/InfoGeometry/Analysis/HilbertGramReciprocity.lean\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "HEAD",
+        "--",
+        "lean/InfoGeometry/All.lean"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stdout": "diff --git a/lean/InfoGeometry/All.lean b/lean/InfoGeometry/All.lean\nindex 0e1599b1..105ddf2b 100644\n--- a/lean/InfoGeometry/All.lean\n+++ b/lean/InfoGeometry/All.lean\n@@ -8,6 +8,9 @@ import InfoGeometry.OperatorAlgebra.IsometryCornerLocalization\n import InfoGeometry.Clifford.WeylFrameMasks\n import InfoGeometry.Analysis.MetricPorosity\n import InfoGeometry.Analysis.MultiscaleLocalization\n+import InfoGeometry.Analysis.HilbertGramReciprocity\n+import InfoGeometry.Analysis.HilbertGramMoorePenrose\n+import InfoGeometry.Analysis.GradedExponentialTrace\n import InfoGeometry.Canonical.PeirceStarColimit\n import InfoGeometry.OperatorAlgebra.HorizonCompressionPairingAudit\n import InfoGeometry.Examples.RealMatrixModeWitness\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "HEAD"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "config",
+        "--get",
+        "core.hooksPath"
+      ],
+      "cwd": "/workspace/scratch/9eb3301f34a1/info-geometry-lean",
+      "exit_code": 0,
+      "stdout": ".githooks\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/workspace/scratch/64554963d837/mathlib-4.34.1",
+      "exit_code": 0,
+      "stdout": "d13f23b723b8a846827a245b89c10fc7d3f11612\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--exit-code",
+        "HEAD",
+        "--"
+      ],
+      "cwd": "/workspace/scratch/64554963d837/mathlib-4.34.1",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "issues": []
+}

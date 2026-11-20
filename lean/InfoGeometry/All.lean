@@ -26,6 +26,9 @@ import InfoGeometry.OperatorAlgebra.IsometryCornerLocalization
 import InfoGeometry.Clifford.WeylFrameMasks
 import InfoGeometry.Analysis.MetricPorosity
 import InfoGeometry.Analysis.MultiscaleLocalization
+import InfoGeometry.Analysis.HilbertGramReciprocity
+import InfoGeometry.Analysis.HilbertGramMoorePenrose
+import InfoGeometry.Analysis.GradedExponentialTrace
 import InfoGeometry.Canonical.PeirceStarColimit
 import InfoGeometry.OperatorAlgebra.HorizonCompressionPairingAudit
 import InfoGeometry.Examples.RealMatrixModeWitness

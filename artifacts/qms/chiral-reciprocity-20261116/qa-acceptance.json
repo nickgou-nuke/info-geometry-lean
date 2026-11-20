@@ -1,0 +1,605 @@
+{
+  "schema": "info_geometry.independent_qa_acceptance.v1",
+  "task": "chiral_reciprocity_20261116",
+  "recorded_utc": "2026-11-16T18:43:41.315722+00:00",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "reviewer_role": "Independent QA-A; authored no Lean theorem/source and made no repository source, documentation, hook, gate, or dependency edits.",
+  "accepted_scope": "The exact three selected owners, their fresh eight-module repository source closure, and all 33 declarations owned by the selected modules. Source semantics, explicit strict source gates, static Gate4, and frozen source/index integration were checked separately.",
+  "git_context": {
+    "base_head": "08c34e03f610b452e03422037949196dc7d92d6d",
+    "branch": "codex/chiral-reciprocity-20261116",
+    "working_tree_scope": "staged task changes; no source/index mismatch",
+    "changed_paths": [
+      "docs/CHIRAL_RECIPROCITY_CONTRACT.md",
+      "docs/CHIRAL_RECIPROCITY_FORMALIZATION.md",
+      "lean/InfoGeometry/All.lean",
+      "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean",
+      "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean",
+      "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean"
+    ],
+    "snapshot_kind": "staged, uncommitted task snapshot identified by exact hashes; later commit/publication belongs to the parent phase"
+  },
+  "source_hashes": {
+    "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean": {
+      "sha256": "64975ff850e1e32ac98e07a52c2d315e83dcc98a0c60833a854bcbd7d7ddbae9",
+      "index_sha256": "64975ff850e1e32ac98e07a52c2d315e83dcc98a0c60833a854bcbd7d7ddbae9",
+      "frozen_sha256": "64975ff850e1e32ac98e07a52c2d315e83dcc98a0c60833a854bcbd7d7ddbae9",
+      "matches_frozen_and_index": true
+    },
+    "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean": {
+      "sha256": "aa016bd2a2711ba481373d23496f3e115e84602c0b4321a3e7731ecc219b1f30",
+      "index_sha256": "aa016bd2a2711ba481373d23496f3e115e84602c0b4321a3e7731ecc219b1f30",
+      "frozen_sha256": "aa016bd2a2711ba481373d23496f3e115e84602c0b4321a3e7731ecc219b1f30",
+      "matches_frozen_and_index": true
+    },
+    "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean": {
+      "sha256": "cdde658faa0d10ab862a648062b405c3178eeff0a504bfd0a1be223ccdef3451",
+      "index_sha256": "cdde658faa0d10ab862a648062b405c3178eeff0a504bfd0a1be223ccdef3451",
+      "frozen_sha256": "cdde658faa0d10ab862a648062b405c3178eeff0a504bfd0a1be223ccdef3451",
+      "matches_frozen_and_index": true
+    },
+    "docs/CHIRAL_RECIPROCITY_CONTRACT.md": {
+      "sha256": "0594dfd47f6ba9a253a4d4f0cf1ce1a5f8ad6c27d49ed146a963274f4d565328",
+      "index_sha256": "0594dfd47f6ba9a253a4d4f0cf1ce1a5f8ad6c27d49ed146a963274f4d565328",
+      "frozen_sha256": "0594dfd47f6ba9a253a4d4f0cf1ce1a5f8ad6c27d49ed146a963274f4d565328",
+      "matches_frozen_and_index": true
+    },
+    "docs/CHIRAL_RECIPROCITY_FORMALIZATION.md": {
+      "sha256": "d4ce080275e295eb34152f00f23759d2ced56abae5648d3e664383fedfb6effa",
+      "index_sha256": "d4ce080275e295eb34152f00f23759d2ced56abae5648d3e664383fedfb6effa",
+      "frozen_sha256": "d4ce080275e295eb34152f00f23759d2ced56abae5648d3e664383fedfb6effa",
+      "matches_frozen_and_index": true
+    },
+    "lean/InfoGeometry/All.lean": {
+      "sha256": "5bd6c78068eab621d0ba45fc64a5f1da9ba7172295a2ab3fddf69a469537d09f",
+      "index_sha256": "5bd6c78068eab621d0ba45fc64a5f1da9ba7172295a2ab3fddf69a469537d09f",
+      "frozen_sha256": "5bd6c78068eab621d0ba45fc64a5f1da9ba7172295a2ab3fddf69a469537d09f",
+      "matches_frozen_and_index": true
+    }
+  },
+  "runtime": {
+    "lean_toolchain": "leanprover/lean4:v4.34.1",
+    "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+    "lake_version": "Lake version 5.0.0-src+5045d00 (Lean version 4.34.1)",
+    "mathlib_revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+    "mathlib_source_clean": true,
+    "lean_path": "/workspace/scratch/64554963d837/lean-runtime/bin/lean",
+    "mathlib_root": "/workspace/scratch/64554963d837/mathlib-4.34.1"
+  },
+  "native_verification": {
+    "command": [
+      "python3",
+      "-B",
+      "tools/quality/check_clifford_dirac.py",
+      "--mathlib-root",
+      "/workspace/scratch/64554963d837/mathlib-4.34.1",
+      "--lean",
+      "/workspace/scratch/64554963d837/lean-runtime/bin/lean",
+      "--output",
+      "/workspace/scratch/9eb3301f34a1/reciprocity/final-validation",
+      "--target",
+      "InfoGeometry.Analysis.HilbertGramReciprocity",
+      "--target",
+      "InfoGeometry.Analysis.HilbertGramMoorePenrose",
+      "--target",
+      "InfoGeometry.Analysis.GradedExponentialTrace"
+    ],
+    "exit_code": 0,
+    "fresh": true,
+    "incremental": false,
+    "skip_audit": false,
+    "repository_module_count": 8,
+    "all_modules_returncode_zero": true,
+    "all_reused_false": true,
+    "modules": [
+      {
+        "module": "InfoGeometry.Algebra.FiniteSpinAlgebra",
+        "returncode": 0,
+        "warnings": 0,
+        "reused": false
+      },
+      {
+        "module": "InfoGeometry.OperatorAlgebra.PartnerEigenspaces",
+        "returncode": 0,
+        "warnings": 0,
+        "reused": false
+      },
+      {
+        "module": "InfoGeometry.Analysis.HilbertGramDuality",
+        "returncode": 0,
+        "warnings": 0,
+        "reused": false
+      },
+      {
+        "module": "InfoGeometry.Analysis.HilbertGramReciprocity",
+        "returncode": 0,
+        "warnings": 0,
+        "reused": false
+      },
+      {
+        "module": "InfoGeometry.Singular.MoorePenrose",
+        "returncode": 0,
+        "warnings": 14,
+        "reused": false
+      },
+      {
+        "module": "InfoGeometry.Analysis.HilbertGramMoorePenrose",
+        "returncode": 0,
+        "warnings": 0,
+        "reused": false
+      },
+      {
+        "module": "InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace",
+        "returncode": 0,
+        "warnings": 0,
+        "reused": false
+      },
+      {
+        "module": "InfoGeometry.Analysis.GradedExponentialTrace",
+        "returncode": 0,
+        "warnings": 0,
+        "reused": false
+      }
+    ],
+    "new_owner_warning_count": 0,
+    "audit_warning_count": 0,
+    "audited_declaration_counts": {
+      "InfoGeometry.Analysis.HilbertGramReciprocity": 16,
+      "InfoGeometry.Analysis.HilbertGramMoorePenrose": 7,
+      "InfoGeometry.Analysis.GradedExponentialTrace": 10
+    },
+    "audited_total": 33,
+    "source_theorem_count": 20,
+    "source_definition_count": 1,
+    "compiler_generated_owned_declarations": 12,
+    "axiom_union": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "unknown_or_custom_axioms": [],
+    "unsafe_or_partial_selected_declarations": false,
+    "axiom_scope": "Native Lean.collectAxioms is run for every constant owned by each selected module, including generated declarations; it follows dependencies and enforces the three-name whitelist. The log lists each audited declaration and the combined axiom union, not a per-declaration origin trace. It does not audit all declarations owned by every dependency module.",
+    "foundation_classification": "Permitted Lean/Mathlib extensionality, classical choice, and quotient foundations. The inspected native Hilbert and inverse constructions are explicitly noncomputable where needed; no local axiom, oracle, or desired conclusion is inserted as proof debt.",
+    "generated_audit_probe": {
+      "raw_path": "/workspace/scratch/9eb3301f34a1/reciprocity/final-validation/src/CliffordDiracAudit.lean",
+      "sha256": "dafbee93aa1105735e89b8e050780af063d290c1c96d40163bde29f322b5f90a",
+      "included_in_publication_packet": false
+    },
+    "maintained_generator_and_helper_sha256": {
+      "tools/quality/check_clifford_dirac.py": "fcf6fbb9845e0ee2a85bdb3778c5fe74345a9ae7a2e97e871d0a89d3e98e7db0",
+      "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+      "tools/quality/reviewed_audit_source.py": "a976c910f5efb4611b1626d714e3197310d92648ffae56513e94a49ae5f0f206",
+      "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df"
+    }
+  },
+  "source_inventory_and_semantic_scope": {
+    "owners": [
+      {
+        "module": "InfoGeometry.Analysis.HilbertGramReciprocity",
+        "path": "lean/InfoGeometry/Analysis/HilbertGramReciprocity.lean",
+        "sha256": "64975ff850e1e32ac98e07a52c2d315e83dcc98a0c60833a854bcbd7d7ddbae9",
+        "declarations": [
+          {
+            "kind": "theorem",
+            "name": "gram_eigenvalue_real_nonneg"
+          },
+          {
+            "kind": "theorem",
+            "name": "gram_eigenvalue_re_pos"
+          },
+          {
+            "kind": "def",
+            "name": "normalizedGramEigenspaceEquiv"
+          },
+          {
+            "kind": "theorem",
+            "name": "normalizedGramEigenspaceEquiv_apply"
+          },
+          {
+            "kind": "theorem",
+            "name": "normalizedGramEigenspaceEquiv_symm_apply"
+          },
+          {
+            "kind": "theorem",
+            "name": "normalizedGramEigenspaceEquiv_adjoint_apply"
+          }
+        ],
+        "direct_imports": [
+          "InfoGeometry.Analysis.HilbertGramDuality",
+          "Mathlib.Analysis.Real.Sqrt"
+        ]
+      },
+      {
+        "module": "InfoGeometry.Analysis.HilbertGramMoorePenrose",
+        "path": "lean/InfoGeometry/Analysis/HilbertGramMoorePenrose.lean",
+        "sha256": "aa016bd2a2711ba481373d23496f3e115e84602c0b4321a3e7731ecc219b1f30",
+        "declarations": [
+          {
+            "kind": "theorem",
+            "name": "comp_adjoint_eq_of_inner_inverse"
+          },
+          {
+            "kind": "theorem",
+            "name": "apply_eq_inv_smul_adjoint_of_mem_eigenspace"
+          },
+          {
+            "kind": "theorem",
+            "name": "moorePenroseInverse_apply_of_mem_eigenspace"
+          },
+          {
+            "kind": "theorem",
+            "name": "normalized_symm_eq_sqrt_smul"
+          },
+          {
+            "kind": "theorem",
+            "name": "norm_apply_of_mem_eigenspace"
+          },
+          {
+            "kind": "theorem",
+            "name": "one_le_eigenvalue_mul_norm_sq"
+          },
+          {
+            "kind": "theorem",
+            "name": "not_isClosed_range_of_positive_eigenvalues_arbitrarily_small"
+          }
+        ],
+        "direct_imports": [
+          "InfoGeometry.Analysis.HilbertGramReciprocity",
+          "InfoGeometry.Singular.MoorePenrose"
+        ]
+      },
+      {
+        "module": "InfoGeometry.Analysis.GradedExponentialTrace",
+        "path": "lean/InfoGeometry/Analysis/GradedExponentialTrace.lean",
+        "sha256": "cdde658faa0d10ab862a648062b405c3178eeff0a504bfd0a1be223ccdef3451",
+        "declarations": [
+          {
+            "kind": "theorem",
+            "name": "cyclicFunctional_odd_square_positive_power"
+          },
+          {
+            "kind": "theorem",
+            "name": "commute_anticommutator_of_square_zero"
+          },
+          {
+            "kind": "theorem",
+            "name": "cyclicFunctional_exp_odd_square"
+          },
+          {
+            "kind": "theorem",
+            "name": "cyclicFunctional_commutator_exp_anticommutator"
+          },
+          {
+            "kind": "theorem",
+            "name": "exp_fromBlocks_zero_zero"
+          },
+          {
+            "kind": "theorem",
+            "name": "rectangular_exponential_trace_difference"
+          },
+          {
+            "kind": "theorem",
+            "name": "trace_commutator_exp_anticommutator"
+          },
+          {
+            "kind": "theorem",
+            "name": "noncommuting_nilpotents_distinguish_weights"
+          }
+        ],
+        "direct_imports": [
+          "InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace",
+          "Mathlib.Analysis.Normed.Algebra.Exponential",
+          "Mathlib.Analysis.Matrix.Normed",
+          "Mathlib.Data.Matrix.Block",
+          "Mathlib.Topology.UniformSpace.Matrix",
+          "Mathlib.LinearAlgebra.Matrix.Trace",
+          "Mathlib.LinearAlgebra.Matrix.Notation"
+        ]
+      }
+    ],
+    "scope_review": {
+      "HilbertGramReciprocity": "Actual complete RCLike Hilbert spaces and native eigenspaces. Positivity uses a nonzero eigenvector from HasEigenvalue. The native LinearIsometryEquiv is constructed from the prior Gram equivalence and proven inner-product preservation. Positive parameter may have zero eigenspaces; no existence or spectral-completeness conclusion is inferred from the construction alone.",
+      "HilbertGramMoorePenrose": "Typed rectangular continuous-map compositions remain ordered. BAA* = A* uses precisely ABA=A and self-adjoint BA. General reciprocal action consumes the four-equation native repo predicate; the closed-range specializations consume the existing constructed bounded map. Norm cancellation uses an actual nonzero eigenvector. The final quantified small-positive-eigenvalue criterion is one-way and has no eigenbasis, Fredholm, or unbounded inverse conclusion.",
+      "GradedExponentialTrace": "General ring cancellation is reused with characteristic-zero scalar output. The generic analytic theorem requires a complete normed algebra and a continuous linear cyclic functional, and transports an actual native HasSum. Matrix specialization uses arbitrary rectangular factors, doubled blocks, and native continuous trace; empty index types remain allowed. The separate commutator-exponential cancellation only needs square-zero E, an additive cyclic functional, and native exponential commutation, with completeness explicitly omitted. The 2x2 witness proves genuine noncommutation and separates the exponential weight from the finite EF weight."
+    },
+    "existing_reuse": [
+      "InfoGeometry.OperatorAlgebra.PartnerEigenspaces",
+      "InfoGeometry.Analysis.HilbertGramDuality",
+      "InfoGeometry.Singular.MoorePenrose",
+      "InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace"
+    ],
+    "unproved_or_excluded": [
+      "Complete spectral decomposition or a global inverse for an arbitrary bounded operator",
+      "Converse of the small-positive-eigenvalue obstruction",
+      "A trace on all bounded Hilbert operators, trace-class ideals or unbounded heat-kernel domains",
+      "APS/eta/Fredholm or regularized-index identifications",
+      "Boundary flux, an infinity eigenspace, or topological conclusions from projective signs or finite weighted traces"
+    ]
+  },
+  "source_gate_summary": {
+    "placeholder_strict": "all 3 passed; one scanned file each; zero findings",
+    "semantic_vacuity": "passed at fail-on error; complete 3/3 coverage; zero read failures; one reviewed rfl advisory",
+    "strict_screener": "passed; zero violations",
+    "strict_refutation": "all 3 PASS; zero errors/warnings",
+    "gate4": "all 3 STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED; zero sorries/admits/traps/scope warnings; no index-churn caveat",
+    "gate4_kernel_checked": false,
+    "separate_native_kernel_pass": true,
+    "source_gate_receipts_file": "source-gate-receipts.json"
+  },
+  "findings_and_warnings": {
+    "new_owner_compiler_warnings": [],
+    "existing_dependency": {
+      "module": "InfoGeometry.Singular.MoorePenrose",
+      "source_sha256": "a2b9f006df7fc1bbc9ce107aeab98048464d70724e88c224f5dd828a2d7ebfe6",
+      "unchanged_from_HEAD": true,
+      "count": 14,
+      "deprecations": 12,
+      "haveI_style_suggestions": 2,
+      "items": [
+        {
+          "line": 237,
+          "column": 78,
+          "message": "`Submodule.orthogonalProjection` has been deprecated: Use `Submodule.orthogonalProjectionOnto` instead",
+          "classification": "deprecation"
+        },
+        {
+          "line": 248,
+          "column": 2,
+          "message": "Try this: ",
+          "classification": "haveI_style"
+        },
+        {
+          "line": 251,
+          "column": 22,
+          "message": "`Submodule.orthogonalProjection` has been deprecated: Use `Submodule.orthogonalProjectionOnto` instead",
+          "classification": "deprecation"
+        },
+        {
+          "line": 257,
+          "column": 23,
+          "message": "`Submodule.orthogonalProjection` has been deprecated: Use `Submodule.orthogonalProjectionOnto` instead",
+          "classification": "deprecation"
+        },
+        {
+          "line": 262,
+          "column": 23,
+          "message": "`Submodule.orthogonalProjection` has been deprecated: Use `Submodule.orthogonalProjectionOnto` instead",
+          "classification": "deprecation"
+        },
+        {
+          "line": 279,
+          "column": 8,
+          "message": "`Submodule.orthogonalProjection` has been deprecated: Use `Submodule.orthogonalProjectionOnto` instead",
+          "classification": "deprecation"
+        },
+        {
+          "line": 280,
+          "column": 12,
+          "message": "`Submodule.orthogonalProjection_mem_subspace_eq_self` has been deprecated: Use `Submodule.orthogonalProjectionOnto_mem_subspace_eq_self` instead",
+          "classification": "deprecation"
+        },
+        {
+          "line": 281,
+          "column": 25,
+          "message": "`Submodule.orthogonalProjection` has been deprecated: Use `Submodule.orthogonalProjectionOnto` instead",
+          "classification": "deprecation"
+        },
+        {
+          "line": 283,
+          "column": 31,
+          "message": "`Submodule.orthogonalProjection` has been deprecated: Use `Submodule.orthogonalProjectionOnto` instead",
+          "classification": "deprecation"
+        },
+        {
+          "line": 286,
+          "column": 25,
+          "message": "`Submodule.orthogonalProjection` has been deprecated: Use `Submodule.orthogonalProjectionOnto` instead",
+          "classification": "deprecation"
+        },
+        {
+          "line": 289,
+          "column": 21,
+          "message": "`Submodule.orthogonalProjection` has been deprecated: Use `Submodule.orthogonalProjectionOnto` instead",
+          "classification": "deprecation"
+        },
+        {
+          "line": 325,
+          "column": 2,
+          "message": "Try this: ",
+          "classification": "haveI_style"
+        },
+        {
+          "line": 327,
+          "column": 20,
+          "message": "`Submodule.orthogonalProjection` has been deprecated: Use `Submodule.orthogonalProjectionOnto` instead",
+          "classification": "deprecation"
+        },
+        {
+          "line": 333,
+          "column": 21,
+          "message": "`Submodule.orthogonalProjection` has been deprecated: Use `Submodule.orthogonalProjectionOnto` instead",
+          "classification": "deprecation"
+        }
+      ],
+      "disposition": "Disclosed inherited warning debt. Native compilation succeeds; owner unchanged; no suppression introduced."
+    },
+    "semantic_vacuity_warning": {
+      "declaration": "normalizedGramEigenspaceEquiv_apply",
+      "classification": "legitimate_definitional_readout",
+      "reason": "rfl describes the forward action of an independently constructed native isometric equivalence; it does not replace the construction or its proof obligations."
+    },
+    "initial_strict_T16_capa": {
+      "status": "closed",
+      "initial_exit_code": 1,
+      "initial_error_count": 5,
+      "initial_failure_preserved": true,
+      "source_types_and_hypotheses_preserved": true,
+      "file": "capa-history.json"
+    }
+  },
+  "independent_AA_receipts": [
+    {
+      "file": "aa-source-review.md",
+      "sha256": "4bc63e5413fe42394b2fdb545e51695b54bd8cbb1277f94d27ff68f4b770e459",
+      "role": "independent mathematical/source review"
+    },
+    {
+      "file": "aa-source-delta-review.md",
+      "sha256": "ade9a8d22b075d5b3b7595ba049c45e4e33e3748bb64f14413d2f41ff9b57b9a",
+      "role": "independent mathematical/source review"
+    },
+    {
+      "file": "aa-source-delta-final.md",
+      "sha256": "f46be5933c5587eddb64b47b0d7fb179a24552c3774ae70d112563e22608121a",
+      "role": "independent mathematical/source review"
+    },
+    {
+      "file": "aa-source-t16-review.md",
+      "sha256": "a778557a7e79b867d572021a4a9040e577456d5b6aab80b489e1483da52ba555",
+      "role": "independent mathematical/source review"
+    },
+    {
+      "file": "aa-doc-delta-review.md",
+      "sha256": "8d4940a1fb8bd362dba6a73a5c7fdf50aac1a95cb9175ad66337be6185a80a87",
+      "role": "documentation-only external candidate review"
+    }
+  ],
+  "integration": {
+    "all_exactly_three_import_additions": true,
+    "task_worktree_matches_index": true,
+    "task_sources_match_frozen_hashes": true,
+    "compiled_closure_matches_final_source_hashes": true,
+    "helper_and_pin_files_unchanged_from_frozen_and_HEAD": 17,
+    "git_diff_check_exit_code": 0,
+    "installed_hooks_path": ".githooks",
+    "independent_checkout": true,
+    "lake_root_or_packages_symlink": false,
+    "root_dependency_preflight_exit_code": 1,
+    "root_dependency_report": "root-path-preflight.json",
+    "root_dependency_blockers": [
+      {
+        "name": "HomotopyHypothesis",
+        "dir": "external_refs/homotopy-hypothesis-lean4",
+        "config": "lakefile.lean",
+        "directory_exists": false,
+        "config_exists": false,
+        "source_kind": "untracked",
+        "errors": [
+          "missing_config",
+          "untracked_path_dependency"
+        ],
+        "ok": false
+      },
+      {
+        "name": "Atlas",
+        "dir": "external_refs/atlas-lean",
+        "config": "lakefile.toml",
+        "directory_exists": false,
+        "config_exists": false,
+        "source_kind": "untracked",
+        "errors": [
+          "missing_config",
+          "untracked_path_dependency"
+        ],
+        "ok": false
+      },
+      {
+        "name": "GIFT",
+        "dir": "external_refs/gift-framework-core",
+        "config": "lakefile.lean",
+        "directory_exists": true,
+        "config_exists": false,
+        "source_kind": "gitlink",
+        "pinned_commit": "e6f3c3ac2140c2324fb2ae029c32233e73aa5e92",
+        "errors": [
+          "missing_config",
+          "uninitialized_gitlink"
+        ],
+        "ok": false
+      }
+    ],
+    "root_build_in_QA": "not executed; path-package eligibility preflight is blocked",
+    "whole_root_or_InfoGeometry_All_build_certified": false
+  },
+  "publication_phase": {
+    "actual_git_pre_commit_hook": "not executed by QA; parent phase pending",
+    "actual_pre_push_and_post_build_gate": "not executed by QA; parent phase pending",
+    "no_gate_bypass_or_pin_change": true,
+    "hook_scope_note": "The installed pre-push path requires the committed source/worktree to match and invokes post_build_gate. All.lean is an incremental target because it changes; the narrow native certificate does not substitute for that target. The no-argument post_build_gate call defaults to incremental despite the pre-push full-root message.",
+    "documentation_note": "This receipt covers frozen repository report d4ce080275e295eb34152f00f23759d2ced56abae5648d3e664383fedfb6effa. A separate documentation-only candidate has A-A approval; parent integration and validation-prose updates occur after QA lane release."
+  },
+  "evidence": {
+    "raw_evidence_root": "/workspace/scratch/9eb3301f34a1/reciprocity",
+    "native_run_root": "/workspace/scratch/9eb3301f34a1/reciprocity/final-validation",
+    "command_ledger": "command-ledger.json",
+    "artifact_hashes": {
+      "aa-doc-delta-review.md": {
+        "sha256": "8d4940a1fb8bd362dba6a73a5c7fdf50aac1a95cb9175ad66337be6185a80a87",
+        "bytes": 2374
+      },
+      "aa-source-delta-final.md": {
+        "sha256": "f46be5933c5587eddb64b47b0d7fb179a24552c3774ae70d112563e22608121a",
+        "bytes": 2962
+      },
+      "aa-source-delta-review.md": {
+        "sha256": "ade9a8d22b075d5b3b7595ba049c45e4e33e3748bb64f14413d2f41ff9b57b9a",
+        "bytes": 7117
+      },
+      "aa-source-review.md": {
+        "sha256": "4bc63e5413fe42394b2fdb545e51695b54bd8cbb1277f94d27ff68f4b770e459",
+        "bytes": 13973
+      },
+      "aa-source-t16-review.md": {
+        "sha256": "a778557a7e79b867d572021a4a9040e577456d5b6aab80b489e1483da52ba555",
+        "bytes": 4828
+      },
+      "capa-history.json": {
+        "sha256": "9ddf1c8e355711857ee6fae951df0bc237309944c8ebb20b19f54aae99dace9a",
+        "bytes": 8207
+      },
+      "command-ledger.json": {
+        "sha256": "f564f791e11e0b26c25beaffd4128c43a876eff98601501eb6eb493203bc9003",
+        "bytes": 16367
+      },
+      "dependency-warnings.log": {
+        "sha256": "bea9801e574f4075818000a8f35f93924494ba2d60e317d8e276c852a5931e49",
+        "bytes": 3605
+      },
+      "native-axioms.log": {
+        "sha256": "b80c5188d818317d891a79290cbb31acf6a4d5c60df7cb0c69d2af8f17a891bc",
+        "bytes": 5106
+      },
+      "native-evidence-sha256.json": {
+        "sha256": "331cbe63927e8c243be0ae8eea2ede69489bfc506d20ea4da08e86eac591413f",
+        "bytes": 1712
+      },
+      "native-report.json": {
+        "sha256": "7024f87cd4592d79fff016c77bb9615a55598f090d83da4ff059ace6dbed9bbf",
+        "bytes": 6607
+      },
+      "root-path-preflight.json": {
+        "sha256": "6d1f1c6c528dfa847a0dcbb7aeb687f68839a6e5e1c5a4164e576dd167cb467d",
+        "bytes": 1539
+      },
+      "source-gate-receipts.json": {
+        "sha256": "26d035b37b3d2336f2d58df7a7bf9903de8c3b87db93ec2d840950f9b3b3c8d3",
+        "bytes": 6781
+      },
+      "source-index-fingerprint.json": {
+        "sha256": "f55edad47e6493ee92628edeb05e57462502cd91ddb7b6ab1bec973f24e42c78",
+        "bytes": 26349
+      }
+    },
+    "packet_manifest": "checksums.json",
+    "external_QA_runner_sha256": "1a9e6b28e918ce1db3760abb1c19143fba9abda6146532764c51265fec87775c",
+    "external_reconciliation_helper_sha256": "848135f360b351585112597d539daa191b88f9483977d2feadcb7af3e1b9746f",
+    "generated_probe_and_compiled_binaries_excluded": true,
+    "full_raw_command_logs_outside_packet": true
+  },
+  "lane": {
+    "all_assigned_validation_processes_completed": true,
+    "remaining_QA_tests_or_builds": [],
+    "release": "Explicit lane release accompanies delivery of this completed receipt."
+  }
+}

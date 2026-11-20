@@ -1,0 +1,28 @@
+/workspace/scratch/9eb3301f34a1/reciprocity/final-validation/src/InfoGeometry/Singular/MoorePenrose.lean:237:78: warning: `Submodule.orthogonalProjection` has been deprecated: Use `Submodule.orthogonalProjectionOnto` instead
+/workspace/scratch/9eb3301f34a1/reciprocity/final-validation/src/InfoGeometry/Singular/MoorePenrose.lean:248:2: warning: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+/workspace/scratch/9eb3301f34a1/reciprocity/final-validation/src/InfoGeometry/Singular/MoorePenrose.lean:251:22: warning: `Submodule.orthogonalProjection` has been deprecated: Use `Submodule.orthogonalProjectionOnto` instead
+/workspace/scratch/9eb3301f34a1/reciprocity/final-validation/src/InfoGeometry/Singular/MoorePenrose.lean:257:23: warning: `Submodule.orthogonalProjection` has been deprecated: Use `Submodule.orthogonalProjectionOnto` instead
+/workspace/scratch/9eb3301f34a1/reciprocity/final-validation/src/InfoGeometry/Singular/MoorePenrose.lean:262:23: warning: `Submodule.orthogonalProjection` has been deprecated: Use `Submodule.orthogonalProjectionOnto` instead
+/workspace/scratch/9eb3301f34a1/reciprocity/final-validation/src/InfoGeometry/Singular/MoorePenrose.lean:279:8: warning: `Submodule.orthogonalProjection` has been deprecated: Use `Submodule.orthogonalProjectionOnto` instead
+/workspace/scratch/9eb3301f34a1/reciprocity/final-validation/src/InfoGeometry/Singular/MoorePenrose.lean:280:12: warning: `Submodule.orthogonalProjection_mem_subspace_eq_self` has been deprecated: Use `Submodule.orthogonalProjectionOnto_mem_subspace_eq_self` instead
+/workspace/scratch/9eb3301f34a1/reciprocity/final-validation/src/InfoGeometry/Singular/MoorePenrose.lean:281:25: warning: `Submodule.orthogonalProjection` has been deprecated: Use `Submodule.orthogonalProjectionOnto` instead
+/workspace/scratch/9eb3301f34a1/reciprocity/final-validation/src/InfoGeometry/Singular/MoorePenrose.lean:283:31: warning: `Submodule.orthogonalProjection` has been deprecated: Use `Submodule.orthogonalProjectionOnto` instead
+/workspace/scratch/9eb3301f34a1/reciprocity/final-validation/src/InfoGeometry/Singular/MoorePenrose.lean:286:25: warning: `Submodule.orthogonalProjection` has been deprecated: Use `Submodule.orthogonalProjectionOnto` instead
+/workspace/scratch/9eb3301f34a1/reciprocity/final-validation/src/InfoGeometry/Singular/MoorePenrose.lean:289:21: warning: `Submodule.orthogonalProjection` has been deprecated: Use `Submodule.orthogonalProjectionOnto` instead
+/workspace/scratch/9eb3301f34a1/reciprocity/final-validation/src/InfoGeometry/Singular/MoorePenrose.lean:325:2: warning: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+/workspace/scratch/9eb3301f34a1/reciprocity/final-validation/src/InfoGeometry/Singular/MoorePenrose.lean:327:20: warning: `Submodule.orthogonalProjection` has been deprecated: Use `Submodule.orthogonalProjectionOnto` instead
+/workspace/scratch/9eb3301f34a1/reciprocity/final-validation/src/InfoGeometry/Singular/MoorePenrose.lean:333:21: warning: `Submodule.orthogonalProjection` has been deprecated: Use `Submodule.orthogonalProjectionOnto` instead

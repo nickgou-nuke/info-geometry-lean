@@ -1,0 +1,674 @@
+{
+  "schema_version": 1,
+  "task_id": "centered-mangoldt-bridge-20261120",
+  "status": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "checked_at_utc": "2026-11-20T18:36:49+00:00",
+  "base_commit": "586c14bc9fb94eb09b56f7dc850d9d5297269f91",
+  "integrated_prerequisites": [
+    {
+      "pr": 421,
+      "published_head": "55c39dfb69b0c139814beb4e0c3766f299a111ee",
+      "state_at_intake": "open draft, unmerged"
+    },
+    {
+      "pr": 422,
+      "published_head": "3c89245fc40b6ddf6d0de385254e3ccef041e47a",
+      "state_at_intake": "open draft, unmerged"
+    }
+  ],
+  "scope": [
+    "Real floor-cutoff von Mangoldt smoothing and exact integer specialization",
+    "Closed-unit-interval affine interpolation including N=0 and t=1",
+    "Native logarithmic chord error, nonnegative and bounded by t*(1-t)/(2*N) <=1/(8*N) for N>=1",
+    "Fixed-sign integer-to-real power growth transfer with coefficient 2^alpha*C+1/8 for alpha,C>=0 and threshold>=1",
+    "Equivalence of fixed-sign integer and real square-root-plus-epsilon predicates, preserving quantifier order",
+    "Proved Bochner integrability and exact raw/centered Mellin identities for Re s>1",
+    "Retained native RH/right-half-plane equivalence with explicit unproved nonvanishing premise"
+  ],
+  "risk_labels": [
+    "R4: native real interpolation, one-sided growth equivalence, and genuine complex Mellin integrals",
+    "R5: conditional RH boundary, external-source provenance, and upstream publication reporting"
+  ],
+  "environment": {
+    "lean": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+    "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+    "root_pins_changed": false,
+    "independent_checkout": true,
+    "shared_build_lock": true,
+    "resolved_dependencies": {
+      "mathlib": {
+        "head": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+        "tracked_and_untracked_source_clean": true
+      },
+      "plausible": {
+        "head": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+        "tracked_and_untracked_source_clean": true
+      },
+      "LeanSearchClient": {
+        "head": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+        "tracked_and_untracked_source_clean": true
+      },
+      "importGraph": {
+        "head": "e928b72544873815af278d38681b31c0293588e3",
+        "tracked_and_untracked_source_clean": true
+      },
+      "proofwidgets": {
+        "head": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5",
+        "tracked_and_untracked_source_clean": true
+      },
+      "aesop": {
+        "head": "355695d523e41d0554926416cba2a2b3544fbbc9",
+        "tracked_and_untracked_source_clean": true
+      },
+      "Qq": {
+        "head": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+        "tracked_and_untracked_source_clean": true
+      },
+      "batteries": {
+        "head": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+        "tracked_and_untracked_source_clean": true
+      },
+      "Cli": {
+        "head": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204",
+        "tracked_and_untracked_source_clean": true
+      }
+    }
+  },
+  "public_inventory": {
+    "new_definitions": 7,
+    "new_theorems": 27,
+    "new_public_declarations": 34,
+    "prerequisite_public_declarations": 27,
+    "combined_public_declarations": 61,
+    "fresh_axiom_records": 61,
+    "permitted_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "observed_axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "no_unapproved_axioms": true,
+    "declarations_by_owner": {
+      "InfoGeometry.Arithmetic.FiniteSmoothedMangoldt": [
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum_zero",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_zero",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_one",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum_succ",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.chebyshevPsiFinite_succ",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_eq_harmonic_sub_psi",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_eq_positivePart",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum_nonneg",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_nonneg",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_succ_sub",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_second_difference",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_second_difference_nonneg",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_second_difference_pos_iff",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.vonMangoldtWeight_eq_mul_second_difference",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum_monotone",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_monotone"
+      ],
+      "InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction": [
+        "InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.ZetaRightHalfPlaneNonvanishing",
+        "InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.DirichletRightHalfPlaneNonvanishing",
+        "InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.nontrivial_zero_reflect",
+        "InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.riemannHypothesis_of_rightHalfPlane",
+        "InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.rightHalfPlane_of_riemannHypothesis",
+        "InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.riemannHypothesis_iff_rightHalfPlane",
+        "InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.zetaRightHalfPlane_of_dirichletRightHalfPlane",
+        "InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.riemannHypothesis_of_dirichletRightHalfPlane",
+        "InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.exists_small_exponent"
+      ],
+      "InfoGeometry.Analysis.CenteredLogInterpolation": [
+        "InfoGeometry.Analysis.CenteredLogInterpolation.logChordError",
+        "InfoGeometry.Analysis.CenteredLogInterpolation.concaveOn_mul_log_sub_quadratic",
+        "InfoGeometry.Analysis.CenteredLogInterpolation.logChordError_nonneg",
+        "InfoGeometry.Analysis.CenteredLogInterpolation.logChordError_le_quadratic",
+        "InfoGeometry.Analysis.CenteredLogInterpolation.quadraticChordBound_le_one_div_eight",
+        "InfoGeometry.Analysis.CenteredLogInterpolation.logChordError_bounds",
+        "InfoGeometry.Analysis.CenteredLogInterpolation.logChordError_nat_bounds"
+      ],
+      "InfoGeometry.Arithmetic.SmoothedMangoldtReal": [
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.centeredSmoothedMangoldtSum",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum_eq_Icc",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum_natCast",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum_eq_harmonic_sub_psi",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum_eq_floor_affine",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum_add_unitInterval",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum_eq_affine",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum_nonneg",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.centeredSmoothedMangoldtSum_natCast"
+      ],
+      "InfoGeometry.Arithmetic.SmoothedMangoldtInterpolation": [
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.centeredSmoothedMangoldtSum_eq_affine_add_error",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.affine_le_centeredSmoothedMangoldtSum",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.centeredSmoothedMangoldtSum_le_affine_add_quadratic",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.centeredSmoothedMangoldtSum_le_affine_add_one_div_eight",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.signed_centeredSmoothedMangoldtSum_le_affine",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.neg_centeredSmoothedMangoldtSum_le_affine"
+      ],
+      "InfoGeometry.Arithmetic.SmoothedMangoldtGrowth": [
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.IntegerCenteredMangoldtPowerBound",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.RealCenteredMangoldtPowerBound",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.IntegerCenteredMangoldtSqrtBound",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.RealCenteredMangoldtSqrtBound",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.centeredSmoothedMangoldtSum_real_bound_of_integer_bound",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.realCenteredMangoldtPowerBound_of_integer",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.integerCenteredMangoldtPowerBound_of_real",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.integerCenteredMangoldtPowerBound_iff_real",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.integerCenteredMangoldtSqrtBound_iff_real"
+      ],
+      "InfoGeometry.Arithmetic.SmoothedMangoldtMellin": [
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum_mellin",
+        "InfoGeometry.Arithmetic.PrimeDistributionLaw.centeredSmoothedMangoldtSum_mellin"
+      ]
+    }
+  },
+  "roles": {
+    "generation": [
+      "root",
+      "smoothing_proofs",
+      "source_audit"
+    ],
+    "independent_semantic_audit": {
+      "agent": "repo_audit",
+      "disposition": "PASS",
+      "source_receipt_sha256": "a0a2d96bff57451b67e9843939f0affbbb9eb9dcf675073d49a56c5accb0ee7a",
+      "receipt": {
+        "status": "PASS",
+        "review_type": "independent semantic A-A source/config review",
+        "reviewer": "/root/repo_audit",
+        "reviewer_authored_lean": false,
+        "reviewer_changed_repo": false,
+        "reviewer_ran_build": false,
+        "upstream_baseline": "586c14bc9fb94eb09b56f7dc850d9d5297269f91",
+        "integrated_prerequisites": [
+          421,
+          422
+        ],
+        "new_public_declarations": 34,
+        "prerequisite_public_declarations": 27,
+        "combined_public_declarations": 61,
+        "audit_unique_axiom_commands": 61,
+        "audit_missing": [],
+        "audit_extra": [],
+        "focused_packages": 9,
+        "focused_pins_equal_root": true,
+        "focused_toolchain_equal_root": true,
+        "focused_package_and_manifest_name": "centered_mangoldt_validation",
+        "focused_default_target": "InfoGeometry.Arithmetic.CenteredMangoldtBridgeAudit",
+        "new_source_and_config_sha256": {
+          ".github/workflows/centered-mangoldt.yml": "5212342927bddc57ccdd9a19b10e2d679346719215884c4c5e71ef8ac5988987",
+          "docs/CENTERED_MANGOLDT_BRIDGE_CONTRACT.md": "30e0a4b8f6913138e14cfb1867a4f8b3046e856e90ed4a4cf27f1e9caf99ed89",
+          "lean/InfoGeometry/Analysis/CenteredLogInterpolation.lean": "47edcd38c5924176dfa2c2862f4aa628def3ec476776ffb342bfe93243254288",
+          "lean/InfoGeometry/Arithmetic/All.lean": "c07eae47be71ba30795449a6e8216f10a711a0fea282002f58b2331f6eac08f7",
+          "lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean": "22ae4923d31b095668069acd1a9298aa2a7a99b3ac660690b0b39155b8f5dd76",
+          "lean/InfoGeometry/Arithmetic/SmoothedMangoldtGrowth.lean": "3b600b6980f9f89252a1f4bc5b6070bc39cbb32231b42476203ec136f7792f84",
+          "lean/InfoGeometry/Arithmetic/SmoothedMangoldtInterpolation.lean": "00b831cffe005b27bbb12c7f4fcc951b2ffb7e02e24aeb61d0b9504e4b553e48",
+          "lean/InfoGeometry/Arithmetic/SmoothedMangoldtMellin.lean": "ee07332b9880dc2ab0b1fab317bdc5d20485c9361b3154307e52594c921073ee",
+          "lean/InfoGeometry/Arithmetic/SmoothedMangoldtReal.lean": "389bf8e5d0faa746e40d0dba55fb2f920788487e8c7aa6602557a2e580471763",
+          "verification/centered-mangoldt/README.md": "a1bf75ae742b609d0de145b58053d2dc4c2e9ecc46115ea613173654f9eb5677",
+          "verification/centered-mangoldt/audit.py": "ce3f2fb2c4ad303db353034d838d2090b8bc77ffdeba5ee6b1311e4eac94b64a",
+          "verification/centered-mangoldt/check.py": "1257e0a067e227a76775dbfc38f39810aec44fadfde993ed7f767a274b8468f5",
+          "verification/centered-mangoldt/lake-manifest.json": "8ee2fba8f86a6f31032f9f02ad9696f6f2ba1ef6ba74830abea445558fb7990d",
+          "verification/centered-mangoldt/lakefile.toml": "76cd86161e8f798419b2205300f0749f343dab8ad8ec137f57e97664ccd39f05",
+          "verification/centered-mangoldt/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b"
+        },
+        "prerequisite_source_sha256": {
+          "lean/InfoGeometry/Arithmetic/FiniteSmoothedMangoldt.lean": "62a63f4e5acbeca18b62c408b5701cc7e01d35f8cb3512126ba714793a079c42",
+          "lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReduction.lean": "9615191aa9a52bd554c2a201fab76bb7b6439f113ac31edcfc0301ca7ceef99d"
+        },
+        "repository_import_closure_sha256": {
+          "lean/InfoGeometry/Arithmetic/PrimeDistributionLaw.lean": "e8029411db60a7425b81268a8ac56ea78a63e50aaec9871d9e723a03f8bd7997",
+          "lean/InfoGeometry/Arithmetic/RiemannZetaFiniteFacts.lean": "d1443b5c1e1da51976ed99eba790ddb3fe632e3f3e349bb397f53af344778572",
+          "lean/InfoGeometry/Arithmetic/ActualRiemannZetaVonMangoldtBridge.lean": "e1f91055ed7d102f3d86cec4c1d6f994bf21c497410e1daf91e6f428f08332d9",
+          "lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567"
+        },
+        "infrastructure_and_root_pin_sha256": {
+          "verification/real-matrix-split/audit.py": "e759bf7479a4771e1f6bd3ed6b0bd30e045af8b6f56884314c7f662553e2822f",
+          "tools/build_lock.py": "276bd21076a0300aaff235c6e01731b2a7318ada9094e754ec81f9dc7de04c45",
+          "tools/infra/build.py": "76575073b6fbf1054511ede20792e549ac216238f2519b2a2c2215d0aa646dc0",
+          "tools/pathing.py": "6827aaa8f308a9d56bde4cb07fce439293d861f12388df2d611eca5617fba2cb",
+          "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+          "lake-manifest.json": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98"
+        },
+        "accepted_mathematical_scope": [
+          "Real floor-cutoff von Mangoldt smoothing and exact integer specialization",
+          "Closed-unit-interval affine interpolation including N=0 and t=1",
+          "Native logarithmic chord error, nonnegative and bounded by t*(1-t)/(2*N) <=1/(8*N) for N>=1",
+          "Fixed-sign integer-to-real power growth transfer with coefficient 2^alpha*C+1/8 for alpha,C>=0 and threshold>=1",
+          "Equivalence of fixed-sign integer and real square-root-plus-epsilon predicates, preserving quantifier order",
+          "Proved Bochner integrability and exact raw/centered Mellin identities for Re s>1",
+          "Retained native RH/right-half-plane equivalence with explicit unproved nonvanishing premise"
+        ],
+        "not_established": [
+          "Arithmetic square-root cancellation bound",
+          "Landau positivity/continuation criterion for the actual centered statistic",
+          "Mellin continuation to Re s>1/2 or removal of the s=1 singularity",
+          "Unconditional RH or Dirichlet GRH",
+          "Successful full root InfoGeometry.All build"
+        ],
+        "heuristic_warning_classification": {
+          "category": "trivial_surface",
+          "count_in_initial_report": 4,
+          "disposition": "valid boundary/specialization simplification lemmas; no semantic flaw",
+          "subjects": [
+            "harmonicMangoldtSum_zero",
+            "smoothedMangoldtSum_zero",
+            "realSmoothedMangoldtSum_natCast",
+            "centeredSmoothedMangoldtSum_natCast"
+          ]
+        },
+        "qa_status": "Distinct decisive QA rerun pending; no kernel result asserted by this source-review receipt",
+        "report_path": "/workspace/scratch/21d08298b44b/qa/centered_mangoldt_semantic.md"
+      }
+    },
+    "independent_qa": {
+      "agent": "centered_qa",
+      "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+      "source_receipt_sha256": "ce9c7577bdc530990b73023670bc3dde32426b0103af0172fdcb3dbd2e3780c5",
+      "started_at_utc": "2026-11-20T18:32:59+00:00",
+      "finished_at_utc": "2026-11-20T18:36:49+00:00",
+      "sources_unchanged_during_checks": true,
+      "verification_configs_unchanged_during_checks": true,
+      "scope": "All seven owners, combined audit, strict source and refute screens, maintained error-level semantic gate, exact pins, and observed root integration attempt."
+    }
+  },
+  "source_sha256": {
+    "lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+    "lean/InfoGeometry/Analysis/CenteredLogInterpolation.lean": "47edcd38c5924176dfa2c2862f4aa628def3ec476776ffb342bfe93243254288",
+    "lean/InfoGeometry/Arithmetic/ActualRiemannZetaVonMangoldtBridge.lean": "e1f91055ed7d102f3d86cec4c1d6f994bf21c497410e1daf91e6f428f08332d9",
+    "lean/InfoGeometry/Arithmetic/FiniteSmoothedMangoldt.lean": "62a63f4e5acbeca18b62c408b5701cc7e01d35f8cb3512126ba714793a079c42",
+    "lean/InfoGeometry/Arithmetic/PrimeDistributionLaw.lean": "e8029411db60a7425b81268a8ac56ea78a63e50aaec9871d9e723a03f8bd7997",
+    "lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReduction.lean": "9615191aa9a52bd554c2a201fab76bb7b6439f113ac31edcfc0301ca7ceef99d",
+    "lean/InfoGeometry/Arithmetic/RiemannZetaFiniteFacts.lean": "d1443b5c1e1da51976ed99eba790ddb3fe632e3f3e349bb397f53af344778572",
+    "lean/InfoGeometry/Arithmetic/SmoothedMangoldtGrowth.lean": "3b600b6980f9f89252a1f4bc5b6070bc39cbb32231b42476203ec136f7792f84",
+    "lean/InfoGeometry/Arithmetic/SmoothedMangoldtInterpolation.lean": "00b831cffe005b27bbb12c7f4fcc951b2ffb7e02e24aeb61d0b9504e4b553e48",
+    "lean/InfoGeometry/Arithmetic/SmoothedMangoldtMellin.lean": "ee07332b9880dc2ab0b1fab317bdc5d20485c9361b3154307e52594c921073ee",
+    "lean/InfoGeometry/Arithmetic/SmoothedMangoldtReal.lean": "389bf8e5d0faa746e40d0dba55fb2f920788487e8c7aa6602557a2e580471763",
+    "lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean": "22ae4923d31b095668069acd1a9298aa2a7a99b3ac660690b0b39155b8f5dd76",
+    "lean/InfoGeometry/Arithmetic/All.lean": "c07eae47be71ba30795449a6e8216f10a711a0fea282002f58b2331f6eac08f7"
+  },
+  "verification_input_sha256": {
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lake-manifest.json": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+    "lakefile.lean": "7f1682a266e65a251ff8adb0b3acc8146ff94004bc78c83850583145434fc5da",
+    "verification/centered-mangoldt/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "verification/centered-mangoldt/lake-manifest.json": "8ee2fba8f86a6f31032f9f02ad9696f6f2ba1ef6ba74830abea445558fb7990d",
+    "verification/centered-mangoldt/lakefile.toml": "76cd86161e8f798419b2205300f0749f343dab8ad8ec137f57e97664ccd39f05",
+    "verification/centered-mangoldt/check.py": "1257e0a067e227a76775dbfc38f39810aec44fadfde993ed7f767a274b8468f5",
+    "verification/centered-mangoldt/audit.py": "ce3f2fb2c4ad303db353034d838d2090b8bc77ffdeba5ee6b1311e4eac94b64a",
+    "verification/real-matrix-split/audit.py": "e759bf7479a4771e1f6bd3ed6b0bd30e045af8b6f56884314c7f662553e2822f",
+    "tools/infra/opengauss_screener.py": "1596c160f1d9fac1e3c09ac0f6d003add1cd49137d07dc8fd0c0b2fd7b836867",
+    "tools/infra/opengauss_cli.py": "cb0e4045a33051a700939ef1761cf6cdea9bb8d33fdf19b3ca4745319a9095d6",
+    "tools/quality/semantic_vacuity_gate.py": "cfd9a8e4108610a8221a74a28330849b02c064536f245fb411bc989eba2ac27f",
+    "tools/quality/semantic_vacuity_patterns.json": "01cd14be0fdb966fbe93e93d2729d6822dc375c85f6338a7d67b70758fd87082",
+    "tools/build_lock.py": "276bd21076a0300aaff235c6e01731b2a7318ada9094e754ec81f9dc7de04c45",
+    "tools/infra/build.py": "76575073b6fbf1054511ede20792e549ac216238f2519b2a2c2215d0aa646dc0"
+  },
+  "heuristic_warnings": {
+    "category": "trivial_surface",
+    "count_in_initial_report": 4,
+    "disposition": "valid boundary/specialization simplification lemmas; no semantic flaw",
+    "subjects": [
+      "harmonicMangoldtSum_zero",
+      "smoothedMangoldtSum_zero",
+      "realSmoothedMangoldtSum_natCast",
+      "centeredSmoothedMangoldtSum_natCast"
+    ]
+  },
+  "corrective_actions": [
+    {
+      "id": "CAPA-01",
+      "finding": "Copied focused manifest retained the prerequisite package name.",
+      "correction": "Set the focused manifest and Lake package consistently to centered_mangoldt_validation.",
+      "closed": true,
+      "evidence": "Independent final pin and inventory check passed."
+    },
+    {
+      "id": "CAPA-02",
+      "finding": "Strict source heuristics could not see hypotheses consumed implicitly by arithmetic tactics.",
+      "correction": "Made the actual inequalities explicit in proof terms and tactic arguments without changing theorem statements.",
+      "closed": true,
+      "evidence": "Independent final strict source and refute scans passed with zero traps."
+    }
+  ],
+  "checks": [
+    {
+      "label": "source-inventory",
+      "argv": [
+        "python3",
+        "verification/centered-mangoldt/audit.py"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "started_at_utc": "2026-11-20T18:32:59+00:00",
+      "finished_at_utc": "2026-11-20T18:32:59+00:00",
+      "exit_code": 0,
+      "log_sha256": "bbfd084ea4d9f0b67284429c0f95064951052b72fc9ec9816615a12f6cb6a7d1",
+      "expected_root_integration_blocker": false,
+      "output": "Source coverage: 61 explicit public declarations in 7 owners; root pins match\n"
+    },
+    {
+      "label": "strict-source-screen",
+      "argv": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "--strict",
+        "--json",
+        "lean/InfoGeometry/Arithmetic/FiniteSmoothedMangoldt.lean",
+        "lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReduction.lean",
+        "lean/InfoGeometry/Analysis/CenteredLogInterpolation.lean",
+        "lean/InfoGeometry/Arithmetic/SmoothedMangoldtReal.lean",
+        "lean/InfoGeometry/Arithmetic/SmoothedMangoldtInterpolation.lean",
+        "lean/InfoGeometry/Arithmetic/SmoothedMangoldtGrowth.lean",
+        "lean/InfoGeometry/Arithmetic/SmoothedMangoldtMellin.lean",
+        "lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "started_at_utc": "2026-11-20T18:32:59+00:00",
+      "finished_at_utc": "2026-11-20T18:32:59+00:00",
+      "exit_code": 0,
+      "log_sha256": "747443d22b8ccffb07c44835fa4a015e33c702c22548bbc3cecde756a8b81eb7",
+      "expected_root_integration_blocker": false,
+      "output": "{\n  \"violations\": {},\n  \"quarantined_packets\": []\n}\n"
+    },
+    {
+      "label": "strict-refute-screen",
+      "argv": [
+        "python3",
+        "tools/infra/opengauss_cli.py",
+        "refute",
+        "--strict",
+        "--json",
+        "lean/InfoGeometry/Arithmetic/FiniteSmoothedMangoldt.lean",
+        "lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReduction.lean",
+        "lean/InfoGeometry/Analysis/CenteredLogInterpolation.lean",
+        "lean/InfoGeometry/Arithmetic/SmoothedMangoldtReal.lean",
+        "lean/InfoGeometry/Arithmetic/SmoothedMangoldtInterpolation.lean",
+        "lean/InfoGeometry/Arithmetic/SmoothedMangoldtGrowth.lean",
+        "lean/InfoGeometry/Arithmetic/SmoothedMangoldtMellin.lean",
+        "lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "started_at_utc": "2026-11-20T18:32:59+00:00",
+      "finished_at_utc": "2026-11-20T18:32:59+00:00",
+      "exit_code": 0,
+      "log_sha256": "f16ac5676f24fd33c3256388080713f57d788fbe9e62ecbc80e503f01c2e009a",
+      "expected_root_integration_blocker": false,
+      "output": "[\n  {\n    \"filename\": \"lean/InfoGeometry/Arithmetic/FiniteSmoothedMangoldt.lean\",\n    \"clean\": true,\n    \"total_traps\": 0,\n    \"errors\": [],\n    \"warnings\": [],\n    \"verdict\": \"PASS\"\n  },\n  {\n    \"filename\": \"lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReduction.lean\",\n    \"clean\": true,\n    \"total_traps\": 0,\n    \"errors\": [],\n    \"warnings\": [],\n    \"verdict\": \"PASS\"\n  },\n  {\n    \"filename\": \"lean/InfoGeometry/Analysis/CenteredLogInterpolation.lean\",\n    \"clean\": true,\n    \"total_traps\": 0,\n    \"errors\": [],\n    \"warnings\": [],\n    \"verdict\": \"PASS\"\n  },\n  {\n    \"filename\": \"lean/InfoGeometry/Arithmetic/SmoothedMangoldtReal.lean\",\n    \"clean\": true,\n    \"total_traps\": 0,\n    \"errors\": [],\n    \"warnings\": [],\n    \"verdict\": \"PASS\"\n  },\n  {\n    \"filename\": \"lean/InfoGeometry/Arithmetic/SmoothedMangoldtInterpolation.lean\",\n    \"clean\": true,\n    \"total_traps\": 0,\n    \"errors\": [],\n    \"warnings\": [],\n    \"verdict\": \"PASS\"\n  },\n  {\n    \"filename\": \"lean/InfoGeometry/Arithmetic/SmoothedMangoldtGrowth.lean\",\n    \"clean\": true,\n    \"total_traps\": 0,\n    \"errors\": [],\n    \"warnings\": [],\n    \"verdict\": \"PASS\"\n  },\n  {\n    \"filename\": \"lean/InfoGeometry/Arithmetic/SmoothedMangoldtMellin.lean\",\n    \"clean\": true,\n    \"total_traps\": 0,\n    \"errors\": [],\n    \"warnings\": [],\n    \"verdict\": \"PASS\"\n  },\n  {\n    \"filename\": \"lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean\",\n    \"clean\": true,\n    \"total_traps\": 0,\n    \"errors\": [],\n    \"warnings\": [],\n    \"verdict\": \"PASS\"\n  }\n]\n"
+    },
+    {
+      "label": "semantic-vacuity",
+      "argv": [
+        "python3",
+        "tools/quality/semantic_vacuity_gate.py",
+        "--fail-on",
+        "error",
+        "--json-out",
+        "/workspace/scratch/21d08298b44b/qa/centered-mangoldt/semantic-vacuity.json",
+        "lean/InfoGeometry/Arithmetic/FiniteSmoothedMangoldt.lean",
+        "lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReduction.lean",
+        "lean/InfoGeometry/Analysis/CenteredLogInterpolation.lean",
+        "lean/InfoGeometry/Arithmetic/SmoothedMangoldtReal.lean",
+        "lean/InfoGeometry/Arithmetic/SmoothedMangoldtInterpolation.lean",
+        "lean/InfoGeometry/Arithmetic/SmoothedMangoldtGrowth.lean",
+        "lean/InfoGeometry/Arithmetic/SmoothedMangoldtMellin.lean",
+        "lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "started_at_utc": "2026-11-20T18:32:59+00:00",
+      "finished_at_utc": "2026-11-20T18:33:00+00:00",
+      "exit_code": 0,
+      "log_sha256": "94577f900a44ea2091baf74e6713e1a6c5f15ba4aa34123dd99e020cee279bef",
+      "expected_root_integration_blocker": false,
+      "output": "Semantic vacuity audit\n======================\nroots: lean/InfoGeometry/Arithmetic/FiniteSmoothedMangoldt.lean, lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReduction.lean, lean/InfoGeometry/Analysis/CenteredLogInterpolation.lean, lean/InfoGeometry/Arithmetic/SmoothedMangoldtReal.lean, lean/InfoGeometry/Arithmetic/SmoothedMangoldtInterpolation.lean, lean/InfoGeometry/Arithmetic/SmoothedMangoldtGrowth.lean, lean/InfoGeometry/Arithmetic/SmoothedMangoldtMellin.lean, lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean\npatterns: /workspace/scratch/21d08298b44b/info-geometry-lean/tools/quality/semantic_vacuity_patterns.json\nsemantic_vacuity: 4\nwarning: 4\ntrivial_surface: 4\n  - lean/InfoGeometry/Arithmetic/FiniteSmoothedMangoldt.lean:41 [warning/trivial_surface] harmonicMangoldtSum_zero: by\n  - lean/InfoGeometry/Arithmetic/FiniteSmoothedMangoldt.lean:44 [warning/trivial_surface] smoothedMangoldtSum_zero: by\n  - lean/InfoGeometry/Arithmetic/SmoothedMangoldtReal.lean:53 [warning/trivial_surface] realSmoothedMangoldtSum_natCast: by\n  - lean/InfoGeometry/Arithmetic/SmoothedMangoldtReal.lean:116 [warning/trivial_surface] centeredSmoothedMangoldtSum_natCast: by\n"
+    },
+    {
+      "label": "lean-version",
+      "argv": [
+        "/workspace/scratch/0b027a897d29/lean_verification_runtime/lean-4.34.1/bin/lean",
+        "--version"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "started_at_utc": "2026-11-20T18:33:00+00:00",
+      "finished_at_utc": "2026-11-20T18:33:00+00:00",
+      "exit_code": 0,
+      "log_sha256": "355a9a028f81641782d75d6e6b58dec70f29d2f61238a9e271690259d9bf5680",
+      "expected_root_integration_blocker": false,
+      "output": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)\n"
+    },
+    {
+      "label": "focused-build",
+      "argv": [
+        "python3",
+        "verification/centered-mangoldt/check.py",
+        "--wfail",
+        "build"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "started_at_utc": "2026-11-20T18:33:00+00:00",
+      "finished_at_utc": "2026-11-20T18:34:17+00:00",
+      "exit_code": 0,
+      "log_sha256": "41f8684e7ceb34f05d5df4da09a3dbc0ebef1b3f0569077770bf8700bbf364b7",
+      "expected_root_integration_blocker": false,
+      "output": "[centered-mangoldt] waiting for the shared build lock\n[centered-mangoldt] lake -d /workspace/scratch/21d08298b44b/info-geometry-lean/verification/centered-mangoldt --wfail build\n✔ [3796/3823] Built Mathlib.RingTheory.RootsOfUnity.EnoughRootsOfUnity (5.7s)\n✔ [3797/3823] Built Mathlib.SetTheory.Cardinal.CountableCover (6.2s)\n✔ [3798/3823] Built Mathlib.Algebra.Module.Card (7.1s)\n✔ [3799/3823] Built Mathlib.NumberTheory.DirichletCharacter.GaussSum (10s)\n✔ [3800/3823] Built Mathlib.Analysis.Calculus.FDeriv.Star (11s)\n✔ [3801/3823] Built Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed (6.6s)\n✔ [3802/3823] Built Mathlib.NumberTheory.EulerProduct.Basic (12s)\n✔ [3803/3823] Built Mathlib.Topology.Algebra.Module.Cardinality (6.2s)\n✔ [3804/3823] Built Mathlib.Topology.Homotopy.Basic (14s)\n✔ [3805/3823] Built Mathlib.NumberTheory.Harmonic.GammaDeriv (14s)\n✔ [3806/3823] Built Mathlib.NumberTheory.EulerProduct.ExpLog (3.7s)\n✔ [3807/3823] Built Mathlib.Analysis.Calculus.Deriv.Star (6.1s)\n✔ [3808/3823] Built Mathlib.Topology.Homotopy.Equiv (4.7s)\n✔ [3809/3823] Built Mathlib.Analysis.SpecialFunctions.Complex.CircleAddChar (7.3s)\n✔ [3810/3823] Built Mathlib.Topology.Homotopy.Path (7.6s)\n✔ [3811/3823] Built Mathlib.NumberTheory.EulerProduct.DirichletLSeries (9.6s)\n✔ [3812/3823] Built Mathlib.Topology.Homotopy.Contractible (4.0s)\n✔ [3813/3823] Built Mathlib.Analysis.Fourier.ZMod (7.2s)\n✔ [3814/3823] Built InfoGeometry.Arithmetic.SmoothedMangoldtMellin (27s)\n✔ [3815/3823] Built Mathlib.Analysis.Convex.Contractible (2.5s)\n✔ [3816/3823] Built Mathlib.Analysis.Normed.Module.Connected (5.3s)\n✔ [3817/3823] Built Mathlib.NumberTheory.LSeries.ZMod (8.5s)\n✔ [3818/3823] Built Mathlib.NumberTheory.LSeries.DirichletContinuation (9.0s)\n✔ [3819/3823] Built Mathlib.NumberTheory.Harmonic.ZetaAsymp (17s)\n✔ [3820/3823] Built Mathlib.NumberTheory.LSeries.Nonvanishing (5.6s)\n✔ [3821/3823] Built InfoGeometry.Arithmetic.RiemannZetaFiniteFacts (6.0s)\n✔ [3822/3823] Built InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction (4.8s)\nℹ [3823/3823] Built InfoGeometry.Arithmetic.CenteredMangoldtBridgeAudit (3.8s)\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:26:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:27:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:28:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum_zero' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:29:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_zero' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:30:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_one' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:31:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum_succ' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:32:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.chebyshevPsiFinite_succ' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:33:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_eq_harmonic_sub_psi' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:34:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_eq_positivePart' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:35:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum_nonneg' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:36:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_nonneg' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:37:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_succ_sub' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:38:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_second_difference' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:39:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_second_difference_nonneg' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:40:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_second_difference_pos_iff' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:41:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.vonMangoldtWeight_eq_mul_second_difference' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:42:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum_monotone' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:43:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_monotone' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:44:0: 'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.ZetaRightHalfPlaneNonvanishing' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:45:0: 'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.DirichletRightHalfPlaneNonvanishing' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:46:0: 'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.nontrivial_zero_reflect' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:47:0: 'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.riemannHypothesis_of_rightHalfPlane' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:48:0: 'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.rightHalfPlane_of_riemannHypothesis' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:49:0: 'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.riemannHypothesis_iff_rightHalfPlane' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:50:0: 'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.zetaRightHalfPlane_of_dirichletRightHalfPlane' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:51:0: 'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.riemannHypothesis_of_dirichletRightHalfPlane' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:52:0: 'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.exists_small_exponent' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:53:0: 'InfoGeometry.Analysis.CenteredLogInterpolation.logChordError' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:54:0: 'InfoGeometry.Analysis.CenteredLogInterpolation.concaveOn_mul_log_sub_quadratic' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:55:0: 'InfoGeometry.Analysis.CenteredLogInterpolation.logChordError_nonneg' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:56:0: 'InfoGeometry.Analysis.CenteredLogInterpolation.logChordError_le_quadratic' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:57:0: 'InfoGeometry.Analysis.CenteredLogInterpolation.quadraticChordBound_le_one_div_eight' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:58:0: 'InfoGeometry.Analysis.CenteredLogInterpolation.logChordError_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:59:0: 'InfoGeometry.Analysis.CenteredLogInterpolation.logChordError_nat_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:60:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:61:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.centeredSmoothedMangoldtSum' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:62:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum_eq_Icc' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:63:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum_natCast' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:64:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum_eq_harmonic_sub_psi' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:65:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum_eq_floor_affine' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:66:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum_add_unitInterval' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:67:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum_eq_affine' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:68:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum_nonneg' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:69:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.centeredSmoothedMangoldtSum_natCast' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:70:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.centeredSmoothedMangoldtSum_eq_affine_add_error' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:71:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.affine_le_centeredSmoothedMangoldtSum' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:72:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.centeredSmoothedMangoldtSum_le_affine_add_quadratic' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:73:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.centeredSmoothedMangoldtSum_le_affine_add_one_div_eight' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:74:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.signed_centeredSmoothedMangoldtSum_le_affine' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:75:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.neg_centeredSmoothedMangoldtSum_le_affine' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:76:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.IntegerCenteredMangoldtPowerBound' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:77:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.RealCenteredMangoldtPowerBound' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:78:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.IntegerCenteredMangoldtSqrtBound' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:79:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.RealCenteredMangoldtSqrtBound' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:80:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.centeredSmoothedMangoldtSum_real_bound_of_integer_bound' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:81:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.realCenteredMangoldtPowerBound_of_integer' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:82:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.integerCenteredMangoldtPowerBound_of_real' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:83:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.integerCenteredMangoldtPowerBound_iff_real' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:84:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.integerCenteredMangoldtSqrtBound_iff_real' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:85:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum_mellin' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\ninfo: ../../lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean:86:0: 'InfoGeometry.Arithmetic.PrimeDistributionLaw.centeredSmoothedMangoldtSum_mellin' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\nBuild completed successfully (3823 jobs).\n"
+    },
+    {
+      "label": "fresh-FiniteSmoothedMangoldt",
+      "argv": [
+        "python3",
+        "verification/centered-mangoldt/check.py",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "lean/InfoGeometry/Arithmetic/FiniteSmoothedMangoldt.lean"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "started_at_utc": "2026-11-20T18:34:17+00:00",
+      "finished_at_utc": "2026-11-20T18:34:40+00:00",
+      "exit_code": 0,
+      "log_sha256": "7e442df7ec6a03ce0d1d407485b18a3df0cc4565835fbb655dfff5ad4056745f",
+      "expected_root_integration_blocker": false,
+      "output": "[centered-mangoldt] waiting for the shared build lock\n[centered-mangoldt] lake -d /workspace/scratch/21d08298b44b/info-geometry-lean/verification/centered-mangoldt env lean -DwarningAsError=true lean/InfoGeometry/Arithmetic/FiniteSmoothedMangoldt.lean\n"
+    },
+    {
+      "label": "fresh-RiemannHypothesisHalfPlaneReduction",
+      "argv": [
+        "python3",
+        "verification/centered-mangoldt/check.py",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReduction.lean"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "started_at_utc": "2026-11-20T18:34:40+00:00",
+      "finished_at_utc": "2026-11-20T18:34:47+00:00",
+      "exit_code": 0,
+      "log_sha256": "ce74017d0ed446a1d3824aff5c7be70cda2295b2812f9b6257278a83e476c627",
+      "expected_root_integration_blocker": false,
+      "output": "[centered-mangoldt] waiting for the shared build lock\n[centered-mangoldt] lake -d /workspace/scratch/21d08298b44b/info-geometry-lean/verification/centered-mangoldt env lean -DwarningAsError=true lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReduction.lean\n"
+    },
+    {
+      "label": "fresh-CenteredLogInterpolation",
+      "argv": [
+        "python3",
+        "verification/centered-mangoldt/check.py",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "lean/InfoGeometry/Analysis/CenteredLogInterpolation.lean"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "started_at_utc": "2026-11-20T18:34:47+00:00",
+      "finished_at_utc": "2026-11-20T18:34:54+00:00",
+      "exit_code": 0,
+      "log_sha256": "a02de8aa995ef1bb213f42a27a3fa157efb37e95fdbe1ee8c74f8c38dea4a069",
+      "expected_root_integration_blocker": false,
+      "output": "[centered-mangoldt] waiting for the shared build lock\n[centered-mangoldt] lake -d /workspace/scratch/21d08298b44b/info-geometry-lean/verification/centered-mangoldt env lean -DwarningAsError=true lean/InfoGeometry/Analysis/CenteredLogInterpolation.lean\n"
+    },
+    {
+      "label": "fresh-SmoothedMangoldtReal",
+      "argv": [
+        "python3",
+        "verification/centered-mangoldt/check.py",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "lean/InfoGeometry/Arithmetic/SmoothedMangoldtReal.lean"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "started_at_utc": "2026-11-20T18:34:54+00:00",
+      "finished_at_utc": "2026-11-20T18:35:00+00:00",
+      "exit_code": 0,
+      "log_sha256": "0879743e83e768aeacac954fb2d5c6ea953ffec0a6a73c0e094736faf6767b8e",
+      "expected_root_integration_blocker": false,
+      "output": "[centered-mangoldt] waiting for the shared build lock\n[centered-mangoldt] lake -d /workspace/scratch/21d08298b44b/info-geometry-lean/verification/centered-mangoldt env lean -DwarningAsError=true lean/InfoGeometry/Arithmetic/SmoothedMangoldtReal.lean\n"
+    },
+    {
+      "label": "fresh-SmoothedMangoldtInterpolation",
+      "argv": [
+        "python3",
+        "verification/centered-mangoldt/check.py",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "lean/InfoGeometry/Arithmetic/SmoothedMangoldtInterpolation.lean"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "started_at_utc": "2026-11-20T18:35:00+00:00",
+      "finished_at_utc": "2026-11-20T18:35:07+00:00",
+      "exit_code": 0,
+      "log_sha256": "f12f193ea0813dacf20c11d252dba9be804bd3fa74b153bc8a2ca9e472295a9a",
+      "expected_root_integration_blocker": false,
+      "output": "[centered-mangoldt] waiting for the shared build lock\n[centered-mangoldt] lake -d /workspace/scratch/21d08298b44b/info-geometry-lean/verification/centered-mangoldt env lean -DwarningAsError=true lean/InfoGeometry/Arithmetic/SmoothedMangoldtInterpolation.lean\n"
+    },
+    {
+      "label": "fresh-SmoothedMangoldtGrowth",
+      "argv": [
+        "python3",
+        "verification/centered-mangoldt/check.py",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "lean/InfoGeometry/Arithmetic/SmoothedMangoldtGrowth.lean"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "started_at_utc": "2026-11-20T18:35:07+00:00",
+      "finished_at_utc": "2026-11-20T18:35:13+00:00",
+      "exit_code": 0,
+      "log_sha256": "7dfd20bb91b2ec505d4c24396698dc0d008740d78742459f9cd97e9840daeeba",
+      "expected_root_integration_blocker": false,
+      "output": "[centered-mangoldt] waiting for the shared build lock\n[centered-mangoldt] lake -d /workspace/scratch/21d08298b44b/info-geometry-lean/verification/centered-mangoldt env lean -DwarningAsError=true lean/InfoGeometry/Arithmetic/SmoothedMangoldtGrowth.lean\n"
+    },
+    {
+      "label": "fresh-SmoothedMangoldtMellin",
+      "argv": [
+        "python3",
+        "verification/centered-mangoldt/check.py",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "lean/InfoGeometry/Arithmetic/SmoothedMangoldtMellin.lean"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "started_at_utc": "2026-11-20T18:35:13+00:00",
+      "finished_at_utc": "2026-11-20T18:35:20+00:00",
+      "exit_code": 0,
+      "log_sha256": "929d49683dca70c51e33950a54a93aa8fdc342ed3d22d96a2fb61d99ce57c2bf",
+      "expected_root_integration_blocker": false,
+      "output": "[centered-mangoldt] waiting for the shared build lock\n[centered-mangoldt] lake -d /workspace/scratch/21d08298b44b/info-geometry-lean/verification/centered-mangoldt env lean -DwarningAsError=true lean/InfoGeometry/Arithmetic/SmoothedMangoldtMellin.lean\n"
+    },
+    {
+      "label": "fresh-axioms",
+      "argv": [
+        "python3",
+        "verification/centered-mangoldt/check.py",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "started_at_utc": "2026-11-20T18:35:20+00:00",
+      "finished_at_utc": "2026-11-20T18:36:21+00:00",
+      "exit_code": 0,
+      "log_sha256": "2af5ad04085e52e033cbcb3601a21c5ce3464dc1e591c0ed67ec71db162df5b0",
+      "expected_root_integration_blocker": false,
+      "output": "[centered-mangoldt] waiting for the shared build lock\n[centered-mangoldt] lake -d /workspace/scratch/21d08298b44b/info-geometry-lean/verification/centered-mangoldt env lean -DwarningAsError=true lean/InfoGeometry/Arithmetic/CenteredMangoldtBridgeAudit.lean\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum_zero' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_zero' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_one' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum_succ' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.chebyshevPsiFinite_succ' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_eq_harmonic_sub_psi' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_eq_positivePart' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum_nonneg' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_nonneg' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_succ_sub' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_second_difference' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_second_difference_nonneg' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_second_difference_pos_iff' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.vonMangoldtWeight_eq_mul_second_difference' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.harmonicMangoldtSum_monotone' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.smoothedMangoldtSum_monotone' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.ZetaRightHalfPlaneNonvanishing' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.DirichletRightHalfPlaneNonvanishing' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.nontrivial_zero_reflect' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.riemannHypothesis_of_rightHalfPlane' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.rightHalfPlane_of_riemannHypothesis' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.riemannHypothesis_iff_rightHalfPlane' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.zetaRightHalfPlane_of_dirichletRightHalfPlane' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.riemannHypothesis_of_dirichletRightHalfPlane' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.RiemannHypothesisHalfPlaneReduction.exists_small_exponent' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Analysis.CenteredLogInterpolation.logChordError' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Analysis.CenteredLogInterpolation.concaveOn_mul_log_sub_quadratic' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Analysis.CenteredLogInterpolation.logChordError_nonneg' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Analysis.CenteredLogInterpolation.logChordError_le_quadratic' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Analysis.CenteredLogInterpolation.quadraticChordBound_le_one_div_eight' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Analysis.CenteredLogInterpolation.logChordError_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Analysis.CenteredLogInterpolation.logChordError_nat_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.centeredSmoothedMangoldtSum' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum_eq_Icc' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum_natCast' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum_eq_harmonic_sub_psi' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum_eq_floor_affine' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum_add_unitInterval' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum_eq_affine' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum_nonneg' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.centeredSmoothedMangoldtSum_natCast' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.centeredSmoothedMangoldtSum_eq_affine_add_error' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.affine_le_centeredSmoothedMangoldtSum' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.centeredSmoothedMangoldtSum_le_affine_add_quadratic' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.centeredSmoothedMangoldtSum_le_affine_add_one_div_eight' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.signed_centeredSmoothedMangoldtSum_le_affine' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.neg_centeredSmoothedMangoldtSum_le_affine' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.IntegerCenteredMangoldtPowerBound' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.RealCenteredMangoldtPowerBound' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.IntegerCenteredMangoldtSqrtBound' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.RealCenteredMangoldtSqrtBound' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.centeredSmoothedMangoldtSum_real_bound_of_integer_bound' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.realCenteredMangoldtPowerBound_of_integer' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.integerCenteredMangoldtPowerBound_of_real' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.integerCenteredMangoldtPowerBound_iff_real' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.integerCenteredMangoldtSqrtBound_iff_real' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.realSmoothedMangoldtSum_mellin' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Arithmetic.PrimeDistributionLaw.centeredSmoothedMangoldtSum_mellin' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n"
+    },
+    {
+      "label": "axiom-validation",
+      "argv": [
+        "python3",
+        "verification/centered-mangoldt/audit.py",
+        "--log",
+        "/workspace/scratch/21d08298b44b/qa/centered-mangoldt/fresh-axioms.log"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "started_at_utc": "2026-11-20T18:36:21+00:00",
+      "finished_at_utc": "2026-11-20T18:36:21+00:00",
+      "exit_code": 0,
+      "log_sha256": "0afb73f5692d2d82398afc6deaafabc15a1f513742167dcfdbe94f7a2f04540a",
+      "expected_root_integration_blocker": false,
+      "output": "Source coverage: 61 explicit public declarations in 7 owners; root pins match\nLean axiom audit passed: 61 distinct records; foundational axioms: ['Classical.choice', 'Quot.sound', 'propext']\n"
+    },
+    {
+      "label": "root-integration",
+      "argv": [
+        "python3",
+        "tools/infra/run_locked_lake_build.py",
+        "--wait-for-build-lock",
+        "--wfail",
+        "InfoGeometry.All"
+      ],
+      "cwd": "/workspace/scratch/21d08298b44b/info-geometry-lean",
+      "started_at_utc": "2026-11-20T18:36:21+00:00",
+      "finished_at_utc": "2026-11-20T18:36:49+00:00",
+      "exit_code": 1,
+      "log_sha256": "d6d73a4ca24b9deac14d687818e2e2fd499b1b3fc79a2f591d821101f8dacaf5",
+      "expected_root_integration_blocker": true,
+      "output": "[locked-lake-build] requesting lock for InfoGeometry.All\n[locked-lake-build] acquired /tmp/info-geometry-build.lock\n[locked-lake-build] executing: lake build --wfail InfoGeometry.All\ninfo: [root]: lakefile.lean and lakefile.toml are both present; using lakefile.lean\nerror: HomotopyHypothesis: package directory not found: /workspace/scratch/21d08298b44b/info-geometry-lean/external_refs/homotopy-hypothesis-lean4\n[locked-lake-build] lake build exited with code 1\n[locked-lake-build] released /tmp/info-geometry-build.lock\n"
+    }
+  ],
+  "root_integration": {
+    "status": "BLOCKED",
+    "exit_code": 1,
+    "command": [
+      "python3",
+      "tools/infra/run_locked_lake_build.py",
+      "--wait-for-build-lock",
+      "--wfail",
+      "InfoGeometry.All"
+    ],
+    "reason": "Configured path dependency external_refs/homotopy-hypothesis-lean4 is absent. Package resolution stops before root owner compilation.",
+    "focused_success_is_not_root_certification": true
+  },
+  "open_debt": [
+    "Arithmetic square-root cancellation bound",
+    "Landau positivity/continuation criterion for the actual centered statistic",
+    "Mellin continuation to Re s>1/2 or removal of the s=1 singularity",
+    "Unconditional RH or Dirichlet GRH",
+    "Successful full root InfoGeometry.All build"
+  ],
+  "counterexample_status": {
+    "status": "not_applicable",
+    "reason": "These universal analytic identities and implications are established by complete Lean proofs and semantic review; finite sampling is not a proof method."
+  },
+  "publication_scope": {
+    "repository": "nickgou-nuke/info-geometry-lean",
+    "base": "main",
+    "branch": "codex/centered-mangoldt-interpolation-20261120",
+    "requested_state": "draft",
+    "includes_unmerged_prerequisites": [
+      421,
+      422
+    ]
+  }
+}

@@ -33,6 +33,8 @@ import InfoGeometry.Arithmetic.LongPrimeGapsPrimonEnergyBridge
 import InfoGeometry.Arithmetic.LongPrimeGapsPrimonEnergyAudit
 import InfoGeometry.Arithmetic.KreinCenteredXiGlideBridge
 import InfoGeometry.Arithmetic.FiniteSmoothedMangoldt
+import InfoGeometry.Arithmetic.SmoothedMangoldtGrowth
+import InfoGeometry.Arithmetic.SmoothedMangoldtMellin
 
 namespace InfoGeometry.Arithmetic.All
 

@@ -1,0 +1,11 @@
+{
+  "source": "User message in active GitHub formalization task",
+  "task_date": "2026-11-18",
+  "timezone": "Europe/Sofia",
+  "path": "prompt.txt",
+  "bytes": 897,
+  "sha256": "d72f9de47e64ded655359bd4b17ed3c21d8c35a033b0150da3a66315deee3a7c",
+  "encoding": "UTF-8",
+  "preservation": "Verbatim message text with one terminal newline; connector mention retained",
+  "base_commit": "08c34e03f610b452e03422037949196dc7d92d6d"
+}

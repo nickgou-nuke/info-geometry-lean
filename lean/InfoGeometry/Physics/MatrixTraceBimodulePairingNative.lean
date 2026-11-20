@@ -3,8 +3,10 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-import Mathlib
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Basic.Real.Basic
+import Mathlib.LinearAlgebra.Matrix.Trace
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.NoncommRing
 
 namespace InfoGeometry.Physics
 

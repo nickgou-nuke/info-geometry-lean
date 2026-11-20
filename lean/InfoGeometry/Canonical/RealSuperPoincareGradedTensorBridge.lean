@@ -7,6 +7,7 @@ import InfoGeometry.Physics.CuntzDeformedSuperPoincare
 import InfoGeometry.Canonical.Cl11JordanComplexRealificationBridge
 import InfoGeometry.Canonical.RealSolderingWeylKreinBridge
 import InfoGeometry.Canonical.HestenesRealGradedTensorRepresentation
+import InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge
 
 /-!
 # Real graded-tensor realization of the operator super-Poincaré relation
@@ -141,5 +142,64 @@ theorem doubledKrein_superPoincare_eq_two_hestenesEven
       (2 : ℝ) • hestenesEvenOnDoubledKrein (circularWeylUpperEven x) := by
   rw [doubledKrein_superPoincare_relation,
     chiralOperatorOnDoubledKrein_eq_hestenesEvenOnDoubledKrein x S hP]
+
+/-- The real four-vector represented by an upper circular coordinate block.
+The remaining four coordinates belong to the independent lower sheet and
+are set to zero here. -/
+def upperWeylCoordinate (x : Coordinate) : Coordinate :=
+  fun i => if i.val < 4 then x i else 0
+
+/-- The owner `FourMomentum` is complex-valued. This constructor embeds a
+real Weyl four-vector using `Complex.ofReal`; the Clifford and graded-tensor
+carriers in the resulting theorem remain real. -/
+def realFourMomentumOfCoordinate (x : Coordinate) :
+    InfoGeometry.Physics.ChiralPoincareSouriauBridge.FourMomentum where
+  E := (x 0 : ℝ)
+  px := (x 1 : ℝ)
+  py := (x 2 : ℝ)
+  pz := (x 3 : ℝ)
+
+/-- A canonical stored super-Poincaré presentation sourced from real
+four-coordinate data. This packages the Pauli-soldered momentum identity;
+it does not construct supercharge operators. -/
+def realCoordinateSuperPoincarePresentation (x : Coordinate) :
+    ChiralOperatorPresentation where
+  antiQQbar := (2 : ℂ) • InfoGeometry.Physics.ChiralPoincareSouriauBridge.pauliMomentum
+    (realFourMomentumOfCoordinate x)
+  Pspinor := InfoGeometry.Physics.ChiralPoincareSouriauBridge.pauliMomentum
+    (realFourMomentumOfCoordinate x)
+  super_poincare := by
+    ext i j
+    simp
+
+/-- The real-coordinate sourced presentation agrees with the circular upper
+Weyl soldering matrix. This is the precise point where the existing complex
+Pauli presentation is realized from real data. -/
+theorem realCoordinatePresentation_solders_to_upperWeyl (x : Coordinate) :
+    (realCoordinateSuperPoincarePresentation x).Pspinor =
+      weylUpperMat (upperWeylCoordinate x) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [realCoordinateSuperPoincarePresentation, realFourMomentumOfCoordinate,
+    InfoGeometry.Physics.ChiralPoincareSouriauBridge.pauliMomentum,
+    weylUpperMat, upperWeylCoordinate,
+    InfoGeometry.Lie.SplitOctonionDoubleChiralSolderingBridge.pauliSolder2x2,
+    InfoGeometry.Quantum.PauliSoldering.solder,
+    InfoGeometry.Quantum.PauliSoldering.σ0,
+    InfoGeometry.Quantum.PauliSoldering.σ1,
+    InfoGeometry.Quantum.PauliSoldering.σ2,
+    InfoGeometry.Quantum.PauliSoldering.σ3] <;> ring
+
+/-- An unconditional real graded-tensor/Hestenes bridge for the canonical
+real-coordinate super-Poincaré presentation. The operator equality is in the
+actual two-factor Koszul tensor of real `2 × 2` matrices. -/
+theorem realCoordinatePresentation_superPoincare_eq_two_hestenesEven
+    (x : Coordinate) :
+    chiralOperatorOnDoubledKrein
+        (realCoordinateSuperPoincarePresentation x).antiQQbar =
+      (2 : ℝ) • hestenesEvenOnDoubledKrein
+        (circularWeylUpperEven (upperWeylCoordinate x)) := by
+  apply doubledKrein_superPoincare_eq_two_hestenesEven
+  exact realCoordinatePresentation_solders_to_upperWeyl x
 
 end InfoGeometry.Canonical.RealSuperPoincareGradedTensorBridge

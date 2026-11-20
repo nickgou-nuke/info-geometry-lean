@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Superalgebra.RealGradedZornCARBridge
 import InfoGeometry.Canonical.RealTetractysTranslationSolderingBridge
+import InfoGeometry.Canonical.RealGradedTensorSuperGrassmannianBridge
 import InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge
 import InfoGeometry.Canonical.Cl11JordanComplexRealificationBridge
 import InfoGeometry.Quantum.Realification
@@ -27,6 +28,7 @@ namespace InfoGeometry.Canonical.RealChiralCARTranslationSynthesis
 open InfoGeometry.Canonical.RealSolderingWeylKreinBridge
 open InfoGeometry.Canonical.SplitCliffordTowerUnification
 open InfoGeometry.Canonical.RealTetractysTranslationSolderingBridge
+open InfoGeometry.Canonical.RealGradedTensorSuperGrassmannianBridge
 open InfoGeometry.Superalgebra.RealGradedZornCARBridge
 open InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge
 open InfoGeometry.Lie.SplitOctonionEllPolarization
@@ -388,5 +390,34 @@ theorem circularRootCAR_matches_unitTime_translation (i : Fin 3) :
   rw [threeMode_supercolor_root_CAR i,
     realKrein_gradedPair_translationCharge_anticommutator_eq_diagonalMomentum,
     realThreeKrein_unitTimeMomentum_is_one]
+
+/-- A circular time-Majorana generator cannot equal a Peirce translation
+generator in the existing three-mode real Koszul algebra: the former squares
+to one, while the latter squares to zero. Thus the unit-time anticommutator
+identity above is genuinely a relation between pairs, not a generator
+identification. -/
+theorem circularMajoranaTime_ne_PeirceTranslation
+    (i : Fin 3) (p : FourSpace) :
+    circularMajoranaTime i ≠
+      realTwoMatrixPairIntoThreeMode (translationInGradedTensor p) := by
+  intro h
+  have hsq := congrArg
+    (fun A : realThreeMatrixGradedTensor => A * A) h
+  have hMajoranaSq := (circularMajorana_splitClifford_relations i).1
+  have hTranslationSq :
+      realTwoMatrixPairIntoThreeMode (translationInGradedTensor p) *
+          realTwoMatrixPairIntoThreeMode (translationInGradedTensor p) = 0 := by
+    calc
+      _ = realTwoMatrixPairIntoThreeMode
+          (translationInGradedTensor p * translationInGradedTensor p) := by
+            rw [map_mul]
+      _ = 0 := by rw [translationInGradedTensor_square, map_zero]
+  rw [hMajoranaSq, hTranslationSq] at hsq
+  have hEnd :
+      (1 : Module.End ℝ KreinFrame4) = 0 := by
+    have h' := congrArg realThreeMatrixTensorOnH4 hsq
+    rw [map_one, map_zero] at h'
+    exact h'
+  exact one_ne_zero hEnd
 
 end InfoGeometry.Canonical.RealChiralCARTranslationSynthesis

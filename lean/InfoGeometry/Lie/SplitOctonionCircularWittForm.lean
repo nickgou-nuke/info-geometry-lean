@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
@@ -329,5 +334,58 @@ theorem circularPeircePolar_from_wittQuadratic (x y : Coord) :
         circularWittQuadratic y := by
   simp [circularPeircePolar, circularWittQuadratic]
   ring
+
+/-! ## Identification with the canonical Zorn determinant
+
+The circular Witt quadratic form is the split-octonion composition norm expressed in the
+circular Peirce frame.  This connects the coordinate Witt form used by the doubled
+Minkowski / chiral Yang–Mills bridges to the multiplicative Zorn determinant
+`detZ realCrossProduct3`, whose composition law is `realZornCompositionDatum.detZ_mul`.
+-/
+
+open InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis
+open InfoGeometry.Lie.SplitOctonionEllCrossChannel
+open InfoGeometry.Lie.SplitOctonionEllPolarization
+open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
+
+set_option maxHeartbeats 4000000 in
+/-- The circular Witt norm equals the canonical Zorn determinant in the circular Peirce
+frame: `N_circ(coordinateEquiv X) = detZ realCrossProduct3 X`. -/
+theorem circularWittQuadratic_coordinateEquiv_eq_detZ
+    (X : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalZorn) :
+    circularWittQuadratic (coordinateEquiv X) =
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X := by
+  suffices h : ∀ x : Coord,
+      circularWittQuadratic x =
+        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+          InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
+          (coordinateEquiv.symm x) by
+    simpa using h (coordinateEquiv X)
+  intro x
+  have hsymm : coordinateEquiv.symm x = ∑ i : Fin 8, x i • frame i := by
+    change circularPeirceBasis.equivFun.symm x = _
+    rw [Module.Basis.equivFun_symm_apply]
+    apply Finset.sum_congr rfl
+    intro i _
+    rw [circularPeirceBasis_apply]
+  simp only [circularWittQuadratic, InfoGeometry.Algebra.Zorn.ZornMatrix.detZ]
+  rw [hsymm]
+  simp [InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3, frame, uPlus,
+    uMinus, rootPlus, rootMinus, chiralNull, quaternionBasis, ellBasis, lUnit, iUnit, jUnit,
+    kQuaternionUnit, zMul, InfoGeometry.Canonical.ZornMatrix.dot,
+    InfoGeometry.Canonical.ZornMatrix.cross, Finset.sum_fin_eq_sum_range, Finset.sum_range_succ]
+  ring
+
+/-- Multiplicativity of the circular Witt norm under the transported split-octonion product:
+the composition law `N(xy) = N(x) N(y)` in circular Peirce coordinates. -/
+theorem circularWittQuadratic_coordinateEquiv_zMul
+    (X Y : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalZorn) :
+    circularWittQuadratic (coordinateEquiv (zMul X Y)) =
+      circularWittQuadratic (coordinateEquiv X) * circularWittQuadratic (coordinateEquiv Y) := by
+  rw [circularWittQuadratic_coordinateEquiv_eq_detZ,
+      circularWittQuadratic_coordinateEquiv_eq_detZ,
+      circularWittQuadratic_coordinateEquiv_eq_detZ]
+  exact realZornCompositionDatum.detZ_mul X Y
 
 end InfoGeometry.Lie.SplitOctonionCircularWittForm

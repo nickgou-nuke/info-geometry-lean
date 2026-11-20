@@ -31,6 +31,8 @@ review are separate checks. This target is not an umbrella import.
 #print axioms InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint_eq_self_iff_of_selfAdjoint
 #print axioms InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint_mul
 #print axioms InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint_involutive
+#print axioms InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint_eq_adjoint_iff
+#print axioms InfoGeometry.OperatorAlgebra.WeightedAdjointCompatibility.adjoint_eq_iff_relative_central
 
 #print axioms InfoGeometry.Physics.metriplecticVelocity
 #print axioms InfoGeometry.Physics.energyRate
@@ -108,6 +110,9 @@ review are separate checks. This target is not an umbrella import.
 #print axioms InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_split
 #print axioms InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_symmetric_part_unique
 #print axioms InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_skew_part_unique
+#print axioms InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_eq_iff_scalar_multiple
+#print axioms InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_eq_iff_nonzero_scalar_multiple
+#print axioms InfoGeometry.OperatorAlgebra.RealMetricAdjoint.weightedAdjoint_eq_iff_eq_or_neg
 
 #print axioms InfoGeometry.Physics.symmetricPart_eq_selfAdjointPart
 #print axioms InfoGeometry.Physics.antisymmetricPart_eq_skewAdjointPart

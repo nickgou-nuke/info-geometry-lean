@@ -1,4 +1,10 @@
-import InfoGeometry.Canonical.BipolarCartanPauliZornRealificationBridge
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Canonical.Cl11JordanComplexRealificationBridge
+import InfoGeometry.Canonical.BipolarLogarithmicDerivationBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.GullDoranPseudoscalarBridge
 import Mathlib.Tactic
@@ -46,7 +52,6 @@ open scoped Matrix
 open InfoGeometry.Canonical.BipolarTwoSheetOperatorConnectionBridge
 open InfoGeometry.Canonical.BipolarLogarithmicDerivationBridge
 open InfoGeometry.Canonical.Cl11JordanComplexRealificationBridge
-open InfoGeometry.Canonical.BipolarCartanPauliZornRealificationBridge
 open InfoGeometry.Clifford.GullDoranPseudoscalarBridge
 open InfoGeometry.Physics.ChiralCausalCone
 

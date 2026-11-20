@@ -3,6 +3,12 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import Mathlib.Algebra.Algebra.Basic
+import Mathlib.Algebra.Star.Module
+import Mathlib.Basic.Real.Star
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.NoncommRing
+import Mathlib.Tactic.NormNum
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!

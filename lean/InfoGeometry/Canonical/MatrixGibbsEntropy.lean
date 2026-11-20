@@ -72,7 +72,6 @@ theorem trace_normalizedGibbsDensity (H : Mat) (hH : H.IsHermitian) (β : ℝ) :
     Matrix.trace (normalizedGibbsDensity H hH β) = 1 :=
   trace_normalizedDensity _ (gibbsDensity_strictlyPositive H hH β)
 
-omit [Nonempty n] in
 theorem normalizedGibbsDensity_eq_normalized_exp
     (H : Mat) (hH : H.IsHermitian) (β : ℝ) :
     normalizedGibbsDensity H hH β =
@@ -101,7 +100,7 @@ theorem log_normalizedGibbsDensity_eq_thermalModularHamiltonian
         (β : ℂ) (Real.log (gibbsPartition H hH β) : ℂ) H := by
   rw [log_normalizedGibbsDensity]
   simp only [QuantumRelativeSurprisal.thermalModularHamiltonian,
-    RCLike.real_smul_eq_coe_smul (K := ℂ), map_neg, Complex.coe_algebraMap]
+    RCLike.real_smul_eq_coe_smul (K := ℂ), Complex.ofReal_neg]
 
 /-- Thermal relative-log trace for an arbitrary trace-one comparison matrix. -/
 theorem relativeLogTrace_eq_energy_sub_entropy

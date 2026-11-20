@@ -300,6 +300,43 @@ theorem realThreeKrein_translationCharge_anticommutator_eq_diagonalMomentum
     (threeMode_translationCharge_anticommutator_eq_diagonalMomentum p)
   simpa only [map_add, map_mul] using h
 
+/-- The canonical inclusion of the two real `M₂(ℝ)` factors into the
+three-factor Koszul algebra transports the same Peirce translation/charge
+anticommutator. This statement uses the literal graded-factor inclusion,
+whose two CAR modes are identified with the head and middle modes; it is not
+the representation-defined diagonal embedding `twoModeIntoThreeMode`. -/
+theorem gradedPair_translationCharge_anticommutator_eq_diagonalMomentum
+    (p : FourSpace) :
+    realTwoMatrixPairIntoThreeMode (translationInGradedTensor p) *
+        realTwoMatrixPairIntoThreeMode conjugatePeirceCharge +
+      realTwoMatrixPairIntoThreeMode conjugatePeirceCharge *
+        realTwoMatrixPairIntoThreeMode (translationInGradedTensor p) =
+      realTwoMatrixPairIntoThreeMode
+        (twoMatrixGradedTensorMoritaEquiv.symm (diagonalMomentumOperator p)) := by
+  have h := congrArg realTwoMatrixPairIntoThreeMode
+    (translationCharge_anticommutator_eq_diagonalMomentum p)
+  simpa only [map_add, map_mul] using h
+
+/-- On the actual real doubled-Krein carrier, the canonical graded-factor
+inclusion represents the Peirce translation anticommutator as the included
+diagonal momentum operator. -/
+theorem realKrein_gradedPair_translationCharge_anticommutator_eq_diagonalMomentum
+    (p : FourSpace) :
+    realThreeMatrixTensorOnH4
+        (realTwoMatrixPairIntoThreeMode (translationInGradedTensor p)) *
+        realThreeMatrixTensorOnH4
+          (realTwoMatrixPairIntoThreeMode conjugatePeirceCharge) +
+      realThreeMatrixTensorOnH4
+          (realTwoMatrixPairIntoThreeMode conjugatePeirceCharge) *
+        realThreeMatrixTensorOnH4
+          (realTwoMatrixPairIntoThreeMode (translationInGradedTensor p)) =
+      realThreeMatrixTensorOnH4
+        (realTwoMatrixPairIntoThreeMode
+          (twoMatrixGradedTensorMoritaEquiv.symm (diagonalMomentumOperator p))) := by
+  have h := congrArg realThreeMatrixTensorOnH4
+    (gradedPair_translationCharge_anticommutator_eq_diagonalMomentum p)
+  simpa only [map_add, map_mul] using h
+
 /-- Translation generators square to zero in the real graded tensor carrier. -/
 theorem translationInGradedTensor_square (p : FourSpace) :
     translationInGradedTensor p * translationInGradedTensor p = 0 := by

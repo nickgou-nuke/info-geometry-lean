@@ -732,6 +732,28 @@ theorem realTwoMatrixPairIntoThreeMode_annihilation₁ :
   unfold realThreeAnnihilationMiddle
   rfl
 
+/-- The first real matrix factor's creator is the first-mode creator under
+the same graded inclusion. -/
+theorem realTwoMatrixPairIntoThreeMode_creation₀ :
+    realTwoMatrixPairIntoThreeMode creation₀ =
+      realThreeCreationHead := by
+  rw [creation₀, realTwoMatrixPairIntoThreeMode_tmul]
+  have hleft : cl11StandardEquiv.symm matrixE10 = headUnit 1 0 := rfl
+  have hright : GradedTensorProduct.includeLeft matrixGrading matrixGrading
+      (1 : M2R) = (1 : twoMatrixGradedTensor) := map_one _
+  rw [hleft, hright]
+  unfold realThreeCreationHead
+  rfl
+
+/-- The second real matrix factor's creator is the middle CAR creator. -/
+theorem realTwoMatrixPairIntoThreeMode_creation₁ :
+    realTwoMatrixPairIntoThreeMode creation₁ =
+      realThreeCreationMiddle := by
+  rw [creation₁, realTwoMatrixPairIntoThreeMode_tmul,
+    map_one, GradedTensorProduct.includeLeft_apply]
+  unfold realThreeCreationMiddle
+  rfl
+
 /-- The second-site CAR is retained in the represented three-factor algebra.
 The proof inspects both diagonal blocks of the graded Morita image. -/
 theorem realThreeMatrixTensor_middle_CAR :

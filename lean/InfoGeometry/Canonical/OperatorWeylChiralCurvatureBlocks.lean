@@ -178,4 +178,51 @@ theorem operator_chiral_square_packet (v : OperatorFourVector W) :
       rightCurvatureBlock v = operatorCoSoldering v * operatorSoldering v := by
   exact ⟨rfl, rfl⟩
 
+/-- In the commuting limit, the left block has no off-diagonal residue. -/
+theorem leftCurvatureBlock_offdiag_zero_of_commute
+    (v : OperatorFourVector W)
+    (h01 : Commute (v 0) (v 1))
+    (h02 : Commute (v 0) (v 2))
+    (h13 : Commute (v 1) (v 3))
+    (h23 : Commute (v 2) (v 3)) :
+    (leftCurvatureBlock v) 0 1 = 0 ∧ (leftCurvatureBlock v) 1 0 = 0 := by
+  have hI0 :
+      (algebraMap ℂ (InfoGeometry.Optics.OperatorCausalSoldering.EndW W)) Complex.I * v 0 =
+        v 0 * (algebraMap ℂ (InfoGeometry.Optics.OperatorCausalSoldering.EndW W)) Complex.I :=
+    Algebra.commutes _ _
+  have hI1 :
+      (algebraMap ℂ (InfoGeometry.Optics.OperatorCausalSoldering.EndW W)) Complex.I * v 1 =
+        v 1 * (algebraMap ℂ (InfoGeometry.Optics.OperatorCausalSoldering.EndW W)) Complex.I :=
+    Algebra.commutes _ _
+  have hI2 :
+      (algebraMap ℂ (InfoGeometry.Optics.OperatorCausalSoldering.EndW W)) Complex.I * v 2 =
+        v 2 * (algebraMap ℂ (InfoGeometry.Optics.OperatorCausalSoldering.EndW W)) Complex.I :=
+    Algebra.commutes _ _
+  have hI3 :
+      (algebraMap ℂ (InfoGeometry.Optics.OperatorCausalSoldering.EndW W)) Complex.I * v 3 =
+        v 3 * (algebraMap ℂ (InfoGeometry.Optics.OperatorCausalSoldering.EndW W)) Complex.I :=
+    Algebra.commutes _ _
+  have commute_mul_I (a b : EndW W) (hab : Commute a b) :
+      a * (b * (algebraMap ℂ (EndW W)) Complex.I) =
+        b * (a * (algebraMap ℂ (EndW W)) Complex.I) := by
+    calc
+      a * (b * (algebraMap ℂ (EndW W)) Complex.I) =
+          (a * b) * (algebraMap ℂ (EndW W)) Complex.I := by rw [← mul_assoc]
+      _ = (b * a) * (algebraMap ℂ (EndW W)) Complex.I := by rw [hab.eq]
+      _ = b * (a * (algebraMap ℂ (EndW W)) Complex.I) := by rw [mul_assoc]
+  constructor
+  · simp [leftCurvatureBlock, operatorSoldering_apply, operatorCoSoldering,
+      Matrix.mul_apply, Fin.sum_univ_two, Algebra.smul_def]
+    noncomm_ring [h01.eq, h02.eq, h13.eq, h23.eq, hI0, hI1, hI2, hI3]
+    rw [commute_mul_I (v 3) (v 2) h23.symm]
+    rw [commute_mul_I (v 0) (v 2) h02]
+    abel
+  · simp [leftCurvatureBlock, operatorSoldering_apply, operatorCoSoldering,
+      Matrix.mul_apply, Fin.sum_univ_two, Algebra.smul_def]
+    noncomm_ring [h01.eq, h02.eq, h13.eq, h23.eq, hI0, hI1, hI2, hI3]
+    rw [commute_mul_I (v 3) (v 2) h23.symm]
+    rw [commute_mul_I (v 0) (v 2) h02]
+    abel
+
 end InfoGeometry.Canonical.OperatorWeylChiralCurvatureBlocks
+

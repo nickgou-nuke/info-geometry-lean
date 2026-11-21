@@ -7,6 +7,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Canonical.Cl11TraceGNSHilbertColimitBridge
 import InfoGeometry.Canonical.RealDoubledBlockOperator
 import InfoGeometry.Krein.DoubledSpace
+import Mathlib.Analysis.InnerProductSpace.Adjoint
 
 /-!
 # Real doubled coordinates for the finite Cl(1,1) GNS standard form
@@ -526,6 +527,120 @@ theorem realDoubledReadout_preGNS_glide_tomita_sheet_sign
   exact congrArg realDoubledReadout
     (stageOnePreGNSHilbertSchmidtReadout_tomita_glide A)
 
+local notation "H₂" => DoubledSpace RealHS
+
+@[simp] theorem realDoubledReadout_zero :
+    realDoubledReadout (0 : HS2) = 0 := by
+  simpa using realDoubledReadout_real_smul 0 (0 : HS2)
+
+@[simp] theorem realDoubledReadout_neg (X : HS2) :
+    realDoubledReadout (-X) = -realDoubledReadout X := by
+  simpa using realDoubledReadout_real_smul (-1) X
+
+/-- The already constructed readout transports the left-action adjoint law
+to the ambient positive real Hilbert inner product. -/
+theorem realDoubledLeftAction_inner (A : HS2) (u v : H₂) :
+    ⟪realDoubledLeftAction A u, v⟫_ℝ =
+      ⟪u, realDoubledLeftAction A.conjTranspose v⟫_ℝ := by
+  obtain ⟨X, rfl⟩ := realDoubledReadout_surjective u
+  obtain ⟨Y, rfl⟩ := realDoubledReadout_surjective v
+  rw [realDoubledLeftAction_readout, realDoubledLeftAction_readout]
+  change doubledHilbertBilin (realDoubledReadout (A * X))
+      (realDoubledReadout Y) =
+    doubledHilbertBilin (realDoubledReadout X)
+      (realDoubledReadout (A.conjTranspose * Y))
+  rw [← realPart_hilbertSchmidtInner_eq_doubledHilbertBilin,
+    ← realPart_hilbertSchmidtInner_eq_doubledHilbertBilin]
+  exact congrArg Complex.re (hilbertSchmidtInner_left_mul A X Y)
+
+/-- The right-action adjoint law on the same positive real carrier. -/
+theorem realDoubledRightAction_inner (B : HS2) (u v : H₂) :
+    ⟪realDoubledRightAction B u, v⟫_ℝ =
+      ⟪u, realDoubledRightAction B.conjTranspose v⟫_ℝ := by
+  obtain ⟨X, rfl⟩ := realDoubledReadout_surjective u
+  obtain ⟨Y, rfl⟩ := realDoubledReadout_surjective v
+  rw [realDoubledRightAction_readout, realDoubledRightAction_readout]
+  change doubledHilbertBilin (realDoubledReadout (X * B))
+      (realDoubledReadout Y) =
+    doubledHilbertBilin (realDoubledReadout X)
+      (realDoubledReadout (Y * B.conjTranspose))
+  rw [← realPart_hilbertSchmidtInner_eq_doubledHilbertBilin,
+    ← realPart_hilbertSchmidtInner_eq_doubledHilbertBilin]
+  exact congrArg Complex.re (hilbertSchmidtInner_right_mul B X Y)
+
+theorem realDoubledLeftAction_adjoint (A : HS2) :
+    (realDoubledLeftAction A).adjoint =
+      realDoubledLeftAction A.conjTranspose := by
+  apply ContinuousLinearMap.ext
+  intro y
+  apply ext_inner_left ℝ
+  intro x
+  rw [ContinuousLinearMap.adjoint_inner_right]
+  exact realDoubledLeftAction_inner A x y
+
+theorem realDoubledRightAction_adjoint (B : HS2) :
+    (realDoubledRightAction B).adjoint =
+      realDoubledRightAction B.conjTranspose := by
+  apply ContinuousLinearMap.ext
+  intro y
+  apply ext_inner_left ℝ
+  intro x
+  rw [ContinuousLinearMap.adjoint_inner_right]
+  exact realDoubledRightAction_inner B x y
+
+@[simp] theorem realDoubledRightAction_neg (B : HS2) :
+    realDoubledRightAction (-B) = -realDoubledRightAction B := by
+  apply ContinuousLinearMap.ext
+  intro u
+  obtain ⟨X, rfl⟩ := realDoubledReadout_surjective u
+  rw [realDoubledRightAction_readout]
+  change realDoubledReadout (X * (-B)) =
+    -(realDoubledRightAction B (realDoubledReadout X))
+  rw [realDoubledRightAction_readout]
+  simp only [rightActionLinear_apply, mul_neg, realDoubledReadout_neg]
+
+/-- A square-minus-one matrix induces a square-minus-one real right action.
+The proof uses surjectivity of the existing readout and associativity. -/
+theorem realDoubledRightAction_sq_of_mul_self
+    (B : HS2) (hB : B * B = -1) :
+    (realDoubledRightAction B).comp (realDoubledRightAction B) =
+      -(ContinuousLinearMap.id ℝ H₂) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  obtain ⟨X, rfl⟩ := realDoubledReadout_surjective u
+  rw [ContinuousLinearMap.comp_apply, realDoubledRightAction_readout,
+    realDoubledRightAction_readout]
+  change realDoubledReadout ((X * B) * B) = -realDoubledReadout X
+  rw [mul_assoc, hB, mul_neg_one, realDoubledReadout_neg]
+
+/-- Left multiplication remains multiplicative after realification. -/
+theorem realDoubledLeftAction_comp (A B : HS2) :
+    (realDoubledLeftAction A).comp (realDoubledLeftAction B) =
+      realDoubledLeftAction (A * B) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  obtain ⟨X, rfl⟩ := realDoubledReadout_surjective u
+  rw [ContinuousLinearMap.comp_apply, realDoubledLeftAction_readout,
+    realDoubledLeftAction_readout, realDoubledLeftAction_readout]
+  simp only [leftActionLinear_apply, mul_assoc]
+
+/-- Faithfulness prevents realification from discarding the noncommutative
+matrix product. -/
+theorem realDoubledLeftAction_injective :
+    Function.Injective realDoubledLeftAction := by
+  intro A B h
+  have he := ContinuousLinearMap.congr_fun h (realDoubledReadout (1 : HS2))
+  rw [realDoubledLeftAction_readout, realDoubledLeftAction_readout] at he
+  apply realDoubledReadout_injective
+  simpa only [leftActionLinear_apply, mul_one] using he
+
+theorem realDoubledLeftAction_isSelfAdjoint
+    (A : HS2) (hA : A.conjTranspose = A) :
+    IsSelfAdjoint (realDoubledLeftAction A) := by
+  change (realDoubledLeftAction A).adjoint = realDoubledLeftAction A
+  rw [realDoubledLeftAction_adjoint, hA]
+
+
 end InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge
 
-end noncomputable section
+end

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -37,6 +42,10 @@ def toPACSplit44 (X : ConformalSix) : PACSplit44 where
   y1 := X.ax
   y2 := X.ay
   y3 := X.az
+
+theorem toPACSplit44_transverse_axial_frozen (X : ConformalSix) :
+    (toPACSplit44 X).x1 = 0 ∧ (toPACSplit44 X).x2 = 0 := by
+  exact ⟨rfl, rfl⟩
 
 @[simp] theorem Q44_toPACSplit44 (X : ConformalSix) :
     Q44 (toPACSplit44 X) = quadratic24 X := by

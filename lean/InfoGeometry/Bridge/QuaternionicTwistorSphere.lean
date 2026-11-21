@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Bridge.QuaternionicPauliDiracSoldering
@@ -47,5 +52,27 @@ theorem twistorAxis_isComplexStructure {a b c : ℝ}
   ext i
   simp [LinearMap.smul_apply, Matrix.mulVec, Fin.sum_univ_four,
     Matrix.one_apply, dotProduct, Finset.sum_ite_eq']
+
+theorem twistorAxis_coordinate_packet :
+    twistorAxis 1 0 0 =
+        QuaternionicPauliDiracSoldering.QuaternionicOperators.I ∧
+    twistorAxis 0 1 0 =
+        QuaternionicPauliDiracSoldering.QuaternionicOperators.J ∧
+    twistorAxis 0 0 1 =
+        QuaternionicPauliDiracSoldering.QuaternionicOperators.K := by
+  constructor
+  · apply LinearMap.ext
+    intro x
+    simp [twistorAxis, twistorMatrix,
+      QuaternionicPauliDiracSoldering.QuaternionicOperators.I]
+  constructor
+  · apply LinearMap.ext
+    intro x
+    simp [twistorAxis, twistorMatrix,
+      QuaternionicPauliDiracSoldering.QuaternionicOperators.J]
+  · apply LinearMap.ext
+    intro x
+    simp [twistorAxis, twistorMatrix,
+      QuaternionicPauliDiracSoldering.QuaternionicOperators.K]
 
 end InfoGeometry.Bridge.QuaternionicTwistorSphere

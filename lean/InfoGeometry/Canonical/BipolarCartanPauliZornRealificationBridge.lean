@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.BipolarPauliZornPristineChain
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl11JordanComplexRealificationBridge
@@ -52,6 +57,8 @@ open scoped Matrix
 
 abbrev Matrix2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev Matrix4R := InfoGeometry.Algebra.FiniteSpin.Mat4R
+abbrev PauliVector :=
+  InfoGeometry.Canonical.PauliHestenesSpinMomentum.PauliParavector
 
 /-- Realification of the noncompact Cartan generator. -/
 noncomputable def realifiedKboost : Matrix4R :=

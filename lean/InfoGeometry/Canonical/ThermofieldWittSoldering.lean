@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.DoubledSpace
@@ -40,6 +45,17 @@ theorem wittSoldering_to_doubled_apply (x ξ : V4) (i : Fin 8) :
     wittSoldering (to_doubled x ξ : DoubledSpace V4) i =
       if h : i.val < 4 then x ⟨i.val, h⟩ else ξ ⟨i.val - 4, by omega⟩ := by
   rfl
+
+@[simp]
+theorem wittSoldering_to_doubled (x ξ : V4) :
+    wittSoldering (to_doubled x ξ : DoubledSpace V4) =
+      positiveCircularEmbedding x + negativeCircularEmbedding ξ := by
+  ext i
+  by_cases h : i.val < 4
+  · simp [wittSoldering, positiveCircularEmbedding,
+      negativeCircularEmbedding, h]
+  · simp [wittSoldering, positiveCircularEmbedding,
+      negativeCircularEmbedding, h]
 
 /-- Witt grading: `+1` on the forward isotropic plane and `-1` on the backward one. -/
 noncomputable def wittGrade : WittCoord →ₗ[ℝ] WittCoord where

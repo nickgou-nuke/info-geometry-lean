@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -69,5 +74,22 @@ theorem operator_factorization_of_pairwise_commute
     fin_cases i <;> fin_cases j <;>
       simp [factorizationDefect, commutator, htz, htu, htv, hzu, hzv, huv]
   rw [h, add_zero]
+
+theorem reverse_operator_factorization_of_pairwise_commute
+    {A : Type*} [Ring A] (t z u v : A)
+    (htz : t * z = z * t)
+    (htu : t * u = u * t)
+    (htv : t * v = v * t)
+    (hzu : z * u = u * z)
+    (hzv : z * v = v * z)
+    (huv : u * v = v * u) :
+    operatorBarSigma t z u v * operatorSigma t z u v =
+      diagonalBlock (orderedQuadratic t z u v) := by
+  rw [operatorBarSigma_mul_operatorSigma]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [diagonalBlock, orderedQuadratic, commutator,
+      htz, htu, htv, hzu, hzv, huv] <;>
+    noncomm_ring
 
 end InfoGeometry.Bridge.OperatorPauliFactorizationDefect

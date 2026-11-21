@@ -49,6 +49,8 @@ open InfoGeometry.Algebra.ZornMatrix
 open InfoGeometry.Lie.SplitOctonionCircularWittForm
 open InfoGeometry.Clifford.GullDoranPseudoscalarBridge
 
+abbrev PauliVector :=
+  InfoGeometry.Canonical.PauliHestenesSpinMomentum.PauliParavector
 abbrev Matrix4R := InfoGeometry.Algebra.FiniteSpin.Mat4R
 
 /-- Complete finite theorem packet for the reconstructed representation chain. -/

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Analysis.BipolarOrthogonalFlowSplit
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.AffineMap
@@ -34,6 +39,9 @@ namespace InfoGeometry.Analysis.BipolarFlatCoordinateGeodesics
 
 open InfoGeometry.Analysis.BipolarPlanarHodgePair
 open InfoGeometry.Analysis.BipolarOrthogonalFlowSplit
+
+/-- Point/tangent carrier for the flat logarithmic coordinate plane. -/
+abbrev FlatCoordinatePoint := PlaneCovector
 
 /-- Unit coordinate vector in the `η` direction. -/
 def etaBasis : PlaneCovector := ![1, 0]

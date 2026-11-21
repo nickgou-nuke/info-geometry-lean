@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Orthogonal.O55ContactGrading
+import InfoGeometry.Orthogonal.O55ContactGradeDecomposition
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Finite Heisenberg-sector carrier for the `(5,5)` contact grading. -/
@@ -129,5 +135,50 @@ theorem embedded_weight_packet :
   · intro a i
     fin_cases i <;> simp [IsVectorWeight, contactEulerEnd, contactWeightR,
       contactWeight, embedOuterPlus]
+
+
+/-- Canonical lowest-grade witness (local to avoid an import cycle). -/
+def gradeMinusTwoH : O55Lie :=
+  splitRankTwo (coordinateVector 0) (coordinateVector 1)
+
+/-- The negative-one generator (local to this owner to avoid an import cycle). -/
+def negativeOneGenerator (a : Outer2) (w : Middle6) : O55Lie :=
+  splitRankTwo (embedOuterMinus a) (embedMiddle w)
+
+/-- The negative-two generator from two negative outer directions. -/
+def negativeTwoGenerator (a b : Outer2) : O55Lie :=
+  splitRankTwo (embedOuterMinus a) (embedOuterMinus b)
+
+theorem negativeOne_bracket
+    (a b : Outer2) (w z : Middle6) :
+    ⁅negativeOneGenerator a w, negativeOneGenerator b z⁆ =
+      -(middlePairing w z) • negativeTwoGenerator a b := by
+  unfold negativeOneGenerator negativeTwoGenerator
+  rw [splitRankTwo_bracket]
+  have hp1 : splitPairing (embedMiddle w) (embedOuterMinus b) = 0 := by
+    rw [splitPairing_comm]
+    exact pairing_outerMinus_middle b w
+  have hp2 : splitPairing (embedMiddle z) (embedOuterMinus a) = 0 := by
+    rw [splitPairing_comm]
+    exact pairing_outerMinus_middle a z
+  simp [hp1, hp2]
+
+theorem negativeTwo_eq_area_smul (a b : Outer2) :
+    negativeTwoGenerator a b = outerArea a b • gradeMinusTwoH := by
+  apply Subtype.ext
+  apply LinearMap.ext
+  intro x
+  funext i
+  fin_cases i <;>
+    simp [negativeTwoGenerator, outerArea, gradeMinusTwoH,
+      splitRankTwo, splitRankTwoEnd, embedOuterMinus,
+      splitPairing, coordinateVector] <;> ring
+
+theorem negativeOne_bracket_scalar
+    (a b : Outer2) (w z : Middle6) :
+    ⁅negativeOneGenerator a w, negativeOneGenerator b z⁆ =
+      (-(middlePairing w z * outerArea a b)) • gradeMinusTwoH := by
+  rw [negativeOne_bracket, negativeTwo_eq_area_smul]
+  simp [smul_smul]
 
 end InfoGeometry.Orthogonal.O55Contact

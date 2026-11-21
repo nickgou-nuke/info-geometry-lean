@@ -43,6 +43,12 @@ open InfoGeometry.Canonical.CurrentSugawaraBridge
 
 set_option synthInstance.maxHeartbeats 200000
 
+/-- The charged Fock representation carrier as a module over the universal enveloping
+algebra of the Heisenberg algebra. -/
+abbrev ChargedFockRepSpace (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :=
+  ModuleOfModuleAlgebra 𝕜 (𝓤 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
+    (VirasoroProject.ChargedFockSpace 𝕜 α)
+
 /-- Pairing of a raw CAR mode completion `RawCARModeCompletion A` with a
 Heisenberg current representation `CurrentHeisenbergRep 𝕜 V`. -/
 def SplitCARCurrentWitness

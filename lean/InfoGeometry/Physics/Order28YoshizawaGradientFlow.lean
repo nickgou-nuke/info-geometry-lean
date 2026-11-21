@@ -297,6 +297,42 @@ theorem amari_alpha_connection_universal_curvature_law (P X Y : B) (hP : P * P =
 def sheetGramianPlus (P X Y : B) : B := peirceNilPlus P X * peirceNilMinus P Y
 def sheetGramianMinus (P X Y : B) : B := peirceNilMinus P Y * peirceNilPlus P X
 
+/-- Bott identities for a nilpotent pair `x² = y² = 0`: the cross products are
+mutually annihilating, and the two-sheet factors `1 - x*y`, `1 - y*x` multiply to
+`1 - (x*y + y*x)` and `1 - (x*y - y*x)` respectively. -/
+lemma nilpotent_pair_bott_identities (x y : B) (hx : x * x = 0) (hy : y * y = 0) :
+    (x * y) * (y * x) = 0 ∧
+    (y * x) * (x * y) = 0 ∧
+    (1 - (x * y + y * x)) = (1 - x * y) * (1 - y * x) ∧
+    (1 - (x * y - y * x)) = (1 - x * y) * (1 + y * x) ∧
+    (1 - (x * y + y * x)) * (1 + (x * y + y * x)) =
+      1 - (x * y + y * x) * (x * y + y * x) := by
+  have hxy : x * y * y * x = 0 := by
+    calc x * y * y * x = x * (y * y) * x := by noncomm_ring
+      _ = 0 := by rw [hy]; noncomm_ring
+  have hyx : y * x * x * y = 0 := by
+    calc y * x * x * y = y * (x * x) * y := by noncomm_ring
+      _ = 0 := by rw [hx]; noncomm_ring
+  have hxy' : x * y * (y * x) = 0 := by
+    calc x * y * (y * x) = x * y * y * x := by noncomm_ring
+      _ = 0 := hxy
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · simpa [mul_assoc] using hxy
+  · simpa [mul_assoc] using hyx
+  · noncomm_ring [hxy']
+  · noncomm_ring [hxy']
+  · noncomm_ring
+
+/-- **Peirce α-square readback (`peirce_alpha_square`)**: the split-signature identity
+`(Φ + α • J)² = (1 - α²) • V`, extracted as the first conjunct of
+`amari_alpha_connection_universal_curvature_law`. -/
+lemma peirce_alpha_square (P X Y : B) (hP : P * P = P) (α : ℤ) :
+    (peirceVielbein P X Y + α • peirceSymplecticJ P X Y) *
+      (peirceVielbein P X Y + α • peirceSymplecticJ P X Y) =
+      (1 - α * α) • peirceMetricHeight P X Y := by
+  have h := amari_alpha_connection_universal_curvature_law P X Y hP α 0
+  exact And.left h
+
 /-- **Bridge 3 (`sheet_gramian_factorization_and_four_way_bott_diamond`)**:
 Sheet Gramians `Q_+ = N_+ N_-` and `Q_- = N_- N_+` factor the two-sheet log-determinant
 `1 - V = (1 - Q_+)(1 - Q_-)` and satisfy the 4-way Bott diamond. -/

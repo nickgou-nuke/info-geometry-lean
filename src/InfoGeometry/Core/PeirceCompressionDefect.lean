@@ -556,5 +556,42 @@ theorem compression_square_defect_selfAdjoint (p x : A) (hp : p * p = p)
       p * (x * x) * p - (p * x * p) * (p * x * p) := by
   rw [compression_square_defect_star p x hp hps hxs, star_mul, star_star]
 
+/-- A normalized operator with identity compression has an exact leakage
+star-square: if `star x * x = k • 1`, then the component transferred from the
+`p` corner to its complement has squared norm `(k - 1) • p`. This is an
+algebraic identity; no order or analytic positivity is assumed. -/
+theorem compression_normalized_leakage_energy (p x : A) (k : ℕ)
+    (hp : p * p = p) (hps : star p = p)
+    (hCompression : p * x * p = p)
+    (hNorm : star x * x = k • (1 : A)) (hk : 1 ≤ k) :
+    star ((1 - p) * x * p) * ((1 - p) * x * p) = (k - 1) • p := by
+  have hCompressionStar : p * star x * p = p := by
+    calc
+      p * star x * p = star (p * x * p) := by
+        simp only [star_mul, hps, mul_assoc]
+      _ = star p := congrArg star hCompression
+      _ = p := hps
+  have hDefect := compression_adjoint_mul_defect p x x hp hps
+  calc
+    star ((1 - p) * x * p) * ((1 - p) * x * p) =
+        p * (star x * x) * p - (p * star x * p) * (p * x * p) := hDefect.symm
+    _ = p * (k • (1 : A)) * p - p := by rw [hNorm, hCompressionStar, hCompression, hp]
+    _ = k • p - p := by
+      have hcoeff : p * (k • (1 : A)) * p = k • p := by
+        calc
+          p * (k • (1 : A)) * p = p * (↑k * 1) * p := by rw [nsmul_eq_mul]
+          _ = p * ↑k * p := by simp
+          _ = ↑k * (p * p) := by
+            rw [(Nat.cast_commute k p).eq.symm]
+            simp only [mul_assoc]
+          _ = ↑k * p := by rw [hp]
+          _ = k • p := (nsmul_eq_mul k p).symm
+      rw [hcoeff]
+    _ = (k - 1) • p := by
+      calc
+        k • p - p = ((k - 1) + 1) • p - p := by rw [Nat.sub_add_cancel hk]
+        _ = ((k - 1) • p + p) - p := by rw [add_nsmul, one_nsmul]
+        _ = (k - 1) • p := by simp
+
 end Star
 end InfoGeometry.Core.PeirceCompressionDefect

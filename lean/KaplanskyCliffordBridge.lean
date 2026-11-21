@@ -34,8 +34,8 @@ structure PeirceProjectors (R : Type*) [Field R] where
   P_minus : R
   involution : R
   h_square : involution * involution = 1
-  h_P_plus : P_plus = (1 + involution) / 2
-  h_P_minus : P_minus = (1 - involution) / 2
+  h_P_plus : P_plus = (⅟(2 : ℚ)) • (1 + involution)
+  h_P_minus : P_minus = (⅟(2 : ℚ)) • (1 - involution)
   h_idempotent_plus : P_plus * P_plus = P_plus
   h_idempotent_minus : P_minus * P_minus = P_minus
   h_orthogonal : P_plus * P_minus = 0
@@ -106,6 +106,11 @@ theorem chevalleyIdempotentNonTrivial {R : Type*} [Ring R] (n p : R)
 /-- Characteristic 2 collapse: split involution becomes nilpotent. -/
 theorem charTwoSplitInvolutionNilpotent (R : Type*) [Ring R] (h₂ : (2 : R) = 0) (ε : R)
     (hε : ε * ε = 1) : (ε + 1) * (ε + 1) = 0 := by
+  have htwo : (2 : R) = 0 := CharP.cast_eq_zero R 2
+  have hone : (1 : R) + 1 = 0 := by
+    calc
+      (1 : R) + 1 = (2 : ℕ) • (1 : R) := by rw [two_smul]
+      _ = 0 := by simpa using congrArg (fun x : R => x * (1 : R)) htwo
   calc
     (ε + 1) * (ε + 1) = ε * ε + 2 * ε + 1 := by noncomm_ring
     _ = 1 + 1 := by rw [hε, h₂]; simp

@@ -129,3 +129,9 @@ lean_lib SrcLane where
     .one `test_rpow,
     .one `test_selfconcordance
   ]
+
+-- The source transition tree also compiles the repository `proofs/` modules
+-- in the isolated src-build output, mirroring the root workspace's proofs lib.
+lean_lib proofs where
+  srcDir := "."
+  globs := #[.submodules `proofs]

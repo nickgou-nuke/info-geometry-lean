@@ -217,4 +217,17 @@ theorem curvature_square_gauge_covariant (D E : Module.End R A)
   rw [curvature_gauge_covariant D E hD hE hcomm]
   simpa only [pow_two] using conjugate_mul g (curvature D E a b) (curvature D E a b)
 
+/-- An associative-ring polynomial transgression identity.  It is the
+noncommutative expansion of the anticommutator of `D` with
+`Φ * D + D * Φ + D^3`, corrected by the iterated commutator `[[D, Φ], D]`.
+This statement is purely algebraic; it does not assert a differential-form
+transgression or require a grading on `A`. -/
+theorem cubic_transgression_polynomial (Φ D : A) :
+    (D * (Φ * D + D * Φ + D * D * D) +
+        (Φ * D + D * Φ + D * D * D) * D) -
+      ((D * Φ - Φ * D) * D - D * (D * Φ - Φ * D)) +
+      2 * (Φ * Φ) =
+    2 * ((Φ + D * D) * (Φ + D * D)) := by
+  noncomm_ring
+
 end InfoGeometry.Geometry.AssociativeGaugeConnection

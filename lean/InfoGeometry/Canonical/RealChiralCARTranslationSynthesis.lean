@@ -1051,6 +1051,71 @@ theorem lorentzMajoranaSpinGenerator_commutator
         minkowskiZBasis, realMinkowskiMajorana, lorentzGenerator4]
       module
 
+/-- The CAR anticommutator is invariant under the adjoint action of the
+six-parameter spin generator.  This proves the Killing identity from the
+actual associative three-factor graded carrier: the commutator is a
+derivation, and the CAR anticommutator is the scalar Minkowski pairing. -/
+theorem lorentzMajoranaSpinGenerator_preserves_CAR_metric
+    (btx bty btz rxy rxz ryz : ℝ)
+    (X Y : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+    minkowski4Form (lorentzGenerator4 btx bty btz rxy rxz ryz X) Y +
+      minkowski4Form X (lorentzGenerator4 btx bty btz rxy rxz ryz Y) = 0 := by
+  let B := lorentzMajoranaSpinGenerator btx bty btz rxy rxz ryz
+  let cX := realMinkowskiMajorana X
+  let cY := realMinkowskiMajorana Y
+  let GX := lorentzGenerator4 btx bty btz rxy rxz ryz X
+  let GY := lorentzGenerator4 btx bty btz rxy rxz ryz Y
+  have hX : B * cX - cX * B = realMinkowskiMajorana GX := by
+    simpa [B, cX, GX] using
+      lorentzMajoranaSpinGenerator_commutator btx bty btz rxy rxz ryz X
+  have hY : B * cY - cY * B = realMinkowskiMajorana GY := by
+    simpa [B, cY, GY] using
+      lorentzMajoranaSpinGenerator_commutator btx bty btz rxy rxz ryz Y
+  have hCARxy : cX * cY + cY * cX =
+      (2 * minkowski4Form X Y) • (1 : realThreeMatrixGradedTensor) := by
+    simpa [cX, cY, minkowski4Form] using
+      realMinkowskiMajorana_anticommutator X Y
+  have hCARgy : realMinkowskiMajorana GX * cY +
+      cY * realMinkowskiMajorana GX =
+        (2 * minkowski4Form GX Y) • (1 : realThreeMatrixGradedTensor) := by
+    simpa [cY, minkowski4Form] using
+      realMinkowskiMajorana_anticommutator GX Y
+  have hCARxg : cX * realMinkowskiMajorana GY +
+      realMinkowskiMajorana GY * cX =
+        (2 * minkowski4Form X GY) • (1 : realThreeMatrixGradedTensor) := by
+    simpa [cX, minkowski4Form] using
+      realMinkowskiMajorana_anticommutator X GY
+  have hCentral : B * (cX * cY + cY * cX) -
+      (cX * cY + cY * cX) * B = 0 := by
+    rw [hCARxy]
+    simp
+  have hPairing : B * (cX * cY + cY * cX) -
+      (cX * cY + cY * cX) * B =
+        (2 * (minkowski4Form GX Y + minkowski4Form X GY)) •
+          (1 : realThreeMatrixGradedTensor) := by
+    calc
+      _ = (B * cX - cX * B) * cY + cX * (B * cY - cY * B) +
+          (B * cY - cY * B) * cX + cY * (B * cX - cX * B) := by
+            noncomm_ring
+      _ = realMinkowskiMajorana GX * cY + cX * realMinkowskiMajorana GY +
+          realMinkowskiMajorana GY * cX + cY * realMinkowskiMajorana GX := by
+            rw [hX, hY]
+      _ = (realMinkowskiMajorana GX * cY + cY * realMinkowskiMajorana GX) +
+          (cX * realMinkowskiMajorana GY + realMinkowskiMajorana GY * cX) := by
+            abel
+      _ = _ := by rw [hCARgy, hCARxg]; module
+  rw [hPairing] at hCentral
+  have hOne : (1 : realThreeMatrixGradedTensor) ≠ 0 := by
+    intro h
+    have hMatrix := congrArg realThreeMatrixTensorToFin8 h
+    simp at hMatrix
+  have hScalar : 2 * (minkowski4Form GX Y + minkowski4Form X GY) = 0 := by
+    exact (smul_eq_zero.mp hCentral).resolve_right hOne
+  have hTwo : (2 : ℝ) ≠ 0 := by norm_num
+  have hMetric : minkowski4Form GX Y + minkowski4Form X GY = 0 :=
+    (mul_eq_zero.mp hScalar).resolve_left hTwo
+  simpa [GX, GY] using hMetric
+
 /-- The full real Lorentz spin action remains valid after transport to the
 existing doubled-Krein endomorphism carrier. -/
 theorem lorentzMajoranaSpinGenerator_onKrein_commutator

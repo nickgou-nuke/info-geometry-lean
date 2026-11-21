@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Orthogonal.O55ContactGrading
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.ZMod.Basic
@@ -186,5 +191,47 @@ theorem matching_block_degree_add (target middle source : Weight3) :
         (BlockDegree.mk middle source).contact =
       (BlockDegree.mk target source).contact := by
   simp [BlockDegree.contact]
+
+
+/-- The combined contact-degree and parity label. -/
+structure MultiDegree where
+  contact : ℤ
+  parity : ZMod 2
+  parity_eq : parity = (contact : ZMod 2)
+
+def canonicalMultiDegree (k : ℤ) : MultiDegree :=
+  ⟨k, (k : ZMod 2), rfl⟩
+
+def MultiDegree.add (d e : MultiDegree) : MultiDegree where
+  contact := d.contact + e.contact
+  parity := d.parity + e.parity
+  parity_eq := by
+    rw [d.parity_eq, e.parity_eq]
+    simp
+
+def MultiDegree.opposite (d : MultiDegree) : MultiDegree where
+  contact := -d.contact
+  parity := d.parity
+  parity_eq := by
+    simpa [d.parity_eq] using
+      (show (d.contact : ZMod 2) = -((d.contact : ZMod 2)) by ring)
+
+@[simp] theorem canonicalMultiDegree_add (k l : ℤ) :
+    (canonicalMultiDegree k).add (canonicalMultiDegree l) =
+      canonicalMultiDegree (k + l) := by
+  simp [canonicalMultiDegree, MultiDegree.add]
+
+@[simp] theorem canonicalMultiDegree_opposite (k : ℤ) :
+    (canonicalMultiDegree k).opposite = canonicalMultiDegree (-k) := by
+  simp [canonicalMultiDegree, MultiDegree.opposite]
+
+theorem multigraded_bracket
+    {k l : ℤ} {A B : O55Lie}
+    (hA : A ∈ realContactGradeSpace k)
+    (hB : B ∈ realContactGradeSpace l) :
+    ⁅A, B⁆ ∈ realContactGradeSpace (k + l) ∧
+      canonicalMultiDegree (k + l) =
+        (canonicalMultiDegree k).add (canonicalMultiDegree l) := by
+  exact ⟨contactGrade_bracket hA hB, by simp⟩
 
 end InfoGeometry.Orthogonal.O55Contact

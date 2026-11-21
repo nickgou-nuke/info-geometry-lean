@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.BipolarVariableCartanMaurerCartan
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib
@@ -49,6 +54,13 @@ def realVariableCartanConnection (s : ℂ) : Op1Form ℝ ℂ Matrix2C where
     realVariableCartanConnection s v =
       ((omegaCoeff s * v) / 2) • σ3c :=
   by rfl
+
+/-- Restriction of scalars does not change the value of the connection. -/
+theorem realVariableCartanConnection_eq_complex
+    (s v : ℂ) :
+    realVariableCartanConnection s v =
+      variableCartanConnection s v :=
+  rfl
 
 /-- The real-tangent operator self-wedge vanishes on every pair. -/
 theorem realVariableCartanConnection_selfWedge_zero (s : ℂ) :

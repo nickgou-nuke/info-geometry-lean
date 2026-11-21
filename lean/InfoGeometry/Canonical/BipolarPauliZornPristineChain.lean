@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.BipolarComplexCartanLine
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BipolarPauliHestenesSolderingBridge
@@ -32,6 +37,8 @@ open InfoGeometry.Canonical.PauliHestenesSpinMomentum
 open InfoGeometry.Algebra.ZornMatrix
 open InfoGeometry.Lie.SplitOctonionCircularWittForm
 
+abbrev PauliVector :=
+  InfoGeometry.Canonical.PauliHestenesSpinMomentum.PauliParavector
 
 /-- Complete finite realization packet for one paravector. -/
 theorem bipolar_pauli_zorn_pristine_chain

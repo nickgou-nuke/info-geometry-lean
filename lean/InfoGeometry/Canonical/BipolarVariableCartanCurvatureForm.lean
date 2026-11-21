@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.BipolarVariableConnectionAnalyticExterior
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib
@@ -76,6 +81,17 @@ theorem variableCartanCurvatureForm_eq_zero (s : ℂ) :
   intro u v
   change ((0 : ℂ →ₗ[ℂ] ℂ →ₗ[ℂ] Matrix2C) + 0) u v = 0
   simp
+
+/-- The bundled theorem agrees pointwise with the earlier local curvature
+formula. -/
+theorem variableCartanCurvatureForm_apply_eq_local
+    (s u v : ℂ) :
+    variableCartanCurvatureForm s u v =
+      variableCartanCurvatureAt s u v := by
+  change variableExteriorDerivativeForm s u v +
+      wedge (variableCartanConnection s) (variableCartanConnection s) u v =
+    variableCartanCurvatureAt s u v
+  rw [variableExteriorDerivativeForm_apply, variableCartanCurvatureAt]
 
 /-- Analytically witnessed bundled flatness on the punctured domain. -/
 theorem bipolar_variable_curvature_form_packet

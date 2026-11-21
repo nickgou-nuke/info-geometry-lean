@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Conformal.BipolarVirasoroProjectiveConnection
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.WittProjectiveClosure
@@ -67,6 +72,13 @@ theorem projective_mode_nonzero_bracket_closed
     (hn : n ∈ ProjectiveClosure) (hcoeff : (m - n : ℂ) ≠ 0) :
     m + n ∈ ProjectiveClosure := by
   exact projective_sum_mem_of_bracket_coeff_ne_zero ℂ hm hn hcoeff
+
+/-- The analytic quadratic-vector-field carrier independently certifies that
+the local third-derivative central term is zero. -/
+theorem quadratic_vector_field_central_term_zero
+    (c : ℂ) (v : ProjectiveVectorField) (s : ℂ) :
+    (c / 12) * v.third s = 0 := by
+  simp [ProjectiveVectorField.third]
 
 /-- Exact separation of the two anomaly statements: local third derivatives
 vanish for quadratic polynomial vector fields, and the native Virasoro cocycle

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.BipolarCartanLorentzBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BipolarLogarithmicDerivationBridge
@@ -41,6 +46,8 @@ open InfoGeometry.Physics.ChiralCausalCone
 open scoped Matrix
 
 abbrev Matrix2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
+abbrev PauliVector := PauliParavector
+
 /-- The native Pauli/Hestenes paravector as the repository-owned Hermitian
 soldering carrier. -/
 def pauliHermitian (P : PauliParavector) : HermitianMat2 :=

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Analysis.BipolarSignedLogConventionBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Conformal.BipolarSchwarzianProjectiveConnection
@@ -36,6 +41,14 @@ theorem local_signedBipolarLog_thirdJet
         hasDerivAt_signedBipolarLog hs hslit,
     hasDerivAt_logarithmicJet₁ hs,
     hasDerivAt_logarithmicJet₂ hs⟩
+
+/-- The Schwarzian jet of the signed logarithmic branch is the canonical
+branch-independent bipolar Schwarzian. -/
+theorem signedBipolarLog_schwarzianJet
+    (s : ℂ) :
+    schwarzianJet
+        (logarithmicJet₁ s) (logarithmicJet₂ s) (logarithmicJet₃ s) =
+      bipolarSchwarzian s := rfl
 
 /-- Exact quadratic-pole form for the signed logarithmic convention. -/
 theorem signedBipolarLog_schwarzian_eq_rational

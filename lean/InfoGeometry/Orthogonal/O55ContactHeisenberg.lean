@@ -142,18 +142,18 @@ def gradeMinusTwoH : O55Lie :=
   splitRankTwo (coordinateVector 0) (coordinateVector 1)
 
 /-- The negative-one generator (local to this owner to avoid an import cycle). -/
-def negativeOneGenerator (a : Outer2) (w : Middle6) : O55Lie :=
+def negativeOneGeneratorH (a : Outer2) (w : Middle6) : O55Lie :=
   splitRankTwo (embedOuterMinus a) (embedMiddle w)
 
 /-- The negative-two generator from two negative outer directions. -/
-def negativeTwoGenerator (a b : Outer2) : O55Lie :=
+def negativeTwoGeneratorH (a b : Outer2) : O55Lie :=
   splitRankTwo (embedOuterMinus a) (embedOuterMinus b)
 
 theorem negativeOne_bracket
     (a b : Outer2) (w z : Middle6) :
-    ⁅negativeOneGenerator a w, negativeOneGenerator b z⁆ =
-      -(middlePairing w z) • negativeTwoGenerator a b := by
-  unfold negativeOneGenerator negativeTwoGenerator
+    ⁅negativeOneGeneratorH a w, negativeOneGeneratorH b z⁆ =
+      -(middlePairing w z) • negativeTwoGeneratorH a b := by
+  unfold negativeOneGeneratorH negativeTwoGeneratorH
   rw [splitRankTwo_bracket]
   have hp1 : splitPairing (embedMiddle w) (embedOuterMinus b) = 0 := by
     rw [splitPairing_comm]
@@ -164,29 +164,29 @@ theorem negativeOne_bracket
   simp [hp1, hp2]
 
 theorem negativeTwo_eq_area_smul (a b : Outer2) :
-    negativeTwoGenerator a b = outerArea a b • gradeMinusTwoH := by
+    negativeTwoGeneratorH a b = outerArea a b • gradeMinusTwoH := by
   apply Subtype.ext
   apply LinearMap.ext
   intro x
   funext i
   fin_cases i <;>
-    simp [negativeTwoGenerator, outerArea, gradeMinusTwoH,
+    simp [negativeTwoGeneratorH, outerArea, gradeMinusTwoH,
       splitRankTwo, splitRankTwoEnd, embedOuterMinus,
       splitPairing, coordinateVector] <;> ring
 
 theorem negativeOne_bracket_scalar
     (a b : Outer2) (w z : Middle6) :
-    ⁅negativeOneGenerator a w, negativeOneGenerator b z⁆ =
+    ⁅negativeOneGeneratorH a w, negativeOneGeneratorH b z⁆ =
       (-(middlePairing w z * outerArea a b)) • gradeMinusTwoH := by
   rw [negativeOne_bracket, negativeTwo_eq_area_smul]
   simp [smul_smul]
 
 
 /-- Positive generators and the highest-grade witness (local to this owner). -/
-def positiveOneGenerator (a : Outer2) (w : Middle6) : O55Lie :=
+def positiveOneGeneratorH (a : Outer2) (w : Middle6) : O55Lie :=
   splitRankTwo (embedOuterPlus a) (embedMiddle w)
 
-def positiveTwoGenerator (a b : Outer2) : O55Lie :=
+def positiveTwoGeneratorH (a b : Outer2) : O55Lie :=
   splitRankTwo (embedOuterPlus a) (embedOuterPlus b)
 
 def gradePlusTwoH : O55Lie :=
@@ -194,9 +194,9 @@ def gradePlusTwoH : O55Lie :=
 
 theorem positiveOne_bracket
     (a b : Outer2) (w z : Middle6) :
-    ⁅positiveOneGenerator a w, positiveOneGenerator b z⁆ =
-      -(middlePairing w z) • positiveTwoGenerator a b := by
-  unfold positiveOneGenerator positiveTwoGenerator
+    ⁅positiveOneGeneratorH a w, positiveOneGeneratorH b z⁆ =
+      -(middlePairing w z) • positiveTwoGeneratorH a b := by
+  unfold positiveOneGeneratorH positiveTwoGeneratorH
   rw [splitRankTwo_bracket]
   have hp1 : splitPairing (embedMiddle w) (embedOuterPlus b) = 0 := by
     rw [splitPairing_comm]
@@ -208,32 +208,32 @@ theorem positiveOne_bracket
 
 theorem negativeTwo_bracket_negativeOne
     (a b c : Outer2) (w : Middle6) :
-    ⁅negativeTwoGenerator a b, negativeOneGenerator c w⁆ = 0 := by
-  unfold negativeTwoGenerator negativeOneGenerator
+    ⁅negativeTwoGeneratorH a b, negativeOneGeneratorH c w⁆ = 0 := by
+  unfold negativeTwoGeneratorH negativeOneGeneratorH
   rw [splitRankTwo_bracket]
   simp
 
 theorem positiveTwo_bracket_positiveOne
     (a b c : Outer2) (w : Middle6) :
-    ⁅positiveTwoGenerator a b, positiveOneGenerator c w⁆ = 0 := by
-  unfold positiveTwoGenerator positiveOneGenerator
+    ⁅positiveTwoGeneratorH a b, positiveOneGeneratorH c w⁆ = 0 := by
+  unfold positiveTwoGeneratorH positiveOneGeneratorH
   rw [splitRankTwo_bracket]
   simp
 
 theorem positiveTwo_eq_area_smul (a b : Outer2) :
-    positiveTwoGenerator a b = outerArea a b • gradePlusTwoH := by
+    positiveTwoGeneratorH a b = outerArea a b • gradePlusTwoH := by
   apply Subtype.ext
   apply LinearMap.ext
   intro x
   funext i
   fin_cases i <;>
-    simp [positiveTwoGenerator, outerArea, gradePlusTwoH,
+    simp [positiveTwoGeneratorH, outerArea, gradePlusTwoH,
       splitRankTwo, splitRankTwoEnd, embedOuterPlus,
       splitPairing, coordinateVector] <;> ring
 
 theorem positiveOne_bracket_scalar
     (a b : Outer2) (w z : Middle6) :
-    ⁅positiveOneGenerator a w, positiveOneGenerator b z⁆ =
+    ⁅positiveOneGeneratorH a w, positiveOneGeneratorH b z⁆ =
       (-(middlePairing w z * outerArea a b)) • gradePlusTwoH := by
   rw [positiveOne_bracket, positiveTwo_eq_area_smul]
   simp [smul_smul]

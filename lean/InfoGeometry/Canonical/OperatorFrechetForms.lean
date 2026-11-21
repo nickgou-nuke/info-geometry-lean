@@ -1233,7 +1233,8 @@ theorem frechetExtDeriv_twoPointNumerator
           (NormedSpace.exp ((1 - s) • H) * A * NormedSpace.exp (s • H) * B) := by
   rw [frechetExtDeriv_constOfIsEmpty, (hasFDerivAt_twoPointNumerator H B).fderiv]
   change twoPointNumeratorDerivative H B A = _
-  rw [twoPointNumeratorDerivative_apply, exponentialDerivative_complex_apply_eq_real H A]
+  rw [twoPointNumeratorDerivative_apply,
+    NoncommutativeGibbsDuhamelTwoPointBridge.exponentialDerivative_complex_apply_eq_real H A]
   exact trace_exponentialDerivative_mul_eq_duhamelTwoPoint H A B
 
 theorem frechetExtDeriv_logPartitionOneForm_eq_zero

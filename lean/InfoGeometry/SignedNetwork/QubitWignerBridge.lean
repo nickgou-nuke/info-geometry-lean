@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.SignedNetwork.PauliContextBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.SignedNetwork.BalancedPairKernel
@@ -47,12 +52,12 @@ def wignerGenerator (hbar : ℝ) (h : Fin 3 → ℝ) : Matrix (Fin 4) (Fin 4) �
 theorem wignerGenerator_column_sum (hbar : ℝ) (h : Fin 3 → ℝ) (b : Fin 4) :
     ∑ a, wignerGenerator hbar h a b = 0 := by
   fin_cases b <;> simp [wignerGenerator, dot3, cross3, phaseDirection,
-    Fin.sum_univ_four] <;> ring
+    Fin.sum_univ_four] <;> ring_nf
 
 theorem wignerGenerator_skew (hbar : ℝ) (h : Fin 3 → ℝ) (a b : Fin 4) :
     wignerGenerator hbar h a b = -wignerGenerator hbar h b a := by
   fin_cases a <;> fin_cases b <;>
-    simp [wignerGenerator, dot3, cross3, phaseDirection] <;> ring
+    simp [wignerGenerator, dot3, cross3, phaseDirection] <;> ring_nf
 
 theorem pairRate_recovers_wigner_column (hbar : ℝ) (h : Fin 3 → ℝ)
     (b a : Fin 4) :
@@ -84,6 +89,31 @@ theorem synthesis_generator (hbar : ℝ) (h : Fin 3 → ℝ) (w : Fin 4 → ℝ)
       InfoGeometry.Canonical.PauliHestenesSpinMomentum.PauliParavector.pauliMatrix,
       Matrix.mul_apply, Matrix.smul_apply, smul_eq_mul, Matrix.sum_apply,
       Fin.sum_univ_four, Fin.sum_univ_two, Complex.mul_re, Complex.mul_im, hhbar] <;> ring
+
+/-- A normalized pure-state example has a negative quasiprobability coordinate. -/
+theorem negative_quasiprobability_example :
+    analysis (contextProjector (-3/5) (-4/5) 0) 0 = (-1/10 : ℝ) := by
+  norm_num [analysis, phasePoint, phaseDirection, contextProjector,
+    InfoGeometry.Canonical.PauliHestenesSpinMomentum.PauliParavector.pauliMatrix,
+    Matrix.trace, Matrix.mul_apply,
+    Fin.sum_univ_two, Complex.mul_re, Complex.mul_im]
+
+theorem negative_example_idempotent :
+    contextProjector (-3/5) (-4/5) 0 * contextProjector (-3/5) (-4/5) 0 =
+      contextProjector (-3/5) (-4/5) 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> apply Complex.ext <;>
+    norm_num [contextProjector,
+      InfoGeometry.Canonical.PauliHestenesSpinMomentum.PauliParavector.pauliMatrix,
+      Matrix.mul_apply, Fin.sum_univ_two, Complex.mul_re, Complex.mul_im]
+
+/-- A balanced pair intensity reproduces every column of this actual
+Hamiltonian generator, including zero-rate columns. No stochastic convergence is asserted. -/
+theorem hamiltonian_pair_first_moment (hbar : ℝ) (h : Fin 3 → ℝ) (b a : Fin 4) :
+    (∑ c, pairRate (fun d => wignerGenerator hbar h d b) a c) -
+        (∑ c, pairRate (fun d => wignerGenerator hbar h d b) c a) =
+      wignerGenerator hbar h a b := by
+  exact pairRate_recovers_wigner_column hbar h b a
 
 end
 end InfoGeometry.SignedNetwork.QubitWignerBridge

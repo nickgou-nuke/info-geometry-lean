@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBernoulliL2OperatorTransport
@@ -328,6 +333,13 @@ theorem chiralArrowBit_conjugate (a :
         (InfoGeometry.Canonical.CantorCylinderChiral.chiralConj a) =
       !(chiralArrowBit a) := by
   cases a <;> rfl
+
+theorem chiralChildWord_left_ne_right (w : List Bool) :
+    chiralChildWord w
+        InfoGeometry.Canonical.CantorCylinderChiral.ChiralArrow.L ≠
+      chiralChildWord w
+        InfoGeometry.Canonical.CantorCylinderChiral.ChiralArrow.R := by
+  simp [chiralChildWord, chiralArrowBit]
 
 /-- The finite Cuntz word owner realizes a chiral child word as a parent
 word followed by the corresponding branch vector. -/

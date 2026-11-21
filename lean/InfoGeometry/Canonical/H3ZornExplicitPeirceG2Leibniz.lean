@@ -1,7 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.H3ZornExplicitPeirceJordanSoldering
 import InfoGeometry.Canonical.H3ZornSolderingDerivationTransport
+import InfoGeometry.Canonical.G2H3ZornCoordinateSolderingClosure
 import InfoGeometry.Lie.SplitOctonionDerivationWittOrthogonalBridge
 
 noncomputable section
@@ -78,12 +84,30 @@ theorem coordinateJordanLeibniz_explicit (D : G2Derivation)
 
 theorem coordinateJordanLeibniz_all (D : G2Derivation)
     (hD : CoordinateJordanLeibniz D) :
-    CoordinateJordanLeibniz D := hD
+    CoordinateJordanLeibniz D := by
+  intro X Y
+  exact hD X Y
 
 theorem full_g2_f4_compatibility
     (hcoord : ∀ D : G2Derivation, CoordinateJordanLeibniz D) :
     FullEntrywiseG2F4Compatibility := by
   exact full_g2_f4_compatibility_of_coordinate
     (fun D => coordinateJordanLeibniz_all D (hcoord D))
+
+/-- Equivalent concrete closure statement: the compatible subalgebra is all
+of the native 14-dimensional split G2 derivation algebra. -/
+theorem entrywiseCompatibleG2_eq_top :
+    entrywiseCompatibleG2 = ⊤ := by
+  exact InfoGeometry.Canonical.G2H3ZornCoordinateSolderingClosure.entrywiseCompatibleG2_eq_top
+
+/-- The full entrywise G2 action therefore lands in the native F4 derivation
+Lie algebra, with no compatibility subtype restriction remaining. -/
+noncomputable def g2ToF4LieHom :
+    G2Derivation →ₗ⁅ℝ⁆ H3ZornF4Derivations :=
+  InfoGeometry.Canonical.G2H3ZornCoordinateSolderingClosure.fullG2ToF4LieHom
+
+/-- The full G2-to-F4 Lie homomorphism is faithful. -/
+theorem g2ToF4LieHom_injective : Function.Injective g2ToF4LieHom := by
+  exact InfoGeometry.Canonical.G2H3ZornCoordinateSolderingClosure.fullG2ToF4LieHom_injective
 
 end InfoGeometry.Canonical.H3ZornExplicitPeirceG2Leibniz

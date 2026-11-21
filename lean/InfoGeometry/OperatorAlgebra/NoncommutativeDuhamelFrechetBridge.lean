@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.NoncommutativeDuhamelFiniteDifference
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Slope
@@ -74,5 +79,59 @@ theorem exp_add_smul_sub_exp_eq_smul_duhamelDifferenceQuotient
     _ = r • duhamelDifferenceQuotient a h r := by
       rw [intervalIntegral.integral_smul]
       rfl
+
+/--
+The exponential along the real affine line a + r h has the Duhamel
+directional derivative at zero.
+-/
+theorem hasDerivAt_exp_affine_duhamel (a h : A) :
+    HasDerivAt
+      (fun r : ℝ => NormedSpace.exp (a + r • h))
+      (duhamelDerivative a h) 0 := by
+  rw [hasDerivAt_iff_tendsto_slope_zero]
+  rw [← duhamelDifferenceQuotient_zero a h]
+  refine
+    ((continuous_duhamelDifferenceQuotient a h).continuousAt.mono_left
+      inf_le_left).congr' ?_
+  filter_upwards [self_mem_nhdsWithin] with r hr
+  have hr0 : r ≠ 0 := by
+    simpa only [Set.mem_compl_iff, Set.mem_singleton_iff] using hr
+  simp only [zero_add, zero_smul, add_zero]
+  rw [exp_add_smul_sub_exp_eq_smul_duhamelDifferenceQuotient]
+  simp [smul_smul, hr0]
+
+/--
+Pointwise form of the full noncommutative Fréchet--Duhamel identity.
+-/
+theorem exponentialDerivative_apply_eq_duhamelDerivative
+    (a h : A) :
+    exponentialDerivative (𝕜 := ℝ) a h =
+      duhamelDerivative a h := by
+  letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
+  have hLine :
+      HasDerivAt (fun r : ℝ => a + r • h) h 0 := by
+    have h1 := (hasDerivAt_const (x := (0 : ℝ)) a).add
+      ((hasDerivAt_id (x := (0 : ℝ))).smul_const h)
+    rw [zero_add, one_smul] at h1
+    exact h1
+  have hFromFrechet :
+      HasDerivAt
+        (fun r : ℝ => NormedSpace.exp (a + r • h))
+        (exponentialDerivative (𝕜 := ℝ) a h) 0 := by
+    convert
+      (hasFDerivAt_exp_noncommutative (𝕜 := ℝ) (A := A) a).comp_hasDerivAt_of_eq
+        (x := (0 : ℝ)) (y := a) hLine (by simp) using 1 <;>
+      simp [Function.comp_def]
+  exact hFromFrechet.unique (hasDerivAt_exp_affine_duhamel a h)
+
+/--
+Bundled operator identity between the changed-origin real Fréchet derivative
+and the Bochner--Duhamel operator.
+-/
+theorem exponentialDerivative_eq_duhamelDerivative (a : A) :
+    exponentialDerivative (𝕜 := ℝ) a =
+      duhamelDerivative a := by
+  ext h
+  exact exponentialDerivative_apply_eq_duhamelDerivative a h
 
 end InfoGeometry.OperatorAlgebra

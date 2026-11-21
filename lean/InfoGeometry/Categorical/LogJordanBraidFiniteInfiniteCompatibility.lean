@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Categorical.LogJordanBraidGroupInfRepresentation
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -51,5 +56,27 @@ theorem hadjiivanov_finite_infinite_compatibility_hom
   apply ModuleCat.hom_ext
   ext v
   exact hadjiivanov_finite_infinite_compatibility n g v
+
+private theorem compatible_one (n : ℕ) :
+    BraidElementCompatible n 1 :=
+  hadjiivanov_finite_infinite_compatibility n 1
+
+private theorem compatible_mul
+    (n : ℕ) {g h : braid_group (n + 2)}
+    (hg : BraidElementCompatible n g)
+    (hh : BraidElementCompatible n h) :
+    BraidElementCompatible n (g * h) :=
+  hadjiivanov_finite_infinite_compatibility n (g * h)
+
+private theorem compatible_inv
+    (n : ℕ) {g : braid_group (n + 2)}
+    (hg : BraidElementCompatible n g) :
+    BraidElementCompatible n g⁻¹ :=
+  hadjiivanov_finite_infinite_compatibility n g⁻¹
+
+private theorem compatible_sigma
+    (n : ℕ) (i : Fin (n + 1)) :
+    BraidElementCompatible n (σ' (n + 1) i) :=
+  hadjiivanov_finite_infinite_compatibility n (σ' (n + 1) i)
 
 end InfoGeometry.Categorical.LogJordanBraidFiniteInfiniteCompatibility

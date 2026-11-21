@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.External.Auto.KleinBottle
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Pin55ReflectionGlide
@@ -64,5 +69,31 @@ def productGlide (x : ℂ × (Fin 3 → ℝ)) : ℂ × (Fin 3 → ℝ) :=
 theorem productGlide_no_fixed (x : ℂ × (Fin 3 → ℝ)) : productGlide x ≠ x := by
   intro h
   exact existingKleinGlide_no_fixed x.1 (congrArg Prod.fst h)
+
+/-- The fixed-point transformation is nontrivial. -/
+theorem proposedDeck_ne_identity : proposedDeck ≠ id := by
+  intro h
+  have h0 := congrArg (fun f : FiveSpace → FiveSpace => f 0 0) h
+  norm_num [proposedDeck, affineInversion] at h0
+
+theorem productGlide_square (x : ℂ × (Fin 3 → ℝ)) :
+    productGlide (productGlide x) = (x.1 + 2, x.2) := by
+  apply Prod.ext
+  · exact glide_reflection_sq x.1
+  · rfl
+
+/-- The separate pre-existing split pair glide is also fixed-point free.
+It flips two coordinates and is not identified with the five-space inversion. -/
+theorem existingSplitPairGlide_no_fixed
+    (x : InfoGeometry.Clifford.Pin55ReflectionGlide.Split55) :
+    InfoGeometry.Clifford.Pin55ReflectionGlide.glide x ≠ x := by
+  intro h
+  have hp := congrArg
+    (fun y : InfoGeometry.Clifford.Pin55ReflectionGlide.Split55 => y.p 1) h
+  norm_num [InfoGeometry.Clifford.Pin55ReflectionGlide.glide,
+    InfoGeometry.Clifford.Pin55ReflectionGlide.translateP,
+    InfoGeometry.Clifford.Pin55ReflectionGlide.pinReflection,
+    InfoGeometry.Clifford.Pin55ReflectionGlide.addAtOne,
+    InfoGeometry.Clifford.Pin55ReflectionGlide.flipFirst] at hp <;> linarith
 
 end InfoGeometry.Topology.AffineDeckFixedPointSeparation

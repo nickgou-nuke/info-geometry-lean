@@ -748,49 +748,6 @@ theorem four_dvd_hammingWeight_encode :
   rw [hm]
   exact four_dvd_basis_sum (messageSupport m)
 
-private def messageSupport (m : Message) : Finset (Fin 12) :=
-  Finset.univ.filter fun i => m i ≠ 0
-
-private theorem four_dvd_basis_sum :
-    ∀ s : Finset (Fin 12),
-      4 ∣ hammingWeight (∑ i ∈ s, basisWord i) := by
-  intro s
-  induction s using Finset.cons_induction with
-  | empty =>
-      exact ⟨0, by simp [hammingWeight]⟩
-  | cons a s ha ih =>
-      rw [Finset.sum_cons]
-      apply four_dvd_hammingWeight_add
-      · rw [basis_weight_eight a]
-        exact ⟨2, by norm_num⟩
-      · exact ih
-      · rw [dot_sum_right]
-        apply Finset.sum_eq_zero
-        intro j hj
-        exact basis_dot_zero a j
-
-/-- Every extended Golay codeword has Hamming weight divisible by four. -/
-theorem four_dvd_hammingWeight_encode :
-    ∀ m : Message, 4 ∣ hammingWeight (encode m) := by
-  intro m
-  have hm : encode m = ∑ i ∈ messageSupport m, basisWord i := by
-    calc
-      encode m = ∑ i : Fin 12, encode (m i • basisMessage i) := by
-        conv_lhs => rw [message_decomp m]
-        rw [encode_sum]
-      _ = ∑ i : Fin 12,
-          if m i ≠ 0 then basisWord i else 0 := by
-        apply Finset.sum_congr rfl
-        intro i _
-        by_cases hi : m i = 0
-        · simp [hi, encode_zero]
-        · have hi_one : m i = 1 := by
-            rcases F₂_eq_zero_or_one (m i) with hmi | hmi <;> simp_all
-          simp [hi_one, basisWord]
-      _ = ∑ i ∈ messageSupport m, basisWord i := by
-        simp [messageSupport, Finset.sum_filter]
-  rw [hm]
-  exact four_dvd_basis_sum (messageSupport m)
 
 theorem four_dvd_hammingWeight :
     ∀ w ∈ code, 4 ∣ hammingWeight w := by

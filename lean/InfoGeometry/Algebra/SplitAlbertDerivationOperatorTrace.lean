@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.BaezF4H3Zorn
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Trace
@@ -122,5 +127,27 @@ theorem h3Zorn_jordanLmul_operatorTrace_smul (r : ℝ) (X : H3Zorn ℝ) :
       r * LinearMap.trace ℝ (H3Zorn ℝ) (jordanLmul (R := ℝ) X) := by
   rw [h3Zorn_jordanLmul_smul, map_smul]
   rfl
+
+/-- The native `H3ZornF4Derivations` Lie-subalgebra element, bundled as a
+Mathlib nonassociative derivation. -/
+noncomputable def h3ZornF4DerivationBundled
+    (D : H3ZornF4Derivations) :
+    NonAssocDerivation.derivations ℝ (H3Zorn ℝ) :=
+  ⟨D.1, D.2⟩
+
+@[simp] theorem h3ZornF4DerivationBundled_coe
+    (D : H3ZornF4Derivations) :
+    (h3ZornF4DerivationBundled D : Module.End ℝ (H3Zorn ℝ)) = D.1 := by
+  rfl
+
+/-- Consequently, every element of the full installed split-Albert derivation
+Lie subalgebra has zero operator trace after evaluation and left
+multiplication. -/
+theorem h3ZornF4Derivation_jordanLmul_operatorTrace_zero
+    (D : H3ZornF4Derivations)
+    (x : H3Zorn ℝ) :
+    LinearMap.trace ℝ (H3Zorn ℝ)
+      (jordanLmul (R := ℝ) (D.1 x)) = 0 := by
+  exact h3ZornF4_derivation_jordanLmul_operatorTrace_zero D x
 
 end InfoGeometry.Algebra

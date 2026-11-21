@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.BipolarTwoSheetOperatorConnectionBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Information.ModularSurprisalDerivationBridge
@@ -347,5 +352,26 @@ theorem bipolar_logarithmic_adjoint_character_packet
     torusAdjoint_sigmaMinus_eq_minusRootCharacter s,
     plusRootCharacter_bipolar hs,
     minusRootCharacter_bipolar hs⟩
+
+/-- Alias for the logarithmic Cartan generator under its PR-facing name. -/
+abbrev logarithmicCartanGenerator : ℂ → Matrix2C := bipolarLogarithmicCartan
+
+/-- Exact scalar normal form of the logarithmic Cartan generator. -/
+theorem logarithmicCartanGenerator_eq_half_bipolarLog_sigma3 (s : ℂ) :
+    logarithmicCartanGenerator s = (bipolarLog s / 2) • σ3c := by
+  exact bipolarLogarithmicCartan_eq_half_bipolarLog_sigma3 s
+
+/-- The integrated adjoint flow has weight `exp(W)` on the plus parabolic sheet. -/
+theorem finiteAdjointFlow_sigmaPlus_eq_plusRootCharacter (s : ℂ) :
+    finiteAdjointFlow s σPlus =
+      plusRootCharacter (bipolarLog s) • σPlus := by
+  exact torusAdjoint_sigmaPlus_eq_plusRootCharacter s
+
+/-- Finite conjugation on the minus root space is exactly the negative root
+character evaluated at the logarithmic weight. -/
+theorem finiteAdjointFlow_sigmaMinus_eq_minusRootCharacter (s : ℂ) :
+    finiteAdjointFlow s σMinus =
+      minusRootCharacter (bipolarLog s) • σMinus := by
+  exact torusAdjoint_sigmaMinus_eq_minusRootCharacter s
 
 end InfoGeometry.Canonical.BipolarLogarithmicDerivationBridge

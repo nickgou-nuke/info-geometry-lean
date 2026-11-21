@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.BipolarTwoSheetParabolicCausalBoundaryBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BipolarLogSL2
@@ -246,5 +251,63 @@ theorem two_sheet_cartan_weight_packet :
   exact ⟨Kboost_comm_sigmaPlus, Kboost_comm_sigmaMinus,
     Kcirc_comm_sigmaPlus, Kcirc_comm_sigmaMinus,
     canonical_connection_wedge_eta_theta_zero⟩
+
+
+/-- The logarithmic Cartan generator indexed directly by the complex period. -/
+def logarithmicCartanGenerator (s : ℂ) : M2C := bipolarLogarithmicCartan s
+
+/-- The scalar eigenvalue on the plus parabolic sheet. -/
+def plusCartanWeight (s : ℂ) : ℂ := (eta s : ℂ) + (theta s : ℂ) * Complex.I
+
+/-- The minus-sheet eigenvalue is the negative plus-sheet weight. -/
+def minusCartanWeight (s : ℂ) : ℂ := -plusCartanWeight s
+
+theorem plusCartanWeight_eq_bipolarLog (s : ℂ) : plusCartanWeight s = bipolarLog s := by
+  simpa [plusCartanWeight, eta, theta] using Complex.re_add_im (bipolarLog s)
+
+/-- Reversed product of the two scalar half-weights. -/
+theorem minusWeight_mul_plusWeight (s : ℂ) : minusWeight s * plusWeight s = 1 := by
+  rw [mul_comm, plusWeight_mul_minusWeight]
+
+/-- The finite adjoint flow on the plus sheet (unconditional complex-log weight). -/
+theorem finiteAdjointFlow_sigmaPlus (s : ℂ) :
+    finiteAdjointFlow s σPlus = Complex.exp (bipolarLog s) • σPlus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [finiteAdjointFlow, torusAdjoint, halfLogLift, halfLogLiftInv, plusWeight,
+      minusWeight, σPlus, Matrix.mul_apply, Fin.sum_univ_two, ← Complex.exp_add,
+      Matrix.smul_apply] <;> ring_nf
+
+/-- The finite adjoint flow on the minus sheet (opposite complex-log weight). -/
+theorem finiteAdjointFlow_sigmaMinus (s : ℂ) :
+    finiteAdjointFlow s σMinus = Complex.exp (-bipolarLog s) • σMinus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [finiteAdjointFlow, torusAdjoint, halfLogLift, halfLogLiftInv, plusWeight,
+      minusWeight, σMinus, Matrix.mul_apply, Fin.sum_univ_two, ← Complex.exp_add,
+      Matrix.smul_apply] <;> ring_nf
+
+/-- Closed scalar-to-operator bridge: infinitesimal weights `±W` and finite weights `q^{±1}`. -/
+theorem logarithmic_cartan_adjoint_flow_packet {s : ℂ} (hs : s ∈ punctured01) :
+    (logarithmicCartanGenerator s * σPlus - σPlus * logarithmicCartanGenerator s =
+      bipolarLog s • σPlus) ∧
+    (logarithmicCartanGenerator s * σMinus - σMinus * logarithmicCartanGenerator s =
+      (-bipolarLog s) • σMinus) ∧
+    finiteAdjointFlow s σPlus = crossRatio01 s • σPlus ∧
+    finiteAdjointFlow s σMinus = (crossRatio01 s)⁻¹ • σMinus := by
+  constructor
+  · rw [logarithmicCartanGenerator, bipolarLogarithmicCartan_comm_sigmaPlus]
+    congr 1
+    calc
+      (eta s : ℂ) + Complex.I * (theta s : ℂ) = plusCartanWeight s := by
+        simp [plusCartanWeight, mul_comm]
+      _ = bipolarLog s := plusCartanWeight_eq_bipolarLog s
+  constructor
+  · rw [logarithmicCartanGenerator, bipolarLogarithmicCartan_comm_sigmaMinus]
+    congr 1
+    rw [← plusCartanWeight_eq_bipolarLog s]
+    simp [minusCartanWeight, plusCartanWeight, mul_comm]
+  exact ⟨finiteAdjointFlow_sigmaPlus_eq_crossRatio hs,
+    finiteAdjointFlow_sigmaMinus_eq_crossRatio_inv hs⟩
 
 end InfoGeometry.Canonical.BipolarTwoSheetOperatorConnectionBridge

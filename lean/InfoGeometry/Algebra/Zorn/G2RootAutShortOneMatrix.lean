@@ -35,14 +35,14 @@ open InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
 open InfoGeometry.Algebra.Zorn.G2TwoRootSystem
 open InfoGeometry.Algebra.Zorn.G2Unipotent
 
-/-- The PC exponent `[0,0,1,0,0,0]`. -/
-def shortOnePCExp : PCWordExp := oneAt 2
+/-- The PC exponent `[0,0,0,1,0,0]`. -/
+def shortOnePCExp : PCWordExp := oneAt 3
 
 /-- The canonical PC word `[0,0,1,0,0,0]` is the third PC generator. -/
 theorem pcWord_shortOnePCExp_eq_pc3Aut :
     G2TwoSylowSubgroup.pcWord shortOnePCExp = pc3Aut := by
   dsimp [shortOnePCExp]
-  simpa [pcGenerator] using pcWord_oneAt_eq_generator (2 : Fin 6)
+  simpa [pcGenerator] using pcWord_oneAt_eq_generator (3 : Fin 6)
 
 def shortOneCorrectedPCExp : Fin 6 → Bool := oneAt 3
 

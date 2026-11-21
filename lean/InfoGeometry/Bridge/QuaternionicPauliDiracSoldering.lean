@@ -1,7 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import InfoGeometry.Canonical.PauliHestenesSpinMomentum
 import InfoGeometry.Canonical.BiQuaternionKahlerFinite
+import InfoGeometry.Canonical.PauliHestenesSpinMomentum
+
 
 /-!
 # Quaternionic Pauli--Dirac soldering
@@ -88,6 +94,68 @@ theorem soldered_chiralWeylOperator_sq_apply
   rcases ψ with ⟨ψL, ψR⟩
   ext i <;> simp [Matrix.smul_mulVec]
 
+
+
+/-- The Pauli chirality grading and its Peirce/circular generators. -/
+def chirality : PauliBlock := !![(1 : ℂ), 0; 0, -1]
+def chiralPlus : PauliBlock := !![(1 : ℂ), 0; 0, 0]
+def chiralMinus : PauliBlock := !![(0 : ℂ), 0; 0, 1]
+def circularPlus : PauliBlock := !![(0 : ℂ), 1; 0, 0]
+def circularMinus : PauliBlock := !![(0 : ℂ), 0; 1, 0]
+
+theorem coSolderingMap_isHermitian (P : PauliParavector) :
+    (coSolderingMap P).IsHermitian := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [coSolderingMap, Matrix.conjTranspose_apply, Complex.conj_I] <;> ring
+
+theorem chirality_sq : chirality * chirality = 1 := by
+  ext i j; fin_cases i <;> fin_cases j <;>
+    simp [chirality, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem chiralPlus_sq : chiralPlus * chiralPlus = chiralPlus := by
+  ext i j; fin_cases i <;> fin_cases j <;>
+    simp [chiralPlus, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem chiralMinus_sq : chiralMinus * chiralMinus = chiralMinus := by
+  ext i j; fin_cases i <;> fin_cases j <;>
+    simp [chiralMinus, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem chiral_projectors_complete : chiralPlus + chiralMinus = 1 := by
+  ext i j; fin_cases i <;> fin_cases j <;> simp [chiralPlus, chiralMinus]
+
+theorem chiral_projectors_orthogonal :
+    chiralPlus * chiralMinus = 0 ∧ chiralMinus * chiralPlus = 0 := by
+  constructor <;> ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [chiralPlus, chiralMinus, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp] theorem circularPlus_sq_zero : circularPlus * circularPlus = 0 := by
+  ext i j; fin_cases i <;> fin_cases j <;>
+    simp [circularPlus, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp] theorem circularMinus_sq_zero : circularMinus * circularMinus = 0 := by
+  ext i j; fin_cases i <;> fin_cases j <;>
+    simp [circularMinus, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp] theorem circular_car :
+    circularPlus * circularMinus + circularMinus * circularPlus = 1 := by
+  ext i j; fin_cases i <;> fin_cases j <;>
+    simp [circularPlus, circularMinus, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem circular_peirce_transport :
+    chiralPlus * circularPlus * chiralMinus = circularPlus ∧
+    chiralMinus * circularMinus * chiralPlus = circularMinus := by
+  constructor <;> ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [chiralPlus, chiralMinus, circularPlus, circularMinus,
+      Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem chirality_circular_commutators :
+    chirality * circularPlus - circularPlus * chirality = (2 : ℂ) • circularPlus ∧
+    chirality * circularMinus - circularMinus * chirality = (-2 : ℂ) • circularMinus := by
+  constructor <;> ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [chirality, circularPlus, circularMinus, Matrix.mul_apply, Fin.sum_univ_two] <;> norm_num
+
+
 namespace QuaternionicOperators
 
 open InfoGeometry.Canonical.BiQuaternionKahlerFinite
@@ -97,13 +165,51 @@ def I : Module.End ℝ Carrier := I4c.mulVecLin
 def J : Module.End ℝ Carrier := J4c.mulVecLin
 def K : Module.End ℝ Carrier := K4c.mulVecLin
 
+@[simp] theorem I_sq : I.comp I = -(LinearMap.id : Module.End ℝ Carrier) := by
+  apply LinearMap.ext
+  intro x
+  change InfoGeometry.Canonical.BiQuaternionKahlerFinite.I4c.mulVec
+      (InfoGeometry.Canonical.BiQuaternionKahlerFinite.I4c.mulVec x) = -x
+  rw [mulVec_mulVec, InfoGeometry.Canonical.BiQuaternionKahlerFinite.I4c_sq]
+  ext i
+  fin_cases i <;> simp [Matrix.mulVec, dotProduct, Fin.sum_univ_four]
+
+@[simp] theorem J_sq : J.comp J = -(LinearMap.id : Module.End ℝ Carrier) := by
+  apply LinearMap.ext
+  intro x
+  change InfoGeometry.Canonical.BiQuaternionKahlerFinite.J4c.mulVec
+      (InfoGeometry.Canonical.BiQuaternionKahlerFinite.J4c.mulVec x) = -x
+  rw [mulVec_mulVec, InfoGeometry.Canonical.BiQuaternionKahlerFinite.J4c_sq]
+  ext i
+  fin_cases i <;> simp [Matrix.mulVec, dotProduct, Fin.sum_univ_four]
+
+@[simp] theorem K_sq : K.comp K = -(LinearMap.id : Module.End ℝ Carrier) := by
+  apply LinearMap.ext
+  intro x
+  change InfoGeometry.Canonical.BiQuaternionKahlerFinite.K4c.mulVec
+      (InfoGeometry.Canonical.BiQuaternionKahlerFinite.K4c.mulVec x) = -x
+  rw [mulVec_mulVec, InfoGeometry.Canonical.BiQuaternionKahlerFinite.K4c_sq]
+  ext i
+  fin_cases i <;> simp [Matrix.mulVec, dotProduct, Fin.sum_univ_four]
+
+@[simp] theorem J_comp_I : J.comp I = -K := by
+  apply LinearMap.ext
+  intro x
+  change InfoGeometry.Canonical.BiQuaternionKahlerFinite.J4c.mulVec
+      (InfoGeometry.Canonical.BiQuaternionKahlerFinite.I4c.mulVec x) =
+    -(InfoGeometry.Canonical.BiQuaternionKahlerFinite.K4c.mulVec x)
+  rw [mulVec_mulVec, InfoGeometry.Canonical.BiQuaternionKahlerFinite.J4c_mul_I4c]
+  ext i
+  fin_cases i <;> simp [Matrix.mulVec, dotProduct, Fin.sum_univ_four]
+
+
 theorem I_comp_J : I.comp J = K := by
   apply LinearMap.ext
   intro x
   change I4c.mulVec (J4c.mulVec x) = K4c.mulVec x
   calc
     I4c.mulVec (J4c.mulVec x) = (I4c * J4c).mulVec x := by
-      rw [Matrix.mulVec_mulVec]
+      rw [mulVec_mulVec]
     _ = K4c.mulVec x := by rw [I4c_mul_J4c]
 
 theorem commute_third_quaternionic_axis

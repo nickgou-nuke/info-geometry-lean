@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonion1331ExteriorDiracSouriauBridge
@@ -37,6 +42,82 @@ def exteriorDegreeProjector1331 (k : ℕ) : Exterior3 →ₗ[ℝ] Exterior3 :=
   exterior3PeirceBasis.equivFun.symm.toLinearMap.comp
     ((degreeCoordinateProjector k).comp exterior3PeirceBasis.equivFun.toLinearMap)
 
+@[simp] theorem exterior3PeirceBasis_equivFun_basis (i : Fin 8) :
+    exterior3PeirceBasis.equivFun (exterior3PeirceBasis i) = Pi.single i 1 := by
+  ext j
+  by_cases h : i = j
+  · subst j
+    simp [Module.Basis.equivFun_self]
+  · have h' : j ≠ i := fun hji => h hji.symm
+    simp [Module.Basis.equivFun_self, h, h']
+
+/-- Exact basis action of the transported exterior-degree projector. -/
+theorem exteriorDegreeProjector1331_basis (k : ℕ) (i : Fin 8) :
+    exteriorDegreeProjector1331 k (exterior3PeirceBasis i) =
+      if exteriorDegree1331 i = k then exterior3PeirceBasis i else 0 := by
+  apply (exterior3PeirceBasis.equivFun.toEquiv.symm_apply_eq).2
+  change degreeCoordinateProjector k (exterior3PeirceBasis.equivFun (exterior3PeirceBasis i)) =
+    exterior3PeirceBasis.equivFun
+      (if exteriorDegree1331 i = k then exterior3PeirceBasis i else 0)
+  by_cases h : exteriorDegree1331 i = k
+  · rw [if_pos h, exterior3PeirceBasis_equivFun_basis]
+    ext j
+    by_cases hji : j = i
+    · subst j
+      simp [degreeCoordinateProjector, h]
+    · simp [degreeCoordinateProjector, hji]
+  · rw [if_neg h]
+    simp only [map_zero]
+    ext j
+    by_cases hjk : exteriorDegree1331 j = k
+    · have hij : i ≠ j := by
+        intro hij
+        subst j
+        exact h hjk
+      simp [degreeCoordinateProjector, hjk, hij]
+    · simp [degreeCoordinateProjector, hjk]
+
+/-- The four degree projectors resolve the identity on the full 8-dimensional
+three-mode exterior carrier. -/
+theorem exteriorDegreeProjector1331_sum_eq_id :
+    exteriorDegreeProjector1331 0 + exteriorDegreeProjector1331 1 +
+        exteriorDegreeProjector1331 2 + exteriorDegreeProjector1331 3 =
+      LinearMap.id := by
+  apply exterior3PeirceBasis.ext
+  intro i
+  fin_cases i <;> simp [exteriorDegreeProjector1331_basis, exteriorDegree1331]
+
+/-- Each transported degree projector is idempotent. -/
+theorem exteriorDegreeProjector1331_idempotent (k : ℕ) :
+    (exteriorDegreeProjector1331 k).comp (exteriorDegreeProjector1331 k) =
+      exteriorDegreeProjector1331 k := by
+  apply exterior3PeirceBasis.ext
+  intro i
+  by_cases h : exteriorDegree1331 i = k <;>
+    simp [LinearMap.comp_apply, exteriorDegreeProjector1331_basis, h]
+
+/-- Distinct exterior-degree projectors are orthogonal. -/
+theorem exteriorDegreeProjector1331_orthogonal
+    {k l : ℕ} (hkl : k ≠ l) :
+    (exteriorDegreeProjector1331 k).comp (exteriorDegreeProjector1331 l) = 0 := by
+  apply exterior3PeirceBasis.ext
+  intro i
+  by_cases hk : exteriorDegree1331 i = k
+  · have hl : exteriorDegree1331 i ≠ l := by
+      intro hil
+      exact hkl (hk.symm.trans hil)
+    simp [LinearMap.comp_apply, exteriorDegreeProjector1331_basis, hk, hl,
+      if_neg (fun h => hkl h), LinearMap.map_zero]
+  · by_cases hil : exteriorDegree1331 i = l
+    · calc
+        (exteriorDegreeProjector1331 k ∘ₗ exteriorDegreeProjector1331 l) (exterior3PeirceBasis i)
+          = exteriorDegreeProjector1331 k (exteriorDegreeProjector1331 l (exterior3PeirceBasis i)) := rfl
+        _ = exteriorDegreeProjector1331 k (exterior3PeirceBasis i) := by
+          rw [exteriorDegreeProjector1331_basis]; simp [hil]
+        _ = 0 := by
+          rw [exteriorDegreeProjector1331_basis]; simp [hk]
+    · simp [LinearMap.comp_apply, exteriorDegreeProjector1331_basis, hk, hil, LinearMap.map_zero]
+
 theorem exteriorDegree1331_packet :
     exteriorDegree1331 0 = 0 ∧
       (∀ i : Fin 3, exteriorDegree1331 ⟨i.1 + 1, by omega⟩ = 1) ∧
@@ -54,6 +135,20 @@ theorem peirceDegreeOne_from_vacuum (i : Fin 3) :
 theorem firstThree_dual_channels_mem_vacuum_annihilator (i : Fin 3) :
     (0, dualBasisVector (firstThreeIndex i)) ∈ neutralAnnihilator (1 : Spinor) :=
   dual_channel_mem_vacuum_neutralAnnihilator i
+
+/-- Combined compatibility statement between the degree-zero exterior vacuum,
+its three degree-one creation directions, and the selected pure-spinor
+annihilator channels. -/
+theorem vacuum_degreeOne_annihilator_1331_packet (i : Fin 3) :
+    exteriorDegree1331 0 = 0 ∧
+    exteriorDegree1331 ⟨i.1 + 1, by omega⟩ = 1 ∧
+    exteriorWedge3 (Pi.single i 1) (exterior3PeirceBasis 0) =
+      exterior3PeirceBasis ⟨i.1 + 1, by omega⟩ ∧
+    (0, dualBasisVector (firstThreeIndex i)) ∈
+      neutralAnnihilator (1 : Spinor) := by
+  refine ⟨rfl, ?_, peirceDegreeOne_from_vacuum i,
+    firstThree_dual_channels_mem_vacuum_annihilator i⟩
+  fin_cases i <;> rfl
 
 theorem vacuum_1331_maximalNeutralGrassmannian_readout :
     projectivePureSpinorGrassmannianPoint

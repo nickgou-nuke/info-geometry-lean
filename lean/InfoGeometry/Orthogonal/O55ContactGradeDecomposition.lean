@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Orthogonal.O55ContactMultiGrading
+import InfoGeometry.Orthogonal.O55ContactFiveGrading
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! The five contact-degree projections of an endomorphism. -/
@@ -307,5 +313,22 @@ theorem grade_projection_membership (A : O55Lie) :
       change endCommutator contactEulerEnd (gradePlusTwoPart (A : End55)) =
         ((2 : ℤ) : ℝ) • gradePlusTwoPart (A : End55)
       simpa using gradePlusTwoPart_grade (A : End55)⟩
+
+
+theorem five_grade_reconstruction (A : O55Lie) :
+    A = gradeMinusTwoProjection A + gradeMinusOneProjection A + gradeZeroProjection A +
+      gradePlusOneProjection A + gradePlusTwoProjection A := by
+  exact grade_projection_reconstruct A
+
+theorem exact_five_grading_packet (A : O55Lie) :
+    A = gradeMinusTwoProjection A + gradeMinusOneProjection A + gradeZeroProjection A +
+        gradePlusOneProjection A + gradePlusTwoProjection A ∧
+      gradeMinusTwoProjection A ∈ realContactGradeSpace (-2) ∧
+      gradeMinusOneProjection A ∈ realContactGradeSpace (-1) ∧
+      gradeZeroProjection A ∈ realContactGradeSpace 0 ∧
+      gradePlusOneProjection A ∈ realContactGradeSpace 1 ∧
+      gradePlusTwoProjection A ∈ realContactGradeSpace 2 := by
+  rcases grade_projection_membership A with ⟨h₂m, h₁m, h₀, h₁, h₂⟩
+  exact ⟨five_grade_reconstruction A, h₂m, h₁m, h₀, h₁, h₂⟩
 
 end InfoGeometry.Orthogonal.O55Contact

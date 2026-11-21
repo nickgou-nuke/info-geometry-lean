@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.NoncommutativeDuhamelFiniteDifference
+import InfoGeometry.OperatorAlgebra.NoncommutativeDuhamelDerivative
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Slope
 import Mathlib.MeasureTheory.Integral.DominatedConvergence
@@ -79,26 +80,6 @@ theorem exp_add_smul_sub_exp_eq_smul_duhamelDifferenceQuotient
     _ = r • duhamelDifferenceQuotient a h r := by
       rw [intervalIntegral.integral_smul]
       rfl
-
-/--
-The exponential along the real affine line a + r h has the Duhamel
-directional derivative at zero.
--/
-theorem hasDerivAt_exp_affine_duhamel (a h : A) :
-    HasDerivAt
-      (fun r : ℝ => NormedSpace.exp (a + r • h))
-      (duhamelDerivative a h) 0 := by
-  rw [hasDerivAt_iff_tendsto_slope_zero]
-  rw [← duhamelDifferenceQuotient_zero a h]
-  refine
-    ((continuous_duhamelDifferenceQuotient a h).continuousAt.mono_left
-      inf_le_left).congr' ?_
-  filter_upwards [self_mem_nhdsWithin] with r hr
-  have hr0 : r ≠ 0 := by
-    simpa only [Set.mem_compl_iff, Set.mem_singleton_iff] using hr
-  simp only [zero_add, zero_smul, add_zero]
-  rw [exp_add_smul_sub_exp_eq_smul_duhamelDifferenceQuotient]
-  simp [smul_smul, hr0]
 
 /--
 Pointwise form of the full noncommutative Fréchet--Duhamel identity.

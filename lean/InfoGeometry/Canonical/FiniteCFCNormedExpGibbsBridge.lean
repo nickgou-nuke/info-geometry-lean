@@ -1,6 +1,15 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.ExpLog.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteMatrixGibbsOperatorReadout
+import InfoGeometry.Canonical.MatrixGibbsEntropy
+import InfoGeometry.Canonical.NoncommutativeGibbsFaithfulNormalizationBridge
+import InfoGeometry.OperatorAlgebra.PeirceSpine.TwoSheetFunctionalCalculus
+import InfoGeometry.TraceFormula.OperatorialISColimitFramework
 
 /-!
 # Canonical finite CFC Gibbs readout
@@ -40,4 +49,58 @@ theorem normalizedCFCDensity_readout
         hH.cfc (expWeight β)) := by
   rfl
 
+
+/-- The CFC Gibbs weight is exactly the Banach-algebra exponential. -/
+theorem cfcGibbsDensity_eq_normedSpace_exp
+    {n : Type*} [Fintype n] [DecidableEq n]
+    (H : Matrix n n ℂ) (hH : H.IsHermitian) (β : ℝ) :
+    gibbsDensity H hH β = NormedSpace.exp ((-β : ℝ) • H) := by
+  exact InfoGeometry.Canonical.MatrixGibbsEntropy.gibbsDensity_eq_exp_neg_smul H hH β
+
+theorem cfcPartition_eq_normedSpaceExpPartition
+    {n : Type*} [Fintype n] [DecidableEq n]
+    (H : Matrix n n ℂ) (hH : H.IsHermitian) (β : ℝ) :
+    Matrix.trace (gibbsDensity H hH β) =
+      Matrix.trace (NormedSpace.exp ((-β : ℝ) • H)) := by
+  rw [cfcGibbsDensity_eq_normedSpace_exp H hH β]
+
+noncomputable def cfcNormalizedGibbsDensity
+    {n : Type*} [Fintype n] [DecidableEq n]
+    (H : Matrix n n ℂ) (hH : H.IsHermitian) (β : ℝ) : Matrix n n ℂ :=
+  (Matrix.trace (gibbsDensity H hH β))⁻¹ • gibbsDensity H hH β
+
+noncomputable def normedExpNormalizedGibbsDensity
+    {n : Type*} [Fintype n] [DecidableEq n]
+    (H : Matrix n n ℂ) (β : ℝ) : Matrix n n ℂ :=
+  (Matrix.trace (NormedSpace.exp ((-β : ℝ) • H)))⁻¹ •
+    NormedSpace.exp ((-β : ℝ) • H)
+
+theorem cfcNormalizedGibbsDensity_eq_normedExpNormalizedGibbsDensity
+    {n : Type*} [Fintype n] [DecidableEq n]
+    (H : Matrix n n ℂ) (hH : H.IsHermitian) (β : ℝ) :
+    cfcNormalizedGibbsDensity H hH β = normedExpNormalizedGibbsDensity H β := by
+  unfold cfcNormalizedGibbsDensity normedExpNormalizedGibbsDensity
+  rw [cfcGibbsDensity_eq_normedSpace_exp H hH β]
+
+theorem matrixOp_cfcGibbsDensity_eq_normedSpaceExpWeight
+    {n : Type*} [Fintype n] [DecidableEq n]
+    (H : Matrix n n ℂ) (hH : H.IsHermitian) (β : ℝ) :
+    matrixOp (gibbsDensity H hH β) =
+      matrixOp (NormedSpace.exp ((-β : ℝ) • H)) := by
+  exact congrArg matrixOp (cfcGibbsDensity_eq_normedSpace_exp H hH β)
+
+theorem matrixOp_cfcNormalizedGibbsDensity_eq_normedExpNormalizedGibbsDensity
+    {n : Type*} [Fintype n] [DecidableEq n]
+    (H : Matrix n n ℂ) (hH : H.IsHermitian) (β : ℝ) :
+    matrixOp (cfcNormalizedGibbsDensity H hH β) =
+      matrixOp (normedExpNormalizedGibbsDensity H β) := by
+  exact congrArg matrixOp
+    (cfcNormalizedGibbsDensity_eq_normedExpNormalizedGibbsDensity H hH β)
+
+theorem matrixOfOp_matrixOp_cfcGibbsDensity
+    {n : Type*} [Fintype n] [DecidableEq n]
+    (H : Matrix n n ℂ) (hH : H.IsHermitian) (β : ℝ) :
+    matrixOfOp (matrixOp (gibbsDensity H hH β)) =
+      NormedSpace.exp ((-β : ℝ) • H) := by
+  rw [matrixOfOp_matrixOp, cfcGibbsDensity_eq_normedSpace_exp H hH β]
 end InfoGeometry.Canonical.FiniteCFCNormedExpGibbsBridge

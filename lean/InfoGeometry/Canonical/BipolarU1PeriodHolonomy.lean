@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Analysis.BipolarCircleEnclosurePeriods
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.Circle
@@ -156,5 +161,67 @@ theorem u1Holonomy_half_origin_sq :
     u1Holonomy (1 / 2 : ℝ) originWinding *
         u1Holonomy (1 / 2 : ℝ) originWinding = 1 := by
   rw [u1Holonomy_half_origin, halfFluxPhase_sq]
+
+
+@[simp] theorem angularPeriodHom_apply (w : WindingPair) :
+    angularPeriodHom w = angularPeriod w := rfl
+
+/-- The coupled angular period as a homomorphism. -/
+def coupledAngularPeriodHom (α : ℝ) : WindingPair →+ ℝ where
+  toFun w := α * angularPeriod w
+  map_zero' := by rw [angularPeriod_zero, mul_zero]
+  map_add' u v := by rw [angularPeriod_add, mul_add]
+
+@[simp] theorem coupledAngularPeriodHom_apply (α : ℝ) (w : WindingPair) :
+    coupledAngularPeriodHom α w = α * angularPeriod w := rfl
+
+/-- Analytic and algebraic holonomy agree for a small circle around `0`. -/
+theorem contourU1Holonomy_origin_eq_winding
+    (α : ℝ) {r : ℝ} (hr0 : 0 < r) (hr1 : r < 1) :
+    contourU1Holonomy α 0 r = u1Holonomy α originWinding :=
+  contourU1Holonomy_origin hr0 hr1
+
+/-- Analytic and algebraic holonomy agree for a small circle around `1`. -/
+theorem contourU1Holonomy_one_eq_winding
+    (α : ℝ) {r : ℝ} (hr0 : 0 < r) (hr1 : r < 1) :
+    contourU1Holonomy α 1 r = u1Holonomy α oneWinding :=
+  contourU1Holonomy_one hr0 hr1
+
+/-- Unit-coupled elementary contour holonomies are trivial. -/
+theorem contourU1Holonomy_unit_elementary
+    {r : ℝ} (hr0 : 0 < r) (hr1 : r < 1) :
+    contourU1Holonomy 1 0 r = 1 ∧ contourU1Holonomy 1 1 r = 1 := by
+  exact ⟨by
+      rw [contourU1Holonomy_origin_eq_winding 1 hr0 hr1, u1Holonomy_unit_coupling],
+    by
+      rw [contourU1Holonomy_one_eq_winding 1 hr0 hr1, u1Holonomy_unit_coupling]⟩
+
+/-- Half-coupled origin contour has nontrivial order-two holonomy. -/
+theorem contourU1Holonomy_half_origin_ne_one
+    {r : ℝ} (hr0 : 0 < r) (hr1 : r < 1) :
+    contourU1Holonomy (1 / 2 : ℝ) 0 r ≠ 1 := by
+  rw [contourU1Holonomy_origin_eq_winding (1 / 2 : ℝ) hr0 hr1]
+  exact u1Holonomy_half_origin_ne_one
+
+/-- Compact scalar period-holonomy packet. -/
+theorem bipolar_u1_period_holonomy_packet
+    (α : ℝ) (w : WindingPair) {r : ℝ} (hr0 : 0 < r) (hr1 : r < 1) :
+    circulationPeriod w = (angularPeriod w : ℂ) * Complex.I ∧
+      u1Holonomy α (originWinding + oneWinding) = 1 ∧
+      contourU1Holonomy α 0 r = u1Holonomy α originWinding ∧
+      contourU1Holonomy α 1 r = u1Holonomy α oneWinding ∧
+      u1Holonomy 1 w = 1 ∧
+      u1Holonomy (1 / 2 : ℝ) originWinding ≠ 1 ∧
+      u1Holonomy (1 / 2 : ℝ) originWinding * u1Holonomy (1 / 2 : ℝ) originWinding = 1 := by
+  refine ⟨circulationPeriod_eq_angularPeriod_mul_I w, ?_,
+    contourU1Holonomy_origin_eq_winding α hr0 hr1,
+    contourU1Holonomy_one_eq_winding α hr0 hr1,
+    u1Holonomy_unit_coupling w, u1Holonomy_half_origin_ne_one,
+    u1Holonomy_half_origin_sq⟩
+  rw [u1Holonomy_apply]
+  have hp : angularPeriod (originWinding + oneWinding) = 0 := by
+    rw [angularPeriod_add, angularPeriod_origin, angularPeriod_one]
+    ring
+  rw [hp, mul_zero, Circle.exp_zero]
 
 end InfoGeometry.Canonical.BipolarU1PeriodHolonomy

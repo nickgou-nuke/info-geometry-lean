@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.SplitAtomInvolutions
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.BilinearForm.Basic
@@ -26,25 +31,25 @@ def metric : LinearMap.BilinForm ℝ Mat2 where
   toFun A :=
     { toFun := metricValue A
       map_add' B C := by
-        simp [metricValue, Matrix.add_apply]; ring
+        simp [metricValue, Matrix.add_apply]; ring_nf
       map_smul' r B := by
-        simp [metricValue, Matrix.smul_apply]; ring }
+        simp [metricValue, Matrix.smul_apply]; ring_nf }
   map_add' A B := by
     ext C
-    simp [metricValue, Matrix.add_apply]; ring
+    simp [metricValue, Matrix.add_apply]; ring_nf
   map_smul' r A := by
     ext B
-    simp [metricValue, Matrix.smul_apply]; ring
+    simp [metricValue, Matrix.smul_apply]; ring_nf
 
 @[simp] theorem metric_apply (A B : Mat2) :
     metric A B =
       (A 0 0 * B 1 1 + A 1 1 * B 0 0 - A 0 1 * B 1 0 - A 1 0 * B 0 1) / 2 := rfl
 
 theorem metric_symm (A B : Mat2) : metric A B = metric B A := by
-  simp only [metric_apply]; ring
+  simp only [metric_apply]; ring_nf
 
 theorem metric_self (A : Mat2) : metric A A = A.det := by
-  simp [Matrix.det_fin_two]; ring
+  simp [Matrix.det_fin_two]; ring_nf
 
 /-- In the split-quaternion coordinates, the metric is diag(1,1,-1,-1). -/
 theorem metric_signature_formula (a b c d : ℝ) :
@@ -52,7 +57,7 @@ theorem metric_signature_formula (a b c d : ℝ) :
       (a • 1 + b • I + c • J + d • K) = a ^ 2 + b ^ 2 - c ^ 2 - d ^ 2 := by
   simp [I, J, K, InfoGeometry.Clifford.Cl11Matrix.Eminus,
     InfoGeometry.Clifford.Cl11Matrix.Eplus, InfoGeometry.Clifford.Cl11Matrix.J1]
-  ring
+  ring_nf
 
 /-- Left multiplication is a native linear endomorphism. -/
 def leftAction (u : Mat2) : Module.End ℝ Mat2 where
@@ -65,7 +70,7 @@ def leftAction (u : Mat2) : Module.End ℝ Mat2 where
 theorem metric_left_scaling (u A B : Mat2) :
     metric (u * A) (u * B) = u.det * metric A B := by
   simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.det_fin_two]
-  ring
+  ring_nf
 
 theorem metric_I (A B : Mat2) : metric (I * A) (I * B) = metric A B := by
   rw [metric_left_scaling]
@@ -79,3 +84,92 @@ theorem metric_K (A B : Mat2) : metric (K * A) (K * B) = -metric A B := by
   rw [metric_left_scaling]
   norm_num [K, InfoGeometry.Clifford.Cl11Matrix.J1, Matrix.det_fin_two]
 
+
+
+theorem metric_left_nondegenerate (A : Mat2)
+    (h : ∀ B : Mat2, metric A B = 0) : A = 0 := by
+  have h1 := h 1
+  have hI := h I
+  have hJ := h J
+  have hK := h K
+  simp [I, J, K, InfoGeometry.Clifford.Cl11Matrix.Eminus,
+    InfoGeometry.Clifford.Cl11Matrix.Eplus,
+    InfoGeometry.Clifford.Cl11Matrix.J1] at h1 hI hJ hK
+  have h00 : A 0 0 = 0 := by linarith
+  have h01 : A 0 1 = 0 := by linarith
+  have h10 : A 1 0 = 0 := by linarith
+  have h11 : A 1 1 = 0 := by linarith
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [h00, h01, h10, h11]
+
+/-- Precomposition of the first slot by an actual linear endomorphism. -/
+def omega (u : Mat2) : LinearMap.BilinForm ℝ Mat2 where
+  toFun A :=
+    { toFun := fun B => metric (u * A) B
+      map_add' := by intro B C; simp; ring_nf
+      map_smul' := by intro r B; simp }
+  map_add' A B := by
+    ext C
+    simp [Matrix.mul_apply, Fin.sum_univ_two, add_mul]; ring_nf
+  map_smul' r A := by
+    ext B
+    simp
+
+@[simp] theorem omega_apply (u A B : Mat2) : omega u A B = metric (u * A) B := rfl
+
+theorem omega_I_alternating (A : Mat2) : omega I A A = 0 := by
+  simp [I, InfoGeometry.Clifford.Cl11Matrix.Eminus,
+    Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_two]; ring_nf
+
+theorem omega_J_alternating (A : Mat2) : omega J A A = 0 := by
+  simp [J, InfoGeometry.Clifford.Cl11Matrix.Eplus,
+    Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_two]; ring_nf
+
+theorem omega_K_alternating (A : Mat2) : omega K A A = 0 := by
+  simp [K, InfoGeometry.Clifford.Cl11Matrix.J1,
+    Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_two]; ring_nf
+
+theorem omega_nondegenerate_of_left_inverse (u v : Mat2) (hvu : v * u = 1)
+    (A : Mat2) (h : ∀ B : Mat2, omega u A B = 0) : A = 0 := by
+  have huA : u * A = 0 := metric_left_nondegenerate (u * A) h
+  calc
+    A = (v * u) * A := by rw [hvu]; simp
+    _ = v * (u * A) := mul_assoc _ _ _
+    _ = 0 := by rw [huA, mul_zero]
+
+theorem omega_I_nondegenerate (A : Mat2)
+    (h : ∀ B : Mat2, omega I A B = 0) : A = 0 :=
+  omega_nondegenerate_of_left_inverse I (-I) (by simp) A h
+
+theorem omega_J_nondegenerate (A : Mat2)
+    (h : ∀ B : Mat2, omega J A B = 0) : A = 0 :=
+  omega_nondegenerate_of_left_inverse J J J_sq A h
+
+theorem omega_K_nondegenerate (A : Mat2)
+    (h : ∀ B : Mat2, omega K A B = 0) : A = 0 :=
+  omega_nondegenerate_of_left_inverse K K K_sq A h
+
+/-- The K-form is not a symmetric dissipative tensor. -/
+theorem omega_K_not_symmetric : ¬ ∀ A B : Mat2, omega K A B = omega K B A := by
+  intro h
+  have h1K := h 1 K
+  norm_num [K, InfoGeometry.Clifford.Cl11Matrix.J1,
+    Matrix.mul_apply, Fin.sum_univ_two] at h1K
+
+/-- On the 2D spinor module no nonzero symmetric compatible metric exists. -/
+theorem two_dimensional_metric_obstruction (G : Mat2)
+    (hSymm : Matrix.transpose G = G) (hI : Matrix.transpose I * G * I = G) (hJ : Matrix.transpose J * G * J = -G) :
+    G = 0 := by
+  have h00 := congrArg (fun A : Mat2 => A 0 0) hJ
+  have h11 := congrArg (fun A : Mat2 => A 1 1) hJ
+  have h01 := congrArg (fun A : Mat2 => A 0 1) hI
+  have h10 := congrArg (fun A : Mat2 => A 0 1) hSymm
+  simp [I, J, InfoGeometry.Clifford.Cl11Matrix.Eminus,
+    InfoGeometry.Clifford.Cl11Matrix.Eplus, Matrix.mul_apply,
+    Fin.sum_univ_two] at h00 h11 h01 h10
+  have he00 : G 0 0 = 0 := by linarith
+  have he01 : G 0 1 = 0 := by linarith
+  have he10 : G 1 0 = 0 := by linarith
+  have he11 : G 1 1 = 0 := by linarith
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [he00, he01, he10, he11]

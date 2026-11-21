@@ -232,6 +232,62 @@ theorem bivectorAction_commutes_grade (u v : V) :
       _ = B (A (Γ x)) := by simp
   rw [hAB, hBA]
 
+/-- The spin action of the simple bivector `u ∧ v` acts on a Clifford vector
+`w` by the corresponding infinitesimal orthogonal transformation. The scalar
+coefficients use Mathlib's polar form `Q.polar` (twice the associated
+symmetric bilinear form conventionally denoted `B_Q`). -/
+theorem bivectorAction_commutator_ι (u v w : V) :
+    ⁅bivectorAction (V := V) (H := H) (Q := Q) u v,
+      rho (Q := Q) (CliffordAlgebra.ι Q w)⁆ =
+      (algebraMap ℝ (H →L[ℝ] H) (QuadraticMap.polar Q v w)) *
+          rho (Q := Q) (CliffordAlgebra.ι Q u) +
+        rho (Q := Q) (CliffordAlgebra.ι Q u) *
+          algebraMap ℝ (H →L[ℝ] H) (QuadraticMap.polar Q v w) -
+        ((algebraMap ℝ (H →L[ℝ] H) (QuadraticMap.polar Q u w)) *
+            rho (Q := Q) (CliffordAlgebra.ι Q v) +
+          rho (Q := Q) (CliffordAlgebra.ι Q v) *
+            algebraMap ℝ (H →L[ℝ] H) (QuadraticMap.polar Q u w)) := by
+  let ρ : CliffordAlgebra Q →ₐ[ℝ] (H →L[ℝ] H) :=
+    (inferInstance : SymmetricCliffordModule V H Q).ρ
+  let A : H →L[ℝ] H := ρ (CliffordAlgebra.ι Q u)
+  let B : H →L[ℝ] H := ρ (CliffordAlgebra.ι Q v)
+  let C : H →L[ℝ] H := ρ (CliffordAlgebra.ι Q w)
+  let a : H →L[ℝ] H :=
+    algebraMap ℝ (H →L[ℝ] H) (QuadraticMap.polar Q u w)
+  let b : H →L[ℝ] H :=
+    algebraMap ℝ (H →L[ℝ] H) (QuadraticMap.polar Q v w)
+  have hAC : A * C + C * A = a := by
+    calc
+      A * C + C * A = ρ (CliffordAlgebra.ι Q u * CliffordAlgebra.ι Q w +
+          CliffordAlgebra.ι Q w * CliffordAlgebra.ι Q u) := by simp [A, C]
+      _ = ρ (algebraMap ℝ (CliffordAlgebra Q) (QuadraticMap.polar Q u w)) := by
+        rw [CliffordAlgebra.ι_mul_ι_add_swap]
+      _ = a := by simp [a, ρ]
+  have hBC : B * C + C * B = b := by
+    calc
+      B * C + C * B = ρ (CliffordAlgebra.ι Q v * CliffordAlgebra.ι Q w +
+          CliffordAlgebra.ι Q w * CliffordAlgebra.ι Q v) := by simp [B, C]
+      _ = ρ (algebraMap ℝ (CliffordAlgebra Q) (QuadraticMap.polar Q v w)) := by
+        rw [CliffordAlgebra.ι_mul_ι_add_swap]
+      _ = b := by simp [b, ρ]
+  have hCA : C * A = a - A * C := by
+    apply eq_sub_of_add_eq
+    calc
+      C * A + A * C = A * C + C * A := add_comm _ _
+      _ = a := hAC
+  have hCB : C * B = b - B * C := by
+    apply eq_sub_of_add_eq
+    calc
+      C * B + B * C = B * C + C * B := add_comm _ _
+      _ = b := hBC
+  change ⁅⁅A, B⁆, C⁆ = b * A + A * b - (a * B + B * a)
+  simp only [Ring.lie_def]
+  simp only [sub_mul, mul_sub]
+  rw [← mul_assoc C A B, ← mul_assoc C B A, hCA, hCB]
+  rw [← hAC, ← hBC]
+  simp only [mul_add, add_mul]
+  noncomm_ring
+
 end SymmetricCliffordModule
 
 

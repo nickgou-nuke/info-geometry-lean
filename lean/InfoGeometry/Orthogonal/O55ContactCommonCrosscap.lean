@@ -115,7 +115,7 @@ theorem commonCrosscap_commutes_bosonAnnihilation :
 grade-reversal statement.  In the current common-carrier model the crosscap is
 grade-preserving, so the grade selected here is the real contact grade space
 at `-k`. -/
-abbrev contactGradeSpace (k : ℤ) : Submodule ℝ O55Lie := realContactGradeSpace (-k)
+abbrev contactGradeSpaceZ (k : ℤ) : Submodule ℝ O55Lie := realContactGradeSpace (-k)
 
 /-- Represented contact grade is reversed by common-carrier crosscap
 conjugation. -/
@@ -129,7 +129,7 @@ theorem commonCrosscap_preserves_represented_grade
 /-- Represented contact grade is reversed by common-carrier crosscap
 conjugation. -/
 theorem commonCrosscap_reverses_represented_grade
-    {k : ℤ} {A : O55Lie} (hA : A ∈ contactGradeSpace k) :
+    {k : ℤ} {A : O55Lie} (hA : A ∈ contactGradeSpaceZ k) :
     IsRepresentedGrade (-k)
       (commonCrosscap * commonAction A * commonCrosscap) := by
   rw [commonCrosscap_conjugates_action]

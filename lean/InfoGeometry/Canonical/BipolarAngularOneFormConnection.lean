@@ -1,6 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.BipolarVariableCartanMaurerCartan
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BipolarU1PeriodHolonomy
+import InfoGeometry.Analysis.BipolarElementaryContourPeriods
+import InfoGeometry.Analysis.BipolarWindingPeriodLattice
+import InfoGeometry.Analysis.BipolarPeriodDescent
 import Mathlib.Tactic
 
 /-! The angular component of the bipolar logarithmic differential, treated as
@@ -11,6 +19,9 @@ namespace InfoGeometry.Canonical.BipolarAngularOneFormConnection
 open Complex Set
 open InfoGeometry.Analysis.BipolarLogDifferential
 open InfoGeometry.Analysis.BipolarCrossRatioLog
+open InfoGeometry.Analysis.BipolarWindingPeriodLattice
+open InfoGeometry.Analysis.BipolarElementaryContourPeriods
+open InfoGeometry.Analysis.BipolarPeriodDescent
 open InfoGeometry.Canonical.BipolarVariableCartanMaurerCartan
 
 def angularOneFormAt (s : ℂ) : ℂ →ₗ[ℝ] ℝ where
@@ -154,5 +165,78 @@ theorem directContourU1Holonomy_one_eq_winding
         hr0.le (by simpa [Metric.mem_sphere] using hr1.ne')
           (by simpa [Metric.mem_sphere] using hr0.ne)),
     BipolarU1PeriodHolonomy.contourU1Holonomy_one hr0 hr1]
+
+/-- Coupled scalar connection `alpha dTheta`. -/
+def coupledAngularOneFormAt (α : ℝ) (s : ℂ) : ℂ →ₗ[ℝ] ℝ :=
+  α • angularOneFormAt s
+
+@[simp] theorem coupledAngularOneFormAt_apply
+    (α : ℝ) (s v : ℂ) :
+    coupledAngularOneFormAt α s v =
+      α * (dlog01 s * v).im := by
+  simp [coupledAngularOneFormAt, angularOneFormAt]
+
+/-- The full logarithmic coefficient is circle-integrable on a small circle
+around the origin. -/
+theorem circleIntegrable_dlog01_origin
+    {r : ℝ} (hr0 : 0 < r) (hr1 : r < 1) :
+    CircleIntegrable dlog01 0 r := by
+  have hpole :
+      CircleIntegrable (fun z : ℂ => (z - 0)⁻¹) 0 r :=
+    circleIntegrable_centerPole hr0
+  have hregularBase :
+      CircleIntegrable (fun z : ℂ => (z - 1)⁻¹) 0 r :=
+    circleIntegrable_sub_inv_of_not_mem_closedBall hr0.le
+      (one_not_mem_closedBall_zero hr1)
+  have hregular :
+      CircleIntegrable (fun z : ℂ => (-1 : ℂ) * (z - 1)⁻¹) 0 r := by
+    simpa [smul_eq_mul] using
+      (hregularBase.const_fun_smul (a := (-1 : ℂ)))
+  rw [CircleIntegrable] at hpole hregular ⊢
+  refine (hpole.add hregular).congr ?_
+  intro t _ht
+  simpa using
+    (dlog01_eq_origin_pole_sub_one_pole (circleMap 0 r t)).symm
+
+/-- The full logarithmic coefficient is circle-integrable on a small circle
+around the second puncture. -/
+theorem circleIntegrable_dlog01_one
+    {r : ℝ} (hr0 : 0 < r) (hr1 : r < 1) :
+    CircleIntegrable dlog01 1 r := by
+  have hregular :
+      CircleIntegrable (fun z : ℂ => (z - 0)⁻¹) 1 r :=
+    circleIntegrable_sub_inv_of_not_mem_closedBall hr0.le
+      (zero_not_mem_closedBall_one hr1)
+  have hpoleBase :
+      CircleIntegrable (fun z : ℂ => (z - 1)⁻¹) 1 r :=
+    circleIntegrable_centerPole hr0
+  have hpole :
+      CircleIntegrable (fun z : ℂ => (-1 : ℂ) * (z - 1)⁻¹) 1 r := by
+    simpa [smul_eq_mul] using
+      (hpoleBase.const_fun_smul (a := (-1 : ℂ)))
+  rw [CircleIntegrable] at hregular hpole ⊢
+  refine (hregular.add hpole).congr ?_
+  intro t _ht
+  simpa using
+    (dlog01_eq_origin_pole_sub_one_pole (circleMap 1 r t)).symm
+
+/-- Compact packet combining the J-fetch, flat-coordinate, and second-gram readouts. -/
+theorem bipolar_angular_one_form_connection_packet
+    (α : ℝ) {s : ℂ} (hs : s ∈ punctured01)
+    (u v : ℂ) {r : ℝ} (hr0 : 0 < r) (hr1 : r < 1) :
+    angularOneFormAt s v = (omegaCoeff s * v).im ∧
+      angularExteriorDerivativeAt s u v = 0 ∧
+      coupledAngularCurvatureAt α s u v = 0 ∧
+      angularCircleIntegral 0 r = BipolarU1PeriodHolonomy.angularPeriod originWinding ∧
+      angularCircleIntegral 1 r = BipolarU1PeriodHolonomy.angularPeriod oneWinding ∧
+      directContourU1Holonomy α 0 r = BipolarU1PeriodHolonomy.u1Holonomy α originWinding ∧
+      directContourU1Holonomy α 1 r = BipolarU1PeriodHolonomy.u1Holonomy α oneWinding := by
+  exact ⟨angularOneFormAt_eq_omegaCoeff hs v,
+    angularExteriorDerivativeAt_eq_zero s u v,
+    coupledAngularCurvatureAt_eq_zero α s u v,
+    angularCircleIntegral_origin hr0 hr1,
+    angularCircleIntegral_one hr0 hr1,
+    directContourU1Holonomy_origin_eq_winding α hr0 hr1,
+    directContourU1Holonomy_one_eq_winding α hr0 hr1⟩
 
 end InfoGeometry.Canonical.BipolarAngularOneFormConnection

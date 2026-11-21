@@ -1,0 +1,298 @@
+{
+  "schema": "info_geometry.source_bound_acceptance_review.v1",
+  "task_id": "contact-spectral-compilation-2026-11-16",
+  "reviewed_at_utc": "2026-11-16T21:13:16.551151+00:00",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "status_tag": "theorem_backed",
+  "acceptance_scope": "The six exact frozen-v3 Lean owners and their 29-module repository source closure, within the finite-matrix and explicitly conditional Hilbert-space claims recorded below.",
+  "roles": {
+    "generation": [
+      "root",
+      "endpoint_candidate"
+    ],
+    "semantic_audit": [
+      "audit_math",
+      "scalar_audit"
+    ],
+    "native_execution": {
+      "agent": "root",
+      "context": "primary PTY session 83170",
+      "compiler_and_native_audit": "Unchanged repository verifier; fresh output; no incremental mode and no skipped audit."
+    },
+    "independent_acceptance_review": {
+      "agent": "acceptance_qa",
+      "authored_theorem_or_gate_source": false,
+      "executed_source_gates": true,
+      "executed_native_compiler_or_audit": false,
+      "method": "Independent inspection and reconciliation of completed primary native output, immutable source snapshots, artifact hashes, all-declaration audit, and independently executed unchanged source gates."
+    }
+  },
+  "checkout": {
+    "repository": "/workspace/scratch/5057b2835763/contact-spectral-lean",
+    "branch": "feat/contact-spectral-compilation",
+    "git_head_at_verification": "01cc888565824d2a5f275b28cb33187a28ec6e73",
+    "working_tree_scope": "Task-owned staged changes; acceptance is bound to exact source hashes, not an assertion that the base commit contains them."
+  },
+  "environment": {
+    "lean_toolchain": "leanprover/lean4:v4.34.1",
+    "native_lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+    "mathlib_revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+    "mathlib_tracked_tree_clean": true,
+    "pins_and_build_files_unchanged_from_base_and_index": true,
+    "isolated_lean_path_verified": true
+  },
+  "frozen_manifest": {
+    "path": "/workspace/scratch/5057b2835763/contact-spectral-frozen-sources-v3.json",
+    "sha256": "97083e577232f12f05e8b920872f425797877c999df8011eee6533da7e5c1485"
+  },
+  "source_sha256": {
+    "lean/InfoGeometry/Algebra/Sp4ContactPoles.lean": "30e94f1036f2c97627a3903bd50a0d4a08711f0ae7dd7a5c5e21e8c935e4e51f",
+    "lean/InfoGeometry/Analysis/HilbertGramIsometry.lean": "d0ecb776a9996f1f0f678fb700b838dad9615e911500a8a2f55f9bbb85a9751e",
+    "lean/InfoGeometry/Analysis/FiniteChiralIndex.lean": "37c4f2ba09aa5e5954107ec19190286652c135454ddf3bbec5e2906a715df503",
+    "lean/InfoGeometry/OperatorAlgebra/FiniteParityHeatSupertrace.lean": "c5c7cc83ea077b305e2da26ce478338a6bdcb40c0b3dce9c817f22187b1dd2be",
+    "lean/InfoGeometry/OperatorAlgebra/Sp4ContactSupertrace.lean": "237d465903205483444eff531e42b2e8a4fb7ca5a91ab5032e3132bbd3ef0ca4",
+    "lean/InfoGeometry/Canonical/SpinorialCore/FiniteIndex.lean": "ffd19d3c11ba2735d2d3cf22c3053b4de98e662c7a228626557f0d73e775c4aa"
+  },
+  "scope_documents_sha256": {
+    "docs/CONTACT_SPECTRAL_COMPILATION_CONTRACT.md": "758d7f2d4894d7ffe79107249baefd92b58aec0ef78870955f8cef279e1f21bf",
+    "docs/contracts/contact-spectral-compilation.json": "0e88f9327677a75efb0311864fc0c95e517faff02fa7b5444ad41dde489d5d05"
+  },
+  "accepted_claims": [
+    {
+      "owner": "InfoGeometry.Algebra.Sp4ContactPoles",
+      "scope": "Concrete full real 4-by-4 contact endpoint Moore-Penrose pair, support and Weyl identities; endpoint completion and separately chosen full rotation have their respective proved squares and folding defects."
+    },
+    {
+      "owner": "InfoGeometry.Analysis.HilbertGramIsometry",
+      "scope": "Native normalized LinearIsometryEquiv of Gram eigenspaces for bounded adjoint pairs on complete real or complex Hilbert spaces, with positivity of the real eigenvalue an explicit hypothesis."
+    },
+    {
+      "owner": "InfoGeometry.Analysis.FiniteChiralIndex",
+      "scope": "Finite-dimensional real/complex adjoint-kernel dimension difference for the existing native kernel/cokernel index, and its stated kernel consequences."
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.FiniteParityHeatSupertrace",
+      "scope": "Actual convergent native matrix-exponential supertrace constancy for an odd full finite real matrix, at every real scale parameter."
+    },
+    {
+      "owner": "InfoGeometry.OperatorAlgebra.Sp4ContactSupertrace",
+      "scope": "Two concrete nonzero self-adjoint odd 4-by-4 matrices with zero balanced heat supertrace and different kernels; explicit kernel equivalence, generalized inverse, and actual chiral-block finite-index linkage."
+    },
+    {
+      "owner": "InfoGeometry.Canonical.SpinorialCore.FiniteIndex",
+      "scope": "Existing definitions and theorem statements preserved; imports narrowed and the counting proof explicitly uses both necessary scalar hypotheses."
+    }
+  ],
+  "native_verification": {
+    "command": [
+      "python3",
+      "tools/quality/check_clifford_dirac.py",
+      "--mathlib-root",
+      "/workspace/scratch/64554963d837/mathlib-4.34.1",
+      "--lean",
+      "/workspace/scratch/64554963d837/lean-runtime/bin/lean",
+      "--output",
+      "/workspace/scratch/5057b2835763/contact-spectral-qa-complete",
+      "--target",
+      "InfoGeometry.Algebra.Sp4ContactPoles",
+      "--target",
+      "InfoGeometry.Analysis.HilbertGramIsometry",
+      "--target",
+      "InfoGeometry.Analysis.FiniteChiralIndex",
+      "--target",
+      "InfoGeometry.OperatorAlgebra.FiniteParityHeatSupertrace",
+      "--target",
+      "InfoGeometry.OperatorAlgebra.Sp4ContactSupertrace",
+      "--target",
+      "InfoGeometry.Canonical.SpinorialCore.FiniteIndex"
+    ],
+    "working_directory": "/workspace/scratch/5057b2835763/contact-spectral-lean",
+    "output_directory": "/workspace/scratch/5057b2835763/contact-spectral-qa-complete",
+    "report_sha256": "4c65ebc6d8494e9a31cc8a9100582d496c7e7495ac26252bd710532092503b36",
+    "evidence_manifest_sha256": "d649ed66dd37c6bc2188423d80180331775f561c3fe74747581a6b50d0b40c3a",
+    "environment_sha256": "13c7f5bf2eacc75e2497cb0c64e4d41c00c5adc4ec9f6051cf4b8c45004144f0",
+    "modules_successfully_compiled": 29,
+    "targets": [
+      "InfoGeometry.Algebra.Sp4ContactPoles",
+      "InfoGeometry.Analysis.HilbertGramIsometry",
+      "InfoGeometry.Analysis.FiniteChiralIndex",
+      "InfoGeometry.OperatorAlgebra.FiniteParityHeatSupertrace",
+      "InfoGeometry.OperatorAlgebra.Sp4ContactSupertrace",
+      "InfoGeometry.Canonical.SpinorialCore.FiniteIndex"
+    ],
+    "unchanged_repository_dependencies": 23,
+    "fresh_modules": 29,
+    "reused_modules": 0,
+    "all_returncodes_zero": true,
+    "changed_owner_warning_counts": {
+      "InfoGeometry.Algebra.Sp4ContactPoles": 0,
+      "InfoGeometry.Analysis.HilbertGramIsometry": 0,
+      "InfoGeometry.Canonical.SpinorialCore.FiniteIndex": 0,
+      "InfoGeometry.Analysis.FiniteChiralIndex": 0,
+      "InfoGeometry.OperatorAlgebra.FiniteParityHeatSupertrace": 0,
+      "InfoGeometry.OperatorAlgebra.Sp4ContactSupertrace": 0
+    },
+    "dependency_warning_counts": {
+      "InfoGeometry.Singular.MoorePenrose": 14,
+      "InfoGeometry.Core.PeirceDecomposition": 1,
+      "InfoGeometry.Core.JordanPeirceDecomposition": 2,
+      "InfoGeometry.Core.JordanAssociator": 7,
+      "InfoGeometry.Singular.SquareZeroChiralHodge": 1,
+      "InfoGeometry.OperatorAlgebra.FiniteParitySupertrace": 1
+    },
+    "dependency_warning_total": 26,
+    "dependency_warning_classification": "All 26 warnings occur in six dependencies unchanged from base: deprecated APIs/imports, unused section variables or simp arguments, and tactic-style suggestions. They are reported separately from the six warning-free changed owners.",
+    "artifact_files_hash_verified": 29,
+    "native_evidence_entries_hash_verified": 36,
+    "source_closure_and_import_graph_recomputed": true,
+    "recursive_dependency_fingerprints_recomputed": true,
+    "source_snapshot_repository_index_frozen_equality": true,
+    "unchanged_dependency_base_equality": true,
+    "verification_source_sha256": {
+      "tools/quality/check_clifford_dirac.py": "fcf6fbb9845e0ee2a85bdb3778c5fe74345a9ae7a2e97e871d0a89d3e98e7db0",
+      "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+      "tools/quality/reviewed_audit_source.py": "a976c910f5efb4611b1626d714e3197310d92648ffae56513e94a49ae5f0f206",
+      "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df"
+    }
+  },
+  "native_axiom_audit": {
+    "generated_source_sha256": "fcbcf5f872e2a28153acf27226710e8ece61c5864426ef4d88c7515ce7bf75ba",
+    "log_sha256": "847082b0a2cf22b79e03c2f4c45f3341f64fc3cab8bc56bd1b7824dfccaf65ea",
+    "generated_source_equals_unchanged_audit_generator": true,
+    "coverage": "Every imported environment constant whose owning module is one of the six targets, including private declarations and generated proof/equation declarations. Coverage is by module ownership, not declaration-name prefix.",
+    "declaration_counts": {
+      "InfoGeometry.Algebra.Sp4ContactPoles": 33,
+      "InfoGeometry.Analysis.HilbertGramIsometry": 14,
+      "InfoGeometry.Analysis.FiniteChiralIndex": 5,
+      "InfoGeometry.OperatorAlgebra.FiniteParityHeatSupertrace": 17,
+      "InfoGeometry.OperatorAlgebra.Sp4ContactSupertrace": 46,
+      "InfoGeometry.Canonical.SpinorialCore.FiniteIndex": 14
+    },
+    "total_declarations": 129,
+    "declaration_markers_unique_and_reconciled": true,
+    "private_declarations_observed": [
+      "_private.InfoGeometry.Analysis.HilbertGramIsometry.0.InfoGeometry.Analysis.HilbertGramDuality.positive_scalar_ne_zero"
+    ],
+    "generated_declaration_examples": [
+      "InfoGeometry.Analysis.HilbertGramDuality.normalizedGramEigenspaceEquiv._proof_1",
+      "InfoGeometry.OperatorAlgebra.Sp4ContactSupertrace.endpointKernelEquiv._proof_10",
+      "InfoGeometry.Canonical.SpinorialCore.vertexGrading.eq_1"
+    ],
+    "observed_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "disallowed_axioms": [],
+    "unsafe_or_partial_owned_declarations": false,
+    "audit_warning_count": 0,
+    "axiom_classification": "Only permitted Lean/Mathlib foundations were observed: propositional extensionality, classical choice used by standard noncomputable mathematical infrastructure, and quotient soundness used by quotient-based infrastructure. No custom axiom or proof-hole dependency was observed."
+  },
+  "independent_source_gates": {
+    "command": [
+      "python3",
+      "/workspace/scratch/5057b2835763/contact-spectral-static-v3/run_checks.py"
+    ],
+    "report_sha256": "3340922daa99e04566f5401df467d980d9f1e525bdf99ffc1216ae3a17004d56",
+    "report_directory": "/workspace/scratch/5057b2835763/contact-spectral-static-v3",
+    "orchestrator_sha256": "7525e08c6807344fcbc45d07ce6fbe6eade177d419aac69642b8fd235a6d3f08",
+    "checks": [
+      {
+        "name": "source-bound-contract",
+        "returncode": 0,
+        "log_sha256": "27ce62fe90374ae40679f2faf696e1472a359f14351d63972218fbfe70a24d72"
+      },
+      {
+        "name": "staged-proof-gate",
+        "returncode": 0,
+        "log_sha256": "15636963213bd1e0893ddeb031ca330861b34fbde83171eaf5ccca90b606f2e2"
+      },
+      {
+        "name": "opengauss-refute",
+        "returncode": 0,
+        "log_sha256": "04f683091129748b30546694d7a24d7318aed5dfea195e0c7af66d940a8e6cf2"
+      },
+      {
+        "name": "semantic-vacuity",
+        "returncode": 0,
+        "log_sha256": "1b8e6750a576633811e1505675bd97b6a6548afdda1cdf4277c577dd0eddb243"
+      },
+      {
+        "name": "placeholder-Sp4ContactPoles",
+        "returncode": 0,
+        "log_sha256": "39f4c4d5986524e047ce4b5a29d15179fab90bc6369ce59914ae123d2d35212e"
+      },
+      {
+        "name": "placeholder-HilbertGramIsometry",
+        "returncode": 0,
+        "log_sha256": "38a3000c9f22cf4473e6f77dfb0db72ea83bad34a9f3c58e257ca8157b007a15"
+      },
+      {
+        "name": "placeholder-FiniteChiralIndex",
+        "returncode": 0,
+        "log_sha256": "98342cdb459c0b5e26fde5fcf5f22c408d7395e315c43c5cb8e18014df7417fa"
+      },
+      {
+        "name": "placeholder-FiniteParityHeatSupertrace",
+        "returncode": 0,
+        "log_sha256": "51905dcdbaadc0168a7e9eb669de442b680678192c16fb399113b76ff035360d"
+      },
+      {
+        "name": "placeholder-Sp4ContactSupertrace",
+        "returncode": 0,
+        "log_sha256": "b892ce9583ae367cd3709293dc0b72ad08ae14eb655b84d6523bffeedcbb8d4c"
+      },
+      {
+        "name": "placeholder-FiniteIndex",
+        "returncode": 0,
+        "log_sha256": "942227ad3780f99cb485ccd9e386fd2da87b5f51f0899bbdbfb5d22b464438ae"
+      },
+      {
+        "name": "staged-whitespace",
+        "returncode": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "all_11_checks_passed": true,
+    "all_logs_hash_verified": true,
+    "source_index_frozen_gate_helper_and_pin_equality_before_and_after": true,
+    "strict_opengauss_errors": 0,
+    "strict_opengauss_warnings": 0,
+    "semantic_vacuity_errors": 0,
+    "semantic_vacuity_warnings": 4,
+    "placeholder_hard_findings": 0,
+    "placeholder_soft_findings": 3,
+    "nonblocking_warning_classifications": {
+      "normalizedGramEigenspaceEquiv_apply": "Standard definitional application lemma; the isometry content is proved separately.",
+      "gramEigenspaceIsometry_apply": "Standard definitional application lemma for the constructed native isometry.",
+      "supertraceCLM_apply": "Definitional evaluation of the continuous linear supertrace functional.",
+      "vertexGrading_trace": "Actual finite diagonal-trace calculation by simplification; statement and proof unchanged from base."
+    }
+  },
+  "independent_semantic_audits": [
+    {
+      "agent": "audit_math",
+      "disposition": "PASS",
+      "coverage": "Original six-owner semantic/source audit and endpoint proof-only follow-up through final Sp4ContactPoles hash 30e94f1036f2c97627a3903bd50a0d4a08711f0ae7dd7a5c5e21e8c935e4e51f. The later heat and FiniteIndex deltas are separately covered below.",
+      "evidence_form": "Exact-hash collaboration handoff; no separate audit file was created."
+    },
+    {
+      "agent": "scalar_audit",
+      "disposition": "PASS",
+      "source_sha256": {
+        "lean/InfoGeometry/OperatorAlgebra/FiniteParityHeatSupertrace.lean": "c5c7cc83ea077b305e2da26ce478338a6bdcb40c0b3dce9c817f22187b1dd2be",
+        "lean/InfoGeometry/Canonical/SpinorialCore/FiniteIndex.lean": "ffd19d3c11ba2735d2d3cf22c3053b4de98e662c7a228626557f0d73e775c4aa"
+      },
+      "coverage": "Final proof-only corrections, explicit positivity-hypothesis wording, counting-proof/import disclosure, and final mathematical PR scope.",
+      "evidence_form": "Exact-hash collaboration handoff; no separate audit file was created."
+    }
+  ],
+  "excluded_evidence": "Earlier abandoned or interrupted native attempts, including contact-spectral-qa-release, are preserved but supply no native acceptance. No dependency-cache fallback or earlier repository olean was reused by the accepted fresh run.",
+  "residual_scope_limits": [
+    "No whole-repository build or root publication/pre-push gate is certified by this review; those remain separate integration checks.",
+    "No unbounded Dirac domain, APS/Callias theorem, continuum spectral expansion, KMS continuation, scattering correction, covering-space classification, or obstruction colimit is constructed.",
+    "The Hilbert isometry assumes a positive real eigenvalue and does not assert an eigenbasis or discrete spectrum.",
+    "Consumers outside the checked closure are not compiled by this run; external clients relying on the former incidental FiniteIndex imports may require explicit imports."
+  ],
+  "acceptance_record_note": "This is a checksummed source-bound review record, not a signed immutable-storage claim. Root may copy it verbatim into docs/contracts/contact-spectral-compilation-qa.json."
+}

@@ -126,6 +126,89 @@ theorem exteriorFock_to_heisenbergColimit_summary (m n : ℤ) :
       (canonicalExteriorFockRawCAR (𝕜 := 𝕜)) m n with ⟨hm, hn, _, _, _⟩
   exact ⟨hm, hn, completedCurrentBracket_readout_eq_colimitBracket m n⟩
 
+/-- Full coefficientwise completion packet for the canonical exterior-Fock
+source. Finite cutoff diagonals stabilize to the completed modes, the
+noncentral remainder cancels, and the crossing coefficient is the Heisenberg
+coefficient. -/
+theorem canonicalExteriorFock_completion_packet
+    (m n : ℤ) :
+    (∀ i j : ℤ, ∃ N0 : ℕ, ∀ N : ℕ, N0 ≤ N →
+      (cutoffDiagonalCurrent N m).coeff i j = (completedCurrent m).coeff i j) ∧
+    (∀ i j : ℤ, ∃ N0 : ℕ, ∀ N : ℕ, N0 ≤ N →
+      (cutoffDiagonalCurrent N n).coeff i j = (completedCurrent n).coeff i j) ∧
+    (∀ i j : ℤ, formalCurrentNoncentralCoeff m n i j = 0) ∧
+    (formalCurrentCentralCoeff m n = if m + n = 0 then m else 0) ∧
+    CCRBracketCompleted
+        (canonicalExteriorFockRawCAR (𝕜 := 𝕜))
+        (normalOrderedCurrent (canonicalExteriorFockRawCAR (𝕜 := 𝕜)) m)
+        (normalOrderedCurrent (canonicalExteriorFockRawCAR (𝕜 := 𝕜)) n) =
+      if m + n = 0 then
+        m • (canonicalExteriorFockRawCAR (𝕜 := 𝕜)).central
+      else 0 := by
+  exact constructiveHeisenbergCurrent_from_completedCurrent
+    (canonicalExteriorFockRawCAR (𝕜 := 𝕜)) m n
+
+/-- Source-to-colimit compatibility packet. The source current law and its
+coefficientwise completion are constructive, while the bracket readout is the
+native categorical Heisenberg bracket. -/
+theorem exteriorFock_to_heisenbergColimit_packet
+    (m n : ℤ) :
+    (∀ i j : ℤ, ∃ N0 : ℕ, ∀ N : ℕ, N0 ≤ N →
+      (cutoffDiagonalCurrent N m).coeff i j = (completedCurrent m).coeff i j) ∧
+    (∀ i j : ℤ, ∃ N0 : ℕ, ∀ N : ℕ, N0 ≤ N →
+      (cutoffDiagonalCurrent N n).coeff i j = (completedCurrent n).coeff i j) ∧
+    (completedCurrentCentralReadout (𝕜 := 𝕜)
+        (completedCurrentModeBracket m n) =
+      ⁅heisenbergFiniteModeColimitEquiv (𝕜 := 𝕜)
+          (heisenbergColimitMode (𝕜 := 𝕜) m),
+        heisenbergFiniteModeColimitEquiv (𝕜 := 𝕜)
+          (heisenbergColimitMode (𝕜 := 𝕜) n)⁆) := by
+  rcases canonicalExteriorFock_completion_packet (𝕜 := 𝕜) m n with
+    ⟨hm, hn, _hnoncentral, _hcentral, _hcurrent⟩
+  exact ⟨hm, hn,
+    completedCurrentBracket_readout_eq_colimitBracket (𝕜 := 𝕜) m n⟩
+
+/-- Thin alias identifying the colimit-derived current representation with the
+repository-owned charged-Fock representation used in this module. -/
+noncomputable abbrev colimitCurrentHeisenbergRep (α : 𝕜) :=
+  chargedFockSpaceCurrentHeisenbergRep 𝕜 α
+
+/-- After the source current has reached the colimit Heisenberg mode system,
+the repository-owned Sugawara representation shifts its represented current
+modes by `[L_r,J_m] = -m J_(r+m)`. -/
+theorem exteriorFock_colimit_virasoro_shift
+    (α : 𝕜) (r m : ℤ) :
+    ((colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroAlgebra.lgen 𝕜 r)).commutator
+      ((colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).J m) =
+        -m • (colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).J (r + m) := by
+  dsimp [colimitCurrentHeisenbergRep]
+  rw [chargedFock_vira_mode_shift (𝕜 := 𝕜) α r m]
+  rw [← Int.cast_smul_eq_zsmul 𝕜]
+  simp
+
+/-- Compact corridor theorem from coefficientwise exterior-Fock completion,
+through the categorical Heisenberg bracket, to the represented Virasoro mode
+shift. -/
+theorem constructive_exterior_heisenberg_virasoro_corridor
+    (α : 𝕜) (m n r : ℤ) :
+    (∀ i j : ℤ, ∃ N0 : ℕ, ∀ N : ℕ, N0 ≤ N →
+      (cutoffDiagonalCurrent N m).coeff i j = (completedCurrent m).coeff i j) ∧
+    completedCurrentCentralReadout (𝕜 := 𝕜)
+        (completedCurrentModeBracket m n) =
+      ⁅heisenbergFiniteModeColimitEquiv (𝕜 := 𝕜)
+          (heisenbergColimitMode (𝕜 := 𝕜) m),
+        heisenbergFiniteModeColimitEquiv (𝕜 := 𝕜)
+          (heisenbergColimitMode (𝕜 := 𝕜) n)⁆ ∧
+    ((colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroAlgebra.lgen 𝕜 r)).commutator
+      ((colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).J m) =
+        -m • (colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).J (r + m) := by
+  rcases exteriorFock_to_heisenbergColimit_packet (𝕜 := 𝕜) m n with
+    ⟨hm, _hn, hbracket⟩
+  exact ⟨hm, hbracket,
+    exteriorFock_colimit_virasoro_shift (𝕜 := 𝕜) α r m⟩
+
 /-- Represented current mode `(chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J n` on
 `ChargedFockSpace 𝕜 α`. -/
 noncomputable def completedModeRepresentation (α : 𝕜) (n : ℤ) :=

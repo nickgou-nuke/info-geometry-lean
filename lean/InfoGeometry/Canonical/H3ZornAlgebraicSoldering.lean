@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.G2H3ZornEntrywiseEmbedding
+import InfoGeometry.Algebra.H3ZornJordanIdentity
+import InfoGeometry.Algebra.H3ZornJordanInstance
 
 noncomputable section
 
@@ -10,6 +17,9 @@ open InfoGeometry.Algebra
 open InfoGeometry.Algebra.H3Zorn
 open InfoGeometry.Lie.CanonicalZornDerivation
 open InfoGeometry.Canonical.G2H3ZornEntrywiseEmbedding
+
+abbrev Zorn := ZornVectorMatrix ℝ
+abbrev H3 := H3Zorn ℝ
 
 /-- A reusable algebraic soldering datum: a linear equivalence together with
 binary products on source and target and an exact product intertwining law. -/
@@ -195,5 +205,51 @@ theorem fullEntrywiseCompatibility_iff_coordinateLeibniz :
     · exact le_top
     · intro D hD
       exact (entrywiseJordanCompatible_iff_coordinateLeibniz D).2 (h D)
+
+/-- The inverse soldering also preserves the product. -/
+@[simp] theorem h3Soldering_symm_jordan_intertwines (X Y : H3) :
+    h3Soldering.symm (candidateJordanMul X Y) =
+      coordJordanMul (h3Soldering.symm X) (h3Soldering.symm Y) := by
+  rw [candidateJordanMul_eq_mul]
+  simp [coordJordanMul]
+
+/-- Generic transport-of-derivations lemma through a product-preserving linear
+equivalence.  This is the reusable algebraic soldering principle. -/
+theorem jordanDerivation_transport
+    {A J : Type*}
+    [AddCommGroup A] [Module ℝ A]
+    [AddCommGroup J] [Module ℝ J]
+    (coordMul : A → A → A) (jordanMul : J → J → J)
+    (S : A ≃ₗ[ℝ] J)
+    (hS : ∀ x y, S (coordMul x y) = jordanMul (S x) (S y))
+    (D : Module.End ℝ A)
+    (hD : ∀ x y, D (coordMul x y) =
+      coordMul (D x) y + coordMul x (D y)) :
+    let Dhat : Module.End ℝ J :=
+      S.toLinearMap.comp (D.comp S.symm.toLinearMap)
+    ∀ x y : J,
+      Dhat (jordanMul x y) =
+        jordanMul (Dhat x) y + jordanMul x (Dhat y) := by
+  intro Dhat x y
+  have hsymm :
+      S.symm (jordanMul x y) =
+        coordMul (S.symm x) (S.symm y) := by
+    apply S.injective
+    simp [hS]
+  change S (D (S.symm (jordanMul x y))) = _
+  rw [hsymm, hD, map_add, hS, hS]
+  simp [Dhat]
+
+/-- Specialization of generic transport to the split-Albert soldering. -/
+theorem h3JordanDerivation_transport
+    (D : Module.End ℝ H3Coord)
+    (hD : ∀ x y, D (coordJordanMul x y) =
+      coordJordanMul (D x) y + coordJordanMul x (D y)) :
+    H3ZornJordanDerivation
+      (h3Soldering.toLinearMap.comp
+        (D.comp h3Soldering.symm.toLinearMap)) := by
+  simpa [H3ZornJordanDerivation] using
+    (jordanDerivation_transport coordJordanMul (fun x y : H3Zorn ℝ => x * y)
+      h3Soldering h3Soldering_jordan_intertwines D hD)
 
 end InfoGeometry.Canonical.H3ZornAlgebraicSoldering

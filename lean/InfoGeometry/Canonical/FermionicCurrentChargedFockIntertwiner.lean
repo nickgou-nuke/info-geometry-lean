@@ -56,6 +56,7 @@ open InfoGeometry.Canonical.BosonizationConstructiveCurrent
 open InfoGeometry.Canonical.CurrentSugawaraBridge
 open InfoGeometry.Canonical.ConstructiveCurrentHeisenbergColimitBridge
 open InfoGeometry.Canonical.CompletedCurrentRepresentationBridge
+open InfoGeometry.Canonical.HeisenbergColimitVirasoroGradedBridge
 open InfoGeometry.Canonical.EndomorphismCutoffCurrentAdapter
 open InfoGeometry.Canonical.ExteriorAlgebraFiniteGeneration
 
@@ -1314,6 +1315,29 @@ theorem fermionicCurrent_completion_summary (m n : ℤ) :
       (canonicalExteriorFockRawCAR (𝕜 := 𝕜)) m n with ⟨hm, hn, _, _, hbr⟩
   exact ⟨hm, hn, hbr⟩
 
+/-- The actual locally-finite completed-current object attached to the
+fermionic current mode `m`. -/
+noncomputable def fermionicCompletedCurrent (m : ℤ) : CompletedCurrentModeCarrier :=
+  completedCurrentPoint m
+
+@[simp] theorem fermionicCompletedCurrent_val (m : ℤ) :
+    (fermionicCompletedCurrent m).1 = completedCurrent m := by
+  simp [fermionicCompletedCurrent]
+
+/-- The completed fermionic current reads out as the canonical Heisenberg
+colimit mode. -/
+@[simp] theorem fermionicCompletedCurrent_colimit_readout (m : ℤ) :
+    completedCurrentColimitReadout (𝕜 := 𝕜) (fermionicCompletedCurrent m) =
+      heisenbergColimitMode (𝕜 := 𝕜) m := by
+  simp [fermionicCompletedCurrent, completedCurrentColimitReadout, completedCurrentPoint]
+
+/-- The Heisenberg algebra readout of the completed fermionic current is the
+native generator `J_m`. -/
+@[simp] theorem fermionicCompletedCurrent_heisenberg_readout (m : ℤ) :
+    completedCurrentHeisenbergReadout (𝕜 := 𝕜) (fermionicCompletedCurrent m) =
+      HeisenbergAlgebra.jgen 𝕜 m := by
+  simp [fermionicCompletedCurrent, completedCurrentHeisenbergReadout, completedCurrentPoint]
+
 section ChargedFock
 
 /-- Bosonic Fock carrier `ChargedFockSpace 𝕜 α`. -/
@@ -1544,6 +1568,39 @@ theorem fermionic_to_bosonic_current_intertwiner_summary (α : 𝕜) (r m : ℤ)
   · constructor
     · exact fermionToBosonCurrent_mode α m
     · exact virasoro_acts_on_bosonizedFermionicCurrent α r m
+
+/-- Thin alias identifying the colimit-derived current representation with the
+repository-owned charged-Fock representation used in this module. -/
+noncomputable abbrev colimitCurrentHeisenbergRep (α : 𝕜) :=
+  chargedFockSpaceCurrentHeisenbergRep 𝕜 α
+
+section
+variable (α : 𝕜)
+
+/-- Full source-faithful current corridor.  The first component is genuine
+coefficientwise completion of the fermionic cutoff family; the second is the
+exact charged-Fock current equality; the third is the Virasoro mode shift. -/
+theorem fermionic_to_bosonic_current_intertwiner_packet
+    (r m : ℤ) :
+    (∀ i j : ℤ, ∃ N0 : ℕ, ∀ N : ℕ, N0 ≤ N →
+      (cutoffDiagonalCurrent N m).coeff i j =
+        (fermionicCompletedCurrent m).1.coeff i j) ∧
+    fermionToBosonCurrent (𝕜 := 𝕜) α (fermionicCompletedCurrent m) =
+      (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J m ∧
+    ((colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroAlgebra.lgen 𝕜 r)).commutator
+      (fermionToBosonCurrent (𝕜 := 𝕜) α (fermionicCompletedCurrent m)) =
+      -m • fermionToBosonCurrent (𝕜 := 𝕜) α
+        (fermionicCompletedCurrent (r + m)) := by
+  refine ⟨?_, ?_, ?_⟩
+  · simpa [fermionicCompletedCurrent] using
+      fermionicCurrent_coefficientwise_completion m
+  · simpa [fermionicCompletedCurrent] using
+      fermionToBosonCurrent_mode (𝕜 := 𝕜) α m
+  · simpa [colimitCurrentHeisenbergRep, fermionicCompletedCurrent] using
+      virasoro_acts_on_bosonizedFermionicCurrent (𝕜 := 𝕜) α r m
+
+end
 
 end ChargedFock
 end InfoGeometry.Canonical.FermionicCurrentChargedFockIntertwiner

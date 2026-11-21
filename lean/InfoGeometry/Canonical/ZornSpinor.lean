@@ -52,7 +52,7 @@ def coordEquiv : ZornMatrix R ≃ Coord R where
     rfl
 
 /-! A flat eight-coordinate presentation of the same canonical carrier. -/
-abbrev FinCoord (R : Type*) [CommRing R] := Fin 8 → R
+abbrev FinCoord (R : Type*) [Ring R] := Fin 8 → R
 
 def toFinCoord (z : ZornMatrix R) : FinCoord R :=
   ![z.a, z.b, z.x 0, z.x 1, z.x 2, z.y 0, z.y 1, z.y 2]
@@ -66,15 +66,15 @@ def fromFinCoord (c : FinCoord R) : ZornMatrix R :=
 @[simp] theorem fromFinCoord_toFinCoord (z : ZornMatrix R) :
     fromFinCoord (toFinCoord z) = z := by
   apply ZornMatrix.ext
-  · rfl
-  · rfl
-  · funext i; fin_cases i <;> rfl
-  · funext i; fin_cases i <;> rfl
+  · simp [fromFinCoord, toFinCoord]
+  · simp [fromFinCoord, toFinCoord]
+  · funext i; fin_cases i <;> simp [fromFinCoord, toFinCoord]
+  · funext i; fin_cases i <;> simp [fromFinCoord, toFinCoord]
 
 @[simp] theorem toFinCoord_fromFinCoord (c : FinCoord R) :
     toFinCoord (fromFinCoord c) = c := by
   funext i
-  fin_cases i <;> rfl
+  fin_cases i <;> simp [fromFinCoord, toFinCoord]
 
 def finCoordEquiv : ZornMatrix R ≃ FinCoord R where
   toFun := toFinCoord

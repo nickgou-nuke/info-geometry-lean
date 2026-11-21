@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Lie.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Dual.Defs
@@ -5,6 +10,7 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
 
 import InfoGeometry.Canonical.SouriauKKSForm
+import InfoGeometry.Thermo.OnsagerOperatorClosure
 
 /-!
 # Souriau Coadjoint Orbits and Thermodynamic State Covariance
@@ -119,6 +125,60 @@ theorem souriauQGT_normSq (state : SouriauThermodynamicState L) (X Y : L) :
 theorem souriau_metric_symmetry (state : SouriauThermodynamicState L) (X Y : L) :
     state.fisherMetric X Y = state.fisherMetric Y X :=
   state.metric_symm X Y
+
+/-- The algebraic KKS form at the state's momentum, as a real bilinear form on
+the Lie algebra. -/
+def souriauKKSBilinForm (state : SouriauThermodynamicState L) :
+    LinearMap.BilinForm ℝ L :=
+  LinearMap.mk₂ ℝ (kksForm state.meanMomentum)
+    (fun X Y Z => kksForm_add_left state.meanMomentum X Y Z)
+    (fun r X Y => kksForm_smul_left state.meanMomentum r X Y)
+    (fun X Y Z => kksForm_add_right state.meanMomentum X Y Z)
+    (fun r X Y => kksForm_smul_right state.meanMomentum r X Y)
+
+/-- Pair the Souriau Fisher response with the coadjoint KKS response as one
+real Onsager--Casimir system. The dissipative channel is symmetric and
+nonnegative; the orbit channel is skew by the Lie bracket antisymmetry. -/
+def souriauOnsagerSystem (state : SouriauThermodynamicState L) :
+    InfoGeometry.Thermo.OnsagerClosure.OnsagerCasimirSystem L where
+  dissipative := state.fisherMetric
+  reversible := souriauKKSBilinForm state
+  dissipative_symm := state.metric_symm
+  reversible_skew := by
+    intro X Y
+    exact kksForm_skew state.meanMomentum X Y
+  dissipative_nonneg := state.metric_nonneg
+
+/-- The quadratic entropy production of the combined Souriau system is
+exactly the Fisher variance; the KKS response contributes zero on the
+diagonal. -/
+theorem souriauOnsagerSystem_entropy_production
+    (state : SouriauThermodynamicState L) (X : L) :
+    (souriauOnsagerSystem state).totalGenerator X X =
+        state.fisherMetric X X ∧
+      0 ≤ (souriauOnsagerSystem state).totalGenerator X X := by
+  constructor
+  · exact (souriauOnsagerSystem state).entropy_production_eq X
+  · exact (souriauOnsagerSystem state).entropy_production_nonneg X
+
+/-- The symmetric and skew parts of the total response recover respectively
+the Souriau Fisher form and the KKS orbit form. -/
+theorem souriauOnsagerSystem_reciprocity
+    (state : SouriauThermodynamicState L) (X Y : L) :
+    (1 / 2 : ℝ) * ((souriauOnsagerSystem state).totalGenerator X Y +
+        (souriauOnsagerSystem state).totalGenerator Y X) =
+        state.fisherMetric X Y ∧
+      (1 / 2 : ℝ) * ((souriauOnsagerSystem state).totalGenerator X Y -
+        (souriauOnsagerSystem state).totalGenerator Y X) =
+        kksForm state.meanMomentum X Y := by
+  constructor
+  · exact (souriauOnsagerSystem state).totalGenerator_symm_part X Y
+  · calc
+      (1 / 2 : ℝ) * ((souriauOnsagerSystem state).totalGenerator X Y -
+          (souriauOnsagerSystem state).totalGenerator Y X) =
+          (souriauOnsagerSystem state).reversible X Y :=
+        (souriauOnsagerSystem state).totalGenerator_skew_part X Y
+      _ = kksForm state.meanMomentum X Y := rfl
 
 end RealSouriauThermodynamics
 

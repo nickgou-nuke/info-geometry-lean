@@ -1,5 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Orthogonal.O55ContactGradeDecomposition
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Orthogonal.O55ContactLie
+import InfoGeometry.Orthogonal.O55ContactGrading
 
 /-! Native two-boundary matrix-coefficient readouts. -/
 
@@ -158,5 +165,81 @@ theorem contact_degree_of_nonzero_readout
   by_contra h
   exact hnonzero
     (homogeneous_readout_eq_zero_of_weight_mismatch B hv hf hA h)
+
+
+theorem block_numerator_eq_zero_of_weight_mismatch
+    (d : BlockDegree) (A : End55)
+    {a b : ℤ} {v : Vector55} {f : Module.Dual ℝ Vector55}
+    (hv : IsKetWeight a v) (hf : IsBraWeight b f)
+    (hmismatch : b - a ≠ d.contact) :
+    f (blockComponent d A v) = 0 := by
+  have hgrade := blockComponent_grade d A
+  have hpoint := LinearMap.congr_fun hgrade v
+  change contactEulerEnd (blockComponent d A v) -
+      blockComponent d A (contactEulerEnd v) =
+    (d.contact : ℝ) • blockComponent d A v at hpoint
+  have hscalar := congrArg f hpoint
+  simp only [map_sub, map_smul] at hscalar
+  rw [hf, hv] at hscalar
+  simp only [LinearMap.map_smul, smul_eq_mul] at hscalar
+  have hbalance :
+      ((b : ℝ) - (a : ℝ) - (d.contact : ℝ)) * f (blockComponent d A v) = 0 := by
+    linear_combination hscalar
+  have hcoeffInt : b - a - d.contact ≠ 0 := by omega
+  have hcoeff : ((b : ℝ) - (a : ℝ) - (d.contact : ℝ)) ≠ 0 := by exact_mod_cast hcoeffInt
+  exact (mul_eq_zero.mp hbalance).resolve_left hcoeff
+
+/-- Crosscap transform of both boundary representatives. -/
+def BoundaryPair55.crosscap (B : BoundaryPair55) : BoundaryPair55 where
+  ket := crosscapEnd B.ket
+  bra := B.bra.comp crosscapEnd
+  overlap_ne := by
+    change B.bra (crosscapEnd (crosscapEnd B.ket)) ≠ 0
+    rw [crosscapEnd_apply_twice]
+    exact B.overlap_ne
+
+@[simp] theorem BoundaryPair55.crosscap_overlap (B : BoundaryPair55) :
+    B.crosscap.overlap = B.overlap := by
+  unfold BoundaryPair55.crosscap BoundaryPair55.overlap
+  change B.bra (crosscapEnd (crosscapEnd B.ket)) = B.bra B.ket
+  rw [crosscapEnd_apply_twice]
+
+theorem BoundaryPair55.crosscap_readout (B : BoundaryPair55) (A : O55Lie) :
+    B.crosscap.readout (crosscapConjugation A : End55) = B.readout (A : End55) := by
+  unfold BoundaryPair55.readout BoundaryPair55.numerator
+  rw [B.crosscap_overlap]
+  congr 1
+  change B.bra (crosscapEnd
+      (crosscapEnd ((A : End55) (crosscapEnd (crosscapEnd B.ket))))) =
+    B.bra ((A : End55) B.ket)
+  simp
+
+theorem crosscap_ket_weight {a : ℤ} {v : Vector55} (hv : IsKetWeight a v) :
+    IsKetWeight (-a) (crosscapEnd v) := by
+  unfold IsKetWeight at hv ⊢
+  have hanti := LinearMap.congr_fun crosscap_anticommutes_euler v
+  change contactEulerEnd (crosscapEnd v) = -(crosscapEnd (contactEulerEnd v)) at hanti
+  rw [hanti, hv, map_smul]
+  simp
+
+theorem crosscap_bra_weight {b : ℤ} {f : Module.Dual ℝ Vector55}
+    (hf : IsBraWeight b f) : IsBraWeight (-b) (f.comp crosscapEnd) := by
+  intro x
+  change f (crosscapEnd (contactEulerEnd x)) = ((-b : ℤ) : ℝ) * f (crosscapEnd x)
+  have hanti : crosscapEnd (contactEulerEnd x) = -(contactEulerEnd (crosscapEnd x)) := by
+    funext i
+    simp [crosscapEnd_apply, contactEulerEnd_apply, contactWeightR_dualIndex]
+  rw [hanti, map_neg, hf]
+  simp
+
+theorem crosscap_selection_packet
+    {a b k : ℤ} (B : BoundaryPair55) {A : O55Lie}
+    (hv : IsKetWeight a B.ket) (hf : IsBraWeight b B.bra)
+    (hA : A ∈ realContactGradeSpace k) :
+    IsKetWeight (-a) B.crosscap.ket ∧ IsBraWeight (-b) B.crosscap.bra ∧
+      crosscapConjugation A ∈ realContactGradeSpace (-k) ∧
+      B.crosscap.readout (crosscapConjugation A : End55) = B.readout (A : End55) := by
+  exact ⟨crosscap_ket_weight hv, crosscap_bra_weight hf,
+    crosscap_reverses_grade hA, B.crosscap_readout A⟩
 
 end InfoGeometry.Orthogonal.O55Contact

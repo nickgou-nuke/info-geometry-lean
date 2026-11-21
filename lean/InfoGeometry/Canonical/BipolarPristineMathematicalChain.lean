@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.BipolarConformalLogos
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MatrixStageLorentzKANSoldering
@@ -6,6 +11,10 @@ import InfoGeometry.Canonical.ApolloniusRapidityFlowBridge
 import InfoGeometry.Analysis.BipolarPlanarHodgePair
 import InfoGeometry.Analysis.BipolarCriticalPhase
 import InfoGeometry.Analysis.BipolarApolloniusReflectionMetric
+import InfoGeometry.Analysis.BipolarMetricEndLengths
+import InfoGeometry.Analysis.BipolarLocalConformalCoordinate
+import InfoGeometry.Analysis.BipolarCrossRatioLog
+import InfoGeometry.Canonical.BipolarCartanLorentzBridge
 
 /-!
 # Pristine bipolar mathematical chain
@@ -32,6 +41,11 @@ open InfoGeometry.Analysis.BipolarApolloniusReflectionMetric
 open InfoGeometry.Canonical.MatrixStageLorentzKANSoldering
 open InfoGeometry.Analysis.BipolarWindingPeriodLattice
 open InfoGeometry.Krein.DoubledSpaceMatrixClockBridge
+open InfoGeometry.Canonical.BipolarCartanLorentzBridge
+open InfoGeometry.Analysis.BipolarLocalConformalCoordinate
+open InfoGeometry.Analysis.BipolarMetricEndLengths
+open Filter
+open scoped Topology Interval
 
 theorem coordinate_differential_and_lift {s : ℂ} (hs : s ∈ punctured01) :
     Complex.exp (bipolarLog s) = crossRatio01 s ∧
@@ -268,5 +282,87 @@ theorem rapidity_flow_split_boost_packet (γ t u : ℝ) :
           (InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex.reconstruct
             0 u)) :=
   flowMap_rapidity_eq_splitBoost_rightPart γ t u
+
+
+theorem pristine_local_analytic_core
+    {s : ℂ} (hs : s ∈ punctured01)
+    (hslit : crossRatio01 s ∈ Complex.slitPlane) :
+    Complex.exp (bipolarLog s) = crossRatio01 s ∧
+      HasDerivAt bipolarLog (dlog01 s) s ∧
+      dlog01 s = 1 / (s * (1 - s)) ∧ dlog01 s ≠ 0 ∧ 0 < metricDensity s := by
+  exact ⟨exp_bipolarLog hs, hasDerivAt_bipolarLog hs hslit,
+    dlog01_eq_one_div_mul hs, dlog01_ne_zero hs, metricDensity_pos hs⟩
+
+theorem pristine_reflection_apollonius_core
+    {s : ℂ} (hs : s ∈ punctured01) (c : ℝ) :
+    mirror (mirror s) = s ∧ (mirror s = s ↔ s.re = 1 / 2) ∧
+      crossRatio01 (mirror s) = ((starRingEnd ℂ) (crossRatio01 s))⁻¹ ∧
+      eta (mirror s) = -eta s ∧
+      (eta s = c ↔ ‖s‖ = Real.exp c * ‖1 - s‖) := by
+  exact ⟨mirror_involutive s, mirror_fixed_iff s, crossRatio01_mirror s,
+    eta_mirror s, eta_eq_iff_apollonius hs c⟩
+
+theorem pristine_eta_zero_critical_core {s : ℂ} (hs : s ∈ punctured01) :
+    eta s = 0 ↔ s.re = 1 / 2 :=
+  InfoGeometry.Analysis.BipolarCrossRatioLog.eta_zero_iff_re_eq_half hs
+
+theorem pristine_boundary_hodge_core (y : ℝ) :
+    phiXY (1 / 2) y = 0 ∧
+      deriv (fun t => phiXY t y) (1 / 2) = 1 / ((1 / 4 : ℝ) + y ^ 2) ∧
+      dPhiCoeff (1 / 2) y 1 = 0 ∧ dPsiCoeff (1 / 2) y 0 = 0 ∧
+      dPsiCoeff (1 / 2) y 1 = 1 / ((1 / 4 : ℝ) + y ^ 2) := by
+  exact ⟨phiXY_half y, deriv_phiXY_half y, dPhiCoeff_half_tangent_zero y,
+    dPsiCoeff_half_normal_zero y, dPsiCoeff_half_tangent y⟩
+
+theorem pristine_planar_hodge_core (x y : ℝ) :
+    dPsiCoeff x y = hodgeRotate (dPhiCoeff x y) ∧
+      hodgeRotate (dPsiCoeff x y) = -dPhiCoeff x y :=
+  planar_hodge_packet x y
+
+theorem pristine_metric_infinity_core {u : ℂ} (hu0 : u ≠ 0) (hu1 : u ≠ 1) :
+    inversionPullbackDlog u = 1 / (1 - u) ∧ infinityChartDensity 0 = 1 := by
+  exact ⟨inversionPullbackDlog_eq hu0 hu1, infinityChartDensity_zero⟩
+
+abbrev pristine_metric_end_length_core := bipolar_metric_end_length_packet
+
+theorem pristine_winding_core (w : WindingPair) :
+    residuePairing w = (residueWinding w : ℂ) ∧
+      circulationPeriod w = residuePairing w * (2 * Real.pi * Complex.I : ℂ) ∧
+      circulationPeriod (diagonalWinding w.1) = 0 := by
+  exact ⟨residuePairing_eq_difference w, circulationPeriod_eq_residuePairing w,
+    circulationPeriod_diagonal w.1⟩
+
+theorem pristine_cartan_representation_core (s : ℂ) (X : HermitianMat2) :
+    halfLogLift s = compactK (theta s / 2) * boostA (eta s / 2) ∧
+      isSL2C (halfLogLift s) ∧ (bipolarSolderingAction s X).mat.det = X.mat.det := by
+  exact ⟨halfLogLift_eq_compactK_mul_boostA s, halfLogLift_isSL2C s,
+    bipolarSolderingAction_det s X⟩
+
+theorem pristine_critical_line_core (y : ℝ) :
+    eta (criticalLine y) = 0 ∧ crossRatio01 (criticalLine y) = criticalPhase y ∧
+      ‖criticalPhase y‖ = 1 ∧
+      halfLogLift (criticalLine y) = compactK (theta (criticalLine y) / 2) ∧
+      isSU2 (halfLogLift (criticalLine y)) := by
+  exact ⟨eta_criticalLine y, crossRatio01_criticalLine_eq_criticalPhase y,
+    norm_criticalPhase y, halfLogLift_criticalLine_eq_compactK y,
+    halfLogLift_criticalLine_isSU2 y⟩
+
+theorem pristine_logistic_core (t : ℝ) :
+    0 < logistic t ∧ logistic t < 1 ∧
+      crossRatio01 (logistic t : ℂ) = (Real.exp t : ℂ) ∧ eta (logistic t : ℂ) = t := by
+  exact ⟨logistic_pos t, logistic_lt_one t, crossRatio01_logistic t, eta_logistic t⟩
+
+theorem pristine_master_chain
+    {s : ℂ} (hs : s ∈ punctured01) (hslit : crossRatio01 s ∈ Complex.slitPlane)
+    (X : HermitianMat2) :
+    Complex.exp (bipolarLog s) = crossRatio01 s ∧
+      HasDerivAt bipolarLog (dlog01 s) s ∧ dlog01 s = 1 / (s * (1 - s)) ∧
+      eta (mirror s) = -eta s ∧ (mirror s = s ↔ s.re = 1 / 2) ∧
+      halfLogLift s = compactK (theta s / 2) * boostA (eta s / 2) ∧
+      isSL2C (halfLogLift s) ∧ (bipolarSolderingAction s X).mat.det = X.mat.det := by
+  exact ⟨exp_bipolarLog hs, hasDerivAt_bipolarLog hs hslit,
+    dlog01_eq_one_div_mul hs, eta_mirror s, mirror_fixed_iff s,
+    halfLogLift_eq_compactK_mul_boostA s, halfLogLift_isSL2C s,
+    bipolarSolderingAction_det s X⟩
 
 end InfoGeometry.Canonical.BipolarPristineMathematicalChain

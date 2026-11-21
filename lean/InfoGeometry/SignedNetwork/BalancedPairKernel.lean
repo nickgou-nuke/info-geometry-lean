@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -108,6 +113,68 @@ theorem pairRate_recovers_column_all (w : C → ℝ) (hw : ∑ a, w a = 0) (a : 
       simp
     simp [pairRate, hγ, hpos, hneg, hz]
   · exact pairRate_recovers_column w hw hγ a
+
+
+theorem positivePart_add_negativePart (w : C → ℝ) (a : C) :
+    positivePart w a + negativePart w a = |w a| := by
+  unfold positivePart negativePart
+  rcases le_total 0 (w a) with h | h
+  · rw [max_eq_left h, max_eq_right (neg_nonpos.mpr h), abs_of_nonneg h]
+    ring
+  · rw [max_eq_right h, max_eq_left (neg_nonneg.mpr h), abs_of_nonpos h]
+    ring
+
+theorem positiveMass_eq_negativeMass (w : C → ℝ) (hw : ∑ a, w a = 0) :
+    positiveMass w = ∑ a, negativePart w a :=
+  positiveMass_eq_negativeMass_of_sum_zero w hw
+
+theorem sum_abs_eq_two_positiveMass (w : C → ℝ) (hw : ∑ a, w a = 0) :
+    (∑ a, |w a|) = 2 * positiveMass w := by
+  calc
+    (∑ a, |w a|) = ∑ a, (positivePart w a + negativePart w a) := by
+      simp only [positivePart_add_negativePart]
+    _ = positiveMass w + ∑ a, negativePart w a := by
+      simp only [Finset.sum_add_distrib, positiveMass]
+    _ = 2 * positiveMass w := by
+      rw [← positiveMass_eq_negativeMass w hw]
+      ring
+
+theorem pairRate_nonneg (w : C → ℝ) (a b : C) : 0 ≤ pairRate w a b := by
+  apply div_nonneg
+  · exact mul_nonneg (positivePart_nonneg w a) (negativePart_nonneg w b)
+  · exact Finset.sum_nonneg (fun c _ => positivePart_nonneg w c)
+
+theorem total_pairRate (w : C → ℝ) (hw : ∑ a, w a = 0)
+    (hγ : positiveMass w ≠ 0) :
+    (∑ a, ∑ b, pairRate w a b) = positiveMass w := by
+  simp only [sum_pairRate_right w hw hγ, positiveMass]
+
+/-- Conditional pair law, used only when the event rate is nonzero. -/
+def pairProbability (w : C → ℝ) (a b : C) : ℝ :=
+  pairRate w a b / positiveMass w
+
+theorem pairProbability_nonneg (w : C → ℝ) (a b : C) :
+    0 ≤ pairProbability w a b := by
+  apply div_nonneg (pairRate_nonneg w a b)
+  exact Finset.sum_nonneg (fun c _ => positivePart_nonneg w c)
+
+theorem sum_pairProbability (w : C → ℝ) (hw : ∑ a, w a = 0)
+    (hγ : positiveMass w ≠ 0) :
+    (∑ a, ∑ b, pairProbability w a b) = 1 := by
+  unfold pairProbability
+  simp_rw [← Finset.sum_div]
+  rw [total_pairRate w hw hγ, div_self hγ]
+
+theorem parent_scaled_first_moment (s : ℝ) (w : C → ℝ)
+    (hw : ∑ a, w a = 0) (hγ : positiveMass w ≠ 0) (a : C) :
+    s * ((∑ b, pairRate w a b) - (∑ b, pairRate w b a)) = s * w a := by
+  rw [pairRate_recovers_column w hw hγ]
+
+theorem pair_event_constant (s c : ℝ) : s * c + (-s) * c = 0 := by ring
+
+@[simp] theorem pairRate_zero (a : C) (b : C) :
+    pairRate (fun _ : C => 0) a b = 0 := by
+  simp [pairRate, positivePart, negativePart, positiveMass]
 
 end
 end InfoGeometry.SignedNetwork.BalancedPairKernel

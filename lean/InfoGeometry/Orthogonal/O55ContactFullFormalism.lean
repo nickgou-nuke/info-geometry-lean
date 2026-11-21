@@ -68,6 +68,19 @@ theorem o55_contact_heisenberg_zero_core
     outerZero_bracket_middleZero a b u v, outerZero_bracket a b c d,
     middleZero_bracket u v w z⟩
 
+/-- Projective boundary selection and crosscap covariance. -/
+theorem o55_contact_boundary_selection_core
+    {a b k : ℤ} (B : BoundaryPair55) {A : O55Lie}
+    (hv : IsKetWeight a B.ket) (hf : IsBraWeight b B.bra)
+    (hA : A ∈ realContactGradeSpace k) :
+    (B.readout (A : End55) ≠ 0 → b - a = k) ∧
+      IsKetWeight (-a) B.crosscap.ket ∧ IsBraWeight (-b) B.crosscap.bra ∧
+      crosscapConjugation A ∈ realContactGradeSpace (-k) ∧
+      B.crosscap.readout (crosscapConjugation A : End55) = B.readout (A : End55) := by
+  rcases crosscap_selection_packet B hv hf hA with ⟨hket, hbra, hgrade, hread⟩
+  exact ⟨fun hnonzero => contact_degree_of_nonzero_readout B hv hf hA hnonzero,
+    hket, hbra, hgrade, hread⟩
+
 /-- Exact operator-envelope packet. -/
 theorem o55_contact_operator_envelope_core {k : ℤ} {A : O55Lie}
     (hA : A ∈ realContactGradeSpace k) :

@@ -182,6 +182,126 @@ private theorem scalarImaginary_square :
       -(1 : EndW W) := by
   rw [← map_mul, Complex.I_mul_I, map_neg, map_one]
 
+/-- Scalar multiplication by the imaginary unit commutes through products on
+the left, and squares to minus the identity on a product.  Keeping these as
+small staged lemmas avoids the recursion blow-up of one large `noncomm_ring`
+call carrying all the centrality hypotheses at once. -/
+private lemma im_smul_mul (x y : EndW W) :
+    (Complex.I • x) * y = Complex.I • (x * y) := by
+  rw [smul_mul_assoc]
+
+private lemma mul_im_smul (x y : EndW W) :
+    x * (Complex.I • y) = Complex.I • (x * y) := by
+  rw [mul_smul_comm]
+
+private lemma im_smul_sq (x : EndW W) :
+    (Complex.I • x) * (Complex.I • x) = -(x * x) := by
+  rw [im_smul_mul x (Complex.I • x), mul_im_smul x x, smul_smul, Complex.I_mul_I]
+  simp
+
+theorem orderedPauliFactor_eq_symmetric_sub_commutators
+    (v : OperatorFourVector W) :
+    orderedPauliFactor v =
+      symmetricPauliQuadratic v -
+        operatorCommutator (v 0) (v 3) -
+        Complex.I • operatorCommutator (v 1) (v 2) := by
+  have h03 :
+      (v 0 + v 3) * (v 0 - v 3) =
+        v 0 * v 0 - v 3 * v 3 - operatorCommutator (v 0) (v 3) := by
+    unfold operatorCommutator
+    noncomm_ring
+  have hmul1 : v 1 * (Complex.I • v 2) = Complex.I • (v 1 * v 2) :=
+    mul_im_smul (v 1) (v 2)
+  have hmul2 : (Complex.I • v 2) * v 1 = Complex.I • (v 2 * v 1) :=
+    im_smul_mul (v 2) (v 1)
+  have h12 :
+      (v 1 - Complex.I • v 2) * (v 1 + Complex.I • v 2) =
+        v 1 * v 1 + v 2 * v 2 +
+          Complex.I • operatorCommutator (v 1) (v 2) := by
+    calc
+      (v 1 - Complex.I • v 2) * (v 1 + Complex.I • v 2)
+          = (v 1 * v 1 + v 1 * (Complex.I • v 2))
+              - ((Complex.I • v 2) * v 1 + (Complex.I • v 2) * (Complex.I • v 2)) := by
+            rw [sub_mul, mul_add, mul_add]
+      _ = (v 1 * v 1 + Complex.I • (v 1 * v 2))
+              - (Complex.I • (v 2 * v 1) + (-(v 2 * v 2))) := by
+            rw [hmul1, hmul2, im_smul_sq]
+      _ = v 1 * v 1 + v 2 * v 2 +
+            Complex.I • operatorCommutator (v 1) (v 2) := by
+            unfold operatorCommutator
+            module
+  unfold orderedPauliFactor symmetricPauliQuadratic
+  rw [h03, h12]
+  module
+
+theorem reversePauliFactor_eq_symmetric_add_commutators
+    (v : OperatorFourVector W) :
+    reversePauliFactor v =
+      symmetricPauliQuadratic v +
+        operatorCommutator (v 0) (v 3) +
+        Complex.I • operatorCommutator (v 1) (v 2) := by
+  have h03 :
+      (v 0 - v 3) * (v 0 + v 3) =
+        v 0 * v 0 - v 3 * v 3 + operatorCommutator (v 0) (v 3) := by
+    unfold operatorCommutator
+    noncomm_ring
+  have hmul1 : v 1 * (Complex.I • v 2) = Complex.I • (v 1 * v 2) :=
+    mul_im_smul (v 1) (v 2)
+  have hmul2 : (Complex.I • v 2) * v 1 = Complex.I • (v 2 * v 1) :=
+    im_smul_mul (v 2) (v 1)
+  have h12 :
+      (v 1 + Complex.I • v 2) * (v 1 - Complex.I • v 2) =
+        v 1 * v 1 + v 2 * v 2 -
+          Complex.I • operatorCommutator (v 1) (v 2) := by
+    calc
+      (v 1 + Complex.I • v 2) * (v 1 - Complex.I • v 2)
+          = (v 1 * v 1 - v 1 * (Complex.I • v 2))
+              + ((Complex.I • v 2) * v 1 - (Complex.I • v 2) * (Complex.I • v 2)) := by
+            rw [add_mul, mul_sub, mul_sub]
+      _ = (v 1 * v 1 - Complex.I • (v 1 * v 2))
+              + (Complex.I • (v 2 * v 1) - (-(v 2 * v 2))) := by
+            rw [hmul1, hmul2, im_smul_sq]
+      _ = v 1 * v 1 + v 2 * v 2 -
+            Complex.I • operatorCommutator (v 1) (v 2) := by
+            unfold operatorCommutator
+            module
+  unfold reversePauliFactor symmetricPauliQuadratic
+  rw [h03, h12]
+  module
+
+/-- The antisymmetric part of the ordered determinant proxy is curvature. -/
+def pauliFactorizationCurvature
+    (v : OperatorFourVector W) : EndW W :=
+  orderedPauliFactor v - reversePauliFactor v
+
+theorem pauliFactorizationCurvature_eq_commutator_residue
+    (v : OperatorFourVector W) :
+    pauliFactorizationCurvature v =
+      (-2 : ℂ) •
+        (operatorCommutator (v 0) (v 3) +
+          Complex.I • operatorCommutator (v 1) (v 2)) := by
+  unfold pauliFactorizationCurvature
+  rw [orderedPauliFactor_eq_symmetric_sub_commutators,
+    reversePauliFactor_eq_symmetric_add_commutators]
+  module
+
+/-- The symmetric part forgets exactly the commutator curvature. -/
+theorem ordered_add_reverse_eq_two_symmetric
+    (v : OperatorFourVector W) :
+    orderedPauliFactor v + reversePauliFactor v =
+      (2 : ℂ) • symmetricPauliQuadratic v := by
+  rw [orderedPauliFactor_eq_symmetric_sub_commutators,
+    reversePauliFactor_eq_symmetric_add_commutators]
+  module
+
+theorem pauliFactorizationCurvature_eq_zero_of_commuting
+    (v : OperatorFourVector W)
+    (h03 : operatorCommutator (v 0) (v 3) = 0)
+    (h12 : operatorCommutator (v 1) (v 2) = 0) :
+    pauliFactorizationCurvature v = 0 := by
+  rw [pauliFactorizationCurvature_eq_commutator_residue, h03, h12]
+  simp
+
 /-! ## Reuse of the existing operator-valued connection owner -/
 
 section Connection

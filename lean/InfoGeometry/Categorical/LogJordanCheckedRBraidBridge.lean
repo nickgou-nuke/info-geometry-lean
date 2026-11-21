@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Categorical.LogNilpotentCrossCheckedR
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.LogJordanTensorFusionDepth
@@ -116,4 +121,25 @@ def standardSymmetricSigmaTwo :
   LogNilpotentModule.tensorHom (𝟙 standardJordanObject)
     ((LogNilpotentModule.symmetricSwapIso standardJordanObject standardJordanObject).hom)
 
+noncomputable section
+
+/-- The general nontrivial checked logarithmic braid: a finite unipotent shear
+followed by the tensor flip. -/
+def shearCheckedR {X : LogNilpotentModule ℂ} (hX : X.N ^ 2 = 0) (p : ℂ) :
+    (X.toLogEndModule.V ⊗[ℂ] X.toLogEndModule.V) ≃ₗ[ℂ]
+      (X.toLogEndModule.V ⊗[ℂ] X.toLogEndModule.V) :=
+  (crossUnipotentEquiv X hX p).trans
+    (TensorProduct.comm ℂ X.toLogEndModule.V X.toLogEndModule.V)
+
+@[simp]
+theorem shearCheckedR_tmul {X : LogNilpotentModule ℂ} (hX : X.N ^ 2 = 0)
+    (p : ℂ) (x y : X.toLogEndModule.V) :
+    shearCheckedR hX p (x ⊗ₜ[ℂ] y) =
+      y ⊗ₜ[ℂ] x + p • (X.N y ⊗ₜ[ℂ] X.N x) := by
+  simp [shearCheckedR, crossUnipotentEquiv, LinearEquiv.trans_apply,
+    crossUnipotentMap_tmul, TensorProduct.comm_tmul]
+
+end
+
 end InfoGeometry.Categorical.LogJordanCheckedRBraidBridge
+

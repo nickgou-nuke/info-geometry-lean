@@ -72,6 +72,7 @@ theorem trace_normalizedGibbsDensity (H : Mat) (hH : H.IsHermitian) (β : ℝ) :
     Matrix.trace (normalizedGibbsDensity H hH β) = 1 :=
   trace_normalizedDensity _ (gibbsDensity_strictlyPositive H hH β)
 
+omit [Nonempty n] in
 theorem normalizedGibbsDensity_eq_normalized_exp
     (H : Mat) (hH : H.IsHermitian) (β : ℝ) :
     normalizedGibbsDensity H hH β =

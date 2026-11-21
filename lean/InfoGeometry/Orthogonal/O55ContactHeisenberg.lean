@@ -181,4 +181,61 @@ theorem negativeOne_bracket_scalar
   rw [negativeOne_bracket, negativeTwo_eq_area_smul]
   simp [smul_smul]
 
+
+/-- Positive generators and the highest-grade witness (local to this owner). -/
+def positiveOneGenerator (a : Outer2) (w : Middle6) : O55Lie :=
+  splitRankTwo (embedOuterPlus a) (embedMiddle w)
+
+def positiveTwoGenerator (a b : Outer2) : O55Lie :=
+  splitRankTwo (embedOuterPlus a) (embedOuterPlus b)
+
+def gradePlusTwoH : O55Lie :=
+  splitRankTwo (coordinateVector 8) (coordinateVector 9)
+
+theorem positiveOne_bracket
+    (a b : Outer2) (w z : Middle6) :
+    ⁅positiveOneGenerator a w, positiveOneGenerator b z⁆ =
+      -(middlePairing w z) • positiveTwoGenerator a b := by
+  unfold positiveOneGenerator positiveTwoGenerator
+  rw [splitRankTwo_bracket]
+  have hp1 : splitPairing (embedMiddle w) (embedOuterPlus b) = 0 := by
+    rw [splitPairing_comm]
+    exact pairing_outerPlus_middle b w
+  have hp2 : splitPairing (embedMiddle z) (embedOuterPlus a) = 0 := by
+    rw [splitPairing_comm]
+    exact pairing_outerPlus_middle a z
+  simp [hp1, hp2]
+
+theorem negativeTwo_bracket_negativeOne
+    (a b c : Outer2) (w : Middle6) :
+    ⁅negativeTwoGenerator a b, negativeOneGenerator c w⁆ = 0 := by
+  unfold negativeTwoGenerator negativeOneGenerator
+  rw [splitRankTwo_bracket]
+  simp
+
+theorem positiveTwo_bracket_positiveOne
+    (a b c : Outer2) (w : Middle6) :
+    ⁅positiveTwoGenerator a b, positiveOneGenerator c w⁆ = 0 := by
+  unfold positiveTwoGenerator positiveOneGenerator
+  rw [splitRankTwo_bracket]
+  simp
+
+theorem positiveTwo_eq_area_smul (a b : Outer2) :
+    positiveTwoGenerator a b = outerArea a b • gradePlusTwoH := by
+  apply Subtype.ext
+  apply LinearMap.ext
+  intro x
+  funext i
+  fin_cases i <;>
+    simp [positiveTwoGenerator, outerArea, gradePlusTwoH,
+      splitRankTwo, splitRankTwoEnd, embedOuterPlus,
+      splitPairing, coordinateVector] <;> ring
+
+theorem positiveOne_bracket_scalar
+    (a b : Outer2) (w z : Middle6) :
+    ⁅positiveOneGenerator a w, positiveOneGenerator b z⁆ =
+      (-(middlePairing w z * outerArea a b)) • gradePlusTwoH := by
+  rw [positiveOne_bracket, positiveTwo_eq_area_smul]
+  simp [smul_smul]
+
 end InfoGeometry.Orthogonal.O55Contact

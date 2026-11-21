@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -79,5 +84,39 @@ theorem all_null_pairs_preserved_iff
     exact sub_eq_zero.mp (h x)
   · rintro rfl x
     exact sub_self _
+
+theorem cancel_positive_eq_remove_pairs (p : Counts C) (c : C) :
+    (cancel p).positive c = p.positive c - annihilationCount p c := by
+  dsimp [cancel, annihilationCount]
+  omega
+
+theorem cancel_negative_eq_remove_pairs (p : Counts C) (c : C) :
+    (cancel p).negative c = p.negative c - annihilationCount p c := by
+  dsimp [cancel, annihilationCount]
+  omega
+
+section Readout
+
+variable [Fintype C] {A : Type*} [AddCommGroup A]
+
+/-- An unnormalized signed observable, not automatically a probability. -/
+def readout (p : Counts C) (O : C → A) : A :=
+  ∑ c, signed p c • O c
+
+@[simp] theorem readout_cancel (p : Counts C) (O : C → A) :
+    readout (cancel p) O = readout p O := by
+  simp only [readout, signed_cancel]
+
+@[simp] theorem readout_addNullPairs (p : Counts C) (k : C → ℕ) (O : C → A) :
+    readout (addNullPairs p k) O = readout p O := by
+  simp only [readout, signed_addNullPairs]
+
+end Readout
+
+/-- Cancellation after any common additive transport is exact. -/
+theorem common_transport_cancels
+    {A B : Type*} [AddCommGroup A] [AddCommGroup B]
+    (T : A →+ B) (x : A) : T x + T (-x) = 0 := by
+  simp
 
 end InfoGeometry.SignedNetwork.ExactCancellation

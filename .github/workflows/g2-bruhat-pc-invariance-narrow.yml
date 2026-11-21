@@ -1,0 +1,25 @@
+name: G2 Bruhat PC Invariance Narrow Check
+
+on:
+  push:
+    branches:
+      - agent/g2-bruhat-pc-invariance
+    paths:
+      - 'lean/InfoGeometry/Algebra/Zorn/G2BruhatPCInvariance.lean'
+      - '.github/workflows/g2-bruhat-pc-invariance-narrow.yml'
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Algebra/Zorn/G2BruhatPCInvariance.lean'
+      - '.github/workflows/g2-bruhat-pc-invariance-narrow.yml'
+
+jobs:
+  narrow-g2-bruhat-pc-invariance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install elan
+        run: |
+          curl https://elan.lean-lang.org/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Build focused owner
+        run: lake build InfoGeometry.Algebra.Zorn.G2BruhatPCInvariance

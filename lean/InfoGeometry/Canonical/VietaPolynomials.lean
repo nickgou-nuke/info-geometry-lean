@@ -7,8 +7,9 @@ Authors: InfoGeometry Engine Contributors
 -- Elementary symmetric (Vieta) polynomials for a quintic.
 
 import Mathlib.Algebra.Algebra.Basic
-import Mathlib.Data.Polynomial.Basic
-import Mathlib.Data.Fin.Tuple
+import Mathlib.Algebra.Polynomial.Basic
+import Mathlib.Data.Fin.Tuple.Basic
+import Mathlib.RingTheory.Polynomial.Vieta
 
 open Polynomial
 
@@ -21,8 +22,7 @@ variable {R : Type*} [CommRing R]
     `i` ranges from 1 to 5. -/
 
 def ei (i : Fin 5) (r : Fin 5 → R) : R :=
-  ((Finset.univ.filter (fun s : Finset (Fin 5) => s.card = i.succ)).sum fun s =>
-    s.attach.prod fun j => r j.1)
+  (Finset.univ.val.map r).esymm i.succ
 
 -- Convenience definitions for each `e_i`.
 
@@ -38,18 +38,16 @@ def e5 (r : Fin 5 → R) : R := ei 4 r
 
 -- Lemma: the monic quintic polynomial with roots `r` expands to the Vieta form.
 
-def monicQuintic (r : Fin 5 → R) : Polynomial R :=
+noncomputable def monicQuintic (r : Fin 5 → R) : Polynomial R :=
   (X - C (r 0)) * (X - C (r 1)) * (X - C (r 2)) * (X - C (r 3)) * (X - C (r 4))
 
 @[simp] lemma monicQuintic_eq_Vieta (r : Fin 5 → R) :
     monicQuintic r =
       X ^ 5 - C (e1 r) * X ^ 4 + C (e2 r) * X ^ 3 - C (e3 r) * X ^ 2 + C (e4 r) * X - C (e5 r) := by
-  -- Expand step by step using `Polynomial.expand_mul` lemmas.
-  -- The proof proceeds by `ring` after `simp`.
   classical
-  have : (∀ i, (X - C (r i)) = X + (-C (r i))) := fun i => by simp
-  simpa [monicQuintic, this] using
-    (by
-      ring)
+  rw [monicQuintic]
+  have hv := Multiset.prod_X_sub_X_eq_sum_esymm (Finset.univ.val.map r)
+  convert hv using 1 <;>
+    simp [e1, e2, e3, e4, e5, ei, Finset.sum_range_succ] <;> ring
 
 end InfoGeometry.Canonical

@@ -6,9 +6,8 @@ Authors: InfoGeometry Engine Contributors
 -- BilinearFormJInvariance.lean
 -- J‑invariance of the `bilinearFormK` family.
 
-import Mathlib.LinearAlgebra.BilinearForm
-import Mathlib.LinearAlgebra.LinearMap
-import .BilinearFormK
+import Mathlib.LinearAlgebra.BilinearForm.Basic
+import InfoGeometry.Canonical.BilinearFormK
 
 open InfoGeometry.Canonical
 

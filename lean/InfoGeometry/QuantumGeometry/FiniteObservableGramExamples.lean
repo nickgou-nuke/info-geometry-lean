@@ -28,7 +28,11 @@ def observables : Fin 2 → Mat2C :=
   ![J_plus + J_minus, (-Complex.I) • (J_plus - J_minus)]
 
 theorem state_normalized : ⟪state, state⟫_ℂ = 1 := by
-  norm_num [state, PiLp.inner_apply, Fin.sum_univ_two]
+  have hs : state = EuclideanSpace.single 0 1 := by
+    ext i
+    fin_cases i <;> simp [state]
+  rw [hs, EuclideanSpace.inner_single_left]
+  simp
 
 theorem observables_isHermitian (a : Fin 2) : (observables a).IsHermitian := by
   change (observables a)ᴴ = observables a

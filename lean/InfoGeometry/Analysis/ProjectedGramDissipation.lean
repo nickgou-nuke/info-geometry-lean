@@ -34,9 +34,9 @@ def energyProjection (h : H) : H →L[ℝ] H :=
 
 theorem energyProjection_apply (h x : H) :
     energyProjection h x = x - (⟪h, x⟫_ℝ / ‖h‖ ^ 2) • h := by
-  simpa only [energyProjection, Submodule.starProjection_singleton] using
-    (Submodule.starProjection_orthogonal_val
-      (K := Submodule.span ℝ ({h} : Set H)) x)
+  rw [energyProjection, Submodule.starProjection_orthogonal_val,
+    Submodule.starProjection_singleton]
+  norm_cast
 
 @[simp] theorem energyProjection_self (h : H) : energyProjection h h = 0 :=
   Submodule.starProjection_orthogonalComplement_singleton_eq_zero h

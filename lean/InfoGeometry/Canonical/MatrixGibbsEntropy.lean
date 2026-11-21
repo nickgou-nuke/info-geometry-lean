@@ -90,7 +90,8 @@ theorem log_normalizedGibbsDensity
     -CFC.log (gibbsDensity H hH β) +
       Real.log (gibbsPartition H hH β) • (1 : Mat) at h
   rw [log_gibbsDensity] at h
-  simpa only [neg_neg, neg_add, sub_eq_add_neg] using congrArg Neg.neg h
+  have hneg := congrArg Neg.neg h
+  convert hneg using 1 <;> simp only [neg_neg, neg_add, sub_eq_add_neg, neg_smul]
 
 /-- The existing thermal modular expression is now an actual CFC logarithm. -/
 theorem log_normalizedGibbsDensity_eq_thermalModularHamiltonian
@@ -100,7 +101,12 @@ theorem log_normalizedGibbsDensity_eq_thermalModularHamiltonian
         (β : ℂ) (Real.log (gibbsPartition H hH β) : ℂ) H := by
   rw [log_normalizedGibbsDensity]
   simp only [QuantumRelativeSurprisal.thermalModularHamiltonian,
-    RCLike.real_smul_eq_coe_smul (K := ℂ), Complex.ofReal_neg]
+    RCLike.real_smul_eq_coe_smul (K := ℂ)]
+  have hβ : ((-β : ℝ) : ℂ) = -(β : ℂ) := by norm_num
+  have hmul : ((-β : ℝ) : ℂ) • H = (-(β : ℂ)) • H :=
+    congrArg (fun z : ℂ => z • H) hβ
+  exact congrArg (fun z : Mat => z -
+    (Real.log (gibbsPartition H hH β) : ℂ) • (1 : Mat)) hmul
 
 /-- Thermal relative-log trace for an arbitrary trace-one comparison matrix. -/
 theorem relativeLogTrace_eq_energy_sub_entropy

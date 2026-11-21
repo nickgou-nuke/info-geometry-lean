@@ -232,9 +232,15 @@ theorem average_both_apply (X : Matrix I J ℝ) (i : I) (j : J) :
     (average I * X * average J) i j = grandMean X := by
   rw [average_right_apply]
   unfold rowLogMean
-  simp only [average_left_apply, colLogMean, ← Finset.sum_div]
+  simp only [average_left_apply, colLogMean, div_eq_mul_inv, Finset.sum_mul]
   rw [Finset.sum_comm]
   unfold grandMean
+  simp only [div_eq_mul_inv]
+  have hinv : ((Fintype.card I : ℝ) * (Fintype.card J : ℝ))⁻¹ =
+      (Fintype.card I : ℝ)⁻¹ * (Fintype.card J : ℝ)⁻¹ := by
+    rw [mul_inv_rev, mul_comm]
+  rw [hinv]
+  simp_rw [← Finset.sum_mul]
   ring
 
 theorem interaction_apply (X : Matrix I J ℝ) (i : I) (j : J) :

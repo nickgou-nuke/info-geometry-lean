@@ -73,7 +73,13 @@ theorem z_x_mul_ne_mul :
       densityMatrix 1 0 0 * densityMatrix 0 0 1 := by
   intro h
   have h01 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℂ => M 0 1) h
-  norm_num [densityMatrix, Matrix.mul_apply, Fin.sum_univ_two] at h01
+  have hL := (Matrix.two_mul_expl (densityMatrix 0 0 1)
+    (densityMatrix 1 0 0)).2.1
+  have hR := (Matrix.two_mul_expl (densityMatrix 1 0 0)
+    (densityMatrix 0 0 1)).2.1
+  simp [densityMatrix] at hL hR h01
+  rw [hL, hR] at h01
+  norm_num at h01
 
 /-- The negative x-axis state is a measurement effect; its complement is
 the positive x-axis state. -/
@@ -83,21 +89,28 @@ theorem neg_x_is_effect :
   have h : (1 : Matrix (Fin 2) (Fin 2) ℂ) - densityMatrix (-1) 0 0 =
       densityMatrix 1 0 0 := by
     ext i j
-    fin_cases i <;> fin_cases j <;> norm_num [densityMatrix]
+    change (1 : Matrix (Fin 2) (Fin 2) ℂ) i j -
+      densityMatrix (-1) 0 0 i j = densityMatrix 1 0 0 i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [densityMatrix, Matrix.one_apply]
   rw [Matrix.le_iff, h]
   exact x_state.1
 
 /-- The support-detecting effect has strictly positive input Born weight. -/
 theorem born_z_neg_x :
     trace (densityMatrix 0 0 1 * densityMatrix (-1) 0 0) = (1 / 2 : ℂ) := by
-  norm_num [densityMatrix, Matrix.trace, Matrix.diag, Matrix.mul_apply,
-    Fin.sum_univ_two]
+  simp only [Matrix.trace, Matrix.diag, Fin.sum_univ_two]
+  rw [(Matrix.two_mul_expl (densityMatrix 0 0 1) (densityMatrix (-1) 0 0)).1,
+    (Matrix.two_mul_expl (densityMatrix 0 0 1) (densityMatrix (-1) 0 0)).2.2.2]
+  norm_num [densityMatrix]
 
 /-- The same effect has zero reference Born weight. -/
 theorem born_x_neg_x :
     trace (densityMatrix 1 0 0 * densityMatrix (-1) 0 0) = 0 := by
-  norm_num [densityMatrix, Matrix.trace, Matrix.diag, Matrix.mul_apply,
-    Fin.sum_univ_two]
+  simp only [Matrix.trace, Matrix.diag, Fin.sum_univ_two]
+  rw [(Matrix.two_mul_expl (densityMatrix 1 0 0) (densityMatrix (-1) 0 0)).1,
+    (Matrix.two_mul_expl (densityMatrix 1 0 0) (densityMatrix (-1) 0 0)).2.2.2]
+  norm_num [densityMatrix]
 
 /-- The actual extended max-relative entropy of these noncommuting
 normalized states is infinite, witnessed by a genuine measurement effect. -/

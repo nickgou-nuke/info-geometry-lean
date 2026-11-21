@@ -6,9 +6,9 @@ Authors: InfoGeometry Engine Contributors
 -- TauQDefinition.lean
 -- Definition of the scalar functional `τ_Q` via the bilinear form family.
 
-import Mathlib.LinearAlgebra.BilinearForm
+import Mathlib.LinearAlgebra.BilinearForm.Basic
 import Mathlib.Algebra.Algebra.Basic
-import .BilinearFormK
+import InfoGeometry.Canonical.BilinearFormK
 
 open InfoGeometry.Canonical
 

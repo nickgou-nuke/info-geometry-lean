@@ -1,6 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.ChiralCausalCone
+import InfoGeometry.Physics.CPTAtom
 import Mathlib.LinearAlgebra.TensorProduct.Basic
 import Mathlib.RingTheory.TensorProduct.Basic
 
@@ -464,7 +470,7 @@ Clifford generators `eps, J, CPT`. Substituting, `e` factors entirely
 through the complexified Cl(1,1) atom. This closes the GEPA loop from
 `SplitClifford.carAnn/carCre` to the 4-cell τ-ideal stability spine. -/
 
-open InfoGeometry.Physics.CPTAtom
+open _root_.InfoGeometry.Physics.CPTAtom
 
 /-- The TL generator `e` factors through the complexified Cl(1,1) atom.
 Expressed in terms of `eps_c = complexifyCl11 eps`, `J_c = complexifyCl11 J`,
@@ -476,10 +482,10 @@ This theorem routes the GEPA edge from `ChiralTensorRecoupling.e` to
 from the real Clifford root to the chiral τ-ideal stability spine. -/
 theorem e_factors_through_cl11_atom :
     e = (1/2 : ℂ) • (
-      ((complexifyCl11 InfoGeometry.Physics.CPTAtom.eps) ⊗ₜ[ℂ] (complexifyCl11 InfoGeometry.Physics.CPTAtom.eps)) -
-      ((complexifyCl11 InfoGeometry.Physics.CPTAtom.J) ⊗ₜ[ℂ] (complexifyCl11 InfoGeometry.Physics.CPTAtom.J)) +
+      ((complexifyCl11 _root_.InfoGeometry.Physics.CPTAtom.eps) ⊗ₜ[ℂ] (complexifyCl11 _root_.InfoGeometry.Physics.CPTAtom.eps)) -
+      ((complexifyCl11 _root_.InfoGeometry.Physics.CPTAtom.J) ⊗ₜ[ℂ] (complexifyCl11 _root_.InfoGeometry.Physics.CPTAtom.J)) +
       ((1 : M2C) ⊗ₜ[ℂ] (1 : M2C)) -
-      ((complexifyCl11 InfoGeometry.Physics.CPTAtom.CPT) ⊗ₜ[ℂ] (complexifyCl11 InfoGeometry.Physics.CPTAtom.CPT))
+      ((complexifyCl11 _root_.InfoGeometry.Physics.CPTAtom.CPT) ⊗ₜ[ℂ] (complexifyCl11 _root_.InfoGeometry.Physics.CPTAtom.CPT))
     ) := by
   -- Extract the weld identities
   have h_eps := complexifyCl11_eps

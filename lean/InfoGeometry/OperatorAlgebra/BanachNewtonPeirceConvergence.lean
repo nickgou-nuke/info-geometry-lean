@@ -453,7 +453,7 @@ theorem banach_newtonPeirce_limit_idempotent_and_intertwiner
     have hEq : (fun k : ℕ => newtonPeirceStep^[k] x * y) =
         (fun k : ℕ => y * newtonPeirceStep^[k] z) := by
       funext k
-      exact newtonPeirceStep_iterates_intertwines hxy k
+      exact PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_intertwines hxy k
     rw [hEq] at hL
     exact tendsto_nhds_unique hL hR
   exact ⟨e, he, hIdem, hCommSelf, hComm, hLeftSup, hRightSup, hLeftAnn, hRightAnn, hInter⟩

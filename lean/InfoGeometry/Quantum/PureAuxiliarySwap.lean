@@ -7,6 +7,7 @@ import InfoGeometry.Quantum.FinitePartialTrace
 import InfoGeometry.Quantum.ChoiCompletePositivity
 import Mathlib.Algebra.Star.StarProjection
 import Mathlib.LinearAlgebra.Matrix.Kronecker
+import Mathlib.LinearAlgebra.Matrix.Permutation
 
 /-!
 # Exact finite erasure using a pure auxiliary system
@@ -54,8 +55,10 @@ open InfoGeometry.Quantum.FiniteAttentionCanonicalBridges
 entries of both factors and the ordered matrix multiplication. -/
 theorem swap_conjugate_kronecker {n : ℕ}
     (A B : Matrix (Fin n) (Fin n) ℂ) :
-    (Equiv.prodComm (Fin n) (Fin n)).permMatrix ℂ * (A ⊗ₖ B) *
-      star ((Equiv.prodComm (Fin n) (Fin n)).permMatrix ℂ) = B ⊗ₖ A := by
+    (Equiv.Perm.permMatrix ℂ (Equiv.prodComm (Fin n) (Fin n))) *
+      (A ⊗ₖ B) *
+      star (Equiv.Perm.permMatrix ℂ (Equiv.prodComm (Fin n) (Fin n))) =
+        B ⊗ₖ A := by
   let e : Equiv.Perm (Fin n × Fin n) := Equiv.prodComm (Fin n) (Fin n)
   change e.permMatrix ℂ * (A ⊗ₖ B) * (e.permMatrix ℂ)ᴴ = B ⊗ₖ A
   rw [Matrix.conjTranspose_permMatrix]

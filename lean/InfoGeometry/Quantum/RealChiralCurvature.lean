@@ -78,7 +78,7 @@ theorem centralizerTrace_cyclic (J : Matrix n n ℝ)
     phaseTrace J ((b : Matrix n n ℝ) * (a : Matrix n n ℝ))
   apply phaseTrace_mul_comm_of_commute_right
   change J * (b : Matrix n n ℝ) = (b : Matrix n n ℝ) * J
-  exact (Subalgebra.mem_centralizer_iff.mp b.property) J (by simp)
+  exact b.property J (by simp)
 
 section CentralizerCurvature
 
@@ -159,7 +159,7 @@ theorem phaseTrace_internalJ_centralizer
   have hT : Commute (T : Matrix (n ⊕ n) (n ⊕ n) ℝ) internalJ := by
     change (T : Matrix (n ⊕ n) (n ⊕ n) ℝ) * internalJ =
       internalJ * (T : Matrix (n ⊕ n) (n ⊕ n) ℝ)
-    exact ((Subalgebra.mem_centralizer_iff.mp T.property) internalJ (by simp)).symm
+    exact (T.property internalJ (by simp)).symm
   calc
     phaseTrace internalJ (T : Matrix (n ⊕ n) (n ⊕ n) ℝ) =
         phaseTrace internalJ (realify (unrealify (T : Matrix (n ⊕ n) (n ⊕ n) ℝ))) :=

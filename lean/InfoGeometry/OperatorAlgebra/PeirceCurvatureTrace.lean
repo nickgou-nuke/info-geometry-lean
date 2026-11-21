@@ -29,8 +29,9 @@ variable {A M : Type*} [Ring A] [AddCommGroup M]
 
 private theorem trace_mul_commutator_left (τ : A →+ M)
     (hτ : ∀ a b, τ (a * b) = τ (b * a)) (a b c : A) :
-    τ (a * commutator b c) = τ (commutator a b * c) := by
-  unfold commutator
+    τ (a * InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator b c) =
+      τ (InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator a b * c) := by
+  unfold InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator
   simp only [mul_sub, sub_mul, map_sub]
   have hcycle : τ (a * (c * b)) = τ ((b * a) * c) := by
     calc
@@ -41,8 +42,9 @@ private theorem trace_mul_commutator_left (τ : A →+ M)
 
 private theorem trace_mul_commutator_rotate (τ : A →+ M)
     (hτ : ∀ a b, τ (a * b) = τ (b * a)) (a b c : A) :
-    τ (a * commutator b c) = τ (b * commutator c a) := by
-  unfold commutator
+    τ (a * InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator b c) =
+      τ (b * InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator c a) := by
+  unfold InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator
   simp only [mul_sub, map_sub]
   have hleft : τ (a * (b * c)) = τ (b * (c * a)) := by
     calc
@@ -99,26 +101,37 @@ trace, using cyclicity and idempotence rather than a changed definition. -/
 theorem trace_projectorCurvature (τ : A →+ M)
     (hτ : ∀ a b, τ (a * b) = τ (b * a)) {p : A}
     (hp : p * p = p) (x y : A) :
-    τ (projectorCurvature p x y) = τ (p * commutator x y) :=
-  trace_idempotent_sandwich τ hτ hp (commutator x y)
+    τ (projectorCurvature p x y) =
+      τ (p * InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator x y) :=
+  trace_idempotent_sandwich τ hτ hp
+    (InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator x y)
 
 /-- The finite gauge-variation identity from equation (8.6). The gauge
 generator is arbitrary; tangency of `[g,p]` follows from idempotence. -/
 theorem trace_projectorCurvature_gauge (τ : A →+ M)
     (hτ : ∀ a b, τ (a * b) = τ (b * a)) {p x : A}
     (hp : p * p = p) (hx : p * x + x * p = x) (g : A) :
-    τ (projectorCurvature p x (commutator g p)) = τ (g * x) := by
-  have hdouble : commutator p (commutator p x) = x := by
+    τ (projectorCurvature p x
+      (InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator g p)) = τ (g * x) := by
+  have hdouble : InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator p
+      (InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator p x) = x := by
     change idempotentAdjoint p (idempotentAdjoint p x) = x
     exact (tangent_iff_adjoint_square_eq_self hp).mp hx
   calc
-    τ (projectorCurvature p x (commutator g p)) =
-        τ (p * commutator x (commutator g p)) :=
-          trace_projectorCurvature τ hτ hp x (commutator g p)
-    _ = τ (commutator p x * commutator g p) :=
-      trace_mul_commutator_left τ hτ p x (commutator g p)
-    _ = τ (g * commutator p (commutator p x)) :=
-      trace_mul_commutator_rotate τ hτ (commutator p x) g p
+    τ (projectorCurvature p x
+      (InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator g p)) =
+        τ (p * InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator x
+          (InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator g p)) :=
+          trace_projectorCurvature τ hτ hp x
+            (InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator g p)
+    _ = τ (InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator p x *
+        InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator g p) :=
+      trace_mul_commutator_left τ hτ p x
+        (InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator g p)
+    _ = τ (g * InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator p
+        (InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator p x)) :=
+      trace_mul_commutator_rotate τ hτ
+        (InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator p x) g p
     _ = τ (g * x) := by rw [hdouble]
 
 /-- Complementing a projector negates its curvature trace. Both tangent
@@ -129,11 +142,13 @@ theorem trace_projectorCurvature_complement (τ : A →+ M)
     τ (projectorCurvature (1 - p) (-x) (-y)) =
       -τ (projectorCurvature p x y) := by
   have hq : (1 - p) * (1 - p) = 1 - p := by noncomm_ring [hp]
-  have hsign : commutator (-x) (-y) = commutator x y := by
-    unfold commutator
+  have hsign : InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator (-x) (-y) =
+      InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator x y := by
+    unfold InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator
     noncomm_ring
-  have hzero : τ (commutator x y) = 0 := by
-    rw [commutator, map_sub, hτ x y, sub_self]
+  have hzero : τ (InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator x y) = 0 := by
+    rw [InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator,
+      map_sub, hτ x y, sub_self]
   rw [trace_projectorCurvature τ hτ hq,
     trace_projectorCurvature τ hτ hp, hsign, sub_mul, one_mul, map_sub,
     hzero, zero_sub]

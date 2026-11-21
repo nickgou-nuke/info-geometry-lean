@@ -52,6 +52,7 @@ theorem uncertaintyGram_mixObservables (ψ : EuclideanSpace ℂ d)
   simp only [uncertaintyGram_apply, fluctuation_mixObservables,
     sum_inner, inner_sum, inner_smul_left, inner_smul_right,
     Matrix.mul_apply, Matrix.conjTranspose_apply, RCLike.star_def, Finset.mul_sum]
+  rw [Finset.sum_comm]
   apply Finset.sum_congr rfl
   intro i hi
   apply Finset.sum_congr rfl

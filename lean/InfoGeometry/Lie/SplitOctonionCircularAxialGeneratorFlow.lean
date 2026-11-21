@@ -1,6 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Lie.SplitOctonionEllCircularAxialGrading
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionCircularZ3Grading
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.SpecialFunctions.Exponential
 
 /-!
 # The axial grading as a linear flow generator
@@ -34,17 +42,11 @@ theorem hasDerivAt_axialFlow_coordinate (X : CanonicalZorn) (t : ℝ) :
     intro i
     simp only [coordinateEquiv_axialFlow_apply,
       coordinateEquiv_axialGrading_apply]
-    have harg : HasDerivAt
-        (fun s : ℝ => s * axialWeight i)
-        (1 * axialWeight i) t :=
-      (hasDerivAt_id t).mul_const (axialWeight i)
     have hexp : HasDerivAt
         (fun s : ℝ => Real.exp (s * axialWeight i))
         (Real.exp (t * axialWeight i) * (1 * axialWeight i)) t :=
-      by
-        convert (Real.hasDerivAt_exp (t * axialWeight i)).comp t harg using 1
-        ext s
-        rfl
+      by simpa [Real.exp_eq_exp_ℝ, smul_eq_mul] using
+        (hasDerivAt_exp_smul_const (axialWeight i) t)
     convert hexp.mul_const (coordinateEquiv X i) using 1 <;> ring
   exact hcoord
 

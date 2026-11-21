@@ -55,7 +55,7 @@ theorem deriv_position (f : SchwartzMap ℝ H) (a : ℝ) :
   simp only [SchwartzMap.derivCLM_apply, add_apply,
     SchwartzMap.smulLeftCLM_apply_apply hg]
   rw [SchwartzMap.smulLeftCLM_apply hg]
-  simpa only [Pi.smul_def', one_smul, add_comm] using
+  simpa only [id_eq, Pi.smul_def', one_smul, add_comm] using
     (((hasDerivAt_id x).sub_const a).smul (f.hasDerivAt x)).deriv
 
 /-- Integration by parts identifies the position/derivative pairing exactly.
@@ -137,8 +137,12 @@ theorem norm_sq_le_two_mul_position_mul_shifted_deriv
       have hself : inner ℝ (f x) (c • f x) = 0 := by
         change (inner ℂ (f x) (c • f x)).re = 0
         have hc : c.re = 0 := by simp [c]
-        simp only [inner_smul_right, Complex.mul_re, hc, inner_self_im,
+        simp only [inner_smul_right, Complex.mul_re, hc,
           zero_mul, mul_zero, sub_zero]
+        have him : (inner ℂ (f x) (f x)).im = 0 :=
+          inner_self_im (𝕜 := ℂ) (f x)
+        rw [him]
+        ring
       rw [hself, mul_zero]
     simp_rw [hpoint]
     simp

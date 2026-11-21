@@ -13,6 +13,7 @@ import InfoGeometry.Canonical.Cl11JordanComplexRealificationBridge
 import InfoGeometry.Quantum.Realification
 import InfoGeometry.Quantum.RealificationCategory
 import InfoGeometry.OperatorAlgebra.MaurerCartanTower
+import InfoGeometry.Projective.ExteriorPowerPluckerBridge
 
 /-!
 # Shared real carrier synthesis: circular CAR and Peirce translations
@@ -1094,6 +1095,72 @@ theorem lorentzMajoranaAction_derives_supercolorJordan_image
   rw [InfoGeometry.Canonical.RealGradedTensorSuperGrassmannianBridge.supercolorJordanAnticommutator_in_tensor]
   change B * (R U * R V + R V * R U) - (R U * R V + R V * R U) * B = _
   noncomm_ring
+
+/-! ### Rindler/Lipschitz flow on the exterior Plücker lane
+
+The exterior owner uses the coordinate volume form on `ℝ⁴`, while the
+spacetime owner uses signature `(+---)`.  The boost acts on the same ordered
+coordinates `(t,x,y,z)`.  Its induced action on simple bivectors preserves
+the Klein quadratic form because `cosh² - sinh² = 1`; this is a volume-form
+statement and does not identify the Euclidean Klein form with the Minkowski
+metric. -/
+
+private def rindlerBoostPluckerVec4 (s : ℝ)
+    (u : InfoGeometry.Canonical.FierzKleinFoundation.Vec4) :
+    InfoGeometry.Canonical.FierzKleinFoundation.Vec4 := fun i =>
+  match i with
+  | .t => Real.cosh s * u .t + Real.sinh s * u .z
+  | .x => u .x
+  | .y => u .y
+  | .z => Real.sinh s * u .t + Real.cosh s * u .z
+
+private def realSpacetimeToPluckerVec4
+    (X : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+    InfoGeometry.Canonical.FierzKleinFoundation.Vec4 := fun i =>
+  match i with
+  | .t => X.t
+  | .x => X.x
+  | .y => X.y
+  | .z => X.z
+
+/-- The physical Rindler boost is exactly the coordinate action used on the
+exterior/Plücker carrier. -/
+private theorem rindlerBoostPluckerVec4_realSpacetime
+    (X : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) (s : ℝ) :
+    rindlerBoostPluckerVec4 s (realSpacetimeToPluckerVec4 X) =
+      realSpacetimeToPluckerVec4
+        (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X s) := by
+  cases X with
+  | mk t x y z =>
+      funext i
+      cases i <;> simp [rindlerBoostPluckerVec4, realSpacetimeToPluckerVec4,
+        InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost] <;> ring
+
+/-- The boost preserves the Klein quadratic form on the Plücker bivector
+formed by any two real spacetime vectors.  This gives an explicit
+Souriau/Lipschitz-to-Plücker bridge on the decomposable locus. -/
+theorem rindlerBoost_preserves_spacetime_wedge_kleinForm
+    (s : ℝ)
+    (X Y : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+    InfoGeometry.Canonical.FierzKleinFoundation.kleinForm
+        (InfoGeometry.Canonical.FierzKleinFoundation.wedgeVec4
+          (realSpacetimeToPluckerVec4
+            (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X s))
+          (realSpacetimeToPluckerVec4
+            (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost Y s))) =
+      InfoGeometry.Canonical.FierzKleinFoundation.kleinForm
+        (InfoGeometry.Canonical.FierzKleinFoundation.wedgeVec4
+          (realSpacetimeToPluckerVec4 X) (realSpacetimeToPluckerVec4 Y)) := by
+  rw [← rindlerBoostPluckerVec4_realSpacetime X s,
+    ← rindlerBoostPluckerVec4_realSpacetime Y s]
+  cases X with
+  | mk xt xx xy xz =>
+    cases Y with
+    | mk yt yx yy yz =>
+      unfold InfoGeometry.Canonical.FierzKleinFoundation.kleinForm
+        InfoGeometry.Canonical.FierzKleinFoundation.wedgeVec4
+        rindlerBoostPluckerVec4 realSpacetimeToPluckerVec4
+      nlinarith [Real.cosh_sq_sub_sinh_sq s]
 
 /-- The real Lorentz spin lift is the restriction of the repository's
 `LieActionLane` inner action on the complete three-factor CAR algebra.  It

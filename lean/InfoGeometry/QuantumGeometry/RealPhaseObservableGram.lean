@@ -176,7 +176,10 @@ theorem phase_apply_inner_self_zero (A : H →ₗ[ℝ] H) (hA : A.IsSymmetric)
     (hAJ : Function.Commute A J) (ψ : H) : ⟪J (A ψ), ψ⟫_ℝ = 0 := by
   have hskew := inner_phase_left J hJ (A ψ) ψ
   have hsym := hA ψ (J ψ)
-  rw [hAJ ψ, real_inner_comm ψ (J (A ψ))] at hsym
+  rw [hAJ ψ] at hsym
+  have hcomm : ⟪A ψ, J ψ⟫_ℝ = ⟪ψ, J (A ψ)⟫_ℝ := hsym
+  have hsymm : ⟪ψ, J (A ψ)⟫_ℝ = ⟪J (A ψ), ψ⟫_ℝ := real_inner_comm _ _
+  rw [hsymm] at hcomm
   linarith
 
 include hJ in
@@ -188,8 +191,12 @@ theorem phase_fluctuation_eq (ψ : H) (A B : H →ₗ[ℝ] H)
     ⟪J (fluctuation ψ A), fluctuation ψ B⟫_ℝ = ⟪J (A ψ), B ψ⟫_ℝ := by
   have hA0 := phase_apply_inner_self_zero J hJ A hA hAJ ψ
   have hB0 : ⟪J ψ, B ψ⟫_ℝ = 0 := by
-    rw [inner_phase_left J hJ, real_inner_comm ψ (J (B ψ)),
-      phase_apply_inner_self_zero J hJ B hB hBJ ψ, neg_zero]
+    have hBA := phase_apply_inner_self_zero J hJ B hB hBJ ψ
+    have hBA' : ⟪ψ, J (B ψ)⟫_ℝ = 0 := by
+      rw [real_inner_comm]
+      exact hBA
+    rw [inner_phase_left J hJ, hBA']
+    simp
   simp only [fluctuation, map_sub, map_smul, inner_sub_left, inner_sub_right,
     real_inner_smul_left, real_inner_smul_right, hA0, hB0,
     inner_phase_self J hJ ψ, mul_zero, sub_zero]

@@ -92,23 +92,23 @@ theorem t1_f1_02_offblock_peirce_deriv_symbolic
       chiralOffBlock4 U (-L) :=
   chiralExteriorProj4_peirceGradingDeriv_offBlock U L
 
-/-- T1-F1-03: Forward direction of `circularGaugeConnection4_compat_iff` for graded diff. -/
+/-- T1-F1-03: Forward direction of `circularGaugeConnection4_eigencondition_iff` for graded diff. -/
 theorem t1_f1_03_compat_iff_forward_graded :
     let ω := circularGradedOmega (coordinateEquiv uPlus)
     ∀ i : Fin 8, circularGradedDiff (ω i) = if i.val < 4 then ω i else -ω i :=
-  (circularGaugeConnection4_compat_iff circularGradedDiff
-    (circularGradedOmega (coordinateEquiv uPlus))).mp (circularGradedDiff_compat _)
+  (circularGaugeConnection4_eigencondition_iff circularGradedDiff
+    (circularGradedOmega (coordinateEquiv uPlus))).mp (circularGradedDiff_eigencondition _)
 
-/-- T1-F1-04: Backward direction of `circularGaugeConnection4_compat_iff` for even diff. -/
+/-- T1-F1-04: Backward direction of `circularGaugeConnection4_eigencondition_iff` for even diff. -/
 theorem t1_f1_04_compat_iff_backward_even :
     let ω := circularEvenOmega (coordinateEquiv (rootPlus 0))
     let A := circularGaugeConnection4 ω
     matrixExteriorDerivative circularEvenDiff A =
       peirceGradingDeriv (chiralExteriorProj4 (Fin 4 → ℂ)) A := by
-  have h := circularEvenDiff_compat (coordinateEquiv (rootPlus 0))
-  exact (circularGaugeConnection4_compat_iff circularEvenDiff
+  have h := circularEvenDiff_eigencondition (coordinateEquiv (rootPlus 0))
+  exact (circularGaugeConnection4_eigencondition_iff circularEvenDiff
     (circularEvenOmega (coordinateEquiv (rootPlus 0)))).mpr
-    ((circularGaugeConnection4_compat_iff circularEvenDiff
+    ((circularGaugeConnection4_eigencondition_iff circularEvenDiff
       (circularEvenOmega (coordinateEquiv (rootPlus 0)))).mp h)
 
 /-- T1-F1-05: `genPhi` invariance on `circularGaugeConnection4 (circularGradedOmega _)`. -/
@@ -140,7 +140,7 @@ theorem t1_f2_03_graded_diff_compat_uplus :
     let A := circularGaugeConnection4 (circularGradedOmega (coordinateEquiv uPlus))
     matrixExteriorDerivative circularGradedDiff A =
       peirceGradingDeriv (chiralExteriorProj4 (Fin 4 → ℂ)) A :=
-  circularGradedDiff_compat (coordinateEquiv uPlus)
+  circularGradedDiff_eigencondition (coordinateEquiv uPlus)
 
 /-- T1-F2-04: Instantiation of `circularGaugeConnection4_yang_mills_bridge` with odd diff. -/
 theorem t1_f2_04_graded_diff_ym_bridge_instantiation :
@@ -180,7 +180,7 @@ theorem t1_f3_03_even_diff_compat_mixed :
     let A := circularGaugeConnection4 (circularEvenOmega (coordinateEquiv (uPlus + uMinus)))
     matrixExteriorDerivative circularEvenDiff A =
       peirceGradingDeriv (chiralExteriorProj4 (Fin 4 → ℂ)) A :=
-  circularEvenDiff_compat (coordinateEquiv (uPlus + uMinus))
+  circularEvenDiff_eigencondition (coordinateEquiv (uPlus + uMinus))
 
 /-- T1-F3-04: Covariant vanishing of `genV P A A` under `circularEvenDiff`. -/
 theorem t1_f3_04_even_diff_covariant_vanishing :
@@ -608,7 +608,7 @@ theorem t2_f1_02_zero_diff_forces_zero_conn
       (circularGaugeConnection4 ω) =
       peirceGradingDeriv (chiralExteriorProj4 (Fin 4 → ℂ)) (circularGaugeConnection4 ω)) :
     circularGaugeConnection4 ω = 0 :=
-  circularGaugeConnection4_sq_zero_compat_forces_zero 0 ω (LinearMap.zero_comp _) hCompat
+  circularGaugeConnection4_sq_zero_eigencondition_forces_zero 0 ω (LinearMap.zero_comp _) hCompat
 
 /-- T2-F1-03: Nonzero `contractionOp` with `d² = 0` STILL forces `A = 0` under compatibility. -/
 theorem t2_f1_03_nonzero_contraction_sq_zero_forces_zero
@@ -619,7 +619,7 @@ theorem t2_f1_03_nonzero_contraction_sq_zero_forces_zero
     circularGaugeConnection4 ω = 0 := by
   have hSq : (contractionOp lam).comp (contractionOp lam) = 0 :=
     LinearMap.ext (contraction_op_sq_zero lam)
-  exact circularGaugeConnection4_sq_zero_compat_forces_zero (contractionOp lam) ω hSq hCompat
+  exact circularGaugeConnection4_sq_zero_eigencondition_forces_zero (contractionOp lam) ω hSq hCompat
 
 /-- T2-F1-04: Pure upper sheet (`L = 0`) has `+1` eigenvalue, pure lower (`U = 0`) has `-1`. -/
 theorem t2_f1_04_upper_vs_lower_sheet_eigenvalue
@@ -738,7 +738,7 @@ theorem t2_f2_03_graded_pure_uminus_neg_eigenspace :
     rw [map_sub, hev, hev3] at hc23
     norm_num at hc23
   refine ⟨hA_ne, ?_⟩
-  rw [circularGradedDiff_compat]
+  rw [circularGradedDiff_eigencondition]
   unfold circularGaugeConnection4
   rw [chiralExteriorProj4_peirceGradingDeriv_offBlock, hU]
   ext i j
@@ -1263,7 +1263,7 @@ theorem t3_01_r1_graded_plus_baseline_bridge :
       matrixExteriorDerivative circularGradedDiff A = peirceGradingDeriv P A ∧
       curvatureFromConnection circularGradedDiff A = genJ P A A + genV P A A := by
   have hBridge := circularGradedDiff_yang_mills_bridge (coordinateEquiv (uPlus + uMinus))
-  have hCompat := circularGradedDiff_compat (coordinateEquiv (uPlus + uMinus))
+  have hCompat := circularGradedDiff_eigencondition (coordinateEquiv (uPlus + uMinus))
   have hA_ne : circularGaugeConnection4
       (circularGradedOmega (coordinateEquiv (uPlus + uMinus))) ≠ 0 := by
     intro hz
@@ -1307,7 +1307,7 @@ theorem t3_02_r1_even_plus_baseline_bridge (x : Coordinate) :
     MatrixIsHomogeneous 1 A ∧
       matrixExteriorDerivative circularEvenDiff A = peirceGradingDeriv P A ∧
       covariantDerivative A circularEvenDiff (genV P A A) = 0 :=
-  ⟨circularEvenOmega_homogeneous x, circularEvenDiff_compat x,
+  ⟨circularEvenOmega_homogeneous x, circularEvenDiff_eigencondition x,
     circularEvenDiff_covariant_vanishing x⟩
 
 /-- T3-03 (R1 + R1): Contrasts nonzero graded/even derivations vs `d² = 0` no-go. -/
@@ -1450,8 +1450,8 @@ theorem t4_01_circular_chiral_gauge_r1_pipeline :
       covariantDerivative A_even circularEvenDiff (genV P A_even A_even) = 0 := by
   refine ⟨chiralKreinForm_diag_eq_two_wittNorm _, minkowskiEta4_mul_self,
     circularGradedDiff_ne_zero, circularEvenDiff_ne_zero,
-    t3_01_r1_graded_plus_baseline_bridge.1, circularGradedDiff_compat _,
-    circularEvenOmega_homogeneous _, circularEvenDiff_compat _,
+    t3_01_r1_graded_plus_baseline_bridge.1, circularGradedDiff_eigencondition _,
+    circularEvenOmega_homogeneous _, circularEvenDiff_eigencondition _,
     circularEvenDiff_covariant_vanishing _⟩
 
 /-- T4-02: End-to-End R2 lattice gauge regularization to continuum action & colimit cone. -/
@@ -1563,7 +1563,7 @@ theorem t5_m1_01_exterior_noncomm_and_offblock_compat :
       at hc
     rw [map_add, hev, hev1] at hc
     norm_num at hc
-  · rw [chiralOffBlock4_compat_iff]
+  · rw [chiralOffBlock4_eigencondition_iff]
     constructor
     · ext i j
       fin_cases i <;> fin_cases j <;>
@@ -2023,7 +2023,7 @@ theorem t5_m1_04_even_diff_self_dual_nonvacuous_and_sign_mismatch :
     rw [hSD]
     exact hVne
   · intro h
-    have h0 := (circularGaugeConnection4_compat_iff circularEvenDiff
+    have h0 := (circularGaugeConnection4_eigencondition_iff circularEvenDiff
       (circularGradedOmega (coordinateEquiv uPlus))).mp h 0
     have hc : coordinateEquiv uPlus = Pi.single 0 1 := by
       simpa [frame] using coordinateEquiv_apply_frame 0
@@ -2459,7 +2459,7 @@ theorem t5_cross_m1_m3_baseline_bridges
     (circularCurvatureMat4_trace x).1, circularCurvatureMat4_square_trace x,
     (circularSheet_tetraktys_table x y).1⟩
   intro hcompat
-  exact hNe (circularGaugeConnection4_sq_zero_compat_forces_zero d _ hd2 hcompat)
+  exact hNe (circularGaugeConnection4_sq_zero_eigencondition_forces_zero d _ hd2 hcompat)
 
 /-! ## Tier 5: Adversarial & Full-Surface Verification Probes (M3) -/
 
@@ -3389,7 +3389,7 @@ private lemma t5_m1_05_graded_hodge_witness :
   exact hGenV
 
 /-- T5-M1-05: Covers `matrixExteriorDerivative_chiralOffBlock4` (general ring & incompatible `d`),
-`chiralOffBlock4_compat_iff.mp` negative check, `genJ ≠ 0` from graded witness,
+`chiralOffBlock4_eigencondition_iff.mp` negative check, `genJ ≠ 0` from graded witness,
 `P * A ≠ A * P` and `matrixTraceForm (A * A) = 0` from even witness, and remaining
 conjuncts 5–6 plus nonzero Hodge-star target of `circularGradedDiff_yang_mills_bridge_general`. -/
 theorem t5_m1_05_offblock_deriv_witnesses_and_bridge_conjuncts
@@ -3415,7 +3415,7 @@ theorem t5_m1_05_offblock_deriv_witnesses_and_bridge_conjuncts
   refine ⟨matrixExteriorDerivative_chiralOffBlock4 dR U L, ?_,
     t5_m1_05_graded_hodge_witness, circularEvenDiff_nondegenerate_witness⟩
   intro U1 h
-  have hU := ((chiralOffBlock4_compat_iff circularEvenDiff U1 0).mp h).1
+  have hU := ((chiralOffBlock4_eigencondition_iff circularEvenDiff U1 0).mp h).1
   have h00 := congrFun (congrFun hU 0) 0
   simp only [U1, Matrix.map_apply, Matrix.of_apply, Matrix.cons_val_zero] at h00
   have hbad : (2 : ℂ) • (ExteriorAlgebra.ι ℂ (Pi.single 0 (1 : ℂ)) *
@@ -3710,9 +3710,9 @@ private def e2eAuditDecls : Array Name :=
    , ``InfoGeometry.Lie.chiralOffBlock4_eq_iff
    , ``InfoGeometry.Lie.matrixExteriorDerivative_chiralOffBlock4
    , ``InfoGeometry.Lie.chiralExteriorProj4_peirceGradingDeriv_offBlock
-   , ``InfoGeometry.Lie.chiralOffBlock4_compat_iff
-   , ``InfoGeometry.Lie.circularGaugeConnection4_compat_iff
-   , ``InfoGeometry.Lie.circularGaugeConnection4_sq_zero_compat_forces_zero
+   , ``InfoGeometry.Lie.chiralOffBlock4_eigencondition_iff
+   , ``InfoGeometry.Lie.circularGaugeConnection4_eigencondition_iff
+   , ``InfoGeometry.Lie.circularGaugeConnection4_sq_zero_eigencondition_forces_zero
    , ``InfoGeometry.Lie.circularGradedTargetMap
    , ``InfoGeometry.Lie.circularGradedDiff
    , ``InfoGeometry.Lie.circularGradedDiff_ι
@@ -3723,7 +3723,7 @@ private def e2eAuditDecls : Array Name :=
    , ``InfoGeometry.Lie.circularGradedDiff_uPlusForm
    , ``InfoGeometry.Lie.circularGradedDiff_uMinusForm
    , ``InfoGeometry.Lie.circularGradedOmega
-   , ``InfoGeometry.Lie.circularGradedDiff_compat
+   , ``InfoGeometry.Lie.circularGradedDiff_eigencondition
    , ``InfoGeometry.Lie.circularGradedDiff_yang_mills_bridge_general
    , ``InfoGeometry.Lie.circularGradedDiff_yang_mills_bridge
    , ``InfoGeometry.Lie.circularGradedDiff_nondegenerate_witness
@@ -3733,7 +3733,7 @@ private def e2eAuditDecls : Array Name :=
    , ``InfoGeometry.Lie.circularEvenDiff_ne_zero
    , ``InfoGeometry.Lie.circularEvenOmega
    , ``InfoGeometry.Lie.circularEvenOmega_homogeneous
-   , ``InfoGeometry.Lie.circularEvenDiff_compat
+   , ``InfoGeometry.Lie.circularEvenDiff_eigencondition
    , ``InfoGeometry.Lie.circularEvenDiff_covariant_vanishing
    , ``InfoGeometry.Lie.circularEvenDiff_self_dual_covariant_vanishing
    , ``InfoGeometry.Lie.circularEvenDiff_nondegenerate_witness

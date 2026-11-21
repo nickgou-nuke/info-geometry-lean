@@ -103,7 +103,10 @@ theorem dominationFactor_map_le (f : A →ₚ[ℝ] B) (ρ σ : A) :
     dominationFactor (f ρ) (f σ) ≤ dominationFactor ρ σ := by
   refine le_iInf fun c => le_iInf fun hc => le_iInf fun hd => ?_
   apply dominationFactor_le hc
-  simpa only [map_smul] using f.monotone' hd
+  have hmap : f ((c : ℝ) • σ) = (c : ℝ) • f σ :=
+    PositiveLinearMap.map_smul_of_tower f (c : ℝ) σ
+  rw [← hmap]
+  exact f.monotone' hd
 
 /-- Data processing for the actual extended divergence under a native positive
 linear map. Trace preservation is not needed for this order-theoretic result. -/
@@ -116,8 +119,13 @@ theorem one_le_dominationFactor_of_normalized (τ : A →ₚ[ℝ] ℝ)
     {ρ σ : A} (hρ : τ ρ = 1) (hσ : τ σ = 1) :
     1 ≤ dominationFactor ρ σ := by
   refine le_iInf fun c => le_iInf fun _ => le_iInf fun hd => ?_
+  have hmap : τ ((c : ℝ) • σ) = (c : ℝ) • τ σ :=
+    PositiveLinearMap.map_smul_of_tower τ (c : ℝ) σ
   have hc : (1 : ℝ) ≤ c := by
-    simpa only [map_smul, hρ, hσ, smul_eq_mul, mul_one] using τ.monotone' hd
+    have h := τ.monotone' hd
+    change τ ρ ≤ τ ((c : ℝ) • σ) at h
+    rw [hρ, hmap, hσ, smul_eq_mul, mul_one] at h
+    exact h
   exact_mod_cast hc
 
 /-- Nonnegativity on pairs normalized by the same positive functional. -/

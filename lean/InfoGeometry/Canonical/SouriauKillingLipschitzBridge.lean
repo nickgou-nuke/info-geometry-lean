@@ -262,6 +262,18 @@ abbrev Minkowski4 := InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetim
 def minkowski4Form (u v : Minkowski4) : ℝ :=
   u.t * v.t - u.x * v.x - u.y * v.y - u.z * v.z
 
+/-- The self-pairing uses exactly the established interval owner and its
+`(+---)` signature; this prevents the bridge from silently introducing a
+second metric convention. -/
+theorem minkowski4Form_self_eq_interval (X : Minkowski4) :
+    minkowski4Form X X =
+      InfoGeometry.Canonical.RealSpacetime4x4Closure.interval X := by
+  cases X with
+  | mk t x y z =>
+    simp [minkowski4Form,
+      InfoGeometry.Canonical.RealSpacetime4x4Closure.interval]
+    ring
+
 /-- A general real Lorentz-algebra infinitesimal on the established
 `(+---)` coordinate carrier. The first three parameters are boosts in the
 `tx`, `ty`, and `tz` planes; the remaining three are rotations in the
@@ -429,6 +441,76 @@ theorem rindler_boost_preserves_minkowski4 (X : Minkowski4) (s : ℝ) :
       InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost]
     have h := Real.cosh_sq_sub_sinh_sq s
     nlinarith [h]
+
+/-- The time and longitudinal coordinates of the full Rindler boost have
+infinitesimal derivatives given by the boosted longitudinal coordinate and
+time coordinate, respectively. -/
+theorem hasDerivAt_rindler_boost_t (X : Minkowski4) (s : ℝ) :
+    HasDerivAt
+      (fun r =>
+        (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X r).t)
+      (rindlerKillingGenerator
+        (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X s)).t s := by
+  cases X with
+  | mk t x y z =>
+    convert (((hasDerivAt_id s).cosh.const_mul t).add
+      ((hasDerivAt_id s).sinh.const_mul z)) using 1
+    · ext r
+      simp [InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost]
+    · simp [InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost,
+        rindlerKillingGenerator]
+      ring
+
+/-- The longitudinal coordinate derivative is the time coordinate of the
+boosted point. -/
+theorem hasDerivAt_rindler_boost_z (X : Minkowski4) (s : ℝ) :
+    HasDerivAt
+      (fun r =>
+        (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X r).z)
+      (rindlerKillingGenerator
+        (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X s)).z s := by
+  cases X with
+  | mk t x y z =>
+    convert (((hasDerivAt_id s).cosh.const_mul z).add
+      ((hasDerivAt_id s).sinh.const_mul t)) using 1
+    · ext r
+      simp [InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost]
+    · simp [InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost,
+        rindlerKillingGenerator]
+      ring
+
+/-- At zero rapidity, the coordinatewise derivative of the full Rindler boost
+is exactly its affine Killing generator. The transverse derivatives vanish. -/
+theorem rindler_boost_derivative_at_zero (X : Minkowski4) :
+    HasDerivAt
+        (fun s =>
+          (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X s).t)
+        (rindlerKillingGenerator X).t 0 ∧
+    HasDerivAt
+        (fun s =>
+          (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X s).x)
+        0 0 ∧
+    HasDerivAt
+        (fun s =>
+          (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X s).y)
+        0 0 ∧
+    HasDerivAt
+        (fun s =>
+          (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X s).z)
+        (rindlerKillingGenerator X).z 0 := by
+  cases X with
+  | mk t x y z =>
+    refine ⟨?_, ?_, ?_, ?_⟩
+    · simpa [rindlerKillingGenerator,
+        InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost] using
+        hasDerivAt_rindler_boost_t ⟨t, x, y, z⟩ 0
+    · simpa [InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost] using
+        (hasDerivAt_const (0 : ℝ) x)
+    · simpa [InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost] using
+        (hasDerivAt_const (0 : ℝ) y)
+    · simpa [rindlerKillingGenerator,
+        InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost] using
+        hasDerivAt_rindler_boost_z ⟨t, x, y, z⟩ 0
 
 /-! ## The finite `Cl(1,1)` rotor -/
 

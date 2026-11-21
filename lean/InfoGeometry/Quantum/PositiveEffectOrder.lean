@@ -113,7 +113,20 @@ theorem le_smul_iff_born_le_effects {ρ σ : Matrix n n ℂ}
     (hρ : ρ.PosSemidef) (hσ : σ.PosSemidef) (c : ℝ) (hc : 0 ≤ c) :
     ρ ≤ c • σ ↔ ∀ E : Matrix n n ℂ, 0 ≤ E ∧ E ≤ 1 →
       trace (E * ρ) ≤ (c : ℂ) * trace (E * σ) := by
-  simpa only [Matrix.smul_mul, trace_smul, Complex.real_smul, trace_mul_comm] using
-    (le_iff_trace_mul_le_effects hρ.isHermitian (hσ.smul hc).isHermitian)
+  rw [le_iff_trace_mul_le_effects hρ.isHermitian (hσ.smul hc).isHermitian]
+  constructor
+  · intro h E hE
+    have htrace := h E hE
+    calc
+      trace (E * ρ) = trace (ρ * E) := Matrix.trace_mul_comm _ _
+      _ ≤ trace ((c : ℂ) • σ * E) := htrace
+      _ = (c : ℂ) * trace (E * σ) := by
+        rw [Matrix.smul_mul, trace_smul, smul_eq_mul, Matrix.trace_mul_comm]
+  · intro h E hE
+    calc
+      trace (ρ * E) = trace (E * ρ) := (Matrix.trace_mul_comm _ _).symm
+      _ ≤ (c : ℂ) * trace (E * σ) := h E hE
+      _ = trace ((c : ℂ) • σ * E) := by
+        rw [Matrix.smul_mul, trace_smul, smul_eq_mul, Matrix.trace_mul_comm]
 
 end InfoGeometry.Quantum.PositiveEffectOrder

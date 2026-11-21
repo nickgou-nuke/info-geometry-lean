@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Probability.AitchisonContingency
+import Mathlib.LinearAlgebra.Trace
+import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 
 /-!
 # Dimensions of the rectangular CLR decomposition

@@ -1,5 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Lie.SplitOctonionCrossTensor
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.LinearAlgebra.ExteriorPower.Basis
 import Mathlib.Tactic
 
 /-!
@@ -92,7 +98,7 @@ theorem nativeCrossExteriorMap_surjective :
 
 theorem nativeCrossExteriorMap_finrank_eq :
     Module.finrank ℝ Bivector3 = Module.finrank ℝ Vec3 := by
-  rw [exteriorPower.finrank_eq (R := ℝ) (M := Vec3) (n := 2),
+  rw [exteriorPower.finrank_eq ℝ Vec3 2,
     Module.finrank_pi]
   norm_num
 

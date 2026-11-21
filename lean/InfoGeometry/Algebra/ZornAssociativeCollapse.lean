@@ -64,7 +64,7 @@ theorem additiveMap_one_eq_zero
   calc
     f one = f (mul J J) := congrArg f hJsq.symm
     _ = f J * f J := hmul J J
-    _ = 0 := by rw [hJ, _root_.zero_mul]
+    _ = 0 := by rw [hJ]; simp
 
 /-- Every additive map preserving the ordered native Zorn product into an
 associative ring is zero. -/
@@ -76,7 +76,7 @@ theorem additiveMap_eq_zero_of_multiplicative
   calc
     f X = f (mul one X) := congrArg f (one_mul X).symm
     _ = f one * f X := hmul one X
-    _ = 0 := by rw [additiveMap_one_eq_zero f hmul, _root_.zero_mul]
+    _ = 0 := by rw [additiveMap_one_eq_zero f hmul]; simp
 
 /-- In particular, an `R`-linear multiplicative map has zero underlying linear
 map. No compatibility between target scalar multiplication and multiplication

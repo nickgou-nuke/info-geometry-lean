@@ -1,7 +1,15 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.OperatorAlgebra.NoncommutativePowerDerivative
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Exponential
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
 
 /-!
 # The noncommutative Duhamel derivative operator
@@ -206,5 +214,115 @@ theorem exponentialDerivative_apply_eq_duhamelDerivative_of_commute
       duhamelDerivative a h := by
   rw [exponentialDerivative_apply_of_commute a h hComm]
   rw [duhamelDerivative_apply_of_commute a h hComm]
+
+/-- The perturbed exponential is continuous in the base operator parameter. -/
+noncomputable def perturbedDuhamelIntegral
+    (a h : A) (z : ℝ) : A :=
+  ∫ t in (0 : ℝ)..1,
+    NormedSpace.exp ((1 - t) • a) *
+      h *
+        NormedSpace.exp (t • (a + z • h))
+
+/-- The finite-difference perturbed integral is continuous in `z`. -/
+theorem continuous_perturbedDuhamelIntegral (a h : A) :
+    Continuous (perturbedDuhamelIntegral a h) := by
+  letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
+  apply
+    intervalIntegral.continuous_parametric_intervalIntegral_of_continuous'
+      (a₀ := (0 : ℝ)) (b₀ := 1)
+  fun_prop
+
+/--
+Exact finite-difference Duhamel formula.  No commutativity assumption is made:
+the second exponential is evaluated at the perturbed endpoint a + z • h.
+-/
+theorem exp_add_smul_sub_exp_eq_smul_perturbedDuhamelIntegral
+    (a h : A) (z : ℝ) :
+    NormedSpace.exp (a + z • h) - NormedSpace.exp a =
+      z • perturbedDuhamelIntegral a h z := by
+  letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
+  let F : ℝ → A := fun t =>
+    NormedSpace.exp ((1 - t) • a) *
+      NormedSpace.exp (t • (a + z • h))
+  let F' : ℝ → A := fun t =>
+    NormedSpace.exp ((1 - t) • a) *
+      (z • h) *
+        NormedSpace.exp (t • (a + z • h))
+  have hF' (t : ℝ) : HasDerivAt F (F' t) t := by
+    have hOneSub :
+        HasDerivAt (fun u : ℝ => 1 - u) (-1) t := by
+      simpa using (hasDerivAt_id (x := t)).const_sub (1 : ℝ)
+    have hLeft :
+        HasDerivAt
+          (fun u : ℝ => NormedSpace.exp ((1 - u) • a))
+          (-(NormedSpace.exp ((1 - t) • a) * a)) t := by
+      have hLeftBase :
+          HasDerivAt (fun v : ℝ => NormedSpace.exp (v • a))
+            (NormedSpace.exp ((1 - t) • a) * a) (1 - t) :=
+        hasDerivAt_exp_smul_const a (1 - t)
+      convert HasDerivAt.scomp t hLeftBase hOneSub using 1
+      · ext u
+        simp
+      · simp
+    have hRight :
+        HasDerivAt
+          (fun u : ℝ => NormedSpace.exp (u • (a + z • h)))
+          ((a + z • h) *
+            NormedSpace.exp (t • (a + z • h))) t :=
+      hasDerivAt_exp_smul_const' (a + z • h) t
+    dsimp [F, F']
+    convert hLeft.mul hRight using 1
+    noncomm_ring
+  have hF'cont : Continuous F' := by
+    dsimp [F']
+    fun_prop
+  have hFTC :
+      (∫ t in (0 : ℝ)..1, F' t) = F 1 - F 0 :=
+    intervalIntegral.integral_eq_sub_of_hasDerivAt
+      (fun t _ => hF' t) (hF'cont.intervalIntegrable 0 1)
+  calc
+    NormedSpace.exp (a + z • h) - NormedSpace.exp a =
+        ∫ t in (0 : ℝ)..1,
+          NormedSpace.exp ((1 - t) • a) *
+            (z • h) *
+              NormedSpace.exp (t • (a + z • h)) := by
+      simpa [F, F'] using hFTC.symm
+    _ = ∫ t in (0 : ℝ)..1,
+          z •
+            (NormedSpace.exp ((1 - t) • a) *
+              h *
+                NormedSpace.exp (t • (a + z • h))) := by
+      apply intervalIntegral.integral_congr
+      intro t _
+      simp only [mul_smul_comm, smul_mul_assoc]
+    _ = z • perturbedDuhamelIntegral a h z := by
+      rw [intervalIntegral.integral_smul]
+      rfl
+
+/--
+The exponential along the real affine line a + z • h has the Duhamel
+directional derivative at zero.  The proof uses the exact finite-difference
+formula and continuity of its parameter-dependent Bochner integral.
+-/
+theorem hasDerivAt_exp_affine_duhamel (a h : A) :
+    HasDerivAt
+      (fun z : ℝ => NormedSpace.exp (a + z • h))
+      (duhamelDerivative a h) 0 := by
+  rw [hasDerivAt_iff_tendsto_slope_zero]
+  have hAtZero :
+      perturbedDuhamelIntegral a h 0 =
+        duhamelDerivative a h := by
+    rw [duhamelDerivative_apply_integral]
+    simp [perturbedDuhamelIntegral]
+  rw [← hAtZero]
+  refine
+    (continuous_perturbedDuhamelIntegral a h).continuousAt.mono_left
+      inf_le_left |>.congr' ?_
+  filter_upwards [self_mem_nhdsWithin] with z hz
+  have hz0 : z ≠ 0 := by
+    simpa only [Set.mem_compl_iff, Set.mem_singleton_iff] using hz
+  simp only [zero_add, zero_smul, add_zero]
+  rw [exp_add_smul_sub_exp_eq_smul_perturbedDuhamelIntegral]
+  simp [smul_smul, hz0]
 
 end InfoGeometry.OperatorAlgebra

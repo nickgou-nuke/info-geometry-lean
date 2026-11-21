@@ -232,4 +232,21 @@ theorem FaithfulDensityOperator.bkmRealBilinForm_isPosSemidef
     simpa only [D.bkmRealBilinForm_apply h_rpow A A] using
       D.kuboMoriPairing_self_re_nonneg A h_rpow⟩
 
+theorem FaithfulDensityOperator.bkmRealBilinForm_self_pos_iff
+    (D : FaithfulDensityOperator n)
+    (h_rpow : Continuous D.rpow)
+    (A : FiniteOperatorAlgebra n) :
+    0 < D.bkmRealBilinForm h_rpow A A ↔ A ≠ 0 := by
+  constructor
+  · intro hpos hA
+    subst A
+    have hzero :
+        D.bkmRealBilinForm h_rpow (0 : FiniteOperatorAlgebra n) 0 = 0 := by
+      simp
+    rw [hzero] at hpos
+    exact (lt_irrefl (0 : ℝ)) hpos
+  · intro hA
+    rw [D.bkmRealBilinForm_apply]
+    exact D.kuboMoriPairing_self_re_pos A h_rpow hA
+
 end SouriauOnsagerBKM

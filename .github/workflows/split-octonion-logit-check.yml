@@ -1,0 +1,71 @@
+name: Split-Octonion Logit Bridge Check
+
+on:
+  push:
+    branches:
+      - feat/split-octonion-logit-bayes
+  pull_request:
+    branches:
+      - main
+    paths:
+      - lean/InfoGeometry/Physics/SplitOctonionLogitBridge.lean
+      - .github/workflows/split-octonion-logit-check.yml
+      - lean-toolchain
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install elan
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Create isolated Mathlib project
+        run: |
+          rm -rf /tmp/split-octonion-logit-check
+          mkdir -p /tmp/split-octonion-logit-check/InfoGeometry/Physics
+          cp lean-toolchain /tmp/split-octonion-logit-check/lean-toolchain
+          cp lean/InfoGeometry/Physics/SplitOctonionLogitBridge.lean \
+            /tmp/split-octonion-logit-check/InfoGeometry/Physics/
+          cat > /tmp/split-octonion-logit-check/lakefile.lean <<'EOF'
+          import Lake
+          open Lake DSL
+
+          package splitOctonionLogitCheck
+
+          require mathlib from git
+            "https://github.com/leanprover-community/mathlib4.git" @ "v4.28.1"
+
+          @[default_target]
+          lean_lib SplitOctonionLogit where
+            roots := #[`InfoGeometry.Physics.SplitOctonionLogitBridge]
+          EOF
+      - name: Restore dependencies
+        id: dependency-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+            /tmp/split-octonion-logit-check/.lake
+          key: split-octonion-logit-lean-4.28.1-mathlib-v4.28.1-v1
+      - name: Fetch Mathlib and binary cache
+        working-directory: /tmp/split-octonion-logit-check
+        run: |
+          lake update
+          lake exe cache get
+      - name: Save dependencies
+        if: steps.dependency-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.elan
+            /tmp/split-octonion-logit-check/.lake
+          key: split-octonion-logit-lean-4.28.1-mathlib-v4.28.1-v1
+      - name: Kernel-check owner module
+        working-directory: /tmp/split-octonion-logit-check
+        run: lake build SplitOctonionLogit
+      - name: Enforce zero proof placeholders
+        run: |
+          ! grep -nE '\bsorry\b|\badmit\b' \
+            lean/InfoGeometry/Physics/SplitOctonionLogitBridge.lean

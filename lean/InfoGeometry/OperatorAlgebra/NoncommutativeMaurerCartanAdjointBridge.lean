@@ -24,6 +24,11 @@ namespace InfoGeometry.OperatorAlgebra.NoncommutativeMaurerCartanAdjointBridge
 
 variable {A : Type*} [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A]
 
+abbrev EndA := A →L[ℝ] A
+
+noncomputable local instance : NormedAlgebra ℚ (A →L[ℝ] A) :=
+  NormedAlgebra.restrictScalars ℚ ℝ (A →L[ℝ] A)
+
 def leftMulCLM (a : A) : A →L[ℝ] A :=
   (ContinuousLinearMap.mul ℝ A) a
 
@@ -72,6 +77,37 @@ theorem adCLM_isDerivation (a : A) :
       (ContinuousLinearMap.mul ℝ A) (adCLM a) := by
   intro x y
   exact adCLM_leibniz a x y
+
+/-- Scaled left and right multipliers remain commuting endomorphisms. -/
+theorem scaled_leftMul_rightMul_commute
+    (a : A) (s t : ℝ) :
+    Commute (s • leftMulCLM a) (t • rightMulCLM a) := by
+  show (s • leftMulCLM a) * (t • rightMulCLM a) =
+    (t • rightMulCLM a) * (s • leftMulCLM a)
+  ext x
+  simp [leftMulCLM, rightMulCLM, mul_assoc]
+  module
+
+/-- Exponential of the adjoint derivation factors into its commuting left and
+right multiplier flows, with no BCH correction. -/
+theorem exp_smul_adCLM_factor
+    (a : A) (s : ℝ) :
+    NormedSpace.exp (s • adCLM a) =
+      NormedSpace.exp (s • leftMulCLM a) *
+        NormedSpace.exp ((-s) • rightMulCLM a) := by
+  have hcomm :
+      Commute (s • leftMulCLM a) ((-s) • rightMulCLM a) := by
+    show (s • leftMulCLM a) * ((-s) • rightMulCLM a) =
+      ((-s) • rightMulCLM a) * (s • leftMulCLM a)
+    ext x
+    simp [leftMulCLM, rightMulCLM, mul_assoc]
+  have hsum :
+      s • adCLM a =
+        s • leftMulCLM a + (-s) • rightMulCLM a := by
+    unfold adCLM
+    module
+  rw [hsum]
+  exact NormedSpace.exp_add_of_commute hcomm
 
 theorem adCLM_commutator (a b x : A) :
     adCLM a (adCLM b x) - adCLM b (adCLM a x) =

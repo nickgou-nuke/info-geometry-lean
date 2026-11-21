@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.Cl55OperatorFiveGradeClosure
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -145,5 +150,19 @@ theorem topCreation_outside_five_grade_window (k : ℤ) (hk : k ≤ 2) :
   intro h
   have h5k := grade_unique_of_ne_zero topCreation_ne_zero topCreation_mem_grade_five h
   omega
+
+/-- The attachment's centered Cartan sum is the existing number operator minus `5/2`. -/
+theorem centeredCartanSum_eq :
+    (∑ i : Fin 5, mixedGenerator55 i i) =
+      numberOperator55 - (5 / 2 : ℝ) • (1 : Cl55) := by
+  simp only [mixedGenerator55, if_true, Finset.sum_sub_distrib,
+    Finset.sum_const, Finset.card_univ, Fintype.card_fin, numberOperator55]
+  module
+
+/-- The same obstruction holds for the source's centered grading element. -/
+theorem topCreation_not_centered_grade_two :
+    ¬ HasOperatorGrade (∑ i : Fin 5, mixedGenerator55 i i) topCreation 2 := by
+  rw [centeredCartanSum_eq, scalarShift_grade_iff]
+  exact topCreation_not_grade_two
 
 end InfoGeometry.Clifford.Cl55CreationWordGradeObstruction

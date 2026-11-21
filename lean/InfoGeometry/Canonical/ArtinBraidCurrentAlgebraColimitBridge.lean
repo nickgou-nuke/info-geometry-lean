@@ -264,6 +264,47 @@ theorem heisenberg_colimit_current_readout (m : ℤ) :
       HeisenbergAlgebra.jgen 𝕜 m := by
   rw [heisenbergFiniteModeColimitEquiv_mode (𝕜 := 𝕜) m]
 
+/-- The colimit-derived current mode, identified with the existing charged-Fock
+Heisenberg mode. -/
+noncomputable def colimitCurrentMode (α : 𝕜) (k : ℤ) : FockEnd (𝕜 := 𝕜) α :=
+  (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J k
+
+@[simp] theorem colimitCurrentMode_eq_chargedFock (α : 𝕜) (k : ℤ) :
+    colimitCurrentMode (𝕜 := 𝕜) α k =
+      (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J k := rfl
+
+/-- The colimit-derived current representation, identified with the existing
+charged-Fock representation. -/
+noncomputable abbrev colimitCurrentHeisenbergRep (α : 𝕜) :=
+  chargedFockSpaceCurrentHeisenbergRep 𝕜 α
+
+/-- The same categorical current mode is represented on charged Fock by the
+existing current representation. -/
+theorem heisenberg_colimit_chargedFock_readout (α : 𝕜) (m : ℤ) :
+    colimitCurrentMode (𝕜 := 𝕜) α m =
+      (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J m := by
+  exact colimitCurrentMode_eq_chargedFock (𝕜 := 𝕜) α m
+
+/-- Sugawara acts on the represented colimit current by the exact mode shift. -/
+theorem sugawara_on_heisenberg_colimit
+    (α : 𝕜) (n m : ℤ) :
+    ((colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).sugawaraStressMode n).commutator
+        ((colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).J m) =
+      (-m : 𝕜) • (colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).J (n + m) := by
+  rw [← CurrentHeisenbergRep.currentSugawaraRepresentation_lgen_apply]
+  exact chargedFock_vira_mode_shift (𝕜 := 𝕜) α n m
+
+/-- The actual Virasoro generator obtained from the Sugawara representation
+acts on the same current colimit by the same shift. -/
+theorem virasoro_on_heisenberg_colimit
+    (α : 𝕜) (n m : ℤ) :
+    ((colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroAlgebra.lgen 𝕜 n)).commutator
+        ((colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).J m) =
+      (-m : 𝕜) • (colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).J (n + m) := by
+  simpa [colimitCurrentHeisenbergRep] using
+    (chargedFock_vira_mode_shift (𝕜 := 𝕜) α n m)
+
 /-- The represented completed current mode at `completedCurrentPoint m` agrees
 with the charged-Fock Heisenberg mode `(chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J m`. -/
 theorem completedCurrent_to_same_heisenberg_current

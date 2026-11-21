@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.BipolarLogarithmicDerivationBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Trace
@@ -118,6 +123,20 @@ theorem bipolarLogarithmicCartan_trace_zero (s : ℂ) :
   rw [← mem_traceZeroMatrices]
   exact cartanLine_le_traceZeroMatrices
     (bipolarLogarithmicCartan_mem_cartanLine s)
+
+/-- Alias for the logarithmic Cartan generator under its PR-facing name. -/
+abbrev logarithmicCartanGenerator : ℂ → Matrix2C := bipolarLogarithmicCartan
+
+/-- Every point-dependent logarithmic Cartan generator belongs to the same
+trace-zero complex line. -/
+theorem logarithmicCartanGenerator_mem_cartanLine (s : ℂ) :
+    logarithmicCartanGenerator s ∈ cartanLine := by
+  exact bipolarLogarithmicCartan_mem_cartanLine s
+
+/-- Hence the logarithmic generator is trace zero. -/
+theorem logarithmicCartanGenerator_trace_zero (s : ℂ) :
+    Matrix.trace (logarithmicCartanGenerator s) = 0 := by
+  exact bipolarLogarithmicCartan_trace_zero s
 
 /-- Compact exact-carrier packet. -/
 theorem bipolar_complex_cartan_line_packet (s : ℂ) :

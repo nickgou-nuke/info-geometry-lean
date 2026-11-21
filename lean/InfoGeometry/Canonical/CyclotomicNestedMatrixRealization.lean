@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CyclotomicExplicitMatrixBridge
@@ -96,6 +101,71 @@ theorem nestedStage24_master_annihilator_of_blocks
     (h24 : phi24Companion ^ 25 = phi24Companion) :
     nestedStage24 * (nestedStage24 ^ 24 - 1) = 0 := by
   have h := nestedStage24_master25_of_blocks ht hc h6 h8 h12 h24
+  calc
+    nestedStage24 * (nestedStage24 ^ 24 - 1)
+        = nestedStage24 ^ 25 - nestedStage24 := by
+            rw [mul_sub, mul_one, ← pow_succ']
+    _ = 0 := sub_eq_zero.mpr h
+
+/-- The complete nested block operator satisfies the common master 25-potent
+equation.  This is an exact finite computation on the 24-dimensional direct
+sum. -/
+theorem nestedStage24_master25 :
+    nestedStage24 ^ 25 = nestedStage24 := by
+  apply nestedStage24_master25_of_blocks
+  · have odd_pow : ∀ n : ℕ, tripotent ^ (2 * n + 1) = tripotent := by
+      intro n
+      induction n with
+      | zero => simp
+      | succ n ih =>
+          have hexp : 2 * Nat.succ n + 1 = (2 * n + 1) + 2 := by omega
+          rw [hexp, pow_add, ih]
+          calc
+            tripotent * tripotent ^ 2 = tripotent ^ 3 := by
+              simpa using (pow_succ' tripotent 2).symm
+            _ = tripotent := tripotent_cube
+    have := odd_pow 12
+    norm_num at this
+    exact this
+  · have hc9 : complexStage ^ 9 = complexStage := by
+      calc
+        complexStage ^ 9 = (complexStage ^ 3) ^ 3 := by
+          rw [show (9 : ℕ) = 3 * 3 by norm_num, pow_mul]
+        _ = (-complexStage) ^ 3 := by rw [complexStage_cube]
+        _ = complexStage := by
+          rw [show (-complexStage) ^ 3 = -(complexStage ^ 3) by simp [pow_succ, mul_assoc]]
+          rw [complexStage_cube, neg_neg]
+    calc
+      complexStage ^ 25 = complexStage ^ 9 * complexStage ^ 16 := by rw [← pow_add]
+      _ = complexStage * complexStage ^ 16 := by rw [hc9]
+      _ = complexStage ^ 17 := by simpa using (pow_succ' complexStage 16).symm
+      _ = complexStage ^ 9 * complexStage ^ 8 := by
+        rw [show (17 : ℕ) = 9 + 8 by norm_num, pow_add]
+      _ = complexStage * complexStage ^ 8 := by rw [hc9]
+      _ = complexStage ^ 9 := by simpa using (pow_succ' complexStage 8).symm
+      _ = complexStage := hc9
+  · calc
+      phi6Companion ^ 25 = phi6Companion ^ (6 * 4 + 1) := by norm_num
+      _ = (phi6Companion ^ 6) ^ 4 * phi6Companion := by rw [pow_add, pow_mul]; simp
+      _ = phi6Companion := by rw [phi6Companion_order]; simp
+  · calc
+      phi8Companion ^ 25 = phi8Companion ^ (8 * 3 + 1) := by norm_num
+      _ = (phi8Companion ^ 8) ^ 3 * phi8Companion := by rw [pow_add, pow_mul]; simp
+      _ = phi8Companion := by rw [phi8Companion_order]; simp
+  · calc
+      phi12Companion ^ 25 = phi12Companion ^ (12 * 2 + 1) := by norm_num
+      _ = (phi12Companion ^ 12) ^ 2 * phi12Companion := by rw [pow_add, pow_mul]; simp
+      _ = phi12Companion := by rw [phi12Companion_order]; simp
+  · calc
+      phi24Companion ^ 25 = phi24Companion ^ (24 * 1 + 1) := by norm_num
+      _ = (phi24Companion ^ 24) ^ 1 * phi24Companion := by rw [pow_add, pow_mul]; simp
+      _ = phi24Companion := by rw [phi24Companion_order]; simp
+
+/-- Equivalently, the master annihilator vanishes on the assembled finite
+operator. -/
+theorem nestedStage24_master_annihilator :
+    nestedStage24 * (nestedStage24 ^ 24 - 1) = 0 := by
+  have h := nestedStage24_master25
   calc
     nestedStage24 * (nestedStage24 ^ 24 - 1)
         = nestedStage24 ^ 25 - nestedStage24 := by

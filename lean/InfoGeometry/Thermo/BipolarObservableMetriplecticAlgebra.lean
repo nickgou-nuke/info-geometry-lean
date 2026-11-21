@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Thermo.BipolarGENERICThreeCoordinateModel
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.RingTheory.Derivation.Basic
@@ -329,6 +334,24 @@ theorem metriplectic_second_law
 /-- Evaluation of algebra-valued entropy production is nonnegative. The
 observable algebra need not be ordered, and its derivations need not vanish. -/
 theorem metriplectic_second_law_nonneg
+    (D : DerivationFrame A) (ev : A →+* ℝ) (H S : A)
+    (hS : IsPoissonCasimir D S)
+    (hH : IsMetricKernel D H) :
+    0 ≤ ev (metriplecticBracket D S (H + S)) := by
+  rw [metriplectic_second_law D H S hS hH, map_pow]
+  exact sq_nonneg _
+
+/-- Every real-valued ring readout of a diagonal metric response is
+nonnegative. This is the correct ordered statement for a generally unordered
+observable algebra. -/
+theorem metricBracket_readout_nonneg
+    (D : DerivationFrame A) (ev : A →+* ℝ) (F : A) :
+    0 ≤ ev (metricBracket D F F) := by
+  rw [metricBracket_sq, map_pow]
+  exact sq_nonneg _
+
+/-- Every real-valued ring readout sees nonnegative entropy production. -/
+theorem metriplectic_second_law_readout_nonneg
     (D : DerivationFrame A) (ev : A →+* ℝ) (H S : A)
     (hS : IsPoissonCasimir D S)
     (hH : IsMetricKernel D H) :

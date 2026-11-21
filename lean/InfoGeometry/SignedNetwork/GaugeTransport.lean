@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 namespace InfoGeometry.SignedNetwork.GaugeTransport
@@ -18,4 +23,15 @@ theorem transport_gauge (g : V → G) (U : V → V → G) (start : V) (p : List 
       rw [ih]
       simp only [gaugeKernel]
       group
+/-- A genuinely closed chain transforms by conjugation at its base point.
+On a DAG a nontrivial such chain requires reversed edges or additional cells. -/
+theorem closed_transport_gauge (g : V → G) (U : V → V → G)
+    (start : V) (p : List V) (hclosed : endpoint start p = start) :
+    transport (gaugeKernel g U) start p =
+      g start * transport U start p * (g start)⁻¹ := by
+  rw [transport_gauge, hclosed]
+
+/-- Coherent return requires the inverse group transformation. -/
+theorem transport_then_reverse (h : G) : h⁻¹ * h = 1 := inv_mul_cancel h
+
 end InfoGeometry.SignedNetwork.GaugeTransport

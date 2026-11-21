@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Analysis.BipolarLogDifferential
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KleinQuadricMonodromy
@@ -87,6 +92,13 @@ theorem circulationPeriod_eq_residuePairing (w : WindingPair) :
     circulationPeriod w =
       residuePairing w * (2 * Real.pi * Complex.I : ℂ) := by
   rw [circulationPeriod, residuePairing_eq_difference]
+
+/-- A globally exact scalar potential has zero period on the algebraic winding lattice.
+This is the period readout appropriate to the globally defined radial potential `eta`. -/
+def exactPotentialPeriod (_w : WindingPair) : ℝ := 0
+
+@[simp] theorem exactPotentialPeriod_zero (w : WindingPair) :
+    exactPotentialPeriod w = 0 := rfl
 
 /-- Compact corrected period packet. -/
 theorem bipolar_period_packet :

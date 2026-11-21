@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Conformal.BipolarSchwarzianProjectiveConnection
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -254,6 +259,23 @@ theorem hasDerivAt_second (v : ProjectiveVectorField) (s : ℂ) :
   hasDerivAt_const s (2 * v.quadratic)
 
 end ProjectiveVectorField
+
+/-- The Virasoro central term vanishes on every quadratic projective vector
+field. -/
+theorem projectiveVectorField_centralTerm_zero
+    (c : ℂ) (v : ProjectiveVectorField) (s : ℂ) :
+    (c / 12) * v.third s = 0 := by
+  simp [ProjectiveVectorField.third]
+
+/-- Consequently the projective connection transforms only by its ordinary
+weight-two Lie derivative on the global projective subalgebra.  This is
+anomaly-freedom, not pointwise invariance of the connection. -/
+theorem projectiveVectorField_variation_no_central
+    (c P P' : ℂ) (v : ProjectiveVectorField) (s : ℂ) :
+    projectiveConnectionVariation c P P'
+        (v.value s) (v.first s) (v.third s) =
+      v.value s * P' + 2 * v.first s * P := by
+  simp [projectiveConnectionVariation, ProjectiveVectorField.third]
 
 /-- Regularized coefficient in the local coordinate at `s=0`. -/
 def regularizedAtZero (c : ℂ) (s : ℂ) : ℂ :=

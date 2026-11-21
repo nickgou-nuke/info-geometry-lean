@@ -1,0 +1,78 @@
+name: Grand Partition Full Pipeline Check
+
+on:
+  push:
+    branches:
+      - feat/grand-partition-polynomial
+  pull_request:
+    branches:
+      - main
+    paths:
+      - lean/GrandPartition*.lean
+      - .github/workflows/grand-partition-check.yml
+      - lean-toolchain
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install elan
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Create isolated Mathlib project
+        run: |
+          rm -rf /tmp/grand-partition-check
+          mkdir -p /tmp/grand-partition-check
+          cp lean-toolchain /tmp/grand-partition-check/lean-toolchain
+          cp lean/GrandPartition*.lean /tmp/grand-partition-check/
+          cat > /tmp/grand-partition-check/lakefile.lean <<'EOF'
+          import Lake
+          open Lake DSL
+
+          package grandPartitionCheck
+
+          require mathlib from git
+            "https://github.com/leanprover-community/mathlib4.git" @ "v4.28.1"
+
+          @[default_target]
+          lean_lib GrandPartition where
+            roots := #[
+              `GrandPartitionPolynomial,
+              `GrandPartitionTransform,
+              `GrandPartitionEuler,
+              `GrandPartitionRational,
+              `GrandPartitionProbability,
+              `GrandPartitionRobustPoisson,
+              `GrandPartitionOnline,
+              `GrandPartitionAll
+            ]
+          EOF
+      - name: Restore isolated dependencies
+        id: dependency-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+            /tmp/grand-partition-check/.lake
+          key: grand-partition-lean-4.28.1-mathlib-v4.28.1-v2
+      - name: Fetch Mathlib and binary cache
+        working-directory: /tmp/grand-partition-check
+        run: |
+          lake update
+          lake exe cache get
+      - name: Save isolated dependencies
+        if: steps.dependency-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.elan
+            /tmp/grand-partition-check/.lake
+          key: grand-partition-lean-4.28.1-mathlib-v4.28.1-v2
+      - name: Kernel-check full pipeline
+        working-directory: /tmp/grand-partition-check
+        run: lake build GrandPartition
+      - name: Enforce zero proof placeholders
+        run: |
+          ! grep -nE '\bsorry\b|\badmit\b' lean/GrandPartition*.lean

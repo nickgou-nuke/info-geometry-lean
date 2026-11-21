@@ -12,7 +12,7 @@ import InfoGeometry.Canonical.SouriauKillingLipschitzBridge
 
 ## Mathematical content
 
-For the real doubled Hilbert carrier and the existing bounded relative modular
+For the doubled real Krein carrier and the existing bounded relative modular
 generator `G := relativeModularKGenerator hMod`, the bridge identifies
 
 ```text
@@ -24,23 +24,53 @@ commutant of `G`, and kernel membership is equivalent to being fixed by the
 actual exponential conjugation for every real time. Both the derivation and
 its norm are `LipschitzWith (2 * ‖G‖₊)`. A continuous linear probe composes
 with this estimate with the extra factor `‖probe‖₊`.
-Completeness is required by the exponential-flow theorems. The algebraic,
-norm, and spectral-distance results also apply to an incomplete real
-inner-product space.
+Completeness is used by the native Krein structure and analytic flow results.
+The algebraic commutator, ordinary norm bounds, and spectral-distance results
+also apply to an incomplete real inner-product space.
 
 Two additive readouts that distinguish a kernel observable give an unbounded
 spectral-distance value set. Accordingly, bounded spectral-distance values
 require agreement on the kernel. The code does not reinterpret an unbounded
 real supremum as infinity.
 
-Under the separate hypotheses that `hMod` is self-adjoint and phase-linear,
-the existing state-vector transport is a positive-Hilbert isometry and is
-`1`-Lipschitz. This theorem does not infer positive-norm isometry merely from
-preservation of the indefinite Krein form.
-
 The upper `ThermodynamicGenerator` definitions use this same construction at
 `hMod := P.modularData.modularSeed ψ`. The focused module does not import that
 larger owner or introduce a new theorem about its named predicate.
+
+## Explicit doubled real Krein dynamics
+
+The actual carrier is `DoubledSpace E = WithLp 2 (E × E)`, equipped with the
+existing canonical `instKreinSpaceProdL2`. Its metric symmetry and pairing are
+
+```text
+ε(x, ξ) = (x, -ξ)
+[(x, ξ), (y, η)] = inner ℝ x y - inner ℝ ξ η
+A♯ = ε ∘ adjoint A ∘ ε.
+```
+
+The real clock axis `K = modular_j ∘ ε` is Krein-self-adjoint, while the
+sheet swap `modular_j` is Krein-skew-adjoint. The bridge proves the exact
+seed criterion
+
+```text
+G(h)♯ = -G(h)  ↔  K ∘ h♯ = -(h ∘ K).
+```
+
+A Krein-self-adjoint, phase-antilinear seed satisfies this criterion. The
+existing exponential theorem then proves `IsKreinIsometry` for the actual
+`modularTransportFlow`, including the signed coordinate-pairing invariant.
+For a Krein-skew generator, `δ(A)♯ = δ(A♯)`, so both adjoint sectors are
+preserved. The actual signed readout `A ↦ [δ(A) u, v]` is Lipschitz with
+constant `(‖u‖₊ * ‖v‖₊) * (2 * ‖G‖₊)` in the associated Hilbert norm.
+
+The concrete seed `h = -ε` gives `G = modular_j` and `δ(ε) = 2 • K`.
+Both are proved nonzero on every nontrivial `E`, and the corresponding
+exponential flow preserves the Krein pairing.
+
+Every bounded state-flow operator has `LipschitzWith ‖flow‖₊`. The existing
+Hilbert-self-adjoint, phase-linear seed regime separately yields Hilbert
+`Isometry` and constant one. These are distinct preservation conditions;
+the indefinite quadratic form is not a metric norm.
 
 ## Reproducible validation
 

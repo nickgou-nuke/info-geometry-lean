@@ -1,7 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Lie.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Dual.Defs
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Tactic
 
 import InfoGeometry.Canonical.SouriauKKSForm
@@ -75,53 +80,41 @@ section RealSouriauThermodynamics
 
 variable {L : Type*} [LieRing L] [LieAlgebra ℝ L]
 
-/-- A Souriau Thermodynamic State on a Lie algebra over ℝ. -/
-structure SouriauThermodynamicState (L : Type*) [LieRing L] [LieAlgebra ℝ L] where
-  /-- Mean momentum / expectation observable in the dual Lie algebra 𝔤*. -/
-  meanMomentum : Module.Dual ℝ L
-  /-- Symmetric Souriau-Koszul Fisher information metric (variance/Hessian). -/
-  fisherMetric : L →ₗ[ℝ] L →ₗ[ℝ] ℝ
-  /-- Symmetry of the Fisher metric. -/
-  metric_symm : ∀ X Y, fisherMetric X Y = fisherMetric Y X
-  /-- Positivity on diagonal elements (positivity of thermodynamic variance). -/
-  metric_nonneg : ∀ X, 0 ≤ fisherMetric X X
-
 /-- 
   The Complex Quantum Geometric Tensor on the Souriau Coadjoint Orbit:
   𝒬(X, Y) = g(X, Y) - i · (1/2) ω_KKS(X, Y)
 -/
-def souriauQGT (state : SouriauThermodynamicState L) (X Y : L) : ℂ :=
-  ⟨state.fisherMetric X Y, -(1 / 2 : ℝ) * kksForm state.meanMomentum X Y⟩
+def souriauQGT
+    (fisherMetric : L →ₗ[ℝ] L →ₗ[ℝ] ℝ)
+    (meanMomentum : Module.Dual ℝ L) (X Y : L) : ℂ :=
+  ⟨fisherMetric X Y, -(1 / 2 : ℝ) * kksForm meanMomentum X Y⟩
 
 /-- 
   THEOREM 3: Decomposition of the Souriau QGT into Metric and Symplectic Components.
 -/
-theorem souriauQGT_re_im (state : SouriauThermodynamicState L) (X Y : L) :
-    (souriauQGT state X Y).re = state.fisherMetric X Y ∧
-    (souriauQGT state X Y).im = -(1 / 2 : ℝ) * kksForm state.meanMomentum X Y :=
+theorem souriauQGT_re_im
+    (fisherMetric : L →ₗ[ℝ] L →ₗ[ℝ] ℝ)
+    (meanMomentum : Module.Dual ℝ L) (X Y : L) :
+    (souriauQGT fisherMetric meanMomentum X Y).re = fisherMetric X Y ∧
+    (souriauQGT fisherMetric meanMomentum X Y).im =
+      -(1 / 2 : ℝ) * kksForm meanMomentum X Y :=
   ⟨rfl, rfl⟩
 
 /-- 
   THEOREM 4: Norm-Squared Decomposition of the Souriau QGT.
   |𝒬(X, Y)|² = g(X, Y)² + (1/4) ω_KKS(X, Y)²
 -/
-theorem souriauQGT_normSq (state : SouriauThermodynamicState L) (X Y : L) :
-    Complex.normSq (souriauQGT state X Y) =
-      (state.fisherMetric X Y) ^ 2 + (1 / 4 : ℝ) * (kksForm state.meanMomentum X Y) ^ 2 := by
+theorem souriauQGT_normSq
+    (fisherMetric : L →ₗ[ℝ] L →ₗ[ℝ] ℝ)
+    (meanMomentum : Module.Dual ℝ L) (X Y : L) :
+    Complex.normSq (souriauQGT fisherMetric meanMomentum X Y) =
+      (fisherMetric X Y) ^ 2 +
+        (1 / 4 : ℝ) * (kksForm meanMomentum X Y) ^ 2 := by
   dsimp [souriauQGT, Complex.normSq]
   ring
-
-/-- 
-  THEOREM 5 (Souriau-Bregman Reciprocity):
-  The Fisher metric on Lie algebra directions is symmetric and reproduces the
-  second-order fluctuation dissipation covariance.
--/
-theorem souriau_metric_symmetry (state : SouriauThermodynamicState L) (X Y : L) :
-    state.fisherMetric X Y = state.fisherMetric Y X :=
-  state.metric_symm X Y
 
 end RealSouriauThermodynamics
 
 end InfoGeometry.Canonical.SouriauCoadjointOrbitBridge
 
-end noncomputable section
+end

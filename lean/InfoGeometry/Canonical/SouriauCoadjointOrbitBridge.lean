@@ -6,7 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.Algebra.Lie.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Dual.Defs
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Tactic
 
 import InfoGeometry.Canonical.SouriauKKSForm
@@ -81,158 +81,108 @@ section RealSouriauThermodynamics
 
 variable {L : Type*} [LieRing L] [LieAlgebra ℝ L]
 
-/-- A Souriau Thermodynamic State on a Lie algebra over ℝ. -/
-structure SouriauThermodynamicState (L : Type*) [LieRing L] [LieAlgebra ℝ L] where
-  /-- Mean momentum / expectation observable in the dual Lie algebra 𝔤*. -/
-  meanMomentum : Module.Dual ℝ L
-  /-- Symmetric Souriau-Koszul Fisher information metric (variance/Hessian). -/
-  fisherMetric : L →ₗ[ℝ] L →ₗ[ℝ] ℝ
-  /-- Symmetry of the Fisher metric. -/
-  metric_symm : ∀ X Y, fisherMetric X Y = fisherMetric Y X
-  /-- Positivity on diagonal elements (positivity of thermodynamic variance). -/
-  metric_nonneg : ∀ X, 0 ≤ fisherMetric X X
-
 /-- 
   The Complex Quantum Geometric Tensor on the Souriau Coadjoint Orbit:
   𝒬(X, Y) = g(X, Y) - i · (1/2) ω_KKS(X, Y)
 -/
-def souriauQGT (state : SouriauThermodynamicState L) (X Y : L) : ℂ :=
-  ⟨state.fisherMetric X Y, -(1 / 2 : ℝ) * kksForm state.meanMomentum X Y⟩
+def souriauQGT
+    (fisherMetric : L →ₗ[ℝ] L →ₗ[ℝ] ℝ)
+    (meanMomentum : Module.Dual ℝ L) (X Y : L) : ℂ :=
+  ⟨fisherMetric X Y, -(1 / 2 : ℝ) * kksForm meanMomentum X Y⟩
 
 /-- 
   THEOREM 3: Decomposition of the Souriau QGT into Metric and Symplectic Components.
 -/
-theorem souriauQGT_re_im (state : SouriauThermodynamicState L) (X Y : L) :
-    (souriauQGT state X Y).re = state.fisherMetric X Y ∧
-    (souriauQGT state X Y).im = -(1 / 2 : ℝ) * kksForm state.meanMomentum X Y :=
+theorem souriauQGT_re_im
+    (fisherMetric : L →ₗ[ℝ] L →ₗ[ℝ] ℝ)
+    (meanMomentum : Module.Dual ℝ L) (X Y : L) :
+    (souriauQGT fisherMetric meanMomentum X Y).re = fisherMetric X Y ∧
+    (souriauQGT fisherMetric meanMomentum X Y).im =
+      -(1 / 2 : ℝ) * kksForm meanMomentum X Y :=
   ⟨rfl, rfl⟩
 
 /-- 
   THEOREM 4: Norm-Squared Decomposition of the Souriau QGT.
   |𝒬(X, Y)|² = g(X, Y)² + (1/4) ω_KKS(X, Y)²
 -/
-theorem souriauQGT_normSq (state : SouriauThermodynamicState L) (X Y : L) :
-    Complex.normSq (souriauQGT state X Y) =
-      (state.fisherMetric X Y) ^ 2 + (1 / 4 : ℝ) * (kksForm state.meanMomentum X Y) ^ 2 := by
+theorem souriauQGT_normSq
+    (fisherMetric : L →ₗ[ℝ] L →ₗ[ℝ] ℝ)
+    (meanMomentum : Module.Dual ℝ L) (X Y : L) :
+    Complex.normSq (souriauQGT fisherMetric meanMomentum X Y) =
+      (fisherMetric X Y) ^ 2 +
+        (1 / 4 : ℝ) * (kksForm meanMomentum X Y) ^ 2 := by
   dsimp [souriauQGT, Complex.normSq]
   ring
 
-/-- 
-  THEOREM 5 (Souriau-Bregman Reciprocity):
-  The Fisher metric on Lie algebra directions is symmetric and reproduces the
-  second-order fluctuation dissipation covariance.
--/
-theorem souriau_metric_symmetry (state : SouriauThermodynamicState L) (X Y : L) :
-    state.fisherMetric X Y = state.fisherMetric Y X :=
-  state.metric_symm X Y
-
-/-- The algebraic KKS form at the state's momentum, as a real bilinear form on
+/-- The algebraic KKS form at a momentum functional, as a real bilinear form on
 the Lie algebra. -/
-def souriauKKSBilinForm (state : SouriauThermodynamicState L) :
+def souriauKKSBilinForm (meanMomentum : Module.Dual ℝ L) :
     LinearMap.BilinForm ℝ L :=
-  LinearMap.mk₂ ℝ (kksForm state.meanMomentum)
-    (fun X Y Z => kksForm_add_left state.meanMomentum X Y Z)
-    (fun r X Y => kksForm_smul_left state.meanMomentum r X Y)
-    (fun X Y Z => kksForm_add_right state.meanMomentum X Y Z)
-    (fun r X Y => kksForm_smul_right state.meanMomentum r X Y)
+  LinearMap.mk₂ ℝ (kksForm meanMomentum)
+    (fun X Y Z => kksForm_add_left meanMomentum X Y Z)
+    (fun r X Y => kksForm_smul_left meanMomentum r X Y)
+    (fun X Y Z => kksForm_add_right meanMomentum X Y Z)
+    (fun r X Y => kksForm_smul_right meanMomentum r X Y)
 
 /-- Pair the Souriau Fisher response with the coadjoint KKS response as one
 real Onsager--Casimir system. The dissipative channel is symmetric and
 nonnegative; the orbit channel is skew by the Lie bracket antisymmetry. -/
-def souriauOnsagerSystem (state : SouriauThermodynamicState L) :
+def souriauOnsagerSystem
+    (fisherMetric : L →ₗ[ℝ] L →ₗ[ℝ] ℝ)
+    (meanMomentum : Module.Dual ℝ L)
+    (metric_symm : ∀ X Y, fisherMetric X Y = fisherMetric Y X)
+    (metric_nonneg : ∀ X, 0 ≤ fisherMetric X X) :
     InfoGeometry.Thermo.OnsagerClosure.OnsagerCasimirSystem L where
-  dissipative := state.fisherMetric
-  reversible := souriauKKSBilinForm state
-  dissipative_symm := state.metric_symm
+  dissipative := fisherMetric
+  reversible := souriauKKSBilinForm meanMomentum
+  dissipative_symm := metric_symm
   reversible_skew := by
     intro X Y
-    exact kksForm_skew state.meanMomentum X Y
-  dissipative_nonneg := state.metric_nonneg
+    exact kksForm_skew meanMomentum X Y
+  dissipative_nonneg := metric_nonneg
 
 /-- The quadratic entropy production of the combined Souriau system is
 exactly the Fisher variance; the KKS response contributes zero on the
 diagonal. -/
 theorem souriauOnsagerSystem_entropy_production
-    (state : SouriauThermodynamicState L) (X : L) :
-    (souriauOnsagerSystem state).totalGenerator X X =
-        state.fisherMetric X X ∧
-      0 ≤ (souriauOnsagerSystem state).totalGenerator X X := by
+    (fisherMetric : L →ₗ[ℝ] L →ₗ[ℝ] ℝ)
+    (meanMomentum : Module.Dual ℝ L)
+    (metric_symm : ∀ X Y, fisherMetric X Y = fisherMetric Y X)
+    (metric_nonneg : ∀ X, 0 ≤ fisherMetric X X) (X : L) :
+    (souriauOnsagerSystem fisherMetric meanMomentum metric_symm metric_nonneg).totalGenerator X X =
+        fisherMetric X X ∧
+      0 ≤ (souriauOnsagerSystem fisherMetric meanMomentum metric_symm metric_nonneg).totalGenerator X X := by
   constructor
-  · exact (souriauOnsagerSystem state).entropy_production_eq X
-  · exact (souriauOnsagerSystem state).entropy_production_nonneg X
+  · exact (souriauOnsagerSystem fisherMetric meanMomentum metric_symm metric_nonneg).entropy_production_eq X
+  · exact (souriauOnsagerSystem fisherMetric meanMomentum metric_symm metric_nonneg).entropy_production_nonneg X
 
 /-- The symmetric and skew parts of the total response recover respectively
 the Souriau Fisher form and the KKS orbit form. -/
 theorem souriauOnsagerSystem_reciprocity
-    (state : SouriauThermodynamicState L) (X Y : L) :
-    (1 / 2 : ℝ) * ((souriauOnsagerSystem state).totalGenerator X Y +
-        (souriauOnsagerSystem state).totalGenerator Y X) =
-        state.fisherMetric X Y ∧
-      (1 / 2 : ℝ) * ((souriauOnsagerSystem state).totalGenerator X Y -
-        (souriauOnsagerSystem state).totalGenerator Y X) =
-        kksForm state.meanMomentum X Y := by
+    (fisherMetric : L →ₗ[ℝ] L →ₗ[ℝ] ℝ)
+    (meanMomentum : Module.Dual ℝ L)
+    (metric_symm : ∀ X Y, fisherMetric X Y = fisherMetric Y X)
+    (metric_nonneg : ∀ X, 0 ≤ fisherMetric X X) (X Y : L) :
+    (1 / 2 : ℝ) *
+        ((souriauOnsagerSystem fisherMetric meanMomentum metric_symm metric_nonneg).totalGenerator X Y +
+          (souriauOnsagerSystem fisherMetric meanMomentum metric_symm metric_nonneg).totalGenerator Y X) =
+        fisherMetric X Y ∧
+      (1 / 2 : ℝ) *
+        ((souriauOnsagerSystem fisherMetric meanMomentum metric_symm metric_nonneg).totalGenerator X Y -
+          (souriauOnsagerSystem fisherMetric meanMomentum metric_symm metric_nonneg).totalGenerator Y X) =
+        kksForm meanMomentum X Y := by
   constructor
-  · exact (souriauOnsagerSystem state).totalGenerator_symm_part X Y
+  · exact (souriauOnsagerSystem fisherMetric meanMomentum metric_symm metric_nonneg).totalGenerator_symm_part X Y
   · calc
-      (1 / 2 : ℝ) * ((souriauOnsagerSystem state).totalGenerator X Y -
-          (souriauOnsagerSystem state).totalGenerator Y X) =
-          (souriauOnsagerSystem state).reversible X Y :=
-        (souriauOnsagerSystem state).totalGenerator_skew_part X Y
-      _ = kksForm state.meanMomentum X Y := rfl
-
-/-- Under an involutive time reversal that reverses the Lie bracket and
-preserves the momentum functional, the KKS response is odd. -/
-theorem souriauKKS_timeReversal_odd
-    (state : SouriauThermodynamicState L)
-    (T : InfoGeometry.Thermo.OnsagerClosure.OnsagerCasimirSystem.TimeReversal L)
-    (hBracket : ∀ X Y : L,
-      ⁅T.op X, T.op Y⁆ = -T.op ⁅X, Y⁆)
-    (hMomentum : ∀ Z : L, state.meanMomentum (T.op Z) = state.meanMomentum Z)
-    (X Y : L) :
-    kksForm state.meanMomentum (T.op X) (T.op Y) =
-      -kksForm state.meanMomentum X Y := by
-  unfold kksForm
-  rw [hBracket, state.meanMomentum.map_neg, hMomentum]
-
-/-- The Souriau Fisher/KKS response has the full Onsager--Casimir parity
-structure whenever the Fisher form is time-reversal even and the involution
-acts anti-Lie while preserving the state's momentum functional. -/
-def souriauParityOnsagerSystem
-    (state : SouriauThermodynamicState L)
-    (T : InfoGeometry.Thermo.OnsagerClosure.OnsagerCasimirSystem.TimeReversal L)
-    (hFisher : ∀ X Y : L,
-      state.fisherMetric (T.op X) (T.op Y) = state.fisherMetric X Y)
-    (hBracket : ∀ X Y : L,
-      ⁅T.op X, T.op Y⁆ = -T.op ⁅X, Y⁆)
-    (hMomentum : ∀ Z : L, state.meanMomentum (T.op Z) = state.meanMomentum Z) :
-    InfoGeometry.Thermo.OnsagerClosure.OnsagerCasimirSystem.ParityOnsagerSystem L where
-  toOnsagerCasimirSystem := souriauOnsagerSystem state
-  T := T
-  dissipative_T_even := hFisher
-  reversible_T_odd := by
-    intro X Y
-    exact souriauKKS_timeReversal_odd state T hBracket hMomentum X Y
-
-/-- Time reversal of the total Souriau response is its transposed response,
-by the standard Onsager--Casimir theorem applied to the constructed system. -/
-theorem souriauParityOnsagerSystem_master_reciprocity
-    (state : SouriauThermodynamicState L)
-    (T : InfoGeometry.Thermo.OnsagerClosure.OnsagerCasimirSystem.TimeReversal L)
-    (hFisher : ∀ X Y : L,
-      state.fisherMetric (T.op X) (T.op Y) = state.fisherMetric X Y)
-    (hBracket : ∀ X Y : L,
-      ⁅T.op X, T.op Y⁆ = -T.op ⁅X, Y⁆)
-    (hMomentum : ∀ Z : L, state.meanMomentum (T.op Z) = state.meanMomentum Z)
-    (X Y : L) :
-    (souriauParityOnsagerSystem state T hFisher hBracket hMomentum).totalGenerator
-        (T.op X) (T.op Y) =
-      (souriauParityOnsagerSystem state T hFisher hBracket hMomentum).totalGenerator
-        Y X := by
-  exact (souriauParityOnsagerSystem state T hFisher hBracket hMomentum)
-    |>.onsager_casimir_master_reciprocity X Y
+      (1 / 2 : ℝ) *
+          ((souriauOnsagerSystem fisherMetric meanMomentum metric_symm metric_nonneg).totalGenerator X Y -
+            (souriauOnsagerSystem fisherMetric meanMomentum metric_symm metric_nonneg).totalGenerator Y X) =
+          (souriauOnsagerSystem fisherMetric meanMomentum metric_symm metric_nonneg).reversible X Y :=
+        (souriauOnsagerSystem fisherMetric meanMomentum metric_symm metric_nonneg).totalGenerator_skew_part X Y
+      _ = kksForm meanMomentum X Y := rfl
 
 end RealSouriauThermodynamics
 
 end InfoGeometry.Canonical.SouriauCoadjointOrbitBridge
 
-end noncomputable section
+end

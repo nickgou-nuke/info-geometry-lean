@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Algebra.Lie.Basic
+import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import InfoGeometry.Canonical.NormalizedTracePositivity
 import InfoGeometry.Canonical.SouriauCoadjointOrbitBridge
+import InfoGeometry.Canonical.SouriauKKSForm
+import InfoGeometry.Thermo.OnsagerOperatorClosure
 
 /-!
 # Matrix transpose parity for the Souriau KKS form
@@ -24,8 +27,8 @@ open scoped Matrix
 
 namespace InfoGeometry.Canonical.SouriauMatrixTransposeParity
 
-open InfoGeometry.Canonical.SouriauCoadjointOrbitBridge
 open InfoGeometry.Thermo.OnsagerClosure.OnsagerCasimirSystem
+open InfoGeometry.Canonical.SouriauCoadjointOrbitBridge
 open SouriauKKS
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
@@ -50,6 +53,7 @@ def matrixTransposeTimeReversal : TimeReversal (Matrix n n ℝ) where
     intro X
     exact Matrix.transpose_transpose X
 
+omit [Fintype n] [DecidableEq n] in
 @[simp] theorem matrixTransposeTimeReversal_apply (X : Matrix n n ℝ) :
     matrixTransposeTimeReversal.op X = Xᵀ := rfl
 
@@ -57,7 +61,9 @@ def matrixTransposeTimeReversal : TimeReversal (Matrix n n ℝ) where
 theorem matrixTranspose_bracket_reversal (X Y : Matrix n n ℝ) :
     ⁅matrixTransposeTimeReversal.op X, matrixTransposeTimeReversal.op Y⁆ =
       -matrixTransposeTimeReversal.op ⁅X, Y⁆ := by
-  change Xᵀ * Yᵀ - Yᵀ * Xᵀ = -(X * Y - Y * X)ᵀ
+  change ⁅Xᵀ, Yᵀ⁆ = -⁅X, Y⁆ᵀ
+  rw [LieRing.of_associative_ring_bracket,
+    LieRing.of_associative_ring_bracket]
   simp only [Matrix.transpose_sub, Matrix.transpose_mul]
   abel
 
@@ -69,7 +75,7 @@ def matrixTracePairing (A : Matrix n n ℝ) : Module.Dual ℝ (Matrix n n ℝ) w
     simp [Matrix.mul_add]
   map_smul' := by
     intro r X
-    simp [Matrix.mul_smul]
+    simp
 
 theorem matrixTracePairing_transpose_of_symmetric
     (A X : Matrix n n ℝ) (hA : Aᵀ = A) :
@@ -86,12 +92,13 @@ theorem matrixTracePairing_transpose_of_symmetric
 /-- The KKS response of a symmetric trace momentum is transpose odd. -/
 theorem matrixTraceKKS_transpose_odd
     (A X Y : Matrix n n ℝ) (hA : Aᵀ = A) :
-    kksForm (matrixTracePairing A)
+    kksForm (R := ℝ) (matrixTracePairing A)
         (matrixTransposeTimeReversal.op X) (matrixTransposeTimeReversal.op Y) =
-      -kksForm (matrixTracePairing A) X Y := by
+      -kksForm (R := ℝ) (matrixTracePairing A) X Y := by
   unfold kksForm
   rw [matrixTranspose_bracket_reversal,
     (matrixTracePairing A).map_neg,
+    matrixTransposeTimeReversal_apply,
     matrixTracePairing_transpose_of_symmetric A _ hA]
 
 /-- The native Frobenius trace form on matrices. -/
@@ -102,13 +109,13 @@ def matrixFisherMetric : LinearMap.BilinForm ℝ (Matrix n n ℝ) :=
       simp [Matrix.add_mul])
     (by
       intro r X Y
-      simp [Matrix.smul_mul])
+      simp)
     (by
       intro X Y₁ Y₂
       simp [Matrix.mul_add])
     (by
       intro r X Y
-      simp [Matrix.mul_smul])
+      simp)
 
 @[simp] theorem matrixFisherMetric_apply (X Y : Matrix n n ℝ) :
     matrixFisherMetric X Y = Matrix.trace (Xᵀ * Y) := rfl
@@ -136,39 +143,32 @@ theorem matrixFisherMetric_transpose_even (X Y : Matrix n n ℝ) :
     _ = Matrix.trace (Y * Xᵀ) := by simp [Matrix.transpose_mul]
     _ = Matrix.trace (Xᵀ * Y) := Matrix.trace_mul_comm _ _
 
-/-- The concrete matrix state uses only the trace momentum and Frobenius
-variance proved above. -/
-def matrixSouriauState (A : Matrix n n ℝ) (hA : Aᵀ = A) :
-    SouriauThermodynamicState (Matrix n n ℝ) where
-  meanMomentum := matrixTracePairing A
-  fisherMetric := matrixFisherMetric
-  metric_symm := matrixFisherMetric_symmetric
-  metric_nonneg := matrixFisherMetric_nonneg
+/-- The concrete matrix Fisher/KKS Onsager system. -/
+def matrixTransposeOnsagerSystem (A : Matrix n n ℝ) :
+    InfoGeometry.Thermo.OnsagerClosure.OnsagerCasimirSystem (Matrix n n ℝ) :=
+  souriauOnsagerSystem matrixFisherMetric (matrixTracePairing A)
+    matrixFisherMetric_symmetric matrixFisherMetric_nonneg
 
-/-- Concrete matrix transpose reciprocity with all parity obligations supplied
-by the preceding Mathlib-derived lemmas. -/
-theorem matrixParityOnsager_master_reciprocity
+/-- Transpose reciprocity for the concrete symmetric trace-momentum system. -/
+theorem matrixTransposeOnsager_master_reciprocity
     (A : Matrix n n ℝ) (hA : Aᵀ = A) (X Y : Matrix n n ℝ) :
-    (souriauParityOnsagerSystem
-      (matrixSouriauState A hA)
-      matrixTransposeTimeReversal
-      matrixFisherMetric_transpose_even
-      matrixTranspose_bracket_reversal
-      (fun Z => matrixTracePairing_transpose_of_symmetric A Z hA)).totalGenerator
-        (matrixTransposeTimeReversal.op X)
-        (matrixTransposeTimeReversal.op Y) =
-      (souriauParityOnsagerSystem
-        (matrixSouriauState A hA)
-        matrixTransposeTimeReversal
-        matrixFisherMetric_transpose_even
-        matrixTranspose_bracket_reversal
-        (fun Z => matrixTracePairing_transpose_of_symmetric A Z hA)).totalGenerator
-        Y X := by
-  exact (souriauParityOnsagerSystem
-    (matrixSouriauState A hA)
-    matrixTransposeTimeReversal
-    matrixFisherMetric_transpose_even
-    matrixTranspose_bracket_reversal
-    (fun Z => matrixTracePairing_transpose_of_symmetric A Z hA)).onsager_casimir_master_reciprocity X Y
+    (matrixTransposeOnsagerSystem A).totalGenerator
+        (matrixTransposeTimeReversal.op X) (matrixTransposeTimeReversal.op Y) =
+      (matrixTransposeOnsagerSystem A).totalGenerator Y X := by
+  change
+    (matrixFisherMetric (matrixTransposeTimeReversal.op X)
+        (matrixTransposeTimeReversal.op Y) +
+      souriauKKSBilinForm (matrixTracePairing A)
+        (matrixTransposeTimeReversal.op X) (matrixTransposeTimeReversal.op Y)) =
+      (matrixFisherMetric Y X +
+        souriauKKSBilinForm (matrixTracePairing A) Y X)
+  rw [matrixFisherMetric_transpose_even, matrixFisherMetric_symmetric]
+  change
+    matrixFisherMetric Y X +
+        kksForm (R := ℝ) (matrixTracePairing A)
+          (matrixTransposeTimeReversal.op X) (matrixTransposeTimeReversal.op Y) =
+      matrixFisherMetric Y X + kksForm (R := ℝ) (matrixTracePairing A) Y X
+  rw [matrixTraceKKS_transpose_odd A X Y hA, kksForm_skew]
+  ring_nf
 
 end InfoGeometry.Canonical.SouriauMatrixTransposeParity

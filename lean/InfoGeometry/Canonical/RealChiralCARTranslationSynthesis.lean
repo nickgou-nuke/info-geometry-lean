@@ -1052,6 +1052,28 @@ theorem lorentzMajoranaSpinGenerator_commutator
         minkowskiZBasis, realMinkowskiMajorana, lorentzGenerator4]
       module
 
+/-- The six-parameter Lorentz spin action also holds on the real
+five-graded Fock carrier.  This is the explicit transport through the
+existing real algebra equivalence from `8 × 8` Fock matrices to the
+three-factor Koszul tensor of real `2 × 2` matrices; it connects the
+Lorentz/Kosmann generator to the graded Fock lane without changing scalars
+or replacing the operator product. -/
+theorem lorentzMajoranaSpinGenerator_fock_commutator
+    (btx bty btz rxy rxz ryz : ℝ)
+    (X : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+    fockMatrixToRealGradedTensor.symm
+          (lorentzMajoranaSpinGenerator btx bty btz rxy rxz ryz) *
+        fockMatrixToRealGradedTensor.symm (realMinkowskiMajorana X) -
+      fockMatrixToRealGradedTensor.symm (realMinkowskiMajorana X) *
+        fockMatrixToRealGradedTensor.symm
+          (lorentzMajoranaSpinGenerator btx bty btz rxy rxz ryz) =
+      fockMatrixToRealGradedTensor.symm
+        (realMinkowskiMajorana
+          (lorentzGenerator4 btx bty btz rxy rxz ryz X)) := by
+  apply fockMatrixToRealGradedTensor.injective
+  simp only [map_sub, map_mul, AlgEquiv.apply_symm_apply]
+  exact lorentzMajoranaSpinGenerator_commutator btx bty btz rxy rxz ryz X
+
 /-- The real Lorentz spin lift is the restriction of the repository's
 `LieActionLane` inner action on the complete three-factor CAR algebra.  It
 acts on the Minkowski Majorana generators by the Lorentz infinitesimal and

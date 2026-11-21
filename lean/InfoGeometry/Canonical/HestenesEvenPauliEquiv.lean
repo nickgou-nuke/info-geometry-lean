@@ -3,18 +3,13 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-<<<<<<< HEAD
-
 import InfoGeometry.Canonical.HestenesPauliSheetBridgeFinite
 import InfoGeometry.Canonical.HestenesCliffordDimension
-=======
-import InfoGeometry.Canonical.HestenesPauliSheetBridgeFinite
 import Mathlib.LinearAlgebra.CliffordAlgebra.Contraction
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Grading
 import Mathlib.LinearAlgebra.ExteriorPower.Basis
 import Mathlib.LinearAlgebra.Dimension.Constructions
 import Mathlib.LinearAlgebra.Complex.FiniteDimensional
->>>>>>> upstream/pr/381
 
 /-! # The real algebra equivalence `Cl⁺(1,3) ≃ M₂(ℂ)` -/
 

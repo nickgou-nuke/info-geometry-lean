@@ -1,6 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.ZornSpinor
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.Algebra.TripotentPeirceProjectors
+import Mathlib.LinearAlgebra.Eigenspace.Basic
 
 /-!
 # Diagonal split-octonion axis and native Peirce trifactor
@@ -21,6 +27,7 @@ namespace InfoGeometry.Lie.SplitOctonionAxialPeirceTrifactor
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.ZornMatrix
 open InfoGeometry.Physics.Algebra
+open Module.End
 
 attribute [local simp] Matrix.vecHead Matrix.vecTail Matrix.cons_val_zero
   Matrix.cons_val_one Matrix.cons_val_two Matrix.cons_val_succ
@@ -138,15 +145,15 @@ theorem axialPZero_range_eq_ker :
 
 /-- The positive projector range is exactly the `+1` eigenspace. -/
 theorem axialPPlus_range_eq_eigenspace :
-    LinearMap.range axialPPlus = Module.End.eigenspace axialGrading 1 := by
+    LinearMap.range axialPPlus = eigenspace axialGrading 1 := by
   apply le_antisymm
   · rintro X ⟨Y, rfl⟩
-    rw [Module.End.mem_eigenspace_iff]
+    rw [mem_eigenspace_iff]
     have h := congrArg (fun F : EndCZ => F Y)
       (mul_projPos axialGrading_mul_three)
     simpa [Module.End.mul_apply, axialPPlus] using h
   · intro X hX
-    rw [Module.End.mem_eigenspace_iff] at hX
+    rw [mem_eigenspace_iff] at hX
     have hX' : axialGrading X = X := by simpa using hX
     rw [LinearMap.mem_range]
     refine ⟨X, ?_⟩
@@ -159,15 +166,15 @@ theorem axialPPlus_range_eq_eigenspace :
 
 /-- The negative projector range is exactly the `-1` eigenspace. -/
 theorem axialPMinus_range_eq_eigenspace :
-    LinearMap.range axialPMinus = Module.End.eigenspace axialGrading (-1) := by
+    LinearMap.range axialPMinus = eigenspace axialGrading (-1) := by
   apply le_antisymm
   · rintro X ⟨Y, rfl⟩
-    rw [Module.End.mem_eigenspace_iff]
+    rw [mem_eigenspace_iff]
     have h := congrArg (fun F : EndCZ => F Y)
       (mul_projNeg axialGrading_mul_three)
     simpa [Module.End.mul_apply, axialPMinus] using h
   · intro X hX
-    rw [Module.End.mem_eigenspace_iff] at hX
+    rw [mem_eigenspace_iff] at hX
     have hX' : axialGrading X = -X := by simpa using hX
     rw [LinearMap.mem_range]
     refine ⟨X, ?_⟩

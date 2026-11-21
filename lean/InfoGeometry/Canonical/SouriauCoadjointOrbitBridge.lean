@@ -180,6 +180,57 @@ theorem souriauOnsagerSystem_reciprocity
         (souriauOnsagerSystem state).totalGenerator_skew_part X Y
       _ = kksForm state.meanMomentum X Y := rfl
 
+/-- Under an involutive time reversal that reverses the Lie bracket and
+preserves the momentum functional, the KKS response is odd. -/
+theorem souriauKKS_timeReversal_odd
+    (state : SouriauThermodynamicState L)
+    (T : InfoGeometry.Thermo.OnsagerClosure.OnsagerCasimirSystem.TimeReversal L)
+    (hBracket : ∀ X Y : L,
+      ⁅T.op X, T.op Y⁆ = -T.op ⁅X, Y⁆)
+    (hMomentum : ∀ Z : L, state.meanMomentum (T.op Z) = state.meanMomentum Z)
+    (X Y : L) :
+    kksForm state.meanMomentum (T.op X) (T.op Y) =
+      -kksForm state.meanMomentum X Y := by
+  unfold kksForm
+  rw [hBracket, state.meanMomentum.map_neg, hMomentum]
+
+/-- The Souriau Fisher/KKS response has the full Onsager--Casimir parity
+structure whenever the Fisher form is time-reversal even and the involution
+acts anti-Lie while preserving the state's momentum functional. -/
+def souriauParityOnsagerSystem
+    (state : SouriauThermodynamicState L)
+    (T : InfoGeometry.Thermo.OnsagerClosure.OnsagerCasimirSystem.TimeReversal L)
+    (hFisher : ∀ X Y : L,
+      state.fisherMetric (T.op X) (T.op Y) = state.fisherMetric X Y)
+    (hBracket : ∀ X Y : L,
+      ⁅T.op X, T.op Y⁆ = -T.op ⁅X, Y⁆)
+    (hMomentum : ∀ Z : L, state.meanMomentum (T.op Z) = state.meanMomentum Z) :
+    InfoGeometry.Thermo.OnsagerClosure.OnsagerCasimirSystem.ParityOnsagerSystem L where
+  toOnsagerCasimirSystem := souriauOnsagerSystem state
+  T := T
+  dissipative_T_even := hFisher
+  reversible_T_odd := by
+    intro X Y
+    exact souriauKKS_timeReversal_odd state T hBracket hMomentum X Y
+
+/-- Time reversal of the total Souriau response is its transposed response,
+by the standard Onsager--Casimir theorem applied to the constructed system. -/
+theorem souriauParityOnsagerSystem_master_reciprocity
+    (state : SouriauThermodynamicState L)
+    (T : InfoGeometry.Thermo.OnsagerClosure.OnsagerCasimirSystem.TimeReversal L)
+    (hFisher : ∀ X Y : L,
+      state.fisherMetric (T.op X) (T.op Y) = state.fisherMetric X Y)
+    (hBracket : ∀ X Y : L,
+      ⁅T.op X, T.op Y⁆ = -T.op ⁅X, Y⁆)
+    (hMomentum : ∀ Z : L, state.meanMomentum (T.op Z) = state.meanMomentum Z)
+    (X Y : L) :
+    (souriauParityOnsagerSystem state T hFisher hBracket hMomentum).totalGenerator
+        (T.op X) (T.op Y) =
+      (souriauParityOnsagerSystem state T hFisher hBracket hMomentum).totalGenerator
+        Y X := by
+  exact (souriauParityOnsagerSystem state T hFisher hBracket hMomentum)
+    |>.onsager_casimir_master_reciprocity X Y
+
 end RealSouriauThermodynamics
 
 end InfoGeometry.Canonical.SouriauCoadjointOrbitBridge

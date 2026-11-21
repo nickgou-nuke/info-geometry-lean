@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Canonical.RealSplitOctonionAutCandidateTopology
@@ -27,12 +32,11 @@ theorem continuous_candidate_apply (X : CZ) :
       candidateCartesianContinuousLinearEquiv f) :=
     continuous_induced_dom
   have hu : Continuous (fun f : CartesianCoordinates ≃L[ℝ] CartesianCoordinates =>
-      continuousLinearEquivToUnitHom f) :=
+      continuousLinearEquivToOperatorPair f) :=
     continuous_induced_dom
   have hc : Continuous (fun f : CartesianCoordinates ≃L[ℝ] CartesianCoordinates =>
-      (continuousLinearEquivToUnitHom f :
-        CartesianCoordinates →L[ℝ] CartesianCoordinates)) :=
-    Units.continuous_val.comp hu
+      (f : CartesianCoordinates →L[ℝ] CartesianCoordinates)) := by
+    exact continuous_fst.comp hu
   have he : Continuous (fun f : SplitAutCandidate =>
       candidateCartesianContinuousLinearEquiv f
         (cartesianZornLinearEquiv.symm X)) :=

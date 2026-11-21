@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.RealSplitOctonionAutAmbient
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TrifactorSU3
@@ -414,20 +419,57 @@ theorem isClosed_canonicalZorn_zero : IsClosed ({0} : Set CZ) := by
   change E X = E 0 ↔ X = 0
   exact E.injective.eq_iff
 
-/-- The native monoid hom from continuous linear equivalences to endomorphism
-units. It supplies the ambient topology and topological-group structure. -/
-noncomputable def continuousLinearEquivToUnitHom :
-    (CartesianCoordinates ≃L[ℝ] CartesianCoordinates) →*
-      (CartesianCoordinates →L[ℝ] CartesianCoordinates)ˣ :=
-  (ContinuousLinearEquiv.unitsEquiv ℝ CartesianCoordinates).symm.toMonoidHom
+/-- Retain both an operator and its inverse in the topology on the equivalence
+group. The inverse coordinate makes continuity of group inversion explicit;
+it does not assume that units of the endomorphism algebra already form a
+topological group. -/
+def continuousLinearEquivToOperatorPair
+    (e : CartesianCoordinates ≃L[ℝ] CartesianCoordinates) :
+    (CartesianCoordinates →L[ℝ] CartesianCoordinates) ×
+      (CartesianCoordinates →L[ℝ] CartesianCoordinates) :=
+  (e, e.symm)
 
 noncomputable instance instTopologicalSpaceCartesianCoordinatesContinuousLinearEquiv :
     TopologicalSpace (CartesianCoordinates ≃L[ℝ] CartesianCoordinates) :=
-  TopologicalSpace.induced continuousLinearEquivToUnitHom inferInstance
+  TopologicalSpace.induced continuousLinearEquivToOperatorPair inferInstance
+
+private theorem continuous_continuousLinearEquivToOperatorPair :
+    Continuous continuousLinearEquivToOperatorPair :=
+  continuous_induced_dom
+
+private theorem continuous_equivForward :
+    Continuous (fun e : CartesianCoordinates ≃L[ℝ] CartesianCoordinates =>
+      (e : CartesianCoordinates →L[ℝ] CartesianCoordinates)) :=
+  continuous_fst.comp continuous_continuousLinearEquivToOperatorPair
+
+private theorem continuous_equivInverse :
+    Continuous (fun e : CartesianCoordinates ≃L[ℝ] CartesianCoordinates =>
+      (e.symm : CartesianCoordinates →L[ℝ] CartesianCoordinates)) :=
+  continuous_snd.comp continuous_continuousLinearEquivToOperatorPair
 
 noncomputable instance instIsTopologicalGroupCartesianCoordinatesContinuousLinearEquiv :
-    IsTopologicalGroup (CartesianCoordinates ≃L[ℝ] CartesianCoordinates) :=
-  topologicalGroup_induced continuousLinearEquivToUnitHom
+    IsTopologicalGroup (CartesianCoordinates ≃L[ℝ] CartesianCoordinates) where
+  continuous_inv := by
+    apply continuous_induced_rng.mpr
+    change Continuous (fun e : CartesianCoordinates ≃L[ℝ] CartesianCoordinates =>
+      ((e.symm : CartesianCoordinates →L[ℝ] CartesianCoordinates),
+        (e : CartesianCoordinates →L[ℝ] CartesianCoordinates)))
+    exact continuous_equivInverse.prodMk continuous_equivForward
+  continuous_mul := by
+    apply continuous_induced_rng.mpr
+    change Continuous (fun p :
+      (CartesianCoordinates ≃L[ℝ] CartesianCoordinates) ×
+        (CartesianCoordinates ≃L[ℝ] CartesianCoordinates) =>
+      ((p.1 : CartesianCoordinates →L[ℝ] CartesianCoordinates) *
+          (p.2 : CartesianCoordinates →L[ℝ] CartesianCoordinates),
+        (p.2.symm : CartesianCoordinates →L[ℝ] CartesianCoordinates) *
+          (p.1.symm : CartesianCoordinates →L[ℝ] CartesianCoordinates)))
+    exact (continuous_mul.comp
+      ((continuous_equivForward.comp continuous_fst).prodMk
+        (continuous_equivForward.comp continuous_snd))).prodMk
+      (continuous_mul.comp
+        ((continuous_equivInverse.comp continuous_snd).prodMk
+          (continuous_equivInverse.comp continuous_fst)))
 
 noncomputable instance instTopologicalSpaceRealSplitOctonionAut :
     TopologicalSpace RealSplitOctonionAut :=
@@ -435,7 +477,7 @@ noncomputable instance instTopologicalSpaceRealSplitOctonionAut :
 
 noncomputable instance instIsTopologicalGroupRealSplitOctonionAut :
     IsTopologicalGroup RealSplitOctonionAut :=
-  topologicalGroup_induced realSplitOctonionAutCartesianContinuousHom
+  isTopologicalGroup_induced realSplitOctonionAutCartesianContinuousHom
 
 theorem continuous_realSplitOctonionAutCartesianContinuous :
     Continuous (realSplitOctonionAutCartesianContinuous :
@@ -458,13 +500,9 @@ theorem continuous_realSplitOctonionAut_apply_cartesian
   have hg : Continuous (realSplitOctonionAutCartesianContinuous :
       RealSplitOctonionAut → CartesianCoordinates ≃L[ℝ] CartesianCoordinates) :=
     continuous_induced_dom
-  have hu : Continuous (fun g : CartesianCoordinates ≃L[ℝ] CartesianCoordinates =>
-      continuousLinearEquivToUnitHom g) :=
-    continuous_induced_dom
   have hc : Continuous (fun g : CartesianCoordinates ≃L[ℝ] CartesianCoordinates =>
-      (continuousLinearEquivToUnitHom g :
-        CartesianCoordinates →L[ℝ] CartesianCoordinates)) :=
-    Units.continuous_val.comp hu
+      (g : CartesianCoordinates →L[ℝ] CartesianCoordinates)) :=
+    continuous_equivForward
   exact (ContinuousLinearMap.apply ℝ CartesianCoordinates X).continuous.comp
     (hc.comp hg)
 

@@ -48,11 +48,22 @@ def coefficientDuality : Z ≃ₗ[ℝ] Module.Dual ℝ Z :=
   change coefficientDuality (coefficientDuality.symm φ) X = φ X
   rw [LinearEquiv.apply_symm_apply]
 
+/-- Curry a bilinear form in its first slot as a map into the algebraic dual. -/
+def bilinearFormToDualMap (B : LinearMap.BilinForm ℝ Z) :
+    Z →ₗ[ℝ] Module.Dual ℝ Z where
+  toFun X := B X
+  map_add' X Y := by
+    ext W
+    exact B.map_add₂ X Y W
+  map_smul' r X := by
+    ext W
+    exact B.map_smul₂ r X W
+
 /-- The two uses of the inverse duality make both variance changes explicit. -/
 def gramCovectorOperator (B : LinearMap.BilinForm ℝ Z) :
     Module.Dual ℝ Z →ₗ[ℝ] Z :=
   coefficientDuality.symm.toLinearMap.comp
-    (B.comp coefficientDuality.symm.toLinearMap)
+    ((bilinearFormToDualMap B).comp coefficientDuality.symm.toLinearMap)
 
 theorem gramCovectorOperator_eval (B : LinearMap.BilinForm ℝ Z)
     (φ ψ : Module.Dual ℝ Z) :
@@ -82,13 +93,22 @@ theorem gramCovectorOperator_zero_iff (B : LinearMap.BilinForm ℝ Z)
   · intro h Y
     have hdual : B (coefficientDuality.symm φ) = 0 := by
       have he := congrArg coefficientDuality h
-      simpa [gramCovectorOperator] using he
+      change B (coefficientDuality.symm φ) = 0
+      change coefficientDuality (coefficientDuality.symm
+        (bilinearFormToDualMap B (coefficientDuality.symm φ))) =
+          coefficientDuality (0 : Z) at he
+      rw [LinearEquiv.apply_symm_apply] at he
+      rw [map_zero] at he
+      exact he
     exact congrArg (fun f : Module.Dual ℝ Z => f Y) hdual
   · intro h
     have hdual : B (coefficientDuality.symm φ) = 0 := by
       ext Y
       exact h Y
-    simp [gramCovectorOperator, hdual]
+    have hmap : bilinearFormToDualMap B (coefficientDuality.symm φ) = 0 := by
+      ext Y
+      exact congrArg (fun f : Module.Dual ℝ Z => f Y) hdual
+    simp [gramCovectorOperator, hmap]
 
 /-- The ambient 64-pair form represented with the constructed coefficient duality. -/
 def ambientDissipation : Module.Dual ℝ Z →ₗ[ℝ] Z :=

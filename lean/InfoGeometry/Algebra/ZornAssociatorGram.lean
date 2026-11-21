@@ -160,7 +160,8 @@ theorem canonical_associator_transport (X Y W : CZ) :
       _root_.associator (canonicalVectorEquiv X)
         (canonicalVectorEquiv Y) (canonicalVectorEquiv W) := by
   simp only [Zorn.associatorDefect, canonicalVectorEquiv_sub,
-    canonicalVectorEquiv_mul, _root_.associator_apply, zvm_mul_def,
+    canonicalVectorEquiv_add, canonicalVectorEquiv_mul,
+    canonicalVectorEquiv_neg, _root_.associator_apply, zvm_mul_def,
     _root_.sub_eq_add_neg, zvm_add_def, zvm_neg_def, ZornVectorMatrix.sub]
 
 /-- Exact scalar-nucleus characterization on the vector carrier, transported

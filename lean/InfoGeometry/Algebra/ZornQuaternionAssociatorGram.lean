@@ -143,7 +143,7 @@ theorem quaternion_mul_ell_eq_zero_iff (q : Quaternion ℝ) :
     have hq := congrArg transversePart h
     simpa only [transversePart_quaternion_mul_ell, map_zero] using hq
   · rintro rfl
-    rw [map_zero, _root_.zero_mul]
+    rw [map_zero, zero_mul]
 
 /-- The pair/Zorn multiplication adapter is proved from the actual native
 product. In quaternion-pair coordinates it is `(0,q) * (p,0) = (0,q * star p)`. -/
@@ -243,7 +243,7 @@ theorem associator_quaternion_i_j_zero_iff (X : Z) :
     apply LinearMap.mem_range.mpr
     refine ⟨quaternionPart X, ?_⟩
     have hX := quaternion_decomposition X
-    rw [hq, map_zero, _root_.zero_mul, _root_.add_zero] at hX
+    rw [hq, map_zero, zero_mul, _root_.add_zero] at hX
     exact hX.symm
   · intro h
     obtain ⟨q, rfl⟩ := LinearMap.mem_range.mp h

@@ -103,13 +103,13 @@ def timeProjectorLeftIdealEquiv :
     rw [quaternionRep_matrixPreimage]
     exact (quaternionRep_eq_first_column x.2).symm
   right_inv z := by
-    simpa only [quaternionRep_matrixPreimage] using (Prod.eta z)
+    ext <;> simp [quaternionRep_matrixPreimage]
   map_add' x y :=
     congrArg (fun A : QuaternionMatrix => (A 0 0, A 1 0))
       (quaternionRep.map_add (x : Cl14) (y : Cl14))
   map_smul' r x :=
     congrArg (fun A : QuaternionMatrix => (A 0 0, A 1 0))
-      (quaternionRep.map_smul r (x : Cl14))
+      (quaternionRep.toLinearMap.map_smul r (x : Cl14))
 
 /-- The native principal left ideal has real dimension eight. -/
 theorem timeProjectorLeftIdeal_finrank :
@@ -143,16 +143,15 @@ theorem exists_left_mul_eq_timeProjector {x : Cl14}
   refine ⟨matrixPreimage (Matrix.single 0 j (quaternionRep x j 0)⁻¹), ?_⟩
   apply quaternionRep_injective
   simp only [map_mul, quaternionRep_matrixPreimage, quaternionRep_timeProjector]
-  apply Matrix.ext
-  intro i k
-  fin_cases i <;> fin_cases k
-  · rw [Matrix.single_mul_apply_same]
-    exact inv_mul_cancel₀ hj
-  · rw [Matrix.single_mul_apply_same, quaternionRep_second_column_eq_zero hx, mul_zero]
-  · exact Matrix.single_mul_apply_of_ne
-      (quaternionRep x j 0)⁻¹ (0 : Fin 2) j 1 0 (by decide) (quaternionRep x)
-  · exact Matrix.single_mul_apply_of_ne
-      (quaternionRep x j 0)⁻¹ (0 : Fin 2) j 1 1 (by decide) (quaternionRep x)
+  fin_cases j
+  all_goals
+    apply Matrix.ext
+    intro i k
+    fin_cases i <;> fin_cases k
+  all_goals
+    simp [Matrix.mul_apply, Matrix.single_apply, Fin.sum_univ_two,
+      quaternionRep_second_column_eq_zero hx, inv_mul_cancel₀ hj]
+  all_goals exact inv_mul_cancel₀ hj
 
 /-- Supported idempotents are zero or the whole projector: the primitive criterion. -/
 theorem timeProjector_supported_idempotent_eq_zero_or_self (f : Cl14)

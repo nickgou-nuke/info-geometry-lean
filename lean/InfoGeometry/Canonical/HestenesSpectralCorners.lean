@@ -5,6 +5,8 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.Canonical.HestenesHermitianAdjoint
+import InfoGeometry.Canonical.HestenesCliffordKreinFinite
+import InfoGeometry.Canonical.HestenesEvenPauliEquiv
 import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.NormNum
 

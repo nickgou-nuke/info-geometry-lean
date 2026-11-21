@@ -37,7 +37,8 @@ def pauliProjection : Mat4R := (1 / 2 : ℝ) • (1 + realSigma3)
 
 theorem pauliProjection_sq : pauliProjection * pauliProjection = pauliProjection := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [pauliProjection, realSigma3, Matrix.mul_apply, Fin.sum_univ_succ]
+    norm_num [pauliProjection, realSigma3, Matrix.mul_apply,
+      Matrix.one_apply, Fin.sum_univ_succ] <;> ring
 
 theorem pauliProjection_selfAdjoint : star pauliProjection = pauliProjection := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
@@ -120,9 +121,11 @@ theorem pauli_curvature_eq :
   have hreverse : realSigma2 * realSigma1 = -(realSigma1 * realSigma2) := by
     apply eq_neg_iff_add_eq_zero.mpr
     simpa only [add_comm] using realSigma1_realSigma2_anticomm
-  have hcomm : commutator realSigma1 realSigma2 =
+  have hcomm : InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator
+      realSigma1 realSigma2 =
       (2 : ℝ) • (realPhaseAxis * realSigma3) := by
-    rw [commutator, hreverse, sub_neg_eq_add, hproduct, two_smul]
+    rw [InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator,
+      hreverse, sub_neg_eq_add, hproduct, two_smul]
   unfold projectorCurvature
   rw [hcomm, mul_smul_comm, smul_mul_assoc]
   congr 1

@@ -60,10 +60,18 @@ theorem hasDerivAt_mass (η s r : ℝ) (hrs : r + s ≠ 0) :
       (2 * η * s * r * (r + 2 * s) / (r + s) ^ 2) r := by
   have hnum : HasDerivAt (fun x : ℝ => 2 * η * s * x ^ 2)
       (2 * η * s * (2 * r)) r := by
-    convert ((hasDerivAt_id r).pow 2).const_mul (2 * η * s) using 1 <;>
-      simp only [id_eq, Nat.cast_ofNat, pow_one, mul_one]
+    convert ((hasDerivAt_id r).pow 2).const_mul (2 * η * s) using 1
+    · funext x
+      rfl
+    · simp only [id_eq]
+      ring
   have hquot := hnum.div ((hasDerivAt_id r).add_const s) hrs
-  convert hquot using 1 <;> dsimp [mass, id] <;> ring
+  convert hquot using 1
+  · funext x
+    rfl
+  · simp only [id_eq]
+    field_simp [hrs]
+    <;> ring
 
 theorem deriv_mass (η s r : ℝ) (hrs : r + s ≠ 0) :
     deriv (mass η s) r =

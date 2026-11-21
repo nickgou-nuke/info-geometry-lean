@@ -1,7 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.SuperMetriplectic.OperatorKLBKM
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauTomitaModularFlowBridge
 import InfoGeometry.Canonical.RelativeModularBerezinianBridge
+import InfoGeometry.Canonical.NoncommutativeGibbsBKMHessianBridge
 
 /-!
 # Souriau/Tomita/BKM Dictionary
@@ -28,6 +34,84 @@ open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Canonical.RelativeModularOperator
 open InfoGeometry.Canonical.RelativeModularBerezinianBridge
 open InfoGeometry.Geometry
+open InfoGeometry.Canonical.NoncommutativeGibbsBKMHessianBridge
+open InfoGeometry.Canonical.NoncommutativeGibbsCenteredBKMCovariance
+open InfoGeometry.Canonical.NoncommutativeGibbsFaithfulNormalizationBridge
+open SouriauOnsagerBKM
+
+/-! ## Constructive finite Gibbs/BKM Hessian realization
+
+The generic dictionaries below remain conditional readout interfaces.  This
+finite-dimensional realization is a separate theorem-backed construction: its
+Hessian is the actual second derivative of the normalized Gibbs log-partition,
+and its BKM form is the centered covariance of the same faithful Gibbs density.
+No equality between these quantities is supplied as model data.
+-/
+
+/-- A finite Gibbs model with a real parameter space of self-adjoint
+observables.  Positivity of the partition function is recorded explicitly;
+the logarithmic differentiation theorem is applied only on this domain. -/
+structure FiniteGibbsBKMHessianModel (n : ℕ) (V : Type*)
+    [AddCommGroup V] [Module ℝ V] where
+  hamiltonian : FiniteOperatorAlgebra n
+  hamiltonian_selfAdjoint : IsSelfAdjoint hamiltonian
+  partition_positive : 0 < gibbsPartitionReal hamiltonian
+  observable : V → FiniteOperatorAlgebra n
+  observable_selfAdjoint : ∀ v, IsSelfAdjoint (observable v)
+
+namespace FiniteGibbsBKMHessianModel
+
+variable {n : ℕ} {V : Type*} [AddCommGroup V] [Module ℝ V]
+variable (M : FiniteGibbsBKMHessianModel n V)
+
+/-- Real second derivative of the actual finite Gibbs log-partition. -/
+noncomputable def massieuHessian (v w : V) : ℝ :=
+  (secondFDerivLogPartitionReadout M.hamiltonian
+    (M.observable v) (M.observable w)).re
+
+/-- Centered BKM covariance at the faithful Gibbs density associated to the
+same Hamiltonian. -/
+noncomputable def bkmCovariance (v w : V) : ℝ :=
+  centeredBKMRealCovariance
+    (faithfulGibbsDensity M.hamiltonian M.hamiltonian_selfAdjoint
+      M.partition_positive)
+    (continuous_faithfulGibbsDensity_rpow M.hamiltonian
+      M.hamiltonian_selfAdjoint M.partition_positive)
+    (M.observable v) (M.observable w)
+
+/-- Genuine finite Gibbs Hessian/BKM identity, derived from differentiation
+and the centered covariance theorem rather than stored as a compatibility
+field. -/
+theorem massieuHessian_eq_bkmCovariance (v w : V) :
+    M.massieuHessian v w = M.bkmCovariance v w := by
+  exact secondFDeriv_logPartition_apply_eq_centeredBKM
+    M.hamiltonian M.hamiltonian_selfAdjoint M.partition_positive
+    (M.observable v) (M.observable w) (M.observable_selfAdjoint v)
+
+/-- Symmetry of the constructed Hessian follows from centered BKM covariance
+symmetry for self-adjoint observables. -/
+theorem massieuHessian_symm (v w : V) :
+    M.massieuHessian v w = M.massieuHessian w v := by
+  rw [M.massieuHessian_eq_bkmCovariance v w,
+    M.massieuHessian_eq_bkmCovariance w v]
+  exact centeredBKMRealCovariance_symm
+    (faithfulGibbsDensity M.hamiltonian M.hamiltonian_selfAdjoint
+      M.partition_positive)
+    (continuous_faithfulGibbsDensity_rpow M.hamiltonian
+      M.hamiltonian_selfAdjoint M.partition_positive)
+    (M.observable v) (M.observable w)
+
+/-- Positivity on each real parameter direction follows from the source
+owner's nonnegative centered BKM response theorem. -/
+theorem massieuHessian_nonneg (v : V) : 0 ≤ M.massieuHessian v v := by
+  change 0 ≤
+    (secondFDerivLogPartitionReadout M.hamiltonian
+      (M.observable v) (M.observable v)).re
+  exact secondFDeriv_logPartition_nonneg_selfAdjoint
+    M.hamiltonian M.hamiltonian_selfAdjoint M.partition_positive
+    (M.observable v) (M.observable_selfAdjoint v)
+
+end FiniteGibbsBKMHessianModel
 
 /--
 Souriau geometric-temperature to Tomita modular-Hamiltonian dictionary.

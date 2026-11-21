@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Real.Sign
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
@@ -94,7 +99,14 @@ theorem sector_det_reconstruction (A D : RealMat) (hD : Matrix.det D ≠ 0) :
     · rw [if_pos h_pos]
       have h_abs : |Matrix.det A * Matrix.det D| = Matrix.det A * Matrix.det D := abs_of_pos h_pos
       rw [h_abs, mul_one]
-  rw [h_recon]
-  field_simp
+  calc
+    Matrix.det A ^ 2 =
+        (Matrix.det A * Matrix.det D) * (Matrix.det A / Matrix.det D) := by
+          field_simp [hD]
+    _ = (|Matrix.det A * Matrix.det D| *
+        (if Matrix.det A * Matrix.det D > 0 then 1
+         else if Matrix.det A * Matrix.det D < 0 then -1 else 0)) *
+        (Matrix.det A / Matrix.det D) :=
+          congrArg (fun x : ℝ => x * (Matrix.det A / Matrix.det D)) h_recon.symm
 
 end InfoGeometry.Modular.DeterminantTrifactorHomomorphism

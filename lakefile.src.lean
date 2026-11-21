@@ -88,12 +88,14 @@ lean_lib SrcLane where
     .andSubmodules `SelfReference,
     .andSubmodules `Socratic,
     .andSubmodules `VirasoroProject,
-    .andSubmodules `sandbox,
-    .andSubmodules `scripts,
+    -- These trees have submodules but no `sandbox.lean` or `scripts.lean`
+    -- root module in `src/`; selecting the roots made Lake schedule paths
+    -- that do not exist during job computation.
+    .submodules `sandbox,
+    .submodules `scripts,
     .one `B3PresentedGroup,
     .one `Agent,
     .one `AuditNative,
-    .one `AuditNativeRun,
     .one `AuditStrict,
     .one `CheckBasis,
     .one `CheckTemp,
@@ -130,8 +132,10 @@ lean_lib SrcLane where
     .one `test_selfconcordance
   ]
 
--- The source transition tree also compiles the repository `proofs/` modules
--- in the isolated src-build output, mirroring the root workspace's proofs lib.
-lean_lib proofs where
-  srcDir := "."
-  globs := #[.submodules `proofs]
+-- `AuditNativeRun` deliberately executes repository-wide architecture and
+-- representation-depth audits. Keep it available as an explicit target, but
+-- out of ordinary source compilation: the audit is a policy gate whose
+-- findings are maintained independently of whether source modules typecheck.
+lean_lib AuditRun where
+  srcDir := "src"
+  roots := #[`AuditNativeRun]

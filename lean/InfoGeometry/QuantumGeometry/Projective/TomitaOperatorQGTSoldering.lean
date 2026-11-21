@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.QuantumGeometry.Projective.QGT
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.GeometricTensorOperatorLift
@@ -62,7 +67,7 @@ noncomputable def nambuClockAxis : EndC where
     intro c u
     change complex_i (c • u) = c • complex_i u
     apply DoubledSpace.ext
-    · simp only [complex_i_apply, WithLp.toLp_smul, WithLp.smul_fst,
+    · simp only [complex_i_apply, WithLp.smul_fst,
         WithLp.toLp_fst, WithLp.toLp_snd, WithLp.smul_snd, smul_neg]
     · rw [complex_i_apply, complex_i_apply]
       change WithLp.fst (c • u) = c • WithLp.fst u
@@ -70,11 +75,13 @@ noncomputable def nambuClockAxis : EndC where
   cont := (clockAxis (E := H)).cont
 
 @[simp]
+omit [CompleteSpace H] in
 theorem nambuClockAxis_apply (u : NambuH) :
     nambuClockAxis (H := H) u = clockAxis (E := H) u := by
   rfl
 
 /-- The complex and real readouts of the phase axis are literally the same map. -/
+omit [CompleteSpace H] in
 theorem nambuClockAxis_restrictScalars_eq_clockAxis :
     (nambuClockAxis (H := H)).restrictScalars ℝ = clockAxis (E := H) := by
   apply ContinuousLinearMap.ext
@@ -102,6 +109,7 @@ def CommutesClock (X : EndC) : Prop :=
   X.comp (nambuClockAxis (H := H)) = (nambuClockAxis (H := H)).comp X
 
 /-- A phase-linear generator preserves the positive Hestenes polarization. -/
+omit [CompleteSpace H] in
 theorem apply_positiveClockPolarized
     (X : EndC) (u : NambuH)
     (hX : CommutesClock X)
@@ -137,6 +145,7 @@ The real inner product obtained from the complex Hilbert structure commutes
 with the doubled `L²` product: it is the real part of the complex Nambu inner
 product.
 -/
+omit [CompleteSpace H] in
 theorem nambu_real_inner_eq_re_complex_inner (u v : NambuH) :
     ⟪u, v⟫_ℝ = (⟪u, v⟫_ℂ).re := by
   rw [WithLp.prod_inner_apply, WithLp.prod_inner_apply]

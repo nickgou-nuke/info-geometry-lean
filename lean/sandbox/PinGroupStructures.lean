@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.GroupTheory.SemidirectProduct
 import Mathlib.Algebra.Group.Equiv.Basic
 import Mathlib.Tactic
@@ -18,16 +23,18 @@ def inversionAut (G : Type*) [CommGroup G] : MulAut G where
 
 /-- The $\mathbb{Z}_2$ action on a commutative group by inversion. -/
 def z2InversionAction (G : Type*) [CommGroup G] : Multiplicative (ZMod 2) →* MulAut G where
-  toFun z := if z = 1 then 1 else inversionAut G
+  toFun z := inversionAut G ^ z.toAdd.val
   map_one' := by simp
   map_mul' x y := by
-    fin_cases x <;> fin_cases y
-    all_goals
-      have htwo : (2 : ZMod 2) = 0 := ZMod.natCast_self 2
+    have hinv : inversionAut G * inversionAut G = 1 := by
       ext g
-      norm_num [inversionAut, ← ofAdd_add, htwo]
-      all_goals
-        rw [if_pos htwo]
-        simp
+      simp [inversionAut]
+    change inversionAut G ^ (x.toAdd + y.toAdd).val =
+      (inversionAut G ^ x.toAdd.val) * (inversionAut G ^ y.toAdd.val)
+    rw [ZMod.val_add]
+    have hx : x.toAdd.val < 2 := ZMod.val_lt x.toAdd
+    have hy : y.toAdd.val < 2 := ZMod.val_lt y.toAdd
+    interval_cases x.toAdd.val <;> interval_cases y.toAdd.val <;>
+      norm_num [inversionAut, hinv]; try exact hinv.symm
 
 end InfoGeometry.Topology.PinStructures

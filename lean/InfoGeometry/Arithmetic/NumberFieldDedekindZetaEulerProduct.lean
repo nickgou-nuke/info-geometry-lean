@@ -11,6 +11,7 @@ import Mathlib.NumberTheory.NumberField.DedekindZeta
 import Mathlib.NumberTheory.NumberField.Completion.FinitePlace
 import Mathlib.Topology.Algebra.InfiniteSum.Real
 import Mathlib.NumberTheory.EulerProduct.Basic
+import Mathlib.Analysis.Normed.Group.Tannery
 
 /-!
 # Dedekind zeta convergence and its prime-ideal Euler product
@@ -51,8 +52,8 @@ theorem dedekindZeta_LSeriesSummable (F : Type*) [Field F] [NumberField F] {s : 
   exact ht (by
     rw [dedekindZeta, LSeries.eq_zero_of_not_LSeriesSummable _ _ hdiv, mul_zero])
 
-/-- The sum of inverse powers of integral ideal norms converges above exponent one. -/
 set_option linter.style.haveILetI false in
+/-- The sum of inverse powers of integral ideal norms converges above exponent one. -/
 theorem summable_absNorm_rpow (F : Type*) [Field F] [NumberField F] {r : ℝ}
     (hr : 1 < r) :
     Summable fun I : Ideal (𝓞 F) ↦ (I.absNorm : ℝ) ^ (-r) := by
@@ -66,14 +67,20 @@ theorem summable_absNorm_rpow (F : Type*) [Field F] [NumberField F] {r : ℝ}
     · simp [hn, A, Real.rpow_neg (Nat.cast_nonneg _), div_eq_mul_inv]
   rw [← (Equiv.sigmaFiberEquiv (Ideal.absNorm (S := 𝓞 F))).summable_iff]
   have hfinite (n : ℕ) : Finite {I : Ideal (𝓞 F) // I.absNorm = n} :=
-    (Ring.HasFiniteQuotients.finite_absNorm_eq n).to_subtype
+    (Ideal.finite_setOfPred_absNorm_eq n).to_subtype
   refine (summable_sigma_of_nonneg (fun _ ↦ by dsimp; positivity)).2
     ⟨fun _ ↦ Summable.of_finite, hsum.congr fun n ↦ ?_⟩
   letI : Fintype {I : Ideal (𝓞 F) // I.absNorm = n} := Fintype.ofFinite _
-  change (∑' I : {I : Ideal (𝓞 F) // I.absNorm = n}, (I.val.absNorm : ℝ) ^ (-r)) = _
-  rw [tsum_congr (fun I : {I : Ideal (𝓞 F) // I.absNorm = n} ↦
-    congrArg (fun m : ℕ ↦ (m : ℝ) ^ (-r)) I.property)]
-  simp [A, tsum_const, nsmul_eq_mul]
+  simp only [Equiv.sigmaFiberEquiv_apply, Function.comp_apply]
+  rw [tsum_fintype]
+  calc
+    A n * (n : ℝ) ^ (-r) = ∑ _ : {I : Ideal (𝓞 F) // I.absNorm = n},
+        (n : ℝ) ^ (-r) := by simp [A, Nat.card_eq_fintype_card]
+    _ = ∑ I : {I : Ideal (𝓞 F) // I.absNorm = n},
+        (I.val.absNorm : ℝ) ^ (-r) := by
+      apply Finset.sum_congr rfl
+      intro I _
+      rw [I.property]
 
 /-- A finite-sieve Euler product for a norm-summable multiplicative weight on a
 commutative monoid with unique prime divisibility. -/
@@ -181,16 +188,13 @@ theorem dedekindZeta_hasProd (F : Type*) [Field F] [NumberField F] {s : ℂ}
     rw [← e.tsum_eq, he.tsum_sigma]
     unfold dedekindZeta LSeries
     refine tsum_congr fun n ↦ ?_
-    obtain hzero | hn := eq_or_ne n 0
-    · subst n
-      simp [Complex.zero_cpow (neg_ne_zero.mpr hs₀)]
-    · have hfinite : Finite {I : Ideal (𝓞 F) // I.absNorm = n} :=
-        (Ring.HasFiniteQuotients.finite_absNorm_eq n).to_subtype
-      change (∑' I : {I : Ideal (𝓞 F) // I.absNorm = n},
-        (I.val.absNorm : ℂ) ^ (-s)) = _
-      rw [tsum_congr (fun I : {I : Ideal (𝓞 F) // I.absNorm = n} ↦
-        congrArg (fun m : ℕ ↦ (m : ℂ) ^ (-s)) I.property), tsum_const,
-        LSeries.term_of_ne_zero' hs₀, Complex.cpow_neg, nsmul_eq_mul, div_eq_mul_inv]
+    have hfinite : Finite {I : Ideal (𝓞 F) // I.absNorm = n} :=
+      (Ideal.finite_setOfPred_absNorm_eq n).to_subtype
+    change (∑' I : {I : Ideal (𝓞 F) // I.absNorm = n},
+      (I.val.absNorm : ℂ) ^ (-s)) = _
+    rw [tsum_congr (fun I : {I : Ideal (𝓞 F) // I.absNorm = n} ↦
+      congrArg (fun m : ℕ ↦ (m : ℂ) ^ (-s)) I.property), tsum_const,
+      LSeries.term_of_ne_zero' hs₀, Complex.cpow_neg, nsmul_eq_mul, div_eq_mul_inv]
   rw [← hz]
   refine hasProd_eulerFactors_of_summable
     (fun v : HeightOneSpectrum (𝓞 F) ↦ v.asIdeal) (fun v ↦ v.prime) ?_ ?_ f hsum ?_
@@ -202,7 +206,8 @@ theorem dedekindZeta_hasProd (F : Type*) [Field F] [NumberField F] {s : ℂ}
     exact ⟨⟨J, hJ.isPrime, fun he ↦ hI (le_bot_iff.mp (he ▸ hIJ))⟩,
       Ideal.dvd_iff_le.mpr hIJ⟩
   · intro v he
-    have hq : (1 : ℝ) < v.asIdeal.absNorm := NumberField.HeightOneSpectrum.one_lt_absNorm v
+    have hq : (1 : ℝ) < v.asIdeal.absNorm := by
+      exact_mod_cast NumberField.HeightOneSpectrum.one_lt_absNorm v
     have hlt := Real.rpow_lt_one_of_one_lt_of_neg hq (by linarith : -s.re < 0)
     have hval := congrArg norm he
     change ‖(v.asIdeal.absNorm : ℂ) ^ (-s)‖ = ‖(1 : ℂ)‖ at hval

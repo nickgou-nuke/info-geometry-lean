@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
@@ -14,8 +19,10 @@ import InfoGeometry.Canonical.TomitaCommutantHeatBathBridge
 /-!
 # Bisognano–Wichmann Souriau Unification Bridge
 
-This module formally unifies the 4 distributed stages of the
-Bisognano–Wichmann / Unruh / Horizon pipeline into a single coherent theorem package:
+This module packages the finite, source-backed parts of the
+Bisognano–Wichmann / Unruh / Souriau pipeline. It does not prove the analytic
+Bisognano–Wichmann theorem or identify an arbitrary finite involution with a
+QFT horizon commutant.
 
 1. **Stage 1 (Cartan Boost Flow in 𝔭):**
    The hyperbolic boost flow $A(a \tau)$ parameterizes the worldline of a uniformly
@@ -28,11 +35,12 @@ Bisognano–Wichmann / Unruh / Horizon pipeline into a single coherent theorem p
    The unit modular KMS period $\Delta \tau_{\mathrm{mod}} = 1$ transforms under proper
    acceleration to the inverse thermal temperature $\beta = 2\pi / a$, yielding
    the exact Unruh temperature $T_U = a / (2\pi)$.
-4. **Stage 4 (Horizon Commutant Duality):**
-   The modular conjugation $J$ reflects the local wedge algebra $\mathcal{M}$ onto its
-   commutant heat bath $\mathcal{M}'$ with exact trace invariance $\mathrm{Tr}(J A J) = \mathrm{Tr}(A)$.
+4. **Stage 4 (Finite Involution Trace Identity):**
+   A matrix involution $J^2 = 1$ gives the finite trace identity
+   $\mathrm{Tr}(J A J) = \mathrm{Tr}(A)$. An actual commutant statement requires
+   `TomitaCommutantDatum` and is not supplied by this matrix hypothesis.
 
-All proofs are 100% native Lean 4 Mathlib proofs with zero `sorry`s and zero custom axioms.
+All proofs are native Lean 4/Mathlib proofs with complete proof terms and no custom axioms.
 -/
 
 noncomputable section
@@ -94,8 +102,9 @@ STAGE 3: KMS Thermal Periodicity & Exact Unruh Temperature
 -/
 
 /--
-  THEOREM 3.1: The fundamental KMS unit modular period $\Delta \tau_{\mathrm{mod}} = 1$
-  induces the exact thermal inverse temperature $\beta = 2\pi / a$.
+  THEOREM 3.1: Under the repository's normalized modular-time convention
+  $\Delta \tau_{\mathrm{mod}} = 1$, the proper-time scale is
+  $\beta = 2\pi / a$. This is a finite parameter conversion, not an analytic KMS theorem.
 -/
 theorem kms_modular_period_to_inverse_temperature (obs : RindlerObserver) :
     inverseTemperature obs = (2 * Real.pi) / obs.a := by
@@ -119,14 +128,15 @@ theorem unruh_temperature_strictly_positive (obs : RindlerObserver) :
 
 /-!
 =============================================================================
-STAGE 4: Horizon Commutant Reflection & Trace Conservation
+STAGE 4: Finite Involution Trace Conservation
 =============================================================================
 -/
 
 /--
-  THEOREM 4.1: Horizon CPT Reflection preserves algebraic traces for any involutive $J^2 = 1$.
+  THEOREM 4.1: Conjugation by any involutive finite matrix preserves trace.
+  This theorem has no commutant or horizon interpretation by itself.
 -/
-theorem horizon_reflection_trace_invariance {n : ℕ} [Fintype (Fin n)] [DecidableEq (Fin n)]
+theorem involutive_conjugation_trace_invariance {n : ℕ} [Fintype (Fin n)] [DecidableEq (Fin n)]
     (J A : Matrix (Fin n) (Fin n) ℝ) (hJ : J * J = 1) :
     trace (J * A * J) = trace A := by
   rw [trace_mul_comm (J * A) J, ← mul_assoc, hJ, one_mul]
@@ -138,11 +148,11 @@ STAGE 5: The Unified Bisognano–Wichmann – Souriau Synthesis Structure
 -/
 
 /--
-  The Complete Unruh–Souriau–Bisognano–Wichmann Packet:
-  Packages the acceleration parameter, proper time evolution, modular period,
-  and resulting thermodynamic temperature into a single coherent structure.
+  A finite Unruh–Souriau packet:
+  packages the acceleration parameter, normalized modular period, and resulting
+  thermodynamic temperature. It is not an AQFT state or a commutant witness.
 -/
-structure UnruhSouriauPacket where
+structure FiniteUnruhSouriauPacket where
   obs : RindlerObserver
   beta_thermal : ℝ
   h_beta : beta_thermal = (2 * Real.pi) / obs.a
@@ -151,9 +161,9 @@ structure UnruhSouriauPacket where
   h_temp_pos : 0 < temperature
 
 /--
-  Constructor for the canonical Unruh–Souriau packet from any accelerating observer.
+  Construct the finite Unruh–Souriau packet from an accelerating observer.
 -/
-def makeUnruhSouriauPacket (obs : RindlerObserver) : UnruhSouriauPacket where
+def makeFiniteUnruhSouriauPacket (obs : RindlerObserver) : FiniteUnruhSouriauPacket where
   obs := obs
   beta_thermal := inverseTemperature obs
   h_beta := inverseTemperature_eq obs
@@ -162,15 +172,16 @@ def makeUnruhSouriauPacket (obs : RindlerObserver) : UnruhSouriauPacket where
   h_temp_pos := unruhTemperature_pos obs
 
 /--
-  MASTER SYNTHESIS THEOREM:
-  The complete Bisognano–Wichmann / Souriau pipeline is mathematically closed:
+  FINITE SYNTHESIS THEOREM:
+  The finite geometric and thermodynamic identities are jointly available:
   1. Boost flow preserves the lightcone proper radius $r^2$;
   2. Modular rapidity matches proper rapidity $\theta = 2\pi \tau_{\mathrm{mod}}$;
-  3. KMS unit modular period yields exact inverse temperature $\beta = 2\pi / a$;
-  4. The emergent thermal temperature is $T_U = a / (2\pi) > 0$;
-  5. The horizon reflection $J$ preserves operator traces.
+  3. The normalized modular convention gives $\beta = 2\pi / a$;
+  4. The finite Unruh temperature is $a / (2\pi) > 0$;
+  5. An involutive matrix conjugation preserves trace. No analytic AQFT theorem
+     or horizon-commutant identification is asserted.
 -/
-theorem bisognano_wichmann_souriau_unification_master
+theorem finite_bisognano_wichmann_souriau_packet
     (obs : RindlerObserver)
     (coords : RindlerCoordinates) (tau : ℝ)
     {n : ℕ} [Fintype (Fin n)] [DecidableEq (Fin n)]
@@ -195,6 +206,6 @@ theorem bisognano_wichmann_souriau_unification_master
   · exact kms_modular_period_to_inverse_temperature obs
   · exact unruh_temperature_value obs
   · exact unruh_temperature_strictly_positive obs
-  · exact horizon_reflection_trace_invariance J A hJ
+  · exact involutive_conjugation_trace_invariance J A hJ
 
 end InfoGeometry.Canonical.BisognanoWichmannUnification

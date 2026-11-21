@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.ChiralCausalCone
+import InfoGeometry.Physics.CPTAtom
 
 /-!
 # Cl(1,1) atom to chiral CAR basis bridge
@@ -58,24 +64,24 @@ theorem gammaPosM_anticomm_gammaNegM :
 /-! ## Identification with the concrete real CPT atom -/
 
 @[simp] theorem gammaPosM_eq_complexifyCl11_eps :
-    gammaPosM = complexifyCl11 CPTAtom.eps := by
+    gammaPosM = complexifyCl11 InfoGeometry.Physics.CPTAtom.eps := by
   rw [complexifyCl11_eps]
   rfl
 
 @[simp] theorem complexifyCl11_J_eq_neg_gammaNegM :
-    complexifyCl11 CPTAtom.J = -gammaNegM := by
+    complexifyCl11 InfoGeometry.Physics.CPTAtom.J = -gammaNegM := by
   rw [complexifyCl11_J]
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [gammaNegM, σPlus, σMinus, Matrix.neg_apply, Matrix.sub_apply]
 
 @[simp] theorem gammaNegM_eq_neg_complexifyCl11_J :
-    gammaNegM = -complexifyCl11 CPTAtom.J := by
+    gammaNegM = -complexifyCl11 InfoGeometry.Physics.CPTAtom.J := by
   rw [complexifyCl11_J_eq_neg_gammaNegM]
   simp
 
 @[simp] theorem complexifyCl11_CPT_eq_sigma3c :
-    complexifyCl11 CPTAtom.CPT = σ3c :=
+    complexifyCl11 InfoGeometry.Physics.CPTAtom.CPT = σ3c :=
   complexifyCl11_CPT
 
 /-- The chiral annihilation/CAR raising operator is the light-cone half-sum. -/
@@ -145,11 +151,11 @@ theorem cl11_atom_recovers_chiral_CAR_basis :
 /-- Capstone weld: the concrete real `CPTAtom` complexifies to the same finite
 `Cl(1,1)`/CAR bridge used by the chiral TL and braid layers. -/
 theorem cpt_atom_matches_cl11_chiral_CAR_bridge :
-    gammaPosM = complexifyCl11 CPTAtom.eps ∧
-    gammaNegM = -complexifyCl11 CPTAtom.J ∧
-    complexifyCl11 CPTAtom.CPT = σ3c ∧
-    σPlus = (1/2 : ℂ) • (complexifyCl11 CPTAtom.eps - complexifyCl11 CPTAtom.J) ∧
-    σMinus = (1/2 : ℂ) • (complexifyCl11 CPTAtom.eps + complexifyCl11 CPTAtom.J) ∧
+    gammaPosM = complexifyCl11 InfoGeometry.Physics.CPTAtom.eps ∧
+    gammaNegM = -complexifyCl11 InfoGeometry.Physics.CPTAtom.J ∧
+    complexifyCl11 InfoGeometry.Physics.CPTAtom.CPT = σ3c ∧
+    σPlus = (1/2 : ℂ) • (complexifyCl11 InfoGeometry.Physics.CPTAtom.eps - complexifyCl11 InfoGeometry.Physics.CPTAtom.J) ∧
+    σMinus = (1/2 : ℂ) • (complexifyCl11 InfoGeometry.Physics.CPTAtom.eps + complexifyCl11 InfoGeometry.Physics.CPTAtom.J) ∧
     σPlus = SplitClifford.carAnn ∧
     σMinus = SplitClifford.carCre := by
   exact ⟨gammaPosM_eq_complexifyCl11_eps, gammaNegM_eq_neg_complexifyCl11_J,

@@ -22,6 +22,8 @@ The normalized real quaternion trace is exactly its scalar coordinate.
 
 noncomputable section
 
+set_option maxHeartbeats 2000000
+
 namespace InfoGeometry.Clifford.RealSpacetimeBlades
 
 open HestenesCl14
@@ -46,6 +48,7 @@ def blade : Fin 16 → Cl14
   | 13 => gamma 0 * gamma 2 * gamma 3
   | 14 => gamma 1 * gamma 2 * gamma 3
   | 15 => gamma 0 * gamma 1 * gamma 2 * gamma 3
+  | _ => 1
 
 /-- Explicit images used only to compute the sixteen native products. -/
 def bladeMatrix : Fin 16 → QuaternionMatrix
@@ -65,6 +68,7 @@ def bladeMatrix : Fin 16 → QuaternionMatrix
   | 13 => !![quaternionI, 0; 0, -quaternionI]
   | 14 => !![0, -1; -1, 0]
   | 15 => !![0, -1; 1, 0]
+  | _ => 1
 
 @[simp] theorem quaternionRep_blade (i : Fin 16) :
     quaternionRep (blade i) = bladeMatrix i := by
@@ -111,7 +115,7 @@ theorem scalar_blade_time_reverse_blade (i j : Fin 16) :
 def bladeCoordinate (j : Fin 16) : Cl14 →ₗ[ℝ] ℝ where
   toFun a := scalar (a * gamma 0 * CliffordAlgebra.reverse (blade j) * gamma 0)
   map_add' a b := by simp only [add_mul, map_add]
-  map_smul' r a := by simp only [smul_mul_assoc, map_smul]
+  map_smul' r a := by simp only [smul_mul_assoc, map_smul, RingHom.id_apply]
 
 @[simp] theorem bladeCoordinate_blade (i j : Fin 16) :
     bladeCoordinate j (blade i) = if i = j then 1 else 0 :=

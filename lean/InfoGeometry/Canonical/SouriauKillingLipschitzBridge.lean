@@ -8,6 +8,7 @@ import Mathlib
 import InfoGeometry.Clifford.Cl11Matrix
 import InfoGeometry.Clifford.LipschitzWittRieszPrimary
 import InfoGeometry.Geometry.RindlerLapseCalculus
+import InfoGeometry.Geometry.RindlerSpinTorsion
 import InfoGeometry.Canonical.RealSpacetime4x4Closure
 import InfoGeometry.Synthesis.CartanHestenesRotorSpinConnectionMaurerCartanSynthesis
 
@@ -39,7 +40,10 @@ namespace InfoGeometry.Canonical.SouriauKillingLipschitzBridge
 open scoped Matrix
 open InfoGeometry.Clifford.Cl11Matrix
 open InfoGeometry.Clifford.LipschitzWittRieszPrimary
+open InfoGeometry.Dynamics.HyperbolicComponent
+open InfoGeometry.Dynamics.RapiditySpace
 open InfoGeometry.Geometry.RindlerLapseCalculus
+open InfoGeometry.Geometry.RindlerSpinTorsion
 open InfoGeometry.Synthesis.CartanHestenesRotorSpinConnectionMaurerCartanSynthesis
 
 abbrev Vec11 := InfoGeometry.Clifford.Cl11Matrix.Vec11
@@ -61,6 +65,124 @@ def affineTemperatureField (b v : Vec11) : Vec11 :=
 def boostFlow (s : ℝ) (v : Vec11) : Vec11 :=
   (Real.cosh s * v.1 + Real.sinh s * v.2,
     Real.sinh s * v.1 + Real.cosh s * v.2)
+
+/-- Light-cone coordinates for the `(t,z)` convention used by the Rindler
+owner: `x₊ = z + t` and `x₋ = z - t`. -/
+def lightConeCoordinates (v : Vec11) : LightConeColumn :=
+  !![v.2 + v.1; v.2 - v.1]
+
+/-- The two null coordinates adapted to the future timelike cone for the
+`(-,+)` Minkowski convention. Unlike `lightConeCoordinates`, both coordinates
+are positive on future timelike vectors. -/
+def temperatureNullCoordinates : Vec11 →ₗ[ℝ] (Fin 2 → ℝ) where
+  toFun v := ![v.1 + v.2, v.1 - v.2]
+  map_add' u v := by
+    ext i
+    fin_cases i <;> simp <;> ring
+  map_smul' r v := by
+    ext i
+    fin_cases i <;> simp <;> ring
+
+/-- The future cone in the actual real Minkowski carrier, pulled back from the
+positive orthant in its two null coordinates. -/
+def rindlerTemperatureCone : ProperCone ℝ Vec11 :=
+  (ProperCone.positive ℝ (Fin 2 → ℝ)).comap
+    temperatureNullCoordinates.toContinuousLinearMap
+
+@[simp] theorem mem_rindlerTemperatureCone (v : Vec11) :
+    v ∈ rindlerTemperatureCone ↔ 0 ≤ v.1 + v.2 ∧ v.2 ≤ v.1 := by
+  change 0 ≤ temperatureNullCoordinates v ↔ _
+  constructor
+  · intro h
+    constructor
+    · have h₀ := h 0
+      simpa [temperatureNullCoordinates] using h₀
+    · have h₁ := h 1
+      have h₁' : 0 ≤ v.1 - v.2 := by simpa [temperatureNullCoordinates] using h₁
+      exact (sub_nonneg.mp h₁')
+  · rintro ⟨h₀, h₁⟩ i
+    fin_cases i
+    · simpa [temperatureNullCoordinates] using h₀
+    · have h₁' : 0 ≤ v.1 - v.2 := sub_nonneg.mpr h₁
+      simpa [temperatureNullCoordinates] using h₁'
+
+/-- The future cone is preserved by every real Rindler boost. On the two null
+coordinates the boost acts by the strictly positive factors `exp s` and
+`exp (-s)`. -/
+theorem boostFlow_preserves_rindlerTemperatureCone {s : ℝ} {v : Vec11}
+    (hv : v ∈ rindlerTemperatureCone) :
+    boostFlow s v ∈ rindlerTemperatureCone := by
+  rw [mem_rindlerTemperatureCone] at hv ⊢
+  rcases v with ⟨t, z⟩
+  dsimp [boostFlow]
+  constructor
+  · have h := hv.1
+    have heq : Real.cosh s * t + Real.sinh s * z +
+        (Real.sinh s * t + Real.cosh s * z) = Real.exp s * (t + z) := by
+      calc
+        _ = (Real.cosh s + Real.sinh s) * (t + z) := by ring
+        _ = Real.exp s * (t + z) := by rw [Real.cosh_add_sinh]
+    rw [heq]
+    exact mul_nonneg (le_of_lt (Real.exp_pos s)) h
+  · have h := hv.2
+    have heq : Real.cosh s * t + Real.sinh s * z -
+        (Real.sinh s * t + Real.cosh s * z) = Real.exp (-s) * (t - z) := by
+      calc
+        _ = (Real.cosh s - Real.sinh s) * (t - z) := by ring
+        _ = Real.exp (-s) * (t - z) := by
+          rw [Real.cosh_sub_sinh]
+    apply sub_nonneg.mp
+    rw [heq]
+    exact mul_nonneg (le_of_lt (Real.exp_pos (-s))) (sub_nonneg.mpr h)
+
+/-- Vectors in the future temperature cone are causal for the `(-,+)`
+Minkowski form. -/
+theorem rindlerTemperatureCone_minkowski_nonpos {v : Vec11}
+    (hv : v ∈ rindlerTemperatureCone) :
+    minkowskiForm v v ≤ 0 := by
+  have h := (mem_rindlerTemperatureCone v).mp hv
+  rw [show minkowskiForm v v = -((v.1 + v.2) * (v.1 - v.2)) by
+    simp [minkowskiForm]; ring]
+  exact neg_nonpos.mpr (mul_nonneg h.1 (sub_nonneg.mpr h.2))
+
+/-- Strict positivity of both null coordinates is exactly a strict timelike
+inequality for the `(-,+)` Minkowski form. -/
+theorem temperatureNullCoordinates_strict_timelike {v : Vec11}
+    (h₁ : 0 < v.1 + v.2) (h₂ : v.2 < v.1) :
+    minkowskiForm v v < 0 := by
+  rw [show minkowskiForm v v = -((v.1 + v.2) * (v.1 - v.2)) by
+    simp [minkowskiForm]; ring]
+  exact neg_lt_zero.mpr (mul_pos h₁ (sub_pos.mpr h₂))
+
+/-- The pulled-back orthant cone is salient: a vector and its negative can
+both lie in the future cone only when the vector is zero. -/
+theorem rindlerTemperatureCone_salient :
+    (rindlerTemperatureCone.toPointedCone.toConvexCone).Salient := by
+  intro v hv hvne hvneg
+  apply hvne
+  rcases (mem_rindlerTemperatureCone v).mp hv with ⟨h₁, h₂⟩
+  rcases (mem_rindlerTemperatureCone (-v)).mp hvneg with ⟨h₃, h₄⟩
+  rcases v with ⟨t, z⟩
+  change 0 ≤ -t + -z at h₃
+  change -z ≤ -t at h₄
+  have ht : t = 0 := by linarith
+  have hz : z = 0 := by linarith
+  simp [ht, hz]
+
+/-- The explicit Lorentz boost is exactly the diagonal real `A`-component
+flow after transport to light-cone coordinates. -/
+theorem componentAReal_lightConeCoordinates (s : ℝ) (v : Vec11) :
+    componentAReal s * lightConeCoordinates v =
+      lightConeCoordinates (boostFlow s v) := by
+  rcases v with ⟨t, z⟩
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [componentAReal, lightConeCoordinates, boostFlow,
+      Matrix.mul_apply, Fin.sum_univ_two]
+  · rw [← Real.cosh_add_sinh]
+    ring
+  · rw [← Real.cosh_sub_sinh]
+    ring
 
 /-- Mathlib's basis-free Lipschitz action preserves the same quadratic form.
 This is the abstract group-level statement; `boostFlow` is its explicit
@@ -442,6 +564,58 @@ theorem rindler_boost_preserves_minkowski4 (X : Minkowski4) (s : ℝ) :
     have h := Real.cosh_sq_sub_sinh_sq s
     nlinarith [h]
 
+/-- The closed future causal cone on the real `(1,3)` carrier, expressed in
+the two null coordinates of the longitudinal boost plane. The transverse
+causal bound is `x² + y² ≤ (t + z)(t - z)`, equivalent to nonnegative
+Minkowski square when both null coordinates are nonnegative. -/
+def rindlerFutureCausalCone4 (X : Minkowski4) : Prop :=
+  0 ≤ X.t + X.z ∧ 0 ≤ X.t - X.z ∧
+    X.x ^ 2 + X.y ^ 2 ≤ (X.t + X.z) * (X.t - X.z)
+
+/-- The full real Rindler boost preserves the future causal cone in `(1,3)`.
+Its two longitudinal null coordinates acquire positive reciprocal factors
+`exp(s)` and `exp(-s)`, while the transverse bound is unchanged. -/
+theorem rindler_boost_preserves_futureCausalCone4
+    (X : Minkowski4) (s : ℝ) (hX : rindlerFutureCausalCone4 X) :
+    rindlerFutureCausalCone4
+      (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X s) := by
+  cases X with
+  | mk t x y z =>
+    change 0 ≤ t + z ∧ 0 ≤ t - z ∧
+      x ^ 2 + y ^ 2 ≤ (t + z) * (t - z) at hX
+    change 0 ≤ _ ∧ 0 ≤ _ ∧ _ ≤ _
+    simp only [InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost]
+    rcases hX with ⟨hPlus, hMinus, hTransverse⟩
+    have hPlusFlow :
+        (t * Real.cosh s + z * Real.sinh s) +
+            (z * Real.cosh s + t * Real.sinh s) =
+          Real.exp s * (t + z) := by
+      calc
+        _ = (Real.cosh s + Real.sinh s) * (t + z) := by ring
+        _ = Real.exp s * (t + z) := by rw [Real.cosh_add_sinh]
+    have hMinusFlow :
+        (t * Real.cosh s + z * Real.sinh s) -
+            (z * Real.cosh s + t * Real.sinh s) =
+          Real.exp (-s) * (t - z) := by
+      calc
+        _ = (Real.cosh s - Real.sinh s) * (t - z) := by ring
+        _ = Real.exp (-s) * (t - z) := by rw [Real.cosh_sub_sinh]
+    have hProduct :
+        (Real.exp s * (t + z)) * (Real.exp (-s) * (t - z)) =
+          (t + z) * (t - z) := by
+      calc
+        _ = (Real.exp s * Real.exp (-s)) * ((t + z) * (t - z)) := by ring
+        _ = (t + z) * (t - z) := by
+          rw [← Real.exp_add]
+          simp
+    refine ⟨?_, ?_, ?_⟩
+    · rw [hPlusFlow]
+      exact mul_nonneg (le_of_lt (Real.exp_pos s)) hPlus
+    · rw [hMinusFlow]
+      exact mul_nonneg (le_of_lt (Real.exp_pos (-s))) hMinus
+    · rw [hPlusFlow, hMinusFlow, hProduct]
+      exact hTransverse
+
 /-- The time and longitudinal coordinates of the full Rindler boost have
 infinitesimal derivatives given by the boosted longitudinal coordinate and
 time coordinate, respectively. -/
@@ -520,6 +694,79 @@ interpreted as the already-contracted Clifford bivector
 spinor bundle, a connection, or a curved-spacetime Kosmann derivative. -/
 def kosmannCorrection (B ψ : Mat2) : Mat2 :=
   ((-1 : ℝ) / 4) • (B * ψ)
+
+/-- The finite Kosmann correction agrees with the established Rindler spin
+lift's left action when the contracted bivector is normalized as
+`2 * a * v.1 * J1`. This is an algebraic interface only; the existing owner
+supplies the connection and its spin-to-vector adjoint, not a curved spinor
+bundle. -/
+theorem kosmannCorrection_eq_rindlerSpinLift_left_action
+    (a : ℝ) (v : InfoGeometry.Geometry.RindlerCartanFrame.Tangent) (ψ : Mat2) :
+    kosmannCorrection ((2 * a * v.1) • J1) ψ =
+      spinLift a 0 0
+        (0 : InfoGeometry.Geometry.RindlerCartanFrame.Tangent →ₗ[ℝ] ℝ) v * ψ := by
+  simp [kosmannCorrection, spinLift, smul_smul, neg_smul]
+  rw [← neg_smul]
+  congr 1
+  ring
+
+/-- A finite, conditional Kosmann datum records the concrete carriers needed
+for a spinorial Lie-derivative calculation. It is not a spinor bundle: the
+connection, covariant derivative, and Killing field are explicit finite data.
+The Rindler instance below supplies all fields from existing owners. -/
+structure FiniteKosmannDatum where
+  killingGenerator : Vec11 → Vec11
+  vectorConnection : InfoGeometry.Geometry.RindlerCartanFrame.Tangent → Mat2
+  spinConnection : InfoGeometry.Geometry.RindlerCartanFrame.Tangent → Mat2
+  contractedBivector : InfoGeometry.Geometry.RindlerCartanFrame.Tangent → Mat2
+  covariantDerivative :
+    InfoGeometry.Geometry.RindlerCartanFrame.Tangent → Mat2 → Mat2
+  killing_generator_skew : ∀ u v,
+    minkowskiForm (killingGenerator u) v +
+      minkowskiForm u (killingGenerator v) = 0
+  vectorConnection_lorentz_skew : ∀ v,
+    (vectorConnection v).transpose *
+          InfoGeometry.Geometry.RindlerCartanFrame.metricMatrix +
+      InfoGeometry.Geometry.RindlerCartanFrame.metricMatrix * vectorConnection v = 0
+  spinConnection_adjoint : ∀ v u,
+    spinConnection v * cliffordVector u -
+      cliffordVector u * spinConnection v =
+      cliffordVector ((vectorConnection v).mulVec u)
+  covariantDerivative_eq_spinConnection_left : ∀ v ψ,
+    covariantDerivative v ψ = spinConnection v * ψ
+
+/-- The concrete finite Rindler Kosmann datum. -/
+def rindlerFiniteKosmannDatum (a : ℝ) : FiniteKosmannDatum where
+  killingGenerator := boostGenerator
+  vectorConnection := fun v => lorentzConnection a 0 0 v
+  spinConnection := fun v =>
+    spinLift a 0 0
+      (0 : InfoGeometry.Geometry.RindlerCartanFrame.Tangent →ₗ[ℝ] ℝ) v
+  contractedBivector := fun v => (2 * a * v.1) • J1
+  covariantDerivative := fun v ψ =>
+    spinLift a 0 0
+      (0 : InfoGeometry.Geometry.RindlerCartanFrame.Tangent →ₗ[ℝ] ℝ) v * ψ
+  killing_generator_skew := boostGenerator_minkowski_skew
+  vectorConnection_lorentz_skew := by
+    intro v
+    exact lorentzConnection_lorentz_skew a 0 0 v
+  spinConnection_adjoint := by
+    intro v u
+    exact spinLift_adjoint a 0 0
+      (0 : InfoGeometry.Geometry.RindlerCartanFrame.Tangent →ₗ[ℝ] ℝ) v u
+  covariantDerivative_eq_spinConnection_left := by
+    intro v ψ
+    rfl
+
+/-- In the finite Rindler datum, the contracted Kosmann correction is the
+spin-connection action on the explicit matrix spinor carrier. -/
+theorem rindlerFiniteKosmannDatum_correction_eq_covariantDerivative
+    (a : ℝ) (v : InfoGeometry.Geometry.RindlerCartanFrame.Tangent) (ψ : Mat2) :
+    kosmannCorrection
+        ((rindlerFiniteKosmannDatum a).contractedBivector v) ψ =
+      (rindlerFiniteKosmannDatum a).covariantDerivative v ψ := by
+  simpa [rindlerFiniteKosmannDatum] using
+    kosmannCorrection_eq_rindlerSpinLift_left_action a v ψ
 
 theorem kosmannCorrection_add (B₁ B₂ ψ : Mat2) :
     kosmannCorrection (B₁ + B₂) ψ =
@@ -789,6 +1036,24 @@ theorem cl11LipschitzAction_eq_boostFlow (s : ℝ) (v : Vec11) :
   change pinGroupToIsometryHom q11 p v = boostFlow s v
   rw [spinGroup_to_lipschitz_eq_spinGroupToIsometryHom]
   exact cl11SpinGroupAction_eq_boostFlow s v
+
+/-- The concrete `Cl(1,1)` Lipschitz rotor preserves the Souriau future cone
+on the real Minkowski carrier. This composes the basis-free Lipschitz action
+identification with the null-coordinate cone invariance theorem. -/
+theorem cl11LipschitzRotor_preserves_temperatureCone
+    (s : ℝ) {v : Vec11} (hv : v ∈ rindlerTemperatureCone) :
+    lipschitzGroupToIsometryHom q11
+      ⟨_root_.pinGroup.toUnits
+          (⟨cl11HyperbolicRotor (-s / 2),
+            _root_.spinGroup.mem_pin
+              (cl11HyperbolicRotor_mem_spinGroup (-s / 2))⟩ : _root_.pinGroup q11),
+        _root_.pinGroup.units_mem_lipschitzGroup
+          (⟨cl11HyperbolicRotor (-s / 2),
+            _root_.spinGroup.mem_pin
+              (cl11HyperbolicRotor_mem_spinGroup (-s / 2))⟩ : _root_.pinGroup q11).2⟩ v ∈
+      rindlerTemperatureCone := by
+  rw [cl11LipschitzAction_eq_boostFlow]
+  exact boostFlow_preserves_rindlerTemperatureCone hv
 
 /-- The rotor sandwich preserves the Clifford quadratic form on vectors. -/
 theorem rotorVectorAction_preserves_q11 (s : ℝ) (v : Vec11) :

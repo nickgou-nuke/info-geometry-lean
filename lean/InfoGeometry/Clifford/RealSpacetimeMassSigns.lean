@@ -119,12 +119,26 @@ theorem bivector_equation_iff_pseudoscalar (a ψ : Cl14) (m : ℝ) :
   constructor
   · intro h
     have ht := congrArg (fun z : Cl14 => z * sigma 2) h
-    simpa only [mul_assoc, phase_mul_sigma_three, time_mul_sigma_three,
-      smul_mul_assoc, mul_neg, smul_neg, neg_smul] using ht
+    have hL : (a * (phaseBivector : Cl14)) * sigma 2 =
+        a * (volume : Cl14) := by
+      rw [mul_assoc, phase_mul_sigma_three]
+    have hR : (m • (ψ * gamma 0)) * sigma 2 =
+        (-m) • (ψ * gamma 3) := by
+      rw [smul_mul_assoc, mul_assoc, time_mul_sigma_three]
+      simp
+    rw [hL, hR] at ht
+    exact ht
   · intro h
     have ht := congrArg (fun z : Cl14 => z * sigma 2) h
-    simpa only [mul_assoc, volume_mul_sigma_three, spatial_mul_sigma_three,
-      smul_mul_assoc, mul_neg, smul_neg, neg_smul, neg_neg] using ht
+    have hL : (a * (volume : Cl14)) * sigma 2 =
+        a * (phaseBivector : Cl14) := by
+      rw [mul_assoc, volume_mul_sigma_three]
+    have hR : ((-m) • (ψ * gamma 3)) * sigma 2 =
+        m • (ψ * gamma 0) := by
+      rw [smul_mul_assoc, mul_assoc, spatial_mul_sigma_three]
+      simp
+    rw [hL, hR] at ht
+    exact ht
 
 section FieldOperator
 

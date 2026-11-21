@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.SpinorMetric
 import InfoGeometry.OperatorAlgebra.StateTangentVector
 import InfoGeometry.OperatorAlgebra.SpinorMetricDependency
@@ -35,7 +40,7 @@ example : IsSLD (Matrix.diagonal (fun index : Fin 2 => (![1 / 3, 2 / 3] : Fin 2 
   fin_cases row <;> fin_cases column <;> norm_num [diagonalSLD]
 
 example : ¬ ∃ score : Matrix (Fin 1) (Fin 1) ℂ, IsSLD 0 1 score := by
-  simp [IsSLD, jordanProd]
+  simp [IsSLD, InfoGeometry.QuantumGeometry.SLD.jordanProd]
 
 example (variation : Matrix (Fin 2) (Fin 2) ℂ) :
     ∃! score, IsSLD 1 variation score :=

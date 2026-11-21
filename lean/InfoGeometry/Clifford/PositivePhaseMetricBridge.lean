@@ -41,7 +41,12 @@ def positiveComplex (G : MetricDatum E) : Module.End ℝ (PhaseSpaceCarrier E) :
 
 theorem positiveComplex_sq (G : MetricDatum E) :
     positiveComplex G * positiveComplex G = -1 := by
-  simp only [positiveComplex, neg_mul_neg, phase_sq]
+  apply LinearMap.ext
+  intro X
+  have h := congrArg (fun f : Module.End ℝ (PhaseSpaceCarrier E) => f X)
+    (phase_sq G)
+  change phase G (phase G X) = -X at h
+  simpa [Module.End.mul_apply, positiveComplex] using h
 
 theorem positiveComplex_anticommutes_para (G : MetricDatum E) :
     positiveComplex G * neutralParaInvolution =
@@ -61,9 +66,17 @@ theorem positiveComplex_mul_para (G : MetricDatum E) :
 /-- The canonical skew form and grading recover the existing neutral form. -/
 theorem omega_para_metric :
     (neutralOmega (E := E)).compLeft neutralParaInvolution = canonicalNeutralBilin := by
-  ext X Y
+  apply LinearMap.ext
+  intro X
+  apply LinearMap.ext
+  intro Y
   change neutralOmega (neutralParaInvolution X) Y = canonicalNeutralBilin X Y
-  simp [neutralOmega_apply, canonicalNeutralBilin_apply, add_comm]
+  rcases X with ⟨x, ξ⟩
+  rcases Y with ⟨y, η⟩
+  simp only [neutralOmega_apply, neutralParaInvolution_apply,
+    canonicalNeutralBilin_apply]
+  simp
+  abel
 
 theorem positiveComplex_preserves_omega (G : MetricDatum E) (X Y : PhaseSpaceCarrier E) :
     neutralOmega (positiveComplex G X) (positiveComplex G Y) = neutralOmega X Y := by
@@ -77,13 +90,18 @@ theorem positiveComplex_preserves_omega (G : MetricDatum E) (X Y : PhaseSpaceCar
 theorem omega_positiveComplex_metric (G : MetricDatum E) :
     (neutralOmega (E := E)).compRight (positiveComplex G) =
       (ofMetric G).generalizedMetricForm := by
-  ext X Y
-  change neutralOmega X (positiveComplex G Y) = (ofMetric G).generalizedMetricForm X Y
+  apply LinearMap.ext
+  intro X
+  apply LinearMap.ext
+  intro Y
+  change neutralOmega X (positiveComplex G Y) =
+    (ofMetric G).generalizedMetricForm X Y
   rcases X with ⟨x, ξ⟩
   rcases Y with ⟨y, η⟩
-  rw [positiveComplex_apply, neutralOmega_apply, generalizedMetricForm_ofMetric_apply]
-  simp only [map_neg, sub_neg_eq_add]
+  simp only [positiveComplex_apply, neutralOmega_apply,
+    generalizedMetricForm_ofMetric_apply, map_neg]
   rw [G.symmetric y x]
+  ring
 
 /-- The positive order is `I * K`; the abstract bridge now has an actual consumer. -/
 theorem neutral_metric_intertwining (G : MetricDatum E) :

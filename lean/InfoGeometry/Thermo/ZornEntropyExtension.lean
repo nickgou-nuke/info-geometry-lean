@@ -38,9 +38,9 @@ open GenericMetriplecticFlow
 def coefficientRotation : Z →ₗ[ℝ] Z where
   toFun X := ⟨-X.b, -X.w, X.v, X.a⟩
   map_add' X Y := by
-    ext i <;> simp [ZornVectorMatrix.add, ZornVectorMatrix.neg]
+    ext i <;> simp [ZornVectorMatrix.add] <;> ring
   map_smul' r X := by
-    ext i <;> simp [ZornVectorMatrix.smul, ZornVectorMatrix.neg]
+    ext i <;> simp [ZornVectorMatrix.smul]
 
 @[simp] theorem coefficientRotation_sq (X : Z) :
     coefficientRotation (coefficientRotation X) = -X := by

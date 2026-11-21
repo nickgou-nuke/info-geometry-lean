@@ -121,8 +121,7 @@ theorem timeCoefficient_sub (X Y : Cl14) :
 /-- The same calibration as an identity between native linear maps. -/
 theorem timeCoefficient_comp_iota :
     timeCoefficient.comp ι14 = coord4 0 := by
-  ext v
-  exact timeCoefficient_iota v
+  exact LinearMap.ext timeCoefficient_iota
 
 /-- The timelike generator has coefficient one; every spacelike generator has zero. -/
 @[simp] theorem timeCoefficient_gamma (i : Fin 4) :

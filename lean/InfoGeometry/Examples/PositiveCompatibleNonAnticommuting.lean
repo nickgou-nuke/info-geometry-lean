@@ -52,6 +52,7 @@ theorem omega_nondegenerate : omega.Nondegenerate := by
 theorem omega_I_preserved (u v : Fin 2 → ℝ) :
     omega (I *ᵥ u) (I *ᵥ v) = omega u v := by
   simp [omega_apply, I, Matrix.mulVec, dotProduct, Fin.sum_univ_two, neg_sub_neg]
+  <;> ring_nf
 
 /-- The right-slot metric is exactly the ordinary positive real dot product. -/
 theorem omega_I_metric (u v : Fin 2 → ℝ) :
@@ -141,7 +142,7 @@ theorem shearedPara_antifixed_iff (b : ℝ) (u : Fin 2 → ℝ) :
   · intro hu
     ext i
     fin_cases i
-    · simp only [Matrix.cons_val_zero, Pi.neg_apply]
+    · change u 0 + b * u 1 = -u 0
       rw [hu]
       ring
     · simp

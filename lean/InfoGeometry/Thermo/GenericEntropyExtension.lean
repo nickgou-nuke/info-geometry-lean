@@ -129,7 +129,8 @@ theorem reversible_pairing (L : Covector V →ₗ[ℝ] V)
       phaseInclusion.dualMap α (L (phaseInclusion.dualMap β)) := rfl
 
 theorem reversible_skew (L : Covector V →ₗ[ℝ] V)
-    (hL : ∀ α β, α (L β) = -β (L α)) (α β : Covector (V × ℝ)) :
+    (hL : ∀ (α β : Covector V), α (L β) = -β (L α))
+    (α β : Covector (V × ℝ)) :
     α (reversible L β) = -β (reversible L α) := by
   rw [reversible_pairing, reversible_pairing, hL]
 
@@ -151,13 +152,13 @@ theorem dissipative_pairing (D : Covector V →ₗ[ℝ] V) (h : Covector V) (T :
   exact map_smul α T⁻¹ (energyLift h T (D ((energyLift h T).dualMap β)))
 
 theorem dissipative_symmetric (D : Covector V →ₗ[ℝ] V)
-    (hD : ∀ α β, α (D β) = β (D α)) (h : Covector V) (T : ℝ)
+    (hD : ∀ (α β : Covector V), α (D β) = β (D α)) (h : Covector V) (T : ℝ)
     (α β : Covector (V × ℝ)) :
     α (dissipative D h T β) = β (dissipative D h T α) := by
   rw [dissipative_pairing, dissipative_pairing, hD]
 
 theorem dissipative_nonneg (D : Covector V →ₗ[ℝ] V)
-    (hD : ∀ α, 0 ≤ α (D α)) (h : Covector V) (T : ℝ) (hT : 0 ≤ T)
+    (hD : ∀ (α : Covector V), 0 ≤ α (D α)) (h : Covector V) (T : ℝ) (hT : 0 ≤ T)
     (α : Covector (V × ℝ)) : 0 ≤ α (dissipative D h T α) := by
   rw [dissipative_pairing]
   exact mul_nonneg (inv_nonneg.mpr hT) (hD _)
@@ -208,8 +209,9 @@ theorem phaseInclusion_dual_eq_zero_iff (α : Covector (V × ℝ)) :
     phaseInclusion.dualMap α = 0 ↔ α = α (0, 1) • entropyCovector := by
   constructor
   · intro hz
-    ext v
-    rcases v with ⟨v, s⟩
+    apply LinearMap.ext
+    intro p
+    rcases p with ⟨v, s⟩
     have hh : α (v, 0) = 0 := congrArg (fun β : Covector V => β v) hz
     change α (v, s) = α (0, 1) * s
     rw [covector_apply_prod, hh]
@@ -243,8 +245,9 @@ theorem reversible_kernel (L : Covector V →ₗ[ℝ] V) (hL : Function.Injectiv
 
 /-- A constructed GENERIC system on the entropy-extended carrier. -/
 def system (L D : Covector V →ₗ[ℝ] V) (h : Covector V) (T : ℝ)
-    (hT : 0 < T) (hL : ∀ α β, α (L β) = -β (L α))
-    (hD : ∀ α β, α (D β) = β (D α)) (hpos : ∀ α, 0 ≤ α (D α)) :
+    (hT : 0 < T) (hL : ∀ (α β : Covector V), α (L β) = -β (L α))
+    (hD : ∀ (α β : Covector V), α (D β) = β (D α))
+    (hpos : ∀ (α : Covector V), 0 ≤ α (D α)) :
     System (V × ℝ) where
   dH := energyCovector h T
   dS := entropyCovector
@@ -257,8 +260,9 @@ def system (L D : Covector V →ₗ[ℝ] V) (h : Covector V) (T : ℝ)
   M_nonneg := dissipative_nonneg D hpos h T hT.le
 
 variable (L D : Covector V →ₗ[ℝ] V) (h : Covector V) (T : ℝ)
-  (hT : 0 < T) (hL : ∀ α β, α (L β) = -β (L α))
-  (hD : ∀ α β, α (D β) = β (D α)) (hpos : ∀ α, 0 ≤ α (D α))
+  (hT : 0 < T) (hL : ∀ (α β : Covector V), α (L β) = -β (L α))
+  (hD : ∀ (α β : Covector V), α (D β) = β (D α))
+  (hpos : ∀ (α : Covector V), 0 ≤ α (D α))
 
 /-- The original energy decays while the added entropy coordinate compensates it. -/
 theorem system_flow :

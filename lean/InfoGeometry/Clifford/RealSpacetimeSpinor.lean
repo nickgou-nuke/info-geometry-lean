@@ -59,14 +59,15 @@ theorem quaternionRep_reverse (a : Cl14) :
       intro i j
       fin_cases i <;> fin_cases j <;> ext <;>
         simp [matrixReverse, timeMatrix, Matrix.mul_apply, Fin.sum_univ_two,
-          Matrix.star_apply, Algebra.algebraMap_eq_smul_one]
+          Matrix.vecMul_apply_eq_sum, Matrix.star_apply,
+          Algebra.algebraMap_eq_smul_one]
   | ι v =>
       simp only [CliffordAlgebra.reverse_ι, quaternionRep_iota]
       apply Matrix.ext
       intro i j
       fin_cases i <;> fin_cases j <;> ext <;>
         simp [matrixReverse, timeMatrix, vectorMatrix, Matrix.mul_apply,
-          Fin.sum_univ_two, Matrix.star_apply]
+          Fin.sum_univ_two, Matrix.vecMul_apply_eq_sum, Matrix.star_apply]
   | mul a b ha hb =>
       simp only [CliffordAlgebra.reverse.map_mul, map_mul, ha, hb, matrixReverse_mul]
   | add a b ha hb =>
@@ -99,7 +100,7 @@ private theorem even_shape_add {A B : QuaternionMatrix}
   rw [hA, hB]
   apply Matrix.ext
   intro i j
-  fin_cases i <;> fin_cases j <;> simp [evenMatrix]
+  fin_cases i <;> fin_cases j <;> simp [evenMatrix] <;> abel
 
 private theorem even_shape_mul {A B : QuaternionMatrix}
     (hA : A = evenMatrix (A 0 0) (A 0 1))
@@ -136,8 +137,8 @@ theorem quaternionRep_even_shape (x : ClPlus14) :
 
 def spinorCoordinates : ClPlus14 →ₗ[ℝ] (Quaternion ℝ × Quaternion ℝ) where
   toFun x := (quaternionRep (x : Cl14) 0 0, quaternionRep (x : Cl14) 0 1)
-  map_add' x y := by simp [map_add]; rfl
-  map_smul' r x := by simp [map_smul]; rfl
+  map_add' x y := by simp [map_add]
+  map_smul' r x := by simp [map_smul]
 
 def evenPair (i j : Fin 4) : ClPlus14 :=
   (CliffordAlgebra.even.ι Q14).bilin (basisVec i) (basisVec j)
@@ -213,7 +214,8 @@ theorem spinorCoordinates_reverseEven (x : ClPlus14) :
     quaternionRep (CliffordAlgebra.reverse (x : Cl14)) 0 1) = _
   rw [quaternionRep_reverse, quaternionRep_even_shape x]
   simp [spinorCoordinates, matrixReverse, timeMatrix, evenMatrix,
-    Matrix.star_apply, Matrix.mul_apply, Fin.sum_univ_two]
+    Matrix.star_apply, Matrix.mul_apply, Matrix.vecMul_apply_eq_sum,
+    Fin.sum_univ_two]
 
 theorem spinorCoordinates_hestenesAdjoint (x : ClPlus14) :
     spinorCoordinates (hestenesAdjoint x) =

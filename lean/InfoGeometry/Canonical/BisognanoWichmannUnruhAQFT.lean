@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Trace
@@ -15,6 +20,13 @@ noncomputable section
 
 open Matrix Complex
 
+/-!
+This file contains finite complex-algebra identities used as interfaces. The
+carriers do not encode a local QFT net, positivity of physical constants, or an
+analytic KMS condition; the theorem names therefore describe only the proved
+algebraic content.
+-/
+
 namespace BisognanoWichmannUnruh
 
 /-- Physical Constants Structure for Unruh Thermalization. -/
@@ -29,24 +41,24 @@ structure RindlerObserver where
 
 namespace BisognanoWichmannUnruh
 
-/-- Bisognano-Wichmann Modular Parameter Identification: s = -2π t. -/
+/-- Finite linear modular-parameter rescaling `s = -two_pi * t`. -/
 def boostFromModular (two_pi t : ℂ) : ℂ :=
   - two_pi * t
 
-/-- **Theorem**: Bisognano-Wichmann Modular Identification Linearity:
-    s(t₁ + t₂) = s(t₁) + s(t₂). -/
-theorem boost_from_modular_linear (two_pi t1 t2 : ℂ) :
+/-- The finite modular-parameter rescaling is additive. -/
+theorem modular_parameter_linear (two_pi t1 t2 : ℂ) :
     boostFromModular two_pi (t1 + t2) = boostFromModular two_pi t1 + boostFromModular two_pi t2 := by
   dsimp [boostFromModular]
   ring
 
-/-- **Theorem**: KMS Period Proper Time Transformation: β_proper = (2π c) / a. -/
-theorem kms_period_proper_time (two_pi c a : ℂ) :
+/-- Reassociation of the finite proper-time scale expression. -/
+theorem proper_time_scale_reassociation (two_pi c a : ℂ) :
     (two_pi * c) / a = two_pi * c / a := rfl
 
-/-- **Theorem**: Exact Unruh Temperature Derivation Theorem:
-    T_Unruh * (2π c kB) = ℏ a. -/
-theorem unruh_temperature_derivation (consts : PhysicalConstants) (obs : RindlerObserver) (two_pi : ℂ)
+/-- Conditional finite thermal-scale cancellation. This is not an Unruh or
+analytic KMS derivation: it is field cancellation under nonzero denominator
+factors. -/
+theorem thermal_scale_cancellation (consts : PhysicalConstants) (obs : RindlerObserver) (two_pi : ℂ)
     (h_two_pi : two_pi ≠ 0) (h_c : consts.c ≠ 0) (h_kB : consts.kB ≠ 0) :
     let T_unruh := (consts.hbar * obs.acc) / (two_pi * consts.c * consts.kB)
     T_unruh * (two_pi * consts.c * consts.kB) = consts.hbar * obs.acc := by
@@ -54,8 +66,8 @@ theorem unruh_temperature_derivation (consts : PhysicalConstants) (obs : Rindler
   dsimp [T_unruh]
   field_simp
 
-/-- **Theorem**: CRT Reflection Operator Invariance: Tr(J A J) = Tr(A) for J² = 1. -/
-theorem crt_reflection_trace_conservation {n : ℕ} [Fintype (Fin n)] [DecidableEq (Fin n)]
+/-- Conjugation by an involutive finite complex matrix preserves trace. -/
+theorem involutive_conjugation_trace_conservation {n : ℕ} [Fintype (Fin n)] [DecidableEq (Fin n)]
     (J A : Matrix (Fin n) (Fin n) ℂ) (h_J_involutive : J * J = 1) :
     trace (J * A * J) = trace A := by
   rw [trace_mul_comm (J * A) J, ← mul_assoc, h_J_involutive, one_mul]

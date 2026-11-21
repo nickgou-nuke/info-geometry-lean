@@ -8,6 +8,7 @@ import InfoGeometry.Krein.KreinSpace
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.FundamentalSymmetryProjectors
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Krein.DiracKreinProjectiveMetric
 import InfoGeometry.Krein.DoubledRootLemmas
 import InfoGeometry.Krein.DoubledAdjoint
 import InfoGeometry.Krein.HestenesWeylGenerator

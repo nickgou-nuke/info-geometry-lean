@@ -97,10 +97,31 @@ def diagonalProjector : DoubledSpace E →L[ℝ] DoubledSpace E :=
   InfoGeometry.GrandUnification.ArchetypeDictionary.peircePlus (R := ℝ)
     (modular_j (E := E))
 
+/-- The projector averages the two sheet coordinates and copies the result to
+both sheets. -/
+theorem diagonalProjector_apply (u : DoubledSpace E) :
+    diagonalProjector u =
+      to_doubled ((1 / 2 : ℝ) • (WithLp.fst u + WithLp.snd u))
+        ((1 / 2 : ℝ) • (WithLp.fst u + WithLp.snd u)) := by
+  apply DoubledSpace.ext
+  · simp [diagonalProjector,
+      InfoGeometry.GrandUnification.ArchetypeDictionary.peircePlus, modular_j,
+      to_doubled, add_comm]
+  · simp [diagonalProjector,
+      InfoGeometry.GrandUnification.ArchetypeDictionary.peircePlus, modular_j,
+      to_doubled, add_comm]
+
 theorem diagonalProjector_idempotent :
     (diagonalProjector (E := E)).comp diagonalProjector = diagonalProjector := by
-  apply InfoGeometry.GrandUnification.ArchetypeDictionary.peircePlus_sq
-  exact modular_j_involution E
+  ext u
+  · rw [ContinuousLinearMap.comp_apply, diagonalProjector_apply,
+      diagonalProjector_apply]
+    simp only [fst_to_doubled, snd_to_doubled]
+    module
+  · rw [ContinuousLinearMap.comp_apply, diagonalProjector_apply,
+      diagonalProjector_apply]
+    simp only [fst_to_doubled, snd_to_doubled]
+    module
 
 theorem diagonalProjector_fst_eq_snd (u : DoubledSpace E) :
     WithLp.fst (diagonalProjector u) = WithLp.snd (diagonalProjector u) := by

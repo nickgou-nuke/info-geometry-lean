@@ -41,8 +41,10 @@ open scoped InnerProductSpace
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
   [CompleteSpace E]
 
+set_option quotPrecheck false in
 local notation "upperTransfer" =>
   (P_plus (H := DoubledSpace E)).comp (modular_j (E := E))
+set_option quotPrecheck false in
 local notation "lowerTransfer" =>
   (modular_j (E := E)).comp (P_plus (H := DoubledSpace E))
 

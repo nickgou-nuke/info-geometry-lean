@@ -29,10 +29,14 @@ theorem quaternionDot_coordinates (p q : Quaternion ℝ) :
     quaternionDot p q = p.re * q.re + p.imI * q.imI +
       p.imJ * q.imJ + p.imK * q.imK := by
   simp [quaternionDot]
-  ring
 
 theorem quaternionDot_comm (p q : Quaternion ℝ) : quaternionDot p q = quaternionDot q p := by
   simp only [quaternionDot_coordinates]
+  ring
+
+theorem quaternionDot_neg_right (p q : Quaternion ℝ) :
+    quaternionDot p (-q) = -quaternionDot p q := by
+  simp [quaternionDot_coordinates]
   ring
 
 @[simp] theorem quaternionDot_self (p : Quaternion ℝ) :
@@ -143,8 +147,9 @@ theorem observerConjugation_involutive (x : ClPlus14) :
 
 theorem krein_observerConjugation (x y : ClPlus14) :
     krein x (observerConjugation y) = observer x y := by
-  simp [krein_coordinates, observer_coordinates,
-    spinorCoordinates_observerConjugation, quaternionDot]
+  rw [krein_coordinates, spinorCoordinates_observerConjugation,
+    observer_coordinates]
+  simp [quaternionDot_neg_right]
 
 theorem krein_nondegenerate (x : ClPlus14) (hx : ∀ y, krein x y = 0) : x = 0 := by
   have h := hx (observerConjugation x)
@@ -274,7 +279,7 @@ theorem observer_two_plane_bound (x y : ClPlus14) :
     ring
   have hnonneg := observer_nonneg r
   rw [hres] at hnonneg
-  have h := nonneg_of_mul_nonneg_left hnonneg hpos
+  have h := nonneg_of_mul_nonneg_right hnonneg hpos
   linarith
 
 /-- The same bound with the explicitly doubled symplectic normalization. -/

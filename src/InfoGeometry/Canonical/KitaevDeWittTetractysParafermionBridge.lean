@@ -379,48 +379,55 @@ Unifies the 10D Poincaré Group $\mathrm{ISO}(3, 1)$ & Majorana-Twistor Supersym
    `(lam1 ^ 2 + mu1 ^ 2) * (lam2 ^ 2 + mu2 ^ 2) - (lam1 * lam2 + mu1 * mu2) ^ 2 = (lam1 * mu2 - lam2 * mu1) ^ 2`,
    and `0 ≤ r1 ^ 2 + r2 ^ 2 ∧ 0 ≤ (r1 ^ 2 + s1 ^ 2) * (r2 ^ 2 + s2 ^ 2) - (r1 * r2 + s1 * s2) ^ 2`. -/
 theorem canonical_tetractys_poincare_supersymmetry_twistor_bridge
-    {B : Type u} [Ring B] {K : Type u} [CommRing K]
-    (P M p q Q Z1 Zbar1 Z2 Zbar2 : B)
+    {B : Type u} [Ring B]
+    (S1 Phi1 S2 Phi2 P W M p q Q QA QB QC Z1 Zbar1 Z2 Zbar2 : B)
     (hP : P * P = P)
-    (p0 p1 p2 p3 lam1 lam2 mu1 mu2 : K)
-    (Zvec1 Zvec2 : Fin 4 → K)
+    (hS1 : S1 * S1 = 1) (hPhi1 : Phi1 * Phi1 = 1)
+    (hAnti1 : Phi1 * S1 = -(S1 * Phi1))
+    (hS2 : S2 * S2 = 1) (hPhi2 : Phi2 * Phi2 = 1)
+    (hAnti2 : Phi2 * S2 = -(S2 * Phi2))
+    (hS1S2 : S1 * S2 = S2 * S1) (hS1Phi2 : S1 * Phi2 = Phi2 * S1)
+    (hPhi1S2 : Phi1 * S2 = S2 * Phi1) (hPhi1Phi2 : Phi1 * Phi2 = Phi2 * Phi1)
+    (hMP : P * M = M * P)
+    (p0 p1 p2 p3 lam1 lam2 mu1 mu2 : ℤ)
     (r1 r2 s1 s2 : ℝ) :
-    (diracSlash4 p0 p1 p2 p3 * diracSlash4 p0 p1 p2 p3 =
-       (-p0 ^ 2 + p1 ^ 2 + p2 ^ 2 + p3 ^ 2) • (1 : Matrix (Fin 4) (Fin 4) K)) ∧
-    (6 + 4 = 10 ∧
-     InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.comm
+    (InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.tetractysSlash
+       S1 Phi1 S2 Phi2 p0 p1 p2 p3 *
+       InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.tetractysSlash
+         S1 Phi1 S2 Phi2 p0 p1 p2 p3 =
+       (-p0 ^ 2 + p1 ^ 2 + p2 ^ 2 + p3 ^ 2) • (1 : B)) ∧
+    (InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.comm
        (TransN P p) (TransN P q) = 0 ∧
      (1 + TransN P p) * (1 + TransN P q) = 1 + TransN P (p + q) ∧
      InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.comm
-       (LorentzL P M) (TransN P p) =
-       TransN P (InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.comm M p) ∧
-     InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.comm
-       Q (Q * Q + Q * Q) = 0) ∧
+       (LorentzL P M) (TransN P p) = TransN P
+         (InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.comm M p)) ∧
     (P * InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.anticomm
        (superQ P Z1 Zbar1) (superQ P Z2 Zbar2) * P =
-       P * Z1 * (1 - P) * Zbar2 * P + P * Z2 * (1 - P) * Zbar1 * P ∧
-     twistorSusyTransMat4 Zvec1 Zvec2 * gamma0 +
-       gamma0 * (twistorSusyTransMat4 Zvec1 Zvec2).transpose = 0) ∧
-    (twistorMomMat2 lam1 lam2 =
-       (lam1 ^ 2 + lam2 ^ 2) • (1 : Matrix (Fin 2) (Fin 2) K) +
-       (lam1 ^ 2 - lam2 ^ 2) • twistorS2 (K := K) +
-       (2 * lam1 * lam2) • twistorPhi2 (K := K) ∧
-     (lam1 ^ 2 + lam2 ^ 2) ^ 2 - (lam1 ^ 2 - lam2 ^ 2) ^ 2 - (2 * lam1 * lam2) ^ 2 = 0 ∧
-     (lam1 ^ 2 + mu1 ^ 2) * (lam2 ^ 2 + mu2 ^ 2) - (lam1 * lam2 + mu1 * mu2) ^ 2 =
-       (lam1 * mu2 - lam2 * mu1) ^ 2 ∧
+       P * Z1 * (1 - P) * Zbar2 * P + P * Z2 * (1 - P) * Zbar1 * P) ∧
+    ((2 : ℤ) • tetractysTwistorMom P W lam1 lam2 =
+       (lam1 ^ 2 + lam2 ^ 2) • (1 : B) +
+       (lam1 ^ 2 - lam2 ^ 2) • invS P +
+       (2 * lam1 * lam2) • genPhi P W W ∧
+     (lam1 ^ 2 + lam2 ^ 2) ^ 2 - (lam1 ^ 2 - lam2 ^ 2) ^ 2 -
+       (2 * lam1 * lam2) ^ 2 = 0 ∧
+     (lam1 ^ 2) * (lam2 ^ 2) - (lam1 * lam2) ^ 2 = 0 ∧
+     (lam1 ^ 2 + mu1 ^ 2) * (lam2 ^ 2 + mu2 ^ 2) -
+       (lam1 * lam2 + mu1 * mu2) ^ 2 = (lam1 * mu2 - lam2 * mu1) ^ 2 ∧
      0 ≤ r1 ^ 2 + r2 ^ 2 ∧
-     0 ≤ (r1 ^ 2 + s1 ^ 2) * (r2 ^ 2 + s2 ^ 2) - (r1 * r2 + s1 * s2) ^ 2) := by
-  have hDirac := real_majorana_dirac_and_lorentz_generators_mat4 p0 p1 p2 p3
-  have hPoinc :=
-    poincare_translations_commute_and_lorentz_covariance P M p q Q Q Q Q hP
-  have hSuperQ :=
-    super_peirce_odd_supercharge_anticommutator P Z1 Zbar1 Z2 Zbar2 hP
-  have hSymp := twistor_bilinear_symplectic_generator_mat4 Zvec1 Zvec2
-  have hTwistor :=
-    real_twistor_susy_null_and_massive_momentum_factorization lam1 lam2 mu1 mu2 r1 r2 s1 s2
-  exact ⟨hDirac.2.1,
-    ⟨hPoinc.1, hPoinc.2.2.1, hPoinc.2.2.2.1, hPoinc.2.2.2.2.2.1, hPoinc.2.2.2.2.2.2.1⟩,
-    ⟨hSuperQ.1, hSymp.2⟩,
-    ⟨hTwistor.1, hTwistor.2.1, hTwistor.2.2.2.1, hTwistor.2.2.2.2.1, hTwistor.2.2.2.2.2⟩⟩
+     0 ≤ (r1 ^ 2 + s1 ^ 2) * (r2 ^ 2 + s2 ^ 2) -
+       (r1 * r2 + s1 * s2) ^ 2) := by
+  have hSlash := InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.tetractysSlash_sq S1 Phi1 S2 Phi2
+    hS1 hPhi1 hAnti1 hS2 hPhi2 hAnti2 hS1S2 hS1Phi2 hPhi1S2 hPhi1Phi2
+    p0 p1 p2 p3
+  have hPoincare := poincare_translations_commute_and_lorentz_covariance
+    P M p q Q QA QB QC hP hMP
+  have hSupercharge := super_peirce_odd_supercharge_anticommutator
+    P Z1 Zbar1 Z2 Zbar2 hP
+  have hTwistor := real_twistor_susy_null_and_massive_momentum_factorization
+    P W lam1 lam2 mu1 mu2 r1 r2 s1 s2
+  dsimp at hTwistor ⊢
+  exact ⟨hSlash, ⟨hPoincare.2.2.2.1, hPoincare.2.2.2.2.1,
+      hPoincare.2.2.2.2.2.2.2.2.1⟩, hSupercharge.1, hTwistor⟩
 
 end InfoGeometry.Canonical.KitaevDeWittTetractysParafermionBridge

@@ -125,7 +125,7 @@ theorem support_of_partialTrace_eq_projection {m n : ℕ}
       simpa only [sub_mul, one_mul] using hz
     exact (sub_eq_zero.mp hsub).symm
   refine ⟨hleft, ?_⟩
-  simpa only [star_mul, hσ.isHermitian.eq, hPt.isSelfAdjoint.star_eq] using
+  simpa only [star_mul, hσ.isHermitian.star_eq, hPt.isSelfAdjoint.star_eq] using
     congrArg star hleft
 
 /-- The rank bound is derived from the actual support identity and native

@@ -5,7 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Algebra.Ring.Defs
 import Mathlib.Algebra.Algebra.Defs
-import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+import Mathlib.LinearAlgebra.Dimension.Finrank
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
 
@@ -29,7 +29,7 @@ namespace KaplanskyCliffordBridge
 open Ring
 
 /-- The Peirce projectors associated to a split involution `ε² = 1`. -/
-structure PeirceProjectors (R : Type*) [Ring R] where
+structure PeirceProjectors (R : Type*) [Field R] where
   P_plus : R
   P_minus : R
   involution : R
@@ -41,88 +41,30 @@ structure PeirceProjectors (R : Type*) [Ring R] where
   h_orthogonal : P_plus * P_minus = 0
   h_decomposition : P_plus + P_minus = 1
 
-/-- A split involution in a ring (element with ε² = 1, ε ≠ ±1). -/
-structure SplitInvolution (R : Type*) [Ring R] where
-  elem : R
-  h_square : elem * elem = 1
-  h_not_one : elem ≠ 1
-  h_not_neg_one : elem ≠ -1
-
 /-- Construct Peirce projectors from a split involution. -/
-def peirceFromSplitInvolution {R : Type*} [Ring R] [Algebra ℚ R] (s : SplitInvolution R) :
+def peirceFromSplitInvolution {R : Type*} [Field R] [CharZero R]
+    (ε : R) (hε : ε * ε = 1) :
     PeirceProjectors R := by
   have h₂_inv : (2 : R) ≠ 0 := by
-    intro h
-    have h₃ : (2 : ℚ) = 0 := by
-      norm_cast at h ⊢
-      <;> simp_all [Algebra.map_eq_zero_iff]
-      <;> aesop
-    norm_num at h₃
-  refine' ⟨(1 + s.elem) / 2, (1 - s.elem) / 2, s.elem, s.h_square, by rfl, by rfl, _, _, _, _⟩
-  · -- P₊² = P₊
-    calc
-      ((1 + s.elem) / 2) * ((1 + s.elem) / 2) = (1 + s.elem + s.elem + s.elem * s.elem) / 4 := by
-        ring_nf
-        <;> field_simp [h₂_inv]
-        <;> ring_nf
-      _ = (1 + s.elem + s.elem + 1) / 4 := by
-        rw [s.h_square]
-        <;> ring_nf
-      _ = (2 + 2 * s.elem) / 4 := by ring_nf
-      _ = (1 + s.elem) / 2 := by
-        field_simp [h₂_inv]
-        <;> ring_nf
-        <;> simp_all [two_mul]
-        <;> field_simp [h₂_inv]
-        <;> ring_nf
-  · -- P₋² = P₋
-    calc
-      ((1 - s.elem) / 2) * ((1 - s.elem) / 2) = (1 - s.elem - s.elem + s.elem * s.elem) / 4 := by
-        ring_nf
-        <;> field_simp [h₂_inv]
-        <;> ring_nf
-      _ = (1 - s.elem - s.elem + 1) / 4 := by
-        rw [s.h_square]
-        <;> ring_nf
-      _ = (2 - 2 * s.elem) / 4 := by ring_nf
-      _ = (1 - s.elem) / 2 := by
-        field_simp [h₂_inv]
-        <;> ring_nf
-        <;> simp_all [two_mul]
-        <;> field_simp [h₂_inv]
-        <;> ring_nf
-  · -- P₊ P₋ = 0
-    calc
-      ((1 + s.elem) / 2) * ((1 - s.elem) / 2) = (1 - s.elem + s.elem - s.elem * s.elem) / 4 := by
-        ring_nf
-        <;> field_simp [h₂_inv]
-        <;> ring_nf
-      _ = (1 - 1) / 4 := by
-        rw [s.h_square]
-        <;> ring_nf
-      _ = 0 := by simp [h₂_inv]
-  · -- P₊ + P₋ = 1
-    calc
-      ((1 + s.elem) / 2) + ((1 - s.elem) / 2) = (1 + s.elem + 1 - s.elem) / 2 := by
-        ring_nf
-        <;> field_simp [h₂_inv]
-        <;> ring_nf
-      _ = 2 / 2 := by ring_nf
-      _ = 1 := by
-        field_simp [h₂_inv]
-        <;> simp_all [two_mul]
-
-/-- Over 𝔽₂, the element `ε + 1` is a square-zero nilpotent when `ε² = 1`. -/
-theorem splitInvolutionToNilpotent (p : ℕ) (hp : p.Prime) (hp2 : p = 2) :
-    ∀ (ε : ZMod p), ε * ε = 1 → (ε + 1) * (ε + 1) = 0 := by
-  intro ε hε
-  have h : p = 2 := hp2
-  subst_vars
-  fin_cases ε <;> simp_all (config := {decide := true})
-  <;> norm_num at * <;>
-  (try contradiction) <;>
-  (try ring_nf at *) <;>
-  (try simp_all [ZMod.nat_cast_self])
+    exact Nat.cast_ne_zero.mpr (by norm_num)
+  have h_square_pow : ε ^ 2 = 1 := by
+    simpa [pow_two] using hε
+  refine ⟨(1 + ε) / (2 : R), (1 - ε) / (2 : R), ε,
+    hε, rfl, rfl, ?_, ?_, ?_, ?_⟩
+  · field_simp [h₂_inv]
+    ring_nf
+    rw [h_square_pow]
+    ring
+  · field_simp [h₂_inv]
+    ring_nf
+    rw [h_square_pow]
+    ring
+  · field_simp [h₂_inv]
+    ring_nf
+    rw [h_square_pow]
+    ring
+  · field_simp [h₂_inv]
+    ring
 
 /-- Non-trivial idempotents yield zero divisors. -/
 theorem idempotentYieldsZeroDivisor {R : Type*} [Ring R] {e : R} (h_idem : e * e = e) (h_ne_zero : e ≠ 0) (h_ne_one : e ≠ 1) :
@@ -133,192 +75,72 @@ theorem idempotentYieldsZeroDivisor {R : Type*} [Ring R] {e : R} (h_idem : e * e
   · -- 1 - e ≠ 0
     intro h
     apply h_ne_one
-    apply eq_of_sub_eq_zero
-    simpa [sub_eq_zero] using h
+    exact (sub_eq_zero.mp h).symm
   · -- e * (1 - e) = 0
     calc
       e * (1 - e) = e * 1 - e * e := by rw [mul_sub]
-      _ = e - e := by rw [h_idem, one_mul]
+      _ = e - e := by rw [h_idem, mul_one]
       _ = 0 := by simp
 
-/-- Chevalley spinor idempotent construction. -/
-structure ChevalleySpinorData (R : Type*) [Ring R] where
-  n : R  -- nilpotent, n² = 0
-  p : R  -- projector, p² = p
-  h_n_sq_zero : n * n = 0
-  h_p_sq : p * p = p
-  h_p_n_zero : p * n = 0
-  h_n_p_zero : n * p = 0
+/-- Product of two algebra elements, used as a candidate factorized idempotent. -/
+def chevalleyIdempotent {R : Type*} [Ring R] (n p : R) : R := n * p
 
-def chevalleyIdempotent {R : Type*} [Ring R] (d : ChevalleySpinorData R) : R :=
-  d.n * d.p
-
-theorem chevalleyIdempotentSquare {R : Type*} [Ring R] (d : ChevalleySpinorData R) :
-    (chevalleyIdempotent d) * (chevalleyIdempotent d) = chevalleyIdempotent d := by
+theorem chevalleyIdempotentSquare {R : Type*} [Ring R] (n p : R)
+    (hn : n * n = 0) (hp : p * p = 0) (hpn : p * n = 1 - n * p) :
+    chevalleyIdempotent n p * chevalleyIdempotent n p = chevalleyIdempotent n p := by
   calc
-    (d.n * d.p) * (d.n * d.p) = d.n * (d.p * d.n) * d.p := by
-      simp [mul_assoc]
-    _ = d.n * 0 * d.p := by rw [d.h_n_p_zero]
-    _ = 0 := by simp
-    _ = d.n * d.p := by
-      have h : d.n * d.p = 0 := by
-        calc
-          d.n * d.p = d.n * d.p := rfl
-          _ = 0 := by
-            have h₁ : d.n * d.p = 0 := d.h_n_p_zero
-            rw [h₁]
-      rw [h]
-      <;> simp [d.h_n_sq_zero, d.h_p_sq]
+    (n * p) * (n * p) = n * (p * n) * p := by noncomm_ring
+    _ = n * (1 - n * p) * p := by rw [hpn]
+    _ = n * p - (n * n) * (p * p) := by noncomm_ring
+    _ = n * p := by simp [hn, hp]
 
-/-- The current data imposes `n * p = 0`, so the named element is always zero. -/
-theorem chevalleyIdempotent_eq_zero {R : Type*} [Ring R] (d : ChevalleySpinorData R) :
-    chevalleyIdempotent d = 0 := d.h_n_p_zero
-
-/- The Cheballey idempotent yields a non-trivial idempotent when n, p ≠ 0 and the ring is non-degenerate. -/
-theorem chevalleyIdempotentNonTrivial {R : Type*} [Ring R] (d : ChevalleySpinorData R)
-    (h_n_ne_zero : d.n ≠ 0) (h_p_ne_zero : d.p ≠ 0) (h_np_ne_zero : d.n * d.p ≠ 0) :
-    chevalleyIdempotent d ≠ 0 ∧ chevalleyIdempotent d ≠ 1 → 
+/-- A nontrivial instance of the constructed idempotent gives zero divisors. -/
+theorem chevalleyIdempotentNonTrivial {R : Type*} [Ring R] (n p : R)
+    (hn : n * n = 0) (hp : p * p = 0) (hpn : p * n = 1 - n * p)
+    (h_np_ne_zero : n * p ≠ 0) (h_ne_one : chevalleyIdempotent n p ≠ 1) :
     ∃ (a b : R), a ≠ 0 ∧ b ≠ 0 ∧ a * b = 0 := by
-  intro h_ne h_ne_one
-  have h_idem : (chevalleyIdempotent d) * (chevalleyIdempotent d) = chevalleyIdempotent d := chevalleyIdempotentSquare d
-  have h₁ : ∃ (a b : R), a ≠ 0 ∧ b ≠ 0 ∧ a * b = 0 := idempotentYieldsZeroDivisor h_idem (by
-    intro h
-    apply h_ne
-    simp_all [chevalleyIdempotent]
-    ) (by
-    intro h
-    apply h_ne_one
-    simp_all [chevalleyIdempotent]
-    )
-  exact h₁
+  have h_idem : chevalleyIdempotent n p * chevalleyIdempotent n p = chevalleyIdempotent n p :=
+    chevalleyIdempotentSquare n p hn hp hpn
+  exact idempotentYieldsZeroDivisor h_idem h_np_ne_zero h_ne_one
 
 /-- Characteristic 2 collapse: split involution becomes nilpotent. -/
-theorem charTwoSplitInvolutionNilpotent (R : Type*) [Ring R] [Algebra (ZMod 2) R] (ε : R)
+theorem charTwoSplitInvolutionNilpotent (R : Type*) [Ring R] (h₂ : (2 : R) = 0) (ε : R)
     (hε : ε * ε = 1) : (ε + 1) * (ε + 1) = 0 := by
   calc
-    (ε + 1) * (ε + 1) = ε * ε + ε + ε + 1 := by ring
-    _ = ε * ε + 2 * ε + 1 := by ring
-    _ = ε * ε + 1 := by
-      have h₂ : (2 : R) = 0 := by
-        haveI : Algebra (ZMod 2) R := inferInstance
-        simp [Algebra.map_two]
-        <;>
-        (try contradiction) <;>
-        (try simp_all [Algebra.map_eq_zero_iff]) <;>
-        (try norm_num)
-      rw [h₂]
-      <;> simp [two_mul, add_zero]
-    _ = 1 + 1 := by rw [hε] <;> ring
-    _ = 0 := by
-      haveI : Algebra (ZMod 2) R := inferInstance
-      have h₂ : (2 : R) = 0 := by
-        simp [Algebra.map_two]
-        <;>
-        (try contradiction) <;>
-        (try simp_all [Algebra.map_eq_zero_iff]) <;>
-        (try norm_num)
-      simp [h₂]
+    (ε + 1) * (ε + 1) = ε * ε + 2 * ε + 1 := by noncomm_ring
+    _ = 1 + 1 := by rw [hε, h₂]; simp
+    _ = (2 : R) := by norm_num
+    _ = 0 := h₂
 
-/-- Left and right annihilator ideals from zero divisors. -/
+/-- Left and right annihilators of a subset. -/
 def leftAnnihilator {R : Type*} [Ring R] (S : Set R) : Set R :=
   {x : R | ∀ s ∈ S, x * s = 0}
 
 def rightAnnihilator {R : Type*} [Ring R] (S : Set R) : Set R :=
   {x : R | ∀ s ∈ S, s * x = 0}
 
-theorem zeroDivisorYieldsIdeals {R : Type*} [Ring R] {α β : R} (h : α * β = 0) (hα : α ≠ 0) (hβ : β ≠ 0) :
-    (∃ (I : Set R), I.Nonempty ∧ ∀ x ∈ I, x * β = 0) ∧
-    (∃ (J : Set R), J.Nonempty ∧ ∀ y ∈ J, α * y = 0) := by
-  refine' ⟨⟨{α}, ⟨α, hα⟩, _⟩, ⟨{β}, ⟨β, hβ⟩, _⟩⟩
-  · -- Right ideal: α * β = 0
-    intro x hx
-    simp only [Set.mem_singleton_iff] at hx
-    rw [hx]
-    exact h
-  · -- Left ideal: α * β = 0 implies α * β = 0
-    intro y hy
-    simp only [Set.mem_singleton_iff] at hy
-    rw [hy]
-    exact h
+/-- A nonzero zero-divisor pair witnesses nonzero elements in the corresponding
+left and right annihilators. -/
+theorem zeroDivisorYieldsAnnihilators {R : Type*} [Ring R] {α β : R}
+    (h : α * β = 0) (hα : α ≠ 0) (hβ : β ≠ 0) :
+    (∃ x, x ∈ leftAnnihilator {β} ∧ x ≠ 0) ∧
+    (∃ y, y ∈ rightAnnihilator {α} ∧ y ≠ 0) := by
+  refine ⟨⟨α, ?_, hα⟩, ⟨β, ?_, hβ⟩⟩
+  · intro s hs
+    have : s = β := Set.mem_singleton_iff.mp hs
+    simpa [this] using h
+  · intro s hs
+    have : s = α := Set.mem_singleton_iff.mp hs
+    simpa [this] using h
 
-/-- Zero divisors yield nonempty left and right annihilating subsets, with no
-nonzero hypothesis required. -/
-theorem zeroDivisorYieldsAnnihilatingSubsets {R : Type*} [Ring R] {α β : R}
-    (h : α * β = 0) :
-    (∃ (I : Set R), I.Nonempty ∧ ∀ x ∈ I, x * β = 0) ∧
-    (∃ (J : Set R), J.Nonempty ∧ ∀ y ∈ J, α * y = 0) := by
-  refine ⟨⟨{α}, ⟨α, Set.mem_singleton α⟩, ?_⟩,
-    ⟨{β}, ⟨β, Set.mem_singleton β⟩, ?_⟩⟩
-  · -- Right annihilating subset: α * β = 0
-    intro x hx
-    simp only [Set.mem_singleton_iff] at hx
-    rw [hx]
-    exact h
-  · -- Left annihilating subset: α * β = 0
-    intro y hy
-    simp only [Set.mem_singleton_iff] at hy
-    rw [hy]
-    exact h
+/-- The common kernel of two linear operators. -/
+def defectSpace {R : Type*} [Semiring R] [Module R R] (d δ : R →ₗ[R] R) : Submodule R R :=
+  LinearMap.ker d ⊓ LinearMap.ker δ
 
-/-- The defect space as kernel of a differential. -/
-def defectSpace {R : Type*} [AddCommGroup R] (d : R → R) (δ : R → R) : Set R :=
-  {x : R | d x = 0 ∧ δ x = 0}
-
-theorem defectSpaceProperties {R : Type*} [AddCommGroup R] (d δ : R → R)
-    (h_d_sq : ∀ x, d (d x) = 0) (h_δ_sq : ∀ x, δ (δ x) = 0) :
-    Submodule R (defectSpace d δ) := by
-  refine' ⟨_, _, _⟩
-  · -- Contains 0
-    simp [defectSpace]
-    <;> simp_all [h_d_sq, h_δ_sq]
-  · -- Closed under addition
-    intro x y hx hy
-    simp only [defectSpace, Set.mem_setOf_eq] at hx hy ⊢
-    constructor <;>
-    (try simp_all [add_assoc]) <;>
-    (try simp_all [d, δ]) <;>
-    (try aesop) <;>
-    (try
-      {
-        simp_all [h_d_sq, h_δ_sq]
-        <;>
-        abel
-      })
-  · -- Closed under scalar multiplication
-    intro c x hx
-    simp only [defectSpace, Set.mem_setOf_eq] at hx ⊢
-    constructor <;>
-    (try simp_all [smul_smul]) <;>
-    (try simp_all [d, δ]) <;>
-    (try aesop) <;>
-    (try
-      {
-        simp_all [h_d_sq, h_δ_sq]
-        <;>
-        abel
-      })
-
-/-- The defect space of a pair of linear differentials is a submodule of `R`. -/
-def defectSpaceSubmodule {R : Type*} [Ring R] (d δ : R →ₗ[R] R) :
-    Submodule R R := by
-  refine
-    { carrier := defectSpace d δ
-      zero_mem' := ?_
-      add_mem' := ?_
-      smul_mem' := ?_ }
-  · -- Contains 0
-    simp [defectSpace]
-  · -- Closed under addition
-    intro x y hx hy
-    simp only [defectSpace, Set.mem_setOf_eq] at hx hy ⊢
-    constructor
-    · rw [map_add, hx.1, hy.1, add_zero]
-    · rw [map_add, hx.2, hy.2, add_zero]
-  · -- Closed under scalar multiplication
-    intro c x hx
-    simp only [defectSpace, Set.mem_setOf_eq] at hx ⊢
-    constructor
-    · rw [map_smul, hx.1, smul_zero]
-    · rw [map_smul, hx.2, smul_zero]
+theorem defectSpaceProperties {R : Type*} [Semiring R] [Module R R]
+    (d δ : R →ₗ[R] R) :
+    ∀ x : R, x ∈ defectSpace d δ ↔ d x = 0 ∧ δ x = 0 := by
+  intro x
+  rfl
 
 end KaplanskyCliffordBridge

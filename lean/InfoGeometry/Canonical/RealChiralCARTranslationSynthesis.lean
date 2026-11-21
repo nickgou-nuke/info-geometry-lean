@@ -1162,6 +1162,116 @@ theorem rindlerBoost_preserves_spacetime_wedge_kleinForm
         rindlerBoostPluckerVec4 realSpacetimeToPluckerVec4
       nlinarith [Real.cosh_sq_sub_sinh_sq s]
 
+/-- The induced action of a real Rindler boost on the six Plücker
+coordinates.  This is the second exterior power of the boost on `Vec4`. -/
+private def rindlerBoostPluckerCoordinateMap (s : ℝ) :
+    (Fin 6 → ℝ) →ₗ[ℝ] (Fin 6 → ℝ) where
+  toFun P := ![Real.cosh s * P 0 - Real.sinh s * P 4,
+    Real.cosh s * P 1 - Real.sinh s * P 5, P 2, P 3,
+    Real.cosh s * P 4 - Real.sinh s * P 0,
+    Real.cosh s * P 5 - Real.sinh s * P 1]
+  map_add' P Q := by
+    funext i
+    fin_cases i <;> simp <;> ring
+  map_smul' c P := by
+    funext i
+    fin_cases i <;> simp <;> ring
+
+private def rindlerBoostBivector (s : ℝ) :
+    InfoGeometry.Canonical.FierzKleinFoundation.Bivector4 →ₗ[ℝ]
+      InfoGeometry.Canonical.FierzKleinFoundation.Bivector4 :=
+  InfoGeometry.Canonical.FierzKleinFoundation.bivector4CoordinateLinearEquiv.symm.toLinearMap.comp
+    ((rindlerBoostPluckerCoordinateMap s).comp
+      InfoGeometry.Canonical.FierzKleinFoundation.bivector4CoordinateLinearEquiv.toLinearMap)
+
+/-- The exterior-square boost preserves the Klein quadratic form on every
+bivector, including bivectors that are not decomposable. -/
+theorem rindlerBoost_preserves_kleinForm
+    (s : ℝ) (P : InfoGeometry.Canonical.FierzKleinFoundation.Bivector4) :
+    InfoGeometry.Canonical.FierzKleinFoundation.kleinForm
+        (rindlerBoostBivector s P) =
+      InfoGeometry.Canonical.FierzKleinFoundation.kleinForm P := by
+  have hcosh : Real.cosh s ^ 2 - Real.sinh s ^ 2 = 1 := by
+    simpa [pow_two] using Real.cosh_sq_sub_sinh_sq s
+  cases P with
+  | mk a b d e f g =>
+    simp [rindlerBoostBivector, rindlerBoostPluckerCoordinateMap,
+      InfoGeometry.Canonical.FierzKleinFoundation.bivector4CoordinateLinearEquiv,
+      InfoGeometry.Canonical.FierzKleinFoundation.bivector4Coordinates,
+      InfoGeometry.Canonical.FierzKleinFoundation.kleinForm]
+    linear_combination (a * g - b * f) * hcosh
+
+/-- Linear action induced on the literal exterior-square carrier by
+conjugating the six-coordinate boost action through the owner's Plücker
+equivalence. -/
+def rindlerBoostExterior (s : ℝ) :
+    (⋀[ℝ]^2 InfoGeometry.Canonical.FierzKleinFoundation.Vec4) →ₗ[ℝ]
+      (⋀[ℝ]^2 InfoGeometry.Canonical.FierzKleinFoundation.Vec4) :=
+  InfoGeometry.Projective.ExteriorPowerPluckerBridge.exteriorBivectorLinearEquiv.symm.toLinearMap.comp
+    ((rindlerBoostBivector s).comp
+      InfoGeometry.Projective.ExteriorPowerPluckerBridge.exteriorBivectorLinearEquiv.toLinearMap)
+
+/-- On simple bivectors, the linear exterior-square action is the wedge of
+the boosted vectors. -/
+theorem rindlerBoostExterior_ιMulti
+    (s : ℝ) (u v : InfoGeometry.Canonical.FierzKleinFoundation.Vec4) :
+    rindlerBoostExterior s
+        (exteriorPower.ιMulti ℝ 2 ![u, v]) =
+      exteriorPower.ιMulti ℝ 2
+        ![rindlerBoostPluckerVec4 s u, rindlerBoostPluckerVec4 s v] := by
+  apply InfoGeometry.Projective.ExteriorPowerPluckerBridge.exteriorBivectorLinearEquiv.injective
+  change InfoGeometry.Projective.ExteriorPowerPluckerBridge.exteriorBivectorLinearEquiv
+      (rindlerBoostExterior s (exteriorPower.ιMulti ℝ 2 ![u, v])) =
+    InfoGeometry.Projective.ExteriorPowerPluckerBridge.exteriorBivectorLinearEquiv
+      (exteriorPower.ιMulti ℝ 2
+        ![rindlerBoostPluckerVec4 s u, rindlerBoostPluckerVec4 s v])
+  simp only [rindlerBoostExterior, LinearMap.comp_apply,
+    InfoGeometry.Projective.ExteriorPowerPluckerBridge.exteriorBivectorLinearEquiv_ιMulti]
+  change InfoGeometry.Projective.ExteriorPowerPluckerBridge.exteriorBivectorLinearEquiv
+      ((InfoGeometry.Projective.ExteriorPowerPluckerBridge.exteriorBivectorLinearEquiv).symm
+        (rindlerBoostBivector s
+          (InfoGeometry.Projective.ExteriorPowerPluckerBridge.exteriorBivectorLinearEquiv
+            (exteriorPower.ιMulti ℝ 2 ![u, v])))) = _
+  rw [InfoGeometry.Projective.ExteriorPowerPluckerBridge.exteriorBivectorLinearEquiv.apply_symm_apply]
+  rw [InfoGeometry.Projective.ExteriorPowerPluckerBridge.exteriorBivectorLinearEquiv_ιMulti]
+  have hcosh : Real.cosh s ^ 2 - Real.sinh s ^ 2 = 1 := by
+    simpa [pow_two] using Real.cosh_sq_sub_sinh_sq s
+  have hscale : 1 - Real.cosh s ^ 2 + Real.sinh s ^ 2 = 0 := by
+    linarith [hcosh]
+  -- The coordinate computation is exactly the six 2-by-2 minors.
+  ext <;> simp [rindlerBoostBivector, rindlerBoostPluckerCoordinateMap,
+    InfoGeometry.Canonical.FierzKleinFoundation.bivector4CoordinateLinearEquiv,
+    InfoGeometry.Canonical.FierzKleinFoundation.bivector4Coordinates,
+    InfoGeometry.Canonical.FierzKleinFoundation.wedgeVec4,
+    rindlerBoostPluckerVec4] <;> try ring
+  linear_combination
+    (u InfoGeometry.Canonical.FierzKleinFoundation.I4.t *
+      v InfoGeometry.Canonical.FierzKleinFoundation.I4.z -
+    u InfoGeometry.Canonical.FierzKleinFoundation.I4.z *
+      v InfoGeometry.Canonical.FierzKleinFoundation.I4.t) * hscale
+
+/-- The induced map on the literal Mathlib exterior square preserves the
+transported Klein form for arbitrary exterior bivectors. -/
+theorem rindlerBoost_preserves_exteriorKleinForm
+    (s : ℝ)
+    (B : ⋀[ℝ]^2 InfoGeometry.Canonical.FierzKleinFoundation.Vec4) :
+    InfoGeometry.Projective.ExteriorPowerPluckerBridge.exteriorKleinForm
+        (rindlerBoostExterior s B) =
+      InfoGeometry.Projective.ExteriorPowerPluckerBridge.exteriorKleinForm B := by
+  change InfoGeometry.Canonical.FierzKleinFoundation.kleinForm
+      (InfoGeometry.Projective.ExteriorPowerPluckerBridge.exteriorBivectorLinearEquiv
+        (rindlerBoostExterior s B)) =
+    InfoGeometry.Canonical.FierzKleinFoundation.kleinForm
+      (InfoGeometry.Projective.ExteriorPowerPluckerBridge.exteriorBivectorLinearEquiv B)
+  simp only [rindlerBoostExterior, LinearMap.comp_apply]
+  change InfoGeometry.Canonical.FierzKleinFoundation.kleinForm
+      (InfoGeometry.Projective.ExteriorPowerPluckerBridge.exteriorBivectorLinearEquiv
+        ((InfoGeometry.Projective.ExteriorPowerPluckerBridge.exteriorBivectorLinearEquiv).symm
+          (rindlerBoostBivector s
+            (InfoGeometry.Projective.ExteriorPowerPluckerBridge.exteriorBivectorLinearEquiv B)))) = _
+  rw [InfoGeometry.Projective.ExteriorPowerPluckerBridge.exteriorBivectorLinearEquiv.apply_symm_apply]
+  exact rindlerBoost_preserves_kleinForm s _
+
 /-- The real Lorentz spin lift is the restriction of the repository's
 `LieActionLane` inner action on the complete three-factor CAR algebra.  It
 acts on the Minkowski Majorana generators by the Lorentz infinitesimal and

@@ -99,10 +99,20 @@ theorem associator_quaternion_i_j (X : Z) :
       (quaternionEmbedding (⟨0, 0, 1, 0⟩ : Quaternion ℝ)) =
       ⟨-(X.v 2 + X.w 2), ![X.v 1 + X.w 1, -(X.v 0 + X.w 0), X.a - X.b],
         ![X.v 1 + X.w 1, -(X.v 0 + X.w 0), X.a - X.b], X.v 2 + X.w 2⟩ := by
+  change ZornVectorMatrix.sub
+    (ZornVectorMatrix.mul
+      (ZornVectorMatrix.mul X
+        (quaternionEmbedding (⟨0, 1, 0, 0⟩ : Quaternion ℝ)))
+      (quaternionEmbedding (⟨0, 0, 1, 0⟩ : Quaternion ℝ)))
+    (ZornVectorMatrix.mul X
+      (ZornVectorMatrix.mul
+        (quaternionEmbedding (⟨0, 1, 0, 0⟩ : Quaternion ℝ))
+        (quaternionEmbedding (⟨0, 0, 1, 0⟩ : Quaternion ℝ)))) = _
+  unfold ZornVectorMatrix.sub ZornVectorMatrix.add ZornVectorMatrix.neg
+    ZornVectorMatrix.mul
   ext i <;> (try fin_cases i) <;>
-    simp [_root_.associator_apply, quaternionEmbedding, ZornVectorMatrix.mul,
-      ZornVectorMatrix.sub, ZornVectorMatrix.add, ZornVectorMatrix.neg,
-      ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three] <;> ring
+    simp [quaternionEmbedding, ZornVec3.dot, ZornVec3.cross,
+      Fin.sum_univ_three] <;> ring
 
 theorem associator_quaternion_i_j_zero_iff (X : Z) :
     _root_.associator X
@@ -120,7 +130,14 @@ theorem associator_quaternion_i_j_zero_iff (X : Z) :
     have hab : X.a = X.b := by linarith
     have hv : ∀ i : Fin 3, X.v i = -X.w i := by
       intro i
-      fin_cases i <;> linarith
+      fin_cases i
+      · change X.v 0 = -X.w 0
+        linarith [hv1]
+      · change X.v 1 = -X.w 1
+        linarith [hv0]
+      · have hsum : X.v 2 + X.w 2 = 0 := by linarith [ha]
+        change X.v 2 = -X.w 2
+        linarith
     refine ⟨⟨X.a, X.w 0, X.w 1, X.w 2⟩, ?_⟩
     ext i <;> (try fin_cases i) <;> simp [quaternionEmbedding, hab, hv]
   · rintro ⟨q, rfl⟩
@@ -205,7 +222,7 @@ theorem projectedAssociatorGram_zero_iff_basis (X : Z) :
     apply Finset.sum_eq_zero
     intro j _
     rw [h i j]
-    simp
+    simp [coefficientPairing, ZornVectorMatrix.zero, ZornVec3.dot]
 
 /-- The projected probe parameters form a native bilinear map, so full-basis
 testing extends to arbitrary probes. -/
@@ -246,6 +263,7 @@ theorem projected_basis_zero_iff (X : Z) :
     intro y z
     change projectedAssociatorParameters X y z = 0
     rw [hmap]
+    simp
   · intro h i j
     exact h _ _
 
@@ -282,7 +300,7 @@ theorem projectedAssociatorGram_left_kernel_iff (X : Z) :
     apply Finset.sum_eq_zero
     intro j _
     rw [hX]
-    simp
+    simp [coefficientPairing, ZornVectorMatrix.zero, ZornVec3.dot]
 
 theorem projectedAssociatorGram_pos_of_not_quaternion {X : Z}
     (hX : X ∉ LinearMap.range quaternionEmbedding) :

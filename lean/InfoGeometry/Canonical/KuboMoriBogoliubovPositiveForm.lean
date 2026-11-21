@@ -32,22 +32,10 @@ namespace KuboMoriBogoliubov.FaithfulDensityState
 variable {n : Type*} [Fintype n] [DecidableEq n]
 variable (rho : FaithfulDensityState n)
 
-/-- Every logarithmic-mean weight is strictly positive, including off-diagonal
-entries with unequal eigenvalues. -/
-theorem bkm_weight_pos (i j : n) : 0 < rho.bkmWeight i j := by
-  unfold bkmWeight
-  split_ifs with h
-  · exact rho.p_pos i
-  · rcases lt_or_gt_of_ne h with hij | hji
-    · exact div_pos_of_neg_of_neg (sub_neg.mpr hij)
-        (sub_neg.mpr (Real.log_lt_log (rho.p_pos i) hij))
-    · exact div_pos (sub_pos.mpr hji)
-        (sub_pos.mpr (Real.log_lt_log (rho.p_pos j) hji))
-
 /-- The unconditional nonnegativity theorem on the full matrix carrier. -/
 theorem bkmInnerProduct_nonneg (A : Matrix n n ℝ) :
     0 ≤ rho.bkmInnerProduct A A :=
-  rho.bkm_metric_pos_semidef_diag A (fun i j => (rho.bkm_weight_pos i j).le)
+  rho.bkm_metric_pos_semidef A
 
 /-- A nonzero entry contributes a strictly positive summand. -/
 theorem bkmInnerProduct_pos (A : Matrix n n ℝ) (hA : A ≠ 0) :

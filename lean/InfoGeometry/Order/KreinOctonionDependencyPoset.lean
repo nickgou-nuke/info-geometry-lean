@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Order.Interval.Finset.Basic
-import Mathlib.Tactic.DeriveFintype
+import Mathlib.Tactic.FinCases
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -30,7 +30,46 @@ inductive Node
   | cut | thesis | shadow | classical | projection | intrusion | unitarity
   | linearization | tension | obstruction | bridge | permanence
   | calibration | quantization | synthesis
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+private def nodeEquivFin : Node ≃ Fin 15 where
+  toFun
+    | .cut => 0
+    | .thesis => 1
+    | .shadow => 2
+    | .classical => 3
+    | .projection => 4
+    | .intrusion => 5
+    | .unitarity => 6
+    | .linearization => 7
+    | .tension => 8
+    | .obstruction => 9
+    | .bridge => 10
+    | .permanence => 11
+    | .calibration => 12
+    | .quantization => 13
+    | .synthesis => 14
+  invFun i :=
+    match i.val with
+    | 0 => .cut
+    | 1 => .thesis
+    | 2 => .shadow
+    | 3 => .classical
+    | 4 => .projection
+    | 5 => .intrusion
+    | 6 => .unitarity
+    | 7 => .linearization
+    | 8 => .tension
+    | 9 => .obstruction
+    | 10 => .bridge
+    | 11 => .permanence
+    | 12 => .calibration
+    | 13 => .quantization
+    | _ => .synthesis
+  left_inv := by intro x; cases x <;> rfl
+  right_inv := by intro i; fin_cases i <;> rfl
+
+instance : Fintype Node := Fintype.ofEquiv (Fin 15) nodeEquivFin.symm
 
 open Node
 

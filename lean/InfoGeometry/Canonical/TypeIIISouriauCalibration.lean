@@ -48,11 +48,9 @@ local instance : IsScalarTower ℝ EndH₂ EndH₂ := inferInstance
 
 /--
 Calibration packet identifying the bounded Souriau/Drazin surrogate with a
-Type-III modular generator.
-
-The exponential witness is explicit because `TypeIIIContinuousCoreReal` only
-offers the Tomita `δ = log Δ` bridge after a supplied proof that
-`exp(generator) = Δ`.
+Type-III modular generator. The Type-III exponential/logarithm identity is
+derived from the positive RN scalar in `RealTypeIIIModularData`; only the
+identification of the Souriau surrogate with that generator remains external.
 -/
 @[rep_depth transport]
 structure Calibration where
@@ -68,13 +66,6 @@ structure Calibration where
   /-- Calibration: the bounded surrogate is the Type-III modular generator. -/
   Ksur_eq_typeIII_modularGenerator :
     souriau.superBridge.Ksur = typeIII.modularGenerator
-
-  /--
-  Explicit Tomita exponential witness for the Type-III modular generator.
-  This is not derived here.
-  -/
-  exp_typeIII_modularGenerator_eq_modularOperator :
-    NormedSpace.exp typeIII.modularGenerator = typeIII.rn.modularOperator
 
 namespace Calibration
 
@@ -112,14 +103,14 @@ theorem modularHamiltonian_eq_typeIII_modularGenerator_add_partitionPotential_on
 theorem exp_Ksur_eq_modularOperator :
     NormedSpace.exp C.souriau.superBridge.Ksur = C.typeIII.rn.modularOperator := by
   rw [C.Ksur_eq_typeIII_modularGenerator]
-  exact C.exp_typeIII_modularGenerator_eq_modularOperator
+  exact C.typeIII.exp_modularGenerator_eq_modularOperator
 
 /-- The Souriau bare generator exponentiates to the Type-III modular operator. -/
 @[rep_depth transport]
 theorem exp_Khat_beta_eq_modularOperator :
     NormedSpace.exp C.souriau.family.Khat_beta = C.typeIII.rn.modularOperator := by
   rw [C.Khat_beta_eq_modularGenerator]
-  exact C.exp_typeIII_modularGenerator_eq_modularOperator
+  exact C.typeIII.exp_modularGenerator_eq_modularOperator
 
 /--
 The bounded surrogate generates the same real Tomita flow as the calibrated
@@ -131,22 +122,25 @@ theorem Ksur_transportFlow_eq_realTomitaFlow
     InfoGeometry.Canonical.BogoliubovTransport.modularTransportFlow
         (E := E) C.souriau.superBridge.Ksur t
       =
-    (C.typeIII.toRealModularLogData
-        C.exp_typeIII_modularGenerator_eq_modularOperator).flow t := by
+    C.typeIII.toRealModularLogData.flow t := by
   rw [C.Ksur_eq_typeIII_modularGenerator]
-  exact C.typeIII.modularTransportFlow_eq_realTomitaFlow
-    C.exp_typeIII_modularGenerator_eq_modularOperator t
+  exact C.typeIII.modularTransportFlow_eq_realTomitaFlow t
 
-/--
-The Type-III modular generator is the RN negative-log generator supplied by the
-Type-III owner lane.
--/
+/-- The Tomita logarithmic generator is the positive logarithm of the RN
+modular scalar; the thermodynamic Hamiltonian is its negative. -/
 @[rep_depth transport]
-theorem modularGenerator_eq_neg_log_rn :
+theorem modularGenerator_eq_log_rn :
     C.typeIII.modularGenerator =
-      (-Real.log C.typeIII.rn.rnDerivative) •
+      Real.log C.typeIII.rn.rnDerivative •
         InfoGeometry.Canonical.YangMillsContinuum.idEndH E :=
-  C.typeIII.2.1
+  C.typeIII.modularGenerator_eq_log_rn
+
+/-- RN positivity derives the Type-III modular exponential identity; callers
+no longer provide it as a compatibility witness. -/
+@[rep_depth transport]
+theorem exp_typeIII_modularGenerator_eq_modularOperator :
+    NormedSpace.exp C.typeIII.modularGenerator = C.typeIII.rn.modularOperator :=
+  C.typeIII.exp_modularGenerator_eq_modularOperator
 
 end Calibration
 

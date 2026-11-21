@@ -115,7 +115,8 @@ theorem gibbsPartition_realify (H : CMat) (hH : H.IsHermitian) (β : ℝ) :
   rw [gibbsPartition, traceMass, gibbsDensity_eq_exp_neg_smul]
 
 /-- The native normalized real exponential is the existing encoded Gibbs state. -/
-theorem normalizedGibbsDensity_state (H : CMat) (hH : H.IsHermitian) (β : ℝ) :
+theorem normalizedGibbsDensity_state [Nonempty n]
+    (H : CMat) (hH : H.IsHermitian) (β : ℝ) :
     state (normalizedGibbsDensity H hH β) =
       (trace (NormedSpace.exp ((-β) • realify H)))⁻¹ •
         NormedSpace.exp ((-β) • realify H) := by
@@ -189,7 +190,7 @@ theorem realify_chargePencil (Q : ι → CMat) (β : ι → ℝ) :
 
 /-- The existing generalized Gibbs state is the normalized exponential of the
 actual real charge pencil; the charges need not commute. -/
-theorem generalizedGibbs_state (Q : ι → CMat)
+theorem generalizedGibbs_state [Nonempty n] (Q : ι → CMat)
     (hQ : ∀ a, (Q a).IsHermitian) (β : ι → ℝ) :
     state (normalizedGibbsDensity (chargePencil Q β)
       (chargePencil_isHermitian Q hQ β) 1) =

@@ -64,3 +64,4 @@ import InfoGeometry.Analysis.FractalMeasure.Basic
 import InfoGeometry.Analysis.Graph
 import InfoGeometry.Analysis.RankOneTrace
 import InfoGeometry.Analysis.MobiusRadialTime
+import InfoGeometry.Analysis.PolyaVectorFieldCR

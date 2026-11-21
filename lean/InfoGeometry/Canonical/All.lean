@@ -2127,6 +2127,7 @@ import InfoGeometry.Canonical.DeformedSuperCuntzWarp
 import InfoGeometry.Canonical.InductiveColimitBridge
 import InfoGeometry.Canonical.KuzminColimit
 import InfoGeometry.Canonical.AmariSouriauThermodynamicGauge
+import InfoGeometry.Canonical.SouriauKosmannLipschitzBridge
 import InfoGeometry.Canonical.KANColimitBridge
 import InfoGeometry.Canonical.ArakiItakuraSaitoCollapse
 import InfoGeometry.Canonical.TensorColimitExpectation

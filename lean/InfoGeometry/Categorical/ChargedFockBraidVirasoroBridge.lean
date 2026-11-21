@@ -77,6 +77,15 @@ theorem chargedFockVirasoroMode_bracket
   exact CurrentHeisenbergRep.sugawaraStressMode_virasoroBracket
     (chargedFockSpaceCurrentHeisenbergRep 𝕜 α) m n
 
+/-- A finite-stage braid system acting on the concrete charged Fock carrier. -/
+structure CompatibleChargedFockAction
+    (𝕜 : Type) [Field 𝕜] [CharZero 𝕜]
+    (α : 𝕜) (B : BraidGroupDiagram) where
+  action :
+    CompatibleStageAction 𝕜 (ChargedFockCarrier 𝕜 α) B
+  modes_are_sugawara :
+    action.L = chargedFockVirasoroMode 𝕜 α
+
 namespace CompatibleChargedFockAction
 
 variable {𝕜 : Type} [Field 𝕜] [CharZero 𝕜]

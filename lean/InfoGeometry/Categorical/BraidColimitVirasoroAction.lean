@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 /-
@@ -144,6 +149,20 @@ theorem action_commutes_with_vira_commutator
   simpa [action] using commutes_with_commutator I b m n
 
 end CompatibleStageAction
+
+/-- PR-named alias for `CompatibleStageAction.stage_intertwines_readout`.
+The in-namespace projection name `CompatibleStageAction.stage_intertwines` is
+occupied by the structure field, so the alias lives in the enclosing namespace. -/
+theorem stage_intertwines
+    {𝕜 V : Type u} [Ring 𝕜]
+    [AddCommGroup V] [Module 𝕜 V]
+    {B : BraidGroupDiagram.{u}}
+    (A : CompatibleStageAction 𝕜 V B)
+    (n : ℕ) (b : B.obj n) (m : ℤ) :
+    Commute
+      ((A.stages.app n b : LinearAut 𝕜 V).toLinearMap)
+      (A.L m) :=
+  A.stage_intertwines_readout n b m
 
 /-- A carrier-level closure package combines any existing bridge object with
 a genuine compatible finite-stage action. -/

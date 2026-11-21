@@ -10,6 +10,12 @@ import InfoGeometry.Twistor.RealInfinityContractionAudit
 These checks expose dependencies of the actual proved declarations. -/
 
 #print axioms InfoGeometry.Twistor.RealTwistorIncidence.incidenceSpace_eq_ker
+#print axioms InfoGeometry.Twistor.RealTwistorIncidence.existsUnique_incidenceSpace_of_bijective_snd
+#print axioms InfoGeometry.Twistor.RealTwistorIsotropicGraph.incidenceSpace_isotropic_iff
+#print axioms InfoGeometry.Twistor.RealTwistorIsotropicGraph.isotropic_phase_invariant_iff_existsUnique
+#print axioms InfoGeometry.Twistor.RealTwistorIsotropicGraph.transverse_isotropic_phase_iff_existsUnique
+#print axioms InfoGeometry.Twistor.RealTwistorIsotropicGraphExamples.nonzero_phase_graph_vector
+#print axioms InfoGeometry.Twistor.RealTwistorIsotropicGraphExamples.neg_phase_not_isSymmetric
 #print axioms InfoGeometry.Twistor.RealTwistorIncidence.spinorEquivIncidence
 #print axioms InfoGeometry.Twistor.RealTwistorIncidence.projectiveIncidence_injective
 #print axioms InfoGeometry.Twistor.RealTwistorIncidence.translation_incidenceSpace

@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Twistor.RealTwistorIncidence
+import InfoGeometry.Twistor.RealTwistorIsotropicGraph
+import InfoGeometry.Twistor.RealTwistorIsotropicGraphExamples
 import InfoGeometry.Twistor.RealMultiTwistorReconstruction
 import InfoGeometry.Twistor.RealTwistorSoldering
 import InfoGeometry.Twistor.RealTwistorBlockInversion

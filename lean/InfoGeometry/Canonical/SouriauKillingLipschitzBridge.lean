@@ -11,6 +11,10 @@ import InfoGeometry.Geometry.RindlerLapseCalculus
 import InfoGeometry.Geometry.RindlerSpinTorsion
 import InfoGeometry.Canonical.RealSpacetime4x4Closure
 import InfoGeometry.Synthesis.CartanHestenesRotorSpinConnectionMaurerCartanSynthesis
+import InfoGeometry.Canonical.BogoliubovTransport
+import InfoGeometry.Canonical.BogoliubovClosedForms
+import InfoGeometry.Krein.ExponentialIsometry
+import InfoGeometry.OperatorAlgebra.KreinInnerDerivation
 
 /-!
 # Souriau equilibrium, Killing flows, and the finite `Cl(1,1)` Lipschitz rotor
@@ -719,8 +723,6 @@ structure FiniteKosmannDatum where
   vectorConnection : InfoGeometry.Geometry.RindlerCartanFrame.Tangent → Mat2
   spinConnection : InfoGeometry.Geometry.RindlerCartanFrame.Tangent → Mat2
   contractedBivector : InfoGeometry.Geometry.RindlerCartanFrame.Tangent → Mat2
-  covariantDerivative :
-    InfoGeometry.Geometry.RindlerCartanFrame.Tangent → Mat2 → Mat2
   killing_generator_skew : ∀ u v,
     minkowskiForm (killingGenerator u) v +
       minkowskiForm u (killingGenerator v) = 0
@@ -732,8 +734,13 @@ structure FiniteKosmannDatum where
     spinConnection v * cliffordVector u -
       cliffordVector u * spinConnection v =
       cliffordVector ((vectorConnection v).mulVec u)
-  covariantDerivative_eq_spinConnection_left : ∀ v ψ,
-    covariantDerivative v ψ = spinConnection v * ψ
+
+/-- The finite spinor covariant derivative is constructed by the stored spin
+connection acting on the explicit matrix-spinor carrier. The connection law
+is therefore definitional, not a field assumed of each datum. -/
+def FiniteKosmannDatum.covariantDerivative (D : FiniteKosmannDatum)
+    (v : InfoGeometry.Geometry.RindlerCartanFrame.Tangent) (ψ : Mat2) : Mat2 :=
+  D.spinConnection v * ψ
 
 /-- The concrete finite Rindler Kosmann datum. -/
 def rindlerFiniteKosmannDatum (a : ℝ) : FiniteKosmannDatum where
@@ -743,9 +750,6 @@ def rindlerFiniteKosmannDatum (a : ℝ) : FiniteKosmannDatum where
     spinLift a 0 0
       (0 : InfoGeometry.Geometry.RindlerCartanFrame.Tangent →ₗ[ℝ] ℝ) v
   contractedBivector := fun v => (2 * a * v.1) • J1
-  covariantDerivative := fun v ψ =>
-    spinLift a 0 0
-      (0 : InfoGeometry.Geometry.RindlerCartanFrame.Tangent →ₗ[ℝ] ℝ) v * ψ
   killing_generator_skew := boostGenerator_minkowski_skew
   vectorConnection_lorentz_skew := by
     intro v
@@ -754,9 +758,6 @@ def rindlerFiniteKosmannDatum (a : ℝ) : FiniteKosmannDatum where
     intro v u
     exact spinLift_adjoint a 0 0
       (0 : InfoGeometry.Geometry.RindlerCartanFrame.Tangent →ₗ[ℝ] ℝ) v u
-  covariantDerivative_eq_spinConnection_left := by
-    intro v ψ
-    rfl
 
 /-- In the finite Rindler datum, the contracted Kosmann correction is the
 spin-connection action on the explicit matrix spinor carrier. -/
@@ -765,7 +766,7 @@ theorem rindlerFiniteKosmannDatum_correction_eq_covariantDerivative
     kosmannCorrection
         ((rindlerFiniteKosmannDatum a).contractedBivector v) ψ =
       (rindlerFiniteKosmannDatum a).covariantDerivative v ψ := by
-  simpa [rindlerFiniteKosmannDatum] using
+  simpa [rindlerFiniteKosmannDatum, FiniteKosmannDatum.covariantDerivative] using
     kosmannCorrection_eq_rindlerSpinLift_left_action a v ψ
 
 theorem kosmannCorrection_add (B₁ B₂ ψ : Mat2) :
@@ -1081,5 +1082,203 @@ theorem positive_scalar_sandwich_cancels (r : ℝ) (hr : r ≠ 0)
 theorem rindler_tolman_readback (T₀ a x : ℝ) (hx : lapse a x ≠ 0) :
     localTemperature T₀ a x * lapse a x = T₀ :=
   tolman_product T₀ a x hx
+
+/-! ## Doubled-real modular flow on the canonical Krein carrier
+
+This section reuses `BogoliubovTransport` on `DoubledSpace E`. Its results
+concern the bounded operator generator `hMod ∘ clockAxis`; they do not assert
+a curved-manifold spinor-bundle lift or identify this generator with an
+arbitrary spacetime Killing field.
+-/
+
+section DoubledKreinModularFlow
+
+open InfoGeometry.Canonical.BogoliubovTransport
+open InfoGeometry.Krein
+
+variable {E : Type*}
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+
+local notation "H₂" => DoubledSpace E
+local notation "EndH" => H₂ →L[ℝ] H₂
+
+noncomputable local instance : NormedRing EndH := inferInstance
+noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
+noncomputable local instance : NormedSpace ℝ EndH := inferInstance
+
+/-- The negative-sheet seed realizes the existing real sheet-swap operator. -/
+@[simp] theorem doubled_relativeModularKGenerator_negativeSheet_eq_modular_j :
+    relativeModularKGenerator (E := E) (-(spectral_epsilon (E := E))) =
+      modular_j (E := E) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  apply DoubledSpace.ext <;>
+    simp [relativeModularKGenerator, modularTransportGenerator, clockAxis]
+
+section CompleteKrein
+
+variable [CompleteSpace E]
+
+local instance : KreinSpace H₂ := instKreinSpaceProdL2 (E := E)
+
+/-- The relative modular generator `hMod ∘ clockAxis` has Krein adjoint
+`clockAxis ∘ hMod♯` on the doubled real carrier. -/
+theorem doubled_relativeModularKGenerator_kreinAdjoint (hMod : EndH) :
+    KreinSpace.kreinAdjoint (relativeModularKGenerator (E := E) hMod) =
+      (clockAxis (E := E)).comp (KreinSpace.kreinAdjoint hMod) := by
+  simp only [relativeModularKGenerator, modularTransportGenerator,
+    KreinSpace.kreinAdjoint_comp, clockAxis, kreinAdjoint_complex_i]
+
+/-- Exact seed criterion for the relative modular generator to be
+Krein-skew-adjoint. -/
+theorem doubled_relativeModularKGenerator_isKreinSkewAdjoint_iff
+    (hMod : EndH) :
+    KreinSpace.IsKreinSkewAdjoint (relativeModularKGenerator (E := E) hMod) ↔
+      (clockAxis (E := E)).comp (KreinSpace.kreinAdjoint hMod) =
+        -(hMod.comp (clockAxis (E := E))) := by
+  change
+    KreinSpace.kreinAdjoint (relativeModularKGenerator (E := E) hMod) =
+        -(hMod.comp (clockAxis (E := E))) ↔
+      (clockAxis (E := E)).comp (KreinSpace.kreinAdjoint hMod) =
+        -(hMod.comp (clockAxis (E := E)))
+  rw [doubled_relativeModularKGenerator_kreinAdjoint]
+
+/-- A Krein-self-adjoint seed that is antilinear for the real sheet axis
+produces a Krein-skew-adjoint relative modular generator. -/
+theorem doubled_relativeModularKGenerator_isKreinSkewAdjoint_of_seed
+    (hMod : EndH)
+    (hSelf : KreinSpace.IsKreinSelfAdjoint hMod)
+    (hAnti : IsPhaseAntilinear (E := E) hMod) :
+    KreinSpace.IsKreinSkewAdjoint (relativeModularKGenerator (E := E) hMod) := by
+  apply (doubled_relativeModularKGenerator_isKreinSkewAdjoint_iff hMod).2
+  change KreinSpace.kreinAdjoint hMod = hMod at hSelf
+  rw [hSelf]
+  change hMod.comp (clockAxis (E := E)) =
+    -((clockAxis (E := E)).comp hMod) at hAnti
+  simpa only [neg_neg] using congrArg Neg.neg hAnti.symm
+
+/-- The concrete negative-sheet seed generates the real modular sheet swap,
+which is already proved Krein-skew by the doubled-space owner. -/
+theorem doubled_relativeModularKGenerator_negativeSheet_skew :
+    KreinSpace.IsKreinSkewAdjoint
+      (relativeModularKGenerator (E := E) (-(spectral_epsilon (E := E)))) := by
+  rw [doubled_relativeModularKGenerator_negativeSheet_eq_modular_j]
+  exact isKreinSkewAdjoint_modular_j (E := E)
+
+/-- Every Krein-skew relative modular generator exponentiates to an
+isometry of the actual doubled signed pairing. -/
+theorem doubled_modularTransportFlow_isKreinIsometry
+    (hMod : EndH)
+    (hGenerator : KreinSpace.IsKreinSkewAdjoint
+      (relativeModularKGenerator (E := E) hMod)) (t : ℝ) :
+    KreinSpace.IsKreinIsometry (modularTransportFlow (E := E) hMod t) := by
+  exact exp_preservesMetric (relativeModularKGenerator (E := E) hMod)
+    hGenerator t
+
+/-- The negative-sheet seed supplies a concrete Krein-isometric modular
+flow, without replacing the indefinite pairing by a positive norm. -/
+theorem doubled_negativeSheet_modularTransportFlow_isKreinIsometry (t : ℝ) :
+    KreinSpace.IsKreinIsometry
+      (modularTransportFlow (E := E) (-(spectral_epsilon (E := E))) t) := by
+  exact doubled_modularTransportFlow_isKreinIsometry
+    (-(spectral_epsilon (E := E)))
+    doubled_relativeModularKGenerator_negativeSheet_skew t
+
+/-- The exponential flow preserves the difference of the two real sheet
+pairings, with the canonical `to_doubled` convention. -/
+theorem doubled_modularTransportFlow_preserves_pairing
+    (hMod : EndH)
+    (hGenerator : KreinSpace.IsKreinSkewAdjoint
+      (relativeModularKGenerator (E := E) hMod))
+    (t : ℝ) (x ξ y η : E) :
+    KreinSpace.kreinInner
+      (modularTransportFlow (E := E) hMod t (to_doubled x ξ))
+      (modularTransportFlow (E := E) hMod t (to_doubled y η)) =
+      inner ℝ x y - inner ℝ ξ η := by
+  rw [doubled_modularTransportFlow_isKreinIsometry hMod hGenerator t]
+  exact kreinInner_to_doubled x ξ y η
+
+/-- The relative modular commutator preserves the Krein adjoint when its
+generator is Krein-skew-adjoint. -/
+theorem doubled_relativeModularDeriv_kreinAdjoint
+    (hMod A : EndH)
+    (hGenerator : KreinSpace.IsKreinSkewAdjoint
+      (relativeModularKGenerator (E := E) hMod)) :
+    KreinSpace.kreinAdjoint (relativeModularDeriv (E := E) hMod A) =
+      relativeModularDeriv (E := E) hMod (KreinSpace.kreinAdjoint A) := by
+  simpa only [InfoGeometry.OperatorAlgebra.kreinCommutator_apply,
+    InfoGeometry.OperatorAlgebra.kreinAdjoint, relativeModularDeriv,
+    modularDeriv, transportCommutator, relativeModularKGenerator,
+    ContinuousLinearMap.mul_def] using
+    (InfoGeometry.OperatorAlgebra.kreinCommutator_kreinStar
+      (relativeModularKGenerator (E := E) hMod) A hGenerator).symm
+
+/-- The same derivation preserves Krein-self-adjoint observables. -/
+theorem doubled_relativeModularDeriv_preserves_kreinSelfAdjoint
+    (hMod A : EndH)
+    (hGenerator : KreinSpace.IsKreinSkewAdjoint
+      (relativeModularKGenerator (E := E) hMod))
+    (hA : KreinSpace.IsKreinSelfAdjoint A) :
+    KreinSpace.IsKreinSelfAdjoint (relativeModularDeriv (E := E) hMod A) := by
+  change KreinSpace.kreinAdjoint (relativeModularDeriv (E := E) hMod A) =
+    relativeModularDeriv (E := E) hMod A
+  rw [doubled_relativeModularDeriv_kreinAdjoint hMod A hGenerator]
+  exact congrArg (relativeModularDeriv (E := E) hMod) hA
+
+/-- The commutator derivation also preserves the Krein-skew-adjoint sector. -/
+theorem doubled_relativeModularDeriv_preserves_kreinSkewAdjoint
+    (hMod A : EndH)
+    (hGenerator : KreinSpace.IsKreinSkewAdjoint
+      (relativeModularKGenerator (E := E) hMod))
+    (hA : KreinSpace.IsKreinSkewAdjoint A) :
+    KreinSpace.IsKreinSkewAdjoint (relativeModularDeriv (E := E) hMod A) := by
+  change KreinSpace.IsKreinSkewAdjoint
+    (transportCommutator (relativeModularKGenerator (E := E) hMod) A)
+  rw [← lieBracket_eq_transportCommutator]
+  exact KreinSpace.isKreinSkewAdjoint_lie hGenerator hA
+
+end CompleteKrein
+
+end DoubledKreinModularFlow
+
+/-! ## Identification with the existing real `Cl(1,1)` boost -/
+
+/-- Under the native coordinate readout `Vec11 → DoubledSpace ℝ`, the doubled
+Krein pairing is the negative of the owner’s `(-,+)` Minkowski form. -/
+theorem doubledKrein_pairing_eq_neg_minkowskiForm (u v : Vec11) :
+    InfoGeometry.Krein.KreinSpace.kreinInner
+      (InfoGeometry.Krein.to_doubled u.1 u.2)
+      (InfoGeometry.Krein.to_doubled v.1 v.2) = -minkowskiForm u v := by
+  rw [InfoGeometry.Krein.kreinInner_to_doubled]
+  simp [minkowskiForm, mul_comm]
+  ring
+
+/-- The exact exponential flow generated by the negative-sheet relative
+modular seed agrees, coordinate for coordinate, with the existing real
+Rindler `Cl(1,1)` boost. This is a finite flat-space identification on
+`DoubledSpace ℝ`, not a curved-spacetime Kosmann theorem. -/
+theorem negativeSheet_modularFlow_eq_boostFlow (s : ℝ) (v : Vec11) :
+    InfoGeometry.Canonical.BogoliubovTransport.modularTransportFlow (E := ℝ)
+        (-(InfoGeometry.Krein.spectral_epsilon (E := ℝ))) s
+        (InfoGeometry.Krein.to_doubled v.1 v.2) =
+      InfoGeometry.Krein.to_doubled (boostFlow s v).1 (boostFlow s v).2 := by
+  have hFlow :
+      InfoGeometry.Canonical.BogoliubovTransport.modularTransportFlow (E := ℝ)
+          (-(InfoGeometry.Krein.spectral_epsilon (E := ℝ))) s =
+        InfoGeometry.Canonical.BogoliubovTransport.JBoost (E := ℝ) s := by
+    apply ContinuousLinearMap.ext
+    intro u
+    change NormedSpace.exp
+        (s • InfoGeometry.Canonical.BogoliubovTransport.relativeModularKGenerator (E := ℝ)
+          (-(InfoGeometry.Krein.spectral_epsilon (E := ℝ)))) u =
+      NormedSpace.exp
+        (s • InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ
+          (E := ℝ)) u
+    rw [doubled_relativeModularKGenerator_negativeSheet_eq_modular_j]
+  rw [hFlow,
+    InfoGeometry.Canonical.BogoliubovClosedForms.JBoost_apply_modular_j]
+  apply InfoGeometry.Krein.DoubledSpace.ext
+  · simp [boostFlow, InfoGeometry.Krein.to_doubled]
+  · simp [boostFlow, InfoGeometry.Krein.to_doubled]; ring
 
 end InfoGeometry.Canonical.SouriauKillingLipschitzBridge

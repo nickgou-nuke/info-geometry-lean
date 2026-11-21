@@ -40,6 +40,11 @@ import InfoGeometry.Arithmetic.FiniteSmoothedMangoldtMellin
 import InfoGeometry.Arithmetic.MertensMellinRiemannHypothesis
 import InfoGeometry.Arithmetic.MertensDikinBounds
 import InfoGeometry.Arithmetic.ScaledEulerUniformBound
+import InfoGeometry.Arithmetic.ArithmeticFunctionLSeriesEulerProduct
+import InfoGeometry.Arithmetic.LSeriesCoefficientwiseUniformConvergence
+import InfoGeometry.Arithmetic.NumberFieldCompletionFinitePlace
+import InfoGeometry.Arithmetic.NumberFieldDedekindZetaEulerProduct
+import InfoGeometry.Arithmetic.NumberFieldHeckeLFunction
 
 namespace InfoGeometry.Arithmetic.All
 

@@ -15,6 +15,7 @@ import InfoGeometry.Canonical.WedgeBoostModularBridge
 import InfoGeometry.Thermodynamics.UnruhTemperature
 import InfoGeometry.Canonical.BisognanoWichmannUnruhAQFT
 import InfoGeometry.Canonical.TomitaCommutantHeatBathBridge
+import InfoGeometry.Canonical.SouriauKillingLipschitzBridge
 
 /-!
 # Bisognano–Wichmann Souriau Unification Bridge
@@ -51,6 +52,7 @@ open InfoGeometry.Canonical.RealTomitaCore
 open InfoGeometry.Canonical.WedgeBoostModularBridge
 open InfoGeometry.Thermodynamics.UnruhTemperature
 open InfoGeometry.Canonical.TomitaCommutant
+open InfoGeometry.Canonical.SouriauKillingLipschitzBridge
 
 namespace InfoGeometry.Canonical.BisognanoWichmannUnification
 
@@ -70,6 +72,112 @@ theorem rindler_boost_flow_invariance (coords : RindlerCoordinates) (a tau : ℝ
     flowed 0 0 * flowed 1 0 = coords.radius ^ 2 := by
   intro flowed
   exact rindler_flow_preserves_proper_distance coords (a * tau)
+
+/-! ## Real light-cone / Minkowski carrier bridge
+
+The preceding Rindler statement is expressed in a `2 × 1` light-cone column;
+the Hestenes/Lipschitz owner acts on `Vec11`.  The following maps explicitly
+identify these carriers and intertwine their flows. -/
+
+/-- Convert the real light-cone column `(x₊, x₋)=(z+t,z-t)` to its
+`(-,+)` Minkowski vector `(t,z)`. -/
+def lightConeToMinkowskiVector
+    (x : InfoGeometry.Dynamics.RapiditySpace.LightConeColumn) : Vec11 :=
+  ((x 0 0 - x 1 0) / 2, (x 0 0 + x 1 0) / 2)
+
+/-- The conversion back to light-cone coordinates is the identity. -/
+theorem minkowskiVector_lightConeCoordinates
+    (x : InfoGeometry.Dynamics.RapiditySpace.LightConeColumn) :
+    InfoGeometry.Canonical.SouriauKillingLipschitzBridge.lightConeCoordinates
+      (lightConeToMinkowskiVector x) = x := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [lightConeCoordinates, lightConeToMinkowskiVector] <;> ring
+
+/-- Light-cone coordinates of a Minkowski vector recover that vector. -/
+theorem lightConeToMinkowskiVector_coordinates (v : Vec11) :
+    lightConeToMinkowskiVector
+      (InfoGeometry.Canonical.SouriauKillingLipschitzBridge.lightConeCoordinates v) = v := by
+  rcases v with ⟨t, z⟩
+  simp [lightConeCoordinates, lightConeToMinkowskiVector]
+
+/-- The real light-cone boost and the real `Cl(1,1)` Minkowski boost are
+conjugate under the explicit coordinate equivalence. -/
+theorem lightCone_boost_intertwines_minkowski_boost
+    (s : ℝ) (x : InfoGeometry.Dynamics.RapiditySpace.LightConeColumn) :
+    lightConeToMinkowskiVector
+        (InfoGeometry.Dynamics.HyperbolicComponent.componentAReal s * x) =
+      boostFlow s (lightConeToMinkowskiVector x) := by
+  have hInjective : Function.Injective
+      InfoGeometry.Canonical.SouriauKillingLipschitzBridge.lightConeCoordinates := by
+    intro u v huv
+    calc
+      u = lightConeToMinkowskiVector
+          (InfoGeometry.Canonical.SouriauKillingLipschitzBridge.lightConeCoordinates u) :=
+            (lightConeToMinkowskiVector_coordinates u).symm
+      _ = lightConeToMinkowskiVector
+          (InfoGeometry.Canonical.SouriauKillingLipschitzBridge.lightConeCoordinates v) :=
+            congrArg lightConeToMinkowskiVector huv
+      _ = v := lightConeToMinkowskiVector_coordinates v
+  apply hInjective
+  calc
+    InfoGeometry.Canonical.SouriauKillingLipschitzBridge.lightConeCoordinates
+        (lightConeToMinkowskiVector
+          (InfoGeometry.Dynamics.HyperbolicComponent.componentAReal s * x))
+        = InfoGeometry.Dynamics.HyperbolicComponent.componentAReal s * x :=
+          minkowskiVector_lightConeCoordinates _
+    _ = InfoGeometry.Dynamics.HyperbolicComponent.componentAReal s *
+        InfoGeometry.Canonical.SouriauKillingLipschitzBridge.lightConeCoordinates
+          (lightConeToMinkowskiVector x) := by
+          rw [minkowskiVector_lightConeCoordinates]
+    _ = InfoGeometry.Canonical.SouriauKillingLipschitzBridge.lightConeCoordinates
+        (boostFlow s (lightConeToMinkowskiVector x)) :=
+          componentAReal_lightConeCoordinates s _
+
+/-- Consequently the two light-cone components of a Rindler orbit are
+exactly the components of the corresponding real Minkowski boost orbit. -/
+theorem rindlerOrbit_intertwines_realBoost
+    (coords : RindlerCoordinates) (s : ℝ) :
+    lightConeToMinkowskiVector
+        (InfoGeometry.Dynamics.HyperbolicComponent.componentAReal s *
+          rindlerToMinkowski coords) =
+      boostFlow s (lightConeToMinkowskiVector (rindlerToMinkowski coords)) :=
+  lightCone_boost_intertwines_minkowski_boost s (rindlerToMinkowski coords)
+
+/-- The light-cone product equals the real Minkowski quadratic form in the
+chosen `(-,+)` convention. -/
+theorem lightCone_product_eq_minkowskiForm
+    (x : InfoGeometry.Dynamics.RapiditySpace.LightConeColumn) :
+    x 0 0 * x 1 0 = minkowskiForm (lightConeToMinkowskiVector x)
+        (lightConeToMinkowskiVector x) := by
+  simp [minkowskiForm, lightConeToMinkowskiVector]
+  ring
+
+/-- Metric preservation of the explicit real Lipschitz boost induces the
+light-cone proper-distance invariance used by the Rindler coordinates. -/
+theorem rindler_distance_invariance_from_realKillingFlow
+    (coords : RindlerCoordinates) (s : ℝ) :
+    let flowed := InfoGeometry.Dynamics.HyperbolicComponent.componentAReal s *
+      rindlerToMinkowski coords
+    flowed 0 0 * flowed 1 0 = coords.radius ^ 2 := by
+  intro flowed
+  calc
+    flowed 0 0 * flowed 1 0 =
+        minkowskiForm (lightConeToMinkowskiVector flowed)
+          (lightConeToMinkowskiVector flowed) :=
+            lightCone_product_eq_minkowskiForm flowed
+    _ = minkowskiForm
+          (boostFlow s (lightConeToMinkowskiVector (rindlerToMinkowski coords)))
+          (boostFlow s (lightConeToMinkowskiVector (rindlerToMinkowski coords))) := by
+            rw [show flowed = InfoGeometry.Dynamics.HyperbolicComponent.componentAReal s *
+              rindlerToMinkowski coords by rfl,
+              rindlerOrbit_intertwines_realBoost]
+    _ = minkowskiForm (lightConeToMinkowskiVector (rindlerToMinkowski coords))
+          (lightConeToMinkowskiVector (rindlerToMinkowski coords)) :=
+            boostFlow_preserves_minkowski s _ _
+    _ = rindlerToMinkowski coords 0 0 * rindlerToMinkowski coords 1 0 :=
+          (lightCone_product_eq_minkowskiForm _).symm
+    _ = coords.radius ^ 2 := rindler_lightcone_product coords
 
 /-!
 =============================================================================

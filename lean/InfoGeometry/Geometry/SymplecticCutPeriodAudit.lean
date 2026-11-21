@@ -38,6 +38,10 @@ The validator compares actual Lean axiom output with this complete list.
 #print axioms InfoGeometry.Geometry.RealHamiltonianMoment.omega_self
 #print axioms InfoGeometry.Geometry.RealHamiltonianMoment.omega_nondegenerate
 #print axioms InfoGeometry.Geometry.RealHamiltonianMoment.quadraticMoment
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.quadraticHamiltonian
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.IsOmegaGenerator
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.hasFDerivAt_quadraticHamiltonian
+#print axioms InfoGeometry.Geometry.RealHamiltonianMoment.fderiv_quadraticHamiltonian_apply
 #print axioms InfoGeometry.Geometry.RealHamiltonianMoment.omega_generator
 #print axioms InfoGeometry.Geometry.RealHamiltonianMoment.hasFDerivAt_quadraticMoment
 #print axioms InfoGeometry.Geometry.RealHamiltonianMoment.fderiv_quadraticMoment

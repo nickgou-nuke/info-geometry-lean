@@ -109,6 +109,20 @@ theorem compactSpace_adicCompletionIntegers (v : HeightOneSpectrum R) :
   exact Valued.integer.compactSpace_iff_completeSpace_and_isDiscreteValuationRing_and_finite_residueField.mpr
     ⟨hComplete, inferInstanceAs (IsDiscreteValuationRing (v.adicCompletionIntegers K)), hFinite⟩
 
+open NumberField in
+/-- A normalized uniformizer in the completed valuation has norm equal to the reciprocal of
+the absolute norm of the corresponding height-one prime. -/
+theorem norm_uniformizer_adicCompletion (v : HeightOneSpectrum R)
+    (π : v.adicCompletion K) (hπ : Valued.v.IsUniformizer π) :
+    ‖π‖ = (v.asIdeal.absNorm : ℝ)⁻¹ := by
+  have hval : Valued.v π = WithZero.exp (-1 : ℤ) := hπ.trans
+    (congrArg Units.val (Valuation.IsRankOneDiscrete.generator_eq_exp_neg_one_of_surjective
+      (v.valuedAdicCompletion_surjective K)))
+  rw [FinitePlace.norm_def, hval,
+    WithZeroMulInt.toNNReal_neg_apply _ (by simp)]
+  rw [WithZero.toAdd_unzero_eq_log (by simp)]
+  simp
+
 open Function NumberField in
 /-- A chosen normalized uniformizer identifies the unit group of the completion with the
 product of the discrete valuation direction and the units in its valuation ring. -/
@@ -141,6 +155,7 @@ theorem finitePlace_unitDecomposition (v : HeightOneSpectrum R)
       exact_mod_cast HeightOneSpectrum.one_lt_absNorm v
     rw [FinitePlace.norm_def, WithZeroMulInt.toNNReal_neg_apply _ (by simp [π.ne_zero]),
       NNReal.coe_zpow] at hπ
+    rw [WithZero.toAdd_unzero_eq_log (by simp [π.ne_zero])] at hπ
     have hlog : WithZero.log (Valued.v π.val) = -1 :=
       zpow_right_injective₀ (zero_lt_one.trans hq) hq.ne' (by simpa using hπ)
     rw [hord, hlog, neg_neg]

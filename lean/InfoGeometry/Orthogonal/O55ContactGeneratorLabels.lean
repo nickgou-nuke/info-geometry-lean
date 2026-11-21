@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Orthogonal.O55ContactCARCCRRepresentation
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Orthogonal.O55ContactHeisenberg
@@ -120,6 +125,7 @@ theorem generator_mem_grade (g : ContactGeneratorLabel) :
         splitRankTwo_grade (h0 (middleBasis j)) (hp (outerBasis i))
   | plusTwo => exact hs.2.2.2.2
 
+
 end ContactGeneratorLabel
 
 /-- Labels in one contact lane. -/
@@ -165,5 +171,10 @@ theorem contact_generator_census_packet :
   rcases contact_lane_label_counts with ⟨h₂m, h₁m, h₀, h₁, h₂⟩
   exact ⟨contact_generator_label_count, h₂m, h₁m, h₀, h₁, h₂,
     ContactGeneratorLabel.generator_mem_grade⟩
+
+/-- Plural alias for the contact generator label cardinality. -/
+theorem contact_generator_label_counts :
+    Fintype.card ContactGeneratorLabel = 45 := by
+  simpa using contact_generator_label_count
 
 end InfoGeometry.Orthogonal.O55Contact

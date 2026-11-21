@@ -1,0 +1,21 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.SuperMetriplectic.SouriauTomitaBKM
+
+/-! Axiom audit for the constructed finite parameter-space BKM Hessian. -/
+
+#print axioms InfoGeometry.SuperMetriplectic.FiniteGibbsBKMHessianModel.bkmCovariance_add_left
+#print axioms InfoGeometry.SuperMetriplectic.FiniteGibbsBKMHessianModel.bkmCovariance_smul_left
+#print axioms InfoGeometry.SuperMetriplectic.FiniteGibbsBKMHessianModel.bkmCovariance_add_right
+#print axioms InfoGeometry.SuperMetriplectic.FiniteGibbsBKMHessianModel.bkmCovariance_smul_right
+#print axioms InfoGeometry.SuperMetriplectic.FiniteGibbsBKMHessianModel.massieuHessian_add_left
+#print axioms InfoGeometry.SuperMetriplectic.FiniteGibbsBKMHessianModel.massieuHessian_smul_left
+#print axioms InfoGeometry.SuperMetriplectic.FiniteGibbsBKMHessianModel.massieuHessian_add_right
+#print axioms InfoGeometry.SuperMetriplectic.FiniteGibbsBKMHessianModel.massieuHessian_smul_right
+#print axioms InfoGeometry.SuperMetriplectic.FiniteGibbsBKMHessianModel.massieuBilinForm
+#print axioms InfoGeometry.SuperMetriplectic.FiniteGibbsBKMHessianModel.massieuBilinForm_apply
+#print axioms InfoGeometry.SuperMetriplectic.FiniteGibbsBKMHessianModel.massieuBilinForm_isSymm
+#print axioms InfoGeometry.SuperMetriplectic.FiniteGibbsBKMHessianModel.massieuBilinForm_nonneg

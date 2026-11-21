@@ -56,13 +56,72 @@ structure FiniteGibbsBKMHessianModel (n : ℕ) (V : Type*)
   hamiltonian : FiniteOperatorAlgebra n
   hamiltonian_selfAdjoint : IsSelfAdjoint hamiltonian
   partition_positive : 0 < gibbsPartitionReal hamiltonian
-  observable : V → FiniteOperatorAlgebra n
+  observable : V →ₗ[ℝ] FiniteOperatorAlgebra n
   observable_selfAdjoint : ∀ v, IsSelfAdjoint (observable v)
 
 namespace FiniteGibbsBKMHessianModel
 
 variable {n : ℕ} {V : Type*} [AddCommGroup V] [Module ℝ V]
 variable (M : FiniteGibbsBKMHessianModel n V)
+
+private theorem expectationReal_add
+    (D : FaithfulDensityOperator n) (hpow : Continuous D.rpow)
+    (A B : FiniteOperatorAlgebra n) :
+    expectationReal D (A + B) = expectationReal D A + expectationReal D B := by
+  rw [← bkmRealBilinForm_one_left D hpow (A + B),
+    (D.bkmRealBilinForm hpow (1 : FiniteOperatorAlgebra n)).map_add,
+    bkmRealBilinForm_one_left, bkmRealBilinForm_one_left]
+
+private theorem expectationReal_smul
+    (D : FaithfulDensityOperator n) (hpow : Continuous D.rpow)
+    (r : ℝ) (A : FiniteOperatorAlgebra n) :
+    expectationReal D (r • A) = r * expectationReal D A := by
+  rw [← bkmRealBilinForm_one_left D hpow (r • A),
+    (D.bkmRealBilinForm hpow (1 : FiniteOperatorAlgebra n)).map_smul,
+    bkmRealBilinForm_one_left]
+  rfl
+
+private theorem centeredBKM_add_left
+    (D : FaithfulDensityOperator n) (hpow : Continuous D.rpow)
+    (A B C : FiniteOperatorAlgebra n) :
+    centeredBKMRealCovariance D hpow (A + B) C =
+      centeredBKMRealCovariance D hpow A C +
+        centeredBKMRealCovariance D hpow B C := by
+  rw [centeredBKMRealCovariance_eq, centeredBKMRealCovariance_eq,
+    centeredBKMRealCovariance_eq]
+  rw [(D.bkmRealBilinForm hpow).map_add, expectationReal_add D hpow]
+  simp only [LinearMap.add_apply]
+  ring_nf
+
+private theorem centeredBKM_smul_left
+    (D : FaithfulDensityOperator n) (hpow : Continuous D.rpow)
+    (r : ℝ) (A B : FiniteOperatorAlgebra n) :
+    centeredBKMRealCovariance D hpow (r • A) B =
+      r * centeredBKMRealCovariance D hpow A B := by
+  rw [centeredBKMRealCovariance_eq, centeredBKMRealCovariance_eq]
+  rw [(D.bkmRealBilinForm hpow).map_smul, expectationReal_smul D hpow]
+  simp only [LinearMap.smul_apply]
+  ring_nf
+
+private theorem centeredBKM_add_right
+    (D : FaithfulDensityOperator n) (hpow : Continuous D.rpow)
+    (A B C : FiniteOperatorAlgebra n) :
+    centeredBKMRealCovariance D hpow A (B + C) =
+      centeredBKMRealCovariance D hpow A B +
+        centeredBKMRealCovariance D hpow A C := by
+  rw [centeredBKMRealCovariance_eq, centeredBKMRealCovariance_eq,
+    centeredBKMRealCovariance_eq]
+  rw [(D.bkmRealBilinForm hpow A).map_add, expectationReal_add D hpow]
+  ring_nf
+
+private theorem centeredBKM_smul_right
+    (D : FaithfulDensityOperator n) (hpow : Continuous D.rpow)
+    (r : ℝ) (A B : FiniteOperatorAlgebra n) :
+    centeredBKMRealCovariance D hpow A (r • B) =
+      r * centeredBKMRealCovariance D hpow A B := by
+  rw [centeredBKMRealCovariance_eq, centeredBKMRealCovariance_eq]
+  rw [(D.bkmRealBilinForm hpow A).map_smul, expectationReal_smul D hpow]
+  ring_nf
 
 /-- Real second derivative of the actual finite Gibbs log-partition. -/
 noncomputable def massieuHessian (v w : V) : ℝ :=
@@ -79,6 +138,57 @@ noncomputable def bkmCovariance (v w : V) : ℝ :=
       M.hamiltonian_selfAdjoint M.partition_positive)
     (M.observable v) (M.observable w)
 
+/-- The BKM covariance is additive in the first parameter direction because
+the parameter-to-observable map is linear and centered covariance is bilinear. -/
+theorem bkmCovariance_add_left (v₁ v₂ w : V) :
+    M.bkmCovariance (v₁ + v₂) w =
+      M.bkmCovariance v₁ w + M.bkmCovariance v₂ w := by
+  unfold bkmCovariance
+  rw [M.observable.map_add]
+  exact centeredBKM_add_left
+    (faithfulGibbsDensity M.hamiltonian M.hamiltonian_selfAdjoint
+      M.partition_positive)
+    (continuous_faithfulGibbsDensity_rpow M.hamiltonian
+      M.hamiltonian_selfAdjoint M.partition_positive)
+    (M.observable v₁) (M.observable v₂) (M.observable w)
+
+/-- The BKM covariance is homogeneous in the first parameter direction. -/
+theorem bkmCovariance_smul_left (r : ℝ) (v w : V) :
+    M.bkmCovariance (r • v) w = r * M.bkmCovariance v w := by
+  unfold bkmCovariance
+  rw [M.observable.map_smul]
+  exact centeredBKM_smul_left
+    (faithfulGibbsDensity M.hamiltonian M.hamiltonian_selfAdjoint
+      M.partition_positive)
+    (continuous_faithfulGibbsDensity_rpow M.hamiltonian
+      M.hamiltonian_selfAdjoint M.partition_positive)
+    r (M.observable v) (M.observable w)
+
+/-- The BKM covariance is additive in the second parameter direction. -/
+theorem bkmCovariance_add_right (v w₁ w₂ : V) :
+    M.bkmCovariance v (w₁ + w₂) =
+      M.bkmCovariance v w₁ + M.bkmCovariance v w₂ := by
+  unfold bkmCovariance
+  rw [M.observable.map_add]
+  exact centeredBKM_add_right
+    (faithfulGibbsDensity M.hamiltonian M.hamiltonian_selfAdjoint
+      M.partition_positive)
+    (continuous_faithfulGibbsDensity_rpow M.hamiltonian
+      M.hamiltonian_selfAdjoint M.partition_positive)
+    (M.observable v) (M.observable w₁) (M.observable w₂)
+
+/-- The BKM covariance is homogeneous in the second parameter direction. -/
+theorem bkmCovariance_smul_right (r : ℝ) (v w : V) :
+    M.bkmCovariance v (r • w) = r * M.bkmCovariance v w := by
+  unfold bkmCovariance
+  rw [M.observable.map_smul]
+  exact centeredBKM_smul_right
+    (faithfulGibbsDensity M.hamiltonian M.hamiltonian_selfAdjoint
+      M.partition_positive)
+    (continuous_faithfulGibbsDensity_rpow M.hamiltonian
+      M.hamiltonian_selfAdjoint M.partition_positive)
+    r (M.observable v) (M.observable w)
+
 /-- Genuine finite Gibbs Hessian/BKM identity, derived from differentiation
 and the centered covariance theorem rather than stored as a compatibility
 field. -/
@@ -87,6 +197,59 @@ theorem massieuHessian_eq_bkmCovariance (v w : V) :
   exact secondFDeriv_logPartition_apply_eq_centeredBKM
     M.hamiltonian M.hamiltonian_selfAdjoint M.partition_positive
     (M.observable v) (M.observable w) (M.observable_selfAdjoint v)
+
+/-- The finite Gibbs Massieu Hessian is additive in its first parameter
+direction, by its derived identification with the centered BKM covariance. -/
+theorem massieuHessian_add_left (v₁ v₂ w : V) :
+    M.massieuHessian (v₁ + v₂) w =
+      M.massieuHessian v₁ w + M.massieuHessian v₂ w := by
+  rw [M.massieuHessian_eq_bkmCovariance (v₁ + v₂) w,
+    M.massieuHessian_eq_bkmCovariance v₁ w,
+    M.massieuHessian_eq_bkmCovariance v₂ w]
+  exact M.bkmCovariance_add_left v₁ v₂ w
+
+/-- The finite Gibbs Massieu Hessian is homogeneous in its first parameter
+direction. -/
+theorem massieuHessian_smul_left (r : ℝ) (v w : V) :
+    M.massieuHessian (r • v) w = r * M.massieuHessian v w := by
+  rw [M.massieuHessian_eq_bkmCovariance (r • v) w,
+    M.massieuHessian_eq_bkmCovariance v w]
+  exact M.bkmCovariance_smul_left r v w
+
+/-- The finite Gibbs Massieu Hessian is additive in its second parameter
+direction. -/
+theorem massieuHessian_add_right (v w₁ w₂ : V) :
+    M.massieuHessian v (w₁ + w₂) =
+      M.massieuHessian v w₁ + M.massieuHessian v w₂ := by
+  rw [M.massieuHessian_eq_bkmCovariance v (w₁ + w₂),
+    M.massieuHessian_eq_bkmCovariance v w₁,
+    M.massieuHessian_eq_bkmCovariance v w₂]
+  exact M.bkmCovariance_add_right v w₁ w₂
+
+/-- The finite Gibbs Massieu Hessian is homogeneous in its second parameter
+direction. -/
+theorem massieuHessian_smul_right (r : ℝ) (v w : V) :
+    M.massieuHessian v (r • w) = r * M.massieuHessian v w := by
+  rw [M.massieuHessian_eq_bkmCovariance v (r • w),
+    M.massieuHessian_eq_bkmCovariance v w]
+  exact M.bkmCovariance_smul_right r v w
+
+/-- Native real bilinear form on parameter directions obtained from the
+actual finite Gibbs log-partition Hessian. Its linearity is proved from the
+linear observable map and centered BKM bilinearity. -/
+noncomputable def massieuBilinForm : LinearMap.BilinForm ℝ V :=
+  LinearMap.mk₂ ℝ (fun v w => M.massieuHessian v w)
+    (fun v₁ v₂ w => M.massieuHessian_add_left v₁ v₂ w)
+    (fun r v w => by
+      rw [M.massieuHessian_smul_left]
+      rfl)
+    (fun v w₁ w₂ => M.massieuHessian_add_right v w₁ w₂)
+    (fun r v w => by
+      rw [M.massieuHessian_smul_right]
+      rfl)
+
+@[simp] theorem massieuBilinForm_apply (v w : V) :
+    M.massieuBilinForm v w = M.massieuHessian v w := rfl
 
 /-- Symmetry of the constructed Hessian follows from centered BKM covariance
 symmetry for self-adjoint observables. -/
@@ -101,6 +264,13 @@ theorem massieuHessian_symm (v w : V) :
       M.hamiltonian_selfAdjoint M.partition_positive)
     (M.observable v) (M.observable w)
 
+/-- The constructed parameter-space bilinear form is symmetric. -/
+theorem massieuBilinForm_isSymm : M.massieuBilinForm.IsSymm := by
+  refine ⟨?_⟩
+  intro v w
+  rw [M.massieuBilinForm_apply, M.massieuBilinForm_apply]
+  exact M.massieuHessian_symm v w
+
 /-- Positivity on each real parameter direction follows from the source
 owner's nonnegative centered BKM response theorem. -/
 theorem massieuHessian_nonneg (v : V) : 0 ≤ M.massieuHessian v v := by
@@ -110,6 +280,13 @@ theorem massieuHessian_nonneg (v : V) : 0 ≤ M.massieuHessian v v := by
   exact secondFDeriv_logPartition_nonneg_selfAdjoint
     M.hamiltonian M.hamiltonian_selfAdjoint M.partition_positive
     (M.observable v) (M.observable_selfAdjoint v)
+
+/-- The BKM bilinear form has nonnegative diagonal, by the finite Gibbs
+second-derivative positivity theorem. -/
+theorem massieuBilinForm_nonneg (v : V) :
+    0 ≤ M.massieuBilinForm v v := by
+  rw [M.massieuBilinForm_apply]
+  exact M.massieuHessian_nonneg v
 
 end FiniteGibbsBKMHessianModel
 

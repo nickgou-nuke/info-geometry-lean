@@ -1,6 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Orthogonal.O55WittNullFrame
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55RealSplitPinNullPairProjective
+import InfoGeometry.Orthogonal.O55ExistingPinGlideBridge
 
 /-!
 # Native contact/Pin readouts
@@ -35,6 +41,12 @@ theorem pin_crosscap_projective_null_swap :
       nPairProjective crosscapIndex := by
   exact ⟨realSplitPinNullAction_fNegRealPin_nPairProjective crosscapIndex,
     realSplitPinNullAction_fNegRealPin_nbarPairProjective crosscapIndex⟩
+
+
+/-- The internal Pin crosscap reverses orientation. -/
+theorem pin_crosscap_orientation_sign :
+    PinO55GlideReflection.crosscapOrientationSign = -1 :=
+  PinO55GlideReflection.crosscap_orientation_reversing
 
 end InfoGeometry.Orthogonal.O55Contact
 

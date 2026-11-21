@@ -10,6 +10,8 @@ import InfoGeometry.Canonical.SouriauKillingLipschitzBridge
 import InfoGeometry.Algebra.ChiralRealHyperbolicRotor
 import InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge
 import InfoGeometry.Canonical.Cl11JordanComplexRealificationBridge
+import InfoGeometry.Canonical.Cl11TensorInductiveLimit
+import InfoGeometry.Clifford.Cl33FiniteJWMajoranaMatrix
 import InfoGeometry.Quantum.Realification
 import InfoGeometry.Quantum.RealificationCategory
 import InfoGeometry.OperatorAlgebra.MaurerCartanTower
@@ -523,6 +525,51 @@ theorem rindlerMajoranaSpinRotor_mul (s t : ℝ) :
     InfoGeometry.OperatorAlgebra.hyperbolicRotor_mul
       rindlerMajoranaBivector hB2, hc, hs]
 
+/-- The reverse CAR rotors obey the same additive law.  The order of the
+factors is retained: this is the reverse-product law needed to compose the
+actual sandwich action on the real CAR algebra. -/
+theorem rindlerMajoranaSpinRotorReverse_mul (s t : ℝ) :
+    rindlerMajoranaSpinRotorReverse s * rindlerMajoranaSpinRotorReverse t =
+      rindlerMajoranaSpinRotorReverse (s + t) := by
+  have hB2 := rindlerMajoranaBivector_square
+  have hArg : (s + t) / 2 = s / 2 + t / 2 := by ring
+  simp only [rindlerMajoranaSpinRotorReverse]
+  have hc : Real.cosh (s / 2) * Real.cosh (t / 2) +
+      Real.sinh (s / 2) * Real.sinh (t / 2) = Real.cosh ((s + t) / 2) := by
+    rw [hArg, Real.cosh_add]
+  have hs : Real.cosh (s / 2) * Real.sinh (t / 2) +
+      Real.sinh (s / 2) * Real.cosh (t / 2) = Real.sinh ((s + t) / 2) := by
+    rw [hArg, Real.sinh_add]
+    ring
+  calc
+    _ = (Real.cosh (s / 2) * Real.cosh (t / 2) +
+          Real.sinh (s / 2) * Real.sinh (t / 2)) •
+          (1 : realThreeMatrixGradedTensor) +
+        (Real.cosh (s / 2) * Real.sinh (t / 2) +
+          Real.sinh (s / 2) * Real.cosh (t / 2)) • rindlerMajoranaBivector := by
+      noncomm_ring
+      rw [hB2]
+      module
+    _ = _ := by rw [hc, hs]
+
+/-- The conjugation action of the real CAR boost rotor is a genuine
+one-parameter action: two successive rapidities compose to their sum on every
+element of the noncommutative CAR algebra. -/
+theorem rindlerMajoranaSpinRotor_sandwich_comp (s t : ℝ)
+    (A : realThreeMatrixGradedTensor) :
+    rindlerMajoranaSpinRotor s *
+        (rindlerMajoranaSpinRotor t * A * rindlerMajoranaSpinRotorReverse t) *
+        rindlerMajoranaSpinRotorReverse s =
+      rindlerMajoranaSpinRotor (s + t) * A *
+        rindlerMajoranaSpinRotorReverse (s + t) := by
+  calc
+    _ = (rindlerMajoranaSpinRotor s * rindlerMajoranaSpinRotor t) * A *
+        (rindlerMajoranaSpinRotorReverse t * rindlerMajoranaSpinRotorReverse s) := by
+          noncomm_ring
+    _ = _ := by
+      rw [rindlerMajoranaSpinRotor_mul, rindlerMajoranaSpinRotorReverse_mul]
+      rw [add_comm t s]
+
 private theorem rindlerMajoranaBivector_double_conjugates :
     rindlerMajoranaBivector * realMajoranaTimeHead * rindlerMajoranaBivector =
         -realMajoranaTimeHead ∧
@@ -957,6 +1004,165 @@ theorem rindlerMajoranaSpinRotor_onKrein_sandwich
           rindlerMajoranaSpinRotorReverse s) := by rw [map_mul, map_mul]
     _ = _ := congrArg realThreeMatrixTensorOnH4
       (rindlerMajoranaSpinRotor_sandwich s X)
+
+/-- The negative-sheet modular flow on the real doubled scalar carrier and
+the finite CAR spin-rotor action have the same physical four-vector
+readout.  The two transverse coordinates are retained unchanged.  This is a
+flat Rindler result: it identifies existing modular and CAR actions without
+asserting a curved spinor-bundle Kosmann derivative. -/
+theorem negativeSheetModularFlow_eq_realCARSpinRotor_action
+    (s : ℝ)
+    (X : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+    realThreeMatrixTensorOnH4 (rindlerMajoranaSpinRotor s) *
+        realThreeMatrixTensorOnH4 (realMinkowskiMajorana X) *
+        realThreeMatrixTensorOnH4 (rindlerMajoranaSpinRotorReverse s) =
+      realThreeMatrixTensorOnH4 (realMinkowskiMajorana
+        ⟨WithLp.fst (InfoGeometry.Canonical.BogoliubovTransport.modularTransportFlow
+            (E := ℝ) (-(InfoGeometry.Krein.spectral_epsilon (E := ℝ))) s
+            (InfoGeometry.Krein.to_doubled X.t X.z)),
+          X.x, X.y,
+          WithLp.snd (InfoGeometry.Canonical.BogoliubovTransport.modularTransportFlow
+            (E := ℝ) (-(InfoGeometry.Krein.spectral_epsilon (E := ℝ))) s
+            (InfoGeometry.Krein.to_doubled X.t X.z))⟩) := by
+  rw [rindlerMajoranaSpinRotor_onKrein_sandwich]
+  rw [realThreeMatrixTensorOnH4.injective.eq_iff]
+  cases X with
+  | mk t x y z =>
+      have hFlow := InfoGeometry.Canonical.SouriauKillingLipschitzBridge.negativeSheet_modularFlow_eq_boostFlow s (t, z)
+      have hTime := congrArg WithLp.fst hFlow
+      have hSpace := congrArg WithLp.snd hFlow
+      simp only [InfoGeometry.Krein.fst_to_doubled] at hTime
+      simp only [InfoGeometry.Krein.snd_to_doubled] at hSpace
+      simp only [InfoGeometry.Canonical.SouriauKillingLipschitzBridge.boostFlow] at hTime hSpace
+      have hVec :
+          InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost
+              ⟨t, x, y, z⟩ s =
+            ⟨WithLp.fst (InfoGeometry.Canonical.BogoliubovTransport.modularTransportFlow
+                (E := ℝ) (-(InfoGeometry.Krein.spectral_epsilon (E := ℝ))) s
+                (InfoGeometry.Krein.to_doubled t z)),
+              x, y,
+              WithLp.snd (InfoGeometry.Canonical.BogoliubovTransport.modularTransportFlow
+                (E := ℝ) (-(InfoGeometry.Krein.spectral_epsilon (E := ℝ))) s
+                (InfoGeometry.Krein.to_doubled t z))⟩ := by
+        ext
+        · change t * Real.cosh s + z * Real.sinh s = _
+          calc
+            t * Real.cosh s + z * Real.sinh s =
+                Real.cosh s * t + Real.sinh s * z := by ring
+            _ = _ := hTime.symm
+        · rfl
+        · rfl
+        · change z * Real.cosh s + t * Real.sinh s = _
+          calc
+            z * Real.cosh s + t * Real.sinh s =
+                Real.sinh s * t + Real.cosh s * z := by ring
+            _ = _ := hSpace.symm
+      exact congrArg realMinkowskiMajorana hVec
+
+/-- Composing the real CAR boost action on two successive rapidity intervals
+agrees with the Rindler boost at the summed rapidity.  This is the group
+action law on the actual real doubled-Krein endomorphism carrier. -/
+theorem rindlerMajoranaSpinRotor_comp_eq_rindlerBoost
+    (s t : ℝ)
+    (X : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+    realThreeMatrixTensorOnH4 (rindlerMajoranaSpinRotor s) *
+        (realThreeMatrixTensorOnH4 (rindlerMajoranaSpinRotor t) *
+          realThreeMatrixTensorOnH4 (realMinkowskiMajorana X) *
+          realThreeMatrixTensorOnH4 (rindlerMajoranaSpinRotorReverse t)) *
+        realThreeMatrixTensorOnH4 (rindlerMajoranaSpinRotorReverse s) =
+      realThreeMatrixTensorOnH4
+        (realMinkowskiMajorana
+          (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X (s + t))) := by
+  calc
+    _ = realThreeMatrixTensorOnH4
+        (rindlerMajoranaSpinRotor s *
+          (rindlerMajoranaSpinRotor t * realMinkowskiMajorana X *
+            rindlerMajoranaSpinRotorReverse t) *
+          rindlerMajoranaSpinRotorReverse s) := by
+            simp only [map_mul]
+    _ = realThreeMatrixTensorOnH4
+        (rindlerMajoranaSpinRotor (s + t) * realMinkowskiMajorana X *
+          rindlerMajoranaSpinRotorReverse (s + t)) :=
+            congrArg realThreeMatrixTensorOnH4
+              (rindlerMajoranaSpinRotor_sandwich_comp s t
+                (realMinkowskiMajorana X))
+    _ = _ := by
+      simp only [map_mul]
+      exact rindlerMajoranaSpinRotor_onKrein_sandwich (s + t) X
+
+/-! ## Transport of the real CAR boost into the Clifford inductive limit -/
+
+/-- The actual three-mode real graded CAR algebra is the stage-three matrix
+algebra of the existing `Cl(1,1)` tower. The coordinate change composes the
+real CAR Morita equivalence with the explicitly ordered occupation basis and
+the circular Peirce index permutation already owned by the finite JW and
+soldering modules. -/
+noncomputable def realCARStageThreeEquiv :
+    realThreeMatrixGradedTensor ≃ₐ[ℝ]
+      InfoGeometry.Clifford.Cl11TensorTower.MatStage 3 :=
+  (realThreeMatrixTensorToFin8).trans
+    ((Matrix.reindexAlgEquiv ℝ ℝ realThreePeirceIndex).symm.trans
+      InfoGeometry.Clifford.Cl33FiniteJWMajoranaMatrix.stage3ToMatrix8.symm)
+
+/-- The canonical algebra map from the existing real CAR carrier to the
+algebraic `Cl(1,1)` inductive limit, through its genuine stage-three
+identification. -/
+noncomputable def realCARToCliffordLimit :
+    realThreeMatrixGradedTensor →ₐ[ℝ]
+      InfoGeometry.Canonical.Cl11TensorInductiveLimit.Limit :=
+  (InfoGeometry.Canonical.Cl11TensorInductiveLimit.ofStageAlgHom 3).comp
+    realCARStageThreeEquiv.toAlgHom
+
+/-- The finite CAR-to-limit map is injective: neither the stage-three
+coordinate equivalence nor the Clifford tower's canonical stage map collapses
+CAR elements. -/
+theorem realCARToCliffordLimit_injective :
+    Function.Injective realCARToCliffordLimit := by
+  apply (InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf_injective
+    InfoGeometry.Clifford.Cl11TensorTowerLimit.stageBond
+    (fun n => InfoGeometry.Clifford.Cl11TensorTower.matStageEmbed_injective n) 3).comp
+  exact realCARStageThreeEquiv.injective
+
+/-- The rapidity-addition law for the real Rindler CAR sandwich survives in
+the actual algebraic Clifford inductive limit.  This is a colimit transport of
+the finite noncommutative action, not merely a scalar-parameter tower law. -/
+theorem rindlerMajoranaSpinRotor_sandwich_comp_inCliffordLimit
+    (s t : ℝ) (A : realThreeMatrixGradedTensor) :
+    realCARToCliffordLimit (rindlerMajoranaSpinRotor s) *
+        (realCARToCliffordLimit (rindlerMajoranaSpinRotor t) *
+          realCARToCliffordLimit A *
+          realCARToCliffordLimit (rindlerMajoranaSpinRotorReverse t)) *
+        realCARToCliffordLimit (rindlerMajoranaSpinRotorReverse s) =
+      realCARToCliffordLimit (rindlerMajoranaSpinRotor (s + t) * A *
+        rindlerMajoranaSpinRotorReverse (s + t)) := by
+  have h := congrArg realCARToCliffordLimit
+    (rindlerMajoranaSpinRotor_sandwich_comp s t A)
+  simpa only [map_mul] using h
+
+/-- On a Minkowski Majorana generator, the limit-valued CAR flow at summed
+rapidity has the existing Rindler-boost readout, now inside the algebraic
+Clifford colimit carrier. -/
+theorem rindlerMajoranaSpinRotor_comp_boost_inCliffordLimit
+    (s t : ℝ)
+    (X : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+    realCARToCliffordLimit (rindlerMajoranaSpinRotor s) *
+        (realCARToCliffordLimit (rindlerMajoranaSpinRotor t) *
+          realCARToCliffordLimit (realMinkowskiMajorana X) *
+          realCARToCliffordLimit (rindlerMajoranaSpinRotorReverse t)) *
+        realCARToCliffordLimit (rindlerMajoranaSpinRotorReverse s) =
+      realCARToCliffordLimit (realMinkowskiMajorana
+        (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X (s + t))) := by
+  have hCAR :
+      rindlerMajoranaSpinRotor s *
+          (rindlerMajoranaSpinRotor t * realMinkowskiMajorana X *
+            rindlerMajoranaSpinRotorReverse t) *
+          rindlerMajoranaSpinRotorReverse s =
+        realMinkowskiMajorana
+          (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X (s + t)) := by
+    apply realThreeMatrixTensorOnH4.injective
+    simpa only [map_mul] using rindlerMajoranaSpinRotor_comp_eq_rindlerBoost s t X
+  have h := congrArg realCARToCliffordLimit hCAR
+  simpa only [map_mul] using h
 
 /-- The infinitesimal Rindler Killing action on the genuine real Majorana
 contraction is the adjoint action of its CAR bivector generator. In

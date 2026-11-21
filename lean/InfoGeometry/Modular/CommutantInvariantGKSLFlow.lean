@@ -525,8 +525,7 @@ theorem projection_jump_gkslFlow_eq_peirce_relaxation
         (Real.exp (-s / 2) * (-1 / 2)) • B := by
       simpa [f, generatorEnd, generatorCLM_apply, smul_smul, mul_comm] using hgenEnd
     convert hderiv using 1
-    rw [hgen]
-    ring
+    rw [hgen, mul_comm]
   have hzero : f 0 = X := by
     simp [f, A, B, projectionJumpPeircePinching]
   have huniq := gkslFlow_unique_of_ode 0 (fun _ : Unit => P) X f hf hzero
@@ -891,6 +890,249 @@ theorem bimodular_generator_splits_stationary_density
     have hread := congrArg (fun X : Mat => (Matrix.trace (Q * X)).re) heq
     exact one_ne_zero (hreadQ.symm.trans (hread.trans hreadQc))
   exact ⟨hρQpos, hρQcpos, hρQtr, hρQctr, hρQstat, hρQcstat, hne⟩
+
+omit [DecidableEq n] in
+private theorem hamiltonianTerm_bimodular
+    (H A B X : Mat) (hAH : A * H = H * A) (hBH : B * H = H * B) :
+    hamiltonianTerm H (A * X * B) = A * hamiltonianTerm H X * B := by
+  simp only [hamiltonianTerm, Matrix.mul_smul, Matrix.smul_mul]
+  congr 1
+  calc
+    H * (A * X * B) - A * X * B * H =
+        (H * A) * X * B - A * X * (B * H) := by noncomm_ring
+    _ = (A * H) * X * B - A * X * (H * B) := by rw [← hAH, hBH]
+    _ = A * (H * X - X * H) * B := by noncomm_ring
+
+omit [DecidableEq n] in
+private theorem schrodingerDissipatorTerm_bimodular
+    (V A B X : Mat)
+    (hAV : A * V = V * A) (hAstarV : A * star V = star V * A)
+    (hBV : B * V = V * B) (hBstarV : B * star V = star V * B) :
+    schrodingerDissipatorTerm V (A * X * B) =
+      A * schrodingerDissipatorTerm V X * B := by
+  have hAprod : A * (star V * V) = (star V * V) * A := by
+    calc
+      A * (star V * V) = (A * star V) * V := by simp [mul_assoc]
+      _ = (star V * A) * V := by rw [hAstarV]
+      _ = star V * (A * V) := by simp [mul_assoc]
+      _ = star V * (V * A) := by rw [hAV]
+      _ = (star V * V) * A := by simp [mul_assoc]
+  have hBprod : B * (star V * V) = (star V * V) * B := by
+    calc
+      B * (star V * V) = (B * star V) * V := by simp [mul_assoc]
+      _ = (star V * B) * V := by rw [hBstarV]
+      _ = star V * (B * V) := by simp [mul_assoc]
+      _ = star V * (V * B) := by rw [hBV]
+      _ = (star V * V) * B := by simp [mul_assoc]
+  have hjump : V * (A * X * B) * star V = A * (V * X * star V) * B := by
+    calc
+      V * (A * X * B) * star V = (V * A) * X * (B * star V) := by noncomm_ring
+      _ = (A * V) * X * (star V * B) := by rw [← hAV, hBstarV]
+      _ = A * (V * X * star V) * B := by noncomm_ring
+  have hleft : star V * V * (A * X * B) = A * (star V * V * X) * B := by
+    calc
+      star V * V * (A * X * B) = ((star V * V) * A) * X * B := by noncomm_ring
+      _ = (A * (star V * V)) * X * B := by rw [← hAprod]
+      _ = A * (star V * V * X) * B := by noncomm_ring
+  have hright : A * X * B * star V * V = A * (X * star V * V) * B := by
+    calc
+      A * X * B * star V * V = A * X * (B * (star V * V)) := by noncomm_ring
+      _ = A * X * ((star V * V) * B) := by rw [hBprod]
+      _ = A * (X * star V * V) * B := by noncomm_ring
+  simp only [schrodingerDissipatorTerm, Matrix.mul_sub, Matrix.sub_mul,
+    Matrix.mul_smul, Matrix.smul_mul, Matrix.mul_add, Matrix.add_mul]
+  rw [hjump, hleft, hright]
+
+omit [DecidableEq n] in
+/-- The Schrödinger GKSL generator is bimodular over any pair of matrices in
+the joint commutant of the Hamiltonian, all jump operators, and their adjoints.
+This holds on the full noncommutative matrix algebra `Matrix n n ℂ`. -/
+theorem schrodingerLindbladian_bimodular
+    (H A B X : Mat) {ι : Type*} [Fintype ι] (V : ι → Mat)
+    (hAH : A * H = H * A)
+    (hAV : ∀ i, A * V i = V i * A)
+    (hAstarV : ∀ i, A * star (V i) = star (V i) * A)
+    (hBH : B * H = H * B)
+    (hBV : ∀ i, B * V i = V i * B)
+    (hBstarV : ∀ i, B * star (V i) = star (V i) * B) :
+    schrodingerLindbladian H V (A * X * B) =
+      A * schrodingerLindbladian H V X * B := by
+  unfold schrodingerLindbladian schrodingerDissipator
+  rw [hamiltonianTerm_bimodular H A B X hAH hBH,
+    Matrix.mul_add, Matrix.add_mul, Matrix.mul_sum, Matrix.sum_mul]
+  congr 1
+  apply Finset.sum_congr rfl
+  intro i _
+  exact schrodingerDissipatorTerm_bimodular (V i) A B X
+    (hAV i) (hAstarV i) (hBV i) (hBstarV i)
+
+/-- The exponential Schrödinger GKSL flow is bimodular over any pair of
+matrices in the joint commutant of the Hamiltonian, all jump operators, and
+their adjoints. -/
+theorem gkslFlow_bimodular
+    (H A B X : Mat) {ι : Type*} [Fintype ι] (V : ι → Mat)
+    (hAH : A * H = H * A)
+    (hAV : ∀ i, A * V i = V i * A)
+    (hAstarV : ∀ i, A * star (V i) = star (V i) * A)
+    (hBH : B * H = H * B)
+    (hBV : ∀ i, B * V i = V i * B)
+    (hBstarV : ∀ i, B * star (V i) = star (V i) * B)
+    (t : ℝ) :
+    gkslFlow H V t (A * X * B) = A * gkslFlow H V t X * B := by
+  let sand : Mat →L[ℝ] Mat := ((leftMul A).comp (rightMul B)).restrictScalars ℝ
+  have hsand_apply : ∀ Y : Mat, sand Y = A * Y * B := by
+    intro Y
+    simp [sand, leftMul, rightMul, mul_assoc]
+  let f : ℝ → Mat := fun s => sand (gkslFlow H V s X)
+  have hf : ∀ s, HasDerivAt f (schrodingerLindbladian H V (f s)) s := by
+    intro s
+    have hcomp := sand.hasFDerivAt.comp_hasDerivAt s (hasDerivAt_gkslFlow_orbit H V X s)
+    have hEq : sand (schrodingerLindbladian H V (gkslFlow H V s X)) =
+        schrodingerLindbladian H V (f s) := by
+      rw [hsand_apply, show f s = A * gkslFlow H V s X * B from hsand_apply _]
+      exact (schrodingerLindbladian_bimodular H A B (gkslFlow H V s X) V
+        hAH hAV hAstarV hBH hBV hBstarV).symm
+    simpa [f, Function.comp_def, hEq] using hcomp
+  have h0 : f 0 = A * X * B := by
+    simp [f, hsand_apply, gkslFlow]
+  have huniq := gkslFlow_unique_of_ode H V (A * X * B) f hf h0
+  have hval := congrFun huniq t
+  simpa [f, hsand_apply] using hval.symm
+
+private theorem one_sub_comm_of_comm (Q M : Mat) (hQM : Q * M = M * Q) :
+    (1 - Q) * M = M * (1 - Q) := by
+  rw [sub_mul, mul_sub, one_mul, mul_one, hQM]
+
+/-- **GKSL commutant-to-bimodularity splitting**: any positive semidefinite
+stationary matrix of a Schrödinger GKSL generator splits along an orthogonal
+projection in the joint commutant of `H`, `V i`, and `star (V i)` into two
+distinct trace-one stationary density matrices, both fixed by the full
+exponential flow `gkslFlow H V t`, provided both Peirce corners carry positive
+trace weight. -/
+theorem gksl_commutant_projection_splits_stationary_density
+    (H ρ Q : Mat) {ι : Type*} [Fintype ι] (V : ι → Mat)
+    (hρpos : ρ.PosSemidef)
+    (hρstat : schrodingerLindbladian H V ρ = 0)
+    (hQidem : Q * Q = Q) (hQstar : star Q = Q)
+    (hQH : Q * H = H * Q)
+    (hQV : ∀ i, Q * V i = V i * Q)
+    (hQstarV : ∀ i, Q * star (V i) = star (V i) * Q)
+    (hQweight : 0 < (Matrix.trace (Q * ρ * Q)).re)
+    (hQcompweight : 0 < (Matrix.trace ((1 - Q) * ρ * (1 - Q))).re) :
+    let ρQ := normalizedPositiveMatrix (Q * ρ * Q)
+    let ρQc := normalizedPositiveMatrix ((1 - Q) * ρ * (1 - Q))
+    ρQ.PosSemidef ∧ ρQc.PosSemidef ∧
+      Matrix.trace ρQ = 1 ∧ Matrix.trace ρQc = 1 ∧
+      schrodingerLindbladian H V ρQ = 0 ∧
+      schrodingerLindbladian H V ρQc = 0 ∧
+      (∀ t, gkslFlow H V t ρQ = ρQ) ∧
+      (∀ t, gkslFlow H V t ρQc = ρQc) ∧
+      ρQ ≠ ρQc := by
+  dsimp only
+  have hLstat : (generatorEnd H V).toLinearMap ρ = 0 := by
+    simpa [generatorEnd, generatorCLM_apply] using hρstat
+  have hQcorner : ∀ X,
+      (generatorEnd H V).toLinearMap (Q * X * Q) =
+        Q * (generatorEnd H V).toLinearMap X * Q := by
+    intro X
+    simpa [generatorEnd, generatorCLM_apply] using
+      schrodingerLindbladian_bimodular H Q Q X V
+        hQH hQV hQstarV hQH hQV hQstarV
+  have hQcompH : (1 - Q) * H = H * (1 - Q) := one_sub_comm_of_comm Q H hQH
+  have hQcompV : ∀ i, (1 - Q) * V i = V i * (1 - Q) :=
+    fun i => one_sub_comm_of_comm Q (V i) (hQV i)
+  have hQcompStarV : ∀ i, (1 - Q) * star (V i) = star (V i) * (1 - Q) :=
+    fun i => one_sub_comm_of_comm Q (star (V i)) (hQstarV i)
+  have hQcompcorner : ∀ X,
+      (generatorEnd H V).toLinearMap ((1 - Q) * X * (1 - Q)) =
+        (1 - Q) * (generatorEnd H V).toLinearMap X * (1 - Q) := by
+    intro X
+    simpa [generatorEnd, generatorCLM_apply] using
+      schrodingerLindbladian_bimodular H (1 - Q) (1 - Q) X V
+        hQcompH hQcompV hQcompStarV hQcompH hQcompV hQcompStarV
+  rcases bimodular_generator_splits_stationary_density
+      (generatorEnd H V).toLinearMap ρ Q hρpos hLstat hQidem hQstar
+      hQcorner hQcompcorner hQweight hQcompweight with
+    ⟨hρQpos, hρQcpos, hρQtr, hρQctr, hρQstatL, hρQcstatL, hne⟩
+  have hρQstat : schrodingerLindbladian H V (normalizedPositiveMatrix (Q * ρ * Q)) = 0 := by
+    simpa [generatorEnd, generatorCLM_apply] using hρQstatL
+  have hρQcstat :
+      schrodingerLindbladian H V (normalizedPositiveMatrix ((1 - Q) * ρ * (1 - Q))) = 0 := by
+    simpa [generatorEnd, generatorCLM_apply] using hρQcstatL
+  exact ⟨hρQpos, hρQcpos, hρQtr, hρQctr, hρQstat, hρQcstat,
+    gkslFlow_fixed_of_generator_eq_zero H _ V hρQstat,
+    gkslFlow_fixed_of_generator_eq_zero H _ V hρQcstat,
+    hne⟩
+
+private theorem trace_re_pos_corner_of_posDef
+    (ρ P : Mat) (hρ : ρ.PosDef) (hPstar : star P = P) (hP0 : P ≠ 0) :
+    0 < (Matrix.trace (P * ρ * P)).re := by
+  have hPct : Pᴴ = P := by rw [← Matrix.star_eq_conjTranspose, hPstar]
+  have hApos : (P * ρ * P).PosSemidef := by
+    simpa only [hPct] using hρ.posSemidef.mul_mul_conjTranspose_same P
+  have hA0 : P * ρ * P ≠ 0 := by
+    intro hzero
+    have hex : ∃ i j : n, P i j ≠ 0 := by
+      by_contra hall
+      push Not at hall
+      apply hP0
+      ext i j
+      exact hall i j
+    rcases hex with ⟨i, j, hij⟩
+    let v : n → ℂ := Pi.single j 1
+    have hPv_ne : P.mulVec v ≠ 0 := by
+      intro hPv
+      have hcoord := congrFun hPv i
+      simp [v, Matrix.mulVec, dotProduct, Pi.single_apply] at hcoord
+      exact hij hcoord
+    have hpos : 0 < star (P.mulVec v) ⬝ᵥ ρ.mulVec (P.mulVec v) :=
+      (Matrix.posDef_iff_dotProduct_mulVec.mp hρ).2 hPv_ne
+    have hquad : star (P.mulVec v) ⬝ᵥ ρ.mulVec (P.mulVec v) =
+        star v ⬝ᵥ (P * ρ * P).mulVec v := by
+      calc
+        star (P.mulVec v) ⬝ᵥ ρ.mulVec (P.mulVec v) =
+            (star v ᵥ* Pᴴ) ⬝ᵥ ρ.mulVec (P.mulVec v) := by
+              rw [Matrix.star_mulVec]
+        _ = star v ⬝ᵥ (Pᴴ *ᵥ (ρ *ᵥ (P *ᵥ v))) := by
+              rw [← Matrix.dotProduct_mulVec]
+        _ = star v ⬝ᵥ (P * ρ * P).mulVec v := by
+              rw [hPct, Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, Matrix.mul_assoc]
+    rw [hquad, hzero, Matrix.zero_mulVec, dotProduct_zero] at hpos
+    exact lt_irrefl 0 hpos
+  exact trace_re_pos_of_posSemidef_ne_zero (P * ρ * P) hApos hA0
+
+/-- **Reducible commutant implies NESS nonuniqueness for faithful stationary
+states**: if a finite-matrix Schrödinger GKSL generator admits a positive
+definite (faithful) stationary matrix `ρ` and a nontrivial orthogonal
+projection `Q` (`Q ≠ 0`, `Q ≠ 1`) in the joint commutant of `H`, `V i`, and
+`star (V i)`, then the two normalized Peirce corners of `ρ` are distinct
+trace-one stationary density matrices fixed by the full exponential flow. -/
+theorem gksl_commutant_projection_splits_faithful_stationary_state
+    (H ρ Q : Mat) {ι : Type*} [Fintype ι] (V : ι → Mat)
+    (hρ : ρ.PosDef)
+    (hρstat : schrodingerLindbladian H V ρ = 0)
+    (hQidem : Q * Q = Q) (hQstar : star Q = Q)
+    (hQ0 : Q ≠ 0) (hQ1 : Q ≠ 1)
+    (hQH : Q * H = H * Q)
+    (hQV : ∀ i, Q * V i = V i * Q)
+    (hQstarV : ∀ i, Q * star (V i) = star (V i) * Q) :
+    let ρQ := normalizedPositiveMatrix (Q * ρ * Q)
+    let ρQc := normalizedPositiveMatrix ((1 - Q) * ρ * (1 - Q))
+    ρQ.PosSemidef ∧ ρQc.PosSemidef ∧
+      Matrix.trace ρQ = 1 ∧ Matrix.trace ρQc = 1 ∧
+      schrodingerLindbladian H V ρQ = 0 ∧
+      schrodingerLindbladian H V ρQc = 0 ∧
+      (∀ t, gkslFlow H V t ρQ = ρQ) ∧
+      (∀ t, gkslFlow H V t ρQc = ρQc) ∧
+      ρQ ≠ ρQc := by
+  have hQcomp0 : 1 - Q ≠ 0 := by
+    intro hz
+    exact hQ1 (sub_eq_zero.mp hz).symm
+  have hQcompStar : star (1 - Q) = 1 - Q := by simp [hQstar]
+  exact gksl_commutant_projection_splits_stationary_density H ρ Q V
+    hρ.posSemidef hρstat hQidem hQstar hQH hQV hQstarV
+    (trace_re_pos_corner_of_posDef ρ Q hρ hQstar hQ0)
+    (trace_re_pos_corner_of_posDef ρ (1 - Q) hρ hQcompStar hQcomp0)
 
 end InfoGeometry.Modular.CommutantInvariantGKSLFlow
 

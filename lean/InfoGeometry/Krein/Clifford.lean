@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.KreinSpace
@@ -147,6 +152,85 @@ lemma rho_ι_isKreinSelfAdjoint (v : V) :
     KreinSpace.IsKreinSelfAdjoint (H := H)
       (rho (Q := Q) (CliffordAlgebra.ι Q v)) := by
   exact (inferInstance : SymmetricCliffordModule V H Q).kreinSelfAdj_ι v
+
+end SymmetricCliffordModule
+
+namespace SymmetricCliffordModule
+
+variable {V H : Type*}
+variable [AddCommGroup V] [Module ℝ V]
+variable {Q : QuadraticForm ℝ V}
+variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+variable [KreinSpace H] [KreinGradedModule H] [SymmetricCliffordModule V H Q]
+
+/-- The infinitesimal spin action of the simple bivector `u ∧ v` on a real
+Krein-Clifford module. It is defined by the commutator of the two Clifford
+generator actions, so no complex scalar structure or positive-definite
+replacement of the Krein pairing is involved. -/
+noncomputable def bivectorAction (u v : V) : H →L[ℝ] H :=
+  let ρ : CliffordAlgebra Q →ₐ[ℝ] (H →L[ℝ] H) :=
+    (inferInstance : SymmetricCliffordModule V H Q).ρ
+  ⁅ρ (CliffordAlgebra.ι Q u), ρ (CliffordAlgebra.ι Q v)⁆
+
+/-- Clifford vectors are Krein-self-adjoint, hence their commutator—the
+spinorial action of a simple bivector—is Krein-skew-adjoint. -/
+theorem bivectorAction_isKreinSkewAdjoint (u v : V) :
+    KreinSpace.IsKreinSkewAdjoint (bivectorAction (V := V) (H := H) (Q := Q) u v) := by
+  rw [KreinSpace.isKreinSkewAdjoint_iff_eq_neg]
+  change KreinSpace.kreinAdjoint ⁅
+      (inferInstance : SymmetricCliffordModule V H Q).ρ (CliffordAlgebra.ι Q u),
+      (inferInstance : SymmetricCliffordModule V H Q).ρ (CliffordAlgebra.ι Q v)⁆ =
+    -⁅(inferInstance : SymmetricCliffordModule V H Q).ρ (CliffordAlgebra.ι Q u),
+      (inferInstance : SymmetricCliffordModule V H Q).ρ (CliffordAlgebra.ι Q v)⁆
+  rw [KreinSpace.kreinAdjoint_lie_neg]
+  rw [(inferInstance : SymmetricCliffordModule V H Q).kreinSelfAdj_ι u,
+    (inferInstance : SymmetricCliffordModule V H Q).kreinSelfAdj_ι v]
+
+/-- The simple-bivector action is even: it commutes with the module grading.
+This is the real spin action on the two chiral sectors, before introducing a
+base-manifold connection. -/
+theorem bivectorAction_commutes_grade (u v : V) :
+    KreinGradedModule.gradeCLM (H := H) ∘L
+        bivectorAction (V := V) (H := H) (Q := Q) u v =
+      bivectorAction (V := V) (H := H) (Q := Q) u v ∘L
+        KreinGradedModule.gradeCLM (H := H) := by
+  let Γ : H →L[ℝ] H := KreinGradedModule.gradeCLM (H := H)
+  let ρ : CliffordAlgebra Q →ₐ[ℝ] (H →L[ℝ] H) :=
+    (inferInstance : SymmetricCliffordModule V H Q).ρ
+  let A : H →L[ℝ] H := ρ (CliffordAlgebra.ι Q u)
+  let B : H →L[ℝ] H := ρ (CliffordAlgebra.ι Q v)
+  have hA : Γ.comp A = -(A.comp Γ) :=
+    (inferInstance : SymmetricCliffordModule V H Q).odd_ι u
+  have hB : Γ.comp B = -(B.comp Γ) :=
+    (inferInstance : SymmetricCliffordModule V H Q).odd_ι v
+  change Γ.comp ⁅A, B⁆ = ⁅A, B⁆.comp Γ
+  rw [Ring.lie_def]
+  ext x
+  simp only [ContinuousLinearMap.comp_apply, sub_apply, mul_apply_eq_comp]
+  rw [map_sub]
+  have h1 : Γ (A (B x)) = -A (Γ (B x)) := by
+    have := congrArg (fun f : H →L[ℝ] H => f (B x)) hA
+    simpa using this
+  have h2 : Γ (B (A x)) = -B (Γ (A x)) := by
+    have := congrArg (fun f : H →L[ℝ] H => f (A x)) hB
+    simpa using this
+  have h3 : Γ (B x) = -B (Γ x) := by
+    have := congrArg (fun f : H →L[ℝ] H => f x) hB
+    simpa using this
+  have h4 : Γ (A x) = -A (Γ x) := by
+    have := congrArg (fun f : H →L[ℝ] H => f x) hA
+    simpa using this
+  have hAB : Γ (A (B x)) = A (B (Γ x)) := by
+    calc
+      Γ (A (B x)) = -A (Γ (B x)) := h1
+      _ = -A (-B (Γ x)) := by rw [h3]
+      _ = A (B (Γ x)) := by simp
+  have hBA : Γ (B (A x)) = B (A (Γ x)) := by
+    calc
+      Γ (B (A x)) = -B (Γ (A x)) := h2
+      _ = -B (-A (Γ x)) := by rw [h4]
+      _ = B (A (Γ x)) := by simp
+  rw [hAB, hBA]
 
 end SymmetricCliffordModule
 

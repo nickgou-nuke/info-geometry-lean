@@ -91,6 +91,38 @@ theorem incidenceSpace_injective :
   rw [h] at hx
   exact (mem_incidenceSpace y _).mp hx
 
+/-- The second coordinate projection restricts to an equivalence from each
+incidence graph onto its parameter spinor space. -/
+theorem incidenceSpace_snd_bijective (x : S' →ₗ[ℝ] S) :
+    Function.Bijective ((LinearMap.snd ℝ S S').comp (incidenceSpace x).subtype) :=
+  (spinorEquivIncidence x).symm.bijective
+
+/-- A subspace transverse to the first summand is the graph of a unique
+linear map. The second projection must be bijective, including surjectivity. -/
+theorem existsUnique_incidenceSpace_of_bijective_snd
+    (L : Submodule ℝ (Carrier S S'))
+    (hL : Function.Bijective ((LinearMap.snd ℝ S S').comp L.subtype)) :
+    ∃! x : S' →ₗ[ℝ] S, incidenceSpace x = L := by
+  let e : L ≃ₗ[ℝ] S' :=
+    LinearEquiv.ofBijective ((LinearMap.snd ℝ S S').comp L.subtype) hL
+  let x : S' →ₗ[ℝ] S :=
+    (LinearMap.fst ℝ S S').comp (L.subtype.comp e.symm.toLinearMap)
+  have hparam (u : S') : incidenceMap x u = (e.symm u).val := by
+    apply Prod.ext
+    · rfl
+    · exact (e.apply_symm_apply u).symm
+  have hx : incidenceSpace x = L := by
+    apply le_antisymm
+    · rintro z ⟨u, rfl⟩
+      rw [hparam]
+      exact (e.symm u).property
+    · intro z hz
+      refine ⟨e ⟨z, hz⟩, ?_⟩
+      rw [hparam, e.symm_apply_apply]
+  refine ⟨x, hx, ?_⟩
+  intro y hy
+  exact incidenceSpace_injective (hy.trans hx.symm)
+
 /-- Intersections are precisely the incident spinors annihilated by `x-y`. -/
 theorem incidenceMap_mem_intersection_iff (x y : S' →ₗ[ℝ] S) (π : S') :
     incidenceMap x π ∈ incidenceSpace x ⊓ incidenceSpace y ↔ (x - y) π = 0 := by

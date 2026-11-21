@@ -1,0 +1,22 @@
+name: G2 BN Bruhat Exhaustion Narrow Check
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/GroupTheory/GeneratedSetExhaustion.lean'
+      - 'lean/InfoGeometry/Algebra/Zorn/G2ConcreteBNBruhatExhaustion.lean'
+      - '.github/workflows/g2-bn-bruhat-exhaustion-narrow.yml'
+  workflow_dispatch:
+
+jobs:
+  narrow-g2-bn-bruhat-exhaustion:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@v1
+        with:
+          use-mathlib-cache: true
+      - name: Build generated-set exhaustion
+        run: lake build InfoGeometry.GroupTheory.GeneratedSetExhaustion
+      - name: Build G2 BN Bruhat exhaustion
+        run: lake build InfoGeometry.Algebra.Zorn.G2ConcreteBNBruhatExhaustion

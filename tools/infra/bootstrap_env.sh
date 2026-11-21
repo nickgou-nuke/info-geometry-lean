@@ -12,6 +12,54 @@ repo_root="$(cd "${script_dir}/../.." && pwd)"
 sandbox_dir="${repo_root}/tools/infra/sandbox-bin"
 ci_mode="${1:-}"
 
+# The root Lake package records Atlas as a local external reference for local
+# research workflows. Clean CI checkouts do not carry that checkout, so hydrate
+# its audited revision before Lake reads the package configuration. GIFT is now
+# a small vendored compatibility package in the repository itself; only hydrate
+# a historical external checkout when that local package is absent.
+if [[ "${ci_mode}" == "--ci" ]]; then
+  mkdir -p "${repo_root}/external_refs"
+
+  if [[ ! -d "${repo_root}/external_refs/atlas-lean/.git" ]]; then
+    echo "[sandbox-bootstrap] hydrating pinned Atlas external dependency"
+    git clone --no-checkout https://github.com/facebookresearch/atlas-lean.git \
+      "${repo_root}/external_refs/atlas-lean"
+    git -C "${repo_root}/external_refs/atlas-lean" checkout \
+      34ffed396f376454c1a9b297f3fd74c5c801fb50
+  fi
+
+  if [[ ! -f "${repo_root}/external_refs/gift-framework-core/lakefile.lean" ]]; then
+    echo "[sandbox-bootstrap] vendored GIFT package missing; attempting historical hydration"
+    rm -rf "${repo_root}/external_refs/gift-framework-core"
+    git clone --no-checkout https://github.com/gift-framework/core.git \
+      "${repo_root}/external_refs/gift-framework-core"
+    git -C "${repo_root}/external_refs/gift-framework-core" fetch origin \
+      e6f3c3ac2140c2324fb2ae029c32233e73aa5e92 || true
+    git -C "${repo_root}/external_refs/gift-framework-core" checkout \
+      e6f3c3ac2140c2324fb2ae029c32233e73aa5e92
+  fi
+
+  # Historical Lake job computation still asks for the old lowercase module
+  # path even though the tracked source DAG has been rewired to the uniquely
+  # named legacy owner. Keep the repository case-clean and materialize only an
+  # untracked import-only compatibility shim for CI builds.
+  kr_compat="${repo_root}/lean/InfoGeometry/Canonical/KrDualityCascade.lean"
+  if [[ ! -e "${kr_compat}" ]]; then
+    printf '%s\n' 'import InfoGeometry.Canonical.LegacyKrDualityCascade' > "${kr_compat}"
+    echo "[sandbox-bootstrap] materialized untracked legacy KR module shim"
+  fi
+fi
+
+# GitHub's hosted image does not necessarily ship bubblewrap. The CI policy
+# prefers the sandbox when it is available and already permits direct fallback
+# when the host kernel disallows it, so install the userspace binary when
+# possible rather than treating its absence as a policy violation.
+if [[ "${ci_mode}" == "--ci" ]] && ! command -v bwrap >/dev/null 2>&1; then
+  echo "[sandbox-bootstrap] installing bubblewrap for CI preflight"
+  sudo apt-get update -qq
+  sudo apt-get install -y -qq bubblewrap
+fi
+
 resolve_command() {
   local cmd="$1"
   local original_path="${PATH:-}"

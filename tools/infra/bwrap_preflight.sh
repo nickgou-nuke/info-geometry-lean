@@ -235,7 +235,6 @@ can_use_bwrap() {
     return 1
   fi
 
-  # Kernel user namespace checks (best-effort)
   if [[ -r /proc/sys/kernel/unprivileged_userns_clone ]]; then
     local v
     v=$(cat /proc/sys/kernel/unprivileged_userns_clone 2>/dev/null || echo "")
@@ -276,7 +275,6 @@ can_use_bwrap() {
   [[ -e /etc/localtime ]] && ro_bind_args+=(--ro-bind /etc/localtime /etc/localtime)
   [[ -e /etc/timezone ]] && ro_bind_args+=(--ro-bind /etc/timezone /etc/timezone)
 
-  # Functional probe
   probe_err="$(probe_temp_file)"
   : > "${probe_err}" 2>/dev/null || { probe_err="/dev/null"; }
   if ! bwrap --unshare-pid "${extra_args[@]}" \
@@ -335,16 +333,20 @@ if [[ "$HINT_EVAL_NO_CMD" -eq 1 ]]; then
     exit 0
   else
     status=$?
+    fallback_active=1
+    if [[ "$REQUIRE_SANDBOX" -eq 1 ]]; then
+      fallback_active=0
+    fi
     if [[ "$HINT_JSON" -eq 1 ]]; then
-      print_hint_json 0 0
+      print_hint_json 0 "$fallback_active"
       exit 2
     fi
     case "$status" in
       2)
-        print_hint "sandbox probe: network/loopback restricted"
+        print_hint "sandbox probe: network/loopback restricted; direct fallback available"
         ;;
       *)
-        print_hint "sandbox probe: unavailable"
+        print_hint "sandbox probe: unavailable; direct fallback available"
         ;;
     esac
     exit 2

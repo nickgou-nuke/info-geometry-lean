@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.ExteriorPower.Basis
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Grading
@@ -57,5 +62,38 @@ theorem exteriorAlgebra_finrank :
   rw [Module.finrank_eq_card_basis exteriorAlgebraBasisFinset]
   rw [Fintype.card_finset, Fintype.card_fin]
   norm_num
+
+theorem exteriorDegree_zero_finrank :
+    Module.finrank ℂ (⋀[ℂ]^0 V4) = 1 := by
+  rw [exteriorDegree_finrank]
+  decide
+
+theorem exteriorDegree_one_finrank :
+    Module.finrank ℂ (⋀[ℂ]^1 V4) = 4 := by
+  rw [exteriorDegree_finrank]
+  decide
+
+theorem exteriorDegree_two_finrank :
+    Module.finrank ℂ (⋀[ℂ]^2 V4) = 6 := by
+  rw [exteriorDegree_finrank]
+  decide
+
+theorem exteriorDegree_three_finrank :
+    Module.finrank ℂ (⋀[ℂ]^3 V4) = 4 := by
+  rw [exteriorDegree_finrank]
+  decide
+
+theorem exteriorDegree_four_finrank :
+    Module.finrank ℂ (⋀[ℂ]^4 V4) = 1 := by
+  rw [exteriorDegree_finrank]
+  decide
+
+noncomputable def exteriorAlgebraBasisSigma :
+    Module.Basis
+      (Σ k : ℕ, Set.powersetCard (Fin 4) k) ℂ
+      (ExteriorAlgebra ℂ V4) :=
+  (DirectSum.Decomposition.isInternal
+      (ℳ := fun k : ℕ => ⋀[ℂ]^k V4)).collectedBasis
+    (fun k => degreeBasis k)
 
 end InfoGeometry.Bridge.CliffordFourExteriorGradeBridge

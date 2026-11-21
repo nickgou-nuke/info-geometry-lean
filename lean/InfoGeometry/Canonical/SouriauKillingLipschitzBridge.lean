@@ -262,6 +262,87 @@ abbrev Minkowski4 := InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetim
 def minkowski4Form (u v : Minkowski4) : ℝ :=
   u.t * v.t - u.x * v.x - u.y * v.y - u.z * v.z
 
+/-- A general real Lorentz-algebra infinitesimal on the established
+`(+---)` coordinate carrier. The first three parameters are boosts in the
+`tx`, `ty`, and `tz` planes; the remaining three are rotations in the
+`xy`, `xz`, and `yz` planes. -/
+def lorentzGenerator4 (btx bty btz rxy rxz ryz : ℝ) (X : Minkowski4) : Minkowski4 :=
+  ⟨btx * X.x + bty * X.y + btz * X.z,
+    btx * X.t + rxy * X.y + rxz * X.z,
+    bty * X.t - rxy * X.x + ryz * X.z,
+    btz * X.t - rxz * X.x - ryz * X.y⟩
+
+/-- The affine inverse-temperature vector field with arbitrary constant
+translation and constant real Lorentz-algebra linear part. -/
+def affineLorentzTemperatureField4
+    (btx bty btz rxy rxz ryz : ℝ) (c X : Minkowski4) : Minkowski4 :=
+  ⟨c.t + (lorentzGenerator4 btx bty btz rxy rxz ryz X).t,
+    c.x + (lorentzGenerator4 btx bty btz rxy rxz ryz X).x,
+    c.y + (lorentzGenerator4 btx bty btz rxy rxz ryz X).y,
+    c.z + (lorentzGenerator4 btx bty btz rxy rxz ryz X).z⟩
+
+/-- Every linear generator in the real six-dimensional Lorentz Lie algebra
+is skew with respect to the actual Minkowski bilinear form. This is the
+coordinate Killing identity for arbitrary simultaneous boosts and rotations. -/
+theorem lorentzGenerator4_minkowski_skew
+    (btx bty btz rxy rxz ryz : ℝ) (u v : Minkowski4) :
+    minkowski4Form (lorentzGenerator4 btx bty btz rxy rxz ryz u) v +
+      minkowski4Form u (lorentzGenerator4 btx bty btz rxy rxz ryz v) = 0 := by
+  cases u with
+  | mk ut ux uy uz =>
+    cases v with
+    | mk vt vx vy vz =>
+      simp [minkowski4Form, lorentzGenerator4]
+      ring_nf
+
+/-- The conformal extension of a Lorentz infinitesimal by uniform dilation
+with infinitesimal scale `2 * sigma`. -/
+def conformalLorentzGenerator4 (sigma btx bty btz rxy rxz ryz : ℝ)
+    (X : Minkowski4) : Minkowski4 :=
+  ⟨2 * sigma * X.t + (lorentzGenerator4 btx bty btz rxy rxz ryz X).t,
+    2 * sigma * X.x + (lorentzGenerator4 btx bty btz rxy rxz ryz X).x,
+    2 * sigma * X.y + (lorentzGenerator4 btx bty btz rxy rxz ryz X).y,
+    2 * sigma * X.z + (lorentzGenerator4 btx bty btz rxy rxz ryz X).z⟩
+
+/-- Adding a uniform infinitesimal dilation to a Lorentz generator changes
+the metric derivative by the conformal factor `4 * sigma`. -/
+theorem conformalLorentzGenerator4_metric_derivative
+    (sigma btx bty btz rxy rxz ryz : ℝ) (u v : Minkowski4) :
+    minkowski4Form (conformalLorentzGenerator4 sigma btx bty btz rxy rxz ryz u) v +
+      minkowski4Form u (conformalLorentzGenerator4 sigma btx bty btz rxy rxz ryz v) =
+        4 * sigma * minkowski4Form u v := by
+  have hLor := lorentzGenerator4_minkowski_skew btx bty btz rxy rxz ryz u v
+  cases u with
+  | mk ut ux uy uz =>
+    cases v with
+    | mk vt vx vy vz =>
+      simp [conformalLorentzGenerator4, minkowski4Form, lorentzGenerator4] at hLor ⊢
+      linear_combination (2 * sigma) * hLor
+
+/-- Adding a constant inverse-temperature vector to a Lorentz-linear field
+does not change its directional increment. -/
+theorem affineLorentzTemperatureField_directional_increment
+    (btx bty btz rxy rxz ryz : ℝ) (c X h : Minkowski4) :
+    affineLorentzTemperatureField4 btx bty btz rxy rxz ryz c
+      ⟨X.t + h.t, X.x + h.x, X.y + h.y, X.z + h.z⟩ =
+      ⟨c.t + (lorentzGenerator4 btx bty btz rxy rxz ryz X).t +
+          (lorentzGenerator4 btx bty btz rxy rxz ryz h).t,
+        c.x + (lorentzGenerator4 btx bty btz rxy rxz ryz X).x +
+          (lorentzGenerator4 btx bty btz rxy rxz ryz h).x,
+        c.y + (lorentzGenerator4 btx bty btz rxy rxz ryz X).y +
+          (lorentzGenerator4 btx bty btz rxy rxz ryz h).y,
+        c.z + (lorentzGenerator4 btx bty btz rxy rxz ryz X).z +
+          (lorentzGenerator4 btx bty btz rxy rxz ryz h).z⟩ := by
+  cases c with
+  | mk ct cx cy cz =>
+    cases X with
+    | mk xt xx xy xz =>
+      cases h with
+      | mk ht hx hy hz =>
+        simp [affineLorentzTemperatureField4, lorentzGenerator4]
+        ring_nf
+        trivial
+
 /-- The boost Killing field in the longitudinal `(t,z)` plane. -/
 def rindlerKillingGenerator (X : Minkowski4) : Minkowski4 :=
   ⟨X.z, 0, 0, X.t⟩
@@ -270,6 +351,19 @@ def rindlerKillingGenerator (X : Minkowski4) : Minkowski4 :=
 boost as its linear part. -/
 def rindlerInverseTemperatureField (b X : Minkowski4) : Minkowski4 :=
   ⟨b.t + X.z, b.x, b.y, b.z + X.t⟩
+
+/-- The existing Rindler inverse-temperature field is exactly the pure
+`tz`-boost member of the six-parameter affine Lorentz family. -/
+theorem rindlerInverseTemperatureField_eq_affineLorentzTemperatureField4
+    (c X : Minkowski4) :
+    rindlerInverseTemperatureField c X =
+      affineLorentzTemperatureField4 0 0 1 0 0 0 c X := by
+  cases c with
+  | mk ct cx cy cz =>
+    cases X with
+    | mk xt xx xy xz =>
+      simp [rindlerInverseTemperatureField,
+        affineLorentzTemperatureField4, lorentzGenerator4]
 
 /-- The longitudinal projection used by the native real `Cl(1,1)` rotor. -/
 def rindlerPlaneProjection (X : Minkowski4) : Vec11 := (X.t, X.z)
@@ -300,14 +394,12 @@ theorem rindlerInverseTemperatureField_directional_increment
           (rindlerKillingGenerator h).y,
         (rindlerInverseTemperatureField b X).z +
           (rindlerKillingGenerator h).z⟩ := by
-  cases b with
-  | mk bt bx by_ bz =>
-    cases X with
-    | mk xt xx xy xz =>
-      cases h with
-      | mk ht hx hy hz =>
-        simp [rindlerInverseTemperatureField, rindlerKillingGenerator]
-        constructor <;> ring
+  rw [rindlerInverseTemperatureField_eq_affineLorentzTemperatureField4,
+    rindlerInverseTemperatureField_eq_affineLorentzTemperatureField4]
+  simpa [rindlerKillingGenerator, lorentzGenerator4,
+    affineLorentzTemperatureField4] using
+    affineLorentzTemperatureField_directional_increment
+      0 0 1 0 0 0 b X h
 
 /-- Projection of the full four-dimensional Rindler boost agrees exactly
 with the existing real `Cl(1,1)` boost flow. -/
@@ -366,6 +458,51 @@ def boostRotor (s : ℝ) : Mat2 :=
 /-- Matrix reversal of the boost rotor. -/
 def boostRotorReverse (s : ℝ) : Mat2 :=
   (Real.cosh (s / 2)) • (1 : Mat2) + (Real.sinh (s / 2)) • J1
+
+/-- Under the explicit `Cl(1,1)` normalization that assigns the contracted
+Rindler bivector `2 * J1`, the finite Kosmann correction is the infinitesimal
+left action of the real boost rotor. -/
+theorem kosmannCorrection_rindler_generator (ψ : Mat2) :
+    kosmannCorrection ((2 : ℝ) • J1) ψ =
+      (-((1 / 2 : ℝ) • J1)) * ψ := by
+  simp [kosmannCorrection]
+  rw [smul_smul]
+  norm_num
+
+/-- The derivative at zero of each matrix coefficient of the Rindler rotor
+is the same bivector generator that appears in the finite Kosmann term. -/
+theorem hasDerivAt_boostRotor_zero (i j : Fin 2) :
+    HasDerivAt (fun s : ℝ => boostRotor s i j)
+      ((-((1 / 2 : ℝ) • J1)) i j) 0 := by
+  fin_cases i <;> fin_cases j
+  · simpa [boostRotor, J1, Matrix.smul_apply, Matrix.sub_apply] using
+      (((hasDerivAt_id (0 : ℝ)).div_const 2).cosh)
+  · convert (((hasDerivAt_id (0 : ℝ)).div_const 2).sinh).neg using 1
+    · funext s
+      simp [boostRotor, J1, Matrix.smul_apply, Matrix.sub_apply]
+    · norm_num [J1]
+  · convert (((hasDerivAt_id (0 : ℝ)).div_const 2).sinh).neg using 1
+    · funext s
+      simp [boostRotor, J1, Matrix.smul_apply, Matrix.sub_apply]
+    · norm_num [J1]
+  · simpa [boostRotor, J1, Matrix.smul_apply, Matrix.sub_apply] using
+      (((hasDerivAt_id (0 : ℝ)).div_const 2).cosh)
+
+/-- The infinitesimal left action of the Rindler rotor on a real matrix
+spinor is exactly the finite Kosmann correction under the stated contracted
+bivector normalization `2 * J1`. This is a coefficientwise derivative on
+`M₂(ℝ)`. -/
+theorem hasDerivAt_boostRotor_spinorAction_zero (ψ : Mat2) (i j : Fin 2) :
+    HasDerivAt (fun s : ℝ => (boostRotor s * ψ) i j)
+      (kosmannCorrection ((2 : ℝ) • J1) ψ i j) 0 := by
+  have h₀ := (hasDerivAt_boostRotor_zero i 0).mul_const (ψ 0 j)
+  have h₁ := (hasDerivAt_boostRotor_zero i 1).mul_const (ψ 1 j)
+  convert h₀.add h₁ using 1
+  · funext s
+    simp [Matrix.mul_apply, Fin.sum_univ_two]
+  · rw [kosmannCorrection_rindler_generator]
+    simp [Matrix.mul_apply, Fin.sum_univ_two]
+    ring
 
 /-- The matrix rotor used below is exactly the image of the reverse of the
 existing real `Cl(1,1)` spin rotor at half rapidity. This fixes both the basis

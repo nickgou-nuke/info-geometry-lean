@@ -32,6 +32,7 @@ open InfoGeometry.Canonical.SplitCliffordTowerUnification
 open InfoGeometry.Physics.CuntzDeformedSuperPoincare
 open InfoGeometry.Canonical.HestenesRealGradedTensorRepresentation
 open InfoGeometry.Canonical.RealChiralCARTranslationSynthesis
+open InfoGeometry.Canonical.RealTetractysTranslationSolderingBridge
 open InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge
 open scoped TensorProduct GradedTensorProduct
 
@@ -294,5 +295,264 @@ theorem realSpacetimePresentation_anticommutator_readout
     (fun M : Matrix (Fin 4) (Fin 4) ℝ => M i j) hMomentum
   simpa [Matrix.reindex_apply, Matrix.submatrix_apply, Matrix.smul_apply] using
     congrArg (fun r : ℝ => (2 : ℝ) * r) hij
+
+/-! ### Physical Rindler-plane Peirce supertranslations
+
+The Peirce translation in the existing two-factor Koszul tensor is odd only
+when its momentum matrix is checkerboard-even. Physical longitudinal
+`(t,z)` momenta meet that condition. The following coordinate identification
+connects their actual Peirce anticommutator readout to the existing
+realified super-Poincaré momentum readout, without treating the stored
+`ChiralOperatorPresentation` as a construction of supercharge operators. -/
+
+/-- Embed the physical Rindler `(t,z)` plane into the existing real
+`FourSpace` soldering coordinates `(t,z,x,y)`. -/
+def realRindlerPlaneMomentum (X : RealSpacetime4x4) : FourSpace :=
+  fourSpaceEquivVec22.symm (X.t, X.z, 0, 0)
+
+/-- The upper Peirce translation is genuinely odd for longitudinal physical
+momentum; the checkerboard condition follows from the diagonal soldering
+matrix rather than being assumed. -/
+theorem realRindlerPlaneTranslation_odd (X : RealSpacetime4x4) :
+    translationInGradedTensor (realRindlerPlaneMomentum X) ∈
+      twoMatrixProductGrading 1 := by
+  rw [translationInGradedTensor_odd_iff]
+  cases X with
+  | mk t x y z =>
+      ext i j
+      fin_cases i <;> fin_cases j <;>
+        simp [realRindlerPlaneMomentum, realMomentum,
+          fourSpaceEquivVec22, InfoGeometry.Clifford.Soldering.soldering,
+          InfoGeometry.Clifford.Soldering.sigma0,
+          InfoGeometry.Clifford.Soldering.sigma1,
+          InfoGeometry.Clifford.Soldering.sigma3,
+          InfoGeometry.Clifford.Soldering.epsilon,
+          matrixParity]
+
+/-- The diagonal Peirce momentum for the Rindler plane, read in the
+Hestenes four-coordinate matrix basis, is exactly the physical real
+spacetime momentum matrix. The middle-index reordering is the already-owned
+`realPauliIndexEquiv`. -/
+theorem realRindlerPlanePeirceMomentum_readout (X : RealSpacetime4x4) :
+    Matrix.reindex realPauliIndexEquiv realPauliIndexEquiv
+        (realNestedMatrixToFin4
+          (diagonalMomentumOperator (realRindlerPlaneMomentum X))) =
+      InfoGeometry.Canonical.RealSpacetime4x4Closure.toMatrix
+        ⟨X.t, 0, 0, X.z⟩ := by
+  cases X with
+  | mk t x y z =>
+      change Matrix.reindex realPauliIndexEquiv realPauliIndexEquiv
+          (Matrix.reindex finProdFinEquiv finProdFinEquiv
+            (fun a b : Fin 2 × Fin 2 =>
+              diagonalMomentumOperator (realRindlerPlaneMomentum
+                ⟨t, x, y, z⟩) a.1 b.1 a.2 b.2)) = _
+      ext i j
+      fin_cases i <;> fin_cases j <;>
+        simp [Matrix.reindex, Matrix.submatrix, realPauliIndexEquiv,
+          Equiv.swap_apply_def,
+          realRindlerPlaneMomentum, diagonalMomentumOperator,
+          fourSpaceEquivVec22, realMomentum,
+          InfoGeometry.Clifford.Soldering.soldering,
+          InfoGeometry.Clifford.Soldering.sigma0,
+          InfoGeometry.Clifford.Soldering.sigma1,
+          InfoGeometry.Clifford.Soldering.sigma3,
+          InfoGeometry.Clifford.Soldering.epsilon,
+          InfoGeometry.Canonical.RealSpacetime4x4Closure.toMatrix,
+          finProdFinEquiv, Fin.divNat, Fin.modNat] <;> ring
+
+/-- On the physical Rindler plane, the actual pair of odd Peirce charge
+operators has real Hestenes matrix readout equal to the spacetime momentum.
+This composes the genuine two-factor Koszul anticommutator with the existing
+real soldering map; no complex-valued charge presentation is involved. -/
+theorem realRindlerPlanePeirce_supercharge_anticommutator_readout
+    (X : RealSpacetime4x4) :
+    Matrix.reindex realPauliIndexEquiv realPauliIndexEquiv
+        (realNestedMatrixToFin4
+          (twoMatrixGradedTensorMoritaEquiv
+            (translationInGradedTensor (realRindlerPlaneMomentum X) *
+                conjugatePeirceCharge +
+              conjugatePeirceCharge *
+                translationInGradedTensor (realRindlerPlaneMomentum X)))) =
+      InfoGeometry.Canonical.RealSpacetime4x4Closure.toMatrix
+        ⟨X.t, 0, 0, X.z⟩ := by
+  have h : realNestedMatrixToFin4
+      (twoMatrixGradedTensorMoritaEquiv
+        (translationInGradedTensor (realRindlerPlaneMomentum X) *
+            conjugatePeirceCharge +
+          conjugatePeirceCharge *
+            translationInGradedTensor (realRindlerPlaneMomentum X))) =
+      realNestedMatrixToFin4
+        (diagonalMomentumOperator (realRindlerPlaneMomentum X)) := by
+    simpa only [AlgEquiv.apply_symm_apply] using
+      congrArg
+        (fun A => realNestedMatrixToFin4
+          (twoMatrixGradedTensorMoritaEquiv A))
+        (translationCharge_anticommutator_eq_diagonalMomentum
+          (realRindlerPlaneMomentum X))
+  rw [h]
+  exact realRindlerPlanePeirceMomentum_readout X
+
+/-- The `sqrt 2`-normalized Peirce translation and its complementary charge
+are both odd in the real Koszul grading and satisfy the standard
+`{Q, Q̄} = 2P` normalization on the physical longitudinal plane. Here the
+charges are the existing Peirce operators themselves, scaled in the existing
+real tensor algebra. -/
+theorem realRindlerPlanePeirce_scaledCharges_odd_and_superPoincare
+    (X : RealSpacetime4x4) :
+    (Real.sqrt 2 • translationInGradedTensor (realRindlerPlaneMomentum X)) ∈
+        twoMatrixProductGrading 1 ∧
+      (Real.sqrt 2 • conjugatePeirceCharge) ∈ twoMatrixProductGrading 1 ∧
+      (Real.sqrt 2 • translationInGradedTensor (realRindlerPlaneMomentum X)) *
+          (Real.sqrt 2 • conjugatePeirceCharge) +
+        (Real.sqrt 2 • conjugatePeirceCharge) *
+          (Real.sqrt 2 • translationInGradedTensor (realRindlerPlaneMomentum X)) =
+        (2 : ℝ) • twoMatrixGradedTensorMoritaEquiv.symm
+          (diagonalMomentumOperator (realRindlerPlaneMomentum X)) := by
+  refine ⟨?_, ?_, ?_⟩
+  · change twoMatrixParity
+        (Real.sqrt 2 • translationInGradedTensor (realRindlerPlaneMomentum X)) = _
+    rw [map_smul, realRindlerPlaneTranslation_odd X, smul_neg]
+  · change twoMatrixParity (Real.sqrt 2 • conjugatePeirceCharge) = _
+    rw [map_smul, conjugatePeirceCharge_odd, smul_neg]
+  have hsqrt : (Real.sqrt 2) * (Real.sqrt 2) = (2 : ℝ) := by
+    nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ 2 by norm_num)]
+  calc
+    _ = ((Real.sqrt 2) * (Real.sqrt 2)) •
+          (translationInGradedTensor (realRindlerPlaneMomentum X) *
+            conjugatePeirceCharge +
+           conjugatePeirceCharge *
+            translationInGradedTensor (realRindlerPlaneMomentum X)) := by
+          simp only [smul_mul_assoc, mul_smul_comm, smul_smul]
+          rw [smul_add]
+    _ = (2 : ℝ) • twoMatrixGradedTensorMoritaEquiv.symm
+          (diagonalMomentumOperator (realRindlerPlaneMomentum X)) := by
+          rw [hsqrt, translationCharge_anticommutator_eq_diagonalMomentum]
+
+/-- The normalized Peirce charges have exactly the same real matrix readout
+as the odd-odd relation stored by the existing real-coordinate
+Super-Poincaré presentation. The equality is after the established
+reindexing into the Hestenes spacetime basis. -/
+theorem realRindlerPlanePeirce_scaledCharges_readout_eq_superPoincare
+    (X : RealSpacetime4x4) :
+    Matrix.reindex realPauliIndexEquiv realPauliIndexEquiv
+        (realNestedMatrixToFin4
+          (twoMatrixGradedTensorMoritaEquiv
+            ((Real.sqrt 2 • translationInGradedTensor
+                (realRindlerPlaneMomentum X)) *
+                (Real.sqrt 2 • conjugatePeirceCharge) +
+              (Real.sqrt 2 • conjugatePeirceCharge) *
+                (Real.sqrt 2 • translationInGradedTensor
+                  (realRindlerPlaneMomentum X))))) =
+      Matrix.reindex realPauliIndexEquiv realPauliIndexEquiv
+        (realifyRingHom
+          ((realCoordinateSuperPoincarePresentation
+            (realMinkowskiCircularCoordinate
+              ⟨X.t, 0, 0, X.z⟩)).antiQQbar)) := by
+  have hcharges :=
+    (realRindlerPlanePeirce_scaledCharges_odd_and_superPoincare X).2.2
+  have hmatrix := congrArg
+    (fun A : Tensor2 => Matrix.reindex realPauliIndexEquiv realPauliIndexEquiv
+      (realNestedMatrixToFin4 (twoMatrixGradedTensorMoritaEquiv A))) hcharges
+  calc
+    _ = (2 : ℝ) • Matrix.reindex realPauliIndexEquiv realPauliIndexEquiv
+          (realNestedMatrixToFin4
+            (diagonalMomentumOperator (realRindlerPlaneMomentum X))) := by
+          ext i j
+          have hij := congrArg
+            (fun M : Matrix (Fin 4) (Fin 4) ℝ => M i j) hmatrix
+          simpa [Matrix.reindex_apply, Matrix.submatrix_apply,
+            Matrix.smul_apply] using hij
+    _ = (2 : ℝ) • InfoGeometry.Canonical.RealSpacetime4x4Closure.toMatrix
+          ⟨X.t, 0, 0, X.z⟩ := by rw [realRindlerPlanePeirceMomentum_readout]
+    _ = Matrix.reindex realPauliIndexEquiv realPauliIndexEquiv
+          (realifyRingHom
+            ((realCoordinateSuperPoincarePresentation
+              (realMinkowskiCircularCoordinate
+                ⟨X.t, 0, 0, X.z⟩)).antiQQbar)) :=
+          (realSpacetimePresentation_anticommutator_readout _).symm
+
+/-- The Peirce translation/charge anticommutator is the momentum operator
+`P`, whereas the stored Super-Poincaré odd-odd relation is normalized as
+`2P`. On the physical longitudinal plane their real matrix readouts therefore
+agree after the exact factor `1/2`; this compares the two owner constructions
+without asserting a termwise identification of their charges. -/
+theorem realRindlerPlanePeirce_readout_eq_half_superPoincare_anticommutator
+    (X : RealSpacetime4x4) :
+    Matrix.reindex realPauliIndexEquiv realPauliIndexEquiv
+        (realNestedMatrixToFin4
+          (twoMatrixGradedTensorMoritaEquiv
+            (translationInGradedTensor (realRindlerPlaneMomentum X) *
+                conjugatePeirceCharge +
+              conjugatePeirceCharge *
+                translationInGradedTensor (realRindlerPlaneMomentum X)))) =
+      (1 / 2 : ℝ) •
+        Matrix.reindex realPauliIndexEquiv realPauliIndexEquiv
+          (realifyRingHom
+            ((realCoordinateSuperPoincarePresentation
+              (realMinkowskiCircularCoordinate
+                ⟨X.t, 0, 0, X.z⟩)).antiQQbar)) := by
+  rw [realRindlerPlanePeirce_supercharge_anticommutator_readout,
+    realSpacetimePresentation_anticommutator_readout]
+  simp [RealSpacetime4x4Closure.toMatrix]
+
+/-- On the longitudinal Rindler plane, the determinant of the real Peirce
+momentum coefficient is the physical Minkowski interval. The general
+`(2,2)` soldering determinant is restricted here to the `(t,z)` subspace, so
+the other two coordinates vanish. -/
+theorem realRindlerPlanePeirce_determinant_eq_interval
+    (X : RealSpacetime4x4) :
+    (translationBlock (realRindlerPlaneMomentum X) 0 1).det =
+      InfoGeometry.Canonical.RealSpacetime4x4Closure.interval
+        ⟨X.t, 0, 0, X.z⟩ := by
+  rw [translationBlock_det]
+  simp [realRindlerPlaneMomentum,
+    InfoGeometry.Canonical.RealSolderingWeylKreinBridge.fourSpaceEquivVec22,
+    InfoGeometry.Clifford.Soldering.q22,
+    InfoGeometry.Canonical.RealSpacetime4x4Closure.interval]
+
+/-- The Peirce momentum determinant and the three-mode Majorana CAR square
+are the same scalar on the doubled Krein carrier. -/
+theorem realRindlerPlanePeirce_determinant_eq_majorana_square
+    (X : RealSpacetime4x4) :
+    (translationBlock (realRindlerPlaneMomentum X) 0 1).det •
+        (1 : Module.End ℝ KreinFrame4) =
+      realThreeMatrixTensorOnH4
+        (realMinkowskiMajorana ⟨X.t, 0, 0, X.z⟩) *
+        realThreeMatrixTensorOnH4
+          (realMinkowskiMajorana ⟨X.t, 0, 0, X.z⟩) := by
+  rw [realMinkowskiMajorana_onKrein_square,
+    ← realRindlerPlanePeirce_determinant_eq_interval]
+
+/-- The determinant readout of the real Peirce supertranslation is invariant
+under the existing Souriau/Lipschitz Rindler boost. -/
+theorem realRindlerPlanePeirce_determinant_rindler_invariant
+    (X : RealSpacetime4x4) (s : ℝ) :
+    (translationBlock
+        (realRindlerPlaneMomentum
+          (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X s))
+        0 1).det =
+      (translationBlock (realRindlerPlaneMomentum X) 0 1).det := by
+  have hplane :
+      (⟨(InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X s).t,
+        0, 0,
+        (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X s).z⟩ :
+          RealSpacetime4x4) =
+        InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost
+          ⟨X.t, 0, 0, X.z⟩ s := by
+    cases X
+    rfl
+  calc
+    _ = InfoGeometry.Canonical.RealSpacetime4x4Closure.interval
+        ⟨(InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X s).t,
+          0, 0,
+          (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost X s).z⟩ :=
+          realRindlerPlanePeirce_determinant_eq_interval _
+    _ = InfoGeometry.Canonical.RealSpacetime4x4Closure.interval
+        (InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_boost
+          ⟨X.t, 0, 0, X.z⟩ s) := by rw [← hplane]
+    _ = InfoGeometry.Canonical.RealSpacetime4x4Closure.interval
+        ⟨X.t, 0, 0, X.z⟩ :=
+      InfoGeometry.Canonical.RealSpacetime4x4Closure.rindler_flow_isometry _ s
+    _ = _ := (realRindlerPlanePeirce_determinant_eq_interval X).symm
 
 end InfoGeometry.Canonical.RealSuperPoincareGradedTensorBridge

@@ -49,6 +49,11 @@ noncomputable def canonicalVectorEquiv : CZ ≃ VZ where
         (canonicalVectorEquiv X) (canonicalVectorEquiv Y) := by
   rfl
 
+@[simp] theorem canonicalVectorEquiv_neg (X : CZ) :
+    canonicalVectorEquiv (-X) =
+      InfoGeometry.Algebra.ZornVectorMatrix.neg (canonicalVectorEquiv X) := by
+  rfl
+
 @[simp] theorem canonicalVectorEquiv_smul (r : ℝ) (X : CZ) :
     canonicalVectorEquiv (r • X) =
       InfoGeometry.Algebra.ZornVectorMatrix.smul r (canonicalVectorEquiv X) := by

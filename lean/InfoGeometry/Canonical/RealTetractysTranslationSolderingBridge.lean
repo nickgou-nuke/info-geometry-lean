@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Canonical.RealSolderingWeylKreinBridge
 import InfoGeometry.Canonical.RealSpacetime4x4Closure
+import InfoGeometry.Canonical.HestenesClPlus14
 import InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset
 import Mathlib.Tactic
 
@@ -167,6 +168,44 @@ theorem translationInGradedTensor_odd_iff (p : FourSpace) :
     fin_cases i <;> fin_cases j <;> fin_cases a <;> fin_cases b <;>
       simp [translationBlock, matrixGrade_apply, matrixParity_apply, hA]
 
+/-- In the native checkerboard-graded `M₂(ℝ) ᵍ⊗ M₂(ℝ)` soldering, a Peirce
+translation is odd exactly on the two-dimensional diagonal-momentum sector
+of the split `(2,2)` carrier.  This is the full parity restriction behind the
+spatial counterexample below: the transverse coordinates cannot be declared
+odd without changing the graded representation itself. -/
+theorem translationInGradedTensor_odd_iff_solderingDiagonal
+    (p : FourSpace) :
+    translationInGradedTensor p ∈ twoMatrixProductGrading 1 ↔
+      (fourSpaceEquivVec22 p).2.2.1 = 0 ∧
+        (fourSpaceEquivVec22 p).2.2.2 = 0 := by
+  rw [translationInGradedTensor_odd_iff]
+  let v := fourSpaceEquivVec22 p
+  change matrixParity (InfoGeometry.Clifford.Soldering.soldering v) =
+      InfoGeometry.Clifford.Soldering.soldering v ↔
+    v.2.2.1 = 0 ∧ v.2.2.2 = 0
+  rcases v with ⟨t, z, x, y⟩
+  change matrixParity (InfoGeometry.Clifford.Soldering.soldering (t, z, x, y)) =
+      InfoGeometry.Clifford.Soldering.soldering (t, z, x, y) ↔ x = 0 ∧ y = 0
+  constructor
+  · intro h
+    have h01 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 1) h
+    have h10 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 1 0) h
+    rw [matrixParity_apply] at h01 h10
+    simp [InfoGeometry.Clifford.Soldering.soldering,
+      InfoGeometry.Clifford.Soldering.sigma0,
+      InfoGeometry.Clifford.Soldering.sigma1,
+      InfoGeometry.Clifford.Soldering.sigma3,
+      InfoGeometry.Clifford.Soldering.epsilon] at h01 h10
+    constructor <;> linarith
+  · rintro ⟨rfl, rfl⟩
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [matrixParity_apply, InfoGeometry.Clifford.Soldering.soldering,
+        InfoGeometry.Clifford.Soldering.sigma0,
+        InfoGeometry.Clifford.Soldering.sigma1,
+        InfoGeometry.Clifford.Soldering.sigma3,
+        InfoGeometry.Clifford.Soldering.epsilon]
+
 /-- The current Peirce translation family is not wholly odd: a pure spatial
 `x` soldering vector has off-diagonal momentum matrix, which changes sign under
 the coefficient parity. Thus the unconditional anticommutator identity above
@@ -215,6 +254,71 @@ theorem conjugatePeirceCharge_odd :
   ext i j a b
   fin_cases i <;> fin_cases j <;> fin_cases a <;> fin_cases b <;>
     simp [conjugatePeirceChargeBlock, matrixGrade_apply, matrixParity_apply]
+
+/-! ### Spinor-indexed real CAR charges for arbitrary soldered momentum
+
+The single upper Peirce corner above is odd only on a checkerboard-even
+momentum subspace.  The two existing CAR modes give the unrestricted
+spinor-indexed relation: each row of the real soldering matrix weights the
+two annihilators, and the two creators supply the column index.  All charges
+remain in the native real Koszul-graded tensor. -/
+
+/-- The `α` component of the real two-mode CAR charge associated with the
+`α`th row of an arbitrary real soldered momentum matrix. -/
+def solderedCARAnnihilationCharge (p : FourSpace) (α : Fin 2) : GradedSolder :=
+  (realMomentum p α 0) • annihilation₀ +
+    (realMomentum p α 1) • annihilation₁
+
+/-- The existing creation mode carrying the `β` spinor index. -/
+def solderedCARCreationCharge (β : Fin 2) : GradedSolder :=
+  if β = 0 then creation₀ else creation₁
+
+/-- In the real `(2,2)` soldering carrier `FourSpace`, the CAR
+anticommutator with both spinor indices retained is the corresponding entry
+of the full real `2 × 2` soldering matrix. This is a finite CAR identity; it
+does not identify this determinant-form carrier with physical `(+---)`
+Minkowski spacetime or assert oddness of the weighted charge. -/
+theorem solderedCARCharges_anticommutator
+    (p : FourSpace) (α β : Fin 2) :
+    solderedCARAnnihilationCharge p α * solderedCARCreationCharge β +
+      solderedCARCreationCharge β * solderedCARAnnihilationCharge p α =
+        (realMomentum p α β) • (1 : GradedSolder) := by
+  have hsum (r s : ℝ) (a b c : GradedSolder) :
+      (r • a + s • b) * c + c * (r • a + s • b) =
+        r • (a * c + c * a) + s • (b * c + c * b) := by
+    calc
+      _ = (r • (a * c) + r • (c * a)) +
+          (s • (b * c) + s • (c * b)) := by
+            simp only [add_mul, mul_add, smul_mul_assoc, mul_smul_comm]
+            ac_rfl
+      _ = _ := by rw [← smul_add, ← smul_add]
+  fin_cases α <;> fin_cases β <;>
+    simp [solderedCARAnnihilationCharge, solderedCARCreationCharge,
+      hsum, annihilation₀_creation₀_CAR,
+      annihilation₀_creation₁_anticommute,
+      annihilation₁_creation₀_anticommute,
+      annihilation₁_creation₁_CAR]
+
+/-- The arbitrary-`FourSpace` CAR anticommutator survives the canonical
+graded-factor inclusion and acts on the actual eight-dimensional doubled
+Krein carrier. The right side is the real matrix entry of the split `(2,2)`
+soldering, represented as a scalar operator on that carrier. -/
+theorem realKrein_solderedCARCharges_anticommutator
+    (p : FourSpace) (α β : Fin 2) :
+    realThreeMatrixTensorOnH4
+        (realTwoMatrixPairIntoThreeMode (solderedCARAnnihilationCharge p α)) *
+      realThreeMatrixTensorOnH4
+        (realTwoMatrixPairIntoThreeMode (solderedCARCreationCharge β)) +
+    realThreeMatrixTensorOnH4
+        (realTwoMatrixPairIntoThreeMode (solderedCARCreationCharge β)) *
+      realThreeMatrixTensorOnH4
+        (realTwoMatrixPairIntoThreeMode (solderedCARAnnihilationCharge p α)) =
+      (realMomentum p α β) •
+        (1 : Module.End ℝ InfoGeometry.Canonical.RealDoubledChiralKreinFrame.KreinFrame4) := by
+  have h := congrArg
+    (fun a => realThreeMatrixTensorOnH4 (realTwoMatrixPairIntoThreeMode a))
+    (solderedCARCharges_anticommutator p α β)
+  simpa only [map_add, map_mul, map_smul, map_one] using h
 
 /-- In the real two-matrix superalgebra, the Peirce translation and its
 complementary lower charge anticommute to the diagonal soldered momentum.
@@ -1492,6 +1596,191 @@ theorem realMinkowskiMajorana_square
       rw [h00, h11, h22, h33]
       simp [InfoGeometry.Canonical.RealSpacetime4x4Closure.interval,
         sub_eq_add_neg, add_smul]
+
+/-- The anticommutator of two real Minkowski Majorana contractions is the
+polarized spacetime metric on the genuine three-mode graded CAR algebra.
+This is the full four-vector CAR relation, not only the diagonal square law. -/
+theorem realMinkowskiMajorana_anticommutator
+    (X Y : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+    realMinkowskiMajorana X * realMinkowskiMajorana Y +
+      realMinkowskiMajorana Y * realMinkowskiMajorana X =
+      (2 * (X.t * Y.t - X.x * Y.x - X.y * Y.y - X.z * Y.z)) •
+        (1 : InfoGeometry.Canonical.RealSolderingWeylKreinBridge.realThreeMatrixGradedTensor) := by
+  let XplusY : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4 :=
+    ⟨X.t + Y.t, X.x + Y.x, X.y + Y.y, X.z + Y.z⟩
+  have hAdd : realMinkowskiMajorana XplusY =
+      realMinkowskiMajorana X + realMinkowskiMajorana Y := by
+    simp [XplusY, realMinkowskiMajorana, add_smul]
+    module
+  calc
+    _ = realMinkowskiMajorana XplusY * realMinkowskiMajorana XplusY -
+          realMinkowskiMajorana X * realMinkowskiMajorana X -
+          realMinkowskiMajorana Y * realMinkowskiMajorana Y := by
+        rw [hAdd]
+        noncomm_ring
+    _ = (InfoGeometry.Canonical.RealSpacetime4x4Closure.interval XplusY) •
+          (1 : InfoGeometry.Canonical.RealSolderingWeylKreinBridge.realThreeMatrixGradedTensor) -
+        (InfoGeometry.Canonical.RealSpacetime4x4Closure.interval X) •
+          (1 : InfoGeometry.Canonical.RealSolderingWeylKreinBridge.realThreeMatrixGradedTensor) -
+        (InfoGeometry.Canonical.RealSpacetime4x4Closure.interval Y) •
+          (1 : InfoGeometry.Canonical.RealSolderingWeylKreinBridge.realThreeMatrixGradedTensor) := by
+        rw [realMinkowskiMajorana_square, realMinkowskiMajorana_square,
+          realMinkowskiMajorana_square]
+    _ = (2 * (X.t * Y.t - X.x * Y.x - X.y * Y.y - X.z * Y.z)) •
+          (1 : InfoGeometry.Canonical.RealSolderingWeylKreinBridge.realThreeMatrixGradedTensor) := by
+        rw [← sub_smul, ← sub_smul]
+        congr 1
+        simp [XplusY, InfoGeometry.Canonical.RealSpacetime4x4Closure.interval]
+        ring
+
+/-- The commutator of a product of two real Majorana contractions with a
+third contraction is determined by the Minkowski pairings. This is the
+algebraic identity from which the bivector action on spacetime vectors is
+obtained. -/
+theorem realMinkowskiMajorana_product_commutator
+    (X Y Z : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+    realMinkowskiMajorana X * realMinkowskiMajorana Y * realMinkowskiMajorana Z -
+        realMinkowskiMajorana Z * realMinkowskiMajorana X * realMinkowskiMajorana Y =
+      (2 * (Y.t * Z.t - Y.x * Z.x - Y.y * Z.y - Y.z * Z.z)) •
+          realMinkowskiMajorana X -
+        (2 * (X.t * Z.t - X.x * Z.x - X.y * Z.y - X.z * Z.z)) •
+          realMinkowskiMajorana Y := by
+  have hYZ := realMinkowskiMajorana_anticommutator Y Z
+  have hXZ := realMinkowskiMajorana_anticommutator X Z
+  calc
+    _ = realMinkowskiMajorana X *
+          (realMinkowskiMajorana Y * realMinkowskiMajorana Z +
+            realMinkowskiMajorana Z * realMinkowskiMajorana Y) -
+        (realMinkowskiMajorana X * realMinkowskiMajorana Z +
+          realMinkowskiMajorana Z * realMinkowskiMajorana X) *
+            realMinkowskiMajorana Y := by noncomm_ring
+    _ = realMinkowskiMajorana X *
+          ((2 * (Y.t * Z.t - Y.x * Z.x - Y.y * Z.y - Y.z * Z.z)) • (1 : _)) -
+        ((2 * (X.t * Z.t - X.x * Z.x - X.y * Z.y - X.z * Z.z)) • (1 : _)) *
+            realMinkowskiMajorana Y := by rw [hYZ, hXZ]
+    _ = _ := by simp only [mul_smul_comm, smul_mul_assoc, one_mul, mul_one]
+
+/-- The real Clifford bivector associated with two Minkowski vectors, using
+the antisymmetrized Clifford product and the standard `-1/4` normalization. -/
+def realMinkowskiBivector
+    (X Y : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+    InfoGeometry.Canonical.RealSolderingWeylKreinBridge.realThreeMatrixGradedTensor :=
+  (-1 / 4 : ℝ) •
+    (realMinkowskiMajorana X * realMinkowskiMajorana Y -
+      realMinkowskiMajorana Y * realMinkowskiMajorana X)
+
+/-- The adjoint action of a real Clifford bivector is the corresponding
+infinitesimal Lorentz transformation on Majorana vectors. This is valid on
+the actual three-factor Koszul-graded CAR algebra with the `(+---)` pairing. -/
+theorem realMinkowskiBivector_commutator
+    (X Y Z : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+    realMinkowskiBivector X Y * realMinkowskiMajorana Z -
+        realMinkowskiMajorana Z * realMinkowskiBivector X Y =
+      (X.t * Z.t - X.x * Z.x - X.y * Z.y - X.z * Z.z) •
+          realMinkowskiMajorana Y -
+        (Y.t * Z.t - Y.x * Z.x - Y.y * Z.y - Y.z * Z.z) •
+          realMinkowskiMajorana X := by
+  have hXY := realMinkowskiMajorana_product_commutator X Y Z
+  have hYX := realMinkowskiMajorana_product_commutator Y X Z
+  have hcommValue :
+      (realMinkowskiMajorana X * realMinkowskiMajorana Y * realMinkowskiMajorana Z -
+          realMinkowskiMajorana Z * realMinkowskiMajorana X * realMinkowskiMajorana Y) -
+        (realMinkowskiMajorana Y * realMinkowskiMajorana X * realMinkowskiMajorana Z -
+          realMinkowskiMajorana Z * realMinkowskiMajorana Y * realMinkowskiMajorana X) =
+      (4 * (Y.t * Z.t - Y.x * Z.x - Y.y * Z.y - Y.z * Z.z)) •
+          realMinkowskiMajorana X -
+        (4 * (X.t * Z.t - X.x * Z.x - X.y * Z.y - X.z * Z.z)) •
+          realMinkowskiMajorana Y := by
+    rw [hXY, hYX]
+    module
+  unfold realMinkowskiBivector
+  rw [smul_mul_assoc, mul_smul_comm, ← smul_sub]
+  calc
+    _ = (-1 / 4 : ℝ) •
+          ((realMinkowskiMajorana X * realMinkowskiMajorana Y * realMinkowskiMajorana Z -
+              realMinkowskiMajorana Z * realMinkowskiMajorana X * realMinkowskiMajorana Y) -
+            (realMinkowskiMajorana Y * realMinkowskiMajorana X * realMinkowskiMajorana Z -
+              realMinkowskiMajorana Z * realMinkowskiMajorana Y * realMinkowskiMajorana X)) := by
+      congr 1
+      noncomm_ring
+    _ = (-1 / 4 : ℝ) •
+          ((4 * (Y.t * Z.t - Y.x * Z.x - Y.y * Z.y - Y.z * Z.z)) •
+              realMinkowskiMajorana X -
+            (4 * (X.t * Z.t - X.x * Z.x - X.y * Z.y - X.z * Z.z)) •
+              realMinkowskiMajorana Y) := by rw [hcommValue]
+    _ = _ := by
+      simp only [smul_sub, smul_smul]
+      rw [show (-1 / 4 : ℝ) *
+          (4 * (Y.t * Z.t - Y.x * Z.x - Y.y * Z.y - Y.z * Z.z)) =
+            -(Y.t * Z.t - Y.x * Z.x - Y.y * Z.y - Y.z * Z.z) by ring_nf]
+      rw [show (-1 / 4 : ℝ) *
+          (4 * (X.t * Z.t - X.x * Z.x - X.y * Z.y - X.z * Z.z)) =
+            -(X.t * Z.t - X.x * Z.x - X.y * Z.y - X.z * Z.z) by ring_nf]
+      simp only [neg_smul, sub_neg_eq_add]
+      module
+
+/-! ### Universal real spacetime Clifford representation in the CAR owner
+
+The preceding square identity is the relation needed by the universal
+property of the repository's native `Cl(1,3)` algebra. This constructs that
+algebra representation directly into the genuine three-factor real
+Koszul-graded CAR algebra; it is not a proxy quadratic-form record. -/
+
+open HestenesCl14
+
+/-- The `(+---)` real coordinate vector read as the physical spacetime
+record, with the same ordered coordinates as `Q14`. -/
+def v14ToRealSpacetime (v : V14) :
+    InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4 :=
+  ⟨v 0, v 1, v 2, v 3⟩
+
+/-- The physical Minkowski form on `RealSpacetime4x4` is exactly the native
+quadratic form used to construct `Cl14`. -/
+theorem v14ToRealSpacetime_interval (v : V14) :
+    InfoGeometry.Canonical.RealSpacetime4x4Closure.interval (v14ToRealSpacetime v) =
+      Q14 v := by
+  rw [Q14_apply]
+  simp [v14ToRealSpacetime,
+    InfoGeometry.Canonical.RealSpacetime4x4Closure.interval,
+    qCoeff, Fin.sum_univ_four]
+  ring
+
+/-- The linear map from real spacetime vectors to the existing Majorana
+generators of the three-mode graded CAR algebra. -/
+def realMajoranaVectorRep : V14 →ₗ[ℝ] realThreeMatrixGradedTensor where
+  toFun v := realMinkowskiMajorana (v14ToRealSpacetime v)
+  map_add' v w := by
+    simp only [v14ToRealSpacetime, realMinkowskiMajorana, Pi.add_apply,
+      add_smul]
+    module
+  map_smul' r v := by
+    simp only [v14ToRealSpacetime, realMinkowskiMajorana, Pi.smul_apply,
+      smul_eq_mul, mul_smul]
+    simp only [RingHom.id_apply]
+    module
+
+/-- The native real spacetime Clifford algebra acts by its actual four
+Majorana generators in the three-factor Koszul-graded CAR algebra. The proof
+uses the owner square theorem to discharge the Clifford relation in the
+universal lift. -/
+def realMajoranaCliffordRep : Cl14 →ₐ[ℝ] realThreeMatrixGradedTensor :=
+  CliffordAlgebra.lift Q14
+    ⟨realMajoranaVectorRep,
+      by
+        intro v
+        change realMinkowskiMajorana (v14ToRealSpacetime v) *
+            realMinkowskiMajorana (v14ToRealSpacetime v) =
+          algebraMap ℝ realThreeMatrixGradedTensor (Q14 v)
+        rw [realMinkowskiMajorana_square, v14ToRealSpacetime_interval]
+        exact (Algebra.algebraMap_eq_smul_one (Q14 v)).symm⟩
+
+/-- The Clifford representation sends each native spacetime generator to
+the corresponding owner Majorana mode, preserving the `(time,x,y,z)` order. -/
+@[simp] theorem realMajoranaCliffordRep_gamma (i : Fin 4) :
+    realMajoranaCliffordRep (gamma i) =
+      realMajoranaVectorRep (basisVec i) := by
+  simp [realMajoranaCliffordRep, gamma, ι14,
+    CliffordAlgebra.lift_ι_apply]
 
 /-- On the actual three-mode doubled-Krein carrier, the represented real
 Majorana contraction has square equal to the Minkowski interval times the

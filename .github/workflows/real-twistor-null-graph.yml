@@ -1,0 +1,91 @@
+name: Real twistor null graphs
+
+on:
+  pull_request:
+    paths:
+      - 'lean/**/*.lean'
+      - 'verification/real-twistor-null-graph/**'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'tools/build_lock.py'
+      - 'tools/pathing.py'
+      - 'tools/infra/build.py'
+      - 'tools/infra/axiom_check.lean'
+      - 'tools/infra/opengauss_screener.py'
+      - '.github/workflows/real-twistor-null-graph.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: real-twistor-null-graph-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore pinned toolchain and dependencies
+        uses: actions/cache/restore@v4
+        id: dependency-cache
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: real-twistor-null-graph-lean4341-d13f23b7-${{ runner.os }}-v1
+          restore-keys: |
+            real-plucker-lean4341-d13f23b7-${{ runner.os }}-
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.34.1
+      - name: Restore pinned Mathlib artifacts
+        run: python3 verification/real-twistor-null-graph/check.py exe cache get
+      - name: Compile canonical sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/real-twistor-null-graph/check.py build 2>&1 | tee real-twistor-build.log
+          for source in RealTwistorIncidence RealTwistorIsotropicGraph RealTwistorIsotropicGraphExamples RealConstructs; do
+            python3 verification/real-twistor-null-graph/check.py env lean -DwarningAsError=true "lean/InfoGeometry/Twistor/$source.lean"
+          done
+      - name: Replay compiled declarations and check axioms
+        shell: bash
+        run: |
+          set -euo pipefail
+          : > real-twistor-axioms.log
+          for source in RealTwistorIncidence RealTwistorIsotropicGraph RealTwistorIsotropicGraphExamples; do
+            python3 verification/real-twistor-null-graph/check.py env lean --run tools/infra/axiom_check.lean \
+              "verification/real-twistor-null-graph/.lake/build/lib/lean/InfoGeometry/Twistor/$source.olean" \
+              2>&1 | tee -a real-twistor-axioms.log
+          done
+      - name: Screen theorem sources
+        run: >-
+          python3 tools/infra/opengauss_screener.py --strict
+          lean/InfoGeometry/Twistor/RealTwistorIncidence.lean
+          lean/InfoGeometry/Twistor/RealTwistorIsotropicGraph.lean
+          lean/InfoGeometry/Twistor/RealTwistorIsotropicGraphExamples.lean
+      - name: Save pinned toolchain and dependencies
+        if: github.event_name == 'workflow_dispatch' && steps.dependency-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: real-twistor-null-graph-lean4341-d13f23b7-${{ runner.os }}-v1
+      - name: Preserve verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: real-twistor-null-graph-verification
+          path: |
+            real-twistor-build.log
+            real-twistor-axioms.log

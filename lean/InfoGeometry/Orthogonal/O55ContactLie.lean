@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Orthogonal.O55ContactCarrier
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.OfAssociative
@@ -101,5 +106,111 @@ theorem contactEuler_cube :
     contactWeightR i * (contactWeightR i * (contactWeightR i * x i)) =
         contactWeightR i ^ 3 * x i := by ring
     _ = contactWeightR i * x i := by rw [contactWeightR_cube]
+
+
+/-- The crosscap endomorphism reverses the ten coordinate directions. -/
+def crosscapEnd : End55 where
+  toFun x i := x (dualIndex i)
+  map_add' x y := by ext i; simp
+  map_smul' c x := by ext i; simp
+
+@[simp] theorem crosscapEnd_apply (x : Vector55) (i : Fin 10) :
+    crosscapEnd x i = x (dualIndex i) := rfl
+
+theorem crosscapEnd_sq : crosscapEnd * crosscapEnd = (1 : End55) := by
+  apply LinearMap.ext
+  intro x; funext i
+  simp [Module.End.mul_apply]
+
+@[simp] theorem crosscapEnd_apply_twice (x : Vector55) :
+    crosscapEnd (crosscapEnd x) = x := by
+  simpa [Module.End.mul_apply] using LinearMap.congr_fun crosscapEnd_sq x
+
+theorem crosscapEnd_isometry (x y : Vector55) :
+    splitPairing (crosscapEnd x) (crosscapEnd y) = splitPairing x y := by
+  simp [splitPairing, crosscapEnd, dualIndex]
+  ring
+
+theorem crosscapEnd_pairing_move (x y : Vector55) :
+    splitPairing (crosscapEnd x) y = splitPairing x (crosscapEnd y) := by
+  calc
+    splitPairing (crosscapEnd x) y =
+        splitPairing (crosscapEnd x) (crosscapEnd (crosscapEnd y)) := by
+          rw [crosscapEnd_apply_twice]
+    _ = splitPairing x (crosscapEnd y) :=
+      crosscapEnd_isometry x (crosscapEnd y)
+
+theorem crosscap_conjugates_euler :
+    crosscapEnd * contactEulerEnd * crosscapEnd = -contactEulerEnd := by
+  apply LinearMap.ext
+  intro x; funext i
+  simp [Module.End.mul_apply, contactEulerEnd_apply, contactWeightR_dualIndex]
+
+theorem crosscap_anticommutes_euler :
+    contactEulerEnd * crosscapEnd = -(crosscapEnd * contactEulerEnd) := by
+  apply LinearMap.ext
+  intro x; funext i
+  simp [Module.End.mul_apply, contactEulerEnd_apply, contactWeightR_dualIndex]
+
+theorem crosscap_conjugate_isSplitSkew {A : End55} (hA : IsSplitSkew A) :
+    IsSplitSkew (crosscapEnd * A * crosscapEnd) := by
+  intro x y
+  change splitPairing (crosscapEnd (A (crosscapEnd x))) y +
+      splitPairing x (crosscapEnd (A (crosscapEnd y))) = 0
+  rw [crosscapEnd_pairing_move (A (crosscapEnd x)) y,
+    ← crosscapEnd_pairing_move x (A (crosscapEnd y))]
+  exact hA (crosscapEnd x) (crosscapEnd y)
+
+def crosscapConjugation : Module.End ℝ O55Lie where
+  toFun A :=
+    ⟨crosscapEnd * (A : End55) * crosscapEnd,
+      crosscap_conjugate_isSplitSkew A.property⟩
+  map_add' A B := by
+    apply Subtype.ext; simp [mul_add, add_mul]
+  map_smul' c A := by
+    apply Subtype.ext; simp [Algebra.mul_smul_comm, Algebra.smul_mul_assoc]
+
+theorem crosscapConjugation_sq :
+    crosscapConjugation * crosscapConjugation = (1 : Module.End ℝ O55Lie) := by
+  apply LinearMap.ext
+  intro A; apply Subtype.ext
+  change crosscapEnd * (crosscapEnd * (A : End55) * crosscapEnd) * crosscapEnd = (A : End55)
+  calc
+    crosscapEnd * (crosscapEnd * (A : End55) * crosscapEnd) * crosscapEnd =
+        (crosscapEnd * crosscapEnd) * A * (crosscapEnd * crosscapEnd) := by noncomm_ring
+    _ = A := by rw [crosscapEnd_sq]; simp
+
+theorem crosscapConjugation_bracket (A B : O55Lie) :
+    crosscapConjugation ⁅A, B⁆ =
+      ⁅crosscapConjugation A, crosscapConjugation B⁆ := by
+  apply Subtype.ext
+  change crosscapEnd * ((A : End55) * B - B * A) * crosscapEnd =
+    (crosscapEnd * A * crosscapEnd) * (crosscapEnd * B * crosscapEnd) -
+      (crosscapEnd * B * crosscapEnd) * (crosscapEnd * A * crosscapEnd)
+  have hAB :
+      (crosscapEnd * (A : End55) * crosscapEnd) *
+          (crosscapEnd * B * crosscapEnd) =
+        crosscapEnd * A * B * crosscapEnd := by
+    calc
+      (crosscapEnd * (A : End55) * crosscapEnd) *
+          (crosscapEnd * B * crosscapEnd) =
+        crosscapEnd * A * (crosscapEnd * crosscapEnd) * B * crosscapEnd := by
+          noncomm_ring
+      _ = crosscapEnd * A * B * crosscapEnd := by
+          rw [crosscapEnd_sq]; simp
+  have hBA :
+      (crosscapEnd * (B : End55) * crosscapEnd) *
+          (crosscapEnd * A * crosscapEnd) =
+        crosscapEnd * B * A * crosscapEnd := by
+    calc
+      (crosscapEnd * (B : End55) * crosscapEnd) *
+          (crosscapEnd * A * crosscapEnd) =
+        crosscapEnd * B * (crosscapEnd * crosscapEnd) * A * crosscapEnd := by
+          noncomm_ring
+      _ = crosscapEnd * B * A * crosscapEnd := by
+          rw [crosscapEnd_sq]; simp
+  rw [hAB, hBA]
+  rw [mul_sub, sub_mul]
+  noncomm_ring
 
 end InfoGeometry.Orthogonal.O55Contact

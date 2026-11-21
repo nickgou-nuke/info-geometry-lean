@@ -109,21 +109,25 @@ theorem FaithfulDensityOperator.bkmRealBilinForm_symm
   simpa [FaithfulDensityOperator.bkmRealBilinForm] using
     congrArg Complex.re hs
 
-/-- The real BKM response as the repository's positive Onsager form.  Diagonal
-nonnegativity is supplied by the native BKM positivity theorem. -/
+/-- Install the real BKM response as the repository's positive Onsager form
+once the remaining diagonal-positivity theorem is available for the model. -/
 noncomputable def FaithfulDensityOperator.bkmOnsagerForm
-    (D : FaithfulDensityOperator n) (h : Continuous D.rpow) :
+    (D : FaithfulDensityOperator n) (h : Continuous D.rpow)
+    (h_nonneg : ∀ A : FiniteOperatorAlgebra n,
+      0 ≤ (D.kuboMoriPairing A A).re) :
     OnsagerTwoOperatorForm (FiniteOperatorAlgebra n) where
   form := D.bkmRealBilinForm h
   symmetric := fun A B => (D.bkmRealBilinForm_symm h).eq A B
   diagonal_nonnegative := by
     intro A
-    simpa using D.kuboMoriPairing_self_nonneg A h
+    simpa using h_nonneg A
 
 @[simp] theorem FaithfulDensityOperator.bkmOnsagerForm_apply
     (D : FaithfulDensityOperator n) (h : Continuous D.rpow)
+    (h_nonneg : ∀ A : FiniteOperatorAlgebra n,
+      0 ≤ (D.kuboMoriPairing A A).re)
     (A B : FiniteOperatorAlgebra n) :
-    (D.bkmOnsagerForm h).form A B =
+    (D.bkmOnsagerForm h h_nonneg).form A B =
       (D.kuboMoriPairing A B).re :=
   rfl
 

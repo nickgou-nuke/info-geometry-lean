@@ -1176,6 +1176,61 @@ theorem realConformalMajoranaAction_eq_conformalLorentzGenerator4
       lorentzGenerator4, add_smul, smul_add]
     module
 
+/-- The real conformal CAR action scales the Majorana anticommutator by the
+expected infinitesimal conformal factor.  This is the operator-algebra form
+of the conformal Killing identity: the bivector commutator preserves the
+CAR pairing, while the real dilation contributes `8 * sigma` to the
+anticommutator normalization. -/
+theorem realConformalMajoranaAction_CAR_anticommutator_derivative
+    (sigma btx bty btz rxy rxz ryz : ℝ)
+    (X Y : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+    realConformalMajoranaAction sigma btx bty btz rxy rxz ryz X *
+        realMinkowskiMajorana Y +
+      realMinkowskiMajorana Y *
+        realConformalMajoranaAction sigma btx bty btz rxy rxz ryz X +
+      realMinkowskiMajorana X *
+        realConformalMajoranaAction sigma btx bty btz rxy rxz ryz Y +
+      realConformalMajoranaAction sigma btx bty btz rxy rxz ryz Y *
+        realMinkowskiMajorana X =
+      (8 * sigma * minkowski4Form X Y) • (1 : realThreeMatrixGradedTensor) := by
+  let B := lorentzMajoranaSpinGenerator btx bty btz rxy rxz ryz
+  let cX := realMinkowskiMajorana X
+  let cY := realMinkowskiMajorana Y
+  have hCAR : cX * cY + cY * cX =
+      (2 * minkowski4Form X Y) • (1 : realThreeMatrixGradedTensor) := by
+    simpa [cX, cY, minkowski4Form] using realMinkowskiMajorana_anticommutator X Y
+  have hCentral : B * (cX * cY + cY * cX) - (cX * cY + cY * cX) * B = 0 := by
+    rw [hCAR]
+    simp
+  have hDilation :
+      (2 * sigma) • cX * cY + cY * ((2 * sigma) • cX) +
+        cX * ((2 * sigma) • cY) + (2 * sigma) • cY * cX =
+      (4 * sigma) • (cX * cY + cY * cX) := by
+    simp only [smul_mul_assoc, mul_smul_comm]
+    module
+  have hAdjoint :
+      (B * cX - cX * B) * cY + cY * (B * cX - cX * B) +
+        cX * (B * cY - cY * B) + (B * cY - cY * B) * cX =
+      B * (cX * cY + cY * cX) - (cX * cY + cY * cX) * B := by
+    noncomm_ring
+  calc
+    _ = ((2 * sigma) • cX * cY + cY * ((2 * sigma) • cX) +
+          cX * ((2 * sigma) • cY) + (2 * sigma) • cY * cX) +
+        ((B * cX - cX * B) * cY + cY * (B * cX - cX * B) +
+          cX * (B * cY - cY * B) + (B * cY - cY * B) * cX) := by
+          simp only [realConformalMajoranaAction, B, cX, cY, smul_mul_assoc,
+            mul_smul_comm, sub_mul, mul_sub, add_mul, mul_add]
+          noncomm_ring
+    _ = (4 * sigma) • (cX * cY + cY * cX) +
+        (B * (cX * cY + cY * cX) - (cX * cY + cY * cX) * B) := by
+          rw [hDilation, hAdjoint]
+    _ = (4 * sigma) • (cX * cY + cY * cX) := by rw [hCentral]; simp
+    _ = (8 * sigma * minkowski4Form X Y) •
+        (1 : realThreeMatrixGradedTensor) := by
+          rw [hCAR, smul_smul]
+          congr 1
+          ring
+
 /-- The full real Lorentz spin action remains valid after transport to the
 existing doubled-Krein endomorphism carrier. -/
 theorem lorentzMajoranaSpinGenerator_onKrein_commutator

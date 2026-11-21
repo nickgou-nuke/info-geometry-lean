@@ -12,6 +12,7 @@ import InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge
 import InfoGeometry.Canonical.Cl11JordanComplexRealificationBridge
 import InfoGeometry.Quantum.Realification
 import InfoGeometry.Quantum.RealificationCategory
+import InfoGeometry.OperatorAlgebra.MaurerCartanTower
 
 /-!
 # Shared real carrier synthesis: circular CAR and Peirce translations
@@ -1050,6 +1051,37 @@ theorem lorentzMajoranaSpinGenerator_commutator
       simp [minkowskiTimeBasis, minkowskiXBasis, minkowskiYBasis,
         minkowskiZBasis, realMinkowskiMajorana, lorentzGenerator4]
       module
+
+/-- The real Lorentz spin lift is the restriction of the repository's
+`LieActionLane` inner action on the complete three-factor CAR algebra.  It
+acts on the Minkowski Majorana generators by the Lorentz infinitesimal and
+satisfies Leibniz on every product of operators, not only on the vector
+subspace. -/
+theorem lorentzMajoranaSpinGenerator_lieActionLane
+    (btx bty btz rxy rxz ryz : ℝ)
+    (X : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+    let K := InfoGeometry.OperatorAlgebra.MaurerCartanTower.innerAlgLieActionLane
+      ℝ realThreeMatrixGradedTensor
+    K.operatorAction
+        (lorentzMajoranaSpinGenerator btx bty btz rxy rxz ryz)
+        (realMinkowskiMajorana X) =
+      realMinkowskiMajorana
+        (lorentzGenerator4 btx bty btz rxy rxz ryz X) ∧
+    ∀ a b : realThreeMatrixGradedTensor,
+      K.operatorAction (lorentzMajoranaSpinGenerator btx bty btz rxy rxz ryz)
+          (a * b) =
+        K.operatorAction (lorentzMajoranaSpinGenerator btx bty btz rxy rxz ryz) a * b +
+          a * K.operatorAction (lorentzMajoranaSpinGenerator btx bty btz rxy rxz ryz) b := by
+  let K := InfoGeometry.OperatorAlgebra.MaurerCartanTower.innerAlgLieActionLane
+    ℝ realThreeMatrixGradedTensor
+  constructor
+  · simpa [K, InfoGeometry.OperatorAlgebra.MaurerCartanTower.innerAlgLieActionLane_operatorAction]
+      using lorentzMajoranaSpinGenerator_commutator btx bty btz rxy rxz ryz X
+  · intro a b
+    simpa [K] using
+      (InfoGeometry.OperatorAlgebra.MaurerCartanTower.innerAlgLieActionLane_isLeibniz
+        ℝ realThreeMatrixGradedTensor
+        (lorentzMajoranaSpinGenerator btx bty btz rxy rxz ryz) a b)
 
 /-- The CAR anticommutator is invariant under the adjoint action of the
 six-parameter spin generator.  This proves the Killing identity from the

@@ -1,5 +1,11 @@
 # Native RH routes: source audit and implementation
 
+The subsequent [Dikin/Weyl boundedness audit](DIKIN_WEYL_BOUNDEDNESS_AUDIT.md)
+extends this initial PR #424 report with four additional native owners,
+constructive geometric scale bounds, the exact prescribed-scale Mertens
+criterion, and a proved obstruction to uniform Euler-factor scaling. The
+original analytic Mertens-to-RH implication below is unchanged.
+
 ## Result and scope
 
 The new arithmetic endpoint is a complete conditional Lean theorem:

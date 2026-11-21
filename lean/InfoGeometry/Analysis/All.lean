@@ -68,3 +68,5 @@ import InfoGeometry.Analysis.RankOneTrace
 import InfoGeometry.Analysis.MobiusRadialTime
 import InfoGeometry.Analysis.MulLogInterpolation
 import InfoGeometry.Analysis.SmoothedMellinKernel
+import InfoGeometry.Analysis.RealMatrixDikinScaling
+import InfoGeometry.Analysis.DikinWeylBoundedness

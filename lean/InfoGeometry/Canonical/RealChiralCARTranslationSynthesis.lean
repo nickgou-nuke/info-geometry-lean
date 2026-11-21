@@ -1074,6 +1074,27 @@ theorem lorentzMajoranaSpinGenerator_fock_commutator
   simp only [map_sub, map_mul, AlgEquiv.apply_symm_apply]
   exact lorentzMajoranaSpinGenerator_commutator btx bty btz rxy rxz ryz X
 
+/-- The Lorentz inner derivation acts by the Leibniz rule on the associative
+Jordan anticommutator that represents the nonassociative Peirce-supercolor
+Jordan product.  This connects the real Lorentz/CAR action to the supercolor
+Jordan lane while keeping the source product and the represented operator
+product distinct. -/
+theorem lorentzMajoranaAction_derives_supercolorJordan_image
+    (btx bty btz rxy rxz ryz : ℝ)
+    (U V : InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra ℝ) :
+    let B := lorentzMajoranaSpinGenerator btx bty btz rxy rxz ryz
+    let R := InfoGeometry.Superalgebra.RealGradedZornCARBridge.supercolorRightRegularInThreeMode
+    B * R (InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.anticommutator U V) -
+        R (InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.anticommutator U V) * B =
+      (B * R U - R U * B) * R V + R U * (B * R V - R V * B) +
+        (B * R V - R V * B) * R U + R V * (B * R U - R U * B) := by
+  let B := lorentzMajoranaSpinGenerator btx bty btz rxy rxz ryz
+  let R := InfoGeometry.Superalgebra.RealGradedZornCARBridge.supercolorRightRegularInThreeMode
+  dsimp only
+  rw [InfoGeometry.Canonical.RealGradedTensorSuperGrassmannianBridge.supercolorJordanAnticommutator_in_tensor]
+  change B * (R U * R V + R V * R U) - (R U * R V + R V * R U) * B = _
+  noncomm_ring
+
 /-- The real Lorentz spin lift is the restriction of the repository's
 `LieActionLane` inner action on the complete three-factor CAR algebra.  It
 acts on the Minkowski Majorana generators by the Lorentz infinitesimal and

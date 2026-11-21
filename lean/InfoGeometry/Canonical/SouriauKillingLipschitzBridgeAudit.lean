@@ -1,0 +1,57 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Canonical.ConnesSpectralTripleBridge
+import InfoGeometry.Canonical.SouriauKillingLipschitzBridge
+
+/-!
+# Souriau Killing Lipschitz declaration audit
+
+Every explicit public declaration in the changed mathematical owners is
+listed below. This includes the pre-existing declarations in the amended
+Connes owner. Generated structure fields and recursors are not separately
+inventoried. Regenerate using the focused package's audit.py --write.
+-/
+
+#print axioms ConnesSpectral.SpectralTriple
+#print axioms ConnesSpectral.instInhabitedSpectralTriple
+#print axioms ConnesSpectral.SpectralTriple.commutator
+#print axioms ConnesSpectral.SpectralTriple.commutatorNorm
+#print axioms ConnesSpectral.SpectralTriple.commutatorNorm_nonneg
+#print axioms ConnesSpectral.SpectralTriple.commutator_add
+#print axioms ConnesSpectral.SpectralTriple.commutator_sub
+#print axioms ConnesSpectral.SpectralTriple.commutator_mul
+#print axioms ConnesSpectral.SpectralTriple.commutatorNorm_eq_zero_iff_commute
+#print axioms ConnesSpectral.SpectralTriple.commutatorNorm_le
+#print axioms ConnesSpectral.SpectralTriple.commutatorNorm_add_le
+#print axioms ConnesSpectral.SpectralTriple.commutatorNorm_mul_le
+#print axioms ConnesSpectral.SpectralTriple.lipschitzWith_commutator
+#print axioms ConnesSpectral.SpectralTriple.lipschitzWith_commutatorNorm
+#print axioms ConnesSpectral.SpectralTriple.commutator_smul
+#print axioms ConnesSpectral.SpectralTriple.commutatorNorm_smul
+#print axioms ConnesSpectral.SpectralTriple.commutatorSeminorm
+#print axioms ConnesSpectral.SpectralTriple.commutatorSeminorm_apply
+#print axioms ConnesSpectral.SpectralTriple.LipschitzFunction
+#print axioms ConnesSpectral.SpectralTriple.StateDistanceBound
+#print axioms ConnesSpectral.SpectralTriple.distance_bound_symmetry
+#print axioms ConnesSpectral.SpectralTriple.distance_bound_triangle
+
+#print axioms InfoGeometry.Canonical.SouriauKillingLipschitzBridge.souriauSpectralData
+#print axioms InfoGeometry.Canonical.SouriauKillingLipschitzBridge.commutator_eq_relativeModularDeriv
+#print axioms InfoGeometry.Canonical.SouriauKillingLipschitzBridge.commutatorNorm_eq
+#print axioms InfoGeometry.Canonical.SouriauKillingLipschitzBridge.commutatorNorm_eq_zero_iff_relativeModularDeriv_eq_zero
+#print axioms InfoGeometry.Canonical.SouriauKillingLipschitzBridge.relativeModularDeriv_eq_zero_iff_commute
+#print axioms InfoGeometry.Canonical.SouriauKillingLipschitzBridge.expTransport_eq_self_of_relativeModularDeriv_eq_zero
+#print axioms InfoGeometry.Canonical.SouriauKillingLipschitzBridge.relativeModularDeriv_eq_zero_iff_expTransport_fixed
+#print axioms InfoGeometry.Canonical.SouriauKillingLipschitzBridge.lipschitzFunction_iff
+#print axioms InfoGeometry.Canonical.SouriauKillingLipschitzBridge.norm_relativeModularDeriv_le
+#print axioms InfoGeometry.Canonical.SouriauKillingLipschitzBridge.lipschitzWith_relativeModularDeriv
+#print axioms InfoGeometry.Canonical.SouriauKillingLipschitzBridge.lipschitzWith_norm_relativeModularDeriv
+#print axioms InfoGeometry.Canonical.SouriauKillingLipschitzBridge.lipschitzWith_probed_relativeModularDeriv
+#print axioms InfoGeometry.Canonical.SouriauKillingLipschitzBridge.isometry_modularTransportFlow
+#print axioms InfoGeometry.Canonical.SouriauKillingLipschitzBridge.lipschitzWith_modularTransportFlow
+#print axioms InfoGeometry.Canonical.SouriauKillingLipschitzBridge.observable_le_spectral_distance_supremum
+#print axioms InfoGeometry.Canonical.SouriauKillingLipschitzBridge.spectralDistanceSet_not_bddAbove_of_relativeModularDeriv_eq_zero
+#print axioms InfoGeometry.Canonical.SouriauKillingLipschitzBridge.readouts_eq_on_relativeModularDeriv_kernel_of_bddAbove

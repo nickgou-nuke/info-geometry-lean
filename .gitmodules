@@ -127,3 +127,6 @@
 [submodule "external_refs/homotopy-hypothesis-lean4"]
 	path = external_refs/homotopy-hypothesis-lean4
 	url = https://github.com/cadamcat/homotopy-hypothesis-lean4.git
+[submodule "external_refs/riemann-masullo"]
+	path = external_refs/riemann-masullo
+	url = https://github.com/mccorvie/riemann-masullo

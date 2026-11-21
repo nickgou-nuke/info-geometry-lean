@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.External.Auto.ZornScalingFlow
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.TitsBruhatBrillouinKlein
@@ -79,6 +84,21 @@ theorem pairedGlideInv_mul (S : PairedState) :
   · exact sectorExchange_involutive S.1
   · dsimp [pairedGlide, pairedGlideInv]
     rw [← Matrix.mul_assoc, hFinvF, Matrix.one_mul]
+
+/-! ## The glide as a genuine bijective state transformation -/
+
+/-- The paired glide is a bijection; its inverse is the displayed paired inverse. -/
+def pairedGlideEquiv : PairedState ≃ PairedState where
+  toFun := pairedGlide
+  invFun := pairedGlideInv
+  left_inv := pairedGlideInv_mul
+  right_inv := pairedGlide_mul_inv
+
+@[simp] theorem pairedGlideEquiv_apply (S : PairedState) :
+    pairedGlideEquiv S = pairedGlide S := rfl
+
+@[simp] theorem pairedGlideEquiv_symm_apply (S : PairedState) :
+    pairedGlideEquiv.symm S = pairedGlideInv S := rfl
 
 /--
 The paired glide conjugates transverse torus/affine evolution to its inverse:

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.KingdonAlgebra
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZornVectorMatrixExplicit
@@ -137,26 +142,26 @@ def formedBilin : LinearMap.BilinForm ℝ ThreeSpace :=
         2 * InfoGeometry.Physics.ZornMatrixSU3.dotProduct u w +
         2 * InfoGeometry.Physics.ZornMatrixSU3.dotProduct v w
       rw [h]
-      ring)
+      ring_nf)
     (fun r u v => by
       have h := InfoGeometry.Physics.ZornMatrixSU3.dotProduct_smul_left r u v
       change 2 * InfoGeometry.Physics.ZornMatrixSU3.dotProduct (r • u) v =
         r * (2 * InfoGeometry.Physics.ZornMatrixSU3.dotProduct u v)
       rw [h]
-      ring)
+      ring_nf)
     (fun u v w => by
       have h := InfoGeometry.Physics.ZornMatrixSU3.dotProduct_add_right u v w
       change 2 * InfoGeometry.Physics.ZornMatrixSU3.dotProduct u (v + w) =
         2 * InfoGeometry.Physics.ZornMatrixSU3.dotProduct u v +
         2 * InfoGeometry.Physics.ZornMatrixSU3.dotProduct u w
       rw [h]
-      ring)
+      ring_nf)
     (fun r u v => by
       have h := InfoGeometry.Physics.ZornMatrixSU3.dotProduct_smul_right r u v
       change 2 * InfoGeometry.Physics.ZornMatrixSU3.dotProduct u (r • v) =
         r * (2 * InfoGeometry.Physics.ZornMatrixSU3.dotProduct u v)
       rw [h]
-      ring)
+      ring_nf)
 
 /-- Symmetric three-space insertion into the off-diagonal Zorn coordinates. -/
 def generator : ThreeSpace →ₗ[ℝ] ZornMatrix where
@@ -746,7 +751,7 @@ theorem upperRawProductForward {i j k : Fin 3}
   abel
 
 theorem upperRawProductReverse {i j k : Fin 3}
-    (hij : i ≠ j) (_hjk : j ≠ k) (_hik : i ≠ k) :
+    (hij : i ≠ j) (hjk : j ≠ k) (hik : i ≠ k) :
     (basisGenerator j - basisGenerator k * basisGenerator i) *
       (basisGenerator i - basisGenerator j * basisGenerator k) =
       (-basisGenerator k - basisGenerator i * basisGenerator j) +
@@ -867,7 +872,7 @@ theorem lowerRawProductForward {i j k : Fin 3}
   abel
 
 theorem lowerRawProductReverse {i j k : Fin 3}
-    (hij : i ≠ j) (_hjk : j ≠ k) (_hik : i ≠ k) :
+    (hij : i ≠ j) (hjk : j ≠ k) (hik : i ≠ k) :
     (basisGenerator j + basisGenerator k * basisGenerator i) *
       (basisGenerator i + basisGenerator j * basisGenerator k) =
       (basisGenerator k - basisGenerator i * basisGenerator j) +
@@ -899,7 +904,7 @@ theorem lowerBasisProductForward {i j k : Fin 3}
   abel
 
 theorem lowerBasisProductReverse {i j k : Fin 3}
-    (hij : i ≠ j) (hjk : j ≠ k) (hik : i ≠ k)
+    (hij : i ≠ j)
     (hai : anti (basisVec i) = basisGenerator j * basisGenerator k)
     (haj : anti (basisVec j) = basisGenerator k * basisGenerator i)
     (hak : anti (basisVec k) = basisGenerator i * basisGenerator j) :
@@ -910,7 +915,7 @@ theorem lowerBasisProductReverse {i j k : Fin 3}
       ((basisGenerator j + basisGenerator k * basisGenerator i) *
        (basisGenerator i + basisGenerator j * basisGenerator k)) =
     scale 2⁻¹ (basisGenerator k - basisGenerator i * basisGenerator j)
-  rw [lowerRawProductReverse hij hjk hik]
+  rw [lowerRawProductReverse hij]
   rw [scale_eq_smul, scale_eq_smul]
   rw [smul_add_abstract, ← add_smul_abstract]
   norm_num
@@ -949,7 +954,7 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
 
 @[simp] theorem lower_basisVec_one_mul_zero :
     lower (basisVec 1) * lower (basisVec 0) = upper (basisVec 2) := by
-  exact lowerBasisProductReverse (by decide) (by decide) (by decide)
+  exact lowerBasisProductReverse (by decide)
     anti_basisVec_zero anti_basisVec_one anti_basisVec_two
 
 @[simp] theorem lower_basisVec_one_mul_two :
@@ -959,7 +964,7 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
 
 @[simp] theorem lower_basisVec_two_mul_one :
     lower (basisVec 2) * lower (basisVec 1) = upper (basisVec 0) := by
-  exact lowerBasisProductReverse (by decide) (by decide) (by decide)
+  exact lowerBasisProductReverse (by decide)
     anti_basisVec_one anti_basisVec_two anti_basisVec_zero
 
 @[simp] theorem lower_basisVec_two_mul_zero :
@@ -969,7 +974,7 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
 
 @[simp] theorem lower_basisVec_zero_mul_two :
     lower (basisVec 0) * lower (basisVec 2) = upper (basisVec 1) := by
-  exact lowerBasisProductReverse (by decide) (by decide) (by decide)
+  exact lowerBasisProductReverse (by decide)
     anti_basisVec_two anti_basisVec_zero anti_basisVec_one
 
 @[simp] theorem upper_basisVec_zero_mul_diagonalUpper :
@@ -1658,7 +1663,7 @@ theorem upperBasis_mul_lowerBasis_cyclic {i j k : Fin 3}
     anti_basisVec_two anti_basisVec_zero
 
 theorem upperLowerRawReverse {i j k : Fin 3}
-    (hij : i ≠ j) (_hjk : j ≠ k) (_hik : i ≠ k) :
+    (hij : i ≠ j) (hjk : j ≠ k) (hik : i ≠ k) :
     (basisGenerator j - basisGenerator k * basisGenerator i) *
       (basisGenerator i + basisGenerator j * basisGenerator k) = 0 := by
   simp only [mul_add, sub_mul]

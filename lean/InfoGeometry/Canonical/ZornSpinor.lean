@@ -51,6 +51,37 @@ def coordEquiv : ZornMatrix R ≃ Coord R where
     rcases c with ⟨a, b, x, y⟩
     rfl
 
+/-! A flat eight-coordinate presentation of the same canonical carrier. -/
+abbrev FinCoord (R : Type*) [CommRing R] := Fin 8 → R
+
+def toFinCoord (z : ZornMatrix R) : FinCoord R :=
+  ![z.a, z.b, z.x 0, z.x 1, z.x 2, z.y 0, z.y 1, z.y 2]
+
+def fromFinCoord (c : FinCoord R) : ZornMatrix R :=
+  { a := c 0
+    b := c 1
+    x := ![c 2, c 3, c 4]
+    y := ![c 5, c 6, c 7] }
+
+@[simp] theorem fromFinCoord_toFinCoord (z : ZornMatrix R) :
+    fromFinCoord (toFinCoord z) = z := by
+  apply ZornMatrix.ext
+  · rfl
+  · rfl
+  · funext i; fin_cases i <;> rfl
+  · funext i; fin_cases i <;> rfl
+
+@[simp] theorem toFinCoord_fromFinCoord (c : FinCoord R) :
+    toFinCoord (fromFinCoord c) = c := by
+  funext i
+  fin_cases i <;> rfl
+
+def finCoordEquiv : ZornMatrix R ≃ FinCoord R where
+  toFun := toFinCoord
+  invFun := fromFinCoord
+  left_inv := fromFinCoord_toFinCoord
+  right_inv := toFinCoord_fromFinCoord
+
 /-- Zorn matrices inherit their additive commutative group structure from coordinates. -/
 instance : AddCommGroup (ZornMatrix R) :=
   Equiv.addCommGroup coordEquiv
@@ -108,6 +139,18 @@ def coordLinearEquiv : ZornMatrix R ≃ₗ[R] Coord R where
 @[simp] theorem zero_b : (0 : ZornMatrix R).b = 0 := rfl
 @[simp] theorem zero_x : (0 : ZornMatrix R).x = 0 := rfl
 @[simp] theorem zero_y : (0 : ZornMatrix R).y = 0 := rfl
+
+def finCoordLinearEquiv : ZornMatrix R ≃ₗ[R] FinCoord R where
+  toFun := toFinCoord
+  invFun := fromFinCoord
+  left_inv := fromFinCoord_toFinCoord
+  right_inv := toFinCoord_fromFinCoord
+  map_add' z₁ z₂ := by
+    funext i
+    fin_cases i <;> rfl
+  map_smul' r z := by
+    funext i
+    fin_cases i <;> rfl
 
 /-- Standard dot product for 3-vectors. -/
 def dot (v1 v2 : Fin 3 → R) : R :=

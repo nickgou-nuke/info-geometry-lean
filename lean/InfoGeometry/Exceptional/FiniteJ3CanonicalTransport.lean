@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Exceptional.FiniteJ3ZornCarrier
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.ZornMatrixRealCanonicalBridge
@@ -1350,6 +1355,8 @@ theorem hermitianRealAlbertEquiv_finiteJordanProduct_mul_α₂
         (hermitianRealAlbertEquiv Y)).α₂ := by
   rw [hermitianRealAlbertEquiv_finiteJordanProduct_alpha₂]
   have hX21 : X.1 2 1 = zornConj (X.1 1 2) := X.property 2 1
+  have hX02 : X.1 0 2 = zornConj (X.1 2 0) := X.property 0 2
+  have hX20 : X.1 2 0 = zornConj (X.1 0 2) := X.property 2 0
   have hY21 : Y.1 2 1 = zornConj (Y.1 1 2) := Y.property 2 1
   have hX10 : X.1 1 0 = zornConj (X.1 0 1) := X.property 1 0
   have hY10 : Y.1 1 0 = zornConj (Y.1 0 1) := Y.property 1 0

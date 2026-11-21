@@ -23,6 +23,7 @@ lean/InfoGeometry/Projective/SplitOctonions/ProjectivePolarFiber.lean:19:No `sor
 lean/InfoGeometry/Application/OperatorFreudenthalBoundary.lean:167:  /-- Boundary states admit Drazin surgery. -/
 lean/InfoGeometry/Lint/NonTriviality.lean:27:* transitive axiom audit using `Lean.collectAxioms`, with explicit `sorry` treated as honest closure debt when configured;
 lean/InfoGeometry/Lint/NonTriviality.lean:57:/-- Permit explicit `sorry` as honest, visible closure debt. -/
+lean/InfoGeometry/SelfReference/Shadow.lean:64:| ShadowKind.sorryDebt => "explicit sorry in proof body"
 lean/InfoGeometry/Lint/Pauli.lean:11:/-- Option to control the Pauli sorry linter. -/
 lean/InfoGeometry/Lint/Pauli.lean:12:register_option linter.pauli.sorry : Bool := {
 lean/InfoGeometry/Lint/Pauli.lean:51:      linter.pauli.sorry.get (← getOptions) ||
@@ -145,8 +146,9 @@ lean/InfoGeometry/Canonical/KreinMajoranaZeroModeBlock.lean:11:No wrappers. No `
 ## Axiom declarations
 
 ```text
+lean/InfoGeometry/Physics/NuclearKleinTopologyDiagnostics.lean:9:axiom dependencies, runs the repository vacuity linter, and executes the
 ```
-- Total explicit axiom declarations: 0
+- Total explicit axiom declarations: 1
 
 ## Namespace audit
 
@@ -438,6 +440,7 @@ lean/InfoGeometry/Canonical/KreinMajoranaZeroModeBlock.lean:11:No wrappers. No `
 ./lean/InfoGeometry/Canonical/KuboMoriBogoliubovMetric.lean
 ./lean/InfoGeometry/Canonical/KuzminFockSpaceAnyon.lean
 ./lean/InfoGeometry/Canonical/LaughlinStateQuantumHallBridge.lean
+./lean/InfoGeometry/Canonical/LegacyKrDualityCascade.lean
 ./lean/InfoGeometry/Canonical/LevinWenStringNetTopologicalEntropy.lean
 ./lean/InfoGeometry/Canonical/LiHaldaneEntanglementSpectrumBridge.lean
 ./lean/InfoGeometry/Canonical/MadelungHydrodynamicPressureBridge.lean
@@ -2134,6 +2137,12 @@ lean/InfoGeometry/Algebra/BostConnesAnalytic.lean:98: theorem summable_nat_rpow_
 lean/InfoGeometry/Algebra/Cl11Fermions.lean:26: theorem orth [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
+lean/InfoGeometry/Algebra/CircularChiralGrading.lean:189: theorem paraJ_plusPhase [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Algebra/CircularChiralGrading.lean:193: theorem paraJ_minusPhase [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
 lean/InfoGeometry/Algebra/Cl11OSp12.lean:36: theorem e [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
@@ -3527,6 +3536,15 @@ lean/InfoGeometry/Canonical/BiquaternionLaplaceTripotent.lean:96: theorem scale_
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Canonical/BisognanoWichmannUnruhAQFT.lean:43: theorem kms_period_proper_time [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Canonical/BitWordGraphDifferential.lean:113: theorem d1_d0 [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Canonical/BitWordGraphDifferential.lean:132: theorem d0_swap [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Canonical/BitWordSimplexCochainModule.lean:1065: theorem simplexCup_zero_one [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Canonical/BogoliubovCartanFrameInterpretation.lean:42: theorem bogoliubovFrameAction_eq_conjugate [skeletal_proof]

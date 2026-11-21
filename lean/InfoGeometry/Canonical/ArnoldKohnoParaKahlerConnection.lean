@@ -19,7 +19,14 @@ identify an arbitrary KZ connection with a metric, nor does it assert a
 general configuration-space theorem without an indexed residue carrier.
 -/
 
-noncomputable section
+/-!
+# Arnold--Kohno flatness certificate for logarithmic/KZ-type connections
+
+This owner keeps the supplied exterior-form relation separate from the
+coefficient-algebra commutator relation.  It proves the finite quadratic
+curvature cancellation and does not assert closure of actual differential
+forms.
+-/
 
 namespace InfoGeometry.Canonical.ArnoldKohnoParaKahlerConnection
 

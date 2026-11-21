@@ -103,6 +103,8 @@ import InfoGeometry.Algebra.InductiveSuperClosureLemmas
 import InfoGeometry.Algebra.InfiniteSuperClosureLemmas
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 import InfoGeometry.Algebra.Grothendieck
+import InfoGeometry.Algebra.GrothendieckMathlibNatIso
+import InfoGeometry.Algebra.GrothendieckMathlibNatIsoDiagnostics
 import InfoGeometry.Algebra.FibonacciGrothendieckRing
 import InfoGeometry.Algebra.InductiveTransportDirectLimitSUSY
 import InfoGeometry.Algebra.FiniteTensorDeterminantStabilization

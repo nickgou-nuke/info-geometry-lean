@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.F4ActionMatrixRankCertificateBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.F4ActionMatrixRationalCertificate
@@ -12,7 +17,9 @@ open InfoGeometry.Algebra
 open InfoGeometry.Algebra.F4Classification
 
 theorem f4_action_matrix_rank_canonical_capstone :
+    -- 1. Dimensions: 27D Albert space, 729D endomorphism space, 52D F₄ algebra
     (dimAlbert = 27 ∧ dimEndAlbert = 729 ∧ dimF4 = 52) ∧
+    -- 2. Certified Basis Readback Law
     (∀ (i : Fin 52) (r c : Fin 27),
       f4BasisActionMatrix i r c =
         (h3ZornCoordinateBasis.repr ((f4Basis i).1 (h3ZornCoordinateBasis r))) c) ∧

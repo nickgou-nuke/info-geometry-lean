@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.DiracPauliGamma
@@ -142,6 +147,20 @@ theorem pureVector_square_is_scalar (A : ComplexFourVector) :
   exact slash_sq A
 
 open InfoGeometry.Canonical.QuaternionEmbedding
+
+/-! ## Quaternionic spatial-bivector packet -/
+
+/-- The repository quaternion units are concrete spatial Dirac bivectors. -/
+theorem quaternionic_spatial_bivector_packet :
+    quat_i = gamma2 * gamma3 ∧
+      quat_j = gamma3 * gamma1 ∧
+      quat_k = gamma1 * gamma2 ∧
+      quat_i * quat_i = -(1 : DiracMatrix) ∧
+      quat_j * quat_j = -(1 : DiracMatrix) ∧
+      quat_k * quat_k = -(1 : DiracMatrix) ∧
+      quat_i * quat_j = quat_k := by
+  exact ⟨rfl, rfl, rfl,
+    quat_i_sq, quat_j_sq, quat_k_sq, quat_ij_eq_k⟩
 
 theorem commute_quaternionic_third_of_first_two
     (N : DiracMatrix)

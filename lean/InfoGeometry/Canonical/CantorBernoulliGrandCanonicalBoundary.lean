@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBernoulliBranchExchangeThermofield
@@ -73,6 +78,18 @@ noncomputable def normalizedBoundaryWeight
     (s : GrandCanonicalBoundaryState α) :
     0 ≤ normalizedBoundaryWeight s :=
   le_of_lt (normalizedBoundaryWeight_pos s)
+
+/-- The selected weight is the exponential kernel divided by the partition
+function, with the shifted energy owner supplied by the finite lane. -/
+theorem normalizedBoundaryWeight_eq_partition_scaled
+    {α : Type*} [Fintype α] [Nonempty α]
+    (s : GrandCanonicalBoundaryState α) :
+    normalizedBoundaryWeight s =
+      Real.exp
+          (-s.beta *
+            shiftedEnergy s.params s.mu s.state) /
+        partitionGC s.params s.beta s.mu := by
+  rfl
 
 /-- The finite grand-canonical weights sum to one. -/
 theorem normalizedBoundaryWeight_sum_one

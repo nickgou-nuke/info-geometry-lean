@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Categorical.LogNilpotentCheckedRAdapter
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.LogEndModuleNilpotentClosure
@@ -105,6 +110,44 @@ theorem logCheckedR_tmul (p : ℂ) (x y : X) :
     logCheckedR X hX p (x ⊗ₜ[ℂ] y) =
       y ⊗ₜ[ℂ] x := by
   simp [logCheckedR]
+
+section crossUnipotent_commutes_tensorN_scoped
+
+set_option allowUnsafeReducibility true
+attribute [local reducible] LogEndModule.tensorObj LogNilpotentModule.tensorObj
+
+/-- The finite unipotent part commutes with the primitive logarithmic tensor
+endomorphism.  The mixed cross term actually annihilates it in both orders. -/
+theorem crossUnipotent_commutes_tensorN (p : ℂ) :
+    (crossUnipotentEquiv X hX p).toLinearMap.comp
+        (PairObj X).N =
+      (PairObj X).N.comp (crossUnipotentEquiv X hX p).toLinearMap := by
+  have hU (v : X.toLogEndModule.V ⊗[ℂ] X.toLogEndModule.V) :
+      crossUnipotentMap X hX p v = v + p • (crossResidue X hX).nilpotent v := by
+    exact unipotentResidueReadout_apply (crossResidue X hX) p v
+  have hCN (v : X.toLogEndModule.V ⊗[ℂ] X.toLogEndModule.V) :
+      (crossResidue X hX).nilpotent ((PairObj X).N v) = 0 := by
+    change ((crossTensorEnd X.toLogEndModule X.toLogEndModule).comp
+      (LogEndModule.tensorObj X.toLogEndModule X.toLogEndModule).N) v = 0
+    rw [crossTensorEnd_comp_tensorObj_N_eq_zero
+      X.toLogEndModule X.toLogEndModule hX hX]
+    rfl
+  have hNC (v : X.toLogEndModule.V ⊗[ℂ] X.toLogEndModule.V) :
+      (PairObj X).N ((crossResidue X hX).nilpotent v) = 0 := by
+    change ((LogEndModule.tensorObj X.toLogEndModule X.toLogEndModule).N.comp
+      (crossTensorEnd X.toLogEndModule X.toLogEndModule)) v = 0
+    rw [tensorObj_N_comp_crossTensorEnd_eq_zero
+      X.toLogEndModule X.toLogEndModule hX hX]
+    rfl
+  apply LinearMap.ext
+  intro t
+  change crossUnipotentMap X hX p ((PairObj X).N t) =
+    (PairObj X).N (crossUnipotentMap X hX p t)
+  rw [hU ((PairObj X).N t)]
+  rw [hU t]
+  simp [hCN t, hNC t, map_add, map_smul]
+
+end crossUnipotent_commutes_tensorN_scoped
 
 /-- The checked braid is a morphism of the logarithmic tensor object. -/
 theorem logCheckedR_commutes_tensorN (p : ℂ) :

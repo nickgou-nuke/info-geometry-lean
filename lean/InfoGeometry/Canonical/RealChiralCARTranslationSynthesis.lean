@@ -1116,6 +1116,34 @@ theorem lorentzMajoranaSpinGenerator_preserves_CAR_metric
     (mul_eq_zero.mp hScalar).resolve_left hTwo
   simpa [GX, GY] using hMetric
 
+/-- Infinitesimal conformal action on real Majorana generators.  The scalar
+term is a real dilation and the bivector term is the adjoint action in the
+three-factor Koszul-graded matrix algebra. -/
+def realConformalMajoranaAction
+    (sigma btx bty btz rxy rxz ryz : ℝ)
+    (X : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+    realThreeMatrixGradedTensor :=
+  (2 * sigma) • realMinkowskiMajorana X +
+    (lorentzMajoranaSpinGenerator btx bty btz rxy rxz ryz *
+        realMinkowskiMajorana X - realMinkowskiMajorana X *
+        lorentzMajoranaSpinGenerator btx bty btz rxy rxz ryz)
+
+/-- The real scalar-dilation-plus-bivector action is exactly the existing
+conformal Lorentz generator on the `(1,3)` carrier, after applying the
+Majorana representation. -/
+theorem realConformalMajoranaAction_eq_conformalLorentzGenerator4
+    (sigma btx bty btz rxy rxz ryz : ℝ)
+    (X : InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
+    realConformalMajoranaAction sigma btx bty btz rxy rxz ryz X =
+      realMinkowskiMajorana
+        (conformalLorentzGenerator4 sigma btx bty btz rxy rxz ryz X) := by
+  rw [realConformalMajoranaAction, lorentzMajoranaSpinGenerator_commutator]
+  cases X with
+  | mk t x y z =>
+    simp [realMinkowskiMajorana, conformalLorentzGenerator4,
+      lorentzGenerator4, add_smul, smul_add]
+    module
+
 /-- The full real Lorentz spin action remains valid after transport to the
 existing doubled-Krein endomorphism carrier. -/
 theorem lorentzMajoranaSpinGenerator_onKrein_commutator

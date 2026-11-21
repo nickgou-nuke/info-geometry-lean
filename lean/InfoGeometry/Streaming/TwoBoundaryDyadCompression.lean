@@ -55,6 +55,10 @@ theorem boundaryDyad_idempotent (p : RegularBoundaryPair ι) :
     boundaryDyad p * boundaryDyad p = boundaryDyad p :=
   normalizedDyad_idempotent p.pre (postCovector p) p.overlap_ne
 
+theorem boundaryDyad_range (p : RegularBoundaryPair ι) :
+    (boundaryDyad p).range = Submodule.span ℂ {p.pre} :=
+  normalizedDyad_range p.pre (postCovector p) p.overlap_ne
+
 /-- The finite weak-value functional is the coordinate-free normalized
 module coefficient on the pre-selected vector and post-selected covector. -/
 theorem weakValue_eq_normalizedReadout (p : RegularBoundaryPair ι)

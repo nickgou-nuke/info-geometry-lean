@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 /-
@@ -100,6 +105,26 @@ theorem sl2_low_modes
         P.sugawara.affineVirasoro.virasoro.Lmode 0⁆ = 0 :=
   P.sugawara.virasoro_bracket_sl2_low_modes hvir
 
+/-- The existing Clifford-to-Virasoro owner can be carried together with
+the categorical braid/Hestenes--Krein closure.  The two readouts retain their
+native carriers; this theorem does not identify the Heisenberg carrier with the
+categorical colimit carrier. -/
+theorem closure_with_current_sugawara
+    {𝕜 V : Type*} [_root_.Field 𝕜] [CharZero 𝕜]
+    [AddCommGroup V] [Module 𝕜 V]
+    (H : CurrentHeisenbergRep 𝕜 V) :
+    CertifiedReadout P.closure ∧
+    (CurrentSugawaraMorphism.ofHeisenberg H).virasoro
+        (VirasoroAlgebra.cgen 𝕜) =
+      (1 : V →ₗ[𝕜] V) ∧
+    (∀ n : Int,
+      (CurrentSugawaraMorphism.ofHeisenberg H).virasoro
+          (VirasoroAlgebra.lgen 𝕜 n) =
+        H.sugawaraStressMode n) := by
+  exact ⟨P.closure_readout,
+    (clifford_current_to_virasoro_sugawara_readout H).1,
+    (clifford_current_to_virasoro_sugawara_readout H).2⟩
+
 /-- The existing abelian Sugawara owner supplies the cardinality-style
 central-charge specialization used by the Virasoro lane. -/
 theorem abelian_central_charge_eq_dimension
@@ -159,5 +184,19 @@ theorem certified_bridge
     hlevel hdim hdual hcc⟩
 
 end BridgeData
+
+/-- The Hestenes--Krein/categorical closure is inherited unchanged.  Thin alias
+of `BridgeData.closure_readout` (the in-namespace name `closure` is reserved by
+the `BridgeData.closure` structure field). -/
+theorem closure
+    {PrimeLabel Field Coeff Finite Alg Weight Tangent State : Type*}
+    [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite]
+    [LieAlgebra ℝ Finite]
+    [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg]
+    [LieAlgebra ℝ Alg]
+    [AddCommGroup Tangent] [Module ℝ Tangent]
+    (P : BridgeData PrimeLabel Field Coeff Finite Alg Weight Tangent State) :
+    CertifiedReadout P.closure :=
+  P.closure_readout
 
 end InfoGeometry.Categorical.BraidHestenesKreinVirasoroBridge

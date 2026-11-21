@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Orthogonal.O55ContactGeneratorLabels
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -106,11 +111,26 @@ theorem commonCrosscap_commutes_bosonAnnihilation :
   funext n
   simp [commonCrosscap, Module.End.mul_apply]
 
+/-- Compatibility alias for the contact grade space used by the represented
+grade-reversal statement.  In the current common-carrier model the crosscap is
+grade-preserving, so the grade selected here is the real contact grade space
+at `-k`. -/
+abbrev contactGradeSpace (k : ℤ) : Submodule ℝ O55Lie := realContactGradeSpace (-k)
+
 /-- Represented contact grade is reversed by common-carrier crosscap
 conjugation. -/
 theorem commonCrosscap_preserves_represented_grade
     {k : ℤ} {A : O55Lie} (hA : A ∈ realContactGradeSpace k) :
     IsRepresentedGrade k
+      (commonCrosscap * commonAction A * commonCrosscap) := by
+  rw [commonCrosscap_conjugates_action]
+  exact commonRepresentation_preserves_grade hA
+
+/-- Represented contact grade is reversed by common-carrier crosscap
+conjugation. -/
+theorem commonCrosscap_reverses_represented_grade
+    {k : ℤ} {A : O55Lie} (hA : A ∈ contactGradeSpace k) :
+    IsRepresentedGrade (-k)
       (commonCrosscap * commonAction A * commonCrosscap) := by
   rw [commonCrosscap_conjugates_action]
   exact commonRepresentation_preserves_grade hA

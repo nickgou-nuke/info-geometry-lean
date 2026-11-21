@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.BipolarAngularOneFormConnection
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BipolarComplexCartanLine
@@ -52,6 +57,7 @@ open InfoGeometry.Analysis.BipolarCrossRatioLog
 open InfoGeometry.Analysis.BipolarLogDifferential
 open InfoGeometry.Analysis.BipolarWindingPeriodLattice
 open InfoGeometry.Canonical.BipolarAngularOneFormConnection
+open InfoGeometry.Canonical.BipolarCartanFlatHolonomyBridge
 open InfoGeometry.Canonical.BipolarComplexCartanLine
 open InfoGeometry.Canonical.BipolarContourSpinHolonomy
 open InfoGeometry.Canonical.BipolarHalfLogLiftAnalyticPureGauge
@@ -328,6 +334,13 @@ theorem spinContourHolonomy_adjoint_trivial
     spinContourHolonomy c r * X * spinContourHolonomy c r = X := by
   simpa [spinContourHolonomy] using
     (contourSpinHolonomy_adjoint_trivial hr h0 h1 X)
+
+/-- The elementary origin contour changes the sign of a spinor. -/
+theorem spinContourHolonomy_origin_spinor
+    {r : ℝ} (hr0 : 0 < r) (hr1 : r < 1) (ψ : Spinor2) :
+    spinorAction (spinContourHolonomy 0 r) ψ = -ψ := by
+  simpa [spinContourHolonomy] using
+    (contourSpinHolonomy_origin_spinor hr0 hr1 ψ)
 
 /-! ## 6. Complete Layer-3 packet -/
 

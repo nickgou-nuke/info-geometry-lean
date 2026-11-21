@@ -86,6 +86,21 @@ theorem onsager_production_nonnegative
   rw [onsager_production]
   exact Finset.sum_nonneg fun i _ => sq_nonneg _
 
+/-- Zero production is precisely the kernel of the chosen dissipative factor. -/
+theorem gram_contraction_eq_zero_iff (R : Matrix m n ℝ) (x : n → ℝ) :
+    dotProduct x (Rᵀ *ᵥ (R *ᵥ x)) = 0 ↔ R *ᵥ x = 0 := by
+  rw [gram_contraction]
+  constructor
+  · intro h
+    funext i
+    have hle : ((R *ᵥ x) i) ^ 2 ≤ ∑ j : m, ((R *ᵥ x) j) ^ 2 :=
+      Finset.single_le_sum (fun j _ => sq_nonneg _) (Finset.mem_univ i)
+    have hz : ((R *ᵥ x) i) ^ 2 = 0 :=
+      le_antisymm (by simpa only [h] using hle) (sq_nonneg _)
+    exact sq_eq_zero_iff.mp hz
+  · intro h
+    simp [h]
+
 /-- The symmetric part of the finite response is exactly the Gram pairing
 of the dissipative factor. -/
 theorem onsager_response_symmetric_part

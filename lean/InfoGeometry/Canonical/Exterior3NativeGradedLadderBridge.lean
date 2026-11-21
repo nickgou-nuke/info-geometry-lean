@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.RingTheory.GradedAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonion1331PureSpinorGradingBridge
@@ -45,6 +50,27 @@ theorem nativeExteriorProjector_wedge_shift_apply
       exteriorWedge3 v (nativeExteriorProjector k x) := by
   exact congrArg (fun T : Exterior3End => T x)
     (nativeExteriorProjector_wedge_shift v k)
+
+/-- The top-degree instance of the same shift identity.  No separate vanishing
+claim is made here; vanishing above degree three belongs to the exterior-power
+subsingleton API. -/
+theorem nativeExteriorProjector_wedge_shift_from_top
+    (v : V3) (x : Exterior3) :
+    nativeExteriorProjector 4 (exteriorWedge3 v x) =
+      exteriorWedge3 v (nativeExteriorProjector 3 x) := by
+  simpa using nativeExteriorProjector_wedge_shift_apply v 3 x
+
+/-- Compact theorem packet combining native graded creation with the existing
+CAR relation. -/
+theorem native_exterior_creation_CAR_projector_packet
+    (v : V3) (phi : Module.Dual ℝ V3) (k : ℕ) :
+    (nativeExteriorProjector (k + 1)).comp (exteriorWedge3 v) =
+        (exteriorWedge3 v).comp (nativeExteriorProjector k) ∧
+    exteriorContract3 phi * exteriorWedge3 v +
+        exteriorWedge3 v * exteriorContract3 phi =
+      (phi v) • (1 : Exterior3End) := by
+  exact ⟨nativeExteriorProjector_wedge_shift v k,
+    exteriorContract3_wedge3_CAR phi v⟩
 
 def nativeExteriorGrade (k : ℕ) : Set Exterior3 :=
   Set.range (nativeExteriorProjector k)

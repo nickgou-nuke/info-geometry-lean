@@ -114,6 +114,11 @@ theorem normalizedDyad_ker (v : E) (f : Module.Dual 𝕜 E)
   · intro hx
     simp [normalizedDyad_apply, hx]
 
+/-- The scalar quotient is also recovered by one more evaluation of the compression. -/
+theorem normalizedDyad_coefficient (v : E) (f : Module.Dual 𝕜 E)
+    (h : f v ≠ 0) : f (normalizedDyad v f v) / f v = 1 := by
+  rw [normalizedDyad_self v f h, div_self h]
+
 end InfoGeometry.LinearAlgebra.RegularDyadCompression
 
 namespace InfoGeometry.LinearAlgebra.RegularDyadCompression

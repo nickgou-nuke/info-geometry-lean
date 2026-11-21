@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.OfAssociative
@@ -118,6 +123,7 @@ theorem completedCurrentHeisenbergLieRepresentation_jgen_bracket
     (VirasoroProject.HeisenbergAlgebra.jgen 𝕜 m)
     (VirasoroProject.HeisenbergAlgebra.jgen 𝕜 n))
 
+abbrev Fock := VirasoroProject.ChargedFockSpace 𝕜 α
 abbrev FockEnd :=
   ModuleOfModuleAlgebra 𝕜
     (UniversalEnvelopingAlgebra 𝕜

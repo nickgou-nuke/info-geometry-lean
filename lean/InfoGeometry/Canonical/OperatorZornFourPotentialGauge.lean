@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.OperatorZornConnectionCurvatureBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NCZornProjectionNormalization
@@ -24,6 +29,11 @@ open InfoGeometry.Physics.NCG
 set_option maxHeartbeats 2000000
 
 variable {A : Type*} [Ring A]
+
+/-- Full Zorn coefficients indexed by state variations or an algebraic frame.
+No dimension, metric signature, or spacetime interpretation is imposed. -/
+abbrev ConnectionCoefficients (Direction A : Type*) [Ring A] :=
+  Direction → OperatorZornMatrix A
 
 /-- Four spacetime-indexed, full operator-Zorn connection coefficients. -/
 abbrev FourPotential (A : Type*) [Ring A] := Fin 4 → OperatorZornMatrix A

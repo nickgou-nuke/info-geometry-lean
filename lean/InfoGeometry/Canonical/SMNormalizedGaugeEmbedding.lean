@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -48,6 +53,19 @@ def hyperchargeNormalizationIndex : ℚ :=
   traceNormSq hyperchargeGenerator / traceNormSq weakT3Generator
 def normalizedWeakCouplingSq : ℚ := (traceNormSq weakT3Generator)⁻¹
 def normalizedHyperchargeCouplingSq : ℚ := (traceNormSq hyperchargeGenerator)⁻¹
+
+/-- Common trace normalization of the weak coupled generator. -/
+theorem normalizedWeakCouplingSq_traceNorm :
+    normalizedWeakCouplingSq * traceNormSq weakT3Generator = 1 := by
+  rw [normalizedWeakCouplingSq, weakT3_traceNormSq]
+  norm_num
+
+/-- Common trace normalization of the hypercharge coupled generator. -/
+theorem normalizedHyperchargeCouplingSq_traceNorm :
+    normalizedHyperchargeCouplingSq * traceNormSq hyperchargeGenerator = 1 := by
+  rw [normalizedHyperchargeCouplingSq, hypercharge_traceNormSq]
+  norm_num
+
 def derivedWeakAngleSinSq : ℚ :=
   normalizedHyperchargeCouplingSq /
     (normalizedWeakCouplingSq + normalizedHyperchargeCouplingSq)

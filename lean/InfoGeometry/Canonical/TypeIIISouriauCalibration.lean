@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.SouriauModularHamiltonianBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TypeIIIContinuousCoreReal
@@ -141,7 +146,7 @@ theorem modularGenerator_eq_neg_log_rn :
     C.typeIII.modularGenerator =
       (-Real.log C.typeIII.rn.rnDerivative) •
         InfoGeometry.Canonical.YangMillsContinuum.idEndH E :=
-  C.typeIII.modularHamiltonian_eq_neg_log_rn
+  C.typeIII.2.1
 
 end Calibration
 

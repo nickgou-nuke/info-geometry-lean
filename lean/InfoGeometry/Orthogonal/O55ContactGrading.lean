@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Orthogonal.O55ContactLie
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -83,5 +88,49 @@ theorem contactGrade_bracket
   rw [hA, hB]
   simp only [endCommutator, smul_sub, smul_mul_assoc, mul_smul_comm]
   module
+
+
+
+/-- Crosscap conjugation reverses the represented contact grade. -/
+theorem crosscap_reverses_grade {k : ℤ} {A : O55Lie}
+    (hA : A ∈ realContactGradeSpace k) :
+    crosscapConjugation A ∈ realContactGradeSpace (-k) := by
+  change IsContactGrade (-k) (crosscapConjugation A)
+  change endCommutator contactEulerEnd
+      (crosscapEnd * (A : End55) * crosscapEnd) =
+    ((-k : ℤ) : ℝ) • (crosscapEnd * (A : End55) * crosscapEnd)
+  apply LinearMap.ext
+  intro v
+  simp only [endCommutator_apply, Module.End.mul_apply, Pi.smul_apply]
+  change contactEulerEnd (crosscapEnd ((A : End55) (crosscapEnd v))) -
+      crosscapEnd ((A : End55) (crosscapEnd (contactEulerEnd v))) =
+    ((-k : ℤ) : ℝ) • crosscapEnd ((A : End55) (crosscapEnd v))
+  have hce (w : Vector55) :
+      contactEulerEnd (crosscapEnd w) = -crosscapEnd (contactEulerEnd w) := by
+    simpa only [Module.End.mul_apply, Pi.neg_apply, LinearMap.neg_apply] using
+      LinearMap.congr_fun crosscap_anticommutes_euler w
+  have hg (w : Vector55) :
+      contactEulerEnd ((A : End55) w) - (A : End55) (contactEulerEnd w) =
+        (k : ℝ) • (A : End55) w := by
+    change endCommutator contactEulerEnd (A : End55) w = ((k : ℝ) • (A : End55)) w
+    have h := LinearMap.congr_fun hA w
+    simpa [IsContactGrade, endCommutator_apply] using h
+  rw [hce ((A : End55) (crosscapEnd v))]
+  have hgv0 := hg (crosscapEnd v)
+  rw [hce v] at hgv0
+  rw [LinearMap.map_neg] at hgv0
+  have hgv :
+      contactEulerEnd ((A : End55) (crosscapEnd v)) +
+          (A : End55) (crosscapEnd (contactEulerEnd v)) =
+        (k : ℝ) • (A : End55) (crosscapEnd v) := by
+    simpa only [sub_neg_eq_add] using hgv0
+  have hsum :
+      -crosscapEnd (contactEulerEnd ((A : End55) (crosscapEnd v))) -
+          crosscapEnd ((A : End55) (crosscapEnd (contactEulerEnd v))) =
+        -(crosscapEnd (contactEulerEnd ((A : End55) (crosscapEnd v))) +
+          crosscapEnd ((A : End55) (crosscapEnd (contactEulerEnd v)))) := by
+    abel
+  rw [hsum, ← map_add, hgv]
+  simp
 
 end InfoGeometry.Orthogonal.O55Contact

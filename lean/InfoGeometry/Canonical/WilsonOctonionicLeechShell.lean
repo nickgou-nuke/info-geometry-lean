@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.E8LeechBridge
@@ -106,6 +111,33 @@ This does not assert that a future Wilson realization uses this normalization;
 that must be supplied by `WilsonShellRealization.shellNormSq`. -/
 theorem existing_leech_minimal_norm_sq : leechMinimalNormSq = 4 := by
   rfl
+
+abbrev PositiveUnitIndex := Fin 8
+abbrev ExplicitSignIndex := Fin 2
+
+/-- The two legitimate sign conventions both have cardinality 16. -/
+theorem signed_unit_bookkeeping_equivalent :
+    Fintype.card SignedUnitIndex =
+      Fintype.card (PositiveUnitIndex × ExplicitSignIndex) := by
+  simp [SignedUnitIndex, PositiveUnitIndex, ExplicitSignIndex]
+
+/-- Adding an independent sign bit on top of `SignedUnitIndex` would double
+count the same signed-unit choice. -/
+theorem signed_unit_with_extra_sign_card :
+    Fintype.card (SignedUnitIndex × ExplicitSignIndex) = 32 := by
+  simp [SignedUnitIndex, ExplicitSignIndex]
+
+/-- Triple norm readout from a root squared norm. -/
+def typeITripleNormFromRootNormSq (rootNormSq : ℝ) : ℝ :=
+  (1 / 2 : ℝ) * (4 * rootNormSq)
+
+@[simp] theorem typeI_norm_of_root_norm_one :
+    typeITripleNormFromRootNormSq 1 = 2 := by
+  norm_num [typeITripleNormFromRootNormSq]
+
+@[simp] theorem typeI_norm_of_root_norm_two :
+    typeITripleNormFromRootNormSq 2 = 4 := by
+  norm_num [typeITripleNormFromRootNormSq]
 
 end InfoGeometry.Canonical.WilsonOctonionicLeechShell
 

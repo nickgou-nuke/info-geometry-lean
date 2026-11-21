@@ -220,4 +220,17 @@ theorem affine_current_generator_colimit_summary (n : ℤ) (x : 𝓰) :
   · exact affineFiniteModeColimitMap_current Φ hΦ hΦs n x
   · exact affineFiniteModeColimitMap_central Φ hΦ hΦs
 
+/-- The PR-named packet theorem; the same content is also exported above as
+`affine_current_generator_colimit_summary`. -/
+theorem affine_current_generator_colimit_packet (n : ℤ) (x : 𝓰) :
+    (affineFiniteModeColimitMap Φ hΦ hΦs).hom
+        (affineCurrentColimitMode Φ hΦ hΦs n x) =
+      affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs n x
+    ∧
+    (affineFiniteModeColimitMap Φ hΦ hΦs).hom
+        (affineCentralColimitMode Φ hΦ hΦs) =
+      affineCentralGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs := by
+  exact affine_current_generator_colimit_summary (𝕜 := 𝕜) (𝓰 := 𝓰)
+    (Φ := Φ) (hΦ := hΦ) (hΦs := hΦs) n x
+
 end InfoGeometry.Canonical.AffineKacMoodyFiniteModeColimit

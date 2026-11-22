@@ -13,6 +13,7 @@ import InfoGeometry.Categorical.LogJordanBraidGroupInfRepresentation
 import InfoGeometry.Categorical.LogJordanBraidFiniteInfiniteCompatibility
 import InfoGeometry.Categorical.BraidGroupInfiniteColimitIso
 import InfoGeometry.Categorical.LogJordanCheckedRBraidBridge
+import InfoGeometry.Categorical.LogJordanHadjiivanovBraidingBridge
 import InfoGeometry.Clifford.LogCftMonodromy
 
 /-!
@@ -267,5 +268,10 @@ inherited from the proved owner (no non-symmetric datum). -/
 theorem hadjiivanovShearR_monodromy_ne_id :
     (hadjiivanovShearR.trans hadjiivanovShearR).toLinearMap ≠ LinearMap.id :=
   InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.standardHadjiivanov_shear_monodromy_ne_id
+
+/-- The genuine categorical checked-`R` isomorphism for the Hadjiivanov shear
+on the standard rank-two cell (no datum witness). -/
+abbrev hadjiivanovCheckedRLogIso :=
+  InfoGeometry.Categorical.LogJordanHadjiivanovBraidingBridge.standardHadjiivanovCheckedRLogIso
 
 end InfoGeometry.Categorical.HadjiivanovRMatrixBraid

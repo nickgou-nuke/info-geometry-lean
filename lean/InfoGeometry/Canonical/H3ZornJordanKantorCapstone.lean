@@ -90,4 +90,22 @@ theorem jordanInner_skew (x y : H3) : InfoGeometry.Canonical.H3ZornJordanTripleG
 @[simp] theorem jordanTriple_zero_right (x y : H3) : jordanTriple x y 0 = 0 := by
   simpa using jordanTriple_smul_right (0 : ℝ) x y 0
 
+
+theorem jordanInner_eq_baez (x y : H3) :
+    InfoGeometry.Canonical.H3ZornJordanTripleG2Bridge.jordanInner x y =
+      (h3ZornJordanInnerDerivation x y : Module.End ℝ H3) := by
+  rfl
+
+theorem jordanTriple_reverse_eq_mul_sub_inner (u v y : H3) :
+    jordanTriple v u y = (u * v) * y -
+      InfoGeometry.Canonical.H3ZornJordanTripleG2Bridge.jordanInner u v y := by
+  rw [InfoGeometry.Canonical.H3ZornTKKNative.jordanTriple_eq_mul_add_inner]
+  rw [mul_comm v u]
+  have hs := LinearMap.congr_fun (jordanInner_skew u v) y
+  simp only [LinearMap.neg_apply] at hs
+  have hs' : (innerDerivation v u) y = -(innerDerivation u v) y := by
+    simp [InfoGeometry.Canonical.H3ZornJordanTripleBridge.innerDerivation_apply]
+  rw [hs']
+  abel
+
 end InfoGeometry.Canonical.H3ZornJordanKantorCapstone

@@ -3,24 +3,28 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-import Mathlib
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import InfoGeometry.SignedNetwork.ExactCancellation
+import InfoGeometry.SignedNetwork.BranchingEventLaw
 
-/-! Finite signed initialization.
+/-!
+# Unbiased finite signed initialization
 
-The signed network stores integer counts, while a finite real coordinate vector
-is represented in expectation by sampling a label with weight proportional to
-its absolute value and retaining its sign.  This owner deliberately stops at
-the finite weighted identity; it does not identify an ensemble with a single
-real-valued count.
+An arbitrary real coordinate vector need not be an integer count difference.
+One seed is drawn with probability proportional to the absolute coordinate,
+its sign is retained, and its common weight is the L1 mass. This realizes the
+initial coordinates in expectation. A zero vector is represented by no seed.
+
+For M independent copies, averaging their weighted readouts gives the same
+initial expectation; no normalization of raw signed counts to a probability
+vector is assumed.
 -/
+
+noncomputable section
 
 namespace InfoGeometry.SignedNetwork.BranchingInitialization
 
+open MeasureTheory
 open InfoGeometry.SignedNetwork.ExactCancellation
-
-noncomputable section
+open InfoGeometry.SignedNetwork.BranchingEnsembleGenerator
 
 variable {C : Type*} [Fintype C] [DecidableEq C]
 
@@ -33,63 +37,104 @@ theorem abs_mul_seedSign (x : ℝ) : |x| * seedSign x = x := by
   · simp [seedSign, hx, abs_of_nonneg hx]
   · simp [seedSign, hx, abs_of_neg (lt_of_not_ge hx)]
 
-theorem seedMass_nonneg (w : C → ℝ) : 0 ≤ seedMass w := by
-  exact Finset.sum_nonneg fun a _ => abs_nonneg (w a)
+omit [DecidableEq C] in
+theorem seedMass_nonneg (w : C → ℝ) : 0 ≤ seedMass w :=
+  Finset.sum_nonneg (fun a _ => abs_nonneg (w a))
 
-def seedProbability (w : C → ℝ) (a : C) : ℝ :=
-  if seedMass w = 0 then 0 else |w a| / seedMass w
+omit [DecidableEq C] in
+theorem coordinate_eq_zero_of_seedMass_zero (w : C → ℝ)
+    (hZ : seedMass w = 0) (a : C) : w a = 0 := by
+  have hle : |w a| ≤ seedMass w :=
+    Finset.single_le_sum (fun b _ => abs_nonneg (w b)) (Finset.mem_univ a)
+  rw [hZ] at hle
+  exact abs_eq_zero.mp (le_antisymm hle (abs_nonneg (w a)))
 
-theorem seedProbability_nonneg (w : C → ℝ) (a : C) :
+def seedProbability (w : C → ℝ) : Option C → ℝ
+  | none => if seedMass w = 0 then 1 else 0
+  | some a => if seedMass w = 0 then 0 else |w a| / seedMass w
+
+omit [DecidableEq C] in
+theorem seedProbability_nonneg (w : C → ℝ) (a : Option C) :
     0 ≤ seedProbability w a := by
-  unfold seedProbability
-  split_ifs
-  · exact le_rfl
-  · exact div_nonneg (abs_nonneg _) (seedMass_nonneg w)
+  cases a with
+  | none => simp only [seedProbability]; split_ifs <;> norm_num
+  | some a =>
+      simp only [seedProbability]
+      split_ifs
+      · exact le_rfl
+      · exact div_nonneg (abs_nonneg _) (seedMass_nonneg w)
 
-theorem seedMass_zero_coordinate (w : C → ℝ) (h : seedMass w = 0) (a : C) :
-    w a = 0 := by
-  have ha : |w a| ≤ seedMass w := by
-    exact Finset.single_le_sum (fun b _ => abs_nonneg (w b)) (Finset.mem_univ a)
-  rw [h] at ha
-  exact abs_eq_zero.mp (le_antisymm ha (abs_nonneg _))
+omit [DecidableEq C] in
+theorem sum_seedProbability (w : C → ℝ) : (∑ a, seedProbability w a) = 1 := by
+  classical
+  by_cases hZ : seedMass w = 0
+  · simp [Fintype.sum_option, seedProbability, hZ]
+  · simp only [Fintype.sum_option, seedProbability, hZ, ite_false, zero_add]
+    rw [← Finset.sum_div]
+    exact div_self hZ
 
-def seed (w : C → ℝ) (a : C) : Counts C :=
-  if 0 ≤ w a then ⟨fun x => if x = a then 1 else 0, fun _ => 0⟩
-  else ⟨fun _ => 0, fun x => if x = a then 1 else 0⟩
+def seedPMF (w : C → ℝ) : PMF (Option C) :=
+  PMF.ofFintype (fun a => ENNReal.ofReal (seedProbability w a)) (by
+    rw [← ENNReal.ofReal_sum_of_nonneg
+      (fun a _ => seedProbability_nonneg w a), sum_seedProbability]
+    simp)
 
-theorem seed_signed (w : C → ℝ) (a x : C) :
-    ((seed w a).positive x : ℝ) - (seed w a).negative x =
-      if x = a then seedSign (w a) else 0 := by
+omit [DecidableEq C] in
+@[simp] theorem seedPMF_toReal (w : C → ℝ) (a : Option C) :
+    (seedPMF w a).toReal = seedProbability w a :=
+  ENNReal.toReal_ofReal (seedProbability_nonneg w a)
+
+/-- The sample is an actual positive or negative count, not a real coordinate
+silently substituted for a particle. -/
+def seed (w : C → ℝ) : Option C → Counts C
+  | none => ⟨fun _ => 0, fun _ => 0⟩
+  | some a => if 0 ≤ w a then ⟨atom a, fun _ => 0⟩ else ⟨fun _ => 0, atom a⟩
+
+omit [Fintype C] in
+@[simp] theorem signedReal_seed_none (w : C → ℝ) (x : C) :
+    signedReal (seed w none) x = 0 := by
+  simp [seed]
+
+omit [Fintype C] in
+theorem signedReal_seed_some (w : C → ℝ) (a x : C) :
+    signedReal (seed w (some a)) x = if x = a then seedSign (w a) else 0 := by
   by_cases ha : 0 ≤ w a <;> by_cases hx : x = a <;>
-    simp [seed, seedSign, ha, hx]
+    simp [seed, ha, atom, hx, seedSign]
 
-theorem weighted_seed_readout (w : C → ℝ) (h : seedMass w ≠ 0) (a x : C) :
-    seedProbability w a * (seedMass w *
-      (((seed w a).positive x : ℝ) - (seed w a).negative x)) =
+/-- Each nonempty outcome contains exactly one sample. -/
+theorem population_seed_some (w : C → ℝ) (a : C) :
+    population (seed w (some a)) = 1 := by
+  by_cases ha : 0 ≤ w a <;> simp [seed, ha, population, atom]
+
+/-- Exact weighted contribution of one cell to the initial expectation. -/
+theorem weighted_seed_term (w : C → ℝ) (hZ : seedMass w ≠ 0) (a x : C) :
+    (|w a| / seedMass w) * (seedMass w * signedReal (seed w (some a)) x) =
       if x = a then w a else 0 := by
-  rw [seed_signed]
+  rw [signedReal_seed_some]
   by_cases hx : x = a
-  · simp only [hx, if_true]
-    unfold seedProbability
-    rw [if_neg h]
-    field_simp [h]
-    exact abs_mul_seedSign (w a)
+  · simp only [hx, ite_true]
+    calc
+      _ = |w a| * seedSign (w a) := by field_simp [hZ]
+      _ = w a := abs_mul_seedSign (w a)
   · simp [hx]
 
-theorem weighted_seed_sum (w : C → ℝ) (x : C) :
-    (∑ a, seedProbability w a * (seedMass w *
-      (((seed w a).positive x : ℝ) - (seed w a).negative x))) = w x := by
-  by_cases h : seedMass w = 0
-  · have hx := seedMass_zero_coordinate w h x
-    rw [hx]
-    simp [seedProbability, h]
-  · simp_rw [weighted_seed_readout w h]
+section Expectation
+
+local instance : MeasurableSpace (Option C) := ⊤
+
+/-- Genuine unbiased initialization for every real finite coordinate vector. -/
+theorem integral_weighted_seed (w : C → ℝ) (x : C) :
+    (∫ a, seedMass w * signedReal (seed w a) x ∂(seedPMF w).toMeasure) = w x := by
+  rw [PMF.integral_eq_sum]
+  simp only [seedPMF_toReal, smul_eq_mul]
+  by_cases hZ : seedMass w = 0
+  · rw [coordinate_eq_zero_of_seedMass_zero w hZ x]
+    simp [hZ]
+  · simp only [Fintype.sum_option, seedProbability, hZ, ite_false,
+      zero_mul, zero_add]
+    simp_rw [weighted_seed_term w hZ]
     simp
 
+end Expectation
 
-theorem coordinate_eq_zero_of_seedMass_zero (w : C → ℝ)
-    (hZ : seedMass w = 0) (a : C) : w a = 0 :=
-  seedMass_zero_coordinate w hZ a
-
-end
 end InfoGeometry.SignedNetwork.BranchingInitialization

@@ -3,92 +3,194 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-import Mathlib
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import InfoGeometry.SignedNetwork.ExactCancellation
-import Mathlib.Data.Option.Basic
+import InfoGeometry.SignedNetwork.BranchingEnsembleGenerator
+import Mathlib.Probability.ProbabilityMassFunction.Integrals
+import Mathlib.Probability.Distributions.Exponential
+import Mathlib.MeasureTheory.MeasurableSpace.Instances
 
-/-! Finite marked-event laws.  The `none` mark is an absorbing outcome when
-the supplied total rate is zero; no continuous-time process is asserted here.
+/-!
+# Native probability laws for the next branching event and its waiting time
+
+The marked-event law is a `PMF`, including a `none` outcome at zero total rate.
+The expectation theorem is an actual Bochner integral against `PMF.toMeasure`.
+On active states the waiting time has Mathlib's `expMeasure` law, and the
+waiting time and mark have their product probability measure.
+
+`none` denotes absorption, not a zero-duration jump. Finite event-indexed
+iterates are provided. No infinite clock limit, nonexplosion, or continuous-
+time first-moment theorem is postulated by these definitions.
 -/
-namespace InfoGeometry.SignedNetwork.BranchingEventLaw
 
 noncomputable section
 
+namespace InfoGeometry.SignedNetwork.BranchingEventLaw
+
+open MeasureTheory ProbabilityTheory
+open InfoGeometry.SignedNetwork.ExactCancellation
+open InfoGeometry.SignedNetwork.BranchingEnsembleGenerator
+
 variable {C : Type*} [Fintype C] [DecidableEq C]
 
-abbrev Event (C : Type*) := C × C
+/-- An optional mark makes zero total rate an explicit absorbing outcome. -/
+def eventProbability (L : Matrix C C ℝ) (p : Counts C) : Option (Event C) → ℝ
+  | none => if totalRate L p = 0 then 1 else 0
+  | some e => if totalRate L p = 0 then 0 else eventRate L p e / totalRate L p
 
-def rate (r : C → C → ℝ) (e : Event C) : ℝ := r e.1 e.2
-
-def totalRate (r : C → C → ℝ) : ℝ := ∑ x, ∑ y, r x y
-
-def probability (r : C → C → ℝ) : Option (Event C) → ℝ
-  | none => if totalRate r = 0 then 1 else 0
-  | some e => if totalRate r = 0 then 0 else rate r e / totalRate r
-
-theorem probability_nonneg (r : C → C → ℝ) (hr : ∀ x y, 0 ≤ r x y)
-    (e : Option (Event C)) : 0 ≤ probability r e := by
+omit [DecidableEq C] in
+theorem eventProbability_nonneg (L : Matrix C C ℝ) (p : Counts C)
+    (e : Option (Event C)) : 0 ≤ eventProbability L p e := by
   cases e with
-  | none => simp [probability]; split_ifs <;> norm_num
+  | none => simp only [eventProbability]; split_ifs <;> norm_num
   | some e =>
-      unfold probability
+      simp only [eventProbability]
       split_ifs
       · exact le_rfl
-      · exact div_nonneg (hr _ _) (Finset.sum_nonneg fun x _ =>
-          Finset.sum_nonneg fun y _ => hr _ _)
+      · exact div_nonneg (eventRate_nonneg L p e) (totalRate_nonneg L p)
 
-theorem totalRate_nonneg (r : C → C → ℝ) (hr : ∀ x y, 0 ≤ r x y) :
-    0 ≤ totalRate r :=
-  Finset.sum_nonneg fun x _ => Finset.sum_nonneg fun y _ => hr _ _
-
-theorem sum_probability (r : C → C → ℝ) (hr : ∀ x y, 0 ≤ r x y) :
-    (∑ e, probability r e) = 1 := by
+omit [DecidableEq C] in
+/-- Normalization is proved from the actual event intensities. -/
+theorem sum_eventProbability (L : Matrix C C ℝ) (p : Counts C) :
+    (∑ e, eventProbability L p e) = 1 := by
   classical
-  by_cases h : totalRate r = 0
-  · simp [Fintype.sum_option, probability, h]
-  · simp only [Fintype.sum_option, probability, h, if_false, zero_add, add_zero]
+  by_cases hq : totalRate L p = 0
+  · simp [Fintype.sum_option, eventProbability, hq]
+  · simp only [Fintype.sum_option, eventProbability, hq, ite_false, zero_add]
     rw [← Finset.sum_div]
-    convert div_self h using 1 <;>
-      simp [Fintype.sum_prod_type, rate, totalRate]
+    exact div_self hq
 
-def eventPMF (r : C → C → ℝ) (hr : ∀ x y, 0 ≤ r x y) :
-    PMF (Option (Event C)) :=
-  PMF.ofFintype (fun e => ENNReal.ofReal (probability r e)) (by
+/-- The actual probability mass function, rather than a normalization predicate. -/
+def eventPMF (L : Matrix C C ℝ) (p : Counts C) : PMF (Option (Event C)) :=
+  PMF.ofFintype (fun e => ENNReal.ofReal (eventProbability L p e)) (by
     rw [← ENNReal.ofReal_sum_of_nonneg
-      (fun e _ => probability_nonneg r hr e), sum_probability r hr]
+      (fun e _ => eventProbability_nonneg L p e), sum_eventProbability]
     simp)
 
-@[simp] theorem eventPMF_toReal (r : C → C → ℝ) (hr : ∀ x y, 0 ≤ r x y)
-    (e : Option (Event C)) : (eventPMF r hr e).toReal = probability r e := by
-  exact ENNReal.toReal_ofReal (probability_nonneg r hr e)
+omit [DecidableEq C] in
+@[simp] theorem eventPMF_toReal (L : Matrix C C ℝ) (p : Counts C)
+    (e : Option (Event C)) :
+    (eventPMF L p e).toReal = eventProbability L p e := by
+  exact ENNReal.toReal_ofReal (eventProbability_nonneg L p e)
 
-def applyEvent (p : InfoGeometry.SignedNetwork.ExactCancellation.Counts C)
-    (e : Event C) : InfoGeometry.SignedNetwork.ExactCancellation.Counts C :=
-  { positive := fun x => p.positive x + if x = e.2 then 1 else 0
-    negative := fun x => p.negative x + if x = e.1 then 1 else 0 }
+omit [DecidableEq C] in
+/-- On an active state the absorbing mark has probability zero. -/
+theorem eventPMF_none_of_active (L : Matrix C C ℝ) (p : Counts C)
+    (hq : totalRate L p ≠ 0) : eventPMF L p none = 0 := by
+  simp [eventPMF, eventProbability, hq]
 
-theorem applyEvent_signed (p : InfoGeometry.SignedNetwork.ExactCancellation.Counts C)
-    (e : Event C) (x : C) :
-    (InfoGeometry.SignedNetwork.ExactCancellation.signed (applyEvent p e)) x =
-      InfoGeometry.SignedNetwork.ExactCancellation.signed p x +
-        (if x = e.2 then 1 else 0) - (if x = e.1 then 1 else 0) := by
-  simp [applyEvent, InfoGeometry.SignedNetwork.ExactCancellation.signed]
-  ring
-
-end
+omit [DecidableEq C] in
+/-- At zero rate the mark law is concentrated at absorption. -/
+theorem eventPMF_of_absorbing (L : Matrix C C ℝ) (p : Counts C)
+    (hq : totalRate L p = 0) : eventPMF L p = PMF.pure none := by
+  ext e
+  cases e <;> simp [eventPMF, eventProbability, hq]
 
 /-- Absorption preserves the state and terminates the physical jump recursion. -/
-def applyOptional {C : Type*} [Fintype C] [DecidableEq C]
-    (p : InfoGeometry.SignedNetwork.ExactCancellation.Counts C) :
-    Option (Event C) → InfoGeometry.SignedNetwork.ExactCancellation.Counts C
+def applyOptional (p : Counts C) : Option (Event C) → Counts C
   | none => p
   | some e => applyEvent p e
 
 /-- Optional deterministic pruning after the sampled event. -/
-def pruneState {C : Type*} [Fintype C] [DecidableEq C] (prune : Bool)
-    (p : InfoGeometry.SignedNetwork.ExactCancellation.Counts C) :
-    InfoGeometry.SignedNetwork.ExactCancellation.Counts C :=
-  if prune then InfoGeometry.SignedNetwork.ExactCancellation.cancel p else p
+def pruneState (prune : Bool) (p : Counts C) : Counts C :=
+  if prune then cancel p else p
+
+omit [Fintype C] [DecidableEq C] in
+@[simp] theorem signedReal_pruneState (prune : Bool) (p : Counts C) (x : C) :
+    signedReal (pruneState prune p) x = signedReal p x := by
+  cases prune
+  · rfl
+  · exact signedReal_cancel p x
+
+/-- Next count-state law, obtained by an actual pushforward of the mark PMF. -/
+def nextStatePMF (prune : Bool) (L : Matrix C C ℝ) (p : Counts C) : PMF (Counts C) :=
+  (eventPMF L p).map (fun e => pruneState prune (applyOptional p e))
+
+/-- Pruning at this event is exactly a pushforward by the canonical cancellation map. -/
+theorem nextStatePMF_pruned (L : Matrix C C ℝ) (p : Counts C) :
+    nextStatePMF true L p = (nextStatePMF false L p).map cancel := by
+  change (eventPMF L p).map (fun e => cancel (applyOptional p e)) =
+    ((eventPMF L p).map (applyOptional p)).map cancel
+  rw [PMF.map_comp]
+  rfl
+
+/-- Finite event-indexed laws. These are not fixed-physical-time laws: each
+step still needs its state-dependent exponential holding time. -/
+def eventIterates (prune : Bool) (L : Matrix C C ℝ) (p : Counts C) :
+    ℕ → PMF (Counts C)
+  | 0 => PMF.pure p
+  | k + 1 => (eventIterates prune L p k).bind (nextStatePMF prune L)
+
+@[simp] theorem eventIterates_zero (prune : Bool) (L : Matrix C C ℝ) (p : Counts C) :
+    eventIterates prune L p 0 = PMF.pure p := rfl
+
+/-- Algebraic identity needed to center the next-event expectation. -/
+theorem generator_eq_uncentered (L : Matrix C C ℝ) (F : Counts C → ℝ)
+    (p : Counts C) :
+    generator L F p = (∑ e, eventRate L p e * F (applyEvent p e)) -
+      totalRate L p * F p := by
+  simp only [generator, totalRate, mul_sub, Finset.sum_sub_distrib, Finset.sum_mul]
+
+section Measures
+
+local instance : MeasurableSpace (Option (Event C)) := ⊤
+
+/-- Genuine expectation under the finite marked-event measure, including the
+absorbing case. The inverse total rate is a holding-time factor, not physical time. -/
+theorem integral_next_event (L : Matrix C C ℝ) (p : Counts C)
+    (F : Counts C → ℝ) :
+    (∫ e, F (applyOptional p e) ∂(eventPMF L p).toMeasure) =
+      F p + generator L F p / totalRate L p := by
+  rw [PMF.integral_eq_sum]
+  simp only [eventPMF_toReal, smul_eq_mul]
+  by_cases hq : totalRate L p = 0
+  · simp [Fintype.sum_option, eventProbability, hq, applyOptional]
+  · simp only [Fintype.sum_option, eventProbability, hq, ite_false, zero_mul,
+      zero_add, applyOptional]
+    calc
+      (∑ e, eventRate L p e / totalRate L p * F (applyEvent p e)) =
+          (∑ e, eventRate L p e * F (applyEvent p e)) / totalRate L p := by
+        simp only [div_mul_eq_mul_div, Finset.sum_div]
+      _ = F p + generator L F p / totalRate L p := by
+        rw [generator_eq_uncentered, sub_div, mul_div_cancel_left₀ _ hq, add_sub_cancel]
+
+/-- Exact conditional first moment of the next marked birth. -/
+theorem integral_next_signedReal (L : Matrix C C ℝ)
+    (hL : ∀ b, ∑ a, L a b = 0) (p : Counts C) (x : C) :
+    (∫ e, signedReal (applyOptional p e) x ∂(eventPMF L p).toMeasure) =
+      signedReal p x + linearDrift L p x / totalRate L p := by
+  rw [integral_next_event L p (fun q => signedReal q x), generator_signedReal L hL]
+
+/-- The same actual expectation after optional exact cancellation. -/
+theorem integral_next_signedReal_pruned (prune : Bool) (L : Matrix C C ℝ)
+    (hL : ∀ b, ∑ a, L a b = 0) (p : Counts C) (x : C) :
+    (∫ e, signedReal (pruneState prune (applyOptional p e)) x
+      ∂(eventPMF L p).toMeasure) =
+      signedReal p x + linearDrift L p x / totalRate L p := by
+  simp only [signedReal_pruneState]
+  exact integral_next_signedReal L hL p x
+
+/-- On an active state, this is the joint law of the holding time and event
+mark. At zero rate the process is absorbed instead of drawing a holding time. -/
+def activeJumpLaw (L : Matrix C C ℝ) (p : Counts C) :
+    Measure (ℝ × Option (Event C)) :=
+  (expMeasure (totalRate L p)).prod (eventPMF L p).toMeasure
+
+omit [DecidableEq C] in
+/-- The active joint law is a native probability measure. -/
+theorem activeJumpLaw_probability (L : Matrix C C ℝ) (p : Counts C)
+    (hq : 0 < totalRate L p) : IsProbabilityMeasure (activeJumpLaw L p) := by
+  have : IsProbabilityMeasure (expMeasure (totalRate L p)) :=
+    isProbabilityMeasure_expMeasure hq
+  unfold activeJumpLaw
+  infer_instance
+
+omit [DecidableEq C] in
+/-- Exact exponential waiting-time CDF, not a one-birth-per-time-step update. -/
+theorem holdingTime_cdf (L : Matrix C C ℝ) (p : Counts C)
+    (hq : 0 < totalRate L p) (t : ℝ) (ht : 0 ≤ t) :
+    cdf (expMeasure (totalRate L p)) t =
+      1 - Real.exp (-(totalRate L p * t)) := by
+  simp [cdf_expMeasure_eq hq, ht]
+
+end Measures
 
 end InfoGeometry.SignedNetwork.BranchingEventLaw

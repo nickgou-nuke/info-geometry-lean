@@ -172,5 +172,20 @@ theorem twoNodeDAG_green_inverse :
     ext i j
     fin_cases i <;> fin_cases j <;>
       norm_num [twoNodeDAG, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- A two-vertex causal recurrence need not have row-normalized response. -/
+def twoVertexTransfer : Matrix (Fin 2) (Fin 2) ℚ := !![0, 0; 2, 0]
+
+def twoVertexGreen : Matrix (Fin 2) (Fin 2) ℚ := !![1, 0; 2, 1]
+
+theorem twoVertex_inverse :
+    (1 - twoVertexTransfer) * twoVertexGreen = 1 ∧
+      twoVertexGreen * (1 - twoVertexTransfer) = 1 := by
+  constructor <;> ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [twoVertexTransfer, twoVertexGreen, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem twoVertex_not_row_normalized : (∑ j, twoVertexGreen 1 j) ≠ 1 := by
+  norm_num [twoVertexGreen, Fin.sum_univ_two]
+
 end
 end InfoGeometry.SignedNetwork.RankedDAGResolvent

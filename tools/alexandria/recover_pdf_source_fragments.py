@@ -25,7 +25,7 @@ import tempfile
 import xml.etree.ElementTree as ET
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 
 if __package__ in (None, ""):
@@ -34,6 +34,7 @@ if __package__ in (None, ""):
 else:
     ROOT = Path(__file__).resolve().parents[2]
 
+from igf.common.json_io import write_jsonl  # noqa: E402
 from tools.alexandria.schema import content_hash, stable_key  # noqa: E402
 from tools.pathing import normalize_user_path, repo_root  # noqa: E402
 
@@ -110,10 +111,6 @@ class RecoveredCodeBlock:
 
 def canonical_json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
-
-
-# [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
-from igf.common.json_io import write_jsonl
 
 
 def clean_text(text: str) -> str:

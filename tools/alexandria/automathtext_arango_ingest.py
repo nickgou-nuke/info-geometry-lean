@@ -22,6 +22,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from igf.common.json_io import iter_jsonl  # noqa: E402
 from tools.alexandria.arango_ingest import (  # noqa: E402
     ensure_collection,
     ensure_database,
@@ -29,10 +30,12 @@ from tools.alexandria.arango_ingest import (  # noqa: E402
     import_rows,
 )
 from tools.infra.arango_env import (  # noqa: E402
+    alexandria_arango_database,
     alexandria_arango_endpoint,
-    arango_password,
-    arango_username,
-    load_repo_arango_env,
+    alexandria_arango_password,
+    alexandria_arango_username,
+    guard_alexandria_target,
+    load_alexandria_arango_env,
 )
 
 DOCUMENT_COLLECTIONS = [
@@ -169,10 +172,6 @@ class ImportPlanRow:
         }
 
 
-# [lossless-compact] iter_jsonl folded into igf.common.json_io.iter_jsonl
-from igf.common.json_io import iter_jsonl
-
-
 def count_jsonl(path: Path) -> int:
     if not path.exists():
         return 0
@@ -248,6 +247,7 @@ def import_automath_graph(
     json_out: Path | None = None,
     batch_size: int = 5000,
 ) -> dict[str, Any]:
+    guard_alexandria_target(endpoint, database)
     plan = build_import_plan(input_dir)
     missing = [row.collection for row in plan if not row.present]
     if require_all and missing:
@@ -313,9 +313,9 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input-dir", required=True, type=Path)
     parser.add_argument("--endpoint", default=alexandria_arango_endpoint())
-    parser.add_argument("--database", default="alexandria")
-    parser.add_argument("--username", default=arango_username())
-    parser.add_argument("--password", default=arango_password("alexandria_root"))
+    parser.add_argument("--database", default=alexandria_arango_database())
+    parser.add_argument("--username", default=alexandria_arango_username())
+    parser.add_argument("--password", default=alexandria_arango_password("alexandria_root"))
     parser.add_argument("--dry-run", action="store_true", help="Only report collection presence/counts; do not touch ArangoDB.")
     parser.add_argument("--skip-indexes", action="store_true", help="Create/import collections but skip persistent index creation.")
     parser.add_argument("--require-all", action="store_true", help="Fail if any automath_* JSONL collection is missing.")
@@ -325,7 +325,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> int:
-    load_repo_arango_env(Path.cwd())
+    load_alexandria_arango_env(REPO_ROOT)
     args = parse_args()
     report = import_automath_graph(
         input_dir=args.input_dir,

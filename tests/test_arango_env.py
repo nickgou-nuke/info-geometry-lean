@@ -7,14 +7,26 @@ from pathlib import Path
 import pytest
 
 from tools.infra.arango_env import (
+    DEFAULT_ALEXANDRIA_ARANGO_DATABASE,
+    DEFAULT_ALEXANDRIA_ARANGO_ENDPOINT,
+    DEFAULT_ALEXANDRIA_ENV,
     DEFAULT_ARANGO_DATABASE,
     DEFAULT_ARANGO_ENDPOINT,
     DEFAULT_ARANGO_ENV,
+    FORBIDDEN_ALEXANDRIA_DATABASES,
+    FORBIDDEN_ALEXANDRIA_PORTS,
+    alexandria_arango_database,
+    alexandria_arango_endpoint,
+    alexandria_arango_password,
+    alexandria_arango_username,
     arango_database,
     arango_endpoint,
     arango_password,
     arango_username,
+    guard_alexandria_target,
+    load_alexandria_arango_env,
     load_repo_arango_env,
+    normalized_alexandria_arango_env,
     normalized_darwin_arango_env,
     repo_root_from,
 )
@@ -173,3 +185,146 @@ def test_repo_root_from_workspace() -> None:
 def test_repo_root_from_nested_dir() -> None:
     result = repo_root_from(REPO_ROOT / "src" / "igf" / "config")
     assert result == REPO_ROOT
+
+
+# ---------------------------------------------------------------------------
+# Alexandria PDF lane isolation, env loader, and target guard (F1)
+# ---------------------------------------------------------------------------
+
+_ALEXANDRIA_VARS = (
+    "ALEXANDRIA_ARANGO_ENV_FILE",
+    "ALEXANDRIA_ARANGO_ENDPOINT",
+    "ALEXANDRIA_ARANGO_PORT",
+    "ALEXANDRIA_ARANGO_DB",
+    "ALEXANDRIA_ARANGO_DATABASE",
+    "ALEXANDRIA_ARANGO_USERNAME",
+    "ALEXANDRIA_ARANGO_USER",
+    "ALEXANDRIA_ARANGO_PASSWORD",
+    "ALEXANDRIA_ARANGO_PASS",
+)
+
+
+def _clear_alexandria_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    for var in _ALEXANDRIA_VARS:
+        monkeypatch.delenv(var, raising=False)
+
+
+def test_alexandria_arango_defaults_and_isolation_from_8530_8540(monkeypatch: pytest.MonkeyPatch) -> None:
+    _clear_alexandria_env(monkeypatch)
+    monkeypatch.setenv("ARANGO_ENDPOINT", "http://127.0.0.1:8530")
+    monkeypatch.setenv("ARANGO_DATABASE", "infogeometry")
+    monkeypatch.setenv("ARANGO_USER", "infogeo_user")
+    monkeypatch.setenv("ARANGO_USERNAME", "infogeo_user")
+    monkeypatch.setenv("ARANGO_PASS", "infogeo_secret")
+    monkeypatch.setenv("ARANGO_PASSWORD", "infogeo_secret")
+    monkeypatch.setenv("HIVE_ARANGO_ENDPOINT", "http://127.0.0.1:8540")
+    monkeypatch.setenv("HIVE_ARANGO_DATABASE", "hive_live")
+
+    assert DEFAULT_ALEXANDRIA_ARANGO_ENDPOINT == "http://127.0.0.1:8532"
+    assert DEFAULT_ALEXANDRIA_ARANGO_DATABASE == "alexandria"
+    assert DEFAULT_ALEXANDRIA_ENV == Path("configs/alexandria/.env")
+    assert FORBIDDEN_ALEXANDRIA_PORTS == frozenset({8530, 8540})
+    assert {"infogeometry", "darwin_commits", "hive_live", "aiclaw_auto_rag"} <= FORBIDDEN_ALEXANDRIA_DATABASES
+
+    assert alexandria_arango_endpoint() == "http://127.0.0.1:8532"
+    assert alexandria_arango_database() == "alexandria"
+    assert alexandria_arango_username() == "root"
+    assert alexandria_arango_password() == ""
+    assert normalized_alexandria_arango_env() == {
+        "endpoint": "http://127.0.0.1:8532",
+        "database": "alexandria",
+        "user": "root",
+        "password": "",
+    }
+
+
+def test_load_alexandria_arango_env_derives_endpoint_and_preserves_non_alexandria_vars(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _clear_alexandria_env(monkeypatch)
+    monkeypatch.setenv("ARANGO_ENDPOINT", "http://127.0.0.1:8530")
+    monkeypatch.setenv("ARANGO_DATABASE", "infogeometry")
+    monkeypatch.setenv("ARANGO_USER", "infogeo_user")
+    monkeypatch.setenv("ARANGO_PASS", "infogeo_pass")
+
+    env_file = tmp_path / "configs" / "alexandria" / ".env"
+    env_file.parent.mkdir(parents=True)
+    env_file.write_text(
+        "\n".join(
+            [
+                "ARANGO_ROOT_PASSWORD=from_root_pw",
+                "ALEXANDRIA_ARANGO_PORT=8532",
+                "ALEXANDRIA_ARANGO_DB=alexandria",
+                "ALEXANDRIA_ARANGO_USERNAME=alex_user",
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    loaded = load_alexandria_arango_env(tmp_path)
+    assert loaded == env_file
+    assert alexandria_arango_endpoint() == "http://127.0.0.1:8532"
+    assert alexandria_arango_database() == "alexandria"
+    assert alexandria_arango_username() == "alex_user"
+    assert alexandria_arango_password() == "from_root_pw"
+    # Must never overwrite or mutate InfoTree :8530 env vars
+    assert os.environ["ARANGO_ENDPOINT"] == "http://127.0.0.1:8530"
+    assert os.environ["ARANGO_DATABASE"] == "infogeometry"
+    assert os.environ["ARANGO_USER"] == "infogeo_user"
+    assert os.environ["ARANGO_PASS"] == "infogeo_pass"
+
+
+def test_load_alexandria_arango_env_respects_explicit_override_and_missing_file(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _clear_alexandria_env(monkeypatch)
+    assert load_alexandria_arango_env(tmp_path) is None
+
+    custom_env = tmp_path / "custom_alex.env"
+    custom_env.write_text(
+        "ALEXANDRIA_ARANGO_PORT=8599\nALEXANDRIA_ARANGO_PASSWORD=file_pw\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("ALEXANDRIA_ARANGO_ENV_FILE", str(custom_env))
+    monkeypatch.setenv("ALEXANDRIA_ARANGO_PASSWORD", "explicit_pw")
+    monkeypatch.setenv("ALEXANDRIA_ARANGO_DATABASE", "custom_alex_db")
+
+    loaded = load_alexandria_arango_env(tmp_path)
+    assert loaded == custom_env
+    assert alexandria_arango_endpoint() == "http://127.0.0.1:8599"
+    assert alexandria_arango_password() == "explicit_pw"
+    assert alexandria_arango_database() == "custom_alex_db"
+
+
+@pytest.mark.parametrize(
+    "endpoint,database",
+    [
+        ("http://127.0.0.1:8530", "alexandria"),
+        ("https://127.0.0.1:8530/", "alexandria"),
+        ("http://127.0.0.1:8530/some/path", "alexandria"),
+        ("127.0.0.1:8530", "alexandria"),
+        ("[::1]:8530", "alexandria"),
+        ("http://root:pw@127.0.0.1:8530", "alexandria"),
+        ("http://127.0.0.1:8540", "alexandria"),
+        ("[::1]:8540", "alexandria"),
+        ("http://127.0.0.1:8532", "infogeometry"),
+        ("http://127.0.0.1:8532", "InfoGeometry"),
+        ("http://127.0.0.1:8532", "darwin_commits"),
+        ("http://127.0.0.1:8532", "hive_live"),
+        ("http://127.0.0.1:8532", "aiclaw_auto_rag"),
+        ("", "alexandria"),
+        ("http://127.0.0.1:8532", ""),
+        ("http:///nohost:8532", "alexandria"),
+        ("http://127.0.0.1:99999", "alexandria"),
+    ],
+)
+def test_guard_alexandria_target_rejects_forbidden_targets(endpoint: str, database: str) -> None:
+    with pytest.raises(ValueError):
+        guard_alexandria_target(endpoint, database)
+
+
+def test_guard_alexandria_target_accepts_8532_alexandria() -> None:
+    guard_alexandria_target("http://127.0.0.1:8532", "alexandria")
+    guard_alexandria_target("http://127.0.0.1:8532/", "alexandria_test")
+

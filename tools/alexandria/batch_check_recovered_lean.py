@@ -29,6 +29,7 @@ if __package__ in (None, ""):
 else:
     ROOT = Path(__file__).resolve().parents[2]
 
+from igf.common.json_io import write_jsonl  # noqa: E402
 from tools.alexandria.schema import stable_key  # noqa: E402
 from tools.pathing import normalize_user_path, repo_root  # noqa: E402
 
@@ -61,10 +62,6 @@ class LeanCheckResult:
 
 def canonical_json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
-
-
-# [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
-from igf.common.json_io import write_jsonl
 
 
 def load_jsonl(path: Path) -> list[dict[str, Any]]:

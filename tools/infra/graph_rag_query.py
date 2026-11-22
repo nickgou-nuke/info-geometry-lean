@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-from __future__ import annotations
-
 """Unified natural-language GraphRAG explorer for the repo.
 
 This is intentionally authority-safe:
@@ -9,16 +7,27 @@ This is intentionally authority-safe:
 - External corpora are searched as mirrors only; they are never treated as proofs.
 """
 
+from __future__ import annotations
+
 import argparse
 import json
 import re
 import subprocess
+import sys
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
+from urllib.error import URLError
 
 ROOT = Path(__file__).resolve().parents[2]
+for _path in (str(ROOT), str(ROOT / "src")):
+    if _path not in sys.path:
+        sys.path.insert(0, _path)
+
+VALID_SCOPES = frozenset({"all", "lean", "docs", "external", "gravity", "alexandria"})
+ALEXANDRIA_AUTHORITY = "retrieval_context_only"
+ALEXANDRIA_DISCLAIMER = "Alexandria PDF results are retrieval context only; NOT verified Lean proof evidence."
 DEFAULT_LEAN_RECORDS = ROOT / "artifacts" / "leansearch_local" / "records.jsonl"
 DEFAULT_EXTERNAL_ROOT = ROOT / "external_refs"
 DEFAULT_DOC_ROOTS = [ROOT / "docs", ROOT / "handover"]
@@ -105,7 +114,7 @@ def search_text_roots(roots: list[Path], query: str, limit: int) -> list[Hit]:
 
 
 # [lossless-compact] read_jsonl folded into igf.common.json_io.read_jsonl
-from igf.common.json_io import read_jsonl
+from igf.common.json_io import read_jsonl  # noqa: E402
 
 
 def search_lean_records(records_path: Path, query: str, limit: int) -> list[Hit]:
@@ -259,6 +268,101 @@ def search_external_corpus(corpus_root: Path, query: str, limit: int) -> list[Hi
     return hits[:limit]
 
 
+def parse_scopes(raw: str) -> tuple[str, ...]:
+    parts = [part.strip().lower() for part in str(raw).split(",") if part.strip()]
+    if not parts:
+        raise argparse.ArgumentTypeError("scope must not be empty")
+    invalid = [part for part in parts if part not in VALID_SCOPES]
+    if invalid:
+        allowed = ", ".join(sorted(VALID_SCOPES))
+        raise argparse.ArgumentTypeError(f"invalid scope(s): {', '.join(invalid)} (choose from {allowed})")
+    deduped: list[str] = []
+    for part in parts:
+        if part not in deduped:
+            deduped.append(part)
+    return tuple(deduped)
+
+
+def search_alexandria(
+    query: str,
+    limit: int,
+    *,
+    endpoint: str | None = None,
+    database: str | None = None,
+) -> list[Hit]:
+    from tools.alexandria.retrieve_context import retrieve_arango_context
+
+    packet = retrieve_arango_context(
+        query,
+        endpoint=endpoint,
+        database=database,
+        top_k=limit,
+        hops=1,
+    )
+    qterms = tokenize(query)
+    hits: list[Hit] = []
+    for row in packet.get("hits", []):
+        if not isinstance(row, dict):
+            continue
+        chunk = row.get("chunk") if isinstance(row.get("chunk"), dict) else {}
+        doc = row.get("document") if isinstance(row.get("document"), dict) else {}
+        prov = chunk.get("provenance") if isinstance(chunk.get("provenance"), dict) else {}
+        path = str(row.get("path") or prov.get("path") or doc.get("path") or "")
+        title = str(
+            row.get("title")
+            or doc.get("title")
+            or chunk.get("title")
+            or (Path(path).name if path else "")
+            or "Alexandria PDF chunk"
+        )
+        text = str(chunk.get("text") or "")
+        snippet = excerpt(text, qterms) or re.sub(r"\s+", " ", text).strip()[:280]
+        entities = [
+            {
+                "surface": e.get("surface"),
+                "normalized": e.get("normalized"),
+                "entityType": e.get("entityType"),
+            }
+            for e in (row.get("entities") or [])[:8]
+            if isinstance(e, dict)
+        ]
+        dag_neighbors = [
+            {
+                "_key": d.get("_key"),
+                "edgeType": d.get("edgeType"),
+                "direction": d.get("direction"),
+                "chunkKind": d.get("chunkKind"),
+                "title": d.get("title"),
+                "surface": d.get("surface"),
+            }
+            for d in (row.get("dagNeighbors") or [])[:6]
+            if isinstance(d, dict)
+        ]
+        hits.append(
+            Hit(
+                source="alexandria",
+                title=title,
+                path=path,
+                score=float(row.get("score") or 0.0),
+                snippet=snippet,
+                metadata={
+                    "authority": ALEXANDRIA_AUTHORITY,
+                    "sourceAuthority": ALEXANDRIA_AUTHORITY,
+                    "documentKey": row.get("documentKey") or chunk.get("documentKey"),
+                    "chunkKey": row.get("chunkKey") or chunk.get("_key"),
+                    "chunkKind": row.get("chunkKind") or chunk.get("chunkKind"),
+                    "contentHash": row.get("contentHash") or prov.get("contentHash") or doc.get("contentHash"),
+                    "pageStart": row.get("pageStart") if row.get("pageStart") is not None else prov.get("pageStart"),
+                    "pageEnd": row.get("pageEnd") if row.get("pageEnd") is not None else prov.get("pageEnd"),
+                    "section": prov.get("section"),
+                    "entities": entities,
+                    "dagNeighbors": dag_neighbors,
+                },
+            )
+        )
+    return hits
+
+
 def run_gravity(query: str, limit: int) -> dict[str, Any]:
     cmd = [
         "python3",
@@ -312,15 +416,28 @@ def main() -> int:
     ap.add_argument("--extra-black-books-root", action="append", type=Path, default=[])
     ap.add_argument("--handover-root", type=Path, default=ROOT / "handover")
     ap.add_argument("--no-gravity", action="store_true")
-    ap.add_argument("--scope", choices=["all", "lean", "docs", "external", "gravity"], default="all")
+    ap.add_argument(
+        "--scope",
+        type=parse_scopes,
+        default="all",
+        help="Scope(s): all, lean, docs, external, gravity, alexandria (comma-separated allowed)",
+    )
+    ap.add_argument("--alexandria-endpoint", default=None)
+    ap.add_argument("--alexandria-database", default=None)
     ap.add_argument("--format", choices=["md", "json"], default="md")
     args = ap.parse_args()
+    if args.top_k < 0:
+        ap.error("--top-k must be >= 0")
 
+    scopes = parse_scopes(args.scope) if isinstance(args.scope, str) else args.scope
+    scope_str = ",".join(scopes)
+    has_all = "all" in scopes
     docs_roots = args.docs_root or DEFAULT_DOC_ROOTS
-    do_lean = args.scope in {"all", "lean"}
-    do_docs = args.scope in {"all", "docs"}
-    do_external = args.scope in {"all", "external"}
-    do_gravity = args.scope in {"all", "gravity"} and not args.no_gravity
+    do_lean = has_all or ("lean" in scopes)
+    do_docs = has_all or ("docs" in scopes)
+    do_external = has_all or ("external" in scopes)
+    do_gravity = (has_all or ("gravity" in scopes)) and not args.no_gravity
+    do_alexandria = "alexandria" in scopes
 
     blackbook_roots: list[Path] = []
     for bb in [args.black_books_root, *DEFAULT_BLACKBOOK_ROOTS, *(args.extra_black_books_root or [])]:
@@ -343,18 +460,45 @@ def main() -> int:
         external_hits.sort(key=lambda h: (-h.score, h.title, h.path))
         external_hits = external_hits[: args.top_k]
 
+    alexandria_hits: list[Hit] = []
+    if do_alexandria:
+        try:
+            alexandria_hits = search_alexandria(
+                args.query,
+                args.top_k,
+                endpoint=args.alexandria_endpoint,
+                database=args.alexandria_database,
+            )
+        except ValueError as exc:
+            print(json.dumps({"error": str(exc)}, ensure_ascii=False), file=sys.stderr)
+            return 2
+        except (URLError, OSError, RuntimeError) as exc:
+            print(json.dumps({"error": f"Alexandria query failed: {exc}"}, ensure_ascii=False), file=sys.stderr)
+            return 1
+
     gravity = None
     if do_gravity:
         gravity = run_gravity(args.query, args.top_k)
 
-    result = {
+    result: dict[str, Any] = {
         "query": args.query,
         "topK": args.top_k,
+        "scope": scope_str,
         "lean": [hit.__dict__ for hit in lean_hits],
         "docs": [hit.__dict__ for hit in text_hits],
         "external": [hit.__dict__ for hit in external_hits],
+        "alexandria": [hit.__dict__ for hit in alexandria_hits],
         "gravity": gravity,
+        "authorities": {
+            "lean": "proof_or_navigation_authority",
+            "docs": "retrieval_context_only",
+            "external": "search_only_mirror",
+            "alexandria": ALEXANDRIA_AUTHORITY,
+        },
     }
+    if do_alexandria and not do_lean:
+        result["authority"] = ALEXANDRIA_AUTHORITY
+        result["disclaimer"] = ALEXANDRIA_DISCLAIMER
 
     if args.format == "json":
         print(json.dumps(result, indent=2, ensure_ascii=False))
@@ -364,6 +508,9 @@ def main() -> int:
     print(format_md_section("Lean declarations", lean_hits))
     print(format_md_section("Docs / black books / handover", text_hits))
     print(format_md_section("External mirrors", external_hits))
+    if do_alexandria:
+        print(format_md_section("Alexandria PDFs (retrieval_context_only — not verified Lean proof evidence)", alexandria_hits))
+        print(f"Authority: `{ALEXANDRIA_AUTHORITY}` — {ALEXANDRIA_DISCLAIMER}\n")
     if gravity is not None:
         print("## Gravity context")
         print("")

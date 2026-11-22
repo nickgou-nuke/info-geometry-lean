@@ -28,10 +28,12 @@ from tools.alexandria.automathtext_arango_ingest import (  # noqa: E402
     EDGE_COLLECTIONS,
 )
 from tools.infra.arango_env import (  # noqa: E402
+    alexandria_arango_database,
     alexandria_arango_endpoint,
-    arango_password,
-    arango_username,
-    load_repo_arango_env,
+    alexandria_arango_password,
+    alexandria_arango_username,
+    guard_alexandria_target,
+    load_alexandria_arango_env,
 )
 
 AqlRunner = Callable[[str, dict[str, Any] | None], list[Any]]
@@ -307,17 +309,18 @@ def make_live_runner(args: argparse.Namespace) -> AqlRunner:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--endpoint", default=alexandria_arango_endpoint())
-    parser.add_argument("--database", default="alexandria")
-    parser.add_argument("--username", default=arango_username())
-    parser.add_argument("--password", default=arango_password("alexandria_root"))
+    parser.add_argument("--database", default=alexandria_arango_database())
+    parser.add_argument("--username", default=alexandria_arango_username())
+    parser.add_argument("--password", default=alexandria_arango_password("alexandria_root"))
     parser.add_argument("--json", action="store_true", help="Print full JSON report.")
     parser.add_argument("--json-out", type=Path, help="Write full JSON report to path.")
     return parser.parse_args()
 
 
 def main() -> int:
-    load_repo_arango_env(Path.cwd())
+    load_alexandria_arango_env(REPO_ROOT)
     args = parse_args()
+    guard_alexandria_target(args.endpoint, args.database)
     report = run_checks(make_live_runner(args))
     if args.json_out:
         args.json_out.parent.mkdir(parents=True, exist_ok=True)

@@ -2,12 +2,13 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import re
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
+
+from igf.common.hashing import stable_hash
 
 
 DEFAULT_IMPORTS = [
@@ -28,10 +29,6 @@ class LeanCandidate:
     obligations: list[str]
     ancestry_hash: str
     ancestry_sources: list[str]
-
-
-# [lossless-compact] stable_hash folded into igf.common.hashing.stable_hash
-from igf.common.hashing import stable_hash
 
 
 def load_packet(path: Path) -> dict[str, Any]:

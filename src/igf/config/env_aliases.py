@@ -4,15 +4,22 @@ import os
 import re
 from pathlib import Path
 from typing import Optional
+from urllib.parse import urlsplit
 
 
 DEFAULT_ARANGO_ENDPOINT = "http://127.0.0.1:8530"
 DEFAULT_ALEXANDRIA_ARANGO_ENDPOINT = "http://127.0.0.1:8532"
+DEFAULT_ALEXANDRIA_ARANGO_DATABASE = "alexandria"
 DEFAULT_HIVE_ARANGO_ENDPOINT = "http://127.0.0.1:8540"
 DEFAULT_ARANGO_DATABASE = "infogeometry"
 DEFAULT_DARWIN_ARANGO_DATABASE = "darwin_commits"
 DEFAULT_HIVE_ARANGO_DATABASE = "hive_live"
 DEFAULT_ARANGO_ENV = Path("configs/local/hive_arango.env")
+DEFAULT_ALEXANDRIA_ENV = Path("configs/alexandria/.env")
+FORBIDDEN_ALEXANDRIA_PORTS = frozenset({8530, 8540})
+FORBIDDEN_ALEXANDRIA_DATABASES = frozenset(
+    {"infogeometry", "darwin_commits", "hive_live", "aiclaw_auto_rag"}
+)
 
 ALIASES = {
     "ARANGO_USER": ("ARANGO_USER", "ARANGO_USERNAME"),
@@ -22,10 +29,10 @@ ALIASES = {
 }
 
 ALEXANDRIA_ALIASES = {
-    "ARANGO_USER": ("ALEXANDRIA_ARANGO_USERNAME", "ARANGO_USER", "ARANGO_USERNAME"),
-    "ARANGO_PASS": ("ALEXANDRIA_ARANGO_PASSWORD", "ARANGO_PASS", "ARANGO_PASSWORD"),
+    "ARANGO_USER": ("ALEXANDRIA_ARANGO_USERNAME", "ALEXANDRIA_ARANGO_USER"),
+    "ARANGO_PASS": ("ALEXANDRIA_ARANGO_PASSWORD", "ALEXANDRIA_ARANGO_PASS"),
     "ARANGO_ENDPOINT": ("ALEXANDRIA_ARANGO_ENDPOINT",),
-    "ARANGO_DATABASE": ("ALEXANDRIA_ARANGO_DB",),
+    "ARANGO_DATABASE": ("ALEXANDRIA_ARANGO_DB", "ALEXANDRIA_ARANGO_DATABASE"),
 }
 
 HIVE_ALIASES = {
@@ -102,6 +109,74 @@ def load_repo_arango_env(repo_root: Path | None = None) -> Path | None:
     )
     os.environ.setdefault("HIVE_DATABASE", os.environ["HIVE_ARANGO_DATABASE"])
     return env_path
+
+
+def load_alexandria_arango_env(repo_root: Path | None = None) -> Path | None:
+    """Load Alexandria-lane Arango settings without touching ARANGO_* or HIVE_*."""
+    root = repo_root or repo_root_from(Path.cwd())
+    configured = os.environ.get("ALEXANDRIA_ARANGO_ENV_FILE")
+    env_path = Path(configured) if configured else root / DEFAULT_ALEXANDRIA_ENV
+    if not env_path.exists():
+        return None
+
+    root_password = ""
+    for raw_line in env_path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        if not key or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", key):
+            continue
+        cleaned = _strip_env_value(value)
+        if key == "ARANGO_ROOT_PASSWORD":
+            if not root_password:
+                root_password = cleaned
+            continue
+        if key.startswith("ALEXANDRIA_"):
+            os.environ.setdefault(key, cleaned)
+
+    if root_password and not get_env_alias(*ALEXANDRIA_ALIASES["ARANGO_PASS"]):
+        os.environ["ALEXANDRIA_ARANGO_PASSWORD"] = root_password
+
+    if not get_env_alias(*ALEXANDRIA_ALIASES["ARANGO_ENDPOINT"]):
+        port = os.environ.get("ALEXANDRIA_ARANGO_PORT", "").strip()
+        default_endpoint = f"http://127.0.0.1:{port}" if port else DEFAULT_ALEXANDRIA_ARANGO_ENDPOINT
+        os.environ["ALEXANDRIA_ARANGO_ENDPOINT"] = default_endpoint
+
+    if not get_env_alias(*ALEXANDRIA_ALIASES["ARANGO_DATABASE"]):
+        os.environ["ALEXANDRIA_ARANGO_DB"] = DEFAULT_ALEXANDRIA_ARANGO_DATABASE
+
+    if not get_env_alias(*ALEXANDRIA_ALIASES["ARANGO_USER"]):
+        os.environ["ALEXANDRIA_ARANGO_USERNAME"] = "root"
+
+    return env_path
+
+
+def guard_alexandria_target(endpoint: str, database: str) -> None:
+    """Reject non-Alexandria ports (:8530, :8540) and non-Alexandria databases."""
+    ep_clean = str(endpoint or "").strip()
+    db_clean = str(database or "").strip()
+    if not ep_clean:
+        raise ValueError("Alexandria Arango endpoint must be non-empty.")
+    if not db_clean:
+        raise ValueError("Alexandria Arango database must be non-empty.")
+    if db_clean.lower() in FORBIDDEN_ALEXANDRIA_DATABASES:
+        raise ValueError(
+            f"Refusing Alexandria target database {db_clean!r}: belongs to a non-Alexandria lane "
+            f"(forbidden: {sorted(FORBIDDEN_ALEXANDRIA_DATABASES)})."
+        )
+
+    candidate = ep_clean if "://" in ep_clean else f"http://{ep_clean}"
+    parsed = urlsplit(candidate)
+    if not parsed.hostname:
+        raise ValueError(f"Invalid Alexandria endpoint (missing hostname): {endpoint!r}")
+    port = parsed.port
+    if port in FORBIDDEN_ALEXANDRIA_PORTS:
+        raise ValueError(
+            f"Refusing Alexandria endpoint {endpoint!r} on forbidden port {port}: "
+            "this port belongs to a non-Alexandria lane; use :8532 for Alexandria."
+        )
 
 
 def get_env_alias(*names: str) -> str:
@@ -200,7 +275,7 @@ def alexandria_arango_endpoint(default: str = DEFAULT_ALEXANDRIA_ARANGO_ENDPOINT
     return get_env_alias(*ALEXANDRIA_ALIASES["ARANGO_ENDPOINT"]) or default
 
 
-def alexandria_arango_database(default: str = "alexandria") -> str:
+def alexandria_arango_database(default: str = DEFAULT_ALEXANDRIA_ARANGO_DATABASE) -> str:
     return get_env_alias(*ALEXANDRIA_ALIASES["ARANGO_DATABASE"]) or default
 
 

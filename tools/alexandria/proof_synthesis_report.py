@@ -3,11 +3,24 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
-from tools.alexandria.arango_ingest import db_url, request_json
-from tools.infra.arango_env import alexandria_arango_endpoint, arango_password, arango_username, load_repo_arango_env
+REPO_ROOT = Path(__file__).resolve().parents[2]
+for _p in (REPO_ROOT, REPO_ROOT / "src"):
+    if str(_p) not in sys.path:
+        sys.path.insert(0, str(_p))
+
+from tools.alexandria.arango_ingest import db_url, request_json  # noqa: E402
+from tools.infra.arango_env import (  # noqa: E402
+    alexandria_arango_database,
+    alexandria_arango_endpoint,
+    alexandria_arango_password,
+    alexandria_arango_username,
+    guard_alexandria_target,
+    load_alexandria_arango_env,
+)
 
 
 LEAN_ANCHORS = [
@@ -170,7 +183,7 @@ def write_outputs(packet: dict[str, Any], json_out: Path | None, md_out: Path | 
 
 
 def main() -> int:
-    load_repo_arango_env(Path.cwd())
+    load_alexandria_arango_env(REPO_ROOT)
     ap = argparse.ArgumentParser(description="Build a witness-backed proof synthesis prompt from Alexandria SCC Deep Discovery")
     ap.add_argument("--aql", type=Path, help="AQL file to execute against Arango")
     ap.add_argument("--input-json", type=Path, help="Previously saved discovery result list or packet")
@@ -180,15 +193,16 @@ def main() -> int:
     ap.add_argument("--max-depth", type=int, default=6)
     ap.add_argument("--limit", type=int, default=25)
     ap.add_argument("--endpoint", default=alexandria_arango_endpoint())
-    ap.add_argument("--database", default="alexandria")
-    ap.add_argument("--username", default=arango_username())
-    ap.add_argument("--password", default=arango_password("alexandria_root"))
+    ap.add_argument("--database", default=alexandria_arango_database())
+    ap.add_argument("--username", default=alexandria_arango_username())
+    ap.add_argument("--password", default=alexandria_arango_password("alexandria_root"))
     ap.add_argument("--json-out", type=Path)
     ap.add_argument("--md-out", type=Path)
     args = ap.parse_args()
 
     if args.input_json is None and args.aql is None:
         ap.error("provide --input-json or --aql")
+    guard_alexandria_target(args.endpoint, args.database)
 
     if args.input_json is not None:
         loaded = json.loads(args.input_json.read_text(encoding="utf-8"))

@@ -21,34 +21,37 @@ import sys
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 from urllib.request import Request, urlopen
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from tools.alexandria.schema import content_hash, infer_source_kind, source_uri
-from tools.alexandria.arango_ingest import (
+from igf.common.hashing import stable_hash  # noqa: E402
+from igf.common.json_io import write_jsonl  # noqa: E402
+from tools.alexandria.schema import content_hash, infer_source_kind, source_uri  # noqa: E402
+from tools.alexandria.arango_ingest import (  # noqa: E402
     ensure_collection,
     ensure_database,
     ensure_index,
     import_rows,
 )
-from tools.alexandria.structural_chunking import tokenize
-from tools.infra.arango_env import (
+from tools.alexandria.structural_chunking import tokenize  # noqa: E402
+from tools.infra.arango_env import (  # noqa: E402
+    alexandria_arango_database,
     alexandria_arango_endpoint,
-    arango_database,
-    arango_password,
-    arango_username,
-    load_repo_arango_env,
+    alexandria_arango_password,
+    alexandria_arango_username,
+    guard_alexandria_target,
+    load_alexandria_arango_env,
 )
-from tools.infra.build_predigestion_packets import (
+from tools.infra.build_predigestion_packets import (  # noqa: E402
     build_packets,
     summary_for as claim_summary_for,
     write_jsonl as write_claim_jsonl,
 )
-from tools.infra.hive_predigestion_ingest import (
+from tools.infra.hive_predigestion_ingest import (  # noqa: E402
     build_tasks,
     summary_for as task_summary_for,
     write_jsonl as write_task_jsonl,
@@ -166,10 +169,6 @@ def canonical_json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
 
 
-# [lossless-compact] stable_hash folded into igf.common.hashing.stable_hash
-from igf.common.hashing import stable_hash
-
-
 def short_key(prefix: str, value: str) -> str:
     return f"{prefix}_{hashlib.md5(value.encode('utf-8')).hexdigest()[:16]}"
 
@@ -177,14 +176,6 @@ def short_key(prefix: str, value: str) -> str:
 def write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=True, sort_keys=True) + "\n", encoding="utf-8")
-
-
-# [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
-from igf.common.json_io import write_jsonl
-
-
-# [lossless-compact] read_jsonl folded into igf.common.json_io.read_jsonl
-from igf.common.json_io import read_jsonl
 
 
 def iter_input_files(inputs: list[Path]) -> list[Path]:
@@ -708,6 +699,7 @@ def ingest_txt2kg_arango(
     entities: list[dict[str, Any]],
     relationships: list[dict[str, Any]],
 ) -> dict[str, Any]:
+    guard_alexandria_target(endpoint, database)
     ensure_database(endpoint, database, username, password)
     for collection in TXT2KG_DOCUMENT_COLLECTIONS:
         ensure_collection(endpoint, database, username, password, collection, edge=False)
@@ -759,7 +751,6 @@ def make_predigestion_rows(chunks: list[dict[str, Any]], triples: list[dict[str,
             "text": chunk.get("text"),
             "claim": claim,
             "symbols": sorted({symbol for symbol in symbols if symbol}),
-            "authority": "semantic",
             "repo_owner_candidates": [],
             "lean_target_candidates": [],
             "authority": "source_text",
@@ -831,11 +822,13 @@ def source_kind_for_predigestion(source_rows: list[dict[str, Any]], override: st
 
 
 def run_pipeline(args: argparse.Namespace) -> dict[str, Any]:
-    load_repo_arango_env(REPO_ROOT)
+    load_alexandria_arango_env(REPO_ROOT)
     arango_endpoint_resolved = args.arango_endpoint or alexandria_arango_endpoint()
-    arango_database_resolved = args.arango_database or arango_database()
-    arango_username_resolved = args.arango_username or arango_username()
-    arango_password_resolved = args.arango_password or arango_password()
+    arango_database_resolved = args.arango_database or alexandria_arango_database()
+    arango_username_resolved = args.arango_username or alexandria_arango_username()
+    arango_password_resolved = args.arango_password or alexandria_arango_password("alexandria_root")
+    if args.ingest_arango:
+        guard_alexandria_target(arango_endpoint_resolved, arango_database_resolved)
 
     input_files = iter_input_files([Path(raw) for raw in args.input])
     output_dir = Path(args.output_dir)

@@ -2,8 +2,18 @@ from __future__ import annotations
 
 import hashlib
 from pathlib import Path
+from typing import Any
 
 SCHEMA_VERSION = "info_geometry.alexandria.semantic_ingest.v2"
+DAG_EDGE_COLLECTION = "alexandria_dag_edges"
+DAG_EDGE_TYPES = (
+    "section_precedes_section",
+    "proof_proves_theorem",
+    "chunk_uses_definition",
+    "chunk_references_result",
+    "chunk_cites_entry",
+    "document_cites_document",
+)
 
 DOCUMENT_COLLECTIONS = [
     "alexandria_documents",
@@ -22,10 +32,25 @@ EDGE_COLLECTIONS = [
     "alexandria_chunk_entity_edges",
     "alexandria_chunk_adjacent_edges",
     "alexandria_entity_relation_edges",
+    "alexandria_dag_edges",
     "alexandria_chunk_embedding_edges",
     "alexandria_chunk_community_edges",
     "alexandria_repair_lineage_edges",
 ]
+
+
+def has_valid_edge_endpoints(row: dict[str, Any]) -> bool:
+    """Return True if ``_from`` and ``_to`` are non-empty ``collection/key`` strings."""
+    for field in ("_from", "_to"):
+        val = row.get(field)
+        if not isinstance(val, str) or not val or val.strip() != val:
+            return False
+        if val.count("/") != 1:
+            return False
+        col, key = val.split("/", 1)
+        if not col or not key or any(ch.isspace() for ch in val):
+            return False
+    return True
 
 
 def stable_key(prefix: str, *parts: object) -> str:

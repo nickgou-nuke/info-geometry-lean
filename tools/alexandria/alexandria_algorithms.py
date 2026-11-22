@@ -2,12 +2,14 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 from collections import Counter, defaultdict, deque
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+from igf.common.hashing import stable_hash
+from igf.common.json_io import read_jsonl, write_jsonl
 
 SCHEMA = "info_geometry.alexandria_algorithms.v1"
 ANCHOR_TYPES = {"theorem", "theorem_name", "module", "identifier"}
@@ -32,14 +34,6 @@ class AlexandriaGraph:
     entities_by_chunk: dict[str, list[dict[str, Any]]]
     canonical_entities: dict[str, list[dict[str, Any]]]
     canonical_to_chunks: dict[str, list[str]]
-
-
-# [lossless-compact] stable_hash folded into igf.common.hashing.stable_hash
-from igf.common.hashing import stable_hash
-
-
-# [lossless-compact] read_jsonl folded into igf.common.json_io.read_jsonl
-from igf.common.json_io import read_jsonl
 
 
 def chunk_key_from_doc_id(doc_id: str) -> str:
@@ -358,10 +352,6 @@ def basin_edge_docs(graph: AlexandriaGraph, basins: list[dict[str, Any]], *, run
             }
         )
     return docs
-
-
-# [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
-from igf.common.json_io import write_jsonl
 
 
 def parse_args() -> argparse.Namespace:

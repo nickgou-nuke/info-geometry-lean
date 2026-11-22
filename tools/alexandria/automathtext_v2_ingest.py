@@ -11,14 +11,15 @@ and Lean build gates before any theorem promotion.
 from __future__ import annotations
 
 import argparse
-import gzip
-import hashlib
 import json
 import math
 import re
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Iterable, Iterator
+from typing import Any, Iterator
+
+from igf.common.hashing import stable_hash
+from igf.common.json_io import write_jsonl
 
 SCHEMA_PREFIX = "info_geometry.automathtext_v2"
 DEFAULT_OPERATOR_TERMS = (
@@ -85,10 +86,6 @@ class Fragment:
     ingestion_run_id: str
     ancestry_hash: str
     parent_id: str | None
-
-
-# [lossless-compact] stable_hash folded into igf.common.hashing.stable_hash
-from igf.common.hashing import stable_hash
 
 
 def load_jsonl(path: Path) -> Iterator[dict[str, Any]]:
@@ -348,10 +345,6 @@ def extract_binder_graph(chunk_key: str, text: str) -> tuple[list[dict[str, Any]
                 )
                 break
     return nodes, edges, [var for var, _ in binders]
-
-
-# [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
-from igf.common.json_io import write_jsonl
 
 
 def row_text(row: dict[str, Any]) -> str:

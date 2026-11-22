@@ -12,8 +12,9 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from tools.alexandria.graph_context_rank import build_graph, chunk_key_from_doc_id, read_jsonl, tokenize
-from tools.alexandria.schema import stable_key
+from igf.common.json_io import write_jsonl  # noqa: E402
+from tools.alexandria.graph_context_rank import build_graph, chunk_key_from_doc_id, read_jsonl, tokenize  # noqa: E402
+from tools.alexandria.schema import stable_key  # noqa: E402
 
 
 def edge_preview(chunk: dict[str, Any]) -> str:
@@ -43,10 +44,6 @@ def representative_terms(members: list[str], entities_for_chunk: dict[str, list[
             if term:
                 counts[str(term)] += 1
     return [term for term, _ in sorted(counts.items(), key=lambda item: (item[1], item[0]), reverse=True)[:16]]
-
-
-# [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
-from igf.common.json_io import write_jsonl
 
 
 def materialize(input_dir: Path, output_dir: Path, *, query: str, conductive: bool) -> dict[str, Any]:

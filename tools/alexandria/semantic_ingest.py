@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import json
 import re
 import sys
 from dataclasses import asdict, dataclass
@@ -14,14 +13,9 @@ for _p in (REPO_ROOT, REPO_ROOT / "src"):
     if str(_p) not in sys.path:
         sys.path.insert(0, str(_p))
 
+from igf.common.json_io import write_jsonl  # noqa: E402
 from tools.alexandria.schema import content_hash, infer_source_kind  # noqa: E402
-from tools.alexandria.structural_chunking import (  # noqa: E402
-    chunk_section_lines,
-    chunk_source_text,
-    classify_markdown_chunk as classify_chunk,
-    split_sections,
-    tokenize,
-)
+from tools.alexandria.structural_chunking import chunk_source_text  # noqa: E402
 
 DEFAULT_SUFFIXES = (".md", ".txt")
 SUPPORTED_SUFFIXES = (".md", ".markdown", ".txt", ".rst", ".lean", ".tex", ".py", ".jsonl")
@@ -361,10 +355,6 @@ def iter_input_files(raw_inputs: list[str], suffixes: set[str], max_bytes: int) 
             if path.is_file() and path.suffix.lower() in suffixes and path.stat().st_size <= max_bytes:
                 out.append(path)
     return out
-
-
-# [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
-from igf.common.json_io import write_jsonl
 
 
 def main() -> int:

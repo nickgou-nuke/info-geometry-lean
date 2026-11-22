@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-from __future__ import annotations
-
 """Thin wrapper around the unified GraphRAG explorer.
 
 This is the user-facing natural-language entrypoint for repository exploration.
 It searches Lean declarations, docs, black books, handover material, and
 external mirrors, while keeping Lean/kernel proof authority separate.
 """
+
+from __future__ import annotations
 
 import argparse
 import json
@@ -17,6 +17,22 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "tools" / "infra" / "graph_rag_query.py"
+VALID_SCOPES = frozenset({"all", "lean", "docs", "external", "gravity", "alexandria"})
+
+
+def parse_scopes(raw: str) -> str:
+    parts = [part.strip().lower() for part in str(raw).split(",") if part.strip()]
+    if not parts:
+        raise argparse.ArgumentTypeError("scope must not be empty")
+    invalid = [part for part in parts if part not in VALID_SCOPES]
+    if invalid:
+        allowed = ", ".join(sorted(VALID_SCOPES))
+        raise argparse.ArgumentTypeError(f"invalid scope(s): {', '.join(invalid)} (choose from {allowed})")
+    deduped: list[str] = []
+    for part in parts:
+        if part not in deduped:
+            deduped.append(part)
+    return ",".join(deduped)
 
 
 def parse_args() -> argparse.Namespace:
@@ -26,12 +42,19 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--format", choices=["md", "json"], default="md")
     parser.add_argument("--brief", action="store_true", help="Render a compact provenance summary instead of raw explorer output")
     parser.add_argument("--answer", action="store_true", help="Render a short cited answer synthesized from the top hits")
-    parser.add_argument("--scope", choices=["all", "lean", "docs", "external", "gravity"], default="all")
+    parser.add_argument(
+        "--scope",
+        type=parse_scopes,
+        default="all",
+        help="Scope(s): all, lean, docs, external, gravity, alexandria (comma-separated allowed)",
+    )
     parser.add_argument("--no-gravity", action="store_true")
     parser.add_argument("--lean-records", type=Path, default=None)
     parser.add_argument("--external-root", type=Path, default=None)
     parser.add_argument("--black-books-root", type=Path, default=None)
     parser.add_argument("--handover-root", type=Path, default=None)
+    parser.add_argument("--alexandria-endpoint", default=None)
+    parser.add_argument("--alexandria-database", default=None)
     return parser.parse_args()
 
 
@@ -58,6 +81,10 @@ def build_cmd(args: argparse.Namespace) -> list[str]:
         cmd.extend(["--black-books-root", str(args.black_books_root)])
     if args.handover_root is not None:
         cmd.extend(["--handover-root", str(args.handover_root)])
+    if getattr(args, "alexandria_endpoint", None):
+        cmd.extend(["--alexandria-endpoint", str(args.alexandria_endpoint)])
+    if getattr(args, "alexandria_database", None):
+        cmd.extend(["--alexandria-database", str(args.alexandria_database)])
     return cmd
 
 
@@ -76,6 +103,7 @@ def render_brief(payload: dict[str, Any]) -> str:
     lean = _hits(payload, "lean")
     docs = _hits(payload, "docs")
     external = _hits(payload, "external")
+    alexandria = _hits(payload, "alexandria")
     gravity = payload.get("gravity")
 
     lines.append("## Source breakdown")
@@ -83,6 +111,7 @@ def render_brief(payload: dict[str, Any]) -> str:
     lines.append(f"- Lean declarations: `{len(lean)}`")
     lines.append(f"- Docs / black books / handover: `{len(docs)}`")
     lines.append(f"- External mirrors: `{len(external)}`")
+    lines.append(f"- Alexandria PDFs: `{len(alexandria)}`")
     lines.append(f"- Gravity context: `{ 'available' if isinstance(gravity, dict) else 'disabled' }`")
     lines.append("")
 
@@ -101,6 +130,11 @@ def render_brief(payload: dict[str, Any]) -> str:
             lines.append(f"{idx}. `{name}` [{source}] score={score}")
             if path:
                 lines.append(f"   - path: `{path}`")
+            meta = item.get("metadata") if isinstance(item.get("metadata"), dict) else {}
+            if meta.get("pageStart") is not None or meta.get("chunkKind"):
+                lines.append(
+                    f"   - provenance: kind=`{meta.get('chunkKind')}` page={meta.get('pageStart')} doc=`{meta.get('documentKey')}` authority=`{meta.get('authority')}`"
+                )
             snippet = item.get("snippet")
             if isinstance(snippet, str) and snippet:
                 lines.append(f"   - excerpt: {snippet[:240]}")
@@ -109,6 +143,8 @@ def render_brief(payload: dict[str, Any]) -> str:
     add_top("Lean", lean)
     add_top("Docs / black books / handover", docs)
     add_top("External mirrors", external)
+    if alexandria or "alexandria" in str(payload.get("scope") or "").lower():
+        add_top("Alexandria PDFs (retrieval_context_only)", alexandria)
 
     if isinstance(gravity, dict):
         lines.append("## Gravity context")
@@ -133,6 +169,7 @@ def render_brief(payload: dict[str, Any]) -> str:
     lines.append("- Lean = proof/navigation authority")
     lines.append("- Docs/black books/handover = retrieval context")
     lines.append("- External mirrors = search-only mirrors")
+    lines.append("- Alexandria PDFs = retrieval_context_only (retrieval context only, not verified Lean proof evidence)")
     lines.append("- Gravity = graph navigation context only")
     lines.append("")
     return "\n".join(lines)
@@ -142,6 +179,7 @@ def render_answer(payload: dict[str, Any]) -> str:
     lean = _hits(payload, "lean")
     docs = _hits(payload, "docs")
     external = _hits(payload, "external")
+    alexandria = _hits(payload, "alexandria")
     gravity = payload.get("gravity")
 
     def top_names(items: list[dict[str, Any]], n: int = 3) -> list[str]:
@@ -156,6 +194,7 @@ def render_answer(payload: dict[str, Any]) -> str:
     strongest.extend(top_names(lean, 2))
     strongest.extend(top_names(docs, 2))
     strongest.extend(top_names(external, 1))
+    strongest.extend(top_names(alexandria, 3 if not (lean or docs or external) else 2))
 
     lines: list[str] = []
     lines.append("# Answer draft")
@@ -168,13 +207,25 @@ def render_answer(payload: dict[str, Any]) -> str:
             lines.append(
                 "The strongest repo-local pointers come from Lean declarations, with supporting context from docs/black books and, where relevant, external mirrors."
             )
+            if alexandria:
+                lines.append(
+                    "Additional PDF context comes from the Alexandria corpus (retrieval_context_only; not verified Lean proof evidence)."
+                )
         elif docs:
             lines.append(
                 "The strongest pointers are coming from documentation and black-book context, with no Lean declaration hits in the current scope."
             )
+            if alexandria:
+                lines.append(
+                    "Additional PDF context comes from the Alexandria corpus (retrieval_context_only; not verified Lean proof evidence)."
+                )
         elif external:
             lines.append(
                 "The strongest pointers are coming from external mirrors only; treat them as discovery context, not proof authority."
+            )
+        elif alexandria:
+            lines.append(
+                "The strongest pointers come from the Alexandria PDF corpus (retrieval_context_only); treat them as retrieval context only, not verified Lean proof evidence."
             )
         else:
             lines.append("No ranked hits were found in the current scope.")
@@ -212,6 +263,7 @@ def render_answer(payload: dict[str, Any]) -> str:
     lines.append("- Lean = proof/navigation authority")
     lines.append("- Docs/black books/handover = retrieval context")
     lines.append("- External mirrors = search-only mirrors")
+    lines.append("- Alexandria PDFs = retrieval_context_only (retrieval context only, not verified Lean proof evidence)")
     lines.append("- Gravity = graph navigation context only")
     lines.append("")
     return "\n".join(lines)

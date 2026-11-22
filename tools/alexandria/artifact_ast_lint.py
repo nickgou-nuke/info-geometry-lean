@@ -27,7 +27,7 @@ import sys
 import tempfile
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 
 if __package__ in (None, ""):
@@ -36,6 +36,7 @@ if __package__ in (None, ""):
 else:
     ROOT = Path(__file__).resolve().parents[2]
 
+from igf.common.json_io import write_jsonl  # noqa: E402
 from tools.alexandria.math_paper_graphrag_ingest import (  # noqa: E402
     infer_source_format,
     input_files_from_path,
@@ -132,10 +133,6 @@ class CodeCandidate:
 
 def canonical_json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
-
-
-# [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
-from igf.common.json_io import write_jsonl
 
 
 def line_starts(text: str) -> list[int]:
@@ -480,7 +477,6 @@ def plaintext_code_runs(text: str, occupied: list[tuple[int, int]]) -> list[tupl
         if overlaps_any(start_off, end_off, occupied):
             idx += 1
             continue
-        stripped = line.strip()
         language = classify_plaintext_code_start(line)
         if not language:
             idx += 1

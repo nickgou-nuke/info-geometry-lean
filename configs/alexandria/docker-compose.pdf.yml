@@ -1,0 +1,20 @@
+name: alexandria_pdf
+
+services:
+  arango_alexandria_pdf:
+    image: arangodb:3.12
+    container_name: arango_alexandria_pdf
+    restart: unless-stopped
+    environment:
+      ARANGO_ROOT_PASSWORD: ${ALEXANDRIA_ARANGO_PASSWORD:-${ARANGO_ROOT_PASSWORD:-alexandria_root}}
+    ports:
+      - "127.0.0.1:${ALEXANDRIA_ARANGO_PORT:-8532}:8529"
+    volumes:
+      - alexandria_pdf_arango_data:/var/lib/arangodb3
+      - alexandria_pdf_arango_apps:/var/lib/arangodb3-apps
+
+volumes:
+  alexandria_pdf_arango_data:
+    name: alexandria_pdf_arango_data
+  alexandria_pdf_arango_apps:
+    name: alexandria_pdf_arango_apps

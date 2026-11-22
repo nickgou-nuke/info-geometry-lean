@@ -18,18 +18,16 @@ from __future__ import annotations
 import argparse
 import bisect
 import gzip
-import hashlib
 import json
 import re
 import shutil
 import subprocess
 import sys
 import tarfile
-import tempfile
 import urllib.request
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Iterable, Iterator
+from typing import Any, Iterable
 
 
 if __package__ in (None, ""):
@@ -38,6 +36,7 @@ if __package__ in (None, ""):
 else:
     ROOT = Path(__file__).resolve().parents[2]
 
+from igf.common.json_io import write_jsonl  # noqa: E402
 from tools.alexandria.schema import content_hash, source_uri, stable_key  # noqa: E402
 from tools.pathing import normalize_user_path, repo_root  # noqa: E402
 
@@ -775,10 +774,6 @@ def llm_prompt(chunk_row: dict[str, Any]) -> dict[str, Any]:
             f"Fragment:\n{raw}"
         ),
     }
-
-
-# [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
-from igf.common.json_io import write_jsonl
 
 
 def process_document(path: Path, *, source_format: str, max_chars: int, bind_proofs: bool) -> dict[str, list[dict[str, Any]]]:

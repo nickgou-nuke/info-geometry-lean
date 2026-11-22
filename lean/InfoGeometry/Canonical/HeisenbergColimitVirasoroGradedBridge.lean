@@ -261,6 +261,75 @@ noncomputable def chargedFockColimitReadout (α : 𝕜) :
   rw [heisenbergFiniteModeColimitEquiv_mode]
   rfl
 
+noncomputable def colimitCurrentMode (α : 𝕜) (k : ℤ) : FockEnd 𝕜 α :=
+  chargedFockColimitReadout α (heisenbergColimitMode (𝕜 := 𝕜) k)
+
+@[simp] theorem colimitCurrentMode_eq_chargedFock (α : 𝕜) (k : ℤ) :
+    colimitCurrentMode α k = chargedFockHeisenbergMode α k :=
+  chargedFockColimitReadout_mode α k
+
+theorem colimitCurrentMode_commutator (α : 𝕜) (k l : ℤ) :
+    (colimitCurrentMode α k).commutator (colimitCurrentMode α l) =
+      if k + l = 0 then (k : 𝕜) • (1 : FockEnd 𝕜 α) else 0 := by
+  rw [colimitCurrentMode_eq_chargedFock, colimitCurrentMode_eq_chargedFock]
+  exact chargedFockHeisenbergMode_commutator (𝕜 := 𝕜) α k l
+
+theorem colimitCurrentMode_eventually_eq_zero (α : 𝕜) (v : Fock 𝕜 α) :
+    Filter.atTop.Eventually (fun k : ℤ => colimitCurrentMode α k v = 0) := by
+  simpa only [colimitCurrentMode_eq_chargedFock] using
+    chargedFockHeisenbergMode_eventually_eq_zero (𝕜 := 𝕜) α v
+
+noncomputable def colimitCurrentHeisenbergRep (α : 𝕜) :
+    CurrentHeisenbergRep 𝕜 (Fock 𝕜 α) :=
+  ⟨colimitCurrentMode α,
+    ⟨⟨colimitCurrentMode_eventually_eq_zero α,
+      colimitCurrentMode_commutator α⟩⟩⟩
+
+theorem sugawara_colimit_mode_shift (α : 𝕜) (n m : ℤ) :
+    ((colimitCurrentHeisenbergRep α).sugawaraStressMode n).commutator
+      ((colimitCurrentHeisenbergRep α).J m) =
+        -m • (colimitCurrentHeisenbergRep α).J (n + m) :=
+  sugawara_current_mode_shift
+    (colimitCurrentHeisenbergRep α).J
+    (colimitCurrentHeisenbergRep α).trunc
+    (colimitCurrentHeisenbergRep α).comm n m
+
+theorem sugawara_lzero_colimit_weight (α : 𝕜) (m : ℤ) :
+    ((colimitCurrentHeisenbergRep α).sugawaraStressMode 0).commutator
+      ((colimitCurrentHeisenbergRep α).J m) =
+        -m • (colimitCurrentHeisenbergRep α).J m := by
+  simpa using sugawara_colimit_mode_shift α 0 m
+
+theorem virasoro_lgen_colimit_readout (α : 𝕜) (n : ℤ) :
+    (colimitCurrentHeisenbergRep α).currentSugawaraRepresentation
+        (VirasoroAlgebra.lgen 𝕜 n) =
+      (colimitCurrentHeisenbergRep α).sugawaraStressMode n :=
+  CurrentHeisenbergRep.currentSugawaraRepresentation_lgen_apply
+    (colimitCurrentHeisenbergRep α) n
+
+theorem virasoro_lgen_colimit_mode_shift (α : 𝕜) (n m : ℤ) :
+    ((colimitCurrentHeisenbergRep α).currentSugawaraRepresentation
+        (VirasoroAlgebra.lgen 𝕜 n)).commutator
+      ((colimitCurrentHeisenbergRep α).J m) =
+        -m • (colimitCurrentHeisenbergRep α).J (n + m) := by
+  rw [virasoro_lgen_colimit_readout α n]
+  exact sugawara_colimit_mode_shift α n m
+
+theorem colimit_stressMode_virasoroBracket (α : 𝕜) (m n : ℤ) :
+    ((colimitCurrentHeisenbergRep α).sugawaraStressMode m).commutator
+        ((colimitCurrentHeisenbergRep α).sugawaraStressMode n) =
+      (m - n) • (colimitCurrentHeisenbergRep α).sugawaraStressMode (m + n)
+        + if m + n = 0 then
+            (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) • (1 : FockEnd 𝕜 α))
+          else 0 :=
+  CurrentHeisenbergRep.sugawaraStressMode_virasoroBracket
+    (colimitCurrentHeisenbergRep α) m n
+
+theorem virasoro_shift_target_is_colimit_mode (α : 𝕜) (n m : ℤ) :
+    (colimitCurrentHeisenbergRep α).J (n + m) =
+      chargedFockColimitReadout α (heisenbergColimitMode (𝕜 := 𝕜) (n + m)) :=
+  rfl
+
 end InfoGeometry.Canonical.HeisenbergColimitVirasoroGradedBridge
 
 end noncomputable section

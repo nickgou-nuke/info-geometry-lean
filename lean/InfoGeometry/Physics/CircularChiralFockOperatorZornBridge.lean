@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CircularChiralOperatorEightBridge
@@ -146,4 +151,70 @@ theorem circular_chiral_fock_operatorZorn_packet (c : Fin 3) :
     circularColourOperatorZorn_toMatrix c⟩
 
 end
+
+
+noncomputable abbrev circularFockScalarPlus :=
+  InfoGeometry.Physics.CircularChiralFockScalarPoleBridge.circularFockScalarPlus
+noncomputable abbrev circularFockScalarMinus :=
+  InfoGeometry.Physics.CircularChiralFockScalarPoleBridge.circularFockScalarMinus
+
+@[simp] theorem circularFockScalarPlus_sq :
+    circularFockScalarPlus * circularFockScalarPlus = circularFockScalarPlus :=
+  InfoGeometry.Physics.CircularChiralFockScalarPoleBridge.circularFockScalarPlus_sq
+@[simp] theorem circularFockScalarMinus_sq :
+    circularFockScalarMinus * circularFockScalarMinus = circularFockScalarMinus :=
+  InfoGeometry.Physics.CircularChiralFockScalarPoleBridge.circularFockScalarMinus_sq
+theorem circularFockScalarPlus_mul_minus :
+    circularFockScalarPlus * circularFockScalarMinus = 0 :=
+  InfoGeometry.Physics.CircularChiralFockScalarPoleBridge.circularFockScalarPlus_mul_minus
+theorem circularFockScalarPlus_add_minus :
+    circularFockScalarPlus + circularFockScalarMinus = 1 :=
+  InfoGeometry.Physics.CircularChiralFockScalarPoleBridge.circularFockScalarPlus_add_minus
+
+abbrev RealOperatorFourPotential := Fin 4 → FockOp
+
+noncomputable def circularCompressedFourPotential (i : Fin 3) : RealOperatorFourPotential :=
+  ![(1 / 2 : ℝ) • (circularFockScalarPlus + circularFockScalarMinus),
+    (1 / 2 : ℝ) • (positiveRailFock i + negativeRailFock i),
+    (1 / 2 : ℝ) • (negativeRailFock i - positiveRailFock i),
+    (1 / 2 : ℝ) • (circularFockScalarPlus - circularFockScalarMinus)]
+
+def realSplitFourSoldering (v : RealOperatorFourPotential) :
+    Matrix (Fin 2) (Fin 2) FockOp :=
+  !![v 0 + v 3, v 1 - v 2; v 1 + v 2, v 0 - v 3]
+
+theorem realSplitFourSoldering_eq_circularOperatorZorn (i : Fin 3) :
+    realSplitFourSoldering (circularCompressedFourPotential i) =
+      OperatorZornMatrix.toMatrix (circularColourOperatorZorn i) := by
+  rw [circularColourOperatorZorn_toMatrix]
+  ext r c
+  fin_cases r <;> fin_cases c <;>
+    simp [realSplitFourSoldering, circularCompressedFourPotential] <;>
+    norm_num [smul_eq_mul] <;> ring
+
+theorem circular_1331_compressed_four_potential_packet (i : Fin 3) :
+    realSplitFourSoldering (circularCompressedFourPotential i) =
+      !![circularFockScalarPlus, positiveRailFock i;
+         negativeRailFock i, circularFockScalarMinus] := by
+  exact realSplitFourSoldering_eq_circularOperatorZorn i
+
+
+@[simp] theorem circularCompressedFourPotential_scalar (c : Fin 3) :
+    circularCompressedFourPotential c 0 = (1 / 2 : ℝ) • (1 : FockOp) := by
+  simp [circularCompressedFourPotential, circularFockScalarPlus_add_minus]
+
+theorem circularCompressedFourPotential_diagonal_reconstruction (c : Fin 3) :
+    circularCompressedFourPotential c 0 + circularCompressedFourPotential c 3 =
+        circularFockScalarPlus ∧
+      circularCompressedFourPotential c 0 - circularCompressedFourPotential c 3 =
+        circularFockScalarMinus := by
+  constructor <;> simp [circularCompressedFourPotential] <;> module
+
+theorem circularCompressedFourPotential_offDiagonal_reconstruction (c : Fin 3) :
+    circularCompressedFourPotential c 1 - circularCompressedFourPotential c 2 =
+        positiveRailFock c ∧
+      circularCompressedFourPotential c 1 + circularCompressedFourPotential c 2 =
+        negativeRailFock c := by
+  constructor <;> simp [circularCompressedFourPotential] <;> module
+
 end InfoGeometry.Physics.CircularChiralFockOperatorZornBridge

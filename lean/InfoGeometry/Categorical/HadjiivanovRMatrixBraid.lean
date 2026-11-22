@@ -58,10 +58,12 @@ open InfoGeometry.Categorical.LogJordanBraidFiniteInfiniteCompatibility
 open InfoGeometry.Categorical.BraidGroupInfiniteColimitIso
 open InfoGeometry.Clifford.LogCftMonodromy
 
-/- The former Hadjiivanov non-symmetric datum is intentionally not exposed:
-its required nontrivial monodromy is not proved in the repository.  The
-verified finite and infinite braid lanes below use the existing symmetric
-logarithmic braiding through `standardTensorPowerGenerator`. -/
+/- The symmetric logarithmic checked braid below has identity monodromy.  The
+genuine non-symmetric Hadjiivanov shear operator and its strictly nontrivial
+double braiding are exposed at the end of this file from the proved owners
+`shearCheckedR` and `standardHadjiivanov_shear_monodromy_ne_id`; no datum is
+used.  The finite and infinite braid lanes use the symmetric logarithmic
+braiding through `standardTensorPowerGenerator`. -/
 
 /-- Categorical Hadjiivanov braid action on the actual `BraidProject` B₃ stage. -/
 def hadjiivanovBraidProject3CategoricalHom :
@@ -248,5 +250,22 @@ theorem hadjiivanovCheckedR_yangBaxter :
       hadjiivanovCheckedR23.toLinearMap ∘ₗ hadjiivanovCheckedR12.toLinearMap ∘ₗ
           hadjiivanovCheckedR23.toLinearMap :=
   InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.standard_logCheckedR_yangBaxter
+
+/-- The genuine non-symmetric Hadjiivanov checked braid: a finite unipotent
+shear followed by the tensor flip at the universal Hadjiivanov parameter. -/
+abbrev hadjiivanovShearR :
+    (InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.standardJordanObject.toLogEndModule.V ⊗[ℂ]
+      InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.standardJordanObject.toLogEndModule.V) ≃ₗ[ℂ]
+    (InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.standardJordanObject.toLogEndModule.V ⊗[ℂ]
+      InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.standardJordanObject.toLogEndModule.V) :=
+  InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.shearCheckedR
+    InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.standardJordanObject_sq_zero
+    logShearBase
+
+/-- Nontrivial double braiding of the genuine Hadjiivanov shear operator,
+inherited from the proved owner (no non-symmetric datum). -/
+theorem hadjiivanovShearR_monodromy_ne_id :
+    (hadjiivanovShearR.trans hadjiivanovShearR).toLinearMap ≠ LinearMap.id :=
+  InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.standardHadjiivanov_shear_monodromy_ne_id
 
 end InfoGeometry.Categorical.HadjiivanovRMatrixBraid

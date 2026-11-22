@@ -139,6 +139,60 @@ theorem shearCheckedR_tmul {X : LogNilpotentModule ℂ} (hX : X.N ^ 2 = 0)
   simp [shearCheckedR, crossUnipotentEquiv, LinearEquiv.trans_apply,
     crossUnipotentMap_tmul, TensorProduct.comm_tmul]
 
+/-- Two applications of the sheared checked logarithmic braid differ from the
+identity by the explicit mixed primary tensor state `(2 * p) • (e0 ⊗ₜ e0)`. -/
+theorem standard_shearCheckedR_sq_e1_tmul_e1 (p : ℂ) :
+    let R := shearCheckedR standardJordanObject_sq_zero p
+    let v1 : standardJordanObject.toLogEndModule.V := (e1 : JordanCarrier ℂ)
+    let v0 : standardJordanObject.toLogEndModule.V := (e0 : JordanCarrier ℂ)
+    R (R (v1 ⊗ₜ[ℂ] v1)) = v1 ⊗ₜ[ℂ] v1 + (2 * p) • (v0 ⊗ₜ[ℂ] v0) := by
+  intro R v1 v0
+  have hN1 : standardJordanObject.N v1 = v0 := standardJordanObject_N_e1
+  have hN0 : standardJordanObject.N v0 = 0 := standardJordanObject_N_e0
+  have h1 : R (v1 ⊗ₜ[ℂ] v1) = v1 ⊗ₜ[ℂ] v1 + p • (v0 ⊗ₜ[ℂ] v0) := by
+    simp [R, hN1]
+  have h0 : R (v0 ⊗ₜ[ℂ] v0) = v0 ⊗ₜ[ℂ] v0 := by
+    simp [R, hN0]
+  rw [h1, map_add, map_smul, h1, h0]
+  module
+
+/-- Every nonzero logarithmic shear coefficient produces strictly nontrivial
+double braiding on the standard rank-two Jordan cell. -/
+theorem standard_shearCheckedR_monodromy_nontrivial
+    (p : ℂ) (hp : p ≠ 0) :
+    ((shearCheckedR standardJordanObject_sq_zero p).trans
+      (shearCheckedR standardJordanObject_sq_zero p)).toLinearMap ≠
+      LinearMap.id := by
+  intro hmono
+  let v1 : standardJordanObject.toLogEndModule.V := (e1 : JordanCarrier ℂ)
+  let v0 : standardJordanObject.toLogEndModule.V := (e0 : JordanCarrier ℂ)
+  have hv := LinearMap.congr_fun hmono (v1 ⊗ₜ[ℂ] v1)
+  have hsq := standard_shearCheckedR_sq_e1_tmul_e1 p
+  change
+    shearCheckedR standardJordanObject_sq_zero p
+        (shearCheckedR standardJordanObject_sq_zero p (v1 ⊗ₜ[ℂ] v1)) =
+      v1 ⊗ₜ[ℂ] v1 at hv
+  rw [hsq] at hv
+  have hcoord : coord00 (𝕜 := ℂ)
+      ((e1 : JordanCarrier ℂ) ⊗ₜ[ℂ] (e1 : JordanCarrier ℂ) +
+        (2 * p) • ((e0 : JordanCarrier ℂ) ⊗ₜ[ℂ] (e0 : JordanCarrier ℂ))) =
+      coord00 (𝕜 := ℂ) ((e1 : JordanCarrier ℂ) ⊗ₜ[ℂ] (e1 : JordanCarrier ℂ)) :=
+    congrArg (coord00 (𝕜 := ℂ)) hv
+  rw [map_add, map_smul] at hcoord
+  have h2p : (2 : ℂ) * p = 0 := by
+    simpa [coord00_tmul, e0, e1, Pi.single] using hcoord
+  rcases mul_eq_zero.mp h2p with h2 | hp0
+  · norm_num at h2
+  · exact hp hp0
+
+/-- The Hadjiivanov sheared checked braid at `logShearBase` has strictly
+nontrivial double braiding. -/
+theorem standardHadjiivanov_shear_monodromy_ne_id :
+    ((shearCheckedR standardJordanObject_sq_zero logShearBase).trans
+      (shearCheckedR standardJordanObject_sq_zero logShearBase)).toLinearMap ≠
+      LinearMap.id :=
+  standard_shearCheckedR_monodromy_nontrivial logShearBase logShearBase_ne_zero
+
 end
 
 end InfoGeometry.Categorical.LogJordanCheckedRBraidBridge

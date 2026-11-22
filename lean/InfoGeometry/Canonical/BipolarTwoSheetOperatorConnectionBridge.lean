@@ -205,6 +205,16 @@ theorem explicitInverse_mul_halfLogLift (s : ℂ) :
   all_goals simp [halfLogLift, Matrix.mul_apply, Fin.sum_univ_two]
   all_goals simpa only [mul_comm] using (plusWeight_mul_minusWeight s)
 
+/-- The explicit inverse is a right inverse of the half-lift. -/
+theorem halfLogLift_mul_inv (s : ℂ) :
+    halfLogLift s * halfLogLiftInv s = 1 :=
+  halfLogLift_mul_explicitInverse s
+
+/-- The explicit inverse is also a left inverse. -/
+theorem halfLogLift_inv_mul (s : ℂ) :
+    halfLogLiftInv s * halfLogLift s = 1 :=
+  explicitInverse_mul_halfLogLift s
+
 theorem torusAdjoint_sigmaPlus {s : ℂ} (hs : s ∈ punctured01) :
     torusAdjoint s σPlus = crossRatio01 s • σPlus := by
   unfold torusAdjoint
@@ -263,7 +273,7 @@ def plusCartanWeight (s : ℂ) : ℂ := (eta s : ℂ) + (theta s : ℂ) * Comple
 def minusCartanWeight (s : ℂ) : ℂ := -plusCartanWeight s
 
 theorem plusCartanWeight_eq_bipolarLog (s : ℂ) : plusCartanWeight s = bipolarLog s := by
-  simpa [plusCartanWeight, eta, theta] using Complex.re_add_im (bipolarLog s)
+  simp [plusCartanWeight, eta, theta]
 
 /-- Reversed product of the two scalar half-weights. -/
 theorem minusWeight_mul_plusWeight (s : ℂ) : minusWeight s * plusWeight s = 1 := by
@@ -274,18 +284,18 @@ theorem finiteAdjointFlow_sigmaPlus (s : ℂ) :
     finiteAdjointFlow s σPlus = Complex.exp (bipolarLog s) • σPlus := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [finiteAdjointFlow, torusAdjoint, halfLogLift, halfLogLiftInv, plusWeight,
+    simp [finiteAdjointFlow, torusAdjoint, halfLogLift, plusWeight,
       minusWeight, σPlus, Matrix.mul_apply, Fin.sum_univ_two, ← Complex.exp_add,
-      Matrix.smul_apply] <;> ring_nf
+      Matrix.smul_apply]
 
 /-- The finite adjoint flow on the minus sheet (opposite complex-log weight). -/
 theorem finiteAdjointFlow_sigmaMinus (s : ℂ) :
     finiteAdjointFlow s σMinus = Complex.exp (-bipolarLog s) • σMinus := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [finiteAdjointFlow, torusAdjoint, halfLogLift, halfLogLiftInv, plusWeight,
+    simp [finiteAdjointFlow, torusAdjoint, halfLogLift, plusWeight,
       minusWeight, σMinus, Matrix.mul_apply, Fin.sum_univ_two, ← Complex.exp_add,
-      Matrix.smul_apply] <;> ring_nf
+      Matrix.smul_apply]
 
 /-- Closed scalar-to-operator bridge: infinitesimal weights `±W` and finite weights `q^{±1}`. -/
 theorem logarithmic_cartan_adjoint_flow_packet {s : ℂ} (hs : s ∈ punctured01) :
@@ -306,7 +316,7 @@ theorem logarithmic_cartan_adjoint_flow_packet {s : ℂ} (hs : s ∈ punctured01
   · rw [logarithmicCartanGenerator, bipolarLogarithmicCartan_comm_sigmaMinus]
     congr 1
     rw [← plusCartanWeight_eq_bipolarLog s]
-    simp [minusCartanWeight, plusCartanWeight, mul_comm]
+    simp [plusCartanWeight, mul_comm]
   exact ⟨finiteAdjointFlow_sigmaPlus_eq_crossRatio hs,
     finiteAdjointFlow_sigmaMinus_eq_crossRatio_inv hs⟩
 

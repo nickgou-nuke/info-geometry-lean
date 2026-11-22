@@ -162,6 +162,23 @@ theorem u1Holonomy_half_origin_sq :
         u1Holonomy (1 / 2 : ℝ) originWinding = 1 := by
   rw [u1Holonomy_half_origin, halfFluxPhase_sq]
 
+/-- Holonomy on the first elementary winding. -/
+theorem u1Holonomy_origin (α : ℝ) :
+    u1Holonomy α originWinding = Circle.exp (α * (2 * Real.pi)) := by
+  rw [u1Holonomy_apply, angularPeriod_origin]
+
+/-- Holonomy on the second elementary winding. -/
+theorem u1Holonomy_one (α : ℝ) :
+    u1Holonomy α oneWinding = Circle.exp (α * (-(2 * Real.pi))) := by
+  rw [u1Holonomy_apply, angularPeriod_one]
+
+/-- Opposite residue signs give mutually inverse elementary holonomies. -/
+theorem u1Holonomy_one_eq_inv_origin (α : ℝ) :
+    u1Holonomy α oneWinding = (u1Holonomy α originWinding)⁻¹ := by
+  rw [u1Holonomy_one, u1Holonomy_origin]
+  have harg : α * (-(2 * Real.pi)) = -(α * (2 * Real.pi)) := by ring
+  rw [harg, Circle.exp_neg]
+
 
 @[simp] theorem angularPeriodHom_apply (w : WindingPair) :
     angularPeriodHom w = angularPeriod w := rfl

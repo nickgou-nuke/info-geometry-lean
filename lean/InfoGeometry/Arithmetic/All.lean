@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 
+import InfoGeometry.Arithmetic.RiemannMasulloInfoGeometryCrossPollinationBridge
+
 import InfoGeometry.Arithmetic.ZetaEulerLaurentMonodromy
 import InfoGeometry.Arithmetic.MatrixDirichletInversion
 import InfoGeometry.Algebra.FiniteSpinAlgebra

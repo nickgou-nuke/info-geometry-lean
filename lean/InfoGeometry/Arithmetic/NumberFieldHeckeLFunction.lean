@@ -18,8 +18,10 @@ import InfoGeometry.Arithmetic.NumberFieldDedekindZetaEulerProduct
 
 The local-character and Euler-factor definitions follow Thomas Browning's
 RiemannMasullo project (Apache-2.0, revision
-`be5d4cb0356d48406eae83233d73c99085b9a038`); their proofs are checked against
-this repository's pinned Mathlib revision.
+`be5d4cb0356d48406eae83233d73c99085b9a038`), and the half-plane Euler-product
+convergence and Dedekind-zeta specialization theorems follow
+`RiemannMasullo/Ch03_IdelicZeta/Sec2.lean` in the same Apache-2.0 repository;
+all proofs are checked against this repository's pinned Mathlib revision.
 
 This file supplies the Hecke-character/L-function layer missing from the pinned
 Mathlib revision. Its carrier is Mathlib's actual idele class group; local
@@ -133,6 +135,13 @@ def LFunction : ArithmeticFunction ℂ :=
 /-- The Dirichlet series attached to the Hecke arithmetic function. -/
 protected def LSeries (s : ℂ) := LSeries χ.LFunction s
 
+open Classical in
+/-- The analytic Euler factor of a Hecke character at a finite place. -/
+def eulerFactor [Infinite R] (v : HeightOneSpectrum R) (s : ℂ) : ℂ :=
+  if χ.IsUnramifiedAt v then
+    (1 - χ.localValue v * (v.asIdeal.absNorm : ℂ) ^ (-s))⁻¹
+  else 1
+
 end HeckeCharacter
 end NumberField
 
@@ -174,11 +183,13 @@ theorem heckeLocalEulerFactor_eventually_prod_eq {F : Type*} [Field F] [NumberFi
 Dirichlet series with a uniform exponential bound. -/
 theorem LSeries_heckeLocalEulerFactor_bound {F : Type*} [Field F] [NumberField F]
     (χ : HeckeCharacter (𝓞 F) F) (v : HeightOneSpectrum (𝓞 F)) {s : ℂ}
-    (hs : 1 < s.re) (hχ : χ.IsUnramifiedAt v → ‖χ.localValue v‖ ≤ 1) :
+    (hs : 1 < s.re)
+    (hχ : χ.IsUnramifiedAt v → ‖χ.localValue v‖ ≤ 1) :
     LSeriesSummable (χ.localEulerFactor v) s ∧
       (∑' n, ‖LSeries.term (χ.localEulerFactor v) s n‖) ≤
         Real.exp (2 * (v.asIdeal.absNorm : ℝ) ^ (-s.re)) := by
   classical
+  have hs' : 1 < s.re := hs
   let q := v.asIdeal.absNorm
   let a := if χ.IsUnramifiedAt v then χ.localValue v else 0
   have hq : 1 < q := NumberField.HeightOneSpectrum.one_lt_absNorm v
@@ -188,7 +199,7 @@ theorem LSeries_heckeLocalEulerFactor_bound {F : Type*} [Field F] [NumberField F
   have hr : 0 ≤ r := Real.rpow_nonneg hq'.le _
   have hrhalf : r ≤ 1 / 2 := calc
     r ≤ (q : ℝ) ^ (-1 : ℝ) :=
-      Real.rpow_le_rpow_of_exponent_le (by linarith : 1 ≤ (q : ℝ)) (by linarith)
+      Real.rpow_le_rpow_of_exponent_le (by linarith : 1 ≤ (q : ℝ)) (by linarith [hs'])
     _ = 1 / q := by rw [Real.rpow_neg hq'.le, Real.rpow_one, one_div]
     _ ≤ 1 / 2 := one_div_le_one_div_of_le (by norm_num) hq₂
   have ha : ‖a‖ ≤ 1 := by
@@ -231,5 +242,121 @@ theorem LSeriesSummable_heckeLFunction {F : Type*} [Field F] [NumberField F]
     (fun v ↦ mul_nonneg (by norm_num) (Real.rpow_nonneg (Nat.cast_nonneg _) _))
     (fun v ↦ (hlocal v).1) (fun v ↦ (hlocal v).2)
     (heckeLocalEulerFactor_eventually_prod_eq χ)
+
+/-- Each formal local Euler factor of a bounded Hecke character sums to `χ.eulerFactor v s` in
+`re(s) > 1`. -/
+theorem LSeriesHasSum_heckeLocalEulerFactor {F : Type*} [Field F] [NumberField F]
+    (χ : HeckeCharacter (𝓞 F) F) (v : HeightOneSpectrum (𝓞 F)) {s : ℂ}
+    (hs : 1 < s.re)
+    (hχ : χ.IsUnramifiedAt v → ‖χ.localValue v‖ ≤ 1) :
+    LSeriesHasSum (χ.localEulerFactor v) s (χ.eulerFactor v s) := by
+  classical
+  have hs' : 1 < s.re := hs
+  let a := if χ.IsUnramifiedAt v then χ.localValue v else 0
+  let q := v.asIdeal.absNorm
+  let z := a * (q : ℂ) ^ (-s)
+  have hq : 1 < q := NumberField.HeightOneSpectrum.one_lt_absNorm v
+  have hq' : (1 : ℝ) < q := by exact_mod_cast hq
+  have ha : ‖a‖ ≤ 1 := by
+    by_cases h : χ.IsUnramifiedAt v
+    · simpa [a, h] using hχ h
+    · simp [a, h]
+  have hz : ‖z‖ < 1 := by
+    change ‖a * ((q : ℝ) : ℂ) ^ (-s)‖ < 1
+    rw [norm_mul, Complex.norm_cpow_eq_rpow_re_of_pos (by linarith : 0 < (q : ℝ)) _,
+      Complex.neg_re]
+    exact (mul_le_of_le_one_left (Real.rpow_nonneg (Nat.cast_nonneg _) _) ha).trans_lt
+      (Real.rpow_lt_one_of_one_lt_of_neg hq' (by linarith [hs']))
+  have hval : χ.eulerFactor v s = (1 - z)⁻¹ := by
+    by_cases h : χ.IsUnramifiedAt v <;> simp [HeckeCharacter.eulerFactor, z, a, q, h]
+  rw [hval, HeckeCharacter.localEulerFactor,
+    InfoGeometry.Arithmetic.NumberFieldCompletionFinitePlace.card_residueField_adicCompletion,
+    hecke_localPowerSeries_eq_mk]
+  obtain ⟨hpow, hout⟩ := LSeries_term_geometric_ofPowerSeries hq a s
+  apply (Nat.pow_right_injective hq).hasSum_iff hout |>.mp
+  exact (hasSum_geometric_of_norm_lt_one hz).congr_fun hpow
+
+/-- Partial Hecke Euler products converge uniformly on every closed right half-plane `a ≤ re(s)`
+with `1 < a` when all unramified local values have norm at most one. -/
+theorem heckeEulerProduct_tendstoUniformlyOn_halfPlane {F : Type*} [Field F] [NumberField F]
+    (χ : HeckeCharacter (𝓞 F) F) {a : ℝ} (ha : 1 < a)
+    (hχ : ∀ v, χ.IsUnramifiedAt v → ‖χ.localValue v‖ ≤ 1) :
+    TendstoUniformlyOn
+      (fun S : Finset (HeightOneSpectrum (𝓞 F)) ↦ fun s ↦ ∏ v ∈ S, χ.eulerFactor v s)
+      χ.LSeries atTop {s : ℂ | a ≤ s.re} := by
+  obtain ⟨r, hr, hra⟩ := exists_between ha
+  let Places := HeightOneSpectrum (𝓞 F)
+  let f := χ.localEulerFactor
+  let u (v : Places) := 2 * (v.asIdeal.absNorm : ℝ) ^ (-r)
+  have hu : Summable u :=
+    ((InfoGeometry.Arithmetic.NumberFieldDedekindZetaEulerProduct.summable_absNorm_rpow
+      F hr).comp_injective
+      (fun v w (h : (v : Places).asIdeal = w.asIdeal) ↦ HeightOneSpectrum.ext h)).mul_left 2
+  have hlocal (v : Places) := LSeries_heckeLocalEulerFactor_bound χ v (s := (r : ℂ)) hr (hχ v)
+  have hp := LSeries_finset_prod_bound f (r : ℂ) (u := u)
+    (fun v ↦ (hlocal v).1) (fun v ↦ (hlocal v).2)
+  have hu₀ (v : Places) : 0 ≤ u v :=
+    mul_nonneg (by norm_num) (Real.rpow_nonneg (Nat.cast_nonneg _) _)
+  have hC (S : Finset Places) :
+      (∑' n, ‖LSeries.term ⇑(∏ v ∈ S, f v) (r : ℂ) n‖) ≤ Real.exp (∑' v, u v) :=
+    (hp S).2.trans (Real.exp_le_exp.mpr (hu.sum_le_tsum S (fun v _ ↦ hu₀ v)))
+  have h :=
+    InfoGeometry.Arithmetic.LSeriesCoefficientwiseUniformConvergence.tendstoUniformlyOn_LSeries_of_eventuallyEq
+      (fun S : Finset Places ↦ ⇑(∏ v ∈ S, f v)) χ.LFunction hra (Real.exp_pos _).le
+      (fun S ↦ (hp S).1) (LSeriesSummable_heckeLFunction χ hr hχ) hC
+      (heckeLocalEulerFactor_eventually_prod_eq χ)
+  apply h.congr
+  exact Filter.Eventually.of_forall fun S s hs ↦
+    (LSeriesHasSum_finset_prod f _ s (fun v ↦ LSeriesHasSum_heckeLocalEulerFactor χ v (lt_of_lt_of_le ha hs) (hχ v)) S).LSeries_eq
+
+/-- On the half-plane `re(s) > 1`, the Hecke L-series equals the convergent Euler product over
+finite places whenever all unramified local values have norm at most one. -/
+theorem heckeLSeries_hasProd {F : Type*} [Field F] [NumberField F]
+    (χ : HeckeCharacter (𝓞 F) F) {s : ℂ} (hs : 1 < s.re)
+    (hχ : ∀ v, χ.IsUnramifiedAt v → ‖χ.localValue v‖ ≤ 1) :
+    HasProd (fun v : HeightOneSpectrum (𝓞 F) ↦ χ.eulerFactor v s) (χ.LSeries s) := by
+  have h := heckeEulerProduct_tendstoUniformlyOn_halfPlane χ (a := s.re) hs hχ
+  exact h.tendsto_at (x := s) (Set.mem_ofPred.mpr (le_refl s.re))
+
+private theorem heckeCharacter_one_restrict_eq_one {F : Type*} [Field F] [NumberField F]
+    (v : HeightOneSpectrum (𝓞 F)) (u : (v.adicCompletion F)ˣ) :
+    (1 : HeckeCharacter (𝓞 F) F).restrict v u = 1 := by
+  rw [HeckeCharacter.restrict, MulChar.ofUnitHom_coe]
+  rfl
+
+/-- The trivial Hecke character is unramified with local value one at every finite place. -/
+theorem heckeCharacter_one_isUnramifiedAt_and_localValue {F : Type*} [Field F] [NumberField F]
+    (v : HeightOneSpectrum (𝓞 F)) :
+    (1 : HeckeCharacter (𝓞 F) F).IsUnramifiedAt v ∧
+      (1 : HeckeCharacter (𝓞 F) F).localValue v = 1 := by
+  classical
+  refine ⟨HeckeCharacter.isUnramifiedAt_iff.mpr fun x ↦
+    heckeCharacter_one_restrict_eq_one v
+      (Units.map (v.adicCompletionIntegers F).subtype.toMonoidHom x), ?_⟩
+  let val : Valuation (v.adicCompletion F) (WithZero (Multiplicative ℤ)) := Valued.v
+  let u := Units.mk0
+    (val.exists_isUniformizer_of_isCyclic_of_nontrivial.choose : v.adicCompletion F)
+    val.exists_isUniformizer_of_isCyclic_of_nontrivial.choose_spec.ne_zero
+  exact heckeCharacter_one_restrict_eq_one v u
+
+/-- For the trivial Hecke character, Mathlib's `HeckeCharacter.LSeries` agrees with
+`NumberField.dedekindZeta` on `re(s) > 1`. -/
+theorem heckeLSeries_one_eq_dedekindZeta {F : Type*} [Field F] [NumberField F]
+    {s : ℂ} (hs : 1 < s.re) :
+    (1 : HeckeCharacter (𝓞 F) F).LSeries s = dedekindZeta F s := by
+  classical
+  have hχ : ∀ v : HeightOneSpectrum (𝓞 F),
+      (1 : HeckeCharacter (𝓞 F) F).IsUnramifiedAt v →
+        ‖(1 : HeckeCharacter (𝓞 F) F).localValue v‖ ≤ 1 := by
+    intro v _
+    rw [(heckeCharacter_one_isUnramifiedAt_and_localValue v).2, norm_one]
+  have hlocal (v : HeightOneSpectrum (𝓞 F)) :
+      (1 : HeckeCharacter (𝓞 F) F).eulerFactor v s =
+        (1 - (v.asIdeal.absNorm : ℂ) ^ (-s))⁻¹ := by
+    obtain ⟨hu, hval⟩ := heckeCharacter_one_isUnramifiedAt_and_localValue v
+    simp only [HeckeCharacter.eulerFactor, hu, ↓reduceIte, hval, one_mul]
+  exact (heckeLSeries_hasProd (1 : HeckeCharacter (𝓞 F) F) hs hχ).unique
+    ((InfoGeometry.Arithmetic.NumberFieldDedekindZetaEulerProduct.dedekindZeta_hasProd
+      F hs).congr_fun hlocal)
 
 end noncomputable section

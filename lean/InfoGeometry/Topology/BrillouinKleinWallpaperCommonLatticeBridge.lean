@@ -1,4 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
+import Mathlib.Data.ZMod.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.WallpaperSymmetry
 import InfoGeometry.Canonical.AffineWeylD5WallpaperQuotient
@@ -31,6 +38,30 @@ abbrev IntegralLattice := Z2
 
 def realifyLattice (t : IntegralLattice) : Lattice2D :=
   (t.1, t.2)
+
+/-- Reduction modulo two of the two integral translation coordinates. -/
+def latticeParity (t : IntegralLattice) : Fin 2 → ZMod 2 :=
+  ![(t.1 : ZMod 2), (t.2 : ZMod 2)]
+
+/-- The `D₄` point action after reduction modulo two.  Signs disappear in
+characteristic two, leaving only the coordinate permutation. -/
+def parityD4Action (g : Fin 8) (p : Fin 2 → ZMod 2) : Fin 2 → ZMod 2 :=
+  match g with
+  | 0 => ![p 0, p 1]
+  | 1 => ![p 1, p 0]
+  | 2 => ![p 0, p 1]
+  | 3 => ![p 1, p 0]
+  | 4 => ![p 0, p 1]
+  | 5 => ![p 1, p 0]
+  | 6 => ![p 0, p 1]
+  | 7 => ![p 1, p 0]
+
+/-- Reduction modulo two is equivariant for the existing integral `D₄`
+action on wallpaper translations. -/
+theorem latticeParity_d4_action (g : Fin 8) (t : IntegralLattice) :
+    latticeParity (d4_action_on_Z2 g t) = parityD4Action g (latticeParity t) := by
+  fin_cases g <;> ext i <;> fin_cases i <;>
+    simp [latticeParity, parityD4Action, d4_action_on_Z2]
 
 def realD4Action (g : Fin 8) (p : Lattice2D) : Lattice2D :=
   match g with

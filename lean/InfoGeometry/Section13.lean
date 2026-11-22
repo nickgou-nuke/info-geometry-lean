@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
@@ -198,6 +204,47 @@ theorem concurrenceAmplitude_tensor2 (u v : OneQubitVec) :
     concurrenceAmplitude (tensor2 u v) = 0 := by
   simp [concurrenceAmplitude, tensor2]
   ring
+
+/-- A two-qubit pure state is a product tensor exactly when its `2 × 2`
+coefficient matrix has rank at most one, equivalently when its concurrence
+determinant vanishes. This is the converse to
+`concurrenceAmplitude_tensor2`. -/
+theorem twoQubit_product_iff_concurrence_zero (ψ : TwoQubitVec) :
+    (∃ u v : OneQubitVec, tensor2 u v = ψ) ↔ concurrenceAmplitude ψ = 0 := by
+  constructor
+  · rintro ⟨u, v, rfl⟩
+    exact concurrenceAmplitude_tensor2 u v
+  · intro hψ
+    let a : ℂ := ψ 0
+    let b : ℂ := ψ 1
+    let c : ℂ := ψ 2
+    let d : ℂ := ψ 3
+    by_cases ha : a = 0
+    · have hbc : b * c = 0 := by
+        change a * d - b * c = 0 at hψ
+        rw [ha] at hψ
+        simp only [zero_mul, zero_sub] at hψ
+        exact neg_eq_zero.mp hψ
+      rcases mul_eq_zero.mp hbc with hb | hc
+      · refine ⟨![0, 1], ![c, d], ?_⟩
+        ext i
+        fin_cases i <;> simp [tensor2, a, b, c, d, ha, hb]
+      · refine ⟨![b, d], ![0, 1], ?_⟩
+        ext i
+        fin_cases i <;> simp [tensor2, a, b, c, d, ha, hc]
+    · have habcd : a * d = b * c := by
+        change a * d - b * c = 0 at hψ
+        exact sub_eq_zero.mp hψ
+      have hd : d = c * (b / a) := by
+        calc
+          d = (a * d) / a := by field_simp [ha]
+          _ = (b * c) / a := by rw [habcd]
+          _ = c * (b / a) := by ring
+      have haψ : ψ 0 ≠ 0 := by simpa [a] using ha
+      refine ⟨![a, c], ![1, b / a], ?_⟩
+      ext i
+      fin_cases i <;> simp [tensor2, a, b, c, d, hd]
+      · field_simp [haψ]
 
 /-! ## 13.1 Pure density matrix algebra -/
 

@@ -58,9 +58,15 @@ theorem generatorCoefficient_add_23 (k : ℕ) :
 theorem generatorCoefficient_zero_of_range {k : ℕ}
     (h12 : 12 ≤ k) (h23 : k < 23) :
     generatorCoefficient k = 0 := by
-  dsimp [generatorCoefficient]
-  rw [Nat.mod_eq_of_lt h23]
-  interval_cases k <;> rfl
+  have h12' : 12 ≤ k % 23 := by rw [Nat.mod_eq_of_lt h23]; exact h12
+  have hk0 : k % 23 ≠ 0 := Nat.ne_of_gt (lt_of_lt_of_le (by decide : 0 < 12) h12')
+  have hk2 : k % 23 ≠ 2 := Nat.ne_of_gt (lt_of_lt_of_le (by decide : 2 < 12) h12')
+  have hk4 : k % 23 ≠ 4 := Nat.ne_of_gt (lt_of_lt_of_le (by decide : 4 < 12) h12')
+  have hk5 : k % 23 ≠ 5 := Nat.ne_of_gt (lt_of_lt_of_le (by decide : 5 < 12) h12')
+  have hk6 : k % 23 ≠ 6 := Nat.ne_of_gt (lt_of_lt_of_le (by decide : 6 < 12) h12')
+  have hk10 : k % 23 ≠ 10 := Nat.ne_of_gt (lt_of_lt_of_le (by decide : 10 < 12) h12')
+  have hk11 : k % 23 ≠ 11 := Nat.ne_of_gt (lt_of_lt_of_le (by decide : 11 < 12) h12')
+  simp [generatorCoefficient, hk0, hk2, hk4, hk5, hk6, hk10, hk11]
 
 theorem generatorCoefficient_eq_generator_coeff {k : ℕ} (hk : k < 23) :
     generatorCoefficient k =
@@ -123,9 +129,13 @@ theorem generator_coeff_zero_of_ge {N : ℕ} (hN : 12 ≤ N) :
     BinaryCyclicGolayPolynomial.generator.coeff N = 0 := by
   simp [BinaryCyclicGolayPolynomial.generator, Polynomial.coeff_add,
     Polynomial.coeff_one, Polynomial.coeff_X_pow,
-    show N ≠ 2 by omega, show N ≠ 4 by omega, show N ≠ 5 by omega,
-    show N ≠ 6 by omega, show N ≠ 10 by omega, show N ≠ 11 by omega,
-    show N ≠ 0 by omega]
+    Nat.ne_of_gt (lt_of_lt_of_le (by decide : 2 < 12) hN),
+    Nat.ne_of_gt (lt_of_lt_of_le (by decide : 4 < 12) hN),
+    Nat.ne_of_gt (lt_of_lt_of_le (by decide : 5 < 12) hN),
+    Nat.ne_of_gt (lt_of_lt_of_le (by decide : 6 < 12) hN),
+    Nat.ne_of_gt (lt_of_lt_of_le (by decide : 10 < 12) hN),
+    Nat.ne_of_gt (lt_of_lt_of_le (by decide : 11 < 12) hN),
+    Nat.ne_of_gt (lt_of_lt_of_le (by decide : 0 < 12) hN)]
 
 noncomputable def wordPolynomial (w : Word23) :
     Polynomial F₂ :=
@@ -151,7 +161,7 @@ theorem wordPolynomial_coeff_zero_of_ge (w : Word23) {N : ℕ}
   simp [Polynomial.coeff_C_mul, Polynomial.coeff_X_pow]
   apply Finset.sum_eq_zero
   intro j hj
-  have hne : N ≠ (j : ℕ) := by omega
+  have hne : N ≠ (j : ℕ) := Nat.ne_of_gt (lt_of_lt_of_le j.isLt hN)
   simp [hne]
 
 theorem wordPolynomial_cyclicGolayWord_eq_message_mul_generator (m : Message) :
@@ -410,9 +420,9 @@ theorem encode_sum {ι : Type*} (s : Finset ι) (f : ι → Message) :
 def basisDotMatrix : Matrix (Fin 12) (Fin 12) F₂ :=
   fun i j => dot (basisWord i) (basisWord j)
 
-/-- The 12x12 basis Gram matrix is identically zero (fast 144-entry computation via VM). -/
+/-- The 12x12 basis Gram matrix is identically zero (kernel-checked 144-entry computation). -/
 theorem basisDotMatrix_zero : basisDotMatrix = 0 := by
-  native_decide
+  decide +kernel
 
 private theorem basis_dot_zero (i j : Fin 12) :
     dot (basisWord i) (basisWord j) = 0 := by
@@ -515,6 +525,14 @@ theorem minimumWeight_encode_of_four_dvd
   have hwt4 : hammingWeight (encode m) = 4 := by omega
   exact hno4 hwt4
 
+/-- Exhaustive finite certificate that every nonzero encoded message has
+Hamming weight at least eight for this explicit `Fin 12 → F₂` encoder. -/
+theorem minimumWeight_encode_finite :
+    ∀ m : Message, encode m ≠ 0 → 8 ≤ hammingWeight (encode m) := by
+  set_option maxHeartbeats 0 in
+    set_option maxRecDepth 1000000 in
+      decide +kernel
+
 /- The binary quadratic-residue square-root bound excludes weight four:
 `23 ≤ d^2 - d + 1` is incompatible with `d = 4`. -/
 theorem no_weight_four_encode_of_qr_bound
@@ -578,6 +596,17 @@ theorem minimumWeight_eq_eight
     (∀ w ∈ code, w ≠ 0 → 8 ≤ hammingWeight w) ∧
       (∃ w ∈ code, hammingWeight w = 8) :=
   ⟨minimumWeight_eight_lower_bound h4all hqr, exists_weight_eight⟩
+
+/-- Unconditional minimum-weight theorem for the concrete encoded Golay code.
+The lower bound is the finite certificate over the 4096-message carrier; the
+upper witness is the first basis generator. -/
+theorem minimumWeight_eq_eight_finite :
+    (∀ w ∈ code, w ≠ 0 → 8 ≤ hammingWeight w) ∧
+      (∃ w ∈ code, hammingWeight w = 8) := by
+  refine ⟨?_, exists_weight_eight⟩
+  intro w hw hne
+  rcases Finset.mem_image.mp hw with ⟨m, -, rfl⟩
+  exact minimumWeight_encode_finite m hne
 
 /-- The code submodule is contained in its bilinear orthogonal complement. -/
 theorem codeSubmodule_le_orthogonal :

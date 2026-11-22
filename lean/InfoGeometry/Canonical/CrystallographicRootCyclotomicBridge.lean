@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.RingTheory.RootsOfUnity.Basic
@@ -22,10 +27,10 @@ scaffolding, no analytic continuation claims.
 ## Mathematical Summary
 
 The hexagonal reciprocal lattice has point group D₆ (dihedral group of order 12).
-The rotation generator `R` satisfies `R⁶ = Id`, so its eigenvalues are the
-sixth roots of unity `ζ₆ᵏ` for `k = 0, …, 5`. The characteristic polynomial
-of the rotation is `X⁶ − 1`, which factors as a product of cyclotomic
-polynomials:
+The rotation generator `R` satisfies `R⁶ = Id`, so its eigenvalues are among
+the sixth roots of unity. On the rank-two reciprocal-coordinate module it
+satisfies `X² − X + 1 = Φ₆(X)`; `X⁶ − 1` is an annihilating polynomial and
+factors as a product of cyclotomic polynomials:
 
   `X⁶ − 1 = (X − 1)(X + 1)(X² + X + 1)(X² − X + 1)`
           = `Φ₁ · Φ₂ · Φ₃ · Φ₆`
@@ -47,6 +52,44 @@ namespace InfoGeometry.Canonical.CrystallographicRootCyclotomicBridge
 
 open InfoGeometry.Canonical.D6ReciprocalLatticeBrillouinZone
 
+/-! ## Operator form of the wallpaper rotation
+
+The sixfold relation is an operator relation on the rank-two reciprocal
+lattice. The stronger quadratic identity below is the actual `Φ₆` relation;
+it records the two-dimensional representation, rather than merely the order
+of the abstract group element. -/
+
+/-- The axial wallpaper rotation as a genuine `ℤ`-linear endomorphism of the
+rank-two reciprocal lattice. -/
+def axialRotateEnd : Module.End ℤ ReciprocalCoord where
+  toFun := axialRotate
+  map_add' p q := by
+    funext i
+    fin_cases i <;> simp [axialRotate] <;> ring
+  map_smul' a p := by
+    funext i
+    (fin_cases i <;> simp [axialRotate]); ring
+
+/-- The reciprocal-lattice rotation satisfies the sixth cyclotomic polynomial
+`Φ₆(T) = T² - T + 1`.  In particular, it is a concrete operator realization
+of the primitive order-six cyclotomic relation over `ℤ`. -/
+theorem axialRotateEnd_cyclotomic_six :
+    axialRotateEnd ^ 2 - axialRotateEnd + 1 = 0 := by
+  apply LinearMap.ext
+  intro v
+  change axialRotate (axialRotate v) - axialRotate v + v = 0
+  funext i
+  fin_cases i <;> simp [axialRotate]
+
+/-- The function-level sixfold rotation law is also a sixth-power identity for
+the induced endomorphism of the reciprocal lattice. -/
+theorem axialRotateEnd_pow_six : axialRotateEnd ^ 6 = 1 := by
+  apply LinearMap.ext
+  intro v
+  change axialRotate (axialRotate (axialRotate
+    (axialRotate (axialRotate (axialRotate v))))) = v
+  exact axialRotate_sixth v
+
 /-! ## 1. D6 Rotation Order and Root-of-Unity Structure -/
 
 /-- The D6 rotation generator has order exactly 6 on the reciprocal lattice. -/
@@ -67,7 +110,8 @@ theorem d6_dihedral_conjugation (p : ReciprocalCoord) :
 
 /-! ## 2. Cyclotomic Polynomial Factorization
 
-The characteristic polynomial of the D6 rotation is `X⁶ − 1`. We prove its
+The order-six relation gives the annihilating polynomial `X⁶ − 1`, not the
+characteristic polynomial of the rank-two representation. We prove its
 factorization into cyclotomic factors purely algebraically over any commutative
 ring.
 -/
@@ -113,7 +157,8 @@ theorem sixth_root_of_unity_pow (ω : ℤ) (h : ω ^ 6 = 1) :
 theorem sixth_root_cyclotomic_vanishing (ω : ℤ) (h : ω ^ 6 = 1) :
     (ω - 1 = 0) ∨ (ω + 1 = 0) ∨ (ω ^ 2 + ω + 1 = 0) ∨ (ω ^ 2 - ω + 1 = 0) := by
   have h0 : (ω - 1) * (ω + 1) * (ω ^ 2 + ω + 1) * (ω ^ 2 - ω + 1) = 0 := by
-    have := x6_sub_one_cyclotomic ω; omega
+    rw [← x6_sub_one_cyclotomic ω, h]
+    norm_num
   rcases mul_eq_zero.mp h0 with h1 | h4
   · rcases mul_eq_zero.mp h1 with h2 | h3
     · rcases mul_eq_zero.mp h2 with h2a | h2b
@@ -126,7 +171,7 @@ theorem sixth_root_cyclotomic_vanishing (ω : ℤ) (h : ω ^ 6 = 1) :
 theorem cube_root_cyclotomic (ω : ℤ)
     (h3 : ω ^ 3 = 1) (hne : ω ≠ 1) :
     ω ^ 2 + ω + 1 = 0 := by
-  have h0 : ω ^ 3 - 1 = 0 := by omega
+  have h0 : ω ^ 3 - 1 = 0 := by rw [h3]; norm_num
   have hfact := x3_sub_one_factor ω
   have hprod : (ω - 1) * (ω ^ 2 + ω + 1) = 0 := by omega
   rcases mul_eq_zero.mp hprod with h1 | h2
@@ -207,7 +252,9 @@ theorem pentagon_heptagon_balance
     (h_faces : F = F5 + F6 + F7)
     (h_edges : 2 * E = 5 * F5 + 6 * F6 + 7 * F7) :
     F5 = F7 := by
-  have h1 : 6 * F = 2 * E := by omega
+  have h1 : 6 * F = 2 * E := by
+    have h3v : 3 * (V + F) = 3 * E := congrArg (3 * ·) h_euler
+    linarith [h_reg]
   have h2 : 6 * (F5 + F6 + F7) = 5 * F5 + 6 * F6 + 7 * F7 := by
     rw [← h_faces, ← h_edges]; exact h1
   omega

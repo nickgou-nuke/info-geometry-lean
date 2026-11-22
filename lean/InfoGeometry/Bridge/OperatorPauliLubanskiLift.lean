@@ -1,5 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Physics.PauliLubanskiFiniteBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Bridge.QuaternionicPauliDiracSoldering
 
 /-! Canonical readback of the finite Pauli--Lubanski owner.  The bridge keeps
 the existing `FourVector`/bivector carrier authoritative and adds no second
@@ -33,5 +39,14 @@ theorem rest_frame_massive_casimir
         (pauliLubanski ⟨⟨m, 0, 0, 0⟩, J, K⟩) =
       -m ^ 2 * s * (s + 1) :=
   pauliLubanski_rest_frame_massive_casimir m s J K hJ
+
+
+abbrev PauliBlock := InfoGeometry.Bridge.QuaternionicPauliDiracSoldering.PauliBlock
+abbrev WeylSpinor := InfoGeometry.Bridge.QuaternionicPauliDiracSoldering.WeylSpinor
+
+noncomputable def spinHalfCasimir : PauliBlock := (3 / 4 : ℂ) • (1 : PauliBlock)
+
+theorem spinHalfCasimir_eq_three_quarters :
+    spinHalfCasimir = (3 / 4 : ℂ) • (1 : PauliBlock) := rfl
 
 end InfoGeometry.Bridge.OperatorPauliLubanskiLift

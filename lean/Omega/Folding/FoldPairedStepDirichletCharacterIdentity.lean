@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
@@ -34,8 +40,21 @@ def characterDirichletEnergy (D : PairedStepKernelData) (a : ℝ) : ℝ :=
 def centeredCharacterVariance (D : PairedStepKernelData) (a : ℝ) : ℝ :=
   1 - D.meanSq a
 
-/-- The spectral gap placeholder bounded by the Rayleigh quotient. -/
-def spectralGap (_D : PairedStepKernelData) : ℝ := 0
+/-- The Rayleigh quotient formula, totalized at constant modes.  Only nonconstant modes are
+included in `rayleighQuotients` below. -/
+def rayleighQuotient (D : PairedStepKernelData) (a : ℝ) : ℝ :=
+  if D.meanSq a < 1 then
+    D.characterDirichletEnergy a / D.centeredCharacterVariance a
+  else 0
+
+/-- Rayleigh quotients indexed by character modes with positive centered variance. -/
+def rayleighQuotients (D : PairedStepKernelData) : Set ℝ :=
+  {q | ∃ a, D.meanSq a < 1 ∧ q = D.rayleighQuotient a}
+
+/-- The spectral gap is the infimum over nonconstant character modes, or zero if there are none. -/
+noncomputable def spectralGap (D : PairedStepKernelData) : ℝ := by
+  classical
+  exact if h : D.rayleighQuotients.Nonempty then sInf D.rayleighQuotients else 0
 
 /-- The paired-step energy rewrites as the averaged `2 sin²(θ_k / 2)` sum. -/
 def characterDirichletEnergyFormula (D : PairedStepKernelData) : Prop :=
@@ -77,6 +96,39 @@ lemma characterDirichletEnergy_nonneg (D : PairedStepKernelData) (a : ℝ) :
     intro k hk
     exact D.pairedContribution_nonneg a k
 
+lemma rayleighQuotient_nonneg (D : PairedStepKernelData) (a : ℝ) :
+    0 ≤ D.rayleighQuotient a := by
+  by_cases hmean : D.meanSq a < 1
+  · simp only [rayleighQuotient, if_pos hmean]
+    have hvariance : 0 < D.centeredCharacterVariance a := by
+      unfold centeredCharacterVariance
+      linarith
+    exact div_nonneg (D.characterDirichletEnergy_nonneg a) hvariance.le
+  · simp [rayleighQuotient, hmean]
+
+lemma spectralGap_nonneg (D : PairedStepKernelData) : 0 ≤ D.spectralGap := by
+  classical
+  by_cases h : D.rayleighQuotients.Nonempty
+  · rw [spectralGap, dif_pos h]
+    refine le_csInf h ?_
+    intro q hq
+    rcases hq with ⟨a, hmean, rfl⟩
+    exact D.rayleighQuotient_nonneg a
+  · simp [spectralGap, h]
+
+lemma spectralGap_le_rayleighQuotient (D : PairedStepKernelData) {a : ℝ}
+    (hmean : D.meanSq a < 1) :
+    D.spectralGap ≤ D.characterDirichletEnergy a / D.centeredCharacterVariance a := by
+  classical
+  have hnonempty : D.rayleighQuotients.Nonempty := ⟨D.rayleighQuotient a,
+    a, hmean, by simp [rayleighQuotient, hmean]⟩
+  rw [spectralGap, dif_pos hnonempty]
+  apply csInf_le
+  · exact ⟨0, fun q hq => by
+      rcases hq with ⟨b, hbmean, rfl⟩
+      exact D.rayleighQuotient_nonneg b⟩
+  · exact ⟨a, hmean, by simp [rayleighQuotient, hmean]⟩
+
 end PairedStepKernelData
 
 open PairedStepKernelData
@@ -96,12 +148,7 @@ theorem paper_fold_paired_step_dirichlet_character_identity (D : PairedStepKerne
   · intro a
     rfl
   · intro a hmean
-    have henergy : 0 ≤ D.characterDirichletEnergy a := D.characterDirichletEnergy_nonneg a
-    have hvar : 0 < D.centeredCharacterVariance a := by
-      unfold PairedStepKernelData.centeredCharacterVariance
-      linarith
-    unfold PairedStepKernelData.spectralGap
-    exact div_nonneg henergy hvar.le
+    exact D.spectralGap_le_rayleighQuotient hmean
 
 end
 

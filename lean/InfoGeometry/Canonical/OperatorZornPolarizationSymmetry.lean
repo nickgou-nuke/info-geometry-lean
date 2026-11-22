@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.OperatorZornCasimirNullIdentity
 
 /-!
@@ -141,5 +147,64 @@ theorem coordinate_actions_do_not_anticommute :
         -(exchange (offDiagonalSign (chiralOperatorZorn U V))) := by
   intro h; have h0 := congrArg (fun X : OperatorZornMatrix ℝ => X.sigma_minus 0) (h ![1, 0, 0] 0)
   change (-1 : ℝ) = -(-1 : ℝ) at h0; linarith
+
+/-- On chiral elements, the proposed anticommutation equation is exactly the
+condition that all vector coordinates are 2-torsion. Thus characteristic two
+is the precise exceptional case; the statement is valid over arbitrary,
+possibly noncommutative coefficient rings. -/
+theorem coordinate_actions_anticommute_iff_two_torsion (U V : OperatorVector A) :
+    offDiagonalSign (exchange (chiralOperatorZorn U V)) =
+        -(exchange (offDiagonalSign (chiralOperatorZorn U V))) ↔
+      (∀ i, U i + U i = 0) ∧ ∀ i, V i + V i = 0 := by
+  constructor
+  · intro h
+    constructor
+    · intro i
+      have hi := congrArg (fun X : OperatorZornMatrix A => X.sigma_minus i) h
+      have hi' : -U i = U i := by
+        simpa [offDiagonalSign, exchange, chiralOperatorZorn,
+          operatorZornCoordinates, Neg.neg] using hi
+      exact (neg_eq_iff_add_eq_zero).mp hi'
+    · intro i
+      have hi := congrArg (fun X : OperatorZornMatrix A => X.sigma_plus i) h
+      have hi' : -V i = V i := by
+        simpa [offDiagonalSign, exchange, chiralOperatorZorn,
+          operatorZornCoordinates, Neg.neg] using hi
+      exact (neg_eq_iff_add_eq_zero).mp hi'
+  · rintro ⟨hU, hV⟩
+    apply operatorZornMatrix_ext
+    · simp [offDiagonalSign, exchange, chiralOperatorZorn, operatorZornCoordinates,
+        Neg.neg]
+    · simp [offDiagonalSign, exchange, chiralOperatorZorn, operatorZornCoordinates,
+        Neg.neg]
+    · funext i
+      simpa [offDiagonalSign, exchange, chiralOperatorZorn,
+        operatorZornCoordinates, Neg.neg] using
+        (neg_eq_iff_add_eq_zero).mpr (hV i)
+    · funext i
+      simpa [offDiagonalSign, exchange, chiralOperatorZorn,
+        operatorZornCoordinates, Neg.neg] using
+        (neg_eq_iff_add_eq_zero).mpr (hU i)
+
+section NoncommutativeMatrixWitness
+
+abbrev CoefficientOperator := Matrix (Fin 2) (Fin 2) ℤ
+
+def e12 : CoefficientOperator := !![0, 1; 0, 0]
+
+/-- The anticommutation claim still fails on the full matrix-operator
+coefficient ring `M₂(ℤ)`, using a nonzero off-diagonal matrix operator. -/
+theorem coordinate_actions_do_not_anticommute_on_matrix_operators :
+    ¬ ∀ U V : OperatorVector CoefficientOperator,
+      offDiagonalSign (exchange (chiralOperatorZorn U V)) =
+        -(exchange (offDiagonalSign (chiralOperatorZorn U V))) := by
+  intro h
+  have hentry := congrArg
+    (fun X : OperatorZornMatrix CoefficientOperator => X.sigma_minus 0 0 1)
+    (h ![e12, 0, 0] 0)
+  change ((-e12) 0 1) = ((-(-e12)) 0 1) at hentry
+  norm_num [e12] at hentry
+
+end NoncommutativeMatrixWitness
 
 end InfoGeometry.Canonical.OperatorZornPolarizationSymmetry

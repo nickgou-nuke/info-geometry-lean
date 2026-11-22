@@ -20,6 +20,40 @@ namespace InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion
 
 variable {A : Type*} [Ring A]
 
+/-- The first-order update associated to a map `D`. -/
+def idPlusMap {R : Type*} [NonUnitalNonAssocRing R] (D : R → R) (x : R) : R :=
+  x + D x
+
+/-- In any nonassociative ring, a Leibniz map `D` has an exactly quadratic
+multiplicativity defect after the first-order update `id + D`. -/
+theorem idPlusDerivation_mul_defect
+    {R : Type*} [NonUnitalNonAssocRing R] (D : R → R)
+    (hD : ∀ x y : R, D (x * y) = D x * y + x * D y) (x y : R) :
+    idPlusMap D (x * y) - idPlusMap D x * idPlusMap D y = -(D x * D y) := by
+  unfold idPlusMap
+  rw [hD x y]
+  simp only [add_mul, mul_add]
+  abel
+
+/-- For a Leibniz map on a nonassociative ring, its first-order update is
+multiplicative precisely when every pair of values of the map has zero
+product. -/
+theorem idPlusDerivation_mul_iff
+    {R : Type*} [NonUnitalNonAssocRing R] (D : R → R)
+    (hD : ∀ x y : R, D (x * y) = D x * y + x * D y) :
+    (∀ x y : R, idPlusMap D (x * y) = idPlusMap D x * idPlusMap D y) ↔
+      ∀ x y : R, D x * D y = 0 := by
+  constructor
+  · intro h x y
+    have hdef := idPlusDerivation_mul_defect D hD x y
+    rw [h x y] at hdef
+    simp only [sub_self] at hdef
+    exact neg_eq_zero.mp hdef.symm
+  · intro h x y
+    have hdef := idPlusDerivation_mul_defect D hD x y
+    rw [h x y, neg_zero] at hdef
+    exact sub_eq_zero.mp hdef
+
 def rootXYUpdate (X : OpZornMatrix A) : OpZornMatrix A := X + rootXY X
 
 def rootZX (X : OpZornMatrix A) : OpZornMatrix A :=
@@ -55,6 +89,15 @@ theorem rootXYUpdate_mul (X Y : OpZornMatrix A) :
   have h' : rootXYUpdate (X * Y) - rootXYUpdate X * rootXYUpdate Y = 0 := by
     simpa using h
   exact sub_eq_zero.mp h'
+
+/-- The generic `id + D` criterion specializes to the owner's `rootXY`:
+multiplicativity is equivalent to pairwise annihilation of its image. -/
+theorem rootXYUpdate_mul_iff :
+    (∀ X Y : OpZornMatrix A,
+      rootXYUpdate (X * Y) = rootXYUpdate X * rootXYUpdate Y) ↔
+      ∀ X Y : OpZornMatrix A, rootXY X * rootXY Y = 0 := by
+  simpa [rootXYUpdate, idPlusMap] using
+    (idPlusDerivation_mul_iff (R := OpZornMatrix A) rootXY rootXY_leibniz)
 
 /-- The root action is square-zero, hence `id - rootXY` is a two-sided
 inverse of the terminated update `id + rootXY`. -/

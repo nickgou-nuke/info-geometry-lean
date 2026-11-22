@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 
 import InfoGeometry.OperatorAlgebra.NoncommutativePowerDerivative
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Analysis.Calculus.Deriv.Slope
 import Mathlib.Analysis.SpecialFunctions.Exponential
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
@@ -49,7 +50,7 @@ noncomputable def duhamelDerivative (a : A) : A →L[ℝ] A :=
 /-- The continuous-linear-map-valued Duhamel integrand is continuous. -/
 theorem continuous_duhamelIntegrand (a : A) :
     Continuous (duhamelIntegrand a) := by
-  letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
+  have : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
   unfold duhamelIntegrand
   fun_prop
 
@@ -59,6 +60,7 @@ theorem intervalIntegrable_duhamelIntegrand
     IntervalIntegrable (duhamelIntegrand a) volume s t :=
   (continuous_duhamelIntegrand a).intervalIntegrable s t
 
+omit [CompleteSpace A] in
 /--
 Evaluation of the Duhamel continuous linear map is the operator-valued
 Duhamel integral.  Integrability is an explicit analytic premise rather than
@@ -105,7 +107,7 @@ generator, by uniqueness of the Fréchet derivative.
 theorem exponentialDerivative_zero :
     exponentialDerivative (𝕜 := ℝ) (0 : A) =
       ContinuousLinearMap.id ℝ A := by
-  letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
+  have : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
   exact
     (hasFDerivAt_exp_noncommutative (𝕜 := ℝ) (A := A) (0 : A)).unique
       hasFDerivAt_exp_zero
@@ -158,7 +160,7 @@ theorem duhamelDerivative_apply_of_commute
             NormedSpace.exp (t • a)) * h := by
               rw [mul_assoc]
       _ = NormedSpace.exp ((1 - t) • a + t • a) * h := by
-              letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
+              have : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
               rw [NormedSpace.exp_add_of_commute hScaledComm]
       _ = NormedSpace.exp a * h := by
               rw [hScaleSum]
@@ -173,7 +175,7 @@ theorem exponentialDerivative_apply_of_commute
     (a h : A) (hComm : Commute h a) :
     exponentialDerivative (𝕜 := ℝ) a h =
       NormedSpace.exp a * h := by
-  letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
+  have : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
   have hLine :
       HasDerivAt (fun t : ℝ => a + t • h) h 0 := by
     have h1 := (hasDerivAt_const (x := (0 : ℝ)) a).add
@@ -187,7 +189,8 @@ theorem exponentialDerivative_apply_of_commute
     by
       convert
         (hasFDerivAt_exp_noncommutative (𝕜 := ℝ) (A := A) a).comp_hasDerivAt_of_eq
-          (x := (0 : ℝ)) (y := a) hLine (by simp) using 1 <;> simp [Function.comp_def]
+          (x := (0 : ℝ)) (y := a) hLine (by simp) using 1
+      simp [Function.comp_def]
   have hFactored :
       (fun t : ℝ => NormedSpace.exp (a + t • h)) =
         fun t : ℝ => NormedSpace.exp a * NormedSpace.exp (t • h) := by
@@ -226,7 +229,7 @@ noncomputable def perturbedDuhamelIntegral
 /-- The finite-difference perturbed integral is continuous in `z`. -/
 theorem continuous_perturbedDuhamelIntegral (a h : A) :
     Continuous (perturbedDuhamelIntegral a h) := by
-  letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
+  have : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
   apply
     intervalIntegral.continuous_parametric_intervalIntegral_of_continuous'
       (a₀ := (0 : ℝ)) (b₀ := 1)
@@ -240,7 +243,7 @@ theorem exp_add_smul_sub_exp_eq_smul_perturbedDuhamelIntegral
     (a h : A) (z : ℝ) :
     NormedSpace.exp (a + z • h) - NormedSpace.exp a =
       z • perturbedDuhamelIntegral a h z := by
-  letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
+  have : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
   let F : ℝ → A := fun t =>
     NormedSpace.exp ((1 - t) • a) *
       NormedSpace.exp (t • (a + z • h))
@@ -324,5 +327,38 @@ theorem hasDerivAt_exp_affine_duhamel (a h : A) :
   simp only [zero_add, zero_smul, add_zero]
   rw [exp_add_smul_sub_exp_eq_smul_perturbedDuhamelIntegral]
   simp [smul_smul, hz0]
+
+/--
+The changed-origin real Fréchet derivative of the Banach-algebra exponential
+is the Duhamel operator in every direction.  This is the full
+noncommutative operator identity; no centralizer hypothesis remains.
+-/
+theorem exponentialDerivative_apply_eq_duhamelDerivative
+    (a h : A) :
+    exponentialDerivative (𝕜 := ℝ) a h =
+      duhamelDerivative a h := by
+  have : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
+  have hLine :
+      HasDerivAt (fun t : ℝ => a + t • h) h 0 := by
+    have h1 := (hasDerivAt_const (x := (0 : ℝ)) a).add
+      ((hasDerivAt_id (x := (0 : ℝ))).smul_const h)
+    rw [zero_add, one_smul] at h1
+    exact h1
+  have hFromFrechet :
+      HasDerivAt
+        (fun t : ℝ => NormedSpace.exp (a + t • h))
+        (exponentialDerivative (𝕜 := ℝ) a h) 0 := by
+    convert
+      (hasFDerivAt_exp_noncommutative (𝕜 := ℝ) (A := A) a).comp_hasDerivAt_of_eq
+        (x := (0 : ℝ)) (y := a) hLine (by simp) using 1
+    simp [Function.comp_def]
+  exact hFromFrechet.unique (hasDerivAt_exp_affine_duhamel a h)
+
+/-- Bundled operator form of the noncommutative Duhamel identity. -/
+theorem exponentialDerivative_eq_duhamelDerivative (a : A) :
+    exponentialDerivative (𝕜 := ℝ) a =
+      duhamelDerivative a := by
+  ext h
+  exact exponentialDerivative_apply_eq_duhamelDerivative a h
 
 end InfoGeometry.OperatorAlgebra

@@ -1,6 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.SignedNetwork.ExactCancellation
+import Mathlib.Data.Option.Basic
 
 /-! Finite marked-event laws.  The `none` mark is an absorbing outcome when
 the supplied total rate is zero; no continuous-time process is asserted here.
@@ -71,4 +77,18 @@ theorem applyEvent_signed (p : InfoGeometry.SignedNetwork.ExactCancellation.Coun
   ring
 
 end
+
+/-- Absorption preserves the state and terminates the physical jump recursion. -/
+def applyOptional {C : Type*} [Fintype C] [DecidableEq C]
+    (p : InfoGeometry.SignedNetwork.ExactCancellation.Counts C) :
+    Option (Event C) → InfoGeometry.SignedNetwork.ExactCancellation.Counts C
+  | none => p
+  | some e => applyEvent p e
+
+/-- Optional deterministic pruning after the sampled event. -/
+def pruneState {C : Type*} [Fintype C] [DecidableEq C] (prune : Bool)
+    (p : InfoGeometry.SignedNetwork.ExactCancellation.Counts C) :
+    InfoGeometry.SignedNetwork.ExactCancellation.Counts C :=
+  if prune then InfoGeometry.SignedNetwork.ExactCancellation.cancel p else p
+
 end InfoGeometry.SignedNetwork.BranchingEventLaw

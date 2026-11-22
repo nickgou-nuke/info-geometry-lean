@@ -1066,6 +1066,7 @@ import InfoGeometry.Canonical.KreinProjectorLattice
 import InfoGeometry.Canonical.FiniteOperatorBooleanAlgebra
 import InfoGeometry.Canonical.WallpaperParityBooleanBridge
 import InfoGeometry.Canonical.KleinGlideTwistedCommutantBridge
+import InfoGeometry.Canonical.WeylCPTParityBridge
 import InfoGeometry.Canonical.SectorLattice
 import InfoGeometry.Canonical.RefinementGaloisConnection
 import InfoGeometry.Canonical.SelfSimilarVacuum

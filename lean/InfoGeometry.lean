@@ -7918,6 +7918,7 @@ import InfoGeometry.OperatorAlgebra.PeircePairExamples
 import InfoGeometry.OperatorAlgebra.PeircePairGeometry
 import InfoGeometry.OperatorAlgebra.PeircePairPositivity
 import InfoGeometry.OperatorAlgebra.PeirceProjectedConnection
+import InfoGeometry.OperatorAlgebra.PeirceDerivationConnection
 import InfoGeometry.OperatorAlgebra.PeirceSignedTransport
 import InfoGeometry.OperatorAlgebra.PeirceSpine
 import InfoGeometry.OperatorAlgebra.PeirceSpine.BergmanTransportAudit

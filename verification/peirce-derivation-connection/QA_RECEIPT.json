@@ -1,0 +1,435 @@
+{
+  "schema": "peirce_derivation_independent_acceptance.v1",
+  "disposition": "ACCEPTED_FOCUSED_SCOPE_WITH_REVIEWED_NONBLOCKING_FINDINGS",
+  "reviewer": "/root/environment_qa",
+  "completed_at_utc": "2026-11-22T21:01:45.773474+00:00",
+  "compiler_test_lane_released": true,
+  "source_index_freeze_released_to_parent": true,
+  "accepted_base_commit": "fe24e350b08fdea04f74c0748ef9fd9417c47529",
+  "accepted_index_listing_sha256": "274c3344acd04d469ca4196a87b47fa9a522c7c8dcf6c696e15c689819f774b4",
+  "staged_source_sha256": {
+    ".github/workflows/peirce-derivation-connection.yml": "e9ce71000b41a965c0c80d6f348e362677771a52045ad5e153476a6440bbe385",
+    "docs/GRADED_NULL_OPERATOR_INTAKE.md": "04e629289cee175836d0f81936d170782f78a2468a01a0c442bc8841e4832644",
+    "docs/PEIRCE_DERIVATION_CONNECTION_CONTRACT.md": "b94e53704f839142fade7314379d4762ec651e2b4dd5ae975267bed3ca42a98a",
+    "lean/InfoGeometry.lean": "3643cfcd20d8ca77e93f699132afd044e090b1f0692c1095649f18ad5f0aee18",
+    "lean/InfoGeometry/OperatorAlgebra/PeirceDerivationConnection.lean": "ae651b99bb56edaebca105e673a1b08514a7991251adc2bda9246684b29b231f",
+    "lean/InfoGeometry/OperatorAlgebra/PeirceDerivationConnectionAudit.lean": "b0c2e8446cd0f5af7ff69f97bc30d3429ff8df8dd7f451304a1d2fe38adff1a7",
+    "verification/peirce-derivation-connection/README.md": "537a598fe03ffc77c4cb631a305e634545cc17656fea71dd5b361516e4640f40",
+    "verification/peirce-derivation-connection/audit.py": "6fa17b0dfb7984179c3c8f2b30f70c7686798f2b019eec983267ee259d7b35cd"
+  },
+  "input_integrity": {
+    "tracked_inputs": 26,
+    "drift": {},
+    "index_unchanged": true,
+    "all_staged_worktree_equal": true,
+    "semantic_review_unchanged": true
+  },
+  "dependency_pins": {
+    "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+    "plausible": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+    "LeanSearchClient": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+    "importGraph": "e928b72544873815af278d38681b31c0293588e3",
+    "proofwidgets": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5",
+    "aesop": "355695d523e41d0554926416cba2a2b3544fbbc9",
+    "Qq": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+    "batteries": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+    "Cli": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204"
+  },
+  "tool_versions": {
+    "elan": "elan 4.4.0 (3cc76985a 2026-11-18)",
+    "lean": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+    "lake": "Lake version 5.0.0-src+5045d00 (Lean version 4.34.1)"
+  },
+  "counts": {
+    "requested_commands": 14,
+    "passed_commands": 14,
+    "public_declarations": 9,
+    "public_definitions": 1,
+    "public_theorems": 8,
+    "compiled_owner_declarations_replayed": 19
+  },
+  "public_axioms_by_declaration": {
+    "InfoGeometry.OperatorAlgebra.PeirceDerivationConnection.derivationConnection": [
+      "Quot.sound",
+      "propext"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceDerivationConnection.derivationConnection_apply": [
+      "Quot.sound",
+      "propext"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceDerivationConnection.operatorAction_idempotent_tangent": [
+      "Quot.sound",
+      "propext"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceDerivationConnection.projected_derivation_curvature": [
+      "Quot.sound",
+      "propext"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceDerivationConnection.derivationConnection_leibniz": [
+      "Quot.sound",
+      "propext"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceDerivationConnection.derivationConnection_curvature": [
+      "Quot.sound",
+      "propext"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceDerivationConnection.derivationConnection_curvature_apply_eq_compressedGram": [
+      "Quot.sound",
+      "propext"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceDerivationConnection.derivationConnection_flat_of_fixed": [
+      "Quot.sound",
+      "propext"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceDerivationConnection.derivationConnection_inner": [
+      "Quot.sound",
+      "propext"
+    ]
+  },
+  "compiled_replay": {
+    "status": "PASS",
+    "allowed_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "exact_used_axiom_union_reported": false,
+    "olean_sha256": {
+      "verification/peirce-defect-boundaries/.lake/build/lib/lean/InfoGeometry/OperatorAlgebra/PeirceDerivationConnection.olean": "b58f326987d13011fd41da7a16c13c91bd2164026f8589be1a4e3a4b447b855b",
+      "verification/peirce-defect-boundaries/.lake/build/lib/lean/InfoGeometry/OperatorAlgebra/PeirceDerivationConnectionAudit.olean": "48f1f80ced0d9d6052ed88f506e734faadaa72516ccf25346f0a166745029fe9"
+    }
+  },
+  "checks": [
+    {
+      "name": "inventory_validator",
+      "command": [
+        "python3",
+        "verification/peirce-derivation-connection/audit.py"
+      ],
+      "cwd": "/workspace/scratch/58c07266fdb0/info-geometry-lean",
+      "exit_code": 0,
+      "total_wall_seconds": 0.058,
+      "events": {},
+      "log": "/workspace/scratch/58c07266fdb0/tmp/qa/peirce-derivation/attempt2/inventory_validator.log",
+      "log_sha256": "cc94ba840a8f43b2d30e89a078c9475f2fb423e9a63f8d374c01bb7ac2976c1d",
+      "result_summary": "9 focused Git pins match root; all 9 public declarations covered"
+    },
+    {
+      "name": "focused_build",
+      "command": [
+        "python3",
+        "verification/peirce-defect-boundaries/check.py",
+        "build",
+        "InfoGeometry.OperatorAlgebra.PeirceDerivationConnection",
+        "InfoGeometry.OperatorAlgebra.PeirceDerivationConnectionAudit"
+      ],
+      "cwd": "/workspace/scratch/58c07266fdb0/info-geometry-lean",
+      "exit_code": 0,
+      "total_wall_seconds": 18.284,
+      "events": {
+        "wait_marker_seconds": 0.062,
+        "lock_acquired_launch_marker_seconds": 0.062
+      },
+      "log": "/workspace/scratch/58c07266fdb0/tmp/qa/peirce-derivation/attempt2/focused_build.log",
+      "log_sha256": "8a7f0dbd1a438ac189b3479f9ad51d58e407247f6f92d73592a65e4e75782285",
+      "post_lock_launch_seconds": 18.222,
+      "observed_wrapper_wait_seconds": 0.0,
+      "result_summary": "Owner and audit built; Lake reported 4,103 successful jobs, including cache replay"
+    },
+    {
+      "name": "owner_warning_as_error",
+      "command": [
+        "python3",
+        "verification/peirce-defect-boundaries/check.py",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceDerivationConnection.lean"
+      ],
+      "cwd": "/workspace/scratch/58c07266fdb0/info-geometry-lean",
+      "exit_code": 0,
+      "total_wall_seconds": 4.462,
+      "events": {
+        "wait_marker_seconds": 0.034,
+        "lock_acquired_launch_marker_seconds": 0.034
+      },
+      "log": "/workspace/scratch/58c07266fdb0/tmp/qa/peirce-derivation/attempt2/owner_warning_as_error.log",
+      "log_sha256": "6f8ff93f8bcd44457dc14af3769dd5dde7cdd813cdc054b8cc1b3d56b0a14fa1",
+      "post_lock_launch_seconds": 4.428,
+      "observed_wrapper_wait_seconds": 0.0,
+      "result_summary": "Fresh owner elaboration with warnings as errors; no warnings"
+    },
+    {
+      "name": "public_axiom_log_warning_as_error",
+      "command": [
+        "python3",
+        "verification/peirce-defect-boundaries/check.py",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceDerivationConnectionAudit.lean"
+      ],
+      "cwd": "/workspace/scratch/58c07266fdb0/info-geometry-lean",
+      "exit_code": 0,
+      "total_wall_seconds": 3.473,
+      "events": {
+        "wait_marker_seconds": 0.034,
+        "lock_acquired_launch_marker_seconds": 0.034
+      },
+      "log": "/workspace/scratch/58c07266fdb0/tmp/qa/peirce-derivation/attempt2/public_axiom_log_warning_as_error.log",
+      "log_sha256": "941896080b4b90f090e444a16fd184c8a02da9937fba0ebb3289daea5ad6184c",
+      "post_lock_launch_seconds": 3.439,
+      "observed_wrapper_wait_seconds": 0.0,
+      "result_summary": "Fresh audit elaboration with warnings as errors; all 9 axiom records printed"
+    },
+    {
+      "name": "public_axiom_log_validator",
+      "command": [
+        "python3",
+        "verification/peirce-derivation-connection/audit.py",
+        "--log",
+        "/workspace/scratch/58c07266fdb0/tmp/qa/peirce-derivation/attempt2/public_axiom_log_warning_as_error.log"
+      ],
+      "cwd": "/workspace/scratch/58c07266fdb0/info-geometry-lean",
+      "exit_code": 0,
+      "total_wall_seconds": 0.037,
+      "events": {},
+      "log": "/workspace/scratch/58c07266fdb0/tmp/qa/peirce-derivation/attempt2/public_axiom_log_validator.log",
+      "log_sha256": "6f3e408d7a2cc70d9272fba4fb740acdf5c8e54318315c2ba84d4cbef95b1e59",
+      "result_summary": "All 9 public declarations use exactly propext and Quot.sound"
+    },
+    {
+      "name": "compiled_kernel_axiom_replay",
+      "command": [
+        "python3",
+        "verification/peirce-defect-boundaries/check.py",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        "verification/peirce-defect-boundaries/.lake/build/lib/lean/InfoGeometry/OperatorAlgebra/PeirceDerivationConnection.olean"
+      ],
+      "cwd": "/workspace/scratch/58c07266fdb0/info-geometry-lean",
+      "exit_code": 0,
+      "total_wall_seconds": 9.282,
+      "events": {
+        "wait_marker_seconds": 0.039,
+        "lock_acquired_launch_marker_seconds": 0.039
+      },
+      "log": "/workspace/scratch/58c07266fdb0/tmp/qa/peirce-derivation/attempt2/compiled_kernel_axiom_replay.log",
+      "log_sha256": "9c9d68af98863eb0644f015086771e384d0260ce4493ee7272203709c358fdef",
+      "post_lock_launch_seconds": 9.243,
+      "observed_wrapper_wait_seconds": 0.0,
+      "result_summary": "All 19 compiled owner declarations clean; module PASS"
+    },
+    {
+      "name": "strict_screener",
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "--strict",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceDerivationConnection.lean"
+      ],
+      "cwd": "/workspace/scratch/58c07266fdb0/info-geometry-lean",
+      "exit_code": 0,
+      "total_wall_seconds": 0.084,
+      "events": {},
+      "log": "/workspace/scratch/58c07266fdb0/tmp/qa/peirce-derivation/attempt2/strict_screener.log",
+      "log_sha256": "ed719d5cdf9396793ecdd81a3c7c14ce0a3814c9a08538ff6267c1a01a37f8aa",
+      "result_summary": "0 traps"
+    },
+    {
+      "name": "strict_placeholder_audit",
+      "command": [
+        "python3",
+        "tools/quality/placeholder_audit.py",
+        "--strict",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceDerivationConnection.lean"
+      ],
+      "cwd": "/workspace/scratch/58c07266fdb0/info-geometry-lean",
+      "exit_code": 0,
+      "total_wall_seconds": 0.065,
+      "events": {},
+      "log": "/workspace/scratch/58c07266fdb0/tmp/qa/peirce-derivation/attempt2/strict_placeholder_audit.log",
+      "log_sha256": "a978c5aada5deaf7ca19617638676fd3df06c91a2e3cc3e68176ac36de30b085",
+      "result_summary": "0 hard findings; 2 reviewed soft premise-group findings"
+    },
+    {
+      "name": "source_axiom_debt_audit",
+      "command": [
+        "python3",
+        "tools/infra/axiom_audit.py",
+        "--fail-on-gaps",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceDerivationConnection.lean"
+      ],
+      "cwd": "/workspace/scratch/58c07266fdb0/info-geometry-lean",
+      "exit_code": 0,
+      "total_wall_seconds": 0.045,
+      "events": {},
+      "log": "/workspace/scratch/58c07266fdb0/tmp/qa/peirce-derivation/attempt2/source_axiom_debt_audit.log",
+      "log_sha256": "fa0a0cc233a9a2371cb5e8e8bdb3a5bcffc09907bd34262a7d1c9b2492767b0b",
+      "result_summary": "0 source proof-hole/custom-axiom gaps"
+    },
+    {
+      "name": "semantic_vacuity",
+      "command": [
+        "python3",
+        "tools/quality/semantic_vacuity_gate.py",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceDerivationConnection.lean",
+        "--fail-on",
+        "error",
+        "--json-out",
+        "/workspace/scratch/58c07266fdb0/tmp/qa/peirce-derivation/attempt2/semantic-vacuity.json"
+      ],
+      "cwd": "/workspace/scratch/58c07266fdb0/info-geometry-lean",
+      "exit_code": 0,
+      "total_wall_seconds": 0.046,
+      "events": {},
+      "log": "/workspace/scratch/58c07266fdb0/tmp/qa/peirce-derivation/attempt2/semantic_vacuity.log",
+      "log_sha256": "041b9717d61f0ab5da197b8cb92a478fb9b0e1532b6760bbf441fd840827dcb1",
+      "result_summary": "0 errors; 1 reviewed definitional rfl warning; complete one-file coverage"
+    },
+    {
+      "name": "semantic_content",
+      "command": [
+        "python3",
+        "tools/quality/semantic_content_audit.py",
+        "--file-prefix",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceDerivationConnection.lean",
+        "--gate",
+        "--json-out",
+        "/workspace/scratch/58c07266fdb0/tmp/qa/peirce-derivation/attempt2/semantic-content.json",
+        "--md-out",
+        "/workspace/scratch/58c07266fdb0/tmp/qa/peirce-derivation/attempt2/semantic-content.md"
+      ],
+      "cwd": "/workspace/scratch/58c07266fdb0/info-geometry-lean",
+      "exit_code": 0,
+      "total_wall_seconds": 2.738,
+      "events": {},
+      "log": "/workspace/scratch/58c07266fdb0/tmp/qa/peirce-derivation/attempt2/semantic_content.log",
+      "log_sha256": "eddee2c466293cbb15cfa055ecc0bfe68d3574f477a04f910f7a0907e46b1c9f",
+      "result_summary": "0 findings; complete one-file coverage"
+    },
+    {
+      "name": "authoritative_scope_audit",
+      "command": [
+        "python3",
+        "tools/quality/repo_lean_scope_audit.py",
+        "--fail-on",
+        "authoritative",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceDerivationConnection.lean"
+      ],
+      "cwd": "/workspace/scratch/58c07266fdb0/info-geometry-lean",
+      "exit_code": 0,
+      "total_wall_seconds": 0.038,
+      "events": {},
+      "log": "/workspace/scratch/58c07266fdb0/tmp/qa/peirce-derivation/attempt2/authoritative_scope_audit.log",
+      "log_sha256": "6956dfc0c6310de52656a954225926691c11644a7e805d3ee1b6cca66a81c892",
+      "result_summary": "0 debt findings and 0 unclassified nonpackage files in selected scope"
+    },
+    {
+      "name": "vacuity_linter",
+      "command": [
+        "python3",
+        "tools/scripts/vacuity-linter.py",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceDerivationConnection.lean",
+        "--json"
+      ],
+      "cwd": "/workspace/scratch/58c07266fdb0/info-geometry-lean",
+      "exit_code": 0,
+      "total_wall_seconds": 0.027,
+      "events": {},
+      "log": "/workspace/scratch/58c07266fdb0/tmp/qa/peirce-derivation/attempt2/vacuity_linter.log",
+      "log_sha256": "988d82142fe990d9cd6539610ae6b0ede03c3a1ef741be1468cb65732b358d1e",
+      "result_summary": "No findings"
+    },
+    {
+      "name": "staged_gate",
+      "command": [
+        "python3",
+        "tools/quality/proof_proxy_staged_gate.py"
+      ],
+      "cwd": "/workspace/scratch/58c07266fdb0/info-geometry-lean",
+      "exit_code": 0,
+      "total_wall_seconds": 49.899,
+      "events": {},
+      "log": "/workspace/scratch/58c07266fdb0/tmp/qa/peirce-derivation/attempt2/staged_gate.log",
+      "log_sha256": "15636963213bd1e0893ddeb031ca330861b34fbde83171eaf5ccca90b606f2e2",
+      "result_summary": "proof_proxy_staged_gate: ok"
+    }
+  ],
+  "nonblocking_findings": [
+    {
+      "tool": "placeholder_audit.py --strict",
+      "severity": "SOFT",
+      "category": "injected-hypothesis-surface",
+      "lines": [
+        38,
+        67
+      ],
+      "count": 2,
+      "disposition": "Explicit algebraic carrier/scalar/Lie-action/Leibniz premises; no curvature or target conclusion assumed."
+    },
+    {
+      "tool": "semantic_vacuity_gate.py --fail-on error",
+      "severity": "warning",
+      "category": "trivial_surface",
+      "declaration": "derivationConnection_apply",
+      "line": 63,
+      "count": 1,
+      "disposition": "Appropriate transparent native-map evaluation equation; separate substantive curvature derivation."
+    }
+  ],
+  "semantic_disposition": {
+    "reviewer": "/root/paper_mathematics",
+    "status": "PASS",
+    "retained_findings_explicitly_confirmed_nonblocking": true,
+    "no_source_or_checker_exemptions_added": true,
+    "nonzero_matrix_witness_is_mathematical_only": true
+  },
+  "inherited_build_warnings": {
+    "warning_headers": 65,
+    "existing_owner_files": 29,
+    "new_owner_or_audit_warnings_in_fresh_checks": 0
+  },
+  "historical_failure": {
+    "attempt": 1,
+    "exit_code": 1,
+    "compiler_commands_run": false,
+    "cause": "New validator incorrectly required all root dependencies instead of focused matching subset.",
+    "repair": {
+      "path": "verification/peirce-derivation-connection/audit.py",
+      "old_sha256": "3f6e74f418e7dc4c426a258f3f2d75a04ef2a0de9992aaaca67def3e1a8813b2",
+      "new_sha256": "6fa17b0dfb7984179c3c8f2b30f70c7686798f2b019eec983267ee259d7b35cd",
+      "description": "New author validator now compares the focused dependency subset with root and requires Mathlib; no existing checker or mathematical source changed."
+    },
+    "preserved_receipt_sha256": "ebd83276cf646c76737f44725ca1ae66fcf3e7c33f230892da45708862298305"
+  },
+  "boundaries": {
+    "explicit_owner_and_audit_built": true,
+    "umbrella_import_inspected_statically": true,
+    "full_umbrella_compiled": false,
+    "root_build_or_publication_gate_run_by_qa": false,
+    "remote_ci_run_by_qa": false,
+    "remote_actions_by_qa": false,
+    "repository_edits_by_qa": false
+  },
+  "evidence": {
+    "execution_receipt": {
+      "path": "/workspace/scratch/58c07266fdb0/tmp/qa/peirce-derivation/attempt2/receipt.json",
+      "sha256": "ed909bf07cf611dbc1d557e0fe1fbd30f9cd8bedf6e70c850833f1633065b6cd"
+    },
+    "semantic_review": {
+      "path": "/workspace/scratch/58c07266fdb0/tmp/qa/peirce-derivation/semantic-review.md",
+      "sha256": "150db90bb8d9f4d15a227854588960c1bb4ea988fda67e0e2a6434ef2eb938fd"
+    },
+    "first_failure_receipt": {
+      "path": "/workspace/scratch/58c07266fdb0/tmp/qa/peirce-derivation/attempt1/receipt.json",
+      "sha256": "ebd83276cf646c76737f44725ca1ae66fcf3e7c33f230892da45708862298305"
+    },
+    "report": {
+      "path": "/workspace/scratch/58c07266fdb0/tmp/qa/peirce-derivation/QA_REPORT.md",
+      "sha256": "f1b2adbb4f665e1b2214e4494d1f8d6269f883753f9bac0824aa570ff7e710e3"
+    }
+  }
+}

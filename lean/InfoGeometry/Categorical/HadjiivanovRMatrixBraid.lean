@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Categorical.BraidGroup3PresentationBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.LogJordanBraidProject3Representation
@@ -6,6 +12,8 @@ import InfoGeometry.Categorical.LogJordanTensorPowerStabilization
 import InfoGeometry.Categorical.LogJordanBraidGroupInfRepresentation
 import InfoGeometry.Categorical.LogJordanBraidFiniteInfiniteCompatibility
 import InfoGeometry.Categorical.BraidGroupInfiniteColimitIso
+import InfoGeometry.Categorical.LogJordanCheckedRBraidBridge
+import InfoGeometry.Clifford.LogCftMonodromy
 
 /-!
 # Hadjiivanov checked R-matrix braid
@@ -27,6 +35,8 @@ namespace InfoGeometry.Categorical.HadjiivanovRMatrixBraid
 
 open CategoryTheory
 open Braid
+
+open scoped TensorProduct
 
 open InfoGeometry.Categorical.BraidGroup3PresentationBridge
 open InfoGeometry.Categorical.FibonacciBraidGroup3Representation
@@ -196,5 +206,47 @@ abbrev braidInfinityColimitIso :=
 /-- The existing `B_∞` boundary cocone is a genuine colimit cocone. -/
 abbrev braidInfinityIsColimit :=
   braidGroupBoundaryCoconeIsColimit
+
+
+/-- The genuine checked logarithmic braid operator on the standard rank-two
+cell at the Hadjiivanov parameter (no datum wrapper). -/
+abbrev hadjiivanovCheckedR :
+    (InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.standardJordanObject.toLogEndModule.V ⊗[ℂ]
+      InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.standardJordanObject.toLogEndModule.V) ≃ₗ[ℂ]
+    (InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.standardJordanObject.toLogEndModule.V ⊗[ℂ]
+      InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.standardJordanObject.toLogEndModule.V) :=
+  InfoGeometry.Categorical.LogNilpotentCrossCheckedR.logCheckedR
+    InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.standardJordanObject
+    InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.standardJordanObject_sq_zero
+    logShearBase
+
+abbrev hadjiivanovCheckedR12 :=
+  InfoGeometry.Categorical.LogNilpotentCrossCheckedR.logCheckedR12
+    InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.standardJordanObject
+    InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.standardJordanObject_sq_zero
+    logShearBase
+
+abbrev hadjiivanovCheckedR23 :=
+  InfoGeometry.Categorical.LogNilpotentCrossCheckedR.logCheckedR23
+    InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.standardJordanObject
+    InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.standardJordanObject_sq_zero
+    logShearBase
+
+theorem hadjiivanovCheckedR_commutes_tensorN :
+    hadjiivanovCheckedR.toLinearMap.comp
+        (PairObj InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.standardJordanObject).N =
+      (PairObj InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.standardJordanObject).N.comp
+        hadjiivanovCheckedR.toLinearMap :=
+  InfoGeometry.Categorical.LogNilpotentCrossCheckedR.logCheckedR_commutes_tensorN
+    InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.standardJordanObject
+    InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.standardJordanObject_sq_zero
+    logShearBase
+
+theorem hadjiivanovCheckedR_yangBaxter :
+    hadjiivanovCheckedR12.toLinearMap ∘ₗ hadjiivanovCheckedR23.toLinearMap ∘ₗ
+          hadjiivanovCheckedR12.toLinearMap =
+      hadjiivanovCheckedR23.toLinearMap ∘ₗ hadjiivanovCheckedR12.toLinearMap ∘ₗ
+          hadjiivanovCheckedR23.toLinearMap :=
+  InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.standard_logCheckedR_yangBaxter
 
 end InfoGeometry.Categorical.HadjiivanovRMatrixBraid

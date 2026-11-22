@@ -195,7 +195,8 @@ theorem fockInfinityInvolute_involutive (ψ : FockInfinity) :
         (LinearMap.id : FockInfinity →ₗ[ℝ] FockInfinity) := by
     apply DirectLimit.Module.hom_ext
     intro n
-    ext ξ
+    apply LinearMap.ext
+    intro ξ
     change fockInfinityInvolute
         (fockInfinityInvolute (DirectLimit.Module.of ℝ ℕ FockStage
           (fun m k h => fockStageMap m k h) n ξ)) =

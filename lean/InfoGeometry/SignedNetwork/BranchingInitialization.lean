@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.SignedNetwork.ExactCancellation
@@ -80,6 +85,11 @@ theorem weighted_seed_sum (w : C → ℝ) (x : C) :
     simp [seedProbability, h]
   · simp_rw [weighted_seed_readout w h]
     simp
+
+
+theorem coordinate_eq_zero_of_seedMass_zero (w : C → ℝ)
+    (hZ : seedMass w = 0) (a : C) : w a = 0 :=
+  seedMass_zero_coordinate w hZ a
 
 end
 end InfoGeometry.SignedNetwork.BranchingInitialization

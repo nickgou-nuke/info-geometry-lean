@@ -63,6 +63,32 @@ theorem weyl_parity_hodge_packet (A : InfoGeometry.Canonical.OperatorWeylChiralC
 
 variable {W : Type*} [AddCommGroup W] [Module ℂ W]
 
+/-- Genuine operator-valued Weyl curvature packet: both chiral blocks are a
+common quadratic channel plus explicit coefficient commutators. -/
+theorem operator_weyl_curvature_packet (v : OperatorFourVector W) :
+    leftCurvatureBlock v =
+      !![operatorMinkowskiQuadratic v - opComm (v 0) (v 3) -
+            Complex.I • opComm (v 1) (v 2),
+          -opComm (v 0) (v 1) + opComm (v 1) (v 3) +
+            Complex.I • (opComm (v 0) (v 2) + opComm (v 3) (v 2));
+         -opComm (v 0) (v 1) - opComm (v 1) (v 3) -
+            Complex.I • opComm (v 0) (v 2) +
+            Complex.I • opComm (v 3) (v 2),
+          operatorMinkowskiQuadratic v + opComm (v 0) (v 3) +
+            Complex.I • opComm (v 1) (v 2)] ∧
+      rightCurvatureBlock v =
+      !![operatorMinkowskiQuadratic v + opComm (v 0) (v 3) -
+            Complex.I • opComm (v 1) (v 2),
+          opComm (v 0) (v 1) + opComm (v 1) (v 3) -
+            Complex.I • opComm (v 0) (v 2) +
+            Complex.I • opComm (v 3) (v 2);
+         opComm (v 0) (v 1) - opComm (v 1) (v 3) +
+            Complex.I • opComm (v 0) (v 2) +
+            Complex.I • opComm (v 3) (v 2),
+          operatorMinkowskiQuadratic v - opComm (v 0) (v 3) +
+            Complex.I • opComm (v 1) (v 2)] :=
+  chiral_curvature_residue_packet v
+
 /-- Commuting with two quaternionic spatial bivectors protects their full
 three-dimensional complex span. -/
 theorem quaternionic_bivector_span_protected

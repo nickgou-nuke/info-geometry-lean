@@ -21,9 +21,8 @@ namespace InfoGeometry.Canonical.OperatorYangMillsCyclicTrace
 
 open InfoGeometry.Algebra.CyclicQuotient
 
-variable {A ι : Type*} [Ring A] [Fintype ι] [DecidableEq ι]
+variable {A ι : Type*} [Ring A] [Fintype ι]
 
-omit [DecidableEq ι] in
 /-- The matrix trace is cyclic after passing to the additive cyclic quotient
 of the coefficient ring, even when the coefficient ring is noncommutative. -/
 theorem cyclicClass_trace_mul_comm (X Y : Matrix ι ι A) :
@@ -31,12 +30,10 @@ theorem cyclicClass_trace_mul_comm (X Y : Matrix ι ι A) :
       cyclicClass ℤ A (Matrix.trace (Y * X)) := by
   have h : Matrix.trace (X * Y - Y * X) =
       ∑ i, ∑ j, (X i j * Y j i - Y j i * X i j) := by
-    rw [Matrix.trace_sub]
-    simp only [Matrix.trace, Matrix.diag_apply, Matrix.mul_apply]
-    conv_lhs =>
-      arg 2
-      rw [Finset.sum_comm]
-    simp only [← Finset.sum_sub_distrib]
+    rw [Matrix.trace_sub, Matrix.trace, Matrix.trace]
+    simp only [Matrix.diag_apply, Matrix.mul_apply]
+    rw [Finset.sum_comm (f := fun i j => Y i j * X j i), ← Finset.sum_sub_distrib]
+    refine Finset.sum_congr rfl fun i _ => (Finset.sum_sub_distrib _ _).symm
   have hzero : cyclicClass ℤ A
       (∑ i, ∑ j, (X i j * Y j i - Y j i * X i j)) = 0 := by
     simp only [map_sum, map_sub]
@@ -55,7 +52,7 @@ theorem cyclicClass_trace_mul_comm (X Y : Matrix ι ι A) :
 
 /-- Cyclic-quotient trace invariance under a matrix gauge transform. The only
 inverse law needed is the displayed left-inverse equation `V * U = 1`. -/
-theorem cyclicClass_trace_gauge_conjugate
+theorem cyclicClass_trace_gauge_conjugate [DecidableEq ι]
     (U F V : Matrix ι ι A) (hVU : V * U = 1) :
     cyclicClass ℤ A (Matrix.trace (U * F * V)) =
       cyclicClass ℤ A (Matrix.trace F) := by

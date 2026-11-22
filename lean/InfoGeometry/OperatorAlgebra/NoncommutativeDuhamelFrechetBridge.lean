@@ -50,7 +50,7 @@ perturbation parameter.
 -/
 theorem continuous_duhamelDifferenceQuotient (a h : A) :
     Continuous (duhamelDifferenceQuotient a h) := by
-  letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
+  have : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
   apply
     intervalIntegral.continuous_parametric_intervalIntegral_of_continuous'
       (a₀ := (0 : ℝ)) (b₀ := 1)
@@ -81,38 +81,9 @@ theorem exp_add_smul_sub_exp_eq_smul_duhamelDifferenceQuotient
       rw [intervalIntegral.integral_smul]
       rfl
 
-/--
-Pointwise form of the full noncommutative Fréchet--Duhamel identity.
--/
-theorem exponentialDerivative_apply_eq_duhamelDerivative
-    (a h : A) :
-    exponentialDerivative (𝕜 := ℝ) a h =
-      duhamelDerivative a h := by
-  letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
-  have hLine :
-      HasDerivAt (fun r : ℝ => a + r • h) h 0 := by
-    have h1 := (hasDerivAt_const (x := (0 : ℝ)) a).add
-      ((hasDerivAt_id (x := (0 : ℝ))).smul_const h)
-    rw [zero_add, one_smul] at h1
-    exact h1
-  have hFromFrechet :
-      HasDerivAt
-        (fun r : ℝ => NormedSpace.exp (a + r • h))
-        (exponentialDerivative (𝕜 := ℝ) a h) 0 := by
-    convert
-      (hasFDerivAt_exp_noncommutative (𝕜 := ℝ) (A := A) a).comp_hasDerivAt_of_eq
-        (x := (0 : ℝ)) (y := a) hLine (by simp) using 1 <;>
-      simp [Function.comp_def]
-  exact hFromFrechet.unique (hasDerivAt_exp_affine_duhamel a h)
-
-/--
-Bundled operator identity between the changed-origin real Fréchet derivative
-and the Bochner--Duhamel operator.
--/
-theorem exponentialDerivative_eq_duhamelDerivative (a : A) :
-    exponentialDerivative (𝕜 := ℝ) a =
-      duhamelDerivative a := by
-  ext h
-  exact exponentialDerivative_apply_eq_duhamelDerivative a h
+/-! `exponentialDerivative_apply_eq_duhamelDerivative` and
+`exponentialDerivative_eq_duhamelDerivative` are owned directly in
+`InfoGeometry.OperatorAlgebra.NoncommutativeDuhamelDerivative` and re-exported
+here via the import above. -/
 
 end InfoGeometry.OperatorAlgebra

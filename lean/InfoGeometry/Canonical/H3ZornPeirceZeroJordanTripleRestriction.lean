@@ -88,4 +88,45 @@ theorem peirceZeroEmbed_add (x y : Spin10) :
   rcases y with ⟨⟨y2, y3⟩, yb⟩
   apply H3Zorn.ext_h3 <;> simp [peirceZeroEmbed, H3Zorn.add_readback]
 
+/-- The Peirce-zero embedding respects subtraction. -/
+theorem peirceZeroEmbed_sub (x y : Spin10) :
+    peirceZeroEmbed (x - y) = peirceZeroEmbed x - peirceZeroEmbed y := by
+  rcases x with ⟨⟨x2, x3⟩, xb⟩
+  rcases y with ⟨⟨y2, y3⟩, yb⟩
+  apply H3Zorn.ext_h3 <;>
+    simp [peirceZeroEmbed, H3Zorn.sub_readback]
+  rfl
+
+/-- Main restriction theorem: the intrinsic 10D spin-factor Jordan triple is
+exactly the restriction of the ambient split-Albert triple to `V₀(e₁)`. -/
+theorem peirceZeroEmbed_jordanTriple10 (x y z : Spin10) :
+    peirceZeroEmbed (jordanTriple10 x y z) =
+      jordanTriple (peirceZeroEmbed x) (peirceZeroEmbed y) (peirceZeroEmbed z) := by
+  unfold jordanTriple10 jordanTriple
+  rw [peirceZeroEmbed_sub, peirceZeroEmbed_add]
+  simp only [peirceZeroEmbed_jordanMul10]
+  rfl
+
+/-- Coordinate readback form of the restriction theorem. -/
+theorem jordanTriple10_eq_fromH3_ambient (x y z : Spin10) :
+    jordanTriple10 x y z =
+      fromH3 (jordanTriple (peirceZeroEmbed x) (peirceZeroEmbed y) (peirceZeroEmbed z)) := by
+  apply peirceZeroEmbed_injective
+  rw [peirceZeroEmbed_jordanTriple10]
+  exact eq_peirceZeroEmbed_of_mem
+    (jordanTriple_preserves_peirceZero
+      (peirceZeroEmbed_mem x) (peirceZeroEmbed_mem y)
+      (peirceZeroEmbed_mem z))
+
+/-- Compact restriction packet separating the 27D Albert Kantor/Jordan triple
+from the 10D split-spin-factor conformal/TKK lane. -/
+theorem peirceZero_jordanTriple_restriction_packet :
+    (∀ x y : Spin10,
+      peirceZeroEmbed (jordanMul10 x y) =
+        candidateJordanMul (peirceZeroEmbed x) (peirceZeroEmbed y)) ∧
+    (∀ x y z : Spin10,
+      peirceZeroEmbed (jordanTriple10 x y z) =
+        jordanTriple (peirceZeroEmbed x) (peirceZeroEmbed y) (peirceZeroEmbed z)) :=
+  ⟨peirceZeroEmbed_jordanMul10, peirceZeroEmbed_jordanTriple10⟩
+
 end InfoGeometry.Canonical.H3ZornPeirceZeroJordanTripleRestriction

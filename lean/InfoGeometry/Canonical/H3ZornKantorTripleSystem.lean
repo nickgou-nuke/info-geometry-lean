@@ -1,5 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.H3ZornJordanKantorCapstone
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Algebra.JordanInnerDerivations
 
 /-! Compatibility owner for the upstream concrete H₃ Kantor path.
 
@@ -28,5 +34,26 @@ theorem inner_swap_apply (x y z : H3) :
 theorem jordan_boundary_packet (x y : H3) :
     kantorOperator x y = 0 := by
   exact kantorOperator_zero x y
+
+
+private noncomputable abbrev innerK (x y : H3) : Module.End ℝ H3 :=
+  (h3ZornJordanInnerDerivation x y : Module.End ℝ H3)
+
+
+theorem inner_comm_inner_apply (u v x y z : H3) :
+    innerK u v (innerK x y z) - innerK x y (innerK u v z) =
+      innerK (innerK u v x) y z + innerK x (innerK u v y) z := by
+  let I := h3ZornJordanInnerDerivation u v
+  have hI := I.property
+  change
+    (I : Module.End ℝ H3) (x * (y * z) - y * (x * z)) -
+        (x * (y * (I : Module.End ℝ H3) z) - y * (x * (I : Module.End ℝ H3) z)) =
+      ((I : Module.End ℝ H3) x) * (y * z) -
+          y * (((I : Module.End ℝ H3) x) * z) +
+        (x * (((I : Module.End ℝ H3) y) * z) -
+          ((I : Module.End ℝ H3) y) * (x * z))
+  rw [map_sub, hI x (y * z), hI y (x * z), hI y z, hI x z]
+  simp only [mul_add, add_mul]
+  abel
 
 end InfoGeometry.Canonical.H3ZornKantorTripleSystem

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -114,5 +119,37 @@ theorem splitPairing_nondegenerate_right (y : Vector55)
 
 theorem vector55_dimension : Fintype.card (Fin 10) = 10 := by
   rfl
+
+
+def positiveOuter (i : Fin 2) : Vector55 :=
+  coordinateVector ⟨i.val, by omega⟩ + coordinateVector ⟨i.val + 8, by omega⟩
+def negativeOuter (i : Fin 2) : Vector55 :=
+  coordinateVector ⟨i.val, by omega⟩ - coordinateVector ⟨i.val + 8, by omega⟩
+def positiveMiddle (i : Fin 3) : Vector55 := coordinateVector ⟨i.val + 2, by omega⟩
+def negativeMiddle (i : Fin 3) : Vector55 := coordinateVector ⟨i.val + 5, by omega⟩
+
+@[simp] theorem positiveOuter_norm (i : Fin 2) :
+    splitPairing (positiveOuter i) (positiveOuter i) = 2 := by
+  fin_cases i <;> norm_num [positiveOuter, splitPairing, coordinateVector]
+@[simp] theorem negativeOuter_norm (i : Fin 2) :
+    splitPairing (negativeOuter i) (negativeOuter i) = -2 := by
+  fin_cases i <;> norm_num [negativeOuter, splitPairing, coordinateVector]
+@[simp] theorem positiveMiddle_norm (i : Fin 3) :
+    splitPairing (positiveMiddle i) (positiveMiddle i) = 1 := by
+  fin_cases i <;> norm_num [positiveMiddle, splitPairing, coordinateVector]
+@[simp] theorem negativeMiddle_norm (i : Fin 3) :
+    splitPairing (negativeMiddle i) (negativeMiddle i) = -1 := by
+  fin_cases i <;> norm_num [negativeMiddle, splitPairing, coordinateVector]
+
+theorem split_signature_five_five_certificate :
+    (∀ i : Fin 2, 0 < splitPairing (positiveOuter i) (positiveOuter i)) ∧
+      (∀ i : Fin 3, 0 < splitPairing (positiveMiddle i) (positiveMiddle i)) ∧
+      (∀ i : Fin 2, splitPairing (negativeOuter i) (negativeOuter i) < 0) ∧
+      (∀ i : Fin 3, splitPairing (negativeMiddle i) (negativeMiddle i) < 0) := by
+  exact ⟨fun i => by simp, fun i => by simp, fun i => by simp, fun i => by simp⟩
+
+theorem carrier_and_generator_counts :
+    Fintype.card (Fin 10) = 10 ∧ Nat.choose 10 2 = 45 := by
+  norm_num [Nat.choose]
 
 end InfoGeometry.Orthogonal.O55Contact

@@ -29,6 +29,8 @@ open InfoGeometry.Physics.Cl55SpinorCartanFock
 open InfoGeometry.Physics.CircularChiralFockScalarPoleBridge
 open InfoGeometry.Clifford.SplitClifford55ZornCARComparison
 open InfoGeometry.Algebra.CircularChiralOperatorEightBridge
+open InfoGeometry.Projective.Closure
+open InfoGeometry.Canonical.ConformalFiveGradeInversion
 
 noncomputable section
 
@@ -216,5 +218,109 @@ theorem circularCompressedFourPotential_offDiagonal_reconstruction (c : Fin 3) :
       circularCompressedFourPotential c 1 + circularCompressedFourPotential c 2 =
         negativeRailFock c := by
   constructor <;> simp [circularCompressedFourPotential] <;> module
+
+/-- Index of the positive circular rail `U_i` in the named eight-frame. -/
+def positiveFrameIndex (i : Fin 3) : Fin 8 :=
+  ⟨i.1 + 1, by omega⟩
+
+/-- Index of the negative circular rail `V_i` in the named eight-frame. -/
+def negativeFrameIndex (i : Fin 3) : Fin 8 :=
+  ⟨i.1 + 5, by omega⟩
+
+/-- The source scalar poles are exactly the two endpoints of the named circular
+operator frame. -/
+theorem circular_scalar_source_readout :
+    operatorFrame 0 = InfoGeometry.Algebra.ZornVectorMatrix.E11 ∧
+    operatorFrame 4 = InfoGeometry.Algebra.ZornVectorMatrix.E22 := by
+  constructor <;> simp [operatorFrame]
+
+/-- Möbius/five-grade inversion swaps the two Fock pole projectors. -/
+theorem fockPoleProjector_conformalSwap (i : Fin 2) :
+    fockPoleProjector (conformalPoleSwap2 i) =
+      if i = 0 then circularFockScalarPlus else circularFockScalarMinus := by
+  fin_cases i <;> simp [fockPoleProjector, conformalPoleSwap2]
+
+/-- The positive Fock scalar pole carries the projective `+2` endpoint label. -/
+theorem circularFockScalarPlus_grade :
+    conformalPoleGrade2 (1 : Fin 2) = ConformalGrade.posTwo :=
+  conformalPoleGrade2_one
+
+/-- The negative Fock scalar pole carries the projective `-2` endpoint label. -/
+theorem circularFockScalarMinus_grade :
+    conformalPoleGrade2 (0 : Fin 2) = ConformalGrade.negTwo :=
+  conformalPoleGrade2_zero
+
+/-- The projective inversion reverses the extremal five-grade label while the
+Fock readout swaps the complementary scalar projectors. -/
+theorem fockPole_fiveGrade_inversion_packet (i : Fin 2) :
+    conformalPoleGrade2 (conformalPoleSwap2 i) =
+        ConformalGrade.swap (conformalPoleGrade2 i) ∧
+    fockPoleProjector (conformalPoleSwap2 i) =
+        (if i = 0 then circularFockScalarPlus else circularFockScalarMinus) :=
+  ⟨conformalPoleGrade2_swap i, fockPoleProjector_conformalSwap i⟩
+
+/-- Difference of the complementary pole projectors.  In the native Fock
+representation it is exactly the spinor chirality operator. -/
+noncomputable def poleLogScaleGenerator : FockOp :=
+  circularFockScalarPlus - circularFockScalarMinus
+
+@[simp] theorem poleLogScaleGenerator_eq_gammaChiral :
+    poleLogScaleGenerator = gammaChiral := by
+  simp [poleLogScaleGenerator, circularFockScalarPlus, circularFockScalarMinus,
+    InfoGeometry.Physics.CircularChiralFockScalarPoleBridge.circularFockScalarPlus,
+    InfoGeometry.Physics.CircularChiralFockScalarPoleBridge.circularFockScalarMinus,
+    PPlus, PMinus]
+  module
+
+/-- The positive pole is the `+1` eigensector of the finite log-scale grading. -/
+theorem poleLogScaleGenerator_mul_plus :
+    poleLogScaleGenerator * circularFockScalarPlus = circularFockScalarPlus := by
+  rw [poleLogScaleGenerator_eq_gammaChiral]
+  simp [circularFockScalarPlus,
+    InfoGeometry.Physics.CircularChiralFockScalarPoleBridge.circularFockScalarPlus,
+    PPlus, mul_add, gammaChiral_sq]
+  module
+
+/-- The negative pole is the `-1` eigensector of the finite log-scale grading. -/
+theorem poleLogScaleGenerator_mul_minus :
+    poleLogScaleGenerator * circularFockScalarMinus = -circularFockScalarMinus := by
+  rw [poleLogScaleGenerator_eq_gammaChiral]
+  simp [circularFockScalarMinus,
+    InfoGeometry.Physics.CircularChiralFockScalarPoleBridge.circularFockScalarMinus,
+    PMinus, mul_sub, gammaChiral_sq]
+  module
+
+/-- The pole projectors commute with the finite log-scale grading. -/
+theorem poleLogScaleGenerator_commutes_poles :
+    poleLogScaleGenerator * circularFockScalarPlus =
+        circularFockScalarPlus * poleLogScaleGenerator ∧
+      poleLogScaleGenerator * circularFockScalarMinus =
+        circularFockScalarMinus * poleLogScaleGenerator := by
+  rw [poleLogScaleGenerator_eq_gammaChiral]
+  constructor
+  · simp [circularFockScalarPlus,
+      InfoGeometry.Physics.CircularChiralFockScalarPoleBridge.circularFockScalarPlus,
+      PPlus, mul_add, add_mul, gammaChiral_sq]
+  · simp [circularFockScalarMinus,
+      InfoGeometry.Physics.CircularChiralFockScalarPoleBridge.circularFockScalarMinus,
+      PMinus, mul_sub, sub_mul, gammaChiral_sq]
+
+@[simp] theorem circularColourOperatorZorn_n_plus (c : Fin 3) :
+    (circularColourOperatorZorn c).n_plus_op = circularFockScalarPlus := rfl
+
+@[simp] theorem circularColourOperatorZorn_n_minus (c : Fin 3) :
+    (circularColourOperatorZorn c).n_minus_op = circularFockScalarMinus := rfl
+
+@[simp] theorem circularColourOperatorZorn_sigma_plus (c : Fin 3) :
+    (circularColourOperatorZorn c).sigma_plus_op = positiveRailFock c := rfl
+
+@[simp] theorem circularColourOperatorZorn_sigma_minus (c : Fin 3) :
+    (circularColourOperatorZorn c).sigma_minus_op = negativeRailFock c := rfl
+
+@[simp] theorem circularCompressedFourPotential_chiral (c : Fin 3) :
+    circularCompressedFourPotential c 3 = (1 / 2 : ℝ) • gammaChiral := by
+  rw [show circularCompressedFourPotential c 3 =
+      (1 / 2 : ℝ) • poleLogScaleGenerator by rfl]
+  rw [poleLogScaleGenerator_eq_gammaChiral]
 
 end InfoGeometry.Physics.CircularChiralFockOperatorZornBridge

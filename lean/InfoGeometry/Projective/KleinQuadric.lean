@@ -1,3 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
@@ -142,6 +153,49 @@ def Incident (P Q : Plucker6 R) : Prop :=
   polar P Q = 0
 
 end Ring
+
+section CentralScalar
+
+variable {R : Type*} [Ring R]
+
+/-- A central scalar moves past any coordinate product. -/
+theorem central_mul_left {l : R} (hl : ∀ c : R, l * c = c * l) (c d : R) :
+    c * (l * d) = l * (c * d) := by
+  rw [← mul_assoc, ← hl c, mul_assoc]
+
+/-- Left homogeneity of the polar form for a central scalar in an operator ring. -/
+theorem polar_scale_left_of_central {l : R} (hl : ∀ c : R, l * c = c * l) (P Q : Plucker6 R) :
+    polar (scale l P) Q = l * polar P Q := by
+  rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
+  rcases Q with ⟨q01, q02, q03, q12, q13, q23⟩
+  have hc := central_mul_left hl
+  simp only [polar, kleinQ, add, scale, mul_add, add_mul, mul_sub, mul_assoc, hc]
+  noncomm_ring
+
+/-- Right homogeneity of the polar form for a central scalar in an operator ring. -/
+theorem polar_scale_right_of_central {l : R} (hl : ∀ c : R, l * c = c * l) (P Q : Plucker6 R) :
+    polar P (scale l Q) = l * polar P Q := by
+  rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
+  rcases Q with ⟨q01, q02, q03, q12, q13, q23⟩
+  have hc := central_mul_left hl
+  simp only [polar, kleinQ, add, scale, mul_add, add_mul, mul_sub, mul_assoc, hc]
+  noncomm_ring
+
+/-- Quadratic homogeneity `Q(λP) = λ² Q(P)` for a central scalar in an operator ring. -/
+theorem kleinQ_scale_of_central {l : R} (hl : ∀ c : R, l * c = c * l) (P : Plucker6 R) :
+    kleinQ (scale l P) = l ^ 2 * kleinQ P := by
+  rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
+  have hc := central_mul_left hl
+  simp only [kleinQ, scale, mul_add, mul_sub, mul_assoc, hc]
+  noncomm_ring
+
+/-- The operator Klein quadric is stable under central scaling. -/
+theorem isKlein_scale_of_central {l : R} (hl : ∀ c : R, l * c = c * l) (P : Plucker6 R)
+    (hP : IsKlein P) : IsKlein (scale l P) := by
+  unfold IsKlein at *
+  rw [kleinQ_scale_of_central hl P, hP, mul_zero]
+
+end CentralScalar
 
 section CommRing
 
@@ -314,6 +368,36 @@ theorem wedge_isKlein (u v : Vec4 R) :
   ring
 
 end CommRing
+
+section Field
+
+variable {K : Type*} [Field K]
+
+/-- On the affine chart `p01 ≠ 0`, the Klein relation is sufficient for a
+Plücker vector to be represented by an actual wedge. The explicit factors
+are `u = (1, 0, -p12/p01, -p13/p01)` and
+`v = (0, p01, p02, p03)`. This is a chart-level converse; it makes no claim
+about points outside this pivot chart. -/
+theorem exists_wedge_eq_of_isKlein_of_p01_ne_zero (P : Plucker6 K)
+    (hp : P.p01 ≠ 0) (hP : Plucker6.IsKlein P) :
+    ∃ u v : Vec4 K, Vec4.wedge u v = P := by
+  change P.p01 * P.p23 - P.p02 * P.p13 + P.p03 * P.p12 = 0 at hP
+  let u : Vec4 K := ⟨1, 0, -P.p12 / P.p01, -P.p13 / P.p01⟩
+  let v : Vec4 K := ⟨0, P.p01, P.p02, P.p03⟩
+  refine ⟨u, v, ?_⟩
+  apply Plucker6.ext
+  · simp [Vec4.wedge, u, v]
+  · simp [Vec4.wedge, u, v]
+  · simp [Vec4.wedge, u, v]
+  · simp [Vec4.wedge, u, v]
+    field_simp [hp]
+  · simp [Vec4.wedge, u, v]
+    field_simp [hp]
+  · simp [Vec4.wedge, u, v]
+    field_simp [hp]
+    linear_combination -hP
+
+end Field
 
 end Vec4
 

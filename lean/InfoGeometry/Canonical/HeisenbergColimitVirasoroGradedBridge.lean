@@ -8,6 +8,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 import InfoGeometry.Canonical.SugawaraFiveGradingObstruction
 import InfoGeometry.OperatorAlgebra.ModeShiftInterface
+import InfoGeometry.Canonical.FibonacciGrothendieckLimit
 
 /-!
 # Heisenberg `ModuleCat` Colimit Canonical Commutation Relation & Virasoro Mode Shift
@@ -55,6 +56,7 @@ open VirasoroProject
 open InfoGeometry.Canonical.CurrentSugawaraBridge
 open InfoGeometry.Canonical.SugawaraFiveGradingObstruction
 open InfoGeometry.OperatorAlgebra
+open InfoGeometry.Canonical.FibonacciGrothendieckLimit
 
 variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
 
@@ -227,6 +229,37 @@ theorem chargedFock_colimit_mode_virasoro_shift
     ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J m) =
     (-m : 𝕜) • (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J (n + m)
   exact chargedFock_vira_mode_shift α n m
+
+
+variable {α : 𝕜}
+
+abbrev Fock (𝕜' : Type*) [Field 𝕜'] [CharZero 𝕜'] (α' : 𝕜') :=
+  VirasoroProject.ChargedFockSpace 𝕜' α'
+abbrev FockEnd (𝕜' : Type*) [Field 𝕜'] [CharZero 𝕜'] (α' : 𝕜') :=
+  Fock 𝕜' α' →ₗ[𝕜'] Fock 𝕜' α' 
+
+noncomputable def chargedFockHeisenbergRepresentation (α : 𝕜) :
+    LieAlgebra.Representation 𝕜 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜)
+      (Fock 𝕜 α) :=
+  UniversalEnvelopingAlgebra.representation
+    (𝕜 := 𝕜) (𝓰 := VirasoroProject.HeisenbergAlgebra 𝕜)
+    (V := Fock 𝕜 α)
+
+noncomputable def chargedFockColimitReadout (α : 𝕜) :
+    (heisenbergFiniteModeColimit (𝕜 := 𝕜) : Type _) →ₗ[𝕜]
+      FockEnd 𝕜 α where
+  toFun x := chargedFockHeisenbergRepresentation α
+    (heisenbergFiniteModeColimitEquiv (𝕜 := 𝕜) x)
+  map_add' x y := by simp
+  map_smul' c x := by simp
+
+@[simp] theorem chargedFockColimitReadout_mode (α : 𝕜) (k : ℤ) :
+    chargedFockColimitReadout α (heisenbergColimitMode (𝕜 := 𝕜) k) =
+      chargedFockHeisenbergMode α k := by
+  change chargedFockHeisenbergRepresentation α
+    (heisenbergFiniteModeColimitEquiv (𝕜 := 𝕜) (heisenbergColimitMode (𝕜 := 𝕜) k)) = _
+  rw [heisenbergFiniteModeColimitEquiv_mode]
+  rfl
 
 end InfoGeometry.Canonical.HeisenbergColimitVirasoroGradedBridge
 

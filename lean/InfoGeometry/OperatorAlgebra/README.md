@@ -1,10 +1,11 @@
 # Operator algebra: owner map and scope
 
-> **Source review:** 2026-11-15 at [abd5826b](https://github.com/nickgou-nuke/info-geometry-lean/tree/abd5826b3676fab6231c66b646ec1cc5aeed6732)
-> plus scoped working-tree kernel verification of
-> `InfoGeometry.Foundations.InfoGeometryCoreLibrary` and
-> `InfoGeometry.OperatorAlgebra.PeirceBiSandwich.All`. This is a navigation map to the
-> current declarations and their assumptions, not a whole-repository CI rebuild certification.
+> **Source review:** 2026-11-22 at [586c14bc](https://github.com/nickgou-nuke/info-geometry-lean/tree/586c14bc9fb94eb09b56f7dc850d9d5297269f91).
+> The previously recorded scoped kernel verification of `InfoGeometry.Foundations.InfoGeometryCoreLibrary` and
+> `InfoGeometry.OperatorAlgebra.PeirceBiSandwich.All` was recorded on 2026-11-15
+> and is not being reported as a check of this revision.
+> This is a navigation map to the current declarations and their assumptions, not a
+> whole-repository CI rebuild certification; no fresh Lean compilation was performed for this update.
 > Validation of the nilpotent-calculus additions is recorded separately in
 > [their theorem contract](../../../docs/PEIRCE_NILPOTENT_COLIMIT_CONTRACT.md).
 
@@ -44,6 +45,7 @@ This table is a practical entry map, not an exhaustive theorem inventory.
 | Quantum Kadison–Schwarz & Cramér–Rao | [KadisonSchwarzAndQuantumCramerRao.lean](KadisonSchwarzAndQuantumCramerRao.lean) | Kadison–Schwarz inequality $\Phi(A)^* \Phi(A) \le \Phi(A^* A)$ for positive unital maps; symmetric logarithmic derivative (SLD) inner product `quantumSLDInner`; and noncommutative quantum Cramér–Rao variance lower bound `quantumVariance`. |
 | GNS representation & Petz monotone metrics | [GNSRepresentationAndPetzMonotoneMetrics.lean](GNSRepresentationAndPetzMonotoneMetrics.lean) | Positive functional on C*-algebra induces GNS Hilbert space representation `gnsRep` and cyclic vector `gnsCyclicVec`; classification of Petz monotone Riemannian metrics on matrix states. |
 | Epistemic compiler Solve et Coagula poset | [SolveEtCoagulaPeirceAporiaPoset.lean](SolveEtCoagulaPeirceAporiaPoset.lean) | 5-stage causal compilation chain ($\mathcal{E}\mathcal{C}_1 \prec \dots \prec \mathcal{E}\mathcal{C}_5$); characteristic-free binary cut grading laws `binary_cut_idempotent_and_grading_laws`; fourfold relational Peirce anatomy & quiver multiplication; transcendent quartet $(\Phi, J, V, \Sigma)$ with universal creation lock; Socratic aporia $\delta(X) = X^2 - X$; infinite non-periodic orbit in $M_2(M_2(\mathbb{Z}))$; Newton–Peirce tower and `ClTowerColimit` transport; bounded acyclic causal poset `SolveEtCoagulaNode`. |
+| Reciprocal-totality three-regime synthesis | [PeirceSpine/ReciprocalTotalityThreeRegimeSynthesis.lean](PeirceSpine/ReciprocalTotalityThreeRegimeSynthesis.lean) | Aligns 14 operators from the Peirce-spine and indefinite-totality owners and proves an isomorphism of their 16-node covering-edge and transitive causal orders; includes elliptic $M_2(\mathbb{Q})$, parabolic and hyperbolic $M_2(\mathbb{Z})$ witnesses, and the Klein-bottle KMS glide / centered-strip / Apollonian-bisector bridge. |
 | Noncommutative Weyl–Cartan split & Iwasawa KAN | [NoncommutativeWeylCartanKANPolarEquivariance.lean](../Algebra/NoncommutativeWeylCartanKANPolarEquivariance.lean), [WeylTraceKANPolarEquivariance.lean](../Canonical/WeylTraceKANPolarEquivariance.lean) | Over arbitrary ring $B$, decomposes $2 \bullet M = M_{\mathrm{Weyl}} + M_{\mathrm{sym}}^0 + M_{\mathrm{antisym}}^0$; Plemelj–Newton trace-to-determinant identity; $K A N$ subgroup multiplication and polar Gram reduction; unitary/symmetry equivariance; $GL^+(2,\mathbb{R})$ closed-form KAN and polar factorizations with uniqueness and Frobenius Pythagorean orthogonality. |
 | Schrödinger GKSL flow & ODE uniqueness | [SchrodingerGKSLFlowBridge.lean](../Modular/SchrodingerGKSLFlowBridge.lean) | Continuous linear generator `generatorCLM` and real endomorphism `generatorEnd`; bounded 1-parameter exponential flow `gkslFlow`; semigroup law `gkslFlow_add`; ODE orbit derivative `hasDerivAt_gkslFlow_orbit`; ODE solution uniqueness `gkslFlow_unique_of_ode`; and real-trace conservation `realTrace_gkslFlow`. Carrier: finite complex matrix algebra $M_n(\mathbb{C})$. Boundary: does not assert complete positivity or Kraus decomposition. |
 | Off-diagonal Bloch-ball Umegaki & quantum Spohn | [BlochBallUmegakiAndQuantumSpohn.lean](../Modular/BlochBallUmegakiAndQuantumSpohn.lean) | Open Bloch ball in $M_2(\mathbb{C})$; spectral projector and continuous functional calculus `CFC.log`; Pythagorean decomposition $D_{\mathrm{Umegaki}}(\rho \| \rho_\theta) = (\phi(r) - \phi(z)) + D_\phi(z \| \eta_\theta)$ with strictly positive off-diagonal coherence divergence; forward Kolmogorov ODE; 3-channel KMS Spohn dissipation rate `operator_spohn_rate_and_strict_coherent_dissipation` $\sigma_{\mathrm{KMS}} \ge 0$; and global relaxation. |

@@ -220,7 +220,8 @@ theorem creation_creation_superBracket (u v : L) :
     ChakravalaGA.superBracket (R := ℝ) .odd .odd
         (creationOperator u) (creationOperator v) = 0 := by
   rw [ChakravalaGA.superBracket_fermionic]
-  ext ψ
+  apply LinearMap.ext
+  intro ψ
   exact creation_anticommute u v ψ
 
 /-- The odd--odd superbracket of two contraction operators vanishes as an
@@ -229,7 +230,8 @@ theorem annihilation_annihilation_superBracket (f g : Dual L) :
     ChakravalaGA.superBracket (R := ℝ) .odd .odd
         (annihilationOperator f) (annihilationOperator g) = 0 := by
   rw [ChakravalaGA.superBracket_fermionic]
-  ext ψ
+  apply LinearMap.ext
+  intro ψ
   exact annihilation_anticommute f g ψ
 
 /-- The full odd--odd Chakravala superbracket of creation and annihilation is
@@ -241,7 +243,8 @@ theorem creation_annihilation_superBracket (u : L) (f : Dual L) :
         (creationOperator u) (annihilationOperator f) =
       (f u) • (1 : Module.End ℝ (FockSpace L)) := by
   rw [ChakravalaGA.superBracket_fermionic]
-  ext ψ
+  apply LinearMap.ext
+  intro ψ
   exact creation_annihilation_CAR u f ψ
 
 /-- Annihilation of a one-particle state evaluates its covector. -/

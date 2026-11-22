@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.GroupTheory.FreeGroup.Basic
 import Mathlib.GroupTheory.PresentedGroup
 import Mathlib.GroupTheory.SpecificGroups.Cyclic
@@ -89,5 +94,100 @@ theorem braid_group_inf.comm {i j : ℕ} (h : i + 2 ≤ j) :
   simp
   use i, j, h
   simp [mul_assoc]
+
+
+noncomputable def braid_group.toGroup
+    {n : ℕ} {G : Type*} [Group G]
+    (f : Fin n → G)
+    (hrels : ∀ r ∈ braid_rels n, FreeGroup.lift f r = 1) :
+    braid_group (n + 1) →* G := by
+  change PresentedGroup (braid_rels n) →* G
+  exact PresentedGroup.toGroup (f := f) hrels
+
+@[simp] theorem braid_group.toGroup_sigma
+    {n : ℕ} {G : Type*} [Group G] (f : Fin n → G)
+    (hrels : ∀ r ∈ braid_rels n, FreeGroup.lift f r = 1) (i : Fin n) :
+    braid_group.toGroup f hrels (σ' n i) = f i := by
+  exact PresentedGroup.toGroup.of hrels
+
+theorem braid_group.toGroup_unique
+    {n : ℕ} {G : Type*} [Group G] (f : Fin n → G)
+    (hrels : ∀ r ∈ braid_rels n, FreeGroup.lift f r = 1)
+    (φ : braid_group (n + 1) →* G) (hφ : ∀ i : Fin n, φ (σ' n i) = f i) :
+    φ = braid_group.toGroup f hrels := by
+  apply PresentedGroup.ext
+  intro i
+  exact (hφ i).trans (braid_group.toGroup_sigma f hrels i).symm
+
+noncomputable def braid_group_inf.toGroup
+    {G : Type*} [Group G] (f : ℕ → G)
+    (hrels : ∀ r ∈ braid_rels_inf, FreeGroup.lift f r = 1) :
+    braid_group_inf →* G :=
+  PresentedGroup.toGroup (f := f) hrels
+
+@[simp] theorem braid_group_inf.toGroup_sigma
+    {G : Type*} [Group G] (f : ℕ → G)
+    (hrels : ∀ r ∈ braid_rels_inf, FreeGroup.lift f r = 1) (i : ℕ) :
+    braid_group_inf.toGroup f hrels (σi i) = f i := by
+  exact PresentedGroup.toGroup.of hrels
+
+theorem braid_group_inf.toGroup_unique
+    {G : Type*} [Group G] (f : ℕ → G)
+    (hrels : ∀ r ∈ braid_rels_inf, FreeGroup.lift f r = 1)
+    (φ : braid_group_inf →* G) (hφ : ∀ i : ℕ, φ (σi i) = f i) :
+    φ = braid_group_inf.toGroup f hrels := by
+  apply PresentedGroup.ext
+  intro i
+  exact (hφ i).trans (braid_group_inf.toGroup_sigma f hrels i).symm
+
+structure braid_group.HomData (n : ℕ) (G : Type*) [Group G] where
+  generator : Fin n → G
+  adjacent : ∀ (i j : Fin n), j.val = i.val + 1 →
+    generator i * generator j * generator i = generator j * generator i * generator j
+  far_commute : ∀ (i j : Fin n), i.val + 2 ≤ j.val →
+    generator i * generator j = generator j * generator i
+
+namespace braid_group.HomData
+
+theorem relations {n : ℕ} {G : Type*} [Group G] (d : braid_group.HomData n G) :
+    ∀ r ∈ braid_rels n, FreeGroup.lift d.generator r = 1 := by
+  intro r hr
+  cases n with
+  | zero => simp [braid_rels] at hr
+  | succ n =>
+    cases n with
+    | zero => simp [braid_rels] at hr
+    | succ n =>
+      have hrels : (∃ i : Fin (n + 1), r = braid_rel (i.castSucc) (i.succ)) ∨
+          (∃ i j : Fin n, i ≤ j ∧ r = comm_rel (i.castSucc.castSucc) (j.succ.succ)) := by
+        simpa only [braid_rels, Set.mem_union, Set.mem_setOf_eq] using hr
+      rcases hrels with ⟨i, rfl⟩ | ⟨i, j, hij, rfl⟩
+      · have hArtin := d.adjacent i.castSucc i.succ (by rfl)
+        simp only [braid_rel, map_mul, map_inv, FreeGroup.lift_apply_of]
+        rw [hArtin]
+        simp [mul_assoc]
+      · have hsep : (i.castSucc.castSucc : Fin (n + 2)).val + 2 ≤
+            (j.succ.succ : Fin (n + 2)).val := by simpa using Nat.add_le_add_right hij 2
+        have hcomm := d.far_commute i.castSucc.castSucc j.succ.succ hsep
+        simp only [comm_rel, map_mul, map_inv, FreeGroup.lift_apply_of]
+        rw [hcomm]
+        simp [mul_assoc]
+
+noncomputable def toGroupHom {n : ℕ} {G : Type*} [Group G]
+    (d : braid_group.HomData n G) : braid_group (n + 1) →* G :=
+  braid_group.toGroup d.generator d.relations
+
+@[simp] theorem toGroupHom_sigma {n : ℕ} {G : Type*} [Group G]
+    (d : braid_group.HomData n G) (i : Fin n) :
+    d.toGroupHom (σ' n i) = d.generator i :=
+  braid_group.toGroup_sigma d.generator d.relations i
+
+theorem toGroupHom_unique {n : ℕ} {G : Type*} [Group G]
+    (d : braid_group.HomData n G) (φ : braid_group (n + 1) →* G)
+    (hφ : ∀ i : Fin n, φ (σ' n i) = d.generator i) :
+    φ = d.toGroupHom :=
+  braid_group.toGroup_unique d.generator d.relations φ hφ
+
+end braid_group.HomData
 
 end Braid

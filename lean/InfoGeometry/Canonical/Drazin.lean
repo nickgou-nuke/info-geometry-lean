@@ -83,6 +83,114 @@ private theorem fromSingular
 @[rep_depth krein]
 def projection (a b : R) : R := a * b
 
+/-! ### Polynomial Drazin construction from a commuting factorization -/
+
+/-- Greville's polynomial candidate in an arbitrary associative ring. -/
+@[rep_depth krein]
+def polynomialDrazinCandidate (a p : R) (k : ℕ) : R := a ^ k * p ^ (k + 1)
+
+/-- Multiplication of the polynomial candidate by `a` reduces to the `k`th powers. -/
+@[rep_depth krein]
+theorem polynomialDrazinCandidate_mul_self (a p : R) (k : ℕ)
+    (hcomm : a * p = p * a)
+    (hfactor : a ^ (k + 1) * p = a ^ k) :
+    polynomialDrazinCandidate a p k * a = a ^ k * p ^ k := by
+  have hc : Commute a p := hcomm
+  have hp : Commute a (p ^ (k + 1)) := hc.pow_right (k + 1)
+  dsimp [polynomialDrazinCandidate]
+  calc
+    a ^ k * p ^ (k + 1) * a = a ^ k * (p ^ (k + 1) * a) := by noncomm_ring
+    _ = a ^ k * (a * p ^ (k + 1)) := by rw [← hp.eq]
+    _ = a ^ (k + 1) * p ^ (k + 1) := by rw [pow_succ]; noncomm_ring
+    _ = a ^ (k + 1) * (p * p ^ k) := by
+      congr 1
+      rw [pow_succ' p k]
+    _ = (a ^ (k + 1) * p) * p ^ k := by noncomm_ring
+    _ = a ^ k * p ^ k := by rw [hfactor]
+
+/-- Repeated application of the commuting factorization removes equal powers of `a` and `p`. -/
+@[rep_depth krein]
+theorem polynomialDrazin_power_reduction (a p : R) (k r s : ℕ)
+    (hc : Commute a p) (hfactor : a ^ (k + 1) * p = a ^ k) :
+    a ^ (k + r) * p ^ (r + s) = a ^ k * p ^ s := by
+  induction r with
+  | zero => simp
+  | succ r ih =>
+      have hka : k + (r + 1) = (k + 1) + r := by omega
+      have hps : (r + 1) + s = 1 + (r + s) := by omega
+      have hmove : a ^ r * (p * p ^ (r + s)) = p * (a ^ r * p ^ (r + s)) := by
+        rw [← mul_assoc, (hc.pow_left r).eq, mul_assoc]
+      calc
+        a ^ (k + (r + 1)) * p ^ ((r + 1) + s)
+            = (a ^ (k + 1) * a ^ r) * (p * p ^ (r + s)) := by
+                rw [hka, hps]
+                simp only [pow_add, pow_one]
+        _ = (a ^ (k + 1) * p) * (a ^ r * p ^ (r + s)) := by
+              calc
+                (a ^ (k + 1) * a ^ r) * (p * p ^ (r + s))
+                    = a ^ (k + 1) * (a ^ r * (p * p ^ (r + s))) := by noncomm_ring
+                _ = a ^ (k + 1) * (p * (a ^ r * p ^ (r + s))) := by rw [hmove]
+                _ = (a ^ (k + 1) * p) * (a ^ r * p ^ (r + s)) := by noncomm_ring
+        _ = a ^ k * (a ^ r * p ^ (r + s)) := by rw [hfactor]
+        _ = a ^ (k + r) * p ^ (r + s) := by
+              calc
+                a ^ k * (a ^ r * p ^ (r + s)) = (a ^ k * a ^ r) * p ^ (r + s) := by noncomm_ring
+                _ = a ^ (k + r) * p ^ (r + s) := by rw [← pow_add]
+        _ = a ^ k * p ^ s := ih
+
+/-- A commuting factorization `a^(k+1) p = a^k` makes the polynomial candidate
+an index-`k` Drazin inverse. The proof retains the order of all noncommuting factors. -/
+@[rep_depth krein]
+theorem isDrazinInverse_polynomialDrazinCandidate
+    (a p : R) (k : ℕ) (hcomm : a * p = p * a)
+    (hfactor : a ^ (k + 1) * p = a ^ k) :
+    IsDrazinInverse a (polynomialDrazinCandidate a p k) k := by
+  have hc : Commute a p := hcomm
+  have ha : Commute a (a ^ k) := (Commute.refl a).pow_right k
+  have hp : Commute a (p ^ (k + 1)) := hc.pow_right (k + 1)
+  have hcx : Commute a (polynomialDrazinCandidate a p k) := by
+    dsimp [polynomialDrazinCandidate]
+    exact ha.mul_right hp
+  have hxa := polynomialDrazinCandidate_mul_self a p k hcomm hfactor
+  have hpower : a ^ (k + 1) * polynomialDrazinCandidate a p k = a ^ k := by
+    dsimp [polynomialDrazinCandidate]
+    have hExp : (k + 1) + k = k + (k + 1) := by omega
+    calc
+      a ^ (k + 1) * (a ^ k * p ^ (k + 1))
+          = (a ^ (k + 1) * a ^ k) * p ^ (k + 1) := by noncomm_ring
+      _ = a ^ (k + (k + 1)) * p ^ (k + 1) := by rw [← pow_add, hExp]
+      _ = a ^ k * p ^ 0 := by
+        exact polynomialDrazin_power_reduction a p k (k + 1) 0 hc hfactor
+      _ = a ^ k := by simp
+  have hidem : polynomialDrazinCandidate a p k * a *
+      polynomialDrazinCandidate a p k = polynomialDrazinCandidate a p k := by
+    rw [hxa]
+    dsimp [polynomialDrazinCandidate]
+    have hpowComm : Commute (a ^ k) (p ^ k) := (hc.pow_left k).pow_right k
+    calc
+      a ^ k * p ^ k * (a ^ k * p ^ (k + 1))
+          = a ^ k * (p ^ k * a ^ k) * p ^ (k + 1) := by noncomm_ring
+      _ = a ^ k * (a ^ k * p ^ k) * p ^ (k + 1) := by rw [← hpowComm.eq]
+      _ = (a ^ k * a ^ k) * (p ^ k * p ^ (k + 1)) := by noncomm_ring
+      _ = a ^ (k + k) * p ^ (k + (k + 1)) := by rw [← pow_add, ← pow_add]
+      _ = a ^ k * p ^ (k + 1) := polynomialDrazin_power_reduction a p k k (k + 1) hc hfactor
+  exact IsDrazinInverse.mk hcx.eq hidem hpower
+
+/-- The regular projector of the polynomial Drazin candidate is `a^k p^k`. -/
+@[rep_depth krein]
+theorem polynomialDrazinCandidate_projection_eq
+    (a p : R) (k : ℕ) (hfactor : a ^ (k + 1) * p = a ^ k) :
+    IsDrazinInverse.projection a (polynomialDrazinCandidate a p k) =
+      a ^ k * p ^ k := by
+  dsimp [IsDrazinInverse.projection, polynomialDrazinCandidate]
+  calc
+    a * (a ^ k * p ^ (k + 1)) = (a * a ^ k) * p ^ (k + 1) := by noncomm_ring
+    _ = a ^ (k + 1) * p ^ (k + 1) := by rw [← pow_succ' a k]
+    _ = (a ^ (k + 1) * p) * p ^ k := by
+      rw [pow_succ' p k]
+      noncomm_ring
+    _ = a ^ k * p ^ k := by rw [hfactor]
+
 /-- Complementary Drazin projector `Q = 1 - P`. -/
 @[rep_depth krein]
 def complementaryProjection (a b : R) : R := 1 - projection a b
@@ -1060,3 +1168,26 @@ theorem fittingNilpotentPart_mul_fittingRegularPart_eq_zero
 
 end IsDrazinInverse
 end InfoGeometry.Canonical.Drazin
+
+namespace InfoGeometry.Canonical
+
+/-- Public canonical name for the polynomial Drazin candidate. -/
+abbrev polynomialDrazinCandidate {R : Type*} [Ring R] (a p : R) (k : ℕ) : R :=
+  Drazin.IsDrazinInverse.polynomialDrazinCandidate a p k
+
+/-- Public canonical theorem for the polynomial Drazin construction. -/
+theorem isDrazinInverse_polynomialDrazinCandidate
+    {R : Type*} [Ring R] (a p : R) (k : ℕ)
+    (hcomm : a * p = p * a) (hfactor : a ^ (k + 1) * p = a ^ k) :
+    Drazin.IsDrazinInverse a (polynomialDrazinCandidate a p k) k :=
+  Drazin.IsDrazinInverse.isDrazinInverse_polynomialDrazinCandidate a p k hcomm hfactor
+
+/-- Public projector formula for the polynomial Drazin candidate. -/
+theorem polynomialDrazinCandidate_projection_eq
+    {R : Type*} [Ring R] (a p : R) (k : ℕ)
+    (hfactor : a ^ (k + 1) * p = a ^ k) :
+    Drazin.IsDrazinInverse.projection a (polynomialDrazinCandidate a p k) =
+      a ^ k * p ^ k :=
+  Drazin.IsDrazinInverse.polynomialDrazinCandidate_projection_eq a p k hfactor
+
+end InfoGeometry.Canonical

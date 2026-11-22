@@ -77,7 +77,7 @@ theorem fixesSelectedPeirceIdempotent_iff_parameters (p : Params) :
   · rintro ⟨hp0, hp3, hp4, hp8, hp9, hp10⟩
     constructor
     · funext i
-      fin_cases i <;> simp [hp4, hp9, hp10]
+      fin_cases i <;> simp [hp4, hp8, hp9, hp10]
     · funext i
       fin_cases i <;> simp [hp0, hp3, hp8]
 
@@ -126,9 +126,23 @@ theorem zornE0_scalar_coordinates {p : Params} :
   have h₁ : (zornG2Derivation p zornE0).a = 0 := by
     simp [zornG2Derivation, zornVectorMatrixEquiv, zornVectorMatrixToSplitOctonion,
       splitOctonionToZornVectorMatrix, parameterAction, zornE0]
+    <;>
+    (try ext k <;> fin_cases k <;> ring) <;>
+    (try funext i <;> fin_cases i <;> ring)
+    <;>
+    (try simp_all [ZornVec3.basis])
+    <;>
+    (try norm_num)
   have h₂ : (zornG2Derivation p zornE0).b = 0 := by
     simp [zornG2Derivation, zornVectorMatrixEquiv, zornVectorMatrixToSplitOctonion,
       splitOctonionToZornVectorMatrix, parameterAction, zornE0]
+    <;>
+    (try ext k <;> fin_cases k <;> ring) <;>
+    (try funext i <;> fin_cases i <;> ring)
+    <;>
+    (try simp_all [ZornVec3.basis])
+    <;>
+    (try norm_num)
   exact ⟨h₁, h₂⟩
 
 end InfoGeometry.NCG.SplitOctonionPeirceStabilizer

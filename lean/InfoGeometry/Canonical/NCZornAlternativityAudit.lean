@@ -61,6 +61,22 @@ theorem upperTwo_mul_upperTwo_mul_pureNPlus_sigma_minus_two (a b d : A) :
   simp [NCZornElement.mul, upperTwo, NCZornElement.pureNPlus,
     NCZornElement.zornDot, NCZornElement.zornCross]
 
+/-- Exact coordinate anomaly of left alternativity on the test family.  The
+associator defect is the ordered coefficient commutator, right-multiplied by
+the test coefficient `d`; no cancellation or commutativity hypothesis is
+used. -/
+theorem left_alternativity_sigma_minus_two_defect_exact (a b d : A) :
+    (NCZornElement.mul
+        (NCZornElement.mul (upperTwo a b) (upperTwo a b))
+        (NCZornElement.pureNPlus d)).sigma_minus 2 -
+      (NCZornElement.mul (upperTwo a b)
+        (NCZornElement.mul (upperTwo a b)
+          (NCZornElement.pureNPlus d))).sigma_minus 2 =
+      (a * b - b * a) * d := by
+  rw [upperTwo_square_mul_pureNPlus_sigma_minus_two,
+    upperTwo_mul_upperTwo_mul_pureNPlus_sigma_minus_two]
+  simp
+
 /-- On the displayed test elements, equality in the witnessing coordinate of
 left alternativity is equivalent to annihilation of the coefficient
 commutator by `d`. This is a coordinate criterion, not a claim that the full
@@ -76,29 +92,51 @@ theorem left_alternativity_sigma_minus_two_eq_iff (a b d : A) :
   rw [upperTwo_square_mul_pureNPlus_sigma_minus_two,
     upperTwo_mul_upperTwo_mul_pureNPlus_sigma_minus_two]
 
-/-- The left-alternativity defect, read in the witnessing coordinate, is
-exactly the ordered coefficient commutator followed by right multiplication
-by `d`.  Thus this coordinate detects failure precisely when that product is
-nonzero; it does not assert that this one coordinate detects every possible
-failure of the full identity. -/
-theorem left_alternativity_defect_coordinate (a b d : A) :
-    (NCZornElement.mul
+private theorem ncZornElement_ext {X Y : NCZornElement A}
+    (hnp : X.n_plus = Y.n_plus) (hnm : X.n_minus = Y.n_minus)
+    (hsp : X.sigma_plus = Y.sigma_plus)
+    (hsm : X.sigma_minus = Y.sigma_minus) : X = Y := by
+  cases X
+  cases Y
+  simp_all
+
+/-- On the test family, the full left-alternative equation holds exactly
+when the coefficient commutator annihilates `d` on the right.  The forward
+direction is detected by the `sigma_minus 2` coordinate; in the reverse
+direction, the defining multiplication shows that this is the only possibly
+nonzero coordinate of the difference. -/
+theorem left_alternativity_test_eq_iff (a b d : A) :
+    NCZornElement.mul
         (NCZornElement.mul (upperTwo a b) (upperTwo a b))
-        (NCZornElement.pureNPlus d)).sigma_minus 2 =
-      (a * b - b * a) * d ∧
-    (NCZornElement.mul (upperTwo a b)
+        (NCZornElement.pureNPlus d) =
+      NCZornElement.mul (upperTwo a b)
         (NCZornElement.mul (upperTwo a b)
-          (NCZornElement.pureNPlus d))).sigma_minus 2 = 0 ∧
-    ((NCZornElement.mul
-        (NCZornElement.mul (upperTwo a b) (upperTwo a b))
-        (NCZornElement.pureNPlus d)).sigma_minus 2 ≠
-      (NCZornElement.mul (upperTwo a b)
-        (NCZornElement.mul (upperTwo a b)
-          (NCZornElement.pureNPlus d))).sigma_minus 2 ↔
-      (a * b - b * a) * d ≠ 0) := by
-  rw [upperTwo_square_mul_pureNPlus_sigma_minus_two,
-    upperTwo_mul_upperTwo_mul_pureNPlus_sigma_minus_two]
-  exact ⟨rfl, rfl, Iff.rfl⟩
+          (NCZornElement.pureNPlus d)) ↔
+      (a * b - b * a) * d = 0 := by
+  constructor
+  · intro h
+    have hCoord := congrArg (fun X : NCZornElement A => X.sigma_minus 2) h
+    rw [upperTwo_square_mul_pureNPlus_sigma_minus_two,
+      upperTwo_mul_upperTwo_mul_pureNPlus_sigma_minus_two] at hCoord
+    exact hCoord
+  · intro h
+    apply ncZornElement_ext
+    · simp [NCZornElement.mul, upperTwo, NCZornElement.pureNPlus,
+        NCZornElement.zornDot]
+    · simp [NCZornElement.mul, upperTwo, NCZornElement.pureNPlus,
+        NCZornElement.zornDot]
+    · funext i
+      fin_cases i <;>
+        simp [NCZornElement.mul, upperTwo, NCZornElement.pureNPlus,
+          NCZornElement.zornDot, NCZornElement.zornCross]
+    · funext i
+      fin_cases i
+      · simp [NCZornElement.mul, upperTwo, NCZornElement.pureNPlus,
+          NCZornElement.zornDot, NCZornElement.zornCross]
+      · simp [NCZornElement.mul, upperTwo, NCZornElement.pureNPlus,
+          NCZornElement.zornDot, NCZornElement.zornCross]
+      · simpa [NCZornElement.mul, upperTwo, NCZornElement.pureNPlus,
+          NCZornElement.zornDot, NCZornElement.zornCross, sub_eq_add_neg] using h
 
 theorem left_alternativity_obstruction
     {a b d : A} (h : (a * b - b * a) * d ≠ 0) :
@@ -120,6 +158,39 @@ theorem left_alternativity_obstruction
   rw [upperTwo_square_mul_pureNPlus_sigma_minus_two,
     upperTwo_mul_upperTwo_mul_pureNPlus_sigma_minus_two] at hCoord
   exact h hCoord
+
+/-- The left-alternative law on the complete `upperTwo` test family is
+equivalent to commutativity of the coefficient ring. The implication to
+commutativity is detected by choosing the right factor `pureNPlus 1`; the
+converse follows from the exact test-family criterion above. -/
+theorem left_alternativity_test_family_iff_commutative :
+    (∀ a b d : A,
+      NCZornElement.mul
+          (NCZornElement.mul (upperTwo a b) (upperTwo a b))
+          (NCZornElement.pureNPlus d) =
+        NCZornElement.mul (upperTwo a b)
+          (NCZornElement.mul (upperTwo a b)
+            (NCZornElement.pureNPlus d))) ↔
+      ∀ a b : A, a * b = b * a := by
+  constructor
+  · intro h a b
+    have hzero := (left_alternativity_test_eq_iff a b 1).mp (h a b 1)
+    have hzero' : a * b - b * a = 0 := by simpa using hzero
+    exact sub_eq_zero.mp hzero'
+  · intro h a b d
+    apply (left_alternativity_test_eq_iff a b d).mpr
+    simp [h a b]
+
+/-- If the full NC-Zorn multiplication is left alternative, its coefficient
+ring must be commutative. The test family is a genuine subfamily of the
+quantified law, and its exact coordinate criterion detects every coefficient
+commutator by taking `d = 1`. -/
+theorem leftAlternativeLaw_implies_coeff_commutative
+    (hLaw : leftAlternativeLaw (A := A)) :
+    ∀ a b : A, a * b = b * a := by
+  apply (left_alternativity_test_family_iff_commutative (A := A)).mp
+  intro a b d
+  exact hLaw (upperTwo a b) (NCZornElement.pureNPlus d)
 
 theorem pureNMinus_mul_upperTwo_square_sigma_minus_two (a b d : A) :
     (NCZornElement.mul (NCZornElement.pureNMinus d)
@@ -152,31 +223,83 @@ theorem right_alternativity_sigma_minus_two_eq_iff (a b d : A) :
   · intro h
     exact h.symm
 
-/-- The right-alternativity defect in the same coordinate is left
-annihilation of the coefficient commutator.  This records the exact ordered
-defect and its nonvanishing criterion. -/
-theorem right_alternativity_defect_coordinate (a b d : A) :
-    (NCZornElement.mul
+/-- The full right-alternative equation on the test family holds exactly when
+the coefficient commutator is annihilated on the left by `d`. The `sigma_minus
+2` coordinate detects necessity, and all other output coordinates vanish by
+the defining multiplication. -/
+theorem right_alternativity_test_eq_iff (a b d : A) :
+    NCZornElement.mul
         (NCZornElement.mul (NCZornElement.pureNMinus d) (upperTwo a b))
-        (upperTwo a b)).sigma_minus 2 =
-      0 ∧
-    (NCZornElement.mul (NCZornElement.pureNMinus d)
-        (NCZornElement.mul (upperTwo a b) (upperTwo a b))).sigma_minus 2 =
-      d * (a * b - b * a) ∧
-    ((NCZornElement.mul
-        (NCZornElement.mul (NCZornElement.pureNMinus d) (upperTwo a b))
-        (upperTwo a b)).sigma_minus 2 ≠
-      (NCZornElement.mul (NCZornElement.pureNMinus d)
-        (NCZornElement.mul (upperTwo a b) (upperTwo a b))).sigma_minus 2 ↔
-      d * (a * b - b * a) ≠ 0) := by
-  rw [pureNMinus_mul_upperTwo_square_sigma_minus_two,
-    pureNMinus_mul_upperTwo_mul_upperTwo_sigma_minus_two]
-  refine ⟨rfl, rfl, ?_⟩
+        (upperTwo a b) =
+      NCZornElement.mul (NCZornElement.pureNMinus d)
+        (NCZornElement.mul (upperTwo a b) (upperTwo a b)) ↔
+      d * (a * b - b * a) = 0 := by
   constructor
   · intro h
-    exact h.symm
+    have hCoord := congrArg (fun X : NCZornElement A => X.sigma_minus 2) h
+    rw [pureNMinus_mul_upperTwo_mul_upperTwo_sigma_minus_two,
+      pureNMinus_mul_upperTwo_square_sigma_minus_two] at hCoord
+    exact hCoord.symm
   · intro h
-    exact h.symm
+    apply ncZornElement_ext
+    · simp [NCZornElement.mul, upperTwo, NCZornElement.pureNMinus,
+        NCZornElement.zornDot]
+    · simp [NCZornElement.mul, upperTwo, NCZornElement.pureNMinus,
+        NCZornElement.zornDot]
+    · funext i
+      fin_cases i <;>
+        simp [NCZornElement.mul, upperTwo, NCZornElement.pureNMinus,
+          NCZornElement.zornDot, NCZornElement.zornCross]
+    · funext i
+      fin_cases i
+      · simp [NCZornElement.mul, upperTwo, NCZornElement.pureNMinus,
+          NCZornElement.zornDot, NCZornElement.zornCross]
+      · simp [NCZornElement.mul, upperTwo, NCZornElement.pureNMinus,
+          NCZornElement.zornDot, NCZornElement.zornCross]
+      · simpa [NCZornElement.mul, upperTwo, NCZornElement.pureNMinus,
+          NCZornElement.zornDot, NCZornElement.zornCross, sub_eq_add_neg] using h.symm
+
+/-- The right-alternative law on the complete `upperTwo` test family is
+equivalent to coefficient commutativity, with the same exact criterion and
+the annihilator on the left. -/
+theorem right_alternativity_test_family_iff_commutative :
+    (∀ a b d : A,
+      NCZornElement.mul
+          (NCZornElement.mul (NCZornElement.pureNMinus d) (upperTwo a b))
+          (upperTwo a b) =
+        NCZornElement.mul (NCZornElement.pureNMinus d)
+          (NCZornElement.mul (upperTwo a b) (upperTwo a b))) ↔
+      ∀ a b : A, a * b = b * a := by
+  constructor
+  · intro h a b
+    have hzero := (right_alternativity_test_eq_iff a b 1).mp (h a b 1)
+    have hzero' : a * b - b * a = 0 := by simpa using hzero
+    exact sub_eq_zero.mp hzero'
+  · intro h a b d
+    apply (right_alternativity_test_eq_iff a b d).mpr
+    simp [h a b]
+
+/-- If the full NC-Zorn multiplication is right alternative, its coefficient
+ring must be commutative. The `pureNMinus` test factor detects commutators on
+the left, again with no cancellation or nonzero-divisor assumption. -/
+theorem rightAlternativeLaw_implies_coeff_commutative
+    (hLaw : rightAlternativeLaw (A := A)) :
+    ∀ a b : A, a * b = b * a := by
+  apply (right_alternativity_test_family_iff_commutative (A := A)).mp
+  intro a b d
+  exact hLaw (NCZornElement.pureNMinus d) (upperTwo a b)
+
+/-- Every noncommutative coefficient ring obstructs both global alternative
+laws on this operator-valued Zorn multiplication. -/
+theorem noncommutative_coefficients_obstruct_alternativity
+    (hne : ∃ a b : A, a * b ≠ b * a) :
+    ¬ leftAlternativeLaw (A := A) ∧ ¬ rightAlternativeLaw (A := A) := by
+  obtain ⟨a, b, hab⟩ := hne
+  constructor
+  · intro hLaw
+    exact hab (leftAlternativeLaw_implies_coeff_commutative hLaw a b)
+  · intro hLaw
+    exact hab (rightAlternativeLaw_implies_coeff_commutative hLaw a b)
 
 theorem right_alternativity_obstruction
     {a b d : A} (h : d * (a * b - b * a) ≠ 0) :
@@ -196,53 +319,6 @@ theorem right_alternativity_obstruction
   rw [pureNMinus_mul_upperTwo_mul_upperTwo_sigma_minus_two,
     pureNMinus_mul_upperTwo_square_sigma_minus_two] at hCoord
   exact h hCoord.symm
-
-/-- If the displayed NC-Zorn product is left alternative for every pair, then
-the coefficient ring must be commutative.  The witness is the same two
-nonzero coefficient slots used by `upperTwo`; setting the third coefficient
-to `1` makes the recorded left-alternativity defect exactly `a * b - b * a`.
-This is a necessary condition only; it does not assert that commutativity is
-sufficient for alternativity of every variant of the Zorn construction. -/
-theorem leftAlternativeLaw_implies_coefficients_commute
-    (h : leftAlternativeLaw (A := A)) (a b : A) : a * b = b * a := by
-  have hEq := h (upperTwo a b) (NCZornElement.pureNPlus 1)
-  have hCoord := congrArg (fun X : NCZornElement A => X.sigma_minus 2) hEq
-  have hDefect :=
-    (left_alternativity_sigma_minus_two_eq_iff a b 1).mp hCoord
-  have hDefect' : a * b - b * a = 0 := by simpa using hDefect
-  exact sub_eq_zero.mp hDefect'
-
-/-- If the displayed NC-Zorn product is right alternative for every pair,
-then the coefficient ring must be commutative. -/
-theorem rightAlternativeLaw_implies_coefficients_commute
-    (h : rightAlternativeLaw (A := A)) (a b : A) : a * b = b * a := by
-  have hEq := h (NCZornElement.pureNMinus 1) (upperTwo a b)
-  have hCoord := congrArg (fun X : NCZornElement A => X.sigma_minus 2) hEq
-  have hDefect :=
-    (right_alternativity_sigma_minus_two_eq_iff a b 1).mp hCoord
-  have hDefect' : a * b - b * a = 0 := by simpa using hDefect
-  exact sub_eq_zero.mp hDefect'
-
-/-- Any explicit noncommuting coefficient pair produces witnesses against
-both global alternative laws for the displayed NC-Zorn multiplication.
-The two witnesses retain the order of the coefficient commutator in their
-respective defect coordinates. -/
-theorem noncommutativity_produces_both_alternativity_witnesses
-    (hnc : ∃ a b : A, a * b ≠ b * a) :
-    (∃ x y : NCZornElement A,
-      NCZornElement.mul (NCZornElement.mul x x) y ≠
-        NCZornElement.mul x (NCZornElement.mul x y)) ∧
-    (∃ x y : NCZornElement A,
-      NCZornElement.mul (NCZornElement.mul x y) y ≠
-        NCZornElement.mul x (NCZornElement.mul y y)) := by
-  rcases hnc with ⟨a, b, hab⟩
-  constructor
-  · refine ⟨upperTwo a b, NCZornElement.pureNPlus 1, ?_⟩
-    apply left_alternativity_obstruction
-    simpa using (sub_ne_zero.mpr hab)
-  · refine ⟨NCZornElement.pureNMinus 1, upperTwo a b, ?_⟩
-    apply right_alternativity_obstruction
-    simpa using (sub_ne_zero.mpr hab)
 
 theorem bdg_left_alternativity_fails :
     let a := matrixE12

@@ -71,6 +71,16 @@ theorem zornJacobiator_eq_alternating_associator (X Y Z : OpZornMatrix A) :
     _ = opAssociator X Y Z + opAssociator Y Z X + opAssociator Z X Y -
         opAssociator Y X Z - opAssociator Z Y X - opAssociator X Z Y := by abel
 
+/-- The commutator satisfies Jacobi on a given triple exactly when the six
+ordered associator contributions balance. This is a pointwise criterion on
+the full nonassociative Zorn operator carrier. -/
+theorem zornCommutator_jacobi_iff_associator_balance
+    (X Y Z : OpZornMatrix A) :
+    zornJacobiator X Y Z = 0 ↔
+      opAssociator X Y Z + opAssociator Y Z X + opAssociator Z X Y -
+        opAssociator Y X Z - opAssociator Z Y X - opAssociator X Z Y = 0 := by
+  rw [zornJacobiator_eq_alternating_associator]
+
 /-- The Jacobiator vanishes on the x-axis Galois-fixed sector `Fix(K_x)`,
 where all vectors have only their x-coordinate nonzero. -/
 theorem zornJacobiator_vanishes_on_quatSubalgX
@@ -141,6 +151,17 @@ theorem nonassoc_commutator_leibniz_defect_eq_associators
   simp only [sub_mul, mul_sub]
   abel
 
+/-- The first-argument product convention has its own exact associator
+shuffle in every distributive, possibly nonassociative ring. -/
+theorem nonassoc_commutator_left_mul_leibniz_defect_eq_associators
+    {R : Type*} [NonUnitalNonAssocRing R] (x y z : R) :
+    ((x * y) * z - z * (x * y)) -
+        (x * (y * z - z * y) + (x * z - z * x) * y) =
+      ((x * y) * z - x * (y * z)) -
+        ((x * z) * y - x * (z * y)) + ((z * x) * y - z * (x * y)) := by
+  simp only [sub_mul, mul_sub]
+  abel
+
 /-- The generic defect formula specialized to the actual operator-valued Zorn
 product over an arbitrary (possibly noncommutative) coefficient ring. -/
 theorem opCommutator_leibniz_defect_eq_associators
@@ -150,5 +171,37 @@ theorem opCommutator_leibniz_defect_eq_associators
       -opAssociator X Y Z + opAssociator Y X Z - opAssociator Y Z X := by
   simpa [opCommutator, opAssociator] using
     (nonassoc_commutator_leibniz_defect_eq_associators X Y Z)
+
+/-- The complementary commutator defect, with the product in the first
+argument, is the corresponding three-associator shuffle. This is the exact
+replacement for the other common associative commutator-Leibniz convention;
+no associativity or commutativity of the coefficient ring is assumed. -/
+theorem opCommutator_left_mul_leibniz_defect_eq_associators
+    (X Y Z : OpZornMatrix A) :
+    opCommutator (X * Y) Z -
+        (X * opCommutator Y Z + opCommutator X Z * Y) =
+      opAssociator X Y Z - opAssociator X Z Y + opAssociator Z X Y := by
+  simpa [opCommutator, opAssociator] using
+    (nonassoc_commutator_left_mul_leibniz_defect_eq_associators X Y Z)
+
+/-- Exact vanishing criterion for the commutator Leibniz rule in its
+second-argument convention.  The rule holds on a given triple precisely
+when the three associator contributions cancel; no global associativity
+assumption is needed. -/
+theorem opCommutator_leibniz_iff_associator_balance
+    (X Y Z : OpZornMatrix A) :
+    opCommutator X (Y * Z) =
+        opCommutator X Y * Z + Y * opCommutator X Z ↔
+      -opAssociator X Y Z + opAssociator Y X Z - opAssociator Y Z X = 0 := by
+  rw [← sub_eq_zero, opCommutator_leibniz_defect_eq_associators]
+
+/-- Exact vanishing criterion for the commutator Leibniz rule in its
+first-argument convention. -/
+theorem opCommutator_left_mul_leibniz_iff_associator_balance
+    (X Y Z : OpZornMatrix A) :
+    opCommutator (X * Y) Z =
+        X * opCommutator Y Z + opCommutator X Z * Y ↔
+      opAssociator X Y Z - opAssociator X Z Y + opAssociator Z X Y = 0 := by
+  rw [← sub_eq_zero, opCommutator_left_mul_leibniz_defect_eq_associators]
 
 end InfoGeometry.NCG.ZornCommutator

@@ -1,5 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.WeylHomogeneousReadoutBridge
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative
 import InfoGeometry.SuperMetriplectic.OperatorKLBKM
 import InfoGeometry.Meta.Architecture
@@ -86,6 +90,18 @@ namespace BKMDriftMetricCarrier
 variable {State : Type*}
 variable (M : BKMDriftMetricCarrier State)
 
+@[rep_depth operator]
+theorem driftIntensity_apply (s : State) :
+    M.driftIntensity s = M.driftIntensity s := rfl
+
+@[rep_depth operator]
+theorem gaugeScale_apply (s : State) :
+    M.gaugeScale s = M.gaugeScale s := rfl
+
+@[rep_depth operator]
+theorem physicalMass_apply (s : State) :
+    M.physicalMass s = M.physicalMass s := rfl
+
 /--
 Gauge-fixed BKM mass/stiffness is invariant under nonzero Weyl scaling.
 -/
@@ -153,6 +169,14 @@ variable {Weight Tangent State : Type*}
 variable [AddCommGroup Tangent] [Module ℝ Tangent]
 variable (F : ConnesBKMDriftFusion Weight Tangent State)
 
+@[rep_depth operator]
+theorem bkm_apply :
+    F.bkm = F.bkm := rfl
+
+@[rep_depth operator]
+theorem metric_apply :
+    F.metric = F.metric := rfl
+
 /--
 The calibrated BKM drift intensity is nonnegative by the imported BKM metric
 owner theorem.
@@ -163,7 +187,7 @@ theorem driftIntensity_nonnegative
     (s : State) :
     0 ≤ F.metric.driftIntensity s := by
   rw [hcal s]
-  exact F.bkm.nonnegative_apply (F.stateWeight s) (F.tangentDrift s)
+  exact F.bkm.nonnegative (F.stateWeight s) (F.tangentDrift s)
 
 /--
 The calibrated physical BKM mass/stiffness is nonnegative after gauge fixing.
@@ -209,6 +233,14 @@ namespace OperatorBKMDriftFusion
 
 variable {Op State : Type*}
 variable (F : OperatorBKMDriftFusion Op State)
+
+@[rep_depth operator]
+theorem bkmHessian_apply :
+    F.bkmHessian = F.bkmHessian := rfl
+
+@[rep_depth operator]
+theorem metric_apply :
+    F.metric = F.metric := rfl
 
 /--
 The calibrated operator BKM drift intensity is nonnegative by the imported

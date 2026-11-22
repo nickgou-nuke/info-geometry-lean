@@ -1,6 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.SignedNetwork.BranchingInitialization
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.SignedNetwork.QubitWignerBridge
+import InfoGeometry.SignedNetwork.BranchingEnsembleGenerator
 
 set_option maxHeartbeats 800000
 
@@ -15,7 +21,9 @@ namespace InfoGeometry.SignedNetwork.BranchingQubitGenerator
 
 noncomputable section
 
+open InfoGeometry.SignedNetwork.ExactCancellation
 open InfoGeometry.SignedNetwork.QubitWignerBridge
+open InfoGeometry.SignedNetwork.BranchingEnsembleGenerator
 open InfoGeometry.SignedNetwork.PauliContextBridge
 open InfoGeometry.Canonical.PauliHestenesSpinMomentum
 
@@ -29,5 +37,20 @@ theorem synthesis_analysis_pauli (P : PauliParavector) :
       Fin.sum_univ_four, Fin.sum_univ_two, Complex.mul_re,
       Complex.mul_im] <;> ring
 
+
+def empiricalDensity (weight : ℝ) (p : Counts (Fin 4)) : Mat2 :=
+  (weight : ℂ) • synthesis (signedReal p)
+
+@[simp] theorem empiricalDensity_cancel (weight : ℝ) (p : Counts (Fin 4)) :
+    empiricalDensity weight (cancel p) = empiricalDensity weight p := by
+  simp only [empiricalDensity, synthesis, signedReal_cancel]
+
+@[simp] theorem empiricalDensity_addNullPairs
+    (weight : ℝ) (p : Counts (Fin 4)) (k : Fin 4 → ℕ) :
+    empiricalDensity weight (addNullPairs p k) = empiricalDensity weight p := by
+  simp only [empiricalDensity, synthesis, signedReal_addNullPairs]
+
+
 end
+
 end InfoGeometry.SignedNetwork.BranchingQubitGenerator

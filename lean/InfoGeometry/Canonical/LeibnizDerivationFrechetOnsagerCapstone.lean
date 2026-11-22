@@ -104,6 +104,8 @@ open SouriauOnsagerBKM
 
 section CoreSpineStructures
 
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
+
 universe u_A u_L
 
 /-- Genuine `Type`-level cross-pillar spine unifying a faithful `DerivationLieLane ℝ A`
@@ -130,7 +132,7 @@ structure UnifiedDerivationOnsagerFormSpine (A : Type u_A)
 /-- Canonical constructor lifting any `DerivationLieLane ℝ A`, `ParityOnsagerSystem A`,
 observable `a : A`, and connection `OneForm K` into `UnifiedDerivationOnsagerFormSpine A`. -/
 def UnifiedDerivationOnsagerFormSpine.ofParitySystem
-    {A : Type*} [NonUnitalNonAssocRing A] [Module ℝ A]
+    {A : Type u_A} [NonUnitalNonAssocRing A] [Module ℝ A]
     [IsScalarTower ℝ A A] [SMulCommClass ℝ A A]
     (K : DerivationLieLane.{0, u_A, u_L} ℝ A) (PS : ParityOnsagerSystem A)
     (a : A) (Γ : OneForm K) :
@@ -138,11 +140,11 @@ def UnifiedDerivationOnsagerFormSpine.ofParitySystem
   lane := K
   onsager := PS.toOnsagerCasimirSystem
   observable := a
-  evalForm m v := ParityOnsagerFormPairing.ofValueParity PS v
+  evalForm _ v := ParityOnsagerFormPairing.ofValueParity PS v
   connectionForm := oneFormAlternatingLinearEquiv K Γ
   induced_eval x y :=
     inducedDerivationLaneOnsagerSystem_totalGenerator PS.toOnsagerCasimirSystem K a x y
-  form_reciprocity m v ω η :=
+  form_reciprocity _ v ω η :=
     onsager_pairing_derivationForm_reciprocity K (ParityOnsagerFormPairing.ofValueParity PS v) ω η
 
 /-- Concrete `n = 2` inhabitant of `UnifiedDerivationOnsagerFormSpine (FiniteOperatorAlgebra 2)`
@@ -225,7 +227,9 @@ def canonicalStarCapstoneSpine {n : ℕ}
   erlangenDatum :=
     gibbsNOperatorFamilyStarErlangenDatum (G := Unit) H hH hZ
       (fun _ => a) (fun _ => ha) (fun _ => 1) Q hQ
-  peirce_split_compat := ⟨peirceAdSq_ker_eq_k P, peirceAd_range_eq_p P⟩
+  peirce_split_compat :=
+    ⟨(peirceAdSq_ker_eq_k P).trans (peirceCartanOnsagerSplit P).drazinCore_eq_k.symm,
+      (peirceAd_range_eq_p P).trans (peirceCartanOnsagerSplit P).dissipativeRange_eq_p.symm⟩
   dissipative_eq_hessian D₁ D₂ hA₁ := by
     change (secondFDerivLogPartitionReadout H _ _).re =
       (finiteGibbsCEOnsagerSystem H hH hZ a Q).dissipative
@@ -269,7 +273,9 @@ def canonicalAutCapstoneSpine {n : ℕ}
   erlangenDatum :=
     gibbsNOperatorFamilyAutErlangenDatum (G := Unit) τ hτ_inv H hH hZ hτ_H hτ_tr
       (fun _ => a) (fun _ => ha) (fun _ => 1) Q hQ
-  peirce_split_compat := ⟨peirceAdSq_ker_eq_k P, peirceAd_range_eq_p P⟩
+  peirce_split_compat :=
+    ⟨(peirceAdSq_ker_eq_k P).trans (peirceCartanOnsagerSplit P).drazinCore_eq_k.symm,
+      (peirceAd_range_eq_p P).trans (peirceCartanOnsagerSplit P).dissipativeRange_eq_p.symm⟩
   dissipative_eq_hessian D₁ D₂ hA₁ := by
     change (secondFDerivLogPartitionReadout H _ _).re =
       (finiteGibbsCEOnsagerSystem H hH hZ a Q).dissipative
@@ -426,21 +432,24 @@ theorem gapBC_frechetHessian_gibbsTrajectory_secondLaw
       AntitoneOn (fun s => Φ (matrixOfOp (normalizedExponential (H s)))) I := by
   let rho : ℝ → Matrix (Fin n) (Fin n) ℂ :=
     fun s => matrixOfOp (normalizedExponential (H s))
+  have h0sa : IsSelfAdjoint (0 : GibbsOperator n) :=
+    isSelfAdjoint_iff.mpr (map_zero ContinuousLinearMap.adjoint)
   let D_op : ℝ → FaithfulDensityOperator n := fun t =>
     by
       classical
       exact if ht : IsSelfAdjoint (H t) then
         faithfulGibbsDensity (H t) ht (tracedExponential_re_pos_of_isSelfAdjoint (H t) ht)
       else
-        maximallyMixedFaithfulDensity n
+        faithfulGibbsDensity (0 : GibbsOperator n) h0sa
+          (tracedExponential_re_pos_of_isSelfAdjoint 0 h0sa)
   have hD_pow : ∀ t, Continuous (D_op t).rpow := fun t => by
     classical
-    by_cases ht : IsSelfAdjoint (H t)
-    · simp only [D_op, dif_pos ht]
-      exact continuous_faithfulGibbsDensity_rpow (H t) ht
+    dsimp only [D_op]
+    split_ifs with ht
+    · exact continuous_faithfulGibbsDensity_rpow (H t) ht
         (tracedExponential_re_pos_of_isSelfAdjoint (H t) ht)
-    · simp only [D_op, dif_neg ht]
-      exact continuous_maximallyMixedFaithfulDensity_rpow n
+    · exact continuous_faithfulGibbsDensity_rpow (0 : GibbsOperator n) h0sa
+        (tracedExponential_re_pos_of_isSelfAdjoint 0 h0sa)
   have hmob' : ∀ t ∈ interior I, ∀ X,
       (sys t).Onsager X = matrixKuboMoriMobility (D_op t) (hD_pow t) X := by
     intro t ht X
@@ -448,18 +457,23 @@ theorem gapBC_frechetHessian_gibbsTrajectory_secondLaw
     have hD_eq : D_op t = faithfulGibbsDensity (H t) hHt
         (tracedExponential_re_pos_of_isSelfAdjoint (H t) hHt) := by
       classical
-      simp [D_op, hHt]
-    have hD_eq_fun : ∀ (h1 : Continuous (D_op t).rpow)
+      dsimp only [D_op]
+      split_ifs
+      rfl
+    have hD_eq_fun : ∀ (D' : FaithfulDensityOperator n)
+        (hD' : D' = faithfulGibbsDensity (H t) hHt
+          (tracedExponential_re_pos_of_isSelfAdjoint (H t) hHt))
+        (h1 : Continuous D'.rpow)
         (h2 : Continuous (faithfulGibbsDensity (H t) hHt
           (tracedExponential_re_pos_of_isSelfAdjoint (H t) hHt)).rpow),
-        matrixKuboMoriMobility (D_op t) h1 X =
+        matrixKuboMoriMobility D' h1 X =
           matrixKuboMoriMobility (faithfulGibbsDensity (H t) hHt
             (tracedExponential_re_pos_of_isSelfAdjoint (H t) hHt)) h2 X := by
-      intro h1 h2
-      subst hD_eq
+      intro D' hD' h1 h2
+      subst hD'
       rfl
     rw [hmob t ht X]
-    exact (hD_eq_fun (hD_pow t) _).symm
+    exact (hD_eq_fun (D_op t) hD_eq (hD_pow t) _).symm
   refine ⟨?_, ?_, ?_⟩
   · intro t ht
     have hZ := tracedExponential_re_pos_of_isSelfAdjoint (H t) (hH t ht)
@@ -493,26 +507,31 @@ theorem gapAD_peirceCut_superAnticomm_cartan_bridge {n : ℕ}
     let d_cut : NonAssocDerivation.derivations ℝ (FiniteOperatorAlgebra n) :=
       FrechetBridge.toRealDerivation (cutDerivation P)
     let d_anti : NonAssocDerivation.derivations ℝ (FiniteOperatorAlgebra n) :=
-      superAnticommLinearToDerivations (invS_sq P.property)
+      superAnticommLinearToDerivations (PureNonCommutativeOperatorSpine.invS_sq P.property)
         (differentialPlusLinear_isOdd (R := ℝ) P.property A)
         (differentialMinusLinear_isOdd (R := ℝ) P.property C)
     let S_der := peirceDerivCartanOnsagerSplit P
     let S_op := peirceSymmetricLieAlgebra P
     d_cut ∈ S_der.drazinCore ∧
       (d_anti : Module.End ℝ (FiniteOperatorAlgebra n)) X =
-        genV (P : FiniteOperatorAlgebra n) A C * X -
-          X * genV (P : FiniteOperatorAlgebra n) A C ∧
-      (peirceCartanTimeReversal P).op (S_op.P_plus X) = -S_op.P_plus X ∧
-      (peirceCartanTimeReversal P).op (S_op.P_minus X) = S_op.P_minus X := by
+        PureNonCommutativeOperatorSpine.genV (P : FiniteOperatorAlgebra n) A C * X -
+          X * PureNonCommutativeOperatorSpine.genV (P : FiniteOperatorAlgebra n) A C ∧
+      S_op.P_plus ((peirceCartanTimeReversal P).op X) = -S_op.P_plus X ∧
+      S_op.P_minus ((peirceCartanTimeReversal P).op X) = S_op.P_minus X := by
   intro d_cut d_anti S_der S_op
   refine ⟨?_, ?_, peirce_P_plus_cartanTimeReversal P X,
     peirce_P_minus_cartanTimeReversal P X⟩
-  · change d_cut ∈ (cutStabilizer (P : FiniteOperatorAlgebra n)).toSubmodule
+  · change d_cut ∈
+      (InfoGeometry.Canonical.FrechetPeirceLieStabilizer.cutStabilizer
+        (P : FiniteOperatorAlgebra n)).toSubmodule
     exact cutDerivation_mem_cutStabilizer P
-  · change differentialPlus P.1 A (differentialMinus P.1 C X) +
-        differentialMinus P.1 C (differentialPlus P.1 A X) = _
+  · change InfoGeometry.OperatorAlgebra.PeirceGradedSuperderivations.differentialPlus P.1 A
+        (InfoGeometry.OperatorAlgebra.PeirceGradedSuperderivations.differentialMinus P.1 C X) +
+      InfoGeometry.OperatorAlgebra.PeirceGradedSuperderivations.differentialMinus P.1 C
+        (InfoGeometry.OperatorAlgebra.PeirceGradedSuperderivations.differentialPlus P.1 A X) = _
     simpa [PureNonCommutativeOperatorSpine.comm] using
-      differentialPlus_differentialMinus_pair A C X P.property
+      InfoGeometry.OperatorAlgebra.PeirceGradedSuperderivations.differentialPlus_differentialMinus_pair
+        A C X P.property
 
 /-- **`T3-AD-02` (Gap A + Gap D):** Given any `DerivationLieLane ℝ A` equipped with
 an involutive Lie algebra automorphism `InvolutiveLieAut K.L` (including bridged
@@ -529,7 +548,7 @@ theorem gapAD_bridgedLane_cartanOnsager_bridge
     (hg_symm : ∀ x y, g x y = g y x) (hg_nonneg : ∀ x, 0 ≤ g x x)
     (η : LinearMap.BilinForm ℝ K.L)
     (x y : K.L) :
-    let S : SymmetricLieAlgebra K.L := { toInvolutiveLieAut := θ }
+    let S : SymmetricLieAlgebra K.L := SymmetricLieAlgebra.ofInvolutiveLieAut θ
     let C : CartanOnsagerSplit K.L :=
       { S := S
         onsager := S.P_minus
@@ -569,7 +588,8 @@ theorem gapDB_modularDerivation_ceBKM_parityForm_bridge {n : ℕ}
     let PS := finiteGibbsCEParityOnsagerSystemOfAut τ hτ_inv H hH hZ hτ_H hτ_tr a Q ha hQ
     let D := faithfulGibbsDensity H hH hZ
     let hpow := continuous_faithfulGibbsDensity_rpow H hH hZ
-    let PP := ParityOnsagerFormPairing.ofValueParity PS ![d₁]
+    let PP := centeredBKMOnsagerFormPairingOfAut_ofValueParity τ hτ_inv D hpow
+      (aut_faithfulGibbsDensity_rho τ H hH hZ hτ_H) hτ_tr Q hQ ![d₁]
     let ω₁ : DerivationOperatorForm (realDerivationsLane (GibbsOperator n)) 1 :=
       oneFormAlternatingLinearEquiv (realDerivationsLane (GibbsOperator n))
         (exteriorDerivativeZero (realDerivationsLane (GibbsOperator n)) a)
@@ -593,14 +613,15 @@ ordinary-Leibniz `GradedBraidedDerivation` (`gradedBraidedDerivationToDerivation
 and `ceCurvature` reciprocity under `starDerivationTimeReversal`. -/
 theorem gapDB_superBraided_ceBKM_curvature_bridge {n : ℕ}
     {Γ : Type*} [AddCommMonoid Γ]
-    {B : InfoGeometry.Canonical.GradingBicharacter Γ ℝ} {grade : Γ → AddSubgroup (GibbsOperator n)}
+    {B : InfoGeometry.Canonical.SylvesterGrading.GradingBicharacter Γ ℝ}
+    {grade : Γ → AddSubgroup (GibbsOperator n)}
     (P : PeirceCut n) (A C H a Q : GibbsOperator n)
     (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H)
     (ha : IsSelfAdjoint a) (hQ : IsSelfAdjoint Q)
     (D_br : GradedBraidedDerivation Γ ℝ (GibbsOperator n) B grade)
     (hL : IsLeibniz ℝ (GibbsOperator n) (gradedBraidedDerivationToLinearMap D_br)) :
     let d_super : Carrier n :=
-      superAnticommLinearToDerivations (invS_sq P.property)
+      superAnticommLinearToDerivations (PureNonCommutativeOperatorSpine.invS_sq P.property)
         (differentialPlusLinear_isOdd (R := ℝ) P.property A)
         (differentialMinusLinear_isOdd (R := ℝ) P.property C)
     let d_br : Carrier n := gradedBraidedDerivationToDerivations D_br hL
@@ -611,7 +632,9 @@ theorem gapDB_superBraided_ceBKM_curvature_bridge {n : ℕ}
     let PP2 := centeredBKMOnsagerFormPairing_ofValueParity D hpow Q hQ ![d_super, d_br]
     let Γ_ce := oneFormAlternatingLinearEquiv K (exteriorDerivativeZero K a)
     PS.dissipative d_super d_br =
-        centeredBKMRealCovariance D hpow (genV P.1 A C * a - a * genV P.1 A C) (D_br a) ∧
+        centeredBKMRealCovariance D hpow
+          (PureNonCommutativeOperatorSpine.genV P.1 A C * a -
+            a * PureNonCommutativeOperatorSpine.genV P.1 A C) (D_br a) ∧
       PS.reversible d_super d_br = ceCurvatureBKMProbeForm D hpow a Q d_super d_br ∧
       PP2.totalGenerator (PP2.T.op (ceCurvature K Γ_ce)) (PP2.T.op (ceCurvature K Γ_ce)) =
         PP2.totalGenerator (ceCurvature K Γ_ce) (ceCurvature K Γ_ce) := by
@@ -619,11 +642,16 @@ theorem gapDB_superBraided_ceBKM_curvature_bridge {n : ℕ}
   refine ⟨?_, rfl, centeredBKM_ceCurvature_reciprocity PP2 Γ_ce Γ_ce⟩
   change centeredCEBKMForm D hpow a d_super d_br = _
   rw [centeredCEBKMForm_apply]
-  have hsuper : finiteCEOperatorForm n a d_super = genV P.1 A C * a - a * genV P.1 A C := by
-    change differentialPlus P.1 A (differentialMinus P.1 C a) +
-        differentialMinus P.1 C (differentialPlus P.1 A a) = _
+  have hsuper : finiteCEOperatorForm n a d_super =
+      PureNonCommutativeOperatorSpine.genV P.1 A C * a -
+        a * PureNonCommutativeOperatorSpine.genV P.1 A C := by
+    change InfoGeometry.OperatorAlgebra.PeirceGradedSuperderivations.differentialPlus P.1 A
+        (InfoGeometry.OperatorAlgebra.PeirceGradedSuperderivations.differentialMinus P.1 C a) +
+      InfoGeometry.OperatorAlgebra.PeirceGradedSuperderivations.differentialMinus P.1 C
+        (InfoGeometry.OperatorAlgebra.PeirceGradedSuperderivations.differentialPlus P.1 A a) = _
     simpa [PureNonCommutativeOperatorSpine.comm] using
-      differentialPlus_differentialMinus_pair A C a P.property
+      InfoGeometry.OperatorAlgebra.PeirceGradedSuperderivations.differentialPlus_differentialMinus_pair
+        A C a P.property
   rw [hsuper]
   rfl
 
@@ -714,6 +742,7 @@ end GapCD_ModularExceptionalTrajectory
 section GapAC_CartanSchurPeirceTrajectory
 
 open scoped Matrix.Norms.L2Operator
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
 
 /-- **`T3-AC-01` (Gap A + Gap C):** Couples a `CartanOnsagerSplit V` and a
 `DrazinPenroseSchurTriad` (`bodyForce ≠ 0`) with a normed `GenericMetriplecticFlow.System V`
@@ -722,7 +751,7 @@ dissipative drift `(sys t).M (sys t).dS` lies in `C.dissipativeRange` (`𝔭`), 
 exact `cartanTimeReversal` signs, `energy_rate = 0`, `0 ≤ triad.entropy.production`,
 and Banach trajectory `AntitoneOn`. -/
 theorem gapAC_cartanSchur_metriplecticFlow_secondLaw
-    {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    {V : Type*} [NormedRing V] [NormedAlgebra ℝ V]
     (C : CartanOnsagerSplit V) (triad : DrazinPenroseSchurTriad)
     (hForce : triad.entropy.bodyForce ≠ 0)
     (sys : ℝ → GenericMetriplecticFlow.System V)
@@ -804,6 +833,10 @@ end GapAC_CartanSchurPeirceTrajectory
 
 section FourPillarMasterSynthesisAndWitness
 
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
+
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
+
 /-- Master four-pillar unification theorem connecting any
 `LeibnizDerivationFrechetOnsagerSpine n` with `UnifiedDerivationOnsagerFormSpine (GibbsOperator n)`
 across `Leibniz`, `Derivation`, `Fréchet`, and `Onsager`, together with trajectory-level
@@ -846,11 +879,11 @@ private theorem faithfulGibbsDensity_tiltOp2_ne_maximallyMixed
     (faithfulGibbsDensity tiltOp2 tiltOp2_isSelfAdjoint hZ).rho ≠
       (1 / 2 : ℝ) • (1 : GibbsOperator 2) := by
   intro heq
-  letI : NormedSpace ℝ (GibbsOperator 2) :=
+  have : NormedSpace ℝ (GibbsOperator 2) :=
     NormedSpace.restrictScalars ℝ ℂ (GibbsOperator 2)
-  letI : NormedAlgebra ℝ (GibbsOperator 2) :=
+  have : NormedAlgebra ℝ (GibbsOperator 2) :=
     NormedAlgebra.restrictScalars ℝ ℂ (GibbsOperator 2)
-  letI : StarModule ℝ (GibbsOperator 2) := ⟨by
+  have : StarModule ℝ (GibbsOperator 2) := ⟨by
     intro r x
     change star ((r : ℂ) • x) = r • star x
     rw [star_smul]
@@ -858,27 +891,39 @@ private theorem faithfulGibbsDensity_tiltOp2_ne_maximallyMixed
       (real_smul_eq_complex_smul r (star x)).symm⟩
   let Z := gibbsPartitionReal tiltOp2
   let D := faithfulGibbsDensity tiltOp2 tiltOp2_isSelfAdjoint hZ
-  have hcfc : D.rho = cfc (normalizedScalarGibbsWeight Z) tiltOp2 :=
+  have hcfc : D.rho =
+      cfc (NoncommutativeGibbsRpowNormalizationBridge.normalizedScalarGibbsWeight Z) tiltOp2 :=
     faithfulGibbsDensity_rho_eq_normalizedGibbsCFC tiltOp2 tiltOp2_isSelfAdjoint hZ
   have hhalf : ((1 / 2 : ℝ) • (1 : GibbsOperator 2)) =
       cfc (fun _ : ℝ => (1 / 2 : ℝ)) tiltOp2 := by
-    rw [cfc_const (fun _ : ℝ => (1 / 2 : ℝ)) tiltOp2]
+    rw [cfc_const (1 / 2 : ℝ) tiltOp2 tiltOp2_isSelfAdjoint]
     change (1 / 2 : ℝ) • (1 : GibbsOperator 2) = (algebraMap ℝ (GibbsOperator 2)) (1 / 2 : ℝ)
     rw [Algebra.algebraMap_eq_smul_one]
+  have hcont_sub : ContinuousOn
+      (fun x : ℝ =>
+        NoncommutativeGibbsRpowNormalizationBridge.normalizedScalarGibbsWeight Z x - 1 / 2)
+      (spectrum ℝ tiltOp2) :=
+    ((continuous_const.mul Real.continuous_exp).sub continuous_const).continuousOn
   have hsub_zero :
-      cfc (fun x : ℝ => normalizedScalarGibbsWeight Z x - 1 / 2) tiltOp2 = 0 := by
-    let f : ℝ → ℝ := normalizedScalarGibbsWeight Z
+      cfc (fun x : ℝ =>
+        NoncommutativeGibbsRpowNormalizationBridge.normalizedScalarGibbsWeight Z x - 1 / 2)
+        tiltOp2 = 0 := by
+    let f : ℝ → ℝ := NoncommutativeGibbsRpowNormalizationBridge.normalizedScalarGibbsWeight Z
     let g : ℝ → ℝ := fun _ => (1 / 2 : ℝ)
     have hf : ContinuousOn f (spectrum ℝ tiltOp2) :=
       (continuous_const.mul Real.continuous_exp).continuousOn
     have hg : ContinuousOn g (spectrum ℝ tiltOp2) := continuousOn_const
     rw [cfc_sub f g tiltOp2 hf hg, ← hcfc, ← hhalf, heq, sub_self]
   have hspec_eq :
-      ∀ x ∈ spectrum ℝ tiltOp2, normalizedScalarGibbsWeight Z x - 1 / 2 = 0 := by
-    have hcont : ContinuousOn (fun x : ℝ => normalizedScalarGibbsWeight Z x - 1 / 2)
-        (spectrum ℝ tiltOp2) :=
-      ((continuous_const.mul Real.continuous_exp).sub continuous_const).continuousOn
-    exact (cfc_eq_zero_iff (R := ℝ) tiltOp2 _ hcont).mp hsub_zero
+      ∀ x ∈ spectrum ℝ tiltOp2,
+        NoncommutativeGibbsRpowNormalizationBridge.normalizedScalarGibbsWeight Z x - 1 / 2 = 0 := by
+    intro x hx
+    have hmem :
+        NoncommutativeGibbsRpowNormalizationBridge.normalizedScalarGibbsWeight Z x - 1 / 2 ∈
+          spectrum ℝ (0 : GibbsOperator 2) := by
+      rw [← hsub_zero, cfc_map_spectrum (ha := tiltOp2_isSelfAdjoint) (hf := hcont_sub)]
+      exact ⟨x, hx, rfl⟩
+    simpa [spectrum.zero_eq] using hmem
   have h_one_ne : tiltOp2 - (1 : GibbsOperator 2) ≠ 0 := by
     intro h0
     have hm := congrArg (fun T : GibbsOperator 2 => matrixOfOp T 1 1) h0
@@ -888,7 +933,7 @@ private theorem faithfulGibbsDensity_tiltOp2_ne_maximallyMixed
       tiltOp2, matrixOfOp_matrixOp,
       show (1 : GibbsOperator 2) = ContinuousLinearMap.id ℂ (FiniteHilbertSpace 2) from rfl,
       matrixOfOp_id, matrixOfOp_zero] at hm
-    norm_num [tilt2] at hm
+    norm_num [InfoGeometry.Physics.KleinBottleSewingExact.tilt2] at hm
   have h_neg_one_ne : tiltOp2 + (1 : GibbsOperator 2) ≠ 0 := by
     intro h0
     have hm := congrArg (fun T : GibbsOperator 2 => matrixOfOp T 0 0) h0
@@ -898,14 +943,18 @@ private theorem faithfulGibbsDensity_tiltOp2_ne_maximallyMixed
       tiltOp2, matrixOfOp_matrixOp,
       show (1 : GibbsOperator 2) = ContinuousLinearMap.id ℂ (FiniteHilbertSpace 2) from rfl,
       matrixOfOp_id, matrixOfOp_zero] at hm
-    norm_num [tilt2] at hm
+    norm_num [InfoGeometry.Physics.KleinBottleSewingExact.tilt2] at hm
   have h_prod1 : (tiltOp2 - 1) * (tiltOp2 + 1) = 0 := by
     calc
-      (tiltOp2 - 1) * (tiltOp2 + 1) = tiltOp2 * tiltOp2 - 1 := by noncomm_ring
+      (tiltOp2 - 1) * (tiltOp2 + 1) = tiltOp2 * tiltOp2 - 1 := by
+        rw [sub_mul, mul_add, one_mul, mul_one]
+        abel
       _ = 0 := sub_eq_zero.mpr tiltOp2_sq
   have h_prod2 : (tiltOp2 + 1) * (tiltOp2 - 1) = 0 := by
     calc
-      (tiltOp2 + 1) * (tiltOp2 - 1) = tiltOp2 * tiltOp2 - 1 := by noncomm_ring
+      (tiltOp2 + 1) * (tiltOp2 - 1) = tiltOp2 * tiltOp2 - 1 := by
+        rw [add_mul, mul_sub, one_mul, mul_one]
+        abel
       _ = 0 := sub_eq_zero.mpr tiltOp2_sq
   have h1_mem : (1 : ℝ) ∈ spectrum ℝ tiltOp2 := by
     rw [spectrum.mem_iff]
@@ -917,7 +966,9 @@ private theorem faithfulGibbsDensity_tiltOp2_ne_maximallyMixed
       rw [← halg]
       exact hunit.unit.inv_mul
     have hmul := congrArg (fun X : GibbsOperator 2 => X * (tiltOp2 + 1)) hinv
-    rw [one_mul, mul_neg, neg_mul, ← mul_assoc, h_prod1, zero_mul, neg_zero] at hmul
+    have hzero_rhs : -(tiltOp2 - 1) * (tiltOp2 + 1) = 0 :=
+      (neg_mul (tiltOp2 - 1) (tiltOp2 + 1)).trans (by rw [h_prod1, neg_zero])
+    rw [one_mul, mul_assoc, hzero_rhs, mul_zero] at hmul
     exact h_neg_one_ne hmul.symm
   have hm1_mem : (-1 : ℝ) ∈ spectrum ℝ tiltOp2 := by
     rw [spectrum.mem_iff]
@@ -929,14 +980,16 @@ private theorem faithfulGibbsDensity_tiltOp2_ne_maximallyMixed
       rw [← halg]
       exact hunit.unit.inv_mul
     have hmul := congrArg (fun X : GibbsOperator 2 => X * (tiltOp2 - 1)) hinv
-    rw [one_mul, mul_neg, neg_mul, ← mul_assoc, h_prod2, zero_mul, neg_zero] at hmul
+    have hzero_rhs : -(tiltOp2 + 1) * (tiltOp2 - 1) = 0 :=
+      (neg_mul (tiltOp2 + 1) (tiltOp2 - 1)).trans (by rw [h_prod2, neg_zero])
+    rw [one_mul, mul_assoc, hzero_rhs, mul_zero] at hmul
     exact h_one_ne hmul.symm
   have hv1 := sub_eq_zero.mp (hspec_eq 1 h1_mem)
   have hvm1 := sub_eq_zero.mp (hspec_eq (-1) hm1_mem)
   have hZne : Z⁻¹ ≠ 0 := inv_ne_zero hZ.ne'
   have hexp_eq : Real.exp 1 = Real.exp (-1) :=
     mul_left_cancel₀ hZne (hv1.trans hvm1.symm)
-  exact (ne_of_gt (Real.exp_lt_exp.mpr (by norm_num : (-1 : ℝ) < 1))) hexp_eq.symm
+  exact (ne_of_gt (Real.exp_lt_exp.mpr (by norm_num : (-1 : ℝ) < 1))) hexp_eq
 
 /-- Non-degenerate concrete `n = 2` noncommutative witness on `capstoneQubitSpine`
 simultaneously verifying:
@@ -981,8 +1034,8 @@ theorem capstone_qubit_nondegenerate_witness :
       rwa [two_smul ℝ (tiltOp2 * switchOp2)]
     have hprod0 : tiltOp2 * switchOp2 = 0 := by
       have hhalf := congrArg (fun Z : GibbsOperator 2 => ((2 : ℝ)⁻¹) • Z) hmul
-      rw [smul_smul, inv_mul_cancel₀ (by norm_num), one_smul, smul_zero] at hhalf
-      exact hhalf
+      simp only [smul_smul, inv_mul_cancel₀ (by norm_num : (2 : ℝ) ≠ 0), one_smul] at hhalf
+      exact hhalf.trans (ContinuousLinearMap.ext fun _ => by simp)
     have hsw0 : switchOp2 = 0 := by
       calc
         switchOp2 = (tiltOp2 * tiltOp2) * switchOp2 := by rw [tiltOp2_sq, one_mul]
@@ -1019,13 +1072,17 @@ theorem capstone_qubit_nondegenerate_witness :
         rw [matrixOfOp_complex_smul]
         change (2 * Complex.I) * matrixOfOp (tiltOp2.comp switchOp2) 0 1 = 2 * Complex.I
         rw [matrixOfOp_comp, tiltOp2, switchOp2, matrixOfOp_matrixOp, matrixOfOp_matrixOp]
-        have h01 : (tilt2 * switch2) 0 1 = 1 := by
-          norm_num [tilt2, switch2, Matrix.mul_apply, Fin.sum_univ_two]
+        have h01 :
+            (InfoGeometry.Physics.KleinBottleSewingExact.tilt2 *
+              InfoGeometry.Physics.KleinBottleSewingExact.switch2) 0 1 = 1 := by
+          norm_num [InfoGeometry.Physics.KleinBottleSewingExact.tilt2,
+            InfoGeometry.Physics.KleinBottleSewingExact.switch2,
+            Matrix.mul_apply, Fin.sum_univ_two]
         rw [h01, mul_one]
       rw [hL, hR] at hm
       have him := congrArg Complex.im hm
       norm_num at him
-    exact hnot_gauge ((centeredStatistic_eq_zero_iff D hpow A₁).mp hzero)
+    exact hnot_gauge ((BKMScalarGaugeQuotient.centeredStatistic_eq_zero_iff D hpow A₁).mp hzero)
   have hSlit : tracedExponential tiltOp2 ∈ Complex.slitPlane :=
     tracedExponential_mem_slitPlane_of_isSelfAdjoint tiltOp2 tiltOp2_isSelfAdjoint
   have hExt : frechetExtDeriv (logPartitionOneForm 2) tiltOp2 ![A₁, A₂] = 0 := by
@@ -1034,29 +1091,39 @@ theorem capstone_qubit_nondegenerate_witness :
   have hσ_sa : IsSelfAdjoint σ_mix := by
     rw [isSelfAdjoint_iff]
     change ContinuousLinearMap.adjoint ((1 / 2 : ℝ) • (1 : GibbsOperator 2)) = _
-    rw [real_smul_eq_complex_smul, map_smul]
+    rw [real_smul_eq_complex_smul, map_smulₛₗ]
     change star ((1 / 2 : ℝ) : ℂ) • star (1 : GibbsOperator 2) = _
     simp [σ_mix, real_smul_eq_complex_smul]
   have hcomm_σ : Commute σ_mix tiltOp2 := by
+    dsimp only [σ_mix]
     rw [Commute, SemiconjBy, real_smul_eq_complex_smul, smul_mul_assoc, mul_smul_comm,
       one_mul, mul_one]
+  have hH0 : H_curve 0 = tiltOp2 :=
+    ContinuousLinearMap.ext fun _ => by simp [H_curve]
+  have hH0_sa : IsSelfAdjoint (H_curve 0) := hH0.symm ▸ tiltOp2_isSelfAdjoint
   have hderiv_curve :
-      HasDerivAt H_curve (gibbsMetriplecticFlow tiltOp2 σ_mix (H_curve 0) (by simpa [H_curve] using tiltOp2_isSelfAdjoint)) 0 := by
+      HasDerivAt H_curve (gibbsMetriplecticFlow tiltOp2 σ_mix (H_curve 0) hH0_sa) 0 := by
     have hsmul : HasDerivAt (fun s : ℝ => s • v_flow) v_flow 0 := by
-      have hclm := ((ContinuousLinearMap.id ℝ ℝ).smulRight v_flow).hasFDerivAt.hasDerivAt
-      simpa using hclm
-    have hadd := (hasDerivAt_const (0 : ℝ) tiltOp2).add hsmul
-    simpa [H_curve, v_flow] using hadd
+      have hclm :=
+        (((ContinuousLinearMap.id ℝ ℝ).smulRight v_flow).hasFDerivAt (x := (0 : ℝ))).hasDerivAt
+      have hone : (((ContinuousLinearMap.id ℝ ℝ).smulRight v_flow) (1 : ℝ)) = v_flow :=
+        ContinuousLinearMap.ext fun _ => by simp
+      rw [hone] at hclm
+      exact hclm
+    have hadd : HasDerivAt H_curve (0 + v_flow) 0 :=
+      (hasDerivAt_const (0 : ℝ) tiltOp2).add hsmul
+    have hval : gibbsMetriplecticFlow tiltOp2 σ_mix (H_curve 0) hH0_sa = v_flow := by
+      simp only [hH0, v_flow]
+    rw [hval]
+    simpa only [zero_add] using hadd
   have hne :
-      (faithfulGibbsDensity (H_curve 0) (by simpa [H_curve] using tiltOp2_isSelfAdjoint)
-        (tracedExponential_re_pos_of_isSelfAdjoint (H_curve 0)
-          (by simpa [H_curve] using tiltOp2_isSelfAdjoint))).rho ≠ σ_mix := by
-    simpa [H_curve] using faithfulGibbsDensity_tiltOp2_ne_maximallyMixed hZ
+      (faithfulGibbsDensity (H_curve 0) hH0_sa
+        (tracedExponential_re_pos_of_isSelfAdjoint (H_curve 0) hH0_sa)).rho ≠ σ_mix := by
+    simpa [hH0, σ_mix] using faithfulGibbsDensity_tiltOp2_ne_maximallyMixed hZ
   have hneg_deriv :
       deriv (fun s => gibbsRelativePotential σ_mix (H_curve s)) 0 < 0 :=
     deriv_gibbsRelativePotential_metriplectic_neg_of_ne
-      tiltOp2 σ_mix hσ_sa hcomm_σ H_curve (t := 0)
-      (by simpa [H_curve] using tiltOp2_isSelfAdjoint) hderiv_curve hne
+      tiltOp2 σ_mix hσ_sa hcomm_σ H_curve (t := 0) hH0_sa hderiv_curve hne
   exact ⟨hnc, hdiss_pos, hw.1, ne_of_lt hw.2.1, hExt, hw.2.2, hneg_deriv⟩
 
 end FourPillarMasterSynthesisAndWitness

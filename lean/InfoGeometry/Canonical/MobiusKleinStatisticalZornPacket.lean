@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
@@ -46,6 +52,17 @@ namespace InfoGeometry.Canonical.MobiusKleinStatisticalZornPacket
 
 abbrev ComplexMat2 : Type :=
   Matrix (Fin 2) (Fin 2) ℂ
+
+/-- The two elementary off-diagonal `2 × 2` complex matrices. -/
+def complexMat2E01 : ComplexMat2 := !![0, 1; 0, 0]
+def complexMat2E10 : ComplexMat2 := !![0, 0; 1, 0]
+
+/-- Explicit non-commutativity witness for the `2 × 2` complex matrix carrier. -/
+theorem complexMat2_mul_noncommutative :
+    complexMat2E01 * complexMat2E10 ≠ complexMat2E10 * complexMat2E01 := by
+  intro h
+  have h00 := congrArg (fun M : ComplexMat2 => M 0 0) h
+  norm_num [complexMat2E01, complexMat2E10, Matrix.mul_apply, Fin.sum_univ_two] at h00
 
 /-- Explicit `2 × 2` complex matrix constructor. -/
 def complexMat2 (a b c d : ℂ) : ComplexMat2 :=
@@ -232,10 +249,10 @@ theorem det2_I_smul (A : ComplexMat2) :
       simp [det2]
       ring_nf
       rw [Complex.I_sq]
-      ring
+      ring_nf
     _ = -det2 A := by
       simp [det2]
-      ring
+      ring_nf
 
 /-- Therefore determinant sign cannot descend to complex projective classes. -/
 theorem projectivelyEquivalent_with_negated_det (A : ComplexMat2) :
@@ -399,6 +416,13 @@ def modularS : IntMat2 :=
 def modularU : IntMat2 :=
   !![(0 : ℤ), 1; -1, 1]
 
+/-- Explicit non-commutativity witness for the integral `2 × 2` matrix carrier. -/
+theorem intMat2_mul_noncommutative :
+    modularT * modularS ≠ modularS * modularT := by
+  intro h
+  have h00 := congrArg (fun M : IntMat2 => M 0 0) h
+  norm_num [modularT, modularS, Matrix.mul_apply, Fin.sum_univ_two] at h00
+
 /-- Coordinate trace of an integral `2 × 2` matrix. -/
 def intTrace2 (A : IntMat2) : ℤ :=
   A 0 0 + A 1 1
@@ -523,10 +547,9 @@ theorem zorn_left_bracketing :
     ring <;> omega <;>
     simp [Matrix.cons_val_succ, Matrix.cons_val_two, Matrix.vecHead, Matrix.vecTail]
     <;> decide
-  all_goals first
-    | (change (1 : ℝ) + 1 = 2; norm_num)
-    | (change (2 : ℝ) - 1 = 1; norm_num)
-    | (change (2 : ℝ) + 1 = 3; norm_num)
+  all_goals norm_num [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
+    zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3]
+  all_goals ext i <;> fin_cases i
 
 /-- Right bracketing of the three explicit generators. -/
 theorem zorn_right_bracketing :
@@ -543,10 +566,9 @@ theorem zorn_right_bracketing :
     ring <;> omega <;>
     simp [Matrix.cons_val_succ, Matrix.cons_val_two, Matrix.vecHead, Matrix.vecTail]
     <;> decide
-  all_goals first
-    | (change (1 : ℝ) + 1 = 2; norm_num)
-    | (change (2 : ℝ) - 1 = 1; norm_num)
-    | (change (2 : ℝ) + 1 = 3; norm_num)
+  all_goals norm_num [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
+    zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3]
+  all_goals ext i <;> fin_cases i
 
 /-- The exact nonzero additive associator of `S₁`, `S₂`, and `U₃`. -/
 theorem zorn_additive_associator_exact :
@@ -561,10 +583,7 @@ theorem zorn_additive_associator_exact :
     ring <;> omega <;>
     simp [Matrix.cons_val_succ, Matrix.cons_val_two, Matrix.vecHead, Matrix.vecTail]
     <;> decide
-  all_goals first
-    | (change (1 : ℝ) + 1 = 2; norm_num)
-    | (change (2 : ℝ) - 1 = 1; norm_num)
-    | (change (2 : ℝ) + 1 = 3; norm_num)
+  all_goals norm_num [zornMk, zornE1, zornE2, zornE3]
 
 /-- The explicit additive associator is nonzero. -/
 theorem zorn_additive_associator_ne_zero :

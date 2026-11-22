@@ -9,6 +9,8 @@ import InfoGeometry.Krein.SplitOctonionZornRegularH4Bridge
 import InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge
 import InfoGeometry.Superalgebra.RealGradedZornCARBridge
 import InfoGeometry.Twistor.WeylZornMajoranaZeroMode
+import InfoGeometry.Canonical.Exterior3NativeGradedLadderBridge
+import InfoGeometry.Canonical.SplitOctonion1331ExteriorDiracSouriauBridge
 
 /-!
 # Real graded-tensor bridge for the five-graded Fock superalgebra
@@ -34,6 +36,9 @@ open InfoGeometry.Superalgebra.RealGradedZornCARBridge
 open InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge
 open InfoGeometry.Lie.SplitOctonionEllPolarization
 open InfoGeometry.Twistor.WeylZornMajoranaZeroMode
+open InfoGeometry.Canonical.Exterior3NativeGradedLadderBridge
+open InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge
+open InfoGeometry.Canonical.SplitOctonion1331ExteriorDiracSouriauBridge
 
 abbrev TensorCarrier := realThreeMatrixGradedTensor
 abbrev FockCarrier := Matrix (Fin 8) (Fin 8) ℝ
@@ -82,6 +87,70 @@ theorem fockMatrixToKreinOperator_superBracket
   cases p <;> cases q <;>
     simp [fockMatrixToKreinOperator, superBracketR, map_add, map_sub, map_mul]
 
+/-! ### The occupation-mask Fock basis is the native exterior basis
+
+The matrix owner indexes occupations by the bit mask `4*b₀ + 2*b₁ + b₂`.
+The circular Peirce owner indexes the exterior basis in `1+3+3+1` order.  The
+equivalence below records their actual permutation; it is not an identity
+relabeling. -/
+
+/-- Matrix occupation masks `0,…,7` sent to the established `1+3+3+1`
+exterior Peirce basis labels. -/
+def fockMaskToPeirceFn : Fin 8 → Fin 8 := ![0, 3, 2, 5, 1, 6, 7, 4]
+
+/-- The actual permutation between the Fock occupation-mask order and the
+native exterior Peirce order. -/
+noncomputable def fockMaskToPeirce : Fin 8 ≃ Fin 8 :=
+  Equiv.ofBijective fockMaskToPeirceFn (by decide)
+
+/-- Exterior basis reindexed in the exact occupation-mask order used by the
+concrete `8 × 8` Fock matrices. -/
+noncomputable def fockExteriorBasis : Module.Basis (Fin 8) ℝ
+    SplitOctonionExterior3HodgeDiracBridge.Exterior3 :=
+  exterior3PeirceBasis.reindex fockMaskToPeirce.symm
+
+/-- The real coordinate equivalence from the matrix Fock state carrier to the
+literal Mathlib exterior algebra, using the concrete mask permutation above. -/
+noncomputable def fockExteriorCoordinateEquiv : (Fin 8 → ℝ) ≃ₗ[ℝ]
+    SplitOctonionExterior3HodgeDiracBridge.Exterior3 :=
+  fockExteriorBasis.equivFun.symm
+
+@[simp] theorem fockExteriorCoordinateEquiv_single (j : Fin 8) :
+    fockExteriorCoordinateEquiv (Pi.single j (1 : ℝ)) = fockExteriorBasis j := by
+  simp [fockExteriorCoordinateEquiv]
+
+/-- Occupation mask produced by creating mode `i` from the vacuum. -/
+def fockVacuumCreatedMask : Fin 3 → Fin 8
+  | 0 => 4
+  | 1 => 2
+  | 2 => 1
+
+/-- The real matrix creation operators act on the vacuum by adding exactly
+their mode bit, and the mask permutation identifies the result with the
+corresponding degree-one exterior basis vector. -/
+theorem gPlus1R_vacuum_to_exterior (i : Fin 3) :
+    fockExteriorCoordinateEquiv
+        (Matrix.toLin' (gPlus1R i) (Pi.single (0 : Fin 8) (1 : ℝ))) =
+      exteriorWedge3 (vBasis3 i)
+        (1 : SplitOctonionExterior3HodgeDiracBridge.Exterior3) := by
+  have hmask :
+      Matrix.toLin' (gPlus1R i) (Pi.single (0 : Fin 8) (1 : ℝ)) =
+        Pi.single (fockVacuumCreatedMask i) (1 : ℝ) := by
+    rw [Matrix.toLin'_apply, Matrix.mulVec_single_one]
+    ext j
+    fin_cases i <;> fin_cases j <;>
+      simp [fockVacuumCreatedMask, Matrix.col_apply, gPlus1R,
+        gPlus1Z, fockCreate0Z, fockCreate1Z, fockCreate2Z]
+  rw [hmask, fockExteriorCoordinateEquiv_single]
+  have hbasis : fockExteriorBasis (fockVacuumCreatedMask i) =
+      exterior3PeirceBasis ⟨i.val + 1, by
+        exact lt_trans (Nat.succ_lt_succ i.isLt) (by decide)⟩ := by
+    fin_cases i <;> simp [fockExteriorBasis, fockVacuumCreatedMask,
+      fockMaskToPeirce, fockMaskToPeirceFn]
+  rw [hbasis]
+  rw [show vBasis3 i = Pi.single i 1 by simp [vBasis3],
+    ← exterior3PeirceBasis_zero, exteriorWedge3_basis_zero]
+
 /-- The grade `+1` Fock creation family represented on the doubled Krein
 carrier. -/
 def fockCreationOnKrein (i : Fin 3) : KreinOperatorCarrier :=
@@ -123,6 +192,45 @@ theorem fockBivectorCreationOnKrein_eq (p : Fin 3) :
         fockCreationOnKrein (bivectorPair p).2 := by
   simp [fockBivectorCreationOnKrein, fockCreationOnKrein, gPlus2R,
     gPlus2Z, gPlus1R, gPlus1Z, map_mul, fockMatrixToKreinOperator]
+
+/-- The product of any two grade `+2` creation operators vanishes on the
+three-mode Fock representation.  This is stronger than their pairwise
+commutation: expanding each grade `+2` generator reduces the statement to the
+owner's fourfold-creation identity for the concrete `Fin 3`-indexed real
+Fock matrices.  The resulting identity is transported to operators on the
+doubled real Krein carrier through the actual algebra equivalence. -/
+theorem fockBivectorCreationOnKrein_mul_eq_zero (p q : Fin 3) :
+    fockBivectorCreationOnKrein p * fockBivectorCreationOnKrein q = 0 := by
+  have hfour := gPlus1R_fourfold_mul_zero
+    (bivectorPair p).1 (bivectorPair p).2
+    (bivectorPair q).1 (bivectorPair q).2
+  have hfour' :
+      (gPlus1R (bivectorPair p).1 * gPlus1R (bivectorPair p).2) *
+        (gPlus1R (bivectorPair q).1 * gPlus1R (bivectorPair q).2) = 0 := by
+    rw [← mul_assoc]
+    exact hfour
+  have hprod : gPlus2R p * gPlus2R q = 0 := by
+    simpa [gPlus2R, gPlus2Z, gPlus1R, gPlus1Z, map_mul] using hfour'
+  change fockMatrixToKreinOperator (gPlus2R p) *
+      fockMatrixToKreinOperator (gPlus2R q) = 0
+  rw [← map_mul, hprod, map_zero]
+
+/-- The same fourfold-creation identity holds in the real Koszul-graded tensor
+algebra before its represented action on the Krein carrier. -/
+theorem fockBivectorCreationOnTensor_mul_eq_zero (p q : Fin 3) :
+    fockMatrixToRealGradedTensor (gPlus2R p) *
+      fockMatrixToRealGradedTensor (gPlus2R q) = 0 := by
+  have hfour := gPlus1R_fourfold_mul_zero
+    (bivectorPair p).1 (bivectorPair p).2
+    (bivectorPair q).1 (bivectorPair q).2
+  have hfour' :
+      (gPlus1R (bivectorPair p).1 * gPlus1R (bivectorPair p).2) *
+        (gPlus1R (bivectorPair q).1 * gPlus1R (bivectorPair q).2) = 0 := by
+    rw [← mul_assoc]
+    exact hfour
+  have hprod : gPlus2R p * gPlus2R q = 0 := by
+    simpa [gPlus2R, gPlus2Z, gPlus1R, gPlus1Z, map_mul] using hfour'
+  rw [← map_mul, hprod, map_zero]
 
 /-! ### Circular root channels as real Majorana pairs
 
@@ -453,5 +561,36 @@ theorem circularMajorana_boundary_zeroMode_realTensor :
   have h := congrArg transportZornOperator zornMajorana_zeroMode
   simpa only [transportZornOperator_sub, transportZornOperator_mul,
     transportZornOperator_add, transportZornOperator_zero] using h
+
+/-- A supercolor Zorn right-regular operator, expressed as its unique matrix
+representative in the three-mode real graded tensor algebra. This uses the
+existing supercolor-to-Krein equivalence and the faithful full endomorphism
+representation; it does not identify Zorn multiplication with composition. -/
+def supercolorRightRegularAsGradedTensor
+    (X : InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra ℝ) :
+    TensorCarrier :=
+  realThreeMatrixTensorOnH4.symm
+    (InfoGeometry.Krein.SplitOctonionZornRegularH4Bridge.rightRegularOnDoubleKrein
+      (InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolorToCanonicalZorn X))
+
+/-- The graded-tensor representative acts on the doubled Krein space by the
+original nonassociative Zorn right-regular action. -/
+theorem supercolorRightRegularAsGradedTensor_spec
+    (X : InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra ℝ) :
+    realThreeMatrixTensorOnH4 (supercolorRightRegularAsGradedTensor X) =
+      InfoGeometry.Krein.SplitOctonionZornRegularH4Bridge.rightRegularOnDoubleKrein
+        (InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolorToCanonicalZorn X) := by
+  simp [supercolorRightRegularAsGradedTensor]
+
+/-- The supercolor product action intertwines with the common doubled-Krein
+carrier on the Hestenes and CAR side. Factor order is the Zorn owner's order. -/
+theorem supercolor_product_action_in_fock_matrix_coordinates
+    (X Y : InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra ℝ) :
+    InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolorToDoubleKrein
+        (InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.mul Y X) =
+      realThreeMatrixTensorOnH4
+        (supercolorRightRegularAsGradedTensor X) (supercolorToDoubleKrein Y) := by
+  rw [supercolorRightRegularAsGradedTensor_spec]
+  exact InfoGeometry.Superalgebra.RealPeirceZornCarrierBridge.supercolor_rightRegular_action X Y
 
 end InfoGeometry.Canonical.RealGradedTensorSuperGrassmannianBridge

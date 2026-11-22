@@ -853,12 +853,6 @@ variable {n : ℕ} [Nonempty (Fin n)]
 
 local notation "EndRA" => EndH (RouterAmplitude n)
 
-noncomputable local instance : NormedRing EndRA := inferInstance
-noncomputable local instance : NormedAlgebra ℝ EndRA := inferInstance
-noncomputable local instance : NormedSpace ℝ EndRA := inferInstance
-local instance : IsTopologicalRing EndRA := inferInstance
-local instance : CompleteSpace EndRA := inferInstance
-
 omit [Nonempty (Fin n)] in
 /-- First-order spectral/Taylor law for the lifted averaged Tomita-Takesaki operator. -/
 theorem hasDerivAt_informationPartitionFunction_zero_relativeTomitaTakesakiOp

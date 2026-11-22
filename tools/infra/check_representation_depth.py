@@ -66,8 +66,7 @@ def parse_args() -> argparse.Namespace:
     return ap.parse_args()
 
 
-def load_jsonl(path: Path) -> list[dict[str, Any]]:
-    out: list[dict[str, Any]] = []
+def iter_jsonl(path: Path):
     with path.open(encoding="utf-8") as handle:
         for line in handle:
             line = line.strip()
@@ -75,11 +74,14 @@ def load_jsonl(path: Path) -> list[dict[str, Any]]:
                 continue
             raw = json.loads(line)
             if isinstance(raw, dict):
-                out.append(raw)
-    return out
+                yield raw
 
 
-def normalize_decls(rows: list[dict[str, Any]], root: Path) -> dict[str, dict[str, Any]]:
+def load_jsonl(path: Path) -> list[dict[str, Any]]:
+    return list(iter_jsonl(path))
+
+
+def normalize_decls(rows, root: Path) -> dict[str, dict[str, Any]]:
     out: dict[str, dict[str, Any]] = {}
     for row in rows:
         name = str(row.get("name", ""))
@@ -433,7 +435,7 @@ def main() -> int:
     md_out = normalize_user_path(args.md_out, root / DEFAULT_MD_OUT)
 
     graph = load_json(graph_path)
-    decls = normalize_decls(load_jsonl(decls_path), root)
+    decls = normalize_decls(iter_jsonl(decls_path), root)
     depth_files, depth_payload = build_depth_sources(depth_path, lean_tags_path, root)
     aggregated = aggregate_edges(graph, decls, depth_files)
     summary = summarize(depth_payload, aggregated, depth_files)

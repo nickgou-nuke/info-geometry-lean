@@ -102,4 +102,23 @@ theorem horizontal_decomposition (x y : H) :
   dsimp [horizontalPart]
   abel
 
+/-- Equivalence between `P₊`-fixed vectors and membership in `KreinSpace.posSubspace H`. -/
+theorem P_plus_fixed_iff_mem_posSubspace (x : H) :
+    KreinSpace.P_plus (H := H) x = x ↔ x ∈ KreinSpace.posSubspace H := by
+  constructor
+  · intro hx
+    rw [← hx]
+    exact KreinSpace.P_plus_mem_posSubspace (H := H) x
+  · intro hx
+    exact KreinSpace.P_plus_eq_self_of_mem (H := H) hx
+
+/-- Strict positivity of `sectorMetric` read directly from `P₊`-fixed vectors. -/
+theorem sectorMetric_self_pos_of_P_plus_fixed {x v : H}
+    (hx : KreinSpace.P_plus (H := H) x = x) (hx0 : x ≠ 0)
+    (hv : KreinSpace.P_plus (H := H) v = v) (hv0 : v ≠ 0) :
+    0 < sectorMetric x v v :=
+  sectorMetric_self_pos
+    ((P_plus_fixed_iff_mem_posSubspace x).mp hx) hx0
+    ((P_plus_fixed_iff_mem_posSubspace v).mp hv) hv0
+
 end InfoGeometry.Krein.PositiveSectorMetric

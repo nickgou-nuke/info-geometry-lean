@@ -1158,6 +1158,19 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def _iter_jsonl_rows(path: Path, limit: int | None = None):
+    count = 0
+    with path.open(encoding="utf-8") as handle:
+        for line in handle:
+            line = line.strip()
+            if not line:
+                continue
+            yield json.loads(line)
+            count += 1
+            if limit is not None and count >= limit:
+                return
+
+
 def main() -> int:
     args = parse_args()
     run_id = str(int(time.time()))
@@ -1166,17 +1179,11 @@ def main() -> int:
     if args.source_mode == "jsonl":
         if not args.nodes_jsonl or not args.edges_jsonl:
             raise ValueError("--nodes-jsonl and --edges-jsonl are required when --source-mode=jsonl")
-        node_rows = [
-            json.loads(line)
-            for line in args.nodes_jsonl.read_text(encoding="utf-8").splitlines()
-            if line.strip()
-        ]
-        edge_rows = [
-            json.loads(line)
-            for line in args.edges_jsonl.read_text(encoding="utf-8").splitlines()
-            if line.strip()
-        ]
-        graph = build_decl_graph_from_rows(node_rows[: args.max_decls], edge_rows)
+        node_limit = int(args.max_decls) if args.max_decls is not None else None
+        graph = build_decl_graph_from_rows(
+            _iter_jsonl_rows(args.nodes_jsonl, limit=node_limit),
+            _iter_jsonl_rows(args.edges_jsonl),
+        )
         target = None
     else:
         target = ArangoTarget(

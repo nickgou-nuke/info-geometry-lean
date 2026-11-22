@@ -153,16 +153,18 @@ def suspect_key(suspect: SuspectTheorem) -> tuple[str, str]:
     return (suspect.file, suspect.name)
 
 
-def load_jsonl(path: Path) -> list[dict]:
-    rows = []
+def iter_jsonl(path: Path):
     if not path.exists():
-        return rows
+        return
     with path.open(encoding='utf-8') as handle:
         for raw in handle:
             raw = raw.strip()
             if raw:
-                rows.append(json.loads(raw))
-    return rows
+                yield json.loads(raw)
+
+
+def load_jsonl(path: Path) -> list[dict]:
+    return list(iter_jsonl(path))
 
 
 def read_file_lines(path: Path, cache: dict[Path, list[str]]) -> list[str]:
@@ -245,14 +247,15 @@ def scan_prop_surfaces() -> list[PropSurface]:
 def scan_public_theorems() -> list[PublicTheorem]:
     theorem_index = load_json(REPORT_PATHS['theorem_surface_index'])
     rows = theorem_index.get('rows', [])
-    decl_rows = load_jsonl(INDEX_PATHS['decls'])
-    edge_rows = load_jsonl(INDEX_PATHS['edges'])
     _decl_key_to_full, graph_profiles = load_decl_graph(ROOT)
 
     theorem_kinds = {'theorem', 'lemma'}
-    decl_kind_by_name = {row['name']: row.get('kind') for row in decl_rows if 'name' in row}
+    theorem_names: set[str] = set()
     file_decl_lines: dict[str, list[int]] = defaultdict(list)
-    for row in decl_rows:
+    for row in iter_jsonl(INDEX_PATHS['decls']):
+        name = row.get('name')
+        if name and row.get('kind') in theorem_kinds:
+            theorem_names.add(name)
         file = normalize_decl_file(row.get('file'))
         line = coerce_line(row.get('line'))
         if file and line:
@@ -261,8 +264,7 @@ def scan_public_theorems() -> list[PublicTheorem]:
         file_decl_lines[rel].sort()
 
     theorem_dependents: dict[str, set[str]] = defaultdict(set)
-    theorem_names = {name for name, kind in decl_kind_by_name.items() if kind in theorem_kinds}
-    for edge in edge_rows:
+    for edge in iter_jsonl(INDEX_PATHS['edges']):
         src = edge.get('src')
         dst = edge.get('dst')
         if src in theorem_names and dst in theorem_names and src != dst:

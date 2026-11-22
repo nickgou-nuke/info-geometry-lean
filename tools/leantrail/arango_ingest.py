@@ -54,10 +54,48 @@ def _ensure_collections(target: ArangoTarget, *, drop_existing: bool) -> None:
             truncate_collection(http_target, name)
 
 
-def _read_text(path: Path) -> bytes:
+DEFAULT_IMPORT_CHUNK_BYTES = 4 * 1024 * 1024
+
+
+def _import_jsonl_stream(
+    target: ArangoTarget,
+    collection: str,
+    path: Path,
+    *,
+    chunk_bytes: int = DEFAULT_IMPORT_CHUNK_BYTES,
+) -> dict[str, Any]:
+    """Stream a JSONL file to ArangoDB in bounded byte chunks instead of loading it in RAM."""
     if not path.exists():
         raise FileNotFoundError(f"Input file not found: {path}")
-    return path.read_bytes()
+    http_target = _http_target(target)
+    totals: dict[str, Any] = {
+        "created": 0,
+        "updated": 0,
+        "errors": 0,
+        "ignored": 0,
+        "empty": 0,
+        "chunks": 0,
+    }
+    buf = bytearray()
+    with path.open("rb") as handle:
+        for raw_line in handle:
+            if not raw_line.strip():
+                continue
+            if buf and len(buf) + len(raw_line) > chunk_bytes:
+                res = import_jsonl(http_target, collection, bytes(buf))
+                totals["chunks"] += 1
+                for key in ("created", "updated", "errors", "ignored", "empty"):
+                    if isinstance(res.get(key), int):
+                        totals[key] += res[key]
+                buf.clear()
+            buf.extend(raw_line)
+    if buf:
+        res = import_jsonl(http_target, collection, bytes(buf))
+        totals["chunks"] += 1
+        for key in ("created", "updated", "errors", "ignored", "empty"):
+            if isinstance(res.get(key), int):
+                totals[key] += res[key]
+    return totals
 
 
 def _http_target(target: ArangoTarget) -> ArangoHttpTarget:
@@ -117,8 +155,8 @@ def main() -> int:
     ensure_database(_http_target(target))
     _ensure_collections(target, drop_existing=bool(args.drop_existing))
 
-    nodes_import = _import_jsonl(target, target.nodes_collection, _read_text(nodes_path))
-    edges_import = _import_jsonl(target, target.edges_collection, _read_text(edges_path))
+    nodes_import = _import_jsonl_stream(target, target.nodes_collection, nodes_path)
+    edges_import = _import_jsonl_stream(target, target.edges_collection, edges_path)
 
     node_count = _collection_count(target, target.nodes_collection)
     edge_count = _collection_count(target, target.edges_collection)

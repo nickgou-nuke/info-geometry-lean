@@ -50,27 +50,29 @@ def normalize_repo_relative(root: Path, raw: Any) -> str:
 
 def load_decl_meta(path: Path, root: Path) -> dict[str, dict[str, Any]]:
     out: dict[str, dict[str, Any]] = {}
-    for raw_line in path.read_text(encoding="utf-8").splitlines():
-        line = raw_line.strip()
-        if not line:
-            continue
-        obj = json.loads(line)
-        name = str(obj.get("name", "")).strip()
-        if not name:
-            continue
-        out[name] = {
-            "module": str(obj.get("module", "")).strip() or name.rsplit(".", 1)[0],
-            "file": normalize_repo_relative(root, obj.get("file", "")),
-            "kind": str(obj.get("kind", "")).strip() or "unknown",
-            "line": int(obj["line"]) if obj.get("line") is not None else -1,
-        }
+    with path.open(encoding="utf-8") as handle:
+        for raw_line in handle:
+            line = raw_line.strip()
+            if not line:
+                continue
+            obj = json.loads(line)
+            name = str(obj.get("name", "")).strip()
+            if not name:
+                continue
+            out[name] = {
+                "module": str(obj.get("module", "")).strip() or name.rsplit(".", 1)[0],
+                "file": normalize_repo_relative(root, obj.get("file", "")),
+                "kind": str(obj.get("kind", "")).strip() or "unknown",
+                "line": int(obj["line"]) if obj.get("line") is not None else -1,
+            }
     return out
 
 
 def load_surface_categories(path: Path, decl_meta: dict[str, dict[str, Any]]) -> dict[str, str]:
     if not path.exists():
         return {name: "unknown" for name in decl_meta}
-    payload = json.loads(path.read_text(encoding="utf-8"))
+    with path.open(encoding="utf-8") as handle:
+        payload = json.load(handle)
     categories = {name: "unknown" for name in decl_meta}
     for row in payload.get("rows", []):
         name = str(row.get("name", "")).strip()
@@ -85,7 +87,8 @@ def build_declaration_graph(
     decl_meta: dict[str, dict[str, Any]],
     surface_categories: dict[str, str],
 ) -> nx.DiGraph:
-    payload = json.loads(graph_path.read_text(encoding="utf-8"))
+    with graph_path.open(encoding="utf-8") as handle:
+        payload = json.load(handle)
     nodes = payload["nodes"]
     forward = payload["forward"]
     graph = nx.DiGraph()

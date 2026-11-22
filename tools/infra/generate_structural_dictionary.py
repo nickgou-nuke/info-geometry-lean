@@ -66,10 +66,9 @@ def parse_args() -> argparse.Namespace:
 from igf.common.json_io import load_json
 
 
-def load_jsonl(path: Path) -> list[dict[str, Any]]:
+def iter_jsonl(path: Path):
     if not path.exists():
-        return []
-    rows: list[dict[str, Any]] = []
+        return
     with path.open(encoding="utf-8") as handle:
         for line in handle:
             line = line.strip()
@@ -77,8 +76,11 @@ def load_jsonl(path: Path) -> list[dict[str, Any]]:
                 continue
             obj = json.loads(line)
             if isinstance(obj, dict):
-                rows.append(obj)
-    return rows
+                yield obj
+
+
+def load_jsonl(path: Path) -> list[dict[str, Any]]:
+    return list(iter_jsonl(path))
 
 
 def tokenize_name(text: str) -> list[str]:
@@ -257,7 +259,6 @@ def main() -> int:
     md_out = normalize_user_path(args.md_out, root / DEFAULT_MD_OUT)
 
     graph = load_json(graph_path)
-    decl_rows = load_jsonl(decls_path)
     tags_payload = load_json(tags_path)
 
     nodes = [str(x) for x in graph.get("nodes", [])]
@@ -267,7 +268,7 @@ def main() -> int:
 
     meta_by_name = {
         str(row.get("name", "")): row
-        for row in decl_rows
+        for row in iter_jsonl(decls_path)
         if str(row.get("name", ""))
     }
     tags_by_name = {

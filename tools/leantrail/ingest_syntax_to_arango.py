@@ -61,9 +61,10 @@ def stable_key(*parts: str) -> str:
     return f"{safe}_{digest}" if safe else digest
 
 
-def load_jsonl(path: Path | None) -> list[dict[str, Any]]:
+def iter_jsonl(path: Path | None) -> Iterable[dict[str, Any]]:
+    """Stream syntax JSONL records one line at a time without loading the file in RAM."""
     handle = sys.stdin if path is None else path.open(encoding="utf-8")
-    records: list[dict[str, Any]] = []
+    yielded = 0
     with handle:
         for line_number, line in enumerate(handle, start=1):
             line = line.strip()
@@ -84,10 +85,14 @@ def load_jsonl(path: Path | None) -> list[dict[str, Any]]:
                 fail(f"line {line_number}: missing declaration keyword")
             if not isinstance(syntax, dict):
                 fail(f"line {line_number}: missing syntax object")
-            records.append(record)
-    if not records:
+            yielded += 1
+            yield record
+    if yielded == 0:
         fail("no syntax records read")
-    return records
+
+
+def load_jsonl(path: Path | None) -> list[dict[str, Any]]:
+    return list(iter_jsonl(path))
 
 
 def iter_ast_nodes(
@@ -166,17 +171,18 @@ def put_doc_http(args: argparse.Namespace, collection: str, doc: dict[str, Any])
     arango_http_request(args, "POST", path, doc)
 
 
-def ingest_http(records: list[dict[str, Any]], args: argparse.Namespace) -> tuple[int, int, int]:
+def ingest_http(records: Iterable[dict[str, Any]], args: argparse.Namespace) -> tuple[int, int, int]:
     for collection, edge in [
         ("syntax_decls", False), ("syntax_nodes", False),
         ("ast_child", True), ("decl_root", True),
     ]:
         ensure_collection_http(args, collection, edge=edge)
 
-    decl_count = len(records)
+    decl_count = 0
     node_count = 0
     edge_count = 0
     for record in records:
+        decl_count += 1
         name = record["name"]
         keyword = record["keyword"]
         decl_key = stable_key("decl", name)
@@ -243,11 +249,11 @@ def setup_arango(args: argparse.Namespace):
     return db, graph
 
 
-def ingest(records: list[dict[str, Any]], args: argparse.Namespace) -> tuple[int, int, int]:
+def ingest(records: Iterable[dict[str, Any]], args: argparse.Namespace) -> tuple[int, int, int]:
     if args.execute_http:
         return ingest_http(records, args)
 
-    decl_count = len(records)
+    decl_count = 0
     node_count = 0
     edge_count = 0
 
@@ -261,6 +267,7 @@ def ingest(records: list[dict[str, Any]], args: argparse.Namespace) -> tuple[int
         decls = nodes = ast_edges = root_edges = None
 
     for record in records:
+        decl_count += 1
         name = record["name"]
         keyword = record["keyword"]
         decl_key = stable_key("decl", name)
@@ -316,8 +323,7 @@ def main() -> None:
     parser.add_argument("--graph", default=os.getenv("ARANGO_GRAPH", "LeanSyntaxGraph"))
     args = parser.parse_args()
 
-    records = load_jsonl(args.jsonl)
-    decls, nodes, edges = ingest(records, args)
+    decls, nodes, edges = ingest(iter_jsonl(args.jsonl), args)
     mode = "executed-http" if args.execute_http else ("executed" if args.execute else "dry-run")
     print(f"{mode}: declarations={decls} syntax_nodes={nodes} edges={edges}", file=sys.stderr)
 

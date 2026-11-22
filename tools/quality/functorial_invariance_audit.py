@@ -53,8 +53,7 @@ def rel(path_str: str) -> str:
     return p.as_posix()
 
 
-def load_jsonl(path: Path) -> list[dict[str, Any]]:
-    rows: list[dict[str, Any]] = []
+def iter_jsonl(path: Path):
     with path.open(encoding="utf-8") as handle:
         for line in handle:
             line = line.strip()
@@ -62,8 +61,11 @@ def load_jsonl(path: Path) -> list[dict[str, Any]]:
                 continue
             raw = json.loads(line)
             if isinstance(raw, dict):
-                rows.append(raw)
-    return rows
+                yield raw
+
+
+def load_jsonl(path: Path) -> list[dict[str, Any]]:
+    return list(iter_jsonl(path))
 
 
 def has_rep_depth(attrs: Any) -> bool:
@@ -201,12 +203,10 @@ def main() -> int:
 
     edge_kinds = set(args.edge_kind) if args.edge_kind else {"value", "type"}
 
-    decl_rows = load_jsonl(decls_path)
-    edge_rows = load_jsonl(edges_path)
     rep_tagged_names = load_rep_tagged_names(rep_tags_path)
 
     decl_by_name: dict[str, dict[str, Any]] = {}
-    for row in decl_rows:
+    for row in iter_jsonl(decls_path):
         name = str(row.get("name", ""))
         if not name:
             continue
@@ -216,7 +216,7 @@ def main() -> int:
 
     reverse_adj: dict[str, list[str]] = defaultdict(list)
     used_edge_count = 0
-    for row in edge_rows:
+    for row in iter_jsonl(edges_path):
         kind = str(row.get("kind", ""))
         if kind not in edge_kinds:
             continue

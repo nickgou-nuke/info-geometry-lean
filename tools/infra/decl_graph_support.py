@@ -16,7 +16,7 @@ import sys
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -32,16 +32,18 @@ from tools.infra.pauli_authority_bridge import (
 THEOREM_KINDS = {"theorem", "lemma"}
 DEFINITION_KINDS = {"def", "opaque", "abbrev"}
 
-def load_jsonl(path: Path) -> list[dict[str, Any]]:
-    rows: list[dict[str, Any]] = []
+def iter_jsonl(path: Path) -> Iterator[dict[str, Any]]:
+    """Stream JSONL objects one line at a time without materializing the file in RAM."""
     if not path.exists():
-        return rows
+        return
     with path.open(encoding="utf-8") as handle:
         for raw in handle:
             raw = raw.strip()
             if raw:
-                rows.append(json.loads(raw))
-    return rows
+                yield json.loads(raw)
+
+def load_jsonl(path: Path) -> list[dict[str, Any]]:
+    return list(iter_jsonl(path))
 
 def parse_decl_attrs(attrs: object) -> tuple[str | None, int | None, dict[str, Any]]:
     rep_layer: str | None = None
@@ -98,31 +100,37 @@ def load_decl_graph(root: Path, *, allow_refresh: bool = False) -> tuple[dict[tu
         if not required.is_file():
             raise FileNotFoundError(f"required declaration graph input missing: {required}")
 
-    decl_rows = load_jsonl(root / DECL_INDEX_PATH)
-    edge_rows = load_jsonl(root / EDGE_INDEX_PATH)
-    
     decl_key_to_full: dict[tuple[str, int, str], str] = {}
-    decl_rows_by_name: dict[str, dict[str, Any]] = {}
+    # Store only compact per-declaration metadata (dropping raw JSON blobs, types, and full docstrings).
+    decl_meta_by_name: dict[str, tuple[str, str, str | None, int | None, str | None, int | None, dict[str, Any], bool]] = {}
     kind_by_name: dict[str, str] = {}
 
-    for row in decl_rows:
+    for row in iter_jsonl(root / DECL_INDEX_PATH):
         full_name = row.get("name")
-        if not full_name: continue
-        decl_rows_by_name[full_name] = row
-        kind_by_name[full_name] = str(row.get("kind") or "")
-
+        if not full_name:
+            continue
+        kind = str(row.get("kind") or "")
+        module = str(row.get("module") or "")
         file_val = row.get("file")
+        line = row.get("line")
+        rep_layer, rep_depth, extra = parse_decl_attrs(row.get("attrs"))
+        doc = row.get("doc")
+        sig_p = bool(doc and len(str(doc)) > 20)
+
+        decl_meta_by_name[full_name] = (kind, module, file_val, line, rep_layer, rep_depth, extra, sig_p)
+        kind_by_name[full_name] = kind
+
         if file_val and isinstance(file_val, str):
             try:
                 rel = Path(file_val).resolve().relative_to(root).as_posix()
-            except ValueError: rel = file_val
-            line = row.get("line")
+            except ValueError:
+                rel = file_val
             if isinstance(line, int):
                 leaf = full_name.rsplit(".", 1)[-1]
                 decl_key_to_full[(rel, line, leaf)] = full_name
 
     if arango_data:
-        local_decl_names = set(decl_rows_by_name.keys())
+        local_decl_names = set(decl_meta_by_name.keys())
         missing_live = local_decl_names.difference(arango_data.keys())
         if missing_live:
             print(
@@ -135,20 +143,23 @@ def load_decl_graph(root: Path, *, allow_refresh: bool = False) -> tuple[dict[tu
     reverse_value_users, reverse_type_users, reverse_theorem_users = [defaultdict(int) for _ in range(3)]
     forward_value_theorems, forward_value_defs = [defaultdict(list) for _ in range(2)]
 
-    for edge in edge_rows:
+    for edge in iter_jsonl(root / EDGE_INDEX_PATH):
         src, dst, kind = edge.get("src"), edge.get("dst"), edge.get("kind")
-        if not src or not dst: continue
+        if not src or not dst:
+            continue
         if kind == "value":
             reverse_value_users[dst] += 1
-            if kind_by_name.get(dst, "") in THEOREM_KINDS: forward_value_theorems[src].append(dst)
-            else: forward_value_defs[src].append(dst)
-            if kind_by_name.get(src, "") in THEOREM_KINDS: reverse_theorem_users[dst] += 1
-        elif kind == "type": reverse_type_users[dst] += 1
+            if kind_by_name.get(dst, "") in THEOREM_KINDS:
+                forward_value_theorems[src].append(dst)
+            else:
+                forward_value_defs[src].append(dst)
+            if kind_by_name.get(src, "") in THEOREM_KINDS:
+                reverse_theorem_users[dst] += 1
+        elif kind == "type":
+            reverse_type_users[dst] += 1
 
     profiles: dict[str, GraphProfile] = {}
-    for name, row in decl_rows_by_name.items():
-        rep_layer, rep_depth, extra = parse_decl_attrs(row.get("attrs"))
-        
+    for name, (kind, module, file_val, line, rep_layer, rep_depth, extra, sig_p_local) in decl_meta_by_name.items():
         if name in arango_data:
             a = arango_data[name]
             rv, rt, rth = a["rv"], a["rt"], a["rth"]
@@ -158,13 +169,13 @@ def load_decl_graph(root: Path, *, allow_refresh: bool = False) -> tuple[dict[tu
             rv, rt, rth = reverse_value_users[name], reverse_type_users[name], reverse_theorem_users[name]
             rpf, dm, trr = rth, extra.get("descendant_mass_nat", 0), extra.get("upstream_reachable_nat", 0)
             dp, ss, sk = extra.get("depth_nat", rep_depth or 0), extra.get("scc_size_nat", 1), bool(extra.get("is_sink_bool", dm == 0))
-            sig_p = bool(row.get("doc") and len(str(row.get("doc"))) > 20)
+            sig_p = sig_p_local
 
         fwd_t, fwd_d = tuple(forward_value_theorems[name]), tuple(forward_value_defs[name])
-        role = structural_role_for_profile(kind=row.get("kind", ""), reverse_value_users=rv, reverse_type_users=rt, reverse_theorem_users=rth, descendant_mass=dm)
-        
+        role = structural_role_for_profile(kind=kind, reverse_value_users=rv, reverse_type_users=rt, reverse_theorem_users=rth, descendant_mass=dm)
+
         load_score = round((3.0*rth) + rv + 0.25*rt + 1.5*math.log1p(rpf) + 1.2*math.log1p(dm), 3)
-        profiles[name] = GraphProfile(name=name, kind=row.get("kind", ""), module=row.get("module", ""), file=row.get("file"), line=row.get("line"),
+        profiles[name] = GraphProfile(name=name, kind=kind, module=module, file=file_val, line=line,
                                       rep_layer=rep_layer, rep_depth=rep_depth, reverse_value_users=rv, reverse_type_users=rt, reverse_theorem_users=rth,
                                       reverse_public_fan_in=rpf, descendant_mass=dm, transitive_reverse_reach=trr, depth=dp, scc_size=ss, is_sink=sk,
                                       significance_present=sig_p, forward_value_theorems=fwd_t, forward_value_defs=fwd_d, graph_load_bearing_score=load_score, structural_role=role)

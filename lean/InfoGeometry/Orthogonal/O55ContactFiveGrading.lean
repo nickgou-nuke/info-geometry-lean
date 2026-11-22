@@ -1,5 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Orthogonal.O55WittRootRepresentation
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Orthogonal.O55ContactLie
+import InfoGeometry.Orthogonal.O55ContactGrading
 
 /-!
 # Multiweight spaces and the `|2|` five-grading of split `O(5,5)`
@@ -315,6 +322,23 @@ theorem o55_contact_five_grading_packet (r s : Root) :
     rootMatrix_mem_contactGradeSpace r,
     wittAdjoint_rootMatrix r,
     rootBracket_contactDegree r s⟩
+
+
+@[simp] theorem mem_contactGradeSpace_iff (k : ℤ) (A : O55Lie) :
+    A ∈ realContactGradeSpace k ↔ IsContactGrade k A := Iff.rfl
+
+theorem contactEuler_mem_grade_zero : contactEuler ∈ realContactGradeSpace 0 := by
+  change IsContactGrade 0 contactEuler
+  simp [IsContactGrade, contactEuler, endCommutator]
+
+theorem contactGradeBracket {k l : ℤ} {A B : O55Lie}
+    (hA : A ∈ realContactGradeSpace k) (hB : B ∈ realContactGradeSpace l) :
+    ⁅A, B⁆ ∈ realContactGradeSpace (k + l) :=
+  contactGrade_bracket hA hB
+
+theorem crosscapConjugation_euler : crosscapConjugation contactEuler = -contactEuler := by
+  apply Subtype.ext
+  exact crosscap_conjugates_euler
 
 end InfoGeometry.Orthogonal.O55Contact
 

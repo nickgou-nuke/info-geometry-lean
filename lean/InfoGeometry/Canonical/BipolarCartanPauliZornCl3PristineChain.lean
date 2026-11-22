@@ -7,6 +7,19 @@ import InfoGeometry.Canonical.BipolarCartanCl3PhaseBridge
 import InfoGeometry.Canonical.BipolarPauliHestenesSolderingBridge
 import InfoGeometry.Canonical.BipolarCartanPauliZornRealificationBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Analysis.BipolarCrossRatioLog
+import InfoGeometry.Canonical.BipolarLogSL2
+import InfoGeometry.Canonical.BipolarCartanLorentzBridge
+import InfoGeometry.Canonical.BipolarComplexCartanLine
+import InfoGeometry.Canonical.BipolarTwoSheetOperatorConnectionBridge
+import InfoGeometry.Canonical.BipolarPauliHestenesSolderingBridge
+import InfoGeometry.Canonical.BipolarPauliZornWittBridge
+import InfoGeometry.Canonical.BipolarCartanPauliZornRealificationBridge
+import InfoGeometry.Canonical.PauliHestenesSpinMomentum
+import InfoGeometry.Canonical.Cl11JordanComplexRealificationBridge
+import InfoGeometry.Algebra.ZornMatrix
+import InfoGeometry.Lie.SplitOctonionCircularWittForm
+import InfoGeometry.Clifford.GullDoranPseudoscalarBridge
 
 /-!
 # Pristine Cartan--Pauli--Zorn--`Cl(3)` chain

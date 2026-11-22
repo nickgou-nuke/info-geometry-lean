@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.KKTCore
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl11LorentzAction
@@ -835,8 +841,16 @@ theorem nonEquilibriumClockDefect_eq_zero_iff_detailedEquilibrium
   · intro hZero
     have hComp :
         (InfoGeometry.Canonical.BogoliubovTransport.modularGeneratorScalePart (E := H) hMod).comp
-          (clockAxis H) = 0 :=
-      (smul_eq_zero.mp hZero).resolve_left (by norm_num)
+          (clockAxis H) = 0 := by
+      apply ContinuousLinearMap.ext
+      intro v
+      have hv := congrArg
+        (fun T : DoubledSpace H →L[ℝ] DoubledSpace H => T v) hZero
+      have hv' : (2 : ℝ) •
+          ((InfoGeometry.Canonical.BogoliubovTransport.modularGeneratorScalePart (E := H) hMod).comp
+            (clockAxis H) v) = 0 := by
+        simpa using hv
+      exact (smul_eq_zero.mp hv').resolve_left (by norm_num)
     simpa [IsDetailedEquilibriumSeed] using
       (right_comp_clockAxis_eq_zero_iff
         (H := H)

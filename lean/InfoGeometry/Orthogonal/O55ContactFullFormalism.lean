@@ -14,6 +14,7 @@ import InfoGeometry.Orthogonal.O55PinContactBridge
 import InfoGeometry.Orthogonal.O55ContactHeisenberg
 import InfoGeometry.Orthogonal.O55ContactMultiGrading
 import InfoGeometry.Orthogonal.O55ContactZeroGrade
+import InfoGeometry.Orthogonal.O55ContactCarrier
 
 /-!
 # Compatibility entry point for the O(5,5) contact formalism
@@ -120,5 +121,28 @@ theorem o55_contact_full_formalism_packet
     crosscap_reverses_grade hA, commonRepresentation_preserves_grade hA,
     commonRepresentation_injective, fermion_CAR, boson_CCR,
     contact_generator_label_counts⟩
+
+
+/-- Global finite structural census and independent Pin/null-sheet readout. -/
+theorem o55_contact_structural_census :
+    Fintype.card (Fin 10) = 10 ∧ Nat.choose 10 2 = 45 ∧
+      Fintype.card ContactGeneratorLabel = 45 ∧
+      Fintype.card (ContactLaneLabel (-2)) = 1 ∧
+      Fintype.card (ContactLaneLabel (-1)) = 12 ∧
+      Fintype.card (ContactLaneLabel 0) = 19 ∧
+      Fintype.card (ContactLaneLabel 1) = 12 ∧
+      Fintype.card (ContactLaneLabel 2) = 1 ∧
+      PinO55GlideReflection.crosscapOrientationSign = -1 ∧
+      InfoGeometry.Clifford.Clifford55.twisted_adj PinO55GlideReflection.crosscapReflectionPin55
+          (InfoGeometry.Clifford.Clifford55.n_pair PinO55GlideReflection.crosscapIndex) =
+        -InfoGeometry.Clifford.Clifford55.ι55 (InfoGeometry.Clifford.Clifford55.nbar_pair PinO55GlideReflection.crosscapIndex) ∧
+      InfoGeometry.Clifford.Clifford55.twisted_adj PinO55GlideReflection.crosscapReflectionPin55
+          (InfoGeometry.Clifford.Clifford55.nbar_pair PinO55GlideReflection.crosscapIndex) =
+        -InfoGeometry.Clifford.Clifford55.ι55 (InfoGeometry.Clifford.Clifford55.n_pair PinO55GlideReflection.crosscapIndex) := by
+  rcases contact_lane_label_counts with ⟨h₂m, h₁m, h₀, h₁, h₂⟩
+  exact ⟨carrier_and_generator_counts.1, carrier_and_generator_counts.2,
+    contact_generator_label_counts, h₂m, h₁m, h₀, h₁, h₂,
+    pin_crosscap_orientation_sign, pin_crosscap_n_to_neg_nbar,
+    pin_crosscap_nbar_to_neg_n⟩
 
 end InfoGeometry.Orthogonal.O55Contact

@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Orthogonal.O55NativePinGradeReadout
+import InfoGeometry.Clifford.Clifford55
+import InfoGeometry.Topology.ArtinCentralizerMonodromy
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Orthogonal.O55TwoBoundaryMultigradedReadout
 import InfoGeometry.Orthogonal.O55WittCoordinateEquiv
@@ -23,6 +25,10 @@ noncomputable section
 kept here so the PR-facing bridge statements do not depend on the archived
 `proofs` Lake workspace. -/
 namespace PinO55GlideReflection
+
+open InfoGeometry.Clifford.Clifford55
+
+abbrev crosscapIndex : Fin 5 := 4
 
 def o55GeneratorCount : ℕ := 45
 
@@ -46,6 +52,114 @@ theorem mandatory_glide_relation :
     InfoGeometry.External.Auto.KleinBottle.glide_reflection_sq⟩
 
 theorem crosscap_orientation_reversing : crosscapOrientationSign = -1 := rfl
+
+
+theorem f_neg_mem_pin55 (i : Fin 5) : ι55 (f_neg i) ∈ Pin55 := by
+  classical
+  rw [pinGroup.mem_iff]
+  constructor
+  · have hQunit : IsUnit (Q55 (f_neg i)) := by
+      rw [Q55_f_neg]
+      exact ⟨-1, rfl⟩
+    let u : Cl55ˣ :=
+      (CliffordAlgebra.isUnit_ι_of_isUnit Q55 hQunit).unit
+    have huval : (u : Cl55) = ι55 (f_neg i) :=
+      (CliffordAlgebra.isUnit_ι_of_isUnit Q55 hQunit).unit_spec
+    have hgen : u ∈ ((↑) ⁻¹' Set.range ι55 : Set Cl55ˣ) := by
+      change (u : Cl55) ∈ Set.range ι55
+      rw [huval]
+      exact Set.mem_range_self (f_neg i)
+    refine ⟨u, ?_, ?_⟩
+    · exact Subgroup.subset_closure hgen
+    · simpa using huval
+  · rw [Unitary.mem_iff]
+    constructor
+    · rw [CliffordAlgebra.star_ι, neg_mul, f_neg_mul_self]
+      simp
+    · rw [CliffordAlgebra.star_ι, mul_neg, f_neg_mul_self]
+      simp
+
+def crosscapReflectionPin55 : Pin55 :=
+  ⟨ι55 (f_neg crosscapIndex), f_neg_mem_pin55 crosscapIndex⟩
+
+private theorem crosscap_pin_inverse :
+    (↑((pinToUnits crosscapReflectionPin55)⁻¹) : Cl55) =
+      -ι55 (f_neg crosscapIndex) := by
+  let u : Cl55ˣ := pinToUnits crosscapReflectionPin55
+  have hu : (u : Cl55) = ι55 (f_neg crosscapIndex) := rfl
+  have hmul : (-ι55 (f_neg crosscapIndex)) * (u : Cl55) = 1 := by
+    rw [hu, neg_mul, f_neg_mul_self]
+    simp
+  have huinv : (u : Cl55) * (↑(u⁻¹) : Cl55) = 1 := Units.val_inv u
+  calc
+    (↑(u⁻¹) : Cl55) = 1 * (↑(u⁻¹) : Cl55) := by simp
+    _ = ((-ι55 (f_neg crosscapIndex)) * (u : Cl55)) *
+        (↑(u⁻¹) : Cl55) := by rw [hmul]
+    _ = (-ι55 (f_neg crosscapIndex)) *
+        ((u : Cl55) * (↑(u⁻¹) : Cl55)) := by rw [mul_assoc]
+    _ = -ι55 (f_neg crosscapIndex) := by rw [huinv]; simp
+
+theorem crosscap_pin_twisted_adj_n_to_neg_nbar :
+    twisted_adj crosscapReflectionPin55 (n_pair crosscapIndex) =
+      -ι55 (nbar_pair crosscapIndex) := by
+  simp only [twisted_adj, crosscapReflectionPin55]
+  have hInv := crosscap_pin_inverse
+  simp only [crosscapReflectionPin55] at hInv
+  rw [hInv]
+  dsimp [n_pair, nbar_pair]
+  rw [map_add, map_sub]
+  have hanti := orthogonal_anticomm crosscapIndex crosscapIndex
+  have hanti' : ι55 (f_neg crosscapIndex) * ι55 (e_pos crosscapIndex) +
+      ι55 (e_pos crosscapIndex) * ι55 (f_neg crosscapIndex) = 0 := by
+    calc
+      _ = ι55 (e_pos crosscapIndex) * ι55 (f_neg crosscapIndex) +
+          ι55 (f_neg crosscapIndex) * ι55 (e_pos crosscapIndex) := add_comm _ _
+      _ = 0 := hanti
+  have hfe : ι55 (f_neg crosscapIndex) * ι55 (e_pos crosscapIndex) =
+      -(ι55 (e_pos crosscapIndex) * ι55 (f_neg crosscapIndex)) := by
+    rw [← add_eq_zero_iff_eq_neg]
+    exact hanti'
+  calc
+    ι55 (f_neg crosscapIndex) *
+        (ι55 (e_pos crosscapIndex) + ι55 (f_neg crosscapIndex)) *
+        (-ι55 (f_neg crosscapIndex)) =
+      -(ι55 (f_neg crosscapIndex) *
+        (ι55 (e_pos crosscapIndex) + ι55 (f_neg crosscapIndex)) *
+        ι55 (f_neg crosscapIndex)) := by noncomm_ring
+    _ = -(ι55 (e_pos crosscapIndex) - ι55 (f_neg crosscapIndex)) := by
+      simp only [mul_add, add_mul, hfe, f_neg_mul_self, neg_mul, mul_assoc]
+      noncomm_ring
+
+theorem crosscap_pin_twisted_adj_nbar_to_neg_n :
+    twisted_adj crosscapReflectionPin55 (nbar_pair crosscapIndex) =
+      -ι55 (n_pair crosscapIndex) := by
+  simp only [twisted_adj, crosscapReflectionPin55]
+  have hInv := crosscap_pin_inverse
+  simp only [crosscapReflectionPin55] at hInv
+  rw [hInv]
+  dsimp [n_pair, nbar_pair]
+  rw [map_sub, map_add]
+  have hanti := orthogonal_anticomm crosscapIndex crosscapIndex
+  have hanti' : ι55 (f_neg crosscapIndex) * ι55 (e_pos crosscapIndex) +
+      ι55 (e_pos crosscapIndex) * ι55 (f_neg crosscapIndex) = 0 := by
+    calc
+      _ = ι55 (e_pos crosscapIndex) * ι55 (f_neg crosscapIndex) +
+          ι55 (f_neg crosscapIndex) * ι55 (e_pos crosscapIndex) := add_comm _ _
+      _ = 0 := hanti
+  have hfe : ι55 (f_neg crosscapIndex) * ι55 (e_pos crosscapIndex) =
+      -(ι55 (e_pos crosscapIndex) * ι55 (f_neg crosscapIndex)) := by
+    rw [← add_eq_zero_iff_eq_neg]
+    exact hanti'
+  calc
+    ι55 (f_neg crosscapIndex) *
+        (ι55 (e_pos crosscapIndex) - ι55 (f_neg crosscapIndex)) *
+        (-ι55 (f_neg crosscapIndex)) =
+      -(ι55 (f_neg crosscapIndex) *
+        (ι55 (e_pos crosscapIndex) - ι55 (f_neg crosscapIndex)) *
+        ι55 (f_neg crosscapIndex)) := by noncomm_ring
+    _ = -(ι55 (e_pos crosscapIndex) + ι55 (f_neg crosscapIndex)) := by
+      simp only [mul_sub, sub_mul, hfe, f_neg_mul_self, neg_mul, mul_assoc]
+      noncomm_ring
 
 end PinO55GlideReflection
 

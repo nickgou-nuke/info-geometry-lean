@@ -43,6 +43,19 @@ theorem pin_crosscap_projective_null_swap :
     realSplitPinNullAction_fNegRealPin_nbarPairProjective crosscapIndex⟩
 
 
+
+theorem pin_crosscap_n_to_neg_nbar :
+    twisted_adj PinO55GlideReflection.crosscapReflectionPin55
+        (n_pair PinO55GlideReflection.crosscapIndex) =
+      -ι55 (nbar_pair PinO55GlideReflection.crosscapIndex) :=
+  PinO55GlideReflection.crosscap_pin_twisted_adj_n_to_neg_nbar
+
+theorem pin_crosscap_nbar_to_neg_n :
+    twisted_adj PinO55GlideReflection.crosscapReflectionPin55
+        (nbar_pair PinO55GlideReflection.crosscapIndex) =
+      -ι55 (n_pair PinO55GlideReflection.crosscapIndex) :=
+  PinO55GlideReflection.crosscap_pin_twisted_adj_nbar_to_neg_n
+
 /-- The internal Pin crosscap reverses orientation. -/
 theorem pin_crosscap_orientation_sign :
     PinO55GlideReflection.crosscapOrientationSign = -1 :=

@@ -193,6 +193,24 @@ theorem standardHadjiivanov_shear_monodromy_ne_id :
       LinearMap.id :=
   standard_shearCheckedR_monodromy_nontrivial logShearBase logShearBase_ne_zero
 
+/-- PR-named alias for the proved nontrivial Hadjiivanov monodromy. -/
+theorem standardHadjiivanov_monodromy_ne_id :
+    ((shearCheckedR standardJordanObject_sq_zero logShearBase).trans
+      (shearCheckedR standardJordanObject_sq_zero logShearBase)).toLinearMap ≠
+      LinearMap.id :=
+  standardHadjiivanov_shear_monodromy_ne_id
+
+/-- PR-named alias for the Yang--Baxter relation of the symmetric checked
+braid at the Hadjiivanov parameter. -/
+theorem standardHadjiivanov_yangBaxter :
+    (logCheckedR12 standardJordanObject standardJordanObject_sq_zero logShearBase).toLinearMap ∘ₗ
+          (logCheckedR23 standardJordanObject standardJordanObject_sq_zero logShearBase).toLinearMap ∘ₗ
+          (logCheckedR12 standardJordanObject standardJordanObject_sq_zero logShearBase).toLinearMap =
+      (logCheckedR23 standardJordanObject standardJordanObject_sq_zero logShearBase).toLinearMap ∘ₗ
+          (logCheckedR12 standardJordanObject standardJordanObject_sq_zero logShearBase).toLinearMap ∘ₗ
+          (logCheckedR23 standardJordanObject standardJordanObject_sq_zero logShearBase).toLinearMap :=
+  standard_logCheckedR_yangBaxter
+
 end
 
 end InfoGeometry.Categorical.LogJordanCheckedRBraidBridge

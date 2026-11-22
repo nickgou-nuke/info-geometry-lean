@@ -172,6 +172,94 @@ theorem finite_denominator_identity
     weylDenominatorProduct L x = weylAlternatingSum L x :=
   finite_prime_weyl_denominator L x
 
+/-- Explicit symmetric form of the finite Weyl denominator identity:
+the alternating subset sum equals `∏_{p ∈ P} (1 - x p)`. -/
+@[rep_depth thermo]
+theorem weylAlternatingSum_eq_prod_one_sub
+    (L : FormalPrimeRootLattice) (x : ℕ → ℝ) :
+    weylAlternatingSum L x = ∏ p ∈ L.primes, (1 - x p) := by
+  simpa [weylDenominatorProduct, rootThermalVariable] using
+    (finite_prime_weyl_denominator L x).symm
+
+/-- Each subset `S ⊆ L.primes` defines a Boolean Weyl group element whose sign
+is `(-1)^|S|`. -/
+@[rep_depth thermo]
+theorem weylSign_mk (L : FormalPrimeRootLattice) (S : Finset ℕ) (hS : S ⊆ L.primes) :
+    weylSign (⟨S, hS⟩ : BooleanWeylGroup L) = (-1 : ℝ) ^ S.card :=
+  rfl
+
+/-- Specializing `weylAlternatingSum` to the Boltzmann variables `x p = e^{-β log p}`
+recovers the inverse of the finite-cutoff primon partition function. -/
+@[rep_depth thermo]
+theorem weylAlternatingSum_boltzmann_eq_inv_partition
+    (L : FormalPrimeRootLattice) (β : ℝ) :
+    weylAlternatingSum L (boltzmannRootVariable β) = (finitePrimonPartition L β)⁻¹ := by
+  rw [← finite_prime_weyl_denominator, finitePrimonPartition_eq_evaluatedWeylDenominator_inv,
+    inv_inv]
+  rfl
+
+/-- Squarefree integer code `n_S = ∏_{p ∈ S} p` associated to a subset of primes. -/
+@[rep_depth thermo]
+def squarefreeCode (S : Finset ℕ) : ℕ :=
+  ∏ p ∈ S, p
+
+/-- A prime `p` divides `squarefreeCode S` (for `S ⊆ L.primes`) iff `p ∈ S`. -/
+@[rep_depth thermo]
+theorem prime_dvd_squarefreeCode_iff
+    (L : FormalPrimeRootLattice) {S : Finset ℕ} (hS : S ⊆ L.primes)
+    {p : ℕ} (hp : Nat.Prime p) :
+    p ∣ squarefreeCode S ↔ p ∈ S := by
+  unfold squarefreeCode
+  rw [hp.prime.dvd_finsetProd_iff]
+  constructor
+  · rintro ⟨q, hqS, hpq⟩
+    have hq : Nat.Prime q := L.prime_mem q (hS hqS)
+    have : p = q := (Nat.prime_dvd_prime_iff_eq hp hq).mp hpq
+    simpa [this] using hqS
+  · intro hpS
+    exact ⟨p, hpS, dvd_rfl⟩
+
+/-- Order-embedding from the Boolean powerset of `L.primes` into divisibility
+of squarefree codes: `S ⊆ T ↔ squarefreeCode S ∣ squarefreeCode T`. -/
+@[rep_depth thermo]
+theorem squarefreeCode_dvd_iff
+    (L : FormalPrimeRootLattice) {S T : Finset ℕ}
+    (hS : S ⊆ L.primes) (hT : T ⊆ L.primes) :
+    squarefreeCode S ∣ squarefreeCode T ↔ S ⊆ T := by
+  constructor
+  · intro hdvd p hpS
+    have hp : Nat.Prime p := L.prime_mem p (hS hpS)
+    have hpdvd : p ∣ squarefreeCode T :=
+      dvd_trans ((prime_dvd_squarefreeCode_iff L hS hp).mpr hpS) hdvd
+    exact (prime_dvd_squarefreeCode_iff L hT hp).mp hpdvd
+  · intro hST
+    unfold squarefreeCode
+    exact Finset.prod_dvd_prod_of_subset S T id hST
+
+/-- Explicit subset-expansion form of the finite Boolean `A₁^P` Weyl alternating sum. -/
+@[rep_depth thermo]
+theorem weylAlternatingSum_eq_sum
+    (L : FormalPrimeRootLattice) (x : ℕ → ℝ) :
+    weylAlternatingSum L x =
+      ∑ S ∈ L.primes.powerset, (-1 : ℝ) ^ S.card * ∏ p ∈ S, x p := by
+  rfl
+
+/-- Boltzmann specialization of the alternating Weyl sum to the evaluated denominator. -/
+@[rep_depth thermo]
+theorem weylAlternatingSum_boltzmann_eq_evaluatedWeylDenominator
+    (L : FormalPrimeRootLattice) (β : ℝ) :
+    weylAlternatingSum L (boltzmannRootVariable β) = evaluatedWeylDenominator L β :=
+  (finite_prime_weyl_denominator L (boltzmannRootVariable β)).symm
+
+/-- The finite-cutoff primon partition function is the inverse of the Boltzmann
+alternating Weyl sum over `B(P)`. -/
+@[rep_depth thermo]
+theorem finitePrimonPartition_eq_weylAlternatingSum_inv
+    (L : FormalPrimeRootLattice) (β : ℝ) :
+    finitePrimonPartition L β = (weylAlternatingSum L (boltzmannRootVariable β))⁻¹ := by
+  rw [finitePrimonPartition_eq_evaluatedWeylDenominator_inv,
+    weylAlternatingSum_boltzmann_eq_evaluatedWeylDenominator]
+
 /-- For any prime `p`, the Boltzmann root variable `e^{-β log p}` vanishes in the
 zero-temperature limit `β → +∞`. -/
 @[rep_depth thermo]

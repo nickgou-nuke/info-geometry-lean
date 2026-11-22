@@ -1,10 +1,11 @@
 # Documentation map
 
 > Status: `current authority`
-> Source reviewed: 2026-11-15 at [`abd5826b3676`](https://github.com/nickgou-nuke/info-geometry-lean/commit/abd5826b3676fab6231c66b646ec1cc5aeed6732)
-> plus scoped working-tree kernel verification of
+> Source map refreshed: 2026-11-22 at [`586c14bc9fb9`](https://github.com/nickgou-nuke/info-geometry-lean/commit/586c14bc9fb94eb09b56f7dc850d9d5297269f91).
+> This navigation update did not include a new Lean build. The previously recorded scoped kernel verification of
 > [`InfoGeometry.Foundations.InfoGeometryCoreLibrary`](../lean/InfoGeometry/Foundations/InfoGeometryCoreLibrary.lean) and
-> [`InfoGeometry.OperatorAlgebra.PeirceBiSandwich.All`](../lean/InfoGeometry/OperatorAlgebra/PeirceBiSandwich/All.lean).
+> [`InfoGeometry.OperatorAlgebra.PeirceBiSandwich.All`](../lean/InfoGeometry/OperatorAlgebra/PeirceBiSandwich/All.lean)
+> is not being reported as a check of this revision.
 > Scope: maintained entry points and source routing. Linked research notes and
 > historical reports retain their own scope and verification dates.
 
@@ -39,6 +40,7 @@ An index entry, graph relation, or filename does not establish a theorem.
 | Krein–Peirce–Kitaev operator bridges | [NoncommutativeKreinMathlibBridge](../lean/InfoGeometry/Algebra/NoncommutativeKreinMathlibBridge.lean), [KreinPeirceTowerIntertwine](../lean/InfoGeometry/Algebra/KreinPeirceTowerIntertwine.lean), [PeirceTetraktysKreinBridge](../lean/InfoGeometry/Algebra/PeirceTetraktysKreinBridge.lean), [KitaevPeirceAporiaEpistemicSynthesis](../lean/InfoGeometry/Algebra/KitaevPeirceAporiaEpistemicSynthesis.lean) |
 | Modular GKSL & quantum Spohn thermodynamics | [GKSLDissipationIdentity](../lean/InfoGeometry/Modular/GKSLDissipationIdentity.lean), [GKSLGibbsAndDuallyFlatSpinCumulants](../lean/InfoGeometry/Modular/GKSLGibbsAndDuallyFlatSpinCumulants.lean), [WeldedBlochQuantumSpohnSynthesis](../lean/InfoGeometry/Modular/WeldedBlochQuantumSpohnSynthesis.lean), [BlochBallUmegakiAndQuantumSpohn](../lean/InfoGeometry/Modular/BlochBallUmegakiAndQuantumSpohn.lean), [SchrodingerGKSLFlowBridge](../lean/InfoGeometry/Modular/SchrodingerGKSLFlowBridge.lean) ([src/ mirror](../src/InfoGeometry/Modular/SchrodingerGKSLFlowBridge.lean)), [AnisotropicBKMHessianAndMultiQubitSpohn](../lean/InfoGeometry/Modular/AnisotropicBKMHessianAndMultiQubitSpohn.lean) |
 | Graded Clifford superbase & entanglement rank | [Cl11SuperBaseAndEntanglementRank](../lean/InfoGeometry/Clifford/Cl11SuperBaseAndEntanglementRank.lean) |
+| Midpoint rotors, GEM (1,3), and covariant QGT | [GEMMidpointRotorBogoliubovQGT](../lean/InfoGeometry/Clifford/GEMMidpointRotorBogoliubovQGT.lean) |
 | Unbounded resolvent flows & C₀-group generators | [TripotentUnboundedResolventFlow](../lean/InfoGeometry/OperatorAlgebra/TripotentUnboundedResolventFlow.lean), [UnboundedHilbertResolventAndC0GroupWitness](../lean/InfoGeometry/OperatorAlgebra/UnboundedHilbertResolventAndC0GroupWitness.lean) |
 | Lattice gauge projections & Elitzur's theorem | [ElitzurLatticeGaugeProjection](../lean/InfoGeometry/OperatorAlgebra/ElitzurLatticeGaugeProjection.lean), [NLinkElitzurChainAndCompactU1Gauge](../lean/InfoGeometry/OperatorAlgebra/NLinkElitzurChainAndCompactU1Gauge.lean) |
 | UHF C*-algebra inductive limit completion | [UHFColimitCStarCompletion](../lean/InfoGeometry/Algebra/UHFColimitCStarCompletion.lean) |
@@ -52,6 +54,7 @@ An index entry, graph relation, or filename does not establish a theorem.
 | Constructive Chebyshev prime bounds & Hoeffding tail | [ChebyshevPrimeAndHoeffdingBounds](../lean/InfoGeometry/Arithmetic/ChebyshevPrimeAndHoeffdingBounds.lean) |
 | Logarithmic integral $\mathrm{li}(x)$ & $\zeta$ pole precursors | [RiemannZetaLogarithmicIntegralPrecursors](../lean/InfoGeometry/Arithmetic/RiemannZetaLogarithmicIntegralPrecursors.lean) |
 | Solve et Coagula noncommutative causal poset | [SolveEtCoagulaPeirceAporiaPoset](../lean/InfoGeometry/OperatorAlgebra/SolveEtCoagulaPeirceAporiaPoset.lean) |
+| Reciprocal-totality three-regime synthesis | [ReciprocalTotalityThreeRegimeSynthesis](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ReciprocalTotalityThreeRegimeSynthesis.lean) |
 | Nuclear operator parity, RPA, and phonon commutators | [Nuclear operator synthesis](NUCLEAR_OPERATOR_SYNTHESIS.md), [theorem contract](NUCLEAR_OPERATOR_PARITY_CONTRACT.md) |
 | Two-sheeted operator transport and framework progress | [Framework progress note](TWO_SHEETED_YANG_MILLS_FRAMEWORK_PROGRESS.md) |
 | Open debt problems & constructive closure | [Open debt problems](OPEN_DEBT_PROBLEMS.md) |

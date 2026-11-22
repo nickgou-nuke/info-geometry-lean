@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.SplitG2AlbertEntrywiseBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -29,6 +34,10 @@ theorem liftG2End_annihilates_diag₂ (D : G2Der) (X : H3) :
 
 theorem liftG2End_annihilates_diag₃ (D : G2Der) (X : H3) :
     (liftG2End D X).α₃ = 0 := by rfl
+
+
+
+abbrev CZ := InfoGeometry.Lie.CanonicalZornDerivation.CZ
 
 end
 end InfoGeometry.Canonical.SplitG2AlbertEntrywiseLift

@@ -3,9 +3,8 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-
 import Mathlib.Tactic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Algebra.BigOperators.GroupWithZero.Action
 import InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain
 
 /-!
@@ -21,6 +20,23 @@ noncomputable section
 
 namespace InfoGeometry.Physics.GellMannParafermionSolder
 
+/-- Complex `3 × 3` matrices used as color-action coefficients. -/
+abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
+
+/-- Elementary off-diagonal `3 × 3` complex matrices. -/
+def m3E01 : M3C := !![0, 1, 0; 0, 0, 0; 0, 0, 0]
+def m3E10 : M3C := !![0, 0, 0; 1, 0, 0; 0, 0, 0]
+
+/-- Non-commutativity witness for the `3 × 3` complex matrix carrier. -/
+theorem m3c_mul_noncommutative : m3E01 * m3E10 ≠ m3E10 * m3E01 := by
+  intro h
+  have h00 : (m3E01 * m3E10 : M3C) 0 0 = (m3E10 * m3E01 : M3C) 0 0 := by rw [h]
+  simp [m3E01, m3E10, Matrix.mul_apply, Fin.sum_univ_three] at h00
+
+/-- A color spinor with three color components and one singlet component. -/
+abbrev ColorSpinor4 (V : Type*) :=
+  InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain.ColorSpinor4 V
+
 /-- Minimal realization data: three color components and a singlet component in
 an arbitrary target carrier. -/
 structure ParafermionRealization (V : Type*) where
@@ -29,28 +45,87 @@ structure ParafermionRealization (V : Type*) where
 
 /-- Read out the spinor carried by a realization. -/
 def realizedParafermionColorSpinor4 {V : Type*} (R : ParafermionRealization V) :
-    InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain.ColorSpinor4 V :=
+    ColorSpinor4 V :=
   (R.color, R.singlet)
 
 /-- Matrix action on the color lane; the singlet lane is sent to zero. -/
 def colorLieAction4 {V : Type*} [AddCommMonoid V] [Module ℂ V]
-    (A : InfoGeometry.Algebra.FiniteSpin.Mat3C)
-    (ψ : InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain.ColorSpinor4 V) :
-      InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain.ColorSpinor4 V :=
+    (A : M3C) (ψ : ColorSpinor4 V) : ColorSpinor4 V :=
   (fun i => ∑ j : Fin 3, A i j • ψ.1 j, 0)
 
 /-- The solder readout is the coefficient-matrix action on realized color data. -/
 def gellMannParafermionSolder {V : Type*} [AddCommMonoid V] [Module ℂ V]
-    (R : ParafermionRealization V) (A : InfoGeometry.Algebra.FiniteSpin.Mat3C) :
-      InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain.ColorSpinor4 V :=
+    (R : ParafermionRealization V) (A : M3C) : ColorSpinor4 V :=
   colorLieAction4 A (realizedParafermionColorSpinor4 R)
+
+/-- Color-coordinate readout for the solder action. -/
+theorem gellMannParafermionSolder_color_apply
+    {V : Type*} [AddCommMonoid V] [Module ℂ V]
+    (R : ParafermionRealization V) (A : M3C) (i : Fin 3) :
+    (gellMannParafermionSolder R A).1 i = ∑ j : Fin 3, A i j • R.color j := by
+  rfl
 
 /-- The matrix color action leaves the singlet output at zero by definition. -/
 theorem gellMannParafermionSolder_singlet_zero
     {V : Type*} [AddCommMonoid V] [Module ℂ V]
-    (R : ParafermionRealization V) (A : InfoGeometry.Algebra.FiniteSpin.Mat3C) :
+    (R : ParafermionRealization V) (A : M3C) :
     (gellMannParafermionSolder R A).2 = 0 := by
   rfl
+
+theorem colorLieAction4_mul
+    {V : Type*} [AddCommMonoid V] [Module ℂ V]
+    (A B : M3C) (ψ : ColorSpinor4 V) :
+    colorLieAction4 (A * B) ψ = colorLieAction4 A (colorLieAction4 B ψ) := by
+  apply Prod.ext
+  · funext i
+    fin_cases i <;>
+      simp [colorLieAction4, Matrix.mul_apply, Fin.sum_univ_three,
+        add_smul, smul_add, smul_smul] <;>
+      module
+  · simp [colorLieAction4]
+
+theorem colorLieAction4_commutator
+    {V : Type*} [AddCommGroup V] [Module ℂ V]
+    (A B : M3C) (ψ : ColorSpinor4 V) :
+    colorLieAction4 (A * B - B * A) ψ =
+      colorLieAction4 A (colorLieAction4 B ψ) -
+        colorLieAction4 B (colorLieAction4 A ψ) := by
+  have hlin :
+      colorLieAction4 (A * B - B * A) ψ =
+        colorLieAction4 (A * B) ψ - colorLieAction4 (B * A) ψ := by
+    apply Prod.ext
+    · funext i
+      change (∑ j : Fin 3, (A * B - B * A) i j • ψ.1 j) =
+        (∑ j : Fin 3, (A * B) i j • ψ.1 j) -
+          ∑ j : Fin 3, (B * A) i j • ψ.1 j
+      simp only [Matrix.sub_apply, sub_smul, Finset.sum_sub_distrib]
+    · simp [colorLieAction4]
+  rw [hlin, colorLieAction4_mul, colorLieAction4_mul]
+
+/-- Minimal inertial-frame record used by downstream statement surfaces. -/
+abbrev BogoliubovInertialFrame :=
+  InfoGeometry.Physics.BogoliubovWeylChemicalPotential.BogoliubovInertialFrame
+
+abbrev qRapidity : ℝ → ℂ := InfoGeometry.Physics.SupergradedCuntzBdG.qRapidity
+
+/-- Compatibility name forwarded to the genuine scalar q-braid owner. -/
+def qBraid4 {V : Type*} [SMul ℂ V] (q : ℂ) (ψ : ColorSpinor4 V) : ColorSpinor4 V :=
+  InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain.qBraid4 q ψ
+
+/-- Compatibility name forwarded to the genuine Bogoliubov frame braid owner. -/
+def frameSolderedBraid {V : Type*} [SMul ℂ V]
+    (F : BogoliubovInertialFrame) (ψ : ColorSpinor4 V) : ColorSpinor4 V :=
+  InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain.frameBraid4 F ψ
+
+/-- The identity braid readout is invariant under changing the scalar frame
+parameter. -/
+theorem frameSolderedBraid_mu_shift {V : Type*} [AddCommMonoid V] [Module ℂ V]
+    (R : ParafermionRealization V) (F : BogoliubovInertialFrame) (δμ : ℝ) :
+    frameSolderedBraid { F with μ := F.μ + δμ } (realizedParafermionColorSpinor4 R) =
+      qBraid4 (qRapidity (F.β * δμ * F.Q))
+        (frameSolderedBraid F (realizedParafermionColorSpinor4 R)) := by
+  exact InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain.frameBraid4_mu_shift
+    F δμ (realizedParafermionColorSpinor4 R)
 
 end InfoGeometry.Physics.GellMannParafermionSolder
 

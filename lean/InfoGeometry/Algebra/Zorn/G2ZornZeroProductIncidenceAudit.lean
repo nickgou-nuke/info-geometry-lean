@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.Zorn.G2NativeLineFiber
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2NativeOnePointStabilizer
@@ -58,6 +63,83 @@ theorem zornZeroRelated_smul_iff
     (g : SplitOctF2Aut) (u v : OctImIsotropicPoint) :
     ZornZeroRelated (g • u) (g • v) ↔ ZornZeroRelated u v := by
   exact zornZeroRelated_aut_iff g u v
+
+/-- Symmetric closure of the native zero-product relation.  Both ordered
+products are required to vanish; this yields an undirected relation without
+asserting that the one-sided relation itself is symmetric or that either
+relation is the split Cayley hexagon incidence. -/
+def ZornMutualZeroRelated (u v : OctImIsotropicPoint) : Prop :=
+  ZornZeroRelated u v ∧ ZornZeroRelated v u
+
+instance : DecidableRel ZornMutualZeroRelated := by
+  intro u v
+  unfold ZornMutualZeroRelated
+  infer_instance
+
+/-- The mutual zero-product relation is symmetric by construction. -/
+theorem zornMutualZeroRelated_symm (u v : OctImIsotropicPoint) :
+    ZornMutualZeroRelated u v ↔ ZornMutualZeroRelated v u := by
+  exact and_comm
+
+/-- Automorphisms preserve the symmetric zero-product relation in both
+ordered directions. -/
+theorem zornMutualZeroRelated_aut_iff
+    (g : SplitOctF2Aut) (u v : OctImIsotropicPoint) :
+    ZornMutualZeroRelated (zornPointAction g u) (zornPointAction g v) ↔
+      ZornMutualZeroRelated u v := by
+  constructor
+  · rintro ⟨huv, hvu⟩
+    exact ⟨(zornZeroRelated_aut_iff g u v).mp huv,
+      (zornZeroRelated_aut_iff g v u).mp hvu⟩
+  · rintro ⟨huv, hvu⟩
+    exact ⟨(zornZeroRelated_aut_iff g u v).mpr huv,
+      (zornZeroRelated_aut_iff g v u).mpr hvu⟩
+
+def zornMutualZeroNeighbourSet (u : OctImIsotropicPoint) :
+    Finset OctImIsotropicPoint :=
+  Finset.univ.filter (fun v => ZornMutualZeroRelated u v)
+
+theorem mem_zornMutualZeroNeighbourSet_smul_iff
+    (g : SplitOctF2Aut) (u v : OctImIsotropicPoint) :
+    v ∈ zornMutualZeroNeighbourSet (g • u) ↔
+      g⁻¹ • v ∈ zornMutualZeroNeighbourSet u := by
+  simp only [zornMutualZeroNeighbourSet, Finset.mem_filter,
+    Finset.mem_univ, true_and]
+  constructor
+  · intro hv
+    have hrel : ZornMutualZeroRelated (g • u) (g • (g⁻¹ • v)) := by
+      simpa [smul_smul] using hv
+    exact (zornMutualZeroRelated_aut_iff g u (g⁻¹ • v)).mp hrel
+  · intro hv
+    have hrel := (zornMutualZeroRelated_aut_iff g u (g⁻¹ • v)).mpr hv
+    change ZornMutualZeroRelated (g • u) (g • (g⁻¹ • v)) at hrel
+    have hcancel : g • (g⁻¹ • v) = v := by simp
+    rw [hcancel] at hrel
+    exact hrel
+
+def zornMutualZeroNeighbourEquiv
+    (g : SplitOctF2Aut) (u : OctImIsotropicPoint) :
+    {v // v ∈ zornMutualZeroNeighbourSet u} ≃
+      {v // v ∈ zornMutualZeroNeighbourSet (g • u)} where
+  toFun v := ⟨g • v.1, by
+    have hv : ZornMutualZeroRelated u v.1 :=
+      (Finset.mem_filter.mp v.2).2
+    have hrel := (zornMutualZeroRelated_aut_iff g u v.1).mpr hv
+    exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, hrel⟩⟩
+  invFun v := ⟨g⁻¹ • v.1, by
+    exact (mem_zornMutualZeroNeighbourSet_smul_iff g u v.1).mp v.2⟩
+  left_inv v := by
+    apply Subtype.ext
+    simp [smul_smul]
+  right_inv v := by
+    apply Subtype.ext
+    simp [smul_smul]
+
+theorem zornMutualZeroNeighbourSet_card_invariant
+    (g : SplitOctF2Aut) (u : OctImIsotropicPoint) :
+    Fintype.card {v // v ∈ zornMutualZeroNeighbourSet u} =
+      Fintype.card {v // v ∈ zornMutualZeroNeighbourSet (g • u)} := by
+  exact Fintype.card_congr (zornMutualZeroNeighbourEquiv g u)
 
 def zornZeroNeighbourSet (u : OctImIsotropicPoint) :
     Finset OctImIsotropicPoint :=

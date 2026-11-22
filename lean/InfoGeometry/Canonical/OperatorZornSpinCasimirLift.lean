@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.FourVectorPauliCasimirBridge
@@ -188,5 +193,114 @@ theorem zornLift_ladder_anticommutator :
         zornLift spinLower * zornLift spinRaise = 1 := by
   apply (equivMatrix (A := ℂ)).injective
   simp [zornLift, spinRaise_spinLower_anticommutator]
+
+
+/-- Positive and negative spin projectors in operator-Zorn coordinates. -/
+def zornSpinPlusProjector : OperatorZornC := zornLift circularPlus
+def zornSpinMinusProjector : OperatorZornC := zornLift circularMinus
+
+/-- Helicity grading in operator-Zorn coordinates. -/
+def zornHelicity : OperatorZornC := zornLift circularHelicity
+
+/-- Circular spin raising and lowering rails in operator-Zorn coordinates. -/
+def zornSpinRaise : OperatorZornC := zornLift spinRaise
+def zornSpinLower : OperatorZornC := zornLift spinLower
+
+/-- Spin-half quadratic Casimir in operator-Zorn coordinates. -/
+def zornSpinHalfCasimir : OperatorZornC := zornLift spinHalfCasimir
+
+theorem zornSpinPlusProjector_coordinates :
+    zornSpinPlusProjector =
+      ({ n_plus_op := 1, n_minus_op := 0,
+         sigma_plus_op := 0, sigma_minus_op := 0 } : OperatorZornC) := by
+  apply (equivMatrix (A := ℂ)).injective
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [zornSpinPlusProjector, zornLift, circularPlus, InfoGeometry.Optics.JonesPoincareSphere.JonesSpinor.circularPlusProjector, InfoGeometry.Optics.FiniteJonesModel.sProjector, InfoGeometry.Optics.FiniteJonesModel.diagJones, toMatrix, ofMatrix]
+
+theorem zornSpinMinusProjector_coordinates :
+    zornSpinMinusProjector =
+      ({ n_plus_op := 0, n_minus_op := 1,
+         sigma_plus_op := 0, sigma_minus_op := 0 } : OperatorZornC) := by
+  apply (equivMatrix (A := ℂ)).injective
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [zornSpinMinusProjector, zornLift, circularMinus, InfoGeometry.Optics.JonesPoincareSphere.JonesSpinor.circularMinusProjector, InfoGeometry.Optics.FiniteJonesModel.pProjector, InfoGeometry.Optics.FiniteJonesModel.diagJones, toMatrix, ofMatrix]
+
+theorem zornHelicity_coordinates :
+    zornHelicity =
+      ({ n_plus_op := 1, n_minus_op := -1,
+         sigma_plus_op := 0, sigma_minus_op := 0 } : OperatorZornC) := by
+  apply (equivMatrix (A := ℂ)).injective
+  change toMatrix zornHelicity = toMatrix
+    ({ n_plus_op := 1, n_minus_op := -1, sigma_plus_op := 0, sigma_minus_op := 0 } : OperatorZornC)
+  change toMatrix (zornLift circularHelicity) = toMatrix
+    ({ n_plus_op := 1, n_minus_op := -1, sigma_plus_op := 0, sigma_minus_op := 0 } : OperatorZornC)
+  rw [toMatrix_zornLift, circularHelicity_eq_sigma3]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [σ3, toMatrix]
+
+theorem zornSpinRaise_coordinates :
+    zornSpinRaise =
+      ({ n_plus_op := 0, n_minus_op := 0,
+         sigma_plus_op := 1, sigma_minus_op := 0 } : OperatorZornC) := by
+  apply (equivMatrix (A := ℂ)).injective
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [zornSpinRaise, zornLift, spinRaise, sigmaPlus, InfoGeometry.Optics.ChiralLorentzOperatorLift.create, toMatrix, ofMatrix]
+
+theorem zornSpinLower_coordinates :
+    zornSpinLower =
+      ({ n_plus_op := 0, n_minus_op := 0,
+         sigma_plus_op := 0, sigma_minus_op := 1 } : OperatorZornC) := by
+  apply (equivMatrix (A := ℂ)).injective
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [zornSpinLower, zornLift, spinLower, sigmaMinus, InfoGeometry.Optics.ChiralLorentzOperatorLift.annihilate, toMatrix, ofMatrix]
+
+theorem zornSpinHalfCasimir_coordinates :
+    zornSpinHalfCasimir =
+      ({ n_plus_op := (3 / 4 : ℂ), n_minus_op := (3 / 4 : ℂ),
+         sigma_plus_op := 0, sigma_minus_op := 0 } : OperatorZornC) := by
+  apply (equivMatrix (A := ℂ)).injective
+  change toMatrix zornSpinHalfCasimir = toMatrix
+    ({ n_plus_op := (3 / 4 : ℂ), n_minus_op := (3 / 4 : ℂ), sigma_plus_op := 0, sigma_minus_op := 0 } : OperatorZornC)
+  change toMatrix (zornLift spinHalfCasimir) = toMatrix
+    ({ n_plus_op := (3 / 4 : ℂ), n_minus_op := (3 / 4 : ℂ), sigma_plus_op := 0, sigma_minus_op := 0 } : OperatorZornC)
+  rw [toMatrix_zornLift, spinHalfCasimir_eq_three_quarters]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [toMatrix]
+
+theorem zornHelicity_sq : zornHelicity * zornHelicity = 1 := by
+  apply (equivMatrix (A := ℂ)).injective
+  simp [zornHelicity, zornLift, circularHelicity_sq]
+
+theorem zornSpinProjector_packet :
+    zornSpinPlusProjector * zornSpinPlusProjector = zornSpinPlusProjector ∧
+      zornSpinMinusProjector * zornSpinMinusProjector = zornSpinMinusProjector ∧
+      zornSpinPlusProjector * zornSpinMinusProjector = 0 ∧
+      zornSpinPlusProjector + zornSpinMinusProjector = 1 := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · apply (equivMatrix (A := ℂ)).injective
+    simp [zornSpinPlusProjector, zornLift, InfoGeometry.Optics.JonesPoincareSphere.JonesSpinor.circularPlusProjector_idem]
+  · apply (equivMatrix (A := ℂ)).injective
+    simp [zornSpinMinusProjector, zornLift, InfoGeometry.Optics.JonesPoincareSphere.JonesSpinor.circularMinusProjector_idem]
+  · apply (equivMatrix (A := ℂ)).injective
+    simp [zornSpinPlusProjector, zornSpinMinusProjector, zornLift, InfoGeometry.Optics.JonesPoincareSphere.JonesSpinor.circularProjectors_orthogonal_left]
+  · apply (equivMatrix (A := ℂ)).injective
+    simp [zornSpinPlusProjector, zornSpinMinusProjector, zornLift, InfoGeometry.Optics.JonesPoincareSphere.JonesSpinor.circularProjectors_sum_one]
+
+theorem operatorZorn_spin_half_packet :
+    zornHelicity * zornHelicity = 1 ∧
+      zornSpinPlusProjector * zornSpinPlusProjector = zornSpinPlusProjector ∧
+      zornSpinMinusProjector * zornSpinMinusProjector = zornSpinMinusProjector ∧
+      zornSpinPlusProjector * zornSpinMinusProjector = 0 ∧
+      toMatrix zornSpinHalfCasimir = (3 / 4 : ℂ) • (1 : Mat2C) := by
+  refine ⟨zornHelicity_sq, ?_⟩
+  rcases zornSpinProjector_packet with ⟨hp, hm, hpm, _⟩
+  refine ⟨hp, hm, hpm, ?_⟩
+  simp [zornSpinHalfCasimir, spinHalfCasimir_eq_three_quarters]
 
 end InfoGeometry.Canonical.OperatorZornSpinCasimirLift

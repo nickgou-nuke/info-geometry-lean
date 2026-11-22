@@ -7,6 +7,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Canonical.ChiralBoundarySymplecticBridge
 import InfoGeometry.Canonical.SouriauKKSForm
+import InfoGeometry.Physics.SouriauLieThermodynamics
 import InfoGeometry.Thermo.OnsagerOperatorClosure
 import InfoGeometry.Geometry.RealHamiltonianMoment
 import InfoGeometry.Geometry.QuadraticPotentialCalculus
@@ -123,6 +124,42 @@ theorem fderiv_quadraticMoment
     fderiv ℝ (quadraticMoment G) z v = symplecticForm (G z) v := by
   rw [(hasFDerivAt_quadraticMoment G hG z).fderiv]
 
+/-- The positive-Hilbert Riesz gradient of the quadratic Souriau moment.
+The carrier remains the real doubled space; this is the vector representing
+the derivative through its positive inner product, not through the indefinite
+Krein pairing. -/
+noncomputable def quadraticMomentGradient
+    (G : Doubled E →L[ℝ] Doubled E) (z : Doubled E) : Doubled E :=
+  clockAxis (G z)
+
+/-- The Fréchet derivative of a symplectic quadratic moment is represented by
+`quadraticMomentGradient` under the positive doubled Hilbert product. -/
+theorem fderiv_quadraticMoment_eq_inner_gradient
+    (G : Doubled E →L[ℝ] Doubled E) (hG : IsSymplecticGenerator G)
+    (z v : Doubled E) :
+    fderiv ℝ (quadraticMoment G) z v =
+      inner ℝ (quadraticMomentGradient G z) v := by
+  rw [fderiv_quadraticMoment G hG, symplecticForm_eq_inner_clockAxis]
+  rfl
+
+/-- The Riesz gradient of the quadratic moment is globally Lipschitz in the
+positive doubled Hilbert norm, with the generator's operator norm as constant.
+This is an exact gradient estimate, unlike the state-value estimate, which is
+only Lipschitz on bounded balls. -/
+theorem quadraticMomentGradient_lipschitz
+    (G : Doubled E →L[ℝ] Doubled E) :
+    LipschitzWith ⟨‖G‖, norm_nonneg G⟩ (quadraticMomentGradient G) := by
+  apply LipschitzWith.of_dist_le_mul
+  intro z w
+  rw [dist_eq_norm, dist_eq_norm]
+  change ‖clockAxis (G z) - clockAxis (G w)‖ ≤ ‖G‖ * ‖z - w‖
+  calc
+    ‖clockAxis (G z) - clockAxis (G w)‖ =
+        ‖clockAxis (G z - G w)‖ := by rw [← map_sub]
+    _ = ‖G z - G w‖ := clockAxis_norm _
+    _ = ‖G (z - w)‖ := by rw [map_sub]
+    _ ≤ ‖G‖ * ‖z - w‖ := G.le_opNorm (z - w)
+
 /-- The canonical symplectic pairing is bounded by the positive doubled
 Hilbert norm. This uses the real clock-axis isometry, not the indefinite
 Krein quadratic form. -/
@@ -222,6 +259,50 @@ theorem souriauMoment_lipschitzOn_ball
       (norm_nonneg G)
       z w hz hw
 
+/-- At a fixed state, the quadratic moment is globally Lipschitz in the
+generator for the operator norm. This is the parameter-direction estimate:
+unlike `souriauMoment_lipschitzOn_ball`, it varies the generator and keeps the
+state fixed. No infinitesimal symplecticity hypothesis is needed for this
+bound. -/
+theorem quadraticMoment_generator_lipschitz
+    (z : Doubled E) :
+    LipschitzWith ⟨‖z‖ ^ 2, sq_nonneg _⟩
+      (fun G : Doubled E →L[ℝ] Doubled E => quadraticMoment G z) := by
+  apply LipschitzWith.of_dist_le_mul
+  intro A B
+  rw [dist_eq_norm, dist_eq_norm]
+  have hdiff : quadraticMoment A z - quadraticMoment B z =
+      quadraticMoment (A - B) z := by
+    simp [quadraticMoment_apply]
+    ring
+  rw [hdiff, quadraticMoment_apply]
+  change |symplecticForm ((A - B) z) z / 2| ≤ _
+  have hpair := abs_symplecticForm_generator_le_norm (A - B) z z
+  have hden : |(2 : ℝ)| = 2 := abs_of_pos (by norm_num)
+  rw [abs_div, hden]
+  calc
+    |symplecticForm ((A - B) z) z| / 2 ≤
+        |symplecticForm ((A - B) z) z| := by
+          exact div_le_self (abs_nonneg _) (by norm_num)
+    _ ≤ ‖A - B‖ * ‖z‖ * ‖z‖ := hpair
+    _ = (‖z‖ ^ 2) * ‖A - B‖ := by ring
+
+/-- The linear moment-map component is bounded by half the squared state norm
+times the operator norm of the generator. This is the pointwise estimate from
+which `quadraticMoment_generator_lipschitz` follows. -/
+theorem abs_quadraticMoment_le_generator_norm
+    (G : Doubled E →L[ℝ] Doubled E) (z : Doubled E) :
+    |quadraticMoment G z| ≤ (‖G‖ * ‖z‖ ^ 2) / 2 := by
+  rw [quadraticMoment_apply]
+  have hpair := abs_symplecticForm_generator_le_norm G z z
+  have hnonneg : 0 ≤ ‖G‖ * ‖z‖ := by positivity
+  calc
+    |symplecticForm (G z) z / 2| =
+        |symplecticForm (G z) z| / 2 := by rw [abs_div]; norm_num
+    _ ≤ (‖G‖ * ‖z‖ * ‖z‖) / 2 := by
+        exact div_le_div_of_nonneg_right hpair (by norm_num : (0 : ℝ) ≤ 2)
+    _ = (‖G‖ * ‖z‖ ^ 2) / 2 := by ring
+
 /-- The general real Hamiltonian owner uses the normalized form
 `omega K = -2 Ω`, while this owner uses the canonical doubled form `Ω`.
 Consequently its quadratic Hamiltonian is `-2` times the Souriau moment.
@@ -304,6 +385,144 @@ theorem hessian_quadraticMoment
     fderiv ℝ (fderiv ℝ (quadraticMoment G)) z = symplecticForm.comp G := by
   exact hessian_potential (symplecticForm.comp G)
     (fun u v => symplecticForm_comp_generator_symmetric G hG u v) z
+
+/-- Polarized Hessian of the real modular-swap moment is the negative of the
+repository's canonical Krein pairing on the doubled carrier. The sign records
+that this Hamiltonian is `-1/2` times the Krein quadratic form. -/
+theorem hessian_quadraticMoment_modularSwap_eq_neg_kreinPairing
+    [CompleteSpace E] (z u v : Doubled E) :
+    (fderiv ℝ (fderiv ℝ
+      (quadraticMoment (InfoGeometry.Krein.modular_j (E := E)))) z) u v =
+      -InfoGeometry.Krein.hessian_indefinite_form u v := by
+  rw [hessian_quadraticMoment
+    (InfoGeometry.Krein.modular_j (E := E)) modularSwap_isSymplecticGenerator z]
+  rw [InfoGeometry.Krein.hessian_indefinite_form_eq_doubledHilbertBilin_spectral_epsilon]
+  change symplecticForm (InfoGeometry.Krein.modular_j u) v =
+    -doubledHilbertBilin u (InfoGeometry.Krein.spectral_epsilon v)
+  simp [symplecticForm_apply, InfoGeometry.Krein.modular_j_apply,
+    doubledHilbertBilin, InfoGeometry.Krein.spectral_epsilon,
+    WithLp.prod_inner_apply]
+  ring
+
+/-- The modular swap is anti-isometric for the Krein pairing, so its action on
+both tangent arguments reverses the polarized Hessian of the quadratic moment.
+This is the exact sign obstruction to transporting the positive-sheet Hessian
+as a positive metric through the swap. -/
+theorem hessian_quadraticMoment_modularSwap_conjugation
+    [CompleteSpace E] (z u v : Doubled E) :
+    (fderiv ℝ (fderiv ℝ
+      (quadraticMoment (InfoGeometry.Krein.modular_j (E := E)))) z)
+        (InfoGeometry.Krein.modular_j u) (InfoGeometry.Krein.modular_j v) =
+      -((fderiv ℝ (fderiv ℝ
+      (quadraticMoment (InfoGeometry.Krein.modular_j (E := E)))) z) u v) := by
+  rw [hessian_quadraticMoment_modularSwap_eq_neg_kreinPairing,
+    hessian_quadraticMoment_modularSwap_eq_neg_kreinPairing]
+  unfold InfoGeometry.Krein.hessian_indefinite_form
+  rw [InfoGeometry.Krein.kreinInner_modular_j]
+
+/-- The Hessian of the modular-swap quadratic moment has the exact split
+signature on every doubled tangent vector: `‖ξ‖² - ‖x‖²`. It is independent
+of the base point, and exposes the obstruction to identifying the whole
+doubled Hessian with a positive BKM covariance metric. -/
+theorem hessian_quadraticMoment_modularSwap
+    [CompleteSpace E] (z u : Doubled E) :
+    (fderiv ℝ (fderiv ℝ
+      (quadraticMoment (InfoGeometry.Krein.modular_j (E := E)))) z)
+        u u = ‖WithLp.snd u‖ ^ 2 - ‖WithLp.fst u‖ ^ 2 := by
+  have h := congrArg
+    (fun H : Doubled E →L[ℝ] Doubled E →L[ℝ] ℝ => H u u)
+    (hessian_quadraticMoment (InfoGeometry.Krein.modular_j (E := E))
+      modularSwap_isSymplecticGenerator z)
+  change (fderiv ℝ (fderiv ℝ
+      (quadraticMoment (InfoGeometry.Krein.modular_j (E := E)))) z) u u =
+    (symplecticForm.comp (InfoGeometry.Krein.modular_j (E := E))) u u at h
+  rw [h]
+  change symplecticForm (InfoGeometry.Krein.modular_j u) u = _
+  rw [symplecticForm_apply, InfoGeometry.Krein.modular_j_apply]
+  simp only [WithLp.fst, WithLp.snd]
+  rw [real_inner_self_eq_norm_sq, real_inner_self_eq_norm_sq]
+
+/-- On the first sheet, the Hessian is negative definite: it evaluates to
+`-‖x‖²`. -/
+theorem hessian_quadraticMoment_modularSwap_firstSheet
+    [CompleteSpace E] (z : Doubled E) (x : E) :
+    (fderiv ℝ (fderiv ℝ
+      (quadraticMoment (InfoGeometry.Krein.modular_j (E := E)))) z)
+        (WithLp.toLp (2 : ENNReal) (x, 0))
+        (WithLp.toLp (2 : ENNReal) (x, 0)) = -‖x‖ ^ 2 := by
+  simpa using hessian_quadraticMoment_modularSwap z
+    (WithLp.toLp (2 : ENNReal) (x, 0))
+
+/-- On the second sheet, the same Hessian is positive definite and evaluates
+to the squared Hilbert norm. Thus the full doubled Hessian has a genuine
+positive sector even though it is indefinite on the whole carrier. -/
+theorem hessian_quadraticMoment_modularSwap_secondSheet
+    [CompleteSpace E] (z : Doubled E) (xi : E) :
+    (fderiv ℝ (fderiv ℝ
+      (quadraticMoment (InfoGeometry.Krein.modular_j (E := E)))) z)
+        (WithLp.toLp (2 : ENNReal) (0, xi))
+        (WithLp.toLp (2 : ENNReal) (0, xi)) = ‖xi‖ ^ 2 := by
+  rw [hessian_quadraticMoment_modularSwap]
+  simp
+
+/-- The polarized modular-swap Hessian restricts on the second coordinate
+sheet to the original positive real Hilbert inner product. This is the
+bilinear pullback, rather than only its diagonal norm formula. -/
+theorem hessian_quadraticMoment_modularSwap_secondSheet_bilinear
+    [CompleteSpace E] (z : Doubled E) (xi eta : E) :
+    (fderiv ℝ (fderiv ℝ
+      (quadraticMoment (InfoGeometry.Krein.modular_j (E := E)))) z)
+        (WithLp.toLp (2 : ENNReal) (0, xi))
+        (WithLp.toLp (2 : ENNReal) (0, eta)) = inner ℝ xi eta := by
+  rw [hessian_quadraticMoment_modularSwap_eq_neg_kreinPairing]
+  rw [InfoGeometry.Krein.hessian_indefinite_form_eq_doubledHilbertBilin_spectral_epsilon]
+  simp [doubledHilbertBilin, InfoGeometry.Krein.spectral_epsilon,
+    WithLp.prod_inner_apply]
+
+/-- The restricted second-sheet Hessian is positive definite: its diagonal
+vanishes exactly at the zero tangent vector. -/
+theorem hessian_quadraticMoment_modularSwap_secondSheet_pos_iff
+    [CompleteSpace E] (z : Doubled E) (xi : E) :
+    0 < (fderiv ℝ (fderiv ℝ
+      (quadraticMoment (InfoGeometry.Krein.modular_j (E := E)))) z)
+        (WithLp.toLp (2 : ENNReal) (0, xi))
+        (WithLp.toLp (2 : ENNReal) (0, xi)) ↔ xi ≠ 0 := by
+  rw [hessian_quadraticMoment_modularSwap_secondSheet]
+  constructor
+  · intro h hx
+    subst xi
+    simp at h
+  · intro h
+    exact sq_pos_of_ne_zero (norm_ne_zero_iff.mpr h)
+
+/-- The modular-swap Hessian has no mixed term between the two coordinate
+sheets. It is therefore exactly the orthogonal difference of its positive
+and negative sheet Hessians. -/
+theorem hessian_quadraticMoment_modularSwap_mixedSheets
+    [CompleteSpace E] (z : Doubled E) (x xi : E) :
+    (fderiv ℝ (fderiv ℝ
+      (quadraticMoment (InfoGeometry.Krein.modular_j (E := E)))) z)
+        (WithLp.toLp (2 : ENNReal) (x, 0))
+        (WithLp.toLp (2 : ENNReal) (0, xi)) = 0 := by
+  rw [hessian_quadraticMoment
+    (InfoGeometry.Krein.modular_j (E := E)) modularSwap_isSymplecticGenerator z]
+  simp [symplecticForm_apply, InfoGeometry.Krein.modular_j_apply]
+
+/-- The modular-swap moment Hessian is not positive semidefinite on the whole
+doubled carrier whenever the underlying real Hilbert space is nontrivial. -/
+theorem modularSwap_quadraticMoment_hessian_not_positiveSemidefinite
+    [CompleteSpace E] [Nontrivial E] :
+    ¬ ∀ z u : Doubled E,
+      0 ≤ (fderiv ℝ (fderiv ℝ
+        (quadraticMoment (InfoGeometry.Krein.modular_j (E := E)))) z) u u := by
+  obtain ⟨x, hx⟩ := exists_ne (0 : E)
+  let u : Doubled E := WithLp.toLp (2 : ENNReal) (x, 0)
+  intro hpositive
+  have hneg := hessian_quadraticMoment_modularSwap_firstSheet (0 : Doubled E) x
+  have hnonneg := hpositive 0 u
+  have hnorm : 0 < ‖x‖ ^ 2 := sq_pos_of_ne_zero (norm_ne_zero_iff.mpr hx)
+  rw [hneg] at hnonneg
+  linarith
 
 /-- The infinitesimal symplectic identity is the operator equation
 `K G + G† K = 0`, where `K` is the canonical real clock axis and `†` is the
@@ -434,6 +653,101 @@ theorem exp_preserves_symplecticForm
           symm
           exact ContinuousLinearMap.adjoint_inner_left U v (clockAxis (U u))
     _ = inner ℝ (clockAxis u) v := by rw [hpoint]
+
+/-- At every time, the derivative of the pairing along two exponential
+trajectories is the infinitesimal symplectic defect evaluated at the flowed
+vectors. -/
+theorem hasDerivAt_symplecticForm_exp_flow_pair
+    [CompleteSpace E] (G : Doubled E →L[ℝ] Doubled E)
+    (u v : Doubled E) (t : ℝ) :
+    HasDerivAt
+      (fun t : ℝ => symplecticForm (NormedSpace.exp (t • G) u)
+        (NormedSpace.exp (t • G) v))
+      (symplecticForm (G (NormedSpace.exp (t • G) u))
+        (NormedSpace.exp (t • G) v) +
+       symplecticForm (NormedSpace.exp (t • G) u)
+        (G (NormedSpace.exp (t • G) v))) t := by
+  let path : ℝ → Doubled E := fun s => NormedSpace.exp (s • G) u
+  let path' : ℝ → Doubled E := fun s => NormedSpace.exp (s • G) v
+  have hexp : HasDerivAt (fun s : ℝ => NormedSpace.exp (s • G))
+      (NormedSpace.exp (t • G) * G) t :=
+    hasDerivAt_exp_smul_const (𝕂 := ℝ) G t
+  have hconstU : HasDerivAt (fun _ : ℝ => u) (0 : Doubled E) t :=
+    hasDerivAt_const t u
+  have hconstV : HasDerivAt (fun _ : ℝ => v) (0 : Doubled E) t :=
+    hasDerivAt_const t v
+  have hu₀ := hexp.clm_apply hconstU
+  have hv₀ := hexp.clm_apply hconstV
+  have hflowCommute : Commute G (NormedSpace.exp (t • G)) := by
+    simpa using ((Commute.refl G).smul_right t).exp_right
+  have hcommPoint (x : Doubled E) :
+      (NormedSpace.exp (t • G)) (G x) = G ((NormedSpace.exp (t • G)) x) := by
+    have hcomm := congrArg (fun T : EndD => T x) hflowCommute.eq.symm
+    simpa [_root_.mul_apply_eq_comp, ContinuousLinearMap.comp_apply] using hcomm
+  have hu : HasDerivAt path (G (path t)) t := by
+    convert hu₀ using 1
+    simpa [path] using (hcommPoint u).symm
+  have hv : HasDerivAt path' (G (path' t)) t := by
+    convert hv₀ using 1
+    simpa [path'] using (hcommPoint v).symm
+  have hpair := symplecticForm.hasFDerivAt_of_bilinear hu.hasFDerivAt hv.hasFDerivAt
+  apply (hasFDerivAt_iff_hasDerivAt.mp hpair).congr_deriv
+  simp [ContinuousLinearMap.precompL_apply, path, path', symplecticForm_apply]
+  ring
+
+/-- At the identity time, the arbitrary-time formula reduces to the
+infinitesimal symplectic defect. -/
+theorem hasDerivAt_symplecticForm_exp_flow_pair_zero
+    [CompleteSpace E] (G : Doubled E →L[ℝ] Doubled E)
+    (u v : Doubled E) :
+    HasDerivAt
+      (fun t : ℝ => symplecticForm (NormedSpace.exp (t • G) u)
+        (NormedSpace.exp (t • G) v))
+      (symplecticForm (G u) v + symplecticForm u (G v)) 0 := by
+  simpa using hasDerivAt_symplecticForm_exp_flow_pair G u v 0
+
+/-- An operator is an infinitesimal symplectic generator exactly when every
+pairing has zero first variation along its exponential flow at the identity. -/
+theorem isSymplecticGenerator_iff_exp_flow_pair_deriv_zero
+    [CompleteSpace E] (G : Doubled E →L[ℝ] Doubled E) :
+    IsSymplecticGenerator G ↔
+      ∀ u v : Doubled E,
+        deriv (fun t : ℝ => symplecticForm (NormedSpace.exp (t • G) u)
+          (NormedSpace.exp (t • G) v)) 0 = 0 := by
+  constructor
+  · intro hG u v
+    rw [(hasDerivAt_symplecticForm_exp_flow_pair_zero G u v).deriv]
+    exact hG u v
+  · intro h u v
+    have hd := h u v
+    rw [(hasDerivAt_symplecticForm_exp_flow_pair_zero G u v).deriv] at hd
+    exact hd
+
+/-- Infinitesimal symplecticity is equivalent to preservation of the canonical
+pairing by the entire one-parameter exponential flow. The reverse direction
+recovers the infinitesimal identity by differentiating the constant pairing
+at time zero. -/
+theorem isSymplecticGenerator_iff_exp_flow_preserves_pairing
+    [CompleteSpace E] (G : Doubled E →L[ℝ] Doubled E) :
+    IsSymplecticGenerator G ↔
+      ∀ t : ℝ, ∀ u v : Doubled E,
+        symplecticForm (NormedSpace.exp (t • G) u)
+          (NormedSpace.exp (t • G) v) = symplecticForm u v := by
+  constructor
+  · intro hG t u v
+    exact exp_preserves_symplecticForm G hG t u v
+  · intro h u v
+    let pairing : ℝ → ℝ := fun t =>
+      symplecticForm (NormedSpace.exp (t • G) u)
+        (NormedSpace.exp (t • G) v)
+    have hconst : pairing = fun _ => symplecticForm u v := by
+      funext t
+      exact h t u v
+    have hderiv : deriv pairing 0 = 0 := by
+      rw [hconst]
+      simp
+    rw [(hasDerivAt_symplecticForm_exp_flow_pair_zero G u v).deriv] at hderiv
+    exact hderiv
 
 /-- The quadratic Hamiltonian of a linear symplectic generator is conserved by
 its own exponential flow. The proof uses commutation of the generator with its
@@ -601,6 +915,32 @@ theorem quadraticMomentBracket_cyclic_closed
 bracket inherited from continuous endomorphisms of the real doubled carrier. -/
 abbrev SymplecticGenerators := symplecticGeneratorLieSubalgebra (E := E)
 
+/-- The symplectic-generator Lie algebra acts on the doubled real carrier by
+its defining bounded endomorphisms. This is the repository's `QuantumMomentMap`
+interface with observable algebra `EndD`: the map is the actual inclusion,
+and Lie compatibility is the commutator law inherited from the associative
+endomorphism algebra. -/
+noncomputable def souriauQuantumMomentMapRepresentation [CompleteSpace E] :
+    InfoGeometry.Physics.SouriauLieThermodynamics.QuantumMomentMap
+      (R := ℝ) (g := SymplecticGenerators (E := E)) (A := EndD) where
+  toLinearMap :=
+    { toFun := fun A => (A : EndD)
+      map_add' := by intro A B; rfl
+      map_smul' := by intro r A; rfl }
+  lie_compat := by
+    intro A B
+    change (⁅(A : EndD), (B : EndD)⁆) =
+      (A : EndD) * (B : EndD) - (B : EndD) * (A : EndD)
+    simp only [Ring.lie_def]
+
+/-- Evaluating the Souriau representation at a generator returns its bounded
+real endomorphism, so the representation uses precisely the operator already
+driving the doubled Hamiltonian. -/
+@[simp] theorem souriauQuantumMomentMapRepresentation_apply
+    [CompleteSpace E] (A : SymplecticGenerators (E := E)) :
+    (souriauQuantumMomentMapRepresentation (E := E)).toLinearMap A =
+      (A : EndD) := rfl
+
 /-- The genuine Souriau moment map takes values in the dual of the Lie algebra
 of infinitesimal symplectic generators, rather than the dual of the ambient
 endomorphism space. -/
@@ -613,6 +953,93 @@ noncomputable def souriauMomentMap (z : Doubled E) :
   map_smul' r A := by
     simp [quadraticMoment_apply]
     ring
+
+/-- The algebraic evaluation functional on ambient bounded real generators is
+continuous in operator norm. Its bound is derived from the doubled
+symplectic-pairing estimate, not supplied as moment-map data. -/
+noncomputable def quadraticMomentFunctionalContinuous [CompleteSpace E] (z : Doubled E) :
+    (Doubled E →L[ℝ] Doubled E) →L[ℝ] ℝ :=
+  (quadraticMomentFunctional z).mkContinuous (‖z‖ ^ 2 / 2) (by
+    intro G
+    rw [Real.norm_eq_abs]
+    have h := abs_quadraticMoment_le_generator_norm G z
+    calc
+      |quadraticMoment G z| ≤ (‖G‖ * ‖z‖ ^ 2) / 2 := h
+      _ = (‖z‖ ^ 2 / 2) * ‖G‖ := by ring)
+
+/-- The ambient continuous evaluation functional has operator norm at most
+the quadratic state scale. -/
+theorem quadraticMomentFunctionalContinuous_norm_le [CompleteSpace E] (z : Doubled E) :
+    ‖quadraticMomentFunctionalContinuous z‖ ≤ ‖z‖ ^ 2 / 2 := by
+  exact LinearMap.mkContinuous_norm_le _ (by positivity) _
+
+/-- As a map into the continuous dual of ambient bounded generators, the
+quadratic moment is Lipschitz on every positive-Hilbert ball. This upgrades
+the componentwise estimate to the operator norm of the full dual-valued
+moment map. -/
+theorem quadraticMomentFunctionalContinuous_lipschitzOn_ball [CompleteSpace E]
+    (R : ℝ) (z w : Doubled E) (hz : ‖z‖ ≤ R) (hw : ‖w‖ ≤ R) :
+    ‖quadraticMomentFunctionalContinuous z - quadraticMomentFunctionalContinuous w‖ ≤
+      R * ‖z - w‖ := by
+  have hR : 0 ≤ R := le_trans (norm_nonneg z) hz
+  refine ContinuousLinearMap.opNorm_le_bound _ (mul_nonneg hR (norm_nonneg (z - w))) ?_
+  intro G
+  rw [Real.norm_eq_abs]
+  have h := souriauMoment_lipschitzOn_ball G R z w hz hw
+  change |quadraticMoment G z - quadraticMoment G w| ≤
+    (R * ‖z - w‖) * ‖G‖
+  calc
+    |quadraticMoment G z - quadraticMoment G w| ≤ R * ‖G‖ * ‖z - w‖ := h
+    _ = (R * ‖z - w‖) * ‖G‖ := by ring
+
+/-- Restricting the continuous ambient functional to an infinitesimal
+symplectic generator recovers the Souriau moment-map component. -/
+@[simp] theorem quadraticMomentFunctionalContinuous_apply_generator
+    [CompleteSpace E] (z : Doubled E) (A : SymplecticGenerators (E := E)) :
+    quadraticMomentFunctionalContinuous z (A : EndD) = souriauMomentMap z A := rfl
+
+/-- The Souriau component is continuous as a function of the generator on the
+Lie-subalgebra subtype, by restriction of the ambient operator-norm
+functional. -/
+theorem continuous_souriauMomentMap_component [CompleteSpace E] (z : Doubled E) :
+    Continuous (fun A : SymplecticGenerators (E := E) => souriauMomentMap z A) := by
+  exact (quadraticMomentFunctionalContinuous z).continuous.comp continuous_subtype_val
+
+/-- The Souriau moment at a fixed doubled state is a bounded functional on
+the actual infinitesimal symplectic Lie algebra. It is obtained by restricting
+the ambient operator-norm continuous functional, so continuity is proved from
+the quadratic estimate rather than assumed as part of the moment-map data. -/
+noncomputable def souriauMomentMapContinuous [CompleteSpace E] (z : Doubled E) :
+    SymplecticGenerators (E := E) →L[ℝ] ℝ :=
+  (quadraticMomentFunctionalContinuous z).comp
+    (symplecticGeneratorLieSubalgebra (E := E)).toSubmodule.subtypeL
+
+/-- The continuous dual-valued representative agrees with the algebraic
+Souriau moment map on every symplectic generator. -/
+@[simp] theorem souriauMomentMapContinuous_apply [CompleteSpace E]
+    (z : Doubled E) (A : SymplecticGenerators (E := E)) :
+    souriauMomentMapContinuous z A = souriauMomentMap z A := rfl
+
+/-- The full moment functional, measured in the operator norm of the
+continuous dual of the symplectic-generator Lie algebra, is Lipschitz on
+positive-Hilbert balls. This is the dual-valued estimate, not merely
+continuity of each scalar component. -/
+theorem souriauMomentMapContinuous_lipschitzOn_ball [CompleteSpace E]
+    (R : ℝ) (z w : Doubled E) (hz : ‖z‖ ≤ R) (hw : ‖w‖ ≤ R) :
+    ‖souriauMomentMapContinuous z - souriauMomentMapContinuous w‖ ≤
+      R * ‖z - w‖ := by
+  have hR : 0 ≤ R := le_trans (norm_nonneg z) hz
+  refine ContinuousLinearMap.opNorm_le_bound _
+    (mul_nonneg hR (norm_nonneg (z - w))) ?_
+  intro A
+  rw [Real.norm_eq_abs]
+  have h := souriauMoment_lipschitzOn_ball (A : EndD) R z w hz hw
+  change |quadraticMoment (A : EndD) z - quadraticMoment (A : EndD) w| ≤
+    (R * ‖z - w‖) * ‖A‖
+  calc
+    |quadraticMoment (A : EndD) z - quadraticMoment (A : EndD) w| ≤
+        R * ‖(A : EndD)‖ * ‖z - w‖ := h
+    _ = (R * ‖z - w‖) * ‖A‖ := by simp [mul_comm, mul_left_comm, mul_assoc]
 
 /-- Pairing the Souriau moment map with a generator has the Hamiltonian
 Fréchet derivative prescribed by the real doubled symplectic form. -/
@@ -780,5 +1207,185 @@ theorem souriauMomentMap_equivariant
     souriauMomentMap (S z) A =
       souriauMomentMap z (conjugateSymplecticGenerator S hS A) := by
   exact quadraticMoment_equivariant S hS (A : EndD) z
+
+/-- The concrete doubled Souriau moment map transports the KKS pairing under
+the induced conjugation action on its actual symplectic-generator Lie algebra.
+This specializes the repository's abstract contragredient KKS invariance to
+the real doubled carrier and its quadratic moment map. -/
+theorem souriauKKS_pairing_equivariant
+    (S : Doubled E ≃L[ℝ] Doubled E) (hS : IsSymplecticEquiv S)
+    (A B : SymplecticGenerators (E := E)) (z : Doubled E) :
+    SouriauKKS.kksForm (souriauMomentMap (S z))
+        (conjugateSymplecticGenerator S.symm
+          (by
+            intro u v
+            have h := hS (S.symm u) (S.symm v)
+            simpa using h.symm) A)
+        (conjugateSymplecticGenerator S.symm
+          (by
+            intro u v
+            have h := hS (S.symm u) (S.symm v)
+            simpa using h.symm) B) =
+      SouriauKKS.kksForm (souriauMomentMap z) A B := by
+  rw [SouriauKKS.kksForm, SouriauKKS.kksForm]
+  let hSinv : IsSymplecticEquiv S.symm := by
+    intro u v
+    have h := hS (S.symm u) (S.symm v)
+    simpa using h.symm
+  have hbracket :
+      ⁅conjugateSymplecticGenerator S.symm hSinv A,
+        conjugateSymplecticGenerator S.symm hSinv B⁆ =
+        conjugateSymplecticGenerator S.symm hSinv ⁅A, B⁆ := by
+    apply Subtype.ext
+    exact (conjugateGenerator_lie S.symm (A : EndD) (B : EndD)).symm
+  rw [hbracket]
+  change quadraticMoment
+    (conjugateGenerator S.symm
+      (⁅(A : EndD), (B : EndD)⁆)) (S z) = quadraticMoment ⁅(A : EndD), (B : EndD)⁆ z
+  simpa using (quadraticMoment_equivariant S.symm hSinv
+    ⁅(A : EndD), (B : EndD)⁆ (S z)).symm
+
+/-- The exponential of a completed infinitesimal symplectic generator is an
+actual continuous linear equivalence. Its inverse is the exponential of the
+negative generator; this records the finite-time flow on the same doubled
+carrier rather than merely a pointwise preservation identity. -/
+noncomputable def symplecticFlowEquiv [CompleteSpace E]
+    (G : Doubled E →L[ℝ] Doubled E) (t : ℝ) :
+    Doubled E ≃L[ℝ] Doubled E := by
+  let U : EndD := NormedSpace.exp (t • G)
+  let V : EndD := NormedSpace.exp (-(t • G))
+  have hcomm : Commute (-(t • G)) (t • G) := (Commute.refl (t • G)).neg_left
+  have hVU : V * U = 1 := by
+    change NormedSpace.exp (-(t • G)) * NormedSpace.exp (t • G) = 1
+    rw [← NormedSpace.exp_add_of_commute hcomm]
+    simp
+  have hUV : U * V = 1 := by
+    change NormedSpace.exp (t • G) * NormedSpace.exp (-(t • G)) = 1
+    rw [← NormedSpace.exp_add_of_commute hcomm.symm]
+    simp
+  have hVU_apply : ∀ x, V (U x) = x := by
+    intro x
+    have h := congrArg (fun T : EndD => T x) hVU
+    simpa [_root_.mul_apply_eq_comp, ContinuousLinearMap.comp_apply] using h
+  have hUV_apply : ∀ x, U (V x) = x := by
+    intro x
+    have h := congrArg (fun T : EndD => T x) hUV
+    simpa [_root_.mul_apply_eq_comp, ContinuousLinearMap.comp_apply] using h
+  have hinj : Function.Injective U := by
+    intro x y hxy
+    calc
+      x = V (U x) := (hVU_apply x).symm
+      _ = V (U y) := congrArg V hxy
+      _ = y := hVU_apply y
+  have hsurj : Function.Surjective U := by
+    intro y
+    exact ⟨V y, hUV_apply y⟩
+  exact ContinuousLinearEquiv.ofBijective U
+    (LinearMap.ker_eq_bot.mpr hinj) (LinearMap.range_eq_top.mpr hsurj)
+
+/-- The finite-time exponential flow acts on the doubled Souriau moment map
+by the corresponding conjugation action on the symplectic-generator dual.
+Thus the componentwise infinitesimal equivariance integrates to an actual
+coadjoint transport identity for every real time. -/
+theorem souriauMomentMap_exp_flow_equivariant [CompleteSpace E]
+    (G : Doubled E →L[ℝ] Doubled E) (hG : IsSymplecticGenerator G)
+    (t : ℝ) (A : SymplecticGenerators (E := E)) (z : Doubled E) :
+    souriauMomentMap (NormedSpace.exp (t • G) z) A =
+      souriauMomentMap z
+        (conjugateSymplecticGenerator (symplecticFlowEquiv G t)
+          (fun u v => exp_preserves_symplecticForm G hG t u v) A) := by
+  exact souriauMomentMap_equivariant (symplecticFlowEquiv G t)
+    (fun u v => exp_preserves_symplecticForm G hG t u v) A z
+
+/-- The finite exponential flow transports the concrete KKS pairing on the
+symplectic-generator subalgebra without changing its value. -/
+theorem souriauKKS_pairing_exp_flow_equivariant [CompleteSpace E]
+    (G : Doubled E →L[ℝ] Doubled E) (hG : IsSymplecticGenerator G)
+    (t : ℝ) (A B : SymplecticGenerators (E := E)) (z : Doubled E) :
+    SouriauKKS.kksForm
+        (souriauMomentMap (NormedSpace.exp (t • G) z))
+        (conjugateSymplecticGenerator (symplecticFlowEquiv G t).symm
+          (by
+            intro u v
+            have h := exp_preserves_symplecticForm G hG t
+              ((symplecticFlowEquiv G t).symm u) ((symplecticFlowEquiv G t).symm v)
+            have hu : NormedSpace.exp (t • G)
+                ((symplecticFlowEquiv G t).symm u) = u :=
+              (symplecticFlowEquiv G t).apply_symm_apply u
+            have hv : NormedSpace.exp (t • G)
+                ((symplecticFlowEquiv G t).symm v) = v :=
+              (symplecticFlowEquiv G t).apply_symm_apply v
+            rw [hu, hv] at h
+            exact h.symm) A)
+        (conjugateSymplecticGenerator (symplecticFlowEquiv G t).symm
+          (by
+            intro u v
+            have h := exp_preserves_symplecticForm G hG t
+              ((symplecticFlowEquiv G t).symm u) ((symplecticFlowEquiv G t).symm v)
+            have hu : NormedSpace.exp (t • G)
+                ((symplecticFlowEquiv G t).symm u) = u :=
+              (symplecticFlowEquiv G t).apply_symm_apply u
+            have hv : NormedSpace.exp (t • G)
+                ((symplecticFlowEquiv G t).symm v) = v :=
+              (symplecticFlowEquiv G t).apply_symm_apply v
+            rw [hu, hv] at h
+            exact h.symm) B) =
+      SouriauKKS.kksForm (souriauMomentMap z) A B := by
+  exact souriauKKS_pairing_equivariant (symplecticFlowEquiv G t)
+    (fun u v => exp_preserves_symplecticForm G hG t u v) A B z
+
+/-- At every time, the derivative of the finite-time Souriau transport is the
+coadjoint Lie-bracket component evaluated at the transported state. The
+trajectory derivative is computed from the exponential and its commutation
+with its generator; the final identity is the already-proved Hamiltonian
+infinitesimal-action law. -/
+theorem hasDerivAt_souriauMomentMap_exp_flow_component
+    [CompleteSpace E]
+    (B : SymplecticGenerators (E := E))
+    (A : SymplecticGenerators (E := E)) (z : Doubled E) (t : ℝ) :
+    HasDerivAt
+      (fun s : ℝ => souriauMomentMap (NormedSpace.exp (s • (B : EndD)) z) A)
+      (souriauMomentMap (NormedSpace.exp (t • (B : EndD)) z) ⁅A, B⁆) t := by
+  let path : ℝ → Doubled E := fun s => NormedSpace.exp (s • (B : EndD)) z
+  have hexp : HasDerivAt
+      (fun s : ℝ => NormedSpace.exp (s • (B : EndD)))
+      (NormedSpace.exp (t • (B : EndD)) * (B : EndD)) t :=
+    hasDerivAt_exp_smul_const (𝕂 := ℝ) (B : EndD) t
+  have hconst : HasDerivAt (fun _ : ℝ => z) (0 : Doubled E) t :=
+    hasDerivAt_const t z
+  have hpath₀ := hexp.clm_apply hconst
+  have hflowCommute : Commute (B : EndD) (NormedSpace.exp (t • (B : EndD))) := by
+    simpa using ((Commute.refl (B : EndD)).smul_right t).exp_right
+  have hcommPoint :
+      (NormedSpace.exp (t • (B : EndD))) ((B : EndD) z) =
+        (B : EndD) ((NormedSpace.exp (t • (B : EndD))) z) := by
+    have hcomm := congrArg (fun T : EndD => T z) hflowCommute.eq.symm
+    simpa [_root_.mul_apply_eq_comp, ContinuousLinearMap.comp_apply] using hcomm
+  have hpath : HasDerivAt path ((B : EndD) (path t)) t := by
+    convert hpath₀ using 1
+    · simpa [path] using hcommPoint.symm
+  have hcomp := (hasFDerivAt_souriauMoment_component A (path t)).comp_hasDerivAt
+    t hpath
+  convert hcomp using 1
+  · ext s
+    rfl
+  · calc
+      souriauMomentMap (path t) ⁅A, B⁆ =
+          fderiv ℝ (fun w => souriauMomentMap w A) (path t)
+            ((B : EndD) (path t)) :=
+              (fderiv_souriauMoment_component_along_generator A B (path t)).symm
+      _ = symplecticForm ((A : EndD) (path t)) ((B : EndD) (path t)) := by
+        rw [(hasFDerivAt_souriauMoment_component A (path t)).fderiv]
+
+/-- The zero-time derivative is the coadjoint Lie-bracket component at the
+initial state. -/
+theorem hasDerivAt_souriauMomentMap_exp_flow_component_zero
+    [CompleteSpace E]
+    (B : SymplecticGenerators (E := E))
+    (A : SymplecticGenerators (E := E)) (z : Doubled E) :
+    HasDerivAt
+      (fun t : ℝ => souriauMomentMap (NormedSpace.exp (t • (B : EndD)) z) A)
+      (souriauMomentMap z ⁅A, B⁆) 0 := by
+  simpa using hasDerivAt_souriauMomentMap_exp_flow_component B A z 0
 
 end InfoGeometry.Canonical.SouriauDoubledQuadraticMomentMap

@@ -39,6 +39,11 @@ open scoped InnerProductSpace
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
+/-- The existing neutral form evaluated on two vectors of an incidence graph. -/
+theorem hessian_incidenceMap (A : Module.End ℝ E) (u v : E) :
+    hessian_indefinite_formCoord (incidenceMap A u) (incidenceMap A v) =
+      ⟪A u, v⟫_ℝ + ⟪A v, u⟫_ℝ := rfl
+
 /-- Total graph isotropy is exactly skewness for the real inner product. -/
 theorem incidenceSpace_isotropic_iff (A : Module.End ℝ E) :
     (∀ z ∈ incidenceSpace A, ∀ w ∈ incidenceSpace A,
@@ -47,14 +52,12 @@ theorem incidenceSpace_isotropic_iff (A : Module.End ℝ E) :
   constructor
   · intro h u v
     have huv := h (incidenceMap A u) ⟨u, rfl⟩ (incidenceMap A v) ⟨v, rfl⟩
-    change ⟪A u, v⟫_ℝ + ⟪A v, u⟫_ℝ = 0 at huv
-    rw [real_inner_comm u (A v)] at huv
+    rw [hessian_incidenceMap, real_inner_comm u (A v)] at huv
     exact eq_neg_of_add_eq_zero_left huv
   · intro h z hz w hw
     rcases hz with ⟨u, rfl⟩
     rcases hw with ⟨v, rfl⟩
-    change ⟪A u, v⟫_ℝ + ⟪A v, u⟫_ℝ = 0
-    rw [h u v, real_inner_comm (A v) u]
+    rw [hessian_incidenceMap, h u v, real_inner_comm (A v) u]
     exact neg_add_cancel _
 
 /-- Diagonal phase invariance of the native graph detects commutation. -/

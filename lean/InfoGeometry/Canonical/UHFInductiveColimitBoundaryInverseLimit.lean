@@ -168,7 +168,7 @@ noncomputable def prependBitHom (b : Bool) :
     TopCat.of CantorBoundary ⟶ TopCat.of CantorBoundary :=
   { hom' :=
       { toFun := prependBit b
-        continuous_toFun := continuous_prependBit b } }
+        continuous_toFun := UHFInductiveColimitBoundaryTopology.continuous_prependBit b } }
 
 noncomputable def prefixLimitPrependBit (b : Bool) :
     (limit prefixDiagram) ⟶ limit prefixDiagram :=

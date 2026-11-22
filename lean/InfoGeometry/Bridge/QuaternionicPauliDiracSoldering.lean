@@ -107,7 +107,7 @@ theorem coSolderingMap_isHermitian (P : PauliParavector) :
     (coSolderingMap P).IsHermitian := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [coSolderingMap, Matrix.conjTranspose_apply, Complex.conj_I] <;> ring
+    (simp [coSolderingMap, Matrix.conjTranspose_apply, Complex.conj_I]; try ring)
 
 theorem chirality_sq : chirality * chirality = 1 := by
   ext i j; fin_cases i <;> fin_cases j <;>
@@ -140,7 +140,7 @@ theorem chiral_projectors_orthogonal :
 @[simp] theorem circular_car :
     circularPlus * circularMinus + circularMinus * circularPlus = 1 := by
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [circularPlus, circularMinus, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [circularPlus, circularMinus]
 
 theorem circular_peirce_transport :
     chiralPlus * circularPlus * chiralMinus = circularPlus ∧
@@ -153,7 +153,7 @@ theorem chirality_circular_commutators :
     chirality * circularPlus - circularPlus * chirality = (2 : ℂ) • circularPlus ∧
     chirality * circularMinus - circularMinus * chirality = (-2 : ℂ) • circularMinus := by
   constructor <;> ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [chirality, circularPlus, circularMinus, Matrix.mul_apply, Fin.sum_univ_two] <;> norm_num
+    simp [chirality, circularPlus, circularMinus] <;> norm_num
 
 
 namespace QuaternionicOperators
@@ -238,6 +238,60 @@ theorem commute_every_quaternionic_axis_of_two
       simp [mul_add]
     _ = a • (I * N) + b • (J * N) + c • (K * N) := by rw [hNI, hNJ, hNK]
     _ = (a • I + b • J + c • K) * N := by simp [add_mul]
+
+/-- Complete quaternionic operator relations for `(I, J, K)`. -/
+theorem quaternionic_operator_packet :
+    I.comp I = -(LinearMap.id : Module.End ℝ Carrier) ∧
+    J.comp J = -(LinearMap.id : Module.End ℝ Carrier) ∧
+    K.comp K = -(LinearMap.id : Module.End ℝ Carrier) ∧
+    I.comp J = K ∧
+    J.comp I = -K :=
+  ⟨I_sq, J_sq, K_sq, I_comp_J, J_comp_I⟩
+
+/-- A square-zero logarithmic endomorphism commuting with `I` and `J`
+therefore preserves the complete quaternionic operator triple. -/
+theorem squareZero_log_operator_quaternionic_packet
+    {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
+    {I J K N : Module.End R V}
+    (hK : I * J = K)
+    (hNI : N * I = I * N)
+    (hNJ : N * J = J * N)
+    (hN2 : N * N = 0) :
+    N * N = 0 ∧ N * I = I * N ∧ N * J = J * N ∧ N * K = K * N :=
+  ⟨hN2, hNI, hNJ, commute_third_quaternionic_axis hK hNI hNJ⟩
+
+/-- Scalar linear combinations of quaternionic axes are preserved by every
+endomorphism commuting with the three axes. -/
+theorem commute_quaternionic_axis_combination
+    {R V : Type*} [CommSemiring R] [AddCommMonoid V] [Module R V]
+    {I J K N : Module.End R V}
+    (a b c : R)
+    (hNI : N * I = I * N)
+    (hNJ : N * J = J * N)
+    (hNK : N * K = K * N) :
+    N * (a • I + b • J + c • K) =
+      (a • I + b • J + c • K) * N := by
+  calc
+    N * (a • I + b • J + c • K) =
+        a • (N * I) + b • (N * J) + c • (N * K) := by
+          simp [mul_add]
+    _ = a • (I * N) + b • (J * N) + c • (K * N) := by rw [hNI, hNJ, hNK]
+    _ = (a • I + b • J + c • K) * N := by simp [add_mul]
+
+/-- Square-zero logarithmic endomorphisms commuting with two axes preserve
+every scalar quaternionic linear combination. -/
+theorem squareZero_log_operator_commutes_every_quaternionic_axis
+    {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
+    {I J K N : Module.End R V}
+    (a b c : R)
+    (hK : I * J = K)
+    (hNI : N * I = I * N)
+    (hNJ : N * J = J * N)
+    (hN2 : N * N = 0) :
+    N * N = 0 ∧
+      N * (a • I + b • J + c • K) =
+        (a • I + b • J + c • K) * N :=
+  ⟨hN2, commute_every_quaternionic_axis_of_two a b c hK hNI hNJ⟩
 
 end QuaternionicOperators
 end InfoGeometry.Bridge.QuaternionicPauliDiracSoldering

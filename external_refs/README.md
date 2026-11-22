@@ -69,6 +69,7 @@ LeanAide
 Canonical
 CanonicalLean
 NavierStokesAndEuler
+grh-lean-verification
 ```
 
 `external_refs/LeanEuclid` is a full-history nested checkout at `7c8f38b` from
@@ -121,6 +122,24 @@ connecting its wave-packet Reynolds stress, Admissible Stress Cone, and
 hyperbolic torus automorphism to our split-octonionic Zorn matrix algebra and
 Madelung quantum fluid is formalized in
 `InfoGeometry/Canonical/ZornNavierStokesHydrodynamicBridge.lean`.
+
+`external_refs/grh-lean-verification` is a full-history nested checkout at
+`6abee46` (`6abee46e94d983f940e711e83297891bfb150b4d`) from
+`https://github.com/mrubinst/grh-lean-verification`. It contains Michael
+Rubinstein's independent verification harness, static-audit/dependency scripts,
+distributed replay/nanoda scripts, recorded logs/reports (`audit.txt`,
+`axioms.out`, `replay_summary.txt`, `nanoda_result.txt`, `index.html`,
+`scripts/`, `dist/`), and `SHA256SUMS.parts` for the November 2026
+Alpöge–Claude RH/GRH Lean 4 release; the external 175,187-file proof source
+tarball (`lean.tar.gz`) is not included in this repository. It has no root
+Lean/Lake package (`lean-toolchain` and `lakefile.*` absent at root), no
+`lake-manifest.json`, and no `mathlib` dependency anywhere: its only Lean
+package is the standalone `checklist/` kernel-replay executable
+(`checklist/lean-toolchain` pinning `leanprover/lean4:v4.33.1`,
+`checklist/lakefile.toml` declaring `checklist` with zero package dependencies,
+and `checklist/Main.lean` importing only `Lean.CoreM` and `Lean.Replay`),
+alongside `scripts/Axioms.lean` and `scripts/DepCheck.lean` targeting the
+external `Main` module.
 
 As of the 2026-09-10 follow-up audit, all nested git checkouts under
 `external_refs/` and `external/` are full-history checkouts:

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonion1331PureSpinorGradingBridge
@@ -5,6 +10,8 @@ import InfoGeometry.Lie.PeirceExteriorHodgeTransport
 import InfoGeometry.Lie.PeirceExteriorHodgeLinearEquiv
 import InfoGeometry.Exceptional.G2ChiralBivectorCarriers
 import InfoGeometry.Algebra.Zorn.G2GaloisCorrespondence
+import InfoGeometry.Lie.SplitOctonionExteriorParityProjectors
+import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 import InfoGeometry.OperatorAlgebra.GradeActionInterface
 
 /-! Transport of the four native degree projectors to the Peirce character
@@ -18,6 +25,7 @@ open InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge
 open InfoGeometry.Canonical.SplitOctonion1331PureSpinorGradingBridge
 open InfoGeometry.Canonical.SplitOctonion1331ExteriorDiracSouriauBridge
 open InfoGeometry.Lie.SplitOctonionPeirceNativeProjectors
+open InfoGeometry.Lie.SplitOctonionExteriorParityProjectors
 open InfoGeometry.Lie.PeirceExteriorHodgeTransport
 open InfoGeometry.Exceptional.G2ChiralBivectorCarriers
 open InfoGeometry.Algebra.Zorn.G2GaloisCorrespondence
@@ -169,5 +177,34 @@ theorem cyclotomic_fourPlaneLift_off_plane_zero
   change zeta * fourPlaneLift B (k, c) (l, d) = 0
   rw [fourPlaneLift_off_plane_zero B k l c d hkl]
   simp
+
+
+theorem exterior_peirce_projector_trace_packet :
+    (LinearMap.trace ℝ PeirceCarrier projectorPP,
+      LinearMap.trace ℝ PeirceCarrier projectorPM,
+      LinearMap.trace ℝ PeirceCarrier projectorMP,
+      LinearMap.trace ℝ PeirceCarrier projectorMM) = (1, 3, 3, 1) :=
+  nativeProjectorTrace_packet
+
+theorem degreeZero_projector_fixes_vacuum :
+    exteriorDegreeProjector1331 0 (1 : Exterior3) = 1 := by
+  rw [← peirceVacuum_eq_exteriorVacuum]
+  rw [exteriorDegreeProjector1331_basis]
+  simp [exteriorDegree1331]
+
+theorem degreeOne_projector_fixes_created_vacuum (i : Fin 3) :
+    exteriorDegreeProjector1331 1
+        (exteriorWedge3 (Pi.single i 1) (1 : Exterior3)) =
+      exteriorWedge3 (Pi.single i 1) (1 : Exterior3) := by
+  rw [← peirceVacuum_eq_exteriorVacuum, peirceDegreeOne_from_vacuum]
+  rw [exteriorDegreeProjector1331_basis]
+  fin_cases i <;> simp [exteriorDegree1331]
+
+theorem finiteGalois_zero_one_fixed
+    (H : Subgroup InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.SplitOctF2Aut) :
+    InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.zero ∈ galoisFixedSet H ∧
+    InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.one ∈ galoisFixedSet H := by
+  exact ⟨InfoGeometry.Algebra.Zorn.G2GaloisCorrespondence.zero_mem_galoisFixedSet H,
+    InfoGeometry.Algebra.Zorn.G2GaloisCorrespondence.one_mem_galoisFixedSet H⟩
 
 end InfoGeometry.Canonical.SplitOctonion1331GradedProjectorActionBridge

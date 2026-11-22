@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.H3ZornPeirce0SO55
@@ -63,5 +68,50 @@ theorem dilation_is_skew (scale : ℝ) (x y : V12) :
 
 theorem so66_dimension_numeral : 12 * (12 - 1) / 2 = 66 := by
   norm_num
+
+
+abbrev End10 := V10 →ₗ[ℝ] V10
+abbrev End12 := V12 →ₗ[ℝ] V12
+
+def InSO66 (T : End12) : Prop := ∀ x y : V12, B66 (T x) y + B66 x (T y) = 0
+
+noncomputable def P (u : V10) : End12 where
+  toFun x := ⟨-BQ10 u x.2.1, ⟨x.2.2 • u, 0⟩⟩
+  map_add' x y := by ext <;> simp [BQ10_add_right, add_smul] <;> ring
+  map_smul' r x := by ext <;> simp [BQ10_smul_right, smul_smul] <;> ring
+
+noncomputable def K (v : V10) : End12 where
+  toFun x := ⟨0, ⟨x.1 • v, -BQ10 v x.2.1⟩⟩
+  map_add' x y := by ext <;> simp [BQ10_add_right, add_smul] <;> ring
+  map_smul' r x := by ext <;> simp [BQ10_smul_right, smul_smul] <;> ring
+
+noncomputable def D (lam : ℝ) : End12 where
+  toFun x := ⟨lam * x.1, ⟨0, -lam * x.2.2⟩⟩
+  map_add' x y := by ext <;> simp <;> ring
+  map_smul' r x := by ext <;> simp <;> ring
+
+noncomputable def Mrot (M : End10) : End12 where
+  toFun x := ⟨0, ⟨M x.2.1, 0⟩⟩
+  map_add' x y := by ext <;> simp
+  map_smul' r x := by ext <;> simp
+
+theorem Mrot_in_so66 (M : End10) (hM : InSO55BQ M) : InSO66 (Mrot M) := by
+  intro x y
+  simp only [InSO66, B66, Mrot, LinearMap.coe_mk, AddHom.coe_mk,
+    zero_mul, mul_zero, zero_add, add_zero]
+  exact hM x.2.1 y.2.1
+
+def bracket (A B : End12) : End12 := A.comp B - B.comp A
+
+def crossRotation (u v : V10) : End10 := (-1 / 2 : ℝ) • bivectorGen u v
+
+theorem crossRotation_apply (u v z : V10) :
+    crossRotation u v z = BQ10 u z • v - BQ10 v z • u := by
+  ext i
+  simp [crossRotation, bivectorGen]
+  ring
+
+theorem finrank_V12 : Module.finrank ℝ V12 = 12 := by
+  simp [V12, finrank_minkowski10]
 
 end InfoGeometry.Canonical.H3ZornPeirce0TKK66

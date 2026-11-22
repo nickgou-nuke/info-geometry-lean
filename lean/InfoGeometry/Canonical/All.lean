@@ -1063,6 +1063,8 @@ import InfoGeometry.Canonical.AFRecursiveLimitBridge
 import InfoGeometry.Canonical.JaynesLDDSCentering
 import InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge
 import InfoGeometry.Canonical.KreinProjectorLattice
+import InfoGeometry.Canonical.FiniteOperatorBooleanAlgebra
+import InfoGeometry.Canonical.WallpaperParityBooleanBridge
 import InfoGeometry.Canonical.SectorLattice
 import InfoGeometry.Canonical.RefinementGaloisConnection
 import InfoGeometry.Canonical.SelfSimilarVacuum

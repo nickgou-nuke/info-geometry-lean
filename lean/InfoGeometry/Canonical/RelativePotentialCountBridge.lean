@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.RelativePotentialDiscreteBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativePotentialScalarBridge
@@ -127,8 +133,7 @@ Continuous avatar of the canonical doubled-atom grading `ε` on the doubled
 router-amplitude carrier.
 -/
 noncomputable def doubledAtomEpsilonOp : AlgebraEnd (RouterAmplitude n) :=
-  LinearMap.toContinuousLinearMap
-    ((InfoGeometry.Canonical.cl11DoubledAtom (RouterAmplitude n)).eps)
+  InfoGeometry.Krein.spectral_epsilon (E := RouterAmplitude n)
 
 @[simp] theorem doubledAtomEpsilonOp_eq_spectralEpsilon :
     doubledAtomEpsilonOp (n := n)

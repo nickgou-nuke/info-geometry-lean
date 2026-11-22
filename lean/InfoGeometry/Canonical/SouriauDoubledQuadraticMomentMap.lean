@@ -12,6 +12,7 @@ import InfoGeometry.Thermo.OnsagerOperatorClosure
 import InfoGeometry.Geometry.RealHamiltonianMoment
 import InfoGeometry.Geometry.QuadraticPotentialCalculus
 import Mathlib.Algebra.Lie.OfAssociative
+import Mathlib.Analysis.Asymptotics.Lemmas
 import Mathlib.Analysis.Normed.Algebra.Exponential
 
 /-!
@@ -34,6 +35,9 @@ namespace InfoGeometry.Canonical.SouriauDoubledQuadraticMomentMap
 
 open InfoGeometry.Krein
 open InfoGeometry.Geometry.QuadraticPotentialCalculus
+open Asymptotics
+open Filter
+open scoped Topology
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
@@ -1040,6 +1044,169 @@ theorem souriauMomentMapContinuous_lipschitzOn_ball [CompleteSpace E]
     |quadraticMoment (A : EndD) z - quadraticMoment (A : EndD) w| ≤
         R * ‖(A : EndD)‖ * ‖z - w‖ := h
     _ = (R * ‖z - w‖) * ‖A‖ := by simp [mul_comm, mul_left_comm, mul_assoc]
+
+/-- The polarization of the continuous Souriau moment map, valued in the
+continuous dual of the actual symplectic-generator Lie algebra. Its value at
+`(z,v)` evaluates a generator `A` as `Ω(A z,v)`. The bound is derived from the
+positive doubled Hilbert norm and the operator norm on generators. -/
+noncomputable def souriauMomentPolarization [CompleteSpace E] :
+    Doubled E →L[ℝ] Doubled E →L[ℝ]
+      (SymplecticGenerators (E := E) →L[ℝ] ℝ) := by
+  letI : Module ℝ (Doubled E) :=
+    (inferInstance : NormedSpace ℝ (Doubled E)).toModule
+  letI : Module ℝ (SymplecticGenerators (E := E) →L[ℝ] ℝ) :=
+    (inferInstance : NormedSpace ℝ
+      (SymplecticGenerators (E := E) →L[ℝ] ℝ)).toModule
+  let cross : Doubled E → Doubled E →
+      (SymplecticGenerators (E := E) →L[ℝ] ℝ) := fun z v =>
+        (symplecticForm.flip v).comp
+          ((ContinuousLinearMap.apply ℝ (Doubled E)) z) |>.comp
+            (symplecticGeneratorLieSubalgebra (E := E)).toSubmodule.subtypeL
+  let hcross : IsBoundedBilinearMap ℝ (fun p : Doubled E × Doubled E => cross p.1 p.2) := {
+      add_left := by
+        intro z₁ z₂ v
+        ext A
+        simp [cross, ContinuousLinearMap.flip_apply]
+      smul_left := by
+        intro r z v
+        ext A
+        simp [cross, ContinuousLinearMap.flip_apply]
+      add_right := by
+        intro z v₁ v₂
+        ext A
+        simp [cross, ContinuousLinearMap.flip_apply]
+      smul_right := by
+        intro r z v
+        ext A
+        simp [cross, ContinuousLinearMap.flip_apply]
+      bound := by
+        refine ⟨1, by norm_num, ?_⟩
+        intro z v
+        have hbound : ∀ A : SymplecticGenerators (E := E),
+            |symplecticForm ((A : EndD) z) v| ≤ ‖z‖ * ‖v‖ * ‖A‖ := by
+          intro A
+          calc
+            |symplecticForm ((A : EndD) z) v| ≤ ‖(A : EndD) z‖ * ‖v‖ :=
+              abs_symplecticForm_le_norm _ _
+            _ ≤ (‖A‖ * ‖z‖) * ‖v‖ := by
+              gcongr
+              exact A.1.le_opNorm z
+            _ = ‖z‖ * ‖v‖ * ‖A‖ := by ring
+        have hnonneg : 0 ≤ (1 : ℝ) * ‖z‖ * ‖v‖ := by positivity
+        refine ContinuousLinearMap.opNorm_le_bound _ hnonneg ?_
+        intro A
+        rw [Real.norm_eq_abs]
+        calc
+          |symplecticForm ((A : EndD) z) v| ≤ ‖z‖ * ‖v‖ * ‖A‖ := hbound A
+          _ = (1 * ‖z‖ * ‖v‖) * ‖A‖ := by ring
+    }
+  exact hcross.toContinuousLinearMap
+
+/-- Pointwise readback of the continuous polarization on a generator. -/
+@[simp] theorem souriauMomentPolarization_apply [CompleteSpace E]
+    (z v : Doubled E) (A : SymplecticGenerators (E := E)) :
+    souriauMomentPolarization z v A = symplecticForm ((A : EndD) z) v := by
+  rfl
+
+/-- The Souriau moment is exactly one half of the diagonal of its continuous
+bilinear polarization. -/
+theorem souriauMomentMapContinuous_eq_polarization [CompleteSpace E]
+    (z : Doubled E) :
+    souriauMomentMapContinuous z =
+      (1 / 2 : ℝ) • souriauMomentPolarization z z := by
+  ext A
+  change quadraticMoment (A : EndD) z =
+    (1 / 2 : ℝ) * symplecticForm ((A : EndD) z) z
+  rw [quadraticMoment_apply]
+  ring
+
+/-- The bilinear polarization is symmetric precisely because every generator
+in this Lie algebra preserves the canonical symplectic form infinitesimally.
+This is a proved identity on the current doubled carrier, not an assumption
+stored in the moment-map interface. -/
+theorem souriauMomentPolarization_symmetric [CompleteSpace E]
+    (z v : Doubled E) :
+    souriauMomentPolarization z v = souriauMomentPolarization v z := by
+  ext A
+  exact symplecticForm_comp_generator_symmetric (A : EndD) A.property z v
+
+/-- Exact second-order expansion of the full dual-valued Souriau moment.
+The remainder is the quadratic moment at the increment, so this identity
+provides the uniform quadratic error needed for a Fréchet derivative. -/
+theorem souriauMomentMapContinuous_taylor [CompleteSpace E]
+    (z v : Doubled E) :
+    souriauMomentMapContinuous (z + v) - souriauMomentMapContinuous z -
+      souriauMomentPolarization z v =
+        (1 / 2 : ℝ) • souriauMomentPolarization v v := by
+  simp only [souriauMomentMapContinuous_eq_polarization]
+  ext A
+  change (1 / 2 : ℝ) * symplecticForm ((A : EndD) (z + v)) (z + v) -
+      (1 / 2 : ℝ) * symplecticForm ((A : EndD) z) z -
+      symplecticForm ((A : EndD) z) v =
+    (1 / 2 : ℝ) * symplecticForm ((A : EndD) v) v
+  have hExpand : symplecticForm ((A : EndD) (z + v)) (z + v) =
+      symplecticForm ((A : EndD) z) z +
+        symplecticForm ((A : EndD) z) v +
+        symplecticForm ((A : EndD) v) z +
+        symplecticForm ((A : EndD) v) v := by
+    calc
+      symplecticForm ((A : EndD) (z + v)) (z + v) =
+          symplecticForm ((A : EndD) z + (A : EndD) v) (z + v) := by
+            rw [map_add (A : EndD) z v]
+      _ = symplecticForm ((A : EndD) z) z +
+            symplecticForm ((A : EndD) z) v +
+            symplecticForm ((A : EndD) v) z +
+            symplecticForm ((A : EndD) v) v := by
+          simp only [symplecticForm_apply, WithLp.add_fst, WithLp.add_snd,
+            inner_add_left, inner_add_right]
+          ring
+  rw [hExpand]
+  have hcross := symplecticForm_comp_generator_symmetric (A : EndD)
+    A.property z v
+  rw [hcross]
+  ring_nf
+
+/-- The full dual-valued Souriau map is Fréchet differentiable on the real
+doubled carrier. Its derivative is the actual continuous polarization
+`v ↦ (A ↦ Ω(A z,v))`; the proof uses the exact quadratic Taylor remainder
+and the previously proved dual-valued Lipschitz bound. -/
+theorem hasFDerivAt_souriauMomentMapContinuous [CompleteSpace E]
+    (z : Doubled E) :
+    HasFDerivAt souriauMomentMapContinuous (souriauMomentPolarization z) z := by
+  have hzero : souriauMomentMapContinuous (0 : Doubled E) = 0 := by
+    ext A
+    simp [souriauMomentMapContinuous_apply, souriauMomentMap, quadraticMoment_apply]
+  have hbound (v : Doubled E) :
+      ‖souriauMomentMapContinuous v‖ ≤ ‖v‖ ^ 2 := by
+    have hL := souriauMomentMapContinuous_lipschitzOn_ball
+      (E := E) ‖v‖ v 0 (by rfl) (by simp)
+    simpa [hzero, pow_two] using hL
+  have hBigO :
+      (fun h : Doubled E =>
+        souriauMomentMapContinuous (z + h) - souriauMomentMapContinuous z -
+          souriauMomentPolarization z h) =O[𝓝 0] (fun h : Doubled E => ‖h‖ ^ 2) := by
+    refine isBigO_iff.mpr ⟨1, ?_⟩
+    exact Filter.Eventually.of_forall (fun h => by
+      rw [souriauMomentMapContinuous_taylor]
+      have hb := hbound h
+      rw [souriauMomentMapContinuous_eq_polarization h] at hb
+      simpa using hb)
+  have hPow :
+      (fun h : Doubled E => ‖h‖ ^ 2) =o[𝓝 0] (fun h : Doubled E => h) := by
+    refine IsLittleO.of_norm_right ?_
+    simpa [pow_one] using
+      (isLittleO_norm_pow_norm_pow (m := 1) (n := 2) (by norm_num) :
+        (fun h : Doubled E => ‖h‖ ^ 2) =o[𝓝 0] (fun h : Doubled E => ‖h‖ ^ 1))
+  have hLittle :
+      (fun h : Doubled E =>
+        souriauMomentMapContinuous (z + h) - souriauMomentMapContinuous z -
+          souriauMomentPolarization z h) =o[𝓝 0] fun h => h :=
+    hBigO.trans_isLittleO hPow
+  refine (hasFDerivAt_iff_isLittleO_nhds_zero
+    (𝕜 := ℝ) (E := Doubled E) (F := SymplecticGenerators (E := E) →L[ℝ] ℝ)
+    (f := souriauMomentMapContinuous) (f' := souriauMomentPolarization z)
+    (x := z)).2 ?_
+  exact hLittle
 
 /-- Pairing the Souriau moment map with a generator has the Hamiltonian
 Fréchet derivative prescribed by the real doubled symplectic form. -/

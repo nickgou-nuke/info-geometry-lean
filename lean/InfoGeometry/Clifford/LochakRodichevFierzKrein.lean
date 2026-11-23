@@ -564,6 +564,75 @@ def realWeylRight (Φ : Vec8R) : Fin 4 → ℝ :=
 def realWeylBivector (x : Fin 4 → ℝ) : Fin 4 → ℝ :=
   ![-x 1, x 0, -x 3, x 2]
 
+/-- Real form of the simultaneous two-sector unit-quaternion action.  The four real
+parameters satisfy the unit-sphere relation in `realWeylSU2_pairings_preserved`.
+This is a real matrix action; the internal phase operator remains `realWeylBivector`. -/
+def realWeylSU2Action (a b c d : ℝ) (x : Fin 4 → ℝ) : Fin 4 → ℝ :=
+  ![a * x 0 - b * x 1 + c * x 2 - d * x 3,
+    b * x 0 + a * x 1 + d * x 2 + c * x 3,
+    -c * x 0 - d * x 1 + a * x 2 + b * x 3,
+    d * x 0 - c * x 1 - b * x 2 + a * x 3]
+
+/-- The real action commutes with the internal Weyl bivector. -/
+theorem realWeylSU2Action_commutes_bivector (a b c d : ℝ) (x : Fin 4 → ℝ) :
+    realWeylSU2Action a b c d (realWeylBivector x) =
+      realWeylBivector (realWeylSU2Action a b c d x) := by
+  ext i
+  fin_cases i <;>
+    simp [realWeylSU2Action, realWeylBivector] <;> ring
+
+/-- Under the real unit-quaternion relation, simultaneous action on two chiral sectors
+preserves their Euclidean pairing. -/
+theorem realWeylSU2Action_preserves_dot (a b c d : ℝ)
+    (hunit : a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = 1) (x y : Fin 4 → ℝ) :
+    dotProduct (realWeylSU2Action a b c d x)
+      (realWeylSU2Action a b c d y) = dotProduct x y := by
+  simp [realWeylSU2Action, dotProduct, Fin.sum_univ_four]
+  linear_combination hunit *
+    (x 0 * y 0 + x 1 * y 1 + x 2 * y 2 + x 3 * y 3)
+
+/-- Both real Weyl pairings defining `Ω₁` and `Ω₂` are invariant when the same
+real unit-quaternion matrix acts on the left and right sectors. -/
+theorem realWeylSU2_pairings_preserved (a b c d : ℝ)
+    (hunit : a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = 1) (x y : Fin 4 → ℝ) :
+    dotProduct (realWeylSU2Action a b c d x)
+        (realWeylSU2Action a b c d y) = dotProduct x y ∧
+    dotProduct (realWeylBivector (realWeylSU2Action a b c d x))
+        (realWeylSU2Action a b c d y) = dotProduct (realWeylBivector x) y := by
+  constructor
+  · exact realWeylSU2Action_preserves_dot a b c d hunit x y
+  · rw [← realWeylSU2Action_commutes_bivector]
+    exact realWeylSU2Action_preserves_dot a b c d hunit (realWeylBivector x) y
+
+/-- The real scalar and pseudoscalar readouts from the two Weyl sectors are
+invariant under their simultaneous real unit-quaternion action. -/
+theorem realWeylSU2_bilinears_preserved (a b c d : ℝ)
+    (hunit : a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = 1) (x y : Fin 4 → ℝ) :
+    dotProduct (realWeylSU2Action a b c d x)
+        (realWeylSU2Action a b c d y) = dotProduct x y ∧
+    -dotProduct (realWeylBivector (realWeylSU2Action a b c d x))
+        (realWeylSU2Action a b c d y) = -dotProduct (realWeylBivector x) y := by
+  obtain ⟨hScalar, hPseudo⟩ := realWeylSU2_pairings_preserved a b c d hunit x y
+  exact ⟨hScalar, congrArg Neg.neg hPseudo⟩
+
+/-- The two complementary real phase-plane rotations. -/
+private def realWeylBivector₂ (x : Fin 4 → ℝ) : Fin 4 → ℝ :=
+  ![-x 2, x 3, x 0, -x 1]
+
+private def realWeylBivector₃ (x : Fin 4 → ℝ) : Fin 4 → ℝ :=
+  ![-x 3, -x 2, x 1, x 0]
+
+/-- Squared Euclidean size of a real four-coordinate chiral sector. -/
+def realWeylEnergy (x : Fin 4 → ℝ) : ℝ := dotProduct x x
+
+/-- Total density of the two real Weyl sectors, normalized to the original real spinor density. -/
+def realWeylProbabilityDensity (Φ : Vec8R) : ℝ :=
+  (realWeylEnergy (realWeylLeft Φ) + realWeylEnergy (realWeylRight Φ)) / 2
+
+/-- Chiral density difference of the two real Weyl sectors. -/
+def realWeylChiralDensity (Φ : Vec8R) : ℝ :=
+  (realWeylEnergy (realWeylLeft Φ) - realWeylEnergy (realWeylRight Φ)) / 2
+
 /-- Real matrix transformation on a Weyl sector, parameterized by four real
 coefficients. The unit-sphere condition is stated in the invariance theorem below. -/
 def realWeylUnitQuaternionTransform (a b c d : ℝ) (x : Fin 4 → ℝ) : Fin 4 → ℝ :=
@@ -673,24 +742,6 @@ theorem realWeylQuaternionAction_preserves_bilinears (q : Quaternion ℝ)
   simpa [realWeylQuaternionAction] using
     realWeylUnitQuaternionTransform_preserves_bilinears
       q.re q.imI q.imJ q.imK hcoords x y
-
-/-- The two complementary real phase-plane rotations. -/
-private def realWeylBivector₂ (x : Fin 4 → ℝ) : Fin 4 → ℝ :=
-  ![-x 2, x 3, x 0, -x 1]
-
-private def realWeylBivector₃ (x : Fin 4 → ℝ) : Fin 4 → ℝ :=
-  ![-x 3, -x 2, x 1, x 0]
-
-/-- Squared Euclidean size of a real four-coordinate chiral sector. -/
-def realWeylEnergy (x : Fin 4 → ℝ) : ℝ := dotProduct x x
-
-/-- Total density of the two real Weyl sectors, normalized to the original real spinor density. -/
-def realWeylProbabilityDensity (Φ : Vec8R) : ℝ :=
-  (realWeylEnergy (realWeylLeft Φ) + realWeylEnergy (realWeylRight Φ)) / 2
-
-/-- Chiral density difference of the two real Weyl sectors. -/
-def realWeylChiralDensity (Φ : Vec8R) : ℝ :=
-  (realWeylEnergy (realWeylLeft Φ) - realWeylEnergy (realWeylRight Φ)) / 2
 
 private theorem real_weyl_energy_frame (x y : Fin 4 → ℝ) :
     realWeylEnergy x * realWeylEnergy y =

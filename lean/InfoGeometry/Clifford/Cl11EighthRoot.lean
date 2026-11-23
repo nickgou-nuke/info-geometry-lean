@@ -65,7 +65,7 @@ theorem eighthRoot_pow_eight : eighthRoot ^ 8 = (1 : Mat2) := by
 theorem eighthRoot_not_symmetric : eighthRootᵀ ≠ eighthRoot := by
   intro h
   have h₀₁ := congrArg (fun A : Mat2 => A 0 1) h
-  have hpos : (0 : ℝ) < 1 / Real.sqrt 2 := by positivity
+  have hpos : (0 : ℝ) < (Real.sqrt 2)⁻¹ := by positivity
   simp [eighthRoot, Eminus, Matrix.transpose_apply] at h₀₁
   linarith
 

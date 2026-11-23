@@ -141,8 +141,7 @@ theorem nambu_scaled_pauli_triple (c : ℝ) :
       (6 * c ^ 3) • realPhaseAxis := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [nambu, dot, cross, realPhaseAxis, realSigma1, realSigma2, realSigma3,
-      Matrix.mul_apply, Fin.sum_univ_four] <;> ring
+    simp [nambu, dot, cross, realPhaseAxis, realSigma1, realSigma2, realSigma3] <;> ring
 
 /-- A real linear combination of the existing identity and Pauli generators.
 The coefficients are real; this is the symmetric, rather than arbitrary
@@ -174,27 +173,30 @@ theorem nambu_pauliLinear_12 (μ0 μ1 μ2 μ3 c : ℝ) :
       c ^ 2 • ((2 * μ0) • (realPhaseAxis * realSigma3) +
         (6 * μ3) • realPhaseAxis) := by
   ext i j
+  simp only [nambu, dot, cross, pauliLinear, Matrix.add_apply, Matrix.sub_apply,
+    Matrix.smul_apply, Matrix.mul_apply, Fin.sum_univ_four]
   fin_cases i <;> fin_cases j <;>
-    simp [nambu, dot, cross, pauliLinear, realPhaseAxis, realSigma1, realSigma2,
-      realSigma3, Matrix.mul_apply, Fin.sum_univ_four] <;> ring
+    norm_num [realPhaseAxis, realSigma1, realSigma2, realSigma3] <;> ring
 
 theorem nambu_pauliLinear_23 (μ0 μ1 μ2 μ3 c : ℝ) :
     nambu ⟨pauliLinear μ0 μ1 μ2 μ3, c • realSigma2, c • realSigma3⟩ =
       c ^ 2 • ((2 * μ0) • (realPhaseAxis * realSigma1) +
         (6 * μ1) • realPhaseAxis) := by
   ext i j
+  simp only [nambu, dot, cross, pauliLinear, Matrix.add_apply, Matrix.sub_apply,
+    Matrix.smul_apply, Matrix.mul_apply, Fin.sum_univ_four]
   fin_cases i <;> fin_cases j <;>
-    simp [nambu, dot, cross, pauliLinear, realPhaseAxis, realSigma1, realSigma2,
-      realSigma3, Matrix.mul_apply, Fin.sum_univ_four] <;> ring
+    norm_num [realPhaseAxis, realSigma1, realSigma2, realSigma3] <;> ring
 
 theorem nambu_pauliLinear_31 (μ0 μ1 μ2 μ3 c : ℝ) :
     nambu ⟨pauliLinear μ0 μ1 μ2 μ3, c • realSigma3, c • realSigma1⟩ =
       c ^ 2 • ((2 * μ0) • (realPhaseAxis * realSigma2) +
         (6 * μ2) • realPhaseAxis) := by
   ext i j
+  simp only [nambu, dot, cross, pauliLinear, Matrix.add_apply, Matrix.sub_apply,
+    Matrix.smul_apply, Matrix.mul_apply, Fin.sum_univ_four]
   fin_cases i <;> fin_cases j <;>
-    simp [nambu, dot, cross, pauliLinear, realPhaseAxis, realSigma1, realSigma2,
-      realSigma3, Matrix.mul_apply, Fin.sum_univ_four] <;> ring
+    norm_num [realPhaseAxis, realSigma1, realSigma2, realSigma3] <;> ring
 
 /-! ## The first three equations force the scalar fourth-generator sector -/
 
@@ -214,14 +216,9 @@ theorem pauli_coefficients_of_cyclic_nambu_equations
   have h12b := congrFun (congrFun h12 2) 3
   have h23a := congrFun (congrFun h23 0) 1
   have h31a := congrFun (congrFun h31 0) 1
-  simp [realPhaseAxis, realSigma1, realSigma2, realSigma3,
-    Matrix.mul_apply, Fin.sum_univ_four] at h12a h12b h23a h31a
-  have hμ1 : μ1 = 0 := by
-    have h : c ^ 2 * μ1 = 0 := by nlinarith [h23a]
-    exact (mul_eq_zero.mp h).resolve_left (pow_ne_zero 2 hc)
-  have hμ2 : μ2 = 0 := by
-    have h : c ^ 2 * μ2 = 0 := by nlinarith [h31a]
-    exact (mul_eq_zero.mp h).resolve_left (pow_ne_zero 2 hc)
+  simp [realPhaseAxis, realSigma1, realSigma2, realSigma3] at h12a h12b h23a h31a
+  have hμ1 : μ1 = 0 := h23a.resolve_left hc
+  have hμ2 : μ2 = 0 := h31a.resolve_left hc
   have hμ3 : μ3 = 0 := by
     have h : c ^ 2 * μ3 = 0 := by nlinarith [h12a, h12b]
     exact (mul_eq_zero.mp h).resolve_left (pow_ne_zero 2 hc)
@@ -369,8 +366,8 @@ theorem symmetric_nambu_412 :
     show symmetricT2 = symmetricSpatialScale • realSigma2 from rfl, h]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [symmetricT3, realPhaseAxis, realSigma3, Matrix.mul_apply,
-      Fin.sum_univ_four] <;> nlinarith [symmetric_scales_quadratic]
+    simp [symmetricT3, realPhaseAxis, realSigma3] <;>
+      nlinarith [symmetric_scales_quadratic]
 
 theorem symmetric_nambu_423 :
     nambu ⟨symmetricT4, symmetricT2, symmetricT3⟩ =
@@ -382,8 +379,8 @@ theorem symmetric_nambu_423 :
     show symmetricT3 = symmetricSpatialScale • realSigma3 from rfl, h]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [symmetricT1, realPhaseAxis, realSigma1, Matrix.mul_apply,
-      Fin.sum_univ_four] <;> nlinarith [symmetric_scales_quadratic]
+    simp [symmetricT1, realPhaseAxis, realSigma1] <;>
+      nlinarith [symmetric_scales_quadratic]
 
 theorem symmetric_nambu_431 :
     nambu ⟨symmetricT4, symmetricT3, symmetricT1⟩ =
@@ -395,8 +392,8 @@ theorem symmetric_nambu_431 :
     show symmetricT1 = symmetricSpatialScale • realSigma1 from rfl, h]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [symmetricT2, realPhaseAxis, realSigma2, Matrix.mul_apply,
-      Fin.sum_univ_four] <;> nlinarith [symmetric_scales_quadratic]
+    simp [symmetricT2, realPhaseAxis, realSigma2] <;>
+      nlinarith [symmetric_scales_quadratic]
 
 theorem symmetric_nambu_123 :
     nambu ⟨symmetricT1, symmetricT2, symmetricT3⟩ =

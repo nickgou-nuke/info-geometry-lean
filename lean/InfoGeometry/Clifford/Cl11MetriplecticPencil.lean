@@ -99,14 +99,18 @@ theorem smul_Eplus_indefinite {σ : ℝ} (hσ : σ ≠ 0) :
   rcases lt_or_gt_of_ne hσ with hneg | hpos
   · constructor
     · refine ⟨![0, 1], ?_⟩
-      simpa [smul_Eplus_quadratic] using neg_pos.mpr hneg
+      rw [smul_Eplus_quadratic]
+      simpa using neg_pos.mpr hneg
     · refine ⟨![1, 0], ?_⟩
-      simpa [smul_Eplus_quadratic] using hneg
+      rw [smul_Eplus_quadratic]
+      simpa using hneg
   · constructor
     · refine ⟨![1, 0], ?_⟩
-      simpa [smul_Eplus_quadratic] using hpos
+      rw [smul_Eplus_quadratic]
+      simpa using hpos
     · refine ⟨![0, 1], ?_⟩
-      simpa [smul_Eplus_quadratic] using neg_neg_of_pos hpos
+      rw [smul_Eplus_quadratic]
+      simpa using neg_neg_of_pos hpos
 
 /-- The sign is positive for the owner's convention `Eplus * Eminus = J1`. -/
 theorem smul_Eplus_Eminus_commutator (σ γ : ℝ) :
@@ -114,7 +118,7 @@ theorem smul_Eplus_Eminus_commutator (σ γ : ℝ) :
       (2 * σ * γ) • J1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [Eplus, Eminus, J1, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+    simp [Eplus, Eminus, J1] <;> ring
 
 theorem smul_Eplus_Eminus_commute_iff (σ γ : ℝ) :
     (σ • Eplus) * (γ • Eminus) = (γ • Eminus) * (σ • Eplus) ↔
@@ -142,7 +146,7 @@ theorem gen_mirror_conjugate (σ γ : ℝ) :
     J1 * gen (σ, γ) * J1 = -gen (σ, γ) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [gen, Eplus, Eminus, J1, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+    simp [gen, Eplus, Eminus, J1, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem gen_det (σ γ : ℝ) :
     (gen (σ, γ)).det = γ ^ 2 - σ ^ 2 := by
@@ -199,7 +203,7 @@ theorem gen_zero_one_nonstationary :
     (selfAdjointPart ℝ (gen (0, 1)) : Mat2) = 0 ∧
       (gen (0, 1)).mulVec ![1, 0] ≠ 0 := by
   constructor
-  · simp [gen_selfAdjointPart]
+  · rw [gen_selfAdjointPart, zero_smul]
   · intro h
     have h₁ := congrFun h 1
     norm_num [gen, Eplus, Eminus, Matrix.mulVec, dotProduct, Fin.sum_univ_two] at h₁

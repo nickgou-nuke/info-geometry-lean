@@ -2,12 +2,20 @@
 
 ## Current status
 
-**Proof candidates; native Lean acceptance is pending.** Earlier local execution
-handles are no longer available; their persisted logs record waiting for the
-shared build lock and do not establish a live process. A fresh invocation on
-2026-11-23 again reached the locked `toolchain` stage, before its native version
-probe could execute. No completed native command is recorded at this snapshot.
-The new declarations have not yet been kernel-checked or axiom-audited in this task.
+**Proof candidates; native Lean acceptance has not passed.** Focused CI
+[45181377416](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45181377416)
+at `383ee52b` passed exact-source checkout, dependency-pin validation, Lean
+`4.34.1` installation and locked Mathlib hydration. Its five-owner native build
+then reported errors in all five new modules, so warnings-as-errors elaboration
+and declaration axiom auditing were not reached.
+
+This revision repairs the reported commutator-name ambiguity, premature matrix
+simplification, flow unfolding, scalar proof obligations and owned-source
+warnings. The statements and operator carriers are retained; the unused
+`DecidableEq` instance is omitted from the final injectivity theorem as requested
+by the compiler linter. These repairs still require a successful native rerun.
+Earlier local attempts were blocked by the shared build lock; they do not
+certify this updated source snapshot.
 
 Completed checks are independent mathematical/source review, exact symbolic
 matrix identities, a bounded forbidden-construct screen, the maintained staged

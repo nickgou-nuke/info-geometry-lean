@@ -43,7 +43,7 @@ theorem nambu_noncommutative_first_slot (M A C : B) :
     nambu ⟨M, A, C⟩ =
       M * comm A C + comm A C * M - A * M * C + C * M * A := by
   rw [nambu_eq_alternating_cubic]
-  dsimp [comm]
+  dsimp [NoncommutativeZornNambu.comm]
   noncomm_ring
 
 end Ring
@@ -56,13 +56,13 @@ variable {K B : Type*} [Field K] [Ring B] [Algebra K B]
 theorem nambu_scalar_first_slot (t : K) (A C : B) :
     nambu ⟨t • (1 : B), A, C⟩ = t • comm A C := by
   rw [nambu_eq_cyclic_commutator]
-  simp [comm, Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_sub]
+  simp [NoncommutativeZornNambu.comm]
 
 /-- A scalar in the third slot scales the ordinary commutator. -/
 theorem nambu_scalar_third_slot (t : K) (A C : B) :
     nambu ⟨A, C, t • (1 : B)⟩ = t • comm A C := by
   rw [nambu_eq_cyclic_commutator]
-  simp [comm, Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_sub]
+  simp [NoncommutativeZornNambu.comm]
 
 /-- A nonzero scalar sector reduces Nambu centrality to ordinary commutation. -/
 theorem nambu_scalar_first_slot_eq_zero_iff
@@ -170,7 +170,7 @@ theorem real_phase_scalar_sector_quartic
   calc
     k * t ^ 4 = (k * t) * t ^ 3 := by ring
     _ = (-(t⁻¹ ^ 3 * c)) * t ^ 3 := by rw [hScalar]
-    _ = -c := by field_simp [ht] <;> ring
+    _ = -c := by field_simp [ht]
 
 /-- The Euclidean sign gives the negative quartic constraint. -/
 theorem real_phase_scalar_sector_euclidean_quartic

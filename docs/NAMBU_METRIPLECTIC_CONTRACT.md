@@ -5,13 +5,22 @@
 Task date: 2026-11-23. Base: `fe24e350b08fdea04f74c0748ef9fd9417c47529`.
 Branch: `codex/nambu-metriplectic-audit-20261123`.
 
-Status: source-reviewed proof candidates. Native Lean acceptance and the
-declaration axiom audit are pending the repository's shared build lock.
+Status: source-reviewed proof candidates. The first native CI build exposed
+compiler and linter failures; their repairs require a fresh native run and
+declaration axiom audit. See the [verification record](../verification/nambu-metriplectic/README.md)
+for exact run links and acceptance scope.
 
 The three uploads contain two distinct notes. Their original bytes and SHA-256
 hashes are preserved in `docs/intake/nambu-metriplectic-20261123/`.
 The two metriplectic/GRH uploads are byte-identical. The proposed Lean code and
 claims of proof in those notes are intake, not compiler evidence.
+
+The user's subsequent audit confirmation and requested native-gated follow-up
+are preserved as [normalized conversation intake](intake/nambu-metriplectic-20261123/followup-20261123.md).
+The existing `gen_eq_scalarPencil_iff` already owns the coincidence criterion;
+the proposed Peirce-defect, Klein-four and KMS-coordinate extensions reuse it.
+Their owner integration remains conditional on successful baseline compilation,
+warnings-as-errors checks and declaration axiom auditing.
 
 Primary references:
 
@@ -226,6 +235,16 @@ its compatibility with the relevant explicit formula and involution, and a
 proof that the resulting positivity holds. None follows from defining a pencil.
 Contour/Stokes statements also need a domain, regularity, boundary hypotheses,
 and treatment of zeros and poles. These obligations remain open.
+
+The separate [GRH analytic-obligation ledger](GRH_ANALYTIC_OBLIGATIONS.md)
+records the three required layers: genuine arithmetic data and a faithful
+carrier map; explicit-formula and involution compatibility; and positivity
+on the actual arithmetic quotient with a proved implication back to zeros.
+It distinguishes radical descent from discarding negative directions and
+identifies reusable native owners without treating their supplied hypotheses
+as constructed arithmetic results. The proposed first analytic family is
+primitive Dirichlet L-functions, beginning with the zeta instance; all three
+obligations remain open.
 
 ## Verification and review
 

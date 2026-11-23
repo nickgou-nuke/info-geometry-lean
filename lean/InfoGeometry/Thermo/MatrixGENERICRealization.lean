@@ -85,7 +85,7 @@ theorem energy_rate_eq_zero (L M : Matrix ι ι ℝ) (hL : Lᵀ = -L)
     (hM : M.PosSemidef) (gradH gradS : ι → ℝ)
     (hDegH : M.mulVec gradH = 0) (hDegS : L.mulVec gradS = 0) :
     dotProduct gradH (L.mulVec gradH + M.mulVec gradS) = 0 := by
-  simpa [matrixSystem] using
+  simpa [matrixSystem, System.flow] using
     (matrixSystem L M hL hM gradH gradS hDegH hDegS).energy_rate
 
 /-- The entropy rate is the native positive semidefinite quadratic form. -/
@@ -94,16 +94,17 @@ theorem entropy_rate_eq_dissipative (L M : Matrix ι ι ℝ) (hL : Lᵀ = -L)
     (hDegH : M.mulVec gradH = 0) (hDegS : L.mulVec gradS = 0) :
     dotProduct gradS (L.mulVec gradH + M.mulVec gradS) =
       dotProduct gradS (M.mulVec gradS) := by
-  simpa [matrixSystem] using
+  simpa [matrixSystem, System.flow] using
     (matrixSystem L M hL hM gradH gradS hDegH hDegS).entropy_rate_eq_dissipative
 
 theorem entropy_rate_nonneg (L M : Matrix ι ι ℝ) (hL : Lᵀ = -L)
     (hM : M.PosSemidef) (gradH gradS : ι → ℝ)
     (hDegH : M.mulVec gradH = 0) (hDegS : L.mulVec gradS = 0) :
     0 ≤ dotProduct gradS (L.mulVec gradH + M.mulVec gradS) := by
-  simpa [matrixSystem] using
+  simpa [matrixSystem, System.flow] using
     (matrixSystem L M hL hM gradH gradS hDegH hDegS).entropy_rate_nonneg
 
+omit [DecidableEq ι] in
 /-- An invertible reversible action and the entropy degeneracy force zero entropy gradient. -/
 theorem entropy_gradient_eq_zero_of_injective (L : Matrix ι ι ℝ)
     (hL : Function.Injective L.mulVec) (gradS : ι → ℝ)

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 /-!
 # Finite predicate-state copy
 
@@ -33,22 +39,34 @@ def mul : V4 → V4 → V4
 theorem mul_assoc (x y z : V4) : mul x (mul y z) = mul (mul x y) z := by
   cases x <;> cases y <;> cases z <;> rfl
 
-end V4
+theorem e_mul (x : V4) : mul e x = x := by
+  cases x <;> rfl
 
-class KleinAction (M : Type) where
-  act : V4 → M → M
-  act_e : ∀ x, act V4.e x = x
-  act_mul : ∀ g h x, act (V4.mul g h) x = act g (act h x)
+theorem mul_e (x : V4) : mul x e = x := by
+  cases x <;> rfl
+
+theorem mul_comm (x y : V4) : mul x y = mul y x := by
+  cases x <;> cases y <;> rfl
+
+theorem mul_self (x : V4) : mul x x = e := by
+  cases x <;> rfl
+
+theorem exists_inverse (x : V4) : ∃ y, mul x y = e ∧ mul y x = e := by
+  exact ⟨x, mul_self x, mul_self x⟩
+
 
 abbrev AdmissiblePredicate (M : Type) := M → Prop
+
 
 structure PredicateState (M : Type) (P : AdmissiblePredicate M) where
   val : M
   admissible : P val
 
+
 structure PredicateStateCopy (M : Type) (P : AdmissiblePredicate M) where
   val : M
   admissible : P val
+
 
 structure StateCopyEquivalence (A B : Type) where
   toFun : A → B
@@ -56,9 +74,17 @@ structure StateCopyEquivalence (A B : Type) where
   inverseOnLeft : ∀ a, invFun (toFun a) = a
   inverseOnRight : ∀ b, toFun (invFun b) = b
 
+
 def predicateStateCopyEquiv (M : Type) (P : AdmissiblePredicate M) :
     StateCopyEquivalence (PredicateState M P) (PredicateStateCopy M P) where
   toFun s := ⟨s.val, s.admissible⟩
   invFun v := ⟨v.val, v.admissible⟩
   inverseOnLeft s := by cases s; rfl
   inverseOnRight v := by cases v; rfl
+
+end V4
+
+class KleinAction (M : Type) where
+  act : V4 → M → M
+  act_e : ∀ x, act V4.e x = x
+  act_mul : ∀ g h x, act (V4.mul g h) x = act g (act h x)

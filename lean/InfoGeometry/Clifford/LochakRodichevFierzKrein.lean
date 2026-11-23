@@ -767,6 +767,45 @@ private theorem omega2_real_weyl_coordinates (Φ : Vec8R) :
     Fin.sum_univ_four]
   ring
 
+/-- Reconstruct the real Dirac carrier from its two real Weyl coordinate vectors.
+The half-sums invert the unnormalised sum/difference convention in
+`realWeylLeft` and `realWeylRight`. -/
+def realWeylJoin (x y : Fin 4 → ℝ) : Vec8R :=
+  ![(x 0 + y 0) / 2, -(x 3 + y 3) / 2, -(x 2 + y 2) / 2,
+    (x 1 + y 1) / 2, (x 1 - y 1) / 2, (x 2 - y 2) / 2,
+    (x 3 - y 3) / 2, (x 0 - y 0) / 2]
+
+@[simp] theorem realWeylLeft_realWeylJoin (x y : Fin 4 → ℝ) :
+    realWeylLeft (realWeylJoin x y) = x := by
+  ext i
+  fin_cases i <;> simp [realWeylLeft, realWeylJoin] <;> ring
+
+@[simp] theorem realWeylRight_realWeylJoin (x y : Fin 4 → ℝ) :
+    realWeylRight (realWeylJoin x y) = y := by
+  ext i
+  fin_cases i <;> simp [realWeylRight, realWeylJoin] <;> ring
+
+theorem realWeylJoin_realWeylLeft_right (Φ : Vec8R) :
+    realWeylJoin (realWeylLeft Φ) (realWeylRight Φ) = Φ := by
+  funext i
+  fin_cases i <;> simp [realWeylLeft, realWeylRight, realWeylJoin] <;> ring
+
+/-- Lift the existing real unit-quaternion action on both Weyl sectors to the
+original real `Vec8R` spinor carrier. -/
+def realWeylQuaternionSpinorAction (q : Quaternion ℝ) (Φ : Vec8R) : Vec8R :=
+  realWeylJoin (realWeylQuaternionAction q (realWeylLeft Φ))
+    (realWeylQuaternionAction q (realWeylRight Φ))
+
+@[simp] theorem realWeylLeft_quaternionSpinorAction (q : Quaternion ℝ) (Φ : Vec8R) :
+    realWeylLeft (realWeylQuaternionSpinorAction q Φ) =
+      realWeylQuaternionAction q (realWeylLeft Φ) := by
+  simp [realWeylQuaternionSpinorAction]
+
+@[simp] theorem realWeylRight_quaternionSpinorAction (q : Quaternion ℝ) (Φ : Vec8R) :
+    realWeylRight (realWeylQuaternionSpinorAction q Φ) =
+      realWeylQuaternionAction q (realWeylRight Φ) := by
+  simp [realWeylQuaternionSpinorAction]
+
 /-- The total real Weyl-sector energy is the time component of Daviau's vector current. -/
 theorem realWeylProbabilityDensity_eq_electricCurrentJ0 (Φ : Vec8R) :
     realWeylProbabilityDensity Φ = electricCurrentJ Φ 0 := by
@@ -782,6 +821,39 @@ theorem realWeylChiralDensity_eq_axialCurrentSigma0 (Φ : Vec8R) :
   simp [realWeylChiralDensity, realWeylEnergy, realWeylLeft,
     realWeylRight, dotProduct, Fin.sum_univ_four]
   ring
+
+/-- On the real Dirac carrier, simultaneous norm-one quaternion action preserves
+the two scalar cross-bilinears and the time components of the vector and axial
+currents. This is a finite-dimensional real algebraic invariance theorem. -/
+theorem realWeylQuaternionSpinorAction_preserves_readouts (q : Quaternion ℝ)
+    (hq : Quaternion.normSq q = 1) (Φ : Vec8R) :
+    omega1 (realWeylQuaternionSpinorAction q Φ) = omega1 Φ ∧
+    omega2 (realWeylQuaternionSpinorAction q Φ) = omega2 Φ ∧
+    electricCurrentJ (realWeylQuaternionSpinorAction q Φ) 0 = electricCurrentJ Φ 0 ∧
+    axialCurrentSigma (realWeylQuaternionSpinorAction q Φ) 0 = axialCurrentSigma Φ 0 := by
+  have hpair := realWeylQuaternionAction_preserves_bilinears q hq
+      (realWeylLeft Φ) (realWeylRight Φ)
+  have hsectorLeft := realWeylQuaternionAction_preserves_bilinears q hq
+      (realWeylLeft Φ) (realWeylLeft Φ)
+  have hsectorRight := realWeylQuaternionAction_preserves_bilinears q hq
+      (realWeylRight Φ) (realWeylRight Φ)
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · rw [omega1_real_weyl_coordinates, omega1_real_weyl_coordinates,
+      realWeylLeft_quaternionSpinorAction, realWeylRight_quaternionSpinorAction]
+    exact hpair.1
+  · rw [omega2_real_weyl_coordinates, omega2_real_weyl_coordinates,
+      realWeylLeft_quaternionSpinorAction, realWeylRight_quaternionSpinorAction]
+    exact hpair.2
+  · rw [← realWeylProbabilityDensity_eq_electricCurrentJ0,
+      ← realWeylProbabilityDensity_eq_electricCurrentJ0]
+    simp only [realWeylProbabilityDensity, realWeylEnergy,
+      realWeylLeft_quaternionSpinorAction, realWeylRight_quaternionSpinorAction]
+    rw [hsectorLeft.1, hsectorRight.1]
+  · rw [← realWeylChiralDensity_eq_axialCurrentSigma0,
+      ← realWeylChiralDensity_eq_axialCurrentSigma0]
+    simp only [realWeylChiralDensity, realWeylEnergy,
+      realWeylLeft_quaternionSpinorAction, realWeylRight_quaternionSpinorAction]
+    rw [hsectorLeft.1, hsectorRight.1]
 
 /-- The square difference of total and chiral densities is the product of the two sector
 energies. -/

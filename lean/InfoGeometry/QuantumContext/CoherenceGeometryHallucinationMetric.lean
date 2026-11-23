@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
@@ -12,28 +17,31 @@ set_option linter.unusedVariables false
 noncomputable section
 
 /-!
-# Coherence Geometry, Trigonometric Stiefel Fibration, and Autoregressive Hallucination Metric
+# Finite Stiefel Coherence Identities and a Noncommutative Idempotent
 
 Module: `InfoGeometry.QuantumContext.CoherenceGeometryHallucinationMetric`
 
-This module formalizes Lane 2 of the Causal Petz Recovery program:
-1. **The Algebraic Stiefel Ring Infrastructure**:
+This module contains finite algebraic identities and a real trigonometric specialization.
+The trigonometric defect is an algebraic diagnostic; no empirical hallucination detector or
+causal Petz recovery theorem is established here.
+
+1. **Noncommutative Stiefel Factorization**:
+   A column $v=(K,L)^T$ and row $w=(K,L)$ over an arbitrary ring give an idempotent
+   $vw$ when $wv=K^2+L^2=1$. No positivity or self-adjointness is asserted.
+2. **Scalar Stiefel Balance**:
    Prompt retention $s K^2$, future generation capacity $s L^2$, and off-diagonal coherence $s K L$
    under the Stiefel constraint $K^2 + L^2 = 1$.
-2. **Density Matrix Purity & Projector Identity**:
-   $\det(\mathcal{R}(\sigma)) = 0$ and $\mathcal{R}(\sigma)^2 = s \mathcal{R}(\sigma)$, proving that
-   the reconstructed causal context is an exact rank-1 pure state projector.
-3. **Real Line Coherence Bound**:
+3. **Scaled Matrix Identity**:
+   The reconstructed matrix has determinant zero and satisfies $R^2=sR$. It is idempotent
+   when normalized with $s=1$; determinant zero alone is not used as a rank theorem.
+4. **Real Line Coherence Bound**:
    $(K - L)^2 \ge 0 \implies 2 K L \le 1$, with maximum coherence $s/2$ attained at $K = L$.
-4. **Trigonometric Stiefel Fibration**:
+5. **Trigonometric Stiefel Parameterization**:
    $K = \cos \theta, L = \sin \theta \implies \text{Coherence}(\theta) = \frac{1}{2} s \sin(2\theta)$
    and $\text{Defect}(\theta) = 1 - \sin(2\theta) = (\cos \theta - \sin \theta)^2$.
-5. **The Hallucination Detachment Limit**:
+6. **Endpoint Values**:
    As $\theta \to \pi/2$, prompt retention and coherence vanish ($s \cos^2 \theta \to 0, s K L \to 0$),
-   while future generation capacity saturates ($s \sin^2 \theta \to s$) with maximal defect $\mathcal{H} = 1$,
-   providing the mathematical foundation for streaming hallucination alert metrics.
-6. **Master Verification Certificate**:
-   Bundled `CoherenceGeometryCertificate` with zero sorry, zero admit, and zero custom axioms.
+   while future generation capacity saturates ($s \sin^2 \theta \to s$) and the algebraic defect equals $1$.
 -/
 
 namespace InfoGeometry.QuantumContext.CoherenceGeometry
@@ -43,6 +51,51 @@ open Matrix Real
 /-! ### 1. Algebraic Stiefel Ring Infrastructure -/
 
 variable {R : Type*} [Ring R]
+
+/-! ### 1. Noncommutative Stiefel Factorization -/
+
+/-- The column vector $(K,L)^T$ over an arbitrary, possibly noncommutative ring. -/
+def stiefelColumn (K L : R) : Matrix (Fin 2) (Fin 1) R :=
+  fun i _ => if i.val = 0 then K else L
+
+/-- The row vector $(K,L)$ over an arbitrary, possibly noncommutative ring. -/
+def stiefelRow (K L : R) : Matrix (Fin 1) (Fin 2) R :=
+  fun _ j => if j.val = 0 then K else L
+
+/-- The factored operator $v w$ on the free rank-two left module. -/
+def stiefelOperatorIdempotent (K L : R) : Matrix (Fin 2) (Fin 2) R :=
+  stiefelColumn K L * stiefelRow K L
+
+/-- The row-column contraction is the $1 \times 1$ matrix with entry $K^2+L^2$. -/
+theorem stiefelRow_mul_column (K L : R) :
+    stiefelRow K L * stiefelColumn K L = !![K * K + L * L] := by
+  ext i j
+  fin_cases i
+  fin_cases j
+  simp [stiefelRow, stiefelColumn, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- If $K^2+L^2=1$, the factored operator $v w$ is idempotent over any ring.
+    This is an algebraic projection; no inner product or positivity is assumed. -/
+theorem stiefelOperatorIdempotent_sq (K L : R) (h : K * K + L * L = 1) :
+    stiefelOperatorIdempotent K L * stiefelOperatorIdempotent K L =
+      stiefelOperatorIdempotent K L := by
+  dsimp [stiefelOperatorIdempotent]
+  have h_unit : (!![1] : Matrix (Fin 1) (Fin 1) R) = 1 := by
+    ext i j
+    fin_cases i
+    fin_cases j
+    simp
+  calc
+    (stiefelColumn K L * stiefelRow K L) * (stiefelColumn K L * stiefelRow K L) =
+        stiefelColumn K L * (stiefelRow K L * stiefelColumn K L) * stiefelRow K L := by
+          simp only [Matrix.mul_assoc]
+    _ = stiefelColumn K L * (!![1] : Matrix (Fin 1) (Fin 1) R) * stiefelRow K L := by
+          rw [stiefelRow_mul_column, h]
+    _ = stiefelColumn K L * stiefelRow K L := by
+          rw [h_unit]
+          simp
+
+/-! ### 2. Scalar Stiefel Balance -/
 
 /-- Prompt retention mass $P(K, s) = s K^2$. -/
 def promptRetention (K s : R) : R := s * K^2
@@ -89,7 +142,7 @@ theorem perfect_balance_defect_zero (K L : R) (h_eq : K = L) :
   rw [h_eq]
   noncomm_ring
 
-/-! ### 2. Density Matrix Purity & Projector Identity -/
+/-! ### 3. Scaled Matrix Identity -/
 
 /-- The $2 \times 2$ reconstructed density matrix $\mathcal{R}(\sigma) = \begin{pmatrix} s K^2 & s K L \\ s K L & s L^2 \end{pmatrix}$. -/
 def reconstructedState (K L s : R) : Matrix (Fin 2) (Fin 2) R :=
@@ -137,7 +190,14 @@ theorem reconstructedState_sq {R : Type*} [CommRing R] (K L s : R) (h_stiefel : 
       _ = s * (s * L^2) * 1 := by rw [h_stiefel]
       _ = s • (s * L^2) := by ring
 
-/-! ### 3. Real Line Coherence Bound -/
+/-- In the normalized scalar case $s=1$, the reconstructed matrix is an idempotent. -/
+theorem reconstructedState_one_sq {R : Type*} [CommRing R] (K L : R)
+    (h_stiefel : K^2 + L^2 = 1) :
+    reconstructedState K L 1 * reconstructedState K L 1 = reconstructedState K L 1 := by
+  rw [reconstructedState_sq K L 1 h_stiefel]
+  simp
+
+/-! ### 4. Real Line Coherence Bound -/
 
 /-- **Theorem**: Algebraic upper bound on coherence cross-product: $2 K L \le 1$. -/
 theorem coherence_two_mul_le_one (K L : ℝ) (h_stiefel : K^2 + L^2 = 1) :
@@ -163,7 +223,7 @@ theorem hallucination_defect_le_one (K L : ℝ) (h_stiefel : K^2 + L^2 = 1)
     linarith
   linarith
 
-/-! ### 4. Real Trigonometric Stiefel Fibration -/
+/-! ### 5. Real Trigonometric Stiefel Parameterization -/
 
 /-- Cosine prompt retention amplitude. -/
 def trigStiefelK (θ : ℝ) : ℝ := Real.cos θ
@@ -200,7 +260,7 @@ theorem trig_hallucination_defect (θ : ℝ) :
   rw [Real.sin_two_mul]
   ring
 
-/-! ### 5. Asymptotic Regimes & The Hallucination Alert Threshold -/
+/-! ### 6. Endpoint Values -/
 
 /-- **Theorem**: At the balanced angle $\theta = \pi/4$, coherence attains maximum value $s/2$. -/
 theorem balanced_regime_pi_div_four (s : ℝ) :
@@ -227,9 +287,8 @@ theorem prompt_lock_regime_zero (s : ℝ) :
   simp [Real.cos_zero, Real.sin_zero]
 
 /-- 
-**The Hallucination Detachment Limit Theorem ($\theta = \pi/2$)**:
-As $\theta = \pi/2$, prompt retention vanishes ($P = 0$), future generation capacity saturates ($G = s$),
-cross-coherence collapses to zero ($C = 0$), and hallucination defect hits maximum ($\mathcal{H} = 1$).
+**Endpoint identity ($\theta = \pi/2$)**:
+Prompt retention is zero, future generation equals $s$, coherence is zero, and the algebraic defect is $1$.
 -/
 theorem total_hallucination_regime_pi_div_two (s : ℝ) :
     promptRetention (trigStiefelK (π / 2)) s = 0 ∧
@@ -240,8 +299,6 @@ theorem total_hallucination_regime_pi_div_two (s : ℝ) :
   have h_sin : Real.sin (π / 2) = 1 := Real.sin_pi_div_two
   dsimp [promptRetention, futureGeneration, coherenceCrossTerm, hallucinationDefect, trigStiefelK, trigStiefelL]
   simp [h_cos, h_sin]
-
-/-! ### 6. Master Verification Certificate -/
 
 /-- Master certificate bundling all proved coherence geometry theorems. -/
 structure CoherenceGeometryCertificate where

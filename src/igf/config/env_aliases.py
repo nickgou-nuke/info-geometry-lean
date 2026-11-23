@@ -116,7 +116,20 @@ def load_alexandria_arango_env(repo_root: Path | None = None) -> Path | None:
     root = repo_root or repo_root_from(Path.cwd())
     configured = os.environ.get("ALEXANDRIA_ARANGO_ENV_FILE")
     env_path = Path(configured) if configured else root / DEFAULT_ALEXANDRIA_ENV
+
+    had_db = bool(get_env_alias(*ALEXANDRIA_ALIASES["ARANGO_DATABASE"]))
+    had_user = bool(get_env_alias(*ALEXANDRIA_ALIASES["ARANGO_USER"]))
+    had_pass = bool(get_env_alias(*ALEXANDRIA_ALIASES["ARANGO_PASS"]))
+    had_ep = bool(
+        get_env_alias(*ALEXANDRIA_ALIASES["ARANGO_ENDPOINT"])
+        or os.environ.get("ALEXANDRIA_ARANGO_PORT", "").strip()
+    )
+
     if not env_path.exists():
+        if not get_env_alias(*ALEXANDRIA_ALIASES["ARANGO_ENDPOINT"]):
+            port = os.environ.get("ALEXANDRIA_ARANGO_PORT", "").strip()
+            if port:
+                os.environ["ALEXANDRIA_ARANGO_ENDPOINT"] = f"http://127.0.0.1:{port}"
         return None
 
     root_password = ""
@@ -134,6 +147,14 @@ def load_alexandria_arango_env(repo_root: Path | None = None) -> Path | None:
                 root_password = cleaned
             continue
         if key.startswith("ALEXANDRIA_"):
+            if key in ALEXANDRIA_ALIASES["ARANGO_DATABASE"] and had_db:
+                continue
+            if key in ALEXANDRIA_ALIASES["ARANGO_USER"] and had_user:
+                continue
+            if key in ALEXANDRIA_ALIASES["ARANGO_PASS"] and had_pass:
+                continue
+            if key in ("ALEXANDRIA_ARANGO_ENDPOINT", "ALEXANDRIA_ARANGO_PORT") and had_ep:
+                continue
             os.environ.setdefault(key, cleaned)
 
     if root_password and not get_env_alias(*ALEXANDRIA_ALIASES["ARANGO_PASS"]):
@@ -272,7 +293,13 @@ def hive_arango_password(default: str = "") -> str:
 
 
 def alexandria_arango_endpoint(default: str = DEFAULT_ALEXANDRIA_ARANGO_ENDPOINT) -> str:
-    return get_env_alias(*ALEXANDRIA_ALIASES["ARANGO_ENDPOINT"]) or default
+    explicit = get_env_alias(*ALEXANDRIA_ALIASES["ARANGO_ENDPOINT"])
+    if explicit:
+        return explicit
+    port = os.environ.get("ALEXANDRIA_ARANGO_PORT", "").strip()
+    if port:
+        return f"http://127.0.0.1:{port}"
+    return default
 
 
 def alexandria_arango_database(default: str = DEFAULT_ALEXANDRIA_ARANGO_DATABASE) -> str:

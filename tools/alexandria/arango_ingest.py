@@ -63,7 +63,7 @@ INDEXES: dict[str, list[list[str]]] = {
     "alexandria_documents": [["path"], ["title"], ["contentHash"]],
     "alexandria_sections": [["documentKey"], ["title"]],
     "alexandria_chunks": [["documentKey"], ["sectionKey"], ["chunkKind"], ["tokens[*]"]],
-    "alexandria_entities": [["chunkKey"], ["entityType"], ["surface"], ["documentKey"]],
+    "alexandria_entities": [["chunkKey"], ["entityType"], ["surface"], ["documentKey"], ["normalized"], ["canonicalKey"]],
     "alexandria_entity_relation_edges": [["chunkKey"]],
     "alexandria_dag_edges": [["documentKey"], ["edgeType"]],
 }
@@ -183,7 +183,12 @@ def ensure_search_view(endpoint: str, database: str, username: str, password: st
 def add_search_terms(row: dict[str, Any]) -> dict[str, Any]:
     """Attach identifier pieces (dots/underscores/camelCase split) to a chunk row."""
     provenance = row.get("provenance") if isinstance(row.get("provenance"), dict) else {}
+    semantic = row.get("semantic") if isinstance(row.get("semantic"), dict) else {}
     parts = [str(row.get("title", "")), str(provenance.get("declName") or "")]
+    for sem_key in ("mathematical_archetypes", "mathematical_entities", "assumed_definitions", "symbolic_terms"):
+        vals = semantic.get(sem_key)
+        if isinstance(vals, list):
+            parts.extend(str(v) for v in vals if isinstance(v, str) and v)
     if provenance.get("sourceFormat") in CODE_SOURCE_FORMATS or "`" in str(row.get("text", "")):
         parts.append(str(row.get("text", "")))
     existing = [str(term) for term in (row.get("searchTerms") or []) if isinstance(term, str) and term]

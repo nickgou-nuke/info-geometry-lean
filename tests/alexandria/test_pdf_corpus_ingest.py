@@ -682,3 +682,284 @@ def test_pre_bibliography_head_sample_toc_references_before_section_one() -> Non
     )
     assert "10.1000/own_subsec" in subsec_sample
     assert "10.9999/leak_subsec" not in subsec_sample
+
+
+def test_equation_filtering_multipara_theorem_proof_and_chapter_sections() -> None:
+    ext = ExtractionResult(
+        sha256="b" * 64,
+        canonical_path=Path("/tmp/chapter_test.pdf"),
+        rel_path="chapter_test.pdf",
+        duplicate_paths=[],
+        size_bytes=2048,
+        outcome="ingested",
+        reason="ok",
+        page_count=1,
+        char_count=600,
+        parser="pdftotext",
+        warnings=[],
+        title="Chapter Test",
+        author="",
+        encrypted=False,
+        encoding_noise_ratio=0.0,
+        pages=[
+            (
+                1,
+                "\n".join(
+                    [
+                        "Chapter 1: Polarized Krein Algebras",
+                        "Definition 1.1 (Polarized space). First paragraph of definition.",
+                        "",
+                        "Second paragraph extending the polarized space definition.",
+                        "§ 1.2. Curvature and Proof Structure",
+                        "Theorem 1.2. Every Krein fundamental symmetry satisfies J^2 = I.",
+                        "",
+                        "Moreover, orthogonal splitting holds by Clifford grading.",
+                        "",
+                        "P J = J P* (1.1)",
+                        "",
+                        "Proof. We verify the relation using Eq. (1.1)",
+                        "(1.2)",
+                        "",
+                        "Continuing the proof paragraph cleanly across blank line. □",
+                        "",
+                        "As shown in (1.1) and Eq. (1.2),",
+                        "subsequent prose should not become an equation.",
+                    ]
+                ),
+            )
+        ],
+    )
+    pkt = build_document_artifacts(ext)
+    secs = [s["title"] for s in pkt["sections"]]
+    assert "Chapter 1: Polarized Krein Algebras" in secs
+    assert "§ 1.2. Curvature and Proof Structure" in secs
+
+    chunks = pkt["chunks"]
+    eq_chunks = [c for c in chunks if c["chunkKind"] == "equation"]
+    assert len(eq_chunks) == 1
+    assert "P J = J P* (1.1)" in eq_chunks[0]["text"]
+
+    def_chunks = [c for c in chunks if c["chunkKind"] == "definition"]
+    assert len(def_chunks) == 1
+    assert "Second paragraph extending" in def_chunks[0]["text"]
+
+    thm_chunks = [c for c in chunks if c["chunkKind"] == "theorem"]
+    assert len(thm_chunks) == 1
+    assert "Moreover, orthogonal splitting holds" in thm_chunks[0]["text"]
+
+    proof_chunks = [c for c in chunks if c["chunkKind"] == "proof"]
+    assert len(proof_chunks) == 1
+    assert "Continuing the proof paragraph cleanly" in proof_chunks[0]["text"]
+    assert "Equation" not in proof_chunks[0]["title"]
+    assert "subsequent prose" not in proof_chunks[0]["text"]
+
+    prose_chunks = [c for c in chunks if c["chunkKind"] == "prose"]
+    assert any("subsequent prose should not become an equation" in c["text"] for c in prose_chunks)
+
+
+def test_archetype_extraction_cover_scan_noise_filter_and_resume(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    corpus = tmp_path / "corpus"
+    corpus.mkdir()
+
+    # Good math paper rich in archetypes
+    _make_text_pdf(
+        corpus / "archetypes_paper.pdf",
+        [
+            [
+                "Abstract",
+                "We relate Krein space fundamental symmetry to Clifford algebra Cl(1,3), "
+                "Peirce decomposition on isotropic nullcones, and the Drazin inverse.",
+                "1. Main Construction",
+                "Theorem 1.1. The Maurer-Cartan curved DG differential commutes with the Riesz projector.",
+            ]
+        ],
+        title="Archetypes and Nullcones",
+    )
+
+    # 12-page cover-only scanned PDF (>= 10 pages, text only on page 1, blank pages 2..12)
+    cover_pages = [["Scanned Book Cover Header Copyright 1970 All Rights Reserved"] * 3] + [[""] for _ in range(11)]
+    _make_text_pdf(corpus / "cover_only_scan.pdf", cover_pages)
+
+    # Noise file matched by DEFAULT_NOISE_EXCLUDE_GLOBS
+    _make_text_pdf(
+        corpus / "Isabelle2025-2_linux" / "doc" / "tutorial.pdf",
+        [["1. Isabelle", "Theorem 1.1. Unrelated interactive theorem prover manual." * 3]],
+        title="Isabelle Manual",
+    )
+
+    out_dir = tmp_path / "out"
+    report = run_pdf_corpus_pipeline(
+        input_dir=corpus,
+        output_dir=out_dir,
+        workers=1,
+        exclude_default_noise=True,
+        resume=True,
+    )
+
+    assert report["total_scanned_files"] == report["non_pdf_skipped"] + report["total_pdf_files"]
+    assert report["total_pdf_files"] == 2
+    assert report["outcome_counts"]["ingested"] == 1
+    assert report["outcome_counts"]["scanned_no_text"] == 1
+    assert sum(report["outcome_counts"].values()) == report["total_pdf_files"]
+    assert any("cover_only_scanned_pdf" in u.get("warnings", []) for u in report["unique_documents"])
+
+    chunks = _read_jsonl(out_dir / "alexandria_chunks.jsonl")
+    entities = _read_jsonl(out_dir / "alexandria_entities.jsonl")
+    archetype_names = {
+        arch
+        for ch in chunks
+        for arch in ch["semantic"].get("mathematical_archetypes", [])
+    }
+    assert {
+        "krein_indefinite_metric",
+        "clifford_spinor_tower",
+        "z2_graded_polarization",
+        "drazin_riesz_spectral",
+        "curved_dga_differential",
+    } <= archetype_names
+    arch_entities = [e for e in entities if e["entityType"] == "math_archetype"]
+    assert arch_entities and all(e.get("canonicalKey", "").startswith("concept_") for e in arch_entities)
+
+    # Second run with resume=True must reuse .doc_cache without re-running extract_pdf_group
+    cache_files = list((out_dir / ".doc_cache").glob("*.json"))
+    assert len(cache_files) == 2
+
+    def _boom(*_args: Any, **_kwargs: Any) -> Any:
+        raise AssertionError("extract_pdf_group should not run when cache hit succeeds")
+
+    monkeypatch.setattr(pdf_corpus_ingest, "extract_pdf_group", _boom)
+    report2 = run_pdf_corpus_pipeline(
+        input_dir=corpus,
+        output_dir=out_dir,
+        workers=1,
+        exclude_default_noise=True,
+        resume=True,
+    )
+    assert report2["outcome_counts"]["ingested"] == 1
+    assert report2["outcome_counts"]["scanned_no_text"] == 1
+
+
+def test_multiversion_arxiv_latest_and_qwen3_v1_thinking_materialization(tmp_path: Path) -> None:
+    corpus = tmp_path / "corpus"
+    corpus.mkdir()
+
+    # Older v1 sorts lexicographically BEFORE v3
+    _make_text_pdf(
+        corpus / "2405.12345v1.pdf",
+        [["Abstract", "Early v1 note on Krein operators." * 4]],
+        title="2405.12345v1",
+    )
+    _make_text_pdf(
+        corpus / "2405.12345v3.pdf",
+        [["Abstract", "Revised v3 treatise on Krein operators." * 4]],
+        title="2405.12345v3",
+    )
+    _make_text_pdf(
+        corpus / "citing_qwen.pdf",
+        [
+            [
+                "Abstract",
+                "We study Bost-Connes modular flows [1].",
+                "1. Introduction",
+                "Theorem 1.1. A KMS state induces modular automorphism [1].",
+                "References",
+                "[1] A. Researcher, Revised treatise, arXiv:2405.12345, 2024.",
+            ]
+        ],
+        title="Citing Qwen Paper",
+    )
+
+    seen_requests: list[dict[str, Any]] = []
+
+    class _V1Handler(BaseHTTPRequestHandler):
+        def log_message(self, format: str, *args: Any) -> None:  # noqa: A002
+            return
+
+        def do_GET(self) -> None:  # noqa: N802
+            if self.path == "/v1/models":
+                assert self.headers.get("Authorization") == "Bearer vllm-secret"
+                body = json.dumps({"data": [{"id": "nvidia/Qwen3.8-27B-NVFP4"}]}).encode("utf-8")
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.end_headers()
+                self.wfile.write(body)
+                return
+            self.send_response(404)
+            self.end_headers()
+
+        def do_POST(self) -> None:  # noqa: N802
+            if self.path != "/v1/chat/completions":
+                self.send_response(404)
+                self.end_headers()
+                return
+            assert self.headers.get("Authorization") == "Bearer vllm-secret"
+            length = int(self.headers.get("Content-Length", "0"))
+            req_payload = json.loads(self.rfile.read(length).decode("utf-8"))
+            seen_requests.append(req_payload)
+            content_str = (
+                "<think>Let us inspect {x^2} and bracket [1, 2] first.</think>\n"
+                "```json\n"
+                + json.dumps(
+                    {
+                        "summary": "Qwen3.8 modular flow summary.",
+                        "assumed_definitions": ["KMS state"],
+                        "mathematical_entities": ["Tomita-Takesaki modular operator", "Bost-Connes system"],
+                        "symbolic_terms": ["sigma_t"],
+                        "graph_triplets": [["Bost-Connes system", "carries", "KMS state"]],
+                    }
+                )
+                + "\n```"
+            )
+            resp_payload = {"choices": [{"message": {"content": content_str}}]}
+            body = json.dumps(resp_payload).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(body)
+
+    server = ThreadingHTTPServer(("127.0.0.1", 0), _V1Handler)
+    port = server.server_address[1]
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        out_dir = tmp_path / "out_qwen"
+        report = run_pdf_corpus_pipeline(
+            input_dir=corpus,
+            output_dir=out_dir,
+            workers=1,
+            enrich_ollama=True,
+            ollama_endpoint=f"http://127.0.0.1:{port}/v1",
+            ollama_model="nvidia/Qwen3.8-27B-NVFP4",
+            enrich_ollama_max_chunks=3,
+            enrich_ollama_workers=2,
+            enrich_ollama_api_key="vllm-secret",
+            enrich_ollama_max_tokens=1024,
+            enrich_ollama_disable_thinking=True,
+        )
+    finally:
+        server.shutdown()
+        server.server_close()
+
+    assert seen_requests
+    assert seen_requests[0]["response_format"] == {"type": "json_object"}
+    assert seen_requests[0]["chat_template_kwargs"] == {"enable_thinking": False}
+    assert seen_requests[0]["max_tokens"] == 1024
+    assert report["ollama_enrichment"]["enriched"] == 3
+    assert report["ollama_enrichment"]["materialized_entities"] > 0
+    assert report["ollama_enrichment"]["materialized_relations"] > 0
+
+    docs = {d["relativePath"]: d for d in _read_jsonl(out_dir / "alexandria_documents.jsonl")}
+    dag_edges = _read_jsonl(out_dir / "alexandria_dag_edges.jsonl")
+    cross = [e for e in dag_edges if e["edgeType"] == "document_cites_document"]
+    assert len(cross) == 1
+    assert cross[0]["_from"] == f"alexandria_documents/{docs['citing_qwen.pdf']['_key']}"
+    assert cross[0]["_to"] == f"alexandria_documents/{docs['2405.12345v3.pdf']['_key']}"
+
+    entities = _read_jsonl(out_dir / "alexandria_entities.jsonl")
+    rel_edges = _read_jsonl(out_dir / "alexandria_entity_relation_edges.jsonl")
+    chunks = _read_jsonl(out_dir / "alexandria_chunks.jsonl")
+    assert any(e["entityType"] == "llm_entity" and e["normalized"] == "tomita-takesaki modular operator" for e in entities)
+    assert any(r["relationType"] == "carries" for r in rel_edges)
+    assert any("tomita" in c["searchTerms"] for c in chunks)

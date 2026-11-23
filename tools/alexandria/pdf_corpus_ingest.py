@@ -7,6 +7,7 @@ Records emitted by this pipeline are retrieval/navigation context only
 from __future__ import annotations
 
 import argparse
+import fnmatch
 import hashlib
 import json
 import math
@@ -19,7 +20,7 @@ from collections import Counter, defaultdict, deque
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
 from urllib.request import Request, urlopen
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -105,7 +106,11 @@ SECTION_HEADER_RE = re.compile(
     r"Introduction\.?|Preliminaries\.?|Conclusion\.?|Conclusions\.?|Discussion\.?|"
     r"References\.?|REFERENCES\.?|Bibliography\.?|BIBLIOGRAPHY\.?|Acknowledgements?\.?|Acknowledgments?\.?|"
     r"Appendix\s+[A-Z0-9][^\n]{0,80}|"
+    r"Chapter\s+(?:\d+|[IVXLCDM]+)\b[^\n]{0,80}|"
+    r"Part\s+(?:\d+|[IVXLCDM]+)\b[^\n]{0,80}|"
+    r"§\s*\d+(?:\.\d+)*\.?\s+[^\n]{2,90}|"
     r"[IVX]{1,5}\.\s+[A-Z][A-Za-z0-9\s,\-:]{2,80}|"
+    r"(?:0|[1-9]\d?)(?:\.\d+){0,3}\.?\s+[A-Z][A-Z0-9\s,\-:]{2,80}|"
     r"(?:0|[1-9]\d?)(?:\.\d+){0,3}\.?\s+[A-Z][^\n]{2,90}"
     r")\s*$"
 )
@@ -167,6 +172,116 @@ DOMAIN_TERMS_RE = re.compile(
     r")\b",
     re.IGNORECASE,
 )
+
+DEFAULT_NOISE_EXCLUDE_GLOBS: tuple[str, ...] = (
+    "*Isabelle2025*",
+    "*Act_Content*",
+    "*OV2640_DS*",
+    "*JFETS_The_New_Frontier*",
+)
+
+NON_CROSS_DOC_ENTITY_TYPES = frozenset({"math_label", "math_reference", "bib_entry"})
+
+EQUATION_PROSE_REF_RE = re.compile(
+    r"\b(?:see|by|in|from|of|and|or|to|with|into|eq\.?|equation|equations|cf\.?|thm\.?|theorem|lemma|prop\.?|proposition|ref\.?)\s*$",
+    re.IGNORECASE,
+)
+
+EQUATION_MATH_OP_RE = re.compile(
+    r"[=<>≤≥≠≈≅≃∈⊂⊆⊗⊕∑∏∫↦→⇒⇔∂∇+*/^]|(?:\s|^)-[A-Za-z0-9(\\ ]"
+)
+
+MATH_ARCHETYPE_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
+    (
+        "z2_graded_polarization",
+        re.compile(
+            r"\b(?:Z/2|ℤ/2|chiral\s+grading|Peirce\s+decomposition|isotropic\s+null|nullcone|gamma5|Krein\s+involution)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "curved_dga_differential",
+        re.compile(
+            r"\b(?:graded\s+differential|curved\s+DG|Maurer-Cartan|Bianchi\s+identity|Cartan\s+curvature|soldering)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "clifford_spinor_tower",
+        re.compile(
+            r"\b(?:Clifford\s+algebra|Cl\s*\([0-9,\s]+\)|spinor|Dirac-Hestenes|Lochak|Daviau|Jordan-Wigner|Pin\s*\()\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "krein_indefinite_metric",
+        re.compile(
+            r"\b(?:Krein\s+space|fundamental\s+symmetry|indefinite\s+inner\s+product|Pontryagin\s+space|J-self-adjoint)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "drazin_riesz_spectral",
+        re.compile(
+            r"\b(?:Drazin\s+inverse|Riesz\s+projector|Riesz\s+decomposition|Moore-Penrose|Fredholm|generalized\s+inverse)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "souriau_metriplectic_thermo",
+        re.compile(
+            r"\b(?:Souriau|coadjoint\s+orbit|moment\s+map|Massieu|Gibbs\s+state|Casimir|Onsager|metriplectic)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "modular_kms_monodromy",
+        re.compile(
+            r"\b(?:Tomita-Takesaki|modular\s+flow|modular\s+automorphism|KMS\s+state|Bost-Connes|thermal\s+time|monodromy|de\s+Rham)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "categorical_colimit_tower",
+        re.compile(
+            r"\b(?:direct\s+limit|colimit|inductive\s+limit|functor|natural\s+transformation|adjunction|topos|sheaf)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "noncommutative_k_theory",
+        re.compile(
+            r"\b(?:C\*-algebra|KK-theory|Kasparov|spectral\s+triple|cyclic\s+cohomology|Cuntz|Toeplitz)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "yang_mills_gauge_holonomy",
+        re.compile(
+            r"\b(?:Yang-Mills|gauge\s+connection|Wilson\s+loop|holonomy|Berry\s+curvature|principal\s+bundle|Chern-Simons)\b",
+            re.IGNORECASE,
+        ),
+    ),
+)
+
+
+def _extract_math_archetypes(text: str) -> list[str]:
+    return [name for name, pat in MATH_ARCHETYPE_PATTERNS if pat.search(text)]
+
+
+def _is_displayed_equation_block(text: str) -> bool:
+    s = text.strip()
+    if not s or len(s) >= 600:
+        return False
+    m = EQUATION_END_RE.search(s)
+    if not m:
+        return False
+    body = s[: m.start()].strip()
+    if len(body) < 3:
+        return False
+    if EQUATION_PROSE_REF_RE.search(body):
+        return False
+    return bool(EQUATION_MATH_OP_RE.search(body))
 
 
 @dataclass
@@ -250,10 +365,26 @@ def _canonical_sort_key(item: DiscoveredPdf) -> tuple[int, int, int, int, str]:
     return (is_isabelle, not_pdf_ext, is_browser_copy, depth, item.rel_path)
 
 
-def scan_and_deduplicate_corpus(input_dir: Path) -> InventoryResult:
+def _matches_exclude_glob(rel_posix: str, exclude_patterns: tuple[str, ...]) -> bool:
+    if not exclude_patterns:
+        return False
+    parts = Path(rel_posix).parts
+    name = Path(rel_posix).name
+    for pat in exclude_patterns:
+        if fnmatch.fnmatch(rel_posix, pat) or fnmatch.fnmatch(name, pat) or any(fnmatch.fnmatch(p, pat) for p in parts):
+            return True
+    return False
+
+
+def scan_and_deduplicate_corpus(
+    input_dir: Path,
+    *,
+    exclude_globs: Iterable[str] = (),
+) -> InventoryResult:
     if not input_dir.exists():
         raise FileNotFoundError(f"Input path does not exist: {input_dir}")
 
+    exclude_patterns = tuple(str(p).strip() for p in exclude_globs if str(p).strip())
     symlinks_skipped = 0
     total_scanned_files = 0
     non_pdf_skipped = 0
@@ -271,6 +402,10 @@ def scan_and_deduplicate_corpus(input_dir: Path) -> InventoryResult:
         if not file_path.is_file():
             return
         total_scanned_files += 1
+        if exclude_patterns and _matches_exclude_glob(rel_posix, exclude_patterns):
+            non_pdf_skipped += 1
+            non_pdf_by_ext["<excluded>"] += 1
+            return
         suffix = file_path.suffix.lower()
         is_pdf_ext = suffix == ".pdf"
         is_magic = False if is_pdf_ext else _is_magic_pdf(file_path)
@@ -764,6 +899,16 @@ def extract_pdf_group(
     elif char_count < min_text_chars:
         outcome = "very_low_text_skipped"
         reason = f"extracted {char_count} chars < min_text_chars={min_text_chars}"
+    elif (
+        page_count >= 10
+        and len(pages) >= 10
+        and (sum(1 for _, t in pages[2:] if len(t.strip()) < 10) / max(1, len(pages) - 2)) >= 0.85
+        and (char_count / max(1, page_count)) < 25.0
+    ):
+        outcome = "scanned_no_text"
+        reason = "cover-only or sparse scanned PDF"
+        if "cover_only_scanned_pdf" not in warnings:
+            warnings.append("cover_only_scanned_pdf")
     else:
         outcome = "ingested"
         reason = "ok"
@@ -1001,13 +1146,16 @@ def _extract_labels(chunk_kind: str, text: str) -> list[str]:
             if lbl not in seen:
                 seen.add(lbl)
                 labels.append(lbl)
-    for line in text.splitlines():
-        eq_m = EQUATION_END_RE.search(line.strip())
-        if eq_m and len(line.strip()) < 160:
-            lbl = _canonical_label("equation", eq_m.group(1))
-            if lbl not in seen:
-                seen.add(lbl)
-                labels.append(lbl)
+    if chunk_kind in {"equation", "theorem", "definition"}:
+        for line in text.splitlines():
+            stripped_line = line.strip()
+            if _is_displayed_equation_block(stripped_line):
+                eq_m = EQUATION_END_RE.search(stripped_line)
+                if eq_m and len(stripped_line) < 160:
+                    lbl = _canonical_label("equation", eq_m.group(1))
+                    if lbl not in seen:
+                        seen.add(lbl)
+                        labels.append(lbl)
     return labels
 
 
@@ -1162,6 +1310,15 @@ def _proof_target_label(text: str) -> str | None:
     return None
 
 
+def _canonical_entity_key(entity_type: str, normalized: str) -> str:
+    if entity_type in NON_CROSS_DOC_ENTITY_TYPES:
+        return ""
+    norm = normalized.strip().lower()
+    if not norm:
+        return ""
+    return stable_key("concept", entity_type, norm)
+
+
 def _entity_row(
     *,
     document_key: str,
@@ -1173,8 +1330,10 @@ def _entity_row(
     metadata: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     key = stable_key("ent", document_key, chunk_key, entity_type, normalized.lower())
+    canonical_key = _canonical_entity_key(entity_type, normalized)
     return {
         "_key": key,
+        "canonicalKey": canonical_key,
         "documentKey": document_key,
         "chunkKey": chunk_key,
         "entityType": entity_type,
@@ -1185,6 +1344,7 @@ def _entity_row(
         "metadata": {
             "documentKey": document_key,
             "chunkKey": chunk_key,
+            "canonicalKey": canonical_key,
             **(metadata or {}),
         },
     }
@@ -1455,6 +1615,7 @@ def build_document_artifacts(
             cur_kind = default_kind
             cur_b_lines = []
             cur_b_start = sec_lstart
+            blank_continuations = 0
             for off, ln in enumerate(sec_lines):
                 abs_line = sec_lstart + off
                 detected = _classify_archetype_line(ln, sec_title)
@@ -1464,24 +1625,58 @@ def build_document_artifacts(
                     cur_kind = detected
                     cur_b_lines = [ln]
                     cur_b_start = abs_line
+                    blank_continuations = 0
                 elif not ln.strip():
+                    should_continue = False
+                    if (
+                        cur_kind in {"theorem", "definition", "remark", "proof"}
+                        and cur_b_lines
+                        and any(item.strip() for item in cur_b_lines)
+                        and (cur_kind == "proof" or blank_continuations < 2)
+                        and sum(len(x) + 1 for x in cur_b_lines) < 1200
+                        and not re.search(r"(?:□|■|∎|Q\.E\.D\.?|QED)\s*$", "\n".join(cur_b_lines).strip())
+                    ):
+                        next_para: list[str] = []
+                        started_para = False
+                        for look_ln in sec_lines[off + 1 :]:
+                            if not look_ln.strip():
+                                if started_para:
+                                    break
+                                continue
+                            started_para = True
+                            next_para.append(look_ln)
+                            if len(next_para) >= 12:
+                                break
+                        next_first = next_para[0] if next_para else ""
+                        if (
+                            next_first
+                            and _classify_archetype_line(next_first, sec_title) is None
+                            and not _is_displayed_equation_block("\n".join(next_para))
+                            and not BIB_HEADING_CUTOFF_RE.match(next_first.strip())
+                        ):
+                            should_continue = True
+                    if should_continue:
+                        cur_b_lines.append(ln)
+                        blank_continuations += 1
+                        continue
                     if cur_b_lines and any(item.strip() for item in cur_b_lines):
                         # Keep equation blocks isolated on blank lines
                         joined = "\n".join(cur_b_lines).strip()
-                        if cur_kind == "prose" and EQUATION_END_RE.search(joined) and len(joined) < 600:
+                        if cur_kind == "prose" and _is_displayed_equation_block(joined):
                             blocks.append(("equation", cur_b_start, cur_b_lines))
                         else:
                             blocks.append((cur_kind, cur_b_start, cur_b_lines))
                         cur_b_lines = []
                     cur_kind = default_kind
                     cur_b_start = abs_line + 1
+                    blank_continuations = 0
                 else:
                     if not cur_b_lines:
                         cur_b_start = abs_line
                     cur_b_lines.append(ln)
             if cur_b_lines and any(item.strip() for item in cur_b_lines):
                 joined = "\n".join(cur_b_lines).strip()
-                if cur_kind == "prose" and EQUATION_END_RE.search(joined) and len(joined) < 600:
+                if cur_kind == "prose" and _is_displayed_equation_block(joined):
                     blocks.append(("equation", cur_b_start, cur_b_lines))
                 else:
                     blocks.append((cur_kind, cur_b_start, cur_b_lines))
@@ -1518,6 +1713,7 @@ def build_document_artifacts(
                 citations = _extract_citations(chunk_text) if b_kind != "bibliography" else []
                 symbolic_terms = _extract_symbolic_terms(chunk_text)
                 defined_terms = _extract_defined_terms(chunk_text) if b_kind == "definition" else []
+                archetypes = _extract_math_archetypes(chunk_text)
 
                 if labels:
                     chunk_title = f"{sec_title}: {labels[0].title()}"
@@ -1525,7 +1721,9 @@ def build_document_artifacts(
                     chunk_title = f"{sec_title} ({b_kind} {chunk_ordinal})"
 
                 summary = _chunk_summary(chunk_text)
-                math_entities = list(dict.fromkeys([*labels, *refs, *[f"cite:{c}" for c in citations], *symbolic_terms]))[:24]
+                math_entities = list(
+                    dict.fromkeys([*labels, *refs, *[f"cite:{c}" for c in citations], *symbolic_terms, *archetypes])
+                )[:24]
                 triplets: list[list[str]] = []
                 subj = labels[0] if labels else chunk_title
                 for r in refs[:6]:
@@ -1534,11 +1732,14 @@ def build_document_artifacts(
                     triplets.append([subj, "cites", f"[{c}]"])
                 for s in symbolic_terms[:6]:
                     triplets.append([subj, "mentions", s])
+                for arch in archetypes[:6]:
+                    triplets.append([subj, "exhibits_archetype", arch])
 
                 semantic = {
                     "summary": summary,
                     "assumed_definitions": [r for r in refs if r.startswith("definition ")] + defined_terms,
                     "mathematical_entities": math_entities,
+                    "mathematical_archetypes": archetypes,
                     "graph_triplets": triplets,
                     "symbolic_terms": symbolic_terms,
                     "semantic_mode": SEMANTIC_MODE_DETERMINISTIC,
@@ -1552,6 +1753,7 @@ def build_document_artifacts(
                             " ".join(refs),
                             " ".join(symbolic_terms),
                             " ".join(defined_terms),
+                            " ".join(archetypes),
                             summary,
                         ]
                     )
@@ -1572,6 +1774,7 @@ def build_document_artifacts(
                     "refs": refs,
                     "citations": citations,
                     "definedTerms": defined_terms,
+                    "archetypes": archetypes,
                     "encodingNoiseRatio": round(ext.encoding_noise_ratio, 6),
                     "corpusTags": ["pdf_corpus", b_kind],
                 }
@@ -1660,6 +1863,17 @@ def build_document_artifacts(
                             surface=dterm,
                             normalized=dterm.lower(),
                             confidence=0.9,
+                        )
+                    )
+                for arch in archetypes:
+                    chunk_entities.append(
+                        _entity_row(
+                            document_key=doc_key,
+                            chunk_key=chunk_key,
+                            entity_type="math_archetype",
+                            surface=arch,
+                            normalized=f"archetype:{arch}",
+                            confidence=0.93,
                         )
                     )
 
@@ -1836,10 +2050,15 @@ def build_document_artifacts(
 
     # Extract identifiers for cross-document citation matching
     head_sample = _pre_bibliography_head_sample(all_lines, max_chars=4000)
-    doc_arxiv_ids = {
-        re.sub(r"v\d+$", "", m.group(1).lower())
-        for m in ARXIV_ID_RE.finditer(ext.canonical_path.name + "\n" + head_sample)
-    }
+    doc_arxiv_versions: dict[str, int] = {}
+    for m in ARXIV_ID_RE.finditer(ext.canonical_path.name + "\n" + head_sample):
+        raw_id = m.group(1).lower()
+        ver_m = re.search(r"v(\d+)$", raw_id)
+        ver_num = int(ver_m.group(1)) if ver_m else 0
+        base_id = re.sub(r"v\d+$", "", raw_id)
+        if base_id not in doc_arxiv_versions or ver_num > doc_arxiv_versions[base_id]:
+            doc_arxiv_versions[base_id] = ver_num
+    doc_arxiv_ids = set(doc_arxiv_versions.keys())
     doc_dois = {d for d in (_clean_doi(m.group(1)) for m in DOI_RE.finditer(head_sample)) if d}
     doc_norm_title = _normalize_title_for_match(ext.title)
 
@@ -1855,26 +2074,44 @@ def build_document_artifacts(
         "entity_relation_edges": list(ent_rel_edges_by_key.values()),
         "dag_edges": list(dag_edges_by_key.values()),
         "bib_entries": bib_entries_parsed,
-        "doc_arxiv_ids": doc_arxiv_ids,
-        "doc_dois": doc_dois,
+        "doc_arxiv_ids": sorted(doc_arxiv_ids),
+        "doc_arxiv_versions": doc_arxiv_versions,
+        "doc_dois": sorted(doc_dois),
         "doc_norm_title": doc_norm_title,
     }
 
 
 def link_cross_document_citations(doc_packets: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    arxiv_to_doc: dict[str, str] = {}
+    arxiv_to_best: dict[str, tuple[int, str]] = {}
     doi_to_doc: dict[str, str] = {}
     title_to_doc: dict[str, str] = {}
 
     for pkt in doc_packets:
         dkey = pkt["document"]["_key"]
-        for aid in pkt["doc_arxiv_ids"]:
-            arxiv_to_doc.setdefault(aid, dkey)
-        for doi in pkt["doc_dois"]:
+        versions = pkt.get("doc_arxiv_versions") or {}
+        for aid in pkt.get("doc_arxiv_ids") or ():
+            ver = int(versions.get(aid, 0))
+            if aid not in arxiv_to_best:
+                arxiv_to_best[aid] = (ver, dkey)
+            else:
+                cur_ver, cur_dkey = arxiv_to_best[aid]
+                if ver > cur_ver or (ver == cur_ver and dkey < cur_dkey):
+                    arxiv_to_best[aid] = (ver, dkey)
+        for doi in pkt.get("doc_dois") or ():
             doi_to_doc.setdefault(doi, dkey)
         norm_title = pkt["doc_norm_title"]
         if len(norm_title) >= 20:
             title_to_doc.setdefault(norm_title, dkey)
+
+    arxiv_to_doc = {aid: dkey for aid, (_ver, dkey) in arxiv_to_best.items()}
+    title_anchor_index: dict[str, list[tuple[str, str]]] = defaultdict(list)
+    for norm_title, cand_doc in title_to_doc.items():
+        tokens = [tok for tok in norm_title.split() if len(tok) >= 4]
+        if not tokens:
+            tokens = norm_title.split()
+        if tokens:
+            anchor = max(tokens, key=len)
+            title_anchor_index[anchor].append((norm_title, cand_doc))
 
     cross_edges: list[dict[str, Any]] = []
     seen_pairs: set[tuple[str, str]] = set()
@@ -1891,10 +2128,18 @@ def link_cross_document_citations(doc_packets: list[dict[str, Any]]) -> list[dic
                 evidence = f"doi:{entry['doi']}"
             else:
                 norm_entry = _normalize_title_for_match(entry["raw_entry"])
-                for norm_title, cand_doc in title_to_doc.items():
-                    if cand_doc != src_doc and norm_title in norm_entry:
-                        dst_doc = cand_doc
-                        evidence = f"title:{norm_title[:60]}"
+                entry_tokens = set(norm_entry.split())
+                seen_cands: set[str] = set()
+                for tok in entry_tokens:
+                    for norm_title, cand_doc in title_anchor_index.get(tok, ()):
+                        if cand_doc in seen_cands or cand_doc == src_doc:
+                            continue
+                        seen_cands.add(cand_doc)
+                        if norm_title in norm_entry:
+                            dst_doc = cand_doc
+                            evidence = f"title:{norm_title[:60]}"
+                            break
+                    if dst_doc:
                         break
             if dst_doc and dst_doc != src_doc and (src_doc, dst_doc) not in seen_pairs:
                 seen_pairs.add((src_doc, dst_doc))
@@ -1911,12 +2156,52 @@ def link_cross_document_citations(doc_packets: list[dict[str, Any]]) -> list[dic
     return cross_edges
 
 
-def _ollama_preflight(endpoint: str, timeout: float = 3.0) -> tuple[bool, str]:
+THINK_BLOCK_RE = re.compile(r"<think>[\s\S]*?</think>", re.IGNORECASE)
+UNCLOSED_THINK_RE = re.compile(r"<think>[\s\S]*?(?=\{)", re.IGNORECASE)
+
+
+def _resolve_llm_api_key(api_key: str = "") -> str:
+    return (
+        api_key.strip()
+        or os.environ.get("ALEXANDRIA_LLM_API_KEY", "").strip()
+        or os.environ.get("OPENAI_API_KEY", "").strip()
+    )
+
+
+def _extract_json_object(raw: str) -> dict[str, Any]:
+    cleaned = THINK_BLOCK_RE.sub("", raw).strip()
+    cleaned = UNCLOSED_THINK_RE.sub("", cleaned).strip()
+    cleaned = re.sub(r"^\s*```(?:json)?\s*|\s*```\s*$", "", cleaned, flags=re.IGNORECASE).strip()
+
+    decoder = json.JSONDecoder()
+    idx = 0
+    while True:
+        brace = cleaned.find("{", idx)
+        if brace == -1:
+            break
+        try:
+            obj, _end = decoder.raw_decode(cleaned, brace)
+            if isinstance(obj, dict):
+                return obj
+        except ValueError:
+            pass
+        idx = brace + 1
+
+    parsed = json.loads(cleaned)
+    if not isinstance(parsed, dict):
+        raise ValueError("LLM response JSON is not an object")
+    return parsed
+
+
+def _ollama_preflight(endpoint: str, timeout: float = 3.0, *, api_key: str = "") -> tuple[bool, str]:
     base = endpoint.rstrip("/")
     url = f"{base}/models" if base.endswith("/v1") else f"{base}/api/tags"
     try:
         req = Request(url, method="GET")
         req.add_header("Accept", "application/json")
+        token = _resolve_llm_api_key(api_key)
+        if token:
+            req.add_header("Authorization", f"Bearer {token}")
         with urlopen(req, timeout=timeout) as resp:
             if resp.status != 200:
                 return False, f"http_{resp.status}"
@@ -1938,6 +2223,9 @@ def _ollama_request_chunk(
     endpoint: str,
     model: str,
     timeout: float,
+    api_key: str = "",
+    max_tokens: int = 1024,
+    disable_thinking: bool = True,
 ) -> dict[str, Any]:
     base = endpoint.rstrip("/")
     system_prompt = (
@@ -1952,15 +2240,18 @@ def _ollama_request_chunk(
     )
     if base.endswith("/v1"):
         url = f"{base}/chat/completions"
-        body = {
+        body: dict[str, Any] = {
             "model": model,
             "messages": [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
             ],
             "temperature": 0.1,
-            "max_tokens": 512,
+            "max_tokens": max(1, int(max_tokens)),
+            "response_format": {"type": "json_object"},
         }
+        if disable_thinking:
+            body["chat_template_kwargs"] = {"enable_thinking": False}
     else:
         url = f"{base}/api/chat"
         body = {
@@ -1971,26 +2262,102 @@ def _ollama_request_chunk(
             ],
             "stream": False,
             "format": "json",
-            "options": {"temperature": 0.1, "num_predict": 512},
+            "options": {"temperature": 0.1, "num_predict": max(1, int(max_tokens))},
         }
     req = Request(url, data=json.dumps(body).encode("utf-8"), method="POST")
     req.add_header("Content-Type", "application/json")
     req.add_header("Accept", "application/json")
+    token = _resolve_llm_api_key(api_key)
+    if token:
+        req.add_header("Authorization", f"Bearer {token}")
     with urlopen(req, timeout=timeout) as resp:
         payload = json.loads(resp.read().decode("utf-8"))
 
     if base.endswith("/v1"):
-        raw = str(((payload.get("choices") or [{}])[0].get("message") or {}).get("content") or "").strip()
+        msg = (payload.get("choices") or [{}])[0].get("message") or {}
+        raw = str(msg.get("content") or msg.get("reasoning_content") or "").strip()
     else:
         raw = str((payload.get("message") or {}).get("content") or payload.get("response") or "").strip()
 
-    match = re.search(r"\{[\s\S]*\}", raw)
-    if match:
-        raw = match.group(0)
-    parsed = json.loads(raw)
-    if not isinstance(parsed, dict):
-        raise ValueError("Ollama response JSON is not an object")
-    return parsed
+    return _extract_json_object(raw)
+
+
+def _materialize_enriched_chunk_to_collections(
+    chunk: dict[str, Any],
+    *,
+    cleaned_entities: list[str],
+    valid_triplets: list[list[str]],
+    collections: dict[str, list[dict[str, Any]]],
+    seen_entity_keys: set[str],
+    seen_chunk_ent_keys: set[str],
+    seen_rel_keys: set[str],
+) -> None:
+    doc_key = str(chunk.get("documentKey") or "")
+    chunk_key = str(chunk.get("_key") or "")
+    if not doc_key or not chunk_key:
+        return
+
+    ent_by_norm: dict[str, dict[str, Any]] = {}
+
+    def _ensure_llm_entity(surface: str, confidence: float = 0.88) -> dict[str, Any]:
+        norm = surface.strip().lower()
+        existing = ent_by_norm.get(norm)
+        if existing is not None:
+            return existing
+        ent = _entity_row(
+            document_key=doc_key,
+            chunk_key=chunk_key,
+            entity_type="llm_entity",
+            surface=surface.strip(),
+            normalized=norm,
+            confidence=confidence,
+        )
+        ent_by_norm[norm] = ent
+        if ent["_key"] not in seen_entity_keys:
+            seen_entity_keys.add(ent["_key"])
+            collections.setdefault("alexandria_entities", []).append(ent)
+        ce_key = stable_key("chunkent", chunk_key, ent["_key"])
+        if ce_key not in seen_chunk_ent_keys:
+            seen_chunk_ent_keys.add(ce_key)
+            collections.setdefault("alexandria_chunk_entity_edges", []).append(
+                {
+                    "_key": ce_key,
+                    "_from": f"alexandria_chunks/{chunk_key}",
+                    "_to": f"alexandria_entities/{ent['_key']}",
+                    "documentKey": doc_key,
+                    "chunkKey": chunk_key,
+                    "entityType": "llm_entity",
+                    "confidence": confidence,
+                    "sourceAuthority": SOURCE_AUTHORITY,
+                }
+            )
+        return ent
+
+    for name in cleaned_entities:
+        _ensure_llm_entity(name, confidence=0.88)
+
+    for subj, pred, obj in valid_triplets:
+        s_ent = _ensure_llm_entity(subj, confidence=0.85)
+        o_ent = _ensure_llm_entity(obj, confidence=0.85)
+        if s_ent["_key"] == o_ent["_key"]:
+            continue
+        rel_type = pred.strip()[:64] or "related_to"
+        rel_key = stable_key("rel", s_ent["_key"], rel_type.lower(), o_ent["_key"], chunk_key)
+        if rel_key not in seen_rel_keys:
+            seen_rel_keys.add(rel_key)
+            collections.setdefault("alexandria_entity_relation_edges", []).append(
+                {
+                    "_key": rel_key,
+                    "_from": f"alexandria_entities/{s_ent['_key']}",
+                    "_to": f"alexandria_entities/{o_ent['_key']}",
+                    "documentKey": doc_key,
+                    "chunkKey": chunk_key,
+                    "relationType": rel_type,
+                    "evidence": str(chunk.get("title") or "")[:200],
+                    "weight": 0.85,
+                    "sourceAuthority": SOURCE_AUTHORITY,
+                }
+            )
 
 
 def enrich_chunks_with_ollama(
@@ -2001,8 +2368,13 @@ def enrich_chunks_with_ollama(
     max_chunks: int,
     timeout: float,
     max_failures: int,
+    workers: int = 1,
+    api_key: str = "",
+    max_tokens: int = 1024,
+    disable_thinking: bool = True,
+    collections: dict[str, list[dict[str, Any]]] | None = None,
 ) -> dict[str, Any]:
-    ok, reason = _ollama_preflight(endpoint, timeout=min(3.0, timeout))
+    ok, reason = _ollama_preflight(endpoint, timeout=min(3.0, timeout), api_key=api_key)
     stats: dict[str, Any] = {
         "enabled": True,
         "endpoint": endpoint,
@@ -2010,9 +2382,12 @@ def enrich_chunks_with_ollama(
         "preflight_ok": ok,
         "preflight_status": reason,
         "max_chunks": max_chunks,
+        "workers": max(1, int(workers)),
         "attempted": 0,
         "enriched": 0,
         "fallbacks": 0,
+        "materialized_entities": 0,
+        "materialized_relations": 0,
         "circuit_breaker_tripped": False,
     }
     if not ok or max_chunks <= 0 or not chunks:
@@ -2024,39 +2399,125 @@ def enrich_chunks_with_ollama(
         key=lambda c: (priority_rank.get(str(c.get("chunkKind") or ""), 9), int(c.get("ordinal") or 0)),
     )[:max_chunks]
 
-    consecutive_failures = 0
-    for chunk in candidates:
-        stats["attempted"] += 1
-        try:
-            enriched = _ollama_request_chunk(chunk, endpoint=endpoint, model=model, timeout=timeout)
-            base_sem = dict(chunk["semantic"])
-            if isinstance(enriched.get("summary"), str) and enriched["summary"].strip():
-                base_sem["summary"] = enriched["summary"].strip()[:600]
-            for list_key in ("assumed_definitions", "mathematical_entities", "symbolic_terms"):
-                val = enriched.get(list_key)
-                if isinstance(val, list):
-                    cleaned = [str(x).strip() for x in val if str(x).strip()]
-                    if cleaned:
-                        base_sem[list_key] = list(dict.fromkeys([*base_sem.get(list_key, []), *cleaned]))[:32]
-            triplets = enriched.get("graph_triplets")
-            if isinstance(triplets, list):
-                valid_triplets = [
-                    [str(t[0]).strip(), str(t[1]).strip(), str(t[2]).strip()]
-                    for t in triplets
-                    if isinstance(t, (list, tuple)) and len(t) == 3 and all(str(x).strip() for x in t)
+    seen_entity_keys: set[str] = set()
+    seen_chunk_ent_keys: set[str] = set()
+    seen_rel_keys: set[str] = set()
+    if collections is not None:
+        seen_entity_keys = {str(r.get("_key") or "") for r in collections.get("alexandria_entities", [])}
+        seen_chunk_ent_keys = {str(r.get("_key") or "") for r in collections.get("alexandria_chunk_entity_edges", [])}
+        seen_rel_keys = {str(r.get("_key") or "") for r in collections.get("alexandria_entity_relation_edges", [])}
+    initial_ent_count = len(seen_entity_keys)
+    initial_rel_count = len(seen_rel_keys)
+
+    def _apply_enrichment(chunk: dict[str, Any], enriched: dict[str, Any]) -> None:
+        base_sem = dict(chunk["semantic"])
+        if isinstance(enriched.get("summary"), str) and enriched["summary"].strip():
+            base_sem["summary"] = enriched["summary"].strip()[:600]
+        cleaned_map: dict[str, list[str]] = {}
+        for list_key in ("assumed_definitions", "mathematical_entities", "symbolic_terms"):
+            val = enriched.get(list_key)
+            if isinstance(val, list):
+                cleaned = [str(x).strip() for x in val if str(x).strip()]
+                if cleaned:
+                    cleaned_map[list_key] = cleaned
+                    base_sem[list_key] = list(dict.fromkeys([*base_sem.get(list_key, []), *cleaned]))[:32]
+        valid_triplets: list[list[str]] = []
+        triplets = enriched.get("graph_triplets")
+        if isinstance(triplets, list):
+            valid_triplets = [
+                [str(t[0]).strip(), str(t[1]).strip(), str(t[2]).strip()]
+                for t in triplets
+                if isinstance(t, (list, tuple)) and len(t) == 3 and all(str(x).strip() for x in t)
+            ]
+            if valid_triplets:
+                base_sem["graph_triplets"] = valid_triplets[:24]
+        base_sem["semantic_mode"] = f"ollama_{model}_v1"
+        chunk["semantic"] = base_sem
+
+        ent_terms = list(
+            dict.fromkeys(
+                [
+                    *cleaned_map.get("mathematical_entities", []),
+                    *cleaned_map.get("assumed_definitions", []),
+                    *cleaned_map.get("symbolic_terms", []),
                 ]
-                if valid_triplets:
-                    base_sem["graph_triplets"] = valid_triplets[:24]
-            base_sem["semantic_mode"] = f"ollama_{model}_v1"
-            chunk["semantic"] = base_sem
-            stats["enriched"] += 1
-            consecutive_failures = 0
-        except Exception:  # noqa: BLE001
-            stats["fallbacks"] += 1
-            consecutive_failures += 1
-            if consecutive_failures >= max(1, max_failures):
-                stats["circuit_breaker_tripped"] = True
-                break
+            )
+        )
+        if ent_terms:
+            chunk["searchTerms"] = sorted(set(chunk.get("searchTerms") or []) | set(ident_terms(" ".join(ent_terms))))
+        if collections is not None:
+            _materialize_enriched_chunk_to_collections(
+                chunk,
+                cleaned_entities=cleaned_map.get("mathematical_entities", []),
+                valid_triplets=valid_triplets[:24],
+                collections=collections,
+                seen_entity_keys=seen_entity_keys,
+                seen_chunk_ent_keys=seen_chunk_ent_keys,
+                seen_rel_keys=seen_rel_keys,
+            )
+
+    consecutive_failures = 0
+    worker_count = max(1, int(workers))
+    if worker_count == 1 or len(candidates) <= 1:
+        for chunk in candidates:
+            stats["attempted"] += 1
+            try:
+                enriched = _ollama_request_chunk(
+                    chunk,
+                    endpoint=endpoint,
+                    model=model,
+                    timeout=timeout,
+                    api_key=api_key,
+                    max_tokens=max_tokens,
+                    disable_thinking=disable_thinking,
+                )
+                _apply_enrichment(chunk, enriched)
+                stats["enriched"] += 1
+                consecutive_failures = 0
+            except Exception:  # noqa: BLE001
+                stats["fallbacks"] += 1
+                consecutive_failures += 1
+                if consecutive_failures >= max(1, max_failures):
+                    stats["circuit_breaker_tripped"] = True
+                    break
+    else:
+        with ThreadPoolExecutor(max_workers=worker_count) as pool:
+            for start in range(0, len(candidates), worker_count):
+                wave = candidates[start : start + worker_count]
+                futs = [
+                    (
+                        chunk,
+                        pool.submit(
+                            _ollama_request_chunk,
+                            chunk,
+                            endpoint=endpoint,
+                            model=model,
+                            timeout=timeout,
+                            api_key=api_key,
+                            max_tokens=max_tokens,
+                            disable_thinking=disable_thinking,
+                        ),
+                    )
+                    for chunk in wave
+                ]
+                for chunk, fut in futs:
+                    stats["attempted"] += 1
+                    try:
+                        enriched = fut.result()
+                        _apply_enrichment(chunk, enriched)
+                        stats["enriched"] += 1
+                        consecutive_failures = 0
+                    except Exception:  # noqa: BLE001
+                        stats["fallbacks"] += 1
+                        consecutive_failures += 1
+                        if consecutive_failures >= max(1, max_failures):
+                            stats["circuit_breaker_tripped"] = True
+                if stats["circuit_breaker_tripped"]:
+                    break
+
+    if collections is not None:
+        stats["materialized_entities"] = len(seen_entity_keys) - initial_ent_count
+        stats["materialized_relations"] = len(seen_rel_keys) - initial_rel_count
     return stats
 
 
@@ -2144,6 +2605,73 @@ def _render_inventory_markdown(report: dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def _extract_and_build_group(
+    group: DedupGroup,
+    *,
+    per_file_timeout: float,
+    min_text_chars: int,
+    max_chunk_chars: int,
+    cache_dir: Path | None,
+) -> tuple[dict[str, Any], dict[str, Any] | None]:
+    dup_paths = [d.path.as_posix() for d in group.duplicates]
+    dup_cnt = len(group.duplicates)
+    cache_path = (cache_dir / f"{group.sha256}_{max_chunk_chars}.json") if cache_dir is not None else None
+    if cache_path is not None and cache_path.exists():
+        try:
+            cached = json.loads(cache_path.read_text(encoding="utf-8"))
+            if (
+                isinstance(cached, dict)
+                and cached.get("cache_schema") == SCHEMA_VERSION
+                and isinstance(cached.get("meta"), dict)
+            ):
+                meta = dict(cached["meta"])
+                meta["canonicalPath"] = group.canonical.path.as_posix()
+                meta["relativePath"] = group.canonical.rel_path
+                meta["duplicatePaths"] = dup_paths
+                meta["duplicateCount"] = dup_cnt
+                pkt = cached.get("packet")
+                if isinstance(pkt, dict) and isinstance(pkt.get("document"), dict):
+                    pkt["document"]["path"] = group.canonical.path.as_posix()
+                    pkt["document"]["relativePath"] = group.canonical.rel_path
+                    pkt["document"]["duplicatePaths"] = dup_paths
+                    pkt["document"]["sourceUri"] = source_uri(group.canonical.path)
+                return meta, pkt if isinstance(pkt, dict) else None
+        except Exception:  # noqa: BLE001
+            pass
+
+    res = extract_pdf_group(group, per_file_timeout=per_file_timeout, min_text_chars=min_text_chars)
+    pkt: dict[str, Any] | None = None
+    doc_key = ""
+    if res.outcome == "ingested":
+        pkt = build_document_artifacts(res, max_chunk_chars=max_chunk_chars)
+        doc_key = str(pkt["document"]["_key"])
+    res.pages = []
+    meta = {
+        "sha256": group.sha256,
+        "canonicalPath": res.canonical_path.as_posix(),
+        "relativePath": res.rel_path,
+        "duplicatePaths": res.duplicate_paths,
+        "duplicateCount": dup_cnt,
+        "sizeBytes": res.size_bytes,
+        "outcome": res.outcome,
+        "reason": res.reason,
+        "pageCount": res.page_count,
+        "charCount": res.char_count,
+        "parser": res.parser,
+        "warnings": res.warnings,
+        "encodingNoiseRatio": round(res.encoding_noise_ratio, 6),
+        "documentKey": doc_key,
+    }
+    if cache_path is not None:
+        tmp_cache = cache_path.with_suffix(".tmp")
+        tmp_cache.write_text(
+            json.dumps({"cache_schema": SCHEMA_VERSION, "meta": meta, "packet": pkt}, ensure_ascii=False),
+            encoding="utf-8",
+        )
+        tmp_cache.replace(cache_path)
+    return meta, pkt
+
+
 def run_pdf_corpus_pipeline(
     *,
     input_dir: Path,
@@ -2166,11 +2694,22 @@ def run_pdf_corpus_pipeline(
     min_text_chars: int = 100,
     per_file_timeout: float = 30.0,
     max_chunk_chars: int = 3200,
+    enrich_ollama_workers: int = 1,
+    enrich_ollama_max_tokens: int = 1024,
+    enrich_ollama_api_key: str = "",
+    enrich_ollama_disable_thinking: bool = True,
+    exclude_globs: Iterable[str] = (),
+    exclude_default_noise: bool = False,
+    resume: bool = False,
 ) -> dict[str, Any]:
     if limit < 0:
         raise ValueError(f"--limit must be >= 0 (0 = all); got {limit}")
     if workers < 1:
         raise ValueError(f"--workers must be >= 1; got {workers}")
+    if enrich_ollama_workers < 1:
+        raise ValueError(f"--enrich-ollama-workers must be >= 1; got {enrich_ollama_workers}")
+    if enrich_ollama_max_tokens < 1:
+        raise ValueError(f"--enrich-ollama-max-tokens must be >= 1; got {enrich_ollama_max_tokens}")
     if per_file_timeout <= 0 or not math.isfinite(per_file_timeout):
         raise ValueError(f"--per-file-timeout must be > 0; got {per_file_timeout}")
     if max_chunk_chars < 1:
@@ -2181,45 +2720,64 @@ def run_pdf_corpus_pipeline(
         guard_alexandria_target(endpoint, database)
 
     output_dir.mkdir(parents=True, exist_ok=True)
-    inventory = scan_and_deduplicate_corpus(input_dir)
+    cache_dir: Path | None = None
+    if resume:
+        cache_dir = output_dir / ".doc_cache"
+        cache_dir.mkdir(parents=True, exist_ok=True)
+
+    active_excludes = tuple(DEFAULT_NOISE_EXCLUDE_GLOBS if exclude_default_noise else ()) + tuple(exclude_globs)
+    inventory = scan_and_deduplicate_corpus(input_dir, exclude_globs=active_excludes)
 
     selected_groups = inventory.groups[:limit] if limit and limit > 0 else inventory.groups
     skipped_limit_groups = inventory.groups[len(selected_groups) :]
 
-    extraction_results: dict[str, ExtractionResult] = {}
+    processed_by_sha: dict[str, tuple[dict[str, Any], dict[str, Any] | None]] = {}
     max_workers = max(1, workers)
     if max_workers == 1 or len(selected_groups) <= 1:
         for group in selected_groups:
-            res = extract_pdf_group(group, per_file_timeout=per_file_timeout, min_text_chars=min_text_chars)
-            extraction_results[group.sha256] = res
+            processed_by_sha[group.sha256] = _extract_and_build_group(
+                group,
+                per_file_timeout=per_file_timeout,
+                min_text_chars=min_text_chars,
+                max_chunk_chars=max_chunk_chars,
+                cache_dir=cache_dir,
+            )
     else:
         with ThreadPoolExecutor(max_workers=max_workers) as pool:
             futs = {
-                pool.submit(extract_pdf_group, group, per_file_timeout=per_file_timeout, min_text_chars=min_text_chars): group
+                pool.submit(
+                    _extract_and_build_group,
+                    group,
+                    per_file_timeout=per_file_timeout,
+                    min_text_chars=min_text_chars,
+                    max_chunk_chars=max_chunk_chars,
+                    cache_dir=cache_dir,
+                ): group
                 for group in selected_groups
             }
             for fut in as_completed(futs):
                 group = futs[fut]
                 try:
-                    extraction_results[group.sha256] = fut.result()
+                    processed_by_sha[group.sha256] = fut.result()
                 except Exception as exc:  # noqa: BLE001
-                    extraction_results[group.sha256] = ExtractionResult(
-                        sha256=group.sha256,
-                        canonical_path=group.canonical.path,
-                        rel_path=group.canonical.rel_path,
-                        duplicate_paths=[d.path.as_posix() for d in group.duplicates],
-                        size_bytes=group.size_bytes,
-                        outcome="parse_error",
-                        reason=f"worker_exception: {exc}",
-                        page_count=0,
-                        char_count=0,
-                        parser="none",
-                        warnings=[f"worker_exception: {exc}"],
-                        title=group.canonical.path.stem,
-                        author="",
-                        encrypted=False,
-                        encoding_noise_ratio=0.0,
-                        pages=[],
+                    processed_by_sha[group.sha256] = (
+                        {
+                            "sha256": group.sha256,
+                            "canonicalPath": group.canonical.path.as_posix(),
+                            "relativePath": group.canonical.rel_path,
+                            "duplicatePaths": [d.path.as_posix() for d in group.duplicates],
+                            "duplicateCount": len(group.duplicates),
+                            "sizeBytes": group.size_bytes,
+                            "outcome": "parse_error",
+                            "reason": f"worker_exception: {exc}",
+                            "pageCount": 0,
+                            "charCount": 0,
+                            "parser": "none",
+                            "warnings": [f"worker_exception: {exc}"],
+                            "encodingNoiseRatio": 0.0,
+                            "documentKey": "",
+                        },
+                        None,
                     )
 
     doc_packets: list[dict[str, Any]] = []
@@ -2228,32 +2786,15 @@ def run_pdf_corpus_pipeline(
     duplicate_skipped_count = 0
 
     for group in selected_groups:
-        res = extraction_results[group.sha256]
-        outcome_counts[res.outcome] = outcome_counts.get(res.outcome, 0) + 1
+        meta, pkt = processed_by_sha[group.sha256]
+        outcome = str(meta["outcome"])
+        outcome_counts[outcome] = outcome_counts.get(outcome, 0) + 1
         dup_cnt = len(group.duplicates)
         duplicate_skipped_count += dup_cnt
         outcome_counts["duplicate_skipped"] += dup_cnt
-        doc_key = f"doc_{group.sha256[:20]}" if res.outcome == "ingested" else ""
-        if res.outcome == "ingested":
-            doc_packets.append(build_document_artifacts(res, max_chunk_chars=max_chunk_chars))
-        unique_records.append(
-            {
-                "sha256": group.sha256,
-                "canonicalPath": res.canonical_path.as_posix(),
-                "relativePath": res.rel_path,
-                "duplicatePaths": res.duplicate_paths,
-                "duplicateCount": dup_cnt,
-                "sizeBytes": res.size_bytes,
-                "outcome": res.outcome,
-                "reason": res.reason,
-                "pageCount": res.page_count,
-                "charCount": res.char_count,
-                "parser": res.parser,
-                "warnings": res.warnings,
-                "encodingNoiseRatio": round(res.encoding_noise_ratio, 6),
-                "documentKey": doc_key,
-            }
-        )
+        if pkt is not None and outcome == "ingested":
+            doc_packets.append(pkt)
+        unique_records.append(meta)
 
     for group in skipped_limit_groups:
         dup_cnt = len(group.duplicates)
@@ -2317,6 +2858,11 @@ def run_pdf_corpus_pipeline(
             max_chunks=enrich_ollama_max_chunks,
             timeout=enrich_ollama_timeout,
             max_failures=enrich_ollama_max_failures,
+            workers=enrich_ollama_workers,
+            api_key=enrich_ollama_api_key,
+            max_tokens=enrich_ollama_max_tokens,
+            disable_thinking=enrich_ollama_disable_thinking,
+            collections=collections,
         )
 
     for col_name, rows in collections.items():
@@ -2405,10 +2951,17 @@ def build_arg_parser() -> argparse.ArgumentParser:
     ap.add_argument("--enrich-ollama-max-chunks", type=int, default=20)
     ap.add_argument("--enrich-ollama-timeout", type=float, default=20.0)
     ap.add_argument("--enrich-ollama-max-failures", type=int, default=3)
+    ap.add_argument("--enrich-ollama-workers", type=int, default=1)
+    ap.add_argument("--enrich-ollama-max-tokens", type=int, default=1024)
+    ap.add_argument("--enrich-ollama-api-key", default="")
+    ap.add_argument("--allow-thinking", action="store_false", dest="enrich_ollama_disable_thinking", default=True)
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--min-text-chars", type=int, default=100)
     ap.add_argument("--per-file-timeout", type=float, default=30.0)
     ap.add_argument("--max-chunk-chars", type=int, default=3200)
+    ap.add_argument("--exclude-glob", action="append", default=[])
+    ap.add_argument("--exclude-default-noise", action="store_true")
+    ap.add_argument("--resume", action="store_true")
     return ap
 
 
@@ -2420,6 +2973,10 @@ def main(argv: list[str] | None = None) -> int:
         ap.error(f"--limit must be >= 0 (0 = all); got {args.limit}")
     if args.workers < 1:
         ap.error(f"--workers must be >= 1; got {args.workers}")
+    if args.enrich_ollama_workers < 1:
+        ap.error(f"--enrich-ollama-workers must be >= 1; got {args.enrich_ollama_workers}")
+    if args.enrich_ollama_max_tokens < 1:
+        ap.error(f"--enrich-ollama-max-tokens must be >= 1; got {args.enrich_ollama_max_tokens}")
     if args.per_file_timeout <= 0 or not math.isfinite(args.per_file_timeout):
         ap.error(f"--per-file-timeout must be > 0; got {args.per_file_timeout}")
     if args.max_chunk_chars < 1:
@@ -2450,6 +3007,13 @@ def main(argv: list[str] | None = None) -> int:
         min_text_chars=int(args.min_text_chars),
         per_file_timeout=float(args.per_file_timeout),
         max_chunk_chars=int(args.max_chunk_chars),
+        enrich_ollama_workers=int(args.enrich_ollama_workers),
+        enrich_ollama_max_tokens=int(args.enrich_ollama_max_tokens),
+        enrich_ollama_api_key=args.enrich_ollama_api_key,
+        enrich_ollama_disable_thinking=bool(args.enrich_ollama_disable_thinking),
+        exclude_globs=args.exclude_glob,
+        exclude_default_noise=bool(args.exclude_default_noise),
+        resume=bool(args.resume),
     )
     print(
         json.dumps(

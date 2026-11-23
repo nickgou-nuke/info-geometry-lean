@@ -3,7 +3,7 @@ name: alexandria_pdf
 services:
   arango_alexandria_pdf:
     image: arangodb:3.12
-    container_name: arango_alexandria_pdf
+    container_name: ${ALEXANDRIA_ARANGO_CONTAINER:-arango_alexandria_pdf}
     restart: unless-stopped
     environment:
       ARANGO_ROOT_PASSWORD: ${ALEXANDRIA_ARANGO_PASSWORD:-${ARANGO_ROOT_PASSWORD:-alexandria_root}}
@@ -15,6 +15,6 @@ services:
 
 volumes:
   alexandria_pdf_arango_data:
-    name: alexandria_pdf_arango_data
+    name: ${ALEXANDRIA_ARANGO_DATA_VOLUME:-alexandria_pdf_arango_data}
   alexandria_pdf_arango_apps:
-    name: alexandria_pdf_arango_apps
+    name: ${ALEXANDRIA_ARANGO_APPS_VOLUME:-alexandria_pdf_arango_apps}

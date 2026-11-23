@@ -467,3 +467,51 @@ def test_rank_arango_context_hops2_no_bogus_chunk_to_chunk_dag_neighbors() -> No
     prf_dag = by_key["prf_2"]["dagNeighbors"]
     assert any(n["_id"] == "alexandria_chunks/lem_2" and n["edgeType"] == "proof_proves_theorem" and n["direction"] == "outbound" for n in prf_dag)
     assert not any(n["_id"] == "alexandria_chunks/thm_1" for n in prf_dag)
+
+
+def test_cross_document_shared_concept_propagates_ppr_despite_distinct_entity_keys() -> None:
+    chunks = [
+        {
+            "_key": "doc1_chunk",
+            "documentKey": "doc_1",
+            "tokens": ["krein", "space"],
+            "chunkKind": "definition",
+            "text": "Krein space definition.",
+        },
+        {
+            "_key": "doc2_chunk",
+            "documentKey": "doc_2",
+            "tokens": ["krein", "space", "drazin"],
+            "chunkKind": "theorem",
+            "text": "Drazin theorem on Krein spaces.",
+        },
+    ]
+    entities = [
+        {
+            "_key": "ent_doc1_c1_krein",
+            "canonicalKey": "concept_shared_krein",
+            "entityType": "math_archetype",
+            "surface": "krein_indefinite_metric",
+            "normalized": "archetype:krein_indefinite_metric",
+            "confidence": 0.93,
+        },
+        {
+            "_key": "ent_doc2_c2_krein",
+            "canonicalKey": "concept_shared_krein",
+            "entityType": "math_archetype",
+            "surface": "krein_indefinite_metric",
+            "normalized": "archetype:krein_indefinite_metric",
+            "confidence": 0.93,
+        },
+    ]
+    chunk_entities = [
+        {"_from": "alexandria_chunks/doc1_chunk", "_to": "alexandria_entities/ent_doc1_c1_krein"},
+        {"_from": "alexandria_chunks/doc2_chunk", "_to": "alexandria_entities/ent_doc2_c2_krein"},
+    ]
+    graph = build_graph(nx, chunks, entities, chunk_entities, [], [], [])
+    assert graph.has_edge("doc1_chunk", "doc2_chunk")
+    assert graph.has_edge("doc2_chunk", "doc1_chunk")
+    assert graph["doc1_chunk"]["doc2_chunk"]["kind"] == "shared_entity"
+
+    scores = personalized_scores(graph, {"doc1_chunk": 1.0})
+    assert scores["doc2_chunk"] > 0.0

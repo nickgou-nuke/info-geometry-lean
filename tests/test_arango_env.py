@@ -328,3 +328,43 @@ def test_guard_alexandria_target_accepts_8532_alexandria() -> None:
     guard_alexandria_target("http://127.0.0.1:8532", "alexandria")
     guard_alexandria_target("http://127.0.0.1:8532/", "alexandria_test")
 
+
+def test_load_alexandria_arango_env_does_not_shadow_explicit_database_or_port(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _clear_alexandria_env(monkeypatch)
+    env_file = tmp_path / "configs" / "alexandria" / ".env"
+    env_file.parent.mkdir(parents=True)
+    env_file.write_text(
+        "\n".join(
+            [
+                "ARANGO_ROOT_PASSWORD=from_root_pw",
+                "ALEXANDRIA_ARANGO_PORT=8532",
+                "ALEXANDRIA_ARANGO_DB=alexandria",
+                "ALEXANDRIA_ARANGO_USERNAME=file_user",
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    monkeypatch.setenv("ALEXANDRIA_ARANGO_DATABASE", "dedicated_dag_db")
+    monkeypatch.setenv("ALEXANDRIA_ARANGO_PORT", "8538")
+
+    loaded = load_alexandria_arango_env(tmp_path)
+    assert loaded == env_file
+    assert alexandria_arango_database() == "dedicated_dag_db"
+    assert alexandria_arango_endpoint() == "http://127.0.0.1:8538"
+    assert alexandria_arango_username() == "file_user"
+    assert alexandria_arango_password() == "from_root_pw"
+
+
+def test_alexandria_arango_endpoint_derives_from_port_without_env_file(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _clear_alexandria_env(monkeypatch)
+    monkeypatch.setenv("ALEXANDRIA_ARANGO_PORT", "8538")
+    assert load_alexandria_arango_env(tmp_path) is None
+    assert alexandria_arango_endpoint() == "http://127.0.0.1:8538"
+    assert os.environ["ALEXANDRIA_ARANGO_ENDPOINT"] == "http://127.0.0.1:8538"
+

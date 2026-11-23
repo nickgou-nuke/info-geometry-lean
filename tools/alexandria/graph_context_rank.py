@@ -153,10 +153,24 @@ def build_graph(
 
     entity_by_key = {row["_key"]: row for row in entities if row.get("_key")}
     entity_to_chunks: dict[str, list[str]] = defaultdict(list)
+    concept_to_chunks: dict[str, list[str]] = defaultdict(list)
+    concept_weight: dict[str, float] = {}
+    non_cross_doc_types = {"math_label", "math_reference", "bib_entry"}
+
     for edge in chunk_entities:
         chunk_key = chunk_key_from_doc_id(edge["_from"])
         entity_key = chunk_key_from_doc_id(edge["_to"])
         entity_to_chunks[entity_key].append(chunk_key)
+
+    def _add_shared_entity_edge(src: str, dst: str, weight: float) -> None:
+        if src == dst or src not in graph or dst not in graph:
+            return
+        cur_fwd = float(graph[src][dst]["weight"]) if graph.has_edge(src, dst) else 0.0
+        if weight >= cur_fwd:
+            graph.add_edge(src, dst, kind="shared_entity", weight=weight)
+        cur_rev = float(graph[dst][src]["weight"]) if graph.has_edge(dst, src) else 0.0
+        if weight >= cur_rev:
+            graph.add_edge(dst, src, kind="shared_entity", weight=weight)
 
     for entity_key, linked_chunks in entity_to_chunks.items():
         unique = list(dict.fromkeys(linked_chunks))
@@ -164,9 +178,25 @@ def build_graph(
         shared_weight = entity_bonus(entity)
         for i, src in enumerate(unique):
             for dst in unique[i + 1 :]:
-                if src in graph and dst in graph:
-                    graph.add_edge(src, dst, kind="shared_entity", weight=shared_weight)
-                    graph.add_edge(dst, src, kind="shared_entity", weight=shared_weight)
+                _add_shared_entity_edge(src, dst, shared_weight)
+
+        etype = str(entity.get("entityType") or "")
+        norm = str(entity.get("normalized") or "").strip().lower()
+        ckey = str(entity.get("canonicalKey") or "").strip()
+        if not ckey and norm and etype not in non_cross_doc_types:
+            ckey = f"{etype}:{norm}" if etype else norm
+        if ckey and etype not in non_cross_doc_types:
+            concept_to_chunks[ckey].extend(unique)
+            concept_weight[ckey] = max(concept_weight.get(ckey, 0.0), shared_weight)
+
+    for ckey, linked_chunks in concept_to_chunks.items():
+        unique = list(dict.fromkeys(linked_chunks))
+        if len(unique) < 2:
+            continue
+        w = concept_weight[ckey]
+        for i, src in enumerate(unique):
+            for dst in unique[i + 1 :]:
+                _add_shared_entity_edge(src, dst, w)
 
     for relation in entity_relations:
         src_entity = entity_by_key.get(chunk_key_from_doc_id(relation["_from"]), {})

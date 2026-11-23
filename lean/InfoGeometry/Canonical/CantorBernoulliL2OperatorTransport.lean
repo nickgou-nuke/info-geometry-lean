@@ -257,7 +257,7 @@ theorem prependBit_measure_map_eq_branchProductMeasure (b : Bool) :
   apply Measure.eq_infinitePi
   intro s t ht
   have hpre : Measurable (prependBit b : Boundary → Boundary) :=
-    continuous_prependBit b |>.measurable
+    InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology.continuous_prependBit b |>.measurable
   have hpi : MeasurableSet (Set.pi s t) :=
     MeasurableSet.pi s.countable_toSet (fun i hi => ht i)
   rw [Measure.map_apply hpre hpi]
@@ -547,7 +547,7 @@ theorem tail_measure_map_restrict_prependBitBranch (b : Bool) :
     simpa [Function.comp_def, tail_prependBit] using
       (Measure.map_id (μ := μC))
   rw [prependBit_measure_map_eq_two_restrict_branch b,
-    Measure.map_smul _ continuous_tail.measurable.aemeasurable] at hcomp
+    Measure.map_smul _ InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology.continuous_tail.measurable.aemeasurable] at hcomp
   apply Measure.ext
   intro s hs
   have h := congrArg (fun ν : Measure Boundary => ν s) hcomp

@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Clifford.Cl33PhaseMatrixEquiv
 
+import InfoGeometry.Clifford.RealDoubledChiralCl11Atom
 import InfoGeometry.Clifford.BottPeriodicity
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.OpSignatureBridge

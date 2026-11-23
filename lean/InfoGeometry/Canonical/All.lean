@@ -1065,6 +1065,11 @@ import InfoGeometry.Canonical.AFRecursiveLimitBridge
 import InfoGeometry.Canonical.JaynesLDDSCentering
 import InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge
 import InfoGeometry.Canonical.KreinProjectorLattice
+import InfoGeometry.Canonical.FiniteOperatorBooleanAlgebra
+import InfoGeometry.Canonical.WallpaperParityBooleanBridge
+import InfoGeometry.Canonical.KleinGlideTwistedCommutantBridge
+import InfoGeometry.Canonical.WeylCPTParityBridge
+import InfoGeometry.Canonical.WallpaperWeylCPTSynthesis
 import InfoGeometry.Canonical.SectorLattice
 import InfoGeometry.Canonical.RefinementGaloisConnection
 import InfoGeometry.Canonical.SelfSimilarVacuum
@@ -2132,6 +2137,7 @@ import InfoGeometry.Canonical.DeformedSuperCuntzWarp
 import InfoGeometry.Canonical.InductiveColimitBridge
 import InfoGeometry.Canonical.KuzminColimit
 import InfoGeometry.Canonical.AmariSouriauThermodynamicGauge
+import InfoGeometry.Canonical.SouriauKosmannLipschitzBridge
 import InfoGeometry.Canonical.KANColimitBridge
 import InfoGeometry.Canonical.ArakiItakuraSaitoCollapse
 import InfoGeometry.Canonical.TensorColimitExpectation

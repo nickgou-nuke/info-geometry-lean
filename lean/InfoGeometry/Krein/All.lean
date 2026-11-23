@@ -55,6 +55,7 @@ import InfoGeometry.Krein.Superphysics
 import InfoGeometry.Krein.Modular
 import InfoGeometry.Krein.Representation
 import InfoGeometry.Krein.State
+import InfoGeometry.Krein.PositiveSectorMetric
 import InfoGeometry.Krein.Dilation
 import InfoGeometry.Krein.ExponentialIsometry
 import InfoGeometry.Krein.Prelude

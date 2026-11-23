@@ -1735,6 +1735,7 @@ import InfoGeometry.Canonical.AltlandZirnbauerTenfoldMasterBridge
 import InfoGeometry.Canonical.AmariBinarySimplexBridge
 import InfoGeometry.Canonical.AmariDualTemperatureColimitPhaseTransitionCapstone
 import InfoGeometry.Canonical.AmariSouriauThermodynamicGauge
+import InfoGeometry.Canonical.SouriauKosmannLipschitzBridge
 import InfoGeometry.Canonical.AmariZetaSimplex
 import InfoGeometry.Canonical.AmplituhedronBostConnesAnalyticBridge
 import InfoGeometry.Canonical.AmplituhedronBostConnesBridge
@@ -7766,6 +7767,8 @@ import InfoGeometry.Geometry.MetriplecticKahlerInterfaces
 import InfoGeometry.Geometry.MobiusClassification
 import InfoGeometry.Geometry.MobiusDual2x2
 import InfoGeometry.Geometry.MobiusInfinitesimal
+import InfoGeometry.Geometry.MobiusLieExponential
+import InfoGeometry.Geometry.MobiusPaperRemainder
 import InfoGeometry.Geometry.MoebiusChiralGeneratorClassification
 import InfoGeometry.Geometry.MoebiusConjugacyClassification
 import InfoGeometry.Geometry.NewmanPenroseNullTetrad

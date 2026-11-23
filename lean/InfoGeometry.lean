@@ -4200,6 +4200,7 @@ import InfoGeometry.Canonical.SourceLinkedCARCurrent
 import InfoGeometry.Canonical.SouriauAnomalyCancellation
 import InfoGeometry.Canonical.SouriauBetaField
 import InfoGeometry.Canonical.SouriauBetaVectorField
+import InfoGeometry.Canonical.SouriauKosmannLipschitzBridge
 import InfoGeometry.Canonical.SouriauBostConnesAnalytic
 import InfoGeometry.Canonical.SouriauBostConnesColimit
 import InfoGeometry.Canonical.SouriauBostConnesColimitBridge
@@ -6587,6 +6588,8 @@ import InfoGeometry.Geometry.MatrixCurvatureHessian
 import InfoGeometry.Geometry.MatrixCurvatureNonconvexity
 import InfoGeometry.Geometry.MobiusClassification
 import InfoGeometry.Geometry.MobiusInfinitesimal
+import InfoGeometry.Geometry.MobiusLieExponential
+import InfoGeometry.Geometry.MobiusPaperRemainder
 import InfoGeometry.Geometry.MoebiusChiralGeneratorClassification
 import InfoGeometry.Geometry.MoebiusConjugacyClassification
 import InfoGeometry.Geometry.MoebiusModeExamples

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 open Setoid
@@ -395,5 +400,18 @@ theorem grothendieckFunctor_comp (f : M →+ N) (g : N →+ P) :
               rw [grothendieckFunctor_map]
             _ = ((grothendieckMap P).comp (g.comp f)) m := by simp)
         x
+
+theorem grothendieckLift_naturality
+    {A : Type*} [AddCommGroup A] (f : M →+ N) (g : N →+ A) :
+    grothendieckLift (g.comp f) =
+      (grothendieckLift g).comp (grothendieckFunctor f) := by
+  ext x
+  exact (grothendieckLift_unique (g.comp f)
+    ((grothendieckLift g).comp (grothendieckFunctor f)) (by
+      intro m
+      change grothendieckLift g
+          (grothendieckFunctor f (grothendieckMap M m)) = g (f m)
+      rw [grothendieckFunctor_map]
+      exact grothendieckLift_comp g (f m)) x).symm
 
 end functoriality

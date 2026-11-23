@@ -98,4 +98,8 @@ theorem h3Zorn_lmul_comm_lmul_sq (x : H3Zorn ℝ) :
       (AddMonoid.End.mulLeft (x * x)) := by
   exact commute_lmul_lmul_sq x
 
+/-- Native closure of the paper-facing Jordan identity target. -/
+theorem h3ZornJordanProductLaw_closed : H3ZornJordanProductLaw :=
+  h3ZornJordanProductLaw
+
 end InfoGeometry.Algebra

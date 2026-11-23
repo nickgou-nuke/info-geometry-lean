@@ -166,6 +166,19 @@ theorem etaChiral_gamma5_anticommute :
       -((gamma5 (E := E)).comp (etaChiral (E := E))) := by
   simpa [etaChiral, gamma5] using modular_j_spectral_epsilon_anticommute E
 
+omit [CompleteSpace E] in
+/-- The cut and the mirror are distinct on every nontrivial doubled carrier. -/
+theorem gamma5_ne_etaChiral [Nontrivial E] : gamma5 (E := E) ≠ etaChiral (E := E) := by
+  intro h
+  obtain ⟨x, hx⟩ := exists_ne (0 : E)
+  have happ := congrArg (fun T : EndH₂ (E := E) => T (to_doubled x (0 : E))) h
+  have hfst := congrArg WithLp.fst happ
+  simp [gamma5, etaChiral, hx] at hfst
+
+omit [CompleteSpace E] in
+theorem etaChiral_ne_gamma5 [Nontrivial E] : etaChiral (E := E) ≠ gamma5 (E := E) :=
+  fun h => gamma5_ne_etaChiral (E := E) h.symm
+
 /-- Conjugating the chiral grading by the doubled real chiral metric flips its sign. -/
 theorem etaChiral_conj_gamma5 :
     (etaChiral (E := E)).comp

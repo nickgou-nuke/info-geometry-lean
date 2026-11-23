@@ -186,4 +186,50 @@ theorem cl11_shirokov_recursive_inverse (U : Cl11Matrix) (hdet : Matrix.det U �
   · simp [Matrix.mul_adjugate, smul_smul, hdet]
   · simp [Matrix.adjugate_mul, smul_smul, hdet]
 
+/-!
+## Versor special case in `Cl(1,1)`
+
+For a versor the general recursion is unnecessary: the inverse is the reversion
+numerator over the scalar `A Ã`.  Here the grade-1 (single-vector) case is proved
+entrywise in the concrete `Cl(1,1)` owner, where `e₀² = 1`, `e₁² = -1` and a
+vector is self-reverse.
+-/
+
+/-- A grade-1 Clifford vector `v = u₁ e₀ + u₂ e₁` in `Cl(1,1)`. -/
+def cl11Vector (u₁ u₂ : ℝ) : Cl11Matrix :=
+  cl11Multivector 0 u₁ u₂ 0
+
+/-- The square of a grade-1 vector is the scalar `u₁² - u₂²` times the identity. -/
+theorem cl11_vector_sq (u₁ u₂ : ℝ) :
+    cl11Vector u₁ u₂ * cl11Vector u₁ u₂ =
+      (u₁ ^ 2 - u₂ ^ 2) • (1 : Cl11Matrix) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [cl11Vector, cl11Multivector, cl11GenE0, cl11GenE1, cl11GenE01,
+      Matrix.mul_apply, Fin.sum_univ_two] <;>
+    ring
+
+/-- A grade-1 vector is invariant under reversion. -/
+theorem cl11_vector_reversion (u₁ u₂ : ℝ) :
+    cl11Reversion 0 u₁ u₂ 0 = cl11Vector u₁ u₂ := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [cl11Vector, cl11Reversion, cl11Multivector, cl11GenE0, cl11GenE1, cl11GenE01]
+
+/-- The versor inverse `v⁻¹ = ṽ / (v ṽ)` for a grade-1 `Cl(1,1)` vector with
+non-null square `u₁² - u₂² ≠ 0`.  The denominator `v ṽ` is the pure scalar
+`u₁² - u₂²`, and the reciprocal times the reversion is a genuine two-sided
+inverse. -/
+theorem cl11_versor_inverse_of_vector (u₁ u₂ : ℝ) (h : u₁ ^ 2 - u₂ ^ 2 ≠ 0) :
+    let v := cl11Vector u₁ u₂
+    let invV : Cl11Matrix := (u₁ ^ 2 - u₂ ^ 2)⁻¹ • cl11Reversion 0 u₁ u₂ 0
+    v * invV = 1 ∧ invV * v = 1 := by
+  dsimp only
+  rw [cl11_vector_reversion]
+  constructor
+  · rw [Matrix.mul_smul, cl11_vector_sq, smul_smul]
+    simp [h]
+  · rw [Matrix.smul_mul, cl11_vector_sq, smul_smul]
+    simp [h]
+
 end InfoGeometry.Synthesis.ShirokovRecursiveInverse

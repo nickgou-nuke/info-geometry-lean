@@ -74,7 +74,12 @@ positive-definite orthonormal-frame results are special cases only.
    powerset average. They do not yet construct the center projection for
    arbitrary multivectors, identify the average with that projection on the
    whole algebra, transport it to a varying dual frame, or prove the
-   odd-dimensional reduced-sum transport required by Theorem 2.2.
+   odd-dimensional reduced-sum transport required by Theorem 2.2. The new
+   `shirokov_blade_reynolds_formula` packages the scalar/top/noncentral cases,
+   and `shirokov_reynolds_finite_blade_support` extends that computation by
+   linearity to any explicitly supplied finite blade expansion. A theorem
+   expressing every Clifford element as that expansion, and hence the
+   all-elements projection statement, remains open.
 2. Connect the finite-coordinate `C+K` transfer's derivation family to the
    repository's CE/exterior-form carrier; derive its flatness and parallelness
    hypotheses from the Clifford-frame compatibility equations.
@@ -134,6 +139,14 @@ reported zero traps and Gate 4's generated `#print axioms` audit passed for
 all 18 public declarations in the owner. This finite-stage average still
 does not prove a center-projection theorem for arbitrary multivectors or the
 varying-frame/odd-reduced-sum transport in Theorem 2.2.
+The later `shirokov_blade_reynolds_formula`,
+`shirokov_reynolds_blade_expansion`, and
+`shirokov_reynolds_finite_blade_support` extensions compile in the same
+targeted owner build. They give the average on each blade and on any explicit
+finite blade expansion, with only scalar and odd top-grade terms retained.
+They do not yet prove that every element is represented by the stated
+expansion inside this owner, so the all-multivector center projection remains
+unproved.
 The earlier strict screen of the new Shirokov bridge reported zero traps. The
 automated GATE_4 review was rejected before
 kernel verification because the repository-wide staged Lean set fails its QMS

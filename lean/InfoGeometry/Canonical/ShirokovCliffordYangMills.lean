@@ -495,6 +495,88 @@ theorem shirokov_odd_pseudoscalar_reynolds_average (n : ℕ) (hn : Odd n) :
           rw [← Finset.sum_smul]
           simp
 
+/-- The standard inverse-blade Reynolds average on any blade: only the scalar
+and (in odd dimension) the top-grade blade survive. -/
+theorem shirokov_blade_reynolds_formula (n : ℕ) (T : Finset (Fin n)) :
+    (∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+      ((-1 : ℝ) ^ (S.card * (S.card + 1) / 2) • cBlade ℝ n S) *
+        cBlade ℝ n T * cBlade ℝ n S) =
+      if T = ∅ then (2 ^ n : ℝ) • cBlade ℝ n ∅ else
+      if Odd n ∧ T = Finset.univ then
+        (2 ^ n : ℝ) • cBlade ℝ n (Finset.univ : Finset (Fin n)) else 0 := by
+  by_cases hEmpty : T = ∅
+  · subst T
+    simp only [if_pos rfl]
+    exact shirokov_scalar_blade_reynolds_average n
+  by_cases hTop : Odd n ∧ T = Finset.univ
+  · rw [if_neg hEmpty, if_pos hTop]
+    simpa [hTop.2] using shirokov_odd_pseudoscalar_reynolds_average n hTop.1
+  rw [if_neg hEmpty, if_neg hTop]
+  have hne : T.Nonempty := by
+    by_contra h
+    apply hEmpty
+    exact Finset.not_nonempty_iff_eq_empty.mp h
+  have hcase : (Even T.card ∧ T.Nonempty) ∨
+      (Odd T.card ∧ T ≠ (Finset.univ : Finset (Fin n))) := by
+    rcases Nat.even_or_odd T.card with hEven | hOdd
+    · exact Or.inl ⟨hEven, hne⟩
+    · exact Or.inr ⟨hOdd, fun h => hTop ⟨by simpa [h] using hOdd, h⟩⟩
+  exact shirokov_noncentral_blade_reynolds_vanishes n T hcase
+
+/-- The unnormalized standard-frame Reynolds operator on `Cl(0,n)`, written
+using the explicit inverse-blade formula. -/
+def shirokovReynolds (n : ℕ)
+    (x : CliffordAlgebra (cliffordNegSqForm ℝ n)) :
+    CliffordAlgebra (cliffordNegSqForm ℝ n) :=
+  ∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+    ((-1 : ℝ) ^ (S.card * (S.card + 1) / 2) • cBlade ℝ n S) * x *
+      cBlade ℝ n S
+
+/-- Reynolds averaging acts coefficientwise on finite blade expansions. -/
+theorem shirokov_reynolds_blade_expansion (n : ℕ)
+    (a : Finset (Fin n) → ℝ) :
+    shirokovReynolds n
+      (∑ T ∈ (Finset.univ : Finset (Fin n)).powerset,
+        a T • cBlade ℝ n T) =
+      ∑ T ∈ (Finset.univ : Finset (Fin n)).powerset,
+        a T • shirokovReynolds n (cBlade ℝ n T) := by
+  simp only [shirokovReynolds, Finset.mul_sum, Finset.sum_mul]
+  rw [Finset.sum_comm]
+  apply Finset.sum_congr rfl
+  intro T hT
+  calc
+    (∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+        ((-1 : ℝ) ^ (S.card * (S.card + 1) / 2) • cBlade ℝ n S) *
+          (a T • cBlade ℝ n T) * cBlade ℝ n S) =
+      ∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+        a T • (((-1 : ℝ) ^ (S.card * (S.card + 1) / 2) • cBlade ℝ n S) *
+          cBlade ℝ n T * cBlade ℝ n S) := by
+            apply Finset.sum_congr rfl
+            intro S hS
+            rw [mul_smul_comm, smul_mul_assoc]
+    _ = a T • shirokovReynolds n (cBlade ℝ n T) := by
+          rw [← Finset.smul_sum]
+          rfl
+
+/-- Explicit Reynolds action on an arbitrary finite linear combination of
+ordered blades: the coefficient is retained only at scalar and odd top grade. -/
+theorem shirokov_reynolds_finite_blade_support (n : ℕ)
+    (a : Finset (Fin n) → ℝ) :
+    shirokovReynolds n
+      (∑ T ∈ (Finset.univ : Finset (Fin n)).powerset,
+        a T • cBlade ℝ n T) =
+      ∑ T ∈ (Finset.univ : Finset (Fin n)).powerset,
+        a T • (if T = ∅ then (2 ^ n : ℝ) • cBlade ℝ n ∅ else
+          if Odd n ∧ T = Finset.univ then
+            (2 ^ n : ℝ) • cBlade ℝ n (Finset.univ : Finset (Fin n)) else 0) := by
+  rw [shirokov_reynolds_blade_expansion]
+  apply Finset.sum_congr rfl
+  intro T hT
+  change a T • (∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+      ((-1 : ℝ) ^ (S.card * (S.card + 1) / 2) • cBlade ℝ n S) *
+        cBlade ℝ n T * cBlade ℝ n S) = _
+  rw [shirokov_blade_reynolds_formula]
+
 private theorem endCommutator_double_scaled (A B : FormEnd V) (r s : ℝ) :
     endCommutator A (endCommutator (r • A) (s • B)) =
       s • (r • endCommutator A (endCommutator A B)) := by

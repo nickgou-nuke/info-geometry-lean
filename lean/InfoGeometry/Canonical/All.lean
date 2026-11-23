@@ -22,6 +22,7 @@ limitations under the License.
 
 Authors: Nikolay Goutev, Dimitar Tonev
 -/
+import InfoGeometry.Canonical.GradedNullconeDifferentialOperatorAlgebra
 import InfoGeometry.Canonical.GradedDualNullconeOperatorAlgebra
 
 import DAG.Basic

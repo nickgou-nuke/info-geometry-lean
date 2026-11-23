@@ -139,5 +139,18 @@ def typeITripleNormFromRootNormSq (rootNormSq : ℝ) : ℝ :=
     typeITripleNormFromRootNormSq 2 = 4 := by
   norm_num [typeITripleNormFromRootNormSq]
 
+theorem realized_shell_has_196560_vectors
+    {V : Type*} [DecidableEq V] (realization : WilsonShellRealization V) :
+    (Finset.univ.image realization.vector).card = 196560 ∧
+      ∀ i : WilsonMinimalIndex,
+        realization.inLattice (realization.vector i) ∧
+          realization.normSq (realization.vector i) =
+            realization.shellNormSq := by
+  constructor
+  · rw [Finset.card_image_of_injective _ realization.vector_injective]
+    exact wilsonMinimalIndex_card
+  · intro i
+    exact ⟨realization.vector_in_lattice i, realization.vector_on_shell i⟩
+
 end InfoGeometry.Canonical.WilsonOctonionicLeechShell
 

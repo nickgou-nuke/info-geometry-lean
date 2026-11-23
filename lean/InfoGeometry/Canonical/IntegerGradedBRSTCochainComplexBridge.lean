@@ -143,4 +143,18 @@ theorem master_integer_graded_brst_cochain_complex_synthesis
   integer_graded_brst_exact_state_class_zero q g_op hq2 h_comm g chi
 ⟩
 
+/-- **Theorem**: Every exact state lies in the boundary image inside the cycle submodule. -/
+theorem integer_graded_brst_exact_state_mem_boundary
+    (q g_op : Module.End R (ExteriorAlgebra R V))
+    (hq2 : q.comp q = 0)
+    (h_comm : g_op.comp q - q.comp g_op = q)
+    (g : ℤ)
+    (chi : integerGhostEigenspace g_op g) :
+    (⟨integerGradedBRSTMap q g_op h_comm g chi,
+      integer_graded_brst_range_le_ker q g_op hq2 h_comm g chi⟩ :
+        LinearMap.ker (integerGradedBRSTMap q g_op h_comm (g + 1))) ∈
+      LinearMap.range (integerGradedBRSTExactToClosed q g_op hq2 h_comm g) := by
+  rw [LinearMap.mem_range]
+  exact ⟨⟨integerGradedBRSTMap q g_op h_comm g chi, ⟨chi, rfl⟩⟩, rfl⟩
+
 end InfoGeometry.Canonical.IntegerGradedBRSTCochainComplexBridge

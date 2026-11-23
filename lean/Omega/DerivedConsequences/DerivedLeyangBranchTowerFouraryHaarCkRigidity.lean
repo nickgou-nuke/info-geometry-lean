@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Omega.DerivedConsequences.DerivedLeyangBranchsetHaarLimit
 import Omega.Zeta.DerivedLeyangBfCkRigidity
 
@@ -19,5 +24,10 @@ theorem paper_derived_leyang_branch_tower_fourary_haar_ck_rigidity (n r : ℕ) (
     rw [Fintype.card_fun]
     norm_num
   exact ⟨paper_derived_leyang_branchset_haar_limit n r h, hzeta, hsnf, hcard⟩
+
+/-- Paper label: `thm:derived-leyang-branch-tower-fourary-haar-ck-rigidity`. -/
+theorem paper_derived_leyang_branch_tower_fourary_haar_scaling (n r : ℕ) (h : r ≤ n) :
+    ((4 : ℚ) ^ (n - r)) / (5 * (4 : ℚ) ^ n) = (1 : ℚ) / (5 * (4 : ℚ) ^ r) :=
+  paper_derived_leyang_branchset_haar_limit n r h
 
 end Omega.DerivedConsequences

@@ -15,7 +15,7 @@ open CliffordAlgebra
 
 /-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
 theorem geometricInverse_exists_noncomm_pair :
-    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+    ∃ a b : Matrix (Fin 2) (Fin 2) ℂ, a * b ≠ b * a :=
   ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
    _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
    _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
@@ -69,6 +69,92 @@ theorem geometricInverse_mul_ι (v : M) [Invertible (Q v)] :
     _ = 1 := by
             rw [Algebra.smul_def, ← map_mul]
             exact congrArg (algebraMap R (CliffordAlgebra Q)) (invOf_mul_self (a := Q v))
+
+/-!
+## Versor products
+
+The general Shirokov characteristic-polynomial construction is distinct from the
+special inverse of a versor.  The following finite-list result stays in Mathlib's
+native `CliffordAlgebra`: it assumes each vector factor has nonzero quadratic
+value, and constructs the inverse by reversing the factor order.  It does not
+claim that every blade or rotor is invertible, nor does it formalize the general
+multivector determinant recurrence.
+-/
+
+section VersorProduct
+
+variable {R M : Type*} [Field R] [AddCommGroup M] [Module R M]
+variable (Q : QuadraticForm R M)
+
+/-- Ordered geometric product of a finite list of vector generators. -/
+def versorProduct : List M → CliffordAlgebra Q
+  | [] => 1
+  | v :: vs => CliffordAlgebra.ι Q v * versorProduct vs
+
+/-- Candidate inverse of a vector generator with nonzero quadratic value. -/
+def nonNullVectorInverse (v : M) : CliffordAlgebra Q :=
+  (Q v)⁻¹ • CliffordAlgebra.ι Q v
+
+theorem ι_mul_nonNullVectorInverse (v : M) (hv : Q v ≠ 0) :
+    CliffordAlgebra.ι Q v * nonNullVectorInverse Q v = 1 := by
+  dsimp [nonNullVectorInverse]
+  calc
+    CliffordAlgebra.ι Q v * ((Q v)⁻¹ • CliffordAlgebra.ι Q v)
+        = (Q v)⁻¹ • (CliffordAlgebra.ι Q v * CliffordAlgebra.ι Q v) := by simp
+    _ = (Q v)⁻¹ • algebraMap R (CliffordAlgebra Q) (Q v) := by
+          rw [CliffordAlgebra.ι_sq_scalar]
+    _ = 1 := by
+          rw [Algebra.smul_def, ← map_mul]
+          exact congrArg (algebraMap R (CliffordAlgebra Q)) (inv_mul_cancel₀ hv)
+
+theorem nonNullVectorInverse_mul_ι (v : M) (hv : Q v ≠ 0) :
+    nonNullVectorInverse Q v * CliffordAlgebra.ι Q v = 1 := by
+  dsimp [nonNullVectorInverse]
+  calc
+    ((Q v)⁻¹ • CliffordAlgebra.ι Q v) * CliffordAlgebra.ι Q v
+        = (Q v)⁻¹ • (CliffordAlgebra.ι Q v * CliffordAlgebra.ι Q v) := by simp
+    _ = (Q v)⁻¹ • algebraMap R (CliffordAlgebra Q) (Q v) := by
+          rw [CliffordAlgebra.ι_sq_scalar]
+    _ = 1 := by
+          rw [Algebra.smul_def, ← map_mul]
+          exact congrArg (algebraMap R (CliffordAlgebra Q)) (inv_mul_cancel₀ hv)
+
+/-- Reverse-ordered product of the inverses of the vector factors. -/
+def versorProductInverse : List M → CliffordAlgebra Q
+  | [] => 1
+  | v :: vs => versorProductInverse vs * nonNullVectorInverse Q v
+
+/-- A finite product of non-null Clifford vectors is two-sided invertible;
+the inverse reverses the factor order. -/
+theorem versorProduct_two_sided_inverse (vs : List M)
+    (hvs : ∀ v ∈ vs, Q v ≠ 0) :
+    versorProduct Q vs * versorProductInverse Q vs = 1 ∧
+      versorProductInverse Q vs * versorProduct Q vs = 1 := by
+  induction vs with
+  | nil => simp [versorProduct, versorProductInverse]
+  | cons v vs ih =>
+      have hv : Q v ≠ 0 := hvs v (List.mem_cons_self)
+      have htail : ∀ w ∈ vs, Q w ≠ 0 := fun w hw => hvs w (List.mem_cons_of_mem v hw)
+      obtain ⟨ih₁, ih₂⟩ := ih htail
+      constructor
+      · simp only [versorProduct, versorProductInverse]
+        calc
+          (CliffordAlgebra.ι Q v * versorProduct Q vs) *
+              (versorProductInverse Q vs * nonNullVectorInverse Q v)
+              = CliffordAlgebra.ι Q v *
+                  (versorProduct Q vs * versorProductInverse Q vs) *
+                    nonNullVectorInverse Q v := by noncomm_ring
+          _ = 1 := by rw [ih₁, mul_one, ι_mul_nonNullVectorInverse Q v hv]
+      · simp only [versorProduct, versorProductInverse]
+        calc
+          (versorProductInverse Q vs * nonNullVectorInverse Q v) *
+              (CliffordAlgebra.ι Q v * versorProduct Q vs)
+              = versorProductInverse Q vs *
+                  (nonNullVectorInverse Q v * CliffordAlgebra.ι Q v) *
+                    versorProduct Q vs := by noncomm_ring
+          _ = 1 := by rw [nonNullVectorInverse_mul_ι Q v hv, mul_one, ih₂]
+
+end VersorProduct
 
 /--
 Radial scaling: the geometric inverse of a vector scales the norm as r ↦ 1/r.

@@ -3,9 +3,14 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import Mathlib.Algebra.Algebra.Equiv
 import Mathlib.Algebra.Module.LinearMap.End
+import Mathlib.Analysis.Normed.Lp.WithLp
+import Mathlib.Data.Matrix.Basic
+import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Prod
 import Mathlib.Tactic.Abel
+import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.NoncommRing
 
 /-!
@@ -23,6 +28,8 @@ blocks detects precisely when the square correction vanishes.
 -/
 
 namespace InfoGeometry.Core.OperatorCliffordDouble
+
+section RingEnd
 
 variable {R M : Type*} [Ring R] [AddCommGroup M] [Module R M]
 
@@ -382,5 +389,223 @@ theorem diracPlus_sq_eq_lift_iff (A B : Module.End R M) :
   · intro h
     change A * B = B * A at h
     simp [diracPlus_sq, lift_eq_block, h]
+
+end RingEnd
+
+section MatrixRingEquiv
+
+variable {R M : Type*} [Semiring R] [AddCommMonoid M] [Module R M]
+
+/-- Ring isomorphism `M₂(End_R(M)) ≃+* End_R(M × M)` over any semiring `R` and
+commutative monoid `M`. -/
+def blockMatrixRingEquiv :
+    Matrix (Fin 2) (Fin 2) (Module.End R M) ≃+* Module.End R (M × M) where
+  toFun mat := ((mat 0 0).coprod (mat 0 1)).prod ((mat 1 0).coprod (mat 1 1))
+  invFun T :=
+    !![(LinearMap.fst R M M).comp (T.comp (LinearMap.inl R M M)),
+       (LinearMap.fst R M M).comp (T.comp (LinearMap.inr R M M));
+       (LinearMap.snd R M M).comp (T.comp (LinearMap.inl R M M)),
+       (LinearMap.snd R M M).comp (T.comp (LinearMap.inr R M M))]
+  left_inv mat := by
+    ext i j x
+    fin_cases i <;> fin_cases j <;> simp
+  right_inv T := by
+    apply LinearMap.ext
+    rintro ⟨x, y⟩
+    have hxy : (x, y) = (x, (0 : M)) + ((0 : M), y) := by simp
+    apply Prod.ext
+    · simp
+      rw [← Prod.fst_add, ← map_add, ← hxy]
+    · simp
+      rw [← Prod.snd_add, ← map_add, ← hxy]
+  map_mul' mat₁ mat₂ := by
+    apply LinearMap.ext
+    rintro ⟨x, y⟩
+    apply Prod.ext <;>
+      simp [Matrix.mul_apply, Fin.sum_univ_two, Module.End.mul_apply] <;>
+      ac_rfl
+  map_add' mat₁ mat₂ := by
+    apply LinearMap.ext
+    rintro ⟨x, y⟩
+    apply Prod.ext <;>
+      simp <;>
+      ac_rfl
+
+/-- For any nontrivial module `M`, `M₂(End_R(M))` is genuinely noncommutative. -/
+theorem matrix_end_noncommutative [Nontrivial M] :
+    ∃ A B : Matrix (Fin 2) (Fin 2) (Module.End R M), A * B ≠ B * A := by
+  refine ⟨!![1, 0; 0, 0], !![0, 1; 0, 0], ?_⟩
+  intro h
+  have h01 := congrArg (fun mat : Matrix (Fin 2) (Fin 2) (Module.End R M) => mat 0 1) h
+  simp only [Matrix.mul_apply, Fin.sum_univ_two, Matrix.of_apply, Matrix.cons_val_zero,
+    Matrix.cons_val_one, mul_one, mul_zero, add_zero] at h01
+  obtain ⟨x, y, hxy⟩ := exists_pair_ne M
+  apply hxy
+  have hx := congrArg (fun f : Module.End R M => f x) h01
+  have hy := congrArg (fun f : Module.End R M => f y) h01
+  simp only [Module.End.one_apply, LinearMap.zero_apply] at hx hy
+  exact hx.trans hy.symm
+
+end MatrixRingEquiv
+
+section MatrixAlgEquiv
+
+variable {R M : Type*} [CommSemiring R] [AddCommMonoid M] [Module R M]
+
+/-- Genuine `R`-algebra isomorphism `M₂(End_R(M)) ≃ₐ[R] End_R(M × M)` over any
+commutative semiring `R`. -/
+def blockMatrixAlgEquiv :
+    Matrix (Fin 2) (Fin 2) (Module.End R M) ≃ₐ[R] Module.End R (M × M) where
+  __ := blockMatrixRingEquiv
+  commutes' r := by
+    apply LinearMap.ext
+    rintro ⟨x, y⟩
+    apply Prod.ext <;>
+      simp [blockMatrixRingEquiv, Matrix.algebraMap_matrix_apply, Module.algebraMap_end_apply]
+
+@[simp]
+theorem blockMatrixAlgEquiv_apply
+    (mat : Matrix (Fin 2) (Fin 2) (Module.End R M)) (x : M × M) :
+    blockMatrixAlgEquiv mat x = (mat 0 0 x.1 + mat 0 1 x.2, mat 1 0 x.1 + mat 1 1 x.2) :=
+  rfl
+
+@[simp]
+theorem blockMatrixAlgEquiv_symm_apply (T : Module.End R (M × M)) :
+    blockMatrixAlgEquiv.symm T =
+      !![(LinearMap.fst R M M).comp (T.comp (LinearMap.inl R M M)),
+         (LinearMap.fst R M M).comp (T.comp (LinearMap.inr R M M));
+         (LinearMap.snd R M M).comp (T.comp (LinearMap.inl R M M)),
+         (LinearMap.snd R M M).comp (T.comp (LinearMap.inr R M M))] :=
+  rfl
+
+theorem blockMatrixAlgEquiv_symm_zero_zero (T : Module.End R (M × M)) :
+    blockMatrixAlgEquiv.symm T 0 0 =
+      (LinearMap.fst R M M).comp (T.comp (LinearMap.inl R M M)) :=
+  rfl
+
+theorem blockMatrixAlgEquiv_symm_zero_one (T : Module.End R (M × M)) :
+    blockMatrixAlgEquiv.symm T 0 1 =
+      (LinearMap.fst R M M).comp (T.comp (LinearMap.inr R M M)) :=
+  rfl
+
+theorem blockMatrixAlgEquiv_symm_one_zero (T : Module.End R (M × M)) :
+    blockMatrixAlgEquiv.symm T 1 0 =
+      (LinearMap.snd R M M).comp (T.comp (LinearMap.inl R M M)) :=
+  rfl
+
+theorem blockMatrixAlgEquiv_symm_one_one (T : Module.End R (M × M)) :
+    blockMatrixAlgEquiv.symm T 1 1 =
+      (LinearMap.snd R M M).comp (T.comp (LinearMap.inr R M M)) :=
+  rfl
+
+@[simp]
+theorem blockMatrixAlgEquiv_commute_iff
+    (A B : Matrix (Fin 2) (Fin 2) (Module.End R M)) :
+    Commute (blockMatrixAlgEquiv A) (blockMatrixAlgEquiv B) ↔ Commute A B := by
+  change blockMatrixAlgEquiv A * blockMatrixAlgEquiv B =
+      blockMatrixAlgEquiv B * blockMatrixAlgEquiv A ↔ A * B = B * A
+  rw [← map_mul, ← map_mul, blockMatrixAlgEquiv.injective.eq_iff]
+
+theorem blockMatrixAlgEquiv_not_commute_iff
+    (A B : Matrix (Fin 2) (Fin 2) (Module.End R M)) :
+    blockMatrixAlgEquiv A * blockMatrixAlgEquiv B ≠
+        blockMatrixAlgEquiv B * blockMatrixAlgEquiv A ↔ A * B ≠ B * A :=
+  not_congr (blockMatrixAlgEquiv_commute_iff A B)
+
+end MatrixAlgEquiv
+
+section MatrixBlockCompat
+
+variable {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
+
+theorem blockMatrixAlgEquiv_eq_block
+    (mat : Matrix (Fin 2) (Fin 2) (Module.End R M)) :
+    blockMatrixAlgEquiv mat = block (mat 0 0) (mat 0 1) (mat 1 0) (mat 1 1) :=
+  rfl
+
+theorem block_eq_blockMatrixAlgEquiv (A B C D : Module.End R M) :
+    block A B C D = blockMatrixAlgEquiv !![A, B; C, D] := by
+  simp [blockMatrixAlgEquiv_eq_block]
+
+@[simp]
+theorem blockMatrixAlgEquiv_of_matrix (A B C D : Module.End R M) :
+    blockMatrixAlgEquiv !![A, B; C, D] = block A B C D :=
+  (block_eq_blockMatrixAlgEquiv A B C D).symm
+
+theorem blockMatrixAlgEquiv_symm_eq_blocks (T : Module.End R (M × M)) :
+    blockMatrixAlgEquiv.symm T =
+      !![upperLeft T, upperRight T; lowerLeft T, lowerRight T] :=
+  rfl
+
+@[simp]
+theorem blockMatrixAlgEquiv_symm_block (A B C D : Module.End R M) :
+    blockMatrixAlgEquiv.symm (block A B C D) = !![A, B; C, D] := by
+  rw [block_eq_blockMatrixAlgEquiv, AlgEquiv.symm_apply_apply]
+
+theorem blockMatrixAlgEquiv_eq_blockEquiv
+    (mat : Matrix (Fin 2) (Fin 2) (Module.End R M)) :
+    blockMatrixAlgEquiv mat = blockEquiv ((mat 0 0, mat 0 1), (mat 1 0, mat 1 1)) :=
+  rfl
+
+theorem blockEquiv_eq_blockMatrixAlgEquiv
+    (p : (Module.End R M × Module.End R M) × (Module.End R M × Module.End R M)) :
+    blockEquiv p = blockMatrixAlgEquiv !![p.1.1, p.1.2; p.2.1, p.2.2] := by
+  rcases p with ⟨⟨A, B⟩, ⟨C, D⟩⟩
+  rw [blockEquiv_apply, block_eq_blockMatrixAlgEquiv]
+
+@[simp]
+theorem blockMatrixAlgEquiv_scalar (A : Module.End R M) :
+    blockMatrixAlgEquiv (Matrix.scalar (Fin 2) A) = lift A := by
+  apply LinearMap.ext
+  rintro ⟨x, y⟩
+  simp [Matrix.scalar_apply]
+
+theorem lift_eq_blockMatrixAlgEquiv (A : Module.End R M) :
+    lift A = blockMatrixAlgEquiv !![A, 0; 0, A] := by
+  simp [lift_eq_block]
+
+theorem gamma1_eq_blockMatrixAlgEquiv :
+    gamma1 (R := R) (M := M) = blockMatrixAlgEquiv !![1, 0; 0, -1] := by
+  simp [gamma1]
+
+theorem gamma2_eq_blockMatrixAlgEquiv :
+    gamma2 (R := R) (M := M) = blockMatrixAlgEquiv !![0, 1; 1, 0] := by
+  simp [gamma2]
+
+theorem diracPlus_eq_blockMatrixAlgEquiv (A B : Module.End R M) :
+    diracPlus A B = blockMatrixAlgEquiv !![A, B; B, -A] := by
+  simp [diracPlus]
+
+theorem diracMinus_eq_blockMatrixAlgEquiv (A B : Module.End R M) :
+    diracMinus A B = blockMatrixAlgEquiv !![A, -B; -B, -A] := by
+  simp [diracMinus]
+
+end MatrixBlockCompat
+
+section WithLpDoubled
+
+variable {R M : Type*} [CommSemiring R] [AddCommGroup M] [Module R M]
+
+/-- Transport `M₂(End_R(M)) ≃ₐ[R] End_R(D)` along any linear equivalence `D ≃ₗ[R] M × M`. -/
+def blockMatrixAlgEquivOfLinearEquiv {D : Type*} [AddCommMonoid D] [Module R D]
+    (e : D ≃ₗ[R] M × M) :
+    Matrix (Fin 2) (Fin 2) (Module.End R M) ≃ₐ[R] Module.End R D :=
+  blockMatrixAlgEquiv.trans (e.symm.conjAlgEquiv R)
+
+/-- Specialization to `WithLp 2 (M × M)` (definitionally `InfoGeometry.Krein.DoubledSpace M`
+when `R = ℝ`), without importing heavy `Analysis` modules into `Core`. -/
+def withLpBlockMatrixAlgEquiv :
+    Matrix (Fin 2) (Fin 2) (Module.End R M) ≃ₐ[R]
+      Module.End R (WithLp (2 : ENNReal) (M × M)) :=
+  blockMatrixAlgEquivOfLinearEquiv (WithLp.linearEquiv (2 : ENNReal) R (M × M))
+
+@[simp]
+theorem withLpBlockMatrixAlgEquiv_apply
+    (mat : Matrix (Fin 2) (Fin 2) (Module.End R M)) (x : M × M) :
+    withLpBlockMatrixAlgEquiv mat (WithLp.toLp 2 x) =
+      WithLp.toLp 2 (mat 0 0 x.1 + mat 0 1 x.2, mat 1 0 x.1 + mat 1 1 x.2) := by
+  simp [withLpBlockMatrixAlgEquiv, blockMatrixAlgEquivOfLinearEquiv, LinearEquiv.conjAlgEquiv_apply]
+
+end WithLpDoubled
 
 end InfoGeometry.Core.OperatorCliffordDouble

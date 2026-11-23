@@ -7,6 +7,7 @@ import InfoGeometry.Core.PeirceCoupledCorners
 import InfoGeometry.Core.JordanMultiplicationClosure
 import Mathlib.Algebra.Category.ModuleCat.Basic
 import Mathlib.Algebra.Homology.HomologicalComplex
+import Mathlib.Algebra.Algebra.Subalgebra.Basic
 
 /-!
 # The graded inner differential on the full Peirce algebra
@@ -245,6 +246,31 @@ noncomputable def cornerComplex (hp : IsIdempotentElem p) (hu : u ∈ peirce10 p
       ModuleCat.ofHom (differential (R := R) p u) := by
   exact CochainComplex.of_d (fun _ : ℕ => ModuleCat.of R A)
     (fun _ => ModuleCat.ofHom (differential (R := R) p u)) i
+
+/-- The reflection conjugation as an `R`-algebra involution on the full algebra. -/
+def parityAlgEquiv (hp : IsIdempotentElem p) : A ≃ₐ[R] A where
+  toFun := conjugation p
+  invFun := conjugation p
+  left_inv := conjugation_involutive hp
+  right_inv := conjugation_involutive hp
+  map_mul' := conjugation_mul hp
+  map_add' := fun x y => map_add (conjugation p) x y
+  commutes' := fun r => by
+    rw [conjugation_apply, (Algebra.commutes r (reflection p)).symm, mul_assoc,
+      reflection_sq hp, mul_one]
+
+@[simp] theorem parityAlgEquiv_apply (hp : IsIdempotentElem p) (x : A) :
+    parityAlgEquiv (R := R) hp x = conjugation p x := rfl
+
+theorem parityAlgEquiv_involutive (hp : IsIdempotentElem p) (x : A) :
+    parityAlgEquiv (R := R) hp (parityAlgEquiv (R := R) hp x) = x :=
+  conjugation_involutive hp x
+
+theorem differential_sq_eq_zero_iff_mem_center (hp : IsIdempotentElem p)
+    (hu : u ∈ LinearMap.range (odd p)) :
+    differential (R := R) p u ^ 2 = 0 ↔ u * u ∈ Subalgebra.center R A := by
+  rw [differential_sq_eq_zero_iff_commutes hp hu, Subalgebra.mem_center_iff]
+  exact ⟨fun h x => (h x).symm, fun h x => (h x).symm⟩
 
 end Algebra
 

@@ -454,6 +454,46 @@ theorem parabolic_jordan_coalescence_witness (ρ₁ ρ₂ : ℝ) (hne : ρ₁ �
     have h01 := congrFun (congrFun h0 0) 1
     norm_num [jordanNilpotent] at h01
 
+/-! ### 4. A stable invariant-cluster projection through internal coalescence -/
+
+/-- A three-dimensional operator with a possibly coalescing two-dimensional
+Jordan cluster and a separate scalar summand. -/
+def jordanClusterMat (ρ₁ ρ₂ μ : ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
+  Matrix.of ![![ρ₁, 1, 0], ![0, ρ₂, 0], ![0, 0, μ]]
+
+/-- Projection onto the two-dimensional invariant cluster. This projection is
+constant in the spectral parameters, so its entries remain bounded as the two
+cluster eigenvalues coalesce. -/
+def jordanClusterProj : Matrix (Fin 3) (Fin 3) ℝ :=
+  Matrix.of ![![1, 0, 0], ![0, 1, 0], ![0, 0, 0]]
+
+/-- The cluster projection is idempotent and commutes with the operator for all
+parameters, including `ρ₁ = ρ₂`. Thus the invariant cluster survives the
+parabolic collision even though its two individual rank-one spectral
+projectors do not have a bounded limit. This is a finite block-diagonal
+cluster result; it does not assert a Riesz projection theorem for general
+operators. -/
+theorem jordanClusterProj_idempotent_commutes (ρ₁ ρ₂ μ : ℝ) :
+    jordanClusterProj * jordanClusterProj = jordanClusterProj ∧
+    jordanClusterMat ρ₁ ρ₂ μ * jordanClusterProj =
+      jordanClusterProj * jordanClusterMat ρ₁ ρ₂ μ := by
+  constructor <;> ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [jordanClusterProj, jordanClusterMat, Matrix.mul_apply,
+      Fin.sum_univ_three]
+
+/-- Concrete 3×3 coordinate swap matrix witnessing non-commutativity with `jordanClusterProj`. -/
+def jordanClusterFlipMat : Matrix (Fin 3) (Fin 3) ℝ :=
+  Matrix.of ![![1, 0, 0], ![0, 0, 1], ![0, 1, 0]]
+
+/-- `jordanClusterProj` does not commute with `jordanClusterFlipMat` in `Matrix (Fin 3) (Fin 3) ℝ`. -/
+theorem jordanClusterProj_mul_jordanClusterFlipMat_ne :
+    jordanClusterProj * jordanClusterFlipMat ≠
+      jordanClusterFlipMat * jordanClusterProj := by
+  intro h
+  have h12 := congrFun (congrFun h 1) 2
+  norm_num [jordanClusterProj, jordanClusterFlipMat, Matrix.mul_apply,
+    Fin.sum_univ_three] at h12
+
 /-- At coalescence, a vector is an eigenvector for the repeated eigenvalue exactly
 when its second coordinate vanishes. Thus the eigenspace is a single line. -/
 theorem jordan_coalesced_eigenvector_iff_second_coordinate_zero (ρ : ℝ)

@@ -9,6 +9,7 @@ import InfoGeometry.Clifford.SplitCl11GradedTensorTower
 import InfoGeometry.Clifford.DaviauRealDirac8x8
 import InfoGeometry.Clifford.DaviauChiralPeirceSU2
 import InfoGeometry.Clifford.LochakRodichevFierzKrein
+import InfoGeometry.Clifford.SplitCliffordMatrixEquiv
 
 /-!
 # Daviau Real `M₈(ℝ)` Dirac Algebra Inside the `k = 3` Parity-Soldered `Cl(1,1)` Tower
@@ -442,5 +443,29 @@ theorem daviau_realDirac_in_cl11_tower_rung3 (μ ν : Fin 4) (j : Fin 3) :
   · rw [← map_mul, peirceRight_idem j]
   · rw [← map_mul, peirceLeft_mul_peirceRight j, map_zero]
   · rw [← map_add, peirceLeft_add_peirceRight j, map_one]
+
+/-! ### 6. R2-Gap1 Contract Reconciliation -/
+
+/-- **`R2-Gap1` Reconciliation**: Canonical split Clifford algebra isomorphism identifying
+the recursive generator algebra `Cl_split 3 = CliffordAlgebra (SplitQuad 3)` with `M₈(ℝ)`. -/
+noncomputable def clSplit3AlgEquivMat8 :
+    InfoGeometry.Clifford.SpinorRep.Cl_split 3 ≃ₐ[ℝ] Mat8R :=
+  InfoGeometry.Clifford.SplitCliffordMatrixEquiv.splitSpinorAlgEquiv 3
+
+/-- Identification of `Cl_split 3` with rung `k = 3` of the `Cl(1,1)` matrix tower. -/
+noncomputable def clSplit3EquivTower3 :
+    InfoGeometry.Clifford.SpinorRep.Cl_split 3 ≃ₐ[ℝ] Matrix (TowerIdx 3) (TowerIdx 3) ℝ :=
+  clSplit3AlgEquivMat8.trans tower3AlgEquivMat8.symm
+
+/-- Transitive algebra equivalence identifying `Cl_split 3` with the abstract graded tensor
+power `SplitClPower 3 ≅ ⊗ᵍ^3 Cl(1,1)`. -/
+noncomputable def clSplit3EquivSplitClPower3 :
+    InfoGeometry.Clifford.SpinorRep.Cl_split 3 ≃ₐ[ℝ] SplitClPower 3 :=
+  clSplit3EquivTower3.trans splitCl3EquivTower3.symm
+
+theorem clSplit3_reconciliation_packet :
+    (clSplit3AlgEquivMat8.trans tower3AlgEquivMat8.symm = clSplit3EquivTower3) ∧
+    (clSplit3EquivTower3.trans splitCl3EquivTower3.symm = clSplit3EquivSplitClPower3) :=
+  ⟨rfl, rfl⟩
 
 end InfoGeometry.Clifford.DaviauCl11TowerRung3Bridge

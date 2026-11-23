@@ -15,6 +15,7 @@ import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.BogoliubovClosedForms
 import InfoGeometry.Krein.ExponentialIsometry
 import InfoGeometry.OperatorAlgebra.KreinInnerDerivation
+import InfoGeometry.Canonical.SouriauDoubledQuadraticMomentMap
 
 /-!
 # Souriau equilibrium, Killing flows, and the finite `Cl(1,1)` Lipschitz rotor
@@ -699,30 +700,92 @@ spinor bundle, a connection, or a curved-spacetime Kosmann derivative. -/
 def kosmannCorrection (B ψ : Mat2) : Mat2 :=
   ((-1 : ℝ) / 4) • (B * ψ)
 
-/-- The finite Kosmann correction agrees with the established Rindler spin
-lift's left action when the contracted bivector is normalized as
-`2 * a * v.1 * J1`. This is an algebraic interface only; the existing owner
-supplies the connection and its spin-to-vector adjoint, not a curved spinor
-bundle. -/
-theorem kosmannCorrection_eq_rindlerSpinLift_left_action
-    (a : ℝ) (v : InfoGeometry.Geometry.RindlerCartanFrame.Tangent) (ψ : Mat2) :
-    kosmannCorrection ((2 * a * v.1) • J1) ψ =
-      spinLift a 0 0
-        (0 : InfoGeometry.Geometry.RindlerCartanFrame.Tangent →ₗ[ℝ] ℝ) v * ψ := by
-  simp [kosmannCorrection, spinLift, smul_smul, neg_smul]
+/-- In signature `(-,+)` and dimension two, every matrix infinitesimally
+preserving `metricMatrix` is the single boost direction `α J1`; its coefficient
+is recovered from the upper-right matrix entry. -/
+theorem lorentzSkew_matrix_eq_offDiagonal_J1 (A : Mat2)
+    (hA : A.transpose * InfoGeometry.Geometry.RindlerCartanFrame.metricMatrix +
+      InfoGeometry.Geometry.RindlerCartanFrame.metricMatrix * A = 0) :
+    A = (A 0 1) • J1 := by
+  have h00 : A 0 0 = 0 := by
+    have h := congrArg (fun M : Mat2 => M 0 0) hA
+    simp [Matrix.add_apply, Matrix.mul_apply, Matrix.transpose_apply,
+      InfoGeometry.Geometry.RindlerCartanFrame.metricMatrix,
+      InfoGeometry.Clifford.Cl11Matrix.Eplus, Matrix.vecMul, dotProduct,
+      Fin.sum_univ_two] at h
+    linarith
+  have h11 : A 1 1 = 0 := by
+    have h := congrArg (fun M : Mat2 => M 1 1) hA
+    simp [Matrix.add_apply, Matrix.mul_apply, Matrix.transpose_apply,
+      InfoGeometry.Geometry.RindlerCartanFrame.metricMatrix,
+      InfoGeometry.Clifford.Cl11Matrix.Eplus, Matrix.vecMul, dotProduct,
+      Fin.sum_univ_two] at h
+    linarith
+  have h10 : A 1 0 = A 0 1 := by
+    have h := congrArg (fun M : Mat2 => M 0 1) hA
+    simp [Matrix.add_apply, Matrix.mul_apply, Matrix.transpose_apply,
+      InfoGeometry.Geometry.RindlerCartanFrame.metricMatrix,
+      InfoGeometry.Clifford.Cl11Matrix.Eplus, Matrix.vecMul, dotProduct,
+      Fin.sum_univ_two] at h
+    linarith
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [InfoGeometry.Clifford.Cl11Matrix.J1, h00, h11, h10]
+
+/-- The finite two-dimensional Kosmann contraction is derived from the vector
+connection itself: for `A = α J1`, contraction of the two antisymmetric Clifford
+indices yields `2 α J1`. This convention makes `(-1/4) B` the trace-free spin
+lift `(-α/2) J1`. -/
+def kosmannBivectorOfLorentzConnection (A : Mat2) : Mat2 :=
+  (2 * (A 0 1)) • J1
+
+/-- The trace-free spin lift determined by a two-dimensional Lorentz
+connection. -/
+def kosmannSpinLiftOfLorentzConnection (A : Mat2) : Mat2 :=
+  (-(A 0 1 / 2)) • J1
+
+/-- The `-1/4` Kosmann coefficient applied to the connection-derived
+contracted bivector is precisely the canonical trace-free spin lift. -/
+theorem kosmannCorrection_ofLorentzConnection_eq_spinLift
+    (A : Mat2) (ψ : Mat2) :
+    kosmannCorrection (kosmannBivectorOfLorentzConnection A) ψ =
+      kosmannSpinLiftOfLorentzConnection A * ψ := by
+  simp [kosmannCorrection, kosmannBivectorOfLorentzConnection,
+    kosmannSpinLiftOfLorentzConnection, smul_smul]
   rw [← neg_smul]
   congr 1
   ring
 
+/-- Every Lorentz-skew two-dimensional vector connection is implemented on
+Clifford vectors by its canonical trace-free Kosmann spin lift. This derives
+the vector-spin compatibility from the connection matrix rather than taking a
+spin-connection intertwining law as free data. -/
+theorem kosmannSpinLiftOfLorentzConnection_adjoint
+    (A : Mat2)
+    (hA : A.transpose * InfoGeometry.Geometry.RindlerCartanFrame.metricMatrix +
+      InfoGeometry.Geometry.RindlerCartanFrame.metricMatrix * A = 0)
+    (u : InfoGeometry.Geometry.RindlerSpinTorsion.Vec) :
+    kosmannSpinLiftOfLorentzConnection A * cliffordVector u -
+        cliffordVector u * kosmannSpinLiftOfLorentzConnection A =
+      cliffordVector (A.mulVec u) := by
+  have hnormal := lorentzSkew_matrix_eq_offDiagonal_J1 A hA
+  have hconn :
+      InfoGeometry.Geometry.RindlerSpinTorsion.lorentzConnection
+          (A 0 1) 0 0 (1, 0) = A := by
+    rw [InfoGeometry.Geometry.RindlerSpinTorsion.lorentzConnection]
+    simpa using hnormal.symm
+  have h := spinLift_adjoint (A 0 1) 0 0
+    (0 : InfoGeometry.Geometry.RindlerCartanFrame.Tangent →ₗ[ℝ] ℝ) (1, 0) u
+  simpa [kosmannSpinLiftOfLorentzConnection, spinLift, hconn] using h
+
 /-- A finite, conditional Kosmann datum records the concrete carriers needed
 for a spinorial Lie-derivative calculation. It is not a spinor bundle: the
-connection, covariant derivative, and Killing field are explicit finite data.
-The Rindler instance below supplies all fields from existing owners. -/
+Killing field and Lorentz vector connection are finite data; the trace-free
+spin lift, Clifford bivector contraction, and covariant derivative are derived
+from that connection. -/
 structure FiniteKosmannDatum where
   killingGenerator : Vec11 → Vec11
   vectorConnection : InfoGeometry.Geometry.RindlerCartanFrame.Tangent → Mat2
-  spinConnection : InfoGeometry.Geometry.RindlerCartanFrame.Tangent → Mat2
-  contractedBivector : InfoGeometry.Geometry.RindlerCartanFrame.Tangent → Mat2
   killing_generator_skew : ∀ u v,
     minkowskiForm (killingGenerator u) v +
       minkowskiForm u (killingGenerator v) = 0
@@ -730,14 +793,34 @@ structure FiniteKosmannDatum where
     (vectorConnection v).transpose *
           InfoGeometry.Geometry.RindlerCartanFrame.metricMatrix +
       InfoGeometry.Geometry.RindlerCartanFrame.metricMatrix * vectorConnection v = 0
-  spinConnection_adjoint : ∀ v u,
-    spinConnection v * cliffordVector u -
-      cliffordVector u * spinConnection v =
-      cliffordVector ((vectorConnection v).mulVec u)
 
-/-- The finite spinor covariant derivative is constructed by the stored spin
-connection acting on the explicit matrix-spinor carrier. The connection law
-is therefore definitional, not a field assumed of each datum. -/
+/-- The spin connection is derived from the Lorentz vector connection by the
+unique trace-free `Cl(1,1)` lift. The scalar central ambiguity of an adjoint
+lift is fixed by this explicit trace-free convention. -/
+def FiniteKosmannDatum.spinConnection (D : FiniteKosmannDatum)
+    (v : InfoGeometry.Geometry.RindlerCartanFrame.Tangent) : Mat2 :=
+  kosmannSpinLiftOfLorentzConnection (D.vectorConnection v)
+
+/-- The derived spin connection implements the given vector connection on
+Clifford vectors; the compatibility previously stored as an independent datum
+now follows from Lorentz skewness. -/
+theorem FiniteKosmannDatum.spinConnection_adjoint (D : FiniteKosmannDatum)
+    (v : InfoGeometry.Geometry.RindlerCartanFrame.Tangent)
+    (u : InfoGeometry.Geometry.RindlerSpinTorsion.Vec) :
+    D.spinConnection v * cliffordVector u - cliffordVector u * D.spinConnection v =
+      cliffordVector ((D.vectorConnection v).mulVec u) := by
+  exact kosmannSpinLiftOfLorentzConnection_adjoint (D.vectorConnection v)
+    (D.vectorConnection_lorentz_skew v) u
+
+/-- The contracted Clifford bivector is computed from the connection. It is
+not independent data: Lorentz skewness puts each two-dimensional connection
+matrix on the `J1` line, and the contraction supplies the factor two. -/
+def FiniteKosmannDatum.contractedBivector (D : FiniteKosmannDatum)
+    (v : InfoGeometry.Geometry.RindlerCartanFrame.Tangent) : Mat2 :=
+  kosmannBivectorOfLorentzConnection (D.vectorConnection v)
+
+/-- The finite spinor covariant derivative is constructed by the derived spin
+connection acting on the explicit matrix-spinor carrier. -/
 def FiniteKosmannDatum.covariantDerivative (D : FiniteKosmannDatum)
     (v : InfoGeometry.Geometry.RindlerCartanFrame.Tangent) (ψ : Mat2) : Mat2 :=
   D.spinConnection v * ψ
@@ -746,18 +829,10 @@ def FiniteKosmannDatum.covariantDerivative (D : FiniteKosmannDatum)
 def rindlerFiniteKosmannDatum (a : ℝ) : FiniteKosmannDatum where
   killingGenerator := boostGenerator
   vectorConnection := fun v => lorentzConnection a 0 0 v
-  spinConnection := fun v =>
-    spinLift a 0 0
-      (0 : InfoGeometry.Geometry.RindlerCartanFrame.Tangent →ₗ[ℝ] ℝ) v
-  contractedBivector := fun v => (2 * a * v.1) • J1
   killing_generator_skew := boostGenerator_minkowski_skew
   vectorConnection_lorentz_skew := by
     intro v
     exact lorentzConnection_lorentz_skew a 0 0 v
-  spinConnection_adjoint := by
-    intro v u
-    exact spinLift_adjoint a 0 0
-      (0 : InfoGeometry.Geometry.RindlerCartanFrame.Tangent →ₗ[ℝ] ℝ) v u
 
 /-- In the finite Rindler datum, the contracted Kosmann correction is the
 spin-connection action on the explicit matrix spinor carrier. -/
@@ -766,8 +841,12 @@ theorem rindlerFiniteKosmannDatum_correction_eq_covariantDerivative
     kosmannCorrection
         ((rindlerFiniteKosmannDatum a).contractedBivector v) ψ =
       (rindlerFiniteKosmannDatum a).covariantDerivative v ψ := by
-  simpa [rindlerFiniteKosmannDatum, FiniteKosmannDatum.covariantDerivative] using
-    kosmannCorrection_eq_rindlerSpinLift_left_action a v ψ
+  simpa [rindlerFiniteKosmannDatum, FiniteKosmannDatum.contractedBivector,
+    kosmannBivectorOfLorentzConnection, FiniteKosmannDatum.covariantDerivative,
+    FiniteKosmannDatum.spinConnection, kosmannSpinLiftOfLorentzConnection,
+    InfoGeometry.Geometry.RindlerSpinTorsion.lorentzConnection, spinLift] using
+    kosmannCorrection_ofLorentzConnection_eq_spinLift
+      ((rindlerFiniteKosmannDatum a).vectorConnection v) ψ
 
 theorem kosmannCorrection_add (B₁ B₂ ψ : Mat2) :
     kosmannCorrection (B₁ + B₂) ψ =
@@ -1280,5 +1359,69 @@ theorem negativeSheet_modularFlow_eq_boostFlow (s : ℝ) (v : Vec11) :
   apply InfoGeometry.Krein.DoubledSpace.ext
   · simp [boostFlow, InfoGeometry.Krein.to_doubled]
   · simp [boostFlow, InfoGeometry.Krein.to_doubled]; ring
+
+/-- The Rindler boost generator is an element of the actual Lie algebra of
+symplectic generators on the doubled real carrier. Its carrier action is the
+modular coordinate swap, which agrees with `boostGenerator` under
+`to_doubled`. -/
+noncomputable def rindlerBoostSymplecticGenerator :
+    InfoGeometry.Canonical.SouriauDoubledQuadraticMomentMap.SymplecticGenerators
+      (E := ℝ) :=
+  ⟨InfoGeometry.Krein.modular_j (E := ℝ),
+    InfoGeometry.Canonical.SouriauDoubledQuadraticMomentMap.modularSwap_isSymplecticGenerator⟩
+
+/-- Under the native `to_doubled` chart, the represented infinitesimal
+symplectic generator acts by the previously defined Minkowski boost generator. -/
+@[simp] theorem rindlerBoostSymplecticGenerator_apply (v : Vec11) :
+    (rindlerBoostSymplecticGenerator :
+      InfoGeometry.Krein.DoubledSpace ℝ →L[ℝ] InfoGeometry.Krein.DoubledSpace ℝ)
+        (InfoGeometry.Krein.to_doubled v.1 v.2) =
+      InfoGeometry.Krein.to_doubled (boostGenerator v).1 (boostGenerator v).2 := by
+  change InfoGeometry.Krein.modular_j (InfoGeometry.Krein.to_doubled v.1 v.2) = _
+  simp [boostGenerator]
+
+/-- On the real doubled Rindler carrier, the Souriau component associated to
+the boost generator is exactly half the Minkowski quadratic form. This
+identifies the quadratic Hamiltonian with the Killing energy for this finite
+flat model. -/
+theorem rindlerBoost_souriauMomentComponent_eq_half_minkowskiQuadratic
+    (v : Vec11) :
+    InfoGeometry.Canonical.SouriauDoubledQuadraticMomentMap.souriauMomentMap
+      (InfoGeometry.Krein.to_doubled v.1 v.2)
+      rindlerBoostSymplecticGenerator = minkowskiForm v v / 2 := by
+  change InfoGeometry.Canonical.SouriauDoubledQuadraticMomentMap.quadraticMoment
+      (InfoGeometry.Krein.modular_j (E := ℝ))
+      (InfoGeometry.Krein.to_doubled v.1 v.2) = _
+  rw [InfoGeometry.Canonical.SouriauDoubledQuadraticMomentMap.quadraticMoment_apply,
+    InfoGeometry.Canonical.SouriauDoubledQuadraticMomentMap.symplecticForm_apply,
+    InfoGeometry.Krein.modular_j_to_doubled]
+  simp [minkowskiForm]
+  ring
+
+/-- The boost component of the doubled Souriau moment is conserved by the
+existing real Rindler flow. This is the finite-dimensional compatibility
+between the Hamiltonian moment component and the geometric Killing flow. -/
+theorem rindlerBoost_souriauMomentComponent_flow_invariant (s : ℝ) (v : Vec11) :
+    InfoGeometry.Canonical.SouriauDoubledQuadraticMomentMap.souriauMomentMap
+      (InfoGeometry.Krein.to_doubled (boostFlow s v).1 (boostFlow s v).2)
+      rindlerBoostSymplecticGenerator =
+    InfoGeometry.Canonical.SouriauDoubledQuadraticMomentMap.souriauMomentMap
+      (InfoGeometry.Krein.to_doubled v.1 v.2)
+      rindlerBoostSymplecticGenerator := by
+  rw [rindlerBoost_souriauMomentComponent_eq_half_minkowskiQuadratic,
+    rindlerBoost_souriauMomentComponent_eq_half_minkowskiQuadratic,
+    boostFlow_preserves_minkowski]
+
+
+/-- HEAD compatibility lemma retained from the integrated owner. -/
+theorem kosmannCorrection_eq_rindlerSpinLift_left_action
+    (a : ℝ) (v : InfoGeometry.Geometry.RindlerCartanFrame.Tangent) (ψ : Mat2) :
+    kosmannCorrection ((2 * a * v.1) • J1) ψ =
+      spinLift a 0 0
+        (0 : InfoGeometry.Geometry.RindlerCartanFrame.Tangent →ₗ[ℝ] ℝ) v * ψ := by
+  simp [kosmannCorrection, spinLift, smul_smul, neg_smul]
+  rw [← neg_smul]
+  congr 1
+  ring
 
 end InfoGeometry.Canonical.SouriauKillingLipschitzBridge

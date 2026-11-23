@@ -1536,6 +1536,42 @@ theorem δ_odd_thermo_next_le_ZD_of_relativeDefectBridge
   exact le_trans (B.next_le_volumeNext k)
     (le_trans (δ_relVol_next_le (n := n) B.T k) hBudget)
 
+/-- Multi-step defect monotonicity: defect after `m` steps along the trajectory
+is monotonically bounded by the defect at stage `k`. -/
+theorem δ_odd_add_le_of_relativeDefectBridge
+    {n : Nat}
+    (B : SinkhornRelativeDefectBridge (E := E) n)
+    (k m : Nat) :
+    δ_odd (B.state (k + m)) ≤ δ_odd (B.state k) := by
+  induction m with
+  | zero =>
+      simp only [Nat.add_zero, le_refl]
+  | succ m ih =>
+      rw [show k + (m + 1) = (k + m) + 1 by omega]
+      exact le_trans (δ_odd_next_le_of_relativeDefectBridge B (k + m)) ih
+
+/-- Multi-step thermodynamic defect monotonicity along the Sinkhorn trajectory. -/
+theorem δ_odd_thermo_add_le_of_relativeDefectBridge
+    {n : Nat}
+    (B : SinkhornThermodynamicRelativeDefectBridge (E := E) n)
+    (k m : Nat) :
+    δ_odd_thermo (B.state (k + m)) ≤ δ_odd_thermo (B.state k) := by
+  induction m with
+  | zero =>
+      simp only [Nat.add_zero, le_refl]
+  | succ m ih =>
+      rw [show k + (m + 1) = (k + m) + 1 by omega]
+      exact le_trans (δ_odd_thermo_next_le_of_relativeDefectBridge B (k + m)) ih
+
+/-- Multi-step Sinkhorn defect convergence bound: stage `m` thermodynamic defect
+is bounded by the initial defect at stage `0`. -/
+theorem δ_odd_thermo_trajectory_le_init
+    {n : Nat}
+    (B : SinkhornThermodynamicRelativeDefectBridge (E := E) n)
+    (m : Nat) :
+    δ_odd_thermo (B.state m) ≤ δ_odd_thermo (B.state 0) := by
+  simpa using δ_odd_thermo_add_le_of_relativeDefectBridge B 0 m
+
 end VolumeAnomaly
 
 end InfoGeometry.LLM.SinkhornDefectFlow

@@ -64,10 +64,17 @@ positive-definite orthonormal-frame results are special cases only.
    the overlap sign: `shirokov_blade_swap_sign_character` identifies the
    coefficient with a product of one-coordinate signs, and
    `shirokov_blade_swap_average_vanishes` proves its sum is zero for even
-   nonempty grades and odd non-top grades. The remaining step is the actual
-   algebra-valued conjugation average (including the inverse blade factors),
-   followed by transport to the paper's varying dual frame and its odd-grade
-   reduced sum.
+   nonempty grades and odd non-top grades. The owner now proves the
+   algebra-valued average `shirokov_noncentral_blade_reynolds_vanishes` for
+   noncentral blade basis elements, and `shirokov_scalar_blade_reynolds_average`
+   for the scalar blade. In odd dimension,
+   `shirokov_odd_pseudoscalar_reynolds_average` proves that the top-grade
+   pseudoscalar is fixed with factor `2^n`. These results use the existing
+   negative-definite `Cl(0,n)` basis, inverse-blade conjugation, and a finite
+   powerset average. They do not yet construct the center projection for
+   arbitrary multivectors, identify the average with that projection on the
+   whole algebra, transport it to a varying dual frame, or prove the
+   odd-dimensional reduced-sum transport required by Theorem 2.2.
 2. Connect the finite-coordinate `C+K` transfer's derivation family to the
    repository's CE/exterior-form carrier; derive its flatness and parallelness
    hypotheses from the Clifford-frame compatibility equations.
@@ -119,9 +126,14 @@ The new `shirokov_blade_conjugation_sign` declaration compiled in the targeted
 owner build (9,091 jobs); the axiom checker passed 1 module with 0 failures,
 and the strict screener reported 0 traps. The follow-up coordinate-factor,
 parity-cancellation, and overlap-character theorems also compile in the same
-targeted owner build (9,091 jobs). These prove cancellation of scalar
-coefficients, not yet the full Clifford-valued Reynolds projection or its
-application to Theorem 2.2.
+targeted owner build (9,091 jobs). The subsequent inverse-blade and
+Clifford-valued Reynolds results, including scalar and odd top-grade fixed
+terms, passed the current targeted build of
+`InfoGeometry.Canonical.ShirokovCliffordYangMills`; the strict screener
+reported zero traps and Gate 4's generated `#print axioms` audit passed for
+all 18 public declarations in the owner. This finite-stage average still
+does not prove a center-projection theorem for arbitrary multivectors or the
+varying-frame/odd-reduced-sum transport in Theorem 2.2.
 The earlier strict screen of the new Shirokov bridge reported zero traps. The
 automated GATE_4 review was rejected before
 kernel verification because the repository-wide staged Lean set fails its QMS

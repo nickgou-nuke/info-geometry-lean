@@ -448,7 +448,52 @@ theorem shirokov_scalar_blade_reynolds_average (n : ℕ) :
           simp [cBlade_empty]
     _ = (2 ^ n : ℝ) • cBlade ℝ n ∅ := by
           rw [← Finset.sum_smul]
-          simp [Finset.card_powerset]
+          simp
+
+/-- In odd dimension, the standard inverse-blade Reynolds average fixes the
+top-grade pseudoscalar as well as the scalar blade. -/
+theorem shirokov_odd_pseudoscalar_reynolds_average (n : ℕ) (hn : Odd n) :
+    (∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+      ((-1 : ℝ) ^ (S.card * (S.card + 1) / 2) • cBlade ℝ n S) *
+        cBlade ℝ n (Finset.univ : Finset (Fin n)) * cBlade ℝ n S) =
+      (2 ^ n : ℝ) • cBlade ℝ n (Finset.univ : Finset (Fin n)) := by
+  have hnCard : Odd (Finset.univ : Finset (Fin n)).card := by simpa using hn
+  obtain ⟨k, hk⟩ := hnCard
+  have hkN : n = 2 * k + 1 := by simpa using hk
+  have hfactor (i : Fin n) :
+      (-1 : ℝ) ^ ((Finset.univ : Finset (Fin n)).card +
+        if i ∈ (Finset.univ : Finset (Fin n)) then 1 else 0) = 1 := by
+    simp only [Finset.mem_univ, if_true, Finset.card_univ, Fintype.card_fin]
+    rw [hkN]
+    rw [show 2 * k + 1 + 1 = 2 * (k + 1) by omega, pow_mul]
+    norm_num
+  calc
+    (∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+        ((-1 : ℝ) ^ (S.card * (S.card + 1) / 2) • cBlade ℝ n S) *
+          cBlade ℝ n (Finset.univ : Finset (Fin n)) * cBlade ℝ n S) =
+      ∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+        (1 : ℝ) • cBlade ℝ n (Finset.univ : Finset (Fin n)) := by
+          apply Finset.sum_congr rfl
+          intro S hS
+          rw [shirokov_inverse_blade_conjugation_sign]
+          have hsign : (-1 : ℝ) ^
+              (S.card * (Finset.univ : Finset (Fin n)).card -
+                (S ∩ (Finset.univ : Finset (Fin n))).card ^ 2) = 1 := by
+            have hchar := shirokov_blade_swap_sign_character n S
+              (Finset.univ : Finset (Fin n))
+            have hreal : (-1 : ℝ) ^
+                (S.card * (Finset.univ : Finset (Fin n)).card -
+                  (S ∩ (Finset.univ : Finset (Fin n))).card ^ 2) =
+                ∏ i ∈ S, (-1 : ℝ) ^
+                  ((Finset.univ : Finset (Fin n)).card +
+                    if i ∈ (Finset.univ : Finset (Fin n)) then 1 else 0) := by
+              exact_mod_cast hchar
+            rw [hreal]
+            simp only [hfactor, Finset.prod_const_one]
+          rw [hsign]
+    _ = (2 ^ n : ℝ) • cBlade ℝ n (Finset.univ : Finset (Fin n)) := by
+          rw [← Finset.sum_smul]
+          simp
 
 private theorem endCommutator_double_scaled (A B : FormEnd V) (r s : ℝ) :
     endCommutator A (endCommutator (r • A) (s • B)) =

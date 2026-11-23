@@ -2311,6 +2311,8 @@ import InfoGeometry.Canonical.DiracKreinMaurerCartanBridge
 import InfoGeometry.Canonical.GrassmannianCartanInteroperability
 import InfoGeometry.Canonical.KahlerAtiyahCartanForms
 import InfoGeometry.Canonical.KahlerAtiyahSpinConnection
+import InfoGeometry.Canonical.ShirokovYangMillsTransfer
+import InfoGeometry.Canonical.ShirokovCliffordYangMills
 import InfoGeometry.Canonical.ZornAssociatorKreinBridge
 import InfoGeometry.Canonical.ZornThreeGeneratorObstruction
 import InfoGeometry.Canonical.ModularWedgeAAVInterferenceBridge

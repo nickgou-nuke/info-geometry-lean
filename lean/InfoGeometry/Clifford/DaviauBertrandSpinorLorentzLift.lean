@@ -83,7 +83,7 @@ theorem cl3Hat_one : cl3Hat (1 : Mat2C) = (1 : Mat2C) := by
 
 theorem cl3Hat_add (A B : Mat2C) : cl3Hat (A + B) = cl3Hat A + cl3Hat B := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [cl3Hat, Matrix.add_apply, neg_add]
+  fin_cases i <;> fin_cases j <;> simp [cl3Hat, Matrix.add_apply] <;> ring
 
 theorem cl3Hat_neg (A : Mat2C) : cl3Hat (-A) = -cl3Hat A := by
   ext i j
@@ -188,11 +188,11 @@ private lemma vec8ToCl3Spinor_eq (Φ : Vec8R) :
 theorem vec8ToCl3Spinor_electricCurrentJ_trace (Φ : Vec8R) (μ : Fin 4) :
     ((vec8ToCl3Spinor Φ * (vec8ToCl3Spinor Φ)ᴴ) * pauli4 μ).trace.re =
       electricCurrentJ Φ μ := by
+  simp only [Matrix.trace, Matrix.diag, Matrix.mul_apply, Matrix.conjTranspose_apply,
+    Fin.sum_univ_two]
   rw [electricCurrentJ_coord_expand Φ μ, vec8ToCl3Spinor_eq]
   fin_cases μ <;>
-    · simp [weylXi, weylEta, phiToPsi, pauli4, sigma1, sigma2, sigma3,
-        Matrix.trace, Matrix.diag, Matrix.mul_apply, Matrix.conjTranspose_apply,
-        Fin.sum_univ_two]
+    · simp [weylXi, weylEta, phiToPsi, pauli4, sigma1, sigma2, sigma3]
       field_simp
       rw [Real.sq_sqrt (by norm_num)]
       ring
@@ -202,11 +202,11 @@ theorem vec8ToCl3Spinor_electricCurrentJ_trace (Φ : Vec8R) (μ : Fin 4) :
 theorem vec8ToCl3Spinor_axialCurrentSigma_trace (Φ : Vec8R) (μ : Fin 4) :
     ((vec8ToCl3Spinor Φ * sigma3 * (vec8ToCl3Spinor Φ)ᴴ) * pauli4 μ).trace.re =
       axialCurrentSigma Φ μ := by
+  simp only [Matrix.trace, Matrix.diag, Matrix.mul_apply, Matrix.conjTranspose_apply,
+    Fin.sum_univ_two]
   rw [axialCurrentSigma_coord_expand Φ μ, vec8ToCl3Spinor_eq]
   fin_cases μ <;>
-    · simp [weylXi, weylEta, phiToPsi, pauli4, sigma1, sigma2, sigma3,
-        Matrix.trace, Matrix.diag, Matrix.mul_apply, Matrix.conjTranspose_apply,
-        Fin.sum_univ_two]
+    · simp [weylXi, weylEta, phiToPsi, pauli4, sigma1, sigma2, sigma3]
       field_simp
       rw [Real.sq_sqrt (by norm_num)]
       ring
@@ -221,13 +221,12 @@ theorem paravectorMat_electricCurrentJ (Φ : Vec8R) :
   have hj : ∀ μ : Fin 4, electricCurrentJ Φ μ =
       ((vec8ToCl3Spinor Φ * (vec8ToCl3Spinor Φ)ᴴ) * pauli4 μ).trace.re :=
     fun μ => (vec8ToCl3Spinor_electricCurrentJ_trace Φ μ).symm
-  set φ := vec8ToCl3Spinor Φ
   ext i j
   fin_cases i <;> fin_cases j <;>
     · simp only [hj 0, hj 1, hj 2, hj 3]
       apply Complex.ext <;>
         · simp [pauli4, sigma1, sigma2, sigma3, Matrix.trace, Matrix.diag, Matrix.mul_apply,
-            Matrix.conjTranspose_apply, Fin.sum_univ_two, Complex.real_smul, Complex.nsmul_eq_mul]
+            Matrix.conjTranspose_apply, Fin.sum_univ_two, Complex.real_smul]
           ring
 
 /-- Hermitian paravector reconstruction `paravectorMat (Σ(Φ)) = 2 • (φ σ₃ φᴴ)` for all 4
@@ -240,13 +239,12 @@ theorem paravectorMat_axialCurrentSigma (Φ : Vec8R) :
   have hs : ∀ μ : Fin 4, axialCurrentSigma Φ μ =
       ((vec8ToCl3Spinor Φ * sigma3 * (vec8ToCl3Spinor Φ)ᴴ) * pauli4 μ).trace.re :=
     fun μ => (vec8ToCl3Spinor_axialCurrentSigma_trace Φ μ).symm
-  set φ := vec8ToCl3Spinor Φ
   ext i j
   fin_cases i <;> fin_cases j <;>
     · simp only [hs 0, hs 1, hs 2, hs 3]
       apply Complex.ext <;>
         · simp [pauli4, sigma1, sigma2, sigma3, Matrix.trace, Matrix.diag, Matrix.mul_apply,
-            Matrix.conjTranspose_apply, Fin.sum_univ_two, Complex.real_smul, Complex.nsmul_eq_mul]
+            Matrix.conjTranspose_apply, Fin.sum_univ_two, Complex.real_smul]
           ring
 
 /-! ### Section 3: Exact `Cl₃`-Spinor Operator Dictionary (`Γ_μ`, `Γ⁰¹²³`, `P₃`, `γ₅`) -/
@@ -259,11 +257,11 @@ theorem vec8ToCl3Spinor_gammaLowR (μ : Fin 4) (Φ : Vec8R) :
     · rw [vec8ToCl3Spinor_eq, vec8ToCl3Spinor_eq]
       ext i j
       fin_cases i <;> fin_cases j <;> apply Complex.ext <;>
-        · simp [weylXi, weylEta, phiToPsi, cl3Hat, pauli4, sigma1, sigma2, sigma3,
-            gammaLowR, gammaLowZ, minkowskiMetricZ, gammaZ, gamma0Z, gamma1Z, gamma2Z, gamma3Z,
-            castZ8, Matrix.mulVec, Matrix.mul_apply, dotProduct, Fin.sum_univ_two,
-            Fin.sum_univ_eight, RingHom.mapMatrix_apply, Matrix.of_apply]
-          ring
+        simp [weylXi, weylEta, phiToPsi, cl3Hat, pauli4, sigma1, sigma2, sigma3,
+          gammaLowR, gammaLowZ, minkowskiMetricZ, gammaZ, gamma0Z, gamma1Z, gamma2Z, gamma3Z,
+          castZ8, Matrix.mulVec, Matrix.mul_apply, dotProduct, Fin.sum_univ_two,
+          Fin.sum_univ_eight, RingHom.mapMatrix_apply, Matrix.of_apply] <;>
+        ring
 
 /-- Exact contravariant Dirac matrix dictionary:
 `vec8ToCl3Spinor (Γ^μ Φ) = g^{μμ} • (σ_μ * cl3Hat (vec8ToCl3Spinor Φ))`. -/
@@ -291,10 +289,10 @@ theorem vec8ToCl3Spinor_quatPR2 (Φ : Vec8R) :
   rw [vec8ToCl3Spinor_eq, vec8ToCl3Spinor_eq]
   ext i j
   fin_cases i <;> fin_cases j <;> apply Complex.ext <;>
-    · simp [weylXi, weylEta, phiToPsi, quatPR, quatPZ, p3Z, castZ8, sigma3, Matrix.mulVec,
-        Matrix.mul_apply, dotProduct, Fin.sum_univ_two, Fin.sum_univ_eight,
-        RingHom.mapMatrix_apply, Matrix.of_apply]
-      ring
+    simp [weylXi, weylEta, phiToPsi, quatPR, quatPZ, p3Z, castZ8, sigma3, Matrix.mulVec,
+      Matrix.mul_apply, dotProduct, Fin.sum_univ_two, Fin.sum_univ_eight,
+      RingHom.mapMatrix_apply, Matrix.of_apply] <;>
+    ring
 
 /-- Exact chiral-involution dictionary: `vec8ToCl3Spinor (γ₅ Φ) = vec8ToCl3Spinor Φ * σ₃`. -/
 theorem vec8ToCl3Spinor_gamma5Real2 (Φ : Vec8R) :
@@ -302,7 +300,7 @@ theorem vec8ToCl3Spinor_gamma5Real2 (Φ : Vec8R) :
   have hg5 : gamma5Real ⟨2, by decide⟩ *ᵥ Φ = gamma0123R *ᵥ (quatPR 2 *ᵥ Φ) := by
     dsimp [gamma5Real]
     rw [Matrix.mulVec_mulVec]
-  rw [hg5, vec8ToCl3Spinor_gamma0123R, vec8ToCl3Spinor_quatPR2, smul_mul_assoc,
+  rw [hg5, vec8ToCl3Spinor_gamma0123R, vec8ToCl3Spinor_quatPR2,
     mul_smul_comm, smul_smul, Complex.I_mul_I, neg_one_smul, neg_neg]
 
 /-! ### Section 4: Lifting `GL(2,ℂ)` Left Multiplication to `Mat8R` -/
@@ -313,7 +311,7 @@ def lorentzDilationSpinorAct (M : Mat2C) : Vec8R →ₗ[ℝ] Vec8R where
   map_add' Φ Ψ := by
     rw [map_add, Matrix.mul_add, map_add]
   map_smul' r Φ := by
-    rw [map_smul, Complex.coe_smul, mul_smul_comm, ← Complex.coe_smul, map_smul]
+    rw [map_smul, mul_smul_comm, map_smul]
     rfl
 
 /-- Real `8 × 8` matrix lift `L(M) ∈ M₈(ℝ)` representing left multiplication `φ ↦ M φ`
@@ -325,10 +323,9 @@ def lorentzDilationMat8 (M : Mat2C) : Mat8R :=
 @[simp]
 theorem lorentzDilationMat8_mulVec (M : Mat2C) (Φ : Vec8R) :
     lorentzDilationMat8 M *ᵥ Φ = vec8ToCl3Spinor.symm (M * vec8ToCl3Spinor Φ) := by
-  ext i
-  have h := congrFun (LinearMap.toMatrix_mulVec_repr (Pi.basisFun ℝ (Fin 8))
-    (Pi.basisFun ℝ (Fin 8)) (lorentzDilationSpinorAct M) Φ) i
-  simpa [lorentzDilationMat8, lorentzDilationSpinorAct] using h
+  have h : lorentzDilationMat8 M = LinearMap.toMatrix' (lorentzDilationSpinorAct M) := rfl
+  rw [h, LinearMap.toMatrix'_mulVec]
+  rfl
 
 @[simp]
 theorem vec8ToCl3Spinor_lorentzDilationMat8 (M : Mat2C) (Φ : Vec8R) :
@@ -338,7 +335,8 @@ theorem vec8ToCl3Spinor_lorentzDilationMat8 (M : Mat2C) (Φ : Vec8R) :
 theorem mat8R_eq_of_mulVec {A B : Mat8R} (h : ∀ Φ : Vec8R, A *ᵥ Φ = B *ᵥ Φ) : A = B := by
   ext i j
   have hv := congrFun (h (Pi.single j (1 : ℝ))) i
-  simpa [Matrix.mulVec, dotProduct] using hv
+  simp [Matrix.mulVec, dotProduct, Pi.single_apply] at hv
+  exact hv
 
 @[simp]
 theorem lorentzDilationMat8_one : lorentzDilationMat8 (1 : Mat2C) = (1 : Mat8R) := by
@@ -354,7 +352,7 @@ theorem lorentzDilationMat8_neg_one : lorentzDilationMat8 (-(1 : Mat2C)) = -(1 :
 theorem lorentzDilationMat8_mul (M N : Mat2C) :
     lorentzDilationMat8 (M * N) = lorentzDilationMat8 M * lorentzDilationMat8 N := by
   refine mat8R_eq_of_mulVec fun Φ => ?_
-  rw [lorentzDilationMat8_mulVec, Matrix.mulVec_mulVec, lorentzDilationMat8_mulVec,
+  rw [lorentzDilationMat8_mulVec, ← Matrix.mulVec_mulVec, lorentzDilationMat8_mulVec,
     lorentzDilationMat8_mulVec, LinearEquiv.apply_symm_apply, Matrix.mul_assoc]
 
 /-- Complex scalar phase `exp(-i α) I₂` lifts verbatim to Lochak's chiral gauge matrix
@@ -365,18 +363,18 @@ theorem lorentzDilationMat8_chiralGauge (α : ℝ) :
   refine mat8R_eq_of_mulVec fun Φ => ?_
   apply vec8ToCl3Spinor.injective
   rw [vec8ToCl3Spinor_lorentzDilationMat8]
-  dsimp [chiralGaugeMat]
+  dsimp only [chiralGaugeMat]
   rw [Matrix.add_mulVec, Matrix.smul_mulVec, Matrix.smul_mulVec, Matrix.one_mulVec,
     map_add, map_smul, map_smul, vec8ToCl3Spinor_gamma0123R]
-  rw [sub_mul, smul_mul_assoc, smul_mul_assoc, one_mul, one_mul, smul_mul_assoc, one_mul,
-    Complex.coe_smul, Complex.coe_smul, smul_neg, sub_eq_add_neg]
+  rw [sub_mul, smul_mul_assoc, smul_mul_assoc, smul_mul_assoc,
+    Matrix.one_mul, smul_neg, sub_eq_add_neg]
 
 /-- Every Lorentz–dilation lift `L(M)` commutes strictly with Daviau's `P₃`. -/
 theorem lorentzDilationMat8_comm_quatPR2 (M : Mat2C) :
     lorentzDilationMat8 M * quatPR 2 = quatPR 2 * lorentzDilationMat8 M := by
   refine mat8R_eq_of_mulVec fun Φ => ?_
   apply vec8ToCl3Spinor.injective
-  rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec,
+  rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec,
     vec8ToCl3Spinor_lorentzDilationMat8, vec8ToCl3Spinor_quatPR2,
     vec8ToCl3Spinor_quatPR2, vec8ToCl3Spinor_lorentzDilationMat8, Matrix.mul_assoc]
 
@@ -386,7 +384,7 @@ theorem lorentzDilationMat8_comm_gamma5Real2 (M : Mat2C) :
       gamma5Real ⟨2, by decide⟩ * lorentzDilationMat8 M := by
   refine mat8R_eq_of_mulVec fun Φ => ?_
   apply vec8ToCl3Spinor.injective
-  rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec,
+  rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec,
     vec8ToCl3Spinor_lorentzDilationMat8, vec8ToCl3Spinor_gamma5Real2,
     vec8ToCl3Spinor_gamma5Real2, vec8ToCl3Spinor_lorentzDilationMat8, Matrix.mul_assoc]
 
@@ -449,12 +447,14 @@ theorem lorentzDilationMat8_bilinear_covariance (M : Mat2C) (Φ : Vec8R) :
       M.det.re * omega1 Φ - M.det.im * omega2 Φ := by
     have hmulre := congrArg Complex.re hdet
     rw [Complex.mul_re] at hmulre
-    linarith
+    rw [← hre', ← hre, ← him, hmulre]
+    ring
   have ho2 : omega2 (lorentzDilationMat8 M *ᵥ Φ) =
       M.det.im * omega1 Φ + M.det.re * omega2 Φ := by
     have hmulim := congrArg Complex.im hdet
     rw [Complex.mul_im] at hmulim
-    linarith
+    rw [← him', ← hre, ← him, hmulim]
+    ring
   have hnsq : omega1 (lorentzDilationMat8 M *ᵥ Φ) ^ 2 + omega2 (lorentzDilationMat8 M *ᵥ Φ) ^ 2 =
       Complex.normSq M.det * (omega1 Φ ^ 2 + omega2 Φ ^ 2) := by
     rw [ho1, ho2, Complex.normSq_apply]
@@ -499,7 +499,7 @@ theorem lorentzDilationMat8_gammaLowR_intertwine (M : Mat2C) (μ : Fin 4) :
       dsimp [paravectorMat]; simp
     rw [hcol, h2, Matrix.conjTranspose_conjTranspose] at h1
     exact h1
-  rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, vec8ToCl3Spinor_lorentzDilationMat8,
+  rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, vec8ToCl3Spinor_lorentzDilationMat8,
     vec8ToCl3Spinor_gammaLowR, vec8ToCl3Spinor_lorentzDilationMat8, cl3Hat_mul]
   rw [Matrix.sum_mulVec, map_sum]
   have hrhs :
@@ -509,6 +509,7 @@ theorem lorentzDilationMat8_gammaLowR_intertwine (M : Mat2C) (μ : Fin 4) :
     rw [Matrix.sum_mul]
     refine Finset.sum_congr rfl fun ν _ => ?_
     rw [map_smul, vec8ToCl3Spinor_gammaLowR, Complex.coe_smul, smul_mul_assoc]
+  simp_rw [Matrix.smul_mulVec]
   rw [hrhs]
   change (cl3Hat M)ᴴ * (pauli4 μ * (cl3Hat M * cl3Hat (vec8ToCl3Spinor Φ))) =
     paravectorMat (fun ν => lorentzDilationMat (cl3Hat M)ᴴ ν μ) * cl3Hat (vec8ToCl3Spinor Φ)

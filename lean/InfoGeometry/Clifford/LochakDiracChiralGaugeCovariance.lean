@@ -227,8 +227,8 @@ private lemma mat8RingDeriv_trigGaugeMat {R : Type*} [CommRing R] (d : RingDeriv
   rw [(mat8RingDeriv d).map_add, mat8RingDeriv_smul, mat8RingDeriv_smul, (mat8RingDeriv d).map_one,
     hJd, smul_zero, smul_zero, zero_add, zero_add, hdc, hds]
   rw [add_mul, smul_mul_assoc, mul_smul_comm, smul_mul_assoc, mul_smul_comm,
-    one_mul, hJ2, smul_neg, ← neg_smul, smul_smul, smul_smul, mul_comm c dθ, mul_comm s dθ,
-    add_comm]
+    one_mul, hJ2, smul_neg, ← neg_smul, smul_smul, smul_smul, mul_comm c dθ,
+    mul_neg, mul_comm s dθ, add_comm]
 
 private lemma covDeriv_trigGauge {R : Type*} [CommRing R] (d : RingDeriv R)
     (J : Mat8Ring R) (hJ2 : J * J = -1) (hJd : mat8RingDeriv d J = 0)
@@ -347,14 +347,27 @@ theorem chiralGauge_constant_mass_obstruction (α m : ℝ) (hm : m ≠ 0) (hsin 
         rw [add_mul, mul_add, Algebra.smul_mul_assoc, Algebra.mul_smul_comm,
           Algebra.smul_mul_assoc, Algebra.mul_smul_comm, one_mul, mul_one,
           gamma0123R_comm_quatPR 2]
-  rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, ← hcomm, ← Matrix.mulVec_mulVec] at heq
+  have hrhs_comm :
+      (m • quatPR 2) *ᵥ (chiralGaugeMat α *ᵥ Φ) =
+        chiralGaugeMat α *ᵥ ((m • quatPR 2) *ᵥ Φ) := by
+    rw [Matrix.mulVec_mulVec, ← hcomm, ← Matrix.mulVec_mulVec]
+  rw [hrhs_comm] at heq
   have hsq : chiralGaugeMat α * chiralGaugeMat α = chiralGaugeMat (2 * α) := by
     rw [chiralGaugeMat_mul, ← two_mul]
   have heq2 : ((m • quatPR 2) *ᵥ Φ) = (chiralGaugeMat (2 * α)) *ᵥ ((m • quatPR 2) *ᵥ Φ) := by
-    have hmul := congrArg (fun v => chiralGaugeMat α *ᵥ v) heq
-    rw [Matrix.mulVec_mulVec, ← Matrix.mul_assoc, chiralGaugeMat_mul, add_neg_cancel,
-      chiralGaugeMat_zero, Matrix.one_mul, Matrix.mulVec_mulVec, ← Matrix.mul_assoc, hsq] at hmul
-    exact hmul
+    calc
+      ((m • quatPR 2) *ᵥ Φ)
+          = (1 : Mat8R) *ᵥ ((m • quatPR 2) *ᵥ Φ) := (Matrix.one_mulVec _).symm
+      _ = (chiralGaugeMat α * chiralGaugeMat (-α)) *ᵥ ((m • quatPR 2) *ᵥ Φ) := by
+            rw [chiralGaugeMat_mul, add_neg_cancel, chiralGaugeMat_zero]
+      _ = chiralGaugeMat α *ᵥ (chiralGaugeMat (-α) *ᵥ ((m • quatPR 2) *ᵥ Φ)) :=
+            (Matrix.mulVec_mulVec _ _ _).symm
+      _ = chiralGaugeMat α *ᵥ (chiralGaugeMat α *ᵥ ((m • quatPR 2) *ᵥ Φ)) := by
+            rw [heq]
+      _ = (chiralGaugeMat α * chiralGaugeMat α) *ᵥ ((m • quatPR 2) *ᵥ Φ) :=
+            Matrix.mulVec_mulVec _ _ _
+      _ = (chiralGaugeMat (2 * α)) *ᵥ ((m • quatPR 2) *ᵥ Φ) := by
+            rw [hsq]
   have hzero : (chiralGaugeMat (2 * α) - 1) *ᵥ ((m • quatPR 2) *ᵥ Φ) = 0 := by
     rw [Matrix.sub_mulVec, Matrix.one_mulVec, ← heq2, sub_self]
   have hdiff : chiralGaugeMat (2 * α) - 1 =
@@ -416,7 +429,6 @@ theorem lhwrMassMat_normSq_identity (Φ : Vec8R) :
       trigGaugeMatRing (gamma0123Ring ℝ) (omega1 Φ) (-omega2 Φ) := by
     dsimp [trigGaugeMatRing]
     rw [sub_eq_add_neg, neg_smul]
-    rfl
   change trigGaugeMatRing (gamma0123Ring ℝ) (omega1 Φ) (omega2 Φ) *
       (omega1 Φ • (1 : Mat8R) - omega2 Φ • gamma0123R) = _
   rw [h, trig_sq_mat_prod (gamma0123Ring ℝ) (gamma0123Ring_sq ℝ)]
@@ -436,7 +448,6 @@ theorem lhwrMassMat_chiralGauge (α : ℝ) (Φ : Vec8R) :
       trigGaugeMatRing (gamma0123Ring ℝ) (Real.cos (2 * α)) (-Real.sin (2 * α)) := by
     dsimp [chiralGaugeMat, trigGaugeMatRing]
     rw [show -2 * α = -(2 * α) by ring, Real.cos_neg, Real.sin_neg]
-    rfl
   change trigGaugeMatRing (gamma0123Ring ℝ) _ _ =
     chiralGaugeMat (-2 * α) * trigGaugeMatRing (gamma0123Ring ℝ) (omega1 Φ) (omega2 Φ)
   rw [hcm, trig_sq_mat_prod (gamma0123Ring ℝ) (gamma0123Ring_sq ℝ)]
@@ -457,8 +468,6 @@ theorem lhwrChiralMassVec_chiralGauge_covariant (κ α : ℝ) (Φ : Vec8R) :
       Algebra.smul_mul_assoc, Algebra.mul_smul_comm, one_mul, mul_one, gamma0123R_comm_quatPR 2]
   have hcommM : chiralGaugeMat α * lhwrMassMat Φ = lhwrMassMat Φ * chiralGaugeMat α := by
     dsimp [lhwrMassMat]
-    change chiralGaugeMat α * (omega1 Φ • (1 : Mat8R) + omega2 Φ • gamma0123R) =
-      (omega1 Φ • (1 : Mat8R) + omega2 Φ • gamma0123R) * chiralGaugeMat α
     rw [mul_add, add_mul, Algebra.mul_smul_comm, Algebra.smul_mul_assoc,
       Algebra.mul_smul_comm, Algebra.smul_mul_assoc, mul_one, one_mul]
     have hcG : chiralGaugeMat α * gamma0123R = gamma0123R * chiralGaugeMat α := by
@@ -585,9 +594,10 @@ lemma evalVec8_smoothChiralGauge (θ : SmoothRealFun) (Φ : Vec8Ring SmoothRealF
   change ((smoothChiralGaugeUnit θ).val i j).val t * (Φ j).val t =
     (chiralGaugeMat (θ.val t) i j) * (Φ j).val t
   congr 1
-  simp [smoothChiralGaugeUnit, trigGaugeUnit, chiralGaugeMat, smoothCos, smoothSin,
-    gamma0123R, castZ8Ring, castZ8]
-  rfl
+  by_cases hij : i = j <;>
+    · simp [hij, smoothChiralGaugeUnit, trigGaugeUnit, chiralGaugeMat, smoothCos, smoothSin,
+        gamma0123R, castZ8Ring, castZ8]
+      rfl
 
 @[simp]
 lemma evalVec8_smoothChiralGauge_inv (θ : SmoothRealFun) (Φ : Vec8Ring SmoothRealFun) (t : ℝ) :
@@ -600,11 +610,11 @@ lemma evalVec8_smoothChiralGauge_inv (θ : SmoothRealFun) (Φ : Vec8Ring SmoothR
   change (((smoothChiralGaugeUnit θ)⁻¹ : (Mat8Ring SmoothRealFun)ˣ).val i j).val t * (Φ j).val t =
     (chiralGaugeMat (-(θ.val t)) i j) * (Φ j).val t
   congr 1
-  simp [smoothChiralGaugeUnit, trigGaugeUnit, chiralGaugeMat, smoothCos, smoothSin,
-    Real.cos_neg, Real.sin_neg, gamma0123R, castZ8Ring, castZ8]
-  change (if i = j then Real.cos (θ.val t) else 0) - Real.sin (θ.val t) * (gamma0123Z i j : ℝ) =
-    (if i = j then Real.cos (θ.val t) else 0) + -(Real.sin (θ.val t) * (gamma0123Z i j : ℝ))
-  rw [sub_eq_add_neg]
+  by_cases hij : i = j <;>
+    simp [hij, smoothChiralGaugeUnit, trigGaugeUnit, chiralGaugeMat, smoothCos, smoothSin,
+      Real.cos_neg, Real.sin_neg, gamma0123R, castZ8Ring, castZ8]
+  · exact sub_eq_add_neg _ _
+  · rfl
 
 /-- **Smooth `C^∞(ℝ, ℝ)` Temporal Chiral Gauge Covariance**:
 Over `SmoothRealFun = C^∞(ℝ, ℝ)`, transforming `Φ ↦ U(θ) Φ` (`smoothChiralGaugeUnit θ`)
@@ -697,7 +707,6 @@ theorem chiralDiracOp_potential_matches_rodichev_torsion (σ : Fin 4 → ℝ) (j
     rw [Matrix.sum_mulVec]
     refine Finset.sum_congr rfl fun ν _ => ?_
     rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, Matrix.mul_assoc]
-    rfl
   change (∑ ν : Fin 4, gammaLowR ν *ᵥ
       (((-(1 / 2 : ℝ) * σ ν) • gamma0123R) *ᵥ (quatPR j *ᵥ Φ))) = _
   rw [hsum, chiral_soldering_matches_rodichev_torsion σ j]

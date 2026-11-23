@@ -256,11 +256,20 @@ theorem doubleEnd_commutes_with_hestenesJ (T : Module.End ℝ FourSpace) :
       doubledComplexStructure.toLinearMap ∘ₗ doubleEnd T := by
   apply LinearMap.ext
   intro u
-  apply DoubledSpace.ext <;>
-    simp [doubleEnd, doubledComplexStructure,
-      InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein.chiralComplexStructure,
-      InfoGeometry.Krein.complex_i, InfoGeometry.Krein.modular_j,
-      InfoGeometry.Krein.spectral_epsilon, map_neg]
+  simp only [LinearMap.comp_apply]
+  have hu : to_doubled (WithLp.fst u) (WithLp.snd u) = u :=
+    DoubledSpace.ext rfl rfl
+  rw [← hu]
+  change doubleEnd T
+      (InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein.chiralComplexStructure
+        (to_doubled (WithLp.fst u) (WithLp.snd u))) =
+    InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein.chiralComplexStructure
+      (doubleEnd T (to_doubled (WithLp.fst u) (WithLp.snd u)))
+  simp only [InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein.chiralComplexStructure_to_doubled,
+    doubleEnd, fst_to_doubled, snd_to_doubled]
+  apply DoubledSpace.ext
+  · exact map_neg T (WithLp.snd u)
+  · rfl
 
 /-- The two odd annihilation factors remain anticommuting after their actual
 real four-dimensional operator representation. -/

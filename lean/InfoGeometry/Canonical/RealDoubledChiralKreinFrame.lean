@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinComplements
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinModularBridge
@@ -24,6 +29,21 @@ namespace InfoGeometry.Canonical.RealDoubledChiralKreinFrame
 open InfoGeometry.Krein
 open InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein
 open InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinComplements
+
+/-! Concrete witness that this owner's real `4 × 4` matrix carrier is
+noncommutative. -/
+private def noncommutingMat4A : Matrix (Fin 4) (Fin 4) ℝ :=
+  !![(0 : ℝ), 1, 0, 0; 0, 0, 0, 0; 0, 0, 0, 0; 0, 0, 0, 0]
+
+private def noncommutingMat4B : Matrix (Fin 4) (Fin 4) ℝ :=
+  !![(0 : ℝ), 0, 0, 0; 1, 0, 0, 0; 0, 0, 0, 0; 0, 0, 0, 0]
+
+private theorem noncommutingMat4A_mul_B_ne_B_mul_A :
+    noncommutingMat4A * noncommutingMat4B ≠ noncommutingMat4B * noncommutingMat4A := by
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 4) (Fin 4) ℝ => M 0 0) h
+  norm_num [noncommutingMat4A, noncommutingMat4B, Matrix.mul_apply,
+    Fin.sum_univ_succ] at h00
 
 abbrev FourSpace := EuclideanSpace ℝ (Fin 4)
 abbrev KreinFrame4 := DoubledSpace FourSpace
@@ -131,13 +151,14 @@ theorem doubledComplexStructure_sq :
 
 @[simp] theorem doubledComplexStructure_plusFrame (i : Fin 4) :
     doubledComplexStructure (plusFrame i) = minusFrame i := by
-  rw [plusFrame, complex_i_to_doubled]
-  apply DoubledSpace.ext <;> simp [minusFrame]
+  simp [doubledComplexStructure, plusFrame, minusFrame,
+    chiralComplexStructure_to_doubled]
 
 @[simp] theorem doubledComplexStructure_minusFrame (i : Fin 4) :
     doubledComplexStructure (minusFrame i) = -plusFrame i := by
-  rw [minusFrame, complex_i_to_doubled]
-  apply DoubledSpace.ext <;> simp [plusFrame]
+  rw [minusFrame, chiralComplexStructure_to_doubled]
+  change to_doubled (-frameBasis i) 0 = -to_doubled (frameBasis i) 0
+  apply DoubledSpace.ext <;> simp
 
 theorem hilbertizedForm_eq_inner (u v : KreinFrame4) :
     chiralHilbertForm (E := FourSpace) u v = inner ℝ u v := by
@@ -156,9 +177,8 @@ theorem symplecticForm_swap (u v : KreinFrame4) :
       -chiralSymplecticForm (E := FourSpace) v u := by
   exact chiralSymplecticForm_swap u v
 
-/-! The sign-correct relation between the cross-sheet symplectic form and the
-Hilbertized complex structure `J = Γ ∘ R`.  With the convention
-`H u v = K u (R v)`, one has `Ω u v = - H (J u) v`. -/
+/-! The cross-sheet symplectic form is represented by the Hilbertized complex
+structure `J = R ∘ Γ`: `Ω u v = H (J u) v`. -/
 theorem symplecticForm_eq_neg_hilbertized_complexStructure
     (u v : KreinFrame4) :
     chiralSymplecticForm (E := FourSpace) u v =

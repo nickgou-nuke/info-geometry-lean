@@ -99,9 +99,9 @@ def chiralHilbertForm
     (u v : H₂ (E := E)) : ℝ :=
   chiralKreinForm u ((etaChiral (E := E)) v)
 
-/-- The complex-structure-shaped product `γ₅ ∘ η_chiral` on the real carrier. -/
+/-- The complex structure `η_chiral ∘ γ₅` on the real carrier, matching `complex_i`. -/
 def chiralComplexStructure : EndH₂ (E := E) :=
-  (gamma5 (E := E)).comp (etaChiral (E := E))
+  (etaChiral (E := E)).comp (gamma5 (E := E))
 
 /-- The actual antisymmetric form associated with the cross-sheet Krein form. -/
 def chiralSymplecticForm
@@ -205,7 +205,7 @@ omit [CompleteSpace E] in
 @[simp]
 theorem chiralComplexStructure_to_doubled (x ξ : E) :
     chiralComplexStructure (E := E) (to_doubled x ξ : H₂ (E := E)) =
-      to_doubled ξ (-x) := by
+      to_doubled (-ξ) x := by
   simp [chiralComplexStructure, gamma5, etaChiral, spectral_epsilon, modular_j]
 
 omit [CompleteSpace E] in

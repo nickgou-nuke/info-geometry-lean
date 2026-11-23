@@ -401,7 +401,8 @@ theorem fockPermutation_conj_creation
     (σ : Equiv.Perm (Fin n)) (u : PrimalSheet n) :
     fockOperatorPermutationEquiv n σ (sheetCreation n u) =
       sheetCreation n (primalSheetModePermutation n σ u) := by
-  ext ψ
+  apply LinearMap.ext
+  intro ψ
   change fockPermutationAlgEquiv n σ
       (sheetCreation n u ((fockPermutationAlgEquiv n σ).symm ψ)) =
     sheetCreation n (primalSheetModePermutation n σ u) ψ
@@ -414,7 +415,8 @@ theorem fockPermutation_conj_annihilation
     (σ : Equiv.Perm (Fin n)) (α : Module.Dual ℝ (PrimalSheet n)) :
     fockOperatorPermutationEquiv n σ (annihilation α) =
       annihilation ((primalSheetModePermutation n σ).dualMap.symm α) := by
-  ext ψ
+  apply LinearMap.ext
+  intro ψ
   change fockPermutationAlgEquiv n σ
       (annihilation α ((fockPermutationAlgEquiv n σ).symm ψ)) =
     annihilation ((primalSheetModePermutation n σ).dualMap.symm α) ψ
@@ -451,7 +453,8 @@ theorem fockOperatorPermutation_towerFockRep_neutralGenerator
         (CliffordAlgebra.ι (TowerForm n)
           (neutralToSplit n (neutralModePermutation n σ X))) := by
   rcases X with ⟨u, φ⟩
-  ext ψ
+  apply LinearMap.ext
+  intro ψ
   change fockPermutationAlgEquiv n σ
       (towerFockRep n
         (CliffordAlgebra.ι (TowerForm n) (neutralToSplit n (u, φ)))

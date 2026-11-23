@@ -36,14 +36,31 @@ jobs:
       EXPECTED_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       EVIDENCE_DIR: artifacts/verification/nambu-metriplectic-ci
     steps:
-      - name: Check out the exact requested source commit
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 1
-          submodules: false
-          persist-credentials: false
+      # This public repository has unrelated unmapped gitlinks. Fetch it
+      # anonymously so checkout-action auth cleanup cannot recurse into them.
+      - name: Check out the exact public source commit
+        shell: bash
+        env:
+          SOURCE_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          GIT_TERMINAL_PROMPT: '0'
+        run: |
+          set -euo pipefail
+          mkdir -p "$EVIDENCE_DIR"
+          {
+            if [[ ! "$SOURCE_REPOSITORY" =~ ^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$ ]]; then
+              echo 'Invalid source repository' >&2
+              exit 1
+            fi
+            if [[ ! "$EXPECTED_SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+              echo 'Invalid exact source SHA' >&2
+              exit 1
+            fi
+            git init
+            git remote add origin "https://github.com/$SOURCE_REPOSITORY.git"
+            git -c credential.helper= -c protocol.version=2 fetch \
+              --no-tags --depth=1 --no-recurse-submodules origin "$EXPECTED_SOURCE_SHA"
+            git -c submodule.recurse=false checkout --detach "$EXPECTED_SOURCE_SHA"
+          } 2>&1 | tee "$EVIDENCE_DIR/source-checkout.log"
 
       - name: Bind the source revision and unchanged dependency pins
         shell: bash

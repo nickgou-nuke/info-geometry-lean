@@ -20,8 +20,10 @@ pins, hook code, toolchain and shared-lock implementation are unchanged.
 ## Focused CI and root integration
 
 `.github/workflows/nambu-metriplectic.yml` runs this same verifier on the exact
-PR head commit, with recursive submodule checkout disabled, read-only repository
-permissions, the pinned toolchain, and only external dependency artifacts cached.
+PR head commit using an anonymous exact-SHA fetch from this public repository,
+with submodule recursion disabled, read-only repository permissions, the pinned
+toolchain, and only external dependency artifacts cached. The source repository
+and SHA are validated before fetching, and no Git credentials are installed.
 It uses the existing locked wrapper for dependency hydration and every build,
 elaboration and native declaration audit. It records the checked commit/tree,
 source hashes, compiler output and audit result as workflow artifacts.
@@ -32,6 +34,16 @@ separate gate. On PR #431 at `c30b02b9`, the reviewed-integration job failed dur
 recursive checkout because `external_ref/open-math-harness` lacks a `.gitmodules`
 URL; the root quality job failed because the `HomotopyHypothesis` package
 directory was absent. Neither failure reached elaboration of these new owners.
+
+The first focused run, [45179392271](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45179392271)
+at `3561393e`, also stopped before Lean: `actions/checkout` fetched the exact
+commit successfully, but its credential cleanup recursively inspected the same
+unmapped gitlink even with `submodules: false`. The focused workflow now uses
+anonymous Git fetch and detached checkout, without changing `.gitmodules`,
+gitlinks, dependency pins, or the native acceptance gate. A minimal Git 2.56.1
+fixture reproduced the cleanup failure and confirmed that this checkout method
+preserves the exact source revision and a clean tracked tree. A new successful
+native run is still required.
 
 The proposed Peirce-defect, Klein-four and KMS-coordinate follow-up remains in
 candidate review until the baseline native build, warnings-as-errors checks and

@@ -1,0 +1,119 @@
+name: Zeta Weil-Krein and finite Stokes
+
+on:
+  pull_request:
+    paths:
+      - 'lean/**/*.lean'
+      - 'verification/zeta-weil-krein/**'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/infra/opengauss_screener.py'
+      - 'tools/quality/proof_proxy_staged_gate.py'
+      - 'tools/quality/semantic_vacuity_gate.py'
+      - 'tools/quality/semantic_vacuity_patterns.json'
+      - 'tools/pathing.py'
+      - '.github/workflows/zeta-weil-krein.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: zeta-weil-krein-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Record checked source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p verification/zeta-weil-krein/logs
+          {
+            git rev-parse HEAD
+            git rev-parse 'HEAD^{tree}'
+            git status --short
+          } | tee verification/zeta-weil-krein/logs/revision.log
+      - name: Screen the six changed owners
+        shell: bash
+        run: |
+          set -euo pipefail
+          owners=(
+            lean/InfoGeometry/Arithmetic/FiniteEulerLogDerivative.lean
+            lean/InfoGeometry/Arithmetic/ZetaDihedralWeilKreinCore.lean
+            lean/InfoGeometry/Arithmetic/ZetaDihedralWeilKreinAudit.lean
+            lean/InfoGeometry/LinearAlgebra/PositiveRadicalQuotient.lean
+            lean/InfoGeometry/OperatorAlgebra/FiniteParitySupertrace.lean
+            lean/InfoGeometry/Canonical/FiniteIncidenceGaussBonnetStokes.lean
+          )
+          python3 - "${owners[@]}" <<'PY' 2>&1 | tee verification/zeta-weil-krein/logs/proof-proxy.log
+          from pathlib import Path
+          import subprocess
+          import sys
+          from tools.quality.proof_proxy_staged_gate import (
+              ActiveIndexCache, check_text, checker_index_mismatches,
+          )
+          root = Path.cwd()
+          paths = sys.argv[1:]
+          if len(paths) != 6 or len(set(paths)) != 6:
+              raise SystemExit("Expected six distinct Lean owners")
+          cache = ActiveIndexCache(root, scope_paths=paths)
+          failures = checker_index_mismatches(root)
+          for path in paths:
+              indexed = subprocess.check_output(["git", "show", f":{path}"])
+              committed = subprocess.check_output(["git", "show", f"HEAD:{path}"])
+              if indexed != committed or (root / path).read_bytes() != committed:
+                  failures.append(f"{path}: HEAD, index, and source differ")
+                  continue
+              failures.extend(check_text(
+                  path, indexed.decode("utf-8"), root,
+                  index_cache=cache, strict=True,
+              ))
+          if not cache.still_current():
+              failures.append("Active index changed during source inspection")
+          if failures:
+              raise SystemExit("\n".join(failures))
+          print(f"Committed-source proof checks passed for all {len(paths)} owners")
+          PY
+          python3 tools/quality/semantic_vacuity_gate.py "${owners[@]}" --fail-on error --json-out verification/zeta-weil-krein/logs/semantic-vacuity.json 2>&1 | tee verification/zeta-weil-krein/logs/semantic-vacuity.log
+          python3 tools/infra/opengauss_screener.py "${owners[@]}" --strict --json > verification/zeta-weil-krein/logs/refutation-screen.json
+      - name: Install the pinned Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          toolchain=$(cat lean-toolchain)
+          "$HOME/.elan/bin/elan" toolchain install "$toolchain"
+          "$HOME/.elan/bin/lean" --version
+          "$HOME/.elan/bin/lake" --version
+      - name: Restore the pinned Mathlib artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/zeta-weil-krein/check.py exe cache get 2>&1 | tee verification/zeta-weil-krein/logs/cache.log
+      - name: Build the focused audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/zeta-weil-krein/check.py --wfail build InfoGeometry.Arithmetic.ZetaDihedralWeilKreinAudit 2>&1 | tee verification/zeta-weil-krein/logs/build.log
+      - name: Inspect fresh declaration axiom output
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/zeta-weil-krein/check.py env lean lean/InfoGeometry/Arithmetic/ZetaDihedralWeilKreinAudit.lean 2>&1 | tee verification/zeta-weil-krein/logs/axioms.log
+          python3 verification/zeta-weil-krein/check_axioms.py verification/zeta-weil-krein/logs/axioms.log > verification/zeta-weil-krein/logs/axiom-check.json
+      - name: Preserve verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zeta-weil-krein-verification
+          path: verification/zeta-weil-krein/logs

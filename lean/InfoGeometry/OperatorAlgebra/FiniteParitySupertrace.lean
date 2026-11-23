@@ -1,6 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic
 
@@ -227,9 +232,7 @@ theorem supertrace_eq_zero_of_odd
   have htrace :=
     congrArg Matrix.trace hodd
   rw [Matrix.trace_neg, Matrix.trace_mul_comm A (parityOperator sign)] at htrace
-  change supertrace sign A = 0
-  rw [supertrace]
-  linarith
+  exact CharZero.eq_neg_self_iff.mp htrace
 
 theorem IsEven.add
     {sign : n → ℝ} {A B : Matrix n n ℝ}
@@ -256,7 +259,6 @@ theorem IsOdd.mul
 
 theorem odd_mul_positiveProjector_eq_negativeProjector_mul
     (sign : n → ℝ)
-    (_hsign : ∀ i, sign i ^ 2 = 1)
     (Q : Matrix n n ℝ)
     (hQ : IsOdd sign Q) :
     Q * positiveParityProjector sign =
@@ -270,7 +272,6 @@ theorem odd_mul_positiveProjector_eq_negativeProjector_mul
 
 theorem odd_mul_negativeProjector_eq_positiveProjector_mul
     (sign : n → ℝ)
-    (_hsign : ∀ i, sign i ^ 2 = 1)
     (Q : Matrix n n ℝ)
     (hQ : IsOdd sign Q) :
     Q * negativeParityProjector sign =
@@ -298,7 +299,7 @@ theorem positiveToNegativeDifferential_eq
     positiveToNegativeDifferential sign Q =
       Q * positiveParityProjector sign := by
   rw [positiveToNegativeDifferential]
-  rw [← odd_mul_positiveProjector_eq_negativeProjector_mul sign hsign Q hQ]
+  rw [← odd_mul_positiveProjector_eq_negativeProjector_mul sign Q hQ]
   rw [Matrix.mul_assoc, positiveParityProjector_idempotent sign hsign]
 
 theorem negativeToPositiveDifferential_eq
@@ -309,7 +310,7 @@ theorem negativeToPositiveDifferential_eq
     negativeToPositiveDifferential sign Q =
       Q * negativeParityProjector sign := by
   rw [negativeToPositiveDifferential]
-  rw [← odd_mul_negativeProjector_eq_positiveProjector_mul sign hsign Q hQ]
+  rw [← odd_mul_negativeProjector_eq_positiveProjector_mul sign Q hQ]
   rw [Matrix.mul_assoc, negativeParityProjector_idempotent sign hsign]
 
 theorem restrictedDifferentials_comp_zero
@@ -325,10 +326,10 @@ theorem restrictedDifferentials_comp_zero
   rw [negativeToPositiveDifferential_eq sign hsign Q hQodd,
     positiveToNegativeDifferential_eq sign hsign Q hQodd]
   constructor
-  · rw [odd_mul_negativeProjector_eq_positiveProjector_mul sign hsign Q hQodd,
+  · rw [odd_mul_negativeProjector_eq_positiveProjector_mul sign Q hQodd,
       Matrix.mul_assoc (positiveParityProjector sign) Q,
       ← Matrix.mul_assoc Q Q, hQsq, zero_mul, mul_zero]
-  · rw [odd_mul_positiveProjector_eq_negativeProjector_mul sign hsign Q hQodd,
+  · rw [odd_mul_positiveProjector_eq_negativeProjector_mul sign Q hQodd,
       Matrix.mul_assoc (negativeParityProjector sign) Q,
       ← Matrix.mul_assoc Q Q, hQsq, zero_mul, mul_zero]
 
@@ -354,12 +355,36 @@ theorem supertrace_mul_comm_of_odd_left
   simpa [Matrix.mul_assoc] using
     congrArg Neg.neg (Matrix.trace_mul_comm A (parityOperator sign * B))
 
-theorem supertrace_mul_comm_of_odd_odd
-    (sign : n → ℝ)
-    (A B : Matrix n n ℝ)
-    (hA : IsOdd sign A)
-    (_hB : IsOdd sign B) :
-    supertrace sign (A * B) = -supertrace sign (B * A) :=
-  supertrace_mul_comm_of_odd_left sign A B hA
+/-- All positive powers of an odd finite real matrix have zero supertrace.
+Only the oddness relation is needed; no self-adjointness, spectral positivity,
+or grading normalization is assumed. -/
+theorem supertrace_pow_succ_eq_zero
+    (sign : n → ℝ) (D : Matrix n n ℝ) (hD : IsOdd sign D) (k : ℕ) :
+    supertrace sign (D ^ (k + 1)) = 0 := by
+  have h := supertrace_mul_comm_of_odd_left sign D (D ^ k) hD
+  rw [← pow_succ', ← pow_succ] at h
+  exact CharZero.eq_neg_self_iff.mp h
+
+/-- Finite polynomial supertrace depends only on the constant coefficient.
+This is a finite matrix identity, without an infinite heat-kernel limit. -/
+theorem supertrace_polynomial_eq_constant
+    (sign : n → ℝ) (D : Matrix n n ℝ) (hD : IsOdd sign D)
+    (N : ℕ) (c : ℕ → ℝ) :
+    supertrace sign (∑ k ∈ Finset.range (N + 1), c k • D ^ k) =
+      c 0 * supertrace sign 1 := by
+  rw [Finset.sum_range_succ']
+  unfold supertrace
+  rw [mul_add, Matrix.trace_add, Finset.mul_sum, Matrix.trace_sum]
+  simp only [mul_smul_comm, Matrix.trace_smul, smul_eq_mul]
+  have htail :
+      (∑ k ∈ Finset.range N,
+        c (k + 1) * Matrix.trace (parityOperator sign * D ^ (k + 1))) = 0 := by
+    apply Finset.sum_eq_zero
+    intro k hk
+    change c (k + 1) * supertrace sign (D ^ (k + 1)) = 0
+    rw [supertrace_pow_succ_eq_zero sign D hD k, mul_zero]
+  rw [htail, zero_add]
+  simp
+
 
 end InfoGeometry.OperatorAlgebra.FiniteParitySupertrace

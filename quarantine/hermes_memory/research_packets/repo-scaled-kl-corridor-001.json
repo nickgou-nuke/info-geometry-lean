@@ -1,0 +1,94 @@
+{
+  "packet_id": "repo-scaled-kl-corridor-001",
+  "created_at": "2026-04-21T03:50:20+00:00",
+  "research_goal": "Reconstruct the owner-local analytic corridor in InfoGeometry.ExponentialFamily.Analytic.LogSumExp that identifies the scaled KL objective with the scaled Bregman / entropic transport potential-gap formulations, keeping the task as bounded proof-specialist analysis with no canonical mutation.",
+  "allowed_sources": ["files"],
+  "trusted_domains": [],
+  "provenance": {
+    "source": "Hermes.GraphGroundedRepoNativeCorridor",
+    "state_path": "/home/goutev/repos/info-geometry-lean/artifacts/hermes_loop/corridors/repo-scaled-kl-corridor-001.md",
+    "models": {
+      "planner": "nemotron",
+      "research": "deepseek-prover-v2-7b-q8_0.gguf",
+      "auditor": "goedel-prover-sft-q8_0.gguf",
+      "verifier": "lean",
+      "writer": "codex-cli"
+    }
+  },
+  "evidence": [
+    {
+      "claim": "The scaled log-sum-exp analytic theorem family is source-backed and the targeted build of InfoGeometry.ExponentialFamily.Analytic.LogSumExp succeeds.",
+      "sources": [
+        "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/ExponentialFamily/Analytic/LogSumExp.lean",
+        "/home/goutev/repos/info-geometry-lean/artifacts/hermes_loop/corridors/repo-scaled-kl-corridor-001.md"
+      ],
+      "confidence": "high",
+      "evidence_summary": "Raw source inspection and targeted lake build confirm the theorem corridor is compiled and live.",
+      "subquestion_id": "scaled-kl-corridor-001"
+    },
+    {
+      "claim": "Graph retrieval ranks the scaled entropic-transport objective/potential-gap equivalence theorems as the dominant nearby corridor declarations.",
+      "sources": [
+        "/home/goutev/repos/info-geometry-lean/artifacts/hermes_loop/gravity_context/manual-scaled-kl-corridor.json"
+      ],
+      "confidence": "high",
+      "evidence_summary": "The top gravity-context neighbors are tightly clustered around the scaled KL and entropic transport alias theorems.",
+      "subquestion_id": "scaled-kl-corridor-002"
+    },
+    {
+      "claim": "The corridor passes through logSumExpScaledKL_eq before the alias-equivalence theorems logSumExpScaledEntropicTransportObjective_eq_inv_eps_mul_potentialGap and logSumExpScaledEntropicTransportPotentialGap_eq_eps_mul_objective are concluded.",
+      "sources": [
+        "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/ExponentialFamily/Analytic/LogSumExp.lean"
+      ],
+      "confidence": "high",
+      "evidence_summary": "The owner file stages the scaled KL expansion before the entropic-transport equivalence theorem pair.",
+      "subquestion_id": "scaled-kl-corridor-003"
+    }
+  ],
+  "contradictions": [],
+  "candidate_invariants": [
+    "the scaled KL expansion controls the owner-local entropic transport objective/potential-gap equivalences",
+    "the scaled analytic corridor is compact and suitable for bounded theorem reconstruction"
+  ],
+  "forbidden_moves": [
+    "do not promote graph retrieval as proof admission",
+    "do not restate an already compiled analytic theorem as new canonical work",
+    "do not invoke Codex mutation unless a separate handoff gate explicitly permits it",
+    "do not blur owner-local aliases with new theorem introduction"
+  ],
+  "formalization_targets": [
+    {
+      "kind": "theorem",
+      "name": "InfoGeometry.Analytic.logSumExpScaledEntropicTransportPotentialGap_eq_eps_mul_objective",
+      "note": "Bounded proof-corridor reconstruction target for the scaled entropic-transport potential-gap equivalence."
+    },
+    {
+      "kind": "coherence",
+      "name": "repo_scaled_kl_dependency_chain",
+      "note": "Explain the minimal owner-local dependency chain without mutating canonical source."
+    }
+  ],
+  "classification": {
+    "facts": [
+      "The LogSumExp analytic owner module builds successfully under targeted lake verification.",
+      "The gravity-context neighbors are concentrated on the scaled KL and entropic-transport theorem family.",
+      "The raw theorem staging places logSumExpScaledKL_eq before the entropic-transport equivalence theorem pair."
+    ],
+    "interpretations": [
+      "This packet is a repo-native bounded autoproof benchmark for a compact owner-local analytic corridor.",
+      "The expected safe route is deepseek_proof with execution disallowed.",
+      "The proof-specialist lane should return a dependency-certified rewrite chain rather than a mutation proposal."
+    ],
+    "metaphors": [],
+    "formalization_candidates": [
+      "Ask the proof-specialist lane to restate the minimal chain from logSumExpScaledKL_eq to the two entropic transport equivalence theorems through the objective/potential-gap aliases.",
+      "Use the result as a graph-grounded bounded autoproof benchmark rather than as canonical edit material."
+    ]
+  },
+  "handoff": {
+    "prompt_a_ready": true,
+    "requires_nemoclaw_note": true,
+    "requires_clawcode_gate": true
+  },
+  "status": "draft"
+}

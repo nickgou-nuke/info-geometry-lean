@@ -1,0 +1,3 @@
+exit_code=0
+command=timeout 240s ~/.elan/bin/lake build InfoGeometry.OperatorAlgebra.IndividuatedBoundedTransform
+log=/home/goutev/repos/info-geometry-lean-fusion-migrate/artifacts/hermes_loop/heartbeat/tmp/heartbeat_20260601_112231_module_IndividuatedBoundedTransform.log

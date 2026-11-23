@@ -1,0 +1,24 @@
+{
+  "center": "InfoGeometry.Krein.KreinSpace",
+  "timestamp": "2026-04-19T05:47:14.830773+00:00",
+  "gravitational_context": [
+    {
+      "id": "InfoGeometry.Krein.DoubledSpace",
+      "mass": 9352,
+      "doc": "Alias for the canonical doubled Hilbert space `WithLp 2 (E \u00d7 E)`. ",
+      "source": "-- [Source not found: /home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Krein/DoubledSpace.lean]"
+    },
+    {
+      "id": "InfoGeometry.Krein.instL2NormedGroup",
+      "mass": 8635,
+      "doc": "",
+      "source": "-- [Source not found: /home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Krein/KreinSpace.lean]"
+    },
+    {
+      "id": "InfoGeometry.Krein.instL2InnerProduct",
+      "mass": 1899,
+      "doc": "",
+      "source": "-- [Source not found: /home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Krein/KreinSpace.lean]"
+    }
+  ]
+}

@@ -3,6 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.Clifford.Cl33PhaseMatrixEquiv
 
 import InfoGeometry.Clifford.BottPeriodicity
 import InfoGeometry.Algebra.FiniteSpinAlgebra
@@ -14,6 +15,7 @@ import InfoGeometry.Clifford.BudinichCliqueSpinor
 import InfoGeometry.Clifford.BudinichMaximumCliquePureSpinor
 import InfoGeometry.Clifford.BudinichSpinorsNullVectors
 import InfoGeometry.Clifford.CrawfordDiracBispinorDensities
+import InfoGeometry.Clifford.GradedNullconeDaviauFierzBridge
 import InfoGeometry.Clifford.DiracPauliGamma
 import InfoGeometry.Clifford.RealMod8Classification
 import InfoGeometry.Clifford.CartanInstance

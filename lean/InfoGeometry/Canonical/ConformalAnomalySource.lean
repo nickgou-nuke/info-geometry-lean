@@ -1,5 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.Complex.Trigonometric
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConformalProjectorCore
 import InfoGeometry.Canonical.ChiralEinsteinBridge
 import InfoGeometry.Canonical.GrandCanonicalExperts
@@ -44,17 +48,6 @@ theorem projectorObstruction_isGZero_of_kkt_wings
     CI.chiralAnomalyOperator_isGZero_of_kkt_wings
       (X := X) hA hAMP hAD
 
-/--
-The projector obstruction is grade zero from a single proof-carrying KKT wing
-witness, without threading the explicit `(hA, hAMP, hAD)` hypothesis triple.
--/
-theorem projectorObstruction_isGZero_of_kktWingWitness
-    (X : InfoGeometry.Quantum.RealSplitCl11Action E)
-    (W : InfoGeometry.Canonical.KKTCore.IsGOne X CI.A ∧ InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_MP ∧ InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_D) :
-    InfoGeometry.Canonical.KKTCore.IsGZero X CI.projectorObstruction := by
-  exact
-    CI.projectorObstruction_isGZero_of_kkt_wings X W.1 W.2.1 W.2.2
-
 theorem projectorObstruction_gOnePart_eq_zero_of_kkt_wings
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
     (hA : InfoGeometry.Canonical.KKTCore.IsGOne X CI.A)
@@ -65,18 +58,6 @@ theorem projectorObstruction_gOnePart_eq_zero_of_kkt_wings
     CI.chiralAnomalyOperator_gOnePart_eq_zero_of_kkt_wings
       (X := X) hA hAMP hAD
 
-/--
-The grade-`+1` projector-obstruction component vanishes from a proof-carrying
-KKT wing witness, without threading the explicit `(hA, hAMP, hAD)` hypothesis
-triple.
--/
-theorem projectorObstruction_gOnePart_eq_zero_of_kktWingWitness
-    (X : InfoGeometry.Quantum.RealSplitCl11Action E)
-    (W : InfoGeometry.Canonical.KKTCore.IsGOne X CI.A ∧ InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_MP ∧ InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_D) :
-    InfoGeometry.Canonical.KKTCore.gOnePart X CI.projectorObstruction = 0 := by
-  exact
-    CI.projectorObstruction_gOnePart_eq_zero_of_kkt_wings X W.1 W.2.1 W.2.2
-
 theorem projectorObstruction_gNegOnePart_eq_zero_of_kkt_wings
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
     (hA : InfoGeometry.Canonical.KKTCore.IsGOne X CI.A)
@@ -86,18 +67,6 @@ theorem projectorObstruction_gNegOnePart_eq_zero_of_kkt_wings
   simpa [projectorObstruction] using
     CI.chiralAnomalyOperator_gNegOnePart_eq_zero_of_kkt_wings
       (X := X) hA hAMP hAD
-
-/--
-The grade-`-1` projector-obstruction component vanishes from a proof-carrying
-KKT wing witness, without threading the explicit `(hA, hAMP, hAD)` hypothesis
-triple.
--/
-theorem projectorObstruction_gNegOnePart_eq_zero_of_kktWingWitness
-    (X : InfoGeometry.Quantum.RealSplitCl11Action E)
-    (W : InfoGeometry.Canonical.KKTCore.IsGOne X CI.A ∧ InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_MP ∧ InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_D) :
-    InfoGeometry.Canonical.KKTCore.gNegOnePart X CI.projectorObstruction = 0 := by
-  exact
-    CI.projectorObstruction_gNegOnePart_eq_zero_of_kkt_wings X W.1 W.2.1 W.2.2
 
 theorem projectorObstruction_eq_diagonal_blocks_of_kkt_wings
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
@@ -112,22 +81,6 @@ theorem projectorObstruction_eq_diagonal_blocks_of_kkt_wings
   simpa [projectorObstruction] using
     CI.chiralAnomalyOperator_eq_diagonal_blocks_of_kkt_wings
       (X := X) hA hAMP hAD
-
-/--
-The projector obstruction is supported on the diagonal KKT blocks from a single
-proof-carrying KKT wing witness, without threading the explicit
-`(hA, hAMP, hAD)` hypothesis triple.
--/
-theorem projectorObstruction_eq_diagonal_blocks_of_kktWingWitness
-    (X : InfoGeometry.Quantum.RealSplitCl11Action E)
-    (W : InfoGeometry.Canonical.KKTCore.IsGOne X CI.A ∧ InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_MP ∧ InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_D) :
-    CI.projectorObstruction
-      = InfoGeometry.Canonical.KKTCore.plusProjector X * CI.projectorObstruction
-          * InfoGeometry.Canonical.KKTCore.plusProjector X
-        + InfoGeometry.Canonical.KKTCore.minusProjector X * CI.projectorObstruction
-          * InfoGeometry.Canonical.KKTCore.minusProjector X := by
-  exact
-    CI.projectorObstruction_eq_diagonal_blocks_of_kkt_wings X W.1 W.2.1 W.2.2
 
 theorem projectorObstruction_plusProjector_mul_mul_minusProjector_eq_zero_of_kkt_wings
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
@@ -305,9 +258,7 @@ theorem projectorObstruction_eq_zero_iff_commute :
       ↔ Commute CI.spectralChiralProjector CI.metricChiralProjector := by
   constructor
   · intro hObs
-    change CI.spectralChiralProjector * CI.metricChiralProjector =
-      CI.metricChiralProjector * CI.spectralChiralProjector
-    exact CI.projectors_commute_of_chiralAnomaly_eq_zero hObs
+    simpa [Commute] using CI.projectors_commute_of_chiralAnomaly_eq_zero hObs
   · intro hComm
     exact CI.projectorObstruction_eq_zero_of_commute hComm
 
@@ -388,25 +339,6 @@ end
 section
 
 /--
-Proof-carrying unit relative-volume witness for the RN/Kähler/log-det lane in
-this conformal owner module.
--/
-def UnitRelativeVolumeWitness (n : Nat) (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n) : Prop :=
-  relativeVolumeChangeRN n M = 1
-
-/--
-Constructive owner packet for the RN/Kähler/log-det zero-scale lane.
-
-This bundles the two explicit scalar compatibility hypotheses needed for the
-unit-relative-volume closure route.
--/
-def KahlerLogDetUnitRelativeVolumeWitness
-    (CI : ConformalInference E)
-    (n : Nat)
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n) : Prop :=
-  CI.chiralScale = kahlerPotentialRN n M ∧ relativeVolumeChangeRN n M = 1
-
-/--
 Normality (`ε = 0`) from the Kähler/log-det layer:
 if the conformal chiral scale matches the RN Kähler potential and the RN
 relative volume is unit, then `ε = 0`.
@@ -429,106 +361,7 @@ theorem chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
     CI.chiralScale = kahlerPotentialRN n M := hScaleFromKahler
     _ = 0 := hKZero
 
-/--
-Proof-carrying unit-relative-volume route for scalar normality.
-
-This constructive companion removes the bare
-`relativeVolumeChangeRN n M = 1` hypothesis from the scalar zero-scale branch
-when callers already own the `UnitRelativeVolumeBit` witness packet.
--/
-theorem chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolumeBit
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
-    (bit : UnitRelativeVolumeWitness n M) :
-    CI.chiralScale = 0 := by
-  exact CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
-    (M := M) hScaleFromKahler bit
-
-/--
-Constructive owner route for scalar normality using a single proof-carrying
-RN/Kähler/log-det witness packet.
--/
-theorem chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolumeWitness
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (W : KahlerLogDetUnitRelativeVolumeWitness CI n M) :
-    CI.chiralScale = 0 := by
-  exact CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
-    (M := M) W.1 W.2
-
 end
-
-/--
-Zero anomaly scale implies vanishing of the canonical projector obstruction.
-
-This is the operator-level owner export behind the scalar zero-scale route; it
-lets downstream users consume `CI.projectorObstruction = 0` directly instead of
-repeating the nonnegative-norm descent from `CI.chiralScale = 0`.
--/
-theorem projectorObstruction_eq_zero_of_chiralScale_eq_zero
-    (hScaleZero : CI.chiralScale = 0) :
-    CI.projectorObstruction = 0 := by
-  have hObsNorm : ‖CI.projectorObstruction‖₊ = 0 := by
-    simpa [CI.chiralScale_eq_projectorObstruction_nnnorm] using hScaleZero
-  exact (nnnorm_eq_zero).1 hObsNorm
-
-/--
-Constructive obstruction collapse from the RN/Kähler/log-det lane.
-
-This removes the bare scalar-zero hypothesis at the obstruction operator level
-when the caller already owns the infinite/operatorial unit-relative-volume
-witness route.
--/
-theorem projectorObstruction_eq_zero_of_kahlerLogDet_unitRelativeVolume
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
-    (hUnitVolume : relativeVolumeChangeRN n M = 1) :
-    CI.projectorObstruction = 0 := by
-  exact CI.projectorObstruction_eq_zero_of_chiralScale_eq_zero
-    (CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
-      (M := M) hScaleFromKahler hUnitVolume)
-
-/--
-Constructive obstruction collapse using the proof-carrying
-`UnitRelativeVolumeWitness` packet instead of a bare unit-volume equality.
--/
-theorem projectorObstruction_eq_zero_of_kahlerLogDet_unitRelativeVolumeBit
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
-    (bit : UnitRelativeVolumeWitness n M) :
-    CI.projectorObstruction = 0 := by
-  exact CI.projectorObstruction_eq_zero_of_kahlerLogDet_unitRelativeVolume
-    (M := M) hScaleFromKahler bit
-
-/--
-Constructive obstruction collapse using the single proof-carrying
-RN/Kähler/log-det witness packet.
--/
-theorem projectorObstruction_eq_zero_of_kahlerLogDet_unitRelativeVolumeWitness
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (W : KahlerLogDetUnitRelativeVolumeWitness CI n M) :
-    CI.projectorObstruction = 0 := by
-  exact CI.projectorObstruction_eq_zero_of_kahlerLogDet_unitRelativeVolume
-    (M := M) W.1 W.2
-
-/--
-Scalar zero anomaly is equivalent to vanishing of the canonical projector
-obstruction.
-
-This removes the need for a bare scalar-zero hypothesis at obstruction-level
-call sites: callers may route through the explicit operator equality, and the
-scalar compatibility wrapper remains available by the reverse direction.
--/
-theorem chiralScale_eq_zero_iff_projectorObstruction_eq_zero :
-    CI.chiralScale = 0 ↔ CI.projectorObstruction = 0 := by
-  constructor
-  · exact CI.projectorObstruction_eq_zero_of_chiralScale_eq_zero
-  · intro hObsZero
-    simp [chiralScale, obstructionScale, hObsZero]
 
 /--
 Zero anomaly scale implies projector commutation.
@@ -540,28 +373,11 @@ theorem projectors_commute_of_chiralScale_eq_zero
     (hScaleZero : CI.chiralScale = 0) :
     CI.spectralChiralProjector * CI.metricChiralProjector
       = CI.metricChiralProjector * CI.spectralChiralProjector := by
-  have hObsZero : CI.projectorObstruction = 0 :=
-    CI.projectorObstruction_eq_zero_of_chiralScale_eq_zero hScaleZero
-  exact (CI.projectorObstruction_eq_zero_iff_commute).1 hObsZero |>.eq
-
-/--
-Constructive iff route between scalar zero anomaly and projector commutation.
-
-This packages the existing obstruction-operator owner theorem so downstream
-users can consume the canonical `Commute` witness instead of carrying a bare
-multiplication equality hypothesis.
--/
-theorem chiralScale_eq_zero_iff_projectors_commute :
-    CI.chiralScale = 0
-      ↔ Commute CI.spectralChiralProjector CI.metricChiralProjector := by
-  constructor
-  · intro hScaleZero
-    exact (CI.projectorObstruction_eq_zero_iff_commute).1
-      (CI.projectorObstruction_eq_zero_of_chiralScale_eq_zero hScaleZero)
-  · intro hComm
-    have hObsZero : CI.projectorObstruction = 0 :=
-      CI.projectorObstruction_eq_zero_of_commute hComm
-    exact (CI.chiralScale_eq_zero_iff_projectorObstruction_eq_zero).2 hObsZero
+  have hNormAnom : ‖CI.chiralAnomalyOperator‖₊ = 0 := by
+    simpa [obstructionScale, chiralAnomalyOperator] using hScaleZero
+  have hAnomZero : CI.chiralAnomalyOperator = 0 :=
+    (nnnorm_eq_zero).1 hNormAnom
+  exact CI.projectors_commute_of_chiralAnomaly_eq_zero hAnomZero
 
 /--
 If the Drazin spectral projector commutes with the Moore-Penrose right
@@ -573,47 +389,15 @@ theorem spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_
       CI.P_D * CI.P_MP_right = CI.P_MP_right * CI.P_D)
     (hScaleZero : CI.chiralScale = 0) :
     CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
-  have hObsZero : CI.projectorObstruction = 0 :=
-    CI.projectorObstruction_eq_zero_of_chiralScale_eq_zero hScaleZero
-  simpa [projectorObstruction] using
+  have hNormObs : ‖CI.projectorObstruction‖₊ = 0 := by
+    simpa [CI.chiralScale_eq_projectorObstruction_nnnorm] using hScaleZero
+  have hNormAnom : ‖CI.chiralAnomalyOperator‖₊ = 0 := by
+    simpa [projectorObstruction] using hNormObs
+  have hAnomZero : CI.chiralAnomalyOperator = 0 :=
+    (nnnorm_eq_zero).1 hNormAnom
+  exact
     CI.spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_of_chiralAnomaly_eq_zero
-      hRight hObsZero
-
-/--
-Proof-carrying dilation-collapse route using the compact
-`UnitRelativeVolumeWitness` packet instead of a bare zero-scale hypothesis.
--/
-theorem spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_of_kahlerLogDet_unitRelativeVolumeBit
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (hRight :
-      CI.P_D * CI.P_MP_right = CI.P_MP_right * CI.P_D)
-    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
-    (bit : UnitRelativeVolumeWitness n M) :
-    CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
-  exact CI.spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_of_chiralScale_eq_zero
-    hRight
-    (CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolumeBit
-      (M := M) hScaleFromKahler bit)
-
-/--
-Single-packet dilation-collapse route on the RN/Kähler/log-det lane.
-
-This narrows the previous operator readback surface by replacing the separate
-`hScaleFromKahler` and unit-relative-volume packet inputs with the existing
-`KahlerLogDetUnitRelativeVolumeWitness` owner packet.
--/
-theorem spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_of_kahlerLogDet_unitRelativeVolumeWitness
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (hRight :
-      CI.P_D * CI.P_MP_right = CI.P_MP_right * CI.P_D)
-    (W : KahlerLogDetUnitRelativeVolumeWitness CI n M) :
-    CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
-  exact CI.spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_of_chiralScale_eq_zero
-    hRight
-    (CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolumeWitness
-      (M := M) W)
+      hRight hAnomZero
 
 /--
 Operator-first dilation/anomaly bridge:
@@ -658,18 +442,6 @@ theorem squashedProjectorObstruction_isGZero_of_kkt_wings
   exact InfoGeometry.Canonical.KKTCore.isGZero_smul
     X CI.projectorObstructionSquashCoeff
     (CI.projectorObstruction_isGZero_of_kkt_wings (X := X) hA hAMP hAD)
-
-/--
-The bounded squashed obstruction inherits grade-zero structure from a single
-proof-carrying KKT wing witness, without threading the explicit
-`(hA, hAMP, hAD)` hypothesis triple.
--/
-theorem squashedProjectorObstruction_isGZero_of_kktWingWitness
-    (X : InfoGeometry.Quantum.RealSplitCl11Action E)
-    (W : InfoGeometry.Canonical.KKTCore.IsGOne X CI.A ∧ InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_MP ∧ InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_D) :
-    InfoGeometry.Canonical.KKTCore.IsGZero X CI.squashedProjectorObstruction := by
-  exact
-    CI.squashedProjectorObstruction_isGZero_of_kkt_wings X W.1 W.2.1 W.2.2
 
 /--
 The bounded squashed obstruction remains block-diagonal in the KKT split.
@@ -728,33 +500,6 @@ theorem spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_
       hRight hObsZero
 
 /--
-Under right-projector commutation, vanishing of the dilation commutator is
-exactly vanishing of the projector obstruction.
-
-This replaces the raw multiplication-equality hypothesis on the owner route with
-an explicit `Commute` witness and packages both directions as a single
-operator-level iff.
--/
-theorem spectralProjector_commutator_dilation_eq_zero_iff_projectorObstruction_eq_zero_of_rightProjectorCommute
-    (hRight : Commute CI.P_D CI.P_MP_right) :
-    CI.P_D * CI.D - CI.D * CI.P_D = 0 ↔ CI.projectorObstruction = 0 := by
-  constructor
-  · intro hCommZero
-    have hScaledZero : -((2 : ℝ)⁻¹) • CI.projectorObstruction = 0 := by
-      calc
-        -((2 : ℝ)⁻¹) • CI.projectorObstruction = CI.P_D * CI.D - CI.D * CI.P_D := by
-          symm
-          exact CI.spectralProjector_commutator_dilation_eq_neg_half_projectorObstruction_of_rightProjector_commute
-            hRight.eq
-        _ = 0 := hCommZero
-    have hScalar : (-((2 : ℝ)⁻¹) : ℝ) ≠ 0 := by
-      norm_num
-    exact (smul_eq_zero.mp hScaledZero).resolve_left hScalar
-  · intro hObsZero
-    exact CI.spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_of_projectorObstruction_eq_zero
-      hRight.eq hObsZero
-
-/--
 Projector commutation directly from the Kähler/log-det layer:
 matching `χ` to the RN Kähler potential and unit relative volume force
 `χ = 0`, hence vanishing projector obstruction.
@@ -769,36 +514,6 @@ theorem projectors_commute_of_kahlerLogDet_unitRelativeVolume
   exact CI.projectors_commute_of_chiralScale_eq_zero
     (CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
       (M := M) hScaleFromKahler hUnitVolume)
-
-/--
-Proof-carrying unit-relative-volume route for projector commutation.
-
-This removes the bare `relativeVolumeChangeRN n M = 1` hypothesis from the
-projector-closure lane when callers already own the compact
-`UnitRelativeVolumeWitness` packet.
--/
-theorem projectors_commute_of_kahlerLogDet_unitRelativeVolumeBit
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
-    (bit : UnitRelativeVolumeWitness n M) :
-    CI.spectralChiralProjector * CI.metricChiralProjector
-      = CI.metricChiralProjector * CI.spectralChiralProjector := by
-  exact CI.projectors_commute_of_kahlerLogDet_unitRelativeVolume
-    (M := M) hScaleFromKahler bit
-
-/--
-Proof-carrying projector-commutation route using the single
-`KahlerLogDetUnitRelativeVolumeWitness` packet.
--/
-theorem projectors_commute_of_kahlerLogDet_unitRelativeVolumeWitness
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (W : KahlerLogDetUnitRelativeVolumeWitness CI n M) :
-    CI.spectralChiralProjector * CI.metricChiralProjector
-      = CI.metricChiralProjector * CI.spectralChiralProjector := by
-  exact CI.projectors_commute_of_kahlerLogDet_unitRelativeVolume
-    (M := M) W.1 W.2
 
 /--
 Log-det barrier self-concordance mechanics package:
@@ -825,38 +540,6 @@ theorem logDetBarrier_selfConcordance_mechanics_of_kahlerLogDet_unitRelativeVolu
   refine ⟨hKahlerZero, hScaleZero, ?_⟩
   exact CI.projectors_commute_of_chiralScale_eq_zero hScaleZero
 
-/--
-Proof-carrying self-concordance mechanics route using the compact
-`UnitRelativeVolumeWitness` packet instead of a bare unit-volume equality.
--/
-theorem logDetBarrier_selfConcordance_mechanics_of_kahlerLogDet_unitRelativeVolumeBit
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
-    (bit : UnitRelativeVolumeWitness n M) :
-    kahlerPotentialRN n M = 0
-      ∧ CI.chiralScale = 0
-      ∧ (CI.spectralChiralProjector * CI.metricChiralProjector
-            = CI.metricChiralProjector * CI.spectralChiralProjector) := by
-  exact CI.logDetBarrier_selfConcordance_mechanics_of_kahlerLogDet_unitRelativeVolume
-    (M := M) hScaleFromKahler bit
-
-/--
-Proof-carrying self-concordance mechanics route using the single
-`KahlerLogDetUnitRelativeVolumeWitness` packet instead of the separate
-`hScaleFromKahler` and `hUnitVolume` hypotheses.
--/
-theorem logDetBarrier_selfConcordance_mechanics_of_kahlerLogDet_unitRelativeVolumeWitness
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (W : KahlerLogDetUnitRelativeVolumeWitness CI n M) :
-    kahlerPotentialRN n M = 0
-      ∧ CI.chiralScale = 0
-      ∧ (CI.spectralChiralProjector * CI.metricChiralProjector
-            = CI.metricChiralProjector * CI.spectralChiralProjector) := by
-  exact CI.logDetBarrier_selfConcordance_mechanics_of_kahlerLogDet_unitRelativeVolume
-    (M := M) W.1 W.2
-
 section
 
 /--
@@ -879,38 +562,6 @@ theorem anomalyDrivenScalarRicciFlow_of_kahlerLogDet_normalized
       (M := M) hScaleFromKahler hUnitVolume
   exact CI.anomalyDrivenScalarRicciFlow_of_normalized_and_chiralScale_zero
     (flow := flow) hNorm hScaleZero
-
-/--
-Proof-carrying anomaly-flow discharge using the compact
-`UnitRelativeVolumeWitness` packet instead of a bare unit-volume equality.
--/
-theorem anomalyDrivenScalarRicciFlow_of_kahlerLogDet_normalized_unitRelativeVolumeBit
-    (flow : ScalarRicciFlow E)
-    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow)
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
-    (bit : UnitRelativeVolumeWitness n M) :
-    SatisfiesAnomalyDrivenScalarRicciFlow (E := E) flow
-      (fun _ => CI.chiralScale) := by
-  exact CI.anomalyDrivenScalarRicciFlow_of_kahlerLogDet_normalized
-    (flow := flow) hNorm (M := M) hScaleFromKahler bit
-
-/--
-Proof-carrying anomaly-flow discharge using the single
-`KahlerLogDetUnitRelativeVolumeWitness` packet instead of the separate
-`hScaleFromKahler` and `bit` hypotheses.
--/
-theorem anomalyDrivenScalarRicciFlow_of_kahlerLogDet_normalized_unitRelativeVolumeWitness
-    (flow : ScalarRicciFlow E)
-    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow)
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (W : KahlerLogDetUnitRelativeVolumeWitness CI n M) :
-    SatisfiesAnomalyDrivenScalarRicciFlow (E := E) flow
-      (fun _ => CI.chiralScale) := by
-  exact CI.anomalyDrivenScalarRicciFlow_of_kahlerLogDet_normalized
-    (flow := flow) hNorm (M := M) W.1 W.2
 
 end
 
@@ -939,47 +590,6 @@ theorem projectors_commute_of_kahlerLogDet_normalized_fixedpoint
       (flow := flow) hNorm (M := M) hScaleFromKahler hUnitVolume
   exact CI.projectors_commute_of_anomalyDriven_normalized_fixedpoint
     (flow := flow) hNorm hFixed hAnomFlow
-
-/--
-Proof-carrying normalized fixed-point projector-commutation route using the
-compact `UnitRelativeVolumeWitness` packet instead of a bare unit-volume
-hypothesis.
--/
-theorem projectors_commute_of_kahlerLogDet_normalized_fixedpoint_unitRelativeVolumeBit
-    (flow : ScalarRicciFlow E)
-    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow)
-    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := E) flow s = 0)
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
-    (bit : UnitRelativeVolumeWitness n M) :
-    CI.spectralChiralProjector * CI.metricChiralProjector
-      = CI.metricChiralProjector * CI.spectralChiralProjector := by
-  have hAnomFlow :
-      SatisfiesAnomalyDrivenScalarRicciFlow (E := E) flow
-        (fun _ => CI.chiralScale) :=
-    CI.anomalyDrivenScalarRicciFlow_of_kahlerLogDet_normalized_unitRelativeVolumeBit
-      (flow := flow) hNorm (M := M) hScaleFromKahler bit
-  exact CI.projectors_commute_of_anomalyDriven_normalized_fixedpoint
-    (flow := flow) hNorm hFixed hAnomFlow
-
-/--
-Proof-carrying normalized fixed-point projector-commutation route using the
-single `KahlerLogDetUnitRelativeVolumeWitness` packet instead of the separate
-`hScaleFromKahler` and `bit` hypotheses.
--/
-theorem projectors_commute_of_kahlerLogDet_normalized_fixedpoint_unitRelativeVolumeWitness
-    (flow : ScalarRicciFlow E)
-    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow)
-    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := E) flow s = 0)
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (W : KahlerLogDetUnitRelativeVolumeWitness CI n M) :
-    CI.spectralChiralProjector * CI.metricChiralProjector
-      = CI.metricChiralProjector * CI.spectralChiralProjector := by
-  exact CI.projectors_commute_of_kahlerLogDet_normalized_fixedpoint_unitRelativeVolumeBit
-    (flow := flow) hNorm hFixed (M := M) W.1
-    W.2
 
 section
 
@@ -1018,36 +628,8 @@ theorem isNormalInference_of_logDetBarrier_selfConcordance_mechanics
       (M := M) hScaleFromKahler hUnitVolume
   simpa [IsNormalInference] using hMechanics.2.1
 
-/--
-Normal-inference corollary from the proof-carrying log-det self-concordance
-mechanics packet.
--/
-theorem isNormalInference_of_logDetBarrier_selfConcordance_mechanics_unitRelativeVolumeBit
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
-    (bit : UnitRelativeVolumeWitness n M) :
-    IsNormalInference (CI := CI) := by
-  have hMechanics :=
-    CI.logDetBarrier_selfConcordance_mechanics_of_kahlerLogDet_unitRelativeVolumeBit
-      (M := M) hScaleFromKahler bit
-  simpa [IsNormalInference] using hMechanics.2.1
-
-/--
-Normal-inference corollary using the single RN/Kähler/log-det witness packet.
--/
-theorem isNormalInference_of_logDetBarrier_selfConcordance_mechanics_unitRelativeVolumeWitness
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (W : KahlerLogDetUnitRelativeVolumeWitness CI n M) :
-    IsNormalInference (CI := CI) := by
-  have hMechanics :=
-    CI.logDetBarrier_selfConcordance_mechanics_of_kahlerLogDet_unitRelativeVolumeWitness
-      (M := M) W
-  simpa [IsNormalInference] using hMechanics.2.1
-
+/-- Definition `IsChiralInference`. -/
 def IsChiralInference : Prop := 0 < CI.chiralScale
-
 
 -- Legacy alias: normal inference stated via `epsilon = 0`.
 section
@@ -1084,38 +666,6 @@ theorem chiralAnomaly_eq_zero_of_kahlerLogDet_normalized_fixedpoint
     CI.projectors_commute_of_kahlerLogDet_normalized_fixedpoint
       (flow := flow) hNorm hFixed (M := M) hScaleFromKahler hUnitVolume
   exact CI.chiralAnomaly_eq_zero_of_projectors_commute hComm
-
-/--
-Proof-carrying normalized fixed-point zero-anomaly route using the compact
-`UnitRelativeVolumeWitness` packet instead of a bare unit-volume equality.
--/
-theorem chiralAnomaly_eq_zero_of_kahlerLogDet_normalized_fixedpoint_unitRelativeVolumeBit
-    (flow : ScalarRicciFlow E)
-    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow)
-    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := E) flow s = 0)
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
-    (bit : UnitRelativeVolumeWitness n M) :
-    CI.chiralAnomalyOperator = 0 := by
-  exact CI.chiralAnomaly_eq_zero_of_kahlerLogDet_normalized_fixedpoint
-    (flow := flow) hNorm hFixed (M := M) hScaleFromKahler bit
-
-/--
-Proof-carrying normalized fixed-point zero-anomaly route using the single
-`KahlerLogDetUnitRelativeVolumeWitness` packet instead of the separate
-`hScaleFromKahler` and `bit` hypotheses.
--/
-theorem chiralAnomaly_eq_zero_of_kahlerLogDet_normalized_fixedpoint_unitRelativeVolumeWitness
-    (flow : ScalarRicciFlow E)
-    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow)
-    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := E) flow s = 0)
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (W : KahlerLogDetUnitRelativeVolumeWitness CI n M) :
-    CI.chiralAnomalyOperator = 0 := by
-  exact CI.chiralAnomaly_eq_zero_of_kahlerLogDet_normalized_fixedpoint
-    (flow := flow) hNorm hFixed (M := M) W.1 W.2
 
 /--
 The Structure Constant Operator (Σ).
@@ -1162,12 +712,16 @@ end
 
 section
 
-/--
-Constructive unit-of-action collapse from the RN/Kähler/log-det lane.
+/-- In the normal phase, the unit of action vanishes. -/
+theorem unitOfAction_eq_zero_of_normalInference
+    (hNormal : IsNormalInference (CI := CI)) :
+    CI.unitOfAction = 0 := by
+  rw [CI.unitOfAction_eq_chiralScale]
+  exact hNormal
 
-This packages the owner route
-`unitOfAction = chiralScale = kahlerPotentialRN = 0` once the caller already
-owns the unit-relative-volume witness on the infinite/operatorial lane.
+/--
+The Kähler/log-det unit-relative-volume lane collapses the unit of action
+without requiring a separate normality hypothesis.
 -/
 theorem unitOfAction_eq_zero_of_kahlerLogDet_unitRelativeVolume
     {n : Nat}
@@ -1175,41 +729,9 @@ theorem unitOfAction_eq_zero_of_kahlerLogDet_unitRelativeVolume
     (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
     (hUnitVolume : relativeVolumeChangeRN n M = 1) :
     CI.unitOfAction = 0 := by
-  rw [CI.unitOfAction_eq_chiralScale]
-  exact CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
-    (M := M) hScaleFromKahler hUnitVolume
-
-/--
-Constructive unit-of-action collapse using the proof-carrying
-`UnitRelativeVolumeWitness` packet instead of a bare unit-volume equality.
--/
-theorem unitOfAction_eq_zero_of_kahlerLogDet_unitRelativeVolumeBit
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
-    (bit : UnitRelativeVolumeWitness n M) :
-    CI.unitOfAction = 0 := by
-  exact CI.unitOfAction_eq_zero_of_kahlerLogDet_unitRelativeVolume
-    (M := M) hScaleFromKahler bit
-
-/--
-Constructive unit-of-action collapse using the single proof-carrying
-RN/Kähler/log-det witness packet.
--/
-theorem unitOfAction_eq_zero_of_kahlerLogDet_unitRelativeVolumeWitness
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (W : KahlerLogDetUnitRelativeVolumeWitness CI n M) :
-    CI.unitOfAction = 0 := by
-  exact CI.unitOfAction_eq_zero_of_kahlerLogDet_unitRelativeVolume
-    (M := M) W.1 W.2
-
-/-- In the normal phase, the unit of action vanishes. -/
-theorem unitOfAction_eq_zero_of_normalInference
-    (hNormal : IsNormalInference (CI := CI)) :
-    CI.unitOfAction = 0 := by
-  rw [CI.unitOfAction_eq_chiralScale]
-  exact hNormal
+  exact CI.unitOfAction_eq_zero_of_normalInference
+    (CI.isNormalInference_of_kahlerLogDet_unitRelativeVolume
+      (M := M) hScaleFromKahler hUnitVolume)
 
 /-- In the chiral phase, the unit of action is strictly positive. -/
 theorem unitOfAction_pos_of_chiralInference
@@ -1248,35 +770,6 @@ theorem isNormalInference_of_kahlerLogDet_unitRelativeVolume
       (M := M) hScaleFromKahler hUnitVolume
   simpa [ConformalInference.IsNormalInference] using hZero
 
-/--
-Constructive bridge from the RN/Kahler/log-det lane into the normal phase via
-the proof-carrying unit-relative-volume packet.
--/
-theorem isNormalInference_of_kahlerLogDet_unitRelativeVolumeBit
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
-    (bit : UnitRelativeVolumeWitness n M) :
-    CI.IsNormalInference := by
-  have hZero :=
-    CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolumeBit
-      (M := M) hScaleFromKahler bit
-  simpa [ConformalInference.IsNormalInference] using hZero
-
-/--
-Constructive bridge from the RN/Kahler/log-det lane into the normal phase via
-its single proof-carrying witness packet.
--/
-theorem isNormalInference_of_kahlerLogDet_unitRelativeVolumeWitness
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (W : KahlerLogDetUnitRelativeVolumeWitness CI n M) :
-    CI.IsNormalInference := by
-  have hZero :=
-    CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolumeWitness
-      (M := M) W
-  simpa [ConformalInference.IsNormalInference] using hZero
-
 end
 
 /--
@@ -1292,31 +785,6 @@ theorem chiralAnomalyOperator_eq_zero_of_unitRelativeVolume
     CI.projectors_commute_of_kahlerLogDet_unitRelativeVolume
       (M := M) hScaleFromKahler hUnitVolume
   exact CI.chiralAnomaly_eq_zero_of_projectors_commute hCommute
-
-/--
-Constructive zero-anomaly endpoint using the proof-carrying
-`UnitRelativeVolumeWitness` packet instead of a bare unit-volume equality.
--/
-theorem chiralAnomalyOperator_eq_zero_of_unitRelativeVolumeBit
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
-    (bit : UnitRelativeVolumeWitness n M) :
-    CI.chiralAnomalyOperator = 0 := by
-  exact CI.chiralAnomalyOperator_eq_zero_of_unitRelativeVolume
-    (M := M) hScaleFromKahler bit
-
-/--
-Constructive zero-anomaly endpoint using the single proof-carrying
-Kähler/log-det/unit-relative-volume witness packet.
--/
-theorem chiralAnomalyOperator_eq_zero_of_unitRelativeVolumeWitness
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (W : KahlerLogDetUnitRelativeVolumeWitness CI n M) :
-    CI.chiralAnomalyOperator = 0 := by
-  exact CI.chiralAnomalyOperator_eq_zero_of_unitRelativeVolume
-    (M := M) W.1 W.2
 
 end ConformalInference
 
@@ -1338,12 +806,11 @@ theorem einsteinEquation_of_projectorObstruction_source
     (hEin : IsEinsteinKaehlerAtWith c R Kgeo x) :
     EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CIK.chiralScale)) Λ κ
       (anomalyStressEnergyAt Kgeo x CIK.chiralScale) := by
-  change EinsteinEquationAt R Kgeo x
-    (2 * (c + Λ - κ * CIK.toInverseKernel.chiralScale)) Λ κ
-    (anomalyStressEnergyAt Kgeo x CIK.toInverseKernel.chiralScale)
-  exact ConformalInference.einsteinEquation_of_projectorObstruction_source
-    (CI := InfoGeometry.Canonical.ConformalUnification.CertifiedInverseKernel.toConformalInference CIK)
-    (c := c) (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ) hEin
+  simpa [InfoGeometry.Canonical.ConformalUnification.CertifiedInverseKernel.toConformalInference]
+    using
+      (ConformalInference.einsteinEquation_of_projectorObstruction_source
+        (CI := InfoGeometry.Canonical.ConformalUnification.CertifiedInverseKernel.toConformalInference CIK)
+        (c := c) (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ) hEin)
 
 end CertifiedInverseKernel
 
@@ -1361,12 +828,12 @@ theorem einsteinEquation_of_projectorObstruction_source
     EinsteinEquationAt R Kgeo x
         (2 * (c + Λ - κ * CCI.toConformalInference.chiralScale)) Λ κ
         (anomalyStressEnergyAt Kgeo x CCI.toConformalInference.chiralScale) := by
-  change EinsteinEquationAt R Kgeo x
-    (2 * (c + Λ - κ * CCI.toConformalInference.toInverseKernel.chiralScale)) Λ κ
-    (anomalyStressEnergyAt Kgeo x CCI.toConformalInference.toInverseKernel.chiralScale)
-  exact CertifiedInverseKernel.einsteinEquation_of_projectorObstruction_source
-    (CIK := CCI.toCertifiedInverseKernel)
-    (c := c) (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ) hEin
+  simpa [InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference.toCertifiedInverseKernel,
+      InfoGeometry.Canonical.ConformalUnification.CertifiedInverseKernel.toConformalInference]
+    using
+      (CertifiedInverseKernel.einsteinEquation_of_projectorObstruction_source
+        (CIK := CCI.toCertifiedInverseKernel)
+        (c := c) (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ) hEin)
 
 end CertifiedConformalInference
 

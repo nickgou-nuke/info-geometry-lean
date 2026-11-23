@@ -1,0 +1,3 @@
+command=timeout 420s ~/.elan/bin/lake build -R
+exit_code=1
+log=/home/goutev/repos/info-geometry-lean-fusion-migrate/artifacts/hermes_loop/heartbeat/tmp/heartbeat_20260601_193337_lake_build_R.log

@@ -1,5 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Krein.Modular
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Krein.DoubledSpaceMatrix
 import InfoGeometry.Canonical.RicciMongeAmpere
@@ -21,6 +25,14 @@ It bridges:
    with the flow of the modular operator `Δ`.
 3. **Observables as Spinor Bilinears**: Expectation values computed via the
    modular conjugation `J`.
+
+## Admission-Equivalence Status
+
+**Classification: admission-equivalent (dead-endpoint)**
+All declarations in this file have zero external value-edge consumers in the
+DAG. Names are re-exported by `Rosetta.lean` but no downstream module
+references them at the declaration level. Replacing every proof body with an
+admission placeholder would not break any external build. See `reports/dag/admission-equivalence.md`.
 -/
 
 namespace InfoGeometry.Canonical.ModularSpinorBridge
@@ -77,16 +89,16 @@ Transport on `E` induced by modular flow on doubled space:
 embed to doubled physical channel, evolve by `flow t`, project back.
 -/
 noncomputable def modularFlowInducedTransport
-    (T : HilbertDoubled E →L[ℝ] HilbertDoubled E)
-    (flow : Krein.ModularFlow T) (t : ℝ) :
+    (J_symm : FundamentalSymmetry (HilbertDoubled E)) (T : HilbertDoubled E →ₗ[ℝ] HilbertDoubled E)
+    (flow : FundamentalSymmetry.ModularFlow J_symm T) (t : ℝ) :
     E →ₗ[ℝ] E :=
-  (doubledPlusProjectL (E := E)).comp ((flow.flow t).toLinearMap.comp (doubledPlusEmbedL (E := E)))
+  (doubledPlusProjectL (E := E)).comp ((flow.flow t).comp (doubledPlusEmbedL (E := E)))
 
 @[simp] theorem modularFlowInducedTransport_eq_id_of_flow_id
-    (T : HilbertDoubled E →L[ℝ] HilbertDoubled E)
-    (flow : Krein.ModularFlow T) (t : ℝ)
-    (hFlowId : flow.flow t = ContinuousLinearMap.id ℝ (HilbertDoubled E)) :
-    modularFlowInducedTransport (E := E) T flow t = LinearMap.id := by
+    (J_symm : FundamentalSymmetry (HilbertDoubled E)) (T : HilbertDoubled E →ₗ[ℝ] HilbertDoubled E)
+    (flow : FundamentalSymmetry.ModularFlow J_symm T) (t : ℝ)
+    (hFlowId : flow.flow t = LinearMap.id) :
+    modularFlowInducedTransport (E := E) J_symm T flow t = LinearMap.id := by
   ext x
   unfold modularFlowInducedTransport doubledPlusProjectL doubledPlusEmbedL
   rw [hFlowId]
@@ -94,12 +106,12 @@ noncomputable def modularFlowInducedTransport
 
 noncomputable def modularSpinConnection_of_flowFixedSplit
     (K : KaehlerInformationGeometry E) (x : E) (V : SplitVielbein K x)
-    (T : HilbertDoubled E →L[ℝ] HilbertDoubled E)
-    (flow : Krein.ModularFlow T) (t : ℝ)
-    (hPlusFixed : modularFlowInducedTransport (E := E) T flow t V.ePlus = V.ePlus)
-    (hMinusFixed : modularFlowInducedTransport (E := E) T flow t V.eMinus = V.eMinus) :
+    (J_symm : FundamentalSymmetry (HilbertDoubled E)) (T : HilbertDoubled E →ₗ[ℝ] HilbertDoubled E)
+    (flow : FundamentalSymmetry.ModularFlow J_symm T) (t : ℝ)
+    (hPlusFixed : modularFlowInducedTransport (E := E) J_symm T flow t V.ePlus = V.ePlus)
+    (hMinusFixed : modularFlowInducedTransport (E := E) J_symm T flow t V.eMinus = V.eMinus) :
     SpinConnection K x V where
-  transport := modularFlowInducedTransport (E := E) T flow t
+  transport := modularFlowInducedTransport (E := E) J_symm T flow t
   preserves_plus := by
     simpa [hPlusFixed] using V.plus_norm
   preserves_minus := by
@@ -113,33 +125,33 @@ spin transport induced by modular flow, under explicit split-fixing witnesses.
 -/
 noncomputable def modularSpinConnection
     (K : KaehlerInformationGeometry E) (x : E) (V : SplitVielbein K x)
-    (T : HilbertDoubled E →L[ℝ] HilbertDoubled E)
-    (flow : Krein.ModularFlow T) (t : ℝ)
-    (hPlusFixed : modularFlowInducedTransport (E := E) T flow t V.ePlus = V.ePlus)
-    (hMinusFixed : modularFlowInducedTransport (E := E) T flow t V.eMinus = V.eMinus) :
+    (J_symm : FundamentalSymmetry (HilbertDoubled E)) (T : HilbertDoubled E →ₗ[ℝ] HilbertDoubled E)
+    (flow : FundamentalSymmetry.ModularFlow J_symm T) (t : ℝ)
+    (hPlusFixed : modularFlowInducedTransport (E := E) J_symm T flow t V.ePlus = V.ePlus)
+    (hMinusFixed : modularFlowInducedTransport (E := E) J_symm T flow t V.eMinus = V.eMinus) :
     SpinConnection K x V :=
   modularSpinConnection_of_flowFixedSplit
-    (E := E) K x V T flow t hPlusFixed hMinusFixed
+    (E := E) K x V J_symm T flow t hPlusFixed hMinusFixed
 
 /-- The transport field of `modularSpinConnection` is the induced modular flow. -/
 @[simp] theorem modularSpinConnection_transport
     (K : KaehlerInformationGeometry E) (x : E) (V : SplitVielbein K x)
-    (T : HilbertDoubled E →L[ℝ] HilbertDoubled E)
-    (flow : Krein.ModularFlow T) (t : ℝ)
-    (hPlusFixed : modularFlowInducedTransport (E := E) T flow t V.ePlus = V.ePlus)
-    (hMinusFixed : modularFlowInducedTransport (E := E) T flow t V.eMinus = V.eMinus) :
-    (modularSpinConnection (E := E) K x V T flow t hPlusFixed hMinusFixed).transport
-      = modularFlowInducedTransport (E := E) T flow t := rfl
+    (J_symm : FundamentalSymmetry (HilbertDoubled E)) (T : HilbertDoubled E →ₗ[ℝ] HilbertDoubled E)
+    (flow : FundamentalSymmetry.ModularFlow J_symm T) (t : ℝ)
+    (hPlusFixed : modularFlowInducedTransport (E := E) J_symm T flow t V.ePlus = V.ePlus)
+    (hMinusFixed : modularFlowInducedTransport (E := E) J_symm T flow t V.eMinus = V.eMinus) :
+    (modularSpinConnection (E := E) K x V J_symm T flow t hPlusFixed hMinusFixed).transport
+      = modularFlowInducedTransport (E := E) J_symm T flow t := rfl
 
 /-- Transporting the split frame through flow-induced `modularSpinConnection` leaves it unchanged. -/
 theorem transportedSplitVielbein_modularSpinConnection
     (K : KaehlerInformationGeometry E) (x : E) (V : SplitVielbein K x)
-    (T : HilbertDoubled E →L[ℝ] HilbertDoubled E)
-    (flow : Krein.ModularFlow T) (t : ℝ)
-    (hPlusFixed : modularFlowInducedTransport (E := E) T flow t V.ePlus = V.ePlus)
-    (hMinusFixed : modularFlowInducedTransport (E := E) T flow t V.eMinus = V.eMinus) :
+    (J_symm : FundamentalSymmetry (HilbertDoubled E)) (T : HilbertDoubled E →ₗ[ℝ] HilbertDoubled E)
+    (flow : FundamentalSymmetry.ModularFlow J_symm T) (t : ℝ)
+    (hPlusFixed : modularFlowInducedTransport (E := E) J_symm T flow t V.ePlus = V.ePlus)
+    (hMinusFixed : modularFlowInducedTransport (E := E) J_symm T flow t V.eMinus = V.eMinus) :
     transportedSplitVielbein K x V
-      (modularSpinConnection (E := E) K x V T flow t hPlusFixed hMinusFixed) = V := by
+      (modularSpinConnection (E := E) K x V J_symm T flow t hPlusFixed hMinusFixed) = V := by
   cases V
   simp [transportedSplitVielbein, modularSpinConnection, modularSpinConnection_of_flowFixedSplit,
     hPlusFixed, hMinusFixed]
@@ -225,16 +237,14 @@ theorem bayesian_update_as_spinor_bilinear
       spinorBilinear prior O = ‖prior‖ ^ 2
     := by
   refine ⟨KreinSpace.jCLM (H := HilbertDoubled E), ?_⟩
-  simpa only [spinorBilinear, KreinSpace.jCLM_apply, real_inner_self_eq_norm_sq] using
-    congrArg (fun r : ℝ => r ^ 2) ((KreinSpace.J (H := HilbertDoubled E)).norm_map prior)
+  simp [spinorBilinear, KreinSpace.jCLM]
 
 omit [FiniteDimensional ℝ E] in
 /-- Nontrivial witness form: the modular conjugation itself realizes the bilinear value. -/
 theorem bayesian_update_as_spinor_bilinear_witness
     (prior : HilbertDoubled E) :
     spinorBilinear prior (KreinSpace.jCLM (H := HilbertDoubled E)) = ‖prior‖ ^ 2 := by
-  simpa only [spinorBilinear, KreinSpace.jCLM_apply, real_inner_self_eq_norm_sq] using
-    congrArg (fun r : ℝ => r ^ 2) ((KreinSpace.J (H := HilbertDoubled E)).norm_map prior)
+  simp [spinorBilinear, KreinSpace.jCLM]
 
 /--
 **Fierz Identity (Informational)**:

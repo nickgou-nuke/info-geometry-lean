@@ -1,0 +1,3 @@
+exit_code=124
+command=timeout 420s lake build -R
+log=/home/goutev/repos/info-geometry-lean-fusion-migrate/artifacts/hermes_loop/heartbeat/tmp/heartbeat_20260601_061828_lake_build_R.log

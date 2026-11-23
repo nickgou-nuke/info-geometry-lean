@@ -1,0 +1,75 @@
+{
+  "packet_id": "EXT-20260422-152911",
+  "stage": "create:raw",
+  "timestamp": "2026-04-22T15:29:11+00:00",
+  "prompt_hash": "4895e2a5ddfceb6849d58588cc7d36a3729f508e509aafc8aa71a488a4dc1623",
+  "command": [
+    "tools/infra/injection_create_packet.py",
+    "--source-type",
+    "manual",
+    "--source-ref",
+    "chat-pasted-hive-md",
+    "--title",
+    "Pasted hive.md architecture spec (Hermes MotherBee / Arango / Lean hive)",
+    "--raw-text",
+    "User pasted the contents of hive.md directly in chat. The document proposes a Chiral Causal Hive / Hive Logos architecture with: ArangoDB causal manifold (ThoughtNodes/Morphisms, then later UnconsciousStream/InfoNodes/DiamondFossils); Lean 4 LSP / InfoTree extraction with De Bruijn hashing; Hermes / MotherBee orchestration; OpenShell/NeMoClaw sandboxed workers; worker queue / tasking protocol; Answer protocol; React Hermes Lens dashboard; Local-vs-global metabolic membranes; DeadEndMotifs / Dirac Sea of failed antiproofs; dual exact/shape hashes; candidate verifier / hive_try_const and hive_annihilate tactics; Rust middleware / semantic firewall; hybrid symbolic+dense V-layer retrieval; Transformer-based analogy proposals; supergraded S+ S- V triality framing; and repeated emphasis that Lean kernel acceptance is the sole trust boundary for fossil promotion."
+  ],
+  "runtime": {
+    "python": "3.12.3 (main, Mar  3 2026, 12:15:18) [GCC 13.3.0]",
+    "platform": "Linux-6.17.0-1014-nvidia-aarch64-with-glibc2.39",
+    "env_models": {
+      "HERMES_MODEL": "",
+      "OPENAI_MODEL": "",
+      "GEMINI_MODEL": "",
+      "LLM_MODEL": ""
+    },
+    "versions": {
+      "git_rev_parse": {
+        "cmd": [
+          "git",
+          "rev-parse",
+          "HEAD"
+        ],
+        "exit": 0,
+        "stdout": "4c3fd9bda98f6b0cd1ff1a96d6766ac1034d2a0f",
+        "stderr": ""
+      },
+      "git_describe": {
+        "cmd": [
+          "git",
+          "describe",
+          "--always",
+          "--dirty"
+        ],
+        "exit": 0,
+        "stdout": "4c3fd9b-dirty",
+        "stderr": ""
+      },
+      "lake_version": {
+        "cmd": [
+          "lake",
+          "--version"
+        ],
+        "exit": 0,
+        "stdout": "Lake version 5.0.0-src+7e01a1b (Lean version 4.28.0)",
+        "stderr": "note: using toolchain 'leanprover/lean4:v4.28.0' from override set on '/home/goutev/repos/info-geometry-lean'\nnote: to remove: elan override unset --path '/home/goutev/repos/info-geometry-lean' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1"
+      },
+      "lean_version": {
+        "cmd": [
+          "lean",
+          "--version"
+        ],
+        "exit": 0,
+        "stdout": "Lean (version 4.28.0, aarch64-unknown-linux-gnu, commit 7e01a1bf5c70fc6167d49c345d3bf80596e9a79b, Release)",
+        "stderr": "note: using toolchain 'leanprover/lean4:v4.28.0' from override set on '/home/goutev/repos/info-geometry-lean'\nnote: to remove: elan override unset --path '/home/goutev/repos/info-geometry-lean' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1"
+      }
+    }
+  },
+  "result": {
+    "ok": true
+  },
+  "extra": {
+    "lock_wait_sec": 4.624016582965851e-06,
+    "lane": "raw"
+  }
+}

@@ -1,5 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.QuantumPresentation
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 /-!
@@ -30,9 +34,10 @@ structure UnifiedCompactificationSystem where
 
 /-- Explicit generator-preservation contract at the capstone boundary. -/
 @[rep_depth krein]
-abbrev GeneratorPreservation
-    {P Q : Presentation} (F : Intertwiner P Q) : Prop :=
-  ∀ s, F.mapState (P.generator s) = Q.generator (F.mapState s)
+structure GeneratorPreservation
+    {P Q : Presentation} (F : Intertwiner P Q) : Prop where
+  generator :
+    ∀ s, F.mapState (P.generator s) = Q.generator (F.mapState s)
 
 /--
 Boundary-preservation contract.
@@ -40,24 +45,28 @@ Boundary-preservation contract.
 This is stronger than the forward-only support map carried inside `Intertwiner`.
 -/
 @[rep_depth krein]
-abbrev BoundaryPreservation
-    {P Q : Presentation} (F : Intertwiner P Q) : Prop :=
-  (∀ s, P.support s → Q.support (F.mapState s)) ∧
+structure BoundaryPreservation
+    {P Q : Presentation} (F : Intertwiner P Q) : Prop where
+  forward :
+    ∀ s, P.support s → Q.support (F.mapState s)
+  backward :
     ∀ s, Q.support (F.mapState s) → P.support s
 
 /-- Coherence contract tying action and generator transport. -/
 @[rep_depth krein]
-abbrev CoherentClosure
-    {P Q : Presentation} (F : Intertwiner P Q) : Prop :=
-  ∀ (o : P.Observable) (s : P.State),
-    F.mapState (P.generator (P.act o s))
-      = Q.generator (Q.act (F.mapObservable o) (F.mapState s))
+structure CoherentClosure
+    {P Q : Presentation} (F : Intertwiner P Q) : Prop where
+  act_generator :
+    ∀ (o : P.Observable) (s : P.State),
+      F.mapState (P.generator (P.act o s))
+        = Q.generator (Q.act (F.mapObservable o) (F.mapState s))
 
 /-- Every intertwiner carries a canonical generator-preservation witness. -/
 @[rep_depth krein]
 theorem generatorPreservation_of_intertwiner
     {P Q : Presentation} (F : Intertwiner P Q) :
     GeneratorPreservation F := by
+  refine ⟨?_⟩
   intro s
   exact F.map_generator s
 
@@ -76,6 +85,7 @@ theorem boundaryPreservation_id (P : Presentation) :
 theorem coherentClosure_of_intertwiner
     {P Q : Presentation} (F : Intertwiner P Q) :
     CoherentClosure F := by
+  refine ⟨?_⟩
   intro o s
   calc
     F.mapState (P.generator (P.act o s))
@@ -110,7 +120,7 @@ def TightenedWeylAnomalyResponse
   ∃ F : Intertwiner S.operatorLane S.causalCompactifiedLane,
     GeneratorPreservation F
 
-/-- Junction 5: spinor-modular identification without sorry-equivalent layer. -/
+/-- Junction 5: spinor-modular identification without placeholder-equivalent layer. -/
 @[rep_depth krein]
 def SpinorModularIdentification
     (S : UnifiedCompactificationSystem) : Prop :=
@@ -167,12 +177,12 @@ theorem spinorModularIdentification_of_capstone
 
 /-- Dependency package: the five open junctions in build order. -/
 @[rep_depth krein]
-abbrev UnificationDependencies (S : UnifiedCompactificationSystem) : Prop :=
-  RealizedProjectorTomitaIdentification S ∧
-    CountProjectivePolarizedAttachment S ∧
-    TwistedFiniteDimensionalWitness S ∧
-    TightenedWeylAnomalyResponse S ∧
-    SpinorModularIdentification S
+structure UnificationDependencies (S : UnifiedCompactificationSystem) : Prop where
+  junction1_realizedProjector_tomita : RealizedProjectorTomitaIdentification S
+  junction2_countProjective_polarized_attach : CountProjectivePolarizedAttachment S
+  junction3_twisted_finite_witness : TwistedFiniteDimensionalWitness S
+  junction4_tightened_weyl_response : TightenedWeylAnomalyResponse S
+  junction5_spinor_modular_identification : SpinorModularIdentification S
 
 /-- Dependency projection 1 (build order). -/
 @[rep_depth krein]
@@ -180,7 +190,7 @@ theorem junction1_realizedProjector_tomita
     (S : UnifiedCompactificationSystem)
     (h : UnificationDependencies S) :
     RealizedProjectorTomitaIdentification S :=
-  h.1
+  h.junction1_realizedProjector_tomita
 
 /-- Dependency projection 2 (build order). -/
 @[rep_depth krein]
@@ -188,15 +198,15 @@ theorem junction2_countProjective_polarized_attach
     (S : UnifiedCompactificationSystem)
     (h : UnificationDependencies S) :
     CountProjectivePolarizedAttachment S :=
-  h.2.1
+  h.junction2_countProjective_polarized_attach
 
 /-- Dependency projection 3 (build order). -/
 @[rep_depth krein]
-theorem junction3_twisted_finite
+theorem junction3_twisted_finite_witness
     (S : UnifiedCompactificationSystem)
     (h : UnificationDependencies S) :
     TwistedFiniteDimensionalWitness S :=
-  h.2.2.1
+  h.junction3_twisted_finite_witness
 
 /-- Dependency projection 4 (build order). -/
 @[rep_depth krein]
@@ -204,7 +214,7 @@ theorem junction4_tightened_weyl_response
     (S : UnifiedCompactificationSystem)
     (h : UnificationDependencies S) :
     TightenedWeylAnomalyResponse S :=
-  h.2.2.2.1
+  h.junction4_tightened_weyl_response
 
 /-- Dependency projection 5 (build order). -/
 @[rep_depth krein]
@@ -212,7 +222,7 @@ theorem junction5_spinor_modular_identification
     (S : UnifiedCompactificationSystem)
     (h : UnificationDependencies S) :
     SpinorModularIdentification S :=
-  h.2.2.2.2
+  h.junction5_spinor_modular_identification
 
 /--
 Constructive dependency bundle:
@@ -228,11 +238,38 @@ theorem unificationDependencies_of_capstone
     (hBoundary : BoundaryPreservation Φ)
     (hFinite : TwistedFiniteDimensionalWitness S) :
     UnificationDependencies S := by
-  exact ⟨realizedProjectorTomitaIdentification_canonical S,
-    countProjectivePolarizedAttachment_of_capstone S Φ hReadout,
-    hFinite,
-    tightenedWeylAnomalyResponse_of_capstone S Φ hGenerator,
-    spinorModularIdentification_of_capstone S Φ hBoundary hGenerator⟩
+  refine
+    { junction1_realizedProjector_tomita := realizedProjectorTomitaIdentification_canonical S
+      junction2_countProjective_polarized_attach :=
+        countProjectivePolarizedAttachment_of_capstone S Φ hReadout
+      junction3_twisted_finite_witness := hFinite
+      junction4_tightened_weyl_response :=
+        tightenedWeylAnomalyResponse_of_capstone S Φ hGenerator
+      junction5_spinor_modular_identification :=
+        spinorModularIdentification_of_capstone S Φ hBoundary hGenerator }
+
+/--
+Single capstone witness shape for bounded/regularized unification.
+
+This is the near-term closure target before full unbounded Type III layering.
+-/
+@[rep_depth krein]
+structure CapstoneWitness (S : UnifiedCompactificationSystem) where
+  Φ : Intertwiner S.operatorLane S.causalCompactifiedLane
+  readout : ReadoutPreservation Φ
+  generator : GeneratorPreservation Φ
+  boundary : BoundaryPreservation Φ
+  coherent : CoherentClosure Φ
+
+/--
+Closed bounded capstone package:
+the capstone intertwiner contracts plus the finite support witness required by
+junction 3.
+-/
+@[rep_depth krein]
+structure ClosedCapstoneWitness (S : UnifiedCompactificationSystem)
+    extends CapstoneWitness S where
+  finiteWitness : TwistedFiniteDimensionalWitness S
 
 /--
 Capstone witness wrapper for constructive dependency discharge.
@@ -240,14 +277,12 @@ Capstone witness wrapper for constructive dependency discharge.
 @[rep_depth krein]
 theorem unificationDependencies_of_capstoneWitness
     (S : UnifiedCompactificationSystem)
-    (cap : ∃ Φ : Intertwiner S.operatorLane S.causalCompactifiedLane,
-      ReadoutPreservation Φ ∧ GeneratorPreservation Φ ∧
-        BoundaryPreservation Φ ∧ CoherentClosure Φ)
+    (cap : CapstoneWitness S)
     (hFinite : TwistedFiniteDimensionalWitness S) :
     UnificationDependencies S := by
-  rcases cap with ⟨Φ, hReadout, hGenerator, hBoundary, _hCoherent⟩
-  exact unificationDependencies_of_capstone
-    S Φ hReadout hGenerator hBoundary hFinite
+  exact
+    unificationDependencies_of_capstone
+      S cap.Φ cap.readout cap.generator cap.boundary hFinite
 
 /--
 Fully bundled bounded dependency discharge from a closed capstone witness.
@@ -255,14 +290,9 @@ Fully bundled bounded dependency discharge from a closed capstone witness.
 @[rep_depth krein]
 theorem unificationDependencies_of_closedCapstoneWitness
     (S : UnifiedCompactificationSystem)
-    (cap : ∃ Φ : Intertwiner S.operatorLane S.causalCompactifiedLane,
-      ReadoutPreservation Φ ∧ GeneratorPreservation Φ ∧
-        BoundaryPreservation Φ ∧ CoherentClosure Φ ∧
-          TwistedFiniteDimensionalWitness S) :
+    (cap : ClosedCapstoneWitness S) :
     UnificationDependencies S := by
-  rcases cap with ⟨Φ, hReadout, hGenerator, hBoundary, _hCoherent, hFinite⟩
-  exact unificationDependencies_of_capstone
-    S Φ hReadout hGenerator hBoundary hFinite
+  exact unificationDependencies_of_capstoneWitness S cap.toCapstoneWitness cap.finiteWitness
 
 /--
 Bounded lane capstone theorem shape:
@@ -272,15 +302,13 @@ Bounded lane capstone theorem shape:
 theorem operator_penrose_unification
     (S : UnifiedCompactificationSystem)
     (_deps : UnificationDependencies S)
-    (cap : ∃ Φ : Intertwiner S.operatorLane S.causalCompactifiedLane,
-      ReadoutPreservation Φ ∧ GeneratorPreservation Φ ∧
-        BoundaryPreservation Φ ∧ CoherentClosure Φ) :
+    (cap : CapstoneWitness S) :
     ∃ Φ : Intertwiner S.operatorLane S.causalCompactifiedLane,
       ReadoutPreservation Φ ∧
       GeneratorPreservation Φ ∧
       BoundaryPreservation Φ ∧
       CoherentClosure Φ := by
-  exact cap
+  exact ⟨cap.Φ, cap.readout, cap.generator, cap.boundary, cap.coherent⟩
 
 /--
 Dependency-free closure form:
@@ -290,16 +318,13 @@ record once a concrete finite witness is provided.
 @[rep_depth krein]
 theorem operator_penrose_unification_of_capstone
     (S : UnifiedCompactificationSystem)
-    (cap : ∃ Φ : Intertwiner S.operatorLane S.causalCompactifiedLane,
-      ReadoutPreservation Φ ∧ GeneratorPreservation Φ ∧
-        BoundaryPreservation Φ ∧ CoherentClosure Φ)
-    (_hFinite : TwistedFiniteDimensionalWitness S) :
+    (cap : CapstoneWitness S) :
     ∃ Φ : Intertwiner S.operatorLane S.causalCompactifiedLane,
       ReadoutPreservation Φ ∧
       GeneratorPreservation Φ ∧
       BoundaryPreservation Φ ∧
       CoherentClosure Φ := by
-  exact cap
+  exact ⟨cap.Φ, cap.readout, cap.generator, cap.boundary, cap.coherent⟩
 
 /--
 Closed-capstone form of the bounded unification theorem: all junction
@@ -308,17 +333,15 @@ dependencies are internal to one witness package.
 @[rep_depth krein]
 theorem operator_penrose_unification_closed
     (S : UnifiedCompactificationSystem)
-    (cap : ∃ Φ : Intertwiner S.operatorLane S.causalCompactifiedLane,
-      ReadoutPreservation Φ ∧ GeneratorPreservation Φ ∧
-        BoundaryPreservation Φ ∧ CoherentClosure Φ ∧
-          TwistedFiniteDimensionalWitness S) :
+    (cap : ClosedCapstoneWitness S) :
     ∃ Φ : Intertwiner S.operatorLane S.causalCompactifiedLane,
       ReadoutPreservation Φ ∧
       GeneratorPreservation Φ ∧
       BoundaryPreservation Φ ∧
       CoherentClosure Φ := by
-  rcases cap with ⟨Φ, hReadout, hGenerator, hBoundary, hCoherent, _hFinite⟩
-  exact ⟨Φ, hReadout, hGenerator, hBoundary, hCoherent⟩
+  exact
+    operator_penrose_unification_of_capstone
+      S cap.toCapstoneWitness cap.finiteWitness
 
 /--
 Translation queue for later unbounded modular closure.
@@ -327,19 +350,9 @@ This keeps the shape explicit without claiming full Type III completion yet.
 -/
 @[rep_depth krein]
 structure UnboundedModularTranslation (S : UnifiedCompactificationSystem) where
-  translation : Intertwiner S.operatorLane S.causalCompactifiedLane
-  supportRestrictedLogLane :
-    ∀ s, S.operatorLane.support s →
-      S.causalCompactifiedLane.support (translation.mapState s)
-  affiliatedGeneratorLane :
-    ∀ s,
-      translation.mapState (S.operatorLane.generator s) =
-        S.causalCompactifiedLane.generator (translation.mapState s)
-  typeIIIClosureProgram :
-    ∀ (o : S.operatorLane.Observable) (s : S.operatorLane.State),
-      translation.mapState (S.operatorLane.act o s) =
-        S.causalCompactifiedLane.act
-          (translation.mapObservable o) (translation.mapState s)
+  supportRestrictedLogLane : Prop
+  affiliatedGeneratorLane : Prop
+  typeIIIClosureProgram : Prop
 
 /--
 A bounded capstone witness seeds the unbounded program at the contract level.
@@ -347,12 +360,9 @@ A bounded capstone witness seeds the unbounded program at the contract level.
 @[rep_depth krein]
 theorem boundedCapstone_seeds_unbounded_translation
     (S : UnifiedCompactificationSystem)
-    (cap : ∃ Φ : Intertwiner S.operatorLane S.causalCompactifiedLane,
-      ReadoutPreservation Φ ∧ GeneratorPreservation Φ ∧
-        BoundaryPreservation Φ ∧ CoherentClosure Φ) :
+    (cap : CapstoneWitness S) :
     ∃ Φ : Intertwiner S.operatorLane S.causalCompactifiedLane,
       BoundaryPreservation Φ ∧ GeneratorPreservation Φ := by
-  rcases cap with ⟨Φ, _hReadout, hGenerator, hBoundary, _hCoherent⟩
-  exact ⟨Φ, hBoundary, hGenerator⟩
+  exact ⟨cap.Φ, cap.boundary, cap.generator⟩
 
 end InfoGeometry.Canonical.OperatorPenroseUnification

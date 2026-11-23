@@ -1,0 +1,23 @@
+# Independent source check of five audit reports
+
+Scope: HEAD-based inspection in the isolated `framework_verifier` worktree; no build, edits to Lean owners, graph refresh, or database writes. The main-worktree staged candidate is not part of this worktree's HEAD and is therefore excluded from source findings; its presence/state is not inferred from this checkout. Reports checked: the two Phase 1 reports and the three specialist reports in `gns_colimit_auditor`, `kms_state_auditor`, and `finite_representation_auditor` worktrees.
+
+## Source-grounded corrections and boundaries
+
+1. **Finite representations and native transition.** The exact declaration `bitWordMatrixStarRepresentation` belongs to the BitWord matrix carrier and has a `StarAlgHom` target in `BoundedL2Operator`. Its refinement theorem is for the BitWord-side `dyadicMatrixEmbedding`. It does not alone prove a commuting square with the native `cstarConcreteStep` (or `cstarConcreteMap`) after transport/reindexing. Keep this distinction: refinement is proved on its stated carrier; identification with the native bond remains unestablished by that theorem. The supplied reports correctly distinguish these claims. No broader absence assertion is warranted from the inspected declarations.
+
+2. **GNS maps, colimits, and surjectivity.** `FilteredGNSRepresentation` supplies state-restriction GNS maps and filtered isometric transitions/intertwining; an isometry is not generally onto. `FilteredGNSColimitRepresentation` starts with a supplied star-inductive cocone into an already supplied C*-algebra and state, and descends to the target GNS space; its stated descent results do not themselves give surjectivity or isometry. Separate results in `FilteredGNSRepresentedCStarTopology` concern a represented-range completion/equivalence and must not be silently attributed to `descendGNSColimit`. The Cantor `gaugeGNSHilbertColimit` specializes the finite matrix trace family to a Hilbert colimit; it is not thereby a full Cuntz C*-algebra GNS identification.
+
+3. **Finite-core versus full Cuntz KMS GNS.** The finite compatible normalized trace states on `CStarMatrixStage` and the associated finite-stage GNS Hilbert colimit are genuine, concretely stated results. They do not establish a state on a completed full Cuntz algebra, a full Cuntz KMS condition, or an identification with a Cuntz-tower GNS colimit. Generic Cuntz GNS infrastructure exists, but that does not instantiate it with this Cantor finite matrix tower or prove the missing comparison.
+
+4. **Algebraic `sigmaComplex` scope.** `Algebra/CuntzKMSCondition.lean` defines `sigmaComplex` on the algebraic Cuntz quotient `CuntzAlg n`, with quotient descent and generator scaling results. Its `KMSWeightDiagonal`/`kms_diagonal` conclusion is diagonal and unnormalized (the value on one is the partition function); this is not a normalized KMS state on a completed C*-algebra. A full completed C*-KMS assertion requires a common completed carrier, state, dynamics, and KMS boundary-condition proof. The KMS specialist report's distinction is correct.
+
+5. **Spatial state versus gauge state.** The spatial functional/state lives on the concrete bounded-operator carrier (with generated-subalgebra variants); the gauge kernel is separately defined on word pairs/finite algebraic data. The spatial cylinder theorem proves agreement on specified diagonal cylinder projections only. It does not establish off-diagonal word-monomial equality or equality of the resulting GNS representations. Neither finite matrix-unit gauge readout nor a spatial projection identity upgrades this restriction to equality of states on a common completed algebra.
+
+## Phase 1 verdict and limits
+
+The reports' central Phase 1 statement is source-supported: `cstarMatrixTraceStateFamily` is a compatible finite matrix trace family, and `CantorBernoulliGaugeFilteredGNSColimitBridge` connects it to the generic filtered Hilbert GNS colimit, including transition, density/completeness, and finite word/matrix-unit readouts. This is not a new full-Cuntz completion theorem. The candidate-QA report appropriately treats its staged diagonal L² bridge as outside the HEAD-based evidence; its stagewise maps must not be represented as a colimit map without the required transition naturality and descent theorem.
+
+## Verification caveat
+
+This is a source audit, not a Lean kernel/build certification. Findings are limited to the named owners and inspected declarations; in particular, lack of a theorem in a cited owner is not a repository-wide nonexistence claim. No proof or theorem is supplied by this report.

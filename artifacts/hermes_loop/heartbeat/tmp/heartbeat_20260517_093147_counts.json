@@ -1,0 +1,269 @@
+{
+  "raw_count": 73,
+  "standalone_count": 54,
+  "standalone_files": 20,
+  "top_files": [
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      16
+    ],
+    [
+      "lean/InfoGeometry/GrandUnification/SpectralThermalNormalization.lean",
+      7
+    ],
+    [
+      "lean/InfoGeometry/Lint/Pauli.lean",
+      4
+    ],
+    [
+      "lean/InfoGeometry/Meta/StrictDef.lean",
+      4
+    ],
+    [
+      "lean/InfoGeometry/Quantum/PrimeMajoranaOPE.lean",
+      3
+    ],
+    [
+      "lean/InfoGeometry/Meta/SocketTarget.lean",
+      3
+    ],
+    [
+      "lean/InfoGeometry/Meta/OwnerTarget.lean",
+      2
+    ],
+    [
+      "lean/InfoGeometry/Canonical/GaugeGroups.lean",
+      2
+    ],
+    [
+      "lean/InfoGeometry/Canonical/LeeYangAsanoDigest.lean",
+      2
+    ],
+    [
+      "lean/InfoGeometry/Singular/MoorePenrose.lean",
+      1
+    ]
+  ],
+  "priority_counts": {
+    "lean/InfoGeometry/OperatorAlgebra/IndividuatedBoundedTransform.lean": {
+      "exists": true,
+      "standalone_sorry": 0
+    },
+    "lean/InfoGeometry/OperatorAlgebra/ModularThermalState.lean": {
+      "exists": true,
+      "standalone_sorry": 0
+    },
+    "lean/InfoGeometry/Geometry/VerifiedCauchyKernel.lean": {
+      "exists": true,
+      "standalone_sorry": 0
+    },
+    "lean/InfoGeometry/Canonical/MeasureScaleShape.lean": {
+      "exists": true,
+      "standalone_sorry": 0
+    }
+  },
+  "raw_examples": [
+    [
+      "lean/InfoGeometry/Lint/Pauli.lean",
+      9,
+      "/-- Option to control the Pauli sorry linter. -/"
+    ],
+    [
+      "lean/InfoGeometry/Lint/Pauli.lean",
+      10,
+      "register_option linter.pauli.sorry : Bool := {"
+    ],
+    [
+      "lean/InfoGeometry/Lint/Pauli.lean",
+      12,
+      "descr := \"warn about declarations in Canonical namespace depending on sorryAx\""
+    ],
+    [
+      "lean/InfoGeometry/Lint/Pauli.lean",
+      32,
+      "unless linter.pauli.sorry.get (\u2190 getOptions) || linter.pauli.grandUnity.get (\u2190 getOptions) do"
+    ],
+    [
+      "lean/InfoGeometry/Lint/Pauli.lean",
+      54,
+      "if linter.pauli.sorry.get (\u2190 getOptions) then"
+    ],
+    [
+      "lean/InfoGeometry/Lint/Pauli.lean",
+      56,
+      "if axioms.contains ``sorryAx || axioms.contains \"admitAx\".toName then"
+    ],
+    [
+      "lean/InfoGeometry/Lint/Pauli.lean",
+      57,
+      "logWarningAt id m!\"[Pauli/Axiom-Surface Seal] {declName} depends on `sorryAx` or `admitAx`.\""
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      20,
+      "- `theorem ... := by sorry`  \u2014 mathematically stated, analytic proof deferred"
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      1571,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      1765,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      1790,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      1935,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      2058,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      2145,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      2248,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      2291,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      2352,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      2429,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      2445,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      2563,
+      "Mechanically verified: no `sorry`."
+    ]
+  ],
+  "standalone_examples": [
+    [
+      "lean/InfoGeometry/Lint/Pauli.lean",
+      9,
+      "/-- Option to control the Pauli sorry linter. -/"
+    ],
+    [
+      "lean/InfoGeometry/Lint/Pauli.lean",
+      10,
+      "register_option linter.pauli.sorry : Bool := {"
+    ],
+    [
+      "lean/InfoGeometry/Lint/Pauli.lean",
+      32,
+      "unless linter.pauli.sorry.get (\u2190 getOptions) || linter.pauli.grandUnity.get (\u2190 getOptions) do"
+    ],
+    [
+      "lean/InfoGeometry/Lint/Pauli.lean",
+      54,
+      "if linter.pauli.sorry.get (\u2190 getOptions) then"
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      20,
+      "- `theorem ... := by sorry`  \u2014 mathematically stated, analytic proof deferred"
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      1571,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      1765,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      1790,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      1935,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      2058,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      2145,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      2248,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      2291,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      2352,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      2429,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      2445,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      2563,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      2616,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      2630,
+      "Mechanically verified: no `sorry`."
+    ],
+    [
+      "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      2646,
+      "Mechanically verified: no `sorry`."
+    ]
+  ]
+}

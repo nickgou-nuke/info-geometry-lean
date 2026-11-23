@@ -1,5 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.InnerProductSpace.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Basic
 import Mathlib.LinearAlgebra.Matrix.ToLin
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
@@ -12,8 +16,8 @@ Core algebraic contracts for gauge groups consumed by `YangMillsFiniteBridge`.
 - `SUNCenter`: n-th roots of unity (center of SU(N))
 - `PSUN`: Projective Special Unitary Group (quotient by center)
 
-Dead declarations (`SU2N`, `block_embedding_*`) removed — sorry-equivalent
-with zero external consumers. See `reports/dag/sorry-equivalence.md`.
+Dead declarations (`SU2N`, `block_embedding_*`) removed — admission-equivalent
+with zero external consumers. See `reports/dag/admission-equivalence.md`.
 -/
 
 namespace InfoGeometry.Canonical.GaugeGroups

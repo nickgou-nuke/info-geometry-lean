@@ -1,0 +1,23 @@
+{
+  "schema": "leanprogress_to_hermes_manifest.v1",
+  "generated_at": "2026-04-18T21:05:18.941616+00:00",
+  "input": "/home/goutev/repos/info-geometry-lean/artifacts/leandojo/lean_progress_sample.jsonl",
+  "count": 3,
+  "packets": [
+    {
+      "packet_id": "ldj-progress-001-n-gcd-n-n-n",
+      "path": "/home/goutev/repos/info-geometry-lean/quarantine/hermes_memory/research_packets/ldj-progress-001-n-gcd-n-n-n.json",
+      "research_goal": "Investigate LeanProgress-guided proof attempt for goal: n : \u2115 \u22a2 gcd n n = n"
+    },
+    {
+      "packet_id": "ldj-progress-002-a-b-ha-a-b-b-a",
+      "path": "/home/goutev/repos/info-geometry-lean/quarantine/hermes_memory/research_packets/ldj-progress-002-a-b-ha-a-b-b-a.json",
+      "research_goal": "Investigate LeanProgress-guided proof attempt for goal: a b : \u211d, ha : a = b \u22a2 b = a"
+    },
+    {
+      "packet_id": "ldj-progress-003-g-group-g-h-g-g-h-h-g",
+      "path": "/home/goutev/repos/info-geometry-lean/quarantine/hermes_memory/research_packets/ldj-progress-003-g-group-g-h-g-g-h-h-g.json",
+      "research_goal": "Investigate LeanProgress-guided proof attempt for goal: G : Group, g h : G \u22a2 g * h = h * g"
+    }
+  ]
+}

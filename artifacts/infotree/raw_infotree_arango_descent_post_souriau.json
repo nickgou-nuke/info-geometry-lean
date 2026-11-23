@@ -1,0 +1,276 @@
+{
+  "schema": "info_geometry.raw_infotree_arango_descent_verification.v1",
+  "database": "infogeometry",
+  "ok": true,
+  "counts_ok": true,
+  "counts": {
+    "live": {
+      "raw_infotree_roots": 220,
+      "raw_infotree_nodes": 63450,
+      "raw_infotree_contexts": 9232,
+      "raw_infotree_payloads": 54218,
+      "raw_infotree_payload_fields": 349701,
+      "raw_infotree_decl_links": 821,
+      "raw_infotree_env_refs": 10366,
+      "raw_infotree_mctx_refs": 5501,
+      "raw_infotree_mctx_decls": 21257,
+      "raw_infotree_lctx_refs": 558488,
+      "raw_infotree_lctx_decls": 50525,
+      "raw_infotree_projection_leakage": 228392,
+      "raw_infotree_tree_edges": 63230,
+      "raw_infotree_root_node_edges": 63450,
+      "raw_infotree_node_context_edges": 9232,
+      "raw_infotree_node_payload_edges": 54218,
+      "raw_infotree_payload_field_edges": 349701,
+      "raw_infotree_node_decl_link_edges": 821,
+      "raw_infotree_node_env_ref_edges": 10366,
+      "raw_infotree_node_mctx_ref_edges": 5501,
+      "raw_infotree_mctx_decl_edges": 505392,
+      "raw_infotree_source_lctx_ref_edges": 558488,
+      "raw_infotree_lctx_ref_decl_edges": 7328395,
+      "raw_infotree_node_leakage_edges": 228392
+    },
+    "expected": {},
+    "missing_collections": [],
+    "mismatches": {},
+    "ok": true
+  },
+  "checks": {
+    "tree_edges_reference_existing_nodes": {
+      "ok": true,
+      "sample_count": 0,
+      "samples": []
+    },
+    "root_node_edges_reference_existing_roots_and_nodes": {
+      "ok": true,
+      "sample_count": 0,
+      "samples": []
+    },
+    "node_payload_rows_have_edges": {
+      "ok": true,
+      "sample_count": 0,
+      "samples": []
+    },
+    "payload_field_rows_have_edges": {
+      "ok": true,
+      "sample_count": 0,
+      "samples": []
+    },
+    "context_rows_have_node_edges": {
+      "ok": true,
+      "sample_count": 0,
+      "samples": []
+    },
+    "decl_link_rows_have_node_edges": {
+      "ok": true,
+      "sample_count": 0,
+      "samples": []
+    },
+    "env_ref_rows_have_node_edges": {
+      "ok": true,
+      "sample_count": 0,
+      "samples": []
+    },
+    "mctx_ref_rows_have_node_edges": {
+      "ok": true,
+      "sample_count": 0,
+      "samples": []
+    },
+    "mctx_decl_rows_have_mctx_ref_edges": {
+      "ok": true,
+      "sample_count": 0,
+      "samples": []
+    },
+    "mctx_lctx_refs_descend_from_mctx_decl": {
+      "ok": true,
+      "sample_count": 0,
+      "samples": []
+    },
+    "node_lctx_refs_descend_from_node": {
+      "ok": true,
+      "sample_count": 0,
+      "samples": []
+    },
+    "lctx_refs_descend_to_decl_rows": {
+      "ok": true,
+      "sample_count": 0,
+      "samples": []
+    },
+    "leakage_rows_have_node_edges": {
+      "ok": true,
+      "sample_count": 0,
+      "samples": []
+    }
+  },
+  "check_failures": [],
+  "tactic_state_descent": {
+    "tacticPayloadCount": 159,
+    "withBefore": 159,
+    "withAfter": 159,
+    "missingBefore": [],
+    "missingAfter": [],
+    "ok": true,
+    "skipped": false
+  },
+  "leakage": {
+    "total": 228392,
+    "by_field": [
+      {
+        "field": "term_expected_type_expr_graph",
+        "count": 37417
+      },
+      {
+        "field": "term_expr_graph",
+        "count": 37417
+      },
+      {
+        "field": "term_lctx",
+        "count": 37417
+      },
+      {
+        "field": "term_syntax_object",
+        "count": 37417
+      },
+      {
+        "field": "completion_id_expected_type_expr_graph",
+        "count": 10860
+      },
+      {
+        "field": "completion_id_lctx",
+        "count": 10860
+      },
+      {
+        "field": "completion_id_syntax_object",
+        "count": 10860
+      },
+      {
+        "field": "command_context_cmd_env",
+        "count": 5183
+      },
+      {
+        "field": "command_context_env",
+        "count": 5183
+      },
+      {
+        "field": "command_context_mctx",
+        "count": 5183
+      },
+      {
+        "field": "command_context_open_decls_structure",
+        "count": 5183
+      },
+      {
+        "field": "command_context_options_structure",
+        "count": 5183
+      },
+      {
+        "field": "macro_expansion_input_syntax_object",
+        "count": 2878
+      },
+      {
+        "field": "macro_expansion_lctx",
+        "count": 2878
+      },
+      {
+        "field": "macro_expansion_output_syntax_object",
+        "count": 2878
+      },
+      {
+        "field": "auto_implicit_expr_graph",
+        "count": 2629
+      },
+      {
+        "field": "completion_dot_expected_type_expr_graph",
+        "count": 986
+      },
+      {
+        "field": "completion_dot_term_expected_type_expr_graph",
+        "count": 986
+      },
+      {
+        "field": "completion_dot_term_expr_graph",
+        "count": 986
+      },
+      {
+        "field": "completion_dot_term_lctx",
+        "count": 986
+      },
+      {
+        "field": "completion_dot_term_syntax_object",
+        "count": 986
+      },
+      {
+        "field": "command_syntax_object",
+        "count": 557
+      },
+      {
+        "field": "partial_term_expected_type_expr_graph",
+        "count": 380
+      },
+      {
+        "field": "partial_term_lctx",
+        "count": 380
+      },
+      {
+        "field": "partial_term_syntax_object",
+        "count": 380
+      },
+      {
+        "field": "custom_dynamic_value",
+        "count": 344
+      },
+      {
+        "field": "completion_field_id_lctx",
+        "count": 258
+      },
+      {
+        "field": "completion_field_id_syntax_object",
+        "count": 258
+      },
+      {
+        "field": "field_lctx",
+        "count": 258
+      },
+      {
+        "field": "field_syntax_object",
+        "count": 258
+      },
+      {
+        "field": "field_value_expr_graph",
+        "count": 258
+      },
+      {
+        "field": "tactic_mctx_after",
+        "count": 159
+      },
+      {
+        "field": "tactic_mctx_before",
+        "count": 159
+      },
+      {
+        "field": "tactic_syntax_object",
+        "count": 159
+      },
+      {
+        "field": "completion_dot_id_expected_type_expr_graph",
+        "count": 59
+      },
+      {
+        "field": "completion_dot_id_lctx",
+        "count": 59
+      },
+      {
+        "field": "completion_dot_id_syntax_object",
+        "count": 59
+      },
+      {
+        "field": "completion_end_section_syntax_object",
+        "count": 48
+      },
+      {
+        "field": "completion_option_syntax_object",
+        "count": 3
+      }
+    ]
+  }
+}

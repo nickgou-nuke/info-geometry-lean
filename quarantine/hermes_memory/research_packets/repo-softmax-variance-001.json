@@ -1,0 +1,82 @@
+{
+  "packet_id": "repo-softmax-variance-001",
+  "created_at": "2026-04-19T06:02:00+00:00",
+  "research_goal": "Investigate a repo-native InfoGeometry proof corridor around the compiled theorem InfoGeometry.Analytic.deriv2_logSumExp_eq_softmaxVariance and its role as the local analytic bridge from log-sum-exp curvature to softmax variance.",
+  "allowed_sources": [
+    "files",
+    "arango",
+    "lean"
+  ],
+  "trusted_domains": [],
+  "provenance": {
+    "source": "Hermes.GraphGroundedRepoNativeTarget",
+    "state_path": "/home/goutev/repos/info-geometry-lean/artifacts/hermes_loop/gravity_context/manual-softmax-variance.json",
+    "models": {
+      "planner": "nemotron",
+      "research": "deepseek-prover-v2-7b-q8_0.gguf",
+      "auditor": "goedel-prover-sft-q8_0.gguf",
+      "verifier": "lean",
+      "writer": "codex-cli"
+    }
+  },
+  "evidence": [
+    {
+      "claim": "The compiled declaration graph contains InfoGeometry.Analytic.deriv2_logSumExp_eq_softmaxVariance as a theorem with source in InfoGeometry/ExponentialFamily/Analytic/Softmax.lean.",
+      "sources": [
+        "/home/goutev/repos/info-geometry-lean/artifacts/hermes_loop/gravity_context/manual-softmax-variance.json",
+        "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/ExponentialFamily/Analytic/Softmax.lean"
+      ],
+      "confidence": "high",
+      "evidence_summary": "Arango gravitational retrieval ranked the theorem first and attached source excerpt lines 248-252.",
+      "subquestion_id": "graph-neighbor-001"
+    },
+    {
+      "claim": "Nearby compiled neighbors include first derivative, second moment, and log-sum-exp variance lemmas in the same analytic module family.",
+      "sources": [
+        "/home/goutev/repos/info-geometry-lean/artifacts/hermes_loop/gravity_context/manual-softmax-variance.json"
+      ],
+      "confidence": "high",
+      "evidence_summary": "Retrieved neighbors include deriv_logSumExp_eq_softmaxMean, logSumExp_secondDeriv_eq_variance, softmaxMean_eq_logSumExpMean, and softmaxSecondMoment_eq_logSumExpSecondMoment.",
+      "subquestion_id": "graph-neighbor-002"
+    }
+  ],
+  "contradictions": [],
+  "candidate_invariants": [
+    "log-sum-exp second derivative is represented as the softmax variance",
+    "softmax mean and second moment are graph-adjacent compiled bridges to log-sum-exp moments"
+  ],
+  "forbidden_moves": [
+    "do not restate an already compiled theorem as new work",
+    "do not promote any generated theorem without lake verification",
+    "do not treat graph retrieval as proof admission",
+    "do not invoke Codex mutation unless a separate handoff gate explicitly permits it"
+  ],
+  "formalization_targets": [
+    {
+      "kind": "theorem-corridor",
+      "name": "InfoGeometry.Analytic.deriv2_logSumExp_eq_softmaxVariance",
+      "note": "Use as a repo-native proving corridor for graph-grounded planning and proof-specialist routing."
+    }
+  ],
+  "classification": {
+    "facts": [
+      "The target theorem is already compiled and source-backed.",
+      "The useful next action is not canonical mutation; it is proof-corridor analysis or proof-local tactic probing around adjacent lemmas."
+    ],
+    "interpretations": [
+      "This packet tests whether Hermes routes a repo-native graph-grounded target differently from mathlib toy goals.",
+      "The expected safe route is deepseek_proof or goedel_audit with execution disallowed."
+    ],
+    "metaphors": [],
+    "formalization_candidates": [
+      "Ask the proof-specialist lane to explain the minimal Lean dependency path from softmaxMean_eq_logSumExpMean and softmaxSecondMoment_eq_logSumExpSecondMoment to deriv2_logSumExp_eq_softmaxVariance.",
+      "Use lean_interact_wrapper.py only for isolated tactic/proof-state probes; use lake as the final gate."
+    ]
+  },
+  "handoff": {
+    "prompt_a_ready": true,
+    "requires_nemoclaw_note": true,
+    "requires_clawcode_gate": true
+  },
+  "status": "draft"
+}

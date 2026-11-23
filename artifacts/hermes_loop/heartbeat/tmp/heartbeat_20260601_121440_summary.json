@@ -1,0 +1,74 @@
+{
+  "run_id": "20260601_121440",
+  "timestamp": "2026-06-01T12:14:40+03:00",
+  "req_repo": "/home/goutev/repos/info-geometry-lean-fusion",
+  "live_repo": "/home/goutev/repos/info-geometry-lean",
+  "art_repo": "/home/goutev/repos/info-geometry-lean-fusion-migrate",
+  "commit_full": "82693ab783517bf07f8e22d383007ab97c852853",
+  "commit_short": "82693ab78351",
+  "worktree_status": "dirty",
+  "sorry_total": 114,
+  "priority": [
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/IndividuatedBoundedTransform.lean",
+      "exists": true,
+      "sorry_count": 0,
+      "module": "InfoGeometry.OperatorAlgebra.IndividuatedBoundedTransform"
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/ModularThermalState.lean",
+      "exists": true,
+      "sorry_count": 0,
+      "module": "InfoGeometry.OperatorAlgebra.ModularThermalState"
+    },
+    {
+      "path": "lean/InfoGeometry/Geometry/VerifiedCauchyKernel.lean",
+      "exists": true,
+      "sorry_count": 0,
+      "module": "InfoGeometry.Geometry.VerifiedCauchyKernel"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/MeasureScaleShape.lean",
+      "exists": true,
+      "sorry_count": 0,
+      "module": "InfoGeometry.Canonical.MeasureScaleShape"
+    }
+  ],
+  "selected_module": {
+    "path": "lean/InfoGeometry/OperatorAlgebra/IndividuatedBoundedTransform.lean",
+    "module": "InfoGeometry.OperatorAlgebra.IndividuatedBoundedTransform"
+  },
+  "edit_applied": false,
+  "edit_desc": "no change",
+  "revert_needed": false,
+  "module_exit": 0,
+  "module_seconds": 5.18,
+  "build_exit": 1,
+  "build_seconds": 29.55,
+  "failed_modules": [
+    "InfoGeometry.Canonical.MasterSynthesis",
+    "InfoGeometry.Canonical.ObserverDefect"
+  ],
+  "error_lines": [
+    "error: lean/InfoGeometry/Canonical/MasterSynthesis.lean:7:74: Function expected at",
+    "error: lean/InfoGeometry/Canonical/MasterSynthesis.lean:11:50: failed to synthesize instance of type class",
+    "error: lean/InfoGeometry/Canonical/MasterSynthesis.lean:11:71: failed to synthesize instance of type class",
+    "error: lean/InfoGeometry/Canonical/MasterSynthesis.lean:13:47: failed to synthesize instance of type class",
+    "error: lean/InfoGeometry/Canonical/MasterSynthesis.lean:13:68: failed to synthesize instance of type class",
+    "error: lean/InfoGeometry/Canonical/MasterSynthesis.lean:15:29: failed to synthesize instance of type class",
+    "error: lean/InfoGeometry/Canonical/MasterSynthesis.lean:15:43: failed to synthesize instance of type class",
+    "error: lean/InfoGeometry/Canonical/MasterSynthesis.lean:19:51: failed to synthesize instance of type class",
+    "error: lean/InfoGeometry/Canonical/MasterSynthesis.lean:19:72: failed to synthesize instance of type class",
+    "error: lean/InfoGeometry/Canonical/MasterSynthesis.lean:20:48: failed to synthesize instance of type class",
+    "error: lean/InfoGeometry/Canonical/MasterSynthesis.lean:20:69: failed to synthesize instance of type class",
+    "error: lean/InfoGeometry/Canonical/MasterSynthesis.lean:21:30: failed to synthesize instance of type class"
+  ],
+  "artifact_paths": {
+    "module_log": "artifacts/hermes_loop/heartbeat/tmp/heartbeat_20260601_121440_module_IndividuatedBoundedTransform.log",
+    "module_seconds": "artifacts/hermes_loop/heartbeat/tmp/heartbeat_20260601_121440_module_IndividuatedBoundedTransform.seconds",
+    "module_exit": "artifacts/hermes_loop/heartbeat/tmp/heartbeat_20260601_121440_module_IndividuatedBoundedTransform.exit",
+    "build_log": "artifacts/hermes_loop/heartbeat/tmp/heartbeat_20260601_121440_lake_build_R.log",
+    "build_seconds": "artifacts/hermes_loop/heartbeat/tmp/heartbeat_20260601_121440_lake_build_R.seconds",
+    "build_exit": "artifacts/hermes_loop/heartbeat/tmp/heartbeat_20260601_121440_lake_build_R.exit"
+  }
+}

@@ -8,6 +8,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 import InfoGeometry.Algebra.Zorn.SplitQuaternionCore
 import InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes
+import Mathlib.LinearAlgebra.BilinearForm.Orthogonal
 
 /-!
 # The Witt form in genuine circular Peirce coordinates
@@ -95,6 +96,10 @@ theorem circularPeircePolar_symm (x y : Coord) :
     circularPeircePolar x y = circularPeircePolar y x := by
   simp [circularPeircePolar]
   ring
+
+theorem circularPeircePolar_smul_right (r : ℝ) (x y : Coord) :
+    circularPeircePolar x (r • y) = r * circularPeircePolar x y := by
+  rw [circularPeircePolar_symm x (r • y), circularPeircePolar_smul_left, circularPeircePolar_symm y x]
 
 /-- The positive circular sector, supported on coordinates `0,1,2,3`. -/
 def positiveCircularSubmodule : Submodule ℝ Coord where
@@ -387,5 +392,74 @@ theorem circularWittQuadratic_coordinateEquiv_zMul
       circularWittQuadratic_coordinateEquiv_eq_detZ,
       circularWittQuadratic_coordinateEquiv_eq_detZ]
   exact realZornCompositionDatum.detZ_mul X Y
+
+/-- The bilinear form underlying the circular Peirce polar form. -/
+def circularPeirceBilin : LinearMap.BilinForm ℝ Coord where
+  toFun x :=
+    { toFun := circularPeircePolar x
+      map_add' := circularPeircePolar_add_right x
+      map_smul' := by
+        intro r y
+        simp [circularPeircePolar_smul_right] }
+  map_add' := by
+    intro x y
+    ext z
+    simp [circularPeircePolar_add_left]
+  map_smul' := by
+    intro r x
+    ext z
+    simp [circularPeircePolar_smul_left]
+
+/-- Nondegeneracy of the circular Peirce bilinear form. -/
+theorem circularPeirceBilin_nondegenerate : circularPeirceBilin.Nondegenerate := by
+  constructor
+  · intro x hx
+    apply circularPairing_nondegenerate_left
+    intro y
+    exact hx y
+  · intro y hy
+    apply circularPairing_nondegenerate_right
+    intro x
+    exact hy x
+
+/-- The positive circular Witt sector has dimension four. -/
+theorem positiveCircularSubmodule_finrank :
+    Module.finrank ℝ positiveCircularSubmodule = 4 := by
+  rw [positiveCircularSubmodule_eq_range]
+  rw [LinearMap.finrank_range_of_inj positiveCircularEmbedding_injective]
+  simp
+
+/-- Maximality of a totally isotropic subspace in the eight-dimensional circular
+Peirce Witt space: its dimension is at most four. This closes `R2-Gap2`. -/
+theorem isTotallyIsotropic_finrank_le_four (W : Submodule ℝ Coord)
+    (hW : ∀ x ∈ W, ∀ y ∈ W, circularPeircePolar x y = 0) :
+    Module.finrank ℝ W ≤ 4 := by
+  have hle : W ≤ circularPeirceBilin.orthogonal W := by
+    intro x hx
+    rw [LinearMap.BilinForm.mem_orthogonal_iff]
+    intro y hy
+    exact hW y hy x hx
+  have hdim :
+      Module.finrank ℝ W ≤ Module.finrank ℝ (circularPeirceBilin.orthogonal W) := by
+    exact LinearMap.finrank_le_finrank_of_injective
+      (f := Submodule.inclusion hle) (by
+        intro x y h
+        have h' : (x : Coord) = (y : Coord) :=
+          congrArg (fun z : circularPeirceBilin.orthogonal W => (z : Coord)) h
+        exact Subtype.ext h')
+  rw [LinearMap.BilinForm.finrank_orthogonal circularPeirceBilin_nondegenerate W] at hdim
+  have hV : Module.finrank ℝ Coord = 8 := by
+    simp [Coord]
+  rw [hV] at hdim
+  omega
+
+/-- A totally isotropic subspace containing the positive sector equals it. -/
+theorem totallyIsotropic_containing_positive_eq (W : Submodule ℝ Coord)
+    (hW : ∀ x ∈ W, ∀ y ∈ W, circularPeircePolar x y = 0)
+    (hpos : positiveCircularSubmodule ≤ W) :
+    W = positiveCircularSubmodule := by
+  exact (Submodule.eq_of_le_of_finrank_le hpos (by
+    rw [positiveCircularSubmodule_finrank]
+    exact isTotallyIsotropic_finrank_le_four W hW)).symm
 
 end InfoGeometry.Lie.SplitOctonionCircularWittForm

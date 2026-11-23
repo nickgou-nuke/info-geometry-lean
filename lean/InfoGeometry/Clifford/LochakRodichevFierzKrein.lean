@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import Mathlib.Basic.Complex.Basic
+import Mathlib.Analysis.Quaternion
 import InfoGeometry.Clifford.DaviauChiralPeirceSU2
 import InfoGeometry.Clifford.DeBroglieDaviauPhotonProcaFusion
 
@@ -570,6 +571,59 @@ def realWeylUnitQuaternionTransform (a b c d : ℝ) (x : Fin 4 → ℝ) : Fin 4 
     b * x 0 + a * x 1 + d * x 2 + c * x 3,
     -c * x 0 - d * x 1 + a * x 2 + b * x 3,
     d * x 0 - c * x 1 - b * x 2 + a * x 3]
+
+/-- The real unit-quaternion action on one Weyl sector, written through its four real
+coordinates and the native Hamilton product on `Quaternion ℝ`. -/
+def realWeylQuaternionAction (q : Quaternion ℝ) (x : Fin 4 → ℝ) : Fin 4 → ℝ :=
+  realWeylUnitQuaternionTransform q.re q.imI q.imJ q.imK x
+
+/-- The coordinate transformation is a representation of the native real quaternion product. -/
+theorem realWeylQuaternionAction_mul (q r : Quaternion ℝ) (x : Fin 4 → ℝ) :
+    realWeylQuaternionAction q (realWeylQuaternionAction r x) =
+      realWeylQuaternionAction (q * r) x := by
+  ext i
+  fin_cases i <;>
+    simp [realWeylQuaternionAction, realWeylUnitQuaternionTransform,
+      Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul, Quaternion.imK_mul] <;>
+    ring
+
+/-- The native real quaternion norm squared is multiplicative. -/
+theorem realQuaternion_normSq_mul (q r : Quaternion ℝ) :
+    Quaternion.normSq (q * r) = Quaternion.normSq q * Quaternion.normSq r := by
+  rw [Quaternion.normSq_eq_norm_mul_self, norm_mul,
+    Quaternion.normSq_eq_norm_mul_self]
+  ring
+
+/-- Unit norm is closed under the product used by the Weyl-sector action. -/
+theorem realQuaternion_normSq_mul_eq_one {q r : Quaternion ℝ}
+    (hq : Quaternion.normSq q = 1) (hr : Quaternion.normSq r = 1) :
+    Quaternion.normSq (q * r) = 1 := by
+  rw [realQuaternion_normSq_mul, hq, hr]
+  norm_num
+
+/-- The identity quaternion acts identically on real Weyl coordinates. -/
+theorem realWeylQuaternionAction_one (x : Fin 4 → ℝ) :
+    realWeylQuaternionAction 1 x = x := by
+  ext i
+  fin_cases i <;>
+    simp [realWeylQuaternionAction, realWeylUnitQuaternionTransform]
+
+/-- A norm-one quaternion acts invertibly; its inverse action is conjugate
+quaternion multiplication. -/
+theorem realWeylQuaternionAction_star_inverse (q : Quaternion ℝ)
+    (hq : Quaternion.normSq q = 1) (x : Fin 4 → ℝ) :
+    realWeylQuaternionAction (star q) (realWeylQuaternionAction q x) = x ∧
+    realWeylQuaternionAction q (realWeylQuaternionAction (star q) x) = x := by
+  have hstar : Quaternion.normSq (star q) = 1 := by rw [Quaternion.normSq_star, hq]
+  have hqstar : q * star q = 1 := by
+    rw [Quaternion.self_mul_star, hq]
+    simp
+  have hstarq : star q * q = 1 := by
+    rw [Quaternion.star_mul_self, hq]
+    simp
+  constructor
+  · rw [← realWeylQuaternionAction_mul, hstarq, realWeylQuaternionAction_one]
+  · rw [← realWeylQuaternionAction_mul, hqstar, realWeylQuaternionAction_one]
 
 /-- The real unit-quaternion transformation commutes with the internal Weyl bivector. -/
 theorem realWeylUnitQuaternionTransform_commutes_bivector

@@ -1,0 +1,4 @@
+exit_code=1
+command=timeout 420s /home/goutev/.elan/bin/lake build -R
+log=artifacts/hermes_loop/heartbeat/tmp/heartbeat_20260602_140741_lake_build_R.log
+seconds=artifacts/hermes_loop/heartbeat/tmp/heartbeat_20260602_140741_lake_build_R.seconds

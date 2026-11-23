@@ -1,0 +1,88 @@
+ℹ [497/760] Replayed DAG.ExactMorphismTest
+info: lean/DAG/ExactMorphismTest.lean:65:0: ✓ polyId: polymorphic unary morphism handled safely
+info: lean/DAG/ExactMorphismTest.lean:77:0: ✓ double: admitted as unary morphism
+info: lean/DAG/ExactMorphismTest.lean:85:0: ✓ addTwo: rejected (multi-explicit)
+info: lean/DAG/ExactMorphismTest.lean:93:0: ✓ makeZero: rejected (dependent result)
+info: lean/DAG/ExactMorphismTest.lean:101:0: ✓ myId: admitted as unary morphism
+info: lean/DAG/ExactMorphismTest.lean:109:0: ✓ flipBool: admitted as unary morphism
+info: lean/DAG/ExactMorphismTest.lean:119:0: ✓ double entry: DAG.Test.double : Nat → Nat
+info: lean/DAG/ExactMorphismTest.lean:131:0: ✓ addTwo entry: correctly rejected
+info: lean/DAG/ExactMorphismTest.lean:141:0: ✓ myId: detected as definitional identity
+info: lean/DAG/ExactMorphismTest.lean:150:0: ✓ succ': correctly classified as non-identity
+info: lean/DAG/ExactMorphismTest.lean:162:0: ✓ trivial square: EXACT (as expected)
+info: lean/DAG/ExactMorphismTest.lean:180:0: ✓ non-commutative square: NOT_EQUAL (as expected)
+info: lean/DAG/ExactMorphismTest.lean:200:0: ✓ flipBool: correctly rejected as non-definitional since !(!x) = x requires proof
+info: lean/DAG/ExactMorphismTest.lean:211:0: ✓ indexMorphismCache: deduplicated and persistent
+info: lean/DAG/ExactMorphismTest.lean:226:0: ✓ isDefinitionalIdentity: myId detected
+info: lean/DAG/ExactMorphismTest.lean:235:0: ✓ isDefinitionalIdentity: succ' rejected
+info: lean/DAG/ExactMorphismTest.lean:246:0: ✓ withUnaryMorphismSignature: callback preserves head names safely
+info: lean/DAG/ExactMorphismTest.lean:261:0: ━━━ All DAG.ExactMorphism regression tests passed ━━━
+ℹ [502/760] Replayed DAG.CategoryBridgeTest
+info: lean/DAG/CategoryBridgeTest.lean:56:0: ✓ identity: correctly verified
+info: lean/DAG/CategoryBridgeTest.lean:70:0: ✓ composition witness: correctly found compXZ
+info: lean/DAG/CategoryBridgeTest.lean:84:0: ✓ object compatibility: correctly rejected
+info: lean/DAG/CategoryBridgeTest.lean:100:0: ✓ missing map: pair correctly skipped
+info: lean/DAG/CategoryBridgeTest.lean:115:0: ✓ no-witness: failure correctly detected
+info: lean/DAG/CategoryBridgeTest.lean:129:0: ━━━ All DAG.CategoryBridge regression tests passed ━━━
+ℹ [3231/3402] Replayed DAG.IntegrationTest
+info: lean/DAG/IntegrationTest.lean:40:0: ✓ Forgetful tower composition: verified
+info: lean/DAG/IntegrationTest.lean:59:0: ✓ Object compatibility failure: detected correctly
+info: lean/DAG/IntegrationTest.lean:80:0: ━━━ All DAG Integration tests passed ━━━
+⚠ [8613/8889] Replayed InfoGeometry.Canonical.RelativeModularBerezinianBridge
+warning: lean/InfoGeometry/Canonical/RelativeModularBerezinianBridge.lean:187:0: automatically included section variable(s) unused in theorem `InfoGeometry.Canonical.RelativeModularBerezinianBridge.hasFDerivAt_relativeModularSupervolumeKreinGradient`:
+  [Nonempty (Fin n)]
+  [CompleteSpace E]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Nonempty (Fin n)] [CompleteSpace E] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: lean/InfoGeometry/Canonical/RelativeModularBerezinianBridge.lean:204:0: automatically included section variable(s) unused in theorem `InfoGeometry.Canonical.RelativeModularBerezinianBridge.relativeModularSupervolumeKreinHessian_bilin_eq_krein_form`:
+  [Nonempty (Fin n)]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Nonempty (Fin n)] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+✖ [8739/8959] Building InfoGeometry.Convex.EuclideanMonotonicity (1.4s)
+trace: .> LEAN_PATH=/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/Qq/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/aesop/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/proofwidgets/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/importGraph/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/plausible/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/batteries/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/MD4Lean/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/BibtexQuery/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/UnicodeBasic/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/Cli/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/mathlib/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/LeanArchitect/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/doc-gen4/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/build/lib/lean /home/goutev/.elan/toolchains/leanprover--lean4---v4.28.0/bin/lean /home/goutev/repos/info-geometry-lean-fusion-migrate/lean/InfoGeometry/Convex/EuclideanMonotonicity.lean -o /home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/build/lib/lean/InfoGeometry/Convex/EuclideanMonotonicity.olean -i /home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/build/lib/lean/InfoGeometry/Convex/EuclideanMonotonicity.ilean -c /home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/build/ir/InfoGeometry/Convex/EuclideanMonotonicity.c --setup /home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/build/ir/InfoGeometry/Convex/EuclideanMonotonicity.setup.json --json
+error: lean/InfoGeometry/Convex/EuclideanMonotonicity.lean:14:15: Function expected at
+  grad
+but this term has type
+  ?m.4
+
+Note: Expected a function because this term is being applied to the argument
+  x
+
+Hint: The identifier `grad` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+error: lean/InfoGeometry/Convex/EuclideanMonotonicity.lean:14:24: Function expected at
+  grad
+but this term has type
+  ?m.4
+
+Note: Expected a function because this term is being applied to the argument
+  y
+
+Hint: The identifier `grad` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+error: lean/InfoGeometry/Convex/EuclideanMonotonicity.lean:17:8: Invalid argument: Variable `grad` is not a proposition or let-declaration
+error: lean/InfoGeometry/Convex/EuclideanMonotonicity.lean:19:2: No goals to be solved
+error: Lean exited with code 1
+✖ [8740/8959] Building InfoGeometry.ExponentialFamily.GaussianMonotonicity (1.6s)
+trace: .> LEAN_PATH=/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/Qq/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/aesop/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/proofwidgets/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/importGraph/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/plausible/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/batteries/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/MD4Lean/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/BibtexQuery/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/UnicodeBasic/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/Cli/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/mathlib/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/LeanArchitect/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/doc-gen4/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/build/lib/lean /home/goutev/.elan/toolchains/leanprover--lean4---v4.28.0/bin/lean /home/goutev/repos/info-geometry-lean-fusion-migrate/lean/InfoGeometry/ExponentialFamily/GaussianMonotonicity.lean -o /home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/build/lib/lean/InfoGeometry/ExponentialFamily/GaussianMonotonicity.olean -i /home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/build/lib/lean/InfoGeometry/ExponentialFamily/GaussianMonotonicity.ilean -c /home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/build/ir/InfoGeometry/ExponentialFamily/GaussianMonotonicity.c --setup /home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/build/ir/InfoGeometry/ExponentialFamily/GaussianMonotonicity.setup.json --json
+error: lean/InfoGeometry/ExponentialFamily/GaussianMonotonicity.lean:18:79: Unknown identifier `ne_of_ne`
+warning: lean/InfoGeometry/ExponentialFamily/GaussianMonotonicity.lean:16:65: This simp argument is unused:
+  LinearMap.map_sub
+
+Hint: Omit it from the simp argument list.
+  simp ̵[̵L̵i̵n̵e̵a̵r̵M̵a̵p̵.̵m̵a̵p̵_̵s̵u̵b̵]̵
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+error: Lean exited with code 1
+✖ [8741/8959] Building InfoGeometry.Canonical.ConformalAnomalySource (4.6s)
+trace: .> LEAN_PATH=/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/Qq/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/aesop/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/proofwidgets/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/importGraph/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/plausible/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/batteries/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/MD4Lean/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/BibtexQuery/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/UnicodeBasic/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/Cli/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/mathlib/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/LeanArchitect/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/packages/doc-gen4/.lake/build/lib/lean:/home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/build/lib/lean /home/goutev/.elan/toolchains/leanprover--lean4---v4.28.0/bin/lean /home/goutev/repos/info-geometry-lean-fusion-migrate/lean/InfoGeometry/Canonical/ConformalAnomalySource.lean -o /home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/build/lib/lean/InfoGeometry/Canonical/ConformalAnomalySource.olean -i /home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/build/lib/lean/InfoGeometry/Canonical/ConformalAnomalySource.ilean -c /home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/build/ir/InfoGeometry/Canonical/ConformalAnomalySource.c --setup /home/goutev/repos/info-geometry-lean-fusion-migrate/.lake/build/ir/InfoGeometry/Canonical/ConformalAnomalySource.setup.json --json
+error: lean/InfoGeometry/Canonical/ConformalAnomalySource.lean:728:8: Invalid field `isNormalInference_of_kahlerLogDet_unitRelativeVolume`: The environment does not contain `InfoGeometry.Canonical.ConformalUnification.ConformalInference.isNormalInference_of_kahlerLogDet_unitRelativeVolume`, so it is not possible to project the field `isNormalInference_of_kahlerLogDet_unitRelativeVolume` from an expression
+  CI
+of type `ConformalInference E`
+error: Lean exited with code 1
+Some required targets logged failures:
+- InfoGeometry.Convex.EuclideanMonotonicity
+- InfoGeometry.ExponentialFamily.GaussianMonotonicity
+- InfoGeometry.Canonical.ConformalAnomalySource

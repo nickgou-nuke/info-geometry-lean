@@ -1,0 +1,95 @@
+{
+  "packet_id": "repo-lichnerowicz-corridor-001",
+  "created_at": "2026-04-21T03:50:00+00:00",
+  "research_goal": "Reconstruct the repo-native proof corridor connecting the second quasilattice-Dirac transport derivative to the operator-information Hessian and then to the metric-sector Lichnerowicz split in InfoGeometry.Canonical.InformationalLichnerowicz, keeping the task as a bounded proof-specialist analysis with no canonical mutation.",
+  "allowed_sources": ["files"],
+  "trusted_domains": [],
+  "provenance": {
+    "source": "Hermes.GraphGroundedRepoNativeCorridor",
+    "state_path": "/home/goutev/repos/info-geometry-lean/artifacts/hermes_loop/corridors/repo-lichnerowicz-corridor-001.md",
+    "models": {
+      "planner": "nemotron",
+      "research": "deepseek-prover-v2-7b-q8_0.gguf",
+      "auditor": "goedel-prover-sft-q8_0.gguf",
+      "verifier": "lean",
+      "writer": "codex-cli"
+    }
+  },
+  "evidence": [
+    {
+      "claim": "The target theorem family in InfoGeometry.Canonical.InformationalLichnerowicz is source-backed and the targeted build of InfoGeometry.Canonical.InformationalLichnerowicz succeeds.",
+      "sources": [
+        "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/InformationalLichnerowicz.lean",
+        "/home/goutev/repos/info-geometry-lean/artifacts/hermes_loop/corridors/repo-lichnerowicz-corridor-001.md"
+      ],
+      "confidence": "high",
+      "evidence_summary": "Raw source inspection and targeted lake build confirm the theorem corridor is compiled and live.",
+      "subquestion_id": "lichnerowicz-corridor-001"
+    },
+    {
+      "claim": "Graph retrieval ranks operatorInformationHessian_eq_metricPart_add_half_curvaturePart, operatorInformationHessian_eq_metricPart, deriv2_quasilatticeDirac_at_zero_eq_operatorInformationMetricPart, and deriv2_quasilatticeDirac_at_zero_eq_metricPart_add_half_curvaturePart as the dominant nearby corridor theorems.",
+      "sources": [
+        "/home/goutev/repos/info-geometry-lean/artifacts/hermes_loop/gravity_context/manual-lichnerowicz-corridor.json"
+      ],
+      "confidence": "high",
+      "evidence_summary": "The top gravity-context neighbors are concentrated on the intended Lichnerowicz bridge family rather than remote modules.",
+      "subquestion_id": "lichnerowicz-corridor-002"
+    },
+    {
+      "claim": "The bridge theorem deriv2_quasilatticeDirac_at_zero_eq_operatorInformationHessian rewrites the quasilattice-Dirac second derivative directly into the operator-information Hessian before the metric-part translators are applied.",
+      "sources": [
+        "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/InformationalLichnerowicz.lean",
+        "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/QuasilatticeDirac.lean"
+      ],
+      "confidence": "high",
+      "evidence_summary": "The theorem body in InformationalLichnerowicz explicitly calls QuasilatticeDirac.deriv2_quasilatticeDirac_at_zero after expanding the operator-information Hessian definitions.",
+      "subquestion_id": "lichnerowicz-corridor-003"
+    }
+  ],
+  "contradictions": [],
+  "candidate_invariants": [
+    "the second quasilattice-Dirac derivative can be transported through the operator-information Hessian into the metric-sector Lichnerowicz split",
+    "the Lichnerowicz corridor is graph-local and proof-specialist tractable without mutation"
+  ],
+  "forbidden_moves": [
+    "do not promote graph retrieval as proof admission",
+    "do not blur owner and translator theorem roles",
+    "do not invoke Codex mutation unless a separate handoff gate explicitly permits it",
+    "do not restate a compiled theorem family as new canonical work"
+  ],
+  "formalization_targets": [
+    {
+      "kind": "translator",
+      "name": "InfoGeometry.Canonical.InformationalLichnerowicz.deriv2_quasilatticeDirac_at_zero_eq_operatorInformationMetricPart",
+      "note": "Bounded proof-corridor reconstruction target for the metric-part Lichnerowicz theorem."
+    },
+    {
+      "kind": "coherence",
+      "name": "repo_lichnerowicz_dependency_chain",
+      "note": "Explain the minimal owner-to-translator dependency chain without mutating canonical source."
+    }
+  ],
+  "classification": {
+    "facts": [
+      "The InformationalLichnerowicz module builds successfully under targeted lake verification.",
+      "The graph-retrieved corridor is tightly clustered on the intended theorem family.",
+      "The bridge theorem passes through deriv2_quasilatticeDirac_at_zero_eq_operatorInformationHessian before the metric-part rewrite."
+    ],
+    "interpretations": [
+      "This packet is a repo-native bounded autoproof benchmark for the weak-owner Lichnerowicz bridge.",
+      "The expected safe route is deepseek_proof with execution disallowed.",
+      "The proof-specialist lane should return a dependency-certified owner-to-translator explanation rather than a mutation proposal."
+    ],
+    "metaphors": [],
+    "formalization_candidates": [
+      "Ask the proof-specialist lane to restate the proof chain from deriv2_quasilatticeDirac_at_zero through deriv2_quasilatticeDirac_at_zero_eq_operatorInformationHessian and operatorInformationHessian_eq_metricPart to deriv2_quasilatticeDirac_at_zero_eq_operatorInformationMetricPart.",
+      "Use the result as a graph-grounded bounded autoproof benchmark rather than as canonical edit material."
+    ]
+  },
+  "handoff": {
+    "prompt_a_ready": true,
+    "requires_nemoclaw_note": true,
+    "requires_clawcode_gate": true
+  },
+  "status": "draft"
+}

@@ -1,0 +1,71 @@
+{
+  "packet_id": "ldj-progress-003-g-group-g-h-g-g-h-h-g",
+  "created_at": "2026-04-18T21:05:18.941451+00:00",
+  "research_goal": "Investigate LeanProgress-guided proof attempt for goal: G : Group, g h : G \u22a2 g * h = h * g",
+  "allowed_sources": [
+    "files"
+  ],
+  "trusted_domains": [],
+  "provenance": {
+    "source": "LeanDojoTokenFree.LeanProgress",
+    "state_path": "/home/goutev/repos/info-geometry-lean/artifacts/leandojo/lean_progress_sample.jsonl",
+    "models": {
+      "planner": "hermes",
+      "research": "deepseek-prover-v2-7b-q8_0.gguf",
+      "verifier": "lean",
+      "writer": "codex-cli"
+    }
+  },
+  "evidence": [
+    {
+      "claim": "Lean goal observed: G : Group, g h : G \u22a2 g * h = h * g",
+      "sources": [
+        "/home/goutev/repos/info-geometry-lean/artifacts/leandojo/lean_progress_sample.jsonl"
+      ],
+      "confidence": "medium",
+      "evidence_summary": "LeanProgress local row with steps_remaining=12; prefix_present=no; tactic_present=yes.",
+      "subquestion_id": "goal-003"
+    },
+    {
+      "claim": "Candidate tactic is `sorry`.",
+      "sources": [
+        "/home/goutev/repos/info-geometry-lean/artifacts/leandojo/lean_progress_sample.jsonl"
+      ],
+      "confidence": "medium",
+      "evidence_summary": "LeanProgress local row with steps_remaining=12; prefix_present=no; tactic_present=yes.",
+      "subquestion_id": "tactic-003"
+    }
+  ],
+  "contradictions": [],
+  "candidate_invariants": [],
+  "forbidden_moves": [
+    "treat LeanProgress sample rows as theorem closure",
+    "promote tactic text without Lean compilation",
+    "convert sorry-bearing candidates directly into canonical statements",
+    "treat local sample data as external evidence"
+  ],
+  "formalization_targets": [
+    {
+      "kind": "theorem",
+      "name": "leanprogress_003_g_group_g_h_g_g_h_h_g",
+      "note": "LeanProgress-derived candidate for goal `G : Group, g h : G \u22a2 g * h = h * g`."
+    }
+  ],
+  "classification": {
+    "facts": [],
+    "interpretations": [
+      "Local LeanProgress sample row for goal: G : Group, g h : G \u22a2 g * h = h * g",
+      "Candidate tactic: sorry",
+      "Estimated steps remaining: 12",
+      "This row contains `sorry` and must remain quarantine-only."
+    ],
+    "metaphors": [],
+    "formalization_candidates": []
+  },
+  "handoff": {
+    "prompt_a_ready": true,
+    "requires_nemoclaw_note": true,
+    "requires_clawcode_gate": true
+  },
+  "status": "draft"
+}

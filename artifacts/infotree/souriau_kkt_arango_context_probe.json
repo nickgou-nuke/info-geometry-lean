@@ -1,0 +1,961 @@
+{
+  "schema": "info_geometry.gravity_context.v1",
+  "query": "SouriauLieThermoKKTBridge",
+  "query_tokens": [
+    "kktbridge",
+    "lie",
+    "souriau",
+    "thermo"
+  ],
+  "query_phrases": [
+    "souriauliethermokktbridge"
+  ],
+  "expanded_query_tokens": [
+    "algebra",
+    "algebraic",
+    "beta",
+    "canonical",
+    "clm",
+    "comp",
+    "conjugate",
+    "conjugation",
+    "coord",
+    "coordinateless",
+    "core",
+    "density",
+    "dual",
+    "energy",
+    "eval",
+    "free",
+    "generator",
+    "geometric",
+    "geometry",
+    "grand",
+    "info",
+    "kktbridge",
+    "kmsbridge",
+    "krein",
+    "legendre",
+    "lie",
+    "lifted",
+    "log",
+    "massieu",
+    "metric",
+    "minus",
+    "model",
+    "moment",
+    "operator",
+    "pairing",
+    "param",
+    "potential",
+    "quantum",
+    "souriau",
+    "state",
+    "symmetric",
+    "temperature",
+    "tensor",
+    "thermal",
+    "thermo",
+    "thermodynamic",
+    "thermodynamics",
+    "transport",
+    "two",
+    "vector",
+    "weight"
+  ],
+  "synonym_expansion": {
+    "enabled": true,
+    "dictionary": "reports/dag/equivalence-dictionary.json",
+    "matched_group_count": 8,
+    "matched_groups": [
+      {
+        "id": "EQC-0052",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "souriau"
+        ],
+        "added_tokens": [
+          "generator",
+          "moment",
+          "operator",
+          "thermal"
+        ],
+        "members": [
+          "C.souriauMoment.momentOperator",
+          "C.souriauMoment.thermalGenerator"
+        ]
+      },
+      {
+        "id": "EQC-0032",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "souriau"
+        ],
+        "added_tokens": [
+          "density",
+          "lifted",
+          "temperature",
+          "thermodynamic",
+          "transport",
+          "vector"
+        ],
+        "members": [
+          "C.density.liftedTransportGenerator",
+          "C.liftedTransportGenerator",
+          "ThermodynamicGenerator.souriauTemperatureVector"
+        ]
+      },
+      {
+        "id": "EQC-0047",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "thermo"
+        ],
+        "added_tokens": [
+          "coord",
+          "dual",
+          "geometry",
+          "info",
+          "legendre",
+          "log",
+          "model",
+          "potential"
+        ],
+        "members": [
+          "C.moment",
+          "InfoGeometry.Potential.Thermo.InfoGeometry.LogPotential.LegendreModel.dualCoord"
+        ]
+      },
+      {
+        "id": "EQC-0136",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "souriau"
+        ],
+        "added_tokens": [
+          "beta",
+          "canonical",
+          "geometric",
+          "pairing",
+          "thermodynamics",
+          "weight"
+        ],
+        "members": [
+          "InfoGeometry.Canonical.SouriauThermodynamics.geometricTemperatureWeightPairing",
+          "T.beta"
+        ]
+      },
+      {
+        "id": "EQC-0160",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "thermo"
+        ],
+        "added_tokens": [
+          "energy",
+          "free",
+          "massieu"
+        ],
+        "members": [
+          "InfoGeometry.Potential.Thermo.InfoGeometry.LogPotential.LegendreModel.freeEnergy",
+          "InfoGeometry.Potential.Thermo.InfoGeometry.LogPotential.LegendreModel.massieu"
+        ]
+      },
+      {
+        "id": "EQC-0033",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "alias",
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "souriau"
+        ],
+        "added_tokens": [
+          "grand",
+          "param",
+          "two"
+        ],
+        "members": [
+          "C.densityWeight",
+          "InfoGeometry.Canonical.SouriauThermodynamics.souriauWeightAt",
+          "InfoGeometry.Canonical.SouriauThermodynamics.toGrandCanonicalTwoParam",
+          "M.energy"
+        ]
+      },
+      {
+        "id": "EQC-0154",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "lie"
+        ],
+        "added_tokens": [
+          "algebra",
+          "clm",
+          "comp",
+          "conjugate",
+          "conjugation",
+          "core",
+          "krein",
+          "minus",
+          "symmetric"
+        ],
+        "members": [
+          "InfoGeometry.Core.conjugationSymmetricLieAlgebra",
+          "InfoGeometry.Krein.conjugateCLM",
+          "S.P_minus",
+          "S.P_minus.comp"
+        ]
+      },
+      {
+        "id": "EQC-0101",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "alias",
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "souriau"
+        ],
+        "added_tokens": [
+          "algebraic",
+          "coordinateless",
+          "eval",
+          "kmsbridge",
+          "metric",
+          "quantum",
+          "state",
+          "tensor"
+        ],
+        "members": [
+          "InfoGeometry.Canonical.CoordinatelessSouriauKMSBridge.AlgebraicState.eval",
+          "InfoGeometry.Quantum.GeometricQuantumTensor.g",
+          "Q.metric"
+        ]
+      }
+    ]
+  },
+  "graph_source": "arango",
+  "graph_mode": "compact",
+  "repo_root": "/home/goutev/repos/info-geometry-lean-fusion",
+  "seed_count": 32,
+  "seed_scc_count": 0,
+  "scc_anchor_first": true,
+  "require_scc_anchor": true,
+  "requested_rep_layers": [],
+  "node_count": 20142,
+  "edge_count": 240330,
+  "graph_rep_layer_counts": [
+    {
+      "rep_layer": null,
+      "count": 20142,
+      "rep_depths": [
+        "count",
+        "krein",
+        "operator",
+        "projective",
+        "thermo",
+        "transport"
+      ],
+      "rep_depth_slugs": []
+    }
+  ],
+  "result_rep_layer_counts": [
+    {
+      "rep_layer": null,
+      "count": 10,
+      "rep_depths": [],
+      "rep_depth_slugs": []
+    }
+  ],
+  "top_k": 10,
+  "items": [
+    {
+      "id": "InfoGeometry.LogPotential.LegendreModel.canonicalFreeEnergy_def",
+      "name": "InfoGeometry.LogPotential.LegendreModel.canonicalFreeEnergy_def",
+      "module": "InfoGeometry.Potential.Thermo",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Potential/Thermo.lean",
+      "line": 133,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": "InfoGeometry.Potential.Thermo",
+      "score": 200.81205,
+      "distance": 0,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Potential/Thermo.lean",
+        "line": 133,
+        "start": 129,
+        "end": 137,
+        "lines": [
+          {
+            "line": 129,
+            "text": "    M.canonicalEntropy θ = M.massieu θ - θ * M.dualCoord θ := by"
+          },
+          {
+            "line": 130,
+            "text": "  unfold canonicalEntropy canonicalEnergy"
+          },
+          {
+            "line": 131,
+            "text": "  ring"
+          },
+          {
+            "line": 132,
+            "text": ""
+          },
+          {
+            "line": 133,
+            "text": "@[simp] lemma canonicalFreeEnergy_def (M : LegendreModel) (ε θ : ℝ) :"
+          },
+          {
+            "line": 134,
+            "text": "    M.canonicalFreeEnergy ε θ = -ε * M.massieu θ := rfl"
+          },
+          {
+            "line": 135,
+            "text": ""
+          },
+          {
+            "line": 136,
+            "text": "@[simp] lemma scaledFenchelGap_def (M : LegendreModel) (ε θ η : ℝ) :"
+          },
+          {
+            "line": 137,
+            "text": "    M.scaledFenchelGap ε θ η = ε * (M.massieu θ + M.φ η - θ * η) := by"
+          }
+        ]
+      },
+      "faithful_witness": null,
+      "scc_anchor_distance": null
+    },
+    {
+      "id": "InfoGeometry.Canonical.ThermodynamicGenerator.souriauTemperatureVector_eq_transportGenerator",
+      "name": "InfoGeometry.Canonical.ThermodynamicGenerator.souriauTemperatureVector_eq_transportGenerator",
+      "module": "InfoGeometry.Canonical.ThermodynamicGenerator",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ThermodynamicGenerator.lean",
+      "line": 60,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": "InfoGeometry.Canonical.ThermodynamicGenerator",
+      "score": 198.427753,
+      "distance": 0,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ThermodynamicGenerator.lean",
+        "line": 60,
+        "start": 56,
+        "end": 64,
+        "lines": [
+          {
+            "line": 56,
+            "text": "@[rep_depth transport, simp] theorem souriauTemperatureVector_eq_generator"
+          },
+          {
+            "line": 57,
+            "text": "    (P : PotentialDatum (E := E)) (ψ : H₂) :"
+          },
+          {
+            "line": 58,
+            "text": "    souriauTemperatureVector (E := E) P ψ = generator (E := E) P ψ := rfl"
+          },
+          {
+            "line": 59,
+            "text": ""
+          },
+          {
+            "line": 60,
+            "text": "@[rep_depth transport, simp] theorem souriauTemperatureVector_eq_transportGenerator"
+          },
+          {
+            "line": 61,
+            "text": "    (P : PotentialDatum (E := E)) (ψ : H₂) :"
+          },
+          {
+            "line": 62,
+            "text": "    souriauTemperatureVector (E := E) P ψ"
+          },
+          {
+            "line": 63,
+            "text": "      ="
+          },
+          {
+            "line": 64,
+            "text": "    InfoGeometry.Canonical.RelativeModularPotential.transportGenerator (E := E) P ψ := rfl"
+          }
+        ]
+      },
+      "faithful_witness": null,
+      "scc_anchor_distance": null
+    },
+    {
+      "id": "InfoGeometry.Canonical.ThermodynamicGenerator.stateRelativeGrandCanonicalMassieuExpectation_eq_value_of_zeroChemicalPotential",
+      "name": "InfoGeometry.Canonical.ThermodynamicGenerator.stateRelativeGrandCanonicalMassieuExpectation_eq_value_of_zeroChemicalPotential",
+      "module": "InfoGeometry.Canonical.ThermodynamicGenerator",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ThermodynamicGenerator.lean",
+      "line": 462,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": "InfoGeometry.Canonical.ThermodynamicGenerator",
+      "score": 196.07245,
+      "distance": 0,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ThermodynamicGenerator.lean",
+        "line": 462,
+        "start": 458,
+        "end": 466,
+        "lines": [
+          {
+            "line": 458,
+            "text": "  simpa [stateRelativeGrandCanonicalGenerator] using"
+          },
+          {
+            "line": 459,
+            "text": "    operatorialGrandCanonicalGenerator_eq_observable_of_zeroChemicalPotential"
+          },
+          {
+            "line": 460,
+            "text": "      (E := E) (B := B) (H := generator (E := E) P ψ)"
+          },
+          {
+            "line": 461,
+            "text": ""
+          },
+          {
+            "line": 462,
+            "text": "@[rep_depth transport]"
+          },
+          {
+            "line": 463,
+            "text": "theorem stateRelativeGrandCanonicalMassieuExpectation_eq_value_of_zeroChemicalPotential"
+          },
+          {
+            "line": 464,
+            "text": "    (P : PotentialDatum (E := E)) (ψ : H₂)"
+          },
+          {
+            "line": 465,
+            "text": "    (B : HyperbolicMixingParams) :"
+          },
+          {
+            "line": 466,
+            "text": "    stateRelativeGrandCanonicalMassieuExpectation (E := E) P.probe P ψ B 0"
+          }
+        ]
+      },
+      "faithful_witness": null,
+      "scc_anchor_distance": null
+    },
+    {
+      "id": "InfoGeometry.Canonical.ThermodynamicGenerator.stateRelativeGrandCanonicalMassieuPotential_normalizedInfinitesimalLaw_of_vacuumTransported",
+      "name": "InfoGeometry.Canonical.ThermodynamicGenerator.stateRelativeGrandCanonicalMassieuPotential_normalizedInfinitesimalLaw_of_vacuumTransported",
+      "module": "InfoGeometry.Canonical.ThermodynamicGenerator",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ThermodynamicGenerator.lean",
+      "line": 541,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": "InfoGeometry.Canonical.ThermodynamicGenerator",
+      "score": 194.180338,
+      "distance": 0,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ThermodynamicGenerator.lean",
+        "line": 541,
+        "start": 537,
+        "end": 545,
+        "lines": [
+          {
+            "line": 537,
+            "text": "        (E := E) (B := B) (H := generator (E := E) P ψ)"
+          },
+          {
+            "line": 538,
+            "text": "        (R := R) (K := K) (x := x)"
+          },
+          {
+            "line": 539,
+            "text": "        (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) hVacSplit)"
+          },
+          {
+            "line": 540,
+            "text": ""
+          },
+          {
+            "line": 541,
+            "text": "@[rep_depth transport]"
+          },
+          {
+            "line": 542,
+            "text": "theorem stateRelativeGrandCanonicalMassieuPotential_normalizedInfinitesimalLaw_of_vacuumTransported"
+          },
+          {
+            "line": 543,
+            "text": "    (P : PotentialDatum (E := E)) (ψ : H₂)"
+          },
+          {
+            "line": 544,
+            "text": "    (B : HyperbolicMixingParams)"
+          },
+          {
+            "line": 545,
+            "text": "    (hProbe1 : P.probe (1 : EndH) = 1)"
+          }
+        ]
+      },
+      "faithful_witness": null,
+      "scc_anchor_distance": null
+    },
+    {
+      "id": "InfoGeometry.LogPotential.LegendreModel.massieu_eq_canonicalEntropy_minus_theta_energy",
+      "name": "InfoGeometry.LogPotential.LegendreModel.massieu_eq_canonicalEntropy_minus_theta_energy",
+      "module": "InfoGeometry.Potential.Thermo",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "Contact balance rewritten with canonical energy:\n`ψ = S - θ U` (Massieu form). ",
+      "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Potential/Thermo.lean",
+      "line": 171,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": "InfoGeometry.Potential.Thermo",
+      "score": 193.271193,
+      "distance": 0,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Potential/Thermo.lean",
+        "line": 171,
+        "start": 167,
+        "end": 175,
+        "lines": [
+          {
+            "line": 167,
+            "text": "  unfold scaledFenchelGap"
+          },
+          {
+            "line": 168,
+            "text": "  rw [M.fenchelGap_eq_zero_at_contact]"
+          },
+          {
+            "line": 169,
+            "text": "  ring"
+          },
+          {
+            "line": 170,
+            "text": ""
+          },
+          {
+            "line": 171,
+            "text": "/-- Contact balance rewritten with canonical energy:"
+          },
+          {
+            "line": 172,
+            "text": "`ψ = S - θ U` (Massieu form). -/"
+          },
+          {
+            "line": 173,
+            "text": "lemma massieu_eq_canonicalEntropy_minus_theta_energy"
+          },
+          {
+            "line": 174,
+            "text": "    (M : LegendreModel) (θ : ℝ) :"
+          },
+          {
+            "line": 175,
+            "text": "    M.massieu θ = M.canonicalEntropy θ - θ * M.canonicalEnergy θ := by"
+          }
+        ]
+      },
+      "faithful_witness": null,
+      "scc_anchor_distance": null
+    },
+    {
+      "id": "InfoGeometry.Canonical.ThermodynamicGenerator.souriauTemperatureVector_eq_generator",
+      "name": "InfoGeometry.Canonical.ThermodynamicGenerator.souriauTemperatureVector_eq_generator",
+      "module": "InfoGeometry.Canonical.ThermodynamicGenerator",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ThermodynamicGenerator.lean",
+      "line": 56,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": "InfoGeometry.Canonical.ThermodynamicGenerator",
+      "score": 191.865253,
+      "distance": 0,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ThermodynamicGenerator.lean",
+        "line": 56,
+        "start": 52,
+        "end": 60,
+        "lines": [
+          {
+            "line": 52,
+            "text": "noncomputable def souriauTemperatureVector"
+          },
+          {
+            "line": 53,
+            "text": "    (P : PotentialDatum (E := E)) (ψ : H₂) : EndH :="
+          },
+          {
+            "line": 54,
+            "text": "  InfoGeometry.Canonical.RelativeModularPotential.transportGenerator (E := E) P ψ"
+          },
+          {
+            "line": 55,
+            "text": ""
+          },
+          {
+            "line": 56,
+            "text": "@[rep_depth transport, simp] theorem souriauTemperatureVector_eq_generator"
+          },
+          {
+            "line": 57,
+            "text": "    (P : PotentialDatum (E := E)) (ψ : H₂) :"
+          },
+          {
+            "line": 58,
+            "text": "    souriauTemperatureVector (E := E) P ψ = generator (E := E) P ψ := rfl"
+          },
+          {
+            "line": 59,
+            "text": ""
+          },
+          {
+            "line": 60,
+            "text": "@[rep_depth transport, simp] theorem souriauTemperatureVector_eq_transportGenerator"
+          }
+        ]
+      },
+      "faithful_witness": null,
+      "scc_anchor_distance": null
+    },
+    {
+      "id": "InfoGeometry.LogPotential.LegendreModel.freeEnergy_def",
+      "name": "InfoGeometry.LogPotential.LegendreModel.freeEnergy_def",
+      "module": "InfoGeometry.Potential.Thermo",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "Free energy is just a scaled negative Massieu potential by definition. ",
+      "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Potential/Thermo.lean",
+      "line": 102,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": "InfoGeometry.Potential.Thermo",
+      "score": 190.73363,
+      "distance": 0,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Potential/Thermo.lean",
+        "line": 102,
+        "start": 98,
+        "end": 106,
+        "lines": [
+          {
+            "line": 98,
+            "text": "  unfold massieu dualCoord"
+          },
+          {
+            "line": 99,
+            "text": "  have h := M.contact θ"
+          },
+          {
+            "line": 100,
+            "text": "  linarith"
+          },
+          {
+            "line": 101,
+            "text": ""
+          },
+          {
+            "line": 102,
+            "text": "/-- Free energy is just a scaled negative Massieu potential by definition. -/"
+          },
+          {
+            "line": 103,
+            "text": "@[simp] lemma freeEnergy_def (M : LegendreModel) (ε θ : ℝ) :"
+          },
+          {
+            "line": 104,
+            "text": "    M.freeEnergy ε θ = -ε * M.L.ψ θ := rfl"
+          },
+          {
+            "line": 105,
+            "text": ""
+          },
+          {
+            "line": 106,
+            "text": "/-- Canonical-ensemble energy convention:"
+          }
+        ]
+      },
+      "faithful_witness": null,
+      "scc_anchor_distance": null
+    },
+    {
+      "id": "InfoGeometry.Canonical.ThermodynamicGenerator.liftedProjectorObstructionMassieuPotential",
+      "name": "InfoGeometry.Canonical.ThermodynamicGenerator.liftedProjectorObstructionMassieuPotential",
+      "module": "InfoGeometry.Canonical.ThermodynamicGenerator",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "Massieu potential of the lifted projector-obstruction operator. ",
+      "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ThermodynamicGenerator.lean",
+      "line": 594,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": "InfoGeometry.Canonical.ThermodynamicGenerator",
+      "score": 188.682302,
+      "distance": 0,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ThermodynamicGenerator.lean",
+        "line": 594,
+        "start": 590,
+        "end": 598,
+        "lines": [
+          {
+            "line": 590,
+            "text": "noncomputable def liftedChiralAnomalyMassieuExpectation"
+          },
+          {
+            "line": 591,
+            "text": "    (CCI : CertifiedConformalInference E) (ω : EndH →L[ℝ] ℝ) : ℝ :="
+          },
+          {
+            "line": 592,
+            "text": "  operatorMassieuExpectation ω CCI.liftedChiralAnomalyOperator"
+          },
+          {
+            "line": 593,
+            "text": ""
+          },
+          {
+            "line": 594,
+            "text": "/-- Massieu potential of the lifted projector-obstruction operator. -/"
+          },
+          {
+            "line": 595,
+            "text": "@[rep_depth krein]"
+          },
+          {
+            "line": 596,
+            "text": "noncomputable def liftedProjectorObstructionMassieuPotential"
+          },
+          {
+            "line": 597,
+            "text": "    (CCI : CertifiedConformalInference E) (ω : EndH →L[ℝ] ℝ) : ℝ → ℝ :="
+          },
+          {
+            "line": 598,
+            "text": "  operatorMassieuPotential (E := E) ω CCI.liftedProjectorObstructionOperator"
+          }
+        ]
+      },
+      "faithful_witness": null,
+      "scc_anchor_distance": null
+    },
+    {
+      "id": "InfoGeometry.Canonical.ThermodynamicGenerator.liftedEinsteinAnomalyMassieuPotential",
+      "name": "InfoGeometry.Canonical.ThermodynamicGenerator.liftedEinsteinAnomalyMassieuPotential",
+      "module": "InfoGeometry.Canonical.ThermodynamicGenerator",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "Massieu potential of the lifted Einstein anomaly operator. ",
+      "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ThermodynamicGenerator.lean",
+      "line": 606,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": "InfoGeometry.Canonical.ThermodynamicGenerator",
+      "score": 188.532662,
+      "distance": 0,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ThermodynamicGenerator.lean",
+        "line": 606,
+        "start": 602,
+        "end": 610,
+        "lines": [
+          {
+            "line": 602,
+            "text": "noncomputable def liftedProjectorObstructionMassieuExpectation"
+          },
+          {
+            "line": 603,
+            "text": "    (CCI : CertifiedConformalInference E) (ω : EndH →L[ℝ] ℝ) : ℝ :="
+          },
+          {
+            "line": 604,
+            "text": "  operatorMassieuExpectation ω CCI.liftedProjectorObstructionOperator"
+          },
+          {
+            "line": 605,
+            "text": ""
+          },
+          {
+            "line": 606,
+            "text": "/-- Massieu potential of the lifted Einstein anomaly operator. -/"
+          },
+          {
+            "line": 607,
+            "text": "@[rep_depth krein]"
+          },
+          {
+            "line": 608,
+            "text": "noncomputable def liftedEinsteinAnomalyMassieuPotential"
+          },
+          {
+            "line": 609,
+            "text": "    (CCI : CertifiedConformalInference E) (ω : EndH →L[ℝ] ℝ) : ℝ → ℝ :="
+          },
+          {
+            "line": 610,
+            "text": "  operatorMassieuPotential (E := E) ω CCI.liftedEinsteinAnomalyOperator"
+          }
+        ]
+      },
+      "faithful_witness": null,
+      "scc_anchor_distance": null
+    },
+    {
+      "id": "InfoGeometry.Canonical.ThermodynamicGenerator.liftedChiralAnomalyMassieuPotential",
+      "name": "InfoGeometry.Canonical.ThermodynamicGenerator.liftedChiralAnomalyMassieuPotential",
+      "module": "InfoGeometry.Canonical.ThermodynamicGenerator",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "Massieu potential of the lifted chiral anomaly operator. ",
+      "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ThermodynamicGenerator.lean",
+      "line": 582,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": "InfoGeometry.Canonical.ThermodynamicGenerator",
+      "score": 188.472806,
+      "distance": 0,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ThermodynamicGenerator.lean",
+        "line": 582,
+        "start": 578,
+        "end": 586,
+        "lines": [
+          {
+            "line": 578,
+            "text": "noncomputable local instance : NormedSpace ℝ EndH := inferInstance"
+          },
+          {
+            "line": 579,
+            "text": "local instance : IsTopologicalRing EndH := inferInstance"
+          },
+          {
+            "line": 580,
+            "text": "local instance : CompleteSpace EndH := inferInstance"
+          },
+          {
+            "line": 581,
+            "text": ""
+          },
+          {
+            "line": 582,
+            "text": "/-- Massieu potential of the lifted chiral anomaly operator. -/"
+          },
+          {
+            "line": 583,
+            "text": "@[rep_depth krein]"
+          },
+          {
+            "line": 584,
+            "text": "noncomputable def liftedChiralAnomalyMassieuPotential"
+          },
+          {
+            "line": 585,
+            "text": "    (CCI : CertifiedConformalInference E) (ω : EndH →L[ℝ] ℝ) : ℝ → ℝ :="
+          },
+          {
+            "line": 586,
+            "text": "  operatorMassieuPotential (E := E) ω CCI.liftedChiralAnomalyOperator"
+          }
+        ]
+      },
+      "faithful_witness": null,
+      "scc_anchor_distance": null
+    }
+  ],
+  "prompt_policy": {
+    "principle": "proven Lean code is gravitational mass",
+    "use": "inject these nearby verified declarations before asking a prover model for tactics",
+    "promotion_allowed": false,
+    "faithful_witness_required": true,
+    "scc_anchor_rule": "lexical/synonym match -> anchored SCC -> bounded quotient expansion -> raw witness descent"
+  }
+}

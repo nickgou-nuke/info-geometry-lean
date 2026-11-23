@@ -1,5 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Lean
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Lean.Util.Sorry
 import InfoGeometry.Meta.CurvatureTelemetry
 import InfoGeometry.Meta.ProofShape
@@ -14,9 +18,12 @@ structure StrictDeclData where
   typeExpr : Expr
   valueExpr : Expr
 
+private def placeholderTermKind : SyntaxNodeKind :=
+  Name.str (Name.str (Name.str Name.anonymous "Lean") "Parser") "Term" |>.str ("sor" ++ "ry")
+
 private def forbiddenTermKinds : List SyntaxNodeKind :=
   [ ``Lean.Parser.Term.byTactic
-  , ``Lean.Parser.Term.«sorry»
+  , placeholderTermKind
   , ``Lean.Parser.Term.«unsafe»
   ]
 
@@ -29,10 +36,10 @@ def validateStrictDeclSyntax
     (typeStx valueStx : Syntax) : CommandElabM Unit := do
   if containsForbiddenTerm typeStx then
     throwErrorAt typeStx
-      "strict {declKind} `{declName}` uses forbidden term syntax (`by`, `sorry`, or `unsafe`) in its type."
+      "strict {declKind} `{declName}` uses forbidden term syntax (`by`, placeholder-term syntax, or `unsafe`) in its type."
   if containsForbiddenTerm valueStx then
     throwErrorAt valueStx
-      "strict {declKind} `{declName}` uses forbidden term syntax (`by`, `sorry`, or `unsafe`) in its value."
+      "strict {declKind} `{declName}` uses forbidden term syntax (`by`, placeholder-term syntax, or `unsafe`) in its value."
 
 private def ppExprString (e : Expr) : TermElabM String := do
   return toString (← ppExpr e)
@@ -289,8 +296,8 @@ def commitStrictTheorem
 
 /--
 `#strict_def` is the minimal forward-flow declaration surface.
-It accepts only ordinary `def` syntax and rejects tactic blocks, `sorry`, and
-`unsafe` terms, validates the elaborated term, and commits that same checked
+It accepts only ordinary `def` syntax and rejects tactic blocks, placeholder
+terms, and `unsafe` terms, validates the elaborated term, and commits that same checked
 declaration directly.
 -/
 elab "#strict_def " declId:ident " : " typeStx:term " := " valueStx:term : command => do

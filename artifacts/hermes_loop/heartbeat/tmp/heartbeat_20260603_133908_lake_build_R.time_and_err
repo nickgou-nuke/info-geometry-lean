@@ -1,0 +1,5 @@
+Command exited with non-zero status 1
+elapsed=14.44s
+ override set on '/home/goutev/repos/info-geometry-lean'
+note: to remove: elan override unset --path '/home/goutev/repos/info-geometry-lean' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1
+error: build failed

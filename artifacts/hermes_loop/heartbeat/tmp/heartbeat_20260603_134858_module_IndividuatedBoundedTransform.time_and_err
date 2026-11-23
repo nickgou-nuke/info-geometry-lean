@@ -1,0 +1,5 @@
+note: using toolchain 'leanprover/lean4:v4.28.0' from override set on '/home/goutev/repos/info-geometry-lean'
+note: to remove: elan override unset --path '/home/goutev/repos/info-geometry-lean' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1
+real 4.90
+user 5.34
+sys 1.70

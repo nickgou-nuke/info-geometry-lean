@@ -1,0 +1,4 @@
+error: build failed
+Command exited with non-zero status 1
+EXIT=1
+ELAPSED=15.99

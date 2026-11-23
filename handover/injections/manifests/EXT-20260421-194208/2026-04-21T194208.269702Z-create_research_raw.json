@@ -1,0 +1,91 @@
+{
+  "packet_id": "EXT-20260421-194208",
+  "stage": "create:research:raw",
+  "timestamp": "2026-04-21T19:42:08+00:00",
+  "prompt_hash": "ed6be57805e53549fea751e2d218c6649fe4166b774d13823ee2cd59adebd29f",
+  "command": [
+    "tools/infra/injection_research_packet.py",
+    "--lane",
+    "raw",
+    "--source-type",
+    "paper",
+    "--source-ref",
+    "souriau-conformal-arxiv",
+    "--topic",
+    "Souriau Lie thermodynamics, conformal/TKK, coadjoint orbit Gibbs geometry, KKT admissible temperature cone",
+    "--title",
+    "Deep research: Souriau conformal-TKK Lie thermodynamics for info-geometry-lean",
+    "--question",
+    "How should Gibbs-Souriau equilibrium be encoded as a repo-native owner surface for the conformal/TKK lane?",
+    "--question",
+    "Which existing owner files already encode Weyl/KKT/conformal weight structure relevant to a Souriau-style admissible temperature cone?",
+    "--source-paper",
+    "arXiv:hep-th/9310040v2",
+    "--source-paper",
+    "arXiv:1609.00271v2",
+    "--source-paper",
+    "arXiv:2306.03106v1",
+    "--source-note",
+    "Local PDFs downloaded under artifacts/research/souriau_conformal/",
+    "--raw-text",
+    "Souriau Lie thermodynamics on coadjoint orbits; geometric temperature beta in Lie algebra; Gibbs-Souriau density; conformal/TKK/Weyl/KKT cone admissibility; derive owner-level equilibrium package for infinite-dimensional repo lanes."
+  ],
+  "runtime": {
+    "python": "3.12.3 (main, Mar  3 2026, 12:15:18) [GCC 13.3.0]",
+    "platform": "Linux-6.17.0-1014-nvidia-aarch64-with-glibc2.39",
+    "env_models": {
+      "HERMES_MODEL": "",
+      "OPENAI_MODEL": "",
+      "GEMINI_MODEL": "",
+      "LLM_MODEL": ""
+    },
+    "versions": {
+      "git_rev_parse": {
+        "cmd": [
+          "git",
+          "rev-parse",
+          "HEAD"
+        ],
+        "exit": 0,
+        "stdout": "e3537c41e95d6969f030e60e254712870980341d",
+        "stderr": ""
+      },
+      "git_describe": {
+        "cmd": [
+          "git",
+          "describe",
+          "--always",
+          "--dirty"
+        ],
+        "exit": 0,
+        "stdout": "e3537c4-dirty",
+        "stderr": ""
+      },
+      "lake_version": {
+        "cmd": [
+          "lake",
+          "--version"
+        ],
+        "exit": 0,
+        "stdout": "Lake version 5.0.0-src+7e01a1b (Lean version 4.28.0)",
+        "stderr": "note: using toolchain 'leanprover/lean4:v4.28.0' from override set on '/home/goutev/repos/info-geometry-lean'\nnote: to remove: elan override unset --path '/home/goutev/repos/info-geometry-lean' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1"
+      },
+      "lean_version": {
+        "cmd": [
+          "lean",
+          "--version"
+        ],
+        "exit": 0,
+        "stdout": "Lean (version 4.28.0, aarch64-unknown-linux-gnu, commit 7e01a1bf5c70fc6167d49c345d3bf80596e9a79b, Release)",
+        "stderr": "note: using toolchain 'leanprover/lean4:v4.28.0' from override set on '/home/goutev/repos/info-geometry-lean'\nnote: to remove: elan override unset --path '/home/goutev/repos/info-geometry-lean' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1"
+      }
+    }
+  },
+  "result": {
+    "ok": true
+  },
+  "extra": {
+    "lock_wait_sec": 3.872031811624765e-06,
+    "lane": "raw"
+  }
+}

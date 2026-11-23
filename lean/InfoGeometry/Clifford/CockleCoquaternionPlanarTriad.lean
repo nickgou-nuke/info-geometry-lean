@@ -63,13 +63,6 @@ structure Coquaternion (R : Type*) where
 
 variable {R : Type*} [Ring R]
 
-/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
-theorem exists_noncomm_pair :
-    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
-  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
-   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
-   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
-
 namespace Coquaternion
 
 /-- The identity coquaternion: 1 • 1. -/
@@ -428,6 +421,34 @@ theorem toMatrix_anticomm_witness :
     (e1 : Coquaternion R) * e2 + e2 * e1 = 0 := by
   ext <;> simp [e1, e2]
 
+/-- The represented Clifford generators are genuinely noncommuting in the operator
+matrix algebra when the coefficient ring has characteristic zero.  This is a
+matrix-level witness: the `(0,1)` entries of the two products are `-1` and
+`1`, respectively. -/
+theorem toMatrix_e1_e2_noncommute [CharZero R] :
+    toMatrix (e1 : Coquaternion R) * toMatrix e2 ≠
+      toMatrix e2 * toMatrix e1 := by
+  intro h
+  have hentry := congrArg (fun M : Mat2 R => M 0 1) h
+  have htwo : (2 : R) = 0 := by
+    simp [toMatrix, e1, e2, Matrix.mul_apply, Fin.sum_univ_two] at hentry
+    have hsum : (1 : R) + 1 = 0 := by
+      calc (1 : R) + 1 = 1 - (-1) := by noncomm_ring
+        _ = 1 - 1 := by rw [hentry]
+        _ = 0 := by noncomm_ring
+    calc (2 : R) = (2 : R) * 1 := by rw [mul_one]
+      _ = 1 + 1 := two_mul 1
+      _ = 0 := hsum
+      _ = 0 := by noncomm_ring
+  exact (Nat.cast_ne_zero.mpr (by decide : (2 : ℕ) ≠ 0)) htwo
+
 end Coquaternion
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
 end InfoGeometry.Clifford.Coquaternion

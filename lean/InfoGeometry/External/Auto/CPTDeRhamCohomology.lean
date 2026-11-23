@@ -1,7 +1,10 @@
-import Mathlib.Topology.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.Analysis.Calculus.FDeriv.Basic
-import Mathlib.Data.Real.Basic
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import Mathlib.Basic.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Complex
 
@@ -10,34 +13,39 @@ noncomputable section
 namespace CPTDeRham
 
 /-
-# De Rham Cohomology and the $d \ln \Omega$ Potential 1-Form
+# Logarithmic Potential Coefficient and Exponential Period Quantization
 
-This module establishes the topological potential of the CPT Atom.
-Instead of treating $\kappa_{\text{harmony}}$ as an ad-hoc constant,
-we derive it as the monodromy index of the connection 1-form 
-$A = d \ln \Omega$, where $\Omega$ is the holomorphic volume form 
-(or partition function) of the system.
+This module formalizes two limited facts: the algebraic coefficient
+`Ω(state)⁻¹ * dΩ` when `Ω(state)` is nonzero, and the quantization of a real
+period whose complex exponential is one. It does not construct differential
+forms, integrate a connection, or identify the period with a CPT invariant.
 -/
 
-/- We define the abstract space of CPT States over which our forms operate. -/
-variable {M : Type} [TopologicalSpace M]
+variable {M : Type}
 
-/-- The Holomorphic Volume Form (Partition Function) $\Omega$.
-    It assigns a complex-valued scalar (probability/partition) to each state. -/
-def Omega (_state : M) : ℂ :=
-  1.0
+/- Algebraic logarithmic derivative coefficient. `dOmega` is an explicit
+   derivative value supplied by the caller; this definition does not assert
+   that it is a derivative in any chosen calculus structure. -/
+def d_ln_Omega (Omega : M → ℂ) (state : M) (dOmega : ℂ)
+    (_hOmega : Omega state ≠ 0) : ℂ :=
+  (Omega state)⁻¹ * dOmega
 
-/-- The logarithmic derivative $d \ln \Omega$. 
-    This acts as the gauge connection 1-form $A$ for the CPT topology. -/
-def d_ln_Omega (state : M) (dOmega : ℂ) : ℂ :=
-  if Omega state = 0 then 0 else (1 / Omega state) * dOmega
+theorem d_ln_Omega_eq_zero_iff (Omega : M → ℂ) (state : M) (dOmega : ℂ)
+    (hOmega : Omega state ≠ 0) :
+    d_ln_Omega Omega state dOmega hOmega = 0 ↔ dOmega = 0 := by
+  constructor
+  · intro h
+    have hprod : (Omega state)⁻¹ = 0 ∨ dOmega = 0 := mul_eq_zero.mp h
+    rcases hprod with hinv | hd
+    · exact False.elim ((inv_ne_zero hOmega) hinv)
+    · exact hd
+  · rintro rfl
+    simp [d_ln_Omega]
 
 /-- 
-Topological Invariance:
-The integral of $d \ln \Omega$ around a closed cycle (Monodromy) 
-is a quantized topological index, directly yielding our structure constants.
-We model the monodromy condition via the exponentiation of the cycle integral.
-If the exponential of the imaginary cycle integral is 1, it must be quantized.
+If the exponential of a purely imaginary real period is one, that real period
+is an integer multiple of `2π`. The period is an input here, not an integral
+constructed from `d_ln_Omega`.
 -/
 theorem monodromy_index_quantization (cycle_integral : ℝ) 
     (h_cycle : Complex.exp (cycle_integral * Complex.I) = 1) : 
@@ -52,10 +60,8 @@ theorem monodromy_index_quantization (cycle_integral : ℝ)
   exact_mod_cast h2
 
 /-- 
-Theorem: The Ground State Degeneracy is fixed by the De Rham Cohomology.
-Because the 1-form $A = d \ln \Omega$ is closed but not exact (due to singularities 
-like the Null Sector), its monodromy provides the exact invariant constants 
-we previously approximated.
+The period condition is equivalent to the zero-period case or a nonzero
+integer multiple of `2π`.
 -/
 theorem ground_state_is_invariant (cycle_integral : ℝ) 
     (h_cycle : Complex.exp (cycle_integral * Complex.I) = 1) : 
@@ -68,4 +74,7 @@ theorem ground_state_is_invariant (cycle_integral : ℝ)
     exact ⟨n, h_ne, hn⟩
 
 end CPTDeRham
+def Omega (_state : M) : ℂ :=
+  1.0
+
 end noncomputable section

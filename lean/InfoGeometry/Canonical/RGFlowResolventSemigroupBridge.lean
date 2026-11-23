@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.InnerProductSpace.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
@@ -6,27 +11,21 @@ import Mathlib.Tactic
 open RealInnerProductSpace
 
 /-!
-# Resolvent Diffusion Semigroups & Lie-Trotter-Kato Hodge Splitting
+# Conditional resolvent estimates and an abstract split-step identity
 
-This module establishes the canonical mathematical bridge formalizing:
-1. **Unconditional $L^2$ Resolvent Contractivity**:
-   For any positive semi-definite operator $T$ (e.g. the Hodge-Laplacian $\Delta = d\delta + \delta d$)
-   on a real inner product space, the resolvent operator $J_\tau = (I + \tau T)^{-1}$ satisfies
-   $\|J_\tau u\| \le \|u\|$ for ALL step sizes $\tau \ge 0$, without requiring any spectral
-   truncation or ultraviolet cutoff $\Lambda_{\mathrm{UV}}$.
-2. **Cohomological Fixed-Point Invariance**:
-   Harmonic forms ($\ker T$) are exact topological fixed points: $J_\tau v = v$.
-3. **Yosida-Hille Semigroup Approximation**:
-   Iterated resolvent powers $S_n(t) = J_{t/n}^n = (I + \frac{t}{n}T)^{-n}$ satisfy uniform $L^2$
-   contractivity $\|S_n(t) u\| \le \|u\|$, scale eigenmodes as $(1 + \tau \lambda)^{-n} v$,
-   and converge via the Yosida generator approximant $A_\tau = \tau^{-1}(J_\tau - I)$ to $-T$.
-4. **Exact Lie-Trotter-Kato Hodge Splitting**:
-   Because $d^2 = 0$ and $\delta^2 = 0$, the components $A = d\delta$ and $B = \delta d$
-   mutually annihilate ($A B = 0$ and $B A = 0$). Consequently, the Lie-Trotter commutator
-   defect vanishes identically:
-   $$(I + \tau A)(I + \tau B) = I + \tau (A + B)$$
-   The product of split resolvents $J_A \circ J_B$ is an EXACT resolvent for the coupled
-   operator $A + B$, yielding zero Trotter splitting error for all finite $\tau > 0$.
+This module proves statements about bounded linear maps on a real inner product
+space under explicit hypotheses:
+1. If `T` is positive and `J` satisfies the displayed left-resolvent equation,
+   then `J` is contractive for nonnegative step size.
+2. Under a left-inverse law for the step map, vectors in `ker T` are fixed.
+3. Iterates of a contractive map remain contractive, and eigenmode formulas
+   identify the scalar Yosida multiplier. No convergence theorem for the
+   Yosida approximants is proved here.
+4. Given maps `A` and `B` whose two compositions vanish, the forward steps
+   factor exactly and left resolvents compose to a left resolvent for `A + B`.
+   This owner does not construct de Rham operators, their adjoints, or a Hodge
+   Laplacian; a separate construction must supply those before the abstract
+   theorem applies.
 -/
 
 namespace InfoGeometry.Canonical.RGFlowResolventSemigroup
@@ -154,7 +153,7 @@ theorem iterated_contractivity (J : E →ₗ[ℝ] E) (hJ : ∀ u, ‖J u‖ ≤ 
 theorem yosida_hille_discrete_contractivity
     (J_step : ℝ → (E →ₗ[ℝ] E))
     (h_contract : ∀ τ ≥ 0, ∀ u, ‖J_step τ u‖ ≤ ‖u‖)
-    (t : ℝ) (ht : 0 ≤ t) (n : ℕ) (_hn : 0 < n) (u : E) :
+    (t : ℝ) (ht : 0 ≤ t) (n : ℕ) (u : E) :
     ‖iteratedResolvent (J_step (t / n)) n u‖ ≤ ‖u‖ := by
   have hτ : 0 ≤ t / n := div_nonneg ht (Nat.cast_nonneg n)
   exact iterated_contractivity (J_step (t / n)) (h_contract (t / n) hτ) n u
@@ -378,9 +377,7 @@ theorem split_resolvent_exact_eigenmode
     exact hJB_left v
   rw [hB, hJA_eigen]
 
-/-!
-### 5. Certified Structural Synthesis
--/
+end
 
 /-- Certified structural record for the resolvent semigroup and Trotter splitting synthesis. -/
 structure ResolventSemigroupTrotterSynthesis where
@@ -413,6 +410,7 @@ def canonicalResolventSemigroupTrotterSynthesis : ResolventSemigroupTrotterSynth
   , sector_decoupling := true
   }
 
+
 theorem certified_resolvent_semigroup_trotter_synthesis :
     canonicalResolventSemigroupTrotterSynthesis.unconditional_contractivity = true ∧
     canonicalResolventSemigroupTrotterSynthesis.harmonic_fixed_point = true ∧
@@ -427,7 +425,5 @@ theorem certified_resolvent_semigroup_trotter_synthesis :
     canonicalResolventSemigroupTrotterSynthesis.split_harmonic_fixed_point = true ∧
     canonicalResolventSemigroupTrotterSynthesis.sector_decoupling = true := by
   decide
-
-end
 
 end InfoGeometry.Canonical.RGFlowResolventSemigroup

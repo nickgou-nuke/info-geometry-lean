@@ -9,12 +9,27 @@ import Mathlib.Order.Basic
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
+/-!
+# Finite prerequisite poset for the metriplectic attention nodes
+
+## BUCKET 1: Finite order-theoretic facts
+The order is induced from the explicitly listed prerequisite finite sets.
+
+## BUCKET 2: Concrete node data
+The constructors and prerequisite sets are finite source data, and theorems
+about them are limited to that declared encoding.
+
+## BUCKET 3: Interpretations not established here
+The prerequisite table alone does not prove that these edges are the causal
+dependencies of a physical, learning, or analytic system.
+-/
+
 namespace InfoGeometry.Attention.AttentionMetriplecticPoset
 
 /-!
-# Causal Poset of the Metriplectic Attention Architecture (Archetypes 901–917)
+# Prerequisite Poset of the Metriplectic Attention Node Catalog
 
-This module establishes the verified causal poset of the 17 archetypes governing
+This module establishes the finite order on the 23 declared nodes, including the 17 numbered archetypes governing
 the Metriplectic Attention Dynamics, the Latent Curvature Lie Holonomy,
 the Multi-Head Symplectic Reduction, the Residual Stream Euler-Metriplectic Flow,
 and the Symplectic Defect Operator Tetrad:
@@ -40,6 +55,7 @@ and the Symplectic Defect Operator Tetrad:
 Every theorem is verified with 0 sorry and 0 custom axioms.
 -/
 
+/-- The formal nodes used by the metriplectic prerequisite order. -/
 inductive MetriplecticArchetype : Type
   | metriplecticSplit
   | frobeniusOrthogonality
@@ -107,9 +123,13 @@ instance : PartialOrder MetriplecticArchetype :=
 instance : DecidableRel (α := MetriplecticArchetype) (· ≤ ·) :=
   fun left right => inferInstanceAs (Decidable (causalPrerequisites left ⊆ causalPrerequisites right))
 
-/-- Master Theorem 2: Strict irreflexivity of causal precedence (acyclic DAG). -/
-theorem causalOrder_irreflexive_strict (a : MetriplecticArchetype) : ¬(a < a) :=
-  lt_irrefl a
+/-- Strict order in the induced archetype poset is exactly proper inclusion of
+the stored prerequisite sets. This exposes the concrete relation carried by
+the `PartialOrder.lift` instead of merely restating irreflexivity. -/
+theorem causalOrder_iff_prerequisite_ssubset (a b : MetriplecticArchetype) :
+    a < b ↔ causalPrerequisites a ⊂ causalPrerequisites b := by
+  rw [lt_iff_le_not_ge, ssubset_iff_subset_not_superset]
+  rfl
 
 /-- Master Theorem 3: Metriplectic splitting is the foundational root of all 17 archetypes. -/
 theorem metriplecticSplit_is_root (a : MetriplecticArchetype) :
@@ -147,6 +167,7 @@ theorem euler_le_lyapunov :
   residualEulerIntegrator ≤ lyapunovLatentStability := by
   decide
 
+/-- The four explicitly encoded motivic nodes form a prerequisite chain. -/
 theorem motivic_chain :
     polylogOne ≤ oddsRatioDeriv ∧
     oddsRatioDeriv ≤ motivicNilpotent ∧
@@ -238,5 +259,9 @@ theorem metriplecticArchetype_operator_identities {P : B} (hP : P * P = P) (A C 
   · peirce_nf hP
 
 end NonCommutativeOperatorRealization
+
+/-- Master Theorem 2: Strict irreflexivity of causal precedence (acyclic DAG). -/
+theorem causalOrder_irreflexive_strict (a : MetriplecticArchetype) : ¬(a < a) :=
+  lt_irrefl a
 
 end InfoGeometry.Attention.AttentionMetriplecticPoset

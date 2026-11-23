@@ -220,6 +220,76 @@ theorem map_idempotent_is_offDiagonal
     _ = P * D P * Q + Q * D P * P := by rw [hDiagP, hDiagQ]; abel
     _ = P * D P * (1 - P) + (1 - P) * D P * P := by rfl
 
+/-- The projected curvature commutator is exactly the product of the two
+opposite off-diagonal Peirce blocks: `P [D₁P, D₂P] P = Y₁X₂ - Y₂X₁`. -/
+theorem projected_commutator_peirce
+    (D₁ D₂ : FrechetOperatorDerivation 𝕜 A) {P : A}
+    (hP : P * P = P) :
+    P * (D₁ P * D₂ P - D₂ P * D₁ P) * P =
+      (P * D₁ P * (1 - P)) * ((1 - P) * D₂ P * P) -
+      (P * D₂ P * (1 - P)) * ((1 - P) * D₁ P * P) := by
+  let Q : A := 1 - P
+  have hPQ : P * Q = 0 := by
+    dsimp [Q]
+    rw [mul_sub, mul_one, hP, sub_self]
+  have hQP : Q * P = 0 := by
+    dsimp [Q]
+    rw [sub_mul, one_mul, hP, sub_self]
+  have hD1 := map_idempotent_is_offDiagonal D₁ hP
+  have hD2 := map_idempotent_is_offDiagonal D₂ hP
+  change D₁ P = P * D₁ P * Q + Q * D₁ P * P at hD1
+  change D₂ P = P * D₂ P * Q + Q * D₂ P * P at hD2
+  let Y1 : A := P * D₁ P * Q
+  let X1 : A := Q * D₁ P * P
+  let Y2 : A := P * D₂ P * Q
+  let X2 : A := Q * D₂ P * P
+  have hYY : P * (Y1 * Y2) * P = 0 := by
+    simp only [Y1, Y2, mul_assoc]
+    rw [hQP]
+    simp
+  have hXY : P * (X1 * Y2) * P = 0 := by
+    simp only [X1, Y2, mul_assoc]
+    rw [← mul_assoc, hPQ, zero_mul]
+  have hXX : P * (X1 * X2) * P = 0 := by
+    simp only [X1, X2, mul_assoc]
+    rw [← mul_assoc, hPQ, zero_mul]
+  have hYX : P * (Y1 * X2) * P = Y1 * X2 := by
+    simp only [Y1, X2, mul_assoc]
+    rw [← mul_assoc, hP]
+  have hY2X1 : P * (Y2 * X1) * P = Y2 * X1 := by
+    simp only [Y2, X1, mul_assoc]
+    rw [← mul_assoc, hP]
+  calc
+    P * (D₁ P * D₂ P - D₂ P * D₁ P) * P
+        = P * ((Y1 + X1) * (Y2 + X2)) * P -
+          P * ((Y2 + X2) * (Y1 + X1)) * P := by
+          rw [hD1, hD2]
+          simp only [Y1, X1, Y2, X2]
+          noncomm_ring
+    _ = (Y1 * X2) - (Y2 * X1) := by
+          rw [show P * ((Y1 + X1) * (Y2 + X2)) * P =
+            P * (Y1 * Y2) * P + P * (Y1 * X2) * P +
+            P * (X1 * Y2) * P + P * (X1 * X2) * P by noncomm_ring]
+          rw [show P * ((Y2 + X2) * (Y1 + X1)) * P =
+            P * (Y2 * Y1) * P + P * (Y2 * X1) * P +
+            P * (X2 * Y1) * P + P * (X2 * X1) * P by noncomm_ring]
+          rw [hYY, hYX, hXY, hXX, hY2X1]
+          have hYY' : P * (Y2 * Y1) * P = 0 := by
+            simp only [Y2, Y1, mul_assoc]
+            rw [hQP]
+            simp
+          have hX2Y1 : P * (X2 * Y1) * P = 0 := by
+            simp only [X2, Y1, mul_assoc]
+            rw [← mul_assoc, hPQ, zero_mul]
+          have hX2X1 : P * (X2 * X1) * P = 0 := by
+            simp only [X2, X1, mul_assoc]
+            rw [← mul_assoc, hPQ, zero_mul]
+          rw [hYY', hX2Y1, hX2X1]
+          abel
+    _ = (P * D₁ P * (1 - P)) * ((1 - P) * D₂ P * P) -
+        (P * D₂ P * (1 - P)) * ((1 - P) * D₁ P * P) := by
+          simp only [Y1, X2, Y2, X1, Q]
+
 /-- The Banach exponential of a continuous Fréchet operator derivation
 preserves the associative operator product. This connects the explicit
 Leibniz structure in this file to the generic continuous derivation flow,

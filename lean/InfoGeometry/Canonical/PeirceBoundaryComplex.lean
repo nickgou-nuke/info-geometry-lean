@@ -161,6 +161,28 @@ theorem differential_sq_eq_zero_iff_commutes (hp : IsIdempotentElem p)
     change (u * u) * x - x * (u * u) = 0
     exact sub_eq_zero.mpr (h x)
 
+/-- The curvature element `u * u` is annihilated by its own graded differential. -/
+theorem differential_sq_generator (hp : IsIdempotentElem p)
+    (hu : u ∈ LinearMap.range (odd p)) :
+    differential (R := R) p u (u * u) = 0 := by
+  have hRu : reflection p * u = -(u * reflection p) :=
+    eq_neg_of_add_eq_zero_left (odd_anticommutes_reflection hp hu)
+  have hR2 := reflection_sq hp
+  have hcalc : reflection p * (u * u) * reflection p = u * u := by
+    calc
+      reflection p * (u * u) * reflection p
+          = (reflection p * u) * (u * reflection p) := by noncomm_ring
+      _ = (-(u * reflection p)) * (u * reflection p) := by rw [hRu]
+      _ = -((u * reflection p) * (u * reflection p)) := by rw [neg_mul]
+      _ = -(u * (reflection p * u) * reflection p) := by noncomm_ring
+      _ = -(u * (-(u * reflection p)) * reflection p) := by rw [hRu]
+      _ = -(-(u * (u * reflection p) * reflection p)) := by noncomm_ring
+      _ = u * (u * reflection p) * reflection p := by rw [neg_neg]
+      _ = u * (u * (reflection p * reflection p)) := by noncomm_ring
+      _ = u * u := by rw [hR2, mul_one]
+  rw [differential_apply, conjugation_apply, hcalc]
+  noncomm_ring
+
 /-- Two odd graded actions close on the native inner action of their symmetric product. -/
 theorem differential_anticommutator (hp : IsIdempotentElem p)
     (hu : u ∈ LinearMap.range (odd p)) (hv : v ∈ LinearMap.range (odd p)) :

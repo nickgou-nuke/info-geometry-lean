@@ -393,6 +393,116 @@ nullcone pair `(ξ(Φ), η(Φ)) ∈ EuclideanSpace ℂ (Fin 2) × EuclideanSpace
 def vec8ToChiralDiracSpinor (Φ : Vec8R) : ChiralDiracSpinor :=
   (WithLp.toLp 2 (weylXi Φ), WithLp.toLp 2 (weylEta Φ))
 
+/-- Inverse coordinate readout for the real eight-component Dirac carrier. -/
+private def psiToPhi (z : Fin 4 → ℂ) : Vec8R := fun i =>
+  match i.val with
+  | 0 => (z 0).re
+  | 1 => -(z 1).im
+  | 2 => -(z 1).re
+  | 3 => (z 0).im
+  | 4 => (z 2).im
+  | 5 => (z 3).re
+  | 6 => (z 3).im
+  | 7 => (z 2).re
+  | _ => 0
+
+private lemma phiToPsi_psiToPhi (z : Fin 4 → ℂ) : phiToPsi (psiToPhi z) = z := by
+  funext i
+  fin_cases i <;> simp [phiToPsi, psiToPhi]
+
+private lemma psiToPhi_phiToPsi (Φ : Vec8R) : psiToPhi (phiToPsi Φ) = Φ := by
+  funext i
+  fin_cases i <;> simp [phiToPsi, psiToPhi]
+
+/-- Inverse Hadamard transform from the two Weyl sectors to Dirac coordinates. -/
+private def chiralToDiracCoords (ψ : ChiralDiracSpinor) : Fin 4 → ℂ
+  | ⟨0, _⟩ => ((1 / Real.sqrt 2 : ℝ) : ℂ) * (ψ.1.ofLp 0 + ψ.2.ofLp 0)
+  | ⟨1, _⟩ => ((1 / Real.sqrt 2 : ℝ) : ℂ) * (ψ.1.ofLp 1 + ψ.2.ofLp 1)
+  | ⟨2, _⟩ => ((1 / Real.sqrt 2 : ℝ) : ℂ) * (ψ.1.ofLp 0 - ψ.2.ofLp 0)
+  | ⟨3, _⟩ => ((1 / Real.sqrt 2 : ℝ) : ℂ) * (ψ.1.ofLp 1 - ψ.2.ofLp 1)
+
+private def chiralToVec8 (ψ : ChiralDiracSpinor) : Vec8R :=
+  psiToPhi (chiralToDiracCoords ψ)
+
+private lemma invSqrtTwoComplex_sq :
+    ((1 / Real.sqrt 2 : ℝ) : ℂ) ^ 2 = (1 / 2 : ℂ) := by
+  have hroot : ((Real.sqrt 2 : ℝ) : ℂ) ^ 2 = 2 := by
+    exact_mod_cast (Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2))
+  push_cast
+  rw [div_pow, one_pow, hroot]
+
+private lemma invSqrtTwo_sum (x y : ℂ) :
+    ((1 / Real.sqrt 2 : ℝ) : ℂ) *
+      (((1 / Real.sqrt 2 : ℝ) : ℂ) * (x + y) +
+        ((1 / Real.sqrt 2 : ℝ) : ℂ) * (x - y)) = x := by
+  calc
+    _ = ((1 / Real.sqrt 2 : ℝ) : ℂ) ^ 2 * ((x + y) + (x - y)) := by ring
+    _ = x := by rw [invSqrtTwoComplex_sq]; ring
+
+private lemma invSqrtTwo_sub (x y : ℂ) :
+    ((1 / Real.sqrt 2 : ℝ) : ℂ) *
+      (((1 / Real.sqrt 2 : ℝ) : ℂ) * (x + y) -
+        ((1 / Real.sqrt 2 : ℝ) : ℂ) * (x - y)) = y := by
+  calc
+    _ = ((1 / Real.sqrt 2 : ℝ) : ℂ) ^ 2 * ((x + y) - (x - y)) := by ring
+    _ = y := by rw [invSqrtTwoComplex_sq]; ring
+
+/-- The Weyl readout followed by the inverse coordinate transform is the identity. -/
+theorem vec8ToChiralDiracSpinor_right_inv (ψ : ChiralDiracSpinor) :
+    vec8ToChiralDiracSpinor (chiralToVec8 ψ) = ψ := by
+  apply Prod.ext
+  · apply (WithLp.ext_iff 2).2
+    funext k
+    change ((1 / Real.sqrt 2 : ℝ) : ℂ) *
+      (phiToPsi (psiToPhi (chiralToDiracCoords ψ)) ⟨k.val, by omega⟩ +
+        phiToPsi (psiToPhi (chiralToDiracCoords ψ)) ⟨k.val + 2, by omega⟩) = _
+    rw [phiToPsi_psiToPhi]
+    fin_cases k
+    · simpa [chiralToDiracCoords] using invSqrtTwo_sum (ψ.1.ofLp 0) (ψ.2.ofLp 0)
+    · simpa [chiralToDiracCoords] using invSqrtTwo_sum (ψ.1.ofLp 1) (ψ.2.ofLp 1)
+  · apply (WithLp.ext_iff 2).2
+    funext k
+    change ((1 / Real.sqrt 2 : ℝ) : ℂ) *
+      (phiToPsi (psiToPhi (chiralToDiracCoords ψ)) ⟨k.val, by omega⟩ -
+        phiToPsi (psiToPhi (chiralToDiracCoords ψ)) ⟨k.val + 2, by omega⟩) = _
+    rw [phiToPsi_psiToPhi]
+    fin_cases k
+    · simpa [chiralToDiracCoords] using invSqrtTwo_sub (ψ.1.ofLp 0) (ψ.2.ofLp 0)
+    · simpa [chiralToDiracCoords] using invSqrtTwo_sub (ψ.1.ofLp 1) (ψ.2.ofLp 1)
+
+/-- Every complex Weyl pair is obtained from a real eight-coordinate spinor. -/
+theorem vec8ToChiralDiracSpinor_surjective :
+    Function.Surjective vec8ToChiralDiracSpinor := by
+  intro ψ
+  exact ⟨chiralToVec8 ψ, vec8ToChiralDiracSpinor_right_inv ψ⟩
+
+private lemma chiralToDiracCoords_vec8 (Φ : Vec8R) :
+    chiralToDiracCoords (vec8ToChiralDiracSpinor Φ) = phiToPsi Φ := by
+  funext i
+  fin_cases i
+  · exact invSqrtTwo_sum (phiToPsi Φ 0) (phiToPsi Φ 2)
+  · exact invSqrtTwo_sum (phiToPsi Φ 1) (phiToPsi Φ 3)
+  · exact invSqrtTwo_sub (phiToPsi Φ 0) (phiToPsi Φ 2)
+  · exact invSqrtTwo_sub (phiToPsi Φ 1) (phiToPsi Φ 3)
+
+private lemma chiralToVec8_vec8ToChiralDiracSpinor (Φ : Vec8R) :
+    chiralToVec8 (vec8ToChiralDiracSpinor Φ) = Φ := by
+  dsimp [chiralToVec8]
+  rw [chiralToDiracCoords_vec8, psiToPhi_phiToPsi]
+
+theorem vec8ToChiralDiracSpinor_injective :
+    Function.Injective vec8ToChiralDiracSpinor := by
+  intro Φ Ψ h
+  have h_eq : chiralToVec8 (vec8ToChiralDiracSpinor Φ) = chiralToVec8 (vec8ToChiralDiracSpinor Ψ) := by
+    rw [h]
+  rwa [chiralToVec8_vec8ToChiralDiracSpinor, chiralToVec8_vec8ToChiralDiracSpinor] at h_eq
+
+/-- The canonical real-to-Weyl readout is bijective as a carrier map. This does not assert
+intertwining with any Clifford action. -/
+theorem vec8ToChiralDiracSpinor_bijective :
+    Function.Bijective vec8ToChiralDiracSpinor :=
+  ⟨vec8ToChiralDiracSpinor_injective, vec8ToChiralDiracSpinor_surjective⟩
+
 theorem inner_vec8ToChiralDiracSpinor (Φ : Vec8R) :
     inner ℂ (vec8ToChiralDiracSpinor Φ).1 (vec8ToChiralDiracSpinor Φ).2 = weylCrossInner Φ := by
   dsimp [vec8ToChiralDiracSpinor, weylCrossInner]

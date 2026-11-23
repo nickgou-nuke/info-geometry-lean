@@ -183,7 +183,7 @@ theorem cl11_shirokov_recursive_inverse (U : Cl11Matrix) (hdet : Matrix.det U 鈮
   dsimp only
   rw [cl11_shirokov_adjugate, cl11_shirokov_c_two]
   constructor
-  路 simp [Matrix.mul_smul, Matrix.mul_adjugate, smul_smul, hdet]
-  路 simp [Matrix.smul_mul, Matrix.adjugate_mul, smul_smul, hdet]
+  路 simp [Matrix.mul_adjugate, smul_smul, hdet]
+  路 simp [Matrix.adjugate_mul, smul_smul, hdet]
 
 end InfoGeometry.Synthesis.ShirokovRecursiveInverse

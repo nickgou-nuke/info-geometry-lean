@@ -68,6 +68,20 @@ theorem shirokovU_eq_zero_of_one_le (φ : A →ₗ[R] R) (N : ℕ) (hN : (N : R)
           rw [shirokovU_succ, hprev, shirokovC_eq_zero_of_u_succ_eq_zero φ N a k hprev]
           simp
 
+/-- A rank-one collapse makes every Shirokov coefficient after the first
+vanish, uniformly at all finite recurrence indices. -/
+theorem shirokovC_eq_zero_of_one_le (φ : A →ₗ[R] R) (N : ℕ) (hN : (N : R) ≠ 0)
+    (a : A) (s : R) (hφa : φ a = s / (N : R))
+    (ha2 : a * a = algebraMap R A s * a) :
+    ∀ k : ℕ, 1 ≤ k → shirokovC φ N a k = 0 := by
+  intro k hk
+  cases k with
+  | zero => omega
+  | succ j =>
+      have hU : shirokovU φ N a (j + 1) = 0 :=
+        shirokovU_eq_zero_of_one_le φ N hN a s hφa ha2 (j + 1) (by omega)
+      exact shirokovC_eq_zero_of_u_succ_eq_zero φ N a j hU
+
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 /-- The normalized trace used as Shirokov's rank-zero readout on square matrices. -/

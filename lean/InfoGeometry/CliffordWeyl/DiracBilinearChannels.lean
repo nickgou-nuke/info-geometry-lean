@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Clifford.CrawfordDiracBispinorDensities
 import Mathlib.LinearAlgebra.Matrix.ConjTranspose
 import Mathlib.LinearAlgebra.Matrix.Trace
@@ -292,6 +298,17 @@ theorem coefficients_injective : Function.Injective channelCoefficient := by
 def diracDyad (left right : DiracSpinor) : DiracMatrix :=
   vecMulVec right (vecMul (star left) gamma0)
 
+/-- Every two-by-two minor of a Dirac spinor dyad vanishes.  This is the
+rank-one constraint on the operator reconstructed from its full Dirac
+bilinear coordinates; it does not assert that the sixteen coordinates are
+independent. -/
+theorem diracDyad_minor_eq_zero (left right : DiracSpinor)
+    (i j k l : Fin 4) :
+    diracDyad left right i k * diracDyad left right j l =
+      diracDyad left right i l * diracDyad left right j k := by
+  simp [diracDyad, Matrix.vecMulVec_apply, Matrix.vecMul]
+  ring
+
 def bilinear (left : DiracSpinor) (insertion : DiracMatrix) (right : DiracSpinor) : ℂ :=
   dotProduct (star left) ((gamma0 * insertion).mulVec right)
 
@@ -310,6 +327,25 @@ theorem fierz_dyad_reconstruction (left right : DiracSpinor) :
   apply Finset.sum_congr rfl
   intro index member
   rw [channelCoefficient, trace_dyad_eq_bilinear]
+
+/-- The sixteen trace-dual Fierz coordinates reconstruct a rank-one operator,
+so the reconstructed matrix satisfies every two-by-two minor relation. -/
+theorem fierz_reconstruction_minor_constraint (left right : DiracSpinor)
+    (i j k l : Fin 4) :
+    (∑ index : Fin 16,
+        (bilinear left (indexedChannel index).conjTranspose right / 4) •
+          indexedChannel index) i k *
+      (∑ index : Fin 16,
+        (bilinear left (indexedChannel index).conjTranspose right / 4) •
+          indexedChannel index) j l =
+    (∑ index : Fin 16,
+        (bilinear left (indexedChannel index).conjTranspose right / 4) •
+          indexedChannel index) i l *
+      (∑ index : Fin 16,
+        (bilinear left (indexedChannel index).conjTranspose right / 4) •
+          indexedChannel index) j k := by
+  rw [← fierz_dyad_reconstruction left right]
+  exact diracDyad_minor_eq_zero left right i j k l
 
 set_option maxHeartbeats 2000000 in
 theorem channel_chirality (label : DiracBilinearLabel) :

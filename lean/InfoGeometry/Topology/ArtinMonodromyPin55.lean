@@ -29,6 +29,16 @@ noncomputable section
 namespace InfoGeometry.Topology.ArtinMonodromyPin55
 
 abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+
+/-- Elementary off-diagonal `2 × 2` complex matrices. -/
+def artinE01 : M2C := !![0, 1; 0, 0]
+def artinE10 : M2C := !![0, 0; 1, 0]
+
+/-- Non-commutativity witness for the `2 × 2` complex braid carrier. -/
+theorem artinM2C_noncommutative : artinE01 * artinE10 ≠ artinE10 * artinE01 := by
+  intro h
+  have h00 : (artinE01 * artinE10 : M2C) 0 0 = (artinE10 * artinE01 : M2C) 0 0 := by rw [h]
+  simp [artinE01, artinE10, Matrix.mul_apply, Fin.sum_univ_two] at h00
 abbrev ArtinWord := List ℕ
 
 instance : Monoid ArtinWord where

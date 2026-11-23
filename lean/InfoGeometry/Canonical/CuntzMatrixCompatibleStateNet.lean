@@ -148,9 +148,9 @@ theorem propagatedDensity_trace (D₀ : MatrixStage 0) (z : ℂ)
   | 0 => h₀
   | n + 1 => by
       rw [propagatedDensity]
-      have htrace := concreteData.trace_compatible n
+      have htrace := concreteTraceCompatibleData.trace_compatible n
         (propagatedDensity D₀ n)
-      simpa [matrixTraceState, matrixTraceFunctional, concreteData] using
+      simpa [matrixTraceState, matrixTraceFunctional, concreteTraceCompatibleData] using
         htrace.trans (propagatedDensity_trace D₀ z h₀ n)
 
 theorem weightedStageFunctional_compatible_of_density_compatible
@@ -164,16 +164,16 @@ theorem weightedStageFunctional_compatible_of_density_compatible
       rw [weightedStageFunctional_apply, weightedStageFunctional_apply]
       rw [show rawMap (Nat.le.step hij) x =
         concreteStep j (rawMap hij x) by
-          simpa [rawMap, concreteData, CuntzMatrixTraceTower.concreteMap,
+          simpa [rawMap, concreteTraceCompatibleData, CuntzMatrixTraceTower.concreteMap,
             CuntzMatrixTraceTower.map_succ] using
             congrArg (fun f => f x)
-              (CuntzMatrixTraceTower.map_succ concreteData hij)]
+              (CuntzMatrixTraceTower.map_succ concreteTraceCompatibleData.step hij)]
       rw [hD j, ← map_mul]
-      have htrace := concreteData.trace_compatible j (rawMap hij x * D j)
+      have htrace := concreteTraceCompatibleData.trace_compatible j (rawMap hij x * D j)
       change matrixTraceFunctional (j + 1)
           (concreteStep j (rawMap hij x * D j)) =
         matrixTraceFunctional i (x * D i)
-      simpa [matrixTraceState, matrixTraceFunctional, concreteData] using
+      simpa [matrixTraceState, matrixTraceFunctional, concreteTraceCompatibleData] using
         htrace.trans (by
           simpa [weightedStageFunctional_apply] using ih)
 
@@ -401,8 +401,8 @@ theorem gibbsStageFunctional_compatible
       rfl
   | @step j hij ih =>
       change gibbsFunctional (H (j + 1)) (hH (j + 1)) β
-          ((map concreteData (Nat.le.step hij)) x) = _
-      rw [map_succ concreteData hij]
+          ((map concreteTraceCompatibleData.step (Nat.le.step hij)) x) = _
+      rw [map_succ concreteTraceCompatibleData.step hij]
       change gibbsFunctional (H (j + 1)) (hH (j + 1)) β
           (concreteStep j (rawMap hij x)) = _
       exact gibbsFunctional_concreteStep j (H j) (H (j + 1))

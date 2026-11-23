@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CantorBoundaryCuntzShift
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -151,8 +156,8 @@ structure ParityEquivariantCuntzCarrier
     (Op : Type*) [Ring Op] [StarRing Op] where
   parity : StarWittenParity Op
   cuntz : CantorCuntzO2Carrier Op
-  left_even : ParityEven parity cuntz.S_left
-  right_odd : ParityOdd parity cuntz.S_right
+  left_even : ParityEven parity (CuntzO2Carrier.S_left cuntz)
+  right_odd : ParityOdd parity (CuntzO2Carrier.S_right cuntz)
 
 namespace ParityEquivariantCuntzCarrier
 

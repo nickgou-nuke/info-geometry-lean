@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
@@ -196,11 +201,11 @@ claiming a new analytic infinite tensor product.
 @[rep_depth operator]
 theorem cantorCuntz_root_branching
     {Op : Type*} [Ring Op] [StarRing Op]
-    (C : CuntzO2Carrier Op)
+    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op)
     (seed : Op)
     (ξ : InfiniteBinaryWordSpace) :
-    (C.leftRangeProjection * seed +
-      C.rightRangeProjection * seed = seed) ∧
+    (CuntzO2Carrier.leftRangeProjection C * seed +
+      CuntzO2Carrier.rightRangeProjection C * seed = seed) ∧
       (ξ = boundaryCons (boundaryHead ξ) (boundaryTail ξ)) := by
   constructor
   · exact InfoGeometry.Canonical.CantorCuntzBasis.seed_branch_decomposition (C := C) (seed := seed)
@@ -499,29 +504,21 @@ def cantorHausdorffReadout
     (T : CuntzCantorSpectralTriple Op H) : ℝ :=
   T.spectralDimension
 
-@[rep_depth operator]
-theorem cantorHausdorffReadout_eq_middleThirdsCantor
-    {Op H : Type*} [Ring Op] [StarRing Op]
-    [NormedAddCommGroup H] [NormedSpace ℂ H] [SMul Op H]
-    (T : CuntzCantorSpectralTriple Op H) :
-    cantorHausdorffReadout T = Real.log 2 / Real.log 3 := by
-  simp [cantorHausdorffReadout, T.spectralDimension_eq_middleThirdsCantor]
-
 /-! ## 3. Cuntz / CAR / Clifford readouts -/
 
 /-- Re-export of the Cuntz range-projection partition of unity. -/
 @[rep_depth operator]
 theorem cuntz_rangeProjection_sum_one
     {Op : Type*} [Ring Op] [StarRing Op]
-    (C : CuntzO2Carrier Op) :
-    C.leftRangeProjection + C.rightRangeProjection = 1 :=
-  C.rangeProjection_sum_one
+    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) :
+    CuntzO2Carrier.leftRangeProjection C + CuntzO2Carrier.rightRangeProjection C = 1 :=
+  CuntzO2Carrier.rangeProjection_sum_one C
 
 /-- Re-export of the derived CAR nilpotency law. -/
 @[rep_depth operator]
 theorem carFromCuntz_sq_eq_zero
     {Op : Type*} [Ring Op] [StarRing Op]
-    (C : CantorCuntzO2Carrier Op) :
+    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) :
     carFromCuntz C * carFromCuntz C = 0 :=
   InfoGeometry.Canonical.carFromCuntz_sq_eq_zero C
 
@@ -529,7 +526,7 @@ theorem carFromCuntz_sq_eq_zero
 @[rep_depth operator]
 theorem carFromCuntz_anticommutator_star_eq_one
     {Op : Type*} [Ring Op] [StarRing Op]
-    (C : CantorCuntzO2Carrier Op) :
+    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) :
     cantorAnticommutator (carFromCuntz C) (star (carFromCuntz C)) = 1 :=
   InfoGeometry.Canonical.carFromCuntz_anticommutator_star_eq_one C
 

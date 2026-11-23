@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Clifford.FiniteRealFockStageIsometry
+import InfoGeometry.LinearAlgebra.DirectLimitBilinear
 
 /-! # Positive real pairing on the existing algebraic Fock direct limit
 
@@ -110,6 +111,19 @@ theorem fockInfinityPairing_same_stage (n : ℕ) (x y : FockStage n) :
     fockInfinityPairing (fockToInfinity n x) (fockToInfinity n y) = inner ℝ x y := by
   rw [fockInfinityPairing_stage, fockCommonInner_eq_at n n n le_rfl le_rfl]
   simp only [fockStageMap_refl, LinearMap.id_apply]
+
+/-- The existing two-lift pairing is the generic native compatible-form descent.
+This identifies the constructions on the same Fock carrier, without adding a
+second pairing or changing its metric instances. -/
+theorem fockInfinityPairing_eq_directLimitForm :
+    fockInfinityPairing =
+      InfoGeometry.LinearAlgebra.DirectLimitBilinear.form
+        (fun i j h => fockStageMap i j h)
+        (fun n => innerₗ (FockStage n))
+        (fun i j h x y => fockStageMap_inner i j h x y) := by
+  apply InfoGeometry.LinearAlgebra.DirectLimitBilinear.form_unique
+  intro i x y
+  exact fockInfinityPairing_same_stage i x y
 
 /-- Symmetry holds on every algebraic Fock vector. -/
 theorem fockInfinityPairing_symm (x y : FockInfinity) :

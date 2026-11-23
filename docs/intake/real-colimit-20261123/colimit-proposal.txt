@@ -1,0 +1,641 @@
+**Apply the inductive colimit to the underlying modules or algebras, with transition maps that preserve the structures you need.** Then reuse the existing theorems on the resulting object.
+
+Several of our “finite” results already quantify over arbitrary modules: the reflection lemmas and `PositiveRadicalQuotient` do not require finite dimension. The missing layer is therefore the construction of compatible operators and pairings on the limit.
+
+For the Weil–Krein part, the useful order is
+\[
+(V_i,J_i,D_i,B_i)
+\;\longrightarrow\;
+(V_\infty,J_\infty,D_\infty,B_\infty)
+\;\longrightarrow\;
+V_\infty/\operatorname{rad}B_\infty,
+\]
+followed by Hilbert completion **when positivity has been proved**.
+
+The Euler-product cutoff, infinite curvature sum, and infinite supertrace each require an additional argument. Their finite expressions do not automatically form compatible elements of a colimit.
+
+## 1. Specify the directed system
+
+Let \(I\) be a nonempty directed preorder. At each stage, take a real vector space \(V_i\), with linear maps
+\[
+f_{ij}:V_i\to V_j \qquad (i\le j)
+\]
+satisfying
+\[
+f_{ii}=\mathrm{id},
+\qquad
+f_{jk}\circ f_{ij}=f_{ik}.
+\]
+
+The algebraic direct limit has canonical maps
+\[
+\iota_i:V_i\to V_\infty,
+\qquad
+\iota_j\circ f_{ij}=\iota_i.
+\]
+
+Every element of \(V_\infty\) has a representative at one stage. Every finite collection of elements can be represented at a common stage. This is what lets us transfer finite algebraic calculations. Mathlib exposes these facts through its direct-limit induction and representative APIs. [leanprover-community.github.io](https://leanprover-community.github.io/mathlib4_docs/Mathlib/Algebra/Colimit/Module.html?utm_source=chatgpt.com)
+
+For our definitions, the necessary compatibility conditions are:
+
+| Structure | Required compatibility |
+|---|---|
+| Reflection \(J_i\) | \(J_jf_{ij}=f_{ij}J_i\) |
+| Linear operator \(D_i\) | \(D_jf_{ij}=f_{ij}D_i\) |
+| Bilinear pairing \(B_i\) | \(B_j(f_{ij}x,f_{ij}y)=B_i(x,y)\) |
+| Algebra derivation \(\delta_i\) | Algebra maps \(f_{ij}\), with \(\delta_jf_{ij}=f_{ij}\delta_i\) |
+| Chain boundary \(\partial_i\) | \(\partial_jf_{ij}=f_{ij}\partial_i\), degree by degree |
+| Trace functional \(\tau_i\) | \(\tau_jf_{ij}=\tau_i\) |
+
+These conditions are substantive. For example, a finite spectral cutoff should contain whole mirror orbits if \(J_i\) is to be an endomorphism of that stage.
+
+The repository already has the categorical universal property in FilteredDirectLimitOwner.lean[FilteredDirectLimitOwner.lean](sandbox:/workspace/scratch/058543be00a5/info-geometry-lean/lean/InfoGeometry/Categorical/FilteredDirectLimitOwner.lean). Its `descendDirectLimit` and uniqueness theorem are the appropriate categorical interface. The file called `TensorTowerColimit` supplies compatibility results for a given cone; it does not itself construct a universal colimit.
+
+## 2. Lift \(J\) and \(D\) using one reusable construction
+
+For explicit calculations, Mathlib’s root `_root_.DirectLimit` is particularly useful: the same carrier supports module, ring, and algebra structures when the transition maps preserve them. Its module universal property is `DirectLimit.Module.lift`; its algebra maps are supplied by `DirectLimit.Algebra.of`. [leanprover-community.github.io](https://leanprover-community.github.io/mathlib4_docs/Mathlib/Algebra/Colimit/DirectLimit.html?utm_source=chatgpt.com)
+
+Here is the native lifting pattern. **I checked its arguments and proof against the pinned Mathlib sources; this new snippet has not been compiler-checked.**
+
+```lean
+import Mathlib.Algebra.Colimit.DirectLimit
+
+namespace ColimitExample
+
+variable {R I : Type*} [Ring R]
+variable [Preorder I] [Nonempty I] [IsDirectedOrder I]
+
+variable {V : I → Type*}
+variable [∀ i, AddCommGroup (V i)] [∀ i, Module R (V i)]
+
+variable (f : ∀ i j, i ≤ j → V i →ₗ[R] V j)
+variable [DirectedSystem V (fun i j h x => f i j h x)]
+
+variable (T : ∀ i, V i →ₗ[R] V i)
+variable
+  (hT : ∀ i j (h : i ≤ j) (x : V i),
+    T j (f i j h x) = f i j h (T i x))
+
+noncomputable def descendEnd :
+    _root_.DirectLimit V f →ₗ[R] _root_.DirectLimit V f :=
+  DirectLimit.Module.lift R I V f
+    (fun i => (DirectLimit.Module.of R I V f i).comp (T i))
+    (by
+      intro i j h x
+      change
+        DirectLimit.Module.of R I V f j (T j (f i j h x)) =
+        DirectLimit.Module.of R I V f i (T i x)
+      rw [hT, DirectLimit.Module.of_f])
+
+@[simp]
+theorem descendEnd_of (i : I) (x : V i) :
+    descendEnd f T hT
+        (DirectLimit.Module.of R I V f i x) =
+      DirectLimit.Module.of R I V f i (T i x) :=
+  rfl
+
+end ColimitExample
+```
+
+Apply this construction separately to \(J_i\) and \(D_i\). It gives
+\[
+J_\infty(\iota_i x)=\iota_i(J_i x),
+\qquad
+D_\infty(\iota_i x)=\iota_i(D_i x).
+\]
+
+Now suppose the stage laws are
+\[
+J_i^2=1,
+\qquad
+J_iD_iJ_i=-D_i.
+\]
+
+On a representative:
+\[
+\begin{aligned}
+J_\infty D_\infty J_\infty(\iota_i x)
+&=\iota_i(J_iD_iJ_i x)\\
+&=\iota_i(-D_i x)\\
+&=-D_\infty(\iota_i x).
+\end{aligned}
+\]
+
+Since every limit vector has such a representative,
+\[
+J_\infty^2=1,
+\qquad
+J_\infty D_\infty J_\infty=-D_\infty.
+\]
+
+At that point, the existing `anticommute_of_reflection`, `reflection_eigen_equation`, and `reflection_hasEigenvector` apply directly to \(V_\infty\). Their statements already allow arbitrary vector spaces.
+
+Injectivity is unnecessary for these identities. To preserve a **particular nonzero stage eigenvector**, additionally prove that its image is nonzero; injective transition maps are one sufficient condition.
+
+## 3. Descend the pairing before taking the radical quotient
+
+Suppose the \(B_i\) are symmetric real bilinear forms, with exact compatibility
+\[
+B_j(f_{ij}x,f_{ij}y)=B_i(x,y).
+\tag{1}
+\]
+
+Define the limit pairing by moving both arguments to a common stage:
+\[
+B_\infty(\iota_i x,\iota_j y)
+=
+B_k(f_{ik}x,f_{jk}y),
+\qquad k\ge i,j.
+\tag{2}
+\]
+
+Equation (1) proves independence of the common stage and of the representatives. In Lean, construct this with **two applications of the linear universal property**, one for each argument.
+
+There is already a concrete real implementation of this method in RealFockInfinityPairing.lean[RealFockInfinityPairing.lean](sandbox:/workspace/scratch/058543be00a5/info-geometry-lean/lean/InfoGeometry/Clifford/RealFockInfinityPairing.lean). It constructs the pairing on the existing direct-limit carrier and proves the representative formula. That is the strongest implementation pattern to generalize here.
+
+### A cutoff pairing may fail the compatibility condition
+
+If
+\[
+B_N(f,g)
+\]
+is a partial spectral sum on a fixed test-function space, increasing \(N\) usually adds terms:
+\[
+B_{N+1}(f,g)=B_N(f,g)+\text{new contribution}.
+\]
+
+With identity transition maps, this is generally **not** equation (1). It is a sequence of forms whose convergence must be studied.
+
+There are two valid constructions:
+
+- Use finite coefficient spaces with compatible pairings, then identify their limit with the intended spectral model.
+- Keep the fixed test-function space and prove convergence of the cutoff forms, including their remainder terms.
+
+The colimit construction applies immediately to the first. The second has an analytic obligation.
+
+### Positivity is completely determined by the stages
+
+Once (2) is established,
+\[
+\boxed{
+B_\infty\ge0
+\quad\Longleftrightarrow\quad
+\forall i,\ B_i\ge0.
+}
+\tag{3}
+\]
+
+Here \(B\ge0\) means \(\forall x,\ B(x,x)\ge0\).
+
+The forward implication follows by restriction along \(\iota_i\). For the reverse implication, represent a limit vector as \(\iota_i x\) and use
+\[
+B_\infty(\iota_i x,\iota_i x)=B_i(x,x).
+\]
+
+Likewise, a finite negative witness survives:
+\[
+B_i(x,x)<0
+\quad\Longrightarrow\quad
+B_\infty(\iota_i x,\iota_i x)<0.
+\tag{4}
+\]
+
+In particular, \(\iota_i x\neq0\). No injectivity assumption is needed for this conclusion: its negative self-pairing already prevents it from vanishing.
+
+### Radical reduction cannot remove that negative witness
+
+Now apply the existing PositiveRadicalQuotient.lean[PositiveRadicalQuotient.lean](sandbox:/workspace/scratch/058543be00a5/info-geometry-lean/lean/InfoGeometry/LinearAlgebra/PositiveRadicalQuotient.lean) to \(B_\infty\):
+\[
+Q_\infty
+=
+V_\infty/\operatorname{rad}B_\infty,
+\qquad
+\operatorname{rad}B_\infty=\ker B_\infty.
+\]
+
+Its `quotientForm_mk` preserves every pairing on representatives. Consequently, the negative vector from (4) remains nonzero and negative in \(Q_\infty\), exactly as `negative_survives_radical_quotient` states.
+
+Thus the precise positivity result is
+\[
+\boxed{
+\bar B_\infty\ge0
+\iff
+B_\infty\ge0
+\iff
+\forall i,\ B_i\ge0.
+}
+\tag{5}
+\]
+
+### Quotienting at every finite stage needs an extra hypothesis
+
+To form
+\[
+\varinjlim_i\bigl(V_i/\operatorname{rad}B_i\bigr),
+\]
+first prove
+\[
+f_{ij}(\operatorname{rad}B_i)
+\subseteq
+\operatorname{rad}B_j.
+\tag{6}
+\]
+
+Form preservation alone does not imply this.
+
+For example, include
+\[
+(\mathbb R,B_0=0)
+\longrightarrow
+(\mathbb R^2,B_1),
+\qquad t\mapsto(t,0),
+\]
+where
+\[
+B_1((a,b),(c,d))=ad+bc.
+\]
+
+The inclusion preserves the restricted form. But the entire first space is radical, while the hyperbolic plane has zero radical:
+\[
+B_1((1,0),(0,1))=1.
+\]
+
+The larger stage has introduced a new direction that detects the old null vector. This is also why the **nullcone and radical must remain distinct**: an isotropic vector can pair nontrivially with other vectors.
+
+Under (6), there is a canonical isomorphism
+\[
+\varinjlim_i\bigl(V_i/\operatorname{rad}B_i\bigr)
+\cong
+V_\infty/\operatorname{rad}B_\infty.
+\tag{7}
+\]
+
+For symmetric positive semidefinite forms, (6) is automatic, because
+\[
+B(x,x)=0\iff x\in\operatorname{rad}B.
+\]
+
+For the general indefinite case, **construct the limit form first and quotient afterward**. That avoids assuming unavailable stage quotient maps.
+
+### The negative-index statement
+
+Define the extended finite negative index by
+\[
+\kappa_-(B)
+=
+\sup\left\{
+\dim W:
+W\text{ finite-dimensional and }B|_W\text{ negative definite}
+\right\}
+\in\mathbb N\cup\{\infty\}.
+\]
+
+Then exact form compatibility gives
+\[
+\boxed{
+\kappa_-(B_\infty)
+=
+\sup_i\kappa_-(B_i)
+=
+\kappa_-(\bar B_\infty).
+}
+\tag{8}
+\]
+
+A negative-definite stage subspace maps injectively into the limit. Conversely, lift a finite basis of a negative-definite limit subspace to one common stage; the lifted span has the same Gram form.
+
+There is an important Lean detail here: **Mathlib’s `QuadraticForm.sigNeg : ℕ` is defined as zero on infinite-dimensional carriers.** Use it for the finite stages. For the limit, define the extended index in `ℕ∞`, or state positivity directly. An equality `sigNeg Q∞ = 0` on an infinite-dimensional space would carry no positivity information. [leanprover-community.github.io](https://leanprover-community.github.io/mathlib4_docs/Mathlib/LinearAlgebra/QuadraticForm/Signature.html?utm_source=chatgpt.com)
+
+## 4. A concrete real colimit for the hyperbolic blocks
+
+Let \(S\) index paired spectral blocks, and let stages be finite subsets \(F\subseteq S\). Set
+\[
+E_F=\mathbb R^F,
+\qquad
+V_F=E_F\oplus E_F,
+\]
+with zero-extension transition maps.
+
+Use the existing cross-pairing:
+\[
+B_F((x,y),(x',y'))
+=
+\langle x,y'\rangle+\langle x',y\rangle.
+\]
+
+The algebraic colimit has the concrete model
+\[
+V_\infty
+\cong
+(S\to_0\mathbb R)\oplus(S\to_0\mathbb R),
+\]
+where `→₀` is Mathlib’s `Finsupp`.
+
+Every pairing remains a finite sum because the vectors have finite support. Define
+\[
+J(x,y)=(y,x),
+\]
+and, for a real weight function \(\lambda:S\to\mathbb R\),
+\[
+D(x,y)=(\lambda x,-\lambda y).
+\]
+
+These operations preserve finite support and satisfy
+\[
+J^2=1,\qquad JDJ=-D.
+\]
+
+For any nonzero finitely supported \(x\),
+\[
+B_\infty((x,-x),(x,-x))
+=
+-2\|x\|^2<0.
+\]
+
+This is a fully real, explicit realization of the inductive construction. It also shows exactly what happens to the hyperbolic directions: they persist.
+
+### Hilbert and Krein completion
+
+If the descended form is positive semidefinite, `PositiveRadicalQuotient.innerProductCore` constructs the real inner product on the quotient. Install the resulting normed structure and take
+\[
+H_\infty=\operatorname{UniformSpace.Completion}(Q_\infty).
+\]
+
+Mathlib supplies the inner-product-space instance on this completion. The repository’s RealFockHilbertCompletion.lean[RealFockHilbertCompletion.lean](sandbox:/workspace/scratch/058543be00a5/info-geometry-lean/lean/InfoGeometry/Clifford/RealFockHilbertCompletion.lean) already demonstrates this sequence, including isometric stage maps and density of their union. [leanprover-community.github.io](https://leanprover-community.github.io/mathlib4_docs/Mathlib/Analysis/InnerProductSpace/Completion.html?utm_source=chatgpt.com)
+
+For the indefinite doubled example, use the positive majorant
+\[
+h((x,y),(x',y'))
+=
+\langle x,x'\rangle+\langle y,y'\rangle.
+\]
+Then
+\[
+B(u,v)=h(Ju,v).
+\]
+
+Completing for \(h\) gives the real space
+\[
+\ell^2(S;\mathbb R)\oplus\ell^2(S;\mathbb R)
+\]
+with its continuous indefinite cross-pairing. Its negative directions remain present.
+
+Two additional operator conditions matter:
+
+- To descend an operator through the radical quotient, it must preserve the radical. A \(B\)-adjoint relation, such as \(B(Dx,y)=-B(x,Dy)\), is sufficient. The relation \(JDJ=-D\) alone is insufficient.
+- To extend an operator continuously to the completion, prove a norm bound uniform across stages. A compatible unbounded \(D\) instead begins as an operator on the dense algebraic domain; its closure and spectral properties require further analysis.
+
+## 5. Apply the construction to Euler factors
+
+Here the objects should be **commutative algebras with compatible derivations**:
+\[
+(A_i,\delta_i),
+\qquad
+f_{ij}:A_i\to_{\mathbb R\text{-alg}}A_j,
+\qquad
+\delta_jf_{ij}=f_{ij}\delta_i.
+\]
+
+Use \(\delta\) here to distinguish an algebra derivation from a spectral endomorphism until a representation identifies them.
+
+The native construction is:
+
+1. Form \(A_\infty=\varinjlim A_i\) using algebra homomorphisms.
+2. Lift the linear maps \(\iota_i\circ\delta_i\).
+3. Put two representatives in a common stage and prove the Leibniz rule there.
+4. Bundle the result as `Derivation ℝ A∞ A∞` using `Derivation.mk'`. [leanprover-community.github.io](https://leanprover-community.github.io/mathlib4_docs/Mathlib/RingTheory/Derivation/Basic.html?utm_source=chatgpt.com)
+
+The repository already contains the representative-based derivation argument in ModularColimitDerivation.lean[ModularColimitDerivation.lean](sandbox:/workspace/scratch/058543be00a5/info-geometry-lean/lean/InfoGeometry/Modular/ModularColimitDerivation.lean). Its supplied colimit interface should be instantiated with the actual native direct limit. Its field named `surj_dense` asserts exact finite-stage representability; it is not a topological density theorem.
+
+### A concrete finite-prime system
+
+For a finite set of primes \(F\), define
+\[
+A_F
+=
+\mathbb R[X_p,Y_p\mid p\in F]\Big/
+\bigl((1-X_p)Y_p-1\mid p\in F\bigr).
+\]
+
+These are finitely generated algebras; they need not be finite-dimensional.
+
+Take
+\[
+a_p=X_p,\qquad E_p=Y_p,\qquad E_p^{-1}=1-X_p,
+\]
+and prescribe
+\[
+\delta X_p=-(\log p)X_p,
+\qquad
+\delta Y_p=-(\log p)X_pY_p^2.
+\]
+
+For the defining relation \(r_p=(1-X_p)Y_p-1\),
+\[
+\delta r_p=-(\log p)X_pY_p\,r_p.
+\]
+
+Hence the defining ideal is stable under the derivation.
+
+This has a native Mathlib implementation route: `MvPolynomial.mkDerivation` builds the polynomial derivation from its values on generators; ideal stability permits descent through the quotient; generator renaming supplies the stage maps. [leanprover-community.github.io](https://leanprover-community.github.io/mathlib4_docs/Mathlib/Algebra/MvPolynomial/Derivation.html?utm_source=chatgpt.com)
+
+For \(F\subseteq G\), send old generators to the identically named generators. The maps intertwine the derivations. A retraction sending new \(X_p\) to \(0\) and new \(Y_p\) to \(1\) also proves that these particular stage maps are injective.
+
+### Transport the logarithmic derivative
+
+For a derivation-intertwining algebra map \(\phi:A\to B\) and a unit \(u\),
+\[
+\phi\bigl(u^{-1}\delta_Au\bigr)
+=
+(\phi_*u)^{-1}\delta_B(\phi_*u).
+\tag{9}
+\]
+
+This is the naturality lemma connecting the finite Euler module to the colimit.
+
+Consequently, its exact finite identity remains valid in \(A_\infty\):
+\[
+-\theta_{\delta_\infty}(\iota_FE_p)
+=
+\sum_{k=1}^{M}(\log p)(\iota_Fa_p)^k
++
+(\log p)(\iota_FE_p)(\iota_Fa_p)^{M+1}.
+\tag{10}
+\]
+
+Since `FiniteEulerLogDerivative` already works over an arbitrary commutative algebra, its finite product and remainder theorems can then be instantiated directly.
+
+### The partial Euler products are not one compatible element
+
+Let
+\[
+P_F=\prod_{p\in F}E_p.
+\]
+For \(F\subseteq G\),
+\[
+P_G
+=
+f_{FG}(P_F)\prod_{p\in G\setminus F}E_p.
+\]
+
+Thus, generally,
+\[
+f_{FG}(P_F)\ne P_G.
+\]
+
+The colimit contains each finite product \(\iota_F(P_F)\). It does not identify them all or supply an infinite product.
+
+The same distinction applies to
+\[
+\sum_{k=1}^{M}a^k.
+\]
+Increasing \(M\) produces a different expression. Formal power-series truncations have natural maps from higher truncation to lower truncation, leading to an **inverse-limit** construction. Analytic convergence uses a topology and estimates.
+
+For example, on \(\Re s\ge\sigma_0>1\), with
+\[
+a_p(s)=\chi(p)p^{-s},
+\qquad q=2^{-\sigma_0}<1,
+\]
+the finite remainder admits the bound
+\[
+\sum_{p\in F}
+\left|(\log p)E_p(s)a_p(s)^{M+1}\right|
+\le
+\frac{q^M}{1-q}
+\sum_p(\log p)p^{-\sigma_0}.
+\]
+
+That is the kind of uniform estimate that justifies removing the power cutoff. Removing the prime cutoff needs the corresponding summable tail estimate.
+
+For the resulting actual Dirichlet \(L\)-series identity on \(\Re s>1\), reuse the already available `DirichletCharacter.LSeries_twist_vonMangoldt_eq`. The algebraic colimit does not extend that absolute-convergence argument into the critical strip. [leanprover-community.github.io](https://leanprover-community.github.io/mathlib4_docs/Mathlib/NumberTheory/LSeries/Dirichlet.html?utm_source=chatgpt.com)
+
+## 6. Apply it to Stokes and supertrace with the correct maps
+
+### Stokes: take the colimit of chains
+
+For finite subcomplexes \(K_i\), take
+\[
+C_k(i)=\operatorname{Cell}_k(K_i)\to_0\mathbb R.
+\]
+
+Cell inclusions extend chains by zero. Prove
+\[
+\partial_j f_{ij}^{k}
+=
+f_{ij}^{k-1}\partial_i.
+\]
+
+Then the boundary maps descend, and \(\partial_\infty^2=0\) follows by checking representatives. For an exhausting filtration, the resulting chains are finitely supported chains on the whole complex.
+
+**Cochains go in the other direction:** they restrict from a larger complex to a smaller one. Algebraically,
+\[
+\operatorname{Hom}\!\left(\varinjlim C_k(i),\mathbb R\right)
+\cong
+\varprojlim\operatorname{Hom}(C_k(i),\mathbb R).
+\]
+
+Zero-extension of arbitrary cochains generally fails to commute with the coboundary. For instance, a constant potential \(1\) on vertices \(0,1\) has zero difference on their edge; after adjoining vertex \(2\) and extending the potential by zero, its difference on \(1\to2\) is \(-1\).
+
+The appropriate global Stokes statement is therefore
+\[
+\langle\partial c,\omega\rangle
+=
+\langle c,d\omega\rangle
+\]
+for finitely supported \(c\) and a global cochain \(\omega\). The repository already has this pattern in RealStokesGaussHomology.lean[RealStokesGaussHomology.lean](sandbox:/workspace/scratch/058543be00a5/info-geometry-lean/lean/InfoGeometry/Canonical/RealStokesGaussHomology.lean), without a global finiteness assumption on the incidence objects.
+
+Filtered colimits also commute with homology of compatible module complexes. The repository exposes related categorical machinery in `FilteredColimitExactness`. [stacks.math.columbia.edu](https://stacks.math.columbia.edu/tag/00DB?utm_source=chatgpt.com)
+
+Be careful with \(D=\partial+\partial^*\): boundary compatibility does not automatically give adjoint compatibility. New incident cells can make \(\partial^*\) send an old vector into newly added directions. Such an operator needs stable stages, or maps into suitably enlarged stages, with an explicit compatibility proof.
+
+The finite curvature identity likewise remains valid at each stage. An infinite total needs its own convergence statement. In expanding square-grid boxes, the four corners each have curvature \(1/4\), so every finite total is \(1\); every fixed vertex eventually becomes interior with curvature \(0\). The boundary contribution escapes to infinity.
+
+### Supertrace: choose trace-preserving embeddings
+
+For nested finite index sets, use corner embeddings
+\[
+j(A)=
+\begin{pmatrix}
+A&0\\
+0&0
+\end{pmatrix},
+\qquad
+\Gamma_{\mathrm{new\ stage}}
+=
+\begin{pmatrix}
+\Gamma&0\\
+0&\Gamma_{\mathrm{added}}
+\end{pmatrix}.
+\]
+
+Then
+\[
+\operatorname{str}_{\mathrm{new\ stage}}(j(A))
+=
+\operatorname{str}_{\mathrm{old\ stage}}(A).
+\]
+
+Package the finite supertraces as linear maps and descend them using the universal property. This yields a supertrace on the algebra of **finitary matrices**.
+
+The corner embeddings are nonunital. If \(P_i=\iota_i(1_i)\), then a transported polynomial expression has the form
+\[
+\iota_i(p(D_i))
+=
+c_0P_i+\sum_{k>0}c_k\,\iota_i(D_i)^k.
+\]
+The constant term uses the local unit \(P_i\).
+
+The existing Primon tensor tower uses a different embedding:
+\[
+A\mapsto A\otimes I_2.
+\]
+
+Its ordinary trace doubles, and its normalized trace is compatible, as recorded in PrimonColimitAlgebra.lean[PrimonColimitAlgebra.lean](sandbox:/workspace/scratch/058543be00a5/info-geometry-lean/lean/InfoGeometry/Algebra/PrimonColimitAlgebra.lean). But with an added balanced grading factor,
+\[
+\operatorname{str}_{n+1}(A\otimes I_2)
+=
+\operatorname{str}_n(A)
+\operatorname{tr}\begin{pmatrix}1&0\\0&-1\end{pmatrix}
+=0.
+\]
+
+So that tensor tower does not preserve the finite supertrace in general.
+
+Finally, distinguish a compatible **operator family**
+\[
+D_jf_{ij}=f_{ij}D_i
+\]
+from compatible **elements of a corner algebra**
+\[
+D_j=j_{ij}(D_i).
+\]
+The first can define an operator on the union while failing the second. Its polynomial or heat-operator supertrace then requires a suitable trace domain and analytic hypotheses.
+
+## 7. The useful next theorem layer
+
+For these modules, the central addition should be a generic real pairing-descent theorem with the following consequences:
+
+\[
+B_\infty(\iota_i x,\iota_i y)=B_i(x,y),
+\]
+
+\[
+B_\infty\ge0\iff\forall i,\ B_i\ge0,
+\]
+
+\[
+B_i(x,x)<0
+\Longrightarrow
+\bar B_\infty([\iota_i x],[\iota_i x])<0,
+\]
+
+and, under radical stability,
+\[
+\varinjlim(V_i/\ker B_i)
+\cong
+(\varinjlim V_i)/\ker B_\infty.
+\]
+
+Use the existing real Fock pairing construction as the model, the existing radical quotient for reduction, and native completion after the positivity proof. Lift the reflection and derivation alongside this construction with their compatibility hypotheses explicit.
+
+For the GRH connection, this establishes the exact structural statement you need: **a genuine finite negative witness survives every form-preserving stage inclusion, the algebraic colimit, and radical reduction.** The remaining arithmetic work is to identify this form with the intended Weil form and construct admissible witnesses with the omitted spectral terms controlled. Those are the hypotheses that turn the colimit construction into a statement about zeros.

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.RingTheory.Derivation.Basic
+import Mathlib.Algebra.Group.Units.Hom
 import Mathlib.Algebra.Ring.GeomSum
 import Mathlib.Tactic.Ring
 
@@ -85,6 +86,33 @@ theorem negative_units_logDeriv_eulerProduct {ι : Type*}
       (hEuler p hp) (hScale p hp)
 
 end NativeDerivation
+
+section Naturality
+
+variable {k A B : Type*} [CommRing k] [CommRing A] [CommRing B]
+variable [Algebra k A] [Algebra k B]
+
+/-- Logarithmic derivatives of units are natural under an algebra map that
+intertwines the native derivations. No injectivity or convergence is required. -/
+theorem units_logDeriv_map (φ : A →ₐ[k] B)
+    (DA : Derivation k A A) (DB : Derivation k B B)
+    (hD : ∀ x, φ (DA x) = DB (φ x)) (u : Aˣ) :
+    φ (((u⁻¹ : Aˣ) : A) * DA (u : A)) =
+      (((Units.map φ.toRingHom.toMonoidHom u)⁻¹ : Bˣ) : B) *
+        DB (Units.map φ.toRingHom.toMonoidHom u : B) := by
+  rw [map_mul, hD]
+  rfl
+
+/-- The negative logarithmic derivative retains the same sign under transport. -/
+theorem negative_units_logDeriv_map (φ : A →ₐ[k] B)
+    (DA : Derivation k A A) (DB : Derivation k B B)
+    (hD : ∀ x, φ (DA x) = DB (φ x)) (u : Aˣ) :
+    φ (-(((u⁻¹ : Aˣ) : A) * DA (u : A))) =
+      -((((Units.map φ.toRingHom.toMonoidHom u)⁻¹ : Bˣ) : B) *
+        DB (Units.map φ.toRingHom.toMonoidHom u : B)) := by
+  rw [map_neg, units_logDeriv_map φ DA DB hD]
+
+end Naturality
 
 /-- The prime-power telescoping identity works even in a noncommutative ring. -/
 theorem one_sub_mul_sum_powers {R : Type*} [Ring R] (a : R) (M : ℕ) :

@@ -5,10 +5,13 @@
 Task date: 2026-11-23. Base: `fe24e350b08fdea04f74c0748ef9fd9417c47529`.
 Branch: `codex/nambu-metriplectic-audit-20261123`.
 
-Status: source-reviewed proof candidates. The first native CI build exposed
-compiler and linter failures; their repairs require a fresh native run and
-declaration axiom audit. See the [verification record](../verification/nambu-metriplectic/README.md)
-for exact run links and acceptance scope.
+Status: the five-owner baseline passed native compilation, fresh
+warnings-as-errors checks and the 157-declaration axiom audit at `d7c16f16` in
+[run 45185104156](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45185104156).
+The two follow-up owners below were integrated only after that result and are
+included in the expanded seven-owner gate. Their acceptance must be read from
+the exact source revision's CI result. See the [verification record](../verification/nambu-metriplectic/README.md)
+for scope and remaining root integration requirements.
 
 The three uploads contain two distinct notes. Their original bytes and SHA-256
 hashes are preserved in `docs/intake/nambu-metriplectic-20261123/`.
@@ -18,9 +21,9 @@ claims of proof in those notes are intake, not compiler evidence.
 The user's subsequent audit confirmation and requested native-gated follow-up
 are preserved as [normalized conversation intake](intake/nambu-metriplectic-20261123/followup-20261123.md).
 The existing `gen_eq_scalarPencil_iff` already owns the coincidence criterion;
-the proposed Peirce-defect, Klein-four and KMS-coordinate extensions reuse it.
-Their owner integration remains conditional on successful baseline compilation,
-warnings-as-errors checks and declaration axiom auditing.
+the Peirce-defect, Klein-four and KMS-coordinate extensions reuse it. The
+baseline compilation, warnings-as-errors and declaration-audit condition was
+satisfied before their owner integration.
 
 Primary references:
 
@@ -46,6 +49,10 @@ analytic consequence is part of this finite construction.
 | `OperatorAlgebra.RealMatrixSplit` | Native self/skew-adjoint parts and normality/commutation theorem |
 | `Clifford.GullDoranPseudoscalarBridge` | Actual real `4 × 4` Pauli matrices and commuting square-minus-one phase |
 | `Thermo.GenericMetriplecticFlow` | Existing covector-based `System` and its energy/entropy rate laws |
+| `Clifford.SplitQ11CausalCone` | The same-family negative Krein projector, `(1/2) • (1 - Eplus)` |
+| `Canonical.Cl11KleinFourAdjointRepresentation` | Native units, algebra automorphisms and `localCl11Map` action |
+| `Arithmetic.ZetaCoordinateSymmetry`, `Arithmetic.ZetaDihedral` | Existing centered real chart, three reflections and critical-mirror fixed locus |
+| `NCG.KMSStripKleinMonodromy` | Existing real strip-to-zeta map, coordinate recovery and reflection transport |
 | Mathlib | `dotProductEquiv`, `Matrix.toLin'`, `Matrix.PosSemidef`, determinants, square roots and native matrix operations |
 
 An independent local branch, `codex/real-nambu-a4-unfolding-20261123`, was
@@ -205,6 +212,60 @@ No differentiable functions, ODE solution or Jacobi identity is assumed to
 have been constructed. Injectivity of `L.mulVec` and the entropy degeneracy
 force `gradS=0`; this limitation is exposed explicitly.
 
+### 6. Peirce defect and the existing Klein four action
+
+Owner: `Clifford.Cl11MetriplecticSymmetry`.
+
+The two real matrix pencils have the exact defect
+
+```
+gen (σ,γ) - scalarPencil σ γ = (-2*σ) • matrixKreinMinusProjector.
+```
+
+The projector is `(1/2) • (1 - Eplus) = diag(0,1)` from the same matrix
+family. The already-owned `gen_eq_scalarPencil_iff` is reused, not duplicated.
+
+| Native tag and conjugation | Clifford-pencil coordinates | Scalar-pencil coordinates |
+| --- | --- | --- |
+| `P`: `Eplus * A * Eplus` | `(σ,-γ)` | `(σ,-γ)` |
+| `T`: `J1 * A * J1` | `(-σ,-γ)` | `(σ,-γ)` |
+| `PT`: `(-Eminus) * A * Eminus` | `(-σ,γ)` | `(σ,γ)` |
+
+The source exposes these identities through the existing `adjointAlgEquiv`
+and `localCl11Map`; it creates no second action. The native causal unit has
+value `Eminus` and inverse `-Eminus`, and its adjoint agrees with the displayed
+order because the scalar minus sign is central. The scalar pencil's identity
+coefficient stays fixed under every inner conjugation. The conjugations form
+the existing Klein four image; the four raw matrices are not asserted to be a
+four-element multiplicative group.
+
+### 7. Real zeta-chart and KMS midline transport
+
+Owner: `NCG.MetriplecticZetaKMSBridge`.
+
+The only new definitions evaluate the existing pencils on the existing chart:
+
+```
+chartPencil z       = gen (centeredSigma z, z.tau)
+chartScalarPencil z = scalarPencil (centeredSigma z) z.tau.
+```
+
+Here `centeredSigma z = z.sigma - 1/2`. The three matrix conjugations transport
+the chart's conjugation, functional dual and critical mirror. Coincidence is
+equivalent to the chart critical line, to fixedness under its critical mirror,
+and through the existing chart conversion to `ZetaDihedral.gamma z.toComplex = z.toComplex`.
+
+The existing map is `kmsToZeta β (t,τ) = (1 - τ/β, t/β)`. For `β > 0`,
+coincidence of the two evaluated matrix pencils is equivalent to `τ = β/2`.
+The three matrix conjugations transport `(t,τ)` respectively to `(-t,τ)`,
+`(-t,β-τ)` and `(t,β-τ)`. This is the imaginary-time strip midline; it is
+distinct from the owner's separate logistic real-time compactification.
+
+Every matrix coefficient remains real. The existing conversion to a complex
+chart is used only to identify its fixed locus. These coordinate identities
+construct no zeta/L-function zero correspondence, arithmetic positivity
+theorem, analytic KMS state or equilibrium trajectory.
+
 ## Corrections to the prose intake
 
 1. The Clifford commutator sign was negative in the uploads and is positive
@@ -256,6 +317,7 @@ proof-integrity gate passed at the recorded source snapshot. Heuristic vacuity
 findings concern ordinary `nlinarith` proofs and the elementary `(-I)²=I`
 simplification; they do not replace semantic review or native verification.
 
-The native build and axiom audit must complete before this contract is labeled
-kernel verified. A successful focused run certifies only these five owners and
-their imported source closure, not the root workspace or every historical file.
+Native acceptance is recorded per checked revision and owner set. The accepted
+five-owner baseline does not certify the two added owners; the expanded gate
+checks all seven together. A successful focused run certifies only its selected
+owners and imported source closure, not the root workspace or every historical file.

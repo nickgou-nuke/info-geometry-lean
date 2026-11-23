@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the five Nambu/metriplectic owners with unchanged pins and build lock."""
+"""Validate the seven Nambu/metriplectic owners with unchanged pins and build lock."""
 from __future__ import annotations
 
 import argparse
@@ -21,6 +21,8 @@ OWNERS = (
     "InfoGeometry.Clifford.Cl11MetriplecticPencil",
     "InfoGeometry.Clifford.Cl11EighthRoot",
     "InfoGeometry.Thermo.MatrixGENERICRealization",
+    "InfoGeometry.Clifford.Cl11MetriplecticSymmetry",
+    "InfoGeometry.NCG.MetriplecticZetaKMSBridge",
 )
 FOCUSED = ROOT / "verification/real-matrix-split"
 
@@ -150,7 +152,7 @@ def main() -> int:
                        "owner_declaration_counts": counts, "dependency_pins": pins,
                        "git_head": subprocess.check_output(
                            ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
-                       "coverage": "Five selected owners and their import closure; not root integration"})
+                       "coverage": "Seven selected owners and their import closure; not root integration"})
         save_status()
         print(f"PASS: {sum(counts.values())} owned declarations audited", flush=True)
         return 0

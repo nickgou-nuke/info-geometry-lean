@@ -1,68 +1,55 @@
 # Nambu and metriplectic focused verification
 
-## Current status
+## Acceptance by source revision
 
-**Proof candidates; native Lean acceptance has not passed.** Focused CI
-[45181377416](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45181377416)
-at `383ee52b` passed exact-source checkout, dependency-pin validation, Lean
-`4.34.1` installation and locked Mathlib hydration. Its five-owner native build
-then reported errors in all five new modules, so warnings-as-errors elaboration
-and declaration axiom auditing were not reached.
+The **five-owner baseline passed** at `d7c16f1605aa9877e92ac2c515d1a70460cd3b3e`
+in [run 45185104156](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45185104156).
+All five builds, fresh `-DwarningAsError=true` elaborations and the complete
+owned-declaration audit passed. The audit covered **157 declarations**, including
+private/generated names, and reported only `propext`, `Classical.choice` and
+`Quot.sound`. Its [uploaded evidence](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45185104156/artifacts/14824355326)
+records the exact source revision, versions, pins and commands.
 
-This revision repairs the reported commutator-name ambiguity, premature matrix
-simplification, flow unfolding, scalar proof obligations and owned-source
-warnings. The statements and operator carriers are retained; the unused
-`DecidableEq` instance is omitted from the final injectivity theorem as requested
-by the compiler linter. These repairs still require a successful native rerun.
-Earlier local attempts were blocked by the shared build lock; they do not
-certify this updated source snapshot.
+Only after that result were `Cl11MetriplecticSymmetry` and
+`MetriplecticZetaKMSBridge` integrated. The verifier now checks **all seven
+owners together**. Acceptance of this expanded scope requires a successful
+result for the checked source revision; the five-owner result does not certify
+the additions. Consult the exact head's [PR checks](https://github.com/nickgou-nuke/info-geometry-lean/pull/431/checks)
+and uploaded `status.json`, rather than inferring acceptance from workflow
+presence or from a successful earlier revision.
 
-The subsequent [run 45183619232](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45183619232)
-at `cac1fff` built the other four owners successfully and reported no warnings
-in the five owned sources. Its remaining three Pauli expansion goals retained
-identity-matrix entries. Those entry-expansion lists now explicitly apply
-`Matrix.one_apply`. The aggregate gate, fresh warning-as-error checks and axiom
-audit still require a successful rerun.
-
-Completed checks are independent mathematical/source review, exact symbolic
-matrix identities, a bounded forbidden-construct screen, the maintained staged
-proof gate, and Python syntax checking for this runner. These are different
-checks and do not imply Lean acceptance.
-
-The root environment and integration gates have not passed. Root dependency
-pins, hook code, toolchain and shared-lock implementation are unchanged.
+Independent source review, symbolic identities, the maintained staged proof
+integrity gate and syntax/whitespace checks are separate evidence. They do not
+replace the native gate. Local attempts blocked by the shared build lock do
+not certify a later source snapshot.
 
 ## Focused CI and root integration
 
-`.github/workflows/nambu-metriplectic.yml` runs this same verifier on the exact
-PR head commit using an anonymous exact-SHA fetch from this public repository,
-with submodule recursion disabled, read-only repository permissions, the pinned
-toolchain, and only external dependency artifacts cached. The source repository
-and SHA are validated before fetching, and no Git credentials are installed.
-It uses the existing locked wrapper for dependency hydration and every build,
-elaboration and native declaration audit. It records the checked commit/tree,
-source hashes, compiler output and audit result as workflow artifacts.
+`.github/workflows/nambu-metriplectic.yml` runs this verifier on the exact PR
+head using an anonymous exact-SHA fetch from this public repository. Repository
+and SHA inputs are validated, submodule recursion is disabled, and no Git
+credentials are installed. Permissions remain read-only. Only the pinned
+toolchain and external dependency artifacts are cached; repository source
+build artifacts are fresh.
 
-This job is intended to establish focused native acceptance for the five owners.
-Its presence is not evidence of a successful run. Root integration remains a
-separate gate. On PR #431 at `c30b02b9`, the reviewed-integration job failed during
-recursive checkout because `external_ref/open-math-harness` lacks a `.gitmodules`
-URL; the root quality job failed because the `HomotopyHypothesis` package
-directory was absent. Neither failure reached elaboration of these new owners.
+Dependency hydration, compilation, fresh elaboration and native axiom auditing
+use the unchanged canonical shared-lock wrapper. The workflow records the
+checked commit/tree, source hashes, compiler output and audit result, and checks
+that owned sources and pinned configuration did not change during validation.
 
-The first focused run, [45179392271](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45179392271)
-at `3561393e`, also stopped before Lean: `actions/checkout` fetched the exact
-commit successfully, but its credential cleanup recursively inspected the same
-unmapped gitlink even with `submodules: false`. The focused workflow now uses
-anonymous Git fetch and detached checkout, without changing `.gitmodules`,
-gitlinks, dependency pins, or the native acceptance gate. A minimal Git 2.56.1
-fixture reproduced the cleanup failure and confirmed that this checkout method
-preserves the exact source revision and a clean tracked tree. A new successful
-native run is still required.
+| Focused run | Observed result |
+| --- | --- |
+| [45179392271](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45179392271), `3561393e` | Checkout-action credential cleanup traversed an unmapped gitlink and failed before Lean. Anonymous exact-SHA checkout repairs this without changing gitlinks or `.gitmodules`. |
+| [45181377416](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45181377416), `383ee52b` | Native build exposed baseline proof and linter errors in all five owners. |
+| [45183619232](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45183619232), `cac1fff` | Four owners built; three Pauli expansion goals required explicit identity-entry normalization. No owned-source warnings were reported. |
+| [45185104156](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45185104156), `d7c16f16` | Full five-owner native acceptance: 157 declarations audited. |
 
-The proposed Peirce-defect, Klein-four and KMS-coordinate follow-up remains in
-candidate review until the baseline native build, warnings-as-errors checks and
-axiom audit complete successfully.
+**Root integration remains separate and is not certified.** At the original
+PR head `c30b02b9`, Reviewed PR Integration failed during recursive checkout
+because `external_ref/open-math-harness` lacks a `.gitmodules` URL. The root
+quality job failed because the `HomotopyHypothesis` package directory was
+absent. Focused native acceptance does not clear these root gates. Dependency
+pins, root manifests, hook code and the shared-lock implementation are unchanged.
 
 ## Reproduce
 
@@ -96,7 +83,7 @@ and acquires `/tmp/info-geometry-build.lock`. Builds remain serialized.
 
 ## Coverage
 
-The five selected owners are:
+The seven selected owners are:
 
 ```text
 InfoGeometry.Algebra.AssociativeNambuScalarReduction
@@ -104,6 +91,8 @@ InfoGeometry.Algebra.RealPauliNambuSign
 InfoGeometry.Clifford.Cl11MetriplecticPencil
 InfoGeometry.Clifford.Cl11EighthRoot
 InfoGeometry.Thermo.MatrixGENERICRealization
+InfoGeometry.Clifford.Cl11MetriplecticSymmetry
+InfoGeometry.NCG.MetriplecticZetaKMSBridge
 ```
 
 The runner performs a focused Lake build, then a fresh warnings-as-errors

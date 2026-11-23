@@ -6,8 +6,10 @@ on:
       - 'lean/InfoGeometry/Algebra/AssociativeNambuScalarReduction.lean'
       - 'lean/InfoGeometry/Algebra/RealPauliNambuSign.lean'
       - 'lean/InfoGeometry/Clifford/Cl11MetriplecticPencil.lean'
+      - 'lean/InfoGeometry/Clifford/Cl11MetriplecticSymmetry.lean'
       - 'lean/InfoGeometry/Clifford/Cl11EighthRoot.lean'
       - 'lean/InfoGeometry/Thermo/MatrixGENERICRealization.lean'
+      - 'lean/InfoGeometry/NCG/MetriplecticZetaKMSBridge.lean'
       - 'verification/nambu-metriplectic/**'
       - 'verification/real-matrix-split/**'
       - 'lean-toolchain'
@@ -100,7 +102,7 @@ jobs:
               'focused_dependency_pins': focused_pins,
               'root_manifest_sha256': hashlib.sha256((root / 'lake-manifest.json').read_bytes()).hexdigest(),
               'focused_manifest_sha256': hashlib.sha256((focused / 'lake-manifest.json').read_bytes()).hexdigest(),
-              'scope': 'Five selected Nambu/metriplectic owners and imported dependencies; root integration remains separate',
+              'scope': 'Seven selected Nambu/metriplectic owners and imported dependencies; root integration remains separate',
           }
           (Path(os.environ['EVIDENCE_DIR']) / 'revision.json').write_text(json.dumps(record, indent=2) + '\n')
           print(json.dumps(record, indent=2))
@@ -143,7 +145,7 @@ jobs:
             verification/real-matrix-split/lake-manifest.json \
             2>&1 | tee -a "$EVIDENCE_DIR/dependency-hydration.log"
 
-      - name: Build the five owners and audit every owned declaration
+      - name: Build the seven owners and audit every owned declaration
         shell: bash
         run: |
           set -euo pipefail

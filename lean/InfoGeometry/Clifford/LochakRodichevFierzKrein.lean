@@ -788,7 +788,7 @@ def realWeylJoin (x y : Fin 4 → ℝ) : Vec8R :=
 theorem realWeylJoin_realWeylLeft_right (Φ : Vec8R) :
     realWeylJoin (realWeylLeft Φ) (realWeylRight Φ) = Φ := by
   funext i
-  fin_cases i <;> simp [realWeylLeft, realWeylRight, realWeylJoin] <;> ring
+  fin_cases i <;> simp [realWeylLeft, realWeylRight, realWeylJoin]
 
 /-- Lift the existing real unit-quaternion action on both Weyl sectors to the
 original real `Vec8R` spinor carrier. -/

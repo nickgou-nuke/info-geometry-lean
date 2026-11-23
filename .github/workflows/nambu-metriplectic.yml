@@ -12,6 +12,7 @@ on:
       - 'lean/InfoGeometry/NCG/MetriplecticZetaKMSBridge.lean'
       - 'verification/nambu-metriplectic/**'
       - 'verification/real-matrix-split/**'
+      - 'lib/InfoGeometryCore/**'
       - 'lean-toolchain'
       - 'lakefile.lean'
       - 'lake-manifest.json'
@@ -150,7 +151,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 verification/nambu-metriplectic/check.py 2>&1 | tee "$EVIDENCE_DIR/native-verification.log"
-          git diff --exit-code HEAD -- lean/InfoGeometry \
+          git diff --exit-code HEAD -- lean/InfoGeometry lib/InfoGeometryCore \
             lean-toolchain lakefile.lean lake-manifest.json \
             verification/real-matrix-split \
             verification/nambu-metriplectic \

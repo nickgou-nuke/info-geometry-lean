@@ -43,6 +43,14 @@ that owned sources and pinned configuration did not change during validation.
 | [45181377416](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45181377416), `383ee52b` | Native build exposed baseline proof and linter errors in all five owners. |
 | [45183619232](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45183619232), `cac1fff` | Four owners built; three Pauli expansion goals required explicit identity-entry normalization. No owned-source warnings were reported. |
 | [45185104156](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45185104156), `d7c16f16` | Full five-owner native acceptance: 157 declarations audited. |
+| [45186628451](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45186628451), `ff6e24df` | The new Klein-four import closure required `InfoGeometryCore.Basic`, which the focused package had not exposed. The original five owners built successfully; the expanded gate did not pass. |
+
+The focused package now exposes the existing tracked source at
+`lib/InfoGeometryCore` as an additional native Lean library. This is the same
+plain library already required by the root package, using the same pinned
+Mathlib revision. Its source is included in CI triggers and the post-build
+tracked-source check. No external dependency or manifest revision is added;
+the seven-owner native result must still validate the expanded import closure.
 
 **Root integration remains separate and is not certified.** At the original
 PR head `c30b02b9`, Reviewed PR Integration failed during recursive checkout

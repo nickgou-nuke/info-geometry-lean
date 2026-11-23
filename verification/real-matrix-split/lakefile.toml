@@ -10,3 +10,10 @@ rev = "d13f23b723b8a846827a245b89c10fc7d3f11612"
 
 [[lean_lib]]
 name = "InfoGeometry"
+
+# Use the same tracked Core owner as the root path package. Library srcDir
+# is relative to the package srcDir above (../../lean).
+[[lean_lib]]
+name = "InfoGeometryCore"
+srcDir = "../lib/InfoGeometryCore"
+globs = ["InfoGeometryCore.*"]

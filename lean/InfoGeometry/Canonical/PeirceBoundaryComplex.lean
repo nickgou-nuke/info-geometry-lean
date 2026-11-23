@@ -145,6 +145,22 @@ theorem differential_sq (hp : IsIdempotentElem p)
     conjugation_eq_neg_of_mem_odd hp hu, conjugation_involutive hp]
   noncomm_ring
 
+/-- For an odd generator, the square of the graded action vanishes exactly
+when the generator's square is central in the full associative algebra. -/
+theorem differential_sq_eq_zero_iff_commutes (hp : IsIdempotentElem p)
+    (hu : u ∈ LinearMap.range (odd p)) :
+    differential (R := R) p u ^ 2 = 0 ↔ ∀ x : A, u * u * x = x * (u * u) := by
+  rw [differential_sq hp hu]
+  constructor
+  · intro h x
+    have hx := congrArg (fun d : Module.End R A => d x) h
+    change (u * u) * x - x * (u * u) = 0 at hx
+    exact sub_eq_zero.mp hx
+  · intro h
+    ext x
+    change (u * u) * x - x * (u * u) = 0
+    exact sub_eq_zero.mpr (h x)
+
 /-- Two odd graded actions close on the native inner action of their symmetric product. -/
 theorem differential_anticommutator (hp : IsIdempotentElem p)
     (hu : u ∈ LinearMap.range (odd p)) (hv : v ∈ LinearMap.range (odd p)) :

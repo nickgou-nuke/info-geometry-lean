@@ -916,4 +916,376 @@ theorem trace_jwNeg_eq_zero (k : ℕ) (i : Fin k) :
   unfold normalizedTowerTrace
   rw [trace_jwNeg_eq_zero, zero_div]
 
+/-! ### Sharpenings 1, 3, 4, 5: Isotropic Sectors, Defect Law, Curved DG `∂_F`, Cartan & Berry Curvature -/
+
+section Section1Sharpenings
+
+/-- Self-pairing formula `b(x, x) = 2 * b(x₊, x₋)` for any symmetric cross-pairing `b`. -/
+theorem nullKreinPairing_self_eq_two_mul {R H : Type*} [CommRing R] [AddCommGroup H] [Module R H]
+    (b : H →ₗ[R] H →ₗ[R] R) (hsym : ∀ u v : H, b u v = b v u) (x : NullconeCarrier H) :
+    nullKreinPairing b x x = (2 : R) * b x.1 x.2 := by
+  simp only [nullKreinPairing]
+  rw [hsym x.2 x.1, two_mul]
+
+/-- Standard dot bilinear form on `Fin 2 → ℝ`. -/
+def finTwoDotBilin : (Fin 2 → ℝ) →ₗ[ℝ] (Fin 2 → ℝ) →ₗ[ℝ] ℝ :=
+  LinearMap.mk₂ ℝ (fun x y => x 0 * y 0 + x 1 * y 1)
+    (fun x₁ x₂ y => by simp only [Pi.add_apply]; ring)
+    (fun r x y => by simp only [Pi.smul_apply, smul_eq_mul]; ring)
+    (fun x y₁ y₂ => by simp only [Pi.add_apply]; ring)
+    (fun r x y => by simp only [Pi.smul_apply, smul_eq_mul]; ring)
+
+/-- Explicit null vector `((1, 0), (0, 1))` on `ℝ² ⊕ ℝ²` outside both chosen isotropic subspaces. -/
+def offSubspaceIsotropicVec1 : NullconeCarrier (Fin 2 → ℝ) :=
+  (![1, 0], ![0, 1])
+
+/-- For `dim E > 1`, the full null cone strictly contains vectors outside `N₊` and `N₋`. -/
+theorem offSubspaceIsotropicVec1_properties :
+    nullKreinPairing finTwoDotBilin offSubspaceIsotropicVec1 offSubspaceIsotropicVec1 = 0 ∧
+    (∀ u : Fin 2 → ℝ, offSubspaceIsotropicVec1 ≠ nullPlus u) ∧
+    (∀ v : Fin 2 → ℝ, offSubspaceIsotropicVec1 ≠ nullMinus v) := by
+  refine ⟨?_, ?_, ?_⟩
+  · simp [nullKreinPairing, offSubspaceIsotropicVec1, finTwoDotBilin]
+  · intro u h
+    have hs := congrArg (fun p : NullconeCarrier (Fin 2 → ℝ) => p.2 1) h
+    simp [offSubspaceIsotropicVec1, nullPlus] at hs
+  · intro v h
+    have hf := congrArg (fun p : NullconeCarrier (Fin 2 → ℝ) => p.1 0) h
+    simp [offSubspaceIsotropicVec1, nullMinus] at hf
+
+/-- Negated mirror involution `-J(x₊, x₋) = (-x₋, -x₊)`. -/
+def negMirrorOp {R H : Type*} [CommRing R] [AddCommGroup H] [Module R H] :
+    NullconeCarrier H →ₗ[R] NullconeCarrier H :=
+  -(mirrorOp (R := R) (H := H))
+
+@[simp]
+theorem negMirrorOp_apply {R H : Type*} [CommRing R] [AddCommGroup H] [Module R H]
+    (x : NullconeCarrier H) :
+    (negMirrorOp : NullconeCarrier H →ₗ[R] NullconeCarrier H) x = (-x.2, -x.1) := rfl
+
+/-- Replacing `J` with `-J` preserves involutivity `(-J)² = I` and anticommutation `{Γ, -J} = 0`
+while flipping the sign of `g_J(u, v) = b(u, J v)`. -/
+theorem negMirrorOp_algebraic_laws_and_sign_reversal {R H : Type*}
+    [CommRing R] [AddCommGroup H] [Module R H]
+    (b : H →ₗ[R] H →ₗ[R] R) (x y : NullconeCarrier H) :
+    ((negMirrorOp : NullconeCarrier H →ₗ[R] NullconeCarrier H).comp negMirrorOp = LinearMap.id) ∧
+    ((cutOp : NullconeCarrier H →ₗ[R] NullconeCarrier H).comp negMirrorOp +
+      (negMirrorOp : NullconeCarrier H →ₗ[R] NullconeCarrier H).comp cutOp = 0) ∧
+    (nullKreinPairing b x (negMirrorOp (R := R) y) =
+      -nullKreinPairing b x (mirrorOp (R := R) y)) := by
+  refine ⟨?_, ?_, ?_⟩
+  · ext u <;> simp
+  · ext u <;> simp
+  · simp [nullKreinPairing, add_comm]
+
+end Section1Sharpenings
+
+section Section3Sharpenings
+
+/-- Diagonal `+` block embedding `T ↦ [[T, 0], [0, 0]]`. -/
+def peirceDiagPlus {E : Type*} [Ring E] (T : E) : Matrix (Fin 2) (Fin 2) E := !![T, 0; 0, 0]
+
+/-- Diagonal `-` block embedding `G ↦ [[0, 0], [0, G]]`. -/
+def peirceDiagMinus {E : Type*} [Ring E] (G : E) : Matrix (Fin 2) (Fin 2) E := !![0, 0; 0, G]
+
+/-- Top sector projector `P = [[1, 0], [0, 0]]` in `M₂(E)`. -/
+def peirceP {E : Type*} [Ring E] : Matrix (Fin 2) (Fin 2) E := !![1, 0; 0, 0]
+
+/-- Bottom sector projector `Q = [[0, 0], [0, 1]]` in `M₂(E)`. -/
+def peirceQ {E : Type*} [Ring E] : Matrix (Fin 2) (Fin 2) E := !![0, 0; 0, 1]
+
+/-- General Peirce idempotency defect law without assuming `Ω² = Ω`:
+`(T - T²) + (G - G²) = F² - ev(Ω² - Ω)` in `M₂(E)`. -/
+theorem peirce_general_idempotency_defect_law {E : Type*} [Ring E] (T X Y G : E) :
+    let Ω : Matrix (Fin 2) (Fin 2) E := peirceOperator T X Y G
+    let Top : Matrix (Fin 2) (Fin 2) E := peirceDiagPlus T
+    let Gop : Matrix (Fin 2) (Fin 2) E := peirceDiagMinus G
+    let Xop : Matrix (Fin 2) (Fin 2) E := peirceX X
+    let Yop : Matrix (Fin 2) (Fin 2) E := peirceY Y
+    let F : Matrix (Fin 2) (Fin 2) E := Xop + Yop
+    let P : Matrix (Fin 2) (Fin 2) E := peirceP
+    let Q : Matrix (Fin 2) (Fin 2) E := peirceQ
+    (P * (Ω * Ω - Ω) * P = (Top * Top - Top) + Yop * Xop) ∧
+    (Q * (Ω * Ω - Ω) * Q = (Gop * Gop - Gop) + Xop * Yop) ∧
+    ((Top - Top * Top) + (Gop - Gop * Gop) =
+      F * F - (P * (Ω * Ω - Ω) * P + Q * (Ω * Ω - Ω) * Q)) := by
+  dsimp only
+  refine ⟨?_, ?_, ?_⟩ <;>
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [peirceOperator, peirceDiagPlus, peirceDiagMinus, peirceX, peirceY,
+        peirceP, peirceQ, Matrix.mul_apply, Fin.sum_univ_two] <;>
+      noncomm_ring
+
+/-- Indefinite odd skew witness: `X = [[0, 0], [-1, 0]]`, `Y = [[0, 1], [0, 0]]` satisfy
+`X² = Y² = 0` and `{Γ, X + Y} = 0`, yet `(X + Y)² = -I` rather than positive definite. -/
+theorem peirce_odd_square_neg_one_witness :
+    let Xop : Matrix (Fin 2) (Fin 2) ℝ := peirceX (-1)
+    let Yop : Matrix (Fin 2) (Fin 2) ℝ := peirceY 1
+    let F : Matrix (Fin 2) (Fin 2) ℝ := Xop + Yop
+    (Xop * Xop = 0) ∧
+    (Yop * Yop = 0) ∧
+    (peirceGamma * F + F * peirceGamma = 0) ∧
+    (F * F = -(1 : Matrix (Fin 2) (Fin 2) ℝ)) := by
+  dsimp only
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [peirceGamma, peirceX, peirceY, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Positive-adjoint specialization `Y = X†`: over `M₂(ℝ)`, setting `F = X_op + Y_op` with
+`Y = x` and `X = x` yields `F² = x² • 1 ≥ 0`, with `F² = 0 ↔ F = 0`. -/
+theorem peirce_real_adjoint_square_nonneg_and_zero_iff (x : ℝ) :
+    let F : Matrix (Fin 2) (Fin 2) ℝ := peirceX x + peirceY x
+    (F * F = (x ^ 2) • (1 : Matrix (Fin 2) (Fin 2) ℝ)) ∧
+    (0 ≤ x ^ 2) ∧
+    (F * F = 0 ↔ F = 0) := by
+  dsimp only
+  have hsq :
+      (peirceX x + peirceY x) * (peirceX x + peirceY x) =
+        (x ^ 2) • (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [peirceX, peirceY, Matrix.mul_apply, Fin.sum_univ_two, pow_two]
+  refine ⟨hsq, sq_nonneg x, ?_⟩
+  constructor
+  · intro hzero
+    have h00 := congrFun (congrFun hzero 0) 0
+    rw [hsq] at h00
+    simp only [Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul, mul_one,
+      Matrix.zero_apply, sq_eq_zero_iff] at h00
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp [peirceX, peirceY, h00]
+  · intro hF
+    rw [hF, zero_mul]
+
+/-- Orthogonal projector quarter bound on diagonal blocks:
+`1/4 - (t - t²) = (t - 1/2)²`, so `t - t² ≤ 1/4` and `1 - (t - t²) ≥ 3/4`. -/
+theorem projector_defect_quarter_identity (t : ℝ) :
+    ((1 / 4 : ℝ) - (t - t ^ 2) = (t - 1 / 2) ^ 2) ∧
+    (t - t ^ 2 ≤ 1 / 4) ∧
+    ((3 / 4 : ℝ) ≤ 1 - (t - t ^ 2)) := by
+  have hid : (1 / 4 : ℝ) - (t - t ^ 2) = (t - 1 / 2) ^ 2 := by ring
+  have hnn : 0 ≤ (1 / 4 : ℝ) - (t - t ^ 2) := by
+    rw [hid]
+    exact sq_nonneg _
+  refine ⟨hid, ?_, ?_⟩ <;> linarith
+
+end Section3Sharpenings
+
+section Section4Sharpenings
+
+variable {E : Type*} [Ring E]
+
+/-- Parity conjugation automorphism `α(A) = Γ * A * Γ`. -/
+def parityConj (Γ A : E) : E := Γ * A * Γ
+
+/-- Curved `ℤ/2`-graded differential `∂_F(A) = F * A - parityConj Γ A * F`. -/
+def gradedInnerDiff (Γ F A : E) : E := F * A - parityConj Γ A * F
+
+@[simp] theorem parityConj_apply (Γ A : E) : parityConj Γ A = Γ * A * Γ := rfl
+
+@[simp] theorem gradedInnerDiff_apply (Γ F A : E) :
+    gradedInnerDiff Γ F A = F * A - parityConj Γ A * F := rfl
+
+theorem parityConj_involutive {Γ : E} (hΓ : Γ * Γ = 1) (A : E) :
+    parityConj Γ (parityConj Γ A) = A := by
+  simp only [parityConj]
+  calc
+    Γ * (Γ * A * Γ) * Γ = (Γ * Γ) * A * (Γ * Γ) := by noncomm_ring
+    _ = 1 * A * 1 := by rw [hΓ]
+    _ = A := by rw [one_mul, mul_one]
+
+theorem parityConj_mul {Γ : E} (hΓ : Γ * Γ = 1) (A B : E) :
+    parityConj Γ (A * B) = parityConj Γ A * parityConj Γ B := by
+  simp only [parityConj]
+  calc
+    Γ * (A * B) * Γ = Γ * A * 1 * B * Γ := by noncomm_ring
+    _ = Γ * A * (Γ * Γ) * B * Γ := by rw [hΓ]
+    _ = Γ * A * Γ * (Γ * B * Γ) := by noncomm_ring
+
+theorem parityConj_add (Γ A B : E) :
+    parityConj Γ (A + B) = parityConj Γ A + parityConj Γ B := by
+  simp only [parityConj]
+  noncomm_ring
+
+theorem parityConj_neg (Γ A : E) :
+    parityConj Γ (-A) = -parityConj Γ A := by
+  simp only [parityConj]
+  noncomm_ring
+
+theorem parityConj_sub (Γ A B : E) :
+    parityConj Γ (A - B) = parityConj Γ A - parityConj Γ B := by
+  simp only [parityConj]
+  noncomm_ring
+
+/-- Graded Leibniz rule `∂_F(AB) = ∂_F(A) B + α(A) ∂_F(B)`. -/
+theorem gradedInnerDiff_mul {Γ : E} (hΓ : Γ * Γ = 1) (F A B : E) :
+    gradedInnerDiff Γ F (A * B) =
+      gradedInnerDiff Γ F A * B + parityConj Γ A * gradedInnerDiff Γ F B := by
+  simp only [gradedInnerDiff, parityConj_mul hΓ]
+  noncomm_ring
+
+/-- On `α`-even elements, `∂_F` reduces to the commutator `[F, A]`. -/
+theorem gradedInnerDiff_of_even {Γ F A : E} (hA : parityConj Γ A = A) :
+    gradedInnerDiff Γ F A = F * A - A * F := by
+  rw [gradedInnerDiff_apply, hA]
+
+/-- On `α`-odd elements, `∂_F` reduces to the anticommutator `{F, A}`. -/
+theorem gradedInnerDiff_of_odd {Γ F A : E} (hA : parityConj Γ A = -A) :
+    gradedInnerDiff Γ F A = F * A + A * F := by
+  rw [gradedInnerDiff_apply, hA, neg_mul, sub_neg_eq_add]
+
+/-- Core curved DG identity: for an `α`-odd generator `F`,
+`∂_F²(A) = [F², A]`. -/
+theorem gradedInnerDiff_sq {Γ F : E} (hΓ : Γ * Γ = 1) (hF : parityConj Γ F = -F) (A : E) :
+    gradedInnerDiff Γ F (gradedInnerDiff Γ F A) = (F * F) * A - A * (F * F) := by
+  simp only [gradedInnerDiff, parityConj_sub, parityConj_mul hΓ, hF, parityConj_involutive hΓ]
+  noncomm_ring
+
+/-- Bianchi identity `∂_F(F²) = 0` for any `α`-odd generator `F`. -/
+theorem gradedInnerDiff_curvature_closed {Γ F : E} (hΓ : Γ * Γ = 1) (hF : parityConj Γ F = -F) :
+    gradedInnerDiff Γ F (F * F) = 0 := by
+  have hsq : parityConj Γ (F * F) = F * F := by
+    rw [parityConj_mul hΓ, hF, neg_mul, mul_neg, neg_neg]
+  rw [gradedInnerDiff_of_even hsq]
+  noncomm_ring
+
+/-- Vanishing of `∂_F²` on all `A` is equivalent to centrality of `F²`,
+NOT necessarily `F² = 0`. -/
+theorem gradedInnerDiff_sq_eq_zero_iff_central {Γ F : E}
+    (hΓ : Γ * Γ = 1) (hF : parityConj Γ F = -F) :
+    (∀ A : E, gradedInnerDiff Γ F (gradedInnerDiff Γ F A) = 0) ↔
+      (∀ A : E, (F * F) * A = A * (F * F)) := by
+  constructor
+  · intro h A
+    have hA := h A
+    rw [gradedInnerDiff_sq hΓ hF] at hA
+    exact sub_eq_zero.mp hA
+  · intro h A
+    rw [gradedInnerDiff_sq hΓ hF, h A, sub_self]
+
+/-- Contrast with an ordinary inner derivation: `ad_G²(A) = G² A - 2 G A G + A G²`
+even when `G² = 0`. -/
+theorem innerRingDeriv_sq (G A : E) :
+    innerRingDeriv G (innerRingDeriv G A) =
+      (G * G) * A - (G * A * G + G * A * G) + A * (G * G) := by
+  simp only [innerRingDeriv]
+  noncomm_ring
+
+end Section4Sharpenings
+
+section Section5Sharpenings
+
+/-- Curvature splitting under `θ = ϖ + e`: when `θ` is flat (`R_θ = 0`) and the odd covariant
+exterior derivative vanishes, horizontal curvature obeys `R_ϖ = -(e₁ e₂ - e₂ e₁)`. -/
+theorem cartan_horizontal_curvature_from_flat_connection {E : Type*} [Ring E]
+    (D₁ D₂ : RingDeriv E) (ϖ₁ ϖ₂ e₁ e₂ : E) :
+    ((D₁ (ϖ₂ + e₂) - D₂ (ϖ₁ + e₁)) + ((ϖ₁ + e₁) * (ϖ₂ + e₂) - (ϖ₂ + e₂) * (ϖ₁ + e₁)) =
+      (((D₁ ϖ₂ - D₂ ϖ₁) + (ϖ₁ * ϖ₂ - ϖ₂ * ϖ₁)) + (e₁ * e₂ - e₂ * e₁)) +
+        ((D₁ e₂ - D₂ e₁) + (ϖ₁ * e₂ - e₂ * ϖ₁) - (ϖ₂ * e₁ - e₁ * ϖ₂))) ∧
+    (((D₁ (ϖ₂ + e₂) - D₂ (ϖ₁ + e₁)) +
+        ((ϖ₁ + e₁) * (ϖ₂ + e₂) - (ϖ₂ + e₂) * (ϖ₁ + e₁)) = 0) →
+      ((D₁ e₂ - D₂ e₁) + (ϖ₁ * e₂ - e₂ * ϖ₁) - (ϖ₂ * e₁ - e₁ * ϖ₂) = 0) →
+      (D₁ ϖ₂ - D₂ ϖ₁) + (ϖ₁ * ϖ₂ - ϖ₂ * ϖ₁) = -(e₁ * e₂ - e₂ * e₁)) := by
+  have hsplit :
+      (D₁ (ϖ₂ + e₂) - D₂ (ϖ₁ + e₁)) + ((ϖ₁ + e₁) * (ϖ₂ + e₂) - (ϖ₂ + e₂) * (ϖ₁ + e₁)) =
+        (((D₁ ϖ₂ - D₂ ϖ₁) + (ϖ₁ * ϖ₂ - ϖ₂ * ϖ₁)) + (e₁ * e₂ - e₂ * e₁)) +
+          ((D₁ e₂ - D₂ e₁) + (ϖ₁ * e₂ - e₂ * ϖ₁) - (ϖ₂ * e₁ - e₁ * ϖ₂)) := by
+    rw [D₁.map_add, D₂.map_add]
+    noncomm_ring
+  refine ⟨hsplit, ?_⟩
+  intro hflat hcov
+  rw [hflat, hcov, add_zero] at hsplit
+  exact eq_neg_of_add_eq_zero_left hsplit.symm
+
+/-- For an idempotent family `P² = P`, `Dᵢ P` is strictly off-diagonal (`P Dᵢ P = 0`,
+`Q Dᵢ P Q = 0`, `Dᵢ P = Xᵢ + Yᵢ`), and the projected Berry curvature across two directions
+is `P [D₁ P, D₂ P] P = Y₁ X₂ - Y₂ X₁` (and `Q [D₁ P, D₂ P] Q = X₁ Y₂ - X₂ Y₁`). -/
+theorem idempotent_deriv_off_diagonal_and_projected_berry_curvature {E : Type*} [Ring E]
+    (D₁ D₂ : RingDeriv E) {P : E} (hP : P * P = P) :
+    let Q : E := 1 - P
+    let X₁ : E := Q * D₁ P * P
+    let Y₁ : E := P * D₁ P * Q
+    let X₂ : E := Q * D₂ P * P
+    let Y₂ : E := P * D₂ P * Q
+    (P * D₁ P * P = 0 ∧ Q * D₁ P * Q = 0) ∧
+    (D₁ P = X₁ + Y₁ ∧ D₂ P = X₂ + Y₂) ∧
+    (P * (D₁ P * D₂ P - D₂ P * D₁ P) * P = Y₁ * X₂ - Y₂ * X₁) ∧
+    (Q * (D₁ P * D₂ P - D₂ P * D₁ P) * Q = X₁ * Y₂ - X₂ * Y₁) := by
+  dsimp only
+  have hQ : (1 - P) * P = 0 := by noncomm_ring [hP]
+  have hPQ : P * (1 - P) = 0 := by noncomm_ring [hP]
+  have hQQ : (1 - P) * (1 - P) = 1 - P := by
+    calc
+      (1 - P) * (1 - P) = 1 - P - P + P * P := by noncomm_ring
+      _ = 1 - P := by rw [hP]; noncomm_ring
+  have hdiag (D : RingDeriv E) : P * D P * P = 0 ∧ (1 - P) * D P * (1 - P) = 0 := by
+    have hDP : P * D P + D P * P = D P := by
+      rw [← D.map_mul, hP]
+    have hPsum : P * (P * D P + D P * P) * P = P * D P * P := by
+      rw [hDP]
+    have hPdup : P * (P * D P + D P * P) * P = P * D P * P + P * D P * P := by
+      calc
+        P * (P * D P + D P * P) * P
+            = (P * P) * D P * P + P * D P * (P * P) := by noncomm_ring
+        _ = P * D P * P + P * D P * P := by rw [hP]
+    have hPadd : P * D P * P + P * D P * P = P * D P * P + 0 := by
+      rw [← hPdup, hPsum, add_zero]
+    have hPzero : P * D P * P = 0 := add_left_cancel hPadd
+    have hQzero : (1 - P) * D P * (1 - P) = 0 := by
+      calc
+        (1 - P) * D P * (1 - P)
+            = (1 - P) * (P * D P + D P * P) * (1 - P) := by rw [hDP]
+        _ = ((1 - P) * P) * (D P * (1 - P)) + ((1 - P) * D P) * (P * (1 - P)) := by noncomm_ring
+        _ = 0 := by rw [hQ, hPQ]; simp
+    exact ⟨hPzero, hQzero⟩
+  have hleftP (D : RingDeriv E) : P * D P = P * D P * (1 - P) := by
+    have hPzero := (hdiag D).1
+    calc
+      P * D P = P * D P * (1 - P) + P * D P * P := by noncomm_ring
+      _ = P * D P * (1 - P) := by rw [hPzero, add_zero]
+  have hrightP (D : RingDeriv E) : D P * P = (1 - P) * D P * P := by
+    have hPzero := (hdiag D).1
+    calc
+      D P * P = (1 - P) * D P * P + P * D P * P := by noncomm_ring
+      _ = (1 - P) * D P * P := by rw [hPzero, add_zero]
+  have hleftQ (D : RingDeriv E) : (1 - P) * D P = (1 - P) * D P * P := by
+    have hQzero := (hdiag D).2
+    calc
+      (1 - P) * D P = (1 - P) * D P * P + (1 - P) * D P * (1 - P) := by noncomm_ring
+      _ = (1 - P) * D P * P := by rw [hQzero, add_zero]
+  have hrightQ (D : RingDeriv E) : D P * (1 - P) = P * D P * (1 - P) := by
+    have hQzero := (hdiag D).2
+    calc
+      D P * (1 - P) = P * D P * (1 - P) + (1 - P) * D P * (1 - P) := by noncomm_ring
+      _ = P * D P * (1 - P) := by rw [hQzero, add_zero]
+  have hoff (D : RingDeriv E) :
+      D P = (1 - P) * D P * P + P * D P * (1 - P) := by
+    have hDP : P * D P + D P * P = D P := by
+      rw [← D.map_mul, hP]
+    calc
+      D P = D P * P + P * D P := by rw [← hDP, add_comm]
+      _ = (1 - P) * D P * P + P * D P * (1 - P) := by rw [hrightP D, hleftP D]
+  have h1diag := hdiag D₁
+  have h1off := hoff D₁
+  have h2off := hoff D₂
+  have _ := hQQ
+  refine ⟨h1diag, ⟨h1off, h2off⟩, ?_, ?_⟩
+  · calc
+      P * (D₁ P * D₂ P - D₂ P * D₁ P) * P
+          = (P * D₁ P) * (D₂ P * P) - (P * D₂ P) * (D₁ P * P) := by noncomm_ring
+      _ = (P * D₁ P * (1 - P)) * ((1 - P) * D₂ P * P) -
+            (P * D₂ P * (1 - P)) * ((1 - P) * D₁ P * P) := by
+          rw [hleftP D₁, hrightP D₂, hleftP D₂, hrightP D₁]
+  · calc
+      (1 - P) * (D₁ P * D₂ P - D₂ P * D₁ P) * (1 - P)
+          = ((1 - P) * D₁ P) * (D₂ P * (1 - P)) -
+            ((1 - P) * D₂ P) * (D₁ P * (1 - P)) := by noncomm_ring
+      _ = ((1 - P) * D₁ P * P) * (P * D₂ P * (1 - P)) -
+            ((1 - P) * D₂ P * P) * (P * D₁ P * (1 - P)) := by
+          rw [hleftQ D₁, hrightQ D₂, hleftQ D₂, hrightQ D₁]
+
+end Section5Sharpenings
+
 end InfoGeometry.Algebra.GradedNullconeAlgebra

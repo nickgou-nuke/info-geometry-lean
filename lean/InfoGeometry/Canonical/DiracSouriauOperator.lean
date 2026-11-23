@@ -29,6 +29,24 @@ namespace InfoGeometry.Canonical.DiracSouriau
 
 open Matrix
 
+/-- Trap T16 non-commutativity witness for `2 × 2` matrices over any nontrivial commutative ring `R`. -/
+theorem mat2_ring_mul_noncommutative_witness {R : Type*} [CommRing R] [Nontrivial R] :
+    ∃ A B : Matrix (Fin 2) (Fin 2) R, A * B ≠ B * A := by
+  refine ⟨!![0, 1; 0, 0], !![0, 0; 1, 0], ?_⟩
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) R => M 0 0) h
+  simp only [Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one,
+    Matrix.head_cons, mul_zero, add_zero, mul_one, zero_add] at h00
+  exact zero_ne_one h00.symm
+
+/-- Trap T16 non-commutativity witness for `2 × 2` real matrices in the Dirac-Souriau sector. -/
+theorem mat2_mul_noncommutative_witness :
+    ∃ A B : Matrix (Fin 2) (Fin 2) ℝ, A * B ≠ B * A := by
+  refine ⟨!![0, 1; 0, 0], !![0, 0; 1, 0], ?_⟩
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 0) h
+  norm_num [Matrix.mul_apply, Fin.sum_univ_two] at h00
+
 /--
 The 4x4 Dirac-Souriau Sector representation of the $C\ell(4,4)$ informational 
 gravity operator. This structure formalizes the block-decoupled 
@@ -334,6 +352,38 @@ noncomputable def berezinian [Field R] (S : DiracSouriauSector R) : R :=
   else
     0
 
+/-- Genuine polynomial Pfaffian for a `2×2` skew-symmetric block over any commutative ring `R`. -/
+@[rep_depth transport]
+def pfaffianPoly (M : Matrix (Fin 2) (Fin 2) R) : R :=
+  M 0 1
+
+/-- Skew-symmetry predicate for `2×2` matrix blocks: vanishing diagonal and anti-symmetric off-diagonals. -/
+@[rep_depth transport]
+def IsSkew2 (M : Matrix (Fin 2) (Fin 2) R) : Prop :=
+  M 0 0 = 0 ∧ M 1 1 = 0 ∧ M 1 0 = -M 0 1
+
+/-- Exact polynomial Pfaffian-squared theorem: for any skew `2×2` matrix over a commutative ring `R`,
+`(Pf M)² = det M` identically without square roots or real-analytic approximations. -/
+@[rep_depth transport]
+theorem pfaffianPoly_sq_eq_det (M : Matrix (Fin 2) (Fin 2) R) (h : IsSkew2 M) :
+    pfaffianPoly M * pfaffianPoly M = M.det := by
+  rcases h with ⟨h00, h11, h10⟩
+  simp [pfaffianPoly, Matrix.det_fin_two, h00, h11, h10]
+
+/-- Determinant of any real `2×2` skew matrix is unconditionally non-negative. -/
+@[rep_depth transport]
+theorem skew2_det_nonneg (M : Matrix (Fin 2) (Fin 2) ℝ) (h : IsSkew2 M) :
+    0 ≤ M.det := by
+  rw [← pfaffianPoly_sq_eq_det M h]
+  exact mul_self_nonneg _
+
+/-- The classical scalar Pfaffian `√det M` matches the absolute value of the genuine polynomial Pfaffian. -/
+@[rep_depth transport]
+theorem pfaffian_eq_abs_pfaffianPoly (M : Matrix (Fin 2) (Fin 2) ℝ) (h : IsSkew2 M) :
+    Real.sqrt M.det = |pfaffianPoly M| := by
+  rw [← pfaffianPoly_sq_eq_det M h]
+  rw [← sq, Real.sqrt_sq_eq_abs]
+
 /--
 Scalar Pfaffian proxy for the topological sector `K`.
 Under the explicit hypothesis `0 ≤ det K`, it satisfies `pfaffian² = det K`.
@@ -342,6 +392,13 @@ Under the explicit hypothesis `0 ≤ det K`, it satisfies `pfaffian² = det K`.
 @[rep_depth transport]
 noncomputable def pfaffian (S : DiracSouriauSector ℝ) : ℝ :=
   Real.sqrt S.K.det
+
+/-- For skew-symmetric topological sectors `K`, the Pfaffian proxy is unconditionally well-defined
+and matches the absolute polynomial Pfaffian without extra determinant positivity assumptions. -/
+@[rep_depth transport]
+theorem pfaffian_eq_abs_pfaffianPoly_of_skew (S : DiracSouriauSector ℝ) (h : IsSkew2 S.K) :
+    S.pfaffian = |pfaffianPoly S.K| :=
+  pfaffian_eq_abs_pfaffianPoly S.K h
 
 /-- The Pfaffian proxy squares to `det K` when the determinant is nonnegative. -/
 
@@ -352,17 +409,59 @@ theorem pfaffian_sq_eq_det_of_det_nonneg
   unfold pfaffian
   exact Real.sq_sqrt hdet
 
+/-- For skew topological sectors, `pfaffian² = det K` unconditionally. -/
+@[rep_depth transport]
+theorem pfaffian_sq_eq_det_of_skew (S : DiracSouriauSector ℝ) (h : IsSkew2 S.K) :
+    S.pfaffian ^ (2 : ℕ) = S.K.det :=
+  pfaffian_sq_eq_det_of_det_nonneg S (skew2_det_nonneg S.K h)
+
 /--
 A scalar entropy functional built from the determinant-square-root proxy above
-and the conditional Schur-complement Berezinian. This definition alone does
-not establish a Pfaffian/Berezinian identity for a `Cl(4,4)` operator; in
-particular, finiteness requires positivity assumptions on both logarithm
-arguments.
+and the conditional Schur-complement Berezinian.
 -/
 
 @[rep_depth transport]
 noncomputable def souriauEntropy (S : DiracSouriauSector ℝ) : ℝ :=
   Real.log (S.pfaffian) - (1 / 2) * Real.log (S.berezinian)
+
+/-- Decoupled Dirac-Souriau entropy decomposition: for an invertible thermodynamic block `A`
+and skew topological block `K`, the entropy splits into the topological Pfaffian and Fisher entropy. -/
+@[rep_depth transport]
+theorem souriauEntropy_decoupled_skew_split
+    (S : DiracSouriauSector ℝ)
+    (hB : S.B = 0)
+    (hA : 0 < S.A.det)
+    (hK_skew : IsSkew2 S.K)
+    (hK_ne : pfaffianPoly S.K ≠ 0) :
+    S.souriauEntropy = 2 * Real.log S.pfaffian - (1 / 2) * Real.log S.A.det := by
+  have hC : S.C = 0 := by simp [C, hB]
+  have hK_sq : S.K.det = (pfaffianPoly S.K)^2 := by
+    rw [← pfaffianPoly_sq_eq_det S.K hK_skew, sq]
+  have hK_pos : 0 < S.K.det := by
+    rw [hK_sq]
+    exact sq_pos_of_ne_zero hK_ne
+  have hK_unit : IsUnit S.K.det := isUnit_iff_ne_zero.mpr hK_pos.ne'
+  have hber : S.berezinian = S.A.det / S.K.det := by
+    dsimp [berezinian]
+    split_ifs with h
+    · simp [hB, hC]
+    · exact False.elim (h hK_unit)
+  have hpf_eq : S.pfaffian = |pfaffianPoly S.K| := pfaffian_eq_abs_pfaffianPoly_of_skew S hK_skew
+  have hpf_pos : 0 < S.pfaffian := by
+    rw [hpf_eq]
+    exact abs_pos.mpr hK_ne
+  have hber_div : Real.log S.berezinian = Real.log S.A.det - Real.log S.K.det := by
+    rw [hber]
+    exact Real.log_div hA.ne' hK_pos.ne'
+  have hlog_K : Real.log S.K.det = 2 * Real.log S.pfaffian := by
+    have h1 : S.K.det = S.pfaffian ^ 2 := by
+      change S.K.det = (Real.sqrt S.K.det) ^ 2
+      exact (Real.sq_sqrt hK_pos.le).symm
+    rw [h1, Real.log_pow S.pfaffian 2]
+    ring
+  dsimp [souriauEntropy]
+  rw [hber_div, hlog_K]
+  ring
 
 /-
 Hypothesis 4: Critical Stiffness Threshold.

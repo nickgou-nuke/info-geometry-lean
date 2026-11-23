@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.PauliZornTrifactor
@@ -65,6 +71,38 @@ theorem hermitian_minkowski_iso_recompose
       ring
     · simp [h11im]
 
+/-- The determinant of a Hermitian matrix is its Minkowski quadratic form in
+Pauli coordinates. -/
+theorem determinant_eq_minkowskiNorm_of_hermitian
+  (X : Matrix (Fin 2) (Fin 2) ℂ) (hx : is_hermitian X) :
+    X.det = (PauliZornTrifactor.minkowskiNorm
+      (hermitian_minkowski_iso X hx).1
+      (hermitian_minkowski_iso X hx).2.1
+      (hermitian_minkowski_iso X hx).2.2.1
+      (hermitian_minkowski_iso X hx).2.2.2 : ℂ) := by
+  let t := (hermitian_minkowski_iso X hx).1
+  let x := (hermitian_minkowski_iso X hx).2.1
+  let y := (hermitian_minkowski_iso X hx).2.2.1
+  let z := (hermitian_minkowski_iso X hx).2.2.2
+  change X.det = (PauliZornTrifactor.minkowskiNorm t x y z : ℂ)
+  calc
+    X.det = (PauliZornTrifactor.pauliHermitian t x y z).det := by
+      congr 1
+      exact hermitian_minkowski_iso_recompose X hx
+    _ = (PauliZornTrifactor.minkowskiNorm t x y z : ℂ) :=
+      PauliZornTrifactor.pauliHermitian_det _ _ _ _
+
+theorem null_cone_locus_iff_minkowski_null
+    (X : Matrix (Fin 2) (Fin 2) ℂ) (hx : is_hermitian X) :
+    X.det = 0 ↔
+      PauliZornTrifactor.minkowskiNorm
+        (hermitian_minkowski_iso X hx).1
+        (hermitian_minkowski_iso X hx).2.1
+        (hermitian_minkowski_iso X hx).2.2.1
+        (hermitian_minkowski_iso X hx).2.2.2 = 0 := by
+  rw [determinant_eq_minkowskiNorm_of_hermitian X hx]
+  norm_cast
+
 /-- The determinant is the owner Minkowski quadratic form in Pauli coordinates. -/
 def determinant_is_minkowski_norm (X : Matrix (Fin 2) (Fin 2) ℂ)
     (hx : is_hermitian X) : Prop :=
@@ -73,6 +111,7 @@ def determinant_is_minkowski_norm (X : Matrix (Fin 2) (Fin 2) ℂ)
     (hermitian_minkowski_iso X hx).2.1
     (hermitian_minkowski_iso X hx).2.2.1
     (hermitian_minkowski_iso X hx).2.2.2 : ℂ)
+
 
 theorem determinant_is_minkowski_norm_proved
   (X : Matrix (Fin 2) (Fin 2) ℂ) (hx : is_hermitian X) :
@@ -93,23 +132,13 @@ theorem determinant_is_minkowski_norm_proved
 def null_cone_locus (X : Matrix (Fin 2) (Fin 2) ℂ) (_hx : is_hermitian X) : Prop :=
   X.det = 0
 
-theorem null_cone_locus_iff_minkowski_null
-    (X : Matrix (Fin 2) (Fin 2) ℂ) (hx : is_hermitian X) :
-    null_cone_locus X hx ↔
-      PauliZornTrifactor.minkowskiNorm
-        (hermitian_minkowski_iso X hx).1
-        (hermitian_minkowski_iso X hx).2.1
-        (hermitian_minkowski_iso X hx).2.2.1
-        (hermitian_minkowski_iso X hx).2.2.2 = 0 := by
-  rw [null_cone_locus, determinant_is_minkowski_norm_proved X hx]
-  norm_cast
-
 /-- The finite spacetime ansatz is witnessed by the owner Pauli representative. -/
 def emergent_spacetime_ansatz : Prop :=
   ∃ t x y z : ℝ,
     is_hermitian (PauliZornTrifactor.pauliHermitian t x y z) ∧
       (PauliZornTrifactor.pauliHermitian t x y z).det =
         (PauliZornTrifactor.minkowskiNorm t x y z : ℂ)
+
 
 theorem emergent_spacetime_ansatz_witness : emergent_spacetime_ansatz := by
   refine ⟨1, 0, 0, 0, ?_, ?_⟩

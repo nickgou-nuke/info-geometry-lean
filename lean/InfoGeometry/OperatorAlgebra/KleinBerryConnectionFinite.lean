@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
@@ -14,7 +19,6 @@ connection discussion.  It keeps only finite matrix and parity identities:
 
 * the cross-cap monodromy is the block swap `M_y` from the dual split-octonion
   root/Klein/braid bridge;
-* for a constant monodromy, derivative correction terms are zero by definition;
 * the `x` connection component picks up the orientation sign, while the `y`
   component does not;
 * the phase-line readout is a parity invariant in `ZMod 2`;
@@ -38,9 +42,6 @@ structure FiniteKBZConnection where
   Ay : Conn8Z
   deriving DecidableEq, Repr
 
-/-- Constant cross-cap monodromy; derivative correction vanishes in this finite model. -/
-def monodromyDerivativeCorrection : Conn8Z := 0
-
 /-- Orientation-reversing `x`-component transform. -/
 def transformAx (A : Conn8Z) : Conn8Z :=
   -(My * A * My)
@@ -51,28 +52,43 @@ def transformAy (A : Conn8Z) : Conn8Z :=
 
 /-- Finite KBZ connection transform. -/
 def transformConnection (C : FiniteKBZConnection) : FiniteKBZConnection where
-  Ax := transformAx C.Ax + monodromyDerivativeCorrection
-  Ay := transformAy C.Ay + monodromyDerivativeCorrection
-
-/-- The constant-monodromy derivative term is zero. -/
-theorem monodromyDerivativeCorrection_zero :
-    monodromyDerivativeCorrection = (0 : Conn8Z) := by
-  rfl
+  Ax := transformAx C.Ax
+  Ay := transformAy C.Ay
 
 /-- Readback of the finite `x`-component glide rule. -/
 theorem transformConnection_Ax (C : FiniteKBZConnection) :
     (transformConnection C).Ax = -(My * C.Ax * My) := by
-  simp [transformConnection, transformAx, monodromyDerivativeCorrection]
+  simp [transformConnection, transformAx]
 
 /-- Readback of the finite `y`-component glide rule. -/
 theorem transformConnection_Ay (C : FiniteKBZConnection) :
     (transformConnection C).Ay = My * C.Ay * My := by
-  simp [transformConnection, transformAy, monodromyDerivativeCorrection]
+  simp [transformConnection, transformAy]
 
 /-- The zero connection is fixed by the finite KBZ transform. -/
 theorem transformConnection_zero :
     transformConnection ⟨0, 0⟩ = ⟨0, 0⟩ := by
   ext i j <;> fin_cases i <;> fin_cases j <;> decide
+
+/-- The finite two-component glide is an involution because `M_y` is an involutive block swap. -/
+theorem transformConnection_involutive (C : FiniteKBZConnection) :
+    transformConnection (transformConnection C) = C := by
+  have hconj (A : Conn8Z) : My * (My * A * My) * My = A := by
+    calc
+      My * (My * A * My) * My = (My * My) * A * (My * My) := by noncomm_ring
+      _ = A := by rw [My_sq]; simp
+  have hAx (A : Conn8Z) : transformAx (transformAx A) = A := by
+    calc
+      transformAx (transformAx A) = My * (My * A * My) * My := by
+        unfold transformAx
+        noncomm_ring
+      _ = A := hconj A
+  have hAy (A : Conn8Z) : transformAy (transformAy A) = A := by
+    unfold transformAy
+    exact hconj A
+  ext i j
+  · exact congrArg (fun A : Conn8Z => A i j) (hAx C.Ax)
+  · exact congrArg (fun A : Conn8Z => A i j) (hAy C.Ay)
 
 /-- Integer crossing count reduced to the finite `Z₂` phase invariant. -/
 def phaseParity (crossings : ℤ) : ZMod 2 :=
@@ -97,11 +113,6 @@ theorem phaseParity_add_two (n : ℤ) :
 theorem antisymmetric_boundary_klein_invariant_zero (theta : ℤ) :
     InfoGeometry.Topology.BrillouinKleinGauge.klein_bottle_z2_invariant theta (-theta) = 0 := by
   simp [InfoGeometry.Topology.BrillouinKleinGauge.klein_bottle_z2_invariant]
-
-/-- The additive Klein boundary owner reduces the zero path to even charge. -/
-theorem zero_path_klein_boundary_even :
-    InfoGeometry.Topology.BrillouinKlein.klein_bottle_boundary ℤ 0 0 = 2 * (0 : ℤ) := by
-  rfl
 
 /-! ## Exact exceptional Cartan/dimension ledgers -/
 
@@ -136,16 +147,29 @@ theorem exceptional_dimension_ledger :
 
 /-- Consolidated finite KBZ connection packet. -/
 theorem kleinBerryConnection_finite_packet :
-    monodromyDerivativeCorrection = (0 : Conn8Z) ∧
-      transformConnection ⟨0, 0⟩ = ⟨0, 0⟩ ∧
+    transformConnection ⟨0, 0⟩ = ⟨0, 0⟩ ∧
+      (∀ C : FiniteKBZConnection, transformConnection (transformConnection C) = C) ∧
       phaseParity 1 = (1 : ZMod 2) ∧
       (∀ n : ℤ, phaseParity (n + 2) = phaseParity n) ∧
       (∀ theta : ℤ,
         InfoGeometry.Topology.BrillouinKleinGauge.klein_bottle_z2_invariant theta (-theta) = 0) ∧
       g2Cartan 0 1 = -3 ∧
       g2Dimension = 14 ∧ e7Dimension = 133 ∧ e7Su8ScalarLedger = 70 := by
-  exact ⟨monodromyDerivativeCorrection_zero, transformConnection_zero, phaseParity_one,
+  exact ⟨transformConnection_zero, transformConnection_involutive, phaseParity_one,
     phaseParity_add_two, antisymmetric_boundary_klein_invariant_zero,
     g2Cartan_entries.2.1, rfl, rfl, rfl⟩
+
+/-- Constant cross-cap monodromy; derivative correction vanishes in this finite model. -/
+def monodromyDerivativeCorrection : Conn8Z := 0
+
+/-- The constant-monodromy derivative term is zero. -/
+theorem monodromyDerivativeCorrection_zero :
+    monodromyDerivativeCorrection = (0 : Conn8Z) := by
+  rfl
+
+/-- The additive Klein boundary owner reduces the zero path to even charge. -/
+theorem zero_path_klein_boundary_even :
+    InfoGeometry.Topology.BrillouinKlein.klein_bottle_boundary ℤ 0 0 = 2 * (0 : ℤ) := by
+  rfl
 
 end InfoGeometry.OperatorAlgebra.KleinBerryConnectionFinite

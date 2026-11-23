@@ -489,12 +489,12 @@ theorem finrank_clTower (k : ℕ) :
     show (4 : ℕ) = 2 * 2 by norm_num, mul_pow]
 
 /-- Lower-left raising atom `a_+ = [[0, 0], [1, 0]]` in `M₂(ℝ)`. -/
-private def atomPos2 : Matrix (Fin 2) (Fin 2) ℝ := !![0, 0; 1, 0]
+def atomPos2 : Matrix (Fin 2) (Fin 2) ℝ := !![0, 0; 1, 0]
 
 /-- Upper-right lowering atom `a_- = [[0, 1], [0, 0]]` in `M₂(ℝ)`. -/
-private def atomNeg2 : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 0, 0]
+def atomNeg2 : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 0, 0]
 
-private theorem atom_car_relations :
+theorem atom_car_relations :
     (atomPos2 * atomPos2 = 0) ∧
     (atomNeg2 * atomNeg2 = 0) ∧
     (atomPos2 * atomNeg2 + atomNeg2 * atomPos2 = 1) ∧
@@ -505,7 +505,7 @@ private theorem atom_car_relations :
     fin_cases i <;> fin_cases j <;>
       simp [atomPos2, atomNeg2, gammaCut2, Matrix.mul_apply, Fin.sum_univ_two]
 
-private theorem kronecker_one_one {m n : Type*} [Fintype m] [Fintype n]
+theorem kronecker_one_one {m n : Type*} [Fintype m] [Fintype n]
     [DecidableEq m] [DecidableEq n] :
     ((1 : Matrix m m ℝ) ⊗ₖ (1 : Matrix n n ℝ)) = (1 : Matrix (m × n) (m × n) ℝ) := by
   ext ⟨i₁, i₂⟩ ⟨j₁, j₂⟩
@@ -527,32 +527,32 @@ def jwNeg : ∀ (k : ℕ), Fin k → Matrix (TowerIdx k) (TowerIdx k) ℝ
   | 0 => Fin.elim0
   | k + 1 => Fin.lastCases (towerGamma k ⊗ₖ atomNeg2) (fun i => jwNeg k i ⊗ₖ 1)
 
-private theorem towerGamma_succ (k : ℕ) :
+theorem towerGamma_succ (k : ℕ) :
     towerGamma (k + 1) = towerGamma k ⊗ₖ gammaCut2 := rfl
 
-private theorem jwPos_last (k : ℕ) :
+theorem jwPos_last (k : ℕ) :
     jwPos (k + 1) (Fin.last k) = towerGamma k ⊗ₖ atomPos2 := by
   simp only [jwPos, Fin.lastCases_last]
 
-private theorem jwPos_castSucc (k : ℕ) (i : Fin k) :
+theorem jwPos_castSucc (k : ℕ) (i : Fin k) :
     jwPos (k + 1) i.castSucc = jwPos k i ⊗ₖ 1 := by
   simp only [jwPos, Fin.lastCases_castSucc]
 
-private theorem jwNeg_last (k : ℕ) :
+theorem jwNeg_last (k : ℕ) :
     jwNeg (k + 1) (Fin.last k) = towerGamma k ⊗ₖ atomNeg2 := by
   simp only [jwNeg, Fin.lastCases_last]
 
-private theorem jwNeg_castSucc (k : ℕ) (i : Fin k) :
+theorem jwNeg_castSucc (k : ℕ) (i : Fin k) :
     jwNeg (k + 1) i.castSucc = jwNeg k i ⊗ₖ 1 := by
   simp only [jwNeg, Fin.lastCases_castSucc]
 
-private theorem towerGamma_sq (k : ℕ) : towerGamma k * towerGamma k = 1 := by
+theorem towerGamma_sq (k : ℕ) : towerGamma k * towerGamma k = 1 := by
   induction k with
   | zero => simp [towerGamma]
   | succ k ih =>
     rw [towerGamma_succ, ← Matrix.mul_kronecker_mul, ih, cl11_atom_laws.1, kronecker_one_one]
 
-private theorem jwPos_anticomm_gamma (k : ℕ) (i : Fin k) :
+theorem jwPos_anticomm_gamma (k : ℕ) (i : Fin k) :
     jwPos k i * towerGamma k + towerGamma k * jwPos k i = 0 := by
   induction k with
   | zero => exact Fin.elim0 i
@@ -566,7 +566,7 @@ private theorem jwPos_anticomm_gamma (k : ℕ) (i : Fin k) :
         ← Matrix.mul_kronecker_mul, one_mul, mul_one, ← Matrix.add_kronecker, ih j,
         Matrix.zero_kronecker]
 
-private theorem jwNeg_anticomm_gamma (k : ℕ) (i : Fin k) :
+theorem jwNeg_anticomm_gamma (k : ℕ) (i : Fin k) :
     jwNeg k i * towerGamma k + towerGamma k * jwNeg k i = 0 := by
   induction k with
   | zero => exact Fin.elim0 i
@@ -580,7 +580,7 @@ private theorem jwNeg_anticomm_gamma (k : ℕ) (i : Fin k) :
         ← Matrix.mul_kronecker_mul, one_mul, mul_one, ← Matrix.add_kronecker, ih j,
         Matrix.zero_kronecker]
 
-private theorem jwPos_anticomm (k : ℕ) (i j : Fin k) :
+theorem jwPos_anticomm (k : ℕ) (i j : Fin k) :
     jwPos k i * jwPos k j + jwPos k j * jwPos k i = 0 := by
   induction k with
   | zero => exact Fin.elim0 i
@@ -607,7 +607,7 @@ private theorem jwPos_anticomm (k : ℕ) (i j : Fin k) :
           ← Matrix.mul_kronecker_mul, one_mul, ← Matrix.add_kronecker, ih i' j',
           Matrix.zero_kronecker]
 
-private theorem jwNeg_anticomm (k : ℕ) (i j : Fin k) :
+theorem jwNeg_anticomm (k : ℕ) (i j : Fin k) :
     jwNeg k i * jwNeg k j + jwNeg k j * jwNeg k i = 0 := by
   induction k with
   | zero => exact Fin.elim0 i
@@ -634,7 +634,7 @@ private theorem jwNeg_anticomm (k : ℕ) (i j : Fin k) :
           ← Matrix.mul_kronecker_mul, one_mul, ← Matrix.add_kronecker, ih i' j',
           Matrix.zero_kronecker]
 
-private theorem jwPos_jwNeg_car (k : ℕ) (i j : Fin k) :
+theorem jwPos_jwNeg_car (k : ℕ) (i j : Fin k) :
     jwPos k i * jwNeg k j + jwNeg k j * jwPos k i = if i = j then 1 else 0 := by
   induction k with
   | zero => exact Fin.elim0 i
@@ -734,5 +734,186 @@ theorem axiom5_parity_soldered_clifford_tower (k : ℕ) :
           = jwPos k i * jwPos k i - (jwPos k i * jwNeg k i + jwNeg k i * jwPos k i) +
               jwNeg k i * jwNeg k i := by noncomm_ring
       _ = -1 := by rw [hp2, hn2, hpn, zero_sub, add_zero]
+
+/-! ### Rung-to-Rung Stage Embedding, Soldering Factorization, and Normalized Trace -/
+
+/-- Unital `ℝ`-algebra embedding `A ↦ A ⊗ I₂` from rung `k` to rung `k + 1`. -/
+def towerStepAlgHom (k : ℕ) :
+    Matrix (TowerIdx k) (TowerIdx k) ℝ →ₐ[ℝ]
+      Matrix (TowerIdx (k + 1)) (TowerIdx (k + 1)) ℝ where
+  toFun A := A ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)
+  map_one' := kronecker_one_one
+  map_mul' A B := by
+    rw [← Matrix.mul_kronecker_mul, mul_one]
+  map_zero' := Matrix.zero_kronecker _
+  map_add' A B := Matrix.add_kronecker A B (1 : Matrix (Fin 2) (Fin 2) ℝ)
+  commutes' r := by
+    rw [Algebra.algebraMap_eq_smul_one, Algebra.algebraMap_eq_smul_one,
+      Matrix.smul_kronecker, kronecker_one_one]
+
+/-- Unital `ℝ`-algebra embedding of the new right-hand `Cl(1,1) ≅ M₂(ℝ)` atom at rung `k + 1`:
+`X ↦ I_{2^k} ⊗ X`. -/
+def towerRightAtomAlgHom (k : ℕ) :
+    Matrix (Fin 2) (Fin 2) ℝ →ₐ[ℝ]
+      Matrix (TowerIdx (k + 1)) (TowerIdx (k + 1)) ℝ where
+  toFun X := (1 : Matrix (TowerIdx k) (TowerIdx k) ℝ) ⊗ₖ X
+  map_one' := kronecker_one_one
+  map_mul' X Y := by
+    rw [← Matrix.mul_kronecker_mul, one_mul]
+  map_zero' := Matrix.kronecker_zero _
+  map_add' X Y := Matrix.kronecker_add (1 : Matrix (TowerIdx k) (TowerIdx k) ℝ) X Y
+  commutes' r := by
+    rw [Algebra.algebraMap_eq_smul_one, Algebra.algebraMap_eq_smul_one,
+      Matrix.kronecker_smul, kronecker_one_one]
+
+@[simp] theorem towerStepAlgHom_apply (k : ℕ) (A : Matrix (TowerIdx k) (TowerIdx k) ℝ) :
+    towerStepAlgHom k A = A ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ) := rfl
+
+@[simp] theorem towerRightAtomAlgHom_apply (k : ℕ) (X : Matrix (Fin 2) (Fin 2) ℝ) :
+    towerRightAtomAlgHom k X = (1 : Matrix (TowerIdx k) (TowerIdx k) ℝ) ⊗ₖ X := rfl
+
+/-- The rung-to-rung stage embedding `towerStepAlgHom k` is injective. -/
+theorem towerStepAlgHom_injective (k : ℕ) : Function.Injective (towerStepAlgHom k) := by
+  intro A B h
+  ext i j
+  have h' : towerStepAlgHom k A (i, (0 : Fin 2)) (j, (0 : Fin 2)) =
+      towerStepAlgHom k B (i, (0 : Fin 2)) (j, (0 : Fin 2)) :=
+    congrFun (congrFun h (i, (0 : Fin 2))) (j, (0 : Fin 2))
+  rw [towerStepAlgHom_apply, towerStepAlgHom_apply] at h'
+  change A i j * (1 : Matrix (Fin 2) (Fin 2) ℝ) 0 0 =
+    B i j * (1 : Matrix (Fin 2) (Fin 2) ℝ) 0 0 at h'
+  simpa using h'
+
+/-- Earlier raising generators are transported cleanly across `towerStepAlgHom`. -/
+@[simp] theorem towerStepAlgHom_jwPos (k : ℕ) (i : Fin k) :
+    towerStepAlgHom k (jwPos k i) = jwPos (k + 1) i.castSucc := by
+  rw [towerStepAlgHom_apply, jwPos_castSucc]
+
+/-- Earlier lowering generators are transported cleanly across `towerStepAlgHom`. -/
+@[simp] theorem towerStepAlgHom_jwNeg (k : ℕ) (i : Fin k) :
+    towerStepAlgHom k (jwNeg k i) = jwNeg (k + 1) i.castSucc := by
+  rw [towerStepAlgHom_apply, jwNeg_castSucc]
+
+/-- Product factorization `towerStepAlgHom k A * towerRightAtomAlgHom k X = A ⊗ₖ X`. -/
+@[simp] theorem towerStep_mul_rightAtom (k : ℕ)
+    (A : Matrix (TowerIdx k) (TowerIdx k) ℝ) (X : Matrix (Fin 2) (Fin 2) ℝ) :
+    towerStepAlgHom k A * towerRightAtomAlgHom k X = A ⊗ₖ X := by
+  rw [towerStepAlgHom_apply, towerRightAtomAlgHom_apply, ← Matrix.mul_kronecker_mul, mul_one,
+    one_mul]
+
+/-- Reverse product factorization `towerRightAtomAlgHom k X * towerStepAlgHom k A = A ⊗ₖ X`. -/
+@[simp] theorem rightAtom_mul_towerStep (k : ℕ)
+    (A : Matrix (TowerIdx k) (TowerIdx k) ℝ) (X : Matrix (Fin 2) (Fin 2) ℝ) :
+    towerRightAtomAlgHom k X * towerStepAlgHom k A = A ⊗ₖ X := by
+  rw [towerRightAtomAlgHom_apply, towerStepAlgHom_apply, ← Matrix.mul_kronecker_mul, one_mul,
+    mul_one]
+
+/-- The embedded stage `k` subalgebra commutes with the newly appended right-hand atom. -/
+theorem towerStep_commutes_rightAtom (k : ℕ)
+    (A : Matrix (TowerIdx k) (TowerIdx k) ℝ) (X : Matrix (Fin 2) (Fin 2) ℝ) :
+    towerStepAlgHom k A * towerRightAtomAlgHom k X =
+      towerRightAtomAlgHom k X * towerStepAlgHom k A := by
+  rw [towerStep_mul_rightAtom, rightAtom_mul_towerStep]
+
+/-- Chirality factorization `Γ^(k+1) = ι_k(Γ^(k)) * R_k(Γ_cut)`. -/
+theorem towerGamma_succ_eq_step_mul_rightAtom (k : ℕ) :
+    towerGamma (k + 1) =
+      towerStepAlgHom k (towerGamma k) * towerRightAtomAlgHom k gammaCut2 := by
+  rw [towerGamma_succ, towerStep_mul_rightAtom]
+
+/-- Soldering factorization for the newly appended creation mode:
+`e_k^+ = ι_k(Γ^(k)) * R_k(a_+)`. -/
+theorem jwPos_last_eq_step_mul_rightAtom (k : ℕ) :
+    jwPos (k + 1) (Fin.last k) =
+      towerStepAlgHom k (towerGamma k) * towerRightAtomAlgHom k atomPos2 := by
+  rw [jwPos_last, towerStep_mul_rightAtom]
+
+/-- Soldering factorization for the newly appended annihilation mode:
+`e_k^- = ι_k(Γ^(k)) * R_k(a_-)`. -/
+theorem jwNeg_last_eq_step_mul_rightAtom (k : ℕ) :
+    jwNeg (k + 1) (Fin.last k) =
+      towerStepAlgHom k (towerGamma k) * towerRightAtomAlgHom k atomNeg2 := by
+  rw [jwNeg_last, towerStep_mul_rightAtom]
+
+/-- Dimension-normalized trace `tr_k(A) = Tr(A) / 2^k` on rung `k` of the parity-soldered tower. -/
+noncomputable def normalizedTowerTrace (k : ℕ) (A : Matrix (TowerIdx k) (TowerIdx k) ℝ) : ℝ :=
+  Matrix.trace A / (2 : ℝ) ^ k
+
+private theorem scalar_two_mul_div_pow_succ (k : ℕ) (t : ℝ) :
+    (2 * t) / (2 : ℝ) ^ (k + 1) = t / (2 : ℝ) ^ k := by
+  rw [pow_succ']
+  have h2 : (2 : ℝ) ≠ 0 := by norm_num
+  have hpow : (2 : ℝ) ^ k ≠ 0 := pow_ne_zero k h2
+  field_simp [h2, hpow]
+
+private theorem scalar_pow_two_div_self (k : ℕ) :
+    ((2 : ℝ) ^ k) / (2 : ℝ) ^ k = 1 :=
+  div_self (pow_ne_zero k (by norm_num))
+
+@[simp] theorem trace_fin_two_one :
+    Matrix.trace (1 : Matrix (Fin 2) (Fin 2) ℝ) = 2 := by
+  simp [Matrix.trace]
+
+@[simp] theorem trace_atomPos2 : Matrix.trace atomPos2 = 0 := by
+  simp [atomPos2, Matrix.trace, Fin.sum_univ_two]
+
+@[simp] theorem trace_atomNeg2 : Matrix.trace atomNeg2 = 0 := by
+  simp [atomNeg2, Matrix.trace, Fin.sum_univ_two]
+
+/-- Embedding `A ↦ A ⊗ I₂` doubles the unnormalized matrix trace. -/
+@[simp] theorem trace_towerStepAlgHom (k : ℕ)
+    (A : Matrix (TowerIdx k) (TowerIdx k) ℝ) :
+    Matrix.trace (towerStepAlgHom k A) = 2 * Matrix.trace A := by
+  rw [towerStepAlgHom_apply, Matrix.trace_kronecker, trace_fin_two_one, mul_comm]
+
+/-- `normalizedTowerTrace` is strictly invariant under all rung-to-rung stage embeddings. -/
+@[simp] theorem normalizedTowerTrace_towerStepAlgHom (k : ℕ)
+    (A : Matrix (TowerIdx k) (TowerIdx k) ℝ) :
+    normalizedTowerTrace (k + 1) (towerStepAlgHom k A) = normalizedTowerTrace k A := by
+  unfold normalizedTowerTrace
+  rw [trace_towerStepAlgHom]
+  exact scalar_two_mul_div_pow_succ k (Matrix.trace A)
+
+/-- The normalized trace is unital (`tr_k(1) = 1`) at every rung `k`. -/
+@[simp] theorem normalizedTowerTrace_one (k : ℕ) :
+    normalizedTowerTrace k 1 = 1 := by
+  unfold normalizedTowerTrace
+  rw [Matrix.trace_one, card_towerIdx]
+  push_cast
+  exact scalar_pow_two_div_self k
+
+/-- Every Jordan–Wigner raising generator is traceless at every rung `k`. -/
+theorem trace_jwPos_eq_zero (k : ℕ) (i : Fin k) :
+    Matrix.trace (jwPos k i) = 0 := by
+  induction k with
+  | zero => exact Fin.elim0 i
+  | succ k ih =>
+    refine Fin.lastCases ?_ ?_ i
+    · rw [jwPos_last, Matrix.trace_kronecker, trace_atomPos2, mul_zero]
+    · intro j
+      rw [← towerStepAlgHom_jwPos, trace_towerStepAlgHom, ih j, mul_zero]
+
+/-- Every Jordan–Wigner lowering generator is traceless at every rung `k`. -/
+theorem trace_jwNeg_eq_zero (k : ℕ) (i : Fin k) :
+    Matrix.trace (jwNeg k i) = 0 := by
+  induction k with
+  | zero => exact Fin.elim0 i
+  | succ k ih =>
+    refine Fin.lastCases ?_ ?_ i
+    · rw [jwNeg_last, Matrix.trace_kronecker, trace_atomNeg2, mul_zero]
+    · intro j
+      rw [← towerStepAlgHom_jwNeg, trace_towerStepAlgHom, ih j, mul_zero]
+
+/-- Every Jordan–Wigner raising generator has zero normalized trace. -/
+@[simp] theorem normalizedTowerTrace_jwPos (k : ℕ) (i : Fin k) :
+    normalizedTowerTrace k (jwPos k i) = 0 := by
+  unfold normalizedTowerTrace
+  rw [trace_jwPos_eq_zero, zero_div]
+
+/-- Every Jordan–Wigner lowering generator has zero normalized trace. -/
+@[simp] theorem normalizedTowerTrace_jwNeg (k : ℕ) (i : Fin k) :
+    normalizedTowerTrace k (jwNeg k i) = 0 := by
+  unfold normalizedTowerTrace
+  rw [trace_jwNeg_eq_zero, zero_div]
 
 end InfoGeometry.Algebra.GradedNullconeAlgebra

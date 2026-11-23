@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixStarRepresentationBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -25,17 +30,17 @@ def dyadicMatrixEmbedding (n : ℕ) (A : BitWordMatrixStage n) :
     BitWordMatrixStage (n + 1) :=
   ∑ u : BitWord n, ∑ v : BitWord n,
     A u v •
-      (Matrix.single (extendBitWord n u false) (extendBitWord n v false) 1 +
-        Matrix.single (extendBitWord n u true) (extendBitWord n v true) 1)
+      (Matrix.single (CantorBernoulliFiniteMatrixUnitBridge.extendBitWord n u false) (CantorBernoulliFiniteMatrixUnitBridge.extendBitWord n v false) 1 +
+        Matrix.single (CantorBernoulliFiniteMatrixUnitBridge.extendBitWord n u true) (CantorBernoulliFiniteMatrixUnitBridge.extendBitWord n v true) 1)
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 
 theorem bitWordMatrixLinearRepresentation_single_refinement
     (n : ℕ) (u v : BitWord n) :
     bitWordMatrixLinearRepresentation n (Matrix.single u v 1) =
       bitWordMatrixLinearRepresentation (n + 1)
-        (Matrix.single (extendBitWord n u false) (extendBitWord n v false) 1) +
+        (Matrix.single (CantorBernoulliFiniteMatrixUnitBridge.extendBitWord n u false) (CantorBernoulliFiniteMatrixUnitBridge.extendBitWord n v false) 1) +
       bitWordMatrixLinearRepresentation (n + 1)
-        (Matrix.single (extendBitWord n u true) (extendBitWord n v true) 1) := by
+        (Matrix.single (CantorBernoulliFiniteMatrixUnitBridge.extendBitWord n u true) (CantorBernoulliFiniteMatrixUnitBridge.extendBitWord n v true) 1) := by
   rw [bitWordMatrixLinearRepresentation_single,
     bitWordMatrixLinearRepresentation_single,
     bitWordMatrixLinearRepresentation_single,
@@ -45,9 +50,9 @@ theorem bitWordMatrixLinearRepresentation_single_smul_refinement
     (n : ℕ) (u v : BitWord n) (c : ℂ) :
     bitWordMatrixLinearRepresentation n (Matrix.single u v c) =
       bitWordMatrixLinearRepresentation (n + 1)
-        (c • Matrix.single (extendBitWord n u false) (extendBitWord n v false) 1) +
+        (c • Matrix.single (CantorBernoulliFiniteMatrixUnitBridge.extendBitWord n u false) (CantorBernoulliFiniteMatrixUnitBridge.extendBitWord n v false) 1) +
       bitWordMatrixLinearRepresentation (n + 1)
-        (c • Matrix.single (extendBitWord n u true) (extendBitWord n v true) 1) := by
+        (c • Matrix.single (CantorBernoulliFiniteMatrixUnitBridge.extendBitWord n u true) (CantorBernoulliFiniteMatrixUnitBridge.extendBitWord n v true) 1) := by
   rw [bitWordMatrixLinearRepresentation_single_smul,
     map_smul,
     bitWordMatrixLinearRepresentation_single_smul,

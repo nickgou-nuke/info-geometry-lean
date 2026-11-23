@@ -8,15 +8,21 @@ import Mathlib.Tactic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.Normed.Field.Basic
 import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.CStarAlgebra.Matrix
+import Mathlib.Algebra.Group.AddChar
 import Mathlib.Algebra.Polynomial.Eval.Defs
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
 /-!
 # InfoGeometry.Arithmetic.AlpogeDeligneFrobeniusBoundBridge
 
-Unconditional Lean 4 formalization of the complete analytic and algebraic engine
-of L. Alpöge's short sign-only proof of Deligne's bound for Frobenius eigenvalues
-(`hexagon:2611.00789v1`, Sections 3–5, 7–8):
+Lean formalization of selected finite algebraic and scalar-analytic estimates
+motivated by L. Alpöge's short sign-only proof of Deligne's bound for Frobenius
+eigenvalues (`hexagon:2611.00789v1`, Sections 3–5, 7–8). The results below
+are not a formalization of the geometric input or of Deligne's theorem itself:
+in particular, no scheme, constructible sheaf, Frobenius action on étale
+cohomology, or weak-Lefschetz theorem is constructed here. The exact conditional
+scope of the scalar Gysin and purity statements is recorded below.
 
 1. **Lemma 2 (Positive-Multiplicity Power-Sum Spectral-Radius Squeeze, §3)**:
    - `powSum_spectralRadius_le_of_bound`: if distinct nonzero `μ : Fin s → ℂ` with
@@ -24,27 +30,47 @@ of L. Alpöge's short sign-only proof of Deligne's bound for Frobenius eigenvalu
      `‖∑ j, (m j : ℂ) * (μ j) ^ n‖ ≤ C * B ^ n` for all `n ≥ 1`, then `‖μ j‖ ≤ B`
      for every `j` (proved directly via Lagrange/Vandermonde polynomial annihilation
      with zero complex-analytic pole machinery).
-   - `eigenvalue_bound_of_tensorPower_squeeze`: if `‖α‖ ^ (k * e k) ≤ q ^ (e k * (k * a + c k))`
+   - `rpow_squeeze_of_tensorPower_bound`: if `‖α‖ ^ (k * e k) ≤ q ^ (e k * (k * a + c k))`
      along a cofinal sequence with `c k / k → 0`, then `‖α‖ ≤ q ^ a`.
 2. **Lemma 3 (Path Character-Sum Parseval / Cauchy–Schwarz Estimate, §4)**:
    - `fourierKernel_parseval_sq`: for a nontrivial additive character `ψ : E → ℂ`
      (`|ψ x| = 1`, `∑ y, ψ y = 0`), nondegenerate bilinear form `b : A →ₗ[E] A →ₗ[E] E`,
      and `h ≠ 0`, the kernel `K(x, y) = ψ (h * b x y)` satisfies the exact Parseval
      identity `∑ x, ‖∑ y, K x y * v y‖ ^ 2 = (Fintype.card A : ℝ) * ∑ y, ‖v y‖ ^ 2`.
-   - `pathCharacterSum_norm_le`: for `k ≥ 2`, `‖t i x‖ ≤ T`, and nondegenerate bilinear
-     couplings `b i`, the `k`-fold path character sum has norm at most
-     `T ^ k * (Fintype.card A : ℝ) ^ ((k + 1 : ℝ) / 2)`.
+   - `pathCharacterSum_pairing_unitTerminal_norm_sq_le`: for `m` nondegenerate bilinear
+     kernels and `m + 1` site weights bounded by `T`, the endpoint-weighted path sum
+     (constant-one terminal vector) has squared norm at most
+     `T ^ (2 * (m + 1)) * (Fintype.card A : ℝ) ^ (m + 2)`.
+   - `nearestNeighborPathSum_eq_pathPropagator` identifies that recursive operator with
+     the literal sum over `Fin (m + 1) → A` vertex tuples, and
+     `nearestNeighborPathSum_norm_sq_le` transfers the bound to that sum.
+   - `pathPropagator_eq_pathTransferProduct_mulVec` represents every edge as an
+     actual matrix on `A` and identifies the chain with their ordered matrix product
+     acting on the terminal vector. The state-space dimension is `Fintype.card A`,
+     independent of path length; `pathTransferProduct_norm_le` bounds the product
+     norm by the product of local operator norms, with no uniform-in-length claim.
+   - `pathCharacterSum_pairing_norm_le`: allows an additional bounded terminal vector
+     and gives the corresponding looser bound with one extra factor of `T`.
 3. **Section 7 Remainder Decomposition (`Q * N - M ^ k`)**:
    - `characterOrthogonality_indicator`: `∑ h : E, ψ (h * x) = if x = 0 then |E| else 0`.
    - `remainder_eq_sum_nonzero_characters`: splits the `h = 0` term (`M ^ k`) from
      `Q * N`, expressing `R = Q * N - M ^ k` as the sum over `h ≠ 0`.
-4. **Proposition 4 (Gysin Alternating-Trace Telescoping Sign Identity, §5) & Example 5**:
-   - `gysin_alternating_trace_telescoping`: if `tY a = tX (a + 1)` for `a ≥ 1` and
-     `tY 0 = tK + tX 1`, then `(-1)^(D - 1) * (Q * N - M ^ k) = tX 0 + tK`
-     (both `H_c^D(U^k)` and the Gysin kernel `K` enter with the **same** `+` sign).
-   - `example5_conic_remainder`: concrete `U = 𝔸¹`, `k = 2` verification
-     `(-1) ^ (2 - 1) * (r ^ n * (r ^ n - 1) - (r ^ n) ^ 2) = r ^ n`.
-5. **Theorem 1(b) (Poincaré-Duality Purity Upgrade, §8)**:
+   - `nearestNeighborRemainder_eq_character_path_sums` identifies this remainder
+     for the explicit nearest-neighbor path hypersurface; its finite norm bound is
+     `nearestNeighborRemainder_norm_sq_le`. Neither theorem supplies positive
+     spectral residues or a Frobenius trace interpretation.
+4. **Scalar Gysin-style alternating-sum identity and Example 5 numerical instance**:
+   - `gysin_alternating_trace_telescoping`: for scalar sequences `tX`, `tY` and
+     scalar `tK`, the stated shift and boundary equations imply the finite
+     alternating-sum identity. These inputs are not constructed from cohomology
+     groups or Gysin morphisms in this file.
+     The indices are relative: `tX b` represents degree `D + b` on `X`, while
+     `tY a` represents degree `D - 1 + a` on `Y`. Thus `tY a = tX (a + 1)`
+     encodes the absolute Gysin degree shift `j ↦ j + 2`, not a degree-`+1`
+     Gysin map.
+   - `example5_conic_remainder`: a polynomial identity for `r` and `n`; it does
+     not construct or prove a geometric example on `𝔸¹`.
+5. **Scalar purity squeeze patterned on Poincaré duality (Section 8)**:
    - `poincareDuality_purity_eq`: `‖α‖ ≤ q ^ ((w + i) / 2)` together with the dual
      bound `‖q ^ d / α‖ ≤ q ^ ((-w + 2 * d - i) / 2)` forces exact purity
      `‖α‖ = q ^ ((w + i) / 2)`.
@@ -68,6 +94,7 @@ noncomputable section
 namespace InfoGeometry.Arithmetic.AlpogeDeligneFrobeniusBoundBridge
 
 open scoped BigOperators
+open scoped Matrix.Norms.L2Operator
 open Filter Topology Polynomial
 
 /-! ## 1. Section 3 / Lemma 2: Positive-multiplicity power-sum spectral-radius squeeze -/
@@ -228,142 +255,117 @@ theorem rpow_squeeze_of_tensorPower_bound
 
 /-! ## 2. Section 4 / Lemma 3: Path character-sum Parseval & Cauchy–Schwarz estimate -/
 
-/-- A nontrivial additive character `ψ : E → ℂ` on a finite field `E`,
-with unit-modulus values and vanishing full sum. -/
-structure NontrivialAddChar (E : Type*) [Field E] [Fintype E] where
-  toFun : E → ℂ
-  map_zero : toFun 0 = 1
-  map_add : ∀ x y, toFun (x + y) = toFun x * toFun y
-  norm_eq_one : ∀ x, ‖toFun x‖ = 1
-  sum_eq_zero : ∑ x : E, toFun x = 0
+namespace FiniteFieldAddChar
 
-/-- Concrete inhabitant: the nontrivial additive character on `ZMod 2` (`0 ↦ 1`, `1 ↦ -1`). -/
-def zmod2AddChar : NontrivialAddChar (ZMod 2) where
-  toFun x := if x = 0 then 1 else -1
-  map_zero := by simp
-  map_add x y := by
-    have hcases : ∀ z : ZMod 2, z = 0 ∨ z = 1 := fun z => by
-      fin_cases z
-      · exact Or.inl rfl
-      · exact Or.inr rfl
-    rcases hcases x with rfl | rfl <;> rcases hcases y with rfl | rfl
-    · simp
-    · simp
-    · simp
-    · have h2 : (1 : ZMod 2) + 1 = 0 := by decide
-      simp [h2]
-  norm_eq_one x := by
-    by_cases hx : x = 0 <;> simp [hx]
-  sum_eq_zero := by
-    change (∑ x : Fin 2, if (x : ZMod 2) = 0 then (1 : ℂ) else -1) = 0
-    rw [Fin.sum_univ_two]
-    simp
+variable {E : Type*} [Field E] [Fintype E] (ψ : AddChar E ℂ) (hψ : ψ ≠ 0)
 
-namespace NontrivialAddChar
-
-variable {E : Type*} [Field E] [Fintype E] (ψ : NontrivialAddChar E)
-
-theorem map_neg (x : E) : ψ.toFun (-x) = star (ψ.toFun x) := by
-  have h1 : ψ.toFun (-x) * ψ.toFun x = 1 := by
-    rw [← ψ.map_add, neg_add_cancel, ψ.map_zero]
-  have h2 : star (ψ.toFun x) * ψ.toFun x = 1 := by
-    rw [mul_comm, Complex.star_def, Complex.mul_conj, Complex.normSq_eq_norm_sq, ψ.norm_eq_one]
+theorem map_neg (x : E) : ψ (-x) = star (ψ x) := by
+  have h1 : ψ (-x) * ψ x = 1 := by
+    rw [← ψ.map_add_eq_mul, neg_add_cancel, ψ.map_zero_eq_one]
+  have h2 : star (ψ x) * ψ x = 1 := by
+    rw [mul_comm, Complex.star_def, Complex.mul_conj, Complex.normSq_eq_norm_sq,
+      ψ.norm_apply x]
     norm_num
-  have hne : ψ.toFun x ≠ 0 := by
+  have hne : ψ x ≠ 0 := by
     intro h0
-    have := ψ.norm_eq_one x
+    have := ψ.norm_apply x
     rw [h0, norm_zero] at this
     norm_num at this
   exact mul_right_cancel₀ hne (h1.trans h2.symm)
 
-theorem map_sub (x y : E) : ψ.toFun (x - y) = ψ.toFun x * star (ψ.toFun y) := by
-  rw [sub_eq_add_neg, ψ.map_add, ψ.map_neg]
+theorem map_sub (x y : E) : ψ (x - y) = ψ x * star (ψ y) := by
+  rw [sub_eq_add_neg, ψ.map_add_eq_mul, map_neg ψ]
 
-/-- **Section 7 Character-Orthogonality Indicator**:
-`∑ h : E, ψ(h * x)` equals `|E|` if `x = 0` and `0` otherwise. -/
-theorem sum_mul_eq_ite [DecidableEq E] (x : E) :
-    (∑ h : E, ψ.toFun (h * x)) = if x = 0 then (Fintype.card E : ℂ) else 0 := by
+theorem sum_mul_eq_ite [DecidableEq E] (hψ : ψ ≠ 0) (x : E) :
+    (∑ h : E, ψ (h * x)) = if x = 0 then (Fintype.card E : ℂ) else 0 := by
   by_cases hx : x = 0
   · subst hx
-    simp [ψ.map_zero]
+    simp [ψ.map_zero_eq_one]
   · simp only [hx, ↓reduceIte]
-    have hbij : (∑ h : E, ψ.toFun (h * x)) = ∑ y : E, ψ.toFun y := by
-      exact Equiv.sum_comp (Equiv.mulRight₀ x hx) ψ.toFun
-    rw [hbij, ψ.sum_eq_zero]
+    have hbij : (∑ h : E, ψ (h * x)) = ∑ y : E, ψ y :=
+      Equiv.sum_comp (Equiv.mulRight₀ x hx) ψ
+    have hsum : (∑ y : E, ψ y) = 0 := AddChar.sum_eq_zero_iff_ne_zero.mpr hψ
+    rw [hbij, hsum]
 
-/-- Any nonzero linear functional `ℓ : A →ₗ[E] E` on a finite `E`-vector space `A`
-has vanishing character sum `∑ y : A, ψ (ℓ y) = 0`. -/
-theorem sum_linearMap_eq_zero
+theorem sum_linearMap_eq_zero (hψ : ψ ≠ 0)
     {A : Type*} [AddCommGroup A] [Module E A] [Fintype A]
-    (ℓ : A →ₗ[E] E) (hℓ : ℓ ≠ 0) :
-    (∑ y : A, ψ.toFun (ℓ y)) = 0 := by
+    (ℓ : A →ₗ[E] E) (hℓ : ℓ ≠ 0) : (∑ y : A, ψ (ℓ y)) = 0 := by
   have hex : ∃ y₀ : A, ℓ y₀ ≠ 0 := by
     by_contra h
     push Not at h
     exact hℓ (LinearMap.ext h)
   obtain ⟨y₀, hy₀⟩ := hex
-  have hmul : ∀ c : E, ψ.toFun (c * ℓ y₀) * (∑ y : A, ψ.toFun (ℓ y)) =
-      ∑ y : A, ψ.toFun (ℓ y) := by
+  have hmul : ∀ c : E, ψ (c * ℓ y₀) * (∑ y : A, ψ (ℓ y)) =
+      ∑ y : A, ψ (ℓ y) := by
     intro c
     rw [Finset.mul_sum]
     calc
-      ∑ y : A, ψ.toFun (c * ℓ y₀) * ψ.toFun (ℓ y)
-          = ∑ y : A, ψ.toFun (ℓ (c • y₀ + y)) := by
+      ∑ y : A, ψ (c * ℓ y₀) * ψ (ℓ y)
+          = ∑ y : A, ψ (ℓ (c • y₀ + y)) := by
             refine Finset.sum_congr rfl fun y _ => ?_
-            rw [LinearMap.map_add, LinearMap.map_smul, smul_eq_mul, ψ.map_add]
-      _ = ∑ y : A, ψ.toFun (ℓ y) :=
-            Equiv.sum_comp (Equiv.addLeft (c • y₀)) (fun y => ψ.toFun (ℓ y))
-  have hsum : (∑ c : E, ψ.toFun (c * ℓ y₀)) * (∑ y : A, ψ.toFun (ℓ y)) =
-      (Fintype.card E : ℂ) * (∑ y : A, ψ.toFun (ℓ y)) := by
+            rw [LinearMap.map_add, LinearMap.map_smul, smul_eq_mul, ψ.map_add_eq_mul]
+      _ = ∑ y : A, ψ (ℓ y) :=
+            Equiv.sum_comp (Equiv.addLeft (c • y₀)) (fun y => ψ (ℓ y))
+  have hsum : (∑ c : E, ψ (c * ℓ y₀)) * (∑ y : A, ψ (ℓ y)) =
+      (Fintype.card E : ℂ) * (∑ y : A, ψ (ℓ y)) := by
     rw [Finset.sum_mul]
     calc
-      ∑ c : E, ψ.toFun (c * ℓ y₀) * (∑ y : A, ψ.toFun (ℓ y))
-          = ∑ _c : E, ∑ y : A, ψ.toFun (ℓ y) := Finset.sum_congr rfl fun c _ => hmul c
-      _ = (Fintype.card E : ℂ) * (∑ y : A, ψ.toFun (ℓ y)) := by simp
+      ∑ c : E, ψ (c * ℓ y₀) * (∑ y : A, ψ (ℓ y))
+          = ∑ _c : E, ∑ y : A, ψ (ℓ y) := Finset.sum_congr rfl fun c _ => hmul c
+      _ = (Fintype.card E : ℂ) * (∑ y : A, ψ (ℓ y)) := by simp
   classical
-  rw [ψ.sum_mul_eq_ite (ℓ y₀)] at hsum
+  rw [sum_mul_eq_ite ψ hψ (ℓ y₀)] at hsum
   simp only [hy₀, ↓reduceIte, zero_mul] at hsum
   have hcard : (Fintype.card E : ℂ) ≠ 0 :=
     Nat.cast_ne_zero.mpr (Fintype.card_ne_zero)
   exact (mul_eq_zero.mp hsum.symm).resolve_left hcard
 
-end NontrivialAddChar
+end FiniteFieldAddChar
 
 /-- **Lemma 3 (Parseval Identity for Nondegenerate Fourier Kernel)**:
 For a right-nondegenerate bilinear form `b : A →ₗ[E] A →ₗ[E] E` and `h ≠ 0`, the Fourier
 matrix `K(x, y) = ψ(h * b x y)` satisfies `‖K v‖₂² = |A| * ‖v‖₂²` identically. -/
 theorem fourierKernel_parseval_sq
     {E A : Type*} [Field E] [Fintype E] [AddCommGroup A] [Module E A] [Fintype A]
-    (ψ : NontrivialAddChar E)
+    (ψ : AddChar E ℂ) (hψ : ψ ≠ 0)
     (b : A →ₗ[E] A →ₗ[E] E)
     (hb : ∀ z : A, (∀ x : A, b x z = 0) → z = 0)
     {h : E} (hh : h ≠ 0) (v : A → ℂ) :
-    (∑ x : A, ‖∑ y : A, ψ.toFun (h * b x y) * v y‖ ^ 2) =
+    (∑ x : A, ‖∑ y : A, ψ (h * b x y) * v y‖ ^ 2) =
       (Fintype.card A : ℝ) * (∑ y : A, ‖v y‖ ^ 2) := by
   classical
   have hC :
-      ((∑ x : A, ‖∑ y : A, ψ.toFun (h * b x y) * v y‖ ^ 2 : ℝ) : ℂ) =
+      ((∑ x : A, ‖∑ y : A, ψ (h * b x y) * v y‖ ^ 2 : ℝ) : ℂ) =
         ((Fintype.card A : ℝ) * (∑ y : A, ‖v y‖ ^ 2) : ℝ) := by
     push_cast
     calc
-      ∑ x : A, (‖∑ y : A, ψ.toFun (h * b x y) * v y‖ : ℂ) ^ 2
-          = ∑ x : A, (∑ y : A, ψ.toFun (h * b x y) * v y) *
-              star (∑ z : A, ψ.toFun (h * b x z) * v z) := by
+      ∑ x : A, (‖∑ y : A, ψ (h * b x y) * v y‖ : ℂ) ^ 2
+          = ∑ x : A, (∑ y : A, ψ (h * b x y) * v y) *
+              star (∑ z : A, ψ (h * b x z) * v z) := by
             refine Finset.sum_congr rfl fun x _ => ?_
             rw [Complex.star_def, Complex.mul_conj, Complex.normSq_eq_norm_sq]
             push_cast
             rfl
       _ = ∑ x : A, ∑ y : A, ∑ z : A,
-            ψ.toFun (h * b x (y - z)) * (v y * star (v z)) := by
+            ψ (h * b x (y - z)) * (v y * star (v z)) := by
             refine Finset.sum_congr rfl fun x _ => ?_
             rw [star_sum, Finset.sum_mul]
             refine Finset.sum_congr rfl fun y _ => ?_
             rw [Finset.mul_sum]
             refine Finset.sum_congr rfl fun z _ => ?_
-            rw [star_mul', map_sub, mul_sub, ψ.map_sub]
-            ring
+            calc
+              ψ (h * b x y) * v y * star (ψ (h * b x z) * v z)
+                  = (ψ (h * b x y) * star (ψ (h * b x z))) *
+                      (v y * star (v z)) := by
+                    rw [star_mul']
+                    ring
+              _ = ψ (h * b x y - h * b x z) * (v y * star (v z)) := by
+                    rw [← FiniteFieldAddChar.map_sub ψ]
+              _ = ψ (h * b x (y - z)) * (v y * star (v z)) := by
+                    congr 2
+                    simp [map_sub, mul_sub]
       _ = ∑ y : A, ∑ z : A,
-            (∑ x : A, ψ.toFun (h * b x (y - z))) * (v y * star (v z)) := by
+            (∑ x : A, ψ (h * b x (y - z))) * (v y * star (v z)) := by
             rw [Finset.sum_comm]
             refine Finset.sum_congr rfl fun y _ => ?_
             rw [Finset.sum_comm]
@@ -372,7 +374,7 @@ theorem fourierKernel_parseval_sq
       _ = ∑ y : A, (Fintype.card A : ℂ) * (v y * star (v y)) := by
             refine Finset.sum_congr rfl fun y _ => ?_
             rw [Finset.sum_eq_single y]
-            · simp [ψ.map_zero]
+            · simp [ψ.map_zero_eq_one]
             · intro z _ hzy
               let ℓ : A →ₗ[E] E :=
                 { toFun := fun x => h * b x (y - z)
@@ -384,8 +386,8 @@ theorem fourierKernel_parseval_sq
                   have hx : ℓ x = 0 := congrArg (fun f : A →ₗ[E] E => f x) h0
                   exact (mul_eq_zero.mp hx).resolve_left hh
                 exact hzy (sub_eq_zero.mp hsub).symm
-              have hzero : (∑ x : A, ψ.toFun (h * b x (y - z))) = 0 :=
-                ψ.sum_linearMap_eq_zero ℓ hℓ
+              have hzero : (∑ x : A, ψ (h * b x (y - z))) = 0 :=
+                FiniteFieldAddChar.sum_linearMap_eq_zero ψ hψ ℓ hℓ
               rw [hzero, zero_mul]
             · intro hmem; exact (hmem (Finset.mem_univ y)).elim
       _ = (Fintype.card A : ℂ) * ∑ y : A, (‖v y‖ : ℂ) ^ 2 := by
@@ -406,25 +408,212 @@ theorem diag_mul_l2_sq_le
   rw [Finset.mul_sum]
   refine Finset.sum_le_sum fun x _ => ?_
   rw [norm_mul, mul_pow]
-  have hsq : ‖t x‖ ^ 2 ≤ T ^ 2 := sq_le_sq' (by linarith [norm_nonneg (t x)]) (ht x)
+  have hsq : ‖t x‖ ^ 2 ≤ T ^ 2 :=
+    sq_le_sq' (by linarith [norm_nonneg (t x), hT]) (ht x)
   exact mul_le_mul_of_nonneg_right hsq (sq_nonneg _)
 
-/-- Recursive path-operator vector `K₁ D₂ K₂ ⋯ D_{m} K_{m} v` for Lemma 3. -/
+/-- Recursive path-operator vector: each Fourier kernel is followed by a diagonal
+weight at its destination. In the endpoint-weighted estimate the final weight acts
+on the constant-one vector, producing the last site vector. -/
 def pathPropagator
     {E A : Type*} [Field E] [Fintype E] [AddCommGroup A] [Module E A] [Fintype A]
-    (ψ : NontrivialAddChar E) (h : E) :
+    (ψ : AddChar E ℂ) (h : E) :
     (m : ℕ) → (Fin m → A →ₗ[E] A →ₗ[E] E) → (Fin m → A → ℂ) → (A → ℂ) → (A → ℂ)
   | 0, _, _, v => v
   | m + 1, b, t, v =>
-      fun x => ∑ y : A, ψ.toFun (h * b 0 x y) * (t 0 y *
+      fun x => ∑ y : A, ψ (h * b 0 x y) * (t 0 y *
         pathPropagator ψ h m (fun i => b i.succ) (fun i => t i.succ) v y)
+
+/-- The one-edge transfer matrix: its row is the source state and its column
+is the destination state, with the destination site weight included. -/
+def pathTransferMatrix
+    {E A : Type*} [Field E] [Fintype E] [AddCommGroup A] [Module E A]
+    [Fintype A] [DecidableEq A]
+    (ψ : AddChar E ℂ) (h : E)
+    (b : A →ₗ[E] A →ₗ[E] E) (t : A → ℂ) : Matrix A A ℂ :=
+  fun x y => ψ (h * b x y) * t y
+
+/-- Ordered transfer-matrix product for a finite chain. The first edge acts
+after the product of the remaining edges, matching the recursive path order. -/
+def pathTransferProduct
+    {E A : Type*} [Field E] [Fintype E] [AddCommGroup A] [Module E A]
+    [Fintype A] [DecidableEq A]
+    (ψ : AddChar E ℂ) (h : E) :
+    (m : ℕ) → (Fin m → A →ₗ[E] A →ₗ[E] E) → (Fin m → A → ℂ) → Matrix A A ℂ
+  | 0, _, _ => 1
+  | m + 1, b, t =>
+      pathTransferMatrix ψ h (b 0) (t 0) *
+        pathTransferProduct ψ h m (fun i => b i.succ) (fun i => t i.succ)
+
+/-- The Euclidean operator norm of a finite nearest-neighbor transfer product
+is bounded by the product of the local operator norms. This is the precise
+submultiplicative estimate for the fixed state-space transfer representation;
+it gives no length-independent bound unless the local factors themselves have
+additional uniform control. -/
+theorem pathTransferProduct_norm_le
+    {E A : Type*} [Field E] [Fintype E] [AddCommGroup A] [Module E A]
+    [Fintype A] [DecidableEq A]
+    (ψ : AddChar E ℂ) (h : E) :
+    ∀ (m : ℕ) (b : Fin m → A →ₗ[E] A →ₗ[E] E)
+      (t : Fin m → A → ℂ),
+      ‖pathTransferProduct ψ h m b t‖ ≤
+        ∏ i : Fin m, ‖pathTransferMatrix ψ h (b i) (t i)‖ := by
+  intro m
+  induction m with
+  | zero =>
+      intro b t
+      simp [pathTransferProduct]
+  | succ m ih =>
+      intro b t
+      rw [pathTransferProduct.eq_def, Fin.prod_univ_succ]
+      calc
+        ‖pathTransferMatrix ψ h (b 0) (t 0) *
+            pathTransferProduct ψ h m (fun i => b i.succ) (fun i => t i.succ)‖
+            ≤ ‖pathTransferMatrix ψ h (b 0) (t 0)‖ *
+                ‖pathTransferProduct ψ h m (fun i => b i.succ) (fun i => t i.succ)‖ :=
+          Matrix.l2_opNorm_mul _ _
+        _ ≤ ‖pathTransferMatrix ψ h (b 0) (t 0)‖ *
+              (∏ i : Fin m,
+                ‖pathTransferMatrix ψ h ((fun i => b i.succ) i)
+                  ((fun i => t i.succ) i)‖) :=
+          mul_le_mul_of_nonneg_left (ih _ _) (norm_nonneg _)
+
+/-- The recursive nearest-neighbor path contraction is exactly an ordered product
+of finite transfer matrices acting on the terminal vector. This is a genuine
+matrix representation on the fixed state space `A`, including site-dependent
+bilinear forms and weights; no tensor-rank or asymptotic bound is asserted. -/
+theorem pathPropagator_eq_pathTransferProduct_mulVec
+    {E A : Type*} [Field E] [Fintype E] [AddCommGroup A] [Module E A]
+    [Fintype A] [DecidableEq A]
+    (ψ : AddChar E ℂ) (h : E) :
+    ∀ (m : ℕ) (b : Fin m → A →ₗ[E] A →ₗ[E] E)
+      (t : Fin m → A → ℂ) (v : A → ℂ),
+      pathPropagator ψ h m b t v =
+        (pathTransferProduct ψ h m b t).mulVec v := by
+  intro m
+  induction m with
+  | zero =>
+      intro b t v
+      funext x
+      simp only [pathPropagator, pathTransferProduct]
+      rw [Matrix.one_mulVec]
+  | succ m ih =>
+      intro b t v
+      funext x
+      simp only [pathPropagator, pathTransferProduct]
+      rw [← Matrix.mulVec_mulVec]
+      simp only [Matrix.mulVec, dotProduct, pathTransferMatrix]
+      apply Finset.sum_congr rfl
+      intro y hy
+      rw [ih]
+      simp only [Matrix.mulVec, dotProduct]
+      ring
+
+/-- The literal nearest-neighbor character sum on paths with `m` edges and
+`m + 1` vertices. Its edge factors use the ordered pair of consecutive vertices;
+the vertex weights are kept as a separate product. -/
+def nearestNeighborPathSum
+    {E A : Type*} [Field E] [Fintype E] [AddCommGroup A]
+    [Module E A] [Fintype A]
+    (ψ : AddChar E ℂ) (h : E) (m : ℕ)
+    (b : Fin m → A →ₗ[E] A →ₗ[E] E)
+    (t₀ : A → ℂ) (t : Fin m → A → ℂ) : ℂ :=
+  ∑ u : Fin (m + 1) → A,
+    t₀ (u 0) * ∏ i : Fin m,
+      (ψ (h * b i (u i.castSucc) (u i.succ)) * t i (u i.succ))
+
+private def pathTupleEquiv {A : Type*} (m : ℕ) :
+    (A × (Fin m → A)) ≃ (Fin (m + 1) → A) :=
+  Fin.consEquiv (fun _ : Fin (m + 1) => A)
+
+/-- Expanding the recursive path operator gives exactly the finite sum over
+vertex tuples with consecutive bilinear edge phases. This is the typed bridge
+from the path contraction estimate to the actual nearest-neighbor character sum. -/
+theorem nearestNeighborPathSum_eq_pathPropagator
+    {E A : Type*} [Field E] [Fintype E] [AddCommGroup A]
+    [Module E A] [Fintype A]
+    (ψ : AddChar E ℂ) (h : E) (m : ℕ)
+    (b : Fin m → A →ₗ[E] A →ₗ[E] E)
+    (t₀ : A → ℂ) (t : Fin m → A → ℂ) :
+    nearestNeighborPathSum ψ h m b t₀ t =
+      ∑ x : A, t₀ x * pathPropagator ψ h m b t (fun _ => (1 : ℂ)) x := by
+  induction m generalizing t₀ with
+  | zero =>
+      simp only [nearestNeighborPathSum, Fin.prod_univ_zero, mul_one, pathPropagator]
+      let e := pathTupleEquiv (A := A) 0
+      rw [← Equiv.sum_comp e (fun u : Fin 1 → A => t₀ (u 0))]
+      calc
+        (∑ p : A × (Fin 0 → A), t₀ p.1) =
+            ∑ x : A, ∑ v : Fin 0 → A, t₀ x := Fintype.sum_prod_type _
+        _ = ∑ x : A, t₀ x := by simp
+  | succ m ih =>
+      rw [nearestNeighborPathSum, pathPropagator]
+      let e := pathTupleEquiv (A := A) (m := m + 1)
+      have hsum :
+          (∑ u : Fin (m + 2) → A,
+            t₀ (u 0) * ∏ i : Fin (m + 1),
+              (ψ (h * b i (u i.castSucc) (u i.succ)) * t i (u i.succ))) =
+          ∑ p : A × (Fin (m + 1) → A),
+            t₀ p.1 * ∏ i : Fin (m + 1),
+              (ψ (h * b i ((e p) i.castSucc) ((e p) i.succ)) *
+                t i ((e p) i.succ)) := by
+        exact (Equiv.sum_comp e (fun u =>
+          t₀ (u 0) * ∏ i : Fin (m + 1),
+            (ψ (h * b i (u i.castSucc) (u i.succ)) * t i (u i.succ)))).symm
+      rw [hsum, Fintype.sum_prod_type]
+      dsimp [e, pathTupleEquiv]
+      simp only [Fin.consEquiv_apply, Fin.cons_succ, Fin.prod_univ_succ]
+      simp only [Fin.castSucc_zero']
+      simp only [Fin.cons_zero]
+      have hidx (a : A) (v : Fin (m + 1) → A) (i : Fin m) :
+          (Fin.cons (α := fun _ : Fin (m + 2) => A) a v) i.succ.castSucc =
+            v i.castSucc := by
+        have h : i.succ.castSucc = i.castSucc.succ := Fin.ext (by simp)
+        rw [h, Fin.cons_succ]
+      simp_rw [hidx]
+      have htail (x : A) :
+          (∑ v : Fin (m + 1) → A,
+            (ψ (h * b 0 x (v 0)) * t 0 (v 0)) *
+              ∏ i : Fin m,
+                (ψ (h * b i.succ (v i.castSucc) (v i.succ)) * t i.succ (v i.succ))) =
+          ∑ y : A, (ψ (h * b 0 x y) * t 0 y) *
+            pathPropagator ψ h m (fun i => b i.succ) (fun i => t i.succ)
+              (fun _ => (1 : ℂ)) y := by
+        simpa [nearestNeighborPathSum] using
+          (ih (b := fun i => b i.succ)
+            (t₀ := fun y => ψ (h * b 0 x y) * t 0 y)
+            (t := fun i => t i.succ))
+      apply Finset.sum_congr rfl
+      intro x hx
+      rw [← Finset.mul_sum, htail x]
+      congr 1
+      apply Finset.sum_congr rfl
+      intro y hy
+      ring
+
+/-- The literal finite path sum is the endpoint pairing with an ordered product
+of transfer matrices on the fixed state space `A`. This exposes the exact
+finite-dimensional chain representation of the nearest-neighbor sum. -/
+theorem nearestNeighborPathSum_eq_transferProduct
+    {E A : Type*} [Field E] [Fintype E] [AddCommGroup A]
+    [Module E A] [Fintype A] [DecidableEq A]
+    (ψ : AddChar E ℂ) (h : E) (m : ℕ)
+    (b : Fin m → A →ₗ[E] A →ₗ[E] E)
+    (t₀ : A → ℂ) (t : Fin m → A → ℂ) :
+    nearestNeighborPathSum ψ h m b t₀ t =
+      ∑ x : A, t₀ x *
+        (pathTransferProduct ψ h m b t).mulVec (fun _ => (1 : ℂ)) x := by
+  rw [nearestNeighborPathSum_eq_pathPropagator]
+  apply Finset.sum_congr rfl
+  intro x hx
+  rw [pathPropagator_eq_pathTransferProduct_mulVec ψ h m b t (fun _ => (1 : ℂ))]
 
 /-- **Lemma 3 (Iterated `ℓ²` Norm Bound Along a Path of Length `m`)**:
 applying `m` nondegenerate Fourier kernels interlaced with `T`-bounded diagonal
 weights scales the `ℓ²` norm squared by at most `(|A| * T ^ 2) ^ m`. -/
 theorem pathPropagator_l2_sq_le
     {E A : Type*} [Field E] [Fintype E] [AddCommGroup A] [Module E A] [Fintype A]
-    (ψ : NontrivialAddChar E) {h : E} (hh : h ≠ 0) {T : ℝ} (hT : 0 ≤ T) :
+    (ψ : AddChar E ℂ) (hψ : ψ ≠ 0) {h : E} (hh : h ≠ 0) {T : ℝ} (hT : 0 ≤ T) :
     ∀ (m : ℕ) (b : Fin m → A →ₗ[E] A →ₗ[E] E)
       (_hb : ∀ i z, (∀ x, b i x z = 0) → z = 0)
       (t : Fin m → A → ℂ) (_ht : ∀ i x, ‖t i x‖ ≤ T) (v : A → ℂ),
@@ -433,10 +622,10 @@ theorem pathPropagator_l2_sq_le
   | 0, _, _, _, _, v => by simp [pathPropagator]
   | m + 1, b, hb, t, ht, v => by
       dsimp only [pathPropagator]
-      rw [fourierKernel_parseval_sq ψ (b 0) (hb 0) hh]
+      rw [fourierKernel_parseval_sq ψ hψ (b 0) (hb 0) hh]
       have hdiag := diag_mul_l2_sq_le (t 0)
         (pathPropagator ψ h m (fun i => b i.succ) (fun i => t i.succ) v) hT (ht 0)
-      have hih := pathPropagator_l2_sq_le ψ hh hT m
+      have hih := pathPropagator_l2_sq_le ψ hψ hh hT m
         (fun i => b i.succ) (fun i => hb i.succ)
         (fun i => t i.succ) (fun i => ht i.succ) v
       have hA : (0 : ℝ) ≤ (Fintype.card A : ℝ) := Nat.cast_nonneg _
@@ -454,22 +643,20 @@ theorem pathPropagator_l2_sq_le
               rw [pow_succ']
               ring
 
-/-- **Lemma 3 (Complete Path Character-Sum Estimate, §4)**:
-for `m ≥ 1` couplings (i.e. `k = m + 1 ≥ 2` points), `T`-bounded weights `t₀, t₁, …, t_m`,
-nondegenerate bilinear forms `b`, `h ≠ 0`, and phase shift `c`:
-`‖ψ(h * c) * ∑ x, t₀ x * (K₁ D₁ ⋯ K_m v) x‖ ≤ T ^ (m + 1) * |A| ^ ((m + 2) / 2)`. -/
+/-- A path estimate with an additional terminal vector `v`, also bounded by `T`.
+The endpoint-weighted estimate below avoids this extra terminal bound by taking `v = 1`. -/
 theorem pathCharacterSum_pairing_norm_le
     {E A : Type*} [Field E] [Fintype E] [AddCommGroup A] [Module E A] [Fintype A]
-    (ψ : NontrivialAddChar E) {h : E} (hh : h ≠ 0) (c : E)
+    (ψ : AddChar E ℂ) (hψ : ψ ≠ 0) {h : E} (hh : h ≠ 0) (c : E)
     {T : ℝ} (hT : 0 ≤ T) (m : ℕ)
     (b : Fin m → A →ₗ[E] A →ₗ[E] E)
     (hb : ∀ i z, (∀ x, b i x z = 0) → z = 0)
     (t₀ : A → ℂ) (ht₀ : ∀ x, ‖t₀ x‖ ≤ T)
     (t : Fin m → A → ℂ) (ht : ∀ i x, ‖t i x‖ ≤ T)
     (v : A → ℂ) (hv : ∀ x, ‖v x‖ ≤ T) :
-    ‖ψ.toFun (h * c) * ∑ x : A, t₀ x * pathPropagator ψ h m b t v x‖ ^ 2 ≤
+    ‖ψ (h * c) * ∑ x : A, t₀ x * pathPropagator ψ h m b t v x‖ ^ 2 ≤
       T ^ (2 * (m + 2)) * (Fintype.card A : ℝ) ^ (m + 2) := by
-  rw [norm_mul, ψ.norm_eq_one, one_mul]
+  rw [norm_mul, ψ.norm_apply, one_mul]
   have hcs :
       ‖∑ x : A, t₀ x * pathPropagator ψ h m b t v x‖ ^ 2 ≤
         (∑ x : A, ‖t₀ x‖ ^ 2) * (∑ x : A, ‖pathPropagator ψ h m b t v x‖ ^ 2) := by
@@ -491,14 +678,16 @@ theorem pathCharacterSum_pairing_norm_le
   have ht₀_sq : (∑ x : A, ‖t₀ x‖ ^ 2) ≤ (Fintype.card A : ℝ) * T ^ 2 := by
     calc
       (∑ x : A, ‖t₀ x‖ ^ 2) ≤ ∑ _x : A, T ^ 2 :=
-        Finset.sum_le_sum fun x _ => sq_le_sq' (by linarith [norm_nonneg (t₀ x)]) (ht₀ x)
+        Finset.sum_le_sum fun x _ =>
+          sq_le_sq' (by linarith [norm_nonneg (t₀ x), hT]) (ht₀ x)
       _ = (Fintype.card A : ℝ) * T ^ 2 := by simp
   have hv_sq : (∑ y : A, ‖v y‖ ^ 2) ≤ (Fintype.card A : ℝ) * T ^ 2 := by
     calc
       (∑ y : A, ‖v y‖ ^ 2) ≤ ∑ _y : A, T ^ 2 :=
-        Finset.sum_le_sum fun y _ => sq_le_sq' (by linarith [norm_nonneg (v y)]) (hv y)
+        Finset.sum_le_sum fun y _ =>
+          sq_le_sq' (by linarith [norm_nonneg (v y), hT]) (hv y)
       _ = (Fintype.card A : ℝ) * T ^ 2 := by simp
-  have hprop := pathPropagator_l2_sq_le ψ hh hT m b hb t ht v
+  have hprop := pathPropagator_l2_sq_le ψ hψ hh hT m b hb t ht v
   have hA : (0 : ℝ) ≤ (Fintype.card A : ℝ) := Nat.cast_nonneg _
   have hprop2 :
       (∑ x : A, ‖pathPropagator ψ h m b t v x‖ ^ 2) ≤
@@ -515,48 +704,290 @@ theorem pathCharacterSum_pairing_norm_le
           rw [mul_pow, pow_mul]
           ring
 
+/-- **Endpoint-weighted path estimate**: the `m` diagonal weights account for all
+`m + 1` sites when the terminal vector is constant one. In norm form the bound is
+`T ^ (m + 1) * |A| ^ ((m + 2) / 2)`; the theorem states its square to avoid square
+roots. -/
+theorem pathCharacterSum_pairing_unitTerminal_norm_sq_le
+    {E A : Type*} [Field E] [Fintype E] [AddCommGroup A] [Module E A] [Fintype A]
+    (ψ : AddChar E ℂ) (hψ : ψ ≠ 0) {h : E} (hh : h ≠ 0) (c : E)
+    {T : ℝ} (hT : 0 ≤ T) (m : ℕ)
+    (b : Fin m → A →ₗ[E] A →ₗ[E] E)
+    (hb : ∀ i z, (∀ x, b i x z = 0) → z = 0)
+    (t₀ : A → ℂ) (ht₀ : ∀ x, ‖t₀ x‖ ≤ T)
+    (t : Fin m → A → ℂ) (ht : ∀ i x, ‖t i x‖ ≤ T) :
+    ‖ψ (h * c) * ∑ x : A,
+        t₀ x * pathPropagator ψ h m b t (fun _ => (1 : ℂ)) x‖ ^ 2 ≤
+      T ^ (2 * (m + 1)) * (Fintype.card A : ℝ) ^ (m + 2) := by
+  rw [norm_mul, ψ.norm_apply, one_mul]
+  have hcs :
+      ‖∑ x : A, t₀ x * pathPropagator ψ h m b t (fun _ => (1 : ℂ)) x‖ ^ 2 ≤
+        (∑ x : A, ‖t₀ x‖ ^ 2) *
+          (∑ x : A, ‖pathPropagator ψ h m b t (fun _ => (1 : ℂ)) x‖ ^ 2) := by
+    have htri :
+        ‖∑ x : A, t₀ x * pathPropagator ψ h m b t (fun _ => (1 : ℂ)) x‖ ≤
+          ∑ x : A, ‖t₀ x‖ *
+            ‖pathPropagator ψ h m b t (fun _ => (1 : ℂ)) x‖ := by
+      calc
+        ‖∑ x : A, t₀ x * pathPropagator ψ h m b t (fun _ => (1 : ℂ)) x‖
+            ≤ ∑ x : A,
+                ‖t₀ x * pathPropagator ψ h m b t (fun _ => (1 : ℂ)) x‖ := norm_sum_le _ _
+        _ = ∑ x : A, ‖t₀ x‖ *
+              ‖pathPropagator ψ h m b t (fun _ => (1 : ℂ)) x‖ := by
+                refine Finset.sum_congr rfl fun x _ => norm_mul ..
+    calc
+      ‖∑ x : A, t₀ x * pathPropagator ψ h m b t (fun _ => (1 : ℂ)) x‖ ^ 2
+          ≤ (∑ x : A, ‖t₀ x‖ *
+              ‖pathPropagator ψ h m b t (fun _ => (1 : ℂ)) x‖) ^ 2 := by
+                refine sq_le_sq' ?_ htri
+                have hsum_nonneg :
+                    0 ≤ ∑ x : A, ‖t₀ x‖ *
+                      ‖pathPropagator ψ h m b t (fun _ => (1 : ℂ)) x‖ :=
+                  Finset.sum_nonneg fun _ _ => mul_nonneg (norm_nonneg _) (norm_nonneg _)
+                linarith [norm_nonneg
+                  (∑ x : A, t₀ x * pathPropagator ψ h m b t (fun _ => (1 : ℂ)) x)]
+      _ ≤ (∑ x : A, ‖t₀ x‖ ^ 2) *
+            (∑ x : A, ‖pathPropagator ψ h m b t (fun _ => (1 : ℂ)) x‖ ^ 2) :=
+              Finset.sum_mul_sq_le_sq_mul_sq Finset.univ _ _
+  have ht₀_sq :
+      (∑ x : A, ‖t₀ x‖ ^ 2) ≤ (Fintype.card A : ℝ) * T ^ 2 := by
+    calc
+      (∑ x : A, ‖t₀ x‖ ^ 2) ≤ ∑ _x : A, T ^ 2 :=
+        Finset.sum_le_sum fun x _ =>
+          sq_le_sq' (by linarith [norm_nonneg (t₀ x), hT]) (ht₀ x)
+      _ = (Fintype.card A : ℝ) * T ^ 2 := by simp
+  have hprop := pathPropagator_l2_sq_le ψ hψ hh hT m b hb t ht
+    (fun _ => (1 : ℂ))
+  have hprop' :
+      (∑ x : A, ‖pathPropagator ψ h m b t (fun _ => (1 : ℂ)) x‖ ^ 2) ≤
+        ((Fintype.card A : ℝ) * T ^ 2) ^ m * (Fintype.card A : ℝ) := by
+    simpa using hprop
+  have hA : (0 : ℝ) ≤ (Fintype.card A : ℝ) := Nat.cast_nonneg _
+  calc
+    ‖∑ x : A, t₀ x * pathPropagator ψ h m b t (fun _ => (1 : ℂ)) x‖ ^ 2
+        ≤ (∑ x : A, ‖t₀ x‖ ^ 2) *
+            (∑ x : A, ‖pathPropagator ψ h m b t (fun _ => (1 : ℂ)) x‖ ^ 2) := hcs
+    _ ≤ ((Fintype.card A : ℝ) * T ^ 2) *
+          (((Fintype.card A : ℝ) * T ^ 2) ^ m * (Fintype.card A : ℝ)) :=
+        mul_le_mul ht₀_sq hprop'
+          (Finset.sum_nonneg fun _ _ => sq_nonneg _)
+          (mul_nonneg hA (sq_nonneg T))
+    _ = T ^ (2 * (m + 1)) * (Fintype.card A : ℝ) ^ (m + 2) := by
+          rw [mul_pow, pow_mul]
+          ring
+
+/-- The recursive transfer estimate applies to the literal finite sum over
+nearest-neighbor vertex configurations. This theorem packages the proved tuple
+expansion with the endpoint-weighted bound; it makes no claim about a general
+hypersurface sum or about a uniform-in-length operator norm. -/
+theorem nearestNeighborPathSum_norm_sq_le
+    {E A : Type*} [Field E] [Fintype E] [AddCommGroup A] [Module E A] [Fintype A]
+    (ψ : AddChar E ℂ) (hψ : ψ ≠ 0) {h : E} (hh : h ≠ 0)
+    {T : ℝ} (hT : 0 ≤ T) (m : ℕ)
+    (b : Fin m → A →ₗ[E] A →ₗ[E] E)
+    (hb : ∀ i z, (∀ x, b i x z = 0) → z = 0)
+    (t₀ : A → ℂ) (ht₀ : ∀ x, ‖t₀ x‖ ≤ T)
+    (t : Fin m → A → ℂ) (ht : ∀ i x, ‖t i x‖ ≤ T) :
+    ‖nearestNeighborPathSum ψ h m b t₀ t‖ ^ 2 ≤
+      T ^ (2 * (m + 1)) * (Fintype.card A : ℝ) ^ (m + 2) := by
+  simpa [nearestNeighborPathSum_eq_pathPropagator] using
+    (pathCharacterSum_pairing_unitTerminal_norm_sq_le ψ hψ hh (0 : E) hT m b hb
+      t₀ ht₀ t ht)
+
 /-- **Section 7 Remainder Identity (`Q * N - M ^ k`)**:
 Detecting the hypersurface `{u | P u = 0}` by additive characters `ψ(h * P u)`
 splits the `h = 0` term (`M ^ k`) from `Q * N`, expressing `R = Q * N - M ^ k`
 as the exact sum over nonzero characters `h ∈ E \ {0}`. -/
 theorem remainder_eq_sum_nonzero_characters
     {E U : Type*} [Field E] [Fintype E] [DecidableEq E] [Fintype U]
-    (ψ : NontrivialAddChar E) (k : ℕ) (τ : U → ℂ) (P : (Fin k → U) → E) :
+    (ψ : AddChar E ℂ) (hψ : ψ ≠ 0) (k : ℕ) (τ : U → ℂ) (P : (Fin k → U) → E) :
     let M : ℂ := ∑ u : U, τ u
     let N : ℂ := ∑ u : Fin k → U, if P u = 0 then (∏ i : Fin k, τ (u i)) else 0
     (Fintype.card E : ℂ) * N - M ^ k =
       ∑ h ∈ Finset.univ.erase (0 : E),
-        ∑ u : Fin k → U, (∏ i : Fin k, τ (u i)) * ψ.toFun (h * P u) := by
+        ∑ u : Fin k → U, (∏ i : Fin k, τ (u i)) * ψ (h * P u) := by
   intro M N
   have hQN :
       (Fintype.card E : ℂ) * N =
-        ∑ h : E, ∑ u : Fin k → U, (∏ i : Fin k, τ (u i)) * ψ.toFun (h * P u) := by
+        ∑ h : E, ∑ u : Fin k → U, (∏ i : Fin k, τ (u i)) * ψ (h * P u) := by
     dsimp [N]
     rw [Finset.mul_sum]
     calc
       ∑ u : Fin k → U, (Fintype.card E : ℂ) * (if P u = 0 then ∏ i : Fin k, τ (u i) else 0)
-          = ∑ u : Fin k → U, (∏ i : Fin k, τ (u i)) * (∑ h : E, ψ.toFun (h * P u)) := by
+          = ∑ u : Fin k → U, (∏ i : Fin k, τ (u i)) * (∑ h : E, ψ (h * P u)) := by
             refine Finset.sum_congr rfl fun u _ => ?_
-            rw [ψ.sum_mul_eq_ite (P u)]
+            rw [FiniteFieldAddChar.sum_mul_eq_ite ψ hψ (P u)]
             split_ifs <;> ring
-      _ = ∑ u : Fin k → U, ∑ h : E, (∏ i : Fin k, τ (u i)) * ψ.toFun (h * P u) := by
+      _ = ∑ u : Fin k → U, ∑ h : E, (∏ i : Fin k, τ (u i)) * ψ (h * P u) := by
             refine Finset.sum_congr rfl fun u _ => Finset.mul_sum ..
-      _ = ∑ h : E, ∑ u : Fin k → U, (∏ i : Fin k, τ (u i)) * ψ.toFun (h * P u) :=
+      _ = ∑ h : E, ∑ u : Fin k → U, (∏ i : Fin k, τ (u i)) * ψ (h * P u) :=
             Finset.sum_comm
   have h0 :
-      (∑ u : Fin k → U, (∏ i : Fin k, τ (u i)) * ψ.toFun ((0 : E) * P u)) = M ^ k := by
-    simp only [zero_mul, ψ.map_zero, mul_one]
+      (∑ u : Fin k → U, (∏ i : Fin k, τ (u i)) * ψ ((0 : E) * P u)) = M ^ k := by
+    simp only [zero_mul, ψ.map_zero_eq_one, mul_one]
     dsimp [M]
     rw [← Fintype.prod_sum (fun (_ : Fin k) (u : U) => τ u)]
     simp [Finset.prod_const, Finset.card_univ]
   rw [hQN, ← Finset.add_sum_erase Finset.univ _ (Finset.mem_univ (0 : E)), h0, add_sub_cancel_left]
 
-/-! ## 3. Section 5 / Proposition 4: Gysin alternating-trace telescoping & Example 5 -/
+/-- Specialize the Fourier remainder identity to a genuinely nearest-neighbor
+path hypersurface. The scalar remainder is exactly the sum of the nontrivial
+character-weighted path contractions; this is an algebraic identity and does
+not assert a Frobenius trace interpretation or positive spectral residues. -/
+theorem nearestNeighborRemainder_eq_character_path_sums
+    {E A : Type*} [Field E] [Fintype E] [DecidableEq E]
+    [AddCommGroup A] [Module E A] [Fintype A]
+    (ψ : AddChar E ℂ) (hψ : ψ ≠ 0) (m : ℕ) (c : E)
+    (τ : A → ℂ)
+    (b : Fin m → A →ₗ[E] A →ₗ[E] E) :
+    let M : ℂ := ∑ x : A, τ x
+    let pathValue : (Fin (m + 1) → A) → E := fun u =>
+      c + ∑ i : Fin m, b i (u i.castSucc) (u i.succ)
+    let N : ℂ := ∑ u : Fin (m + 1) → A,
+      if pathValue u = 0 then ∏ i : Fin (m + 1), τ (u i) else 0
+    (Fintype.card E : ℂ) * N - M ^ (m + 1) =
+      ∑ r ∈ Finset.univ.erase (0 : E), ψ (r * c) *
+        nearestNeighborPathSum ψ r m b (fun x => τ x) (fun _ x => τ x) := by
+  classical
+  intro M pathValue N
+  have hmapSum (s : Finset (Fin m)) (f : Fin m → E) :
+      ψ (∑ i ∈ s, f i) = ∏ i ∈ s, ψ (f i) := by
+    induction s using Finset.induction_on with
+    | empty => simp
+    | @insert a s ha ih =>
+        rw [Finset.sum_insert ha, Finset.prod_insert ha, ψ.map_add_eq_mul, ih]
+  have hphase (r : E) (u : Fin (m + 1) → A) :
+      ψ (r * pathValue u) = ψ (r * c) *
+        ∏ i : Fin m, ψ (r * b i (u i.castSucc) (u i.succ)) := by
+    change ψ (r * (c +
+      ∑ i : Fin m, b i (u i.castSucc) (u i.succ))) = _
+    rw [mul_add, Finset.mul_sum, ψ.map_add_eq_mul]
+    congr 1
+    exact hmapSum Finset.univ (fun i => r * b i (u i.castSucc) (u i.succ))
+  have hweight (u : Fin (m + 1) → A) :
+      ∏ i : Fin (m + 1), τ (u i) = τ (u 0) *
+        ∏ i : Fin m, τ (u i.succ) := by
+    rw [Fin.prod_univ_succ]
+  have hterm (r : E) (u : Fin (m + 1) → A) :
+      (∏ i : Fin (m + 1), τ (u i)) * ψ (r * pathValue u) =
+        ψ (r * c) * (τ (u 0) * ∏ i : Fin m,
+          (ψ (r * b i (u i.castSucc) (u i.succ)) * τ (u i.succ))) := by
+    rw [hweight u, hphase r u, Finset.prod_mul_distrib]
+    ring
+  have hpath (r : E) :
+      (∑ u : Fin (m + 1) → A,
+        (∏ i : Fin (m + 1), τ (u i)) * ψ (r * pathValue u)) =
+      ψ (r * c) * nearestNeighborPathSum ψ r m b (fun x => τ x) (fun _ x => τ x) := by
+    rw [Finset.sum_congr rfl (fun u _ => hterm r u), ← Finset.mul_sum]
+    rfl
+  have hrem := remainder_eq_sum_nonzero_characters ψ hψ (m + 1) τ pathValue
+  dsimp [M, N] at hrem ⊢
+  rw [hrem]
+  refine Finset.sum_congr rfl ?_
+  intro r hr
+  exact hpath r
 
-/-- **Proposition 4 (Exact Gysin Alternating-Trace Telescoping Sign Identity)**:
-If `tY a = tX (a + 1)` for all `a ≥ 1` (Gysin isomorphisms above the border) and
-`tY 0 = tK + tX 1` (Gysin surjection at the border with kernel trace `tK`), then
-`(-1)^(D - 1) * (QN - Mk) = tX 0 + tK` with both terms entering with the **same `+` sign**. -/
+/-- Express the nontrivial-character remainder as a sum of ordered transfer-matrix
+products on the fixed state space `A`. This composes the finite Fourier
+decomposition with the path-to-matrix representation; it makes no claim about
+Frobenius traces, positive residues, or bounds uniform in the path length. -/
+theorem nearestNeighborRemainder_eq_character_transfer_products
+    {E A : Type*} [Field E] [Fintype E] [DecidableEq E]
+    [AddCommGroup A] [Module E A] [Fintype A] [DecidableEq A]
+    (ψ : AddChar E ℂ) (hψ : ψ ≠ 0) (m : ℕ) (c : E)
+    (τ : A → ℂ)
+    (b : Fin m → A →ₗ[E] A →ₗ[E] E) :
+    let M : ℂ := ∑ x : A, τ x
+    let pathValue : (Fin (m + 1) → A) → E := fun u =>
+      c + ∑ i : Fin m, b i (u i.castSucc) (u i.succ)
+    let N : ℂ := ∑ u : Fin (m + 1) → A,
+      if pathValue u = 0 then ∏ i : Fin (m + 1), τ (u i) else 0
+    (Fintype.card E : ℂ) * N - M ^ (m + 1) =
+      ∑ r ∈ Finset.univ.erase (0 : E), ψ (r * c) *
+        ∑ x : A, τ x *
+          (pathTransferProduct ψ r m b (fun _ x => τ x)).mulVec
+            (fun _ => (1 : ℂ)) x := by
+  classical
+  intro M pathValue N
+  rw [nearestNeighborRemainder_eq_character_path_sums ψ hψ m c τ b]
+  refine Finset.sum_congr rfl ?_
+  intro r hr
+  rw [nearestNeighborPathSum_eq_transferProduct]
+
+/-- Uniform finite bound for the nearest-neighbor remainder. Its only inputs are
+the nondegenerate bilinear edge kernels and the site-weight bound; no spectral
+decomposition, residue positivity, or cohomological interpretation is assumed. -/
+theorem nearestNeighborRemainder_norm_sq_le
+    {E A : Type*} [Field E] [Fintype E] [DecidableEq E]
+    [AddCommGroup A] [Module E A] [Fintype A]
+    (ψ : AddChar E ℂ) (hψ : ψ ≠ 0) (m : ℕ) (c : E)
+    (τ : A → ℂ) (b : Fin m → A →ₗ[E] A →ₗ[E] E)
+    (hb : ∀ i z, (∀ x, b i x z = 0) → z = 0)
+    {T : ℝ} (hT : 0 ≤ T) (hτ : ∀ x, ‖τ x‖ ≤ T) :
+    let M : ℂ := ∑ x : A, τ x
+    let pathValue : (Fin (m + 1) → A) → E := fun u =>
+      c + ∑ i : Fin m, b i (u i.castSucc) (u i.succ)
+    let N : ℂ := ∑ u : Fin (m + 1) → A,
+      if pathValue u = 0 then ∏ i : Fin (m + 1), τ (u i) else 0
+    ‖(Fintype.card E : ℂ) * N - M ^ (m + 1)‖ ^ 2 ≤
+      (Fintype.card E : ℝ) ^ 2 * T ^ (2 * (m + 1)) *
+        (Fintype.card A : ℝ) ^ (m + 2) := by
+  classical
+  intro M pathValue N
+  rw [nearestNeighborRemainder_eq_character_path_sums ψ hψ m c τ b]
+  let S : Finset E := Finset.univ.erase (0 : E)
+  let term : E → ℂ := fun r =>
+    ψ (r * c) * nearestNeighborPathSum ψ r m b (fun x => τ x) (fun _ x => τ x)
+  let K : ℝ := T ^ (2 * (m + 1)) * (Fintype.card A : ℝ) ^ (m + 2)
+  have hK : 0 ≤ K := by
+    dsimp [K]
+    exact mul_nonneg (pow_nonneg hT _) (pow_nonneg (Nat.cast_nonneg _) _)
+  have hterm (r : E) (hr : r ∈ S) : ‖term r‖ ^ 2 ≤ K := by
+    have hr0 : r ≠ 0 := (Finset.mem_erase.mp hr).1
+    have hbound := nearestNeighborPathSum_norm_sq_le ψ hψ hr0 hT m b hb
+      (fun x => τ x) hτ (fun _ x => τ x) (fun _ x => hτ x)
+    dsimp [term, K]
+    rw [norm_mul, ψ.norm_apply, one_mul]
+    exact hbound
+  have hsumSq : (∑ r ∈ S, ‖term r‖ ^ 2) ≤ (S.card : ℝ) * K := by
+    calc
+      (∑ r ∈ S, ‖term r‖ ^ 2) ≤ ∑ _r ∈ S, K :=
+        Finset.sum_le_sum fun r hr => hterm r hr
+      _ = (S.card : ℝ) * K := by simp
+  have hcs :
+      (∑ r ∈ S, ‖term r‖) ^ 2 ≤
+        (S.card : ℝ) * (∑ r ∈ S, ‖term r‖ ^ 2) := by
+    simpa using
+      (Finset.sum_mul_sq_le_sq_mul_sq S (fun _ : E => (1 : ℝ))
+        (fun r => ‖term r‖))
+  have hSle : S.card ≤ Fintype.card E := Finset.card_le_univ S
+  have hsumBound : (∑ r ∈ S, ‖term r‖) ^ 2 ≤ (Fintype.card E : ℝ) ^ 2 * K := by
+    calc
+      (∑ r ∈ S, ‖term r‖) ^ 2 ≤ (S.card : ℝ) * ((S.card : ℝ) * K) :=
+        hcs.trans (mul_le_mul_of_nonneg_left hsumSq (Nat.cast_nonneg _))
+      _ = (S.card : ℝ) ^ 2 * K := by ring
+      _ ≤ (Fintype.card E : ℝ) ^ 2 * K := by
+        have hcardSq : (S.card : ℝ) ^ 2 ≤ (Fintype.card E : ℝ) ^ 2 := by
+          exact_mod_cast (show S.card ^ 2 ≤ Fintype.card E ^ 2 by nlinarith)
+        exact mul_le_mul_of_nonneg_right hcardSq hK
+  have htriangle :
+      ‖∑ r ∈ S, term r‖ ≤ ∑ r ∈ S, ‖term r‖ := norm_sum_le _ _
+  have hfinal : ‖∑ r ∈ S, term r‖ ^ 2 ≤ (Fintype.card E : ℝ) ^ 2 * K := by
+    calc
+      ‖∑ r ∈ S, term r‖ ^ 2 ≤ (∑ r ∈ S, ‖term r‖) ^ 2 := by
+        nlinarith [norm_nonneg (∑ r ∈ S, term r), htriangle]
+      _ ≤ (Fintype.card E : ℝ) ^ 2 * K := hsumBound
+  simpa [S, term, K, mul_assoc] using hfinal
+
+/-! ## 3. Section 5 / Proposition 4: Gysin `+2` in relative indices -/
+
+/-- **Scalar form of Proposition 4 (Gysin degree `+2`)**:
+the indices are relative to the lowest possible compactly supported degrees:
+`tX b` denotes degree `D + b` on `X`, and `tY a` denotes degree `D - 1 + a`
+on `Y`. The relation `tY a = tX (a + 1)` therefore models the absolute Gysin
+map from degree `j` on `Y` to degree `j + 2` on `X`. With these scalar trace
+identities, the two surviving terms enter with the same sign. The theorem does
+not construct the cohomology groups, Gysin map, or Frobenius action. -/
 theorem gysin_alternating_trace_telescoping
     (D m : ℕ) (hD : 1 ≤ D) (hm : 2 ≤ m)
     (tX tY : ℕ → ℂ) (tK : ℂ)
@@ -572,7 +1003,10 @@ theorem gysin_alternating_trace_telescoping
     norm_num
   have hsign_X : ∀ b : ℕ, (-1 : ℂ) ^ (D - 1) * (-1 : ℂ) ^ (D + b) = -((-1 : ℂ) ^ b) := by
     intro b
-    rw [← pow_add, show (D - 1) + (D + b) = 2 * (D - 1) + (b + 1) by omega,
+    have hDsub : D - 1 + 1 = D := Nat.sub_add_cancel hD
+    rw [← pow_add, show (D - 1) + (D + b) = 2 * (D - 1) + (b + 1) by
+      rw [← hDsub]
+      omega,
       pow_add, pow_mul, pow_succ]
     ring
   have hQN : (-1 : ℂ) ^ (D - 1) * QN = ∑ a ∈ Finset.range (m - 1), (-1 : ℂ) ^ a * tY a := by
@@ -586,7 +1020,8 @@ theorem gysin_alternating_trace_telescoping
     refine Finset.sum_congr rfl fun b _ => ?_
     rw [← mul_assoc, hsign_X, neg_mul]
   rw [mul_sub, hQN, hMk, sub_neg_eq_add]
-  obtain ⟨m', rfl⟩ : ∃ m', m = m' + 2 := ⟨m - 2, by omega⟩
+  obtain ⟨m', rfl⟩ : ∃ m', m = m' + 2 :=
+    ⟨m - 2, (Nat.sub_add_cancel hm).symm⟩
   rw [show m' + 2 - 1 = m' + 1 by omega]
   rw [Finset.sum_range_succ' (fun a => (-1 : ℂ) ^ a * tY a) m',
     Finset.sum_range_succ' (fun b => (-1 : ℂ) ^ b * tX b) (m' + 1),
@@ -692,5 +1127,106 @@ theorem poincareDuality_purity_of_scaled_eigenvector_pair
     dual_eigenvalue_eq_rpow_div F B hx hy hpair hα hscale
   rw [hβ] at hdual
   exact poincareDuality_purity_eq hq hα hupper hdual
+
+/-- A nontrivial additive character `ψ : E → ℂ` on a finite field `E`,
+with unit-modulus values and vanishing full sum. -/
+structure NontrivialAddChar (E : Type*) [Field E] [Fintype E] where
+  toFun : E → ℂ
+  map_zero : toFun 0 = 1
+  map_add : ∀ x y, toFun (x + y) = toFun x * toFun y
+  norm_eq_one : ∀ x, ‖toFun x‖ = 1
+  sum_eq_zero : ∑ x : E, toFun x = 0
+
+/-- Concrete inhabitant: the nontrivial additive character on `ZMod 2` (`0 ↦ 1`, `1 ↦ -1`). -/
+def zmod2AddChar : NontrivialAddChar (ZMod 2) where
+  toFun x := if x = 0 then 1 else -1
+  map_zero := by simp
+  map_add x y := by
+    have hcases : ∀ z : ZMod 2, z = 0 ∨ z = 1 := fun z => by
+      fin_cases z
+      · exact Or.inl rfl
+      · exact Or.inr rfl
+    rcases hcases x with rfl | rfl <;> rcases hcases y with rfl | rfl
+    · simp
+    · simp
+    · simp
+    · have h2 : (1 : ZMod 2) + 1 = 0 := by decide
+      simp [h2]
+  norm_eq_one x := by
+    by_cases hx : x = 0 <;> simp [hx]
+  sum_eq_zero := by
+    change (∑ x : Fin 2, if (x : ZMod 2) = 0 then (1 : ℂ) else -1) = 0
+    rw [Fin.sum_univ_two]
+    simp
+
+namespace NontrivialAddChar
+
+variable {E : Type*} [Field E] [Fintype E] (ψ : NontrivialAddChar E)
+
+theorem map_neg (x : E) : ψ.toFun (-x) = star (ψ.toFun x) := by
+  have h1 : ψ.toFun (-x) * ψ.toFun x = 1 := by
+    rw [← ψ.map_add, neg_add_cancel, ψ.map_zero]
+  have h2 : star (ψ.toFun x) * ψ.toFun x = 1 := by
+    rw [mul_comm, Complex.star_def, Complex.mul_conj, Complex.normSq_eq_norm_sq, ψ.norm_eq_one]
+    norm_num
+  have hne : ψ.toFun x ≠ 0 := by
+    intro h0
+    have := ψ.norm_eq_one x
+    rw [h0, norm_zero] at this
+    norm_num at this
+  exact mul_right_cancel₀ hne (h1.trans h2.symm)
+
+theorem map_sub (x y : E) : ψ.toFun (x - y) = ψ.toFun x * star (ψ.toFun y) := by
+  rw [sub_eq_add_neg, ψ.map_add, ψ.map_neg]
+
+/-- **Section 7 Character-Orthogonality Indicator**:
+`∑ h : E, ψ(h * x)` equals `|E|` if `x = 0` and `0` otherwise. -/
+theorem sum_mul_eq_ite [DecidableEq E] (x : E) :
+    (∑ h : E, ψ.toFun (h * x)) = if x = 0 then (Fintype.card E : ℂ) else 0 := by
+  by_cases hx : x = 0
+  · subst hx
+    simp [ψ.map_zero]
+  · simp only [hx, ↓reduceIte]
+    have hbij : (∑ h : E, ψ.toFun (h * x)) = ∑ y : E, ψ.toFun y := by
+      exact Equiv.sum_comp (Equiv.mulRight₀ x hx) ψ.toFun
+    rw [hbij, ψ.sum_eq_zero]
+
+/-- Any nonzero linear functional `ℓ : A →ₗ[E] E` on a finite `E`-vector space `A`
+has vanishing character sum `∑ y : A, ψ (ℓ y) = 0`. -/
+theorem sum_linearMap_eq_zero
+    {A : Type*} [AddCommGroup A] [Module E A] [Fintype A]
+    (ℓ : A →ₗ[E] E) (hℓ : ℓ ≠ 0) :
+    (∑ y : A, ψ.toFun (ℓ y)) = 0 := by
+  have hex : ∃ y₀ : A, ℓ y₀ ≠ 0 := by
+    by_contra h
+    push Not at h
+    exact hℓ (LinearMap.ext h)
+  obtain ⟨y₀, hy₀⟩ := hex
+  have hmul : ∀ c : E, ψ.toFun (c * ℓ y₀) * (∑ y : A, ψ.toFun (ℓ y)) =
+      ∑ y : A, ψ.toFun (ℓ y) := by
+    intro c
+    rw [Finset.mul_sum]
+    calc
+      ∑ y : A, ψ.toFun (c * ℓ y₀) * ψ.toFun (ℓ y)
+          = ∑ y : A, ψ.toFun (ℓ (c • y₀ + y)) := by
+            refine Finset.sum_congr rfl fun y _ => ?_
+            rw [LinearMap.map_add, LinearMap.map_smul, smul_eq_mul, ψ.map_add]
+      _ = ∑ y : A, ψ.toFun (ℓ y) :=
+            Equiv.sum_comp (Equiv.addLeft (c • y₀)) (fun y => ψ.toFun (ℓ y))
+  have hsum : (∑ c : E, ψ.toFun (c * ℓ y₀)) * (∑ y : A, ψ.toFun (ℓ y)) =
+      (Fintype.card E : ℂ) * (∑ y : A, ψ.toFun (ℓ y)) := by
+    rw [Finset.sum_mul]
+    calc
+      ∑ c : E, ψ.toFun (c * ℓ y₀) * (∑ y : A, ψ.toFun (ℓ y))
+          = ∑ _c : E, ∑ y : A, ψ.toFun (ℓ y) := Finset.sum_congr rfl fun c _ => hmul c
+      _ = (Fintype.card E : ℂ) * (∑ y : A, ψ.toFun (ℓ y)) := by simp
+  classical
+  rw [ψ.sum_mul_eq_ite (ℓ y₀)] at hsum
+  simp only [hy₀, ↓reduceIte, zero_mul] at hsum
+  have hcard : (Fintype.card E : ℂ) ≠ 0 :=
+    Nat.cast_ne_zero.mpr (Fintype.card_ne_zero)
+  exact (mul_eq_zero.mp hsum.symm).resolve_left hcard
+
+end NontrivialAddChar
 
 end InfoGeometry.Arithmetic.AlpogeDeligneFrobeniusBoundBridge

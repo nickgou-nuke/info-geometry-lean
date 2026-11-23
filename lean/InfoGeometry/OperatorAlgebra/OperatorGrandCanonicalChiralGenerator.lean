@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.ModularZ2CubeGrading
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -115,16 +120,15 @@ theorem grandCanonicalCommutator_sub_left (x y z : A) :
   unfold grandCanonicalCommutator
   noncomm_ring
 
-theorem grandCanonicalCommutator_mul_central_left
-    (c x y : A) (hc : ∀ z : A, c * z = z * c) :
-    grandCanonicalCommutator (c * x) y = c * grandCanonicalCommutator x y := by
+/-- The commutator with a left-ordered operator product has an explicit
+noncentral correction. This is the associative derivation identity with the
+commutator acting on the coefficient as well as on the right factor. -/
+theorem grandCanonicalCommutator_mul_left (x y z : A) :
+    grandCanonicalCommutator (x * y) z =
+      x * grandCanonicalCommutator y z +
+        grandCanonicalCommutator x z * y := by
   unfold grandCanonicalCommutator
-  calc
-    c * x * y - y * (c * x) = c * (x * y) - c * (y * x) := by
-      rw [mul_assoc, ← mul_assoc y c x, ← hc y]
-      congr 1
-      rw [← mul_assoc]
-    _ = c * (x * y - y * x) := by rw [mul_sub]
+  noncomm_ring
 
 theorem grandCanonicalCommutator_self (x : A) :
     grandCanonicalCommutator x x = 0 := by
@@ -141,42 +145,62 @@ theorem grandCanonicalCommutator_totalNumber_chiralCharge
   rw [hcomm]
   noncomm_ring
 
+/-- Exact charge-commutator expansion for a grand-canonical operator with
+operator-valued chemical potentials. No centrality assumption is imposed:
+the last two terms record the defects caused by noncentral coefficients. -/
+theorem grandCanonicalCommutator_grandCanonicalGenerator_chiralCharge_expansion
+    (H Nplus Nminus μ μχ : A) :
+    grandCanonicalCommutator
+        (grandCanonicalGenerator H Nplus Nminus μ μχ)
+        (chiralCharge Nplus Nminus) =
+      grandCanonicalCommutator H (chiralCharge Nplus Nminus) -
+        μ * grandCanonicalCommutator (totalNumber Nplus Nminus)
+          (chiralCharge Nplus Nminus) -
+        grandCanonicalCommutator μ (chiralCharge Nplus Nminus) *
+          totalNumber Nplus Nminus -
+        grandCanonicalCommutator μχ (chiralCharge Nplus Nminus) *
+          chiralCharge Nplus Nminus := by
+  unfold grandCanonicalGenerator grandCanonicalCommutator totalNumber chiralCharge
+  noncomm_ring
+
 theorem grandCanonicalCommutator_grandCanonicalGenerator_chiralCharge
     (H Nplus Nminus μ μχ : A)
     (hH : grandCanonicalCommutator H (chiralCharge Nplus Nminus) = 0)
     (hN : Nplus * Nminus = Nminus * Nplus)
-    (hμ : ∀ z : A, μ * z = z * μ)
-    (hμχ : ∀ z : A, μχ * z = z * μχ) :
+    (hμ : Commute μ (chiralCharge Nplus Nminus))
+    (hμχ : Commute μχ (chiralCharge Nplus Nminus)) :
     grandCanonicalCommutator
         (grandCanonicalGenerator H Nplus Nminus μ μχ)
         (chiralCharge Nplus Nminus) = 0 := by
-  unfold grandCanonicalGenerator
-  rw [grandCanonicalCommutator_sub_left, grandCanonicalCommutator_sub_left,
-    grandCanonicalCommutator_mul_central_left μ
-      (totalNumber Nplus Nminus) (chiralCharge Nplus Nminus) hμ,
-    grandCanonicalCommutator_mul_central_left μχ
-      (chiralCharge Nplus Nminus) (chiralCharge Nplus Nminus) hμχ]
-  rw [hH, grandCanonicalCommutator_totalNumber_chiralCharge Nplus Nminus hN,
-    grandCanonicalCommutator_self]
+  rw [grandCanonicalCommutator_grandCanonicalGenerator_chiralCharge_expansion,
+    hH, grandCanonicalCommutator_totalNumber_chiralCharge Nplus Nminus hN]
+  have hμ0 : grandCanonicalCommutator μ (chiralCharge Nplus Nminus) = 0 := by
+    unfold grandCanonicalCommutator
+    exact sub_eq_zero.mpr hμ.eq
+  have hμχ0 : grandCanonicalCommutator μχ (chiralCharge Nplus Nminus) = 0 := by
+    unfold grandCanonicalCommutator
+    exact sub_eq_zero.mpr hμχ.eq
+  rw [hμ0, hμχ0]
   simp
 
 theorem grandCanonicalCommutator_modularGrandCanonicalGenerator_chiralCharge
     (β H Nplus Nminus μ μχ : A)
     (hH : grandCanonicalCommutator H (chiralCharge Nplus Nminus) = 0)
     (hN : Nplus * Nminus = Nminus * Nplus)
-    (hβ : ∀ z : A, β * z = z * β)
-    (hμ : ∀ z : A, μ * z = z * μ)
-    (hμχ : ∀ z : A, μχ * z = z * μχ) :
+    (hβ : Commute β (chiralCharge Nplus Nminus))
+    (hμ : Commute μ (chiralCharge Nplus Nminus))
+    (hμχ : Commute μχ (chiralCharge Nplus Nminus)) :
     grandCanonicalCommutator
         (modularGrandCanonicalGenerator β H Nplus Nminus μ μχ)
         (chiralCharge Nplus Nminus) = 0 := by
   unfold modularGrandCanonicalGenerator
-  rw [grandCanonicalCommutator_mul_central_left β
-    (grandCanonicalGenerator H Nplus Nminus μ μχ)
-    (chiralCharge Nplus Nminus) hβ]
+  rw [grandCanonicalCommutator_mul_left]
   rw [grandCanonicalCommutator_grandCanonicalGenerator_chiralCharge
     H Nplus Nminus μ μχ hH hN hμ hμχ]
-  simp
+  have hβ0 : grandCanonicalCommutator β (chiralCharge Nplus Nminus) = 0 := by
+    unfold grandCanonicalCommutator
+    exact sub_eq_zero.mpr hβ.eq
+  simp [hβ0]
 
 theorem totalNumber_isFullyEven
     {Γ_R Γ_χ Γ_N Nplus Nminus : A}
@@ -209,8 +233,9 @@ theorem grandCanonicalGenerator_isFullyEven
     (hH : ModularZ2CubeGrading.isFullyEven Γ_R Γ_χ Γ_N H)
     (hPlus : ModularZ2CubeGrading.isFullyEven Γ_R Γ_χ Γ_N Nplus)
     (hMinus : ModularZ2CubeGrading.isFullyEven Γ_R Γ_χ Γ_N Nminus)
-    (hμ : ∀ z : A, μ * z = z * μ)
-    (hμχ : ∀ z : A, μχ * z = z * μχ) :
+    (hμR : Commute μ Γ_R) (hμχ : Commute μ Γ_χ) (hμN : Commute μ Γ_N)
+    (hμχR : Commute μχ Γ_R) (hμχχ : Commute μχ Γ_χ)
+    (hμχN : Commute μχ Γ_N) :
     ModularZ2CubeGrading.isFullyEven Γ_R Γ_χ Γ_N
       (grandCanonicalGenerator H Nplus Nminus μ μχ) := by
   unfold grandCanonicalGenerator ModularZ2CubeGrading.isFullyEven
@@ -219,15 +244,27 @@ theorem grandCanonicalGenerator_isFullyEven
   have hCharge := chiralCharge_isFullyEven hPlus hMinus
   exact ⟨ModularZ2CubeGrading.hasGrading_sub
       (ModularZ2CubeGrading.hasGrading_sub hHR
-        (ModularZ2CubeGrading.hasGrading_mul_of_commute hTot.1 (hμ Γ_R)))
-      (ModularZ2CubeGrading.hasGrading_mul_of_commute hCharge.1 (hμχ Γ_R)),
+        (ModularZ2CubeGrading.hasGrading_mul_of_commute hTot.1 hμR))
+      (ModularZ2CubeGrading.hasGrading_mul_of_commute hCharge.1 hμχR),
     ModularZ2CubeGrading.hasGrading_sub
       (ModularZ2CubeGrading.hasGrading_sub hHχ
-        (ModularZ2CubeGrading.hasGrading_mul_of_commute hTot.2.1 (hμ Γ_χ)))
-      (ModularZ2CubeGrading.hasGrading_mul_of_commute hCharge.2.1 (hμχ Γ_χ)),
+        (ModularZ2CubeGrading.hasGrading_mul_of_commute hTot.2.1 hμχ))
+      (ModularZ2CubeGrading.hasGrading_mul_of_commute hCharge.2.1 hμχχ),
     ModularZ2CubeGrading.hasGrading_sub
       (ModularZ2CubeGrading.hasGrading_sub hHN
-        (ModularZ2CubeGrading.hasGrading_mul_of_commute hTot.2.2 (hμ Γ_N)))
-      (ModularZ2CubeGrading.hasGrading_mul_of_commute hCharge.2.2 (hμχ Γ_N))⟩
+        (ModularZ2CubeGrading.hasGrading_mul_of_commute hTot.2.2 hμN))
+      (ModularZ2CubeGrading.hasGrading_mul_of_commute hCharge.2.2 hμχN)⟩
+
+
+theorem grandCanonicalCommutator_mul_central_left
+    (c x y : A) (hc : ∀ z : A, c * z = z * c) :
+    grandCanonicalCommutator (c * x) y = c * grandCanonicalCommutator x y := by
+  unfold grandCanonicalCommutator
+  calc
+    c * x * y - y * (c * x) = c * (x * y) - c * (y * x) := by
+      rw [mul_assoc, ← mul_assoc y c x, ← hc y]
+      congr 1
+      rw [← mul_assoc]
+    _ = c * (x * y - y * x) := by rw [mul_sub]
 
 end InfoGeometry.OperatorAlgebra

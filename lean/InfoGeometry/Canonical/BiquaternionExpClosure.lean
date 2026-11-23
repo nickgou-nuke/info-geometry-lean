@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.BiquaternionNegativeRootsLog
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BiquaternionCliffordIso
@@ -34,21 +40,21 @@ theorem tracelessPauli_sq (x y z : ℂ) :
 def biquaternion (α x y z : ℂ) : M2C :=
   α • (1 : M2C) + tracelessPauli x y z
 
-def biquaternionExp (α r x y z : ℂ) (_hr : r * r = x * x + y * y + z * z) : M2C :=
+def biquaternionExpFormula (α r x y z : ℂ) : M2C :=
   let exp_α := Complex.exp α
   let cosh_r := Complex.cosh r
   let sinh_r_over_r := if r = 0 then (1 : ℂ) else Complex.sinh r / r
   exp_α • (cosh_r • (1 : M2C) + sinh_r_over_r • tracelessPauli x y z)
 
-theorem biquaternionExp_is_M2C (α r x y z : ℂ) (hr : r * r = x * x + y * y + z * z) :
+theorem biquaternionExpFormula_is_PauliLinear (α r x y z : ℂ) :
     ∃ (a₀ a₁ a₂ a₃ : ℂ),
-      biquaternionExp α r x y z hr =
+      biquaternionExpFormula α r x y z =
         a₀ • (1 : M2C) + a₁ • σ₁ + a₂ • σ₂ + a₃ • σ₃ := by
   use Complex.exp α * Complex.cosh r
   use Complex.exp α * (if r = 0 then (1 : ℂ) else Complex.sinh r / r) * x
   use Complex.exp α * (if r = 0 then (1 : ℂ) else Complex.sinh r / r) * y
   use Complex.exp α * (if r = 0 then (1 : ℂ) else Complex.sinh r / r) * z
-  simp only [biquaternionExp, tracelessPauli, σ₁, σ₂, σ₃, BiquaternionNegativeRootsLog.T]
+  simp only [biquaternionExpFormula, tracelessPauli, σ₁, σ₂, σ₃, BiquaternionNegativeRootsLog.T]
   module
 
 theorem trace_biquaternion (α x y z : ℂ) :
@@ -129,5 +135,24 @@ structure SouriauBetaVector where
 
 def SouriauBetaVector.exponent (B : SouriauBetaVector) : ℝ :=
   -B.β * (B.energy - B.μ * B.charge)
+
+
+def biquaternionExp (α r x y z : ℂ) (_hr : r * r = x * x + y * y + z * z) : M2C :=
+  let exp_α := Complex.exp α
+  let cosh_r := Complex.cosh r
+  let sinh_r_over_r := if r = 0 then (1 : ℂ) else Complex.sinh r / r
+  exp_α • (cosh_r • (1 : M2C) + sinh_r_over_r • tracelessPauli x y z)
+
+
+theorem biquaternionExp_is_M2C (α r x y z : ℂ) (hr : r * r = x * x + y * y + z * z) :
+    ∃ (a₀ a₁ a₂ a₃ : ℂ),
+      biquaternionExp α r x y z hr =
+        a₀ • (1 : M2C) + a₁ • σ₁ + a₂ • σ₂ + a₃ • σ₃ := by
+  use Complex.exp α * Complex.cosh r
+  use Complex.exp α * (if r = 0 then (1 : ℂ) else Complex.sinh r / r) * x
+  use Complex.exp α * (if r = 0 then (1 : ℂ) else Complex.sinh r / r) * y
+  use Complex.exp α * (if r = 0 then (1 : ℂ) else Complex.sinh r / r) * z
+  simp only [biquaternionExp, tracelessPauli, σ₁, σ₂, σ₃, BiquaternionNegativeRootsLog.T]
+  module
 
 end InfoGeometry.Canonical.BiquaternionExpClosure

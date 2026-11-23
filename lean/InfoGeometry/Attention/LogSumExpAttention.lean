@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.ExponentialFamily.Analytic.LogSumExp
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.ExponentialFamily.Analytic.Softmax
+import InfoGeometry.Thermodynamics.SoftmaxGibbsVariationalPrinciple
 
 /-!
 # Log-Sum-Exp Derivatives and Finite Softmax Expectations
@@ -12,6 +19,7 @@ This proves that attention mechanisms compute gradients of log-partition functio
 -/
 
 open InfoGeometry.Analytic
+open InfoGeometry.Thermodynamics.SoftmaxGibbsVariational
 
 noncomputable section
 
@@ -55,18 +63,54 @@ theorem attention_scaled_logSumExp [Nonempty (Fin n)]
     deriv (logSumExpScaled w a ε) θ = logSumExpScaledMean w a ε θ := by
   apply logSumExpScaled_deriv_eq_mean w a ε hw hε.ne' θ
 
-/--
-Interpretation: Attention weights as softmax probabilities.
--/
-theorem attention_weights_are_softmax (_hw : ∀ i, 0 < w i) (θ : ℝ) (i : Fin n) :
+/-! The following statements record probability and free-energy properties of
+the concrete finite attention weights. They replace definitional restatements
+of `softmaxProb` and `logSumExp`. -/
+
+/-- The explicit attention weights form a strictly positive probability
+distribution. Positivity of the base weights and a nonempty finite index type
+ensure the partition denominator is positive. -/
+theorem attention_weights_are_strict_probability [Nonempty (Fin n)]
+    (hw : ∀ i, 0 < w i) (θ : ℝ) :
+    let attentionWeights : Fin n → ℝ := fun i =>
+      (w i * Real.exp (θ * a i)) / (∑ j, w j * Real.exp (θ * a j))
+    (∀ i, 0 < attentionWeights i) ∧ ∑ i, attentionWeights i = 1 := by
+  refine ⟨?_, ?_⟩
+  · intro i
+    change 0 < softmaxProb w a θ i
+    exact softmaxProb_pos (w := w) (a := a) hw θ i
+  · change (∑ i, softmaxProb w a θ i) = 1
+    exact softmaxProb_sum_one (w := w) (a := a) hw θ
+
+/-- At unit base weights, the log-partition potential is the negative
+equilibrium free energy for the Hamiltonian `Hᵢ = -aᵢ`. This identifies the
+finite log-sum-exp with a thermodynamic potential through the Gibbs variational
+owner, rather than merely unfolding its definition. -/
+theorem logSumExp_eq_negative_gibbs_equilibrium_freeEnergy
+    [Nonempty (Fin n)] (T : InverseTemperature) (a : Fin n → ℝ) :
+    logSumExp (fun _ : Fin n => (1 : ℝ)) a T.beta =
+      -T.beta * freeEnergy T (fun i => -a i)
+        (gibbsState T (fun i => -a i)) := by
+  rw [freeEnergy_gibbsState]
+  have hpartition :
+      partitionSum T (fun i : Fin n => -a i) =
+        logSumExpPartition (fun _ : Fin n => (1 : ℝ)) a T.beta := by
+    unfold partitionSum logSumExpPartition
+    apply Finset.sum_congr rfl
+    intro i hi
+    rw [neg_mul_neg, one_mul]
+  rw [hpartition]
+  unfold logSumExp
+  have hscale : -T.beta * (-(1 / T.beta)) = 1 := by
+    field_simp [T.beta_ne_zero]
+  rw [← mul_assoc, hscale, one_mul]
+
+theorem attention_weights_are_softmax (θ : ℝ) (i : Fin n) :
     let attention_weights := fun i =>
       (w i * Real.exp (θ * a i)) / (∑ j, w j * Real.exp (θ * a j))
     attention_weights i = softmaxProb w a θ i := by
   rfl
 
-/--
-Connection to thermodynamics: logSumExp as free energy.
--/
 theorem logSumExp_as_free_energy (θ : ℝ) :
     logSumExp w a (-θ) = Real.log (∑ i, w i * Real.exp (-θ * a i)) := by
   rfl
